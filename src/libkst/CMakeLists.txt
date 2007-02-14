@@ -1,5 +1,6 @@
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ksttimers.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/ksttimers.h )
+FIND_PACKAGE(KDE4 REQUIRED)
+# configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ksttimers.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/ksttimers.h )
 
 include_directories( ${CMAKE_SOURCE_DIR}/kst/src/extdate ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
 
@@ -19,7 +20,7 @@ set(kst_LIB_SRCS
    kstdateparser.cpp 
    ksttimezones.cpp 
    kstscalar.cpp 
-   $(PROCPS_COPY) 
+#   $(PROCPS_COPY) 
    kststring.cpp 
    kstmatrix.cpp 
    kstrmatrix.cpp 
