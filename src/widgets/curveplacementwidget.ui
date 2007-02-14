@@ -1,0 +1,257 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>CurvePlacementWidget</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>CurvePlacementWidget</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>411</width>
+            <height>153</height>
+        </rect>
+    </property>
+    <property name="sizePolicy">
+        <sizepolicy>
+            <hsizetype>5</hsizetype>
+            <vsizetype>5</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <property name="spacing">
+            <number>0</number>
+        </property>
+        <widget class="QButtonGroup" row="0" column="0">
+            <property name="name">
+                <cstring>_curvePlacementGroup</cstring>
+            </property>
+            <property name="title">
+                <string>Placement</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>textLabel1</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Plot window:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>_plotWindow</cstring>
+                    </property>
+                </widget>
+                <widget class="KComboBox" row="0" column="1" rowspan="1" colspan="3">
+                    <property name="name">
+                        <cstring>_plotWindow</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>1</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>1</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                </widget>
+                <widget class="QPushButton" row="0" column="4">
+                    <property name="name">
+                        <cstring>_newWindow</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Ne&amp;w...</string>
+                    </property>
+                </widget>
+                <widget class="QRadioButton" row="3" column="0" rowspan="1" colspan="3">
+                    <property name="name">
+                        <cstring>_dontPlace</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Do not place in any plot</string>
+                    </property>
+                </widget>
+                <widget class="QRadioButton" row="1" column="0" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>_inPlot</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Place in &amp;existing plot:</string>
+                    </property>
+                </widget>
+                <widget class="QRadioButton" row="2" column="0" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>_newPlot</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Place in &amp;new plot</string>
+                    </property>
+                    <property name="checked">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="2" column="2">
+                    <property name="name">
+                        <cstring>_reGrid</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Re-grid  Columns:</string>
+                    </property>
+                </widget>
+                <widget class="QSpinBox" row="2" column="3" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>_plotColumns</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>1</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>1</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="maxValue">
+                        <number>10</number>
+                    </property>
+                    <property name="minValue">
+                        <number>1</number>
+                    </property>
+                    <property name="value">
+                        <number>1</number>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>AutoLayout will place the plots in a grid with this many columns.</string>
+                    </property>
+                </widget>
+                <widget class="QComboBox" row="1" column="2" rowspan="1" colspan="3">
+                    <property name="name">
+                        <cstring>_plotList</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>5</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>1</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="editable">
+                        <bool>false</bool>
+                    </property>
+                    <property name="insertionPolicy">
+                        <enum>AtTop</enum>
+                    </property>
+                    <property name="autoCompletion">
+                        <bool>true</bool>
+                    </property>
+                    <property name="duplicatesEnabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>The name of the data file which will be read for this vector.</string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>_plotWindow</sender>
+        <signal>activated(int)</signal>
+        <receiver>CurvePlacementWidget</receiver>
+        <slot>updatePlotList()</slot>
+    </connection>
+    <connection>
+        <sender>_newWindow</sender>
+        <signal>clicked()</signal>
+        <receiver>CurvePlacementWidget</receiver>
+        <slot>newWindow()</slot>
+    </connection>
+    <connection>
+        <sender>_inPlot</sender>
+        <signal>clicked()</signal>
+        <receiver>CurvePlacementWidget</receiver>
+        <slot>updateEnabled()</slot>
+    </connection>
+    <connection>
+        <sender>_newPlot</sender>
+        <signal>clicked()</signal>
+        <receiver>CurvePlacementWidget</receiver>
+        <slot>updateEnabled()</slot>
+    </connection>
+    <connection>
+        <sender>_dontPlace</sender>
+        <signal>clicked()</signal>
+        <receiver>CurvePlacementWidget</receiver>
+        <slot>updateEnabled()</slot>
+    </connection>
+    <connection>
+        <sender>_plotWindow</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>CurvePlacementWidget</receiver>
+        <slot>updateGrid()</slot>
+    </connection>
+    <connection>
+        <sender>_reGrid</sender>
+        <signal>clicked()</signal>
+        <receiver>CurvePlacementWidget</receiver>
+        <slot>updateEnabled()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>_plotWindow</tabstop>
+    <tabstop>_newWindow</tabstop>
+    <tabstop>_newPlot</tabstop>
+    <tabstop>_plotList</tabstop>
+    <tabstop>_reGrid</tabstop>
+    <tabstop>_plotColumns</tabstop>
+    <tabstop>_inPlot</tabstop>
+    <tabstop>_dontPlace</tabstop>
+</tabstops>
+<includes>
+    <include location="global" impldecl="in implementation">qspinbox.h</include>
+    <include location="global" impldecl="in implementation">kstdatacollection.h</include>
+    <include location="local" impldecl="in implementation">curveplacementwidget.ui.h</include>
+    <include location="global" impldecl="in declaration">kst_export.h</include>
+</includes>
+<exportmacro>KST_EXPORT</exportmacro>
+<slots>
+    <slot>setExistingPlot( bool existingPlot )</slot>
+    <slot>setNewPlot( bool newPlot )</slot>
+    <slot>setCols( int c )</slot>
+    <slot>setCurrentPlot( const QString &amp; p )</slot>
+    <slot>newWindow()</slot>
+    <slot>update()</slot>
+    <slot>updatePlotList()</slot>
+    <slot>updateEnabled()</slot>
+    <slot>updateGrid()</slot>
+</slots>
+<functions>
+    <function returnType="bool">existingPlot()</function>
+    <function returnType="bool">newPlot()</function>
+    <function returnType="QString">plotName()</function>
+    <function returnType="int">columns()</function>
+    <function returnType="bool">reGrid()</function>
+</functions>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>kcombobox.h</includehint>
+</includehints>
+</UI>

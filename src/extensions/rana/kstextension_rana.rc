@@ -1,0 +1,11 @@
+<!DOCTYPE kpartgui>
+<kpartgui name="Kst RaNA Extension" version="6">
+<MenuBar>
+ <Menu name="file"><Text>&amp;File</Text>
+  <Action name="noise_temperature_calculation"/>
+  <Action name="receiver_input_offset"/>
+  <Action name="linearity_gain_isolation"/>
+ </Menu>
+</MenuBar>
+</kpartgui>
+

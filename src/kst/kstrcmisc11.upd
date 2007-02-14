@@ -1,0 +1,49 @@
+# Update: move things around
+#
+Id=kstrcmisc1.1
+File=kstrc
+Group=Kst,EMail
+Key=EMail Sender,Sender
+Key=EMail Server,Server
+Key=EMail Port,Port
+Key=EMail Authenticate,Authenticate
+Key=EMail Username,Username
+Key=EMail Password,Password
+Key=EMail Encryption,Encryption
+Key=EMail Authentication,Authentication
+RemoveKey=EMail Sender
+RemoveKey=EMail Server
+RemoveKey=EMail Port
+RemoveKey=EMail Authenticate
+RemoveKey=EMail Username
+RemoveKey=EMail Password
+RemoveKey=EMail Encryption
+RemoveKey=EMail Authentication
+
+Group=Kst,Grid Lines
+Key=X Major Grid Lines,X Major
+Key=Y Major Grid Lines,Y Major
+Key=X Minor Grid Lines,X Minor
+Key=Y Minor Grid Lines,Y Minor
+Key=Major Grid Lines Color,Major Color
+Key=Minor Grid Lines Color,Minor Color
+Key=Default Major Grid Lines Color,Default Major Color
+Key=Default Minor Grid Lines Color,Default Minor Color
+RemoveKey=X Major Grid Lines
+RemoveKey=Y Major Grid Lines
+RemoveKey=X Minor Grid Lines
+RemoveKey=Y Minor Grid Lines
+RemoveKey=Major Grid Lines Color
+RemoveKey=Minor Grid Lines Color
+RemoveKey=Default Major Grid Lines Color
+RemoveKey=Default Minor Grid Lines Color
+
+Group=Kst,X Axis
+Key=X Axis Interpret,Interpret
+Key=X Axis Interpretation,Interpretation
+Key=X Axis Display,Display
+RemoveKey=X Axis Interpret
+RemoveKey=X Axis Interpretation
+RemoveKey=X Axis Display
+
+

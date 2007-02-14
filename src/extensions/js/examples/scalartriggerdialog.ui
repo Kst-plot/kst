@@ -1,0 +1,134 @@
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>ScalarTriggerDialog</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>ScalarTriggerDialog</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>433</width>
+            <height>266</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Scalar Trigger Maker</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLineEdit" row="1" column="1" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>value</cstring>
+            </property>
+            <property name="maxLength">
+                <number>40</number>
+            </property>
+            <property name="alignment">
+                <set>AlignRight</set>
+            </property>
+        </widget>
+        <spacer row="2" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>spacer1</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>251</width>
+                    <height>21</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QPushButton" row="2" column="2">
+            <property name="name">
+                <cstring>ok</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Create</string>
+            </property>
+        </widget>
+        <widget class="QComboBox" row="1" column="0">
+            <item>
+                <property name="text">
+                    <string>&gt;</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>&gt;=</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>=</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>&lt;=</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>&lt;</string>
+                </property>
+            </item>
+            <property name="name">
+                <cstring>comparator</cstring>
+            </property>
+        </widget>
+        <widget class="QLayoutWidget" row="0" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>layout2</cstring>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QListBox" row="0" column="1" rowspan="2" colspan="1">
+                    <property name="name">
+                        <cstring>scalars</cstring>
+                    </property>
+                </widget>
+                <spacer row="1" column="0">
+                    <property name="name">
+                        <cstring>spacer3</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>31</width>
+                            <height>121</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>textLabel1</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Scalars:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>comboBox1</cstring>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+    </grid>
+</widget>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

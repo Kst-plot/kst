@@ -1,0 +1,15 @@
+[Protocol]
+exec=kio_nad
+protocol=nad
+input=none
+output=filesystem
+listing=Name,Type,Size,Date,AccessDate,Access
+reading=true
+writing=true
+makedir=true
+deleting=true
+linking=false
+moving=true
+maxInstances=4
+DocPath=kioslave/nad.html
+Class=:local

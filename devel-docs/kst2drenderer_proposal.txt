@@ -1,0 +1,282 @@
+Here is a more detailed proposal to accomodate painting data in non-cartesian 
+coordinate systems.  Also includes some refactoring of Kst2DPlot.  
+
+Basically I have tried to go through all the existing code and determine what 
+kind of class interface is needed and then have tried to create that class.  
+
+
+Background
+-----------
+
+A)  Current configuration.  The painting code is currently set up like this:
+
+KstApp : KMdiMainFrm
+  \
+   ---> KstViewWindow : KMdiChildFrm
+          \
+            ---> KstTopLevelView
+                 (friend) KstViewWidget
+                 o The top level view has an instance of a QPainter
+                   which is set to draw on the KstViewWidget.
+                 o The top level view has a list of KstViewObjects
+                   which it calls on to paint on the QPainter.
+
+B)  One such descendent of KstViewObject is 
+Kst2DPlot : KstPlotBase : KstMetaPlot : KstBorderedViewObject : KstViewObject
+
+C)  Kst2DPlot draws the axes, legends, tick marks, etc and then calls on all 
+KstBaseCurves to paint themselves.  The base curves are provided with the 
+QPainter reference to paint to.
+
+
+Definitions
+------------
+
+1.  For this discussion, 2D "rendering" is the act of taking data lying in a 
+general 2D coordinate space (U,V) and drawing it (using QPainter primitives) 
+in a section of the cartesian (window space) plane.
+
+2.  For this discussion, 3D "rendering" is the act of taking data lying in a 
+general 3D coordinate space (U,V,W) and drawing it (using, e.g. OpenGL) in a 
+section of cartesian space.
+
+So when I say "render", what I really mean is a combination of a coordinate 
+transformation/projection to cartesian space and then painting this cartesian 
+data to a window.
+
+
+Proposal
+----------
+
+I propose the creation of a new Kst2DRenderer (3D will come later, once we 
+have Kst3DPlot working).  This new object will wrap a QPainter and provide an 
+interface for drawing in terms of native U/V coordinates.  The goals are the 
+following:
+
+a)  Remove all notion of "X and Y" coordinates-- unless we decide to keep 
+calling it "X" and "Y" when we mean U/V, in order to minimize code changes.  
+All work is done in native (U,V) coordinates and the window coordinates of a 
+QPainter.  The currently selected Kst2DRenderer determines how things in 
+(U,V) space are drawn to the QPainter.
+
+b)  All QPainter commands in 2DPlot and the basecurves that involve (U,V) 
+space coordinates are converted into calls to a Kst2DRenderer.  This does 
+not affect things like drawing the legend or other calls to the QPainter that 
+are in terms of pixels.
+
+This new Kst2DRenderer will have the following members/methods:
+
+0.  Normal QDom handling and save/load/etc functionality
+
+1.  Coordinate Range.  The current Min/Max values of the (U,V) coordinate 
+space.  There is no a priori restriction on these values, since in some cases 
+Min > Max, e.g. a plot of spherical data centered on the prime meridian where 
+phi=(3Pi/2...Pi/2).  
+
+2.  Range checking methods.  Each descendent of Kst2DRenderer should check 
+that the current range makes sense for the specific type of rendering.  Also 
+include methods to check individual U/V values for validity.  If values are 
+out of range, return sensible default for this type of rendering.  Also 
+provide test functions to determine if a value lies within the current range.
+
+3.  Simple functions for doing coordinate transformations for a single ordered 
+pair (U,V) <--> (Xwindow,Ywindow), given the currently specified range of the 
+(U,V) space and the current window coordinates of the QPainter.
+
+4.  Graphics primitives, given in terms of (U,V) coordinates, including:
+        drawPoint
+        drawLine
+        drawRect
+        drawEllipse
+        drawPixmap
+        drawPolyLine
+        Others?
+
+5.  config dialog, with options specific to the type of rendering being done.
+
+See attached files for a rough definition of this class.  In order to support 
+polylines in (U,V) coordinates, I have also created a simple QValueVector of 
+pairs of doubles-- does such a class already exist?  If so, we could just use 
+that instead of the DPointArray I came up with.
+
+
+Typical Useage
+---------------
+
+Here is a typical example of useage from within Kst2DPlot:
+
+1.  In Kst2DPlot, the Kst2DRenderer is allocated in the constructor and set to 
+the default type (cartesian).
+
+2.  A combobox in the plotdialog is used to select the desired type of 
+Renderer.  Kst2DPlot has a method (called by the dialog) to switch to a new 
+type of Renderer (allocate the new and delete the old).
+
+3.  In the paint/draw functions, the Kst2DRenderer._painter is set to the 
+current painter.  The U/V range is set based on the min/max values stored in 
+2DPlot.  The painter window and viewport are set up as they are now.  The 
+Kst2DRenderer._pSpace is set to the desired sub-rectangle (in window 
+coordinates) of the QPainter  All U/V drawing functions perform the necessary 
+projection/painting based on the U/V range and the current subsection of the 
+QPainter.window.
+
+
+Implementation 
+(including some unrelated refactoring of Kst2DPlot)
+----------------------------------------------------
+
+Implementation requires some refactoring of Kst2DPlot and modifications to the 
+basecurves.  However, I think things will be simpler in the long run ;-)  
+Here is (I think) a mostly complete list of the changes needed to implement 
+this:
+
+0.  Do we want to actually rename X and Y in the code to U/V or something 
+else?  If not, then "X" and "Y" become our generalized coordinates- they are 
+no longer assumed to be cartesian.
+
+1.  Add a member to Kst2DPlot that is an instance of a Kst2DRenderer.
+
+2.  Create descendents of Kst2DRenderer for the existing types of plots 
+(cartesian and Log).
+
+3.  Create config dialogs for the cartesian and Log renderers which 
+contain the options currently found in the Plotdialog->{X,Y} Axis->Scale 
+block (i.e. time display, reversal, etc).
+
+4.  In Plotdialog.ui, combine the X Axis and Y Axis tabs into a single "Axes" 
+tab.  This is similar to how the "Range" tab is set up.  Remove the "Scale" 
+sub blocks from these.  Using the resulting extra space in the "Axes" tab, 
+add a combobox to choose between the available Kst2DRenderers.  Beneath 
+this combo box, have a "configure" button, that can pop up a detailed config 
+dialog depending on the selected type of Rendering.  Cartesian and Log 
+renderers would have options like displaying interpreted axis labels.  
+Spherical/Sinusoidal renderer might have options like display in RA/DEC, 
+lat/long, or radians.
+
+5.  In Kst2DPlot, we no longer need the (many) xlog and ylog boolean flags.  
+As far as 2DPlot is concerned, it always draws in U,V coordinates.  Remove 
+members _xLog and _yLog.  Remove bools from common constructor.
+
+6.  In Kst2DPlot, commonConstructor:  call range checking functions in the 
+Renderer instead.
+
+7.  In Kst2DPlot, Move CheckRange and CheckLRange to their respective 
+Renderers.
+
+8.  In Kst2DPlot, have setScale, setXScale and setYscale call the range 
+functions in the Renderer.  Remove setLScale, setLXScale and setLYScale.  
+
+9.  In Kst2DPlot, updateScale:  remove all reference to boolean _xLog and 
+_yLog.  Simply query basecurves for min/max values.  The autoborder option 
+will create a border in U,V coordinates.  Use Renderer's checkRange 
+functions.
+
+10.  In Kst2DPlot, time functions:  Can't we move all this time stuff to a 
+"KstTime" class?  We could remove ~330 lines here alone.  I can do this at 
+some point, but it's low priority now...
+
+11.  In Kst2DPlot, time functions and genAxisTick*Label :  Remove log mode 
+stuff- "z" will always be either just a number in U/V coordinates or 
+interpretted.
+
+12.  TICK MARKS:  there is a ton of crazy stuff going on in 2DPlot for 
+computing where to draw ticks.  There may need to be some changes.  The basic 
+method should be:  determine desired U/V tick spacing, check that ticks are 
+not too close or far apart in pixel space, if so then autotick, draw ticks at 
+locations determined by calling the renderer's UVtoPix function.
+
+13.  In Kst2DPlot::draw, KstCurveRenderContext should contain a reference to 
+the Kst2DRenderer, rather than the raw QPainter.  Basecurves should never 
+be drawing directly in pixel coordinates (except for specifying certain 
+pixel-sized features in the renderer's primitives).
+
+14.  In Kst2DPlot, setTicks:  Again, we need to figure out a reworking of the 
+tick handling that calls the render object to find out how far apart the 
+ticks will be in pixel space.
+
+15.  In Kst2DPlot, setCursorPos:  getNearestDataPoint finds the closest point 
+in U/V space.  Set _cursor_x and _cursor_y by calling render object to 
+convert mouse.tracker coordinates to data coordinates.
+
+16.  In Kst2DPlot, updateMousePos:  use render object to find xpos and ypos
+
+17.  In Kst2DPlot, getNearestDataPoint:  Use render object to compute the 
+current mouse location in U,V coordinates.
+
+18.  In Kst2DPlot, highlightNearestDataPoint:  Use render object primitive to 
+draw highlighted point.
+
+19.  In Kst2DPlot, mouseReleaseEvent:  Call the render object's coordinate 
+transforms to figure out the new U/V range values based on the mouse's QRect.
+
+20.  In Kst2DPlot, remove menuXLogSlot and menuYLogSlot.
+
+21.  In Kst2DPlot, moveToNextMarker/moveToPrevMarker:  mostly OK, need to 
+remove log stuff.  currCenter and newCenter are in terms of U/V coordinates. 
+
+22.  In Kst2DPlot, zoomSelfYLocalMax:  Curves return their min/max as 
+currently coded.  Call render object for range checking and to get sensible 
+values.
+
+23.  In Kst2DPlot, xZoomNormal/yZoomNormal:  Use renderobject's functions to 
+compute new min/max.
+
+24.  In Kst2DPlot, plotMarkers:  call render object to determine if marker 
+value is within the current range.
+
+25.  In Kst2DPlot, plotPlotMarkers:  call render object's drawLine primitive 
+instead.
+
+26.  In Kst2DPlot, plotAxes:  More tick issues.  Assuming we have already 
+determined the correct major/minor spacing in (U,V) coordinates (i.e. in 
+setTicks), all we need to do here is for each tick, find the pixel location 
+by calling the renderobject's conversion, then draw the tick at this location 
+in pixel space using the QPainter.drawLine primitive.  Lots of code saving 
+from removing all the Log-based stuff.
+
+27.  In Kst2DPlot, plotGridLines:  simply call the renderobject's drawLine 
+function instead of the QPainter one.
+
+28.  In Kst2DPlot, mouseDoubleClickEvent:  Use renderobject to find mouse 
+location in U/V coordinates.
+
+29.  In Kst2DPlot, draw:  The KstCurveRenderContext contains too much info.  
+We don't need the x_min, y_min, etc that are used for log plots.  We also 
+don't need the L/H/m/b variables, since basecurves should not need to know 
+about the conversion from U,V to pixels.  All they need is the min/max U/V 
+range and a pointer to the Kst2DRenderer.
+
+29.  In KstBaseCurve:  Change KstCurveRenderContext to contain a pointer to a 
+Kst2DRenderer.  Remove useless members.
+
+30.  In KstVCurve:  When painting, call renderobject's primitives.  Use 
+DPointArray (see attached files) of U/V values for polyline function.  This 
+should clean out a ton of code in this function, since we don't need to do 
+any pixelspace stuff.  For some drawing, we may want objects that have a 
+fixed size in pixels (error bar ends, plot symbols, etc).  We can then use 
+the "fixed" drawing primitives in Kst2DRenderer.
+
+31.  In KstImage, paint function:  For colormap, rather than building up a 
+QImage and painting it, we should draw each matrix element as a filled 
+rectangle in (U,V) space using Kst2DRenderer->fillRect.  This allows the 
+renderer to morph each rectangle into some other shape based on the type 
+of rendering.  Remove all the pixel crap.  Simply iterate through all matrix 
+elements and call fillRect based on the U/V range.
+
+32.  In KstImage, paint function:  For contours, we have a problem.  The 
+contour step is currently specified in pixels.  I don't know what to do here- 
+any suggestions?  Aside from this, I think we just need to call 
+Kst2DRenderer->drawLine instead of using the QPainter.
+
+33. Add Kst2DRenderers for other types of display (polar coordinates, 
+spherical/sinusoidal, spherical/polar, etc)
+
+
+Future Benefits
+--------------------
+
+OpenGL for 3D and 2D:  one could imagine having KstViewWidget inherit from 
+QGLWidget instead of QWidget.  In this case, all KstViewObjects (including 
+Kst2DPlot) would have a QGLContext rather than a QPainter reference.  We 
+could then modify Kst2DRenderer to draw primitives with OpenGL commands, 
+and all basecurve painting would immediately benefit from this enhancement.

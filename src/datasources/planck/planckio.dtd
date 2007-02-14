@@ -1,0 +1,23 @@
+<!--
+PIOLIB database tree format
+Jean-Marc Delouis
+29/08/2003
+-->
+<!ELEMENT database (group+) >
+<!ATTLIST database path CDATA #REQUIRED>
+<!ELEMENT group (object+)>
+<!ATTLIST group name CDATA #REQUIRED>
+<!ATTLIST group type CDATA #REQUIRED>
+<!ATTLIST group creator CDATA #REQUIRED>
+<!ATTLIST group date CDATA #REQUIRED>
+<!ELEMENT object EMPTY >
+<!ATTLIST object name CDATA #REQUIRED>
+<!ATTLIST object type CDATA #REQUIRED>
+<!ATTLIST object datatype CDATA #REQUIRED>
+<!ATTLIST object creator CDATA #REQUIRED>
+<!ATTLIST object date CDATA #REQUIRED>
+<!ATTLIST object lastmodification CDATA #REQUIRED>
+<!ATTLIST object begin CDATA #REQUIRED>
+<!ATTLIST object end CDATA #REQUIRED>
+<!ATTLIST object beginring CDATA #REQUIRED>
+<!ATTLIST object endring CDATA #REQUIRED>

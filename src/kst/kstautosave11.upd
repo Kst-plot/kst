@@ -1,0 +1,7 @@
+# Update: kstautosaverc goes away in Kst 1.1
+#
+Id=kstautosave1.1
+File=kstautosaverc,kstrc
+Group=AutoSaveImages
+AllKeys
+RemoveGroup=AutoSaveImages

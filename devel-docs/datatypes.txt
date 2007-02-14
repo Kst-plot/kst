@@ -1,0 +1,52 @@
+
+Kst contains types, just as a typical computer application.  In C++, there
+are primitive types (POD) and derived types (classes).  In Kst, we have the
+following categorization:
+
+Primitive Types		Derived Types		Interpretations
+-------------------------------------------------------------------------
+KstScalar		KstPSD			KstVCurve
+KstString		KstEquation		KstImage*
+KstVector		KstHistogram
+KstRVector		KstPlugin
+KstAVector		KstCSD
+KstSVector
+KstMatrix*
+KstRMatrix
+KstAMatrix
+KstSMatrix
+
+
+
+KstMatrix and KstImage are presently wrong in Kst.  They are both derived
+types, and yet one represents primitive underived data (though it is not
+implemented that way), and the other is used directly to interpret that
+data as a visualization.
+
+
+Primitive types can be created by the user, or loaded from storage.  The
+present data loading mechanism is flawed in that it only supports loading
+one type of data from disk: vectors.  KstDataSource needs to be expanded
+with a keyed plugin mechanism and needs to drop binary compatibility
+issues [-internally- -only-] so that it can be extended to support these
+other primitive types.  This key is implemented in the development code.
+
+The next step is to create Kst?Matrix classes which behave as close as
+possible to the same way Kst?Vector does, with an interface as close as
+possible to that of Kst?Vector.  Once this is done, the KstDataSource
+interface can be extended to support loading them (as well as all other
+primitive types).  The Matrix dialog will become an equivalent to the
+Vector dialog.
+
+Note that Matrix needs to be a primitive type internally too.  It should
+not use KstVector.
+
+After matrices are renovated, KstImage needs to be converted into a
+KstBaseCurve and adjusted somewhat to be a generic curve with a matrix
+for storing data.  It is desired at some point to be able to render all
+sort of different image formats easily with this class.  This change,
+however, depends on changes to Kst2DPlot to an extent, and should wait
+for those changes.  (they are minor)
+
+
+

@@ -1,0 +1,52 @@
+How To Make Kst Plugins
+-----------------------
+
+KstPlugins are modules that can be loaded into Kst to provide additional
+functionality.
+
+
+KstPlugins are presently implemented as:
+- KstDataSource plugins
+	+ These provide the ability to read in different file formats or data
+	  "sources".
+- KstDataObject plugins
+	+ These are advanced data plugins that provide their own configuration dialog.
+- KstBasicPlugin plugins
+	+ These are basic data plugins that inherit KstDataObject plugins, but
+	  are provided with a default configuration dialog.
+- KstCPlugin plugins
+	+ These are deprecated data plugins replaced by KstBasicPlugins.
+- Kst Extensions
+	+ These allow entire subsystems to be added to Kst without touching
+	  the Kst core.
+
+
+All KstPlugins except KstCPlugins are KDE style plugins and therefore require
+a .desktop file and must be installed in the KDE standard plugins directories.
+They derive from the base servicetype "Kst/Plugin".  This base type includes
+two kst specific properties:
+
+X-Kst-Plugin-Author: A string containing the name of the author.
+X-Kst-Plugin-Version: A string containing the version of the plugin.
+
+,desktop files also have additional properties.  Here are the required ones:
+
+Name: A string containing the name of the plugin.  For instance, "My Plugin".
+ServiceTypes: For KstDataSource this is "Kst Data Source" and for KstDataObjects this is "Kst Data Object" etc, etc...
+X-KDE-ModuleType: This should be set to "Plugin".
+X-KDE-Library: The library name.  This is not the filename, but a name
+               that is used to construct it.  For instance, it could
+               be "kstobject_myplugin" where the library might be named
+               "kstobject_myplugin.so".  This must also be a legal C
+               variable name as it is used to construct the function
+               names inside the library.  Note: for KstDataSource plugins the
+               name here is shortened even further: the actual library name is
+               kstdata_myplugin.so, but you should put "myplugin" as the value
+               for this property.
+
+Some other .desktop properties are also common to all plugins:
+
+Comment: The description of the plugin.
+
+To find out more about creating these plugins look in the respective file for
+the type of plugin you are interested in creating.

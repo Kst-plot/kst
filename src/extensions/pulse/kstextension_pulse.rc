@@ -1,0 +1,8 @@
+<!DOCTYPE kpartgui>
+<kpartgui name="Kst Pulse Extension" version="1">
+<MenuBar>
+ <Menu name="tools"><Text>&amp;Tools</Text>
+  <Action name="pulse_show"/>
+ </Menu>
+</MenuBar>
+</kpartgui>

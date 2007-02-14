@@ -1,0 +1,140 @@
+All data objects (objects derived from KstObject) should be globally accessible
+from a hierarchical namespace. The general idea is to change tags to be a path
+instead of a simple name.
+
+A full path should uniquely specify a particular object in the hierarchy. We
+use separate hierarchies for different object types to allow, for example,
+a vector and a string to have the same name.
+
+The relationship of a KstObject being below another KstObject in the hierarchy
+means that the parent object CREATED the child object. Note that this is not
+the same thing as data PROVIDERS, which form a dependency graph (perhaps with
+cycles) rather than a tree. For example, a PSD created with the PSD button in
+the Data Manager is placed after its source vectors in the provider graph, but
+is a Level 1 object (i.e. not below its source vectors) in the naming
+hierarchy.
+
+Level 0
+-------
+An implied single root with no name. It is probably better to show Level 1
+objects as multiple roots and have no Level 0 object.
+
+Level 1
+-------
+- Providers/Data Sources.
+- Global constants. A CONSTANTS namespace can be used (maybe with a full
+  hierarchy of constant types).
+- Global (user-created) KstPrimitives
+  - e.g. generated KstVector, KstMatrix
+- user-created KstDataObjects
+  - curves, equations, power spectra, etc.
+
+Level 2
+-------
+- Data vectors read from a data source (e.g. KstVector::tagName()). These names
+  will not collide as long as there are unique names in each data source. 
+- Data source metadata strings, scalars (author, dataset description,
+  numFields, etc.)
+
+Level 3
+-------
+- KstObjects generated from level 2 objects (e.g. KstScalars for min, max,
+  etc.).
+- Data object metadata strings, scalars (units, field description, etc.)
+
+
+In labels, one can use the full path to specify a field (e.g.
+[DataSource1/Field1/max]), or start with any globally-unique name and go from
+there, which is compatible with the current model (e.g. [Field1/max]). Using
+'/' as a path separator allows compatibility with existing .kst files, but will
+cause conflicts with datasources using '/' within field names. For now, I'm
+converting '/' to '-'.
+
+
+In addition to the global lists of scalars, vectors, matrices, etc., we can
+view the data as a tree of KstObjects:
+
+- DataSource1
+ \
+  + Field1
+  + Field2
+- DataSource2
+ \
+  + Field1
+  - Field1-2
+   \
+    - min
+    - max         <========== [DataSource2/Field1-2/max] or [Field1-2/max]
+  - Field2
+   \
+    - min
+    - max
+    - units
+    - description
+  + Field3
+  - Field4
+   \
+    - min
+    - max
+    - units
+    - description
+
+We have separate trees to show only scalars or strings (or whatever) in an
+organized way.
+
+
+IMPLEMENTATION DETAILS
+======================
+Instead of tags being QStrings, they are now KstObjectTag objects. These
+objects contain a QString tag (the last part of the hierarchical tag) and a
+QStringList context. The static constant KstObjectTag::globalTagContext
+represents global tags (i.e. Level 1). KstObjectTag::constantTagContext
+represents a namespace for constants.
+
+For an empty tag in the global namespace, use KstObjectTag::invalidTag. Unless
+otherwise specified, the context is assumed to be the global context.
+
+
+Display Tags
+------------
+In situations where we display a flat list of object tags (i.e. the primitive
+selector comboboxes), we can use display tags. Inside a KstObjectTag there are
+two variables: _minDisplayComponents and _uniqueDisplayComponents.
+
+_minDisplayComponents is the minimum number of path components used to form the
+display tag. It is set by the user and has a default value of 1. When a tag is
+created in the context of another tag, the default value takes one components
+of the context tag.
+
+_uniqueDisplayComponents is the number of path components needed to ensure that
+the display tag is unique. It is kept up-to-date by the KstObjectCollection
+containing the KstObject.
+
+The display tag is formed by taking the last MAX(_minDisplayComponents,
+_uniqueDisplayComponents) components of the full tag.
+
+e.g.:
+These 4 scalars exist in the system:
+
+	- The global constant CONST_PI. The full tag is "CONSTANTS/CONST_PI". The
+	  display tag is "CONST_PI".
+
+	- The Max scalar for field GYRO1 in datasource DS-dirfile1. The full tag is
+	  "DS-dirfile1/GYRO1/Max". Since the tag was created in the context of the
+	  GYRO1 vector's tag (DS-dirfile1/GYRO1), _minDisplayComponents is 2. The
+      display tag is "GYRO1/Max".
+
+	- The Max scalar for field GYRO2 in datasource DS-dirfile1. The full tag is
+	  "DS-dirfile1/GYRO2/Max". Again, _minDisplayComponents is 2. Since there
+	  is also a GYRO2 vector from datasource DS-dirfile2,
+	  _uniqueDisplayComponents is 3 (since "GYRO2/Max" is not unique).
+      Therefore, the display tag is "DS-dirfile1/GYRO2/Max".
+
+	- The Max scalar for field GYRO2 in datasource DS-dirfile2. The full tag is
+	  "DS-dirfile2/GYRO2/Max". The display tag is "DS-dirfile2/GYRO2/Max".
+
+The flat list of scalars will be:
+CONST_PI
+DS-dirfile1/GYRO2/Max
+DS-dirfile2/GYRO2/Max
+GYRO1/Max

@@ -1,0 +1,170 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>VectorSaveDialog</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>VectorSaveDialog</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>437</width>
+            <height>345</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Save Vectors to Disk</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>11</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
+        </property>
+        <widget class="QListBox" row="1" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>_vectorList</cstring>
+            </property>
+            <property name="selectionMode">
+                <enum>Extended</enum>
+            </property>
+        </widget>
+        <widget class="QLabel" row="0" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>textLabel1</cstring>
+            </property>
+            <property name="text">
+                <string>Select one or more vectors and click &lt;i&gt;Save&lt;/i&gt; to save them to a text file.</string>
+            </property>
+            <property name="textFormat">
+                <enum>RichText</enum>
+            </property>
+            <property name="scaledContents">
+                <bool>true</bool>
+            </property>
+            <property name="alignment">
+                <set>WordBreak|AlignTop</set>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="3" column="2">
+            <property name="name">
+                <cstring>pushButton2</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Close</string>
+            </property>
+        </widget>
+        <spacer row="3" column="0">
+            <property name="name">
+                <cstring>spacer1</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>252</width>
+                    <height>31</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QPushButton" row="3" column="1">
+            <property name="name">
+                <cstring>_saveButton</cstring>
+            </property>
+            <property name="enabled">
+                <bool>false</bool>
+            </property>
+            <property name="text">
+                <string>&amp;Save...</string>
+            </property>
+        </widget>
+        <widget class="KComboBox" row="2" column="0" rowspan="1" colspan="3">
+            <item>
+                <property name="text">
+                    <string>Truncate long vectors</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>Interpolate short vectors</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>Save in separate files</string>
+                </property>
+            </item>
+            <property name="name">
+                <cstring>_multiOptions</cstring>
+            </property>
+            <property name="enabled">
+                <bool>false</bool>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<customwidgets>
+</customwidgets>
+<connections>
+    <connection>
+        <sender>pushButton2</sender>
+        <signal>clicked()</signal>
+        <receiver>VectorSaveDialog</receiver>
+        <slot>hide()</slot>
+    </connection>
+    <connection>
+        <sender>_saveButton</sender>
+        <signal>clicked()</signal>
+        <receiver>VectorSaveDialog</receiver>
+        <slot>save()</slot>
+    </connection>
+    <connection>
+        <sender>_vectorList</sender>
+        <signal>selectionChanged()</signal>
+        <receiver>VectorSaveDialog</receiver>
+        <slot>selectionChanged()</slot>
+    </connection>
+    <connection>
+        <sender>_vectorList</sender>
+        <signal>doubleClicked(QListBoxItem*)</signal>
+        <receiver>VectorSaveDialog</receiver>
+        <slot>save()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>_vectorList</tabstop>
+    <tabstop>_multiOptions</tabstop>
+    <tabstop>_saveButton</tabstop>
+    <tabstop>pushButton2</tabstop>
+</tabstops>
+<includes>
+    <include location="global" impldecl="in implementation">kdeversion.h</include>
+    <include location="global" impldecl="in implementation">kfiledialog.h</include>
+    <include location="global" impldecl="in implementation">ktempfile.h</include>
+    <include location="global" impldecl="in implementation">kio/netaccess.h</include>
+    <include location="global" impldecl="in implementation">kstandarddirs.h</include>
+    <include location="global" impldecl="in implementation">kmessagebox.h</include>
+    <include location="local" impldecl="in implementation">kstdatacollection.h</include>
+    <include location="local" impldecl="in implementation">kstvector.h</include>
+    <include location="local" impldecl="in implementation">kstdatacollection.h</include>
+    <include location="local" impldecl="in implementation">vectorsavedialog.ui.h</include>
+</includes>
+<slots>
+    <slot access="private">save()</slot>
+    <slot>show()</slot>
+    <slot>init()</slot>
+    <slot access="private">selectionChanged()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>kcombobox.h</includehint>
+</includehints>
+</UI>

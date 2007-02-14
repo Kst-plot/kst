@@ -1,0 +1,147 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>ElogEventEntry</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>ElogEventEntry</cstring>
+    </property>
+    <property name="enabled">
+        <bool>true</bool>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>679</width>
+            <height>191</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>ELOG Event Entry</string>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QFrame">
+            <property name="name">
+                <cstring>frameAttrs</cstring>
+            </property>
+            <property name="enabled">
+                <bool>true</bool>
+            </property>
+            <property name="frameShape">
+                <enum>GroupBoxPanel</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Plain</enum>
+            </property>
+            <property name="lineWidth">
+                <number>1</number>
+            </property>
+        </widget>
+        <widget class="Line">
+            <property name="name">
+                <cstring>line1</cstring>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>0</width>
+                    <height>1</height>
+                </size>
+            </property>
+            <property name="frameShape">
+                <enum>HLine</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+        </widget>
+        <widget class="QCheckBox">
+            <property name="name">
+                <cstring>checkBoxIncludeCapture</cstring>
+            </property>
+            <property name="text">
+                <string>Include &amp;Kst capture</string>
+            </property>
+        </widget>
+        <widget class="QCheckBox">
+            <property name="name">
+                <cstring>checkBoxIncludeConfiguration</cstring>
+            </property>
+            <property name="text">
+                <string>Include Kst configuration &amp;file</string>
+            </property>
+        </widget>
+        <widget class="QCheckBox">
+            <property name="name">
+                <cstring>checkBoxIncludeDebugInfo</cstring>
+            </property>
+            <property name="text">
+                <string>Include Kst &amp;debugging information</string>
+            </property>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout10</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>pushButtonConfiguration</cstring>
+                    </property>
+                    <property name="text">
+                        <string>C&amp;onfiguration...</string>
+                    </property>
+                </widget>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer3</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>220</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>pushButtonSubmit</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Test</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>pushButtonClose</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Close</string>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+    </vbox>
+</widget>
+<tabstops>
+    <tabstop>checkBoxIncludeCapture</tabstop>
+    <tabstop>checkBoxIncludeConfiguration</tabstop>
+    <tabstop>pushButtonConfiguration</tabstop>
+    <tabstop>pushButtonSubmit</tabstop>
+    <tabstop>pushButtonClose</tabstop>
+</tabstops>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

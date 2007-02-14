@@ -1,0 +1,63 @@
+
+Kst2Dplot rocks:  Here's why:
+(loosing just one of these, while fixing every single item in 
+whatiswrongwithkst2dplot.txt would be a loss).
+
+1) Well spaced and scaled axis labels
+
+2) Well placed and scaled axis numbers
+
+3) great default tick size and spacing
+
+4) good control over tick density
+
+5) rotateable axis numbers
+
+6) Time interpretation for axis numbers (many sources, many output formats)
+
+7) rotatable axis numbers
+
+8) Optional major and minor grid lines
+
+9) adjustable forground, background colors
+
+10) adjustable major and minor gridline colors
+
+11) surpressable borders for adjacent plots
+
+12) easy interface to log-log, log-linear, and linear-log plots
+
+13) Transformable top and right axis
+
+14) Convenient autoscale
+
+15) auto-border mode for plots
+
+16) Spike insensitive autoscale for glitchy data
+
+17) Fixed scale mode.
+
+18) Excellent mouse interface to fixed scale mode
+
+19) convenient ability to change only X or Y zooming with the mouse
+
+20) rmb interface to match axes between plots
+
+21) plots borders auto-align when plots are in a grid
+
+22) plot markers
+
+23) rmb access to filtering or fitting curves
+
+24) exponetial notation in log plots, when reasonable
+
+25) plots can display curves and images
+
+26) clicking outside the plot region brings up plot dialog on useful page
+
+27) very useful keyboard interface: (lots of items here)
+
+28) plots inherit all the coolness of view objects.
+
+
+

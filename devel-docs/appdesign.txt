@@ -1,0 +1,44 @@
+
+Kst is designed as a multi-layer application.  The core is intended to be small
+and well-focused on the core functionality.  Additional features and
+functionality are implemented as plugins, extensions, or datasource plugins.
+
+
+libkst
+------
+This contains the bare minimum required by Kst extensions in order for them to
+cleanly link and be sufficiently powerful to perform their tasks.  It should
+not contain any data or view object code at this time.
+
+libkstmath
+----------
+All non-gui dependent math code and data objects (equations, PSDs, etc) go
+here.  This is not presently installed.
+
+d2asc
+-----
+A command line utility to convert any kst supported data file into ascii.
+
+kst
+---
+This is the core executable.  It links to libkst, qt, KDE, and not much else.
+kst proper contains only main.cpp.  The rest is in libkstapp.
+
+extensions
+----------
+Kst extensions allow developers to add functionality that may not be required
+by all Kst users, or is more of a peripheral or optional component.
+Extensions are loaded on demand of the user.
+
+datasources
+-----------
+These are runtime loaded plugins which add support in Kst for loading files
+of various formats.
+
+plugins
+-------
+Plugins are Kst-independent loadable modules that implement new mathematical
+algorithms for use inside Kst.  These are often of limited or no value to most
+users, so they should be implemented as plugins to avoid bloat.
+
+

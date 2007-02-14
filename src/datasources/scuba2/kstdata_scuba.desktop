@@ -1,0 +1,15 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Source
+X-KDE-ModuleType=Plugin
+X-KDE-Library=scuba
+X-Kst-Plugin-Author=The University of British Columbia
+Name=SCUBA File Reader
+Name[da]=SCUBA Fillæser
+Name[el]=Αναγνώστης αρχείων SCUBA
+Name[es]=Lector de archivos SCUBA
+Name[it]=Lettore file SCUBA
+Name[pt]=Leitor de Ficheiros SCUBA
+Name[pt_BR]=Leitor de Arquivos SCUBA
+

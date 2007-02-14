@@ -1,0 +1,155 @@
+- indenting is emacs style 2 space, no tabs
+
+- all files should have appropriate vim modelines at the end:
+// vim: ts=2 sw=2 et
+
+- bracing and structure style is as follows:
+
+    for (int x = 1; x < 10; ++x) {
+      val *= x;
+    }
+
+    if (x == y) {
+      z();
+    } else if (q < r) {
+    } else {
+    }
+
+    switch (expression) {
+      case 1:
+        foo();
+        break;
+      case 2:
+      default:
+    }
+
+    rettype Class::method(type var, type var, ...) {
+      type var;
+      type var2 = val, var3;
+
+      function();
+      etc
+
+      return var;
+    }
+
+
+- class layout example:
+
+    class X : public Y, private Z {
+      Q_OBJECT
+      public:
+        X();
+        virtual ~X();
+
+      private:
+
+      public slots:
+
+    };
+
+
+- all include files must be guarded:
+    #ifndef FILENAME_H
+    #define FILENAME_H
+    <contents>
+    #endif
+
+- avoid inline methods - it makes things difficult to modify later
+
+- designer .ui.h files use designer default indenting format
+
+- don't use superfluous semicolons.  It causes compile problems with some
+  compilers.
+
+- all .c, .cpp, .h files must have license and copyright headers
+
+- all files must be licensed *GPL* unless it derives from non-GPL compatible
+  code, in which case you must contact the Kst developers and maintainers
+  before integrating it
+
+- no C++ exceptions will be used
+
+- the present hard requirements for compilation are KDE 3.3.0. No
+  new hard requirements may be added, though conditional compilation is fine.
+
+- be very sensitive of performance (both startup time and runtime) of all Kst
+  components.  profile often
+
+- don't make constant unnecessary changes as part of other commits since it
+  destroys cvs annotations
+
+- variables do not use "Hungarian notation" pchlzpstrMyVariable style of
+  naming.  Qt/KDE style naming is preferred:
+
+   type myVariableName;
+   type _myMethodName;
+
+- public variables should be avoided as much as possible as they eventually
+  will cause problems (circumvents locking).  Naming can be myPublicName or
+  MyPublicName.  Both are common in Kst.  Perhaps this should be
+  standardized in the future.
+
+- global variables must be namespaced in some way, and can use myGlobalName or
+  MyGlobalName naming styles as appropriate
+
+- methods should use Qt-style myMethodName() naming style.  functions should
+  use myFunctionName() or (less preferably) MyFunctionName()
+
+- DCOP methods are public, and therefore must always be 100% clean.  Do not
+  use short forms, be consistent in nomenclature, and follow the most
+  preferred and already-used capitalization schemes.
+
+- Text literals must use i18n().  Be conscious of the fact that translators do
+  not know anything about Kst or perhaps about things like "PSD"s and "fit"s,
+  and that different languages have very different geometry, pluralization,
+  and word-order requirements.  Consult KDE developer documentation for more
+  information.
+
+- Kst is now nicely component-ized after much hard work.  Let's keep it that
+  way.  No huge monolithic/multipurpose classes.  Use abstract interfaces and
+  concrete implementations, where applicable as KDE-style plugins.
+
+- Discuss changes of design on the list first.  Commit second.  Sometimes a
+  concrete implementation as a branch or a patch set can be very convincing.
+
+- Remember portability.  Kst runs on many hardware and software platforms, is
+  compiled with various compilers, and is run in all kinds of strange
+  environments now.  Just because it works on Linux or GCC doesn't mean it will
+  work anywhere else.
+
+- Don't use char to store numbers, use int bitfields.  Char is signed on some
+  platforms and unsigned on others, leading to all kinds of strange bugs.
+
+- Make methods const where applicable to allow use of const objects and
+  pointers.  Keep in mind if something may need to be non-const in the future
+  so that we don't break existing code.
+
+- Don't use unnecessary const_cast - much effort was put into making the code
+  "const correct".
+
+- Pass arguments and return values as const& where applicable for performance
+  reasons.
+
+- Early returns to avoid huge nesting of blocks is -good-.  It makes the code
+  easy to understand.  Do it, and don't remove it.  Use judgement to avoid
+  making soup.
+  
+- Have care to push class instantiations down as far as possible in scope.
+  Some are quite expensive to instantiate and there is no value in following
+  the old C-style declarations.  Instantiating objects that aren't used just
+  slows down Kst.
+
+- If you fix a bug for code that has substantial testing support in tests/, you
+  must add a testcase to avoid regressions in the future.
+
+- Methods and functions that return their values through references are
+  -banned-.  Do not add these as new code, and try to clean up old ones as you
+  go.  If you must return multiple values individually, use a pointer.  It's
+  too confusing to use references and leads to many hard-to-trace bugs.  Ideally
+  use a single structure/class to encapsulate the data and return.
+
+- Why do we do this?  To make coding on Kst faster, easier, more consistent,
+  and more efficient.
+
+

@@ -1,0 +1,7 @@
+Kst Extensions
+--------------
+
+These are presently private but will become public once the interface is fully
+defined.  They allow entire subsystems to be added to Kst without touching
+the Kst core.  These are optional subsystems so they do not affect the UI or
+performance if not enabled.

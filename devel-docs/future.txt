@@ -1,0 +1,144 @@
+kst: Long Term Goals
+Barth Netterfield Nov. 18, 2004
+
+1. Overview:
+	Our  goal should be to develop kst into the premier data viewing, plotting, and light data analysis tool, prioritized in that order.  In particular, we would like to directly compete with (and eventually surpass) sm, pgplot, and xmgrace.  The rational is to have one tool (kst) be used for data display at all stages of an experiment's life, from real time data collection to data analysis, to publication.  As our most important specific case, I would like this to be true for the Planck-HFI.  I believe that we have created a framework in kst which is capable of attaining this goal, if we remain disciplined about both UI design and code structure.  
+	What follows is an incomplete list of the types of features we would need to add to kst to fully achieve this lofty goal.  While the priority of many of these features may be relatively low, nothing should be done to the kst code base which would impede later upgrades to these features.
+
+2. New Capabilities
+2.1. Data Viewing
+	Currently, kst is very strong in many aspects of data viewing.  However, there are a couple of important areas where it can be improved.
+i ) advanced Image based data representations: 
+* Waterfall plots (builtin?)
+* focal Plane visual representations (instrument specific plugins)
+* simple binned maps (plugin)
+ii ) UI enhancements: These require some discussion
+* Better auto-labeling 
+* add-curve from context menu 
+* edit parent data object of curves from context menu 
+* QuickStats(tm) label in context menu
+* X-axis sensitive Y auto scaling
+* X-axis sensitive curve fitting
+iii ) Colour co-ordination: psds and histograms should default to the same colour as their curves
+iv ) Shift/scale for RVectors: to, eg, allow easy/fast calibration for datasources that don't otherwise support it.
+v ) Time Awareness (input)
+* Data sources need to have a (configurable) TIME_ field, which is A*<somefield> + B.  <somefield> could be, eg, INDEX.  The configuration should be on a data-source by data-source basis, and should be cached (how to avoid this growing to \infinity?)
+* Vector limits everywhere need to be able to accept time rather than INDEX for ranges.
+
+
+2.2. Plotting
+	The goal here is to make kst suitable for publication quality plots for a sufficiently large fraction of cases, so that a second tool needed.
+i ) Asymetric error bars: currently only symetric errors are supported.  We need a mechanism for s+ != s-.
+ii ) Floating labels: labels outside of plots
+iii ) Alternate axis limits: (eg, wavenumber on bottom, frequency on top)
+iv ) shared axis: (eg, Stack several plots vertically so they are touching, all with the same X Axis, only labeled on the bottom plot)
+v ) sparse symbols as suggested by nicolas
+vi ) Configurable legends:  
+* Ability to add text (including latex) 
+* change curve name text 
+* change listed order
+* Floating legends (shared between multiple plots)
+vii ) Drawing elements: 
+* lines & arrows
+* Shapes (boxes, circles)
+* fills (eg, shade, hatch, or blank regions of the plot)
+* curves
+viii ) R to L language support (?)
+ix ) Better control over symbols
+* sm options (#vertex, star or polygon, filled or open, size)
+* png (etc) import
+* select indexed from a list (V[0] uses png[0], V[1] uses png[1] etc.
+x ) Better latex support in labels
+* more math symbols (sqrt, matrix related)
+* vertically positioned integral and sum limits
+* multi-row equation support, not just 'inline' equations.
+xi ) Axis property control: In an 'advanced' dialog...
+* line width
+* tick lengths
+* line colour different from label colour
+* t type axis rather than box axis
+xii ) Layout mode magnetic borders
+xiii ) Alternal base for axis (eg, hex)
+xiv ) Other types of plots (eg, Polar)
+
+2.3. Data Analysis
+i ) A spreadsheet mode for looking at and hand editing data vectors
+ii ) Improved data export capability: 
+* Multi vector
+* Subsets defined by X vector
+* Subsets defined by current plot ranges
+* Output to other formats than ascii
+* Interoplation in export
+iii ) Scripting environment
+* Loops & branches
+* subroutines and functions (which can take all data objects)
+* Natural format equations (ie, e2 = i*v1 + s1*v2^2)
+* String handling
+* String lists for creating data object lists
+* Data source list, Vector list and scalar list indexing
+* Vector element access
+* Convenient access to plugins from scripts
+* Script command prompt
+* Scripts from files
+* Access to command line arguments in scripts
+* Ability to extend UI from scripts
+* Access to timer system from scripts
+* Full control over labels, plots, windows
+iv ) plugins
+* Despike
+* Deconvolve
+* Gausian fit to negative gaussians
+* Differentiation
+* Integration
+* FIR time domain filtering
+* Fit to RC modeled Cosmic Rays
+* Fits to arbitrary equations
+v ) data processing optionally limited to current view
+* Fits
+* Stats
+vi ) UI for creating functions (and perhaps subroutines) as mentioned in Scripting Environment.  (this has previously been referred to a 'filter sets')
+vii ) Math in labels (ie, [S1_BOLO1-rms]*2.0)
+viii ) consider allowing non-power of 2 FFTs (use gsl or fftw?)
+
+2.4. Other features
+i ) Access to data sources using KIO: This will work like an indirect file, and will allow reading of archived data only.
+ii ) Embed/attach vector data in kst file (option at save time)
+iii ) Allow saving and loading of kst files via KIO: Particularly useful w/ embedded data.
+iv ) Drag and Drop
+* Drop in other apps as png/ps/pdf (think KWord or KMail...)
+* Drag between MDI windows
+* Drag between kst sessions
+v ) 'Database' system for scalars: we need to be able to turn off the MKS constants (rarely needed in the general case) and add other experiment specific scalar lists.
+vi ) Make a KstPlotLib to allow kst to be used from C++ programs (reverse scripting....)
+vii ) Make .kst files a recognized MIME type: This will be very useful when combined with embedded data.
+viii ) Make kst a kpart: to allow embedding in konq (kst as embedded viewer) or kpresenter (allow interactive plots in a presentation)
+ix ) Eye Candy: possibly completely useless frills.... except maybe for kpresenter/ppt use or for less serious publications.
+* Import background from a PNG/jpeg, etc
+* raised/shadowed/embossed lines and labels
+* raised/shadowed/embossed bar graph bars, pie charts, etcgraph
+* rounded corners on plots
+* Raised/shadowed plots
+* Use alpha channel to allow semi-transparent plots
+* Make all of the above themable
+
+3. Library and Class changes
+	In order to do all of these things, it will be important to keep careful control over the code structure of kst.  However, all changes we make to the class structure has to be specifically motivated by a tangable goal.  As I see it, the following items will require some noticeable/significant re-architecturing.  All re-architecturing needs to be done in an incremental way (3 day steps max), rather than via a re-write, to avoid long code development stagnations!
+3.1. Data viewing
+i ) a Waterfall Plot DataObject class  and UI needs to be created.  It should use the same structure as psds and histograms do.
+ii ) Plugins need to export matrixes to allow experiment specific image stuff.
+3.2. Plot upgrades: 
+i ) Floating labels (outside of plots) require ViewObject label.  Axis and tick labels work better under current model.  We don't want to support 2 rendering engines.  So - the label rendering engine needs to be pulled out of Kst[View]Label and shared by both classes.  Current floating label model needs to be replaced.
+ii ) Floating legends require legends to become ViewObjects
+iii ) New Legend classs needs to use new lable rendering class to allow equations and R to L without code duplication
+iv ) Optionally floating ViewObjects requires the ViewObjects to be attached to a 'parent' or be free (ie, attached to the top level view).
+v ) ViewObject classes for lines, etc must be created.
+vi ) Refactoring of renderer may be useful to ease addition of extended point properties and axis properties.
+3.3. Data Analysis
+i ) Class to represent subroutines (generalized filter sets). Should inherit from a 'kstplugin'....
+ii ) subvectors: For working on visible part of plots
+* Must be efficient (produced by plots during drawing?)
+* should appear as a kstvector.
+3.4. Other stuff
+i ) making KstPlotLib will require changes beyond the scope of human comprehension.
+ii ) Making kst a Kpart will be hard also.
+

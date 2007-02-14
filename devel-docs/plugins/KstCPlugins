@@ -1,0 +1,175 @@
+*****************************************************************************
+WARNING!!! These plugins are now deprecated. Plugin writers
+should instead consider writing such plugins by inheriting either
+KstDataObject or KstBasicPlugin.  See the KstPlugin file for more info.
+*****************************************************************************
+
+KstCPlugin Plugins
+------------
+
+Kst C plugins consist of two files, an XML file and a shared object. The XML
+file describes the contents of the shared object file.  The shared object file
+contains the actual plugin code, and must export a C-style function.
+
+XML FILE
+--------
+
+See linefit/linefit.xml for an example of an XML file.
+Each XML file contains an <intro> node with the following information:
+<modulename name="linefit"/>    <!-- The name of the module -->
+<author name="George Staikos"/> <!-- The name of the author -->
+<description text="Generates a line of best fit for a set of data."/>
+                                <!-- A description of the module -->
+<version minor="1" major="0"/>  <!-- The version number of the module -->
+<state devstate="release"/>     <!-- The development state of the module -->
+
+All but <state> are required.
+
+The module also contains an <interface> node which describes the interface to
+the plugin.  This node has children of type <input> and <output> for inputs
+and outputs respectively.  It may contain any number of these, but they must
+be in the order that the plugin expects them.  They are considered to be
+sequential inputs and outputs respectively.
+
+Inputs and ouputs can be <table> or <float>.  No other data types are
+supported at this time.  All <table> nodes must be tables of floats.
+
+An array input looks like this:
+<input>
+<table type="float" name="X Array" descr="The array of X coordinates." />
+</input>
+A float (scalar) output looks like this:
+<output>
+<float name="a" descr="The a value in the interpolation equation y = a + b*x." />
+</output>
+
+
+SHARED OBJECT
+-------------
+
+The shared object must export a C linkage symbol:
+int symbol(const double *const inArrays[],
+           const int inArrayLens[],
+           const double inScalars[],
+           double *outArrays[],
+           int outArrayLens[],
+           double outScalars[])
+
+"symbol" would be the same as the attribute "name" of the node "modulename" in
+the XML file.  The plugin must return 0 on success, or non-zero on error.  It
+must be prepared to deal with inputs that are not what it expects (empty arrays,
+ etc).  Just return an error if that is the case.  See below for a list of
+error codes.
+
+If you return arrays, you must set outArrayLens[] appropriately.  You must
+always return the exact number of arrays and scalars as the XML file indicates.
+outArrayLens[] will be set when your plugin is called, but you may need to
+resize the arrays.  You must only do this with realloc().  Do not use any other
+memory allocator as it could cause internal memory problems in Kst.
+
+Finally, do not, ever, cast away the constness of input variables.  This will
+result in inconsistencies in Kst internally.  The input variables are const for
+a reason and must remain as such.
+
+
+HOW TO BUILD THE C PLUGIN
+-----------------------
+
+If you write your plugin in C with GNU-style tools, you can compile your
+plugin like this:
+
+cc -Wall -c -o myplugin.o myplugin.c -fPIC -DPIC
+ld -o myplugin.so -shared myplugin.o
+
+
+You should put the .so file and the .xml file in a common directory.  Then the
+plugin manager in Kst can be used to browse to that directory and install the
+plugin in Kst automatically.
+
+
+
+Matrices
+--------
+
+C Plugins can manipulate matrices by putting this in the XML file.  In this case,
+two vectors will be exported in the vector lists, the first being the parameters
+of the matrix, the second being the entire matrix in a linear vector.
+
+<matrix type="float" name="" descr=""/>
+
+
+Curve Hints
+-----------
+
+C Plugins can provide curve hints like this in the module node:
+<curvehints>
+<hint name="foo" x="xvectorname" y="yvectorname"/>
+</curvehints>
+
+Note: Curve hints are automatically generated for filters, as defined below.
+
+
+Filters
+-------
+
+Filters are plugins that process a given input vector (along with one or more
+auxiliary vectors and scalars), and produce an output vector (along with one
+or more auxiliary vectors and scalars).  The production of the output vector
+from the input vector is considered to be the main action of the plugin, and
+this simple definition allows filters to be easily added to vectors on the fly.
+A filter is marked by adding the following node to the intro node of the XML
+file:
+
+<filter input="input_vector_name" output="output_vector_name" />
+
+
+PID
+---
+
+A special input node can be specified of type "pid".  This will be equivalent
+to a scalar but it receives the process ID of the main Kst process, since this
+is different than the one the plugin runs in.
+
+
+Localdata
+---------
+
+C Plugins that require the ability to store data across calls -cannot- use
+static memory.  This would lead to race conditions and inconsistency.  Instead,
+plugins must use a "localdata" facility.  Simply specify the node <localdata />
+in the intro node of the plugin XML file and change your plugin signature to
+this:
+int symbol(const double *const inArrays[],
+           const int inArrayLens[],
+           const double inScalars[],
+           double *outArrays[],
+           int outArrayLens[],
+           double outScalars[],
+	   void **localdata)
+
+On first call, this will be null.  It is your responsibility to populate it
+with what you like, and it will be passed back to you on each call, with a
+separate one for each instance of the plugin in Kst.  If you free() it, set
+it to null!  For memory allocation, be sure to use only system malloc() and
+realloc().
+
+If you allocate something more than a simple free() can cleanup, you must clean
+up the localdata yourself.  To do this, export a symbol:
+void freeLocalData(void**)
+that does the cleanup.  It will be called when the plugin is being destroyed.
+
+
+Parameter Names
+---------------
+Undocumented
+
+
+Error Codes
+-----------
+> 0   Custom error, you must provide a symbol const char *errorCodes(int) which
+      will be called to obtain a string representing the error.  Make these
+      strings static!
+-1    Generic error
+-2    Input error (something is wrong with the inputs)
+-3    Memory error (such as malloc failure)
+< -3  RESERVED

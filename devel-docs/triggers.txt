@@ -1,0 +1,20 @@
+For triggers:
+=============
+
+Add to Vectors
+--------------
+- triggering will be a property of vectors
+- add a grouped option section to the Edit Vector dialog called "Update
+Options"
+- have two mutually exclusive options in this section
+    - Read from file continuously
+    - Only update when triggered
+
+Add to Events
+-------------
+- in the Event Monitor dialog, in addition to Kst Debug Log and
+  E-Mail Notification, add a section called "Vector Triggering"
+- in the Vector Triggering section, have a checkbox called "Trigger:"
+- to the right of the check box, have a drop-down list of triggerable
+vectors
+  (i.e. vectors for which "only update when triggered" have been checked).

@@ -1,0 +1,87 @@
+
+1) Allocation
+
+malloc() and realloc() are defined to return null pointers in some cases and
+this should be tested for.  In particular, we need to test for it when we do
+big allocations.  However we may not always prevent bad situations like this.
+Actually, in most cases we probably won't.  This is because Linux will
+allocate memory to us even when it's not *really* available, and the machine
+will go into "swap hell" or the app will be killed by the kernel.  Linux is
+the main platform for Kst so it is the primary concern.  This behaviour is
+actually ideal as well, since OOM is generally quite uncommon now, and many
+apps allocate more memory than they really need.  We are a special case
+and we really do use lots of memory.
+
+As a C++ application, we use the C++ allocator whenever possible.  For data
+vectors, we use malloc() and realloc(), and checking for failed allocations is
+important since users may tried to load in data so huge that it can't possibly
+be dealt with.  Unfortunately it is probably more likely that the user loads
+in enough to go into heavy swap but not enough to actually fail the malloc.
+Therefore we have code on Linux that checks the system memory and tries to
+guess if we will enter this situation.  If so, the malloc is denied.  You
+must use the Kst malloc replacement in order to get this behaviour.  In
+general malloc() is deprecated and discouraged in Kst.
+
+C++ objects (widgets, containers, other classes) are allocated with the C++
+allocator in Kst.  That is, Foo *foo = new Foo;.  The C++ allocator has one
+of two behaviours when allocations fail:
+1) throw an exception
+2) return null
+
+We don't use exceptions in Kst, so 1 is not suitable.  By default g++ doesn't
+do 2 so it is not suitable at this time.  Furthermore, even if we did start
+using exceptions or hardcoded the g++ flags in the makefile to do 2, we still
+would crash.  Here's why:
+
+It is at least 50% likely that this call will fail in a place that guarantees
+a crash:
+
+QListView *l = new QListView(this);
+
+The reason is that internally, it uses [at least one] "d-pointer" which is
+allocated without checking the return code.  If an exception is thrown, we
+don't really know where it failed, and it's likely we will crash due to null
+or dangling pointers deep inside one of these classes.  If null is returned,
+it's not checked in Qt and it's likely that it will crash since it assumes
+that the allocation succeeded.  Furthermore, these allocations are generally
+small, so if they fail, it is because the OS [being most likely Linux] is so
+far into swap or out of memory that it is doomed to fail no matter what we do,
+including trying to recover, save data, or notify the user.  We're just plain
+toast at this point.  Not only that, but we are multithreaded and we have no
+mechanism to be able to prevent those other threads from stomping us out of
+existance too.
+
+Therefore, code that checks for null return from operator new is just adding
+extra indent and making the code messy and complicated for no gain.  In most
+cases, Kst will be horribly inconsistent internally if we do check for null
+because we just don't expect this anywhere in the ~70,000 lines of code we
+have so far.
+
+Finally, it's important to note that failed operator new is exceedingly rare
+in the KDE world.  Practice shows that there is no tangible gain in checking
+for this case, and more time should be spent making the code more stable in
+other ways.
+
+
+2) Deallocation
+free() expects a non-null pointer
+delete and delete[] -check- the pointer for null before deallocating.  There
+is never a need to do:
+if (foo)
+  delete foo;
+
+This is equivalent to writing:
+if (foo) {
+  if (foo) {
+    free(foo);
+  }
+}
+
+It's just silly.
+
+Never, ever, ever mix malloc/free, new/delete, or new[]/delete[].  They are
+all different and mixing them will just result in crashes.  Make sure you
+match them properly in all cases.
+
+
+

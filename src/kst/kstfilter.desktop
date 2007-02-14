@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=ServiceType
+X-KDE-ServiceType=Kst/Filter
+
+[PropertyDef::X-Kst-Filter-Author]
+Type=QString
+
+[PropertyDef::X-Kst-Filter-Library]
+Type=QString
+

@@ -1,0 +1,34 @@
+.TH "kjscmd" 1
+.SH NAME
+kjscmd \- A tool for running KJSEmbed scripts from the command line
+.SH SYNOPSIS
+.B kjscmd
+kjscmd [Qt-options] [KDE-options] [options] [file]
+.SH DESCRIPTION
+kjscmd is a tool for launching KJSEmbed scripts from the command line, and
+can also provide a console for running commands interactively. It will run
+the named file using KJSEmbed (or read a file from stdin if '-' is
+specified).
+.SH OPTIONS
+.TP
+.B \-\-console \-c
+Enables the graphical console. The console will not be visible unless the
+script enters the event loop or the --exec parameter is used. If no script
+was specified on the command line then the event loop is entered
+automatically.
+.TP
+.B \-\-interactive \-i
+Enables the interactive command line prompt.
+.TP
+.B \-\-exec
+Tells kjscmd to enter the event loop after executing the script. This option
+is rarely used, but it can be handy if you want to use the console to examine
+the state of the interpreter after a non-graphical script has executed.
+.TP
+.B \-\-nogui
+Tells kjscmd not to create an X connection. This allows you to use scripts
+without needing an X server (though with reduced functionality).
+.SH BUGS
+There are probably lots of bugs. Use http://bugs.kde.org/ to report them.
+
+

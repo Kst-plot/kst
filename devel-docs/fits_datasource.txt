@@ -1,0 +1,146 @@
+FITS Datasource Design 
+============================
+Revision History
+----------------------------
+
+2006 05 29 : Ted K.  More details about FITS helper library
+2006 05 04 : Ted K.  Added info about WCS
+2006 05 03 : Ted K.  Initial proposal
+----------------------------
+
+This is a proposal for a new general FITS datasource (called fitsfile).  There
+are some auxillary issues that also need to be dealt with in the healpix and
+LFIIO datasources.
+
+
+Utility library
+--------------------------------------------------------------------
+
+The cfitsio library has low level functions to access the FITS file.  It
+would be convenient to have a library of higher level functions that could be
+called from all datasources that deal with FITS files.  Examples of
+possible functions would be:  fetch all keys, build combined fieldlist from
+all extensions, build matrixlist from all extensions, etc.
+
+In order to be really useful, this utility library needs to be accessible from
+the understands_*, fieldList_* and matrixList_* functions.  I'm not sure of
+the best place to put such a library in the buildsystem- maybe
+kst/src/datasources/libfitsfile/ ?
+
+Proposed Functions:
+
+1.  fitsNHDU( fitsfile *fp )
+    Returns the number of HDU's in the FITS file.
+    
+2.  fitsDim( fitsfile *fp, int HDU )
+    Returns the dimensions of the the image or table contained in the 
+    current HDU.  In the case of binary tables with "wide" columns (each
+    column entry is a vector), the column entries will be "unrolled" 
+    and the returned number of rows will reflect this new size.
+    
+3.  fitsKeys( fitsfile *fp, int HDU )
+    Returns a list of FITS keys.  This list will contain any keywords in the
+    file header, and then the keys contained in the specified HDU.
+    
+4.  fitsNames( fitsfile *fp, int HDU )
+    Returns a QStringList of the names of all columns in the HDU (if the HDU
+    contains a table), or the label of the image.
+    
+5.  fitsUnits( fitsfile *fp, int HDU )
+    Returns a QStringList of the units of all columns in the HDU (if the HDU
+    contains a table), or the units of the image.
+    
+6.  fitsFields( fitsfile *fp, int HDU )
+    Returns a fieldlist for the current HDU.  Some datasources may wish to
+    construct their own fieldlist using the information returned from
+    fitsNames and fitsUnits.
+    
+7.  fitsMatrices( fitsfile *fp, int HDU )
+    Returns a matrixlist for the current HDU.  Some datasources may wish to
+    construct their own fieldlist using the information returned from
+    fitsNames and fitsUnits.
+
+
+Overview of the fitsfile datasource
+--------------------------------------------------------------------
+
+The overall behaviour of the datasource will be to offer up all data in the
+FITS file as both vectors and matrices.  The datasource will scan through
+the current extension (HDU) in the FITS file and build up a list of 
+available fields.  The current HDU will default to the first one, and be 
+selectable from the config dialog.  The INDEX field length will be determined
+based on the size of the current HDU.
+
+A.  Vector List.  The datasource would call a function in libfitsfile to build
+the fieldlist for the current HDU.  For an image extension, it will read the
+units and add 2 fields to the fieldlist that represent the pixel index (row
+major) and the flat-packed pixel values from the image.  For a table
+extension, it will read the names and units of the columns and combine them
+to create a field name to add to the fieldlist.
+
+B.  Matrix List.  The datasource would call a function in libfitsfile to build
+the matrixlist for the current HDU.  For an image extension, it will read the
+units and add a field to the matrixlist which represents the rectangular 
+image data.  For a table extension, it will read the names and units of all 
+columns and combine them to create a field name to add to the matrixlist.  So 
+for a table extension, the corresponding matrix field has the same dimensions 
+as the table.
+
+C.  Dealing with corrupt or "poorly created" files.  Unfortunately, not all
+FITS files "in the wild" are of the same quality.  Sometimes files become
+truncated or the software creating the file has made a mistake.  In my
+experience, a more robust way of handling these issues is to use the very low
+level functions of cfitsio to read the file.  This makes it easier to handle
+errors with a subset of the data in the file, while keeping any data that is
+good. The higher level functions tend to just give up if they encounter a
+problem.
+
+D.  Configuration.  The initial config widget will be very simple, and allow
+the user to choose which HDU to use in the file.
+
+E.  Command line.  The command line switches -x, -y, and -z will determine how
+the fitsfile datasource returns data to be plotted.  If the -z option is not
+specified, all further actions pertain to the first HDU.  If the -z option is 
+specified alone, the value will be taken as the HDU to plot as an image.  If
+the -x and -y options are specified, then their values correspond to the
+columns of the fieldlist to use.  If no -x is specified, data is plotted
+versus the INDEX field for the selected HDU.
+
+
+WCS Extensions
+--------------------------------------------------------------------
+The WCS system provides a way of specifying the coordinates of each pixel
+value in a FITS image.  This can be done by specifying mapping parameters, or
+even by specifying every pixel's coordinates in a binary table extension. 
+This is great, but what can we do with this information?  The best we can do
+at this point is maybe support some limited types of coordinate mappings
+(rectangular ones).  Full support of WCS projections will not be possible
+with kst until we have a complete 3D display framework.
+
+Note that WCS is implemented as an external library.  It is small and GPL'd,
+so it may be easier to just include the files we wish within the fitsfile
+datasource.  This can be discussed more later.
+
+
+Healpix, LFIIO, and Miscellaneous
+--------------------------------------------------------------------
+
+A.  The healpix datasource needs to support the use case of reading the pixel
+values straight out of the binary table as vectors.  I will do this by adding
+some additional fields to the fieldlist that have the form "(RAW) <field
+name>", so that the user knows what they are getting.
+
+B.  The LFIIO datasource needs to support interleaved data in tables.  My hope
+is that it can make use of some of the existing utility functions in
+libfitsfile. For example, it could call the function to read all keys and then
+check if there are special keys to indicate that the file is an LFIIO fits
+file.  Then it could call another function to build the fieldlist and simply
+add/remove a couple fields to deal with the interleaving.  So basically LFIIO
+would support all the functionality of the fitsfile datasource (through the
+use of libfitsfile), with some "extra" functionality built on top.
+
+C.  Notes:  Need to properly handle null pixel values in images.
+
+
+
+

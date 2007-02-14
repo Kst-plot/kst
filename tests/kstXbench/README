@@ -1,0 +1,25 @@
+This program attempts to benchmark the qt/X calls used by kst, to see if your
+graphics card is a bottleneck to performance.
+
+To make it, 
+qmake -project
+qmake
+make
+
+Typical kst screen updates are 1-5 Hz, so anything over 20Hz is fine.
+The xorg or XFree drivers are ~20% faster in this bench than the ATI binaries.
+I have not checked NVIDIA's drivers.
+
+You can expect
+ATI 9600: ~30 Hz
+NVidia G4 ~35 Hz
+ATI 9800: ~50 Hz
+ATI 8500: ~30 Hz
+
+S3 on board: 2-6 Hz
+Laptop Radeons: 12 Hz - 25 Hz, depending on model and driver.
+
+As with all benchmarks, make sure nothing else is running.
+
+In some cases I have found terrible performance, even though nothing else
+was running.  Restarting the X server fixed it.  Not sure why....

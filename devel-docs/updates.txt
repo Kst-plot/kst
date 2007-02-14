@@ -1,0 +1,87 @@
+
+
+The Plan:
+---------
+
+- update() is implemented in view objects
+    view objects form a tree already, so update() should propagate through the
+    view object tree.  Most will do little more than update their children.
+    Plots, most importantly, will trigger the updates of curves which will
+    trigger the updates of data objects and data sources.  
+    update() does not -paint- anything.  No pixmaps are touched here!
+
+- locking is implemented in view objects
+    The implementation of update() will require the implementation of locking
+    since their members will be accessible in >1 thread.
+
+- dirty flag is implemented in kstobjects to indicate if an update should
+  happen despite no new data and no dependents with updates.  This will be used
+  to determine if updates should happen due to property changes in objects.
+  (ex: curve changes colour)
+  - Dirty flag is to be implemented -implicitly-.  That means _no_inline_set_
+    _methods_in_objects_.  setDirty()/update() will be removed everywhere and
+    fixed on a case-by-case basis.
+
+- update thread now only updates [visible] view objects, and then rvectors
+   - updates propagate downward to update dependent objects
+          -> more efficient, no repainting of unnecessary objects
+   - updating rvectors allows us to keep data current.
+
+- scalars become first class citizens
+   - Scalars and strings can make objects do updates now.  This is needed
+   because some objects (such as plugins) can depend on the output of another
+   object where that output is a scalar.  Right now these updates don't work
+   properly.
+
+- updates store the "last result" and send that if the current counter has already been encountered (fixes some bugs)
+   if (checkUpdateCounter(counter)) {
+	   return _lastUpdateResult;
+   }
+   
+- threading and painting stay as they are
+   - We won't add more threads yet but hope to do so in the future.
+   - Painting continues to work as it does.  There is no reason to move it.
+
+- update counter:
+   - 0 is special, means "first update" - that's a forced one.  Never happens
+     after the first time.
+   - > 0 is a sequenced update.  Use the helper method in KstObject to
+     determine if you should update or not
+   - < 0 is deprecated and won't happen again in future Kst releases.
+   - updates only happen from the update thread.
+   - replace update(-1) to setDirty() and a mechanism to tell the update loop
+   to start again immediately at next opportunity (no delay).
+
+- 'Pause' only pauses data sources.
+
+- Eventually we will have multiple threads updating over the object tree, so
+we must plan for it now.
+
+- labels and other objects that use scalars or strings will also need an update
+function
+
+- objects must call updates on scalars and strings
+
+
+The Flow
+--------
+
+update(counter) {
+	bool force = dirty();
+	setDirty(false);
+
+	if (KstObject::checkUpdateCounter(counter) && !force) {
+		return lastUpdateResult();
+	}
+
+	bool updated = false;
+	// check dependency objects/scalars/vectors with counter and set updated
+	// to true if any of those had updatedd
+
+	if (updated || force) {
+		// do your update
+		return setLastUpdateResult(UPDATE);
+	}
+	return setLastUpdateResult(NO_CHANGE);
+}
+

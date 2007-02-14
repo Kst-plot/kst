@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Module SYSTEM "file:/Repository/Level2/Soft/ProC/moduledef.dtd">
+<module>
+<intro>
+<filter/>
+<modulename name="scalarfilter"/>
+<author name="George Staikos"/>
+<description text="Multiplies the vector by a scalar."/>
+<version minor="0" major="1"/>
+<state devstate="release"/>
+</intro>
+
+<interface>
+<input>
+<float name="constant" descr="The constant to multiply by." />
+</input>
+</interface>
+</module>

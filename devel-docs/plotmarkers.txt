@@ -1,0 +1,36 @@
+For plot marking:
+=================
+
+- use Alt-Left Click to created a plot marker at the current position
+- use a vertical dotted foreground-colour line to mark the plot.
+- all other zooming/data mode actions are still available.
+
+Add to Plot Dialog
+------------------
+- plot markers will be part of plots, not curves.
+- have a new tab on the Plot Dialog called Markers
+- on the tab will be a list of plot markers
+  (probably in x-coordinate form)
+- underneath/beside the list of plot markers will be 3 buttons:
+    - Add (to manually add a plot marker by entering the value)
+    - Remove (this will remove selected plot marker(s))
+    - Remove All
+
+Add to Plot Context Menu
+------------------------
+- add a separater to the bottom of the Scroll submenu in the context menu
+- underneath the separater, add two entries:
+    - Next Plot Marker
+    - Previous Plot Marker
+- suggested shortcuts - Alt+Right arrow/Alt+Left arrow, PgUp/PgDown,...
+- moving to plot markers is a scrolling action, it will not change the
+  zoom "level"
+
+Additional Details
+------------------
+- there will be public functions for adding, removing, and retrieving plot
+  markers from plots (event monitors could use these to add markers,
+  given that a plot is specified to be associated with the event).  
+
+
+

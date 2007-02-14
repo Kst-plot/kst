@@ -1,0 +1,148 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>StringEditor</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>StringEditor</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>589</width>
+            <height>62</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>String Editor</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>3</number>
+        </property>
+        <property name="spacing">
+            <number>3</number>
+        </property>
+        <widget class="Line" row="1" column="0" rowspan="2" colspan="3">
+            <property name="name">
+                <cstring>line3</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>HLine</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+        </widget>
+        <spacer row="3" column="0">
+            <property name="name">
+                <cstring>spacer5</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>341</width>
+                    <height>21</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QPushButton" row="2" column="1" rowspan="2" colspan="1">
+            <property name="name">
+                <cstring>pushButton11</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;OK</string>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="2" column="2" rowspan="2" colspan="1">
+            <property name="name">
+                <cstring>pushButton10</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Cancel</string>
+            </property>
+        </widget>
+        <widget class="QLayoutWidget" row="0" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>layout13</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel1</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Unique name:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>_name</cstring>
+                    </property>
+                </widget>
+                <widget class="QLineEdit">
+                    <property name="name">
+                        <cstring>_name</cstring>
+                    </property>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Value:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>_value</cstring>
+                    </property>
+                </widget>
+                <widget class="QLineEdit">
+                    <property name="name">
+                        <cstring>_value</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>3</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>pushButton10</sender>
+        <signal>clicked()</signal>
+        <receiver>StringEditor</receiver>
+        <slot>reject()</slot>
+    </connection>
+    <connection>
+        <sender>pushButton11</sender>
+        <signal>clicked()</signal>
+        <receiver>StringEditor</receiver>
+        <slot>accept()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>_name</tabstop>
+    <tabstop>_value</tabstop>
+    <tabstop>pushButton11</tabstop>
+    <tabstop>pushButton10</tabstop>
+</tabstops>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

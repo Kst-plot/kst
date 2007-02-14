@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Module SYSTEM "file:/Repository/Level2/Soft/ProC/moduledef.dtd">
+<module>
+<intro>
+<modulename name="despike" readableName="despike"/>
+<author name="Barth Netterfield"/>
+<description text="Finds and removes spikes using a 3 point difference."/>
+<version minor="1" major="0"/>
+<state devstate="release"/>
+<filter/>
+</intro>
+
+<interface>
+<input>
+<table type="float" name="Y" descr="The array of data." />
+</input>
+<input>
+<float name="Spacing" descr="The spacing between points for difference." default="1"/>
+</input>
+<input>
+<float name="NSigma" descr="Number of sigma for cut." default="5.0" />
+</input>
+
+<output>
+<table type="float" name="Despiked" descr="The despiked data." />
+</output>
+
+</interface>
+</module>
+

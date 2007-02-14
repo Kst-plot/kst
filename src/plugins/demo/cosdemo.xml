@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Module SYSTEM "file:/Repository/Level2/Soft/ProC/moduledef.dtd">
+<module>
+<intro>
+<modulename name="cosdemo"/>
+<author name="George Staikos"/>
+<description text="Generates a cosine curve."/>
+<version minor="0" major="1"/>
+<state devstate="release"/>
+</intro>
+
+<interface>
+<input>
+<table type="float" name="FirstArray" descr="The first array to take cos() of." />
+</input>
+<input>
+<table type="float" name="SecondArray" descr="The second array to take cos() of." />
+</input>
+
+<output>
+<table type="float" name="FirstResults" descr="The cos() of the first array." />
+</output>
+<output>
+<table type="float" name="SecondResults" descr="The cos() of the second array." />
+</output>
+</interface>
+</module>

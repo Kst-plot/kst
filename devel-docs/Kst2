@@ -1,0 +1,18 @@
+List of items to consider for Kst2 - mostly because they break backwards
+compatibility or require hacks right now:
+
+- Make data sources also data writers so we can save to formats other than
+  ASCII.
+- Clean up data types for plugins.
+- rework update() to be two functions, one which does the "infrastructure" part
+  and one which is reimplemented to do the things specific to each type of
+  object
+- move isValid() up to KstObject so that KstVector can use it 
+- remove duplicated tagNames() (the non-const one) from KstObject and make the
+  const one virtual
+- kstdatasource.cpp : configWidget() needs to be non-const
+- kstdatasource.cpp : obtainFile() needs to take a widget
+- KstObject: setDirty(bool) needs to be virtual.  Maybe also dirty()
+- Rename rwlock.h to avoid global namespace issues
+- data sources: fix the load/create/save mess
+

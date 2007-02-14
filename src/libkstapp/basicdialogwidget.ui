@@ -1,0 +1,59 @@
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>BasicDialogWidget</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>BasicDialogWidget</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>240</width>
+            <height>41</height>
+        </rect>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <property name="spacing">
+            <number>0</number>
+        </property>
+        <widget class="QGroupBox" row="1" column="0">
+            <property name="name">
+                <cstring>_inputOutputBox</cstring>
+            </property>
+            <property name="title">
+                <string>Inputs and Outputs</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QFrame" row="0" column="0">
+                    <property name="name">
+                        <cstring>_frame</cstring>
+                    </property>
+                    <property name="frameShape">
+                        <enum>NoFrame</enum>
+                    </property>
+                    <property name="frameShadow">
+                        <enum>Plain</enum>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+    </grid>
+</widget>
+<tabstops>
+</tabstops>
+<includes>
+    <include location="global" impldecl="in implementation">curveappearancewidget.h</include>
+    <include location="global" impldecl="in declaration">kst_export.h</include>
+</includes>
+<exportmacro>KST_EXPORT</exportmacro>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

@@ -1,0 +1,76 @@
+
+Classes to be bound or created in JS:
+
+Kst		General Kst object (static global) - effectively "document"
+Debug		DONE (.log property unfinished)
+Vector		DONE
+DataVector	DONE
+Scalar		DONE
+String		DONE
+DataSource	DONE
+Point		DONE (simply x,y)
+Size		DONE (simply w,h)
+Document	DONE
+Matrix		DONE
+DataMatrix	DONE
+
+Equation	DONE
+PowerSpectrum	DONE
+Fit
+Filter
+Plugin		DONE (needs work)
+Histogram	DONE (issue with the type of histogram remains)
+Curve		DONE (maybe still do some minX etc stuff)
+Image		Name?
+Plot		DONE (needs many more functions/properties)
+Window		DONE (needs more functions/properties)
+
+PlotLabel	DONE
+PlotLegend	DONE (needs more functions/properties)
+ViewObject	DONE
+-> Plot		DONE
+-> Box		DONE
+-> Ellipse	DONE
+-> Picture	DONE
+-> Line		DONE
+-> Label	DONE
+-> Arrow	DONE
+-> Polygon
+-> ViewObjectGroup
+-> ViewCurve       (Bezier, etc)
+-> HTML            (Embedded KHTML)
+
+
+KstUIMerge
+	- Global object used to load XMLUI files for merging.
+	KstJSUIBuilder loadGUI(string filename);
+		Load an XMLUI file for merging with Kst's GUI.
+		@param filename The filename of the .rc file to load
+		@returns KstJSUIBuilder with the XMLUI loaded and ready to
+			merge.
+KstJSUIBuilder
+	- Object containing an action collection and XMLUI ready for merging.
+	KActionCollection actionCollection();
+		Obtain a reference to the action collection for creating new
+		actions.
+		@returns KActionCollection for storing newly created actions to
+			be merged with Kst's GUI.
+	void merge();
+		Merge the action collection with Kst's GUI according to the
+		rules of the loaded XMLUI file.  Must be called after all
+		actions are created as a part of the actionCollection().
+KActionCollection
+	- See C++ documentation for KActionCollection.  Simply a list of
+	actions.
+
+
+
+Consistency
+-----------
+
+In all cases it is a priority to implement bindings so that they are consistent
+across all objects.  For instance, if one class uses .xVector, another class
+should not use .xV or .XVector or .vectors.x
+______________________________________________________________________________
+
+

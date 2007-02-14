@@ -1,0 +1,37 @@
+KstDataObject Plugins
+---------------------
+
+The purpose of a KstDataObject plugin is to provide an implementation of the
+virtual class "KstDataObject."  Plugin writers need to provide a class that
+inherits "KstDataObject" directly.  You will also need to provide a .desktop
+file and a configuration widget for this plugin.  The benefit of this type of
+plugin over KstBasicPlugin plugins is the degree of control you'll have over
+the implementation.  Most plugins should probably use KstBasicPlugin, but if
+you need a custom dialog for instance, this is the type of plugin for you.
+
+Here is an example of the .desktop file named 'kstobject_myplugin.desktop':
+
+    [Desktop Entry]
+    Encoding=UTF-8
+    Type=Service
+    ServiceTypes=Kst Data Object
+    X-KDE-ModuleType=Plugin
+    X-KDE-Library=kstobject_fooplugin
+    X-Kst-Plugin-Author=Your Name
+    X-Kst-Plugin-Version=0.1
+    Name=Foo
+    Comment=A plugin that provides Foo algorithm.
+
+You C++ class should inherit KstDataObject and provide implementations of the
+pure virtual methods found in KstDataObject:
+
+    virtual UpdateType update(int updateCounter = -1) = 0;
+    virtual QString propertyString() const = 0;
+    virtual void showNewDialog() = 0;
+    virtual void showEditDialog() = 0;
+
+There is also a number of regular virtual methods that can be reimplemented
+as needed.
+
+See the Cross Power Spectrum plugin for an example implementation and the
+KstDataObject header file for API declarations.

@@ -1,0 +1,15 @@
+How to regenerate the manpage before a release:
+
+1. Get the latest docbook-xsl package from:
+http://sourceforge.net/project/showfiles.php?group_id=21935
+Untar it somewhere, let's call it $XSLDIR
+
+2. In the Kst doc dir, run:
+
+meinproc -o kst.1 --stylesheet \
+$XSLDIR/manpages/docbook.xsl index.docbook
+
+The output file is kst.1 . The message about 'unable to parse index.docbook' appears to be harmless.
+
+--
+Philip Rodrigues 2005-01-17

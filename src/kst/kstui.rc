@@ -1,0 +1,104 @@
+<!DOCTYPE kpartgui>
+<kpartgui version="13" name="kst">
+<MenuBar>
+  <Menu name="file"><text>&amp;File</text>
+    <Action name="file_new_window"/>
+    <Action name="graphfiledialog_action"/>
+    <Action name="vectorsavedialog_action"/>
+    <Action name="save_vector_data"/>
+    <Merge/>
+  </Menu>
+  <Menu name="edit"><text>&amp;Edit</text>
+  </Menu>
+  <Menu name="data"><text>&amp;Data</text>
+    <Action name="reload"/>
+    <Separator/>
+    <Action name="datamanager_action"/>
+    <Action name="viewmanager_action"/>
+    <Separator/>
+    <Action name="vectordialog_action"/>
+    <Action name="curvedialog_action"/>
+    <Action name="eqdialog_action"/>
+    <Action name="hsdialog_action"/>
+    <Action name="psddialog_action"/>
+    <Action name="plugindialog_action"/>
+    <Action name="eventmonitor_action"/>
+    <Action name="matrixdialog_action"/>
+    <Action name="imagedialog_action"/>
+    <Action name="csddialog_action"/> 
+    <Separator/>
+    <Action name="viewscalarsdialog_action"/>
+    <Action name="viewvectorsdialog_action"/>
+    <Action name="viewmatricesdialog_action"/>
+    <Action name="viewfitsdialog_action"/>
+    <Action name="viewstringsdialog_action"/>
+    <Separator/>
+    <Merge/>
+  </Menu>
+  <Menu name="range"><text>&amp;Range</text>
+    <Action name="samplesdown_action"/>
+    <Action name="samplesup_action"/>
+    <Separator/>
+    <Action name="samplesend_action"/>
+    <Action name="pause_action"/>
+  </Menu>
+  <Menu name="tools"><text>&amp;Tools</text>
+    <Action name="datawizard_action"/>
+    <Action name="changefiledialog_action"/>
+    <Action name="changenptsdialog_action"/>
+    <Action name="choosecolordialog_action"/>
+    <Action name="differentiatecurves_action"/>
+  </Menu>
+  <Menu name="plots"><text>&amp;Plots</text>
+    <Action name="newplot_action"/>
+    <Separator/>
+    <Action name="zoomtie_action"/>
+    <Separator/>
+    <Action name="zoomxy_action"/>
+    <Action name="zoomx_action"/>
+    <Action name="zoomy_action"/>
+    <Action name="layoutmode_action"/>
+    <Menu name="graphics_menu"><text>&amp;Graphics Mode</text>
+      <Action name="label_action"/>
+      <Action name="rectangle_action"/>
+      <Action name="ellipse_action"/>
+      <Action name="line_action"/>
+      <Action name="arrow_action"/>
+      <Action name="picture_action"/>
+      <Action name="2dplot_action"/>
+    </Menu>
+    <Separator/>
+    <Action name="datamode_action"/>
+  </Menu>
+  <Menu name="settings"><text>&amp;Settings</text>
+    <Merge name="StandardToolBarMenuHandler"/>
+    <Separator/>
+    <Action name="pluginmanager_action"/>
+    <Action name="extensionmanager_action"/>
+  </Menu>
+  <Menu name="help"><text>&amp;Help</text>
+    <Action name="debug_action"/>
+  </Menu>
+</MenuBar>
+<ToolBar name="mainToolBar">
+  <Action name="graphfiledialog_action"/>
+  <Separator/>
+  <Action name="reload"/>
+  <Separator/>
+  <Action name="datawizard_action"/>
+  <Action name="datamanager_action"/>
+  <Action name="viewmanager_action"/>
+  <Action name="plotdialog_action"/>
+  <Action name="changefiledialog_action"/>
+  <Action name="changenptsdialog_action"/>
+  <Separator/>
+  <Action name="samplesdown_action"/>
+  <Action name="samplesup_action"/>
+  <Action name="pause_action"/>
+  <Action name="samplesend_action"/>
+  <Separator/>
+  <Action name="zoomtie_action"/>
+  <Separator/>
+  <Action name="datamode_action"/>
+</ToolBar>
+</kpartgui>

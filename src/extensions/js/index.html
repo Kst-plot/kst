@@ -1,0 +1,36 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>KstScript Documentation</title>
+</head>
+<body>
+<h2>KstScript</h2>
+<p>
+KstScript is an implementation of embedded JavaScript and bindings which allows
+Kst users to programatically manipulate Kst at runtime.
+</p>
+<p>Because KstScript is still a work-in-progress, the language bindings may
+change, thereby breaking scripts.  Any changes to the language will be
+announced on the Kst mailing list.  After Kst 1.2.0 is released, the bindings
+will remain compatible at least until Kst 2.0.0, and possibly beyond.  You can
+pre-emptively check for Kst 1.x with the following code:</p>
+<code><pre>
+        function main() {
+                // my script
+        }
+
+        if (Kst.version[0] == '1') {
+                main();
+        } else {
+                alert("Sorry, this script is only compatible with Kst 1.x.");
+        }
+</pre></code>
+<br/>
+<a href="classindex.html">Classes</a><br/>
+<a href="scriptgui.html">Working With The GUI</a><br/>
+<a href="exampleindex.html">Examples</a><br/>
+<h6>Copyright &copy; 2005 <a href="http://www.utoronto.ca/">The University of Toronto</a><br>
+  Kst <a href="http://kst.kde.org/">http://kst.kde.org/</a>
+</h6>
+</body>
+</html>

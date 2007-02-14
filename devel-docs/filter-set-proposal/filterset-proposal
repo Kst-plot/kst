@@ -1,0 +1,42 @@
+Suggested Filter Set 
+========================
+
+A set of filters should be called a Filter Set to avoid confusion
+with the actual filter plugins.
+
+Changes to Data Manager
+-----------------------
+- In the "New" section to the left, a new button should be added
+called "Filter Set..."
+
+- Clicking this button will bring up a dialog similar to other
+dialogs for data objects - see Screenshot-filterset.png.  Clicking the
+Configure... button will bring up a configuration dialog for the
+selected filter, where scalar inputs can be entered or edited.
+
+- Once a filter set is created, it will show up in the list of
+data objects, and will contain slave vectors (the filtered vectors).
+
+- Using these slave vectors, other objects such as curves can be
+created.
+
+(Possible) Changes to Plot Context Menu
+---------------------------------------
+- A shortcut for creating filter sets could be added to the right-click
+plot context menu
+
+- Under the Fit submenu, add another selection called "Filter..."
+
+- Click this will bring up the Edit Filter Set dialog, with the vectors
+used in the plot preselected.
+
+Changes to Data Wizard
+----------------------
+If "Apply Filters" is checked on the second page, and intermediate
+filter selection page should be displayed 
+(see Screenshot-datawizard-filterset.png) 
+
+
+
+
+

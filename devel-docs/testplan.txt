@@ -1,0 +1,256 @@
+Kst Test Plan
+=============
+
+This is a test plan designed to test basic functionality of the entire Kst
+application as a whole, from a user perspective.  Only certain combinations of
+certain actions are tested.
+
+In the following steps, each action should produce an expected result.  Results
+deviating from the expected results should be recorded.  Results not deviating
+from the expected result should be recorded as well.
+
+The following perl script is used:
+datagenerator.pl
+under kst/tests/
+
+I. Compiling and Installing
+---------------------------
+
+1. Make sure CFITSIO and GSL libraries are installed.
+
+2. Download and untar the Kst source.
+
+3. Do the following:
+	./configure --prefix=`kde-config --prefix`
+	make
+	make install
+   Expected Result: Kst is installed.
+
+4. Run Kst:
+	kst
+   Expected Result: Kst starts.  Main window is shown.
+
+II. Basic Functionality
+-----------------------
+
+0.  Run:
+	datagenerator.pl testdata
+    Wait 30 seconds. Terminate execution of datagenerator.pl.
+
+1.  Select Data->Data Wizard.  Browse to "testdata".  Click Next.
+    Expected Result: 2nd window of Data Wizard is displayed.  4 fields should be
+    selectable.
+
+2.  Type * in the Search box.
+    Expected Result: All fields should be highlighted.
+
+3.  Remove * from the Search box and highlight fields 2, 3, and 4.  Click Check
+    Selected.
+    Expected Result: Fields 2,3,4 should be checked.  Field 1 should not
+                     be checked.
+
+4.  Check the Read to end checkbox.  Select XY and Power Spectrum for Plot Type.
+    Click Next.  Select 1 plot per curve. Click Finish.
+    Expected Result: 6 plots are displayed.
+
+5.  Drag a rectangle on a plot.
+    Expected Result: Plot zooms in.
+
+6.  Hold down shift and drag a rectangle on a plot.
+    Expected Result: Plot zooms in on y axis only.
+
+7.  Hold down ctrl and drag a rectangle on a plot.
+    Expected Result: Plot zooms in on x axis only.
+
+8.  Hold cursor over a plot and hit left, right, up, down arrow keys.
+    Expected Result: Plot scrolls left, right, up, down respectively.
+
+9.  Right-click on a plot and select Edit->(Curve Name).  Change Y Axis Vector
+    and change curve colour. Click Apply Edits.
+    Expected Result: Plot changes to reflect new vector and colour.
+
+10. Select Data->Data Manager.  Click Vector button under New: and choose field
+    2.  Click Apply As New.  Click Close.
+    Expected Result: New vector V5-2 should be created.
+
+11. Click Curve.  Select V0-INDEX as X axis vector and V1-2 as Y axis vector.
+    Click Apply As New.  Click Close.
+    Expected Result: New Curve and plot are created.
+
+12. Click Equation. Enter the equation:
+	[V1-2]+SIN([V2-3])
+    Click Apply As New.  Click Close.
+    Expected Result: New Equation is created.
+
+13. Click Histogram.  Select V3-4 as the vector.  Click Apply As New.  Click
+    Close.
+    Expected Result: New Histogram is created.
+
+14. Click Power Spectra. Select V1-2 as the vector. Click Apply As New.  Click
+    Close.
+    Expected Result: New Power Spectrum is created.
+
+15. Click Plugin. Select Fit polynomial as the plugin.  Select V0-INDEX as the
+    X Array and V1-2 as the Y Array. Enter 2 as the order. Click Apply As New
+    and then Close.
+    Expected Result: New Plugin is created.
+
+16. Expand the listing for the new plugin in Data Manager and right-click on
+    ...-Y Fitted.  Select Make Curve.  Click Apply As New and click Close.
+    Expected Result: New Curve showing the fit is created.
+
+17. Click Event.  Select V1-2 as the vector. Append >0 to the expression.
+    Select Log As and choose Warning.  Click Apply As New and click Close.
+    Expected Result: New Event is created.
+
+18. Right-click C2-V2-3 and choose Remove From Plot->(plot name).  Right-click
+    PSD3-V2-3 and choose Remove From Plot->(plot name).  Click the Purge button.
+    Expected Result: C2-V2-3, PSD3-V2-3 and V2-3 are removed from Data Manager.
+
+19. Close Data Manager. Goto Help->Debug Kst.  Select Log tab.
+    Expected Result: There are 13 Event Monitor Warnings.
+
+20. Close Kst Debug Dialog.  Select Plots->Label Editor. Click on any plot.
+    Expected Result: Label Editor dialog appears.
+
+21. Enter arbitrary label text. Select a font and enter 30 for rotation.  Click
+    OK.
+    Expected Result: Label is created, rotated 30 degrees clockwise.
+
+22. Drag the label.
+    Expected Result: Label moves to new location.
+
+23. Click on the label.
+    Expected Result: Label Editor Dialog appears with settings for this label.
+
+24. Click Ok. Select Plots->Layout Mode.  Drag the plots around and resize by
+    dragging edges of the plots.
+    Expected Result: Plots are rearranged and resized.
+
+25. Select Plots->Layout Mode. Select Plots->XY Mouse Zoom.
+
+26. Select File->Print.  Click Print.
+    Expected Result: Current window is printed in landscape orientation, with
+    footer.
+
+27. Select File->Save Vectors to Disk. Select V3-4 and click Save. Enter a
+    filename and click Save, then Close. Select File->Export to Graphics File.
+    Select a Save Location and click Save Once.
+    Expected Result: Vector and Graphics files are saved to specified locations.
+
+28. Right-click and plot and select Delete.
+    Expected Result: The plot is removed from window.
+
+29. Select File->New Window. Enter 1234 and click OK.  Select File->New Window.
+    Enter abcdef and click OK.
+    Expected Result: Two new windows are created.
+
+30. Select Window->MDI Mode->Toplevel.
+    Expected Result: Windows are arranged in Toplevel mode.
+
+31. Select Window->MDI Mode->Childframe.  Select Window->Tile...->Tile
+    Non-overlapped
+    Expected Result: Windows are arranged in Childframe mode, tiled.
+
+32. Select Window->MDI Mode->Tab Page Mode.
+    Expected Result: Windows are arranged in Tab Page mode.
+
+33. Select Window->MDI Mode->IDEAl mode.
+    Expected Result: Windows are arranged in IDEAl mode.
+
+34. Select File->Save.  Save file to a location.  Select File->New
+    Expected Result: All windows are cleared.
+
+35. Select Data->Data Manager.
+    Expected Result: No data objects are present.
+
+36. Select File->Quit.
+    Expected Result: Kst exits.
+
+37. Start Kst.  Select File->Open.  Browse to file saved in step 34.
+    Expected Result: All windows, plot layouts, data objects saved are open.
+
+38. Select Settings->Plugins.  Highlight Autocorrelation and click Remove, then
+    Yes. Highlight Chop and click Remove, then Yes. Highlight Linefit and click
+    Remove, then Yes.
+    Expected Result: Autocorrelation, Chop, Linefit are removed from list.
+
+39. Click Rescan.
+    Expected Result: Autocorrelation, Chop, Linefit are added to list.
+
+40. Click Close.  Select File->Quit.
+    Expected Result: Plugin Manager is closed. Kst exits.
+
+41. Delete testdata.
+
+Streaming Data
+==============
+
+0.  During the following steps, note any slowless or strange behaviour.
+
+1.  Run:
+	datagenerator.pl teststream
+
+2.  Start Kst.  Select Data->Data Manager.  Click Vector. Browse to teststream
+    for File name, select Field 1.  Check Read to End. Click Apply as New.
+    Select Field 2.  Check Read to End. Click Apply as New.  Click Close.
+    Expected Result: Vectors V1-1 and V2-2 are created.
+
+3.  Click Curve.  Select V1-1 for X axis vector, V2-2 for Y axis vector.  Click
+    New... under Curve Placement.  Type 1234 and click OK. Check Place in new
+    plot.  Click Apply as New.
+    Expected Result: New Curve is created in new window and plot.
+
+4.  Watch plot for 10 seconds.
+    Expected Result: Plot updates as new data is written.
+
+5.  Select Range->Pause.  Watch plot for 10 seconds.
+    Expected Result: Plot does not update.
+
+6.  Select Range->Read from End.  Watch plot for 10 seconds.
+    Expected Result: Plot updates with new data.
+
+7.  Select Plots->XY Mouse Zoom.  Draw a rectangle on plot.  Watch plot for 10
+    seconds.
+    Expected Result: Plot zooms in to rectangular area, does not update.
+
+8.  Right-click on plot, select Zoom->Zoom Maximum.  Watch plot for 10 seconds.
+    Expected Result: Plot updates with new data.
+
+9.  Select Plots->Y Mouse Zoom.  Draw rectangular area on plot.  Watch plot for
+    10 seconds.
+    Expected Result: Plot zooms in on y axis, plot continues to update.
+
+10. Select Plots->X Mouse Zoom. Draw rectangular area smaller than current plot
+    size.  Watch plot for 10 seconds.
+    Expected Result: Plot zooms in on y axis, plot does not update.
+
+11. Right-click on plot, select Zoom->Zoom Maximum.  Click plot and hit right
+    arrow key 5 times. Watch plot for 10 seconds.
+    Expected Result: Plot scrolls to right, revealing blank area.  Plot updates
+    and draws curves to blank area.
+
+12. Right-click on plot, select Zoom->Zoom Maximum.  Select Plots->Edit Plots.
+    Select Limits tab.  Under X Axis, choose AC: Range, and enter 9000.  Click
+    Apply Edits and click Close.  Watch plot for 10 seconds.
+    Expected Result: X axis changes to 9000 length, plot updates, lower x axis
+    value updates accordingly to keep 9000 length.
+
+13. Select Data->Edit Equation.  Create equation:
+	[V1-2]*5
+    Select V0-1 for Use Existing Vector under Independent Variable. Select Place
+    in new plot under Curve Placement, click Apply as New.
+    Expected Result: New curve and plot is created,
+
+14. Watch plot for 10 seconds.
+    Expected Result: New curve and plot updates simultaneously with original
+    plot.
+
+15. Select File->Quit, click No.
+    Expected Result: Kst exits.
+
+16. Terminate execution of datagenerator.pl, delete teststream.
+
+
+
+

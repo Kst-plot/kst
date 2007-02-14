@@ -1,0 +1,140 @@
+Index: ksttoplevelview.h
+===================================================================
+--- ksttoplevelview.h	(revision 474116)
++++ ksttoplevelview.h	(working copy)
+@@ -21,6 +21,7 @@
+ #include <qcursor.h>
+ #include <qguardedptr.h>
+ 
++#include "kstbackbuffer.h"
+ #include "kstviewobject.h"
+ 
+ class KPopupMenu;
+@@ -102,6 +103,8 @@
+     void cleanupCustom();
+ 
+   protected:
++    void paintIntoBuffer(KstPaintType type, const QRegion& bounds);
++
+     void resized(const QSize& size);
+     void cancelMouseOperations();
+     void deleteSelectedObjects();
+Index: ksttoplevelview.cpp
+===================================================================
+--- ksttoplevelview.cpp	(revision 474116)
++++ ksttoplevelview.cpp	(working copy)
+@@ -57,16 +57,18 @@
+ #define STICKY_THRESHOLD 10
+ 
+ KstTopLevelView::KstTopLevelView(QWidget *parent, const char *name, WFlags w)
+-: KstViewObject("KstTopLevelView"), _w(new KstViewWidget(this, parent, name, w)) {
++: KstViewObject("KstTopLevelView"), _w(new KstViewWidget(this, parent, name, w)), _backBuffer(8) {
+   _onGrid = true;
+   setTagName(name);
+   commonConstructor(); 
++  setDirty(true);
+ }
+ 
+ 
+-KstTopLevelView::KstTopLevelView(const QDomElement& e, QWidget *parent, const char *name, WFlags w) : KstViewObject(e), _w(new KstViewWidget(this, parent, name, w)) {
++KstTopLevelView::KstTopLevelView(const QDomElement& e, QWidget *parent, const char *name, WFlags w) : KstViewObject(e), _w(new KstViewWidget(this, parent, name, w)), _backBuffer(8) {
+   commonConstructor();
+   loadChildren(e);
++  setDirty(true);
+ }
+ 
+ 
+@@ -183,8 +185,50 @@
+   QPainter p;
+   p.begin(_w);
+   p.setViewXForm(true);
++  if (objectDirty()) {
++#ifdef BENCHMARK
++    QTime t;
++    t.start();
++#endif
++    paintIntoBuffer(type, bounds);
++#ifdef BENCHMARK
++    int x = t.elapsed();
++    kstdDebug() << " TLV: paint into buffer " << x << endl;
++    t.start();
++#endif
++    _backBuffer.paintInto(p, geometry());
++#ifdef BENCHMARK
++    x = t.elapsed();
++    kstdDebug() << " TLV: paint into window " << x << endl;
++    t.start();
++#endif
++    setDirty(false);
++  } else {
++    QRect r = bounds.boundingRect();
++    _backBuffer.paintInto(p, r, r.topLeft());
++  }
++  p.end();
++}
++
++
++void KstTopLevelView::paintIntoBuffer(KstPaintType type, const QRegion& bounds) {
++  _backBuffer.buffer().resize(size());
++  assert(!_backBuffer.buffer().isNull()); // Want to find these crashes
++
++  QPainter p;
++  p.begin(&_backBuffer.buffer());
++  p.setViewXForm(true);
+   // Paint everything else first so that geometries are properly updated.
++  // Note: we might need to .save() and .restore() here one day, but it's slow
++#ifdef BENCHMARK
++  QTime t;
++  t.start();
++#endif
+   paint(type, p, bounds);
++#ifdef BENCHMARK
++  int x = t.elapsed();
++  kstdDebug() << " TLV++P: create painter and paint self " << x << endl;
++#endif
+ 
+   QRegion boundary = bounds;
+   for (KstViewObjectList::Iterator i = _children.begin(); i != _children.end(); ++i) {
+@@ -195,19 +239,15 @@
+     p.fillRect(geometry(), QBrush(_backgroundColor));
+     p.setClipping(false);
+   }
+-  p.end();
+-  
++
+   // now, check what has the focus and repaint the focus rect, as all focus rects are now lost
+   if (_hoverFocus) {
+-    QPainter p;
+-    p.begin(_w);
+-    p.setViewXForm(true);
+     p.setRasterOp(Qt::NotROP);
+     p.setPen(QPen(Qt::black, 0, Qt::SolidLine));
+     p.setBrush(Qt::NoBrush);
+     _hoverFocus->drawFocusRect(p);
+-    p.end();
+   }
++  p.end();
+ }
+ 
+ 
+@@ -678,11 +718,10 @@
+   }
+   
+   _mouseMoved = true;
+-  
++
+   // handle as in layout mode
+   pressMoveLayoutMode(pos, shift);  
+   return;
+-
+ }
+ 
+ 
+@@ -702,6 +741,7 @@
+       pressMoveLayoutModeResize(pos, shift);
+     }
+     KstApp::inst()->slotUpdateDataMsg(i18n("(x0,y0)-(x1,y1)", "(%1,%2)-(%3,%4)").arg(_prevBand.topLeft().x()).arg(_prevBand.topLeft().y()).arg(_prevBand.bottomRight().x()).arg(_prevBand.bottomRight().y()));
++    setDirty();
+   } else {
+     // selecting objects
+     pressMoveLayoutModeSelect(pos, shift);

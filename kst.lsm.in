@@ -1,0 +1,14 @@
+Begin3
+Title:          Kst 
+Version:        @KST_VERSION@
+Entered-date:   
+Description:    A data viewing program.
+Keywords:        
+Author:         C. Barth Netterfield <kst@kde.org> 
+Maintained-by:  C. Barth Netterfield <kst@kde.org> 
+Primary-site:   	        
+Home-page:      http://kst.kde.org/
+Original-site:  
+Platforms:      Linux and other Unices
+Copying-policy: GNU Public License
+End

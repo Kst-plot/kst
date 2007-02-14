@@ -1,0 +1,26 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=kstobject_periodogram
+X-Kst-Plugin-Author=Andrew Walker
+Name=Periodogram
+Name[ca]=Períodograma
+Name[el]=Περιοδογράφημα
+Name[et]=Periodogramm
+Name[it]=Periodogramma
+Name[pt]=Periodograma
+Name[vi]=Chu kỳ đồ
+Comment=Takes the periodogram of a given data set. The data is not assumed to be sampled at equal time intervals.
+Comment[ca]=Construeix el períodograma d'un conjunt de dades donat. No s'assumeix que les dades s'hagin mostrejat en intervals de temps iguals.
+Comment[da]=Opretter periodogrammet for en given datamængde. Data antages ikke at være samplet med samme tidsinterval.
+Comment[el]=Κατασκευή του περιοδογραφήματος ενός δοσμένου συνόλου δεδομένων. Τα δεδομένα δε θεωρούνται ότι είναι δείγμα ίσων χρονικών διαστημάτων.
+Comment[es]=Toma el periodogram de una serie de datos. No se asume que los datos se muestrean en intervalos de tiempo iguales.
+Comment[et]=Arvutab antud andmekogumi periodogrammi. Andmevalim ei pea olema võrdsete ajavahemikega.
+Comment[it]=Rileva il periodogramma dell'insieme di dati. Non si assume che i dati siano campionati a intervalli regolari.
+Comment[nl]=Maakt een periodogram van een gegeven verzameling van gegevens. Er wordt niet aangenomen dat de gegevens met gelijke tijdsintervallen zijn verzameld.
+Comment[pt]=Extrai o periodograma de um determinado conjunto de dados. Os dados assumem-se como não sendo amostrados em intervalos de tempo iguais.
+Comment[pt_BR]=Obtém o periodograma de um conjunto de dados fornecido. O dado não é tido como sendo uma amostra em intervalos de tempo iguais.
+Comment[sv]=Skapar periodogrammet för en given datamängd. Data antas inte vara samplat med samma tidsintervall.
+Comment[vi]=Tính chu kỳ đồ của một tập dữ liệu đã cho. Không giả sử dữ liệu được lấy mẫu sau mỗi khoảng thời gian.

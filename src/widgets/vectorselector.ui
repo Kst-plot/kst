@@ -1,0 +1,138 @@
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>VectorSelector</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>VectorSelector</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>326</width>
+            <height>38</height>
+        </rect>
+    </property>
+    <property name="whatsThis" stdset="0">
+        <string>Select a vector to utilize.  If you wish to create a new vector, click on the icon to the right.</string>
+    </property>
+    <hbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <widget class="KstComboBox">
+            <property name="name">
+                <cstring>_vector</cstring>
+            </property>
+        </widget>
+        <widget class="QPushButton">
+            <property name="name">
+                <cstring>_newVector</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>0</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>Create a new vector.</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Opens a vector dialog to create a new vector, which will become the selected vector.</string>
+            </property>
+        </widget>
+        <widget class="QPushButton">
+            <property name="name">
+                <cstring>_editVector</cstring>
+            </property>
+            <property name="enabled">
+                <bool>false</bool>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>0</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>Edit selected vector.</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Opens a vector dialog to edit selected vector.</string>
+            </property>
+        </widget>
+    </hbox>
+</widget>
+<connections>
+    <connection>
+        <sender>_newVector</sender>
+        <signal>clicked()</signal>
+        <receiver>VectorSelector</receiver>
+        <slot>createNewVector()</slot>
+    </connection>
+    <connection>
+        <sender>_editVector</sender>
+        <signal>clicked()</signal>
+        <receiver>VectorSelector</receiver>
+        <slot>editVector()</slot>
+    </connection>
+    <connection>
+        <sender>VectorSelector</sender>
+        <signal>selectionChanged(const QString&amp;)</signal>
+        <receiver>VectorSelector</receiver>
+        <slot>selectionWatcher(const QString&amp;)</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="local" impldecl="in declaration">kstdatacollection.h</include>
+    <include location="local" impldecl="in declaration">kstcombobox.h</include>
+    <include location="local" impldecl="in implementation">kstrvector.h</include>
+    <include location="local" impldecl="in implementation">kstsvector.h</include>
+    <include location="local" impldecl="in implementation">dialoglauncher.h</include>
+    <include location="local" impldecl="in implementation">kstdataobject.h</include>
+    <include location="global" impldecl="in implementation">qlistbox.h</include>
+    <include location="global" impldecl="in implementation">kiconloader.h</include>
+    <include location="global" impldecl="in implementation">qtimer.h</include>
+    <include location="global" impldecl="in declaration">kst_export.h</include>
+    <include location="local" impldecl="in implementation">vectorselector.ui.h</include>
+</includes>
+<variables>
+    <variable access="private">bool _provideNoneVector;</variable>
+</variables>
+<signals>
+    <signal>newVectorCreated(const QString&amp;)</signal>
+    <signal>selectionChanged(const QString&amp;)</signal>
+    <signal>selectionChangedLabel(const QString&amp;)</signal>
+</signals>
+<slots>
+    <slot>allowNewVectors( bool allowed )</slot>
+    <slot>update()</slot>
+    <slot>createNewVector()</slot>
+    <slot>selectionWatcher( const QString &amp; tag )</slot>
+    <slot>setSelection( const QString &amp; tag )</slot>
+    <slot>newVectorCreated( KstVectorPtr v )</slot>
+    <slot>setSelection( KstVectorPtr v )</slot>
+    <slot>provideNoneVector( bool provide )</slot>
+    <slot>editVector()</slot>
+    <slot>setEdit( const QString&amp; tag )</slot>
+</slots>
+<functions>
+    <function access="private">init()</function>
+    <function returnType="QString">selectedVector()</function>
+</functions>
+<exportmacro>KST_EXPORT</exportmacro>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

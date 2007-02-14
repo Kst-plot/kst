@@ -1,0 +1,5 @@
+- use a better allocator/cache for AllocTmpbuff
+- use memcpy() where possible for ConvertType (>25% of GetData)
+- MultiplyData slow  (50% of GetData time on a multiply field)
+- Generally clean up iterations, remove strcmp/strlen/etc where unneeded
+

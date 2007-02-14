@@ -1,0 +1,11 @@
+<!DOCTYPE kpartgui>
+<kpartplugin name="jsconsole" library="libjsconsoleplugin">
+<MenuBar>
+ <Menu name="tools"><Text>&amp;Tools</Text>
+  <Action name="jsconsole"/>
+ </Menu>
+</MenuBar>
+<ToolBar name="extraToolBar">
+  <Action name="jsconsole"/>
+</ToolBar>
+</kpartplugin>

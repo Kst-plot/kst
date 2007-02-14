@@ -1,0 +1,79 @@
+
+Kst2DPlot is a monstrosity.  Here's why:
+
+1) No single person understands it.  Some people understand some of it.  No-one
+understands all of it.  it is quite possible that there are some parts of it
+that no-one understands.
+
+2) It's HUGE.  The header file alone is 630 lines.  The source file is over ten
+times that.
+
+3) It has all kinds of functions that are unclear or have side effects.
+Example:
+  setBorders(xleft_bdr_px, xright_bdr_px, ytop_bdr_px, ybot_bdr_px,
+             tpx, tpy, p, offsetX, offsetY, xtick_len_px, ytick_len_px);
+   Can you guess what that does?  It actually -gets- some values, for instance.
+
+4) Can you guess what any of the variables in (3) mean/are?
+
+5) It's C masquerading as C++.  It's a whole bunch of function calls that call
+eachother in seemingly unconnected ways.  Change one, you break something
+elsewhere.
+
+6) Too many ways to do things, or too many things that look the same but aren't:
+  void setCursorPos(QWidget *view);
+  void unsetCursorPos(QWidget *view);
+  void drawCursorPos(QWidget *view);
+  void drawCursorPos(QPainter& p);
+  void updateMousePos(const QPoint& pos);
+
+7) Too many different internal states that get flipped back and forth
+externally.  Display and state need to be separated.  Caches should not be
+an internal part of the object, they should be abstract.
+
+8) It doesn't come close to following our coding conventions.
+
+9) Shortforms abound:
+setXTransformedExp, etcetera
+
+10) Lack of verbosity:
+  bool suppressRight() const;
+  void setSuppressTop(bool yes);
+
+11) Implementations in the header file.  Makes it hard to fix things properly:
+  int xMinorTicks() const { return _xMinorTicks - 1; }
+  int yMinorTicks() const { return _yMinorTicks - 1; }
+  bool xMinorTicksAuto() const { return _reqXMinorTicks < 0; }
+  bool yMinorTicksAuto() const { return _reqYMinorTicks < 0; }
+
+12) Passing return values by reference parameters! Evil!
+
+13) Public methods that should be private
+
+14) Way too many things in one class - there's no reason for it to do time
+conversions inside, for instance
+
+15) Public member variables!!
+
+16) Pointless virtuals
+
+17) Count them: 107 member variables.
+
+18) No design documentation
+
+19) Inefficiencies all over
+
+20) Algorithms are undocumented and unclear at best, mostly voodoo
+
+21) Too many options are causing way too many branches and nested branches.
+This makes testing particularly difficult.
+
+22) float<->int conversions are not well defined, happen far too often
+
+23) C-style casts all over
+
+24) Magic numbers like 1.666666.
+
+25) Dumping grounds are just not cool
+
+

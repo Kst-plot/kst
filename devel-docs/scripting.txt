@@ -1,0 +1,73 @@
+Javascript Definition:
+
+Overview:
+A planck-HFI reqirement is that kst support scripting to allow flexable
+generation of complex plots.  We plan to use JavaScript as excellent 
+facilities for this exist within KDE.
+
+Requirements:
+- Complete bindings to all objects
+	- everything that can be done in a .kst file can be done with a
+	  javascript
+- DCOP based commandline tool with konsole
+	- will provide a 'command line' to kst (like sm or idl)
+	- Can be commanded from either an embedded konsole, or an external
+	  konsole.
+- Multiple ways of entering scripts
+	- from command line when starting kst
+		eg: kst -J "file=\"data.dat\";field=\"N15C2\"" bolo.js
+	- From file menue
+	- From DCOP/command line tool.
+- We will not use automatic bindings.  Instead, we will "ideal" bindings
+  and implement them as internal calls to our internal objects
+- The update thread doesn't run if the interpreter is running, and blocks the
+  interpreter from starting up during an update There will be a force
+  update/repaint mechanism to allow updates during script interpretation.
+- vectors can be referenced as strings (tagname) everywhere too
+
+
+Open Questions:
+- kjsembed or qsa?
+
+
+Examples:
+A plot with points + error bars, and a line fit.
+The X axis vector has to be re-scaled.
+
+var f = new DataSource("Data.dat");
+if (!f) {
+	alert("error");
+}
+
+var Vx = new DataVector(f, "1");
+string Vn = (new DataVector(f, "2", start, end)).tagName();
+var Vp = new DataVector(f, "3", start, end, skip);
+var Vm = new DataVector(f, "4", start, end, skip, ave);
+
+// After here is unimplemented so far
+var Ex = Equation("[" + Vx.tag + "] * 0.0042", Vx);
+
+var C = Curve(Ex.sv, Vn);
+C.hasPoint = true;
+C.hasLines = false;
+C.setYError(Vp, Vm);
+C.setPointType(6);.
+
+var lfit = fit("kstfit_linear_unweighted", Ex.sv, Vn);
+
+var Cf = Curve(Ex.sv, lfit.Y_Fitted);
+
+var P = Plot();
+
+P.addCurve(C);  // ordering etc.............  P.curves.append() etc?
+P.addCurve(Cf);
+
+P.xLabel.text = "x axis";
+P.yLabel.text = "y axis";
+
+L = PlotLabel(lfit.parameterstring);
+L.setPos(0.2, 0.8);
+P.addLabel(L);
+
+Window().addPlot(P);
+

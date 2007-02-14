@@ -1,0 +1,19 @@
+
+Compatibility Policy
+--------------------
+
+Only the necessary properties, methods, and objects will be exposed via
+JavaScript.  For the most part, bindings will be provided based on user-demand.
+There is a global script version number which scripts can use to determine if
+they are compatible with the version of Kst they are running in.  If they are
+for general distribution, they should check this.
+
+If it is discovered that a major bug exists that makes a property, method, or
+object completely unusable, it may be changed in an incompatible way.  Otherwise
+we will always provide a suitable implementation of a feature that is shipped
+in an official Kst release.
+
+Code in development versions ("SVN") is subject to change at any time.
+
+Kst v2 may break compatibility with version 1.
+

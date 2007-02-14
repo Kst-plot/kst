@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Module SYSTEM "file:/Repository/Level2/Soft/ProC/moduledef.dtd">
+<module>
+<intro>
+<modulename name="filter_highpass" readableName="High pass filter"/>
+<author name="Andrew Walker"/>
+<description text="Filters a set of data with a zero phase Butterworth high pass filter."/>
+<version minor="1" major="0"/>
+<state devstate="release"/>
+<filter/>
+</intro>
+
+<interface>
+<input>
+<table type="float" name="Y" descr="The array of data." />
+</input>
+<input>
+<float name="Order" descr="Order of the high pass filter." default="4"/>
+</input>
+<input>
+<float name="Cutoff frequency/sample rate" descr="Cutoff frequency of the high pass filter." default="0.02" />
+</input>
+
+<output>
+<table type="float" name="Filtered" descr="The array of filtered data." />
+</output>
+</interface>
+</module>
+

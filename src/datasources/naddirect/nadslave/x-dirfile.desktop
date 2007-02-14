@@ -1,0 +1,24 @@
+[Desktop Entry]
+Type=MimeType
+MimeType=application/x-dirfile
+Icon=dirfile
+DefaultApp=kst
+Comment=DirFile database
+Comment[ca]=Base de dades DirFile
+Comment[cs]=Databáze DirFile
+Comment[da]=DirFile-database
+Comment[de]=DirFile-Datenbank
+Comment[el]=Βάση δεδομένων DirFile
+Comment[es]=base de datos de DirFile
+Comment[et]=Kataloogifaili andmebaas
+Comment[ga]=Bunachar sonraí DirFile
+Comment[gl]=Base de dados DirFile
+Comment[is]=DirFile gagnagrunnur
+Comment[it]=Banca dati DirFile
+Comment[ja]=DirFile データベース
+Comment[nl]=DirFile-gegevensbestand
+Comment[pa]=DirFile ਡਾਟਾਬੇਸ
+Comment[pt]=Base de dados do DirFile
+Comment[pt_BR]=Banco de Dados DirArq
+Comment[sv]=Dirfile-databas
+Comment[vi]=Cơ sở dữ liệu DirFile

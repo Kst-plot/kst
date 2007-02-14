@@ -1,0 +1,36 @@
+
+UI
+--
+Drag and Drop    (George for all of this)
+-------------
+
+- Factories need to register earlier and automatically for each view object type
+- Rename plots that cause namespace conflicts
+- DCOP ID needs to be stored for callback
+- Callback for objects that we need
+- Drag across processes
+- Drop target rect
+- Feedback on errors
+
+
+Objects
+-------
+- undo/redo
+	- must use the marshalling code
+- draw(QPainter&, ...) needs to be rethought slightly in Kst2DPlot and pushed
+  up the chain.
+
+
+Integration
+-----------
+- Concept of "New" might need to change
+
+
+Fun Stuff
+---------
+- Provide alternate drag mimetypes?
+	- maybe even XML?
+- Opaque move
+- Stored drag should write a signature, and then drags can be dropped on the
+  desktop into a file and then dragged to a Kst window another time.
+  	- This conflicts with image dropping.

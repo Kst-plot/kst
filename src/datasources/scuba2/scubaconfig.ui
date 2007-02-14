@@ -1,0 +1,98 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>ScubaConfig</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>ScubaConfig</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>497</width>
+            <height>397</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>ScubaConfig</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QCheckBox" row="0" column="0">
+            <property name="name">
+                <cstring>_readMatrices</cstring>
+            </property>
+            <property name="text">
+                <string>Generate &amp;matrices from data</string>
+            </property>
+            <property name="accel">
+                <string>Alt+M</string>
+            </property>
+        </widget>
+        <spacer row="0" column="1">
+            <property name="name">
+                <cstring>spacer4_2</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>270</width>
+                    <height>21</height>
+                </size>
+            </property>
+        </spacer>
+        <spacer row="1" column="1">
+            <property name="name">
+                <cstring>spacer4_2_2</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>270</width>
+                    <height>21</height>
+                </size>
+            </property>
+        </spacer>
+        <spacer row="2" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>spacer1</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>320</width>
+                    <height>290</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QCheckBox" row="1" column="0">
+            <property name="name">
+                <cstring>_validateChecksum</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Validate checksum</string>
+            </property>
+            <property name="accel">
+                <string>Alt+V</string>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

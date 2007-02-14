@@ -1,0 +1,129 @@
+KstBasicPlugin Plugins
+----------------------
+
+The purpose of a KstBasicPlugin plugin is to provide an implementation of the
+virtual class "KstDataObject" via the abstract class "KstBasicPlugin."  Plugin
+writers need to provide a class that inherits "KstBasicPlugin" and a .desktop
+file.
+
+Here is an example of the .desktop file named 'kstobject_myplugin.desktop':
+
+    [Desktop Entry]
+    Encoding=UTF-8
+    Type=Service
+    ServiceTypes=Kst Data Object
+    X-KDE-ModuleType=Plugin
+    X-KDE-Library=kstobject_fooplugin
+    X-Kst-Plugin-Author=Your Name
+    X-Kst-Plugin-Version=0.1
+    Name=Foo
+    Comment=A plugin that provides Foo algorithm.
+
+Your C++ class should inherit KstBasicPlugin and provide implementations of the
+pure virtual methods found in KstBasicPlugin:
+
+    //The implementation of the algorithm the plugin provides.
+    //Operates on the inputVectors, inputScalars, and inputStrings
+    //to produce the outputVectors, outputScalars, and outputStrings.
+    virtual bool algorithm() = 0;
+
+    //String lists of the names of the expected inputs.
+    virtual QStringList inputVectorList() const = 0;
+    virtual QStringList inputScalarList() const = 0;
+    virtual QStringList inputStringList() const = 0;
+
+    //String lists of the names of the expected outputs.
+    virtual QStringList outputVectorList() const = 0;
+    virtual QStringList outputScalarList() const = 0;
+    virtual QStringList outputStringList() const = 0;
+
+Here is an example of a plugins header file:
+
+#ifndef FOOPLUGIN_H
+#define FOOPLUGIN_H
+
+#include <kstbasicplugin.h>
+
+class FooPlugin : public KstBasicPlugin {
+  Q_OBJECT
+  public:
+    FooPlugin(QObject *parent, const char *name, const QStringList &args);
+    virtual ~FooPlugin();
+
+    virtual bool algorithm();
+
+    virtual QStringList inputVectorList() const;
+    virtual QStringList inputScalarList() const;
+    virtual QStringList inputStringList() const;
+    virtual QStringList outputVectorList() const;
+    virtual QStringList outputScalarList() const;
+    virtual QStringList outputStringList() const;
+};
+
+And here is an example of a plugins cpp file:
+
+#include "fooplugin.h"
+
+#include <kgenericfactory.h>
+
+static const QString& VECTOR_IN = KGlobal::staticQString("Vector In");
+static const QString& SCALAR_IN = KGlobal::staticQString("Scalar In");
+static const QString& STRING_IN = KGlobal::staticQString("String In");
+static const QString& VECTOR_OUT = KGlobal::staticQString("Vector Out");
+static const QString& SCALAR_OUT = KGlobal::staticQString("Scalar Out");
+static const QString& STRING_OUT = KGlobal::staticQString("String Out");
+
+K_EXPORT_COMPONENT_FACTORY( kstobject_fooplugin,
+    KGenericFactory<FooPlugin>( "kstobject_fooplugin" ) )
+
+FooPlugin::FooPlugin( QObject */*parent*/, const char */*name*/, const QStringList &/*args*/ )
+    : KstBasicPlugin() {
+}
+
+
+FooPlugin::~FooPlugin() {
+}
+
+
+bool FooPlugin::algorithm() {
+  //Do something...
+  return true;
+}
+
+
+QStringList FooPlugin::inputVectorList() const {
+  return QStringList( VECTOR_IN );
+}
+
+
+QStringList FooPlugin::inputScalarList() const {
+  return QStringList( SCALAR_IN );
+}
+
+
+QStringList FooPlugin::inputStringList() const {
+  return QStringList( STRING_IN );
+}
+
+
+QStringList FooPlugin::outputVectorList() const {
+  return QStringList( VECTOR_OUT );
+}
+
+
+QStringList FooPlugin::outputScalarList() const {
+  return QStringList( SCALAR_OUT );
+}
+
+
+QStringList FooPlugin::outputStringList() const {
+  return QStringList( STRING_OUT );
+}
+
+#include "fooplugin.moc"
+
+The KstBasicPlugin takes care of providing almost everything, including the
+configuration widget for your plugin.  The one thing it doesn't do is provide
+the actual algorithm or the names of the inputs/outputs.
+
+See the Line Fit plugin for an example implementation.

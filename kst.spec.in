@@ -1,0 +1,114 @@
+# Installs in dir @prefix@
+
+%define prefix @prefix@
+
+Summary: A data viewing program for KDE.
+Name: kst
+Version: @KST_VERSION@
+Release: 1
+Source0: kst-%{version}.tar.gz
+Group: X11/Applications/Scientific
+License: GNU GENERAL PUBLIC LICENSE
+URL: http://kst.kde.org/
+Vendor: Barth Netterfield <netterfield@astro.utoronto.ca>
+BuildRoot: /var/tmp/kst-%{version}.root
+
+Requires(post,postun): /sbin/ldconfig
+
+%description
+A data viewing application for KDE.
+
+%prep
+%setup -q
+./configure --prefix=%prefix --libdir=%prefix/%_lib --disable-dependency-tracking
+
+%build
+make
+
+%install
+[ -n "$RPM_BUILD_ROOT" -a "$RPM_BUILD_ROOT" != / ] && rm -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT SUID_ROOT="" install
+
+%find_lang %{name}
+%find_lang kstplugineditor
+cat kstplugineditor.lang >> %{name}.lang
+
+%files -f %{name}.lang
+%defattr(-,root,root)
+#binaries
+%prefix/bin/kst
+%prefix/bin/kstcmd
+%prefix/bin/d2asc
+#libraries
+%prefix/%_lib/lib*.so*
+%prefix/%_lib/lib*.la
+#headers
+%prefix/include/kstdatasource.h
+%prefix/include/kstobject.h
+%prefix/include/kstdateparser.h
+%prefix/include/kst_export.h
+%prefix/include/kstsharedptr.h
+%prefix/include/rwlock.h
+%prefix/include/kstextcalendarsystemgregorian.h
+%prefix/include/kstextdatetimeedit.h
+%prefix/include/kstextcalendarsystem.h
+%prefix/include/kstextdatetime.h
+%prefix/include/kstextdatepicker.h
+%prefix/include/kstextdatewidget.h
+%prefix/include/kstextdatetbl.h
+%prefix/include/kstwaitcondition.h
+#update
+%prefix/share/apps/kconf_update/kstautosave11.upd
+%prefix/share/apps/kconf_update/kstrcmisc11.upd
+#fonts
+%prefix/share/apps/kst/fonts/*.gz
+#data plugins
+%prefix/%_lib/kde3/kstdata_*.la
+%prefix/%_lib/kde3/kstdata_*.so
+%prefix/share/services/kst/kstdata_*.desktop
+#plugins
+%prefix/%_lib/kde3/kstplugins/*.la
+%prefix/%_lib/kde3/kstplugins/*.so
+%prefix/%_lib/kde3/kstplugins/*.xml
+%prefix/share/servicetypes/kst/kstdatasourceplugin.desktop
+%prefix/share/servicetypes/kst/kstplugin.desktop
+%prefix/share/servicetypes/kst/kstfilter.desktop
+#designerplugin
+%prefix/%_lib/kde3/plugins/designer/kstwidgets.la
+%prefix/%_lib/kde3/plugins/designer/kstwidgets.so
+#extensions
+%prefix/%_lib/kde3/kstextension_*.la
+%prefix/%_lib/kde3/kstextension_*.so
+%prefix/share/services/kst/kstextension_*.desktop
+%prefix/share/apps/kst/kstextension_*.rc
+%prefix/share/servicetypes/kst/kstextension.desktop
+# UI file
+%prefix/share/apps/kst/kstui.rc
+#desktop file
+%prefix/share/applnk/Applications/Sciences/kst.desktop
+%prefix/share/mimelnk/application/x-kst.desktop
+#icons
+%prefix/share/icons/hicolor/22x22/actions/*.png
+%prefix/share/icons/locolor/16x16/apps/kst.png
+%prefix/share/icons/locolor/32x32/apps/kst.png
+%prefix/share/icons/hicolor/16x16/mimetypes/kst.png
+%prefix/share/icons/hicolor/32x32/mimetypes/kst.png
+%prefix/share/icons/locolor/16x16/mimetypes/kst.png
+%prefix/share/icons/locolor/32x32/mimetypes/kst.png
+#other icons
+%prefix/share/apps/kst/pics/*.png
+#docs
+%prefix/man/man1/kst.1.gz
+%prefix/share/doc/HTML/*/kst/*
+%prefix/share/apps/kst/tutorial/*
+#other
+"%prefix/share/config/colors"
+
+%doc ChangeLog INSTALL AUTHORS README COPYING kst/COPYING.LGPL kst/RELEASE.NOTES kst/NEWS
+
+%post
+/sbin/ldconfig
+
+%postun
+/sbin/ldconfig
+

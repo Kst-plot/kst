@@ -1,0 +1,82 @@
+
+
+Notes on threading:
+
+- you must lock and unlock global and shared objects to avoid races
+
+- KstObject classes are also locks internally, so you can just ->readLock(),
+  ->writeUnlock() etc on them directly.
+
+- KstObjectList and Map classes have locks accessible with .lock()
+
+- KstWriteLocker and KstReadLocker are useful to lock an object and ensure that
+the object is unlocked when (and only when) the locker instance falls out of
+scope.  Only put these on the stack.
+
+- KstShared objects must always be used by KstSharedPtr<Foo>, NOT Foo*.  If you
+use Foo*, you will not get proper reference counting.  In most cases a typedef
+exists to make this easy.
+
+- some Qt objects are shared:
+	- QMemarray
+	- QMap
+	- QString
+	- QValueList
+	- QValueVector
+
+	You need to make -deep- copies of these in particular when using
+globals.
+
+	example:
+	KstDataObjectList mine = QDeepCopy<KstDataObjectList>(KST::dataObjectList);
+
+	This could crash if the dataObjectList is modified while mine is being
+used.  KST::dataObjectList is global and used from all threads in general.  You
+need to make a deep copy of the list.
+
+- Use a write lock iff there is a possibility that you will modify the object.
+
+- Don't make your locks too finegrained.  If looping, either copy the data you
+  need in the loop temporarily, or lock around the outside of the loop instead
+  of constantly locking and unlocking inside the loop.
+
+- Maximum recursion depth of read locks is 30.  Maximum recursion of write
+locks is 0.  Locking for writing twice in the same thread is a guaranteed
+deadlock.
+
+- Locking is generally "explicit" in that if you are accessing object "x", you
+must x->readLock(); /* read from x */ x->readUnlock().  x will not lock itself
+when it needs to read members.  The only implicit locking happens in a few
+special cases, and in shared pointer reference counting (semaphore is used).
+
+
+
+-------------------------------------------------------------------
+08/10/06
+
+How to fix our deadlock issues.
+
+Recent changes to object complexity and performance of locking in Kst have
+brought some old deadlock scenarios up in frequency and made Kst appear far
+less stable.  Past fixes for these deadlocks were apparently insufficient and
+only fixes some cases.  The most common scenario is this:
+
+Thread 1 locks Object A
+Object A starts to lock dependencies
+Context switch
+Thread 2 locks Object B
+Object B starts to lock dependencies and eventually blocks on Object A
+Context switch
+Object A continues to lock dependencies and blocks on an object locked by B
+-> deadlock
+
+The general solution for this is to lock all objects in a consistent order,
+such as pointer value of object or lock.  We do this presently, but only at
+each level, which is insufficient in complex object structures.  One possible
+solution is for KstDataObject to first obtain all pointers requiring locks,
+recursively, and then sort and lock them iteratively.  The problem is that in
+order to obtain these pointers, we will need to have locks on the objects, thus
+defeating the goal.  It is proposed to split locking into shallow and deep
+locking, allowing a shallow lock for tree reading, and a deep lock for more
+complex operations.
+

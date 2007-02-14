@@ -1,0 +1,47 @@
+
+
+The current view is designed as a set of classes called "view objects" which
+inherit from KstViewObject and contain properties as well as pointers to their
+children.  Their properties are generally quantities relative to their parent
+objects, though ideally they do not depend on their parent's properties more
+than necessary.  They also do not know how they are displayed, or even if they
+are displayed.  They must only react to events or commands sent by others.
+
+
+- Events pass in a view pointer, but generally, there is no single "view"
+- Painting must -only- happen in the paintSelf() function.  Anything else is
+  wrong and will break eventually.
+- Updating must only happen in update() and updateSelf().  Anything else is
+  wrong and will break eventually.
+- All KstViewObjects are KstSharedPtrs.  Again, as documented in the threading
+  documentation, they must ALWAYS be referred to in KstSharedPtr<Class> form!
+  If you don't do this, you will break these objects in multithreaded
+  scenarios as well as likely cause invalid usage counts or references to
+  deleted memory.
+- Properties should be relative to the parent
+- Avoid unnecessary redraws, use a KstBackBuffer.  Eventually KstBackBuffer
+  will need to be enhanced to provide multiple backends.
+- KstTopLevelView is the only object that has a pointer to the view because it
+  is by definition an object that represents a view.
+- Objects must provide serialization so they can be packaged for undo, drag
+  and drop, and more.  They must be self-contained.
+- Do not store widgets or pointers to widgets beyond the life of an "operation"
+  They are effectively invalid after that time.  For instance, you can store
+  the view pointer while waiting for a menu selection, but do not store the
+  view pointer for longer than that.  Also use a QGuardedPtr to be safe.  It is
+  conceivable that the operation actually changes the view on you!
+- If you want to handle mouse events inside your object, use the mouseHandler
+  and mouse grabbing facilities provided by the view.
+- Pack bools and ints into bitfields to save space.
+- Actions that do things to an object must not be coupled with redraws.  It
+  causes far too many of them.  For instance, if you want to move up-left in a
+  2D plot and the moveUp() and moveLeft() functions both draw(), you get 2
+  redraws where you only needed one.
+- View objects are meant to be modular and eventually will be loaded as plugins
+  to provide additional functionality on demand.  No higher-level should know
+  about a view object.  Making an object such as KstApp know about a view object
+  is completely wrong.  Do not do it.  Period.  Even KstDoc will eventually lose
+  all knowledge of specific objects, as will KstTopLevelView.  The factories
+  provide everything that is needed.
+
+

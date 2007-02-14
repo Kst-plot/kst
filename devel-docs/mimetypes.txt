@@ -1,0 +1,42 @@
+List of mimetypes we provide and their definitions:
+
+
+application/x-kst:
+A Kst XML file in full
+
+
+application/x-kst-fragment:
+A Kst XML fragment that can be read and interpreted, but does not describe a
+full Kst session.  Unimplemented.
+
+
+application/x-kst-plot-list:
+A list of plot names encoded as a qstringlist.  Used primarily for drag and
+drop in the plot dialog.
+
+
+application/x-kst-plot-names:
+A list of plot names encoded as a qstringlist, preceded by a window.  Used for
+drag and drop of plots between windows in Kst 1.1.0 only.  DEPRECATED
+
+
+application/x-kst-legend:
+A plot legend.  Contains the window name, the plot name, and the hotspot.  
+DEPRECATED
+
+
+application/x-kst-label-number:
+A plot label.  Contains the window name, the plot name, the label number in the
+internal list, and the hotspot.   DEPRECATED
+
+
+application/x-kst-plots:
+Unimplemented, reserved for plot dragging.
+
+
+
+
+Do not implement support for drag and drop or copy and paste for the deprecated
+mimetypes in any new applications.  They are almost entirely useless there, and
+these types will be removed from Kst starting in version 1.2.0.
+

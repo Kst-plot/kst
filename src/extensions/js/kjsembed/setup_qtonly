@@ -1,0 +1,54 @@
+#!/bin/sh
+
+#
+# Sets a clean checkout of kjsembed for qt-only builds.
+#
+
+# If there is no kjs tree then fetch one
+if test ! -d kjs ; then
+    echo 'Setting up kjs tree'
+
+    cvs co -l kdelibs
+    cd kdelibs
+    cvs up -dP kjs
+    mv kjs ..
+    cd ..
+    rm -rf kdelibs
+
+    cd kjs
+    ln -s ../kjs.pro .
+    echo > config.h
+    perl create_hash_table keywords.table     -i  > lexer.lut.h
+    perl create_hash_table array_object.cpp   -i  > array_object.lut.h
+    perl create_hash_table math_object.cpp    -i  > math_object.lut.h
+    perl create_hash_table date_object.cpp    -i  > date_object.lut.h
+    perl create_hash_table number_object.cpp  -i  > number_object.lut.h
+    perl create_hash_table string_object.cpp  -i  > string_object.lut.h
+    cd ..
+fi
+
+echo 'Running qmake'
+cd kjs
+qmake kjs.pro
+cd ../builtins
+qmake builtins.pro
+cd ../qtbindings 
+qmake qtbindings.pro
+cd ..
+qmake kjsembed.pro
+qmake -o  Makefile.qjscmd qjscmd.pro
+
+echo 'Building KJSEmbed/Qt'
+
+echo '  + kjs...'
+( cd kjs ; make )
+echo '  + builtins...'
+( cd builtins ; make )
+echo '  + qtbindings...'
+( cd qtbindings ; make )
+echo '  + lib...'
+make
+echo '  + app...'
+make -f Makefile.qjscmd
+
+echo 'Done'

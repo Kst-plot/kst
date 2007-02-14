@@ -1,0 +1,114 @@
+Kst 1.4 is the next major release of Kst.  There is no set date and the scope
+is not yet defined.  
+
+
+Our current feature list and feature plan is as follows:
+
+Pending major changes:
+
+- merge and activate multi-threaded updates
+
+
+
+New work:
+
+- kst2dplot needs to be redesigned and refactored
+	Some reasons:
+	- tick interval calculations wrong
+	- merging axes on plots just erases borders
+
+- printing needs to be redesigned:
+	- Resize/Revert concept is not workable, and is the cause of the
+	legend printing issues
+	- It's slow
+	- It's confusing to write view objects because of this
+
+- view objects need to be simplified
+	- Too many mis-functions and mis-features crept into the base class
+	- Sizing and positioning are confusing
+	- Top level view is over-complicated and also suffers feature-creep
+
+- port loading to SAX depending on results of benchmarking
+	- Test with 500kb+ xml files and see how it compares to 
+
+- spreadsheet mode
+	- This is almost certainly dependent on a KDE4 port
+
+- add UI support for specifying X and Y separately as functions for a curve
+	- ie: parametric
+
+- ongoing scripting fixes and scripting work
+
+- expose String datatype somehow
+	- needs thought/research and a design plan
+
+- scalar work
+	- top-level dialog for scalars, similar to the vector and matrix ones
+		- making scalars easy to edit
+	- adding scalars without providers to the data manager
+		- note the UI concerns that might come up
+
+- data source work
+	- design and then implement metadata enhancements
+	- add support for parallel (interlaced?) reads
+	- add getinfo() type of function for fields
+	- implement low-resolution preloading
+	- add data sink support - ability to write out vectors in any format
+
+- implement KstIndex across Kst and support time as a primary indexing mechanism
+
+- implement a default TIMEINDEX field
+
+- port to KDE4 once KDE4 beta 1 is released
+
+- use fast malloc for data areas where malloc calls are repeated and costly
+	- calltree profiles show this
+
+- add a generic system for supporting units, especially as provided by
+datasources
+
+- make fits and filters usable from equations by having them export a hint that
+can be used to add an entry to the operator list
+	- needs a carefully thought-out plan
+
+- allow fit outputs to use arbitrary X vectors for higher (or lower?) resolution
+
+- data subsets
+	- write up a plan for this
+	- create a UI for doing this
+	- allow subsets to reflect flagged data (or unflagged data)
+	- allow selected ranges to be fit to as a subset, etc
+
+- static mode
+	- a new save mode that saves vector data to the kst file as CDATA
+	- UI to convert from static back to data source mode
+	- brings up interesting issue: no way to cleanly convert data types
+	of KstObjects
+
+- map manipulation work
+
+- undo/redo in layout mode
+	- must be done -properly- using serialization
+	- also the solution should apply to drag and drop and copy/paste
+
+- Barth's combobox idea :-)
+
+- Label syntax validator to make label writing easier
+
+- Ongoing doc updates
+
+- Fit and filter plugins share a number of common algorithms that are
+specific to the C plugin API.  Build parallel API for
+regular C++ plugins??
+
+- Get rid of fit/filter specific code in KstCPlugins
+
+
+Other possible ideas to consider but not approved:
+
+- Object templates and complex object construction
+
+- KstScript session generator
+
+
+

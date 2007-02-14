@@ -1,0 +1,187 @@
+Index: kstvcurve.cpp
+===================================================================
+--- kstvcurve.cpp	(revision 476102)
++++ kstvcurve.cpp	(working copy)
+@@ -565,18 +565,45 @@
+ }
+ 
+ 
++/*
++   Fast interpolation replacement for KstVectors, good for inner loops.
++   This lacks error checking that can be done outside these loops.  It can
++   crash if:
++   in_i >= ns_i
++   in_i < 0
++   _size <= 1
++   _v == 0
++ */
++inline double fastInterpolate(double *_v, int in_i, int ns_i, int _size) {
++  if (ns_i == _size) { /* no extrapolating or decimating needed */
++    return _v[in_i];
++  }
++  double fj = in_i * double(_size - 1) / double(ns_i - 1); /* scaled index */
++  int j = int(floor(fj)); /* index of sample one lower */
++  if (_v[j + 1] != _v[j + 1] || _v[j] != _v[j]) {
++    return KST::NOPOINT;
++  }
++  double fdj = fj - float(j); /* fdj is fraction between _v[j] and _v[j+1] */
++  return _v[j + 1] * fdj + _v[j] * (1.0 - fdj);
++}
++
++
+ inline int indexNearX(double x, KstVectorPtr& xv, int NS) {
+   // monotonically rising: we can do a binary search
+   // should be reasonably fast
+   if (xv->isRising()) {
+     int i_top = NS - 1;
+     int i_bot = 0;
+-
++    int xvSize = xv->length();
++    if (KDE_ISUNLIKELY(xvSize < 2)) {
++      return 0;
++    }
++    double *const xvV = xv->value();
+     // don't pre-check for x outside of the curve since this is not
+     // the common case.  It will be correct - just slightly slower...
+     while (i_bot + 1 < i_top) {
+       int i0 = (i_top + i_bot)/2;
+-      double rX = xv->interpolate(i0, NS);
++      double rX = fastInterpolate(xvV, i0, NS, xvSize);
+       if (x < rX) {
+         i_top = i0;
+       } else {
+@@ -596,9 +623,14 @@
+     double rX = xv->interpolate(0, NS);
+     double dx0 = fabs(x - rX);
+     int i0 = 0;
++    int xvSize = xv->length();
++    if (KDE_ISUNLIKELY(xvSize < 2)) {
++      return 0;
++    }
++    double *const xvV = xv->value();
+ 
+     for (int i = 1; i < NS; ++i) {
+-      rX = xv->interpolate(i, NS);
++      rX = fastInterpolate(xvV, i, NS, xvSize);
+       double dx = fabs(x - rX);
+       if (dx < dx0) {
+         dx0 = dx;
+@@ -789,6 +821,12 @@
+   benchtmp.start();
+ #endif
+ 
++  double *const xvV = xv->value();
++  double *const yvV = yv->value();
++  int xvSize = xv->length();
++  int yvSize = yv->length();
++
++  // FIXME: if xvSize < 2 || yvSize < 2 we can't call fastInterpolate
+   if (sampleCount() > 0) {
+     Qt::PenStyle style = KstLineStyle[lineStyle()];
+     int i0, iN;
+@@ -824,13 +862,13 @@
+ //            cachegrind backs this up.
+ #undef isnan
+ #define isnan(x) (x != x)
+-      rX = xv->interpolate(i0, NS);
+-      rY = yv->interpolate(i0, NS);
++      rX = fastInterpolate(xvV, i0, NS, xvSize);
++      rY = fastInterpolate(yvV, i0, NS, yvSize);
+       // if invalid point then look backward for the last valid point.
+       while (i0 > 0 && (isnan(rX) || isnan(rY))) {
+         --i0;
+-        rX = xv->interpolate(i0, NS);
+-        rY = yv->interpolate(i0, NS);
++        rX = fastInterpolate(xvV, i0, NS, xvSize);
++        rY = fastInterpolate(yvV, i0, NS, yvSize);
+       }
+ 
+       // if invalid point then look forward for the next valid point...
+@@ -838,8 +876,8 @@
+         i0 = i0Start;
+         while (i0 < iN && (isnan(rX) || isnan(rY))) {
+           ++i0;
+-          rX = xv->interpolate(i0, NS);
+-          rY = yv->interpolate(i0, NS);
++          rX = fastInterpolate(xvV, i0, NS, xvSize);
++          rY = fastInterpolate(yvV, i0, NS, yvSize);
+         }
+       }
+  
+@@ -859,8 +897,8 @@
+         Y2 = last_y1;
+ 
+         ++i_pt;
+-        rX = xv->interpolate(i_pt, NS);
+-        rY = yv->interpolate(i_pt, NS);
++        rX = fastInterpolate(xvV, i_pt, NS, xvSize);
++        rY = fastInterpolate(yvV, i_pt, NS, yvSize);
+         bool foundNan = false;
+ 
+         // if necessary continue looking for the first valid point...
+@@ -868,8 +906,8 @@
+ #undef isnan
+           foundNan = true;
+           ++i_pt;
+-          rX = xv->interpolate(i_pt, NS);
+-          rY = yv->interpolate(i_pt, NS);
++          rX = fastInterpolate(xvV, i_pt, NS, xvSize);
++          rY = fastInterpolate(yvV, i_pt, NS, yvSize);
+         }
+ 
+         if (KDE_ISUNLIKELY(foundNan)) {
+@@ -1123,8 +1161,8 @@
+         if (exv) {
+           drX = exv->interpolate(i_pt, NS);
+         }
+-        rX = xv->interpolate(i_pt, NS);
+-        rY = yv->interpolate(i_pt, NS);
++        rX = fastInterpolate(xvV, i_pt, NS, xvSize);
++        rY = fastInterpolate(yvV, i_pt, NS, yvSize);
+         rX -= drX/2.0;
+         rX2 = rX + drX;
+         if (_xLog) {
+@@ -1228,8 +1266,8 @@
+         QPoint pt;
+         const int lineWidth = this->lineWidth();
+         for (i_pt = i0; i_pt <= iN; ++i_pt) {
+-          rX = xv->interpolate(i_pt, NS);
+-          rY = yv->interpolate(i_pt, NS);
++          rX = fastInterpolate(xvV, i_pt, NS, xvSize);
++          rY = fastInterpolate(yvV, i_pt, NS, yvSize);
+           if (_xLog) {
+             rX = logX(rX);
+           }
+@@ -1247,8 +1285,8 @@
+       } else {
+         const int lineWidth = this->lineWidth();
+         for (i_pt = i0; i_pt <= iN; ++i_pt) {
+-          rX = xv->interpolate(i_pt, NS);
+-          rY = yv->interpolate(i_pt, NS);
++          rX = fastInterpolate(xvV, i_pt, NS, xvSize);
++          rY = fastInterpolate(yvV, i_pt, NS, yvSize);
+           if (_xLog) {
+             rX = logX(rX);
+           }
+@@ -1285,8 +1323,8 @@
+         do_low_flag = true;
+         do_high_flag = true;
+ 
+-        rX = xv->interpolate(i_pt, NS);
+-        rY = yv->interpolate(i_pt, NS);
++        rX = fastInterpolate(xvV, i_pt, NS, xvSize);
++        rY = fastInterpolate(yvV, i_pt, NS, yvSize);
+         if (errorSame) {
+           rEX = fabs(exv->interpolate(i_pt, NS));
+           if (_xLog) {
+@@ -1376,8 +1414,8 @@
+         do_low_flag = true;
+         do_high_flag = true;
+ 
+-        rX = xv->interpolate(i_pt, NS);
+-        rY = yv->interpolate(i_pt, NS);
++        rX = fastInterpolate(xvV, i_pt, NS, xvSize);
++        rY = fastInterpolate(yvV, i_pt, NS, yvSize);
+         if (errorSame) {
+           rEY = eyv->interpolate(i_pt, NS);
+           if (_yLog) {

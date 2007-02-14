@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Module SYSTEM "file:/Repository/Level2/Soft/ProC/moduledef.dtd">
+<module>
+<intro>
+<modulename name="kstfit_kneefrequency_unweighted" readableName="Fit Knee Frequency"/>
+<author name="Duncan Hanson"/>
+<description text="Fits a power spectrum for the knee frequency by finding the 1/f^a power law and the white noise limit. The data must be ordered."/>
+<version minor="1" major="0"/>
+<fit weighted="0"/>
+<state devstate="release"/>
+</intro>
+
+<interface>
+<input>
+<table type="float" name="X Array" descr="The array of frequencies." />
+</input>
+<input>
+<table type="float" name="Y Array" descr="The array of powers." />
+</input>
+
+<input>
+<float name="Max. 1/f^a Freq." descr="The value of a maximum frequency dominated by 1/f noise." default="20" />
+</input>
+<input>
+<float name="Min. White Noise Freq." descr="The value of a minimum frquency dominated by white noise." default="700" />
+</input>
+<input>
+<float name="White Noise C" descr="The knee frequency is calculated as the frequency at which the 1/f^a noise power is equal to C * (white noise power)" default="1.4142135" />
+</input>
+
+<output>
+<table type="float" name="Y Fitted" descr="The array of fitted Y values." />
+</output>
+<output>
+<table type="float" name="Residuals" descr="The residuals of the fitted data." />
+</output>
+<output>
+<table type="floatNonVector" name="Parameters" descr="The parameter values of the fit." />
+</output>
+<output>
+<table type="floatNonVector" name="Covariance" descr="The covariance matrix of the fit." />
+</output>
+</interface>
+</module>
+

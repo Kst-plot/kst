@@ -1,0 +1,133 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>PluginDialogWidget</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>PluginDialogWidget</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>240</width>
+            <height>109</height>
+        </rect>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <property name="spacing">
+            <number>0</number>
+        </property>
+        <widget class="QGroupBox" row="0" column="0">
+            <property name="name">
+                <cstring>GroupBox9_3</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>5</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="title">
+                <string>Plugin Selection</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLayoutWidget" row="0" column="0">
+                    <property name="name">
+                        <cstring>layout6</cstring>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QPushButton" row="0" column="1">
+                            <property name="name">
+                                <cstring>_pluginManager</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Manager...</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="0" column="0">
+                            <property name="name">
+                                <cstring>PluginCombo</cstring>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+                <widget class="QFrame" row="1" column="0">
+                    <property name="name">
+                        <cstring>_pluginInfoFrame</cstring>
+                    </property>
+                    <property name="frameShape">
+                        <enum>NoFrame</enum>
+                    </property>
+                    <property name="frameShadow">
+                        <enum>Plain</enum>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QGroupBox" row="1" column="0">
+            <property name="name">
+                <cstring>_pluginInputsBox</cstring>
+            </property>
+            <property name="title">
+                <string>Inputs and Outputs</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QFrame" row="0" column="0">
+                    <property name="name">
+                        <cstring>_pluginInputOutputFrame</cstring>
+                    </property>
+                    <property name="frameShape">
+                        <enum>NoFrame</enum>
+                    </property>
+                    <property name="frameShadow">
+                        <enum>Plain</enum>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="CurveAppearanceWidget" row="3" column="0">
+            <property name="name">
+                <cstring>_curveAppearance</cstring>
+            </property>
+            <property name="hidden">
+                <bool>true</bool>
+            </property> 
+        </widget>
+    </grid>
+</widget>
+<tabstops>
+    <tabstop>PluginCombo</tabstop>
+    <tabstop>_pluginManager</tabstop>
+    <tabstop>_curveAppearance</tabstop>
+</tabstops>
+<layoutdefaults spacing="6" margin="11"/>
+<includes>
+    <include location="global" impldecl="in implementation">curveappearancewidget.h</include>
+    <include location="global" impldecl="in declaration">kst_export.h</include>
+</includes>
+<exportmacro>KST_EXPORT</exportmacro>
+</UI>

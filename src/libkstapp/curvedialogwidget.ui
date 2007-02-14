@@ -1,0 +1,310 @@
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>CurveDialogWidget</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>CurveDialogWidget</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>775</width>
+            <height>369</height>
+        </rect>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="CurveAppearanceWidget" row="1" column="0">
+            <property name="name">
+                <cstring>_curveAppearance</cstring>
+            </property>
+        </widget>
+        <widget class="CurvePlacementWidget" row="1" column="1">
+            <property name="name">
+                <cstring>_curvePlacement</cstring>
+            </property>
+        </widget>
+        <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>_checkBoxIgnoreAutoscale</cstring>
+            </property>
+            <property name="text">
+                <string>Ignore in automatic axes range calculations</string>
+            </property>
+        </widget>
+        <widget class="QGroupBox" row="0" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>GroupBox9_4</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>5</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="title">
+                <string>Curve Contents</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>11</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>TextLabel1_6_3</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string>X axis vector:</string>
+                    </property>
+                </widget>
+                <widget class="QLayoutWidget" row="5" column="0" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>layout18</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>_checkBoxXMinusSameAsPlus</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Use +X error bar for -X</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>_checkBoxYMinusSameAsPlus</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Use +Y error bar for -Y</string>
+                            </property>
+                        </widget>
+                        <spacer>
+                            <property name="name">
+                                <cstring>spacer33</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>71</width>
+                                    <height>31</height>
+                                </size>
+                            </property>
+                        </spacer>
+                    </hbox>
+                </widget>
+                <widget class="QLabel" row="0" column="2">
+                    <property name="name">
+                        <cstring>TextLabel1_6_2_5</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string>Y axis vector:</string>
+                    </property>
+                </widget>
+                <widget class="Line" row="1" column="0" rowspan="1" colspan="4">
+                    <property name="name">
+                        <cstring>line1_3</cstring>
+                    </property>
+                    <property name="frameShape">
+                        <enum>HLine</enum>
+                    </property>
+                    <property name="frameShadow">
+                        <enum>Sunken</enum>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="2" column="0" rowspan="2" colspan="1">
+                    <property name="name">
+                        <cstring>TextLabel1_6_2_2_2</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string>+X error bar:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring></cstring>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="4" column="0">
+                    <property name="name">
+                        <cstring>textLabelXMinus</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string>-X error bar:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring></cstring>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="4" column="2">
+                    <property name="name">
+                        <cstring>textLabelYMinus</cstring>
+                    </property>
+                    <property name="text">
+                        <string>-Y error bar:</string>
+                    </property>
+                </widget>
+                <widget class="VectorSelector" row="0" column="3">
+                    <property name="name">
+                        <cstring>_yVector</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>7</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                </widget>
+                <widget class="VectorSelector" row="3" column="3">
+                    <property name="name">
+                        <cstring>_yError</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>7</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                </widget>
+                <widget class="VectorSelector" row="4" column="3">
+                    <property name="name">
+                        <cstring>_yMinusError</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>7</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="3" column="2">
+                    <property name="name">
+                        <cstring>textLabel1</cstring>
+                    </property>
+                    <property name="text">
+                        <string>+Y error bar:</string>
+                    </property>
+                </widget>
+                <widget class="VectorSelector" row="4" column="1">
+                    <property name="name">
+                        <cstring>_xMinusError</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>7</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                </widget>
+                <widget class="VectorSelector" row="2" column="1" rowspan="2" colspan="1">
+                    <property name="name">
+                        <cstring>_xError</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>7</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                </widget>
+                <widget class="VectorSelector" row="0" column="1">
+                    <property name="name">
+                        <cstring>_xVector</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>7</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+    </grid>
+</widget>
+<tabstops>
+    <tabstop>_xVector</tabstop>
+    <tabstop>_yVector</tabstop>
+    <tabstop>_xError</tabstop>
+    <tabstop>_yError</tabstop>
+    <tabstop>_xMinusError</tabstop>
+    <tabstop>_yMinusError</tabstop>
+    <tabstop>_checkBoxXMinusSameAsPlus</tabstop>
+    <tabstop>_checkBoxYMinusSameAsPlus</tabstop>
+    <tabstop>_curveAppearance</tabstop>
+    <tabstop>_curvePlacement</tabstop>
+    <tabstop>_checkBoxIgnoreAutoscale</tabstop>
+    <tabstop>_curveAppearance</tabstop>
+    <tabstop>_curvePlacement</tabstop>
+</tabstops>
+<includes>
+    <include location="global" impldecl="in implementation">vectorselector.h</include>
+    <include location="global" impldecl="in implementation">curveappearancewidget.h</include>
+    <include location="global" impldecl="in implementation">curveplacementwidget.h</include>
+    <include location="global" impldecl="in declaration">kst_export.h</include>
+</includes>
+<exportmacro>KST_EXPORT</exportmacro>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

@@ -1,0 +1,148 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>ExtensionDialog</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>ExtensionDialog</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>573</width>
+            <height>296</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Kst Extensions</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QListView" row="1" column="0" rowspan="1" colspan="3">
+            <column>
+                <property name="text">
+                    <string>Extension</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizable">
+                    <bool>true</bool>
+                </property>
+            </column>
+            <column>
+                <property name="text">
+                    <string>Description</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizable">
+                    <bool>true</bool>
+                </property>
+            </column>
+            <column>
+                <property name="text">
+                    <string>Author</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizable">
+                    <bool>true</bool>
+                </property>
+            </column>
+            <column>
+                <property name="text">
+                    <string>Plugin</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizable">
+                    <bool>true</bool>
+                </property>
+            </column>
+            <property name="name">
+                <cstring>_extensions</cstring>
+            </property>
+            <property name="allColumnsShowFocus">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>textLabel1</cstring>
+            </property>
+            <property name="text">
+                <string>Select extensions to enable or disable:</string>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="2" column="2">
+            <property name="name">
+                <cstring>_cancel</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Cancel</string>
+            </property>
+        </widget>
+        <spacer row="2" column="0">
+            <property name="name">
+                <cstring>spacer1</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>281</width>
+                    <height>31</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QPushButton" row="2" column="1">
+            <property name="name">
+                <cstring>_ok</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;OK</string>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>_ok</sender>
+        <signal>clicked()</signal>
+        <receiver>ExtensionDialog</receiver>
+        <slot>accept()</slot>
+    </connection>
+    <connection>
+        <sender>_cancel</sender>
+        <signal>clicked()</signal>
+        <receiver>ExtensionDialog</receiver>
+        <slot>reject()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>_extensions</tabstop>
+    <tabstop>_ok</tabstop>
+    <tabstop>_cancel</tabstop>
+</tabstops>
+<includes>
+    <include location="global" impldecl="in implementation">klibloader.h</include>
+    <include location="global" impldecl="in implementation">kservicetype.h</include>
+    <include location="local" impldecl="in implementation">kst.h</include>
+    <include location="local" impldecl="in implementation">extensionmgr.h</include>
+    <include location="local" impldecl="in implementation">extensiondlg.ui.h</include>
+</includes>
+<slots>
+    <slot>show()</slot>
+    <slot>accept()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

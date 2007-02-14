@@ -1,0 +1,26 @@
+[Desktop Entry]
+Type=MimeType
+MimeType=application/x-piolib
+Icon=piolib
+DefaultApp=kst
+Comment=PIOlib database
+Comment[ca]=Base de dades PIOlib
+Comment[cs]=Databáze PIOlib
+Comment[da]=PIOlib-database
+Comment[de]=PIOlib Datenbank
+Comment[el]=Βάση δεδομένων PIOlib
+Comment[es]=base de datos de PIOlib
+Comment[et]=PIOlibi andmebaas
+Comment[ga]=Bunachar sonraí PIOlib
+Comment[gl]=Base de dados PIOlib
+Comment[hr]=PIOlib baza podataka
+Comment[is]=PIOlib gagnagrunnur
+Comment[it]=Banca dati PIOlib
+Comment[ja]=PIOlib データベース
+Comment[ka]=PIOlib მონაცემთა ბაზა
+Comment[nl]=PIOlib-gegevensbestand
+Comment[pa]=PIOlib ਡਾਟਾਬੇਸ
+Comment[pt]=Base de dados da PIOlib
+Comment[pt_BR]=Banco de Dados PIOlib
+Comment[sv]=PIOlib-databas
+Comment[vi]=Cơ sở dữ liệu PIOlib

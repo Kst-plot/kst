@@ -1,0 +1,40 @@
+KstDataSource Plugins
+---------------------
+
+The purpose of a KstDataSource plugin is to provide an implementation of the
+virtual class "KstDataSource".  By default this class does nothing, which means
+that there is no direct way to load external data into Kst.  Such a plugin
+provides three symbols:
+
+extern "C" {
+// Create a data source.
+KstDataSource *create_<libname>(const QString& filename, const QString& type);
+
+// Does this plugin understand the file indicated by the argument?
+bool understands_<libname>(const QString& filename);
+
+// Which types of data does this plugin provide a data source for?
+QStringList provides_<libname>();
+}
+
+Generally you will have to create one or more derived classes of KstDataSource
+which implement your I/O system.
+
+Along with the shared object, you must also create a desktop file:
+
+=> kstdata_myplugin.desktop
+
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Source
+X-KDE-ModuleType=Plugin
+X-KDE-Library=myplugin
+X-Kst-Plugin-Author=Your Name
+X-Kst-Plugin-Version=0.1
+Name=My Plugin
+Comment=A long description of what this thing actually does.
+
+
+You can find a template datasource plugin in kst/datasources/template/.  It
+includes a proper Makefile.am, source files, and a desktop service file.

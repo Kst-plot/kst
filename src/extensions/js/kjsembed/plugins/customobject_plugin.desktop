@@ -1,0 +1,16 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=MyCustomObject
+Name[et]=MinuEndaObjekt
+Name[hi]=मेरी-मनपसंद-वस्तुएँ
+Name[hr]=MojVlastitiObjekt
+Name[it]=MioOggettoPersonalizzato
+Name[nl]=MijnEigenObject
+Name[pt_BR]=MeuObjeto
+Name[sv]=Mitt eget objekt
+Name[tg]=ОбъектиОддииМан
+Name[vi]=Đối tượng riêng tôi
+Name[xx]=xxMyCustomObjectxx
+ServiceTypes=JSBindingPlugin/Binding
+Type=Service
+X-KDE-Library=libcustomobjectplugin

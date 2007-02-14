@@ -1,0 +1,9 @@
+<!DOCTYPE kpartgui>
+<kpartgui name="Kst Scalar Trigger" version="1">
+<MenuBar>
+ <Menu name="data"><Text>&amp;Data</Text>
+  <Action name="kst_scalar_trigger"/>
+ </Menu>
+</MenuBar>
+</kpartgui>
+

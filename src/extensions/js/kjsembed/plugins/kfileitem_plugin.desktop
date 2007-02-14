@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=KFileItem
+Name[hi]=के-फ़ाइल-आइटम
+Name[hr]=KStavkaDatoteke
+Name[pt_BR]=Item de arquivo
+Name[sv]=Filobjekt
+Name[tg]=ҶузъиФайли-К
+Name[tr]=KDosyaBaşlığı
+Name[xx]=xxKFileItemxx
+ServiceTypes=JSBindingPlugin/Binding
+Type=Service
+X-KDE-Library=libfileitemplugin

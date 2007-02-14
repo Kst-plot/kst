@@ -1,0 +1,64 @@
+
+All graphic items, including text labels, should become view objects.  There
+are many reasons, including:
+- Duplication of mouse handling code is wasteful and error prone
+- Inconsistency between objects is undesired
+- The objects can be used without plots
+- They can be arranged along with plots
+- In the script language they are consistent with other objects and require
+  far less work to implement and maintain
+- They're much easier to manipulate in the script language
+- With Qt properties we can make a generic dialog for all of them quite easily
+
+In particular, users have demanded the ability to create objects outside of
+plots, so it makes this design necessary. As a very nice side-effect, we will
+be able to remove large amounts of irrelevant code from Kst2DPlot.  The
+framework for this is already done and works quite well, but the user-interface
+is severely lacking.  There are additional deficiencies in our UI which should
+be addressed simultaneously.
+
+See is.png.  This is Inkscape, and contains similar drawing tools in the
+toolbar on the left side.  We should create a similar toolbar, but have it
+cascade from a single entry in the main toolbar.  The 2dplot-internal graphics
+toolbar, for instance, takes up quite a bit of screen real-estate, most of
+which is typically empty.  We can save this space for data if we cascade it
+from the main toolbar.
+
+kstempty.png has some annotations to illustrate this.
+
+Furthermore, the 2dplot zoom modes should be brought into kst2dplot, since they
+are specific to it, and handled entirely there.  They should also be a drop-
+down toolbar entry since only one can be active at any given time.
+
+The biggest job, by far, is making the graphics objects usable as the user
+would expect in a similar vector graphics applications.  The 2dplot-internal
+graphics system is close to what is wanted, but we should look at inkscape,
+corel draw, and other such applications for ideas.  The user should be able
+to manipulate objects irrespective of their bounding box, however.  This 
+requires new cases in KstTopLevelView.  It may be sensible to rework the
+existing code to make it more readable and understandable.  Over many
+iterations it's become a bit complicated.
+
+
+
+
+Tools for the Graphics Menu
+---------------------------
+Layout (Move, Resize)
+Text
+Line
+Arrow
+Box
+Ellipse (also does circle)
+Picture
+Curve     (less important)
+Polyline  (less important)
+Freeform  (less important)
+
+
+
+Other things missing in view objects:
+- Ability to rotate objects
+- Mechanism to indicate that an object should be subject to the grid
+- Ability to compose objects from the UI easily
+

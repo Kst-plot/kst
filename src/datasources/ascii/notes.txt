@@ -1,0 +1,26 @@
+Notes for the ASCII data source
+-------------------------------
+
+
+Time
+----
+
+Two time modes are supported:
+
+1) C Time
+   Equivalent to time_t, including epoch.  This is an absolute measure.
+
+2) Seconds
+   This is a relative measure.  Time is equivalent to the value of the index
+   vector in seconds
+
+
+
+Broken
+------
+1) We have to update() from the constructor because KstRVector doesn't update
+the data source.  This has to be reworked in Kst-core so that the update thread
+no longer does data sources.  Should give a performance boost.
+
+2) Time code is unfinished.
+

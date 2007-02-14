@@ -1,0 +1,59 @@
+Plot UI
+
+Items marked with *** require a change from the current behavior.
+
+ToolBar
+There should a pull down icon menuin the tool bar with the following entries:
+* XY, X, and Y zoom icons
+* Layout mode, Text, Line, Arrow, Box, Ellipse, picture
+* The last icon selected from the list is the one which shows.  
+
+Zoom Modes (XY, X and Y zoom modes)
+2d plot modes which are only valid for 2d plots.  The current behavior for clicks inside the plot area of these there modes is correct.
+
+For all of these modes, the right button menu should include:
+....
+Layout Mode:
+ Used to move and edit any data view object.  
+* All mouse actions applies to the highest level object the mouse is over.
+* ***The mouse's target area is ~20% of the size of the mouse icon.***
+* Single click on an object selects it.  A selected object is marked by a filled rectangle. 
+* A double click on a view object selects the object, and pops up the objects edit dialog. (eg, PlotDialog for plot, labeldialog for labels, etc).
+* A drag on a view object moves the object and all of its children.
+* *** Mouse actions are independent of whether the object is a child object or not. Drags drag, clicks select, double clicks edit. ***
+* *** On drop, an object becomes the child of the highest object to completely contain it.  This may be the top level view ***
+* A drag on the hot point of a data object changes the object's geometry and all of its children.
+* The mouse icon will change depending on where it is.  The current behavior is correct.
+* Visual feedback as to what object would be selected or moved will be given by showing an open rectangle around the object's hotpoint.
+* The hotpoints are located as follows:
+* Plots, rectangles, text objects: hotpoints on the 4 corners, and 4 midpoints.  Drags on the corners do XY resizing.  Drags on the midpoints do either X or Y resizing.
+* Lines: Hot points at each end.  Drags on the hotpoints move the point.  Drags anywhere else moves the line.
+* Ellipse: Hot points at noon, 3:00, 6:00, and 9:00
+
+Text Mode
+* *** Icon changes to the text | icon. ***
+* ***Clicking calls up a text dialog for entry.  It will placed relative to the click point based on the selection of 'justification'.***
+
+Line/Arrow Line modes:
+* The line goes from the first click to the second click.
+* The line is drawn from the first click to the mouse until the 2nd click.
+* <Esc> cancels the line.
+* For arrows, the head is at the 2nd click.
+* An arrow is just a line with the 2nd arrow head shown by default.  A line can be turned to an arrow or an arrow to a line in the dialog.
+
+Ellipse:
+* Arrow Icon
+* First click is at centre.
+* Second is at extended corner.
+* The ellipse is drawn as the mouse is moved.
+* <Esc> cancels the circle.
+* There is no concept of a circle: the dimensions are relative the parent.
+
+Dialogs:
+* Line Mode and arrow mode contains: width, type, color, and arrow head properties (check box for 1st head, 2nd head, and a scale factor).
+* Ellipse contains width, type, line color, and a check box to make it a circle
+* Box: Border color, border width, fill color, X and Y roundness, and ()Transparent fill
+* Label: ***In This order***: ***Scalar list combo***, Text, font, font size, Resize label for text, H Justification, V Justfication, data precision, Rotation, Transparent fill, Font colour, box properties
+etc...
+
+

@@ -1,0 +1,24 @@
+Kst is now being actively translated by the KDE translation team.  As such, we
+should do our best to help them with their task.  This means:
+
+1) Make sure you i18n() or I18N_NOOP() your strings as appropriate.
+
+2) Keep in mind that some languages are Right-To-Left.  You cannot do things
+like:  QString foo = i18n("My first statement."); foo += i18n("\nmore text");
+
+3) There are three variants of i18n() and I18N_NOOP().  We need to make heavy
+use of the "comment" ones because the translators do not understand all of our
+terminology:
+i18n(const char *string);
+i18n(const char *comment, const char *string);
+i18n(const char *singular_form, const char *plural_form, unsigned long n);
+
+The comment one looks like this: i18n("A curve that represents a \"best fit\" for another curve.", "Fit Curve");
+
+4) Don't change i18n()s if you don't have to.  It introduces "fuzzies" and
+makes life difficult for translators.
+
+5) Be aware of non-language issues for translation, such as dates (different
+calendar systems), currencies, numerics, and units.  KDE provides various
+facilities to deal with some of these issues.
+
