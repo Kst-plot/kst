@@ -8,7 +8,7 @@ add_subdirectory( libkstapp )
 add_subdirectory( kst )
 add_subdirectory( d2asc )
 add_subdirectory( d2d )
-add_subdirectory( plugins )
+#add_subdirectory( plugins )
 add_subdirectory( extensions )
 
 message(STATUS "${CMAKE_CURRENT_SOURCE_DIR}: skipped subdir $(KMDI_SUBDIR)")

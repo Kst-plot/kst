@@ -1,7 +1,7 @@
 
 add_subdirectory( src )
-add_subdirectory( misc )
-add_subdirectory( tests )
+#add_subdirectory( misc )
+#add_subdirectory( tests )
 
 include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
 
