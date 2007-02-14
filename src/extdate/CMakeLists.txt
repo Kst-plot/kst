@@ -1,4 +1,5 @@
 
+FIND_PACKAGE(KDE4 REQUIRED)
 include_directories( ${CMAKE_SOURCE_DIR}/kst/kst ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
 
 

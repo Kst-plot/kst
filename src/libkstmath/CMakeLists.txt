@@ -1,4 +1,5 @@
 
+FIND_PACKAGE(KDE4 REQUIRED)
 include_directories( ${CMAKE_SOURCE_DIR}/kst/src/extdate ${CMAKE_SOURCE_DIR}/kst/src/libkst ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
 
 
