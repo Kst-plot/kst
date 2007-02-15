@@ -66,7 +66,7 @@ static QString obtainFile(const QString& source) {
     url = KUrl::fromPathOrUrl(source);
   }
 
-  if (url.isLocalFile() || url.protocol().isEmpty() || url.protocol().lower() == "nad") {
+  if (url.isLocalFile() || url.protocol().isEmpty() || url.protocol().toLower() == "nad") {
     return source;
   }
 
