@@ -51,7 +51,7 @@ void KstDataSource::cleanupForExit() {
   pluginInfo.clear();
   kConfigObject = 0L;
   for (QMap<QString,QString>::Iterator i = urlMap.begin(); i != urlMap.end(); ++i) {
-    KIO::NetAccess::removeTempFile(i.data());
+    KIO::NetAccess::removeTempFile(i.value());
   }
   urlMap.clear();
 }
@@ -578,7 +578,7 @@ int KstDataSource::frameCount(const QString& field) const {
 QString KstDataSource::fileName() const {
   // Look to see if it was a URL and save the URL instead
   for (QMap<QString,QString>::ConstIterator i = urlMap.begin(); i != urlMap.end(); ++i) {
-    if (i.data() == _filename) {
+    if (i.value() == _filename) {
       return i.key();
     }
   }
@@ -605,7 +605,7 @@ void KstDataSource::save(Q3TextStream &ts, const QString& indent) {
   QString name = Q3StyleSheet::escape(_filename);
   // Look to see if it was a URL and save the URL instead
   for (QMap<QString,QString>::ConstIterator i = urlMap.begin(); i != urlMap.end(); ++i) {
-    if (i.data() == _filename) {
+    if (i.value() == _filename) {
       name = Q3StyleSheet::escape(i.key());
       break;
     }

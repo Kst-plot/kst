@@ -387,7 +387,7 @@ KstTimezones::~KstTimezones()
     {
         for (ZoneMap::ConstIterator it = m_zones->begin(); it != m_zones->end(); ++it)
         {
-            delete it.data();
+            delete it.value();
         }
     }
     delete m_zones;
@@ -550,7 +550,7 @@ const KstTimezone *KstTimezones::local()
             // Compare it with each zoneinfo file.
             for (ZoneMap::Iterator it = m_zones->begin(); it != m_zones->end(); ++it)
             {
-                KstTimezone *zone = it.data();
+                KstTimezone *zone = it.value();
                 f.setName(m_zoneinfoDir + '/' + zone->name());
                 if (f.open(QIODevice::ReadOnly))
                 {
@@ -629,7 +629,7 @@ const KstTimezone *KstTimezones::local()
         int bestOffset = INT_MAX;
         for (ZoneMap::Iterator it = m_zones->begin(); it != m_zones->end(); ++it)
         {
-            KstTimezone *zone = it.data();
+            KstTimezone *zone = it.value();
             int candidateOffset = QABS(zone->offset(Qt::LocalTime));
             if (zone->parse(matcher) && matcher.test() && (candidateOffset < bestOffset))
             {
@@ -649,7 +649,7 @@ const KstTimezone *KstTimezones::zone(const QString &name)
         return m_UTC;
     ZoneMap::ConstIterator it = m_zones->find(name);
     if (it != m_zones->end())
-        return it.data();
+        return it.value();
 
     // Error.
     return 0;

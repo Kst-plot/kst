@@ -361,7 +361,7 @@ class KstObjectMap : public QMap<QString,T> {
     virtual QStringList tagNames() {
       QStringList rc;
       for (typename QMap<QString,T>::ConstIterator it = QMap<QString,T>::begin(); it != QMap<QString,T>::end(); ++it) {
-        rc << it.data()->tagName();
+        rc << it.value()->tagName();
       }
       return rc;
     }
@@ -370,7 +370,7 @@ class KstObjectMap : public QMap<QString,T> {
     QStringList tagNames() const {
       QStringList rc;
       for (typename QMap<QString,T>::ConstIterator it = QMap<QString,T>::begin(); it != QMap<QString,T>::end(); ++it) {
-        rc << it.data()->tagName();
+        rc << it.value()->tagName();
       }
       return rc;
     }
@@ -383,7 +383,7 @@ class KstObjectMap : public QMap<QString,T> {
     typename QMap<QString,T>::iterator findTag(const QString& tag) {
       typename QMap<QString,T>::iterator i;
       for (i = QMap<QString,T>::begin(); i != QMap<QString,T>::end(); ++i) {
-        if (i.data()->tagName() == tag) {
+        if (i.value()->tagName() == tag) {
           break;
         }
       }

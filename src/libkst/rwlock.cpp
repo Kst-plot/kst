@@ -52,7 +52,7 @@ void KstRWLock::readLock() const {
 #endif
   } else {
     QMap<Qt::HANDLE, int>::Iterator it = _readLockers.find(me);
-    if (it != _readLockers.end() && it.data() > 0) {
+    if (it != _readLockers.end() && it.value() > 0) {
       // thread already has another read lock
     } else {
       while (_writeCount > 0 || _waitingWriters) {  // writer priority otherwise
@@ -88,7 +88,7 @@ void KstRWLock::writeLock() const {
 
   if (_readCount > 0) {
     QMap<Qt::HANDLE, int>::Iterator it = _readLockers.find(me);
-    if (it != _readLockers.end() && it.data() > 0) {
+    if (it != _readLockers.end() && it.value() > 0) {
       // cannot acquire a write lock if I already have a read lock -- ERROR
       kstdFatal() << "Thread " << (int)QThread::currentThread() << " tried to write lock KstRWLock " << (void*)this << " while holding a read lock" << endl;
       return;
@@ -130,10 +130,10 @@ void KstRWLock::unlock() const {
       return;
     } else {
       --_readCount;
-      if (it.data() == 1) {
+      if (it.value() == 1) {
         _readLockers.remove(it);
       } else {
-        --(it.data());
+        --(it.value());
       }
     }
   } else if (_writeCount > 0) {
