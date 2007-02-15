@@ -18,11 +18,16 @@
 #ifndef KSTDATEPARSER_H
 #define KSTDATEPARSER_H
 
-#include <kstextdatetime.h>
+// #include <kstextdatetime.h>
 #include "kst_export.h"
 
 /* This is a public header */
 namespace KST {
+
+  /*FIXME Need to know if QDateTime in Qt4 will serve our needs or do we need to port
+  over the extdate lib*/
+  typedef QDateTime ExtDateTime;
+
   /*
   All times represented as doubles are the number of milliseconds since Jan 01
   1970 00:00:00.  Negative times are before then.
