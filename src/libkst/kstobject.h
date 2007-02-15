@@ -237,6 +237,7 @@ class KST_EXPORT KstObject : public KstShared, public QObject, public KstRWLock 
 typedef KstSharedPtr<KstObject> KstObjectPtr;
 
 #include <q3valuelist.h>
+#include <q3deepcopy.h>
 
 template<class T>
 class KstObjectList : public Q3ValueList<T> {

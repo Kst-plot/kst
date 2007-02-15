@@ -81,7 +81,7 @@ void KstObject::setTagName(const KstObjectTag& tag) {
   }
 
   _tag = tag;
-  setName(_tag.tagString().local8Bit().data());
+  setObjectName(_tag.tagString().toLocal8Bit().data());
 }
 
 
