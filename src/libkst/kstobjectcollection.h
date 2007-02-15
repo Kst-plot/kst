@@ -172,9 +172,7 @@ KstObjectTreeNode<T>::KstObjectTreeNode(const QString& tag) : _tag(tag),
 
 template <class T>
 KstObjectTreeNode<T>::~KstObjectTreeNode() {
-  for (QMapIterator<QString, KstObjectTreeNode*> i = _children.begin(); i != _children.end(); ++i) {
-    delete (i.value());
-  }
+  qDeleteAll(_children);
 }
 
 

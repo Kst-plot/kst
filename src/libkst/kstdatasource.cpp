@@ -190,7 +190,8 @@ static Q3ValueList<PluginSortContainer> bestPluginsForSource(const QString& file
     }
   }
 
-  qSort(bestPlugins);
+  /*FIXME need to get away from Q3ValueList anyways...
+  qSort(bestPlugins);*/
   return bestPlugins;
 }
 
