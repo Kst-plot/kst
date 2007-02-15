@@ -150,7 +150,7 @@ class KstObjectTag {
 
     // factory for String representation
     static KstObjectTag fromString(const QString& str) {
-      QStringList l = QStringList::split(tagSeparator, str);
+      QStringList l = str.split(tagSeparator);
       if (l.isEmpty()) {
         return invalidTag;
       }

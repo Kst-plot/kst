@@ -61,7 +61,7 @@ double extDateTimeToMilliseconds(const ExtDateTime& edt) {
 
 
 ExtDateTime parsePlanckDate(const QString& dateString) {
-  QStringList secondSplit = QStringList::split('.', dateString);
+  QStringList secondSplit = dateString.split('.');
   if (secondSplit.isEmpty() || secondSplit.count() > 2) {
     return ExtDateTime();
   }
@@ -71,7 +71,7 @@ ExtDateTime parsePlanckDate(const QString& dateString) {
     seconds = secondSplit[1].toUInt();
   }
 
-  QStringList mainSplit = QStringList::split(':', secondSplit[0]);
+  QStringList mainSplit = secondSplit[0].split(':');
   ExtDateTime edt = ExtDateTime::currentDateTime();
   int offset = ExtDateTime::currentDateTime(Qt::UTC).toTime_t() - edt.toTime_t();
   ExtDate d = edt.date();
