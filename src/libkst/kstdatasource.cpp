@@ -24,6 +24,7 @@
 #include <klibloader.h>
 #include <klocale.h>
 #include <kservicetype.h>
+#include <kservicetypetrader.h>
 
 #include <q3deepcopy.h>
 #include <qfile.h>
@@ -107,7 +108,7 @@ static void scanPlugins() {
 
   KstDebug::self()->log(i18n("Scanning for data-source plugins."));
 
-  KService::List sl = KServiceType::offers("Kst Data Source");
+  KService::List sl = KServiceTypeTrader::self()->query("Kst Data Source");
   for (KService::List::ConstIterator it = sl.begin(); it != sl.end(); ++it) {
     for (KST::PluginInfoList::ConstIterator i2 = pluginInfo.begin(); i2 != pluginInfo.end(); ++i2) {
       if ((*i2)->service == *it) {
