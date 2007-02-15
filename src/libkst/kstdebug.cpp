@@ -25,7 +25,9 @@
 #include <kglobal.h>
 #include <klocale.h>
 
-#include <qdeepcopy.h>
+#include <q3deepcopy.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 static KStaticDeleter<KstDebug> sd;
 
@@ -87,8 +89,8 @@ void KstDebug::log(const QString& msg, LogLevel level) {
 
   _messages.append(message);
   if (_applyLimit && int(_messages.size()) > _limit) {
-    QValueListIterator<LogMessage> first = _messages.begin();
-    QValueListIterator<LogMessage> last = first;
+    Q3ValueListIterator<LogMessage> first = _messages.begin();
+    Q3ValueListIterator<LogMessage> last = first;
     last += _messages.size() - _limit;
     _messages.erase(first, last);
   }
@@ -161,9 +163,9 @@ void KstDebug::sendEmail() {
 }
 
 
-QValueList<KstDebug::LogMessage> KstDebug::messages() const {
+Q3ValueList<KstDebug::LogMessage> KstDebug::messages() const {
   QMutexLocker ml(&_lock);
-  return QDeepCopy<QValueList<LogMessage> >(_messages);
+  return Q3DeepCopy<Q3ValueList<LogMessage> >(_messages);
 }
 
 

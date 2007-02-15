@@ -20,7 +20,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include <qstylesheet.h>
+#include <q3stylesheet.h>
 
 #include "ksdebug.h"
 #include <klocale.h>
@@ -329,13 +329,13 @@ int KstRVector::reqStartFrame() const {
 
 
 /** Save vector information */
-void KstRVector::save(QTextStream &ts, const QString& indent, bool saveAbsolutePosition) {
+void KstRVector::save(Q3TextStream &ts, const QString& indent, bool saveAbsolutePosition) {
   if (_file) {    
     ts << indent << "<vector>" << endl;
     KstVector::save(ts, indent + "  ", saveAbsolutePosition);
     _file->readLock();
-    ts << indent << "  <provider>" << QStyleSheet::escape(_file->tag().tagString()) << "</provider>" << endl;
-    ts << indent << "  <filename>" << QStyleSheet::escape(_file->fileName()) << "</filename>" << endl;
+    ts << indent << "  <provider>" << Q3StyleSheet::escape(_file->tag().tagString()) << "</provider>" << endl;
+    ts << indent << "  <filename>" << Q3StyleSheet::escape(_file->fileName()) << "</filename>" << endl;
     _file->unlock();
 
     ts << indent << "  <field>" << _field << "</field>" << endl;

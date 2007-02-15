@@ -29,7 +29,7 @@
 #include <qfile.h>
 #include <qregexp.h>
 #include <qstringlist.h>
-#include <qtextstream.h>
+#include <q3textstream.h>
 
 #include <cerrno>
 #include <climits>
@@ -414,15 +414,15 @@ const KstTimezones::ZoneMap KstTimezones::allZones()
     QFile f;
     m_zoneinfoDir = "/usr/share/zoneinfo";
     f.setName(m_zoneinfoDir + "/zone.tab");
-    if (!f.open(IO_ReadOnly))
+    if (!f.open(QIODevice::ReadOnly))
     {
         m_zoneinfoDir = "/usr/lib/zoneinfo";
         f.setName(m_zoneinfoDir + "/zone.tab");
-        if (!f.open(IO_ReadOnly))
+        if (!f.open(QIODevice::ReadOnly))
         {
             m_zoneinfoDir = ::getenv("TZDIR");
             f.setName(m_zoneinfoDir + "/zone.tab");
-            if (m_zoneinfoDir.isEmpty() || !f.open(IO_ReadOnly))
+            if (m_zoneinfoDir.isEmpty() || !f.open(QIODevice::ReadOnly))
             {
                 // Solaris support. Synthesise something that looks like a zone.tab.
                 //
@@ -439,7 +439,7 @@ const KstTimezones::ZoneMap KstTimezones::allZones()
                 temp.close();
                 reader.start(KProcess::Block);
                 f.setName(temp.name());
-                if (!temp.status() || !f.open(IO_ReadOnly))
+                if (!temp.status() || !f.open(QIODevice::ReadOnly))
                 {
                     return *m_zones;
                 }
@@ -448,7 +448,7 @@ const KstTimezones::ZoneMap KstTimezones::allZones()
     }
 
     // Parse the zone.tab.
-    QTextStream str(&f);
+    Q3TextStream str(&f);
     QRegExp lineSeparator("[ \t]");
     QRegExp ordinateSeparator("[+-]");
     KSharedPtr<KstTimezoneSource> db(new KstTimezoneSource(m_zoneinfoDir));
@@ -536,13 +536,13 @@ const KstTimezone *KstTimezones::local()
     // Try to match /etc/localtime against the list of zoneinfo files.
     QFile f;
     f.setName("/etc/localtime");
-    if (f.open(IO_ReadOnly))
+    if (f.open(QIODevice::ReadOnly))
     {
         // Compute the MD5 sum of /etc/localtime.
         KMD5 context("");
         context.reset();
         context.update(f);
-        QIODevice::Offset referenceSize = f.size();
+        qlonglong referenceSize = f.size();
         QString referenceMd5Sum = context.hexDigest();
         f.close();
         if (!m_zoneinfoDir.isEmpty())
@@ -552,9 +552,9 @@ const KstTimezone *KstTimezones::local()
             {
                 KstTimezone *zone = it.data();
                 f.setName(m_zoneinfoDir + '/' + zone->name());
-                if (f.open(IO_ReadOnly))
+                if (f.open(QIODevice::ReadOnly))
                 {
-                    QIODevice::Offset candidateSize = f.size();
+                    qlonglong candidateSize = f.size();
                     QString candidateMd5Sum;
                     if (candidateSize == referenceSize)
                     {
@@ -579,14 +579,14 @@ const KstTimezone *KstTimezones::local()
     // BSD support.
     QString fileZone;
     f.setName("/etc/timezone");
-    if (!f.open(IO_ReadOnly))
+    if (!f.open(QIODevice::ReadOnly))
     {
         // Solaris support using /etc/default/init.
         f.setName("/etc/default/init");
-        if (f.open(IO_ReadOnly))
+        if (f.open(QIODevice::ReadOnly))
         {
-            QTextStream ts(&f);
-            ts.setEncoding(QTextStream::Latin1);
+            Q3TextStream ts(&f);
+            ts.setEncoding(Q3TextStream::Latin1);
 
             // Read the last line starting "TZ=".
             while (!ts.atEnd())
@@ -604,8 +604,8 @@ const KstTimezone *KstTimezones::local()
     }
     else
     {
-        QTextStream ts(&f);
-        ts.setEncoding(QTextStream::Latin1);
+        Q3TextStream ts(&f);
+        ts.setEncoding(Q3TextStream::Latin1);
 
         // Read the first line.
         if (!ts.atEnd())
@@ -712,7 +712,7 @@ QString KstTimezoneSource::db()
 bool KstTimezoneSource::parse(const QString &zone, KstTimezoneDetails &dataReceiver) const
 {
     QFile f(m_db + '/' + zone);
-    if (!f.open(IO_ReadOnly))
+    if (!f.open(QIODevice::ReadOnly))
     {
         return false;
     }

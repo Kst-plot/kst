@@ -16,7 +16,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "kstsmatrix.h"
-#include <qstylesheet.h>
+#include <q3stylesheet.h>
 
 KstSMatrix::KstSMatrix(const QDomElement &e) : KstMatrix() {
   double in_xMin = 0, in_yMin = 0, in_xStep = 1, in_yStep = 1;
@@ -72,12 +72,12 @@ KstSMatrix::KstSMatrix(KstObjectTag tag,
   change(tag, nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
 }
 
-void KstSMatrix::save(QTextStream &ts, const QString& indent) {
+void KstSMatrix::save(Q3TextStream &ts, const QString& indent) {
       
   QString indent2 = "  ";
   
   ts << indent << "<smatrix>" << endl;
-  ts << indent << indent2 << "<tag>" << QStyleSheet::escape(tag().tagString()) << "</tag>" << endl;
+  ts << indent << indent2 << "<tag>" << Q3StyleSheet::escape(tag().tagString()) << "</tag>" << endl;
   ts << indent << indent2 << "<xmin>" << minX() << "</xmin>" << endl;
   ts << indent << indent2 << "<ymin>" << minY() << "</ymin>" << endl;
   ts << indent << indent2 << "<nx>" << xNumSteps() << "</nx>" << endl;

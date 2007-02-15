@@ -20,8 +20,8 @@
 
 #include "kstamatrix.h"
 #include "kstdebug.h"
-#include <qcstring.h>
-#include <qstylesheet.h>
+#include <q3cstring.h>
+#include <q3stylesheet.h>
 #include <klocale.h>
 #include <kmdcodec.h>
 
@@ -65,11 +65,11 @@ KstAMatrix::KstAMatrix(const QDomElement &e) : KstMatrix() {
       QDomElement e = n.toElement();
       if (!e.isNull()) {
         if (e.tagName() == "data") {
-          QCString qcs(e.text().latin1());
+          Q3CString qcs(e.text().latin1());
           QByteArray qbca;
           KCodecs::base64Decode(qcs, qbca);
           QByteArray qba = qUncompress(qbca);
-          QDataStream qds(qba, IO_ReadOnly);
+          QDataStream qds(qba, QIODevice::ReadOnly);
           int i;
           // fill in the raw array with the data
           for (i = 0; i < in_nX*in_nY && !qds.atEnd(); i++) {
@@ -95,19 +95,19 @@ KstAMatrix::KstAMatrix(KstObjectTag in_tag, uint nX, uint nY, double minX, doubl
 }
 
 
-void KstAMatrix::save(QTextStream &ts, const QString& indent) {
+void KstAMatrix::save(Q3TextStream &ts, const QString& indent) {
 
   QString indent2 = "  ";
   
   QByteArray qba(_zSize*sizeof(double));
-  QDataStream qds(qba, IO_WriteOnly);
+  QDataStream qds(qba, QIODevice::WriteOnly);
 
   for (int i = 0; i < _zSize; i++) {
     qds << _z[i];
   }
 
   ts << indent << "<amatrix>" << endl;
-  ts << indent << indent2 << "<tag>" << QStyleSheet::escape(tag().tagString()) << "</tag>" << endl;
+  ts << indent << indent2 << "<tag>" << Q3StyleSheet::escape(tag().tagString()) << "</tag>" << endl;
   ts << indent << indent2 << "<xmin>" << minX() << "</xmin>" << endl;
   ts << indent << indent2 << "<ymin>" << minY() << "</ymin>" << endl;
   ts << indent << indent2 << "<nx>" << xNumSteps() << "</nx>" << endl;

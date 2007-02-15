@@ -35,7 +35,7 @@ class KST_EXPORT KstString : public KstPrimitive {
     void setTagName(const KstObjectTag& tag);
 
     /** Save information */
-    void save(QTextStream &ts, const QString& indent = QString::null);
+    void save(Q3TextStream &ts, const QString& indent = QString::null);
 
     /** Update the vector.  Return true if there was new data. */
     UpdateType update(int updateCounter = -1);

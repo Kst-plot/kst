@@ -21,8 +21,10 @@
 // NAMEDEBUG: 0 for no debug, 1 for some debug, 2 for more debug, 3 for all debug
 #define NAMEDEBUG 0
 
-#include <qdict.h>
-#include <qintdict.h>
+#include <q3dict.h>
+#include <q3intdict.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include "ksdebug.h"
 #include "kstobject.h"
@@ -38,7 +40,7 @@ class KstVector;
 
 // Typedefs
 template <class T>
-class KstObjectNameIndex : public QDict<QValueList<KstObjectTreeNode<T> *> > {
+class KstObjectNameIndex : public Q3Dict<Q3ValueList<KstObjectTreeNode<T> *> > {
 };
 
 
@@ -67,7 +69,7 @@ class KstObjectTreeNode {
 
   private:
     QString _tag;
-    QGuardedPtr<T> _object;
+    QPointer<T> _object;
     KstObjectTreeNode<T> *_parent;
     QMap<QString, KstObjectTreeNode<T> *> _children;
 };
@@ -120,13 +122,13 @@ class KstObjectCollection {
     KstRWLock& lock() const { return _list.lock(); }
 
   private:
-    QValueList<KstObjectTreeNode<T> *> relatedNodes(T *obj);
-    void relatedNodesHelper(T *o, KstObjectTreeNode<T> *n, QIntDict<KstObjectTreeNode<T> >& nodes);
+    Q3ValueList<KstObjectTreeNode<T> *> relatedNodes(T *obj);
+    void relatedNodesHelper(T *o, KstObjectTreeNode<T> *n, Q3IntDict<KstObjectTreeNode<T> >& nodes);
 
     // must be called AFTER the object is added to the index, while holding a write lock
     void updateAllDisplayTags();
     void updateDisplayTag(T *obj);
-    void updateDisplayTags(QValueList<KstObjectTreeNode<T> *> nodes);
+    void updateDisplayTags(Q3ValueList<KstObjectTreeNode<T> *> nodes);
 
     bool _updateDisplayTags;
 
@@ -246,9 +248,9 @@ KstObjectTreeNode<T> *KstObjectTreeNode<T>::addDescendant(T *o, KstObjectNameInd
       nextNode->_parent = currNode;
       currNode->_children[*i] = nextNode;
       if (index) {
-        QValueList<KstObjectTreeNode<T> *> *l;
+        Q3ValueList<KstObjectTreeNode<T> *> *l;
         if (!(l = index->take(*i))) {
-          l = new QValueList<KstObjectTreeNode<T> *>;
+          l = new Q3ValueList<KstObjectTreeNode<T> *>;
         }
         l->append(nextNode);
         index->insert(*i, l);
@@ -292,7 +294,7 @@ bool KstObjectTreeNode<T>::removeDescendant(T *o, KstObjectNameIndex<T> *index) 
     currNode = nextNode;
   }
 
-  if (currNode->_object != QGuardedPtr<KstObject>(o)) {
+  if (currNode->_object != QPointer<KstObject>(o)) {
 #if NAMEDEBUG > 0
     kstdDebug() << "Tried to remove KstObject from naming tree: \"" << o->tag().tagString() << "\", but the object is not in the tree" << endl;
 #endif
@@ -308,7 +310,7 @@ bool KstObjectTreeNode<T>::removeDescendant(T *o, KstObjectNameIndex<T> *index) 
       kstdDebug() << "Removed naming tree node: \"" << currNode->fullTag().join(KstObjectTag::tagSeparator) << "\"" << endl;
 #endif
       if (index) {
-        QValueList<KstObjectTreeNode<T> *> *l = index->take(*i);
+        Q3ValueList<KstObjectTreeNode<T> *> *l = index->take(*i);
         if (l) {
           l->remove(currNode);
           index->insert(*i, l);
@@ -356,7 +358,7 @@ bool KstObjectCollection<T>::addObject(T *o) {
 
   _list.append(o);
 
-  QValueList<KstObjectTreeNode<T> *> relNodes;
+  Q3ValueList<KstObjectTreeNode<T> *> relNodes;
   if (_updateDisplayTags) {
     relNodes = relatedNodes(o);
   }
@@ -393,7 +395,7 @@ bool KstObjectCollection<T>::removeObject(T *o) {
     kstdDebug() << "Removing object from the collection: " << o->tag().tagString() << endl;
 #endif
 
-    QValueList<KstObjectTreeNode<T> *> relNodes;
+    Q3ValueList<KstObjectTreeNode<T> *> relNodes;
     if (_updateDisplayTags) {
 #if NAMEDEBUG > 2
       kstdDebug() << "  fetching related nodes" << endl;
@@ -434,7 +436,7 @@ void KstObjectCollection<T>::doRename(T *o, const KstObjectTag& newTag) {
     return;
   }
 
-  QValueList<KstObjectTreeNode<T> *> relNodes;
+  Q3ValueList<KstObjectTreeNode<T> *> relNodes;
   if (_updateDisplayTags) {
     relNodes = relatedNodes(o);
   }
@@ -724,8 +726,8 @@ void KstObjectCollection<T>::updateDisplayTag(T *obj) {
 }
 
 template <class T>
-void KstObjectCollection<T>::updateDisplayTags(QValueList<KstObjectTreeNode<T> *> nodes) {
-  for (typename QValueList<KstObjectTreeNode<T> *>::Iterator i = nodes.begin(); i != nodes.end(); ++i) {
+void KstObjectCollection<T>::updateDisplayTags(Q3ValueList<KstObjectTreeNode<T> *> nodes) {
+  for (typename Q3ValueList<KstObjectTreeNode<T> *>::Iterator i = nodes.begin(); i != nodes.end(); ++i) {
     updateDisplayTag((*i)->object());
   }
 }
@@ -733,7 +735,7 @@ void KstObjectCollection<T>::updateDisplayTags(QValueList<KstObjectTreeNode<T> *
 
 // recursion helper
 template <class T>
-void KstObjectCollection<T>::relatedNodesHelper(T *o, KstObjectTreeNode<T> *n, QIntDict<KstObjectTreeNode<T> >& nodes) {
+void KstObjectCollection<T>::relatedNodesHelper(T *o, KstObjectTreeNode<T> *n, Q3IntDict<KstObjectTreeNode<T> >& nodes) {
 
   if (n->object() && n->object() != o && !nodes[(long)n]) {
 #if NAMEDEBUG > 2
@@ -756,9 +758,9 @@ void KstObjectCollection<T>::relatedNodesHelper(T *o, KstObjectTreeNode<T> *n, Q
 //
 // There should not be any duplicates in the returned list.
 template <class T>
-QValueList<KstObjectTreeNode<T> *> KstObjectCollection<T>::relatedNodes(T *o) {
-  QIntDict<KstObjectTreeNode<T> > nodes;
-  QValueList<KstObjectTreeNode<T> *> outNodes;
+Q3ValueList<KstObjectTreeNode<T> *> KstObjectCollection<T>::relatedNodes(T *o) {
+  Q3IntDict<KstObjectTreeNode<T> > nodes;
+  Q3ValueList<KstObjectTreeNode<T> *> outNodes;
 
   if (!o) {
     return outNodes;
@@ -772,14 +774,14 @@ QValueList<KstObjectTreeNode<T> *> KstObjectCollection<T>::relatedNodes(T *o) {
 
   for (QStringList::ConstIterator i = ft.begin(); i != ft.end(); ++i) {
     if (_index[*i]) {
-      QValueList<KstObjectTreeNode<T> *> *nodeList = _index[*i];
-      for (typename QValueList<KstObjectTreeNode<T> *>::ConstIterator i2 = nodeList->begin(); i2 != nodeList->end(); ++i2) {
+      Q3ValueList<KstObjectTreeNode<T> *> *nodeList = _index[*i];
+      for (typename Q3ValueList<KstObjectTreeNode<T> *>::ConstIterator i2 = nodeList->begin(); i2 != nodeList->end(); ++i2) {
         relatedNodesHelper(o, *i2, nodes);
       }
     }
   }
 
-  QIntDictIterator<KstObjectTreeNode<T> > i(nodes);
+  Q3IntDictIterator<KstObjectTreeNode<T> > i(nodes);
   for (; i.current(); ++i) {
     outNodes << i.current();
   }

@@ -153,7 +153,7 @@ QString KstStdinSource::fileType() const {
 }
 
 
-void KstStdinSource::save(QTextStream &ts, const QString& indent) {
+void KstStdinSource::save(Q3TextStream &ts, const QString& indent) {
   if (isValid()) {
     return _src->save(ts, indent);
   }

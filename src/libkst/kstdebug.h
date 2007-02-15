@@ -21,9 +21,11 @@
 #include <config.h>
 
 #include <qdatetime.h>
-#include <qguardedptr.h>
+#include <qpointer.h>
 #include <qobject.h>
 #include <qmutex.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include <kstaticdeleter.h>
 #include <ksttimers.h>
@@ -50,7 +52,7 @@ class KST_EXPORT KstDebug : public QObject {
     void sendEmail();
 
     int logLength() const;
-    QValueList<LogMessage> messages() const;
+    Q3ValueList<LogMessage> messages() const;
     KstDebug::LogMessage message(unsigned n) const;
     QStringList dataSourcePlugins() const;
     QString label(LogLevel level) const;
@@ -74,7 +76,7 @@ class KST_EXPORT KstDebug : public QObject {
     ~KstDebug();
 
     static KstDebug *_self;
-    QValueList<LogMessage> _messages;
+    Q3ValueList<LogMessage> _messages;
     bool _applyLimit;
     bool _hasNewError;
     int _limit;
@@ -83,7 +85,7 @@ class KST_EXPORT KstDebug : public QObject {
     // If this is ever public we can't do this
     QMap<QString,int> _drawCounter;
 #endif
-    QGuardedPtr<QObject> _handler;
+    QPointer<QObject> _handler;
     QString _kstRevision;
 };
 

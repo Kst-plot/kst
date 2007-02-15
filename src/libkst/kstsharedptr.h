@@ -19,9 +19,9 @@
 #ifndef KstSharedPTR_H
 #define KstSharedPTR_H
 
-#include <qsemaphore.h>
+#include <q3semaphore.h>
 
-#include <ksdebug.h>
+// #include <ksdebug.h>
 
 // NOTE: In order to preserve binary compatibility with plugins, you must
 //       not add, remove, or change member variables or virtual functions.
@@ -78,7 +78,7 @@ public:
 protected:
    virtual ~KstShared() { }
 private:
-   mutable QSemaphore sem;
+   mutable Q3Semaphore sem;
 };
 
 template< class T >

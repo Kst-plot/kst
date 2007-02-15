@@ -24,7 +24,7 @@
 
 #include "kstwaitcondition.h"
 
-#include "config.h"
+#include <config.h>
 #include "kst_export.h"
 
 // NOTE: In order to preserve binary compatibility with plugins, you must

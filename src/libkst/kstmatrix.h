@@ -18,7 +18,7 @@
 #ifndef KSTMATRIX_H
 #define KSTMATRIX_H
 
-#include <qdict.h>
+#include <q3dict.h>
 #include "kstscalar.h"
 #include "kstprimitive.h"
 
@@ -96,13 +96,13 @@ class KST_EXPORT KstMatrix: public KstPrimitive {
     virtual int getUsage() const;
 
     // save the matrix
-    virtual void save(QTextStream &ts, const QString& indent = QString::null);
+    virtual void save(Q3TextStream &ts, const QString& indent = QString::null);
 
     // set tag name of the matrix
     virtual void setTagName(const KstObjectTag& tag);
 
     // the statistics scalars for this matrix
-    const QDict<KstScalar>& scalars() const;
+    const Q3Dict<KstScalar>& scalars() const;
 
     // set the labels for this matrix
     void setLabel(const QString& newLabel);
@@ -137,7 +137,7 @@ class KST_EXPORT KstMatrix: public KstPrimitive {
     double _stepX;
     double _stepY;
     int _numNew; // number of new samples
-    QDict<KstScalar> _statScalars; // statistics scalars
+    Q3Dict<KstScalar> _statScalars; // statistics scalars
     bool _editable : 1;
     bool _saveable : 1;
 

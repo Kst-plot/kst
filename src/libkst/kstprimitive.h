@@ -20,7 +20,7 @@
 
 #include "kst_export.h"
 #include "kstobject.h"
-#include <qguardedptr.h>
+#include <qpointer.h>
 
 class KST_EXPORT KstPrimitive : public KstObject {
   public:
@@ -44,7 +44,7 @@ class KST_EXPORT KstPrimitive : public KstObject {
     /** Possibly null.  Be careful, this is non-standard usage of a KstShared.
      * The purpose of this is to trigger hierarchical updates properly.
      */
-    QGuardedPtr<KstObject> _provider;
+    QPointer<KstObject> _provider;
 };
 
 typedef KstSharedPtr<KstPrimitive> KstPrimitivePtr;

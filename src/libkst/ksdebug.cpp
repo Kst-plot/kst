@@ -37,7 +37,7 @@
 #include <qbrush.h>
 #include <qdatetime.h>
 #include <qfile.h>
-#include <qintdict.h>
+#include <q3intdict.h>
 #include <qmessagebox.h>
 #include <qmutex.h>
 #include <qpen.h>
@@ -48,6 +48,9 @@
 #include <qstring.h>
 #include <qstringlist.h>
 #include <qthread.h>
+//Added by qt3to4:
+#include <Q3CString>
+#include <Q3MemArray>
 
 #include <kurl.h>
 
@@ -71,22 +74,22 @@ class KstDebugEntry;
 class KstDebugEntry
 {
 public:
-    KstDebugEntry (int n, const QCString& d) {number=n; descr=d;}
+    KstDebugEntry (int n, const Q3CString& d) {number=n; descr=d;}
     unsigned int number;
-    QCString descr;
+    Q3CString descr;
 };
 
-static QIntDict<KstDebugEntry> *KstDebugCache;
+static Q3IntDict<KstDebugEntry> *KstDebugCache;
 
-static KStaticDeleter< QIntDict<KstDebugEntry> > kstdd;
+static KStaticDeleter< Q3IntDict<KstDebugEntry> > kstdd;
 
 static QMutex kstDebugMutex;
 
-static QCString getDescrFromNum(unsigned int _num)
+static Q3CString getDescrFromNum(unsigned int _num)
 {
   QMutexLocker ml(&kstDebugMutex);
   if (!KstDebugCache) {
-    kstdd.setObject(KstDebugCache, new QIntDict<KstDebugEntry>( 601 ));
+    kstdd.setObject(KstDebugCache, new Q3IntDict<KstDebugEntry>( 601 ));
     // Do not call this deleter from ~KApplication
     KGlobal::unregisterStaticDeleter(&kstdd);
     KstDebugCache->setAutoDelete(true);
@@ -97,21 +100,21 @@ static QCString getDescrFromNum(unsigned int _num)
     return ent->descr;
 
   if ( !KstDebugCache->isEmpty() ) // areas already loaded
-    return QCString();
+    return Q3CString();
 
   QString filename(locate("config","kdebug.areas"));
   if (filename.isEmpty())
-      return QCString();
+      return Q3CString();
 
   QFile file(filename);
-  if (!file.open(IO_ReadOnly)) {
+  if (!file.open(QIODevice::ReadOnly)) {
     qWarning("Couldn't open %s", filename.local8Bit().data());
     file.close();
-    return QCString();
+    return Q3CString();
   }
 
   uint lineNumber=0;
-  QCString line(1024);
+  Q3CString line(1024);
   int len;
 
   while (( len = file.readLine(line.data(),line.size()-1) ) > 0) {
@@ -149,7 +152,7 @@ static QCString getDescrFromNum(unsigned int _num)
   if ( ent )
       return ent->descr;
 
-  return QCString();
+  return Q3CString();
 }
 
 enum DebugLevels {
@@ -166,7 +169,7 @@ struct kstDebugPrivate {
 
   ~kstDebugPrivate() { delete config; }
 
-  QCString aAreaName;
+  Q3CString aAreaName;
   unsigned int oldarea;
   KConfig *config;
 };
@@ -285,7 +288,7 @@ static void kstDebugBackend( unsigned short nLevel, unsigned int nArea, const ch
           break;
       }
       QFile aOutputFile( kstDebug_data->config->readPathEntry(aKey, "kdebug.dbg") );
-      aOutputFile.open( IO_WriteOnly | IO_Append | IO_Raw );
+      aOutputFile.open( QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered );
       aOutputFile.writeBlock( buf, strlen( buf ) );
       aOutputFile.close();
       break;
@@ -457,7 +460,7 @@ kstdbgstream& kstdbgstream::operator<<( const QRect& r ) {
 kstdbgstream& kstdbgstream::operator<<( const QRegion& reg ) {
     *this<< "[ ";
 
-    QMemArray<QRect>rs=reg.rects();
+    Q3MemArray<QRect>rs=reg.rects();
     for (uint i=0;i<rs.size();++i)
         *this << QString("[%1,%2 - %3x%4] ").arg(rs[i].x()).arg(rs[i].y()).arg(rs[i].width()).arg(rs[i].height() ) ;
 

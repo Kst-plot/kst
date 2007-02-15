@@ -37,7 +37,7 @@ class KST_EXPORT KstRMatrix : public KstMatrix {
     KstRMatrix(const QDomElement &e);
     
     // save KstRMatrix
-    virtual void save(QTextStream &ts, const QString& indent = QString::null);
+    virtual void save(Q3TextStream &ts, const QString& indent = QString::null);
     
     virtual ~KstRMatrix();
     

@@ -18,11 +18,11 @@
 #ifndef KSTDATASOURCE_H
 #define KSTDATASOURCE_H
 
-#include <qdict.h>
+#include <q3dict.h>
 #include <qdom.h>
-#include <qguardedptr.h>
+#include <qpointer.h>
 #include <qstring.h>
-#include <qtextstream.h>
+#include <q3textstream.h>
 #include <qwidget.h>
 
 #include <kconfig.h>
@@ -170,7 +170,7 @@ class KST_EXPORT KstDataSource : public KstObject {
 
     /** Save file description info into stream ts.
       Remember to call the base class if you reimplement this. */
-    virtual void save(QTextStream &ts, const QString& indent = QString::null);
+    virtual void save(Q3TextStream &ts, const QString& indent = QString::null);
 
     const QString& sourceName() const { return _source; }
 
@@ -190,7 +190,7 @@ class KST_EXPORT KstDataSource : public KstObject {
      */
     virtual bool reset();
 
-    virtual const QDict<KstString>& metaData() const;
+    virtual const Q3Dict<KstString>& metaData() const;
 
     virtual const QString& metaData(const QString& key) const;
 
@@ -234,7 +234,7 @@ class KST_EXPORT KstDataSource : public KstObject {
     /** The source type name. */
     QString _source;
 
-    QDict<KstString> _metaData;
+    Q3Dict<KstString> _metaData;
 
     KConfig *_cfg;
 

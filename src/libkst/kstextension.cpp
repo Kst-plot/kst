@@ -35,7 +35,7 @@ void KstExtension::load(const QDomElement& e) {
 }
 
 
-void KstExtension::save(QTextStream& ts, const QString& indent) {
+void KstExtension::save(Q3TextStream& ts, const QString& indent) {
   Q_UNUSED(ts)
   Q_UNUSED(indent)
 }

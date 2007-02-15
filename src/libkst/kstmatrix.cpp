@@ -19,8 +19,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include <qdeepcopy.h>
-#include <qstylesheet.h>
+#include <q3deepcopy.h>
+#include <q3stylesheet.h>
   
 #include <klocale.h>
 
@@ -78,7 +78,7 @@ KstMatrix::~KstMatrix() {
   // get rid of the stat scalars
   KST::scalarList.lock().writeLock();
   KST::scalarList.setUpdateDisplayTags(false);
-  for (QDictIterator<KstScalar> iter(_statScalars); iter.current(); ++iter) {
+  for (Q3DictIterator<KstScalar> iter(_statScalars); iter.current(); ++iter) {
     KST::scalarList.remove(iter.current());
     iter.current()->_KShared_unref();  
   }
@@ -313,7 +313,7 @@ void KstMatrix::blank() {
 
 int KstMatrix::getUsage() const {
   int scalarUsage = 0;
-  for (QDictIterator<KstScalar> it(_statScalars); it.current(); ++it) {
+  for (Q3DictIterator<KstScalar> it(_statScalars); it.current(); ++it) {
     scalarUsage += it.current()->getUsage() - 1;
   }
   return KstObject::getUsage() + scalarUsage;
@@ -385,7 +385,7 @@ void KstMatrix::setTagName(const KstObjectTag& tag) {
 }
 
 
-const QDict<KstScalar>& KstMatrix::scalars() const {
+const Q3Dict<KstScalar>& KstMatrix::scalars() const {
   return _statScalars;
 }
     
@@ -530,7 +530,7 @@ bool KstMatrix::resize(int xSize, int ySize, bool reinit) {
 }
 
 
-void KstMatrix::save(QTextStream &ts, const QString& indent) {
+void KstMatrix::save(Q3TextStream &ts, const QString& indent) {
   Q_UNUSED(ts);
   Q_UNUSED(indent);
 

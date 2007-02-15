@@ -23,6 +23,9 @@
 #define _KSDEBUG_H_
 
 #include <qstring.h>
+//Added by qt3to4:
+#include <Q3CString>
+#include <Q3ValueList>
 #include "kst_export.h"
 
 class QWidget;
@@ -40,7 +43,7 @@ class QPen;
 class QBrush;
 class QVariant;
 template <class T>
-class QValueList;
+class Q3ValueList;
 
 class kstdbgstream;
 class kstndbgstream;
@@ -188,7 +191,7 @@ class KST_EXPORT kstdbgstream {
      * @param i the long long to print
      * @return this stream
      */
-    kstdbgstream &operator<<(Q_LLONG i) {
+    kstdbgstream &operator<<(qlonglong i) {
         if (!print) return *this;
         QString tmp; tmp.setNum(i); output += tmp;
         return *this;
@@ -198,7 +201,7 @@ class KST_EXPORT kstdbgstream {
      * @param i the unsigned long long to print
      * @return this stream
      */
-    kstdbgstream &operator<<(Q_ULLONG i) {
+    kstdbgstream &operator<<(qulonglong i) {
         if (!print) return *this;
         QString tmp; tmp.setNum(i); output += tmp;
         return *this;
@@ -245,7 +248,7 @@ class KST_EXPORT kstdbgstream {
      * @param string the string to print
      * @return this stream
      */
-    kstdbgstream &operator<<(const QCString& string) {
+    kstdbgstream &operator<<(const Q3CString& string) {
         *this << string.data();
         return *this;
     }
@@ -405,7 +408,7 @@ class KST_EXPORT kstdbgstream {
      * @since 3.3
      */
     template <class T>
-    kstdbgstream& operator << ( const QValueList<T> &list );
+    kstdbgstream& operator << ( const Q3ValueList<T> &list );
 
  private:
     QString output;
@@ -415,10 +418,10 @@ class KST_EXPORT kstdbgstream {
 };
 
 template <class T>
-kstdbgstream &kstdbgstream::operator<<( const QValueList<T> &list )
+kstdbgstream &kstdbgstream::operator<<( const Q3ValueList<T> &list )
 {
     *this << "(";
-    typename QValueList<T>::ConstIterator it = list.begin();
+    typename Q3ValueList<T>::ConstIterator it = list.begin();
     if ( !list.isEmpty() ) {
       *this << *it++;
     }
@@ -506,7 +509,7 @@ class KST_EXPORT kstndbgstream {
      * Does nothing.
      * @return this stream
      */
-    kstndbgstream &operator<<(const QCString& ) { return *this; }
+    kstndbgstream &operator<<(const Q3CString& ) { return *this; }
     /**
      * Does nothing.
      * @return this stream
@@ -541,12 +544,12 @@ class KST_EXPORT kstndbgstream {
      * Does nothing.
      * @return this stream
      */
-    kstndbgstream& operator<<(Q_LLONG) { return *this; }
+    kstndbgstream& operator<<(qlonglong) { return *this; }
     /**
      * Does nothing.
      * @return this stream
      */
-    kstndbgstream& operator<<(Q_ULLONG) { return *this; }
+    kstndbgstream& operator<<(qulonglong) { return *this; }
     /**
      * Does nothing.
      * @return this stream
@@ -580,7 +583,7 @@ class KST_EXPORT kstndbgstream {
     kstndbgstream& operator<<( const QByteArray & ) { return *this; }
 
     template <class T>
-    kstndbgstream& operator<<( const QValueList<T> & ) { return *this; }
+    kstndbgstream& operator<<( const Q3ValueList<T> & ) { return *this; }
 };
 
 /**

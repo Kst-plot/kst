@@ -23,10 +23,13 @@
 #include <klocale.h>
 #include <kservicetype.h>
 
-#include <qdeepcopy.h>
+#include <q3deepcopy.h>
 #include <qfile.h>
 #include <qfileinfo.h>
-#include <qstylesheet.h>
+#include <q3stylesheet.h>
+//Added by qt3to4:
+#include <Q3CString>
+#include <Q3ValueList>
 
 #include "kstdatacollection.h"
 #include "kstdebug.h"
@@ -75,7 +78,7 @@ namespace KST {
         }
 
         QString libname = _plugLib;
-        QCString s = QFile::encodeName(sym + "_" + libname.remove(QString("kstobject_")));
+        Q3CString s = QFile::encodeName(sym + "_" + libname.remove(QString("kstobject_")));
         if (_lib->hasSymbol(s)) {
           return _lib->symbol(s);
         }
@@ -90,7 +93,7 @@ namespace KST {
 
         bool isDataObject = _plugLib.contains(QString("kstobject_"));
 
-        QCString libname = QFile::encodeName((!isDataObject ? QString("kstdata_") : QString()) + _plugLib);
+        Q3CString libname = QFile::encodeName((!isDataObject ? QString("kstdata_") : QString()) + _plugLib);
         _lib = KLibLoader::self()->library(libname);
         if (!_lib) {
           KstDebug::self()->log(i18n("Error loading data plugin [%1]: %2").arg(libname).arg(KLibLoader::self()->lastErrorMessage()), KstDebug::Error);
@@ -355,5 +358,5 @@ namespace KST {
   };
 #endif
 
-  typedef QValueList<KstSharedPtr<KST::Plugin> > PluginInfoList;
+  typedef Q3ValueList<KstSharedPtr<KST::Plugin> > PluginInfoList;
 }

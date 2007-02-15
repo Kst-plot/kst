@@ -19,8 +19,8 @@
 #define KSTVECTOR_H
 
 #include <math.h>
-#include <qdict.h>
-#include <qguardedptr.h>
+#include <q3dict.h>
+#include <qpointer.h>
 #include "kstobjectcollection.h"
 #include "kstprimitive.h"
 #include "kstscalar.h"
@@ -125,7 +125,7 @@ class KST_EXPORT KstVector : public KstPrimitive {
     virtual int getUsage() const;
 
     /** Save vector information */
-    virtual void save(QTextStream &ts, const QString& indent = QString::null, bool saveAbsolutePosition = false);
+    virtual void save(Q3TextStream &ts, const QString& indent = QString::null, bool saveAbsolutePosition = false);
 
     /** Generate a new vector [x0..x1] with n total points */
     // #### Remove
@@ -139,7 +139,7 @@ class KST_EXPORT KstVector : public KstPrimitive {
     /** access functions for _isScalarList */
     bool isScalarList() const { return _isScalarList; }
     
-    const QDict<KstScalar>& scalars() const;
+    const Q3Dict<KstScalar>& scalars() const;
 
     void setLabel(const QString& label_in);
 
@@ -172,7 +172,7 @@ class KST_EXPORT KstVector : public KstPrimitive {
     int NumNew;
 
     /** Statistics Scalars */
-    QDict<KstScalar> _scalars;
+    Q3Dict<KstScalar> _scalars;
 
     /** is the vector monotonically rising */
     bool _is_rising : 1;

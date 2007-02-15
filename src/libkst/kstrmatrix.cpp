@@ -20,7 +20,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include <qstylesheet.h>
+#include <q3stylesheet.h>
 
 #include <klocale.h>
 
@@ -105,16 +105,16 @@ KstRMatrix::KstRMatrix(const QDomElement &e) : KstMatrix(KstObjectTag::invalidTa
 }
 
 
-void KstRMatrix::save(QTextStream &ts, const QString& indent) {
+void KstRMatrix::save(Q3TextStream &ts, const QString& indent) {
   if (_file) {
 
     QString indent2 = "  ";
 
     ts << indent << "<rmatrix>" << endl;
-    ts << indent << indent2 << "<tag>" << QStyleSheet::escape(tag().tagString()) << "</tag>" << endl;
+    ts << indent << indent2 << "<tag>" << Q3StyleSheet::escape(tag().tagString()) << "</tag>" << endl;
     _file->readLock();
-    ts << indent << indent2 << "<provider>" << QStyleSheet::escape(_file->tag().tagString()) << "</provider>" << endl;
-    ts << indent << indent2 << "<file>" << QStyleSheet::escape(_file->fileName()) << "</file>" << endl;
+    ts << indent << indent2 << "<provider>" << Q3StyleSheet::escape(_file->tag().tagString()) << "</provider>" << endl;
+    ts << indent << indent2 << "<file>" << Q3StyleSheet::escape(_file->fileName()) << "</file>" << endl;
     _file->unlock();
     ts << indent << indent2 << "<field>" << _field << "</field>" << endl;
     ts << indent << indent2 << "<reqxstart>" << _reqXStart << "</reqxstart>" << endl;
