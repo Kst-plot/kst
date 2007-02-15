@@ -19,6 +19,9 @@
 #define KSTDATEPARSER_H
 
 // #include <kstextdatetime.h>
+#include <QTime>
+#include <QDate>
+#include <QDateTime>
 #include "kst_export.h"
 
 /* This is a public header */
@@ -26,6 +29,8 @@ namespace KST {
 
   /*FIXME Need to know if QDateTime in Qt4 will serve our needs or do we need to port
   over the extdate lib*/
+  typedef QTime ExtTime;
+  typedef QDate ExtDate;
   typedef QDateTime ExtDateTime;
 
   /*

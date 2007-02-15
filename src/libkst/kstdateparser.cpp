@@ -73,7 +73,7 @@ ExtDateTime parsePlanckDate(const QString& dateString) {
 
   QStringList mainSplit = secondSplit[0].split(':');
   ExtDateTime edt = ExtDateTime::currentDateTime();
-  int offset = ExtDateTime::currentDateTime(Qt::UTC).toTime_t() - edt.toTime_t();
+  int offset = ExtDateTime::currentDateTime().toUTC().toTime_t() - edt.toTime_t();
   ExtDate d = edt.date();
   QTime t = edt.time();
   int i = 0;
