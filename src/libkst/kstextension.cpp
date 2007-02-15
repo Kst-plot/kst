@@ -21,7 +21,7 @@
 #include "kstextension.h"
 #include <kmainwindow.h>
 
-KstExtension::KstExtension(QObject *parent, const char *name, const QStringList&) : QObject(parent, name) {
+KstExtension::KstExtension(QObject *parent, const QStringList&) : QObject(parent) {
 }
 
 
@@ -35,7 +35,7 @@ void KstExtension::load(const QDomElement& e) {
 }
 
 
-void KstExtension::save(Q3TextStream& ts, const QString& indent) {
+void KstExtension::save(QTextStream& ts, const QString& indent) {
   Q_UNUSED(ts)
   Q_UNUSED(indent)
 }

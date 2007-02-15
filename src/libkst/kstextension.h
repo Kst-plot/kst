@@ -28,14 +28,14 @@ class KMainWindow;
 class KST_EXPORT KstExtension : public QObject {
   Q_OBJECT
   public:
-    KstExtension(QObject *parent, const char *name, const QStringList&);
+    KstExtension(QObject *parent, const QStringList&);
     virtual ~KstExtension();
 
     virtual void processArguments(const QString& args);
 
     // To save state
     virtual void load(const QDomElement& e);
-    virtual void save(Q3TextStream& ts, const QString& indent = QString::null);
+    virtual void save(QTextStream& ts, const QString& indent = QString::null);
 
     // Clear internal state
     virtual void clear();
