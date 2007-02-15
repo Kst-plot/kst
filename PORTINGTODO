@@ -1,0 +1,10 @@
+Please place porting todo items in this file categorized by lib/module
+
+**** extdate ****
+  A. Decide whether this lib even belongs anymore.  Will Qt4's date/time classes serve us?
+  B. If we are going to continue using this should we start with Qt4's classes and revamp them?
+
+**** libkst ****:
+  A. Numerous changes WRT Qt4's threading package
+  B. Switch to using Qt4's container classes eg Q3ValueList --> QList
+  C. Revamp the plugin manager to use Qt4's plugin system?
