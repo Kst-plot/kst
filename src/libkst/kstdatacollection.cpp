@@ -98,7 +98,7 @@ KstData::~KstData() {
 
 bool KstData::vectorTagNameNotUniqueInternal(const QString& tag) {
   /* verify that the tag name is not empty */
-  if (tag.stripWhiteSpace().isEmpty()) {
+  if (tag.trimmed().isEmpty()) {
       return true;
   }
 
@@ -117,7 +117,7 @@ bool KstData::vectorTagNameNotUniqueInternal(const QString& tag) {
 
 bool KstData::matrixTagNameNotUniqueInternal(const QString& tag) {
   /* verify that the tag name is not empty */
-  if (tag.stripWhiteSpace().isEmpty()) {
+  if (tag.trimmed().isEmpty()) {
     return true;
   }
 
@@ -149,7 +149,7 @@ bool KstData::vectorTagNameNotUnique(const QString& tag, bool warn, void *p) {
   Q_UNUSED(p)
   Q_UNUSED(warn)
   /* verify that the tag name is not empty */
-  if (tag.stripWhiteSpace().isEmpty()) {
+  if (tag.trimmed().isEmpty()) {
       return true;
   }
 
@@ -168,7 +168,7 @@ bool KstData::matrixTagNameNotUnique(const QString& tag, bool warn, void *p) {
   Q_UNUSED(p)
   Q_UNUSED(warn)
   /* verify that the tag name is not empty */
-  if (tag.stripWhiteSpace().isEmpty()) {
+  if (tag.trimmed().isEmpty()) {
     return true;
   }
 
@@ -186,7 +186,7 @@ bool KstData::dataSourceTagNameNotUnique(const QString& tag, bool warn, void *p)
   Q_UNUSED(p)
   Q_UNUSED(warn)
   /* verify that the tag name is not empty */
-  if (tag.stripWhiteSpace().isEmpty()) {
+  if (tag.trimmed().isEmpty()) {
     return true;
   }
 
