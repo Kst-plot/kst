@@ -467,7 +467,7 @@ kstdbgstream& kstdbgstream::operator<<( const QRegion& reg ) {
     *this <<"]";
     return *this;
 }
-kstdbgstream& kstdbgstream::operator<<( const KURL& u ) {
+kstdbgstream& kstdbgstream::operator<<( const KUrl& u ) {
     *this << u.prettyURL();
     return *this;
 }

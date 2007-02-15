@@ -58,12 +58,12 @@ void KstDataSource::cleanupForExit() {
 
 
 static QString obtainFile(const QString& source) {
-  KURL url;
+  KUrl url;
   
   if (QFile::exists(source) && QFileInfo(source).isRelative()) {
     url.setPath(source);
   } else {
-    url = KURL::fromPathOrURL(source);
+    url = KUrl::fromPathOrUrl(source);
   }
 
   if (url.isLocalFile() || url.protocol().isEmpty() || url.protocol().lower() == "nad") {

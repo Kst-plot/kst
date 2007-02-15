@@ -36,7 +36,7 @@ class QPoint;
 class QSize;
 class QRect;
 class QRegion;
-class KURL;
+class KUrl;
 class QStringList;
 class QColor;
 class QPen;
@@ -353,7 +353,7 @@ class KST_EXPORT kstdbgstream {
      * @param url the url to print
      * @return this stream
      */
-    kstdbgstream& operator << ( const KURL& url );
+    kstdbgstream& operator << ( const KUrl& url );
 
     /**
      * Prints the given value.
@@ -574,7 +574,7 @@ class KST_EXPORT kstndbgstream {
     kstndbgstream& operator<<( const QSize & )  { return *this; }
     kstndbgstream& operator<<( const QRect & )  { return *this; }
     kstndbgstream& operator<<( const QRegion & ) { return *this; }
-    kstndbgstream& operator<<( const KURL & )  { return *this; }
+    kstndbgstream& operator<<( const KUrl & )  { return *this; }
     kstndbgstream& operator<<( const QStringList & ) { return *this; }
     kstndbgstream& operator<<( const QColor & ) { return *this; }
     kstndbgstream& operator<<( const QPen & ) { return *this; }
