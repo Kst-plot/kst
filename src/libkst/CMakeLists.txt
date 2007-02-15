@@ -1,20 +1,19 @@
 
 FIND_PACKAGE(KDE4 REQUIRED)
-# configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ksttimers.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/ksttimers.h )
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ksttimers.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/ksttimers.h )
 
 include_directories( ${CMAKE_SOURCE_DIR}/kst/src/extdate ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
-
 
 ########### next target ###############
 
 set(kst_LIB_SRCS 
-   ksdebug.cpp 
+#    ksdebug.cpp 
    kstobject.cpp 
    kstdatasource.cpp 
    stdinsource.cpp 
    kstextension.cpp 
    kstdatacollection.cpp 
-   kstdebug.cpp 
+#    kstdebug.cpp 
    rwlock.cpp 
    kstmath.cpp 
    kstdateparser.cpp 
