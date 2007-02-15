@@ -64,7 +64,7 @@ static QString obtainFile(const QString& source) {
   if (QFile::exists(source) && QFileInfo(source).isRelative()) {
     url.setPath(source);
   } else {
-    url = KUrl::fromPathOrUrl(source);
+    url = KUrl(source);
   }
 
   if (url.isLocalFile() || url.protocol().isEmpty() || url.protocol().toLower() == "nad") {

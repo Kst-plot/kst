@@ -18,7 +18,7 @@
 #include "config.h"
 #include "stdinsource.h"
 
-#include <ktempfile.h>
+#include <k3tempfile.h>
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -36,7 +36,7 @@
 
 KstStdinSource::KstStdinSource(KConfig *cfg)
 : KstDataSource(cfg, "stdin", "stdin") {
-  _file = new KTempFile;
+  _file = new K3TempFile;
   _filename = _file->name();
   // Unfortunately we have to update here.  stdin is a special case.
   update();

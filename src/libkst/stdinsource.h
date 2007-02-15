@@ -22,7 +22,7 @@
 
 #include "kst_export.h"
 
-class KTempFile;
+class K3TempFile;
 
 class KST_EXPORT KstStdinSource : public KstDataSource {
   public:
@@ -50,7 +50,7 @@ class KST_EXPORT KstStdinSource : public KstDataSource {
 
   private:
     KstDataSourcePtr _src;
-    KTempFile *_file;
+    K3TempFile *_file;
 };
 
 
