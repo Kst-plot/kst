@@ -21,6 +21,7 @@
 #include <kio/netaccess.h>
 #include <klibloader.h>
 #include <klocale.h>
+#include <kservice.h>
 #include <kservicetype.h>
 
 #include <q3deepcopy.h>
