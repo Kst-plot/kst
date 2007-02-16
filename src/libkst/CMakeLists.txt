@@ -7,7 +7,7 @@ endif(Subversion_FOUND)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/kstrevision.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kstrevision.h)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ksttimers.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/ksttimers.h)
 
-include_directories(${CMAKE_SOURCE_DIR}/kst/src/extdate ${KDE4_INCLUDE_DIR} ${QT_INCLUDES})
+include_directories(${CMAKE_SOURCE_DIR}/src/extdate ${KDE4_INCLUDE_DIR} ${QT_INCLUDES})
 
 ########### next target ###############
 
