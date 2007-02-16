@@ -105,7 +105,7 @@ KstRMatrix::KstRMatrix(const QDomElement &e) : KstMatrix(KstObjectTag::invalidTa
 }
 
 
-void KstRMatrix::save(Q3TextStream &ts, const QString& indent) {
+void KstRMatrix::save(QTextStream &ts, const QString& indent) {
   if (_file) {
 
     QString indent2 = "  ";

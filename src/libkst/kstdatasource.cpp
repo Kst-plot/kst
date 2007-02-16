@@ -603,7 +603,7 @@ QString KstDataSource::fileType() const {
 }
 
 
-void KstDataSource::save(Q3TextStream &ts, const QString& indent) {
+void KstDataSource::save(QTextStream &ts, const QString& indent) {
   QString name = Q3StyleSheet::escape(_filename);
   // Look to see if it was a URL and save the URL instead
   for (QMap<QString,QString>::ConstIterator i = urlMap.begin(); i != urlMap.end(); ++i) {

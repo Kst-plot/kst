@@ -125,7 +125,7 @@ class KST_EXPORT KstVector : public KstPrimitive {
     virtual int getUsage() const;
 
     /** Save vector information */
-    virtual void save(Q3TextStream &ts, const QString& indent = QString::null, bool saveAbsolutePosition = false);
+    virtual void save(QTextStream &ts, const QString& indent = QString::null, bool saveAbsolutePosition = false);
 
     /** Generate a new vector [x0..x1] with n total points */
     // #### Remove

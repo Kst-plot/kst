@@ -16,6 +16,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "kstsmatrix.h"
+#include <qtextstream.h>
 #include <q3stylesheet.h>
 
 KstSMatrix::KstSMatrix(const QDomElement &e) : KstMatrix() {
@@ -72,7 +73,7 @@ KstSMatrix::KstSMatrix(KstObjectTag tag,
   change(tag, nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
 }
 
-void KstSMatrix::save(Q3TextStream &ts, const QString& indent) {
+void KstSMatrix::save(QTextStream &ts, const QString& indent) {
       
   QString indent2 = "  ";
   

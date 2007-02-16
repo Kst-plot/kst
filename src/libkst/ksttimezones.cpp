@@ -29,7 +29,7 @@
 #include <qfile.h>
 #include <qregexp.h>
 #include <qstringlist.h>
-#include <q3textstream.h>
+#include <qtextstream.h>
 
 #include <cerrno>
 #include <climits>
@@ -449,7 +449,7 @@ const KstTimezones::ZoneMap KstTimezones::allZones()
     }
 
     // Parse the zone.tab.
-    Q3TextStream str(&f);
+    QTextStream str(&f);
     QRegExp lineSeparator("[ \t]");
     QRegExp ordinateSeparator("[+-]");
     KSharedPtr<KstTimezoneSource> db(new KstTimezoneSource(m_zoneinfoDir));
@@ -586,8 +586,8 @@ const KstTimezone *KstTimezones::local()
         f.setFileName("/etc/default/init");
         if (f.open(QIODevice::ReadOnly))
         {
-            Q3TextStream ts(&f);
-            ts.setEncoding(Q3TextStream::Latin1);
+            QTextStream ts(&f);
+            ts.setCodec("latin1");
 
             // Read the last line starting "TZ=".
             while (!ts.atEnd())
@@ -605,8 +605,8 @@ const KstTimezone *KstTimezones::local()
     }
     else
     {
-        Q3TextStream ts(&f);
-        ts.setEncoding(Q3TextStream::Latin1);
+        QTextStream ts(&f);
+        ts.setCodec("latin1");
 
         // Read the first line.
         if (!ts.atEnd())

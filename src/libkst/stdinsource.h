@@ -42,7 +42,7 @@ class KST_EXPORT KstStdinSource : public KstDataSource {
 
     virtual QString fileType() const;
 
-    virtual void save(Q3TextStream &ts, const QString& indent = QString::null);
+    virtual void save(QTextStream &ts, const QString& indent = QString::null);
 
     virtual bool isValid() const;
 

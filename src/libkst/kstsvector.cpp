@@ -17,6 +17,7 @@
 #include "kstsvector.h"
 #include "ksdebug.h"
 #include <q3stylesheet.h>
+#include <qtextstream.h>
 
 KstSVector::KstSVector(const QDomElement &e) : KstVector(e) {
   double in_x0 = 0.0;
@@ -53,7 +54,7 @@ KstSVector::KstSVector(double x0, double x1, int n, KstObjectTag tag) :
 }
 
 
-void KstSVector::save(Q3TextStream &ts, const QString& indent, bool saveAbsolutePosition) {
+void KstSVector::save(QTextStream &ts, const QString& indent, bool saveAbsolutePosition) {
   ts << indent << "<svector>" << endl;
   KstVector::save(ts, indent + "  ", saveAbsolutePosition);
   ts << indent << "  <min>" << min() << "</min>" << endl;

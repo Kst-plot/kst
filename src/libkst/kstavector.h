@@ -28,7 +28,7 @@ class KstAVector : public KstVector {
   KST_EXPORT KstAVector(const QDomElement &e);
   KST_EXPORT KstAVector(int n, KstObjectTag tag);
 
-  void save(Q3TextStream &ts, const QString& indent = QString::null, bool saveAbsolutePosition = false);
+  void save(QTextStream &ts, const QString& indent = QString::null, bool saveAbsolutePosition = false);
 
   KstObject::UpdateType update(int update_counter);
 

@@ -25,7 +25,7 @@ class KST_EXPORT KstAMatrix : public KstMatrix {
     KstAMatrix(const QDomElement &e);
     KstAMatrix(KstObjectTag in_tag, uint nX, uint nY, double minX, double minY, double stepX, double stepY);
 
-    virtual void save(Q3TextStream &ts, const QString& indent = QString::null);
+    virtual void save(QTextStream &ts, const QString& indent = QString::null);
 };
 
 typedef KstSharedPtr<KstAMatrix> KstAMatrixPtr;

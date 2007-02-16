@@ -85,7 +85,7 @@ public:
   int samplesPerFrame() const;
 
   /** Save vector information */
-  virtual void save(Q3TextStream &ts, const QString& indent = QString::null, bool saveAbsolutePosition = false);
+  virtual void save(QTextStream &ts, const QString& indent = QString::null, bool saveAbsolutePosition = false);
 
   /** return the name of the file if a RVector - otherwise return "" */
   QString filename() const;

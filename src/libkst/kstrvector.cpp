@@ -329,7 +329,7 @@ int KstRVector::reqStartFrame() const {
 
 
 /** Save vector information */
-void KstRVector::save(Q3TextStream &ts, const QString& indent, bool saveAbsolutePosition) {
+void KstRVector::save(QTextStream &ts, const QString& indent, bool saveAbsolutePosition) {
   if (_file) {    
     ts << indent << "<vector>" << endl;
     KstVector::save(ts, indent + "  ", saveAbsolutePosition);

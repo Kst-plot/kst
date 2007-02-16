@@ -82,7 +82,7 @@ void KstString::setTagName(const KstObjectTag& tag) {
 }
 
 
-void KstString::save(Q3TextStream &ts, const QString& indent) {
+void KstString::save(QTextStream &ts, const QString& indent) {
   ts << indent << "<tag>" << Q3StyleSheet::escape(tag().tagString()) << "</tag>" << endl;
   if (_orphan) {
     ts << indent << "<orphan/>" << endl;

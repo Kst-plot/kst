@@ -96,7 +96,7 @@ class KST_EXPORT KstMatrix: public KstPrimitive {
     virtual int getUsage() const;
 
     // save the matrix
-    virtual void save(Q3TextStream &ts, const QString& indent = QString::null);
+    virtual void save(QTextStream &ts, const QString& indent = QString::null);
 
     // set tag name of the matrix
     virtual void setTagName(const KstObjectTag& tag);

@@ -28,7 +28,7 @@ class KST_EXPORT KstSMatrix : public KstMatrix {
                double minX, double minY, double stepX, double stepY,
                double gradZMin, double gradZMax, bool xDirection);
 
-    virtual void save(Q3TextStream &ts, const QString& indent = QString::null);
+    virtual void save(QTextStream &ts, const QString& indent = QString::null);
 
     void change(KstObjectTag tag, uint nX, uint nY,
                 double minX, double minY, double stepX, double stepY,

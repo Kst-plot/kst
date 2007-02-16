@@ -588,7 +588,7 @@ KstObject::UpdateType KstVector::internalUpdate(KstObject::UpdateType providerRC
 
 
 
-void KstVector::save(Q3TextStream &ts, const QString& indent, bool saveAbsolutePosition) {
+void KstVector::save(QTextStream &ts, const QString& indent, bool saveAbsolutePosition) {
   Q_UNUSED(saveAbsolutePosition)
   ts << indent << "<tag>" << Q3StyleSheet::escape(tag().tagString()) << "</tag>" << endl;
   if (_saveData) {

@@ -23,7 +23,7 @@
 #include <q3cstring.h>
 #include <q3stylesheet.h>
 #include <klocale.h>
-#include <kmdcodec.h>
+#include <kcodecs.h>
 
 KstAMatrix::KstAMatrix(const QDomElement &e) : KstMatrix() {
   _editable = true;
@@ -95,7 +95,7 @@ KstAMatrix::KstAMatrix(KstObjectTag in_tag, uint nX, uint nY, double minX, doubl
 }
 
 
-void KstAMatrix::save(Q3TextStream &ts, const QString& indent) {
+void KstAMatrix::save(QTextStream &ts, const QString& indent) {
 
   QString indent2 = "  ";
   

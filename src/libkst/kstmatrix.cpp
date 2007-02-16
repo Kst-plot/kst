@@ -530,7 +530,7 @@ bool KstMatrix::resize(int xSize, int ySize, bool reinit) {
 }
 
 
-void KstMatrix::save(Q3TextStream &ts, const QString& indent) {
+void KstMatrix::save(QTextStream &ts, const QString& indent) {
   Q_UNUSED(ts);
   Q_UNUSED(indent);
 

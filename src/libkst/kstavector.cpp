@@ -20,6 +20,7 @@
 
 #include "kstavector.h"
 #include "kstdebug.h"
+#include <qtextstream.h>
 
 KstAVector::KstAVector(const QDomElement &e)
 : KstVector(e) {
@@ -37,7 +38,7 @@ KstAVector::KstAVector(int n, KstObjectTag tag)
 }
 
 
-void KstAVector::save(Q3TextStream &ts, const QString& indent, bool saveAbsolutePosition) {
+void KstAVector::save(QTextStream &ts, const QString& indent, bool saveAbsolutePosition) {
   ts << indent << "<avector>" << endl;
   KstVector::save(ts, indent + "  ", saveAbsolutePosition);
   ts << indent << "</avector>" << endl;
