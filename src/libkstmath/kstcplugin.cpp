@@ -481,35 +481,35 @@ void KstCPlugin::save(QTextStream &ts, const QString& indent) {
   ts << l2 << "<name>" << Q3StyleSheet::escape(_plugin->data()._name) << "</name>" << endl;
   for (KstVectorMap::Iterator i = _inputVectors.begin(); i != _inputVectors.end(); ++i) {
     ts << l2 << "<ivector name=\"" << Q3StyleSheet::escape(i.key()) << "\">"
-      << Q3StyleSheet::escape(i.data()->tag().tagString())
+      << Q3StyleSheet::escape(i.value()->tag().tagString())
       << "</ivector>" << endl;
   }
   for (KstScalarMap::Iterator i = _inputScalars.begin(); i != _inputScalars.end(); ++i) {
     ts << l2 << "<iscalar name=\"" << Q3StyleSheet::escape(i.key()) << "\">"
-      << Q3StyleSheet::escape(i.data()->tag().tagString())
+      << Q3StyleSheet::escape(i.value()->tag().tagString())
       << "</iscalar>" << endl;
   }
   for (KstStringMap::Iterator i = _inputStrings.begin(); i != _inputStrings.end(); ++i) {
     ts << l2 << "<istring name=\"" << Q3StyleSheet::escape(i.key()) << "\">"
-      << Q3StyleSheet::escape(i.data()->tag().tagString())
+      << Q3StyleSheet::escape(i.value()->tag().tagString())
       << "</istring>" << endl;
   }
   for (KstVectorMap::Iterator i = _outputVectors.begin(); i != _outputVectors.end(); ++i) {
     ts << l2 << "<ovector name=\"" << Q3StyleSheet::escape(i.key());
-    if (i.data()->isScalarList()) {
+    if (i.value()->isScalarList()) {
       ts << "\" scalarList=\"1";
     }
-    ts << "\">" << Q3StyleSheet::escape(i.data()->tag().tag())
+    ts << "\">" << Q3StyleSheet::escape(i.value()->tag().tag())
       << "</ovector>" << endl;
   }
   for (KstScalarMap::Iterator i = _outputScalars.begin(); i != _outputScalars.end(); ++i) {
     ts << l2 << "<oscalar name=\"" << Q3StyleSheet::escape(i.key()) << "\">"
-      << Q3StyleSheet::escape(i.data()->tag().tag())
+      << Q3StyleSheet::escape(i.value()->tag().tag())
       << "</oscalar>" << endl;
   }
   for (KstStringMap::Iterator i = _outputStrings.begin(); i != _outputStrings.end(); ++i) {
     ts << l2 << "<ostring name=\"" << Q3StyleSheet::escape(i.key()) << "\">"
-      << Q3StyleSheet::escape(i.data()->tag().tag())
+      << Q3StyleSheet::escape(i.value()->tag().tag())
       << "</ostring>" << endl;
   }
   ts << indent << "</plugin>" << endl;
@@ -701,27 +701,27 @@ KstDataObjectPtr KstCPlugin::makeDuplicate(KstDataObjectDataObjectMap& duplicate
 
   // use same inputs
   for (KstVectorMap::ConstIterator iter = _inputVectors.begin(); iter != _inputVectors.end(); ++iter) {
-    plugin->inputVectors().insert(iter.key(), iter.data());
+    plugin->inputVectors().insert(iter.key(), iter.value());
   }
   for (KstScalarMap::ConstIterator iter = _inputScalars.begin(); iter != _inputScalars.end(); ++iter) {
-    plugin->inputScalars().insert(iter.key(), iter.data());  
+    plugin->inputScalars().insert(iter.key(), iter.value());  
   }
   for (KstStringMap::ConstIterator iter = _inputStrings.begin(); iter != _inputStrings.end(); ++iter) {
-    plugin->inputStrings().insert(iter.key(), iter.data());  
+    plugin->inputStrings().insert(iter.key(), iter.value());  
   }
   
   // create new outputs
   for (KstVectorMap::ConstIterator iter = outputVectors().begin(); iter != outputVectors().end(); ++iter) {
     KstWriteLocker blockVectorUpdates(&KST::vectorList.lock());
-    KstVectorPtr v = new KstVector(KstObjectTag(iter.data()->tag().tag() + "'", iter.data()->tag().context()), 0, plugin.data()); // FIXME: unique tag generation
+    KstVectorPtr v = new KstVector(KstObjectTag(iter.value()->tag().tag() + "'", iter.value()->tag().context()), 0, plugin.data()); // FIXME: unique tag generation
     plugin->outputVectors().insert(iter.key(), v);
   }
   for (KstScalarMap::ConstIterator iter = outputScalars().begin(); iter != outputScalars().end(); ++iter) {
-    KstScalarPtr s = new KstScalar(KstObjectTag(iter.data()->tag().tag() + "'", iter.data()->tag().context()), plugin.data()); // FIXME: unique tag generation
+    KstScalarPtr s = new KstScalar(KstObjectTag(iter.value()->tag().tag() + "'", iter.value()->tag().context()), plugin.data()); // FIXME: unique tag generation
     plugin->outputScalars().insert(iter.key(), s);
   }
   for (KstStringMap::ConstIterator iter = outputStrings().begin(); iter != outputStrings().end(); ++iter) {
-    KstStringPtr s = new KstString(KstObjectTag(iter.data()->tag().tag() + "'", iter.data()->tag().context()), plugin.data()); // FIXME: unique tag generation
+    KstStringPtr s = new KstString(KstObjectTag(iter.value()->tag().tag() + "'", iter.value()->tag().context()), plugin.data()); // FIXME: unique tag generation
     plugin->outputStrings().insert(iter.key(), s);
   }
   

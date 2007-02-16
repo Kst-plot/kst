@@ -24,9 +24,9 @@
 
 #include <qcolor.h>
 
-typedef Q_UINT16 KstLJustifyType;
-typedef Q_UINT8  KstLHJustifyType;
-typedef Q_UINT8  KstLVJustifyType;
+typedef quint16 KstLJustifyType;
+typedef quint8  KstLHJustifyType;
+typedef quint8  KstLVJustifyType;
 #define KST_JUSTIFY_H(x)     (x & 0x000000ffL)
 #define KST_JUSTIFY_H_NONE    0
 #define KST_JUSTIFY_H_LEFT    1

@@ -360,8 +360,8 @@ bool KstEquation::FillY(bool force) {
   if (_doInterp) {
     ns = (*_xInVector)->length();
     for (KstVectorMap::ConstIterator i = VectorsUsed.begin(); i != VectorsUsed.end(); ++i) {
-      if (i.data()->length() > ns) {
-        ns = i.data()->length();
+      if (i.value()->length() > ns) {
+        ns = i.value()->length();
       }
     }
   } else {
@@ -394,13 +394,13 @@ bool KstEquation::FillY(bool force) {
     v_new = (*_xInVector)->numNew();
 
     for (KstVectorMap::ConstIterator i = VectorsUsed.begin(); i != VectorsUsed.end(); ++i) {
-      if (v_shift != i.data()->numShift()) {
+      if (v_shift != i.value()->numShift()) {
         v_shift = _ns;
       }
-      if (v_new != i.data()->numNew()) {
+      if (v_new != i.value()->numNew()) {
         v_shift = _ns;
       }
-      if (_ns != i.data()->length()) {
+      if (_ns != i.value()->length()) {
         v_shift = _ns;
       }
     }
@@ -513,20 +513,20 @@ void KstEquation::replaceDependency(KstDataObjectPtr oldObject, KstDataObjectPtr
   
   // replace all occurences of outputVectors, outputScalars from oldObject
   for (KstVectorMap::Iterator j = oldObject->outputVectors().begin(); j != oldObject->outputVectors().end(); ++j) {
-    QString oldTag = j.data()->tagName();
+    QString oldTag = j.value()->tagName();
     QString newTag = ((newObject->outputVectors())[j.key()])->tagName();
     newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
   }
   
   for (KstScalarMap::Iterator j = oldObject->outputScalars().begin(); j != oldObject->outputScalars().end(); ++j) {
-    QString oldTag = j.data()->tagName();
+    QString oldTag = j.value()->tagName();
     QString newTag = ((newObject->outputScalars())[j.key()])->tagName();
     newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
   }
   
   // and dependencies on matrix stats (there won't be matrices themselves in the expression)
   for (KstMatrixMap::Iterator j = oldObject->outputMatrices().begin(); j != oldObject->outputMatrices().end(); ++j) {
-    Q3DictIterator<KstScalar> scalarDictIter(j.data()->scalars());
+    Q3DictIterator<KstScalar> scalarDictIter(j.value()->scalars());
     for (; scalarDictIter.current(); ++scalarDictIter) {
       QString oldTag = scalarDictIter.current()->tagName();
       QString newTag = ((((newObject->outputMatrices())[j.key()])->scalars())[scalarDictIter.currentKey()])->tagName();
@@ -537,13 +537,13 @@ void KstEquation::replaceDependency(KstDataObjectPtr oldObject, KstDataObjectPtr
   // only replace _inputVectors
   for (KstVectorMap::Iterator j = oldObject->outputVectors().begin(); j != oldObject->outputVectors().end(); ++j) {
     for (KstVectorMap::Iterator k = _inputVectors.begin(); k != _inputVectors.end(); ++k) {
-      if (j.data().data() == k.data().data()) {
+      if (j.value().data() == k.value().data()) {
         // replace input with the output from newObject
         _inputVectors[k.key()] = (newObject->outputVectors())[j.key()]; 
       }
     }
     // and dependencies on vector stats
-    Q3DictIterator<KstScalar> scalarDictIter(j.data()->scalars());
+    Q3DictIterator<KstScalar> scalarDictIter(j.value()->scalars());
     for (; scalarDictIter.current(); ++scalarDictIter) {
       QString oldTag = scalarDictIter.current()->tagName();
       QString newTag = ((((newObject->outputVectors())[j.key()])->scalars())[scalarDictIter.currentKey()])->tagName();
@@ -575,7 +575,7 @@ void KstEquation::replaceDependency(KstVectorPtr oldVector, KstVectorPtr newVect
   // do the dependency replacements for _inputVectors, but don't call parent function as it
   // replaces _inputScalars 
   for (KstVectorMap::Iterator j = _inputVectors.begin(); j != _inputVectors.end(); ++j) {
-    if (j.data() == oldVector) {
+    if (j.value() == oldVector) {
       _inputVectors[j.key()] = newVector;  
     }      
   }
@@ -603,7 +603,7 @@ bool KstEquation::uses(KstObjectPtr p) const {
   // check VectorsUsed in addition to _input*'s
   if (KstVectorPtr vect = kst_cast<KstVector>(p)) {
     for (KstVectorMap::ConstIterator j = VectorsUsed.begin(); j != VectorsUsed.end(); ++j) {
-      if (j.data() == vect) {
+      if (j.value() == vect) {
         return true;
       }
     }
@@ -611,7 +611,7 @@ bool KstEquation::uses(KstObjectPtr p) const {
     // check all connections from this expression to p
     for (KstVectorMap::Iterator j = obj->outputVectors().begin(); j != obj->outputVectors().end(); ++j) {
       for (KstVectorMap::ConstIterator k = VectorsUsed.begin(); k != VectorsUsed.end(); ++k) {
-        if (j.data() == k.data()) {
+        if (j.value() == k.value()) {
           return true;
         }
       }
