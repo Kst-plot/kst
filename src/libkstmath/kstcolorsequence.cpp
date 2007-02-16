@@ -219,8 +219,8 @@ bool KstColorSequence::colorsTooClose(const QColor& color, const QColor& badColo
   // The 2nd angle is phi = S*(PI/4)/255
   // a color is acceptable if |C1-C2|>dcMin
 
-  color.getHsv(sugH,sugS,sugV);
-  badColor.getHsv(badH, badS, badV);
+  color.getHsv(&sugH,&sugS,&sugV);
+  badColor.getHsv(&badH, &badS, &badV);
 
   r1 = badV/255.0;
   h1 = badH*M_PI/180.0;
