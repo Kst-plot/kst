@@ -132,7 +132,7 @@ void KstDataObject::scanPlugins() {
 
   pluginInfo.clear(); //FIXME?
 
-  KService::List sl = KServiceType::offers("Kst Data Object");
+  KService::List sl = KServiceTypeTrader::self()->query("Kst Data Object");
   for (KService::List::ConstIterator it = sl.begin(); it != sl.end(); ++it) {
     if (KstDataObjectPtr object = createPlugin(*it)) {
       pluginInfo.insert((*it)->name(), KstDataObjectPtr(object));
@@ -164,7 +164,7 @@ KstDataObjectPtr KstDataObject::plugin(const QString& name) {
 
 
 KstDataObjectPtr KstDataObject::createPlugin(const QString& name) {
-  KService::List sl = KServiceType::offers("Kst Data Object");
+  KService::List sl = KServiceTypeTrader::self()->query("Kst Data Object");
   for (KService::List::ConstIterator it = sl.begin(); it != sl.end(); ++it) {
     if ((*it)->name() != name) {
       continue;
