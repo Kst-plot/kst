@@ -1,12 +1,23 @@
 Please place porting todo items in this file categorized by lib/module
 
+**** cmake build system ****
+  A. Need to port over all the configure checks found in configure.in.in
+
 **** extdate ****
   A. Decide whether this lib even belongs anymore.  Will Qt4's date/time classes serve us?
   B. If we are going to continue using this should we start with Qt4's classes and revamp them?
 
 **** libkst ****:
   A. Numerous changes WRT Qt4's threading package
+    1. Probably should get rid of own threading classes and use Qt4's versions...
+       KstWaitCondition -> QWaitCondition
+       KstRWLock -> QReadWriteLock
+       etc, etc
   B. Switch to using Qt4's container classes eg Q3ValueList --> QList
+    1. No longer need to use QDeepCopy as all implicitly shared objects in Qt4 are reentrant and
+       use atomic reference counting.  See the threading docs...
   C. Revamp the plugin manager to use Qt4's plugin system?
   D. We relied upon a hack in KDE3 version that used a private header
-     from qt.  This is no longer installed in Qt4...
+     from qt.  This is no longer installed in Qt4.  This can be taken care of by getting rid of
+     KstWaitCondition as described above.
+  E. Rename kstdebug classes as they really are loggers and should be named as such.
