@@ -26,7 +26,7 @@
 
 #include <kglobal.h>
 #include <klocale.h>
-#include <kmdcodec.h>
+#include <kcodecs.h>
 
 #include "ksdebug.h"
 #include "kstdatacollection.h"
@@ -109,11 +109,11 @@ KstVector::KstVector(const QDomElement& e)
       if (e.tagName() == "tag") {
         in_tag = KstObjectTag::fromString(e.text());
       } else if (e.tagName() == "data") {
-        Q3CString qcs(e.text().latin1());
+        QString qcs(e.text().toLatin1());
         QByteArray qbca;
-        KCodecs::base64Decode(qcs, qbca);
+        KCodecs::base64Decode(qcs.toLatin1(), qbca);
         qba = qUncompress(qbca);
-        sz = kMax((size_t)(INITSIZE), qba.size()/sizeof(double));
+        sz = qMax((size_t)(INITSIZE), qba.size()/sizeof(double));
       }
     }
     n = n.nextSibling();
@@ -135,7 +135,7 @@ KstVector::KstVector(const QDomElement& e)
   if (!qba.isEmpty()) {
     _saveable = true;
     _saveData = true;
-    QDataStream qds(qba, QIODevice::ReadOnly);
+    QDataStream qds(&qba, QIODevice::ReadOnly);
     for (int i = 0; !qds.atEnd(); ++i) {
       qds >> _v[i];
     }
@@ -592,8 +592,8 @@ void KstVector::save(QTextStream &ts, const QString& indent, bool saveAbsolutePo
   Q_UNUSED(saveAbsolutePosition)
   ts << indent << "<tag>" << Q3StyleSheet::escape(tag().tagString()) << "</tag>" << endl;
   if (_saveData) {
-    QByteArray qba(length()*sizeof(double));
-    QDataStream qds(qba, QIODevice::WriteOnly);
+    QByteArray qba(length()*sizeof(double), '\0');
+    QDataStream qds(&qba, QIODevice::WriteOnly);
 
     for (int i = 0; i < length(); i++) {
       qds << _v[i];

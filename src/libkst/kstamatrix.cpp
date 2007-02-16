@@ -65,11 +65,11 @@ KstAMatrix::KstAMatrix(const QDomElement &e) : KstMatrix() {
       QDomElement e = n.toElement();
       if (!e.isNull()) {
         if (e.tagName() == "data") {
-          Q3CString qcs(e.text().latin1());
+          QString qcs(e.text().toLatin1());
           QByteArray qbca;
-          KCodecs::base64Decode(qcs, qbca);
+          KCodecs::base64Decode(qcs.toLatin1(), qbca);
           QByteArray qba = qUncompress(qbca);
-          QDataStream qds(qba, QIODevice::ReadOnly);
+          QDataStream qds(&qba, QIODevice::ReadOnly);
           int i;
           // fill in the raw array with the data
           for (i = 0; i < in_nX*in_nY && !qds.atEnd(); i++) {
@@ -99,8 +99,8 @@ void KstAMatrix::save(QTextStream &ts, const QString& indent) {
 
   QString indent2 = "  ";
   
-  QByteArray qba(_zSize*sizeof(double));
-  QDataStream qds(qba, QIODevice::WriteOnly);
+  QByteArray qba(_zSize*sizeof(double), '\0');
+  QDataStream qds(&qba, QIODevice::WriteOnly);
 
   for (int i = 0; i < _zSize; i++) {
     qds << _z[i];

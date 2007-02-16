@@ -45,7 +45,7 @@ typedef pthread_mutex_t Q_MUTEX_T;
 #define private public
 #include "qmutex.h"
 #undef private
-#include "private/qmutex_p.h"
+// #include "private/qmutex_p.h"
 
 #include <errno.h>
 #include <stdlib.h>
