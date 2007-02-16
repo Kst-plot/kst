@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "ksdebug.h"
+#include <qdebug.h>
 #include "kstobject.h"
 
 /** Tag globals */

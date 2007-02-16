@@ -17,7 +17,7 @@
 
 #include "rwlock.h"
 
-#include "ksdebug.h"
+#include <qdebug.h>
 
 //#define LOCKTRACE
 
@@ -90,7 +90,7 @@ void KstRWLock::writeLock() const {
     QMap<Qt::HANDLE, int>::Iterator it = _readLockers.find(me);
     if (it != _readLockers.end() && it.value() > 0) {
       // cannot acquire a write lock if I already have a read lock -- ERROR
-      kstdFatal() << "Thread " << (int)QThread::currentThreadId() << " tried to write lock KstRWLock " << (void*)this << " while holding a read lock" << endl;
+      qDebug() << "Thread " << (int)QThread::currentThreadId() << " tried to write lock KstRWLock " << (void*)this << " while holding a read lock" << endl;
       return;
     }
   }
@@ -126,7 +126,7 @@ void KstRWLock::unlock() const {
     QMap<Qt::HANDLE, int>::Iterator it = _readLockers.find(me);
     if (it == _readLockers.end()) {
       // read locked but not by me -- ERROR
-      kstdFatal() << "Thread " << (int)QThread::currentThreadId() << " tried to unlock KstRWLock " << (void*)this << " (read locked) without holding the lock" << endl;
+      qDebug() << "Thread " << (int)QThread::currentThreadId() << " tried to unlock KstRWLock " << (void*)this << " (read locked) without holding the lock" << endl;
       return;
     } else {
       --_readCount;
@@ -139,14 +139,14 @@ void KstRWLock::unlock() const {
   } else if (_writeCount > 0) {
     if (_writeLocker != me) {
       // write locked but not by me -- ERROR
-      kstdFatal() << "Thread " << (int)QThread::currentThread() << " tried to unlock KstRWLock " << (void*)this << " (write locked) without holding the lock" << endl;
+      qDebug() << "Thread " << (int)QThread::currentThread() << " tried to unlock KstRWLock " << (void*)this << " (write locked) without holding the lock" << endl;
       return;
     } else {
       --_writeCount;
     }
   } else if (_readCount == 0 && _writeCount == 0) {
     // not locked -- ERROR
-    kstdFatal() << "Thread " << (int)QThread::currentThread() << " tried to unlock KstRWLock " << (void*)this << " (unlocked) without holding the lock" << endl;
+    qDebug() << "Thread " << (int)QThread::currentThread() << " tried to unlock KstRWLock " << (void*)this << " (unlocked) without holding the lock" << endl;
     return;
   }
 

@@ -27,7 +27,7 @@
 #include "defaultprimitivenames.h"
 #include "kstdatacollection.h"
 #include "kstdebug.h"
-#include "ksdebug.h"
+#include <qdebug.h>
 #include "kstmatrix.h"
 #include "kstmath.h"
 

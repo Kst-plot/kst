@@ -21,7 +21,7 @@
 
 #include <q3semaphore.h>
 
-// #include <ksdebug.h>
+#include <qdebug.h>
 
 // NOTE: In order to preserve binary compatibility with plugins, you must
 //       not add, remove, or change member variables or virtual functions.

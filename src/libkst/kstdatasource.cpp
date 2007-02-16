@@ -19,7 +19,7 @@
 
 #include <assert.h>
 
-#include "ksdebug.h"
+#include <qdebug.h>
 #include <kio/netaccess.h>
 #include <klibloader.h>
 #include <klocale.h>
@@ -208,7 +208,7 @@ static KstDataSourcePtr findPluginFor(const QString& filename, const QString& ty
       if (l.count() > 0) {
         QDomElement e2 = l.item(0).toElement();
         if (!e2.isNull()) {
-          kstdDebug() << "Restoring tag " << e2.text() << " to KstDataSource" << endl;
+          qDebug() << "Restoring tag " << e2.text() << " to KstDataSource" << endl;
           plugin->setTagName(KstObjectTag::fromString(e2.text()));
         }
       }

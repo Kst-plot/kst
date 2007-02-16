@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "kstsvector.h"
-#include "ksdebug.h"
+#include <qdebug.h>
 #include <q3stylesheet.h>
 #include <qtextstream.h>
 

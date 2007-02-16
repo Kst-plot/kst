@@ -28,7 +28,7 @@
 
 #include "kst_export.h"
 #include "kstsharedptr.h"
-#include "ksdebug.h"
+#include <qdebug.h>
 #include "rwlock.h"
 
 //We define two different keys for datasource VS dataobject plugins

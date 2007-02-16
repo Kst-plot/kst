@@ -4,10 +4,10 @@ if(Subversion_FOUND)
 endif(Subversion_FOUND)
 
 #FIXME need to run this whenever .svn/entries changes...
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/kstrevision.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kstrevision.h )
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ksttimers.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/ksttimers.h )
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/kstrevision.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kstrevision.h)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ksttimers.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/ksttimers.h)
 
-include_directories( ${CMAKE_SOURCE_DIR}/kst/src/extdate ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
+include_directories(${CMAKE_SOURCE_DIR}/kst/src/extdate ${KDE4_INCLUDE_DIR} ${QT_INCLUDES})
 
 ########### next target ###############
 
@@ -38,22 +38,22 @@ set(kst_LIB_SRCS
    kstmatrixdefaults.cpp 
    kstprimitive.cpp 
    defaultprimitivenames.cpp 
-   kstwaitcondition_unix.cpp )
+   kstwaitcondition_unix.cpp)
 
 kde4_automoc(${kst_LIB_SRCS})
 
 kde4_add_library(kst SHARED ${kst_LIB_SRCS})
 
-# target_link_libraries(kst  ${KDE4_KIO_LIBS} kstextdate )
-target_link_libraries(kst  ${KDE4_KIO_LIBS} )
+# target_link_libraries(kst kstextdate)
+target_link_libraries(kst kde3support)
 
-set_target_properties(kst PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 1 )
-install(TARGETS kst DESTINATION ${LIB_INSTALL_DIR} )
+set_target_properties(kst PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 1)
+install(TARGETS kst DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install( FILES  kstdatasource.h kstobject.h kst_export.h kstsharedptr.h rwlock.h kstdateparser.h kstwaitcondition.h kstobjectcollection.h DESTINATION ${INCLUDE_INSTALL_DIR} )
+install(FILES kstdatasource.h kstobject.h kst_export.h kstsharedptr.h rwlock.h kstdateparser.h kstwaitcondition.h kstobjectcollection.h DESTINATION ${INCLUDE_INSTALL_DIR})
 
 
 

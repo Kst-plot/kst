@@ -22,7 +22,7 @@
 #include "kstscalar.h"
 #include "kstdatacollection.h"
 #include "defaultprimitivenames.h"
-#include "ksdebug.h"
+#include <qdebug.h>
 
 
 static int iAnonymousScalarCounter = 0;

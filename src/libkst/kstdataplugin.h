@@ -17,7 +17,7 @@
 
 #include <assert.h>
 
-#include "ksdebug.h"
+#include <qdebug.h>
 #include <kio/netaccess.h>
 #include <klibloader.h>
 #include <klocale.h>
@@ -48,7 +48,7 @@ namespace KST {
         //kstdDebug() << "Create plugin " << (void*)this << " " << service->property("Name").toString() << endl;
       }
 
-	protected:
+    protected:
       virtual ~Plugin() {
         //kstdDebug() << "Destroy plugin " << (void*)this << " " << service->property("Name").toString() << endl;
         if (_lib) {
@@ -56,7 +56,7 @@ namespace KST {
         }
       }
 
-	public:
+    public:
       quint32 key() const {
         quint32 (*sym)() = (quint32(*)())symbol("key");
         if (sym) {

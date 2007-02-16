@@ -22,7 +22,7 @@
 
 #include <kapplication.h>
 #include <ktoolinvocation.h>
-#include "ksdebug.h"
+#include <qdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
 

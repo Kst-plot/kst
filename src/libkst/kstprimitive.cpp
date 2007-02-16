@@ -22,7 +22,7 @@
 
 #include <assert.h>
 
-#include "ksdebug.h"
+#include <qdebug.h>
 
 
 KstPrimitive::KstPrimitive(KstObject *provider)

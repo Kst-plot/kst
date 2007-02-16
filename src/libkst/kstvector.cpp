@@ -28,7 +28,7 @@
 #include <klocale.h>
 #include <kcodecs.h>
 
-#include "ksdebug.h"
+#include <qdebug.h>
 #include "kstdatacollection.h"
 #include "defaultprimitivenames.h"
 #include "kstmath.h"

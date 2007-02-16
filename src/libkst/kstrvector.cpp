@@ -22,7 +22,7 @@
 
 #include <q3stylesheet.h>
 
-#include "ksdebug.h"
+#include <qdebug.h>
 #include <klocale.h>
 
 #include "kstdatacollection.h"
