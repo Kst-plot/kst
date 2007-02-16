@@ -159,9 +159,9 @@ void KstSettings::save() {
   KConfig cfg("kstrc", false, false);
 
   cfg.setGroup("Kst");
-  cfg.writeEntry("Plot Update Timer", plotUpdateTimer);
-  cfg.writeEntry("Plot Font Size", plotFontSize);
-  cfg.writeEntry("Plot Font Min Size", plotFontMinSize);
+  cfg.writeEntry("Plot Update Timer", qlonglong(plotUpdateTimer));
+  cfg.writeEntry("Plot Font Size", qlonglong(plotFontSize));
+  cfg.writeEntry("Plot Font Min Size", qlonglong(plotFontMinSize));
   cfg.writeEntry("Background Color", backgroundColor);
   cfg.writeEntry("Foreground Color", foregroundColor);
   cfg.writeEntry("Prompt on Window Close", promptWindowClose);
@@ -184,12 +184,12 @@ void KstSettings::save() {
 
   cfg.setGroup("X Axis");
   cfg.writeEntry("Interpret", xAxisInterpret);
-  cfg.writeEntry("Interpretation", xAxisInterpretation);
-  cfg.writeEntry("Display", xAxisDisplay);
+  cfg.writeEntry("Interpretation", int(xAxisInterpretation));
+  cfg.writeEntry("Display", int(xAxisDisplay));
   cfg.setGroup("Y Axis");
   cfg.writeEntry("Interpret", yAxisInterpret);
-  cfg.writeEntry("Interpretation", yAxisInterpretation);
-  cfg.writeEntry("Display", yAxisDisplay);
+  cfg.writeEntry("Interpretation", int(yAxisInterpretation));
+  cfg.writeEntry("Display", int(yAxisDisplay));
 
   cfg.setGroup("Curve");
   cfg.writeEntry("DefaultLineWeight", defaultLineWeight);
@@ -201,8 +201,8 @@ void KstSettings::save() {
   cfg.writeEntry("Authenticate", emailRequiresAuthentication);
   cfg.writeEntry("Username", emailUsername);
   cfg.writeEntry("Password", emailPassword);
-  cfg.writeEntry("Encryption", emailEncryption);
-  cfg.writeEntry("Authentication", emailAuthentication);
+  cfg.writeEntry("Encryption", int(emailEncryption));
+  cfg.writeEntry("Authentication", int(emailAuthentication));
 
   cfg.setGroup("Printing");
   cfg.writeEntry("kde-pagesize", printing.pageSize);
