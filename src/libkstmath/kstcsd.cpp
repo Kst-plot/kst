@@ -229,7 +229,7 @@ KstObject::UpdateType KstCSD::update(int update_counter) {
   return setLastUpdateResult(UPDATE);
 }
 
-void KstCSD::save(Q3TextStream &ts, const QString& indent) {
+void KstCSD::save(QTextStream &ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<csdobject>" << endl;
   ts << l2 << "<tag>" << Q3StyleSheet::escape(tagName()) << "</tag>" << endl;

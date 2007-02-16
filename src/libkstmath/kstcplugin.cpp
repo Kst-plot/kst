@@ -470,7 +470,7 @@ QString KstCPlugin::label(int precision) const {
 }
 
 
-void KstCPlugin::save(Q3TextStream &ts, const QString& indent) {
+void KstCPlugin::save(QTextStream &ts, const QString& indent) {
   if (!_plugin) {
     return;
   }

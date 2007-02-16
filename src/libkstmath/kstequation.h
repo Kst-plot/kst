@@ -39,7 +39,7 @@ class KST_EXPORT KstEquation : public KstDataObject {
 
     virtual UpdateType update(int update_counter = -1);
 
-    virtual void save(Q3TextStream &ts, const QString& indent = QString::null);
+    virtual void save(QTextStream &ts, const QString& indent = QString::null);
     virtual QString propertyString() const;
 
     /** equations used to edit the vector */

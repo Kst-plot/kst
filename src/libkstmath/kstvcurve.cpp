@@ -467,7 +467,7 @@ bool KstVCurve::hasYMinusError() const {
 }
 
 
-void KstVCurve::save(Q3TextStream &ts, const QString& indent) {
+void KstVCurve::save(QTextStream &ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<curve>" << endl;
   ts << l2 << "<tag>" << Q3StyleSheet::escape(tagName()) << "</tag>" << endl;

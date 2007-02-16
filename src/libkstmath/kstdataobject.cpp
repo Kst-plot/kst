@@ -194,7 +194,7 @@ void KstDataObject::load(const QDomElement &e) {
 }
 
 
-void KstDataObject::save(Q3TextStream& ts, const QString& indent) {
+void KstDataObject::save(QTextStream& ts, const QString& indent) {
   Q_UNUSED(ts)
   Q_UNUSED(indent)
 }

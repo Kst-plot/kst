@@ -71,7 +71,7 @@ class KST_EXPORT KstVCurve: public KstBaseCurve {
     void setYMinusError(KstVectorPtr new_ey);
 
     /** Save curve information */
-    void save(Q3TextStream &ts, const QString& indent = QString::null);
+    void save(QTextStream &ts, const QString& indent = QString::null);
 
     QString xLabel() const;
     QString yLabel() const;

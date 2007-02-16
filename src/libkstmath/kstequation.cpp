@@ -230,7 +230,7 @@ KstObject::UpdateType KstEquation::update(int update_counter) {
 }
 
 
-void KstEquation::save(Q3TextStream &ts, const QString& indent) {
+void KstEquation::save(QTextStream &ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<equationobject>" << endl;
   ts << l2 << "<tag>" << Q3StyleSheet::escape(tag().tagString()) << "</tag>" << endl;

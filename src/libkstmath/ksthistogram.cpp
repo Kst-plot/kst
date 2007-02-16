@@ -347,7 +347,7 @@ QString KstHistogram::xLabel() const {
 }
 
 
-void KstHistogram::save(Q3TextStream &ts, const QString& indent) {
+void KstHistogram::save(QTextStream &ts, const QString& indent) {
   // FIXME: clean this up - all lower case nodes, maybe save points in the
   // point class itself, etc
   QString l2 = indent + "  ";

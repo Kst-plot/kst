@@ -339,7 +339,7 @@ QString KstBasicPlugin::label(int precision) const {
 }
 
 
-void KstBasicPlugin::save(Q3TextStream& ts, const QString& indent) {
+void KstBasicPlugin::save(QTextStream& ts, const QString& indent) {
   QString l2 = indent + "  ";
   //The plugin name _must_ be the same as the entry in the .desktop file
   ts << indent << "<plugin name=\"" << propertyString() << "\">" << endl;

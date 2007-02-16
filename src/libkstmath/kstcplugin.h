@@ -38,7 +38,7 @@ class KST_EXPORT KstCPlugin : public KstDataObject {
 
     virtual UpdateType update(int update_counter);
 
-    virtual void save(Q3TextStream &ts, const QString& indent = QString::null);
+    virtual void save(QTextStream &ts, const QString& indent = QString::null);
 
     virtual bool slaveVectorsUsed() const;
     virtual bool isValid() const;

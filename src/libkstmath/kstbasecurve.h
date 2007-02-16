@@ -65,7 +65,7 @@ class KST_EXPORT KstBaseCurve : public KstDataObject {
 
     virtual void showNewDialog() { }
     virtual void showEditDialog() { }
-    virtual void save(Q3TextStream &ts, const QString& indent = QString::null) = 0;
+    virtual void save(QTextStream &ts, const QString& indent = QString::null) = 0;
     virtual QString propertyString() const = 0;
 
     virtual KstCurveType curveType() const = 0;

@@ -176,7 +176,7 @@ KstImage::~KstImage() {
 }
 
 
-void KstImage::save(Q3TextStream &ts, const QString& indent) {
+void KstImage::save(QTextStream &ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<image>" << endl;
   ts << l2 << "<tag>" << Q3StyleSheet::escape(tagName()) << "</tag>" << endl;

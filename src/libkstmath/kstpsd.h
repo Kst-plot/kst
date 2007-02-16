@@ -37,7 +37,7 @@ class KST_EXPORT KstPSD : public KstDataObject {
 
     virtual UpdateType update(int update_counter = -1);
 
-    virtual void save(Q3TextStream& ts, const QString& indent = QString::null);
+    virtual void save(QTextStream& ts, const QString& indent = QString::null);
     virtual QString propertyString() const;
     
     bool apodize() const;

@@ -268,7 +268,7 @@ void KstPSD::_adjustLengths() {
   }
 }
 
-void KstPSD::save(Q3TextStream &ts, const QString& indent) {
+void KstPSD::save(QTextStream &ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<psdobject>" << endl;
   ts << l2 << "<tag>" << Q3StyleSheet::escape(tagName()) << "</tag>" << endl;
