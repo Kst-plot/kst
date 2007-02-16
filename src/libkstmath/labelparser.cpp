@@ -118,7 +118,7 @@ inline void setNormalChar(QChar c, Chunk **tail) {
 
 
 inline QColor parseColor(const QString& txt, int *skip) {
-  const int end = txt.find('}');
+  const int end = txt.lastIndexOf('}');
   if (skip) {
     *skip = end;
   }
