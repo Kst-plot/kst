@@ -1,5 +1,12 @@
+find_package(KDE4 REQUIRED)
 
-FIND_PACKAGE(KDE4 REQUIRED)
+find_package(Subversion)
+if(Subversion_FOUND)
+  Subversion_WC_INFO(${CMAKE_CURRENT_SOURCE_DIR} libkst)
+endif(Subversion_FOUND)
+
+#FIXME need to run this whenever .svn/entries changes...
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/kstrevision.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kstrevision.h )
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ksttimers.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/ksttimers.h )
 
 include_directories( ${CMAKE_SOURCE_DIR}/kst/src/extdate ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
@@ -13,7 +20,7 @@ set(kst_LIB_SRCS
    stdinsource.cpp 
    kstextension.cpp 
    kstdatacollection.cpp 
-#    kstdebug.cpp 
+   kstdebug.cpp 
    rwlock.cpp 
    kstmath.cpp 
    kstdateparser.cpp 
@@ -39,7 +46,8 @@ kde4_automoc(${kst_LIB_SRCS})
 
 kde4_add_library(kst SHARED ${kst_LIB_SRCS})
 
-target_link_libraries(kst  ${KDE4_KIO_LIBS} kstextdate )
+# target_link_libraries(kst  ${KDE4_KIO_LIBS} kstextdate )
+target_link_libraries(kst  ${KDE4_KIO_LIBS} )
 
 set_target_properties(kst PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kst DESTINATION ${LIB_INSTALL_DIR} )
