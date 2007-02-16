@@ -286,13 +286,13 @@ bool KstWaitCondition::wait(QMutex *mutex, unsigned long time)
     if (! mutex)
 	return FALSE;
 
-    if (mutex->d->type() == Q_MUTEX_RECURSIVE) {
-#ifdef QT_CHECK_RANGE
-	qWarning("Wait condition warning: using recursive mutexes with\n"
-		 "                        wait conditions is undefined!");
-#endif
-	return FALSE;
-    }
+//     if (mutex->d->type() == Q_MUTEX_RECURSIVE) {
+// #ifdef QT_CHECK_RANGE
+// 	qWarning("Wait condition warning: using recursive mutexes with\n"
+// 		 "                        wait conditions is undefined!");
+// #endif
+// 	return FALSE;
+//     }
 
     int ret;
     if (time != ULONG_MAX) {
@@ -304,9 +304,9 @@ bool KstWaitCondition::wait(QMutex *mutex, unsigned long time)
 	ti.tv_sec = tv.tv_sec + (time / 1000) + ( ti.tv_nsec / 1000000000 );
 	ti.tv_nsec %= 1000000000;
 
-	ret = pthread_cond_timedwait(&d->cond, &mutex->d->handle, &ti);
+// 	ret = pthread_cond_timedwait(&d->cond, &mutex->d->handle, &ti);
     } else
-	ret = pthread_cond_wait(&d->cond, &mutex->d->handle);
+// 	ret = pthread_cond_wait(&d->cond, &mutex->d->handle);
 
 #ifdef QT_CHECK_RANGE
     if (ret && ret != ETIMEDOUT)
