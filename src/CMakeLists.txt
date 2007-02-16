@@ -1,7 +1,7 @@
 
 #add_subdirectory( extdate )
 add_subdirectory( libkst )
-#add_subdirectory( libkstmath )
+add_subdirectory( libkstmath )
 #add_subdirectory( datasources )
 #add_subdirectory( widgets )
 #add_subdirectory( libkstapp )

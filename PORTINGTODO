@@ -21,3 +21,5 @@ Please place porting todo items in this file categorized by lib/module
      from qt.  This is no longer installed in Qt4.  This can be taken care of by getting rid of
      KstWaitCondition as described above.
   E. Rename kstdebug classes as they really are loggers and should be named as such.
+
+  **** libkstmath ****:

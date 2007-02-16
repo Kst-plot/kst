@@ -1,5 +1,4 @@
 
-FIND_PACKAGE(KDE4 REQUIRED)
 include_directories( ${CMAKE_SOURCE_DIR}/kst/src/extdate ${CMAKE_SOURCE_DIR}/kst/src/libkst ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
 
 
@@ -45,7 +44,7 @@ kde4_add_library(kstmath SHARED ${kstmath_LIB_SRCS})
 
 target_link_libraries(kstmath  ${KDE4_KDECORE_LIBS} kst )
 
-set_target_properties(kstmath PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(kstmath PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 1 )
 install(TARGETS kstmath DESTINATION ${LIB_INSTALL_DIR} )
 
 
