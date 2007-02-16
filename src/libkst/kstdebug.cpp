@@ -21,6 +21,7 @@
 #include "logevents.h"
 
 #include <kapplication.h>
+#include <ktoolinvocation.h>
 #include "ksdebug.h"
 #include <kglobal.h>
 #include <klocale.h>
@@ -119,15 +120,15 @@ void KstDebug::clear() {
 QString KstDebug::label(LogLevel level) const {
   switch (level) {
     case Notice:
-      return i18n("log level notice", "Notice");
+      return i18nc("log level notice", "Notice");
     case Warning:
-      return i18n("log level warning", "Warning");
+      return i18nc("log level warning", "Warning");
     case Error:
-      return i18n("log level error", "Error");
+      return i18nc("log level error", "Error");
     case Debug:
-      return i18n("log level debug", "Debug");
+      return i18nc("log level debug", "Debug");
     default:
-      return i18n("log level other", "Other");
+      return i18nc("log level other", "Other");
   }    
 }
 
@@ -137,7 +138,7 @@ QString KstDebug::text() {
   QString body = i18n("Kst version %1\n\n\nKst log:\n").arg(KSTVERSION);
 
   for (unsigned i = 0; i < _messages.count(); i++ ) {
-    body += i18n("date leveltext: message", "%1 %2: %3\n").arg(KGlobal::locale()->formatDateTime(_messages[i].date)).arg(label(_messages[i].level)).arg(_messages[i].msg);
+    body += i18nc("date leveltext: message", "%1 %2: %3\n").arg(KGlobal::locale()->formatDateTime(_messages[i].date)).arg(label(_messages[i].level)).arg(_messages[i].msg);
   }
 
   body += i18n("\n\nData-source plugins:");
@@ -159,7 +160,7 @@ void KstDebug::setLimit(bool applyLimit, int limit) {
 
 
 void KstDebug::sendEmail() {
-  kapp->invokeMailer(QString::null, QString::null, QString::null, i18n("Kst Debugging Information"), text());
+  KToolInvocation::invokeMailer(QString::null, QString::null, QString::null, i18n("Kst Debugging Information"), text());
 }
 
 
