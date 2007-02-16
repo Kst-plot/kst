@@ -388,7 +388,7 @@ void KstDataObject::writeLockInputsAndOutputs() const {
     if (inputIt != inputs.end() && (outputIt == outputs.end() || (void*)(*inputIt) < (void*)(*outputIt))) {
       // do input
       if (!(*inputIt)) {
-        kstdFatal() << "Input for data object " << this->tag().displayString() << " is invalid." << endl;
+        qWarning() << "Input for data object " << this->tag().displayString() << " is invalid." << endl;
       }
 #ifdef LOCKTRACE
       kstdDebug() << (void*)this << " (" << this->type() << ": " << this->tag().tagString() << ") KstDataObject::writeLockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": write locking input \"" << (*inputIt)->tag().tagString() << "\" (" << (void*)((KstRWLock*)*inputIt) << ")" << endl;
@@ -398,7 +398,7 @@ void KstDataObject::writeLockInputsAndOutputs() const {
     } else {
       // do output
       if (!(*outputIt)) {
-        kstdFatal() << "Output for data object " << this->tag().displayString() << " is invalid." << endl;
+        qWarning() << "Output for data object " << this->tag().displayString() << " is invalid." << endl;
       }
 #ifdef LOCKTRACE
       kstdDebug() << (void*)this << " (" << this->type() << ": " << this->tag().tagString() << ") KstDataObject::writeLockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": write locking output \"" << (*outputIt)->tag().tagString() << "\" (" << (void*)((KstRWLock*)*outputIt) << ")" << endl;
@@ -420,7 +420,7 @@ void KstDataObject::unlockInputsAndOutputs() const {
 
   for (KstMatrixMap::ConstIterator i = _outputMatrices.begin(); i != _outputMatrices.end(); ++i) {
     if (!(*i)) {
-      kstdFatal() << "Output matrix for data object " << this->tag().displayString() << " is invalid." << endl;
+      qWarning() << "Output matrix for data object " << this->tag().displayString() << " is invalid." << endl;
     }
     #ifdef LOCKTRACE
     kstdDebug() << (void*)this << " (" << this->type() << ": " << this->tag().tagString() << ") KstDataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking output matrix \"" << (*i)->tag().tagString() << "\" (" << (void*)((KstRWLock*)*i) << ")" << endl;
@@ -430,7 +430,7 @@ void KstDataObject::unlockInputsAndOutputs() const {
 
   for (KstMatrixMap::ConstIterator i = _inputMatrices.begin(); i != _inputMatrices.end(); ++i) {
     if (!(*i)) {
-      kstdFatal() << "Input matrix for data object " << this->tag().displayString() << " is invalid." << endl;
+      qWarning() << "Input matrix for data object " << this->tag().displayString() << " is invalid." << endl;
     }
     #ifdef LOCKTRACE
     kstdDebug() << (void*)this << " (" << this->type() << ": " << this->tag().tagString() << ") KstDataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking input matrix \"" << (*i)->tag().tagString() << "\" (" << (void*)((KstRWLock*)*i) << ")" << endl;
@@ -440,7 +440,7 @@ void KstDataObject::unlockInputsAndOutputs() const {
 
   for (KstVectorMap::ConstIterator i = _outputVectors.begin(); i != _outputVectors.end(); ++i) {
     if (!(*i)) {
-      kstdFatal() << "Output vector for data object " << this->tag().displayString() << " is invalid." << endl;
+      qWarning() << "Output vector for data object " << this->tag().displayString() << " is invalid." << endl;
     }
     #ifdef LOCKTRACE
     kstdDebug() << (void*)this << " (" << this->type() << ": " << this->tag().tagString() << ") KstDataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking output vector \"" << (*i)->tag().tagString() << "\" (" << (void*)((KstRWLock*)*i) << ")" << endl;
@@ -450,7 +450,7 @@ void KstDataObject::unlockInputsAndOutputs() const {
 
   for (KstVectorMap::ConstIterator i = _inputVectors.begin(); i != _inputVectors.end(); ++i) {
     if (!(*i)) {
-      kstdFatal() << "Input vector for data object " << this->tag().displayString() << " is invalid." << endl;
+      qWarning() << "Input vector for data object " << this->tag().displayString() << " is invalid." << endl;
     }
     #ifdef LOCKTRACE
     kstdDebug() << (void*)this << " (" << this->type() << ": " << this->tag().tagString() << ") KstDataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking input vector \"" << (*i)->tag().tagString() << "\" (" << (void*)((KstRWLock*)*i) << ")" << endl;
@@ -460,7 +460,7 @@ void KstDataObject::unlockInputsAndOutputs() const {
 
   for (KstScalarMap::ConstIterator i = _outputScalars.begin(); i != _outputScalars.end(); ++i) {
     if (!(*i)) {
-      kstdFatal() << "Output scalar for data object " << this->tag().displayString() << " is invalid." << endl;
+      qWarning() << "Output scalar for data object " << this->tag().displayString() << " is invalid." << endl;
     }
     #ifdef LOCKTRACE
     kstdDebug() << (void*)this << " (" << this->type() << ": " << this->tag().tagString() << ") KstDataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking output scalar \"" << (*i)->tag().tagString() << "\" (" << (void*)((KstRWLock*)*i) << ")" << endl;
@@ -470,7 +470,7 @@ void KstDataObject::unlockInputsAndOutputs() const {
 
   for (KstScalarMap::ConstIterator i = _inputScalars.begin(); i != _inputScalars.end(); ++i) {
     if (!(*i)) {
-      kstdFatal() << "Input scalar for data object " << this->tag().displayString() << " is invalid." << endl;
+      qWarning() << "Input scalar for data object " << this->tag().displayString() << " is invalid." << endl;
     }
     #ifdef LOCKTRACE
     kstdDebug() << (void*)this << " (" << this->type() << ": " << this->tag().tagString() << ") KstDataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking input scalar \"" << (*i)->tag().tagString() << "\" (" << (void*)((KstRWLock*)*i) << ")" << endl;
@@ -480,7 +480,7 @@ void KstDataObject::unlockInputsAndOutputs() const {
 
   for (KstStringMap::ConstIterator i = _outputStrings.begin(); i != _outputStrings.end(); ++i) {
     if (!(*i)) {
-      kstdFatal() << "Output string for data object " << this->tag().displayString() << " is invalid." << endl;
+      qWarning() << "Output string for data object " << this->tag().displayString() << " is invalid." << endl;
     }
    #ifdef LOCKTRACE
     kstdDebug() << (void*)this << " (" << this->type() << ": " << this->tag().tagString() << ") KstDataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking output string \"" << (*i)->tag().tagString() << "\" (" << (void*)((KstRWLock*)*i) << ")" << endl;
@@ -490,7 +490,7 @@ void KstDataObject::unlockInputsAndOutputs() const {
 
   for (KstStringMap::ConstIterator i = _inputStrings.begin(); i != _inputStrings.end(); ++i) {
     if (!(*i)) {
-      kstdFatal() << "Input string for data object " << this->tag().displayString() << " is invalid." << endl;
+      qWarning() << "Input string for data object " << this->tag().displayString() << " is invalid." << endl;
     }
     #ifdef LOCKTRACE
     kstdDebug() << (void*)this << " (" << this->type() << ": " << this->tag().tagString() << ") KstDataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking input string \"" << (*i)->tag().tagString() << "\" (" << (void*)((KstRWLock*)*i) << ")" << endl;

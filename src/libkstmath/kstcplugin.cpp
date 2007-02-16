@@ -300,7 +300,7 @@ KstObject::UpdateType KstCPlugin::update(int update_counter) {
       }
       KstVectorPtr iv = _inputVectors[(*it)._name];
       if (!iv) {
-        kstdFatal() << "Input vector \"" << (*it)._name << "\" for plugin " << tag().displayString() << " is invalid." << endl;
+        qWarning() << "Input vector \"" << (*it)._name << "\" for plugin " << tag().displayString() << " is invalid." << endl;
       }
       doUpdate = (UPDATE == iv->update(update_counter)) || doUpdate;
       _inVectors[vitcnt] = iv->value();
@@ -308,14 +308,14 @@ KstObject::UpdateType KstCPlugin::update(int update_counter) {
     } else if ((*it)._type == Plugin::Data::IOValue::FloatType) {
       KstScalarPtr is = _inputScalars[(*it)._name];
       if (!is) {
-        kstdFatal() << "Input scalar \"" << (*it)._name << "\" for plugin " << tag().displayString() << " is invalid." << endl;
+        qWarning() << "Input scalar \"" << (*it)._name << "\" for plugin " << tag().displayString() << " is invalid." << endl;
       }
       doUpdate = (UPDATE == is->update(update_counter)) || doUpdate;
       _inScalars[itcnt++] = is->value();
     } else if ((*it)._type == Plugin::Data::IOValue::StringType) {
       KstStringPtr is = _inputStrings[(*it)._name];
       if (!is) {
-        kstdFatal() << "Input string \"" << (*it)._name << "\" for plugin " << tag().displayString() << " is invalid." << endl;
+        qWarning() << "Input string \"" << (*it)._name << "\" for plugin " << tag().displayString() << " is invalid." << endl;
       }
       doUpdate = (UPDATE == is->update(update_counter)) || doUpdate;
       // Maybe we should use UTF-8 instead?
