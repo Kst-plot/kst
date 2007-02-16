@@ -8,3 +8,5 @@ Please place porting todo items in this file categorized by lib/module
   A. Numerous changes WRT Qt4's threading package
   B. Switch to using Qt4's container classes eg Q3ValueList --> QList
   C. Revamp the plugin manager to use Qt4's plugin system?
+  D. We relied upon a hack in KDE3 version that used a private header
+     from qt.  This is no longer installed in Qt4...
