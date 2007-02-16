@@ -25,6 +25,7 @@
 #include "kstmatrix.h"
 #include "kst_export.h"
 
+#include <kservice.h>
 #include <kservicetype.h>
 //Added by qt3to4:
 #include <Q3ValueList>
