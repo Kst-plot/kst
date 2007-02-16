@@ -19,6 +19,7 @@
 #define _KST_CURVEHINT_H
 
 #include <qstring.h>
+#include <qcolor.h>
 #include <q3valuelist.h>
 
 #include "kstvector.h"
