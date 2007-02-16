@@ -775,10 +775,10 @@ Data::Data(char *name)
 : Node(), _isEquation(false), _equation(0L) {
   //printf("%p: New Data Object: [%s]\n", (void*)this, name);
   if (name[0] == '=') {
-    _tagName = QString(&name[1]).stripWhiteSpace();
+    _tagName = QString(&name[1]).trimmed();
     _isEquation = true;
   } else if (strchr(name, '[')) {
-    _tagName = QString(name).stripWhiteSpace();
+    _tagName = QString(name).trimmed();
     QRegExp re("(.*)\\[(.*)\\]");
     int hit = re.search(_tagName);
     if (hit > -1 && re.numCaptures() == 2) {
@@ -788,7 +788,7 @@ Data::Data(char *name)
       }
     }
   } else {
-    _tagName = QString(name).stripWhiteSpace();
+    _tagName = QString(name).trimmed();
     _vector = *KST::vectorList.findTag(_tagName);
     if (!_vector) {
       _scalar = *KST::scalarList.findTag(_tagName);

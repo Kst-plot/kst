@@ -613,11 +613,11 @@ static Chunk *parseInternal(Chunk *ctail, const QString& txt, uint& start, uint 
           }
 
           if (vector) {
-            ctail->text = txt.mid(i + 1, vectorIndexStart - i - 2).stripWhiteSpace();
+            ctail->text = txt.mid(i + 1, vectorIndexStart - i - 2).trimmed();
             ctail->expression = txt.mid(vectorIndexStart, vectorIndexEnd - vectorIndexStart + 1);
             ctail->vector = true;
           } else {
-            ctail->text = txt.mid(i + 1, pos - i - 1).stripWhiteSpace();
+            ctail->text = txt.mid(i + 1, pos - i - 1).trimmed();
             ctail->scalar = true;
           }
           i = uint(pos);

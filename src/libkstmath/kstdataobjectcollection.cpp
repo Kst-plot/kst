@@ -31,7 +31,7 @@ bool KstData::dataTagNameNotUnique(const QString& tag, bool warn, void *p) {
   Q_UNUSED(p)
   Q_UNUSED(warn)
   /* verify that the tag name is not empty */
-  if (tag.stripWhiteSpace().isEmpty()) {
+  if (tag.trimmed().isEmpty()) {
       return true;
   }
 
