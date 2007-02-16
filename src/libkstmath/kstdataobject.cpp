@@ -24,7 +24,9 @@
 #include "kstdataobjectcollection.h"
 
 #include <qtimer.h>
-#include <qdeepcopy.h>
+#include <q3deepcopy.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include <assert.h>
 
@@ -192,7 +194,7 @@ void KstDataObject::load(const QDomElement &e) {
 }
 
 
-void KstDataObject::save(QTextStream& ts, const QString& indent) {
+void KstDataObject::save(Q3TextStream& ts, const QString& indent) {
   Q_UNUSED(ts)
   Q_UNUSED(indent)
 }
@@ -200,7 +202,7 @@ void KstDataObject::save(QTextStream& ts, const QString& indent) {
 
 bool KstDataObject::loadInputs() {
   bool rc = true;
-  QValueList<QPair<QString,QString> >::Iterator i;
+  Q3ValueList<QPair<QString,QString> >::Iterator i;
   
   KST::vectorList.lock().readLock();
   for (i = _inputVectorLoadQueue.begin(); i != _inputVectorLoadQueue.end(); ++i) {
@@ -337,50 +339,50 @@ void KstDataObject::writeLockInputsAndOutputs() const {
   kstdDebug() << (void*)this << " (" << this->type() << ": " << this->tag().tagString() << ") KstDataObject::writeLockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << endl;
   #endif
 
-  QValueList<KstPrimitivePtr> inputs;
-  QValueList<KstPrimitivePtr> outputs;
+  Q3ValueList<KstPrimitivePtr> inputs;
+  Q3ValueList<KstPrimitivePtr> outputs;
 
-  QValueList<KstStringPtr> sl = _inputStrings.values();
-  for (QValueList<KstStringPtr>::Iterator i = sl.begin(); i != sl.end(); ++i) {
+  Q3ValueList<KstStringPtr> sl = _inputStrings.values();
+  for (Q3ValueList<KstStringPtr>::Iterator i = sl.begin(); i != sl.end(); ++i) {
     inputs += (*i).data();
   }
   sl = _outputStrings.values();
-  for (QValueList<KstStringPtr>::Iterator i = sl.begin(); i != sl.end(); ++i) {
+  for (Q3ValueList<KstStringPtr>::Iterator i = sl.begin(); i != sl.end(); ++i) {
     outputs += (*i).data();
   }
   
-  QValueList<KstScalarPtr> sc = _inputScalars.values();
-  for (QValueList<KstScalarPtr>::Iterator i = sc.begin(); i != sc.end(); ++i) {
+  Q3ValueList<KstScalarPtr> sc = _inputScalars.values();
+  for (Q3ValueList<KstScalarPtr>::Iterator i = sc.begin(); i != sc.end(); ++i) {
     inputs += (*i).data();
   }
   sc = _outputScalars.values();
-  for (QValueList<KstScalarPtr>::Iterator i = sc.begin(); i != sc.end(); ++i) {
+  for (Q3ValueList<KstScalarPtr>::Iterator i = sc.begin(); i != sc.end(); ++i) {
     outputs += (*i).data();
   }
   
-  QValueList<KstVectorPtr> vl = _inputVectors.values();
-  for (QValueList<KstVectorPtr>::Iterator i = vl.begin(); i != vl.end(); ++i) {
+  Q3ValueList<KstVectorPtr> vl = _inputVectors.values();
+  for (Q3ValueList<KstVectorPtr>::Iterator i = vl.begin(); i != vl.end(); ++i) {
     inputs += (*i).data();
   }
   vl = _outputVectors.values();
-  for (QValueList<KstVectorPtr>::Iterator i = vl.begin(); i != vl.end(); ++i) {
+  for (Q3ValueList<KstVectorPtr>::Iterator i = vl.begin(); i != vl.end(); ++i) {
     outputs += (*i).data();
   }
   
-  QValueList<KstMatrixPtr> ml = _inputMatrices.values();
-  for (QValueList<KstMatrixPtr>::Iterator i = ml.begin(); i != ml.end(); ++i) {
+  Q3ValueList<KstMatrixPtr> ml = _inputMatrices.values();
+  for (Q3ValueList<KstMatrixPtr>::Iterator i = ml.begin(); i != ml.end(); ++i) {
     inputs += (*i).data();
   }
   ml = _outputMatrices.values();
-  for (QValueList<KstMatrixPtr>::Iterator i = ml.begin(); i != ml.end(); ++i) {
+  for (Q3ValueList<KstMatrixPtr>::Iterator i = ml.begin(); i != ml.end(); ++i) {
     outputs += (*i).data();
   }
 
-  qHeapSort(inputs);
-  qHeapSort(outputs);
+  qSort(inputs);
+  qSort(outputs);
 
-  QValueList<KstPrimitivePtr>::ConstIterator inputIt = inputs.begin();
-  QValueList<KstPrimitivePtr>::ConstIterator outputIt = outputs.begin();
+  Q3ValueList<KstPrimitivePtr>::ConstIterator inputIt = inputs.begin();
+  Q3ValueList<KstPrimitivePtr>::ConstIterator outputIt = outputs.begin();
 
   while (inputIt != inputs.end() || outputIt != outputs.end()) {
     if (inputIt != inputs.end() && (outputIt == outputs.end() || (void*)(*inputIt) < (void*)(*outputIt))) {
@@ -510,7 +512,7 @@ const KstCurveHintList* KstDataObject::curveHints() const {
 
 bool KstDataObject::deleteDependents() {
   KST::dataObjectList.lock().readLock();
-  KstDataObjectList dol = QDeepCopy<KstDataObjectList>(KST::dataObjectList);
+  KstDataObjectList dol = Q3DeepCopy<KstDataObjectList>(KST::dataObjectList);
   KST::dataObjectList.lock().unlock();
   for (KstDataObjectList::Iterator i = dol.begin(); i != dol.end(); ++i) {
     bool user = (*i)->uses(this);
@@ -541,7 +543,7 @@ bool KstDataObject::deleteDependents() {
 bool KstDataObject::duplicateDependents(QMap<KstDataObjectPtr, KstDataObjectPtr> &duplicatedMap) {
   // work with a copy of the data object list
   KST::dataObjectList.lock().readLock();
-  KstDataObjectList dol = QDeepCopy<KstDataObjectList>(KST::dataObjectList);
+  KstDataObjectList dol = Q3DeepCopy<KstDataObjectList>(KST::dataObjectList);
   KST::dataObjectList.lock().unlock();
   
   for (KstDataObjectList::Iterator i = dol.begin(); i != dol.end(); ++i) { 
@@ -575,7 +577,7 @@ void KstDataObject::replaceDependency(KstDataObjectPtr oldObject, KstDataObjectP
       }
     }
     // also replace dependencies on vector stats
-    QDictIterator<KstScalar> scalarDictIter(j.data()->scalars());
+    Q3DictIterator<KstScalar> scalarDictIter(j.data()->scalars());
     for (KstScalarMap::Iterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
       for (; scalarDictIter.current(); ++scalarDictIter) {
         if (scalarDictIter.current() == k.data()) {
@@ -594,7 +596,7 @@ void KstDataObject::replaceDependency(KstDataObjectPtr oldObject, KstDataObjectP
       }
     }
     // also replace dependencies on matrix stats
-    QDictIterator<KstScalar> scalarDictIter(j.data()->scalars());
+    Q3DictIterator<KstScalar> scalarDictIter(j.data()->scalars());
     for (KstScalarMap::Iterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
       for (; scalarDictIter.current(); ++scalarDictIter) {
         if (scalarDictIter.current() == k.data()) {
@@ -633,7 +635,7 @@ void KstDataObject::replaceDependency(KstVectorPtr oldVector, KstVectorPtr newVe
     }      
   }
   
-  QDictIterator<KstScalar> scalarDictIter(oldVector->scalars());
+  Q3DictIterator<KstScalar> scalarDictIter(oldVector->scalars());
   for (KstScalarMap::Iterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
     for (; scalarDictIter.current(); ++ scalarDictIter) {
       if (scalarDictIter.current() == j.data()) {
@@ -651,7 +653,7 @@ void KstDataObject::replaceDependency(KstMatrixPtr oldMatrix, KstMatrixPtr newMa
     }      
   }
   
-  QDictIterator<KstScalar> scalarDictIter(oldMatrix->scalars());
+  Q3DictIterator<KstScalar> scalarDictIter(oldMatrix->scalars());
   for (KstScalarMap::Iterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
     for (; scalarDictIter.current(); ++ scalarDictIter) {
       if (scalarDictIter.current() == j.data()) {
@@ -670,7 +672,7 @@ bool KstDataObject::uses(KstObjectPtr p) const {
         return true;
       }
     }
-    QDictIterator<KstScalar> scalarDictIter(v->scalars());
+    Q3DictIterator<KstScalar> scalarDictIter(v->scalars());
     for (KstScalarMap::ConstIterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
       for (; scalarDictIter.current(); ++scalarDictIter) {
         if (scalarDictIter.current() == j.data()) {
@@ -684,7 +686,7 @@ bool KstDataObject::uses(KstObjectPtr p) const {
         return true;
       }
     }
-    QDictIterator<KstScalar> scalarDictIter(matrix->scalars());
+    Q3DictIterator<KstScalar> scalarDictIter(matrix->scalars());
     for (KstScalarMap::ConstIterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
       for (; scalarDictIter.current(); ++scalarDictIter) {
         if (scalarDictIter.current() == j.data()) {
@@ -701,7 +703,7 @@ bool KstDataObject::uses(KstObjectPtr p) const {
         }
       }
       // also check dependencies on vector stats
-      QDictIterator<KstScalar> scalarDictIter(j.data()->scalars());
+      Q3DictIterator<KstScalar> scalarDictIter(j.data()->scalars());
       for (KstScalarMap::ConstIterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
         for (; scalarDictIter.current(); ++scalarDictIter) {
           if (scalarDictIter.current() == k.data()) {
@@ -718,7 +720,7 @@ bool KstDataObject::uses(KstObjectPtr p) const {
         }
       }
       // also check dependencies on vector stats
-      QDictIterator<KstScalar> scalarDictIter(j.data()->scalars());
+      Q3DictIterator<KstScalar> scalarDictIter(j.data()->scalars());
       for (KstScalarMap::ConstIterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
         for (; scalarDictIter.current(); ++scalarDictIter) {
           if (scalarDictIter.current() == k.data()) {

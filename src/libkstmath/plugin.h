@@ -19,6 +19,8 @@
 #define _KST_PLUGIN_H
 
 #include <qmap.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include "kstsharedptr.h"
 #include "kst_export.h"
@@ -119,8 +121,8 @@ class KST_EXPORT Plugin : public KstShared {
         // Unimplemented:  platforms, language, documentation
 
         // Interface
-        QValueList<IOValue> _inputs;
-        QValueList<IOValue> _outputs;
+        Q3ValueList<IOValue> _inputs;
+        Q3ValueList<IOValue> _outputs;
 
         // Parameter list
         QMap<QString, QPair<ParameterTypes, QString> > _parameters;
@@ -132,11 +134,11 @@ class KST_EXPORT Plugin : public KstShared {
             : name(name), x(x), y(y) {}
           QString name, x, y;
         };
-        QValueList<Data::CurveHint> _hints;
+        Q3ValueList<Data::CurveHint> _hints;
     };
 
 
-    static void countScalarsVectorsAndStrings(const QValueList<Plugin::Data::IOValue>& table, unsigned& scalars, unsigned& vectors, unsigned& strings, unsigned& numberOfPids);
+    static void countScalarsVectorsAndStrings(const Q3ValueList<Plugin::Data::IOValue>& table, unsigned& scalars, unsigned& vectors, unsigned& strings, unsigned& numberOfPids);
 
   protected:
     Plugin();

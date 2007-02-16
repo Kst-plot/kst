@@ -20,6 +20,8 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <qfile.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 PluginXMLParser::PluginXMLParser() {
 }
@@ -33,7 +35,7 @@ int PluginXMLParser::parseFile(const QString& filename) {
   QFile qf(filename);
   int retVal = -1;
 
-  if (qf.open(IO_ReadOnly)) {
+  if (qf.open(QIODevice::ReadOnly)) {
     QDomDocument doc(filename);
 
     if (doc.setContent(&qf)) {
@@ -297,7 +299,7 @@ return 0;
 }
 
 
-int PluginXMLParser::parseIO(const QDomElement& element, QValueList<Plugin::Data::IOValue>& collection) {
+int PluginXMLParser::parseIO(const QDomElement& element, Q3ValueList<Plugin::Data::IOValue>& collection) {
 QDomNode n = element.firstChild();
 
   while (!n.isNull()) {

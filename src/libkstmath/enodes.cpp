@@ -26,6 +26,8 @@
 
 #include <qmutex.h>
 #include <qregexp.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include "enodes.h"
 #include "kstdatacollection.h"
@@ -419,8 +421,8 @@ Function::Function(char *name, ArgumentList *args)
     if (pn) {
       _plugin = PluginCollection::self()->plugin(pn->name());
       if (_plugin) {
-        const QValueList<Plugin::Data::IOValue>& itable = _plugin->data()._inputs;
-        const QValueList<Plugin::Data::IOValue>& otable = _plugin->data()._outputs;
+        const Q3ValueList<Plugin::Data::IOValue>& itable = _plugin->data()._inputs;
+        const Q3ValueList<Plugin::Data::IOValue>& otable = _plugin->data()._outputs;
         Plugin::countScalarsVectorsAndStrings(itable, _inputScalarCnt, _inputVectorCnt, _inputStringCnt, _inPid);
         unsigned ignore;
         Plugin::countScalarsVectorsAndStrings(otable, _outputScalarCnt, _outputVectorCnt, _outputStringCnt, ignore);
@@ -485,10 +487,10 @@ KstObject::UpdateType Function::update(int counter, Context *ctx) {
     return KstObject::NO_CHANGE;
   }
 
-  const QValueList<Plugin::Data::IOValue>& itable = _plugin->data()._inputs;
+  const Q3ValueList<Plugin::Data::IOValue>& itable = _plugin->data()._inputs;
   uint itcnt = 0, vitcnt = 0, cnt = 0;
   // Populate the input scalars and vectors
-  for (QValueList<Plugin::Data::IOValue>::ConstIterator it = itable.begin(); it != itable.end(); ++it) {
+  for (Q3ValueList<Plugin::Data::IOValue>::ConstIterator it = itable.begin(); it != itable.end(); ++it) {
     if ((*it)._type == Plugin::Data::IOValue::TableType) {
       Data *d = dynamic_cast<Data*>(_args->node(cnt + 1));
       if (d && d->_vector) {
@@ -536,8 +538,8 @@ KstObject::UpdateType Function::update(int counter, Context *ctx) {
   if (!_plugin->data()._filterOutputVector.isEmpty()) {
     int loc = 0;
     bool found = false;
-    const QValueList<Plugin::Data::IOValue>& otable = _plugin->data()._outputs;
-    for (QValueList<Plugin::Data::IOValue>::ConstIterator it = otable.begin(); it != otable.end(); ++it) {
+    const Q3ValueList<Plugin::Data::IOValue>& otable = _plugin->data()._outputs;
+    for (Q3ValueList<Plugin::Data::IOValue>::ConstIterator it = otable.begin(); it != otable.end(); ++it) {
       if ((*it)._type == Plugin::Data::IOValue::TableType) {
         if ((*it)._name == _plugin->data()._filterOutputVector) {
           found = true;
@@ -699,7 +701,7 @@ KstObject::UpdateType ArgumentList::update(int counter, Context *ctx) {
 QString ArgumentList::text() const {
   QString rc;
   bool first = true;
-  QPtrListIterator<Node> it(_args);
+  Q3PtrListIterator<Node> it(_args);
   const Node *i;
   while ( (i = it.current()) ) {
     if (!first) {

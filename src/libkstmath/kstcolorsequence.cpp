@@ -25,6 +25,8 @@
 // application specific includes
 #include "kstcolorsequence.h"
 #include "kstsettings.h"
+//Added by qt3to4:
+#include <Q3MemArray>
 
 // Default palette that is used if "Kst Colors" is not found.
 static const char *const colors[] = { "red",
@@ -86,7 +88,7 @@ QColor KstColorSequence::next(const KstVCurveList& curves, const QColor& badColo
   }
   _self->createPalette();
   
-  QMemArray<int> usage(_self->_count*2);
+  Q3MemArray<int> usage(_self->_count*2);
   
   for (int i = 0; i < _self->_count*2; i++) {
     usage[i] = 0;

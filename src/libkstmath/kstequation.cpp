@@ -24,7 +24,7 @@
 #include <stdlib.h>
 
 // include files for Qt
-#include <qstylesheet.h>
+#include <q3stylesheet.h>
 
 // include files for KDE
 #include <klocale.h>
@@ -230,10 +230,10 @@ KstObject::UpdateType KstEquation::update(int update_counter) {
 }
 
 
-void KstEquation::save(QTextStream &ts, const QString& indent) {
+void KstEquation::save(Q3TextStream &ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<equationobject>" << endl;
-  ts << l2 << "<tag>" << QStyleSheet::escape(tag().tagString()) << "</tag>" << endl;
+  ts << l2 << "<tag>" << Q3StyleSheet::escape(tag().tagString()) << "</tag>" << endl;
 
   // Reparse the equation, then write it back out in text so that we can update
   // any vectors or scalars that had name changes, but we don't get affected by
@@ -249,13 +249,13 @@ void KstEquation::save(QTextStream &ts, const QString& indent) {
         KstDebug::self()->log(i18n("Equation [%1] failed to find its vectors when saving.  Resulting Kst file may have issues.").arg(_equation), KstDebug::Warning);
       }
       QString etext = en->text();
-      ts << l2 << "<equation>" << QStyleSheet::escape(etext) << "</equation>" << endl;
+      ts << l2 << "<equation>" << Q3StyleSheet::escape(etext) << "</equation>" << endl;
     }
     delete en;
     ParsedEquation = 0L;
   }
 
-  ts << l2 << "<xvector>" << QStyleSheet::escape((*_xInVector)->tag().tagString()) << "</xvector>" << endl;
+  ts << l2 << "<xvector>" << Q3StyleSheet::escape((*_xInVector)->tag().tagString()) << "</xvector>" << endl;
   if (_doInterp) {
     ts << l2 << "<interpolate/>" << endl;
   }
@@ -526,7 +526,7 @@ void KstEquation::replaceDependency(KstDataObjectPtr oldObject, KstDataObjectPtr
   
   // and dependencies on matrix stats (there won't be matrices themselves in the expression)
   for (KstMatrixMap::Iterator j = oldObject->outputMatrices().begin(); j != oldObject->outputMatrices().end(); ++j) {
-    QDictIterator<KstScalar> scalarDictIter(j.data()->scalars());
+    Q3DictIterator<KstScalar> scalarDictIter(j.data()->scalars());
     for (; scalarDictIter.current(); ++scalarDictIter) {
       QString oldTag = scalarDictIter.current()->tagName();
       QString newTag = ((((newObject->outputMatrices())[j.key()])->scalars())[scalarDictIter.currentKey()])->tagName();
@@ -543,7 +543,7 @@ void KstEquation::replaceDependency(KstDataObjectPtr oldObject, KstDataObjectPtr
       }
     }
     // and dependencies on vector stats
-    QDictIterator<KstScalar> scalarDictIter(j.data()->scalars());
+    Q3DictIterator<KstScalar> scalarDictIter(j.data()->scalars());
     for (; scalarDictIter.current(); ++scalarDictIter) {
       QString oldTag = scalarDictIter.current()->tagName();
       QString newTag = ((((newObject->outputVectors())[j.key()])->scalars())[scalarDictIter.currentKey()])->tagName();
@@ -563,7 +563,7 @@ void KstEquation::replaceDependency(KstVectorPtr oldVector, KstVectorPtr newVect
   QString newExp = _equation.replace("["+oldTag+"]", "["+newTag+"]");
   
   // also replace all occurences of scalar stats for the oldVector
-  QDictIterator<KstScalar> scalarDictIter(oldVector->scalars());
+  Q3DictIterator<KstScalar> scalarDictIter(oldVector->scalars());
   for (; scalarDictIter.current(); ++scalarDictIter) {
     QString oldTag = scalarDictIter.current()->tagName();
     QString newTag = ((newVector->scalars())[scalarDictIter.currentKey()])->tagName();
@@ -587,7 +587,7 @@ void KstEquation::replaceDependency(KstMatrixPtr oldMatrix, KstMatrixPtr newMatr
   QString newExp = _equation;
   
   // also replace all occurences of scalar stats for the oldMatrix
-  QDictIterator<KstScalar> scalarDictIter(oldMatrix->scalars());
+  Q3DictIterator<KstScalar> scalarDictIter(oldMatrix->scalars());
   for (; scalarDictIter.current(); ++scalarDictIter) {
     QString oldTag = scalarDictIter.current()->tagName();
     QString newTag = ((newMatrix->scalars())[scalarDictIter.currentKey()])->tagName();

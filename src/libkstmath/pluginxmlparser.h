@@ -22,6 +22,8 @@
 #include "kst_export.h"
 
 #include <qdom.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 class QString;
 
@@ -49,7 +51,7 @@ class PluginXMLParser {
     int parseParalist(const QDomElement& element);
 #endif
     int parseCurveHints(const QDomElement& element);
-    int parseIO(const QDomElement& element, QValueList<Plugin::Data::IOValue>& collection);
+    int parseIO(const QDomElement& element, Q3ValueList<Plugin::Data::IOValue>& collection);
 
     Plugin::Data _pluginData;
 };

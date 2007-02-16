@@ -26,6 +26,8 @@
 #include "kst_export.h"
 
 #include <kservicetype.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 typedef KstSharedPtr<KstDataObject> KstDataObjectPtr;
 typedef KstObjectList<KstDataObjectPtr> KstDataObjectList;
@@ -81,7 +83,7 @@ class KST_EXPORT KstDataObject : public KstObject {
     KstMatrixMap& outputMatrices() { return _outputMatrices; }
 
     virtual void load(const QDomElement& e);
-    virtual void save(QTextStream& ts, const QString& indent = QString::null);
+    virtual void save(Q3TextStream& ts, const QString& indent = QString::null);
 
     virtual bool loadInputs();
 
@@ -147,10 +149,10 @@ class KST_EXPORT KstDataObject : public KstObject {
     QString _typeString, _type;
 
     bool _isInputLoaded;
-    QValueList<QPair<QString,QString> > _inputVectorLoadQueue;
-    QValueList<QPair<QString,QString> > _inputScalarLoadQueue;
-    QValueList<QPair<QString,QString> > _inputStringLoadQueue;
-    QValueList<QPair<QString,QString> > _inputMatrixLoadQueue;
+    Q3ValueList<QPair<QString,QString> > _inputVectorLoadQueue;
+    Q3ValueList<QPair<QString,QString> > _inputScalarLoadQueue;
+    Q3ValueList<QPair<QString,QString> > _inputStringLoadQueue;
+    Q3ValueList<QPair<QString,QString> > _inputMatrixLoadQueue;
     KstCurveHintList *_curveHints;
 
   private:

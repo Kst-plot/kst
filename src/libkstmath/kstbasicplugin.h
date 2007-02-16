@@ -79,7 +79,7 @@ class KST_EXPORT KstBasicPlugin : public KstDataObject {
 
     //Regular virtual methods from KstDataObject
     void load(const QDomElement &e);
-    void save(QTextStream& ts, const QString& indent = QString::null);
+    void save(Q3TextStream& ts, const QString& indent = QString::null);
 
     bool isFit() const { return _isFit; }
     // FIXME: remove this

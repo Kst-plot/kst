@@ -71,7 +71,7 @@ class KST_EXPORT KstVCurve: public KstBaseCurve {
     void setYMinusError(KstVectorPtr new_ey);
 
     /** Save curve information */
-    void save(QTextStream &ts, const QString& indent = QString::null);
+    void save(Q3TextStream &ts, const QString& indent = QString::null);
 
     QString xLabel() const;
     QString yLabel() const;
@@ -165,13 +165,13 @@ class KST_EXPORT KstVCurve: public KstBaseCurve {
     bool HasBars;
     
     QColor Color;
-    QValueStack<int> _widthStack;
-    QValueStack<QColor> _colorStack;
-    QValueStack<int> _pointStyleStack;
-    QValueStack<int> _lineStyleStack;
-    QValueStack<bool> _hasPointsStack;
-    QValueStack<bool> _hasLinesStack;
-    QValueStack<int> _pointDensityStack;
+    Q3ValueStack<int> _widthStack;
+    Q3ValueStack<QColor> _colorStack;
+    Q3ValueStack<int> _pointStyleStack;
+    Q3ValueStack<int> _lineStyleStack;
+    Q3ValueStack<bool> _hasPointsStack;
+    Q3ValueStack<bool> _hasLinesStack;
+    Q3ValueStack<int> _pointDensityStack;
 
 };
 

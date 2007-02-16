@@ -26,7 +26,9 @@
 
 #include <qimage.h>
 #include <qpainter.h>
-#include <qstylesheet.h>
+#include <q3stylesheet.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 #include <math.h>
 
@@ -174,24 +176,24 @@ KstImage::~KstImage() {
 }
 
 
-void KstImage::save(QTextStream &ts, const QString& indent) {
+void KstImage::save(Q3TextStream &ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<image>" << endl;
-  ts << l2 << "<tag>" << QStyleSheet::escape(tagName()) << "</tag>" << endl;
+  ts << l2 << "<tag>" << Q3StyleSheet::escape(tagName()) << "</tag>" << endl;
   if (_inputMatrices.contains(THEMATRIX)) {
-    ts << l2 << "<matrixtag>" << QStyleSheet::escape(_inputMatrices[THEMATRIX]->tag().tagString()) << "</matrixtag>" << endl;
+    ts << l2 << "<matrixtag>" << Q3StyleSheet::escape(_inputMatrices[THEMATRIX]->tag().tagString()) << "</matrixtag>" << endl;
   }
-  ts << l2 << "<legend>" << QStyleSheet::escape(legendText()) << "</legend>" << endl;
+  ts << l2 << "<legend>" << Q3StyleSheet::escape(legendText()) << "</legend>" << endl;
   ts << l2 << "<hascolormap>" << _hasColorMap << "</hascolormap>" <<endl;
   if (_pal) {
-    ts << l2 << "<palettename>" << QStyleSheet::escape(_pal->name()) << "</palettename>" << endl;
+    ts << l2 << "<palettename>" << Q3StyleSheet::escape(_pal->name()) << "</palettename>" << endl;
   }
   ts << l2 << "<lowerthreshold>" << _zLower << "</lowerthreshold>" << endl;
   ts << l2 << "<upperthreshold>" << _zUpper << "</upperthreshold>" << endl;
   ts << l2 << "<hascontourmap>" << _hasContourMap << "</hascontourmap>" << endl;
   ts << l2 << "<numcontourlines>" << _numContourLines << "</numcontourlines>" << endl;
   ts << l2 << "<contourweight>" << _contourWeight << "</contourweight>" << endl;
-  ts << l2 << "<contourcolor>" << QStyleSheet::escape(_contourColor.name()) << "</contourcolor>" << endl;
+  ts << l2 << "<contourcolor>" << Q3StyleSheet::escape(_contourColor.name()) << "</contourcolor>" << endl;
   ts << l2 << "<autothreshold>" << _autoThreshold << "</autothreshold>" << endl;
   ts << indent << "</image>" << endl;
 }
@@ -671,7 +673,7 @@ void KstImage::paint(const KstCurveRenderContext& context) {
           p->setPen(QPen(tempColor, image->contourWeight() + 1, Qt::SolidLine, Qt::RoundCap, Qt::MiterJoin));
         }
         // do the drawing for each contour line
-        QValueList<double> lines = image->contourLines();
+        Q3ValueList<double> lines = image->contourLines();
         QPoint lastPoint; // used to remember the previous point
         bool hasPrevBottom = false;
         KstMatrixPtr mp = _inputMatrices[THEMATRIX];

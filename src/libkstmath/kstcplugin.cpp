@@ -19,7 +19,9 @@
 #include <unistd.h>
 
 // include files for Qt
-#include <qstylesheet.h>
+#include <q3stylesheet.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 // include files for KDE
 #include "ksdebug.h"
@@ -93,8 +95,8 @@ KstCPlugin::KstCPlugin(const QDomElement& pluginElement)
   } else {
     Plugin::countScalarsVectorsAndStrings(_plugin->data()._inputs, _inScalarCnt, _inArrayCnt, _inStringCnt, _inPid);
 
-    const QValueList<Plugin::Data::IOValue>& otable = _plugin->data()._outputs;
-    for (QValueList<Plugin::Data::IOValue>::ConstIterator it = otable.begin();
+    const Q3ValueList<Plugin::Data::IOValue>& otable = _plugin->data()._outputs;
+    for (Q3ValueList<Plugin::Data::IOValue>::ConstIterator it = otable.begin();
                                                            it != otable.end();
                                                                          ++it) {
       // FIXME: i18n?
@@ -281,13 +283,13 @@ KstObject::UpdateType KstCPlugin::update(int update_counter) {
 
   writeLockInputsAndOutputs();
 
-  const QValueList<Plugin::Data::IOValue>& itable = _plugin->data()._inputs;
-  const QValueList<Plugin::Data::IOValue>& otable = _plugin->data()._outputs;
+  const Q3ValueList<Plugin::Data::IOValue>& itable = _plugin->data()._inputs;
+  const Q3ValueList<Plugin::Data::IOValue>& otable = _plugin->data()._outputs;
   int itcnt = 0, vitcnt = 0, sitcnt = 0;
   bool doUpdate = force;
 
   // Populate the input scalars and vectors
-  for (QValueList<Plugin::Data::IOValue>::ConstIterator it = itable.begin();
+  for (Q3ValueList<Plugin::Data::IOValue>::ConstIterator it = itable.begin();
                                                          it != itable.end();
                                                                         ++it) {
     if ((*it)._type == Plugin::Data::IOValue::TableType) {
@@ -331,7 +333,7 @@ KstObject::UpdateType KstCPlugin::update(int update_counter) {
 
   vitcnt = 0;
   // Populate the output vectors
-  for (QValueList<Plugin::Data::IOValue>::ConstIterator it = otable.begin();
+  for (Q3ValueList<Plugin::Data::IOValue>::ConstIterator it = otable.begin();
                                                          it != otable.end();
                                                                         ++it) {
     if ((*it)._type == Plugin::Data::IOValue::TableType) {
@@ -377,7 +379,7 @@ KstObject::UpdateType KstCPlugin::update(int update_counter) {
     sitcnt = 0;
     setLastUpdateResult(UPDATE); // make sure that provider callbacks work
     // Read back the output vectors and scalars
-    for (QValueList<Plugin::Data::IOValue>::ConstIterator it = otable.begin();
+    for (Q3ValueList<Plugin::Data::IOValue>::ConstIterator it = otable.begin();
         it != otable.end();
         ++it) {
       if ((*it)._type == Plugin::Data::IOValue::TableType) {
@@ -468,46 +470,46 @@ QString KstCPlugin::label(int precision) const {
 }
 
 
-void KstCPlugin::save(QTextStream &ts, const QString& indent) {
+void KstCPlugin::save(Q3TextStream &ts, const QString& indent) {
   if (!_plugin) {
     return;
   }
 
   QString l2 = indent + "  ";
   ts << indent << "<plugin>" << endl;
-  ts << l2 << "<tag>" << QStyleSheet::escape(tagName()) << "</tag>" << endl;
-  ts << l2 << "<name>" << QStyleSheet::escape(_plugin->data()._name) << "</name>" << endl;
+  ts << l2 << "<tag>" << Q3StyleSheet::escape(tagName()) << "</tag>" << endl;
+  ts << l2 << "<name>" << Q3StyleSheet::escape(_plugin->data()._name) << "</name>" << endl;
   for (KstVectorMap::Iterator i = _inputVectors.begin(); i != _inputVectors.end(); ++i) {
-    ts << l2 << "<ivector name=\"" << QStyleSheet::escape(i.key()) << "\">"
-      << QStyleSheet::escape(i.data()->tag().tagString())
+    ts << l2 << "<ivector name=\"" << Q3StyleSheet::escape(i.key()) << "\">"
+      << Q3StyleSheet::escape(i.data()->tag().tagString())
       << "</ivector>" << endl;
   }
   for (KstScalarMap::Iterator i = _inputScalars.begin(); i != _inputScalars.end(); ++i) {
-    ts << l2 << "<iscalar name=\"" << QStyleSheet::escape(i.key()) << "\">"
-      << QStyleSheet::escape(i.data()->tag().tagString())
+    ts << l2 << "<iscalar name=\"" << Q3StyleSheet::escape(i.key()) << "\">"
+      << Q3StyleSheet::escape(i.data()->tag().tagString())
       << "</iscalar>" << endl;
   }
   for (KstStringMap::Iterator i = _inputStrings.begin(); i != _inputStrings.end(); ++i) {
-    ts << l2 << "<istring name=\"" << QStyleSheet::escape(i.key()) << "\">"
-      << QStyleSheet::escape(i.data()->tag().tagString())
+    ts << l2 << "<istring name=\"" << Q3StyleSheet::escape(i.key()) << "\">"
+      << Q3StyleSheet::escape(i.data()->tag().tagString())
       << "</istring>" << endl;
   }
   for (KstVectorMap::Iterator i = _outputVectors.begin(); i != _outputVectors.end(); ++i) {
-    ts << l2 << "<ovector name=\"" << QStyleSheet::escape(i.key());
+    ts << l2 << "<ovector name=\"" << Q3StyleSheet::escape(i.key());
     if (i.data()->isScalarList()) {
       ts << "\" scalarList=\"1";
     }
-    ts << "\">" << QStyleSheet::escape(i.data()->tag().tag())
+    ts << "\">" << Q3StyleSheet::escape(i.data()->tag().tag())
       << "</ovector>" << endl;
   }
   for (KstScalarMap::Iterator i = _outputScalars.begin(); i != _outputScalars.end(); ++i) {
-    ts << l2 << "<oscalar name=\"" << QStyleSheet::escape(i.key()) << "\">"
-      << QStyleSheet::escape(i.data()->tag().tag())
+    ts << l2 << "<oscalar name=\"" << Q3StyleSheet::escape(i.key()) << "\">"
+      << Q3StyleSheet::escape(i.data()->tag().tag())
       << "</oscalar>" << endl;
   }
   for (KstStringMap::Iterator i = _outputStrings.begin(); i != _outputStrings.end(); ++i) {
-    ts << l2 << "<ostring name=\"" << QStyleSheet::escape(i.key()) << "\">"
-      << QStyleSheet::escape(i.data()->tag().tag())
+    ts << l2 << "<ostring name=\"" << Q3StyleSheet::escape(i.key()) << "\">"
+      << Q3StyleSheet::escape(i.data()->tag().tag())
       << "</ostring>" << endl;
   }
   ts << indent << "</plugin>" << endl;
@@ -579,8 +581,8 @@ bool KstCPlugin::setPlugin(KstSharedPtr<Plugin> plugin) {
   _outputScalars.clear();
   _outputStrings.clear();
 
-  const QValueList<Plugin::Data::IOValue>& otable = plugin->data()._outputs;
-  for (QValueList<Plugin::Data::IOValue>::ConstIterator it = otable.begin();
+  const Q3ValueList<Plugin::Data::IOValue>& otable = plugin->data()._outputs;
+  for (Q3ValueList<Plugin::Data::IOValue>::ConstIterator it = otable.begin();
                                                          it != otable.end();
                                                                         ++it) {
     if ((*it)._type == Plugin::Data::IOValue::TableType) {
@@ -632,7 +634,7 @@ void KstCPlugin::showEditDialog() {
 const KstCurveHintList* KstCPlugin::curveHints() const {
   _curveHints->clear();
   if (_plugin) {
-    for (QValueList<Plugin::Data::CurveHint>::ConstIterator i = _plugin->data()._hints.begin(); i != _plugin->data()._hints.end(); ++i) {
+    for (Q3ValueList<Plugin::Data::CurveHint>::ConstIterator i = _plugin->data()._hints.begin(); i != _plugin->data()._hints.end(); ++i) {
       KstVectorPtr xv = _outputVectors[(*i).x];
       KstVectorPtr yv = _outputVectors[(*i).y];
       if (xv && yv) {

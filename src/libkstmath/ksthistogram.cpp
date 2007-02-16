@@ -20,7 +20,7 @@
 #include <stdlib.h>
 
 // include files for Qt
-#include <qstylesheet.h>
+#include <q3stylesheet.h>
 
 // include files for KDE
 #include <kglobal.h>
@@ -347,13 +347,13 @@ QString KstHistogram::xLabel() const {
 }
 
 
-void KstHistogram::save(QTextStream &ts, const QString& indent) {
+void KstHistogram::save(Q3TextStream &ts, const QString& indent) {
   // FIXME: clean this up - all lower case nodes, maybe save points in the
   // point class itself, etc
   QString l2 = indent + "  ";
   ts << indent << "<histogram>" << endl;
-  ts << l2 << "<tag>" << QStyleSheet::escape(tagName()) << "</tag>" << endl;
-  ts << l2 << "<vectag>" << QStyleSheet::escape(_inputVectors[RAWVECTOR]->tag().tagString()) << "</vectag>" << endl;
+  ts << l2 << "<tag>" << Q3StyleSheet::escape(tagName()) << "</tag>" << endl;
+  ts << l2 << "<vectag>" << Q3StyleSheet::escape(_inputVectors[RAWVECTOR]->tag().tagString()) << "</vectag>" << endl;
   ts << l2 << "<numBins>"  << _NBins << "</numBins>" << endl;
   ts << l2 << "<realtimeautobin>" << _realTimeAutoBin << "</realtimeautobin>" << endl;
   ts << l2 << "<minX>" << _MinX << "</minX>" << endl;

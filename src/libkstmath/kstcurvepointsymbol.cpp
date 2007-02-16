@@ -19,6 +19,8 @@
 
 #include "kstcurvepointsymbol.h"
 #include <kglobal.h>
+//Added by qt3to4:
+#include <Q3PointArray>
 
 namespace KstCurvePointSymbol {
 
@@ -56,7 +58,7 @@ void draw(int Type, QPainter *p, int x, int y, int lineSize, int size) {
       break;
     case 4:
       {
-        QPointArray pts(3);
+        Q3PointArray pts(3);
 
         pts.putPoints( 0, 3, x-s, y-s, x, y+s, x+s, y-s );
         p->setBrush(QBrush::NoBrush);
@@ -65,7 +67,7 @@ void draw(int Type, QPainter *p, int x, int y, int lineSize, int size) {
       break;
     case 5:
       {
-        QPointArray pts(3);
+        Q3PointArray pts(3);
 
         pts.putPoints( 0, 3, x-s, y+s, x, y-s, x+s, y+s );
         p->setBrush(QBrush::NoBrush);
@@ -88,7 +90,7 @@ void draw(int Type, QPainter *p, int x, int y, int lineSize, int size) {
       break;    
     case 9:
       {
-        QPointArray pts(3);
+        Q3PointArray pts(3);
 
         pts.putPoints( 0, 3, x-s, y-s, x, y+s, x+s, y-s );
         p->setBrush(QBrush::SolidPattern);
@@ -97,7 +99,7 @@ void draw(int Type, QPainter *p, int x, int y, int lineSize, int size) {
       break;
     case 10:
       {
-        QPointArray pts(3);
+        Q3PointArray pts(3);
 
         pts.putPoints( 0, 3, x-s, y+s, x, y-s, x+s, y+s );
         p->setBrush(QBrush::SolidPattern);
@@ -106,7 +108,7 @@ void draw(int Type, QPainter *p, int x, int y, int lineSize, int size) {
       break;
     case 11:
       {
-        QPointArray pts(4);
+        Q3PointArray pts(4);
 
         pts.putPoints( 0, 4,   x+s, y,
                                x, y+s,
@@ -118,7 +120,7 @@ void draw(int Type, QPainter *p, int x, int y, int lineSize, int size) {
       break;
     case 12:
       {    
-        QPointArray pts(4);
+        Q3PointArray pts(4);
 
         pts.putPoints( 0, 4,   x+s, y,
                                x, y+s,

@@ -23,6 +23,8 @@
 #include "kstmatrix.h"
 #include "kstbasecurve.h"
 #include "kst_export.h"
+//Added by qt3to4:
+#include <Q3ValueList>
 
 /**A class for handling images for Kst
  *@author University of British Columbia
@@ -49,7 +51,7 @@ class KST_EXPORT KstImage: public KstBaseCurve {
 
     virtual void showNewDialog();
     virtual void showEditDialog();
-    virtual void save(QTextStream &ts, const QString& indent = QString::null);
+    virtual void save(Q3TextStream &ts, const QString& indent = QString::null);
     virtual UpdateType update(int update_counter = -1);
     virtual QString propertyString() const;
 
@@ -85,7 +87,7 @@ class KST_EXPORT KstImage: public KstBaseCurve {
 
     //contour lines
     virtual int numContourLines() const { return _numContourLines; }
-    virtual QValueList<double> contourLines() const { return _contourLines; }
+    virtual Q3ValueList<double> contourLines() const { return _contourLines; }
     virtual bool addContourLine(double line);
     virtual bool removeContourLine(double line);
     virtual void clearContourLines();
@@ -132,7 +134,7 @@ class KST_EXPORT KstImage: public KstBaseCurve {
     bool _hasContourMap;
 
     int _numContourLines;
-    QValueList<double> _contourLines;
+    Q3ValueList<double> _contourLines;
     QColor _contourColor;
     int _contourWeight; //_contourWeight = -1 means variable weight
     QString _lastPaletteName;

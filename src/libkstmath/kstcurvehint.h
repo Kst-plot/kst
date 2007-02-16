@@ -19,7 +19,7 @@
 #define _KST_CURVEHINT_H
 
 #include <qstring.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 #include "kstvector.h"
 
@@ -46,7 +46,7 @@ class KstCurveHint : public KstShared {
 };
 
 typedef KstSharedPtr<KstCurveHint> KstCurveHintPtr;
-typedef QValueList<KstCurveHintPtr> KstCurveHintList;
+typedef Q3ValueList<KstCurveHintPtr> KstCurveHintList;
 
 #endif
 
