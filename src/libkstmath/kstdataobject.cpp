@@ -18,7 +18,7 @@
 
 #include "kstdataobject.h"
 
-#include "ksdebug.h"
+#include <qdebug.h>
 #include "kstdebug.h"
 #include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"

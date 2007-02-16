@@ -26,7 +26,7 @@
 
 #include <kglobal.h>
 #include <klocale.h>
-#include "ksdebug.h"
+#include <qdebug.h>
 
 #include "dialoglauncher.h"
 #include "kstdatacollection.h"
