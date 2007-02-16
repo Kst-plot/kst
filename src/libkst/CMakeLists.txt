@@ -1,5 +1,3 @@
-find_package(KDE4 REQUIRED)
-
 find_package(Subversion)
 if(Subversion_FOUND)
   Subversion_WC_INFO(${CMAKE_CURRENT_SOURCE_DIR} libkst)
@@ -49,7 +47,7 @@ kde4_add_library(kst SHARED ${kst_LIB_SRCS})
 # target_link_libraries(kst  ${KDE4_KIO_LIBS} kstextdate )
 target_link_libraries(kst  ${KDE4_KIO_LIBS} )
 
-set_target_properties(kst PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(kst PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 1 )
 install(TARGETS kst DESTINATION ${LIB_INSTALL_DIR} )
 
 

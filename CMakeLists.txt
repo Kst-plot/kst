@@ -1,4 +1,8 @@
 project(kst)
+
+set(KST_VERSION "1.9.0_devel")
+set(KST_LIBKST_VERSION 1.9.0)
+
 find_package(KDE4 REQUIRED)
 
 include(KDE4Defaults)
