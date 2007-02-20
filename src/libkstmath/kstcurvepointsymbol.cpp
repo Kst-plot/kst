@@ -138,7 +138,7 @@ void draw(int Type, QPainter *p, int x, int y, int lineSize, int size) {
 
 int dim(QPainter *p) {
   QRect r = p->window();
-  return kMax(1, ((r.width() + r.height()) / 400));
+  return qMax(1, ((r.width() + r.height()) / 400));
 }
 
 }

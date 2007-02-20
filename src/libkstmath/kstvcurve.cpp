@@ -269,7 +269,7 @@ KstObject::UpdateType KstVCurve::update(int update_counter) {
     MinPosY = 0;
   }
 
-  NS = kMax(cxV->length(), cyV->length());
+  NS = qMax(cxV->length(), cyV->length());
 
   unlockInputsAndOutputs();
 
