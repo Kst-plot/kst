@@ -97,9 +97,7 @@ void KstDataObject::cleanupForExit() {
 
 KstDataObjectPtr KstDataObject::createPlugin(KService::Ptr service) {
   int err = 0;
-  KstDataObject *object =
-      KParts::ComponentFactory::createInstanceFromService<KstDataObject>(service, 0, "",
-      QStringList(), &err);
+  KstDataObject *object = KService::createInstance<KstDataObject>(service, 0, QStringList(), &err);
 
   KstSharedPtr<KST::Plugin> p = new KST::DataObjectPlugin(service);
 

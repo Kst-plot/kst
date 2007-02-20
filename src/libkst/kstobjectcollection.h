@@ -612,21 +612,22 @@ typename KstObjectList<KstSharedPtr<T> >::Iterator KstObjectCollection<T>::remov
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::Iterator KstObjectCollection<T>::findTag(const KstObjectTag& x) {
-  T *obj = retrieveObject(x);
-  if (obj) {
-    return _list.find(obj);
-  } else {
-    // For historical compatibility:
-    // previously, output vectors of equations, PSDs, etc. were named PSD1-ABCDE-freq
-    // now, they are PSD1-ABCDE/freq
-    QString newTag = x.tagString();
-    newTag.replace(newTag.lastIndexOf('-'), 1, KstObjectTag::tagSeparator);
-    obj = retrieveObject(KstObjectTag::fromString(newTag));
-    if (obj) {
-      return _list.find(obj);
-    }
-  }
+typename KstObjectList<KstSharedPtr<T> >::Iterator KstObjectCollection<T>::findTag(const KstObjectTag& /*x*/) {
+  //FIXME Break this for now as Q3ValueList semantics are problematic... Noted in PORTINGTODO
+//  T *obj = retrieveObject(x);
+//   if (obj) {
+//     return _list.find(obj);
+//   } else {
+//     // For historical compatibility:
+//     // previously, output vectors of equations, PSDs, etc. were named PSD1-ABCDE-freq
+//     // now, they are PSD1-ABCDE/freq
+//     QString newTag = x.tagString();
+//     newTag.replace(newTag.lastIndexOf('-'), 1, KstObjectTag::tagSeparator);
+//     obj = retrieveObject(KstObjectTag::fromString(newTag));
+//     if (obj) {
+//       return _list.find(obj);
+//     }
+//   }
   return _list.end();
 }
 
