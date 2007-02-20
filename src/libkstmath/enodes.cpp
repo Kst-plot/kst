@@ -780,7 +780,7 @@ Data::Data(char *name)
   } else if (strchr(name, '[')) {
     _tagName = QString(name).trimmed();
     QRegExp re("(.*)\\[(.*)\\]");
-    int hit = re.search(_tagName);
+    int hit = re.indexIn(_tagName);
     if (hit > -1 && re.numCaptures() == 2) {
       _vector = *KST::vectorList.findTag(re.cap(1));
       if (_vector) {
