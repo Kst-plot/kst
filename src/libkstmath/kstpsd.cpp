@@ -378,7 +378,7 @@ void KstPSD::setVector(KstVectorPtr new_v) {
     v->unlock();
   }
 
-  _inputVectors.erase(INVECTOR);
+  _inputVectors.remove(INVECTOR);
   new_v->writeLock();
   _inputVectors[INVECTOR] = new_v;
   setDirty();
