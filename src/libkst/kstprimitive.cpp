@@ -36,7 +36,7 @@ KstPrimitive::~KstPrimitive() {
 
 KstObject::UpdateType KstPrimitive::update(int update_counter) {
 #ifdef UPDATEDEBUG
-  kstdDebug() << "Updating Primitive " << tag().displayString() << endl;
+  qDebug() << "Updating Primitive " << tag().displayString() << endl;
 #endif
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 

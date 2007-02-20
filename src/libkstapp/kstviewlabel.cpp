@@ -303,12 +303,12 @@ void KstViewLabel::drawToPainter(Label::Parsed *lp, QPainter& p) {
     _cache.valid = true;
   }
 #ifdef BENCHMARK
-  kstdDebug() << "render took: " << t.elapsed() << endl;
+  qDebug() << "render took: " << t.elapsed() << endl;
   t.start();
 #endif
   QApplication::syncX();
 #ifdef BENCHMARK
-  kstdDebug() << "sync X took: " << t.elapsed() << endl;
+  qDebug() << "sync X took: " << t.elapsed() << endl;
 #endif
 }
 
@@ -324,7 +324,7 @@ void KstViewLabel::computeTextSize(Label::Parsed *lp) {
 #endif
     renderLabel(rc, lp->chunk);
 #ifdef BENCHMARK
-    kstdDebug() << "compute (false render) took: " << t.elapsed() << endl;
+    qDebug() << "compute (false render) took: " << t.elapsed() << endl;
 #endif
     _textWidth = rc.xMax;
     _ascent = rc.ascent;

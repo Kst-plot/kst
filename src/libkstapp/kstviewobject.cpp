@@ -371,7 +371,7 @@ void KstViewObject::paint(KstPainter& p, const QRegion& bounds) {
           clipRegion -= (*i)->clipRegion();
 #ifdef BENCHMARK
           int x = t.elapsed();
-          kstdDebug() << "   -> object " << (*i)->tagName() << " took " << x << "ms" << endl;
+          qDebug() << "   -> object " << (*i)->tagName() << " took " << x << "ms" << endl;
 #endif
         }
         if (i == begin) {
@@ -1631,7 +1631,7 @@ void KstViewObject::readBinary(QDataStream& str) {
   QString tagName;
   str >> tagName;
   setTagName(KstObjectTag(tagName, KstObjectTag::globalTagContext)); // FIXME: tag context
-  kstdDebug() << "Decoding " << tagName << " from drag." << endl;
+  qDebug() << "Decoding " << tagName << " from drag." << endl;
   // FIXME: rename objects if they cause a namespace conflict
   str >> _geom >> _backgroundColor >> _foregroundColor;
   str >> _standardActions >> _layoutActions >> _aspect >> _idealSize;

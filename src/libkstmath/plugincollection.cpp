@@ -214,7 +214,7 @@ void PluginCollection::scanPlugins() {
   QStringList dirs = KGlobal::dirs()->resourceDirs("kstplugins");
   dirs += KGlobal::dirs()->resourceDirs("kstpluginlib");
   for (QStringList::ConstIterator it = dirs.begin(); it != dirs.end(); ++it) {
-    //kstdDebug() << "Scanning [" << *it << "] for plugins." << endl;
+    //qDebug() << "Scanning [" << *it << "] for plugins." << endl;
     QDir d(*it);
 
     d.setFilter(QDir::Files | QDir::NoSymLinks);
@@ -230,7 +230,7 @@ void PluginCollection::scanPlugins() {
     int status;
 
     while ((fi = fit.current()) != 0L) {
-      //kstdDebug() << "Parsing [" << (*it + fi->fileName()) << "]" << endl;
+      //qDebug() << "Parsing [" << (*it + fi->fileName()) << "]" << endl;
       status = _parser->parseFile(*it + fi->fileName());
       if (status == 0) {
         // dupe? - prefer earlier installations

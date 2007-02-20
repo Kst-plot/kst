@@ -135,7 +135,7 @@ void KstTopLevelView::paint(KstPainter& p, const QRegion& bounds) {
   KstViewObject::paint(p, bounds);
 #ifdef BENCHMARK
   int x = t.elapsed();
-  kstdDebug() << " -> Parent class took " << x << "ms" << endl;
+  qDebug() << " -> Parent class took " << x << "ms" << endl;
 #endif
 }
 
@@ -312,7 +312,7 @@ bool KstTopLevelView::handlePress(const QPoint& pos, bool shift) {
   
   _mouseMoved = false;
   
-  //kstdDebug() << "HANDLE PRESS" << endl;
+  //qDebug() << "HANDLE PRESS" << endl;
   _pressDirection = -1;
 
   if (_mode != LayoutMode) {

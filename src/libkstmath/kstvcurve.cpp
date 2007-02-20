@@ -1203,7 +1203,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
     } // end if hasLines()
 #ifdef BENCHMARK
     clock_t linesEnd = clock();
-    kstdDebug() << "        Lines clocks: " << (linesEnd - linesStart) << endl;
+    qDebug() << "        Lines clocks: " << (linesEnd - linesStart) << endl;
     b_1 = benchtmp.elapsed();
 #endif
 
@@ -1585,12 +1585,12 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
 #endif
 #ifdef BENCHMARK
   int i = bench_time.elapsed();
-  kstdDebug() << "Plotting curve " << (void *)this << ": " << i << "ms" << endl;
-  kstdDebug() << "    Without locks: " << b_4 << "ms" << endl;
-  if (b_1 > 0)       kstdDebug() << "            Lines: " << b_1 << "ms" << endl;
-  if (b_2 - b_1 > 0) kstdDebug() << "             Bars: " << (b_2 - b_1) << "ms" << endl;
-  if (b_3 - b_2 > 0) kstdDebug() << "           Points: " << (b_3 - b_2) << "ms" << endl;
-  if (b_4 - b_3 > 0) kstdDebug() << "           Errors: " << (b_4 - b_3) << "ms" << endl;
+  qDebug() << "Plotting curve " << (void *)this << ": " << i << "ms" << endl;
+  qDebug() << "    Without locks: " << b_4 << "ms" << endl;
+  if (b_1 > 0)       qDebug() << "            Lines: " << b_1 << "ms" << endl;
+  if (b_2 - b_1 > 0) qDebug() << "             Bars: " << (b_2 - b_1) << "ms" << endl;
+  if (b_3 - b_2 > 0) qDebug() << "           Points: " << (b_3 - b_2) << "ms" << endl;
+  if (b_4 - b_3 > 0) qDebug() << "           Errors: " << (b_4 - b_3) << "ms" << endl;
 #endif
 }
 

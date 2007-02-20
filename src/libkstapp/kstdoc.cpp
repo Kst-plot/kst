@@ -568,7 +568,7 @@ bool KstDoc::openDocument(const KURL& url, const QString& o_file,
     KST::dataObjectList.lock().unlock();
     for (KstDataObjectList::Iterator i = dol.begin(); i != dol.end(); ++i) {
       assert(*i);
-      //kstdDebug() << "Load inputs for " << (*i)->tagName() << " " << (void*)*i << endl;
+      //qDebug() << "Load inputs for " << (*i)->tagName() << " " << (void*)*i << endl;
       (*i)->KstRWLock::writeLock();
       bool rc = (*i)->loadInputs();
       (*i)->KstRWLock::unlock();
@@ -988,7 +988,7 @@ RemoveStatus KstDoc::removeDataObject(const QString& tag) {
 
 void KstDoc::purge() {
 #ifdef PURGEDEBUG
-  kstdDebug() << "Purging unused objects" << endl;
+  qDebug() << "Purging unused objects" << endl;
 #endif
 
   QString purging = i18n("Purging unused objects");
@@ -1013,11 +1013,11 @@ void KstDoc::purge() {
     KST::dataObjectList.lock().writeLock();
     for (KstDataObjectList::Iterator it = KST::dataObjectList.begin(); it != KST::dataObjectList.end(); ++it) {
 #ifdef PURGEDEBUG
-      kstdDebug() << "OBJECT: " << (*it)->tag().displayString() << " (" << (void*)(*it) << ") USAGE: " << (*it)->getUsage() << endl;
+      qDebug() << "OBJECT: " << (*it)->tag().displayString() << " (" << (void*)(*it) << ") USAGE: " << (*it)->getUsage() << endl;
 #endif
       if ((*it)->getUsage() == 0 && !kst_cast<EventMonitorEntry>(*it)) {
 #ifdef PURGEDEBUG
-        kstdDebug() << "    -> REMOVED" << endl;
+        qDebug() << "    -> REMOVED" << endl;
 #endif
         KstDataObjectList::Iterator byebye = it;
         --it;
@@ -1037,19 +1037,19 @@ void KstDoc::purge() {
     // clear unused vectors that are editable 
     for (KstVectorList::ConstIterator it = vectorList.begin(); it != vectorList.end(); ++it) {
 #ifdef PURGEDEBUG
-      kstdDebug() << "VECTOR: " << (*it)->tag().displayString() << " (" << (void*)(*it) << ") USAGE: " << (*it)->getUsage() << endl;
+      qDebug() << "VECTOR: " << (*it)->tag().displayString() << " (" << (void*)(*it) << ") USAGE: " << (*it)->getUsage() << endl;
 //      if ((*it)->provider()) {
-//        kstdDebug() << "  provider=" << (*it)->provider()->tag().displayString() << endl;
+//        qDebug() << "  provider=" << (*it)->provider()->tag().displayString() << endl;
 //      }
 //      KstRVectorPtr rvp = kst_cast<KstRVector>(*it);
 //      if (rvp && rvp->_file) {
 //        KstDataSource *file = rvp->_file;
-//        kstdDebug() << "  file=" << file->tag().displayString() << " (" << (void*)(&(*file)) << "): " << file->getUsage() << endl;
+//        qDebug() << "  file=" << file->tag().displayString() << " (" << (void*)(&(*file)) << "): " << file->getUsage() << endl;
 //      }
 #endif
       if ((*it)->getUsage() == 1) {
 #ifdef PURGEDEBUG
-        kstdDebug() << "    -> REMOVED" << endl;
+        qDebug() << "    -> REMOVED" << endl;
 #endif
         KST::vectorList.lock().writeLock();
         KST::vectorList.remove(const_cast<KstVector*>((*it).data()));
@@ -1068,19 +1068,19 @@ void KstDoc::purge() {
     // clear unused matrices that are editable
     for (KstMatrixList::ConstIterator it = matrixList.begin(); it != matrixList.end(); ++it) {
 #ifdef PURGEDEBUG
-      kstdDebug() << "MATRIX: " << (*it)->tag().displayString() << " (" << (void*)(*it) << ") USAGE: " << (*it)->getUsage() << endl;
+      qDebug() << "MATRIX: " << (*it)->tag().displayString() << " (" << (void*)(*it) << ") USAGE: " << (*it)->getUsage() << endl;
 //      if ((*it)->provider()) {
-//        kstdDebug() << "  provider=" << (*it)->provider()->tag().displayString() << endl;
+//        qDebug() << "  provider=" << (*it)->provider()->tag().displayString() << endl;
 //      }
 //      KstRMatrixPtr rmp = kst_cast<KstRMatrix>(*it);
 //      if (rmp && rmp->_file) {
 //        KstDataSource *file = rmp->_file;
-//        kstdDebug() << "  file=" << file->tag().displayString() << " (" << (void*)(&(*file)) << "): " << file->getUsage() << endl;
+//        qDebug() << "  file=" << file->tag().displayString() << " (" << (void*)(&(*file)) << "): " << file->getUsage() << endl;
 //      }
 #endif
       if ((*it)->getUsage() == 1) {
 #ifdef PURGEDEBUG
-        kstdDebug() << "    -> REMOVED" << endl;
+        qDebug() << "    -> REMOVED" << endl;
 #endif
         KST::matrixList.lock().writeLock();
         KST::matrixList.remove(const_cast<KstMatrix*>((*it).data()));
@@ -1098,11 +1098,11 @@ void KstDoc::purge() {
   for (KstDataSourceList::ConstIterator it = KST::dataSourceList.begin(); it != KST::dataSourceList.end(); ++it) {
       KstDataSourcePtr ds = *it; // MUST use a reference-counted pointer to call getUsage()
 #ifdef PURGEDEBUG
-      kstdDebug() << "DATA SOURCE: " << ds->tag().displayString() << " (" << (void*)ds << ") USAGE: " << ds->getUsage() << endl;
+      qDebug() << "DATA SOURCE: " << ds->tag().displayString() << " (" << (void*)ds << ") USAGE: " << ds->getUsage() << endl;
 #endif
       if (ds->getUsage() == 1) {
 #ifdef PURGEDEBUG
-        kstdDebug() << "    -> REMOVED" << endl;
+        qDebug() << "    -> REMOVED" << endl;
 #endif
         dataList.append(const_cast<KstDataSource*>((*it).data()));
         modified = true;
@@ -1188,7 +1188,7 @@ bool KstDoc::event(QEvent *e) {
         }
         break;
       case ThreadEvent::UpdateAllDialogs:
-        //kstdDebug() << "Update ALL dialogs" << endl;
+        //qDebug() << "Update ALL dialogs" << endl;
         {
           KMdiIterator<KMdiChildView*>* it = KstApp::inst()->createIterator();
           if (it) {

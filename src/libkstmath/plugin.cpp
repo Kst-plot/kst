@@ -32,7 +32,7 @@ Plugin::Plugin() : KstShared() {
   _freeSymbol = 0L;
   _errorSymbol = 0L;
   _parameterName = 0L;
-  //kstdDebug() << "Creating Plugin: " << long(this) << endl;
+  //qDebug() << "Creating Plugin: " << long(this) << endl;
 }
 
 
@@ -47,7 +47,7 @@ Plugin::~Plugin() {
     _lib = 0L;
   }
 
-  //kstdDebug() << "Destroying Plugin: " << long(this) << endl;
+  //qDebug() << "Destroying Plugin: " << long(this) << endl;
 }
 
 

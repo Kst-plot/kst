@@ -81,10 +81,10 @@ QDragObject *KstViewWidget::dragObject() {
 
 
 void KstViewWidget::enterEvent(QEvent *e) {
-  //kstdDebug() << "Enter event" << endl;
+  //qDebug() << "Enter event" << endl;
   if (_view->viewMode() != KstTopLevelView::DisplayMode) {
     if (!_menu && !_view->tracking()) {
-      //kstdDebug() << "Turning on tracking again" << endl;
+      //qDebug() << "Turning on tracking again" << endl;
       _view->clearFocus();
     }
   }
@@ -102,17 +102,17 @@ void KstViewWidget::focusOutEvent(QFocusEvent *e) {
 
 
 void KstViewWidget::leaveEvent(QEvent *e) {
-  //kstdDebug() << "Leave event" << endl;
+  //qDebug() << "Leave event" << endl;
   QWidget::leaveEvent(e);
   if (_view->viewMode() != KstTopLevelView::DisplayMode) {
     if (_menu) {
       return;
     }
     if (!_view->tracking()) {
-      //kstdDebug() << "Not tracking" << endl;
+      //qDebug() << "Not tracking" << endl;
       _view->clearFocus();
     } else {
-      //kstdDebug() << "Tracking" << endl;
+      //qDebug() << "Tracking" << endl;
       if (_view->trackingIsMove() && _dragEnabled) {
         QDragObject *d = dragObject();
         if (d) {
@@ -166,7 +166,7 @@ void KstViewWidget::mouseMoveEvent(QMouseEvent *e) {
     }
 
     if (vo) {
-      //kstdDebug() << "Found mouse handler " << vo->tagName() << endl;
+      //qDebug() << "Found mouse handler " << vo->tagName() << endl;
       vo->mouseMoveEvent(this, e);
     } else {
       setCursor(QCursor(Qt::ArrowCursor));
@@ -195,7 +195,7 @@ void KstViewWidget::mouseMoveEvent(QMouseEvent *e) {
 
 
 void KstViewWidget::mousePressEvent(QMouseEvent *e) {
-  //kstdDebug() << "Press event. button=" << e->button() << " state=" << e->state() << endl;
+  //qDebug() << "Press event. button=" << e->button() << " state=" << e->state() << endl;
 
   if (_menu) {
     QWidget::mousePressEvent(e);
@@ -210,7 +210,7 @@ void KstViewWidget::mousePressEvent(QMouseEvent *e) {
       vo = findChildFor(e->pos());
     }
     if (vo) {
-      //kstdDebug() << "Found mouse handler " << vo->tagName() << endl;
+      //qDebug() << "Found mouse handler " << vo->tagName() << endl;
       vo->mousePressEvent(this, e);
     }
     return;
@@ -219,24 +219,24 @@ void KstViewWidget::mousePressEvent(QMouseEvent *e) {
   // Layout/graphics mode
   if (e->button() & Qt::LeftButton) {
     setCursor(QCursor(Qt::ArrowCursor));
-    //kstdDebug() << "    -> left button" << endl;
+    //qDebug() << "    -> left button" << endl;
     if (_view->handlePress(e->pos(), e->state() & Qt::ShiftButton)) {
-      //kstdDebug() << "   -> Accepting" << endl;
+      //qDebug() << "   -> Accepting" << endl;
       e->accept();
       return;
     } else if (_view->tracking()) {
-      //kstdDebug() << "   -> Swallowing" << endl;
+      //qDebug() << "   -> Swallowing" << endl;
       e->accept(); // swallow
       return;
     }
   }
-  //kstdDebug() << "   -> Passing up" << endl;
+  //qDebug() << "   -> Passing up" << endl;
   QWidget::mousePressEvent(e);
 }
 
 
 void KstViewWidget::mouseDoubleClickEvent(QMouseEvent *e) {
-  //kstdDebug() << "DoubleClick event. button=" << e->button() << " state=" << e->state() << endl;
+  //qDebug() << "DoubleClick event. button=" << e->button() << " state=" << e->state() << endl;
   if (_view->viewMode() == KstTopLevelView::DisplayMode) {
     KstViewObjectPtr vo;
     if (_view->mouseGrabbed()) {
@@ -245,7 +245,7 @@ void KstViewWidget::mouseDoubleClickEvent(QMouseEvent *e) {
       vo = findChildFor(e->pos());
     }
     if (vo) {
-      //kstdDebug() << "Found mouse handler " << vo->tagName() << endl;
+      //qDebug() << "Found mouse handler " << vo->tagName() << endl;
       vo->mouseDoubleClickEvent(this, e);
     }
     return;
@@ -260,7 +260,7 @@ void KstViewWidget::mouseDoubleClickEvent(QMouseEvent *e) {
     }
   }
 
-  //kstdDebug() << "   -> Passing up" << endl;
+  //qDebug() << "   -> Passing up" << endl;
   QWidget::mouseDoubleClickEvent(e);
 }
 
@@ -274,7 +274,7 @@ void KstViewWidget::wheelEvent(QWheelEvent *e) {
       vo = findChildFor(e->pos());
     }
     if (vo) {
-      //kstdDebug() << "Found mouse handler " << vo->tagName() << endl;
+      //qDebug() << "Found mouse handler " << vo->tagName() << endl;
       vo->wheelEvent(this, e);
     }
     return;
@@ -283,7 +283,7 @@ void KstViewWidget::wheelEvent(QWheelEvent *e) {
 
 
 void KstViewWidget::mouseReleaseEvent(QMouseEvent *e) {
-  //kstdDebug() << "Release event. button=" << e->button() << " state=" << e->state() << endl;
+  //qDebug() << "Release event. button=" << e->button() << " state=" << e->state() << endl;
   if (_view->viewMode() == KstTopLevelView::DisplayMode) {
     KstViewObjectPtr vo;
     if (_view->mouseGrabbed()) {
@@ -292,7 +292,7 @@ void KstViewWidget::mouseReleaseEvent(QMouseEvent *e) {
       vo = findChildFor(e->pos());
     }
     if (vo) {
-      //kstdDebug() << "Found mouse handler " << vo->tagName() << endl;
+      //qDebug() << "Found mouse handler " << vo->tagName() << endl;
       vo->mouseReleaseEvent(this, e);
     }
     return;
@@ -301,7 +301,7 @@ void KstViewWidget::mouseReleaseEvent(QMouseEvent *e) {
   if ((e->state() & Qt::ShiftButton) && (e->button() & Qt::LeftButton) && !_view->tracking()) {
     _view->releasePress(e->pos(), true);
   } else if (e->button() & Qt::LeftButton) {
-    //kstdDebug() << "doing releasePress" << endl;
+    //qDebug() << "doing releasePress" << endl;
     _view->releasePress(e->pos(), e->state() & Qt::ShiftButton);
     e->accept();
   } else {
@@ -329,11 +329,11 @@ void KstViewWidget::contextMenuEvent(QContextMenuEvent *e) {
     return;
   }
   _menu = new KPopupMenu(this);
-  //kstdDebug() << "Querying for the popup" << endl;
+  //qDebug() << "Querying for the popup" << endl;
   bool rc = _view->popupMenu(_menu, e->pos());
   if (rc && _menu->count() > 0) {
     _menu->popup(mapToGlobal(e->pos()));
-    //kstdDebug() << "Showing the popup." << endl;
+    //qDebug() << "Showing the popup." << endl;
     _menu->exec();
     delete _menu;
     if (_view->viewMode() != KstTopLevelView::DisplayMode) {
@@ -368,21 +368,21 @@ void KstViewWidget::paintEvent(QPaintEvent *e) {
   if (e) {  // Resize/expose/etc triggered by X11
     QRegion r = e->region();
     if (r.isEmpty()) {
-      //kstdDebug() << "Paint event with NO region" << endl;
+      //qDebug() << "Paint event with NO region" << endl;
       _view->paint(KstPainter::P_PAINT);
     } else {
-      //kstdDebug() << "Paint event with region " << e->region() << endl;
+      //qDebug() << "Paint event with region " << e->region() << endl;
       _view->paint(KstPainter::P_PAINT, e->region());
     }
 #ifdef BENCHMARK
     int x = t.elapsed();
-    kstdDebug() << "Paint event: X11 triggered - " << x << "ms" << endl;
+    qDebug() << "Paint event: X11 triggered - " << x << "ms" << endl;
 #endif
   } else { // explicitly forced paint in the code
     _view->paint(KstPainter::P_ZOOM);
 #ifdef BENCHMARK
     int x = t.elapsed();
-    kstdDebug() << "Paint event: Forced (zoom) - " << x << "ms" << endl;
+    qDebug() << "Paint event: Forced (zoom) - " << x << "ms" << endl;
 #endif
   }
 }

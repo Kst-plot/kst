@@ -198,7 +198,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
 #endif
         rc.p->drawText(rc.x, rc.y, fi->text);
 #ifdef BENCHMARK
-        kstdDebug() << "Renderer did draw, time: " << t.elapsed() << endl;
+        qDebug() << "Renderer did draw, time: " << t.elapsed() << endl;
 #endif
       }
       rc.x += rc.fontWidth(fi->text);

@@ -56,9 +56,9 @@ KstDebug::KstDebug()
 
 KstDebug::~KstDebug() {
 #ifdef BENCHMARK
-  kstdDebug() << "DRAW COUNTS ---------------------------------------" << endl;
+  qDebug() << "DRAW COUNTS ---------------------------------------" << endl;
   for (QMap<QString,int>::ConstIterator i = _drawCounter.begin(); i != _drawCounter.end(); ++i) {
-    kstdDebug() << i.key() << ": " << i.value() << endl;
+    qDebug() << i.key() << ": " << i.value() << endl;
   }
 #endif
 }

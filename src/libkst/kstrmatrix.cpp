@@ -524,7 +524,7 @@ KstRMatrixPtr KstRMatrix::makeDuplicate() const {
 void KstRMatrix::commonConstructor(KstDataSourcePtr file, const QString &field,
                                    int reqXStart, int reqYStart, int reqNX, int reqNY,
                                    bool doAve, bool doSkip, int skip) {
-//  kstdDebug() << "constructing KstRMatrix " << tag().displayString() << " from file " << file->tag().displayString() << " (" << (void*)(&(*file)) << ")" << endl;
+//  qDebug() << "constructing KstRMatrix " << tag().displayString() << " from file " << file->tag().displayString() << " (" << (void*)(&(*file)) << ")" << endl;
   _reqXStart = reqXStart;
   _reqYStart = reqYStart;
   _reqNX = reqNX;

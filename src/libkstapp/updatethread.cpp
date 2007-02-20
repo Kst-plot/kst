@@ -55,10 +55,10 @@ void UpdateThread::run() {
   int  updateTime;
 
 #if UPDATEDEBUG > 0
-  kstdDebug() << "Update thread running, tid=" << (int)QThread::currentThread() << endl;
+  qDebug() << "Update thread running, tid=" << (int)QThread::currentThread() << endl;
 #if UPDATEDEBUG > 2
-  kstdDebug() << "dataObjectList lock is at " << (void*)(&KST::dataObjectList.lock()) << endl;
-  kstdDebug() << "dataSourceList lock is at " << (void*)(&KST::dataSourceList.lock()) << endl;
+  qDebug() << "dataObjectList lock is at " << (void*)(&KST::dataObjectList.lock()) << endl;
+  qDebug() << "dataSourceList lock is at " << (void*)(&KST::dataSourceList.lock()) << endl;
 #endif
 #endif
 
@@ -71,7 +71,7 @@ void UpdateThread::run() {
 
     if (_waitCondition.wait(_updateTime)) {
 #if UPDATEDEBUG > 0
-      kstdDebug() << "Update timer " << _updateTime << endl;
+      qDebug() << "Update timer " << _updateTime << endl;
 #endif
       if (!_force) {
         break;
@@ -89,7 +89,7 @@ void UpdateThread::run() {
 
     if (_paused && !force) {
 #if UPDATEDEBUG > 0
-      kstdDebug() << "Update thread paused..." << endl;
+      qDebug() << "Update thread paused..." << endl;
 #endif
       continue;
     }
@@ -97,10 +97,10 @@ void UpdateThread::run() {
     bool gotData = false;
     if (doUpdates(force, &gotData) && !_done) {
 #if UPDATEDEBUG > 1
-      kstdDebug() << "Update resulted in: TRUE!" << endl;
+      qDebug() << "Update resulted in: TRUE!" << endl;
 #endif
       if (gotData) {
-        kstdDebug() << "Posting UpdateDataDialogs" << endl;
+        qDebug() << "Posting UpdateDataDialogs" << endl;
         ThreadEvent *e = new ThreadEvent(ThreadEvent::UpdateDataDialogs);
         e->_curves = _updatedCurves;
         e->_counter = _updateCounter;
@@ -152,7 +152,7 @@ bool UpdateThread::doUpdates(bool force, bool *gotData) {
   
 #if UPDATEDEBUG > 0
   if (force) {
-    kstdDebug() << "Forced update!" << endl;
+    qDebug() << "Forced update!" << endl;
   }
 #endif
 
@@ -162,7 +162,7 @@ bool UpdateThread::doUpdates(bool force, bool *gotData) {
   }
 
 #if UPDATEDEBUG > 2
-  kstdDebug() << "UPDATE: counter=" << _updateCounter << endl;
+  qDebug() << "UPDATE: counter=" << _updateCounter << endl;
 #endif
 
   {
@@ -179,7 +179,7 @@ bool UpdateThread::doUpdates(bool force, bool *gotData) {
       bcp->writeLock();
       assert(bcp.data());
 #if UPDATEDEBUG > 1
-      kstdDebug() << "updating curve: " << (void*)bcp << " - " << bcp->tagName() << endl;
+      qDebug() << "updating curve: " << (void*)bcp << " - " << bcp->tagName() << endl;
 #endif
       KstObject::UpdateType ut = bcp->update(_updateCounter);
       bcp->unlock();
@@ -192,14 +192,14 @@ bool UpdateThread::doUpdates(bool force, bool *gotData) {
         U = ut;
         if (U == KstObject::UPDATE) {
 #if UPDATEDEBUG > 0
-          kstdDebug() << "Curve " << bcp->tagName() << " said UPDATE" << endl;
+          qDebug() << "Curve " << bcp->tagName() << " said UPDATE" << endl;
 #endif
         }
       }
 
       if (_done || (_paused && !force)) {
 #if UPDATEDEBUG > 1
-        kstdDebug() << "5 Returning from scan with U=" << (int)U << endl;
+        qDebug() << "5 Returning from scan with U=" << (int)U << endl;
 #endif
         return U == KstObject::UPDATE;
       }
@@ -211,14 +211,14 @@ bool UpdateThread::doUpdates(bool force, bool *gotData) {
       dp->writeLock();
       assert(dp.data());
 #if UPDATEDEBUG > 1
-      kstdDebug() << "updating data object: " << (void*)dp << " - " << dp->tagName() << endl;
+      qDebug() << "updating data object: " << (void*)dp << " - " << dp->tagName() << endl;
 #endif
       dp->update(_updateCounter);
       dp->unlock();
 
       if (_done || (_paused && !force)) {
 #if UPDATEDEBUG > 1
-        kstdDebug() << "5 Returning from scan with U=" << (int)U << endl;
+        qDebug() << "5 Returning from scan with U=" << (int)U << endl;
 #endif
         return U == KstObject::UPDATE;
       }
@@ -268,14 +268,14 @@ bool UpdateThread::doUpdates(bool force, bool *gotData) {
   }
 
   if (U == KstObject::UPDATE) {
-    kstdDebug() << "Update plots" << endl;
+    qDebug() << "Update plots" << endl;
     if (gotData) { // FIXME: do we need to consider all the other exit points?
       *gotData = true;
     }
   }
 
 #if UPDATEDEBUG > 1
-  kstdDebug() << "6 Returning from scan with U=" << (int)U << endl;
+  qDebug() << "6 Returning from scan with U=" << (int)U << endl;
 #endif
   return U == KstObject::UPDATE;
 }

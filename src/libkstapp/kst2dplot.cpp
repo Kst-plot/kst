@@ -2209,7 +2209,7 @@ void Kst2DPlot::setBorders(double& xleft_bdr_px, double& xright_bdr_px,
   ytop_bdr_px   = ceil(ytop_bdr_px);
   ybot_bdr_px   = ceil(ybot_bdr_px);
 #ifdef BENCHMARK
-  kstdDebug() << "SET BORDERS CALLED on object " << tagName() << ", took " << t.elapsed() << endl;
+  qDebug() << "SET BORDERS CALLED on object " << tagName() << ", took " << t.elapsed() << endl;
 #endif
 }
 
@@ -2396,7 +2396,7 @@ void Kst2DPlot::paintSelf(KstPainter& p, const QRegion& bounds) {
       p.setClipRegion(bounds & clip);
     }
 
-    //kstdDebug() << " -> paint plot " << tagName() << " with clipRegion: " << p.clipRegion() << endl;
+    //qDebug() << " -> paint plot " << tagName() << " with clipRegion: " << p.clipRegion() << endl;
     _buffer.paintInto(p, geometry());
     drawCursorPos(p);
     updateTieBox(p);
@@ -2468,7 +2468,7 @@ void Kst2DPlot::draw(KstPainter& p) {
 
 #ifdef BENCHMARK
   ++KstDebug::self()->drawCounter()[tagName()];
-  kstdDebug() << ">>>>>>>>>>>>>>>>>>>> DRAWING PLOT " << tagName() << endl;
+  qDebug() << ">>>>>>>>>>>>>>>>>>>> DRAWING PLOT " << tagName() << endl;
   QTime benchTime;
   int i_bt = 0, bt[15];
   QString bt_label[15];
@@ -2651,12 +2651,12 @@ void Kst2DPlot::draw(KstPainter& p) {
     bt_label[i_bt] = "Flush Painter";
     bt[i_bt++] = benchTime.elapsed();
 
-    kstdDebug() << "Plot Benchmark stats:" << endl;
-    kstdDebug() << "   " << bt_label[0] << ": " << bt[0] << "ms" << endl;
+    qDebug() << "Plot Benchmark stats:" << endl;
+    qDebug() << "   " << bt_label[0] << ": " << bt[0] << "ms" << endl;
     for (int j = 1; j < i_bt; ++j) {
-      kstdDebug() << "   " << bt_label[j] << ": " << bt[j]-bt[j-1] << "ms" << endl;
+      qDebug() << "   " << bt_label[j] << ": " << bt[j]-bt[j-1] << "ms" << endl;
     }
-    kstdDebug() << "Plot Total: " << bt[i_bt-1] << "ms" << endl;
+    qDebug() << "Plot Total: " << bt[i_bt-1] << "ms" << endl;
 #endif
   } else {
     // if the plot is too small to draw then denote this with a cross pattern
@@ -4004,7 +4004,7 @@ void Kst2DPlot::highlightNearestDataPoint(bool bRepaint, KstPainter *p, const QP
 
 
 void Kst2DPlot::updateXYGuideline(QWidget *view, const QPoint& oldPos, const QPoint& newPos, const QRect& pr, KstMouseModeType gzType) {
-  //kstdDebug() << "update guideline for old=" << oldPos << " new=" << newPos << endl;
+  //qDebug() << "update guideline for old=" << oldPos << " new=" << newPos << endl;
   KstPainter p; // FIXME: Broken, just prepare and then trigger a
                 //  view->paint(GetPlotRegion());
   p.begin(view);
@@ -4183,7 +4183,7 @@ void Kst2DPlot::mousePressEvent(QWidget *view, QMouseEvent *e) {
     plot_rect = GetPlotRegion();
     tie_rect = GetTieBoxRegion();
     plot_and_axis_rect = GetPlotAndAxisRegion();
-    //kstdDebug() << e->pos() << " " << win_rect << " " << plot_rect << endl;
+    //qDebug() << e->pos() << " " << win_rect << " " << plot_rect << endl;
     if (tie_rect.contains(e->pos())) {
       toggleTied();
       // So inefficient, but I have some sort of weird bug making it necessary
@@ -4364,7 +4364,7 @@ void Kst2DPlot::mouseReleaseEvent(QWidget *view, QMouseEvent *e) {
   setCursorForMode(view, _mouse.mode, e->pos());
 
   if (doUpdate) {
-    kstdDebug() << "mouse release: do update" << endl;
+    qDebug() << "mouse release: do update" << endl;
     setDirty();
     static_cast<KstViewWidget*>(view)->paint();
   }

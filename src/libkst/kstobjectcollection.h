@@ -259,13 +259,13 @@ KstObjectTreeNode<T> *KstObjectTreeNode<T>::addDescendant(T *o, KstObjectNameInd
 
   if (currNode->_object) {
 #if NAMEDEBUG > 0
-    kstdDebug() << "Tried to add KstObject to naming tree " << (void*)this << ": \"" << o->tag().tagString() << "\", but there's already an object with that name" << endl;
+    qDebug() << "Tried to add KstObject to naming tree " << (void*)this << ": \"" << o->tag().tagString() << "\", but there's already an object with that name" << endl;
 #endif
     return NULL;
   } else {
     currNode->_object = o;
 #if NAMEDEBUG > 0
-    kstdDebug() << "Added KstObject to naming tree " << (void*)this << ": \"" << o->tag().tagString() << "\"" << endl;
+    qDebug() << "Added KstObject to naming tree " << (void*)this << ": \"" << o->tag().tagString() << "\"" << endl;
 #endif
     return currNode;
   }
@@ -285,7 +285,7 @@ bool KstObjectTreeNode<T>::removeDescendant(T *o, KstObjectNameIndex<T> *index) 
     KstObjectTreeNode<T> *nextNode = currNode->child(*i);
     if (!nextNode) {
 #if NAMEDEBUG > 0
-      kstdDebug() << "Tried to remove KstObject from naming tree: \"" << o->tag().tagString() << "\", but the node is not in the tree" << endl;
+      qDebug() << "Tried to remove KstObject from naming tree: \"" << o->tag().tagString() << "\", but the node is not in the tree" << endl;
 #endif
       return false;
     }
@@ -294,7 +294,7 @@ bool KstObjectTreeNode<T>::removeDescendant(T *o, KstObjectNameIndex<T> *index) 
 
   if (currNode->_object != QPointer<KstObject>(o)) {
 #if NAMEDEBUG > 0
-    kstdDebug() << "Tried to remove KstObject from naming tree: \"" << o->tag().tagString() << "\", but the object is not in the tree" << endl;
+    qDebug() << "Tried to remove KstObject from naming tree: \"" << o->tag().tagString() << "\", but the object is not in the tree" << endl;
 #endif
     return false;
   } else {
@@ -305,7 +305,7 @@ bool KstObjectTreeNode<T>::removeDescendant(T *o, KstObjectNameIndex<T> *index) 
       KstObjectTreeNode<T> *lastNode = currNode->_parent;
       lastNode->_children.remove(*i);
 #if NAMEDEBUG > 1
-      kstdDebug() << "Removed naming tree node: \"" << currNode->fullTag().join(KstObjectTag::tagSeparator) << "\"" << endl;
+      qDebug() << "Removed naming tree node: \"" << currNode->fullTag().join(KstObjectTag::tagSeparator) << "\"" << endl;
 #endif
       if (index) {
         Q3ValueList<KstObjectTreeNode<T> *> *l = index->take(*i);
@@ -318,7 +318,7 @@ bool KstObjectTreeNode<T>::removeDescendant(T *o, KstObjectNameIndex<T> *index) 
       currNode = lastNode;
     }
 #if NAMEDEBUG > 0
-    kstdDebug() << "Removed KstObject from naming tree: \"" << o->tag().tagString() << "\"" << endl;
+    qDebug() << "Removed KstObject from naming tree: \"" << o->tag().tagString() << "\"" << endl;
 #endif
     return true;
   }
@@ -384,38 +384,38 @@ bool KstObjectCollection<T>::removeObject(T *o) {
 
   if (!_list.contains(o)) {
 #if NAMEDEBUG > 1
-    kstdDebug() << "Trying to delete a non-existant object from the collection: " << o->tag().tagString() << endl;
+    qDebug() << "Trying to delete a non-existant object from the collection: " << o->tag().tagString() << endl;
 #endif
     return false;
   }
 
 #if NAMEDEBUG > 1
-    kstdDebug() << "Removing object from the collection: " << o->tag().tagString() << endl;
+    qDebug() << "Removing object from the collection: " << o->tag().tagString() << endl;
 #endif
 
     Q3ValueList<KstObjectTreeNode<T> *> relNodes;
     if (_updateDisplayTags) {
 #if NAMEDEBUG > 2
-      kstdDebug() << "  fetching related nodes" << endl;
+      qDebug() << "  fetching related nodes" << endl;
 #endif
       relNodes = relatedNodes(o);
     }
 
 #if NAMEDEBUG > 2
-    kstdDebug() << "  removing object from tree" << endl;
+    qDebug() << "  removing object from tree" << endl;
 #endif
   bool ok = _root.removeDescendant(o, &_index);
 
   if (ok) {
     if (_updateDisplayTags) {
 #if NAMEDEBUG > 2
-      kstdDebug() << "  updating display components" << endl;
+      qDebug() << "  updating display components" << endl;
 #endif
       updateDisplayTags(relNodes);
     }
 
 #if NAMEDEBUG > 2
-    kstdDebug() << "  removing object from list" << endl;
+    qDebug() << "  removing object from list" << endl;
 #endif
     _list.remove(o);
   }
@@ -458,7 +458,7 @@ void KstObjectCollection<T>::doRename(T *o, const KstObjectTag& newTag) {
 template <class T>
 KstSharedPtr<T> KstObjectCollection<T>::retrieveObject(QStringList tag) const {
 #if NAMEDEBUG > 1
-  kstdDebug() << "Retrieving object with tag: \"" << tag.join(KstObjectTag::tagSeparator) << "\"" << endl;
+  qDebug() << "Retrieving object with tag: \"" << tag.join(KstObjectTag::tagSeparator) << "\"" << endl;
 #endif
 
   if (tag.isEmpty()) {
@@ -468,7 +468,7 @@ KstSharedPtr<T> KstObjectCollection<T>::retrieveObject(QStringList tag) const {
   if (_index[tag.first()] && _index[tag.first()]->count() == 1) {
     // the first tag element is unique, so use the index
 #if NAMEDEBUG > 2
-    kstdDebug() << "  first tag element (\"" << tag.first() << "\") is unique in index" << endl;
+    qDebug() << "  first tag element (\"" << tag.first() << "\") is unique in index" << endl;
 #endif
 
     KstObjectTreeNode<T> *n = _index[tag.first()]->first();
@@ -478,7 +478,7 @@ KstSharedPtr<T> KstObjectCollection<T>::retrieveObject(QStringList tag) const {
     }
     if (n) {
 #if NAMEDEBUG > 1
-      kstdDebug() << "  found node, returning object " << (void*) n->object() << endl;
+      qDebug() << "  found node, returning object " << (void*) n->object() << endl;
 #endif
       return n->object();
     }
@@ -488,12 +488,12 @@ KstSharedPtr<T> KstObjectCollection<T>::retrieveObject(QStringList tag) const {
   const KstObjectTreeNode<T> *n = _root.descendant(tag);
   if (n) {
 #if NAMEDEBUG > 1
-    kstdDebug() << "  found node, returning object " << (void*) n->object() << endl;
+    qDebug() << "  found node, returning object " << (void*) n->object() << endl;
 #endif
     return n->object();
   } else {
 #if NAMEDEBUG > 1
-    kstdDebug() << "  node not found" << endl;
+    qDebug() << "  node not found" << endl;
 #endif
     return NULL;
   }
@@ -581,7 +581,7 @@ void KstObjectCollection<T>::remove(T *o) {
 template <class T>
 void KstObjectCollection<T>::clear() {
 #if NAMEDEBUG > 0
-  kstdDebug () << "Clearing object collection " << (void*) this << endl;
+  qDebug () << "Clearing object collection " << (void*) this << endl;
 #endif
   _root.clear();
   _index.clear();
@@ -718,7 +718,7 @@ void KstObjectCollection<T>::updateDisplayTag(T *obj) {
   unsigned int nc = componentsForUniqueTag(tag);
   if (tag.uniqueDisplayComponents() != nc) {
 #if NAMEDEBUG > 2
-    kstdDebug() << "Changing display components on \"" << tag.tagString() << "\" from " << tag.uniqueDisplayComponents() << " to " << nc << endl;
+    qDebug() << "Changing display components on \"" << tag.tagString() << "\" from " << tag.uniqueDisplayComponents() << " to " << nc << endl;
 #endif
     obj->tag().setUniqueDisplayComponents(nc);
   }
@@ -738,7 +738,7 @@ void KstObjectCollection<T>::relatedNodesHelper(T *o, KstObjectTreeNode<T> *n, Q
 
   if (n->object() && n->object() != o && !nodes[(long)n]) {
 #if NAMEDEBUG > 2
-          kstdDebug() << "Found related node to \"" << o->tag().tagString() << "\": \"" << n->object()->tag().tagString() << "\"" << endl; 
+          qDebug() << "Found related node to \"" << o->tag().tagString() << "\": \"" << n->object()->tag().tagString() << "\"" << endl; 
 #endif
     nodes.insert((long)n, n);
   }
@@ -766,7 +766,7 @@ Q3ValueList<KstObjectTreeNode<T> *> KstObjectCollection<T>::relatedNodes(T *o) {
   }
 
 #if NAMEDEBUG > 2
-  kstdDebug() << "Looking for related nodes to \"" << o->tag().tagString() << "\"" << endl; 
+  qDebug() << "Looking for related nodes to \"" << o->tag().tagString() << "\"" << endl; 
 #endif
 
   QStringList ft = o->tag().fullTag();

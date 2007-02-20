@@ -53,8 +53,8 @@ public:
     */
    void _KShared_ref() const {
 	   sem++;
-//	   kstdDebug() << "KShared_ref: " << (void*)this << " -> " << _KShared_count() << endl;
-//	   kstdDebug() << kstdBacktrace() << endl;
+//	   qDebug() << "KShared_ref: " << (void*)this << " -> " << _KShared_count() << endl;
+//	   qDebug() << kstdBacktrace() << endl;
    }
 
    /**
@@ -63,8 +63,8 @@ public:
     */
    void _KShared_unref() const {
 	   sem--;
-//	   kstdDebug() << "KShared_unref: " << (void*)this << " -> " << _KShared_count() << endl;
-//	   kstdDebug() << kstdBacktrace() << endl;
+//	   qDebug() << "KShared_unref: " << (void*)this << " -> " << _KShared_count() << endl;
+//	   qDebug() << kstdBacktrace() << endl;
 	   if (sem.total() == sem.available()) delete this;
    }
 

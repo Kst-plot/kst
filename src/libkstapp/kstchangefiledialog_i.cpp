@@ -302,12 +302,12 @@ bool KstChangeFileDialogI::applyFileChange() {
   }
 
   // clean up unused data sources
-//  kstdDebug() << "cleaning up data sources" << endl;
+//  qDebug() << "cleaning up data sources" << endl;
   KST::dataSourceList.lock().writeLock();
   for (KstDataSourceList::Iterator it = oldSources.begin(); it != oldSources.end(); ++it) {
-//    kstdDebug() << "DATA SOURCE: " << (*it)->tag().displayString() << " (" << (void*)(*it) << ") USAGE: " << (*it)->getUsage() << endl;
+//    qDebug() << "DATA SOURCE: " << (*it)->tag().displayString() << " (" << (void*)(*it) << ") USAGE: " << (*it)->getUsage() << endl;
     if ((*it)->getUsage() == 1) {
-//      kstdDebug() << "    -> REMOVED" << endl;
+//      qDebug() << "    -> REMOVED" << endl;
       KST::dataSourceList.remove((*it).data());
     }
   }

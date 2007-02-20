@@ -87,12 +87,12 @@ void KstStringListView::update() {
   }
 
 /*
-  kstdDebug() << "Updated KstStringListView: now " << childCount() << " root-child items" << endl;
+  qDebug() << "Updated KstStringListView: now " << childCount() << " root-child items" << endl;
   QListViewItemIterator it(this);
   while (it.current()) {
     KstStringListViewItem *item = dynamic_cast<KstStringListViewItem*>(it.current());
     if (item) {
-      kstdDebug() << "  " << item->node()->fullTag().join(KstObjectTag::tagSeparator) << ": " << item->text(0) << ", " << item->text(1) << endl;
+      qDebug() << "  " << item->node()->fullTag().join(KstObjectTag::tagSeparator) << ": " << item->text(0) << ", " << item->text(1) << endl;
     }
     ++it;
   }

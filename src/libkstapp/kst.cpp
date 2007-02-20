@@ -1996,7 +1996,7 @@ void KstApp::paintAll(KstPainter::PaintType pt) {
   }
 #ifdef PAINTTIMER
   int x = t.elapsed();
-  kstdDebug() << "paintAll with painttype " << (int)pt << " - " << x << "ms" << endl;
+  qDebug() << "paintAll with painttype " << (int)pt << " - " << x << "ms" << endl;
 #endif
 }
 
@@ -2209,7 +2209,7 @@ void KstApp::updateDialogs(bool onlyVisible) {
     updateDataManager(onlyVisible);
     updateViewManager(onlyVisible);
 #ifdef BENCHMARK
-    kstdDebug() << "Dialogs updated in " << t.elapsed() << "ms" << endl;
+    qDebug() << "Dialogs updated in " << t.elapsed() << "ms" << endl;
 #endif
   }
 }
@@ -2289,7 +2289,7 @@ void KstApp::showDataWizardWithFile(const QString &input) {
 
 
 void KstApp::registerDocChange() {
-  kstdDebug() << "register doc changed" << endl;
+  qDebug() << "register doc changed" << endl;
   forceUpdate();
   updateVisibleDialogs();
   doc->setModified();

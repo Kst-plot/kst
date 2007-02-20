@@ -438,17 +438,17 @@ KstDataSource::KstDataSource(KConfig *cfg, const QString& filename, const QStrin
 
 
 KstDataSource::~KstDataSource() {
-//  kstdDebug() << "KstDataSource destructor: " << tag().tagString() << endl;
+//  qDebug() << "KstDataSource destructor: " << tag().tagString() << endl;
   KST::scalarList.lock().writeLock();
-//  kstdDebug() << "  removing numFrames scalar" << endl;
+//  qDebug() << "  removing numFrames scalar" << endl;
   KST::scalarList.remove(_numFramesScalar);
   KST::scalarList.lock().unlock();
 
-//  kstdDebug() << "  removing metadata strings" << endl;
+//  qDebug() << "  removing metadata strings" << endl;
   KST::stringList.lock().writeLock();
   KST::stringList.setUpdateDisplayTags(false);
   for (Q3DictIterator<KstString> it(_metaData); it.current(); ++it) {
-//    kstdDebug() << "    removing " << it.current()->tag().tagString() << endl;
+//    qDebug() << "    removing " << it.current()->tag().tagString() << endl;
     KST::stringList.remove(it.current());
   }
   KST::stringList.setUpdateDisplayTags(true);

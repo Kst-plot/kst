@@ -46,7 +46,7 @@ static int anonymousVectorCounter = 1;
 /** Create a vector */
 KstVector::KstVector(KstObjectTag in_tag, int size, KstObject *provider, bool isScalarList)
 : KstPrimitive(provider), _nsum(0), _scalars(isScalarList ? 0 : 11) {
-  //kstdDebug() << "+++ CREATING VECTOR: " << (void*) this << endl;
+  //qDebug() << "+++ CREATING VECTOR: " << (void*) this << endl;
   _editable = false;
   NumShifted = 0;
   NumNew = 0;
@@ -150,7 +150,7 @@ KstVector::KstVector(const QDomElement& e)
 
 
 KstVector::~KstVector() {
-  //kstdDebug() << "+++ DELETING VECTOR: " << (void*) this << endl;
+  //qDebug() << "+++ DELETING VECTOR: " << (void*) this << endl;
   KST::scalarList.lock().writeLock();
   KST::scalarList.setUpdateDisplayTags(false);
   for (Q3DictIterator<KstScalar> it(_scalars); it.current(); ++it) {
@@ -427,7 +427,7 @@ void KstVector::blank() {
 
 
 bool KstVector::resize(int sz, bool reinit) {
-  //kstdDebug() << "resizing to: " << sz << endl;
+  //qDebug() << "resizing to: " << sz << endl;
   if (sz > 0) {
     _v = static_cast<double*>(KST::realloc(_v, sz*sizeof(double)));
     if (!_v) {

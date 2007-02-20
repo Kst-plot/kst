@@ -45,12 +45,12 @@ namespace KST {
       Plugin(KService::Ptr svc) : KstShared(), service(svc), _lib(0L) {
         assert(service);
         _plugLib = service->library();
-        //kstdDebug() << "Create plugin " << (void*)this << " " << service->property("Name").toString() << endl;
+        //qDebug() << "Create plugin " << (void*)this << " " << service->property("Name").toString() << endl;
       }
 
     protected:
       virtual ~Plugin() {
-        //kstdDebug() << "Destroy plugin " << (void*)this << " " << service->property("Name").toString() << endl;
+        //qDebug() << "Destroy plugin " << (void*)this << " " << service->property("Name").toString() << endl;
         if (_lib) {
           _lib->unload();
         }
@@ -126,12 +126,12 @@ namespace KST {
       KstDataSource *create(KConfig *cfg, const QString& filename, const QString& type = QString::null) const {
         KstDataSource *(*sym)(KConfig*, const QString&, const QString&) = (KstDataSource*(*)(KConfig*, const QString&, const QString&))symbol("create");
         if (sym) {
-          //kstdDebug() << "Trying to create " << filename << " type=" << type << " with " << service->property("Name").toString() << endl;
+          //qDebug() << "Trying to create " << filename << " type=" << type << " with " << service->property("Name").toString() << endl;
           KstDataSource *ds = (sym)(cfg, filename, type);
           if (ds) {
             ds->_source = service->property("Name").toString();
           }
-          //kstdDebug() << (ds ? "SUCCESS" : "FAILED") << endl;
+          //qDebug() << (ds ? "SUCCESS" : "FAILED") << endl;
           return ds;
         }
 
@@ -141,12 +141,12 @@ namespace KST {
       KstDataSource *create(KConfig *cfg, const QString& filename, const QString& type, const QDomElement& e) const {
         KstDataSource *(*sym)(KConfig*, const QString&, const QString&, const QDomElement&) = (KstDataSource*(*)(KConfig*, const QString&, const QString&, const QDomElement&))symbol("load");
         if (sym) {
-          //kstdDebug() << "Trying to create " << filename << " type=" << type << " with " << service->property("Name").toString() << endl;
+          //qDebug() << "Trying to create " << filename << " type=" << type << " with " << service->property("Name").toString() << endl;
           KstDataSource *ds = (sym)(cfg, filename, type, e);
           if (ds) {
             ds->_source = service->property("Name").toString();
           }
-          //kstdDebug() << (ds ? "SUCCESS" : "FAILED") << endl;
+          //qDebug() << (ds ? "SUCCESS" : "FAILED") << endl;
           return ds;
         } else {
           KstDataSource *(*sym)(KConfig*, const QString&, const QString&) = (KstDataSource*(*)(KConfig*, const QString&, const QString&))symbol("create");
@@ -209,9 +209,9 @@ namespace KST {
       int understands(KConfig *cfg, const QString& filename) const {
         int (*sym)(KConfig*, const QString&) = (int(*)(KConfig*, const QString&))symbol("understands");
         if (sym) {
-          //kstdDebug() << "Checking if " << service->property("Name").toString() << " understands " << filename << endl;
+          //qDebug() << "Checking if " << service->property("Name").toString() << " understands " << filename << endl;
           int rc = (sym)(cfg, filename);
-          //kstdDebug() << "result: " << rc << endl;
+          //qDebug() << "result: " << rc << endl;
           return rc;
         }
 
@@ -235,7 +235,7 @@ namespace KST {
       QStringList provides() const {
         QStringList (*sym)() = (QStringList(*)())symbol("provides");
         if (sym) {
-          //kstdDebug() << "Checking if " << service->property("Name").toString() << " provides " << type << endl;
+          //qDebug() << "Checking if " << service->property("Name").toString() << " provides " << type << endl;
           return (sym)();
         }
 

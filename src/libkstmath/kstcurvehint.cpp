@@ -55,7 +55,7 @@ KstBaseCurvePtr KstCurveHint::makeCurve(const QString& tag, const QColor& color)
   KstVectorPtr x = xVector();
   KstVectorPtr y = yVector();
   if (!x || !y) {
-    kstdDebug() << "Couldn't find either " << _xVectorName << " or " << _yVectorName << endl;
+    qDebug() << "Couldn't find either " << _xVectorName << " or " << _yVectorName << endl;
     return 0L;
   }
 

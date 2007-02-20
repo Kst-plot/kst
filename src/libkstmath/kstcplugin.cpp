@@ -167,7 +167,7 @@ void KstCPlugin::commonConstructor() {
   _type = "Plugin";
   _plugin = 0L;
   _localData = 0L;
-  //kstdDebug() << "Creating KSTPlugin: " << long(this) << endl;
+  //qDebug() << "Creating KSTPlugin: " << long(this) << endl;
 }
 
 
@@ -179,7 +179,7 @@ KstCPlugin::~KstCPlugin() {
     }
     _localData = 0L;
   }
-  //kstdDebug() << "Destroying KSTPlugin: " << long(this) << endl;
+  //qDebug() << "Destroying KSTPlugin: " << long(this) << endl;
 }
 
 

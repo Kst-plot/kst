@@ -39,8 +39,8 @@ void KstRWLock::readLock() const {
   QMutexLocker lock(&_mutex);
   
 #ifdef LOCKTRACE
-  kstdDebug() << (void*)this << " KstRWLock::readLock() by tid=" << (int)QThread::currentThreadId() << endl;
-//  kstdDebug() << kstdBacktrace(6) << endl;
+  qDebug() << (void*)this << " KstRWLock::readLock() by tid=" << (int)QThread::currentThreadId() << endl;
+//  qDebug() << kstdBacktrace(6) << endl;
 #endif
 
   Qt::HANDLE me = QThread::currentThreadId();
@@ -48,7 +48,7 @@ void KstRWLock::readLock() const {
   if (_writeCount > 0 && _writeLocker == me) {
     // thread already has a write lock
 #ifdef LOCKTRACE
-    kstdDebug() << "Thread " << (int)QThread::currentThreadId() << " has a write lock on KstRWLock " << (void*)this << ", getting a read lock" << endl;
+    qDebug() << "Thread " << (int)QThread::currentThreadId() << " has a write lock on KstRWLock " << (void*)this << ", getting a read lock" << endl;
 #endif
   } else {
     QMap<Qt::HANDLE, int>::Iterator it = _readLockers.find(me);
@@ -67,7 +67,7 @@ void KstRWLock::readLock() const {
   ++_readCount;
 
 #ifdef LOCKTRACE
-  kstdDebug() << (void*)this << " KstRWLock::readLock() done by tid=" << (int)QThread::currentThread() << endl;
+  qDebug() << (void*)this << " KstRWLock::readLock() done by tid=" << (int)QThread::currentThread() << endl;
 #endif
 #else
   _mutex.lock();
@@ -80,8 +80,8 @@ void KstRWLock::writeLock() const {
   QMutexLocker lock(&_mutex);
 
 #ifdef LOCKTRACE
-  kstdDebug() << (void*)this << " KstRWLock::writeLock() by tid=" << (int)QThread::currentThreadId() << endl;
-//  kstdDebug() << kstdBacktrace(6) << endl;
+  qDebug() << (void*)this << " KstRWLock::writeLock() by tid=" << (int)QThread::currentThreadId() << endl;
+//  qDebug() << kstdBacktrace(6) << endl;
 #endif
 
   Qt::HANDLE me = QThread::currentThreadId();
@@ -104,7 +104,7 @@ void KstRWLock::writeLock() const {
   ++_writeCount;
 
 #ifdef LOCKTRACE
-  kstdDebug() << (void*)this << " KstRWLock::writeLock() done by tid=" << (int)QThread::currentThread() << endl;
+  qDebug() << (void*)this << " KstRWLock::writeLock() done by tid=" << (int)QThread::currentThread() << endl;
 #endif
 #else
   _mutex.lock();
@@ -117,7 +117,7 @@ void KstRWLock::unlock() const {
   QMutexLocker lock(&_mutex);
 
 #ifdef LOCKTRACE
-  kstdDebug() << (void*)this << " KstRWLock::unlock() by tid=" << (int)QThread::currentThreadId() << endl;
+  qDebug() << (void*)this << " KstRWLock::unlock() by tid=" << (int)QThread::currentThreadId() << endl;
 #endif
 
   Qt::HANDLE me = QThread::currentThreadId();
@@ -160,7 +160,7 @@ void KstRWLock::unlock() const {
   }
 
 #ifdef LOCKTRACE
-  kstdDebug() << (void*)this << " KstRWLock::unlock() done by tid=" << (int)QThread::currentThread() << endl;
+  qDebug() << (void*)this << " KstRWLock::unlock() done by tid=" << (int)QThread::currentThread() << endl;
 #endif
 #else
   _mutex.unlock();
