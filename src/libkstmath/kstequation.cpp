@@ -240,7 +240,7 @@ void KstEquation::save(QTextStream &ts, const QString& indent) {
   // the optimizer
   if (!_equation.isEmpty()) {
     QMutexLocker ml(&Equation::mutex());
-    yy_scan_string(_equation.latin1());
+    yy_scan_string(_equation.toLatin1());
     ParsedEquation = 0L;
     int rc = yyparse();
     Equation::Node *en = static_cast<Equation::Node*>(ParsedEquation);
@@ -278,7 +278,7 @@ void KstEquation::setEquation(const QString& in_fn) {
   _pe = 0L;
   if (!_equation.isEmpty()) {
     Equation::mutex().lock();
-    yy_scan_string(_equation.latin1());
+    yy_scan_string(_equation.toLatin1());
     int rc = yyparse();
     _pe = static_cast<Equation::Node*>(ParsedEquation);
     if (rc == 0 && _pe) {
@@ -323,7 +323,7 @@ void KstEquation::setExistingXVector(KstVectorPtr in_xv, bool do_interp) {
 
   setDirty();
 
-  _inputVectors.erase(XINVECTOR);
+  _inputVectors.remove(XINVECTOR);
   _xInVector = _inputVectors.insert(XINVECTOR, in_xv);
 
   _ns = 2; // reset the updating
@@ -447,7 +447,7 @@ bool KstEquation::FillY(bool force) {
     }
 
     QMutexLocker ml(&Equation::mutex());
-    yy_scan_string(_equation.latin1());
+    yy_scan_string(_equation.toLatin1());
     int rc = yyparse();
     _pe = static_cast<Equation::Node*>(ParsedEquation);
     if (_pe && rc == 0) {
