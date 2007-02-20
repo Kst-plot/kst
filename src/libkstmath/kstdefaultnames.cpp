@@ -68,35 +68,35 @@ QString suggestDataObjectName(const QString& field,
 /* been put on the list */
 QString KST::suggestCurveName( KstObjectTag vector_name, bool add_c ) {
   return suggestDataObjectName(vector_name.displayString(), 
-                      i18n("Minimal abbreviation for 'Curve'", "C"), 
+                      i18nc("Minimal abbreviation for 'Curve'", "C"), 
                       add_c);
 }
 
 
 QString KST::suggestPSDName( KstObjectTag vector_name ) {
   return suggestDataObjectName(vector_name.tag(), 
-                      i18n("Minimal abbreviation for 'Power spectrum'", "P"),
+                      i18nc("Minimal abbreviation for 'Power spectrum'", "P"),
                       true);
 }
 
 
 QString KST::suggestCSDName( KstObjectTag vector_name ) {
   return suggestDataObjectName(vector_name.tag(),
-                               i18n("Minimal abbreviation for 'Cumulative Spectral Decay'", "S"),
+                               i18nc("Minimal abbreviation for 'Cumulative Spectral Decay'", "S"),
                                true);
 }
 
 
 QString KST::suggestHistogramName( KstObjectTag vector_name ) {
   return suggestDataObjectName(vector_name.tag(), 
-                      i18n("Minimal abbreviation for 'Histogram'", "H"),
+                      i18nc("Minimal abbreviation for 'Histogram'", "H"),
                       true);
 }
 
 
 QString KST::suggestEQName(const QString& name_in) {
   return suggestDataObjectName(name_in, 
-                      i18n("Minimal abbreviation for 'Equation'", "E"),
+                      i18nc("Minimal abbreviation for 'Equation'", "E"),
                       false);
 }
 
@@ -110,14 +110,14 @@ QString KST::suggestPluginName(const QString& pname, KstObjectTag vname) {
     tag = vname.tag() + "-" + pname;
   }
   return suggestDataObjectName(tag, 
-                      i18n("Minimal abbreviation for 'pluGin'", "G"),
+                      i18nc("Minimal abbreviation for 'pluGin'", "G"),
                       false);
 }
 
 
 QString KST::suggestImageName(KstObjectTag matrix_name) {
   return suggestDataObjectName(matrix_name.tag(), 
-                      i18n("Minimal abbreviation for 'Image'", "I"),
+                      i18nc("Minimal abbreviation for 'Image'", "I"),
                       true);
 }
 // vim: ts=2 sw=2 et
