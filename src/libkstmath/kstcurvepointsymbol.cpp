@@ -45,15 +45,15 @@ void draw(int Type, QPainter *p, int x, int y, int lineSize, int size) {
       p->drawLine(x-s, y+s, x+s, y-s);
       break;
     case 1:
-      p->setBrush(QBrush::NoBrush);
+      p->setBrush(Qt::NoBrush);
       p->drawRect(x-s, y-s, 2*s+1, 2*s+1);
       break;
     case 2:
-      p->setBrush(QBrush::NoBrush);
+      p->setBrush(Qt::NoBrush);
       p->drawEllipse(x-s, y-s, 2*s+1, 2*s+1);
       break;
     case 3:
-      p->setBrush(QBrush::SolidPattern);
+      p->setBrush(Qt::SolidPattern);
       p->drawEllipse(x-s, y-s, 2*s+1, 2*s+1);
       break;
     case 4:
@@ -61,7 +61,7 @@ void draw(int Type, QPainter *p, int x, int y, int lineSize, int size) {
         Q3PointArray pts(3);
 
         pts.putPoints( 0, 3, x-s, y-s, x, y+s, x+s, y-s );
-        p->setBrush(QBrush::NoBrush);
+        p->setBrush(Qt::NoBrush);
         p->drawPolygon(pts);
       }
       break;
@@ -70,12 +70,12 @@ void draw(int Type, QPainter *p, int x, int y, int lineSize, int size) {
         Q3PointArray pts(3);
 
         pts.putPoints( 0, 3, x-s, y+s, x, y-s, x+s, y+s );
-        p->setBrush(QBrush::NoBrush);
+        p->setBrush(Qt::NoBrush);
         p->drawPolygon(pts);
       }
       break;
     case 6:
-      p->setBrush(QBrush::SolidPattern);
+      p->setBrush(Qt::SolidPattern);
       p->drawRect(x-s, y-s, 2*s+1, 2*s+1);
       break;
     case 7:
@@ -93,7 +93,7 @@ void draw(int Type, QPainter *p, int x, int y, int lineSize, int size) {
         Q3PointArray pts(3);
 
         pts.putPoints( 0, 3, x-s, y-s, x, y+s, x+s, y-s );
-        p->setBrush(QBrush::SolidPattern);
+        p->setBrush(Qt::SolidPattern);
         p->drawPolygon(pts);
       }
       break;
@@ -102,7 +102,7 @@ void draw(int Type, QPainter *p, int x, int y, int lineSize, int size) {
         Q3PointArray pts(3);
 
         pts.putPoints( 0, 3, x-s, y+s, x, y-s, x+s, y+s );
-        p->setBrush(QBrush::SolidPattern);
+        p->setBrush(Qt::SolidPattern);
         p->drawPolygon(pts);
       }
       break;
@@ -114,7 +114,7 @@ void draw(int Type, QPainter *p, int x, int y, int lineSize, int size) {
                                x, y+s,
                                x-s, y,
                                x, y-s );
-        p->setBrush(QBrush::NoBrush);
+        p->setBrush(Qt::NoBrush);
         p->drawPolygon(pts);
       }
       break;
@@ -126,13 +126,13 @@ void draw(int Type, QPainter *p, int x, int y, int lineSize, int size) {
                                x, y+s,
                                x-s, y,
                                x, y-s );
-        p->setBrush(QBrush::SolidPattern);
+        p->setBrush(Qt::SolidPattern);
         p->drawPolygon(pts);
       }
       break;
   }
 
-  p->setBrush(QBrush::NoBrush);
+  p->setBrush(Qt::NoBrush);
 }
 
 
