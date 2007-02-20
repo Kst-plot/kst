@@ -234,7 +234,7 @@ void PluginCollection::scanPlugins() {
   while (!backup.isEmpty()) {
     KstDebug::self()->log(i18n("Detected disappearance of '%1'.").arg(backup.begin().key()));
     emit pluginRemoved(backup.begin().key());
-    backup.remove(backup.begin());
+    backup.remove(backup.begin().key());
     changed = true;
   }
 
