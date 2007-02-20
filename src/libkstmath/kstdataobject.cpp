@@ -376,8 +376,8 @@ void KstDataObject::writeLockInputsAndOutputs() const {
     outputs += (*i).data();
   }
 
-  qSort(inputs);
-  qSort(outputs);
+//   qSort(inputs);
+//   qSort(outputs);
 
   Q3ValueList<KstPrimitivePtr>::ConstIterator inputIt = inputs.begin();
   Q3ValueList<KstPrimitivePtr>::ConstIterator outputIt = outputs.begin();
