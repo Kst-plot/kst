@@ -68,21 +68,10 @@ void PluginCollection::loadAllPlugins() {
 
 void PluginCollection::loadPluginsFor(const QString& path) {
   QDir d(path);
-
   d.setFilter(QDir::Files | QDir::NoSymLinks);
-  d.setNameFilter("*.xml");
-
-  const QFileInfoList *list = d.entryInfoList();
-  if (!list) {
-    return;
-  }
-
-  QFileInfoListIterator it(*list);
-  QFileInfo *fi;
-
-  while ((fi = it.current()) != 0L) {
-    loadPlugin(path + QDir::separator() + fi->fileName());
-    ++it;
+  d.setNameFilters(QStringList("*.xml"));
+  foreach(QFileInfo fi, d.entryInfoList()) {
+    loadPlugin(path + QDir::separator() + fi.fileName());
   }
 }
 
@@ -216,30 +205,19 @@ void PluginCollection::scanPlugins() {
   for (QStringList::ConstIterator it = dirs.begin(); it != dirs.end(); ++it) {
     //qDebug() << "Scanning [" << *it << "] for plugins." << endl;
     QDir d(*it);
-
     d.setFilter(QDir::Files | QDir::NoSymLinks);
-    d.setNameFilter("*.xml");
+    d.setNameFilters(QStringList("*.xml"));
 
-    const QFileInfoList *list = d.entryInfoList();
-    if (!list) {
-      continue;
-    }
-
-    QFileInfoListIterator fit(*list);
-    QFileInfo *fi;
-    int status;
-
-    while ((fi = fit.current()) != 0L) {
+    foreach (QFileInfo fi, d.entryInfoList()) {
       //qDebug() << "Parsing [" << (*it + fi->fileName()) << "]" << endl;
-      status = _parser->parseFile(*it + fi->fileName());
+      int status = _parser->parseFile(*it + fi.fileName());
       if (status == 0) {
         // dupe? - prefer earlier installations
-        if (_installedPluginNames.contains(_parser->data()._name)) {
-          ++fit;
+        if (_installedPluginNames.contains(_parser->data()._name))
           continue;
-        }
-        _installedPlugins[*it + fi->fileName()] = _parser->data();
-        _installedPluginNames[_parser->data()._name] = *it + fi->fileName();
+
+        _installedPlugins[*it + fi.fileName()] = _parser->data();
+        _installedPluginNames[_parser->data()._name] = *it + fi.fileName();
         _installedReadablePluginNames[_parser->data()._readableName] = _parser->data()._name;
         if (!backup.contains(_parser->data()._name)) {
           emit pluginInstalled(_parser->data()._name);
@@ -248,9 +226,8 @@ void PluginCollection::scanPlugins() {
           backup.remove(_parser->data()._name);
         }
       } else {
-        KstDebug::self()->log(i18n("Error [%2] parsing XML file '%1'; skipping.").arg(*it + fi->fileName()).arg(status), KstDebug::Warning);
+        KstDebug::self()->log(i18n("Error [%2] parsing XML file '%1'; skipping.").arg(*it + fi.fileName()).arg(status), KstDebug::Warning);
       }
-      ++fit;
     }
   }
 
