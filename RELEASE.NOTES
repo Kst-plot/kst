@@ -1,6 +1,1 @@
-Known issues in 1.3.0:
-- If you experience crashes with the distributed fit and filter plugins, it is
-likely a problem with your GSL libraries and recent linker options.  The problem
-is resolved by removing -Wl,--as-needed from linking stages for these plugins,
-but there is no easy workaround available at this time.
 
