@@ -634,7 +634,7 @@ void KstImage::paint(const KstCurveRenderContext& context) {
       if (image->hasColorMap()) {
         int hXlXDiff = d2i(img_Hx_pix - img_Lx_pix);
         int hYlYDiff = d2i(img_Hy_pix - img_Ly_pix - 1);
-        QImage tempImage(hXlXDiff, hYlYDiff, 32);
+        QImage tempImage(hXlXDiff, hYlYDiff, QImage::Format_RGB32);
         for (int i = 0; i < hXlXDiff; ++i) {
           for (int j = 0; j < hYlYDiff; ++j) {
             double new_x, new_y;
