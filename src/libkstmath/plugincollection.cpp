@@ -40,8 +40,8 @@ return _self;
 }
 
 
-PluginCollection::PluginCollection() 
-: QObject(0L, "KST Plugin Collection") {
+PluginCollection::PluginCollection() : QObject(0L) {
+  setObjectName("KST Plugin Collection");
   KGlobal::dirs()->addResourceType("kstplugins", KStandardDirs::kde_default("data") + "kst" + QDir::separator() + "plugins");
   // KDE3 provides no way to get the plugin directory
   KGlobal::dirs()->addResourceType("kstpluginlib", KStandardDirs::kde_default("lib") + QString("kde%1").arg(KDE_VERSION_MAJOR) + QDir::separator() + "kstplugins");
