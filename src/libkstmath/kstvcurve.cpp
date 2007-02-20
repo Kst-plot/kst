@@ -972,7 +972,9 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
 
         if (KDE_ISUNLIKELY(foundNan)) {
           if (index > 0) {
-            p->drawPolyline(points, 0, index);
+            QPolygon poly;
+            poly.putPoints(0, index, points);
+            p->drawPolyline(poly);
           }
           index = 0;
           if (overlap) {
@@ -1030,7 +1032,9 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
                   int minYi = d2i(minY);
 
                   if (index >= MAX_NUM_POLYLINES-2) {
-                    p->drawPolyline(points, 0, index);
+                    QPolygon poly;
+                    poly.putPoints(0, index, points);
+                    p->drawPolyline(poly);
                     index = 0;
                   }
                   if (KDE_ISUNLIKELY(minYi == maxYi)) {
@@ -1059,7 +1063,9 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
                   }
                   if (KDE_ISUNLIKELY(minY >= Ly && minY <= Hy && maxY >= Ly && maxY <= Hy)) {
                     if (index > 0) {
-                      p->drawPolyline(points, 0, index);
+                      QPolygon poly;
+                      poly.putPoints(0, index, points);
+                      p->drawPolyline(poly);
                       index = 0;
                     }
                     p->drawLine(X2i, d2i(minY), X2i, d2i(maxY));
@@ -1155,7 +1161,9 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
                   points.setPoint(index++, X1i, Y1i);
                 } else {
                   if (KDE_ISLIKELY(index > 1)) {
-                    p->drawPolyline(points, 0, index);
+                    QPolygon poly;
+                    poly.putPoints(0, index, points);
+                    p->drawPolyline(poly);
                   }
                   index = 0;
                   points.setPoint(index++, X2i, Y2i);
@@ -1171,7 +1179,9 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
 
       // we might a have polyline left undrawn...
       if (index > 1) {
-        p->drawPolyline(points, 0, index);
+        QPolygon poly;
+        poly.putPoints(0, index, points);
+        p->drawPolyline(poly);
         index = 0;
       }
 
@@ -1344,7 +1354,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
         const double w = Hx - Lx;
         const double h = Hy - Ly;
         QRegion rgn((int)Lx, (int)Ly, (int)w, (int)h);
-        const int size = int(kMax(w, h)) / int(pow(3.0, KSTPOINTDENSITY_MAXTYPE - pointDensity()));
+        const int size = int(qMax(w, h)) / int(pow(3.0, KSTPOINTDENSITY_MAXTYPE - pointDensity()));
         QPoint pt;
         for (i_pt = i0; i_pt <= iN; ++i_pt) {
           rX = xv->interpolate(i_pt, NS);
