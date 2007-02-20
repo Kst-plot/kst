@@ -319,7 +319,7 @@ KstObject::UpdateType KstCPlugin::update(int update_counter) {
       }
       doUpdate = (UPDATE == is->update(update_counter)) || doUpdate;
       // Maybe we should use UTF-8 instead?
-      _inStrings[sitcnt++] = strdup(is->value().latin1());
+      _inStrings[sitcnt++] = strdup(is->value().toLatin1());
     } else if ((*it)._type == Plugin::Data::IOValue::PidType) {
       _inScalars[itcnt++] = getpid();
     }

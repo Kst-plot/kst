@@ -809,7 +809,7 @@ double Data::value(Context *ctx) {
   if (_isEquation) {
     if (!_equation) {
       mutex().lock();
-      YY_BUFFER_STATE b = yy_scan_bytes(_tagName.latin1(), _tagName.length());
+      YY_BUFFER_STATE b = yy_scan_bytes(_tagName.toLatin1(), _tagName.length());
       int rc = yyparse();
       yy_delete_buffer(b);
       if (rc == 0 && ParsedEquation) {
@@ -833,7 +833,7 @@ double Data::value(Context *ctx) {
   } else if (_vector) {
     if (!_equation && !_vectorIndex.isEmpty()) {
       mutex().lock();
-      YY_BUFFER_STATE b = yy_scan_bytes(_vectorIndex.latin1(), _vectorIndex.length());
+      YY_BUFFER_STATE b = yy_scan_bytes(_vectorIndex.toLatin1(), _vectorIndex.length());
       int rc = yyparse();
       yy_delete_buffer(b);
       if (rc == 0 && ParsedEquation) {

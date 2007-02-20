@@ -59,15 +59,15 @@ Plugin *PluginLoader::loadPlugin(const QString& xmlfile, const QString& object) 
   plug->_data = _parser->data();
 
   // Load the plugin
-  plug->_lib = KLibLoader::self()->library(object.local8Bit().data());
+  plug->_lib = KLibLoader::self()->library(object.toLocal8Bit().data());
   if (!plug->_lib) {
     KstDebug::self()->log(i18n("Error trying to load plugin %1 [%2].").arg(object).arg(KLibLoader::self()->lastErrorMessage()), KstDebug::Error);
     delete plug;
     return 0L;
   }
 
-  if (plug->_lib->hasSymbol(plug->_data._name.latin1())) {
-    plug->_symbol = plug->_lib->symbol(plug->_data._name.latin1());
+  if (plug->_lib->hasSymbol(plug->_data._name.toLatin1())) {
+    plug->_symbol = plug->_lib->symbol(plug->_data._name.toLatin1());
   }
 
   if (plug->_lib->hasSymbol("freeLocalData")) {
