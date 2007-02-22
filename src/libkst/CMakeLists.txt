@@ -2,7 +2,7 @@
 #NOTE this is used to fill in the latest revision number in kstrevision.h
 find_package(Subversion)
 if(Subversion_FOUND)
-  Subversion_WC_INFO(${CMAKE_CURRENT_SOURCE_DIR} libkst)
+  Subversion_WC_INFO(${CMAKE_CURRENT_SOURCE_DIR} libkst)
 endif(Subversion_FOUND)
 
 #FIXME need to run this whenever .svn/entries changes...
