@@ -51,7 +51,7 @@ bool FrameSource::init() {
   int buf[4], err = 0;
 
   _fieldList.append("INDEX");
-  ReadData(_filename.latin1(), "FFINFO",
+  ReadData(_filename.toLatin1(), "FFINFO",
            0, 0, /* 1st sframe, 1st samp */
            0, 2, /* num sframes, num samps */
            'i', (void*)buf,
@@ -68,8 +68,8 @@ bool FrameSource::init() {
   /* split out file name and extension */
   int len = _filename.length();
   char ext[3];
-  ext[0] = _filename.latin1()[len - 2];
-  ext[1] = _filename.latin1()[len - 1];
+  ext[0] = _filename.toLatin1()[len - 2];
+  ext[1] = _filename.toLatin1()[len - 1];
   ext[2] = '\0';
 
   _rootFileName = _filename;
@@ -98,14 +98,14 @@ KstObject::UpdateType FrameSource::update(int u) {
   int newN;
 
   if (_maxExt < 0) { // no hex number extension: only this file
-    if (stat(_filename.latin1(), &stat_buf) != 0) { // file is gone
+    if (stat(_filename.toLatin1(), &stat_buf) != 0) { // file is gone
       newN = 0;
     } else {                               // file exists
       newN = stat_buf.st_size/_bytesPerFrame;
     }
   } else {
     do {
-      tmpfilename.sprintf("%s%2.2x", _rootFileName.latin1(), _maxExt);
+      tmpfilename.sprintf("%s%2.2x", _rootFileName.toLatin1(), _maxExt);
       if (stat(QFile::encodeName(tmpfilename).data(), &stat_buf) != 0) {
           if (_maxExt > _rootExt) {  // deleted (?) check the next one down
             _maxExt--;
@@ -141,13 +141,13 @@ int FrameSource::readField(double *v, const QString& field, int s, int n) {
   int err = 0;
 
   if (n < 0) {
-    return CReadData(_filename.latin1(), field.left(8).latin1(),
+    return CReadData(_filename.toLatin1(), field.left(8).toLatin1(),
                      s, 0, /* 1st sframe, 1st samp */
                      0, 1, /* num sframes, num samps */
                      'd', (void*)v,
                      &err);
   } else {
-    return CReadData(_filename.latin1(), field.left(8).latin1(),
+    return CReadData(_filename.toLatin1(), field.left(8).toLatin1(),
                      s, 0, /* 1st sframe, 1st samp */
                      n, 0, /* num sframes, num samps */
                      'd', (void*)v,
@@ -159,7 +159,7 @@ int FrameSource::readField(double *v, const QString& field, int s, int n) {
 bool FrameSource::isValidField(const QString& field) const {
   int err = 0;
 
-  CReadData(_filename.latin1(), field.left(8).latin1(),
+  CReadData(_filename.toLatin1(), field.left(8).toLatin1(),
             0, 0, /* 1st sframe, 1st samp */
             1, 0, /* num sframes, num samps */
             'n', (void*)0L,
@@ -172,7 +172,7 @@ bool FrameSource::isValidField(const QString& field) const {
 int FrameSource::samplesPerFrame(const QString &field) {
   int err = 0;
 
-  return CReadData(_filename.latin1(), field.left(8).latin1(),
+  return CReadData(_filename.toLatin1(), field.left(8).toLatin1(),
                    0, 0, /* 1st sframe, 1st samp */
                    1, 0, /* num sframes, num samps */
                    'n', (void*)0L,
@@ -219,7 +219,7 @@ QStringList provides_frame() {
 
 int understands_frame(KConfig*, const QString& filename) {
   int err = 0;
-  CReadData(filename.latin1(), "INDEX",
+  CReadData(filename.toLatin1(), "INDEX",
             0, 0, /* 1st sframe, 1st samp */
             1, 0, /* num sframes, num samps */
             'n', (void*)0L,
