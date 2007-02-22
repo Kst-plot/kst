@@ -29,7 +29,7 @@
 class QFile;
 class KstBaseCurve;
 
-KST_EXPORT class KstData {
+class KstData {
   friend class KStaticDeleter<KstData>;
   protected:
     static KstData *_self;
@@ -69,8 +69,7 @@ KST_EXPORT class KstData {
     virtual QStringList windowList();
     /** Returns the name of the current window. */
     virtual QString currentWindow();
-};
-
+} KST_EXPORT;
 
 namespace KST {
     /** The list of data sources (files) */

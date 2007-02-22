@@ -142,7 +142,7 @@ QDomElement topElem = doc.documentElement();
         int num = 0;
         int inputIndex = 0;
 
-        for (uint i = 0; i < _pluginData._inputs.size(); i++) {
+        for (int i = 0; i < _pluginData._inputs.size(); i++) {
           if (_pluginData._inputs[i]._type == Plugin::Data::IOValue::TableType) {
             num++;
             inputIndex = i;
@@ -158,7 +158,7 @@ QDomElement topElem = doc.documentElement();
         int num = 0;
         int inputIndex = 0;
 
-        for (uint i = 0; i < _pluginData._outputs.size(); i++) {
+        for (int i = 0; i < _pluginData._outputs.size(); i++) {
           if (_pluginData._outputs[i]._type == Plugin::Data::IOValue::TableType) {
             num++;
             inputIndex = i;
@@ -170,10 +170,10 @@ QDomElement topElem = doc.documentElement();
       }
 
       // check that we have valid vector names for the input and output.
-      for (uint i = 0; i < _pluginData._inputs.size(); i++) {
+      for (int i = 0; i < _pluginData._inputs.size(); i++) {
         if (_pluginData._inputs[i]._type == Plugin::Data::IOValue::TableType &&
             _pluginData._inputs[i]._name == _pluginData._filterInputVector) {
-          for (uint j = 0; j < _pluginData._outputs.size(); j++) {
+          for (int j = 0; j < _pluginData._outputs.size(); j++) {
             if (_pluginData._outputs[j]._type == Plugin::Data::IOValue::TableType &&
                 _pluginData._outputs[j]._name == _pluginData._filterOutputVector) {
               _pluginData._isFilter = true;

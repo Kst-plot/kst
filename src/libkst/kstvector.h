@@ -43,13 +43,13 @@ class KstDataObject;
 class KstVector;
 typedef KstSharedPtr<KstVector> KstVectorPtr;
 // KST::interpolate is still too polluting
-extern double kstInterpolate(double *v, int _size, int in_i, int ns_i);
-extern double kstInterpolateNoHoles(double *v, int _size, int in_i, int ns_i);
+extern double kstInterpolate(double *v, int _size, int in_i, int ns_i) KST_EXPORT;
+extern double kstInterpolateNoHoles(double *v, int _size, int in_i, int ns_i) KST_EXPORT;
 
 /**A class for handling data vectors for kst.
  *@author cbn
  */
-class KST_EXPORT KstVector : public KstPrimitive {
+class KstVector : public KstPrimitive {
   Q_OBJECT
   public:
     /**
@@ -202,7 +202,7 @@ class KST_EXPORT KstVector : public KstPrimitive {
     friend class KstDataObject;
     virtual double* realloced(double *memptr, int newSize);
     KstObject::UpdateType internalUpdate(KstObject::UpdateType providerRC);
-};
+} KST_EXPORT;
 
 typedef KstObjectList<KstVectorPtr> KstVectorList;
 typedef KstObjectMap<KstVectorPtr> KstVectorMap;

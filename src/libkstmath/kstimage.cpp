@@ -677,7 +677,7 @@ void KstImage::paint(const KstCurveRenderContext& context) {
         QPoint lastPoint; // used to remember the previous point
         bool hasPrevBottom = false;
         KstMatrixPtr mp = _inputMatrices[THEMATRIX];
-        for (uint k = 0; k < lines.count(); ++k) {
+        for (int k = 0; k < lines.count(); ++k) {
           double lineK = lines[k];
           if (variableWeight) {
             // + 1 because 0 and 1 are the same width

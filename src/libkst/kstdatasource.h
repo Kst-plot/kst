@@ -192,7 +192,7 @@ class KST_EXPORT KstDataSource : public KstObject {
 
     virtual const Q3Dict<KstString>& metaData() const;
 
-    virtual const QString& metaData(const QString& key) const;
+    virtual QString metaData(const QString& key) const;
 
     virtual bool hasMetaData() const;
 

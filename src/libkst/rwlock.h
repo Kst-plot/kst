@@ -21,8 +21,7 @@
 #include <qmutex.h>
 #include <qmap.h>
 #include <qthread.h>
-
-#include "kstwaitcondition.h"
+#include <qwaitcondition.h>
 
 #include <config.h>
 #include "kst_export.h"
@@ -54,7 +53,7 @@ class KST_EXPORT KstRWLock {
     mutable
 #endif
     QMutex _mutex;
-    mutable KstWaitCondition _readerWait, _writerWait;
+    mutable QWaitCondition _readerWait, _writerWait;
 
     mutable int _readCount, _writeCount;
     mutable int _waitingReaders, _waitingWriters;

@@ -65,8 +65,8 @@ class KST_EXPORT KstCPlugin : public KstDataObject {
     virtual void showNewDialog();
     virtual void showEditDialog();
     KstSharedPtr<Plugin> _plugin;
-    unsigned _inScalarCnt, _inArrayCnt, _inStringCnt, _outScalarCnt;
-    unsigned _inPid, _outArrayCnt, _outStringCnt;
+    int _inScalarCnt, _inArrayCnt, _inStringCnt, _outScalarCnt;
+    int _inPid, _outArrayCnt, _outStringCnt;
     void *_localData;
     QString _lastError;
 

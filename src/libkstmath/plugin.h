@@ -138,7 +138,7 @@ class KST_EXPORT Plugin : public KstShared {
     };
 
 
-    static void countScalarsVectorsAndStrings(const Q3ValueList<Plugin::Data::IOValue>& table, unsigned& scalars, unsigned& vectors, unsigned& strings, unsigned& numberOfPids);
+    static void countScalarsVectorsAndStrings(const Q3ValueList<Plugin::Data::IOValue>& table, int& scalars, int& vectors, int& strings, int& numberOfPids);
 
   protected:
     Plugin();

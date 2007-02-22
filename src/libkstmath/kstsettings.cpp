@@ -156,7 +156,7 @@ void KstSettings::setGlobalSettings(const KstSettings *settings) {
 
 
 void KstSettings::save() {
-  KConfig cfg("kstrc", false, false);
+  KConfig cfg(QString("kstrc"));
 
   cfg.setGroup("Kst");
   cfg.writeEntry("Plot Update Timer", qlonglong(plotUpdateTimer));

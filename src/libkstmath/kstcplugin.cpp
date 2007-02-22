@@ -229,7 +229,7 @@ void KstCPlugin::freeParameters() {
   delete[] _inScalars;
   _inScalars = 0L;
   if (_outStrings) {
-    for (unsigned i = 0; i < _outStringCnt; ++i) {
+    for (int i = 0; i < _outStringCnt; ++i) {
       if (_outStrings[i]) {
         free(_outStrings[i]);
         _outStrings[i] = 0L;
@@ -239,7 +239,7 @@ void KstCPlugin::freeParameters() {
   delete[] _outStrings;
   _outStrings = 0L;
   if (_inStrings) {
-    for (unsigned i = 0; i < _inStringCnt; ++i) {
+    for (int i = 0; i < _inStringCnt; ++i) {
       if (_inStrings[i]) {
         free(_inStrings[i]);
         _inStrings[i] = 0L;
@@ -266,13 +266,13 @@ KstObject::UpdateType KstCPlugin::update(int update_counter) {
   }
 
 #define CLEANUP() do {\
-  for (unsigned i = 0; i < _outStringCnt; ++i) { \
+  for (int i = 0; i < _outStringCnt; ++i) { \
     if (_outStrings[i]) { \
       free(_outStrings[i]); \
       _outStrings[i] = 0L; \
     } \
   } \
-  for (unsigned i = 0; i < _inStringCnt; ++i) { \
+  for (int i = 0; i < _inStringCnt; ++i) { \
     if (_inStrings[i]) { \
       free(_inStrings[i]); \
       _inStrings[i] = 0L; \

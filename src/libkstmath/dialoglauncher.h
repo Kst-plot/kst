@@ -23,7 +23,7 @@
 
 class QWidget;
 
-KST_EXPORT class KstDialogs {
+class KstDialogs {
   friend class KStaticDeleter<KstDialogs>;
   protected:
     static KstDialogs *_self;
@@ -55,7 +55,7 @@ KST_EXPORT class KstDialogs {
 
     virtual void newVectorDialog(QWidget *parent, const char *createdSlot = 0L, const char *selectedSlot = 0L, const char *updateSlot = 0L);
     virtual void showVectorDialog(const QString& name = QString::null, bool edit = false);
-};
+} KST_EXPORT;
 
 #endif
 

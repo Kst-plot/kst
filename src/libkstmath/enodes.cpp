@@ -424,7 +424,7 @@ Function::Function(char *name, ArgumentList *args)
         const Q3ValueList<Plugin::Data::IOValue>& itable = _plugin->data()._inputs;
         const Q3ValueList<Plugin::Data::IOValue>& otable = _plugin->data()._outputs;
         Plugin::countScalarsVectorsAndStrings(itable, _inputScalarCnt, _inputVectorCnt, _inputStringCnt, _inPid);
-        unsigned ignore;
+        int ignore;
         Plugin::countScalarsVectorsAndStrings(otable, _outputScalarCnt, _outputVectorCnt, _outputStringCnt, ignore);
         assert(_inputStringCnt == 0 && _outputStringCnt == 0); // FIXME: implement support for strings
         _inScalars = new double[_inputScalarCnt];
@@ -468,7 +468,7 @@ Function::~Function() {
   delete[] _inScalars;
   delete[] _inVectors;
   delete[] _outScalars;
-  for (uint i = 0; i < _outputVectorCnt; ++i) {
+  for (int i = 0; i < _outputVectorCnt; ++i) {
     free(_outVectors[i]);
   }
   delete[] _outVectors;

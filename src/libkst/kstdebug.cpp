@@ -137,7 +137,7 @@ QString KstDebug::text() {
   QMutexLocker ml(&_lock);
   QString body = i18n("Kst version %1\n\n\nKst log:\n").arg(KSTVERSION);
 
-  for (unsigned i = 0; i < _messages.count(); i++ ) {
+  for (int i = 0; i < _messages.count(); i++ ) {
     body += i18nc("date leveltext: message", "%1 %2: %3\n").arg(KGlobal::locale()->formatDateTime(_messages[i].date)).arg(label(_messages[i].level)).arg(_messages[i].msg);
   }
 
@@ -172,7 +172,7 @@ Q3ValueList<KstDebug::LogMessage> KstDebug::messages() const {
 
 KstDebug::LogMessage KstDebug::message(unsigned n) const {
   QMutexLocker ml(&_lock);
-  if (_messages.size() > n) {
+  if (_messages.size() > int(n)) {
     return _messages[n];
   }
   return KstDebug::LogMessage();

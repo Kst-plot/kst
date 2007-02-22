@@ -139,8 +139,8 @@ namespace Equation {
 
     private:
       double evaluatePlugin(Context *ctx);
-      unsigned _inputScalarCnt, _inputVectorCnt, _inputStringCnt;
-      unsigned _inPid, _outputScalarCnt, _outputVectorCnt, _outputStringCnt;
+      int _inputScalarCnt, _inputVectorCnt, _inputStringCnt;
+      int _inPid, _outputScalarCnt, _outputVectorCnt, _outputStringCnt;
       int *_inArrayLens, *_outArrayLens;
       double *_inScalars, *_outScalars;
       double **_inVectors, **_outVectors;

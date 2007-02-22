@@ -138,7 +138,7 @@ QString Plugin::parameterName(int idx) const {
 }
 
 
-void Plugin::countScalarsVectorsAndStrings(const Q3ValueList<Plugin::Data::IOValue>& table, unsigned& scalars, unsigned& vectors, unsigned& strings, unsigned& numberOfPids) {
+void Plugin::countScalarsVectorsAndStrings(const Q3ValueList<Plugin::Data::IOValue>& table, int& scalars, int& vectors, int& strings, int& numberOfPids) {
   scalars = 0;
   vectors = 0;
   strings = 0;

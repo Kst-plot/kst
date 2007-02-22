@@ -137,7 +137,7 @@ class KstObjectTag {
 
     QStringList displayFullTag() const { 
       QStringList out_tag = _context + QStringList(_tag);
-      unsigned int componentsToDisplay = qMin(qMax(_uniqueDisplayComponents, _minDisplayComponents), components());
+      int componentsToDisplay = qMin(qMax(_uniqueDisplayComponents, _minDisplayComponents), components());
       while (out_tag.count() > componentsToDisplay) {
         out_tag.pop_front();
       }
@@ -184,10 +184,10 @@ class KstObjectTag {
     QStringList _context;
     unsigned int _minDisplayComponents; // minimum number of components to use in display tag
     unsigned int _uniqueDisplayComponents;  // number of components necessary for unique display tag
-};
+} KST_EXPORT;
 
 
-class KST_EXPORT KstObject : public KstShared, public QObject, public KstRWLock {
+class KstObject : public KstShared, public QObject, public KstRWLock {
   public:
     KstObject();
 
@@ -232,7 +232,7 @@ class KST_EXPORT KstObject : public KstShared, public QObject, public KstRWLock 
     KstObjectTag _tag;
     bool _dirty;
     KstObject::UpdateType _lastUpdate;
-};
+} KST_EXPORT;
 
 typedef KstSharedPtr<KstObject> KstObjectPtr;
 

@@ -29,10 +29,8 @@
 #include <qradiobutton.h>
 #include <qregexp.h>
 #include <qspinbox.h>
-#include <qstylesheet.h>
 
 #include <kcombobox.h>
-#include <ksdebug.h>
 
 #include <kstmath.h>
 #include "ascii.h"

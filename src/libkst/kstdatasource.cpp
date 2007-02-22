@@ -653,7 +653,7 @@ const Q3Dict<KstString>& KstDataSource::metaData() const {
 }
 
 
-const QString& KstDataSource::metaData(const QString& key) const {
+QString KstDataSource::metaData(const QString& key) const {
   if (_metaData[key]) {
     return _metaData[key]->value();
   } else {
