@@ -1,3 +1,10 @@
+
+#NOTE this is used to fill in the latest revision number in kstrevision.h
+find_package(Subversion)
+if(Subversion_FOUND)
+  Subversion_WC_INFO(${CMAKE_CURRENT_SOURCE_DIR} libkst)
+endif(Subversion_FOUND)
+
 #FIXME need to run this whenever .svn/entries changes...
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/kstrevision.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kstrevision.h)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ksttimers.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/ksttimers.h)
@@ -39,7 +46,7 @@ kde4_automoc(${kst_LIB_SRCS})
 kde4_add_library(kst SHARED ${kst_LIB_SRCS})
 
 # target_link_libraries(kst kstextdate)
-target_link_libraries(kst kde3support)
+target_link_libraries(kst ${KDE4_KDECORE_LIBS} kde3support)
 
 set_target_properties(kst PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 1)
 install(TARGETS kst DESTINATION ${LIB_INSTALL_DIR})
