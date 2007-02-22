@@ -17,19 +17,20 @@ set(kstwidgets_LIB_SRCS
 kde4_automoc(${kstwidgets_LIB_SRCS})
 
 kde4_add_ui_files(kstwidgets_LIB_SRCS 
-   comboboxselection.ui 
-   stringeditor.ui 
-   scalareditor.ui 
-   scalarselector.ui 
-   matrixselector.ui 
-   vectorselector.ui 
-   stringselector.ui 
-   editmultiplewidget.ui 
-   curveplacementwidget.ui 
-   curveappearancewidget.ui 
-   fftoptionswidget.ui 
-   datarangewidget.ui 
-   colorpalettewidget.ui)
+   comboboxselection4.ui 
+   stringeditor4.ui 
+   scalareditor4.ui 
+   scalarselector4.ui 
+   matrixselector4.ui 
+   vectorselector4.ui 
+   stringselector4.ui 
+   editmultiplewidget4.ui 
+   curveplacementwidget4.ui 
+   curveappearancewidget4.ui 
+   fftoptionswidget4.ui 
+   datarangewidget4.ui 
+   colorpalettewidget4.ui
+   )
 
 kde4_add_library(kstwidgets SHARED ${kstwidgets_LIB_SRCS})
 

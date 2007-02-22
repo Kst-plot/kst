@@ -1,0 +1,101 @@
+<ui version="4.0" stdsetdef="1" >
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>MatrixSelector</class>
+  <widget class="QWidget" name="MatrixSelector" >
+    <property name="geometry" >
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>327</width>
+        <height>40</height>
+      </rect>
+    </property>
+    <property name="whatsThis" stdset="0" >
+      <string>Select a matrix to utilize.  If you wish to create a new matrix, click on the icon to the right.</string>
+    </property>
+    <layout class="QGridLayout" >
+      <property name="margin" >
+        <number>0</number>
+      </property>
+      <item row="0" column="0" >
+        <widget class="KstComboBox" name="_matrix" />
+      </item>
+      <item row="0" column="1" >
+        <widget class="QPushButton" name="_newMatrix" >
+          <property name="sizePolicy" >
+            <sizepolicy>
+              <hsizetype>0</hsizetype>
+              <vsizetype>0</vsizetype>
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+            </sizepolicy>
+          </property>
+          <property name="text" >
+            <string/>
+          </property>
+          <property name="toolTip" stdset="0" >
+            <string>Create a new matrix</string>
+          </property>
+        </widget>
+      </item>
+      <item row="0" column="2" >
+        <widget class="QPushButton" name="_editMatrix" >
+          <property name="enabled" >
+            <bool>false</bool>
+          </property>
+          <property name="sizePolicy" >
+            <sizepolicy>
+              <hsizetype>0</hsizetype>
+              <vsizetype>0</vsizetype>
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+            </sizepolicy>
+          </property>
+          <property name="text" >
+            <string/>
+          </property>
+          <property name="toolTip" stdset="0" >
+            <string>Edit selected matrix</string>
+          </property>
+        </widget>
+      </item>
+    </layout>
+  </widget>
+  <layoutdefault spacing="6" margin="11" />
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <customwidgets>
+    <customwidget>
+      <class>KstComboBox</class>
+      <extends>QComboBox</extends>
+      <header>kstcombobox.h</header>
+    </customwidget>
+  </customwidgets>
+  <includes>
+    <include location="local" >kstdatacollection.h</include>
+    <include location="local" >kstcombobox.h</include>
+    <include location="local" >kstmatrix.h</include>
+    <include location="global" >kst_export.h</include>
+  </includes>
+  <connections>
+    <connection>
+      <sender>MatrixSelector</sender>
+      <signal>selectionChanged(QString)</signal>
+      <receiver>MatrixSelector</receiver>
+      <slot>selectionWatcher(QString)</slot>
+    </connection>
+    <connection>
+      <sender>_editMatrix</sender>
+      <signal>clicked()</signal>
+      <receiver>MatrixSelector</receiver>
+      <slot>editMatrix()</slot>
+    </connection>
+    <connection>
+      <sender>_newMatrix</sender>
+      <signal>clicked()</signal>
+      <receiver>MatrixSelector</receiver>
+      <slot>createNewMatrix()</slot>
+    </connection>
+  </connections>
+</ui>

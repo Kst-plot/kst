@@ -1,0 +1,488 @@
+<ui version="4.0" stdsetdef="1" >
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>KstFFTOptions</class>
+  <widget class="QWidget" name="KstFFTOptions" >
+    <property name="geometry" >
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>488</width>
+        <height>162</height>
+      </rect>
+    </property>
+    <property name="sizePolicy" >
+      <sizepolicy>
+        <hsizetype>5</hsizetype>
+        <vsizetype>5</vsizetype>
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+      </sizepolicy>
+    </property>
+    <property name="windowTitle" >
+      <string>FFTOptions</string>
+    </property>
+    <layout class="QGridLayout" >
+      <property name="margin" >
+        <number>0</number>
+      </property>
+      <property name="spacing" >
+        <number>0</number>
+      </property>
+      <item row="0" column="0" >
+        <widget class="Q3GroupBox" name="GroupBoxFFTOptions" >
+          <property name="sizePolicy" >
+            <sizepolicy>
+              <hsizetype>5</hsizetype>
+              <vsizetype>0</vsizetype>
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+            </sizepolicy>
+          </property>
+          <property name="title" >
+            <string>FFT Options</string>
+          </property>
+          <layout class="QVBoxLayout" >
+            <property name="margin" >
+              <number>0</number>
+            </property>
+            <item>
+              <layout class="QGridLayout" >
+                <property name="margin" >
+                  <number>0</number>
+                </property>
+                <item row="0" column="2" >
+                  <widget class="QComboBox" name="ApodizeFxn" >
+                    <property name="sizePolicy" >
+                      <sizepolicy>
+                        <hsizetype>3</hsizetype>
+                        <vsizetype>0</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <item>
+                      <property name="text" >
+                        <string>Default</string>
+                      </property>
+                    </item>
+                    <item>
+                      <property name="text" >
+                        <string>Bartlett</string>
+                      </property>
+                    </item>
+                    <item>
+                      <property name="text" >
+                        <string>Blackman</string>
+                      </property>
+                    </item>
+                    <item>
+                      <property name="text" >
+                        <string>Connes</string>
+                      </property>
+                    </item>
+                    <item>
+                      <property name="text" >
+                        <string>cosine</string>
+                      </property>
+                    </item>
+                    <item>
+                      <property name="text" >
+                        <string>Gaussian (custom sigma)</string>
+                      </property>
+                    </item>
+                    <item>
+                      <property name="text" >
+                        <string>Hamming</string>
+                      </property>
+                    </item>
+                    <item>
+                      <property name="text" >
+                        <string>Hann</string>
+                      </property>
+                    </item>
+                    <item>
+                      <property name="text" >
+                        <string>Welch</string>
+                      </property>
+                    </item>
+                  </widget>
+                </item>
+                <item row="0" column="3" >
+                  <widget class="QLabel" name="textLabel1" >
+                    <property name="text" >
+                      <string>&amp;Sigma:</string>
+                    </property>
+                    <property name="buddy" stdset="0" >
+                      <cstring>Sigma</cstring>
+                    </property>
+                    <property name="wordWrap" >
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="0" column="4" >
+                  <widget class="KDoubleNumInput" name="Sigma" >
+                    <property name="minValue" >
+                      <double>0.010000000000000</double>
+                    </property>
+                  </widget>
+                </item>
+                <item row="0" column="0" >
+                  <widget class="QCheckBox" name="Apodize" >
+                    <property name="sizePolicy" >
+                      <sizepolicy>
+                        <hsizetype>1</hsizetype>
+                        <vsizetype>0</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="text" >
+                      <string>Apodi&amp;ze</string>
+                    </property>
+                    <property name="checked" >
+                      <bool>true</bool>
+                    </property>
+                    <property name="whatsThis" stdset="0" >
+                      <string>Select from this pulldown the source vector for the Curve's y axis error bars.  If "&lt;None>" is selected, there will be no y axis error bars drawn.  Create new vectors with the "Vectors" tab.</string>
+                    </property>
+                  </widget>
+                </item>
+                <item row="0" column="1" >
+                  <widget class="QLabel" name="textLabel2" >
+                    <property name="text" >
+                      <string>&amp;Function:</string>
+                    </property>
+                    <property name="buddy" stdset="0" >
+                      <cstring>ApodizeFxn</cstring>
+                    </property>
+                    <property name="wordWrap" >
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+              </layout>
+            </item>
+            <item>
+              <layout class="QGridLayout" >
+                <property name="margin" >
+                  <number>0</number>
+                </property>
+                <item row="0" column="1" >
+                  <widget class="QCheckBox" name="Interleaved" >
+                    <property name="text" >
+                      <string>&amp;Interleaved average</string>
+                    </property>
+                    <property name="checked" >
+                      <bool>true</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="0" column="2" >
+                  <widget class="QLabel" name="TextLabel1_9" >
+                    <property name="sizePolicy" >
+                      <sizepolicy>
+                        <hsizetype>0</hsizetype>
+                        <vsizetype>0</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="text" >
+                      <string>FFT &amp;length: 2^</string>
+                    </property>
+                    <property name="alignment" >
+                      <set>Qt::AlignVCenter|Qt::AlignRight</set>
+                    </property>
+                    <property name="buddy" stdset="0" >
+                      <cstring>FFTLen</cstring>
+                    </property>
+                    <property name="wordWrap" >
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="0" column="3" >
+                  <widget class="QSpinBox" name="FFTLen" >
+                    <property name="sizePolicy" >
+                      <sizepolicy>
+                        <hsizetype>3</hsizetype>
+                        <vsizetype>0</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="maximum" >
+                      <number>24</number>
+                    </property>
+                    <property name="minimum" >
+                      <number>4</number>
+                    </property>
+                    <property name="value" >
+                      <number>10</number>
+                    </property>
+                    <property name="whatsThis" stdset="0" >
+                      <string>Sets the length of the FFTs in generating the power spectrum.  2^10 = 1024, etc.  The larger the number, the larger the noise and resolution.</string>
+                    </property>
+                  </widget>
+                </item>
+                <item row="0" column="0" >
+                  <widget class="QCheckBox" name="RemoveMean" >
+                    <property name="text" >
+                      <string>Remo&amp;ve mean</string>
+                    </property>
+                    <property name="checked" >
+                      <bool>true</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="1" column="0" >
+                  <widget class="QCheckBox" name="InterpolateHoles" >
+                    <property name="text" >
+                      <string>Interpolate Over &amp;Holes</string>
+                    </property>
+                    <property name="checked" >
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+              </layout>
+            </item>
+            <item>
+              <layout class="QHBoxLayout" >
+                <property name="margin" >
+                  <number>0</number>
+                </property>
+                <item>
+                  <widget class="QLabel" name="TextLabel1_9_2" >
+                    <property name="sizePolicy" >
+                      <sizepolicy>
+                        <hsizetype>0</hsizetype>
+                        <vsizetype>5</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="text" >
+                      <string>Sample &amp;rate:</string>
+                    </property>
+                    <property name="alignment" >
+                      <set>Qt::AlignVCenter|Qt::AlignRight</set>
+                    </property>
+                    <property name="buddy" stdset="0" >
+                      <cstring>SampRate</cstring>
+                    </property>
+                    <property name="wordWrap" >
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item>
+                  <widget class="QLineEdit" name="SampRate" >
+                    <property name="sizePolicy" >
+                      <sizepolicy>
+                        <hsizetype>7</hsizetype>
+                        <vsizetype>0</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="text" >
+                      <string>60.0</string>
+                    </property>
+                    <property name="whatsThis" stdset="0" >
+                      <string>The sample rate at which the measurements were acquired, for proper normalization.</string>
+                    </property>
+                  </widget>
+                </item>
+                <item>
+                  <widget class="QLabel" name="TextLabel1_9_3" >
+                    <property name="sizePolicy" >
+                      <sizepolicy>
+                        <hsizetype>0</hsizetype>
+                        <vsizetype>5</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="text" >
+                      <string>&amp;Vector units:</string>
+                    </property>
+                    <property name="alignment" >
+                      <set>Qt::AlignVCenter|Qt::AlignRight</set>
+                    </property>
+                    <property name="buddy" stdset="0" >
+                      <cstring>VectorUnits</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0" >
+                      <string>Apply new data sample specifications to selected vectors.</string>
+                    </property>
+                    <property name="wordWrap" >
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item>
+                  <widget class="QLineEdit" name="VectorUnits" >
+                    <property name="sizePolicy" >
+                      <sizepolicy>
+                        <hsizetype>7</hsizetype>
+                        <vsizetype>0</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="text" >
+                      <string>V</string>
+                    </property>
+                    <property name="whatsThis" stdset="0" >
+                      <string>The units of the Data Vector - for automatic labels.</string>
+                    </property>
+                  </widget>
+                </item>
+                <item>
+                  <widget class="QLabel" name="TextLabel1_9_2_2" >
+                    <property name="sizePolicy" >
+                      <sizepolicy>
+                        <hsizetype>0</hsizetype>
+                        <vsizetype>0</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="text" >
+                      <string>Rate &amp;units:</string>
+                    </property>
+                    <property name="alignment" >
+                      <set>Qt::AlignVCenter|Qt::AlignRight</set>
+                    </property>
+                    <property name="buddy" stdset="0" >
+                      <cstring>RateUnits</cstring>
+                    </property>
+                    <property name="wordWrap" >
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item>
+                  <widget class="QLineEdit" name="RateUnits" >
+                    <property name="sizePolicy" >
+                      <sizepolicy>
+                        <hsizetype>7</hsizetype>
+                        <vsizetype>0</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="text" >
+                      <string>Hz</string>
+                    </property>
+                    <property name="whatsThis" stdset="0" >
+                      <string>The units for the sample rate.  Used for automatic labels.</string>
+                    </property>
+                  </widget>
+                </item>
+              </layout>
+            </item>
+            <item>
+              <layout class="QHBoxLayout" >
+                <property name="margin" >
+                  <number>0</number>
+                </property>
+                <item>
+                  <widget class="QLabel" name="textLabel1_2" >
+                    <property name="text" >
+                      <string>Output:</string>
+                    </property>
+                    <property name="wordWrap" >
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item>
+                  <widget class="QComboBox" name="Output" >
+                    <property name="sizePolicy" >
+                      <sizepolicy>
+                        <hsizetype>3</hsizetype>
+                        <vsizetype>0</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <item>
+                      <property name="text" >
+                        <string>Amplitude spectral density (V/Hz^1/2)</string>
+                      </property>
+                    </item>
+                    <item>
+                      <property name="text" >
+                        <string>Power spectral density (V^2/Hz)</string>
+                      </property>
+                    </item>
+                    <item>
+                      <property name="text" >
+                        <string>Amplitude spectrum (V)</string>
+                      </property>
+                    </item>
+                    <item>
+                      <property name="text" >
+                        <string>Power spectrum (V^2)</string>
+                      </property>
+                    </item>
+                  </widget>
+                </item>
+              </layout>
+            </item>
+          </layout>
+        </widget>
+      </item>
+    </layout>
+  </widget>
+  <layoutdefault spacing="6" margin="11" />
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <tabstops>
+    <tabstop>Apodize</tabstop>
+    <tabstop>ApodizeFxn</tabstop>
+    <tabstop>Sigma</tabstop>
+    <tabstop>RemoveMean</tabstop>
+    <tabstop>Interleaved</tabstop>
+    <tabstop>FFTLen</tabstop>
+    <tabstop>InterpolateHoles</tabstop>
+    <tabstop>SampRate</tabstop>
+    <tabstop>VectorUnits</tabstop>
+    <tabstop>RateUnits</tabstop>
+  </tabstops>
+  <includes>
+    <include location="global" >kst_export.h</include>
+    <include location="local" >knuminput.h</include>
+    <include location="local" >knuminput.h</include>
+  </includes>
+  <connections>
+    <connection>
+      <sender>Interleaved</sender>
+      <signal>clicked()</signal>
+      <receiver>FFTOptions</receiver>
+      <slot>clickedInterleaved()</slot>
+    </connection>
+    <connection>
+      <sender>Apodize</sender>
+      <signal>clicked()</signal>
+      <receiver>FFTOptions</receiver>
+      <slot>clickedApodize()</slot>
+    </connection>
+    <connection>
+      <sender>ApodizeFxn</sender>
+      <signal>activated(int)</signal>
+      <receiver>FFTOptions</receiver>
+      <slot>changedApodizeFxn()</slot>
+    </connection>
+    <connection>
+      <sender>Apodize</sender>
+      <signal>clicked()</signal>
+      <receiver>FFTOptions</receiver>
+      <slot>changedApodizeFxn()</slot>
+    </connection>
+  </connections>
+</ui>
