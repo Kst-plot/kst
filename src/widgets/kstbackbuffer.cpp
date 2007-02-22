@@ -17,8 +17,8 @@
 
 #include "kstbackbuffer.h"
 
-KstBackBuffer::KstBackBuffer(int depth)
-: _buffer(0, 0, depth, QPixmap::MemoryOptim) {
+KstBackBuffer::KstBackBuffer()
+: _buffer(0, 0) {
 }
 
 

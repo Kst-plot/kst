@@ -23,7 +23,7 @@
 
 class KstBackBuffer {
   public:
-    KstBackBuffer(int depth = -1);
+    KstBackBuffer();
     ~KstBackBuffer();
 
     QSize size() const { return _buffer.size(); }
@@ -32,7 +32,7 @@ class KstBackBuffer {
     void paintInto(QPainter& p, const QRect& geom, const QPoint& from);
 
   private:
-    QPixmap _buffer; 
+    QPixmap _buffer;
 };
 
 
