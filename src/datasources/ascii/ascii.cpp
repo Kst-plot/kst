@@ -29,12 +29,13 @@
 #include <qradiobutton.h>
 #include <qregexp.h>
 #include <qspinbox.h>
+#include <qtextdocument.h>
 
 #include <kcombobox.h>
 
 #include <kstmath.h>
 #include "ascii.h"
-#include "asciiconfig.h"
+#include "ui_asciiconfig.h"
 
 #ifndef INF
 double INF = 1.0/0.0;
@@ -59,36 +60,36 @@ class AsciiSource::Config {
     void read(KConfig *cfg, const QString& fileName = QString::null) {
       cfg->setGroup("ASCII General");
       _fileNamePattern = cfg->readEntry("Filename Pattern", QString::null);
-      _delimiters = cfg->readEntry("Comment Delimiters", "#/c!;").latin1();
+      _delimiters = cfg->readEntry("Comment Delimiters", "#/c!;").toLatin1();
       _indexInterpretation = (Interpretation)cfg->readNumEntry("Default INDEX Interpretation", Unknown);
       _columnType = (ColumnType)cfg->readNumEntry("Column Type", Whitespace);
-      _columnDelimiter = cfg->readEntry("Column Delimiter", QString::null).latin1();
+      _columnDelimiter = cfg->readEntry("Column Delimiter", QString()).toLatin1();
       _columnWidth = cfg->readNumEntry("Column Width", DEFAULT_COLUMN_WIDTH);
       _dataLine = cfg->readNumEntry("Data Start", 0);
       _readFields = cfg->readBoolEntry("Read Fields", false);
       _fieldsLine = cfg->readNumEntry("Fields Line", 0);
       if (!fileName.isEmpty()) {
         cfg->setGroup(fileName);
-        _delimiters = cfg->readEntry("Comment Delimiters", _delimiters).latin1();
+        _delimiters = cfg->readEntry("Comment Delimiters", _delimiters).toLatin1();
         _indexInterpretation = (Interpretation)cfg->readNumEntry("Default INDEX Interpretation", _indexInterpretation);
         _columnType = (ColumnType)cfg->readNumEntry("Column Type", _columnType);
-        _columnDelimiter = cfg->readEntry("Column Delimiter", _columnDelimiter).latin1();
+        _columnDelimiter = cfg->readEntry("Column Delimiter", _columnDelimiter).toLatin1();
         _columnWidth = cfg->readNumEntry("Column Width", _columnWidth);
         _dataLine = cfg->readNumEntry("Data Start", _dataLine);
         _readFields = cfg->readBoolEntry("Read Fields", _readFields);
         _fieldsLine = cfg->readNumEntry("Fields Line", _fieldsLine);
       }
-      _delimiters = QRegExp::escape(_delimiters).latin1();
+      _delimiters = QRegExp::escape(_delimiters).toLatin1();
     }
 
-    QCString _delimiters;
+    QString _delimiters;
     QString _indexVector;
     QString _fileNamePattern;
     enum Interpretation { Unknown = 0, INDEX, CTime, Seconds, IntEnd = 0xffff };
     Interpretation _indexInterpretation;
     enum ColumnType { Whitespace = 0, Fixed, Custom, ColEnd = 0xffff };
     ColumnType _columnType;
-    QCString _columnDelimiter;
+    QString _columnDelimiter;
     int _columnWidth;
     int _dataLine;
     bool _readFields;
@@ -96,14 +97,14 @@ class AsciiSource::Config {
 
     void save(QTextStream& str, const QString& indent) {
       if (_indexInterpretation != AsciiSource::Config::Unknown) {
-        str << indent << "<index vector=\"" << QStyleSheet::escape(_indexVector) << "\" interpretation=\"" << int(_indexInterpretation) << "\"/>" << endl;
+        str << indent << "<index vector=\"" << Qt::escape(_indexVector) << "\" interpretation=\"" << int(_indexInterpretation) << "\"/>" << endl;
       }
-      str << indent << "<comment delimiters=\"" << QStyleSheet::escape(_delimiters) << "\"/>" << endl;
+      str << indent << "<comment delimiters=\"" << Qt::escape(_delimiters) << "\"/>" << endl;
       str << indent << "<columns type=\"" << int(_columnType) << "\"";
       if (_columnType == Fixed) {
         str << " width=\"" << _columnWidth << "\"";
       } else if (_columnType == Custom) {
-        str << " delimiters=\"" << QStyleSheet::escape(_columnDelimiter) << "\"";
+        str << " delimiters=\"" << Qt::escape(_columnDelimiter) << "\"";
       }
       str << "/>" << endl;
       str << indent << "<header start=\"" << _dataLine << "\"";
@@ -127,7 +128,7 @@ class AsciiSource::Config {
              }
            } else if (e.tagName() == "comment") {
              if (e.hasAttribute("delimiters")) {
-               _delimiters = e.attribute("delimiters").latin1();
+               _delimiters = e.attribute("delimiters").toLatin1();
              }
            } else if (e.tagName() == "columns") {
              if (e.hasAttribute("type")) {
@@ -137,7 +138,7 @@ class AsciiSource::Config {
                _columnWidth = e.attribute("width").toInt();
              }
              if (e.hasAttribute("delimiters")) {
-               _columnDelimiter = e.attribute("delimiters").latin1();
+               _columnDelimiter = e.attribute("delimiters").toLatin1();
              }
            } else if (e.tagName() == "header") {
              if (e.hasAttribute("start")) {
@@ -215,24 +216,19 @@ bool AsciiSource::reset() {
 }
 
 
-int AsciiSource::readFullLine(QFile &file, QString &str) {
-  int read = file.readLine(str, 1000);
-
-  if (read == 1000-1) {
-    QString strExtra;
-    while (str[read-1] != '\n') {
-      int readExtra = file.readLine(strExtra, 1000);
-      if (readExtra > 0) {
-        read += readExtra;
-        str += strExtra;
-      } else {
-        read = readExtra;
-        break;
-      }
+int AsciiSource::readFullLine(QFile &file, QByteArray &str) {
+  str = file.readLine(1000);
+  QByteArray strExtra;
+  while (str[str.size()-1] != '\n') {
+    strExtra = file.readLine(1000);
+    if (!strExtra.isEmpty()) {
+      str += strExtra;
+    } else {
+      break;
     }
   }
 
-  return read;
+  return str.size();
 }
  
 
@@ -247,12 +243,12 @@ bool AsciiSource::initRowIndex() {
 
   if (_config->_dataLine > 0) {
     QFile file(_filename);
-    if (!file.open(IO_ReadOnly)) {
+    if (!file.open(QIODevice::ReadOnly)) {
       return false;
     }
     int left = _config->_dataLine;
     int didRead = 0;
-    QString ignore;
+    QByteArray ignore;
     while (left > 0) {
       int thisRead = readFullLine(file, ignore);
       if (thisRead <= 0 || file.atEnd()) {
@@ -299,7 +295,7 @@ KstObject::UpdateType AsciiSource::update(int u) {
     return setLastUpdateResult(KstObject::NO_CHANGE);
   }
 
-  if (!file.open(IO_ReadOnly)) {
+  if (!file.open(QIODevice::ReadOnly)) {
     // quietly fail - no data to be had here
     _valid = false;
     return setLastUpdateResult(KstObject::NO_CHANGE);
@@ -310,7 +306,7 @@ KstObject::UpdateType AsciiSource::update(int u) {
   int bufstart, bufread;
   bool new_data = false;
   char tmpbuf[MAXBUFREADLEN+1];
-  const char *del = _config->_delimiters; // beware
+  const char *del = _config->_delimiters.toLatin1(); // beware
   
   do {
     /* Read the tmpbuffer, starting at row_index[_numFrames] */
@@ -321,8 +317,8 @@ KstObject::UpdateType AsciiSource::update(int u) {
     }
 
     bufstart = _rowIndex[_numFrames];
-    file.at(bufstart); // expensive?
-    file.readBlock(tmpbuf, bufread);
+    file.seek(bufstart); // expensive?
+    file.read(tmpbuf, bufread);
     tmpbuf[bufread] = '\0';
     
     bool is_comment = false, has_dat = false;
@@ -452,7 +448,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
   }
 
   QStringList fieldList = this->fieldList();
-  uint col = 0;
+  int col = 0;
   for (QStringList::ConstIterator i = fieldList.begin(); i != fieldList.end(); ++i) {
     if (*i == field) {
       break;
@@ -479,7 +475,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
   }
 
   QFile file(_filename);
-  if (!file.open(IO_ReadOnly)) {
+  if (!file.open(QIODevice::ReadOnly)) {
     _valid = false;
     return 0;
   }
@@ -491,8 +487,8 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
     }
   }
 
-  file.at(bufstart);
-  file.readBlock(_tmpBuf, bufread);
+  file.seek(bufstart);
+  file.read(_tmpBuf, bufread);
 
   if (_config->_columnType == AsciiSource::Config::Fixed) {
     for (int i = 0; i < n; ++i, ++s) {
@@ -502,7 +498,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
   } else if (_config->_columnType == AsciiSource::Config::Custom) {
     for (int i = 0; i < n; ++i, ++s) {
       bool incol = false;
-      uint i_col = 0;
+      int i_col = 0;
       v[i] = KST::NOPOINT;
       for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
         if (_config->_columnDelimiter.contains(_tmpBuf[ch])) {
@@ -603,7 +599,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSource::Conf
   QStringList rc;
   QFile file(filename);
 
-  if (!file.open(IO_ReadOnly)) {
+  if (!file.open(QIODevice::ReadOnly)) {
     return rc;
   }
 
@@ -611,21 +607,21 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSource::Conf
 
   if (cfg->_readFields) {
     int l = cfg->_fieldsLine;
-    QString line;
+    QByteArray line;
     while (!file.atEnd()) {
       int r = readFullLine(file, line);
       if (l-- == 0) {
         if (r >= 0) {
           if (cfg->_columnType == AsciiSource::Config::Custom && !cfg->_columnDelimiter.isEmpty()) {
-            rc += QStringList::split(QRegExp(QString("[%1]").arg(QRegExp::escape(cfg->_columnDelimiter))), line.stripWhiteSpace(), false);
+            rc += QString(line).trimmed().split(QRegExp(QString("[%1]").arg(QRegExp::escape(cfg->_columnDelimiter))), QString::SkipEmptyParts);
           } else if (cfg->_columnType == AsciiSource::Config::Fixed) {
             int cnt = line.length() / cfg->_columnWidth;
             for (int i = 0; i < cnt; ++i) {
               QString sub = line.mid(i * cfg->_columnWidth).left(cfg->_columnWidth);
-              rc += sub.stripWhiteSpace();
+              rc += sub.trimmed();
             }
           } else {
-            rc += QStringList::split(QRegExp("[\\s]"), line.stripWhiteSpace(), false);
+            rc += QString(line).trimmed().split(QRegExp("[\\s]"), QString::SkipEmptyParts);
           }
         }
         break;
@@ -636,13 +632,12 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSource::Conf
 
   QRegExp re;
   if (cfg->_columnType == AsciiSource::Config::Custom && !cfg->_columnDelimiter.isEmpty()) {
-    re = QString("^[%1]*[%2].*").arg(QRegExp::escape(cfg->_columnDelimiter)).arg(cfg->_delimiters);
+    re.setPattern(QString("^[%1]*[%2].*").arg(QRegExp::escape(cfg->_columnDelimiter)).arg(cfg->_delimiters));
   } else {
-    re = QString("^\\s*[%1].*").arg(cfg->_delimiters);
+    re.setPattern(QString("^\\s*[%1].*").arg(cfg->_delimiters));
   }
 
   bool done = false;
-  QString line;
   int skip = cfg->_dataLine;
   //FIXME This is a hack which should eventually be fixed by specifying 
   // the starting frame of the data when calling KstDataSource::fieldListForSource
@@ -657,6 +652,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSource::Conf
   int cnt;
   int nextscan = 0;
   int curscan = 0;
+  QByteArray line;
   while (!file.atEnd() && !done && (nextscan < 200)) {
     int r = readFullLine(file, line);
     if (skip > 0) { //keep skipping until desired line
@@ -669,13 +665,13 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSource::Conf
     if (maxcnt >= 0) { //original skip value == 0, so scan some lines
       if (curscan >= nextscan) {
         if (r > 1 && !re.exactMatch(line)) {
-          line = line.stripWhiteSpace();
+          line = line.trimmed();
           if (cfg->_columnType == AsciiSource::Config::Custom && !cfg->_columnDelimiter.isEmpty()) {
-            cnt = QStringList::split(QRegExp(QString("[%1]").arg(QRegExp::escape(cfg->_columnDelimiter))), line, false).count();
+            cnt = QString(line).split(QRegExp(QString("[%1]").arg(QRegExp::escape(cfg->_columnDelimiter))), QString::SkipEmptyParts).count();
           } else if (cfg->_columnType == AsciiSource::Config::Fixed) {
             cnt = line.length() / cfg->_columnWidth;
           } else {
-            cnt = QStringList::split(QRegExp("\\s"), line, false).count();
+            cnt = QString(line).split(QRegExp("\\s"), QString::SkipEmptyParts).count();
           }
           if (cnt > maxcnt) {
             maxcnt = cnt;
@@ -689,13 +685,13 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSource::Conf
       continue;
     }
     if (r > 1 && !re.exactMatch(line)) { //at desired line, find count
-      line = line.stripWhiteSpace();
+      line = line.trimmed();
       if (cfg->_columnType == AsciiSource::Config::Custom && !cfg->_columnDelimiter.isEmpty()) {
-        maxcnt = QStringList::split(QRegExp(QString("[%1]").arg(QRegExp::escape(cfg->_columnDelimiter))), line, false).count();
+        maxcnt = QString(line).split(QRegExp(QString("[%1]").arg(QRegExp::escape(cfg->_columnDelimiter))), QString::SkipEmptyParts).count();
       } else if (cfg->_columnType == AsciiSource::Config::Fixed) {
         maxcnt = line.length() / cfg->_columnWidth;
       } else {
-        maxcnt = QStringList::split(QRegExp("\\s"), line, false).count();
+        maxcnt = QString(line).split(QRegExp("\\s"), QString::SkipEmptyParts).count();
       }
       done = true;
     } else if (r < 0) {
@@ -730,7 +726,7 @@ QStringList AsciiSource::matrixList() const {
     //       y = y coordinate of minimum
     //       w = x step size
     //       l = y step size
-    _matrixList = fieldList().grep(QRegExp("^\\[\\w*,\\S*,\\S*,\\S*,\\S*,\\S*\\]$"));
+    _matrixList = fieldList().filter(QRegExp("^\\[\\w*,\\S*,\\S*,\\S*,\\S*,\\S*\\]$"));
   }
   
   return _matrixList;
@@ -924,7 +920,7 @@ int understands_ascii(KConfig *cfg, const QString& filename) {
   }
 
   QFile f(filename);
-  if (f.open(IO_ReadOnly)) {
+  if (f.open(QIODevice::ReadOnly)) {
     QString s;
     Q_LONG rc = 0;
     bool done = false;
@@ -959,7 +955,7 @@ int understands_ascii(KConfig *cfg, const QString& filename) {
         // a number - this may be an ascii file - assume that it is
         // This line checks for an indirect file and gives that a chance too.
         // Indirect files look like ascii files.
-        return QFile::exists(s.stripWhiteSpace()) ? 49 : 75;
+        return QFile::exists(s.trimmed()) ? 49 : 75;
       } else {
         return 20;
       }

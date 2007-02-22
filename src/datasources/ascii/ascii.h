@@ -28,7 +28,7 @@ class AsciiSource : public KstDataSource {
 
     ~AsciiSource();
 
-    static int readFullLine(QFile &file, QString &str);
+    static int readFullLine(QFile &file, QByteArray &str);
     bool initRowIndex();
 
     KstObject::UpdateType update(int = -1);
