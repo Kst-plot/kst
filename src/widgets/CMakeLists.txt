@@ -1,5 +1,5 @@
 
-include_directories( ${CMAKE_SOURCE_DIR}/kst/src/extdate ${CMAKE_SOURCE_DIR}/kst/src/libkst ${CMAKE_SOURCE_DIR}/kst/src/libkstmath ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
+include_directories(${CMAKE_SOURCE_DIR}/src/extdate ${CMAKE_SOURCE_DIR}/src/libkst ${CMAKE_SOURCE_DIR}/src/libkstmath ${KDE4_INCLUDE_DIR} ${QT_INCLUDES})
 
 
 ########### next target ###############
@@ -12,7 +12,7 @@ set(kstwidgets_LIB_SRCS
    plotlistbox.cpp 
    vectorlistview.cpp 
    kstcombobox.cpp 
-   kstwidgets.cpp )
+   kstwidgets.cpp)
 
 kde4_automoc(${kstwidgets_LIB_SRCS})
 
@@ -29,27 +29,27 @@ kde4_add_ui_files(kstwidgets_LIB_SRCS
    curveappearancewidget.ui 
    fftoptionswidget.ui 
    datarangewidget.ui 
-   colorpalettewidget.ui )
+   colorpalettewidget.ui)
 
 kde4_add_library(kstwidgets SHARED ${kstwidgets_LIB_SRCS})
 
-target_link_libraries(kstwidgets  ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} kstmath kstwidgets )
+target_link_libraries(kstwidgets ${KDE4_KDECORE_LIBS} kstmath)
 
-set_target_properties(kstwidgets PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install(TARGETS kstwidgets DESTINATION ${LIB_INSTALL_DIR} )
+set_target_properties(kstwidgets PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 1)
+install(TARGETS kstwidgets DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### next target ###############
 
-set(kstwidgets_PART_SRCS ${CMAKE_CURRENT_BINARY_DIR}/dummy.cpp )
+set(kstwidgets_PART_SRCS ${CMAKE_CURRENT_BINARY_DIR}/dummy.cpp)
 
 kde4_automoc(${kstwidgets_PART_SRCS})
 
 kde4_add_plugin(kstwidgets ${kstwidgets_PART_SRCS})
 
-target_link_libraries(kstwidgets  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(kstwidgets ${KDE4_KDECORE_LIBS})
 
-install(TARGETS kstwidgets DESTINATION ${PLUGIN_INSTALL_DIR} )
+install(TARGETS kstwidgets DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
