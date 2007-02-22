@@ -16,12 +16,13 @@
  ***************************************************************************/
 
 #include "qimagesource.h"
+#include <QImageReader>
 #include <qcolor.h>
 
 
 QimagesourceSource::QimagesourceSource(KConfig *cfg, const QString& filename, const QString& type)
 : KstDataSource(cfg, filename, type) {
-  _image.reset();
+  _image = QImage();
   if (init()) {
     _valid = true;
   }
@@ -40,7 +41,7 @@ bool QimagesourceSource::reset() {
 
 bool QimagesourceSource::init() {
 
-  _image.reset();
+  _image = QImage();
   _matrixList.clear();
   _fieldList.clear();
   _frameCount = 0;
@@ -64,7 +65,7 @@ bool QimagesourceSource::init() {
     _matrixList.append( "4" );
     return update() == KstObject::UPDATE;
   } else {
-    _image.reset();
+    _image = QImage();
     return false;
   }
 }
@@ -242,16 +243,15 @@ QStringList provides_qimagesource() {
 }
 
 int understands_qimagesource(KConfig*, const QString& filename) {
-  QString ftype( QImage::imageFormat( filename ) );
+  QString ftype( QImageReader::imageFormat( filename ) );
 
   if ( ftype.isEmpty() ) return 0;
 
   if ( ftype == "TIFF" ) {
-    if ( ftype.find( ".tif",  -5, false )<0 ) return 0;
+    if ( !filename.endsWith(".tif") ) return 0;
   }
 
   return 90;
-
 }
 
 
@@ -266,7 +266,7 @@ QStringList fieldList_qimagesource(KConfig*, const QString& filename, const QStr
   if (typeSuggestion) {
     *typeSuggestion = "QImage compatible Image";
   }
-  if ( QImage::imageFormat( filename ) ) {
+  if ( !QImageReader::imageFormat( filename ).isEmpty() ) {
     fieldList.append("INDEX");
     fieldList.append( "GRAY" );
     fieldList.append( "RED" );
