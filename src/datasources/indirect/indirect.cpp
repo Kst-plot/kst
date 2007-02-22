@@ -47,7 +47,7 @@ KstObject::UpdateType IndirectSource::update(int u) {
 
   // recheck the indirect file for a changed filename
   QFile f(_filename);
-  if (f.open(IO_ReadOnly)) {
+  if (f.open(QIODevice::ReadOnly)) {
     QString ifn;
     if (0 < f.readLine(ifn, 1000)) {
       KURL url = KURL::fromPathOrURL(ifn);
@@ -57,9 +57,9 @@ KstObject::UpdateType IndirectSource::update(int u) {
         }
       }
 
-      if (!_child || ifn.stripWhiteSpace() != _child->fileName()) {
+      if (!_child || ifn.trimmed() != _child->fileName()) {
         _child = 0L; // release
-        KstDataSourcePtr p = KstDataSource::loadSource(ifn.stripWhiteSpace());
+        KstDataSourcePtr p = KstDataSource::loadSource(ifn.trimmed());
         if (p) {
           _child = p;
           _fieldList = p->fieldList();
@@ -105,7 +105,7 @@ QString IndirectSource::fileType() const {
 }
 
 
-void IndirectSource::save(QTextStream &ts, const QString& indent) {
+void IndirectSource::save(Q3TextStream &ts, const QString& indent) {
   KstDataSource::save(ts, indent);
 }
 
@@ -127,7 +127,7 @@ KstDataSource *create_indirect(KConfig *cfg, const QString& filename, const QStr
   }
 
   QFile f(filename);
-  if (!f.open(IO_ReadOnly)) {
+  if (!f.open(QIODevice::ReadOnly)) {
     return 0L;
   }
 
@@ -143,7 +143,7 @@ KstDataSource *create_indirect(KConfig *cfg, const QString& filename, const QStr
     }
   }
 
-  KstDataSourcePtr p = KstDataSource::loadSource(ifn.stripWhiteSpace());
+  KstDataSourcePtr p = KstDataSource::loadSource(ifn.trimmed());
   f.close();
 
   return new IndirectSource(cfg, filename, p);
@@ -165,7 +165,7 @@ int understands_indirect(KConfig*, const QString& filename) {
   }
 
   QFile f(filename);
-  if (!f.open(IO_ReadOnly)) {
+  if (!f.open(QIODevice::ReadOnly)) {
     return 0;
   }
 
@@ -174,19 +174,14 @@ int understands_indirect(KConfig*, const QString& filename) {
     return 0;
   }
 
-  KURL url = KURL::fromPathOrURL(ifn.stripWhiteSpace());
+  KURL url = KURL::fromPathOrURL(ifn.trimmed());
   if (url.isLocalFile() || url.protocol().isEmpty()) {
     if (QFileInfo(ifn).isRelative()) {
       ifn = QFileInfo(filename).dirPath(true) + QDir::separator() + ifn;
     }
-    return QFile::exists(ifn.stripWhiteSpace()) ? percent : 0;
-  } else {
-#if KDE_VERSION >= KDE_MAKE_VERSION(3,3,0)
-    return KIO::NetAccess::exists(url, true, 0L) ? percent : 0;
-#else
-    return KIO::NetAccess::exists(url, true) ? percent : 0;
-#endif
+    return QFile::exists(ifn.trimmed()) ? percent : 0;
   }
+  return KIO::NetAccess::exists(url, true, 0L) ? percent : 0;
 }
 
 
@@ -196,7 +191,7 @@ QStringList fieldList_indirect(KConfig *cfg, const QString& filename, const QStr
   }
 
   QFile f(filename);
-  if (!f.open(IO_ReadOnly)) {
+  if (!f.open(QIODevice::ReadOnly)) {
     return QStringList();
   }
 
@@ -212,7 +207,7 @@ QStringList fieldList_indirect(KConfig *cfg, const QString& filename, const QStr
     }
   }
 
-  return KstDataSource::fieldListForSource(ifn.stripWhiteSpace(), type, typeSuggestion, complete);
+  return KstDataSource::fieldListForSource(ifn.trimmed(), type, typeSuggestion, complete);
 }
 
 }
