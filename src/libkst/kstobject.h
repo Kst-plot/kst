@@ -36,11 +36,11 @@
 //updated also...
 #define KST_CURRENT_DATASOURCE_KEY 0x00000006
 
-#define KST_KEY_DATASOURCE_PLUGIN(x) extern "C" Q_UINT32 key_##x() { return KST_CURRENT_DATASOURCE_KEY; }
+#define KST_KEY_DATASOURCE_PLUGIN(x) extern "C" quint32 key_##x() { return KST_CURRENT_DATASOURCE_KEY; }
 
 #define KST_CURRENT_DATAOBJECT_KEY 0x00000006
 
-#define KST_KEY_DATAOBJECT_PLUGIN(x) extern "C" Q_UINT32 key_##x() { return KST_CURRENT_DATAOBJECT_KEY; }
+#define KST_KEY_DATAOBJECT_PLUGIN(x) extern "C" quint32 key_##x() { return KST_CURRENT_DATAOBJECT_KEY; }
 
 class KstObjectPrivate;
 
