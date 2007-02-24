@@ -20,7 +20,7 @@
 #include "kstrmatrix.h"
 #include "stdinsource.h"
 
-#include <kconfig.h>
+#include <kconfiggroup.h>
 
 KstMatrixDefaults KST::matrixDefaults;
 
@@ -129,7 +129,7 @@ void KstMatrixDefaults::sync() {
   }
 }
 
-void KstMatrixDefaults::writeConfig(KConfig *config) {
+void KstMatrixDefaults::writeConfig(KConfigGroup *config) {
   config->writeEntry("defaultMatrixDataSource", KST::matrixDefaults.dataSource());
   config->writeEntry("defaultXStart", KST::matrixDefaults.xStart());
   config->writeEntry("defaultYStart", KST::matrixDefaults.yStart());
@@ -141,15 +141,15 @@ void KstMatrixDefaults::writeConfig(KConfig *config) {
 }
 
 
-void KstMatrixDefaults::readConfig(KConfig *config) {
+void KstMatrixDefaults::readConfig(KConfigGroup *config) {
   _dataSource = config->readEntry("defaultMatrixDataSource", ".");
-  _xStart = config->readNumEntry("defaultXStart", 0);
-  _yStart = config->readNumEntry("defaultYStart", 0);
-  _xNumSteps = config->readNumEntry("defaultXNumSteps", -1);
-  _yNumSteps = config->readNumEntry("defaultYNumSteps", -1);
-  _doSkip = config->readNumEntry("defaultMatrixDoSkip", 0);
-  _doAve = config->readNumEntry("defaultMatrixDoAverage", 0);
-  _skip = config->readNumEntry("defaultMatrixSkip", 0);
+  _xStart = config->readEntry("defaultXStart", 0);
+  _yStart = config->readEntry("defaultYStart", 0);
+  _xNumSteps = config->readEntry("defaultXNumSteps", -1);
+  _yNumSteps = config->readEntry("defaultYNumSteps", -1);
+  _doSkip = config->readEntry("defaultMatrixDoSkip", 0);
+  _doAve = config->readEntry("defaultMatrixDoAverage", 0);
+  _skip = config->readEntry("defaultMatrixSkip", 0);
 }
 
 

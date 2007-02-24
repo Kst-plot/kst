@@ -30,8 +30,6 @@ int main( int argc, char **argv )
 
   TW tw( &a );
 
-  a.setMainWidget( &tw );
-
   tw.show();
 
 //   tw.testPixMapLines(1000);

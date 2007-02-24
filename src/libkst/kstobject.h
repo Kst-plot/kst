@@ -236,25 +236,22 @@ class KstObject : public KstShared, public QObject, public KstRWLock {
 
 typedef KstSharedPtr<KstObject> KstObjectPtr;
 
-#include <q3valuelist.h>
-#include <q3deepcopy.h>
 
 template<class T>
-class KstObjectList : public Q3ValueList<T> {
-  friend class Q3DeepCopy<KstObjectList<T> >;
+class KstObjectList : public QList<T> {
   public:
-    KstObjectList() : Q3ValueList<T>() {}
-    KstObjectList(const KstObjectList<T>& x) : Q3ValueList<T>(x) {}
+    KstObjectList() : QList<T>() {}
+    KstObjectList(const KstObjectList<T>& x) : QList<T>(x) {}
     virtual ~KstObjectList() { }
 
     KstObjectList& operator=(const KstObjectList& l) {
-      this->Q3ValueList<T>::operator=(l);
+      this->QList<T>::operator=(l);
       return *this;
     }
 
     virtual QStringList tagNames() {
       QStringList rc;
-      for (typename Q3ValueList<T>::ConstIterator it = Q3ValueList<T>::begin(); it != Q3ValueList<T>::end(); ++it) {
+      for (typename QList<T>::ConstIterator it = QList<T>::begin(); it != QList<T>::end(); ++it) {
         rc << (*it)->tagName();
       }
       return rc;
@@ -263,33 +260,33 @@ class KstObjectList : public Q3ValueList<T> {
     // @since 1.1.0
     QStringList tagNames() const {
       QStringList rc;
-      for (typename Q3ValueList<T>::ConstIterator it = Q3ValueList<T>::begin(); it != Q3ValueList<T>::end(); ++it) {
+      for (typename QList<T>::ConstIterator it = QList<T>::begin(); it != QList<T>::end(); ++it) {
         rc << (*it)->tagName();
       }
       return rc;
     }
 
-    virtual typename Q3ValueList<T>::Iterator findTag(const QString& x) {
-      for (typename Q3ValueList<T>::Iterator it = Q3ValueList<T>::begin(); it != Q3ValueList<T>::end(); ++it) {
+    virtual typename QList<T>::Iterator findTag(const QString& x) {
+      for (typename QList<T>::Iterator it = QList<T>::begin(); it != QList<T>::end(); ++it) {
         if (*(*it) == x) {
           return it;
         }
       }
-      return Q3ValueList<T>::end();
+      return QList<T>::end();
     }
 
-    virtual typename Q3ValueList<T>::ConstIterator findTag(const QString& x) const {
-      for (typename Q3ValueList<T>::ConstIterator it = Q3ValueList<T>::begin(); it != Q3ValueList<T>::end(); ++it) {
+    virtual typename QList<T>::ConstIterator findTag(const QString& x) const {
+      for (typename QList<T>::ConstIterator it = QList<T>::begin(); it != QList<T>::end(); ++it) {
         if (*(*it) == x) {
           return it;
         }
       }
-      return Q3ValueList<T>::end();
+      return QList<T>::end();
     }
 
     virtual int findIndexTag(const QString& x) const {
       int i = 0;
-      for (typename Q3ValueList<T>::ConstIterator it = Q3ValueList<T>::begin(); it != Q3ValueList<T>::end(); ++it) {
+      for (typename QList<T>::ConstIterator it = QList<T>::begin(); it != QList<T>::end(); ++it) {
         if (*(*it) == x) {
           return i;
         }
@@ -298,10 +295,10 @@ class KstObjectList : public Q3ValueList<T> {
       return -1;
     }
 
-    virtual typename Q3ValueList<T>::Iterator removeTag(const QString& x) {
-      typename Q3ValueList<T>::Iterator it = findTag(x);
-      if (it != Q3ValueList<T>::end()) {
-        return Q3ValueList<T>::remove(it);
+    virtual typename QList<T>::Iterator removeTag(const QString& x) {
+      typename QList<T>::Iterator it = findTag(x);
+      if (it != QList<T>::end()) {
+        return QList<T>::erase(it);
       }
       return it;
     }

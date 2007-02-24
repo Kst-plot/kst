@@ -21,8 +21,6 @@
 #include "kststring.h"
 #include "kstvector.h"
 #include "kst_export.h"
-//Added by qt3to4:
-#include <Q3PtrList>
 
 class Plugin;
 
@@ -70,7 +68,7 @@ namespace Equation {
 
     protected:
       bool _parentheses;
-  };
+  } KST_EXPORT;
 
   class BinaryNode : public Node {
     public:
@@ -112,7 +110,7 @@ namespace Equation {
       QString text() const;
 
     protected:
-      Q3PtrList<Node> _args;
+      QList<Node*> _args;
   };
 
 
@@ -161,7 +159,7 @@ namespace Equation {
 
     protected:
       double _n;
-  };
+  } KST_EXPORT;
 
 
   class Identifier : public Node {

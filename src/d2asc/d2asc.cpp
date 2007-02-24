@@ -17,7 +17,6 @@
 
 #include <stdlib.h> // atoi
 #include <kconfig.h>
-#include <kinstance.h>
 
 // hack to make main() a friend of kstdatasource
 #define protected public
@@ -42,11 +41,10 @@ static void exitHelper() {
 
 int main(int argc, char *argv[]) {
   atexit(exitHelper);
-  KInstance inst("d2asc");
   KstDataSourcePtr file;
   int i;
 
-  KConfig *kConfigObject = new KConfig("kstdatarc", false, false);
+  KConfig *kConfigObject = new KConfig("kstdatarc");
   KstDataSource::setupOnStartup(kConfigObject);
 
   char field_list[40][120], filename[180];
@@ -102,10 +100,9 @@ int main(int argc, char *argv[]) {
     return -2;
   }
   /** make vectors and fill the list **/
-  QPtrList<KstRVector> vlist;
+  QList<KstRVector*> vlist;
 
   for (i=0; i<n_field; i++) {
-
     if (!file->isValidField(field_list[i])) {
       fprintf(stderr, "d2asc error: field %s in file %s is not valid\n",
               field_list[i], filename);
@@ -117,7 +114,6 @@ int main(int argc, char *argv[]) {
 
   /* find NS */
   for (i = 0; i < n_field; i++) {
-
     while (vlist.at(i)->update(-1) != KstObject::NO_CHANGE)
       ; // read vector
 

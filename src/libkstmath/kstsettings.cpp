@@ -156,9 +156,9 @@ void KstSettings::setGlobalSettings(const KstSettings *settings) {
 
 
 void KstSettings::save() {
-  KConfig cfg(QString("kstrc"));
+  KConfig c(QString("kstrc"));
+  KConfigGroup cfg(&c, "Kst");
 
-  cfg.setGroup("Kst");
   cfg.writeEntry("Plot Update Timer", qlonglong(plotUpdateTimer));
   cfg.writeEntry("Plot Font Size", qlonglong(plotFontSize));
   cfg.writeEntry("Plot Font Min Size", qlonglong(plotFontMinSize));
@@ -172,7 +172,7 @@ void KstSettings::save() {
   cfg.writeEntry("Timezone", timezone);
   cfg.writeEntry("OffsetSeconds", offsetSeconds);
   
-  cfg.setGroup("Grid Lines");
+  cfg.changeGroup("Grid Lines");
   cfg.writeEntry("X Major", xMajor);
   cfg.writeEntry("Y Major", yMajor);
   cfg.writeEntry("X Minor", xMinor);
@@ -182,19 +182,20 @@ void KstSettings::save() {
   cfg.writeEntry("Default Major Color", majorGridColorDefault);
   cfg.writeEntry("Default Minor Color", minorGridColorDefault);
 
-  cfg.setGroup("X Axis");
+  cfg.changeGroup("X Axis");
   cfg.writeEntry("Interpret", xAxisInterpret);
   cfg.writeEntry("Interpretation", int(xAxisInterpretation));
   cfg.writeEntry("Display", int(xAxisDisplay));
-  cfg.setGroup("Y Axis");
+
+  cfg.changeGroup("Y Axis");
   cfg.writeEntry("Interpret", yAxisInterpret);
   cfg.writeEntry("Interpretation", int(yAxisInterpretation));
   cfg.writeEntry("Display", int(yAxisDisplay));
 
-  cfg.setGroup("Curve");
+  cfg.changeGroup("Curve");
   cfg.writeEntry("DefaultLineWeight", defaultLineWeight);
   
-  cfg.setGroup("EMail");
+  cfg.changeGroup("EMail");
   cfg.writeEntry("Sender", emailSender);
   cfg.writeEntry("Server", emailSMTPServer);
   cfg.writeEntry("Port", emailSMTPPort);
@@ -204,7 +205,7 @@ void KstSettings::save() {
   cfg.writeEntry("Encryption", int(emailEncryption));
   cfg.writeEntry("Authentication", int(emailAuthentication));
 
-  cfg.setGroup("Printing");
+  cfg.changeGroup("Printing");
   cfg.writeEntry("kde-pagesize", printing.pageSize);
   cfg.writeEntry("kde-orientation", printing.orientation);
   cfg.writeEntry("kst-plot-datetime-footer", printing.plotDateTimeFooter);
@@ -225,61 +226,62 @@ void KstSettings::save() {
   cfg.writeEntry("kst-plot-monochromesettings-pointdensity",
                  printing.monochromeSettings.pointDensity);
 
-  cfg.sync();
+  c.sync();
 }
 
 
 void KstSettings::reload() {
-  KConfig cfg("kstrc");
+  KConfig c("kstrc");
+  KConfigGroup cfg(&c, "Kst");
 
-  cfg.setGroup("Kst");
-  plotUpdateTimer = cfg.readNumEntry("Plot Update Timer", 200);
-  plotFontSize    = cfg.readNumEntry("Plot Font Size", 12);
-  plotFontMinSize = cfg.readNumEntry("Plot Font Min Size", 5);
-  backgroundColor = cfg.readColorEntry("Background Color", &backgroundColor);
-  foregroundColor = cfg.readColorEntry("Foreground Color", &foregroundColor);
-  promptWindowClose = cfg.readBoolEntry("Prompt on Window Close", true);
-  showQuickStart = cfg.readBoolEntry("Show QuickStart", true);
-  tiedZoomGlobal = cfg.readBoolEntry("Tied-zoom Global", true);
+  plotUpdateTimer = cfg.readEntry("Plot Update Timer", 200);
+  plotFontSize    = cfg.readEntry("Plot Font Size", 12);
+  plotFontMinSize = cfg.readEntry("Plot Font Min Size", 5);
+  backgroundColor = cfg.readEntry("Background Color", backgroundColor);
+  foregroundColor = cfg.readEntry("Foreground Color", foregroundColor);
+  promptWindowClose = cfg.readEntry("Prompt on Window Close", true);
+  showQuickStart = cfg.readEntry("Show QuickStart", true);
+  tiedZoomGlobal = cfg.readEntry("Tied-zoom Global", true);
   curveColorSequencePalette = cfg.readEntry("Curve Color Sequence", "Kst Colors");
   
   timezone = cfg.readEntry("Timezone", "UTC");
-  offsetSeconds = cfg.readNumEntry("OffsetSeconds", 0);
+  offsetSeconds = cfg.readEntry("OffsetSeconds", 0);
   
-  cfg.setGroup("Grid Lines");
-  xMajor = cfg.readBoolEntry("X Major", false);
-  yMajor = cfg.readBoolEntry("Y Major", false);
-  xMinor = cfg.readBoolEntry("X Minor", false);
-  yMinor = cfg.readBoolEntry("Y Minor", false);
-  majorColor = cfg.readColorEntry("Major Color", &majorColor);
-  minorColor = cfg.readColorEntry("Minor Color", &minorColor);
-  majorGridColorDefault = cfg.readBoolEntry("Default Major Color", true);
-  minorGridColorDefault = cfg.readBoolEntry("Default Minor Color", true);
+  cfg.changeGroup("Grid Lines");
+  xMajor = cfg.readEntry("X Major", false);
+  yMajor = cfg.readEntry("Y Major", false);
+  xMinor = cfg.readEntry("X Minor", false);
+  yMinor = cfg.readEntry("Y Minor", false);
+  majorColor = cfg.readEntry("Major Color", majorColor);
+  minorColor = cfg.readEntry("Minor Color", minorColor);
+  majorGridColorDefault = cfg.readEntry("Default Major Color", true);
+  minorGridColorDefault = cfg.readEntry("Default Minor Color", true);
 
-  cfg.setGroup("X Axis");
-  xAxisInterpret = cfg.readBoolEntry("Interpret", false);
-  xAxisInterpretation = (KstAxisInterpretation)cfg.readNumEntry("Interpretation", AXIS_INTERP_CTIME);
-  xAxisDisplay = (KstAxisDisplay)cfg.readNumEntry("Display", AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS);
-  cfg.setGroup("Y Axis");
-  yAxisInterpret = cfg.readBoolEntry("Interpret", false);
-  yAxisInterpretation = (KstAxisInterpretation)cfg.readNumEntry("Interpretation", AXIS_INTERP_CTIME);
-  yAxisDisplay = (KstAxisDisplay)cfg.readNumEntry("Display", AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS);
+  cfg.changeGroup("X Axis");
+  xAxisInterpret = cfg.readEntry("Interpret", false);
+  xAxisInterpretation = (KstAxisInterpretation)cfg.readEntry("Interpretation", (int)AXIS_INTERP_CTIME);
+  xAxisDisplay = (KstAxisDisplay)cfg.readEntry("Display", static_cast<int>(AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS));
 
-  cfg.setGroup("Curve");
-  defaultLineWeight = cfg.readNumEntry("DefaultLineWeight", 0);
+  cfg.changeGroup("Y Axis");
+  yAxisInterpret = cfg.readEntry("Interpret", false);
+  yAxisInterpretation = (KstAxisInterpretation)cfg.readEntry("Interpretation", (int)AXIS_INTERP_CTIME);
+  yAxisDisplay = (KstAxisDisplay)cfg.readEntry("Display", static_cast<int>(AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS));
+
+  cfg.changeGroup("Curve");
+  defaultLineWeight = cfg.readEntry("DefaultLineWeight", 0);
   
-  cfg.setGroup("EMail");
+  cfg.changeGroup("EMail");
   KEMailSettings es;
   emailSender = cfg.readEntry("Sender", es.getSetting(KEMailSettings::EmailAddress));
   emailSMTPServer = cfg.readEntry("Server", es.getSetting(KEMailSettings::OutServer));
-  emailSMTPPort = cfg.readNumEntry("Port", 25); // FIXME: no KEMailSettings for this?
-  emailRequiresAuthentication = cfg.readBoolEntry("Authenticate", !es.getSetting(KEMailSettings::OutServerLogin).isEmpty());
+  emailSMTPPort = cfg.readEntry("Port", 25); // FIXME: no KEMailSettings for this?
+  emailRequiresAuthentication = cfg.readEntry("Authenticate", !es.getSetting(KEMailSettings::OutServerLogin).isEmpty());
   emailUsername = cfg.readEntry("Username", es.getSetting(KEMailSettings::OutServerLogin));
   emailPassword = cfg.readEntry("Password", es.getSetting(KEMailSettings::OutServerPass));
-  emailEncryption = (EMailEncryption)cfg.readNumEntry("Encryption", es.getSetting(KEMailSettings::OutServerTLS) == "true" ? EMailEncryptionTLS : EMailEncryptionNone);
-  emailAuthentication = (EMailAuthentication)cfg.readNumEntry("Authentication", EMailAuthenticationPLAIN); // FIXME: no KEMailSettings for this?
+  emailEncryption = (EMailEncryption)cfg.readEntry("Encryption", static_cast<int>(es.getSetting(KEMailSettings::OutServerTLS) == "true" ? EMailEncryptionTLS : EMailEncryptionNone));
+  emailAuthentication = (EMailAuthentication)cfg.readEntry("Authentication", static_cast<int>(EMailAuthenticationPLAIN)); // FIXME: no KEMailSettings for this?
 
-  cfg.setGroup("Printing");
+  cfg.changeGroup("Printing");
   printing.pageSize = cfg.readEntry("kde-pagesize", QString::number((int)KPrinter::Letter));
   printing.orientation = cfg.readEntry("kde-orientation", "Landscape");
   printing.plotDateTimeFooter = cfg.readEntry("kst-plot-datetime-footer", "0");
@@ -302,9 +304,7 @@ void KstSettings::reload() {
 
 
 void KstSettings::checkUpdates() {
-  KConfig cfg("kstrc");
-  cfg.checkUpdate("kstautosave1.1", "kstautosave11.upd");
-  cfg.checkUpdate("kstrcmisc1.1", "kstrcmisc11.upd");
+  // ### Do KDE3->4 update (?)
 }
 
 

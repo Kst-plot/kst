@@ -19,18 +19,11 @@ include(ConfigureChecks.cmake)
 configure_file(config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 add_subdirectory(src)
-#add_subdirectory(misc)
-#add_subdirectory(tests)
+add_subdirectory(misc)
+add_subdirectory(tests)
 
 ########### install files ###############
 
-
-
-
-#original Makefile.am contents follow:
-
-#SUBDIRS = src misc tests
-#
 #EXTRA_DIST = AUTHORS COPYING COPYING.LGPL ChangeLog INSTALL README TODO RELEASE.NOTES kst.lsm 
 #
 #changes:

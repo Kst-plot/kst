@@ -16,7 +16,6 @@
  ***************************************************************************/
 #include "kstsvector.h"
 #include <qdebug.h>
-#include <q3stylesheet.h>
 #include <qtextstream.h>
 
 KstSVector::KstSVector(const QDomElement &e) : KstVector(e) {

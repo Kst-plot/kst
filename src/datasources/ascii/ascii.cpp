@@ -57,27 +57,27 @@ class AsciiSource::Config {
       _fieldsLine = 0;
     }
 
-    void read(KConfig *cfg, const QString& fileName = QString::null) {
-      cfg->setGroup("ASCII General");
-      _fileNamePattern = cfg->readEntry("Filename Pattern", QString::null);
-      _delimiters = cfg->readEntry("Comment Delimiters", "#/c!;").toLatin1();
-      _indexInterpretation = (Interpretation)cfg->readNumEntry("Default INDEX Interpretation", Unknown);
-      _columnType = (ColumnType)cfg->readNumEntry("Column Type", Whitespace);
-      _columnDelimiter = cfg->readEntry("Column Delimiter", QString()).toLatin1();
-      _columnWidth = cfg->readNumEntry("Column Width", DEFAULT_COLUMN_WIDTH);
-      _dataLine = cfg->readNumEntry("Data Start", 0);
-      _readFields = cfg->readBoolEntry("Read Fields", false);
-      _fieldsLine = cfg->readNumEntry("Fields Line", 0);
+    void read(KConfig *c, const QString& fileName = QString::null) {
+      KConfigGroup cfg(c, "ASCII General");
+      _fileNamePattern = cfg.readEntry("Filename Pattern");
+      _delimiters = cfg.readEntry("Comment Delimiters", "#/c!;").toLatin1();
+      _indexInterpretation = (Interpretation)cfg.readEntry("Default INDEX Interpretation", (int)Unknown);
+      _columnType = (ColumnType)cfg.readEntry("Column Type", (int)Whitespace);
+      _columnDelimiter = cfg.readEntry("Column Delimiter", QString()).toLatin1();
+      _columnWidth = cfg.readEntry("Column Width", DEFAULT_COLUMN_WIDTH);
+      _dataLine = cfg.readEntry("Data Start", 0);
+      _readFields = cfg.readEntry("Read Fields", false);
+      _fieldsLine = cfg.readEntry("Fields Line", 0);
       if (!fileName.isEmpty()) {
-        cfg->setGroup(fileName);
-        _delimiters = cfg->readEntry("Comment Delimiters", _delimiters).toLatin1();
-        _indexInterpretation = (Interpretation)cfg->readNumEntry("Default INDEX Interpretation", _indexInterpretation);
-        _columnType = (ColumnType)cfg->readNumEntry("Column Type", _columnType);
-        _columnDelimiter = cfg->readEntry("Column Delimiter", _columnDelimiter).toLatin1();
-        _columnWidth = cfg->readNumEntry("Column Width", _columnWidth);
-        _dataLine = cfg->readNumEntry("Data Start", _dataLine);
-        _readFields = cfg->readBoolEntry("Read Fields", _readFields);
-        _fieldsLine = cfg->readNumEntry("Fields Line", _fieldsLine);
+        cfg.changeGroup(fileName);
+        _delimiters = cfg.readEntry("Comment Delimiters", _delimiters).toLatin1();
+        _indexInterpretation = (Interpretation)cfg.readEntry("Default INDEX Interpretation", (int)_indexInterpretation);
+        _columnType = (ColumnType)cfg.readEntry("Column Type", (int)_columnType);
+        _columnDelimiter = cfg.readEntry("Column Delimiter", _columnDelimiter).toLatin1();
+        _columnWidth = cfg.readEntry("Column Width", _columnWidth);
+        _dataLine = cfg.readEntry("Data Start", _dataLine);
+        _readFields = cfg.readEntry("Read Fields", _readFields);
+        _fieldsLine = cfg.readEntry("Fields Line", _fieldsLine);
       }
       _delimiters = QRegExp::escape(_delimiters).toLatin1();
     }
@@ -250,7 +250,7 @@ bool AsciiSource::initRowIndex() {
     int didRead = 0;
     QByteArray ignore;
     while (left > 0) {
-      int thisRead = readFullLine(file, ignore);
+      int thisRead = AsciiSource::readFullLine(file, ignore);
       if (thisRead <= 0 || file.atEnd()) {
         return false;
       }
@@ -527,7 +527,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
   } else {
     for (int i = 0; i < n; i++, s++) {
       bool incol = false;
-      uint i_col = 0;
+      int i_col = 0;
       
       v[i] = KST::NOPOINT;
       for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {     
@@ -784,31 +784,37 @@ int AsciiSource::sampleForTime(const KST::ExtDateTime& time, bool *ok) {
 }
 
 
+class ConfigWidgetAsciiInternal : public QWidget, public Ui_AsciiConfig {
+  public:
+    ConfigWidgetAsciiInternal(QWidget *parent) : QWidget(parent), Ui_AsciiConfig() { setupUi(this); }
+};
+
+
 class ConfigWidgetAscii : public KstDataSourceConfigWidget {
   public:
     ConfigWidgetAscii() : KstDataSourceConfigWidget() {
-      QGridLayout *layout = new QGridLayout(this, 1, 1);
-      _ac = new AsciiConfig(this);
+      QGridLayout *layout = new QGridLayout(this);
+      _ac = new ConfigWidgetAsciiInternal(this);
       layout->addWidget(_ac, 0, 0);
       layout->activate();
     }
 
-    virtual ~ConfigWidgetAscii() {}
+    ~ConfigWidgetAscii() {}
 
-    virtual void setConfig(KConfig *cfg) {
+    void setConfig(KConfig *cfg) {
       KstDataSourceConfigWidget::setConfig(cfg);
     }
 
-    virtual void load() {
-      _cfg->setGroup("ASCII General");
-      _ac->_delimiters->setText(_cfg->readEntry("Comment Delimiters", DEFAULT_DELIMITERS));
-      _ac->_fileNamePattern->setText(_cfg->readEntry("Filename Pattern", QString::null));
-      _ac->_columnDelimiter->setText(_cfg->readEntry("Column Delimiter", QString::null));
-      _ac->_columnWidth->setValue(_cfg->readNumEntry("Column Width", DEFAULT_COLUMN_WIDTH));
-      _ac->_startLine->setValue(_cfg->readNumEntry("Data Start", 0));
-      _ac->_readFields->setChecked(_cfg->readBoolEntry("Read Fields", false));
-      _ac->_fieldsLine->setValue(_cfg->readNumEntry("Fields Line", 0));
-      AsciiSource::Config::ColumnType ct = (AsciiSource::Config::ColumnType)_cfg->readNumEntry("Column Type", 0);
+    void load() {
+      KConfigGroup cfg(_cfg, "ASCII General");
+      _ac->_delimiters->setText(cfg.readEntry("Comment Delimiters", DEFAULT_DELIMITERS));
+      _ac->_fileNamePattern->setText(cfg.readEntry("Filename Pattern"));
+      _ac->_columnDelimiter->setText(cfg.readEntry("Column Delimiter"));
+      _ac->_columnWidth->setValue(cfg.readEntry("Column Width", DEFAULT_COLUMN_WIDTH));
+      _ac->_startLine->setValue(cfg.readEntry("Data Start", 0));
+      _ac->_readFields->setChecked(cfg.readEntry("Read Fields", false));
+      _ac->_fieldsLine->setValue(cfg.readEntry("Fields Line", 0));
+      AsciiSource::Config::ColumnType ct = (AsciiSource::Config::ColumnType)cfg.readEntry("Column Type", 0);
       if (ct == AsciiSource::Config::Fixed) {
         _ac->_fixed->setChecked(true);
       } else if (ct == AsciiSource::Config::Custom) {
@@ -819,22 +825,22 @@ class ConfigWidgetAscii : public KstDataSourceConfigWidget {
       bool hasInstance = _instance != 0L;
       _ac->_indexVector->clear();
       if (hasInstance) {
-        _ac->_indexVector->insertStringList(_instance->fieldList());
+        _ac->_indexVector->addItems(_instance->fieldList());
         KstSharedPtr<AsciiSource> src = kst_cast<AsciiSource>(_instance);
         assert(src);
-        _ac->_indexType->setCurrentItem(src->_config->_indexInterpretation - 1);
+        _ac->_indexType->setCurrentIndex(src->_config->_indexInterpretation - 1);
         if (_instance->fieldList().contains(src->_config->_indexVector)) {
-          _ac->_indexVector->setCurrentText(src->_config->_indexVector);
+          _ac->_indexVector->setEditText(src->_config->_indexVector);
         }
         
-        _cfg->setGroup(src->fileName());
-        _ac->_delimiters->setText(_cfg->readEntry("Comment Delimiters", _ac->_delimiters->text()));
-        _ac->_columnDelimiter->setText(_cfg->readEntry("Column Delimiter", _ac->_columnDelimiter->text()));
-        _ac->_columnWidth->setValue(_cfg->readNumEntry("Column Width", _ac->_columnWidth->value()));
-        _ac->_startLine->setValue(_cfg->readNumEntry("Data Start", _ac->_startLine->value()));
-        _ac->_readFields->setChecked(_cfg->readBoolEntry("Read Fields", _ac->_readFields->isChecked()));
-        _ac->_fieldsLine->setValue(_cfg->readNumEntry("Fields Line", _ac->_fieldsLine->value()));
-        ct = (AsciiSource::Config::ColumnType)_cfg->readNumEntry("Column Type", ct);
+        cfg.changeGroup(src->fileName());
+        _ac->_delimiters->setText(cfg.readEntry("Comment Delimiters", _ac->_delimiters->text()));
+        _ac->_columnDelimiter->setText(cfg.readEntry("Column Delimiter", _ac->_columnDelimiter->text()));
+        _ac->_columnWidth->setValue(cfg.readEntry("Column Width", _ac->_columnWidth->value()));
+        _ac->_startLine->setValue(cfg.readEntry("Data Start", _ac->_startLine->value()));
+        _ac->_readFields->setChecked(cfg.readEntry("Read Fields", _ac->_readFields->isChecked()));
+        _ac->_fieldsLine->setValue(cfg.readEntry("Fields Line", _ac->_fieldsLine->value()));
+        ct = (AsciiSource::Config::ColumnType)cfg.readEntry("Column Type", (int)ct);
         if (ct == AsciiSource::Config::Fixed) {
           _ac->_fixed->setChecked(true);
         } else if (ct == AsciiSource::Config::Custom) {
@@ -843,40 +849,40 @@ class ConfigWidgetAscii : public KstDataSourceConfigWidget {
           _ac->_whitespace->setChecked(true);
         }
       } else {
-        _ac->_indexVector->insertItem("INDEX");
-        int x = _cfg->readNumEntry("Default INDEX Interpretation", AsciiSource::Config::INDEX);
+        _ac->_indexVector->addItem("INDEX");
+        int x = cfg.readEntry("Default INDEX Interpretation", (int)AsciiSource::Config::INDEX);
         if (x > 0 && x <= _ac->_indexType->count()) {
-          _ac->_indexType->setCurrentItem(x - 1);
+          _ac->_indexType->setCurrentIndex(x - 1);
         } else {
-          _ac->_indexType->setCurrentItem(0);
+          _ac->_indexType->setCurrentIndex(0);
         }
       }
       _ac->_indexVector->setEnabled(hasInstance);
     }
 
-    virtual void save() {
+    void save() {
       assert(_cfg);
-      _cfg->setGroup("ASCII General");
-      _cfg->writeEntry("Filename Pattern", _ac->_fileNamePattern->text());
+      KConfigGroup cfg(_cfg, "ASCII General");
+      cfg.writeEntry("Filename Pattern", _ac->_fileNamePattern->text());
       // If we have an instance, save settings for that instance only
       KstSharedPtr<AsciiSource> src = kst_cast<AsciiSource>(_instance);
       if (src) {
-        _cfg->setGroup(src->fileName());
+        cfg.changeGroup(src->fileName());
       }
-      _cfg->writeEntry("Default INDEX Interpretation", 1 + _ac->_indexType->currentItem());
-      _cfg->writeEntry("Comment Delimiters", _ac->_delimiters->text());
+      cfg.writeEntry("Default INDEX Interpretation", 1 + _ac->_indexType->currentIndex());
+      cfg.writeEntry("Comment Delimiters", _ac->_delimiters->text());
       AsciiSource::Config::ColumnType ct = AsciiSource::Config::Whitespace;
       if (_ac->_fixed->isChecked()) {
         ct = AsciiSource::Config::Fixed;
       } else if (_ac->_custom->isChecked()) {
         ct = AsciiSource::Config::Custom;
       }
-      _cfg->writeEntry("Column Type", (int)ct);
-      _cfg->writeEntry("Column Delimiter", _ac->_columnDelimiter->text());
-      _cfg->writeEntry("Column Width", _ac->_columnWidth->value());
-      _cfg->writeEntry("Data Start", _ac->_startLine->value());
-      _cfg->writeEntry("Read Fields", _ac->_readFields->isChecked());
-      _cfg->writeEntry("Fields Line", _ac->_fieldsLine->value());
+      cfg.writeEntry("Column Type", (int)ct);
+      cfg.writeEntry("Column Delimiter", _ac->_columnDelimiter->text());
+      cfg.writeEntry("Column Width", _ac->_columnWidth->value());
+      cfg.writeEntry("Data Start", _ac->_startLine->value());
+      cfg.writeEntry("Read Fields", _ac->_readFields->isChecked());
+      cfg.writeEntry("Fields Line", _ac->_fieldsLine->value());
 
       // Update the instance from our new settings
       if (src && src->reusable()) {
@@ -884,7 +890,7 @@ class ConfigWidgetAscii : public KstDataSourceConfigWidget {
       }
     }
 
-    AsciiConfig *_ac;
+    ConfigWidgetAsciiInternal *_ac;
 };
 
 
@@ -909,7 +915,7 @@ int understands_ascii(KConfig *cfg, const QString& filename) {
 
   if (!config._fileNamePattern.isEmpty()) {
     QRegExp filenamePattern(config._fileNamePattern);
-    filenamePattern.setWildcard(true);
+    filenamePattern.setPatternSyntax(QRegExp::Wildcard);
     if (filenamePattern.exactMatch(filename)) {
       return 100;
     }
@@ -921,17 +927,17 @@ int understands_ascii(KConfig *cfg, const QString& filename) {
 
   QFile f(filename);
   if (f.open(QIODevice::ReadOnly)) {
-    QString s;
-    Q_LONG rc = 0;
+    QByteArray s;
+    qint64 rc = 0;
     bool done = false;
 
     QRegExp commentRE, dataRE;
     if (config._columnType == AsciiSource::Config::Custom && !config._columnDelimiter.isEmpty()) {
-      commentRE = QString("^[%1]*[%2].*").arg(QRegExp::escape(config._columnDelimiter)).arg(config._delimiters);
-      dataRE = QString("^[%1]*(([Nn][Aa][Nn]|(\\-\\+)?[Ii][Nn][Ff]|[0-9\\+\\-\\.eE]+)[\\s]*)+").arg(QRegExp::escape(config._columnDelimiter));
+      commentRE.setPattern(QString("^[%1]*[%2].*").arg(QRegExp::escape(config._columnDelimiter)).arg(config._delimiters));
+      dataRE.setPattern(QString("^[%1]*(([Nn][Aa][Nn]|(\\-\\+)?[Ii][Nn][Ff]|[0-9\\+\\-\\.eE]+)[\\s]*)+").arg(QRegExp::escape(config._columnDelimiter)));
     } else {
-      commentRE = QString("^\\s*[%1].*").arg(config._delimiters);
-      dataRE = QString("^[\\s]*(([Nn][Aa][Nn]|(\\-\\+)?[Ii][Nn][Ff]|[0-9\\+\\-\\.eE]+)[\\s]*)+");
+      commentRE.setPattern(QString("^\\s*[%1].*").arg(config._delimiters));
+      dataRE.setPattern(QString("^[\\s]*(([Nn][Aa][Nn]|(\\-\\+)?[Ii][Nn][Ff]|[0-9\\+\\-\\.eE]+)[\\s]*)+"));
     }
 
     int skip = config._dataLine;

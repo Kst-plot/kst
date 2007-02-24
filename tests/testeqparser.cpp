@@ -45,11 +45,11 @@ void testText(const char *equation, const char *expect) {
     if (!Equation::errorStack.isEmpty()) {
       printf("Failures on [%s] -------------------------\n", equation);
       for (QStringList::ConstIterator i = Equation::errorStack.constBegin(); i != Equation::errorStack.constEnd(); ++i) {
-        printf("%s\n", (*i).latin1());
+        printf("%s\n", (*i).toLatin1().data());
       }
       printf("------------------------------------------\n");
     } else {
-      printf("Got [%s], expected [%s]\n", txt.latin1(), expect);
+      printf("Got [%s], expected [%s]\n", txt.toLatin1().data(), expect);
     }
     --rc;
   }
@@ -99,7 +99,7 @@ bool doTest(const char *equation, double x, double result, const double tol = 0.
     // Parse error
     printf("Failures on [%s] -------------------------\n", equation);
     for (QStringList::ConstIterator i = Equation::errorStack.constBegin(); i != Equation::errorStack.constEnd(); ++i) {
-      printf("%s\n", (*i).latin1());
+      printf("%s\n", (*i).toLatin1().data());
     }
     printf("------------------------------------------\n");
     delete (Equation::Node*)ParsedEquation;
@@ -130,7 +130,7 @@ void testParseFail(const char *equation) {
     } else {
       printf("Failures on [%s] -------------------------\n", equation);
       for (QStringList::ConstIterator i = Equation::errorStack.constBegin(); i != Equation::errorStack.constEnd(); ++i) {
-        printf("%s\n", (*i).latin1());
+        printf("%s\n", (*i).toLatin1().data());
       }
       printf("------------------------------------------\n");
 #endif
@@ -152,7 +152,7 @@ extern int yydebug;
 int main(int argc, char **argv) {
   atexit(exitHelper);
 
-  KApplication app(argc, argv, "testeqparser", false, false);
+  QCoreApplication app(argc, argv);
 
   // Base cases
   test("0", 1.0, 0.0);
@@ -318,12 +318,12 @@ int main(int argc, char **argv) {
   test("257|-1", 0.0, -1);
 
   // Scalars
-  new KstScalar("test1", 0L, 1.0, true);
-  new KstScalar("test2", 0L, 0.0, true);
-  new KstScalar("test3", 0L, -1.0, true);
-  new KstScalar("test4", 0L, NOPOINT, true);
-  new KstScalar("test5", 0L, INF, true);
-  new KstScalar("test6", 0L, -INF, true);
+  new KstScalar(KstObjectTag::fromString("test1"), 0L, 1.0, true);
+  new KstScalar(KstObjectTag::fromString("test2"), 0L, 0.0, true);
+  new KstScalar(KstObjectTag::fromString("test3"), 0L, -1.0, true);
+  new KstScalar(KstObjectTag::fromString("test4"), 0L, NOPOINT, true);
+  new KstScalar(KstObjectTag::fromString("test5"), 0L, INF, true);
+  new KstScalar(KstObjectTag::fromString("test6"), 0L, -INF, true);
 
   test("[test1]", 0.0, 1.0);
   test("[test4]", 0.0, NOPOINT);
@@ -335,12 +335,12 @@ int main(int argc, char **argv) {
   test("[=10+10]", 0.0, 20.0);
   
   // Vectors
-  KstVector::generateVector(0, 1.0, 10, "1");
-  KstVector::generateVector(0, 1.0, 10, "V1");
-  KstVector::generateVector(1.0, 2.0, 10, "V2");
-  KstVector::generateVector(0, 1.0, 2, "V3");
-  KstVector::generateVector(-1.0, 1.0, 1000, "V4");
-  KstVector::generateVector(-1.0, 1.0, 1000, "V5-%+-_!");
+  KstVector::generateVector(0, 1.0, 10, KstObjectTag::fromString("1"));
+  KstVector::generateVector(0, 1.0, 10, KstObjectTag::fromString("V1"));
+  KstVector::generateVector(1.0, 2.0, 10, KstObjectTag::fromString("V2"));
+  KstVector::generateVector(0, 1.0, 2, KstObjectTag::fromString("V3"));
+  KstVector::generateVector(-1.0, 1.0, 1000, KstObjectTag::fromString("V4"));
+  KstVector::generateVector(-1.0, 1.0, 1000, KstObjectTag::fromString("V5-%+-_!"));
   test("[V2] - [V1]", 0.0, 1.0);
   test("[V2[9]]", 0.0, 2.0);
   test("[V2[5+4]]", 0.0, 2.0);
@@ -352,7 +352,7 @@ int main(int argc, char **argv) {
   test("2*plugin(bin, [V4], 12)", 1.0, -1.9779779779779778);
   test("4*plugin(bin, [V4], x)", 5.0, -3.9839839839839839);
   test("-3*plugin(bin, x, 12)", 2.0, NOPOINT);
-  xVector = KstVector::generateVector(0, 100, 2000, "XVector");
+  xVector = KstVector::generateVector(0, 100, 2000, KstObjectTag::fromString("XVector"));
   test("-3*plugin(bin, x, 12)", 2.0, -0.8254127063531767);
   test("-3*plugin(bin, y, 12)", 2.0, NOPOINT);
 

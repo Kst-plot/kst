@@ -30,8 +30,9 @@
 
 #define NITR 1000
 
-TW::TW(QApplication *a, QWidget *parent, const char *name):
-  QWidget(parent, name) {
+TW::TW(QApplication *a, QWidget *parent)
+: QWidget(parent) {
+  setAttribute(Qt::WA_PaintOutsidePaintEvent);
   setFixedSize(WIDTH, HEIGHT);
   _a = a;
 }
@@ -149,7 +150,6 @@ void TW::testPlotBench(bool ppressure) {
 	p.drawPixmap(w,0,*px[1]);
 	p.drawPixmap(0,h,*px[2]);
 	p.drawPixmap(w,h,*px[3]);
-	p.flush();
       }
       QPainter q(this);
       q.drawPixmap(0,0,full);
@@ -168,7 +168,7 @@ void TW::testPlotBench(bool ppressure) {
 }
 
 void TW::testDrawImage() {
-  QImage im(WIDTH, HEIGHT, 32);
+  QImage im(WIDTH, HEIGHT, QImage::Format_ARGB32);
   QTime t;
   int i, j, et;
   QPainter p( this );
@@ -189,4 +189,4 @@ void TW::testDrawImage() {
           WIDTH,  HEIGHT, 1000.0*double( j )/double( et ) );
 }
 
-//#include "tw.moc"
+#include "tw.moc"

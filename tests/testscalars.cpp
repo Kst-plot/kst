@@ -25,7 +25,7 @@ int rc = KstTestSuccess;
 void testAssert(bool result, const QString& text = "Unknown") {
   if (!result) {
     KstTestFailed();
-    printf("Test [%s] failed.\n", text.latin1());
+    printf("Test [%s] failed.\n", text.toLatin1().data());
   }
 }
 
@@ -85,11 +85,9 @@ void doTests() {
   *sp = 1.1415;
   doTest(listener->_trigger == 2);
 
-  KstScalarPtr sp2 = new KstScalar(sp->tagName());
+  KstScalarPtr sp2 = new KstScalar(KstObjectTag::fromString(sp->tagName()));
   doTest(sp2->tagName() == sp->tagName() + "'");
 
-  doTest(sp->isGlobal());
-  doTest(sp2->isGlobal());
   doTest(sp->displayable());
   doTest(sp2->displayable());
 
@@ -101,7 +99,6 @@ void doTests() {
   doTest(sp3->orphan() == false);
   doTest(sp3->value() == 2.14159265);
   doTest(sp3->tagName() == "load1");
-  doTest(sp3->isGlobal());
   doTest(sp3->displayable());
 
   n = makeDOM1("55.4232", "55.4232", true).firstChild();
@@ -110,7 +107,6 @@ void doTests() {
   doTest(sp4->orphan());
   doTest(sp4->value() == 55.4232);
   doTest(sp4->tagName() == "55.4232");
-  doTest(sp4->isGlobal());
   doTest(!sp4->displayable());
 
   n = makeDOM1("load2", "NAN").firstChild();
@@ -135,7 +131,7 @@ void doTests() {
 int main(int argc, char **argv) {
   atexit(exitHelper);
 
-  KApplication app(argc, argv, "testscalars", false, false);
+  QCoreApplication app(argc, argv);
 
   doTests();
   // Don't put tests in main because we need to ensure that no KstObjects

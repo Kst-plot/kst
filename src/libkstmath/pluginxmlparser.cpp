@@ -20,8 +20,6 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <qfile.h>
-//Added by qt3to4:
-#include <Q3ValueList>
 
 PluginXMLParser::PluginXMLParser() {
 }
@@ -299,7 +297,7 @@ return 0;
 }
 
 
-int PluginXMLParser::parseIO(const QDomElement& element, Q3ValueList<Plugin::Data::IOValue>& collection) {
+int PluginXMLParser::parseIO(const QDomElement& element, QList<Plugin::Data::IOValue>& collection) {
 QDomNode n = element.firstChild();
 
   while (!n.isNull()) {

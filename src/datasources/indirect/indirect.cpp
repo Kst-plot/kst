@@ -48,12 +48,14 @@ KstObject::UpdateType IndirectSource::update(int u) {
   // recheck the indirect file for a changed filename
   QFile f(_filename);
   if (f.open(QIODevice::ReadOnly)) {
-    QString ifn;
-    if (0 < f.readLine(ifn, 1000)) {
-      KURL url = KURL::fromPathOrURL(ifn);
+    QByteArray ifn;
+    ifn = f.readLine(1000);
+    if (!ifn.isEmpty()) {
+      KUrl url(ifn);
       if (url.isLocalFile() || url.protocol().isEmpty()) {
         if (QFileInfo(ifn).isRelative()) {
-          ifn = QFileInfo(_filename).dirPath(true) + QDir::separator() + ifn;
+          // ### this may screw up encoding
+          ifn = (QFileInfo(_filename).absolutePath() + QDir::separator() + ifn).toLatin1();
         }
       }
 
@@ -105,7 +107,7 @@ QString IndirectSource::fileType() const {
 }
 
 
-void IndirectSource::save(Q3TextStream &ts, const QString& indent) {
+void IndirectSource::save(QTextStream &ts, const QString& indent) {
   KstDataSource::save(ts, indent);
 }
 
@@ -131,15 +133,15 @@ KstDataSource *create_indirect(KConfig *cfg, const QString& filename, const QStr
     return 0L;
   }
 
-  QString ifn;
-  if (0 >= f.readLine(ifn, 1000)) {
+  QByteArray ifn = f.readLine(1000);
+  if (ifn.isEmpty()) {
     return 0L;
   }
 
-  KURL url = KURL::fromPathOrURL(ifn);
+  KUrl url(ifn);
   if (url.isLocalFile() || url.protocol().isEmpty()) {
     if (QFileInfo(ifn).isRelative()) {
-      ifn = QFileInfo(filename).dirPath(true) + QDir::separator() + ifn;
+      ifn = (QFileInfo(filename).absolutePath() + QDir::separator() + ifn).toLatin1();
     }
   }
 
@@ -169,15 +171,15 @@ int understands_indirect(KConfig*, const QString& filename) {
     return 0;
   }
 
-  QString ifn;
-  if (0 >= f.readLine(ifn, 1000)) {
+  QByteArray ifn = f.readLine(1000);
+  if (ifn.isEmpty()) {
     return 0;
   }
 
-  KURL url = KURL::fromPathOrURL(ifn.trimmed());
+  KUrl url(ifn.trimmed());
   if (url.isLocalFile() || url.protocol().isEmpty()) {
     if (QFileInfo(ifn).isRelative()) {
-      ifn = QFileInfo(filename).dirPath(true) + QDir::separator() + ifn;
+      ifn = (QFileInfo(filename).absolutePath() + QDir::separator() + ifn).toLatin1();
     }
     return QFile::exists(ifn.trimmed()) ? percent : 0;
   }
@@ -195,15 +197,15 @@ QStringList fieldList_indirect(KConfig *cfg, const QString& filename, const QStr
     return QStringList();
   }
 
-  QString ifn;
-  if (0 >= f.readLine(ifn, 1000)) {
+  QByteArray ifn = f.readLine(1000);
+  if (ifn.isEmpty()) {
     return QStringList();
   }
 
-  KURL url = KURL::fromPathOrURL(ifn);
+  KUrl url(ifn);
   if (url.isLocalFile() || url.protocol().isEmpty()) {
     if (QFileInfo(ifn).isRelative()) {
-      ifn = QFileInfo(filename).dirPath(true) + QDir::separator() + ifn;
+      ifn = (QFileInfo(filename).absolutePath() + QDir::separator() + ifn).toLatin1();
     }
   }
 

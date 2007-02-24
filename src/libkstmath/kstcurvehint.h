@@ -47,7 +47,7 @@ class KstCurveHint : public KstShared {
 };
 
 typedef KstSharedPtr<KstCurveHint> KstCurveHintPtr;
-typedef Q3ValueList<KstCurveHintPtr> KstCurveHintList;
+typedef QList<KstCurveHintPtr> KstCurveHintList;
 
 #endif
 

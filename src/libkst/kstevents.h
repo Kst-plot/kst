@@ -20,8 +20,6 @@
 
 #include <qevent.h>
 #include <qstringlist.h>
-//Added by qt3to4:
-#include <Q3ValueList>
 
 class QDataStream;
 class QWidget;
@@ -59,7 +57,7 @@ struct KstELOGAttribStruct {
   int iMaxLength;
 };
 
-typedef Q3ValueList<KstELOGAttribStruct> ELOGAttribList;
+typedef QList<KstELOGAttribStruct> ELOGAttribList;
 
 #endif
 

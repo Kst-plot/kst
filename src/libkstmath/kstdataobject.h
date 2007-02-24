@@ -27,8 +27,6 @@
 
 #include <kservice.h>
 #include <kservicetype.h>
-//Added by qt3to4:
-#include <Q3ValueList>
 
 typedef KstSharedPtr<KstDataObject> KstDataObjectPtr;
 typedef KstObjectList<KstDataObjectPtr> KstDataObjectList;
@@ -150,10 +148,10 @@ class KST_EXPORT KstDataObject : public KstObject {
     QString _typeString, _type;
 
     bool _isInputLoaded;
-    Q3ValueList<QPair<QString,QString> > _inputVectorLoadQueue;
-    Q3ValueList<QPair<QString,QString> > _inputScalarLoadQueue;
-    Q3ValueList<QPair<QString,QString> > _inputStringLoadQueue;
-    Q3ValueList<QPair<QString,QString> > _inputMatrixLoadQueue;
+    QList<QPair<QString,QString> > _inputVectorLoadQueue;
+    QList<QPair<QString,QString> > _inputScalarLoadQueue;
+    QList<QPair<QString,QString> > _inputStringLoadQueue;
+    QList<QPair<QString,QString> > _inputMatrixLoadQueue;
     KstCurveHintList *_curveHints;
 
   private:

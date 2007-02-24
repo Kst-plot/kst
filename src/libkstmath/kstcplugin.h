@@ -21,8 +21,6 @@
 #include "kstdataobject.h"
 #include "plugin.h"
 #include "kst_export.h"
-//Added by qt3to4:
-#include <Q3ValueList>
 
 
 /*  Usage notes:
@@ -61,7 +59,7 @@ class KST_EXPORT KstCPlugin : public KstDataObject {
     virtual KstDataObjectPtr makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap);
 
   protected:
-    static void countScalarsAndVectors(const Q3ValueList<Plugin::Data::IOValue>& table, unsigned& scalars, unsigned& vectors);
+    static void countScalarsAndVectors(const QList<Plugin::Data::IOValue>& table, unsigned& scalars, unsigned& vectors);
     virtual void showNewDialog();
     virtual void showEditDialog();
     KstSharedPtr<Plugin> _plugin;

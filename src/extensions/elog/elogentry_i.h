@@ -19,7 +19,7 @@
 #ifndef ELOGENTRYI_H
 #define ELOGENTRYI_H
 
-#include "elogentry.h"
+#include "ui_elogentry.h"
 
 class KstELOG;
 

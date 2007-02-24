@@ -109,7 +109,7 @@ void KstVectorDefaults::sync() {
 }
 
 
-void KstVectorDefaults::writeConfig(KConfig *config) {
+void KstVectorDefaults::writeConfig(KConfigGroup *config) {
   config->writeEntry("defaultDataSource", KST::vectorDefaults.dataSource());
   config->writeEntry("defaultWizardXVector", KST::vectorDefaults.wizardXVector());
   config->writeEntry("defaultStartFrame", KST::vectorDefaults.f0());
@@ -120,14 +120,14 @@ void KstVectorDefaults::writeConfig(KConfig *config) {
 }
 
 
-void KstVectorDefaults::readConfig(KConfig *config) {
-  _f0 = config->readDoubleNumEntry("defaultStartFrame", 0);
-  _n = config->readDoubleNumEntry("defaultNumFrames", -1);
+void KstVectorDefaults::readConfig(KConfigGroup *config) {
+  _f0 = config->readEntry("defaultStartFrame", 0);
+  _n = config->readEntry("defaultNumFrames", -1);
   _dataSource = config->readEntry("defaultDataSource", ".");
   _wizardX = config->readEntry("defaultWizardXVector", "INDEX");
-  _doSkip = config->readNumEntry("defaultDoSkip", 0);
-  _doAve = config->readNumEntry("defaultDoAve", 0);
-  _skip = config->readNumEntry("defaultSkip", 0);
+  _doSkip = config->readEntry("defaultDoSkip", 0);
+  _doAve = config->readEntry("defaultDoAve", 0);
+  _skip = config->readEntry("defaultSkip", 0);
 }
 
 

@@ -24,13 +24,9 @@
 #include <kservice.h>
 #include <kservicetype.h>
 
-#include <q3deepcopy.h>
 #include <qfile.h>
 #include <qfileinfo.h>
-#include <q3stylesheet.h>
-//Added by qt3to4:
-#include <Q3CString>
-#include <Q3ValueList>
+#include <qtextdocument.h>
 
 #include "kstdatacollection.h"
 #include "kstdebug.h"
@@ -79,7 +75,7 @@ namespace KST {
         }
 
         QString libname = _plugLib;
-        Q3CString s = QFile::encodeName(sym + "_" + libname.remove(QString("kstobject_")));
+        QByteArray s = QFile::encodeName(sym + "_" + libname.remove(QString("kstobject_")));
         if (_lib->hasSymbol(s)) {
           return _lib->symbol(s);
         }
@@ -359,5 +355,5 @@ namespace KST {
   };
 #endif
 
-  typedef Q3ValueList<KstSharedPtr<KST::Plugin> > PluginInfoList;
+  typedef QList<KstSharedPtr<KST::Plugin> > PluginInfoList;
 }

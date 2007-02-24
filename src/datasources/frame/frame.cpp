@@ -105,7 +105,7 @@ KstObject::UpdateType FrameSource::update(int u) {
     }
   } else {
     do {
-      tmpfilename.sprintf("%s%2.2x", _rootFileName.toLatin1(), _maxExt);
+      tmpfilename.sprintf("%s%2.2x", _rootFileName.toLatin1().data(), _maxExt);
       if (stat(QFile::encodeName(tmpfilename).data(), &stat_buf) != 0) {
           if (_maxExt > _rootExt) {  // deleted (?) check the next one down
             _maxExt--;

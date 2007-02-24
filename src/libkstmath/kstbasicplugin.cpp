@@ -18,13 +18,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-// include files for Qt
-#include <q3stylesheet.h>
+#include <QTextDocument>
 
-// include files for KDE
 #include <klocale.h>
 
-// application specific includes
 #include "kstdebug.h"
 #include "kstbasicplugin.h"
 #include "dialoglauncher.h"
@@ -343,38 +340,38 @@ void KstBasicPlugin::save(QTextStream& ts, const QString& indent) {
   QString l2 = indent + "  ";
   //The plugin name _must_ be the same as the entry in the .desktop file
   ts << indent << "<plugin name=\"" << propertyString() << "\">" << endl;
-  ts << l2 << "<tag>" << Q3StyleSheet::escape(tagName()) << "</tag>" << endl;
+  ts << l2 << "<tag>" << Qt::escape(tagName()) << "</tag>" << endl;
   for (KstVectorMap::Iterator i = _inputVectors.begin(); i != _inputVectors.end(); ++i) {
-    ts << l2 << "<ivector name=\"" << Q3StyleSheet::escape(i.key()) << "\">"
-        << Q3StyleSheet::escape(i.value()->tag().tagString())
+    ts << l2 << "<ivector name=\"" << Qt::escape(i.key()) << "\">"
+        << Qt::escape(i.value()->tag().tagString())
         << "</ivector>" << endl;
   }
   for (KstScalarMap::Iterator i = _inputScalars.begin(); i != _inputScalars.end(); ++i) {
-    ts << l2 << "<iscalar name=\"" << Q3StyleSheet::escape(i.key()) << "\">"
-        << Q3StyleSheet::escape(i.value()->tag().tagString())
+    ts << l2 << "<iscalar name=\"" << Qt::escape(i.key()) << "\">"
+        << Qt::escape(i.value()->tag().tagString())
         << "</iscalar>" << endl;
   }
   for (KstStringMap::Iterator i = _inputStrings.begin(); i != _inputStrings.end(); ++i) {
-    ts << l2 << "<istring name=\"" << Q3StyleSheet::escape(i.key()) << "\">"
-        << Q3StyleSheet::escape(i.value()->tag().tagString())
+    ts << l2 << "<istring name=\"" << Qt::escape(i.key()) << "\">"
+        << Qt::escape(i.value()->tag().tagString())
         << "</istring>" << endl;
   }
   for (KstVectorMap::Iterator i = _outputVectors.begin(); i != _outputVectors.end(); ++i) {
-    ts << l2 << "<ovector name=\"" << Q3StyleSheet::escape(i.key());
+    ts << l2 << "<ovector name=\"" << Qt::escape(i.key());
     if (i.value()->isScalarList()) {
       ts << "\" scalarList=\"1";
     }
-    ts << "\">" << Q3StyleSheet::escape(i.value()->tag().tag())
+    ts << "\">" << Qt::escape(i.value()->tag().tag())
         << "</ovector>" << endl;
   }
   for (KstScalarMap::Iterator i = _outputScalars.begin(); i != _outputScalars.end(); ++i) {
-    ts << l2 << "<oscalar name=\"" << Q3StyleSheet::escape(i.key()) << "\">"
-        << Q3StyleSheet::escape(i.value()->tag().tag())
+    ts << l2 << "<oscalar name=\"" << Qt::escape(i.key()) << "\">"
+        << Qt::escape(i.value()->tag().tag())
         << "</oscalar>" << endl;
   }
   for (KstStringMap::Iterator i = _outputStrings.begin(); i != _outputStrings.end(); ++i) {
-    ts << l2 << "<ostring name=\"" << Q3StyleSheet::escape(i.key()) << "\">"
-        << Q3StyleSheet::escape(i.value()->tag().tag())
+    ts << l2 << "<ostring name=\"" << Qt::escape(i.key()) << "\">"
+        << Qt::escape(i.value()->tag().tag())
         << "</ostring>" << endl;
   }
   ts << indent << "</plugin>" << endl;

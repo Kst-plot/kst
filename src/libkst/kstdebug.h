@@ -24,11 +24,8 @@
 #include <qpointer.h>
 #include <qobject.h>
 #include <qmutex.h>
-//Added by qt3to4:
-#include <Q3ValueList>
 
 #include <kstaticdeleter.h>
-#include <ksttimers.h>
 
 #include "kst_export.h"
 
@@ -52,7 +49,7 @@ class KST_EXPORT KstDebug : public QObject {
     void sendEmail();
 
     int logLength() const;
-    Q3ValueList<LogMessage> messages() const;
+    QList<LogMessage> messages() const;
     KstDebug::LogMessage message(unsigned n) const;
     QStringList dataSourcePlugins() const;
     QString label(LogLevel level) const;
@@ -76,7 +73,7 @@ class KST_EXPORT KstDebug : public QObject {
     ~KstDebug();
 
     static KstDebug *_self;
-    Q3ValueList<LogMessage> _messages;
+    QList<LogMessage> _messages;
     bool _applyLimit;
     bool _hasNewError;
     int _limit;

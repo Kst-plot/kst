@@ -20,9 +20,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include <q3cstring.h>
-#include <q3deepcopy.h>
-#include <q3stylesheet.h>
+#include <qtextdocument.h>
 
 #include <kglobal.h>
 #include <klocale.h>
@@ -45,7 +43,7 @@ static int anonymousVectorCounter = 1;
 
 /** Create a vector */
 KstVector::KstVector(KstObjectTag in_tag, int size, KstObject *provider, bool isScalarList)
-: KstPrimitive(provider), _nsum(0), _scalars(isScalarList ? 0 : 11) {
+: KstPrimitive(provider), _nsum(0) {
   //qDebug() << "+++ CREATING VECTOR: " << (void*) this << endl;
   _editable = false;
   NumShifted = 0;
@@ -88,7 +86,7 @@ KstVector::KstVector(KstObjectTag in_tag, int size, KstObject *provider, bool is
 
 
 KstVector::KstVector(const QDomElement& e)
-: KstPrimitive(), _nsum(0), _scalars(11) {
+: KstPrimitive(), _nsum(0) {
   QByteArray qba;
   _v = 0L;
   _size = 0;
@@ -153,9 +151,9 @@ KstVector::~KstVector() {
   //qDebug() << "+++ DELETING VECTOR: " << (void*) this << endl;
   KST::scalarList.lock().writeLock();
   KST::scalarList.setUpdateDisplayTags(false);
-  for (Q3DictIterator<KstScalar> it(_scalars); it.current(); ++it) {
-    KST::scalarList.remove(it.current());
-    it.current()->_KShared_unref();
+  for (QHash<QString, KstScalar*>::Iterator it = _scalars.begin(); it != _scalars.end(); ++it) {
+    KST::scalarList.remove(it.value());
+    it.value()->_KShared_unref();
   }
   KST::scalarList.setUpdateDisplayTags(true);
   KST::scalarList.lock().unlock();
@@ -384,7 +382,7 @@ void KstVector::updateScalars() {
 }
 
 
-const Q3Dict<KstScalar>& KstVector::scalars() const {  
+const QHash<QString, KstScalar*>& KstVector::scalars() const {  
   return _scalars;
 }
 
@@ -590,7 +588,7 @@ KstObject::UpdateType KstVector::internalUpdate(KstObject::UpdateType providerRC
 
 void KstVector::save(QTextStream &ts, const QString& indent, bool saveAbsolutePosition) {
   Q_UNUSED(saveAbsolutePosition)
-  ts << indent << "<tag>" << Q3StyleSheet::escape(tag().tagString()) << "</tag>" << endl;
+  ts << indent << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
   if (_saveData) {
     QByteArray qba(length()*sizeof(double), '\0');
     QDataStream qds(&qba, QIODevice::WriteOnly);
@@ -686,8 +684,8 @@ void KstVector::setLabel(const QString& label_in) {
 
 int KstVector::getUsage() const {
   int adj = 0;
-  for (Q3DictIterator<KstScalar> it(_scalars); it.current(); ++it) {
-    adj += it.current()->getUsage() - 1;
+  for (QHash<QString, KstScalar*>::ConstIterator it = _scalars.begin(); it != _scalars.end(); ++it) {
+    adj += it.value()->getUsage() - 1;
   }
   return KstObject::getUsage() + adj;
 }

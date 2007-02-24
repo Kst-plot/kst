@@ -8,7 +8,6 @@
 
 #include <kstdataobjectcollection.h>
 #include <kstandarddirs.h>
-#include <ktempfile.h>
 #include <kstobject.h>
 #include <qdir.h>
 #include <qfile.h>
@@ -29,7 +28,7 @@ int rc = KstTestSuccess;
 void testAssert(bool result, const QString& text = "Unknown") {
   if (!result) {
     KstTestFailed();
-    printf("Test [%s] failed.\n", text.latin1());
+    printf("Test [%s] failed.\n", text.toLatin1().data());
   }
 }
 
@@ -113,7 +112,7 @@ QDomDocument makeDOMElement(const QString& tag, const QString& val) {
 
 void doTests() {
 
-  KstVectorPtr vp = new KstVector("tempVector", 10);
+  KstVectorPtr vp = new KstVector(KstObjectTag::fromString("tempVector"), 10);
   for (int i = 0; i < 10; i++){
     vp->value()[i] = i;
   }
@@ -173,7 +172,7 @@ void doTests() {
   doTest(csdDOM->gaussianSigma() == 0.01);
   doTest(csdDOM->windowSize() == 5000);
 
-  KstVectorPtr vp2 = new KstVector("tempVector2", 10);
+  KstVectorPtr vp2 = new KstVector(KstObjectTag::fromString("tempVector2"), 10);
   for (int i = 0; i < 10; i++){
     vp2->value()[i] = i;
   }
@@ -227,7 +226,7 @@ void doTests() {
 int main(int argc, char **argv) {
   atexit(exitHelper);
 
-  KApplication app(argc, argv, "testcsd", false, false);
+  QCoreApplication app(argc, argv);
 
   doTests();
   // Don't put tests in main because we need to ensure that no KstObjects

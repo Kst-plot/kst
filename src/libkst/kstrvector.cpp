@@ -20,7 +20,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include <q3stylesheet.h>
+#include <qtextdocument.h>
 
 #include <qdebug.h>
 #include <klocale.h>
@@ -334,8 +334,8 @@ void KstRVector::save(QTextStream &ts, const QString& indent, bool saveAbsoluteP
     ts << indent << "<vector>" << endl;
     KstVector::save(ts, indent + "  ", saveAbsolutePosition);
     _file->readLock();
-    ts << indent << "  <provider>" << Q3StyleSheet::escape(_file->tag().tagString()) << "</provider>" << endl;
-    ts << indent << "  <filename>" << Q3StyleSheet::escape(_file->fileName()) << "</filename>" << endl;
+    ts << indent << "  <provider>" << Qt::escape(_file->tag().tagString()) << "</provider>" << endl;
+    ts << indent << "  <filename>" << Qt::escape(_file->fileName()) << "</filename>" << endl;
     _file->unlock();
 
     ts << indent << "  <field>" << _field << "</field>" << endl;
@@ -724,7 +724,7 @@ void KstRVector::reload() {
       if (newsrc) {
         _file->unlock();
         KST::dataSourceList.lock().writeLock();
-        KST::dataSourceList.remove(_file);
+        KST::dataSourceList.removeAll(_file);
         _dontUseSkipAccel = false;
         _file = newsrc;
         _file->writeLock();

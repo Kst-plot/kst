@@ -6,8 +6,6 @@
 #include "ksttestcase.h"
 #include <kstdataobjectcollection.h>
 #include <kstamatrix.h>
-#include <kmdcodec.h>
-#include <ktempfile.h>
 #include <kstandarddirs.h>
 
 
@@ -26,7 +24,7 @@ int rc = KstTestSuccess;
 void testAssert(bool result, const QString& text = "Unknown") {
   if (!result) {
     KstTestFailed();
-    printf("Test [%s] failed.\n", text.latin1());
+    printf("Test [%s] failed.\n", text.toLatin1().data());
   }
 }
 
@@ -75,14 +73,15 @@ QDomDocument makeDOMElement(const QString& tag, const int nx, const int ny, cons
 
 
   child = amDOM.createElement("data");
-  QByteArray qba(dataSize*sizeof(double));
-  QDataStream qds(qba, IO_WriteOnly);
+  QByteArray qba;
+  qba.reserve(dataSize*sizeof(double));
+  QDataStream qds(&qba, QIODevice::WriteOnly);
 
   for (int i = 0; i < dataSize; i++) {
     qds << 1.1;
   }
   
-  text = amDOM.createTextNode(QString(KCodecs::base64Encode(qCompress(qba))));
+  text = amDOM.createTextNode(QString(qCompress(qba).toBase64()));
 
   child.appendChild(text);
   amElement.appendChild(child);
@@ -144,7 +143,7 @@ void doTests() {
 
   am2->blank();
 
-  am2->change(am2->tagName(), 3, 3, 0, 0, 0, 0); //should not be legal
+  am2->change(KstObjectTag::fromString(am2->tagName()), 3, 3, 0, 0, 0, 0); //should not be legal
   doTest(am2->xNumSteps() == 3);
   doTest(am2->yNumSteps() == 3);
   doTest(am2->minX() == 0);
@@ -162,7 +161,7 @@ void doTests() {
   doTest(am2->value(1, 1) != 5.0);
   doTest(am2->setValueRaw(2, 2, 6.0)); //fails
 
-  KstAMatrix* um1 = new KstAMatrix("Unity", 3, 3, 0.0, 0.0, 1.0, 1.0);
+  KstAMatrix* um1 = new KstAMatrix(KstObjectTag::fromString("Unity"), 3, 3, 0.0, 0.0, 1.0, 1.0);
   um1->setEditable(true);
   doTest(um1->setValue(0, 0, 1));
   doTest(um1->setValue(1, 1, 1));
@@ -288,7 +287,7 @@ void doTests() {
   doTest(um1->minValue() == 0);
   doTest(um1->maxValue() == 0);
 
-  KstAMatrix* sm = new KstAMatrix("Spike", 2, 2, 0.0, 0.0, 1.0, 1.0);
+  KstAMatrix* sm = new KstAMatrix(KstObjectTag::fromString("Spike"), 2, 2, 0.0, 0.0, 1.0, 1.0);
   
   sm->setEditable(true);
   doTest(sm->resize(2, 2, false));
@@ -317,13 +316,13 @@ void doTests() {
 int main(int argc, char **argv) {
   atexit(exitHelper);
 
-  KApplication app(argc, argv, "testamatrix", false, false);
+  QCoreApplication app(argc, argv);
 
   doTests();
   // Don't put tests in main because we need to ensure that no KstObjects
   // remain past the exit handler
 
-  exitHelper(); // need to run it here before kapp goes away in some cases.
+  exitHelper(); // need to run it here before app goes away in some cases.
   if (rc == KstTestSuccess) {
     printf("All tests passed!\n");
   }

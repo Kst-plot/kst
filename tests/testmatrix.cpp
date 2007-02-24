@@ -21,7 +21,7 @@ int rc = KstTestSuccess;
 void testAssert(bool result, const QString& text = "Unknown") {
   if (!result) {
     KstTestFailed();
-    printf("Test [%s] failed.\n", text.latin1());
+    printf("Test [%s] failed.\n", text.toLatin1().data());
   }
 }
 
@@ -29,7 +29,7 @@ void doTests() {
   bool ok = true;
 
   //basic default constructor values
-  KstMatrixPtr m1 = new KstMatrix(QString::null);
+  KstMatrixPtr m1 = new KstMatrix(KstObjectTag::fromString(QString::null));
   doTest(m1->tagName().startsWith("Anonymous"));
   doTest(m1->sampleCount() == 0);
   doTest(m1->minValue() == 0);
@@ -42,7 +42,7 @@ void doTests() {
   doTest(m1->meanValue() == 0);
 
   //basic symetrical matrix
-  KstMatrixPtr m2 = new KstMatrix("Symetrical", 0L, 3, 3);
+  KstMatrixPtr m2 = new KstMatrix(KstObjectTag::fromString("Symetrical"), 0L, 3, 3);
   doTest(m2->tagName() == "Symetrical");
 
   doTest(m2->resize(3, 3, true));
@@ -67,7 +67,7 @@ void doTests() {
 
   m2->blank();
 
-  m2->change(m2->tagName(), 3, 3, 0, 0, 0, 0); //should not be legal
+  m2->change(KstObjectTag::fromString(m2->tagName()), 3, 3, 0, 0, 0, 0); //should not be legal
   doTest(m2->xNumSteps() == 3);
   doTest(m2->yNumSteps() == 3);
   doTest(m2->minX() == 0);
@@ -85,7 +85,7 @@ void doTests() {
   doTest(m2->value(1, 1) != 5.0);
   doTest(m2->setValueRaw(2, 2, 6.0)); //fails
 
-  KstMatrixPtr um1 = new KstMatrix("Unity", 0L, 3, 3, 0, 0, 1, 1);
+  KstMatrixPtr um1 = new KstMatrix(KstObjectTag::fromString("Unity"), 0L, 3, 3, 0, 0, 1, 1);
   um1->setEditable(true);
   um1->zero();
   doTest(!um1->setValue(0, 0, 1.0));
@@ -152,7 +152,7 @@ void doTests() {
   doTest(um1->minValue() == 0);
   doTest(um1->maxValue() == 0);
 
-  KstMatrixPtr sm = new KstMatrix("Spike", 0L, 2, 2, 0, 0, 1, 1);
+  KstMatrixPtr sm = new KstMatrix(KstObjectTag::fromString("Spike"), 0L, 2, 2, 0, 0, 1, 1);
   
   sm->setEditable(true);
   doTest(sm->resize(2, 2, false));
@@ -181,7 +181,7 @@ void doTests() {
 int main(int argc, char **argv) {
   atexit(exitHelper);
 
-  KApplication app(argc, argv, "testmatrix", false, false);
+  QCoreApplication app(argc, argv);
 
   doTests();
   // Don't put tests in main because we need to ensure that no KstObjects

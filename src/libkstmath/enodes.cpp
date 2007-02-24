@@ -17,7 +17,6 @@
 
 #include <assert.h>
 #include <math.h>
-//#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -26,8 +25,6 @@
 
 #include <qmutex.h>
 #include <qregexp.h>
-//Added by qt3to4:
-#include <Q3ValueList>
 
 #include "enodes.h"
 #include "kstdatacollection.h"
@@ -421,8 +418,8 @@ Function::Function(char *name, ArgumentList *args)
     if (pn) {
       _plugin = PluginCollection::self()->plugin(pn->name());
       if (_plugin) {
-        const Q3ValueList<Plugin::Data::IOValue>& itable = _plugin->data()._inputs;
-        const Q3ValueList<Plugin::Data::IOValue>& otable = _plugin->data()._outputs;
+        const QList<Plugin::Data::IOValue>& itable = _plugin->data()._inputs;
+        const QList<Plugin::Data::IOValue>& otable = _plugin->data()._outputs;
         Plugin::countScalarsVectorsAndStrings(itable, _inputScalarCnt, _inputVectorCnt, _inputStringCnt, _inPid);
         int ignore;
         Plugin::countScalarsVectorsAndStrings(otable, _outputScalarCnt, _outputVectorCnt, _outputStringCnt, ignore);
@@ -487,10 +484,10 @@ KstObject::UpdateType Function::update(int counter, Context *ctx) {
     return KstObject::NO_CHANGE;
   }
 
-  const Q3ValueList<Plugin::Data::IOValue>& itable = _plugin->data()._inputs;
+  const QList<Plugin::Data::IOValue>& itable = _plugin->data()._inputs;
   uint itcnt = 0, vitcnt = 0, cnt = 0;
   // Populate the input scalars and vectors
-  for (Q3ValueList<Plugin::Data::IOValue>::ConstIterator it = itable.begin(); it != itable.end(); ++it) {
+  for (QList<Plugin::Data::IOValue>::ConstIterator it = itable.begin(); it != itable.end(); ++it) {
     if ((*it)._type == Plugin::Data::IOValue::TableType) {
       Data *d = dynamic_cast<Data*>(_args->node(cnt + 1));
       if (d && d->_vector) {
@@ -538,8 +535,8 @@ KstObject::UpdateType Function::update(int counter, Context *ctx) {
   if (!_plugin->data()._filterOutputVector.isEmpty()) {
     int loc = 0;
     bool found = false;
-    const Q3ValueList<Plugin::Data::IOValue>& otable = _plugin->data()._outputs;
-    for (Q3ValueList<Plugin::Data::IOValue>::ConstIterator it = otable.begin(); it != otable.end(); ++it) {
+    const QList<Plugin::Data::IOValue>& otable = _plugin->data()._outputs;
+    for (QList<Plugin::Data::IOValue>::ConstIterator it = otable.begin(); it != otable.end(); ++it) {
       if ((*it)._type == Plugin::Data::IOValue::TableType) {
         if ((*it)._name == _plugin->data()._filterOutputVector) {
           found = true;
@@ -634,11 +631,11 @@ QString Function::text() const {
 ArgumentList::ArgumentList()
 : Node() {
   //printf("%p: New Argument List\n", (void*)this);
-  _args.setAutoDelete(true);
 }
 
 
 ArgumentList::~ArgumentList() {
+  qDeleteAll(_args);
 }
 
 
@@ -648,7 +645,7 @@ void ArgumentList::appendArgument(Node *arg) {
 
 
 double ArgumentList::at(int arg, Context *ctx) {
-  Node *n = _args.at(arg);
+  Node *n = _args.value(arg); // catches out-of-bounds
   if (n) {
     return n->value(ctx);
   }
@@ -657,7 +654,7 @@ double ArgumentList::at(int arg, Context *ctx) {
 
 
 bool ArgumentList::isConst() {
-  for (Node *i = _args.first(); i; i = _args.next()) {
+  foreach (Node *i, _args) {
     if (!i->isConst()) {
       return false;
     }
@@ -668,7 +665,7 @@ bool ArgumentList::isConst() {
 
 bool ArgumentList::collectObjects(KstVectorMap& v, KstScalarMap& s, KstStringMap& t) {
   bool ok = true;
-  for (Node *i = _args.first(); i; i = _args.next()) {
+  foreach (Node *i, _args) {
     ok = i->collectObjects(v, s, t) ? ok : false;
   }
   return ok;
@@ -677,7 +674,7 @@ bool ArgumentList::collectObjects(KstVectorMap& v, KstScalarMap& s, KstStringMap
 
 bool ArgumentList::takeVectors(const KstVectorMap& c) {
   bool rc = true;
-  for (Node *i = _args.first(); i; i = _args.next()) {
+  foreach (Node *i, _args) {
     rc = i->takeVectors(c) && rc;
   }
   return rc;
@@ -691,7 +688,7 @@ Node *ArgumentList::node(int idx) {
 
 KstObject::UpdateType ArgumentList::update(int counter, Context *ctx) {
   bool updated = false;
-  for (Node *i = _args.first(); i; i = _args.next()) {
+  foreach (Node *i, _args) {
     updated = updated || KstObject::UPDATE == i->update(counter, ctx);
   }
   return updated ? KstObject::UPDATE : KstObject::NO_CHANGE;
@@ -701,16 +698,14 @@ KstObject::UpdateType ArgumentList::update(int counter, Context *ctx) {
 QString ArgumentList::text() const {
   QString rc;
   bool first = true;
-  Q3PtrListIterator<Node> it(_args);
-  const Node *i;
-  while ( (i = it.current()) ) {
+  QListIterator<Node*> it(_args);
+  while (it.hasNext()) {
     if (!first) {
       rc += ", ";
     } else {
       first = false;
     }
-    rc += i->text();
-    ++it;
+    rc += it.next()->text();
   }
   return rc;
 }

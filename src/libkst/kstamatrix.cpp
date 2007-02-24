@@ -20,8 +20,8 @@
 
 #include "kstamatrix.h"
 #include "kstdebug.h"
-#include <q3cstring.h>
-#include <q3stylesheet.h>
+#include <qbytearray.h>
+#include <qtextdocument.h>
 #include <klocale.h>
 #include <kcodecs.h>
 
@@ -107,7 +107,7 @@ void KstAMatrix::save(QTextStream &ts, const QString& indent) {
   }
 
   ts << indent << "<amatrix>" << endl;
-  ts << indent << indent2 << "<tag>" << Q3StyleSheet::escape(tag().tagString()) << "</tag>" << endl;
+  ts << indent << indent2 << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
   ts << indent << indent2 << "<xmin>" << minX() << "</xmin>" << endl;
   ts << indent << indent2 << "<ymin>" << minY() << "</ymin>" << endl;
   ts << indent << indent2 << "<nx>" << xNumSteps() << "</nx>" << endl;

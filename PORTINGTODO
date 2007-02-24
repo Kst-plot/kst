@@ -9,20 +9,9 @@ Please place porting todo items in this file categorized by lib/module
 
 **** libkst ****:
   A. Numerous changes WRT Qt4's threading package
-    1. Probably should get rid of own threading classes and use Qt4's versions...
-       KstWaitCondition -> QWaitCondition
-       KstRWLock -> QReadWriteLock
-       etc, etc
-  B. Switch to using Qt4's container classes eg Q3ValueList --> QList
-    1. No longer need to use QDeepCopy as all implicitly shared objects in Qt4 are reentrant and
-       use atomic reference counting.  See the threading docs...
-    2. KstObjectList::findTag is broken for now as Q3ValueList does not have same semantics as
-       QValueList had...
-    3. Numerous calls to qSort are commented out for now until switch from Q3ValueList
-  C. Revamp the plugin manager to use Qt4's plugin system?
-  D. We relied upon a hack in KDE3 version that used a private header
-     from qt.  This is no longer installed in Qt4.  This can be taken care of by getting rid of
-     KstWaitCondition as described above.
-  E. Rename kstdebug classes as they really are loggers and should be named as such.
+    Probably should get rid of own threading classes and use Qt4's versions...
+    KstRWLock -> QReadWriteLock etc, etc
+  B. Revamp the plugin manager to use Qt4's plugin system?
+  C. Rename kstdebug classes as they really are loggers and should be named as such.
 
 **** libkstmath ****:

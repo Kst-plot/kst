@@ -15,14 +15,11 @@
  *                                                                         *
  ***************************************************************************/
 
-// includes for Qt
-#include <q3stylesheet.h>
-//Added by qt3to4:
-#include <Q3PointArray>
-
 // includes for KDE
 #include <klocale.h>
 #include <qdebug.h>
+#include <QPolygon>
+#include <QTextDocument>
 
 // application specific includes
 #include "dialoglauncher.h"
@@ -470,22 +467,22 @@ bool KstVCurve::hasYMinusError() const {
 void KstVCurve::save(QTextStream &ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<curve>" << endl;
-  ts << l2 << "<tag>" << Q3StyleSheet::escape(tagName()) << "</tag>" << endl;
-  ts << l2 << "<xvectag>" << Q3StyleSheet::escape(_inputVectors[COLOR_XVECTOR]->tag().tagString()) << "</xvectag>" << endl;
-  ts << l2 << "<yvectag>" << Q3StyleSheet::escape(_inputVectors[COLOR_YVECTOR]->tag().tagString()) << "</yvectag>" << endl;
-  ts << l2 << "<legend>" << Q3StyleSheet::escape(legendText()) << "</legend>" << endl;
+  ts << l2 << "<tag>" << Qt::escape(tagName()) << "</tag>" << endl;
+  ts << l2 << "<xvectag>" << Qt::escape(_inputVectors[COLOR_XVECTOR]->tag().tagString()) << "</xvectag>" << endl;
+  ts << l2 << "<yvectag>" << Qt::escape(_inputVectors[COLOR_YVECTOR]->tag().tagString()) << "</yvectag>" << endl;
+  ts << l2 << "<legend>" << Qt::escape(legendText()) << "</legend>" << endl;
   ts << l2 << "<hasMinus/>" << endl;
   if (_inputVectors.contains(EXVECTOR)) {
-    ts << l2 << "<exVectag>" << Q3StyleSheet::escape(_inputVectors[EXVECTOR]->tag().tagString()) << "</exVectag>" << endl;
+    ts << l2 << "<exVectag>" << Qt::escape(_inputVectors[EXVECTOR]->tag().tagString()) << "</exVectag>" << endl;
   }
   if (_inputVectors.contains(EYVECTOR)) {
-    ts << l2 << "<eyVectag>" << Q3StyleSheet::escape(_inputVectors[EYVECTOR]->tag().tagString()) << "</eyVectag>" << endl;
+    ts << l2 << "<eyVectag>" << Qt::escape(_inputVectors[EYVECTOR]->tag().tagString()) << "</eyVectag>" << endl;
   }
   if (_inputVectors.contains(EXMINUSVECTOR)) {
-    ts << l2 << "<exMinusVectag>" << Q3StyleSheet::escape(_inputVectors[EXMINUSVECTOR]->tag().tagString()) << "</exMinusVectag>" << endl;
+    ts << l2 << "<exMinusVectag>" << Qt::escape(_inputVectors[EXMINUSVECTOR]->tag().tagString()) << "</exMinusVectag>" << endl;
   }
   if (_inputVectors.contains(EYMINUSVECTOR)) {
-    ts << l2 << "<eyMinusVectag>" << Q3StyleSheet::escape(_inputVectors[EYMINUSVECTOR]->tag().tagString()) << "</eyMinusVectag>" << endl;
+    ts << l2 << "<eyMinusVectag>" << Qt::escape(_inputVectors[EYMINUSVECTOR]->tag().tagString()) << "</eyMinusVectag>" << endl;
   }
   ts << l2 << "<color>" << Color.name() << "</color>" << endl;
   if (HasLines) {
@@ -910,7 +907,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
     clock_t linesStart = clock();
 #endif
     if (hasLines()) {
-      Q3PointArray points(MAX_NUM_POLYLINES);
+      QPolygon points(MAX_NUM_POLYLINES);
       int lastPlottedX = 0;
       int lastPlottedY = 0;
       int index = 0;

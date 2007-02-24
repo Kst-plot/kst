@@ -21,7 +21,7 @@
 #include <qstring.h>
 #include "kst_export.h"
 
-class KConfig;
+class KConfigGroup;
 
 class KST_EXPORT KstObjectDefaults {
   public:
@@ -39,8 +39,8 @@ class KST_EXPORT KstObjectDefaults {
     int output() const { return _output; }
     int interpolateHoles() const { return _interpolateHoles; }
     
-    void readConfig(KConfig *config);
-    void writeConfig(KConfig *config);
+    void readConfig(KConfigGroup *config);
+    void writeConfig(KConfigGroup *config);
 
   private:
     double _psd_freq;

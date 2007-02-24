@@ -9,7 +9,7 @@
 
 #include <kstdataobjectcollection.h>
 #include <kstandarddirs.h>
-#include <ktempfile.h>
+#include <qtemporaryfile.h>
 #include <qdir.h>
 #include <qfile.h>
 
@@ -27,7 +27,7 @@ int rc = KstTestSuccess;
 void testAssert(bool result, const QString& text = "Unknown") {
   if (!result) {
     KstTestFailed();
-    printf("Test [%s] failed.\n", text.latin1());
+    printf("Test [%s] failed.\n", text.toLatin1().data());
   }
 }
 
@@ -111,7 +111,7 @@ QDomDocument makeDOMElement(const QString& tag, const QString& val) {
 
 void doTests() {
 
-  KstVectorPtr vp = new KstVector("tempVector", 10);
+  KstVectorPtr vp = new KstVector(KstObjectTag::fromString("tempVector"), 10);
   for (int i = 0; i < 10; i++){
     vp->value()[i] = i;
   }
@@ -169,11 +169,11 @@ void doTests() {
 //   printf("X Vector name [%s]", kstCHL[0].xVectorName());
 //   printf("Y Vector name [%s]", kstCHL[0].yVectorName());
 
-  KTempFile tf(locateLocal("tmp", "kst-csd"), "txt");
-  QFile *qf = tf.file();
-  QTextStream ts(qf);
+  QTemporaryFile tf;
+  tf.open();
+  QTextStream ts(&tf);
   psd->save(ts, "");
-  QFile::remove(tf.name());
+  QFile::remove(tf.fileName());
 
   QDomNode n = makeDOMElement("psdDOMPsd", "psdDOMVector").firstChild();
   QDomElement e = n.toElement();
@@ -199,7 +199,7 @@ void doTests() {
 int main(int argc, char **argv) {
   atexit(exitHelper);
 
-  KApplication app(argc, argv, "testpsd", false, false);
+  QCoreApplication app(argc, argv);
 
   doTests();
   // Don't put tests in main because we need to ensure that no KstObjects

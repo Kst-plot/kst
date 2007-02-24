@@ -18,7 +18,7 @@
 #include "kstdatacollection.h"
 #include "defaultprimitivenames.h"
 
-#include <q3stylesheet.h>
+#include <qtextdocument.h>
 
 #include <klocale.h>
 
@@ -83,14 +83,14 @@ void KstString::setTagName(const KstObjectTag& tag) {
 
 
 void KstString::save(QTextStream &ts, const QString& indent) {
-  ts << indent << "<tag>" << Q3StyleSheet::escape(tag().tagString()) << "</tag>" << endl;
+  ts << indent << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
   if (_orphan) {
     ts << indent << "<orphan/>" << endl;
   }
   if (_editable) {
     ts << indent << "<editable/>" << endl;
   }
-  ts << indent << "<value>" << Q3StyleSheet::escape(value()) << "</value>" << endl;
+  ts << indent << "<value>" << Qt::escape(value()) << "</value>" << endl;
 }
 
 

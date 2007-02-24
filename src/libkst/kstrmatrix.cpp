@@ -20,7 +20,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include <q3stylesheet.h>
+#include <qtextdocument.h>
 
 #include <klocale.h>
 
@@ -111,10 +111,10 @@ void KstRMatrix::save(QTextStream &ts, const QString& indent) {
     QString indent2 = "  ";
 
     ts << indent << "<rmatrix>" << endl;
-    ts << indent << indent2 << "<tag>" << Q3StyleSheet::escape(tag().tagString()) << "</tag>" << endl;
+    ts << indent << indent2 << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
     _file->readLock();
-    ts << indent << indent2 << "<provider>" << Q3StyleSheet::escape(_file->tag().tagString()) << "</provider>" << endl;
-    ts << indent << indent2 << "<file>" << Q3StyleSheet::escape(_file->fileName()) << "</file>" << endl;
+    ts << indent << indent2 << "<provider>" << Qt::escape(_file->tag().tagString()) << "</provider>" << endl;
+    ts << indent << indent2 << "<file>" << Qt::escape(_file->fileName()) << "</file>" << endl;
     _file->unlock();
     ts << indent << indent2 << "<field>" << _field << "</field>" << endl;
     ts << indent << indent2 << "<reqxstart>" << _reqXStart << "</reqxstart>" << endl;
@@ -500,7 +500,7 @@ void KstRMatrix::reload() {
       if (newsrc) {
         _file->unlock();
         KST::dataSourceList.lock().writeLock();
-        KST::dataSourceList.remove(_file);
+        KST::dataSourceList.removeAll(_file);
         _file = newsrc;
         _file->writeLock();
         KST::dataSourceList.append(_file);

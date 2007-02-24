@@ -19,9 +19,6 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include <q3deepcopy.h>
-#include <q3stylesheet.h>
-  
 #include <klocale.h>
 
 #include "defaultprimitivenames.h"
@@ -78,9 +75,9 @@ KstMatrix::~KstMatrix() {
   // get rid of the stat scalars
   KST::scalarList.lock().writeLock();
   KST::scalarList.setUpdateDisplayTags(false);
-  for (Q3DictIterator<KstScalar> iter(_statScalars); iter.current(); ++iter) {
-    KST::scalarList.remove(iter.current());
-    iter.current()->_KShared_unref();  
+  for (QHash<QString, KstScalar*>::Iterator iter = _statScalars.begin(); iter != _statScalars.end(); ++iter) {
+    KST::scalarList.remove(iter.value());
+    iter.value()->_KShared_unref();  
   }
   KST::scalarList.setUpdateDisplayTags(true);
   KST::scalarList.lock().unlock();
@@ -313,8 +310,8 @@ void KstMatrix::blank() {
 
 int KstMatrix::getUsage() const {
   int scalarUsage = 0;
-  for (Q3DictIterator<KstScalar> it(_statScalars); it.current(); ++it) {
-    scalarUsage += it.current()->getUsage() - 1;
+  for (QHash<QString, KstScalar*>::ConstIterator it = _statScalars.begin(); it != _statScalars.end(); ++it) {
+    scalarUsage += it.value()->getUsage() - 1;
   }
   return KstObject::getUsage() + scalarUsage;
 }
@@ -385,7 +382,7 @@ void KstMatrix::setTagName(const KstObjectTag& tag) {
 }
 
 
-const Q3Dict<KstScalar>& KstMatrix::scalars() const {
+const QHash<QString, KstScalar*>& KstMatrix::scalars() const {
   return _statScalars;
 }
     

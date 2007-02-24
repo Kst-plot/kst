@@ -23,7 +23,7 @@ int rc = KstTestSuccess;
 void testAssert(bool result, const QString& text = "Unknown") {
   if (!result) {
     KstTestFailed();
-    printf("Test [%s] failed.\n", text.latin1());
+    printf("Test [%s] failed.\n", text.toLatin1().data());
   }
 }
 
@@ -135,7 +135,7 @@ void doTests() {
 
   sm2->blank();
 
-  sm2->change(sm2->tagName(), 3, 3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, false); //should not be legal
+  sm2->change(KstObjectTag::fromString(sm2->tagName()), 3, 3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, false); //should not be legal
   doTest(sm2->xNumSteps() == 3);
   doTest(sm2->yNumSteps() == 3);
   doTest(sm2->minX() == 0);
@@ -153,7 +153,7 @@ void doTests() {
   doTest(sm2->value(1, 1) != 5.0);
   doTest(sm2->setValueRaw(2, 2, 6.0)); //fails
 
-  KstSMatrix* um1 = new KstSMatrix("Unity",3, 3, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, false);
+  KstSMatrix* um1 = new KstSMatrix(KstObjectTag::fromString("Unity"), 3, 3, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, false);
 
   um1->setEditable(true);
   doTest(um1->resize(3, 3, false));
@@ -196,7 +196,7 @@ void doTests() {
 int main(int argc, char **argv) {
   atexit(exitHelper);
 
-  KApplication app(argc, argv, "testsmatrix", false, false);
+  QCoreApplication app(argc, argv);
 
   doTests();
   // Don't put tests in main because we need to ensure that no KstObjects

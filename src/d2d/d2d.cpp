@@ -17,7 +17,6 @@
 
 #include <stdlib.h> // atoi
 #include <kconfig.h>
-#include <kinstance.h>
 
 // hack to make main() a friend of kstdatasource
 #define protected public
@@ -27,6 +26,8 @@
 #undef protected
 
 #include "kstdataplugin.h"
+
+#include <kservicetypetrader.h>
 
 void Usage() {
   fprintf(stderr, "usage: d2d in_filename out_filename [-t <out_type>]\n");
@@ -43,9 +44,8 @@ static void exitHelper() {
 
 int main(int argc, char *argv[]) {
   atexit(exitHelper);
-  KInstance inst("d2d");
 
-  KConfig *kConfigObject = new KConfig("kstdatarc", false, false);
+  KConfig *kConfigObject = new KConfig("kstdatarc");
   KstDataSource::setupOnStartup(kConfigObject);
 
   char field_list[40][120], in_filename[180], out_filename[180], out_type[40];
@@ -100,10 +100,9 @@ int main(int argc, char *argv[]) {
   }
 
   /** make vectors and fill the list **/
-  QPtrList<KstRVector> vlist;
+  QList<KstRVector*> vlist;
 
   for (int i = 0; i < n_field; i++) {
-
     if (!file->isValidField(field_list[i])) {
       fprintf(stderr, "d2asc error: field %s in file %s is not valid\n",
               field_list[i], in_filename);
@@ -124,7 +123,7 @@ int main(int argc, char *argv[]) {
   }
 
   KstDataSourcePtr out_file;
-  KService::List sl = KServiceType::offers("Kst Data Source");
+  KService::List sl = KServiceTypeTrader::self()->query("Kst Data Source");
   for (KService::List::ConstIterator it = sl.begin(); it != sl.end(); ++it) {
     if ((*it)->library() == out_type) {
       KstSharedPtr<KST::DataSourcePlugin> p = new KST::DataSourcePlugin(*it);
@@ -137,7 +136,7 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < n_field; i++) {
       double *data = vlist.at(i)->value();
       int n = out_file->writeField(data, field_list[i], start_frame, n_frames);
-      kstdDebug() << "wrote " << n << " samples for field " << field_list[i] << endl;
+      qDebug() << "wrote" << n << "samples for field" << field_list[i];
     }
   }
 }

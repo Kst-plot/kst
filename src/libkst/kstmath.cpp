@@ -19,9 +19,9 @@
 
 namespace KST {
 #ifdef NAN
-KST_EXPORT const double NOPOINT = NAN;
+const double NOPOINT = NAN;
 #else
-KST_EXPORT const double NOPOINT = 0.0/0.0; // NaN
+const double NOPOINT = 0.0/0.0; // NaN
 #endif
 }
 

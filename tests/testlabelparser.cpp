@@ -15,14 +15,14 @@ static void exitHelper() {
 
 
 static void dumpAttributes(Label::Chunk *l, QString indent) {
-  printf("%sb:%d i:%d u:%d c:%s\n", indent.latin1(), l->attributes.bold, l->attributes.italic, l->attributes.underline, l->attributes.color.name().latin1());
+  printf("%sb:%d i:%d u:%d c:%s\n", indent.toLatin1().data(), l->attributes.bold, l->attributes.italic, l->attributes.underline, l->attributes.color.name().toLatin1().data());
 }
 
 
 static void dumpTree(Label::Chunk *l, QString indent = "") {
   while (l) {
-    printf("%sNode: %p %s[%s]%s\n", indent.latin1(), l, l->vOffset == Label::Chunk::None ? "" : (l->vOffset == Label::Chunk::Up ? "U " : "D "), l->text.latin1(), l->group ? " [G]" : "");
-    printf("%sPrev: %p Next: %p Up: %p Down: %p\n", indent.latin1(), l->prev, l->next, l->up, l->down);
+    printf("%sNode: %p %s[%s]%s\n", indent.toLatin1().data(), l, l->vOffset == Label::Chunk::None ? "" : (l->vOffset == Label::Chunk::Up ? "U " : "D "), l->text.toLatin1().data(), l->group ? " [G]" : "");
+    printf("%sPrev: %p Next: %p Up: %p Down: %p\n", indent.toLatin1().data(), l->prev, l->next, l->up, l->down);
     dumpAttributes(l, indent);
     if (l->group) {
       dumpTree(l->group, indent + "   ");
@@ -51,7 +51,7 @@ int rc = KstTestSuccess;
 void testAssert(bool result, const QString& text = "Unknown") {
   if (!result) {
     KstTestFailed();
-    printf("Test [%s] failed.\n", text.latin1());
+    printf("Test [%s] failed.\n", text.toLatin1().data());
   }
 }
 
@@ -486,7 +486,7 @@ void doTests() {
 int main(int argc, char **argv) {
   atexit(exitHelper);
 
-  KApplication app(argc, argv, "testlabelparser", false, false);
+  QCoreApplication app(argc, argv);
 
   doTests();
   // Don't put tests in main because we need to ensure that no KstObjects

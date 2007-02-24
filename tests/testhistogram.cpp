@@ -24,7 +24,7 @@ int rc = KstTestSuccess;
 void testAssert(bool result, const QString& text = "Unknown") {
   if (!result) {
     KstTestFailed();
-    printf("Test [%s] failed.\n", text.latin1());
+    printf("Test [%s] failed.\n", text.toLatin1().data());
   }
 }
 
@@ -35,7 +35,7 @@ void testAssert(bool result, const QString& text = "Unknown") {
   } } while(0)
 
 void doTests() {
-  KstVectorPtr vp = KstVector::generateVector(0, 10, 100, "V1");
+  KstVectorPtr vp = KstVector::generateVector(0, 10, 100, KstObjectTag::fromString("V1"));
   KstHistogramPtr h1 = new KstHistogram("H1", vp, 0, 10, 10, KST_HS_NUMBER);
   KST::dataObjectList.append(h1.data());
   doTest(h1->propertyString() == "Histogram: V1");
@@ -118,7 +118,7 @@ void doTests() {
 int main(int argc, char **argv) {
   atexit(exitHelper);
 
-  KApplication app(argc, argv, "testhistogram", false, false);
+  QCoreApplication app(argc, argv);
 
   doTests();
 

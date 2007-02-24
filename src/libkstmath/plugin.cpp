@@ -20,8 +20,6 @@
 
 #include <klibloader.h>
 #include <klocale.h>
-//Added by qt3to4:
-#include <Q3ValueList>
 
 
 const int Plugin::CallError = -424242;
@@ -138,13 +136,13 @@ QString Plugin::parameterName(int idx) const {
 }
 
 
-void Plugin::countScalarsVectorsAndStrings(const Q3ValueList<Plugin::Data::IOValue>& table, int& scalars, int& vectors, int& strings, int& numberOfPids) {
+void Plugin::countScalarsVectorsAndStrings(const QList<Plugin::Data::IOValue>& table, int& scalars, int& vectors, int& strings, int& numberOfPids) {
   scalars = 0;
   vectors = 0;
   strings = 0;
   numberOfPids = 0;
 
-  for (Q3ValueList<Plugin::Data::IOValue>::ConstIterator it = table.begin(); it != table.end(); ++it) {
+  for (QList<Plugin::Data::IOValue>::ConstIterator it = table.begin(); it != table.end(); ++it) {
     switch ((*it)._type) {
       case Plugin::Data::IOValue::StringType:
         ++strings;

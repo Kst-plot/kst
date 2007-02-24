@@ -19,14 +19,10 @@
 #include <math.h>
 #include <stdlib.h>
 
-// include files for Qt
-#include <q3stylesheet.h>
-
-// include files for KDE
+#include <QTextDocument>
 #include <kglobal.h>
 #include <klocale.h>
 
-// application specific includes
 #include "dialoglauncher.h"
 #include "kstdatacollection.h"
 #include "kstdefaultnames.h"
@@ -352,8 +348,8 @@ void KstHistogram::save(QTextStream &ts, const QString& indent) {
   // point class itself, etc
   QString l2 = indent + "  ";
   ts << indent << "<histogram>" << endl;
-  ts << l2 << "<tag>" << Q3StyleSheet::escape(tagName()) << "</tag>" << endl;
-  ts << l2 << "<vectag>" << Q3StyleSheet::escape(_inputVectors[RAWVECTOR]->tag().tagString()) << "</vectag>" << endl;
+  ts << l2 << "<tag>" << Qt::escape(tagName()) << "</tag>" << endl;
+  ts << l2 << "<vectag>" << Qt::escape(_inputVectors[RAWVECTOR]->tag().tagString()) << "</vectag>" << endl;
   ts << l2 << "<numBins>"  << _NBins << "</numBins>" << endl;
   ts << l2 << "<realtimeautobin>" << _realTimeAutoBin << "</realtimeautobin>" << endl;
   ts << l2 << "<minX>" << _MinX << "</minX>" << endl;

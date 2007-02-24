@@ -23,6 +23,8 @@
 #include "kstcurvepointsymbol.h"
 #include "kst_export.h"
 
+#include <QStack>
+
 /**A class for handling curves for kst
  *@author C. Barth Netterfield
  */
@@ -165,13 +167,13 @@ class KST_EXPORT KstVCurve: public KstBaseCurve {
     bool HasBars;
     
     QColor Color;
-    Q3ValueStack<int> _widthStack;
-    Q3ValueStack<QColor> _colorStack;
-    Q3ValueStack<int> _pointStyleStack;
-    Q3ValueStack<int> _lineStyleStack;
-    Q3ValueStack<bool> _hasPointsStack;
-    Q3ValueStack<bool> _hasLinesStack;
-    Q3ValueStack<int> _pointDensityStack;
+    QStack<int> _widthStack;
+    QStack<QColor> _colorStack;
+    QStack<int> _pointStyleStack;
+    QStack<int> _lineStyleStack;
+    QStack<bool> _hasPointsStack;
+    QStack<bool> _hasLinesStack;
+    QStack<int> _pointDensityStack;
 
 };
 

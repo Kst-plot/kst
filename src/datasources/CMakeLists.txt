@@ -1,9 +1,9 @@
 
-#add_subdirectory( ascii )
+add_subdirectory( ascii )
 add_subdirectory( qimagesource )
 add_subdirectory( dirfile )
 add_subdirectory( frame )
-#add_subdirectory( indirect )
+add_subdirectory( indirect )
 #add_subdirectory( scuba2 )
 
 message(STATUS "${CMAKE_CURRENT_SOURCE_DIR}: skipped subdir $(PIOLIB_SUBDIR)")

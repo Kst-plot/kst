@@ -25,7 +25,7 @@
 class TW : public QWidget {
   Q_OBJECT
  public:
-  TW(QApplication *a, QWidget *parent = 0, const char *name=0);
+  TW(QApplication *a, QWidget *parent = 0);
   void testPixMapLines(int length);
   void testPixMapFill(int size);
   void testDrawPixmap();

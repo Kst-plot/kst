@@ -22,7 +22,7 @@
 #include <assert.h>
 #include <math.h>
 
-#include <q3stylesheet.h>
+#include <QTextDocument>
 
 #include <kglobal.h>
 #include <klocale.h>
@@ -271,8 +271,8 @@ void KstPSD::_adjustLengths() {
 void KstPSD::save(QTextStream &ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<psdobject>" << endl;
-  ts << l2 << "<tag>" << Q3StyleSheet::escape(tagName()) << "</tag>" << endl;
-  ts << l2 << "<vectag>" << Q3StyleSheet::escape(_inputVectors[INVECTOR]->tag().tagString()) << "</vectag>" << endl;
+  ts << l2 << "<tag>" << Qt::escape(tagName()) << "</tag>" << endl;
+  ts << l2 << "<vectag>" << Qt::escape(_inputVectors[INVECTOR]->tag().tagString()) << "</vectag>" << endl;
   ts << l2 << "<sampRate>"  << _Freq << "</sampRate>" << endl;
   ts << l2 << "<average>" << _Average << "</average>" << endl;
   ts << l2 << "<fftLen>" << int(ceil(log(double(_PSDLen*2)) / log(2.0))) << "</fftLen>" << endl;

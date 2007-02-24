@@ -19,7 +19,7 @@
 #ifndef ELOGCONFIGURATIONI_H
 #define ELOGCONFIGURATIONI_H
 
-#include "elogconfiguration.h"
+#include "ui_elogconfiguration.h"
 
 class KstELOG;
 

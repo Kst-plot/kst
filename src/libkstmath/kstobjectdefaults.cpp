@@ -19,7 +19,7 @@
 #include "kstdataobjectcollection.h"
 #include "kstpsd.h"
 
-#include <kconfig.h>
+#include <kconfiggroup.h>
 
 KstObjectDefaults KST::objectDefaults;
 
@@ -70,7 +70,7 @@ int KstObjectDefaults::fftLen() const {
 }
 
 
-void KstObjectDefaults::writeConfig(KConfig *config) {
+void KstObjectDefaults::writeConfig(KConfigGroup *config) {
   config->writeEntry("defaultFFTLen", KST::objectDefaults.fftLen());
   config->writeEntry("defaultPSDFreq", KST::objectDefaults.psdFreq());
   config->writeEntry("defaultVUnits", KST::objectDefaults.vUnits());
@@ -84,17 +84,17 @@ void KstObjectDefaults::writeConfig(KConfig *config) {
 }
 
 
-void KstObjectDefaults::readConfig(KConfig *config) {
-  _fft_len = config->readNumEntry("defaultFFTLen", 10);
-  _psd_freq = config->readDoubleNumEntry("defaultPSDFreq", 100.0);
+void KstObjectDefaults::readConfig(KConfigGroup *config) {
+  _fft_len = config->readEntry("defaultFFTLen", 10);
+  _psd_freq = config->readEntry("defaultPSDFreq", 100.0);
   _vUnits = config->readEntry("defaultVUnits", "V");
   _rUnits = config->readEntry("defaultRUnits", "Hz");
-  _apodize = config->readNumEntry("defaultApodize", 1);
-  _removeMean = config->readNumEntry("defaultRemoveMean", 1);
-  _psd_average = config->readNumEntry("defaultPSDAverage", 1);
-  _apodizeFxn = config->readNumEntry("defaultApodizeFxn", 0);
-  _output = config->readNumEntry("defaultOutput", 0);
-  _interpolateHoles = config->readBoolEntry("defaultInterpolateHoles", false);
+  _apodize = config->readEntry("defaultApodize", 1);
+  _removeMean = config->readEntry("defaultRemoveMean", 1);
+  _psd_average = config->readEntry("defaultPSDAverage", 1);
+  _apodizeFxn = config->readEntry("defaultApodizeFxn", 0);
+  _output = config->readEntry("defaultOutput", 0);
+  _interpolateHoles = config->readEntry("defaultInterpolateHoles", false);
 }
 
 

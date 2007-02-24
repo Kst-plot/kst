@@ -19,7 +19,7 @@
 #ifndef ELOGEVENTENTRYI_H
 #define ELOGEVENTENTRYI_H
 
-#include "elogevententry.h"
+#include "ui_elogevententry.h"
 #include <kstevents.h>
 
 class KstELOG;

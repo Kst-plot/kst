@@ -21,7 +21,7 @@
 #include <qstring.h>
 #include "kst_export.h"
 
-class KConfig;
+class KConfigGroup;
 
 class KST_EXPORT KstVectorDefaults {
   public:
@@ -38,8 +38,8 @@ class KST_EXPORT KstVectorDefaults {
     bool doAve() const;
     int skip() const;
 
-    void readConfig(KConfig *config);
-    void writeConfig(KConfig *config);
+    void readConfig(KConfigGroup *config);
+    void writeConfig(KConfigGroup *config);
 
   private:
     QString _dataSource, _wizardX;

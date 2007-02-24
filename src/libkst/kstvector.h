@@ -19,7 +19,7 @@
 #define KSTVECTOR_H
 
 #include <math.h>
-#include <q3dict.h>
+#include <qhash.h>
 #include <qpointer.h>
 #include "kstobjectcollection.h"
 #include "kstprimitive.h"
@@ -139,7 +139,7 @@ class KstVector : public KstPrimitive {
     /** access functions for _isScalarList */
     bool isScalarList() const { return _isScalarList; }
     
-    const Q3Dict<KstScalar>& scalars() const;
+    const QHash<QString, KstScalar*>& scalars() const;
 
     void setLabel(const QString& label_in);
 
@@ -172,7 +172,7 @@ class KstVector : public KstPrimitive {
     int NumNew;
 
     /** Statistics Scalars */
-    Q3Dict<KstScalar> _scalars;
+    QHash<QString, KstScalar*> _scalars;
 
     /** is the vector monotonically rising */
     bool _is_rising : 1;

@@ -18,7 +18,7 @@
 #ifndef KSTDATASOURCE_H
 #define KSTDATASOURCE_H
 
-#include <q3dict.h>
+#include <qhash.h>
 #include <qdom.h>
 #include <qpointer.h>
 #include <qstring.h>
@@ -190,7 +190,7 @@ class KST_EXPORT KstDataSource : public KstObject {
      */
     virtual bool reset();
 
-    virtual const Q3Dict<KstString>& metaData() const;
+    virtual const QHash<QString, KstString*>& metaData() const;
 
     virtual QString metaData(const QString& key) const;
 
@@ -234,7 +234,7 @@ class KST_EXPORT KstDataSource : public KstObject {
     /** The source type name. */
     QString _source;
 
-    Q3Dict<KstString> _metaData;
+    QHash<QString, KstString*> _metaData;
 
     KConfig *_cfg;
 
@@ -306,7 +306,7 @@ class KstDataSourceConfigWidget : public QWidget {
     // If _instance is nonzero, then your settings are to be saved for this
     // particular instance of the source, as opposed to globally.
     KstDataSourcePtr _instance;
-};
+} KST_EXPORT;
 
 #endif
 // vim: ts=2 sw=2 et

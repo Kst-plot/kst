@@ -21,13 +21,13 @@ int rc = KstTestSuccess;
 void testAssert(bool result, const QString& text = "Unknown") {
   if (!result) {
     KstTestFailed();
-    printf("Test [%s] failed.\n", text.latin1());
+    printf("Test [%s] failed.\n", text.toLatin1().data());
   }
 }
     
 
 void doTests() {
-  KstVectorPtr v1 = new KstVector("V1", 15);
+  KstVectorPtr v1 = new KstVector(KstObjectTag::fromString("V1"), 15);
   doTest(v1->tagName() == "V1");
   doTest(v1->length() == 15);
   v1->zero();
@@ -40,12 +40,12 @@ void doTests() {
   doTest(v1->length() == 3);
   doTest(v1->value()[0] == -42);
 
-  KstVectorPtr v2 = new KstVector(QString::null, 0);
+  KstVectorPtr v2 = new KstVector(KstObjectTag::fromString(QString::null), 0);
   doTest(v2->length() == 1);
   doTest(v2->tagName().startsWith("Anonymous")); // valid only in en_*
-  v2 = new KstVector("V2", 1);
+  v2 = new KstVector(KstObjectTag::fromString("V2"), 1);
   doTest(v2->length() == 1);
-  v2 = new KstVector("V2", 2);
+  v2 = new KstVector(KstObjectTag::fromString("V2"), 2);
   doTest(v2->length() == 2);
 
   v2->resize(3);
@@ -64,7 +64,7 @@ void doTests() {
 int main(int argc, char **argv) {
   atexit(exitHelper);
 
-  KApplication app(argc, argv, "testvector", false, false);
+  QCoreApplication app(argc, argv);
 
   doTests();
   // Don't put tests in main because we need to ensure that no KstObjects
