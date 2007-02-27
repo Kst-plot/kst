@@ -7,12 +7,12 @@ include_directories( ${CMAKE_BINARY_DIR}/kst ${CMAKE_SOURCE_DIR}/kst/src/extdate
 set(kstwidgets_LIB_SRCS
    kstwidgets.cpp
 
-#    colorpalettewidget.cpp
+   colorpalettewidget.cpp
    curveappearancewidget.cpp
-#    curveplacementwidget.cpp
-#    datarangewidget.cpp
-#    editmultiplewidget.cpp
-#    fftoptionswidget.cpp
+   curveplacementwidget.cpp
+   datarangewidget.cpp
+   editmultiplewidget.cpp
+   fftoptionswidget.cpp
 #    matrixselector.cpp
 #    scalarselector.cpp
 #    stringselector.cpp
@@ -30,12 +30,12 @@ set(kstwidgets_LIB_SRCS
 kde4_automoc(${kstwidgets_LIB_SRCS})
 
 kde4_add_ui_files(kstwidgets_LIB_SRCS
-#    colorpalettewidget4.ui
+   colorpalettewidget4.ui
    curveappearancewidget4.ui
-#    curveplacementwidget4.ui
-#    datarangewidget4.ui
-#    editmultiplewidget4.ui
-#    fftoptionswidget4.ui
+   curveplacementwidget4.ui
+   datarangewidget4.ui
+   editmultiplewidget4.ui
+   fftoptionswidget4.ui
 #    matrixselector4.ui
 #    scalarselector4.ui
 #    stringselector4.ui

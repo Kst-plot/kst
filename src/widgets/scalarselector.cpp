@@ -17,10 +17,33 @@
 
 #include "scalarselector.h"
 
+#include <QTimer>
+#include <QLineEdit>
+#include <QValidator>
+#include <QListWidget>
+#include <QAbstractItemView>
+
+#include <kmessagebox.h>
+#include <kiconloader.h>
+
+#include <comboboxselection_i.h>
+#include <kstdatacollection.h>
+#include <kstcombobox.h>
+#include <scalareditor.h>
+#include <enodes.h>
+
+#include <kst_export.h>
+
+ScalarSelector::ScalarSelector(QWidget *parent)
+    : QWidget(parent) {
+  setupUi(this);
+}
+
+
 void ScalarSelector::init() {
   update();
-  _newScalar->setPixmap(BarIcon("kst_scalarnew"));
-  _editScalar->setPixmap(BarIcon("kst_scalaredit"));
+  _newScalar->setIcon(BarIcon("kst_scalarnew"));
+  _editScalar->setIcon(BarIcon("kst_scalaredit"));
   connect(_selectScalar, SIGNAL(clicked()), this, SLOT(selectScalar()));
   connect(_newScalar, SIGNAL(clicked()), this, SLOT(createNewScalar()));
   connect(_editScalar, SIGNAL(clicked()), this, SLOT(editScalar()));
@@ -29,13 +52,16 @@ void ScalarSelector::init() {
 }
 
 
+ScalarSelector::~ScalarSelector() {}
+
+
 void ScalarSelector::allowNewScalars(bool allowed) {
   _newScalar->setEnabled(allowed);
 }
 
 
 void ScalarSelector::update() {
-  if (_scalar->listBox()->isVisible()) {
+  if (_scalar->view()->isVisible()) {
     QTimer::singleShot(250, this, SLOT(update()));
     return;
   }
@@ -64,12 +90,12 @@ void ScalarSelector::update() {
   KST::scalarList.lock().unlock();
 
   qSort(scalars);
-  _scalar->insertStringList(scalars);
+  _scalar->addItems(scalars);
   if (found) {
-    _scalar->setCurrentText(prev);
+    _scalar->setItemText(_scalar->currentIndex(), prev);
   } else {
-    _scalar->insertItem("0");
-    _scalar->setCurrentText("0");
+    _scalar->addItem("0");
+    _scalar->setItemText(_scalar->currentIndex(), ("0");
     _editScalar->setEnabled(false);
   }
 
@@ -86,7 +112,7 @@ void ScalarSelector::createNewScalar() {
     double val = se->_value->text().toFloat(&ok);
 
     if (!ok) {
-      val = Equation::interpret(se->_value->text().latin1(), &ok);
+      val = Equation::interpret(se->_value->text().toLatin1(), &ok);
     }
 
     if (ok) {
@@ -113,12 +139,12 @@ void ScalarSelector::selectScalar() {
 
   selection->reset();
   for (i=0; i<_scalar->count(); i++) {
-    selection->addString(_scalar->text(i));
+    selection->addString(_scalar->itemText(i));
   }
   selection->sort();
   int rc = selection->exec();
   if (rc == QDialog::Accepted) {
-    _scalar->setCurrentText(selection->selected());
+    _scalar->setItemText(_scalar->currentIndex(), selection->selected());
   }
 
   delete selection;
@@ -142,7 +168,7 @@ void ScalarSelector::editScalar() {
     double val = se->_value->text().toFloat(&ok);
 
     if (!ok) {
-      val = Equation::interpret(se->_value->text().latin1(), &ok);
+      val = Equation::interpret(se->_value->text().toLatin1(), &ok);
     }
 
     if (ok) {
@@ -189,7 +215,7 @@ void ScalarSelector::setSelection(const QString &tag) {
     return;
   }
   blockSignals(true);
-  _scalar->setCurrentText(tag);
+  _scalar->setItemText(_scalar->currentIndex(), tag);
   selectionWatcher(tag);
   blockSignals(false);
 }

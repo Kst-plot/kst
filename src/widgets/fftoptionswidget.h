@@ -18,5 +18,29 @@
 #ifndef FFTOPTIONSWIDGET_H
 #define FFTOPTIONSWIDGET_H
 
+#include <QWidget>
+#include "ui_fftoptionswidget4.h"
+
+class KstFFTOptions : public QWidget, public Ui::KstFFTOptions {
+  Q_OBJECT
+
+public:
+  KstFFTOptions(QWidget *parent = 0);
+  ~KstFFTOptions();
+
+  void update();
+
+public slots:
+  void changedApodizeFxn();
+  void clickedInterleaved();
+  void clickedApodize();
+  void synch();
+  bool checkValues();
+  bool checkGivenValues(double sampRate, int FFTLen);
+
+private:
+  void init();
+};
+
 #endif
 // vim: ts=2 sw=2 et

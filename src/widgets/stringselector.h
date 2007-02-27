@@ -18,5 +18,32 @@
 #ifndef STRINGSELECTOR_H
 #define STRINGSELECTOR_H
 
+#include <QWidget>
+#include "ui_stringselector4.h"
+
+class StringSelector : public QWidget, public Ui::StringSelector {
+  Q_OBJECT
+
+public:
+  StringSelector(QWidget *parent = 0);
+  ~StringSelector();
+
+  QString selectedString();
+
+public slots:
+  void allowNewStrings(bool allowed);
+  void update();
+  void createNewString();
+  void selectString();
+  void editString();
+  void selectionWatcher(const QString &tag);
+  void setSelection(const QString &tag);
+  void setSelection(KstStringPtr s);
+  void allowDirectEntry(bool allowed);
+
+private:
+  void init();
+};
+
 #endif
 // vim: ts=2 sw=2 et

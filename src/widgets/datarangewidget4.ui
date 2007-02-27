@@ -28,7 +28,7 @@
         <number>0</number>
       </property>
       <item row="0" column="0" >
-        <widget class="Q3GroupBox" name="groupBox2" >
+        <widget class="QGroupBox" name="groupBox2" >
           <property name="title" >
             <string>Data Range</string>
           </property>

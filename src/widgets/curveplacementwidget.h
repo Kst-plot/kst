@@ -18,5 +18,33 @@
 #ifndef CURVEPLACEMENTWIDGET_H
 #define CURVEPLACEMENTWIDGET_H
 
+#include <QWidget>
+#include "ui_curveplacementwidget4.h"
+
+class CurvePlacementWidget : public QWidget, public Ui::CurvePlacementWidget {
+  Q_OBJECT
+
+public:
+  CurvePlacementWidget(QWidget *parent = 0);
+  ~CurvePlacementWidget();
+
+  bool existingPlot();
+  bool newPlot();
+  QString plotName();
+  int columns();
+  bool reGrid();
+
+public slots:
+  void setExistingPlot(bool existingPlot);
+  void setNewPlot(bool newPlot);
+  void setCols(int c);
+  void setCurrentPlot(const QString &p);
+  void newWindow();
+  void update();
+  void updatePlotList();
+  void updateEnabled();
+  void updateGrid();
+};
+
 #endif
 // vim: ts=2 sw=2 et

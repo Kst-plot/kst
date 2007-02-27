@@ -17,11 +17,39 @@
 
 #include "vectorselector.h"
 
-#include "kstdataobject.h"
+#include <QTimer>
+#include <QListWidget>
+#include <QAbstractItemView>
+
+#include <kiconloader.h>
+
+#include <kstdatacollection.h>
+#include <kstcombobox.h>
+#include <kstrvector.h>
+#include <kstsvector.h>
+#include <dialoglauncher.h>
+#include <kstdataobject.h>
+
+#include <kst_export.h>
+
+VectorSelector::VectorSelector(QWidget *parent)
+    : QWidget(parent), _provideNoneVector(false) {
+  setupUi(this);
+
+  connect(_newVector, SIGNAL(clicked()), this, SLOT(createNewVector()));
+
+  connect(_editVector, SIGNAL(clicked()), this, SLOT(editVector()));
+
+  connect(this, SIGNAL(selectionChanged(const QString&)), this, SLOT(selectionWatcher(const QString&)));
+}
+
+
+VectorSelector::~VectorSelector() {}
+
 
 void VectorSelector::init() {
-  _newVector->setPixmap(BarIcon("kst_vectornew"));
-  _editVector->setPixmap(BarIcon("kst_vectoredit"));
+  _newVector->setIcon(BarIcon("kst_vectornew"));
+  _editVector->setIcon(BarIcon("kst_vectoredit"));
   _provideNoneVector = false;
   update();
   connect(_vector, SIGNAL(activated(const QString&)), this, SIGNAL(selectionChanged(const QString&))); // annoying that signal->signal doesn't seem to work in .ui files
@@ -34,7 +62,7 @@ void VectorSelector::allowNewVectors(bool allowed) {
 
 
 QString VectorSelector::selectedVector() {
-  if (_provideNoneVector && _vector->currentItem() == 0) {
+  if (_provideNoneVector && _vector->currentIndex() == 0) {
     return QString::null;
   }
   return _vector->currentText();
@@ -42,7 +70,7 @@ QString VectorSelector::selectedVector() {
 
 
 void VectorSelector::update() {
-  if (_vector->listBox()->isVisible()) {
+  if (_vector->view()->isVisible()) {
     QTimer::singleShot(250, this, SLOT(update()));
     return;
   }
@@ -52,7 +80,7 @@ void VectorSelector::update() {
   bool found = false;
   _vector->clear();
   if (_provideNoneVector) {
-    _vector->insertItem(tr("<None>"));
+    _vector->addItem(tr("<None>"));
   }
   QStringList vectors;
   KST::vectorList.lock().readLock();
@@ -71,9 +99,9 @@ void VectorSelector::update() {
   }
   KST::vectorList.lock().unlock();
   qSort(vectors);
-  _vector->insertStringList(vectors);
+  _vector->addItems(vectors);
   if (found) {
-    _vector->setCurrentText(prev);
+    _vector->setItemText(_vector->currentIndex(), prev);
   }
   blockSignals(false);
   setEdit(_vector->currentText());
@@ -96,7 +124,7 @@ void VectorSelector::setSelection(const QString &tag) {
   if (tag.isEmpty()) {
     if (_provideNoneVector) {
       blockSignals(true);
-      _vector->setCurrentItem(0);
+      _vector->setCurrentIndex(0);
       blockSignals(false);
 
       _editVector->setEnabled(false);
@@ -104,7 +132,7 @@ void VectorSelector::setSelection(const QString &tag) {
     return;
   }
   blockSignals(true);
-  _vector->setCurrentText(tag);  // What if it isn't in the combo?
+  _vector->setItemText(_vector->currentIndex(), tag);  // What if it isn't in the combo?
   blockSignals(false);
 
   setEdit(tag);

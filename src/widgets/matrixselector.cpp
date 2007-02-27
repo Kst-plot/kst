@@ -17,13 +17,42 @@
 
 #include "matrixselector.h"
 
+#include <QTimer>
+#include <QListWidget>
+#include <QAbstractItemView>
+
+#include <kiconloader.h>
+
+#include <kstdatacollection.h>
+#include <kstcombobox.h>
+#include <kstmatrix.h>
+#include <kstdataobject.h>
+#include <dialoglauncher.h>
+
+#include <kst_export.h>
+
+MatrixSelector::MatrixSelector(QWidget *parent)
+    : QWidget(parent), _provideNoneMatrix(false) {
+  setupUi(this);
+
+  connect(this, SIGNAL(selectionChanged(const QString&)), this, SLOT(selectionWatcher(const QString&)));
+
+  connect(_editMatrix, SIGNAL(clicked()), this, SLOT(editMatrix()));
+
+  connect(_newMatrix, SIGNAL(clicked()), this, SLOT(createNewMatrix()));
+}
+
+
+MatrixSelector::~MatrixSelector() {}
+
+
 void MatrixSelector::allowNewMatrices(bool allowed) {
   _newMatrix->setEnabled(allowed);
 }
 
 
 QString MatrixSelector::selectedMatrix() {
-  if (_provideNoneMatrix && _matrix->currentItem() == 0) {
+  if (_provideNoneMatrix && _matrix->currentIndex() == 0) {
     return QString::null;
   }
   return _matrix->currentText();
@@ -31,7 +60,7 @@ QString MatrixSelector::selectedMatrix() {
 
 
 void MatrixSelector::update() {
-  if (_matrix->listBox()->isVisible()) {
+  if (_matrix->view()->isVisible()) {
     QTimer::singleShot(250, this, SLOT(update()));
     return;
   }
@@ -41,7 +70,7 @@ void MatrixSelector::update() {
   bool found = false;
   _matrix->clear();
   if (_provideNoneMatrix) {
-    _matrix->insertItem("<None>");
+    _matrix->addItem("<None>");
   }
 
   KstMatrixList matrices = KST::matrixList.list();
@@ -50,14 +79,14 @@ void MatrixSelector::update() {
     (*i)->readLock();
     QString tag = (*i)->tag().displayString();
     (*i)->unlock();
-    _matrix->insertItem(tag);
+    _matrix->addItem(tag);
     if (!found && tag == prev) {
       found = true;
     }
   }
   KST::matrixList.lock().unlock();
   if (found) {
-    _matrix->setCurrentText(prev);
+    _matrix->setItemText(_matrix->currentIndex(), prev);
   }
   blockSignals(false);
   setEdit(_matrix->currentText());
@@ -65,8 +94,8 @@ void MatrixSelector::update() {
 
 
 void MatrixSelector::init() {
-  _newMatrix->setPixmap(BarIcon("kst_matrixnew"));
-  _editMatrix->setPixmap(BarIcon("kst_matrixedit"));
+  _newMatrix->setIcon(BarIcon("kst_matrixnew"));
+  _editMatrix->setIcon(BarIcon("kst_matrixedit"));
   _provideNoneMatrix = false;
   update();
   connect(_matrix, SIGNAL(activated(const QString&)), this, SIGNAL(selectionChanged(const QString&)));
@@ -89,14 +118,14 @@ void MatrixSelector::setSelection(const QString &tag) {
   if (tag.isEmpty()) {
     if (_provideNoneMatrix) {
       blockSignals(true);
-      _matrix->setCurrentItem(0);
+      _matrix->setCurrentIndex(0);
       blockSignals(false);
       _editMatrix->setEnabled(false);
     }
     return;
   }
   blockSignals(true);
-  _matrix->setCurrentText(tag);  // What if it isn't in the combo?
+  _matrix->setItemText(_matrix->currentIndex(), tag);  // What if it isn't in the combo?
   blockSignals(false);
 
   setEdit(tag);

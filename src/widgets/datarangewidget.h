@@ -18,5 +18,40 @@
 #ifndef DATARANGEWIDGET_H
 #define DATARANGEWIDGET_H
 
+#include <QWidget>
+#include "ui_datarangewidget4.h"
+
+class KstDataRange : public QWidget, public Ui::KstDataRange {
+  Q_OBJECT
+
+public:
+  KstDataRange(QWidget *parent = 0);
+  ~KstDataRange();
+
+  void update();
+  double f0Value();
+  double nValue();
+  KST::ExtDateTime f0DateTimeValue();
+  bool isStartRelativeTime();
+  bool isStartAbsoluteTime();
+  bool isRangeRelativeTime();
+
+public slots:
+  void clickedCountFromEnd();
+  void ClickedReadToEnd();
+  void clickedDoSkip();
+  void updateEnables();
+  void setAllowTime(bool allow);
+  void setF0Value(double v);
+  void setNValue(double v);
+
+private:
+  void init();
+  double interpret(const char *txt);
+
+private:
+  bool _time;
+};
+
 #endif
 // vim: ts=2 sw=2 et

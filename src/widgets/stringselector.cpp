@@ -17,10 +17,36 @@
 
 #include "stringselector.h"
 
+#include <QTimer>
+#include <QLineEdit>
+#include <QValidator>
+#include <QListWidget>
+#include <QAbstractItemView>
+
+#include <kmessagebox.h>
+#include <kiconloader.h>
+
+#include <comboboxselection_i.h>
+#include <kstdatacollection.h>
+#include <kstcombobox.h>
+#include <stringeditor.h>
+#include <enodes.h>
+
+#include <kst_export.h>
+
+StringSelector::StringSelector(QWidget *parent)
+    : QWidget(parent) {
+  setupUi(this);
+}
+
+
+StringSelector::~StringSelector() {}
+
+
 void StringSelector::init() {
   update();
-  _newString->setPixmap(BarIcon("kst_stringnew"));
-  _editString->setPixmap(BarIcon("kst_stringedit"));
+  _newString->setIcon(BarIcon("kst_stringnew"));
+  _editString->setIcon(BarIcon("kst_stringedit"));
   connect(_selectString, SIGNAL(clicked()), this, SLOT(selectString()));
   connect(_newString, SIGNAL(clicked()), this, SLOT(createNewString()));
   connect(_editString, SIGNAL(clicked()), this, SLOT(editString()));
@@ -36,7 +62,7 @@ void StringSelector::allowNewStrings(bool allowed) {
 
 
 void StringSelector::update() {
-  if (_string->listBox()->isVisible()) {
+  if (_string->view()->isVisible()) {
     QTimer::singleShot(250, this, SLOT(update()));
     return;
   }
@@ -63,9 +89,9 @@ void StringSelector::update() {
   KST::stringList.lock().unlock();
 
   qSort(strings);
-  _string->insertStringList(strings);
+  _string->addItems(strings);
   if (found) {
-    _string->setCurrentText(prev);
+    _string->setItemText(_string->currentIndex(), prev);
   }
 
   blockSignals(false);
@@ -81,7 +107,7 @@ void StringSelector::createNewString() {
     double val = se->_value->text().toFloat(&ok);
 
     if (!ok) {
-      val = Equation::interpret(se->_value->text().latin1(), &ok);
+      val = Equation::interpret(se->_value->text().toLatin1(), &ok);
     }
 
     if (ok) {
@@ -108,12 +134,12 @@ void StringSelector::selectString() {
 
   selection->reset();
   for (i=0; i<_string->count(); i++) {
-    selection->addString(_string->text(i));
+    selection->addString(_string->itemText(i));
   }
   selection->sort();
   int rc = selection->exec();
   if (rc == QDialog::Accepted) {
-    _string->setCurrentText(selection->selected());
+    _string->setItemText(_string->currentIndex(), selection->selected());
   }
 
   delete selection;
@@ -180,7 +206,7 @@ void StringSelector::setSelection(const QString &tag) {
     return;
   }
   blockSignals(true);
-  _string->setCurrentText(tag);
+  _string->setItemText(_string->currentIndex(), tag);
   selectionWatcher(tag);
   blockSignals(false);
 }

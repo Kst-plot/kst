@@ -31,7 +31,7 @@
         <number>0</number>
       </property>
       <item row="0" column="0" >
-        <widget class="Q3GroupBox" name="GroupBoxFFTOptions" >
+        <widget class="QGroupBox" name="GroupBoxFFTOptions" >
           <property name="sizePolicy" >
             <sizepolicy>
               <hsizetype>5</hsizetype>
@@ -123,8 +123,8 @@
                   </widget>
                 </item>
                 <item row="0" column="4" >
-                  <widget class="KDoubleNumInput" name="Sigma" >
-                    <property name="minValue" >
+                  <widget class="QDoubleSpinBox" name="Sigma" >
+                    <property name="minimum" >
                       <double>0.010000000000000</double>
                     </property>
                   </widget>

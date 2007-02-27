@@ -18,5 +18,20 @@
 #ifndef EDITMULTIPLEWIDGET_H
 #define EDITMULTIPLEWIDGET_H
 
+#include <QWidget>
+#include "ui_editmultiplewidget4.h"
+
+class EditMultipleWidget : public QWidget, public Ui::EditMultipleWidget {
+  Q_OBJECT
+
+public:
+  EditMultipleWidget(QWidget *parent = 0);
+  ~EditMultipleWidget();
+
+public slots:
+  void selectAllObjects();
+  void applyFilter(const QString &filter);
+};
+
 #endif
 // vim: ts=2 sw=2 et

@@ -17,52 +17,88 @@
 
 #include "curveplacementwidget.h"
 
+#include <kstdatacollection.h>
+
+#include <kst_export.h>
+
+CurvePlacementWidget::CurvePlacementWidget(QWidget *parent)
+    : QWidget(parent) {
+  setupUi(this);
+
+  connect(_plotWindow, SIGNAL(activated(int)), this, SLOT(updatePlotList()));
+
+  connect(_newWindow, SIGNAL(clicked()), this, SLOT(newWindow()));
+
+  connect(_inPlot, SIGNAL(clicked()), this, SLOT(updateEnabled()));
+
+  connect(_newPlot, SIGNAL(clicked()), this, SLOT(updateEnabled()));
+
+  connect(_dontPlace, SIGNAL(clicked()), this, SLOT(updateEnabled()));
+
+  connect(_plotWindow, SIGNAL(textChanged(const QString&)), this, SLOT(updateGrid()));
+
+  connect(_reGrid, SIGNAL(clicked()), this, SLOT(updateEnabled()));
+}
+
+
+CurvePlacementWidget::~CurvePlacementWidget() {}
+
+
 bool CurvePlacementWidget::existingPlot() {
   return _inPlot->isChecked();
 }
+
 
 bool CurvePlacementWidget::newPlot() {
   return _newPlot->isChecked();
 }
 
+
 void CurvePlacementWidget::setExistingPlot(bool existingPlot) {
   _inPlot->setChecked(existingPlot);
 }
+
 
 void CurvePlacementWidget::setNewPlot(bool newPlot) {
   _newPlot->setChecked(newPlot);
 }
 
+
 QString CurvePlacementWidget::plotName() {
   return _plotList->currentText();
 }
+
 
 int CurvePlacementWidget::columns() {
   return _plotColumns->value();
 }
 
+
 void CurvePlacementWidget::setCols(int c) {
   _plotColumns->setValue(c);
 }
 
+
 void CurvePlacementWidget::setCurrentPlot(const QString &p) {
-  _plotList->setCurrentText(p);
+  _plotList->setItemText(_plotList->currentIndex(), p);
 }
+
 
 void CurvePlacementWidget::newWindow() {
   KstData::self()->newWindow(this);
   update();
 }
 
+
 void CurvePlacementWidget::update() {
   _plotWindow->clear();
   QStringList windows = KstData::self()->windowList();
   for (QStringList::ConstIterator i = windows.begin(); i != windows.end(); ++i) {
-    _plotWindow->insertItem(*i);
+    _plotWindow->addItem(*i);
   }
   QString cur = KstData::self()->currentWindow();
   if (!cur.isEmpty()) {
-    _plotWindow->setCurrentItem(cur);
+    _plotWindow->setItemText(_plotWindow->currentIndex(), cur);
   }
 
   updatePlotList();
@@ -71,6 +107,7 @@ void CurvePlacementWidget::update() {
 
   updateGrid();
 }
+
 
 void CurvePlacementWidget::updatePlotList() {
   QString old;
@@ -81,11 +118,11 @@ void CurvePlacementWidget::updatePlotList() {
   QStringList plots = KstData::self()->plotList(_plotWindow->currentText());
   _plotList->clear();
   for (QStringList::ConstIterator i = plots.begin(); i != plots.end(); ++i) {
-    _plotList->insertItem(*i);
+    _plotList->addItem(*i);
   }
 
   if (!old.isNull() && plots.contains(old)) {
-    _plotList->setCurrentText(old);
+    _plotList->setItemText(_plotList->currentIndex(), old);
   }
 }
 
@@ -114,6 +151,6 @@ bool CurvePlacementWidget::reGrid() {
   return _reGrid->isChecked();
 }
 
-#include "curveplacement.moc"
+#include "curveplacementwidget.moc"
 
 // vim: ts=2 sw=2 et

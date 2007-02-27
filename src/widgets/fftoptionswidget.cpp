@@ -17,6 +17,29 @@
 
 #include "fftoptionswidget.h"
 
+#include <kmessagebox.h>
+
+#include <kstobjectdefaults.h>
+
+#include <kst_export.h>
+
+KstFFTOptions::KstFFTOptions(QWidget *parent)
+    : QWidget(parent) {
+  setupUi(this);
+
+  connect(Interleaved, SIGNAL(clicked()), this, SLOT(clickedInterleaved()));
+
+  connect(Apodize, SIGNAL(clicked()), this, SLOT(clickedApodize()));
+
+  connect(ApodizeFxn, SIGNAL(activated(int)), this, SLOT(changedApodizeFxn()));
+
+  connect(Apodize, SIGNAL(clicked()), this, SLOT(changedApodizeFxn()));
+}
+
+
+KstFFTOptions::~KstFFTOptions() {}
+
+
 void KstFFTOptions::init() {
   update();
 }
@@ -32,8 +55,8 @@ void KstFFTOptions::update() {
   Apodize->setChecked(KST::objectDefaults.apodize());
   RemoveMean->setChecked(KST::objectDefaults.removeMean());
   Interleaved->setChecked(KST::objectDefaults.psdAverage());
-  ApodizeFxn->setCurrentItem(KST::objectDefaults.apodizeFxn());
-  Output->setCurrentItem(KST::objectDefaults.output());
+  ApodizeFxn->setCurrentIndex(KST::objectDefaults.apodizeFxn());
+  Output->setCurrentIndex(KST::objectDefaults.output());
   InterpolateHoles->setChecked(KST::objectDefaults.interpolateHoles());
 
   clickedInterleaved();
@@ -44,10 +67,10 @@ void KstFFTOptions::update() {
 
 void KstFFTOptions::changedApodizeFxn() {
   int gaussianIndex = 5;
-  if (ApodizeFxn->text(0).isEmpty()) {
+  if (ApodizeFxn->itemText(0).isEmpty()) {
     ++gaussianIndex;
   }
-  Sigma->setEnabled(ApodizeFxn->currentItem() == gaussianIndex && Apodize->isChecked());
+  Sigma->setEnabled(ApodizeFxn->currentIndex() == gaussianIndex && Apodize->isChecked());
 }
 
 

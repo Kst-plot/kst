@@ -22,12 +22,13 @@
 #include <QPixmap>
 #include <QResizeEvent>
 
-#include "kstsettings.h"
-#include "kstlinestyle.h"
-#include "kstbasecurve.h"
-#include "kstcurvepointsymbol.h"
-#include "kstcolorsequence.h"
-#include "kst_export.h"
+#include <kstsettings.h>
+#include <kstlinestyle.h>
+#include <kstbasecurve.h>
+#include <kstcurvepointsymbol.h>
+#include <kstcolorsequence.h>
+
+#include <kst_export.h>
 
 CurveAppearanceWidget::CurveAppearanceWidget(QWidget *parent)
     : QWidget(parent) {

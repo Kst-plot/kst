@@ -16,7 +16,23 @@
  ***************************************************************************/
 
 #include "colorpalettewidget.h"
+
 #include <QPixmap>
+#include <QPainter>
+
+#include <kst_export.h>
+
+ColorPaletteWidget::ColorPaletteWidget(QWidget *parent)
+    : QWidget(parent) {
+  setupUi(this);
+
+  connect(_palette, SIGNAL(highlighted(const QString&)), this, SLOT(updatePalette(const QString&)));
+  connect(_palette, SIGNAL(activated(const QString&)), this, SLOT(updatePalette(const QString&)));
+}
+
+
+ColorPaletteWidget::~ColorPaletteWidget() {}
+
 
 void ColorPaletteWidget::init() {
   refresh();
@@ -71,12 +87,12 @@ void ColorPaletteWidget::refresh() {
   _palette->clear();
   QStringList palList = KPalette::getPaletteList();
   palList.sort();
-  _palette->insertStringList(palList);
+  _palette->addItems(palList);
 
   if (palList.contains("Kst Spectrum 1021")) {
-    _palette->setCurrentText("Kst Spectrum 1021");
+    _palette->setItemText(_palette->currentIndex(), "Kst Spectrum 1021");
   } else if (palList.contains("Kst Grayscale 256")) {
-    _palette->setCurrentText("Kst Grayscale 256");
+    _palette->setItemText(_palette->currentIndex(), "Kst Grayscale 256");
   }
 }
 
@@ -87,10 +103,10 @@ void ColorPaletteWidget::refresh( const QString & palette ) {
 
   _palette->clear();
   palList.sort();
-  _palette->insertStringList(palList);
+  _palette->addItems(palList);
 
   for (i = 0; i < _palette->count(); ++i) {
-    if (_palette->text(i) == palette) {
+    if (_palette->itemText(i) == palette) {
       break;
     }
   }
@@ -98,13 +114,13 @@ void ColorPaletteWidget::refresh( const QString & palette ) {
     i = 0;
   }
 
-  _palette->setCurrentItem(i);
+  _palette->setCurrentIndex(i);
 }
 
 
 
 int ColorPaletteWidget::currentPaletteIndex() {
-  return _palette->currentItem();
+  return _palette->currentIndex();
 }
 
 #include "colorpalettewidget.moc"

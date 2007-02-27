@@ -18,5 +18,36 @@
 #ifndef VECTORSELECTOR_H
 #define VECTORSELECTOR_H
 
+#include <QWidget>
+#include "ui_vectorselector4.h"
+
+class VectorSelector : public QWidget, public Ui::VectorSelector {
+  Q_OBJECT
+
+public:
+  VectorSelector(QWidget *parent = 0);
+  ~VectorSelector();
+
+  QString selectedVector();
+
+public slots:
+  void allowNewVectors(bool allowed);
+  void update();
+  void createNewVector();
+  void selectionWatcher(const QString &tag);
+  void setSelection(const QString &tag);
+  void newVectorCreated(KstVectorPtr v);
+  void setSelection(KstVectorPtr v);
+  void provideNoneVector(bool provide);
+  void editVector();
+  void setEdit(const QString &tag);
+
+private:
+  void init();
+
+private:
+  bool _provideNoneVector;
+};
+
 #endif
 // vim: ts=2 sw=2 et

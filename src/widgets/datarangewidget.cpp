@@ -17,6 +17,35 @@
 
 #include "datarangewidget.h"
 
+#include <QTimer>
+
+#include <kstmath.h>
+#include <timedefinitions.h>
+#include <kstvectordefaults.h>
+#include <kstcurvepointsymbol.h>
+#include <kstcolorsequence.h>
+#include <kstvector.h>
+#include <eparse.h>
+#include <enodes.h>
+#include <kstdateparser.h>
+
+#include <kst_export.h>
+
+KstDataRange::KstDataRange(QWidget *parent)
+    : QWidget(parent), _time(false) {
+  setupUi(this);
+
+  connect(CountFromEnd, SIGNAL(clicked()), this, SLOT(clickedCountFromEnd()));
+
+  connect(ReadToEnd, SIGNAL(clicked()), this, SLOT(ClickedReadToEnd()));
+
+  connect(DoSkip, SIGNAL(clicked()), this, SLOT(clickedDoSkip()));
+}
+
+
+KstDataRange::~KstDataRange() {}
+
+
 void KstDataRange::init() {
   _time = false;
   update();
@@ -118,14 +147,14 @@ void KstDataRange::setAllowTime(bool allow) {
   if (allow != _time) {
     _time = allow;
     _startUnits->clear();
-    _startUnits->insertItem(i18n(KST::timeDefinitions[0].name, KST::timeDefinitions[0].description));
+    _startUnits->addItem(i18n(KST::timeDefinitions[0].name, KST::timeDefinitions[0].description));
     _rangeUnits->clear();
-    _rangeUnits->insertItem(i18n(KST::timeDefinitions[0].name, KST::timeDefinitions[0].description));
+    _rangeUnits->addItem(i18n(KST::timeDefinitions[0].name, KST::timeDefinitions[0].description));
     if (_time) {
       for (int i = 1; KST::timeDefinitions[i].name; ++i) {
-        _startUnits->insertItem(i18n(KST::timeDefinitions[i].name, KST::timeDefinitions[i].description));
+        _startUnits->addItem(i18n(KST::timeDefinitions[i].name, KST::timeDefinitions[i].description));
         if (i != KST::dateTimeEntry) {
-          _rangeUnits->insertItem(i18n(KST::timeDefinitions[i].name, KST::timeDefinitions[i].description));
+          _rangeUnits->addItem(i18n(KST::timeDefinitions[i].name, KST::timeDefinitions[i].description));
         }
       }
     }
@@ -149,7 +178,7 @@ double KstDataRange::interpret(const char *txt) {
 
 
 double KstDataRange::f0Value() {
-  const int cur = _startUnits->currentItem();
+  const int cur = _startUnits->currentIndex();
   if (cur == KST::dateTimeEntry) {
     KST::ExtDateTime edt = KST::parsePlanckDate(F0->text());
     if (edt.isNull()) {
@@ -157,21 +186,21 @@ double KstDataRange::f0Value() {
     }
     return KST::extDateTimeToMilliseconds(edt);
   }
-  return ::d2i(interpret(F0->text().latin1()) * KST::timeDefinitions[cur].factor);
+  return ::d2i(interpret(F0->text().toLatin1()) * KST::timeDefinitions[cur].factor);
 }
 
 
 double KstDataRange::nValue() {
-  int cur = _rangeUnits->currentItem();
+  int cur = _rangeUnits->currentIndex();
   if (cur >= KST::dateTimeEntry) {
     ++cur; // we don't allow "date"
   }
-  return ::d2i(interpret(N->text().latin1()) * KST::timeDefinitions[cur].factor);
+  return ::d2i(interpret(N->text().toLatin1()) * KST::timeDefinitions[cur].factor);
 }
 
 
 KST::ExtDateTime KstDataRange::f0DateTimeValue() {
-  const int cur = _startUnits->currentItem();
+  const int cur = _startUnits->currentIndex();
   KST::ExtDateTime edt;
   if (cur == KST::dateTimeEntry) {
     edt = KST::parsePlanckDate(F0->text());
@@ -181,17 +210,17 @@ KST::ExtDateTime KstDataRange::f0DateTimeValue() {
 
 
 bool KstDataRange::isStartRelativeTime() {
-  return _startUnits->currentItem() > KST::dateTimeEntry;
+  return _startUnits->currentIndex() > KST::dateTimeEntry;
 }
 
 
 bool KstDataRange::isStartAbsoluteTime() {
-  return _startUnits->currentItem() == KST::dateTimeEntry;
+  return _startUnits->currentIndex() == KST::dateTimeEntry;
 }
 
 
 bool KstDataRange::isRangeRelativeTime() {
-  return _rangeUnits->currentItem() > KST::dateTimeEntry;
+  return _rangeUnits->currentIndex() > KST::dateTimeEntry;
 }
 
 #include "datarangewidget.moc"
