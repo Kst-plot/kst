@@ -19,6 +19,8 @@
 #define KSTCOMBOBOX_H
 
 #include <kcombobox.h>
+//Added by qt3to4:
+#include <QFocusEvent>
 
 /*This class is a wrapper around KComboBox that does something different in read only mode...
   basically, we act like a readwrite combo with one important difference... when the widget

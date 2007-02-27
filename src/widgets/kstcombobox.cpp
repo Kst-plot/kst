@@ -16,6 +16,8 @@
  ***************************************************************************/
 
 #include "kstcombobox.h"
+//Added by qt3to4:
+#include <QFocusEvent>
 
 KstComboBox::KstComboBox(QWidget *parent, const char *name)
   : KComboBox(parent, name), _trueRW(false) {

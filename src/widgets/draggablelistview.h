@@ -18,18 +18,20 @@
 #ifndef DRAGGABLELISTVIEW_H
 #define DRAGGABLELISTVIEW_H
 
-#include <qlistview.h>
-#include <qdragobject.h>
+#include <q3listview.h>
+#include <q3dragobject.h>
+//Added by qt3to4:
+#include <QMouseEvent>
 
 #include "kst_export.h"
 
-class KST_EXPORT DraggableListView : public QListView {
+class KST_EXPORT DraggableListView : public Q3ListView {
   Q_OBJECT
   public:
     DraggableListView(QWidget *parent = 0L, const char *name = 0L);
     virtual ~DraggableListView();
 
-    virtual QDragObject *dragObject();
+    virtual Q3DragObject *dragObject();
 
     bool dragEnabled() const;
     virtual void setDragEnabled(bool enabled);

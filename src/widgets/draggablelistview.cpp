@@ -16,10 +16,12 @@
  ***************************************************************************/
 
 #include <qapplication.h>
+//Added by qt3to4:
+#include <QMouseEvent>
 #include "draggablelistview.h"
 
 DraggableListView::DraggableListView(QWidget *parent, const char *name)
-: QListView(parent, name), _pressPos(-1, -1), _dragEnabled(false) {
+: Q3ListView(parent, name), _pressPos(-1, -1), _dragEnabled(false) {
 }
 
 
@@ -37,7 +39,7 @@ void DraggableListView::setDragEnabled(bool en) {
 }
 
 
-QDragObject *DraggableListView::dragObject() {
+Q3DragObject *DraggableListView::dragObject() {
   return 0L;
 }
 
@@ -47,11 +49,11 @@ void DraggableListView::mousePressEvent(QMouseEvent *e) {
     _pressPos = QPoint(-1, -1);
 
     if (e->button() & Qt::LeftButton) {
-      QListViewItem *item;
+      Q3ListViewItem *item;
       if ((item = itemAt(e->pos()))) {
         setCurrentItem(item);
         if (!item->isSelected()) {
-          if (!(e->state() & Qt::ControlButton)) {
+          if (!(e->state() & Qt::ControlModifier)) {
             clearSelection();
           }
           setSelected(item, true);
@@ -63,13 +65,13 @@ void DraggableListView::mousePressEvent(QMouseEvent *e) {
     }
   }
 
-  QListView::mousePressEvent(e);
+  Q3ListView::mousePressEvent(e);
 }
 
 
 void DraggableListView::mouseReleaseEvent(QMouseEvent *e) {
   _pressPos = QPoint(-1, -1);
-  QListView::mouseReleaseEvent(e);
+  Q3ListView::mouseReleaseEvent(e);
 }
 
 
@@ -82,13 +84,13 @@ void DraggableListView::mouseMoveEvent(QMouseEvent *e) {
     }
     e->accept();
   } else {
-    QListView::mouseMoveEvent(e);
+    Q3ListView::mouseMoveEvent(e);
   }
 }
 
 
 void DraggableListView::startDrag() {
-  QDragObject *o = dragObject();
+  Q3DragObject *o = dragObject();
   if (o) {
     o->drag();
   }

@@ -63,9 +63,9 @@ public:
 
 	virtual QWidget *create(const QString &key, QWidget *parent = 0, const char *name = 0);
 
-	virtual QIconSet iconSet(const QString &key) const {
+	virtual QIcon iconSet(const QString &key) const {
 		Q_UNUSED(key)
-		return QIconSet();
+		return QIcon();
 	}
 
 	virtual bool isContainer(const QString &key) const {

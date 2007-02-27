@@ -20,6 +20,9 @@
 
 #include "draggablelistview.h"
 #include "kst_export.h"
+//Added by qt3to4:
+#include <QDragMoveEvent>
+#include <QDropEvent>
 
 class VectorListView : public DraggableListView {
   Q_OBJECT
@@ -27,7 +30,7 @@ class VectorListView : public DraggableListView {
     KST_EXPORT VectorListView(QWidget *parent = 0L, const char *name = 0L);
     virtual ~VectorListView();
 
-    virtual QDragObject *dragObject();
+    virtual Q3DragObject *dragObject();
 
   protected:
     virtual void dragMoveEvent(QDragMoveEvent *e);

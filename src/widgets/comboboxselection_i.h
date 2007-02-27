@@ -24,7 +24,7 @@ class ComboBoxSelectionI : public ComboBoxSelection {
   Q_OBJECT
   public:
     ComboBoxSelectionI(QWidget* parent = 0, const char* name = 0,
-        bool modal = FALSE, WFlags fl = 0 );
+        bool modal = FALSE, Qt::WFlags fl = 0 );
     virtual ~ComboBoxSelectionI();
     void addString(const QString &str);
     void reset();

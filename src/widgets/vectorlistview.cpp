@@ -17,11 +17,14 @@
 
 #include <ksdebug.h>
 #include "vectorlistview.h"
+//Added by qt3to4:
+#include <QDragMoveEvent>
+#include <QDropEvent>
 
 VectorListView::VectorListView(QWidget *parent, const char *name)
 : DraggableListView(parent, name) {
   setAcceptDrops(true);
-  setSelectionMode(QListView::Extended);
+  setSelectionMode(Q3ListView::Extended);
 }
 
 
@@ -29,18 +32,18 @@ VectorListView::~VectorListView() {
 }
 
 
-QDragObject *VectorListView::dragObject() {
-  QStoredDrag *drag = new QStoredDrag("application/x-kst-vector-list", this);
+Q3DragObject *VectorListView::dragObject() {
+  Q3StoredDrag *drag = new Q3StoredDrag("application/x-kst-vector-list", this);
 
   QStringList entries;
-  for (QListViewItem *entry = firstChild(); entry; entry = entry->nextSibling()) {
+  for (Q3ListViewItem *entry = firstChild(); entry; entry = entry->nextSibling()) {
     if (entry->isSelected()) {
       entries << entry->text(0);
     }
   }
 
   QByteArray data;
-  QDataStream ds(data, IO_WriteOnly);
+  QDataStream ds(data, QIODevice::WriteOnly);
   ds << entries;
   drag->setEncodedData(data);
 
@@ -60,12 +63,12 @@ void VectorListView::dropEvent(QDropEvent *e) {
   }
 
   QByteArray data = e->encodedData("application/x-kst-vector-list");
-  QDataStream ds(data, IO_ReadOnly);
+  QDataStream ds(data, QIODevice::ReadOnly);
   QStringList entries;
   ds >> entries;
-  QListViewItem *last = lastItem();
+  Q3ListViewItem *last = lastItem();
   for (QStringList::ConstIterator i = entries.begin(); i != entries.end(); ++i) {
-    QListViewItem *j = new QListViewItem(this, *i);
+    Q3ListViewItem *j = new Q3ListViewItem(this, *i);
     j->setDragEnabled(true);
     j->moveItem(last);
     last = j;
@@ -78,10 +81,10 @@ void VectorListView::dropEvent(QDropEvent *e) {
 
 
 void VectorListView::startDrag() {
-  QDragObject *o = dragObject();
+  Q3DragObject *o = dragObject();
   if (o && o->dragMove()) {
     QByteArray data = o->encodedData("application/x-kst-vector-list");
-    QDataStream ds(data, IO_ReadOnly);
+    QDataStream ds(data, QIODevice::ReadOnly);
     QStringList entries;
     ds >> entries;
     for (QStringList::ConstIterator i = entries.begin(); i != entries.end(); ++i) {

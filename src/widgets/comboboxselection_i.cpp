@@ -17,7 +17,7 @@
 
 // include files for Qt
 #include <qlineedit.h>
-#include <qlistbox.h>
+#include <q3listbox.h>
 #include <qpushbutton.h>
 #include <qregexp.h>
 #include <qstringlist.h>
@@ -28,7 +28,7 @@
 #include "comboboxselection_i.h"
 
 ComboBoxSelectionI::ComboBoxSelectionI(QWidget *parent, const char* name, bool modal,
-                                 WFlags fl)
+                                 Qt::WFlags fl)
 : ComboBoxSelection(parent, name, modal, fl) {
   connect(OK, SIGNAL(clicked()), this, SLOT(ok()));
   connect(Cancel, SIGNAL(clicked()), this, SLOT(close()));

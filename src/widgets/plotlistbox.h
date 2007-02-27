@@ -20,6 +20,9 @@
 
 #include "draggablelistbox.h"
 #include "kst_export.h"
+//Added by qt3to4:
+#include <QDragMoveEvent>
+#include <QDropEvent>
 
 class PlotListBox : public DraggableListBox {
   Q_OBJECT
@@ -27,7 +30,7 @@ class PlotListBox : public DraggableListBox {
     KST_EXPORT PlotListBox(QWidget *parent = 0L, const char *name = 0L);
     virtual ~PlotListBox();
 
-    virtual QDragObject *dragObject();
+    virtual Q3DragObject *dragObject();
 
   protected:
     virtual void dragMoveEvent(QDragMoveEvent *e);

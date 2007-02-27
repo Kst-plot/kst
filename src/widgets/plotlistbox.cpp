@@ -16,12 +16,15 @@
  ***************************************************************************/
 
 #include "plotlistbox.h"
+//Added by qt3to4:
+#include <QDragMoveEvent>
+#include <QDropEvent>
 
 PlotListBox::PlotListBox(QWidget *parent, const char *name)
 : DraggableListBox(parent, name) {
   setDragEnabled(true);
   setAcceptDrops(true);
-  setSelectionMode(QListBox::Extended);
+  setSelectionMode(Q3ListBox::Extended);
 }
 
 
@@ -29,18 +32,18 @@ PlotListBox::~PlotListBox() {
 }
 
 
-QDragObject *PlotListBox::dragObject() {
-  QStoredDrag *drag = new QStoredDrag("application/x-kst-plot-list", this);
+Q3DragObject *PlotListBox::dragObject() {
+  Q3StoredDrag *drag = new Q3StoredDrag("application/x-kst-plot-list", this);
 
   QStringList entries;
-  for (QListBoxItem *entry = firstItem(); entry; entry = entry->next()) {
+  for (Q3ListBoxItem *entry = firstItem(); entry; entry = entry->next()) {
     if (entry->isSelected()) {
       entries << entry->text();
     }
   }
 
   QByteArray data;
-  QDataStream ds(data, IO_WriteOnly);
+  QDataStream ds(data, QIODevice::WriteOnly);
   ds << entries;
   drag->setEncodedData(data);
 
@@ -60,7 +63,7 @@ void PlotListBox::dropEvent(QDropEvent *e) {
   }
 
   QByteArray data = e->encodedData("application/x-kst-plot-list");
-  QDataStream ds(data, IO_ReadOnly);
+  QDataStream ds(data, QIODevice::ReadOnly);
   QStringList entries;
   ds >> entries;
   for (QStringList::ConstIterator i = entries.begin(); i != entries.end(); ++i) {
@@ -75,10 +78,10 @@ void PlotListBox::dropEvent(QDropEvent *e) {
 
 
 void PlotListBox::startDrag() {
-  QDragObject *o = dragObject();
+  Q3DragObject *o = dragObject();
   if (o && o->dragMove()) {
     QByteArray data = o->encodedData("application/x-kst-plot-list");
-    QDataStream ds(data, IO_ReadOnly);
+    QDataStream ds(data, QIODevice::ReadOnly);
     QStringList entries;
     ds >> entries;
     for (QStringList::ConstIterator i = entries.begin(); i != entries.end(); ++i) {
