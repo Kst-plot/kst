@@ -1,35 +1,36 @@
 
-include_directories(${CMAKE_SOURCE_DIR}/src/extdate ${CMAKE_SOURCE_DIR}/src/libkst ${CMAKE_SOURCE_DIR}/src/libkstmath ${KDE4_INCLUDE_DIR} ${QT_INCLUDES})
+include_directories( ${CMAKE_BINARY_DIR}/kst ${CMAKE_SOURCE_DIR}/kst/src/extdate ${CMAKE_SOURCE_DIR}/kst/src/libkst ${CMAKE_BINARY_DIR}/kst/src/libkst ${CMAKE_SOURCE_DIR}/kst/src/libkstmath ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
 
 
 ########### next target ###############
 
 set(kstwidgets_LIB_SRCS 
    kstbackbuffer.cpp 
-   comboboxselection_i.cpp 
-   draggablelistbox.cpp 
-   draggablelistview.cpp 
-   plotlistbox.cpp 
-   vectorlistview.cpp 
-   kstcombobox.cpp 
-   kstwidgets.cpp)
+#    comboboxselection_i.cpp 
+#    draggablelistbox.cpp 
+#    draggablelistview.cpp 
+#    plotlistbox.cpp 
+#    vectorlistview.cpp 
+#    kstcombobox.cpp 
+#    kstwidgets.cpp
+   )
 
 kde4_automoc(${kstwidgets_LIB_SRCS})
 
 kde4_add_ui_files(kstwidgets_LIB_SRCS 
-   comboboxselection4.ui 
-   stringeditor4.ui 
-   scalareditor4.ui 
-   scalarselector4.ui 
-   matrixselector4.ui 
-   vectorselector4.ui 
-   stringselector4.ui 
-   editmultiplewidget4.ui 
-   curveplacementwidget4.ui 
+#    comboboxselection4.ui 
+#    stringeditor4.ui 
+#    scalareditor4.ui 
+#    scalarselector4.ui 
+#    matrixselector4.ui 
+#    vectorselector4.ui 
+#    stringselector4.ui 
+#    editmultiplewidget4.ui 
+#    curveplacementwidget4.ui 
    curveappearancewidget4.ui 
-   fftoptionswidget4.ui 
-   datarangewidget4.ui 
-   colorpalettewidget4.ui
+#    fftoptionswidget4.ui 
+#    datarangewidget4.ui 
+#    colorpalettewidget4.ui
    )
 
 kde4_add_library(kstwidgets SHARED ${kstwidgets_LIB_SRCS})

@@ -63,7 +63,7 @@ void VectorSelector::update()
 	(*i)->unlock();
     }
     KST::vectorList.lock().unlock();
-    qHeapSort(vectors);
+    qSort(vectors);
     _vector->insertStringList(vectors);
     if (found) {
 	_vector->setCurrentText(prev);

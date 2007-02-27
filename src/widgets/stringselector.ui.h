@@ -53,7 +53,7 @@ void StringSelector::update()
     }
 	KST::stringList.lock().unlock();
     
-    qHeapSort(strings);
+    qSort(strings);
     _string->insertStringList(strings);
     if (found) {
         _string->setCurrentText(prev);

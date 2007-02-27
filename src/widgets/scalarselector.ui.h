@@ -54,7 +54,7 @@ void ScalarSelector::update()
     }
 	KST::scalarList.lock().unlock();
     
-    qHeapSort(scalars);
+    qSort(scalars);
     _scalar->insertStringList(scalars);
     if (found) {
         _scalar->setCurrentText(prev);
