@@ -1,5 +1,5 @@
 
-include_directories( ${CMAKE_SOURCE_DIR}/kst/src/libkst ${CMAKE_SOURCE_DIR}/kst/src/extdate ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
+include_directories( ${CMAKE_BINARY_DIR}/kst ${CMAKE_SOURCE_DIR}/kst/src/libkst ${CMAKE_SOURCE_DIR}/kst/src/extdate ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
 
 
 ########### next target ###############
@@ -10,7 +10,7 @@ kde4_automoc(${kstdata_netcdf_PART_SRCS})
 
 kde4_add_plugin(kstdata_netcdf ${kstdata_netcdf_PART_SRCS})
 
-target_link_libraries(kstdata_netcdf  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(kstdata_netcdf  ${KDE4_KDECORE_LIBS} kst netcdf_c++ netcdf )
 
 install(TARGETS kstdata_netcdf DESTINATION ${PLUGIN_INSTALL_DIR} )
 

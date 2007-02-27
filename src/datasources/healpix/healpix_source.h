@@ -54,7 +54,7 @@ class HealpixSource : public KstDataSource {
 
     QString fileType() const;
 
-    void save(QTextStream &ts, const QString& indent = QString::null);
+    void save(Q3TextStream &ts, const QString& indent = QString::null);
     
     void load(const QDomElement& e);
 

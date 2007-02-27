@@ -1,5 +1,5 @@
 
-include_directories( ${CMAKE_SOURCE_DIR}/kst/src/libkst ${CMAKE_SOURCE_DIR}/kst/src/extdate ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
+include_directories( ${CMAKE_BINARY_DIR}/kst ${CMAKE_SOURCE_DIR}/kst/src/libkst ${CMAKE_SOURCE_DIR}/kst/src/extdate ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
 
 
 ########### next target ###############
@@ -16,7 +16,7 @@ kde4_add_ui_files(kstdata_healpix_PART_SRCS healpixconfig.ui )
 
 kde4_add_plugin(kstdata_healpix ${kstdata_healpix_PART_SRCS})
 
-target_link_libraries(kstdata_healpix  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(kstdata_healpix  ${KDE4_KDECORE_LIBS} kst )
 
 install(TARGETS kstdata_healpix DESTINATION ${PLUGIN_INSTALL_DIR} )
 

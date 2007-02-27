@@ -19,7 +19,7 @@
 #include <cdf.h>
 #include "cdfdefs.h" // Macros to handle rVars and zVars transparently
 
-#include <ksdebug.h>
+#include <qdebug.h>
 
 #include <qfile.h>
 #include <qfileinfo.h>
@@ -29,7 +29,7 @@
 
 CdfSource::CdfSource(KConfig *cfg, const QString& filename, const QString& type)
 : KstDataSource(cfg, filename, type) {
-  // kstdDebug() << "Entering CdfSource constructor for " << _filename << endl;
+  // qDebug() << "Entering CdfSource constructor for " << _filename;
   _maxFrameCount = 0;
 
   if (!type.isEmpty() && type != "CDF") {
@@ -46,7 +46,7 @@ CdfSource::~CdfSource() {
 
 
 bool CdfSource::reset() {
-  // kstdDebug() << "Calling reset() for " << _filename << endl;
+  // qDebug() << "Calling reset() for " << _filename;
   _maxFrameCount = 0;
   _fieldList.clear();
   return _valid = initFile();
@@ -55,9 +55,9 @@ bool CdfSource::reset() {
 
 bool CdfSource::initFile() {
   CDFid id;
-  CDFstatus status = CDFopen(_filename.latin1(), &id);
+  CDFstatus status = CDFopen(_filename.toLatin1().data(), &id);
   if (status < CDF_OK) {
-    kstdDebug() << _filename << ": failed to open in initFile()" << endl;
+    qDebug() << _filename << ": failed to open in initFile()";
     return false;
   }
   // Query field list and store it in _fieldList (plus "INDEX")
@@ -93,7 +93,7 @@ bool CdfSource::initFile() {
     maxRec += 1;
     if (status == CDF_OK && numDims < 2) {
       if (numDims == 1 && dimSizes[0] > 1 && maxRec > 1) { // Ignore that, this is not really a vector
-        kstdDebug() << "Variable " << varName << " can't be handled by kst: only CDF vectors with dimensionalities 0, 1[1] or 1[n] but only one record in the latter case are supported (try cdfexport on your CDF if you have problems)" << endl;
+        qDebug() << "Variable " << varName << " can't be handled by kst: only CDF vectors with dimensionalities 0, 1[1] or 1[n] but only one record in the latter case are supported (try cdfexport on your CDF if you have problems)";
         continue;
       }
       _fieldList += varName;
@@ -123,7 +123,7 @@ bool CdfSource::initFile() {
     maxRec += 1;
     if (status == CDF_OK && numDims < 2) {
       if (numDims == 1 && dimSizes[0] > 1 && maxRec > 1) { // Ignore that, this is not really a vector
-        kstdDebug() << "Variable " << varName << " can't be handled by kst: only CDF vectors with dimensionalities 0, 1[1] or 1[n] but only one record in the latter case are supported (try cdfexport on your CDF if you have problems)" << endl;
+        qDebug() << "Variable " << varName << " can't be handled by kst: only CDF vectors with dimensionalities 0, 1[1] or 1[n] but only one record in the latter case are supported (try cdfexport on your CDF if you have problems)";
         continue;
       }
       _fieldList += varName;
@@ -164,9 +164,9 @@ int CdfSource::readField(double *v, const QString& field, int s, int n) {
   long recCount = 0, indices[1] = {0}, counts[1] = {0};
   char varName[CDF_VAR_NAME_LEN+1];
   bool isZvar = true;     /* Should be the case for recent cdf files */
-  // kstdDebug() << "Entering CdfSource::readField with params: " << field << ", from " << s << " for " << n << " values" << endl;
+  // qDebug() << "Entering CdfSource::readField with params: " << field << ", from " << s << " for " << n << " values";
   // Handle the special case where we query INDEX
-  if (field.lower() == "index") {
+  if (field.toLower() == "index") {
     if (n < 0) {
       v[0] = double(s);
       return 1;
@@ -178,23 +178,23 @@ int CdfSource::readField(double *v, const QString& field, int s, int n) {
   }
 
   // If not INDEX, look into the CDF file...
-  status = CDFopen(_filename.latin1(), &id);
+  status = CDFopen(_filename.toLatin1().data(), &id);
   if (status < CDF_OK) {
-    kstdDebug() << _filename << ": failed to open to read from field " << field << endl;
+    qDebug() << _filename << ": failed to open to read from field " << field;
     return -1;
   }
 
   QString ftmp = field;
   ftmp.truncate(CDF_VAR_NAME_LEN);
   // Variable selection
-  strcpy(varName, ftmp.latin1());
+  strcpy(varName, ftmp.toLatin1().data());
   status = CDFlib(SELECT_,
                      zVAR_NAME_, varName, 
                   GET_,
                      zVAR_DATATYPE_, &dataType, 
                   NULL_);
   if (status < CDF_OK) { // if not zVar, try rVar
-    // kstdDebug() << ftmp << ": " << " not a zVAR (" << status <<")" << endl;
+    // qDebug() << ftmp << ": " << " not a zVAR (" << status <<")";
     isZvar = false;
     status = CDFlib(SELECT_, 
                        rVAR_NAME_, varName, 
@@ -205,7 +205,7 @@ int CdfSource::readField(double *v, const QString& field, int s, int n) {
 
   // I suppose the returned int is the number of values read, <0 when there is a problem
   if (status < CDF_OK) {
-    kstdDebug() << ftmp << ": " << " not a rVAR either -> exiting" << endl;
+    qDebug() << ftmp << ": " << " not a rVAR either -> exiting";
     CDFclose(id);
     return -1; 
   }
@@ -389,12 +389,12 @@ int understands_cdf(KConfig*, const QString& filename) {
   QFile f(filename);
   QFileInfo fInfo(f);
 
-  if (!f.open(IO_ReadOnly)) {
-    kstdDebug() << "Unable to read file !" << endl;
+  if (!f.open(QIODevice::ReadOnly)) {
+    qDebug() << "Unable to read file !";
     return 0;
   }
 
-  if (fInfo.extension(false) != "cdf") {
+  if (fInfo.suffix() != "cdf") {
     return 0;
   }
 
@@ -403,9 +403,9 @@ int understands_cdf(KConfig*, const QString& filename) {
   // Extension check should be enough :-) (?)
   /* CDFid id;
   CDFstatus status;
-  status = CDFopen (fInfo.baseName(true).latin1(), &id);
+  status = CDFopen (fInfo.baseName(true).toLatin1().data(), &id);
   if (status < CDF_OK) {
-    kstdDebug() << "CDFlib unable to read the file !" << endl;
+    qDebug() << "CDFlib unable to read the file !";
     return false;
   }
   else {

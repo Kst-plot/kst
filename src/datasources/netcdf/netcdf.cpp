@@ -18,10 +18,11 @@
 
 #include "netcdf_source.h" // Local header for the kst netCDF datasource
 
-#include <ksdebug.h>
+#include <qdebug.h>
 
 #include <qfile.h>
 #include <qfileinfo.h>
+#include <QTextStream>
 
 #include <ctype.h>
 #include <stdlib.h>
@@ -59,26 +60,26 @@ bool NetcdfSource::reset() {
 
 
 bool NetcdfSource::initFile() {
-  _ncfile = new NcFile(_filename.latin1(), NcFile::ReadOnly);
+  _ncfile = new NcFile(_filename.toLatin1().data(), NcFile::ReadOnly);
   if (!_ncfile->is_valid()) {
-      kstdDebug() << _filename << ": failed to open in initFile()" << endl;
+      qDebug() << _filename << "failed to open in initFile()";
       return false;
     }
 
-  // kstdDebug() << _filename << ": building field list" << endl;
+  // qDebug() << _filename << "building field list";
   _fieldList.clear();
   _fieldList += "INDEX";
 
   int nb_vars = _ncfile->num_vars();
-  // kstdDebug() << nb_vars << " vars found in total" << endl;
+  // qDebug() << nb_vars << " vars found in total";
 
   _maxFrameCount = 0;
 
   for (int i = 0; i < nb_vars; i++) {
     NcVar *var = _ncfile->get_var(i);
     _fieldList += var->name();
-    int fc = var->num_vals() / var->rec_size();
-    _maxFrameCount = QMAX(_maxFrameCount, fc);
+    long fc = var->num_vals() / var->rec_size();
+    _maxFrameCount = qMax(_maxFrameCount, fc);
     _frameCounts[var->name()] = fc;
   }
 
@@ -117,8 +118,8 @@ KstObject::UpdateType NetcdfSource::update(int u) {
   int nb_vars = _ncfile->num_vars();
   for (int j = 0; j < nb_vars; j++) {
     NcVar *var = _ncfile->get_var(j);
-    int fc = var->num_vals() / var->rec_size();
-    _maxFrameCount = QMAX(_maxFrameCount, fc);
+    long fc = var->num_vals() / var->rec_size();
+    _maxFrameCount = qMax(_maxFrameCount, fc);
     updated = updated || (_frameCounts[var->name()] != fc);
     _frameCounts[var->name()] = fc;
   }
@@ -132,10 +133,10 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
   /* Values for one record */
   NcValues *record = 0;// = new NcValues(dataType,numFrameVals);
 
-  // kstdDebug() << "Entering NetcdfSource::readField with params: " << field << ", from " << s << " for " << n << " frames" << endl;
+  // qDebug() << "Entering NetcdfSource::readField with params: " << field << ", from " << s << " for " << n << " frames";
 
   /* For INDEX field */
-  if (field.lower() == "index") {
+  if (field.toLower() == "index") {
     if (n < 0) {
       v[0] = double(s);
       return 1;
@@ -147,9 +148,9 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
   }
 
   /* For a variable from the netCDF file */
-  NcVar *var = _ncfile->get_var(field.latin1());  // var is owned by _ncfile
+  NcVar *var = _ncfile->get_var(field.toLatin1().data());  // var is owned by _ncfile
   if (!var) {
-    kstdDebug() << "Queried field " << field << " which can't be read" << endl;
+    qDebug() << "Queried field " << field << " which can't be read";
     return -1;
   }
 
@@ -190,7 +191,7 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
         } else {
           for (int i = 0; i < n; i++) {
             record = var->get_rec(i+s);
-            // kstdDebug() << "Read record " << i+s << endl;
+            // qDebug() << "Read record " << i+s;
             for (int j = 0; j < recSize; j++) {
               v[i*recSize + j] = record->as_int(j);
             }
@@ -237,13 +238,13 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
       break;
 
     default:
-      kstdDebug() << field << ": wrong datatype for kst, no values read" << endl;
+      qDebug() << field << ": wrong datatype for kst, no values read";
       return -1;
       break;
 
   }
 
-  // kstdDebug() << "Finished reading " << field << endl;
+  // qDebug() << "Finished reading " << field;
 
   return oneSample ? 1 : n * recSize;
 }
@@ -257,10 +258,10 @@ bool NetcdfSource::isValidField(const QString& field) const {
 
 
 int NetcdfSource::samplesPerFrame(const QString& field) {
-  if (field.lower() == "index") {
+  if (field.toLower() == "index") {
     return 1;
   }
-  NcVar *var = _ncfile->get_var(field.latin1());
+  NcVar *var = _ncfile->get_var(field.toLatin1().data());
   if (!var) {
     return 0;
   }
@@ -270,7 +271,7 @@ int NetcdfSource::samplesPerFrame(const QString& field) {
 
 
 int NetcdfSource::frameCount(const QString& field) const {
-  if (field.isEmpty() || field.lower() == "index") {
+  if (field.isEmpty() || field.toLower() == "index") {
     return _maxFrameCount;
   } else { 
     return _frameCounts[field];
@@ -316,14 +317,14 @@ extern "C" {
   int understands_netcdf(KConfig*, const QString& filename) {
     QFile f(filename);
 
-    if (!f.open(IO_ReadOnly)) {
-      kstdDebug() << "Unable to read file !" << endl;
+    if (!f.open(QIODevice::ReadOnly)) {
+      qDebug() << "Unable to read file !";
       return 0;
     }
 
-    NcFile *ncfile = new NcFile(filename.latin1());
+    NcFile *ncfile = new NcFile(filename.toLatin1().data());
     if (ncfile->is_valid()) {
-      // kstdDebug() << filename << " looks like netCDF !" << endl;
+      // qDebug() << filename << " looks like netCDF !";
       delete ncfile;
       return 80;
     } else {

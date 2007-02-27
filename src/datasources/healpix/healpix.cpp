@@ -23,12 +23,14 @@
 #include <qfileinfo.h>
 #include <qlayout.h>
 #include <qcheckbox.h>
+//Added by qt3to4:
+#include <Q3GridLayout>
 
 #include <klineedit.h>
 #include <kcombobox.h>
 #include <knuminput.h>
 
-#include <ksdebug.h>
+#include <qdebug.h>
 #include "kststring.h"
 #include "healpix_source.h"
 #include "healpixconfig.h"
@@ -46,7 +48,7 @@ HealpixSource::HealpixSource(KConfig *cfg, const QString& filename, const QStrin
    
   _valid = false;
   if (type.isEmpty( ) || type == "HEALPIX") {
-    strncpy(_healpixfile, filename.latin1(), HEALPIX_STRNL);
+    strncpy(_healpixfile, filename.toLatin1().data(), HEALPIX_STRNL);
     
     _names = healpix_strarr_alloc(HEALPIX_FITS_MAXCOL);
     _units = healpix_strarr_alloc(HEALPIX_FITS_MAXCOL);
@@ -155,9 +157,9 @@ HealpixSource::HealpixSource(KConfig *cfg, const QString& filename, const QStrin
           mapName.sprintf("%d - %s",(int)(i+1),_names[i+poff]);
         }
         if (strlen(_units[i+poff]) == 0) {
-          mapName.sprintf("%s (%s)",mapName.ascii(),"Unknown Units");
+          mapName.sprintf("%s (%s)",mapName.toLatin1().data(),"Unknown Units");
         } else {
-          mapName.sprintf("%s (%s)",mapName.ascii(),_units[i+poff]);
+          mapName.sprintf("%s (%s)",mapName.toLatin1().data(),_units[i+poff]);
         }
         _matrixList.append(mapName);
       }
@@ -174,9 +176,9 @@ HealpixSource::HealpixSource(KConfig *cfg, const QString& filename, const QStrin
           mapName.sprintf("%s",_names[_nMaps+2]);
         }
         if (strlen(_units[_nMaps+2]) == 0) {
-          mapName.sprintf("%s (%s)",mapName.ascii(),"Unknown Units");
+          mapName.sprintf("%s (%s)",mapName.toLatin1().data(),"Unknown Units");
         } else {
-          mapName.sprintf("%s (%s)",mapName.ascii(),_units[_nMaps+2]);
+          mapName.sprintf("%s (%s)",mapName.toLatin1().data(),_units[_nMaps+2]);
         }
         _matrixList.append(mapName);
       }
@@ -864,9 +866,9 @@ int HealpixSource::readMatrix(KstMatrixData* data, const QString& matrix, int xS
         _phiMin = mapMinPhi;
         _phiMax = mapMaxPhi;
       }
-      //kstdDebug() << "HEALPIX autorange is Theta=[" << mapMinTheta << "..." << mapMaxTheta << "] Phi=[" << mapMinPhi << "..." << mapMaxPhi << "]" << endl;
+      //qDebug() << "HEALPIX autorange is Theta=[" << mapMinTheta << "..." << mapMaxTheta << "] Phi=[" << mapMinPhi << "..." << mapMaxPhi << "]";
     }
-    //kstdDebug() << "HEALPIX using range Theta=[" << _thetaMin << "..." << _thetaMax << "] Phi=[" << _phiMin << "..." << _phiMax << "]" << endl;
+    //qDebug() << "HEALPIX using range Theta=[" << _thetaMin << "..." << _thetaMax << "] Phi=[" << _phiMin << "..." << _phiMax << "]";
     
     // copy sphere data to matrix.
     
@@ -914,7 +916,7 @@ int HealpixSource::readMatrix(KstMatrixData* data, const QString& matrix, int xS
     theta2External(_thetaUnits, tMax);
     phi2External(_phiUnits, pMin);
     phi2External(_phiUnits, pMax);
-    //kstdDebug() << "HEALPIX exported range Theta=[" << tMin << "..." << tMax << "] Phi=[" << pMin << "..." << pMax << "]" << endl;
+    //qDebug() << "HEALPIX exported range Theta=[" << tMin << "..." << tMax << "] Phi=[" << pMin << "..." << pMax << "]";
     
     switch (_thetaUnits) {
       case HPUNIT_RAD: case HPUNIT_DEG:
@@ -1155,17 +1157,13 @@ void HealpixSource::load(const QDomElement& e) {
   QString indent = "  ";
   QTextStream ts(&str, IO_WriteOnly);
   save(ts, indent);
-  kstdDebug() << str << endl;
+  qDebug() << str;
   */
   return;
 }
 
 bool HealpixSource::isEmpty() const {
-  if (!_valid) {
-    return true;
-  } else {
-    return false;
-  }
+  return !_valid;
 }
 
 void HealpixSource::theta2Internal(int units, double& theta) {
@@ -1268,31 +1266,31 @@ void HealpixSource::checkDegrade(int& degrade) {
   return;
 }
 
-void HealpixSource::loadConfig(KConfig *cfg) {
+void HealpixSource::loadConfig(KConfig *c) {
   double confThetaMin;
   double confThetaMax;
   double confPhiMin;
   double confPhiMax;
   int tempdegrade;
+  KConfigGroup cfg(c, "Healpix General");
   
-  cfg->setGroup("Healpix General");
-  cfg->setGroup(fileName());
-  _nX = (int)cfg->readNumEntry("Matrix X Dimension", DEFAULT_XDIM);
-  _nY = (int)cfg->readNumEntry("Matrix Y Dimension", DEFAULT_YDIM);
-  _autoTheta = cfg->readBoolEntry("Theta Autoscale", true);
-  _thetaUnits = cfg->readNumEntry("Theta Units", HPUNIT_RADEC);
-  confThetaMin = (cfg->readEntry("Theta Min", QString::null)).toDouble();
-  confThetaMax = (cfg->readEntry("Theta Max", QString::null)).toDouble();
-  _autoPhi = cfg->readBoolEntry("Phi Autoscale", true);
-  _phiUnits = cfg->readNumEntry("Phi Units", HPUNIT_RADEC);
-  confPhiMin = (cfg->readEntry("Phi Min", QString::null)).toDouble();
-  confPhiMax = (cfg->readEntry("Phi Max", QString::null)).toDouble();
-  _vecTheta = cfg->readNumEntry("Vector Theta", 0);
-  _vecPhi = cfg->readNumEntry("Vector Phi", 0);
-  tempdegrade = (int)cfg->readNumEntry("Vector Degrade Factor", 1);
-  _autoMag = cfg->readBoolEntry("Vector Magnitude Autoscale", true);
-  _maxMag = (cfg->readEntry("Vector Max Magnitude", QString::null)).toDouble();
-  _vecQU = cfg->readBoolEntry("Vector is QU", false);
+  cfg.changeGroup(fileName());
+  _nX = (int)cfg.readEntry("Matrix X Dimension", DEFAULT_XDIM);
+  _nY = (int)cfg.readEntry("Matrix Y Dimension", DEFAULT_YDIM);
+  _autoTheta = cfg.readEntry("Theta Autoscale", true);
+  _thetaUnits = cfg.readEntry("Theta Units", HPUNIT_RADEC);
+  confThetaMin = (cfg.readEntry("Theta Min")).toDouble();
+  confThetaMax = (cfg.readEntry("Theta Max")).toDouble();
+  _autoPhi = cfg.readEntry("Phi Autoscale", true);
+  _phiUnits = cfg.readEntry("Phi Units", HPUNIT_RADEC);
+  confPhiMin = (cfg.readEntry("Phi Min")).toDouble();
+  confPhiMax = (cfg.readEntry("Phi Max")).toDouble();
+  _vecTheta = cfg.readEntry("Vector Theta", 0);
+  _vecPhi = cfg.readEntry("Vector Phi", 0);
+  tempdegrade = (int)cfg.readEntry("Vector Degrade Factor", 1);
+  _autoMag = cfg.readEntry("Vector Magnitude Autoscale", true);
+  _maxMag = (cfg.readEntry("Vector Max Magnitude")).toDouble();
+  _vecQU = cfg.readEntry("Vector is QU", false);
   
   // check degrade factor
   checkDegrade(tempdegrade);
@@ -1320,7 +1318,7 @@ void HealpixSource::loadConfig(KConfig *cfg) {
   return;
 }
 
-void HealpixSource::saveConfig(KConfig *cfg) {
+void HealpixSource::saveConfig(KConfig *c) {
   double confThetaMin = _thetaMin;
   double confThetaMax = _thetaMax;
   double confPhiMin = _phiMin;
@@ -1340,24 +1338,24 @@ void HealpixSource::saveConfig(KConfig *cfg) {
     confThetaMin = temp;
   }
   
-  cfg->setGroup("Healpix General");
-  cfg->setGroup(fileName());
-  cfg->writeEntry("Matrix X Dimension", _nX);
-  cfg->writeEntry("Matrix Y Dimension", _nY);
-  cfg->writeEntry("Theta Autoscale", _autoTheta);
-  cfg->writeEntry("Theta Units", _thetaUnits);
-  cfg->writeEntry("Theta Min", confThetaMin);
-  cfg->writeEntry("Theta Max", confThetaMax);
-  cfg->writeEntry("Phi Autoscale", _autoPhi);
-  cfg->writeEntry("Phi Units", _phiUnits);
-  cfg->writeEntry("Phi Min", confPhiMin);
-  cfg->writeEntry("Phi Max", confPhiMax);
-  cfg->writeEntry("Vector Theta", _vecTheta);
-  cfg->writeEntry("Vector Phi", _vecPhi);
-  cfg->writeEntry("Vector Degrade Factor", _vecDegrade);
-  cfg->writeEntry("Vector Magnitude Autoscale", _autoMag);
-  cfg->writeEntry("Vector Max Magnitude", _maxMag);
-  cfg->writeEntry("Vector is QU", _vecQU);
+  KConfigGroup cfg(c, "Healpix General");
+  cfg.changeGroup(fileName());
+  cfg.writeEntry("Matrix X Dimension", _nX);
+  cfg.writeEntry("Matrix Y Dimension", _nY);
+  cfg.writeEntry("Theta Autoscale", _autoTheta);
+  cfg.writeEntry("Theta Units", _thetaUnits);
+  cfg.writeEntry("Theta Min", confThetaMin);
+  cfg.writeEntry("Theta Max", confThetaMax);
+  cfg.writeEntry("Phi Autoscale", _autoPhi);
+  cfg.writeEntry("Phi Units", _phiUnits);
+  cfg.writeEntry("Phi Min", confPhiMin);
+  cfg.writeEntry("Phi Max", confPhiMax);
+  cfg.writeEntry("Vector Theta", _vecTheta);
+  cfg.writeEntry("Vector Phi", _vecPhi);
+  cfg.writeEntry("Vector Degrade Factor", _vecDegrade);
+  cfg.writeEntry("Vector Magnitude Autoscale", _autoMag);
+  cfg.writeEntry("Vector Max Magnitude", _maxMag);
+  cfg.writeEntry("Vector is QU", _vecQU);
   
   return;
 }
@@ -1365,7 +1363,7 @@ void HealpixSource::saveConfig(KConfig *cfg) {
 class ConfigWidgetHealpix : public KstDataSourceConfigWidget {
   public:
     ConfigWidgetHealpix() : KstDataSourceConfigWidget() {
-      QGridLayout *layout = new QGridLayout(this, 1, 1);
+      Q3GridLayout *layout = new Q3GridLayout(this, 1, 1);
       _hc = new HealpixConfig(this);
       layout->addWidget(_hc, 0, 0);
       layout->activate();
@@ -1385,7 +1383,7 @@ class ConfigWidgetHealpix : public KstDataSourceConfigWidget {
       //unitList.append("(Degrees)");
       unitList.append("(RA/DEC)");
       //unitList.append("(Lat/Long)");
-      _cfg->setGroup("Healpix General");
+      KConfigGroup cfg(_cfg, "Healpix General");
       _hc->matThetaUnits->clear();
       _hc->matPhiUnits->clear();
       _hc->vecTheta->clear();
@@ -1395,26 +1393,26 @@ class ConfigWidgetHealpix : public KstDataSourceConfigWidget {
       //FIXME change to HPUNIT_RAD
       _hc->matThetaUnits->setCurrentItem(0);
       _hc->matPhiUnits->setCurrentItem(0);
-      _hc->matDimX->setValue(_cfg->readNumEntry("Matrix X Dimension", DEFAULT_XDIM));
-      _hc->matDimY->setValue(_cfg->readNumEntry("Matrix Y Dimension", DEFAULT_YDIM));
-      _hc->matThetaAuto->setChecked(_cfg->readBoolEntry("Theta Autoscale", true));
+      _hc->matDimX->setValue(cfg.readEntry("Matrix X Dimension", DEFAULT_XDIM));
+      _hc->matDimY->setValue(cfg.readEntry("Matrix Y Dimension", DEFAULT_YDIM));
+      _hc->matThetaAuto->setChecked(cfg.readEntry("Theta Autoscale", true));
       //FIXME Only one combobox item for now...
-      //_hc->matThetaUnits->setCurrentItem(_cfg->readNumEntry("Theta Units", HPUNIT_RAD));
+      //_hc->matThetaUnits->setCurrentItem(cfg.readEntry("Theta Units", HPUNIT_RAD));
       _hc->matThetaUnits->setCurrentItem(0);
-      _hc->matThetaMin->setText(_cfg->readEntry("Theta Min", QString::null));
-      _hc->matThetaMax->setText(_cfg->readEntry("Theta Max", QString::null));
-      _hc->matPhiAuto->setChecked(_cfg->readBoolEntry("Phi Autoscale", true));
+      _hc->matThetaMin->setText(cfg.readEntry("Theta Min"));
+      _hc->matThetaMax->setText(cfg.readEntry("Theta Max"));
+      _hc->matPhiAuto->setChecked(cfg.readEntry("Phi Autoscale", true));
       //FIXME Only one combobox item for now...
-      //_hc->matPhiUnits->setCurrentItem(_cfg->readNumEntry("Phi Units", HPUNIT_RAD));
+      //_hc->matPhiUnits->setCurrentItem(cfg.readEntry("Phi Units", HPUNIT_RAD));
       _hc->matPhiUnits->setCurrentItem(0);
-      _hc->matPhiMin->setText(_cfg->readEntry("Phi Min", QString::null));
-      _hc->matPhiMax->setText(_cfg->readEntry("Phi Max", QString::null));
-      _hc->vecTheta->setCurrentItem(_cfg->readNumEntry("Vector Theta", 0));
-      _hc->vecPhi->setCurrentItem(_cfg->readNumEntry("Vector Phi", 0));
-      _hc->vecDegrade->setValue(_cfg->readNumEntry("Vector Degrade Factor", 1));
-      _hc->vecMagAuto->setChecked(_cfg->readBoolEntry("Vector Magnitude Autoscale", true));
-      _hc->vecMag->setText(_cfg->readEntry("Vector Max Magnitude", QString::null));
-      _hc->vecQU->setChecked(_cfg->readBoolEntry("Vector is QU", false));
+      _hc->matPhiMin->setText(cfg.readEntry("Phi Min"));
+      _hc->matPhiMax->setText(cfg.readEntry("Phi Max"));
+      _hc->vecTheta->setCurrentItem(cfg.readEntry("Vector Theta", 0));
+      _hc->vecPhi->setCurrentItem(cfg.readEntry("Vector Phi", 0));
+      _hc->vecDegrade->setValue(cfg.readEntry("Vector Degrade Factor", 1));
+      _hc->vecMagAuto->setChecked(cfg.readEntry("Vector Magnitude Autoscale", true));
+      _hc->vecMag->setText(cfg.readEntry("Vector Max Magnitude"));
+      _hc->vecQU->setChecked(cfg.readEntry("Vector is QU", false));
       
       bool hasInstance = (_instance != 0L);
       
@@ -1423,62 +1421,62 @@ class ConfigWidgetHealpix : public KstDataSourceConfigWidget {
         _hc->vecPhi->insertStringList(_instance->matrixList());
         KstSharedPtr<HealpixSource> src = kst_cast<HealpixSource>(_instance);
         assert(src);        
-        _cfg->setGroup(src->fileName());
+        cfg.changeGroup(src->fileName());
         // set the config to the current datasource values
         src->saveConfig(_cfg);
-        _hc->matDimX->setValue(_cfg->readNumEntry("Matrix X Dimension", DEFAULT_XDIM));
-        _hc->matDimY->setValue(_cfg->readNumEntry("Matrix Y Dimension", DEFAULT_YDIM));
-        _hc->matThetaAuto->setChecked(_cfg->readBoolEntry("Theta Autoscale", true));
+        _hc->matDimX->setValue(cfg.readEntry("Matrix X Dimension", DEFAULT_XDIM));
+        _hc->matDimY->setValue(cfg.readEntry("Matrix Y Dimension", DEFAULT_YDIM));
+        _hc->matThetaAuto->setChecked(cfg.readEntry("Theta Autoscale", true));
         //FIXME Only one combobox item for now...
-        //_hc->matThetaUnits->setCurrentItem(_cfg->readNumEntry("Theta Units", HPUNIT_RAD));
+        //_hc->matThetaUnits->setCurrentItem(cfg.readEntry("Theta Units", HPUNIT_RAD));
         _hc->matThetaUnits->setCurrentItem(0);
-        _hc->matThetaMin->setText(_cfg->readEntry("Theta Min", QString::null));
-        _hc->matThetaMax->setText(_cfg->readEntry("Theta Max", QString::null));
-        _hc->matPhiAuto->setChecked(_cfg->readBoolEntry("Phi Autoscale", true));
+        _hc->matThetaMin->setText(cfg.readEntry("Theta Min"));
+        _hc->matThetaMax->setText(cfg.readEntry("Theta Max"));
+        _hc->matPhiAuto->setChecked(cfg.readEntry("Phi Autoscale", true));
         //FIXME Only one combobox item for now...
-        //_hc->matPhiUnits->setCurrentItem(_cfg->readNumEntry("Phi Units", HPUNIT_RAD));
+        //_hc->matPhiUnits->setCurrentItem(cfg.readEntry("Phi Units", HPUNIT_RAD));
         _hc->matPhiUnits->setCurrentItem(0);
-        _hc->matPhiMin->setText(_cfg->readEntry("Phi Min", QString::null));
-        _hc->matPhiMax->setText(_cfg->readEntry("Phi Max", QString::null));
-        _hc->vecTheta->setCurrentItem(_cfg->readNumEntry("Vector Theta", 0));
-        _hc->vecPhi->setCurrentItem(_cfg->readNumEntry("Vector Phi", 0));
-        _hc->vecDegrade->setValue(_cfg->readNumEntry("Vector Degrade Factor", 1));
-        _hc->vecMagAuto->setChecked(_cfg->readBoolEntry("Vector Magnitude Autoscale", true));
-        _hc->vecMag->setText(_cfg->readEntry("Vector Max Magnitude", QString::null));
-        _hc->vecQU->setChecked(_cfg->readBoolEntry("Vector is QU", false));
+        _hc->matPhiMin->setText(cfg.readEntry("Phi Min"));
+        _hc->matPhiMax->setText(cfg.readEntry("Phi Max"));
+        _hc->vecTheta->setCurrentItem(cfg.readEntry("Vector Theta", 0));
+        _hc->vecPhi->setCurrentItem(cfg.readEntry("Vector Phi", 0));
+        _hc->vecDegrade->setValue(cfg.readEntry("Vector Degrade Factor", 1));
+        _hc->vecMagAuto->setChecked(cfg.readEntry("Vector Magnitude Autoscale", true));
+        _hc->vecMag->setText(cfg.readEntry("Vector Max Magnitude"));
+        _hc->vecQU->setChecked(cfg.readEntry("Vector is QU", false));
       }
       return;
     }
 
     virtual void save() {
       assert(_cfg);
-      _cfg->setGroup("Healpix General");
+      KConfigGroup cfg(_cfg, "Healpix General");
       // If we have an instance, save settings for that 
       // instance only
       KstSharedPtr<HealpixSource> src = kst_cast<HealpixSource>(_instance);
       if (src) {
-        _cfg->setGroup(src->fileName());
+        cfg.changeGroup(src->fileName());
       }
-      _cfg->writeEntry("Matrix X Dimension", _hc->matDimX->value());
-      _cfg->writeEntry("Matrix Y Dimension", _hc->matDimY->value());
-      _cfg->writeEntry("Theta Autoscale", _hc->matThetaAuto->isChecked());
+      cfg.writeEntry("Matrix X Dimension", _hc->matDimX->value());
+      cfg.writeEntry("Matrix Y Dimension", _hc->matDimY->value());
+      cfg.writeEntry("Theta Autoscale", _hc->matThetaAuto->isChecked());
       //FIXME override for now
-      //_cfg->writeEntry("Theta Units", _hc->matThetaUnits->currentItem());
-      _cfg->writeEntry("Theta Units", HPUNIT_RADEC);
-      _cfg->writeEntry("Theta Min", _hc->matThetaMin->text());
-      _cfg->writeEntry("Theta Max", _hc->matThetaMax->text());
-      _cfg->writeEntry("Phi Autoscale", _hc->matPhiAuto->isChecked());
+      //cfg.writeEntry("Theta Units", _hc->matThetaUnits->currentItem());
+      cfg.writeEntry("Theta Units", HPUNIT_RADEC);
+      cfg.writeEntry("Theta Min", _hc->matThetaMin->text());
+      cfg.writeEntry("Theta Max", _hc->matThetaMax->text());
+      cfg.writeEntry("Phi Autoscale", _hc->matPhiAuto->isChecked());
       //FIXME override for now
-      //_cfg->writeEntry("Phi Units", _hc->matPhiUnits->currentItem());
-      _cfg->writeEntry("Phi Units", HPUNIT_RADEC);
-      _cfg->writeEntry("Phi Min", _hc->matPhiMin->text());
-      _cfg->writeEntry("Phi Max", _hc->matPhiMax->text());
-      _cfg->writeEntry("Vector Theta", _hc->vecTheta->currentItem());
-      _cfg->writeEntry("Vector Phi", _hc->vecPhi->currentItem());
-      _cfg->writeEntry("Vector Degrade Factor", _hc->vecDegrade->value());
-      _cfg->writeEntry("Vector Magnitude Autoscale", _hc->vecMagAuto->isChecked());
-      _cfg->writeEntry("Vector Max Magnitude", _hc->vecMag->text());
-      _cfg->writeEntry("Vector is QU", _hc->vecQU->isChecked());
+      //cfg.writeEntry("Phi Units", _hc->matPhiUnits->currentItem());
+      cfg.writeEntry("Phi Units", HPUNIT_RADEC);
+      cfg.writeEntry("Phi Min", _hc->matPhiMin->text());
+      cfg.writeEntry("Phi Max", _hc->matPhiMax->text());
+      cfg.writeEntry("Vector Theta", _hc->vecTheta->currentItem());
+      cfg.writeEntry("Vector Phi", _hc->vecPhi->currentItem());
+      cfg.writeEntry("Vector Degrade Factor", _hc->vecDegrade->value());
+      cfg.writeEntry("Vector Magnitude Autoscale", _hc->vecMagAuto->isChecked());
+      cfg.writeEntry("Vector Max Magnitude", _hc->vecMag->text());
+      cfg.writeEntry("Vector is QU", _hc->vecQU->isChecked());
       
       // Update the instance from our new settings
       // Load the config and then save it again, in case
@@ -1520,7 +1518,7 @@ int understands_healpix(KConfig *cfg, const QString& filename) {
   size_t tNside;
   size_t tMaps;
    
-  strncpy(thealpixfile, filename.latin1(), HEALPIX_STRNL);
+  strncpy(thealpixfile, filename.toLatin1().data(), HEALPIX_STRNL);
   ret = healpix_fits_map_test(thealpixfile, &tNside, &tOrder, &tCoord, &tType, &tMaps);
     
   if (ret) {
@@ -1552,7 +1550,7 @@ QStringList matrixList_healpix(KConfig *cfg, const QString& filename, const QStr
   healpix_keys *keys;
   size_t poff;
    
-  strncpy(thealpixfile, filename.latin1(), HEALPIX_STRNL);
+  strncpy(thealpixfile, filename.toLatin1().data(), HEALPIX_STRNL);
   
   names = healpix_strarr_alloc(HEALPIX_FITS_MAXCOL);
   units = healpix_strarr_alloc(HEALPIX_FITS_MAXCOL);
@@ -1576,9 +1574,9 @@ QStringList matrixList_healpix(KConfig *cfg, const QString& filename, const QStr
         mapName.sprintf("%d - %s",(int)(i+1),names[i+poff]);
       }
       if (strlen(units[i+poff]) == 0) {
-        mapName.sprintf("%s (%s)",mapName.ascii(),"Unknown Units");
+        mapName.sprintf("%s (%s)",mapName.toLatin1().data(),"Unknown Units");
       } else {
-        mapName.sprintf("%s (%s)",mapName.ascii(),units[i+poff]);
+        mapName.sprintf("%s (%s)",mapName.toLatin1().data(),units[i+poff]);
       }
       matrices.append(mapName);
     }
@@ -1595,9 +1593,9 @@ QStringList matrixList_healpix(KConfig *cfg, const QString& filename, const QStr
         mapName.sprintf("%s",names[tMaps+2]);
       }
       if (strlen(units[tMaps+2]) == 0) {
-        mapName.sprintf("%s (%s)",mapName.ascii(),"Unknown Units");
+        mapName.sprintf("%s (%s)",mapName.toLatin1().data(),"Unknown Units");
       } else {
-        mapName.sprintf("%s (%s)",mapName.ascii(),units[tMaps+2]);
+        mapName.sprintf("%s (%s)",mapName.toLatin1().data(),units[tMaps+2]);
       }
       matrices.append(mapName);
     }
@@ -1635,7 +1633,7 @@ QStringList fieldList_healpix(KConfig *cfg, const QString& filename, const QStri
   size_t tMaps;
   QStringList fields;
    
-  strncpy(thealpixfile, filename.latin1(), HEALPIX_STRNL);
+  strncpy(thealpixfile, filename.toLatin1().data(), HEALPIX_STRNL);
   ret = healpix_fits_map_test(thealpixfile, &tNside, &tOrder, &tCoord, &tType, &tMaps);
   
   if (ret) {

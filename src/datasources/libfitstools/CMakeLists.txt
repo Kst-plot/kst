@@ -4,21 +4,15 @@ include_directories( ${CMAKE_SOURCE_DIR}/kst/src/libkst ${CMAKE_SOURCE_DIR}/kst/
 
 ########### next target ###############
 
+set(fitstools_LIB_SRCS fitstools.cpp )
+
+kde4_add_library(fitstools STATIC ${fitstools_LIB_SRCS})
+
+target_link_libraries(fitstools  ${KDE4_KDECORE_LIBS} qt )
+
+set_target_properties(fitstools PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 1)
+install(TARGETS fitstools DESTINATION ${LIB_INSTALL_DIR} )
+
 
 ########### install files ###############
 
-
-
-
-#original Makefile.am contents follow:
-
-#INCLUDES=-I$(top_srcdir)/kst/src/libkst -I$(top_srcdir)/kst/src/extdate $(all_includes)
-#
-#noinst_LTLIBRARIES = libfitstools.la
-#
-#libfitstools_la_LIBADD=$(FITSIO_LIBS)
-#libfitstools_la_LDFLAGS=$(all_libraries) -module -avoid-version
-#libfitstools_la_SOURCES = \
-#	fitstools.cpp 
-#
-#METASOURCES=AUTO

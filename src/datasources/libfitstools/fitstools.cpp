@@ -16,6 +16,8 @@
  ***************************************************************************/
 
 #include "fitstools.h"
+//Added by qt3to4:
+#include <Q3ValueList>
 
 
 char **fitsSarrayAlloc(size_t nstring)
@@ -295,9 +297,9 @@ QStringList fitsMatrices( fitsfile *fp, int HDU ) {
 }
 
 
-QValueList<int> fitsDim( fitsfile *fp, int HDU ) {
+Q3ValueList<int> fitsDim( fitsfile *fp, int HDU ) {
   
-  QValueList<int> dims;
+  Q3ValueList<int> dims;
   
   // move to desired HDU
   int ret = 0;

@@ -22,7 +22,7 @@
 #include <fitsio.h>
 #include <qpair.h>
 #include <qstring.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 #include <qstringlist.h>
 #include <qmap.h>
 
@@ -44,7 +44,7 @@ QStringList fitsFields( fitsfile *fp, int HDU );
     
 QStringList fitsMatrices( fitsfile *fp, int HDU );
 
-QValueList<int> fitsDim( fitsfile *fp, int HDU );
+Q3ValueList<int> fitsDim( fitsfile *fp, int HDU );
 
 // read data from file
 
