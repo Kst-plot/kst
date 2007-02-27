@@ -53,7 +53,7 @@ install(TARGETS kst DESTINATION ${LIB_INSTALL_DIR})
 
 ########### install files ###############
 
-install(FILES kstdatasource.h kstobject.h kst_export.h kstsharedptr.h rwlock.h kstdateparser.h kstwaitcondition.h kstobjectcollection.h DESTINATION ${INCLUDE_INSTALL_DIR})
+install(FILES kstdatasource.h kstobject.h kst_export.h kstsharedptr.h rwlock.h kstdateparser.h kstobjectcollection.h DESTINATION ${INCLUDE_INSTALL_DIR})
 
 
 
