@@ -5,14 +5,15 @@ include_directories( ${CMAKE_BINARY_DIR}/kst ${CMAKE_SOURCE_DIR}/kst/src/extdate
 ########### next target ###############
 
 set(kstwidgets_LIB_SRCS 
-   kstbackbuffer.cpp 
+   kstwidgets.cpp
+   curveappearancewidget.cpp
+#    kstbackbuffer.cpp
 #    comboboxselection_i.cpp 
 #    draggablelistbox.cpp 
 #    draggablelistview.cpp 
 #    plotlistbox.cpp 
 #    vectorlistview.cpp 
 #    kstcombobox.cpp 
-#    kstwidgets.cpp
    )
 
 kde4_automoc(${kstwidgets_LIB_SRCS})
@@ -51,7 +52,7 @@ kde4_add_plugin(kstwidgets ${kstwidgets_PART_SRCS})
 
 target_link_libraries(kstwidgets ${KDE4_KDECORE_LIBS})
 
-install(TARGETS kstwidgets DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS kstwidgets DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
 
 
 ########### install files ###############

@@ -3,7 +3,7 @@
 add_subdirectory( libkst )
 add_subdirectory( libkstmath )
 add_subdirectory( datasources )
-#add_subdirectory( widgets )
+add_subdirectory( widgets )
 #add_subdirectory( libkstapp )
 #add_subdirectory( kst )
 add_subdirectory( d2asc )
