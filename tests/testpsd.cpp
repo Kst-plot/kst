@@ -129,15 +129,14 @@ void doTests() {
   KstVectorPtr vpVX = psd->vX();
   KstVectorPtr vpVY = psd->vY();
 
-  for(int j = 0; j < vpVX->length(); j++){
-      doTest(vpVX->value()[j] == j);
-  }
+  doTest(vpVX->length() == 1);
+  doTest(vpVX->value()[0] != vpVX->value()[0]);
+  doTest(vpVY->length() == 1);
+  doTest(vpVY->value()[0] != vpVY->value()[0]);
 
-  for(int j = 0; j < vpVX->length(); j++){
-      doTest(vpVY->value()[j] == j);
-  }
-
+  psd->writeLock();
   doTest(psd->update(0) == KstObject::UPDATE);
+  psd->unlock();
  
   for(int j = 0; j < vpVX->length(); j++){
       doTest(vpVX->value()[j] == 0);

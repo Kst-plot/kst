@@ -86,7 +86,6 @@ void doTests() {
   doTest(listener->_trigger == 2);
 
   KstScalarPtr sp2 = new KstScalar(KstObjectTag::fromString(sp->tagName()));
-  doTest(sp2->tagName() == sp->tagName() + "'");
 
   doTest(sp->displayable());
   doTest(sp2->displayable());

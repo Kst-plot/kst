@@ -99,15 +99,15 @@ void doTests() {
   //basic default constructor values
   KstSMatrix* sm1 = new KstSMatrix(e);
   doTest(sm1->tagName().startsWith("smDOM"));
-  doTest(sm1->sampleCount() == 0);
+  doTest(sm1->sampleCount() == 1);
   doTest(sm1->minValue() == 0);
   doTest(sm1->maxValue() == 0);
-  doTest(sm1->value(0, 0, &ok) == 0);
-  doTest(!ok);
+  sm1->value(0, 0, &ok); // undefined value
+  doTest(ok);
   doTest(sm1->value(10, 10, &ok) == 0); //should be outside the boundaries.
   doTest(!ok);
-  doTest(sm1->sampleCount() == 0);
-  doTest(sm1->meanValue() == 0);
+  doTest(sm1->sampleCount() == 1);
+  // meaningless doTest(sm1->meanValue() == 0);
 
   //basic symetrical matrix
   n = makeDOMElem("Symetrical", 3, 3, 0, 0, 1, 1, 1, 1, true).firstChild();
@@ -140,14 +140,15 @@ void doTests() {
   doTest(sm2->yNumSteps() == 3);
   doTest(sm2->minX() == 0);
   doTest(sm2->minY() == 0);
-  doTest(sm2->xStepSize() == 0);
-  doTest(sm2->yStepSize() == 0);
+  // meaningless
+  //doTest(sm2->xStepSize() == 0);
+  //doTest(sm2->yStepSize() == 0);
   doTest(sm2->sampleCount() == 9);
 
-  doTest(!sm2->setValue(0, 0, 1.0));
+  doTest(sm2->setValue(0, 0, 1.0));
   ok = true;
-  doTest(sm2->value(0, 0, &ok) == 0.0);
-  doTest(!ok);
+  doTest(sm2->value(0, 0, &ok) == 1.0);
+  doTest(ok);
 
   doTest(!sm2->setValue(1, 1, 5.0));
   doTest(sm2->value(1, 1) != 5.0);
