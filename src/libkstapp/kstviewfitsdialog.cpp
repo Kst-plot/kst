@@ -1,5 +1,5 @@
 /***************************************************************************
-                    kstviewfitsdialog_i.cpp  -  Part of KST
+                    kstviewfitsdialog.cpp  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2004 The University of British Columbia
@@ -28,7 +28,7 @@
 #include "kstcplugin.h"
 #include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"
-#include "kstviewfitsdialog_i.h"
+#include "kstviewfitsdialog.h"
 
 KstViewFitsDialogI::KstViewFitsDialogI(QWidget* parent,
                                              const char* name,
@@ -199,5 +199,5 @@ void KstViewFitsDialogI::updateDefaults(int index) {
   Q_UNUSED(index)
 }
 
-#include "kstviewfitsdialog_i.moc"
+#include "kstviewfitsdialog.moc"
 // vim: ts=2 sw=2 et

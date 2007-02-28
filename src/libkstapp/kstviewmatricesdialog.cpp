@@ -1,5 +1,5 @@
 /***************************************************************************
-                    kstviewmatricesdialog_i.cpp  -  Part of KST
+                    kstviewmatricesdialog.cpp  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2005 The University of British Columbia
@@ -25,7 +25,7 @@
 
 // application specific includes
 #include "kstmatrix.h"
-#include "kstviewmatricesdialog_i.h"
+#include "kstviewmatricesdialog.h"
 #include "matrixselector.h"
 
 KstViewMatricesDialogI::KstViewMatricesDialogI(QWidget* parent,
@@ -119,5 +119,5 @@ void KstViewMatricesDialogI::updateDefaults(int index) {
   Q_UNUSED(index)
 }
 
-#include "kstviewmatricesdialog_i.moc"
+#include "kstviewmatricesdialog.moc"
 // vim: ts=2 sw=2 et

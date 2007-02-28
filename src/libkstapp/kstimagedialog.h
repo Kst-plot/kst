@@ -1,5 +1,5 @@
 /***************************************************************************
-                       kstimagedialog_i.h  -  Part of KST
+                       kstimagedialog.h  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2003 The University of Toronto

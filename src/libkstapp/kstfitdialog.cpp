@@ -1,5 +1,5 @@
 /***************************************************************************
-                     kstfitdialog_i.cpp  -  Part of KST
+                     kstfitdialog.cpp  -  Part of KST
                              -------------------
     begin                : Wed Jul 28 2004
     copyright            : (C) 2003 The University of Toronto
@@ -37,7 +37,7 @@
 #include "curveappearancewidget.h"
 #include "kst2dplot.h"
 #include "kstdataobjectcollection.h"
-#include "kstfitdialog_i.h"
+#include "kstfitdialog.h"
 #include "kstvcurve.h"
 #include "kstviewlabel.h"
 #include "kstviewwindow.h"
@@ -437,6 +437,6 @@ bool KstFitDialogI::saveInputs(KstCPluginPtr plugin, KstSharedPtr<Plugin> p) {
 }
 
 
-#include "kstfitdialog_i.moc"
+#include "kstfitdialog.moc"
 
 // vim: ts=2 sw=2 et

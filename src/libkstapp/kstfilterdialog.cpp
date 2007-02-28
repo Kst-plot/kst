@@ -1,5 +1,5 @@
 /***************************************************************************
-                     kstfilterdialog_i.cpp  -  Part of KST
+                     kstfilterdialog.cpp  -  Part of KST
                              -------------------
     begin                : Wed Jul 28 2004
     copyright            : (C) 2003 The University of Toronto
@@ -34,7 +34,7 @@
 #include "curveappearancewidget.h"
 #include "kst2dplot.h"
 #include "kstdataobjectcollection.h"
-#include "kstfilterdialog_i.h"
+#include "kstfilterdialog.h"
 #include "kstvcurve.h"
 #include "kstviewwindow.h"
 #include "plugincollection.h"
@@ -416,6 +416,6 @@ void KstFilterDialogI::generateEntries(bool input, int& cnt, QWidget *parent, Q3
 }
 
 
-#include "kstfilterdialog_i.moc"
+#include "kstfilterdialog.moc"
 
 // vim: ts=2 sw=2 et

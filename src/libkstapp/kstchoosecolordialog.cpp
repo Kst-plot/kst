@@ -1,5 +1,5 @@
 /**************************************************************************
-        kstchoosecolordialog_i.cpp - source file: inherits designer dialog
+        kstchoosecolordialog.cpp - source file: inherits designer dialog
                              -------------------
     begin                :  2001
     copyright            : (C) 2000-2003 by Barth Netterfield
@@ -26,7 +26,7 @@
 #include <kcolorcombo.h>
 
 #include "kst.h"
-#include "kstchoosecolordialog_i.h"
+#include "kstchoosecolordialog.h"
 #include "kstcolorsequence.h"
 #include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"
@@ -175,5 +175,5 @@ KstChooseColorDialogI::KstChooseColorDialogI(QWidget* parent,
     return QColor();   
   }
 
-#include "kstchoosecolordialog_i.moc"
+#include "kstchoosecolordialog.moc"
 // vim: ts=2 sw=2 et

@@ -1,5 +1,5 @@
 /***************************************************************************
-                      kstvectordialog_i.h  -  Part of KST
+                      kstvectordialog.h  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2003 The University of Toronto

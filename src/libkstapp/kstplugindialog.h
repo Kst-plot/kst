@@ -1,5 +1,5 @@
 /***************************************************************************
-                      kstplugindialog_i.h  -  Part of KST
+                      kstplugindialog.h  -  Part of KST
                              -------------------
     begin                : Mon May 12 2003
     copyright            : (C) 2003 The University of Toronto

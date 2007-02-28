@@ -1,5 +1,5 @@
 /***************************************************************************
-                      kstcurvedialog_i.cpp  -  Part of KST
+                      kstcurvedialog.cpp  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2003 The University of Toronto
@@ -34,7 +34,7 @@
 #include "curveplacementwidget.h"
 #include "editmultiplewidget.h"
 #include "kst2dplot.h"
-#include "kstcurvedialog_i.h"
+#include "kstcurvedialog.h"
 #include "kstdataobjectcollection.h"
 #include "kstviewwindow.h"
 #include "kstuinames.h"
@@ -649,5 +649,5 @@ void KstCurveDialogI::setVector(const QString& name) {
   _w->_yVector->setSelection(name);
 }
 
-#include "kstcurvedialog_i.moc"
+#include "kstcurvedialog.moc"
 // vim: ts=2 sw=2 et

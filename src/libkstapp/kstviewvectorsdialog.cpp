@@ -1,5 +1,5 @@
 /***************************************************************************
-                    kstviewvectorsdialog_i.cpp  -  Part of KST
+                    kstviewvectorsdialog.cpp  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2004 The University of British Columbia
@@ -21,7 +21,7 @@
 
 #include <klocale.h>
 
-#include "kstviewvectorsdialog_i.h"
+#include "kstviewvectorsdialog.h"
 #include "vectorselector.h"
 
 KstViewVectorsDialogI::KstViewVectorsDialogI(QWidget* parent,
@@ -119,5 +119,5 @@ void KstViewVectorsDialogI::updateDefaults(int index) {
   Q_UNUSED(index)
 }
 
-#include "kstviewvectorsdialog_i.moc"
+#include "kstviewvectorsdialog.moc"
 // vim: ts=2 sw=2 et

@@ -1,5 +1,5 @@
 /***************************************************************************
-                      kstimagedialog_i.cpp  -  Part of KST
+                      kstimagedialog.cpp  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2003 The University of Toronto
@@ -39,7 +39,7 @@
 #include "imagedialogwidget.h"
 #include "kst2dplot.h"
 #include "kstdataobjectcollection.h"
-#include "kstimagedialog_i.h"
+#include "kstimagedialog.h"
 #include "kstuinames.h"
 #include "kstviewwindow.h"
 #include "matrixselector.h"
@@ -671,5 +671,5 @@ void KstImageDialogI::setMatrix(const QString& name) {
   _w->_matrix->setSelection(name);
 }
 
-#include "kstimagedialog_i.moc"
+#include "kstimagedialog.moc"
 // vim: ts=2 sw=2 et

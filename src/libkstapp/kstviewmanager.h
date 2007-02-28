@@ -2,7 +2,7 @@
 #include <QDropEvent>
 #include <QMouseEvent>
 /***************************************************************************
-                       kstdatamanger_i.h  -  Part of KST
+                       kstdatamanger.h  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2003 The University of British Columbia

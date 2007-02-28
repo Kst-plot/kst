@@ -1,5 +1,5 @@
 /***************************************************************************
-                       kstviewscalarsdialog_i.h  -  Part of KST
+                       kstviewscalarsdialog.h  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2004 The University of British Columbia

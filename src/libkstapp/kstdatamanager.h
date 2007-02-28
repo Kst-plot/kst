@@ -1,5 +1,5 @@
 /***************************************************************************
-                       kstdatamanger_i.h  -  Part of KST
+                       kstdatamanger.h  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2003 The University of Toronto

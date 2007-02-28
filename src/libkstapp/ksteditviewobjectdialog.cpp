@@ -1,5 +1,5 @@
 /***************************************************************************
-                    ksteditviewobjectdialog_i.cpp  -  Part of KST
+                    ksteditviewobjectdialog.cpp  -  Part of KST
                              -------------------
     begin                : 2005
     copyright            : (C) 2005 The University of British Columbia
@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "ksteditviewobjectdialog_i.h"
+#include "ksteditviewobjectdialog.h"
 
 #include <qbutton.h>
 #include <q3buttongroup.h>
@@ -372,5 +372,5 @@ void KstEditViewObjectDialogI::okClicked() {
 }
 
 
-#include "ksteditviewobjectdialog_i.moc"
+#include "ksteditviewobjectdialog.moc"
 // vim: ts=2 sw=2 et

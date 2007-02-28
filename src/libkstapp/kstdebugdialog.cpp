@@ -1,5 +1,5 @@
 /**************************************************************************
-              kstdebugdialog_i.cpp - debug dialog: inherits designer dialog
+              kstdebugdialog.cpp - debug dialog: inherits designer dialog
                              -------------------
     begin                :  2004
     copyright            : (C) 2004 The University of British Columbia
@@ -116,5 +116,5 @@ KstLogWidget *KstDebugDialogI::logWidget() const {
 }
 
 
-#include "kstdebugdialog_i.moc"
+#include "kstdebugdialog.moc"
 // vim: et ts=2 sw=2

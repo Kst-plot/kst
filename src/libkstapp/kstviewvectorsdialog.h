@@ -1,5 +1,5 @@
 /***************************************************************************
-                       kstviewvectorsdialog_i.h  -  Part of KST
+                       kstviewvectorsdialog.h  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2004 The University of British Columbia

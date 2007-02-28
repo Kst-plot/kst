@@ -1,5 +1,5 @@
 /***************************************************************************
-                      ksthsdialog_i.cpp  -  Part of KST
+                      ksthsdialog.cpp  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2003 The University of Toronto
@@ -30,7 +30,7 @@
 #include <kmessagebox.h>
 
 // application specific includes
-#include "ksthsdialog_i.h"
+#include "ksthsdialog.h"
 #include "curveappearancewidget.h"
 #include "curveplacementwidget.h"
 #include "editmultiplewidget.h"
@@ -517,5 +517,5 @@ void KstHsDialogI::setVector(const QString& name) {
 }
 
 
-#include "ksthsdialog_i.moc"
+#include "ksthsdialog.moc"
 // vim: ts=2 sw=2 et

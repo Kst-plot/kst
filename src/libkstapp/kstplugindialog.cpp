@@ -41,7 +41,7 @@
 
 // application specific includes
 #include "kst.h"
-#include "kstplugindialog_i.h"
+#include "kstplugindialog.h"
 #include "kstdataobjectcollection.h"
 #include "kstdefaultnames.h"
 #include "plugincollection.h"
@@ -880,6 +880,6 @@ void KstPluginDialogI::updateStringTooltip(const QString& n) {
 }
 
 
-#include "kstplugindialog_i.moc"
+#include "kstplugindialog.moc"
 
 // vim: ts=2 sw=2 et

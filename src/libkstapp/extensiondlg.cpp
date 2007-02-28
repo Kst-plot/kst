@@ -60,6 +60,6 @@ void ExtensionDialog::accept() {
   QDialog::accept();
 }
 
-#include "extensiondialog.moc"
+#include "extensiondlg.moc"
 
 // vim: ts=2 sw=2 et

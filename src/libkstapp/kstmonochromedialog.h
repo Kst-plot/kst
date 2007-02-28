@@ -1,5 +1,5 @@
 /**************************************************************************
-        kstmonochromedialog_i.h - source file: inherits designer dialog
+        kstmonochromedialog.h - source file: inherits designer dialog
                              -------------------
     begin                :  2005
     copyright            : (C) 2005 The University of British Columbia

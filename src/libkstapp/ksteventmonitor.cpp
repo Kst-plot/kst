@@ -1,5 +1,5 @@
 /***************************************************************************
-                    ksteventmonitor_i.cpp  -  Part of KST
+                    ksteventmonitor.cpp  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2004 The University of British Columbia
@@ -32,7 +32,7 @@
 #include "eventmonitorwidget.h"
 #include "kst.h"
 #include "kstdataobjectcollection.h"
-#include "ksteventmonitor_i.h"
+#include "ksteventmonitor.h"
 #include "ksteventmonitorentry.h"
 #include "scalarselector.h"
 #include "vectorselector.h"
@@ -401,5 +401,5 @@ void KstEventMonitorI::setcheckBoxELOGNotifyDirty() {
   _checkBoxELOGNotifyDirty = true;
 }
 
-#include "ksteventmonitor_i.moc"
+#include "ksteventmonitor.moc"
 // vim: ts=2 sw=2 et

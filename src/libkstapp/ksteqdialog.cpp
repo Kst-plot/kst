@@ -1,5 +1,5 @@
 /***************************************************************************
-                       ksteqdialog_i.cpp  -  Part of KST
+                       ksteqdialog.cpp  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2003 The University of Toronto
@@ -38,7 +38,7 @@
 #include "kst2dplot.h"
 #include "kstdataobjectcollection.h"
 #include "kstdefaultnames.h"
-#include "ksteqdialog_i.h"
+#include "ksteqdialog.h"
 #include "kstuinames.h"
 #include "kstvcurve.h"
 #include "kstviewwindow.h"
@@ -432,5 +432,5 @@ void KstEqDialogI::setDoInterpolationDirty() {
   _doInterpolationDirty = true;
 }
 
-#include "ksteqdialog_i.moc"
+#include "ksteqdialog.moc"
 // vim: ts=2 sw=2 et

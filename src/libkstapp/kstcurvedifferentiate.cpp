@@ -1,5 +1,5 @@
 /**************************************************************************
-        kstcurvedifferentiate_i.cpp - source file: inherits designer dialog
+        kstcurvedifferentiate.cpp - source file: inherits designer dialog
                              -------------------
     begin                :  2005
     copyright            : (C) 2005 by University of British Columbia
@@ -27,7 +27,7 @@
 #include <kiconloader.h>
 
 #include "kst2dplot.h"
-#include "kstcurvedifferentiate_i.h"
+#include "kstcurvedifferentiate.h"
 #include "kstlinestyle.h"
 #include "kstnumbersequence.h"
 #include "kstviewwindow.h"
@@ -355,5 +355,5 @@ void KstCurveDifferentiateI::apply() {
   close();
 }
 
-#include "kstcurvedifferentiate_i.moc"
+#include "kstcurvedifferentiate.moc"
 // vim: ts=2 sw=2 et

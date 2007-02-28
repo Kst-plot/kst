@@ -1,5 +1,5 @@
 /***************************************************************************
-                       kstviewmanager_i.cpp  -  Part of KST
+                       kstviewmanager.cpp  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2003 The University of Toronto
@@ -38,7 +38,7 @@
 #include "kstdataobjectcollection.h"
 #include "kstdoc.h"
 #include "kstobject.h"
-#include "kstviewmanager_i.h"
+#include "kstviewmanager.h"
 #include "kstviewobjectimagedrag.h"
 #include "kstviewwindow.h"
 #include "plotmimesource.h"
@@ -771,5 +771,5 @@ void KstViewManagerI::currentChanged(Q3ListViewItem *i) {
   }
 }
 
-#include "kstviewmanager_i.moc"
+#include "kstviewmanager.moc"
 // vim: ts=2 sw=2 et

@@ -1,5 +1,5 @@
 /***************************************************************************
-                     kstgraphdialog_i.cpp  -  Part of KST
+                     kstgraphdialog.cpp  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2003 The University of Toronto
@@ -32,7 +32,7 @@
 #include <kurlrequester.h>
 
 // application specific includes
-#include "kstgraphfiledialog_i.h"
+#include "kstgraphfiledialog.h"
 
 
 KstGraphFileDialogI::KstGraphFileDialogI(QWidget* parent, const char* name,
@@ -238,5 +238,5 @@ void KstGraphFileDialogI::updateDialog() {
   enableWidthHeight();
 }
 
-#include "kstgraphfiledialog_i.moc"
+#include "kstgraphfiledialog.moc"
 // vim: ts=2 sw=2 et

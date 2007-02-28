@@ -1,5 +1,5 @@
 /**************************************************************************
-        kstchoosecolordialog_i.h - source file: inherits designer dialog
+        kstchoosecolordialog.h - source file: inherits designer dialog
                              -------------------
     begin                :  2001
     copyright            : (C) 2000-2003 by Barth Netterfield

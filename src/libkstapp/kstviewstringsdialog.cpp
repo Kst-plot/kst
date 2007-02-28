@@ -1,5 +1,5 @@
 /***************************************************************************
-                    kstviewstringsdialog_i.cpp  -  Part of KST
+                    kstviewstringsdialog.cpp  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2006 The University of Toronto
@@ -22,7 +22,7 @@
 #include <klocale.h>
 
 #include "kstdatacollection.h"
-#include "kstviewstringsdialog_i.h"
+#include "kstviewstringsdialog.h"
 
 KstViewStringsDialogI::KstViewStringsDialogI(QWidget* parent,
                                            const char* name,
@@ -92,5 +92,5 @@ void KstViewStringsDialogI::updateDefaults(int index) {
   Q_UNUSED(index)
 }
 
-#include "kstviewstringsdialog_i.moc"
+#include "kstviewstringsdialog.moc"
 // vim: ts=2 sw=2 et

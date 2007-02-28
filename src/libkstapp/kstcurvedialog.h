@@ -1,5 +1,5 @@
 /***************************************************************************
-                       kstcurvedialog_i.h  -  Part of KST
+                       kstcurvedialog.h  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2003 The University of Toronto

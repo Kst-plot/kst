@@ -1,5 +1,5 @@
 /***************************************************************************
-                      kstbasicdialog_i.h  -  Part of KST
+                      kstbasicdialog.h  -  Part of KST
                              -------------------
     begin                : 09/15/06
     copyright            : (C) 2006 The University of Toronto

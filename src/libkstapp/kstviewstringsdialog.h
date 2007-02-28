@@ -1,5 +1,5 @@
 /***************************************************************************
-                       kstviewstringsdialog_i.h  -  Part of KST
+                       kstviewstringsdialog.h  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2006 The University of Toronto

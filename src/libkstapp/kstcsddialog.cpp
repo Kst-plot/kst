@@ -1,5 +1,5 @@
 /***************************************************************************
-                       kstcsddialog_i.cpp  -  Part of KST
+                       kstcsddialog.cpp  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2003 The University of Toronto
@@ -38,7 +38,7 @@
 #include "editmultiplewidget.h"
 #include "csddialogwidget.h"
 #include "kst2dplot.h"
-#include "kstcsddialog_i.h"
+#include "kstcsddialog.h"
 #include "kstdataobjectcollection.h"
 #include "kstuinames.h"
 #include "kstvcurve.h"
@@ -469,5 +469,5 @@ void KstCsdDialogI::setVector(const QString& name) {
   _w->_vector->setSelection(name);
 }
 
-#include "kstcsddialog_i.moc"
+#include "kstcsddialog.moc"
 // vim: ts=2 sw=2 et

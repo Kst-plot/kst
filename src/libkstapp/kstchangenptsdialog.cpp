@@ -1,5 +1,5 @@
 /***************************************************************************
-                    kstchangenptsdialog_i.cpp  -  Part of KST
+                    kstchangenptsdialog.cpp  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2003 The University of Toronto
@@ -25,7 +25,7 @@
 #include <knuminput.h>
 
 #include "datarangewidget.h"
-#include "kstchangenptsdialog_i.h"
+#include "kstchangenptsdialog.h"
 #include "kstdatacollection.h"
 #include "kstrvector.h"
 
@@ -218,5 +218,5 @@ void KstChangeNptsDialogI::updateTimeCombo() {
 }
 
 
-#include "kstchangenptsdialog_i.moc"
+#include "kstchangenptsdialog.moc"
 // vim: ts=2 sw=2 et

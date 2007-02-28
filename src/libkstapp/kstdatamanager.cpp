@@ -1,5 +1,5 @@
 /***************************************************************************
-                       kstdatamanger_i.cpp  -  Part of KST
+                       kstdatamanger.cpp  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2003 The University of Toronto
@@ -44,20 +44,20 @@ static QStyle *windowsStyle = 0;
 // application specific includes
 #include "datasourcemetadatadialog.h"
 #include "kst2dplot.h"
-#include "kstcurvedialog_i.h"
-#include "kstcsddialog_i.h"
+#include "kstcurvedialog.h"
+#include "kstcsddialog.h"
 #include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"
-#include "kstdatamanager_i.h"
+#include "kstdatamanager.h"
 #include "kstdoc.h"
-#include "ksteqdialog_i.h"
-#include "ksteventmonitor_i.h"
-#include "ksthsdialog_i.h"
-#include "kstimagedialog_i.h"
-#include "kstmatrixdialog_i.h"
-#include "kstplugindialog_i.h"
-#include "kstpsddialog_i.h"
-#include "kstvectordialog_i.h"
+#include "ksteqdialog.h"
+#include "ksteventmonitor.h"
+#include "ksthsdialog.h"
+#include "kstimagedialog.h"
+#include "kstmatrixdialog.h"
+#include "kstplugindialog.h"
+#include "kstpsddialog.h"
+#include "kstvectordialog.h"
 #include "kstviewwindow.h"
 #include "matrixselector.h"
 #include "vectorselector.h"
@@ -1247,5 +1247,5 @@ void KstDataManagerI::selectionChanged() {
 }
 
 
-#include "kstdatamanager_i.moc"
+#include "kstdatamanager.moc"
 // vim: ts=2 sw=2 et

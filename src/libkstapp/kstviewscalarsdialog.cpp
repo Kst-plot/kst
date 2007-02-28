@@ -1,5 +1,5 @@
 /***************************************************************************
-                    kstviewscalarsdialog_i.cpp  -  Part of KST
+                    kstviewscalarsdialog.cpp  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2004 The University of British Columbia
@@ -22,7 +22,7 @@
 #include <klocale.h>
 
 #include "kstdatacollection.h"
-#include "kstviewscalarsdialog_i.h"
+#include "kstviewscalarsdialog.h"
 
 KstViewScalarsDialogI::KstViewScalarsDialogI(QWidget* parent,
                                            const char* name,
@@ -92,5 +92,5 @@ void KstViewScalarsDialogI::updateDefaults(int index) {
   Q_UNUSED(index)
 }
 
-#include "kstviewscalarsdialog_i.moc"
+#include "kstviewscalarsdialog.moc"
 // vim: ts=2 sw=2 et

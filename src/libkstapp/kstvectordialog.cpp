@@ -1,5 +1,5 @@
 /***************************************************************************
-                       kstvectordialog_i.cpp  -  Part of KST
+                       kstvectordialog.cpp  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2003 The University of Toronto
@@ -41,7 +41,7 @@
 #include "kstrvector.h"
 #include "kstsvector.h"
 #include "kstvectordefaults.h"
-#include "kstvectordialog_i.h"
+#include "kstvectordialog.h"
 #include "kstdefaultnames.h"
 #include "kstcombobox.h"
 #include "vectordialogwidget.h"
@@ -827,5 +827,5 @@ KstObjectPtr KstVectorDialogI::findObject(const QString& name) {
 }
 
 
-#include "kstvectordialog_i.moc"
+#include "kstvectordialog.moc"
 // vim: sw=2 ts=2 et

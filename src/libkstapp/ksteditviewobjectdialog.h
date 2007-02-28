@@ -1,5 +1,5 @@
 /***************************************************************************
-                       ksteditviewobjectdialog_i.h  -  Part of KST
+                       ksteditviewobjectdialog.h  -  Part of KST
                              -------------------
     begin                : 2005
     copyright            : (C) 2005 The University of British Columbia

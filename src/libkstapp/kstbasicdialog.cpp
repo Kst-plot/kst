@@ -1,5 +1,5 @@
 /***************************************************************************
-                     kstbasicdialog_i.cpp  -  Part of KST
+                     kstbasicdialog.cpp  -  Part of KST
                              -------------------
     begin                : 09/15/06
     copyright            : (C) 2006 The University of Toronto
@@ -28,7 +28,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
-#include "kstbasicdialog_i.h"
+#include "kstbasicdialog.h"
 #include "basicdialogwidget.h"
 
 // application specific includes
@@ -524,6 +524,6 @@ QLineEdit *KstBasicDialogI::output(const QString &name) const {
   return ::qt_cast<QLineEdit*>(_w->_frame->child(name.latin1()));
 }
 
-#include "kstbasicdialog_i.moc"
+#include "kstbasicdialog.moc"
 
 // vim: ts=2 sw=2 et

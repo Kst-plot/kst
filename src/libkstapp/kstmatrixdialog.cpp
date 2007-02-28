@@ -1,5 +1,5 @@
 /***************************************************************************
-                      kstmatrixdialog_i.cpp  -  Part of KST
+                      kstmatrixdialog.cpp  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2004 The University of British Columbia
@@ -34,7 +34,7 @@
 // application specific includes
 #include "editmultiplewidget.h"
 #include "kstmatrixdefaults.h"
-#include "kstmatrixdialog_i.h"
+#include "kstmatrixdialog.h"
 #include "kstviewwindow.h"
 #include "matrixdialogwidget.h"
 #include <defaultprimitivenames.h>
@@ -1015,5 +1015,5 @@ KstObjectPtr KstMatrixDialogI::findObject(const QString& name) {
   return o;
 }
 
-#include "kstmatrixdialog_i.moc"
+#include "kstmatrixdialog.moc"
 // vim: ts=2 sw=2 et

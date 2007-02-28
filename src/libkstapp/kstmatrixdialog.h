@@ -1,5 +1,5 @@
 /***************************************************************************
-                       kstmatrixdialog_i.h  -  Part of KST
+                       kstmatrixdialog.h  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2004 The University of British Columbia

@@ -1,5 +1,5 @@
 /***************************************************************************
-                       kstcsddialog_i.h  -  Part of KST
+                       kstcsddialog.h  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2005 The University of British Columbia

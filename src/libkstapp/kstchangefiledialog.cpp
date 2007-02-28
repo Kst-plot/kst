@@ -1,5 +1,5 @@
 /**************************************************************************
-        kstchangefiledialog_i.cpp - source file: inherits designer dialog
+        kstchangefiledialog.cpp - source file: inherits designer dialog
                              -------------------
     begin                :  2001
     copyright            : (C) 2000-2003 by Barth Netterfield
@@ -29,7 +29,7 @@
 
 #include "kst.h"
 #include "kst2dplot.h"
-#include "kstchangefiledialog_i.h"
+#include "kstchangefiledialog.h"
 #include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"
 #include "kstrmatrix.h"
@@ -355,5 +355,5 @@ void KstChangeFileDialogI::updateSelection(const QString& txt) {
   }
 }
 
-#include "kstchangefiledialog_i.moc"
+#include "kstchangefiledialog.moc"
 // vim: ts=2 sw=2 et

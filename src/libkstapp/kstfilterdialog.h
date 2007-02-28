@@ -1,5 +1,5 @@
 /***************************************************************************
-                      kstfilterdialog_i.h  -  Part of KST
+                      kstfilterdialog.h  -  Part of KST
                              -------------------
     begin                : Wed Jul 28 2004
     copyright            : (C) 2004 The University of British Columbia
@@ -18,7 +18,7 @@
 #ifndef KSTFILTERDIALOGI_H
 #define KSTFILTERDIALOGI_H
 
-#include "kstplugindialog_i.h"
+#include "kstplugindialog.h"
 //Added by qt3to4:
 #include <Q3GridLayout>
 #include <Q3ValueList>

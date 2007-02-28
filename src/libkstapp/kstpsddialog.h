@@ -1,5 +1,5 @@
 /***************************************************************************
-                       kstpsddialog_i.h  -  Part of KST
+                       kstpsddialog.h  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2003 The University of Toronto

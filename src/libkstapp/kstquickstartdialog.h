@@ -1,5 +1,5 @@
 /***************************************************************************
-                       kstquickstartdialog_i.h  -  Part of KST
+                       kstquickstartdialog.h  -  Part of KST
                              -------------------
     begin                :
     copyright            : (C) 2004 University of British Columbia

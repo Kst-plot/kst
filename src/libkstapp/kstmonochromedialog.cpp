@@ -1,5 +1,5 @@
 /**************************************************************************
-        kstmonochromedialog_i.cpp - source file: inherits designer dialog
+        kstmonochromedialog.cpp - source file: inherits designer dialog
                              -------------------
     begin                :  2005
     copyright            : (C) 2005 by University of British Columbia
@@ -26,7 +26,7 @@
 #include <kiconloader.h>
 
 #include "kstlinestyle.h"
-#include "kstmonochromedialog_i.h"
+#include "kstmonochromedialog.h"
 
 KstMonochromeDialogI::KstMonochromeDialogI(QWidget* parent,
                                            const char* name,
@@ -194,5 +194,5 @@ void KstMonochromeDialogI::downClicked() {
 }
 
 
-#include "kstmonochromedialog_i.moc"
+#include "kstmonochromedialog.moc"
 // vim: ts=2 sw=2 et

@@ -1,5 +1,5 @@
 /**************************************************************************
-              kstquickstartdialog_i.cpp - quickstart dialog: inherits designer dialog
+              kstquickstartdialog.cpp - quickstart dialog: inherits designer dialog
                              -------------------
     begin                :  2004
     copyright            : (C) 2004 University of British Columbia
@@ -26,7 +26,7 @@
 // application specific includes
 #include "kst.h"
 #include "kstdoc.h"
-#include "kstquickstartdialog_i.h"
+#include "kstquickstartdialog.h"
 #include "kstsettings.h"
 
 KstQuickStartDialogI::KstQuickStartDialogI(QWidget *parent, const char *name, bool modal, Qt::WFlags fl)
@@ -108,5 +108,5 @@ void KstQuickStartDialogI::deselectRecentFile() {
   _isRecentFile = false;
 }
 
-#include "kstquickstartdialog_i.moc"
+#include "kstquickstartdialog.moc"
 // vim: et ts=2 sw=2
