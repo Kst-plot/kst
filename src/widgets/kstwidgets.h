@@ -21,6 +21,9 @@
 #include <QObject>
 #include <QDesignerCustomWidgetInterface>
 
+//FIXME Remove this eventually...
+#include <kcomponentdata.h>
+
 #include <QtPlugin>
 
 class KstWidgetPlugin : public QObject, public QDesignerCustomWidgetInterface {
@@ -271,6 +274,7 @@ Q_EXPORT_PLUGIN2(kstwidgets, KstWidgets)
 
 KstWidgets::KstWidgets(QObject *parent)
     : QObject(parent) {
+  (void) new KComponentData("kstwidgets");
   _plugins.append(new CurveAppearanceWidgetPlugin(this));
   _plugins.append(new CurvePlacementWidgetPlugin(this));
   _plugins.append(new EditMultipleWidgetPlugin(this));
