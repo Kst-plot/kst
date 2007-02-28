@@ -1,0 +1,125 @@
+<ui version="4.0" stdsetdef="1" >
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>KstChooseColorDialog</class>
+  <widget class="QDialog" name="KstChooseColorDialog" >
+    <property name="geometry" >
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>413</width>
+        <height>154</height>
+      </rect>
+    </property>
+    <property name="windowTitle" >
+      <string>Assign Curve Color From File</string>
+    </property>
+    <layout class="QGridLayout" >
+      <item row="2" column="0" >
+        <layout class="QGridLayout" >
+          <property name="margin" >
+            <number>0</number>
+          </property>
+          <item row="0" column="2" >
+            <widget class="QPushButton" name="Cancel" >
+              <property name="text" >
+                <string>Cancel</string>
+              </property>
+            </widget>
+          </item>
+          <item row="0" column="1" >
+            <widget class="QPushButton" name="OK" >
+              <property name="text" >
+                <string>OK</string>
+              </property>
+            </widget>
+          </item>
+          <item row="0" column="0" >
+            <spacer name="spacer1" >
+              <property name="sizeHint" >
+                <size>
+                  <width>160</width>
+                  <height>20</height>
+                </size>
+              </property>
+              <property name="sizeType" >
+                <enum>Expanding</enum>
+              </property>
+              <property name="orientation" >
+                <enum>Horizontal</enum>
+              </property>
+            </spacer>
+          </item>
+        </layout>
+      </item>
+      <item row="0" column="0" >
+        <widget class="Q3GroupBox" name="colorGroup" >
+          <property name="title" >
+            <string>Assign Colors</string>
+          </property>
+          <layout class="QGridLayout" >
+            <property name="margin" >
+              <number>0</number>
+            </property>
+            <item row="0" column="0" >
+              <widget class="Q3Frame" name="colorFrame" >
+                <property name="frameShape" >
+                  <enum>StyledPanel</enum>
+                </property>
+                <property name="frameShadow" >
+                  <enum>Raised</enum>
+                </property>
+                <property name="lineWidth" >
+                  <number>0</number>
+                </property>
+              </widget>
+            </item>
+          </layout>
+        </widget>
+      </item>
+      <item row="1" column="0" >
+        <widget class="Q3ButtonGroup" name="vectorGroup" >
+          <property name="title" >
+            <string>Base Curve Color On</string>
+          </property>
+          <layout class="QGridLayout" >
+            <property name="margin" >
+              <number>0</number>
+            </property>
+            <item row="0" column="0" >
+              <widget class="QRadioButton" name="xVector" >
+                <property name="text" >
+                  <string>X Vector</string>
+                </property>
+              </widget>
+            </item>
+            <item row="0" column="1" >
+              <widget class="QRadioButton" name="yVector" >
+                <property name="text" >
+                  <string>Y Vector</string>
+                </property>
+              </widget>
+            </item>
+          </layout>
+        </widget>
+      </item>
+    </layout>
+  </widget>
+  <layoutdefault spacing="6" margin="11" />
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <tabstops>
+    <tabstop>xVector</tabstop>
+    <tabstop>yVector</tabstop>
+    <tabstop>OK</tabstop>
+    <tabstop>Cancel</tabstop>
+  </tabstops>
+  <connections>
+    <connection>
+      <sender>Cancel</sender>
+      <signal>clicked()</signal>
+      <receiver>KstChooseColorDialog</receiver>
+      <slot>reject()</slot>
+    </connection>
+  </connections>
+</ui>

@@ -1,0 +1,236 @@
+<ui version="4.0" stdsetdef="1" >
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>EqDialogWidget</class>
+  <widget class="QWidget" name="EqDialogWidget" >
+    <property name="geometry" >
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>482</width>
+        <height>564</height>
+      </rect>
+    </property>
+    <layout class="QGridLayout" >
+      <property name="margin" >
+        <number>0</number>
+      </property>
+      <property name="spacing" >
+        <number>0</number>
+      </property>
+      <item row="2" column="0" >
+        <widget class="CurvePlacementWidget" name="_curvePlacement" />
+      </item>
+      <item row="1" column="0" >
+        <widget class="CurveAppearanceWidget" name="_curveAppearance" />
+      </item>
+      <item row="0" column="0" >
+        <widget class="Q3GroupBox" name="GroupBox14" >
+          <property name="title" >
+            <string>Equation</string>
+          </property>
+          <layout class="QGridLayout" >
+            <property name="margin" >
+              <number>0</number>
+            </property>
+            <item rowspan="1" row="3" column="0" colspan="2" >
+              <layout class="QHBoxLayout" >
+                <property name="margin" >
+                  <number>0</number>
+                </property>
+                <property name="spacing" >
+                  <number>6</number>
+                </property>
+                <item>
+                  <widget class="QLabel" name="TextLabel1_11" >
+                    <property name="sizePolicy" >
+                      <sizepolicy>
+                        <hsizetype>0</hsizetype>
+                        <vsizetype>0</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="text" >
+                      <string>Equation:</string>
+                    </property>
+                    <property name="buddy" stdset="0" >
+                      <cstring>_equation</cstring>
+                    </property>
+                    <property name="wordWrap" >
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item>
+                  <widget class="QLineEdit" name="_equation" >
+                    <property name="whatsThis" stdset="0" >
+                      <string>Enter the equation to be evaluated here.  Use 'x' as the independent variable.  Vectors an operators are selected from the above lists.</string>
+                    </property>
+                  </widget>
+                </item>
+              </layout>
+            </item>
+            <item row="0" column="0" >
+              <widget class="QLabel" name="TextLabel1_2_3_2" >
+                <property name="sizePolicy" >
+                  <sizepolicy>
+                    <hsizetype>0</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                  </sizepolicy>
+                </property>
+                <property name="text" >
+                  <string>Operators:</string>
+                </property>
+                <property name="buddy" stdset="0" >
+                  <cstring>Operators</cstring>
+                </property>
+                <property name="wordWrap" >
+                  <bool>false</bool>
+                </property>
+              </widget>
+            </item>
+            <item row="1" column="0" >
+              <widget class="QLabel" name="TextLabel1_2_2" >
+                <property name="sizePolicy" >
+                  <sizepolicy>
+                    <hsizetype>0</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                  </sizepolicy>
+                </property>
+                <property name="text" >
+                  <string>Vectors:</string>
+                </property>
+                <property name="buddy" stdset="0" >
+                  <cstring>_vectors</cstring>
+                </property>
+                <property name="wordWrap" >
+                  <bool>false</bool>
+                </property>
+              </widget>
+            </item>
+            <item row="2" column="0" >
+              <widget class="QLabel" name="TextLabel1_2_2_2" >
+                <property name="sizePolicy" >
+                  <sizepolicy>
+                    <hsizetype>0</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                  </sizepolicy>
+                </property>
+                <property name="text" >
+                  <string>Scalars:</string>
+                </property>
+                <property name="buddy" stdset="0" >
+                  <cstring>_scalars</cstring>
+                </property>
+                <property name="wordWrap" >
+                  <bool>false</bool>
+                </property>
+              </widget>
+            </item>
+            <item row="0" column="1" >
+              <widget class="QComboBox" name="Operators" >
+                <property name="whatsThis" stdset="0" >
+                  <string>Select an operator from this list to insert it into the equation.  All valid operators are listed here.  </string>
+                </property>
+              </widget>
+            </item>
+            <item row="1" column="1" >
+              <widget class="VectorSelector" name="_vectors" />
+            </item>
+            <item row="2" column="1" >
+              <widget class="ScalarSelector" name="_scalars" />
+            </item>
+            <item row="4" column="1" >
+              <widget class="VectorSelector" name="_xVectors" >
+                <property name="enabled" >
+                  <bool>true</bool>
+                </property>
+              </widget>
+            </item>
+            <item rowspan="1" row="5" column="0" colspan="2" >
+              <widget class="QCheckBox" name="_doInterpolation" >
+                <property name="text" >
+                  <string>Interpolate to highest resolution vector</string>
+                </property>
+                <property name="checked" >
+                  <bool>true</bool>
+                </property>
+              </widget>
+            </item>
+            <item row="4" column="0" >
+              <widget class="QLabel" name="textLabel1_2" >
+                <property name="text" >
+                  <string>X Vector:</string>
+                </property>
+                <property name="wordWrap" >
+                  <bool>false</bool>
+                </property>
+              </widget>
+            </item>
+          </layout>
+        </widget>
+      </item>
+    </layout>
+  </widget>
+  <layoutdefault spacing="6" margin="11" />
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <tabstops>
+    <tabstop>Operators</tabstop>
+    <tabstop>_vectors</tabstop>
+    <tabstop>_scalars</tabstop>
+    <tabstop>_equation</tabstop>
+    <tabstop>_xVectors</tabstop>
+    <tabstop>_doInterpolation</tabstop>
+    <tabstop>_curveAppearance</tabstop>
+    <tabstop>_curvePlacement</tabstop>
+  </tabstops>
+  <includes>
+    <include location="global" >kst_export.h</include>
+  </includes>
+  <connections>
+    <connection>
+      <sender>Operators</sender>
+      <signal>activated(QString)</signal>
+      <receiver>_equation</receiver>
+      <slot>insert(QString)</slot>
+    </connection>
+    <connection>
+      <sender>Operators</sender>
+      <signal>activated(QString)</signal>
+      <receiver>_equation</receiver>
+      <slot>setFocus()</slot>
+    </connection>
+    <connection>
+      <sender>_vectors</sender>
+      <signal>selectionChangedLabel(QString)</signal>
+      <receiver>_equation</receiver>
+      <slot>insert(QString)</slot>
+    </connection>
+    <connection>
+      <sender>_vectors</sender>
+      <signal>selectionChangedLabel(QString)</signal>
+      <receiver>_equation</receiver>
+      <slot>setFocus()</slot>
+    </connection>
+    <connection>
+      <sender>_scalars</sender>
+      <signal>selectionChangedLabel(QString)</signal>
+      <receiver>_equation</receiver>
+      <slot>insert(QString)</slot>
+    </connection>
+    <connection>
+      <sender>_scalars</sender>
+      <signal>selectionChangedLabel(QString)</signal>
+      <receiver>_equation</receiver>
+      <slot>setFocus()</slot>
+    </connection>
+  </connections>
+</ui>

@@ -1,0 +1,277 @@
+<ui version="4.0" stdsetdef="1" >
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>KstDataManager</class>
+  <widget class="QDialog" name="KstDataManager" >
+    <property name="geometry" >
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>800</width>
+        <height>527</height>
+      </rect>
+    </property>
+    <property name="windowTitle" >
+      <string>Data Manager</string>
+    </property>
+    <layout class="QGridLayout" >
+      <item>
+        <widget class="QSplitter" name="splitter5" >
+          <property name="geometry" >
+            <rect>
+              <x>10</x>
+              <y>0</y>
+              <width>812</width>
+              <height>480</height>
+            </rect>
+          </property>
+          <property name="sizePolicy" >
+            <sizepolicy>
+              <hsizetype>7</hsizetype>
+              <vsizetype>7</vsizetype>
+              <horstretch>1</horstretch>
+              <verstretch>1</verstretch>
+            </sizepolicy>
+          </property>
+          <property name="orientation" >
+            <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QWidget" name="layout3" >
+            <layout class="QVBoxLayout" >
+              <property name="margin" >
+                <number>0</number>
+              </property>
+              <item>
+                <widget class="QLabel" name="label1" >
+                  <property name="text" >
+                    <string>&lt;b>Create New Object&lt;/b></string>
+                  </property>
+                  <property name="alignment" >
+                    <set>Qt::AlignVCenter</set>
+                  </property>
+                  <property name="wordWrap" >
+                    <bool>false</bool>
+                  </property>
+                </widget>
+              </item>
+              <item>
+                <widget class="QToolBox" name="ToolBox" >
+                  <property name="sizePolicy" >
+                    <sizepolicy>
+                      <hsizetype>7</hsizetype>
+                      <vsizetype>7</vsizetype>
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                    </sizepolicy>
+                  </property>
+                  <property name="frameShape" >
+                    <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow" >
+                    <enum>QFrame::Sunken</enum>
+                  </property>
+                  <property name="currentIndex" >
+                    <number>-1</number>
+                  </property>
+                </widget>
+              </item>
+            </layout>
+          </widget>
+          <widget class="QWidget" name="layout5" >
+            <layout class="QVBoxLayout" >
+              <property name="margin" >
+                <number>0</number>
+              </property>
+              <item>
+                <widget class="Q3HBox" name="SearchBox" />
+              </item>
+              <item>
+                <widget class="KListView" name="DataView" >
+                  <property name="sizePolicy" >
+                    <sizepolicy>
+                      <hsizetype>7</hsizetype>
+                      <vsizetype>7</vsizetype>
+                      <horstretch>1</horstretch>
+                      <verstretch>0</verstretch>
+                    </sizepolicy>
+                  </property>
+                  <property name="allColumnsShowFocus" >
+                    <bool>true</bool>
+                  </property>
+                  <property name="showSortIndicator" >
+                    <bool>true</bool>
+                  </property>
+                  <property name="rootIsDecorated" >
+                    <bool>true</bool>
+                  </property>
+                  <column>
+                    <property name="text" >
+                      <string>Name</string>
+                    </property>
+                    <property name="clickable" >
+                      <bool>true</bool>
+                    </property>
+                    <property name="resizable" >
+                      <bool>true</bool>
+                    </property>
+                  </column>
+                  <column>
+                    <property name="text" >
+                      <string>Type</string>
+                    </property>
+                    <property name="clickable" >
+                      <bool>true</bool>
+                    </property>
+                    <property name="resizable" >
+                      <bool>true</bool>
+                    </property>
+                  </column>
+                  <column>
+                    <property name="text" >
+                      <string>Used</string>
+                    </property>
+                    <property name="clickable" >
+                      <bool>true</bool>
+                    </property>
+                    <property name="resizable" >
+                      <bool>true</bool>
+                    </property>
+                  </column>
+                  <column>
+                    <property name="text" >
+                      <string>Samples</string>
+                    </property>
+                    <property name="clickable" >
+                      <bool>true</bool>
+                    </property>
+                    <property name="resizable" >
+                      <bool>true</bool>
+                    </property>
+                  </column>
+                  <column>
+                    <property name="text" >
+                      <string>Properties</string>
+                    </property>
+                    <property name="clickable" >
+                      <bool>true</bool>
+                    </property>
+                    <property name="resizable" >
+                      <bool>true</bool>
+                    </property>
+                  </column>
+                </widget>
+              </item>
+              <item>
+                <layout class="QHBoxLayout" >
+                  <property name="margin" >
+                    <number>0</number>
+                  </property>
+                  <item>
+                    <spacer name="Spacer14" >
+                      <property name="sizeHint" >
+                        <size>
+                          <width>350</width>
+                          <height>20</height>
+                        </size>
+                      </property>
+                      <property name="sizeType" >
+                        <enum>Expanding</enum>
+                      </property>
+                      <property name="orientation" >
+                        <enum>Horizontal</enum>
+                      </property>
+                    </spacer>
+                  </item>
+                  <item>
+                    <widget class="QPushButton" name="Purge" >
+                      <property name="text" >
+                        <string>&amp;Purge</string>
+                      </property>
+                      <property name="whatsThis" stdset="0" >
+                        <string>Purge unused objects</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item>
+                    <widget class="QPushButton" name="Delete" >
+                      <property name="text" >
+                        <string>&amp;Delete</string>
+                      </property>
+                      <property name="whatsThis" stdset="0" >
+                        <string>Delete selected object</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item>
+                    <widget class="QPushButton" name="Edit" >
+                      <property name="sizePolicy" >
+                        <sizepolicy>
+                          <hsizetype>0</hsizetype>
+                          <vsizetype>0</vsizetype>
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                        </sizepolicy>
+                      </property>
+                      <property name="text" >
+                        <string>&amp;Edit</string>
+                      </property>
+                      <property name="whatsThis" stdset="0" >
+                        <string>Edit selected object</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item>
+                    <widget class="QPushButton" name="Close" >
+                      <property name="sizePolicy" >
+                        <sizepolicy>
+                          <hsizetype>0</hsizetype>
+                          <vsizetype>0</vsizetype>
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                        </sizepolicy>
+                      </property>
+                      <property name="text" >
+                        <string>&amp;Close</string>
+                      </property>
+                      <property name="whatsThis" stdset="0" >
+                        <string>Close window</string>
+                      </property>
+                    </widget>
+                  </item>
+                </layout>
+              </item>
+            </layout>
+          </widget>
+        </widget>
+      </item>
+    </layout>
+  </widget>
+  <layoutdefault spacing="6" margin="8" />
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <customwidgets>
+    <customwidget>
+      <class>KListView</class>
+      <extends>Q3ListView</extends>
+      <header>klistview.h</header>
+    </customwidget>
+  </customwidgets>
+  <tabstops>
+    <tabstop>DataView</tabstop>
+    <tabstop>Purge</tabstop>
+    <tabstop>Delete</tabstop>
+    <tabstop>Edit</tabstop>
+    <tabstop>Close</tabstop>
+  </tabstops>
+  <includes>
+    <include location="local" >klistview.h</include>
+  </includes>
+  <connections>
+    <connection>
+      <sender>Close</sender>
+      <signal>clicked()</signal>
+      <receiver>KstDataManager</receiver>
+      <slot>reject()</slot>
+    </connection>
+  </connections>
+</ui>
