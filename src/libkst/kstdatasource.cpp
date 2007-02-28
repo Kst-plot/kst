@@ -295,7 +295,7 @@ KstDataSourceConfigWidget* KstDataSource::configWidgetForSource(const QString& f
     return w;
   }
 
-  KstDebug::self()->log(i18n("Could not find a datasource for '%1'(%2), but we found one just prior.  Something is wrong with Kst.").arg(filename).arg(type), KstDebug::Error);
+  KstDebug::self()->log(i18n("Could not find a datasource for '%1'(%2), but we found one just prior.  Something is wrong with Kst.", filename, type), KstDebug::Error);
   return 0L;
 }
 
@@ -420,12 +420,12 @@ KstDataSource::KstDataSource(KConfig *cfg, const QString& filename, const QStrin
     shortFilename.truncate(shortFilename.length() - 1);
   }
   shortFilename = shortFilename.section('/', -1);
-  QString tn = i18n("DS-%1").arg(shortFilename);
+  QString tn = i18n("DS-%1", shortFilename);
   int count = 1;
 
   KstObject::setTagName(KstObjectTag(tn, KstObjectTag::globalTagContext));  // are DataSources always top-level?
   while (KstData::self()->dataSourceTagNameNotUnique(tagName(), false)) {
-    KstObject::setTagName(KstObjectTag(tn + QString("-%1").arg(count++), KstObjectTag::globalTagContext));  // are DataSources always top-level?
+    KstObject::setTagName(KstObjectTag(tn + QString::number(-(count++)), KstObjectTag::globalTagContext));  // are DataSources always top-level?
   }
 
   _numFramesScalar = new KstScalar(KstObjectTag("frames", tag()));

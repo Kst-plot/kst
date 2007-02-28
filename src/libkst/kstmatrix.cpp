@@ -52,10 +52,8 @@ KstMatrix::KstMatrix(KstObjectTag in_tag, KstObject *provider, uint nX, uint nY,
 
   QString _tag = in_tag.tag();
   if (!in_tag.isValid()) {
-    QString nt = i18n("Anonymous Matrix %1");
-
     do {
-      _tag = nt.arg(anonymousMatrixCounter++);
+      _tag = i18n("Anonymous Matrix %1", anonymousMatrixCounter++);
     } while (KstData::self()->matrixTagNameNotUnique(_tag, false));
     KstObject::setTagName(KstObjectTag(_tag, in_tag.context()));
   } else {

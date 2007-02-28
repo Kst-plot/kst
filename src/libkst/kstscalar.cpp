@@ -45,10 +45,8 @@ KstScalar::KstScalar(KstObjectTag in_tag, KstObject *provider, double val, bool 
 : KstPrimitive(provider), _value(val), _orphan(orphan), _displayable(displayable), _editable(editable) {
   QString _tag = in_tag.tag();
   if (_tag.isEmpty()) {
-    QString nt = i18n("Anonymous Scalar %1");
-
     do {
-      _tag = nt.arg(iAnonymousScalarCounter++);
+      _tag = i18n("Anonymous Scalar %1", iAnonymousScalarCounter++);
     } while (KstData::self()->vectorTagNameNotUniqueInternal(_tag));  // FIXME: why vector?
     KstObject::setTagName(KstObjectTag(_tag, in_tag.context()));
   } else {

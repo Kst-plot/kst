@@ -133,10 +133,10 @@ QString KstDebug::label(LogLevel level) const {
 
 QString KstDebug::text() {
   QMutexLocker ml(&_lock);
-  QString body = i18n("Kst version %1\n\n\nKst log:\n").arg(KSTVERSION);
+  QString body = i18n("Kst version %1\n\n\nKst log:\n", QString::fromLatin1(KSTVERSION));
 
   for (int i = 0; i < _messages.count(); i++ ) {
-    body += i18nc("date leveltext: message", "%1 %2: %3\n").arg(KGlobal::locale()->formatDateTime(_messages[i].date)).arg(label(_messages[i].level)).arg(_messages[i].msg);
+    body += i18nc("date leveltext: message", "%1 %2: %3\n", KGlobal::locale()->formatDateTime(_messages[i].date), label(_messages[i].level), _messages[i].msg);
   }
 
   body += i18n("\n\nData-source plugins:");

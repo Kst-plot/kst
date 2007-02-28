@@ -93,13 +93,13 @@ namespace KST {
         QString libname = QFile::encodeName((!isDataObject ? QString("kstdata_") : QString()) + _plugLib);
         _lib = KLibLoader::self()->library(libname.toLatin1().constData());
         if (!_lib) {
-          KstDebug::self()->log(i18n("Error loading data plugin [%1]: %2").arg(libname).arg(KLibLoader::self()->lastErrorMessage()), KstDebug::Error);
+          KstDebug::self()->log(i18n("Error loading data plugin [%1]: %2", libname, KLibLoader::self()->lastErrorMessage()), KstDebug::Error);
           return false;
         }
 
         if (key() != (isDataObject ? KST_CURRENT_DATAOBJECT_KEY : KST_CURRENT_DATASOURCE_KEY)) {
-          KstDebug::self()->log(i18n("Error loading data plugin [%1]: %2").arg(libname).arg(i18n("Plugin is too old and needs to be recompiled.")), KstDebug::Error);
-          KstDebug::self()->log(i18n("Error loading data plugin key = [%1]: %2").arg(key()).arg(QString(QFile::encodeName("key_" + _plugLib))), KstDebug::Error);
+          KstDebug::self()->log(i18n("Error loading data plugin [%1]: %2", libname, i18n("Plugin is too old and needs to be recompiled.")), KstDebug::Error);
+          KstDebug::self()->log(i18n("Error loading data plugin key = [%1]: %2", key(), QString(QFile::encodeName("key_" + _plugLib))), KstDebug::Error);
           return false;
         }
         return true;
@@ -248,7 +248,7 @@ namespace KST {
             return cw;
           }
           if (rc) {
-            KstDebug::self()->log(i18n("Error in plugin %1: Configuration widget is of the wrong type.").arg(service->property("Name").toString()), KstDebug::Error);
+            KstDebug::self()->log(i18n("Error in plugin %1: Configuration widget is of the wrong type.", service->property("Name").toString()), KstDebug::Error);
             delete rc;
           }
         }
