@@ -18,21 +18,6 @@
 #ifndef KSTWIDGETS_H
 #define KSTWIDGETS_H
 
-//widgets supplied...
-
-//CurveAppearanceWidget
-//CurvePlacementWidget
-//EditMultipleWidget
-//KstDataRange
-//KstFFTOptions
-//MatrixSelector
-//PlotListBox
-//VectorListView
-//ScalarSelector
-//StringSelector
-//VectorSelector
-//KstComboBox
-
 #include <QObject>
 #include <QDesignerCustomWidgetInterface>
 
@@ -42,9 +27,15 @@ class KstWidgetPlugin : public QObject, public QDesignerCustomWidgetInterface {
 public:
   KstWidgetPlugin(QObject *parent = 0) : QObject(parent), _initialized(false) {}
 
-  QString group() const { return tr("Kst Widgets"); }
-  QString toolTip() const { return ""; }
-  QString whatsThis() const { return ""; }
+  QString group() const {
+    return tr("Kst Widgets");
+  }
+  QString toolTip() const {
+    return QString::null;
+  }
+  QString whatsThis() const {
+    return QString::null;
+  }
 
   QString instanceName() const {
     QChar camel = name().at(0).toLower();
@@ -57,12 +48,18 @@ public:
 
   QString domXml() const {
     return QString::fromUtf8("<widget class=\"%1\" name=\"%2\"/>")
-            .arg(name()).arg(instanceName().toLower());
+           .arg(name()).arg(instanceName().toLower());
   }
 
-  bool isContainer() const { return false; }
-  bool isInitialized() const { return _initialized; }
-  QIcon icon() const { return QIcon(); }
+  bool isContainer() const {
+    return false;
+  }
+  bool isInitialized() const {
+    return _initialized;
+  }
+  QIcon icon() const {
+    return QIcon();
+  }
 
   void initialize(QDesignerFormEditorInterface *) {
     if (_initialized)
@@ -75,27 +72,218 @@ private:
   bool _initialized;
 };
 
+
 #include "curveappearancewidget.h"
 class CurveAppearanceWidgetPlugin : public KstWidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
 public:
   CurveAppearanceWidgetPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
-  QString name() const { return "CurveAppearanceWidget"; } //do not translate
-  QWidget *createWidget(QWidget *parent) { return new CurveAppearanceWidget(parent); }
+  QString name() const {
+    return QLatin1String("CurveAppearanceWidget");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new CurveAppearanceWidget(parent);
+  }
 };
-Q_EXPORT_PLUGIN2(curveappearancewidgetplugin, CurveAppearanceWidgetPlugin)
 
-// #include "curveplacementwidget.h"
-// class CurvePlacementWidgetPlugin : public KstWidgetPlugin {
-//   Q_OBJECT
-//   Q_INTERFACES(QDesignerCustomWidgetInterface)
-// public:
-//   CurvePlacementWidgetPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
-//   QString name() const { return "CurvePlacementWidget"; } //do not translate
-//   QWidget *createWidget(QWidget *parent) { return new CurvePlacementWidget(parent); }
-// };
-// Q_EXPORT_PLUGIN2(curveplacementwidgetplugin, CurvePlacementWidgetPlugin)
+
+#include "curveplacementwidget.h"
+class CurvePlacementWidgetPlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  CurvePlacementWidgetPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("CurvePlacementWidget");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new CurvePlacementWidget(parent);
+  }
+};
+
+
+#include "editmultiplewidget.h"
+class EditMultipleWidgetPlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  EditMultipleWidgetPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("EditMultipleWidget");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new EditMultipleWidget(parent);
+  }
+};
+
+
+#include "datarangewidget.h"
+class DataRangeWidgetPlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  DataRangeWidgetPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("KstDataRange");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new KstDataRange(parent);
+  }
+};
+
+
+#include "fftoptionswidget.h"
+class FFTOptionsWidgetPlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  FFTOptionsWidgetPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("KstFFTOptions");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new KstFFTOptions(parent);
+  }
+};
+
+
+#include "matrixselector.h"
+class MatrixSelectorPlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  MatrixSelectorPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("MatrixSelector");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new MatrixSelector(parent);
+  }
+};
+
+
+#include "scalarselector.h"
+class ScalarSelectorPlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  ScalarSelectorPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("ScalarSelector");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new ScalarSelector(parent);
+  }
+};
+
+
+#include "stringselector.h"
+class StringSelectorPlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  StringSelectorPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("StringSelector");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new StringSelector(parent);
+  }
+};
+
+
+#include "vectorselector.h"
+class VectorSelectorPlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  VectorSelectorPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("VectorSelector");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new VectorSelector(parent);
+  }
+};
+
+
+#include "plotlistbox.h"
+class PlotListBoxPlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  PlotListBoxPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("PlotListBox");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new PlotListBox(parent);
+  }
+};
+
+
+#include "vectorlistview.h"
+class VectorListViewPlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  VectorListViewPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("VectorListView");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new VectorListView(parent);
+  }
+};
+
+
+#include "kstcombobox.h"
+class KstComboBoxPlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  KstComboBoxPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("KstComboBox");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new KstComboBox(parent);
+  }
+};
+
+
+class KstWidgets : public QObject, public QDesignerCustomWidgetCollectionInterface {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
+public:
+  KstWidgets(QObject *parent = 0);
+  virtual ~KstWidgets() {}
+  QList<QDesignerCustomWidgetInterface*> customWidgets() const {
+    return _plugins;
+  }
+
+private:
+  QList<QDesignerCustomWidgetInterface*> _plugins;
+};
+Q_EXPORT_PLUGIN2(kstwidgets, KstWidgets)
+
+
+KstWidgets::KstWidgets(QObject *parent)
+    : QObject(parent) {
+  _plugins.append(new CurveAppearanceWidgetPlugin(this));
+  _plugins.append(new CurvePlacementWidgetPlugin(this));
+  _plugins.append(new EditMultipleWidgetPlugin(this));
+  _plugins.append(new DataRangeWidgetPlugin(this));
+  _plugins.append(new FFTOptionsWidgetPlugin(this));
+  _plugins.append(new MatrixSelectorPlugin(this));
+  _plugins.append(new ScalarSelectorPlugin(this));
+  _plugins.append(new StringSelectorPlugin(this));
+  _plugins.append(new VectorSelectorPlugin(this));
+  _plugins.append(new PlotListBoxPlugin(this));
+  _plugins.append(new VectorListViewPlugin(this));
+  _plugins.append(new KstComboBoxPlugin(this));
+}
 
 #endif
 // vim: ts=2 sw=2 et
