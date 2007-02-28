@@ -19,7 +19,7 @@ install(TARGETS kst DESTINATION ${BIN_INSTALL_DIR})
 
 ########### install files ###############
 
-install( FILES  kst.desktop DESTINATION ${APPLNK_INSTALL_DIR}/Applications/Sciences )
+install( FILES  kst.desktop DESTINATION ${XDG_APPS_DIR} )
 install( FILES  kstui.rc DESTINATION ${DATA_INSTALL_DIR}/kst )
 install( FILES  kstplugin.desktop kstdatasourceplugin.desktop kstdataobjectplugin.desktop kstbasicplugin.desktop kstfilter.desktop kstextension.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR}/kst )
 install( FILES  kstautosave11.upd kstrcmisc11.upd DESTINATION ${DATA_INSTALL_DIR}/kconf_update )
