@@ -1,31 +1,55 @@
-/****************************************************************************
-** ui.h extension file, included from the uic-generated form implementation.
-**
-** If you want to add, delete, or rename functions or slots, use
-** Qt Designer to update this file, preserving your code.
-**
-** You should not define a constructor or destructor in this file.
-** Instead, write your code in functions called init() and destroy().
-** These will automatically be called by the form's constructor and
-** destructor.
-*****************************************************************************/
+/***************************************************************************
+                   view2dplotwidget.cpp
+                             -------------------
+    begin                : 02/28/07
+    copyright            : (C) 2007 The University of Toronto
+    email                :
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
+#include "view2dplotwidget.h"
+
+#include <kst_export.h>
 
 struct MajorTickSpacing {
   const char *label;
   int majorTickDensity;
 };
 
+
 const MajorTickSpacing MajorTickSpacings[] = {
-  { I18N_NOOP("Coarse"), 2 },
-  { I18N_NOOP("Default"), 5 },
-  { I18N_NOOP("Fine"), 10 },
-  { I18N_NOOP("Very fine"), 15 }
-};
+      {
+        I18N_NOOP("Coarse"), 2
+      },
+      { I18N_NOOP("Default"), 5 },
+      { I18N_NOOP("Fine"), 10 },
+      { I18N_NOOP("Very fine"), 15 }
+    };
+
 
 const unsigned int numMajorTickSpacings = sizeof( MajorTickSpacings ) / sizeof( MajorTickSpacing );
 
-void View2DPlotWidget::init()
-{
+
+View2DPlotWidget::View2DPlotWidget(QWidget *parent)
+    : QWidget(parent) {
+  setupUi(this);
+
+  connect(, SIGNAL(), this, SLOT());
+}
+
+
+View2DPlotWidget::~View2DPlotWidget() {}
+
+
+void View2DPlotWidget::init() {
 
   QFontDatabase qfd;
 
@@ -48,9 +72,9 @@ void View2DPlotWidget::init()
   connect(_add, SIGNAL(clicked()),
           this, SLOT(addDisplayedCurve()));
   connect(_up, SIGNAL(clicked()),
-                DisplayedCurveList, SLOT(up()));
+          DisplayedCurveList, SLOT(up()));
   connect(_down, SIGNAL(clicked()),
-                DisplayedCurveList, SLOT(down()));
+          DisplayedCurveList, SLOT(down()));
 
   _up->setPixmap(BarIcon("up"));
   _up->setEnabled(false);
@@ -65,11 +89,15 @@ void View2DPlotWidget::init()
   _remove->setEnabled(false);
   _remove->setAccel(ALT+Key_R);
 
-  QToolTip::add(_up, i18n("Shortcut: Alt+Up"));
-  QToolTip::add(_down, i18n("Shortcut: Alt+Down"));
-  QToolTip::add(_add, i18n("Shortcut: Alt+s"));
-  QToolTip::add(_remove, i18n("Shortcut: Alt+r"));
-  
+  QToolTip::add
+    (_up, i18n("Shortcut: Alt+Up"));
+  QToolTip::add
+    (_down, i18n("Shortcut: Alt+Down"));
+  QToolTip::add
+    (_add, i18n("Shortcut: Alt+s"));
+  QToolTip::add
+    (_remove, i18n("Shortcut: Alt+r"));
+
   FontComboBox->setEditable(false);
 
   // axes range
@@ -228,6 +256,7 @@ void View2DPlotWidget::init()
 
 }
 
+
 void View2DPlotWidget::generateDefaultLabels() {
   if (_plot) {
     _plot->generateDefaultLabels();
@@ -239,8 +268,7 @@ void View2DPlotWidget::generateDefaultLabels() {
 
 //FIXME:Destroy(?)
 
-void View2DPlotWidget::updateButtons()
-{
+void View2DPlotWidget::updateButtons() {
   bool selected = false;
   uint count = AvailableCurveList->count();
 
@@ -312,47 +340,44 @@ void View2DPlotWidget::updateButtons()
 }
 
 
-void View2DPlotWidget::addDisplayedCurve()
-{
-    uint count = AvailableCurveList->count();
+void View2DPlotWidget::addDisplayedCurve() {
+  uint count = AvailableCurveList->count();
 
-    if (count > 0) {
-        for (int i = count-1; i >= 0; i--) {
-            if (AvailableCurveList->isSelected(i)) {
-              DisplayedCurveList->insertItem(AvailableCurveList->text(i));
-              AvailableCurveList->removeItem(i);
-            }
-        }
-        updateButtons();
-        emit changed();
+  if (count > 0) {
+    for (int i = count-1; i >= 0; i--) {
+      if (AvailableCurveList->isSelected(i)) {
+        DisplayedCurveList->insertItem(AvailableCurveList->text(i));
+        AvailableCurveList->removeItem(i);
+      }
     }
-    TrackContents->setChecked(false);
+    updateButtons();
+    emit changed();
+  }
+  TrackContents->setChecked(false);
 }
 
 
-void View2DPlotWidget::removeDisplayedCurve()
-{
-     uint count = DisplayedCurveList->count();
+void View2DPlotWidget::removeDisplayedCurve() {
+  uint count = DisplayedCurveList->count();
 
-     if (count > 0) {
-       for (int i = count-1; i >= 0; i--) {
-         if (DisplayedCurveList->isSelected(i)) {
-           AvailableCurveList->insertItem(DisplayedCurveList->text(i));
-           DisplayedCurveList->removeItem(i);
-         }
-       }
-       updateButtons();
-       emit changed();
-     }
-     TrackContents->setChecked(false);
+  if (count > 0) {
+    for (int i = count-1; i >= 0; i--) {
+      if (DisplayedCurveList->isSelected(i)) {
+        AvailableCurveList->insertItem(DisplayedCurveList->text(i));
+        DisplayedCurveList->removeItem(i);
+      }
+    }
+    updateButtons();
+    emit changed();
+  }
+  TrackContents->setChecked(false);
 
 }
-
 
 
 void View2DPlotWidget::fillMarkerLineCombo() {
   QRect rect = _comboMarkerLineStyle->style().querySubControlMetrics(
-      QStyle::CC_ComboBox, _comboMarkerLineStyle, QStyle::SC_ComboBoxEditField);
+                 QStyle::CC_ComboBox, _comboMarkerLineStyle, QStyle::SC_ComboBoxEditField);
   rect.setLeft(rect.left() + 2);
   rect.setRight(rect.right() - 2);
   rect.setTop(rect.top() + 2);
@@ -394,6 +419,7 @@ void View2DPlotWidget::updateAxesButtons() {
   _yMinorTicks->setEnabled(!_yMinorTicksAuto->isChecked());
 }
 
+
 void View2DPlotWidget::updateScalarCombo() {
   ScalarList->clear();
   scalarSelectorX1->clear();
@@ -416,6 +442,7 @@ void View2DPlotWidget::updateScalarCombo() {
   }
 }
 
+
 void View2DPlotWidget::updatePlotMarkers(const Kst2DPlot *plot) {
   for (KstMarkerList::ConstIterator it = plot->plotMarkers().begin(); it != plot->plotMarkers().end(); ++it) {
     if ((*it).isRising) {
@@ -423,7 +450,7 @@ void View2DPlotWidget::updatePlotMarkers(const Kst2DPlot *plot) {
     } else if ((*it).isFalling) {
       PlotMarkerList->insertItem(i18n("%1 [falling]").arg(QString::number((*it).value, 'g', MARKER_LABEL_PRECISION)));
     } else if ((*it).isVectorValue) {
-      PlotMarkerList->insertItem(i18n("%1 [value]").arg(QString::number((*it).value, 'g', MARKER_LABEL_PRECISION)));        
+      PlotMarkerList->insertItem(i18n("%1 [value]").arg(QString::number((*it).value, 'g', MARKER_LABEL_PRECISION)));
     } else {
       PlotMarkerList->insertItem(QString::number((*it).value, 'g', MARKER_LABEL_PRECISION));
     }
@@ -437,7 +464,7 @@ void View2DPlotWidget::updatePlotMarkers(const Kst2DPlot *plot) {
     CurveCombo->insertItem((*curves_iter)->tagName());
     (*curves_iter)->unlock();
   }
-  
+
   if (plot->hasCurveToMarkers()) {
     UseCurve->setChecked(true);
     Both->setChecked(false);
@@ -461,7 +488,7 @@ void View2DPlotWidget::updatePlotMarkers(const Kst2DPlot *plot) {
   } else {
     UseCurve->setChecked(false);
   }
-  
+
   if (plot->hasVectorToMarkers()) {
     UseVector->setChecked(true);
     _vectorForMarkers->setSelection(plot->vectorToMarkers()->tag().displayString());
@@ -471,6 +498,7 @@ void View2DPlotWidget::updatePlotMarkers(const Kst2DPlot *plot) {
 
 }
 
+
 void View2DPlotWidget::fillWidget(const Kst2DPlot *plot) {
   _plot = Kst2DPlot::findPlotByName(plot->tagName());
   _vectorForMarkers->update();
@@ -478,7 +506,7 @@ void View2DPlotWidget::fillWidget(const Kst2DPlot *plot) {
   scalarSelectorY1->update();
   scalarSelectorX2->update();
   scalarSelectorY2->update();
-  
+
   KstBaseCurveList curves = kstObjectSubList<KstDataObject, KstBaseCurve>(KST::dataObjectList);
 
   DisplayedCurveList->clear();
@@ -500,7 +528,7 @@ void View2DPlotWidget::fillWidget(const Kst2DPlot *plot) {
 
   updateScalarCombo();
   updatePlotMarkers(plot);
-  
+
   // update the checks and buttons
   _xMajorGrid->setChecked(plot->hasXMajorGrid());
   _xMinorGrid->setChecked(plot->hasXMinorGrid());
@@ -534,65 +562,65 @@ void View2DPlotWidget::fillWidget(const Kst2DPlot *plot) {
   YACRange->setText(QString::number(ymax - ymin, 'g', 16));
 
   switch (plot->xScaleMode()) {
-    case AUTO:
-      XAuto->setChecked(true);
-      break;
-    case AUTOBORDER:
-      XAutoBorder->setChecked(true);
-      break;
-    case AC:
-      XAC->setChecked(true);
-      break;
-    case FIXED:
-      XExpression->setChecked(true); // treat fixed ranges as expressions
-      XExpressionMin->setText(QString::number(xmin, 'g', 16));
-      XExpressionMax->setText(QString::number(xmax, 'g', 16));
-      break;
-    case EXPRESSION:
-      XExpression->setChecked(true);
-      XExpressionMin->setText(xMinExp);
-      XExpressionMax->setText(xMaxExp);
-      break;
-    case AUTOUP:
-      XAutoUp->setChecked(true);
-      break;
-    case NOSPIKE:
-      XNoSpikes->setChecked(true);
-      break;
-    default:
-      XAuto->setChecked(true);
-      break;
+  case AUTO:
+    XAuto->setChecked(true);
+    break;
+  case AUTOBORDER:
+    XAutoBorder->setChecked(true);
+    break;
+  case AC:
+    XAC->setChecked(true);
+    break;
+  case FIXED:
+    XExpression->setChecked(true); // treat fixed ranges as expressions
+    XExpressionMin->setText(QString::number(xmin, 'g', 16));
+    XExpressionMax->setText(QString::number(xmax, 'g', 16));
+    break;
+  case EXPRESSION:
+    XExpression->setChecked(true);
+    XExpressionMin->setText(xMinExp);
+    XExpressionMax->setText(xMaxExp);
+    break;
+  case AUTOUP:
+    XAutoUp->setChecked(true);
+    break;
+  case NOSPIKE:
+    XNoSpikes->setChecked(true);
+    break;
+  default:
+    XAuto->setChecked(true);
+    break;
   }
 
   switch (plot->yScaleMode()) {
-    case AUTO:
-      YAuto->setChecked(true);
-      break;
-    case AUTOBORDER:
-      YAutoBorder->setChecked(true);
-      break;
-    case AC:
-      YAC->setChecked(true);
-      break;
-    case FIXED:
-      YExpression->setChecked(true);
-      YExpressionMin->setText(QString::number(ymin, 'g', 16));
-      YExpressionMax->setText(QString::number(ymax, 'g', 16));
-      break;
-    case EXPRESSION:
-      YExpression->setChecked(true);
-      YExpressionMin->setText(yMinExp);
-      YExpressionMax->setText(yMaxExp);
-      break;
-    case AUTOUP:
-      YAutoUp->setChecked(true);
-      break;
-    case NOSPIKE:
-      YNoSpikes->setChecked(true);
-      break;
-    default:
-      YAuto->setChecked(true);
-      break;
+  case AUTO:
+    YAuto->setChecked(true);
+    break;
+  case AUTOBORDER:
+    YAutoBorder->setChecked(true);
+    break;
+  case AC:
+    YAC->setChecked(true);
+    break;
+  case FIXED:
+    YExpression->setChecked(true);
+    YExpressionMin->setText(QString::number(ymin, 'g', 16));
+    YExpressionMax->setText(QString::number(ymax, 'g', 16));
+    break;
+  case EXPRESSION:
+    YExpression->setChecked(true);
+    YExpressionMin->setText(yMinExp);
+    YExpressionMax->setText(yMaxExp);
+    break;
+  case AUTOUP:
+    YAutoUp->setChecked(true);
+    break;
+  case NOSPIKE:
+    YNoSpikes->setChecked(true);
+    break;
+  default:
+    YAuto->setChecked(true);
+    break;
   }
 
   // update the major and minor tick settings
@@ -600,7 +628,7 @@ void View2DPlotWidget::fillWidget(const Kst2DPlot *plot) {
   _yMinorTicks->setValue(plot->yMinorTicks());
   _xMinorTicksAuto->setChecked(plot->xMinorTicksAuto());
   _yMinorTicksAuto->setChecked(plot->yMinorTicksAuto());
-  
+
   //void KstPlotDialogI::setMajorSpacing(QComboBox* majorTicks, int spacing) {
 
   for (int i = 0; i < (int)numMajorTickSpacings; i++) {
@@ -627,20 +655,20 @@ void View2DPlotWidget::fillWidget(const Kst2DPlot *plot) {
   TopLabelFontSize->setValue(plot->topLabel()->fontSize());
   FontComboBox->setCurrentFont(plot->topLabel()->fontName());
   switch (plot->topLabel()->justification()) {
-    case KST_JUSTIFY_H_LEFT:
-      _comboBoxTopLabelJustify->setCurrentItem(0);
-      break;
-    case KST_JUSTIFY_H_RIGHT:
-      _comboBoxTopLabelJustify->setCurrentItem(1);
-      break;
-    case KST_JUSTIFY_H_CENTER:
-      _comboBoxTopLabelJustify->setCurrentItem(2);
-      break;
-    default:
-      _comboBoxTopLabelJustify->setCurrentItem(0);
-      break;
+  case KST_JUSTIFY_H_LEFT:
+    _comboBoxTopLabelJustify->setCurrentItem(0);
+    break;
+  case KST_JUSTIFY_H_RIGHT:
+    _comboBoxTopLabelJustify->setCurrentItem(1);
+    break;
+  case KST_JUSTIFY_H_CENTER:
+    _comboBoxTopLabelJustify->setCurrentItem(2);
+    break;
+  default:
+    _comboBoxTopLabelJustify->setCurrentItem(0);
+    break;
   }
-  
+
   // update the x-axis interpretation
   KstAxisInterpretation xAxisInterpretation;
   KstAxisInterpretation yAxisInterpretation;
@@ -697,7 +725,7 @@ void View2DPlotWidget::fillWidget(const Kst2DPlot *plot) {
     _comboBoxYInterpret->setCurrentItem(KstSettings::globalSettings()->xAxisInterpretation);
     _comboBoxYDisplay->setCurrentItem(KstSettings::globalSettings()->xAxisDisplay);
   }
-  
+
   // initialize the legend settings for the current plot
   KstViewLegendPtr vl = plot->legend();
   if (vl) {
@@ -712,7 +740,7 @@ void View2DPlotWidget::fillWidget(const Kst2DPlot *plot) {
 
   _axisPenWidth->setValue(plot->axisPenWidth());
 
-    //update the tick display options
+  //update the tick display options
   _xMarksInsidePlot->setChecked(plot->xTicksInPlot() && !plot->xTicksOutPlot());
   _xMarksOutsidePlot->setChecked(plot->xTicksOutPlot() && !plot->xTicksInPlot());
   _xMarksInsideAndOutsidePlot->setChecked(plot->xTicksOutPlot() && plot->xTicksInPlot());
@@ -732,10 +760,10 @@ void View2DPlotWidget::fillWidget(const Kst2DPlot *plot) {
   _yTransformRightExp->setText(plot->yTransformedExp());
   _xTransformTop->setChecked(!plot->xTransformedExp().isEmpty());
   _xTransformTopExp->setText(plot->xTransformedExp());
-  
+
   _xReversed->setChecked(plot->xReversed());
   _yReversed->setChecked(plot->yReversed());
-  
+
   // update marker attributes
   _comboMarkerLineStyle->setCurrentItem(plot->lineStyleMarkers());
   _spinBoxMarkerLineWidth->setValue(plot->lineWidthMarkers());
@@ -749,6 +777,7 @@ void View2DPlotWidget::fillWidget(const Kst2DPlot *plot) {
 
 }
 
+
 void View2DPlotWidget::applyAppearance(Kst2DPlotPtr plot) {
   Kst2DPlotList plots;
   Kst2DPlotPtr plotExtra;
@@ -758,17 +787,17 @@ void View2DPlotWidget::applyAppearance(Kst2DPlotPtr plot) {
   plot->yLabel()->setText(YAxisText->text());
   plot->topLabel()->setText(TopLabelText->text());
   switch (_comboBoxTopLabelJustify->currentItem()) {
-    case 0:
-      plot->topLabel()->setJustification(SET_KST_JUSTIFY(KST_JUSTIFY_H_LEFT, KST_JUSTIFY_V_NONE));
-      break;
-    case 1:
-      plot->topLabel()->setJustification(SET_KST_JUSTIFY(KST_JUSTIFY_H_RIGHT, KST_JUSTIFY_V_NONE));
-      break;
-    case 2:
-      plot->topLabel()->setJustification(SET_KST_JUSTIFY(KST_JUSTIFY_H_CENTER, KST_JUSTIFY_V_NONE));
-      break;      
+  case 0:
+    plot->topLabel()->setJustification(SET_KST_JUSTIFY(KST_JUSTIFY_H_LEFT, KST_JUSTIFY_V_NONE));
+    break;
+  case 1:
+    plot->topLabel()->setJustification(SET_KST_JUSTIFY(KST_JUSTIFY_H_RIGHT, KST_JUSTIFY_V_NONE));
+    break;
+  case 2:
+    plot->topLabel()->setJustification(SET_KST_JUSTIFY(KST_JUSTIFY_H_CENTER, KST_JUSTIFY_V_NONE));
+    break;
   }
-  
+
   if (appearanceThisPlot->isChecked()) {
     plots += plot;
   } else if (appearanceThisWindow->isChecked()) {
@@ -802,15 +831,15 @@ void View2DPlotWidget::applyAppearance(Kst2DPlotPtr plot) {
     plotExtra->topLabel()->setFontName(FontComboBox->currentText());
     plotExtra->topLabel()->setFontSize(TopLabelFontSize->value());
     switch (_comboBoxTopLabelJustify->currentItem()) {
-      case 0:
-        plotExtra->topLabel()->setJustification(SET_KST_JUSTIFY(KST_JUSTIFY_H_LEFT, KST_JUSTIFY_V_NONE));
-        break;
-      case 1:
-        plotExtra->topLabel()->setJustification(SET_KST_JUSTIFY(KST_JUSTIFY_H_RIGHT, KST_JUSTIFY_V_NONE));
-        break;
-      case 2:
-        plotExtra->topLabel()->setJustification(SET_KST_JUSTIFY(KST_JUSTIFY_H_CENTER, KST_JUSTIFY_V_NONE));
-        break;
+    case 0:
+      plotExtra->topLabel()->setJustification(SET_KST_JUSTIFY(KST_JUSTIFY_H_LEFT, KST_JUSTIFY_V_NONE));
+      break;
+    case 1:
+      plotExtra->topLabel()->setJustification(SET_KST_JUSTIFY(KST_JUSTIFY_H_RIGHT, KST_JUSTIFY_V_NONE));
+      break;
+    case 2:
+      plotExtra->topLabel()->setJustification(SET_KST_JUSTIFY(KST_JUSTIFY_H_CENTER, KST_JUSTIFY_V_NONE));
+      break;
     }
 
     plotExtra->xTickLabel()->setFontName(FontComboBox->currentText());
@@ -851,11 +880,11 @@ void View2DPlotWidget::applyXAxis(Kst2DPlotPtr plot) {
 
   for (uint i = 0; i < plots.size(); i++) {
     plotExtra = plots[i];
-  
+
     plotExtra->setLog(XIsLog->isChecked(), YIsLog->isChecked());
-  
+
     plotExtra->setXOffsetMode(_checkBoxXOffsetMode->isChecked());
-    
+
     if (_checkBoxXInterpret->isChecked()) {
       plotExtra->setXAxisInterpretation(true,
                                         AxisInterpretations[_comboBoxXInterpret->currentItem()].type,
@@ -874,7 +903,7 @@ void View2DPlotWidget::applyXAxis(Kst2DPlotPtr plot) {
 
     // major tick settings.
     plotExtra->setXMajorTicks(
-        MajorTickSpacings[_xMajorTickSpacing->currentItem()].majorTickDensity);
+      MajorTickSpacings[_xMajorTickSpacing->currentItem()].majorTickDensity);
 
     // tick display
     plotExtra->setXTicksInPlot(_xMarksInsidePlot->isChecked() || _xMarksInsideAndOutsidePlot->isChecked());
@@ -898,6 +927,7 @@ void View2DPlotWidget::applyXAxis(Kst2DPlotPtr plot) {
     plotExtra->setDirty();
   }
 }
+
 
 void View2DPlotWidget::applyYAxis(Kst2DPlotPtr plot) {
 
@@ -934,7 +964,7 @@ void View2DPlotWidget::applyYAxis(Kst2DPlotPtr plot) {
     }
     // major ticks
     plotExtra->setYMajorTicks(
-        MajorTickSpacings[_yMajorTickSpacing->currentItem()].majorTickDensity);
+      MajorTickSpacings[_yMajorTickSpacing->currentItem()].majorTickDensity);
 
     // tick display
     plotExtra->setYTicksInPlot(_yMarksInsidePlot->isChecked() || _yMarksInsideAndOutsidePlot->isChecked());
@@ -960,6 +990,7 @@ void View2DPlotWidget::applyYAxis(Kst2DPlotPtr plot) {
   }
 }
 
+
 void View2DPlotWidget::applyRange(Kst2DPlotPtr plot) {
   Kst2DPlotList plots;
   Kst2DPlotPtr  plotExtra;
@@ -981,8 +1012,7 @@ void View2DPlotWidget::applyRange(Kst2DPlotPtr plot) {
       plotExtra->setXScale(0, XACRange->text().toDouble());
     } else if (XExpression->isChecked()) {
       plotExtra->setXScaleMode(EXPRESSION);
-      if (!plotExtra->setXExpressions(XExpressionMin->text(), XExpressionMax->text()))
-      {
+      if (!plotExtra->setXExpressions(XExpressionMin->text(), XExpressionMax->text())) {
         KMessageBox::sorry(this, i18n("There is a problem with the X range expressions."));
         return;
       }
@@ -1006,8 +1036,7 @@ void View2DPlotWidget::applyRange(Kst2DPlotPtr plot) {
       plotExtra->setYScale(0, YACRange->text().toDouble());
     } else if (YExpression->isChecked()) {
       plotExtra->setYScaleMode(EXPRESSION);
-      if (!plotExtra->setYExpressions(YExpressionMin->text(), YExpressionMax->text()))
-      {
+      if (!plotExtra->setYExpressions(YExpressionMin->text(), YExpressionMax->text())) {
         KMessageBox::sorry(this, i18n("There is a problem with the Y range expressions."));
         return;
       }
@@ -1027,6 +1056,7 @@ void View2DPlotWidget::applyRange(Kst2DPlotPtr plot) {
     plotExtra->setDirty();
   }
 }
+
 
 void View2DPlotWidget::addPlotMarker() {
   // silently do nothing if there is no text, to
@@ -1064,6 +1094,7 @@ void View2DPlotWidget::addPlotMarker() {
   }
 }
 
+
 void View2DPlotWidget::removePlotMarker() {
   uint count = PlotMarkerList->count();
   if (count > 0) {
@@ -1076,6 +1107,7 @@ void View2DPlotWidget::removePlotMarker() {
   }
 }
 
+
 void View2DPlotWidget::removeAllPlotMarkers() {
   uint count = PlotMarkerList->count();
   if (count > 0) {
@@ -1085,6 +1117,7 @@ void View2DPlotWidget::removeAllPlotMarkers() {
     updateButtons();
   }
 }
+
 
 void View2DPlotWidget::applyPlotMarkers(Kst2DPlotPtr plot) {
   Kst2DPlotList plots;
@@ -1109,7 +1142,7 @@ void View2DPlotWidget::applyPlotMarkers(Kst2DPlotPtr plot) {
         PlotMarkerList->text(i).find( i18n("falling")) == -1 &&
         PlotMarkerList->text(i).find( i18n("value")) == -1) {
       newMarkers.append(marker);
-        }
+    }
   }
 
   for (unsigned i = 0; i < plots.size(); i++) {
@@ -1148,8 +1181,8 @@ void View2DPlotWidget::applyPlotMarkers(Kst2DPlotPtr plot) {
   }
 }
 
-void View2DPlotWidget::fillPlot( Kst2DPlotPtr plot )
-{
+
+void View2DPlotWidget::fillPlot( Kst2DPlotPtr plot ) {
 
   applyAppearance(plot);
 
@@ -1173,7 +1206,7 @@ void View2DPlotWidget::fillPlot( Kst2DPlotPtr plot )
   //_title->setText(plot->tagName());
   QString tag = _title->text().stripWhiteSpace();
   if (tag.isEmpty()) {
-    plot->setTagName(KstObjectTag(KST::suggestPlotName(), KstObjectTag::globalTagContext));	// FIXME: always global tag context?
+    plot->setTagName(KstObjectTag(KST::suggestPlotName(), KstObjectTag::globalTagContext)); // FIXME: always global tag context?
   } else {
     plot->setTagName(KstObjectTag(tag+"randomtextasholdingpattern", KstObjectTag::globalTagContext)); // FIXME: always global tag context?
     if (KstData::self()->viewObjectNameNotUnique(tag)) {
@@ -1214,21 +1247,26 @@ void View2DPlotWidget::fillPlot( Kst2DPlotPtr plot )
   */
 }
 
+
 void View2DPlotWidget::insertCurrentScalar() {
   ScalarDest->insert(ScalarList->currentText());
 }
+
 
 void View2DPlotWidget::setScalarDestXLabel() {
   ScalarDest = XAxisText;
 }
 
+
 void View2DPlotWidget::setScalarDestYLabel() {
   ScalarDest = YAxisText;
 }
 
+
 void View2DPlotWidget::setScalarDestTopLabel() {
   ScalarDest = TopLabelText;
 }
+
 
 void View2DPlotWidget::editLegend() {
   KstTopLevelViewPtr tlv = kst_cast<KstTopLevelView>(_plot->topLevelParent());
@@ -1237,3 +1275,6 @@ void View2DPlotWidget::editLegend() {
   ShowLegend->setChecked(true);
 }
 
+#include "view2dplotwidget.moc"
+
+// vim: ts=2 sw=2 et

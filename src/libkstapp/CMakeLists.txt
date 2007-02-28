@@ -1,145 +1,145 @@
 
-include_directories( ${CMAKE_SOURCE_DIR}/kst/src/extdate ${CMAKE_SOURCE_DIR}/kst/src/libkst ${CMAKE_SOURCE_DIR}/kst/src/libkstmath ${CMAKE_SOURCE_DIR}/kst/src/widgets ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
-
+include_directories( ${CMAKE_BINARY_DIR}/kst ${CMAKE_SOURCE_DIR}/kst/src/extdate ${CMAKE_SOURCE_DIR}/kst/src/widgets ${CMAKE_SOURCE_DIR}/kst/src/libkst ${CMAKE_BINARY_DIR}/kst/src/libkst ${CMAKE_SOURCE_DIR}/kst/src/libkstmath ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
 
 ########### next target ###############
 
 set(kstapp_LIB_SRCS 
-   kstdatacollection-gui.cpp 
-   dialoglauncher-gui.cpp 
-   labelrenderer.cpp 
-   kstnumbersequence.cpp 
-   kstuinames.cpp 
-   kstcurvedifferentiate_i.cpp 
-   kstiface_impl.cpp 
-   statuslabel.cpp 
-   plotmimesource.cpp 
-   kstplotdrag.cpp 
-   kstviewobjectimagedrag.cpp 
-   kstvectortable.cpp 
-   kstmatrixtable.cpp 
-   kstfittable.cpp 
-   kstlogwidget.cpp 
-   kstplotbase.cpp 
-   kstviewlabel.cpp 
-   kstplotlabel.cpp 
-   kst2dplot.cpp 
-   kstviewlegend.cpp 
-   kstviewbox.cpp 
-   kstviewline.cpp 
-   kstviewellipse.cpp 
-   kstviewpicture.cpp 
-   kstviewbezier.cpp 
-   kstviewarrow.cpp 
-   kstviewwidget.cpp 
-   kstviewobjectfactory.cpp 
-   kstviewobject.cpp 
-   kstplotgroup.cpp 
-   kstborderedviewobject.cpp 
-   ksttoplevelview.cpp 
-   kstgfxmousehandler.cpp 
-   kstgfxmousehandlerutils.cpp 
-   kstgfxrectanglemousehandler.cpp 
-   kstgfxlinemousehandler.cpp 
-   kstgfxtextmousehandler.cpp 
-   kstgfxellipsemousehandler.cpp 
-   kstgfxpicturemousehandler.cpp 
-   kstgfxarrowmousehandler.cpp 
-   kstgfx2dplotmousehandler.cpp 
-   kstmetaplot.cpp 
-   kstdrag.cpp 
-   kstplugindialog_i.cpp 
-   kstfitdialog_i.cpp 
-   kstfilterdialog_i.cpp 
-   extensionmgr.cpp 
-   ksteditviewobjectdialog_i.cpp 
-   kstdatamanager_i.cpp 
-   kstviewmanager_i.cpp 
-   kstvectordialog_i.cpp 
-   kstcsddialog_i.cpp 
-   ksteqdialog_i.cpp 
-   ksthsdialog_i.cpp 
-   kstpsddialog_i.cpp 
-   kstgraphfiledialog_i.cpp 
-   kstimagedialog_i.cpp 
-   kstquickstartdialog_i.cpp 
-   updatethread.cpp 
-   emailthread.cpp 
-   kstprintoptionspage.cpp 
-   kstviewscalarsdialog_i.cpp 
-   kstviewstringsdialog_i.cpp 
-   kstviewvectorsdialog_i.cpp 
-   kstviewmatricesdialog_i.cpp 
-   kstviewfitsdialog_i.cpp 
-   kstchoosecolordialog_i.cpp 
-   kstchangenptsdialog_i.cpp 
-   kstchangefiledialog_i.cpp 
-   ksteventmonitor_i.cpp 
-   kstdebugdialog_i.cpp 
-   kstmatrixdialog_i.cpp 
-   kstmonochromedialog_i.cpp 
-   kstalignment.cpp 
-   ksteventmonitorentry.cpp 
-   kstcurvedialog_i.cpp 
-   kstbasicdialog_i.cpp 
-   kstdoc.cpp 
-   kstviewwindow.cpp 
-   ktimezonecombo.cpp 
-   kstdebugnotifier.cpp 
-   kstdatanotifier.cpp 
-   kstscalarlistview.cpp 
-   kststringlistview.cpp 
-   kst.cpp )
+#    kstdatacollection-gui.cpp
+#    dialoglauncher-gui.cpp
+#    labelrenderer.cpp
+#    kstnumbersequence.cpp
+#    kstuinames.cpp
+#    kstcurvedifferentiate_i.cpp
+#    kstiface_impl.cpp
+#    statuslabel.cpp
+#    plotmimesource.cpp
+#    kstplotdrag.cpp
+#    kstviewobjectimagedrag.cpp
+#    kstvectortable.cpp
+#    kstmatrixtable.cpp
+#    kstfittable.cpp
+#    kstlogwidget.cpp
+#    kstplotbase.cpp
+#    kstviewlabel.cpp
+#    kstplotlabel.cpp
+#    kst2dplot.cpp
+#    kstviewlegend.cpp
+#    kstviewbox.cpp
+#    kstviewline.cpp
+#    kstviewellipse.cpp
+#    kstviewpicture.cpp
+#    kstviewbezier.cpp
+#    kstviewarrow.cpp
+#    kstviewwidget.cpp
+#    kstviewobjectfactory.cpp
+#    kstviewobject.cpp
+#    kstplotgroup.cpp
+#    kstborderedviewobject.cpp
+#    ksttoplevelview.cpp
+#    kstgfxmousehandler.cpp
+#    kstgfxmousehandlerutils.cpp
+#    kstgfxrectanglemousehandler.cpp
+#    kstgfxlinemousehandler.cpp
+#    kstgfxtextmousehandler.cpp
+#    kstgfxellipsemousehandler.cpp
+#    kstgfxpicturemousehandler.cpp
+#    kstgfxarrowmousehandler.cpp
+#    kstgfx2dplotmousehandler.cpp
+#    kstmetaplot.cpp
+#    kstdrag.cpp
+#    kstplugindialog_i.cpp
+#    kstfitdialog_i.cpp
+#    kstfilterdialog_i.cpp
+#    extensionmgr.cpp
+#    ksteditviewobjectdialog_i.cpp
+#    kstdatamanager_i.cpp
+#    kstviewmanager_i.cpp
+#    kstvectordialog_i.cpp
+#    kstcsddialog_i.cpp
+#    ksteqdialog_i.cpp
+#    ksthsdialog_i.cpp
+#    kstpsddialog_i.cpp
+#    kstgraphfiledialog_i.cpp
+#    kstimagedialog_i.cpp
+#    kstquickstartdialog_i.cpp
+#    updatethread.cpp
+#    emailthread.cpp
+#    kstprintoptionspage.cpp
+#    kstviewscalarsdialog_i.cpp
+#    kstviewstringsdialog_i.cpp
+#    kstviewvectorsdialog_i.cpp
+#    kstviewmatricesdialog_i.cpp
+#    kstviewfitsdialog_i.cpp
+#    kstchoosecolordialog_i.cpp
+#    kstchangenptsdialog_i.cpp
+#    kstchangefiledialog_i.cpp
+#    ksteventmonitor_i.cpp
+#    kstdebugdialog_i.cpp
+#    kstmatrixdialog_i.cpp
+#    kstmonochromedialog_i.cpp
+#    kstalignment.cpp
+#    ksteventmonitorentry.cpp
+#    kstcurvedialog_i.cpp
+#    kstbasicdialog_i.cpp
+#    kstdoc.cpp
+#    kstviewwindow.cpp
+#    ktimezonecombo.cpp
+#    kstdebugnotifier.cpp
+#    kstdatanotifier.cpp
+#    kstscalarlistview.cpp
+#    kststringlistview.cpp
+#    kst.cpp
+   )
 
 kde4_automoc(${kstapp_LIB_SRCS})
 
 kde4_add_ui_files(kstapp_LIB_SRCS 
-   editviewobjectdialog.ui 
-   vectordialogwidget.ui 
-   curvedifferentiate.ui 
-   csddialogwidget.ui 
-   eqdialogwidget.ui 
-   histogramdialogwidget.ui 
-   psddialogwidget.ui 
-   imagedialogwidget.ui 
-   matrixdialogwidget.ui 
-   plugindialogwidget.ui 
-   basicdialogwidget.ui 
-   eventmonitorwidget.ui 
-   pluginmanager.ui 
-   curvedialogwidget.ui 
-   viewlabelwidget.ui 
-   viewlegendwidget.ui 
-   view2dplotwidget.ui 
-   datasourcemetadatadialog.ui 
-   extensiondlg.ui 
-   kstdatadialog.ui 
-   choosecolordialog.ui 
-   debugdialog.ui 
-   datawizard.ui 
-   changefiledialog.ui 
-   graphfiledialog.ui 
-   viewscalarsdialog.ui 
-   viewstringsdialog.ui 
-   viewvectorsdialog.ui 
-   viewmatricesdialog.ui 
-   viewfitsdialog.ui 
-   changenptsdialog.ui 
-   datamanager.ui 
-   kstviewmanager.ui 
-   vectorsavedialog.ui 
-   kstsettingsdlg.ui 
-   quickstartdialog.ui 
-   monochromedialog.ui )
+   editviewobjectdialog4.ui
+   vectordialogwidget4.ui
+   curvedifferentiate4.ui
+   csddialogwidget4.ui
+   eqdialogwidget4.ui
+   histogramdialogwidget4.ui
+   psddialogwidget4.ui
+   imagedialogwidget4.ui
+   matrixdialogwidget4.ui
+   plugindialogwidget4.ui
+   basicdialogwidget4.ui
+   eventmonitorwidget4.ui
+   pluginmanager4.ui
+   curvedialogwidget4.ui
+   viewlabelwidget4.ui
+   viewlegendwidget4.ui
+   view2dplotwidget4.ui
+   datasourcemetadatadialog4.ui
+   extensiondlg4.ui
+   kstdatadialog4.ui
+   choosecolordialog4.ui
+   debugdialog4.ui
+   datawizard4.ui
+   changefiledialog4.ui
+   graphfiledialog4.ui
+   viewscalarsdialog4.ui
+   viewstringsdialog4.ui
+   viewvectorsdialog4.ui
+   viewmatricesdialog4.ui
+   viewfitsdialog4.ui
+   changenptsdialog4.ui
+   datamanager4.ui
+   kstviewmanager4.ui
+   vectorsavedialog4.ui
+   kstsettingsdlg4.ui
+   quickstartdialog4.ui
+   monochromedialog4.ui
+   )
 
 #kde4_add_dcop_skels(kstapp_LIB_SRCS MESSAGE(STATUS "DCOP stuff was remove into kde4, convert it to dbus please.kde4_add_dcop_skels macro doesn't exist now. We keep it just to remember to port to dbus")
-kstiface.h )
 
 kde4_add_library(kstapp SHARED ${kstapp_LIB_SRCS})
 
-target_link_libraries(kstapp  ${KDE4_KDECORE_LIBS} ${KDE4_KDEPRINT_LIBS} kstwidgets )
+target_link_libraries(kstapp ${KDE4_KDECORE_LIBS} ${KDE4_KDEPRINT_LIBS} kstwidgets)
 
-set_target_properties(kstapp PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(kstapp PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 1)
 install(TARGETS kstapp DESTINATION ${LIB_INSTALL_DIR} )
 
 
@@ -156,14 +156,14 @@ install(TARGETS kstapp DESTINATION ${LIB_INSTALL_DIR} )
 #lib_LTLIBRARIES = libkstapp.la
 #
 #libkstapp_la_SOURCES = \
-#	kstdatacollection-gui.cpp \
-#	dialoglauncher-gui.cpp \
-#	labelrenderer.cpp \
-#	kstnumbersequence.cpp \
-#	kstuinames.cpp \
+#	kstdatacollection-gui.cpp\
+#	dialoglauncher-gui.cpp\
+#	labelrenderer.cpp\
+#	kstnumbersequence.cpp\
+#	kstuinames.cpp\
 #	editviewobjectdialog.ui \
 #	vectordialogwidget.ui \
-#	kstcurvedifferentiate_i.cpp \
+#	kstcurvedifferentiate_i.cpp\
 #	curvedifferentiate.ui \
 #	csddialogwidget.ui \
 #	eqdialogwidget.ui \
@@ -177,84 +177,84 @@ install(TARGETS kstapp DESTINATION ${LIB_INSTALL_DIR} )
 #	pluginmanager.ui \
 #	curvedialogwidget.ui \
 #	kstiface.skel \
-#	kstiface_impl.cpp \
-#	statuslabel.cpp \
-#	plotmimesource.cpp \
-#	kstplotdrag.cpp \
-#	kstviewobjectimagedrag.cpp \
-#	kstvectortable.cpp \
-#	kstmatrixtable.cpp \
-#	kstfittable.cpp \
-#	kstlogwidget.cpp \
-#	kstplotbase.cpp \
+#	kstiface_impl.cpp\
+#	statuslabel.cpp\
+#	plotmimesource.cpp\
+#	kstplotdrag.cpp\
+#	kstviewobjectimagedrag.cpp\
+#	kstvectortable.cpp\
+#	kstmatrixtable.cpp\
+#	kstfittable.cpp\
+#	kstlogwidget.cpp\
+#	kstplotbase.cpp\
 #	viewlabelwidget.ui \
 #	viewlegendwidget.ui \
 #	view2dplotwidget.ui \
-#	kstviewlabel.cpp \
-#	kstplotlabel.cpp \
-#	kst2dplot.cpp \
-#	kstviewlegend.cpp \
-#	kstviewbox.cpp \
-#	kstviewline.cpp \
-#	kstviewellipse.cpp \
-#	kstviewpicture.cpp \
-#	kstviewbezier.cpp \
-#	kstviewarrow.cpp \
-#	kstviewwidget.cpp \
-#	kstviewobjectfactory.cpp \
-#	kstviewobject.cpp \
-#	kstplotgroup.cpp \
-#	kstborderedviewobject.cpp \
-#	ksttoplevelview.cpp \
-#	kstgfxmousehandler.cpp \
-#	kstgfxmousehandlerutils.cpp \
-#	kstgfxrectanglemousehandler.cpp \
-#	kstgfxlinemousehandler.cpp \
-#	kstgfxtextmousehandler.cpp \
-#	kstgfxellipsemousehandler.cpp \
-#	kstgfxpicturemousehandler.cpp \
-#	kstgfxarrowmousehandler.cpp \
-#	kstgfx2dplotmousehandler.cpp \
-#	kstmetaplot.cpp \
-#	kstdrag.cpp \
-#	kstplugindialog_i.cpp \
-#	kstfitdialog_i.cpp \
-#	kstfilterdialog_i.cpp \
-#	extensionmgr.cpp \
-#	ksteditviewobjectdialog_i.cpp \
+#	kstviewlabel.cpp\
+#	kstplotlabel.cpp\
+#	kst2dplot.cpp\
+#	kstviewlegend.cpp\
+#	kstviewbox.cpp\
+#	kstviewline.cpp\
+#	kstviewellipse.cpp\
+#	kstviewpicture.cpp\
+#	kstviewbezier.cpp\
+#	kstviewarrow.cpp\
+#	kstviewwidget.cpp\
+#	kstviewobjectfactory.cpp\
+#	kstviewobject.cpp\
+#	kstplotgroup.cpp\
+#	kstborderedviewobject.cpp\
+#	ksttoplevelview.cpp\
+#	kstgfxmousehandler.cpp\
+#	kstgfxmousehandlerutils.cpp\
+#	kstgfxrectanglemousehandler.cpp\
+#	kstgfxlinemousehandler.cpp\
+#	kstgfxtextmousehandler.cpp\
+#	kstgfxellipsemousehandler.cpp\
+#	kstgfxpicturemousehandler.cpp\
+#	kstgfxarrowmousehandler.cpp\
+#	kstgfx2dplotmousehandler.cpp\
+#	kstmetaplot.cpp\
+#	kstdrag.cpp\
+#	kstplugindialog_i.cpp\
+#	kstfitdialog_i.cpp\
+#	kstfilterdialog_i.cpp\
+#	extensionmgr.cpp\
+#	ksteditviewobjectdialog_i.cpp\
 #	datasourcemetadatadialog.ui \
-#	kstdatamanager_i.cpp \
-#	kstviewmanager_i.cpp \
-#	kstvectordialog_i.cpp \
-#	kstcsddialog_i.cpp \
-#	ksteqdialog_i.cpp \
-#	ksthsdialog_i.cpp \
-#	kstpsddialog_i.cpp \
-#	kstgraphfiledialog_i.cpp \
-#	kstimagedialog_i.cpp \
-#	kstquickstartdialog_i.cpp \
-#	updatethread.cpp \
-#	emailthread.cpp \
-#	kstprintoptionspage.cpp \
-#	kstviewscalarsdialog_i.cpp \
-#	kstviewstringsdialog_i.cpp \
-#	kstviewvectorsdialog_i.cpp \
-#	kstviewmatricesdialog_i.cpp \
-#	kstviewfitsdialog_i.cpp \
-#	kstchoosecolordialog_i.cpp \
-#	kstchangenptsdialog_i.cpp \
-#	kstchangefiledialog_i.cpp \
-#	ksteventmonitor_i.cpp \
-#	kstdebugdialog_i.cpp \
-#	kstmatrixdialog_i.cpp \
-#	kstmonochromedialog_i.cpp \
-#	kstalignment.cpp \
-#	ksteventmonitorentry.cpp \
-#	kstcurvedialog_i.cpp \
-#	kstbasicdialog_i.cpp \
-#	kstdoc.cpp \
-#	kstviewwindow.cpp \
-#	ktimezonecombo.cpp \
+#	kstdatamanager_i.cpp\
+#	kstviewmanager_i.cpp\
+#	kstvectordialog_i.cpp\
+#	kstcsddialog_i.cpp\
+#	ksteqdialog_i.cpp\
+#	ksthsdialog_i.cpp\
+#	kstpsddialog_i.cpp\
+#	kstgraphfiledialog_i.cpp\
+#	kstimagedialog_i.cpp\
+#	kstquickstartdialog_i.cpp\
+#	updatethread.cpp\
+#	emailthread.cpp\
+#	kstprintoptionspage.cpp\
+#	kstviewscalarsdialog_i.cpp\
+#	kstviewstringsdialog_i.cpp\
+#	kstviewvectorsdialog_i.cpp\
+#	kstviewmatricesdialog_i.cpp\
+#	kstviewfitsdialog_i.cpp\
+#	kstchoosecolordialog_i.cpp\
+#	kstchangenptsdialog_i.cpp\
+#	kstchangefiledialog_i.cpp\
+#	ksteventmonitor_i.cpp\
+#	kstdebugdialog_i.cpp\
+#	kstmatrixdialog_i.cpp\
+#	kstmonochromedialog_i.cpp\
+#	kstalignment.cpp\
+#	ksteventmonitorentry.cpp\
+#	kstcurvedialog_i.cpp\
+#	kstbasicdialog_i.cpp\
+#	kstdoc.cpp\
+#	kstviewwindow.cpp\
+#	ktimezonecombo.cpp\
 #	extensiondlg.ui \
 #	kstdatadialog.ui \
 #	choosecolordialog.ui \
@@ -274,10 +274,10 @@ install(TARGETS kstapp DESTINATION ${LIB_INSTALL_DIR} )
 #	kstsettingsdlg.ui \
 #	quickstartdialog.ui \
 #	monochromedialog.ui \
-#	kstdebugnotifier.cpp \
-#	kstdatanotifier.cpp \
-#	kstscalarlistview.cpp \
-#	kststringlistview.cpp \
+#	kstdebugnotifier.cpp\
+#	kstdatanotifier.cpp\
+#	kstscalarlistview.cpp\
+#	kststringlistview.cpp\
 #	kst.cpp
 #
 #
@@ -288,7 +288,7 @@ install(TARGETS kstapp DESTINATION ${LIB_INSTALL_DIR} )
 #INCLUDES=-I$(top_srcdir)/kst/src/extdate -I$(top_srcdir)/kst/src/libkst -I$(top_srcdir)/kst/src/libkstmath -I../libkst -I$(top_srcdir)/kst/src/widgets -I../widgets -I$(top_srcdir) $(KMDI_INCLUDES) $(all_includes)
 #
 #messages: rc.cpp
-#	LIST=`find . -name \*.h -o -name \*.hh -o -name \*.H -o -name \*.hxx -o -name \*.hpp -o -name \*.cpp -o -name \*.cc -o -name \*.cxx -o -name \*.ecpp -o -name \*.C`; \
+#	LIST=`find . -name \*.h -o -name \*.hh -o -name \*.H -o -name \*.hxx -o -name \*.hpp -o -name \*.cpp-o -name \*.cc -o -name \*.cxx -o -name \*.ecpp -o -name \*.C`; \
 #	if test -n "$$LIST"; then \
 #	 $(XGETTEXT) $$LIST -o $(podir)/kst.pot; \
 #	fi

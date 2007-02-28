@@ -1,0 +1,133 @@
+<ui version="4.0" stdsetdef="1" >
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>ExtensionDialog</class>
+  <widget class="QDialog" name="ExtensionDialog" >
+    <property name="geometry" >
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>573</width>
+        <height>296</height>
+      </rect>
+    </property>
+    <property name="windowTitle" >
+      <string>Kst Extensions</string>
+    </property>
+    <layout class="QGridLayout" >
+      <item rowspan="1" row="1" column="0" colspan="3" >
+        <widget class="Q3ListView" name="_extensions" >
+          <property name="allColumnsShowFocus" >
+            <bool>true</bool>
+          </property>
+          <column>
+            <property name="text" >
+              <string>Extension</string>
+            </property>
+            <property name="clickable" >
+              <bool>true</bool>
+            </property>
+            <property name="resizable" >
+              <bool>true</bool>
+            </property>
+          </column>
+          <column>
+            <property name="text" >
+              <string>Description</string>
+            </property>
+            <property name="clickable" >
+              <bool>true</bool>
+            </property>
+            <property name="resizable" >
+              <bool>true</bool>
+            </property>
+          </column>
+          <column>
+            <property name="text" >
+              <string>Author</string>
+            </property>
+            <property name="clickable" >
+              <bool>true</bool>
+            </property>
+            <property name="resizable" >
+              <bool>true</bool>
+            </property>
+          </column>
+          <column>
+            <property name="text" >
+              <string>Plugin</string>
+            </property>
+            <property name="clickable" >
+              <bool>true</bool>
+            </property>
+            <property name="resizable" >
+              <bool>true</bool>
+            </property>
+          </column>
+        </widget>
+      </item>
+      <item row="0" column="0" >
+        <widget class="QLabel" name="textLabel1" >
+          <property name="text" >
+            <string>Select extensions to enable or disable:</string>
+          </property>
+          <property name="wordWrap" >
+            <bool>false</bool>
+          </property>
+        </widget>
+      </item>
+      <item row="2" column="2" >
+        <widget class="QPushButton" name="_cancel" >
+          <property name="text" >
+            <string>&amp;Cancel</string>
+          </property>
+        </widget>
+      </item>
+      <item row="2" column="0" >
+        <spacer name="spacer1" >
+          <property name="sizeHint" >
+            <size>
+              <width>281</width>
+              <height>31</height>
+            </size>
+          </property>
+          <property name="sizeType" >
+            <enum>Expanding</enum>
+          </property>
+          <property name="orientation" >
+            <enum>Horizontal</enum>
+          </property>
+        </spacer>
+      </item>
+      <item row="2" column="1" >
+        <widget class="QPushButton" name="_ok" >
+          <property name="text" >
+            <string>&amp;OK</string>
+          </property>
+        </widget>
+      </item>
+    </layout>
+  </widget>
+  <layoutdefault spacing="6" margin="11" />
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <tabstops>
+    <tabstop>_extensions</tabstop>
+    <tabstop>_ok</tabstop>
+    <tabstop>_cancel</tabstop>
+  </tabstops>
+  <connections>
+    <connection>
+      <sender>_ok</sender>
+      <signal>clicked()</signal>
+      <receiver>ExtensionDialog</receiver>
+      <slot>accept()</slot>
+    </connection>
+    <connection>
+      <sender>_cancel</sender>
+      <signal>clicked()</signal>
+      <receiver>ExtensionDialog</receiver>
+      <slot>reject()</slot>
+    </connection>
+  </connections>
+</ui>
