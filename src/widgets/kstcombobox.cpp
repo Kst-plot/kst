@@ -16,18 +16,19 @@
  ***************************************************************************/
 
 #include "kstcombobox.h"
-//Added by qt3to4:
+
+#include <QLineEdit>
 #include <QFocusEvent>
 
-KstComboBox::KstComboBox(QWidget *parent, const char *name)
-  : KComboBox(parent, name), _trueRW(false) {
+KstComboBox::KstComboBox(QWidget *parent)
+  : KComboBox(parent), _trueRW(false) {
 
   commonConstructor();
 }
 
 
-KstComboBox::KstComboBox(bool rw, QWidget *parent, const char *name)
-  : KComboBox(false, parent, name), _trueRW(rw) {
+KstComboBox::KstComboBox(bool rw, QWidget *parent)
+  : KComboBox(false, parent), _trueRW(rw) {
 
   commonConstructor();
 }
@@ -45,7 +46,7 @@ void KstComboBox::commonConstructor() {
   QComboBox::setEditable( true );
 
   if (!_trueRW) { //if not truly read write then go into psuedo mode for read only
-    setInsertionPolicy( NoInsertion );
+    setInsertPolicy( NoInsert );
     setCompletionMode( KGlobalSettings::CompletionPopupAuto );
 
     //DON'T HANDLE THE EDIT'S RETURNPRESSED IN qcombobox.cpp... RATHER HANDLE HERE!
@@ -64,7 +65,7 @@ void KstComboBox::focusInEvent(QFocusEvent *event) {
     if (KCompletion *comp = completionObject()) {
       comp->clear();
       for (int i = 0; i < count(); ++i) {
-        comp->addItem(text(i));
+        comp->addItem(itemText(i));
       }
     }
   }
@@ -88,19 +89,19 @@ void KstComboBox::validate(bool rp) {
   if (!_trueRW) {
     int match = -1;
     for (int i = 0; i < count(); ++i) {
-      match = currentText() == text(i) ? i : match;
+      match = currentText() == itemText(i) ? i : match;
     }
 
     if (match < 0 && count()) {
       lineEdit()->blockSignals(true);
-      lineEdit()->setText( text(currentItem()) );
+      lineEdit()->setText( itemText(currentIndex()) );
       lineEdit()->blockSignals(false);
 
-    } else if (match != currentItem() || rp) {
-      setCurrentItem(match);
+    } else if (match != currentIndex() || rp) {
+      setCurrentIndex(match);
 
       emit activated(match);
-      emit activated(text(match));
+      emit activated(itemText(match));
     }
   }
 }

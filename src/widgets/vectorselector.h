@@ -42,6 +42,11 @@ public slots:
   void editVector();
   void setEdit(const QString &tag);
 
+signals:
+  void newVectorCreated(const QString &);
+  void selectionChanged(const QString &);
+  void selectionChangedLabel(const QString &);
+
 private:
   void init();
 

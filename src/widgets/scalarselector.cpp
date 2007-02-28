@@ -17,6 +17,10 @@
 
 #include "scalarselector.h"
 
+#include "kstcombobox.h"
+#include "scalareditor.h"
+#include "comboboxselection.h"
+
 #include <QTimer>
 #include <QLineEdit>
 #include <QValidator>
@@ -26,10 +30,7 @@
 #include <kmessagebox.h>
 #include <kiconloader.h>
 
-#include <comboboxselection_i.h>
 #include <kstdatacollection.h>
-#include <kstcombobox.h>
-#include <scalareditor.h>
 #include <enodes.h>
 
 #include <kst_export.h>
@@ -95,7 +96,7 @@ void ScalarSelector::update() {
     _scalar->setItemText(_scalar->currentIndex(), prev);
   } else {
     _scalar->addItem("0");
-    _scalar->setItemText(_scalar->currentIndex(), ("0");
+    _scalar->setItemText(_scalar->currentIndex(), "0");
     _editScalar->setEnabled(false);
   }
 
@@ -104,7 +105,7 @@ void ScalarSelector::update() {
 
 
 void ScalarSelector::createNewScalar() {
-  ScalarEditor *se = new ScalarEditor(this, "scalar editor");
+  ScalarEditor *se = new ScalarEditor(this);
 
   int rc = se->exec();
   if (rc == QDialog::Accepted) {
@@ -134,7 +135,7 @@ void ScalarSelector::createNewScalar() {
 
 
 void ScalarSelector::selectScalar() {
-  ComboBoxSelectionI *selection = new ComboBoxSelectionI(this, "scalar selector");
+  ComboBoxSelection *selection = new ComboBoxSelection(this);
   int i;
 
   selection->reset();
@@ -152,7 +153,7 @@ void ScalarSelector::selectScalar() {
 
 
 void ScalarSelector::editScalar() {
-  ScalarEditor *se = new ScalarEditor(this, "scalar editor");
+  ScalarEditor *se = new ScalarEditor(this);
 
   KstScalarPtr pold = *KST::scalarList.findTag(_scalar->currentText());
   if (pold && pold->editable()) {

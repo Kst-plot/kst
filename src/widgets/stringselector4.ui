@@ -100,7 +100,7 @@
     <tabstop>_editString</tabstop>
   </tabstops>
   <includes>
-    <include location="local" >comboboxselection_i.h</include>
+    <include location="local" >comboboxselection.h</include>
     <include location="local" >kstdatacollection.h</include>
     <include location="local" >kstcombobox.h</include>
     <include location="global" >kst_export.h</include>

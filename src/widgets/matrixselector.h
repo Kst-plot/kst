@@ -42,6 +42,11 @@ public slots:
   void editMatrix();
   void setEdit(const QString &tag);
 
+signals:
+  void newMatrixCreated(const QString &);
+  void selectionChanged(const QString &);
+  void selectionChangedLabel(const QString &label);
+
 private:
   void init();
 

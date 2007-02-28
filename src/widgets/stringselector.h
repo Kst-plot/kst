@@ -41,6 +41,11 @@ public slots:
   void setSelection(KstStringPtr s);
   void allowDirectEntry(bool allowed);
 
+signals:
+  void newStringCreated();
+  void selectionChanged(const QString &);
+  void selectionChangedLabel(const QString &);
+
 private:
   void init();
 };

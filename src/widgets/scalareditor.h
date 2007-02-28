@@ -1,8 +1,8 @@
-/**************************************************************************
-        comboboxselection_i.h - source file: inherits designer dialog
+/***************************************************************************
+                   scalareditor.h
                              -------------------
-    begin                :  2005
-    copyright            : (C) 2005 The University of British Columbia
+    begin                : 02/27/07
+    copyright            : (C) 2007 The University of Toronto
     email                :
  ***************************************************************************/
 
@@ -15,29 +15,20 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef COMBOBOXSELECTIONI_H
-#define COMBOBOXSELECTIONI_H
+#ifndef SCALAREDITOR_H
+#define SCALAREDITOR_H
 
-#include "comboboxselection.h"
+#include <QDialog>
+#include "ui_scalareditor4.h"
 
-class ComboBoxSelectionI : public ComboBoxSelection {
+class ScalarEditor : public QDialog, public Ui::ScalarEditor {
   Q_OBJECT
-  public:
-    ComboBoxSelectionI(QWidget* parent = 0, const char* name = 0,
-        bool modal = FALSE, Qt::WFlags fl = 0 );
-    virtual ~ComboBoxSelectionI();
-    void addString(const QString &str);
-    void reset();
-    const QString& selected() const { return _selected; }
-  public slots:
-    void ok();
-    void changed();
-    void sort();
-  private:
-    QStringList _strs;
-    QString _selected;
-  signals:
+
+public:
+  ScalarEditor(QWidget *parent = 0);
+  ~ScalarEditor();
 };
 
 #endif
 // vim: ts=2 sw=2 et
+

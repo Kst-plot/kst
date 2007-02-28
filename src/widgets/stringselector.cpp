@@ -17,6 +17,10 @@
 
 #include "stringselector.h"
 
+#include "kstcombobox.h"
+#include "stringeditor.h"
+#include "comboboxselection.h"
+
 #include <QTimer>
 #include <QLineEdit>
 #include <QValidator>
@@ -26,10 +30,7 @@
 #include <kmessagebox.h>
 #include <kiconloader.h>
 
-#include <comboboxselection_i.h>
 #include <kstdatacollection.h>
-#include <kstcombobox.h>
-#include <stringeditor.h>
 #include <enodes.h>
 
 #include <kst_export.h>
@@ -99,7 +100,7 @@ void StringSelector::update() {
 
 
 void StringSelector::createNewString() {
-  StringEditor *se = new StringEditor(this, "string editor");
+  StringEditor *se = new StringEditor(this);
 
   int rc = se->exec();
   if (rc == QDialog::Accepted) {
@@ -129,7 +130,7 @@ void StringSelector::createNewString() {
 
 
 void StringSelector::selectString() {
-  ComboBoxSelectionI *selection = new ComboBoxSelectionI(this, "string selector");
+  ComboBoxSelection *selection = new ComboBoxSelection(this);
   int i;
 
   selection->reset();
@@ -147,7 +148,7 @@ void StringSelector::selectString() {
 
 
 void StringSelector::editString() {
-  StringEditor *se = new StringEditor(this, "string editor");
+  StringEditor *se = new StringEditor(this);
 
   KstStringPtr pold = *KST::stringList.findTag(_string->currentText());
   if (pold && pold->editable()) {

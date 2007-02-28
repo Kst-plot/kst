@@ -1,5 +1,5 @@
 /***************************************************************************
-                   scalarselector.h
+                   stringeditor.h
                              -------------------
     begin                : 02/27/07
     copyright            : (C) 2007 The University of Toronto
@@ -15,40 +15,20 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef SCALARSELECTOR_H
-#define SCALARSELECTOR_H
+#ifndef STRINGEDITOR_H
+#define STRINGEDITOR_H
 
-#include <QWidget>
-#include "ui_scalarselector4.h"
+#include <QDialog>
+#include "ui_stringeditor4.h"
 
-class ScalarSelector : public QWidget, public Ui::ScalarSelector {
+class StringEditor : public QDialog, public Ui::StringEditor {
   Q_OBJECT
 
 public:
-  ScalarSelector(QWidget *parent = 0);
-  ~ScalarSelector();
-
-  QString selectedScalar();
-
-public slots:
-  void allowNewScalars(bool allowed);
-  void update();
-  void createNewScalar();
-  void selectScalar();
-  void editScalar();
-  void selectionWatcher(const QString &tag);
-  void setSelection(const QString &tag);
-  void setSelection(KstScalarPtr s);
-  void allowDirectEntry(bool allowed);
-
-signals:
-  void newScalarCreated();
-  void selectionChanged(const QString &);
-  void selectionChangedLabel(const QString &);
-
-private:
-  void init();
+  StringEditor(QWidget *parent = 0);
+  ~StringEditor();
 };
 
 #endif
 // vim: ts=2 sw=2 et
+

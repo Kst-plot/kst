@@ -8,42 +8,43 @@ set(kstwidgets_LIB_SRCS
    kstwidgets.cpp
 
    colorpalettewidget.cpp
+   comboboxselection.cpp
    curveappearancewidget.cpp
    curveplacementwidget.cpp
    datarangewidget.cpp
    editmultiplewidget.cpp
    fftoptionswidget.cpp
-#    matrixselector.cpp
-#    scalarselector.cpp
-#    stringselector.cpp
-#    vectorselector.cpp
+   matrixselector.cpp
+   scalareditor.cpp
+   scalarselector.cpp
+   stringeditor.cpp
+   stringselector.cpp
+   vectorselector.cpp
 
 #    kstbackbuffer.cpp
-#    comboboxselection_i.cpp
 #    draggablelistbox.cpp
 #    draggablelistview.cpp
 #    plotlistbox.cpp
 #    vectorlistview.cpp
-#    kstcombobox.cpp
+   kstcombobox.cpp
    )
 
 kde4_automoc(${kstwidgets_LIB_SRCS})
 
 kde4_add_ui_files(kstwidgets_LIB_SRCS
    colorpalettewidget4.ui
+   comboboxselection4.ui
    curveappearancewidget4.ui
    curveplacementwidget4.ui
    datarangewidget4.ui
    editmultiplewidget4.ui
    fftoptionswidget4.ui
-#    matrixselector4.ui
-#    scalarselector4.ui
-#    stringselector4.ui
-#    vectorselector4.ui
-
-#    comboboxselection4.ui
-#    stringeditor4.ui
-#    scalareditor4.ui
+   matrixselector4.ui
+   scalareditor4.ui
+   scalarselector4.ui
+   stringeditor4.ui
+   stringselector4.ui
+   vectorselector4.ui
    )
 
 kde4_add_library(kstwidgets SHARED ${kstwidgets_LIB_SRCS})

@@ -1,5 +1,5 @@
-/**************************************************************************
-        comboboxselection_i.cpp - source file: inherits designer dialog
+/***************************************************************************
+                   comboboxselection.cpp
                              -------------------
     begin                :  2005
     copyright            : (C) 2005 The University of British Columbia
@@ -15,45 +15,43 @@
  *                                                                         *
  ***************************************************************************/
 
-// include files for Qt
-#include <qlineedit.h>
+#include "comboboxselection.h"
+
 #include <q3listbox.h>
-#include <qpushbutton.h>
-#include <qregexp.h>
-#include <qstringlist.h>
+#include <QRegExp>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QStringList>
 
-// include files for KDE
+ComboBoxSelection::ComboBoxSelection(QWidget *parent)
+    : QDialog(parent) {
 
-// application specific includes
-#include "comboboxselection_i.h"
-
-ComboBoxSelectionI::ComboBoxSelectionI(QWidget *parent, const char* name, bool modal,
-                                 Qt::WFlags fl)
-: ComboBoxSelection(parent, name, modal, fl) {
   connect(OK, SIGNAL(clicked()), this, SLOT(ok()));
+
   connect(Cancel, SIGNAL(clicked()), this, SLOT(close()));
+
   connect(_lineEdit, SIGNAL(textChanged(const QString &)), this, SLOT(sort()));
+
   connect(_listBox, SIGNAL(selectionChanged()), this, SLOT(changed()));
-  
+
   OK->setEnabled(false);
 }
 
 
-ComboBoxSelectionI::~ComboBoxSelectionI() {
-}
+ComboBoxSelection::~ComboBoxSelection() {}
 
 
-void ComboBoxSelectionI::addString(const QString &str) {
+void ComboBoxSelection::addString(const QString &str) {
   _strs.append(str);
 }
 
 
-void ComboBoxSelectionI::reset() {
+void ComboBoxSelection::reset() {
   _listBox->clear();
 }
 
 
-void ComboBoxSelectionI::changed() {    
+void ComboBoxSelection::changed() {
   if (_listBox->selectedItem()) {
     OK->setEnabled(true);
   } else {
@@ -62,10 +60,10 @@ void ComboBoxSelectionI::changed() {
 }
 
 
-void ComboBoxSelectionI::sort() {
+void ComboBoxSelection::sort() {
   QString search;
   int i;
-  
+
   search = _lineEdit->text();
   if (search.isEmpty()) {
     search = "*";
@@ -73,7 +71,7 @@ void ComboBoxSelectionI::sort() {
     search.prepend("*");
     search.append("*");
   }
-  QRegExp regexp(search, false, true);
+  QRegExp regexp(search, Qt::CaseInsensitive, QRegExp::Wildcard);
 
   OK->setEnabled(false);
   _listBox->clear();
@@ -86,13 +84,13 @@ void ComboBoxSelectionI::sort() {
 }
 
 
-void ComboBoxSelectionI::ok() {
+void ComboBoxSelection::ok() {
   if (_listBox->selectedItem() != 0L) {
     _selected = _listBox->selectedItem()->text();
   }
   accept();
 }
 
+#include "comboboxselection.moc"
 
-#include "comboboxselection_i.moc"
 // vim: ts=2 sw=2 et

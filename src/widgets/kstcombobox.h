@@ -34,8 +34,8 @@
 class KstComboBox : public KComboBox {
   Q_OBJECT
   public:
-    KstComboBox(QWidget *parent=0, const char *name=0);
-    KstComboBox(bool rw, QWidget *parent=0, const char *name=0);
+    KstComboBox(QWidget *parent=0);
+    KstComboBox(bool rw, QWidget *parent=0);
     void setEditable(bool rw);
     virtual ~KstComboBox();
 
