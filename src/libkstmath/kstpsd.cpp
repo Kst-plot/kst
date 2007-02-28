@@ -391,7 +391,7 @@ bool KstPSD::slaveVectorsUsed() const {
 
 
 QString KstPSD::propertyString() const {
-  return i18n("PSD: %1").arg(vTag());
+  return i18n("PSD: %1", vTag());
 }
 
 
@@ -480,19 +480,19 @@ void KstPSD::updateVectorLabels() {
   switch (_Output) {
     default:
     case 0: // amplitude spectral density (default) [V/Hz^1/2]
-      (*_sVector)->setLabel(i18n("ASD \\[%1/%2^{1/2} \\]").arg(_vUnits).arg(_rUnits));
+      (*_sVector)->setLabel(i18n("ASD \\[%1/%2^{1/2} \\]", _vUnits, _rUnits));
       break;
     case 1: // power spectral density [V^2/Hz]
-      (*_sVector)->setLabel(i18n("PSD \\[%1^2/%2\\]").arg(_vUnits).arg(_rUnits));
+      (*_sVector)->setLabel(i18n("PSD \\[%1^2/%2\\]", _vUnits, _rUnits));
       break;
     case 2: // amplitude spectrum [V]
-      (*_sVector)->setLabel(i18n("Amplitude Spectrum\\[%1\\]").arg(_vUnits));
+      (*_sVector)->setLabel(i18n("Amplitude Spectrum\\[%1\\]", _vUnits));
       break;
     case 3: // power spectrum [V^2]
-      (*_sVector)->setLabel(i18n("Power Spectrum \\[%1^2\\]").arg(_vUnits));
+      (*_sVector)->setLabel(i18n("Power Spectrum \\[%1^2\\]", _vUnits));
       break;
   }
-  (*_fVector)->setLabel(i18n("Frequency \\[%1\\]").arg(_rUnits));
+  (*_fVector)->setLabel(i18n("Frequency \\[%1\\]", _rUnits));
 }
 
 
