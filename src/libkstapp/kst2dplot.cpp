@@ -29,13 +29,17 @@
 // include files for Qt
 #include <qbitmap.h>
 #include <qclipboard.h>
-#include <qdeepcopy.h>
-#include <qpointarray.h>
-#include <qstylesheet.h>
+#include <q3deepcopy.h>
+#include <q3pointarray.h>
+#include <q3stylesheet.h>
 #include <qlineedit.h>
 #include <qspinbox.h>
 #include <qcheckbox.h>
 #include <qradiobutton.h>
+//Added by qt3to4:
+#include <QWheelEvent>
+#include <QKeyEvent>
+#include <QMouseEvent>
 
 // include files for KDE
 #include "ksdebug.h"
@@ -53,8 +57,8 @@
 #include "kstdataobjectcollection.h"
 #include "kstdebug.h"
 #include "kstdoc.h"
-#include "kstfitdialog_i.h"
-#include "kstfilterdialog_i.h"
+#include "kstfitdialog.h"
+#include "kstfilterdialog.h"
 #include "kstgfxmousehandler.h"
 #include "kstimage.h"
 #include "kstlinestyle.h"
@@ -1001,8 +1005,8 @@ void Kst2DPlot::updateScale() {
       first = true;
 
       {
-        KstBaseCurveList cl = QDeepCopy<KstBaseCurveList>(Curves);
-        qHeapSort(cl);
+        KstBaseCurveList cl = Q3DeepCopy<KstBaseCurveList>(Curves);
+        qSort(cl);
         for (unsigned i = 0; i < cl.count(); i++) {
           KstBaseCurvePtr c = cl[i];
           c->readLock();
@@ -2328,9 +2332,9 @@ void Kst2DPlot::updateTieBox(QPainter& p) {
   QRect tr = GetTieBoxRegion();
   QColor fillColor;
   if (isTied()) {
-    fillColor.setRgb((foregroundColor().red() + backgroundColor().red()) / 2,
-                     (foregroundColor().green() + backgroundColor().green()) / 2,
-                     (foregroundColor().blue() + backgroundColor().blue()) / 2);
+    fillColor.setRgb((foregroundColor().Qt::red() + backgroundColor().Qt::red()) / 2,
+                     (foregroundColor().Qt::green() + backgroundColor().Qt::green()) / 2,
+                     (foregroundColor().Qt::blue() + backgroundColor().Qt::blue()) / 2);
   } else {
     fillColor = backgroundColor();
   }
@@ -2732,10 +2736,10 @@ KstObject::UpdateType Kst2DPlot::update(int update_counter) {
 }
 
 
-void Kst2DPlot::save(QTextStream& ts, const QString& indent) {
+void Kst2DPlot::save(Q3TextStream& ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<" << type() << ">" << endl;
-  ts << l2 << "<tag>" << QStyleSheet::escape(tagName()) << "</tag>" << endl;
+  ts << l2 << "<tag>" << Q3StyleSheet::escape(tagName()) << "</tag>" << endl;
   for (KstViewObjectList::Iterator i = _children.begin(); i != _children.end(); ++i) {
     (*i)->save(ts, indent + "  ");
   }
@@ -2743,7 +2747,7 @@ void Kst2DPlot::save(QTextStream& ts, const QString& indent) {
 }
 
 
-void Kst2DPlot::saveAttributes(QTextStream& ts, const QString& indent) {
+void Kst2DPlot::saveAttributes(Q3TextStream& ts, const QString& indent) {
   unsigned i;
   QString l2 = indent + "  ";
 
@@ -2817,16 +2821,16 @@ void Kst2DPlot::saveAttributes(QTextStream& ts, const QString& indent) {
 
   for (KstBaseCurveList::Iterator j = Curves.begin(); j != Curves.end(); ++j) {
     (*j)->readLock();
-    ts << indent << "<curvetag>" << QStyleSheet::escape((*j)->tagName()) << "</curvetag>" << endl;
+    ts << indent << "<curvetag>" << Q3StyleSheet::escape((*j)->tagName()) << "</curvetag>" << endl;
     (*j)->unlock();
   }
 
   // save the plot colors, but only if they are different from default
   if (_foregroundColor != KstSettings::globalSettings()->foregroundColor) {
-    ts << indent << "<plotforecolor>" << QStyleSheet::escape(_foregroundColor.name()) << "</plotforecolor>" << endl;
+    ts << indent << "<plotforecolor>" << Q3StyleSheet::escape(_foregroundColor.name()) << "</plotforecolor>" << endl;
   }
   if (_backgroundColor != KstSettings::globalSettings()->backgroundColor) {
-    ts << indent << "<plotbackcolor>" << QStyleSheet::escape(_backgroundColor.name()) << "</plotbackcolor>" << endl;
+    ts << indent << "<plotbackcolor>" << Q3StyleSheet::escape(_backgroundColor.name()) << "</plotbackcolor>" << endl;
   }
 
   // save the plot markers
@@ -3465,45 +3469,45 @@ bool Kst2DPlot::popupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr 
 
   submenu = new KPopupMenu(menu);
   menu->insertItem(i18n("Z&oom"), submenu);
-  submenu->insertItem(i18n("Zoom &Maximum"), this, SLOT(menuZoomMax()), Key_M);
+  submenu->insertItem(i18n("Zoom &Maximum"), this, SLOT(menuZoomMax()), Qt::Key_M);
   submenu->insertItem(i18n("Zoom Max &Spike Insensitive"),
-                      this, SLOT(menuZoomSpikeInsensitiveMax()), Key_S);
-  submenu->insertItem(i18n("Zoom P&revious"), this, SLOT(menuZoomPrev()), Key_R);
-  submenu->insertItem(i18n("Y-Zoom Mean-centered"), this, SLOT(menuYZoomAc()), Key_A);
+                      this, SLOT(menuZoomSpikeInsensitiveMax()), Qt::Key_S);
+  submenu->insertItem(i18n("Zoom P&revious"), this, SLOT(menuZoomPrev()), Qt::Key_R);
+  submenu->insertItem(i18n("Y-Zoom Mean-centered"), this, SLOT(menuYZoomAc()), Qt::Key_A);
   submenu->insertSeparator();
   submenu->insertItem(i18n("X-Zoom Maximum"),
-                        this, SLOT(menuXZoomMax()), CTRL + Key_M);
+                        this, SLOT(menuXZoomMax()), Qt::CTRL + Qt::Key_M);
   submenu->insertItem(i18n("X-Zoom Out"),
-                        this, SLOT(menuXZoomOut()), SHIFT + Key_Right);
+                        this, SLOT(menuXZoomOut()), Qt::SHIFT + Qt::Key_Right);
   submenu->insertItem(i18n("X-Zoom In"),
-                        this, SLOT(menuXZoomIn()), SHIFT + Key_Left);
+                        this, SLOT(menuXZoomIn()), Qt::SHIFT + Qt::Key_Left);
   submenu->insertItem(i18n("Normalize X Axis to Y Axis"),
-                        this, SLOT(menuXNormalize()), Key_N);
+                        this, SLOT(menuXNormalize()), Qt::Key_N);
   submenu->insertItem(i18n("Toggle Log X Axis"),
-                        this, SLOT(menuXLogSlot()), Key_G);
+                        this, SLOT(menuXLogSlot()), Qt::Key_G);
   submenu->insertSeparator();
   submenu->insertItem(i18n("Y-Zoom Local Maximum"),
-                      this, SLOT(menuYZoomLocalMax()), SHIFT + Key_L);
+                      this, SLOT(menuYZoomLocalMax()), Qt::SHIFT + Qt::Key_L);
   submenu->insertItem(i18n("Y-Zoom Maximum"),
-                        this, SLOT(menuYZoomMax()), SHIFT + Key_M);
+                        this, SLOT(menuYZoomMax()), Qt::SHIFT + Qt::Key_M);
   submenu->insertItem(i18n("Y-Zoom Out"),
-                        this, SLOT(menuYZoomOut()), SHIFT + Key_Up);
+                        this, SLOT(menuYZoomOut()), Qt::SHIFT + Qt::Key_Up);
   submenu->insertItem(i18n("Y-Zoom In"),
-                        this, SLOT(menuYZoomIn()), SHIFT + Key_Down);
+                        this, SLOT(menuYZoomIn()), Qt::SHIFT + Qt::Key_Down);
   submenu->insertItem(i18n("Normalize Y Axis to X Axis"),
-                        this, SLOT(menuYNormalize()), SHIFT + Key_N);
+                        this, SLOT(menuYNormalize()), Qt::SHIFT + Qt::Key_N);
   submenu->insertItem(i18n("Toggle Log Y Axis"),
-                        this, SLOT(menuYLogSlot()), Key_L);
+                        this, SLOT(menuYLogSlot()), Qt::Key_L);
   submenu->insertSeparator();
   submenu->insertItem(i18n("Next &Image Color Scale"),
-                      this, SLOT(menuNextImageColorScale()), Key_I);
+                      this, SLOT(menuNextImageColorScale()), Qt::Key_I);
   
   submenu = new KPopupMenu(menu);
   menu->insertItem(i18n("&Scroll"), submenu);
-  submenu->insertItem(i18n("Left"), this, SLOT(menuMoveLeft()), Key_Left);
-  submenu->insertItem(i18n("Right"), this, SLOT(menuMoveRight()), Key_Right);
-  submenu->insertItem(i18n("Up"), this, SLOT(menuMoveUp()), Key_Up);
-  submenu->insertItem(i18n("Down"), this, SLOT(menuMoveDown()), Key_Down);
+  submenu->insertItem(i18n("Left"), this, SLOT(menuMoveLeft()), Qt::Key_Left);
+  submenu->insertItem(i18n("Right"), this, SLOT(menuMoveRight()), Qt::Key_Right);
+  submenu->insertItem(i18n("Up"), this, SLOT(menuMoveUp()), Qt::Key_Up);
+  submenu->insertItem(i18n("Down"), this, SLOT(menuMoveDown()), Qt::Key_Down);
   submenu->insertSeparator();
 
   // disable next or previous marker items if necessary
@@ -3517,9 +3521,9 @@ bool Kst2DPlot::popupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr 
   if (_xLog) {
     currCenter = pow(_xLogBase, currCenter);
   }
-  id = submenu->insertItem(i18n("Next Marker"), this, SLOT(menuNextMarker()), ALT + Key_Right);
+  id = submenu->insertItem(i18n("Next Marker"), this, SLOT(menuNextMarker()), Qt::ALT + Qt::Key_Right);
   submenu->setItemEnabled(id, nextMarker(currCenter, tempVal));
-  id = submenu->insertItem(i18n("Previous Marker"), this, SLOT(menuPrevMarker()), ALT + Key_Left);
+  id = submenu->insertItem(i18n("Previous Marker"), this, SLOT(menuPrevMarker()), Qt::ALT + Qt::Key_Left);
   currCenter = ((xmax + xmin)/2.0) - (xmax - xmin)/MARKER_NUM_SEGS;
   if (_xLog) {
     currCenter = pow(_xLogBase, currCenter);
@@ -4054,25 +4058,25 @@ void Kst2DPlot::mouseMoveEvent(QWidget *view, QMouseEvent *e) {
   KstMouseModeType gzType = globalZoomType();
   // Draw a helper guide in X or Y zoom modes
   if (gzType == X_ZOOMBOX || gzType == Y_ZOOMBOX) {
-    ButtonState s = e->stateAfter();
+    Qt::ButtonState s = e->stateAfter();
     if (s == 0) {
       updateXYGuideline(view, _mouse.lastGuideline, _mouse.tracker, pr, gzType);
-    } else if (s & Qt::ShiftButton) {
+    } else if (s & Qt::ShiftModifier) {
       updateXYGuideline(view, _mouse.lastGuideline, _mouse.tracker, pr, Y_ZOOMBOX);
-    } else if (s & Qt::ControlButton) {
+    } else if (s & Qt::ControlModifier) {
       updateXYGuideline(view, _mouse.lastGuideline, _mouse.tracker, pr, X_ZOOMBOX);
     } else {
       updateXYGuideline(view, _mouse.lastGuideline, QPoint(-1, -1), pr, gzType);
     }
   } else if (gzType == XY_ZOOMBOX) {
-    ButtonState s = e->stateAfter();
-    if (s & Qt::ShiftButton) {
+    Qt::ButtonState s = e->stateAfter();
+    if (s & Qt::ShiftModifier) {
       if (e->state() & Qt::LeftButton && _mouse.zooming()) {
         updateXYGuideline(view, _mouse.lastGuideline, QPoint(-1, -1), pr, Y_ZOOMBOX);
       } else {
         updateXYGuideline(view, _mouse.lastGuideline, _mouse.tracker, pr, Y_ZOOMBOX);
       }
-    } else if (s & Qt::ControlButton) {
+    } else if (s & Qt::ControlModifier) {
       if (e->state() & Qt::LeftButton && _mouse.zooming()) {
         updateXYGuideline(view, _mouse.lastGuideline, QPoint(-1, -1), pr, X_ZOOMBOX);
       } else {
@@ -4156,11 +4160,11 @@ void Kst2DPlot::mouseMoveEvent(QWidget *view, QMouseEvent *e) {
     zoomRectUpdate(view, newType, x, y);
     setCursorForMode(view, _mouse.mode, e->pos());
   } else {
-    ButtonState s = e->stateAfter();
+    Qt::ButtonState s = e->stateAfter();
     if (pr.contains(e->pos())) {
-      if (s & Qt::ShiftButton) {
+      if (s & Qt::ShiftModifier) {
         setCursorForMode(view, Y_ZOOMBOX, e->pos());
-      } else if (s & Qt::ControlButton) {
+      } else if (s & Qt::ControlModifier) {
         setCursorForMode(view, X_ZOOMBOX, e->pos());
       } else {
         setCursorForMode(view, globalZoomType(), e->pos());
@@ -4190,9 +4194,9 @@ void Kst2DPlot::mousePressEvent(QWidget *view, QMouseEvent *e) {
       static_cast<KstViewWidget*>(view)->paint();
       return;
     } else if (plot_rect.contains(e->pos())) {
-      if (e->state() & Qt::ShiftButton) {
+      if (e->state() & Qt::ShiftModifier) {
         _mouse.mode = Y_ZOOMBOX;
-      } else if (e->state() & Qt::ControlButton) {
+      } else if (e->state() & Qt::ControlModifier) {
         _mouse.mode = X_ZOOMBOX;
       } else {
         _mouse.mode = globalZoomType();
@@ -4524,9 +4528,9 @@ void Kst2DPlot::keyReleaseEvent(QWidget *view, QKeyEvent *e) {
     }
   }
 
-  if (e->key() == Key_Shift) {
+  if (e->key() == Qt::Key_Shift) {
     updateXYGuideline(view, _mouse.lastGuideline, QPoint(-1, -1), GetPlotRegion(), Y_ZOOMBOX);
-  } else if (e->key() == Key_Control) {
+  } else if (e->key() == Qt::Key_Control) {
     updateXYGuideline(view, _mouse.lastGuideline, QPoint(-1, -1), GetPlotRegion(), X_ZOOMBOX);
   }
 
@@ -5133,53 +5137,53 @@ void Kst2DPlot::keyPressEvent(QWidget *vw, QKeyEvent *e) {
   bool handled = true;
   bool paint = true;
 
-  ButtonState s = e->stateAfter();
+  Qt::ButtonState s = e->stateAfter();
   QPoint cursorPos = _mouse.tracker;
   switch (e->key()) {
-    case Key_A:
+    case Qt::Key_A:
       yZoomAc(view);
       break;
-    case Key_C:
-      if (s & Qt::ShiftButton) {
+    case Qt::Key_C:
+      if (s & Qt::ShiftModifier) {
         unsetCursorPos(view);
       } else {
         setCursorPos(view);
       }
       break;
-    case Key_E:
+    case Qt::Key_E:
       edit();
       break;
-    case Key_G:
+    case Qt::Key_G:
       xLogSlot(view);
       break;
-    case Key_L:
-      if (s & Qt::ShiftButton) {
+    case Qt::Key_L:
+      if (s & Qt::ShiftModifier) {
         yZoomLocalMax(view);
       } else {
         yLogSlot(view);
       }
       break;
-    case Key_M:
-      if (s & Qt::ShiftButton) {
+    case Qt::Key_M:
+      if (s & Qt::ShiftModifier) {
         yZoomMax(view);
-      } else if (s & Qt::ControlButton) {
+      } else if (s & Qt::ControlModifier) {
         xZoomMax(view);
       } else {
         zoomMax(view);
       }
       break;
-    case Key_N:
-      if (s & Qt::ShiftButton) {
+    case Qt::Key_N:
+      if (s & Qt::ShiftModifier) {
         yZoomNormal(view);
       } else {
         xZoomNormal(view);
       }
       break;
-    case Key_P:
+    case Qt::Key_P:
       pauseToggle();
       setDirty();
       break;
-    case Key_R:
+    case Qt::Key_R:
       if (_plotScaleList.count() <= 1) {
         // Don't paint
         handled = false;
@@ -5187,21 +5191,21 @@ void Kst2DPlot::keyPressEvent(QWidget *vw, QKeyEvent *e) {
         zoomPrev(view);
       }
       break;
-    case Key_S:
+    case Qt::Key_S:
       zoomSpikeInsensitiveMax(view);
       break;
-    case Key_I:
+    case Qt::Key_I:
       nextImageColorScale();
       break;
-    case Key_Z:
+    case Qt::Key_Z:
       zoomToggle();
       cancelZoom(view);
       setDirty();
       break;
-    case Key_Left:
-      if (s & Qt::ShiftButton) {
+    case Qt::Key_Left:
+      if (s & Qt::ShiftModifier) {
         xZoomIn(view);
-      } else if (s & Qt::AltButton) {
+      } else if (s & Qt::AltModifier) {
         if (_xReversed) {
           moveToNextMarker(view);
         } else {
@@ -5215,10 +5219,10 @@ void Kst2DPlot::keyPressEvent(QWidget *vw, QKeyEvent *e) {
         }
       }
       break;
-    case Key_Right:
-      if (s & Qt::ShiftButton) {
+    case Qt::Key_Right:
+      if (s & Qt::ShiftModifier) {
         xZoomOut(view);
-      } else if (s & Qt::AltButton) {
+      } else if (s & Qt::AltModifier) {
         if (_xReversed) {
           moveToPrevMarker(view);
         } else {
@@ -5232,8 +5236,8 @@ void Kst2DPlot::keyPressEvent(QWidget *vw, QKeyEvent *e) {
         }
       }
       break;
-    case Key_Up:
-      if (s & Qt::ShiftButton) {
+    case Qt::Key_Up:
+      if (s & Qt::ShiftModifier) {
         yZoomOut(view);
       } else {
         if (_yReversed) {
@@ -5243,8 +5247,8 @@ void Kst2DPlot::keyPressEvent(QWidget *vw, QKeyEvent *e) {
         }
       }
       break;
-    case Key_Down:
-      if (s & Qt::ShiftButton) {
+    case Qt::Key_Down:
+      if (s & Qt::ShiftModifier) {
         yZoomIn(view);
       } else {
         if (_yReversed) {
@@ -5254,7 +5258,7 @@ void Kst2DPlot::keyPressEvent(QWidget *vw, QKeyEvent *e) {
         }
       }
       break;
-    case Key_Insert:
+    case Qt::Key_Insert:
       if (!e->isAutoRepeat() && GetPlotRegion().contains(cursorPos)) {
         double fakeCursorPos = cursorPos.x();
         if (_xReversed) {
@@ -5268,12 +5272,12 @@ void Kst2DPlot::keyPressEvent(QWidget *vw, QKeyEvent *e) {
         setDirty();
       }
       break;
-    case Key_Shift:
+    case Qt::Key_Shift:
       updateXYGuideline(view, _mouse.lastGuideline, _mouse.tracker, GetPlotRegion(), Y_ZOOMBOX);
       setCursorForMode(view, Y_ZOOMBOX, _mouse.tracker);
       paint = false;
       break;
-    case Key_Control:
+    case Qt::Key_Control:
       updateXYGuideline(view, _mouse.lastGuideline, _mouse.tracker, GetPlotRegion(), X_ZOOMBOX);
       setCursorForMode(view, X_ZOOMBOX, _mouse.tracker);
       paint = false;
@@ -5315,9 +5319,9 @@ void Kst2DPlot::keyPressEvent(QWidget *vw, QKeyEvent *e) {
     setCursorForMode(view, _mouse.mode, cursorPos);
   } else {
     if (_mouse.mode == INACTIVE && GetPlotRegion().contains(cursorPos)) {
-      if (s & Qt::ShiftButton) {
+      if (s & Qt::ShiftModifier) {
         setCursorForMode(view, Y_ZOOMBOX, cursorPos);
-      } else if (s & Qt::ControlButton) {
+      } else if (s & Qt::ControlModifier) {
         setCursorForMode(view, X_ZOOMBOX, cursorPos);
       } else {
         setCursorForMode(view, globalZoomType(), cursorPos);
@@ -5414,8 +5418,8 @@ void Kst2DPlot::wheelEvent(QWidget *view, QWheelEvent *e) {
   if (vw && GetPlotRegion().contains(e->pos())) {
     bool forward = e->delta() >= 0;
     int absDelta = forward ? e->delta() : -e->delta();
-    bool alt = e->state() & Qt::AltButton;
-    if (e->state() & Qt::ControlButton) {
+    bool alt = e->state() & Qt::AltModifier;
+    if (e->state() & Qt::ControlModifier) {
       for (int i = 0; i < absDelta/WHEEL_DELTA; ++i) {
         if (forward) {
           xZoomIn(vw);
@@ -5424,7 +5428,7 @@ void Kst2DPlot::wheelEvent(QWidget *view, QWheelEvent *e) {
         }
       }
       vw->paint();
-    } else if (e->state() & Qt::ShiftButton) {
+    } else if (e->state() & Qt::ShiftModifier) {
       for (int i = 0; i < absDelta/WHEEL_DELTA; ++i) {
         if (forward) {
           yZoomIn(vw);
@@ -6074,9 +6078,9 @@ void Kst2DPlot::plotGridLines(KstPainter& p,
     double x_orig_px, double xtick_px, double xtick_len_px, int x_px,
     double YTick, double ytop_bdr_px, double ybot_bdr_px,
     double y_orig_px, double ytick_px, double ytick_len_px, int y_px) {
-  QColor defaultGridColor( (_foregroundColor.red() + _backgroundColor.red()) / 2,
-      (_foregroundColor.green() + _backgroundColor.green()) / 2,
-      (_foregroundColor.blue() + _backgroundColor.blue()) / 2 );
+  QColor defaultGridColor( (_foregroundColor.Qt::red() + _backgroundColor.Qt::red()) / 2,
+      (_foregroundColor.Qt::green() + _backgroundColor.Qt::green()) / 2,
+      (_foregroundColor.Qt::blue() + _backgroundColor.Qt::blue()) / 2 );
   double X1, Y1;
   double X2, Y2;
   int i, j;
@@ -6669,7 +6673,7 @@ void Kst2DPlot::changeToMonochrome(int pointStylePriority, int lineStylePriority
   KstNumberSequence lineWidthSeq(1, maxLineWidth);
 
   int maxSequences = -1;
-  QPtrVector<KstNumberSequence> seqVect(3);
+  Q3PtrVector<KstNumberSequence> seqVect(3);
   if (pointStylePriority > -1) {
     seqVect.insert(pointStylePriority, &pointStyleSeq);
     ++maxSequences;

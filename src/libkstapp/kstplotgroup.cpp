@@ -140,7 +140,7 @@ void KstPlotGroup::flatten() {
 }
 
 
-void KstPlotGroup::save(QTextStream& ts, const QString& indent) {
+void KstPlotGroup::save(Q3TextStream& ts, const QString& indent) {
   ts << indent << "<" << type() << ">" << endl;
   KstMetaPlot::save(ts, indent + "  ");
   ts << indent << "</" << type() << ">" << endl;

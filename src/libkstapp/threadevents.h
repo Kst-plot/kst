@@ -19,6 +19,9 @@
 #define THREADEVENTS_H
 
 #include "kstevents.h"
+//Added by qt3to4:
+#include <QEvent>
+#include <Q3ValueList>
 
 class ThreadEvent : public QEvent {
   public:
@@ -28,7 +31,7 @@ class ThreadEvent : public QEvent {
     virtual ~ThreadEvent() {}
 
     ThreadEventType _eventType;
-    QValueList<KstBaseCurve*> _curves; // HACK: for temporary use in update reworking
+    Q3ValueList<KstBaseCurve*> _curves; // HACK: for temporary use in update reworking
     int _counter;
 };
 

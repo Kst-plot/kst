@@ -20,9 +20,9 @@
 
 
 
-class FilterListBoxItem : public QListBoxText {
+class FilterListBoxItem : public Q3ListBoxText {
   public:
-    FilterListBoxItem(QListBox *p, const QString& filter) : QListBoxText(p, filter), _filter(filter) {}
+    FilterListBoxItem(Q3ListBox *p, const QString& filter) : Q3ListBoxText(p, filter), _filter(filter) {}
     virtual ~FilterListBoxItem() {}
 
     void updateText() {

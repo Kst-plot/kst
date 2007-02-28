@@ -29,7 +29,13 @@
 #include "kstviewlegend.h"
 #include "kst_export.h"
 
-#include <qvaluestack.h>
+#include <q3valuestack.h>
+//Added by qt3to4:
+#include <QWheelEvent>
+#include <QMouseEvent>
+#include <Q3ValueList>
+#include <QKeyEvent>
+#include <Q3PtrList>
 
 namespace Equation {
   class Node;
@@ -62,7 +68,7 @@ struct KstMarker {
   bool isVectorValue;
 };
 
-typedef QValueList<KstMarker> KstMarkerList;
+typedef Q3ValueList<KstMarker> KstMarkerList;
 
 enum KstMouseModeType { INACTIVE, XY_ZOOMBOX, Y_ZOOMBOX, X_ZOOMBOX, LAYOUT_TOOL };
 
@@ -109,8 +115,8 @@ public:
   static void genAxisTickLabel(QString& label, double z, bool isLog, double logBase);
 
   virtual UpdateType update(int update_counter);
-  virtual void save(QTextStream& ts, const QString& indent = QString::null);
-  virtual void saveAttributes(QTextStream& ts, const QString& indent = QString::null);
+  virtual void save(Q3TextStream& ts, const QString& indent = QString::null);
+  virtual void saveAttributes(Q3TextStream& ts, const QString& indent = QString::null);
   
   virtual bool popupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr topLevelParent);
   virtual bool layoutPopupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr topLevelParent);
@@ -552,7 +558,7 @@ private:
 
   KstScaleModeType _xScaleMode, _yScaleMode;
 
-  QPtrList<KstPlotScale> _plotScaleList;
+  Q3PtrList<KstPlotScale> _plotScaleList;
 
   // hold last minimum and maximum y values that were plotted
   double _yPlottedMinCached, _yPlottedMaxCached;
@@ -569,11 +575,11 @@ private:
 
   KstMouse _mouse;
   QMap<int, QString> _curveEditMap, _curveFitMap, _curveRemoveMap, _objectEditMap;
-  QMap<int, QGuardedPtr<Kst2DPlot> > _plotMap;
+  QMap<int, QPointer<Kst2DPlot> > _plotMap;
 
   KstBackBuffer _buffer;
-  QGuardedPtr<KstViewWidget> _menuView;
-  QGuardedPtr<KstViewWidget> _layoutMenuView;
+  QPointer<KstViewWidget> _menuView;
+  QPointer<KstViewWidget> _layoutMenuView;
   QSize _oldSize;
   QRect _oldAlignment;
   double _m_X, _b_X, _m_Y, _b_Y;
@@ -606,7 +612,7 @@ private:
 
   KstPlotLabel *_xLabel, *_yLabel, *_topLabel, *_xTickLabel, *_yTickLabel, *_fullTickLabel;
 
-  QValueStack<QColor> _colorStack;
+  Q3ValueStack<QColor> _colorStack;
 
   // for range expressions
   bool reparse(const QString& stringExp, Equation::Node** eqNode);

@@ -44,10 +44,10 @@
 #include <qradiobutton.h>
 #include <qapplication.h>
 #include <qbitmap.h>
-#include <qdeepcopy.h>
+#include <q3deepcopy.h>
 #include <qmetaobject.h>
-#include <qptrstack.h>
-#include <qstylesheet.h>
+#include <q3ptrstack.h>
+#include <q3stylesheet.h>
 #include <qspinbox.h>
 #include <qcheckbox.h>
 
@@ -154,7 +154,7 @@ KstViewLegend::KstViewLegend(const KstViewLegend& legend)
   _title = legend._title;
   _parsedTitle = 0L;
   _trackContents = legend._trackContents;
-  _curves = QDeepCopy<KstBaseCurveList>(legend._curves);
+  _curves = Q3DeepCopy<KstBaseCurveList>(legend._curves);
   
   reparseTitle();
   computeTextSize();
@@ -203,13 +203,13 @@ const QString& KstViewLegend::fontName() const {
 }
 
 
-void KstViewLegend::save(QTextStream &ts, const QString& indent) {
+void KstViewLegend::save(Q3TextStream &ts, const QString& indent) {
   ts << indent << "<" << type() << ">" << endl;
   KstBorderedViewObject::save(ts, indent + "  ");
   
   for (KstBaseCurveList::ConstIterator j = _curves.begin(); j != _curves.end(); ++j) {
     (*j)->readLock();
-    ts << indent+"  " << "<curvetag>" << QStyleSheet::escape((*j)->tagName()) << "</curvetag>" << endl;
+    ts << indent+"  " << "<curvetag>" << Q3StyleSheet::escape((*j)->tagName()) << "</curvetag>" << endl;
     (*j)->unlock();
   }
 
@@ -567,7 +567,7 @@ void KstViewLegend::clear() {
 
 
 void KstViewLegend::setCurveList(Kst2DPlotPtr pl) {
-  _curves = QDeepCopy<KstBaseCurveList>(pl->Curves);
+  _curves = Q3DeepCopy<KstBaseCurveList>(pl->Curves);
   setDirty();
 }
 

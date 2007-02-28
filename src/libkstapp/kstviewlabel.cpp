@@ -44,11 +44,13 @@
 #include <qapplication.h>
 #include <qbitmap.h>
 #include <qmetaobject.h>
-#include <qptrstack.h>
-#include <qtextedit.h>
+#include <q3ptrstack.h>
+#include <q3textedit.h>
 #include <qregexp.h>
 #include <qspinbox.h>
 #include <qcheckbox.h>
+//Added by qt3to4:
+#include <Q3PointArray>
 
 #include <stdlib.h>
 
@@ -219,7 +221,7 @@ void KstViewLabel::setInterpreted(bool interpreted) {
 }
 
 
-void KstViewLabel::save(QTextStream &ts, const QString& indent) {
+void KstViewLabel::save(Q3TextStream &ts, const QString& indent) {
   ts << indent << "<" << type() << ">" << endl;
   KstBorderedViewObject::save(ts, indent + "  ");
   ts << indent << "</" << type() << ">" << endl;
@@ -500,7 +502,7 @@ QSize KstViewLabel::sizeForText(const QRect& w) {
   QSize sz(kMax(1, _textWidth), kMax(1, _textHeight));
 
   if (int(_rotation) != 0 && int(_rotation) != 180) {
-    QPointArray pts(4);
+    Q3PointArray pts(4);
     pts[0] = QPoint(0, 0);
     pts[1] = QPoint(0, _textHeight);
     pts[2] = QPoint(_textWidth, _textHeight);
@@ -508,7 +510,7 @@ QSize KstViewLabel::sizeForText(const QRect& w) {
     double theta = M_PI * (int(_rotation) % 360) / 180;
     double sina = sin(theta);
     double cosa = cos(theta);
-    QWMatrix m(cosa, sina, -sina, cosa, 0.0, 0.0);
+    QMatrix m(cosa, sina, -sina, cosa, 0.0, 0.0);
 
     pts = m.map(pts);
 
@@ -802,7 +804,7 @@ KST_REGISTER_VIEW_OBJECT(Label, create_KstViewLabel, handler_KstViewLabel)
 
 
 void KstViewLabel::DataCache::update() {
-  for (QValueVector<DataRef>::ConstIterator i = data.begin(); valid && i != data.end(); ++i) {
+  for (Q3ValueVector<DataRef>::ConstIterator i = data.begin(); valid && i != data.end(); ++i) {
     switch ((*i).type) {
       case DataRef::DataRef::DRScalar:
         {

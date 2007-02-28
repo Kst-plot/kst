@@ -29,7 +29,7 @@ class KstPlotGroup : public KstMetaPlot {
     KstPlotGroup(const KstPlotGroup& plotGroup);
     ~KstPlotGroup();
 
-    void save(QTextStream& ts, const QString& indent = QString::null);
+    void save(Q3TextStream& ts, const QString& indent = QString::null);
 
     bool removeChild(KstViewObjectPtr obj, bool recursive = false);
     bool popupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr topLevelParent);

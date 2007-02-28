@@ -29,9 +29,13 @@
 #include <math.h>
 
 // include files for Qt
-#include <qdeepcopy.h>
+#include <q3deepcopy.h>
 #include <qeventloop.h>
-#include <qstylesheet.h>
+#include <q3stylesheet.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
+#include <QEvent>
 
 // include files for KDE
 #include <dcopclient.h>
@@ -51,7 +55,7 @@
 #include "kstcsd.h"
 #include "kstdataobjectcollection.h"
 #include "kstdoc.h"
-#include "kstgraphfiledialog_i.h"
+#include "kstgraphfiledialog.h"
 #include "kstequation.h"
 #include "ksteventmonitorentry.h"
 #include "ksthistogram.h"
@@ -239,7 +243,7 @@ bool KstDoc::openDocument(const KURL& url, const QString& o_file,
   }
   QDomDocument doc(_title);
 
-  if (!f.open(IO_ReadOnly)) {
+  if (!f.open(QIODevice::ReadOnly)) {
     KMessageBox::sorry(KstApp::inst(), i18n("%1: File exists, but kst could not open it.").arg(url.prettyURL()));
     opening = false;
     _updating = false;
@@ -564,7 +568,7 @@ bool KstDoc::openDocument(const KURL& url, const QString& o_file,
   KstDataObjectList bitBucket;
   {
     KST::dataObjectList.lock().readLock();
-    KstDataObjectList dol = QDeepCopy<KstDataObjectList>(KST::dataObjectList);
+    KstDataObjectList dol = Q3DeepCopy<KstDataObjectList>(KST::dataObjectList);
     KST::dataObjectList.lock().unlock();
     for (KstDataObjectList::Iterator i = dol.begin(); i != dol.end(); ++i) {
       assert(*i);
@@ -633,7 +637,7 @@ bool KstDoc::openDocument(const KURL& url, const QString& o_file,
 }
 
 
-void KstDoc::saveDocument(QTextStream& ts, bool saveAbsoluteVectorPositions) {
+void KstDoc::saveDocument(Q3TextStream& ts, bool saveAbsoluteVectorPositions) {
   KstApp *app = KstApp::inst();
   ts << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
   ts << "<kstdoc version=\"1.3\">" << endl;
@@ -643,7 +647,7 @@ void KstDoc::saveDocument(QTextStream& ts, bool saveAbsoluteVectorPositions) {
   ts << "    <height>"<< app->height()<< "</height>" << endl;
   KMdiChildView *c = app->activeWindow();
   if (c) {
-    ts << "    <active name=\"" << QStyleSheet::escape(c->caption()) << "\"/>" << endl;
+    ts << "    <active name=\"" << Q3StyleSheet::escape(c->caption()) << "\"/>" << endl;
   }
   ts << "  </windowsize>" << endl;
 
@@ -653,7 +657,7 @@ void KstDoc::saveDocument(QTextStream& ts, bool saveAbsoluteVectorPositions) {
     << "\" enabled=\""
     << (app->graphFileDlg()->autoSaving() ? "true" : "false")
     << "\" format=\""
-    << QStyleSheet::escape(app->graphFileDlg()->format())
+    << Q3StyleSheet::escape(app->graphFileDlg()->format())
     << "\" xsize=\""
     << app->graphFileDlg()->imageXSize()
     << "\" ysize=\""
@@ -665,7 +669,7 @@ void KstDoc::saveDocument(QTextStream& ts, bool saveAbsoluteVectorPositions) {
     << (app->graphFileDlg()->display() == 1 ? "true" : "false");
 
   if (app->graphFileDlg()->autoSaving()) {
-    ts << "\" url=\"" << QStyleSheet::escape(app->graphFileDlg()->url().url());
+    ts << "\" url=\"" << Q3StyleSheet::escape(app->graphFileDlg()->url().url());
   }
   ts << "\" />" << endl;
 
@@ -788,8 +792,8 @@ bool KstDoc::saveDocument(const QString& filename, bool saveAbsoluteVectorPositi
   }
   KTempFile tf(locateLocal("tmp", "kst"), "txt");
 
-  QTextStream ts(tf.file());
-  ts.setEncoding(QTextStream::UnicodeUTF8);
+  Q3TextStream ts(tf.file());
+  ts.setEncoding(Q3TextStream::UnicodeUTF8);
   ts.precision(14);
 
   _lastFilePath = url.prettyURL();
@@ -846,7 +850,7 @@ void KstDoc::deleteContents() {
 
   KST::dataObjectList.lock().writeLock();
   // Avoid deadlock in DataObject destructor
-  KstDataObjectList tmpDol = QDeepCopy<KstDataObjectList>(KST::dataObjectList);
+  KstDataObjectList tmpDol = Q3DeepCopy<KstDataObjectList>(KST::dataObjectList);
   KST::dataObjectList.clear();
   KST::dataObjectList.lock().unlock();
   tmpDol.clear();
@@ -1031,7 +1035,7 @@ void KstDoc::purge() {
     KST::dataObjectList.lock().unlock();
   
     KST::vectorList.lock().readLock();
-    KstVectorList vectorList = QDeepCopy<KstVectorList>(KST::vectorList.list());
+    KstVectorList vectorList = Q3DeepCopy<KstVectorList>(KST::vectorList.list());
     KST::vectorList.lock().unlock();
     
     // clear unused vectors that are editable 
@@ -1062,7 +1066,7 @@ void KstDoc::purge() {
     }
     
     KST::matrixList.lock().readLock();
-    KstMatrixList matrixList = QDeepCopy<KstMatrixList>(KST::matrixList.list());
+    KstMatrixList matrixList = Q3DeepCopy<KstMatrixList>(KST::matrixList.list());
     KST::matrixList.lock().unlock();
 
     // clear unused matrices that are editable
@@ -1155,7 +1159,7 @@ bool KstDoc::event(QEvent *e) {
 
               Kst2DPlotList pl = view->view()->findChildrenType<Kst2DPlot>(true);
               for (Kst2DPlotList::Iterator i = pl.begin(); i != pl.end(); ++i) {
-                for (QValueList<KstBaseCurve*>::ConstIterator j = te->_curves.begin(); j != te->_curves.end(); ++j) {
+                for (Q3ValueList<KstBaseCurve*>::ConstIterator j = te->_curves.begin(); j != te->_curves.end(); ++j) {
                   // race: if ((*i)->Curves.contains(*j)) 
                   const KstBaseCurveList& cl = (*i)->Curves;
                   bool doBreak = false;
@@ -1295,7 +1299,7 @@ static int write_all(int fd, const char *buf, size_t len) {
 
 static bool backupFile(const QString& qFilename, const QString& backupDir,
                        const QString& backupExtension) {
-   QCString cFilename = QFile::encodeName(qFilename);
+   Q3CString cFilename = QFile::encodeName(qFilename);
    const char *filename = cFilename.data();
 
    int fd = open(filename, O_RDONLY);
@@ -1310,13 +1314,13 @@ static bool backupFile(const QString& qFilename, const QString& backupDir,
       return false;
    }
 
-   QCString cBackup;
+   Q3CString cBackup;
    if ( backupDir.isEmpty() ) {
        cBackup = cFilename;
    }
    else
    {
-       QCString nameOnly;
+       Q3CString nameOnly;
        int slash = cFilename.findRev('/');
        if (slash < 0)
          nameOnly = cFilename;

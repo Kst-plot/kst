@@ -23,7 +23,7 @@
 #else
 #include <assert.h>
 
-#include <qdeepcopy.h>
+#include <q3deepcopy.h>
 
 #include "ksdebug.h"
 
@@ -170,8 +170,8 @@ bool UpdateThread::doUpdates(bool force, bool *gotData) {
     KstBaseCurveList cl;
     KstDataObjectList dol;
     kstObjectSplitList<KstDataObject, KstBaseCurve>(KST::dataObjectList, cl, dol);
-    qHeapSort(cl); 
-    qHeapSort(dol); 
+    qSort(cl); 
+    qSort(dol); 
 
     // Update all curves
     for (uint i = 0; i < cl.count(); ++i) {
@@ -248,7 +248,7 @@ bool UpdateThread::doUpdates(bool force, bool *gotData) {
     KstScalar::clearScalarsDirty(); // Must do this first and take a risk of
                                     // falling slightly behind
     KST::scalarList.lock().readLock();
-    KstScalarList sl = QDeepCopy<KstScalarList>(KST::scalarList.list()); // avoid deadlock on exit
+    KstScalarList sl = Q3DeepCopy<KstScalarList>(KST::scalarList.list()); // avoid deadlock on exit
     KST::scalarList.lock().unlock();
     for (KstScalarList::ConstIterator i = sl.begin(); i != sl.end(); ++i) {
       KstScalarPtr sp = *i;

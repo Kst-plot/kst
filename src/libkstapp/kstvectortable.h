@@ -18,9 +18,9 @@
 #ifndef KSTVECTORTABLE_H
 #define KSTVECTORTABLE_H
 
-#include <qtable.h>
+#include <q3table.h>
 
-class KstVectorTable : public QTable
+class KstVectorTable : public Q3Table
 {
   public:
     KstVectorTable( QWidget * parent = 0, const char * name = 0 );
@@ -30,8 +30,8 @@ class KstVectorTable : public QTable
 
     void resizeData(int) {}
     QWidget* createEditor(int, int, bool) const { return 0; }
-    QTableItem* item(int, int) { return 0; }
-    void setItem(int, int, QTableItem *) {}
+    Q3TableItem* item(int, int) { return 0; }
+    void setItem(int, int, Q3TableItem *) {}
     void clearCell(int, int) {}
     void insertWidget(int, int, QWidget *) {}
     QWidget* cellWidget(int, int) const { return 0; }

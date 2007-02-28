@@ -20,7 +20,7 @@
 
 #include "kstviewobject.h"
 #include <qglobal.h>
-#include <qpointarray.h>
+#include <q3pointarray.h>
 
 class KstViewBezier;
 typedef KstSharedPtr<KstViewBezier> KstViewBezierPtr;
@@ -53,13 +53,13 @@ class KstViewBezier : public KstViewObject {
     void paint(KstPainter& p, const QRegion& bounds);
 
   public:
-    void save(QTextStream& ts, const QString& indent = QString::null);
+    void save(Q3TextStream& ts, const QString& indent = QString::null);
 
   private:
     int _width;
     Qt::PenCapStyle _capStyle;
     Qt::PenStyle _penStyle;
-    QPointArray _points;
+    Q3PointArray _points;
 };
 
 typedef KstObjectList<KstViewBezierPtr> KstViewBezierList;

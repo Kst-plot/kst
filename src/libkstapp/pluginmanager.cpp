@@ -40,7 +40,7 @@ void PluginManager::init() {
 }
 
 
-void PluginManager::selectionChanged( QListViewItem *item ) {
+void PluginManager::selectionChanged( Q3ListViewItem *item ) {
   _remove->setEnabled(item != 0L);
 }
 
@@ -112,7 +112,7 @@ void PluginManager::install() {
 
 void PluginManager::remove
   () {
-  QListViewItem *item = _pluginList->selectedItem();
+  Q3ListViewItem *item = _pluginList->selectedItem();
   if (!item) {
     return;
   }
@@ -151,7 +151,7 @@ void PluginManager::reloadList() {
 
   for (it = pluginList.begin(); it != pluginList.end(); ++it) {
     QString path = pc->pluginNameList()[it.data()._name];
-    QListViewItem *i = new QListViewItem(_pluginList,
+    Q3ListViewItem *i = new Q3ListViewItem(_pluginList,
                                          it.data()._readableName,
                                          QString::null,
                                          it.data()._description,

@@ -25,8 +25,8 @@
 #include "kstscalar.h"
 #include "labelparser.h"
 
-#include <qguardedptr.h>
-#include <qvaluevector.h>
+#include <qpointer.h>
+#include <q3valuevector.h>
 
 class KstViewLabel : public KstBorderedViewObject {
   Q_OBJECT
@@ -70,7 +70,7 @@ class KstViewLabel : public KstBorderedViewObject {
     void setFontSize(int size);
     int fontSize() const;
 
-    void save(QTextStream& ts, const QString& indent = QString::null);
+    void save(Q3TextStream& ts, const QString& indent = QString::null);
 
     void setDoScalarReplacement(bool in_do);
     bool doScalarReplacement() const;
@@ -135,7 +135,7 @@ class KstViewLabel : public KstBorderedViewObject {
     struct DataCache {
       DataCache() : valid(false) {}
       bool valid;
-      QValueVector<DataRef> data;
+      Q3ValueVector<DataRef> data;
       void update();
     };
     DataCache _cache;

@@ -18,24 +18,37 @@
 #ifndef KSTVIEWWIDGET_H
 #define KSTVIEWWIDGET_H
 
-#include <qguardedptr.h>
+#include <qpointer.h>
 #include <qwidget.h>
+//Added by qt3to4:
+#include <QResizeEvent>
+#include <QWheelEvent>
+#include <QEvent>
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QMouseEvent>
+#include <QDragMoveEvent>
+#include <QContextMenuEvent>
+#include <QKeyEvent>
+#include <QPaintEvent>
+#include <QFocusEvent>
+#include <QDragLeaveEvent>
 
 #include <kpopupmenu.h>
 #include "ksttoplevelview.h"
 
-class QDragObject;
+class Q3DragObject;
 
 class KstViewWidget : public QWidget {
   Q_OBJECT
   public:
-    KstViewWidget(KstTopLevelViewPtr view, QWidget *parent = 0L, const char *name = 0L, WFlags w = 0);
+    KstViewWidget(KstTopLevelViewPtr view, QWidget *parent = 0L, const char *name = 0L, Qt::WFlags w = 0);
     virtual ~KstViewWidget();
 
     void setDropEnabled(bool);
     void setDragEnabled(bool);
 
-    QDragObject *dragObject();
+    Q3DragObject *dragObject();
     KstTopLevelViewPtr viewObject() const;
 
     void paint();
@@ -69,11 +82,11 @@ class KstViewWidget : public QWidget {
   private:
     KstTopLevelViewPtr _view;
     KstTopLevelView::ViewMode _lastViewMode;
-    QGuardedPtr<KstViewObject> _vo_datamode;
+    QPointer<KstViewObject> _vo_datamode;
     bool _dropEnabled : 1;
     bool _dragEnabled : 1;
-    QGuardedPtr<KPopupMenu> _menu;
-    QDragObject *_drag;
+    QPointer<KPopupMenu> _menu;
+    Q3DragObject *_drag;
 };
 
 #endif

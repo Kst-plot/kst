@@ -19,12 +19,15 @@
 
 // include files for Qt
 #include <qclipboard.h>
-#include <qdeepcopy.h>
+#include <q3deepcopy.h>
 #include <qeventloop.h>
-#include <qpaintdevicemetrics.h>
-#include <qpopupmenu.h>
-#include <qprogressbar.h>
+#include <q3paintdevicemetrics.h>
+#include <q3popupmenu.h>
+#include <q3progressbar.h>
 #include <qvalidator.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <QCustomEvent>
 
 // include files for KDE
 #include <kaccel.h>
@@ -47,46 +50,46 @@
 #include "extensionmgr.h"
 #include "kst.h"
 #include "kst2dplot.h"
-#include "kstchangefiledialog_i.h"
-#include "kstchangenptsdialog_i.h"
-#include "kstchoosecolordialog_i.h"
-#include "kstcurvedifferentiate_i.h"
-#include "kstcurvedialog_i.h"
-#include "kstcsddialog_i.h"
-#include "kstdatamanager_i.h"
+#include "kstchangefiledialog.h"
+#include "kstchangenptsdialog.h"
+#include "kstchoosecolordialog.h"
+#include "kstcurvedifferentiate.h"
+#include "kstcurvedialog.h"
+#include "kstcsddialog.h"
+#include "kstdatamanager.h"
 #include "kstdatanotifier.h"
 #include "datawizard.h"
-#include "kstdebugdialog_i.h"
+#include "kstdebugdialog.h"
 #include "kstdebugnotifier.h"
 #include "kstdoc.h"
-#include "ksteqdialog_i.h"
+#include "ksteqdialog.h"
 #include "kstevents.h"
-#include "ksteventmonitor_i.h"
+#include "ksteventmonitor.h"
 #include "ksteventmonitorentry.h"
-#include "kstfitdialog_i.h"
-#include "kstfilterdialog_i.h"
-#include "kstgraphfiledialog_i.h"
-#include "ksthsdialog_i.h"
+#include "kstfitdialog.h"
+#include "kstfilterdialog.h"
+#include "kstgraphfiledialog.h"
+#include "ksthsdialog.h"
 #include "kstiface_impl.h"
-#include "kstimagedialog_i.h"
+#include "kstimagedialog.h"
 #include "kstlogwidget.h"
-#include "kstmatrixdialog_i.h"
+#include "kstmatrixdialog.h"
 #include "kstmatrixdefaults.h"
-#include "kstmonochromedialog_i.h"
-#include "kstplugindialog_i.h"
+#include "kstmonochromedialog.h"
+#include "kstplugindialog.h"
 #include "kstprintoptionspage.h"
-#include "kstpsddialog_i.h"
-#include "kstquickstartdialog_i.h"
+#include "kstpsddialog.h"
+#include "kstquickstartdialog.h"
 #include "kstsettingsdlg.h"
 #include "kstuinames.h"
 #include "kstvectordefaults.h"
-#include "kstvectordialog_i.h"
-#include "kstviewmanager_i.h"
-#include "kstviewscalarsdialog_i.h"
-#include "kstviewstringsdialog_i.h"
-#include "kstviewvectorsdialog_i.h"
-#include "kstviewmatricesdialog_i.h"
-#include "kstviewfitsdialog_i.h"
+#include "kstvectordialog.h"
+#include "kstviewmanager.h"
+#include "kstviewscalarsdialog.h"
+#include "kstviewstringsdialog.h"
+#include "kstviewvectorsdialog.h"
+#include "kstviewmatricesdialog.h"
+#include "kstviewfitsdialog.h"
 #include "kstviewwindow.h"
 #include "plotmimesource.h"
 #include "plugincollection.h"
@@ -131,7 +134,7 @@ KstApp::KstApp(QWidget *parent, const char *name)
 
   _dataSourceConfig = kConfigObject;
 
-  clearWFlags(WDestructiveClose);
+  clearWFlags(Qt::WDestructiveClose);
 
   _stopping = false;
   config = kapp->config();
@@ -369,10 +372,10 @@ void KstApp::customEvent(QCustomEvent *pEvent) {
   } else if (pEvent->type() == KstELOGDeathEvent) {
     KstEventMonitorI::globalInstance()->disableELOG();
   } else if (pEvent->type() == KstELOGDebugInfoEvent) {
-    QTextStream *pTextStream = (QTextStream*)pEvent->data();
+    Q3TextStream *pTextStream = (Q3TextStream*)pEvent->data();
     (*pTextStream) << KstDebug::self()->text();
   } else if (pEvent->type() == KstELOGConfigureEvent) {
-    QTextStream *pTextStream = (QTextStream*)pEvent->data();
+    Q3TextStream *pTextStream = (Q3TextStream*)pEvent->data();
     if (document()) {
       document()->saveDocument(*pTextStream, true);
     }
@@ -463,7 +466,7 @@ void KstApp::initActions() {
 
   /************/
   XYZoomAction = new KRadioAction(i18n("XY Mouse &Zoom"), "kst_zoomxy",
-                                  KShortcut(Key_F2),
+                                  KShortcut(Qt::Key_F2),
                                   this, SLOT(toggleMouseMode()),
                                   actionCollection(), "zoomxy_action");
   XYZoomAction->setExclusiveGroup("gfx");
@@ -474,7 +477,7 @@ void KstApp::initActions() {
 
   /************/
   XZoomAction = new KRadioAction(i18n("&X Mouse Zoom"), "kst_zoomx",
-                                 KShortcut(Key_F3),
+                                 KShortcut(Qt::Key_F3),
                                  this, SLOT(toggleMouseMode()),
                                  actionCollection(), "zoomx_action");
   XZoomAction->setExclusiveGroup("gfx");
@@ -484,7 +487,7 @@ void KstApp::initActions() {
 
   /************/
   YZoomAction = new KRadioAction(i18n("&Y Mouse Zoom"), "kst_zoomy",
-                                  KShortcut(Key_F4),
+                                  KShortcut(Qt::Key_F4),
                                   this, SLOT(toggleMouseMode()),
                                   actionCollection(), "zoomy_action");
   YZoomAction->setExclusiveGroup("gfx");
@@ -719,7 +722,7 @@ void KstApp::initActions() {
   /************/
   SamplesDownAction = new KAction(i18n("&Back 1 Screen"),
                                   "player_rew",
-                                  KShortcut(CTRL + Key_Left),
+                                  KShortcut(Qt::CTRL + Qt::Key_Left),
                                   this, SLOT(samplesDown()),
                                   actionCollection(),
                                   "samplesdown_action");
@@ -731,7 +734,7 @@ void KstApp::initActions() {
   /************/
   SamplesUpAction = new KAction(i18n("&Advance 1 Screen"),
                                 "player_fwd",
-                                KShortcut(CTRL + Key_Right),
+                                KShortcut(Qt::CTRL + Qt::Key_Right),
                                 this, SLOT(samplesUp()),
                                 actionCollection(),
                                 "samplesup_action");
@@ -743,7 +746,7 @@ void KstApp::initActions() {
   /************/
   SamplesFromEndAction = new KAction(i18n("Read From &End"),
                                      "player_end",
-                                     KShortcut(SHIFT + CTRL + Key_Right),
+                                     KShortcut(Qt::SHIFT + Qt::CTRL + Qt::Key_Right),
                                      this, SLOT(fromEnd()),
                                      actionCollection(),
                                      "samplesend_action");
@@ -768,7 +771,7 @@ void KstApp::initActions() {
 
   /************/
   DataWizardAction = new KAction(i18n("Data &Wizard"), "wizard", 
-                                 KShortcut(Key_W),
+                                 KShortcut(Qt::Key_W),
                                  this, SLOT(showDataWizard()),
                                  actionCollection(), "datawizard_action");
   DataWizardAction->setWhatsThis(i18n("Bring up a wizard\n"
@@ -790,7 +793,7 @@ void KstApp::initActions() {
   DataMode->setWhatsThis(i18n("Toggle between cursor mode and data mode."));
   DataMode->setToolTip(i18n("Data mode"));
   /************/
-  _reloadAction = new KAction(i18n("Reload"), "reload", Key_F5, this, SLOT(reload()),
+  _reloadAction = new KAction(i18n("Reload"), "reload", Qt::Key_F5, this, SLOT(reload()),
                               actionCollection(), "reload");
   _reloadAction->setWhatsThis(i18n("Reload the data from file."));
 
@@ -802,7 +805,7 @@ void KstApp::initActions() {
                                      "(not just the active one)."));
 
   _gfxRectangleAction = new KRadioAction(i18n("&Rectangle"), "kst_gfx_rectangle", 
-                                  KShortcut(Key_F8),
+                                  KShortcut(Qt::Key_F8),
                                   this, SLOT(toggleMouseMode()),
                                   actionCollection(), "rectangle_action");
   _gfxRectangleAction->setExclusiveGroup("gfx");
@@ -810,7 +813,7 @@ void KstApp::initActions() {
   _gfxRectangleAction->setWhatsThis(i18n("Draw rectangle"));
 
   _gfxEllipseAction = new KRadioAction(i18n("&Ellipse"), "kst_gfx_ellipse",
-                                  KShortcut(Key_F9),
+                                  KShortcut(Qt::Key_F9),
                                   this, SLOT(toggleMouseMode()),
                                   actionCollection(), "ellipse_action");
   _gfxEllipseAction->setExclusiveGroup("gfx");
@@ -818,7 +821,7 @@ void KstApp::initActions() {
   _gfxEllipseAction->setWhatsThis(i18n("Draw ellipse"));
 
   _gfxPictureAction = new KRadioAction(i18n("&Picture"), "kst_gfx_picture",
-                                   KShortcut(Key_F12),
+                                   KShortcut(Qt::Key_F12),
                                    this, SLOT(toggleMouseMode()),
                                    actionCollection(), "picture_action");
   _gfxPictureAction->setExclusiveGroup("gfx");
@@ -826,7 +829,7 @@ void KstApp::initActions() {
   _gfxPictureAction->setWhatsThis(i18n("Insert picture"));
   
   _gfx2DPlotAction = new KRadioAction(i18n("&2DPlot"), "kst_newplot",
-                                   KShortcut(Key_2),
+                                   KShortcut(Qt::Key_2),
                                    this, SLOT(toggleMouseMode()),
                                    actionCollection(), "2dplot_action");
   _gfx2DPlotAction->setExclusiveGroup("gfx");
@@ -834,7 +837,7 @@ void KstApp::initActions() {
   _gfx2DPlotAction->setWhatsThis(i18n("Insert Plot"));
 
   _gfxArrowAction = new KRadioAction(i18n("&Arrow"), "kst_gfx_arrow",
-                                   KShortcut(Key_F11),
+                                   KShortcut(Qt::Key_F11),
                                    this, SLOT(toggleMouseMode()),
                                    actionCollection(), "arrow_action");
   _gfxArrowAction->setExclusiveGroup("gfx");
@@ -842,7 +845,7 @@ void KstApp::initActions() {
   _gfxArrowAction->setWhatsThis(i18n("Draw arrow"));
 
   _gfxLineAction = new KRadioAction(i18n("&Line"), "kst_gfx_line",
-                                   KShortcut(Key_F10),
+                                   KShortcut(Qt::Key_F10),
                                    this, SLOT(toggleMouseMode()),
                                    actionCollection(), "line_action");
   _gfxLineAction->setExclusiveGroup("gfx");
@@ -852,7 +855,7 @@ void KstApp::initActions() {
 
   /************/
   _gfxLabelAction = new KRadioAction(i18n("L&abel"), "text",
-                                   KShortcut(Key_F7),
+                                   KShortcut(Qt::Key_F7),
                                    this, SLOT(toggleMouseMode()),
                                    actionCollection(), "label_action");
   _gfxLabelAction->setExclusiveGroup("gfx");
@@ -860,7 +863,7 @@ void KstApp::initActions() {
   _gfxLabelAction->setWhatsThis(i18n("Draw label"));
 
   LayoutAction = new KRadioAction(i18n("Layout Mode"), "kst_layoutmode",
-                                   KShortcut(Key_F6),
+                                   KShortcut(Qt::Key_F6),
                                    this, SLOT(toggleMouseMode()),
                                    actionCollection(), "layoutmode_action");
   LayoutAction->setExclusiveGroup("gfx");
@@ -868,7 +871,7 @@ void KstApp::initActions() {
   LayoutAction->setWhatsThis(i18n("Use this mode to move, resize, and group plots."));
 
   // this is the mouse mode menu
-  QPopupMenu* mouseModeMenu = new QPopupMenu(this);
+  Q3PopupMenu* mouseModeMenu = new Q3PopupMenu(this);
 
   XYZoomAction->plug(mouseModeMenu);
   XZoomAction->plug(mouseModeMenu);
@@ -1068,10 +1071,10 @@ void KstApp::selectRecentFile(const KURL &url) {
 
 
 void KstApp::doDelayedOpens() {
-  QValueList<KstOpen> queueCopy = QDeepCopy<QValueList<KstOpen> >(_openQueue);
+  Q3ValueList<KstOpen> queueCopy = Q3DeepCopy<Q3ValueList<KstOpen> >(_openQueue);
   _openQueue.clear();
 
-  for (QValueList<KstOpen>::ConstIterator i = queueCopy.begin(); i != queueCopy.end(); ++i) {
+  for (Q3ValueList<KstOpen>::ConstIterator i = queueCopy.begin(); i != queueCopy.end(); ++i) {
     openDocumentFile((*i).filename, (*i).file, (*i).n, (*i).f, (*i).s, (*i).ave);
   }
 }
@@ -1479,7 +1482,7 @@ void KstApp::slotFilePrint() {
 
   KstPainter paint(KstPainter::P_PRINT);
   paint.begin(&printer);
-  QPaintDeviceMetrics metrics(&printer);
+  Q3PaintDeviceMetrics metrics(&printer);
   QSize size(metrics.width(), metrics.height());
   bool datetimeFooter;
   bool maintainAspectRatio;
@@ -1572,7 +1575,7 @@ void KstApp::slotFilePrint() {
     printer.setPageSelection(KPrinter::SystemSide);
   }
 #else
-  QValueList<int> pageList = printer.pageList();
+  Q3ValueList<int> pageList = printer.pageList();
 #endif
 
   it = createIterator();
@@ -1624,7 +1627,7 @@ void KstApp::immediatePrintToFile(const QString& filename, bool revert) {
   bool firstPage = true;
   KstPainter paint(KstPainter::P_PRINT);
   paint.begin(&printer);
-  QPaintDeviceMetrics metrics(&printer);
+  Q3PaintDeviceMetrics metrics(&printer);
   QRect rect;
   const QSize size(metrics.width(), metrics.height());
 

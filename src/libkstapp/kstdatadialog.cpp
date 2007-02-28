@@ -21,6 +21,8 @@
 #include "kstdoc.h"
 
 #include <kst_export.h>
+//Added by qt3to4:
+#include <QCloseEvent>
 
 KstDataDialog::KstDataDialog(QWidget *parent)
     : QWidget(parent) {

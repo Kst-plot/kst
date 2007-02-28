@@ -34,7 +34,7 @@ void VectorSaveDialog::save() {
   KstVectorList toSave;
 
   KST::vectorList.lock().readLock();
-  for (QListBoxItem *i = _vectorList->firstItem(); i; i = i->next()) {
+  for (Q3ListBoxItem *i = _vectorList->firstItem(); i; i = i->next()) {
     if (i->isSelected()) {
       KstVectorPtr v = *KST::vectorList.findTag(i->text());
       if (v) {
@@ -155,7 +155,7 @@ void VectorSaveDialog::init() {
 void VectorSaveDialog::selectionChanged() {
   int cnt = 0;
   // expensive but qlistbox provides nothing better at the moment
-  for (QListBoxItem *i = _vectorList->firstItem(); i; i = i->next()) {
+  for (Q3ListBoxItem *i = _vectorList->firstItem(); i; i = i->next()) {
     if (i->isSelected()) {
       if (++cnt > 1) {
         break;

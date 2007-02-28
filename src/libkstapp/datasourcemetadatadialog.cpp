@@ -43,7 +43,7 @@ void DataSourceMetaDataDialog::setDataSource(KstDataSourcePtr dsp) {
   _value->clear();
   if (_dsp) {
     dsp->readLock();
-    for (QDictIterator<KstString> i(dsp->metaData())
+    for (Q3DictIterator<KstString> i(dsp->metaData())
          ;
          i.current();
          ++i) {

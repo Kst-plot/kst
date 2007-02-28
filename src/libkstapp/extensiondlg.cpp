@@ -36,7 +36,7 @@ void ExtensionDialog::show() {
   for (KService::List::ConstIterator it = sl.begin(); it != sl.end(); ++it) {
     KService::Ptr service = *it;
     QString name = service->property("Name").toString();
-    QCheckListItem *i = new QCheckListItem(_extensions, name, QCheckListItem::CheckBox);
+    Q3CheckListItem *i = new Q3CheckListItem(_extensions, name, Q3CheckListItem::CheckBox);
     i->setText(1, service->property("Comment").toString());
     i->setText(2, service->property("X-Kst-Plugin-Author").toString());
     i->setText(3, KLibLoader::findLibrary(service->library().latin1(), KstApp::inst()->instance()));
@@ -51,9 +51,9 @@ void ExtensionDialog::show() {
 
 void ExtensionDialog::accept() {
   ExtensionMgr *mgr = ExtensionMgr::self();
-  QListViewItemIterator it(_extensions); // don't use Checked since it is too new
+  Q3ListViewItemIterator it(_extensions); // don't use Checked since it is too new
   while (it.current()) {
-    mgr->setEnabled(it.current()->text(0), static_cast<QCheckListItem*>(it.current())->isOn());
+    mgr->setEnabled(it.current()->text(0), static_cast<Q3CheckListItem*>(it.current())->isOn());
     ++it;
   }
   mgr->updateExtensions();

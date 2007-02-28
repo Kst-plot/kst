@@ -18,7 +18,7 @@
 #ifndef KSTGFXMOUSEHANDLER_H
 #define KSTGFXMOUSEHANDLER_H
 
-#include <qguardedptr.h>
+#include <qpointer.h>
 #include "kstobject.h"
 
 class KstTopLevelView;

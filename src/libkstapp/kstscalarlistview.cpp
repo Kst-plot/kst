@@ -21,6 +21,8 @@
 #include "kstscalar.h"
 
 #include "kstscalarlistview.h"
+//Added by qt3to4:
+#include <Q3ValueList>
 
 KstScalarListViewItem::KstScalarListViewItem(KstScalarListView *parent, KstObjectTreeNode<KstScalar> *node) : KListViewItem(parent), _node(node) {
 }
@@ -67,8 +69,8 @@ static void addChildItems(KstScalarListViewItem *parentItem, KstObjectTreeNode<K
     return;
   }
 
-  QValueList<KstObjectTreeNode<KstScalar>*> children = parentNode->children().values();
-  for (QValueList<KstObjectTreeNode<KstScalar>*>::ConstIterator i = children.begin(); i != children.end(); ++i) {
+  Q3ValueList<KstObjectTreeNode<KstScalar>*> children = parentNode->children().values();
+  for (Q3ValueList<KstObjectTreeNode<KstScalar>*>::ConstIterator i = children.begin(); i != children.end(); ++i) {
     KstScalarListViewItem *item = new KstScalarListViewItem(parentItem, *i);
     addChildItems(item, *i);
   }
@@ -79,8 +81,8 @@ void KstScalarListView::update() {
 
   if (_coll) {
     KstReadLocker(&_coll->lock());
-    QValueList<KstObjectTreeNode<KstScalar>*> rootItems = _coll->nameTreeRoot()->children().values();
-    for (QValueList<KstObjectTreeNode<KstScalar>*>::ConstIterator i = rootItems.begin(); i != rootItems.end(); ++i) {
+    Q3ValueList<KstObjectTreeNode<KstScalar>*> rootItems = _coll->nameTreeRoot()->children().values();
+    for (Q3ValueList<KstObjectTreeNode<KstScalar>*>::ConstIterator i = rootItems.begin(); i != rootItems.end(); ++i) {
       KstScalarListViewItem *item = new KstScalarListViewItem(this, *i);
       addChildItems(item, *i);
     }

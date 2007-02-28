@@ -19,7 +19,7 @@
 
 
 KstDrag::KstDrag(const char *mimeType, QWidget *dragSource)
-: QStoredDrag(mimeType, dragSource)
+: Q3StoredDrag(mimeType, dragSource)
 {
 }
 

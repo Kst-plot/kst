@@ -109,7 +109,7 @@ void KstViewEllipse::paintSelf(KstPainter& p, const QRegion& bounds) {
 }
 
 
-void KstViewEllipse::save(QTextStream& ts, const QString& indent) {
+void KstViewEllipse::save(Q3TextStream& ts, const QString& indent) {
   ts << indent << "<" << type() << ">" << endl;
   KstViewObject::save(ts, indent + "  ");
   ts << indent << "</" << type() << ">" << endl;

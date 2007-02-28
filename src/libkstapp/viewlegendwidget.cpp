@@ -33,13 +33,13 @@ ViewLegendWidget::~ViewLegendWidget() {}
 
 
 void ViewLegendWidget::init() {
-  connect(DisplayedCurveList, SIGNAL(clicked(QListBoxItem*)),
+  connect(DisplayedCurveList, SIGNAL(clicked(Q3ListBoxItem*)),
           this, SLOT(updateButtons()));
-  connect(AvailableCurveList, SIGNAL(clicked(QListBoxItem*)),
+  connect(AvailableCurveList, SIGNAL(clicked(Q3ListBoxItem*)),
           this, SLOT(updateButtons()));
-  connect(DisplayedCurveList, SIGNAL(doubleClicked(QListBoxItem*)),
+  connect(DisplayedCurveList, SIGNAL(doubleClicked(Q3ListBoxItem*)),
           this, SLOT(removeDisplayedCurve()));
-  connect(AvailableCurveList, SIGNAL(doubleClicked(QListBoxItem*)),
+  connect(AvailableCurveList, SIGNAL(doubleClicked(Q3ListBoxItem*)),
           this, SLOT(addDisplayedCurve()));
   connect(DisplayedCurveList, SIGNAL(selectionChanged()),
           this, SLOT(updateButtons()));

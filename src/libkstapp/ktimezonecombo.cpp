@@ -18,8 +18,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qlistbox.h>
-#include <qmemarray.h>
+#include <q3listbox.h>
+#include <q3memarray.h>
 
 #include <klocale.h>
 #include <kcombobox.h>
@@ -29,7 +29,7 @@
 
 class KTimezoneCombo::Private {
   public:
-    QMemArray<int> _offsets;
+    Q3MemArray<int> _offsets;
     QStringList _names;
 };
 
@@ -42,9 +42,9 @@ KTimezoneCombo::KTimezoneCombo(QWidget *parent, const char *name, KstTimezones *
   }
 
   if (listBox()) {
-    listBox()->setVScrollBarMode(QScrollView::AlwaysOn);
-    listBox()->setColumnMode(QListBox::FixedNumber);
-    listBox()->setRowMode(QListBox::Variable);
+    listBox()->setVScrollBarMode(Q3ScrollView::AlwaysOn);
+    listBox()->setColumnMode(Q3ListBox::FixedNumber);
+    listBox()->setRowMode(Q3ListBox::Variable);
   }
   
   insertItem("UTC");

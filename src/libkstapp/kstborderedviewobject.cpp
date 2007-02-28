@@ -21,7 +21,7 @@
 #include <klocale.h>
 
 #include <qpainter.h>
-#include <qstylesheet.h>
+#include <q3stylesheet.h>
 #include <qvariant.h>
 
 KstBorderedViewObject::KstBorderedViewObject(const QString& type)
@@ -60,22 +60,22 @@ KstBorderedViewObject::~KstBorderedViewObject() {
 }
 
 
-void KstBorderedViewObject::saveAttributesOnly(QTextStream& ts, const QString& indent) {
+void KstBorderedViewObject::saveAttributesOnly(Q3TextStream& ts, const QString& indent) {
   ts << indent << "<border color=\""
-    << QStyleSheet::escape(_borderColor.name())
+    << Q3StyleSheet::escape(_borderColor.name())
     << "\" width=\"" << _borderWidth
     << "\" padding=\"" << _padding
     << "\" margin=\"" << _margin << "\" />" << endl;
 }
 
 
-void KstBorderedViewObject::save(QTextStream& ts, const QString& indent) {
+void KstBorderedViewObject::save(Q3TextStream& ts, const QString& indent) {
   saveAttributesOnly(ts, indent);
   KstViewObject::save(ts, indent);
 }
 
 
-void KstBorderedViewObject::saveAttributes(QTextStream& ts, const QString& indent) {
+void KstBorderedViewObject::saveAttributes(Q3TextStream& ts, const QString& indent) {
   saveAttributesOnly(ts, indent);
   KstViewObject::saveAttributes(ts, indent);
 }

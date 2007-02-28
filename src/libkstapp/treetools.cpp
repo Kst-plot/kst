@@ -2,7 +2,7 @@
 
 bool KST::deleteDependents(KstVectorPtr vectorFor) {
   KST::dataObjectList.lock().readLock();
-  KstDataObjectList dol = QDeepCopy<KstDataObjectList>(KST::dataObjectList);
+  KstDataObjectList dol = Q3DeepCopy<KstDataObjectList>(KST::dataObjectList);
   KST::dataObjectList.lock().unlock();
   for (KstDataObjectList::Iterator i = dol.begin(); i != dol.end(); ++i) {
     bool user = (*i)->uses(vectorFor);
@@ -22,7 +22,7 @@ bool KST::deleteDependents(KstVectorPtr vectorFor) {
 bool KST::duplicateDependents(KstVectorPtr vectorFor, KstDataObjectDataObjectMap& duplicatedMap, QMap<KstVectorPtr, KstVectorPtr> &duplicatedVectors) {
   // work with a copy of the data object list
   KST::dataObjectList.lock().readLock();
-  KstDataObjectList dol = QDeepCopy<KstDataObjectList>(KST::dataObjectList);
+  KstDataObjectList dol = Q3DeepCopy<KstDataObjectList>(KST::dataObjectList);
   KST::dataObjectList.lock().unlock();
   
   for (KstDataObjectList::Iterator i = dol.begin(); i != dol.end(); ++i) {

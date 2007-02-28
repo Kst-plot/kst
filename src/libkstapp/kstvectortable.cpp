@@ -16,11 +16,11 @@
  ***************************************************************************/
 
 #include <qpainter.h>
-#include <qtable.h>
+#include <q3table.h>
 #include "kstvectortable.h"
 #include "kstdatacollection.h"
 
-KstVectorTable::KstVectorTable( QWidget * parent, const char * name ) : QTable( parent, name ) {
+KstVectorTable::KstVectorTable( QWidget * parent, const char * name ) : Q3Table( parent, name ) {
 }
 
 void KstVectorTable::setVector(QString strVector) {
@@ -44,7 +44,7 @@ void KstVectorTable::paintCell( QPainter* painter, int row, int col, const QRect
     str.setNum(vector->value(row), 'g', 16);
   }
 
-  painter->drawText(0, 0, cr.width(), cr.height(), AlignLeft, str);
+  painter->drawText(0, 0, cr.width(), cr.height(), Qt::AlignLeft, str);
 }
 
 // vim: ts=2 sw=2 et

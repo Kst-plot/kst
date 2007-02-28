@@ -18,7 +18,7 @@
 #ifndef EMAILTHREAD_H
 #define EMAILTHREAD_H
 
-#include <qcstring.h>
+#include <q3cstring.h>
 #include <qobject.h>
 
 #include <kio/global.h>
@@ -50,7 +50,7 @@ class EMailThread : public QObject {
 
     QString       _strFrom;
     QString       _strTo;
-    QCString      _strBody;
+    Q3CString      _strBody;
     QString       _strSubject;
     QString       _strSMTPServer;
     QString       _strMessage;

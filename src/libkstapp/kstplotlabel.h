@@ -58,7 +58,7 @@ class KstPlotLabel {
     QSize size() const;
 
     void load(const QDomElement& e);
-    void save(QTextStream& ts, const QString& indent = QString::null, bool save_pos = false) const;
+    void save(Q3TextStream& ts, const QString& indent = QString::null, bool save_pos = false) const;
 
     KstPlotLabel& operator=(const KstPlotLabel&);
 

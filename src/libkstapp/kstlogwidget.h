@@ -20,9 +20,9 @@
 
 #include "kstdebug.h"
 #include <qmime.h>
-#include <qtextbrowser.h>
+#include <q3textbrowser.h>
 
-class KstLogWidget : public QTextBrowser {
+class KstLogWidget : public Q3TextBrowser {
   Q_OBJECT
   public:
     KstLogWidget(QWidget *parent = 0, const char *name = 0);
@@ -42,7 +42,7 @@ class KstLogWidget : public QTextBrowser {
   private:            
     KstDebug *_debug;
     int _show;
-    QMimeSourceFactory _msrc;
+    Q3MimeSourceFactory _msrc;
 
     void generateImages();
 };

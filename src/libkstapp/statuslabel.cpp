@@ -24,7 +24,7 @@
 // application specific includes
 #include "statuslabel.h"
 
-StatusLabel::StatusLabel(const QString &text, QWidget *parent, const char *name, WFlags f)
+StatusLabel::StatusLabel(const QString &text, QWidget *parent, const char *name, Qt::WFlags f)
 : QLabel(text, parent, name, f) {
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   setMinimumWidth(0);

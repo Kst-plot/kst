@@ -24,7 +24,7 @@
 
 #include <qmutex.h>
 #include <qthread.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 #include "kstwaitcondition.h"
 
@@ -55,7 +55,7 @@ class UpdateThread : public QThread {
     KstDoc *_doc;
     int _updateCounter;
     int _updateTime;
-    QValueList<KstBaseCurve*> _updatedCurves; // HACK: temporary use in update reworking
+    Q3ValueList<KstBaseCurve*> _updatedCurves; // HACK: temporary use in update reworking
 };
 
 

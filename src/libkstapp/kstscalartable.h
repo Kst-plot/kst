@@ -18,9 +18,9 @@
 #ifndef KSTSCALARTABLE_H
 #define KSTSCALARTABLE_H
 
-#include <qtable.h>
+#include <q3table.h>
 
-class KstScalarTable : public QTable
+class KstScalarTable : public Q3Table
 {
 public:
   KstScalarTable( QWidget * parent = 0, const char * name = 0 );
@@ -29,8 +29,8 @@ public:
 
   void resizeData(int) {}
   QWidget* createEditor(int, int, bool) const { return 0; }
-  QTableItem* item(int, int) { return 0; }
-  void setItem(int, int, QTableItem *) {}
+  Q3TableItem* item(int, int) { return 0; }
+  void setItem(int, int, Q3TableItem *) {}
   void clearCell(int, int) {}
   void insertWidget(int, int, QWidget *) {}
   QWidget* cellWidget(int, int) const { return 0; }

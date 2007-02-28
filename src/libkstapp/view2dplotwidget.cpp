@@ -18,6 +18,8 @@
 #include "view2dplotwidget.h"
 
 #include <kst_export.h>
+//Added by qt3to4:
+#include <QPixmap>
 
 struct MajorTickSpacing {
   const char *label;
@@ -55,13 +57,13 @@ void View2DPlotWidget::init() {
 
   _plot = 0L;
 
-  connect(DisplayedCurveList, SIGNAL(clicked(QListBoxItem*)),
+  connect(DisplayedCurveList, SIGNAL(clicked(Q3ListBoxItem*)),
           this, SLOT(updateButtons()));
-  connect(AvailableCurveList, SIGNAL(clicked(QListBoxItem*)),
+  connect(AvailableCurveList, SIGNAL(clicked(Q3ListBoxItem*)),
           this, SLOT(updateButtons()));
-  connect(DisplayedCurveList, SIGNAL(doubleClicked(QListBoxItem*)),
+  connect(DisplayedCurveList, SIGNAL(doubleClicked(Q3ListBoxItem*)),
           this, SLOT(removeDisplayedCurve()));
-  connect(AvailableCurveList, SIGNAL(doubleClicked(QListBoxItem*)),
+  connect(AvailableCurveList, SIGNAL(doubleClicked(Q3ListBoxItem*)),
           this, SLOT(addDisplayedCurve()));
   connect(DisplayedCurveList, SIGNAL(selectionChanged()),
           this, SLOT(updateButtons()));
@@ -78,16 +80,16 @@ void View2DPlotWidget::init() {
 
   _up->setPixmap(BarIcon("up"));
   _up->setEnabled(false);
-  _up->setAccel(ALT+Key_Up);
+  _up->setAccel(Qt::ALT+Qt::Key_Up);
   _down->setPixmap(BarIcon("down"));
   _down->setEnabled(false);
-  _down->setAccel(ALT+Key_Down);
+  _down->setAccel(Qt::ALT+Qt::Key_Down);
   _add->setPixmap(BarIcon("forward"));
   _add->setEnabled(false);
-  _add->setAccel(ALT+Key_S);
+  _add->setAccel(Qt::ALT+Qt::Key_S);
   _remove->setPixmap(BarIcon("back"));
   _remove->setEnabled(false);
-  _remove->setAccel(ALT+Key_R);
+  _remove->setAccel(Qt::ALT+Qt::Key_R);
 
   QToolTip::add
     (_up, i18n("Shortcut: Alt+Up"));
@@ -116,10 +118,10 @@ void View2DPlotWidget::init() {
           YExpressionMax, SLOT(insert(const QString&)));
 
   // adding/removing curves
-  connect(DisplayedCurveList, SIGNAL(clicked(QListBoxItem*)), this, SLOT(updateButtons()));
-  connect(AvailableCurveList, SIGNAL(clicked(QListBoxItem*)), this, SLOT(updateButtons()));
-  connect(DisplayedCurveList, SIGNAL(doubleClicked(QListBoxItem*)), this, SLOT(removeDisplayedCurve()));
-  connect(AvailableCurveList, SIGNAL(doubleClicked(QListBoxItem*)), this, SLOT(addDisplayedCurve()));
+  connect(DisplayedCurveList, SIGNAL(clicked(Q3ListBoxItem*)), this, SLOT(updateButtons()));
+  connect(AvailableCurveList, SIGNAL(clicked(Q3ListBoxItem*)), this, SLOT(updateButtons()));
+  connect(DisplayedCurveList, SIGNAL(doubleClicked(Q3ListBoxItem*)), this, SLOT(removeDisplayedCurve()));
+  connect(AvailableCurveList, SIGNAL(doubleClicked(Q3ListBoxItem*)), this, SLOT(addDisplayedCurve()));
   connect(DisplayedCurveList, SIGNAL(selectionChanged()), this, SLOT(updateButtons()));
   connect(AvailableCurveList, SIGNAL(selectionChanged()), this, SLOT(updateButtons()));
   connect(_remove, SIGNAL(clicked()), this, SLOT(removeDisplayedCurve()));
@@ -192,7 +194,7 @@ void View2DPlotWidget::init() {
           this, SLOT(removePlotMarker()));
   connect(RemoveAllPlotMarkers, SIGNAL(clicked()),
           this, SLOT(removeAllPlotMarkers()));
-  connect(PlotMarkerList, SIGNAL(clicked(QListBoxItem*)),
+  connect(PlotMarkerList, SIGNAL(clicked(Q3ListBoxItem*)),
           this, SLOT(updateButtons()));
   connect(PlotMarkerList, SIGNAL(selectionChanged()),
           this, SLOT(updateButtons()));
@@ -224,9 +226,9 @@ void View2DPlotWidget::init() {
   connect(_checkBoxDefaultMinorGridColor, SIGNAL(clicked()),
           this, SLOT(updateAxesButtons()));
 
-  QColor defaultColor((KstSettings::globalSettings()->foregroundColor.red() + KstSettings::globalSettings()->backgroundColor.red())/2,
-                      (KstSettings::globalSettings()->foregroundColor.green() + KstSettings::globalSettings()->backgroundColor.green())/2,
-                      (KstSettings::globalSettings()->foregroundColor.blue() + KstSettings::globalSettings()->backgroundColor.blue())/2);
+  QColor defaultColor((KstSettings::globalSettings()->foregroundColor.Qt::red() + KstSettings::globalSettings()->backgroundColor.Qt::red())/2,
+                      (KstSettings::globalSettings()->foregroundColor.Qt::green() + KstSettings::globalSettings()->backgroundColor.Qt::green())/2,
+                      (KstSettings::globalSettings()->foregroundColor.Qt::blue() + KstSettings::globalSettings()->backgroundColor.Qt::blue())/2);
   _majorGridColor->setColor(defaultColor);
   _minorGridColor->setColor(defaultColor);
 
@@ -427,9 +429,9 @@ void View2DPlotWidget::updateScalarCombo() {
   scalarSelectorY1->clear();
   scalarSelectorY2->clear();
   KST::scalarList.lock().readLock();
-  KstScalarList sl = QDeepCopy<KstScalarList>(KST::scalarList.list());
+  KstScalarList sl = Q3DeepCopy<KstScalarList>(KST::scalarList.list());
   KST::scalarList.lock().unlock();
-  qHeapSort(sl);
+  qSort(sl);
   for (KstScalarList::ConstIterator i = sl.begin(); i != sl.end(); ++i) {
     (*i)->readLock();
     QString n = (*i)->tagLabel();

@@ -175,7 +175,7 @@ void KstViewPicture::paintSelf(KstPainter& p, const QRegion& bounds) {
 }
 
 
-void KstViewPicture::save(QTextStream& ts, const QString& indent) {
+void KstViewPicture::save(Q3TextStream& ts, const QString& indent) {
   ts << indent << "<" << type() << ">" << endl;
   KstBorderedViewObject::save(ts, indent + "  ");
   ts << indent << "</" << type() << ">" << endl;

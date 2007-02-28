@@ -18,8 +18,12 @@
 // include files for Qt
 #include <qfile.h>
 #include <qpainter.h>
-#include <qpaintdevicemetrics.h>
-#include <qstylesheet.h>
+#include <q3paintdevicemetrics.h>
+#include <q3stylesheet.h>
+//Added by qt3to4:
+#include <QCloseEvent>
+#include <QPixmap>
+#include <Q3VBoxLayout>
 
 // include files for KDE
 #include <kmessagebox.h>
@@ -89,7 +93,7 @@ void KstViewWindow::commonConstructor() {
 
   QTimer::singleShot(0, this, SLOT(updateActions()));
 
-  QVBoxLayout *vb = new QVBoxLayout(this);
+  Q3VBoxLayout *vb = new Q3VBoxLayout(this);
   vb->setAutoAdd(true);
 }
 
@@ -163,7 +167,7 @@ void KstViewWindow::immediatePrintToFile(const QString &filename) {
 
   KstPainter p(KstPainter::P_PRINT);
   p.begin(&printer);
-  QPaintDeviceMetrics metrics(&printer);
+  Q3PaintDeviceMetrics metrics(&printer);
   const QSize size(metrics.width(), metrics.height());
 
   view()->resizeForPrint(size);
@@ -187,7 +191,7 @@ void KstViewWindow::immediatePrintToPng(QDataStream* dataStream, const QSize& si
       Q_UNUSED(format)
 
       QByteArray bytes;
-      QDataStream tempStream(bytes, IO_ReadWrite);
+      QDataStream tempStream(bytes, QIODevice::ReadWrite);
 
       tempStream << pixmap;
       if (bytes.count() > 4) {
@@ -266,7 +270,7 @@ void KstViewWindow::immediatePrintToEps(const QString &filename, const QSize& si
 
       KstPainter paint(KstPainter::P_PRINT);
       paint.begin(&printer);
-      QPaintDeviceMetrics metrics(&printer);
+      Q3PaintDeviceMetrics metrics(&printer);
 
       view()->resizeForPrint(size);
       view()->paint(paint, QRegion());
@@ -281,10 +285,10 @@ void KstViewWindow::immediatePrintToEps(const QString &filename, const QSize& si
     QFile fileEPS(filenameNewEps);
     QString line;
 
-    if (filePS.open(IO_ReadOnly)) {
-      if (fileEPS.open(IO_WriteOnly | IO_Truncate)) {
-        QTextStream streamPS(&filePS);
-        QTextStream streamEPS(&fileEPS);
+    if (filePS.open(QIODevice::ReadOnly)) {
+      if (fileEPS.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        Q3TextStream streamPS(&filePS);
+        Q3TextStream streamEPS(&fileEPS);
 
         line = streamPS.readLine();
         if (line.startsWith("%!PS-Adobe-")) {
@@ -379,11 +383,11 @@ void KstViewWindow::print(KstPainter& paint, QSize& size, int pages, int lineAdj
 }
 
 
-void KstViewWindow::save(QTextStream& ts, const QString& indent) {
+void KstViewWindow::save(Q3TextStream& ts, const QString& indent) {
   const QRect restoreGeom(restoreGeometry());
   const QRect internalGeom(internalGeometry());
 
-  ts << indent << "<tag>" << QStyleSheet::escape(caption()) << "</tag>" << endl;
+  ts << indent << "<tag>" << Q3StyleSheet::escape(caption()) << "</tag>" << endl;
 
   ts << indent << "<restore"  << " x=\"" << restoreGeom.x()
     << "\" y=\"" << restoreGeom.y()

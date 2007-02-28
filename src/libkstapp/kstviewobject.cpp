@@ -22,9 +22,17 @@
 
 // include files for Qt
 #include <qbitmap.h>
-#include <qdeepcopy.h>
+#include <q3deepcopy.h>
 #include <qmetaobject.h>
-#include <qstylesheet.h>
+#include <q3stylesheet.h>
+//Added by qt3to4:
+#include <QWheelEvent>
+#include <QMouseEvent>
+#include <QDragEnterEvent>
+#include <QKeyEvent>
+#include <Q3MemArray>
+#include <QDropEvent>
+#include <QDragMoveEvent>
 
 // include files for KDE
 #include <kdatastream.h>
@@ -35,7 +43,7 @@
 #include "kst2dplot.h" // Yuck, fix this
 #include "kstaccessibility.h"
 #include "kstdoc.h"
-#include "ksteditviewobjectdialog_i.h"
+#include "ksteditviewobjectdialog.h"
 #include "kstmath.h"
 #include "kstobject.h"
 #include "kstplotgroup.h"
@@ -266,7 +274,7 @@ KstObject::UpdateType KstViewObject::updateChildren(int counter) {
 }
 
 
-void KstViewObject::save(QTextStream& ts, const QString& indent) {
+void KstViewObject::save(Q3TextStream& ts, const QString& indent) {
   saveAttributes(ts, indent);
 
   for (KstViewObjectList::Iterator i = _children.begin(); i != _children.end(); ++i) {
@@ -275,7 +283,7 @@ void KstViewObject::save(QTextStream& ts, const QString& indent) {
 }
 
 
-void KstViewObject::saveAttributes(QTextStream& ts, const QString& indent) {
+void KstViewObject::saveAttributes(Q3TextStream& ts, const QString& indent) {
   KstAspectRatio aspect;
 
   if (_maximized) {
@@ -287,7 +295,7 @@ void KstViewObject::saveAttributes(QTextStream& ts, const QString& indent) {
   if (transparent()) {
     ts << indent << "<transparent/>" << endl;
   }
-  ts << indent << "<tag>" << QStyleSheet::escape(tagName()) << "</tag>" << endl;
+  ts << indent << "<tag>" << Q3StyleSheet::escape(tagName()) << "</tag>" << endl;
   ts << indent << "<aspect x=\"" << aspect.x <<
     "\" y=\"" << aspect.y <<
     "\" w=\"" << aspect.w <<
@@ -742,8 +750,8 @@ void KstViewObject::cleanup(int cols) {
 
   int rows = ( cnt + _columns - 1 ) / _columns;
 
-  QMemArray<int> plotLoc(rows * _columns); // what plot lives at each grid location
-  QMemArray<int> unAssigned(cnt); // what plots haven't got a home yet?
+  Q3MemArray<int> plotLoc(rows * _columns); // what plot lives at each grid location
+  Q3MemArray<int> unAssigned(cnt); // what plots haven't got a home yet?
   int n_unassigned = 0;
   int r, c, CR;
   for (int i = 0; i < rows * _columns; ++i) {
@@ -802,7 +810,7 @@ void KstViewObject::cleanup(int cols) {
     plotLoc[CR] = unAssigned[i];
   }
 
-  QMemArray<double> HR(rows);
+  Q3MemArray<double> HR(rows);
   double sum_HR = 0.0;
   KstViewObject *ob;
   double hr;
@@ -1436,7 +1444,7 @@ void KstViewObject::updateFromAspect() {
 
     if (_maintainAspect == true) {
       QSize maintaining_size(_idealSize);
-      maintaining_size.scale(_geom.size(),QSize::ScaleMin);
+      maintaining_size.scale(_geom.size(),Qt::KeepAspectRatio);
       _geom.setSize(maintaining_size);
     }
   }
@@ -1740,7 +1748,7 @@ bool KstViewObject::paste(QMimeSource* source, KstViewObjectList* list) {
   bool rc = false;
 
   if (source && source->provides(PlotMimeSource::mimeType())) {
-    QDataStream ds(source->encodedData(PlotMimeSource::mimeType()), IO_ReadOnly);
+    QDataStream ds(source->encodedData(PlotMimeSource::mimeType()), QIODevice::ReadOnly);
     KstViewWindow *w;
 
     ds >> window;

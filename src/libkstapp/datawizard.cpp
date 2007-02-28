@@ -18,6 +18,10 @@
 #include "datawizard.h"
 
 #include <kst_export.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3PtrList>
+#include <QDropEvent>
 
 DataWizard::DataWizard(QWidget *parent)
     : QWidget(parent) {
@@ -81,16 +85,16 @@ void DataWizard::init() {
   _xVectorExisting->_editVector->hide();
 
   _up->setPixmap(BarIcon("up"));
-  _up->setAccel(ALT+Key_Up);
+  _up->setAccel(Qt::ALT+Qt::Key_Up);
 
   _down->setPixmap(BarIcon("down"));
-  _down->setAccel(ALT+Key_Down);
+  _down->setAccel(Qt::ALT+Qt::Key_Down);
 
   _add->setPixmap(BarIcon("forward"));
-  _add->setAccel(ALT+Key_S);
+  _add->setAccel(Qt::ALT+Qt::Key_S);
 
   _remove->setPixmap(BarIcon("back"));
-  _remove->setAccel(ALT+Key_R);
+  _remove->setAccel(Qt::ALT+Qt::Key_R);
 
   loadSettings();
 
@@ -241,7 +245,7 @@ void DataWizard::sourceChanged(const QString& text) {
       count = 1;
     }
     for (QStringList::ConstIterator it = fl.begin(); it != fl.end(); ++it) {
-      QListViewItem *item = new QListViewItem(_vectors, *it);
+      Q3ListViewItem *item = new Q3ListViewItem(_vectors, *it);
       item->setDragEnabled(true);
       QString str;
       str.sprintf("%0*d", count, index++);
@@ -339,7 +343,7 @@ void DataWizard::showPage( QWidget *page ) {
     updateColumns();
   }
 
-  QWizard::showPage(page);
+  Q3Wizard::showPage(page);
 }
 
 
@@ -454,13 +458,13 @@ void DataWizard::updatePlotBox() {
 
 
 void DataWizard::vectorSubset(const QString& filter) {
-  QListViewItem *after = 0L;
+  Q3ListViewItem *after = 0L;
   _vectors->clearSelection();
   _vectors->setSorting(3, true); // Qt 3.1 compat
   QRegExp re(filter, true /* case insensitive */, true /* wildcard */);
-  QListViewItemIterator it(_vectors);
+  Q3ListViewItemIterator it(_vectors);
   while (it.current()) {
-    QListViewItem *i = it.current();
+    Q3ListViewItem *i = it.current();
     ++it;
     if (re.exactMatch(i->text(0))) {
       if (!after) {
@@ -483,7 +487,7 @@ void DataWizard::finished() {
   KstApp *app = KstApp::inst();
   KstVectorList l;
   QString name = KST::suggestVectorName(_xVector->currentText());
-  QValueList<QColor> colors;
+  Q3ValueList<QColor> colors;
   QColor color;
   uint n_curves = 0;
   uint n_steps = 0;
@@ -562,10 +566,10 @@ void DataWizard::finished() {
 
   // memory estimate for the y vectors
   {
-    QListViewItemIterator it(_vectorsToPlot);
+    Q3ListViewItemIterator it(_vectorsToPlot);
     int fftLen = int(pow(2.0, double(_kstFFTOptions->FFTLen->text().toInt() - 1)));
     while (it.current()) {
-      QListViewItem *i = it.current();
+      Q3ListViewItem *i = it.current();
       if (i->isSelected()) {
         QString field = i->text(0);
 
@@ -641,9 +645,9 @@ void DataWizard::finished() {
 
   // create the y-vectors
   {
-    QListViewItemIterator it(_vectorsToPlot);
+    Q3ListViewItemIterator it(_vectorsToPlot);
     while (it.current()) {
-      QListViewItem *i = it.current();
+      Q3ListViewItem *i = it.current();
       name = KST::suggestVectorName(i->text(0));
 
       KstVectorPtr v = new KstRVector(ds, i->text(0),
@@ -736,7 +740,7 @@ void DataWizard::finished() {
     plots.append(p.data());
     relayout = false;
   } else if (_cycleExisting->isChecked()) {
-    Kst2DPlotList pl = QDeepCopy<Kst2DPlotList>(w->view()->findChildrenType<Kst2DPlot>());
+    Kst2DPlotList pl = Q3DeepCopy<Kst2DPlotList>(w->view()->findChildrenType<Kst2DPlot>());
     for (Kst2DPlotList::Iterator i = pl.begin(); i != pl.end(); ++i) {
       plots += (*i).data();
     }
@@ -1120,7 +1124,7 @@ void DataWizard::loadSettings() {
     _xAxisCreateFromField->setChecked(true);
     QString str = cfg.readEntry("XFieldCreate", "");
     if (_xVector->listBox()) {
-      QListBoxItem *item = _xVector->listBox()->findItem(str, Qt::ExactMatch);
+      Q3ListBoxItem *item = _xVector->listBox()->findItem(str, Qt::ExactMatch);
       if (item) {
         _xVector->listBox()->setSelected(item, true);
       }
@@ -1167,15 +1171,15 @@ void DataWizard::loadSettings() {
 
 
 void DataWizard::clear() {
-  QPtrList<QListViewItem> lst;
+  Q3PtrList<Q3ListViewItem> lst;
 
-  QListViewItemIterator it(_vectorsToPlot);
+  Q3ListViewItemIterator it(_vectorsToPlot);
   while (it.current()) {
     lst.append(it.current());
     ++it;
   }
 
-  QPtrListIterator<QListViewItem> iter(lst);
+  Q3PtrListIterator<Q3ListViewItem> iter(lst);
   while (iter.current()) {
     _vectorsToPlot->takeItem(iter.current());
     _vectors->insertItem(iter.current());
@@ -1187,14 +1191,14 @@ void DataWizard::clear() {
 
 
 void DataWizard::down() {
-  QListViewItem *lastSelected = 0L;
-  QListViewItem *lastUnselected = 0L;
+  Q3ListViewItem *lastSelected = 0L;
+  Q3ListViewItem *lastUnselected = 0L;
 
   _vectorsToPlot->setSorting(10, true);
 
-  QListViewItemIterator it(_vectorsToPlot);
+  Q3ListViewItemIterator it(_vectorsToPlot);
   while (it.current()) {
-    QListViewItem *current = it.current();
+    Q3ListViewItem *current = it.current();
     ++it;
     if (_vectorsToPlot->isSelected(current)) {
       lastSelected = current;
@@ -1202,7 +1206,7 @@ void DataWizard::down() {
       if (lastUnselected) {
         current->moveItem(lastUnselected);
       } else {
-        QListViewItem *itemAbove = current->itemAbove();
+        Q3ListViewItem *itemAbove = current->itemAbove();
         while (itemAbove) {
           itemAbove->moveItem(current);
           itemAbove = current->itemAbove();
@@ -1220,12 +1224,12 @@ void DataWizard::down() {
 
 
 void DataWizard::up() {
-  QListViewItem *lastSelected = 0L;
-  QListViewItem *lastUnselected = 0L;
+  Q3ListViewItem *lastSelected = 0L;
+  Q3ListViewItem *lastUnselected = 0L;
 
   _vectorsToPlot->setSorting(10, true);
 
-  QListViewItemIterator it(_vectorsToPlot);
+  Q3ListViewItemIterator it(_vectorsToPlot);
   while (it.current()) {
     if (_vectorsToPlot->isSelected(it.current())) {
       lastSelected = it.current();
@@ -1253,9 +1257,9 @@ void DataWizard::updateVectorPageButtons() {
 
 void DataWizard::add
   () {
-  QPtrList<QListViewItem> lst;
+  Q3PtrList<Q3ListViewItem> lst;
 
-  QListViewItemIterator it(_vectors);
+  Q3ListViewItemIterator it(_vectors);
   while (it.current()) {
     if (it.current()->isSelected()) {
       lst.append(it.current());
@@ -1263,10 +1267,10 @@ void DataWizard::add
     ++it;
   }
 
-  QListViewItem *last = _vectorsToPlot->lastItem();
-  QPtrListIterator<QListViewItem> iter(lst);
+  Q3ListViewItem *last = _vectorsToPlot->lastItem();
+  Q3PtrListIterator<Q3ListViewItem> iter(lst);
   while (iter.current()) {
-    QListViewItem *item = iter.current();
+    Q3ListViewItem *item = iter.current();
     _vectors->takeItem(item);
     _vectorsToPlot->insertItem(item);
     item->moveItem(last);
@@ -1285,9 +1289,9 @@ void DataWizard::add
 
 void DataWizard::remove
   () {
-  QPtrList<QListViewItem> lst;
+  Q3PtrList<Q3ListViewItem> lst;
 
-  QListViewItemIterator it(_vectorsToPlot);
+  Q3ListViewItemIterator it(_vectorsToPlot);
   while (it.current()) {
     if (it.current()->isSelected()) {
       lst.append(it.current());
@@ -1295,7 +1299,7 @@ void DataWizard::remove
     ++it;
   }
 
-  QPtrListIterator<QListViewItem> iter(lst);
+  Q3PtrListIterator<Q3ListViewItem> iter(lst);
   while (iter.current()) {
     _vectorsToPlot->takeItem(iter.current());
     _vectors->insertItem(iter.current());
@@ -1316,9 +1320,9 @@ void DataWizard::remove
 void DataWizard::vectorsDroppedBack(QDropEvent *e) {
   Q_UNUSED(e)
   // Note: e can be null
-  QListViewItemIterator it(_vectors);
+  Q3ListViewItemIterator it(_vectors);
   while (it.current()) {
-    QListViewItem *i = it.current();
+    Q3ListViewItem *i = it.current();
     if (i->text(1).isEmpty()) {
       i->setText(1, _countMap[i->text(0)]);
     }

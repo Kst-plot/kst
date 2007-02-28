@@ -33,7 +33,7 @@ PlotMimeSource::PlotMimeSource(QString window, QStringList plots, QWidget *dragS
 
 QByteArray PlotMimeSource::encodedData(const char *mime) const {
   QByteArray  bytes;
-  QDataStream data(bytes, IO_WriteOnly);
+  QDataStream data(bytes, QIODevice::WriteOnly);
   
   if (strcmp(mime, format(0)) == 0) {
     data << _window;

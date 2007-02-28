@@ -34,6 +34,9 @@
 #include "kstdatacollection.h"
 #include "kstdefaultnames.h"
 #include "kst_export.h"
+//Added by qt3to4:
+#include <QLabel>
+#include <QCloseEvent>
 
 class QLabel;
 
@@ -49,7 +52,7 @@ class KST_EXPORT KstViewWindow : public KMdiChildView {
     /** pause the updating of data */
     void setPaused(bool paused);
     void togglePaused();
-    void save(QTextStream& ts, const QString& indent = QString::null);
+    void save(Q3TextStream& ts, const QString& indent = QString::null);
     void print( KstPainter& paint, QSize& size, int pages, int lineAdjust, bool monochrome, bool enhanceReadability, bool dateTimeFooter, bool maintainAspectRatio, int pointStyleOrder, int lineStyleOrder, int lineWidthOrder, int maxLineWidth, int pointDensity );
     KstTopLevelViewPtr view() const;
     virtual void setCaption(const QString& szCaption);

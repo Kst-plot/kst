@@ -54,7 +54,7 @@ class KstViewEllipse : public KstViewObject {
     virtual void paintSelf(KstPainter& p, const QRegion& bounds);
 
   public:
-    virtual void save(QTextStream& ts, const QString& indent = QString::null);
+    virtual void save(Q3TextStream& ts, const QString& indent = QString::null);
     
     virtual QMap<QString, QVariant> widgetHints(const QString& propertyName) const; 
     

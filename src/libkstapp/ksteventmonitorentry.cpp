@@ -19,8 +19,10 @@
 #include <config.h>
 
 // include files for Qt
-#include <qstylesheet.h>
+#include <q3stylesheet.h>
 #include <qthread.h>
+//Added by qt3to4:
+#include <QEvent>
 
 // include files for KDE
 #include <dcopref.h>
@@ -32,7 +34,7 @@
 #include "kst.h"
 #include "kstdatacollection.h"
 #include "ksteventmonitorentry.h"
-#include "ksteventmonitor_i.h"
+#include "ksteventmonitor.h"
 
 #include <assert.h>
 #include <unistd.h>
@@ -146,18 +148,18 @@ bool EventMonitorEntry::reparse() {
 }
 
 
-void EventMonitorEntry::save(QTextStream &ts, const QString& indent) {
+void EventMonitorEntry::save(Q3TextStream &ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<event>" << endl;
-  ts << l2 << "<tag>" << QStyleSheet::escape(tagName()) << "</tag>" << endl;
-  ts << l2 << "<equation>" << QStyleSheet::escape(_event) << "</equation>" << endl;
-  ts << l2 << "<description>" << QStyleSheet::escape(_description) << "</description>" << endl;
+  ts << l2 << "<tag>" << Q3StyleSheet::escape(tagName()) << "</tag>" << endl;
+  ts << l2 << "<equation>" << Q3StyleSheet::escape(_event) << "</equation>" << endl;
+  ts << l2 << "<description>" << Q3StyleSheet::escape(_description) << "</description>" << endl;
   ts << l2 << "<logdebug>" << QString::number(_logKstDebug) << "</logdebug>" << endl;
   ts << l2 << "<loglevel>" << QString::number(_level) << "</loglevel>" << endl;
   ts << l2 << "<logemail>" << QString::number(_logEMail) << "</logemail>" << endl;
   ts << l2 << "<logelog>" << QString::number(_logELOG) << "</logelog>" << endl;
-  ts << l2 << "<emailRecipients>" << QStyleSheet::escape(_eMailRecipients) << "</emailRecipients>" << endl;
-  ts << l2 << "<script>" << QStyleSheet::escape(_script) << "</script>" << endl;
+  ts << l2 << "<emailRecipients>" << Q3StyleSheet::escape(_eMailRecipients) << "</emailRecipients>" << endl;
+  ts << l2 << "<script>" << Q3StyleSheet::escape(_script) << "</script>" << endl;
   ts << indent << "</event>" << endl;
 }
 
@@ -494,8 +496,8 @@ void EventMonitorEntry::replaceDependency(KstDataObjectPtr oldObject, KstDataObj
 
   // and dependencies on vector stats
   for (KstVectorMap::ConstIterator j = oldObject->outputVectors().begin(); j != oldObject->outputVectors().end(); ++j) {
-    const QDict<KstScalar>& scalarMap(newObject->outputVectors()[j.key()]->scalars());
-    QDictIterator<KstScalar> scalarDictIter(j.data()->scalars());
+    const Q3Dict<KstScalar>& scalarMap(newObject->outputVectors()[j.key()]->scalars());
+    Q3DictIterator<KstScalar> scalarDictIter(j.data()->scalars());
     for (; scalarDictIter.current(); ++scalarDictIter) {
       const QString oldTag = scalarDictIter.current()->tagName();
       const QString newTag = scalarMap[scalarDictIter.currentKey()]->tagName();
@@ -505,8 +507,8 @@ void EventMonitorEntry::replaceDependency(KstDataObjectPtr oldObject, KstDataObj
 
   // and dependencies on matrix stats
   for (KstMatrixMap::ConstIterator j = oldObject->outputMatrices().begin(); j != oldObject->outputMatrices().end(); ++j) {
-    const QDict<KstScalar>& scalarMap(newObject->outputMatrices()[j.key()]->scalars());
-    QDictIterator<KstScalar> scalarDictIter(j.data()->scalars());
+    const Q3Dict<KstScalar>& scalarMap(newObject->outputMatrices()[j.key()]->scalars());
+    Q3DictIterator<KstScalar> scalarDictIter(j.data()->scalars());
     for (; scalarDictIter.current(); ++scalarDictIter) {
       const QString oldTag = scalarDictIter.current()->tagName();
       const QString newTag = scalarMap[scalarDictIter.currentKey()]->tagName();
@@ -526,7 +528,7 @@ void EventMonitorEntry::replaceDependency(KstVectorPtr oldVector, KstVectorPtr n
   QString newExp = _event.replace("[" + oldVector->tagName() + "]", "[" + newVector->tagName() + "]");
 
   // also replace all occurences of vector stats for the oldVector
-  QDictIterator<KstScalar> scalarDictIter(oldVector->scalars());
+  Q3DictIterator<KstScalar> scalarDictIter(oldVector->scalars());
   for (; scalarDictIter.current(); ++scalarDictIter) {
     const QString oldTag = scalarDictIter.current()->tagName();
     const QString newTag = newVector->scalars()[scalarDictIter.currentKey()]->tagName();
@@ -544,7 +546,7 @@ void EventMonitorEntry::replaceDependency(KstMatrixPtr oldMatrix, KstMatrixPtr n
   QString newExp = _event;
 
   // also replace all occurences of scalar stats for the oldMatrix
-  QDictIterator<KstScalar> scalarDictIter(oldMatrix->scalars());
+  Q3DictIterator<KstScalar> scalarDictIter(oldMatrix->scalars());
   for (; scalarDictIter.current(); ++scalarDictIter) {
     const QString oldTag = scalarDictIter.current()->tagName();
     const QString newTag = newMatrix->scalars()[scalarDictIter.currentKey()]->tagName();

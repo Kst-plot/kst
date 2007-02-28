@@ -18,10 +18,10 @@
 #ifndef KSTDRAG_H
 #define KSTDRAG_H
 
-#include <qdragobject.h>
+#include <q3dragobject.h>
 
 
-class KstDrag : public QStoredDrag {
+class KstDrag : public Q3StoredDrag {
   public:
     KstDrag(const char *mimeType, QWidget *dragSource);
     virtual ~KstDrag();

@@ -20,6 +20,8 @@
 // include files for Qt
 #include <qfileinfo.h>
 #include <qregexp.h>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 // include files for KDE
 
@@ -378,7 +380,7 @@ bool KstIfaceImpl::saveVector(const QString& vector, const QString& filename) {
   }
 
   QFile f(filename);
-  if (!f.open(IO_WriteOnly)) {
+  if (!f.open(QIODevice::WriteOnly)) {
     return false;
   }
 
@@ -1420,7 +1422,7 @@ QStringList KstIfaceImpl::createPlugin(const QString& pluginName,
   }
 
   Plugin::Data plug_data = plug_ptr->data();
-  QValueList<Plugin::Data::IOValue>::Iterator IOIter;
+  Q3ValueList<Plugin::Data::IOValue>::Iterator IOIter;
   QStringList::ConstIterator scalarParamIter;
   QStringList::ConstIterator vectorParamIter;
 

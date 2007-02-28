@@ -28,6 +28,8 @@
 #include <kglobal.h>
 
 #include <iostream>
+//Added by qt3to4:
+#include <Q3ValueList>
 
 void renderLabel(RenderContext& rc, Label::Chunk *fi) {
   // FIXME: RTL support
@@ -120,9 +122,9 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
                 const QString txtAll = fit->label(rc.precision);
                 fit->unlock();
 
-                const QValueList<QString> strList = QStringList::split('\n', txtAll);
-                QValueListConstIterator<QString> last = --(strList.end());
-                for (QValueListConstIterator<QString> iter = strList.begin(); iter != strList.end(); ++iter) {
+                const Q3ValueList<QString> strList = QStringList::split('\n', txtAll);
+                Q3ValueListConstIterator<QString> last = --(strList.end());
+                for (Q3ValueListConstIterator<QString> iter = strList.begin(); iter != strList.end(); ++iter) {
                   txt = (*iter);
 
                   if (iter != last) {

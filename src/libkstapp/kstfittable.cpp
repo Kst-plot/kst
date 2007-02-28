@@ -16,10 +16,10 @@
  ***************************************************************************/
 
 #include <qpainter.h>
-#include <qtable.h>
+#include <q3table.h>
 #include "kstfittable.h"
 
-KstFitTable::KstFitTable( QWidget * parent, const char * name ) : QTable( parent, name ) {
+KstFitTable::KstFitTable( QWidget * parent, const char * name ) : Q3Table( parent, name ) {
   _pdParams = 0L;
   _pdCovars = 0L;
   _iNumParams = 0;
@@ -75,7 +75,7 @@ void KstFitTable::paintCell( QPainter* painter, int row, int col, const QRect& c
     str.setNum(_dChi2Nu, 'g', 6);
   }    
 
-  painter->drawText(0, 0, cr.width(), cr.height(), AlignLeft, str);
+  painter->drawText(0, 0, cr.width(), cr.height(), Qt::AlignLeft, str);
 }
 
 // vim: ts=2 sw=2 et

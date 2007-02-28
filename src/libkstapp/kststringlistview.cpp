@@ -21,6 +21,8 @@
 #include "kststring.h"
 
 #include "kststringlistview.h"
+//Added by qt3to4:
+#include <Q3ValueList>
 
 KstStringListViewItem::KstStringListViewItem(KstStringListView *parent, KstObjectTreeNode<KstString> *node) : KListViewItem(parent), _node(node) {
 }
@@ -67,8 +69,8 @@ static void addChildItems(KstStringListViewItem *parentItem, KstObjectTreeNode<K
     return;
   }
 
-  QValueList<KstObjectTreeNode<KstString>*> children = parentNode->children().values();
-  for (QValueList<KstObjectTreeNode<KstString>*>::ConstIterator i = children.begin(); i != children.end(); ++i) {
+  Q3ValueList<KstObjectTreeNode<KstString>*> children = parentNode->children().values();
+  for (Q3ValueList<KstObjectTreeNode<KstString>*>::ConstIterator i = children.begin(); i != children.end(); ++i) {
     KstStringListViewItem *item = new KstStringListViewItem(parentItem, *i);
     addChildItems(item, *i);
   }
@@ -79,8 +81,8 @@ void KstStringListView::update() {
 
   if (_coll) {
     KstReadLocker(&_coll->lock());
-    QValueList<KstObjectTreeNode<KstString>*> rootItems = _coll->nameTreeRoot()->children().values();
-    for (QValueList<KstObjectTreeNode<KstString>*>::ConstIterator i = rootItems.begin(); i != rootItems.end(); ++i) {
+    Q3ValueList<KstObjectTreeNode<KstString>*> rootItems = _coll->nameTreeRoot()->children().values();
+    for (Q3ValueList<KstObjectTreeNode<KstString>*>::ConstIterator i = rootItems.begin(); i != rootItems.end(); ++i) {
       KstStringListViewItem *item = new KstStringListViewItem(this, *i);
       addChildItems(item, *i);
     }

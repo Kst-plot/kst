@@ -21,8 +21,12 @@
 #include <config.h>
 
 // include files for Qt
-#include <qguardedptr.h>
+#include <qpointer.h>
 #include <qtimer.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <QLabel>
+#include <QCustomEvent>
 
 // include files for KDE
 #include <kmdimainfrm.h>
@@ -70,7 +74,7 @@ class UpdateThread;
 class VectorSaveDialog;
 
 class QLabel;
-class QProgressBar;
+class Q3ProgressBar;
 class KProgress;
 
 
@@ -583,13 +587,13 @@ class KST_EXPORT KstApp : public KMdiMainFrm {
     QTimer _memTimer;
     QString _defaultFont;
     KConfig *_dataSourceConfig;
-    QValueList<KstOpen> _openQueue;
+    Q3ValueList<KstOpen> _openQueue;
     KstGraphicType _graphicType;
     
     KstTopLevelView::ViewMode _viewMode;
     QString _createType;
-    QGuardedPtr<KstDebugNotifier> _debugNotifier;
-    QGuardedPtr<KstDataNotifier> _dataNotifier;
+    QPointer<KstDebugNotifier> _debugNotifier;
+    QPointer<KstDataNotifier> _dataNotifier;
 };
 
 #endif // KST_H

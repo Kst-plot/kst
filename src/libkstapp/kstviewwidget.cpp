@@ -26,9 +26,22 @@
 #include "kstviewwidget.h"
 #include "kstviewwindow.h"
 #include "plotmimesource.h"
+//Added by qt3to4:
+#include <QContextMenuEvent>
+#include <QDragMoveEvent>
+#include <QDropEvent>
+#include <QDragLeaveEvent>
+#include <QWheelEvent>
+#include <QPaintEvent>
+#include <QResizeEvent>
+#include <QFocusEvent>
+#include <QMouseEvent>
+#include <QKeyEvent>
+#include <QEvent>
+#include <QDragEnterEvent>
 
-KstViewWidget::KstViewWidget(KstTopLevelViewPtr view, QWidget *parent, const char *name, WFlags w)
-: QWidget(parent, name, WStyle_Customize | WRepaintNoErase | w), _view(view) {
+KstViewWidget::KstViewWidget(KstTopLevelViewPtr view, QWidget *parent, const char *name, Qt::WFlags w)
+: QWidget(parent, name, Qt::WStyle_Customize | Qt::WNoAutoErase | w), _view(view) {
   setDragEnabled(true);
   setDropEnabled(true);
   setMouseTracking(true);
@@ -44,7 +57,7 @@ KstViewWidget::~KstViewWidget() {
 }
 
 
-QDragObject *KstViewWidget::dragObject() {
+Q3DragObject *KstViewWidget::dragObject() {
   KMultipleDrag *drag = new KMultipleDrag(this);
 #if 1
   QStringList plots;
@@ -114,7 +127,7 @@ void KstViewWidget::leaveEvent(QEvent *e) {
     } else {
       //qDebug() << "Tracking" << endl;
       if (_view->trackingIsMove() && _dragEnabled) {
-        QDragObject *d = dragObject();
+        Q3DragObject *d = dragObject();
         if (d) {
           // First cancel any operations
           _view->cancelMouseOperations();
@@ -175,7 +188,7 @@ void KstViewWidget::mouseMoveEvent(QMouseEvent *e) {
     if ((e->state() & Qt::MouseButtonMask) == 0) {
       switch (_view->viewMode()) {
         case KstTopLevelView::LabelMode:
-          setCursor(QCursor(Qt::IbeamCursor));
+          setCursor(QCursor(Qt::IBeamCursor));
           break;
         case KstTopLevelView::CreateMode:
           setCursor(QCursor(Qt::ArrowCursor));

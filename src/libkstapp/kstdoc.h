@@ -26,6 +26,8 @@
 
 #include "kstdebug.h"
 #include "kstlistenums.h"
+//Added by qt3to4:
+#include <QEvent>
 
 class KstDoc : public QObject {
   Q_OBJECT
@@ -50,7 +52,7 @@ public:
         int o_n = -2, int o_f = -2,
         int o_s = -1, bool o_ave = false);
   /** saves the document to a QTextStream */
-  void saveDocument(QTextStream& ts, bool saveAbsoluteVectorPositions = false);
+  void saveDocument(Q3TextStream& ts, bool saveAbsoluteVectorPositions = false);
   /** saves the document under filename */
   bool saveDocument(const QString& filename, bool saveAbsoluteVectorPositions = false, bool prompt = true);
   /** returns the pathname of the current document file*/

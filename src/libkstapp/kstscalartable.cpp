@@ -19,7 +19,7 @@
 #include "kstscalartable.h"
 #include "kstdatacollection.h"
 
-KstScalarTable::KstScalarTable( QWidget * parent, const char * name ) : QTable( parent, name ) {
+KstScalarTable::KstScalarTable( QWidget * parent, const char * name ) : Q3Table( parent, name ) {
 }
 
 void KstScalarTable::paintCell( QPainter* painter, int row, int col, const QRect& cr, bool selected, const QColorGroup& cg ) {
@@ -43,7 +43,7 @@ void KstScalarTable::paintCell( QPainter* painter, int row, int col, const QRect
     str = (*it)->label();
   }
 
-  painter->drawText(0, 0, cr.width(), cr.height(), AlignLeft, str);
+  painter->drawText(0, 0, cr.width(), cr.height(), Qt::AlignLeft, str);
 }
 
 // vim: ts=2 sw=2 et

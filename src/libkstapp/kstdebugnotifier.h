@@ -20,7 +20,9 @@
 
 #include <qlabel.h>
 #include <qpixmap.h>
-#include <qvaluevector.h>
+#include <q3valuevector.h>
+//Added by qt3to4:
+#include <QMouseEvent>
 
 class KstDebugNotifier : public QLabel {
   Q_OBJECT
@@ -43,7 +45,7 @@ class KstDebugNotifier : public QLabel {
   private:
     int _animationStage;
     bool _gotPress;
-    QValueVector<QPixmap> _pm;
+    Q3ValueVector<QPixmap> _pm;
 };
 
 

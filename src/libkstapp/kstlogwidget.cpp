@@ -23,11 +23,14 @@
 
 #include <qbitmap.h>
 #include <qpainter.h>
-#include <qpointarray.h>
+#include <q3pointarray.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <Q3ValueList>
 
 
 KstLogWidget::KstLogWidget(QWidget *parent, const char *name )
-: QTextBrowser(parent, name) {
+: Q3TextBrowser(parent, name) {
   //setTextFormat(LogText);
   //setMaxLogLines(KstDebug::self()->limit());
   setTextFormat(AutoText);
@@ -122,16 +125,16 @@ void KstLogWidget::setShowError(bool show) {
 
 
 void KstLogWidget::clear() {
-  QTextBrowser::clear();
+  Q3TextBrowser::clear();
   KstApp::inst()->destroyDebugNotifier();
 }
 
 
 void KstLogWidget::regenerate() {
   clear();
-  QValueList<KstDebug::LogMessage> msgs = KstDebug::self()->messages();
+  Q3ValueList<KstDebug::LogMessage> msgs = KstDebug::self()->messages();
 
-  QValueListConstIterator<KstDebug::LogMessage> it = msgs.begin();
+  Q3ValueListConstIterator<KstDebug::LogMessage> it = msgs.begin();
   while (it != msgs.end()) {
     logAdded(*it);
     ++it;
@@ -142,7 +145,7 @@ void KstLogWidget::regenerate() {
 
 
 void KstLogWidget::generateImages() {
-  QPointArray pointArray;
+  Q3PointArray pointArray;
   QPixmap pixmap;
   QPainter painter;
 

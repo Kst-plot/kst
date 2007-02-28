@@ -57,7 +57,7 @@ class KstViewArrow : public KstViewLine {
     QRegion clipRegion();
 
   public:
-    void save(QTextStream& ts, const QString& indent = QString::null);
+    void save(Q3TextStream& ts, const QString& indent = QString::null);
     
   private:
     bool _hasFromArrow;

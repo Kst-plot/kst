@@ -23,7 +23,7 @@
 #include <qpair.h>
 #include <qstring.h>
 #include <qvariant.h>
-#include <qvaluevector.h>
+#include <q3valuevector.h>
 
 #include "dataref.h"
 #include "kst_export.h"
@@ -121,7 +121,7 @@ struct RenderContext {
   QPainter *p;
   int precision;
   bool substitute;
-  QValueVector<DataRef> *_cache;
+  Q3ValueVector<DataRef> *_cache;
   QPen pen;
   
   private:

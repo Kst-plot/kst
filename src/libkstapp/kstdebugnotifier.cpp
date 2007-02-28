@@ -24,6 +24,10 @@
 
 #include <qtimer.h>
 #include <qtooltip.h>
+//Added by qt3to4:
+#include <QMouseEvent>
+#include <QPixmap>
+#include <QLabel>
 
 #define TIMER_TICK 250
 #define TIMER_ITERATIONS 10

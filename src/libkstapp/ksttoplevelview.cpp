@@ -50,7 +50,7 @@
 
 #define STICKY_THRESHOLD 10
 
-KstTopLevelView::KstTopLevelView(QWidget *parent, const char *name, WFlags w)
+KstTopLevelView::KstTopLevelView(QWidget *parent, const char *name, Qt::WFlags w)
 : KstViewObject("TopLevelView"), _w(new KstViewWidget(this, parent, name, w)) {
   _onGrid = true;
   setTagName(KstObjectTag(name, KstObjectTag::globalTagContext));  // FIXME: tag context
@@ -58,7 +58,7 @@ KstTopLevelView::KstTopLevelView(QWidget *parent, const char *name, WFlags w)
 }
 
 
-KstTopLevelView::KstTopLevelView(const QDomElement& e, QWidget *parent, const char *name, WFlags w)
+KstTopLevelView::KstTopLevelView(const QDomElement& e, QWidget *parent, const char *name, Qt::WFlags w)
 : KstViewObject(e), _w(new KstViewWidget(this, parent, name, w)) {
   commonConstructor();
   loadChildren(e);
@@ -86,7 +86,7 @@ KstTopLevelView::~KstTopLevelView() {
 }
 
 
-void KstTopLevelView::save(QTextStream& ts, const QString& indent) {
+void KstTopLevelView::save(Q3TextStream& ts, const QString& indent) {
   bool temp_onGrid;
   if (_maximized) {
     temp_onGrid = _prevOnGrid;

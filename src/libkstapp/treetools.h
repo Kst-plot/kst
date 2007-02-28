@@ -18,7 +18,7 @@
 #ifndef TREETOOLS_H
 #define TREETOOLS_H
 
-#include <qdeepcopy.h>
+#include <q3deepcopy.h>
 
 #include <kstdatacollection.h>
 
@@ -26,7 +26,7 @@ namespace KST {
   template<class T>
     bool deleteDependents(T objectFor) {
       KST::dataObjectList.lock().readLock();
-      KstDataObjectList dol = QDeepCopy<KstDataObjectList>(KST::dataObjectList);
+      KstDataObjectList dol = Q3DeepCopy<KstDataObjectList>(KST::dataObjectList);
       KST::dataObjectList.lock().unlock();
       for (KstDataObjectList::Iterator i = dol.begin(); i != dol.end(); ++i) {
         bool user = (*i)->uses(objectFor.data());
@@ -47,7 +47,7 @@ namespace KST {
     bool duplicateDependents(T objectFor, KstDataObjectDataObjectMap& duplicatedMap, QMap<T, T>& duplicatedVectors) {
       // work with a copy of the data object list
       KST::dataObjectList.lock().readLock();
-      KstDataObjectList dol = QDeepCopy<KstDataObjectList>(KST::dataObjectList);
+      KstDataObjectList dol = Q3DeepCopy<KstDataObjectList>(KST::dataObjectList);
       KST::dataObjectList.lock().unlock();
 
       for (KstDataObjectList::Iterator i = dol.begin(); i != dol.end(); ++i) {

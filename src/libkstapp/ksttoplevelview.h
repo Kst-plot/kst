@@ -19,7 +19,9 @@
 #define KSTTOPLEVELVIEW_H
 
 #include <qcursor.h>
-#include <qguardedptr.h>
+#include <qpointer.h>
+//Added by qt3to4:
+#include <Q3MemArray>
 
 #include "kstviewobject.h"
 
@@ -31,11 +33,11 @@ class KstTopLevelView : public KstViewObject {
   friend class KstViewWidget;
   Q_OBJECT
   public:
-    KstTopLevelView(QWidget *parent = 0L, const char *name = 0L, WFlags w = 0);
-    KstTopLevelView(const QDomElement& e, QWidget *parent = 0L, const char *name = 0L, WFlags w = 0);
+    KstTopLevelView(QWidget *parent = 0L, const char *name = 0L, Qt::WFlags w = 0);
+    KstTopLevelView(const QDomElement& e, QWidget *parent = 0L, const char *name = 0L, Qt::WFlags w = 0);
     virtual ~KstTopLevelView();
 
-    virtual void save(QTextStream& ts, const QString& indent = QString::null);
+    virtual void save(Q3TextStream& ts, const QString& indent = QString::null);
 
     void release(); // Release this from it's window/view.  When you call this,
                     // you'd better be deleting this object in the next line.
@@ -142,7 +144,7 @@ class KstTopLevelView : public KstViewObject {
     // If no children, returns (0,0)
     QSize averageChildSize() const;
 
-    QGuardedPtr<KstViewWidget> _w;
+    QPointer<KstViewWidget> _w;
     bool _focusOn : 1;
     bool _mouseGrabbed : 1;
     bool _mouseMoved : 1; // true even if mouse moved back to original position
@@ -182,10 +184,10 @@ KstSharedPtr<T> KstTopLevelView::createObject(const QString& name, bool doCleanu
     // First look at the overall clip mask.  If there are gaps, take the
     // biggest one and use that location.
     QRegion r = clipRegion();
-    QMemArray<QRect> rects = r.rects();
+    Q3MemArray<QRect> rects = r.rects();
     if (!rects.isEmpty()) {
       QRect maxRect(0, 0, 0, 0);
-      for (QMemArray<QRect>::ConstIterator i = rects.begin(); i != rects.end(); ++i) {
+      for (Q3MemArray<QRect>::ConstIterator i = rects.begin(); i != rects.end(); ++i) {
         if ((*i).width() * (*i).height() > maxRect.width() * maxRect.height()) {
           maxRect = *i;
         }
@@ -208,7 +210,7 @@ KstSharedPtr<T> KstTopLevelView::createObject(const QString& name, bool doCleanu
         plot->move(QPoint(0, 0));
       } else {
         QRect maxRect(0, 0, 0, 0);
-        for (QMemArray<QRect>::ConstIterator i = rects.begin(); i != rects.end(); ++i) {
+        for (Q3MemArray<QRect>::ConstIterator i = rects.begin(); i != rects.end(); ++i) {
           if ((*i).width() * (*i).height() > maxRect.width() * maxRect.height()) {
             maxRect = *i;
           }

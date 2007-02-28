@@ -28,6 +28,8 @@
 #include <qmetaobject.h>
 #include <qpainter.h>
 #include <qvariant.h>
+//Added by qt3to4:
+#include <Q3PointArray>
 
 KstViewArrow::KstViewArrow()
 : KstViewLine("Arrow") {
@@ -96,12 +98,12 @@ void KstViewArrow::paintArrow(KstPainter& p, const QPoint& to, const QPoint &fro
   double cosa = cos(theta);
   double yin = sqrt(3.0) * deltax;
   double x1, y1, x2, y2;
-  QWMatrix m(cosa, sina, -sina, cosa, 0.0, 0.0);
+  QMatrix m(cosa, sina, -sina, cosa, 0.0, 0.0);
   
   m.map( deltax, yin, &x1, &y1);
   m.map(-deltax, yin, &x2, &y2);
   
-  QPointArray pts(3);
+  Q3PointArray pts(3);
   pts[0] = to;
   pts[1] = to + QPoint(d2i(x1), d2i(y1));
   pts[2] = to + QPoint(d2i(x2), d2i(y2));
@@ -176,7 +178,7 @@ void KstViewArrow::paintSelf(KstPainter& p, const QRegion& bounds) {
 }
 
 
-void KstViewArrow::save(QTextStream& ts, const QString& indent) {
+void KstViewArrow::save(Q3TextStream& ts, const QString& indent) {
   ts << indent << "<" << type() << ">" << endl;
   ts << indent + "  " << "<orientation>" << _orientation << "</orientation>" << endl;
   KstViewObject::save(ts, indent + "  ");

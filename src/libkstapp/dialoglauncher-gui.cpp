@@ -16,16 +16,16 @@
  ***************************************************************************/
 
 #include "dialoglauncher-gui.h"
-#include "kstcsddialog_i.h"
-#include "kstcurvedialog_i.h"
-#include "ksteqdialog_i.h"
-#include "ksthsdialog_i.h"
-#include "kstimagedialog_i.h"
-#include "kstmatrixdialog_i.h"
-#include "kstplugindialog_i.h"
-#include "kstbasicdialog_i.h"
-#include "kstpsddialog_i.h"
-#include "kstvectordialog_i.h"
+#include "kstcsddialog.h"
+#include "kstcurvedialog.h"
+#include "ksteqdialog.h"
+#include "ksthsdialog.h"
+#include "kstimagedialog.h"
+#include "kstmatrixdialog.h"
+#include "kstplugindialog.h"
+#include "kstbasicdialog.h"
+#include "kstpsddialog.h"
+#include "kstvectordialog.h"
 
 
 KstGuiDialogs::KstGuiDialogs()

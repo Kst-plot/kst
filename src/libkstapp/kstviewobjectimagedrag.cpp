@@ -116,13 +116,13 @@ QByteArray KstViewObjectImageDrag::encodedData(const char *mimeType) const {
   pm.save(tf.name(), KImageIO::typeForMime(mimeType).latin1());
   tf.close();
   QFile f(tf.name());
-  if (f.open(IO_ReadOnly)) {
+  if (f.open(QIODevice::ReadOnly)) {
     rc = f.readAll();
     f.close();
   }
   QFile::remove(tf.name());
 #else
-  QDataStream ds(rc, IO_WriteOnly);
+  QDataStream ds(rc, QIODevice::WriteOnly);
   pm.save(ds.device(), KImageIO::typeForMime(mimeType).latin1());
 #endif
 
