@@ -21,11 +21,11 @@ set(kstwidgets_LIB_SRCS
    stringselector.cpp
    vectorselector.cpp
 
-#    kstbackbuffer.cpp
-#    draggablelistbox.cpp
-#    draggablelistview.cpp
-#    plotlistbox.cpp
-#    vectorlistview.cpp
+   kstbackbuffer.cpp
+   draggablelistbox.cpp
+   draggablelistview.cpp
+   plotlistbox.cpp
+   vectorlistview.cpp
    kstcombobox.cpp
    )
 

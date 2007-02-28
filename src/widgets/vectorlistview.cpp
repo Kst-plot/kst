@@ -15,7 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <ksdebug.h>
 #include "vectorlistview.h"
 //Added by qt3to4:
 #include <QDragMoveEvent>
@@ -43,7 +42,7 @@ Q3DragObject *VectorListView::dragObject() {
   }
 
   QByteArray data;
-  QDataStream ds(data, QIODevice::WriteOnly);
+  QDataStream ds(&data, QIODevice::WriteOnly);
   ds << entries;
   drag->setEncodedData(data);
 
@@ -52,18 +51,18 @@ Q3DragObject *VectorListView::dragObject() {
 
 
 void VectorListView::dragMoveEvent(QDragMoveEvent *e) {
-  e->accept(e->provides("application/x-kst-vector-list") && e->source() != this);
+  if (e->mimeData()->hasFormat("application/x-kst-vector-list") && e->source() != this)
+    e->acceptProposedAction();
 }
 
 
 void VectorListView::dropEvent(QDropEvent *e) {
-  if (!e->provides("application/x-kst-vector-list") || e->source() == this) {
-    e->accept(false);
+  if (!e->mimeData()->hasFormat("application/x-kst-vector-list") || e->source() == this) {
     return;
   }
 
   QByteArray data = e->encodedData("application/x-kst-vector-list");
-  QDataStream ds(data, QIODevice::ReadOnly);
+  QDataStream ds(&data, QIODevice::ReadOnly);
   QStringList entries;
   ds >> entries;
   Q3ListViewItem *last = lastItem();
@@ -75,7 +74,7 @@ void VectorListView::dropEvent(QDropEvent *e) {
   }
 
   clearSelection();
-  e->accept(true);
+  e->acceptProposedAction();
   emit dropped(e);
 }
 
@@ -84,7 +83,7 @@ void VectorListView::startDrag() {
   Q3DragObject *o = dragObject();
   if (o && o->dragMove()) {
     QByteArray data = o->encodedData("application/x-kst-vector-list");
-    QDataStream ds(data, QIODevice::ReadOnly);
+    QDataStream ds(&data, QIODevice::ReadOnly);
     QStringList entries;
     ds >> entries;
     for (QStringList::ConstIterator i = entries.begin(); i != entries.end(); ++i) {

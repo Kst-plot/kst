@@ -15,10 +15,11 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "draggablelistview.h"
+
 #include <qapplication.h>
 //Added by qt3to4:
 #include <QMouseEvent>
-#include "draggablelistview.h"
 
 DraggableListView::DraggableListView(QWidget *parent, const char *name)
 : Q3ListView(parent, name), _pressPos(-1, -1), _dragEnabled(false) {
@@ -53,9 +54,7 @@ void DraggableListView::mousePressEvent(QMouseEvent *e) {
       if ((item = itemAt(e->pos()))) {
         setCurrentItem(item);
         if (!item->isSelected()) {
-          if (!(e->state() & Qt::ControlModifier)) {
-            clearSelection();
-          }
+          clearSelection();
           setSelected(item, true);
         }
         _pressPos = e->pos();
@@ -76,7 +75,7 @@ void DraggableListView::mouseReleaseEvent(QMouseEvent *e) {
 
 
 void DraggableListView::mouseMoveEvent(QMouseEvent *e) {
-  if (_dragEnabled && e->state() & Qt::LeftButton && _pressPos != QPoint(-1, -1)) {
+  if (_dragEnabled && e->buttons() & Qt::LeftButton && _pressPos != QPoint(-1, -1)) {
     QPoint delta = e->pos() - _pressPos;
     if (delta.manhattanLength() > QApplication::startDragDistance()) {
       _pressPos = QPoint(-1, -1);

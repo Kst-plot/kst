@@ -18,6 +18,8 @@
 #ifndef DRAGGABLELISTVIEW_H
 #define DRAGGABLELISTVIEW_H
 
+class QColorGroup;
+
 #include <q3listview.h>
 #include <q3dragobject.h>
 //Added by qt3to4:

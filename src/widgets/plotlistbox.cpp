@@ -43,7 +43,7 @@ Q3DragObject *PlotListBox::dragObject() {
   }
 
   QByteArray data;
-  QDataStream ds(data, QIODevice::WriteOnly);
+  QDataStream ds(&data, QIODevice::WriteOnly);
   ds << entries;
   drag->setEncodedData(data);
 
@@ -52,18 +52,18 @@ Q3DragObject *PlotListBox::dragObject() {
 
 
 void PlotListBox::dragMoveEvent(QDragMoveEvent *e) {
-  e->accept(e->provides("application/x-kst-plot-list") && e->source() != this);
+  if (e->mimeData()->hasFormat("application/x-kst-plot-list") && e->source() != this)
+    e->acceptProposedAction();
 }
 
 
 void PlotListBox::dropEvent(QDropEvent *e) {
-  if (!e->provides("application/x-kst-plot-list") || e->source() == this) {
-    e->accept(false);
+  if (!e->mimeData()->hasFormat("application/x-kst-plot-list") || e->source() == this) {
     return;
   }
 
   QByteArray data = e->encodedData("application/x-kst-plot-list");
-  QDataStream ds(data, QIODevice::ReadOnly);
+  QDataStream ds(&data, QIODevice::ReadOnly);
   QStringList entries;
   ds >> entries;
   for (QStringList::ConstIterator i = entries.begin(); i != entries.end(); ++i) {
@@ -73,7 +73,7 @@ void PlotListBox::dropEvent(QDropEvent *e) {
     emit changed();
   }
   clearSelection();
-  e->accept(true);
+  e->acceptProposedAction();
 }
 
 
@@ -81,7 +81,7 @@ void PlotListBox::startDrag() {
   Q3DragObject *o = dragObject();
   if (o && o->dragMove()) {
     QByteArray data = o->encodedData("application/x-kst-plot-list");
-    QDataStream ds(data, QIODevice::ReadOnly);
+    QDataStream ds(&data, QIODevice::ReadOnly);
     QStringList entries;
     ds >> entries;
     for (QStringList::ConstIterator i = entries.begin(); i != entries.end(); ++i) {
