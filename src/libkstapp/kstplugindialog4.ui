@@ -20,7 +20,7 @@
         <number>0</number>
       </property>
       <item row="0" column="0" >
-        <widget class="Q3GroupBox" name="GroupBox9_3" >
+        <widget class="QGroupBox" name="GroupBox9_3" >
           <property name="sizePolicy" >
             <sizepolicy>
               <hsizetype>5</hsizetype>
@@ -75,7 +75,7 @@
         </widget>
       </item>
       <item row="1" column="0" >
-        <widget class="Q3GroupBox" name="_pluginInputsBox" >
+        <widget class="QGroupBox" name="_pluginInputsBox" >
           <property name="title" >
             <string>Inputs and Outputs</string>
           </property>

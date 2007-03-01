@@ -537,7 +537,7 @@
                 </widget>
               </item>
               <item>
-                <widget class="Q3GroupBox" name="groupBox1" >
+                <widget class="QGroupBox" name="groupBox1" >
                   <property name="title" >
                     <string>Default X Axis</string>
                   </property>

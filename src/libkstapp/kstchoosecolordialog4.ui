@@ -54,7 +54,7 @@
         </layout>
       </item>
       <item row="0" column="0" >
-        <widget class="Q3GroupBox" name="colorGroup" >
+        <widget class="QGroupBox" name="colorGroup" >
           <property name="title" >
             <string>Assign Colors</string>
           </property>

@@ -135,7 +135,7 @@
                 </spacer>
               </item>
               <item row="1" column="0" >
-                <widget class="Q3GroupBox" name="groupBoxHide" >
+                <widget class="QGroupBox" name="groupBoxHide" >
                   <property name="sizePolicy" >
                     <sizepolicy>
                       <hsizetype>0</hsizetype>

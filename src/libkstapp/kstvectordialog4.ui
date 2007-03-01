@@ -88,7 +88,7 @@
         </widget>
       </item>
       <item row="1" column="0" >
-        <widget class="Q3GroupBox" name="_rvectorGroup" >
+        <widget class="QGroupBox" name="_rvectorGroup" >
           <property name="sizePolicy" >
             <sizepolicy>
               <hsizetype>5</hsizetype>
@@ -177,7 +177,7 @@
         </widget>
       </item>
       <item row="3" column="0" >
-        <widget class="Q3GroupBox" name="_svectorGroup" >
+        <widget class="QGroupBox" name="_svectorGroup" >
           <property name="enabled" >
             <bool>false</bool>
           </property>

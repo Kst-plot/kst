@@ -88,7 +88,7 @@
             </widget>
           </item>
           <item>
-            <widget class="Q3GroupBox" name="groupBox2" >
+            <widget class="QGroupBox" name="groupBox2" >
               <property name="title" >
                 <string>Format</string>
               </property>
@@ -228,7 +228,7 @@
             </widget>
           </item>
           <item>
-            <widget class="Q3GroupBox" name="groupBox1" >
+            <widget class="QGroupBox" name="groupBox1" >
               <property name="title" >
                 <string>Box</string>
               </property>

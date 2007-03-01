@@ -254,7 +254,7 @@
                 <number>0</number>
               </property>
               <item row="0" column="0" >
-                <widget class="Q3GroupBox" name="groupBox4" >
+                <widget class="QGroupBox" name="groupBox4" >
                   <property name="title" >
                     <string>Colors and Line Weights</string>
                   </property>
@@ -543,7 +543,7 @@
                 </widget>
               </item>
               <item row="2" column="0" >
-                <widget class="Q3GroupBox" name="groupBox3" >
+                <widget class="QGroupBox" name="groupBox3" >
                   <property name="title" >
                     <string>Legend</string>
                   </property>
@@ -665,7 +665,7 @@
                 </widget>
               </item>
               <item row="1" column="0" >
-                <widget class="Q3GroupBox" name="groupBox5" >
+                <widget class="QGroupBox" name="groupBox5" >
                   <property name="title" >
                     <string>Labels</string>
                   </property>

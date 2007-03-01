@@ -27,7 +27,7 @@
         </widget>
       </item>
       <item rowspan="1" row="0" column="0" colspan="2" >
-        <widget class="Q3GroupBox" name="GroupBox9_4" >
+        <widget class="QGroupBox" name="GroupBox9_4" >
           <property name="sizePolicy" >
             <sizepolicy>
               <hsizetype>5</hsizetype>

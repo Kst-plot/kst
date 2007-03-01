@@ -20,7 +20,7 @@
         <number>0</number>
       </property>
       <item row="1" column="0" >
-        <widget class="Q3GroupBox" name="_inputOutputBox" >
+        <widget class="QGroupBox" name="_inputOutputBox" >
           <property name="title" >
             <string>Inputs and Outputs</string>
           </property>

@@ -20,7 +20,7 @@
         <number>0</number>
       </property>
       <item row="2" column="0" >
-        <widget class="Q3GroupBox" name="groupBoxEMail" >
+        <widget class="QGroupBox" name="groupBoxEMail" >
           <property name="sizePolicy" >
             <sizepolicy>
               <hsizetype>5</hsizetype>
@@ -50,7 +50,7 @@
         </widget>
       </item>
       <item row="0" column="0" >
-        <widget class="Q3GroupBox" name="groupBoxEquation" >
+        <widget class="QGroupBox" name="groupBoxEquation" >
           <property name="sizePolicy" >
             <sizepolicy>
               <hsizetype>5</hsizetype>
@@ -315,7 +315,7 @@
         </widget>
       </item>
       <item row="4" column="0" >
-        <widget class="Q3GroupBox" name="groupBoxScript" >
+        <widget class="QGroupBox" name="groupBoxScript" >
           <property name="title" >
             <string>KstScript</string>
           </property>
@@ -337,7 +337,7 @@
         </widget>
       </item>
       <item row="3" column="0" >
-        <widget class="Q3GroupBox" name="groupBoxELOG" >
+        <widget class="QGroupBox" name="groupBoxELOG" >
           <property name="title" >
             <string>ELOG</string>
           </property>

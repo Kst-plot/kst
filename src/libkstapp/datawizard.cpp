@@ -24,7 +24,7 @@
 #include <QDropEvent>
 
 DataWizard::DataWizard(QWidget *parent)
-    : QWidget(parent) {
+    : Q3Wizard(parent) {
   setupUi(this);
 
 //  connect(, SIGNAL(), this, SLOT());

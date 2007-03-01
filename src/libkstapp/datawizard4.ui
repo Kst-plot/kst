@@ -20,9 +20,6 @@
         <verstretch>0</verstretch>
       </sizepolicy>
     </property>
-    <property name="caption" >
-      <string>Data Wizard</string>
-    </property>
     <widget class="QWidget" name="_pageDataSource" >
       <attribute name="title" >
         <string>Data Source</string>

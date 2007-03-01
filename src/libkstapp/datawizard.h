@@ -18,10 +18,10 @@
 #ifndef DATAWIZARD_H
 #define DATAWIZARD_H
 
-#include <QWidget>
+#include <Q3Wizard>
 #include "ui_datawizard4.h"
 
-class DataWizard : public QWidget, public Ui::DataWizard {
+class DataWizard : public Q3Wizard, public Ui::DataWizard {
   Q_OBJECT
 
 public:
