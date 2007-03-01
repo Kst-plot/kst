@@ -1,5 +1,5 @@
 /***************************************************************************
-                   fftoptionswidget.cpp
+                   kstfftoptions.cpp
                              -------------------
     begin                : 02/27/07
     copyright            : (C) 2007 The University of Toronto
@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "fftoptionswidget.h"
+#include "kstfftoptions.h"
 
 #include <kmessagebox.h>
 
@@ -109,6 +109,6 @@ bool KstFFTOptions::checkGivenValues(double sampRate, int FFTLen) {
   return true;
 }
 
-#include "fftoptionswidget.moc"
+#include "kstfftoptions.moc"
 
 // vim: ts=2 sw=2 et

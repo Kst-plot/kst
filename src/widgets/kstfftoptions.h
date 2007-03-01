@@ -1,5 +1,5 @@
 /***************************************************************************
-                   fftoptionswidget.h
+                   kstfftoptions.h
                              -------------------
     begin                : 02/27/07
     copyright            : (C) 2007 The University of Toronto
@@ -15,11 +15,11 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FFTOPTIONSWIDGET_H
-#define FFTOPTIONSWIDGET_H
+#ifndef KSTFFTOPTIONS_H
+#define KSTFFTOPTIONS_H
 
 #include <QWidget>
-#include "ui_fftoptionswidget4.h"
+#include "ui_kstfftoptions4.h"
 
 class KstFFTOptions : public QWidget, public Ui::KstFFTOptions {
   Q_OBJECT

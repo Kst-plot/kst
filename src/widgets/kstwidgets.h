@@ -136,12 +136,12 @@ public:
 };
 
 
-#include "fftoptionswidget.h"
-class FFTOptionsWidgetPlugin : public KstWidgetPlugin {
+#include "kstfftoptions.h"
+class KstFFTOptionsPlugin : public KstWidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
 public:
-  FFTOptionsWidgetPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  KstFFTOptionsPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
   QString name() const {
     return QLatin1String("KstFFTOptions");
   } //do not translate
@@ -279,7 +279,7 @@ KstWidgets::KstWidgets(QObject *parent)
   _plugins.append(new CurvePlacementWidgetPlugin(this));
   _plugins.append(new EditMultipleWidgetPlugin(this));
   _plugins.append(new KstDataRangePlugin(this));
-  _plugins.append(new FFTOptionsWidgetPlugin(this));
+  _plugins.append(new KstFFTOptionsPlugin(this));
   _plugins.append(new MatrixSelectorPlugin(this));
   _plugins.append(new ScalarSelectorPlugin(this));
   _plugins.append(new StringSelectorPlugin(this));

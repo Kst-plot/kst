@@ -13,7 +13,7 @@ set(kstwidgets_LIB_SRCS
    curveplacementwidget.cpp
    kstdatarange.cpp
    editmultiplewidget.cpp
-   fftoptionswidget.cpp
+   kstfftoptions.cpp
    matrixselector.cpp
    scalareditor.cpp
    scalarselector.cpp
@@ -38,7 +38,7 @@ kde4_add_ui_files(kstwidgets_LIB_SRCS
    curveplacementwidget4.ui
    kstdatarange4.ui
    editmultiplewidget4.ui
-   fftoptionswidget4.ui
+   kstfftoptions4.ui
    matrixselector4.ui
    scalareditor4.ui
    scalarselector4.ui
