@@ -146,11 +146,11 @@ void KstVectorDialogI::updateCompletion() {
     QString type;
     bool complete = false;
     QString u = _w->FileName->url();
-    KURL url;
+    KUrl url;
     if (QFile::exists(u) && QFileInfo(u).isRelative()) {
       url.setPath(u);
     } else {
-      url = KURL::fromPathOrURL(u);
+      url = KUrl::fromPathOrUrl(u);
     }
 
     if (!_inTest && !url.isLocalFile() && url.protocol() != "file" && !url.protocol().isEmpty()) {

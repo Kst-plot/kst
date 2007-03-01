@@ -260,12 +260,12 @@ void DataWizard::sourceChanged(const QString& text) {
   _configureSource->setEnabled(false);
   _file = QString::null;
   if (!text.isEmpty() && text != "stdin" && text != "-") {
-    KURL url;
+    KUrl url;
     QString txt = _url->completionObject()->replacedPath(text);
     if (QFile::exists(txt) && QFileInfo(txt).isRelative()) {
       url.setPath(txt);
     } else {
-      url = KURL::fromPathOrURL(txt);
+      url = KUrl::fromPathOrUrl(txt);
     }
 
     if (!_inTest && !url.isLocalFile() && url.protocol() != "file" && !url.protocol().isEmpty()) {

@@ -63,7 +63,7 @@ void PluginManager::selectionChanged( Q3ListViewItem *item ) {
 
 
 void PluginManager::install() {
-  KURL xmlfile = KFileDialog::getOpenURL(QString::null, "*.xml", this, i18n("Select Plugin to Install"));
+  KUrl xmlfile = KFileDialog::getOpenUrl(QString::null, "*.xml", this, i18n("Select Plugin to Install"));
 
   if (xmlfile.isEmpty()) {
     return;
@@ -89,11 +89,11 @@ void PluginManager::install() {
   }
 
   QString path = KGlobal::dirs()->saveLocation("kstplugins");
-  KURL pathURL;
+  KUrl pathURL;
   pathURL.setPath(path);
 
   // First try copying the .so file in
-  KURL sofile = xmlfile;
+  KUrl sofile = xmlfile;
   QString tmpSoFile = sofile.path();
   tmpSoFile.replace(QRegExp(".xml$"), ".so");
   sofile.setPath(tmpSoFile);
@@ -109,7 +109,7 @@ void PluginManager::install() {
     return;
   }
 
-  KURL tmpFileURL;
+  KUrl tmpFileURL;
   tmpFileURL.setPath(tmpFile);
   pathURL.setFileName(xmlfile.fileName());
 

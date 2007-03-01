@@ -160,7 +160,7 @@ int KstGuiData::vectorsToFile(const KstVectorList& vl, QFile *f, bool interpolat
     maxlen = 0;
     for (KstVectorList::ConstIterator v = vl.begin(); v != vl.end(); ++v) {
       (*v)->readLock();
-      maxlen = KMAX(maxlen, (*v)->length());
+      maxlen = kMax(maxlen, (*v)->length());
     }
   } else {
     for (KstVectorList::ConstIterator v = vl.begin(); v != vl.end(); ++v) {
@@ -168,7 +168,7 @@ int KstGuiData::vectorsToFile(const KstVectorList& vl, QFile *f, bool interpolat
       if (maxlen == -1) {
         maxlen = (*v)->length();
       } else {
-        maxlen = KMIN(maxlen, (*v)->length());
+        maxlen = qMin(maxlen, (*v)->length());
       }
     }
   }

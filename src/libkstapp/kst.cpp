@@ -36,7 +36,7 @@
 #include <kfiledialog.h>
 #include <kkeydialog.h>
 #include <kmessagebox.h>
-#include <kpopupmenu.h>
+#include <kmenu.h>
 #include <kprinter.h>
 #include <kprogress.h>
 #include <kstandarddirs.h>

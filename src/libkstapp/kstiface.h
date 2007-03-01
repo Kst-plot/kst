@@ -17,8 +17,9 @@
 #ifndef KSTIFACE_H
 #define KSTIFACE_H
 
-#include <dcopobject.h>
-#include <dcopref.h>
+//FIXME Need to port to dbus
+// #include <dcopobject.h>
+// #include <dcopref.h>
 
 #include <qcolor.h>
 #include <qstringlist.h>  //Qt 3.1.2 KDE 3.1.4

@@ -19,7 +19,7 @@
 #define EXTENSIONDIALOG_H
 
 #include <QWidget>
-#include "ui_extensiondialog4.h"
+#include "ui_extensiondlg4.h"
 
 class ExtensionDialog : public QWidget, public Ui::ExtensionDialog {
   Q_OBJECT

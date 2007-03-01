@@ -35,8 +35,8 @@ class KstGraphFileDialogI : public QDialog {
     void setAutoSaveTimer(int time) {_savePeriod = time;}
     int autoSaveTimer() const {return _savePeriod;}
 
-    KURL url() const {return _url;}
-    void setURL(const QString&);
+    KUrl url() const {return _url;}
+    void setUrl(const QString&);
 
     void setFormat(const QString& format) {_format = format;}
     QString format() const {return _format;}

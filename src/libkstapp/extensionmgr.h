@@ -18,7 +18,7 @@
 #ifndef EXTENSIONMGR_H
 #define EXTENSIONMGR_H
 
-
+#include <kservice.h>
 #include <kstaticdeleter.h>
 #include "kstextension.h"
 
