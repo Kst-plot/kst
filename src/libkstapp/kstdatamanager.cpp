@@ -606,6 +606,7 @@ KstDataManagerI::KstDataManagerI(KstDoc *in_doc, QWidget* parent, const char* na
 
   _yesPixmap = QPixmap(locate("data", "kst/pics/yes.png"));
 
+  connect(Close, SIGNAL(clicked()), this, SLOT(reject()));
   connect(Edit, SIGNAL(clicked()), this, SLOT(edit_I()));
   connect(Delete, SIGNAL(clicked()), this, SLOT(delete_I()));
   connect(Purge, SIGNAL(clicked()), doc, SLOT(purge()));

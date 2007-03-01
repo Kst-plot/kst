@@ -24,11 +24,19 @@
 //Added by qt3to4:
 #include <QCloseEvent>
 
+#include <qvbox.h>
+#include <qlistbox.>
+#include "editmultiplewidget.h"
+#include "kstdatacollection.h"
+#include "kstdataobjectcollection.h"
+
 KstDataDialog::KstDataDialog(QWidget *parent)
     : QDialog(parent) {
   setupUi(this);
 
-//  connect(, SIGNAL(), this, SLOT());
+ connect(_ok, SIGNAL(clicked()), this, SLOT(ok()));
+
+ connect(_cancel, SIGNAL(clicked()), this, SLOT(close()));
 }
 
 

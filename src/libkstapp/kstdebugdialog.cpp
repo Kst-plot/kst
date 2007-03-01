@@ -41,6 +41,7 @@
 KstDebugDialogI::KstDebugDialogI(QWidget* parent,
                                const char* name, bool modal, Qt::WFlags fl)
 : QDialog(parent, name, modal, fl ) {
+
   _log = new KstLogWidget(TabPage, "logwidget");
   _log->setDebug(KstDebug::self());
 
@@ -64,6 +65,8 @@ KstDebugDialogI::KstDebugDialogI(QWidget* parent,
   checkBoxShowOther->hide(); // unused
   connect(checkBoxShowNotice, SIGNAL(toggled(bool)), _log, SLOT(setShowNotice(bool)));
   connect(checkBoxShowError, SIGNAL(toggled(bool)), _log, SLOT(setShowError(bool)));
+
+  connect(_close, SIGNAL(clicked()), this, SLOT(close()));
 }
 
 

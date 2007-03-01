@@ -25,11 +25,104 @@
 
 #include <kiconloader.h>
 
+#include "qaccel.h"
+#include "kstsettings.h"
+#include "kstcolorsequence.h"
+#include "kstvcurve.h"
+#include "kstuinames.h"
+#include "kstpsd.h"
+#include "kstrvector.h"
+#include "kstdataobjectcollection.h"
+#include <kdialogbase.h>
+#include <kmessagebox.h>
+#include <knuminput.h>
+#include <kiconloader.h>
+#include <qguardedptr.h>
+#include <qregexp.h>
+#include <qlistview.h>
+#include <qheader.h>
+#include <assert.h>
+#include <stdlib.h>
+#include <math.h>
+#include <defaultprimitivenames.h>
+#include "kstvectordefaults.h>
+#include "kstviewwindow.h>
+#include "kstcombobox.h>
+#include "kst2dplot.h>
+#include <qdeepcopy.h>
+#include <config.h>
+#include "psversion.h>
+#include "sysinfo.h>
+#include "vectorselector.h>
+#include "fftoptionswidget.h>
+#include "datarangewidget.h>
+#include <kurlcompletion.h>
+#include <kdebug.h>
+#include <vectorlistview.h>
+
 DataWizard::DataWizard(QWidget *parent)
     : Q3Wizard(parent) {
   setupUi(this);
 
-//  connect(, SIGNAL(), this, SLOT());
+ connect(_newWindow, SIGNAL(toggled(bool)), this, SLOT(updatePlotBox()));
+
+ connect(_currentWindow, SIGNAL(toggled(bool)), this, SLOT(updatePlotBox()));
+
+ connect(_existingWindow, SIGNAL(toggled(bool)), this, SLOT(updatePlotBox()));
+
+ connect(_windowName, SIGNAL(activated(int)), this, SLOT(updatePlotBox()));
+
+ connect(_applyFilters, SIGNAL(toggled(bool)), this, SLOT(applyFiltersChecked(bool)));
+
+ connect(_newFilter, SIGNAL(), this, SLOT(newFilter()));
+
+ connect(_radioButtonPlotData, SIGNAL(clicked()), this, SLOT(disablePSDEntries()));
+
+ connect(_radioButtonPlotData, SIGNAL(clicked()), this, SLOT(enableXEntries()));
+
+ connect(_radioButtonPlotPSD, SIGNAL(clicked()), this, SLOT(enablePSDEntries()));
+
+ connect(_radioButtonPlotPSD, SIGNAL(clicked()), this, SLOT(disableXEntries()));
+
+ connect(_radioButtonPlotDataPSD, SIGNAL(clicked()), this, SLOT(enablePSDEntries()));
+
+ connect(_radioButtonPlotDataPSD, SIGNAL(clicked()), this, SLOT(enableXEntries()));
+
+ connect(_newWindows, SIGNAL(toggled(bool)), this, SLOT(updatePlotBox()));
+
+ connect(_plotGroup, SIGNAL(clicked(int)), this, SLOT(updateColumns()));
+
+ connect(_windowGroup, SIGNAL(clicked(int)), this, SLOT(updateColumns()));
+
+ connect(_url, SIGNAL(textChanged(const QString&)), this, SLOT(sourceChanged(const QString&)));
+
+ connect(_configureSource, SIGNAL(clicked()), this, SLOT(configureSource()));
+
+ connect(_plotColumns, SIGNAL(valueChanged(int)), this, SLOT(plotColsChanged()));
+
+ connect(_vectorReduction, SIGNAL(textChanged(const QString&)), this, SLOT(vectorSubset(const QString&)));
+
+ connect(_vectorSearch, SIGNAL(clicked()), this, SLOT(_search()));
+
+ connect(_vectors, SIGNAL(pressed(QListViewItem*)), this, SLOT(fieldListChanged()));
+
+ connect(_add, SIGNAL(clicked()), this, SLOT(add()));
+
+ connect(_remove, SIGNAL(clicked()), this, SLOT(remove()));
+
+ connect(_up, SIGNAL(clicked()), this, SLOT(up()));
+
+ connect(_down, SIGNAL(clicked()), this, SLOT(down()));
+
+ connect(_vectors, SIGNAL(doubleClicked(QListViewItem*)), this, SLOT(add()));
+
+ connect(_vectorsToPlot, SIGNAL(doubleClicked(QListViewItem*)), this, SLOT(remove()));
+
+ connect(_vectors, SIGNAL(dropped(QDropEvent*)), this, SLOT(vectorsDroppedBack(QDropEvent*)));
+
+ connect(_vectorsToPlot, SIGNAL(dropped(QDropEvent*)), this, SLOT(updateVectorPageButtons()));
+
+ connect(_testURL, SIGNAL(clicked()), this, SLOT(testURL()));
 }
 
 

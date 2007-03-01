@@ -17,13 +17,15 @@
 
 #include "kstsettingsdlg.h"
 
+#include "kstdatasource.h"
+#include "kst.h"
+#include "ksttimezones.h"
+
 #include <kst_export.h>
 
 KstSettingsDlg::KstSettingsDlg(QWidget *parent)
     : QWidget(parent) {
   setupUi(this);
-
-//  connect(, SIGNAL(), this, SLOT());
 }
 
 

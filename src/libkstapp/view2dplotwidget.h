@@ -21,6 +21,8 @@
 #include <QWidget>
 #include "ui_view2dplotwidget4.h"
 
+#include "kst2dplot.h"
+
 class View2DPlotWidget : public QWidget, public Ui::View2DPlotWidget {
   Q_OBJECT
 
@@ -29,6 +31,37 @@ public:
   ~View2DPlotWidget();
 
 public slots:
+  void generateDefaultLabels();
+  void updateButtons();
+  void addDisplayedCurve();
+  void removeDisplayedCurve();
+  void fillMarkerLineCombo();
+  void updateAxesButtons();
+  void updateScalarCombo();
+  void updatePlotMarkers(const Kst2DPlot *plot);
+  void fillWidget(const Kst2DPlot *plot);
+  void applyAppearance( Kst2DPlotPtr plot);
+  void applyXAxis(Kst2DPlotPtr plot);
+  void applyYAxis(Kst2DPlotPtr plot);
+  void applyRange(Kst2DPlotPtr plot);
+  void addPlotMarker();
+  void removePlotMarker();
+  void removeAllPlotMarkers();
+  void applyPlotMarkers(Kst2DPlotPtr plot);
+  void fillPlot(Kst2DPlotPtr plot);
+  void insertCurrentScalar();
+  void setScalarDestXLabel();
+  void setScalarDestYLabel();
+  void setScalarDestTopLabel();
+  void editLegend();
+
+signals:
+  void changed();
+
+private:
+  void init();
+  Kst2DPlotPtr _plot;
+  QLineEdit *ScalarDest;
 };
 
 #endif

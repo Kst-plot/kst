@@ -22,8 +22,6 @@
 ViewLabelWidget::ViewLabelWidget(QWidget *parent)
     : QWidget(parent) {
   setupUi(this);
-
-//  connect(, SIGNAL(), this, SLOT());
 }
 
 

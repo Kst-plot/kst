@@ -29,6 +29,15 @@ public:
   ~ViewLegendWidget();
 
 public slots:
+  void updateButtons();
+  void removeDisplayedCurve();
+  void addDisplayedCurve();
+
+signals:
+  void changed();
+
+private:
+  void init();
 };
 
 #endif

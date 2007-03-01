@@ -17,6 +17,21 @@
 
 #include "view2dplotwidget.h"
 
+#include <qfontdatabase.h>
+#include <qstyle.h>
+#include <qpainter.h>
+#include <qdeepcopy.h>
+#include <kiconloader.h>
+#include <kmessagebox.h>
+
+#include "kstplotdefines.h"
+#include "kstsettings.h"
+#include "kstlinestyle.h"
+#include "kstdataobjectcollection.h"
+#include "kstplotlabel.h"
+#include "kstdebug.h"
+#include "kstdefaultnames.h"
+
 #include <kst_export.h>
 //Added by qt3to4:
 #include <QPixmap>
@@ -43,8 +58,6 @@ const unsigned int numMajorTickSpacings = sizeof( MajorTickSpacings ) / sizeof( 
 View2DPlotWidget::View2DPlotWidget(QWidget *parent)
     : QWidget(parent) {
   setupUi(this);
-
-//  connect(, SIGNAL(), this, SLOT());
 }
 
 

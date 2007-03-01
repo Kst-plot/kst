@@ -43,9 +43,11 @@ KstChangeFileDialogI::KstChangeFileDialogI(QWidget* parent,
                                            bool modal,
                                            Qt::WFlags fl)
 : KstChangeFileDialog(parent, name, modal, fl) {
+
   connect(_clearFilter, SIGNAL(clicked()), _filter, SLOT(clear()));
   connect(_clearFilter, SIGNAL(clicked()), ChangeFileCurveList, SLOT(clearSelection()));
   connect(_filter, SIGNAL(textChanged(const QString&)), this, SLOT(updateSelection(const QString&)));
+  connect(ChangeFileCancel, SIGNAL(clicked()), this, SLOT(reject()));
   connect(ChangeFileClear, SIGNAL(clicked()), _filter, SLOT(clear()));
   connect(ChangeFileClear, SIGNAL(clicked()), ChangeFileCurveList, SLOT(clearSelection()));
   connect(ChangeFileSelectAll, SIGNAL(clicked()), _filter, SLOT(clear()));

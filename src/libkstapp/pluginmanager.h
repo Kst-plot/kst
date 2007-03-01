@@ -28,7 +28,18 @@ public:
   PluginManager(QWidget *parent = 0);
   ~PluginManager();
 
-public slots:
+private slots:
+  void init();
+  void selectionChanged(QListViewItem *item);
+  void install();
+  void remove();
+  void rescan();
+
+private:
+  void reloadList();
+
+signals:
+  void rescanned();
 };
 
 #endif

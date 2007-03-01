@@ -21,6 +21,8 @@
 #include <QDialog>
 #include "ui_kstdatadialog4.h"
 
+#include "kstdataobject.h"
+
 class KstDataDialog : public QDialog, public Ui::KstDataDialog {
   Q_OBJECT
 
@@ -29,6 +31,37 @@ public:
   ~KstDataDialog();
 
 public slots:
+  void ok();
+  void close();
+  void reject();
+  void init();
+  void update();
+  void show();
+  void showNew(const QString &field);
+  void showEdit(const QString &field);
+  bool newObject();
+  bool editObject();
+  bool multiple();
+  void toggleEditMultiple();
+
+signals:
+  void modified();
+
+public:
+  bool _newDialog;
+  bool _multiple;
+  bool _editMultipleMode;
+  KstObjectPtr _dp;
+
+protected:
+  QString objectName();
+  void fillFieldsForEdit();
+  void fillFieldsForNew();
+  KstObjectPtr findObject(const QString &name);
+  void populateEditMultiple();
+  void setMultiple(bool multiple);
+  void closeEvent(QCloseEvent *e);
+  void cleanup();
 };
 
 #endif

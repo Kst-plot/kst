@@ -19,11 +19,18 @@
 
 #include <kst_export.h>
 
+#include <klibloader.h>
+#include <kservicetype.h>
+#include "kst.h"
+#include "extensionmgr.h"
+
 ExtensionDialog::ExtensionDialog(QWidget *parent)
     : QWidget(parent) {
   setupUi(this);
 
-//  connect(, SIGNAL(), this, SLOT());
+ connect(_ok, SIGNAL(clicked()), this, SLOT(accept()));
+
+ connect(_cancel, SIGNAL(clicked()), this, SLOT(reject()));
 }
 
 

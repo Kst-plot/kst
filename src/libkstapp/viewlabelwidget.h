@@ -28,7 +28,11 @@ public:
   ViewLabelWidget(QWidget *parent = 0);
   ~ViewLabelWidget();
 
+  void init();
+
 public slots:
+  void insertScalarInText(const QString &S);
+  void insertStringInText(const QString &S);
 };
 
 #endif

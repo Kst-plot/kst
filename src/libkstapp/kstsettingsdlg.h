@@ -21,6 +21,12 @@
 #include <QWidget>
 #include "ui_kstsettingsdlg4.h"
 
+#include <math.h>
+#include <kdialog.h>
+#include <kpalette.h>
+#include "kstsettings.h"
+#include "kstplotdefines.h"
+
 class KstSettingsDlg : public QWidget, public Ui::KstSettingsDlg {
   Q_OBJECT
 
@@ -29,6 +35,34 @@ public:
   ~KstSettingsDlg();
 
 public slots:
+  void setSettings(const KstSettings *settings);
+  void updateAxesButtons();
+  void updateAxesSettings();
+  void updateEMailSettings();
+  void updateCurveColorSettings();
+  void fillAxesSettings();
+  void configureSource();
+  void sourceChanged(const QString &name);
+
+private slots:
+  void init();
+  void defaults();
+  void setDirty();
+  void setClean();
+  void save();
+
+  void updateUTCOffset();
+  void setUTCOffset(const QString &timezone);
+  void updateTimezone(const QString &Hours);
+  void updateTimezone(double hours);
+
+signals:
+  void settingsChanged();
+
+private:
+  int utcOffset(const QString &timezone);
+  QString timezoneFromUTCOffset(double hours);
+
 };
 
 #endif

@@ -38,7 +38,10 @@ class KstDebugDialogI : public QDialog {
     void clear();
     void show_I();
 
-  private:  
+  private:
+    void init();
+
+  private:
     KstLogWidget *_log;
 };
 

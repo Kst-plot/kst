@@ -29,6 +29,14 @@ public:
   ~DataSourceMetaDataDialog();
 
 public slots:
+    void setDataSource(KstDataSourcePtr dsp);
+
+protected slots:
+    void updateMetadata(const QString &tag);
+    void init();
+
+private:
+  KstDataSourcePtr _dsp;
 };
 
 #endif

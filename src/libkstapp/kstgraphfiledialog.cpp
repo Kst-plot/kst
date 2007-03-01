@@ -38,8 +38,10 @@
 KstGraphFileDialogI::KstGraphFileDialogI(QWidget* parent, const char* name,
                                          bool modal, Qt::WFlags fl)
 : KstGraphFileDialog(parent, name, modal, fl) {
+
   _autoSaveTimer = new QTimer(this);
 
+  connect(_cancel,        SIGNAL(clicked()),             this, SLOT(reject()));
   connect(_autoSaveTimer, SIGNAL(timeout()),      this, SLOT(reqGraphFile()));
   connect(_ok,            SIGNAL(clicked()),      this, SLOT(ok_I()));
   connect(_Apply,         SIGNAL(clicked()),      this, SLOT(apply_I()));

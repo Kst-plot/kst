@@ -21,13 +21,30 @@
 #define COLUMN_LOADED         1
 #define COLUMN_NAME           5
 
+#include "plugincollection.h"
+#include <kstandarddirs.h>
+#include "pluginxmlparser.h"
+#include <kmessagebox.h>
+#include <kfiledialog.h>
+#include <kdeversion.h>
+#include <kio/netaccess.h>
+#include <qregexp.h>
+
 #include <kst_export.h>
 
 PluginManager::PluginManager(QWidget *parent)
     : QWidget(parent) {
   setupUi(this);
 
-//  connect(, SIGNAL(), this, SLOT());
+ connect(_close, SIGNAL(clicked()), this, SLOT(close()));
+
+ connect(_pluginList, SIGNAL(selectionChanged(QListViewItem*)), this, SLOT(selectionChanged(QListViewItem*)));
+
+ connect(_install, SIGNAL(clicked()), this, SLOT(install()));
+
+ connect(_remove, SIGNAL(clicked()), this, SLOT(remove()));
+
+ connect(pushButton4, SIGNAL(clicked()), this, SLOT(rescan()));
 }
 
 

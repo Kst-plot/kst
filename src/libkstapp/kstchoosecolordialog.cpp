@@ -38,8 +38,9 @@ KstChooseColorDialogI::KstChooseColorDialogI(QWidget* parent,
                                            bool modal,
                                            Qt::WFlags fl)
   : KstChooseColorDialog(parent, name, modal, fl) {
-    
+
     xVector->setChecked(true); 
+    connect(Cancel, SIGNAL(clicked()), this, SLOT(reject()));  
     connect(OK, SIGNAL(clicked()), this, SLOT(applyColors()));  
     grid = 0L; 
   }

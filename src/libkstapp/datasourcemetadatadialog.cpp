@@ -25,7 +25,9 @@ DataSourceMetaDataDialog::DataSourceMetaDataDialog(QWidget *parent)
     : QDialog(parent) {
   setupUi(this);
 
-//  connect(, SIGNAL(), this, SLOT());
+ connect(_close, SIGNAL(clicked()), this, SLOT(close()));
+
+ connect(_name, SIGNAL(activated(const QString &)), this, SLOT(updateMetadata(const QString &)));
 }
 
 

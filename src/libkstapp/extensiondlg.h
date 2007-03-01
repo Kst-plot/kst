@@ -29,6 +29,8 @@ public:
   ~ExtensionDialog();
 
 public slots:
+  void show();
+  void accept();
 };
 
 #endif

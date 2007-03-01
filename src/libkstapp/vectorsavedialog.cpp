@@ -17,13 +17,29 @@
 
 #include "vectorsavedialog.h"
 
+#include <kdeversion.h>
+#include <kfiledialog.h>
+#include <ktempfile.h>
+#include <kio/netaccess.h>
+#include <kstandarddirs.h>
+#include <kmessagebox.h>
+#include "kstdatacollection.h"
+#include "kstvector.h"
+#include "kstdatacollection.h"
+
 #include <kst_export.h>
 
 VectorSaveDialog::VectorSaveDialog(QWidget *parent)
     : QWidget(parent) {
   setupUi(this);
 
-//  connect(, SIGNAL(), this, SLOT());
+ connect(pushButton2, SIGNAL(clicked()), this, SLOT(hide()));
+
+ connect(_saveButton, SIGNAL(clicked()), this, SLOT(save()));
+
+ connect(_vectorList, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
+
+ connect(_vectorList, SIGNAL(doubleClicked(QListBoxItem*)), this, SLOT(save()));
 }
 
 

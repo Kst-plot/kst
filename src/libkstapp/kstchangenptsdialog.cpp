@@ -34,6 +34,11 @@ KstChangeNptsDialogI::KstChangeNptsDialogI(QWidget* parent,
                                            bool modal,
                                            Qt::WFlags fl)
 : KstChangeNptsDialog(parent, name, modal, fl) {
+
+    connect(Cancel,     SIGNAL(clicked()),
+            this, SLOT(reject()));
+    connect(CurveList, SIGNAL(selectionChanged()),
+            this, SLOT(updateTimeCombo()));
     connect(Clear,     SIGNAL(clicked()),
             CurveList, SLOT(clearSelection()));
     connect(SelectAll, SIGNAL(clicked()),

@@ -29,6 +29,12 @@ public:
   ~VectorSaveDialog();
 
 public slots:
+  void show();
+  void init();
+
+private slots:
+  void selectionChanged();
+  void save();
 };
 
 #endif
