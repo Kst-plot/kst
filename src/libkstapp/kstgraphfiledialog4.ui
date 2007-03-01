@@ -84,7 +84,7 @@
         </widget>
       </item>
       <item rowspan="1" row="5" column="0" colspan="5" >
-        <widget class="Q3ButtonGroup" name="buttonGroup2" >
+        <widget class="QGroupBox" name="buttonGroup2" >
           <property name="title" >
             <string>Save Options</string>
           </property>
@@ -399,7 +399,7 @@
         </spacer>
       </item>
       <item rowspan="1" row="4" column="0" colspan="5" >
-        <widget class="Q3ButtonGroup" name="buttonGroup1" >
+        <widget class="QGroupBox" name="buttonGroup1" >
           <property name="title" >
             <string>Windows</string>
           </property>

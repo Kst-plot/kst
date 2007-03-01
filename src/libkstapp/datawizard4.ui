@@ -464,7 +464,7 @@
               <widget class="KstDataRange" name="_kstDataRange" />
             </item>
             <item>
-              <widget class="Q3ButtonGroup" name="buttonGroup5" >
+              <widget class="QGroupBox" name="buttonGroup5" >
                 <property name="sizePolicy" >
                   <sizepolicy>
                     <hsizetype>5</hsizetype>
@@ -517,7 +517,7 @@
               </widget>
             </item>
             <item>
-              <widget class="Q3ButtonGroup" name="_xAxisGroup" >
+              <widget class="QGroupBox" name="_xAxisGroup" >
                 <property name="title" >
                   <string>X Axis Vector</string>
                 </property>
@@ -675,7 +675,7 @@
           <number>0</number>
         </property>
         <item rowspan="2" row="2" column="1" colspan="1" >
-          <widget class="Q3ButtonGroup" name="_windowGroup" >
+          <widget class="QGroupBox" name="_windowGroup" >
             <property name="enabled" >
               <bool>true</bool>
             </property>
@@ -793,7 +793,7 @@
           </widget>
         </item>
         <item rowspan="2" row="0" column="1" colspan="1" >
-          <widget class="Q3ButtonGroup" name="_plotGroup" >
+          <widget class="QGroupBox" name="_plotGroup" >
             <property name="title" >
               <string>Curve Placement</string>
             </property>
@@ -889,7 +889,7 @@
           </widget>
         </item>
         <item row="0" column="0" >
-          <widget class="Q3ButtonGroup" name="buttonGroup1" >
+          <widget class="QGroupBox" name="buttonGroup1" >
             <property name="title" >
               <string>Cur&amp;ve Style</string>
             </property>
@@ -928,7 +928,7 @@
           </widget>
         </item>
         <item rowspan="2" row="1" column="0" colspan="1" >
-          <widget class="Q3ButtonGroup" name="buttonGroup3" >
+          <widget class="QGroupBox" name="buttonGroup3" >
             <property name="title" >
               <string>Label &amp;Generation</string>
             </property>
@@ -990,7 +990,7 @@
                     </widget>
                   </item>
                   <item>
-                    <widget class="Q3ButtonGroup" name="buttonGroup7" >
+                    <widget class="QGroupBox" name="buttonGroup7" >
                       <property name="title" >
                         <string/>
                       </property>
@@ -1034,7 +1034,7 @@
           </widget>
         </item>
         <item row="3" column="0" >
-          <widget class="Q3ButtonGroup" name="_psdAxisGroup" >
+          <widget class="QGroupBox" name="_psdAxisGroup" >
             <property name="title" >
               <string>Power Spectrum Axis Mode</string>
             </property>

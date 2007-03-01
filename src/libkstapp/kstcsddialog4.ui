@@ -23,7 +23,7 @@
         <widget class="KstFFTOptions" name="_kstFFTOptions" />
       </item>
       <item row="1" column="0" >
-        <widget class="Q3ButtonGroup" name="buttonGroup2" >
+        <widget class="QGroupBox" name="buttonGroup2" >
           <property name="sizePolicy" >
             <sizepolicy>
               <hsizetype>5</hsizetype>
@@ -88,7 +88,7 @@
         <widget class="CurvePlacementWidget" name="_curvePlacement" />
       </item>
       <item row="3" column="0" >
-        <widget class="Q3ButtonGroup" name="_imageOptionsGroup" >
+        <widget class="QGroupBox" name="_imageOptionsGroup" >
           <property name="sizePolicy" >
             <sizepolicy>
               <hsizetype>1</hsizetype>

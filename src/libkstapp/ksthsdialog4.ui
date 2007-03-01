@@ -14,7 +14,7 @@
     </property>
     <layout class="QGridLayout" >
       <item row="0" column="0" >
-        <widget class="Q3ButtonGroup" name="ButtonGroup1_3" >
+        <widget class="QGroupBox" name="ButtonGroup1_3" >
           <property name="sizePolicy" >
             <sizepolicy>
               <hsizetype>5</hsizetype>
@@ -225,7 +225,7 @@
         <widget class="CurveAppearanceWidget" name="_curveAppearance" />
       </item>
       <item row="1" column="0" >
-        <widget class="Q3ButtonGroup" name="ButtonGroup5" >
+        <widget class="QGroupBox" name="ButtonGroup5" >
           <property name="sizePolicy" >
             <sizepolicy>
               <hsizetype>5</hsizetype>

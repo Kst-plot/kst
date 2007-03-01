@@ -305,7 +305,7 @@
                 </layout>
               </item>
               <item>
-                <widget class="Q3ButtonGroup" name="buttonGroup6" >
+                <widget class="QGroupBox" name="buttonGroup6" >
                   <property name="title" >
                     <string>Default Plot Grid Lines</string>
                   </property>
@@ -1006,7 +1006,7 @@
                     <number>0</number>
                   </property>
                   <item>
-                    <widget class="Q3ButtonGroup" name="_buttonGroupEncryption" >
+                    <widget class="QGroupBox" name="_buttonGroupEncryption" >
                       <property name="title" >
                         <string>Encryption</string>
                       </property>
@@ -1039,7 +1039,7 @@
                     </widget>
                   </item>
                   <item>
-                    <widget class="Q3ButtonGroup" name="_buttonGroupAuthentication" >
+                    <widget class="QGroupBox" name="_buttonGroupAuthentication" >
                       <property name="title" >
                         <string>Authentication</string>
                       </property>

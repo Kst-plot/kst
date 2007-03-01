@@ -607,7 +607,7 @@
                 </widget>
               </item>
               <item row="3" column="0" >
-                <widget class="Q3ButtonGroup" name="buttonGroup3" >
+                <widget class="QGroupBox" name="buttonGroup3" >
                   <property name="title" >
                     <string>Apply Settings To</string>
                   </property>
@@ -1062,7 +1062,7 @@
                 <number>0</number>
               </property>
               <item row="5" column="0" >
-                <widget class="Q3ButtonGroup" name="buttonGroup3_2" >
+                <widget class="QGroupBox" name="buttonGroup3_2" >
                   <property name="title" >
                     <string>Apply Settings To</string>
                   </property>
@@ -1117,7 +1117,7 @@
                 </widget>
               </item>
               <item row="0" column="0" >
-                <widget class="Q3ButtonGroup" name="buttonGroup16" >
+                <widget class="QGroupBox" name="buttonGroup16" >
                   <property name="title" >
                     <string>Placement</string>
                   </property>
@@ -1159,7 +1159,7 @@
                 </spacer>
               </item>
               <item row="1" column="0" >
-                <widget class="Q3ButtonGroup" name="ButtonGroup1_2" >
+                <widget class="QGroupBox" name="ButtonGroup1_2" >
                   <property name="sizePolicy" >
                     <sizepolicy>
                       <hsizetype>5</hsizetype>
@@ -1285,7 +1285,7 @@
                 </widget>
               </item>
               <item row="2" column="0" >
-                <widget class="Q3ButtonGroup" name="groupBox5_2" >
+                <widget class="QGroupBox" name="groupBox5_2" >
                   <property name="title" >
                     <string>Tick Marks</string>
                   </property>
@@ -1433,7 +1433,7 @@
                 </widget>
               </item>
               <item row="3" column="0" >
-                <widget class="Q3ButtonGroup" name="buttonGroup6" >
+                <widget class="QGroupBox" name="buttonGroup6" >
                   <property name="title" >
                     <string>Grid Lines</string>
                   </property>
@@ -1501,7 +1501,7 @@
                 <number>0</number>
               </property>
               <item row="5" column="0" >
-                <widget class="Q3ButtonGroup" name="buttonGroup3_2_4" >
+                <widget class="QGroupBox" name="buttonGroup3_2_4" >
                   <property name="title" >
                     <string>Apply Settings To</string>
                   </property>
@@ -1556,7 +1556,7 @@
                 </widget>
               </item>
               <item row="1" column="0" >
-                <widget class="Q3ButtonGroup" name="ButtonGroup1_2_2" >
+                <widget class="QGroupBox" name="ButtonGroup1_2_2" >
                   <property name="sizePolicy" >
                     <sizepolicy>
                       <hsizetype>5</hsizetype>
@@ -1688,7 +1688,7 @@
                 </widget>
               </item>
               <item row="0" column="0" >
-                <widget class="Q3ButtonGroup" name="buttonGroup16_2" >
+                <widget class="QGroupBox" name="buttonGroup16_2" >
                   <property name="title" >
                     <string>Placement</string>
                   </property>
@@ -1714,7 +1714,7 @@
                 </widget>
               </item>
               <item row="3" column="0" >
-                <widget class="Q3ButtonGroup" name="buttonGroup6_2" >
+                <widget class="QGroupBox" name="buttonGroup6_2" >
                   <property name="title" >
                     <string>Grid Lines</string>
                   </property>
@@ -1772,7 +1772,7 @@
                 </widget>
               </item>
               <item row="2" column="0" >
-                <widget class="Q3ButtonGroup" name="buttonGroup18" >
+                <widget class="QGroupBox" name="buttonGroup18" >
                   <property name="title" >
                     <string>Tick Marks</string>
                   </property>
@@ -1946,7 +1946,7 @@
                 <number>0</number>
               </property>
               <item row="3" column="0" >
-                <widget class="Q3ButtonGroup" name="buttonGroup3_2_2" >
+                <widget class="QGroupBox" name="buttonGroup3_2_2" >
                   <property name="title" >
                     <string>Apply Settings To</string>
                   </property>
@@ -2017,7 +2017,7 @@
                 </spacer>
               </item>
               <item row="0" column="0" >
-                <widget class="Q3ButtonGroup" name="buttonGroup9" >
+                <widget class="QGroupBox" name="buttonGroup9" >
                   <property name="title" >
                     <string>X Axis</string>
                   </property>
@@ -2249,7 +2249,7 @@
                 </widget>
               </item>
               <item row="1" column="0" >
-                <widget class="Q3ButtonGroup" name="buttonGroup10" >
+                <widget class="QGroupBox" name="buttonGroup10" >
                   <property name="title" >
                     <string>Y Axis</string>
                   </property>
@@ -2483,7 +2483,7 @@
                 <number>0</number>
               </property>
               <item rowspan="1" row="4" column="0" colspan="2" >
-                <widget class="Q3ButtonGroup" name="buttonGroup3_2_3" >
+                <widget class="QGroupBox" name="buttonGroup3_2_3" >
                   <property name="title" >
                     <string>Apply Settings To</string>
                   </property>
@@ -2538,7 +2538,7 @@
                 </widget>
               </item>
               <item row="3" column="0" >
-                <widget class="Q3ButtonGroup" name="buttonGroup17" >
+                <widget class="QGroupBox" name="buttonGroup17" >
                   <property name="title" >
                     <string>Appearance</string>
                   </property>
@@ -2718,7 +2718,7 @@
                 </layout>
               </item>
               <item rowspan="1" row="2" column="0" colspan="2" >
-                <widget class="Q3ButtonGroup" name="buttonGroup15" >
+                <widget class="QGroupBox" name="buttonGroup15" >
                   <property name="title" >
                     <string>Automatic Marker Generation</string>
                   </property>

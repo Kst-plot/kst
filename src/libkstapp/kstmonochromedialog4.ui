@@ -47,7 +47,7 @@
         </layout>
       </item>
       <item>
-        <widget class="Q3ButtonGroup" name="cycleOrderGroup" >
+        <widget class="QGroupBox" name="cycleOrderGroup" >
           <property name="title" >
             <string>Property Selection and Cycle Order</string>
           </property>
@@ -228,7 +228,7 @@
         </widget>
       </item>
       <item>
-        <widget class="Q3ButtonGroup" name="optionsGroup" >
+        <widget class="QGroupBox" name="optionsGroup" >
           <property name="title" >
             <string>Options</string>
           </property>

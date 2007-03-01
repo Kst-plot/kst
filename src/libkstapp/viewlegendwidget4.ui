@@ -424,7 +424,7 @@
         </widget>
       </item>
       <item rowspan="1" row="7" column="0" colspan="3" >
-        <widget class="Q3ButtonGroup" name="buttonGroup3" >
+        <widget class="QGroupBox" name="buttonGroup3" >
           <property name="title" >
             <string>Apply Settings To</string>
           </property>

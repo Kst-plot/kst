@@ -43,7 +43,7 @@
         </widget>
       </item>
       <item rowspan="1" row="0" column="0" colspan="4" >
-        <widget class="Q3ButtonGroup" name="_propertiesGroup" >
+        <widget class="QGroupBox" name="_propertiesGroup" >
           <property name="title" >
             <string>Properties</string>
           </property>

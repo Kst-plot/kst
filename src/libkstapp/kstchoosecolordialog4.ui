@@ -79,7 +79,7 @@
         </widget>
       </item>
       <item row="1" column="0" >
-        <widget class="Q3ButtonGroup" name="vectorGroup" >
+        <widget class="QGroupBox" name="vectorGroup" >
           <property name="title" >
             <string>Base Curve Color On</string>
           </property>

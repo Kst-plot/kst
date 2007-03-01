@@ -17,7 +17,7 @@
     </property>
     <layout class="QVBoxLayout" >
       <item>
-        <widget class="Q3ButtonGroup" name="cycleOrderGroup" >
+        <widget class="QGroupBox" name="cycleOrderGroup" >
           <property name="title" >
             <string>Property Selection and Cycle Order</string>
           </property>
@@ -204,7 +204,7 @@
         </widget>
       </item>
       <item>
-        <widget class="Q3ButtonGroup" name="optionsGroup" >
+        <widget class="QGroupBox" name="optionsGroup" >
           <property name="title" >
             <string>Options</string>
           </property>
@@ -309,7 +309,7 @@
         </widget>
       </item>
       <item>
-        <widget class="Q3ButtonGroup" name="_buttonGroupRepeat" >
+        <widget class="QGroupBox" name="_buttonGroupRepeat" >
           <property name="title" >
             <string>Repeat Across</string>
           </property>
@@ -342,7 +342,7 @@
         </widget>
       </item>
       <item>
-        <widget class="Q3ButtonGroup" name="_buttonGroupApplyTo" >
+        <widget class="QGroupBox" name="_buttonGroupApplyTo" >
           <property name="title" >
             <string>Apply To</string>
           </property>
