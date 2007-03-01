@@ -32,7 +32,7 @@
 #include <q3whatsthis.h>
 //Added by qt3to4:
 #include <Q3ValueList>
-#include <Q3GridLayout>
+#include <QGridLayout>
 
 // include files for KDE
 #include <kcolorbutton.h>
@@ -658,7 +658,7 @@ void KstPluginDialogI::showNew(const QString &field) {
 }
 
 
-void KstPluginDialogI::generateEntries(bool input, int& cnt, QWidget *parent, Q3GridLayout *grid, const Q3ValueList<Plugin::Data::IOValue>& table) {
+void KstPluginDialogI::generateEntries(bool input, int& cnt, QWidget *parent, QGridLayout *grid, const Q3ValueList<Plugin::Data::IOValue>& table) {
   QString scalarLabelTemplate, vectorLabelTemplate, stringLabelTemplate;
 
   if (input) {
@@ -780,7 +780,7 @@ void KstPluginDialogI::pluginChanged(int idx) {
   delete _pluginInputOutputGrid;
 
   // create new info grid
-  _pluginInfoGrid = new Q3GridLayout(_w->_pluginInfoFrame, 2, 2, 0, 8);
+  _pluginInfoGrid = new QGridLayout(_w->_pluginInfoFrame, 2, 2, 0, 8);
   _pluginInfoGrid->setColStretch(1,1); // stretch the right column
   _pluginInfoGrid->setColStretch(0,0); // don't stretch the left column
 
@@ -819,7 +819,7 @@ void KstPluginDialogI::pluginChanged(int idx) {
     int numInputOutputs = pluginData._inputs.count() + pluginData._outputs.count();
 
     // generate inputs
-    _pluginInputOutputGrid = new Q3GridLayout(_w->_pluginInputOutputFrame, numInputOutputs + 1, 2, 0, 8);
+    _pluginInputOutputGrid = new QGridLayout(_w->_pluginInputOutputFrame, numInputOutputs + 1, 2, 0, 8);
     _pluginInputOutputGrid->setColStretch(1,1);
     _pluginInputOutputGrid->setColStretch(0,0);
     generateEntries(true, cnt, _w->_pluginInputOutputFrame, _pluginInputOutputGrid, pluginData._inputs);

@@ -28,7 +28,7 @@
 //Added by qt3to4:
 #include <Q3ValueList>
 #include <QLabel>
-#include <Q3GridLayout>
+#include <QGridLayout>
 
 // include files for KDE
 #include <kmessagebox.h>
@@ -242,7 +242,7 @@ bool KstFitDialogI::newObject() {
 }
 
 
-void KstFitDialogI::generateEntries(bool input, int& cnt, QWidget *parent, Q3GridLayout *grid, const Q3ValueList<Plugin::Data::IOValue>& table) {
+void KstFitDialogI::generateEntries(bool input, int& cnt, QWidget *parent, QGridLayout *grid, const Q3ValueList<Plugin::Data::IOValue>& table) {
 
   const QString& pluginName = _pluginList[_w->PluginCombo->currentItem()];
   const Plugin::Data& pluginData = PluginCollection::self()->pluginList()[PluginCollection::self()->pluginNameList()[pluginName]];

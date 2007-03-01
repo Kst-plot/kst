@@ -25,7 +25,7 @@
 //Added by qt3to4:
 #include <Q3ValueList>
 #include <QLabel>
-#include <Q3GridLayout>
+#include <QGridLayout>
 
 // include files for KDE
 #include <kmessagebox.h>
@@ -288,7 +288,7 @@ bool KstFilterDialogI::newObject() {
 }
 
 
-void KstFilterDialogI::generateEntries(bool input, int& cnt, QWidget *parent, Q3GridLayout *grid, const Q3ValueList<Plugin::Data::IOValue>& table) {
+void KstFilterDialogI::generateEntries(bool input, int& cnt, QWidget *parent, QGridLayout *grid, const Q3ValueList<Plugin::Data::IOValue>& table) {
 
   // get fixed vector for filter
   QString fixedVector;

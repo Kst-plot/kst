@@ -20,7 +20,7 @@
 
 #include <qpointer.h>
 //Added by qt3to4:
-#include <Q3GridLayout>
+#include <QGridLayout>
 #include <Q3ValueList>
 
 #include "kst_export.h"
@@ -75,7 +75,7 @@ class KST_EXPORT KstBasicDialogI : public KstDataDialog {
     BasicDialogWidget *_w;
 
     // layout items
-    Q3GridLayout *_grid;
+    QGridLayout *_grid;
     Q3ValueList<QWidget*> _widgets;
 };
 

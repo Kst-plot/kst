@@ -23,7 +23,7 @@
 #include <QDialog>
 
 //Added by qt3to4:
-#include <Q3GridLayout>
+#include <QGridLayout>
 #include <Q3ValueList>
 
 class KstFilterDialogI : public KstPluginDialogI {
@@ -49,7 +49,7 @@ class KstFilterDialogI : public KstPluginDialogI {
 
     bool createCurve(KstCPluginPtr plugin);
     bool saveInputs(KstCPluginPtr plugin, KstSharedPtr<Plugin> p);
-    void generateEntries(bool input, int& cnt, QWidget *parent, Q3GridLayout *grid, const Q3ValueList<Plugin::Data::IOValue>& table);
+    void generateEntries(bool input, int& cnt, QWidget *parent, QGridLayout *grid, const Q3ValueList<Plugin::Data::IOValue>& table);
 };
 
 #endif

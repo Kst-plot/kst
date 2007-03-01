@@ -21,7 +21,7 @@
 #include <qlayout.h>
 #include <qspinbox.h>
 //Added by qt3to4:
-#include <Q3GridLayout>
+#include <QGridLayout>
 
 #include <klocale.h>
 
@@ -35,7 +35,7 @@ KstPrintOptionsPage::KstPrintOptionsPage(QWidget *parent, const char *name)
 
   setTitle(i18n("Kst Options"));
 
-  Q3GridLayout *grid = new Q3GridLayout(this, 4, 2);
+  QGridLayout *grid = new QGridLayout(this, 4, 2);
 
   _dateTimeFooter = new QCheckBox(i18n("Append plot information to each page"), this);
   grid->addMultiCellWidget(_dateTimeFooter, row, row, 0, 1);

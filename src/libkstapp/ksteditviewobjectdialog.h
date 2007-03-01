@@ -27,11 +27,10 @@
 #include "kst_export.h"
 #include <qpointer.h>
 //Added by qt3to4:
-#include <Q3GridLayout>
+#include <QGridLayout>
 #include <Q3ValueList>
 
 class QComboBox;
-class Q3GridLayout;
 
 class KST_EXPORT KstEditViewObjectDialogI : public QDialog {
   Q_OBJECT
@@ -60,7 +59,7 @@ class KST_EXPORT KstEditViewObjectDialogI : public QDialog {
     // for layout purposes
     Q3ValueList<QWidget*> _inputWidgets; // the widgets used to change properties
     Q3ValueList<QWidget*> _widgets; // all other widgets
-    Q3GridLayout* _grid;
+    QGridLayout* _grid;
     QPointer<QWidget> _customWidget;
     bool _isNew;
     

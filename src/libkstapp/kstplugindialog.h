@@ -23,7 +23,7 @@
 #include "kstdatadialog.h"
 #include "kst_export.h"
 //Added by qt3to4:
-#include <Q3GridLayout>
+#include <QGridLayout>
 #include <Q3ValueList>
 
 class PluginDialogWidget;
@@ -61,14 +61,14 @@ class KST_EXPORT KstPluginDialogI : public KstDataDialog {
     virtual bool saveInputs(KstCPluginPtr plugin, KstSharedPtr<Plugin> p);
     bool saveOutputs(KstCPluginPtr plugin, KstSharedPtr<Plugin> p);
     virtual void generateEntries(bool input, int& cnt, QWidget *parent,
-        Q3GridLayout *grid, const Q3ValueList<Plugin::Data::IOValue>& table);
+        QGridLayout *grid, const Q3ValueList<Plugin::Data::IOValue>& table);
 
     QMap<QString,QString> cacheInputs(const Q3ValueList<Plugin::Data::IOValue>& table);
     void restoreInputs(const Q3ValueList<Plugin::Data::IOValue>& table, const QMap<QString,QString>& v);
 
     // layout items
-    Q3GridLayout* _pluginInfoGrid;
-    Q3GridLayout* _pluginInputOutputGrid;
+    QGridLayout* _pluginInfoGrid;
+    QGridLayout* _pluginInputOutputGrid;
     Q3ValueList<QWidget*> _pluginWidgets;
 
   private:

@@ -20,7 +20,7 @@
 #include <qlayout.h>
 #include <qlineedit.h>
 //Added by qt3to4:
-#include <Q3GridLayout>
+#include <QGridLayout>
 #include <Q3Frame>
 #include <QLabel>
 
@@ -29,7 +29,6 @@
 #include <kmessagebox.h>
 
 #include "kstbasicdialog.h"
-#include "basicdialogwidget.h"
 
 // application specific includes
 #include "kst.h"
@@ -94,7 +93,7 @@ void KstBasicDialogI::init() {
                       + ptr->outputScalarList().count()
                       + ptr->outputStringList().count();
 
-  _grid = new Q3GridLayout(_w->_frame, numInputOutputs + 1, 2, 0, 8);
+  _grid = new QGridLayout(_w->_frame, numInputOutputs + 1, 2, 0, 8);
   _grid->setColStretch(1,1);
   _grid->setColStretch(0,0);
 

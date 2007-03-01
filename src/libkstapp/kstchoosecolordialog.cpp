@@ -20,7 +20,7 @@
 #include <q3valuelist.h>
 #include <qradiobutton.h>
 //Added by qt3to4:
-#include <Q3GridLayout>
+#include <QGridLayout>
 
 #include <kcombobox.h>
 #include <kcolorcombo.h>
@@ -71,7 +71,7 @@ KstChooseColorDialogI::KstChooseColorDialogI(QWidget* parent,
     cleanColorGroup();
     
     // new grid
-    grid = new Q3GridLayout(colorFrame, fileNameList.count(), 2, 0, 8);
+    grid = new QGridLayout(colorFrame, fileNameList.count(), 2, 0, 8);
     grid->setColStretch(1,0);
     
     int i = fileNameList.count();

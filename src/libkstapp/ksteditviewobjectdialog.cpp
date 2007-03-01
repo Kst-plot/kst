@@ -29,7 +29,7 @@
 #include <qspinbox.h>
 #include <qstyle.h>
 //Added by qt3to4:
-#include <Q3GridLayout>
+#include <QGridLayout>
 #include <Q3ValueList>
 #include <QPixmap>
 
@@ -117,7 +117,7 @@ void KstEditViewObjectDialogI::updateWidgets() {
   if (_viewObject) {
     _customWidget = _viewObject->configWidget();
     if (_customWidget) {
-      _grid = new Q3GridLayout(_propertiesFrame, 1, 1);
+      _grid = new QGridLayout(_propertiesFrame, 1, 1);
       _customWidget->reparent(_propertiesFrame, QPoint(0, 0));
       _grid->addWidget(_customWidget, 0, 0);
       _viewObject->fillConfigWidget(_customWidget, _isNew);
@@ -135,7 +135,7 @@ void KstEditViewObjectDialogI::updateWidgets() {
     int numProperties = _viewObject->metaObject()->numProperties(true);
 
     // create a new grid
-    _grid = new Q3GridLayout(_propertiesFrame, numProperties, 2, 0, 8);
+    _grid = new QGridLayout(_propertiesFrame, numProperties, 2, 0, 8);
     _grid->setColStretch(0,0);
     _grid->setColStretch(1,1);
     

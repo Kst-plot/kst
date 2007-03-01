@@ -20,7 +20,7 @@
 
 #include "kstplugindialog.h"
 //Added by qt3to4:
-#include <Q3GridLayout>
+#include <QGridLayout>
 #include <Q3ValueList>
 
 class KstFitDialogI : public KstPluginDialogI {
@@ -47,7 +47,7 @@ class KstFitDialogI : public KstPluginDialogI {
     
     bool createCurve(KstCPluginPtr plugin);
     
-    void generateEntries(bool input, int& cnt, QWidget *parent, Q3GridLayout *grid, const Q3ValueList<Plugin::Data::IOValue>& table);
+    void generateEntries(bool input, int& cnt, QWidget *parent, QGridLayout *grid, const Q3ValueList<Plugin::Data::IOValue>& table);
     
     bool saveInputs(KstCPluginPtr plugin, KstSharedPtr<Plugin> p);
 };
