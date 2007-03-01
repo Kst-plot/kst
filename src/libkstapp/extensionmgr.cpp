@@ -23,6 +23,7 @@
 #include <klocale.h>
 #include <kparts/componentfactory.h>
 #include <kservicetype.h>
+#include <kservicetypetrader.h>
 
 // appliaction specific includes
 #include "extensionmgr.h"
@@ -88,7 +89,7 @@ KstExtension *ExtensionMgr::extension(const QString& name) const {
 
 
 void ExtensionMgr::loadExtension(const QString& name) {
-  KService::List sl = KServiceType::offers("Kst Extension");
+  KService::List sl = KServiceTypeTrader::self()->query("Kst Extension");
   for (KService::List::ConstIterator it = sl.begin(); it != sl.end(); ++it) {
     KService::Ptr service = *it;
     if (name == service->property("Name").toString()) {
@@ -102,13 +103,13 @@ void ExtensionMgr::loadExtension(const QString& name) {
 void ExtensionMgr::loadExtension(const KService::Ptr& service) {
   int err = 0;
   QString name = service->property("Name").toString();
-  KstExtension *e = KParts::ComponentFactory::createInstanceFromService<KstExtension>(service, _window, 0, QStringList(), &err);
+  KstExtension *e = KService::createInstance<KstExtension>(service, _window, QStringList(), &err);
   if (e) {
     connect(e, SIGNAL(unregister()), this, SLOT(unregister()));
     KstDebug::self()->log(i18n("Kst Extension %1 loaded.").arg(name));
     doRegister(name,e);
   } else {
-    KstDebug::self()->log(i18n("Error trying to load Kst extension %1.  Code=%2, \"%3\"").arg(name).arg(err).arg(err == KParts::ComponentFactory::ErrNoLibrary ? i18n("Library not found [%1].").arg(KLibLoader::self()->lastErrorMessage()) : KLibLoader::self()->lastErrorMessage()), KstDebug::Error);
+    KstDebug::self()->log(i18n("Error trying to load Kst extension %1.  Code=%2, \"%3\"").arg(name).arg(err).arg(err == KLibLoader::ErrNoLibrary ? i18n("Library not found [%1].").arg(KLibLoader::self()->lastErrorMessage()) : KLibLoader::self()->lastErrorMessage()), KstDebug::Error);
   }
 }
 
@@ -140,7 +141,7 @@ void ExtensionMgr::doRegister(const QString& name, KstExtension *inst) {
 void ExtensionMgr::unregister(KstExtension *inst) {
   for (QMap<QString,KstExtension*>::Iterator i = _registry.begin(); i != _registry.end(); ++i) {
     if (i.value() == inst) {
-      _registry.remove(i);
+      _registry.erase(i);
       break;
     }
   }
