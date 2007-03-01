@@ -126,12 +126,12 @@ int KstGuiData::vectorToFile(KstVectorPtr v, QFile *f) {
   modval = qMax(vSize/100, 100);
 
   QString ltxt = "; " + v->tagName() + '\n';
-  f->writeBlock(ltxt.ascii(), ltxt.length());
+  f->writeBlock(ltxt.toAscii(), ltxt.length());
   ltxt.fill('-');
   ltxt[0] = ';';
   ltxt[1] = ' ';
   ltxt[ltxt.length() - 1] = '\n';
-  f->writeBlock(ltxt.ascii(), ltxt.length());
+  f->writeBlock(ltxt.toAscii(), ltxt.length());
 
   app->slotUpdateProgress(vSize, 0, QString::null);
 
@@ -185,12 +185,12 @@ int KstGuiData::vectorsToFile(const KstVectorList& vl, QFile *f, bool interpolat
   }
   ltxt += '\n';
 
-  f->writeBlock(ltxt.ascii(), ltxt.length());
+  f->writeBlock(ltxt.toAscii(), ltxt.length());
   ltxt.fill('-');
   ltxt[0] = ';';
   ltxt[1] = ' ';
   ltxt[ltxt.length() - 1] = '\n';
-  f->writeBlock(ltxt.ascii(), ltxt.length());
+  f->writeBlock(ltxt.toAscii(), ltxt.length());
 #if QT_VERSION >= 0x030200
   ltxt.reserve(vl.count()*17);
 #endif
@@ -212,7 +212,7 @@ int KstGuiData::vectorsToFile(const KstVectorList& vl, QFile *f, bool interpolat
       ltxt += QString::number(val, 'g', 15);
     }
     ltxt += "\n";
-    f->writeBlock(ltxt.ascii(), ltxt.length());
+    f->writeBlock(ltxt.toAscii(), ltxt.length());
     if (line % modval == 0) {
       app->slotUpdateProgress(maxlen, line, saving);
     }

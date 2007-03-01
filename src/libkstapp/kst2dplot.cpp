@@ -957,7 +957,7 @@ void Kst2DPlot::filterCurve(int id) {
 
 
 void Kst2DPlot::removeCurve(KstBaseCurvePtr incurve) {
-  Curves.remove(incurve);
+  Curves.removeAll(incurve);
   KstViewLegendPtr vl = legend();
   if (vl) {
     if (vl->trackContents()) {
@@ -1611,12 +1611,12 @@ void Kst2DPlot::convertJDToDateString(KstAxisInterpretation axisInterpretation, 
       break;
     case AXIS_DISPLAY_QTTEXTDATEHHMMSS_SS:
       date.setYMD(year, month, day);
-      label.sprintf("%s %02d:%02d:%02.*f", date.toString(Qt::TextDate).ascii(),
+      label.sprintf("%s %02d:%02d:%02.*f", date.toString(Qt::TextDate).toAscii(),
                                             hour, minute, accuracy, second);
       break;
     case AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS:
       date.setYMD(year, month, day);
-      label.sprintf("%s %02d:%02d:%02.*f", date.toString(Qt::LocalDate).ascii(),
+      label.sprintf("%s %02d:%02d:%02.*f", date.toString(Qt::LocalDate).toAscii(),
                                             hour, minute, accuracy, second);
       break;
     case AXIS_DISPLAY_KDE_SHORTDATE:
@@ -1957,7 +1957,7 @@ void Kst2DPlot::genAxisTickLabels(TickParameters &tp,
       }
       // case insensitive replace
       QString replacedExp = isX ? _xTransformedExp : _yTransformedExp;
-      replacedExp.replace(isX ? "x" : "y", QString::number(originalNumber), false);
+      replacedExp.replace(isX ? "x" : "y", QString::number(originalNumber), Qt::CaseInsensitive);
       bool transformedOK = false;
       double transformedNumber = Equation::interpret(replacedExp.toLatin1(), &transformedOK, replacedExp.length());
       tick_label->setText(QString::number(transformedNumber, 'g', LABEL_PRECISION));
