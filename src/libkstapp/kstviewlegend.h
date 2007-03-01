@@ -104,7 +104,7 @@ class KstViewLegend : public KstBorderedViewObject {
 
   protected:
     KstViewObjectFactoryMethod factory() const;
-    bool layoutPopupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr topLevelParent);
+    bool layoutPopupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topLevelParent);
     void readBinary(QDataStream& str);
     void writeBinary(QDataStream& str);
 

@@ -341,7 +341,7 @@ void KstViewWidget::contextMenuEvent(QContextMenuEvent *e) {
     e->ignore();
     return;
   }
-  _menu = new KPopupMenu(this);
+  _menu = new KMenu(this);
   //qDebug() << "Querying for the popup" << endl;
   bool rc = _view->popupMenu(_menu, e->pos());
   if (rc && _menu->count() > 0) {

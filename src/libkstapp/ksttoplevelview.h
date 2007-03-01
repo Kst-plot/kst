@@ -25,7 +25,7 @@
 
 #include "kstviewobject.h"
 
-class KPopupMenu;
+class KMenu;
 class KstGfxMouseHandler;
 class KstViewWidget;
 
@@ -125,7 +125,7 @@ class KstTopLevelView : public KstViewObject {
     void releasePressLayoutModeCenteredResize(const QPoint& pos, bool shift = false);
 
     void setCursorFor(const QPoint& pos, KstViewObjectPtr p);
-    bool popupMenu(KPopupMenu *menu, const QPoint& pos);
+    bool popupMenu(KMenu *menu, const QPoint& pos);
     void correctPosition(KstViewObjectPtr pObject, QPoint point);
     QRect newSize(const QRect& originalSize, const QRect& bounds, int direction, const QPoint& pos, bool maintainAspect = false);
     QRect newSizeCentered(const QRect& oldSize, const QRect& bounds, const QPoint& pos, bool maintainAspect);

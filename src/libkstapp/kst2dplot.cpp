@@ -3433,7 +3433,7 @@ void Kst2DPlot::removeCurve(int id) {
 }
 
 
-bool Kst2DPlot::popupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr topLevelParent) {
+bool Kst2DPlot::popupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topLevelParent) {
   bool hasEntry = false;
   KstMouseModeType mode;
 
@@ -3443,8 +3443,8 @@ bool Kst2DPlot::popupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr 
   _menuView = tlv ? tlv->widget() : 0L;
   KstViewObject::popupMenu(menu, pos, topLevelParent);
 
-  KPopupMenu *submenu = new KPopupMenu(menu);
-  KPopupMenu *submenu2 = new KPopupMenu(menu);
+  KMenu *submenu = new KMenu(menu);
+  KMenu *submenu2 = new KMenu(menu);
   Kst2DPlotList pl = globalPlotList();
   int i = 0;
   _plotMap.clear();
@@ -3466,7 +3466,7 @@ bool Kst2DPlot::popupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr 
   menu->setItemEnabled(id, hasEntry);
   hasEntry = false;
 
-  submenu = new KPopupMenu(menu);
+  submenu = new KMenu(menu);
   menu->insertItem(i18n("Z&oom"), submenu);
   submenu->insertItem(i18n("Zoom &Maximum"), this, SLOT(menuZoomMax()), Qt::Key_M);
   submenu->insertItem(i18n("Zoom Max &Spike Insensitive"),
@@ -3501,7 +3501,7 @@ bool Kst2DPlot::popupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr 
   submenu->insertItem(i18n("Next &Image Color Scale"),
                       this, SLOT(menuNextImageColorScale()), Qt::Key_I);
   
-  submenu = new KPopupMenu(menu);
+  submenu = new KMenu(menu);
   menu->insertItem(i18n("&Scroll"), submenu);
   submenu->insertItem(i18n("Left"), this, SLOT(menuMoveLeft()), Qt::Key_Left);
   submenu->insertItem(i18n("Right"), this, SLOT(menuMoveRight()), Qt::Key_Right);
@@ -3538,13 +3538,13 @@ bool Kst2DPlot::popupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr 
   _curveRemoveMap.clear();
 
   // Edit menu
-  submenu = new KPopupMenu(menu);
+  submenu = new KMenu(menu);
   // Fit menu
-  KPopupMenu *submenu4 = new KPopupMenu(menu);
+  KMenu *submenu4 = new KMenu(menu);
   // Filter menu
-  submenu2 = new KPopupMenu(menu);
+  submenu2 = new KMenu(menu);
   // Remove menu
-  KPopupMenu *submenu3 = new KPopupMenu(menu);
+  KMenu *submenu3 = new KMenu(menu);
   hasEntry = false;
   for (i = 0; i < n_curves; i++) {
     KstBaseCurvePtr c = Curves[i];
@@ -3614,7 +3614,7 @@ bool Kst2DPlot::popupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr 
 }
 
 
-bool Kst2DPlot::layoutPopupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr topLevelParent) {
+bool Kst2DPlot::layoutPopupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topLevelParent) {
   KstTopLevelViewPtr tlv = kst_cast<KstTopLevelView>(topLevelParent);
   _layoutMenuView = tlv ? tlv->widget() : 0L;
   KstViewObject::layoutPopupMenu(menu, pos, topLevelParent);

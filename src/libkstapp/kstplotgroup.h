@@ -32,8 +32,8 @@ class KstPlotGroup : public KstMetaPlot {
     void save(QTextStream& ts, const QString& indent = QString::null);
 
     bool removeChild(KstViewObjectPtr obj, bool recursive = false);
-    bool popupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr topLevelParent);
-    bool layoutPopupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr topParent);
+    bool popupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topLevelParent);
+    bool layoutPopupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topParent);
 
     void setTransparent(bool transparent);
     bool transparent() const;

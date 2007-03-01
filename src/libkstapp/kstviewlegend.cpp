@@ -504,7 +504,7 @@ void KstViewLegend::modifiedLegendEntry() {
   setDirty();
 }
 
-bool KstViewLegend::layoutPopupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr topLevelParent) {
+bool KstViewLegend::layoutPopupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topLevelParent) {
   return KstViewObject::layoutPopupMenu(menu, pos, topLevelParent);
 }
 

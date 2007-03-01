@@ -39,7 +39,7 @@
 #include "kstpainter.h"
 #include "kst_export.h"
 
-class KPopupMenu;
+class KMenu;
 class KstGfxMouseHandler;
 class KstViewObject;
 class KstViewWidget;
@@ -175,8 +175,8 @@ class KST_EXPORT KstViewObject : public KstObject {
     // note also: self=false
     template<class U> void forEachChild2(void (U::*)());
 
-    virtual bool popupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr topParent);
-    virtual bool layoutPopupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr topParent);
+    virtual bool popupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topParent);
+    virtual bool layoutPopupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topParent);
 
     // FIXME: split into layout and non-layout?
     enum StandardActions { Delete =          0x1,

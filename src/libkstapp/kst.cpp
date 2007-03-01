@@ -2615,7 +2615,7 @@ void KstApp::destroyDebugNotifier() {
 
 
 void KstApp::showContextMenu(QWidget *w, const QPoint& pos) {
-  KPopupMenu *pm = new KPopupMenu(this);
+  KMenu *pm = new KMenu(this);
   KstViewWindow *vw = dynamic_cast<KstViewWindow*>(w);
   if (vw) {
     pm->insertTitle(vw->caption());
@@ -2640,7 +2640,7 @@ void KstApp::showContextMenu(QWidget *w, const QPoint& pos) {
 
 
 void KstApp::showContextMenu(const QPoint& pos) {
-  KPopupMenu *pm = new KPopupMenu(this);
+  KMenu *pm = new KMenu(this);
   pm->insertItem(i18n("&New..."), this, SLOT(slotFileNewWindow()));
   pm->exec(pos);
   delete pm;

@@ -1097,7 +1097,7 @@ QString KstViewObject::menuTitle() const {
 }
 
 
-bool KstViewObject::popupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr topParent) {
+bool KstViewObject::popupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topParent) {
   Q_UNUSED(pos)
   bool rc = false;
   int id;
@@ -1152,7 +1152,7 @@ bool KstViewObject::popupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObject
 }
 
 
-bool KstViewObject::layoutPopupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr topParent) {
+bool KstViewObject::layoutPopupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topParent) {
   Q_UNUSED(pos)
 
   _topObjectForMenu = topParent;
@@ -1223,7 +1223,7 @@ bool KstViewObject::layoutPopupMenu(KPopupMenu *menu, const QPoint& pos, KstView
     int i = 0;
     bool hasEntry = false;
 
-    KPopupMenu *submenu = new KPopupMenu(menu);
+    KMenu *submenu = new KMenu(menu);
 
     id = menu->insertItem(i18n("&Move To"), submenu);
 
@@ -1252,7 +1252,7 @@ bool KstViewObject::layoutPopupMenu(KPopupMenu *menu, const QPoint& pos, KstView
     int i = 0;
     bool hasEntry = false;
 
-    KPopupMenu *submenu = new KPopupMenu(menu);
+    KMenu *submenu = new KMenu(menu);
 
     id = menu->insertItem(i18n("&Copy To"), submenu);
 

@@ -118,8 +118,8 @@ public:
   virtual void save(QTextStream& ts, const QString& indent = QString::null);
   virtual void saveAttributes(QTextStream& ts, const QString& indent = QString::null);
   
-  virtual bool popupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr topLevelParent);
-  virtual bool layoutPopupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr topLevelParent);
+  virtual bool popupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topLevelParent);
+  virtual bool layoutPopupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topLevelParent);
 
   void drawGraphicSelectionAt(QPainter& p, const QPoint& pos);
   void drawDotAt(QPainter& p, double x, double y);

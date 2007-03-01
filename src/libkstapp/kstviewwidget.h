@@ -85,7 +85,7 @@ class KstViewWidget : public QWidget {
     QPointer<KstViewObject> _vo_datamode;
     bool _dropEnabled : 1;
     bool _dragEnabled : 1;
-    QPointer<KPopupMenu> _menu;
+    QPointer<KMenu> _menu;
     Q3DragObject *_drag;
 };
 

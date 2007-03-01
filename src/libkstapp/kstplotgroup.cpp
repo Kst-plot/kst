@@ -165,11 +165,11 @@ void KstPlotGroup::paintSelf(KstPainter& p, const QRegion& bounds) {
 }
 
 
-bool KstPlotGroup::popupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr topParent) {
+bool KstPlotGroup::popupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topParent) {
   KstMetaPlot::popupMenu(menu, pos, topParent);
   KstViewObjectPtr c = findChild(pos + position());
   if (c) {
-    KPopupMenu *s = new KPopupMenu(menu);
+    KMenu *s = new KMenu(menu);
     if (c->popupMenu(s, pos - c->position(), topParent)) {
       menu->insertItem(c->tagName(), s);
     } else {
@@ -180,12 +180,12 @@ bool KstPlotGroup::popupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectP
 }
 
 
-bool KstPlotGroup::layoutPopupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr topParent) {
+bool KstPlotGroup::layoutPopupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topParent) {
   KstMetaPlot::layoutPopupMenu(menu, pos, topParent);
   menu->insertItem(i18n("&Ungroup"), this, SLOT(flatten()));
   KstViewObjectPtr c = findChild(pos + position());
   if (c) {
-    KPopupMenu *s = new KPopupMenu(menu);
+    KMenu *s = new KMenu(menu);
     if (c->layoutPopupMenu(s, pos - c->position(), topParent)) {
       menu->insertItem(c->tagName(), s);
     } else {
