@@ -161,8 +161,8 @@ QStringList KstIfaceImpl::pluginList() {
   QMap<QString,Plugin::Data>::ConstIterator it;
 
   for (it = pluginList.begin(); it != pluginList.end(); ++it) {
-    if (it.data()._isFilter == false) {
-      rc += it.data()._name;
+    if (it.value()._isFilter == false) {
+      rc += it.value()._name;
     }
   }
 
@@ -177,8 +177,8 @@ QStringList KstIfaceImpl::filterList() {
   QMap<QString,Plugin::Data>::ConstIterator it;
 
   for (it = pluginList.begin(); it != pluginList.end(); ++it) {
-    if (it.data()._isFilter) {
-      rc += it.data()._name;
+    if (it.value()._isFilter) {
+      rc += it.value()._name;
     }
   }
 

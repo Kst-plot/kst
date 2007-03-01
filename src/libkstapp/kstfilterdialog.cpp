@@ -99,12 +99,12 @@ void KstFilterDialogI::updatePluginList() {
   _w->PluginCombo->clear();
   _pluginList.clear();
   for (QMap<QString,Plugin::Data>::ConstIterator it = _pluginMap.begin(); it != _pluginMap.end(); ++it) {
-    if (it.data()._isFilter) {
-      _pluginList += it.data()._name;
-      _w->PluginCombo->insertItem(i18n("%1 (v%2) - %3").arg(it.data()._readableName)
-                              .arg(it.data()._version)
-                              .arg(it.data()._description));
-      if (it.data()._name == previous) {
+    if (it.value()._isFilter) {
+      _pluginList += it.value()._name;
+      _w->PluginCombo->insertItem(i18n("%1 (v%2) - %3").arg(it.value()._readableName)
+                              .arg(it.value()._version)
+                              .arg(it.value()._description));
+      if (it.value()._name == previous) {
         newFocus = cnt;
       }
       ++cnt;

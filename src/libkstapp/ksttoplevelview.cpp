@@ -1831,7 +1831,7 @@ QRect KstTopLevelView::correctHeightForRatio(const QRect& oldRect, double ratio,
 KstGfxMouseHandler *KstTopLevelView::handlerForObject(const QString& objType) {
   QMap<QString,KstGfxMouseHandler*>::Iterator i = _handlers.find(objType);
   if (i != _handlers.end()) {
-    return i.data();
+    return i.value();
   }
 
   KstGfxMouseHandler *rc = KstViewObjectFactory::self()->createHandlerFor(objType);

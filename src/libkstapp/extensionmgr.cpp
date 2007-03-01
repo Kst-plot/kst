@@ -46,7 +46,7 @@ void ExtensionMgr::save() {
   QStringList disabled;
   QStringList enabled;
   for (QMap<QString,bool>::ConstIterator i = _extensions.begin(); i != _extensions.end(); ++i) {
-    if (i.data()) {
+    if (i.value()) {
       enabled += i.key();
     } else {
       disabled += i.key();
@@ -116,13 +116,13 @@ void ExtensionMgr::loadExtension(const KService::Ptr& service) {
 void ExtensionMgr::updateExtensions() {
   for (QMap<QString,bool>::ConstIterator i = _extensions.begin(); i != _extensions.end(); ++i) {
     QMap<QString,KstExtension*>::Iterator j = _registry.find(i.key());
-    if (i.data()) {
+    if (i.value()) {
       if (j == _registry.end()) {      
         loadExtension(i.key());
       }
     } else {
       if (j != _registry.end()) {      
-        delete j.data();
+        delete j.value();
         // Does this automatically
         //_registry.remove(j);
       }
@@ -139,7 +139,7 @@ void ExtensionMgr::doRegister(const QString& name, KstExtension *inst) {
 
 void ExtensionMgr::unregister(KstExtension *inst) {
   for (QMap<QString,KstExtension*>::Iterator i = _registry.begin(); i != _registry.end(); ++i) {
-    if (i.data() == inst) {
+    if (i.value() == inst) {
       _registry.remove(i);
       break;
     }

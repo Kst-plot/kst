@@ -106,11 +106,11 @@ void KstFitDialogI::updatePluginList() {
   _w->PluginCombo->clear();
   _pluginList.clear();
   for (it = _pluginMap.begin(); it != _pluginMap.end(); ++it) {
-    if (it.data()._isFit) {
-      if (!it.data()._isFitWeighted || _evector != "<None>") {
-        _pluginList += it.data()._name;
-        _w->PluginCombo->insertItem(i18n("%1 (v%2)").arg(it.data()._readableName).arg(it.data()._version));
-        if (it.data()._name == previous) {
+    if (it.value()._isFit) {
+      if (!it.value()._isFitWeighted || _evector != "<None>") {
+        _pluginList += it.value()._name;
+        _w->PluginCombo->insertItem(i18n("%1 (v%2)").arg(it.data()._readableName).arg(it.value()._version));
+        if (it.value()._name == previous) {
           newFocus = cnt;
         }
         ++cnt;
