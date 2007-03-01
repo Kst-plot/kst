@@ -29,7 +29,7 @@ EMailThread::EMailThread( const QString& strTo,
                           const QString& strBody ) : QObject() {
   _strTo          = strTo;
   _strSubject     = strSubject;
-  _strBody        = strBody.latin1();
+  _strBody        = strBody.toLatin1();
 
   _strFrom        =  KstSettings::globalSettings()->emailSender;
   _strSMTPServer  =  KstSettings::globalSettings()->emailSMTPServer;
@@ -57,7 +57,7 @@ EMailThread::EMailThread( const QString& strTo,
                           const bool useAuthentication ) : QObject() {
   _strTo          = strTo;
   _strSubject     = strSubject;
-  _strBody        = strBody.latin1();
+  _strBody        = strBody.toLatin1();
   _strFrom        = strFrom;
   _strSMTPServer  = strSMTPServer;
   _useAuthentication = useAuthentication;
@@ -87,7 +87,7 @@ void EMailThread::send() {
   QStringList listTo;
   QString mQuery;
   KIO::MetaData slaveConfig;
-  KURL destination;
+  KUrl destination;
   int i, count;
 
   _sendOk = false;
@@ -95,24 +95,24 @@ void EMailThread::send() {
   KIO::Scheduler::connect(SIGNAL(slaveError(KIO::Slave *, int, const QString &)), this,
                             SLOT(slaveError(KIO::Slave *, int, const QString &)));
 
-  _strBody.insert( 0, QString("Subject:%1\n\n").arg(_strSubject).latin1());
-  _strBody.insert( 0, QString("To:%1\n").arg(_strTo).latin1());
+  _strBody.insert( 0, QString("Subject:%1\n\n").arg(_strSubject).toLatin1());
+  _strBody.insert( 0, QString("To:%1\n").arg(_strTo).toLatin1());
 
   _bodyOffset = 0;
   _bodyLength = _strBody.length();
 
   mQuery  = "headers=0&from=";
-  mQuery += KURL::encode_string(_strFrom);
+  mQuery += KUrl::encode_string(_strFrom);
   listTo = QStringList::split(QRegExp("[ ,;]"), _strTo);
   count = listTo.count();
   if (count > 0) {
     for (i=0; i<count; i++) {
       mQuery += "&to=";
-      mQuery += KURL::encode_string(listTo[i]);
+      mQuery += KUrl::encode_string(listTo[i]);
     }
   } else {
     mQuery += "&to=";
-    mQuery += KURL::encode_string(_strTo);
+    mQuery += KUrl::encode_string(_strTo);
   }
 
   mQuery += "&size=";

@@ -185,7 +185,7 @@ bool KstDoc::newDocument() {
   return true;
 }
 
-bool KstDoc::openDocument(const KURL& url, const QString& o_file,
+bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
                           int o_n, int o_f, int o_s, bool o_ave) {
   static bool opening = false;
   bool cleanupFile = false;
@@ -779,11 +779,11 @@ void KstDoc::saveDocument(Q3TextStream& ts, bool saveAbsoluteVectorPositions) {
 
 
 bool KstDoc::saveDocument(const QString& filename, bool saveAbsoluteVectorPositions, bool prompt) {
-  KURL url;
+  KUrl url;
   if (QFile::exists(filename) && QFileInfo(filename).isRelative()) {
     url.setPath(QFileInfo(filename).absFilePath());
   } else {
-    url = KURL::fromPathOrURL(filename);
+    url = KUrl::fromPathOrURL(filename);
   }
 
   if (QFile::exists(filename)) {
@@ -820,7 +820,7 @@ bool KstDoc::saveDocument(const QString& filename, bool saveAbsoluteVectorPositi
   }
 
 #if KDE_VERSION >= KDE_MAKE_VERSION(3,2,0)
-  KIO::NetAccess::file_copy(KURL(tf.name()), url, -1, true, false, KstApp::inst());
+  KIO::NetAccess::file_copy(KUrl(tf.name()), url, -1, true, false, KstApp::inst());
 #else
   KIO::NetAccess::upload(tf.name(), url);
 #endif

@@ -1960,7 +1960,7 @@ void Kst2DPlot::genAxisTickLabels(TickParameters &tp,
       QString replacedExp = isX ? _xTransformedExp : _yTransformedExp;
       replacedExp.replace(isX ? "x" : "y", QString::number(originalNumber), false);
       bool transformedOK = false;
-      double transformedNumber = Equation::interpret(replacedExp.latin1(), &transformedOK, replacedExp.length());
+      double transformedNumber = Equation::interpret(replacedExp.toLatin1(), &transformedOK, replacedExp.length());
       tick_label->setText(QString::number(transformedNumber, 'g', LABEL_PRECISION));
       if (!transformedOK) {
         tick_label->setText("NaN");
@@ -6418,7 +6418,7 @@ bool Kst2DPlot::reparse(const QString& stringExp, Equation::Node** eqNode) {
   bool eqValid = false;
   if (!stringExp.isEmpty()) {
     QMutexLocker ml(&Equation::mutex());
-    yy_scan_string(stringExp.latin1());
+    yy_scan_string(stringExp.toLatin1());
     int rc = yyparse();
     if (rc == 0) {
       *eqNode = static_cast<Equation::Node*>(ParsedEquation);

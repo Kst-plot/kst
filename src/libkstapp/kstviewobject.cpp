@@ -307,7 +307,7 @@ void KstViewObject::saveAttributes(Q3TextStream& ts, const QString& indent) {
   // save all properties
   for (int i = 0; i < metaObject()->numProperties(true); i++) {
     ts << indent << "<" << metaObject()->property(i, true)->name() << ">";
-    ts << property(metaObject()->property(i, true)->name()).toString().latin1();
+    ts << property(metaObject()->property(i, true)->name()).toString().toLatin1();
     ts << "</" << metaObject()->property(i, true)->name() << ">" << endl;
   }  
 }

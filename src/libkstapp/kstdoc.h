@@ -48,7 +48,7 @@ public:
   /** closes the acutal document */
   void closeDocument();
   /** loads the document by filename */
-  bool openDocument(const KURL& url, const QString& o_file="|",
+  bool openDocument(const KUrl& url, const QString& o_file="|",
         int o_n = -2, int o_f = -2,
         int o_s = -1, bool o_ave = false);
   /** saves the document to a QTextStream */

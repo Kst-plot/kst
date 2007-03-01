@@ -29,7 +29,10 @@
 #include <QCustomEvent>
 
 // include files for KDE
-#include <kmdimainfrm.h>
+// #include <kmdimainfrm.h>
+#include <kaction.h>
+#include <ktoggleaction.h>
+#include <krecentfilesaction.h>
 
 // application specific includes
 #include "kst_export.h"
@@ -110,8 +113,8 @@ class KST_EXPORT KstApp : public KMdiMainFrm {
     const QString& defaultFont() const;
 
     /** add a file to the recent file list */
-    void addRecentFile(const KURL &file);
-    void selectRecentFile(const KURL &file);
+    void addRecentFile(const KUrl &file);
+    void selectRecentFile(const KUrl &file);
 
     /** opens a file specified by commandline option */
     bool openDocumentFile(const QString& _cmdl = QString::null,
@@ -257,7 +260,7 @@ class KST_EXPORT KstApp : public KMdiMainFrm {
     void slotFileOpen();
 
     /** opens a file from the recent files menu */
-    bool slotFileOpenRecent(const KURL &);
+    bool slotFileOpenRecent(const KUrl &);
 
     /** save a document */
     void slotFileSave();
@@ -483,11 +486,12 @@ class KST_EXPORT KstApp : public KMdiMainFrm {
     KAction *_reloadAction;
 
     /** Radio Collection: XY, X, Y zoom, Text, Layout */
-    KRadioAction *XYZoomAction;
-    KRadioAction *XZoomAction;
-    KRadioAction *YZoomAction;
-    KRadioAction *GfxAction;
-    KRadioAction *LayoutAction;
+    //FIXME use exclusive action group
+    KAction *XYZoomAction;
+    KAction *XZoomAction;
+    KAction *YZoomAction;
+    KAction *GfxAction;
+    KAction *LayoutAction;
 
     /* Matrix Edit Action */
     KAction *MatrixDialogAction;
@@ -568,13 +572,14 @@ class KST_EXPORT KstApp : public KMdiMainFrm {
 
     KToggleAction *_saveData;
 
-    KRadioAction *_gfxLineAction;
-    KRadioAction *_gfxRectangleAction;
-    KRadioAction *_gfxEllipseAction;
-    KRadioAction *_gfxLabelAction;
-    KRadioAction *_gfxPictureAction;
-    KRadioAction *_gfx2DPlotAction;
-    KRadioAction *_gfxArrowAction;
+    //FIXME use exclusive action group
+    KAction *_gfxLineAction;
+    KAction *_gfxRectangleAction;
+    KAction *_gfxEllipseAction;
+    KAction *_gfxLabelAction;
+    KAction *_gfxPictureAction;
+    KAction *_gfx2DPlotAction;
+    KAction *_gfxArrowAction;
 
     StatusLabel *_readyBar;
     StatusLabel *_memoryBar;

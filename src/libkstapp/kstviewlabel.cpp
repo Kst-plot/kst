@@ -104,8 +104,8 @@ KstViewLabel::KstViewLabel(const QDomElement& e)
   while (!n.isNull()) {
     QDomElement el = n.toElement(); 
     if (!el.isNull()) {
-      if (metaObject()->findProperty(el.tagName().latin1(), true) > -1) {
-        setProperty(el.tagName().latin1(), QVariant(el.text()));  
+      if (metaObject()->findProperty(el.tagName().toLatin1(), true) > -1) {
+        setProperty(el.tagName().toLatin1(), QVariant(el.text()));  
       }  
     }
     n = n.nextSibling();
@@ -837,7 +837,7 @@ void KstViewLabel::DataCache::update() {
       case DataRef::DRExpression:
         {
           bool ok = false;
-          const double val = Equation::interpret((*i).name.latin1(), &ok, (*i).name.length());
+          const double val = Equation::interpret((*i).name.toLatin1(), &ok, (*i).name.length());
           if (QVariant(val) != (*i).value) {
             valid = false;
           }
@@ -846,7 +846,7 @@ void KstViewLabel::DataCache::update() {
       case DataRef::DRVector:
         {
           bool ok = false;
-          const double idx = Equation::interpret((*i).index.latin1(), &ok, (*i).index.length());
+          const double idx = Equation::interpret((*i).index.toLatin1(), &ok, (*i).index.length());
           if (idx != (*i).indexValue) {
             valid = false;
             break;

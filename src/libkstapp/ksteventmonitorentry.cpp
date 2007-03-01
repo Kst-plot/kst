@@ -123,7 +123,7 @@ bool EventMonitorEntry::reparse() {
   _isValid = false;
   if (!_event.isEmpty()) {
     QMutexLocker ml(&Equation::mutex());
-    yy_scan_string(_event.latin1());
+    yy_scan_string(_event.toLatin1());
     int rc = yyparse();
     if (rc == 0) {
       _pExpression = static_cast<Equation::Node*>(ParsedEquation);
@@ -361,7 +361,7 @@ void EventMonitorEntry::doLog(const QString& logMessage) const {
   }
 
   if (!_script.isEmpty()) {
-    DCOPRef ref(QString("kst-%1").arg(getpid()).latin1(), "KstScript");
+    DCOPRef ref(QString("kst-%1").arg(getpid()).toLatin1(), "KstScript");
     ref.send("evaluate", _script);
   }
 }

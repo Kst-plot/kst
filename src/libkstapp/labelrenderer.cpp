@@ -84,7 +84,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
         // Parse and evaluate as an equation
         bool ok = false;
         const QString s = fi->text.mid(1);
-        const double eqResult(Equation::interpret(s.latin1(), &ok, s.length()));
+        const double eqResult(Equation::interpret(s.toLatin1(), &ok, s.length()));
         txt = QString::number(eqResult, 'g', rc.precision);
         if (rc._cache) {
           rc._cache->append(DataRef(DataRef::DRExpression, fi->text, QString::null, 0.0, QVariant(eqResult)));
@@ -165,7 +165,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
           // Parse and evaluate as an equation
           bool ok = false;
           // FIXME: make more efficient: cache the parsed equation
-          const double idx = Equation::interpret(fi->expression.latin1(), &ok, fi->expression.length());
+          const double idx = Equation::interpret(fi->expression.toLatin1(), &ok, fi->expression.length());
           if (ok) {
             vp->readLock();
             const double vVal(vp->value()[int(idx)]);

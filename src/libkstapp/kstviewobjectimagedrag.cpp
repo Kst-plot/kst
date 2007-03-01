@@ -57,7 +57,7 @@ const char *KstViewObjectImageDrag::format(int i) const {
   if (i < 0 || i >= static_cast<int>(_mimeTypes.count())) {
     return 0L;
   }
-  return _mimeTypes[i].latin1();
+  return _mimeTypes[i].toLatin1();
 }
 
 
@@ -113,7 +113,7 @@ QByteArray KstViewObjectImageDrag::encodedData(const char *mimeType) const {
   QByteArray rc;
 #if QT_VERSION < 0x030200
   KTempFile tf;
-  pm.save(tf.name(), KImageIO::typeForMime(mimeType).latin1());
+  pm.save(tf.name(), KImageIO::typeForMime(mimeType).toLatin1());
   tf.close();
   QFile f(tf.name());
   if (f.open(QIODevice::ReadOnly)) {
@@ -123,7 +123,7 @@ QByteArray KstViewObjectImageDrag::encodedData(const char *mimeType) const {
   QFile::remove(tf.name());
 #else
   QDataStream ds(rc, QIODevice::WriteOnly);
-  pm.save(ds.device(), KImageIO::typeForMime(mimeType).latin1());
+  pm.save(ds.device(), KImageIO::typeForMime(mimeType).toLatin1());
 #endif
 
   return rc;

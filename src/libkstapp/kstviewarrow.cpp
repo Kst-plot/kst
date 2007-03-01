@@ -51,8 +51,8 @@ KstViewArrow::KstViewArrow(const QDomElement& e)
   while (!n.isNull()) {
     QDomElement el = n.toElement(); 
     if (!el.isNull()) {
-      if (metaObject()->findProperty(el.tagName().latin1(), true) > -1) {
-        setProperty(el.tagName().latin1(), QVariant(el.text()));  
+      if (metaObject()->findProperty(el.tagName().toLatin1(), true) > -1) {
+        setProperty(el.tagName().toLatin1(), QVariant(el.text()));  
       }  
     }
     n = n.nextSibling();      

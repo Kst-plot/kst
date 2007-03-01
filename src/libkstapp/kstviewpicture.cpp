@@ -54,8 +54,8 @@ KstViewPicture::KstViewPicture(const QDomElement& e)
   while (!n.isNull()) {
     QDomElement el = n.toElement();
     if (!el.isNull()) {
-      if (metaObject()->findProperty(el.tagName().latin1(), true) > -1) {
-        setProperty(el.tagName().latin1(), QVariant(el.text()));
+      if (metaObject()->findProperty(el.tagName().toLatin1(), true) > -1) {
+        setProperty(el.tagName().toLatin1(), QVariant(el.text()));
       }
     }
     n = n.nextSibling();
@@ -183,12 +183,12 @@ void KstViewPicture::save(Q3TextStream& ts, const QString& indent) {
 
 
 bool KstViewPicture::setImage(const QString& source) {
-  KURL url;
+  KUrl url;
 
   if (QFile::exists(source) && QFileInfo(source).isRelative()) {
     url.setPath(source);
   } else {
-    url = KURL::fromPathOrURL(source);
+    url = KUrl::fromPathOrURL(source);
   }
 
 #if KDE_VERSION >= KDE_MAKE_VERSION(3,3,0)

@@ -23,6 +23,8 @@
 #include <Q3PtrList>
 #include <QDropEvent>
 
+#include <kiconloader.h>
+
 DataWizard::DataWizard(QWidget *parent)
     : Q3Wizard(parent) {
   setupUi(this);

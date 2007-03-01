@@ -52,8 +52,8 @@ KstViewLine::KstViewLine(const QDomElement& e)
     if (!el.isNull()) {
       if (el.tagName() == "orientation") {
         orientationInt = el.text().toInt();
-      } else if (metaObject()->findProperty(el.tagName().latin1(), true) > -1) {
-        setProperty(el.tagName().latin1(), QVariant(el.text()));  
+      } else if (metaObject()->findProperty(el.tagName().toLatin1(), true) > -1) {
+        setProperty(el.tagName().toLatin1(), QVariant(el.text()));  
       }
     }
     n = n.nextSibling();

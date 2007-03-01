@@ -349,7 +349,7 @@ const QString& KstApp::defaultFont() const {
 void KstApp::checkFontPresent(const QString& font) {
   QFont f(font);
   QFontInfo info(f);
-  if (info.family().lower() != font.lower()) {
+  if (info.family().toLower() != font.toLower()) {
     QString msg = i18n("The %1 font was not found and was replaced by the %2 font; as a result, some labels may not display correctly.").arg(font).arg(info.family());
     KstDebug::self()->log(msg, KstDebug::Warning);
   }
@@ -448,7 +448,7 @@ void KstApp::initActions() {
   KStdAction::open(this, SLOT(slotFileOpen()), actionCollection());
 
   /************/
-  _recent = KStdAction::openRecent(this, SLOT(slotFileOpenRecent(const KURL &)), actionCollection());
+  _recent = KStdAction::openRecent(this, SLOT(slotFileOpenRecent(const KUrl &)), actionCollection());
   _recent->setWhatsThis(i18n("Open a recently used Kst plot."));
 
   /************/
@@ -1049,19 +1049,19 @@ void KstApp::forceUpdate() {
 }
 
 
-void KstApp::addRecentFile(const KURL& url) {
+void KstApp::addRecentFile(const KUrl& url) {
   _recent->addURL(url);
 }
 
 
-void KstApp::selectRecentFile(const KURL &url) {
+void KstApp::selectRecentFile(const KUrl &url) {
   if (url.isEmpty()) {
     _recent->setCurrentItem(-1);
   } else {
     QStringList urls = _recent->items();
     int count = urls.count();
     for (int i = 0; i < count; ++i) {
-      if (KURL(urls[i]) == url) {
+      if (KUrl(urls[i]) == url) {
         _recent->setCurrentItem(i);
         break;
       }
@@ -1098,13 +1098,13 @@ bool KstApp::openDocumentFile(const QString& in_filename,
   }
 
   opening = true;
-  KURL url;
+  KUrl url;
   bool rc = false;
 
   if (QFile::exists(in_filename) && QFileInfo(in_filename).isRelative()) {
     url.setPath(QFileInfo(in_filename).absFilePath());
   } else {
-    url = KURL::fromPathOrURL(in_filename);
+    url = KUrl::fromPathOrURL(in_filename);
   }
 
   slotUpdateStatusMsg(i18n("Opening %1...").arg(url.prettyURL()));
@@ -1232,7 +1232,7 @@ void KstApp::slotFileNew() {
   if (doc->saveModified()) {
     doc->newDocument();
     setCaption(doc->title());
-    selectRecentFile(KURL(""));
+    selectRecentFile(KUrl(""));
   }
 
   slotUpdateStatusMsg(i18n("Ready"));
@@ -1243,7 +1243,7 @@ void KstApp::slotFileOpen() {
   slotUpdateStatusMsg(i18n("Opening file..."));
 
   if (doc->saveModified(false)) {
-    KURL url = KFileDialog::getOpenURL("::<kstfiledir>", i18n("*.kst|Kst Plot File (*.kst)\n*|All Files"), this, i18n("Open File"));
+    KUrl url = KFileDialog::getOpenURL("::<kstfiledir>", i18n("*.kst|Kst Plot File (*.kst)\n*|All Files"), this, i18n("Open File"));
     if (!url.isEmpty()) {
       doc->deleteContents();
       doc->setModified(false);
@@ -1258,7 +1258,7 @@ void KstApp::slotFileOpen() {
 }
 
 
-bool KstApp::slotFileOpenRecent(const KURL& newfile) {
+bool KstApp::slotFileOpenRecent(const KUrl& newfile) {
   bool returnVal = false;
   slotUpdateStatusMsg(i18n("Opening file..."));
 
