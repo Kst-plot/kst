@@ -1,5 +1,5 @@
 /***************************************************************************
-                   datarangewidget.h
+                   kstdatarange.h
                              -------------------
     begin                : 02/27/07
     copyright            : (C) 2007 The University of Toronto
@@ -15,11 +15,11 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef DATARANGEWIDGET_H
-#define DATARANGEWIDGET_H
+#ifndef KSTDATARANGE_H
+#define KSTDATARANGE_H
 
 #include <QWidget>
-#include "ui_datarangewidget4.h"
+#include "ui_kstdatarange4.h"
 
 class KstDataRange : public QWidget, public Ui::KstDataRange {
   Q_OBJECT

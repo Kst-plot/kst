@@ -121,12 +121,12 @@ public:
 };
 
 
-#include "datarangewidget.h"
-class DataRangeWidgetPlugin : public KstWidgetPlugin {
+#include "kstdatarange.h"
+class KstDataRangePlugin : public KstWidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
 public:
-  DataRangeWidgetPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  KstDataRangePlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
   QString name() const {
     return QLatin1String("KstDataRange");
   } //do not translate
@@ -278,7 +278,7 @@ KstWidgets::KstWidgets(QObject *parent)
   _plugins.append(new CurveAppearanceWidgetPlugin(this));
   _plugins.append(new CurvePlacementWidgetPlugin(this));
   _plugins.append(new EditMultipleWidgetPlugin(this));
-  _plugins.append(new DataRangeWidgetPlugin(this));
+  _plugins.append(new KstDataRangePlugin(this));
   _plugins.append(new FFTOptionsWidgetPlugin(this));
   _plugins.append(new MatrixSelectorPlugin(this));
   _plugins.append(new ScalarSelectorPlugin(this));

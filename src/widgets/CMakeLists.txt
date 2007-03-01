@@ -11,7 +11,7 @@ set(kstwidgets_LIB_SRCS
    comboboxselection.cpp
    curveappearancewidget.cpp
    curveplacementwidget.cpp
-   datarangewidget.cpp
+   kstdatarange.cpp
    editmultiplewidget.cpp
    fftoptionswidget.cpp
    matrixselector.cpp
@@ -36,7 +36,7 @@ kde4_add_ui_files(kstwidgets_LIB_SRCS
    comboboxselection4.ui
    curveappearancewidget4.ui
    curveplacementwidget4.ui
-   datarangewidget4.ui
+   kstdatarange4.ui
    editmultiplewidget4.ui
    fftoptionswidget4.ui
    matrixselector4.ui

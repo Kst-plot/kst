@@ -1,5 +1,5 @@
 /***************************************************************************
-                   datarangewidget.cpp
+                   kstdatarange.cpp
                              -------------------
     begin                : 02/27/07
     copyright            : (C) 2007 The University of Toronto
@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "datarangewidget.h"
+#include "kstdatarange.h"
 
 #include <QTimer>
 
@@ -223,6 +223,6 @@ bool KstDataRange::isRangeRelativeTime() {
   return _rangeUnits->currentIndex() > KST::dateTimeEntry;
 }
 
-#include "datarangewidget.moc"
+#include "kstdatarange.moc"
 
 // vim: ts=2 sw=2 et
