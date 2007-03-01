@@ -23,7 +23,7 @@
 //Added by qt3to4:
 #include <Q3ValueList>
 
-#include "ksdebug.h"
+#include <qdebug.h>
 
 #include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"

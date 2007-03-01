@@ -129,8 +129,8 @@ void KstCurveDifferentiateI::loadProperties( ) {
 }
 
 
-void KstCurveDifferentiateI::saveProperties( ) {  
-  KConfig cfg("kstrc", false, false);
+void KstCurveDifferentiateI::saveProperties( ) {
+  KConfig cfg("kstrc", KConfig::NoGlobals);
 
   cfg.writeEntry("DifferentiateLineColor", _lineColorOrder);
   cfg.writeEntry("DifferentiatePointStyle", _pointStyleOrder);

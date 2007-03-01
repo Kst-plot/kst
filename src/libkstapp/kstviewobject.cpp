@@ -36,7 +36,7 @@
 
 // include files for KDE
 #include <kdatastream.h>
-#include "ksdebug.h"
+#include <qdebug.h>
 
 // application specific includes
 #include "kst.h"

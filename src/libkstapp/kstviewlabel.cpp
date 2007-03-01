@@ -39,7 +39,7 @@
 #include <klocale.h>
 #include <knuminput.h>
 #include <kpopupmenu.h>
-#include "ksdebug.h"
+#include <qdebug.h>
 
 #include <qapplication.h>
 #include <qbitmap.h>

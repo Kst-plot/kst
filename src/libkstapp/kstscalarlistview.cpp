@@ -17,7 +17,7 @@
 
 #include "klocale.h"
 
-#include "ksdebug.h"
+#include <qdebug.h>
 #include "kstscalar.h"
 
 #include "kstscalarlistview.h"

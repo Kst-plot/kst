@@ -39,7 +39,7 @@
 
 // include files for KDE
 #include <dcopclient.h>
-#include "ksdebug.h"
+#include <qdebug.h>
 #include <kdeversion.h>
 #include <kfiledialog.h>
 #include <kio/netaccess.h>

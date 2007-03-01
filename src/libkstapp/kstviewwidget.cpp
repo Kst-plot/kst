@@ -17,7 +17,7 @@
 
 #include <assert.h>
 
-#include "ksdebug.h"
+#include <qdebug.h>
 #include <kmultipledrag.h>
 
 #include "kst.h"

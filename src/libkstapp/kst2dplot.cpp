@@ -42,7 +42,7 @@
 #include <QMouseEvent>
 
 // include files for KDE
-#include "ksdebug.h"
+#include <qdebug.h>
 #include <kglobal.h>
 #include <kdualcolorbutton.h>
 #include <kcolorbutton.h>

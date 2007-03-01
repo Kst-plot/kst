@@ -134,7 +134,7 @@ void KstGraphFileDialogI::setURL(const QString& url) {
 
 
 void KstGraphFileDialogI::saveProperties() {
-  KConfig cfg("kstrc", false, false);
+  KConfig cfg("kstrc", KConfig::NoGlobals);
 
   cfg.setGroup("AutoSaveImages");
 

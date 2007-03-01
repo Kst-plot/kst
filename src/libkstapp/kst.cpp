@@ -32,7 +32,7 @@
 // include files for KDE
 #include <kaccel.h>
 #include <kcmdlineargs.h>
-#include "ksdebug.h"
+#include <qdebug.h>
 #include <kfiledialog.h>
 #include <kkeydialog.h>
 #include <kmessagebox.h>
@@ -273,7 +273,7 @@ QSize KstApp::sizeHint() const
 
 void KstApp::initialize() {
   KstSettings::checkUpdates();
-  kConfigObject = new KConfig("kstdatarc", false, false);
+  kConfigObject = new KConfig("kstdatarc", KConfig::NoGlobals);
   KstDataSource::setupOnStartup(kConfigObject);
   // NOTE: This is leaked in commandline mode if we never create a KstApp.
   //       Not too much of a problem right now, and less messy than hooking in

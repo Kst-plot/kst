@@ -37,7 +37,6 @@
 #include <kmessagebox.h>
 #include <knuminput.h>
 #include <kiconloader.h>
-#include <qguardedptr.h>
 #include <qregexp.h>
 #include <qlistview.h>
 #include <qheader.h>
@@ -1162,7 +1161,7 @@ void DataWizard::configureSource() {
 }
 
 void DataWizard::saveSettings() {
-  KConfig cfg("kstrc", false, false);
+  KConfig cfg("kstrc", KConfig::NoGlobals);
 
   cfg.setGroup("DataWizard");
 

@@ -22,7 +22,7 @@
 // include files for Qt
 
 // include files for KDE
-#include "ksdebug.h"
+#include <qdebug.h>
 #include <kdeversion.h>
 #if KDE_VERSION >= KDE_MAKE_VERSION(3,3,0)
 #include <kinputdialog.h>

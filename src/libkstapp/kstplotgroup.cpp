@@ -22,7 +22,7 @@
 #include <qpainter.h>
 
 // include files for KDE
-#include "ksdebug.h"
+#include <qdebug.h>
 #include <klocale.h>
 
 // application specific includes

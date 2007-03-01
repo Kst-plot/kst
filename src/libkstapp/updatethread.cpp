@@ -25,7 +25,7 @@
 
 #include <q3deepcopy.h>
 
-#include "ksdebug.h"
+#include <qdebug.h>
 
 #include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"

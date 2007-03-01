@@ -23,7 +23,7 @@
 
 #include <kglobal.h>
 
-#include "ksdebug.h"
+#include <qdebug.h>
 #include "kstgfxmousehandlerutils.h"
 
 QPoint KstGfxMouseHandlerUtils::findNearestPtOnLine(const QPoint& fromPoint, const QPoint& toPoint, const QPoint& pos, const QRect &bounds) {

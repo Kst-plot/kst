@@ -23,7 +23,7 @@
 #include <assert.h>
 #include <math.h>
 
-#include "ksdebug.h"
+#include <qdebug.h>
 #include <kglobal.h>
 #include <kio/netaccess.h>
 #include <klocale.h>

@@ -22,7 +22,7 @@
 #include "kstgfxtextmousehandler.h"
 #include "kstgfxmousehandlerutils.h"
 #include "kst.h"
-#include "ksdebug.h"
+#include <qdebug.h>
 #include "kstdoc.h"
 #include "kstviewlabel.h"
 #include "kstviewwidget.h"

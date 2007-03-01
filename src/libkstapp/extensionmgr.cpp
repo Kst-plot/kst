@@ -41,7 +41,7 @@ ExtensionMgr *ExtensionMgr::self() {
 
 
 void ExtensionMgr::save() {
-  KConfig cfg("kstextensionsrc", false, false);
+  KConfig cfg("kstextensionsrc", KConfig::NoGlobals);
   cfg.setGroup("Extensions");
   QStringList disabled;
   QStringList enabled;
@@ -58,7 +58,7 @@ void ExtensionMgr::save() {
 
 
 ExtensionMgr::ExtensionMgr() : QObject(), _window(0L) {
-  KConfig cfg("kstextensionsrc", true, false);
+  KConfig cfg("kstextensionsrc", KConfig::NoGlobals);
   cfg.setGroup("Extensions");
   QStringList disabled = cfg.readListEntry("Disabled");
   QStringList enabled = cfg.readListEntry("Enabled");

@@ -19,7 +19,7 @@
 #include "kstviewlegend.h"
 
 #include "enodes.h"
-#include "ksdebug.h"
+#include <qdebug.h>
 #include "kst2dplot.h"
 #include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"

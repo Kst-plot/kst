@@ -25,8 +25,6 @@
 #include "labelparser.h"
 #include "kstbasecurve.h"
 
-#include <qguardedptr.h>
-
 class Kst2DPlot;
 typedef KstSharedPtr<Kst2DPlot> Kst2DPlotPtr;
 class KstViewLegend;
