@@ -18,9 +18,11 @@
 #ifndef KSTMONOCHROMEDIALOGI_H
 #define KSTMONOCHROMEDIALOGI_H
 
-#include "monochromedialog.h"
+#include <QDialog>
 
-class KstMonochromeDialogI : public KstMonochromeDialog {
+#include "ui_kstmonochromedialog4.h"
+
+class KstMonochromeDialogI : public QDialog {
   Q_OBJECT
   public:
     KstMonochromeDialogI(QWidget* parent = 0,

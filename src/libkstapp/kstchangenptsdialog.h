@@ -19,9 +19,11 @@
 #ifndef KSTCHANGENPTSDIALOGI_H
 #define KSTCHANGENPTSDIALOGI_H
 
-#include "changenptsdialog.h"
+#include <QDialog>
 
-class KstChangeNptsDialogI : public KstChangeNptsDialog {
+#include "ui_kstchangenptsdialog4.h"
+
+class KstChangeNptsDialogI : public QDialog {
     Q_OBJECT
 public:
     KstChangeNptsDialogI(QWidget* parent = 0,

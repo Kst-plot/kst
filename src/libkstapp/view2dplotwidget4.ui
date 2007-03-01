@@ -3041,10 +3041,8 @@
     <include location="local" >vectorselector.h</include>
     <include location="local" >kdualcolorbutton.h</include>
     <include location="local" >kcolorbutton.h</include>
-    <include location="local" >kcolorbutton.h</include>
     <include location="local" >kfontcombo.h</include>
     <include location="local" >klineedit.h</include>
     <include location="local" >kcombobox.h</include>
-    <include location="local" >kcolorbutton.h</include>
   </includes>
 </ui>

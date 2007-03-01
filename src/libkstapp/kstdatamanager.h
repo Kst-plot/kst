@@ -18,6 +18,8 @@
 #ifndef KSTDATAMANAGERI_H
 #define KSTDATAMANAGERI_H
 
+#include <QDialog>
+
 #include <qaction.h>
 //Added by qt3to4:
 #include <QPixmap>
@@ -26,7 +28,8 @@ class KstDoc;
 class Q3ToolBar;
 class KListViewSearchLineWidget;
 
-#include "datamanager.h"
+#include "ui_kstdatamanager4.h"
+
 #include "kstrvector.h"
 #include "kstsvector.h"
 #include "kstrmatrix.h"
@@ -42,7 +45,7 @@ class KstDataAction : public QAction {
     void addedTo(QWidget *actionWidget, QWidget *container);
 };
 
-class KstDataManagerI : public KstDataManager {
+class KstDataManagerI : public QDialog {
   Q_OBJECT
   public:
     KstDataManagerI(KstDoc *doc, QWidget* parent = 0,

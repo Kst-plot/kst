@@ -1,5 +1,5 @@
 
-include_directories( ${CMAKE_BINARY_DIR}/kst ${CMAKE_SOURCE_DIR}/kst/src/extdate ${CMAKE_SOURCE_DIR}/kst/src/widgets ${CMAKE_SOURCE_DIR}/kst/src/libkst ${CMAKE_BINARY_DIR}/kst/src/libkst ${CMAKE_SOURCE_DIR}/kst/src/libkstmath ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
+include_directories( ${CMAKE_BINARY_DIR}/kst ${CMAKE_SOURCE_DIR}/kst/src/extdate ${CMAKE_SOURCE_DIR}/kst/src/widgets ${CMAKE_BINARY_DIR}/kst/src/widgets ${CMAKE_SOURCE_DIR}/kst/src/libkst ${CMAKE_BINARY_DIR}/kst/src/libkst ${CMAKE_SOURCE_DIR}/kst/src/libkstmath ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
 
 ########### next target ###############
 
@@ -45,67 +45,67 @@ set(kstapp_LIB_UI_IMPL_SRCS
 
 set(kstapp_LIB_SRCS
    ${kstapp_LIB_UI_IMPL_SRCS}
-   dialoglauncher-gui.cpp
-   emailthread.cpp
-   extensionmgr.cpp
-   kst2dplot.cpp
-   kstalignment.cpp
-   kstborderedviewobject.cpp
-   kst.cpp
-   kstdatacollection-gui.cpp
-   kstdatanotifier.cpp
-   kstdebugnotifier.cpp
-   kstdoc.cpp
-   kstdrag.cpp
-   ksteventmonitorentry.cpp
-   kstfilterdialog.cpp
-   kstfitdialog.cpp
-   kstfittable.cpp
-   kstgfx2dplotmousehandler.cpp
-   kstgfxarrowmousehandler.cpp
-   kstgfxellipsemousehandler.cpp
-   kstgfxlinemousehandler.cpp
-   kstgfxmousehandler.cpp
-   kstgfxmousehandlerutils.cpp
-   kstgfxpicturemousehandler.cpp
-   kstgfxrectanglemousehandler.cpp
-   kstgfxtextmousehandler.cpp
-   kstiface_impl.cpp
-   kstlogwidget.cpp
-   kstmatrixtable.cpp
-   kstmetaplot.cpp
-   kstnumbersequence.cpp
-   kstplotbase.cpp
-   kstplotdrag.cpp
-   kstplotgroup.cpp
-   kstplotlabel.cpp
-   kstprintoptionspage.cpp
-   kstscalarlistview.cpp
-   kstscalartable.cpp
-   kststringlistview.cpp
-   ksttoplevelview.cpp
-   kstuinames.cpp
-   kstvectortable.cpp
-   kstviewarrow.cpp
-   kstviewbezier.cpp
-   kstviewbox.cpp
-   kstviewellipse.cpp
-   kstviewlabel.cpp
-   kstviewlegend.cpp
-   kstviewline.cpp
-   kstviewobject.cpp
-   kstviewobjectfactory.cpp
-   kstviewobjectimagedrag.cpp
-   kstviewpicture.cpp
-   kstviewwidget.cpp
-   kstviewwindow.cpp
-   ktimezonecombo.cpp
-   labelrenderer.cpp
-   plotmimesource.cpp
-   statuslabel.cpp
-   treetools.cpp
-   updatethread.cpp
-   updatethread-multicore.cpp
+#    dialoglauncher-gui.cpp
+#    emailthread.cpp
+#    extensionmgr.cpp
+#    kst2dplot.cpp
+#    kstalignment.cpp
+#    kstborderedviewobject.cpp
+#    kst.cpp
+#    kstdatacollection-gui.cpp
+#    kstdatanotifier.cpp
+#    kstdebugnotifier.cpp
+#    kstdoc.cpp
+#    kstdrag.cpp
+#    ksteventmonitorentry.cpp
+#    kstfilterdialog.cpp
+#    kstfitdialog.cpp
+#    kstfittable.cpp
+#    kstgfx2dplotmousehandler.cpp
+#    kstgfxarrowmousehandler.cpp
+#    kstgfxellipsemousehandler.cpp
+#    kstgfxlinemousehandler.cpp
+#    kstgfxmousehandler.cpp
+#    kstgfxmousehandlerutils.cpp
+#    kstgfxpicturemousehandler.cpp
+#    kstgfxrectanglemousehandler.cpp
+#    kstgfxtextmousehandler.cpp
+#    kstiface_impl.cpp
+#    kstlogwidget.cpp
+#    kstmatrixtable.cpp
+#    kstmetaplot.cpp
+#    kstnumbersequence.cpp
+#    kstplotbase.cpp
+#    kstplotdrag.cpp
+#    kstplotgroup.cpp
+#    kstplotlabel.cpp
+#    kstprintoptionspage.cpp
+#    kstscalarlistview.cpp
+#    kstscalartable.cpp
+#    kststringlistview.cpp
+#    ksttoplevelview.cpp
+#    kstuinames.cpp
+#    kstvectortable.cpp
+#    kstviewarrow.cpp
+#    kstviewbezier.cpp
+#    kstviewbox.cpp
+#    kstviewellipse.cpp
+#    kstviewlabel.cpp
+#    kstviewlegend.cpp
+#    kstviewline.cpp
+#    kstviewobject.cpp
+#    kstviewobjectfactory.cpp
+#    kstviewobjectimagedrag.cpp
+#    kstviewpicture.cpp
+#    kstviewwidget.cpp
+#    kstviewwindow.cpp
+#    ktimezonecombo.cpp
+#    labelrenderer.cpp
+#    plotmimesource.cpp
+#    statuslabel.cpp
+#    treetools.cpp
+#    updatethread.cpp
+#    updatethread-multicore.cpp
    )
 
 kde4_automoc(${kstapp_LIB_SRCS})

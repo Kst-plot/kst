@@ -165,11 +165,6 @@
     <tabstop>pushButton4</tabstop>
     <tabstop>_close</tabstop>
   </tabstops>
-  <includes>
-    <include location="global" >qmap.h</include>
-    <include location="global" >qstring.h</include>
-    <include location="global" >kst_export.h</include>
-  </includes>
   <connections>
     <connection>
       <sender>_close</sender>

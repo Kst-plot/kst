@@ -18,9 +18,11 @@
 #ifndef KSTGRAPHFILEDIALOGI_H
 #define KSTGRAPHFILEDIALOGI_H
 
-#include "graphfiledialog.h"
+#include <QDialog>
 
-class KstGraphFileDialogI : public KstGraphFileDialog {
+#include "ui_kstgraphfiledialog4.h"
+
+class KstGraphFileDialogI : public QDialog {
   Q_OBJECT
   public:
     KstGraphFileDialogI(QWidget* parent = 0, const char* name = 0,

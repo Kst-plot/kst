@@ -112,7 +112,4 @@
     <tabstop>_pluginManager</tabstop>
     <tabstop>_curveAppearance</tabstop>
   </tabstops>
-  <includes>
-    <include location="global" >kst_export.h</include>
-  </includes>
 </ui>

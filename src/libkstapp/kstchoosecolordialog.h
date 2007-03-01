@@ -18,13 +18,15 @@
 #ifndef KSTCHOOSECOLORDIALOGI_H
 #define KSTCHOOSECOLORDIALOGI_H
 
+#include <QDialog>
+
+#include "ui_kstchoosecolordialog4.h"
+
 #include <qlineedit.h>
 
 #include <kcolorcombo.h>
 
-#include "choosecolordialog.h"
-
-class KstChooseColorDialogI : public KstChooseColorDialog {
+class KstChooseColorDialogI : public QDialog {
   Q_OBJECT
   public:
     KstChooseColorDialogI(QWidget* parent = 0,

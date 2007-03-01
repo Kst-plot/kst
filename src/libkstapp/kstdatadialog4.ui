@@ -156,9 +156,6 @@
   </widget>
   <layoutdefault spacing="6" margin="11" />
   <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
-  <includes>
-    <include location="local" >kstdataobject.h</include>
-  </includes>
   <connections>
     <connection>
       <sender>_ok</sender>

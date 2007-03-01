@@ -77,7 +77,4 @@
     <tabstop>_apply</tabstop>
     <tabstop>_cancel</tabstop>
   </tabstops>
-  <includes>
-    <include location="global" >kst_export.h</include>
-  </includes>
 </ui>

@@ -508,9 +508,7 @@
     </image>
   </images>
   <includes>
-    <include location="global" >kst_export.h</include>
     <include location="local" >colorpalettewidget.h</include>
-    <include location="local" >knuminput.h</include>
     <include location="local" >knuminput.h</include>
     <include location="local" >kcolorbutton.h</include>
   </includes>

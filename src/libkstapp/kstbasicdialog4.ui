@@ -45,7 +45,4 @@
   </widget>
   <layoutdefault spacing="6" margin="11" />
   <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
-  <includes>
-    <include location="global" >kst_export.h</include>
-  </includes>
 </ui>

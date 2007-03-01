@@ -18,16 +18,19 @@
 #ifndef KSTCURVEDIFFERENTIATEI_H
 #define KSTCURVEDIFFERENTIATEI_H
 
+#include <QDialog>
+
+#include "ui_kstcurvedifferentiate4.h"
+
 #include <q3ptrvector.h>
 
 #include "kstnumbersequence.h"
-#include "curvedifferentiate.h"
 #include "kst_export.h"
 
 class KstNumberSequence;
 class KstViewWindow;
 
-class KstCurveDifferentiateI : public KstCurveDifferentiate {
+class KstCurveDifferentiateI : public QDialog {
   Q_OBJECT
   public:
     KST_EXPORT KstCurveDifferentiateI(QWidget* parent = 0,

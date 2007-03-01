@@ -601,7 +601,7 @@ const QPixmap& KstDataManagerI::yesPixmap() const {
 }
 
 KstDataManagerI::KstDataManagerI(KstDoc *in_doc, QWidget* parent, const char* name, bool modal, Qt::WFlags fl)
-: KstDataManager(parent, name, modal, fl) {
+: QDialog(parent, name, modal, fl) {
   doc = in_doc;
 
   _yesPixmap = QPixmap(locate("data", "kst/pics/yes.png"));

@@ -285,7 +285,4 @@
     <tabstop>_curveAppearance</tabstop>
     <tabstop>_curvePlacement</tabstop>
   </tabstops>
-  <includes>
-    <include location="global" >kst_export.h</include>
-  </includes>
 </ui>

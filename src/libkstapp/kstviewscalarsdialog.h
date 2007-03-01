@@ -18,13 +18,16 @@
 #ifndef KSTVIEWSCALARSDIALOGI_H
 #define KSTVIEWSCALARSDIALOGI_H
 
+#include <QDialog>
+
+#include "ui_kstviewscalarsdialog4.h"
+
 #include <klistviewsearchline.h>
 
-#include "viewscalarsdialog.h"
 //#include "kstscalartable.h"
 #include "kstscalarlistview.h"
 
-class KstViewScalarsDialogI : public KstViewScalarsDialog {
+class KstViewScalarsDialogI : public QDialog {
   Q_OBJECT
   public:
     KstViewScalarsDialogI(QWidget* parent = 0,

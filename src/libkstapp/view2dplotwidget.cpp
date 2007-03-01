@@ -44,7 +44,7 @@ View2DPlotWidget::View2DPlotWidget(QWidget *parent)
     : QWidget(parent) {
   setupUi(this);
 
-  connect(, SIGNAL(), this, SLOT());
+//  connect(, SIGNAL(), this, SLOT());
 }
 
 

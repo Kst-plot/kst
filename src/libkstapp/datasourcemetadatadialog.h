@@ -18,10 +18,10 @@
 #ifndef DATASOURCEMETADATADIALOG_H
 #define DATASOURCEMETADATADIALOG_H
 
-#include <QWidget>
+#include <QDialog>
 #include "ui_datasourcemetadatadialog4.h"
 
-class DataSourceMetaDataDialog : public QWidget, public Ui::DataSourceMetaDataDialog {
+class DataSourceMetaDataDialog : public QDialog, public Ui::DataSourceMetaDataDialog {
   Q_OBJECT
 
 public:

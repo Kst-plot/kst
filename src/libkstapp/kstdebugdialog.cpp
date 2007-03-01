@@ -40,7 +40,7 @@
  */
 KstDebugDialogI::KstDebugDialogI(QWidget* parent,
                                const char* name, bool modal, Qt::WFlags fl)
-: QWidget(parent, name, modal, fl ) {
+: QDialog(parent, name, modal, fl ) {
   _log = new KstLogWidget(TabPage, "logwidget");
   _log->setDebug(KstDebug::self());
 

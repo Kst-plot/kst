@@ -18,7 +18,10 @@
 #ifndef KSTVIEWVECTORSDIALOGI_H
 #define KSTVIEWVECTORSDIALOGI_H
 
-#include "viewvectorsdialog.h"
+#include <QDialog>
+
+#include "ui_kstviewvectorsdialog4.h"
+
 #include "kstvectortable.h"
 
 class KstViewVectorsDialogI : public KstViewVectorsDialog {

@@ -733,7 +733,7 @@
               </widget>
             </item>
             <item row="0" column="1" >
-              <widget class="KURLRequester" name="_fileName" />
+              <widget class="KUrlRequester" name="_fileName" />
             </item>
             <item row="0" column="0" >
               <widget class="QLabel" name="TextLabel4_3" >
@@ -845,7 +845,5 @@
     <include location="local" >klineedit.h</include>
     <include location="local" >kpushbutton.h</include>
     <include location="local" >kcombobox.h</include>
-    <include location="local" >klineedit.h</include>
-    <include location="global" >kst_export.h</include>
   </includes>
 </ui>

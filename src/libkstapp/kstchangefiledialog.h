@@ -18,7 +18,9 @@
 #ifndef KSTCHANGEFILEDIALOGI_H
 #define KSTCHANGEFILEDIALOGI_H
 
-#include "changefiledialog.h"
+#include <QDialog>
+
+#include "ui_kstchangefiledialog4.h"
 
 class KstChangeFileDialogI : public KstChangeFileDialog {
   Q_OBJECT

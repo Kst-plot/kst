@@ -23,7 +23,7 @@ VectorSaveDialog::VectorSaveDialog(QWidget *parent)
     : QWidget(parent) {
   setupUi(this);
 
-  connect(, SIGNAL(), this, SLOT());
+//  connect(, SIGNAL(), this, SLOT());
 }
 
 

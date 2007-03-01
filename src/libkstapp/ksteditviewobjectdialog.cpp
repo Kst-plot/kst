@@ -185,9 +185,9 @@ void KstEditViewObjectDialogI::updateWidgets() {
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(textChanged(const QString&)), this, SLOT(modified()));
           }
-        } else if (widgetType == "KURLRequester") {
+        } else if (widgetType == "KUrlRequester") {
           // insert a url requester
-          propertyWidget = new KURLRequester(_propertiesFrame, (propertyName+","+"url").latin1());
+          propertyWidget = new KUrlRequester(_propertiesFrame, (propertyName+","+"url").latin1());
           propertyWidget->setProperty("url", _viewObject->property(property->name()));
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(textChanged(const QString&)), this, SLOT(modified()));

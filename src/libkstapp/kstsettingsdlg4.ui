@@ -1198,7 +1198,6 @@
     </image>
   </images>
   <includes>
-    <include location="global" >math.h</include>
     <include location="global" >kdialog.h</include>
     <include location="global" >kpalette.h</include>
     <include location="local" >kstsettings.h</include>
@@ -1207,10 +1206,7 @@
     <include location="local" >kdualcolorbutton.h</include>
     <include location="local" >colorpalettewidget.h</include>
     <include location="local" >kcolorbutton.h</include>
-    <include location="local" >kcolorbutton.h</include>
     <include location="local" >knuminput.h</include>
-    <include location="local" >knuminput.h</include>
-    <include location="local" >ktimezonecombo.h</include>
     <include location="local" >kcombobox.h</include>
     <include location="local" >knuminput.h</include>
   </includes>

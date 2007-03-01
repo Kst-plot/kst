@@ -326,7 +326,7 @@ QMap<QString, QVariant> KstViewPicture::widgetHints(const QString& propertyName)
   }
 
   if (propertyName == "path") {
-    map.insert(QString("_kst_widgetType"), QString("KURLRequester"));
+    map.insert(QString("_kst_widgetType"), QString("KUrlRequester"));
     map.insert(QString("_kst_label"), i18n("File path"));
   } else if (propertyName == "refreshTimer") {
     map.insert(QString("_kst_widgetType"), QString("QSpinBox"));

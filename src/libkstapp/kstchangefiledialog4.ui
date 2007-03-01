@@ -180,7 +180,7 @@
                       <number>0</number>
                     </property>
                     <item>
-                      <widget class="KURLRequester" name="_dataFile" />
+                      <widget class="KUrlRequester" name="_dataFile" />
                     </item>
                   </layout>
                 </item>

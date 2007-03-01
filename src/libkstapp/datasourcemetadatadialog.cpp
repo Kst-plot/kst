@@ -15,17 +15,17 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "datasourcemetadialog.h"
+#include "datasourcemetadatadialog.h"
 
 #include "kststring.h"
 
 #include <kst_export.h>
 
 DataSourceMetaDataDialog::DataSourceMetaDataDialog(QWidget *parent)
-    : QWidget(parent) {
+    : QDialog(parent) {
   setupUi(this);
 
-  connect(, SIGNAL(), this, SLOT());
+//  connect(, SIGNAL(), this, SLOT());
 }
 
 

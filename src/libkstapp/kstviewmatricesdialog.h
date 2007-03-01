@@ -18,10 +18,13 @@
 #ifndef KSTVIEWMATRICESDIALOGI_H
 #define KSTVIEWMATRICESDIALOGI_H
 
-#include "viewmatricesdialog.h"
+#include <QDialog>
+
+#include "ui_kstviewmatricesdialog4.h"
+
 #include "kstmatrixtable.h"
 
-class KstViewMatricesDialogI : public KstViewMatricesDialog {
+class KstViewMatricesDialogI : public QDialog {
   Q_OBJECT
   public:
     KstViewMatricesDialogI(QWidget* parent = 0,

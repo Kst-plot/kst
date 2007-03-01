@@ -118,7 +118,7 @@
               </widget>
             </item>
             <item row="0" column="1" >
-              <widget class="KURLRequester" name="FileName" />
+              <widget class="KUrlRequester" name="FileName" />
             </item>
             <item row="0" column="0" >
               <widget class="QLabel" name="TextLabel4_3" >
@@ -339,6 +339,6 @@
     <tabstop>_xMax</tabstop>
   </tabstops>
   <includes>
-    <include location="global" >kst_export.h</include>
+    <include location="local" >kstdatarange.h</include>
   </includes>
 </ui>

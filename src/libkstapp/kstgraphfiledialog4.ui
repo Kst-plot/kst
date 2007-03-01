@@ -62,7 +62,7 @@
         </widget>
       </item>
       <item rowspan="1" row="0" column="1" colspan="4" >
-        <widget class="KURLRequester" name="_saveLocation" />
+        <widget class="KUrlRequester" name="_saveLocation" />
       </item>
       <item rowspan="1" row="1" column="1" colspan="4" >
         <widget class="QComboBox" name="_comboBoxFormats" >

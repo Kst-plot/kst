@@ -77,7 +77,7 @@
           </spacer>
         </item>
         <item row="2" column="1" >
-          <widget class="KURLRequester" name="_url" >
+          <widget class="KUrlRequester" name="_url" >
             <property name="sizePolicy" >
               <sizepolicy>
                 <hsizetype>5</hsizetype>
@@ -1198,16 +1198,13 @@
     <tabstop>_plotColumns</tabstop>
   </tabstops>
   <includes>
-    <include location="local" >kstdatacollection.h</include>
     <include location="local" >kurlrequester.h</include>
     <include location="local" >klineedit.h</include>
     <include location="local" >kpushbutton.h</include>
     <include location="local" >vectorlistview.h</include>
-    <include location="local" >vectorlistview.h</include>
-    <include location="local" >kstcombobox.h</include>
     <include location="local" >klineedit.h</include>
     <include location="local" >kstcombobox.h</include>
-    <include location="local" >kstcombobox.h</include>
+    <include location="local" >kstdatarange.h</include>
   </includes>
   <connections>
     <connection>

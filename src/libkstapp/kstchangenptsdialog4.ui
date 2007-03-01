@@ -143,6 +143,9 @@
     <tabstop>OK</tabstop>
     <tabstop>Cancel</tabstop>
   </tabstops>
+  <includes>
+    <include location="local" >kstdatarange.h</include>
+  </includes>
   <connections>
     <connection>
       <sender>Cancel</sender>

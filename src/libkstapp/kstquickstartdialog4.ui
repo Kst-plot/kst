@@ -108,7 +108,7 @@
               <number>0</number>
             </property>
             <item row="3" column="0" >
-              <widget class="KURLRequester" name="_fileName" />
+              <widget class="KUrlRequester" name="_fileName" />
             </item>
             <item row="1" column="0" >
               <widget class="Q3ListBox" name="_recentFileList" >

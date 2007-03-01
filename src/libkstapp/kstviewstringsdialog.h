@@ -18,12 +18,14 @@
 #ifndef KSTVIEWSTRINGSDIALOGI_H
 #define KSTVIEWSTRINGSDIALOGI_H
 
-#include <klistviewsearchline.h>
+#include <QDialog>
 
-#include "viewstringsdialog.h"
+#include "ui_kstviewstringsdialog4.h"
+
+#include <klistviewsearchline.h>
 #include "kststringlistview.h"
 
-class KstViewStringsDialogI : public KstViewStringsDialog {
+class KstViewStringsDialogI : public QDialog {
   Q_OBJECT
   public:
     KstViewStringsDialogI(QWidget* parent = 0,

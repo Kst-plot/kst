@@ -356,7 +356,6 @@
     </customwidget>
   </customwidgets>
   <includes>
-    <include location="local" >kst_export.h</include>
     <include location="local" >scalarselector.h</include>
     <include location="local" >stringselector.h</include>
     <include location="local" >knuminput.h</include>
@@ -364,7 +363,6 @@
     <include location="local" >klineedit.h</include>
     <include location="local" >kcolorbutton.h</include>
     <include location="local" >kcombobox.h</include>
-    <include location="local" >knuminput.h</include>
     <include location="local" >kdualcolorbutton.h</include>
   </includes>
 </ui>

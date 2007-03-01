@@ -25,10 +25,10 @@
 #include <QCloseEvent>
 
 KstDataDialog::KstDataDialog(QWidget *parent)
-    : QWidget(parent) {
+    : QDialog(parent) {
   setupUi(this);
 
-  connect(, SIGNAL(), this, SLOT());
+//  connect(, SIGNAL(), this, SLOT());
 }
 
 

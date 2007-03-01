@@ -18,10 +18,13 @@
 #ifndef KSTVIEWFITSDIALOGI_H
 #define KSTVIEWFITSDIALOGI_H
 
-#include "viewfitsdialog.h"
+#include <QDialog>
+
 #include "kstfittable.h"
 
-class KstViewFitsDialogI : public KstViewFitsDialog {
+#include "ui_kstviewfitsdialog4.h"
+
+class KstViewFitsDialogI : public QDialog {
   Q_OBJECT
   public:
     KstViewFitsDialogI(QWidget* parent = 0,

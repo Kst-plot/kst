@@ -17,11 +17,13 @@
 #ifndef KSTQUICKSTARTDIALOGI_H
 #define KSTQUICKSTARTDIALOGI_H
 
-#include "quickstartdialog.h"
+#include <QDialog>
+
+#include "ui_kstquickstartdialog4.h"
 
 class KstApp;
 
-class KstQuickStartDialogI : public KstQuickStartDialog {
+class KstQuickStartDialogI : public QDialog {
   Q_OBJECT
   public:
     KstQuickStartDialogI(QWidget *parent = 0, const char *name = 0,

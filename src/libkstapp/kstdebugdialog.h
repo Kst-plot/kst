@@ -17,11 +17,13 @@
 #ifndef KSTDEBUGI_H
 #define KSTDEBUGI_H
 
-#include "debugdialog.h"
+#include <QDialog>
+
+#include "ui_kstdebugdialog4.h"
 
 class KstLogWidget;
 
-class KstDebugDialogI : public QWidget {
+class KstDebugDialogI : public QDialog {
   Q_OBJECT
   public:
     KstDebugDialogI(QWidget* parent = 0, const char* name = 0,

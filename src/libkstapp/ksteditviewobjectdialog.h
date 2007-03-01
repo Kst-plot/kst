@@ -18,7 +18,10 @@
 #ifndef KSTEDITVIEWOBJECTDIALOGI_H
 #define KSTEDITVIEWOBJECTDIALOGI_H
 
-#include "editviewobjectdialog.h"
+#include <QDialog>
+
+#include "ui_ksteditviewdialog4.h"
+
 #include "kstviewobject.h"
 #include "ksttoplevelview.h"
 #include "kst_export.h"
@@ -30,7 +33,7 @@
 class QComboBox;
 class Q3GridLayout;
 
-class KST_EXPORT KstEditViewObjectDialogI : public KstEditViewObjectDialog {
+class KST_EXPORT KstEditViewObjectDialogI : public QDialog {
   Q_OBJECT
   public:
     KstEditViewObjectDialogI(QWidget* parent = 0,

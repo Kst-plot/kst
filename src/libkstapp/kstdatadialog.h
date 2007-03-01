@@ -18,10 +18,10 @@
 #ifndef KSTDATADIALOG_H
 #define KSTDATADIALOG_H
 
-#include <QWidget>
+#include <QDialog>
 #include "ui_kstdatadialog4.h"
 
-class KstDataDialog : public QWidget, public Ui::KstDataDialog {
+class KstDataDialog : public QDialog, public Ui::KstDataDialog {
   Q_OBJECT
 
 public:

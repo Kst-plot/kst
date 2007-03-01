@@ -470,7 +470,4 @@
     <tabstop>checkBoxELOGNotify</tabstop>
     <tabstop>_pushButtonELOGConfigure</tabstop>
   </tabstops>
-  <includes>
-    <include location="global" >kst_export.h</include>
-  </includes>
 </ui>
