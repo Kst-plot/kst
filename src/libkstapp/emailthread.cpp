@@ -174,7 +174,7 @@ void EMailThread::dataReq(KIO::Job *job, QByteArray &array)
 {
   Q_UNUSED(job)
 
-  int chunkSize = kMin(_bodyLength - _bodyOffset, uint(0x8000));
+  int chunkSize = qMin(_bodyLength - _bodyOffset, uint(0x8000));
 
   if (chunkSize > 0) {
     array.duplicate(_strBody.data() + _bodyOffset, chunkSize);

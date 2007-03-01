@@ -227,7 +227,7 @@ const QColor& KstViewBox::borderColor() const {
 
 
 void KstViewBox::setBorderWidth(int w) {
-  int mw = kMax(0, w);
+  int mw = qMax(0, w);
   if (_borderWidth != mw) {
     _borderWidth = mw;
     setDirty();

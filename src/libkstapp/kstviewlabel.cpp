@@ -499,7 +499,7 @@ QSize KstViewLabel::sizeForText(const QRect& w) {
     computeTextSize(_parsed);
   }
  
-  QSize sz(kMax(1, _textWidth), kMax(1, _textHeight));
+  QSize sz(qMax(1, _textWidth), qMax(1, _textHeight));
 
   if (int(_rotation) != 0 && int(_rotation) != 180) {
     Q3PointArray pts(4);
@@ -771,7 +771,7 @@ void KstViewLabel::setHorizJustifyWrap(int justify) {
 }
 
 void KstViewLabel::setLabelMargin(int margin) {
-  int mm = kMax(0, margin);
+  int mm = qMax(0, margin);
   if (mm != _labelMargin) {
     _labelMargin = mm;
     setDirty();

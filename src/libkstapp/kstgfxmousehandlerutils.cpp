@@ -31,24 +31,24 @@ QPoint KstGfxMouseHandlerUtils::findNearestPtOnLine(const QPoint& fromPoint, con
   
   if (fromPoint.y() == toPoint.y()) {
     npos.setY(fromPoint.y());
-    npos.setX(kMax(npos.x(), bounds.left()));
-    npos.setX(kMin(npos.x(), bounds.right()));
+    npos.setX(qMax(npos.x(), bounds.left()));
+    npos.setX(qMin(npos.x(), bounds.right()));
   } else if (fromPoint.x() == toPoint.x()) {
     npos.setX(fromPoint.x());
-    npos.setY(kMax(npos.y(), bounds.top()));
-    npos.setY(kMin(npos.y(), bounds.bottom()));
+    npos.setY(qMax(npos.y(), bounds.top()));
+    npos.setY(qMin(npos.y(), bounds.bottom()));
   } else {
     double newxpos, newypos;
     double slope = double(toPoint.y() - fromPoint.y()) / double(toPoint.x() - fromPoint.x());
 
     newxpos = (double(pos.y()) + slope*double(fromPoint.x()) + double(pos.x())/slope -double(fromPoint.y())) / (slope + 1.0/slope); //we want the tip of our new line to be as close as possible to the original line (while still maintaining aspect). 
 
-    newxpos = kMin(newxpos, double(bounds.right())); //ensure that our x is inside the bounds.
-    newxpos = kMax(newxpos, double(bounds.left())); // ""
+    newxpos = qMin(newxpos, double(bounds.right())); //ensure that our x is inside the bounds.
+    newxpos = qMax(newxpos, double(bounds.left())); // ""
     newypos = slope*(newxpos - double(fromPoint.x())) + double(fromPoint.y()); //consistency w/ x.
 
-    newypos = kMin(newypos, double(bounds.bottom())); //ensure that our y is inside the bounds.
-    newypos = kMax(newypos, double(bounds.top())); // ""*/
+    newypos = qMin(newypos, double(bounds.bottom())); //ensure that our y is inside the bounds.
+    newypos = qMax(newypos, double(bounds.top())); // ""*/
     newxpos = double(fromPoint.x()) + (newypos - double(fromPoint.y()))/slope; // x will still be inside the bounds because we have just moved newypos closer to fromPoint.y(), which will send newxpos closer to fromPoint.x(), ie. in the direction further 'into' the bounds.
 
     npos.setX(int(newxpos));
@@ -85,11 +85,11 @@ QRect KstGfxMouseHandlerUtils::resizeRectFromCornerCentered(const QRect& origina
   newHalfHeight = abs((pos - anchorPoint).y());
 
   if (maintainAspect) {
-    newHalfWidth = kMin(newHalfWidth,anchorPoint.x() - bounds.left());
-    newHalfWidth = kMin(newHalfWidth,bounds.right() - anchorPoint.x());
+    newHalfWidth = qMin(newHalfWidth,anchorPoint.x() - bounds.left());
+    newHalfWidth = qMin(newHalfWidth,bounds.right() - anchorPoint.x());
 
-    newHalfHeight = kMin(newHalfHeight,anchorPoint.y() - bounds.top());
-    newHalfHeight = kMin(newHalfHeight,bounds.bottom() - anchorPoint.y());
+    newHalfHeight = qMin(newHalfHeight,anchorPoint.y() - bounds.top());
+    newHalfHeight = qMin(newHalfHeight,bounds.bottom() - anchorPoint.y());
 
     QSize newSize(originalRect.size());
     newSize.scale(2*newHalfWidth,2*newHalfHeight,QSize::ScaleMin);
@@ -115,8 +115,8 @@ QRect KstGfxMouseHandlerUtils::resizeRectFromEdge(const QRect& originalSize, con
       if (maintainAspect) {
         double newHalfHeight = originalSize.height() * (abs(newWidth) + 1) / originalSize.width() / 2.0; //defined with the QRect convention (height = bot - top + 1)
 
-        newHalfHeight = kMin(double(movePoint.y() - bounds.top()) + 1, newHalfHeight); // ensure we are still within the bounds.
-        newHalfHeight = kMin(double(bounds.bottom() - movePoint.y()) + 1, newHalfHeight);
+        newHalfHeight = qMin(double(movePoint.y() - bounds.top()) + 1, newHalfHeight); // ensure we are still within the bounds.
+        newHalfHeight = qMin(double(bounds.bottom() - movePoint.y()) + 1, newHalfHeight);
 
         if (newWidth == 0) { // anything better to be done?
           newWidth = 1;
@@ -138,8 +138,8 @@ QRect KstGfxMouseHandlerUtils::resizeRectFromEdge(const QRect& originalSize, con
       if (maintainAspect) {
         double newHalfWidth = originalSize.width() * (abs(newHeight) + 1) / originalSize.height() / 2.0;
 
-        newHalfWidth = kMin(double(movePoint.x() - bounds.left() + 1), newHalfWidth);
-        newHalfWidth = kMin(double(bounds.right() - movePoint.x() + 1), newHalfWidth);
+        newHalfWidth = qMin(double(movePoint.x() - bounds.left() + 1), newHalfWidth);
+        newHalfWidth = qMin(double(bounds.right() - movePoint.x() + 1), newHalfWidth);
 
         if (newHeight == 0) {
           newHeight = 1;

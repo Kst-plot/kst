@@ -131,13 +131,13 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
                     if (rc.p) {
                       rc.p->drawText(rc.x, rc.y, txt);
                     } else {
-                      rc.ascent = kMax(rc.ascent, -rc.y + rc.fontAscent());
+                      rc.ascent = qMax(rc.ascent, -rc.y + rc.fontAscent());
                       if (-rc.y - rc.fontDescent() < 0) {
-                        rc.descent = kMax(rc.descent, rc.fontDescent() + rc.y);
+                        rc.descent = qMax(rc.descent, rc.fontDescent() + rc.y);
                       }
                     }
                     rc.x   += rc.fontWidth(txt);
-                    rc.xMax = kMax(rc.xMax, rc.x);
+                    rc.xMax = qMax(rc.xMax, rc.x);
 
                     rc.x    = oldX;
                     rc.y   += rc.fontAscent() + rc.fontDescent() + 1;
@@ -208,9 +208,9 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
 
     if (!rc.p) {
       // No need to compute ascent and descent when really painting
-      rc.ascent = kMax(rc.ascent, -rc.y + rc.fontAscent());
+      rc.ascent = qMax(rc.ascent, -rc.y + rc.fontAscent());
       if (-rc.y - rc.fontDescent() < 0) {
-        rc.descent = kMax(rc.descent, rc.fontDescent() + rc.y);
+        rc.descent = qMax(rc.descent, rc.fontDescent() + rc.y);
       }
     }
 
@@ -223,17 +223,17 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
     if (fi->up) {
       int xPrev = rc.x;
       renderLabel(rc, fi->up);
-      xNext = kMax(xNext, rc.x);
+      xNext = qMax(xNext, rc.x);
       rc.x = xPrev;
     }
 
     if (fi->down) {
       renderLabel(rc, fi->down);
-      xNext = kMax(xNext, rc.x);
+      xNext = qMax(xNext, rc.x);
     }
 
     rc.x = xNext;
-    rc.xMax = kMax(rc.xMax, rc.x);
+    rc.xMax = qMax(rc.xMax, rc.x);
 
     fi = fi->next;
   }

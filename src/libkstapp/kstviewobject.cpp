@@ -738,13 +738,13 @@ void KstViewObject::cleanup(int cols) {
 
   if (!_onGrid) {
     _onGrid = true;
-    _columns = kMax(1, cols);
+    _columns = qMax(1, cols);
   } else {
     if (cols > 0) {
       _columns = cols;
       assert(_columns > 0);
     } else if (cols <= 0){
-      _columns = kMax(1, int(sqrt(cnt)));
+      _columns = qMax(1, int(sqrt(cnt)));
     }
   }
 

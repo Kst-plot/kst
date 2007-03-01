@@ -264,7 +264,7 @@ void KstViewPicture::doRefresh() {
 
 
 void KstViewPicture::setRefreshTimer(int seconds) {
-  _refresh = kMax(0, seconds);
+  _refresh = qMax(0, seconds);
   if (_refresh) {
     if (!_timer) {
       _timer = new QTimer(this);

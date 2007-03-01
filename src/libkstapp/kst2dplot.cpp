@@ -1932,8 +1932,8 @@ void Kst2DPlot::genAxisTickLabels(TickParameters &tp,
     tick_label->setText(strTmp);
     QSize lsize = tick_label->size();
 
-    tp.maxWidth = kMax(tp.maxWidth, double(lsize.width()));
-    tp.maxHeight = kMax(tp.maxHeight, double(lsize.height()));
+    tp.maxWidth = qMax(tp.maxWidth, double(lsize.width()));
+    tp.maxHeight = qMax(tp.maxHeight, double(lsize.height()));
     if (strTmp == strTmpOld) {
       bDuplicate = true;
     } else {
@@ -1969,8 +1969,8 @@ void Kst2DPlot::genAxisTickLabels(TickParameters &tp,
 
       // update the max height and width of opposite labels
       QSize lsize = tick_label->size();
-      tp.oppMaxWidth = kMax(tp.oppMaxWidth, double(lsize.width()));
-      tp.oppMaxHeight = kMax(tp.oppMaxHeight, double(lsize.height()));
+      tp.oppMaxWidth = qMax(tp.oppMaxWidth, double(lsize.width()));
+      tp.oppMaxHeight = qMax(tp.oppMaxHeight, double(lsize.height()));
     }
   }
 
@@ -1999,8 +1999,8 @@ void Kst2DPlot::genAxisTickLabels(TickParameters &tp,
       tp.labels.append(strTmp);
       tick_label->setText(strTmp);
       QSize lsize = tick_label->size();
-      tp.maxWidth = kMax(tp.maxWidth, double(lsize.width()));
-      tp.maxHeight = kMax(tp.maxHeight, double(lsize.height()));
+      tp.maxWidth = qMax(tp.maxWidth, double(lsize.width()));
+      tp.maxHeight = qMax(tp.maxHeight, double(lsize.height()));
     }
   }
 }
@@ -4405,7 +4405,7 @@ bool KstMouse::rectBigEnough() const {
 
 
 QRect KstMouse::mouseRect() const {
-  QRect rc = QRect(kMin(pressLocation.x(), lastLocation.x()), kMin(pressLocation.y(), lastLocation.y()), QABS(pressLocation.x() - lastLocation.x()), QABS(pressLocation.y() - lastLocation.y()));
+  QRect rc = QRect(qMin(pressLocation.x(), lastLocation.x()), qMin(pressLocation.y(), lastLocation.y()), QABS(pressLocation.x() - lastLocation.x()), QABS(pressLocation.y() - lastLocation.y()));
   switch (mode) {
     case X_ZOOMBOX:
       rc.setTop(plotGeometry.top());

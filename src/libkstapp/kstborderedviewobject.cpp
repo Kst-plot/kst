@@ -123,7 +123,7 @@ const QColor& KstBorderedViewObject::borderColor() const {
 
 
 void KstBorderedViewObject::setBorderWidth(int w) {
-  int mw = kMax(0, w);
+  int mw = qMax(0, w);
   if (_borderWidth != mw) {
     _borderWidth = mw;
     setDirty();
@@ -137,7 +137,7 @@ int KstBorderedViewObject::borderWidth() const {
 
 
 void KstBorderedViewObject::setMargin(int w) {
-  int mm = kMax(0, w);
+  int mm = qMax(0, w);
   if (_margin != mm) {
     _margin = mm;
     setDirty();
@@ -151,7 +151,7 @@ int KstBorderedViewObject::margin() const {
 
 
 void KstBorderedViewObject::setPadding(int p) {
-  int mp = kMax(0, p);
+  int mp = qMax(0, p);
   if (_padding != mp) {
     _padding = mp;
     setDirty();

@@ -123,7 +123,7 @@ int KstGuiData::vectorToFile(KstVectorPtr v, QFile *f) {
   register int modval;
   QString saving = i18n("Saving vector %1").arg(v->tagName());
 
-  modval = kMax(vSize/100, 100);
+  modval = qMax(vSize/100, 100);
 
   QString ltxt = "; " + v->tagName() + '\n';
   f->writeBlock(ltxt.ascii(), ltxt.length());
@@ -174,7 +174,7 @@ int KstGuiData::vectorsToFile(const KstVectorList& vl, QFile *f, bool interpolat
   }
 
   QString saving = i18n("Saving vectors...");
-  register int modval = kMax(maxlen/100, 100);
+  register int modval = qMax(maxlen/100, 100);
   app->slotUpdateProgress(maxlen, 0, QString::null);
 
   bool first = true;

@@ -200,7 +200,7 @@ KstObject::UpdateType EventMonitorEntry::update(int updateCounter) {
   int ns = 1;
 
   for (KstVectorMap::ConstIterator i = _vectorsUsed.begin(); i != _vectorsUsed.end(); ++i) {
-    ns = kMax(ns, i.data()->length());
+    ns = qMax(ns, i.data()->length());
   }
 
   double *rawValuesX = 0L;

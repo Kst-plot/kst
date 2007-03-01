@@ -131,7 +131,7 @@ QColor KstViewEllipse::borderColor() const {
 
 void KstViewEllipse::setBorderWidth(int width) {
   if (_borderWidth != width) {
-    _borderWidth = kMax(0, width);
+    _borderWidth = qMax(0, width);
     setDirty();
   }
 }

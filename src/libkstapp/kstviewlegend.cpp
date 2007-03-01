@@ -474,13 +474,13 @@ QSize KstViewLegend::sizeForText(const QRect& w) {
 
   int width, height;
   if (_vertical) {
-    width = kMax(_textWidth + 9*_ascent/2, _titleWidth);
+    width = qMax(_textWidth + 9*_ascent/2, _titleWidth);
     height = _textHeight;
     if (_titleHeight > 0) {
       height += _titleHeight;
     }
   } else {
-    height = kMax(_textHeight, _titleHeight);
+    height = qMax(_textHeight, _titleHeight);
 
     if (_titleWidth > 0) {
       width = _titleWidth + _textWidth + 9*_ascent*_curves.count()/2;
@@ -732,7 +732,7 @@ void KstViewLegend::setVertical(bool vertical) {
 
 
 void KstViewLegend::setLegendMargin(int margin) {
-  int mm = kMax(0, margin);
+  int mm = qMax(0, margin);
   if (_legendMargin != mm) {
     _legendMargin = mm;
     setDirty();

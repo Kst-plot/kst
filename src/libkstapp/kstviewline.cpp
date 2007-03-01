@@ -285,21 +285,21 @@ void KstViewLine::updateOrientation() {
     if (_from.y() < _to.y()) {
       _orientation = DownRight;  
       KstViewObject::move(_from);
-      KstViewObject::resize(QSize(kMax(_width, _to.x() - _from.x() + 1), kMax(_width, _to.y() - _from.y() + 1)));
+      KstViewObject::resize(QSize(qMax(_width, _to.x() - _from.x() + 1), qMax(_width, _to.y() - _from.y() + 1)));
     } else {
       _orientation = UpRight;  
       KstViewObject::move(QPoint(_from.x(), _to.y()));
-      KstViewObject::resize(QSize(kMax(_width, _to.x() - _from.x() + 1), kMax(_width, _from.y() - _to.y() + 1)));
+      KstViewObject::resize(QSize(qMax(_width, _to.x() - _from.x() + 1), qMax(_width, _from.y() - _to.y() + 1)));
     }
   } else {
     if (_from.y() < _to.y()) {
       _orientation = DownLeft;  
       KstViewObject::move(QPoint(_to.x(), _from.y()));
-      KstViewObject::resize(QSize(kMax(_width, _from.x() - _to.x() + 1), kMax(_width, _to.y() - _from.y() + 1)));
+      KstViewObject::resize(QSize(qMax(_width, _from.x() - _to.x() + 1), qMax(_width, _to.y() - _from.y() + 1)));
     } else {
       _orientation = UpLeft;  
       KstViewObject::move(_to);
-      KstViewObject::resize(QSize(kMax(_width, _from.x() - _to.x() + 1), kMax(_width, _from.y() - _to.y() + 1)));
+      KstViewObject::resize(QSize(qMax(_width, _from.x() - _to.x() + 1), qMax(_width, _from.y() - _to.y() + 1)));
     }
   }
 }
