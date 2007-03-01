@@ -159,7 +159,7 @@ void KstViewLine::paintSelf(KstPainter& p, const QRegion& bounds) {
 }
 
 
-void KstViewLine::save(Q3TextStream& ts, const QString& indent) {
+void KstViewLine::save(QTextStream& ts, const QString& indent) {
   ts << indent << "<" << type() << ">" << endl;
   // and save the orientation
   ts << indent + "  " << "<orientation>" << _orientation << "</orientation>" << endl;

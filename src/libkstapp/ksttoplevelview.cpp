@@ -86,7 +86,7 @@ KstTopLevelView::~KstTopLevelView() {
 }
 
 
-void KstTopLevelView::save(Q3TextStream& ts, const QString& indent) {
+void KstTopLevelView::save(QTextStream& ts, const QString& indent) {
   bool temp_onGrid;
   if (_maximized) {
     temp_onGrid = _prevOnGrid;

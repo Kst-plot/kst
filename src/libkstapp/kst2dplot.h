@@ -115,8 +115,8 @@ public:
   static void genAxisTickLabel(QString& label, double z, bool isLog, double logBase);
 
   virtual UpdateType update(int update_counter);
-  virtual void save(Q3TextStream& ts, const QString& indent = QString::null);
-  virtual void saveAttributes(Q3TextStream& ts, const QString& indent = QString::null);
+  virtual void save(QTextStream& ts, const QString& indent = QString::null);
+  virtual void saveAttributes(QTextStream& ts, const QString& indent = QString::null);
   
   virtual bool popupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr topLevelParent);
   virtual bool layoutPopupMenu(KPopupMenu *menu, const QPoint& pos, KstViewObjectPtr topLevelParent);

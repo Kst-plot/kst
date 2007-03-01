@@ -39,7 +39,7 @@ KstMetaPlot::~KstMetaPlot() {
 }
 
 
-void KstMetaPlot::save(Q3TextStream& ts, const QString& indent) {
+void KstMetaPlot::save(QTextStream& ts, const QString& indent) {
   KstBorderedViewObject::save(ts, indent);
 }
 

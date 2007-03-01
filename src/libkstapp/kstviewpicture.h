@@ -66,7 +66,7 @@ class KstViewPicture : public KstBorderedViewObject {
     void doRefresh();
 
   public:
-    void save(Q3TextStream& ts, const QString& indent = QString::null);
+    void save(QTextStream& ts, const QString& indent = QString::null);
 
   private:
     QImage _image, _iCache;

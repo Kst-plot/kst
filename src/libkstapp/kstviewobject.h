@@ -74,8 +74,8 @@ class KST_EXPORT KstViewObject : public KstObject {
 
     virtual UpdateType update(int = -1);
     // FIXME: bring this down to 1 function
-    virtual void save(Q3TextStream& ts, const QString& indent = QString::null);
-    virtual void saveAttributes(Q3TextStream& ts, const QString& indent = QString::null);
+    virtual void save(QTextStream& ts, const QString& indent = QString::null);
+    virtual void saveAttributes(QTextStream& ts, const QString& indent = QString::null);
     virtual void loadChildren(const QDomElement& e);
 
     virtual void invalidateClipRegion();
@@ -325,7 +325,7 @@ class KST_EXPORT KstViewObject : public KstObject {
     int _columns : 10;
     QPointer<KstViewObject> _topObjectForMenu;
     QPointer<KstViewObject> _parent; // danger!!
-    Q_UINT32 _standardActions, _layoutActions;
+    quint32 _standardActions, _layoutActions;
     KstAspectRatio _aspect;
     QSize _idealSize; //ideal size for object. useful when _maintainAspect==true
     KstAspectRatio _aspectOldZoomedObject;

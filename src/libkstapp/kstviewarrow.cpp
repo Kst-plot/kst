@@ -178,7 +178,7 @@ void KstViewArrow::paintSelf(KstPainter& p, const QRegion& bounds) {
 }
 
 
-void KstViewArrow::save(Q3TextStream& ts, const QString& indent) {
+void KstViewArrow::save(QTextStream& ts, const QString& indent) {
   ts << indent << "<" << type() << ">" << endl;
   ts << indent + "  " << "<orientation>" << _orientation << "</orientation>" << endl;
   KstViewObject::save(ts, indent + "  ");

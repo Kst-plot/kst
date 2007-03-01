@@ -287,8 +287,8 @@ void KstViewWindow::immediatePrintToEps(const QString &filename, const QSize& si
 
     if (filePS.open(QIODevice::ReadOnly)) {
       if (fileEPS.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-        Q3TextStream streamPS(&filePS);
-        Q3TextStream streamEPS(&fileEPS);
+        QTextStream streamPS(&filePS);
+        QTextStream streamEPS(&fileEPS);
 
         line = streamPS.readLine();
         if (line.startsWith("%!PS-Adobe-")) {
@@ -383,7 +383,7 @@ void KstViewWindow::print(KstPainter& paint, QSize& size, int pages, int lineAdj
 }
 
 
-void KstViewWindow::save(Q3TextStream& ts, const QString& indent) {
+void KstViewWindow::save(QTextStream& ts, const QString& indent) {
   const QRect restoreGeom(restoreGeometry());
   const QRect internalGeom(internalGeometry());
 

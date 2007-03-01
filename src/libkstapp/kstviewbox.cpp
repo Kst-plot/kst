@@ -138,7 +138,7 @@ void KstViewBox::paintSelf(KstPainter& p, const QRegion& bounds) {
 }
 
 
-void KstViewBox::save(Q3TextStream& ts, const QString& indent) {
+void KstViewBox::save(QTextStream& ts, const QString& indent) {
   ts << indent << "<" << type() << ">" << endl;
   KstViewObject::save(ts, indent + "  ");
   ts << indent << "</" << type() << ">" << endl;

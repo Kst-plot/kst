@@ -203,7 +203,7 @@ const QString& KstViewLegend::fontName() const {
 }
 
 
-void KstViewLegend::save(Q3TextStream &ts, const QString& indent) {
+void KstViewLegend::save(QTextStream &ts, const QString& indent) {
   ts << indent << "<" << type() << ">" << endl;
   KstBorderedViewObject::save(ts, indent + "  ");
   

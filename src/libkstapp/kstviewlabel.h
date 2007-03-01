@@ -70,7 +70,7 @@ class KstViewLabel : public KstBorderedViewObject {
     void setFontSize(int size);
     int fontSize() const;
 
-    void save(Q3TextStream& ts, const QString& indent = QString::null);
+    void save(QTextStream& ts, const QString& indent = QString::null);
 
     void setDoScalarReplacement(bool in_do);
     bool doScalarReplacement() const;

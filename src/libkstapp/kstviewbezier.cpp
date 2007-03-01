@@ -53,7 +53,7 @@ void KstViewBezier::paint(KstPainter& p, const QRegion& bounds) {
 }
 
 
-void KstViewBezier::save(Q3TextStream& ts, const QString& indent) {
+void KstViewBezier::save(QTextStream& ts, const QString& indent) {
   KstViewObject::save(ts, indent);
 }
 

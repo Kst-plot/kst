@@ -637,7 +637,7 @@ bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
 }
 
 
-void KstDoc::saveDocument(Q3TextStream& ts, bool saveAbsoluteVectorPositions) {
+void KstDoc::saveDocument(QTextStream& ts, bool saveAbsoluteVectorPositions) {
   KstApp *app = KstApp::inst();
   ts << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
   ts << "<kstdoc version=\"1.3\">" << endl;
@@ -792,8 +792,8 @@ bool KstDoc::saveDocument(const QString& filename, bool saveAbsoluteVectorPositi
   }
   KTempFile tf(locateLocal("tmp", "kst"), "txt");
 
-  Q3TextStream ts(tf.file());
-  ts.setEncoding(Q3TextStream::UnicodeUTF8);
+  QTextStream ts(tf.file());
+  ts.setEncoding(QTextStream::UnicodeUTF8);
   ts.precision(14);
 
   _lastFilePath = url.prettyURL();

@@ -2736,7 +2736,7 @@ KstObject::UpdateType Kst2DPlot::update(int update_counter) {
 }
 
 
-void Kst2DPlot::save(Q3TextStream& ts, const QString& indent) {
+void Kst2DPlot::save(QTextStream& ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<" << type() << ">" << endl;
   ts << l2 << "<tag>" << Q3StyleSheet::escape(tagName()) << "</tag>" << endl;
@@ -2747,7 +2747,7 @@ void Kst2DPlot::save(Q3TextStream& ts, const QString& indent) {
 }
 
 
-void Kst2DPlot::saveAttributes(Q3TextStream& ts, const QString& indent) {
+void Kst2DPlot::saveAttributes(QTextStream& ts, const QString& indent) {
   unsigned i;
   QString l2 = indent + "  ";
 

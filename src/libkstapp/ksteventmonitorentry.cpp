@@ -148,7 +148,7 @@ bool EventMonitorEntry::reparse() {
 }
 
 
-void EventMonitorEntry::save(Q3TextStream &ts, const QString& indent) {
+void EventMonitorEntry::save(QTextStream &ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<event>" << endl;
   ts << l2 << "<tag>" << Q3StyleSheet::escape(tagName()) << "</tag>" << endl;

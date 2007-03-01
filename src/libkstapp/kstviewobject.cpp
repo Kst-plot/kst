@@ -274,7 +274,7 @@ KstObject::UpdateType KstViewObject::updateChildren(int counter) {
 }
 
 
-void KstViewObject::save(Q3TextStream& ts, const QString& indent) {
+void KstViewObject::save(QTextStream& ts, const QString& indent) {
   saveAttributes(ts, indent);
 
   for (KstViewObjectList::Iterator i = _children.begin(); i != _children.end(); ++i) {
@@ -283,7 +283,7 @@ void KstViewObject::save(Q3TextStream& ts, const QString& indent) {
 }
 
 
-void KstViewObject::saveAttributes(Q3TextStream& ts, const QString& indent) {
+void KstViewObject::saveAttributes(QTextStream& ts, const QString& indent) {
   KstAspectRatio aspect;
 
   if (_maximized) {

@@ -246,7 +246,7 @@ void KstPlotLabel::load(const QDomElement& e) {
 }
 
 
-void KstPlotLabel::save(Q3TextStream &ts, const QString& indent, bool save_pos) const {
+void KstPlotLabel::save(QTextStream &ts, const QString& indent, bool save_pos) const {
   QString l2 = indent + "  ";
   ts << indent << "<text>" << Q3StyleSheet::escape(_txt) << "</text>" << endl;
   if (_interpret) {

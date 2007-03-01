@@ -66,7 +66,7 @@ class KstViewBox : public KstViewObject {
     virtual QColor backgroundColor() const;
 
   public:
-    void save(Q3TextStream& ts, const QString& indent = QString::null);
+    void save(QTextStream& ts, const QString& indent = QString::null);
     
     QMap<QString, QVariant > widgetHints(const QString& propertyName) const;
 

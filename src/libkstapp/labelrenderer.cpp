@@ -122,7 +122,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
                 const QString txtAll = fit->label(rc.precision);
                 fit->unlock();
 
-                const Q3ValueList<QString> strList = QStringList::split('\n', txtAll);
+                const Q3ValueList<QString> strList = txtAll.split('\n');
                 Q3ValueListConstIterator<QString> last = --(strList.end());
                 for (Q3ValueListConstIterator<QString> iter = strList.begin(); iter != strList.end(); ++iter) {
                   txt = (*iter);

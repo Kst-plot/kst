@@ -221,7 +221,7 @@ void KstViewLabel::setInterpreted(bool interpreted) {
 }
 
 
-void KstViewLabel::save(Q3TextStream &ts, const QString& indent) {
+void KstViewLabel::save(QTextStream &ts, const QString& indent) {
   ts << indent << "<" << type() << ">" << endl;
   KstBorderedViewObject::save(ts, indent + "  ");
   ts << indent << "</" << type() << ">" << endl;

@@ -29,7 +29,7 @@ class KstPlotBase : public KstMetaPlot {
     KstPlotBase(const KstPlotBase& plotBase);
     virtual ~KstPlotBase();
 
-    virtual void save(Q3TextStream& ts, const QString& indent = QString::null);
+    virtual void save(QTextStream& ts, const QString& indent = QString::null);
 };
 
 typedef KstSharedPtr<KstPlotBase> KstPlotBasePtr;

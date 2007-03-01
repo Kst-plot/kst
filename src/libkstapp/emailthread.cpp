@@ -103,7 +103,7 @@ void EMailThread::send() {
 
   mQuery  = "headers=0&from=";
   mQuery += KUrl::encode_string(_strFrom);
-  listTo = QStringList::split(QRegExp("[ ,;]"), _strTo);
+  listTo = _strTo.split(QRegExp("[ ,;]"));
   count = listTo.count();
   if (count > 0) {
     for (i=0; i<count; i++) {

@@ -60,7 +60,7 @@ KstBorderedViewObject::~KstBorderedViewObject() {
 }
 
 
-void KstBorderedViewObject::saveAttributesOnly(Q3TextStream& ts, const QString& indent) {
+void KstBorderedViewObject::saveAttributesOnly(QTextStream& ts, const QString& indent) {
   ts << indent << "<border color=\""
     << Q3StyleSheet::escape(_borderColor.name())
     << "\" width=\"" << _borderWidth
@@ -69,13 +69,13 @@ void KstBorderedViewObject::saveAttributesOnly(Q3TextStream& ts, const QString& 
 }
 
 
-void KstBorderedViewObject::save(Q3TextStream& ts, const QString& indent) {
+void KstBorderedViewObject::save(QTextStream& ts, const QString& indent) {
   saveAttributesOnly(ts, indent);
   KstViewObject::save(ts, indent);
 }
 
 
-void KstBorderedViewObject::saveAttributes(Q3TextStream& ts, const QString& indent) {
+void KstBorderedViewObject::saveAttributes(QTextStream& ts, const QString& indent) {
   saveAttributesOnly(ts, indent);
   KstViewObject::saveAttributes(ts, indent);
 }

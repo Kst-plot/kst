@@ -372,10 +372,10 @@ void KstApp::customEvent(QCustomEvent *pEvent) {
   } else if (pEvent->type() == KstELOGDeathEvent) {
     KstEventMonitorI::globalInstance()->disableELOG();
   } else if (pEvent->type() == KstELOGDebugInfoEvent) {
-    Q3TextStream *pTextStream = (Q3TextStream*)pEvent->data();
+    QTextStream *pTextStream = (QTextStream*)pEvent->data();
     (*pTextStream) << KstDebug::self()->text();
   } else if (pEvent->type() == KstELOGConfigureEvent) {
-    Q3TextStream *pTextStream = (Q3TextStream*)pEvent->data();
+    QTextStream *pTextStream = (QTextStream*)pEvent->data();
     if (document()) {
       document()->saveDocument(*pTextStream, true);
     }

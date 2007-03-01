@@ -76,7 +76,7 @@ class KstViewLine : public KstViewObject {
     virtual void paintSelf(KstPainter& p, const QRegion& bounds);
 
   public:
-    virtual void save(Q3TextStream& ts, const QString& indent = QString::null);
+    virtual void save(QTextStream& ts, const QString& indent = QString::null);
 
   protected:
     enum Direction { UpLeft = 0, UpRight = 1, DownLeft = 2, DownRight = 3};

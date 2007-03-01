@@ -74,8 +74,8 @@ class KST_EXPORT KstBorderedViewObject : public KstViewObject {
     KstBorderedViewObject(const KstBorderedViewObject& borderedViewObject);
     virtual ~KstBorderedViewObject();
 
-    virtual void save(Q3TextStream& ts, const QString& indent = QString::null);
-    virtual void saveAttributes(Q3TextStream& ts, const QString& indent = QString::null);
+    virtual void save(QTextStream& ts, const QString& indent = QString::null);
+    virtual void saveAttributes(QTextStream& ts, const QString& indent = QString::null);
 
     void setBorderColor(const QColor& c);
     const QColor& borderColor() const;
@@ -106,7 +106,7 @@ class KST_EXPORT KstBorderedViewObject : public KstViewObject {
   protected:
     virtual void readBinary(QDataStream& str);
     virtual void writeBinary(QDataStream& str);
-    void saveAttributesOnly(Q3TextStream& ts, const QString& indent = QString::null);
+    void saveAttributesOnly(QTextStream& ts, const QString& indent = QString::null);
     // Internal, indication of design problem.  Adjusts the contents rect based
     // on a given line width adjustment factor.
     QRect contentsRectForPainter(const KstPainter& painter) const;

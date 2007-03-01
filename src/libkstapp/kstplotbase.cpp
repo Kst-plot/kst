@@ -37,7 +37,7 @@ KstPlotBase::~KstPlotBase() {
 }
 
 
-void KstPlotBase::save(Q3TextStream& ts, const QString& indent) {
+void KstPlotBase::save(QTextStream& ts, const QString& indent) {
   KstMetaPlot::save(ts, indent);
 }
 

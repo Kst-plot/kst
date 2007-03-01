@@ -37,7 +37,7 @@ class KstTopLevelView : public KstViewObject {
     KstTopLevelView(const QDomElement& e, QWidget *parent = 0L, const char *name = 0L, Qt::WFlags w = 0);
     virtual ~KstTopLevelView();
 
-    virtual void save(Q3TextStream& ts, const QString& indent = QString::null);
+    virtual void save(QTextStream& ts, const QString& indent = QString::null);
 
     void release(); // Release this from it's window/view.  When you call this,
                     // you'd better be deleting this object in the next line.
