@@ -181,7 +181,6 @@
     <tabstop>_dontPlace</tabstop>
   </tabstops>
   <includes>
-    <include location="global" >kst_export.h</include>
     <include location="local" >kcombobox.h</include>
   </includes>
   <connections>

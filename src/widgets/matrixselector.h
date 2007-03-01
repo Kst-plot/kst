@@ -21,6 +21,8 @@
 #include <QWidget>
 #include "ui_matrixselector4.h"
 
+#include <kstdataobject.h>
+
 class MatrixSelector : public QWidget, public Ui::MatrixSelector {
   Q_OBJECT
 

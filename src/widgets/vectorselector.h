@@ -21,6 +21,8 @@
 #include <QWidget>
 #include "ui_vectorselector4.h"
 
+#include <kstdataobject.h>
+
 class VectorSelector : public QWidget, public Ui::VectorSelector {
   Q_OBJECT
 

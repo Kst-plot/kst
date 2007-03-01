@@ -74,7 +74,6 @@
   <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <includes>
     <include location="global" >kpalette.h</include>
-    <include location="global" >kst_export.h</include>
   </includes>
   <connections>
     <connection>

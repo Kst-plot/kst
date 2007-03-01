@@ -455,8 +455,6 @@
     <tabstop>RateUnits</tabstop>
   </tabstops>
   <includes>
-    <include location="global" >kst_export.h</include>
-    <include location="local" >knuminput.h</include>
     <include location="local" >knuminput.h</include>
   </includes>
   <connections>

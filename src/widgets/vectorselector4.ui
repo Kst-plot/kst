@@ -79,9 +79,7 @@
     </customwidget>
   </customwidgets>
   <includes>
-    <include location="local" >kstdatacollection.h</include>
     <include location="local" >kstcombobox.h</include>
-    <include location="global" >kst_export.h</include>
   </includes>
   <connections>
     <connection>

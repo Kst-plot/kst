@@ -119,9 +119,6 @@
     <tabstop>_selectAllBut</tabstop>
     <tabstop>_selectNoneBut</tabstop>
   </tabstops>
-  <includes>
-    <include location="global" >kst_export.h</include>
-  </includes>
   <connections>
     <connection>
       <sender>_selectAllBut</sender>

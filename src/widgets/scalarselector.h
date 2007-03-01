@@ -21,6 +21,8 @@
 #include <QWidget>
 #include "ui_scalarselector4.h"
 
+#include <kstdataobject.h>
+
 class ScalarSelector : public QWidget, public Ui::ScalarSelector {
   Q_OBJECT
 

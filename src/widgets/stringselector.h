@@ -21,6 +21,8 @@
 #include <QWidget>
 #include "ui_stringselector4.h"
 
+#include <kstdataobject.h>
+
 class StringSelector : public QWidget, public Ui::StringSelector {
   Q_OBJECT
 
