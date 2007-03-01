@@ -44,7 +44,7 @@ KstGuiData::~KstGuiData() {
 
 bool KstGuiData::dataTagNameNotUnique(const QString &tag, bool warn, void *p) {
   /* verify that the tag name is not empty */
-  if (tag.stripWhiteSpace().isEmpty()) {
+  if (tag.trimmed().isEmpty()) {
       if (warn) {
         KMessageBox::sorry(static_cast<QWidget*>(p), i18n("Empty tag names are not allowed."));
       }
@@ -67,7 +67,7 @@ bool KstGuiData::dataTagNameNotUnique(const QString &tag, bool warn, void *p) {
 
 bool KstGuiData::vectorTagNameNotUnique(const QString &tag, bool warn, void *p) {
   /* verify that the tag name is not empty */
-  if (tag.stripWhiteSpace().isEmpty()) {
+  if (tag.trimmed().isEmpty()) {
       if (warn) {
         KMessageBox::sorry(static_cast<QWidget*>(p), i18n("Empty tag names are not allowed."));
       }
@@ -90,7 +90,7 @@ bool KstGuiData::vectorTagNameNotUnique(const QString &tag, bool warn, void *p) 
 
 bool KstGuiData::matrixTagNameNotUnique(const QString &tag, bool warn, void *p) {
   /* verify that the tag name is not empty */
-  if (tag.stripWhiteSpace().isEmpty()) {
+  if (tag.trimmed().isEmpty()) {
     if (warn) {
       KMessageBox::sorry(static_cast<QWidget*>(p), i18n("Empty tag names are not allowed."));
     }

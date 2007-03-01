@@ -2285,9 +2285,9 @@ void Kst2DPlot::edit() {
 void Kst2DPlot::move(const QPoint& pos) {
   QPoint offset = pos - _geom.topLeft();
 
-  PlotRegion.moveBy(offset.x(), offset.y());
-  WinRegion.moveBy(offset.x(), offset.y());
-  PlotAndAxisRegion.moveBy(offset.x(), offset.y());
+  PlotRegion.translate(offset.x(), offset.y());
+  WinRegion.translate(offset.x(), offset.y());
+  PlotAndAxisRegion.translate(offset.x(), offset.y());
 
   KstPlotBase::move(pos);
 }
@@ -2300,9 +2300,9 @@ void Kst2DPlot::parentResized() {
 
 
 void Kst2DPlot::parentMoved(const QPoint& offset) {
-  PlotRegion.moveBy(offset.x(), offset.y());
-  WinRegion.moveBy(offset.x(), offset.y());
-  PlotAndAxisRegion.moveBy(offset.x(), offset.y());
+  PlotRegion.translate(offset.x(), offset.y());
+  WinRegion.translate(offset.x(), offset.y());
+  PlotAndAxisRegion.translate(offset.x(), offset.y());
 
   KstPlotBase::parentMoved(offset);
 }
@@ -2331,9 +2331,9 @@ void Kst2DPlot::updateTieBox(QPainter& p) {
   QRect tr = GetTieBoxRegion();
   QColor fillColor;
   if (isTied()) {
-    fillColor.setRgb((foregroundColor().Qt::red() + backgroundColor().Qt::red()) / 2,
-                     (foregroundColor().Qt::green() + backgroundColor().Qt::green()) / 2,
-                     (foregroundColor().Qt::blue() + backgroundColor().Qt::blue()) / 2);
+    fillColor.setRgb((foregroundColor().red() + backgroundColor().red()) / 2,
+                     (foregroundColor().green() + backgroundColor().green()) / 2,
+                     (foregroundColor().blue() + backgroundColor().blue()) / 2);
   } else {
     fillColor = backgroundColor();
   }
@@ -2705,11 +2705,11 @@ QRect Kst2DPlot::GetTieBoxRegion() const {
 
 void Kst2DPlot::setPixRect(const QRect& RelPlotRegion, const QRect& RelWinRegion, const QRect& RelPlotAndAxisRegion) {
   PlotRegion = RelPlotRegion;
-  PlotRegion.moveBy(geometry().x(), geometry().y());
+  PlotRegion.translate(geometry().x(), geometry().y());
   WinRegion = RelWinRegion;
-  WinRegion.moveBy(geometry().x(), geometry().y());
+  WinRegion.translate(geometry().x(), geometry().y());
   PlotAndAxisRegion = RelPlotAndAxisRegion;
-  PlotAndAxisRegion.moveBy(geometry().x(), geometry().y());
+  PlotAndAxisRegion.translate(geometry().x(), geometry().y());
 }
 
 
@@ -6077,9 +6077,9 @@ void Kst2DPlot::plotGridLines(KstPainter& p,
     double x_orig_px, double xtick_px, double xtick_len_px, int x_px,
     double YTick, double ytop_bdr_px, double ybot_bdr_px,
     double y_orig_px, double ytick_px, double ytick_len_px, int y_px) {
-  QColor defaultGridColor( (_foregroundColor.Qt::red() + _backgroundColor.Qt::red()) / 2,
-      (_foregroundColor.Qt::green() + _backgroundColor.Qt::green()) / 2,
-      (_foregroundColor.Qt::blue() + _backgroundColor.Qt::blue()) / 2 );
+  QColor defaultGridColor( (_foregroundColor.red() + _backgroundColor.red()) / 2,
+      (_foregroundColor.green() + _backgroundColor.green()) / 2,
+      (_foregroundColor.blue() + _backgroundColor.blue()) / 2 );
   double X1, Y1;
   double X2, Y2;
   int i, j;
@@ -6572,13 +6572,13 @@ void Kst2DPlot::setSuppressRight(bool yes) {
 
 void Kst2DPlot::setXTransformedExp(const QString& exp) {
   _xTransformedExp = exp;
-  _xTransformed = !exp.stripWhiteSpace().isEmpty();
+  _xTransformed = !exp.trimmed().isEmpty();
 }
 
 
 void Kst2DPlot::setYTransformedExp(const QString& exp) {
   _yTransformedExp = exp;
-  _yTransformed = !exp.stripWhiteSpace().isEmpty();
+  _yTransformed = !exp.trimmed().isEmpty();
 }
 
 

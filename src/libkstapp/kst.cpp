@@ -2445,15 +2445,15 @@ QString KstApp::windowName(bool prompt, const QString& nameOriginal, bool rename
 
       if (rename) {
 #if KDE_VERSION >= KDE_MAKE_VERSION(3,3,0)
-        name = KInputDialog::getText(i18n("Kst"), i18n("Enter a new name for the window:"), name, &ok, parent, 0L, &val).stripWhiteSpace();
+        name = KInputDialog::getText(i18n("Kst"), i18n("Enter a new name for the window:"), name, &ok, parent, 0L, &val).trimmed();
 #else
-        name = KLineEditDlg::getText(i18n("Enter a new name for the window:"), name, &ok, parent, &val).stripWhiteSpace();
+        name = KLineEditDlg::getText(i18n("Enter a new name for the window:"), name, &ok, parent, &val).trimmed();
 #endif
       } else {
 #if KDE_VERSION >= KDE_MAKE_VERSION(3,3,0)
-        name = KInputDialog::getText(i18n("Kst"), i18n("Enter a name for the new window:"), name, &ok, parent, 0L, &val).stripWhiteSpace();
+        name = KInputDialog::getText(i18n("Kst"), i18n("Enter a name for the new window:"), name, &ok, parent, 0L, &val).trimmed();
 #else
-        name = KLineEditDlg::getText(i18n("Enter a name for the new window:"), name, &ok, parent, &val).stripWhiteSpace();
+        name = KLineEditDlg::getText(i18n("Enter a name for the new window:"), name, &ok, parent, &val).trimmed();
 #endif
       }
       if (ok && name==defaultTag) {
