@@ -22,7 +22,7 @@
 #include <qobject.h>
 
 #include <kio/global.h>
-#include <kio/passdlg.h>
+#include <kio/passworddialog.h>
 #include <kio/scheduler.h>
 
 #include "kstsettings.h"

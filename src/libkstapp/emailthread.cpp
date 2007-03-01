@@ -95,8 +95,8 @@ void EMailThread::send() {
   KIO::Scheduler::connect(SIGNAL(slaveError(KIO::Slave *, int, const QString &)), this,
                             SLOT(slaveError(KIO::Slave *, int, const QString &)));
 
-  _strBody.insert( 0, QString("Subject:%1\n\n").arg(_strSubject).toLatin1());
-  _strBody.insert( 0, QString("To:%1\n").arg(_strTo).toLatin1());
+  _strBody.insert( 0, QString("Subject:%1\n\n").arg(_strSubject).toLatin1().data());
+  _strBody.insert( 0, QString("To:%1\n").arg(_strTo).toLatin1().data());
 
   _bodyOffset = 0;
   _bodyLength = _strBody.length();
@@ -177,7 +177,7 @@ void EMailThread::dataReq(KIO::Job *job, QByteArray &array)
   int chunkSize = qMin(_bodyLength - _bodyOffset, uint(0x8000));
 
   if (chunkSize > 0) {
-    array.duplicate(_strBody.data() + _bodyOffset, chunkSize);
+    array = _strBody.data() + _bodyOffset;
     _bodyOffset += chunkSize;
   } else {
     array.resize(0);

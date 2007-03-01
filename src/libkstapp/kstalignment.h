@@ -23,7 +23,7 @@
 #include <qpoint.h>
 #include <qrect.h>
 
-Q_EXPORT int operator<(const QPoint &p1, const QPoint &p2);
+Q_CORE_EXPORT int operator<(const QPoint &p1, const QPoint &p2);
 
 // this class keeps track of the plot line alignment (eg, xaxis lineup, etc)
 class KstAlignment {
