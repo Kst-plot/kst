@@ -272,7 +272,7 @@
                     </widget>
                   </item>
                   <item>
-                    <widget class="KDualColorButton" name="_colors" >
+                    <widget class="KColorButton" name="_colors" >
                       <property name="sizePolicy" >
                         <sizepolicy>
                           <hsizetype>5</hsizetype>
@@ -1203,7 +1203,6 @@
     <include location="local" >kstsettings.h</include>
     <include location="local" >kstplotdefines.h</include>
     <include location="local" >ktimezonecombo.h</include>
-    <include location="local" >kdualcolorbutton.h</include>
     <include location="local" >colorpalettewidget.h</include>
     <include location="local" >kcolorbutton.h</include>
     <include location="local" >knuminput.h</include>

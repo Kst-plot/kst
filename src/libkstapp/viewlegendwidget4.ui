@@ -303,7 +303,7 @@
               </widget>
             </item>
             <item rowspan="1" row="0" column="1" colspan="3" >
-              <widget class="KFontCombo" name="_font" />
+              <widget class="QFontComboBox" name="_font" />
             </item>
           </layout>
         </widget>
@@ -343,7 +343,7 @@
               </widget>
             </item>
             <item>
-              <widget class="KDualColorButton" name="_boxColors" >
+              <widget class="KColorButton" name="_boxColors" >
                 <property name="sizePolicy" >
                   <sizepolicy>
                     <hsizetype>0</hsizetype>
@@ -494,8 +494,6 @@
   </customwidgets>
   <includes>
     <include location="local" >kcolorbutton.h</include>
-    <include location="local" >kfontcombo.h</include>
     <include location="local" >klineedit.h</include>
-    <include location="local" >kdualcolorbutton.h</include>
   </includes>
 </ui>

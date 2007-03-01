@@ -33,8 +33,7 @@
 #include <kcolorbutton.h>
 #include <kcombobox.h>
 #include <kdatastream.h>
-#include <kdualcolorbutton.h>
-#include <kfontcombo.h>
+#include <QFontComboBox>
 #include <kglobal.h>
 #include <klocale.h>
 #include <knuminput.h>

@@ -34,7 +34,7 @@
 #include <QPixmap>
 
 #include <kcolorbutton.h>
-#include <kfontcombo.h>
+#include <QFontComboBox>
 #include <knuminput.h>
 #include <kurlrequester.h>
   
@@ -227,9 +227,9 @@ void KstEditViewObjectDialogI::updateWidgets() {
             connect(propertyWidget, SIGNAL(valueChanged(double)), this, SLOT(modified()));
             connect(propertyWidget->child("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), this, SLOT(modified()));
           }
-        } else if (widgetType == "KFontCombo") {
+        } else if (widgetType == "QFontComboBox") {
           // insert a font combo box
-          propertyWidget = new KFontCombo(_propertiesFrame, (propertyName+","+"currentText").toLatin1());
+          propertyWidget = new QFontComboBox(_propertiesFrame, (propertyName+","+"currentText").toLatin1());
           propertyWidget->setProperty("currentText", _viewObject->property(property->name()));  
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(activated(int)), this, SLOT(modified()));

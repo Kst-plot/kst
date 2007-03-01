@@ -44,10 +44,9 @@
 // include files for KDE
 #include <qdebug.h>
 #include <kglobal.h>
-#include <kdualcolorbutton.h>
 #include <kcolorbutton.h>
 #include <kcombobox.h>
-#include <kfontcombo.h>
+#include <QFontComboBox>
 
 // application specific includes
 #include "dialoglauncher.h"

@@ -38,8 +38,7 @@
 #include <kpopupmenu.h>
 #include <kcolorbutton.h>
 #include <kcombobox.h>
-#include <kdualcolorbutton.h>
-#include <kfontcombo.h>
+#include <QFontComboBox>
 
 #include <qradiobutton.h>
 #include <qapplication.h>

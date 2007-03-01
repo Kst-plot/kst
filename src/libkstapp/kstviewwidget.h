@@ -34,7 +34,7 @@
 #include <QFocusEvent>
 #include <QDragLeaveEvent>
 
-#include <kpopupmenu.h>
+#include <kmenu.h>
 #include "ksttoplevelview.h"
 
 class Q3DragObject;
