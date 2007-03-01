@@ -165,7 +165,7 @@ void KstEditViewObjectDialogI::updateWidgets() {
         QWidget* propertyWidget = 0L;
         if (widgetType == "QSpinBox") {
           // insert a spinbox
-          propertyWidget = new QSpinBox(_propertiesFrame, (propertyName+","+"value").latin1()); 
+          propertyWidget = new QSpinBox(_propertiesFrame, (propertyName+","+"value").toLatin1()); 
           propertyWidget->setProperty("value", _viewObject->property(property->name()));
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(valueChanged(const QString&)), this, SLOT(modified()));
@@ -173,21 +173,21 @@ void KstEditViewObjectDialogI::updateWidgets() {
           }
         } else if (widgetType == "KColorButton") {
           // insert a colorbutton
-          propertyWidget = new KColorButton(_propertiesFrame, (propertyName+","+"color").latin1());
+          propertyWidget = new KColorButton(_propertiesFrame, (propertyName+","+"color").toLatin1());
           propertyWidget->setProperty("color", _viewObject->property(property->name()));
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(changed(const QColor&)), this, SLOT(modified()));
           }
         } else if (widgetType == "QLineEdit") {
           // insert a text field
-          propertyWidget = new QLineEdit(_propertiesFrame, (propertyName+","+"text").latin1());
+          propertyWidget = new QLineEdit(_propertiesFrame, (propertyName+","+"text").toLatin1());
           propertyWidget->setProperty("text", _viewObject->property(property->name()));
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(textChanged(const QString&)), this, SLOT(modified()));
           }
         } else if (widgetType == "KUrlRequester") {
           // insert a url requester
-          propertyWidget = new KUrlRequester(_propertiesFrame, (propertyName+","+"url").latin1());
+          propertyWidget = new KUrlRequester(_propertiesFrame, (propertyName+","+"url").toLatin1());
           propertyWidget->setProperty("url", _viewObject->property(property->name()));
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(textChanged(const QString&)), this, SLOT(modified()));
@@ -195,7 +195,7 @@ void KstEditViewObjectDialogI::updateWidgets() {
           }
         } else if (widgetType == "PenStyleWidget") {
           // insert a combobox with QT pen styles
-          QComboBox* combo = new QComboBox(_propertiesFrame, (propertyName+","+"currentItem").latin1());
+          QComboBox* combo = new QComboBox(_propertiesFrame, (propertyName+","+"currentItem").toLatin1());
           fillPenStyleWidget(combo);
           propertyWidget = combo;
           propertyWidget->setProperty("currentItem", _viewObject->property(property->name()));
@@ -204,14 +204,14 @@ void KstEditViewObjectDialogI::updateWidgets() {
           }
         } else if (widgetType == "QCheckBox") {
           // insert a checkbox
-          propertyWidget = new QCheckBox(_propertiesFrame, (propertyName+","+"checked").latin1());
+          propertyWidget = new QCheckBox(_propertiesFrame, (propertyName+","+"checked").toLatin1());
           propertyWidget->setProperty("checked", _viewObject->property(property->name()));
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(pressed()), this, SLOT(modified()));
           }
         } else if (widgetType == "KDoubleSpinBox") {
           // insert a double num spinbox
-          KDoubleSpinBox* input = new KDoubleSpinBox(_propertiesFrame, (propertyName+","+"value").latin1());
+          KDoubleSpinBox* input = new KDoubleSpinBox(_propertiesFrame, (propertyName+","+"value").toLatin1());
           // need this so that setValue later works
           input->setMinValue(metaData["minValue"].toDouble());
           input->setMaxValue(metaData["maxValue"].toDouble());
@@ -229,14 +229,14 @@ void KstEditViewObjectDialogI::updateWidgets() {
           }
         } else if (widgetType == "KFontCombo") {
           // insert a font combo box
-          propertyWidget = new KFontCombo(_propertiesFrame, (propertyName+","+"currentText").latin1());
+          propertyWidget = new KFontCombo(_propertiesFrame, (propertyName+","+"currentText").toLatin1());
           propertyWidget->setProperty("currentText", _viewObject->property(property->name()));  
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(activated(int)), this, SLOT(modified()));
           }
         } else if (widgetType == "HJustifyCombo") {
           // insert a combo box filled with horizontal justifications
-          QComboBox* combo = new QComboBox(_propertiesFrame, (propertyName+","+"currentItem").latin1());
+          QComboBox* combo = new QComboBox(_propertiesFrame, (propertyName+","+"currentItem").toLatin1());
           fillHJustifyWidget(combo);
           propertyWidget = combo;
           propertyWidget->setProperty("currentItem", _viewObject->property(property->name()));
@@ -245,7 +245,7 @@ void KstEditViewObjectDialogI::updateWidgets() {
           }
         } else if (widgetType == "VJustifyCombo") {
           // insert a combo box filled with vertical justifications
-          QComboBox* combo = new QComboBox(_propertiesFrame, (propertyName+","+"currentItem").latin1());
+          QComboBox* combo = new QComboBox(_propertiesFrame, (propertyName+","+"currentItem").toLatin1());
           fillVJustifyWidget(combo);
           propertyWidget = combo;
           propertyWidget->setProperty("currentItem", _viewObject->property(property->name()));
@@ -256,7 +256,7 @@ void KstEditViewObjectDialogI::updateWidgets() {
         
         // also set any additional properties specified by metaData
         for (QMap<QString, QVariant>::ConstIterator it = metaData.begin(); it != metaData.end(); ++it) {
-          propertyWidget->setProperty(it.key().latin1(), it.data());
+          propertyWidget->setProperty(it.key().toLatin1(), it.data());
         }
         
         _grid->addWidget(propertyWidget, i, 1);
@@ -338,7 +338,7 @@ void KstEditViewObjectDialogI::applyClicked() {
       QString widgetPropertyName = QString((*iter)->name()).section(',', 1, 1);
       
       // get the widget's property and set it on the viewObject
-      _viewObject->setProperty(propertyName.latin1(), (*iter)->property(widgetPropertyName.latin1()));
+      _viewObject->setProperty(propertyName.toLatin1(), (*iter)->property(widgetPropertyName.toLatin1()));
     }
 #if 0
     // Removed by George.  This is very strange.  Some dialogs have 10+

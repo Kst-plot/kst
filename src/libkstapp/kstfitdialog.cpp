@@ -299,7 +299,7 @@ void KstFitDialogI::generateEntries(bool input, int& cnt, QWidget *parent, Q3Gri
 
     if (input) {
       if (scalar) {
-        ScalarSelector *w = new ScalarSelector(parent, (*it)._name.latin1());
+        ScalarSelector *w = new ScalarSelector(parent, (*it)._name.toLatin1());
         widget = w;
         connect(w->_scalar, SIGNAL(activated(const QString&)), this, SLOT(updateScalarTooltip(const QString&)));
         connect(widget, SIGNAL(newScalarCreated()), this, SIGNAL(modified()));
@@ -313,7 +313,7 @@ void KstFitDialogI::generateEntries(bool input, int& cnt, QWidget *parent, Q3Gri
           QToolTip::add(w->_scalar, QString::number(p->value()));
         }
       } else if (string) {
-        StringSelector *w = new StringSelector(parent, (*it)._name.latin1());
+        StringSelector *w = new StringSelector(parent, (*it)._name.toLatin1());
         widget = w;
         connect(w->_string, SIGNAL(activated(const QString&)), this, SLOT(updateStringTooltip(const QString&)));
         connect(widget, SIGNAL(newStringCreated()), this, SIGNAL(modified()));
@@ -328,7 +328,7 @@ void KstFitDialogI::generateEntries(bool input, int& cnt, QWidget *parent, Q3Gri
         }
       } else {
         if (fixed) {
-          widget = new QLabel(parent, (*it)._name.latin1());
+          widget = new QLabel(parent, (*it)._name.toLatin1());
           switch (iInputVector) {
             case 0:
               static_cast<QLabel*>(widget)->setText(_xvector);
@@ -342,12 +342,12 @@ void KstFitDialogI::generateEntries(bool input, int& cnt, QWidget *parent, Q3Gri
           }
           iInputVector++;
         } else {
-          widget = new VectorSelector(parent, (*it)._name.latin1());
+          widget = new VectorSelector(parent, (*it)._name.toLatin1());
           connect(widget, SIGNAL(newVectorCreated(const QString&)), this, SIGNAL(modified()));
         }
       }
     } else {
-      widget = new QLineEdit(parent, (*it)._name.latin1());
+      widget = new QLineEdit(parent, (*it)._name.toLatin1());
     }
 
     grid->addWidget(label, cnt, 0);
@@ -376,11 +376,11 @@ bool KstFitDialogI::saveInputs(KstCPluginPtr plugin, KstSharedPtr<Plugin> p) {
   const Q3ValueList<Plugin::Data::IOValue>& itable = p->data()._inputs;
   for (Q3ValueList<Plugin::Data::IOValue>::ConstIterator it = itable.begin(); it != itable.end(); ++it) {
     if ((*it)._type == Plugin::Data::IOValue::TableType) {
-      QObject *field = _w->_pluginInputOutputFrame->child((*it)._name.latin1(), "VectorSelector");
+      QObject *field = _w->_pluginInputOutputFrame->child((*it)._name.toLatin1(), "VectorSelector");
       KstVectorPtr v;
       KstReadLocker vl(&KST::vectorList.lock());
       if (!field) {
-        field = _w->_pluginInputOutputFrame->child((*it)._name.latin1(), "QLabel");
+        field = _w->_pluginInputOutputFrame->child((*it)._name.toLatin1(), "QLabel");
         assert(field);
         v = *KST::vectorList.findTag(static_cast<QLabel*>(field)->text());
       } else {
@@ -394,7 +394,7 @@ bool KstFitDialogI::saveInputs(KstCPluginPtr plugin, KstSharedPtr<Plugin> p) {
         rc = false;
       }
     } else if ((*it)._type == Plugin::Data::IOValue::StringType) {
-      QObject *field = _w->_pluginInputOutputFrame->child((*it)._name.latin1(), "StringSelector");
+      QObject *field = _w->_pluginInputOutputFrame->child((*it)._name.toLatin1(), "StringSelector");
       assert(field);
       StringSelector *ss = static_cast<StringSelector*>(field);
       KstWriteLocker sl(&KST::stringList.lock());
@@ -410,7 +410,7 @@ bool KstFitDialogI::saveInputs(KstCPluginPtr plugin, KstSharedPtr<Plugin> p) {
     } else if ((*it)._type == Plugin::Data::IOValue::PidType) {
       // Nothing
     } else if ((*it)._type == Plugin::Data::IOValue::FloatType) {
-      QObject *field = _w->_pluginInputOutputFrame->child((*it)._name.latin1(), "ScalarSelector");
+      QObject *field = _w->_pluginInputOutputFrame->child((*it)._name.toLatin1(), "ScalarSelector");
       assert(field);
       ScalarSelector *ss = static_cast<ScalarSelector*>(field);
       KstWriteLocker sl(&KST::scalarList.lock());

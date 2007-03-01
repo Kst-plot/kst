@@ -46,7 +46,7 @@ void ExtensionDialog::show() {
     Q3CheckListItem *i = new Q3CheckListItem(_extensions, name, Q3CheckListItem::CheckBox);
     i->setText(1, service->property("Comment").toString());
     i->setText(2, service->property("X-Kst-Plugin-Author").toString());
-    i->setText(3, KLibLoader::findLibrary(service->library().latin1(), KstApp::inst()->instance()));
+    i->setText(3, KLibLoader::findLibrary(service->library().toLatin1(), KstApp::inst()->instance()));
     if (!ExtensionMgr::self()->extensions().contains(name)) {
       ExtensionMgr::self()->setEnabled(name, service->property("X-Kst-Enabled").toBool());
     }

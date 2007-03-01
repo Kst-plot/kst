@@ -157,7 +157,7 @@ void KstBasicDialogI::createInputVector(const QString &name, int row) {
   QLabel *label = new QLabel(name + ":", _w->_frame);
 
   VectorSelector *widget = new VectorSelector(_w->_frame,
-                                              name.latin1());
+                                              name.toLatin1());
   connect(widget, SIGNAL(newVectorCreated(const QString&)),
           this, SIGNAL(modified()));
 
@@ -172,7 +172,7 @@ void KstBasicDialogI::createInputScalar(const QString &name, int row) {
   QLabel *label = new QLabel(name + ":", _w->_frame);
 
   ScalarSelector *widget = new ScalarSelector(_w->_frame,
-                                              name.latin1());
+                                              name.toLatin1());
   connect(widget, SIGNAL(newScalarCreated()),
           this, SIGNAL(modified()));
   widget->allowDirectEntry(true);
@@ -188,7 +188,7 @@ void KstBasicDialogI::createInputString(const QString &name, int row) {
   QLabel *label = new QLabel(name + ":", _w->_frame);
 
   StringSelector *widget = new StringSelector(_w->_frame,
-                                              name.latin1());
+                                              name.toLatin1());
   connect(widget, SIGNAL(newStringCreated()),
           this, SIGNAL(modified()));
 
@@ -201,7 +201,7 @@ void KstBasicDialogI::createInputString(const QString &name, int row) {
 
 void KstBasicDialogI::createOutputWidget(const QString &name, int row) {
   QLabel *label = new QLabel(name + ":", _w->_frame);
-  QLineEdit *widget = new QLineEdit(_w->_frame, name.latin1());
+  QLineEdit *widget = new QLineEdit(_w->_frame, name.toLatin1());
   _grid->addWidget(label, row, 0);
   label->show();
   _grid->addWidget(widget, row, 1);
@@ -506,22 +506,22 @@ void KstBasicDialogI::fillFieldsForNew() {
 
 
 VectorSelector *KstBasicDialogI::vector(const QString &name) const {
-  return ::qt_cast<VectorSelector*>(_w->_frame->child(name.latin1()));
+  return ::qt_cast<VectorSelector*>(_w->_frame->child(name.toLatin1()));
 }
 
 
 ScalarSelector *KstBasicDialogI::scalar(const QString &name) const {
-  return ::qt_cast<ScalarSelector*>(_w->_frame->child(name.latin1()));
+  return ::qt_cast<ScalarSelector*>(_w->_frame->child(name.toLatin1()));
 }
 
 
 StringSelector *KstBasicDialogI::string(const QString &name) const {
-  return ::qt_cast<StringSelector*>(_w->_frame->child(name.latin1()));
+  return ::qt_cast<StringSelector*>(_w->_frame->child(name.toLatin1()));
 }
 
 
 QLineEdit *KstBasicDialogI::output(const QString &name) const {
-  return ::qt_cast<QLineEdit*>(_w->_frame->child(name.latin1()));
+  return ::qt_cast<QLineEdit*>(_w->_frame->child(name.toLatin1()));
 }
 
 #include "kstbasicdialog.moc"

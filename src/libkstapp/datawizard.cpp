@@ -648,7 +648,7 @@ void DataWizard::finished() {
     if (_kstDataRange->ReadToEnd->isChecked() || nValue < 0) {
       frames = ds->frameCount(_xVector->currentText()) - f0Value;
     } else {
-      frames = kMin(nValue, ds->frameCount(_xVector->currentText()));
+      frames = qMin(nValue, ds->frameCount(_xVector->currentText()));
     }
 
     if (_kstDataRange->DoSkip->isChecked() && _kstDataRange->Skip->value() > 0) {
