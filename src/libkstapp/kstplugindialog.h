@@ -31,7 +31,7 @@ class PluginDialogWidget;
 class KST_EXPORT KstPluginDialogI : public KstDataDialog {
   Q_OBJECT
   public:
-    KstPluginDialogI(QWidget* parent = 0, const char* name = 0, bool modal = false, Qt::WFlags fl = 0);
+    KstPluginDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0);
     virtual ~KstPluginDialogI();
     static KstPluginDialogI *globalInstance();
     static const QString& plugin_defaultTag;

@@ -92,7 +92,8 @@ void KstGuiDialogs::showPSDDialog(const QString& name, bool edit) {
 
 
 void KstGuiDialogs::newVectorDialog(QWidget *parent, const char *createdSlot, const char *selectedSlot, const char *updateSlot) {
-  KstVectorDialogI *ad = new KstVectorDialogI(parent, "vector dialog");
+  KstVectorDialogI *ad = new KstVectorDialogI(parent);
+  ad->setObjectName("vector dialog");
   if (createdSlot) {
     QObject::connect(ad, SIGNAL(vectorCreated(KstVectorPtr)), parent, createdSlot);
   }
@@ -118,7 +119,8 @@ void KstGuiDialogs::showVectorDialog(const QString& name, bool edit) {
 
 
 void KstGuiDialogs::newMatrixDialog(QWidget *parent, const char *createdSlot, const char *selectedSlot, const char *updateSlot) {
-  KstMatrixDialogI *ad = new KstMatrixDialogI(parent, "matrix dialog");
+  KstMatrixDialogI *ad = new KstMatrixDialogI(parent);
+  ad->setObjectName("matrix dialog");
   if (createdSlot) {
     QObject::connect(ad, SIGNAL(matrixCreated(KstMatrixPtr)), parent, createdSlot);
   }

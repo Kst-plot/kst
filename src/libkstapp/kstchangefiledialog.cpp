@@ -39,10 +39,8 @@
 #include "treetools.h"
 
 KstChangeFileDialogI::KstChangeFileDialogI(QWidget* parent,
-                                           const char* name,
-                                           bool modal,
-                                           Qt::WFlags fl)
-: KstChangeFileDialog(parent, name, modal, fl) {
+                                           Qt::WindowFlags fl)
+: KstChangeFileDialog(parent, fl) {
 
   connect(_clearFilter, SIGNAL(clicked()), _filter, SLOT(clear()));
   connect(_clearFilter, SIGNAL(clicked()), ChangeFileCurveList, SLOT(clearSelection()));

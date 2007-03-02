@@ -24,11 +24,8 @@
 #include "kstdatacollection.h"
 #include "kstviewscalarsdialog.h"
 
-KstViewScalarsDialogI::KstViewScalarsDialogI(QWidget* parent,
-                                           const char* name,
-                                           bool modal,
-                                           WFlags fl)
-: KstViewScalarsDialog(parent, name, modal, fl) {
+KstViewScalarsDialogI::KstViewScalarsDialogI(QWidget* parent, Qt::WindowFlags fl)
+: KstViewScalarsDialog(parent, fl) {
   listViewScalars = new KstScalarListView(this, &KST::scalarList);
   listViewScalars->setShowSortIndicator(false);
   listViewScalars->setSelectionMode(QListView::NoSelection);

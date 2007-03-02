@@ -38,9 +38,8 @@
  *  The dialog will by default be modeless, unless you set 'modal' to
  *  TRUE to construct a modal dialog.
  */
-KstDebugDialogI::KstDebugDialogI(QWidget* parent,
-                               const char* name, bool modal, Qt::WFlags fl)
-: QDialog(parent, name, modal, fl ) {
+KstDebugDialogI::KstDebugDialogI(QWidget* parent, Qt::WindowFlags fl)
+: QDialog(parent, fl ) {
 
   _log = new KstLogWidget(TabPage, "logwidget");
   _log->setDebug(KstDebug::self());

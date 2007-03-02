@@ -415,10 +415,10 @@ KstTopLevelViewPtr KstViewWindow::view() const {
 }
 
 
-// void KstViewWindow::setCaption(const QString& caption) {
-//   KMdiChildView::setCaption(caption);
-//   _view->setTagName(KstObjectTag(caption, KstObjectTag::globalTagContext));  // FIXME: global tag context?
-// }
+void KstViewWindow::setCaption(const QString& caption) {
+  KMdiChildView::setCaption(caption);
+  _view->setTagName(KstObjectTag(caption, KstObjectTag::globalTagContext));  // FIXME: global tag context?
+}
 
 
 void KstViewWindow::closeEvent(QCloseEvent *e) {

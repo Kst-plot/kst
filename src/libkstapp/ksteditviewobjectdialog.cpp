@@ -43,8 +43,8 @@
 #include <klocale.h>
 #include <stdio.h>
 
-KstEditViewObjectDialogI::KstEditViewObjectDialogI(QWidget* parent, const char* name, bool modal, Qt::WFlags fl) 
-: KstEditViewObjectDialog(parent, name, modal, fl) {
+KstEditViewObjectDialogI::KstEditViewObjectDialogI(QWidget* parent, Qt::WindowFlags fl) 
+: KstEditViewObjectDialog(parent, fl) {
   connect(_cancel, SIGNAL(clicked()), this, SLOT(close()));
   connect(_apply, SIGNAL(clicked()), this, SLOT(applyClicked()));
   connect(_OK, SIGNAL(clicked()), this, SLOT(okClicked()));

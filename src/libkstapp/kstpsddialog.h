@@ -28,8 +28,7 @@ class PSDDialogWidget;
 class KstPsdDialogI : public KstDataDialog {
   Q_OBJECT
   public:
-    KstPsdDialogI(QWidget* parent = 0, const char* name = 0,
-        bool modal = false, Qt::WFlags fl = 0 );
+    KstPsdDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
     virtual ~KstPsdDialogI();
     KST_EXPORT static KstPsdDialogI *globalInstance();
 

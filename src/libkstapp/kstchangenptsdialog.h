@@ -26,9 +26,7 @@
 class KstChangeNptsDialogI : public QDialog {
     Q_OBJECT
 public:
-    KstChangeNptsDialogI(QWidget* parent = 0,
-                         const char* name = 0,
-                         bool modal = FALSE, Qt::WFlags fl = 0 );
+    KstChangeNptsDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
     virtual ~KstChangeNptsDialogI();
 
 public slots:

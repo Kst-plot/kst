@@ -29,11 +29,8 @@
 #include "kstdatacollection.h"
 #include "kstrvector.h"
 
-KstChangeNptsDialogI::KstChangeNptsDialogI(QWidget* parent,
-                                           const char* name,
-                                           bool modal,
-                                           Qt::WFlags fl)
-: KstChangeNptsDialog(parent, name, modal, fl) {
+KstChangeNptsDialogI::KstChangeNptsDialogI(QWidget* parent, Qt::WindowFlags fl)
+: KstChangeNptsDialog(parent, fl) {
 
     connect(Cancel,     SIGNAL(clicked()),
             this, SLOT(reject()));

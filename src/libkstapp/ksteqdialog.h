@@ -28,7 +28,7 @@ class EqDialogWidget;
 class KST_EXPORT KstEqDialogI : public KstDataDialog {
   Q_OBJECT
   public:
-    KstEqDialogI(QWidget* parent = 0, const char* name = 0, bool modal = false, Qt::WFlags fl = 0);
+    KstEqDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0);
     virtual ~KstEqDialogI();
     static KstEqDialogI *globalInstance();
 

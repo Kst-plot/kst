@@ -24,7 +24,7 @@
 class StatusLabel : public QLabel {
   Q_OBJECT
   public:
-    StatusLabel(const QString &text, QWidget *parent, const char *name = 0, Qt::WFlags f = 0);
+    StatusLabel(const QString &text, QWidget *parent, Qt::WindowFlags f = 0);
     virtual ~StatusLabel();
 
     void setFullText();

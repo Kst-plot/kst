@@ -28,11 +28,8 @@
 #include "kstviewmatricesdialog.h"
 #include "matrixselector.h"
 
-KstViewMatricesDialogI::KstViewMatricesDialogI(QWidget* parent,
-                                             const char* name,
-                                             bool modal,
-                                             Qt::WFlags fl)
-: KstViewMatricesDialog(parent, name, modal, fl) {
+KstViewMatricesDialogI::KstViewMatricesDialogI(QWidget* parent, Qt::WindowFlags fl)
+: KstViewMatricesDialog(parent, fl) {
   _tableMatrices = new KstMatrixTable(this, "tableMatrices");
   _tableMatrices->setNumRows(0);
   _tableMatrices->setNumCols(5);

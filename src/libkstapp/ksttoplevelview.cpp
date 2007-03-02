@@ -50,16 +50,16 @@
 
 #define STICKY_THRESHOLD 10
 
-KstTopLevelView::KstTopLevelView(QWidget *parent, const char *name, Qt::WFlags w)
-: KstViewObject("TopLevelView"), _w(new KstViewWidget(this, parent, name, w)) {
+KstTopLevelView::KstTopLevelView(QWidget *parent, Qt::WindowFlags w)
+: KstViewObject("TopLevelView"), _w(new KstViewWidget(this, w)) {
   _onGrid = true;
   setTagName(KstObjectTag(name, KstObjectTag::globalTagContext));  // FIXME: tag context
   commonConstructor(); 
 }
 
 
-KstTopLevelView::KstTopLevelView(const QDomElement& e, QWidget *parent, const char *name, Qt::WFlags w)
-: KstViewObject(e), _w(new KstViewWidget(this, parent, name, w)) {
+KstTopLevelView::KstTopLevelView(const QDomElement& e, QWidget *parent, Qt::WindowFlags w)
+: KstViewObject(e), _w(new KstViewWidget(this, parent, w)) {
   commonConstructor();
   loadChildren(e);
 }

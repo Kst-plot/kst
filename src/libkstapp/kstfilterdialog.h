@@ -29,7 +29,7 @@
 class KstFilterDialogI : public KstPluginDialogI {
   Q_OBJECT
   public:
-    KstFilterDialogI(QWidget* parent = 0, const char* name = 0, bool modal = false, Qt::WFlags fl = 0);
+    KstFilterDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0);
     virtual ~KstFilterDialogI();
     static KstFilterDialogI *globalInstance();
 

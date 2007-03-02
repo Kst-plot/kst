@@ -29,9 +29,7 @@
 class KstChooseColorDialogI : public QDialog {
   Q_OBJECT
   public:
-    KstChooseColorDialogI(QWidget* parent = 0,
-                         const char* name = 0,
-                         bool modal = FALSE, WFlags fl = 0 );
+    KstChooseColorDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
     virtual ~KstChooseColorDialogI();
     
     void updateChooseColorDialog();

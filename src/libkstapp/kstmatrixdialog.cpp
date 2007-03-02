@@ -50,8 +50,8 @@ KstMatrixDialogI *KstMatrixDialogI::globalInstance() {
 }
 
 
-KstMatrixDialogI::KstMatrixDialogI(QWidget* parent, const char* name, bool modal, Qt::WFlags fl)
-: KstDataDialog(parent, name, modal, fl) {
+KstMatrixDialogI::KstMatrixDialogI(QWidget* parent, Qt::WindowFlags fl)
+: KstDataDialog(parent, fl) {
   _w = new MatrixDialogWidget(_contents);
   setMultiple(true);
   _inTest = false;

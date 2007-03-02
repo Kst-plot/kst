@@ -32,11 +32,8 @@
 #include "kstnumbersequence.h"
 #include "kstviewwindow.h"
 
-KstCurveDifferentiateI::KstCurveDifferentiateI(QWidget* parent,
-                                           const char* name,
-                                           bool modal,
-                                           Qt::WFlags fl)
-: KstCurveDifferentiate(parent, name, modal, fl) {
+KstCurveDifferentiateI::KstCurveDifferentiateI(QWidget* parent, Qt::WindowFlags fl)
+: KstCurveDifferentiate(parent, fl) {
 
   availableListBox->clear();
   selectedListBox->clear();

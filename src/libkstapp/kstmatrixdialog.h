@@ -29,7 +29,7 @@ class MatrixDialogWidget;
 class KST_EXPORT KstMatrixDialogI : public KstDataDialog {
   Q_OBJECT
   public:
-    KstMatrixDialogI(QWidget* parent = 0, const char* name = 0, bool modal = false, Qt::WFlags fl = 0 );
+    KstMatrixDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
     virtual ~KstMatrixDialogI();
     static KstMatrixDialogI *globalInstance();
 

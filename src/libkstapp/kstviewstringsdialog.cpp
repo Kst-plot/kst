@@ -24,11 +24,8 @@
 #include "kstdatacollection.h"
 #include "kstviewstringsdialog.h"
 
-KstViewStringsDialogI::KstViewStringsDialogI(QWidget* parent,
-                                           const char* name,
-                                           bool modal,
-                                           Qt::WFlags fl)
-: KstViewStringsDialog(parent, name, modal, fl) {
+KstViewStringsDialogI::KstViewStringsDialogI(QWidget* parent, Qt::WindowFlags fl)
+: KstViewStringsDialog(parent, fl) {
   listViewStrings = new KstStringListView(this, &KST::stringList);
   listViewStrings->setShowSortIndicator(false);
   listViewStrings->setSelectionMode(Q3ListView::NoSelection);

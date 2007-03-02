@@ -28,7 +28,7 @@ class CurveDialogWidget;
 class KstCurveDialogI : public KstDataDialog {
   Q_OBJECT
   public:
-    KstCurveDialogI(QWidget* parent = 0, const char* name = 0, bool modal = false, Qt::WFlags fl = 0 );
+    KstCurveDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
     virtual ~KstCurveDialogI();
     KST_EXPORT static KstCurveDialogI *globalInstance();
 

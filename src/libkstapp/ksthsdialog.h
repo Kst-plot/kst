@@ -28,7 +28,7 @@ class HistogramDialogWidget;
 class KST_EXPORT KstHsDialogI : public KstDataDialog {
   Q_OBJECT
   public:
-    KstHsDialogI(QWidget* parent = 0, const char* name = 0, bool modal = false, Qt::WFlags fl = 0 );
+    KstHsDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
     virtual ~KstHsDialogI();
     static KstHsDialogI *globalInstance();
 

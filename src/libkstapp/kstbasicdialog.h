@@ -37,7 +37,7 @@ class BasicDialogWidget;
 class KST_EXPORT KstBasicDialogI : public KstDataDialog {
   Q_OBJECT
   public:
-    KstBasicDialogI(QWidget* parent = 0, const char* name = 0, bool modal = false, Qt::WFlags fl = 0);
+    KstBasicDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0);
     virtual ~KstBasicDialogI();
     static KstBasicDialogI *globalInstance();
 

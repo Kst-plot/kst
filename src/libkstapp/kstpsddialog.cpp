@@ -56,8 +56,8 @@ KstPsdDialogI *KstPsdDialogI::globalInstance() {
 }
 
 
-KstPsdDialogI::KstPsdDialogI(QWidget* parent, const char* name, bool modal, Qt::WFlags fl)
-: KstDataDialog(parent, name, modal, fl) {
+KstPsdDialogI::KstPsdDialogI(QWidget* parent, Qt::WindowFlags fl)
+: KstDataDialog(parent, fl) {
   _w = new PSDDialogWidget(_contents);
   setMultiple(true);
   connect(_w->_vector, SIGNAL(newVectorCreated(const QString&)), this, SIGNAL(modified()));

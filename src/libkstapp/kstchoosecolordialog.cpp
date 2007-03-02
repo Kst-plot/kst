@@ -33,11 +33,8 @@
 #include "kstvcurve.h"
 #include "kstrvector.h"
 
-KstChooseColorDialogI::KstChooseColorDialogI(QWidget* parent,
-                                           const char* name,
-                                           bool modal,
-                                           Qt::WFlags fl)
-  : KstChooseColorDialog(parent, name, modal, fl) {
+KstChooseColorDialogI::KstChooseColorDialogI(QWidget* parent, Qt::WindowFlags fl)
+  : KstChooseColorDialog(parent, fl) {
 
     xVector->setChecked(true); 
     connect(Cancel, SIGNAL(clicked()), this, SLOT(reject()));  

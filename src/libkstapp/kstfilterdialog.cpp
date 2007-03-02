@@ -55,8 +55,8 @@ KstFilterDialogI *KstFilterDialogI::globalInstance() {
 }
 
 
-KstFilterDialogI::KstFilterDialogI(QWidget* parent, const char* name, bool modal, Qt::WFlags fl)
-: KstPluginDialogI(parent, name, modal, fl) {
+KstFilterDialogI::KstFilterDialogI(QWidget* parent, Qt::WindowFlags fl)
+: KstPluginDialogI(parent, fl) {
   _w->_curveAppearance->show();
 }
 

@@ -68,8 +68,7 @@ class KstViewObjectItem : public Q3ListViewItem {
 class KstViewManagerI: public KstViewManager {
   Q_OBJECT
   public:
-    KstViewManagerI(KstDoc *doc, QWidget* parent = 0, const char *name = 0, 
-                    bool modal = false, Qt::WFlags fl = 0);
+    KstViewManagerI(KstDoc *doc, QWidget* parent = 0, Qt::WindowFlags fl = 0);
     virtual ~KstViewManagerI();
         
   public slots:

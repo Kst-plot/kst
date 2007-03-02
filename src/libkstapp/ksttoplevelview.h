@@ -33,8 +33,8 @@ class KstTopLevelView : public KstViewObject {
   friend class KstViewWidget;
   Q_OBJECT
   public:
-    KstTopLevelView(QWidget *parent = 0L, const char *name = 0L, Qt::WFlags w = 0);
-    KstTopLevelView(const QDomElement& e, QWidget *parent = 0L, const char *name = 0L, Qt::WFlags w = 0);
+    KstTopLevelView(QWidget *parent = 0L, Qt::WindowFlags w = 0);
+    KstTopLevelView(const QDomElement& e, QWidget *parent = 0L, Qt::WindowFlags w = 0);
     virtual ~KstTopLevelView();
 
     virtual void save(QTextStream& ts, const QString& indent = QString::null);

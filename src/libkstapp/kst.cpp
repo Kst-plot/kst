@@ -134,8 +134,6 @@ KstApp::KstApp(QWidget *parent, const char *name)
 
   _dataSourceConfig = kConfigObject;
 
-  clearWFlags(Qt::WDestructiveClose);
-
   _stopping = false;
   config = kapp->config();
   initStatusBar();

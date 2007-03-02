@@ -396,8 +396,8 @@ void KstViewObjectItem::openChildren(bool open) {
 
 // ==============================================
 
-KstViewManagerI::KstViewManagerI(KstDoc *in_doc, QWidget* parent, const char* name, bool modal, Qt::WFlags fl)
-: KstViewManager(parent, name, modal, fl) {
+KstViewManagerI::KstViewManagerI(KstDoc *in_doc, QWidget* parent, Qt::WindowFlags fl)
+: KstViewManager(parent, fl) {
   doc = in_doc;
   delete ViewView;
   

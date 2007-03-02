@@ -33,9 +33,7 @@ class KstViewWindow;
 class KstCurveDifferentiateI : public QDialog {
   Q_OBJECT
   public:
-    KST_EXPORT KstCurveDifferentiateI(QWidget* parent = 0,
-                         const char* name = 0,
-                         bool modal = TRUE, Qt::WFlags fl = 0 );
+    KST_EXPORT KstCurveDifferentiateI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
     virtual ~KstCurveDifferentiateI();
     
     void setOptions();

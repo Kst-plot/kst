@@ -59,9 +59,8 @@ KstVectorDialogI *KstVectorDialogI::globalInstance() {
 }
 
 
-KstVectorDialogI::KstVectorDialogI(QWidget* parent, const char* name,
-                                   bool modal, Qt::WFlags fl)
-: KstDataDialog(parent, name, modal, fl) {
+KstVectorDialogI::KstVectorDialogI(QWidget* parent, Qt::WindowFlags fl)
+: KstDataDialog(parent, fl) {
   _w = new VectorDialogWidget(_contents);
   setMultiple(true);
   _inTest = false;

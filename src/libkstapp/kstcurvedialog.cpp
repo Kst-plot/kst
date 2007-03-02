@@ -52,8 +52,8 @@ KstCurveDialogI *KstCurveDialogI::globalInstance() {
 }
 
 
-KstCurveDialogI::KstCurveDialogI(QWidget* parent, const char* name, bool modal, Qt::WFlags fl)
-: KstDataDialog(parent, name, modal, fl) {
+KstCurveDialogI::KstCurveDialogI(QWidget* parent, Qt::WindowFlags fl)
+: KstDataDialog(parent, fl) {
   _w = new CurveDialogWidget(_contents);
   setMultiple(true);
   connect(_w->_xVector, SIGNAL(newVectorCreated(const QString&)), this, SIGNAL(modified()));

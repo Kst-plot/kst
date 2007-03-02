@@ -63,8 +63,8 @@ KstPluginDialogI *KstPluginDialogI::globalInstance() {
 }
 
 
-KstPluginDialogI::KstPluginDialogI(QWidget* parent, const char* name, bool modal, Qt::WFlags fl)
-: KstDataDialog(parent, name, modal, fl) {
+KstPluginDialogI::KstPluginDialogI(QWidget* parent, Qt::WindowFlags fl)
+: KstDataDialog(parent, fl) {
   _w = new PluginDialogWidget(_contents);
   setMultiple(false);
   connect(_w->PluginCombo, SIGNAL(activated(int)), this, SLOT(pluginChanged(int)));

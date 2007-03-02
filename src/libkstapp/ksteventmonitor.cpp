@@ -49,8 +49,8 @@ KstEventMonitorI* KstEventMonitorI::globalInstance() {
 }
 
 
-KstEventMonitorI::KstEventMonitorI(QWidget* parent, const char* name, bool modal, Qt::WFlags fl)
-: KstDataDialog(parent, name, modal, fl) {
+KstEventMonitorI::KstEventMonitorI(QWidget* parent, Qt::WindowFlags fl)
+: KstDataDialog(parent, fl) {
   _w = new EventMonitorWidget(_contents);
   setMultiple(true);
   connect(_w->_vectorSelectorEq, SIGNAL(newVectorCreated(const QString&)), this, SIGNAL(modified()));

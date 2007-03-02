@@ -28,7 +28,7 @@ class ImageDialogWidget;
 class KST_EXPORT KstImageDialogI : public KstDataDialog {
   Q_OBJECT
   public:
-    KstImageDialogI(QWidget *parent = 0, const char *name = 0, bool modal = false, Qt::WFlags fl = 0 );
+    KstImageDialogI(QWidget *parent = 0, Qt::WindowFlags fl = 0 );
     virtual ~KstImageDialogI();
     static KstImageDialogI *globalInstance();
 

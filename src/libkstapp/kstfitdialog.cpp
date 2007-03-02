@@ -58,8 +58,8 @@ KstFitDialogI *KstFitDialogI::globalInstance() {
 }
 
 
-KstFitDialogI::KstFitDialogI(QWidget* parent, const char* name, bool modal, Qt::WFlags fl)
-: KstPluginDialogI(parent, name, modal, fl) {
+KstFitDialogI::KstFitDialogI(QWidget* parent, Qt::WindowFlags fl)
+: KstPluginDialogI(parent, fl) {
   _w->_curveAppearance->show();
 }
 

@@ -28,11 +28,8 @@
 #include "kstlinestyle.h"
 #include "kstmonochromedialog.h"
 
-KstMonochromeDialogI::KstMonochromeDialogI(QWidget* parent,
-                                           const char* name,
-                                           bool modal,
-                                           Qt::WFlags fl)
-: KstMonochromeDialog(parent, name, modal, fl) {
+KstMonochromeDialogI::KstMonochromeDialogI(QWidget* parent, Qt::WindowFlags fl)
+: KstMonochromeDialog(parent, fl) {
 
   availableListBox->clear();
   selectedListBox->clear();

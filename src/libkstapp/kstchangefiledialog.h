@@ -25,9 +25,7 @@
 class KstChangeFileDialogI : public KstChangeFileDialog {
   Q_OBJECT
   public:
-    KstChangeFileDialogI(QWidget* parent = 0,
-                         const char* name = 0,
-                         bool modal = FALSE, Qt::WFlags fl = 0 );
+    KstChangeFileDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
     virtual ~KstChangeFileDialogI();
 
   public slots:

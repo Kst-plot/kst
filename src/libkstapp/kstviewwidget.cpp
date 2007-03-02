@@ -40,8 +40,8 @@
 #include <QEvent>
 #include <QDragEnterEvent>
 
-KstViewWidget::KstViewWidget(KstTopLevelViewPtr view, QWidget *parent, const char *name, Qt::WFlags w)
-: QWidget(parent, name, Qt::WStyle_Customize | Qt::WNoAutoErase | w), _view(view) {
+KstViewWidget::KstViewWidget(KstTopLevelViewPtr view, Qt::WindowFlags w)
+: QWidget(parent, Qt::WStyle_Customize | Qt::WNoAutoErase | w), _view(view) {
   setDragEnabled(true);
   setDropEnabled(true);
   setMouseTracking(true);

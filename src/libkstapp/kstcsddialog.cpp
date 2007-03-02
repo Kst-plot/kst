@@ -57,8 +57,8 @@ KstCsdDialogI *KstCsdDialogI::globalInstance() {
 }
 
 
-KstCsdDialogI::KstCsdDialogI(QWidget* parent, const char* name, bool modal, Qt::WFlags fl)
-: KstDataDialog(parent, name, modal, fl) {
+KstCsdDialogI::KstCsdDialogI(QWidget* parent, Qt::WindowFlags fl)
+: KstDataDialog(parent, fl) {
   _w = new CSDDialogWidget(_contents);
   setMultiple(true);
   connect(_w->_vector, SIGNAL(newVectorCreated(const QString&)), this, SIGNAL(modified()));

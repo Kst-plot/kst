@@ -55,8 +55,8 @@ KstHsDialogI *KstHsDialogI::globalInstance() {
 }
 
 
-KstHsDialogI::KstHsDialogI(QWidget* parent, const char* name, bool modal, Qt::WFlags fl)
-: KstDataDialog(parent, name, modal, fl) {
+KstHsDialogI::KstHsDialogI(QWidget* parent, Qt::WindowFlags fl)
+: KstDataDialog(parent, fl) {
   _w = new HistogramDialogWidget(_contents);
   setMultiple(true);
   connect(_w->AutoBin, SIGNAL(clicked()), this, SLOT(autoBin()));

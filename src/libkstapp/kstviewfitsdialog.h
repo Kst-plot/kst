@@ -27,9 +27,7 @@
 class KstViewFitsDialogI : public QDialog {
   Q_OBJECT
   public:
-    KstViewFitsDialogI(QWidget* parent = 0,
-                        const char* name = 0,
-                        bool modal = false, Qt::WFlags fl = 0 );
+    KstViewFitsDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
     virtual ~KstViewFitsDialogI();
     KstFitTable* tableFits;
 

@@ -26,8 +26,7 @@ class KstApp;
 class KstQuickStartDialogI : public QDialog {
   Q_OBJECT
   public:
-    KstQuickStartDialogI(QWidget *parent = 0, const char *name = 0,
-        bool modal = false, Qt::WFlags fl = 0 );
+    KstQuickStartDialogI(QWidget *parent = 0, Qt::WindowFlags fl = 0 );
     ~KstQuickStartDialogI();
 
   public slots:

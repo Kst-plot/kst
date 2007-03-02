@@ -24,11 +24,8 @@
 #include "kstviewvectorsdialog.h"
 #include "vectorselector.h"
 
-KstViewVectorsDialogI::KstViewVectorsDialogI(QWidget* parent,
-                                             const char* name,
-                                             bool modal,
-                                             Qt::WFlags fl)
-: KstViewVectorsDialog(parent, name, modal, fl) {
+KstViewVectorsDialogI::KstViewVectorsDialogI(QWidget* parent, Qt::WindowFlags fl)
+: KstViewVectorsDialog(parent, fl) {
   tableVectors = new KstVectorTable(this, "tableVectors");
   tableVectors->setNumRows(0);
   tableVectors->setNumCols(1);

@@ -27,9 +27,7 @@
 class KstViewVectorsDialogI : public KstViewVectorsDialog {
   Q_OBJECT
   public:
-    KstViewVectorsDialogI(QWidget* parent = 0,
-                        const char* name = 0,
-                        bool modal = false, Qt::WFlags fl = 0 );
+    KstViewVectorsDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
     virtual ~KstViewVectorsDialogI();
     KstVectorTable* tableVectors;
 
