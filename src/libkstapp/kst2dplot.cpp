@@ -2219,10 +2219,10 @@ void Kst2DPlot::setBorders(double& xleft_bdr_px, double& xright_bdr_px,
 
 void Kst2DPlot::drawGraphicSelectionAt(QPainter& p, const QPoint& pos) {
   if (PlotRegion.contains(pos)) {
-    p.setRasterOp(Qt::XorROP);
+    p.setCompositionMode(QPainter::CompositionMode_Xor);
     p.setPen(QPen(QColor("gray"), 1));
     p.drawRect(pos.x() - 2, pos.y() - 2, 4, 4);
-    p.setRasterOp(Qt::CopyROP);
+    p.setCompositionMode(QPainter::CompositionMode_Source);
   }
 }
 
@@ -2247,10 +2247,10 @@ void Kst2DPlot::drawDotAt(QPainter& p, double x, double y) {
   }
 
   if (PlotRegion.contains(X1, Y1)) {
-    p.setRasterOp(Qt::XorROP);
+    p.setCompositionMode(QPainter::CompositionMode_Xor);
     p.setPen(QPen(QColor("gray"), 1));
     p.drawEllipse(X1 - 3, Y1 - 3, 6, 6);
-    p.setRasterOp(Qt::CopyROP);
+    p.setCompositionMode(QPainter::CompositionMode_Source);
   }
 }
 
@@ -2267,11 +2267,11 @@ void Kst2DPlot::drawPlusAt(QPainter& p, double x, double y) {
   int Y1 = d2i(_m_Y * y + _b_Y) + position().y();
 
   if (PlotRegion.contains(X1, Y1)) {
-    p.setRasterOp(Qt::XorROP);
+    p.setCompositionMode(QPainter::CompositionMode_Xor);
     p.setPen(QPen(QColor("gray"), 1));
     p.drawLine(X1 - 3, Y1, X1 + 4, Y1);
     p.drawLine(X1, Y1 - 3, X1, Y1 + 4);
-    p.setRasterOp(Qt::CopyROP);
+    p.setCompositionMode(QPainter::CompositionMode_Source);
   }
 }
 
@@ -2391,7 +2391,7 @@ void Kst2DPlot::paintSelf(KstPainter& p, const QRegion& bounds) {
     }
 
     if (p.makingMask()) {
-      p.setRasterOp(Qt::SetROP);
+      p.setCompositionMode(QPainter::CompositionMode_Source);
       KstPlotBase::paintSelf(p, bounds);
     } else {
       const QRegion clip(clipRegion());
