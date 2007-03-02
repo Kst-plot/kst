@@ -32,6 +32,7 @@
 #include <q3deepcopy.h>
 #include <q3pointarray.h>
 #include <q3stylesheet.h>
+#include <q3ptrvector.h>
 #include <qlineedit.h>
 #include <qspinbox.h>
 #include <qcheckbox.h>
@@ -3443,7 +3444,9 @@ bool Kst2DPlot::popupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topLe
   KstViewObject::popupMenu(menu, pos, topLevelParent);
 
   KMenu *submenu = new KMenu(menu);
+  submenu->setTitle(i18n("&Match Axes"));
   KMenu *submenu2 = new KMenu(menu);
+  submenu->setTitle(i18n("&Match X Axis"));
   Kst2DPlotList pl = globalPlotList();
   int i = 0;
   _plotMap.clear();
@@ -3452,61 +3455,61 @@ bool Kst2DPlot::popupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topLe
       _plotMap[i] = *j; // don't think there is any way around this.
                         // We have to hope that it's safe until the menu is
                         // done.
-      submenu->insertItem((*j)->tagName(), i);
-      submenu->connectItem(i, this, SLOT(matchAxes(int)));
-      submenu2->insertItem((*j)->tagName(), i);
-      submenu2->connectItem(i++, this, SLOT(matchXAxis(int)));
+      submenu->addAction((*j)->tagName(), this, SLOT(matchAxes(int)));
+      submenu2->addAction((*j)->tagName(), this, SLOT(matchXAxis(int)));
       hasEntry = true;
     }
   }
-  int id = menu->insertItem(i18n("&Match Axes"), submenu);
-  menu->setItemEnabled(id, hasEntry);
-  id = menu->insertItem(i18n("&Match X Axis"), submenu2);
-  menu->setItemEnabled(id, hasEntry);
+  menu->addMenu(submenu);
+  submenu->setEnabled(hasEntry);
+  menu->addMenu(submenu2);
+  menu->setEnabled(hasEntry);
   hasEntry = false;
 
   submenu = new KMenu(menu);
-  menu->insertItem(i18n("Z&oom"), submenu);
-  submenu->insertItem(i18n("Zoom &Maximum"), this, SLOT(menuZoomMax()), Qt::Key_M);
-  submenu->insertItem(i18n("Zoom Max &Spike Insensitive"),
+  submenu->setTitle(i18n("Z&oom"));
+  menu->addMenu(submenu);
+  submenu->addAction(i18n("Zoom &Maximum"), this, SLOT(menuZoomMax()), Qt::Key_M);
+  submenu->addAction(i18n("Zoom Max &Spike Insensitive"),
                       this, SLOT(menuZoomSpikeInsensitiveMax()), Qt::Key_S);
-  submenu->insertItem(i18n("Zoom P&revious"), this, SLOT(menuZoomPrev()), Qt::Key_R);
-  submenu->insertItem(i18n("Y-Zoom Mean-centered"), this, SLOT(menuYZoomAc()), Qt::Key_A);
-  submenu->insertSeparator();
-  submenu->insertItem(i18n("X-Zoom Maximum"),
+  submenu->addAction(i18n("Zoom P&revious"), this, SLOT(menuZoomPrev()), Qt::Key_R);
+  submenu->addAction(i18n("Y-Zoom Mean-centered"), this, SLOT(menuYZoomAc()), Qt::Key_A);
+  submenu->addSeparator();
+  submenu->addAction(i18n("X-Zoom Maximum"),
                         this, SLOT(menuXZoomMax()), Qt::CTRL + Qt::Key_M);
-  submenu->insertItem(i18n("X-Zoom Out"),
+  submenu->addAction(i18n("X-Zoom Out"),
                         this, SLOT(menuXZoomOut()), Qt::SHIFT + Qt::Key_Right);
-  submenu->insertItem(i18n("X-Zoom In"),
+  submenu->addAction(i18n("X-Zoom In"),
                         this, SLOT(menuXZoomIn()), Qt::SHIFT + Qt::Key_Left);
-  submenu->insertItem(i18n("Normalize X Axis to Y Axis"),
+  submenu->addAction(i18n("Normalize X Axis to Y Axis"),
                         this, SLOT(menuXNormalize()), Qt::Key_N);
-  submenu->insertItem(i18n("Toggle Log X Axis"),
+  submenu->addAction(i18n("Toggle Log X Axis"),
                         this, SLOT(menuXLogSlot()), Qt::Key_G);
-  submenu->insertSeparator();
-  submenu->insertItem(i18n("Y-Zoom Local Maximum"),
+  submenu->addSeparator();
+  submenu->addAction(i18n("Y-Zoom Local Maximum"),
                       this, SLOT(menuYZoomLocalMax()), Qt::SHIFT + Qt::Key_L);
-  submenu->insertItem(i18n("Y-Zoom Maximum"),
+  submenu->addAction(i18n("Y-Zoom Maximum"),
                         this, SLOT(menuYZoomMax()), Qt::SHIFT + Qt::Key_M);
-  submenu->insertItem(i18n("Y-Zoom Out"),
+  submenu->addAction(i18n("Y-Zoom Out"),
                         this, SLOT(menuYZoomOut()), Qt::SHIFT + Qt::Key_Up);
-  submenu->insertItem(i18n("Y-Zoom In"),
+  submenu->addAction(i18n("Y-Zoom In"),
                         this, SLOT(menuYZoomIn()), Qt::SHIFT + Qt::Key_Down);
-  submenu->insertItem(i18n("Normalize Y Axis to X Axis"),
+  submenu->addAction(i18n("Normalize Y Axis to X Axis"),
                         this, SLOT(menuYNormalize()), Qt::SHIFT + Qt::Key_N);
-  submenu->insertItem(i18n("Toggle Log Y Axis"),
+  submenu->addAction(i18n("Toggle Log Y Axis"),
                         this, SLOT(menuYLogSlot()), Qt::Key_L);
-  submenu->insertSeparator();
-  submenu->insertItem(i18n("Next &Image Color Scale"),
+  submenu->addSeparator();
+  submenu->addAction(i18n("Next &Image Color Scale"),
                       this, SLOT(menuNextImageColorScale()), Qt::Key_I);
-  
+
   submenu = new KMenu(menu);
-  menu->insertItem(i18n("&Scroll"), submenu);
-  submenu->insertItem(i18n("Left"), this, SLOT(menuMoveLeft()), Qt::Key_Left);
-  submenu->insertItem(i18n("Right"), this, SLOT(menuMoveRight()), Qt::Key_Right);
-  submenu->insertItem(i18n("Up"), this, SLOT(menuMoveUp()), Qt::Key_Up);
-  submenu->insertItem(i18n("Down"), this, SLOT(menuMoveDown()), Qt::Key_Down);
-  submenu->insertSeparator();
+  submenu->setTitle(i18n("&Scroll"));
+  menu->addMenu(submenu);
+  submenu->addAction(i18n("Left"), this, SLOT(menuMoveLeft()), Qt::Key_Left);
+  submenu->addAction(i18n("Right"), this, SLOT(menuMoveRight()), Qt::Key_Right);
+  submenu->addAction(i18n("Up"), this, SLOT(menuMoveUp()), Qt::Key_Up);
+  submenu->addAction(i18n("Down"), this, SLOT(menuMoveDown()), Qt::Key_Down);
+  submenu->addSeparator();
 
   // disable next or previous marker items if necessary
   #ifndef MARKER_NUM_SEGS
@@ -3519,17 +3522,17 @@ bool Kst2DPlot::popupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topLe
   if (_xLog) {
     currCenter = pow(_xLogBase, currCenter);
   }
-  id = submenu->insertItem(i18n("Next Marker"), this, SLOT(menuNextMarker()), Qt::ALT + Qt::Key_Right);
-  submenu->setItemEnabled(id, nextMarker(currCenter, tempVal));
-  id = submenu->insertItem(i18n("Previous Marker"), this, SLOT(menuPrevMarker()), Qt::ALT + Qt::Key_Left);
+  QAction *a = submenu->addAction(i18n("Next Marker"), this, SLOT(menuNextMarker()), Qt::ALT + Qt::Key_Right);
+  a->setEnabled(nextMarker(currCenter, tempVal));
+  a = submenu->addAction(i18n("Previous Marker"), this, SLOT(menuPrevMarker()), Qt::ALT + Qt::Key_Left);
   currCenter = ((xmax + xmin)/2.0) - (xmax - xmin)/MARKER_NUM_SEGS;
   if (_xLog) {
     currCenter = pow(_xLogBase, currCenter);
   }
-  submenu->setItemEnabled(id, prevMarker(currCenter, tempVal) && (!_xLog || tempVal > 0));
+  a->setEnabled(prevMarker(currCenter, tempVal) && (!_xLog || tempVal > 0));
 
   int n_curves = Curves.count();
-  menu->insertSeparator();
+  menu->addSeparator();
 
   _objectEditMap.clear();
   _curveEditMap.clear();
@@ -3538,12 +3541,16 @@ bool Kst2DPlot::popupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topLe
 
   // Edit menu
   submenu = new KMenu(menu);
+  submenu->setTitle(i18n("Edit"));
   // Fit menu
   KMenu *submenu4 = new KMenu(menu);
+  submenu->setTitle(i18n("Fit"));
   // Filter menu
   submenu2 = new KMenu(menu);
+  submenu->setTitle(i18n("Filter"));
   // Remove menu
   KMenu *submenu3 = new KMenu(menu);
+  submenu->setTitle(i18n("Remove"));
   hasEntry = false;
   for (i = 0; i < n_curves; i++) {
     KstBaseCurvePtr c = Curves[i];
@@ -3551,8 +3558,7 @@ bool Kst2DPlot::popupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topLe
     const QString& tag = c->tagName();
     c->unlock();
     _curveEditMap[i] = tag;
-    submenu->insertItem(i18nc("Type: Name", "Plot Object: %1").arg(tag), i);
-    submenu->connectItem(i, this, SLOT(editCurve(int)));
+    submenu->addAction(i18nc("Type: Name", "Plot Object: %1").arg(tag), this, SLOT(editCurve(int)));
     KstVCurvePtr vc = kst_cast<KstVCurve>(c);
     if (vc && vc->yVector()) {
       KstObjectPtr provider = vc->yVector()->provider();
@@ -3560,15 +3566,13 @@ bool Kst2DPlot::popupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topLe
         KstDataObjectPtr dop = kst_cast<KstDataObject>(provider);
         if (dop) {
           _objectEditMap[i + n_curves] = dop->tagName();
-          submenu->insertItem(i18nc("Type: Name", "%1: %2").arg(dop->typeString()).arg(dop->tagName()), i + n_curves);
-          submenu->connectItem(i + n_curves, this, SLOT(editObject(int)));
+          submenu->addAction(i18nc("Type: Name", "%1: %2").arg(dop->typeString()).arg(dop->tagName()), this, SLOT(editObject(int)));
         }
       } else {
         KstRVectorPtr rv = kst_cast<KstRVector>(vc->yVector());
         if (rv) {
           _objectEditMap[i + n_curves] = rv->tagName();
-          submenu->insertItem(i18nc("Type: Name", "Vector: %1").arg(rv->tagName()), i + n_curves);
-          submenu->connectItem(i + n_curves, this, SLOT(editVector(int)));
+          submenu->addAction(i18nc("Type: Name", "Vector: %1").arg(rv->tagName()), this, SLOT(editVector(int)));
         }
       }
     } else if (KstImagePtr img = kst_cast<KstImage>(c)) {
@@ -3577,37 +3581,32 @@ bool Kst2DPlot::popupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topLe
         KstDataObjectPtr dop = kst_cast<KstDataObject>(provider);
         if (dop) {
           _objectEditMap[i + n_curves] = dop->tagName();
-          submenu->insertItem(i18nc("Type: Name", "%1: %2").arg(dop->typeString()).arg(dop->tagName()), i + n_curves);
-          submenu->connectItem(i + n_curves, this, SLOT(editObject(int)));
+          submenu->addAction(i18nc("Type: Name", "%1: %2").arg(dop->typeString()).arg(dop->tagName()), this, SLOT(editObject(int)));
         }
       } else {
         KstRMatrixPtr rm = kst_cast<KstRMatrix>(img->matrix());
         if (rm) {
           _objectEditMap[i + n_curves] = rm->tagName();
-          submenu->insertItem(i18nc("Type: Name", "Matrix: %1").arg(rm->tagName()), i + n_curves);
-          submenu->connectItem(i + n_curves, this, SLOT(editMatrix(int)));
+          submenu->addAction(i18nc("Type: Name", "Matrix: %1").arg(rm->tagName()), this, SLOT(editMatrix(int)));
         }
       }
     }
     _curveFitMap[i] = tag;
     _curveRemoveMap[i] = tag;
-    submenu4->insertItem(tag, i);
-    submenu2->insertItem(tag, i);
-    submenu3->insertItem(tag, i);
-    submenu4->connectItem(i, this, SLOT(fitCurve(int)));
-    submenu2->connectItem(i, this, SLOT(filterCurve(int)));
-    submenu3->connectItem(i, this, SLOT(removeCurve(int)));
+    submenu4->addAction(tag, this, SLOT(fitCurve(int)));
+    submenu2->addAction(tag, this, SLOT(filterCurve(int)));
+    submenu3->addAction(tag, this, SLOT(removeCurve(int)));
     hasEntry = true;
   }
 
-  id = menu->insertItem(i18n("Edit"), submenu);
-  menu->setItemEnabled(id, hasEntry);
-  id = menu->insertItem(i18n("Fit"), submenu4);
-  menu->setItemEnabled(id, hasEntry);
-  id = menu->insertItem(i18n("Filter"), submenu2);
-  menu->setItemEnabled(id, hasEntry);
-  id = menu->insertItem(i18n("Remove"), submenu3);
-  menu->setItemEnabled(id, hasEntry);
+  a = menu->addMenu(submenu);
+  a->setEnabled(hasEntry);
+  a = menu->addMenu(submenu4);
+  a->setEnabled(hasEntry);
+  a = menu->addMenu(submenu2);
+  a->setEnabled(hasEntry);
+  a = menu->addMenu(submenu3);
+  a->setEnabled(hasEntry);
 
   return true;
 }
