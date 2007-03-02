@@ -1753,9 +1753,9 @@ void Kst2DPlot::genAxisTickLabelDifference(KstAxisInterpretation axisInterpretat
   }
 
   if (zdiff > 0.0) {
-    label = i18n("+[numeric value]", "+[%1]").arg(zdiff, 0, 'g', DIFFERENCE_PRECISION);
+    label = i18nc("+[numeric value]", "+[%1]").arg(zdiff, 0, 'g', DIFFERENCE_PRECISION);
   } else if (zdiff < 0.0) {
-    label = i18n("-[numeric value]", "-[%1]").arg(-zdiff, 0, 'g', DIFFERENCE_PRECISION);
+    label = i18nc("-[numeric value]", "-[%1]").arg(-zdiff, 0, 'g', DIFFERENCE_PRECISION);
   } else {
     label = i18n("[0]");
   }
@@ -1794,7 +1794,7 @@ void Kst2DPlot::genAxisTickLabel(QString& label, double z, bool isLog, double lo
     if (z > -4 && z < 4) {
       label = QString::number(pow(logBase, z), 'g', LABEL_PRECISION);
     } else {
-      label = i18n("%2 to the power of %1", "%2^{%1}").arg(z, 0, 'f', 0).arg(logBase, 0, 'f', 0);
+      label = i18nc("%2 to the power of %1", "%2^{%1}").arg(z, 0, 'f', 0).arg(logBase, 0, 'f', 0);
     }
   } else {
     label = QString::number(z, 'g', LABEL_PRECISION);
@@ -1826,7 +1826,7 @@ void Kst2DPlot::getPrefixUnitsScale(bool isInterpreted, KstAxisInterpretation ax
 
     switch (axisDisplay) {
       case AXIS_DISPLAY_YEAR:
-        strPrefix = i18n("Prefix for Julian Year", "J");
+        strPrefix = i18nc("Prefix for Julian Year", "J");
         strUnits  = i18n("years");
         scale /= 365.25 * 24.0 * 60.0 * 60.0;
         break;
@@ -1860,17 +1860,17 @@ void Kst2DPlot::getPrefixUnitsScale(bool isInterpreted, KstAxisInterpretation ax
         }
         break;
       case AXIS_DISPLAY_JD:
-        strPrefix = i18n("Prefix for Julian Date", "JD");
+        strPrefix = i18nc("Prefix for Julian Date", "JD");
         strUnits  = i18n("days");
         scale /= 24.0 * 60.0 * 60.0;
         break;
       case AXIS_DISPLAY_MJD:
-        strPrefix = i18n("Prefix for Modified Julian Date", "MJD");
+        strPrefix = i18nc("Prefix for Modified Julian Date", "MJD");
         strUnits  = i18n("days");
         scale /= 24.0 * 60.0 * 60.0;
         break;
       case AXIS_DISPLAY_RJD:
-        strPrefix = i18n("Prefix for Reduced Julian Date", "RJD");
+        strPrefix = i18nc("Prefix for Reduced Julian Date", "RJD");
         strUnits  = i18n("days");
         scale /= 24.0 * 60.0 * 60.0;
         break;
@@ -1983,7 +1983,7 @@ void Kst2DPlot::genAxisTickLabels(TickParameters &tp,
       if (i == iShort) {
         genAxisTickLabelFullPrecision(axisInterpretation, axisDisplay, strTmp, length, (double)iShort * tp.tick + tp.org, isLog, logBase, isInterpreted);
         if (!strUnits.isEmpty()) {
-          strTmp = i18n( "<Prefix e.g. JD><Value> [Units]", "%1%2 [%3]" ).arg(strPrefix).arg(strTmp).arg(strUnits);
+          strTmp = i18nc( "<Prefix e.g. JD><Value> [Units]", "%1%2 [%3]" ).arg(strPrefix).arg(strTmp).arg(strUnits);
         }
         tp.labels.prepend(strTmp);
       }
@@ -3005,9 +3005,9 @@ void Kst2DPlot::generateDefaultLabels(bool xl, bool yl, bool tl) {
       if (i_curve == i_count - 1) {
         xlabel += xlabels[i_curve];
       } else if (i_curve < i_count-2) {
-        xlabel += i18n("name in a list", "%1, ").arg(xlabels[i_curve]);
+        xlabel += i18nc("name in a list", "%1, ").arg(xlabels[i_curve]);
       } else if (i_curve == i_count-2) {
-        xlabel += i18n("penultimate name in a list", "%1 and ").arg(xlabels[i_curve]);
+        xlabel += i18nc("penultimate name in a list", "%1 and ").arg(xlabels[i_curve]);
       }
     }
 
@@ -3020,9 +3020,9 @@ void Kst2DPlot::generateDefaultLabels(bool xl, bool yl, bool tl) {
         if (i_curve == i_count - 1) {
           ylabel += ylabels[i_curve];
         } else if (i_curve < i_count-2) {
-          ylabel += i18n("name in a list", "%1, ").arg(ylabels[i_curve]);
+          ylabel += i18nc("name in a list", "%1, ").arg(ylabels[i_curve]);
         } else if (i_curve == i_count-2) {
-          ylabel += i18n("penultimate name in a list", "%1 and ").arg(ylabels[i_curve]);
+          ylabel += i18nc("penultimate name in a list", "%1 and ").arg(ylabels[i_curve]);
         }
       }
     }
@@ -3033,9 +3033,9 @@ void Kst2DPlot::generateDefaultLabels(bool xl, bool yl, bool tl) {
       if (i_curve == i_count - 1) {
         toplabel += toplabels[i_curve];
       } else if (i_curve < i_count-2) {
-        toplabel += i18n("name in a list", "%1, ").arg(toplabels[i_curve]);
+        toplabel += i18nc("name in a list", "%1, ").arg(toplabels[i_curve]);
       } else if (i_curve == i_count-2) {
-        toplabel += i18n("penultimate name in a list", "%1 and ").arg(toplabels[i_curve]);
+        toplabel += i18nc("penultimate name in a list", "%1 and ").arg(toplabels[i_curve]);
       }
     }
   }
@@ -3551,7 +3551,7 @@ bool Kst2DPlot::popupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topLe
     const QString& tag = c->tagName();
     c->unlock();
     _curveEditMap[i] = tag;
-    submenu->insertItem(i18n("Type: Name", "Plot Object: %1").arg(tag), i);
+    submenu->insertItem(i18nc("Type: Name", "Plot Object: %1").arg(tag), i);
     submenu->connectItem(i, this, SLOT(editCurve(int)));
     KstVCurvePtr vc = kst_cast<KstVCurve>(c);
     if (vc && vc->yVector()) {
@@ -3560,14 +3560,14 @@ bool Kst2DPlot::popupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topLe
         KstDataObjectPtr dop = kst_cast<KstDataObject>(provider);
         if (dop) {
           _objectEditMap[i + n_curves] = dop->tagName();
-          submenu->insertItem(i18n("Type: Name", "%1: %2").arg(dop->typeString()).arg(dop->tagName()), i + n_curves);
+          submenu->insertItem(i18nc("Type: Name", "%1: %2").arg(dop->typeString()).arg(dop->tagName()), i + n_curves);
           submenu->connectItem(i + n_curves, this, SLOT(editObject(int)));
         }
       } else {
         KstRVectorPtr rv = kst_cast<KstRVector>(vc->yVector());
         if (rv) {
           _objectEditMap[i + n_curves] = rv->tagName();
-          submenu->insertItem(i18n("Type: Name", "Vector: %1").arg(rv->tagName()), i + n_curves);
+          submenu->insertItem(i18nc("Type: Name", "Vector: %1").arg(rv->tagName()), i + n_curves);
           submenu->connectItem(i + n_curves, this, SLOT(editVector(int)));
         }
       }
@@ -3577,14 +3577,14 @@ bool Kst2DPlot::popupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr topLe
         KstDataObjectPtr dop = kst_cast<KstDataObject>(provider);
         if (dop) {
           _objectEditMap[i + n_curves] = dop->tagName();
-          submenu->insertItem(i18n("Type: Name", "%1: %2").arg(dop->typeString()).arg(dop->tagName()), i + n_curves);
+          submenu->insertItem(i18nc("Type: Name", "%1: %2").arg(dop->typeString()).arg(dop->tagName()), i + n_curves);
           submenu->connectItem(i + n_curves, this, SLOT(editObject(int)));
         }
       } else {
         KstRMatrixPtr rm = kst_cast<KstRMatrix>(img->matrix());
         if (rm) {
           _objectEditMap[i + n_curves] = rm->tagName();
-          submenu->insertItem(i18n("Type: Name", "Matrix: %1").arg(rm->tagName()), i + n_curves);
+          submenu->insertItem(i18nc("Type: Name", "Matrix: %1").arg(rm->tagName()), i + n_curves);
           submenu->connectItem(i + n_curves, this, SLOT(editMatrix(int)));
         }
       }
@@ -3754,9 +3754,9 @@ void Kst2DPlot::updateMousePos(const QPoint& pos) {
   }
 
   if (_cursorOffset) {
-    KstApp::inst()->slotUpdateDataMsg(i18n("(x, y) [Offset: x,y]", "(%1, %2) [Offset: %3, %4]").arg(xlabel).arg(ylabel).arg(msgXOffset).arg(msgYOffset));
+    KstApp::inst()->slotUpdateDataMsg(i18nc("(x, y) [Offset: x,y]", "(%1, %2) [Offset: %3, %4]").arg(xlabel).arg(ylabel).arg(msgXOffset).arg(msgYOffset));
   } else {
-    KstApp::inst()->slotUpdateDataMsg(i18n("(x, y)", "(%1, %2)").arg(xlabel).arg(ylabel));
+    KstApp::inst()->slotUpdateDataMsg(i18nc("(x, y)", "(%1, %2)").arg(xlabel).arg(ylabel));
   }
 }
 
@@ -3928,9 +3928,9 @@ void Kst2DPlot::highlightNearestDataPoint(bool bRepaint, KstPainter *p, const QP
       }
 
       if (_cursorOffset) {
-        msg = i18n("Curve name, (x, y) [Offset: x,y]", "%3 (%1, %2) [Offset: %4, %5]").arg(xlabel).arg(ylabel).arg(name).arg(msgXOffset).arg(msgYOffset);
+        msg = i18nc("Curve name, (x, y) [Offset: x,y]", "%3 (%1, %2) [Offset: %4, %5]").arg(xlabel).arg(ylabel).arg(name).arg(msgXOffset).arg(msgYOffset);
       } else {
-        msg = i18n("Curve name, (x, y)", "%3 (%1, %2)").arg(xlabel).arg(ylabel).arg(name);
+        msg = i18nc("Curve name, (x, y)", "%3 (%1, %2)").arg(xlabel).arg(ylabel).arg(name);
       }
     }
 
@@ -3993,9 +3993,9 @@ void Kst2DPlot::highlightNearestDataPoint(bool bRepaint, KstPainter *p, const QP
         }
 
         if (!msg.isEmpty()) {
-          msg = i18n("Label, Image name (x, y, z)", "%5, %4 (%1, %2, %3)" ).arg(xlabel).arg(ylabel).arg(zValue,0,'G',precision).arg(images[i+1]->tagName()).arg(msg);
+          msg = i18nc("Label, Image name (x, y, z)", "%5, %4 (%1, %2, %3)" ).arg(xlabel).arg(ylabel).arg(zValue,0,'G',precision).arg(images[i+1]->tagName()).arg(msg);
         } else {
-          msg = i18n("Image name (x, y, z)", "%4 (%1, %2, %3)" ).arg(xlabel).arg(ylabel).arg(zValue,0,'G', precision).arg(images[i+1]->tagName());
+          msg = i18nc("Image name (x, y, z)", "%4 (%1, %2, %3)" ).arg(xlabel).arg(ylabel).arg(zValue,0,'G', precision).arg(images[i+1]->tagName());
         }
       }
     }
@@ -4012,7 +4012,7 @@ void Kst2DPlot::updateXYGuideline(QWidget *view, const QPoint& oldPos, const QPo
   p.begin(view);
   QPen newPen(Qt::black, 1, Qt::DotLine);
   p.setPen(newPen);
-  p.setRasterOp(Qt::NotROP);
+  p.setCompositionMode(QPainter::CompositionMode_Destination);
 
   if (pr.contains(oldPos)) {
     if (_mouse.lastGuidelineType == X_ZOOMBOX) {
@@ -4263,8 +4263,9 @@ void Kst2DPlot::mouseReleaseEvent(QWidget *view, QMouseEvent *e) {
     if (_mouse.rectBigEnough()) {
       QPainter p(view); // FIXME: Broken, just prepare and then trigger a
                         //  view->paint(GetPlotRegion());
-      p.setRasterOp(Qt::NotROP);
-      p.drawWinFocusRect(newg);
+      p.setPen(Qt::DashLine);
+      p.setCompositionMode(QPainter::CompositionMode_Destination);
+      p.drawRect(newg);
 
       getLScale(xmin, ymin, xmax, ymax);
       plotregion = GetPlotRegion();
@@ -4304,8 +4305,9 @@ void Kst2DPlot::mouseReleaseEvent(QWidget *view, QMouseEvent *e) {
     if (newg.height() >= _mouse.minMove) {
       QPainter p(view); // FIXME: Broken, just prepare and then trigger a
                         //  view->paint(GetPlotRegion());
-      p.setRasterOp(Qt::NotROP);
-      p.drawWinFocusRect(newg);
+      p.setPen(Qt::DashLine);
+      p.setCompositionMode(QPainter::CompositionMode_Destination);
+      p.drawRect(newg);
 
       getLScale(xmin, ymin, xmax, ymax);
       plotregion = GetPlotRegion();
@@ -4334,8 +4336,9 @@ void Kst2DPlot::mouseReleaseEvent(QWidget *view, QMouseEvent *e) {
     if (newg.width() >= _mouse.minMove) {
       QPainter p(view); // FIXME: Broken, just prepare and then trigger a
                         //  view->paint(GetPlotRegion());
-      p.setRasterOp(Qt::NotROP);
-      p.drawWinFocusRect(newg);
+      p.setPen(Qt::DashLine);
+      p.setCompositionMode(QPainter::CompositionMode_Destination);
+      p.drawRect(newg);
 
       getLScale(xmin, ymin, xmax, ymax);
       plotregion = GetPlotRegion();
@@ -4403,7 +4406,7 @@ bool KstMouse::rectBigEnough() const {
 
 
 QRect KstMouse::mouseRect() const {
-  QRect rc = QRect(qMin(pressLocation.x(), lastLocation.x()), qMin(pressLocation.y(), lastLocation.y()), QABS(pressLocation.x() - lastLocation.x()), QABS(pressLocation.y() - lastLocation.y()));
+  QRect rc = QRect(qMin(pressLocation.x(), lastLocation.x()), qMin(pressLocation.y(), lastLocation.y()), qAbs(pressLocation.x() - lastLocation.x()), qAbs(pressLocation.y() - lastLocation.y()));
   switch (mode) {
     case X_ZOOMBOX:
       rc.setTop(plotGeometry.top());
@@ -4431,13 +4434,14 @@ void Kst2DPlot::zoomRectUpdate(QWidget *view, KstMouseModeType t, int x, int y) 
   if (_mouse.lastLocation != newp) {
     QPainter p(view); // FIXME: Broken, just prepare and then trigger a
                       //  view->paint(GetPlotRegion());
-    p.setRasterOp(Qt::NotROP);
+    p.setPen(Qt::DashLine);
+    p.setCompositionMode(QPainter::CompositionMode_Destination);
     if (_mouse.rectBigEnough()) {
-      p.drawWinFocusRect(_mouse.mouseRect());
+      p.drawRect(_mouse.mouseRect());
     }
     _mouse.zoomUpdate(t, newp);
     if (_mouse.rectBigEnough()) {
-      p.drawWinFocusRect(_mouse.mouseRect());
+      p.drawRect(_mouse.mouseRect());
     }
   }
 }
@@ -4515,14 +4519,15 @@ void Kst2DPlot::keyReleaseEvent(QWidget *view, QKeyEvent *e) {
     QPoint newp(x, y);
     QPainter p(view); // FIXME: Broken, just prepare and then trigger a
                       //  view->paint(GetPlotRegion());
-    p.setRasterOp(Qt::NotROP);
+    p.setPen(Qt::DashLine);
+    p.setCompositionMode(QPainter::CompositionMode_Destination);
     if (_mouse.rectBigEnough()) {
-      p.drawWinFocusRect(_mouse.mouseRect());
+      p.drawRect(_mouse.mouseRect());
     }
 
     _mouse.zoomUpdate(newType, newp);
     if (_mouse.rectBigEnough()) {
-      p.drawWinFocusRect(_mouse.mouseRect());
+      p.drawRect(_mouse.mouseRect());
     }
   }
 
@@ -4541,8 +4546,9 @@ void Kst2DPlot::cancelZoom(QWidget *view) {
   if (_mouse.rectBigEnough()) {
     QPainter p(view); // FIXME: Broken, just prepare and then trigger a
                       //  view->paint(GetPlotRegion());
-    p.setRasterOp(Qt::NotROP);
-    p.drawWinFocusRect(_mouse.mouseRect());
+    p.setPen(Qt::DashLine);
+    p.setCompositionMode(QPainter::CompositionMode_Destination);
+    p.drawRect(_mouse.mouseRect());
   }
 
   _mouse.lastLocation = _mouse.pressLocation; // make rectBigEnough() false
@@ -5304,14 +5310,15 @@ void Kst2DPlot::keyPressEvent(QWidget *vw, QKeyEvent *e) {
 
       QPainter p(view); // FIXME: Broken, just prepare and then trigger a
                         //  view->paint(GetPlotRegion());
-      p.setRasterOp(Qt::NotROP);
+      p.setPen(Qt::DashLine);
+      p.setCompositionMode(QPainter::CompositionMode_Destination);
       if (_mouse.rectBigEnough()) {
-        p.drawWinFocusRect(_mouse.mouseRect());
+        p.drawRect(_mouse.mouseRect());
       }
 
       _mouse.zoomUpdate(newType, newp);
       if (_mouse.rectBigEnough()) {
-        p.drawWinFocusRect(_mouse.mouseRect());
+        p.drawRect(_mouse.mouseRect());
       }
     }
     setCursorForMode(view, _mouse.mode, cursorPos);
