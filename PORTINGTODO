@@ -15,3 +15,15 @@ Please place porting todo items in this file categorized by lib/module
   C. Rename kstdebug classes as they really are loggers and should be named as such.
 
 **** libkstmath ****:
+
+**** libkstapp ****:
+  A. Get rid of KMdi* classes.  Using typedefs for now, but these need to go away
+  B. NOTES on kst2dplot:
+    I'm using the following mapping for QPainter::rasterOp in 3.x to QPainter::compositionMode in 4.x
+      CopyROP = CompositionMode_Source
+      XorROP = CompositionMode_Xor
+      NotROP = CompositionMode_Destination
+      SetROP = CompositionMode_Source
+  C. Several places in libkstapp use QMouseEvent's combined with the info they present about the state
+     of the keyboard modifiers.  This facility isn't present in Qt4 AFAIK.  The code is just commented
+     out.  Grep through kst2dplot for 'stateAfter' for instance.
