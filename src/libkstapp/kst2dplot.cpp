@@ -4099,9 +4099,9 @@ void Kst2DPlot::mouseMoveEvent(QWidget *view, QMouseEvent *e) {
   }
 
   KstMouseModeType newType = _mouse.mode;
-  if (e->state() & Qt::LeftButton && _mouse.zooming()) {
+/*  if (e->state() & Qt::LeftButton && _mouse.zooming()) {
     // LEAVE BLANK
-  } else if (KstApp::inst()->dataMode() && pr.contains(e->pos())) {
+  } else */if (KstApp::inst()->dataMode() && pr.contains(e->pos())) {
     KstViewWidget *w = dynamic_cast<KstViewWidget*>(view);
     if (w) {
       w->paint(GetPlotRegion());
@@ -4192,14 +4192,14 @@ void Kst2DPlot::mousePressEvent(QWidget *view, QMouseEvent *e) {
       static_cast<KstViewWidget*>(view)->paint();
       return;
     } else if (plot_rect.contains(e->pos())) {
-      if (e->state() & Qt::ShiftModifier) {
-        _mouse.mode = Y_ZOOMBOX;
-      } else if (e->state() & Qt::ControlModifier) {
-        _mouse.mode = X_ZOOMBOX;
-      } else {
+//       if (e->state() & Qt::ShiftModifier) {
+//         _mouse.mode = Y_ZOOMBOX;
+//       } else if (e->state() & Qt::ControlModifier) {
+//         _mouse.mode = X_ZOOMBOX;
+//       } else {
         _mouse.mode = globalZoomType();
         assert(_mouse.mode != INACTIVE);
-      }
+//       }
       _mouse.plotGeometry = GetPlotRegion();
       _mouse.zoomStart(_mouse.mode, e->pos());
       _zoomPaused = true;
@@ -5324,13 +5324,13 @@ void Kst2DPlot::keyPressEvent(QWidget *vw, QKeyEvent *e) {
     setCursorForMode(view, _mouse.mode, cursorPos);
   } else {
     if (_mouse.mode == INACTIVE && GetPlotRegion().contains(cursorPos)) {
-      if (s & Qt::ShiftModifier) {
-        setCursorForMode(view, Y_ZOOMBOX, cursorPos);
-      } else if (s & Qt::ControlModifier) {
-        setCursorForMode(view, X_ZOOMBOX, cursorPos);
-      } else {
+//       if (s & Qt::ShiftModifier) {
+//         setCursorForMode(view, Y_ZOOMBOX, cursorPos);
+//       } else if (s & Qt::ControlModifier) {
+//         setCursorForMode(view, X_ZOOMBOX, cursorPos);
+//       } else {
         setCursorForMode(view, globalZoomType(), cursorPos);
-      }
+//       }
     } else {
       e->ignore();
       return;
@@ -5423,59 +5423,59 @@ void Kst2DPlot::wheelEvent(QWidget *view, QWheelEvent *e) {
   if (vw && GetPlotRegion().contains(e->pos())) {
     bool forward = e->delta() >= 0;
     int absDelta = forward ? e->delta() : -e->delta();
-    bool alt = e->state() & Qt::AltModifier;
-    if (e->state() & Qt::ControlModifier) {
+//     bool alt = e->state() & Qt::AltModifier;
+//     if (e->state() & Qt::ControlModifier) {
+//       for (int i = 0; i < absDelta/WHEEL_DELTA; ++i) {
+//         if (forward) {
+//           xZoomIn(vw);
+//         } else {
+//           xZoomOut(vw);
+//         }
+//       }
+//       vw->paint();
+//     } else if (e->state() & Qt::ShiftModifier) {
+//       for (int i = 0; i < absDelta/WHEEL_DELTA; ++i) {
+//         if (forward) {
+//           yZoomIn(vw);
+//         } else {
+//           yZoomOut(vw);
+//         }
+//       }
+//       vw->paint();
+//     } else {
       for (int i = 0; i < absDelta/WHEEL_DELTA; ++i) {
         if (forward) {
-          xZoomIn(vw);
-        } else {
-          xZoomOut(vw);
-        }
-      }
-      vw->paint();
-    } else if (e->state() & Qt::ShiftModifier) {
-      for (int i = 0; i < absDelta/WHEEL_DELTA; ++i) {
-        if (forward) {
-          yZoomIn(vw);
-        } else {
-          yZoomOut(vw);
-        }
-      }
-      vw->paint();
-    } else {
-      for (int i = 0; i < absDelta/WHEEL_DELTA; ++i) {
-        if (forward) {
-          if (alt) {
-            if (_yReversed) {
-              moveDown(vw);
-            } else {
-              moveUp(vw);
-            }
-          } else {
+//           if (alt) {
+//             if (_yReversed) {
+//               moveDown(vw);
+//             } else {
+//               moveUp(vw);
+//             }
+//           } else {
             if (_xReversed) {
               moveLeft(vw);
             } else {
               moveRight(vw);
             }
-          }
+//           }
         } else {
-          if (alt) {
-            if (_yReversed) {
-              moveUp(vw);
-            } else {
-              moveDown(vw);
-            }
-          } else {
+//           if (alt) {
+//             if (_yReversed) {
+//               moveUp(vw);
+//             } else {
+//               moveDown(vw);
+//             }
+//           } else {
             if (_xReversed) {
               moveRight(vw);
             } else {
               moveLeft(vw);
             }
-          }
+//           }
         }
       }
       vw->paint();
-    }
+//     }
 
     e->accept();
   }
@@ -6942,7 +6942,7 @@ bool Kst2DPlot::fillConfigWidget(QWidget *w, bool isNew) const {
   }
   
   widget->fillWidget(this);
-  widget->TabWidget->setCurrentPage(_tabToShow);
+  widget->TabWidget->setCurrentIndex(_tabToShow);
   return false;
 }
 
