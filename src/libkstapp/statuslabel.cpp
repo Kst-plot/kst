@@ -25,7 +25,7 @@
 #include "statuslabel.h"
 
 StatusLabel::StatusLabel(const QString &text, QWidget *parent, Qt::WindowFlags f)
-: QLabel(text, f) {
+: QLabel(text, parent, f) {
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   setMinimumWidth(0);
   _width = 0;

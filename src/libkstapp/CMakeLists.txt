@@ -103,7 +103,7 @@ set(kstapp_LIB_SRCS
    labelrenderer.cpp
    plotmimesource.cpp
    statuslabel.cpp
-   treetools.cpp
+#    treetools.cpp
    updatethread.cpp
    updatethread-multicore.cpp
    )
