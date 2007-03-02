@@ -919,7 +919,7 @@ void DataWizard::finished() {
       if (!_onePlot->isChecked()) { // change plots if we are not onePlot
         if (_radioButtonPlotDataPSD->isChecked()) { // if xy and psd
           ++pit;
-          if (plots.findIndex(*pit) >= (int)plots.count()/2) {
+          if (plots.indexOf(*pit) >= (int)plots.count()/2) {
             pit = plots.begin();
           }
         } else if (++pit == plots.end()) {

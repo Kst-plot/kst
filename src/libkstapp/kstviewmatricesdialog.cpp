@@ -110,7 +110,7 @@ void KstViewMatricesDialogI::matrixChanged(const QString& matrix) {
  *  language.
  */
 void KstViewMatricesDialogI::languageChange() {
-  setCaption(i18n("View Matrix Values"));
+  setWindowTitle(i18n("View Matrix Values"));
   KstViewMatricesDialog::languageChange();
 }
 

@@ -143,7 +143,7 @@ KstApp::KstApp(QWidget *parent, const char *name)
 
   initDocument();
   KstDebug::self()->setHandler(doc);
-  setCaption(doc->title());
+  setWindowTitle(doc->title());
 
   /* create dialogs */
   debugDialog = new KstDebugDialogI(this);
@@ -1110,7 +1110,7 @@ bool KstApp::openDocumentFile(const QString& in_filename,
   slotUpdateStatusMsg(i18n("Opening %1...").arg(url.prettyURL()));
 
   if (doc->openDocument(url, o_file, o_n, o_f, o_s, o_ave)) {
-    setCaption(doc->title());
+    setWindowTitle(doc->title());
     if (url.isLocalFile()) {
       QFileInfo finfo(in_filename);
       addRecentFile(finfo.absFilePath());
@@ -1231,7 +1231,7 @@ void KstApp::slotFileNew() {
 
   if (doc->saveModified()) {
     doc->newDocument();
-    setCaption(doc->title());
+    setWindowTitle(doc->title());
     selectRecentFile(KUrl(""));
   }
 
@@ -1248,7 +1248,7 @@ void KstApp::slotFileOpen() {
       doc->deleteContents();
       doc->setModified(false);
       if (doc->openDocument(url)) {
-        setCaption(doc->title());
+        setWindowTitle(doc->title());
         addRecentFile(url);
       }
     }
@@ -1266,7 +1266,7 @@ bool KstApp::slotFileOpenRecent(const KUrl& newfile) {
     if (doc->openDocument(newfile)) {
       returnVal = true;
     }
-    setCaption(kapp->caption() + ": " + doc->title());
+    setWindowTitle(qApp->applicationName() + ": " + doc->title());
   }
 
   slotUpdateStatusMsg(i18n("Ready"));
@@ -1314,7 +1314,7 @@ bool KstApp::slotFileSaveAs() {
         doc->setTitle(saveAsInfo.fileName());
         doc->setAbsFilePath(saveAsInfo.absFilePath());
 
-        setCaption(kapp->caption() + ": " + doc->title());
+        setWindowTitle(qApp->applicationName() + ": " + doc->title());
 
         slotUpdateStatusMsg(i18n("Ready"));
         return true;
@@ -2396,7 +2396,7 @@ void KstApp::renameWindow(KstViewWindow *vw) {
   QString name = windowName(true, vw->caption(), true);
 
   if (!name.isEmpty() && vw->caption() != name) {
-    vw->setCaption(name);
+    vw->setWindowTitle(name);
     vw->setTabCaption(name);
     updateDialogsForWindow();
     doc->setModified();
@@ -2425,7 +2425,7 @@ QString KstApp::newWindow(const QString& name_in) {
   }
   nameToUse = name;
 
-  w->setCaption(nameToUse);
+  w->setWindowTitle(nameToUse);
   w->setTabCaption(nameToUse);
   addWindow(w, KMdi::StandardAdd | KMdi::UseKMdiSizeHint);
   w->activate();

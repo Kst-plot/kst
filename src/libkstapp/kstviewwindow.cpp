@@ -61,7 +61,7 @@ KstViewWindow::KstViewWindow(const QDomElement& e, QWidget* parent, const char* 
     if( !e.isNull()) { // the node was really an element.
       if (e.tagName() == "tag") {
         in_tag = e.text();
-        setCaption(in_tag);
+        setWindowTitle(in_tag);
         setTabCaption(in_tag);
       } else if (e.tagName() == "restore") {
         rectRestore.setX( e.attribute( "x", "0" ).toInt() );
@@ -415,10 +415,10 @@ KstTopLevelViewPtr KstViewWindow::view() const {
 }
 
 
-void KstViewWindow::setCaption(const QString& caption) {
-  KMdiChildView::setCaption(caption);
-  _view->setTagName(KstObjectTag(caption, KstObjectTag::globalTagContext));  // FIXME: global tag context?
-}
+// void KstViewWindow::setCaption(const QString& caption) {
+//   KMdiChildView::setCaption(caption);
+//   _view->setTagName(KstObjectTag(caption, KstObjectTag::globalTagContext));  // FIXME: global tag context?
+// }
 
 
 void KstViewWindow::closeEvent(QCloseEvent *e) {

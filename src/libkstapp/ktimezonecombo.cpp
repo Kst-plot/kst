@@ -109,7 +109,7 @@ QString KTimezoneCombo::tzName() const {
 
 
 void KTimezoneCombo::setTimezone(const QString& tz) {
-  int idx = d->_names.findIndex(tz);
+  int idx = d->_names.indexOf(tz);
 
   if (idx != -1) {
     setCurrentItem(idx);

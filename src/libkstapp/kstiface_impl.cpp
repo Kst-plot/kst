@@ -904,7 +904,7 @@ bool KstIfaceImpl::saveAs(const QString& fileName) {
     _doc->setTitle(saveAsInfo.fileName());
     _doc->setAbsFilePath(saveAsInfo.absFilePath());
 
-    _app->setCaption(kapp->caption() + ": " + _doc->title());
+    _app->setWindowTitle(qApp->applicationName() + ": " + _doc->title());
   }
   return rc;
 }

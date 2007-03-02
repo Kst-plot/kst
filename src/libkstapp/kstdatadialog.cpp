@@ -110,7 +110,7 @@ void KstDataDialog::showNew(const QString& field) {
   _tagName->setEnabled(true);
   _legendText->setEnabled(true);
 
-  setCaption(i18n("New %1").arg(objectName()));
+  setWindowTitle(i18n("New %1").arg(objectName()));
   QDialog::show();
   raise();
   _ok->setEnabled(true);
@@ -140,7 +140,7 @@ void KstDataDialog::showEdit(const QString& field) {
   update();
   fillFieldsForEdit();
 
-  setCaption(i18n("Edit %1").arg(objectName()));
+  setWindowTitle(i18n("Edit %1").arg(objectName()));
   QDialog::show();
   raise();
   _ok->setEnabled(true);

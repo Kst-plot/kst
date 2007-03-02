@@ -109,7 +109,7 @@ void KstViewVectorsDialogI::vectorChanged(const QString& vector) {
  *  language.
  */
 void KstViewVectorsDialogI::languageChange() {
-  setCaption(i18n("View Vector Values"));
+  setWindowTitle(i18n("View Vector Values"));
   tableVectors->horizontalHeader()->setLabel(0, i18n("Values"));
   KstViewVectorsDialog::languageChange();
 }

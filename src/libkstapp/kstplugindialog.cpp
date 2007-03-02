@@ -172,7 +172,7 @@ void KstPluginDialogI::fillFieldsForEdit() {
   _tagName->setText(pluginName);
   updatePluginList();
 
-  int i = _pluginList.findIndex(pluginObjectName);
+  int i = _pluginList.indexOf(pluginObjectName);
   _w->PluginCombo->setCurrentItem(i);
   pluginChanged(_w->PluginCombo->currentItem());
 
@@ -185,7 +185,7 @@ void KstPluginDialogI::fillFieldsForEdit() {
 
 void KstPluginDialogI::fillFieldsForNew() {
   updatePluginList();
-  int i = _pluginList.findIndex(_pluginName);
+  int i = _pluginList.indexOf(_pluginName);
   _w->PluginCombo->setCurrentItem(i);
   pluginChanged(_w->PluginCombo->currentItem());
   _tagName->setText(plugin_defaultTag);
