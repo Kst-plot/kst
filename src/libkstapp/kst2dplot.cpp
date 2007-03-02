@@ -2312,7 +2312,7 @@ void Kst2DPlot::resize(const QSize& size) {
   // FIXME
   // Horribly inefficient, but we need to update contentsRect() somehow
   // before the base class resize happens.
-  _buffer.buffer().resize(size);
+  _buffer.buffer() = QPixmap(size);
   assert(!_buffer.buffer().isNull()); // Want to find these crashes
   if (!_buffer.buffer().isNull()) {    // Because this is garbage
     _buffer.buffer().fill(backgroundColor());
@@ -2437,7 +2437,7 @@ void Kst2DPlot::draw() {
   }
 
   // Precondition: w and h are both > 0
-  _buffer.buffer().resize(size());
+  _buffer.buffer() = QPixmap(size());
   assert(!_buffer.buffer().isNull()); // Want to find these crashes
   if (_buffer.buffer().isNull()) {    // Because this is garbage
     return;
@@ -2496,7 +2496,6 @@ void Kst2DPlot::draw(KstPainter& p) {
 
   setBorders(xleft_bdr_px, xright_bdr_px, ytop_bdr_px, ybot_bdr_px,
              tpx, tpy, p, offsetX, offsetY, xtick_len_px, ytick_len_px);
-  p.flush();
 
   // use a common plot region for plots that are aligned and of the same
   //  dimension, in either the horizontal or vertical sense...
@@ -2562,7 +2561,6 @@ void Kst2DPlot::draw(KstPainter& p) {
     bt[i_bt++] = benchTime.elapsed();
 #endif
     plotLabels(p, x_px, y_px, xleft_bdr_px, xright_bdr_px, ytop_bdr_px);
-    p.flush();
 #ifdef BENCHMARK
     bt_label[i_bt] = "Plot Labels";
     bt[i_bt++] = benchTime.elapsed();
@@ -2606,7 +2604,7 @@ void Kst2DPlot::draw(KstPainter& p) {
       p.scale(1, -1);
       p.translate(0, d2i(-1.0 * Hy - Ly));
     }
-    p.setClipRect(int(Lx), int(Ly), int(Hx - Lx), int(Hy - Ly), QPainter::CoordPainter);
+    p.setClipRect(int(Lx), int(Ly), int(Hx - Lx), int(Hy - Ly));
     for (KstBaseCurveList::Iterator i = Curves.begin(); i != Curves.end(); ++i) {
       (*i)->paint(context);
     }
@@ -2647,8 +2645,6 @@ void Kst2DPlot::draw(KstPainter& p) {
     bt_label[i_bt] = "Plot Markers";
     bt[i_bt++] = benchTime.elapsed();
 #endif
-
-    p.flush();
 
 #ifdef BENCHMARK
     bt_label[i_bt] = "Flush Painter";
@@ -2989,13 +2985,13 @@ void Kst2DPlot::generateDefaultLabels(bool xl, bool yl, bool tl) {
   // accumulate list of curve labels
   for (KstBaseCurveList::ConstIterator i = Curves.begin(); i != Curves.end(); ++i) {
     (*i)->readLock();
-    if (xlabels.findIndex((*i)->xLabel()) == -1) {
+    if (xlabels.indexOf((*i)->xLabel()) == -1) {
       xlabels.append((*i)->xLabel());
     }
-    if (ylabels.findIndex((*i)->yLabel()) == -1) {
+    if (ylabels.indexOf((*i)->yLabel()) == -1) {
       ylabels.append((*i)->yLabel());
     }
-    if (toplabels.findIndex((*i)->topLabel()) == -1) {
+    if (toplabels.indexOf((*i)->topLabel()) == -1) {
       toplabels.append((*i)->topLabel());
     }
     (*i)->unlock();
@@ -3397,9 +3393,12 @@ void Kst2DPlot::copyObject() {
 
         plotList.append(tagName());
 
-        PlotMimeSource *newplots = new PlotMimeSource(vw->caption(), plotList);
+        PlotMimeSource *newplots = new PlotMimeSource(vw->windowTitle(), plotList);
 
-        QApplication::clipboard()->setData(newplots, QClipboard::Clipboard);
+        QMimeData mimeData;
+        mimeData.setData(newplots->format(0), newplots->encodedData(newplots->format(0)));
+
+        QApplication::clipboard()->setMimeData(&mimeData, QClipboard::Clipboard);
       }
     }
   }
