@@ -26,7 +26,7 @@
 #include <qthread.h>
 #include <q3valuelist.h>
 
-#include "kstwaitcondition.h"
+#include <qwaitcondition.h>
 
 class KstBaseCurve;
 class KstDoc;

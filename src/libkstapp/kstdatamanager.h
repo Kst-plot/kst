@@ -26,7 +26,7 @@
 
 class KstDoc;
 class Q3ToolBar;
-class KListViewSearchLineWidget;
+class K3ListViewSearchLineWidget;
 
 #include "ui_kstdatamanager4.h"
 
@@ -79,7 +79,7 @@ class KstDataManagerI : public QDialog {
     Q3ToolBar *_data;
     Q3ToolBar *_fits;
     Q3ToolBar *_filters;
-    KListViewSearchLineWidget *_searchWidget;
+    K3ListViewSearchLineWidget *_searchWidget;
 
   protected:
     QPixmap _yesPixmap;
@@ -92,16 +92,16 @@ class KstDataManagerI : public QDialog {
     void docChanged();
 };
 
-class KstObjectItem : public QObject, public KListViewItem {
+class KstObjectItem : public QObject, public K3ListViewItem {
   Q_OBJECT
   public:
     KstObjectItem(Q3ListView *parent, KstRVectorPtr x, KstDataManagerI *dm, int localUseCount = 0);
     KstObjectItem(Q3ListView *parent, KstSVectorPtr x, KstDataManagerI *dm, int localUseCount = 0);
-    KstObjectItem(KListViewItem *parent, KstVectorPtr x, KstDataManagerI *dm, int localUseCount = 0);
+    KstObjectItem(K3ListViewItem *parent, KstVectorPtr x, KstDataManagerI *dm, int localUseCount = 0);
     KstObjectItem(Q3ListView *parent, KstDataObjectPtr x, KstDataManagerI *dm, int localUseCount = 0);
     KstObjectItem(Q3ListView *parent, KstRMatrixPtr x, KstDataManagerI *dm, int localUseCount = 0);
     KstObjectItem(Q3ListView *parent, KstSMatrixPtr x, KstDataManagerI *dm, int localUseCount = 0);
-    KstObjectItem(KListViewItem *parent, KstMatrixPtr x, KstDataManagerI *dm, int localUseCount = 0);
+    KstObjectItem(K3ListViewItem *parent, KstMatrixPtr x, KstDataManagerI *dm, int localUseCount = 0);
     virtual ~KstObjectItem();
 
     void update(bool recursive = true, int localUseCount = 0);

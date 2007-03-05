@@ -26,7 +26,7 @@
 
 // include files for KDE
 #include "ksdebug.h"
-#include <klistview.h>
+#include <k3listview.h>
 #include <kmessagebox.h>
 #include <kmultipledrag.h>
 #include <kstandarddirs.h>

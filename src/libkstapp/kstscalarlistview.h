@@ -18,12 +18,12 @@
 #ifndef KSTSCALARLISTVIEW_H
 #define KSTSCALARLISTVIEW_H
 
-#include <klistview.h>
+#include <k3listview.h>
 
 #include "kstobject.h"
 #include "kstobjectcollection.h"
 
-class KstScalarListView : public KListView
+class KstScalarListView : public K3ListView
 {
   public:
     KstScalarListView(QWidget *parent = 0, KstObjectCollection<KstScalar> *coll = NULL);
@@ -35,7 +35,7 @@ class KstScalarListView : public KListView
 };
 
 
-class KstScalarListViewItem : public KListViewItem
+class KstScalarListViewItem : public K3ListViewItem
 {
   public:
     KstScalarListViewItem(KstScalarListView *parent, KstObjectTreeNode<KstScalar> *node);

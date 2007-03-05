@@ -33,13 +33,13 @@ static QStyle *windowsStyle = 0;
 
 // include files for KDE
 #include "ksdebug.h"
-#include <klistview.h>
+#include <k3listview.h>
 #include <kmessagebox.h>
 #include <kinputdialog.h>
 #include <kstandarddirs.h>
 #include <kcombobox.h>
 
-#include <klistviewsearchline.h>
+#include <k3listviewsearchline.h>
 
 // application specific includes
 #include "datasourcemetadatadialog.h"
@@ -75,7 +75,7 @@ static QMap<int,Kst2DPlotPtr> PlotMap;
 #define RTTI_OBJ_STATIC_MATRIX   4207
 
 KstObjectItem::KstObjectItem(Q3ListView *parent, KstRVectorPtr x, KstDataManagerI *dm, int localUseCount)
-: QObject(), KListViewItem(parent), _rtti(RTTI_OBJ_DATA_VECTOR), _tag(x->tag()), _dm(dm) {
+: QObject(), K3ListViewItem(parent), _rtti(RTTI_OBJ_DATA_VECTOR), _tag(x->tag()), _dm(dm) {
   assert(x);
   _inUse = false;
   setText(0, x->tag().tag());
@@ -86,7 +86,7 @@ KstObjectItem::KstObjectItem(Q3ListView *parent, KstRVectorPtr x, KstDataManager
 
 
 KstObjectItem::KstObjectItem(Q3ListView *parent, KstSVectorPtr x, KstDataManagerI *dm, int localUseCount)
-: QObject(), KListViewItem(parent), _rtti(RTTI_OBJ_STATIC_VECTOR), _tag(x->tag()), _dm(dm) {
+: QObject(), K3ListViewItem(parent), _rtti(RTTI_OBJ_STATIC_VECTOR), _tag(x->tag()), _dm(dm) {
   assert(x);
   _inUse = false;
   setText(0, x->tag().tag());
@@ -96,8 +96,8 @@ KstObjectItem::KstObjectItem(Q3ListView *parent, KstSVectorPtr x, KstDataManager
 }
 
 
-KstObjectItem::KstObjectItem(KListViewItem *parent, KstVectorPtr x, KstDataManagerI *dm, int localUseCount)
-: QObject(), KListViewItem(parent), _rtti(RTTI_OBJ_VECTOR), _tag(x->tag()), _dm(dm) {
+KstObjectItem::KstObjectItem(K3ListViewItem *parent, KstVectorPtr x, KstDataManagerI *dm, int localUseCount)
+: QObject(), K3ListViewItem(parent), _rtti(RTTI_OBJ_VECTOR), _tag(x->tag()), _dm(dm) {
   assert(x);
   _inUse = false;
   setText(0, x->tag().tag());
@@ -108,7 +108,7 @@ KstObjectItem::KstObjectItem(KListViewItem *parent, KstVectorPtr x, KstDataManag
 
 
 KstObjectItem::KstObjectItem(Q3ListView *parent, KstDataObjectPtr x, KstDataManagerI *dm, int localUseCount)
-: QObject(), KListViewItem(parent), _rtti(RTTI_OBJ_OBJECT), _tag(x->tag()), _dm(dm) {
+: QObject(), K3ListViewItem(parent), _rtti(RTTI_OBJ_OBJECT), _tag(x->tag()), _dm(dm) {
   assert(x);
   _inUse = false;
   setText(0, x->tag().tag());
@@ -130,7 +130,7 @@ KstObjectItem::KstObjectItem(Q3ListView *parent, KstDataObjectPtr x, KstDataMana
 
 
 KstObjectItem::KstObjectItem(Q3ListView *parent, KstRMatrixPtr x, KstDataManagerI *dm, int localUseCount) 
-: QObject(), KListViewItem(parent), _rtti(RTTI_OBJ_DATA_MATRIX), _tag(x->tag()), _dm(dm) {
+: QObject(), K3ListViewItem(parent), _rtti(RTTI_OBJ_DATA_MATRIX), _tag(x->tag()), _dm(dm) {
   assert(x);
   _inUse = false;
   setText(0, x->tag().tag());
@@ -141,7 +141,7 @@ KstObjectItem::KstObjectItem(Q3ListView *parent, KstRMatrixPtr x, KstDataManager
 
 
 KstObjectItem::KstObjectItem(Q3ListView *parent, KstSMatrixPtr x, KstDataManagerI *dm, int localUseCount) 
-: QObject(), KListViewItem(parent), _rtti(RTTI_OBJ_STATIC_MATRIX), _tag(x->tag()), _dm(dm) {
+: QObject(), K3ListViewItem(parent), _rtti(RTTI_OBJ_STATIC_MATRIX), _tag(x->tag()), _dm(dm) {
   assert(x);
   _inUse = false;
   setText(0, x->tag().tag());
@@ -151,8 +151,8 @@ KstObjectItem::KstObjectItem(Q3ListView *parent, KstSMatrixPtr x, KstDataManager
 }
 
 
-KstObjectItem::KstObjectItem(KListViewItem *parent, KstMatrixPtr x, KstDataManagerI *dm, int localUseCount) 
-: QObject(), KListViewItem(parent), _rtti(RTTI_OBJ_MATRIX), _tag(x->tag()), _dm(dm) {
+KstObjectItem::KstObjectItem(K3ListViewItem *parent, KstMatrixPtr x, KstDataManagerI *dm, int localUseCount) 
+: QObject(), K3ListViewItem(parent), _rtti(RTTI_OBJ_MATRIX), _tag(x->tag()), _dm(dm) {
   assert(x);
   _inUse = false;
   setText(0, x->tag().tag());
@@ -618,7 +618,7 @@ KstDataManagerI::KstDataManagerI(KstDoc *in_doc, QWidget* parent, Qt::WindowFlag
       this, SLOT(selectionChanged()));
   connect(DataView, SIGNAL(contextMenuRequested(Q3ListViewItem*, const QPoint&, int)), this, SLOT(contextMenu(Q3ListViewItem*, const QPoint&, int)));
 
-  _searchWidget = new KListViewSearchLineWidget(DataView, SearchBox);
+  _searchWidget = new K3ListViewSearchLineWidget(DataView, SearchBox);
   Q3ValueList<int> cols;
   cols.append(0);
   _searchWidget->createSearchLine(DataView);

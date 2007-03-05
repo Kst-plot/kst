@@ -24,10 +24,10 @@
 //Added by qt3to4:
 #include <Q3ValueList>
 
-KstScalarListViewItem::KstScalarListViewItem(KstScalarListView *parent, KstObjectTreeNode<KstScalar> *node) : KListViewItem(parent), _node(node) {
+KstScalarListViewItem::KstScalarListViewItem(KstScalarListView *parent, KstObjectTreeNode<KstScalar> *node) : K3ListViewItem(parent), _node(node) {
 }
 
-KstScalarListViewItem::KstScalarListViewItem(KstScalarListViewItem *parent, KstObjectTreeNode<KstScalar> *node) : KListViewItem(parent), _node(node) {
+KstScalarListViewItem::KstScalarListViewItem(KstScalarListViewItem *parent, KstObjectTreeNode<KstScalar> *node) : K3ListViewItem(parent), _node(node) {
 }
 
 QString KstScalarListViewItem::text(int column) const {
@@ -53,7 +53,7 @@ QString KstScalarListViewItem::text(int column) const {
 }
 
 
-KstScalarListView::KstScalarListView(QWidget *parent, KstObjectCollection<KstScalar> *coll) : KListView(parent), _coll(coll) {
+KstScalarListView::KstScalarListView(QWidget *parent, KstObjectCollection<KstScalar> *coll) : K3ListView(parent), _coll(coll) {
   addColumn(i18n("Scalar"));
   addColumn(i18n("Value"));
 
@@ -100,7 +100,7 @@ void KstScalarListView::update() {
   }
 */
 
-  KListView::update();
+  K3ListView::update();
 }
 
 // vim: ts=2 sw=2 et

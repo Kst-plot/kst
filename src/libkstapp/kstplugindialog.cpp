@@ -45,7 +45,6 @@
 #include "kstdataobjectcollection.h"
 #include "kstdefaultnames.h"
 #include "plugincollection.h"
-#include "plugindialogwidget.h"
 #include "pluginmanager.h"
 #include "scalarselector.h"
 #include "stringselector.h"

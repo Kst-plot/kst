@@ -22,7 +22,7 @@
 
 #include "ui_kstviewstringsdialog4.h"
 
-#include <klistviewsearchline.h>
+#include <k3listviewsearchline.h>
 #include "kststringlistview.h"
 
 class KstViewStringsDialogI : public QDialog {
@@ -30,7 +30,7 @@ class KstViewStringsDialogI : public QDialog {
   public:
     KstViewStringsDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
     virtual ~KstViewStringsDialogI();
-    KListViewSearchLineWidget *searchWidget;
+    K3ListViewSearchLineWidget *searchWidget;
     KstStringListView *listViewStrings;
 
     bool hasContent() const;

@@ -29,7 +29,7 @@ KstViewStringsDialogI::KstViewStringsDialogI(QWidget* parent, Qt::WindowFlags fl
   listViewStrings = new KstStringListView(this, &KST::stringList);
   listViewStrings->setShowSortIndicator(false);
   listViewStrings->setSelectionMode(Q3ListView::NoSelection);
-  searchWidget = new KListViewSearchLineWidget(listViewStrings, this);
+  searchWidget = new K3ListViewSearchLineWidget(listViewStrings, this);
   Q3BoxLayout *box = dynamic_cast<Q3BoxLayout*>(layout());
   if (box) {
     box->insertWidget(0, searchWidget);

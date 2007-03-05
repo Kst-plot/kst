@@ -1122,6 +1122,34 @@
   <layoutfunction spacing="KDialog::spacingHint" margin="KDialog::marginHint" />
   <customwidgets>
     <customwidget>
+      <class>KIntSpinBox</class>
+      <header location="global" >knuminput.h</header>
+      <sizehint>
+        <width>-1</width>
+        <height>-1</height>
+      </sizehint>
+      <container>0</container>
+      <sizepolicy>
+        <hordata>5</hordata>
+        <verdata>5</verdata>
+      </sizepolicy>
+      <pixmap>image0</pixmap>
+    </customwidget>
+    <customwidget>
+      <class>KDoubleNumInput</class>
+      <header location="global" >knuminput.h</header>
+      <sizehint>
+        <width>-1</width>
+        <height>-1</height>
+      </sizehint>
+      <container>0</container>
+      <sizepolicy>
+        <hordata>5</hordata>
+        <verdata>5</verdata>
+      </sizepolicy>
+      <pixmap>image0</pixmap>
+    </customwidget>
+    <customwidget>
       <class>KTimezoneCombo</class>
       <header location="global" >ktimezonecombo.h</header>
       <sizehint>

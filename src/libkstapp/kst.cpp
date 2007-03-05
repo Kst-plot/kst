@@ -30,7 +30,6 @@
 #include <QCustomEvent>
 
 // include files for KDE
-#include <kaccel.h>
 #include <kcmdlineargs.h>
 #include <qdebug.h>
 #include <kfiledialog.h>
@@ -38,11 +37,9 @@
 #include <kmessagebox.h>
 #include <kmenu.h>
 #include <kprinter.h>
-#include <kprogress.h>
 #include <kstandarddirs.h>
 #include <kstatusbar.h>
 #include <ktabwidget.h>
-#include <ktoolbarbutton.h>
 #include <qdatetime.h>
 
 // application specific includes

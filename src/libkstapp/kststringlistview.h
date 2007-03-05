@@ -18,12 +18,12 @@
 #ifndef KSTSTRINGLISTVIEW_H
 #define KSTSTRINGLISTVIEW_H
 
-#include <klistview.h>
+#include <k3listview.h>
 
 #include "kstobject.h"
 #include "kstobjectcollection.h"
 
-class KstStringListView : public KListView
+class KstStringListView : public K3ListView
 {
   public:
     KstStringListView(QWidget *parent = 0, KstObjectCollection<KstString> *coll = NULL);
@@ -35,7 +35,7 @@ class KstStringListView : public KListView
 };
 
 
-class KstStringListViewItem : public KListViewItem
+class KstStringListViewItem : public K3ListViewItem
 {
   public:
     KstStringListViewItem(KstStringListView *parent, KstObjectTreeNode<KstString> *node);

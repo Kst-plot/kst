@@ -2,7 +2,6 @@
   <author></author>
   <comment></comment>
   <exportmacro></exportmacro>
-  <class>PluginDialogWidget</class>
   <widget class="QWidget" name="PluginDialogWidget" >
     <property name="geometry" >
       <rect>

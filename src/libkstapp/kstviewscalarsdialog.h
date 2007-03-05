@@ -22,7 +22,7 @@
 
 #include "ui_kstviewscalarsdialog4.h"
 
-#include <klistviewsearchline.h>
+#include <k3listviewsearchline.h>
 
 //#include "kstscalartable.h"
 #include "kstscalarlistview.h"
@@ -32,7 +32,7 @@ class KstViewScalarsDialogI : public QDialog {
   public:
     KstViewScalarsDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
     virtual ~KstViewScalarsDialogI();
-    KListViewSearchLineWidget *searchWidget;
+    K3ListViewSearchLineWidget *searchWidget;
     KstScalarListView *listViewScalars;
 
     bool hasContent() const;

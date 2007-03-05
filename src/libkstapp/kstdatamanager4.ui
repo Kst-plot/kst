@@ -87,7 +87,7 @@
                 <widget class="Q3HBox" name="SearchBox" />
               </item>
               <item>
-                <widget class="KListView" name="DataView" >
+                <widget class="K3ListView" name="DataView" >
                   <property name="sizePolicy" >
                     <sizepolicy>
                       <hsizetype>7</hsizetype>
@@ -251,9 +251,9 @@
   <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <customwidgets>
     <customwidget>
-      <class>KListView</class>
+      <class>K3ListView</class>
       <extends>Q3ListView</extends>
-      <header>klistview.h</header>
+      <header>k3listview.h</header>
     </customwidget>
   </customwidgets>
   <tabstops>
@@ -264,7 +264,7 @@
     <tabstop>Close</tabstop>
   </tabstops>
   <includes>
-    <include location="local" >klistview.h</include>
+    <include location="local" >k3listview.h</include>
   </includes>
   <connections>
     <connection>

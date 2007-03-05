@@ -24,10 +24,10 @@
 //Added by qt3to4:
 #include <Q3ValueList>
 
-KstStringListViewItem::KstStringListViewItem(KstStringListView *parent, KstObjectTreeNode<KstString> *node) : KListViewItem(parent), _node(node) {
+KstStringListViewItem::KstStringListViewItem(KstStringListView *parent, KstObjectTreeNode<KstString> *node) : K3ListViewItem(parent), _node(node) {
 }
 
-KstStringListViewItem::KstStringListViewItem(KstStringListViewItem *parent, KstObjectTreeNode<KstString> *node) : KListViewItem(parent), _node(node) {
+KstStringListViewItem::KstStringListViewItem(KstStringListViewItem *parent, KstObjectTreeNode<KstString> *node) : K3ListViewItem(parent), _node(node) {
 }
 
 QString KstStringListViewItem::text(int column) const {
@@ -53,7 +53,7 @@ QString KstStringListViewItem::text(int column) const {
 }
 
 
-KstStringListView::KstStringListView(QWidget *parent, KstObjectCollection<KstString> *tree) : KListView(parent), _coll(tree) {
+KstStringListView::KstStringListView(QWidget *parent, KstObjectCollection<KstString> *tree) : K3ListView(parent), _coll(tree) {
   addColumn(i18n("String"));
   addColumn(i18n("Value"));
 
@@ -100,7 +100,7 @@ void KstStringListView::update() {
   }
 */
 
-  KListView::update();
+  K3ListView::update();
 }
 
 // vim: ts=2 sw=2 et
