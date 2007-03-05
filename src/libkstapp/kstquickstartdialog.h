@@ -36,7 +36,7 @@ class KstQuickStartDialogI : public QDialog {
   private slots:
     void wizard_I();
     void open_I();
-    void changeURL(const QString& name);
+    void changeUrl(const QString& name);
     void updateSettings();
     void deselectRecentFile();
 

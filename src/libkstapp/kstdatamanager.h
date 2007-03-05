@@ -38,8 +38,8 @@ class K3ListViewSearchLineWidget;
 class KstDataAction : public QAction {
   Q_OBJECT
   public:
-    KstDataAction(const QString &menuText, QKeySequence accel, QObject *parent, const char *name = 0)
-      : QAction(menuText, accel, parent, name) {}
+    KstDataAction(const QString &menuText, const QKeySequence &accel, QObject *parent, const char *name = 0)
+      : QAction(menuText, parent) { setObjectName(name); setShortcut(accel); }
 
   protected:
     void addedTo(QWidget *actionWidget, QWidget *container);

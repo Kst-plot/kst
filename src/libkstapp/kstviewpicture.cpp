@@ -188,7 +188,7 @@ bool KstViewPicture::setImage(const QString& source) {
   if (QFile::exists(source) && QFileInfo(source).isRelative()) {
     url.setPath(source);
   } else {
-    url = KUrl::fromPathOrURL(source);
+    url = KUrl(source);
   }
 
 #if KDE_VERSION >= KDE_MAKE_VERSION(3,3,0)

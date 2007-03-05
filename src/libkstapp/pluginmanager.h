@@ -18,10 +18,10 @@
 #ifndef PLUGINMANAGER_H
 #define PLUGINMANAGER_H
 
-#include <QWidget>
+#include <QDialog>
 #include "ui_pluginmanager4.h"
 
-class PluginManager : public QWidget, public Ui::PluginManager {
+class PluginManager : public QDialog, public Ui::PluginManager {
   Q_OBJECT
 
 public:

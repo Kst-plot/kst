@@ -77,9 +77,7 @@ class UpdateThread;
 class VectorSaveDialog;
 
 class QLabel;
-class Q3ProgressBar;
-class KProgress;
-
+class QProgressBar;
 
 class KstOpen {
   public:
@@ -107,7 +105,7 @@ class KST_EXPORT KstApp : public KMdiMainFrm {
   public:
     static void initialize(); // for main to call
 
-    KstApp(QWidget* parent=0, const char* name=0);
+    KstApp(QWidget* parent=0);
     ~KstApp();
 
     virtual QSize sizeHint() const;
@@ -590,7 +588,7 @@ class KST_EXPORT KstApp : public KMdiMainFrm {
     StatusLabel *_readyBar;
     StatusLabel *_memoryBar;
     StatusLabel *_dataBar;
-    KProgress *_progressBar;
+    QProgressBar *_progressBar;
     bool _stopping;
     KstIfaceImpl *_dcopIface;
     UpdateThread *_updateThread;

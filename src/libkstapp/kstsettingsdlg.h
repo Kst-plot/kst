@@ -18,7 +18,7 @@
 #ifndef KSTSETTINGSDLG_H
 #define KSTSETTINGSDLG_H
 
-#include <QWidget>
+#include <QDialog>
 #include "ui_kstsettingsdlg4.h"
 
 #include <math.h>
@@ -27,7 +27,7 @@
 #include "kstsettings.h"
 #include "kstplotdefines.h"
 
-class KstSettingsDlg : public QWidget, public Ui::KstSettingsDlg {
+class KstSettingsDlg : public QDialog, public Ui::KstSettingsDlg {
   Q_OBJECT
 
 public:

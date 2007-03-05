@@ -24,7 +24,7 @@
 #include <kst_export.h>
 
 KstSettingsDlg::KstSettingsDlg(QWidget *parent)
-    : QWidget(parent) {
+    : QDialog(parent) {
   setupUi(this);
 }
 

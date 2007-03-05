@@ -25,7 +25,7 @@
 #include "extensionmgr.h"
 
 ExtensionDialog::ExtensionDialog(QWidget *parent)
-    : QWidget(parent) {
+    : QDialog(parent) {
   setupUi(this);
 
  connect(_ok, SIGNAL(clicked()), this, SLOT(accept()));

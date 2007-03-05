@@ -66,7 +66,7 @@ class KST_EXPORT KstMatrixDialogI : public KstDataDialog {
     void fillFieldsForRMatrixEdit();
     void fillFieldsForSMatrixEdit();
 
-    bool _inTest; // testing URL for datasource
+    bool _inTest; // testing Url for datasource
 
     bool _fileNameDirty : 1;
     bool _fieldDirty : 1;
@@ -103,7 +103,7 @@ class KST_EXPORT KstMatrixDialogI : public KstDataDialog {
     void configureSource();
     void enableSource();
     void markSourceAndSave();
-    void testURL();
+    void testUrl();
 
     void setXStartCountFromEndDirty();
     void setYStartCountFromEndDirty();

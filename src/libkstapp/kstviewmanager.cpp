@@ -438,7 +438,7 @@ void KstViewManagerI::updateContents() {
 void KstViewManagerI::update() {
   KstApp *app = KstApp::inst();
     
-  if (!isShown()) {
+  if (isHidden()) {
     return;
   }
 

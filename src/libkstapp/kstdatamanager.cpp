@@ -818,7 +818,7 @@ void KstDataManagerI::show_I() {
 
 
 void KstDataManagerI::updateContents() {
-  if (!isShown()) {
+  if (isHidden()) {
     return;
   }
 
@@ -832,7 +832,7 @@ void KstDataManagerI::updateContents() {
 
 
 void KstDataManagerI::update() {
-  if (!isShown()) {
+  if (isHidden()) {
     return;
   }
 

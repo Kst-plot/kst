@@ -45,7 +45,7 @@ private slots:
   void destroy();
   void plotColsChanged();
   void xChanged();
-  void testURL();
+  void testUrl();
   void sourceChanged(const QString &txt);
   void fieldListChanged();
   void updateWindowBox();

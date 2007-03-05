@@ -17,9 +17,7 @@
 #ifndef KSTIFACE_H
 #define KSTIFACE_H
 
-//FIXME Need to port to dbus
-// #include <dcopobject.h>
-// #include <dcopref.h>
+#include <QtDBus/QtDBus>
 
 #include <qcolor.h>
 #include <qstringlist.h>  //Qt 3.1.2 KDE 3.1.4
@@ -27,86 +25,86 @@
 
 // Warning: If you change something here, you could break existing scripts.
 
-class KstIface : virtual public DCOPObject {
-  K_DCOP
-k_dcop:
-  virtual void showDataManager() = 0;
+class KstIface : virtual public QObject {
+  Q_CLASSINFO("D-Bus Interface", "org.kde.KstIface")
+public Q_SLOTS:
+  Q_SCRIPTABLE virtual void showDataManager() = 0;
 
-  virtual QStringList stringList() = 0;
-  virtual QStringList scalarList() = 0;
-  virtual QStringList vectorList() = 0;
-  virtual QStringList objectList() = 0;
-  virtual QStringList curveList() = 0;
-  virtual QString activeWindow() = 0;
-  virtual QStringList windowList() = 0;
-  virtual QStringList plotList() = 0;
-  virtual QStringList plotList(const QString& window) = 0;
-  virtual QStringList pluginList() = 0;
-  virtual QStringList filterList() = 0;
+  Q_SCRIPTABLE virtual QStringList stringList() = 0;
+  Q_SCRIPTABLE virtual QStringList scalarList() = 0;
+  Q_SCRIPTABLE virtual QStringList vectorList() = 0;
+  Q_SCRIPTABLE virtual QStringList objectList() = 0;
+  Q_SCRIPTABLE virtual QStringList curveList() = 0;
+  Q_SCRIPTABLE virtual QString activeWindow() = 0;
+  Q_SCRIPTABLE virtual QStringList windowList() = 0;
+  Q_SCRIPTABLE virtual QStringList plotList() = 0;
+  Q_SCRIPTABLE virtual QStringList plotList(const QString& window) = 0;
+  Q_SCRIPTABLE virtual QStringList pluginList() = 0;
+  Q_SCRIPTABLE virtual QStringList filterList() = 0;
 
 
-  virtual QStringList inputVectors(const QString& objectName) = 0;
-  virtual QStringList inputScalars(const QString& objectName) = 0;
-  virtual QStringList outputVectors(const QString& objectName) = 0;
-  virtual QStringList outputScalars(const QString& objectName) = 0;
+  Q_SCRIPTABLE virtual QStringList inputVectors(const QString& objectName) = 0;
+  Q_SCRIPTABLE virtual QStringList inputScalars(const QString& objectName) = 0;
+  Q_SCRIPTABLE virtual QStringList outputVectors(const QString& objectName) = 0;
+  Q_SCRIPTABLE virtual QStringList outputScalars(const QString& objectName) = 0;
 
-  virtual double scalar(const QString& name) = 0;
-  virtual bool setScalar(const QString& name, double value) = 0;
+  Q_SCRIPTABLE virtual double scalar(const QString& name) = 0;
+  Q_SCRIPTABLE virtual bool setScalar(const QString& name, double value) = 0;
 
-  virtual const QString& string(const QString& name) = 0;
-  virtual bool setString(const QString& name, const QString& value) = 0;
+  Q_SCRIPTABLE virtual const QString& string(const QString& name) = 0;
+  Q_SCRIPTABLE virtual bool setString(const QString& name, const QString& value) = 0;
 
-  virtual double vector(const QString& name, int index) = 0;
-  virtual bool setVector(const QString& name, int index, double value) = 0;
-  virtual bool resizeVector(const QString& name, int newSize) = 0;
-  virtual bool clearVector(const QString& name) = 0;
-  virtual int vectorSize(const QString& name) = 0;
+  Q_SCRIPTABLE virtual double vector(const QString& name, int index) = 0;
+  Q_SCRIPTABLE virtual bool setVector(const QString& name, int index, double value) = 0;
+  Q_SCRIPTABLE virtual bool resizeVector(const QString& name, int newSize) = 0;
+  Q_SCRIPTABLE virtual bool clearVector(const QString& name) = 0;
+  Q_SCRIPTABLE virtual int vectorSize(const QString& name) = 0;
 
-  virtual QString generateVector(const QString& name, double from, double to, int points) = 0;
-  virtual QString generateScalar(const QString& name, double value) = 0;
+  Q_SCRIPTABLE virtual QString generateVector(const QString& name, double from, double to, int points) = 0;
+  Q_SCRIPTABLE virtual QString generateScalar(const QString& name, double value) = 0;
 
-  virtual bool plotEquation(const QString& xvector, const QString& equation, const QString& plotName, const QColor& color) = 0;
-  virtual bool plotEquation(const QString& xvector, const QString& equation, const QString& plotName) = 0;
-  virtual bool plotEquation(double start, double end, int numSamples, const QString& equation, const QString& plotName, const QColor& color) = 0;
-  virtual bool plotEquation(double start, double end, int numSamples, const QString& equation, const QString& plotName) = 0;
+  Q_SCRIPTABLE virtual bool plotEquation(const QString& xvector, const QString& equation, const QString& plotName, const QColor& color) = 0;
+  Q_SCRIPTABLE virtual bool plotEquation(const QString& xvector, const QString& equation, const QString& plotName) = 0;
+  Q_SCRIPTABLE virtual bool plotEquation(double start, double end, int numSamples, const QString& equation, const QString& plotName, const QColor& color) = 0;
+  Q_SCRIPTABLE virtual bool plotEquation(double start, double end, int numSamples, const QString& equation, const QString& plotName) = 0;
 
-  virtual bool saveVector(const QString& vector, const QString& filename) = 0;
+  Q_SCRIPTABLE virtual bool saveVector(const QString& vector, const QString& filename) = 0;
 
-  virtual bool printImage(const QString& windowname, const QString& url) = 0;
-  virtual bool printImage(const QString& filename) = 0;
-  virtual bool printPostScript(const QString& windowname, const QString& filename) = 0;
-  virtual bool printPostScript(const QString& filename) = 0;
+  Q_SCRIPTABLE virtual bool printImage(const QString& windowname, const QString& url) = 0;
+  Q_SCRIPTABLE virtual bool printImage(const QString& filename) = 0;
+  Q_SCRIPTABLE virtual bool printPostScript(const QString& windowname, const QString& filename) = 0;
+  Q_SCRIPTABLE virtual bool printPostScript(const QString& filename) = 0;
 
-  virtual QString createWindow(const QString& name) = 0;
-  virtual QString createPlot(const QString& window, const QString& name) = 0;
-  virtual QString createPlot(const QString& name) = 0;
+  Q_SCRIPTABLE virtual QString createWindow(const QString& name) = 0;
+  Q_SCRIPTABLE virtual QString createPlot(const QString& window, const QString& name) = 0;
+  Q_SCRIPTABLE virtual QString createPlot(const QString& name) = 0;
 
-  virtual bool deletePlot(const QString& window, const QString& name) = 0;
-  virtual bool deletePlot(const QString& name) = 0;
+  Q_SCRIPTABLE virtual bool deletePlot(const QString& window, const QString& name) = 0;
+  Q_SCRIPTABLE virtual bool deletePlot(const QString& name) = 0;
 
-  virtual QStringList plotContents(const QString& name) = 0;
-  virtual bool addCurveToPlot(const QString& window, const QString& plot, const QString& curve) = 0;
-  virtual bool addCurveToPlot(const QString& plot, const QString& curve) = 0;
-  virtual bool removeCurveFromPlot(const QString& window, const QString& plot, const QString& curve) = 0;
-  virtual bool removeCurveFromPlot(const QString& plot, const QString& curve) = 0;
+  Q_SCRIPTABLE virtual QStringList plotContents(const QString& name) = 0;
+  Q_SCRIPTABLE virtual bool addCurveToPlot(const QString& window, const QString& plot, const QString& curve) = 0;
+  Q_SCRIPTABLE virtual bool addCurveToPlot(const QString& plot, const QString& curve) = 0;
+  Q_SCRIPTABLE virtual bool removeCurveFromPlot(const QString& window, const QString& plot, const QString& curve) = 0;
+  Q_SCRIPTABLE virtual bool removeCurveFromPlot(const QString& plot, const QString& curve) = 0;
 
-  virtual QString createCurve(const QString& name, const QString& xVector, const QString& yVector, const QString& xErrorVector, const QString& yErrorVector, const QColor& color) = 0; 
-  virtual QString createCurve(const QString& name, const QString& xVector, const QString& yVector, const QString& xErrorVector, const QString& yErrorVector) = 0; 
+  Q_SCRIPTABLE virtual QString createCurve(const QString& name, const QString& xVector, const QString& yVector, const QString& xErrorVector, const QString& yErrorVector, const QColor& color) = 0; 
+  Q_SCRIPTABLE virtual QString createCurve(const QString& name, const QString& xVector, const QString& yVector, const QString& xErrorVector, const QString& yErrorVector) = 0; 
 
-  virtual void reloadVectors() = 0;
-  virtual void reloadVector(const QString& vector) = 0;
+  Q_SCRIPTABLE virtual void reloadVectors() = 0;
+  Q_SCRIPTABLE virtual void reloadVector(const QString& vector) = 0;
 
-  virtual QString loadVector(const QString& file, const QString& field) = 0;
+  Q_SCRIPTABLE virtual QString loadVector(const QString& file, const QString& field) = 0;
 
-  virtual const QString& fileName() = 0;
-  virtual bool save() = 0;
-  virtual bool saveAs(const QString& fileName) = 0;
-  virtual void newFile() = 0;
-  virtual bool open(const QString& fileName) = 0;
+  Q_SCRIPTABLE virtual const QString& fileName() = 0;
+  Q_SCRIPTABLE virtual bool save() = 0;
+  Q_SCRIPTABLE virtual bool saveAs(const QString& fileName) = 0;
+  Q_SCRIPTABLE virtual void newFile() = 0;
+  Q_SCRIPTABLE virtual bool open(const QString& fileName) = 0;
 
   //Sets the window MDI mode
   //mode 1=Toplevel, 2=Childframe, 3=Tab Page, 4=IDEAl Mode
-  virtual bool setMDIMode(int mode) = 0;
+  Q_SCRIPTABLE virtual bool setMDIMode(int mode) = 0;
 
   //set tile mode in childframe mode
   //mode 1=cascade
@@ -116,27 +114,27 @@ k_dcop:
   //     5=tile non-overlapped
   //     6=tile overlapped
   //     7=tile vertically
-  virtual bool setTileMode(int mode) = 0;
+  Q_SCRIPTABLE virtual bool setTileMode(int mode) = 0;
 
   //close window
-  virtual bool closeWindow(const QString& windowName) = 0;
+  Q_SCRIPTABLE virtual bool closeWindow(const QString& windowName) = 0;
 
   //make window active
-  virtual bool activateWindow(const QString& windowName) = 0;
+  Q_SCRIPTABLE virtual bool activateWindow(const QString& windowName) = 0;
 
   //position/resize window (relative to kst window)
-  virtual bool positionWindow(int topLeftX,
+  Q_SCRIPTABLE virtual bool positionWindow(int topLeftX,
       int topLeftY,
       int width,
       int height) = 0;
 
   //zoom (maximize) plot
-  virtual bool maximizePlot(const QString& plotName) = 0;
-  virtual bool unmaximizePlot(const QString& plotName) = 0;
-  virtual bool toggleMaximizePlot(const QString& plotName) = 0;
+  Q_SCRIPTABLE virtual bool maximizePlot(const QString& plotName) = 0;
+  Q_SCRIPTABLE virtual bool unmaximizePlot(const QString& plotName) = 0;
+  Q_SCRIPTABLE virtual bool toggleMaximizePlot(const QString& plotName) = 0;
 
   //change plot axes
-  virtual bool setPlotAxes(const QString& plotName,
+  Q_SCRIPTABLE virtual bool setPlotAxes(const QString& plotName,
       int xLower,
       int xUpper,
       int yLower,
@@ -149,7 +147,7 @@ k_dcop:
   //                  4 = maximum 1.0
   //      anything else = number
   //returns the name of the histogram, or empty QString if not successful
-  virtual QString createHistogram(const QString& name,
+  Q_SCRIPTABLE virtual QString createHistogram(const QString& name,
       const QString& vector,
       double min,
       double max,
@@ -165,7 +163,7 @@ k_dcop:
   //      anything else = number
   //On success, returns in order: name of the histogram, X slave vector, and Y slave vector
   //On failure, returns empty list
-  virtual QStringList createHistogram(const QString& name,
+  Q_SCRIPTABLE virtual QStringList createHistogram(const QString& name,
                                   const QString& vector,
                                   double min,
                                   double max,
@@ -174,7 +172,7 @@ k_dcop:
 
   //create new power spectrum and curve from power spectrum.  Will not be plotted.
   //returns the name of the ps, or empty QString if not successful
-  virtual QString createPowerSpectrum(const QString& name,
+  Q_SCRIPTABLE virtual QString createPowerSpectrum(const QString& name,
       const QString& vector,
       bool appodize,
       bool removeMean,
@@ -187,7 +185,7 @@ k_dcop:
   //create new power specturm.  No curve is created.  
   //On success, returns in order: name of power spectrum, X slave vector, and Y slave vector
   //On failure, returns empty list
-  virtual QStringList createPowerSpectrum(const QString& name,
+  Q_SCRIPTABLE virtual QStringList createPowerSpectrum(const QString& name,
                                           const QString& vector,
                                           bool appodize,
                                           bool removeMean,
@@ -203,7 +201,7 @@ k_dcop:
   //             3 = Error
   // anything else = no debug logging
   //empty email = no email notification
-  virtual QString createEvent(const QString& name,
+  Q_SCRIPTABLE virtual QString createEvent(const QString& name,
       const QString& expression,
       const QString& description,
       int debugLogType,
@@ -214,7 +212,7 @@ k_dcop:
   //QStringList parameters
   //returns output vector names followed by output scalar names
   //returns empty QString if not successful
-  virtual QStringList createPlugin(const QString& pluginName,
+  Q_SCRIPTABLE virtual QStringList createPlugin(const QString& pluginName,
                             const QStringList& scalarInputs,
                             const QStringList& vectorInputs) = 0;
 
@@ -226,7 +224,7 @@ k_dcop:
   //yNumSteps - number of y frames to read, -1 to read to end
   //skipFrames - read 1 sample per skipFrames, -1 to read all samples in range
   //boxcarFilter - perform boxcar filtering when skipping frames
-  virtual QString loadMatrix(const QString& name, const QString& file, const QString& field,
+  Q_SCRIPTABLE virtual QString loadMatrix(const QString& name, const QString& file, const QString& field,
                              int xStart, int yStart, int xNumSteps, int yNumSteps, 
                              int skipFrames, bool boxcarFilter) = 0;
   
@@ -236,7 +234,7 @@ k_dcop:
   //xNumSteps, yNumSteps - length and width of the matrix 
   //xMin, yMin - the minimum coordinates of the matrix
   //xStepSize, yStepSize - the dimensions of each block of the matrix
-  virtual QString createGradient(const QString& name, bool xDirection, double zAtMin, double zAtMax, 
+  Q_SCRIPTABLE virtual QString createGradient(const QString& name, bool xDirection, double zAtMin, double zAtMax, 
                                  int xNumSteps, int yNumSteps, double xMin, double yMin, 
                                  double xStepSize, double yStepSize) = 0;
 
@@ -246,7 +244,7 @@ k_dcop:
   //          1 = contour map only
   //          2 = both colormap and contour map
   //if imageType == 0 or 1, unnneeded parameters are ignored
-  virtual QString createImage(const QString &name,
+  Q_SCRIPTABLE virtual QString createImage(const QString &name,
                               const QString &matrix,
                               double lowerZ,
                               double upperZ,
@@ -257,13 +255,13 @@ k_dcop:
 
   //create a plot marker
   //returns false if plotName is not valid or markerValue already exists, else returns true
-  virtual bool addPlotMarker(const QString &plotName, double markerValue) = 0;
+  Q_SCRIPTABLE virtual bool addPlotMarker(const QString &plotName, double markerValue) = 0;
 
-  virtual bool changeDataFile(const QString& fileName) = 0;
+  Q_SCRIPTABLE virtual bool changeDataFile(const QString& fileName) = 0;
 
-  virtual bool changeDataFile(const QString& vector, const QString& fileName) = 0;
+  Q_SCRIPTABLE virtual bool changeDataFile(const QString& vector, const QString& fileName) = 0;
 
-  virtual bool changeDataFiles(const QStringList& vectors, const QString& fileName) = 0;
+  Q_SCRIPTABLE virtual bool changeDataFiles(const QStringList& vectors, const QString& fileName) = 0;
 
 };
 

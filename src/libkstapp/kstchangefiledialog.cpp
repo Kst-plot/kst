@@ -113,7 +113,7 @@ void KstChangeFileDialogI::updateChangeFileDialog() {
   _files->setEnabled(_files->count() > 0);
 
   if (_first) {
-    _dataFile->setURL(KST::vectorDefaults.dataSource());
+    _dataFile->setUrl(KST::vectorDefaults.dataSource());
     _first = false;
   }
 }

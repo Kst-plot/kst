@@ -121,7 +121,7 @@ DataWizard::DataWizard(QWidget *parent)
 
  connect(_vectorsToPlot, SIGNAL(dropped(QDropEvent*)), this, SLOT(updateVectorPageButtons()));
 
- connect(_testURL, SIGNAL(clicked()), this, SLOT(testURL()));
+ connect(_testUrl, SIGNAL(clicked()), this, SLOT(testUrl()));
 }
 
 
@@ -164,7 +164,7 @@ void DataWizard::init() {
   setHelpEnabled(_pagePlot, false);
   _newFilter->setEnabled(false);
   _newFilter->hide(); // FIXME: implement this
-  _url->setURL(default_source);
+  _url->setUrl(default_source);
   _url->completionObject()->setDir(QDir::currentDirPath());
   _url->setFocus();
 
@@ -209,7 +209,7 @@ void DataWizard::destroy() {
 
 
 void DataWizard::setInput(const QString& input) {
-  _url->setURL(input);
+  _url->setUrl(input);
 }
 
 
@@ -247,7 +247,7 @@ void DataWizard::xChanged() {
 }
 
 
-void DataWizard::testURL() {
+void DataWizard::testUrl() {
   _inTest = true;
   sourceChanged(_url->url());
   _inTest = false;
@@ -271,12 +271,12 @@ void DataWizard::sourceChanged(const QString& text) {
     if (!_inTest && !url.isLocalFile() && url.protocol() != "file" && !url.protocol().isEmpty()) {
       setNextEnabled(_pageDataSource, false);
       _fileType->setText(QString::null);
-      _testURL->show();
+      _testUrl->show();
       return;
     }
 
     if (!_inTest) {
-      _testURL->hide();
+      _testUrl->hide();
     }
 
     if (!url.isValid()) {
@@ -368,7 +368,7 @@ void DataWizard::sourceChanged(const QString& text) {
   setNextEnabled(_pageVectors, xVectorOk() && yVectorsOk());
   setNextEnabled(_pageDataSource, true);
   if (_inTest) {
-    _testURL->hide();
+    _testUrl->hide();
   }
 }
 

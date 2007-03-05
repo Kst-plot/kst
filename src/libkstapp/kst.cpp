@@ -23,7 +23,7 @@
 #include <qeventloop.h>
 #include <q3paintdevicemetrics.h>
 #include <q3popupmenu.h>
-#include <q3progressbar.h>
+#include <qprogressbar.h>
 #include <qvalidator.h>
 //Added by qt3to4:
 #include <Q3ValueList>
@@ -392,7 +392,7 @@ void KstApp::customEvent(QCustomEvent *pEvent) {
 
 void KstApp::updateActions() {
   // Hack
-  StatusBarAction->setChecked(statusBar()->isShown());
+  StatusBarAction->setChecked(statusBar()->isVisible());
   QApplication::flushX();
   QTimer::singleShot(0, this, SLOT(loadExtensions()));
 }
@@ -947,28 +947,28 @@ KstApp::KstZoomType KstApp::getZoomRadio() {
 
 void KstApp::initStatusBar() {
   _dataNotifier = new KstDataNotifier(statusBar());
-  statusBar()->addWidget(_dataNotifier, 0, true);
+  statusBar()->addPermanentWidget(_dataNotifier, 0);
 
   _dataBar = new StatusLabel(QString::null, statusBar());
   _dataBar->setTextFormat(Qt::PlainText);
-  statusBar()->addWidget(_dataBar, 5, true);
+  statusBar()->addPermanentWidget(_dataBar, 5);
 
   _readyBar = new StatusLabel(i18n("Almost Ready"), statusBar());
   _readyBar->setTextFormat(Qt::PlainText);
   _readyBar->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-  statusBar()->addWidget(_readyBar, 5, true);
+  statusBar()->addPermanentWidget(_readyBar, 5);
 
-  _progressBar = new KProgress(statusBar());
+  _progressBar = new QProgressBar(statusBar());
   _progressBar->setPercentageVisible(false);
   _progressBar->setCenterIndicator(true);
-  statusBar()->addWidget(_progressBar, 2, true);
+  statusBar()->addPermanentWidget(_progressBar, 2);
   _progressBar->setMaximumHeight( fontMetrics().height() );
   _progressBar->hide();
 
 #ifdef HAVE_LINUX
   _memoryBar = new StatusLabel(i18n("0 MB available"), statusBar());
   _memoryBar->setTextFormat(Qt::PlainText);
-  statusBar()->addWidget(_memoryBar, 0, true);
+  statusBar()->addPermanentWidget(_memoryBar, 0);
   connect(&_memTimer, SIGNAL(timeout()), this, SLOT(updateMemoryStatus()));
   _memTimer.start(5000);
 #endif
@@ -1022,7 +1022,7 @@ void KstApp::selectDataPlugin() {
   l += oldPlugins;
 
   bool ok = false;
-  QStringList plugin = KInputDialog::getItemList(i18n("Data Plugins"), i18n("Create..."), l, 0, false, &ok, this);
+  QStringList plugin = KInputDialog::getItemList(i18n("Data Plugins"), i18n("Create..."), l, QStringList(), false, &ok, this);
 
   if (!ok || plugin.isEmpty()) {
     return;
@@ -1045,7 +1045,7 @@ void KstApp::forceUpdate() {
 
 
 void KstApp::addRecentFile(const KUrl& url) {
-  _recent->addURL(url);
+  _recent->addUrl(url);
 }
 
 
@@ -1097,18 +1097,18 @@ bool KstApp::openDocumentFile(const QString& in_filename,
   bool rc = false;
 
   if (QFile::exists(in_filename) && QFileInfo(in_filename).isRelative()) {
-    url.setPath(QFileInfo(in_filename).absFilePath());
+    url.setPath(QFileInfo(in_filename).absoluteFilePath());
   } else {
-    url = KUrl::fromPathOrURL(in_filename);
+    url = KUrl(in_filename);
   }
 
-  slotUpdateStatusMsg(i18n("Opening %1...").arg(url.prettyURL()));
+  slotUpdateStatusMsg(i18n("Opening %1...").arg(url.prettyUrl()));
 
   if (doc->openDocument(url, o_file, o_n, o_f, o_s, o_ave)) {
     setWindowTitle(doc->title());
     if (url.isLocalFile()) {
       QFileInfo finfo(in_filename);
-      addRecentFile(finfo.absFilePath());
+      addRecentFile(finfo.absoluteFilePath());
     } else {
       addRecentFile(url);
     }
@@ -1238,7 +1238,7 @@ void KstApp::slotFileOpen() {
   slotUpdateStatusMsg(i18n("Opening file..."));
 
   if (doc->saveModified(false)) {
-    KUrl url = KFileDialog::getOpenURL("::<kstfiledir>", i18n("*.kst|Kst Plot File (*.kst)\n*|All Files"), this, i18n("Open File"));
+    KUrl url = KFileDialog::getOpenUrl("::<kstfiledir>", i18n("*.kst|Kst Plot File (*.kst)\n*|All Files"), this, i18n("Open File"));
     if (!url.isEmpty()) {
       doc->deleteContents();
       doc->setModified(false);
@@ -1296,7 +1296,7 @@ bool KstApp::slotFileSaveAs() {
                   i18n("*.kst|Kst Plot File (*.kst)\n*|All Files"),
                                   this, i18n("Save As"));
     if (!newName.isEmpty()) {
-      QRegExp extension("*.kst", false, true);
+      QRegExp extension("*.kst", Qt::CaseInsensitive, QRegExp::Wildcard);
       QString longName = newName;
 
       if (!extension.exactMatch(newName)) {
@@ -1307,7 +1307,7 @@ bool KstApp::slotFileSaveAs() {
 
         addRecentFile(longName);
         doc->setTitle(saveAsInfo.fileName());
-        doc->setAbsFilePath(saveAsInfo.absFilePath());
+        doc->setAbsFilePath(saveAsInfo.absoluteFilePath());
 
         setWindowTitle(qApp->applicationName() + ": " + doc->title());
 
@@ -1726,7 +1726,7 @@ void KstApp::slotViewStatusBar() {
 
 
 void KstApp::updateStatusBarText() {
-  if (statusBar()->isShown()) {
+  if (statusBar()->isVisible()) {
     QFontMetrics fm(fontMetrics());
     int widthUsed;
     int margin = 3;
@@ -1736,11 +1736,11 @@ void KstApp::updateStatusBarText() {
     int widthData = fm.width(_dataBar->fullText());
     int widthReady = fm.width(_readyBar->fullText());
 
-    if (_progressBar->isShown()) {
+    if (_progressBar->isVisible()) {
       widthAvailable -= _progressBar->width();
       widthAvailable -= spacing;
     }
-    if (_dataNotifier->isShown()) {
+    if (_dataNotifier->isVisible()) {
       widthAvailable -= _dataNotifier->geometry().width();
       widthAvailable -= spacing;
     }
@@ -1818,17 +1818,17 @@ void KstApp::slotUpdateProgress(int total, int step, const QString &msg) {
 
   _progressBar->show();
   if (step > 0) {
-    if (!_progressBar->percentageVisible()) {
-      _progressBar->setPercentageVisible(true);
+    if (!_progressBar->textVisible()) {
+      _progressBar->setTextVisible(true);
     }
-    if (total != _progressBar->totalSteps()) {
-      _progressBar->setTotalSteps(total);
+    if (total != _progressBar->maximum()) {
+      _progressBar->setMaximum(total);
     }
-    if (_progressBar->progress() != step) {
-      _progressBar->setProgress(step);
+    if (_progressBar->value() != step) {
+      _progressBar->setValue(step);
     }
   } else {
-    _progressBar->setPercentageVisible(false);
+    _progressBar->setTextVisible(false);
     _progressBar->reset();
   }
 
@@ -1840,7 +1840,7 @@ void KstApp::slotUpdateProgress(int total, int step, const QString &msg) {
 
   updateStatusBarText();
 
-  kapp->eventLoop()->processEvents(QEventLoop::ExcludeSocketNotifiers, 10);
+  QCoreApplication::processEvents(QEventLoop::ExcludeSocketNotifiers, 10);
 }
 
 
@@ -2152,55 +2152,55 @@ void KstApp::updateDialogs(bool onlyVisible) {
     QTime t;
     t.start();
 #endif
-    if (!onlyVisible || KstVectorDialogI::globalInstance()->isShown()) {
+    if (!onlyVisible || KstVectorDialogI::globalInstance()->isVisible()) {
       KstVectorDialogI::globalInstance()->update();
     }
-    if (!onlyVisible || KstPluginDialogI::globalInstance()->isShown()) {
+    if (!onlyVisible || KstPluginDialogI::globalInstance()->isVisible()) {
       KstPluginDialogI::globalInstance()->updateForm();
     }
-    if (!onlyVisible || KstFitDialogI::globalInstance()->isShown()) {
+    if (!onlyVisible || KstFitDialogI::globalInstance()->isVisible()) {
       KstFitDialogI::globalInstance()->update();
     }
-    if (!onlyVisible || KstFilterDialogI::globalInstance()->isShown()) {
+    if (!onlyVisible || KstFilterDialogI::globalInstance()->isVisible()) {
       KstFilterDialogI::globalInstance()->update();
     }
-    if (!onlyVisible || KstEqDialogI::globalInstance()->isShown()) {
+    if (!onlyVisible || KstEqDialogI::globalInstance()->isVisible()) {
       KstEqDialogI::globalInstance()->update();
     }
-    if (!onlyVisible || KstHsDialogI::globalInstance()->isShown()) {
+    if (!onlyVisible || KstHsDialogI::globalInstance()->isVisible()) {
       KstHsDialogI::globalInstance()->update();
     }
-    if (!onlyVisible || KstPsdDialogI::globalInstance()->isShown()) {
+    if (!onlyVisible || KstPsdDialogI::globalInstance()->isVisible()) {
       KstPsdDialogI::globalInstance()->update();
     }
-    if (!onlyVisible || KstCsdDialogI::globalInstance()->isShown()) {
+    if (!onlyVisible || KstCsdDialogI::globalInstance()->isVisible()) {
       KstCsdDialogI::globalInstance()->update();
     }
-    if (!onlyVisible || KstCurveDialogI::globalInstance()->isShown()) {
+    if (!onlyVisible || KstCurveDialogI::globalInstance()->isVisible()) {
       KstCurveDialogI::globalInstance()->update();
     }
-    if (!onlyVisible || KstEventMonitorI::globalInstance()->isShown()) {
+    if (!onlyVisible || KstEventMonitorI::globalInstance()->isVisible()) {
       KstEventMonitorI::globalInstance()->update();
     }
-    if (!onlyVisible || KstImageDialogI::globalInstance()->isShown()) {
+    if (!onlyVisible || KstImageDialogI::globalInstance()->isVisible()) {
       KstImageDialogI::globalInstance()->update();
     }
-    if (!onlyVisible || KstMatrixDialogI::globalInstance()->isShown()) {
+    if (!onlyVisible || KstMatrixDialogI::globalInstance()->isVisible()) {
       KstMatrixDialogI::globalInstance()->update();
     }
-    if (!onlyVisible || changeFileDialog->isShown()) {
+    if (!onlyVisible || changeFileDialog->isVisible()) {
       changeFileDialog->updateChangeFileDialog();
     }
-    if (!onlyVisible || chooseColorDialog->isShown()) {
+    if (!onlyVisible || chooseColorDialog->isVisible()) {
       chooseColorDialog->updateChooseColorDialog();
     }
-    if (!onlyVisible || differentiateCurvesDialog->isShown()) {
+    if (!onlyVisible || differentiateCurvesDialog->isVisible()) {
       differentiateCurvesDialog->updateCurveDifferentiate();
     }
-    if (!onlyVisible || changeNptsDialog->isShown()) {
+    if (!onlyVisible || changeNptsDialog->isVisible()) {
       changeNptsDialog->updateChangeNptsDialog();
     }
-    if (!onlyVisible || vectorSaveDialog->isShown()) {
+    if (!onlyVisible || vectorSaveDialog->isVisible()) {
       vectorSaveDialog->init();
     }
     updateDataDialogs(false);
@@ -2228,21 +2228,22 @@ void KstApp::updateDialogsForWindow() {
 
 
 void KstApp::updateDataManager(bool onlyVisible) {
-  if (!onlyVisible || dataManager->isShown()) {
+  if (!onlyVisible || dataManager->isVisible()) {
     dataManager->update();
   }
 }
 
 
 void KstApp::updateViewManager(bool onlyVisible) {
-  if (!onlyVisible || viewManager->isShown()) {
+  if (!onlyVisible || viewManager->isVisible()) {
     viewManager->update();
   }
 }
 
 
 void KstApp::showPluginManager() {
-  PluginManager *pm = new PluginManager(this, "Plugin Manager");
+  PluginManager *pm = new PluginManager(this);
+  pm->setObjectName("Plugin Manager");
   pm->exec();
   delete pm;
 
@@ -2251,7 +2252,8 @@ void KstApp::showPluginManager() {
 
 
 void KstApp::showExtensionManager() {
-  ExtensionDialog *dlg = new ExtensionDialog(this, "Extension Manager");
+  ExtensionDialog *dlg = new ExtensionDialog(this);
+  dlg->setObjectName("Extension Manager");
   dlg->exec();
   delete dlg;
 }
@@ -2259,6 +2261,7 @@ void KstApp::showExtensionManager() {
 
 void KstApp::showDataWizard() {
   DataWizard *dw = new DataWizard(this, "DataWizard");
+  dw->setObjectName("DataWizard");
   dw->exec();
   if (dw->result() == QDialog::Accepted) {
     delete dw; // leave this here - releases references
@@ -2321,7 +2324,8 @@ void KstApp::reload() {
 
 
 void KstApp::slotPreferences() {
-  KstSettingsDlg *ksd = new KstSettingsDlg(this, "Kst Settings Dialog");
+  KstSettingsDlg *ksd = new KstSettingsDlg(this);
+  ksd->setObjectName("Kst Settings Dialog");
   connect(ksd, SIGNAL(settingsChanged()), this, SIGNAL(settingsChanged()));
   ksd->exec();
   delete ksd;
@@ -2597,7 +2601,7 @@ void KstApp::fixKMdi() {
 void KstApp::createDebugNotifier() {
   if (!_debugNotifier) {
     _debugNotifier = new KstDebugNotifier(statusBar());
-    statusBar()->addWidget(_debugNotifier, 0, true);
+    statusBar()->addPermanentWidget(_debugNotifier, 0);
   } else {
     _debugNotifier->reanimate();
   }

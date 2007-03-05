@@ -33,7 +33,7 @@
 #include <kst_export.h>
 
 PluginManager::PluginManager(QWidget *parent)
-    : QWidget(parent) {
+    : QDialog(parent) {
   setupUi(this);
 
  connect(_close, SIGNAL(clicked()), this, SLOT(close()));
@@ -76,7 +76,7 @@ void PluginManager::install() {
 #else
   if (!KIO::NetAccess::download(xmlfile, tmpFile)) {
 #endif
-    KMessageBox::error(this, i18n("Unable to access file %1.").arg(xmlfile.prettyURL()), i18n("KST Plugin Loader"));
+    KMessageBox::error(this, i18n("Unable to access file %1.").arg(xmlfile.prettyUrl()), i18n("KST Plugin Loader"));
     return;
   }
 
@@ -89,8 +89,8 @@ void PluginManager::install() {
   }
 
   QString path = KGlobal::dirs()->saveLocation("kstplugins");
-  KUrl pathURL;
-  pathURL.setPath(path);
+  KUrl pathUrl;
+  pathUrl.setPath(path);
 
   // First try copying the .so file in
   KUrl sofile = xmlfile;
@@ -100,24 +100,24 @@ void PluginManager::install() {
 
 #if KDE_VERSION >= KDE_MAKE_VERSION(3,3,0)
 
-  if (!KIO::NetAccess::dircopy(sofile, pathURL, this)) {
+  if (!KIO::NetAccess::dircopy(sofile, pathUrl, this)) {
 #else
-  if (!KIO::NetAccess::dircopy(sofile, pathURL)) {
+  if (!KIO::NetAccess::dircopy(sofile, pathUrl)) {
 #endif
     KIO::NetAccess::removeTempFile(tmpFile);
-    KMessageBox::error(this, i18n("Unable to copy plugin file %1 to %2.").arg(sofile.prettyURL()).arg(pathURL.prettyURL()), i18n("KST Plugin Loader"));
+    KMessageBox::error(this, i18n("Unable to copy plugin file %1 to %2.").arg(sofile.prettyUrl()).arg(pathUrl.prettyUrl()), i18n("KST Plugin Loader"));
     return;
   }
 
-  KUrl tmpFileURL;
-  tmpFileURL.setPath(tmpFile);
-  pathURL.setFileName(xmlfile.fileName());
+  KUrl tmpFileUrl;
+  tmpFileUrl.setPath(tmpFile);
+  pathUrl.setFileName(xmlfile.fileName());
 
 #if KDE_VERSION >= KDE_MAKE_VERSION(3,3,0)
 
-  if (!KIO::NetAccess::dircopy(tmpFileURL, pathURL, this)) {
+  if (!KIO::NetAccess::dircopy(tmpFileUrl, pathUrl, this)) {
 #else
-  if (!KIO::NetAccess::dircopy(tmpFileURL, pathURL)) {
+  if (!KIO::NetAccess::dircopy(tmpFileUrl, pathUrl)) {
 #endif
     KMessageBox::error(this, i18n("Internal temporary file %1 could not be copied to plugin directory %2.").arg(tmpFile).arg(path), i18n("KST Plugin Loader"));
   }

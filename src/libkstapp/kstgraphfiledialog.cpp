@@ -119,7 +119,7 @@ void KstGraphFileDialogI::applyAutosave() {
 }
 
 
-void KstGraphFileDialogI::setURL(const QString& url) {
+void KstGraphFileDialogI::setUrl(const QString& url) {
   QString path;
 
   if (url.isEmpty()) {
@@ -213,7 +213,7 @@ void KstGraphFileDialogI::updateDialog() {
   if (_url.isEmpty()) {
     _url = QDir::currentDirPath();
   }
-  _saveLocation->setURL(_url);
+  _saveLocation->setUrl(_url);
   _saveLocation->completionObject()->setDir(_url);
 
   QString upfmt = _format.upper();

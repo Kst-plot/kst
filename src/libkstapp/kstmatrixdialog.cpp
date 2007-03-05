@@ -70,7 +70,7 @@ KstMatrixDialogI::KstMatrixDialogI(QWidget* parent, Qt::WindowFlags fl)
   connect(_w->_configure, SIGNAL(clicked()), this, SLOT(configureSource()));
   connect(_w->_readFromSource, SIGNAL(clicked()), this, SLOT(enableSource()));
   connect(_w->_generateGradient, SIGNAL(clicked()), this, SLOT(updateEnables()));
-  connect(_w->_connect, SIGNAL(clicked()), this, SLOT(testURL()));
+  connect(_w->_connect, SIGNAL(clicked()), this, SLOT(testUrl()));
 
   _w->_configure->setEnabled(false);
   _fieldCompletion = _w->_field->completionObject();
@@ -182,7 +182,7 @@ void KstMatrixDialogI::fillFieldsForRMatrixEdit() {
   _w->_field->setCurrentText(rmp->field());
 
   // fill in the other parameters
-  _w->_fileName->setURL(rmp->filename());
+  _w->_fileName->setUrl(rmp->filename());
 
   _w->_xStart->setValue(rmp->reqXStart());
   _w->_yStart->setValue(rmp->reqYStart());
@@ -233,7 +233,7 @@ void KstMatrixDialogI::fillFieldsForNew() {
 
   // set defaults using KstMatrixDefaults
   KST::matrixDefaults.sync();
-  _w->_fileName->setURL(KST::matrixDefaults.dataSource());
+  _w->_fileName->setUrl(KST::matrixDefaults.dataSource());
   _w->_minX->setText("0");
   _w->_minY->setText("1");
   _w->_xStep->setText("1");
@@ -1001,7 +1001,7 @@ void KstMatrixDialogI::enableSource() {
 }
 
 
-void KstMatrixDialogI::testURL() {
+void KstMatrixDialogI::testUrl() {
   _inTest = true;
   updateCompletion();
   _inTest = false;

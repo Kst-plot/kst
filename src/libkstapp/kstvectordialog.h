@@ -73,7 +73,7 @@ class KST_EXPORT KstVectorDialogI : public KstDataDialog {
     void enableSource();
     void enableGenerate();
     void markSourceAndSave();
-    void testURL();
+    void testUrl();
 
     // for multiple edit mode
     void setF0Dirty() { _f0Dirty = true; }

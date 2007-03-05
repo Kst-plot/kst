@@ -203,7 +203,7 @@ bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
 #else
     if (!KIO::NetAccess::exists(url, true)) {
 #endif
-      KMessageBox::sorry(KstApp::inst(), i18n("%1: There is no file with that name to open.").arg(url.prettyURL()));
+      KMessageBox::sorry(KstApp::inst(), i18n("%1: There is no file with that name to open.").arg(url.prettyUrl()));
       return false;
     }
 
@@ -212,7 +212,7 @@ bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
 #else
     if (!KIO::NetAccess::download(url, tmpFile)) {
 #endif
-      KMessageBox::sorry(KstApp::inst(), i18n("%1: There is no file with that name to open.").arg(url.prettyURL()));
+      KMessageBox::sorry(KstApp::inst(), i18n("%1: There is no file with that name to open.").arg(url.prettyUrl()));
       return false;
     }
     cleanupFile = true;
@@ -227,7 +227,7 @@ bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
 
   QFile f(tmpFile);
   if (!f.exists()) {
-    KMessageBox::sorry(KstApp::inst(), i18n("%1: There is no file with that name to open.").arg(url.prettyURL()));
+    KMessageBox::sorry(KstApp::inst(), i18n("%1: There is no file with that name to open.").arg(url.prettyUrl()));
     opening = false;
     _updating = false;
     KstApp::inst()->setPaused(false);
@@ -244,7 +244,7 @@ bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
   QDomDocument doc(_title);
 
   if (!f.open(QIODevice::ReadOnly)) {
-    KMessageBox::sorry(KstApp::inst(), i18n("%1: File exists, but kst could not open it.").arg(url.prettyURL()));
+    KMessageBox::sorry(KstApp::inst(), i18n("%1: File exists, but kst could not open it.").arg(url.prettyUrl()));
     opening = false;
     _updating = false;
     KstApp::inst()->setPaused(false);
@@ -256,7 +256,7 @@ bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
   }
 
   if (!doc.setContent(&f)) {
-    KMessageBox::sorry(KstApp::inst(), i18n("%1: Not a valid kst plot specification file.").arg(url.prettyURL()));
+    KMessageBox::sorry(KstApp::inst(), i18n("%1: Not a valid kst plot specification file.").arg(url.prettyUrl()));
     f.close();
     opening = false;
     _updating = false;
@@ -281,7 +281,7 @@ bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
   QString readingDocument = i18n("Reading Kst file");
 
   if (docElem.tagName() != "kstdoc") {
-    QString err = i18n("Error opening file %1.  Does not appear to be a Kst file.").arg(url.prettyURL());
+    QString err = i18n("Error opening file %1.  Does not appear to be a Kst file.").arg(url.prettyUrl());
     KstDebug::self()->log(err, KstDebug::Error);
     KMessageBox::sorry(KstApp::inst(), err);
     opening = false;
@@ -295,7 +295,7 @@ bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
   }
 
   if (docElem.attribute("version").toDouble() > 1.3 && !docElem.attribute("version").isEmpty()) {
-    QString err = i18n("While opening file %2, version %1 is too new.  Update Kst or fix the Kst file.  Attempting to load as-is.").arg(docElem.attribute("version")).arg(url.prettyURL());
+    QString err = i18n("While opening file %2, version %1 is too new.  Update Kst or fix the Kst file.  Attempting to load as-is.").arg(docElem.attribute("version")).arg(url.prettyUrl());
     KstDebug::self()->log(err, KstDebug::Warning);
   }
 
@@ -358,7 +358,7 @@ bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
           gdlg->setImageSize(sizeX, sizeY);
         }
         if (!url.isEmpty()) {
-          gdlg->setURL(url);
+          gdlg->setUrl(url);
         }
         if (!fmt.isEmpty()) {
           gdlg->setFormat(fmt);
@@ -491,7 +491,7 @@ bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
           app->closeWindow(toDelete);
         }
       } else {
-        KstDebug::self()->log(i18n("Unsupported element '%1' in file %2.").arg(e.tagName()).arg(url.prettyURL()), KstDebug::Warning);
+        KstDebug::self()->log(i18n("Unsupported element '%1' in file %2.").arg(e.tagName()).arg(url.prettyUrl()), KstDebug::Warning);
       }
     }
     handled++;
@@ -781,9 +781,9 @@ void KstDoc::saveDocument(QTextStream& ts, bool saveAbsoluteVectorPositions) {
 bool KstDoc::saveDocument(const QString& filename, bool saveAbsoluteVectorPositions, bool prompt) {
   KUrl url;
   if (QFile::exists(filename) && QFileInfo(filename).isRelative()) {
-    url.setPath(QFileInfo(filename).absFilePath());
+    url.setPath(QFileInfo(filename).absoluteFilePath());
   } else {
-    url = KUrl::fromPathOrURL(filename);
+    url = KUrl(filename);
   }
 
   if (QFile::exists(filename)) {
@@ -796,7 +796,7 @@ bool KstDoc::saveDocument(const QString& filename, bool saveAbsoluteVectorPositi
   ts.setEncoding(QTextStream::UnicodeUTF8);
   ts.precision(14);
 
-  _lastFilePath = url.prettyURL();
+  _lastFilePath = url.prettyUrl();
 
   saveDocument(ts, saveAbsoluteVectorPositions);
 
@@ -812,7 +812,7 @@ bool KstDoc::saveDocument(const QString& filename, bool saveAbsoluteVectorPositi
   if (KIO::NetAccess::exists(url)) {
 #endif
     if (prompt) {
-      int rc = KMessageBox::warningYesNo(KstApp::inst(), i18n("File %1 exists.  Overwrite?").arg(url.prettyURL()), i18n("Kst"));
+      int rc = KMessageBox::warningYesNo(KstApp::inst(), i18n("File %1 exists.  Overwrite?").arg(url.prettyUrl()), i18n("Kst"));
       if (rc == KMessageBox::No) {
         return false;
       }

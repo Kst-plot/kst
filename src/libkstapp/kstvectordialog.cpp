@@ -71,7 +71,7 @@ KstVectorDialogI::KstVectorDialogI(QWidget* parent, Qt::WindowFlags fl)
   connect(_w->_configure, SIGNAL(clicked()), this, SLOT(configureSource()));
   connect(_w->_readFromSource, SIGNAL(clicked()), this, SLOT(enableSource()));
   connect(_w->_generateX, SIGNAL(clicked()), this, SLOT(enableGenerate()));
-  connect(_w->_connect, SIGNAL(clicked()), this, SLOT(testURL()));
+  connect(_w->_connect, SIGNAL(clicked()), this, SLOT(testUrl()));
 
   // connections for multiple edit mode
   connect(_w->_kstDataRange->CountFromEnd, SIGNAL(clicked()), this, SLOT(setCountFromEndDirty()));
@@ -97,7 +97,7 @@ KstVectorDialogI::~KstVectorDialogI() {
 }
 
 
-void KstVectorDialogI::testURL() {
+void KstVectorDialogI::testUrl() {
   _inTest = true;
   updateCompletion();
   _inTest = false;
@@ -229,7 +229,7 @@ void KstVectorDialogI::fillFieldsForRVEdit() {
   _w->Field->setCurrentText(rvp->field());
 
   /* select the proper file */
-  _w->FileName->setURL(rvp->filename());
+  _w->FileName->setUrl(rvp->filename());
 
   /* fill the vector range entries */
   _w->_kstDataRange->CountFromEnd->setChecked(rvp->countFromEOF());
@@ -302,7 +302,7 @@ void KstVectorDialogI::fillFieldsForNew() {
 
   /* set defaults with vectorDefaults */
   KST::vectorDefaults.sync();
-  _w->FileName->setURL(KST::vectorDefaults.dataSource());
+  _w->FileName->setUrl(KST::vectorDefaults.dataSource());
   updateCompletion();
   _w->_kstDataRange->update();
   _w->Field->setFocus();

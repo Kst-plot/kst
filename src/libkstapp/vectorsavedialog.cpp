@@ -70,7 +70,7 @@ void VectorSaveDialog::save() {
         KTempFile tf(locateLocal("tmp", "kstvectors"), "txt");
         tf.setAutoDelete(true);
         if (0 != KstData::self()->vectorsToFile(toSave, tf.file(), interpolate)) {
-          KMessageBox::sorry(this, i18n("Error saving vector to %1.").arg(url.prettyURL()), i18n("Kst"));
+          KMessageBox::sorry(this, i18n("Error saving vector to %1.").arg(url.prettyUrl()), i18n("Kst"));
           return;
         }
 #if KDE_VERSION >= KDE_MAKE_VERSION(3,3,0)
@@ -86,7 +86,7 @@ void VectorSaveDialog::save() {
 #else
         if (KIO::NetAccess::exists(url)) {
 #endif
-          int rc = KMessageBox::warningYesNo(this, i18n("File %1 exists.  Overwrite?").arg(url.prettyURL()), i18n("Kst"));
+          int rc = KMessageBox::warningYesNo(this, i18n("File %1 exists.  Overwrite?").arg(url.prettyUrl()), i18n("Kst"));
           if (rc == KMessageBox::No) {
             return;
           }
@@ -112,7 +112,7 @@ void VectorSaveDialog::save() {
           KTempFile tf(locateLocal("tmp", "kstvectors"), "txt");
           tf.setAutoDelete(true);
           if (0 != KstData::self()->vectorToFile(*i, tf.file())) {
-            KMessageBox::sorry(this, i18n("Error saving vector to %1.").arg(url2.prettyURL()), i18n("Kst"));
+            KMessageBox::sorry(this, i18n("Error saving vector to %1.").arg(url2.prettyUrl()), i18n("Kst"));
             return;
           }
 #if KDE_VERSION >= KDE_MAKE_VERSION(3,3,0)
@@ -128,7 +128,7 @@ void VectorSaveDialog::save() {
 #else
           if (KIO::NetAccess::exists(url2)) {
 #endif
-            int rc = KMessageBox::warningYesNo(this, i18n("File %1 exists.  Overwrite?").arg(url2.prettyURL()), i18n("Kst"));
+            int rc = KMessageBox::warningYesNo(this, i18n("File %1 exists.  Overwrite?").arg(url2.prettyUrl()), i18n("Kst"));
             if (rc == KMessageBox::No) {
               continue;
             }

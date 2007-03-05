@@ -50,8 +50,10 @@
 #include "kmessagebox.h"
 
 KstIfaceImpl::KstIfaceImpl(KstDoc *doc, KstApp *app)
-: DCOPObject("KstIface"), _doc(doc), _app(app) {
+: QObject(), _doc(doc), _app(app) {
   assert(doc);
+  QDBusConnection::sessionBus().registerObject("/KstIface", this,
+                                               QDBusConnection::ExportScriptableSlots);
 }
 
 
@@ -902,7 +904,7 @@ bool KstIfaceImpl::saveAs(const QString& fileName) {
   if (rc) {
     QFileInfo saveAsInfo(fileName);
     _doc->setTitle(saveAsInfo.fileName());
-    _doc->setAbsFilePath(saveAsInfo.absFilePath());
+    _doc->setAbsFilePath(saveAsInfo.absoluteFilePath());
 
     _app->setWindowTitle(qApp->applicationName() + ": " + _doc->title());
   }
