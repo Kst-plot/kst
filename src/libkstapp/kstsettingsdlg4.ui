@@ -667,10 +667,10 @@
                   </item>
                   <item>
                     <widget class="KDoubleNumInput" name="_valueOffset" >
-                      <property name="minValue" >
+                      <property name="minimum" >
                         <number>-24</number>
                       </property>
-                      <property name="maxValue" >
+                      <property name="maximum" >
                         <number>24</number>
                       </property>
                     </widget>
@@ -995,7 +995,7 @@
               </item>
               <item row="2" column="1" >
                 <widget class="KIntSpinBox" name="_kIntSpinBoxEMailPort" >
-                  <property name="maxValue" >
+                  <property name="maximum" >
                     <number>65536</number>
                   </property>
                 </widget>

@@ -25,7 +25,7 @@
 class KstGraphFileDialogI : public QDialog {
   Q_OBJECT
   public:
-    KstGraphFileDialogI(QWidget* parent = 0, WindowFlags fl = 0 );
+    KstGraphFileDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
     virtual ~KstGraphFileDialogI();
 
     void setAutoSave(bool as) {_autoSave = as;}

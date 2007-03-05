@@ -38,7 +38,7 @@
 #include <knuminput.h>
 #include <kiconloader.h>
 #include <qregexp.h>
-#include <qlistview.h>
+#include <q3listview.h>
 #include <qheader.h>
 #include <assert.h>
 #include <stdlib.h>
@@ -103,7 +103,7 @@ DataWizard::DataWizard(QWidget *parent)
 
  connect(_vectorSearch, SIGNAL(clicked()), this, SLOT(_search()));
 
- connect(_vectors, SIGNAL(pressed(QListViewItem*)), this, SLOT(fieldListChanged()));
+ connect(_vectors, SIGNAL(pressed(Q3ListViewItem*)), this, SLOT(fieldListChanged()));
 
  connect(_add, SIGNAL(clicked()), this, SLOT(add()));
 
@@ -113,9 +113,9 @@ DataWizard::DataWizard(QWidget *parent)
 
  connect(_down, SIGNAL(clicked()), this, SLOT(down()));
 
- connect(_vectors, SIGNAL(doubleClicked(QListViewItem*)), this, SLOT(add()));
+ connect(_vectors, SIGNAL(doubleClicked(Q3ListViewItem*)), this, SLOT(add()));
 
- connect(_vectorsToPlot, SIGNAL(doubleClicked(QListViewItem*)), this, SLOT(remove()));
+ connect(_vectorsToPlot, SIGNAL(doubleClicked(Q3ListViewItem*)), this, SLOT(remove()));
 
  connect(_vectors, SIGNAL(dropped(QDropEvent*)), this, SLOT(vectorsDroppedBack(QDropEvent*)));
 

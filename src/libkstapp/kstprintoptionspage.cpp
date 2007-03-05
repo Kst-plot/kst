@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <qbutton.h> 
+#include <q3button.h>
 #include <qcheckbox.h>
 #include <qlabel.h>
 #include <qlayout.h>

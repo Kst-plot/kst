@@ -90,7 +90,7 @@ void KstScalarListView::update() {
 
 /*
   qDebug() << "Updated KstScalarListView: now " << childCount() << " root-child items" << endl;
-  QListViewItemIterator it(this);
+  Q3ListViewItemIterator it(this);
   while (it.current()) {
     KstScalarListViewItem *item = dynamic_cast<KstScalarListViewItem*>(it.current());
     if (item) {

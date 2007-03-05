@@ -28,6 +28,8 @@ class KstDoc;
 #include "kstviewobject.h"
 #include "kstviewwindow.h"
 
+#include "ui_kstviewmanager4.h"
+
 class KstViewListView : public Q3ListView {
   public:
     KstViewListView(QWidget * parent = 0, const char * name = 0);
@@ -65,7 +67,7 @@ class KstViewObjectItem : public Q3ListViewItem {
     bool _inUse;
 };
 
-class KstViewManagerI: public KstViewManager {
+class KstViewManagerI: public Ui::KstViewManager {
   Q_OBJECT
   public:
     KstViewManagerI(KstDoc *doc, QWidget* parent = 0, Qt::WindowFlags fl = 0);

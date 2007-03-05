@@ -121,8 +121,8 @@ KstApp* KstApp::inst() {
 
 static KConfig *kConfigObject = 0L;
 
-KstApp::KstApp(QWidget *parent, const char *name)
-: KMdiMainFrm(parent, name) {
+KstApp::KstApp(QWidget *parent)
+: KMdiMainFrm(parent) {
   assert(!::inst);
   ::inst = this;
 
@@ -157,7 +157,7 @@ KstApp::KstApp(QWidget *parent, const char *name)
   vectorSaveDialog = new VectorSaveDialog(this);
   _monochromeDialog = new KstMonochromeDialogI(this);
 #ifdef KST_QUICKSTART_DLG
-  _quickStartDialog = new KstQuickStartDialogI(this, 0 , true);
+  _quickStartDialog = new KstQuickStartDialogI(this);
 #endif
 
   connect(this, SIGNAL(mdiModeHasBeenChangedTo(KMdi::MdiMode)), SLOT(fixKMdi()));

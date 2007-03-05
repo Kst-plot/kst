@@ -18,6 +18,7 @@
 #ifndef _KST_POP_H
 #define _KST_POP_H
 
+class Q3Button;
 class QCheckBox;
 #include <kdeprint/kprintdialogpage.h>
 
@@ -34,7 +35,7 @@ class KstPrintOptionsPage : public KPrintDialogPage {
     QCheckBox *_dateTimeFooter;
     QCheckBox *_maintainAspectRatio;
     QCheckBox *_bw;
-    QButton *_configureBW;
+    Q3Button *_configureBW;
     QSpinBox *_curveWidthAdjust;
 };
 

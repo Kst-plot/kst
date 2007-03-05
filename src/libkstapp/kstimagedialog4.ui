@@ -254,10 +254,10 @@
                     <property name="value" >
                       <double>0.500000000000000</double>
                     </property>
-                    <property name="minValue" >
+                    <property name="minimum" >
                       <number>0</number>
                     </property>
-                    <property name="maxValue" >
+                    <property name="maximum" >
                       <number>45</number>
                     </property>
                   </widget>

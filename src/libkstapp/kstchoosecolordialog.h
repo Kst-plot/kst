@@ -42,8 +42,8 @@ class KstChooseColorDialogI : public QDialog {
     QGridLayout* grid;
     
     // list of the current textfields and colorcombos
-    QValueList<QLineEdit*> lineEdits;
-    QValueList<KColorCombo*> colorCombos;
+    Q3ValueList<QLineEdit*> lineEdits;
+    Q3ValueList<KColorCombo*> colorCombos;
     QColor getColorForFile(const QString &fileName);
     
     void cleanColorGroup();

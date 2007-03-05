@@ -30,7 +30,7 @@ public:
 
 private slots:
   void init();
-  void selectionChanged(QListViewItem *item);
+  void selectionChanged(Q3ListViewItem *item);
   void install();
   void remove();
   void rescan();

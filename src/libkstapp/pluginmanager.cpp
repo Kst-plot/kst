@@ -38,7 +38,7 @@ PluginManager::PluginManager(QWidget *parent)
 
  connect(_close, SIGNAL(clicked()), this, SLOT(close()));
 
- connect(_pluginList, SIGNAL(selectionChanged(QListViewItem*)), this, SLOT(selectionChanged(QListViewItem*)));
+ connect(_pluginList, SIGNAL(selectionChanged(Q3ListViewItem*)), this, SLOT(selectionChanged(Q3ListViewItem*)));
 
  connect(_install, SIGNAL(clicked()), this, SLOT(install()));
 

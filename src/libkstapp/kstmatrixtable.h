@@ -29,8 +29,8 @@ class KstMatrixTable : public Q3Table {
 
     void resizeData(int) {}
     QWidget* createEditor(int, int, bool) const { return 0; }
-    QTableItem* item(int, int) { return 0; }
-    void setItem(int, int, QTableItem *) {}
+    Q3TableItem* item(int, int) { return 0; }
+    void setItem(int, int, Q3TableItem *) {}
     void clearCell(int, int) {}
     void insertWidget(int, int, QWidget *) {}
     QWidget* cellWidget(int, int) const { return 0; }

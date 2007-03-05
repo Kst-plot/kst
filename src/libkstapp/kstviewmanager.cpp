@@ -186,7 +186,7 @@ bool KstViewObjectItem::acceptDrop(const QMimeSource *mime) const {
   }
   
   //
-  // the following should not be necessary but is due to a bug in QListView...
+  // the following should not be necessary but is due to a bug in Q3ListView...
   //
   if (retVal) {
     _vm->ViewView->viewport()->setCursor(Qt::ArrowCursor);

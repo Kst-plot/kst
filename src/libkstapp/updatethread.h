@@ -50,7 +50,7 @@ class UpdateThread : public QThread {
   private:
     bool _paused, _done;
     bool _force;
-    KstWaitCondition _waitCondition;
+    QWaitCondition _waitCondition;
     mutable QMutex _statusMutex;
     KstDoc *_doc;
     int _updateCounter;

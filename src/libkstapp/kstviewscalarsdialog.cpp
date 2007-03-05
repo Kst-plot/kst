@@ -28,7 +28,7 @@ KstViewScalarsDialogI::KstViewScalarsDialogI(QWidget* parent, Qt::WindowFlags fl
 : KstViewScalarsDialog(parent, fl) {
   listViewScalars = new KstScalarListView(this, &KST::scalarList);
   listViewScalars->setShowSortIndicator(false);
-  listViewScalars->setSelectionMode(QListView::NoSelection);
+  listViewScalars->setSelectionMode(Q3ListView::NoSelection);
   searchWidget = new K3ListViewSearchLineWidget(listViewScalars, this);
   QBoxLayout *box = dynamic_cast<QBoxLayout*>(layout());
   if (box) {
