@@ -185,13 +185,13 @@
                 </item>
                 <item row="1" column="3" >
                   <widget class="KDoubleSpinBox" name="_rotation" >
-                    <property name="maxValue" >
+                    <property name="maximum" >
                       <number>360</number>
                     </property>
-                    <property name="minValue" >
+                    <property name="minimum" >
                       <number>-360</number>
                     </property>
-                    <property name="lineStep" >
+                    <property name="singleStep" >
                       <number>5</number>
                     </property>
                   </widget>
@@ -353,6 +353,11 @@
       <class>KComboBox</class>
       <extends>QComboBox</extends>
       <header>kcombobox.h</header>
+    </customwidget>
+    <customwidget>
+      <class>KDoubleSpinBox</class>
+      <extends>QSpinBox</extends>
+      <header>knuminput.h</header>
     </customwidget>
   </customwidgets>
   <includes>
