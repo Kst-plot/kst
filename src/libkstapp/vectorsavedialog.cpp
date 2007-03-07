@@ -63,7 +63,7 @@ void VectorSaveDialog::save() {
   KUrl url = KFileDialog::getSaveUrl(QString::null, QString::null, this, i18n("Save Vector As"));
   if (!url.isEmpty()) {
     bool interpolate = true;
-    switch (_multiOptions->currentItem()) {
+    switch (_multiOptions->currentIndex()) {
     case 0:
       interpolate = false;
     case 1: {

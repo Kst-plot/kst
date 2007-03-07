@@ -31,9 +31,9 @@ ViewLabelWidget::~ViewLabelWidget() {}
 void ViewLabelWidget::init() {
   connect(_scalars, SIGNAL(selectionChanged(const QString &)),
           this, SLOT(insertScalarInText(const QString &)));
-  _horizontal->insertItem(i18n("Left"));
-  _horizontal->insertItem(i18n("Right"));
-  _horizontal->insertItem(i18n("Center"));
+  _horizontal->addItem(i18n("Left"));
+  _horizontal->addItem(i18n("Right"));
+  _horizontal->addItem(i18n("Center"));
 
   connect(_strings, SIGNAL(selectionChanged(const QString &)),
           this, SLOT(insertStringInText(const QString &)));

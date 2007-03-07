@@ -173,17 +173,17 @@ void View2DPlotWidget::init() {
   FontComboBox->setFonts(qfd.families());
 
   for (unsigned i = 0; i < numMajorTickSpacings; i++) {
-    _xMajorTickSpacing->insertItem(i18n(MajorTickSpacings[i].label));
-    _yMajorTickSpacing->insertItem(i18n(MajorTickSpacings[i].label));
+    _xMajorTickSpacing->addItem(i18n(MajorTickSpacings[i].label));
+    _yMajorTickSpacing->addItem(i18n(MajorTickSpacings[i].label));
   }
 
   for (unsigned i = 0; i < numAxisInterpretations; i++) {
-    _comboBoxXInterpret->insertItem(i18n(AxisInterpretations[i].label));
-    _comboBoxYInterpret->insertItem(i18n(AxisInterpretations[i].label));
+    _comboBoxXInterpret->addItem(i18n(AxisInterpretations[i].label));
+    _comboBoxYInterpret->addItem(i18n(AxisInterpretations[i].label));
   }
   for (unsigned i = 0; i < numAxisDisplays; i++) {
-    _comboBoxXDisplay->insertItem(i18n(AxisDisplays[i].label));
-    _comboBoxYDisplay->insertItem(i18n(AxisDisplays[i].label));
+    _comboBoxXDisplay->addItem(i18n(AxisDisplays[i].label));
+    _comboBoxYDisplay->addItem(i18n(AxisDisplays[i].label));
   }
 
   _comboBoxXInterpret->setEnabled(false);
@@ -246,18 +246,17 @@ void View2DPlotWidget::init() {
   _minorGridColor->setColor(defaultColor);
 
   /* set defaults */
-  plotColors->setBackground(KstSettings::globalSettings()->backgroundColor);
-  plotColors->setForeground(KstSettings::globalSettings()->foregroundColor);
+  plotColors->setColor(KstSettings::globalSettings()->backgroundColor);
 
-  _xMajorTickSpacing->setCurrentItem(1);
-  _yMajorTickSpacing->setCurrentItem(1);
+  _xMajorTickSpacing->setCurrentIndex(1);
+  _yMajorTickSpacing->setCurrentIndex(1);
 
   _yMarksInsidePlot->setChecked(true);
   _xMarksInsidePlot->setChecked(true);
 
-  _comboBoxTopLabelJustify->insertItem(i18n("Left"));
-  _comboBoxTopLabelJustify->insertItem(i18n("Right"));
-  _comboBoxTopLabelJustify->insertItem(i18n("Center"));
+  _comboBoxTopLabelJustify->addItem(i18n("Left"));
+  _comboBoxTopLabelJustify->addItem(i18n("Right"));
+  _comboBoxTopLabelJustify->addItem(i18n("Center"));
 
   // FIXME: should use kstsettings
   _axisPenWidth->setValue(0);
@@ -403,7 +402,7 @@ void View2DPlotWidget::fillMarkerLineCombo() {
   QPainter pp(&ppix);
   QPen pen(QColor("black"), 0);
 
-  int currentItem = _comboMarkerLineStyle->currentItem();
+  int currentIndex = _comboMarkerLineStyle->currentIndex();
   _comboMarkerLineStyle->clear();
 
   for (int style = 0; style < (int)KSTLINESTYLE_MAXTYPE; style++) {
@@ -411,10 +410,10 @@ void View2DPlotWidget::fillMarkerLineCombo() {
     pp.setPen(pen);
     pp.fillRect( pp.window(), QColor("white"));
     pp.drawLine(1,ppix.height()/2,ppix.width()-1, ppix.height()/2);
-    _comboMarkerLineStyle->insertItem(ppix);
+    _comboMarkerLineStyle->addItem(ppix);
   }
 
-  _comboMarkerLineStyle->setCurrentItem(currentItem);
+  _comboMarkerLineStyle->setCurrentIndex(currentIndex);
 }
 
 
@@ -449,11 +448,11 @@ void View2DPlotWidget::updateScalarCombo() {
     (*i)->readLock();
     QString n = (*i)->tagLabel();
     (*i)->unlock();
-    ScalarList->insertItem(n);
-    scalarSelectorX1->insertItem(n);
-    scalarSelectorX2->insertItem(n);
-    scalarSelectorY1->insertItem(n);
-    scalarSelectorY2->insertItem(n);
+    ScalarList->addItem(n);
+    scalarSelectorX1->addItem(n);
+    scalarSelectorX2->addItem(n);
+    scalarSelectorY1->addItem(n);
+    scalarSelectorY2->addItem(n);
   }
 }
 
@@ -476,7 +475,7 @@ void View2DPlotWidget::updatePlotMarkers(const Kst2DPlot *plot) {
   CurveCombo->clear();
   for (KstBaseCurveList::ConstIterator curves_iter = curves.begin(); curves_iter != curves.end(); ++curves_iter) {
     (*curves_iter)->readLock();
-    CurveCombo->insertItem((*curves_iter)->tagName());
+    CurveCombo->addItem((*curves_iter)->tagName());
     (*curves_iter)->unlock();
   }
 
@@ -496,7 +495,7 @@ void View2DPlotWidget::updatePlotMarkers(const Kst2DPlot *plot) {
     }
     for (int curveComboIndex = 0; curveComboIndex < CurveCombo->count(); curveComboIndex++) {
       if (CurveCombo->text(curveComboIndex) == plot->curveToMarkers()->tagName()) {
-        CurveCombo->setCurrentItem(curveComboIndex);
+        CurveCombo->setCurrentIndex(curveComboIndex);
         break;
       }
     }
@@ -648,10 +647,10 @@ void View2DPlotWidget::fillWidget(const Kst2DPlot *plot) {
 
   for (int i = 0; i < (int)numMajorTickSpacings; i++) {
     if (MajorTickSpacings[i].majorTickDensity <= plot->xMajorTicks()) {
-      _xMajorTickSpacing->setCurrentItem(i);
+      _xMajorTickSpacing->setCurrentIndex(i);
     }
     if (MajorTickSpacings[i].majorTickDensity <= plot->yMajorTicks()) {
-      _yMajorTickSpacing->setCurrentItem(i);
+      _yMajorTickSpacing->setCurrentIndex(i);
     }
 
   }
@@ -671,16 +670,16 @@ void View2DPlotWidget::fillWidget(const Kst2DPlot *plot) {
   FontComboBox->setCurrentFont(plot->topLabel()->fontName());
   switch (plot->topLabel()->justification()) {
   case KST_JUSTIFY_H_LEFT:
-    _comboBoxTopLabelJustify->setCurrentItem(0);
+    _comboBoxTopLabelJustify->setCurrentIndex(0);
     break;
   case KST_JUSTIFY_H_RIGHT:
-    _comboBoxTopLabelJustify->setCurrentItem(1);
+    _comboBoxTopLabelJustify->setCurrentIndex(1);
     break;
   case KST_JUSTIFY_H_CENTER:
-    _comboBoxTopLabelJustify->setCurrentItem(2);
+    _comboBoxTopLabelJustify->setCurrentIndex(2);
     break;
   default:
-    _comboBoxTopLabelJustify->setCurrentItem(0);
+    _comboBoxTopLabelJustify->setCurrentIndex(0);
     break;
   }
 
@@ -701,19 +700,19 @@ void View2DPlotWidget::fillWidget(const Kst2DPlot *plot) {
   if (xAxisInterpret) {
     for (unsigned i = 0; i < numAxisInterpretations; i++) {
       if (AxisInterpretations[i].type == xAxisInterpretation) {
-        _comboBoxXInterpret->setCurrentItem(i);
+        _comboBoxXInterpret->setCurrentIndex(i);
         break;
       }
     }
     for (unsigned i = 0; i < numAxisDisplays; i++) {
       if (AxisDisplays[i].type == xAxisDisplay) {
-        _comboBoxXDisplay->setCurrentItem(i);
+        _comboBoxXDisplay->setCurrentIndex(i);
         break;
       }
     }
   } else {
-    _comboBoxXInterpret->setCurrentItem(KstSettings::globalSettings()->xAxisInterpretation);
-    _comboBoxXDisplay->setCurrentItem(KstSettings::globalSettings()->xAxisDisplay);
+    _comboBoxXInterpret->setCurrentIndex(KstSettings::globalSettings()->xAxisInterpretation);
+    _comboBoxXDisplay->setCurrentIndex(KstSettings::globalSettings()->xAxisDisplay);
   }
 
   plot->getYAxisInterpretation(yAxisInterpret, yAxisInterpretation, yAxisDisplay);
@@ -725,20 +724,20 @@ void View2DPlotWidget::fillWidget(const Kst2DPlot *plot) {
   if (yAxisInterpret) {
     for (unsigned i = 0; i < numAxisInterpretations; i++) {
       if (AxisInterpretations[i].type == yAxisInterpretation) {
-        _comboBoxYInterpret->setCurrentItem(i);
+        _comboBoxYInterpret->setCurrentIndex(i);
         break;
       }
     }
     for (unsigned i = 0; i < numAxisDisplays; i++) {
       if (AxisDisplays[i].type == yAxisDisplay) {
-        _comboBoxYDisplay->setCurrentItem(i);
+        _comboBoxYDisplay->setCurrentIndex(i);
         break;
       }
     }
   } else {
     // FIXME: these should use kstsettings defaults
-    _comboBoxYInterpret->setCurrentItem(KstSettings::globalSettings()->xAxisInterpretation);
-    _comboBoxYDisplay->setCurrentItem(KstSettings::globalSettings()->xAxisDisplay);
+    _comboBoxYInterpret->setCurrentIndex(KstSettings::globalSettings()->xAxisInterpretation);
+    _comboBoxYDisplay->setCurrentIndex(KstSettings::globalSettings()->xAxisDisplay);
   }
 
   // initialize the legend settings for the current plot
@@ -750,8 +749,7 @@ void View2DPlotWidget::fillWidget(const Kst2DPlot *plot) {
     ShowLegend->setChecked(false);
   }
   // initialize the plot color widget
-  plotColors->setForeground(plot->foregroundColor());
-  plotColors->setBackground(plot->backgroundColor());
+  plotColors->setColor(plot->backgroundColor());
 
   _axisPenWidth->setValue(plot->axisPenWidth());
 
@@ -780,7 +778,7 @@ void View2DPlotWidget::fillWidget(const Kst2DPlot *plot) {
   _yReversed->setChecked(plot->yReversed());
 
   // update marker attributes
-  _comboMarkerLineStyle->setCurrentItem(plot->lineStyleMarkers());
+  _comboMarkerLineStyle->setCurrentIndex(plot->lineStyleMarkers());
   _spinBoxMarkerLineWidth->setValue(plot->lineWidthMarkers());
   _checkBoxDefaultMarkerColor->setChecked(plot->defaultColorMarker());
   _colorMarker->setColor(plot->colorMarkers());
@@ -801,7 +799,7 @@ void View2DPlotWidget::applyAppearance(Kst2DPlotPtr plot) {
   plot->xLabel()->setText(XAxisText->text());
   plot->yLabel()->setText(YAxisText->text());
   plot->topLabel()->setText(TopLabelText->text());
-  switch (_comboBoxTopLabelJustify->currentItem()) {
+  switch (_comboBoxTopLabelJustify->currentIndex()) {
   case 0:
     plot->topLabel()->setJustification(SET_KST_JUSTIFY(KST_JUSTIFY_H_LEFT, KST_JUSTIFY_V_NONE));
     break;
@@ -824,8 +822,8 @@ void View2DPlotWidget::applyAppearance(Kst2DPlotPtr plot) {
   for (uint i = 0; i < plots.size(); i++) {
     plotExtra = plots[i];
 
-    plotExtra->setForegroundColor(plotColors->foreground());
-    plotExtra->setBackgroundColor(plotColors->background());
+    plotExtra->setForegroundColor(plotColors->color());
+    plotExtra->setBackgroundColor(plotColors->color());
 
     // gridlines colors
     plotExtra->setGridLinesColor(_majorGridColor->color(),
@@ -845,7 +843,7 @@ void View2DPlotWidget::applyAppearance(Kst2DPlotPtr plot) {
 
     plotExtra->topLabel()->setFontName(FontComboBox->currentText());
     plotExtra->topLabel()->setFontSize(TopLabelFontSize->value());
-    switch (_comboBoxTopLabelJustify->currentItem()) {
+    switch (_comboBoxTopLabelJustify->currentIndex()) {
     case 0:
       plotExtra->topLabel()->setJustification(SET_KST_JUSTIFY(KST_JUSTIFY_H_LEFT, KST_JUSTIFY_V_NONE));
       break;
@@ -902,8 +900,8 @@ void View2DPlotWidget::applyXAxis(Kst2DPlotPtr plot) {
 
     if (_checkBoxXInterpret->isChecked()) {
       plotExtra->setXAxisInterpretation(true,
-                                        AxisInterpretations[_comboBoxXInterpret->currentItem()].type,
-                                        AxisDisplays[_comboBoxXDisplay->currentItem()].type);
+                                        AxisInterpretations[_comboBoxXInterpret->currentIndex()].type,
+                                        AxisDisplays[_comboBoxXDisplay->currentIndex()].type);
     } else {
       plotExtra->setXAxisInterpretation(false,
                                         AXIS_INTERP_CTIME,
@@ -918,7 +916,7 @@ void View2DPlotWidget::applyXAxis(Kst2DPlotPtr plot) {
 
     // major tick settings.
     plotExtra->setXMajorTicks(
-      MajorTickSpacings[_xMajorTickSpacing->currentItem()].majorTickDensity);
+      MajorTickSpacings[_xMajorTickSpacing->currentIndex()].majorTickDensity);
 
     // tick display
     plotExtra->setXTicksInPlot(_xMarksInsidePlot->isChecked() || _xMarksInsideAndOutsidePlot->isChecked());
@@ -964,8 +962,8 @@ void View2DPlotWidget::applyYAxis(Kst2DPlotPtr plot) {
 
     if (_checkBoxYInterpret->isChecked()) {
       plotExtra->setYAxisInterpretation(true,
-                                        AxisInterpretations[_comboBoxYInterpret->currentItem()].type,
-                                        AxisDisplays[_comboBoxYDisplay->currentItem()].type);
+                                        AxisInterpretations[_comboBoxYInterpret->currentIndex()].type,
+                                        AxisDisplays[_comboBoxYDisplay->currentIndex()].type);
     } else {
       plotExtra->setYAxisInterpretation(false,
                                         AXIS_INTERP_CTIME,
@@ -979,7 +977,7 @@ void View2DPlotWidget::applyYAxis(Kst2DPlotPtr plot) {
     }
     // major ticks
     plotExtra->setYMajorTicks(
-      MajorTickSpacings[_yMajorTickSpacing->currentItem()].majorTickDensity);
+      MajorTickSpacings[_yMajorTickSpacing->currentIndex()].majorTickDensity);
 
     // tick display
     plotExtra->setYTicksInPlot(_yMarksInsidePlot->isChecked() || _yMarksInsideAndOutsidePlot->isChecked());
@@ -1188,7 +1186,7 @@ void View2DPlotWidget::applyPlotMarkers(Kst2DPlotPtr plot) {
       plotExtra->removeVectorToMarkers();
     }
 
-    plotExtra->setLineStyleMarkers(_comboMarkerLineStyle->currentItem());
+    plotExtra->setLineStyleMarkers(_comboMarkerLineStyle->currentIndex());
     plotExtra->setLineWidthMarkers(_spinBoxMarkerLineWidth->value());
     plotExtra->setColorMarkers(_colorMarker->color());
     plotExtra->setDefaultColorMarker(_checkBoxDefaultMarkerColor->isChecked());
@@ -1219,7 +1217,7 @@ void View2DPlotWidget::fillPlot( Kst2DPlotPtr plot ) {
   applyPlotMarkers(plot);
 
   //_title->setText(plot->tagName());
-  QString tag = _title->text().stripWhiteSpace();
+  QString tag = _title->text().simplified();
   if (tag.isEmpty()) {
     plot->setTagName(KstObjectTag(KST::suggestPlotName(), KstObjectTag::globalTagContext)); // FIXME: always global tag context?
   } else {
@@ -1256,7 +1254,7 @@ void View2DPlotWidget::fillPlot( Kst2DPlotPtr plot ) {
     static_cast<KstViewWindow*>(c)->view()->paint(KstPainter::P_PLOT);
   }
 
-  _plotName = _title->text().stripWhiteSpace();
+  _plotName = _title->text().simplified();
   update();
   emit docChanged();
   */

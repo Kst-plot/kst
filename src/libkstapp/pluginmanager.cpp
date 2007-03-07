@@ -167,16 +167,16 @@ void PluginManager::reloadList() {
   QMap<QString,Plugin::Data>::ConstIterator it;
 
   for (it = pluginList.begin(); it != pluginList.end(); ++it) {
-    QString path = pc->pluginNameList()[it.data()._name];
+    QString path = pc->pluginNameList()[it.value()._name];
     Q3ListViewItem *i = new Q3ListViewItem(_pluginList,
-                                         it.data()._readableName,
+                                         it.value()._readableName,
                                          QString::null,
-                                         it.data()._description,
+                                         it.value()._description,
                                          it.data()._version,
-                                         it.data()._author,
-                                         it.data()._name,
+                                         it.value()._author,
+                                         it.value()._name,
                                          path);
-    if (loadedPluginList.contains(it.data()._name)) {
+    if (loadedPluginList.contains(it.value()._name)) {
       i->setPixmap(COLUMN_LOADED, locate("data", "kst/pics/yes.png"));
       // Don't use no.png - it looks bad
     }

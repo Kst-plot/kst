@@ -24,7 +24,7 @@
 
 #include "kstvectortable.h"
 
-class KstViewVectorsDialogI : public Ui::KstViewVectorsDialog {
+class KstViewVectorsDialogI : public QDialog, public Ui::KstViewVectorsDialog {
   Q_OBJECT
   public:
     KstViewVectorsDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
