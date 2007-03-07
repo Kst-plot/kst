@@ -26,14 +26,12 @@
 
 // include files for KDE
 #include <kcombobox.h>
-#include "ksdebug.h"
 #include <kmessagebox.h>
 
 // application specific includes
 #include "curveappearancewidget.h"
 #include "curveplacementwidget.h"
 #include "editmultiplewidget.h"
-#include "eqdialogwidget.h"
 #include "eparse-eh.h"
 #include "kst2dplot.h"
 #include "kstdataobjectcollection.h"
@@ -44,8 +42,6 @@
 #include "kstviewwindow.h"
 #include "scalarselector.h"
 #include "vectorselector.h"
-
-#include "ui_ksteqdialog4.h"
 
 const QString& KstEqDialogI::defaultTag = KGlobal::staticQString("<Auto Name>");
 
@@ -60,8 +56,11 @@ KstEqDialogI *KstEqDialogI::globalInstance() {
 
 
 KstEqDialogI::KstEqDialogI(QWidget* parent, Qt::WindowFlags fl)
-: KstDataDialog(parent, name, modal, fl) {
-  _w = new EqDialogWidget(_contents);
+: KstDataDialog(parent, fl) {
+
+  _w = new Ui::KstEqDialog;
+  _w->setupUi(_contents);
+
   setMultiple(true);
   connect(_w->_vectors, SIGNAL(newVectorCreated(const QString&)), this, SIGNAL(modified()));
   connect(_w->_xVectors, SIGNAL(newVectorCreated(const QString&)), this, SIGNAL(modified()));
@@ -74,6 +73,7 @@ KstEqDialogI::KstEqDialogI(QWidget* parent, Qt::WindowFlags fl)
 
 
 KstEqDialogI::~KstEqDialogI() {
+  delete _w;
 }
 
 
@@ -368,45 +368,45 @@ bool KstEqDialogI::editObject() {
 
 void KstEqDialogI::populateFunctionList() {
   _w->Operators->clear();
-  _w->Operators->insertItem("+");
-  _w->Operators->insertItem("-");
-  _w->Operators->insertItem("*");
-  _w->Operators->insertItem("/");
-  _w->Operators->insertItem("%");
-  _w->Operators->insertItem("^");
-  _w->Operators->insertItem("&");
-  _w->Operators->insertItem("|");
-  _w->Operators->insertItem("&&");
-  _w->Operators->insertItem("||");
-  _w->Operators->insertItem("!");
-  _w->Operators->insertItem("<");
-  _w->Operators->insertItem("<=");
-  _w->Operators->insertItem("==");
-  _w->Operators->insertItem(">=");
-  _w->Operators->insertItem(">");
-  _w->Operators->insertItem("!=");
-  _w->Operators->insertItem("PI");
-  _w->Operators->insertItem("e");
-  _w->Operators->insertItem("STEP()");
-  _w->Operators->insertItem("ABS()");
-  _w->Operators->insertItem("SQRT()");
-  _w->Operators->insertItem("CBRT()");
-  _w->Operators->insertItem("SIN()");
-  _w->Operators->insertItem("COS()");
-  _w->Operators->insertItem("TAN()");
-  _w->Operators->insertItem("ASIN()");
-  _w->Operators->insertItem("ACOS()");
-  _w->Operators->insertItem("ATAN()");
-  _w->Operators->insertItem("SEC()");
-  _w->Operators->insertItem("CSC()");
-  _w->Operators->insertItem("COT()");
-  _w->Operators->insertItem("SINH()");
-  _w->Operators->insertItem("COSH()");
-  _w->Operators->insertItem("TANH()");
-  _w->Operators->insertItem("EXP()");
-  _w->Operators->insertItem("LN()");
-  _w->Operators->insertItem("LOG()");
-  _w->Operators->insertItem("PLUGIN()");
+  _w->Operators->addItem("+");
+  _w->Operators->addItem("-");
+  _w->Operators->addItem("*");
+  _w->Operators->addItem("/");
+  _w->Operators->addItem("%");
+  _w->Operators->addItem("^");
+  _w->Operators->addItem("&");
+  _w->Operators->addItem("|");
+  _w->Operators->addItem("&&");
+  _w->Operators->addItem("||");
+  _w->Operators->addItem("!");
+  _w->Operators->addItem("<");
+  _w->Operators->addItem("<=");
+  _w->Operators->addItem("==");
+  _w->Operators->addItem(">=");
+  _w->Operators->addItem(">");
+  _w->Operators->addItem("!=");
+  _w->Operators->addItem("PI");
+  _w->Operators->addItem("e");
+  _w->Operators->addItem("STEP()");
+  _w->Operators->addItem("ABS()");
+  _w->Operators->addItem("SQRT()");
+  _w->Operators->addItem("CBRT()");
+  _w->Operators->addItem("SIN()");
+  _w->Operators->addItem("COS()");
+  _w->Operators->addItem("TAN()");
+  _w->Operators->addItem("ASIN()");
+  _w->Operators->addItem("ACOS()");
+  _w->Operators->addItem("ATAN()");
+  _w->Operators->addItem("SEC()");
+  _w->Operators->addItem("CSC()");
+  _w->Operators->addItem("COT()");
+  _w->Operators->addItem("SINH()");
+  _w->Operators->addItem("COSH()");
+  _w->Operators->addItem("TANH()");
+  _w->Operators->addItem("EXP()");
+  _w->Operators->addItem("LN()");
+  _w->Operators->addItem("LOG()");
+  _w->Operators->addItem("PLUGIN()");
 }
 
 
@@ -416,8 +416,8 @@ void KstEqDialogI::populateEditMultiple() {
   _editMultipleWidget->_objectList->insertStringList(eqlist.tagNames());
 
   // also intermediate state for multiple edit
-  _w->_xVectors->_vector->insertItem("", 0);
-  _w->_xVectors->_vector->setCurrentItem(0);
+  _w->_xVectors->_vector->insertIndex(0, "");
+  _w->_xVectors->_vector->setCurrentIndex(0);
   _w->_doInterpolation->setTristate(true);
   _w->_doInterpolation->setNoChange();
   _w->_equation->setText("");

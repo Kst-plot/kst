@@ -33,7 +33,7 @@
 #include "kstviewwindow.h"
 
 KstCurveDifferentiateI::KstCurveDifferentiateI(QWidget* parent, Qt::WindowFlags fl)
-: KstCurveDifferentiate(parent, fl) {
+: QDialog(parent, fl) {
 
   availableListBox->clear();
   selectedListBox->clear();
@@ -62,8 +62,8 @@ KstCurveDifferentiateI::KstCurveDifferentiateI(QWidget* parent, Qt::WindowFlags 
   _remove->setIcon(BarIcon("back"));
   _remove->setEnabled(false);
 
-  maxLineWidth->setMaxValue(KSTLINEWIDTH_MAX);
-  maxLineWidth->setMinValue(1);
+  maxLineWidth->setMaximum(KSTLINEWIDTH_MAX);
+  maxLineWidth->setMinimum(1);
   
   _radioButtonRepeatPlot->setChecked(true);
   _radioButtonApplyAllWindows->setChecked(true);
@@ -170,7 +170,7 @@ void KstCurveDifferentiateI::setOptions( ) {
   }
   
   maxLineWidth->setValue(_maxLineWidth);
-  pointDensity->setCurrentItem(_pointDensity);
+  pointDensity->setCurrentIndex(_pointDensity);
 
   button = (QRadioButton*)_buttonGroupRepeat->find(_repeatAcross);
   if (button) {
@@ -190,7 +190,7 @@ void KstCurveDifferentiateI::getOptions( ) {
   _lineWidthOrder  = selectedListBox->index(selectedListBox->findItem(i18n("Line Width"), ExactMatch));
    
   _maxLineWidth = maxLineWidth->value();
-  _pointDensity = pointDensity->currentItem();
+  _pointDensity = pointDensity->currentIndex();
   
   _repeatAcross = _buttonGroupRepeat->selectedId();
   _applyTo = _buttonGroupApplyTo->selectedId();

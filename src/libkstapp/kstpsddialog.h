@@ -23,7 +23,7 @@
 #include "kstpsd.h"
 #include "kst_export.h"
 
-class PSDDialogWidget;
+#include "ui_kstpsddialog4.h"
 
 class KstPsdDialogI : public KstDataDialog {
   Q_OBJECT
@@ -73,7 +73,7 @@ class KstPsdDialogI : public KstDataDialog {
     void fillFieldsForEdit();
     void fillFieldsForNew();
     void cleanup();
-    PSDDialogWidget *_w;
+    Ui::KstPsdDialog *_w;
 };
 
 #endif

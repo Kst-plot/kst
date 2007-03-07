@@ -20,7 +20,7 @@
 
 #include <QDialog>
 
-#include "ui_ksteditviewdialog4.h"
+#include "ui_ksteditviewobjectdialog4.h"
 
 #include "kstviewobject.h"
 #include "ksttoplevelview.h"

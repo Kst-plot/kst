@@ -23,7 +23,7 @@
 #include "kstequation.h"
 #include "kst_export.h"
 
-class EqDialogWidget;
+#include "ui_ksteqdialog4.h"
 
 class KST_EXPORT KstEqDialogI : public KstDataDialog {
   Q_OBJECT
@@ -61,7 +61,7 @@ class KST_EXPORT KstEqDialogI : public KstDataDialog {
   private:
     static const QString& defaultTag;
     void populateFunctionList();
-    EqDialogWidget *_w;
+    Ui::KstEqDialog *_w;
 };
 
 #endif

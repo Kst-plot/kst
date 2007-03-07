@@ -232,7 +232,7 @@ QMap<QString, QVariant> KstBorderedViewObject::widgetHints(const QString& proper
   } else if (propertyName == "borderWidth") {
     map.insert(QString("_kst_widgetType"), QString("QSpinBox"));
     map.insert(QString("_kst_label"), i18n("Border width"));
-    map.insert(QString("minValue"), 0);
+    map.insert(QString("minimum"), 0);
   }
   return map;
 }

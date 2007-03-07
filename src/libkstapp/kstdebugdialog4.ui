@@ -2,8 +2,8 @@
   <author></author>
   <comment></comment>
   <exportmacro></exportmacro>
-  <class>DebugDialog</class>
-  <widget class="QDialog" name="DebugDialog" >
+  <class>KstDebugDialog</class>
+  <widget class="QDialog" name="KstDebugDialog" >
     <property name="geometry" >
       <rect>
         <x>0</x>

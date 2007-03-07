@@ -32,7 +32,6 @@
 static QStyle *windowsStyle = 0;
 
 // include files for KDE
-#include "ksdebug.h"
 #include <k3listview.h>
 #include <kmessagebox.h>
 #include <kinputdialog.h>
@@ -115,13 +114,13 @@ KstObjectItem::KstObjectItem(Q3ListView *parent, KstDataObjectPtr x, KstDataMana
   for (KstVectorMap::Iterator i = x->outputVectors().begin();
       i != x->outputVectors().end();
       ++i) {
-    KstObjectItem *item = new KstObjectItem(this, i.data(), _dm);
+    KstObjectItem *item = new KstObjectItem(this, i.value(), _dm);
     connect(item, SIGNAL(updated()), this, SIGNAL(updated()));
   }
   for (KstMatrixMap::Iterator i = x->outputMatrices().begin();
        i != x->outputMatrices().end();
        ++i) {
-    KstObjectItem *item = new KstObjectItem(this, i.data(), _dm);
+    KstObjectItem *item = new KstObjectItem(this, i.value(), _dm);
     connect(item, SIGNAL(updated()), this, SIGNAL(updated()));       
   }
   x = 0L; // keep the counts in sync
@@ -316,7 +315,7 @@ void KstObjectItem::update(bool recursive, int localUseCount) {
           // get the output vectors
           for (KstVectorMap::Iterator p = vl.begin(); p != vlEnd; ++p) {
             bool found = false;
-            QString tn = p.data()->tag().tag();
+            QString tn = p.value()->tag().tag();
             for (Q3ListViewItem *i = firstChild(); i; i = i->nextSibling()) {
               KstObjectItem *oi = static_cast<KstObjectItem*>(i);
               if (oi->tag().tag() == tn) {
@@ -326,7 +325,7 @@ void KstObjectItem::update(bool recursive, int localUseCount) {
               }
             }
             if (!found) {
-              KstObjectItem *item = new KstObjectItem(this, p.data(), _dm);
+              KstObjectItem *item = new KstObjectItem(this, p.value(), _dm);
               connect(item, SIGNAL(updated()), this, SIGNAL(updated()));
             }
           }
@@ -336,7 +335,7 @@ void KstObjectItem::update(bool recursive, int localUseCount) {
           // also get the output matrices
           for (KstMatrixMap::Iterator p = ml.begin(); p != mlEnd; ++p) {
             bool found = false;
-            QString tn = p.data()->tag().tag();
+            QString tn = p.value()->tag().tag();
             for (Q3ListViewItem *i = firstChild(); i; i = i->nextSibling()) {
               KstObjectItem *oi = static_cast<KstObjectItem*>(i);
               if (oi->tag().tag() == tn) {
@@ -346,7 +345,7 @@ void KstObjectItem::update(bool recursive, int localUseCount) {
               }
             }
             if (!found) {
-              KstObjectItem *item = new KstObjectItem(this, p.data(), _dm);
+              KstObjectItem *item = new KstObjectItem(this, p.value(), _dm);
               connect(item, SIGNAL(updated()), this, SIGNAL(updated()));
             }
           }
@@ -428,7 +427,7 @@ void KstObjectItem::update(bool recursive, int localUseCount) {
         if (text(3) != field) {
           setText(3, field);
         }
-        field = i18n("[%1..%2]").arg(x->minValue()).arg(x->maxValue());
+        field = i18n("[%1..%2]").arg(x->minimum()).arg(x->maximum());
         if (text(4) != field) {
           setText(4, field);
         }
@@ -750,7 +749,7 @@ void KstDataManagerI::setupPluginActions() {
       if (!ptr)
         continue;
 
-      switch(it.data()) {
+      switch(it.value()) {
       case KstDataObject::Generic:
         createObjectAction(it.key(), _data, ptr, SLOT(showNewDialog()));
         break;
@@ -1190,10 +1189,10 @@ void KstDataManagerI::contextMenu(Q3ListViewItem *i, const QPoint& p, int col) {
         for (Kst2DPlotList::Iterator i = plots.begin(); i != plots.end(); ++i) {
           Kst2DPlotPtr plot = *i;
           if (!plot->Curves.contains(c)) {
-            addMenu->insertItem(i18n("%1 - %2").arg(v->caption()).arg(plot->tag().tag()), koi, SLOT(addToPlot(int)), 0, id);
+            addMenu->insertItem(i18n("%1 - %2").arg(v->windowTitle()).arg(plot->tag().tag()), koi, SLOT(addToPlot(int)), 0, id);
             haveAdd = true;
           } else {
-            removeMenu->insertItem(i18n("%1 - %2").arg(v->caption()).arg(plot->tag().tag()), koi, SLOT(removeFromPlot(int)), 0, id);
+            removeMenu->insertItem(i18n("%1 - %2").arg(v->windowTitle()).arg(plot->tag().tag()), koi, SLOT(removeFromPlot(int)), 0, id);
             haveRemove = true;
           }
           PlotMap[id++] = plot;

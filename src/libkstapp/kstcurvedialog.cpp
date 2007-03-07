@@ -25,7 +25,6 @@
 // include files for KDE
 #include <kcombobox.h>
 #include <kcolorbutton.h>
-#include "ksdebug.h"
 #include <kmessagebox.h>
 
 // application specific includes
@@ -38,8 +37,6 @@
 #include "kstviewwindow.h"
 #include "kstuinames.h"
 #include "vectorselector.h"
-
-#include "ui_kstcurvedialog4.h"
 
 const QString& KstCurveDialogI::defaultTag = KGlobal::staticQString("<Auto Name>");
 
@@ -55,7 +52,10 @@ KstCurveDialogI *KstCurveDialogI::globalInstance() {
 
 KstCurveDialogI::KstCurveDialogI(QWidget* parent, Qt::WindowFlags fl)
 : KstDataDialog(parent, fl) {
-  _w = new CurveDialogWidget(_contents);
+
+  _w = new Ui::KstCurveDialog;
+  _w->setupUi(_contents);
+
   setMultiple(true);
   connect(_w->_xVector, SIGNAL(newVectorCreated(const QString&)), this, SIGNAL(modified()));
   connect(_w->_yVector, SIGNAL(newVectorCreated(const QString&)), this, SIGNAL(modified()));
@@ -89,6 +89,7 @@ KstCurveDialogI::KstCurveDialogI(QWidget* parent, Qt::WindowFlags fl)
 
 
 KstCurveDialogI::~KstCurveDialogI() {
+  delete _w;
 }
 
 
@@ -438,19 +439,19 @@ bool KstCurveDialogI::editObject() {
   // if editing multiple objects, edit each one
   if (_editMultipleMode) {
     // if the user selected no vector, treat it as non-dirty
-    _xVectorDirty = _w->_xVector->_vector->currentItem() != 0;
-    _yVectorDirty = _w->_yVector->_vector->currentItem() != 0;
-    _xErrorDirty = _w->_xError->_vector->currentItem() != 0;
-    _xMinusErrorDirty = _w->_xMinusError->_vector->currentItem() != 0;
-    _yErrorDirty = _w->_yError->_vector->currentItem() != 0;
-    _yMinusErrorDirty = _w->_yMinusError->_vector->currentItem() != 0;
+    _xVectorDirty = _w->_xVector->_vector->currentIndex() != 0;
+    _yVectorDirty = _w->_yVector->_vector->currentIndex() != 0;
+    _xErrorDirty = _w->_xError->_vector->currentIndex() != 0;
+    _xMinusErrorDirty = _w->_xMinusError->_vector->currentIndex() != 0;
+    _yErrorDirty = _w->_yError->_vector->currentIndex() != 0;
+    _yMinusErrorDirty = _w->_yMinusError->_vector->currentIndex() != 0;
     _spinBoxLineWidthDirty = _w->_curveAppearance->_spinBoxLineWidth->text() != " ";
 
     // the current selection may not have been set for the following
-    _comboDirty = _w->_curveAppearance->_combo->currentItem() > 0;
-    _comboLineStyleDirty = _w->_curveAppearance->_comboLineStyle->currentItem() > 0;
-    _comboPointDensityDirty = _w->_curveAppearance->_comboPointDensity->currentItem() > 0;
-    _barStyleDirty = _w->_curveAppearance->_barStyle->currentItem() > 0;
+    _comboDirty = _w->_curveAppearance->_combo->currentIndex() > 0;
+    _comboLineStyleDirty = _w->_curveAppearance->_comboLineStyle->currentIndex() > 0;
+    _comboPointDensityDirty = _w->_curveAppearance->_comboPointDensity->currentIndex() > 0;
+    _barStyleDirty = _w->_curveAppearance->_barStyle->currentIndex() > 0;
 
     bool didEdit = false;
 
@@ -527,32 +528,32 @@ void KstCurveDialogI::populateEditMultiple() {
   _editMultipleWidget->_objectList->insertStringList(cvlist.tagNames());
 
   // also intermediate state for multiple edit
-  _w->_xVector->_vector->insertItem("", 0);
-  _w->_xVector->_vector->setCurrentItem(0);
-  _w->_yVector->_vector->insertItem("", 0);
-  _w->_yVector->_vector->setCurrentItem(0);
-  _w->_xError->_vector->insertItem("", 0);
-  _w->_xError->_vector->setCurrentItem(0);
-  _w->_yError->_vector->insertItem("", 0);
-  _w->_yError->_vector->setCurrentItem(0);
-  _w->_xMinusError->_vector->insertItem("", 0);
-  _w->_xMinusError->_vector->setCurrentItem(0);
-  _w->_yMinusError->_vector->insertItem("", 0);
-  _w->_yMinusError->_vector->setCurrentItem(0);
+  _w->_xVector->_vector->insertItem(0, "");
+  _w->_xVector->_vector->setCurrentIndex(0);
+  _w->_yVector->_vector->insertItem(0, "");
+  _w->_yVector->_vector->setCurrentIndex(0);
+  _w->_xError->_vector->insertItem(0, "");
+  _w->_xError->_vector->setCurrentIndex(0);
+  _w->_yError->_vector->insertItem(0, "");
+  _w->_yError->_vector->setCurrentIndex(0);
+  _w->_xMinusError->_vector->insertItem(0, "");
+  _w->_xMinusError->_vector->setCurrentIndex(0);
+  _w->_yMinusError->_vector->insertItem(0, "");
+  _w->_yMinusError->_vector->setCurrentIndex(0);
 
   // single blank characters to differentiate between QPixmaps
-  _w->_curveAppearance->_combo->insertItem(" ", 0);
-  _w->_curveAppearance->_combo->setCurrentItem(0);
-  _w->_curveAppearance->_comboPointDensity->insertItem(" ", 0);
-  _w->_curveAppearance->_comboPointDensity->setCurrentItem(0);
-  _w->_curveAppearance->_comboLineStyle->insertItem(" ", 0);
-  _w->_curveAppearance->_comboLineStyle->setCurrentItem(0);
-  _w->_curveAppearance->_barStyle->insertItem(" ", 0);
-  _w->_curveAppearance->_barStyle->setCurrentItem(0);
+  _w->_curveAppearance->_combo->insertItem(0, "");
+  _w->_curveAppearance->_combo->setCurrentIndex(0);
+  _w->_curveAppearance->_comboPointDensity->insertItem(0, "");
+  _w->_curveAppearance->_comboPointDensity->setCurrentIndex(0);
+  _w->_curveAppearance->_comboLineStyle->insertItem(0, "");
+  _w->_curveAppearance->_comboLineStyle->setCurrentIndex(0);
+  _w->_curveAppearance->_barStyle->insertItem(0, "");
+  _w->_curveAppearance->_barStyle->setCurrentIndex(0);
 
-  _w->_curveAppearance->_spinBoxLineWidth->setMinValue(_w->_curveAppearance->_spinBoxLineWidth->minValue() - 1);
+  _w->_curveAppearance->_spinBoxLineWidth->setMinimum(_w->_curveAppearance->_spinBoxLineWidth->minimum() - 1);
   _w->_curveAppearance->_spinBoxLineWidth->setSpecialValueText(" ");
-  _w->_curveAppearance->_spinBoxLineWidth->setValue(_w->_curveAppearance->_spinBoxLineWidth->minValue());
+  _w->_curveAppearance->_spinBoxLineWidth->setValue(_w->_curveAppearance->_spinBoxLineWidth->minimum());
 
   _w->_checkBoxXMinusSameAsPlus->setTristate(true);
   _w->_checkBoxXMinusSameAsPlus->setNoChange();
@@ -641,7 +642,7 @@ void KstCurveDialogI::cleanup() {
     _w->_curveAppearance->_comboPointDensity->removeItem(0);
     _w->_curveAppearance->_barStyle->removeItem(0);
     _w->_curveAppearance->_spinBoxLineWidth->setSpecialValueText(QString::null);
-    _w->_curveAppearance->_spinBoxLineWidth->setMinValue(_w->_curveAppearance->_spinBoxLineWidth->minValue() + 1);
+    _w->_curveAppearance->_spinBoxLineWidth->setMinimum(_w->_curveAppearance->_spinBoxLineWidth->minimum() + 1);
   }
 }
 

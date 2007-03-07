@@ -18,10 +18,10 @@
 #ifndef VECTORSAVEDIALOG_H
 #define VECTORSAVEDIALOG_H
 
-#include <QWidget>
+#include <QDialog>
 #include "ui_vectorsavedialog4.h"
 
-class VectorSaveDialog : public QWidget, public Ui::VectorSaveDialog {
+class VectorSaveDialog : public QDialog, public Ui::VectorSaveDialog {
   Q_OBJECT
 
 public:

@@ -102,7 +102,7 @@ void KstChangeFileDialogI::updateChangeFileDialog() {
   KstReadLocker ml(&KST::dataSourceList.lock());
   for (KstDataSourceList::Iterator it = KST::dataSourceList.begin(); it != KST::dataSourceList.end(); ++it) {
     if (filesUsed.contains((*it)->fileName())) {
-      _files->insertItem((*it)->fileName());
+      _files->addItem((*it)->fileName());
     }
   }
   if (_files->contains(currentFile)) {
@@ -286,7 +286,7 @@ bool KstChangeFileDialogI::applyFileChange() {
           Kst2DPlotList plots = view->findChildrenType<Kst2DPlot>(true);
           for (Kst2DPlotList::Iterator plotIter = plots.begin(); plotIter != plots.end(); ++plotIter) {
             for (KstDataObjectDataObjectMap::ConstIterator iter = duplicatedMap.begin(); iter != duplicatedMap.end(); ++iter) {
-              if (KstBaseCurvePtr curve = kst_cast<KstBaseCurve>(iter.data())) {
+              if (KstBaseCurvePtr curve = kst_cast<KstBaseCurve>(iter.value())) {
                 if ((*plotIter)->Curves.contains(kst_cast<KstBaseCurve>(iter.key())) && !(*plotIter)->Curves.contains(kst_cast<KstBaseCurve>(curve))) {
                   (*plotIter)->addCurve(curve);
                 }

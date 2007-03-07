@@ -51,7 +51,7 @@ KstGraphFileDialogI::KstGraphFileDialogI(QWidget* parent, Qt::WindowFlags fl)
   _saveLocation->setMode(KFile::File);
 
   _comboBoxFormats->insertStrList(QImageIO::outputFormats());
-  _comboBoxFormats->setCurrentItem(0);
+  _comboBoxFormats->setCurrentIndex(0);
 
   loadProperties();
 
@@ -82,7 +82,7 @@ void KstGraphFileDialogI::apply_I() {
   _format = _comboBoxFormats->currentText();
   _w = _xSize->value();
   _h = _ySize->value();
-  _displayOption = _comboBoxSizeOption->currentItem();
+  _displayOption = _comboBoxSizeOption->currentIndex();
   _allWindows = _radioButtonAll->isChecked();
   _autoSave = _autosave->isChecked();
   _savePeriod = _period->value();
@@ -186,7 +186,7 @@ void KstGraphFileDialogI::enableEPSVector(const QString &format) {
 
 
 void KstGraphFileDialogI::enableWidthHeight() {
-  int displayOption = _comboBoxSizeOption->currentItem();
+  int displayOption = _comboBoxSizeOption->currentIndex();
 
   switch (displayOption) {
     case 0:
@@ -216,17 +216,17 @@ void KstGraphFileDialogI::updateDialog() {
   _saveLocation->setUrl(_url);
   _saveLocation->completionObject()->setDir(_url);
 
-  QString upfmt = _format.upper();
+  QString upfmt = _format.toUpper();
   for (int i = 0; i < _comboBoxFormats->count(); i++) {
     if (_comboBoxFormats->text(i).upper() == upfmt) {
-      _comboBoxFormats->setCurrentItem(i);
+      _comboBoxFormats->setCurrentIndex(i);
       break;
     }
   }
 
   _xSize->setValue(_w);
   _ySize->setValue(_h);
-  _comboBoxSizeOption->setCurrentItem(_displayOption);
+  _comboBoxSizeOption->setCurrentIndex(_displayOption);
   _radioButtonAll->setChecked(_allWindows);
   _radioButtonActive->setChecked(!_allWindows);
   _autosave->setChecked(_autoSave);

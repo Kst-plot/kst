@@ -30,7 +30,7 @@
 class KstNumberSequence;
 class KstViewWindow;
 
-class KstCurveDifferentiateI : public QDialog {
+class KstCurveDifferentiateI : public QDialog, public Ui::KstCurveDifferentiate {
   Q_OBJECT
   public:
     KST_EXPORT KstCurveDifferentiateI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );

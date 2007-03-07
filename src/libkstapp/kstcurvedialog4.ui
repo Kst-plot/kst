@@ -2,8 +2,8 @@
   <author></author>
   <comment></comment>
   <exportmacro></exportmacro>
-  <class>CurveDialogWidget</class>
-  <widget class="QWidget" name="CurveDialogWidget" >
+  <class>KstCurveDialog</class>
+  <widget class="QWidget" name="KstCurveDialog" >
     <property name="geometry" >
       <rect>
         <x>0</x>

@@ -53,8 +53,8 @@ KstMonochromeDialogI::KstMonochromeDialogI(QWidget* parent, Qt::WindowFlags fl)
   _add->setIcon(BarIcon("forward"));
   _remove->setIcon(BarIcon("back"));
 
-  maxLineWidth->setMaxValue(KSTLINESTYLE_MAXTYPE);
-  maxLineWidth->setMinValue(1);
+  maxLineWidth->setMaximum(KSTLINESTYLE_MAXTYPE);
+  maxLineWidth->setMinimum(1);
   updateMonochromeDialog();
 }
 
@@ -109,7 +109,7 @@ void KstMonochromeDialogI::setOptions(const QMap<QString,QString>& opts) {
   }
   
   maxLineWidth->setValue(opts["kst-plot-monochromesettings-maxlinewidth"].toInt());
-  pointDensity->setCurrentItem(opts["kst-plot-monochromesettings-pointdensity"].toInt());
+  pointDensity->setCurrentIndex(opts["kst-plot-monochromesettings-pointdensity"].toInt());
 }
 
 void KstMonochromeDialogI::getOptions(QMap<QString,QString> &opts, bool include_def) {  
@@ -137,8 +137,8 @@ void KstMonochromeDialogI::getOptions(QMap<QString,QString> &opts, bool include_
     opts["kst-plot-monochromesettings-maxlinewidth"] = QString::number(maxLineWidth->value());
   }
   // point density - default is 2
-  if (pointDensity->currentItem() != 2 || include_def) {
-    opts["kst-plot-monochromesettings-pointdensity"] = QString::number(pointDensity->currentItem());
+  if (pointDensity->currentIndex() != 2 || include_def) {
+    opts["kst-plot-monochromesettings-pointdensity"] = QString::number(pointDensity->currentIndex());
   }
 }
 

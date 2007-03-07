@@ -340,11 +340,11 @@ QMap<QString, QVariant> KstViewPicture::widgetHints(const QString& propertyName)
   /* else if (propertyName == "padding") {
   map.insert(QString("_kst_widgetType"), QString("QSpinBox"));
   map.insert(QString("_kst_label"), i18n("Padding"));
-  map.insert(QString("minValue"), 0);
+  map.insert(QString("minimum"), 0);
 } else if (propertyName == "margin") {
   map.insert(QString("_kst_widgetType"), QString("QSpinBox"));
   map.insert(QString("_kst_label"), i18n("Margin"));
-  map.insert(QString("minValue"), 0);
+  map.insert(QString("minimum"), 0);
 }*/
   return map;
 }

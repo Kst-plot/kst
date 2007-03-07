@@ -27,7 +27,7 @@ class KstDataDialog : public QDialog, public Ui::KstDataDialog {
   Q_OBJECT
 
 public:
-  KstDataDialog(QWidget *parent = 0);
+  KstDataDialog(QWidget *parent = 0, Qt::WindowFlags fl = 0);
   ~KstDataDialog();
 
 public slots:

@@ -23,7 +23,7 @@
 #include "kstvcurve.h"
 #include "kst_export.h"
 
-class CurveDialogWidget;
+#include "ui_kstcurvedialog4.h"
 
 class KstCurveDialogI : public KstDataDialog {
   Q_OBJECT
@@ -86,7 +86,7 @@ class KstCurveDialogI : public KstDataDialog {
     void fillFieldsForEdit();
     void fillFieldsForNew();
     void cleanup();
-    CurveDialogWidget *_w;
+    Ui::KstCurveDialog *_w;
 };
 
 #endif

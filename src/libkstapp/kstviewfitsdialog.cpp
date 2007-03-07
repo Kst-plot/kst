@@ -30,10 +30,7 @@
 #include "kstdataobjectcollection.h"
 #include "kstviewfitsdialog.h"
 
-KstViewFitsDialogI::KstViewFitsDialogI(QWidget* parent,
-                                             const char* name,
-                                             bool modal,
-                                             WindowFlags fl) 
+KstViewFitsDialogI::KstViewFitsDialogI(QWidget* parent, Qt::WindowFlags fl) 
 : QDialog(parent, fl) {
 
   tableFits = new KstFitTable(this, "tableFits");
@@ -77,9 +74,9 @@ void KstViewFitsDialogI::fillComboBox(const QString& str) {
     KstCPluginPtr fit = fits[i];
     fit->readLock();
     if (fit->plugin()->data()._isFit) {
-      _comboBoxFits->insertItem(fit->tagName());
+      _comboBoxFits->addItem(fit->tagName());
       if (fitName == fit->tagName() || fitName.isEmpty()) {
-        _comboBoxFits->setCurrentItem(_comboBoxFits->count() - 1);
+        _comboBoxFits->setCurrentIndex(_comboBoxFits->count() - 1);
         if (fitName.isEmpty()) {
           fitName = fit->tagName();
         }
@@ -101,7 +98,7 @@ void KstViewFitsDialogI::updateViewFitsDialog() {
   } else {
     QString old;
     if (_comboBoxFits->count() > 0) {
-      int idx = _comboBoxFits->currentItem();
+      int idx = _comboBoxFits->currentIndex();
       old = _comboBoxFits->text(idx);
     }
     fillComboBox(old);

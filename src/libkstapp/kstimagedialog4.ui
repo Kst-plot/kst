@@ -2,8 +2,8 @@
   <author></author>
   <comment></comment>
   <exportmacro></exportmacro>
-  <class>ImageDialogWidget</class>
-  <widget class="QWidget" name="ImageDialogWidget" >
+  <class>KstImageDialog</class>
+  <widget class="QWidget" name="KstImageDialog" >
     <property name="geometry" >
       <rect>
         <x>0</x>

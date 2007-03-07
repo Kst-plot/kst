@@ -2,8 +2,8 @@
   <author></author>
   <comment></comment>
   <exportmacro></exportmacro>
-  <class>PSDDialogWidget</class>
-  <widget class="QWidget" name="PSDDialogWidget" >
+  <class>KstPsdDialog</class>
+  <widget class="QWidget" name="KstPsdDialog" >
     <property name="geometry" >
       <rect>
         <x>0</x>

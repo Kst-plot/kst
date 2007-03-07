@@ -2,8 +2,8 @@
   <author></author>
   <comment></comment>
   <exportmacro></exportmacro>
-  <class>MatrixDialogWidget</class>
-  <widget class="QWidget" name="MatrixDialogWidget" >
+  <class>KstMatrixDialog</class>
+  <widget class="QWidget" name="KstMatrixDialog" >
     <property name="geometry" >
       <rect>
         <x>0</x>

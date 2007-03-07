@@ -30,7 +30,7 @@
 #include <kst_export.h>
 
 VectorSaveDialog::VectorSaveDialog(QWidget *parent)
-    : QWidget(parent) {
+    : QDialog(parent) {
   setupUi(this);
 
  connect(pushButton2, SIGNAL(clicked()), this, SLOT(hide()));

@@ -26,7 +26,6 @@
 
 // include files for KDE
 #include <kcombobox.h>
-#include "ksdebug.h"
 #include <kmessagebox.h>
 
 // application specific includes
@@ -34,7 +33,6 @@
 #include "curveappearancewidget.h"
 #include "curveplacementwidget.h"
 #include "editmultiplewidget.h"
-#include "histogramdialogwidget.h"
 #include "kst2dplot.h"
 #include "kstdataobjectcollection.h"
 #include "kstsettings.h"
@@ -42,8 +40,6 @@
 #include "kstvcurve.h"
 #include "kstviewwindow.h"
 #include "vectorselector.h"
-
-#include "ui_ksthsdialog4.h"
 
 const QString& KstHsDialogI::defaultTag = KGlobal::staticQString("<Auto Name>");
 
@@ -59,7 +55,10 @@ KstHsDialogI *KstHsDialogI::globalInstance() {
 
 KstHsDialogI::KstHsDialogI(QWidget* parent, Qt::WindowFlags fl)
 : KstDataDialog(parent, fl) {
-  _w = new HistogramDialogWidget(_contents);
+
+  _w = new Ui::KstHsDialog;
+  _w->setupUi(_contents);
+
   setMultiple(true);
   connect(_w->AutoBin, SIGNAL(clicked()), this, SLOT(autoBin()));
   connect(_w->_vector, SIGNAL(newVectorCreated(const QString&)), this, SIGNAL(modified()));
@@ -78,6 +77,7 @@ KstHsDialogI::KstHsDialogI(QWidget* parent, Qt::WindowFlags fl)
 
 
 KstHsDialogI::~KstHsDialogI() {
+  delete _w;
 }
 
 
@@ -369,7 +369,7 @@ bool KstHsDialogI::editObject() {
   // if editing multiple objects, edit each one
   if (_editMultipleMode) {
     // if the user selected no vector, treat it as non-dirty
-    _vectorDirty = _w->_vector->_vector->currentItem() != 0;
+    _vectorDirty = _w->_vector->_vector->currentIndex() != 0;
     _nDirty = _w->N->text() != " ";
     _minDirty = !_w->Min->text().isEmpty();
     _maxDirty = !_w->Max->text().isEmpty();
@@ -467,12 +467,12 @@ void KstHsDialogI::populateEditMultiple() {
   _w->Min->setText("");
   _w->Max->setText("");
 
-  _w->N->setMinValue(_w->N->minValue() - 1);
+  _w->N->setMinimum(_w->N->minimum() - 1);
   _w->N->setSpecialValueText(" ");
-  _w->N->setValue(_w->N->minValue());
+  _w->N->setValue(_w->N->minimum());
 
-  _w->_vector->_vector->insertItem("", 0);
-  _w->_vector->_vector->setCurrentItem(0);
+  _w->_vector->_vector->insertItem(0, "");
+  _w->_vector->_vector->setCurrentIndex(0);
   _w->_realTimeAutoBin->setTristate(true);
   _w->_realTimeAutoBin->setNoChange();
 
@@ -508,7 +508,7 @@ void KstHsDialogI::setRealTimeAutoBinDirty() {
 
 void KstHsDialogI::cleanup() {
   if (_editMultipleMode) {
-    _w->N->setMinValue(_w->N->minValue() + 1);
+    _w->N->setMinimum(_w->N->minimum() + 1);
     _w->N->setSpecialValueText(QString::null);
   }
 }

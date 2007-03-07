@@ -44,8 +44,6 @@
 #include "kstviewwindow.h"
 #include "matrixselector.h"
 
-#include "ui_kstimagedialog4.h"
-
 QPointer<KstImageDialogI> KstImageDialogI::_inst;
 
 KstImageDialogI *KstImageDialogI::globalInstance() {
@@ -58,7 +56,10 @@ KstImageDialogI *KstImageDialogI::globalInstance() {
 
 KstImageDialogI::KstImageDialogI(QWidget* parent, Qt::WindowFlags fl)
 : KstDataDialog(parent, fl) {
-  _w = new ImageDialogWidget(_contents);
+
+  _w = new Ui::KstImageDialog;
+  _w->setupUi(_contents);
+
   setMultiple(true);
   connect(_w->_matrix, SIGNAL(newMatrixCreated(const QString&)), this, SIGNAL(modified()));
   connect(_w->_autoThreshold, SIGNAL(clicked()), this, SLOT(calcAutoThreshold()));
@@ -80,6 +81,7 @@ KstImageDialogI::KstImageDialogI(QWidget* parent, Qt::WindowFlags fl)
 
 
 KstImageDialogI::~KstImageDialogI() {
+  delete _w;
 }
 
 
@@ -197,7 +199,7 @@ void KstImageDialogI::update() {
 bool KstImageDialogI::newObject() {
   //if matrixCombo is empty then display an error message
   if (_w->_matrix->selectedMatrix().isEmpty()){
-    KMessageBox::sorry(this, i18n("Matrix is a 2D grid of numbers, used to create image", "New image not made: define matrix first."));
+    KMessageBox::sorry(this, i18nc("Matrix is a 2D grid of numbers, used to create image", "New image not made: define matrix first."));
     return false;
   }
 
@@ -211,7 +213,7 @@ bool KstImageDialogI::newObject() {
   KstMatrixPtr matrix = *KST::matrixList.findTag(_w->_matrix->selectedMatrix());
   KST::matrixList.lock().unlock();
   if (!matrix) {
-    KMessageBox::sorry(this, i18n("Matrix is a 2D grid of numbers, used to create image", "Could not find matrix."));
+    KMessageBox::sorry(this, i18nc("Matrix is a 2D grid of numbers, used to create image", "Could not find matrix."));
     return false;
   }
   KST::dataObjectList.lock().readLock();
@@ -267,7 +269,7 @@ bool KstImageDialogI::editSingleObject(KstImagePtr imPtr) {
     KST::matrixList.lock().unlock();
 
     if (!pMatrix) {
-      KMessageBox::sorry(this, i18n("Matrix is a 2D grid of numbers, used to create image", "Could not find pMatrix."));
+      KMessageBox::sorry(this, i18nc("Matrix is a 2D grid of numbers, used to create image", "Could not find pMatrix."));
       return false;
     }
   } else {
@@ -602,21 +604,21 @@ void KstImageDialogI::populateEditMultiple() {
   _w->_colorAndContour->setChecked(false);
   _w->_colorMapGroup->setEnabled(true);
   _w->_contourMapGroup->setEnabled(true);
-  _w->_colorPalette->_palette->insertItem("", 0);
-  _w->_colorPalette->_palette->setCurrentItem(0);
-  _w->_matrix->_matrix->insertItem("",0);
-  _w->_matrix->_matrix->setCurrentItem(0);
+  _w->_colorPalette->_palette->addItem(0, "");
+  _w->_colorPalette->_palette->setCurrentIndex(0);
+  _w->_matrix->_matrix->addItem(0, "");
+  _w->_matrix->_matrix->setCurrentIndex(0);
   _w->_lowerZ->setText("");
   _w->_upperZ->setText("");
   _w->_realTimeAutoThreshold->setTristate(true);
   _w->_realTimeAutoThreshold->setNoChange();
   _w->_autoThreshold->setEnabled(false);
   _w->_numContourLines->setSpecialValueText(" ");
-  _w->_numContourLines->setMinValue(_w->_numContourLines->minValue() - 1);
-  _w->_numContourLines->setValue(_w->_numContourLines->minValue());
+  _w->_numContourLines->setMinimum(_w->_numContourLines->minimum() - 1);
+  _w->_numContourLines->setValue(_w->_numContourLines->minimum());
   _w->_contourWeight->setSpecialValueText(" ");
-  _w->_contourWeight->setMinValue(_w->_contourWeight->minValue() - 1);
-  _w->_contourWeight->setValue(_w->_contourWeight->minValue());
+  _w->_contourWeight->setMinimum(_w->_contourWeight->minimum() - 1);
+  _w->_contourWeight->setValue(_w->_contourWeight->minimum());
   _w->_useVariableWeight->setTristate(true);
   _w->_useVariableWeight->setNoChange();
   _w->_contourColor->setColor(QColor()); //default color
@@ -660,9 +662,9 @@ void KstImageDialogI::setUseVariableWeightDirty() {
 void KstImageDialogI::cleanup() {
   if (_editMultipleMode) {
     _w->_numContourLines->setSpecialValueText(QString::null);
-    _w->_numContourLines->setMinValue(_w->_numContourLines->minValue() + 1);
+    _w->_numContourLines->setMinimum(_w->_numContourLines->minimum() + 1);
     _w->_contourWeight->setSpecialValueText(QString::null);
-    _w->_contourWeight->setMinValue(_w->_contourWeight->minValue() + 1);
+    _w->_contourWeight->setMinimum(_w->_contourWeight->minimum() + 1);
     _w->_autoThreshold->setEnabled(true);
   }
 }

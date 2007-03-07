@@ -23,7 +23,7 @@
 #include "ksthistogram.h"
 #include "kst_export.h"
 
-class HistogramDialogWidget;
+#include "ui_ksthsdialog4.h"
 
 class KST_EXPORT KstHsDialogI : public KstDataDialog {
   Q_OBJECT
@@ -74,7 +74,7 @@ class KST_EXPORT KstHsDialogI : public KstDataDialog {
     void fillFieldsForEdit();
     void fillFieldsForNew();
     void cleanup();
-    HistogramDialogWidget *_w;
+    Ui::KstHsDialog *_w;
 };
 
 #endif

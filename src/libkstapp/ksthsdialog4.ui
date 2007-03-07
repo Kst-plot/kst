@@ -2,8 +2,8 @@
   <author></author>
   <comment></comment>
   <exportmacro></exportmacro>
-  <class>HistogramDialogWidget</class>
-  <widget class="QWidget" name="HistogramDialogWidget" >
+  <class>KstHsDialog</class>
+  <widget class="QWidget" name="KstHsDialog" >
     <property name="geometry" >
       <rect>
         <x>0</x>

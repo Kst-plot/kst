@@ -27,12 +27,12 @@
 #include "kstdatadialog.h"
 #include "kstbasicplugin.h"
 
+#include "ui_kstbasicdialog4.h"
+
 class QLineEdit;
 class VectorSelector;
 class ScalarSelector;
 class StringSelector;
-
-class BasicDialogWidget;
 
 class KST_EXPORT KstBasicDialogI : public KstDataDialog {
   Q_OBJECT
@@ -72,7 +72,7 @@ class KST_EXPORT KstBasicDialogI : public KstDataDialog {
     static QPointer<KstBasicDialogI> _inst;
 
     QString _pluginName;
-    BasicDialogWidget *_w;
+    Ui::KstBasicDialog *_w;
 
     // layout items
     QGridLayout *_grid;

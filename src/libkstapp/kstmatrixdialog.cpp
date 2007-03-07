@@ -36,11 +36,8 @@
 #include "kstmatrixdefaults.h"
 #include "kstmatrixdialog.h"
 #include "kstviewwindow.h"
-#include "matrixdialogwidget.h"
 #include <defaultprimitivenames.h>
 #include "vectorselector.h"
-
-#include "ui_kstmatrixdialog4.h"
 
 QPointer<KstMatrixDialogI> KstMatrixDialogI::_inst;
 
@@ -54,7 +51,10 @@ KstMatrixDialogI *KstMatrixDialogI::globalInstance() {
 
 KstMatrixDialogI::KstMatrixDialogI(QWidget* parent, Qt::WindowFlags fl)
 : KstDataDialog(parent, fl) {
-  _w = new MatrixDialogWidget(_contents);
+
+  _w = new Ui::KstMatrixDialog;
+  _w->setupUi(_contents);
+
   setMultiple(true);
   _inTest = false;
   _w->_fileName->completionObject()->setDir(QDir::currentPath());
@@ -97,6 +97,7 @@ KstMatrixDialogI::KstMatrixDialogI(QWidget* parent, Qt::WindowFlags fl)
 
 
 KstMatrixDialogI::~KstMatrixDialogI() {
+  delete _w;
 }
 
 
@@ -725,24 +726,24 @@ void KstMatrixDialogI::populateEditMultipleRMatrix() {
   // intermediate state for multiple edit
   _w->_fileName->clear();
   _w->_xStart->setSpecialValueText(" ");
-  _w->_xStart->setMinValue(_w->_xStart->minValue() - 1);
-  _w->_xStart->setValue(_w->_xStart->minValue());
+  _w->_xStart->setMinimum(_w->_xStart->minimum() - 1);
+  _w->_xStart->setValue(_w->_xStart->minimum());
 
   _w->_yStart->setSpecialValueText(" ");
-  _w->_yStart->setMinValue(_w->_yStart->minValue() - 1);
-  _w->_yStart->setValue(_w->_yStart->minValue());
+  _w->_yStart->setMinimum(_w->_yStart->minimum() - 1);
+  _w->_yStart->setValue(_w->_yStart->minimum());
 
   _w->_xNumSteps->setSpecialValueText(" ");
-  _w->_xNumSteps->setMinValue(_w->_xNumSteps->minValue() - 1);
-  _w->_xNumSteps->setValue(_w->_xNumSteps->minValue());
+  _w->_xNumSteps->setMinimum(_w->_xNumSteps->minimum() - 1);
+  _w->_xNumSteps->setValue(_w->_xNumSteps->minimum());
 
   _w->_yNumSteps->setSpecialValueText(" ");
-  _w->_yNumSteps->setMinValue(_w->_yNumSteps->minValue() - 1);
-  _w->_yNumSteps->setValue(_w->_yNumSteps->minValue());
+  _w->_yNumSteps->setMinimum(_w->_yNumSteps->minimum() - 1);
+  _w->_yNumSteps->setValue(_w->_yNumSteps->minimum());
 
   _w->_skip->setSpecialValueText(" ");
-  _w->_skip->setMinValue(_w->_skip->minValue() - 1);
-  _w->_skip->setValue(_w->_skip->minValue());
+  _w->_skip->setMinimum(_w->_skip->minimum() - 1);
+  _w->_skip->setValue(_w->_skip->minimum());
 
   _w->_doSkip->setTristate(true);
   _w->_doSkip->setNoChange();
@@ -771,26 +772,26 @@ void KstMatrixDialogI::populateEditMultipleSMatrix() {
   _w->_gradientZAtMin->setText("");
   _w->_gradientZAtMax->setText("");
   _w->_nX->setSpecialValueText(" ");
-  _w->_nX->setMinValue(_w->_nX->minValue() - 1);
-  _w->_nX->setValue(_w->_nX->minValue());
+  _w->_nX->setMinimum(_w->_nX->minimum() - 1);
+  _w->_nX->setValue(_w->_nX->minimum());
   _w->_nY->setSpecialValueText(" ");
-  _w->_nY->setMinValue(_w->_nY->minValue() - 1);
-  _w->_nY->setValue(_w->_nY->minValue());
+  _w->_nY->setMinimum(_w->_nY->minimum() - 1);
+  _w->_nY->setValue(_w->_nY->minimum());
 }
 
 
 void KstMatrixDialogI::cleanup() {
   if (_editMultipleMode) {
     _w->_xStart->setSpecialValueText(QString::null);
-    _w->_xStart->setMinValue(_w->_xStart->minValue() + 1);
+    _w->_xStart->setMinimum(_w->_xStart->minimum() + 1);
     _w->_yStart->setSpecialValueText(QString::null);
-    _w->_yStart->setMinValue(_w->_yStart->minValue() + 1);
+    _w->_yStart->setMinimum(_w->_yStart->minimum() + 1);
     _w->_xNumSteps->setSpecialValueText(QString::null);
-    _w->_xNumSteps->setMinValue(_w->_xNumSteps->minValue() + 1);
+    _w->_xNumSteps->setMinimum(_w->_xNumSteps->minimum() + 1);
     _w->_yNumSteps->setSpecialValueText(QString::null);
-    _w->_yNumSteps->setMinValue(_w->_yNumSteps->minValue() + 1);
+    _w->_yNumSteps->setMinimum(_w->_yNumSteps->minimum() + 1);
     _w->_skip->setSpecialValueText(QString::null);
-    _w->_skip->setMinValue(_w->_skip->minValue() + 1);
+    _w->_skip->setMinimum(_w->_skip->minimum() + 1);
     _w->_nX->setSpecialValueText(QString::null);
     _w->_nY->setSpecialValueText(QString::null);
   }
@@ -983,12 +984,12 @@ void KstMatrixDialogI::configureSource() {
     connect(dlg, SIGNAL(okClicked()), this, SLOT(markSourceAndSave()));
     connect(dlg, SIGNAL(applyClicked()), this, SLOT(markSourceAndSave()));
   }
-  _configWidget->reparent(dlg, QPoint(0, 0));
+  _configWidget->setParent(dlg);
   dlg->setMainWidget(_configWidget);
   _configWidget->setInstance(ds);
   _configWidget->load();
   dlg->exec();
-  _configWidget->reparent(0L, QPoint(0, 0));
+  _configWidget->setParent(0L);
   dlg->setMainWidget(0L);
   delete dlg;
   updateCompletion(); // could be smarter by only running if Ok/Apply clicked

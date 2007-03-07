@@ -118,7 +118,7 @@ void KstEditViewObjectDialogI::updateWidgets() {
     _customWidget = _viewObject->configWidget();
     if (_customWidget) {
       _grid = new QGridLayout(_propertiesFrame, 1, 1);
-      _customWidget->reparent(_propertiesFrame, QPoint(0, 0));
+      _customWidget->setParent(_propertiesFrame);
       _grid->addWidget(_customWidget, 0, 0);
       _viewObject->fillConfigWidget(_customWidget, _isNew);
       if (!_isNew) {
@@ -213,12 +213,12 @@ void KstEditViewObjectDialogI::updateWidgets() {
           // insert a double num spinbox
           KDoubleSpinBox* input = new KDoubleSpinBox(_propertiesFrame, (propertyName+","+"value").toLatin1());
           // need this so that setValue later works
-          input->setMinValue(metaData["minValue"].toDouble());
-          input->setMaxValue(metaData["maxValue"].toDouble());
-          input->setLineStep(metaData["lineStep"].toDouble());
-          metaData.erase("minValue");
-          metaData.erase("maxValue");
-          metaData.erase("lineStep");
+          input->setMinimum(metaData["minimum"].toDouble());
+          input->setMaximum(metaData["maximum"].toDouble());
+          input->setSingleStep(metaData["singleStep"].toDouble());
+          metaData.erase("minimum");
+          metaData.erase("maximum");
+          metaData.erase("singleStep");
           propertyWidget = input; 
           propertyWidget->setProperty("value", _viewObject->property(property->name()));
           // need the following line because of a KDE bug causing valueChanged(double) never to be emitted 
@@ -256,7 +256,7 @@ void KstEditViewObjectDialogI::updateWidgets() {
         
         // also set any additional properties specified by metaData
         for (QMap<QString, QVariant>::ConstIterator it = metaData.begin(); it != metaData.end(); ++it) {
-          propertyWidget->setProperty(it.key().toLatin1(), it.data());
+          propertyWidget->setProperty(it.key().toLatin1(), it.value());
         }
         
         _grid->addWidget(propertyWidget, i, 1);
@@ -300,23 +300,23 @@ void KstEditViewObjectDialogI::fillPenStyleWidget(QComboBox* widget) {
     pp.setPen(pen);
     pp.fillRect( pp.window(), QColor("white"));
     pp.drawLine(1,ppix.height()/2,ppix.width()-1, ppix.height()/2);
-    widget->insertItem(ppix);
+    widget->addItem(ppix);
     styles.pop_front();
   }
 }
 
 
 void KstEditViewObjectDialogI::fillHJustifyWidget(QComboBox* widget) {
-  widget->insertItem(i18n("Left"));
-  widget->insertItem(i18n("Right"));
-  widget->insertItem(i18n("Center")); 
+  widget->addItem(i18n("Left"));
+  widget->addItem(i18n("Right"));
+  widget->addItem(i18n("Center")); 
 }
     
 
 void KstEditViewObjectDialogI::fillVJustifyWidget(QComboBox* widget) {
-  widget->insertItem(i18n("Top"));
-  widget->insertItem(i18n("Bottom"));
-  widget->insertItem(i18n("Center")); 
+  widget->addItem(i18n("Top"));
+  widget->addItem(i18n("Bottom"));
+  widget->addItem(i18n("Center")); 
 }
 
 

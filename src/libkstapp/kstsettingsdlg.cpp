@@ -147,8 +147,8 @@ void KstSettingsDlg::save() {
   s.majorGridColorDefault = _checkBoxDefaultMajorGridColor->isChecked();
   s.minorGridColorDefault = _checkBoxDefaultMinorGridColor->isChecked();
   s.xAxisInterpret        = _checkBoxXInterpret->isChecked();
-  s.xAxisInterpretation   = (KstAxisInterpretation)(_comboBoxXInterpret->currentItem());
-  s.xAxisDisplay          = (KstAxisDisplay)(_comboBoxXDisplay->currentItem());
+  s.xAxisInterpretation   = (KstAxisInterpretation)(_comboBoxXInterpret->currentIndex());
+  s.xAxisDisplay          = (KstAxisDisplay)(_comboBoxXDisplay->currentIndex());
 
   s.defaultLineWeight = _spinBoxLineWidth->value();
 
@@ -226,10 +226,10 @@ void KstSettingsDlg::fillAxesSettings() {
   unsigned int i;
 
   for (i = 0; i < numAxisInterpretations; i++) {
-    _comboBoxXInterpret->insertItem(i18n(AxisInterpretations[i].label));
+    _comboBoxXInterpret->addItem(i18n(AxisInterpretations[i].label));
   }
   for (i = 0; i < numAxisDisplays; i++) {
-    _comboBoxXDisplay->insertItem(i18n(AxisDisplays[i].label));
+    _comboBoxXDisplay->addItem(i18n(AxisDisplays[i].label));
   }
 }
 
@@ -242,7 +242,7 @@ void KstSettingsDlg::configureSource() {
   KDialogBase *dlg = new KDialogBase(this, "Data Config Dialog", true, i18n("Configure Data Source"));
   connect(dlg, SIGNAL(okClicked()), cw, SLOT(save()));
   connect(dlg, SIGNAL(applyClicked()), cw, SLOT(save()));
-  cw->reparent(dlg, QPoint(0, 0));
+  cw->setParent(dlg);
   dlg->setMainWidget(cw);
   cw->load();
   dlg->exec();

@@ -207,13 +207,13 @@ QMap<QString, QVariant> KstViewArrow::widgetHints(const QString& propertyName) c
   } else if (propertyName == "fromArrowScaling") {
     map.insert(QString("_kst_widgetType"), QString("KDoubleSpinBox"));
     map.insert(QString("_kst_label"), i18n("Start arrow scaling")); 
-    map.insert(QString("minValue"), 1.0);
-    map.insert(QString("maxValue"), 100.0);
+    map.insert(QString("minimum"), 1.0);
+    map.insert(QString("maximum"), 100.0);
   } else if (propertyName == "toArrowScaling") {
     map.insert(QString("_kst_widgetType"), QString("KDoubleSpinBox"));
     map.insert(QString("_kst_label"), i18n("End arrow scaling")); 
-    map.insert(QString("minValue"), 1.0);
-    map.insert(QString("maxValue"), 100.0);
+    map.insert(QString("minimum"), 1.0);
+    map.insert(QString("maximum"), 100.0);
   }
   return map;
 }

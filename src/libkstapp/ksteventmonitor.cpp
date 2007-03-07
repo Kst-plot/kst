@@ -29,15 +29,12 @@
 
 // application specific includes
 #include "editmultiplewidget.h"
-#include "eventmonitorwidget.h"
 #include "kst.h"
 #include "kstdataobjectcollection.h"
 #include "ksteventmonitor.h"
 #include "ksteventmonitorentry.h"
 #include "scalarselector.h"
 #include "vectorselector.h"
-
-#include "ui_ksteventmonitor4.h"
 
 QPointer<KstEventMonitorI> KstEventMonitorI::_inst;
 
@@ -52,7 +49,10 @@ KstEventMonitorI* KstEventMonitorI::globalInstance() {
 
 KstEventMonitorI::KstEventMonitorI(QWidget* parent, Qt::WindowFlags fl)
 : KstDataDialog(parent, fl) {
-  _w = new EventMonitorWidget(_contents);
+
+  _w = new Ui::KstEventMonitor;
+  _w->setupUi(_contents);
+
   setMultiple(true);
   connect(_w->_vectorSelectorEq, SIGNAL(newVectorCreated(const QString&)), this, SIGNAL(modified()));
   connect(_w->_scalarSelectorEq, SIGNAL(newScalarCreated()), this, SIGNAL(modified()));
@@ -74,6 +74,7 @@ KstEventMonitorI::KstEventMonitorI(QWidget* parent, Qt::WindowFlags fl)
 
 
 KstEventMonitorI::~KstEventMonitorI() {
+  delete _w;
 }
 
 

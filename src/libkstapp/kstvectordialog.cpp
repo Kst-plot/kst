@@ -25,7 +25,7 @@
 #include <qspinbox.h>
 #include <q3vbox.h>
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -45,8 +45,6 @@
 #include "kstdefaultnames.h"
 #include "kstcombobox.h"
 
-#include "ui_kstvectordialog4.h"
-
 QPointer<KstVectorDialogI> KstVectorDialogI::_inst = 0L;
 
 const QString& KstVectorDialogI::defaultTag = KGlobal::staticQString("<Auto Name>");
@@ -61,7 +59,10 @@ KstVectorDialogI *KstVectorDialogI::globalInstance() {
 
 KstVectorDialogI::KstVectorDialogI(QWidget* parent, Qt::WindowFlags fl)
 : KstDataDialog(parent, fl) {
-  _w = new VectorDialogWidget(_contents);
+
+  _w = new Ui::KstVectorDialog;
+  _w->setupUi(_contents);
+
   setMultiple(true);
   _inTest = false;
   _w->FileName->completionObject()->setDir(QDir::currentPath());
@@ -92,6 +93,7 @@ KstVectorDialogI::KstVectorDialogI(QWidget* parent, Qt::WindowFlags fl)
 
 
 KstVectorDialogI::~KstVectorDialogI() {
+  delete _w;
   delete _configWidget;
   _configWidget = 0L;
 }
@@ -701,12 +703,12 @@ void KstVectorDialogI::configureSource() {
     connect(dlg, SIGNAL(okClicked()), this, SLOT(markSourceAndSave()));
     connect(dlg, SIGNAL(applyClicked()), this, SLOT(markSourceAndSave()));
   }
-  _configWidget->reparent(dlg, QPoint(0, 0));
+  _configWidget->setParent(dlg);
   dlg->setMainWidget(_configWidget);
   _configWidget->setInstance(ds);
   _configWidget->load();
   dlg->exec();
-  _configWidget->reparent(0L, QPoint(0, 0));
+  _configWidget->setParent(0L);
   dlg->setMainWidget(0L);
   delete dlg;
   updateCompletion(); // could be smarter by only running if Ok/Apply clicked
@@ -721,9 +723,9 @@ void KstVectorDialogI::populateEditMultipleRV() {
   _w->FileName->clear();
   _w->_kstDataRange->F0->setText("");
   _w->_kstDataRange->N->setText("");
-  _w->_kstDataRange->Skip->setMinValue(_w->_kstDataRange->Skip->minValue() - 1);
+  _w->_kstDataRange->Skip->setMinimum(_w->_kstDataRange->Skip->minimum() - 1);
   _w->_kstDataRange->Skip->setSpecialValueText(" ");
-  _w->_kstDataRange->Skip->setValue(_w->_kstDataRange->Skip->minValue());
+  _w->_kstDataRange->Skip->setValue(_w->_kstDataRange->Skip->minimum());
   _w->_kstDataRange->CountFromEnd->setTristate(true);
   _w->_kstDataRange->CountFromEnd->setNoChange();
   _w->_kstDataRange->ReadToEnd->setTristate(true);
@@ -753,9 +755,9 @@ void KstVectorDialogI::populateEditMultipleSV() {
   KstSVectorList vclist = kstObjectSubList<KstVector, KstSVector>(KST::vectorList);
   _editMultipleWidget->_objectList->insertStringList(vclist.tagNames());
 
-  _w->_N->setMinValue(_w->_N->minValue() - 1);
+  _w->_N->setMinimum(_w->_N->minimum() - 1);
   _w->_N->setSpecialValueText(" ");
-  _w->_N->setValue(_w->_N->minValue());
+  _w->_N->setValue(_w->_N->minimum());
   _w->_xMin->setText("");
   _w->_xMax->setText("");
 
@@ -808,11 +810,11 @@ void KstVectorDialogI::cleanup() {
   if (_editMultipleMode) {
     if (_w->_kstDataRange->Skip->specialValueText() == " ") {
       _w->_kstDataRange->Skip->setSpecialValueText(QString::null);
-      _w->_kstDataRange->Skip->setMinValue(_w->_kstDataRange->Skip->minValue() + 1);
+      _w->_kstDataRange->Skip->setMinimum(_w->_kstDataRange->Skip->minimum() + 1);
     }
     if (_w->_N->specialValueText() == " ") {
       _w->_N->setSpecialValueText(QString::null);
-      _w->_N->setMinValue(_w->_N->minValue() + 1);
+      _w->_N->setMinimum(_w->_N->minimum() + 1);
     }
   }
 }

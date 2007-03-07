@@ -25,7 +25,6 @@
 #include <QMouseEvent>
 
 // include files for KDE
-#include "ksdebug.h"
 #include <k3listview.h>
 #include <kmessagebox.h>
 #include <kmultipledrag.h>
@@ -93,7 +92,7 @@ Q3DragObject* KstViewListView::dragObject() {
           entries << dataObject->tagName();
           
           QByteArray data;
-          QDataStream ds(data, QIODevice::WriteOnly);
+          QDataStream ds(&data, QIODevice::WriteOnly);
           ds << entries;
           storedDrag->setEncodedData(data);
         }
@@ -233,7 +232,7 @@ void KstViewObjectItem::dropped(QDropEvent *e) {
         if (plot || legend) {
           KstBaseCurveList curves = kstObjectSubList<KstDataObject, KstBaseCurve>(KST::dataObjectList);
           QByteArray data = e->encodedData("application/x-kst-curve-list");
-          QDataStream ds(data, QIODevice::ReadOnly);
+          QDataStream ds(&data, QIODevice::ReadOnly);
           QStringList entries;
           bool added = false;
           
@@ -397,7 +396,7 @@ void KstViewObjectItem::openChildren(bool open) {
 // ==============================================
 
 KstViewManagerI::KstViewManagerI(KstDoc *in_doc, QWidget* parent, Qt::WindowFlags fl)
-: KstViewManager(parent, fl) {
+: QWidget(parent, fl) {
   doc = in_doc;
   delete ViewView;
   

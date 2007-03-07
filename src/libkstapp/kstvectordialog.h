@@ -21,8 +21,9 @@
 #include "kstdatadialog.h"
 #include "kst_export.h"
 
+#include "ui_kstvectordialog4.h"
+
 class KCompletion;
-class VectorDialogWidget;
 
 class KST_EXPORT KstVectorDialogI : public KstDataDialog {
   Q_OBJECT
@@ -93,7 +94,7 @@ class KST_EXPORT KstVectorDialogI : public KstDataDialog {
     void fillFieldsForNew();
     void cleanup();
     static const QString& defaultTag;
-    VectorDialogWidget *_w;
+    Ui::KstVectorDialog *_w;
 };
 
 #endif

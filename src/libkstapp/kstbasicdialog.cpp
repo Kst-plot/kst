@@ -39,8 +39,6 @@
 #include "kstdefaultnames.h"
 #include "kstdataobjectcollection.h"
 
-#include "ui_kstbasicdialog4.h"
-
 const QString& KstBasicDialogI::defaultTag = KGlobal::staticQString("<Auto Name>");
 
 QPointer<KstBasicDialogI> KstBasicDialogI::_inst;
@@ -56,7 +54,9 @@ KstBasicDialogI *KstBasicDialogI::globalInstance() {
 KstBasicDialogI::KstBasicDialogI(QWidget* parent, Qt::WindowFlags fl)
 : KstDataDialog(parent, fl) {
   setMultiple(false);
-  _w = new BasicDialogWidget(_contents);
+
+  _w = new Ui::KstBasicDialog;
+  _w->setupUi(_contents);
 
   _pluginName = QString::null;
   _grid = 0L;
@@ -64,6 +64,7 @@ KstBasicDialogI::KstBasicDialogI(QWidget* parent, Qt::WindowFlags fl)
 
 
 KstBasicDialogI::~KstBasicDialogI() {
+  delete _w;
 }
 
 void KstBasicDialogI::init() {

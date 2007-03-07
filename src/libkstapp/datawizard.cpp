@@ -550,7 +550,7 @@ void DataWizard::vectorSubset(const QString& filter) {
   Q3ListViewItem *after = 0L;
   _vectors->clearSelection();
   _vectors->setSorting(3, true); // Qt 3.1 compat
-  QRegExp re(filter, true /* case insensitive */, true /* wildcard */);
+  QRegExp re(filter, Qt::CaseSensative, QRegExp::Wildcard);
   Q3ListViewItemIterator it(_vectors);
   while (it.current()) {
     Q3ListViewItem *i = it.current();

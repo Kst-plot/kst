@@ -2,8 +2,8 @@
   <author></author>
   <comment></comment>
   <exportmacro></exportmacro>
-  <class>VectorDialogWidget</class>
-  <widget class="QWidget" name="VectorDialogWidget" >
+  <class>KstVectorDialog</class>
+  <widget class="QWidget" name="KstVectorDialog" >
     <property name="geometry" >
       <rect>
         <x>0</x>

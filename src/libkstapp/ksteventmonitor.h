@@ -21,7 +21,7 @@
 #include "kstdatadialog.h"
 #include "ksteventmonitorentry.h"
 
-class EventMonitorWidget;
+#include "ui_ksteventmonitor4.h"
 
 class KstEventMonitorI : public KstDataDialog {
   Q_OBJECT
@@ -72,7 +72,7 @@ class KstEventMonitorI : public KstDataDialog {
   private:
     void fillFieldsForEdit();
     void fillFieldsForNew();
-    EventMonitorWidget *_w;
+    Ui::KstEventMonitor *_w;
 };
 
 

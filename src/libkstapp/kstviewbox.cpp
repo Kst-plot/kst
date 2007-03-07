@@ -268,11 +268,11 @@ QMap<QString, QVariant > KstViewBox::widgetHints(const QString& propertyName) co
   if (propertyName == "xRound") {
     map.insert(QString("_kst_widgetType"), QString("QSpinBox"));
     map.insert(QString("_kst_label"), i18n("X Roundness"));
-    map.insert(QString("minValue"), 0);   
+    map.insert(QString("minimum"), 0);   
   } else if (propertyName == "yRound") {
     map.insert(QString("_kst_widgetType"), QString("QSpinBox"));
     map.insert(QString("_kst_label"), i18n("Y Roundness"));
-    map.insert(QString("minValue"), 0);  
+    map.insert(QString("minimum"), 0);  
   } else if (propertyName == "foregroundColor") {
     map.insert(QString("_kst_widgetType"), QString("KColorButton"));
     map.insert(QString("_kst_label"), i18n("Fill Color"));
@@ -286,7 +286,7 @@ QMap<QString, QVariant > KstViewBox::widgetHints(const QString& propertyName) co
   } else if (propertyName == "borderWidth") {
     map.insert(QString("_kst_widgetType"), QString("QSpinBox"));
     map.insert(QString("_kst_label"), i18n("Border width"));
-    map.insert(QString("minValue"), 0);
+    map.insert(QString("minimum"), 0);
   }
   return map;
 }

@@ -73,7 +73,7 @@ KstDebugDialogI::~KstDebugDialogI() {
 }
 
 
-void DebugDialog::init() {
+void KstDebugDialogI::init() {
   _dataSources->setAllColumnsShowFocus(true);
 }
 

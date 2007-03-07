@@ -16,6 +16,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "kstcsddialog.h"
+
 // include files for Qt
 #include <q3buttongroup.h>
 #include <qcheckbox.h>
@@ -26,7 +28,6 @@
 
 // include files for KDE
 #include <kcombobox.h>
-#include "ksdebug.h"
 #include <knuminput.h>
 #include <kmessagebox.h>
 
@@ -37,14 +38,11 @@
 #include "curveplacementwidget.h"
 #include "editmultiplewidget.h"
 #include "kst2dplot.h"
-#include "kstcsddialog.h"
 #include "kstdataobjectcollection.h"
 #include "kstuinames.h"
 #include "kstvcurve.h"
 #include "kstviewwindow.h"
 #include "vectorselector.h"
-
-#include "ui_kstcsddialog4.h"
 
 const QString& KstCsdDialogI::defaultTag = KGlobal::staticQString("<Auto Name>");
 
@@ -60,7 +58,10 @@ KstCsdDialogI *KstCsdDialogI::globalInstance() {
 
 KstCsdDialogI::KstCsdDialogI(QWidget* parent, Qt::WindowFlags fl)
 : KstDataDialog(parent, fl) {
-  _w = new CSDDialogWidget(_contents);
+
+  _w = new Ui::KstCsdDialog;
+  _w->setupUi(_contents);
+
   setMultiple(true);
   connect(_w->_vector, SIGNAL(newVectorCreated(const QString&)), this, SIGNAL(modified()));
  
@@ -72,6 +73,7 @@ KstCsdDialogI::KstCsdDialogI(QWidget* parent, Qt::WindowFlags fl)
 
 
 KstCsdDialogI::~KstCsdDialogI() {
+  delete _w;
 }
 
 
@@ -97,11 +99,11 @@ void KstCsdDialogI::fillFieldsForEdit() {
   _w->_kstFFTOptions->VectorUnits->setText(cp->vectorUnits());
   _w->_kstFFTOptions->RateUnits->setText(cp->rateUnits());
   _w->_kstFFTOptions->Apodize->setChecked(cp->apodize());
-  _w->_kstFFTOptions->ApodizeFxn->setCurrentItem(cp->apodizeFxn());
+  _w->_kstFFTOptions->ApodizeFxn->setCurrentIndex(cp->apodizeFxn());
   _w->_kstFFTOptions->Sigma->setValue(cp->gaussianSigma());
   _w->_kstFFTOptions->RemoveMean->setChecked(cp->removeMean());
   _w->_kstFFTOptions->Interleaved->setChecked(cp->average());
-  _w->_kstFFTOptions->Output->setCurrentItem(cp->output());
+  _w->_kstFFTOptions->Output->setCurrentIndex(cp->output());
   _w->_windowSize->setValue(cp->windowSize());
   _w->_kstFFTOptions->synch();
 
@@ -165,7 +167,7 @@ bool KstCsdDialogI::newObject() {
                 << "a non existant vector...." << endl;
   }
  
-  ApodizeFunction apodizeFxn = ApodizeFunction(_w->_kstFFTOptions->ApodizeFxn->currentItem());
+  ApodizeFunction apodizeFxn = ApodizeFunction(_w->_kstFFTOptions->ApodizeFxn->currentIndex());
   bool apodize = _w->_kstFFTOptions->Apodize->isChecked();
   double gaussianSigma = _w->_kstFFTOptions->Sigma->value();
   bool removeMean = _w->_kstFFTOptions->RemoveMean->isChecked();
@@ -173,7 +175,7 @@ bool KstCsdDialogI::newObject() {
   int windowSize = _w->_windowSize->value();
   int length = _w->_kstFFTOptions->FFTLen->value();
   double freq = _w->_kstFFTOptions->SampRate->text().toDouble();
-  PSDType output = PSDType(_w->_kstFFTOptions->Output->currentItem());
+  PSDType output = PSDType(_w->_kstFFTOptions->Output->currentIndex());
   QString vectorUnits = _w->_kstFFTOptions->VectorUnits->text();
   QString rateUnits = _w->_kstFFTOptions->RateUnits->text();
   _w->_kstFFTOptions->synch();
@@ -277,7 +279,7 @@ bool KstCsdDialogI::editSingleObject(KstCSDPtr csPtr) {
   }
  
   if (_apodizeFxnDirty) {
-    csPtr->setApodizeFxn(ApodizeFunction(_w->_kstFFTOptions->ApodizeFxn->currentItem()));
+    csPtr->setApodizeFxn(ApodizeFunction(_w->_kstFFTOptions->ApodizeFxn->currentIndex()));
   }
  
   if (_gaussianSigmaDirty) {
@@ -306,7 +308,7 @@ bool KstCsdDialogI::editSingleObject(KstCSDPtr csPtr) {
   }
  
   if (_outputDirty) {
-    csPtr->setOutput(PSDType(_w->_kstFFTOptions->Output->currentItem()));
+    csPtr->setOutput(PSDType(_w->_kstFFTOptions->Output->currentIndex()));
   }
     
   csPtr->unlock();
@@ -317,15 +319,15 @@ bool KstCsdDialogI::editSingleObject(KstCSDPtr csPtr) {
 // returns true if succesful
 bool KstCsdDialogI::editObject() {
   // if the user selected no vector, treat it as non-dirty
-  _vectorDirty = _w->_vector->_vector->currentItem() != 0;
+  _vectorDirty = _w->_vector->_vector->currentIndex() != 0;
   _fFTLenDirty = _w->_kstFFTOptions->FFTLen->text() != " ";
   _sampRateDirty = !_w->_kstFFTOptions->SampRate->text().isEmpty();
   _vectorUnitsDirty = !_w->_kstFFTOptions->VectorUnits->text().isEmpty();
   _rateUnitsDirty = !_w->_kstFFTOptions->RateUnits->text().isEmpty();
   _windowSizeDirty = _w->_windowSize->text() != " ";
-  _apodizeFxnDirty = _w->_kstFFTOptions->ApodizeFxn->currentItem() != 0;
-  _gaussianSigmaDirty = _w->_kstFFTOptions->Sigma->value() != _w->_kstFFTOptions->Sigma->minValue();
-  _outputDirty =  _w->_kstFFTOptions->Output->currentItem() != 0;
+  _apodizeFxnDirty = _w->_kstFFTOptions->ApodizeFxn->currentIndex() != 0;
+  _gaussianSigmaDirty = _w->_kstFFTOptions->Sigma->value() != _w->_kstFFTOptions->Sigma->minimum();
+  _outputDirty =  _w->_kstFFTOptions->Output->currentIndex() != 0;
   
   KstCSDList csList = kstObjectSubList<KstDataObject,KstCSD>(KST::dataObjectList);
  
@@ -392,27 +394,27 @@ void KstCsdDialogI::populateEditMultiple() {
   _editMultipleWidget->_objectList->insertStringList(csList.tagNames());
 
   // also intermediate state for multiple edit
-  _w->_vector->_vector->insertItem("", 0);
-  _w->_vector->_vector->setCurrentItem(0);
+  _w->_vector->_vector->insertItem(0, "");
+  _w->_vector->_vector->setCurrentIndex(0);
   _w->_kstFFTOptions->Apodize->setNoChange();
-  _w->_kstFFTOptions->ApodizeFxn->insertItem("", 0);
-  _w->_kstFFTOptions->ApodizeFxn->setCurrentItem(0);
-  _w->_kstFFTOptions->Sigma->setMinValue(_w->_kstFFTOptions->Sigma->minValue() - 0.01);
+  _w->_kstFFTOptions->ApodizeFxn->insertItem(0, "");
+  _w->_kstFFTOptions->ApodizeFxn->setCurrentIndex(0);
+  _w->_kstFFTOptions->Sigma->setMinimum(_w->_kstFFTOptions->Sigma->minimum() - 0.01);
   _w->_kstFFTOptions->Sigma->setSpecialValueText(" ");
-  _w->_kstFFTOptions->Sigma->setValue(_w->_kstFFTOptions->Sigma->minValue());
+  _w->_kstFFTOptions->Sigma->setValue(_w->_kstFFTOptions->Sigma->minimum());
   _w->_kstFFTOptions->RemoveMean->setNoChange();
   _w->_kstFFTOptions->Interleaved->setNoChange();
   _w->_kstFFTOptions->SampRate->setText("");
   _w->_kstFFTOptions->VectorUnits->setText("");
   _w->_kstFFTOptions->RateUnits->setText("");
-  _w->_kstFFTOptions->FFTLen->setMinValue(_w->_kstFFTOptions->FFTLen->minValue() - 1);
+  _w->_kstFFTOptions->FFTLen->setMinimum(_w->_kstFFTOptions->FFTLen->minimum() - 1);
   _w->_kstFFTOptions->FFTLen->setSpecialValueText(" ");
-  _w->_kstFFTOptions->FFTLen->setValue(_w->_kstFFTOptions->FFTLen->minValue());
-  _w->_kstFFTOptions->Output->insertItem("", 0);
-  _w->_kstFFTOptions->Output->setCurrentItem(0);
-  _w->_windowSize->setMinValue(_w->_windowSize->minValue() - 1);
+  _w->_kstFFTOptions->FFTLen->setValue(_w->_kstFFTOptions->FFTLen->minimum());
+  _w->_kstFFTOptions->Output->insertItem(0, "");
+  _w->_kstFFTOptions->Output->setCurrentIndex(0);
+  _w->_windowSize->setMinimum(_w->_windowSize->minimum() - 1);
   _w->_windowSize->setSpecialValueText(" ");
-  _w->_windowSize->setValue(_w->_windowSize->minValue());
+  _w->_windowSize->setValue(_w->_windowSize->minimum());
  
   _tagName->setText("");
   _tagName->setEnabled(false);
@@ -435,9 +437,9 @@ void KstCsdDialogI::populateEditMultiple() {
 
 void KstCsdDialogI::cleanup() {
   if (_editMultipleMode) {
-     _w->_kstFFTOptions->FFTLen->setMinValue(_w->_kstFFTOptions->FFTLen->minValue() + 1);
+     _w->_kstFFTOptions->FFTLen->setMinimum(_w->_kstFFTOptions->FFTLen->minimum() + 1);
      _w->_kstFFTOptions->FFTLen->setSpecialValueText(QString::null);
-     _w->_kstFFTOptions->Sigma->setMinValue(_w->_kstFFTOptions->Sigma->minValue() + 0.01);
+     _w->_kstFFTOptions->Sigma->setMinimum(_w->_kstFFTOptions->Sigma->minimum() + 0.01);
      _w->_kstFFTOptions->Sigma->setSpecialValueText(QString::null);
      _w->_kstFFTOptions->ApodizeFxn->removeItem(0);
      _w->_kstFFTOptions->Output->removeItem(0);

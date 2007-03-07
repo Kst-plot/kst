@@ -50,8 +50,6 @@
 #include "stringselector.h"
 #include "vectorselector.h"
 
-#include "ui_kstplugindialog4.h"
-
 const QString& KstPluginDialogI::plugin_defaultTag = KGlobal::staticQString("<Auto Name>");
 
 QPointer<KstPluginDialogI> KstPluginDialogI::_inst;
@@ -66,7 +64,10 @@ KstPluginDialogI *KstPluginDialogI::globalInstance() {
 
 KstPluginDialogI::KstPluginDialogI(QWidget* parent, Qt::WindowFlags fl)
 : KstDataDialog(parent, fl) {
-  _w = new PluginDialogWidget(_contents);
+
+  _w = new Ui::KstPluginDialog;
+  _w->setupUi(_contents);
+
   setMultiple(false);
   connect(_w->PluginCombo, SIGNAL(activated(int)), this, SLOT(pluginChanged(int)));
   connect(_w->_pluginManager, SIGNAL(clicked()), this, SLOT(showPluginManager()));
@@ -83,7 +84,7 @@ KstPluginDialogI::~KstPluginDialogI() {
 
 void KstPluginDialogI::updatePluginList() {
   PluginCollection *pc = PluginCollection::self();
-  QString previous = _pluginList[_w->PluginCombo->currentItem()];
+  QString previous = _pluginList[_w->PluginCombo->currentIndex()];
   int newFocus = -1;
 
   const QMap<QString,Plugin::Data>& pluginMap = pc->pluginList();
@@ -97,31 +98,31 @@ void KstPluginDialogI::updatePluginList() {
   for (QMap<QString,Plugin::Data>::ConstIterator it = pluginMap.begin();
                                                   it != pluginMap.end();
                                                                    ++it) {
-    _pluginList += it.data()._name;
-    _w->PluginCombo->insertItem(i18n("%1 (v%2)").arg(it.data()._readableName).arg(it.data()._version));
-    if (it.data()._name == previous) {
+    _pluginList += it.value()._name;
+    _w->PluginCombo->addItem(i18n("%1 (v%2)").arg(it.value()._readableName).arg(it.value()._version));
+    if (it.value()._name == previous) {
       newFocus = cnt;
-      oldIEntries = cacheInputs(it.data()._inputs);
-      oldOEntries = cacheInputs(it.data()._outputs);
-      restoreEntry = it.data();
+      oldIEntries = cacheInputs(it.value()._inputs);
+      oldOEntries = cacheInputs(it.value()._outputs);
+      restoreEntry = it.value();
     }
     ++cnt;
   }
 
   if (newFocus != -1) {
-    _w->PluginCombo->setCurrentItem(newFocus);
-    pluginChanged(_w->PluginCombo->currentItem());
+    _w->PluginCombo->setCurrentIndex(newFocus);
+    pluginChanged(_w->PluginCombo->currentIndex());
     restoreInputs(restoreEntry._inputs, oldIEntries);
     restoreInputs(restoreEntry._outputs, oldOEntries);
   } else {
-    _w->PluginCombo->setCurrentItem(0);
+    _w->PluginCombo->setCurrentIndex(0);
     pluginChanged(0);
   }
 }
 
 
 void KstPluginDialogI::updateForm() {
-  KstSharedPtr<Plugin> plugin = PluginCollection::self()->plugin(_pluginList[_w->PluginCombo->currentItem()]);
+  KstSharedPtr<Plugin> plugin = PluginCollection::self()->plugin(_pluginList[_w->PluginCombo->currentIndex()]);
   if (plugin) {
     const Q3ValueList<Plugin::Data::IOValue>& itable = plugin->data()._inputs;
     for (Q3ValueList<Plugin::Data::IOValue>::ConstIterator it = itable.begin(); it != itable.end(); ++it) {
@@ -174,8 +175,8 @@ void KstPluginDialogI::fillFieldsForEdit() {
   updatePluginList();
 
   int i = _pluginList.indexOf(pluginObjectName);
-  _w->PluginCombo->setCurrentItem(i);
-  pluginChanged(_w->PluginCombo->currentItem());
+  _w->PluginCombo->setCurrentIndex(i);
+  pluginChanged(_w->PluginCombo->currentIndex());
 
   fillVectorScalarCombos(plug);
   _w->PluginCombo->setEnabled(usage < 3);
@@ -187,8 +188,8 @@ void KstPluginDialogI::fillFieldsForEdit() {
 void KstPluginDialogI::fillFieldsForNew() {
   updatePluginList();
   int i = _pluginList.indexOf(_pluginName);
-  _w->PluginCombo->setCurrentItem(i);
-  pluginChanged(_w->PluginCombo->currentItem());
+  _w->PluginCombo->setCurrentIndex(i);
+  pluginChanged(_w->PluginCombo->currentIndex());
   _tagName->setText(plugin_defaultTag);
 }
 
@@ -279,7 +280,7 @@ void KstPluginDialogI::fillVectorScalarCombos(KstSharedPtr<Plugin> plugin) {
     }
   } else { // invalid plugin
     PluginCollection *pc = PluginCollection::self();
-    QString cur = _pluginList[_w->PluginCombo->currentItem()];
+    QString cur = _pluginList[_w->PluginCombo->currentIndex()];
     Plugin::Data pdata = pc->pluginList()[pc->pluginNameList()[cur]];
     for (Q3ValueList<Plugin::Data::IOValue>::ConstIterator it = pdata._outputs.begin(); it != pdata._outputs.end(); ++it) {
       QObject *field = _w->_pluginInputOutputFrame->child((*it)._name.toLatin1(), "QLineEdit");
@@ -557,7 +558,7 @@ bool KstPluginDialogI::newObject() {
     return false;
   }
   KstCPluginPtr plugin;
-  int pitem = _w->PluginCombo->currentItem();
+  int pitem = _w->PluginCombo->currentIndex();
   if (pitem >= 0 && _w->PluginCombo->count() > 0) {
     KstSharedPtr<Plugin> pPtr = PluginCollection::self()->plugin(_pluginList[pitem]);
     if (pPtr) {
@@ -617,7 +618,7 @@ bool KstPluginDialogI::editObject() {
 
   pp->setTagName(KstObjectTag(_tagName->text(), KstObjectTag::globalTagContext));  // FIXME: tag context always global?
 
-  int pitem = _w->PluginCombo->currentItem();
+  int pitem = _w->PluginCombo->currentIndex();
   KstSharedPtr<Plugin> pPtr = PluginCollection::self()->plugin(_pluginList[pitem]);
 
   pp->inputVectors().clear();
@@ -712,7 +713,7 @@ void KstPluginDialogI::generateEntries(bool input, int& cnt, QWidget *parent, QG
         connect(w->_scalar, SIGNAL(activated(const QString&)), this, SLOT(updateScalarTooltip(const QString&)));
         connect(widget, SIGNAL(newScalarCreated()), this, SIGNAL(modified()));
         if (!(*it)._default.isEmpty()) {
-          w->_scalar->insertItem((*it)._default);
+          w->_scalar->addItem((*it)._default);
           w->_scalar->setCurrentText((*it)._default);
         }
         KstScalarPtr p = *KST::scalarList.findTag(w->_scalar->currentText());
@@ -728,7 +729,7 @@ void KstPluginDialogI::generateEntries(bool input, int& cnt, QWidget *parent, QG
         connect(w->_string, SIGNAL(activated(const QString&)), this, SLOT(updateStringTooltip(const QString&)));
         connect(widget, SIGNAL(newStringCreated()), this, SIGNAL(modified()));
         if (!(*it)._default.isEmpty()) {
-          w->_string->insertItem((*it)._default);
+          w->_string->addItem((*it)._default);
           w->_string->setCurrentText((*it)._default);
         }
         KstStringPtr p = *KST::stringList.findTag(w->_string->currentText());
@@ -844,7 +845,8 @@ void KstPluginDialogI::pluginChanged(int idx) {
 
 
 void KstPluginDialogI::showPluginManager() {
-  PluginManager *pm = new PluginManager(this, "Plugin Manager");
+  PluginManager *pm = new PluginManager(this);
+  pm->setObjectName("Plugin Manager");
   pm->exec();
   delete pm;
   updatePluginList();
@@ -869,7 +871,7 @@ void KstPluginDialogI::updateStringTooltip(const QString& n) {
   QWidget *w = const_cast<QWidget*>(static_cast<const QWidget*>(sender()));
   if (s) {
     s->readLock();
-    w->setToolTip(QString::number(s->value()));
+    w->setToolTip(s->value());
     s->unlock();
   } else {
     w->setToolTip(QString::null);

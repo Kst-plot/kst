@@ -45,7 +45,7 @@ class KstDataAction : public QAction {
     void addedTo(QWidget *actionWidget, QWidget *container);
 };
 
-class KstDataManagerI : public QDialog {
+class KstDataManagerI : public QDialog, public Ui::KstDataManager {
   Q_OBJECT
   public:
     KstDataManagerI(KstDoc *doc, QWidget* parent = 0, Qt::WindowFlags fl = 0);

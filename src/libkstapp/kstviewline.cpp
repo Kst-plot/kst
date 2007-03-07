@@ -395,7 +395,7 @@ QMap<QString, QVariant> KstViewLine::widgetHints(const QString& propertyName) co
   if (propertyName == "width") {
     map.insert(QString("_kst_widgetType"), QString("QSpinBox"));
     map.insert(QString("_kst_label"), i18n("Line width"));  
-    map.insert(QString("minValue"), 0);
+    map.insert(QString("minimum"), 0);
   } else if (propertyName == "lineStyle") {
     map.insert(QString("_kst_widgetType"), QString("PenStyleWidget"));
     map.insert(QString("_kst_label"), i18n("Line style"));  

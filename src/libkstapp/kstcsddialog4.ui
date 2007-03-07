@@ -2,8 +2,8 @@
   <author></author>
   <comment></comment>
   <exportmacro></exportmacro>
-  <class>CSDDialogWidget</class>
-  <widget class="QWidget" name="CSDDialogWidget" >
+  <class>KstCsdDialog</class>
+  <widget class="QWidget" name="KstCsdDialog" >
     <property name="geometry" >
       <rect>
         <x>0</x>
@@ -180,7 +180,7 @@
     </image>
   </images>
   <includes>
-    <include location="local" >fftoptionswidget.h</include>
+    <include location="local" >kstfftoptions.h</include>
     <include location="local" >curveplacementwidget.h</include>
     <include location="local" >colorpalettewidget.h</include>
     <include location="local" >vectorselector.h</include>

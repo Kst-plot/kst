@@ -23,7 +23,7 @@
 #include "kstimage.h"
 #include "kst_export.h"
 
-class CSDDialogWidget;
+#include "ui_kstcsddialog4.h"
 
 class KstCsdDialogI : public KstDataDialog {
   Q_OBJECT
@@ -73,7 +73,7 @@ class KstCsdDialogI : public KstDataDialog {
     void fillFieldsForEdit();
     void fillFieldsForNew();
     void cleanup();
-    CSDDialogWidget *_w;
+    Ui::KstCsdDialog *_w;
 };
 
 #endif

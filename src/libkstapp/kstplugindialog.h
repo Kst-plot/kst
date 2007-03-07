@@ -26,7 +26,7 @@
 #include <QGridLayout>
 #include <Q3ValueList>
 
-class PluginDialogWidget;
+#include "ui_kstplugindialog4.h"
 
 class KST_EXPORT KstPluginDialogI : public KstDataDialog {
   Q_OBJECT
@@ -78,7 +78,7 @@ class KST_EXPORT KstPluginDialogI : public KstDataDialog {
   protected:
     void fillFieldsForEdit();
     void fillFieldsForNew();
-    PluginDialogWidget *_w;
+    Ui::KstPluginDialog *_w;
 };
 
 #endif

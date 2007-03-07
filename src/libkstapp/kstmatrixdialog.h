@@ -23,8 +23,9 @@
 #include "kstsmatrix.h"
 #include "kst_export.h"
 
+#include "ui_kstmatrixdialog4.h"
+
 class KCompletion;
-class MatrixDialogWidget;
 
 class KST_EXPORT KstMatrixDialogI : public KstDataDialog {
   Q_OBJECT
@@ -119,7 +120,7 @@ class KST_EXPORT KstMatrixDialogI : public KstDataDialog {
     void fillFieldsForEdit();
     void fillFieldsForNew();
     void cleanup();
-    MatrixDialogWidget *_w;
+    Ui::KstMatrixDialog *_w;
 };
 
 #endif
