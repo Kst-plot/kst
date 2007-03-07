@@ -31,12 +31,11 @@
 #include <kmessagebox.h>
 
 // application specific inclues
-#include "fftoptionswidget.h"
+#include "kstfftoptions.h"
 #include "colorpalettewidget.h"
 #include "curveappearancewidget.h"
 #include "curveplacementwidget.h"
 #include "editmultiplewidget.h"
-#include "csddialogwidget.h"
 #include "kst2dplot.h"
 #include "kstcsddialog.h"
 #include "kstdataobjectcollection.h"

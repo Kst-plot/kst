@@ -54,22 +54,18 @@ void ViewLegendWidget::init() {
   connect(_down, SIGNAL(clicked()),
           DisplayedCurveList, SLOT(down()));
 
-  _up->setPixmap(BarIcon("up"));
+  _up->setIcon(BarIcon("up"));
   _up->setEnabled(false);
-  _down->setPixmap(BarIcon("down"));
+  _down->setIcon(BarIcon("down"));
   _down->setEnabled(false);
-  _add->setPixmap(BarIcon("forward"));
+  _add->setIcon(BarIcon("forward"));
   _add->setEnabled(false);
-  _remove->setPixmap(BarIcon("back"));
+  _remove->setIcon(BarIcon("back"));
   _remove->setEnabled(false);
-  QToolTip::add
-    (_up, i18n("Shortcut: Alt+Up"));
-  QToolTip::add
-    (_down, i18n("Shortcut: Alt+Down"));
-  QToolTip::add
-    (_add, i18n("Shortcut: Alt+s"));
-  QToolTip::add
-    (_remove, i18n("Shortcut: Alt+r"));
+  _up->setToolTip(i18n("Shortcut: Alt+Up"));
+  _down->setToolTip(i18n("Shortcut: Alt+Down"));
+  _add->setToolTip(i18n("Shortcut: Alt+s"));
+  _remove->setToolTip(i18n("Shortcut: Alt+r"));
 
   _thisLegend->setChecked(true);
 

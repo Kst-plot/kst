@@ -25,7 +25,6 @@
 
 #include <kiconloader.h>
 
-#include "qaccel.h"
 #include "kstsettings.h"
 #include "kstcolorsequence.h"
 #include "kstvcurve.h"
@@ -33,28 +32,28 @@
 #include "kstpsd.h"
 #include "kstrvector.h"
 #include "kstdataobjectcollection.h"
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <kmessagebox.h>
 #include <knuminput.h>
 #include <kiconloader.h>
 #include <qregexp.h>
 #include <q3listview.h>
-#include <qheader.h>
+#include <qheaderview.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <math.h>
 #include <defaultprimitivenames.h>
-#include "kstvectordefaults.h>
-#include "kstviewwindow.h>
-#include "kstcombobox.h>
-#include "kst2dplot.h>
-#include <qdeepcopy.h>
+#include "kstvectordefaults.h"
+#include "kstviewwindow.h"
+#include "kstcombobox.h"
+#include "kst2dplot.h"
+#include <q3deepcopy.h>
 #include <config.h>
-#include "psversion.h>
-#include "sysinfo.h>
-#include "vectorselector.h>
-#include "fftoptionswidget.h>
-#include "datarangewidget.h>
+#include "psversion.h"
+#include "sysinfo.h"
+#include "vectorselector.h"
+#include "kstfftoptions.h"
+#include "kstdatarange.h"
 #include <kurlcompletion.h>
 #include <kdebug.h>
 #include <vectorlistview.h>
@@ -137,7 +136,7 @@ void DataWizard::init() {
   QString default_source = KST::vectorDefaults.dataSource();
   _url->setMode(KFile::File | KFile::Directory | KFile::ExistingOnly);
   setAppropriate(_pageFilters, false);
-  setIcon(BarIcon("kst_datawizard"));
+  setWindowIcon(BarIcon("kst_datawizard"));
 
   _kstDataRange->update();
   _kstFFTOptions->update();
@@ -165,7 +164,7 @@ void DataWizard::init() {
   _newFilter->setEnabled(false);
   _newFilter->hide(); // FIXME: implement this
   _url->setUrl(default_source);
-  _url->completionObject()->setDir(QDir::currentDirPath());
+  _url->completionObject()->setDir(QDir::currentPath());
   _url->setFocus();
 
   // x vector selection
@@ -178,28 +177,24 @@ void DataWizard::init() {
   _xVectorExisting->_newVector->hide();
   _xVectorExisting->_editVector->hide();
 
-  _up->setPixmap(BarIcon("up"));
-  _up->setAccel(Qt::ALT+Qt::Key_Up);
+  _up->setIcon(BarIcon("up"));
+  _up->setShortcut(Qt::ALT+Qt::Key_Up);
 
-  _down->setPixmap(BarIcon("down"));
-  _down->setAccel(Qt::ALT+Qt::Key_Down);
+  _down->setIcon(BarIcon("down"));
+  _down->setShortcut(Qt::ALT+Qt::Key_Down);
 
-  _add->setPixmap(BarIcon("forward"));
-  _add->setAccel(Qt::ALT+Qt::Key_S);
+  _add->setIcon(BarIcon("forward"));
+  _add->setShortcut(Qt::ALT+Qt::Key_S);
 
-  _remove->setPixmap(BarIcon("back"));
-  _remove->setAccel(Qt::ALT+Qt::Key_R);
+  _remove->setIcon(BarIcon("back"));
+  _remove->setShortcut(Qt::ALT+Qt::Key_R);
 
   loadSettings();
 
-  QToolTip::add
-    (_up, i18n("Raise in plot order: Alt+Up"));
-  QToolTip::add
-    (_down, i18n("Lower in plot order: Alt+Down"));
-  QToolTip::add
-    (_add, i18n("Select: Alt+s"));
-  QToolTip::add
-    (_remove, i18n("Remove: Alt+r"));
+  _up->setToolTip(i18n("Raise in plot order: Alt+Up"));
+  _down->setToolTip(i18n("Lower in plot order: Alt+Down"));
+  _add->setToolTip(i18n("Select: Alt+s"));
+  _remove->setToolTip(i18n("Remove: Alt+r"));
 }
 
 
@@ -527,7 +522,7 @@ void DataWizard::updatePlotBox() {
     }
 
     for (Kst2DPlotList::ConstIterator i = plots.begin(); i != plots.end(); ++i) {
-      _existingPlotName->insertItem((*i)->tagName());
+      _existingPlotName->addItem((*i)->tagName());
     }
 
     bool havePlots = _existingPlotName->count() > 0;
@@ -972,9 +967,9 @@ void DataWizard::finished() {
                                  _kstFFTOptions->RemoveMean->isChecked(),
                                  _kstFFTOptions->VectorUnits->text(),
                                  _kstFFTOptions->RateUnits->text(),
-                                 ApodizeFunction(_kstFFTOptions->ApodizeFxn->currentItem()),
+                                 ApodizeFunction(_kstFFTOptions->ApodizeFxn->currentIndex()),
                                  _kstFFTOptions->Sigma->value(),
-                                 PSDType(_kstFFTOptions->Output->currentItem()));
+                                 PSDType(_kstFFTOptions->Output->currentIndex()));
         p->setInterpolateHoles(_kstFFTOptions->InterpolateHoles->isChecked());
         if (_radioButtonPlotPSD->isChecked() || colors.count() <= (unsigned long)indexColor) {
           KstVCurveList vcurves = kstObjectSubList<KstBaseCurve,KstVCurve>(plot->Curves);
@@ -1141,7 +1136,7 @@ void DataWizard::configureSource() {
   }
 
   assert(_configWidget);
-  KDialogBase *dlg = new KDialogBase(this, "Data Config Dialog", true, i18n("Configure Data Source"));
+  KDialog *dlg = new KDialog(this, "Data Config Dialog", true, i18n("Configure Data Source"));
   if (isNew) {
     connect(dlg, SIGNAL(okClicked()), _configWidget, SLOT(save()));
     connect(dlg, SIGNAL(applyClicked()), _configWidget, SLOT(save()));
@@ -1149,12 +1144,12 @@ void DataWizard::configureSource() {
     connect(dlg, SIGNAL(okClicked()), this, SLOT(markSourceAndSave()));
     connect(dlg, SIGNAL(applyClicked()), this, SLOT(markSourceAndSave()));
   }
-  _configWidget->reparent(dlg, QPoint(0, 0));
+  _configWidget->setParent(dlg);
   dlg->setMainWidget(_configWidget);
   static_cast<KstDataSourceConfigWidget*>((QWidget*)_configWidget)->setInstance(ds);
   static_cast<KstDataSourceConfigWidget*>((QWidget*)_configWidget)->load();
   dlg->exec();
-  _configWidget->reparent(0L, QPoint(0, 0));
+  _configWidget->setParent(0L);
   dlg->setMainWidget(0L);
   delete dlg;
   sourceChanged(_url->url());

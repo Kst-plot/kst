@@ -17,6 +17,7 @@
 
 #include "datasourcemetadatadialog.h"
 
+#include <QHashIterator>
 #include "kststring.h"
 
 #include <kst_export.h>
@@ -45,11 +46,10 @@ void DataSourceMetaDataDialog::setDataSource(KstDataSourcePtr dsp) {
   _value->clear();
   if (_dsp) {
     dsp->readLock();
-    for (Q3DictIterator<KstString> i(dsp->metaData())
-         ;
-         i.current();
-         ++i) {
-      _name->insertItem(i.currentKey());
+    QHash<QString, KstString*> meta = dsp->metaData();
+    QHash<QString, KstString*>::ConstIterator it = meta.begin();
+    for (; it != meta.end(); ++it) {
+      _name->addItem(it.key());
     }
     _source->setText(dsp->fileName());
     _plugin->setText(dsp->fileType());

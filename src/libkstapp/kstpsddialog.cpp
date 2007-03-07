@@ -30,7 +30,7 @@
 #include "ksdebug.h"
 
 // application specific inclues
-#include "fftoptionswidget.h"
+#include "kstfftoptions.h"
 #include "curveappearancewidget.h"
 #include "curveplacementwidget.h"
 #include "editmultiplewidget.h"

@@ -56,8 +56,8 @@ KstChangeFileDialogI::KstChangeFileDialogI(QWidget* parent,
   connect(_allFromFile, SIGNAL(clicked()), this, SLOT(allFromFile()));
   connect(_duplicateSelected, SIGNAL(toggled(bool)), _duplicateDependents, SLOT(setEnabled(bool)));
   
-  _dataFile->completionObject()->setDir(QDir::currentDirPath());
-  _clearFilter->setPixmap(BarIcon("locationbar_erase"));
+  _dataFile->completionObject()->setDir(QDir::currentPath());
+  _clearFilter->setIcon(BarIcon("locationbar_erase"));
   _duplicateDependents->setEnabled(_duplicateSelected->isChecked());
   _first = true;
 }
@@ -349,7 +349,7 @@ void KstChangeFileDialogI::allFromFile() {
 
 void KstChangeFileDialogI::updateSelection(const QString& txt) {
   ChangeFileCurveList->selectAll(false);
-  QRegExp re(txt, true, true);
+  QRegExp re(txt, Qt::CaseSensitive, QRegExp::Wildcard);
   for (uint i = 0; i < ChangeFileCurveList->count(); ++i) {
     ChangeFileCurveList->setSelected(i, re.exactMatch(ChangeFileCurveList->text(i)));
   }

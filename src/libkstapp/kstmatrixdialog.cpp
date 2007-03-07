@@ -57,7 +57,7 @@ KstMatrixDialogI::KstMatrixDialogI(QWidget* parent, Qt::WindowFlags fl)
   _w = new MatrixDialogWidget(_contents);
   setMultiple(true);
   _inTest = false;
-  _w->_fileName->completionObject()->setDir(QDir::currentDirPath());
+  _w->_fileName->completionObject()->setDir(QDir::currentPath());
 
   connect(_w->_readFromSource, SIGNAL(clicked()), this, SLOT(updateEnables()));
   connect(_w->_generateGradient, SIGNAL(clicked()), this, SLOT(updateEnables()));

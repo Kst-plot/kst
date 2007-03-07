@@ -53,13 +53,13 @@ KstCurveDifferentiateI::KstCurveDifferentiateI(QWidget* parent, Qt::WindowFlags 
   connect(availableListBox, SIGNAL(highlighted(int)), this, SLOT(updateButtons()));
   connect(selectedListBox, SIGNAL(highlighted(int)), this, SLOT(updateButtons()));
   
-  _up->setPixmap(BarIcon("up"));
+  _up->setIcon(BarIcon("up"));
   _up->setEnabled(false);
-  _down->setPixmap(BarIcon("down"));
+  _down->setIcon(BarIcon("down"));
   _down->setEnabled(false);
-  _add->setPixmap(BarIcon("forward"));
+  _add->setIcon(BarIcon("forward"));
   _add->setEnabled(false);
-  _remove->setPixmap(BarIcon("back"));
+  _remove->setIcon(BarIcon("back"));
   _remove->setEnabled(false);
 
   maxLineWidth->setMaxValue(KSTLINEWIDTH_MAX);

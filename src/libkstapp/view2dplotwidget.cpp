@@ -91,27 +91,23 @@ void View2DPlotWidget::init() {
   connect(_down, SIGNAL(clicked()),
           DisplayedCurveList, SLOT(down()));
 
-  _up->setPixmap(BarIcon("up"));
+  _up->setIcon(BarIcon("up"));
   _up->setEnabled(false);
-  _up->setAccel(Qt::ALT+Qt::Key_Up);
-  _down->setPixmap(BarIcon("down"));
+  _up->setShortcut(Qt::ALT+Qt::Key_Up);
+  _down->setIcon(BarIcon("down"));
   _down->setEnabled(false);
-  _down->setAccel(Qt::ALT+Qt::Key_Down);
-  _add->setPixmap(BarIcon("forward"));
+  _down->setShortcut(Qt::ALT+Qt::Key_Down);
+  _add->setIcon(BarIcon("forward"));
   _add->setEnabled(false);
-  _add->setAccel(Qt::ALT+Qt::Key_S);
-  _remove->setPixmap(BarIcon("back"));
+  _add->setShortcut(Qt::ALT+Qt::Key_S);
+  _remove->setIcon(BarIcon("back"));
   _remove->setEnabled(false);
-  _remove->setAccel(Qt::ALT+Qt::Key_R);
+  _remove->setShortcut(Qt::ALT+Qt::Key_R);
 
-  QToolTip::add
-    (_up, i18n("Shortcut: Alt+Up"));
-  QToolTip::add
-    (_down, i18n("Shortcut: Alt+Down"));
-  QToolTip::add
-    (_add, i18n("Shortcut: Alt+s"));
-  QToolTip::add
-    (_remove, i18n("Shortcut: Alt+r"));
+  _up->setToolTip(i18n("Shortcut: Alt+Up"));
+  _down->setToolTip(i18n("Shortcut: Alt+Down"));
+  _add->setToolTip(i18n("Shortcut: Alt+s"));
+  _remove->setToolTip(i18n("Shortcut: Alt+r"));
 
   FontComboBox->setEditable(false);
 

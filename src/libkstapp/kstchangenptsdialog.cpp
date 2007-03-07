@@ -24,7 +24,7 @@
 #include <kcombobox.h>
 #include <knuminput.h>
 
-#include "datarangewidget.h"
+#include "kstdatarange.h"
 #include "kstchangenptsdialog.h"
 #include "kstdatacollection.h"
 #include "kstrvector.h"

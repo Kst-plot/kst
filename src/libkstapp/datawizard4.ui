@@ -154,7 +154,7 @@
               </widget>
             </item>
             <item>
-              <widget class="QPushButton" name="_testURL" >
+              <widget class="QPushButton" name="_testUrl" >
                 <property name="text" >
                   <string>Connec&amp;t</string>
                 </property>
@@ -1397,10 +1397,10 @@
       <slot>updateVectorPageButtons()</slot>
     </connection>
     <connection>
-      <sender>_testURL</sender>
+      <sender>_testUrl</sender>
       <signal>clicked()</signal>
       <receiver>DataWizard</receiver>
-      <slot>testURL()</slot>
+      <slot>testUrl()</slot>
     </connection>
   </connections>
 </ui>

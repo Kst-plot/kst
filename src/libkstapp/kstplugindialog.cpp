@@ -719,8 +719,7 @@ void KstPluginDialogI::generateEntries(bool input, int& cnt, QWidget *parent, QG
         w->allowDirectEntry(true);
         if (p) {
           p->readLock();
-          QToolTip::remove(w->_scalar);
-          QToolTip::add(w->_scalar, QString::number(p->value()));
+          w->_scalar->setToolTip(QString::number(p->value()));
           p->unlock();
         }
       } else if (string) {
@@ -736,8 +735,7 @@ void KstPluginDialogI::generateEntries(bool input, int& cnt, QWidget *parent, QG
         w->allowDirectEntry(true);
         if (p) {
           p->readLock();
-          QToolTip::remove(w->_string);
-          QToolTip::add(w->_string, p->value());
+          w->_string->setToolTip(p->value());
           p->unlock();
         }
       } else {
@@ -858,11 +856,10 @@ void KstPluginDialogI::updateScalarTooltip(const QString& n) {
   QWidget *w = const_cast<QWidget*>(static_cast<const QWidget*>(sender()));
   if (s) {
     s->readLock();
-    QToolTip::remove(w);
-    QToolTip::add(w, QString::number(s->value()));
+    w->setToolTip(QString::number(s->value()));
     s->unlock();
   } else {
-    QToolTip::remove(w);
+    w->setToolTip(QString::null);
   }
 }
 
@@ -872,11 +869,10 @@ void KstPluginDialogI::updateStringTooltip(const QString& n) {
   QWidget *w = const_cast<QWidget*>(static_cast<const QWidget*>(sender()));
   if (s) {
     s->readLock();
-    QToolTip::remove(w);
-    QToolTip::add(w, s->value());
+    w->setToolTip(QString::number(s->value()));
     s->unlock();
   } else {
-    QToolTip::remove(w);
+    w->setToolTip(QString::null);
   }
 }
 

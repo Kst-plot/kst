@@ -29,7 +29,7 @@ KstDataNotifier::KstDataNotifier(QWidget *parent)
 : KLed(QColor(0, 255, 0), parent) {
   off();
   _animationStage = 0;
-  QToolTip::add(this, i18n("Indicates that new data has arrived."));
+  setToolTip(i18n("Indicates that new data has arrived."));
   show();
 }
 

@@ -123,7 +123,7 @@ void KstGraphFileDialogI::setUrl(const QString& url) {
   QString path;
 
   if (url.isEmpty()) {
-    path = QDir::currentDirPath();
+    path = QDir::currentPath();
   } else {
     path = url;
   }
@@ -161,7 +161,7 @@ void KstGraphFileDialogI::loadProperties() {
 
   _url = cfg.readEntry("Location", "");
   if (_url.isEmpty()) {
-    _url = QDir::currentDirPath();
+    _url = QDir::currentPath();
   }
   _format = cfg.readEntry("Format", "PNG");
   _w = cfg.readNumEntry("XSize", 640);
@@ -211,7 +211,7 @@ void KstGraphFileDialogI::enableWidthHeight() {
 
 void KstGraphFileDialogI::updateDialog() {
   if (_url.isEmpty()) {
-    _url = QDir::currentDirPath();
+    _url = QDir::currentPath();
   }
   _saveLocation->setUrl(_url);
   _saveLocation->completionObject()->setDir(_url);

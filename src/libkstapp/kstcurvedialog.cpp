@@ -30,7 +30,6 @@
 
 // application specific includes
 #include "curveappearancewidget.h"
-#include "curvedialogwidget.h"
 #include "curveplacementwidget.h"
 #include "editmultiplewidget.h"
 #include "kst2dplot.h"

@@ -362,8 +362,7 @@ void KstFilterDialogI::generateEntries(bool input, int& cnt, QWidget *parent, QG
         w->allowDirectEntry(true);
         if (p) {
           p->readLock();
-          QToolTip::remove(w->_scalar);
-          QToolTip::add(w->_scalar, QString::number(p->value()));
+          w->_scalar->setToolTip(QString::number(p->value()));
           p->unlock();
         }
       } else if (string) {
@@ -379,8 +378,7 @@ void KstFilterDialogI::generateEntries(bool input, int& cnt, QWidget *parent, QG
         w->allowDirectEntry(true);
         if (p) {
           p->readLock();
-          QToolTip::remove(w->_string);
-          QToolTip::add(w->_string, p->value());
+          w->_string->setToolTip(p->value());
           p->unlock();
         }
       } else {

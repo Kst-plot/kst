@@ -1287,7 +1287,7 @@ bool KstApp::slotFileSaveAs() {
     QString folder;
 
     if (doc->lastFilePath().isEmpty()) {
-      folder = QDir::currentDirPath();
+      folder = QDir::currentPath();
     } else {
       folder = doc->lastFilePath();
     }

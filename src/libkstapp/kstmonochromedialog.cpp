@@ -48,10 +48,10 @@ KstMonochromeDialogI::KstMonochromeDialogI(QWidget* parent, Qt::WindowFlags fl)
   connect(availableListBox, SIGNAL(highlighted(int)), this, SLOT(updateButtons()));
   connect(selectedListBox, SIGNAL(highlighted(int)), this, SLOT(updateButtons()));
   
-  _up->setPixmap(BarIcon("up"));
-  _down->setPixmap(BarIcon("down"));
-  _add->setPixmap(BarIcon("forward"));
-  _remove->setPixmap(BarIcon("back"));
+  _up->setIcon(BarIcon("up"));
+  _down->setIcon(BarIcon("down"));
+  _add->setIcon(BarIcon("forward"));
+  _remove->setIcon(BarIcon("back"));
 
   maxLineWidth->setMaxValue(KSTLINESTYLE_MAXTYPE);
   maxLineWidth->setMinValue(1);

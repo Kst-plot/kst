@@ -33,7 +33,7 @@
 #include <kurlcompletion.h>
 #include <kurlrequester.h>
 
-#include "datarangewidget.h"
+#include "kstdatarange.h"
 #include "defaultprimitivenames.h"
 #include "editmultiplewidget.h"
 #include "kst.h"
@@ -64,7 +64,7 @@ KstVectorDialogI::KstVectorDialogI(QWidget* parent, Qt::WindowFlags fl)
   _w = new VectorDialogWidget(_contents);
   setMultiple(true);
   _inTest = false;
-  _w->FileName->completionObject()->setDir(QDir::currentDirPath());
+  _w->FileName->completionObject()->setDir(QDir::currentPath());
 
   _w->FileName->setMode(KFile::File | KFile::Directory | KFile::ExistingOnly);
   connect(_w->FileName, SIGNAL(textChanged(const QString&)), this, SLOT(updateCompletion()));

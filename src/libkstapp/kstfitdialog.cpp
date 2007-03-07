@@ -310,7 +310,7 @@ void KstFitDialogI::generateEntries(bool input, int& cnt, QWidget *parent, QGrid
         KstScalarPtr p = *KST::scalarList.findTag(w->_scalar->currentText());
         w->allowDirectEntry( true );
         if (p) {
-          QToolTip::add(w->_scalar, QString::number(p->value()));
+          w->_scalar->setToolTip(QString::number(p->value()));
         }
       } else if (string) {
         StringSelector *w = new StringSelector(parent, (*it)._name.toLatin1());
@@ -324,7 +324,7 @@ void KstFitDialogI::generateEntries(bool input, int& cnt, QWidget *parent, QGrid
         KstStringPtr p = *KST::stringList.findTag(w->_string->currentText());
         w->allowDirectEntry( true );
         if (p) {
-          QToolTip::add(w->_string, p->value());
+          w->_string->setToolTip(p->value());
         }
       } else {
         if (fixed) {
