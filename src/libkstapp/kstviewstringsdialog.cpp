@@ -25,7 +25,7 @@
 #include "kstviewstringsdialog.h"
 
 KstViewStringsDialogI::KstViewStringsDialogI(QWidget* parent, Qt::WindowFlags fl)
-: KstViewStringsDialog(parent, fl) {
+: QDialog(parent, fl) {
   listViewStrings = new KstStringListView(this, &KST::stringList);
   listViewStrings->setShowSortIndicator(false);
   listViewStrings->setSelectionMode(Q3ListView::NoSelection);

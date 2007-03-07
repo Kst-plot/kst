@@ -32,7 +32,7 @@
 
 class QComboBox;
 
-class KST_EXPORT KstEditViewObjectDialogI : public QDialog {
+class KST_EXPORT KstEditViewObjectDialogI : public QDialog, public Ui::KstEditViewObjectDialog {
   Q_OBJECT
   public:
     KstEditViewObjectDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );

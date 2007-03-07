@@ -37,6 +37,7 @@
 #include "scalarselector.h"
 #include "vectorselector.h"
 
+#include "ui_ksteventmonitor4.h"
 
 QPointer<KstEventMonitorI> KstEventMonitorI::_inst;
 

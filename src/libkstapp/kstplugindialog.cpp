@@ -50,6 +50,8 @@
 #include "stringselector.h"
 #include "vectorselector.h"
 
+#include "ui_kstplugindialog4.h"
+
 const QString& KstPluginDialogI::plugin_defaultTag = KGlobal::staticQString("<Auto Name>");
 
 QPointer<KstPluginDialogI> KstPluginDialogI::_inst;

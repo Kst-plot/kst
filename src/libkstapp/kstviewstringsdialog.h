@@ -25,7 +25,7 @@
 #include <k3listviewsearchline.h>
 #include "kststringlistview.h"
 
-class KstViewStringsDialogI : public QDialog {
+class KstViewStringsDialogI : public QDialog, public Ui::KstViewStringsDialog {
   Q_OBJECT
   public:
     KstViewStringsDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );

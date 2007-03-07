@@ -23,7 +23,7 @@
 
 #include "ui_kstchangenptsdialog4.h"
 
-class KstChangeNptsDialogI : public QDialog {
+class KstChangeNptsDialogI : public QDialog, public Ui::KstChangeNptsDialog {
     Q_OBJECT
 public:
     KstChangeNptsDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );

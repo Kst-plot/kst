@@ -24,7 +24,7 @@
 
 #include "kstmatrixtable.h"
 
-class KstViewMatricesDialogI : public QDialog {
+class KstViewMatricesDialogI : public QDialog, public Ui::KstViewMatricesDialog {
   Q_OBJECT
   public:
     KstViewMatricesDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );

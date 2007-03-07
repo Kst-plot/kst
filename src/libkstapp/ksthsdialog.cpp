@@ -43,6 +43,8 @@
 #include "kstviewwindow.h"
 #include "vectorselector.h"
 
+#include "ui_ksthsdialog4.h"
+
 const QString& KstHsDialogI::defaultTag = KGlobal::staticQString("<Auto Name>");
 
 QPointer<KstHsDialogI> KstHsDialogI::_inst;

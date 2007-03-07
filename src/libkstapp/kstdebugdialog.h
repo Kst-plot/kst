@@ -23,7 +23,7 @@
 
 class KstLogWidget;
 
-class KstDebugDialogI : public QDialog {
+class KstDebugDialogI : public QDialog, public Ui::KstDebugDialog {
   Q_OBJECT
   public:
     KstDebugDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0);

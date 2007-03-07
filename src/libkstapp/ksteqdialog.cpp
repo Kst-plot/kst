@@ -45,6 +45,8 @@
 #include "scalarselector.h"
 #include "vectorselector.h"
 
+#include "ui_ksteqdialog4.h"
+
 const QString& KstEqDialogI::defaultTag = KGlobal::staticQString("<Auto Name>");
 
 QPointer<KstEqDialogI> KstEqDialogI::_inst;

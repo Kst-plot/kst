@@ -22,7 +22,7 @@
 
 #include "ui_kstgraphfiledialog4.h"
 
-class KstGraphFileDialogI : public QDialog {
+class KstGraphFileDialogI : public QDialog, public Ui::KstGraphFileDialog {
   Q_OBJECT
   public:
     KstGraphFileDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );

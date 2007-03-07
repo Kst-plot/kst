@@ -44,7 +44,7 @@
 #include <stdio.h>
 
 KstEditViewObjectDialogI::KstEditViewObjectDialogI(QWidget* parent, Qt::WindowFlags fl) 
-: KstEditViewObjectDialog(parent, fl) {
+: QDialog(parent, fl) {
   connect(_cancel, SIGNAL(clicked()), this, SLOT(close()));
   connect(_apply, SIGNAL(clicked()), this, SLOT(applyClicked()));
   connect(_OK, SIGNAL(clicked()), this, SLOT(okClicked()));

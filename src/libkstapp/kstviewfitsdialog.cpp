@@ -34,7 +34,7 @@ KstViewFitsDialogI::KstViewFitsDialogI(QWidget* parent,
                                              const char* name,
                                              bool modal,
                                              WindowFlags fl) 
-: KstViewFitsDialog(parent, fl) {
+: QDialog(parent, fl) {
 
   tableFits = new KstFitTable(this, "tableFits");
   tableFits->setNumRows(0);

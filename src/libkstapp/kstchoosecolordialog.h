@@ -26,7 +26,7 @@
 
 #include <kcolorcombo.h>
 
-class KstChooseColorDialogI : public QDialog {
+class KstChooseColorDialogI : public QDialog, public Ui::KstChooseColorDialog {
   Q_OBJECT
   public:
     KstChooseColorDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );

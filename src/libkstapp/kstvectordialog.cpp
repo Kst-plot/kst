@@ -44,8 +44,8 @@
 #include "kstvectordialog.h"
 #include "kstdefaultnames.h"
 #include "kstcombobox.h"
-#include "vectordialogwidget.h"
 
+#include "ui_kstvectordialog4.h"
 
 QPointer<KstVectorDialogI> KstVectorDialogI::_inst = 0L;
 

@@ -26,7 +26,7 @@
 #include <QGridLayout>
 #include <Q3ValueList>
 
-class KstFilterDialogI : public KstPluginDialogI {
+class KstFilterDialogI : public KstPluginDialogI, public Ui::KstFilterDialog {
   Q_OBJECT
   public:
     KstFilterDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0);

@@ -24,7 +24,7 @@
 
 #include "ui_kstviewfitsdialog4.h"
 
-class KstViewFitsDialogI : public QDialog {
+class KstViewFitsDialogI : public QDialog, public Ui::KstViewFitsDialog {
   Q_OBJECT
   public:
     KstViewFitsDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );

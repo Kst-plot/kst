@@ -29,7 +29,7 @@
 #include "kstmonochromedialog.h"
 
 KstMonochromeDialogI::KstMonochromeDialogI(QWidget* parent, Qt::WindowFlags fl)
-: KstMonochromeDialog(parent, fl) {
+: QDialog(parent, fl) {
 
   availableListBox->clear();
   selectedListBox->clear();

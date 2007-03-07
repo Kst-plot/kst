@@ -44,6 +44,8 @@
 #include "psddialogwidget.h"
 #include "vectorselector.h"
 
+#include "ui_kstpsddialog4.h"
+
 const QString& KstPsdDialogI::defaultTag = KGlobal::staticQString("<Auto Name>");
 
 QPointer<KstPsdDialogI> KstPsdDialogI::_inst = 0L;

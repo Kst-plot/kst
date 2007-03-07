@@ -40,6 +40,8 @@
 #include <defaultprimitivenames.h>
 #include "vectorselector.h"
 
+#include "ui_kstmatrixdialog4.h"
+
 QPointer<KstMatrixDialogI> KstMatrixDialogI::_inst;
 
 KstMatrixDialogI *KstMatrixDialogI::globalInstance() {

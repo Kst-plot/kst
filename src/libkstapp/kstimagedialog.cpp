@@ -44,6 +44,8 @@
 #include "kstviewwindow.h"
 #include "matrixselector.h"
 
+#include "ui_kstimagedialog4.h"
+
 QPointer<KstImageDialogI> KstImageDialogI::_inst;
 
 KstImageDialogI *KstImageDialogI::globalInstance() {

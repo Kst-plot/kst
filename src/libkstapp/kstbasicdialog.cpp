@@ -39,6 +39,8 @@
 #include "kstdefaultnames.h"
 #include "kstdataobjectcollection.h"
 
+#include "ui_kstbasicdialog4.h"
+
 const QString& KstBasicDialogI::defaultTag = KGlobal::staticQString("<Auto Name>");
 
 QPointer<KstBasicDialogI> KstBasicDialogI::_inst;

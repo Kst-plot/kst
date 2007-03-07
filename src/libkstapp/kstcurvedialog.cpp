@@ -40,6 +40,8 @@
 #include "kstuinames.h"
 #include "vectorselector.h"
 
+#include "ui_kstcurvedialog4.h"
+
 const QString& KstCurveDialogI::defaultTag = KGlobal::staticQString("<Auto Name>");
 
 QPointer<KstCurveDialogI> KstCurveDialogI::_inst;

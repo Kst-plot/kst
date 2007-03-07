@@ -22,7 +22,7 @@
 
 #include "ui_kstmonochromedialog4.h"
 
-class KstMonochromeDialogI : public QDialog {
+class KstMonochromeDialogI : public QDialog, public Ui::KstMonochromeDialog {
   Q_OBJECT
   public:
     KstMonochromeDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );

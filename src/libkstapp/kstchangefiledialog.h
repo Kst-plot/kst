@@ -22,7 +22,7 @@
 
 #include "ui_kstchangefiledialog4.h"
 
-class KstChangeFileDialogI : public Ui::KstChangeFileDialog {
+class KstChangeFileDialogI : public QDialog, public Ui::KstChangeFileDialog {
   Q_OBJECT
   public:
     KstChangeFileDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );

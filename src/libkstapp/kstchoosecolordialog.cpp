@@ -34,7 +34,7 @@
 #include "kstrvector.h"
 
 KstChooseColorDialogI::KstChooseColorDialogI(QWidget* parent, Qt::WindowFlags fl)
-  : KstChooseColorDialog(parent, fl) {
+  : QDialog(parent, fl) {
 
     xVector->setChecked(true); 
     connect(Cancel, SIGNAL(clicked()), this, SLOT(reject()));  

@@ -23,7 +23,7 @@
 #include <QGridLayout>
 #include <Q3ValueList>
 
-class KstFitDialogI : public KstPluginDialogI {
+class KstFitDialogI : public KstPluginDialogI, public Ui::KstFitDialog {
   Q_OBJECT
   public:
     KstFitDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );

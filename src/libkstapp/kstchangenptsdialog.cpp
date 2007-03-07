@@ -30,7 +30,7 @@
 #include "kstrvector.h"
 
 KstChangeNptsDialogI::KstChangeNptsDialogI(QWidget* parent, Qt::WindowFlags fl)
-: KstChangeNptsDialog(parent, fl) {
+: QDialog(parent, fl) {
 
     connect(Cancel,     SIGNAL(clicked()),
             this, SLOT(reject()));

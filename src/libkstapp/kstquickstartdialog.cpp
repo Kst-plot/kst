@@ -30,7 +30,7 @@
 #include "kstsettings.h"
 
 KstQuickStartDialogI::KstQuickStartDialogI(QWidget *parent, Qt::WindowFlags fl)
-: KstQuickStartDialog(parent, fl) {
+: QDialog(parent, fl) {
 
   _fileName->completionObject()->setDir(QDir::currentDirPath());
   _app = KstApp::inst();

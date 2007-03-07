@@ -23,7 +23,7 @@
 
 class KstApp;
 
-class KstQuickStartDialogI : public QDialog {
+class KstQuickStartDialogI : public QDialog, public Ui::KstQuickStartDialog {
   Q_OBJECT
   public:
     KstQuickStartDialogI(QWidget *parent = 0, Qt::WindowFlags fl = 0 );

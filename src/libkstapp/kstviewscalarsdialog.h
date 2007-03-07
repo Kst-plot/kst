@@ -27,7 +27,7 @@
 //#include "kstscalartable.h"
 #include "kstscalarlistview.h"
 
-class KstViewScalarsDialogI : public QDialog {
+class KstViewScalarsDialogI : public QDialog, public Ui::KstViewScalarsDialog {
   Q_OBJECT
   public:
     KstViewScalarsDialogI(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
