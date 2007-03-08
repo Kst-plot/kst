@@ -304,8 +304,8 @@ void KstFitDialogI::generateEntries(bool input, int& cnt, QWidget *parent, QGrid
         connect(w->_scalar, SIGNAL(activated(const QString&)), this, SLOT(updateScalarTooltip(const QString&)));
         connect(widget, SIGNAL(newScalarCreated()), this, SIGNAL(modified()));
         if (!(*it)._default.isEmpty()) {
-          w->_scalar->insertItem((*it)._default);
-          w->_scalar->setCurrentText((*it)._default);
+          w->_scalar->addItem((*it)._default);
+          w->_scalar->setItemText(w->_scalar->currentIndex(), (*it)._default);
         }
         KstScalarPtr p = *KST::scalarList.findTag(w->_scalar->currentText());
         w->allowDirectEntry( true );
@@ -318,8 +318,8 @@ void KstFitDialogI::generateEntries(bool input, int& cnt, QWidget *parent, QGrid
         connect(w->_string, SIGNAL(activated(const QString&)), this, SLOT(updateStringTooltip(const QString&)));
         connect(widget, SIGNAL(newStringCreated()), this, SIGNAL(modified()));
         if (!(*it)._default.isEmpty()) {
-          w->_string->insertItem((*it)._default);
-          w->_string->setCurrentText((*it)._default);
+          w->_string->addItem((*it)._default);
+          w->_string->setItemText(w->_string->currentIndex(), (*it)._default);
         }
         KstStringPtr p = *KST::stringList.findTag(w->_string->currentText());
         w->allowDirectEntry( true );

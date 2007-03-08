@@ -391,19 +391,19 @@ bool KstCsdDialogI::editObject() {
 
 void KstCsdDialogI::populateEditMultiple() {
   KstCSDList csList = kstObjectSubList<KstDataObject,KstCSD>(KST::dataObjectList);
-  _editMultipleWidget->_objectList->insertStringList(csList.tagNames());
+  _editMultipleWidget->_objectList->addItems(csList.tagNames());
 
   // also intermediate state for multiple edit
   _w->_vector->_vector->insertItem(0, "");
   _w->_vector->_vector->setCurrentIndex(0);
-  _w->_kstFFTOptions->Apodize->setNoChange();
+  _w->_kstFFTOptions->Apodize->setCheckState(Qt::PartiallyChecked);
   _w->_kstFFTOptions->ApodizeFxn->insertItem(0, "");
   _w->_kstFFTOptions->ApodizeFxn->setCurrentIndex(0);
   _w->_kstFFTOptions->Sigma->setMinimum(_w->_kstFFTOptions->Sigma->minimum() - 0.01);
   _w->_kstFFTOptions->Sigma->setSpecialValueText(" ");
   _w->_kstFFTOptions->Sigma->setValue(_w->_kstFFTOptions->Sigma->minimum());
-  _w->_kstFFTOptions->RemoveMean->setNoChange();
-  _w->_kstFFTOptions->Interleaved->setNoChange();
+  _w->_kstFFTOptions->RemoveMean->setCheckState(Qt::PartiallyChecked);
+  _w->_kstFFTOptions->Interleaved->setCheckState(Qt::PartiallyChecked);
   _w->_kstFFTOptions->SampRate->setText("");
   _w->_kstFFTOptions->VectorUnits->setText("");
   _w->_kstFFTOptions->RateUnits->setText("");

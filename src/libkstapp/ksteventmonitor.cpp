@@ -333,24 +333,24 @@ bool KstEventMonitorI::editObject() {
 
 void KstEventMonitorI::populateEditMultiple() {
   KstEventMonitorEntryList emlist = kstObjectSubList<KstDataObject,EventMonitorEntry>(KST::dataObjectList);
-  _editMultipleWidget->_objectList->insertStringList(emlist.tagNames());
+  _editMultipleWidget->_objectList->addItems(emlist.tagNames());
 
   // also intermediate state for multiple edit
   _w->lineEditEquation->setText("");
   _w->lineEditDescription->setText("");
 
   _w->checkBoxDebug->setTristate(true);
-  _w->checkBoxDebug->setNoChange();
+  _w->checkBoxDebug->setCheckState(Qt::PartiallyChecked);
   _w->radioButtonLogNotice->setChecked(false);
   _w->radioButtonLogWarning->setChecked(false);
   _w->radioButtonLogError->setChecked(false);
 
   _w->checkBoxEMailNotify->setTristate(true);
-  _w->checkBoxEMailNotify->setNoChange();
+  _w->checkBoxEMailNotify->setCheckState(Qt::PartiallyChecked);
   _w->lineEditEMailRecipients->setText("");
 
   _w->checkBoxELOGNotify->setTristate(true);
-  _w->checkBoxELOGNotify->setNoChange();
+  _w->checkBoxELOGNotify->setCheckState(Qt::PartiallyChecked);
   
   _tagName->setText("");
   _tagName->setEnabled(false);
@@ -361,7 +361,7 @@ void KstEventMonitorI::populateEditMultiple() {
   _w->radioButtonLogError->setEnabled(true);
 
   _w->_useScript->setTristate(true);
-  _w->_useScript->setNoChange();
+  _w->_useScript->setCheckState(Qt::PartiallyChecked);
   _w->_useScript->setChecked(false);
   _w->_script->setEnabled(false);
   _w->_script->setText("");

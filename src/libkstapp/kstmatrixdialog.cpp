@@ -166,23 +166,23 @@ void KstMatrixDialogI::fillFieldsForRMatrixEdit() {
     if (it != KST::dataSourceList.end()) {
       tf = *it;
       tf->readLock();
-      _w->_field->insertStringList(tf->matrixList());
+      _w->_field->addItems(tf->matrixList());
       if (_fieldCompletion) {
         _fieldCompletion->insertItems(tf->matrixList());
       }
       tf->unlock();
     } else {
       QStringList list = KstDataSource::matrixListForSource(_w->_fileName->url());
-      _w->_field->insertStringList(list);
+      _w->_field->addItems(list);
       if (_fieldCompletion) {
-        _fieldCompletion->insertItems(list);
+        _fieldCompletion->addItems(list);
       }
     }
     KST::dataSourceList.lock().unlock();
   }
   _w->_field->setEnabled(_w->_field->count() > 0);
   _ok->setEnabled(_w->_field->isEnabled());
-  _w->_field->setCurrentText(rmp->field());
+  _w->_field->setItemText(_w->_field->currentIndex(), rmp->field());
 
   // fill in the other parameters
   _w->_fileName->setUrl(rmp->filename());
@@ -721,7 +721,7 @@ void KstMatrixDialogI::populateEditMultiple() {
 
 void KstMatrixDialogI::populateEditMultipleRMatrix() {
   KstRMatrixList mxList = kstObjectSubList<KstMatrix,KstRMatrix>(KST::matrixList);
-  _editMultipleWidget->_objectList->insertStringList(mxList.tagNames());
+  _editMultipleWidget->_objectList->addItems(mxList.tagNames());
 
   // intermediate state for multiple edit
   _w->_fileName->clear();
@@ -746,17 +746,17 @@ void KstMatrixDialogI::populateEditMultipleRMatrix() {
   _w->_skip->setValue(_w->_skip->minimum());
 
   _w->_doSkip->setTristate(true);
-  _w->_doSkip->setNoChange();
+  _w->_doSkip->setCheckState(Qt::PartiallyChecked);
   _w->_doAve->setTristate(true);
-  _w->_doAve->setNoChange();
+  _w->_doAve->setCheckState(Qt::PartiallyChecked);
   _w->_xStartCountFromEnd->setTristate(true);
-  _w->_xStartCountFromEnd->setNoChange();
+  _w->_xStartCountFromEnd->setCheckState(Qt::PartiallyChecked);
   _w->_yStartCountFromEnd->setTristate(true);
-  _w->_yStartCountFromEnd->setNoChange();
+  _w->_yStartCountFromEnd->setCheckState(Qt::PartiallyChecked);
   _w->_xNumStepsReadToEnd->setTristate(true);
-  _w->_xNumStepsReadToEnd->setNoChange();
+  _w->_xNumStepsReadToEnd->setCheckState(Qt::PartiallyChecked);
   _w->_yNumStepsReadToEnd->setTristate(true);
-  _w->_yNumStepsReadToEnd->setNoChange();
+  _w->_yNumStepsReadToEnd->setCheckState(Qt::PartiallyChecked);
   _w->_xStart->setEnabled(true);
   _w->_xNumSteps->setEnabled(true);
   _w->_yStart->setEnabled(true);
@@ -766,7 +766,7 @@ void KstMatrixDialogI::populateEditMultipleRMatrix() {
 
 void KstMatrixDialogI::populateEditMultipleSMatrix() {
   KstSMatrixList mxList = kstObjectSubList<KstMatrix,KstSMatrix>(KST::matrixList);
-  _editMultipleWidget->_objectList->insertStringList(mxList.tagNames());
+  _editMultipleWidget->_objectList->addItems(mxList.tagNames());
 
   // intermediate state for multiple edit
   _w->_gradientZAtMin->setText("");
@@ -856,13 +856,13 @@ void KstMatrixDialogI::updateCompletion() {
 
   _fieldCompletion = _w->_field->completionObject();
 
-  _w->_field->insertStringList(list);
+  _w->_field->addItems(list);
   if (_fieldCompletion) {
     _fieldCompletion->clear();
     _fieldCompletion->insertItems(list);
   }
-  if (!current_text.isEmpty() && (list.contains(current_text) || _w->_field->editable())) {
-    _w->_field->setCurrentText(current_text);
+  if (!current_text.isEmpty() && (list.contains(current_text) || _w->_field->isEditable())) {
+    _w->_field->setItemText(_w->_field->currentIndex(), current_text);
   }
   _ok->setEnabled(_w->_field->isEnabled() || _editMultipleMode);
 }

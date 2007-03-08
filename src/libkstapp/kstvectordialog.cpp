@@ -174,13 +174,13 @@ void KstVectorDialogI::updateCompletion() {
 
   _fieldCompletion = _w->Field->completionObject();
 
-  _w->Field->insertStringList(list);
+  _w->Field->addItems(list);
   if (_fieldCompletion) {
     _fieldCompletion->clear();
     _fieldCompletion->insertItems(list);
   }
-  if (!current_text.isEmpty() && (list.contains(current_text) || _w->Field->editable())) {
-    _w->Field->setCurrentText(current_text);
+  if (!current_text.isEmpty() && (list.contains(current_text) || _w->Field->isEditable())) {
+    _w->Field->setItemText(_w->Field->currentIndex(), current_text);
   }
   _ok->setEnabled(_w->Field->isEnabled() || _editMultipleMode);
 }
@@ -212,14 +212,14 @@ void KstVectorDialogI::fillFieldsForRVEdit() {
     if (it != KST::dataSourceList.end()) {
       tf = *it;
       tf->readLock();
-      _w->Field->insertStringList(tf->fieldList());
+      _w->Field->addItems(tf->fieldList());
       if (_fieldCompletion) {
         _fieldCompletion->insertItems(tf->fieldList());
       }
       tf->unlock();
     } else {
       QStringList list = KstDataSource::fieldListForSource(_w->FileName->url());
-      _w->Field->insertStringList(list);
+      _w->Field->addItems(list);
       if (_fieldCompletion) {
         _fieldCompletion->insertItems(list);
       }
@@ -228,7 +228,7 @@ void KstVectorDialogI::fillFieldsForRVEdit() {
   }
   _w->Field->setEnabled(_w->Field->count() > 0);
   _ok->setEnabled(_w->Field->isEnabled());
-  _w->Field->setCurrentText(rvp->field());
+  _w->Field->setItemText(_w->Field->currentIndex(), rvp->field());
 
   /* select the proper file */
   _w->FileName->setUrl(rvp->filename());
@@ -727,13 +727,13 @@ void KstVectorDialogI::populateEditMultipleRV() {
   _w->_kstDataRange->Skip->setSpecialValueText(" ");
   _w->_kstDataRange->Skip->setValue(_w->_kstDataRange->Skip->minimum());
   _w->_kstDataRange->CountFromEnd->setTristate(true);
-  _w->_kstDataRange->CountFromEnd->setNoChange();
+  _w->_kstDataRange->CountFromEnd->setCheckState(Qt::PartiallyChecked);
   _w->_kstDataRange->ReadToEnd->setTristate(true);
-  _w->_kstDataRange->ReadToEnd->setNoChange();
+  _w->_kstDataRange->ReadToEnd->setCheckState(Qt::PartiallyChecked);
   _w->_kstDataRange->DoFilter->setTristate(true);
-  _w->_kstDataRange->DoFilter->setNoChange();
+  _w->_kstDataRange->DoFilter->setCheckState(Qt::PartiallyChecked);
   _w->_kstDataRange->DoSkip->setTristate(true);
-  _w->_kstDataRange->DoSkip->setNoChange();
+  _w->_kstDataRange->DoSkip->setCheckState(Qt::PartiallyChecked);
 
   _w->_kstDataRange->Skip->setEnabled(true);
   _w->_kstDataRange->N->setEnabled(true);
@@ -753,7 +753,7 @@ void KstVectorDialogI::populateEditMultipleRV() {
 
 void KstVectorDialogI::populateEditMultipleSV() {
   KstSVectorList vclist = kstObjectSubList<KstVector, KstSVector>(KST::vectorList);
-  _editMultipleWidget->_objectList->insertStringList(vclist.tagNames());
+  _editMultipleWidget->_objectList->addItems(vclist.tagNames());
 
   _w->_N->setMinimum(_w->_N->minimum() - 1);
   _w->_N->setSpecialValueText(" ");

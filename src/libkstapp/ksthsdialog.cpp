@@ -461,7 +461,7 @@ void KstHsDialogI::updateButtons() {
 
 void KstHsDialogI::populateEditMultiple() {
   KstHistogramList hslist = kstObjectSubList<KstDataObject,KstHistogram>(KST::dataObjectList);
-  _editMultipleWidget->_objectList->insertStringList(hslist.tagNames());
+  _editMultipleWidget->_objectList->addItems(hslist.tagNames());
 
   // also intermediate state for multiple edit
   _w->Min->setText("");
@@ -474,7 +474,7 @@ void KstHsDialogI::populateEditMultiple() {
   _w->_vector->_vector->insertItem(0, "");
   _w->_vector->_vector->setCurrentIndex(0);
   _w->_realTimeAutoBin->setTristate(true);
-  _w->_realTimeAutoBin->setNoChange();
+  _w->_realTimeAutoBin->setCheckState(Qt::PartiallyChecked);
 
   _w->NormIsPercent->setChecked(false);
   _w->NormIsFraction->setChecked(false);

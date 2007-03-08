@@ -236,8 +236,8 @@ bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
   }
 
   _title = url.fileName(false);
-  _absFilePath = url.url();
-  _lastFilePath = url.url();
+  _absFilePath = url.toString();
+  _lastFilePath = url.toString();
   if (_title.isEmpty()) {
     _title = _absFilePath;
   }
@@ -669,7 +669,7 @@ void KstDoc::saveDocument(QTextStream& ts, bool saveAbsoluteVectorPositions) {
     << (app->graphFileDlg()->display() == 1 ? "true" : "false");
 
   if (app->graphFileDlg()->autoSaving()) {
-    ts << "\" url=\"" << Q3StyleSheet::escape(app->graphFileDlg()->url().url());
+    ts << "\" url=\"" << Q3StyleSheet::escape(app->graphFileDlg()->url().toString());
   }
   ts << "\" />" << endl;
 

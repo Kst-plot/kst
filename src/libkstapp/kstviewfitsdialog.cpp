@@ -99,7 +99,7 @@ void KstViewFitsDialogI::updateViewFitsDialog() {
     QString old;
     if (_comboBoxFits->count() > 0) {
       int idx = _comboBoxFits->currentIndex();
-      old = _comboBoxFits->text(idx);
+      old = _comboBoxFits->itemText(idx);
     }
     fillComboBox(old);
   }

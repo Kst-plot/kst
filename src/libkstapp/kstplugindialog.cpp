@@ -714,7 +714,7 @@ void KstPluginDialogI::generateEntries(bool input, int& cnt, QWidget *parent, QG
         connect(widget, SIGNAL(newScalarCreated()), this, SIGNAL(modified()));
         if (!(*it)._default.isEmpty()) {
           w->_scalar->addItem((*it)._default);
-          w->_scalar->setCurrentText((*it)._default);
+          w->_scalar->setItemText(w->_scalar->currentIndex(), (*it)._default);
         }
         KstScalarPtr p = *KST::scalarList.findTag(w->_scalar->currentText());
         w->allowDirectEntry(true);
@@ -730,7 +730,7 @@ void KstPluginDialogI::generateEntries(bool input, int& cnt, QWidget *parent, QG
         connect(widget, SIGNAL(newStringCreated()), this, SIGNAL(modified()));
         if (!(*it)._default.isEmpty()) {
           w->_string->addItem((*it)._default);
-          w->_string->setCurrentText((*it)._default);
+          w->_string->setItemText(w->_string->currentIndex(), (*it)._default);
         }
         KstStringPtr p = *KST::stringList.findTag(w->_string->currentText());
         w->allowDirectEntry(true);

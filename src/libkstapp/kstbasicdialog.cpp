@@ -508,22 +508,22 @@ void KstBasicDialogI::fillFieldsForNew() {
 
 
 VectorSelector *KstBasicDialogI::vector(const QString &name) const {
-  return ::qt_cast<VectorSelector*>(_w->_frame->child(name.toLatin1()));
+  return qobject_cast<VectorSelector*>(_w->_frame->child(name.toLatin1()));
 }
 
 
 ScalarSelector *KstBasicDialogI::scalar(const QString &name) const {
-  return ::qt_cast<ScalarSelector*>(_w->_frame->child(name.toLatin1()));
+  return qobject_cast<ScalarSelector*>(_w->_frame->child(name.toLatin1()));
 }
 
 
 StringSelector *KstBasicDialogI::string(const QString &name) const {
-  return ::qt_cast<StringSelector*>(_w->_frame->child(name.toLatin1()));
+  return qobject_cast<StringSelector*>(_w->_frame->child(name.toLatin1()));
 }
 
 
 QLineEdit *KstBasicDialogI::output(const QString &name) const {
-  return ::qt_cast<QLineEdit*>(_w->_frame->child(name.toLatin1()));
+  return qobject_cast<QLineEdit*>(_w->_frame->child(name.toLatin1()));
 }
 
 #include "kstbasicdialog.moc"

@@ -525,7 +525,7 @@ bool KstCurveDialogI::editObject() {
 
 void KstCurveDialogI::populateEditMultiple() {
   KstVCurveList cvlist = kstObjectSubList<KstDataObject,KstVCurve>(KST::dataObjectList);
-  _editMultipleWidget->_objectList->insertStringList(cvlist.tagNames());
+  _editMultipleWidget->_objectList->addItems(cvlist.tagNames());
 
   // also intermediate state for multiple edit
   _w->_xVector->_vector->insertItem(0, "");
@@ -556,17 +556,17 @@ void KstCurveDialogI::populateEditMultiple() {
   _w->_curveAppearance->_spinBoxLineWidth->setValue(_w->_curveAppearance->_spinBoxLineWidth->minimum());
 
   _w->_checkBoxXMinusSameAsPlus->setTristate(true);
-  _w->_checkBoxXMinusSameAsPlus->setNoChange();
+  _w->_checkBoxXMinusSameAsPlus->setCheckState(Qt::PartiallyChecked);
   _w->_checkBoxYMinusSameAsPlus->setTristate(true);
-  _w->_checkBoxYMinusSameAsPlus->setNoChange();
+  _w->_checkBoxYMinusSameAsPlus->setCheckState(Qt::PartiallyChecked);
   _w->_curveAppearance->_showPoints->setTristate(true);
-  _w->_curveAppearance->_showPoints->setNoChange();
+  _w->_curveAppearance->_showPoints->setCheckState(Qt::PartiallyChecked);
   _w->_curveAppearance->_showLines->setTristate(true);
-  _w->_curveAppearance->_showLines->setNoChange();
+  _w->_curveAppearance->_showLines->setCheckState(Qt::PartiallyChecked);
   _w->_curveAppearance->_showBars->setTristate(true);
-  _w->_curveAppearance->_showBars->setNoChange();
+  _w->_curveAppearance->_showBars->setCheckState(Qt::PartiallyChecked);
   _w->_checkBoxIgnoreAutoscale->setTristate(true);
-  _w->_checkBoxIgnoreAutoscale->setNoChange();
+  _w->_checkBoxIgnoreAutoscale->setCheckState(Qt::PartiallyChecked);
 
   toggledXErrorSame(false);
   toggledYErrorSame(false);

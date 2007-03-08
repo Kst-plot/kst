@@ -36,7 +36,6 @@
 #include "colorpalettewidget.h"
 #include "curveplacementwidget.h"
 #include "editmultiplewidget.h"
-#include "imagedialogwidget.h"
 #include "kst2dplot.h"
 #include "kstdataobjectcollection.h"
 #include "kstimagedialog.h"
@@ -407,7 +406,7 @@ bool KstImageDialogI::editObject() {
     _numContourLinesDirty = _w->_numContourLines->text() != " ";
     _contourWeightDirty = _w->_contourWeight->text() != " ";
     _paletteDirty = _w->_colorPalette->currentPaletteIndex() != 0;
-    _matrixDirty = _w->_matrix->_matrix->currentItem() != 0;
+    _matrixDirty = _w->_matrix->_matrix->currentIndex() != 0;
     _lowerZDirty = !_w->_lowerZ->text().isEmpty();
     _upperZDirty = !_w->_upperZ->text().isEmpty();
 
@@ -596,7 +595,7 @@ bool KstImageDialogI::checkParameters(double& lowerZDouble, double& upperZDouble
 
 void KstImageDialogI::populateEditMultiple() {
   KstImageList imlist = kstObjectSubList<KstDataObject,KstImage>(KST::dataObjectList);
-  _editMultipleWidget->_objectList->insertStringList(imlist.tagNames());
+  _editMultipleWidget->_objectList->addItems(imlist.tagNames());
 
   // also intermediate state for multiple edit
   _w->_colorOnly->setChecked(false);
@@ -611,7 +610,7 @@ void KstImageDialogI::populateEditMultiple() {
   _w->_lowerZ->setText("");
   _w->_upperZ->setText("");
   _w->_realTimeAutoThreshold->setTristate(true);
-  _w->_realTimeAutoThreshold->setNoChange();
+  _w->_realTimeAutoThreshold->setCheckState(Qt::PartiallyChecked);
   _w->_autoThreshold->setEnabled(false);
   _w->_numContourLines->setSpecialValueText(" ");
   _w->_numContourLines->setMinimum(_w->_numContourLines->minimum() - 1);
@@ -620,7 +619,7 @@ void KstImageDialogI::populateEditMultiple() {
   _w->_contourWeight->setMinimum(_w->_contourWeight->minimum() - 1);
   _w->_contourWeight->setValue(_w->_contourWeight->minimum());
   _w->_useVariableWeight->setTristate(true);
-  _w->_useVariableWeight->setNoChange();
+  _w->_useVariableWeight->setCheckState(Qt::PartiallyChecked);
   _w->_contourColor->setColor(QColor()); //default color
 
   _tagName->setText("");

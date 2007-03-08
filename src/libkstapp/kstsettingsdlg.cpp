@@ -39,9 +39,9 @@ void KstSettingsDlg::init() {
   updateAxesButtons();
   updateAxesSettings();
   updateEMailSettings();
-  _source->insertStringList(KstDataSource::pluginList());
+  _source->addItems(KstDataSource::pluginList());
   if (_source->count() > 0) {
-    sourceChanged(_source->text(0));
+    sourceChanged(_source->itemText(0));
   } else {
     _configureSource->setEnabled(false);
   }
@@ -86,8 +86,8 @@ void KstSettingsDlg::setSettings(const KstSettings *settings) {
   _checkBoxDefaultMinorGridColor->setChecked(settings->minorGridColorDefault);
 
   _checkBoxXInterpret->setChecked(settings->xAxisInterpret);
-  _comboBoxXInterpret->setCurrentItem(settings->xAxisInterpretation);
-  _comboBoxXDisplay->setCurrentItem(settings->xAxisDisplay);
+  _comboBoxXInterpret->setCurrentIndex(settings->xAxisInterpretation);
+  _comboBoxXDisplay->setCurrentIndex(settings->xAxisDisplay);
 
   _spinBoxLineWidth->setValue(settings->defaultLineWeight);
 
@@ -308,8 +308,8 @@ void KstSettingsDlg::updateTimezone(const QString& strHours) {
 
 
 void KstSettingsDlg::updateTimezone(double hours) {
-  _tz->setCurrentItem(0);
-  _tz->setCurrentText(timezoneFromUTCOffset(hours));
+  _tz->setCurrentIndex(0);
+  _tz->setItemText(_tz->currentIndex(), timezoneFromUTCOffset(hours));
   setDirty();
 }
 

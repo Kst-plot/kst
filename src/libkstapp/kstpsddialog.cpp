@@ -406,17 +406,17 @@ bool KstPsdDialogI::editObject() {
 
 void KstPsdDialogI::populateEditMultiple() {
   KstPSDList pslist = kstObjectSubList<KstDataObject,KstPSD>(KST::dataObjectList);
-  _editMultipleWidget->_objectList->insertStringList(pslist.tagNames());
+  _editMultipleWidget->_objectList->insertItems(pslist.tagNames());
 
   // also intermediate state for multiple edit
   _w->_vector->_vector->insertItem(0, "");
   _w->_vector->_vector->setCurrentIndex(0);
   _w->_kstFFTOptions->ApodizeFxn->insertItem(0, "");
   _w->_kstFFTOptions->ApodizeFxn->setCurrentIndex(0);
-  _w->_kstFFTOptions->Apodize->setNoChange();
-  _w->_kstFFTOptions->RemoveMean->setNoChange();
-  _w->_kstFFTOptions->Interleaved->setNoChange();
-  _w->_kstFFTOptions->InterpolateHoles->setNoChange();
+  _w->_kstFFTOptions->Apodize->setCheckState(Qt::PartiallyChecked);
+  _w->_kstFFTOptions->RemoveMean->setCheckState(Qt::PartiallyChecked);
+  _w->_kstFFTOptions->Interleaved->setCheckState(Qt::PartiallyChecked);
+  _w->_kstFFTOptions->InterpolateHoles->setCheckState(Qt::PartiallyChecked);
   _w->_kstFFTOptions->SampRate->setText("");
   _w->_kstFFTOptions->VectorUnits->setText("");
   _w->_kstFFTOptions->RateUnits->setText("");

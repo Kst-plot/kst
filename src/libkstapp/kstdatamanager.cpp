@@ -715,7 +715,7 @@ KstDataManagerI::~KstDataManagerI() {
 
 void KstDataAction::addedTo(QWidget *actionWidget, QWidget *container) {
   Q_UNUSED(container)
-  if ( ::qt_cast<QToolButton*>(actionWidget) ) {
+  if ( qobject_cast<QToolButton*>(actionWidget) ) {
     if (!windowsStyle)
       windowsStyle = QStyleFactory::create("windows");
     actionWidget->setStyle(windowsStyle);
@@ -795,7 +795,7 @@ void KstDataManagerI::setupPluginActions() {
 
 void KstDataManagerI::showOldPlugin() {
 
-  if (QAction *a = ::qt_cast<QAction*>(sender())) {
+  if (QAction *a = qobject_cast<QAction*>(sender())) {
     const QMap<QString,QString> readable =
       PluginCollection::self()->readableNameList();
     KstPluginDialogI::globalInstance()->showNew(readable[a->text()]);

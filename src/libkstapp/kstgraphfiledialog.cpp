@@ -50,7 +50,7 @@ KstGraphFileDialogI::KstGraphFileDialogI(QWidget* parent, Qt::WindowFlags fl)
   _saveLocation->setFilter(KImageIO::mimeTypes().join(" "));
   _saveLocation->setMode(KFile::File);
 
-  _comboBoxFormats->insertStrList(QImageIO::outputFormats());
+  _comboBoxFormats->addItems(QImageIO::outputFormats());
   _comboBoxFormats->setCurrentIndex(0);
 
   loadProperties();
@@ -218,7 +218,7 @@ void KstGraphFileDialogI::updateDialog() {
 
   QString upfmt = _format.toUpper();
   for (int i = 0; i < _comboBoxFormats->count(); i++) {
-    if (_comboBoxFormats->text(i).upper() == upfmt) {
+    if (_comboBoxFormats->itemText(i).upper() == upfmt) {
       _comboBoxFormats->setCurrentIndex(i);
       break;
     }

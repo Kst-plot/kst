@@ -317,7 +317,7 @@ bool KstEqDialogI::editObject() {
   // if editing multiple objects, edit each one
   if (_editMultipleMode) { 
     // if the user selected no vector, treat it as non-dirty
-    _xVectorsDirty = _w->_xVectors->_vector->currentItem() != 0;
+    _xVectorsDirty = _w->_xVectors->_vector->currentIndex() != 0;
     _equationDirty = !_w->_equation->text().isEmpty();
   
     bool didEdit = false;
@@ -413,13 +413,13 @@ void KstEqDialogI::populateFunctionList() {
 void KstEqDialogI::populateEditMultiple() {
   // list of objects
   KstEquationList eqlist = kstObjectSubList<KstDataObject,KstEquation>(KST::dataObjectList);
-  _editMultipleWidget->_objectList->insertStringList(eqlist.tagNames());
+  _editMultipleWidget->_objectList->addItems(eqlist.tagNames());
 
   // also intermediate state for multiple edit
-  _w->_xVectors->_vector->insertIndex(0, "");
+  _w->_xVectors->_vector->insertItem(0, "");
   _w->_xVectors->_vector->setCurrentIndex(0);
   _w->_doInterpolation->setTristate(true);
-  _w->_doInterpolation->setNoChange();
+  _w->_doInterpolation->setCheckState(Qt::PartiallyChecked);
   _w->_equation->setText("");
   
   // and clean all the fields

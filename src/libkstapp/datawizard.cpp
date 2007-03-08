@@ -244,7 +244,7 @@ void DataWizard::xChanged() {
 
 void DataWizard::testUrl() {
   _inTest = true;
-  sourceChanged(_url->url());
+  sourceChanged(_url->toString());
   _inTest = false;
 }
 
@@ -323,8 +323,8 @@ void DataWizard::sourceChanged(const QString& text) {
     _vectorsToPlot->clear();
     _xVector->clear();
 
-    _xVector->insertStringList(fl);
-    _xVector->completionObject()->insertItems(fl);
+    _xVector->addItems(fl);
+    _xVector->completionObject()->addItems(fl);
     _xVector->setEditable(!complete);
 
     count = fl.count();
@@ -346,9 +346,9 @@ void DataWizard::sourceChanged(const QString& text) {
     KST::vectorDefaults.sync();
     QString defaultX = KST::vectorDefaults.wizardXVector();
     if (fl.contains(defaultX)) {
-      _xVector->setCurrentText(defaultX);
+      _xVector->setItemText(xVector->currentIndex(), defaultX);
     } else {
-      _xVector->setCurrentItem(0);
+      _xVector->setCurrentIndex(0);
     }
     _file = file;
     // we probably don't want to use an
@@ -540,7 +540,7 @@ void DataWizard::updatePlotBox() {
   }
 
   if (_existingPlot->isEnabled() && _existingPlotName->listBox() && _existingPlotName->listBox()->findItem(psave)) {
-    _existingPlotName->setCurrentText(psave);
+    _existingPlotName->setItemText(_existingPlotName->currentIndex(), psave);
   }
   updateColumns();
 }
@@ -1152,7 +1152,7 @@ void DataWizard::configureSource() {
   _configWidget->setParent(0L);
   dlg->setMainWidget(0L);
   delete dlg;
-  sourceChanged(_url->url());
+  sourceChanged(_url->toString());
 }
 
 void DataWizard::saveSettings() {

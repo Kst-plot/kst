@@ -106,7 +106,7 @@ void KstChangeFileDialogI::updateChangeFileDialog() {
     }
   }
   if (_files->contains(currentFile)) {
-    _files->setCurrentText(currentFile);
+    _files->setItemText(_files->currentIndex(), currentFile);
   }
 
   _allFromFile->setEnabled(_files->count() > 0);

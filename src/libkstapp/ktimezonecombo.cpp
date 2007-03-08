@@ -77,7 +77,7 @@ KTimezoneCombo::KTimezoneCombo(QWidget *parent, const char *name, KstTimezones *
     }
     offnum += QString::number(minutes);
     if ((*it)->name() != "UTC") {
-      insertItem(i18n("%3 (UTC%1%2)").arg(negative ? '-' : '+').arg(offnum).arg((*it)->name()));
+      addItem(i18n("%3 (UTC%1%2)").arg(negative ? '-' : '+').arg(offnum).arg((*it)->name()));
       d->_names += (*it)->name();
     }
   }
@@ -95,7 +95,7 @@ KTimezoneCombo::~KTimezoneCombo() {
 
 
 int KTimezoneCombo::offset() const {
-  return d->_offsets[currentItem()];
+  return d->_offsets[currentIndex()];
 }
 
 
@@ -103,7 +103,7 @@ QString KTimezoneCombo::tzName() const {
   if (currentItem() == 0) {
     return currentText();
   } else {
-    return d->_names[currentItem()];
+    return d->_names[currentIndex()];
   }
 }
 
@@ -112,10 +112,10 @@ void KTimezoneCombo::setTimezone(const QString& tz) {
   int idx = d->_names.indexOf(tz);
 
   if (idx != -1) {
-    setCurrentItem(idx);
+    setCurrentIndex(idx);
   } else {
-    setCurrentItem(0);
-    setCurrentText(tz);
+    setCurrentIndex(0);
+    setItemText(currentIndex(), tz);
   }
 }
 
