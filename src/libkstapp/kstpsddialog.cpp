@@ -406,7 +406,7 @@ bool KstPsdDialogI::editObject() {
 
 void KstPsdDialogI::populateEditMultiple() {
   KstPSDList pslist = kstObjectSubList<KstDataObject,KstPSD>(KST::dataObjectList);
-  _editMultipleWidget->_objectList->insertItems(pslist.tagNames());
+  _editMultipleWidget->_objectList->insertStringList(pslist.tagNames());
 
   // also intermediate state for multiple edit
   _w->_vector->_vector->insertItem(0, "");

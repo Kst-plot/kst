@@ -413,7 +413,7 @@ void KstEqDialogI::populateFunctionList() {
 void KstEqDialogI::populateEditMultiple() {
   // list of objects
   KstEquationList eqlist = kstObjectSubList<KstDataObject,KstEquation>(KST::dataObjectList);
-  _editMultipleWidget->_objectList->addItems(eqlist.tagNames());
+  _editMultipleWidget->_objectList->insertStringList(eqlist.tagNames());
 
   // also intermediate state for multiple edit
   _w->_xVectors->_vector->insertItem(0, "");

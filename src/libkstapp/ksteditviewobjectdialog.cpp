@@ -136,8 +136,8 @@ void KstEditViewObjectDialogI::updateWidgets() {
 
     // create a new grid
     _grid = new QGridLayout(_propertiesFrame, numProperties, 2, 0, 8);
-    _grid->setColStretch(0,0);
-    _grid->setColStretch(1,1);
+    _grid->setColumnStretch(0,0);
+    _grid->setColumnStretch(1,1);
     
     // get the property names and types
     for (int i = 0; i < numProperties; i++) {
@@ -300,7 +300,7 @@ void KstEditViewObjectDialogI::fillPenStyleWidget(QComboBox* widget) {
     pp.setPen(pen);
     pp.fillRect( pp.window(), QColor("white"));
     pp.drawLine(1,ppix.height()/2,ppix.width()-1, ppix.height()/2);
-    widget->addItem(ppix);
+    widget->addItem(ppix, "");
     styles.pop_front();
   }
 }
@@ -334,8 +334,8 @@ void KstEditViewObjectDialogI::applyClicked() {
     for (Q3ValueList<QWidget*>::ConstIterator iter = _inputWidgets.begin(); iter != _inputWidgets.end(); ++iter) {
       
       // get the widget type and property name
-      QString propertyName = QString((*iter)->name()).section(',', 0, 0);
-      QString widgetPropertyName = QString((*iter)->name()).section(',', 1, 1);
+      QString propertyName = QString((*iter)->objectName()).section(',', 0, 0);
+      QString widgetPropertyName = QString((*iter)->objectName()).section(',', 1, 1);
       
       // get the widget's property and set it on the viewObject
       _viewObject->setProperty(propertyName.toLatin1(), (*iter)->property(widgetPropertyName.toLatin1()));

@@ -78,7 +78,7 @@ void KstGraphFileDialogI::ok_I() {
 
 
 void KstGraphFileDialogI::apply_I() {
-  _url = _saveLocation->url();
+  _url = _saveLocation->url().toString();
   _format = _comboBoxFormats->currentText();
   _w = _xSize->value();
   _h = _ySize->value();
@@ -112,7 +112,7 @@ void KstGraphFileDialogI::reqEpsGraphFile() {
 
 void KstGraphFileDialogI::applyAutosave() {
   if (_autoSave) {
-    _autoSaveTimer->start(_savePeriod*1000, false);
+    _autoSaveTimer->start(_savePeriod*1000);
   } else {
     _autoSaveTimer->stop();
   }
@@ -218,7 +218,7 @@ void KstGraphFileDialogI::updateDialog() {
 
   QString upfmt = _format.toUpper();
   for (int i = 0; i < _comboBoxFormats->count(); i++) {
-    if (_comboBoxFormats->itemText(i).upper() == upfmt) {
+    if (_comboBoxFormats->itemText(i).toUpper() == upfmt) {
       _comboBoxFormats->setCurrentIndex(i);
       break;
     }

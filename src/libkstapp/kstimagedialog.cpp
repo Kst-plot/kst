@@ -595,7 +595,7 @@ bool KstImageDialogI::checkParameters(double& lowerZDouble, double& upperZDouble
 
 void KstImageDialogI::populateEditMultiple() {
   KstImageList imlist = kstObjectSubList<KstDataObject,KstImage>(KST::dataObjectList);
-  _editMultipleWidget->_objectList->addItems(imlist.tagNames());
+  _editMultipleWidget->_objectList->insertStringList(imlist.tagNames());
 
   // also intermediate state for multiple edit
   _w->_colorOnly->setChecked(false);

@@ -781,8 +781,8 @@ void KstPluginDialogI::pluginChanged(int idx) {
 
   // create new info grid
   _pluginInfoGrid = new QGridLayout(_w->_pluginInfoFrame, 2, 2, 0, 8);
-  _pluginInfoGrid->setColStretch(1,1); // stretch the right column
-  _pluginInfoGrid->setColStretch(0,0); // don't stretch the left column
+  _pluginInfoGrid->setColumnStretch(1,1); // stretch the right column
+  _pluginInfoGrid->setColumnStretch(0,0); // don't stretch the left column
 
   if (idx >= 0 && _w->PluginCombo->count() > 0) {
 
@@ -820,8 +820,8 @@ void KstPluginDialogI::pluginChanged(int idx) {
 
     // generate inputs
     _pluginInputOutputGrid = new QGridLayout(_w->_pluginInputOutputFrame, numInputOutputs + 1, 2, 0, 8);
-    _pluginInputOutputGrid->setColStretch(1,1);
-    _pluginInputOutputGrid->setColStretch(0,0);
+    _pluginInputOutputGrid->setColumnStretch(1,1);
+    _pluginInputOutputGrid->setColumnStretch(0,0);
     generateEntries(true, cnt, _w->_pluginInputOutputFrame, _pluginInputOutputGrid, pluginData._inputs);
 
     // insert separator
@@ -829,14 +829,14 @@ void KstPluginDialogI::pluginChanged(int idx) {
     Q3Frame* line = new Q3Frame(_w->_pluginInputOutputFrame);
     line->setFrameShadow(Q3Frame::Sunken);
     line->setFrameShape(Q3Frame::HLine);
-    _pluginInputOutputGrid->addMultiCellWidget(line, cnt, cnt, 0, 1);
+    _pluginInputOutputGrid->addWidget(line, cnt, cnt, 0, 1);
     _pluginWidgets.push_back(line);
     line->show();
     cnt++;
 
     // generate outputs
-    _pluginInputOutputGrid->setColStretch(1,1);
-    _pluginInputOutputGrid->setColStretch(0,0);
+    _pluginInputOutputGrid->setColumnStretch(1,1);
+    _pluginInputOutputGrid->setColumnStretch(0,0);
     generateEntries(false, cnt, _w->_pluginInputOutputFrame, _pluginInputOutputGrid, pluginData._outputs);
   }
   // resize everything

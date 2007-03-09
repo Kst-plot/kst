@@ -97,8 +97,8 @@ void KstBasicDialogI::init() {
                       + ptr->outputStringList().count();
 
   _grid = new QGridLayout(_w->_frame, numInputOutputs + 1, 2, 0, 8);
-  _grid->setColStretch(1,1);
-  _grid->setColStretch(0,0);
+  _grid->setColumnStretch(1,1);
+  _grid->setColumnStretch(0,0);
 
   //create input widgets
   //First, the inputVectors...

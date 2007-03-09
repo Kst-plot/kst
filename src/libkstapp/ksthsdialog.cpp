@@ -461,7 +461,7 @@ void KstHsDialogI::updateButtons() {
 
 void KstHsDialogI::populateEditMultiple() {
   KstHistogramList hslist = kstObjectSubList<KstDataObject,KstHistogram>(KST::dataObjectList);
-  _editMultipleWidget->_objectList->addItems(hslist.tagNames());
+  _editMultipleWidget->_objectList->insertStringList(hslist.tagNames());
 
   // also intermediate state for multiple edit
   _w->Min->setText("");

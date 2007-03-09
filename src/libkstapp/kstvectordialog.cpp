@@ -753,7 +753,7 @@ void KstVectorDialogI::populateEditMultipleRV() {
 
 void KstVectorDialogI::populateEditMultipleSV() {
   KstSVectorList vclist = kstObjectSubList<KstVector, KstSVector>(KST::vectorList);
-  _editMultipleWidget->_objectList->addItems(vclist.tagNames());
+  _editMultipleWidget->_objectList->insertStringList(vclist.tagNames());
 
   _w->_N->setMinimum(_w->_N->minimum() - 1);
   _w->_N->setSpecialValueText(" ");

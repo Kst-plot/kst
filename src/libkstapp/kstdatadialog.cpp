@@ -25,7 +25,7 @@
 #include <QCloseEvent>
 
 #include <q3vbox.h>
-#include <q3listbox.>
+#include <q3listbox.h>
 #include "editmultiplewidget.h"
 #include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"

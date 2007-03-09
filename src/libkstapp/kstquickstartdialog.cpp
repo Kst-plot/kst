@@ -71,7 +71,7 @@ void KstQuickStartDialogI::open_I() {
 void KstQuickStartDialogI::update() {
   //get the list of recent files
   _recentFileList->clear();
-  _recentFileList->insertItems(_app->recentFiles());
+  _recentFileList->insertStringList(_app->recentFiles());
 
   //by default, select a recent file
   if (_recentFileList->numItemsVisible() > 0) {

@@ -69,7 +69,7 @@ KstChooseColorDialogI::KstChooseColorDialogI(QWidget* parent, Qt::WindowFlags fl
     
     // new grid
     grid = new QGridLayout(colorFrame, fileNameList.count(), 2, 0, 8);
-    grid->setColStretch(1,0);
+    grid->setColumnStretch(1,0);
     
     int i = fileNameList.count();
     for (QStringList::Iterator it = fileNameList.begin(); 

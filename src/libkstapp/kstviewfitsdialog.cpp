@@ -18,9 +18,9 @@
 #include <qcombobox.h>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qlistbox.h>
+#include <q3listbox.h>
 #include <qpushbutton.h>
-#include <qtable.h>
+#include <q3table.h>
 #include <qtimer.h>
 
 #include <klocale.h>
@@ -93,7 +93,7 @@ void KstViewFitsDialogI::fillComboBox(const QString& str) {
 }
 
 void KstViewFitsDialogI::updateViewFitsDialog() {
-  if (_comboBoxFits->listBox()->isVisible()) {
+  if (_comboBoxFits->view()->isVisible()) {
     QTimer::singleShot(250, this, SLOT(updateViewFitsDialog()));
   } else {
     QString old;

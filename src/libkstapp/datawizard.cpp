@@ -221,7 +221,7 @@ bool DataWizard::xVectorOk() {
   if (_xAxisCreateFromField->isChecked()) {
     QString txt = _xVector->currentText();
     for (int i = 0; i < _xVector->count(); ++i) {
-      if (_xVector->text(i) == txt) {
+      if (_xVector->itemText(i) == txt) {
         return true;
       }
     }
@@ -244,7 +244,7 @@ void DataWizard::xChanged() {
 
 void DataWizard::testUrl() {
   _inTest = true;
-  sourceChanged(_url->toString());
+  sourceChanged(_url->url());
   _inTest = false;
 }
 
@@ -324,7 +324,7 @@ void DataWizard::sourceChanged(const QString& text) {
     _xVector->clear();
 
     _xVector->addItems(fl);
-    _xVector->completionObject()->addItems(fl);
+    _xVector->completionObject()->insertItems(fl);
     _xVector->setEditable(!complete);
 
     count = fl.count();
@@ -539,7 +539,8 @@ void DataWizard::updatePlotBox() {
     _onePlot->setChecked(true);
   }
 
-  if (_existingPlot->isEnabled() && _existingPlotName->listBox() && _existingPlotName->listBox()->findItem(psave)) {
+  //FIXME Combo's don't work this way anymore...
+  if (_existingPlot->isEnabled()) {
     _existingPlotName->setItemText(_existingPlotName->currentIndex(), psave);
   }
   updateColumns();
@@ -550,7 +551,7 @@ void DataWizard::vectorSubset(const QString& filter) {
   Q3ListViewItem *after = 0L;
   _vectors->clearSelection();
   _vectors->setSorting(3, true); // Qt 3.1 compat
-  QRegExp re(filter, Qt::CaseSensative, QRegExp::Wildcard);
+  QRegExp re(filter, Qt::CaseSensitive, QRegExp::Wildcard);
   Q3ListViewItemIterator it(_vectors);
   while (it.current()) {
     Q3ListViewItem *i = it.current();
@@ -1152,7 +1153,7 @@ void DataWizard::configureSource() {
   _configWidget->setParent(0L);
   dlg->setMainWidget(0L);
   delete dlg;
-  sourceChanged(_url->toString());
+  sourceChanged(_url->url().toString());
 }
 
 void DataWizard::saveSettings() {
@@ -1212,18 +1213,21 @@ void DataWizard::loadSettings() {
   if (cfg.readBoolEntry("XCreate", true) || _xVectorExisting->_vector->count() == 0) {
     _xAxisCreateFromField->setChecked(true);
     QString str = cfg.readEntry("XFieldCreate", "");
-    if (_xVector->listBox()) {
-      Q3ListBoxItem *item = _xVector->listBox()->findItem(str, Qt::ExactMatch);
-      if (item) {
-        _xVector->listBox()->setSelected(item, true);
-      }
-    }
+    //FIXME Combo's don't work this way any longer
+//     if (_xVector->listBox()) {
+//       Q3ListBoxItem *item = _xVector->listBox()->findItem(str, Qt::ExactMatch);
+//       if (item) {
+//         _xVector->listBox()->setSelected(item, true);
+//       }
+//     }
   } else {
     _xAxisUseExisting->setChecked(true);
     QString str = cfg.readEntry("XFieldExists", "");
-    if (_xVectorExisting->_vector->listBox() && _xVectorExisting->_vector->listBox()->findItem(str, Qt::ExactMatch)) {
-      _xVectorExisting->setSelection(str);
-    }
+
+    //FIXME Combo's don't work this way any longer
+//     if (_xVectorExisting->_vector->listBox() && _xVectorExisting->_vector->listBox()->findItem(str, Qt::ExactMatch)) {
+//       _xVectorExisting->setSelection(str);
+//     }
   }
 
   if (cfg.readBoolEntry("Lines", true)) {

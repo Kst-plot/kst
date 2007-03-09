@@ -172,7 +172,7 @@ void PluginManager::reloadList() {
                                          it.value()._readableName,
                                          QString::null,
                                          it.value()._description,
-                                         it.data()._version,
+                                         it.value()._version,
                                          it.value()._author,
                                          it.value()._name,
                                          path);

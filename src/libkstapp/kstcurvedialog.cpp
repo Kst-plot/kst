@@ -525,7 +525,7 @@ bool KstCurveDialogI::editObject() {
 
 void KstCurveDialogI::populateEditMultiple() {
   KstVCurveList cvlist = kstObjectSubList<KstDataObject,KstVCurve>(KST::dataObjectList);
-  _editMultipleWidget->_objectList->addItems(cvlist.tagNames());
+  _editMultipleWidget->_objectList->insertStringList(cvlist.tagNames());
 
   // also intermediate state for multiple edit
   _w->_xVector->_vector->insertItem(0, "");

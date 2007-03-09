@@ -17,6 +17,7 @@
 
 #include "viewlabelwidget.h"
 
+#include <q3whatsthis.h>
 #include <kst_export.h>
 
 ViewLabelWidget::ViewLabelWidget(QWidget *parent)

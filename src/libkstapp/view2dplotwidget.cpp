@@ -406,7 +406,7 @@ void View2DPlotWidget::fillMarkerLineCombo() {
     pp.setPen(pen);
     pp.fillRect( pp.window(), QColor("white"));
     pp.drawLine(1,ppix.height()/2,ppix.width()-1, ppix.height()/2);
-    _comboMarkerLineStyle->addItem(ppix);
+    _comboMarkerLineStyle->addItem(ppix, "");
   }
 
   _comboMarkerLineStyle->setCurrentIndex(currentIndex);
@@ -490,7 +490,7 @@ void View2DPlotWidget::updatePlotMarkers(const Kst2DPlot *plot) {
       Rising->setChecked(true);
     }
     for (int curveComboIndex = 0; curveComboIndex < CurveCombo->count(); curveComboIndex++) {
-      if (CurveCombo->text(curveComboIndex) == plot->curveToMarkers()->tagName()) {
+      if (CurveCombo->itemText(curveComboIndex) == plot->curveToMarkers()->tagName()) {
         CurveCombo->setCurrentIndex(curveComboIndex);
         break;
       }

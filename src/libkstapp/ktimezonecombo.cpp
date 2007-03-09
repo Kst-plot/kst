@@ -41,10 +41,8 @@ KTimezoneCombo::KTimezoneCombo(QWidget *parent, const char *name, KstTimezones *
     db = new KstTimezones;
   }
 
-  if (listBox()) {
-    listBox()->setVScrollBarMode(Q3ScrollView::AlwaysOn);
-    listBox()->setColumnMode(Q3ListBox::FixedNumber);
-    listBox()->setRowMode(Q3ListBox::Variable);
+  if (view()) {
+    view()->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   }
   
   insertItem("UTC");

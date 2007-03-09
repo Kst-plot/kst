@@ -175,7 +175,7 @@ void KstMatrixDialogI::fillFieldsForRMatrixEdit() {
       QStringList list = KstDataSource::matrixListForSource(_w->_fileName->url());
       _w->_field->addItems(list);
       if (_fieldCompletion) {
-        _fieldCompletion->addItems(list);
+        _fieldCompletion->insertItems(list);
       }
     }
     KST::dataSourceList.lock().unlock();
@@ -721,7 +721,7 @@ void KstMatrixDialogI::populateEditMultiple() {
 
 void KstMatrixDialogI::populateEditMultipleRMatrix() {
   KstRMatrixList mxList = kstObjectSubList<KstMatrix,KstRMatrix>(KST::matrixList);
-  _editMultipleWidget->_objectList->addItems(mxList.tagNames());
+  _editMultipleWidget->_objectList->insertStringList(mxList.tagNames());
 
   // intermediate state for multiple edit
   _w->_fileName->clear();
@@ -766,7 +766,7 @@ void KstMatrixDialogI::populateEditMultipleRMatrix() {
 
 void KstMatrixDialogI::populateEditMultipleSMatrix() {
   KstSMatrixList mxList = kstObjectSubList<KstMatrix,KstSMatrix>(KST::matrixList);
-  _editMultipleWidget->_objectList->addItems(mxList.tagNames());
+  _editMultipleWidget->_objectList->insertStringList(mxList.tagNames());
 
   // intermediate state for multiple edit
   _w->_gradientZAtMin->setText("");
