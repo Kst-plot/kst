@@ -1153,7 +1153,7 @@ void DataWizard::configureSource() {
   _configWidget->setParent(0L);
   dlg->setMainWidget(0L);
   delete dlg;
-  sourceChanged(_url->url().toString());
+  sourceChanged(_url->url().url());
 }
 
 void DataWizard::saveSettings() {

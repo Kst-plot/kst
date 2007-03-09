@@ -97,8 +97,8 @@ void KstBasicDialogI::init() {
                       + ptr->outputStringList().count();
 
   _grid = new QGridLayout(_w->_frame, numInputOutputs + 1, 2, 0, 8);
-  _grid->setColumnStretch(1,1);
-  _grid->setColumnStretch(0,0);
+  _grid->setColStretch(1,1);
+  _grid->setColStretch(0,0);
 
   //create input widgets
   //First, the inputVectors...
@@ -508,22 +508,22 @@ void KstBasicDialogI::fillFieldsForNew() {
 
 
 VectorSelector *KstBasicDialogI::vector(const QString &name) const {
-  return qobject_cast<VectorSelector*>(_w->_frame->child(name.toLatin1()));
+  return _w->_frame->findChild<VectorSelector*>(name.toLatin1());
 }
 
 
 ScalarSelector *KstBasicDialogI::scalar(const QString &name) const {
-  return qobject_cast<ScalarSelector*>(_w->_frame->child(name.toLatin1()));
+  return _w->_frame->findChild<ScalarSelector*>(name.toLatin1());
 }
 
 
 StringSelector *KstBasicDialogI::string(const QString &name) const {
-  return qobject_cast<StringSelector*>(_w->_frame->child(name.toLatin1()));
+  return _w->_frame->findChild<StringSelector*>(name.toLatin1());
 }
 
 
 QLineEdit *KstBasicDialogI::output(const QString &name) const {
-  return qobject_cast<QLineEdit*>(_w->_frame->child(name.toLatin1()));
+  return _w->_frame->findChild<QLineEdit*>(name.toLatin1());
 }
 
 #include "kstbasicdialog.moc"

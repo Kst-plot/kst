@@ -78,7 +78,7 @@ void KstGraphFileDialogI::ok_I() {
 
 
 void KstGraphFileDialogI::apply_I() {
-  _url = _saveLocation->url().toString();
+  _url = _saveLocation->url().url();
   _format = _comboBoxFormats->currentText();
   _w = _xSize->value();
   _h = _ySize->value();

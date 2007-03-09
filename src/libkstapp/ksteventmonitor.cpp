@@ -333,7 +333,7 @@ bool KstEventMonitorI::editObject() {
 
 void KstEventMonitorI::populateEditMultiple() {
   KstEventMonitorEntryList emlist = kstObjectSubList<KstDataObject,EventMonitorEntry>(KST::dataObjectList);
-  _editMultipleWidget->_objectList->addItems(emlist.tagNames());
+  _editMultipleWidget->_objectList->insertStringList(emlist.tagNames());
 
   // also intermediate state for multiple edit
   _w->lineEditEquation->setText("");

@@ -172,7 +172,7 @@ void KstMatrixDialogI::fillFieldsForRMatrixEdit() {
       }
       tf->unlock();
     } else {
-      QStringList list = KstDataSource::matrixListForSource(_w->_fileName->url());
+      QStringList list = KstDataSource::matrixListForSource(_w->_fileName->url().url());
       _w->_field->addItems(list);
       if (_fieldCompletion) {
         _fieldCompletion->insertItems(list);
@@ -300,10 +300,10 @@ bool KstMatrixDialogI::new_IRMatrix() {
 
   /* if there is not an active KstFile, create one */
   KST::dataSourceList.lock().writeLock();
-  KstDataSourceList::Iterator it = KST::dataSourceList.findReusableFileName(_w->_fileName->url());
+  KstDataSourceList::Iterator it = KST::dataSourceList.findReusableFileName(_w->_fileName->url().url());
 
   if (it == KST::dataSourceList.end()) {
-    file = KstDataSource::loadSource(_w->_fileName->url());
+    file = KstDataSource::loadSource(_w->_fileName->url().url());
     if (!file || !file->isValid()) {
       KST::dataSourceList.lock().unlock();
       KMessageBox::sorry(this, i18n("The file could not be opened."));
@@ -402,10 +402,10 @@ bool KstMatrixDialogI::editSingleRMatrix(KstRMatrixPtr rmp) {
   if (_fileNameDirty) {
     /* if there is not an active KstFile, create one */
     KST::dataSourceList.lock().writeLock();
-    KstDataSourceList::Iterator it = KST::dataSourceList.findReusableFileName(_w->_fileName->url());
+    KstDataSourceList::Iterator it = KST::dataSourceList.findReusableFileName(_w->_fileName->url().url());
 
     if (it == KST::dataSourceList.end()) {
-      file = KstDataSource::loadSource(_w->_fileName->url());
+      file = KstDataSource::loadSource(_w->_fileName->url().url());
       if (!file || !file->isValid()) {
         KST::dataSourceList.lock().unlock();
         KMessageBox::sorry(this, i18n("The file could not be opened."));
@@ -804,7 +804,7 @@ void KstMatrixDialogI::updateCompletion() {
 
   /* update filename list and ll axes combo boxes */
   KST::dataSourceList.lock().readLock();
-  KstDataSourcePtr ds = *KST::dataSourceList.findReusableFileName(_w->_fileName->url());
+  KstDataSourcePtr ds = *KST::dataSourceList.findReusableFileName(_w->_fileName->url().url());
   KST::dataSourceList.lock().unlock();
 
   delete _configWidget;
@@ -822,7 +822,7 @@ void KstMatrixDialogI::updateCompletion() {
   } else {
     QString type;
     bool complete = false;
-    QString u = _w->_fileName->url();
+    QString u = _w->_fileName->url().url();
     KUrl url;
     if (QFile::exists(u) && QFileInfo(u).isRelative()) {
       url.setPath(u);
@@ -964,11 +964,11 @@ void KstMatrixDialogI::setDoAveDirty() {
 void KstMatrixDialogI::configureSource() {
   bool isNew = false;
   KST::dataSourceList.lock().readLock();
-  KstDataSourcePtr ds = *KST::dataSourceList.findReusableFileName(_w->_fileName->url());
+  KstDataSourcePtr ds = *KST::dataSourceList.findReusableFileName(_w->_fileName->url().url());
   KST::dataSourceList.lock().unlock();
   if (!ds) {
     isNew = true;
-    ds = KstDataSource::loadSource(_w->_fileName->url());
+    ds = KstDataSource::loadSource(_w->_fileName->url().url());
     if (!ds || !ds->isValid()) {
       _w->_configure->setEnabled(false);
       return;

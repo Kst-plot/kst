@@ -669,7 +669,7 @@ void KstDoc::saveDocument(QTextStream& ts, bool saveAbsoluteVectorPositions) {
     << (app->graphFileDlg()->display() == 1 ? "true" : "false");
 
   if (app->graphFileDlg()->autoSaving()) {
-    ts << "\" url=\"" << Q3StyleSheet::escape(app->graphFileDlg()->url().toString());
+    ts << "\" url=\"" << Q3StyleSheet::escape(app->graphFileDlg()->url().url());
   }
   ts << "\" />" << endl;
 

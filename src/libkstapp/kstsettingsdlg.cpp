@@ -48,7 +48,7 @@ void KstSettingsDlg::init() {
   _apply->setEnabled(false);
 
   QString hours = i18n(" hours");
-  QLineEdit* edit = dynamic_cast<QLineEdit*>(_valueOffset->child("qt_spinbox_edit"));
+  QLineEdit* edit = _valueOffset->findChild<QLineEdit*>("qt_spinbox_edit");
   if (edit) {
     edit->setMaxLength(5 + hours.length());
   }
@@ -57,13 +57,13 @@ void KstSettingsDlg::init() {
   _colorPalette->_label->setText(i18n("Curve color sequence: "));
 
   connect(_spinBoxLineWidth, SIGNAL(valueChanged(int)), this, SLOT(setDirty()));
-  connect(_spinBoxLineWidth->child("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), this, SLOT(setDirty()));
-  connect(_valueOffset->child("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), this, SLOT(updateTimezone(const QString&)));
-  connect(_timer->child("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), this, SLOT(setDirty()));
-  connect(_kIntSpinBoxEMailPort->child("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), this, SLOT(setDirty()));
+  connect(_spinBoxLineWidth->findChild<QLineEdit*>("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), this, SLOT(setDirty()));
+  connect(_valueOffset->findChild<QLineEdit*>("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), this, SLOT(updateTimezone(const QString&)));
+  connect(_timer->findChild<QLineEdit*>("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), this, SLOT(setDirty()));
+  connect(_kIntSpinBoxEMailPort->findChild<QLineEdit*>("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), this, SLOT(setDirty()));
   connect(_colorPalette->_palette, SIGNAL(activated(int)), this, SLOT(setDirty()));
-  connect(_fontSize->child("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), this, SLOT(setDirty()));
-  connect(_fontMinSize->child("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), this, SLOT(setDirty()));
+  connect(_fontSize->findChild<QLineEdit*>("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), this, SLOT(setDirty()));
+  connect(_fontMinSize->findChild<QLineEdit*>("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), this, SLOT(setDirty()));
 }
 
 void KstSettingsDlg::setSettings(const KstSettings *settings) {
@@ -280,10 +280,10 @@ int KstSettingsDlg::utcOffset(const QString& timezone) {
 
 void KstSettingsDlg::setUTCOffset(const QString& timezone) {
   double hours = double(utcOffset(timezone)) / 3600.0;
-  _valueOffset->child("qt_spinbox_edit")->blockSignals(true);
+  _valueOffset->findChild<QLineEdit*>("qt_spinbox_edit")->blockSignals(true);
   _valueOffset->blockSignals(true);
   _valueOffset->setValue(hours);
-  _valueOffset->child("qt_spinbox_edit")->blockSignals(false);
+  _valueOffset->findChild<QLineEdit*>("qt_spinbox_edit")->blockSignals(false);
   _valueOffset->blockSignals(false);
   setDirty();
 }

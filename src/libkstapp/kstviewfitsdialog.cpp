@@ -21,6 +21,7 @@
 #include <q3listbox.h>
 #include <qpushbutton.h>
 #include <q3table.h>
+#include <qabstractitemview.h>
 #include <qtimer.h>
 
 #include <klocale.h>

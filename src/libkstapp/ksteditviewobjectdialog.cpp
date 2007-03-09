@@ -17,7 +17,7 @@
 
 #include "ksteditviewobjectdialog.h"
 
-#include <qbutton.h>
+#include <q3button.h>
 #include <q3buttongroup.h>
 #include <qcheckbox.h>
 #include <qcombobox.h>
@@ -169,7 +169,7 @@ void KstEditViewObjectDialogI::updateWidgets() {
           propertyWidget->setProperty("value", _viewObject->property(property->name()));
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(valueChanged(const QString&)), this, SLOT(modified()));
-            connect(propertyWidget->child("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), this, SLOT(modified()));
+            connect(propertyWidget->findChild<QLineEdit*>("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), this, SLOT(modified()));
           }
         } else if (widgetType == "KColorButton") {
           // insert a colorbutton
@@ -225,7 +225,7 @@ void KstEditViewObjectDialogI::updateWidgets() {
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(valueChanged(int)), this, SLOT(modified()));
             connect(propertyWidget, SIGNAL(valueChanged(double)), this, SLOT(modified()));
-            connect(propertyWidget->child("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), this, SLOT(modified()));
+            connect(propertyWidget->findChild<QLineEdit*>("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), this, SLOT(modified()));
           }
         } else if (widgetType == "QFontComboBox") {
           // insert a font combo box

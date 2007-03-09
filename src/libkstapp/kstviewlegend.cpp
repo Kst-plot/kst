@@ -697,16 +697,16 @@ void KstViewLegend::connectConfigWidget(QWidget *parent, QWidget *w) const {
   connect(widget->TrackContents, SIGNAL(pressed()), parent, SLOT(modified()));
   connect(widget->_font, SIGNAL(activated(int)), parent, SLOT(modified()));
   connect(widget->_fontSize, SIGNAL(valueChanged(int)), parent, SLOT(modified()));
-  connect(widget->_fontSize->child("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), parent, SLOT(modified()));
+  connect(widget->_fontSize->findChild<QLineEdit*>("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), parent, SLOT(modified()));
   connect(widget->_vertical, SIGNAL(pressed()), parent, SLOT(modified()));
   connect(widget->_fontColor, SIGNAL(changed(const QColor&)), parent, SLOT(modified()));  
   connect(widget->_transparent, SIGNAL(pressed()), parent, SLOT(modified()));
   connect(widget->_boxColors, SIGNAL(fgChanged(const QColor&)), parent, SLOT(modified()));
   connect(widget->_boxColors, SIGNAL(bgChanged(const QColor&)), parent, SLOT(modified()));
   connect(widget->_margin, SIGNAL(valueChanged(int)), parent, SLOT(modified()));
-  connect(widget->_margin->child("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), parent, SLOT(modified()));
+  connect(widget->_margin->findChild<QLineEdit*>("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), parent, SLOT(modified()));
   connect(widget->_border, SIGNAL(valueChanged(int)), parent, SLOT(modified()));
-  connect(widget->_border->child("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), parent, SLOT(modified()));
+  connect(widget->_border->findChild<QLineEdit*>("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), parent, SLOT(modified()));
   connect(widget->_thisLegend, SIGNAL(stateChanged(int)), parent, SLOT(modified()));
 
 }

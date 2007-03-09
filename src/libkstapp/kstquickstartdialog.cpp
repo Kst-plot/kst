@@ -62,7 +62,7 @@ void KstQuickStartDialogI::open_I() {
       _app->selectRecentFile(_fileName->url());
       close();
     }
-  } else if (_app->openDocumentFile(_fileName->url())) {
+  } else if (_app->openDocumentFile(_fileName->url().url())) {
     close();
   }
 }

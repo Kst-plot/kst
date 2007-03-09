@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include <q3header.h>
+#include <q3boxlayout.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
 

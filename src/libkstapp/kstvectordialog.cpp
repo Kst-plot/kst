@@ -128,7 +128,7 @@ void KstVectorDialogI::updateCompletion() {
 
   /* update filename list and ll axes combo boxes */
   KST::dataSourceList.lock().readLock();
-  KstDataSourcePtr ds = *KST::dataSourceList.findReusableFileName(_w->FileName->url());
+  KstDataSourcePtr ds = *KST::dataSourceList.findReusableFileName(_w->FileName->url().url());
   KST::dataSourceList.lock().unlock();
 
   delete _configWidget;
@@ -146,7 +146,7 @@ void KstVectorDialogI::updateCompletion() {
   } else {
     QString type;
     bool complete = false;
-    QString u = _w->FileName->url();
+    QString u = _w->FileName->url().url();
     KUrl url;
     if (QFile::exists(u) && QFileInfo(u).isRelative()) {
       url.setPath(u);
@@ -218,7 +218,7 @@ void KstVectorDialogI::fillFieldsForRVEdit() {
       }
       tf->unlock();
     } else {
-      QStringList list = KstDataSource::fieldListForSource(_w->FileName->url());
+      QStringList list = KstDataSource::fieldListForSource(_w->FileName->url().url());
       _w->Field->addItems(list);
       if (_fieldCompletion) {
         _fieldCompletion->insertItems(list);
@@ -325,10 +325,10 @@ bool KstVectorDialogI::newObject() {
     /* if there is not an active DataSource, create one */
     {
       KST::dataSourceList.lock().writeLock();
-      KstDataSourceList::Iterator it = KST::dataSourceList.findReusableFileName(_w->FileName->url());
+      KstDataSourceList::Iterator it = KST::dataSourceList.findReusableFileName(_w->FileName->url().url());
 
       if (it == KST::dataSourceList.end()) {
-        file = KstDataSource::loadSource(_w->FileName->url());
+        file = KstDataSource::loadSource(_w->FileName->url().url());
         if (!file || !file->isValid()) {
           KST::dataSourceList.lock().unlock();
           KMessageBox::sorry(this, i18n("The file could not be loaded."));
@@ -449,10 +449,10 @@ bool KstVectorDialogI::editSingleObjectRV(KstVectorPtr vcPtr) {
   if (_fileNameDirty) {
     /* if there is not an active KstFile, create one */
     KST::dataSourceList.lock().writeLock();
-    KstDataSourceList::Iterator it = KST::dataSourceList.findReusableFileName(_w->FileName->url());
+    KstDataSourceList::Iterator it = KST::dataSourceList.findReusableFileName(_w->FileName->url().url());
 
     if (it == KST::dataSourceList.end()) {
-      file = KstDataSource::loadSource(_w->FileName->url());
+      file = KstDataSource::loadSource(_w->FileName->url().url());
       if (!file || !file->isValid()) {
         KST::dataSourceList.lock().unlock();
         KMessageBox::sorry(this, i18n("The file could not be opened."));
@@ -687,7 +687,7 @@ void KstVectorDialogI::configureSource() {
   KST::dataSourceList.lock().unlock();
   if (!ds) {
     isNew = true;
-    ds = KstDataSource::loadSource(_w->FileName->url());
+    ds = KstDataSource::loadSource(_w->FileName->url().url());
     if (!ds || !ds->isValid()) {
       _w->_configure->setEnabled(false);
       return;

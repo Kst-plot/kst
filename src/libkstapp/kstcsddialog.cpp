@@ -391,7 +391,7 @@ bool KstCsdDialogI::editObject() {
 
 void KstCsdDialogI::populateEditMultiple() {
   KstCSDList csList = kstObjectSubList<KstDataObject,KstCSD>(KST::dataObjectList);
-  _editMultipleWidget->_objectList->addItems(csList.tagNames());
+  _editMultipleWidget->_objectList->insertStringList(csList.tagNames());
 
   // also intermediate state for multiple edit
   _w->_vector->_vector->insertItem(0, "");

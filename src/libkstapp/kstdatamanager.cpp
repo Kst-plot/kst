@@ -20,6 +20,7 @@
 // include files for Qt
 #include <q3ptrstack.h>
 #include <q3toolbar.h>
+#include <q3mainwindow.h>
 #include <qtoolbox.h>
 
 #include <qtoolbutton.h>

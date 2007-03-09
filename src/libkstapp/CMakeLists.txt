@@ -1,4 +1,6 @@
 
+ADD_DEFINITIONS(-DQT3_SUPPORT)
+
 include_directories( ${CMAKE_BINARY_DIR}/kst ${CMAKE_SOURCE_DIR}/kst/src/extdate ${CMAKE_SOURCE_DIR}/kst/src/widgets ${CMAKE_BINARY_DIR}/kst/src/widgets ${CMAKE_SOURCE_DIR}/kst/src/libkst ${CMAKE_BINARY_DIR}/kst/src/libkst ${CMAKE_SOURCE_DIR}/kst/src/libkstmath ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
 
 ########### next target ###############
@@ -25,7 +27,7 @@ set(kstapp_LIB_UI_IMPL_SRCS
    kstimagedialog.cpp
    kstmatrixdialog.cpp
    kstmonochromedialog.cpp
-   kstplugindialog.cpp
+#    kstplugindialog.cpp
    kstpsddialog.cpp
    kstquickstartdialog.cpp
    kstsettingsdlg.cpp
@@ -58,8 +60,8 @@ set(kstapp_LIB_SRCS
 #    kstdoc.cpp
 #    kstdrag.cpp
 #    ksteventmonitorentry.cpp
-#    kstfilterdialog.cpp
-#    kstfitdialog.cpp
+# #    kstfilterdialog.cpp
+# #    kstfitdialog.cpp
 #    kstfittable.cpp
 #    kstgfx2dplotmousehandler.cpp
 #    kstgfxarrowmousehandler.cpp

@@ -21,6 +21,7 @@
 
 #include <klibloader.h>
 #include <kservicetype.h>
+#include <kservicetypetrader.h>
 #include "kst.h"
 #include "extensionmgr.h"
 
@@ -39,14 +40,14 @@ ExtensionDialog::~ExtensionDialog() {}
 
 void ExtensionDialog::show() {
   _extensions->clear();
-  KService::List sl = KServiceType::offers("Kst Extension");
+  KService::List sl = KServiceTypeTrader::self()->query("Kst Extension");
   for (KService::List::ConstIterator it = sl.begin(); it != sl.end(); ++it) {
     KService::Ptr service = *it;
     QString name = service->property("Name").toString();
     Q3CheckListItem *i = new Q3CheckListItem(_extensions, name, Q3CheckListItem::CheckBox);
     i->setText(1, service->property("Comment").toString());
     i->setText(2, service->property("X-Kst-Plugin-Author").toString());
-    i->setText(3, KLibLoader::findLibrary(service->library().toLatin1(), KstApp::inst()->instance()));
+    i->setText(3, KLibLoader::findLibrary(service->library().toLatin1()));
     if (!ExtensionMgr::self()->extensions().contains(name)) {
       ExtensionMgr::self()->setEnabled(name, service->property("X-Kst-Enabled").toBool());
     }

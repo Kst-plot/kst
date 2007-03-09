@@ -681,21 +681,21 @@ void KstViewLabel::connectConfigWidget(QWidget *parent, QWidget *w) const {
   connect(widget->_text, SIGNAL(textChanged()), parent, SLOT(modified()));
   connect(widget->_font, SIGNAL(activated(int)), parent, SLOT(modified()));
   connect(widget->_fontSize, SIGNAL(valueChanged(int)), parent, SLOT(modified()));
-  connect(widget->_fontSize->child("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), parent, SLOT(modified()));
+  connect(widget->_fontSize->findChild<QLineEdit*>("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), parent, SLOT(modified()));
   connect(widget->_horizontal, SIGNAL(activated(int)), parent, SLOT(modified()));
   connect(widget->_fontColor, SIGNAL(changed(const QColor&)), parent, SLOT(modified()));  
   connect(widget->_precision, SIGNAL(valueChanged(int)), parent, SLOT(modified()));
-  connect(widget->_precision->child("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), parent, SLOT(modified()));
+  connect(widget->_precision->findChild<QLineEdit*>("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), parent, SLOT(modified()));
   connect(widget->_rotation, SIGNAL(valueChanged(int)), parent, SLOT(modified()));
   connect(widget->_rotation, SIGNAL(valueChanged(double)), parent, SLOT(modified()));
-  connect(widget->_rotation->child("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), parent, SLOT(modified()));  
+  connect(widget->_rotation->findChild<QLineEdit*>("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), parent, SLOT(modified()));  
   connect(widget->_transparent, SIGNAL(pressed()), parent, SLOT(modified()));
   connect(widget->_boxColors, SIGNAL(fgChanged(const QColor&)), parent, SLOT(modified()));
   connect(widget->_boxColors, SIGNAL(bgChanged(const QColor&)), parent, SLOT(modified()));
   connect(widget->_margin, SIGNAL(valueChanged(int)), parent, SLOT(modified()));
-  connect(widget->_margin->child("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), parent, SLOT(modified()));
+  connect(widget->_margin->findChild<QLineEdit*>("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), parent, SLOT(modified()));
   connect(widget->_border, SIGNAL(valueChanged(int)), parent, SLOT(modified()));
-  connect(widget->_border->child("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), parent, SLOT(modified()));
+  connect(widget->_border->findChild<QLineEdit*>("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), parent, SLOT(modified()));
 }
 
 
