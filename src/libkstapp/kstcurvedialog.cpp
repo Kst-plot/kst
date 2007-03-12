@@ -232,8 +232,7 @@ bool KstCurveDialogI::newObject() {
   }
   KST::vectorList.lock().unlock();
   if (!VX || !VY) {
-    kstdFatal() << "Bug in kst: the XVector field refers to "
-                << "a non existent vector...." << endl;
+    qFatal("Bug in kst: the XVector field refers to a non existent vector....");
   }
 
   // readlock the vectors, because when we update the curve, they get read

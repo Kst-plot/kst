@@ -116,7 +116,7 @@ template<class T>
 QString KstViewWindow::createObject(const QString& suggestedName, bool prompt) {
 
   KstApp *app = KstApp::inst();
-  KMdiIterator<KMdiChildView*> *iter;
+  QList<QWidget*> childViews;
 
   QString name = suggestedName;
   bool duplicate = true;
@@ -124,9 +124,10 @@ QString KstViewWindow::createObject(const QString& suggestedName, bool prompt) {
     duplicate = false;
     KstViewObjectPtr rc;
     //check the name
-    iter = app->createIterator();
-    while (iter->currentItem() && !duplicate) {
-      KMdiChildView *childview = iter->currentItem();
+    childViews = app->childViews();
+    QListIterator<QWidget*> iter(childViews);
+    while (iter.hasNext() && !duplicate) {
+      KMdiChildView *childview = iter.next();
       KstViewWindow *viewwindow = dynamic_cast<KstViewWindow*>(childview);
       if (viewwindow) {
         rc = viewwindow->view()->findChild(name);
@@ -135,9 +136,8 @@ QString KstViewWindow::createObject(const QString& suggestedName, bool prompt) {
           name = KST::suggestPlotName();
         }
       }
-      iter->next();
+      iter.next();
     }
-    app->deleteIterator(iter);
   }
 
   if (prompt) {
@@ -156,9 +156,9 @@ QString KstViewWindow::createObject(const QString& suggestedName, bool prompt) {
       duplicate = false;
       KstViewObjectPtr rc;
       //check the name
-      iter = app->createIterator();
-      while (iter->currentItem() && !duplicate) {
-        KMdiChildView *childview = iter->currentItem();
+      QListIterator<QWidget*> iter(childViews);
+      while (iter.hasNext() && !duplicate) {
+        KMdiChildView *childview = iter.next();
         KstViewWindow *viewwindow = dynamic_cast<KstViewWindow*>(childview);
         if (viewwindow) {
           rc = viewwindow->view()->findChild(name);
@@ -170,14 +170,12 @@ QString KstViewWindow::createObject(const QString& suggestedName, bool prompt) {
             name = KLineEditDlg::getText(i18n("Enter a name for the new plot:"), name, &ok, 0L);
 #endif
             if (!ok) {
-              app->deleteIterator(iter);
               return QString::null;
             }
           }
         }
-        iter->next();
+        iter.next();
       }
-      app->deleteIterator(iter);
     }
   }
   //create the plot now

@@ -85,7 +85,8 @@ KstChooseColorDialogI::KstChooseColorDialogI(QWidget* parent, Qt::WindowFlags fl
       dsName->show();
       
       // add the colorcombo
-      KColorCombo* dsColor = new KColorCombo(colorFrame, "dsColor"+i);
+      KColorCombo* dsColor = new KColorCombo(colorFrame);
+      dsColor->setObjectName("dsColor"+i);
       dsColor->setColor(KstColorSequence::next());
       grid->addWidget(dsColor,i,1);
       colorCombos.push_back(dsColor);

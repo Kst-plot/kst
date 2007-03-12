@@ -429,7 +429,7 @@ void KstObjectItem::update(bool recursive, int localUseCount) {
         if (text(3) != field) {
           setText(3, field);
         }
-        field = i18n("[%1..%2]").arg(x->minimum()).arg(x->maximum());
+        field = i18n("[%1..%2]").arg(x->minValue()).arg(x->maxValue());
         if (text(4) != field) {
           setText(4, field);
         }
@@ -507,7 +507,9 @@ void KstObjectItem::makeImage() {
 
 void KstObjectItem::showMetadata() {
   if (_rtti == RTTI_OBJ_DATA_VECTOR) {
-    DataSourceMetaDataDialog *dlg = new DataSourceMetaDataDialog(_dm, 0, false, Qt::WDestructiveClose);
+    DataSourceMetaDataDialog *dlg = new DataSourceMetaDataDialog(_dm);
+    dlg->setModal(false);
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
     KstReadLocker vl(&KST::vectorList.lock());
     KstVectorList::Iterator m = KST::vectorList.findTag(_tag);
     KstRVectorPtr r = kst_cast<KstRVector>(*m);
@@ -520,7 +522,9 @@ void KstObjectItem::showMetadata() {
     dlg->setDataSource(dsp);
     dlg->show();
   } else if (_rtti == RTTI_OBJ_DATA_MATRIX) {
-    DataSourceMetaDataDialog *dlg = new DataSourceMetaDataDialog(_dm, 0, false, Qt::WDestructiveClose);
+    DataSourceMetaDataDialog *dlg = new DataSourceMetaDataDialog(_dm);
+    dlg->setModal(false);
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
     KstReadLocker ml(&KST::matrixList.lock());
     KstMatrixList::Iterator m = KST::matrixList.findTag(_tag);
     KstRMatrixPtr r = kst_cast<KstRMatrix>(*m);
@@ -584,16 +588,16 @@ void KstObjectItem::removeFromPlot(int id) {
 
 void KstObjectItem::paintPlot(Kst2DPlotPtr p) {
   KstApp *app = KstApp::inst();
-  KMdiIterator<KMdiChildView*> *it = app->createIterator();
-  while (it->currentItem()) {
-    KstViewWindow *v = dynamic_cast<KstViewWindow*>(it->currentItem());
+  QList<KMdiChildView*> childViews = app->childViews();
+  QListIterator<KMdiChildView*> it(childViews);
+  while (it.hasNext()) {
+    KstViewWindow *v = dynamic_cast<KstViewWindow*>(it.next());
     if (v && v->view()->contains(kst_cast<KstViewObject>(p))) {
       v->view()->paint(KstPainter::P_PLOT);
       break;
     }
-    it->next();
+    it.next();
   }
-  app->deleteIterator(it);
 }
 
 
@@ -605,7 +609,7 @@ KstDataManagerI::KstDataManagerI(KstDoc *in_doc, QWidget* parent, Qt::WindowFlag
 : QDialog(parent, fl) {
   doc = in_doc;
 
-  _yesPixmap = QPixmap(locate("data", "kst/pics/yes.png"));
+  _yesPixmap = QPixmap(KStandardDirs::locate("data", "kst/pics/yes.png"));
 
   connect(Close, SIGNAL(clicked()), this, SLOT(reject()));
   connect(Edit, SIGNAL(clicked()), this, SLOT(edit_I()));
@@ -1135,7 +1139,7 @@ void KstDataManagerI::contextMenu(Q3ListViewItem *i, const QPoint& p, int col) {
   KstBaseCurvePtr c;
   KstImagePtr img;
 
-  KPopupMenu *m = new KPopupMenu(this);
+  KMenu *m = new KMenu(this);
 
   m->insertTitle(koi->text(0));
 
@@ -1183,9 +1187,10 @@ void KstDataManagerI::contextMenu(Q3ListViewItem *i, const QPoint& p, int col) {
     bool haveAdd = false, haveRemove = false;
 
     KstApp *app = KstApp::inst();
-    KMdiIterator<KMdiChildView*> *it = app->createIterator();
-    while (it->currentItem()) {
-      KstViewWindow *v = dynamic_cast<KstViewWindow*>(it->currentItem());
+    QList<QWidget*> childViews = app->childViews();
+    QListIterator<KMdiChildView*> it(childViews);
+    while (it.hasNext) {
+      KstViewWindow *v = dynamic_cast<KstViewWindow*>(it.next());
       if (v) {
         Kst2DPlotList plots = v->view()->findChildrenType<Kst2DPlot>();
         for (Kst2DPlotList::Iterator i = plots.begin(); i != plots.end(); ++i) {
@@ -1200,10 +1205,8 @@ void KstDataManagerI::contextMenu(Q3ListViewItem *i, const QPoint& p, int col) {
           PlotMap[id++] = plot;
         }
       }
-      it->next();
+      it.next();
     }
-
-    app->deleteIterator(it);
 
     id = m->insertItem(i18n("&Add to Plot"), addMenu);
     m->setItemEnabled(id, haveAdd);

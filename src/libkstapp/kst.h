@@ -113,6 +113,11 @@ class KST_EXPORT KstApp : public KMdiMainFrm {
     static KstApp* inst();
     static void doubleCheckCleanup();
 
+    //FIXME Placeholders to eliminate KMDI as best as possible
+    QList<QWidget*> childViews() { return this->findChildren<QWidget*>(); }
+    QWidget *activeWindow() { return this; }
+    QWidget *findWindow(const QString &/*name*/) { return this; }
+
     void checkFontPresent(const QString& font);
     const QString& defaultFont() const;
 

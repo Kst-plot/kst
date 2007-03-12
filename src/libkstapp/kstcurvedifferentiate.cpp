@@ -184,16 +184,17 @@ void KstCurveDifferentiateI::setOptions( ) {
 
 
 void KstCurveDifferentiateI::getOptions( ) {
-  _lineColorOrder  = selectedListBox->index(selectedListBox->findItem(i18n("Line Color"), ExactMatch));
-  _pointStyleOrder = selectedListBox->index(selectedListBox->findItem(i18n("Point Style"), ExactMatch));
-  _lineStyleOrder  = selectedListBox->index(selectedListBox->findItem(i18n("Line Style"), ExactMatch));
-  _lineWidthOrder  = selectedListBox->index(selectedListBox->findItem(i18n("Line Width"), ExactMatch));
+  _lineColorOrder  = selectedListBox->index(selectedListBox->findItem(i18n("Line Color"), Q3ListBox::ExactMatch));
+  _pointStyleOrder = selectedListBox->index(selectedListBox->findItem(i18n("Point Style"), Q3ListBox::ExactMatch));
+  _lineStyleOrder  = selectedListBox->index(selectedListBox->findItem(i18n("Line Style"), Q3ListBox::ExactMatch));
+  _lineWidthOrder  = selectedListBox->index(selectedListBox->findItem(i18n("Line Width"), Q3ListBox::ExactMatch));
    
   _maxLineWidth = maxLineWidth->value();
   _pointDensity = pointDensity->currentIndex();
   
-  _repeatAcross = _buttonGroupRepeat->selectedId();
-  _applyTo = _buttonGroupApplyTo->selectedId();
+  //FIXME PORT
+//   _repeatAcross = _buttonGroupRepeat->selectedId();
+//   _applyTo = _buttonGroupApplyTo->selectedId();
 }
 
 
@@ -330,21 +331,18 @@ void KstCurveDifferentiateI::apply() {
         cycleWindow(window);
       }
     } else {
-      KMdiIterator<KMdiChildView*> *it = app->createIterator();
-      
-      if (it) {
-        while (it->currentItem()) {
-          if (_repeatAcross == 1) {
-            _seqVect[0]->reset();
-          }
-
-          window = dynamic_cast<KstViewWindow*>(it->currentItem());
-          if (window && !window->view()->children().isEmpty()) {
-            cycleWindow(window);
-          }
-          it->next();
+      QList<QWidget*> childViews = app->childViews();
+      QListIterator<KMdiChildView*> it(childViews);
+      while (it.hasNext()) {
+        if (_repeatAcross == 1) {
+          _seqVect[0]->reset();
         }
-        app->deleteIterator(it);
+
+        window = dynamic_cast<KstViewWindow*>(it.next());
+        if (window && !window->view()->children().isEmpty()) {
+          cycleWindow(window);
+        }
+        it.next();
       }
     }
   }

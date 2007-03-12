@@ -134,12 +134,12 @@ void KstChangeFileDialogI::OKFileChange() {
 bool KstChangeFileDialogI::applyFileChange() {
   KstDataSourcePtr file;
   KST::dataSourceList.lock().writeLock();
-  KstDataSourceList::Iterator it = KST::dataSourceList.findReusableFileName(_dataFile->url());
+  KstDataSourceList::Iterator it = KST::dataSourceList.findReusableFileName(_dataFile->url().url());
   QString invalidSources;
   int invalid = 0;
 
   if (it == KST::dataSourceList.end()) {
-    file = KstDataSource::loadSource(_dataFile->url());
+    file = KstDataSource::loadSource(_dataFile->url().url());
     if (!file || !file->isValid()) {
       KST::dataSourceList.lock().unlock();
       KMessageBox::sorry(this, i18n("The file could not be loaded."));
@@ -277,9 +277,10 @@ bool KstChangeFileDialogI::applyFileChange() {
   // now add any curves and images to plots if they were duplicated
   if (_duplicateSelected->isChecked() && _duplicateDependents->isChecked()) { 
     KstApp *app = KstApp::inst();
-    KMdiIterator<KMdiChildView*> *it = app->createIterator();
-    while (it->currentItem()) {
-      KstViewWindow *w = dynamic_cast<KstViewWindow*>(it->currentItem());
+    QList<KMdiChildView*> childViews = app->childViews();
+    QListIterator<KMdiChildView*> it(childViews);
+    while (it.hasNext()) {
+      KstViewWindow *w = dynamic_cast<KstViewWindow*>(it.next());
       if (w) {
         KstTopLevelViewPtr view = kst_cast<KstTopLevelView>(w->view());
         if (view) {
@@ -290,15 +291,13 @@ bool KstChangeFileDialogI::applyFileChange() {
                 if ((*plotIter)->Curves.contains(kst_cast<KstBaseCurve>(iter.key())) && !(*plotIter)->Curves.contains(kst_cast<KstBaseCurve>(curve))) {
                   (*plotIter)->addCurve(curve);
                 }
-              } 
+              }
             }
-  
-          }     
+          }
         }
       }
-      it->next();
+      it.next();
     }
-    app->deleteIterator(it);
   }
 
   // clean up unused data sources

@@ -33,6 +33,7 @@
 // application specific includes
 #include "kst.h"
 #include "kstdoc.h"
+#include "kstdatacollection.h"
 #include "scalarselector.h"
 #include "stringselector.h"
 #include "vectorselector.h"
@@ -158,8 +159,8 @@ void KstBasicDialogI::init() {
 void KstBasicDialogI::createInputVector(const QString &name, int row) {
   QLabel *label = new QLabel(name + ":", _w->_frame);
 
-  VectorSelector *widget = new VectorSelector(_w->_frame,
-                                              name.toLatin1());
+  VectorSelector *widget = new VectorSelector(_w->_frame);
+  widget->setObjectName(name);
   connect(widget, SIGNAL(newVectorCreated(const QString&)),
           this, SIGNAL(modified()));
 
@@ -173,8 +174,8 @@ void KstBasicDialogI::createInputVector(const QString &name, int row) {
 void KstBasicDialogI::createInputScalar(const QString &name, int row) {
   QLabel *label = new QLabel(name + ":", _w->_frame);
 
-  ScalarSelector *widget = new ScalarSelector(_w->_frame,
-                                              name.toLatin1());
+  ScalarSelector *widget = new ScalarSelector(_w->_frame);
+  widget->setObjectName(name);
   connect(widget, SIGNAL(newScalarCreated()),
           this, SIGNAL(modified()));
   widget->allowDirectEntry(true);
@@ -189,8 +190,8 @@ void KstBasicDialogI::createInputScalar(const QString &name, int row) {
 void KstBasicDialogI::createInputString(const QString &name, int row) {
   QLabel *label = new QLabel(name + ":", _w->_frame);
 
-  StringSelector *widget = new StringSelector(_w->_frame,
-                                              name.toLatin1());
+  StringSelector *widget = new StringSelector(_w->_frame);
+  widget->setObjectName(name);
   connect(widget, SIGNAL(newStringCreated()),
           this, SIGNAL(modified()));
 

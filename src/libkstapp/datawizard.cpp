@@ -244,7 +244,7 @@ void DataWizard::xChanged() {
 
 void DataWizard::testUrl() {
   _inTest = true;
-  sourceChanged(_url->url());
+  sourceChanged(_url->url().url());
   _inTest = false;
 }
 
@@ -346,7 +346,7 @@ void DataWizard::sourceChanged(const QString& text) {
     KST::vectorDefaults.sync();
     QString defaultX = KST::vectorDefaults.wizardXVector();
     if (fl.contains(defaultX)) {
-      _xVector->setItemText(xVector->currentIndex(), defaultX);
+      _xVector->setItemText(_xVector->currentIndex(), defaultX);
     } else {
       _xVector->setCurrentIndex(0);
     }
@@ -438,24 +438,25 @@ void DataWizard::showPage( QWidget *page ) {
 
 void DataWizard::updateWindowBox() {
   KstApp *app = KstApp::inst();
-  KMdiIterator<KMdiChildView*> *it = app->createIterator();
+  QList<KMdiChildView*> childViews = app->childViews();
+  QListIterator<KMdiChildView*> it(childViews);
 
   _windowName->clear();
-  while (it->currentItem()) {
-    KstViewWindow *v = dynamic_cast<KstViewWindow*>(it->currentItem());
+  while (it.hasNext()) {
+    KstViewWindow *v = dynamic_cast<KstViewWindow*>(it.next());
     if (v) {
       _windowName->insertItem(v->caption());
     }
-    it->next();
+    it.next();
   }
-  app->deleteIterator(it);
 
   _existingWindow->setEnabled(_windowName->count() > 0);
   _currentWindow->setEnabled(_windowName->count() > 0 && KstApp::inst()->activeWindow());
 
-  if (!_windowGroup->selected() || !_windowGroup->selected()->isEnabled()) {
-    _newWindow->setChecked(true);
-  }
+//FIXME PORT!
+//   if (!_windowGroup->selected() || !_windowGroup->selected()->isEnabled()) {
+//     _newWindow->setChecked(true);
+//   }
 }
 
 
@@ -535,9 +536,10 @@ void DataWizard::updatePlotBox() {
     _existingPlotName->setEnabled(havePlots && _existingPlot->isChecked());
   }
 
-  if (!_plotGroup->selected()->isEnabled()) {
-    _onePlot->setChecked(true);
-  }
+//FIXME PORT!
+//   if (!_plotGroup->selected()->isEnabled()) {
+//     _onePlot->setChecked(true);
+//   }
 
   //FIXME Combo's don't work this way anymore...
   if (_existingPlot->isEnabled()) {
@@ -763,7 +765,7 @@ void DataWizard::finished() {
       // Use the existing view
       newName = w->caption();
       if (newName.isEmpty()) {
-        newName = w->tabCaption();
+        newName = w->windowTitle();
       }
     } else {
       newName = _newWindowName->text();
@@ -932,7 +934,7 @@ void DataWizard::finished() {
       pit = plots.begin();
     }
   } else if (_radioButtonPlotDataPSD->isChecked()) {
-    pit = plots.at(plots.count()/2);
+    *pit = plots.at(plots.count()/2);
   }
 
   // create the PSDs
@@ -1001,7 +1003,7 @@ void DataWizard::finished() {
         if (!_onePlot->isChecked()) { // change plots if we are not onePlot
           if (++pit == plots.end()) {
             if (_radioButtonPlotDataPSD->isChecked()) { // if xy and psd
-              pit = plots.at(plots.count()/2);
+              *pit = plots.at(plots.count()/2);
             } else {
               pit = plots.begin();
             }
@@ -1137,7 +1139,10 @@ void DataWizard::configureSource() {
   }
 
   assert(_configWidget);
-  KDialog *dlg = new KDialog(this, "Data Config Dialog", true, i18n("Configure Data Source"));
+  KDialog *dlg = new KDialog(this);
+  dlg->setObjectName("Data Config Dialog");
+  dlg->setModal(true);
+  dlg->setCaption(i18n("Configure Data Source"));
   if (isNew) {
     connect(dlg, SIGNAL(okClicked()), _configWidget, SLOT(save()));
     connect(dlg, SIGNAL(applyClicked()), _configWidget, SLOT(save()));
