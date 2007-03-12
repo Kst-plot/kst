@@ -1748,7 +1748,7 @@ bool KstViewObject::paste(QMimeSource* source, KstViewObjectList* list) {
   bool rc = false;
 
   if (source && source->provides(PlotMimeSource::mimeType())) {
-    QDataStream ds(source->encodedData(PlotMimeSource::mimeType()), QIODevice::ReadOnly);
+    QDataStream ds(&source->encodedData(PlotMimeSource::mimeType()), QIODevice::ReadOnly);
     KstViewWindow *w;
 
     ds >> window;

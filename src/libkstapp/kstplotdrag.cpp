@@ -37,7 +37,7 @@ KstPlotDrag::~KstPlotDrag() {
 
 void KstPlotDrag::setPlots(const KstViewObjectList& l) {
   QByteArray a;
-  QDataStream ds(a, QIODevice::WriteOnly);
+  QDataStream ds(&a, QIODevice::WriteOnly);
   ds << l.count();
   for (KstViewObjectList::ConstIterator i = l.begin(); i != l.end(); ++i) {
     ds << *i;
@@ -48,7 +48,7 @@ void KstPlotDrag::setPlots(const KstViewObjectList& l) {
 
 KstViewObjectList KstPlotDrag::decodedContents(QByteArray& a) {
   uint x;
-  QDataStream ds(a, QIODevice::ReadOnly);
+  QDataStream ds(&a, QIODevice::ReadOnly);
   ds >> x;
   KstViewObjectList c;
   for (uint i = 0; i < x; ++i) {

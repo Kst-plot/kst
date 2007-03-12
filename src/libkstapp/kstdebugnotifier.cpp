@@ -39,8 +39,8 @@ KstDebugNotifier::KstDebugNotifier(QWidget *parent)
   setToolTip(i18n("An error has occurred.  Click on this icon for more details."));
 #define IMAGE_STAGES 2
   _pm.resize(IMAGE_STAGES);
-  _pm[0] = QPixmap(locate("data", "kst/pics/kst_error_1.png"));
-  _pm[1] = QPixmap(locate("data", "kst/pics/kst_error_2.png"));
+  _pm[0] = QPixmap(KStandardDirs::locate("data", "kst/pics/kst_error_1.png"));
+  _pm[1] = QPixmap(KStandardDirs::locate("data", "kst/pics/kst_error_2.png"));
   setPixmap(_pm[0]);
   show();
   QTimer::singleShot(TIMER_TICK, this, SLOT(animate()));

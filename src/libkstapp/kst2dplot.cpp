@@ -57,8 +57,8 @@
 #include "kstdataobjectcollection.h"
 #include "kstdebug.h"
 #include "kstdoc.h"
-#include "kstfitdialog.h"
-#include "kstfilterdialog.h"
+// #include "kstfitdialog.h"
+// #include "kstfilterdialog.h"
 #include "kstgfxmousehandler.h"
 #include "kstimage.h"
 #include "kstlinestyle.h"
@@ -497,16 +497,16 @@ Kst2DPlot::Kst2DPlot(const Kst2DPlot& plot, const QString& name)
   }
 
   KstApp *app = KstApp::inst();
-  KMdiIterator<KMdiChildView*> *iter;
+  QList<QWidget*> childViews = app->childViews();
+  QListIterator<KMdiChildView*> iter(childViews);
   bool duplicate = true;
   int last = 0;
 
   // check for unique plot name
   while (duplicate) {
     duplicate = false;
-    iter = app->createIterator();
-    while (iter->currentItem() && !duplicate) {
-      KMdiChildView *childview = iter->currentItem();
+    while (iter.hasNext() && !duplicate) {
+      KMdiChildView *childview = iter.next();
       KstViewWindow *viewwindow = dynamic_cast<KstViewWindow*>(childview);
       if (viewwindow) {
         if (viewwindow->view()->findChild(plotName)) {
@@ -521,9 +521,8 @@ Kst2DPlot::Kst2DPlot(const Kst2DPlot& plot, const QString& name)
           break;
         }
       }
-      iter->next();
+      iter.next();
     }
-    app->deleteIterator(iter);
   }
 
   commonConstructor(plotName,
@@ -930,7 +929,8 @@ void Kst2DPlot::clearCurves() {
 
 
 void Kst2DPlot::fitCurve(int id) {
-  KMdiChildView* c = KstApp::inst()->activeWindow();
+  //FIXME PORT!
+  /*KMdiChildView* c = KstApp::inst()->activeWindow();
   if (c) {
     KstBaseCurvePtr curve = *(Curves.findTag(_curveRemoveMap[id]));
     if (curve) {
@@ -939,12 +939,13 @@ void Kst2DPlot::fitCurve(int id) {
         _menuView->paint();
       }
     }
-  }
+  }*/
 }
 
 
 void Kst2DPlot::filterCurve(int id) {
-  KMdiChildView* c = KstApp::inst()->activeWindow();
+  //FIXME PORT!
+  /*KMdiChildView* c = KstApp::inst()->activeWindow();
   if (c) {
     KstBaseCurvePtr curve = *(Curves.findTag(_curveRemoveMap[id]));
     if (curve) {
@@ -953,7 +954,7 @@ void Kst2DPlot::filterCurve(int id) {
         _menuView->paint();
       }
     }
-  }
+  }*/
 }
 
 
@@ -1196,7 +1197,7 @@ void Kst2DPlot::updateScale() {
       break;
 
     default:
-      kstdWarning() << "Bug in Kst2DPlot::updateScale: bad scale mode" << endl;
+      qWarning("Bug in Kst2DPlot::updateScale: bad scale mode");
       break;
   }
 
@@ -1403,7 +1404,7 @@ void Kst2DPlot::updateScale() {
       break;
 
     default:
-      kstdWarning() << "Bug in Kst2DPlot::updateScale: bad scale mode" << endl;
+      qWarning("Bug in Kst2DPlot::updateScale: bad scale mode");
       break;
   }
 }
@@ -5373,19 +5374,17 @@ void Kst2DPlot::copy() {
 Kst2DPlotPtr Kst2DPlot::findPlotByName(const QString& name) {
   Kst2DPlotPtr rc;
   KstApp *app = KstApp::inst();
-  KMdiIterator<KMdiChildView*> *it = app->createIterator();
-  if (it) {
-    while (it->currentItem()) {
-      KstViewWindow *view = dynamic_cast<KstViewWindow*>(it->currentItem());
-      if (view) {
-        rc = kst_cast<Kst2DPlot>(view->view()->findChild(name));
-        if (rc) {
-          break;
-        }
+  QList<QWidget*> childViews = app->childViews();
+  QListIterator<KMdiChildView*> it(childViews);
+  while (it.hasNext()) {
+    KstViewWindow *view = dynamic_cast<KstViewWindow*>(it.next());
+    if (view) {
+      rc = kst_cast<Kst2DPlot>(view->view()->findChild(name));
+      if (rc) {
+        break;
       }
-      it->next();
     }
-    app->deleteIterator(it);
+    it.next();
   }
   return rc;
 }
@@ -5397,17 +5396,15 @@ Kst2DPlotPtr Kst2DPlot::findPlotByName(const QString& name) {
 Kst2DPlotList Kst2DPlot::globalPlotList() {
   Kst2DPlotList rc;
   KstApp *app = KstApp::inst();
-  KMdiIterator<KMdiChildView*> *it = app->createIterator();
-  if (it) {
-    while (it->currentItem()) {
-      KstViewWindow *view = dynamic_cast<KstViewWindow*>(it->currentItem());
-      if (view) {
-        Kst2DPlotList sub = view->view()->findChildrenType<Kst2DPlot>(true);
-        rc += sub;
-      }
-      it->next();
+  QList<QWidget*> childViews = app->childViews();
+  QListIterator<KMdiChildView*> it(childViews);
+  while (it.hasNext()) {
+    KstViewWindow *view = dynamic_cast<KstViewWindow*>(it.next());
+    if (view) {
+      Kst2DPlotList sub = view->view()->findChildrenType<Kst2DPlot>(true);
+      rc += sub;
     }
-    app->deleteIterator(it);
+    it.next();
   }
   return rc;
 }

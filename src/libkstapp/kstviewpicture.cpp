@@ -129,7 +129,7 @@ void KstViewPicture::paintSelf(KstPainter& p, const QRegion& bounds) {
   p.save();
   if (p.type() != KstPainter::P_PRINT && p.type() != KstPainter::P_EXPORT) {
     if (p.makingMask()) {
-      p.setRasterOp(Qt::OrROP);
+      p.setCompositionMode(QPainter::CompositionMode_SourceOver);
     } else {
       const QRegion clip(clipRegion());
       KstBorderedViewObject::paintSelf(p, bounds - _myClipMask);

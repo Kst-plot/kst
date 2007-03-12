@@ -29,7 +29,7 @@ class KstTimezones;
 class KTimezoneCombo : public KComboBox {
   Q_OBJECT
   public:
-    KTimezoneCombo(QWidget *parent = 0L, const char *name = 0L, KstTimezones *db = 0L);
+    KTimezoneCombo(QWidget *parent = 0L, KstTimezones *db = 0L);
     virtual ~KTimezoneCombo();
 
     // returns the offset from UTC in seconds

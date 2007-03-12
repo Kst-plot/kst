@@ -20,6 +20,8 @@
 
 #include "labelparser.h"
 
+class QPainter;
+
 class KstPlotLabel {
   public:
     explicit KstPlotLabel(float rotation = 0.0);

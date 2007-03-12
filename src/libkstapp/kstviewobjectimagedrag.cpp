@@ -20,8 +20,8 @@
 #include <kapplication.h>
 #include <kimageio.h>
 #include <klocale.h>
-#include <kprogress.h>
-#include <ktempfile.h>
+#include <qprogressbar.h>
+#include <k3tempfile.h>
 
 #include <qeventloop.h>
 #include <qfile.h>
@@ -122,7 +122,7 @@ QByteArray KstViewObjectImageDrag::encodedData(const char *mimeType) const {
   }
   QFile::remove(tf.name());
 #else
-  QDataStream ds(rc, QIODevice::WriteOnly);
+  QDataStream ds(&rc, QIODevice::WriteOnly);
   pm.save(ds.device(), KImageIO::typeForMime(mimeType).toLatin1());
 #endif
 

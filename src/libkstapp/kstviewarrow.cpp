@@ -147,7 +147,7 @@ void KstViewArrow::paintSelf(KstPainter& p, const QRegion& bounds) {
   p.save();
   if (p.type() != KstPainter::P_PRINT && p.type() != KstPainter::P_EXPORT) {
     if (p.makingMask()) {
-      p.setRasterOp(Qt::SetROP);
+      p.setCompositionMode(QPainter::CompositionMode_Source);
     } else {
       const QRegion clip(clipRegion());
       KstViewLine::paintSelf(p, bounds - _myClipMask);

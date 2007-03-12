@@ -24,6 +24,7 @@
 // include files for KDE
 #include <qdebug.h>
 #include <klocale.h>
+#include <kmenu.h>
 
 // application specific includes
 #include "kst.h"

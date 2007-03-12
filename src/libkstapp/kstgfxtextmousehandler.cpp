@@ -56,7 +56,7 @@ void KstGfxTextMouseHandler::pressMove(KstTopLevelViewPtr view, const QPoint& po
     QPainter p;
     p.begin(view->widget());
     p.setPen(QPen(Qt::black, 0, Qt::SolidLine));
-    p.setRasterOp(Qt::NotROP);
+    p.setCompositionMode(QPainter::CompositionMode_Destination);
     if (old.topLeft() != QPoint(-1, -1)) {
       p.drawRect(old);
     } 

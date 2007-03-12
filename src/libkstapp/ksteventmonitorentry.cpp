@@ -25,7 +25,6 @@
 #include <QEvent>
 
 // include files for KDE
-#include <dcopref.h>
 #include <klocale.h>
 
 // application specific includes
@@ -360,10 +359,11 @@ void EventMonitorEntry::doLog(const QString& logMessage) const {
     KstApp::inst()->EventELOGSubmitEntry(logMessage);
   }
 
-  if (!_script.isEmpty()) {
-    DCOPRef ref(QString("kst-%1").arg(getpid()).toLatin1(), "KstScript");
-    ref.send("evaluate", _script);
-  }
+//FIXME PORT!
+//   if (!_script.isEmpty()) {
+//     DCOPRef ref(QString("kst-%1").arg(getpid()).toLatin1(), "KstScript");
+//     ref.send("evaluate", _script);
+//   }
 }
 
 
@@ -496,22 +496,22 @@ void EventMonitorEntry::replaceDependency(KstDataObjectPtr oldObject, KstDataObj
 
   // and dependencies on vector stats
   for (KstVectorMap::ConstIterator j = oldObject->outputVectors().begin(); j != oldObject->outputVectors().end(); ++j) {
-    const Q3Dict<KstScalar>& scalarMap(newObject->outputVectors()[j.key()]->scalars());
-    Q3DictIterator<KstScalar> scalarDictIter(j.value()->scalars());
-    for (; scalarDictIter.current(); ++scalarDictIter) {
-      const QString oldTag = scalarDictIter.current()->tagName();
-      const QString newTag = scalarMap[scalarDictIter.currentKey()]->tagName();
+    const QHash<QString, KstScalar*>& scalarMap(newObject->outputVectors()[j.key()]->scalars());
+    QHashIterator<QString, KstScalar*> scalarDictIter(j.value()->scalars());
+    while (scalarDictIter.hasNext()) {
+      const QString oldTag = scalarDictIter.next().value()->tagName();
+      const QString newTag = scalarMap[scalarDictIter.key()]->tagName();
       newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
     }
   }
 
   // and dependencies on matrix stats
   for (KstMatrixMap::ConstIterator j = oldObject->outputMatrices().begin(); j != oldObject->outputMatrices().end(); ++j) {
-    const Q3Dict<KstScalar>& scalarMap(newObject->outputMatrices()[j.key()]->scalars());
-    Q3DictIterator<KstScalar> scalarDictIter(j.value()->scalars());
-    for (; scalarDictIter.current(); ++scalarDictIter) {
-      const QString oldTag = scalarDictIter.current()->tagName();
-      const QString newTag = scalarMap[scalarDictIter.currentKey()]->tagName();
+    const QHash<QString, KstScalar*>& scalarMap(newObject->outputMatrices()[j.key()]->scalars());
+    QHashIterator<QString, KstScalar*> scalarDictIter(j.value()->scalars());
+    while (scalarDictIter.hasNext()) {
+      const QString oldTag = scalarDictIter.next().value()->tagName();
+      const QString newTag = scalarMap[scalarDictIter.key()]->tagName();
       newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
     }
   }
@@ -528,10 +528,10 @@ void EventMonitorEntry::replaceDependency(KstVectorPtr oldVector, KstVectorPtr n
   QString newExp = _event.replace("[" + oldVector->tagName() + "]", "[" + newVector->tagName() + "]");
 
   // also replace all occurences of vector stats for the oldVector
-  Q3DictIterator<KstScalar> scalarDictIter(oldVector->scalars());
-  for (; scalarDictIter.current(); ++scalarDictIter) {
-    const QString oldTag = scalarDictIter.current()->tagName();
-    const QString newTag = newVector->scalars()[scalarDictIter.currentKey()]->tagName();
+  QHashIterator<QString, KstScalar*> scalarDictIter(oldVector->scalars());
+  while (scalarDictIter.hasNext()) {
+    const QString oldTag = scalarDictIter.next().value()->tagName();
+    const QString newTag = newVector->scalars()[scalarDictIter.key()]->tagName();
     newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
   }
 
@@ -546,10 +546,10 @@ void EventMonitorEntry::replaceDependency(KstMatrixPtr oldMatrix, KstMatrixPtr n
   QString newExp = _event;
 
   // also replace all occurences of scalar stats for the oldMatrix
-  Q3DictIterator<KstScalar> scalarDictIter(oldMatrix->scalars());
-  for (; scalarDictIter.current(); ++scalarDictIter) {
-    const QString oldTag = scalarDictIter.current()->tagName();
-    const QString newTag = newMatrix->scalars()[scalarDictIter.currentKey()]->tagName();
+  QHashIterator<QString, KstScalar*> scalarDictIter(oldMatrix->scalars());
+  while (scalarDictIter.hasNext()) {
+    const QString oldTag = scalarDictIter.next().value()->tagName();
+    const QString newTag = newMatrix->scalars()[scalarDictIter.key()]->tagName();
     newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
   }
 

@@ -23,7 +23,7 @@
 #include <kapplication.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kprogress.h>
+#include <qprogressbar.h>
 
 // application specific includes
 #include "kst.h"
@@ -160,7 +160,7 @@ int KstGuiData::vectorsToFile(const KstVectorList& vl, QFile *f, bool interpolat
     maxlen = 0;
     for (KstVectorList::ConstIterator v = vl.begin(); v != vl.end(); ++v) {
       (*v)->readLock();
-      maxlen = kMax(maxlen, (*v)->length());
+      maxlen = qMax(maxlen, (*v)->length());
     }
   } else {
     for (KstVectorList::ConstIterator v = vl.begin(); v != vl.end(); ++v) {
@@ -256,18 +256,16 @@ QStringList KstGuiData::plotList(const QString& window) {
 
 bool KstGuiData::viewObjectNameNotUnique(const QString& tag) {
   KstApp *app = KstApp::inst();
-  KMdiIterator<KMdiChildView*> *it = app->createIterator();
-  if (it) {
-    while (it->currentItem()) {
-      KstViewWindow *view = dynamic_cast<KstViewWindow*>(it->currentItem());
-      if (view) {
-        if (view->view()->findChild(tag, true)) {
-          return (true);
-        }
+  QList<QWidget*> childViews = app->childViews();
+  QListIterator<KMdiChildView*> it(childViews);
+  while (it.hasNext()) {
+    KstViewWindow *view = dynamic_cast<KstViewWindow*>(it.next());
+    if (view) {
+      if (view->view()->findChild(tag, true)) {
+        return (true);
       }
-      it->next();
     }
-    app->deleteIterator(it);
+    it.next();
   }
   return false;
 }
@@ -291,12 +289,13 @@ void KstGuiData::newWindow(QWidget *dialogParent) {
 
 QStringList KstGuiData::windowList() {
   QStringList rc;
-  KMdiIterator<KMdiChildView*> *it = KstApp::inst()->createIterator();
-  while (it->currentItem()) {
-    rc << it->currentItem()->caption();
-    it->next();
+  KstApp *app = KstApp::inst();
+  QList<QWidget*> childViews = app->childViews();
+  QListIterator<KMdiChildView*> it(childViews);
+  while (it.hasNext()) {
+    rc << it.next()->caption();
+    it.next();
   }
-  KstApp::inst()->deleteIterator(it);
 
   return rc;
 }

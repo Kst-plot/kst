@@ -156,7 +156,7 @@ void KstTopLevelView::paint(KstPainter::PaintType type, const QRegion& bounds) {
   // now, check what has the focus and repaint the focus rect, as all focus rects are now lost
   if (_hoverFocus) {
     p.setClipping(false);
-    p.setRasterOp(Qt::NotROP);
+    p.setCompositionMode(QPainter::CompositionMode_Destination);
     p.setPen(QPen(Qt::black, 0, Qt::SolidLine));
     p.setBrush(Qt::NoBrush);
     _hoverFocus->drawFocusRect(p);
@@ -178,7 +178,7 @@ void KstTopLevelView::clearFocus() {
       p.begin(_w);
       p.setViewXForm(true);
       _hoverFocus->setFocus(false);
-      p.setRasterOp(Qt::NotROP);
+      p.setCompositionMode(QPainter::CompositionMode_Destination);
       p.setPen(QPen(Qt::black, 0, Qt::SolidLine));
       p.setBrush(Qt::NoBrush);
       _hoverFocus->drawFocusRect(p);
@@ -224,7 +224,7 @@ void KstTopLevelView::updateFocus(const QPoint& pos) {
     setCursorFor(pos, p);
     KstPainter painter;
     painter.begin(_w);
-    painter.setRasterOp(Qt::NotROP);
+    p.setCompositionMode(QPainter::CompositionMode_Destination);
     painter.setPen(QPen(Qt::black, 0, Qt::SolidLine));
     painter.setBrush(Qt::NoBrush);
     p->drawFocusRect(painter);
@@ -658,7 +658,7 @@ void KstTopLevelView::pressMoveLayoutMode(const QPoint& pos, bool shift) {
     if (_pressDirection == 0) {
       // moving an object
       pressMoveLayoutModeMove(pos, shift);
-      KstApp::inst()->slotUpdateDataMsg(i18n("(x0,y0)-(x1,y1)", "(%1,%2)-(%3,%4)").arg(_prevBand.topLeft().x()).arg(_prevBand.topLeft().y()).arg(_prevBand.bottomRight().x()).arg(_prevBand.bottomRight().y()));
+      KstApp::inst()->slotUpdateDataMsg(i18nc("(x0,y0)-(x1,y1)", "(%1,%2)-(%3,%4)").arg(_prevBand.topLeft().x()).arg(_prevBand.topLeft().y()).arg(_prevBand.bottomRight().x()).arg(_prevBand.bottomRight().y()));
     } else if (_pressTarget->isResizable()) {
       bool maintainAspect = shift ^ _pressTarget->maintainAspect(); // if default behaviour is to maintainAspect on resize, then shift will now have opposite behaviour.
       if (_pressDirection & ENDPOINT) {
@@ -671,7 +671,7 @@ void KstTopLevelView::pressMoveLayoutMode(const QPoint& pos, bool shift) {
         // resizing a rectangular object
         pressMoveLayoutModeResize(pos, maintainAspect);
       }
-      KstApp::inst()->slotUpdateDataMsg(i18n("(x0,y0)-(x1,y1)", "(%1,%2)-(%3,%4)").arg(_prevBand.topLeft().x()).arg(_prevBand.topLeft().y()).arg(_prevBand.bottomRight().x()).arg(_prevBand.bottomRight().y()));
+      KstApp::inst()->slotUpdateDataMsg(i18nc("(x0,y0)-(x1,y1)", "(%1,%2)-(%3,%4)").arg(_prevBand.topLeft().x()).arg(_prevBand.topLeft().y()).arg(_prevBand.bottomRight().x()).arg(_prevBand.bottomRight().y()));
     }
   } else {
     // selecting objects
@@ -719,7 +719,7 @@ void KstTopLevelView::pressMoveLayoutModeMove(const QPoint& pos, bool shift) {
     KstPainter p;
         
     p.begin(_w);
-    p.setRasterOp(Qt::NotROP);
+    p.setCompositionMode(QPainter::CompositionMode_Destination);
     p.setPen(QPen(Qt::black, 0, Qt::DotLine));
     if (_selectionList.isEmpty()) {
       if (old.topLeft() != QPoint(-1, -1)) {
@@ -747,7 +747,7 @@ void KstTopLevelView::pressMoveLayoutModeResize(const QPoint& pos, bool maintain
     KstPainter p;
         
     p.begin(_w);
-    p.setRasterOp(Qt::NotROP);
+    p.setCompositionMode(QPainter::CompositionMode_Destination);
     p.setPen(QPen(Qt::black, 0, Qt::DotLine));
     if (old.topLeft() != QPoint(-1, -1)) {
       p.drawRect(old);
@@ -769,7 +769,7 @@ void KstTopLevelView::pressMoveLayoutModeSelect(const QPoint& pos, bool shift) {
   if (old != _prevBand) {
     KstPainter p;
     p.begin(_w);
-    p.setRasterOp(Qt::NotROP);
+    p.setCompositionMode(QPainter::CompositionMode_Destination);
     p.drawWinFocusRect(old);
     p.drawWinFocusRect(_prevBand);
     p.end();
@@ -821,7 +821,7 @@ void KstTopLevelView::pressMoveLayoutModeEndPoint(const QPoint& pos, bool mainta
       KstPainter p;
       p.begin(_w);
       p.setPen(QPen(Qt::black, 0, Qt::DotLine));
-      p.setRasterOp(Qt::NotROP);
+      p.setCompositionMode(QPainter::CompositionMode_Destination);
       if (old.topLeft() != QPoint(-1, -1)) {
         p.drawLine(old.topLeft(), old.bottomRight());
       } 
@@ -843,7 +843,7 @@ void KstTopLevelView::pressMoveLayoutModeCenteredResize(const QPoint& pos, bool 
 
     p.begin(_w);
     p.setPen(QPen(Qt::black, 0, Qt::DotLine));
-    p.setRasterOp(Qt::NotROP);
+    p.setCompositionMode(QPainter::CompositionMode_Destination);
     if (old.topLeft() != QPoint(-1, -1)) {
       p.drawEllipse(old);
     } 
@@ -955,7 +955,7 @@ void KstTopLevelView::releasePressLayoutModeSelect(const QPoint& pos, bool shift
   KstPainter p;
     
   p.begin(_w);
-  p.setRasterOp(Qt::NotROP);
+  p.setCompositionMode(QPainter::CompositionMode_Destination);
   p.drawWinFocusRect(_prevBand);
   p.end();
   if (shift) {

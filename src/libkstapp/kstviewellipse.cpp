@@ -86,7 +86,7 @@ void KstViewEllipse::paintSelf(KstPainter& p, const QRegion& bounds) {
   p.save();
   if (p.type() != KstPainter::P_PRINT && p.type() != KstPainter::P_EXPORT) {
     if (p.makingMask()) {
-      p.setRasterOp(Qt::SetROP);
+      p.setCompositionMode(QPainter::CompositionMode_Source);
       KstViewObject::paintSelf(p, geometry());
     } else {
       const QRegion clip(clipRegion());

@@ -39,15 +39,15 @@
 #define KST_STATUSBAR_DATA 1
 #define KST_STATUSBAR_STATUS 2
 
-KstViewWindow::KstViewWindow(QWidget *parent, const char* name)
-: KMdiChildView(QString::null, parent, name) {
+KstViewWindow::KstViewWindow(QWidget *parent)
+: KMdiChildView(parent) {
   commonConstructor();
   _view = new KstTopLevelView(this, name);
 }
 
 
-KstViewWindow::KstViewWindow(const QDomElement& e, QWidget* parent, const char* name)
-: KMdiChildView(QString::null, parent, name) {
+KstViewWindow::KstViewWindow(const QDomElement& e, QWidget* parent)
+: KMdiChildView(parent) {
   QString in_tag;
   QRect rectRestore;
   QRect rectInternal;

@@ -37,7 +37,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <knuminput.h>
-#include <kpopupmenu.h>
+#include <kmenu.h>
 #include <qdebug.h>
 
 #include <qapplication.h>
@@ -397,7 +397,7 @@ void KstViewLabel::paintSelf(KstPainter& p, const QRegion& bounds) {
     _absFontSize = absFontSizeOld;
   } else {
     if (p.makingMask()) {
-      p.setRasterOp(Qt::SetROP);
+      p.setCompositionMode(QPainter::CompositionMode_Source);
     } else {
       const QRegion clip(clipRegion());
       KstBorderedViewObject::paintSelf(p, bounds - _myClipMask);

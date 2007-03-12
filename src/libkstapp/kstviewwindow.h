@@ -45,8 +45,8 @@ class QLabel;
 class KST_EXPORT KstViewWindow : public KMdiChildView {
   Q_OBJECT
   public:
-    KstViewWindow(QWidget *parent=0, const char *name=0);
-    KstViewWindow(const QDomElement& e, QWidget *parent=0, const char *name=0);
+    KstViewWindow(QWidget *parent=0);
+    KstViewWindow(const QDomElement& e, QWidget *parent=0);
     virtual ~KstViewWindow();
 
     /** pause the updating of data */

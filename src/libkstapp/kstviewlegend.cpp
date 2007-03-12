@@ -35,7 +35,7 @@
 #include <kdatastream.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <kpopupmenu.h>
+#include <kmenu.h>
 #include <kcolorbutton.h>
 #include <kcombobox.h>
 #include <QFontComboBox>
@@ -377,7 +377,7 @@ void KstViewLegend::paintSelf(KstPainter& p, const QRegion& bounds) {
   } else {
     const QRect cr(contentsRect());
     if (p.makingMask()) {
-      p.setRasterOp(Qt::SetROP);
+      p.setCompositionMode(QPainter::CompositionMode_Source);
     } else {
       const QRegion clip(clipRegion());
       KstBorderedViewObject::paintSelf(p, bounds - _myClipMask);

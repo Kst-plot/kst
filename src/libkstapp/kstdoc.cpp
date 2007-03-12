@@ -27,6 +27,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <math.h>
+#include <errno.h>
 
 // include files for Qt
 #include <q3deepcopy.h>
@@ -38,17 +39,15 @@
 #include <QEvent>
 
 // include files for KDE
-#include <dcopclient.h>
 #include <qdebug.h>
 #include <kdeversion.h>
 #include <kfiledialog.h>
 #include <kio/netaccess.h>
 #include <kmessagebox.h>
-#include <kmdimainfrm.h>
-#include <kprogress.h>
+#include <qprogressbar.h>
 #include <ksavefile.h>
 #include <kstandarddirs.h>
-#include <ktempfile.h>
+#include <k3tempfile.h>
 
 // application specific includes
 #include "kst2dplot.h"
@@ -177,7 +176,7 @@ bool KstDoc::newDocument() {
     _modified = false;
     _absFilePath = QDir::homeDirPath();
     _title = "Untitled";
-    KstApp::inst()->newWindow(i18n("default name of first window", "W1"));
+    KstApp::inst()->newWindow(i18nc("default name of first window", "W1"));
     createScalars();
     emit updateDialogs();
   //}
@@ -236,8 +235,8 @@ bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
   }
 
   _title = url.fileName(false);
-  _absFilePath = url.toString();
-  _lastFilePath = url.toString();
+  _absFilePath = url.url();
+  _lastFilePath = url.url();
   if (_title.isEmpty()) {
     _title = _absFilePath;
   }
@@ -304,8 +303,6 @@ bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
   QDomNode n = docElem.firstChild();
   count = docElem.childNodes().length();
   app->slotUpdateProgress(count, handled, readingDocument);
-
-  kapp->dcopClient()->setAcceptCalls(false);
 
   // disable display tags for speed
   {
@@ -475,9 +472,8 @@ bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
         KstViewWindow *toDelete = 0L;
 
         if (!p) {
-          KMdiIterator<KMdiChildView*> *it = app->createIterator();
-          p = dynamic_cast<KstViewWindow*>(it->currentItem());
-          app->deleteIterator(it);
+          QListIterator<KMdiChildView*> it(app->childViews());
+          p = dynamic_cast<KstViewWindow*>(it.next());
         }
 
         if (p && p->view()->children().count() == 0) {
@@ -485,11 +481,12 @@ bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
         }
 
         p = new KstViewWindow(e);
-        app->addWindow(p, KMdi::StandardAdd | KMdi::UseKMdiSizeHint);
-        p->activate();
-        if (toDelete) {
-          app->closeWindow(toDelete);
-        }
+        //FIXME PORT! ... somehow
+        //app->addWindow(p, KMdi::StandardAdd | KMdi::UseKMdiSizeHint);
+        //p->setVisible(true);
+        //if (toDelete) {
+        // app->closeWindow(toDelete);
+        //}
       } else {
         KstDebug::self()->log(i18n("Unsupported element '%1' in file %2.").arg(e.tagName()).arg(url.prettyUrl()), KstDebug::Warning);
       }
@@ -497,7 +494,7 @@ bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
     handled++;
     app->slotUpdateProgress(count, handled, readingDocument);
     n = n.nextSibling();
-    kapp->eventLoop()->processEvents(QEventLoop::ExcludeSocketNotifiers, 10);
+    qApp->processEvents(QEventLoop::ExcludeSocketNotifiers, 10);
   }
 
   // reenable display tags
@@ -580,7 +577,7 @@ bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
         // schedule for removal
         bitBucket.append(*i);
       }
-      kapp->eventLoop()->processEvents(QEventLoop::ExcludeSocketNotifiers, 10);
+      qApp->processEvents(QEventLoop::ExcludeSocketNotifiers, 10);
     }
   }
 
@@ -606,18 +603,18 @@ bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
   }
 
   app->slotUpdateProgress(0, 0, i18n("Synchronizing data"));
-  kapp->dcopClient()->setAcceptCalls(true);
 
   _nextEventPaint = true;
 
   emit updateDialogs();
 
-  if (!activeWindow.isEmpty()) {
-    KMdiChildView *c = app->findWindow(activeWindow);
-    if (c) {
-      c->activate();
-    }
-  }
+//FIXME PORT!
+//   if (!activeWindow.isEmpty()) {
+//     KMdiChildView *c = app->findWindow(activeWindow);
+//     if (c) {
+//       c->activate();
+//     }
+//   }
 
   app->slotUpdateProgress(0, 0, QString::null);
 
@@ -741,9 +738,9 @@ void KstDoc::saveDocument(QTextStream& ts, bool saveAbsoluteVectorPositions) {
   KST::dataObjectList.lock().unlock();
   
   // save plots
-  KMdiIterator<KMdiChildView*> *it = app->createIterator();
-  while (it->currentItem()) {
-    KstViewWindow *c = dynamic_cast<KstViewWindow*>(it->currentItem());
+  QListIterator<KMdiChildView*> it(app->childViews());
+  while (it.hasNext()) {
+    KstViewWindow *c = dynamic_cast<KstViewWindow*>(it.next());
     if (c) {
       KstPlotBaseList plots = c->view()->findChildrenType<KstPlotBase>(true);
       for (KstPlotBaseList::Iterator i = plots.begin(); i != plots.end(); ++i) {
@@ -755,23 +752,19 @@ void KstDoc::saveDocument(QTextStream& ts, bool saveAbsoluteVectorPositions) {
         }
       }
     }
-    it->next();
+    it.next();
   }
-  app->deleteIterator(it);
 
   // save windows
-  it = app->createIterator();
-  if (it) {
-    while (it->currentItem()) {
-      KstViewWindow *v = dynamic_cast<KstViewWindow*>(it->currentItem());
-      if (v) {
-        ts << "  <window>" << endl;
-        v->save(ts, "    ");
-        ts << "  </window>" << endl;
-      }
-      it->next();
+  it = QListIterator<KMdiChildView*>(app->childViews());
+  while (it.hasNext()) {
+    KstViewWindow *v = dynamic_cast<KstViewWindow*>(it.next());
+    if (v) {
+      ts << "  <window>" << endl;
+      v->save(ts, "    ");
+      ts << "  </window>" << endl;
     }
-    app->deleteIterator(it);
+    it.next();
   }
 
   ts << "</kstdoc>" << endl;
@@ -790,7 +783,7 @@ bool KstDoc::saveDocument(const QString& filename, bool saveAbsoluteVectorPositi
     // Only backup local files
     backupFile(filename);
   }
-  KTempFile tf(locateLocal("tmp", "kst"), "txt");
+  K3TempFile tf(KStandardDirs::locateLocal("tmp", "kst"), "txt");
 
   QTextStream ts(tf.file());
   ts.setEncoding(QTextStream::UnicodeUTF8);
@@ -837,15 +830,13 @@ void KstDoc::deleteContents() {
 
   KstApp *app = KstApp::inst();
   if (app) { // Can be null on application exit
-    KMdiIterator<KMdiChildView*> *it = app->createIterator();
-    if (it) {
-      while (it->currentItem()) {
-        KMdiChildView *view = it->currentItem();
-        it->next();
-        app->closeWindow(view);
-      }
-      app->deleteIterator(it);
-    }
+//FIXME PORT!
+//     QListIterator<KMdiChildView*> it(app->childViews());
+//     while (it.hasNext()) {
+//       KMdiChildView *view = it.next();
+//       it.next();
+//       app->closeWindow(view);
+//     }
   }
 
   KST::dataObjectList.lock().writeLock();
@@ -1148,32 +1139,31 @@ bool KstDoc::event(QEvent *e) {
           emit dataChanged();
           KstApp::inst()->updateDataNotifier();
           // HACK: remove me later
-          KMdiIterator<KMdiChildView*> *it = KstApp::inst()->createIterator();
-          if (it) {
-            while (it->currentItem()) {
-              KstViewWindow *view = dynamic_cast<KstViewWindow*>(it->currentItem());
-              if (!view) {
-                it->next();
-                continue;
-              }
+          QListIterator<KMdiChildView*> it(KstApp::inst()->childViews());
+          while (it.hasNext()) {
+            KstViewWindow *view = dynamic_cast<KstViewWindow*>(it.next());
+            if (!view) {
+              it.next();
+              continue;
+            }
 
-              Kst2DPlotList pl = view->view()->findChildrenType<Kst2DPlot>(true);
-              for (Kst2DPlotList::Iterator i = pl.begin(); i != pl.end(); ++i) {
-                for (Q3ValueList<KstBaseCurve*>::ConstIterator j = te->_curves.begin(); j != te->_curves.end(); ++j) {
-                  // race: if ((*i)->Curves.contains(*j)) 
-                  const KstBaseCurveList& cl = (*i)->Curves;
-                  bool doBreak = false;
-                  for (KstBaseCurveList::ConstIterator k = cl.begin(); k != cl.end(); ++k) {
-                    if (*j == *k) {
-                      (*i)->setDirty();
-                      doBreak = true;
-                      break;
-                    }
-                  }
-                  if (doBreak) {
+            Kst2DPlotList pl = view->view()->findChildrenType<Kst2DPlot>(true);
+            for (Kst2DPlotList::Iterator i = pl.begin(); i != pl.end(); ++i) {
+              for (Q3ValueList<KstBaseCurve*>::ConstIterator j = te->_curves.begin(); j != te->_curves.end(); ++j) {
+                // race: if ((*i)->Curves.contains(*j)) 
+                const KstBaseCurveList& cl = (*i)->Curves;
+                bool doBreak = false;
+                for (KstBaseCurveList::ConstIterator k = cl.begin(); k != cl.end(); ++k) {
+                  if (*j == *k) {
+                    (*i)->setDirty();
+                    doBreak = true;
                     break;
                   }
                 }
+                if (doBreak) {
+                  break;
+                }
+              }
 
 #if 0
                 KstViewLabelList vl = view->view()->findChildrenType<KstViewLabel>(true);
@@ -1183,10 +1173,8 @@ bool KstDoc::event(QEvent *e) {
 #else
                 view->view()->recursively<int, KstViewObject>((void (KstViewObject::*)(int))&KstViewObject::update, te->_counter);
 #endif
-              }
-              it->next();
             }
-            KstApp::inst()->deleteIterator(it);
+            it.next();
           }
           KstApp::inst()->paintAll(KstPainter::P_UPDATE);
         }
@@ -1194,18 +1182,14 @@ bool KstDoc::event(QEvent *e) {
       case ThreadEvent::UpdateAllDialogs:
         //qDebug() << "Update ALL dialogs" << endl;
         {
-          KMdiIterator<KMdiChildView*>* it = KstApp::inst()->createIterator();
-          if (it) {
-            while (it->currentItem()) {
-              KstViewWindow *view = dynamic_cast<KstViewWindow*>(it->currentItem());
-              if (view) {
-                view->view()->update();
-              }
-              it->next();
+          QListIterator<KMdiChildView*> it(KstApp::inst()->childViews());
+          while (it.hasNext()) {
+            KstViewWindow *view = dynamic_cast<KstViewWindow*>(it.next());
+            if (view) {
+              view->view()->update();
             }
-            KstApp::inst()->deleteIterator(it);
+            it.next();
           }
-
           emit updateDialogs();
         }
         break;
