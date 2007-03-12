@@ -25,6 +25,7 @@
 
 // application specific includes
 #include "kstmatrix.h"
+#include "kstdatacollection.h"
 #include "kstviewmatricesdialog.h"
 #include "matrixselector.h"
 
@@ -36,7 +37,7 @@ KstViewMatricesDialogI::KstViewMatricesDialogI(QWidget* parent, Qt::WindowFlags 
   _tableMatrices->setReadOnly(true);
   _tableMatrices->setSorting(false);
   _tableMatrices->setSelectionMode(Q3Table::Single);
-  layout2->insertWidget(1, _tableMatrices);
+  vboxLayout->insertWidget(1, _tableMatrices);
 
   connect(Cancel, SIGNAL(clicked()), this, SLOT(close()));
   connect(matrixSelector, SIGNAL(selectionChanged(const QString&)), this, SLOT(matrixChanged(const QString&)));
@@ -108,7 +109,6 @@ void KstViewMatricesDialogI::matrixChanged(const QString& matrix) {
  */
 void KstViewMatricesDialogI::languageChange() {
   setWindowTitle(i18n("View Matrix Values"));
-  KstViewMatricesDialog::languageChange();
 }
 
 

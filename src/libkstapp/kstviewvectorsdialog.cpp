@@ -21,6 +21,7 @@
 
 #include <klocale.h>
 
+#include "kstdatacollection.h"
 #include "kstviewvectorsdialog.h"
 #include "vectorselector.h"
 
@@ -32,7 +33,7 @@ KstViewVectorsDialogI::KstViewVectorsDialogI(QWidget* parent, Qt::WindowFlags fl
   tableVectors->setReadOnly(true);
   tableVectors->setSorting(false);
   tableVectors->setSelectionMode(Q3Table::Single);
-  layout2->insertWidget(1, tableVectors);
+  vboxLayout->insertWidget(1, tableVectors);
 
   connect(Cancel, SIGNAL(clicked()), this, SLOT(close()));
   connect(vectorSelector, SIGNAL(selectionChanged(const QString&)), this, SLOT( vectorChanged(const QString&)));
@@ -108,7 +109,6 @@ void KstViewVectorsDialogI::vectorChanged(const QString& vector) {
 void KstViewVectorsDialogI::languageChange() {
   setWindowTitle(i18n("View Vector Values"));
   tableVectors->horizontalHeader()->setLabel(0, i18n("Values"));
-  KstViewVectorsDialog::languageChange();
 }
 
 

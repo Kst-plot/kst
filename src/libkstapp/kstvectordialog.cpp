@@ -683,7 +683,7 @@ void KstVectorDialogI::markSourceAndSave() {
 void KstVectorDialogI::configureSource() {
   bool isNew = false;
   KST::dataSourceList.lock().readLock();
-  KstDataSourcePtr ds = *KST::dataSourceList.findReusableFileName(_w->FileName->url());
+  KstDataSourcePtr ds = *KST::dataSourceList.findReusableFileName(_w->FileName->url().url());
   KST::dataSourceList.lock().unlock();
   if (!ds) {
     isNew = true;
@@ -695,7 +695,10 @@ void KstVectorDialogI::configureSource() {
   }
 
   assert(_configWidget);
-  KDialogBase *dlg = new KDialogBase(this, "Data Config Dialog", true, i18n("Configure Data Source"));
+  KDialog *dlg = new KDialog(this);
+  dlg->setObjectName("Data Config Dialog");
+  dlg->setModal(true);
+  dlg->setCaption(i18n("Configure Data Source"));
   if (isNew) {
     connect(dlg, SIGNAL(okClicked()), _configWidget, SLOT(save()));
     connect(dlg, SIGNAL(applyClicked()), _configWidget, SLOT(save()));

@@ -118,17 +118,17 @@ void KstMonochromeDialogI::getOptions(QMap<QString,QString> &opts, bool include_
     opts["kst-plot-monochromesettings-enhancereadability"] = enhanceReadability->isChecked() ? "1" : "0";
   }
   // point style order - default is 0
-  int pointStyleOrder = selectedListBox->index(selectedListBox->findItem(i18n("Point Style"), ExactMatch));
+  int pointStyleOrder = selectedListBox->index(selectedListBox->findItem(i18n("Point Style"), Q3ListBox::ExactMatch));
   if (pointStyleOrder != 0 || include_def) {
     opts["kst-plot-monochromesettings-pointstyleorder"] = QString::number(pointStyleOrder);
   }
   // line style order - default is 1
-  int lineStyleOrder = selectedListBox->index(selectedListBox->findItem(i18n("Line Style"), ExactMatch));
+  int lineStyleOrder = selectedListBox->index(selectedListBox->findItem(i18n("Line Style"), Q3ListBox::ExactMatch));
   if (lineStyleOrder != 1 || include_def) {
     opts["kst-plot-monochromesettings-linestyleorder"] = QString::number(lineStyleOrder);
   }
   // line width order - default is 2
-  int lineWidthOrder = selectedListBox->index(selectedListBox->findItem(i18n("Line Width"), ExactMatch));
+  int lineWidthOrder = selectedListBox->index(selectedListBox->findItem(i18n("Line Width"), Q3ListBox::ExactMatch));
   if (lineWidthOrder != 2 || include_def) {
     opts["kst-plot-monochromesettings-linewidthorder"] = QString::number(lineWidthOrder);
   }

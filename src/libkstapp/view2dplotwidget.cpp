@@ -20,10 +20,11 @@
 #include <qfontdatabase.h>
 #include <qstyle.h>
 #include <qpainter.h>
-#include <qdeepcopy.h>
+#include <q3deepcopy.h>
 #include <kiconloader.h>
 #include <kmessagebox.h>
 
+#include "kstdatacollection.h"
 #include "kstplotdefines.h"
 #include "kstsettings.h"
 #include "kstlinestyle.h"
@@ -65,8 +66,6 @@ View2DPlotWidget::~View2DPlotWidget() {}
 
 
 void View2DPlotWidget::init() {
-
-  QFontDatabase qfd;
 
   _plot = 0L;
 
@@ -166,8 +165,6 @@ void View2DPlotWidget::init() {
 
   connect(_pushButtonEditLegend, SIGNAL(clicked()), this, SLOT(editLegend()));
 
-  FontComboBox->setFonts(qfd.families());
-
   for (unsigned i = 0; i < numMajorTickSpacings; i++) {
     _xMajorTickSpacing->addItem(i18n(MajorTickSpacings[i].label));
     _yMajorTickSpacing->addItem(i18n(MajorTickSpacings[i].label));
@@ -235,9 +232,9 @@ void View2DPlotWidget::init() {
   connect(_checkBoxDefaultMinorGridColor, SIGNAL(clicked()),
           this, SLOT(updateAxesButtons()));
 
-  QColor defaultColor((KstSettings::globalSettings()->foregroundColor.Qt::red() + KstSettings::globalSettings()->backgroundColor.Qt::red())/2,
-                      (KstSettings::globalSettings()->foregroundColor.Qt::green() + KstSettings::globalSettings()->backgroundColor.Qt::green())/2,
-                      (KstSettings::globalSettings()->foregroundColor.Qt::blue() + KstSettings::globalSettings()->backgroundColor.Qt::blue())/2);
+  QColor defaultColor((KstSettings::globalSettings()->foregroundColor.red() + KstSettings::globalSettings()->backgroundColor.red())/2,
+                      (KstSettings::globalSettings()->foregroundColor.green() + KstSettings::globalSettings()->backgroundColor.green())/2,
+                      (KstSettings::globalSettings()->foregroundColor.blue() + KstSettings::globalSettings()->backgroundColor.blue())/2);
   _majorGridColor->setColor(defaultColor);
   _minorGridColor->setColor(defaultColor);
 
@@ -386,8 +383,17 @@ void View2DPlotWidget::removeDisplayedCurve() {
 
 
 void View2DPlotWidget::fillMarkerLineCombo() {
-  QRect rect = _comboMarkerLineStyle->style().querySubControlMetrics(
-                 QStyle::CC_ComboBox, _comboMarkerLineStyle, QStyle::SC_ComboBoxEditField);
+
+  QStyleOptionComboBox option;
+  option.initFrom(_comboMarkerLineStyle);
+  option.currentIcon = _comboMarkerLineStyle->itemIcon(_comboMarkerLineStyle->currentIndex());
+  option.currentText = _comboMarkerLineStyle->itemText(_comboMarkerLineStyle->currentIndex());
+  option.editable = _comboMarkerLineStyle->isEditable();
+  option.frame = _comboMarkerLineStyle->hasFrame();
+  option.iconSize = _comboMarkerLineStyle->iconSize();
+
+  QRect rect = _comboMarkerLineStyle->style()->subControlRect(
+                 QStyle::CC_ComboBox, &option, QStyle::SC_ComboBoxEditField, _comboMarkerLineStyle);
   rect.setLeft(rect.left() + 2);
   rect.setRight(rect.right() - 2);
   rect.setTop(rect.top() + 2);

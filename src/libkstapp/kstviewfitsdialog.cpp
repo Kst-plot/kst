@@ -39,8 +39,8 @@ KstViewFitsDialogI::KstViewFitsDialogI(QWidget* parent, Qt::WindowFlags fl)
   tableFits->setNumCols(1);
   tableFits->setReadOnly(true);
   tableFits->setSorting(false);
-  tableFits->setSelectionMode(QTable::Single);
-  layout2->addWidget(tableFits, 2, 0);
+  tableFits->setSelectionMode(Q3Table::Single);
+  gridLayout1->addWidget(tableFits, 2, 0);
 
   connect(Cancel, SIGNAL(clicked()), this, SLOT(close()));
   connect(_comboBoxFits, SIGNAL(activated(const QString&)), this, SLOT(fitChanged(const QString&)));

@@ -30,6 +30,7 @@
 // application specific includes
 #include "editmultiplewidget.h"
 #include "kst.h"
+#include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"
 #include "ksteventmonitor.h"
 #include "ksteventmonitorentry.h"

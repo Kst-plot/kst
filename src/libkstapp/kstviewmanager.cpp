@@ -27,7 +27,6 @@
 // include files for KDE
 #include <k3listview.h>
 #include <kmessagebox.h>
-#include <kmultipledrag.h>
 #include <kstandarddirs.h>
 
 // application specific includes
@@ -57,18 +56,19 @@ KstViewListView::~KstViewListView() {
 Q3DragObject* KstViewListView::dragObject() {
   Q3ListViewItem *qi = selectedItem();
   Q3DragObject* drag = 0L;
-  
+
   if (qi) {
     KstViewObjectItem *koi = static_cast<KstViewObjectItem*>(qi);
-    
+
     if (koi) {
       if (koi->rtti() == RTTI_OBJ_VIEW_OBJECT) {
-        KMultipleDrag *multipleDrag = new KMultipleDrag(this);        
+        //FIXME PORT!
+        /*KMultipleDrag *multipleDrag = new KMultipleDrag(this);
         QStringList objects;
         KstViewObjectList vol;
         KstViewWindow *win;
         KstViewObjectPtr viewObject = koi->viewObject(&win);
-        
+
         drag = multipleDrag;
 
         if (viewObject) {
@@ -78,7 +78,7 @@ Q3DragObject* KstViewListView::dragObject() {
           KstViewObjectImageDrag *imd = new KstViewObjectImageDrag(this);
           imd->setObjects(vol);
           multipleDrag->addDragObject(imd);
-        }
+        }*/
       } else if(koi->rtti() == RTTI_OBJ_DATA_OBJECT) {
         Kst2DPlotPtr plot;
         KstDataObjectPtr dataObject = koi->dataObject(plot);
@@ -410,7 +410,7 @@ KstViewManagerI::KstViewManagerI(KstDoc *in_doc, QWidget* parent, Qt::WindowFlag
   ViewView->setAcceptDrops(FALSE);
   ViewView->viewport()->setAcceptDrops(TRUE);
   ViewView->setSelectionMode(Q3ListView::Single);
-  KstViewManagerLayout->addMultiCellWidget(ViewView, 0, 0, 0, 3);
+  gridLayout->addMultiCellWidget(ViewView, 0, 0, 0, 3);
   
   connect(Close, SIGNAL(clicked()), this, SLOT(reject()));
   connect(Edit, SIGNAL(clicked()), this, SLOT(edit_I()));
@@ -443,16 +443,18 @@ void KstViewManagerI::update() {
 
   Q3ListViewItem *currentItem = ViewView->selectedItem();
   Q3PtrStack<Q3ListViewItem> trash;
-  KMdiIterator<KMdiChildView*> *it = app->createIterator();
+
+  QList<QWidget*> childViews = app->childViews();
+  QListIterator<KMdiChildView*> it(childViews);
 
   // garbage collect first
   for (Q3ListViewItem *i = ViewView->firstChild(); i; i = i->nextSibling()) {
     bool found = false;
     KstViewObjectItem *oi = static_cast<KstViewObjectItem*>(i);
-    it->first();
+    it.toFront();
     if (i->rtti() == RTTI_OBJ_WINDOW) {
-      while (it->currentItem()) {      
-        KstViewWindow *win = dynamic_cast<KstViewWindow*>(it->currentItem());
+      while (it.hasNext()) {
+        KstViewWindow *win = dynamic_cast<KstViewWindow*>(it.next());
         if (win) {
           KstTopLevelViewPtr view = win->view();
           if (view) {
@@ -461,7 +463,7 @@ void KstViewManagerI::update() {
             }
           }
         }
-        it->next();
+        it.next();
       }
     }
     if (!found) {
@@ -473,10 +475,10 @@ void KstViewManagerI::update() {
   ViewView->blockSignals(true);
   trash.clear();
   ViewView->blockSignals(false);
-  
-  it->first();
-  while (it->currentItem()) {      
-    KstViewWindow *win = dynamic_cast<KstViewWindow*>(it->currentItem());
+
+  it.toFront();
+  while (it.hasNext()) {
+    KstViewWindow *win = dynamic_cast<KstViewWindow*>(it.next());
     if (win) {
       KstTopLevelViewPtr view = win->view();
       if (view) {
@@ -495,7 +497,7 @@ void KstViewManagerI::update() {
         }
       }
     }
-    it->next();
+    it.next();
   }
 
   for (Q3ListViewItem *i = ViewView->firstChild(); i; i = i->nextSibling()) {
@@ -505,15 +507,13 @@ void KstViewManagerI::update() {
       break;
     }
   }
-  
+
   if (ViewView->selectedItem()) {
     static_cast<KstViewObjectItem*>(ViewView->currentItem())->updateButtons();
   } else {
     Edit->setEnabled(false);
     Delete->setEnabled(false);
   }
-  
-  app->deleteIterator(it);
 }
 
 void KstViewManagerI::edit_I() {
@@ -590,8 +590,8 @@ void KstViewManagerI::activate_I() {
     if (koi->rtti() == RTTI_OBJ_WINDOW) {
       KstViewWindow *win = dynamic_cast<KstViewWindow*>(KstApp::inst()->findWindow(koi->tagName()));
       if (win) {
-        win->activate();
-      }      
+        win->setVisible(true);
+      }
     }
   }
 }
@@ -633,7 +633,7 @@ void KstViewManagerI::select_I() {
       KstViewWindow *win;
       KstViewObjectPtr obj = koi->viewObject(&win);
       if (obj && win) {
-        win->activate();
+        win->setVisible(true);
         obj->setSelected(true);
         win->view()->paint(KstPainter::P_PAINT);
         update();
@@ -651,7 +651,7 @@ void KstViewManagerI::deselect_I() {
       KstViewWindow *win;
       KstViewObjectPtr obj = koi->viewObject(&win);
       if (obj && win) {
-        win->activate();
+        win->setVisible(true);
         obj->setSelected(false);
         win->view()->paint(KstPainter::P_PAINT);
         update();
@@ -703,20 +703,18 @@ void KstViewManagerI::closeAll() {
 
 void KstViewManagerI::contextMenu(Q3ListViewItem *i, const QPoint& p, int col) {
   Q_UNUSED(col)
-  
+
   if (i) {
     KstViewObjectItem *koi = static_cast<KstViewObjectItem*>(i);
-    KPopupMenu *menu = new KPopupMenu(this);
+    KMenu *menu = new KMenu(koi->text(0), this);
     int id;
-    
-    menu->insertTitle(koi->text(0));
-    
+
     if (koi->rtti() == RTTI_OBJ_WINDOW) {
       id = menu->insertItem(i18n("&Rename..."), this, SLOT(edit_I()));
       id = menu->insertItem(i18n("&Close"), this, SLOT(delete_I()));
       id = menu->insertItem(i18n("&Activate"), this, SLOT(activate_I()));
-      
-      KPopupMenu *submenu = new KPopupMenu(menu);
+
+      KMenu *submenu = new KMenu(menu);
       if (submenu) {
         menu->insertSeparator();
         submenu->insertItem("Default Tile", this, SLOT(cleanupDefault_I()));
@@ -734,7 +732,7 @@ void KstViewManagerI::contextMenu(Q3ListViewItem *i, const QPoint& p, int col) {
       id = menu->insertItem(i18n("&Edit..."), this, SLOT(edit_I()));
       id = menu->insertItem(i18n("&Remove"), this, SLOT(delete_I()));
     }
-    
+
     menu->insertSeparator();
     id = menu->insertItem(i18n("Expand"), this, SLOT(open()));
     menu->setItemEnabled(id, !koi->isOpen() && koi->firstChild());
@@ -744,17 +742,17 @@ void KstViewManagerI::contextMenu(Q3ListViewItem *i, const QPoint& p, int col) {
     menu->setItemEnabled(id, koi->firstChild());
     id = menu->insertItem(i18n("Collapse All"), this, SLOT(closeAll()));
     menu->setItemEnabled(id, koi->firstChild());
-  
+
     menu->popup(p);
   } else {
-    KPopupMenu *menu = new KPopupMenu(this);
+    KMenu *menu = new KMenu(this);
     int id;
-        
+
     id = menu->insertItem(i18n("Expand All"), this, SLOT(openAll()));
     menu->setItemEnabled(id, ViewView->firstChild());
     id = menu->insertItem(i18n("Collapse All"), this, SLOT(closeAll()));
-    menu->setItemEnabled(id, ViewView->firstChild());        
-    
+    menu->setItemEnabled(id, ViewView->firstChild());
+
     menu->popup(p);
   }
 }

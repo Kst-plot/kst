@@ -216,8 +216,7 @@ bool KstHsDialogI::newObject() {
   KstVectorPtr vp = *KST::vectorList.findTag(_w->_vector->selectedVector());
   KST::vectorList.lock().unlock();
   if (!vp) {
-    kstdFatal() << "Bug in kst: the Vector field (Hs) refers to "
-                << " a non existant vector..." << endl;
+    qFatal("Bug in kst: the Vector field (Hs) refers to a non existant vector...");
   }
 
   vp->readLock();
@@ -433,8 +432,7 @@ void KstHsDialogI::autoBin() {
     int n;
 
     if (i == KST::vectorList.end()) {
-      kstdFatal() << "Bug in kst: the Vector field in hsdialog refers to "
-                  << "a non existant vector..." << endl;
+      qFatal("Bug in kst: the Vector field in hsdialog refers to a non existant vector...");
     }
     (*i)->readLock(); // Hmm should we really lock here?  AutoBin should I think
     KstHistogram::AutoBin(KstVectorPtr(*i), &n, &max, &min);

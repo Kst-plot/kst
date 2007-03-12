@@ -63,7 +63,7 @@ void PluginManager::selectionChanged( Q3ListViewItem *item ) {
 
 
 void PluginManager::install() {
-  KUrl xmlfile = KFileDialog::getOpenUrl(QString::null, "*.xml", this, i18n("Select Plugin to Install"));
+  KUrl xmlfile = KFileDialog::getOpenUrl(KUrl(), "*.xml", this, i18n("Select Plugin to Install"));
 
   if (xmlfile.isEmpty()) {
     return;
@@ -142,7 +142,7 @@ void PluginManager::remove
 
   if (PluginCollection::self()->isLoaded(item->text(COLUMN_NAME))) {
     PluginCollection::self()->unloadPlugin(item->text(COLUMN_NAME));
-    item->setPixmap(COLUMN_LOADED, locate("data", "kst/pics/no.png"));
+    item->setPixmap(COLUMN_LOADED, KStandardDirs::locate("data", "kst/pics/no.png"));
   }
 
   PluginCollection::self()->deletePlugin(PluginCollection::self()->pluginNameList()[item->text(COLUMN_NAME)]);
@@ -177,7 +177,7 @@ void PluginManager::reloadList() {
                                          it.value()._name,
                                          path);
     if (loadedPluginList.contains(it.value()._name)) {
-      i->setPixmap(COLUMN_LOADED, locate("data", "kst/pics/yes.png"));
+      i->setPixmap(COLUMN_LOADED, KStandardDirs::locate("data", "kst/pics/yes.png"));
       // Don't use no.png - it looks bad
     }
   }

@@ -24,6 +24,7 @@
 #include <qradiobutton.h>
 #include <qspinbox.h>
 #include <qtimer.h>
+#include <qimagewriter.h>
 
 // include files for KDE
 #include <kconfig.h>
@@ -50,7 +51,11 @@ KstGraphFileDialogI::KstGraphFileDialogI(QWidget* parent, Qt::WindowFlags fl)
   _saveLocation->setFilter(KImageIO::mimeTypes().join(" "));
   _saveLocation->setMode(KFile::File);
 
-  _comboBoxFormats->addItems(QImageIO::outputFormats());
+  QStringList formats;
+  foreach (QByteArray format, QImageWriter::supportedImageFormats()) {
+    formats << format;
+  }
+  _comboBoxFormats->addItems(formats);
   _comboBoxFormats->setCurrentIndex(0);
 
   loadProperties();

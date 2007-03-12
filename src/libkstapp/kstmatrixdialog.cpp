@@ -976,7 +976,10 @@ void KstMatrixDialogI::configureSource() {
   }
 
   assert(_configWidget);
-  KDialogBase *dlg = new KDialogBase(this, "Data Config Dialog", true, i18n("Configure Data Source"));
+  KDialog *dlg = new KDialog(this);
+  dlg->setObjectName("Data Config Dialog");
+  dlg->setModal(true);
+  dlg->setCaption(i18n("Configure Data Source"));
   if (isNew) {
     connect(dlg, SIGNAL(okClicked()), _configWidget, SLOT(save()));
     connect(dlg, SIGNAL(applyClicked()), _configWidget, SLOT(save()));

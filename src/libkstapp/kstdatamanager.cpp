@@ -1139,9 +1139,7 @@ void KstDataManagerI::contextMenu(Q3ListViewItem *i, const QPoint& p, int col) {
   KstBaseCurvePtr c;
   KstImagePtr img;
 
-  KMenu *m = new KMenu(this);
-
-  m->insertTitle(koi->text(0));
+  KMenu *m = new KMenu(koi->text(0), this);
 
   int id;
   if (koi->rtti() != RTTI_OBJ_VECTOR && koi->rtti() != RTTI_OBJ_MATRIX) {
@@ -1151,7 +1149,7 @@ void KstDataManagerI::contextMenu(Q3ListViewItem *i, const QPoint& p, int col) {
   if (koi->dataObject()) {
     const KstCurveHintList* hints = koi->dataObject()->curveHints();
     if (!hints->isEmpty()) {
-      KPopupMenu *hintMenu = new KPopupMenu(this);
+      KMenu *hintMenu = new KMenu(this);
       int cnt = 0;
       for (KstCurveHintList::ConstIterator i = hints->begin(); i != hints->end(); ++i) {
         hintMenu->insertItem((*i)->curveName(), koi, SLOT(activateHint(int)), 0, cnt);
@@ -1180,8 +1178,8 @@ void KstDataManagerI::contextMenu(Q3ListViewItem *i, const QPoint& p, int col) {
   } else if (koi->rtti() == RTTI_OBJ_MATRIX || koi->rtti() == RTTI_OBJ_STATIC_MATRIX) {
     id = m->insertItem(i18n("Make &Image..."), koi, SLOT(makeImage()));
   } else if ((c = kst_cast<KstBaseCurve>(koi->dataObject()))) {
-    KPopupMenu *addMenu = new KPopupMenu(this);
-    KPopupMenu *removeMenu = new KPopupMenu(this);
+    KMenu *addMenu = new KMenu(this);
+    KMenu *removeMenu = new KMenu(this);
     PlotMap.clear();
     id = 300;
     bool haveAdd = false, haveRemove = false;
@@ -1189,7 +1187,7 @@ void KstDataManagerI::contextMenu(Q3ListViewItem *i, const QPoint& p, int col) {
     KstApp *app = KstApp::inst();
     QList<QWidget*> childViews = app->childViews();
     QListIterator<KMdiChildView*> it(childViews);
-    while (it.hasNext) {
+    while (it.hasNext()) {
       KstViewWindow *v = dynamic_cast<KstViewWindow*>(it.next());
       if (v) {
         Kst2DPlotList plots = v->view()->findChildrenType<Kst2DPlot>();

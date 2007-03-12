@@ -168,8 +168,7 @@ bool KstPsdDialogI::newObject() {
   KstVectorPtr p = *KST::vectorList.findTag(_w->_vector->selectedVector());
   KST::vectorList.lock().unlock();
   if (!p) {
-    kstdFatal() << "Bug in kst: the vector field (PSD) refers to "
-                << "a non existant vector...." << endl;
+    qFatal("Bug in kst: the vector field (PSD) refers to a non existant vector....");
   }
 
   // create the psd curve

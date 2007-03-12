@@ -44,7 +44,7 @@ KstDebugDialogI::KstDebugDialogI(QWidget* parent, Qt::WindowFlags fl)
   _log = new KstLogWidget(TabPage, "logwidget");
   _log->setDebug(KstDebug::self());
 
-  TabPageLayout->addMultiCellWidget(_log, 0, 0, 0, 2);
+  gridLayout2->addMultiCellWidget(_log, 0, 0, 0, 2);
 
   const QStringList& pl = KstDataSource::pluginList();
 

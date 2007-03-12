@@ -70,8 +70,7 @@ void KstSettingsDlg::setSettings(const KstSettings *settings) {
   _timer->setValue(settings->plotUpdateTimer);
   _fontSize->setValue(settings->plotFontSize);
   _fontMinSize->setValue(settings->plotFontMinSize);
-  _colors->setBackground(settings->backgroundColor);
-  _colors->setForeground(settings->foregroundColor);
+  _colors->setColor(settings->backgroundColor);
   _promptWindowClose->setChecked(settings->promptWindowClose);
   _showQuickStart->setChecked(settings->showQuickStart);
   _tiedZoomGlobal->setChecked(settings->tiedZoomGlobal);
@@ -97,8 +96,9 @@ void KstSettingsDlg::setSettings(const KstSettings *settings) {
   _lineEditPassword->setText(settings->emailPassword);
   _kIntSpinBoxEMailPort->setValue(settings->emailSMTPPort);
   _checkBoxAuthentication->setChecked(settings->emailRequiresAuthentication);
-  _buttonGroupEncryption->setButton((int)settings->emailEncryption);
-  _buttonGroupAuthentication->setButton((int)settings->emailAuthentication);
+  //FIXME PORT!
+  //_buttonGroupEncryption->setButton((int)settings->emailEncryption);
+  //_buttonGroupAuthentication->setButton((int)settings->emailAuthentication);
 
   _tz->setTimezone(settings->timezone);
   setUTCOffset(settings->timezone);
@@ -130,8 +130,8 @@ void KstSettingsDlg::save() {
   s.plotUpdateTimer   = _timer->value();
   s.plotFontSize      = _fontSize->value();
   s.plotFontMinSize   = _fontMinSize->value();
-  s.backgroundColor   = _colors->background();
-  s.foregroundColor   = _colors->foreground();
+  s.backgroundColor   = _colors->color();
+  s.foregroundColor   = _colors->color();
   s.promptWindowClose = _promptWindowClose->isChecked();
   s.showQuickStart    = _showQuickStart->isChecked();
   s.tiedZoomGlobal    = _tiedZoomGlobal->isChecked();
@@ -164,7 +164,8 @@ void KstSettingsDlg::save() {
   s.timezone = tzName;
   s.offsetSeconds = utcOffset(tzName);
 
-  int value = _buttonGroupEncryption->id(_buttonGroupEncryption->selected());
+  //FIXME PORT!
+  /*int value = _buttonGroupEncryption->id(_buttonGroupEncryption->selected());
   if (value >= 0 && value < EMailEncryptionMAXIMUM) {
     s.emailEncryption = (EMailEncryption)value;
   } else {
@@ -176,7 +177,7 @@ void KstSettingsDlg::save() {
     s.emailAuthentication = (EMailAuthentication)value;
   } else {
     s.emailAuthentication = EMailAuthenticationPLAIN;
-  }
+  }*/
 
   KstSettings::setGlobalSettings(&s);
   KstSettings::globalSettings()->save();
@@ -239,7 +240,10 @@ void KstSettingsDlg::configureSource() {
   if (!cw) {
     return;
   }
-  KDialogBase *dlg = new KDialogBase(this, "Data Config Dialog", true, i18n("Configure Data Source"));
+  KDialog *dlg = new KDialog(this);
+  dlg->setObjectName("Data Config Dialog");
+  dlg->setModal(true);
+  dlg->setCaption(i18n("Configure Data Source"));
   connect(dlg, SIGNAL(okClicked()), cw, SLOT(save()));
   connect(dlg, SIGNAL(applyClicked()), cw, SLOT(save()));
   cw->setParent(dlg);

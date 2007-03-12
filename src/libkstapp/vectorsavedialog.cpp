@@ -19,7 +19,7 @@
 
 #include <kdeversion.h>
 #include <kfiledialog.h>
-#include <ktempfile.h>
+#include <k3tempfile.h>
 #include <kio/netaccess.h>
 #include <kstandarddirs.h>
 #include <kmessagebox.h>
@@ -60,14 +60,14 @@ void VectorSaveDialog::save() {
   }
   KST::vectorList.lock().unlock();
 
-  KUrl url = KFileDialog::getSaveUrl(QString::null, QString::null, this, i18n("Save Vector As"));
+  KUrl url = KFileDialog::getSaveUrl(KUrl(), QString::null, this, i18n("Save Vector As"));
   if (!url.isEmpty()) {
     bool interpolate = true;
     switch (_multiOptions->currentIndex()) {
     case 0:
       interpolate = false;
     case 1: {
-        KTempFile tf(locateLocal("tmp", "kstvectors"), "txt");
+        K3TempFile tf(KStandardDirs::locateLocal("tmp", "kstvectors"), "txt");
         tf.setAutoDelete(true);
         if (0 != KstData::self()->vectorsToFile(toSave, tf.file(), interpolate)) {
           KMessageBox::sorry(this, i18n("Error saving vector to %1.").arg(url.prettyUrl()), i18n("Kst"));
@@ -109,7 +109,7 @@ void VectorSaveDialog::save() {
           } else {
             url2.setFileName(url.fileName());
           }
-          KTempFile tf(locateLocal("tmp", "kstvectors"), "txt");
+          K3TempFile tf(KStandardDirs::locateLocal("tmp", "kstvectors"), "txt");
           tf.setAutoDelete(true);
           if (0 != KstData::self()->vectorToFile(*i, tf.file())) {
             KMessageBox::sorry(this, i18n("Error saving vector to %1.").arg(url2.prettyUrl()), i18n("Kst"));

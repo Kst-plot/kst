@@ -82,7 +82,6 @@ void KstViewStringsDialogI::languageChange() {
   setWindowTitle(i18n("View String Values"));
   listViewStrings->header()->setLabel(0, i18n("String"));
   listViewStrings->header()->setLabel(1, i18n("Value"));
-  KstViewStringsDialog::languageChange();      
 }
 
 

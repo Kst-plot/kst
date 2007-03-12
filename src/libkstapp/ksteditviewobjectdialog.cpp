@@ -32,6 +32,7 @@
 #include <QGridLayout>
 #include <Q3ValueList>
 #include <QPixmap>
+#include <QStyle>
 
 #include <kcolorbutton.h>
 #include <QFontComboBox>
@@ -132,7 +133,7 @@ void KstEditViewObjectDialogI::updateWidgets() {
     // NOTE: due to Early return, nothing after this line is executed
     // if the view object provides a custom widget.
 
-    int numProperties = _viewObject->metaObject()->numProperties(true);
+    int numProperties = _viewObject->metaObject()->propertyCount();
 
     // create a new grid
     _grid = new QGridLayout(_propertiesFrame, numProperties, 2, 0, 8);
@@ -141,9 +142,9 @@ void KstEditViewObjectDialogI::updateWidgets() {
     
     // get the property names and types
     for (int i = 0; i < numProperties; i++) {
-      const QMetaProperty* property = _viewObject->metaObject()->property(i, true);
-      QString propertyType(property->type());
-      QString propertyName(property->name());
+      const QMetaProperty property = _viewObject->metaObject()->property(i);
+      QString propertyType(property.type());
+      QString propertyName(property.name());
      
       // for this property, get the meta-data map
       QMap<QString, QVariant> metaData = _viewObject->widgetHints(propertyName);
@@ -166,52 +167,58 @@ void KstEditViewObjectDialogI::updateWidgets() {
         if (widgetType == "QSpinBox") {
           // insert a spinbox
           propertyWidget = new QSpinBox(_propertiesFrame, (propertyName+","+"value").toLatin1()); 
-          propertyWidget->setProperty("value", _viewObject->property(property->name()));
+          propertyWidget->setProperty("value", _viewObject->property(property.name()));
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(valueChanged(const QString&)), this, SLOT(modified()));
             connect(propertyWidget->findChild<QLineEdit*>("qt_spinbox_edit"), SIGNAL(textChanged(const QString&)), this, SLOT(modified()));
           }
         } else if (widgetType == "KColorButton") {
           // insert a colorbutton
-          propertyWidget = new KColorButton(_propertiesFrame, (propertyName+","+"color").toLatin1());
-          propertyWidget->setProperty("color", _viewObject->property(property->name()));
+          propertyWidget = new KColorButton(_propertiesFrame);
+          propertyWidget->setObjectName(propertyName+","+"color");
+          propertyWidget->setProperty("color", _viewObject->property(property.name()));
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(changed(const QColor&)), this, SLOT(modified()));
           }
         } else if (widgetType == "QLineEdit") {
           // insert a text field
-          propertyWidget = new QLineEdit(_propertiesFrame, (propertyName+","+"text").toLatin1());
-          propertyWidget->setProperty("text", _viewObject->property(property->name()));
+          propertyWidget = new QLineEdit(_propertiesFrame);
+          propertyWidget->setObjectName(propertyName+","+"text");
+          propertyWidget->setProperty("text", _viewObject->property(property.name()));
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(textChanged(const QString&)), this, SLOT(modified()));
           }
         } else if (widgetType == "KUrlRequester") {
           // insert a url requester
-          propertyWidget = new KUrlRequester(_propertiesFrame, (propertyName+","+"url").toLatin1());
-          propertyWidget->setProperty("url", _viewObject->property(property->name()));
+          propertyWidget = new KUrlRequester(_propertiesFrame);
+          propertyWidget->setObjectName(propertyName+","+"url");
+          propertyWidget->setProperty("url", _viewObject->property(property.name()));
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(textChanged(const QString&)), this, SLOT(modified()));
             connect(propertyWidget, SIGNAL(urlSelected(const QString&)), this, SLOT(modified()));
           }
         } else if (widgetType == "PenStyleWidget") {
           // insert a combobox with QT pen styles
-          QComboBox* combo = new QComboBox(_propertiesFrame, (propertyName+","+"currentItem").toLatin1());
+          QComboBox* combo = new QComboBox(_propertiesFrame);
+          combo->setObjectName(propertyName+","+"currentIndex");
           fillPenStyleWidget(combo);
           propertyWidget = combo;
-          propertyWidget->setProperty("currentItem", _viewObject->property(property->name()));
+          propertyWidget->setProperty("currentIndex", _viewObject->property(property.name()));
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(activated(int)), this, SLOT(modified()));
           }
         } else if (widgetType == "QCheckBox") {
           // insert a checkbox
-          propertyWidget = new QCheckBox(_propertiesFrame, (propertyName+","+"checked").toLatin1());
-          propertyWidget->setProperty("checked", _viewObject->property(property->name()));
+          propertyWidget = new QCheckBox(_propertiesFrame);
+          propertyWidget->setObjectName(propertyName+","+"checked");
+          propertyWidget->setProperty("checked", _viewObject->property(property.name()));
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(pressed()), this, SLOT(modified()));
           }
         } else if (widgetType == "KDoubleSpinBox") {
           // insert a double num spinbox
-          KDoubleSpinBox* input = new KDoubleSpinBox(_propertiesFrame, (propertyName+","+"value").toLatin1());
+          KDoubleSpinBox* input = new KDoubleSpinBox(_propertiesFrame);
+          input->setObjectName(propertyName+","+"value");
           // need this so that setValue later works
           input->setMinimum(metaData["minimum"].toDouble());
           input->setMaximum(metaData["maximum"].toDouble());
@@ -220,7 +227,7 @@ void KstEditViewObjectDialogI::updateWidgets() {
           metaData.erase("maximum");
           metaData.erase("singleStep");
           propertyWidget = input; 
-          propertyWidget->setProperty("value", _viewObject->property(property->name()));
+          propertyWidget->setProperty("value", _viewObject->property(property.name()));
           // need the following line because of a KDE bug causing valueChanged(double) never to be emitted 
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(valueChanged(int)), this, SLOT(modified()));
@@ -229,26 +236,29 @@ void KstEditViewObjectDialogI::updateWidgets() {
           }
         } else if (widgetType == "QFontComboBox") {
           // insert a font combo box
-          propertyWidget = new QFontComboBox(_propertiesFrame, (propertyName+","+"currentText").toLatin1());
-          propertyWidget->setProperty("currentText", _viewObject->property(property->name()));  
+          propertyWidget = new QFontComboBox(_propertiesFrame);
+          propertyWidget->setObjectName(propertyName+","+"currentText");
+          propertyWidget->setProperty("currentText", _viewObject->property(property.name()));
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(activated(int)), this, SLOT(modified()));
           }
         } else if (widgetType == "HJustifyCombo") {
           // insert a combo box filled with horizontal justifications
-          QComboBox* combo = new QComboBox(_propertiesFrame, (propertyName+","+"currentItem").toLatin1());
+          QComboBox* combo = new QComboBox(_propertiesFrame);
+          combo->setObjectName(propertyName+","+"currentIndex");
           fillHJustifyWidget(combo);
           propertyWidget = combo;
-          propertyWidget->setProperty("currentItem", _viewObject->property(property->name()));
+          propertyWidget->setProperty("currentIndex", _viewObject->property(property.name()));
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(activated(int)), this, SLOT(modified()));
           }
         } else if (widgetType == "VJustifyCombo") {
           // insert a combo box filled with vertical justifications
-          QComboBox* combo = new QComboBox(_propertiesFrame, (propertyName+","+"currentItem").toLatin1());
+          QComboBox* combo = new QComboBox(_propertiesFrame);
+          combo->setObjectName(propertyName+","+"currentIndex");
           fillVJustifyWidget(combo);
           propertyWidget = combo;
-          propertyWidget->setProperty("currentItem", _viewObject->property(property->name()));
+          propertyWidget->setProperty("currentIndex", _viewObject->property(property.name()));
           if (!_isNew) {
             connect(propertyWidget, SIGNAL(activated(int)), this, SLOT(modified()));
           }
@@ -273,9 +283,19 @@ void KstEditViewObjectDialogI::updateWidgets() {
 
 
 void KstEditViewObjectDialogI::fillPenStyleWidget(QComboBox* widget) {
-  QRect rect = widget->style().querySubControlMetrics(QStyle::CC_ComboBox, 
-                                                      widget, 
-                                                      QStyle::SC_ComboBoxEditField);
+
+  QStyleOptionComboBox option;
+  option.initFrom(widget);
+  option.currentIcon = widget->itemIcon(widget->currentIndex());
+  option.currentText = widget->itemText(widget->currentIndex());
+  option.editable = widget->isEditable();
+  option.frame = widget->hasFrame();
+  option.iconSize = widget->iconSize();
+
+  QRect rect = widget->style()->subControlRect(QStyle::CC_ComboBox,
+                                               &option,
+                                               QStyle::SC_ComboBoxEditField,
+                                               widget);
   rect.setLeft(rect.left() + 2);
   rect.setRight(rect.right() - 2);
   rect.setTop(rect.top() + 2);
