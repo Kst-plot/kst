@@ -39,15 +39,15 @@ KstViewEllipse::KstViewEllipse(const QDomElement& e)
   _transparentFill = false;
   QDomNode n = e.firstChild();
   while (!n.isNull()) {
-    QDomElement el = n.toElement(); 
+    QDomElement el = n.toElement();
     if (!el.isNull()) {
-      if (metaObject()->findProperty(el.tagName().toLatin1(), true) > -1) {
-        setProperty(el.tagName().toLatin1(), QVariant(el.text()));  
-      }  
+      if (metaObject()->indexOfProperty(el.tagName().toLatin1()) > -1) {
+        setProperty(el.tagName().toLatin1(), QVariant(el.text()));
+      }
     }
-    n = n.nextSibling();      
+    n = n.nextSibling();
   }
-  
+
   // always have these values
   _type = "Ellipse";
   setTransparent(true);
@@ -159,18 +159,18 @@ QMap<QString, QVariant> KstViewEllipse::widgetHints(const QString& propertyName)
   }
   if (propertyName == "borderColor") {
     map.insert(QString("_kst_widgetType"), QString("KColorButton"));
-    map.insert(QString("_kst_label"), i18n("Border color"));  
+    map.insert(QString("_kst_label"), i18n("Border color"));
   } else if (propertyName == "borderWidth") {
     map.insert(QString("_kst_widgetType"), QString("QSpinBox"));
-    map.insert(QString("_kst_label"), i18n("Border width"));    
+    map.insert(QString("_kst_label"), i18n("Border width"));
     map.insert(QString("minimum"), 0);
   } else if (propertyName == "fillColor") {
     map.insert(QString("_kst_widgetType"), QString("KColorButton"));
-    map.insert(QString("_kst_label"), i18n("Fill Color"));    
+    map.insert(QString("_kst_label"), i18n("Fill Color"));
   } else if (propertyName == "transparentFill") {
     map.insert(QString("_kst_widgetType"), QString("QCheckBox"));
-    map.insert(QString("_kst_label"), QString::null);   
-    map.insert(QString("text"), i18n("Transparent fill")); 
+    map.insert(QString("_kst_label"), QVariant());
+    map.insert(QString("text"), i18n("Transparent fill"));
   }  
   return map;
 }

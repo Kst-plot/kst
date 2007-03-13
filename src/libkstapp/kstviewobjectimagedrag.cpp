@@ -20,7 +20,7 @@
 #include <kapplication.h>
 #include <kimageio.h>
 #include <klocale.h>
-#include <qprogressbar.h>
+#include <kprogressdialog.h>
 #include <k3tempfile.h>
 
 #include <qeventloop.h>
@@ -85,9 +85,9 @@ QByteArray KstViewObjectImageDrag::encodedData(const char *mimeType) const {
   KstPainter p(KstPainter::P_EXPORT);
   p.begin(&pm);
   p.setClipping(true);
-  KProgressDialog *dlg = new KProgressDialog(0, 0, QString::null, i18n("Generating and storing images of objects..."), true);
+  KProgressDialog *dlg = new KProgressDialog(0, QString::null, i18n("Generating and storing images of objects..."), true);
   dlg->setAllowCancel(true);
-  dlg->progressBar()->setTotalSteps(_objects.count());
+  dlg->progressBar()->setMaximum(_objects.count());
   dlg->progressBar()->setValue(prog);
   dlg->show();
 
@@ -100,7 +100,7 @@ QByteArray KstViewObjectImageDrag::encodedData(const char *mimeType) const {
       break;
     }
     dlg->progressBar()->setValue(++prog);
-    kapp->eventLoop()->processEvents(QEventLoop::ExcludeSocketNotifiers);
+    qApp->processEvents(QEventLoop::ExcludeSocketNotifiers);
   }
   p.end();
 
@@ -123,7 +123,7 @@ QByteArray KstViewObjectImageDrag::encodedData(const char *mimeType) const {
   QFile::remove(tf.name());
 #else
   QDataStream ds(&rc, QIODevice::WriteOnly);
-  pm.save(ds.device(), KImageIO::typeForMime(mimeType).toLatin1());
+  pm.save(ds.device(), KImageIO::typeForMime(mimeType).join("").toLatin1());
 #endif
 
   return rc;

@@ -44,18 +44,18 @@ KstViewBox::KstViewBox()
 
 KstViewBox::KstViewBox(const QDomElement& e)
 : KstViewObject(e), _borderColor(QColor(0, 0, 0)), _borderWidth(0) {
-  
+
   QDomNode n = e.firstChild();
   while (!n.isNull()) {
-    QDomElement el = n.toElement(); 
+    QDomElement el = n.toElement();
     if (!el.isNull()) {
-      if (metaObject()->findProperty(el.tagName().toLatin1(), true) > -1) {
-        setProperty(el.tagName().toLatin1(), QVariant(el.text()));  
-      }  
+      if (metaObject()->indexOfProperty(el.tagName().toLatin1()) > -1) {
+        setProperty(el.tagName().toLatin1(), QVariant(el.text()));
+      }
     }
-    n = n.nextSibling();      
+    n = n.nextSibling(); 
   }
-  
+
   // these always have these values
   _type = "Box";
   _standardActions |= Delete | Edit;
@@ -268,17 +268,17 @@ QMap<QString, QVariant > KstViewBox::widgetHints(const QString& propertyName) co
   if (propertyName == "xRound") {
     map.insert(QString("_kst_widgetType"), QString("QSpinBox"));
     map.insert(QString("_kst_label"), i18n("X Roundness"));
-    map.insert(QString("minimum"), 0);   
+    map.insert(QString("minimum"), 0);
   } else if (propertyName == "yRound") {
     map.insert(QString("_kst_widgetType"), QString("QSpinBox"));
     map.insert(QString("_kst_label"), i18n("Y Roundness"));
-    map.insert(QString("minimum"), 0);  
+    map.insert(QString("minimum"), 0);
   } else if (propertyName == "foregroundColor") {
     map.insert(QString("_kst_widgetType"), QString("KColorButton"));
     map.insert(QString("_kst_label"), i18n("Fill Color"));
   } else if (propertyName == "transparentFill") {
     map.insert(QString("_kst_widgetType"), QString("QCheckBox"));
-    map.insert(QString("_kst_label"), QString::null);
+    map.insert(QString("_kst_label"), QVariant());
     map.insert(QString("text"), i18n("Transparent fill"));
   } if (propertyName == "borderColor") {
     map.insert(QString("_kst_widgetType"), QString("KColorButton"));

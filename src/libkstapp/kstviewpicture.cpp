@@ -54,7 +54,7 @@ KstViewPicture::KstViewPicture(const QDomElement& e)
   while (!n.isNull()) {
     QDomElement el = n.toElement();
     if (!el.isNull()) {
-      if (metaObject()->findProperty(el.tagName().toLatin1(), true) > -1) {
+      if (metaObject()->indexOfProperty(el.tagName().toLatin1()) > -1) {
         setProperty(el.tagName().toLatin1(), QVariant(el.text()));
       }
     }
@@ -104,7 +104,6 @@ QRegion KstViewPicture::clipRegion() {
       p.begin(&bm1);
       p.setViewXForm(true);
       KstBorderedViewObject::paintSelf(p, QRegion());
-      p.flush();
       p.end();
       _clipMask = QRegion(bm1);
     }
@@ -115,7 +114,6 @@ QRegion KstViewPicture::clipRegion() {
       p.begin(&bm2);
       p.setViewXForm(true);
       paintSelf(p, QRegion());
-      p.flush();
       p.end();
       _myClipMask = QRegion(bm2);
     }
@@ -313,7 +311,7 @@ void KstViewPicture::restoreAspect() {
   QRect cr(contentsRect());
   QSize size = _image.size(); //start with original size.
 
-  size.scale( cr.size().width(), cr.size().height(), QSize::ScaleMin ); //find largest rect. which will fit inside original and still preserve aspect.
+  size.scale( cr.size().width(), cr.size().height(), Qt::KeepAspectRatio ); //find largest rect. which will fit inside original and still preserve aspect.
 
   cr.setSize(size);
   setContentsRect(cr);
@@ -333,7 +331,7 @@ QMap<QString, QVariant> KstViewPicture::widgetHints(const QString& propertyName)
     map.insert(QString("_kst_label"), i18n("Refresh timer"));
   } else if (propertyName == "maintainAspect") {
     map.insert(QString("_kst_widgetType"), QString("QCheckBox"));
-    map.insert(QString("_kst_label"), QString::null);    
+    map.insert(QString("_kst_label"), QVariant());
     map.insert(QString("text"), i18n("Maintain aspect ratio"));
   }
   // FIXME: uncomment once these are supported.

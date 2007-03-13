@@ -33,7 +33,7 @@ KstLogWidget::KstLogWidget(QWidget *parent, const char *name )
 : Q3TextBrowser(parent, name) {
   //setTextFormat(LogText);
   //setMaxLogLines(KstDebug::self()->limit());
-  setTextFormat(AutoText);
+  setTextFormat(Qt::AutoText);
   _show = KstDebug::Warning | KstDebug::Error | KstDebug::Notice | KstDebug::Debug;
   generateImages();
   setMimeSourceFactory(&_msrc);

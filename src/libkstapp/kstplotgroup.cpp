@@ -56,7 +56,7 @@ KstPlotGroup::KstPlotGroup(const QDomElement& e)
   while (!n.isNull()) {
     QDomElement el = n.toElement();
     if (!el.isNull()) {
-      if (metaObject()->findProperty(el.tagName().toLatin1(), true) > -1) {
+      if (metaObject()->indexOfProperty(el.tagName().toLatin1()) > -1) {
         setProperty(el.tagName().toLatin1(), QVariant(el.text()));
       }
     }
@@ -216,7 +216,7 @@ QMap<QString, QVariant> KstPlotGroup::widgetHints(const QString& propertyName) c
 
   if (propertyName == "transparent") {
     map.insert(QString("_kst_widgetType"), QString("QCheckBox"));
-    map.insert(QString("_kst_label"), QString::null);
+    map.insert(QString("_kst_label"), QVariant());
     map.insert(QString("text"), i18n("Transparent background"));
   } else if (propertyName == "backColor") {
     map.insert(QString("_kst_widgetType"), QString("KColorButton"));

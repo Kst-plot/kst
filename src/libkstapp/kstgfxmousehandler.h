@@ -21,6 +21,9 @@
 #include <qpointer.h>
 #include "kstobject.h"
 
+#include <qpoint.h>
+#include <qrect.h>
+
 class KstTopLevelView;
 class KstViewObject;
 

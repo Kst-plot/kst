@@ -24,7 +24,7 @@ class QCheckBox;
 
 class KstPrintOptionsPage : public KPrintDialogPage {
   public:
-    KstPrintOptionsPage(QWidget *parent = 0L, const char *name = 0L);
+    KstPrintOptionsPage(QWidget *parent = 0L);
     virtual ~KstPrintOptionsPage();
 
     void setOptions(const QMap<QString,QString>& opts);
@@ -35,7 +35,7 @@ class KstPrintOptionsPage : public KPrintDialogPage {
     QCheckBox *_dateTimeFooter;
     QCheckBox *_maintainAspectRatio;
     QCheckBox *_bw;
-    Q3Button *_configureBW;
+    QPushButton *_configureBW;
     QSpinBox *_curveWidthAdjust;
 };
 

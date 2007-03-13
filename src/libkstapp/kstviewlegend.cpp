@@ -32,7 +32,6 @@
 #include "plotlistbox.h"
 #include "kstviewwindow.h"
 
-#include <kdatastream.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kmenu.h>
@@ -97,7 +96,7 @@ KstViewLegend::KstViewLegend(const QDomElement& e)
   _legendMargin = 5;
   _parsedTitle = 0L;
   _trackContents = true;
-  
+
   QStringList ctaglist;
 
   // read the properties
@@ -105,7 +104,7 @@ KstViewLegend::KstViewLegend(const QDomElement& e)
   while (!n.isNull()) {
     QDomElement el = n.toElement();
     if (!el.isNull()) {
-      if (metaObject()->findProperty(el.tagName().toLatin1(), true) > -1) {
+      if (metaObject()->indexOfProperty(el.tagName().toLatin1()) > -1) {
         setProperty(el.tagName().toLatin1(), QVariant(el.text()));
       } else if (el.tagName() == "curvetag") {
         ctaglist.append(el.text()); 
@@ -413,7 +412,6 @@ QRegion KstViewLegend::clipRegion() {
       p.begin(&bm1);
       p.setViewXForm(true);
       KstBorderedViewObject::paintSelf(p, QRegion());
-      p.flush();
       p.end();
       _clipMask = QRegion(bm1);
     }
@@ -591,8 +589,7 @@ bool KstViewLegend::fillConfigWidget(QWidget *w, bool isNew) const {
     widget->_fontColor->setColor(KstSettings::globalSettings()->foregroundColor);
     widget->_font->setCurrentFont(KstApp::inst()->defaultFont());
     widget->_margin->setValue(5);
-    widget->_boxColors->setForeground(KstSettings::globalSettings()->foregroundColor);
-    widget->_boxColors->setBackground(KstSettings::globalSettings()->backgroundColor);
+    widget->_boxColors->setColor(KstSettings::globalSettings()->foregroundColor);
     widget->_vertical->setChecked(true);
     widget->_transparent->setChecked(false);
     widget->_border->setValue(2);
@@ -613,8 +610,7 @@ bool KstViewLegend::fillConfigWidget(QWidget *w, bool isNew) const {
     widget->_font->setCurrentFont(fontName());
     widget->_transparent->setChecked(transparent());
     widget->_border->setValue(borderWidth());
-    widget->_boxColors->setForeground(borderColor());
-    widget->_boxColors->setBackground(backgroundColor());
+    widget->_boxColors->setColor(borderColor());
     widget->_margin->setValue(_legendMargin);
     widget->_vertical->setChecked(vertical());
     for (KstBaseCurveList::ConstIterator it = _curves.begin(); it != _curves.end(); ++it) {
@@ -667,13 +663,13 @@ bool KstViewLegend::readConfigWidget(QWidget *w) {
 
     legendExtra->setFontSize(widget->_fontSize->value());
     legendExtra->setForegroundColor(widget->_fontColor->color());
-    legendExtra->setFontName(widget->_font->currentFont());
+    legendExtra->setFontName(widget->_font->currentFont().toString());
     legendExtra->setTitle(widget->_title->text());
 
     legendExtra->setTransparent(widget->_transparent->isChecked());
     legendExtra->setBorderWidth(widget->_border->value());
-    legendExtra->setBorderColor(widget->_boxColors->foreground());
-    legendExtra->setBackgroundColor(widget->_boxColors->background());
+    legendExtra->setBorderColor(widget->_boxColors->color());
+    legendExtra->setBackgroundColor(widget->_boxColors->color());
     legendExtra->setLegendMargin(widget->_margin->value());
     legendExtra->setVertical(widget->_vertical->isChecked());
     legendExtra->setTrackContents(widget->TrackContents->isChecked());
@@ -769,17 +765,14 @@ KstBaseCurveList& KstViewLegend::curves() {
 KstViewLegendList KstViewLegend::globalLegendList() {
   KstViewLegendList rc;
   KstApp *app = KstApp::inst();
-  KMdiIterator<KMdiChildView*> *it = app->createIterator();
-  if (it) {
-    while (it->currentItem()) {
-      KstViewWindow *view = dynamic_cast<KstViewWindow*>(it->currentItem());
-      if (view) {
-        KstViewLegendList sub = view->view()->findChildrenType<KstViewLegend>(true);
-        rc += sub;
-      }
-      it->next();
+  QListIterator<KMdiChildView*> it(app->childViews());
+  while (it.hasNext()) {
+    KstViewWindow *view = dynamic_cast<KstViewWindow*>(it.next());
+    if (view) {
+      KstViewLegendList sub = view->view()->findChildrenType<KstViewLegend>(true);
+      rc += sub;
     }
-    app->deleteIterator(it);
+    it.next();
   }
   return rc;
 }

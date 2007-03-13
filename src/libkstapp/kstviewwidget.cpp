@@ -18,6 +18,7 @@
 #include <assert.h>
 
 #include <qdebug.h>
+#include <qapplication.h>
 #include <kmultipledrag.h>
 
 #include "kst.h"
@@ -40,7 +41,7 @@
 #include <QEvent>
 #include <QDragEnterEvent>
 
-KstViewWidget::KstViewWidget(KstTopLevelViewPtr view, Qt::WindowFlags w)
+KstViewWidget::KstViewWidget(KstTopLevelViewPtr view, QWidget *parent, Qt::WindowFlags w)
 : QWidget(parent, Qt::WStyle_Customize | Qt::WNoAutoErase | w), _view(view) {
   setDragEnabled(true);
   setDropEnabled(true);

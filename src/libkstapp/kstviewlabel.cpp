@@ -32,7 +32,6 @@
 
 #include <kcolorbutton.h>
 #include <kcombobox.h>
-#include <kdatastream.h>
 #include <QFontComboBox>
 #include <kglobal.h>
 #include <klocale.h>
@@ -97,15 +96,15 @@ KstViewLabel::KstViewLabel(const QDomElement& e)
   _parsed = 0L;
   _isResizable = false;
   reparse();
-  
+
   // read the properties
   QDomNode n = e.firstChild();
   while (!n.isNull()) {
-    QDomElement el = n.toElement(); 
+    QDomElement el = n.toElement();
     if (!el.isNull()) {
-      if (metaObject()->findProperty(el.tagName().toLatin1(), true) > -1) {
-        setProperty(el.tagName().toLatin1(), QVariant(el.text()));  
-      }  
+      if (metaObject()->indexOfProperty(el.tagName().toLatin1()) > -1) {
+        setProperty(el.tagName().toLatin1(), QVariant(el.text()));
+      }
     }
     n = n.nextSibling();
   }
@@ -114,7 +113,7 @@ KstViewLabel::KstViewLabel(const QDomElement& e)
 
 KstViewLabel::KstViewLabel(const KstViewLabel& label)
 : KstBorderedViewObject(label) {
-  
+
   _dataPrecision = label._dataPrecision;
   _interpret = label._interpret;
   _replace = label._replace;
@@ -434,7 +433,6 @@ QRegion KstViewLabel::clipRegion() {
       p.begin(&bm1);
       p.setViewXForm(true);
       KstBorderedViewObject::paintSelf(p, QRegion());
-      p.flush();
       p.end();
       _clipMask = QRegion(bm1);
     }
@@ -600,8 +598,7 @@ bool KstViewLabel::fillConfigWidget(QWidget *w, bool isNew) const {
     widget->_font->setCurrentFont(KstApp::inst()->defaultFont());
     widget->_margin->setValue(5);
 
-    widget->_boxColors->setForeground(KstSettings::globalSettings()->foregroundColor);
-    widget->_boxColors->setBackground(KstSettings::globalSettings()->backgroundColor);
+    widget->_boxColors->setColor(KstSettings::globalSettings()->backgroundColor);
 
     if (size().width() * size().height() < 25) { // assume a click, and default to just text
       widget->_transparent->setChecked(true);
@@ -625,14 +622,13 @@ bool KstViewLabel::fillConfigWidget(QWidget *w, bool isNew) const {
     widget->_precision->setValue(int(dataPrecision()));
     widget->_rotation->setValue(double(rotation()));
     widget->_fontSize->setValue(int(fontSize()));
-    widget->_horizontal->setCurrentItem(horizJustifyWrap());
+    widget->_horizontal->setCurrentIndex(horizJustifyWrap());
     widget->_fontColor->setColor(foregroundColor());
     widget->_font->setCurrentFont(fontName());
 
     widget->_transparent->setChecked(transparent());
     widget->_border->setValue(borderWidth());
-    widget->_boxColors->setForeground(borderColor());
-    widget->_boxColors->setBackground(backgroundColor());
+    widget->_boxColors->setColor(borderColor());
     widget->_margin->setValue(_labelMargin);
   }
   widget->_text->setFocus();
@@ -659,12 +655,12 @@ bool KstViewLabel::readConfigWidget(QWidget *w) {
   setFontSize(widget->_fontSize->value());
   setHorizJustifyWrap(widget->_horizontal->currentItem());
   setForegroundColor(widget->_fontColor->color());
-  setFontName(widget->_font->currentFont());
+  setFontName(widget->_font->currentFont().toString());
 
   setTransparent(widget->_transparent->isChecked());
   setBorderWidth(widget->_border->value());
-  setBorderColor(widget->_boxColors->foreground());
-  setBackgroundColor(widget->_boxColors->background());
+  setBorderColor(widget->_boxColors->color());
+  setBackgroundColor(widget->_boxColors->color());
   setLabelMargin(widget->_margin->value());
  
   reparse(); // calls setDirty()

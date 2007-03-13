@@ -92,7 +92,7 @@ QRect KstGfxMouseHandlerUtils::resizeRectFromCornerCentered(const QRect& origina
     newHalfHeight = qMin(newHalfHeight,bounds.bottom() - anchorPoint.y());
 
     QSize newSize(originalRect.size());
-    newSize.scale(2*newHalfWidth,2*newHalfHeight,QSize::ScaleMin);
+    newSize.scale(2*newHalfWidth,2*newHalfHeight,Qt::KeepAspectRatio);
 
     newRect.setSize(newSize);
     newRect.moveCenter(anchorPoint);

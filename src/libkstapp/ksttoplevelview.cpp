@@ -50,8 +50,9 @@
 
 #define STICKY_THRESHOLD 10
 
-KstTopLevelView::KstTopLevelView(QWidget *parent, Qt::WindowFlags w)
-: KstViewObject("TopLevelView"), _w(new KstViewWidget(this, w)) {
+KstTopLevelView::KstTopLevelView(QWidget *parent, const QString &name, Qt::WindowFlags w)
+: KstViewObject("TopLevelView") {
+  _w = new KstViewWidget(this, parent, w);
   _onGrid = true;
   setTagName(KstObjectTag(name, KstObjectTag::globalTagContext));  // FIXME: tag context
   commonConstructor(); 
@@ -224,7 +225,7 @@ void KstTopLevelView::updateFocus(const QPoint& pos) {
     setCursorFor(pos, p);
     KstPainter painter;
     painter.begin(_w);
-    p.setCompositionMode(QPainter::CompositionMode_Destination);
+    painter.setCompositionMode(QPainter::CompositionMode_Destination);
     painter.setPen(QPen(Qt::black, 0, Qt::SolidLine));
     painter.setBrush(Qt::NoBrush);
     p->drawFocusRect(painter);
@@ -770,8 +771,8 @@ void KstTopLevelView::pressMoveLayoutModeSelect(const QPoint& pos, bool shift) {
     KstPainter p;
     p.begin(_w);
     p.setCompositionMode(QPainter::CompositionMode_Destination);
-    p.drawWinFocusRect(old);
-    p.drawWinFocusRect(_prevBand);
+    p.drawRect(old);
+    p.drawRect(_prevBand);
     p.end();
   }
   KstApp::inst()->slotUpdateDataMsg(QString::null);
@@ -956,7 +957,7 @@ void KstTopLevelView::releasePressLayoutModeSelect(const QPoint& pos, bool shift
     
   p.begin(_w);
   p.setCompositionMode(QPainter::CompositionMode_Destination);
-  p.drawWinFocusRect(_prevBand);
+  p.drawRect(_prevBand);
   p.end();
   if (shift) {
     for (KstViewObjectList::Iterator i = _children.begin(); i != _children.end(); ++i) {

@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <q3button.h>
+#include <qpushbutton.h>
 #include <qcheckbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
@@ -29,8 +29,8 @@
 #include "kstmonochromedialog.h"
 #include "kst.h"
 
-KstPrintOptionsPage::KstPrintOptionsPage(QWidget *parent, const char *name)
-: KPrintDialogPage(parent, name) {
+KstPrintOptionsPage::KstPrintOptionsPage(QWidget *parent)
+: KPrintDialogPage(parent) {
   int row = 0;
 
   setTitle(i18n("Kst Options"));

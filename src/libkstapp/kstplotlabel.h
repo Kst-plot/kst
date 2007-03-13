@@ -18,6 +18,8 @@
 #ifndef KSTPLOTLABEL_H
 #define KSTPLOTLABEL_H
 
+#include <QSize>
+
 #include "labelparser.h"
 
 class QPainter;

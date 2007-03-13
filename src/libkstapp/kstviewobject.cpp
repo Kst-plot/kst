@@ -35,7 +35,6 @@
 #include <QDragMoveEvent>
 
 // include files for KDE
-#include <kdatastream.h>
 #include <qdebug.h>
 
 // application specific includes
@@ -305,11 +304,11 @@ void KstViewObject::saveAttributes(QTextStream& ts, const QString& indent) {
     "\" h=\"" << _idealSize.height() <<"\" />" << endl;
 
   // save all properties
-  for (int i = 0; i < metaObject()->numProperties(true); i++) {
-    ts << indent << "<" << metaObject()->property(i, true)->name() << ">";
-    ts << property(metaObject()->property(i, true)->name()).toString().toLatin1();
-    ts << "</" << metaObject()->property(i, true)->name() << ">" << endl;
-  }  
+  for (int i = 0; i < metaObject()->propertyCount(); i++) {
+    ts << indent << "<" << metaObject()->property(i).name() << ">";
+    ts << property(metaObject()->property(i).name()).toString().toLatin1();
+    ts << "</" << metaObject()->property(i).name() << ">" << endl;
+  }
 }
 
 
@@ -367,8 +366,9 @@ void KstViewObject::paint(KstPainter& p, const QRegion& bounds) {
     }
 
     if (!_children.isEmpty()) {
-      KstViewObjectList::Iterator begin = _children.begin();
-      for (KstViewObjectList::Iterator i = _children.fromLast();; --i) {
+      KstViewObjectList::Iterator i = _children.end();
+      while (i != _children.begin()) {
+         --i; // decrement i before using it
         const QRegion thisObjectGeometry((*i)->geometry());
         if (nullBounds || !clipRegion.intersect(thisObjectGeometry).isEmpty()) {
 #ifdef BENCHMARK
@@ -381,9 +381,6 @@ void KstViewObject::paint(KstPainter& p, const QRegion& bounds) {
           int x = t.elapsed();
           qDebug() << "   -> object " << (*i)->tagName() << " took " << x << "ms" << endl;
 #endif
-        }
-        if (i == begin) {
-          break;
         }
       }
     }
@@ -404,8 +401,6 @@ void KstViewObject::paint(KstPainter& p, const QRegion& bounds) {
       p.restore();
     }
   }
-
-  p.flush();
 }
 
 
@@ -1106,7 +1101,7 @@ bool KstViewObject::popupMenu(KMenu *menu, const QPoint& pos, KstViewObjectPtr t
   _topObjectForMenu = topParent;
 
   if (!menuTitle.isEmpty()) {
-    menu->insertTitle(menuTitle);
+    menu->setTitle(menuTitle);
   }
 
   if (_standardActions & Edit) {
@@ -1164,7 +1159,7 @@ bool KstViewObject::layoutPopupMenu(KMenu *menu, const QPoint& pos, KstViewObjec
   _moveToMap.clear();
 
   if (!tagName().isEmpty()) {
-    menu->insertTitle(tagName());
+    menu->setTitle(tagName());
   }
 
   if (_layoutActions & Edit) {
@@ -1227,21 +1222,20 @@ bool KstViewObject::layoutPopupMenu(KMenu *menu, const QPoint& pos, KstViewObjec
 
     id = menu->insertItem(i18n("&Move To"), submenu);
 
-    KMdiIterator<KMdiChildView*> *it = KstApp::inst()->createIterator();
-    while (it->currentItem()) {
-      KstViewWindow *c = dynamic_cast<KstViewWindow*>(it->currentItem());
+    QListIterator<KMdiChildView*> it(KstApp::inst()->childViews());
+    while (it.hasNext()) {
+      KstViewWindow *c = dynamic_cast<KstViewWindow*>(it.next());
       KstTopLevelViewPtr tlv = kst_cast<KstTopLevelView>(topParent);
 
       if (c && (!tlv || tlv != c->view())) {
         hasEntry = true;
-        submenu->insertItem(it->currentItem()->caption(), i);
+        submenu->insertItem(it.next()->caption(), i);
         submenu->connectItem(i, this, SLOT(moveTo(int)));
-        _moveToMap[i] = it->currentItem()->caption();
+        _moveToMap[i] = it.next()->caption();
         i++;
       }
-      it->next();
+      it.next();
     }
-    KstApp::inst()->deleteIterator(it);
 
     menu->setItemEnabled(id, hasEntry);
 
@@ -1256,25 +1250,24 @@ bool KstViewObject::layoutPopupMenu(KMenu *menu, const QPoint& pos, KstViewObjec
 
     id = menu->insertItem(i18n("&Copy To"), submenu);
 
-    KMdiIterator<KMdiChildView*> *it = KstApp::inst()->createIterator();
-    while (it->currentItem()) {
-      KstViewWindow *c = dynamic_cast<KstViewWindow*>(it->currentItem());
+    QListIterator<KMdiChildView*> it(KstApp::inst()->childViews());
+    while (it.hasNext()) {
+      KstViewWindow *c = dynamic_cast<KstViewWindow*>(it.next());
       KstTopLevelViewPtr tlv = kst_cast<KstTopLevelView>(topParent);
 
       if (c) {
         hasEntry = true;
         if (tlv && tlv == c->view()) {
-          submenu->insertItem(i18n("%1 (here)").arg(it->currentItem()->caption()), i);
+          submenu->insertItem(i18n("%1 (here)").arg(it.next()->caption()), i);
         } else {
-          submenu->insertItem(it->currentItem()->caption(), i);
+          submenu->insertItem(it.next()->caption(), i);
         }
         submenu->connectItem(i, this, SLOT(copyTo(int)));
-        _copyToMap[i] = it->currentItem()->caption();
+        _copyToMap[i] = it.next()->caption();
         i++;
       }
-      it->next();
+      it.next();
     }
-    KstApp::inst()->deleteIterator(it);
 
     menu->setItemEnabled(id, hasEntry);
 
@@ -1865,7 +1858,6 @@ QRegion KstViewObject::clipRegion() {
         p.begin(&bm);
         p.setViewXForm(true);
         paint(p, QRegion());
-        p.flush();
         p.end();
         _clipMask = QRegion(bm);
       } else {

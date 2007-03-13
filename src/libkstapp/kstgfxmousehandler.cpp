@@ -50,10 +50,10 @@ void KstGfxMouseHandler::saveDefaults(KstViewObjectPtr obj) {
 
 void KstGfxMouseHandler::copyDefaults(KstViewObjectPtr newObj) {
   if (_defaultObject) {
-    int numProperties = _defaultObject->metaObject()->numProperties(true);
+    int numProperties = _defaultObject->metaObject()->propertyCount();
     for (int i = 0; i < numProperties; i++) {
-      const QMetaProperty* property = _defaultObject->metaObject()->property(i, true);
-      newObj->setProperty(property->name(), _defaultObject->property(property->name()));
+      const QMetaProperty property = _defaultObject->metaObject()->property(i);
+      newObj->setProperty(property.name(), _defaultObject->property(property.name()));
     }
   }
 }

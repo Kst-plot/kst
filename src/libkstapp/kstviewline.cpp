@@ -43,22 +43,22 @@ KstViewLine::KstViewLine(const QDomElement& e)
 : KstViewObject(e) {
   _width = 0;
   _container = false;
-  _capStyle = Qt::FlatCap; 
+  _capStyle = Qt::FlatCap;
   _penStyle = Qt::SolidLine;
   int orientationInt = 0;
   QDomNode n = e.firstChild();
   while (!n.isNull()) {
-    QDomElement el = n.toElement(); 
+    QDomElement el = n.toElement();
     if (!el.isNull()) {
       if (el.tagName() == "orientation") {
         orientationInt = el.text().toInt();
-      } else if (metaObject()->findProperty(el.tagName().toLatin1(), true) > -1) {
-        setProperty(el.tagName().toLatin1(), QVariant(el.text()));  
+      } else if (metaObject()->indexOfProperty(el.tagName().toLatin1()) > -1) {
+        setProperty(el.tagName().toLatin1(), QVariant(el.text()));
       }
     }
     n = n.nextSibling();
   }
-  
+
   switch (orientationInt) {
     case 1:
       _orientation = UpRight;

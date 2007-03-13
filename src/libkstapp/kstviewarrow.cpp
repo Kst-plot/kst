@@ -51,13 +51,13 @@ KstViewArrow::KstViewArrow(const QDomElement& e)
   while (!n.isNull()) {
     QDomElement el = n.toElement(); 
     if (!el.isNull()) {
-      if (metaObject()->findProperty(el.tagName().toLatin1(), true) > -1) {
-        setProperty(el.tagName().toLatin1(), QVariant(el.text()));  
-      }  
+      if (metaObject()->indexOfProperty(el.tagName().toLatin1()) > -1) {
+        setProperty(el.tagName().toLatin1(), QVariant(el.text()));
+      }
     }
-    n = n.nextSibling();      
+    n = n.nextSibling();
   }
-  
+
   // always has this value
   _type = "Arrow";
   _standardActions |= Delete | Edit;
@@ -122,7 +122,6 @@ QRegion KstViewArrow::clipRegion() {
       p.begin(&bm1);
       p.setViewXForm(true);
       KstViewLine::paintSelf(p, QRegion());
-      p.flush();
       p.end();
       _clipMask = QRegion(bm1);
     }
@@ -133,7 +132,6 @@ QRegion KstViewArrow::clipRegion() {
       p.begin(&bm2);
       p.setViewXForm(true);
       paintSelf(p, QRegion());
-      p.flush();
       p.end();
       _myClipMask = QRegion(bm2);
     }
@@ -198,11 +196,11 @@ QMap<QString, QVariant> KstViewArrow::widgetHints(const QString& propertyName) c
   }
   if (propertyName == "hasFromArrow") {
     map.insert(QString("_kst_widgetType"), QString("QCheckBox"));
-    map.insert(QString("_kst_label"), QString::null);
-    map.insert(QString("text"), i18n("Arrow at start"));  
+    map.insert(QString("_kst_label"), QVariant());
+    map.insert(QString("text"), i18n("Arrow at start"));
   } else if (propertyName == "hasToArrow") {
     map.insert(QString("_kst_widgetType"), QString("QCheckBox"));
-    map.insert(QString("_kst_label"), QString::null);    
+    map.insert(QString("_kst_label"), QVariant());
     map.insert(QString("text"), i18n("Arrow at end"));
   } else if (propertyName == "fromArrowScaling") {
     map.insert(QString("_kst_widgetType"), QString("KDoubleSpinBox"));
