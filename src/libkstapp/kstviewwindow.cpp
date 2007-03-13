@@ -87,6 +87,7 @@ KstViewWindow::KstViewWindow(const QDomElement& e, QWidget* parent, Qt::WindowFl
 
 
 void KstViewWindow::commonConstructor() {
+  config = KGlobal::config().data();
   connect(this, SIGNAL(focusInEventOccurs( KMdiChildView*)), this, SLOT(slotActivated(KMdiChildView*)));
 
   QTimer::singleShot(0, this, SLOT(updateActions()));

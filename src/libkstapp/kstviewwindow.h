@@ -45,8 +45,8 @@ class QLabel;
 class KST_EXPORT KstViewWindow : public KMdiChildView {
   Q_OBJECT
   public:
-    KstViewWindow(QWidget *parent, const QString &name, Qt::WindowFlags fl=0);
-    KstViewWindow(const QDomElement& e, QWidget *parent=0, Qt::WindowFlags fl=0);
+    KstViewWindow(QWidget *parent = 0, const QString &name = QString(), Qt::WindowFlags fl = 0);
+    KstViewWindow(const QDomElement& e, QWidget *parent = 0, Qt::WindowFlags fl = 0);
     virtual ~KstViewWindow();
 
     /** pause the updating of data */
@@ -106,6 +106,8 @@ class KST_EXPORT KstViewWindow : public KMdiChildView {
   private:
     void commonConstructor();
 
+    /** the configuration object of the application */
+    KConfig *config;
     KstTopLevelViewPtr _view;
 };
 

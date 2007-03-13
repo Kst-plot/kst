@@ -21,7 +21,7 @@
 #include <config.h>
 
 // include files for Qt
-#include <QMainWindow>
+#include <kmainwindow.h>
 #include <qpointer.h>
 #include <qtimer.h>
 //Added by qt3to4:
@@ -97,7 +97,7 @@ class KstOpen {
 
 //FIXME This is going to be fun porting away from KMDI, but for now use a typedef
 //and see how far we get...
-typedef QMainWindow KMdiMainFrm;
+typedef KMainWindow KMdiMainFrm;
 typedef QWidget KMdiChildView;
 
 class KST_EXPORT KstApp : public KMdiMainFrm {
@@ -239,7 +239,6 @@ class KST_EXPORT KstApp : public KMdiMainFrm {
     void slotSettingsChanged();
     void addNewWindowMenu();
 
-    void fixKMdi();
     void showContextMenu(QWidget *w, const QPoint& pos);
     void showContextMenu(const QPoint& pos);
     void delayedDocInit();
@@ -496,11 +495,11 @@ class KST_EXPORT KstApp : public KMdiMainFrm {
 
     /** Radio Collection: XY, X, Y zoom, Text, Layout */
     //FIXME use exclusive action group
-    KAction *XYZoomAction;
-    KAction *XZoomAction;
-    KAction *YZoomAction;
-    KAction *GfxAction;
-    KAction *LayoutAction;
+    KToggleAction *XYZoomAction;
+    KToggleAction *XZoomAction;
+    KToggleAction *YZoomAction;
+    KToggleAction *GfxAction;
+    KToggleAction *LayoutAction;
 
     /* Matrix Edit Action */
     KAction *MatrixDialogAction;
@@ -582,13 +581,13 @@ class KST_EXPORT KstApp : public KMdiMainFrm {
     KToggleAction *_saveData;
 
     //FIXME use exclusive action group
-    KAction *_gfxLineAction;
-    KAction *_gfxRectangleAction;
-    KAction *_gfxEllipseAction;
-    KAction *_gfxLabelAction;
-    KAction *_gfxPictureAction;
-    KAction *_gfx2DPlotAction;
-    KAction *_gfxArrowAction;
+    KToggleAction *_gfxLineAction;
+    KToggleAction *_gfxRectangleAction;
+    KToggleAction *_gfxEllipseAction;
+    KToggleAction *_gfxLabelAction;
+    KToggleAction *_gfxPictureAction;
+    KToggleAction *_gfx2DPlotAction;
+    KToggleAction *_gfxArrowAction;
 
     StatusLabel *_readyBar;
     StatusLabel *_memoryBar;

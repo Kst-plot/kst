@@ -53,7 +53,7 @@ set(kstapp_LIB_SRCS
    kst2dplot.cpp
    kstalignment.cpp
    kstborderedviewobject.cpp
-#    kst.cpp
+   kst.cpp
    kstdatacollection-gui.cpp
    kstdatanotifier.cpp
    kstdebugnotifier.cpp
