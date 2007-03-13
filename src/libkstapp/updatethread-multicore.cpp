@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "updatethread.h"
+#include "updatethread-multicore.h"
 
 #include <assert.h>
 
@@ -94,7 +94,7 @@ class UpdateJob : public QThread {
           continue;
         }
 
-        t->_queueCondition.wait();
+        t->_queueCondition.wait(&t->_updateQueueMutex);
       }
       // FIXME need to signify to the update thread that we're dead
     }
@@ -123,7 +123,7 @@ void UpdateThread::run() {
     updateTime = _updateTime;
     _statusMutex.unlock();
 
-    if (_waitCondition.wait(_updateTime)) {
+    if (_waitCondition.wait(&_statusMutex, _updateTime)) {
 #if UPDATEDEBUG > 0
       qDebug() << "Update timer " << _updateTime << endl;
 #endif
@@ -453,7 +453,7 @@ void UpdateThread::waitForJobs() {
   if (empty) {
     return;
   }
-  _emptyQueueCondition.wait();
+  _emptyQueueCondition.wait(&_updateQueueMutex);
 }
 
 

@@ -107,7 +107,7 @@ set(kstapp_LIB_SRCS
    statuslabel.cpp
 #    treetools.cpp
    updatethread.cpp
-   updatethread-multicore.cpp
+#   updatethread-multicore.cpp
    )
 
 kde4_automoc(${kstapp_LIB_SRCS})

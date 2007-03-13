@@ -69,7 +69,7 @@ void UpdateThread::run() {
     updateTime = _updateTime;
     _statusMutex.unlock();
 
-    if (_waitCondition.wait(_updateTime)) {
+    if (_waitCondition.wait(&_statusMutex, _updateTime)) {
 #if UPDATEDEBUG > 0
       qDebug() << "Update timer " << _updateTime << endl;
 #endif

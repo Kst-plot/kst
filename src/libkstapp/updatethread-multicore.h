@@ -20,10 +20,10 @@
 
 #include <qmutex.h>
 #include <qthread.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 
 #include <kstobject.h>
-#include "kstwaitcondition.h"
+#include <qwaitcondition.h>
 
 class KstBaseCurve;
 class KstDoc;
@@ -52,7 +52,7 @@ class UpdateThread : public QThread {
     KstObject::UpdateType updateResult() const;
     void waitForJobs();
 
-    KstWaitCondition _queueCondition, _emptyQueueCondition;
+    QWaitCondition _queueCondition, _emptyQueueCondition;
     int _updateCounter;
     KstObject::UpdateType _updateResult;
 
@@ -63,11 +63,11 @@ class UpdateThread : public QThread {
   private:
     bool _paused, _done;
     bool _force;
-    KstWaitCondition _waitCondition;
+    QWaitCondition _waitCondition;
     mutable QMutex _statusMutex;
     KstDoc *_doc;
     int _updateTime;
-    QValueList<KstBaseCurve*> _updatedCurves; // HACK: temporary use in update reworking
+    Q3ValueList<KstBaseCurve*> _updatedCurves; // HACK: temporary use in update reworking
     KstObjectList<KstObjectPtr> _updateQueue;
     QMutex _updateQueueMutex;
     mutable QMutex _jobCountMutex;

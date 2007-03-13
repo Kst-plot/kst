@@ -19,7 +19,6 @@
 
 #include <qdebug.h>
 #include <qapplication.h>
-#include <kmultipledrag.h>
 
 #include "kst.h"
 #include "kstviewobjectimagedrag.h"
@@ -46,7 +45,7 @@ KstViewWidget::KstViewWidget(KstTopLevelViewPtr view, QWidget *parent, Qt::Windo
   setDragEnabled(true);
   setDropEnabled(true);
   setMouseTracking(true);
-  setFocusPolicy(QWidget::StrongFocus);
+  setFocusPolicy(Qt::StrongFocus);
   setBackgroundMode(Qt::NoBackground);
   setMinimumSize(40, 25);
   _vo_datamode = 0L;
@@ -59,7 +58,8 @@ KstViewWidget::~KstViewWidget() {
 
 
 Q3DragObject *KstViewWidget::dragObject() {
-  KMultipleDrag *drag = new KMultipleDrag(this);
+  //FIXME PORT!
+  /*KMultipleDrag *drag = new KMultipleDrag(this);
 #if 1
   QStringList plots;
   KstViewObjectList vol;
@@ -90,7 +90,8 @@ Q3DragObject *KstViewWidget::dragObject() {
   drag->addDragObject(new KstPlotDrag(...));
 #endif
 
-  return drag;
+  return drag;*/
+  return 0;
 }
 
 
@@ -492,7 +493,7 @@ void KstViewWidget::keyPressEvent(QKeyEvent *e) {
     }
     return;
   } else if (_view->viewMode() == KstTopLevelView::LayoutMode) {
-    ButtonState s = e->stateAfter();
+    Qt::KeyboardModifiers s = e->modifiers();
     if (e->key() == Qt::Key_Escape) {
       _view->cancelMouseOperations();
       return;

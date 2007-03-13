@@ -39,21 +39,21 @@
 #define KST_STATUSBAR_DATA 1
 #define KST_STATUSBAR_STATUS 2
 
-KstViewWindow::KstViewWindow(QWidget *parent)
+KstViewWindow::KstViewWindow(QWidget *parent, const QString &name, Qt::WindowFlags fl)
 : KMdiChildView(parent) {
   commonConstructor();
-  _view = new KstTopLevelView(this, name);
+  _view = new KstTopLevelView(this, name, fl);
 }
 
 
-KstViewWindow::KstViewWindow(const QDomElement& e, QWidget* parent)
+KstViewWindow::KstViewWindow(const QDomElement& e, QWidget* parent, Qt::WindowFlags fl)
 : KMdiChildView(parent) {
   QString in_tag;
   QRect rectRestore;
   QRect rectInternal;
 
   commonConstructor();
-  _view = new KstTopLevelView(e, this);
+  _view = new KstTopLevelView(e, this, fl);
 
   QDomNode n = e.firstChild();
   while (!n.isNull()) {
@@ -62,23 +62,23 @@ KstViewWindow::KstViewWindow(const QDomElement& e, QWidget* parent)
       if (e.tagName() == "tag") {
         in_tag = e.text();
         setWindowTitle(in_tag);
-        setTabCaption(in_tag);
+//FIXME PORT!         setTabCaption(in_tag);
       } else if (e.tagName() == "restore") {
         rectRestore.setX( e.attribute( "x", "0" ).toInt() );
         rectRestore.setY( e.attribute( "y", "0" ).toInt() );
         rectRestore.setWidth( e.attribute( "w", "100" ).toInt() );
         rectRestore.setHeight( e.attribute( "h", "100" ).toInt() );
-        setRestoreGeometry( rectRestore );
+//FIXME PORT!         setRestoreGeometry( rectRestore );
       } else if (e.tagName() == "internal") {
         rectInternal.setX( e.attribute( "x", "0" ).toInt() );
         rectInternal.setY( e.attribute( "y", "0" ).toInt() );
         rectInternal.setWidth( e.attribute( "w", "100" ).toInt() );
         rectInternal.setHeight( e.attribute( "h", "100" ).toInt() );
-        setInternalGeometry( rectInternal );
+//FIXME PORT!        setInternalGeometry( rectInternal );
       } else if (e.tagName() == "minimize") {
-        minimize(false);
+//FIXME PORT!        minimize(false);
       } else if (e.tagName() == "maximize") {
-        maximize(false);
+//FIXME PORT!        maximize(false);
       }
     }
     n = n.nextSibling();
@@ -87,8 +87,6 @@ KstViewWindow::KstViewWindow(const QDomElement& e, QWidget* parent)
 
 
 void KstViewWindow::commonConstructor() {
-  config = kapp->config();
-
   connect(this, SIGNAL(focusInEventOccurs( KMdiChildView*)), this, SLOT(slotActivated(KMdiChildView*)));
 
   QTimer::singleShot(0, this, SLOT(updateActions()));
@@ -261,7 +259,6 @@ void KstViewWindow::immediatePrintToEps(const QString &filename, const QSize& si
       right = ( 72 * size.height() ) / resolution;
       bottom = ( 72 * size.width() ) / resolution;
 
-      printer.setMargins(0, 0, 0, 0);
       printer.setResolution(resolution);
       printer.setPageSize(QPrinter::Letter);
       printer.setOrientation(QPrinter::Landscape);
@@ -384,29 +381,30 @@ void KstViewWindow::print(KstPainter& paint, QSize& size, int pages, int lineAdj
 
 
 void KstViewWindow::save(QTextStream& ts, const QString& indent) {
-  const QRect restoreGeom(restoreGeometry());
-  const QRect internalGeom(internalGeometry());
-
-  ts << indent << "<tag>" << Q3StyleSheet::escape(caption()) << "</tag>" << endl;
-
-  ts << indent << "<restore"  << " x=\"" << restoreGeom.x()
-    << "\" y=\"" << restoreGeom.y()
-    << "\" w=\"" << restoreGeom.width()
-    << "\" h=\"" << restoreGeom.height() << "\" />" << endl;
-
-  ts << indent << "<internal" << " x=\"" << internalGeom.x()
-    << "\" y=\"" << internalGeom.y()
-    << "\" w=\"" << internalGeom.width()
-    << "\" h=\"" << internalGeom.height() << "\" />" << endl;
-
-  if (isMinimized()) {
-    ts << indent << "<minimized/>" << endl;
-  }
-  if (isMaximized()) {
-    ts << indent << "<maximized/>" << endl;
-  }
-
-  view()->save(ts, indent);
+//FIXME PORT!
+//   const QRect restoreGeom(restoreGeometry());
+//   const QRect internalGeom(internalGeometry());
+// 
+//   ts << indent << "<tag>" << Q3StyleSheet::escape(caption()) << "</tag>" << endl;
+// 
+//   ts << indent << "<restore"  << " x=\"" << restoreGeom.x()
+//     << "\" y=\"" << restoreGeom.y()
+//     << "\" w=\"" << restoreGeom.width()
+//     << "\" h=\"" << restoreGeom.height() << "\" />" << endl;
+// 
+//   ts << indent << "<internal" << " x=\"" << internalGeom.x()
+//     << "\" y=\"" << internalGeom.y()
+//     << "\" w=\"" << internalGeom.width()
+//     << "\" h=\"" << internalGeom.height() << "\" />" << endl;
+// 
+//   if (isMinimized()) {
+//     ts << indent << "<minimized/>" << endl;
+//   }
+//   if (isMaximized()) {
+//     ts << indent << "<maximized/>" << endl;
+//   }
+// 
+//   view()->save(ts, indent);
 }
 
 
