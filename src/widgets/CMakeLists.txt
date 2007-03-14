@@ -60,11 +60,11 @@ install(TARGETS kstwidgets DESTINATION ${LIB_INSTALL_DIR})
 # 
 # kde4_automoc(${kstwidgets_PART_SRCS})
 # 
-# kde4_add_plugin(kstwidgets ${kstwidgets_PART_SRCS})
+# kde4_add_plugin(kstwidgetsplugin ${kstwidgets_PART_SRCS})
 # 
-# target_link_libraries(kstwidgets ${KDE4_KDECORE_LIBS})
+# target_link_libraries(kstwidgetsplugin ${KDE4_KDECORE_LIBS})
 # 
-# install(TARGETS kstwidgets DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
+# install(TARGETS kstwidgetsplugin DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
 
 
 ########### install files ###############

@@ -20,6 +20,8 @@
 
 #include "kstdatacollection.h"
 
+#include "kst_export.h"
+
 class KstGuiData : public KstData {
   public:
     KstGuiData();
@@ -43,7 +45,7 @@ class KstGuiData : public KstData {
     void newWindow(QWidget *dialogParent = 0L);
     QStringList windowList();
     QString currentWindow();
-};
+} KST_EXPORT;
 
 #endif
 // vim: ts=2 sw=2 et

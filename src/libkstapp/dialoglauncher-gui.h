@@ -19,6 +19,8 @@
 #define DIALOGLAUNCHERGUI_H
 #include "dialoglauncher.h"
 
+#include "kst_export.h"
+
 class KstGuiDialogs : public KstDialogs {
   public:
     KstGuiDialogs();
@@ -45,7 +47,7 @@ class KstGuiDialogs : public KstDialogs {
 
     void newVectorDialog(QWidget *parent, const char *createdSlot = 0L, const char *selectedSlot = 0L, const char *updateSlot = 0L);
     void showVectorDialog(const QString& name = QString::null, bool edit = false);
-};
+} KST_EXPORT;
 
 #endif
 
