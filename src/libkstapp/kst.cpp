@@ -75,13 +75,13 @@
 // #include "kstfilterdialog.h"
 #include "kstgraphfiledialog.h"
 #include "ksthsdialog.h"
-#include "kstiface_impl.h"
+// #include "kstiface_impl.h"
 #include "kstimagedialog.h"
 #include "kstlogwidget.h"
 #include "kstmatrixdialog.h"
 #include "kstmatrixdefaults.h"
 #include "kstmonochromedialog.h"
-#include "kstplugindialog.h"
+// #include "kstplugindialog.h"
 #include "kstprintoptionspage.h"
 #include "kstpsddialog.h"
 #include "kstquickstartdialog.h"
@@ -196,7 +196,6 @@ KstApp::KstApp(QWidget *parent)
 
 
   setAutoSaveSettings("KST-KMainWindow", true);
-  _dcopIface = new KstIfaceImpl(doc, this);
 
   connect(this, SIGNAL(settingsChanged()), this, SLOT(slotSettingsChanged()));
 
@@ -243,8 +242,6 @@ KstApp::~KstApp() {
   KstDataObject::cleanupForExit(); // must be before deletions
   delete _updateThread;
   _updateThread = 0L;
-  delete _dcopIface;
-  _dcopIface = 0L;
   ::inst = 0L;
   if (_dataSourceConfig) {
     _dataSourceConfig->sync();
@@ -1007,9 +1004,9 @@ void KstApp::selectDataPlugin() {
   if (newPlugins.contains(p)) {
     KstDataObjectPtr ptr = KstDataObject::plugin(p);
     ptr->showDialog(true);
-  } else if (oldPlugins.contains(p)) {
+  }/* else if (oldPlugins.contains(p)) {
     KstPluginDialogI::globalInstance()->showNew(readable[p]);
-  }
+  }*/
 }
 
 
@@ -2083,10 +2080,10 @@ void KstApp::updateDialogs(bool onlyVisible) {
     if (!onlyVisible || KstVectorDialogI::globalInstance()->isVisible()) {
       KstVectorDialogI::globalInstance()->update();
     }
-    if (!onlyVisible || KstPluginDialogI::globalInstance()->isVisible()) {
-      KstPluginDialogI::globalInstance()->updateForm();
-    }
 //FIXME PORT!
+//     if (!onlyVisible || KstPluginDialogI::globalInstance()->isVisible()) {
+//       KstPluginDialogI::globalInstance()->updateForm();
+//     }
 //     if (!onlyVisible || KstFitDialogI::globalInstance()->isVisible()) {
 //       KstFitDialogI::globalInstance()->update();
 //     }
@@ -2176,7 +2173,7 @@ void KstApp::showPluginManager() {
   pm->exec();
   delete pm;
 
-  KstPluginDialogI::globalInstance()->updatePluginList();
+//   KstPluginDialogI::globalInstance()->updatePluginList();
 }
 
 

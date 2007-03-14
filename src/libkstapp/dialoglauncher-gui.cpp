@@ -22,7 +22,7 @@
 #include "ksthsdialog.h"
 #include "kstimagedialog.h"
 #include "kstmatrixdialog.h"
-#include "kstplugindialog.h"
+// #include "kstplugindialog.h"
 #include "kstbasicdialog.h"
 #include "kstpsddialog.h"
 #include "kstvectordialog.h"
@@ -46,13 +46,13 @@ void KstGuiDialogs::showHistogramDialog(const QString& name, bool edit) {
 }
 
 
-void KstGuiDialogs::showCPluginDialog(const QString& name, bool edit) {
-  if (!edit) {
-    KstPluginDialogI::globalInstance()->showNew(name);
-  } else {
-    KstPluginDialogI::globalInstance()->showEdit(name);
-  }
-}
+// void KstGuiDialogs::showCPluginDialog(const QString& name, bool edit) {
+//   if (!edit) {
+//     KstPluginDialogI::globalInstance()->showNew(name);
+//   } else {
+//     KstPluginDialogI::globalInstance()->showEdit(name);
+//   }
+// }
 
 
 void KstGuiDialogs::showBasicPluginDialog(const QString& name, bool edit) {

@@ -594,7 +594,6 @@ class KST_EXPORT KstApp : public KMdiMainFrm {
     StatusLabel *_dataBar;
     QProgressBar *_progressBar;
     bool _stopping;
-    KstIfaceImpl *_dcopIface;
     UpdateThread *_updateThread;
     Kst2DPlotMap *_plotHolderWhileOpeningDocument;
     QTimer _memTimer;

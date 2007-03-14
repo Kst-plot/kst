@@ -66,7 +66,7 @@ class KstDataManagerI : public QDialog, public Ui::KstDataManager {
     void currentChanged(Q3ListViewItem *);
     void selectionChanged();
     void doubleClicked(Q3ListViewItem *);
-    void showOldPlugin();
+//     void showOldPlugin();
 
   private:
     void createObjectAction(const QString &txt, Q3ToolBar *bar,

@@ -56,7 +56,7 @@ static QStyle *windowsStyle = 0;
 #include "ksthsdialog.h"
 #include "kstimagedialog.h"
 #include "kstmatrixdialog.h"
-#include "kstplugindialog.h"
+// #include "kstplugindialog.h"
 #include "kstpsddialog.h"
 #include "kstvectordialog.h"
 #include "kstviewwindow.h"
@@ -799,14 +799,14 @@ void KstDataManagerI::setupPluginActions() {
 }
 
 
-void KstDataManagerI::showOldPlugin() {
-
-  if (QAction *a = qobject_cast<QAction*>(sender())) {
-    const QMap<QString,QString> readable =
-      PluginCollection::self()->readableNameList();
-    KstPluginDialogI::globalInstance()->showNew(readable[a->text()]);
-  }
-}
+// void KstDataManagerI::showOldPlugin() {
+// 
+//   if (QAction *a = qobject_cast<QAction*>(sender())) {
+//     const QMap<QString,QString> readable =
+//       PluginCollection::self()->readableNameList();
+//     KstPluginDialogI::globalInstance()->showNew(readable[a->text()]);
+//   }
+// }
 
 
 void KstDataManagerI::doubleClicked(Q3ListViewItem *i) {

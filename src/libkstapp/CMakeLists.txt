@@ -134,7 +134,7 @@ kde4_add_ui_files(kstapp_LIB_SRCS
    kstimagedialog4.ui
    kstmatrixdialog4.ui
    kstmonochromedialog4.ui
-   kstplugindialog4.ui
+#    kstplugindialog4.ui
    kstpsddialog4.ui
    kstquickstartdialog4.ui
    kstsettingsdlg4.ui
@@ -156,7 +156,7 @@ kde4_add_ui_files(kstapp_LIB_SRCS
 
 kde4_add_library(kstapp SHARED ${kstapp_LIB_SRCS})
 
-target_link_libraries(kstapp ${KDE4_KDECORE_LIBS} ${KDE4_KDEPRINT_LIBS} kstwidgets)
+target_link_libraries(kstapp ${KDE4_KDECORE_LIBS} ${KDE4_KDEPRINT_LIBS} kstmath kstwidgets)
 
 set_target_properties(kstapp PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 1)
 install(TARGETS kstapp DESTINATION ${LIB_INSTALL_DIR} )
