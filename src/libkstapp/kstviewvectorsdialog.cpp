@@ -27,6 +27,9 @@
 
 KstViewVectorsDialogI::KstViewVectorsDialogI(QWidget* parent, Qt::WindowFlags fl)
 : QDialog(parent, fl) {
+
+  setupUi(this);
+
   tableVectors = new KstVectorTable(this, "tableVectors");
   tableVectors->setNumRows(0);
   tableVectors->setNumCols(1);

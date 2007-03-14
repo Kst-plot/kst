@@ -60,7 +60,7 @@
 
 DataWizard::DataWizard(QWidget *parent)
     : Q3Wizard(parent) {
-  setupUi(this);
+ setupUi(this);
 
  connect(_newWindow, SIGNAL(toggled(bool)), this, SLOT(updatePlotBox()));
 

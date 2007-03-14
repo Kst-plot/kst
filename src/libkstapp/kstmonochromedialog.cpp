@@ -30,6 +30,7 @@
 
 KstMonochromeDialogI::KstMonochromeDialogI(QWidget* parent, Qt::WindowFlags fl)
 : QDialog(parent, fl) {
+  setupUi(this);
 
   availableListBox->clear();
   selectedListBox->clear();

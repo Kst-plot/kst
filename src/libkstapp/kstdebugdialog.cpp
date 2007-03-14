@@ -41,6 +41,8 @@
 KstDebugDialogI::KstDebugDialogI(QWidget* parent, Qt::WindowFlags fl)
 : QDialog(parent, fl ) {
 
+  setupUi(this);
+
   _log = new KstLogWidget(TabPage, "logwidget");
   _log->setDebug(KstDebug::self());
 

@@ -26,6 +26,9 @@
 
 KstViewScalarsDialogI::KstViewScalarsDialogI(QWidget* parent, Qt::WindowFlags fl)
 : QDialog(parent, fl) {
+
+  setupUi(this);
+
   listViewScalars = new KstScalarListView(this, &KST::scalarList);
   listViewScalars->setShowSortIndicator(false);
   listViewScalars->setSelectionMode(Q3ListView::NoSelection);

@@ -38,6 +38,7 @@
 
 KstGraphFileDialogI::KstGraphFileDialogI(QWidget* parent, Qt::WindowFlags fl)
 : QDialog(parent, fl) {
+  setupUi(this);
 
   _autoSaveTimer = new QTimer(this);
 

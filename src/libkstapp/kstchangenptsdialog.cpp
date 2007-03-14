@@ -32,20 +32,22 @@
 KstChangeNptsDialogI::KstChangeNptsDialogI(QWidget* parent, Qt::WindowFlags fl)
 : QDialog(parent, fl) {
 
-    connect(Cancel,     SIGNAL(clicked()),
-            this, SLOT(reject()));
-    connect(CurveList, SIGNAL(selectionChanged()),
-            this, SLOT(updateTimeCombo()));
-    connect(Clear,     SIGNAL(clicked()),
-            CurveList, SLOT(clearSelection()));
-    connect(SelectAll, SIGNAL(clicked()),
-            this,      SLOT(selectAll()));
-    connect(Apply,     SIGNAL(clicked()),
-            this,      SLOT(applyNptsChange()));
-    connect(OK,        SIGNAL(clicked()),
-            this,      SLOT(OKNptsChange()));
-    connect(CurveList, SIGNAL(selected ( int )),
-            this,      SLOT(updateDefaults( int )));
+  setupUi(this);
+
+  connect(Cancel,     SIGNAL(clicked()),
+          this, SLOT(reject()));
+  connect(CurveList, SIGNAL(selectionChanged()),
+          this, SLOT(updateTimeCombo()));
+  connect(Clear,     SIGNAL(clicked()),
+          CurveList, SLOT(clearSelection()));
+  connect(SelectAll, SIGNAL(clicked()),
+          this,      SLOT(selectAll()));
+  connect(Apply,     SIGNAL(clicked()),
+          this,      SLOT(applyNptsChange()));
+  connect(OK,        SIGNAL(clicked()),
+          this,      SLOT(OKNptsChange()));
+  connect(CurveList, SIGNAL(selected ( int )),
+          this,      SLOT(updateDefaults( int )));
 }
 
 

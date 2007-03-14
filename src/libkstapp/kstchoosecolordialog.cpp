@@ -36,11 +36,13 @@
 KstChooseColorDialogI::KstChooseColorDialogI(QWidget* parent, Qt::WindowFlags fl)
   : QDialog(parent, fl) {
 
-    xVector->setChecked(true); 
-    connect(Cancel, SIGNAL(clicked()), this, SLOT(reject()));  
-    connect(OK, SIGNAL(clicked()), this, SLOT(applyColors()));  
-    grid = 0L; 
-  }
+  setupUi(this);
+
+  xVector->setChecked(true);
+  connect(Cancel, SIGNAL(clicked()), this, SLOT(reject()));
+  connect(OK, SIGNAL(clicked()), this, SLOT(applyColors()));
+  grid = 0L;
+}
 
 
   KstChooseColorDialogI::~KstChooseColorDialogI() {

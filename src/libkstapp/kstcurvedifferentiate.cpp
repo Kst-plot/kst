@@ -35,6 +35,8 @@
 KstCurveDifferentiateI::KstCurveDifferentiateI(QWidget* parent, Qt::WindowFlags fl)
 : QDialog(parent, fl) {
 
+  setupUi(this);
+
   availableListBox->clear();
   selectedListBox->clear();
   availableListBox->insertItem(i18n("Line Color"));  

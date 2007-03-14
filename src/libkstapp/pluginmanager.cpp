@@ -34,7 +34,7 @@
 
 PluginManager::PluginManager(QWidget *parent)
     : QDialog(parent) {
-  setupUi(this);
+ setupUi(this);
 
  connect(_close, SIGNAL(clicked()), this, SLOT(close()));
 

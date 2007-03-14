@@ -31,6 +31,9 @@
 
 KstViewMatricesDialogI::KstViewMatricesDialogI(QWidget* parent, Qt::WindowFlags fl)
 : QDialog(parent, fl) {
+
+  setupUi(this);
+
   _tableMatrices = new KstMatrixTable(this, "tableMatrices");
   _tableMatrices->setNumRows(0);
   _tableMatrices->setNumCols(5);

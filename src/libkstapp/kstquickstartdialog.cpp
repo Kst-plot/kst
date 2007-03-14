@@ -32,6 +32,8 @@
 KstQuickStartDialogI::KstQuickStartDialogI(QWidget *parent, Qt::WindowFlags fl)
 : QDialog(parent, fl) {
 
+  setupUi(this);
+
   _fileName->completionObject()->setDir(QDir::currentPath());
   _app = KstApp::inst();
   _isRecentFile = false;
