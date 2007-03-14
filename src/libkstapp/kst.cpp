@@ -156,7 +156,7 @@ KstApp::KstApp(QWidget *parent)
   viewStringsDialog = new KstViewStringsDialogI(this);
   viewVectorsDialog = new KstViewVectorsDialogI(this);
   viewMatricesDialog = new KstViewMatricesDialogI(this);
-  viewFitsDialog = new KstViewFitsDialogI(this);
+//   viewFitsDialog = new KstViewFitsDialogI(this);
   changeFileDialog = new KstChangeFileDialogI(this);
   chooseColorDialog = new KstChooseColorDialogI(this);
   differentiateCurvesDialog = new KstCurveDifferentiateI(this);
@@ -175,7 +175,7 @@ KstApp::KstApp(QWidget *parent)
 
   _updateThread = new UpdateThread(doc);
   _updateThread->setUpdateTime(KstSettings::globalSettings()->plotUpdateTimer);
-  _updateThread->start();
+//   _updateThread->start();
 
   /*** Plot Dialog signals */
   connect(changeFileDialog, SIGNAL(docChanged()),
@@ -199,7 +199,7 @@ KstApp::KstApp(QWidget *parent)
 
   connect(this, SIGNAL(settingsChanged()), this, SLOT(slotSettingsChanged()));
 
-  QTimer::singleShot(0, this, SLOT(updateActions()));
+//   QTimer::singleShot(0, this, SLOT(updateActions()));
 
 //FIXME PORT!
 //   if (!isFakingSDIApplication()) {
@@ -535,12 +535,12 @@ void KstApp::initActions() {
           KstVectorDialogI::globalInstance(), SLOT(show()));
 
   /************/
-  CurveDialogAction = new KAction(KIcon("kst_curvenew"), i18n("New &Curve..."),
-                                  actionCollection());
-  CurveDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
-                                       "to create a new curve."));
-  connect(CurveDialogAction, SIGNAL(triggered()),
-          KstCurveDialogI::globalInstance(), SLOT(show()));
+//   CurveDialogAction = new KAction(KIcon("kst_curvenew"), i18n("New &Curve..."),
+//                                   actionCollection());
+//   CurveDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
+//                                        "to create a new curve."));
+//   connect(CurveDialogAction, SIGNAL(triggered()),
+//           KstCurveDialogI::globalInstance(), SLOT(show()));
 
   /************/
   CsdDialogAction = new KAction(KIcon("kst_csdnew"), i18n("New Cumulative &Spectral Decay..."),
@@ -1860,14 +1860,14 @@ void KstApp::toggleMouseMode() {
 //     }
 //   }
 
-  QListIterator<KMdiChildView*> it(childViews());
-  while (it.hasNext()) {
-    KstViewWindow *pView = dynamic_cast<KstViewWindow*>(it.next());
-    if (pView) {
-      pView->view()->setViewMode(mode, createType);
-    }
-    it.next();
-  }
+//   QListIterator<KMdiChildView*> it(childViews());
+//   while (it.hasNext()) {
+//     KstViewWindow *pView = dynamic_cast<KstViewWindow*>(it.next());
+//     if (pView) {
+//       pView->view()->setViewMode(mode, createType);
+//     }
+//     it.next();
+//   }
 
   _viewMode = mode;
   _createType = createType;

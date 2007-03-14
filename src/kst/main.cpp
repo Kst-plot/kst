@@ -797,7 +797,8 @@ int main(int argc, char *argv[]) {
       delete kst;
       return 0;
     } else {
-      kst->updateDialogs();
+//FIXME PORT!
+//       kst->updateDialogs();
       
       if (showQuickStart) {
         kst->showQuickStartDialog();

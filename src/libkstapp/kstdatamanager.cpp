@@ -632,89 +632,89 @@ KstDataManagerI::KstDataManagerI(KstDoc *in_doc, QWidget* parent, Qt::WindowFlag
   _searchWidget->createSearchLine(DataView);
   _searchWidget->searchLine()->setSearchColumns(cols);
 
-  Q3MainWindow *main = static_cast<Q3MainWindow*>(parent);
-  main->setUsesTextLabel(true);
-
-  _primitive = new Q3ToolBar(i18n("Primitive Objects"), main, this);
-  _primitive->setFrameStyle(Q3Frame::NoFrame);
-  _primitive->setOrientation(Qt::Vertical);
-  _primitive->setBackgroundMode(Qt::PaletteBase);
-
-  _data = new Q3ToolBar(i18n("Data Objects"), main, this);
-  _data->setFrameStyle(Q3Frame::NoFrame);
-  _data->setOrientation(Qt::Vertical);
-  _data->setBackgroundMode(Qt::PaletteBase);
-
-  _fits = new Q3ToolBar(i18n("Fit Objects"), main, this);
-  _fits->setFrameStyle(Q3Frame::NoFrame);
-  _fits->setOrientation(Qt::Vertical);
-  _fits->setBackgroundMode(Qt::PaletteBase);
-
-  _filters = new Q3ToolBar(i18n("Filter Objects"), main, this);
-  _filters->setFrameStyle(Q3Frame::NoFrame);
-  _filters->setOrientation(Qt::Vertical);
-  _filters->setBackgroundMode(Qt::PaletteBase);
-
-  ToolBox->setUpdatesEnabled(false);
-
-  _primitive->setUpdatesEnabled(false);
-  _primitive->clear();
-
-  _data->setUpdatesEnabled(false);
-  _data->clear();
-
-  _fits->setUpdatesEnabled(false);
-  _fits->clear();
-
-  _filters->setUpdatesEnabled(false);
-  _filters->clear();
-
-  //Create canonical actions...
-//   createObjectAction(i18n("Scalar"), _primitive, KstScalarDialogI::globalInstance(), SLOT(show()));
-  createObjectAction(i18n("Vector"), _primitive, KstVectorDialogI::globalInstance(), SLOT(show()));
-  createObjectAction(i18n("Matrix"), _primitive, KstMatrixDialogI::globalInstance(), SLOT(show()));
-//   createObjectAction(i18n("String"), _primitive, KstStringDialogI::globalInstance(), SLOT(show()));
-
-  createObjectAction(i18n("Curve"), _data, KstCurveDialogI::globalInstance(), SLOT(show()));
-  createObjectAction(i18n("Equation"), _data, KstEqDialogI::globalInstance(), SLOT(show()));
-  createObjectAction(i18n("Histogram"), _data, KstHsDialogI::globalInstance(), SLOT(show()));
-  createObjectAction(i18n("Power Spectrum"), _data, KstPsdDialogI::globalInstance(), SLOT(show()));
-  createObjectAction(i18n("Event Monitor"), _data, KstEventMonitorI::globalInstance(), SLOT(show()));
-  createObjectAction(i18n("Image"), _data, KstImageDialogI::globalInstance(), SLOT(show()));
-  createObjectAction(i18n("CSD"), _data, KstCsdDialogI::globalInstance(), SLOT(show()));
-
-  //Create plugin actions...
-  setupPluginActions();
-
-  //TODO sort the actions in each box alphabetically?
-
-  QWidget *priw = new QWidget(_primitive);
-  priw->setBackgroundMode(Qt::PaletteBase);
-  _primitive->setStretchableWidget(priw);
-
-  QWidget *datw = new QWidget(_data);
-  datw->setBackgroundMode(Qt::PaletteBase);
-  _data->setStretchableWidget(datw);
-
-  QWidget *fitw = new QWidget(_fits);
-  fitw->setBackgroundMode(Qt::PaletteBase);
-  _fits->setStretchableWidget(fitw);
-
-  QWidget *filw = new QWidget(_filters);
-  filw->setBackgroundMode(Qt::PaletteBase);
-  _filters->setStretchableWidget(filw);
-
-  ToolBox->setUpdatesEnabled(true);
-
-  _primitive->setUpdatesEnabled(true);
-  _data->setUpdatesEnabled(true);
-  _fits->setUpdatesEnabled(true);
-  _filters->setUpdatesEnabled(true);
-
-  ToolBox->addItem(_primitive, i18n("Primitive Objects"));
-  ToolBox->addItem(_data, i18n("Data Objects"));
-  ToolBox->addItem(_fits, i18n("Fit Objects"));
-  ToolBox->addItem(_filters, i18n("Filter Objects"));
+//   Q3MainWindow *main = static_cast<Q3MainWindow*>(parent);
+//   main->setUsesTextLabel(true);
+// 
+//   _primitive = new Q3ToolBar(i18n("Primitive Objects"), main, this);
+//   _primitive->setFrameStyle(Q3Frame::NoFrame);
+//   _primitive->setOrientation(Qt::Vertical);
+//   _primitive->setBackgroundMode(Qt::PaletteBase);
+// 
+//   _data = new Q3ToolBar(i18n("Data Objects"), main, this);
+//   _data->setFrameStyle(Q3Frame::NoFrame);
+//   _data->setOrientation(Qt::Vertical);
+//   _data->setBackgroundMode(Qt::PaletteBase);
+// 
+//   _fits = new Q3ToolBar(i18n("Fit Objects"), main, this);
+//   _fits->setFrameStyle(Q3Frame::NoFrame);
+//   _fits->setOrientation(Qt::Vertical);
+//   _fits->setBackgroundMode(Qt::PaletteBase);
+// 
+//   _filters = new Q3ToolBar(i18n("Filter Objects"), main, this);
+//   _filters->setFrameStyle(Q3Frame::NoFrame);
+//   _filters->setOrientation(Qt::Vertical);
+//   _filters->setBackgroundMode(Qt::PaletteBase);
+// 
+//   ToolBox->setUpdatesEnabled(false);
+// 
+//   _primitive->setUpdatesEnabled(false);
+//   _primitive->clear();
+// 
+//   _data->setUpdatesEnabled(false);
+//   _data->clear();
+// 
+//   _fits->setUpdatesEnabled(false);
+//   _fits->clear();
+// 
+//   _filters->setUpdatesEnabled(false);
+//   _filters->clear();
+// 
+//   //Create canonical actions...
+// //   createObjectAction(i18n("Scalar"), _primitive, KstScalarDialogI::globalInstance(), SLOT(show()));
+//   createObjectAction(i18n("Vector"), _primitive, KstVectorDialogI::globalInstance(), SLOT(show()));
+//   createObjectAction(i18n("Matrix"), _primitive, KstMatrixDialogI::globalInstance(), SLOT(show()));
+// //   createObjectAction(i18n("String"), _primitive, KstStringDialogI::globalInstance(), SLOT(show()));
+// 
+//   createObjectAction(i18n("Curve"), _data, KstCurveDialogI::globalInstance(), SLOT(show()));
+//   createObjectAction(i18n("Equation"), _data, KstEqDialogI::globalInstance(), SLOT(show()));
+//   createObjectAction(i18n("Histogram"), _data, KstHsDialogI::globalInstance(), SLOT(show()));
+//   createObjectAction(i18n("Power Spectrum"), _data, KstPsdDialogI::globalInstance(), SLOT(show()));
+//   createObjectAction(i18n("Event Monitor"), _data, KstEventMonitorI::globalInstance(), SLOT(show()));
+//   createObjectAction(i18n("Image"), _data, KstImageDialogI::globalInstance(), SLOT(show()));
+//   createObjectAction(i18n("CSD"), _data, KstCsdDialogI::globalInstance(), SLOT(show()));
+// 
+//   //Create plugin actions...
+//   setupPluginActions();
+// 
+//   //TODO sort the actions in each box alphabetically?
+// 
+//   QWidget *priw = new QWidget(_primitive);
+//   priw->setBackgroundMode(Qt::PaletteBase);
+//   _primitive->setStretchableWidget(priw);
+// 
+//   QWidget *datw = new QWidget(_data);
+//   datw->setBackgroundMode(Qt::PaletteBase);
+//   _data->setStretchableWidget(datw);
+// 
+//   QWidget *fitw = new QWidget(_fits);
+//   fitw->setBackgroundMode(Qt::PaletteBase);
+//   _fits->setStretchableWidget(fitw);
+// 
+//   QWidget *filw = new QWidget(_filters);
+//   filw->setBackgroundMode(Qt::PaletteBase);
+//   _filters->setStretchableWidget(filw);
+// 
+//   ToolBox->setUpdatesEnabled(true);
+// 
+//   _primitive->setUpdatesEnabled(true);
+//   _data->setUpdatesEnabled(true);
+//   _fits->setUpdatesEnabled(true);
+//   _filters->setUpdatesEnabled(true);
+// 
+//   ToolBox->addItem(_primitive, i18n("Primitive Objects"));
+//   ToolBox->addItem(_data, i18n("Data Objects"));
+//   ToolBox->addItem(_fits, i18n("Fit Objects"));
+//   ToolBox->addItem(_filters, i18n("Filter Objects"));
 }
 
 
