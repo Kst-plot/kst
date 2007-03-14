@@ -23,7 +23,6 @@
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
-#include "ksdebug.h"
 #include <kimageio.h>
 
 #include "dialoglauncher-gui.h"
@@ -107,12 +106,12 @@ static void CheckForCMDErrors(KCmdLineArgs *args) {
   bool nOK;
 
   if (args->getOption("n").toInt(&nOK) == 0) {
-    kstdError() << i18n("Exiting because '-n 0' requests vectors with no data in them.") << endl;
+    qWarning() << i18n("Exiting because '-n 0' requests vectors with no data in them.") << endl;
     exit(0); // ugly but now safe
   }
   if (args->getOption("n").toInt(&nOK)>0) {
     if (args->getOption("n").toInt(&nOK) < 2*args->getOption("s").toInt(&nOK)) {
-      kstdError() << i18n("Requested data skipping would leave vector with fewer than two points.") << endl;
+      qWarning() << i18n("Requested data skipping would leave vector with fewer than two points.") << endl;
       exit(0); // ugly but now safe
     }
   }
@@ -224,7 +223,7 @@ static void CreatePlots(InType &in, KstTopLevelViewPtr tlv) {
 /******************************************************************/
 static void SetEqXRanges(QString xeqS, double *min, double *max, int *n, bool *ok) {
   *ok = true;
-  QStringList fields = QStringList::split( QChar(':'), xeqS );
+  QStringList fields = xeqS.split( QChar(':') );
   if (fields.count() != 3) {
     *ok = false;
     *n = 2;
@@ -234,11 +233,11 @@ static void SetEqXRanges(QString xeqS, double *min, double *max, int *n, bool *o
   }
   QString f;
 
-  f = *fields.at(0);
+  f = fields.at(0);
   *min = f.toDouble(ok);
-  f = *fields.at(1);
+  f = fields.at(1);
   *max = f.toDouble(ok);
-  f = *fields.at(2);
+  f = fields.at(2);
   *n = f.toInt(ok);
 
   if (*n < 2) {
@@ -263,7 +262,7 @@ static KstRVector *GetOrCreateVector(const QString& field, KstDataSourcePtr file
   n_v = vectorList.count();
 
   for (i_v=0; i_v<n_v; i_v++) {
-    V = *vectorList.at(i_v);
+    V = vectorList.at(i_v);
     if (V->field() == field && V->filename() == file->fileName()) {
       return V;
     }
@@ -291,7 +290,7 @@ static KstRVector *GetOrCreateVector(const QString& field, KstDataSourcePtr file
 /*                                                              */
 /****************************************************************/
 static bool NoVectorEq(const QString& eq) {
-  return eq.find('[') < 0;
+  return eq.contains('[');
 }
 
 static void ProcessEq(QString &eq, KstDataSourcePtr file, InType &in, bool *ok) {
@@ -300,8 +299,8 @@ static void ProcessEq(QString &eq, KstDataSourcePtr file, InType &in, bool *ok) 
   KstVector *v;
   *ok = true;
 
-  while ((i0 = eq.find('[', i0))>=0) {
-    i1 = eq.find(']', i0);
+  while ((i0 = eq.indexOf('[', i0))>=0) {
+    i1 = eq.indexOf(']', i0);
     if (i1>0) {
       field = eq.mid(i0+1, i1-i0-1);
       v = GetOrCreateVector(field, file, in);
@@ -366,7 +365,6 @@ int main(int argc, char *argv[]) {
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
   KApplication app;
-  KImageIO::registerFormats();
 
   KstDialogs::replaceSelf(new KstGuiDialogs);
   KstData::replaceSelf(new KstGuiData);
@@ -374,23 +372,23 @@ int main(int argc, char *argv[]) {
 
   atexit(exitHelper);
 
-  if (app.isRestored()) {
+  if (qApp->isSessionRestored()) {
     RESTORE(KstApp)
   } else {
     KstApp *kst = new KstApp;
     InType in;
     QColor color;
     KstDataSourcePtr file;
-    QCStringList ycolList;
-    QCStringList matrixList;
-    QCStringList yEqList;
-    QCStringList psdList;
-    QCStringList hsList;
-    QCStringList errorList;
+    QByteArrayList ycolList;
+    QByteArrayList matrixList;
+    QByteArrayList yEqList;
+    QByteArrayList psdList;
+    QByteArrayList hsList;
+    QByteArrayList errorList;
     unsigned int i_ycol;
-    QCStringList::Iterator hs_string;
-    QCStringList::Iterator eq_i;
-    QCStringList::Iterator mat_i;
+    QByteArrayList::Iterator hs_string;
+    QByteArrayList::Iterator eq_i;
+    QByteArrayList::Iterator mat_i;
     bool showQuickStart = false;
     bool showDataWizard = false;
     bool nOK;
@@ -412,7 +410,6 @@ int main(int argc, char *argv[]) {
     }
 
     if (!print_and_exit) {
-      app.setMainWidget(kst);
       kst->show();
     }
 
@@ -446,7 +443,7 @@ int main(int argc, char *argv[]) {
       }
 
       if (!tlv) {
-        kstdError() << i18n("Can't create a view.") << endl;
+        qWarning() << i18n("Can't create a view.") << endl;
         return 0;
       }
 
@@ -454,7 +451,7 @@ int main(int argc, char *argv[]) {
       Kst2DPlotList plist = kstObjectSubList<KstViewObject, Kst2DPlot>(tlv->children());
 
       i_plot = 0;
-      Kst2DPlotPtr plot = *plist.at(i_plot);
+      Kst2DPlotPtr plot = plist.at(i_plot);
 
       KstVCurveList vcurves = kstObjectSubList<KstBaseCurve,KstVCurve>(plot->Curves);
 
@@ -488,7 +485,7 @@ int main(int argc, char *argv[]) {
                 if (in.sep_plots) {
                   i_plot++;
                   if (i_plot < in.n_plots) {
-                    plot = *plist.at(i_plot);
+                    plot = plist.at(i_plot);
                   }
                 }
               }
@@ -508,14 +505,14 @@ int main(int argc, char *argv[]) {
       for (i_curve = i_v = 0, i_file = 0; i_file < args->count(); i_file++) {
         // make the file
         if (QFile::exists(args->arg(i_file))) {
-          fullPath = QFileInfo(args->arg(i_file)).absFilePath();
+          fullPath = QFileInfo(args->arg(i_file)).absoluteFilePath();
         } else {
           fullPath = args->arg(i_file);
         }
         file = KstDataSource::loadSource(fullPath);
         if (file) {
           if (!file->isValid() || file->isEmpty()) {
-            kstdError() << i18n("No data in file %1.  Trying to continue...").arg(args->arg(i_file)) << endl;
+            qWarning() << i18n("No data in file %1.  Trying to continue...").arg(args->arg(i_file)) << endl;
             // The file might get data later!
           }
 
@@ -536,7 +533,7 @@ int main(int argc, char *argv[]) {
             if (xvector) {
               // make the y axis vectors
               for (i_ycol = 0; i_ycol < ycolList.count(); ++i_ycol ) {
-                yvector = GetOrCreateVector(*(ycolList.at(i_ycol)), file, in);
+                yvector = GetOrCreateVector((ycolList.at(i_ycol)), file, in);
                 if (yvector) {
                   // make the curves
                   color = KstColorSequence::next(vcurves,plot->backgroundColor());
@@ -549,7 +546,7 @@ int main(int argc, char *argv[]) {
                   }
 
                   if (i_ycol<errorList.count()) {
-                    evector = GetOrCreateVector(*(errorList.at(i_ycol)), file, in);
+                    evector = GetOrCreateVector((errorList.at(i_ycol)), file, in);
                     if (evector) {
                       curve->setYError(KstVectorPtr(evector));
                       curve->setYMinusError(KstVectorPtr(evector));
@@ -565,7 +562,7 @@ int main(int argc, char *argv[]) {
                     plot->setTagName(curve->tag());
                     i_plot++;
                     if (i_plot < in.n_plots) {
-                      plot = *plist.at(i_plot);
+                      plot = plist.at(i_plot);
                     }
                   } // end (if they are separate plots)
                 }
@@ -611,7 +608,7 @@ int main(int argc, char *argv[]) {
                   plot->setTagName(eq->tag());
                   i_plot++;
                   if (i_plot <in.n_plots) {
-                    plot = *plist.at(i_plot);
+                    plot = plist.at(i_plot);
                   }
                 }
               }
@@ -620,7 +617,7 @@ int main(int argc, char *argv[]) {
 
           if (psdList.count() > 0) { // if there are some psd plots
             KstRVectorList rvl = kstObjectSubList<KstVector,KstRVector>(KST::vectorList);
-            for (QCStringList::ConstIterator it = psdList.begin(); it != psdList.end(); ++it) {
+            for (QByteArrayList::ConstIterator it = psdList.begin(); it != psdList.end(); ++it) {
 
               yvector = GetOrCreateVector(*it, file, in);
               if (yvector) {
@@ -646,7 +643,7 @@ int main(int argc, char *argv[]) {
                   plot->setTagName(psd->tag());
                   i_plot++;
                   if (i_plot <in.n_plots) {
-                    plot = *plist.at(i_plot);
+                    plot = plist.at(i_plot);
                   }
                 }
               }
@@ -686,7 +683,7 @@ int main(int argc, char *argv[]) {
                   plot->setTagName(hs->tag());
                   i_plot++;
                   if (i_plot < in.n_plots) {
-                    plot = *plist.at(i_plot);
+                    plot = plist.at(i_plot);
                   }
                 }
               }
@@ -697,7 +694,7 @@ int main(int argc, char *argv[]) {
             for (mat_i = matrixList.begin(); mat_i != matrixList.end(); ++mat_i) {
               QString tag_name = KST::suggestMatrixName(*mat_i);
               if (!file->isValidMatrix(*mat_i)) {
-                startupErrors.append(i18n("Failed to create matrix '%1' from file '%2'.").arg(*mat_i).arg(file->fileName()));
+                startupErrors.append(i18n("Failed to create matrix '%1' from file '%2'.").arg(QString(*mat_i)).arg(file->fileName()));
               }
               KstRMatrixPtr matrix = new KstRMatrix(file, *mat_i,
                   KstObjectTag(tag_name, file->tag()),
@@ -712,7 +709,7 @@ int main(int argc, char *argv[]) {
               if (palList.contains("IDL 13 RAINBOW")) {
                 pal = QString("IDL 13 RAINBOW");
               } else {
-                pal = QString(*palList.at(0));
+                pal = QString(palList.at(0));
               }
               
               KPalette* newPal = new KPalette(pal);
@@ -728,7 +725,7 @@ int main(int argc, char *argv[]) {
                 plot->setTagName(matrix->tag());
                 i_plot++;
                 if (i_plot < in.n_plots) {
-                  plot = *plist.at(i_plot);
+                  plot = plist.at(i_plot);
                 }
               }
             }
@@ -744,7 +741,7 @@ int main(int argc, char *argv[]) {
       handled = 0;
       kst->slotUpdateProgress( count, handled, creatingPlots );
       for (i_plot = 0; i_plot < in.n_plots; i_plot++) {
-        plot = *plist.at(i_plot);
+        plot = plist.at(i_plot);
         plot->generateDefaultLabels();
       
         // if we have only images in a plot then set the scale mode to AUTO (instead of AUTOBORDER)
