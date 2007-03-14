@@ -20,6 +20,7 @@
 
 #include <qpainter.h>
 
+#include "kst_export.h"
 
 class KstPainter : public QPainter {
   public:
@@ -55,7 +56,7 @@ class KstPainter : public QPainter {
     bool _drawInlineUI;
     bool _makingMask;
     QRegion _uiMask;
-};
+} KST_EXPORT;
 
 #endif
 // vim: ts=2 sw=2 et
