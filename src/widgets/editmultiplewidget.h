@@ -33,7 +33,7 @@ public:
 public slots:
   void selectAllObjects();
   void applyFilter(const QString &filter);
-};
+} KST_EXPORT;
 
 #endif
 // vim: ts=2 sw=2 et

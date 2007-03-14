@@ -21,6 +21,8 @@
 #include <qpainter.h>
 #include <qpixmap.h>
 
+#include "kst_export.h"
+
 class KstBackBuffer {
   public:
     KstBackBuffer();
@@ -33,7 +35,7 @@ class KstBackBuffer {
 
   private:
     QPixmap _buffer;
-};
+} KST_EXPORT;
 
 
 #endif
