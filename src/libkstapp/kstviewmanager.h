@@ -20,7 +20,7 @@
 #ifndef KSTVIEWMANAGERI_H
 #define KSTVIEWMANAGERI_H
 
-#include <QWidget>
+#include <QDialog>
 
 class KstDoc;
 
@@ -69,7 +69,7 @@ class KstViewObjectItem : public Q3ListViewItem {
     bool _inUse;
 };
 
-class KstViewManagerI: public QWidget, public Ui::KstViewManager {
+class KstViewManagerI: public QDialog, public Ui::KstViewManager {
   Q_OBJECT
   public:
     KstViewManagerI(KstDoc *doc, QWidget* parent = 0, Qt::WindowFlags fl = 0);
