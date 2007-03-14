@@ -453,6 +453,7 @@ void KstApp::initActions() {
   /************/
   PauseAction = new KToggleAction(KIcon("player_pause"), i18n("P&ause"),
                                   actionCollection());
+  actionCollection()->addAction("pause_action", PauseAction);
   PauseAction->setToolTip(i18n("Pause"));
   PauseAction->setWhatsThis(i18n("When paused, new data will not be read."));
   connect(PauseAction, SIGNAL(toggled(bool)), this, SLOT(updatePausedState(bool)));
@@ -460,6 +461,7 @@ void KstApp::initActions() {
   /************/
   _saveData = new KToggleAction(KIcon("save_vector_data"), i18n("Save Da&ta"),
                                   actionCollection());
+  actionCollection()->addAction("save_vector_data", _saveData);
   _saveData->setToolTip(i18n("Save Vector Data To Disk"));
   _saveData->setWhatsThis(i18n("When selected, data in vectors will be saved into the Kst file."));
 
@@ -468,6 +470,7 @@ void KstApp::initActions() {
   connect(radioCollection, SIGNAL(triggered()), this, SLOT(toggleMouseMode()));
   XYZoomAction = new KToggleAction(KIcon("kst_zoomxy"), i18n("XY Mouse &Zoom"),
                                   actionCollection());
+  actionCollection()->addAction("zoomxy_action", XYZoomAction);
   XYZoomAction->setActionGroup(radioCollection);
   XYZoomAction->setShortcut(KShortcut(Qt::Key_F2));
   XYZoomAction->setToolTip(i18n("XY mouse zoom"));
@@ -478,6 +481,7 @@ void KstApp::initActions() {
   /************/
   XZoomAction = new KToggleAction(KIcon("kst_zoomx"), i18n("&X Mouse Zoom"),
                                  actionCollection());
+  actionCollection()->addAction("zoomx_action", XZoomAction);
   XZoomAction->setShortcut(KShortcut(Qt::Key_F3));
   XZoomAction->setActionGroup(radioCollection);
   XZoomAction->setToolTip(i18n("X mouse zoom"));
@@ -487,6 +491,7 @@ void KstApp::initActions() {
   /************/
   YZoomAction = new KToggleAction(KIcon("kst_zoomy"), i18n("&Y Mouse Zoom"),
                                   actionCollection());
+  actionCollection()->addAction("zoomy_action", YZoomAction);
   YZoomAction->setActionGroup(radioCollection);
   XZoomAction->setShortcut(KShortcut(Qt::Key_F4));
   YZoomAction->setToolTip(i18n("Y mouse zoom"));
@@ -496,6 +501,7 @@ void KstApp::initActions() {
   /************/
   GfxAction = new KToggleAction(KIcon("kst_graphics"), i18n("&Graphics Mode"),
                                 actionCollection());
+  actionCollection()->addAction("graphicsmode_action", GfxAction);
   GfxAction->setActionGroup(radioCollection);
   GfxAction->setToolTip(i18n("Graphics Editor"));
   GfxAction->setWhatsThis(i18n("Use the mouse to create and edit graphics objects."));
@@ -507,6 +513,7 @@ void KstApp::initActions() {
   /************/
   NewPlotAction = new KAction(KIcon("kst_newplot"), i18n("New Plot..."),
                                  actionCollection());
+  actionCollection()->addAction("newplot_action", NewPlotAction);
   NewPlotAction->setWhatsThis(i18n("Create a new plot in the\n"
                                       "current window."));
   connect(NewPlotAction, SIGNAL(triggered()), this, SLOT(newPlot()));
@@ -514,6 +521,7 @@ void KstApp::initActions() {
   /************/
   DataManagerAction = new KAction(KIcon("kst_datamanager"), i18n("&Data Manager"),
                                   actionCollection());
+  actionCollection()->addAction("datamanager_action", DataManagerAction);
   DataManagerAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                        "to manage data."));
   connect(DataManagerAction, SIGNAL(triggered()), dataManager, SLOT(show_I()));
@@ -522,6 +530,7 @@ void KstApp::initActions() {
   /************/
   ViewManagerAction = new KAction(KIcon("kst_viewmanager"), i18n("&View Manager"),
                                   actionCollection());
+  actionCollection()->addAction("viewmanager_action", ViewManagerAction);
   ViewManagerAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                        "to manage views."));
   connect(ViewManagerAction, SIGNAL(triggered()), viewManager, SLOT(show_I()));
@@ -529,6 +538,7 @@ void KstApp::initActions() {
   /************/
   VectorDialogAction = new KAction(KIcon("kst_vectornew"), i18n("New &Vector..."),
                                   actionCollection());
+  actionCollection()->addAction("vectordialog_action", VectorDialogAction);
   VectorDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                         "to create a new vector."));
   connect(VectorDialogAction, SIGNAL(triggered()),
@@ -537,6 +547,7 @@ void KstApp::initActions() {
   /************/
 //   CurveDialogAction = new KAction(KIcon("kst_curvenew"), i18n("New &Curve..."),
 //                                   actionCollection());
+//   actionCollection()->addAction("curvedialog_action", CurveDialogAction);
 //   CurveDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
 //                                        "to create a new curve."));
 //   connect(CurveDialogAction, SIGNAL(triggered()),
@@ -545,6 +556,7 @@ void KstApp::initActions() {
   /************/
   CsdDialogAction = new KAction(KIcon("kst_csdnew"), i18n("New Cumulative &Spectral Decay..."),
                                 actionCollection());
+  actionCollection()->addAction("csddialog_action", CsdDialogAction);
   CsdDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                      "to create a new cumulative spectral decay."));
   connect(CsdDialogAction, SIGNAL(triggered()),
@@ -553,6 +565,7 @@ void KstApp::initActions() {
   /************/
   EqDialogAction = new KAction(KIcon("kst_equationnew"), i18n("New &Equation..."),
                                actionCollection());
+  actionCollection()->addAction("eqdialog_action", EqDialogAction);
   EqDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                     "to create a new equation."));
   connect(EqDialogAction, SIGNAL(triggered()),
@@ -561,6 +574,7 @@ void KstApp::initActions() {
   /************/
   HsDialogAction = new KAction(KIcon("kst_histogramnew"), i18n("New &Histogram..."),
                                actionCollection());
+  actionCollection()->addAction("hstdialog_action", HsDialogAction);
   HsDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                     "to create a new histogram."));
   connect(HsDialogAction, SIGNAL(triggered()),
@@ -570,6 +584,7 @@ void KstApp::initActions() {
   /************/
   PsdDialogAction = new KAction(KIcon("kst_psdnew"), i18n("New Power &Spectrum..."),
                                 actionCollection());
+  actionCollection()->addAction("psddialog_action", PsdDialogAction);
   PsdDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                      "to create a new power spectrum."));
   connect(PsdDialogAction, SIGNAL(triggered()),
@@ -578,6 +593,7 @@ void KstApp::initActions() {
   /************/
   PluginDialogAction = new KAction(KIcon("kst_pluginnew"),i18n("New &Plugin..."),
                                    actionCollection());
+  actionCollection()->addAction("plugindialog_action", PluginDialogAction);
   PluginDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                         "to create a new plugin instance."));
   connect(PluginDialogAction, SIGNAL(triggered()), this, SLOT(selectDataPlugin()));
@@ -585,6 +601,7 @@ void KstApp::initActions() {
   /************/
   MatrixDialogAction = new KAction(KIcon("kst_matrixnew"), i18n("New M&atrix..."),
                                    actionCollection());
+  actionCollection()->addAction("imagedialog_action", MatrixDialogAction);
   MatrixDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                         "to create a new matrix."));
   connect(MatrixDialogAction, SIGNAL(triggered()),
@@ -592,6 +609,7 @@ void KstApp::initActions() {
   /************/
   ImageDialogAction = new KAction(KIcon("kst_imagenew"), i18n("New &Image..."),
                                   actionCollection());
+  actionCollection()->addAction("", ImageDialogAction);
   ImageDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                         "to create a new image instance."));
   connect(ImageDialogAction, SIGNAL(triggered()),
@@ -601,6 +619,7 @@ void KstApp::initActions() {
   ChangeFileDialogAction = new KAction(KIcon("kst_changefile"),
                                        i18n("Change Data &File..."),
                                        actionCollection());
+  actionCollection()->addAction("changefiledialog_action", ChangeFileDialogAction);
   ChangeFileDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                             "to change input files."));
   connect(ChangeFileDialogAction, SIGNAL(triggered()),
@@ -610,6 +629,7 @@ void KstApp::initActions() {
   ChooseColorDialogAction = new KAction(KIcon("kst_choosecolor"),
                                         i18n("Assign Curve &Color Per File..."),
                                         actionCollection());
+  actionCollection()->addAction("choosecolordialog_action", ChooseColorDialogAction);
   ChooseColorDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                              "to change curve colors\n"
                                              "based on data file."));
@@ -620,6 +640,7 @@ void KstApp::initActions() {
   DifferentiateCurvesDialogAction = new KAction(KIcon("kst_differentiatecurves"),
                                                       i18n("&Differentiate Between Curves..."),
                                                       actionCollection());
+  actionCollection()->addAction("differentiatecurves_action", DifferentiateCurvesDialogAction);
   DifferentiateCurvesDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                              "to differentiate between curves."));
   connect(DifferentiateCurvesDialogAction, SIGNAL(triggered()),
@@ -628,6 +649,7 @@ void KstApp::initActions() {
   /************/
   ViewScalarsDialogAction = new KAction(i18n("View &Scalar Values"),
                                         actionCollection());
+  actionCollection()->addAction("viewscalarsdialog_action", ViewScalarsDialogAction);
   ViewScalarsDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                             "to view scalar values."));
   ViewScalarsDialogAction->setEnabled(false);
@@ -637,6 +659,7 @@ void KstApp::initActions() {
   /************/
   ViewStringsDialogAction = new KAction(i18n("View Strin&g Values"),
                                         actionCollection());
+  actionCollection()->addAction("viewstringsdialog_action", ViewStringsDialogAction);
   ViewStringsDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                             "to view string values."));
   connect(ViewStringsDialogAction, SIGNAL(triggered()),
@@ -645,6 +668,7 @@ void KstApp::initActions() {
   /************/
   ViewVectorsDialogAction = new KAction(i18n("View Vec&tor Values"),
                                         actionCollection());
+  actionCollection()->addAction("viewvectorsdialog_action", ViewVectorsDialogAction);
   ViewVectorsDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                             "to view vector values."));
   ViewVectorsDialogAction->setEnabled(false);
@@ -655,6 +679,7 @@ void KstApp::initActions() {
   /************/
   ViewMatricesDialogAction = new KAction(i18n("View &Matrix Values"),
                                          actionCollection());
+  actionCollection()->addAction("viewmatricesdialog_action", ViewMatricesDialogAction);
   ViewMatricesDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                             "to view matrix values."));
   ViewMatricesDialogAction->setEnabled(false);
@@ -664,6 +689,7 @@ void KstApp::initActions() {
   /************/
   ViewFitsDialogAction = new KAction(i18n("View &Fit Results"),
                                      actionCollection());
+  actionCollection()->addAction("viewfitsdialog_action", ViewFitsDialogAction);
   ViewFitsDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                             "to view fit values."));
   ViewFitsDialogAction->setEnabled(false);
@@ -674,6 +700,7 @@ void KstApp::initActions() {
   ChangeNptsDialogAction = new KAction(KIcon("kst_changenpts"),
                                        i18n("Change Data Sample &Ranges..."),
                                        actionCollection());
+  actionCollection()->addAction("changenptsdialog_action", ChangeNptsDialogAction);
   ChangeNptsDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                             "to change data sample ranges."));
   connect(ChangeNptsDialogAction, SIGNAL(triggered()),
@@ -682,6 +709,7 @@ void KstApp::initActions() {
   /************/
   EventMonitorAction = new KAction(KIcon("kst_eventnew"), i18n("New Event &Monitor..."),
                                      actionCollection());
+  actionCollection()->addAction("eventmonitor_action", EventMonitorAction);
   EventMonitorAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                           "create a new event monitor."));
   connect(EventMonitorAction, SIGNAL(triggered()),
@@ -690,6 +718,7 @@ void KstApp::initActions() {
   /************/
   GraphFileDialogAction = new KAction(KIcon("thumbnail"), i18n("Export to Graphics File..."),
                                       actionCollection());
+  actionCollection()->addAction("graphfiledialog_action", GraphFileDialogAction);
   GraphFileDialogAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                            "to export the plot as a\n"
                                            "graphics file."));
@@ -698,6 +727,7 @@ void KstApp::initActions() {
   /************/
   _vectorSaveAction = new KAction(i18n("Save Vectors to Disk..."),
                                   actionCollection());
+  actionCollection()->addAction("vectorsavedialog_action", _vectorSaveAction);
   _vectorSaveAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                        "to save vectors to text files."));
   connect(_vectorSaveAction, SIGNAL(triggered()), vectorSaveDialog, SLOT(show()));
@@ -705,6 +735,7 @@ void KstApp::initActions() {
   /************/
   SamplesDownAction = new KAction(KIcon("player_rew"), i18n("&Back 1 Screen"),
                                   actionCollection());
+  actionCollection()->addAction("samplesdown_action", SamplesDownAction);
   SamplesDownAction->setShortcut(KShortcut(Qt::CTRL + Qt::Key_Left));
   //SamplesDownAction->setToolTip(i18n("Back"));
   SamplesDownAction->setWhatsThis(i18n("Reduce the starting frame by\n"
@@ -714,6 +745,7 @@ void KstApp::initActions() {
   /************/
   SamplesUpAction = new KAction(KIcon("player_fwd"), i18n("&Advance 1 Screen"),
                                 actionCollection());
+  actionCollection()->addAction("samplesup_action", SamplesUpAction);
   SamplesUpAction->setShortcut(KShortcut(Qt::CTRL + Qt::Key_Right));
   //SamplesUpAction->setToolTip(i18n("Advance"));
   SamplesUpAction->setWhatsThis(i18n("Increase the starting frame by\n"
@@ -724,6 +756,7 @@ void KstApp::initActions() {
   SamplesFromEndAction = new KAction(KIcon("player_end"), i18n("Read From &End"),
                                      actionCollection());
 
+  actionCollection()->addAction("samplesend_action", SamplesFromEndAction);
   SamplesFromEndAction->setShortcut(KShortcut(Qt::SHIFT + Qt::CTRL + Qt::Key_Right));
   SamplesFromEndAction->setToolTip(i18n("Read from end"));
   SamplesFromEndAction->setWhatsThis(i18n("Read current data from end of file."));
@@ -732,6 +765,7 @@ void KstApp::initActions() {
   /************/
   PluginManagerAction = new KAction(i18n("&Plugins..."),
                                     actionCollection());
+  actionCollection()->addAction("plugin_manager", PluginManagerAction);
   PluginManagerAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                            "to manage plugins."));
   connect(PluginManagerAction, SIGNAL(triggered()), this, SLOT(showPluginManager()));
@@ -739,6 +773,7 @@ void KstApp::initActions() {
   /************/
   ExtensionManagerAction = new KAction(i18n("&Extensions..."),
                                        actionCollection());
+  actionCollection()->addAction("extensionmanager_action", ExtensionManagerAction);
   ExtensionManagerAction->setWhatsThis(i18n("Bring up a dialog box\n"
                                            "to manage extensions."));
   connect(ExtensionManagerAction, SIGNAL(triggered()), this, SLOT(showExtensionManager()));
@@ -746,6 +781,7 @@ void KstApp::initActions() {
   /************/
   DataWizardAction = new KAction(KIcon("wizard"), i18n("Data &Wizard"),
                                  actionCollection());
+  actionCollection()->addAction("datawizard_action", DataWizardAction);
   DataWizardAction->setShortcut(KShortcut(Qt::Key_W));
   DataWizardAction->setWhatsThis(i18n("Bring up a wizard\n"
                                            "to easily load data."));
@@ -754,6 +790,7 @@ void KstApp::initActions() {
   /************/
   DebugDialogAction = new KAction(i18n("Debug Kst..."),
                                   actionCollection());
+  actionCollection()->addAction("debug_action", DebugDialogAction);
   DebugDialogAction->setWhatsThis(i18n("Bring up a dialog\n"
                                            "to display debugging information."));
   connect(DebugDialogAction, SIGNAL(triggered()), this, SLOT(showDebugDialog()));
@@ -761,6 +798,7 @@ void KstApp::initActions() {
   /************/
   DataMode = new KToggleAction(KIcon("kst_datamode"), i18n("Data Mode"),
                                  actionCollection());
+  actionCollection()->addAction("datamode_action", DataMode);
   DataMode->setWhatsThis(i18n("Toggle between cursor mode and data mode."));
   DataMode->setToolTip(i18n("Data mode"));
   connect(DataMode, SIGNAL(triggered()), this, SLOT(toggleDataMode()));
@@ -768,12 +806,14 @@ void KstApp::initActions() {
   /************/
   _reloadAction = new KAction(KIcon("reload"), i18n("Reload"),
                               actionCollection());
+  actionCollection()->addAction("reload", _reloadAction);
   _reloadAction->setShortcut(Qt::Key_F5);
   _reloadAction->setWhatsThis(i18n("Reload the data from file."));
   connect(_reloadAction, SIGNAL(triggered()), this, SLOT(reload()));
 
   _tiedZoomAction = new KAction(KIcon("kst_zoomtie"), i18n("&Tied Zoom"),
                                actionCollection());
+  actionCollection()->addAction("zoomtie_action", _tiedZoomAction);
   _tiedZoomAction->setToolTip(i18n("Enable tied zoom"));
   _tiedZoomAction->setWhatsThis(i18n("Apply zoom actions to all plots\n"
                                      "(not just the active one)."));
@@ -781,6 +821,7 @@ void KstApp::initActions() {
 
   _gfxRectangleAction = new KToggleAction(KIcon("kst_gfx_rectangle"), i18n("&Rectangle"),
                                                 actionCollection());
+  actionCollection()->addAction("rectangle_action", _gfxRectangleAction);
   _gfxRectangleAction->setActionGroup(radioCollection);
   _gfxRectangleAction->setShortcut(KShortcut(Qt::Key_F8));
   _gfxRectangleAction->setToolTip(i18n("Draw rectangle"));
@@ -788,6 +829,7 @@ void KstApp::initActions() {
 
   _gfxEllipseAction = new KToggleAction(KIcon("kst_gfx_ellipse"), i18n("&Ellipse"),
                                         actionCollection());
+  actionCollection()->addAction("ellipse_action", _gfxEllipseAction);
   _gfxEllipseAction->setActionGroup(radioCollection);
   _gfxEllipseAction->setShortcut(KShortcut(Qt::Key_F9));
   _gfxEllipseAction->setToolTip(i18n("Draw ellipse"));
@@ -795,6 +837,7 @@ void KstApp::initActions() {
 
   _gfxPictureAction = new KToggleAction(KIcon("kst_gfx_picture"), i18n("&Picture"),
                                         actionCollection());
+  actionCollection()->addAction("picture_action", _gfxPictureAction);
   _gfxPictureAction->setActionGroup(radioCollection);
   _gfxPictureAction->setShortcut(KShortcut(Qt::Key_F12));
   _gfxPictureAction->setToolTip(i18n("Insert picture"));
@@ -802,6 +845,7 @@ void KstApp::initActions() {
 
   _gfx2DPlotAction = new KToggleAction(KIcon("kst_newplot"), i18n("&2DPlot"),
                                        actionCollection());
+  actionCollection()->addAction("2dplot_action", _gfx2DPlotAction);
   _gfx2DPlotAction->setActionGroup(radioCollection);
   _gfx2DPlotAction->setShortcut(KShortcut(Qt::Key_2));
   _gfx2DPlotAction->setToolTip(i18n("Insert Plot"));
@@ -809,6 +853,7 @@ void KstApp::initActions() {
 
   _gfxArrowAction = new KToggleAction(KIcon("kst_gfx_arrow"), i18n("&Arrow"),
                                       actionCollection());
+  actionCollection()->addAction("arrow_action", _gfxArrowAction);
   _gfxArrowAction->setActionGroup(radioCollection);
   _gfxArrowAction->setShortcut(KShortcut(Qt::Key_F11));
   _gfxArrowAction->setToolTip(i18n("Draw arrow"));
@@ -816,6 +861,7 @@ void KstApp::initActions() {
 
   _gfxLineAction = new KToggleAction(KIcon("kst_gfx_line"), i18n("&Line"),
                                      actionCollection());
+  actionCollection()->addAction("line_action", _gfxLineAction);
   _gfxLineAction->setActionGroup(radioCollection);
   _gfxLineAction->setShortcut(KShortcut(Qt::Key_F10));
   _gfxLineAction->setToolTip(i18n("Draw line"));
@@ -825,6 +871,7 @@ void KstApp::initActions() {
   /************/
   _gfxLabelAction = new KToggleAction(KIcon("text"), i18n("L&abel"),
                                      actionCollection());
+  actionCollection()->addAction("label_action", _gfxLabelAction);
   _gfxLabelAction->setActionGroup(radioCollection);
   _gfxLabelAction->setShortcut(KShortcut(Qt::Key_F7));
   _gfxLabelAction->setToolTip(i18n("Draw label"));
@@ -832,6 +879,7 @@ void KstApp::initActions() {
 
   LayoutAction = new KToggleAction(KIcon("kst_layoutmode"), i18n("Layout Mode"),
                                    actionCollection());
+  actionCollection()->addAction("layoutmode_action", LayoutAction);
   LayoutAction->setActionGroup(radioCollection);
   LayoutAction->setShortcut(KShortcut(Qt::Key_F6));
   LayoutAction->setToolTip(i18n("Layout mode"));
