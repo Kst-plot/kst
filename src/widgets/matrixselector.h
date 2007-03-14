@@ -23,6 +23,8 @@
 
 #include <kstdataobject.h>
 
+#include "kst_export.h"
+
 class MatrixSelector : public QWidget, public Ui::MatrixSelector {
   Q_OBJECT
 
@@ -54,7 +56,7 @@ private:
 
 private:
   bool _provideNoneMatrix;
-};
+} KST_EXPORT;
 
 #endif
 // vim: ts=2 sw=2 et

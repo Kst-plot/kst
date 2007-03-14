@@ -23,6 +23,8 @@
 
 #include <kstdataobject.h>
 
+#include "kst_export.h"
+
 class ScalarSelector : public QWidget, public Ui::ScalarSelector {
   Q_OBJECT
 
@@ -50,7 +52,7 @@ signals:
 
 private:
   void init();
-};
+} KST_EXPORT;
 
 #endif
 // vim: ts=2 sw=2 et

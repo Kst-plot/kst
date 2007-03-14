@@ -22,6 +22,8 @@
 //Added by qt3to4:
 #include <QFocusEvent>
 
+#include "kst_export.h"
+
 /*This class is a wrapper around KComboBox that does something different in read only mode...
   basically, we act like a readwrite combo with one important difference... when the widget
   loses focus or return is pressed we validate and make sure that what is left in the
@@ -49,7 +51,7 @@ class KstComboBox : public KComboBox {
   private:
     void commonConstructor();
     bool _trueRW; //captures whether this combo is *truly* read write as opposed to psuedo
-};
+} KST_EXPORT;
 
 
 #endif

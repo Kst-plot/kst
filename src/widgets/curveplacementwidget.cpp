@@ -19,8 +19,6 @@
 
 #include <kstdatacollection.h>
 
-#include <kst_export.h>
-
 CurvePlacementWidget::CurvePlacementWidget(QWidget *parent)
     : QWidget(parent) {
   setupUi(this);

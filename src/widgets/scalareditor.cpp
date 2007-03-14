@@ -17,8 +17,6 @@
 
 #include "scalareditor.h"
 
-#include <kst_export.h>
-
 ScalarEditor::ScalarEditor(QWidget *parent)
     : QDialog(parent) {
   setupUi(this);

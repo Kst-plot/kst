@@ -28,8 +28,6 @@
 #include <kstcurvepointsymbol.h>
 #include <kstcolorsequence.h>
 
-#include <kst_export.h>
-
 CurveAppearanceWidget::CurveAppearanceWidget(QWidget *parent)
     : QWidget(parent) {
   setupUi(this);

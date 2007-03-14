@@ -21,6 +21,8 @@
 #include <QWidget>
 #include "ui_colorpalettewidget4.h"
 
+#include "kst_export.h"
+
 class ColorPaletteWidget : public QWidget, public Ui::ColorPaletteWidget {
   Q_OBJECT
 
@@ -38,7 +40,7 @@ public slots:
 
 private:
   void init();
-};
+} KST_EXPORT;
 
 #endif
 // vim: ts=2 sw=2 et

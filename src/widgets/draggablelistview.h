@@ -27,7 +27,7 @@ class QColorGroup;
 
 #include "kst_export.h"
 
-class KST_EXPORT DraggableListView : public Q3ListView {
+class DraggableListView : public Q3ListView {
   Q_OBJECT
   public:
     DraggableListView(QWidget *parent = 0L, const char *name = 0L);
@@ -47,8 +47,7 @@ class KST_EXPORT DraggableListView : public Q3ListView {
   private:
     QPoint _pressPos;
     bool _dragEnabled;
-};
-
+} KST_EXPORT;
 
 #endif
 // vim: ts=2 sw=2 et

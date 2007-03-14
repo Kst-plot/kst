@@ -37,8 +37,7 @@ class VectorListView : public DraggableListView {
     virtual void dropEvent(QDropEvent *e);
     virtual void startDrag();
 
-};
-
+} KST_EXPORT;
 
 #endif
 // vim: ts=2 sw=2 et

@@ -19,8 +19,6 @@
 
 #include <QRegExp>
 
-#include <kst_export.h>
-
 EditMultipleWidget::EditMultipleWidget(QWidget *parent)
     : QWidget(parent) {
   setupUi(this);

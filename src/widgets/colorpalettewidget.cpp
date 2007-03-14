@@ -20,8 +20,6 @@
 #include <QPixmap>
 #include <QPainter>
 
-#include <kst_export.h>
-
 ColorPaletteWidget::ColorPaletteWidget(QWidget *parent)
     : QWidget(parent) {
   setupUi(this);

@@ -21,6 +21,8 @@
 #include <QDialog>
 #include "ui_scalareditor4.h"
 
+#include "kst_export.h"
+
 class ScalarEditor : public QDialog, public Ui::ScalarEditor {
   Q_OBJECT
 

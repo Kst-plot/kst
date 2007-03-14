@@ -21,6 +21,8 @@
 #include <QWidget>
 #include "ui_kstdatarange4.h"
 
+#include "kst_export.h"
+
 class KstDataRange : public QWidget, public Ui::KstDataRange {
   Q_OBJECT
 
@@ -51,7 +53,7 @@ private:
 
 private:
   bool _time;
-};
+} KST_EXPORT;
 
 #endif
 // vim: ts=2 sw=2 et

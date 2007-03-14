@@ -33,8 +33,6 @@
 #include <kstdatacollection.h>
 #include <enodes.h>
 
-#include <kst_export.h>
-
 StringSelector::StringSelector(QWidget *parent)
     : QWidget(parent) {
   setupUi(this);

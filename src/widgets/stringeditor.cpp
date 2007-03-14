@@ -17,8 +17,6 @@
 
 #include "stringeditor.h"
 
-#include <kst_export.h>
-
 StringEditor::StringEditor(QWidget *parent)
     : QDialog(parent) {
   setupUi(this);

@@ -21,6 +21,8 @@
 #include <QDialog>
 #include "ui_stringeditor4.h"
 
+#include "kst_export.h"
+
 class StringEditor : public QDialog, public Ui::StringEditor {
   Q_OBJECT
 

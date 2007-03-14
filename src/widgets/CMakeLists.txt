@@ -54,18 +54,17 @@ target_link_libraries(kstwidgets ${KDE4_KDECORE_LIBS} kstmath)
 set_target_properties(kstwidgets PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 1)
 install(TARGETS kstwidgets DESTINATION ${LIB_INSTALL_DIR})
 
-
 ########### next target ###############
 
-set(kstwidgets_PART_SRCS ${CMAKE_CURRENT_BINARY_DIR}/dummy.cpp)
-
-kde4_automoc(${kstwidgets_PART_SRCS})
-
-kde4_add_plugin(kstwidgets ${kstwidgets_PART_SRCS})
-
-target_link_libraries(kstwidgets ${KDE4_KDECORE_LIBS})
-
-install(TARGETS kstwidgets DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
+# set(kstwidgets_PART_SRCS ${CMAKE_CURRENT_BINARY_DIR}/dummy.cpp)
+# 
+# kde4_automoc(${kstwidgets_PART_SRCS})
+# 
+# kde4_add_plugin(kstwidgets ${kstwidgets_PART_SRCS})
+# 
+# target_link_libraries(kstwidgets ${KDE4_KDECORE_LIBS})
+# 
+# install(TARGETS kstwidgets DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
 
 
 ########### install files ###############

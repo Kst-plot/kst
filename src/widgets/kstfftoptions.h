@@ -21,6 +21,8 @@
 #include <QWidget>
 #include "ui_kstfftoptions4.h"
 
+#include "kst_export.h"
+
 class KstFFTOptions : public QWidget, public Ui::KstFFTOptions {
   Q_OBJECT
 
@@ -40,7 +42,7 @@ public slots:
 
 private:
   void init();
-};
+} KST_EXPORT;
 
 #endif
 // vim: ts=2 sw=2 et

@@ -29,8 +29,6 @@
 #include <kstdataobject.h>
 #include <dialoglauncher.h>
 
-#include <kst_export.h>
-
 MatrixSelector::MatrixSelector(QWidget *parent)
     : QWidget(parent), _provideNoneMatrix(false) {
   setupUi(this);

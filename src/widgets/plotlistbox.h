@@ -39,7 +39,7 @@ class PlotListBox : public DraggableListBox {
 
   signals:
     void changed();
-};
+} KST_EXPORT;
 
 
 #endif

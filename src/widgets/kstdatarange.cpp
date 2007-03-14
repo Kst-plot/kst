@@ -29,8 +29,6 @@
 #include <enodes.h>
 #include <kstdateparser.h>
 
-#include <kst_export.h>
-
 KstDataRange::KstDataRange(QWidget *parent)
     : QWidget(parent), _time(false) {
   setupUi(this);

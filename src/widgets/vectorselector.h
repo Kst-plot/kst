@@ -23,6 +23,8 @@
 
 #include <kstdataobject.h>
 
+#include "kst_export.h"
+
 class VectorSelector : public QWidget, public Ui::VectorSelector {
   Q_OBJECT
 
@@ -54,7 +56,7 @@ private:
 
 private:
   bool _provideNoneVector;
-};
+} KST_EXPORT;
 
 #endif
 // vim: ts=2 sw=2 et

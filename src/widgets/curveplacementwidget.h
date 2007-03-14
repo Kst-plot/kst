@@ -21,6 +21,8 @@
 #include <QWidget>
 #include "ui_curveplacementwidget4.h"
 
+#include "kst_export.h"
+
 class CurvePlacementWidget : public QWidget, public Ui::CurvePlacementWidget {
   Q_OBJECT
 
@@ -44,7 +46,7 @@ public slots:
   void updatePlotList();
   void updateEnabled();
   void updateGrid();
-};
+} KST_EXPORT;
 
 #endif
 // vim: ts=2 sw=2 et

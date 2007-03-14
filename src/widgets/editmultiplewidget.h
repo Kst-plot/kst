@@ -21,6 +21,8 @@
 #include <QWidget>
 #include "ui_editmultiplewidget4.h"
 
+#include "kst_export.h"
+
 class EditMultipleWidget : public QWidget, public Ui::EditMultipleWidget {
   Q_OBJECT
 

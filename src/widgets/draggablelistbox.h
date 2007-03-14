@@ -25,7 +25,7 @@
 
 #include "kst_export.h"
 
-class KST_EXPORT DraggableListBox : public Q3ListBox {
+class DraggableListBox : public Q3ListBox {
   Q_OBJECT
   public:
     DraggableListBox(QWidget *parent = 0L, const char *name = 0L);
@@ -49,8 +49,7 @@ class KST_EXPORT DraggableListBox : public Q3ListBox {
   private:
     QPoint _pressPos;
     bool _dragEnabled;
-};
-
+} KST_EXPORT;
 
 #endif
 // vim: ts=2 sw=2 et

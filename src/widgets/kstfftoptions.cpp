@@ -21,8 +21,6 @@
 
 #include <kstobjectdefaults.h>
 
-#include <kst_export.h>
-
 KstFFTOptions::KstFFTOptions(QWidget *parent)
     : QWidget(parent) {
   setupUi(this);

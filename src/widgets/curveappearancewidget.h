@@ -21,6 +21,8 @@
 #include <QWidget>
 #include "ui_curveappearancewidget4.h"
 
+#include "kst_export.h"
+
 class CurveAppearanceWidget : public QWidget, public Ui::CurveAppearanceWidget {
   Q_OBJECT
 
@@ -58,7 +60,7 @@ private slots:
 
 protected:
   void resizeEvent(QResizeEvent *pEvent);
-};
+} KST_EXPORT;
 
 #endif
 // vim: ts=2 sw=2 et

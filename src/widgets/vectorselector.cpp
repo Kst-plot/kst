@@ -30,8 +30,6 @@
 #include <dialoglauncher.h>
 #include <kstdataobject.h>
 
-#include <kst_export.h>
-
 VectorSelector::VectorSelector(QWidget *parent)
     : QWidget(parent), _provideNoneVector(false) {
   setupUi(this);
