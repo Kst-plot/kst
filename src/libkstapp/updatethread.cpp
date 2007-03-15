@@ -67,7 +67,6 @@ void UpdateThread::run() {
   while (!_done) {
     _statusMutex.lock();
     updateTime = _updateTime;
-    _statusMutex.unlock();
 
     if (_waitCondition.wait(&_statusMutex, _updateTime)) {
 #if UPDATEDEBUG > 0
@@ -78,7 +77,6 @@ void UpdateThread::run() {
       }
     }
 
-    _statusMutex.lock();
     if (_done) {
       _statusMutex.unlock();
       break;

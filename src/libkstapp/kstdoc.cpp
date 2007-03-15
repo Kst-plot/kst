@@ -234,7 +234,7 @@ bool KstDoc::openDocument(const KUrl& url, const QString& o_file,
     return false;
   }
 
-  _title = url.fileName(false);
+  _title = url.fileName(KUrl::AppendTrailingSlash);
   _absFilePath = url.url();
   _lastFilePath = url.url();
   if (_title.isEmpty()) {

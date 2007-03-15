@@ -175,7 +175,7 @@ KstApp::KstApp(QWidget *parent)
 
   _updateThread = new UpdateThread(doc);
   _updateThread->setUpdateTime(KstSettings::globalSettings()->plotUpdateTimer);
-//   _updateThread->start();
+  _updateThread->start();
 
   /*** Plot Dialog signals */
   connect(changeFileDialog, SIGNAL(docChanged()),
