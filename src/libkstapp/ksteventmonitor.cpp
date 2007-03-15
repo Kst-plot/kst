@@ -57,9 +57,9 @@ KstEventMonitorI::KstEventMonitorI(QWidget* parent, Qt::WindowFlags fl)
   setMultiple(true);
   connect(_w->_vectorSelectorEq, SIGNAL(newVectorCreated(const QString&)), this, SIGNAL(modified()));
   connect(_w->_scalarSelectorEq, SIGNAL(newScalarCreated()), this, SIGNAL(modified()));
-  connect(_w->_vectorSelectorEq, SIGNAL(selectionChangedLabel(const QString&)), _w->lineEditEquation, SLOT(insert(const QString&)));
+  connect(_w->_vectorSelectorEq, SIGNAL(selectionChangedLabel(const QString&)), _w->lineEditEquation, SLOT(setText(const QString&)));
   connect(_w->_vectorSelectorEq, SIGNAL(selectionChangedLabel(const QString&)), _w->lineEditEquation, SLOT(setFocus()));
-  connect(_w->_scalarSelectorEq, SIGNAL(selectionChangedLabel(const QString&)), _w->lineEditEquation, SLOT(insert(const QString&)));
+  connect(_w->_scalarSelectorEq, SIGNAL(selectionChangedLabel(const QString&)), _w->lineEditEquation, SLOT(setText(const QString&)));
   connect(_w->_scalarSelectorEq, SIGNAL(selectionChangedLabel(const QString&)), _w->lineEditEquation, SLOT(setFocus()));
   connect(_w->_pushButtonELOGConfigure, SIGNAL(clicked()), KstApp::inst(), SLOT(EventELOGConfigure()));
   

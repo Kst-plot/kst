@@ -467,7 +467,7 @@ void KstApp::initActions() {
 
   /************/
   QActionGroup *radioCollection = new QActionGroup(actionCollection());
-  connect(radioCollection, SIGNAL(triggered()), this, SLOT(toggleMouseMode()));
+  connect(radioCollection, SIGNAL(triggered(QAction*)), this, SLOT(toggleMouseMode()));
   XYZoomAction = new KToggleAction(KIcon("kst_zoomxy"), i18n("XY Mouse &Zoom"),
                                   actionCollection());
   actionCollection()->addAction("zoomxy_action", XYZoomAction);

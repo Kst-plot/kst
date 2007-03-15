@@ -33,7 +33,7 @@ CurvePlacementWidget::CurvePlacementWidget(QWidget *parent)
 
   connect(_dontPlace, SIGNAL(clicked()), this, SLOT(updateEnabled()));
 
-  connect(_plotWindow, SIGNAL(textChanged(const QString&)), this, SLOT(updateGrid()));
+  connect(_plotWindow, SIGNAL(editTextChanged(const QString&)), this, SLOT(updateGrid()));
 
   connect(_reGrid, SIGNAL(clicked()), this, SLOT(updateEnabled()));
 }

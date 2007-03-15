@@ -197,7 +197,7 @@
       <sender>Operators</sender>
       <signal>activated(QString)</signal>
       <receiver>_equation</receiver>
-      <slot>insert(QString)</slot>
+      <slot>setText(QString)</slot>
     </connection>
     <connection>
       <sender>Operators</sender>
@@ -209,7 +209,7 @@
       <sender>_vectors</sender>
       <signal>selectionChangedLabel(QString)</signal>
       <receiver>_equation</receiver>
-      <slot>insert(QString)</slot>
+      <slot>setText(QString)</slot>
     </connection>
     <connection>
       <sender>_vectors</sender>
@@ -221,7 +221,7 @@
       <sender>_scalars</sender>
       <signal>selectionChangedLabel(QString)</signal>
       <receiver>_equation</receiver>
-      <slot>insert(QString)</slot>
+      <slot>setText(QString)</slot>
     </connection>
     <connection>
       <sender>_scalars</sender>

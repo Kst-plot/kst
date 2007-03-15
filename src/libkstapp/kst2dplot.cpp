@@ -6973,7 +6973,7 @@ void Kst2DPlot::connectConfigWidget(QWidget *parent, QWidget *w) const {
   connect(widget->_minorGridColor, SIGNAL( changed(const QColor&) ), parent, SLOT( modified() ) );
   connect(widget->_checkBoxDefaultMajorGridColor, SIGNAL( stateChanged(int) ), parent, SLOT( modified() ) );
 
-  connect( widget->ScalarList, SIGNAL( textChanged(const QString&) ), parent, SLOT(modified()));
+  connect( widget->ScalarList, SIGNAL( editTextChanged(const QString&) ), parent, SLOT(modified()));
   connect( widget->TopLabelFontSize, SIGNAL( valueChanged(int) ), parent, SLOT(modified()));
   connect( widget->TopLabelText, SIGNAL( textChanged(const QString&) ), parent, SLOT(modified()));
   connect( widget->_comboBoxTopLabelJustify, SIGNAL( activated(int) ), parent, SLOT(modified()));

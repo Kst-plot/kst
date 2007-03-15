@@ -50,7 +50,7 @@ void StringSelector::init() {
   connect(_newString, SIGNAL(clicked()), this, SLOT(createNewString()));
   connect(_editString, SIGNAL(clicked()), this, SLOT(editString()));
   connect(_string, SIGNAL(activated(const QString&)), this, SIGNAL(selectionChanged(const QString&)));
-  connect(_string, SIGNAL(textChanged(const QString&)), this, SIGNAL(selectionChanged(const QString&)));
+  connect(_string, SIGNAL(editTextChanged(const QString&)), this, SIGNAL(selectionChanged(const QString&)));
   connect(this, SIGNAL(selectionChanged(const QString&)), this, SLOT(selectionWatcher(const QString&)));
 }
 

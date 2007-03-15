@@ -117,13 +117,13 @@ void View2DPlotWidget::init() {
   connect(XExpression, SIGNAL(toggled(bool)), this, SLOT(updateButtons()));
 
   connect(scalarSelectorX1, SIGNAL(activated(const QString&)),
-          XExpressionMin, SLOT(insert(const QString&)));
+          XExpressionMin, SLOT(setText(const QString&)));
   connect(scalarSelectorY1, SIGNAL(activated(const QString&)),
-          YExpressionMin, SLOT(insert(const QString&)));
+          YExpressionMin, SLOT(setText(const QString&)));
   connect(scalarSelectorX2, SIGNAL(activated(const QString&)),
-          XExpressionMax, SLOT(insert(const QString&)));
+          XExpressionMax, SLOT(setText(const QString&)));
   connect(scalarSelectorY2, SIGNAL(activated(const QString&)),
-          YExpressionMax, SLOT(insert(const QString&)));
+          YExpressionMax, SLOT(setText(const QString&)));
 
   // adding/removing curves
   connect(DisplayedCurveList, SIGNAL(clicked(Q3ListBoxItem*)), this, SLOT(updateButtons()));

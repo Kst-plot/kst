@@ -39,7 +39,7 @@ VectorSaveDialog::VectorSaveDialog(QWidget *parent)
 
  connect(_vectorList, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
 
- connect(_vectorList, SIGNAL(doubleClicked(QListBoxItem*)), this, SLOT(save()));
+ connect(_vectorList, SIGNAL(doubleClicked(Q3ListBoxItem*)), this, SLOT(save()));
 }
 
 
