@@ -102,7 +102,8 @@ void VectorSelector::update() {
     _vector->setItemText(_vector->currentIndex(), prev);
   }
   blockSignals(false);
-  setEdit(_vector->currentText());
+//FIXME PORT!
+//   setEdit(_vector->currentText());
 }
 
 

@@ -797,9 +797,8 @@ int main(int argc, char *argv[]) {
       delete kst;
       return 0;
     } else {
-//FIXME PORT!
-//       kst->updateDialogs();
-      
+      kst->updateDialogs();
+
       if (showQuickStart) {
         kst->showQuickStartDialog();
       }
@@ -811,10 +810,7 @@ int main(int argc, char *argv[]) {
       }
       startupErrors.clear();
     }
-
-    // LEAVE THIS HERE - causes crashes otherwise!
     int rc = app.exec();
-    delete kst;
     return rc;
   }
 

@@ -2014,7 +2014,7 @@ void KstApp::showViewMatricesDialog() {
 
 
 void KstApp::showViewFitsDialog() {
-  viewFitsDialog->showViewFitsDialog();
+/*  viewFitsDialog->showViewFitsDialog();*/
 }
 
 
@@ -2085,7 +2085,7 @@ void KstApp::updateDataDialogs(bool dm, bool vm) {
   ViewStringsDialogAction->setEnabled(viewStringsDialog->hasContent());
   ViewVectorsDialogAction->setEnabled(viewVectorsDialog->hasContent());
   ViewMatricesDialogAction->setEnabled(viewMatricesDialog->hasContent());
-  ViewFitsDialogAction->setEnabled(viewFitsDialog->hasContent());
+//   ViewFitsDialogAction->setEnabled(viewFitsDialog->hasContent());
 
   if (!viewScalarsDialog->isHidden()) {
     viewScalarsDialog->updateViewScalarsDialog();
@@ -2099,9 +2099,9 @@ void KstApp::updateDataDialogs(bool dm, bool vm) {
   if (!viewMatricesDialog->isHidden()) {
     viewMatricesDialog->updateViewMatricesDialog();
   }
-  if (!viewFitsDialog->isHidden()) {
-    viewFitsDialog->updateViewFitsDialog();
-  }
+//   if (!viewFitsDialog->isHidden()) {
+//     viewFitsDialog->updateViewFitsDialog();
+//   }
 
   if (dm) {
     dataManager->updateContents();
