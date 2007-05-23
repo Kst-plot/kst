@@ -3,12 +3,12 @@
 
 #include <QPointer>
 #include <QApplication>
-#include <QMainWindow>
 
 #include "kst_export.h"
+#include "kstmainwindow.h"
 
 #define kstApp \
-  (static_cast<QCode*>(QCoreApplication::instance()))
+  (static_cast<KstApplication*>(QCoreApplication::instance()))
 
 class KST_EXPORT KstApplication : public QApplication
 {
@@ -17,11 +17,12 @@ public:
   KstApplication(int &argc, char **argv);
   virtual ~KstApplication();
 
-  QMainWindow *mainWindow() const;
+  KstMainWindow *mainWindow() const;
 
 private:
-  QPointer<QMainWindow> m_mainWindow;
+  QPointer<KstMainWindow> _mainWindow;
 };
 
 #endif
+
 // vim: ts=2 sw=2 et

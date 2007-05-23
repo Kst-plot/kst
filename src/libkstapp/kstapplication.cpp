@@ -2,22 +2,26 @@
 
 KstApplication::KstApplication(int &argc, char **argv)
     : QApplication(argc, argv) {
-    QCoreApplication::setApplicationName("Kst");
 
-    m_mainWindow = new QMainWindow;
-    m_mainWindow->show();
+  QCoreApplication::setApplicationName("Kst");
+
+  _mainWindow = new KstMainWindow;
+  connect(this, SIGNAL(aboutToQuit()), _mainWindow, SLOT(aboutToQuit()));
+
+  _mainWindow->show();
 }
 
 
 KstApplication::~KstApplication() {
-    if (m_mainWindow)
-        delete m_mainWindow;
+  if (_mainWindow)
+      delete _mainWindow;
 }
 
 
-QMainWindow *KstApplication::mainWindow() const {
-    return m_mainWindow;
+KstMainWindow *KstApplication::mainWindow() const {
+  return _mainWindow;
 }
 
 #include "kstapplication.moc"
+
 // vim: ts=2 sw=2 et

@@ -1,0 +1,101 @@
+#include "kstmainwindow.h"
+#include "kstapplication.h"
+#include "kstplotview.h"
+
+#include <QtGui>
+
+KstMainWindow::KstMainWindow() {
+
+  _undoStack = new QUndoStack(this);
+
+  _tabWidget = new QTabWidget(this);
+  _tabWidget->addTab(new KstPlotView, "Plot #1");
+  _tabWidget->addTab(new KstPlotView, "Plot #2");
+  setCentralWidget(_tabWidget);
+
+  createActions();
+  createMenus();
+//   createToolBars();
+  createStatusBar();
+
+  readSettings();
+}
+
+
+KstMainWindow::~KstMainWindow() {
+}
+
+
+void KstMainWindow::aboutToQuit() {
+  writeSettings();
+}
+
+
+void KstMainWindow::about() {
+  //FIXME Build a proper about box...
+  QMessageBox::about(this, tr("About Kst"),
+          tr("FIXME."));
+}
+
+
+void KstMainWindow::createActions() {
+  _exitAct = new QAction(tr("E&xit"), this);
+  _exitAct->setShortcut(tr("Ctrl+Q"));
+  _exitAct->setStatusTip(tr("Exit the application"));
+  connect(_exitAct, SIGNAL(triggered()), this, SLOT(close()));
+
+  _aboutAct = new QAction(tr("&About"), this);
+  _aboutAct->setStatusTip(tr("Show Kst's About box"));
+  connect(_aboutAct, SIGNAL(triggered()), this, SLOT(about()));
+
+  _aboutQtAct = new QAction(tr("About &Qt"), this);
+  _aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
+  connect(_aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+}
+
+void KstMainWindow::createMenus() {
+  _fileMenu = menuBar()->addMenu(tr("&File"));
+  _fileMenu->addSeparator();
+  _fileMenu->addAction(_exitAct);
+
+  _editMenu = menuBar()->addMenu(tr("&Edit"));
+
+  _settingsMenu = menuBar()->addMenu(tr("&Settings"));
+
+  menuBar()->addSeparator();
+
+  _helpMenu = menuBar()->addMenu(tr("&Help"));
+  _helpMenu->addAction(_aboutAct);
+  _helpMenu->addAction(_aboutQtAct);
+}
+
+
+void KstMainWindow::createToolBars() {
+  _fileToolBar = addToolBar(tr("File"));
+  _editToolBar = addToolBar(tr("Edit"));
+}
+
+
+void KstMainWindow::createStatusBar() {
+  statusBar()->showMessage(tr("Ready"));
+}
+
+
+void KstMainWindow::readSettings() {
+  QSettings settings;
+  QPoint pos = settings.value("pos", QPoint(20, 20)).toPoint();
+  QSize size = settings.value("size", QSize(800, 600)).toSize();
+  resize(size);
+  move(pos);
+}
+
+
+void KstMainWindow::writeSettings() {
+  QSettings settings;
+  settings.setValue("pos", pos());
+  settings.setValue("size", size());
+}
+
+#include "kstmainwindow.moc"
+
+// vim: ts=2 sw=2 et
