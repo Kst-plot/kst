@@ -5,10 +5,12 @@
 #include <QApplication>
 #include <QMainWindow>
 
+#include "kst_export.h"
+
 #define kstApp \
   (static_cast<QCode*>(QCoreApplication::instance()))
 
-class KstApplication : public QApplication
+class KST_EXPORT KstApplication : public QApplication
 {
   Q_OBJECT
 public:

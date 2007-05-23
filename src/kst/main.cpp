@@ -1,7 +1,7 @@
-#include <QApplication>
+#include "kstapplication.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+    KstApplication app(argc, argv);
     return app.exec();
 }

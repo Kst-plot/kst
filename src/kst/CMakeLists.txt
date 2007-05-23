@@ -12,7 +12,7 @@ kde4_automoc(${kst_SRCS})
 
 kde4_add_executable(kstexe ${kst_SRCS})
 
-target_link_libraries(kstexe ${KDE4_KDECORE_LIBS} kstapp )
+target_link_libraries(kstexe kstapp )
 
 set_target_properties(kstexe PROPERTIES OUTPUT_NAME kst)
 

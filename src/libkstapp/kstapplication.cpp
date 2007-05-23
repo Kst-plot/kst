@@ -19,4 +19,5 @@ QMainWindow *KstApplication::mainWindow() const {
     return m_mainWindow;
 }
 
+#include "kstapplication.moc"
 // vim: ts=2 sw=2 et
