@@ -16,6 +16,8 @@
 
 #include "kst_export.h"
 
+class QUndoStack;
+
 class KST_EXPORT KstPlotView : public QGraphicsView
 {
   Q_OBJECT
@@ -23,7 +25,10 @@ public:
   KstPlotView();
   virtual ~KstPlotView();
 
+  QUndoStack *undoStack() const;
+
 private:
+  QUndoStack *_undoStack;
 };
 
 #endif

@@ -17,7 +17,9 @@
 class QMenu;
 class QAction;
 class QTabWidget;
-class QUndoStack;
+class QUndoGroup;
+
+class KstPlotView;
 
 class KstMainWindow : public QMainWindow
 {
@@ -26,10 +28,15 @@ public:
   KstMainWindow();
   virtual ~KstMainWindow();
 
+  QUndoGroup *undoGroup() const;
+  QTabWidget *tabWidget() const;
+
+  KstPlotView *createPlotView();
+
 private Q_SLOTS:
   void aboutToQuit();
   void about();
-
+  void plotViewDestroyed(QObject *object);
 
 private:
   void createActions();
@@ -41,7 +48,7 @@ private:
   void writeSettings();
 
 private:
-  QUndoStack *_undoStack;
+  QUndoGroup *_undoGroup;
   QTabWidget *_tabWidget;
 
   QMenu *_fileMenu;

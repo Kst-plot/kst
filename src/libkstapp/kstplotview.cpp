@@ -13,17 +13,27 @@
 #include "kstmainwindow.h"
 #include "kstapplication.h"
 
+#include <QUndoStack>
 #include <QGraphicsScene>
 
 KstPlotView::KstPlotView()
     : QGraphicsView(kstApp->mainWindow()) {
- QGraphicsScene *scene = new QGraphicsScene(this);
- scene->addText("Hello, Kst Plot!");
- setScene(scene);
+
+  _undoStack = new QUndoStack(this);
+
+  QGraphicsScene *scene = new QGraphicsScene(this);
+  scene->addText("Hello, Kst Plot!");
+  setScene(scene);
+
 }
 
 
 KstPlotView::~KstPlotView() {
+}
+
+
+QUndoStack *KstPlotView::undoStack() const {
+  return _undoStack;
 }
 
 #include "kstplotview.moc"

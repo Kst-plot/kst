@@ -17,11 +17,12 @@
 
 KstMainWindow::KstMainWindow() {
 
-  _undoStack = new QUndoStack(this);
+  _undoGroup = new QUndoGroup(this);
 
   _tabWidget = new QTabWidget(this);
-  _tabWidget->addTab(new KstPlotView, "Plot #1");
-  _tabWidget->addTab(new KstPlotView, "Plot #2");
+
+  createPlotView();
+
   setCentralWidget(_tabWidget);
 
   createActions();
@@ -34,6 +35,37 @@ KstMainWindow::KstMainWindow() {
 
 
 KstMainWindow::~KstMainWindow() {
+}
+
+
+QUndoGroup *KstMainWindow::undoGroup() const {
+  return _undoGroup;
+}
+
+
+QTabWidget *KstMainWindow::tabWidget() const {
+  return _tabWidget;
+}
+
+
+KstPlotView *KstMainWindow::createPlotView() {
+  KstPlotView *plotView = new KstPlotView;
+  connect(plotView, SIGNAL(destroyed(QObject*)),
+          this, SLOT(plotViewDestroyed(QObject*)));
+  _undoGroup->addStack(plotView->undoStack());
+
+  QString label = plotView->objectName().isEmpty() ?
+                  QString("Plot %1").arg(QString::number(_tabWidget->count())) :
+                  plotView->objectName();
+
+  _tabWidget->addTab(plotView, label);
+  return plotView;
+}
+
+
+void KstMainWindow::plotViewDestroyed(QObject *object) {
+  KstPlotView *plotView = qobject_cast<KstPlotView*>(object);
+  _tabWidget->removeTab(_tabWidget->indexOf(plotView));
 }
 
 
