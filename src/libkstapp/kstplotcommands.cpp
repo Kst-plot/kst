@@ -9,7 +9,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstplotcommand.h"
+#include "kstplotcommands.h"
 #include "kstapplication.h"
 #include "kstplotview.h"
 

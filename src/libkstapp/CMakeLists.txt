@@ -4,7 +4,7 @@ set(kstapp_LIB_SRCS
    kstapplication.cpp
    kstmainwindow.cpp
    kstplotview.cpp
-   kstplotcommand.cpp
+   kstplotcommands.cpp
    )
 
 kde4_automoc(${kstapp_LIB_SRCS})
