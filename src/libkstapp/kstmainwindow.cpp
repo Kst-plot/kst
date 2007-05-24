@@ -48,6 +48,11 @@ QTabWidget *KstMainWindow::tabWidget() const {
 }
 
 
+KstPlotView *KstMainWindow::currentPlotView() const {
+  return qobject_cast<KstPlotView*>(_tabWidget->currentWidget());
+}
+
+
 KstPlotView *KstMainWindow::createPlotView() {
   KstPlotView *plotView = new KstPlotView;
   connect(plotView, SIGNAL(destroyed(QObject*)),

@@ -22,6 +22,7 @@ class KstPlotView;
 class KST_EXPORT KstPlotCommand : public QUndoCommand
 {
 public:
+  KstPlotCommand(const QString &text, QUndoCommand *parent = 0);
   KstPlotCommand(KstPlotView *view, const QString &text, QUndoCommand *parent = 0);
   virtual ~KstPlotCommand();
 

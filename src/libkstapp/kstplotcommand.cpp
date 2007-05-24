@@ -10,7 +10,13 @@
  ***************************************************************************/
 
 #include "kstplotcommand.h"
+#include "kstapplication.h"
 #include "kstplotview.h"
+
+KstPlotCommand::KstPlotCommand(const QString &text, QUndoCommand *parent)
+    : QUndoCommand(text, parent), _view(kstApp->mainWindow()->currentPlotView()) {
+}
+
 
 KstPlotCommand::KstPlotCommand(KstPlotView *view, const QString &text, QUndoCommand *parent)
     : QUndoCommand(text, parent), _view(view) {

@@ -30,6 +30,7 @@ public:
 
   QUndoGroup *undoGroup() const;
   QTabWidget *tabWidget() const;
+  KstPlotView *currentPlotView() const;
 
   KstPlotView *createPlotView();
 
