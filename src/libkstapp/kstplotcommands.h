@@ -49,6 +49,12 @@ public:
   CreateLabelCommand(KstPlotView *view);
   virtual ~CreateLabelCommand();
 
+  virtual void undo();
+  virtual void redo();
+
+private:
+  void createItem();
+
 protected:
   QPointer<KstPlotItem> _item;
 };

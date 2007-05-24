@@ -53,7 +53,34 @@ KstPlotItemCommand::~KstPlotItemCommand() {
 
 CreateLabelCommand::CreateLabelCommand()
     : KstPlotViewCommand(QObject::tr("Create Label")) {
+  createItem();
+}
 
+
+CreateLabelCommand::CreateLabelCommand(KstPlotView *view)
+    : KstPlotViewCommand(view, QObject::tr("Create Label")) {
+  createItem();
+}
+
+
+CreateLabelCommand::~CreateLabelCommand() {
+}
+
+
+void CreateLabelCommand::undo() {
+  if (_item)
+    _item->graphicsItem()->hide();
+}
+
+
+void CreateLabelCommand::redo() {
+  if (!_item)
+    createItem();
+
+  _item->graphicsItem()->show();
+}
+
+void CreateLabelCommand::createItem() {
   bool ok;
   QString text = QInputDialog::getText(_view, QObject::tr("label"),
                                        QObject::tr("label:"), QLineEdit::Normal,
@@ -63,15 +90,5 @@ CreateLabelCommand::CreateLabelCommand()
     _view->scene()->addItem(_item->graphicsItem());
   }
 }
-
-
-CreateLabelCommand::CreateLabelCommand(KstPlotView *view)
-    : KstPlotViewCommand(view, QObject::tr("Create Label")) {
-}
-
-
-CreateLabelCommand::~CreateLabelCommand() {
-}
-
 
 // vim: ts=2 sw=2 et

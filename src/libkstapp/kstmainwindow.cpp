@@ -20,8 +20,10 @@
 KstMainWindow::KstMainWindow() {
 
   _tabWidget = new QTabWidget(this);
-
   _undoGroup = new QUndoGroup(this);
+
+  connect(_tabWidget, SIGNAL(currentChanged(int)),
+          this, SLOT(currentPlotChanged()));
 
   createPlotView();
 
@@ -60,6 +62,7 @@ KstPlotView *KstMainWindow::createPlotView() {
   connect(plotView, SIGNAL(destroyed(QObject*)),
           this, SLOT(plotViewDestroyed(QObject*)));
   _undoGroup->addStack(plotView->undoStack());
+  _undoGroup->setActiveStack(plotView->undoStack());
 
   QString label = plotView->objectName().isEmpty() ?
                   QString("Plot %1").arg(QString::number(_tabWidget->count())) :
@@ -67,6 +70,11 @@ KstPlotView *KstMainWindow::createPlotView() {
 
   _tabWidget->addTab(plotView, label);
   return plotView;
+}
+
+
+void KstMainWindow::currentPlotChanged() {
+  _undoGroup->setActiveStack(currentPlotView()->undoStack());
 }
 
 

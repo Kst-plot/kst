@@ -37,6 +37,7 @@ public:
 private Q_SLOTS:
   void aboutToQuit();
   void about();
+  void currentPlotChanged();
   void plotViewDestroyed(QObject *object);
   void createLabel();
 
