@@ -17,9 +17,9 @@
 
 KstMainWindow::KstMainWindow() {
 
-  _undoGroup = new QUndoGroup(this);
-
   _tabWidget = new QTabWidget(this);
+
+  _undoGroup = new QUndoGroup(this);
 
   createPlotView();
 

@@ -48,8 +48,8 @@ private:
   void writeSettings();
 
 private:
-  QUndoGroup *_undoGroup;
   QTabWidget *_tabWidget;
+  QUndoGroup *_undoGroup;
 
   QMenu *_fileMenu;
   QMenu *_editMenu;
