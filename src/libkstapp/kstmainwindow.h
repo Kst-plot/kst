@@ -62,6 +62,8 @@ private:
   QToolBar *_fileToolBar;
   QToolBar *_editToolBar;
 
+  QAction *_undoAct;
+  QAction *_redoAct;
   QAction *_createLabelAct;
 
   QAction *_exitAct;

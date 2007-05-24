@@ -94,6 +94,9 @@ void KstMainWindow::createLabel() {
 
 
 void KstMainWindow::createActions() {
+  _undoAct = _undoGroup->createUndoAction(this);
+  _redoAct = _undoGroup->createRedoAction(this);
+
   _createLabelAct = new QAction(tr("&Create label"), this);
   _createLabelAct->setStatusTip(tr("Create a label for the current plot"));
   connect(_createLabelAct, SIGNAL(triggered()), this, SLOT(createLabel()));
@@ -118,6 +121,8 @@ void KstMainWindow::createMenus() {
   _fileMenu->addAction(_exitAct);
 
   _editMenu = menuBar()->addMenu(tr("&Edit"));
+  _editMenu->addAction(_undoAct);
+  _editMenu->addAction(_redoAct);
 
   _plotMenu = menuBar()->addMenu(tr("&Plot"));
   _plotMenu->addAction(_createLabelAct);

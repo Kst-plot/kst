@@ -12,7 +12,7 @@
 #include "kstplotview.h"
 #include "kstmainwindow.h"
 #include "kstapplication.h"
-
+#include <QDebug>
 #include <QUndoStack>
 #include <QGraphicsScene>
 
@@ -20,10 +20,7 @@ KstPlotView::KstPlotView()
     : QGraphicsView(kstApp->mainWindow()), _currentPlotItem(0) {
 
   _undoStack = new QUndoStack(this);
-
-  QGraphicsScene *scene = new QGraphicsScene(this);
-  scene->addText("Hello, Kst Plot!");
-  setScene(scene);
+  setScene(new QGraphicsScene(this));
 
 }
 

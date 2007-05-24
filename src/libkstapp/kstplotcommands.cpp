@@ -14,8 +14,10 @@
 #include "kstplotview.h"
 #include "kstplotitems.h"
 
+#include <QDebug>
 #include <QObject>
 #include <QInputDialog>
+#include <QGraphicsScene>
 
 KstPlotViewCommand::KstPlotViewCommand(const QString &text, QUndoCommand *parent)
     : QUndoCommand(text, parent), _view(kstApp->mainWindow()->currentPlotView()) {
@@ -57,7 +59,8 @@ CreateLabelCommand::CreateLabelCommand()
                                        QObject::tr("label:"), QLineEdit::Normal,
                                        QString::null, &ok);
   if (ok && !text.isEmpty()) {
-    //Create the item!!
+    _item = new LabelItem(text, _view);
+    _view->scene()->addItem(_item->graphicsItem());
   }
 }
 

@@ -27,6 +27,17 @@ KstPlotView *KstPlotItem::parentView() const {
   return qobject_cast<KstPlotView*>(parent());
 }
 
+
+LabelItem::LabelItem(const QString &text, KstPlotView *parent)
+    : KstPlotItem(parent), QGraphicsSimpleTextItem(text) {
+
+}
+
+
+LabelItem::~LabelItem() {
+}
+
+
 #include "kstplotitems.moc"
 
 // vim: ts=2 sw=2 et

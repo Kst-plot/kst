@@ -13,6 +13,7 @@
 #define KSTPLOTITEMS_H
 
 #include <QObject>
+#include <QGraphicsSimpleTextItem>
 
 #include "kst_export.h"
 
@@ -28,7 +29,17 @@ public:
 
   KstPlotView *parentView() const;
 
-  virtual QGraphicsItem *graphicsItem() const = 0;
+  virtual QGraphicsItem *graphicsItem() = 0;
+};
+
+class LabelItem : public KstPlotItem, public QGraphicsSimpleTextItem
+{
+  Q_OBJECT
+public:
+  LabelItem(const QString &text, KstPlotView *parent);
+  virtual ~LabelItem();
+
+  virtual QGraphicsItem *graphicsItem() { return this; }
 };
 
 #endif
