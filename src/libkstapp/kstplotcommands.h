@@ -9,8 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTPLOTCOMMAND_H
-#define KSTPLOTCOMMAND_H
+#ifndef KSTPLOTCOMMANDS_H
+#define KSTPLOTCOMMANDS_H
 
 #include <QPointer>
 #include <QUndoCommand>

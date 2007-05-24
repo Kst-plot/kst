@@ -12,6 +12,7 @@
 #include "kstplotcommands.h"
 #include "kstapplication.h"
 #include "kstplotview.h"
+#include "kstplotitems.h"
 
 #include <QObject>
 #include <QInputDialog>

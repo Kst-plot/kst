@@ -9,38 +9,24 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "kstplotitems.h"
 #include "kstplotview.h"
-#include "kstmainwindow.h"
-#include "kstapplication.h"
 
-#include <QUndoStack>
-#include <QGraphicsScene>
+#include <QGraphicsItem>
 
-KstPlotView::KstPlotView()
-    : QGraphicsView(kstApp->mainWindow()), _currentPlotItem(0) {
-
-  _undoStack = new QUndoStack(this);
-
-  QGraphicsScene *scene = new QGraphicsScene(this);
-  scene->addText("Hello, Kst Plot!");
-  setScene(scene);
-
+KstPlotItem::KstPlotItem(KstPlotView *parent)
+    : QObject(parent) {
 }
 
 
-KstPlotView::~KstPlotView() {
+KstPlotItem::~KstPlotItem() {
 }
 
 
-QUndoStack *KstPlotView::undoStack() const {
-  return _undoStack;
+KstPlotView *KstPlotItem::parentView() const {
+  return qobject_cast<KstPlotView*>(parent());
 }
 
-
-KstPlotItem *KstPlotView::currentPlotItem() const {
-  return _currentPlotItem;
-}
-
-#include "kstplotview.moc"
+#include "kstplotitems.moc"
 
 // vim: ts=2 sw=2 et

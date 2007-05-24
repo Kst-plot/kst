@@ -4,6 +4,7 @@ set(kstapp_LIB_SRCS
    kstapplication.cpp
    kstmainwindow.cpp
    kstplotview.cpp
+   kstplotitems.cpp
    kstplotcommands.cpp
    )
 

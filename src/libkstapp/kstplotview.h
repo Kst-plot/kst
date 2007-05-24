@@ -12,25 +12,12 @@
 #ifndef KSTPLOTVIEW_H
 #define KSTPLOTVIEW_H
 
-#include <QObject>
 #include <QGraphicsView>
 
 #include "kst_export.h"
 
 class QUndoStack;
-class KstPlotView;
-
-class KST_EXPORT KstPlotItem : public QObject
-{
-  Q_OBJECT
-public:
-  KstPlotItem(KstPlotView *parent);
-  virtual ~KstPlotItem();
-
-  KstPlotView *parentView() const;
-
-  virtual QGraphicsItem *graphicsItem() const = 0;
-};
+class KstPlotItem;
 
 class KST_EXPORT KstPlotView : public QGraphicsView
 {
