@@ -18,17 +18,39 @@
 #include "kst_export.h"
 
 class KstPlotView;
+class KstPlotItem;
 
-class KST_EXPORT KstPlotCommand : public QUndoCommand
+class KST_EXPORT KstPlotViewCommand : public QUndoCommand
 {
 public:
-  KstPlotCommand(const QString &text, QUndoCommand *parent = 0);
-  KstPlotCommand(KstPlotView *view, const QString &text, QUndoCommand *parent = 0);
-  virtual ~KstPlotCommand();
+  KstPlotViewCommand(const QString &text, QUndoCommand *parent = 0);
+  KstPlotViewCommand(KstPlotView *view, const QString &text, QUndoCommand *parent = 0);
+  virtual ~KstPlotViewCommand();
 
 protected:
   QPointer<KstPlotView> _view;
 };
+
+class KST_EXPORT KstPlotItemCommand : public QUndoCommand
+{
+public:
+  KstPlotItemCommand(const QString &text, QUndoCommand *parent = 0);
+  KstPlotItemCommand(KstPlotItem *item, const QString &text, QUndoCommand *parent = 0);
+  virtual ~KstPlotItemCommand();
+
+protected:
+  QPointer<KstPlotItem> _item;
+};
+
+/*
+  LABEL
+  BOX
+  ELLIPSE
+  LINE
+  ARROW
+  PICTURE
+  PLOT
+*/
 
 #endif
 

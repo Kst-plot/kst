@@ -14,10 +14,21 @@
 #include "kstapplication.h"
 
 #include <QUndoStack>
+#include <QGraphicsItem>
 #include <QGraphicsScene>
 
+
+KstPlotItem::KstPlotItem(KstPlotView *parent)
+    : QObject(parent) {
+}
+
+
+KstPlotItem::~KstPlotItem() {
+}
+
+
 KstPlotView::KstPlotView()
-    : QGraphicsView(kstApp->mainWindow()) {
+    : QGraphicsView(kstApp->mainWindow()), _currentPlotItem(0) {
 
   _undoStack = new QUndoStack(this);
 
@@ -34,6 +45,11 @@ KstPlotView::~KstPlotView() {
 
 QUndoStack *KstPlotView::undoStack() const {
   return _undoStack;
+}
+
+
+KstPlotItem *KstPlotView::currentPlotItem() const {
+  return _currentPlotItem;
 }
 
 #include "kstplotview.moc"

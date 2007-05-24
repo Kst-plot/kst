@@ -13,17 +13,31 @@
 #include "kstapplication.h"
 #include "kstplotview.h"
 
-KstPlotCommand::KstPlotCommand(const QString &text, QUndoCommand *parent)
+KstPlotViewCommand::KstPlotViewCommand(const QString &text, QUndoCommand *parent)
     : QUndoCommand(text, parent), _view(kstApp->mainWindow()->currentPlotView()) {
 }
 
 
-KstPlotCommand::KstPlotCommand(KstPlotView *view, const QString &text, QUndoCommand *parent)
+KstPlotViewCommand::KstPlotViewCommand(KstPlotView *view, const QString &text, QUndoCommand *parent)
     : QUndoCommand(text, parent), _view(view) {
 }
 
 
-KstPlotCommand::~KstPlotCommand() {
+KstPlotViewCommand::~KstPlotViewCommand() {
+}
+
+
+KstPlotItemCommand::KstPlotItemCommand(const QString &text, QUndoCommand *parent)
+    : QUndoCommand(text, parent), _item(kstApp->mainWindow()->currentPlotView()->currentPlotItem()) {
+}
+
+
+KstPlotItemCommand::KstPlotItemCommand(KstPlotItem *item, const QString &text, QUndoCommand *parent)
+    : QUndoCommand(text, parent), _item(item) {
+}
+
+
+KstPlotItemCommand::~KstPlotItemCommand() {
 }
 
 // vim: ts=2 sw=2 et
