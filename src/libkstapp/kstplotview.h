@@ -27,6 +27,8 @@ public:
   KstPlotItem(KstPlotView *parent);
   virtual ~KstPlotItem();
 
+  KstPlotView *parentView() const;
+
   virtual QGraphicsItem *graphicsItem() const = 0;
 };
 

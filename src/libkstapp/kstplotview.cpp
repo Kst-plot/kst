@@ -27,6 +27,11 @@ KstPlotItem::~KstPlotItem() {
 }
 
 
+KstPlotView *KstPlotItem::parentView() const {
+  return qobject_cast<KstPlotView*>(parent());
+}
+
+
 KstPlotView::KstPlotView()
     : QGraphicsView(kstApp->mainWindow()), _currentPlotItem(0) {
 

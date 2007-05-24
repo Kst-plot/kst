@@ -13,13 +13,18 @@
 #include "kstapplication.h"
 #include "kstplotview.h"
 
+#include <QObject>
+#include <QInputDialog>
+
 KstPlotViewCommand::KstPlotViewCommand(const QString &text, QUndoCommand *parent)
     : QUndoCommand(text, parent), _view(kstApp->mainWindow()->currentPlotView()) {
+  _view->undoStack()->push(this);
 }
 
 
 KstPlotViewCommand::KstPlotViewCommand(KstPlotView *view, const QString &text, QUndoCommand *parent)
     : QUndoCommand(text, parent), _view(view) {
+  _view->undoStack()->push(this);
 }
 
 
@@ -29,15 +34,40 @@ KstPlotViewCommand::~KstPlotViewCommand() {
 
 KstPlotItemCommand::KstPlotItemCommand(const QString &text, QUndoCommand *parent)
     : QUndoCommand(text, parent), _item(kstApp->mainWindow()->currentPlotView()->currentPlotItem()) {
+  _item->parentView()->undoStack()->push(this);
 }
 
 
 KstPlotItemCommand::KstPlotItemCommand(KstPlotItem *item, const QString &text, QUndoCommand *parent)
     : QUndoCommand(text, parent), _item(item) {
+  _item->parentView()->undoStack()->push(this);
 }
 
 
 KstPlotItemCommand::~KstPlotItemCommand() {
 }
+
+
+CreateLabelCommand::CreateLabelCommand()
+    : KstPlotViewCommand(QObject::tr("Create Label")) {
+
+  bool ok;
+  QString text = QInputDialog::getText(_view, QObject::tr("label"),
+                                       QObject::tr("label:"), QLineEdit::Normal,
+                                       QString::null, &ok);
+  if (ok && !text.isEmpty()) {
+    //Create the item!!
+  }
+}
+
+
+CreateLabelCommand::CreateLabelCommand(KstPlotView *view)
+    : KstPlotViewCommand(view, QObject::tr("Create Label")) {
+}
+
+
+CreateLabelCommand::~CreateLabelCommand() {
+}
+
 
 // vim: ts=2 sw=2 et

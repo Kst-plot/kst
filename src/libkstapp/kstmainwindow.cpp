@@ -13,6 +13,8 @@
 #include "kstapplication.h"
 #include "kstplotview.h"
 
+#include "kstplotcommands.h"
+
 #include <QtGui>
 
 KstMainWindow::KstMainWindow() {
@@ -86,7 +88,16 @@ void KstMainWindow::about() {
 }
 
 
+void KstMainWindow::createLabel() {
+  new CreateLabelCommand;
+}
+
+
 void KstMainWindow::createActions() {
+  _createLabelAct = new QAction(tr("&Create label"), this);
+  _createLabelAct->setStatusTip(tr("Create a label for the current plot"));
+  connect(_createLabelAct, SIGNAL(triggered()), this, SLOT(createLabel()));
+
   _exitAct = new QAction(tr("E&xit"), this);
   _exitAct->setShortcut(tr("Ctrl+Q"));
   _exitAct->setStatusTip(tr("Exit the application"));
@@ -107,6 +118,9 @@ void KstMainWindow::createMenus() {
   _fileMenu->addAction(_exitAct);
 
   _editMenu = menuBar()->addMenu(tr("&Edit"));
+
+  _plotMenu = menuBar()->addMenu(tr("&Plot"));
+  _plotMenu->addAction(_createLabelAct);
 
   _settingsMenu = menuBar()->addMenu(tr("&Settings"));
 

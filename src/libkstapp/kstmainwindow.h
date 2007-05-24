@@ -38,6 +38,7 @@ private Q_SLOTS:
   void aboutToQuit();
   void about();
   void plotViewDestroyed(QObject *object);
+  void createLabel();
 
 private:
   void createActions();
@@ -54,11 +55,14 @@ private:
 
   QMenu *_fileMenu;
   QMenu *_editMenu;
+  QMenu *_plotMenu;
   QMenu *_settingsMenu;
   QMenu *_helpMenu;
 
   QToolBar *_fileToolBar;
   QToolBar *_editToolBar;
+
+  QAction *_createLabelAct;
 
   QAction *_exitAct;
   QAction *_aboutAct;

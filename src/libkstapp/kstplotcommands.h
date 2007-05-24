@@ -42,6 +42,17 @@ protected:
   QPointer<KstPlotItem> _item;
 };
 
+class KST_EXPORT CreateLabelCommand : public KstPlotViewCommand
+{
+public:
+  CreateLabelCommand();
+  CreateLabelCommand(KstPlotView *view);
+  virtual ~CreateLabelCommand();
+
+protected:
+  QPointer<KstPlotItem> _item;
+};
+
 /*
   LABEL
   BOX
