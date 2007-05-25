@@ -87,6 +87,7 @@ void CreateLabelCommand::createItem() {
   if (ok && !text.isEmpty()) {
     _item = new LabelItem(text, _view);
     _view->scene()->addItem(_item->graphicsItem());
+    _item->graphicsItem()->setZValue(1);
   }
 }
 

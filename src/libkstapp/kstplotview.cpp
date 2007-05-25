@@ -15,6 +15,7 @@
 
 #include <QDebug>
 #include <QUndoStack>
+#include <QResizeEvent>
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 
@@ -80,6 +81,18 @@ bool KstPlotView::eventFilter(QObject *obj, QEvent *event) {
   default:
     return QGraphicsView::eventFilter(obj, event);
   }
+}
+
+
+void KstPlotView::resizeEvent(QResizeEvent *event) {
+  QGraphicsView::resizeEvent(event);
+  setSceneRect(QRectF(0, 0, event->size().width(), event->size().height()));
+
+  //See what I'm doing
+  QLinearGradient l(0,0,0,event->size().height());
+  l.setColorAt(0, Qt::white);
+  l.setColorAt(1, Qt::lightGray);
+  setBackgroundBrush(l);
 }
 
 #include "kstplotview.moc"

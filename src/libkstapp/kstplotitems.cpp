@@ -32,7 +32,6 @@ KstPlotView *KstPlotItem::parentView() const {
 
 LabelItem::LabelItem(const QString &text, KstPlotView *parent)
     : KstPlotItem(parent), QGraphicsSimpleTextItem(text) {
-
 }
 
 
@@ -60,6 +59,7 @@ void LineItem::creationPolygonChanged() {
     parentView()->scene()->addItem(this);
     parentView()->setMouseMode(KstPlotView::Default);
     parentView()->disconnect(this);
+    setZValue(1);
   }
 }
 

@@ -40,6 +40,7 @@ Q_SIGNALS:
 
 protected:
   bool eventFilter(QObject *obj, QEvent *event);
+  void resizeEvent(QResizeEvent *event);
 
 private:
   QUndoStack *_undoStack;
