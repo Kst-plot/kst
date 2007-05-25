@@ -12,6 +12,7 @@
 #ifndef KSTPLOTCOMMANDS_H
 #define KSTPLOTCOMMANDS_H
 
+#include <QObject>
 #include <QPointer>
 #include <QUndoCommand>
 
@@ -23,8 +24,10 @@ class KstPlotItem;
 class KST_EXPORT KstPlotViewCommand : public QUndoCommand
 {
 public:
-  KstPlotViewCommand(const QString &text, QUndoCommand *parent = 0);
-  KstPlotViewCommand(KstPlotView *view, const QString &text, QUndoCommand *parent = 0);
+  KstPlotViewCommand(const QString &text,
+                     bool addToStack = true, QUndoCommand *parent = 0);
+  KstPlotViewCommand(KstPlotView *view, const QString &text,
+                     bool addToStack = true, QUndoCommand *parent = 0);
   virtual ~KstPlotViewCommand();
 
 protected:
@@ -34,16 +37,19 @@ protected:
 class KST_EXPORT KstPlotItemCommand : public QUndoCommand
 {
 public:
-  KstPlotItemCommand(const QString &text, QUndoCommand *parent = 0);
-  KstPlotItemCommand(KstPlotItem *item, const QString &text, QUndoCommand *parent = 0);
+  KstPlotItemCommand(const QString &text,
+                     bool addToStack = true, QUndoCommand *parent = 0);
+  KstPlotItemCommand(KstPlotItem *item, const QString &text,
+                     bool addToStack = true, QUndoCommand *parent = 0);
   virtual ~KstPlotItemCommand();
 
 protected:
   QPointer<KstPlotItem> _item;
 };
 
-class KST_EXPORT CreateCommand : public KstPlotViewCommand
+class KST_EXPORT CreateCommand : public QObject, public KstPlotViewCommand
 {
+  Q_OBJECT
 public:
   CreateCommand(const QString &text, QUndoCommand *parent = 0);
   CreateCommand(KstPlotView *view, const QString &text, QUndoCommand *parent = 0);
@@ -52,6 +58,9 @@ public:
   virtual void undo();
   virtual void redo();
   virtual void createItem() = 0;
+
+public Q_SLOTS:
+  void creationComplete();
 
 protected:
   QPointer<KstPlotItem> _item;

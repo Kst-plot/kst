@@ -19,15 +19,19 @@
 #include <QInputDialog>
 #include <QGraphicsScene>
 
-KstPlotViewCommand::KstPlotViewCommand(const QString &text, QUndoCommand *parent)
+KstPlotViewCommand::KstPlotViewCommand(const QString &text,
+                                       bool addToStack, QUndoCommand *parent)
     : QUndoCommand(text, parent), _view(kstApp->mainWindow()->currentPlotView()) {
-  _view->undoStack()->push(this);
+  if (addToStack)
+    _view->undoStack()->push(this);
 }
 
 
-KstPlotViewCommand::KstPlotViewCommand(KstPlotView *view, const QString &text, QUndoCommand *parent)
+KstPlotViewCommand::KstPlotViewCommand(KstPlotView *view, const QString &text,
+                                       bool addToStack, QUndoCommand *parent)
     : QUndoCommand(text, parent), _view(view) {
-  _view->undoStack()->push(this);
+  if (addToStack)
+    _view->undoStack()->push(this);
 }
 
 
@@ -35,15 +39,19 @@ KstPlotViewCommand::~KstPlotViewCommand() {
 }
 
 
-KstPlotItemCommand::KstPlotItemCommand(const QString &text, QUndoCommand *parent)
+KstPlotItemCommand::KstPlotItemCommand(const QString &text,
+                                       bool addToStack, QUndoCommand *parent)
     : QUndoCommand(text, parent), _item(kstApp->mainWindow()->currentPlotView()->currentPlotItem()) {
-  _item->parentView()->undoStack()->push(this);
+  if (addToStack)
+    _item->parentView()->undoStack()->push(this);
 }
 
 
-KstPlotItemCommand::KstPlotItemCommand(KstPlotItem *item, const QString &text, QUndoCommand *parent)
+KstPlotItemCommand::KstPlotItemCommand(KstPlotItem *item, const QString &text,
+                                       bool addToStack, QUndoCommand *parent)
     : QUndoCommand(text, parent), _item(item) {
-  _item->parentView()->undoStack()->push(this);
+  if (addToStack)
+    _item->parentView()->undoStack()->push(this);
 }
 
 
@@ -52,12 +60,12 @@ KstPlotItemCommand::~KstPlotItemCommand() {
 
 
 CreateCommand::CreateCommand(const QString &text, QUndoCommand *parent)
-    : KstPlotViewCommand(text, parent) {
+    : KstPlotViewCommand(text, false, parent) {
 }
 
 
 CreateCommand::CreateCommand(KstPlotView *view, const QString &text, QUndoCommand *parent)
-    : KstPlotViewCommand(view, text, parent) {
+    : KstPlotViewCommand(view, text, false, parent) {
 }
 
 
@@ -79,6 +87,11 @@ void CreateCommand::redo() {
 }
 
 
+void CreateCommand::creationComplete() {
+  _view->undoStack()->push(this);
+}
+
+
 void CreateLabelCommand::createItem() {
   bool ok;
   QString text = QInputDialog::getText(_view, QObject::tr("label"),
@@ -88,12 +101,26 @@ void CreateLabelCommand::createItem() {
     _item = new LabelItem(text, _view);
     _view->scene()->addItem(_item->graphicsItem());
     _item->graphicsItem()->setZValue(1);
+
+    //If the item is interrupted while creating itself it will destroy itself
+    //need to delete this too in response...
+    connect(_item, SIGNAL(destroyed(QObject*)), this, SLOT(deleteLater()));
+
+    creationComplete();
   }
+
 }
 
 
 void CreateLineCommand::createItem() {
-    _item = new LineItem(_view);
+  _item = new LineItem(_view);
+  connect(_item, SIGNAL(creationComplete()), this, SLOT(creationComplete()));
+
+  //If the item is interrupted while creating itself it will destroy itself
+  //need to delete this too in response...
+  connect(_item, SIGNAL(destroyed(QObject*)), this, SLOT(deleteLater()));
 }
+
+#include "kstplotcommands.moc"
 
 // vim: ts=2 sw=2 et

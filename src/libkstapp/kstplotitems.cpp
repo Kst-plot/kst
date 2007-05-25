@@ -74,6 +74,11 @@ LineItem::LineItem(KstPlotView *parent)
     : KstPlotItem(parent) {
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
   parent->setMouseMode(KstPlotView::Create);
+
+  //If the mouseMode is changed again before we're done with creation
+  //delete ourself.
+  connect(parent, SIGNAL(mouseModeChanged()), this, SLOT(deleteLater()));
+
   connect(parent, SIGNAL(creationPolygonChanged(KstPlotView::CreationEvent)),
           this, SLOT(creationPolygonChanged(KstPlotView::CreationEvent)));
 }
@@ -102,8 +107,10 @@ void LineItem::creationPolygonChanged(KstPlotView::CreationEvent event) {
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(KstPlotView::MouseRelease));
     setLine(QLineF(line().p1(), poly.last())); //start and end
     updateAspectFromGeometry();
-    parentView()->setMouseMode(KstPlotView::Default);
+    parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
     parentView()->disconnect(this, SLOT(creationPolygonChanged(KstPlotView::CreationEvent)));
+    parentView()->setMouseMode(KstPlotView::Default);
+    emit creationComplete();
     return;
   }
 }

@@ -33,6 +33,9 @@ public:
 
   virtual QGraphicsItem *graphicsItem() = 0;
 
+Q_SIGNALS:
+  void creationComplete();
+
 public Q_SLOTS:
   void updateAspectFromGeometry();
   void updateGeometry();

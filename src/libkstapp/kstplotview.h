@@ -43,6 +43,7 @@ public:
   QPolygonF creationPolygon(CreationEvents events) const;
 
 Q_SIGNALS:
+  void mouseModeChanged();
   void creationPolygonChanged(KstPlotView::CreationEvent event);
   void resized();
 

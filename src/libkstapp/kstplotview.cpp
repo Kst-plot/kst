@@ -59,6 +59,8 @@ void KstPlotView::setMouseMode(MouseMode mode) {
   }
 
   _mouseMode = mode;
+
+  emit mouseModeChanged();
 }
 
 
