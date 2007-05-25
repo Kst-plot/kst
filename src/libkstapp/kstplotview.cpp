@@ -26,6 +26,8 @@ KstPlotView::KstPlotView()
   _undoStack = new QUndoStack(this);
   setScene(new QGraphicsScene(this));
   scene()->installEventFilter(this);
+
+  setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
 }
 
 
