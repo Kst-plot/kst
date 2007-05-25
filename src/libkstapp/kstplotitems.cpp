@@ -92,7 +92,7 @@ void LineItem::creationPolygonChanged() {
     setLine(QLineF(poly[0], poly[1]));
     parentView()->scene()->addItem(this);
     parentView()->setMouseMode(KstPlotView::Default);
-    parentView()->disconnect(this);
+    parentView()->disconnect(this, SLOT(creationPolygonChanged()));
     setZValue(1);
     updateAspectFromGeometry();
   }
