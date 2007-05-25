@@ -23,7 +23,14 @@ class KST_EXPORT KstPlotView : public QGraphicsView
 {
   Q_OBJECT
 public:
-  enum MouseMode { Default, Move, CreateRubberBand, CreateClosedPath, CreateOpenPath, CreatePoints };
+  enum MouseMode { Default, Move, Create };
+  enum CreationEvent {
+    MousePress = 0x0,
+    MouseRelease =0x1,
+    MouseMove = 0x2
+  };
+  Q_DECLARE_FLAGS(CreationEvents, CreationEvent)
+
   KstPlotView();
   virtual ~KstPlotView();
 
@@ -33,12 +40,10 @@ public:
   MouseMode mouseMode() const;
   void setMouseMode(MouseMode mode);
 
-  bool isMouseCreateMode() const;
-
-  QPolygonF creationPolygon() const;
+  QPolygonF creationPolygon(CreationEvents events) const;
 
 Q_SIGNALS:
-  void creationPolygonChanged();
+  void creationPolygonChanged(KstPlotView::CreationEvent event);
   void resized();
 
 protected:
@@ -49,7 +54,9 @@ private:
   QUndoStack *_undoStack;
   KstPlotItem *_currentPlotItem;
   MouseMode _mouseMode;
-  QPolygonF _creationPolygon;
+  QPolygonF _creationPolygonPress;
+  QPolygonF _creationPolygonMove;
+  QPolygonF _creationPolygonRelease;
 };
 
 #endif

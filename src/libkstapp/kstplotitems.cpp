@@ -10,7 +10,6 @@
  ***************************************************************************/
 
 #include "kstplotitems.h"
-#include "kstplotview.h"
 
 #include <assert.h>
 
@@ -76,9 +75,9 @@ LabelItem::~LabelItem() {
 LineItem::LineItem(KstPlotView *parent)
     : KstPlotItem(parent) {
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
-  parent->setMouseMode(KstPlotView::CreateClosedPath);
-  connect(parent, SIGNAL(creationPolygonChanged()),
-          this, SLOT(creationPolygonChanged()));
+  parent->setMouseMode(KstPlotView::Create);
+  connect(parent, SIGNAL(creationPolygonChanged(KstPlotView::CreationEvent)),
+          this, SLOT(creationPolygonChanged(KstPlotView::CreationEvent)));
 }
 
 
@@ -86,15 +85,28 @@ LineItem::~LineItem() {
 }
 
 
-void LineItem::creationPolygonChanged() {
-  const QPolygonF poly = mapFromScene(parentView()->creationPolygon());
-  if (poly.count() > 1) {
-    setLine(QLineF(poly[0], poly[1]));
+void LineItem::creationPolygonChanged(KstPlotView::CreationEvent event) {
+  if (event == KstPlotView::MousePress) {
+    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(KstPlotView::MousePress));
+    setLine(QLineF(poly[0], poly[0])); //start and end
     parentView()->scene()->addItem(this);
-    parentView()->setMouseMode(KstPlotView::Default);
-    parentView()->disconnect(this, SLOT(creationPolygonChanged()));
     setZValue(1);
+    return;
+  }
+
+  if (event == KstPlotView::MouseMove) {
+    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(KstPlotView::MouseMove));
+    setLine(QLineF(line().p1(), poly.last())); //start and end
+    return;
+  }
+
+  if (event == KstPlotView::MouseRelease) {
+    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(KstPlotView::MouseRelease));
+    setLine(QLineF(line().p1(), poly.last())); //start and end
     updateAspectFromGeometry();
+    parentView()->setMouseMode(KstPlotView::Default);
+    parentView()->disconnect(this, SLOT(creationPolygonChanged(KstPlotView::CreationEvent)));
+    return;
   }
 }
 

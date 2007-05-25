@@ -52,50 +52,63 @@ KstPlotView::MouseMode KstPlotView::mouseMode() const {
 
 void KstPlotView::setMouseMode(MouseMode mode) {
 
-  if (isMouseCreateMode()) {
-    _creationPolygon.clear();
+  if (_mouseMode == Create) {
+    _creationPolygonPress.clear();
+    _creationPolygonRelease.clear();
+    _creationPolygonMove.clear();
   }
 
   _mouseMode = mode;
 }
 
 
-bool KstPlotView::isMouseCreateMode() const {
-  switch (_mouseMode) {
-  case CreateRubberBand:
-  case CreateClosedPath:
-  case CreateOpenPath:
-  case CreatePoints:
-    return true;
-  case Default:
-  case Move:
-  default:
-    return false;
-  }
-}
-
-
-QPolygonF KstPlotView::creationPolygon() const {
-  return _creationPolygon;
+QPolygonF KstPlotView::creationPolygon(CreationEvents events) const {
+#if 0
+  QPolygonF resultSet;
+  if (events & KstPlotView::MousePress)
+    resultSet = resultSet.united(_creationPolygonPress);
+  if (events & KstPlotView::MouseRelease)
+    resultSet = resultSet.united(_creationPolygonRelease);
+  if (events & KstPlotView::MouseMove)
+    resultSet = resultSet.united(_creationPolygonMove);
+  return resultSet;
+#endif
+  if (events == KstPlotView::MousePress)
+     return _creationPolygonPress;
+  if (events == KstPlotView::MouseRelease)
+     return _creationPolygonRelease;
+  if (events == KstPlotView::MouseMove)
+     return _creationPolygonMove;
+  return QPolygonF();
 }
 
 
 bool KstPlotView::eventFilter(QObject *obj, QEvent *event) {
-  if (obj != scene())
+  if (obj != scene() || _mouseMode != Create)
     return QGraphicsView::eventFilter(obj, event);
 
   switch (event->type()) {
   case QEvent::GraphicsSceneMousePress:
     {
       QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
-      if (isMouseCreateMode()) {
-        _creationPolygon << e->buttonDownScenePos(Qt::LeftButton);
-        emit creationPolygonChanged();
-        return false;
-      }
+      _creationPolygonPress << e->buttonDownScenePos(Qt::LeftButton);
+      emit creationPolygonChanged(MousePress);
+      return false;
     }
   case QEvent::GraphicsSceneMouseRelease:
+    {
+      QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
+      _creationPolygonRelease << e->scenePos();
+      emit creationPolygonChanged(MouseRelease);
+      return false;
+    }
   case QEvent::GraphicsSceneMouseMove:
+    {
+      QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
+      _creationPolygonMove << e->scenePos();
+      emit creationPolygonChanged(MouseMove);
+      return false;
+    }
   default:
     return QGraphicsView::eventFilter(obj, event);
   }

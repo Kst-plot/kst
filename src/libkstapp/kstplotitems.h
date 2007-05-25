@@ -18,8 +18,9 @@
 
 #include "kst_export.h"
 
+#include "kstplotview.h" //forward declare, but enums??
+
 class QGraphicsItem;
-class KstPlotView;
 
 class KST_EXPORT KstPlotItem : public QObject
 {
@@ -61,7 +62,7 @@ public:
   virtual QGraphicsItem *graphicsItem() { return this; }
 
 private Q_SLOTS:
-  void creationPolygonChanged();
+  void creationPolygonChanged(KstPlotView::CreationEvent event);
 };
 
 #endif
