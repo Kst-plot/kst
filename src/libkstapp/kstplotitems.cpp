@@ -11,17 +11,12 @@
 
 #include "kstplotitems.h"
 
-#include <assert.h>
-
 #include <QDebug>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 
 KstPlotItem::KstPlotItem(KstPlotView *parent)
     : QObject(parent) {
-  _aspectPos = QPointF(50, 50);
-  _aspectSize = QSizeF(50, 50);
-  qDebug() << "CONNECT";
   connect(parent, SIGNAL(resized()), this, SLOT(updateGeometry()));
 }
 
@@ -37,27 +32,30 @@ KstPlotView *KstPlotItem::parentView() const {
 
 void KstPlotItem::updateAspectFromGeometry() {
   KstPlotView *v = parentView();
-  assert(v);
+  Q_ASSERT(v);
   QGraphicsItem *i = graphicsItem();
-  assert(i);
-  _aspectPos = QPointF(100.0 * i->scenePos().x() / v->width(), 100.0 * i->scenePos().y() / v->height());
-  _aspectSize = QSizeF(100.0 * i->boundingRect().width() / v->width(), 100.0 * i->boundingRect().height() / v->height());
-  qDebug() << "update aspect to" << _aspectPos << _aspectSize;
+  Q_ASSERT(i);
+
+  _aspectPos = QPointF(100.0 * i->scenePos().x() / v->width(),
+                       100.0 * i->scenePos().y() / v->height());
+  _aspectSize = QSizeF(100.0 * i->boundingRect().width() / v->width(),
+                       100.0 * i->boundingRect().height() / v->height());
 }
 
 
 void KstPlotItem::updateGeometry() {
-  qDebug("RESIZE");
-  //prepareGeometryChange();
   KstPlotView *v = parentView();
-  assert(v);
+  Q_ASSERT(v);
   QGraphicsItem *i = graphicsItem();
-  assert(i);
-  qDebug() << "Pos was" << i->scenePos();
-  i->setPos(_aspectPos.x() * v->width() / 100.0, _aspectPos.y() * v->height() / 100.0);
-  i->scale(_aspectSize.width() * v->width() / (i->boundingRect().width() * 100.0), _aspectSize.height() * v->height() / (i->boundingRect().height() * 100.0));
-  qDebug() << "Pos is now" << i->scenePos();
-  i->update();
+  Q_ASSERT(i);
+
+  i->setPos(_aspectPos.x() * v->width() / 100.0,
+            _aspectPos.y() * v->height() / 100.0);
+  qreal sx = _aspectSize.width() * v->width() / (i->boundingRect().width() * 100.0);
+  qreal sy = _aspectSize.height() * v->height() / (i->boundingRect().height() * 100.0);
+  i->scale(sx, sy);
+
+  updateAspectFromGeometry();
 }
 
 
