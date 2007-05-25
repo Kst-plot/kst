@@ -14,6 +14,7 @@
 
 #include <QDebug>
 #include <QGraphicsItem>
+#include <QGraphicsScene>
 
 KstPlotItem::KstPlotItem(KstPlotView *parent)
     : QObject(parent) {
@@ -39,11 +40,28 @@ LabelItem::~LabelItem() {
 }
 
 
-void LabelItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-  qDebug() << "LabelItem::mousePressEvent" << endl;
-  QGraphicsItem::mousePressEvent(event);
+LineItem::LineItem(KstPlotView *parent)
+    : KstPlotItem(parent) {
+
+  parent->setMouseMode(KstPlotView::Create);
+  connect(parent, SIGNAL(creationPolygonChanged()),
+          this, SLOT(creationPolygonChanged()));
 }
 
+
+LineItem::~LineItem() {
+}
+
+
+void LineItem::creationPolygonChanged() {
+  const QPolygonF poly = mapFromScene(parentView()->creationPolygon());
+  if (poly.count() > 1) {
+    setLine(QLineF(poly[0], poly[1]));
+    parentView()->scene()->addItem(this);
+    parentView()->setMouseMode(KstPlotView::Default);
+    parentView()->disconnect(this);
+  }
+}
 
 #include "kstplotitems.moc"
 

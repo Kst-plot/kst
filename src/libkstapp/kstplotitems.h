@@ -13,6 +13,7 @@
 #define KSTPLOTITEMS_H
 
 #include <QObject>
+#include <QGraphicsLineItem>
 #include <QGraphicsSimpleTextItem>
 
 #include "kst_export.h"
@@ -40,8 +41,19 @@ public:
   virtual ~LabelItem();
 
   virtual QGraphicsItem *graphicsItem() { return this; }
+};
 
-  virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+class LineItem : public KstPlotItem, public QGraphicsLineItem
+{
+  Q_OBJECT
+public:
+  LineItem(KstPlotView *parent);
+  virtual ~LineItem();
+
+  virtual QGraphicsItem *graphicsItem() { return this; }
+
+private Q_SLOTS:
+  void creationPolygonChanged();
 };
 
 #endif

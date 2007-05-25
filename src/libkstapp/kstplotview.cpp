@@ -70,7 +70,7 @@ bool KstPlotView::eventFilter(QObject *obj, QEvent *event) {
     {
       QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
       if (_mouseMode == Create) {
-        _creationPolygon << e->buttonDownScreenPos(Qt::LeftButton);
+        _creationPolygon << e->buttonDownScenePos(Qt::LeftButton);
         emit creationPolygonChanged();
         return false;
       }

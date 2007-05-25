@@ -92,7 +92,7 @@ void CreateLabelCommand::createItem() {
 
 
 void CreateLineCommand::createItem() {
-  /*nada yet*/
+    _item = new LineItem(_view);
 }
 
 // vim: ts=2 sw=2 et
