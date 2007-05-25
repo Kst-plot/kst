@@ -44,7 +44,7 @@ kde4_add_library(kstmath SHARED ${kstmath_LIB_SRCS})
 
 target_link_libraries(kstmath  ${KDE4_KDECORE_LIBS} kst )
 
-set_target_properties(kstmath PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 1 )
+set_target_properties(kstmath PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 2 )
 install(TARGETS kstmath DESTINATION ${LIB_INSTALL_DIR} )
 
 

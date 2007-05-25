@@ -20,7 +20,7 @@ kde4_add_library(kstextdate SHARED ${kstextdate_LIB_SRCS})
 
 target_link_libraries(kstextdate  ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} )
 
-set_target_properties(kstextdate PROPERTIES VERSION 1.2.0 SOVERSION 1 )
+set_target_properties(kstextdate PROPERTIES VERSION 1.2.0 SOVERSION 2 )
 install(TARGETS kstextdate DESTINATION ${LIB_INSTALL_DIR} )
 
 

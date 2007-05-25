@@ -10,7 +10,7 @@ kde4_add_library(fitstools STATIC ${fitstools_LIB_SRCS})
 
 target_link_libraries(fitstools  ${KDE4_KDECORE_LIBS} qt )
 
-set_target_properties(fitstools PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 1)
+set_target_properties(fitstools PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 2)
 install(TARGETS fitstools DESTINATION ${LIB_INSTALL_DIR} )
 
 

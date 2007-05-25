@@ -47,7 +47,7 @@ kde4_add_library(kst SHARED ${kst_LIB_SRCS})
 # target_link_libraries(kst kstextdate)
 target_link_libraries(kst ${KDE4_KDECORE_LIBS} ${KDE4_KDE3SUPPORT_LIBS})
 
-set_target_properties(kst PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 1)
+set_target_properties(kst PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 2)
 install(TARGETS kst DESTINATION ${LIB_INSTALL_DIR})
 
 

@@ -51,7 +51,7 @@ kde4_add_library(kstwidgets SHARED ${kstwidgets_LIB_SRCS})
 
 target_link_libraries(kstwidgets ${KDE4_KDECORE_LIBS} kstmath)
 
-set_target_properties(kstwidgets PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 1)
+set_target_properties(kstwidgets PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 2)
 install(TARGETS kstwidgets DESTINATION ${LIB_INSTALL_DIR})
 
 ########### next target ###############

@@ -14,5 +14,5 @@ kde4_add_library(kstapp SHARED ${kstapp_LIB_SRCS})
 
 target_link_libraries(kstapp kstmath)
 
-set_target_properties(kstapp PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 1)
+set_target_properties(kstapp PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 2)
 install(TARGETS kstapp DESTINATION ${LIB_INSTALL_DIR} )
