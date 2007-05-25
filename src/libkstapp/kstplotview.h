@@ -23,7 +23,7 @@ class KST_EXPORT KstPlotView : public QGraphicsView
 {
   Q_OBJECT
 public:
-  enum MouseMode { Default, Move, Create };
+  enum MouseMode { Default, Move, CreateRubberBand, CreateClosedPath, CreateOpenPath, CreatePoints };
   KstPlotView();
   virtual ~KstPlotView();
 
@@ -32,6 +32,8 @@ public:
 
   MouseMode mouseMode() const;
   void setMouseMode(MouseMode mode);
+
+  bool isMouseCreateMode() const;
 
   QPolygonF creationPolygon() const;
 

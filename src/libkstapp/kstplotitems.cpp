@@ -76,7 +76,7 @@ LabelItem::~LabelItem() {
 LineItem::LineItem(KstPlotView *parent)
     : KstPlotItem(parent) {
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
-  parent->setMouseMode(KstPlotView::Create);
+  parent->setMouseMode(KstPlotView::CreateClosedPath);
   connect(parent, SIGNAL(creationPolygonChanged()),
           this, SLOT(creationPolygonChanged()));
 }

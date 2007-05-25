@@ -52,10 +52,26 @@ KstPlotView::MouseMode KstPlotView::mouseMode() const {
 
 void KstPlotView::setMouseMode(MouseMode mode) {
 
-  if (_mouseMode == Create)
+  if (isMouseCreateMode()) {
     _creationPolygon.clear();
+  }
 
   _mouseMode = mode;
+}
+
+
+bool KstPlotView::isMouseCreateMode() const {
+  switch (_mouseMode) {
+  case CreateRubberBand:
+  case CreateClosedPath:
+  case CreateOpenPath:
+  case CreatePoints:
+    return true;
+  case Default:
+  case Move:
+  default:
+    return false;
+  }
 }
 
 
@@ -72,7 +88,7 @@ bool KstPlotView::eventFilter(QObject *obj, QEvent *event) {
   case QEvent::GraphicsSceneMousePress:
     {
       QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
-      if (_mouseMode == Create) {
+      if (isMouseCreateMode()) {
         _creationPolygon << e->buttonDownScenePos(Qt::LeftButton);
         emit creationPolygonChanged();
         return false;
