@@ -37,6 +37,7 @@ public:
 
 Q_SIGNALS:
   void creationPolygonChanged();
+  void resized();
 
 protected:
   bool eventFilter(QObject *obj, QEvent *event);

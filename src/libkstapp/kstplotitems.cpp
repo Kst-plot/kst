@@ -12,12 +12,18 @@
 #include "kstplotitems.h"
 #include "kstplotview.h"
 
+#include <assert.h>
+
 #include <QDebug>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 
 KstPlotItem::KstPlotItem(KstPlotView *parent)
     : QObject(parent) {
+  _aspectPos = QPointF(50, 50);
+  _aspectSize = QSizeF(50, 50);
+  qDebug() << "CONNECT";
+  connect(parent, SIGNAL(resized()), this, SLOT(updateGeometry()));
 }
 
 
@@ -30,8 +36,36 @@ KstPlotView *KstPlotItem::parentView() const {
 }
 
 
+void KstPlotItem::updateAspectFromGeometry() {
+  KstPlotView *v = parentView();
+  assert(v);
+  QGraphicsItem *i = graphicsItem();
+  assert(i);
+  _aspectPos = QPointF(100.0 * i->scenePos().x() / v->width(), 100.0 * i->scenePos().y() / v->height());
+  _aspectSize = QSizeF(100.0 * i->boundingRect().width() / v->width(), 100.0 * i->boundingRect().height() / v->height());
+  qDebug() << "update aspect to" << _aspectPos << _aspectSize;
+}
+
+
+void KstPlotItem::updateGeometry() {
+  qDebug("RESIZE");
+  //prepareGeometryChange();
+  KstPlotView *v = parentView();
+  assert(v);
+  QGraphicsItem *i = graphicsItem();
+  assert(i);
+  qDebug() << "Pos was" << i->scenePos();
+  i->setPos(_aspectPos.x() * v->width() / 100.0, _aspectPos.y() * v->height() / 100.0);
+  i->scale(_aspectSize.width() * v->width() / (i->boundingRect().width() * 100.0), _aspectSize.height() * v->height() / (i->boundingRect().height() * 100.0));
+  qDebug() << "Pos is now" << i->scenePos();
+  i->update();
+}
+
+
 LabelItem::LabelItem(const QString &text, KstPlotView *parent)
     : KstPlotItem(parent), QGraphicsSimpleTextItem(text) {
+  updateAspectFromGeometry();
+  setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
 }
 
 
@@ -41,7 +75,7 @@ LabelItem::~LabelItem() {
 
 LineItem::LineItem(KstPlotView *parent)
     : KstPlotItem(parent) {
-
+  setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
   parent->setMouseMode(KstPlotView::Create);
   connect(parent, SIGNAL(creationPolygonChanged()),
           this, SLOT(creationPolygonChanged()));
@@ -60,6 +94,7 @@ void LineItem::creationPolygonChanged() {
     parentView()->setMouseMode(KstPlotView::Default);
     parentView()->disconnect(this);
     setZValue(1);
+    updateAspectFromGeometry();
   }
 }
 

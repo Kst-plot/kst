@@ -31,6 +31,14 @@ public:
   KstPlotView *parentView() const;
 
   virtual QGraphicsItem *graphicsItem() = 0;
+
+public Q_SLOTS:
+  void updateAspectFromGeometry();
+  void updateGeometry();
+
+private:
+  QPointF _aspectPos;   // In % from 0.0 to 100.0
+  QSizeF _aspectSize;   // In % from 0.0 to 100.0
 };
 
 class LabelItem : public KstPlotItem, public QGraphicsSimpleTextItem

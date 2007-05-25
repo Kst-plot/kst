@@ -26,7 +26,7 @@ KstPlotView::KstPlotView()
   _undoStack = new QUndoStack(this);
   setScene(new QGraphicsScene(this));
   scene()->installEventFilter(this);
-
+  setInteractive(true);
   setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
 }
 
@@ -95,6 +95,8 @@ void KstPlotView::resizeEvent(QResizeEvent *event) {
   l.setColorAt(0, Qt::white);
   l.setColorAt(1, Qt::lightGray);
   setBackgroundBrush(l);
+
+  emit resized();
 }
 
 #include "kstplotview.moc"
