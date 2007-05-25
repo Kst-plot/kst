@@ -23,16 +23,29 @@ class KST_EXPORT KstPlotView : public QGraphicsView
 {
   Q_OBJECT
 public:
+  enum MouseMode { Default, Move, Create };
   KstPlotView();
   virtual ~KstPlotView();
 
   QUndoStack *undoStack() const;
-
   KstPlotItem* currentPlotItem() const;
+
+  MouseMode mouseMode() const;
+  void setMouseMode(MouseMode mode);
+
+  QPolygonF creationPolygon() const;
+
+Q_SIGNALS:
+  void creationPolygonChanged();
+
+protected:
+  bool eventFilter(QObject *obj, QEvent *event);
 
 private:
   QUndoStack *_undoStack;
   KstPlotItem *_currentPlotItem;
+  MouseMode _mouseMode;
+  QPolygonF _creationPolygon;
 };
 
 #endif

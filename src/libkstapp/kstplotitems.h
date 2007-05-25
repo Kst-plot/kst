@@ -40,6 +40,8 @@ public:
   virtual ~LabelItem();
 
   virtual QGraphicsItem *graphicsItem() { return this; }
+
+  virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
 };
 
 #endif

@@ -42,21 +42,37 @@ protected:
   QPointer<KstPlotItem> _item;
 };
 
-class KST_EXPORT CreateLabelCommand : public KstPlotViewCommand
+class KST_EXPORT CreateCommand : public KstPlotViewCommand
 {
 public:
-  CreateLabelCommand();
-  CreateLabelCommand(KstPlotView *view);
-  virtual ~CreateLabelCommand();
+  CreateCommand(const QString &text, QUndoCommand *parent = 0);
+  CreateCommand(KstPlotView *view, const QString &text, QUndoCommand *parent = 0);
+  virtual ~CreateCommand();
 
   virtual void undo();
   virtual void redo();
-
-private:
-  void createItem();
+  virtual void createItem() = 0;
 
 protected:
   QPointer<KstPlotItem> _item;
+};
+
+class KST_EXPORT CreateLabelCommand : public CreateCommand
+{
+public:
+  CreateLabelCommand() : CreateCommand(QObject::tr("Create Label")) {}
+  CreateLabelCommand(KstPlotView *view): CreateCommand(view, QObject::tr("Create Label")) {}
+  virtual ~CreateLabelCommand() {}
+  virtual void createItem();
+};
+
+class KST_EXPORT CreateLineCommand : public CreateCommand
+{
+public:
+  CreateLineCommand() : CreateCommand(QObject::tr("Create Line")) {}
+  CreateLineCommand(KstPlotView *view) : CreateCommand(view, QObject::tr("Create Line")) {}
+  virtual ~CreateLineCommand() {}
+  virtual void createItem();
 };
 
 /*

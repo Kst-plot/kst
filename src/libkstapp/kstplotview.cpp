@@ -12,16 +12,19 @@
 #include "kstplotview.h"
 #include "kstmainwindow.h"
 #include "kstapplication.h"
+
 #include <QDebug>
 #include <QUndoStack>
 #include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
 
 KstPlotView::KstPlotView()
-    : QGraphicsView(kstApp->mainWindow()), _currentPlotItem(0) {
+    : QGraphicsView(kstApp->mainWindow()),
+      _currentPlotItem(0), _mouseMode(Default) {
 
   _undoStack = new QUndoStack(this);
   setScene(new QGraphicsScene(this));
-
+  scene()->installEventFilter(this);
 }
 
 
@@ -36,6 +39,47 @@ QUndoStack *KstPlotView::undoStack() const {
 
 KstPlotItem *KstPlotView::currentPlotItem() const {
   return _currentPlotItem;
+}
+
+
+KstPlotView::MouseMode KstPlotView::mouseMode() const {
+  return _mouseMode;
+}
+
+
+void KstPlotView::setMouseMode(MouseMode mode) {
+
+  if (_mouseMode == Create)
+    _creationPolygon.clear();
+
+  _mouseMode = mode;
+}
+
+
+QPolygonF KstPlotView::creationPolygon() const {
+  return _creationPolygon;
+}
+
+
+bool KstPlotView::eventFilter(QObject *obj, QEvent *event) {
+  if (obj != scene())
+    return QGraphicsView::eventFilter(obj, event);
+
+  switch (event->type()) {
+  case QEvent::GraphicsSceneMousePress:
+    {
+      QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
+      if (_mouseMode == Create) {
+        _creationPolygon << e->buttonDownScreenPos(Qt::LeftButton);
+        emit creationPolygonChanged();
+        return false;
+      }
+    }
+  case QEvent::GraphicsSceneMouseRelease:
+  case QEvent::GraphicsSceneMouseMove:
+  default:
+    return QGraphicsView::eventFilter(obj, event);
+  }
 }
 
 #include "kstplotview.moc"

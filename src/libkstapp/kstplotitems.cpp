@@ -12,6 +12,7 @@
 #include "kstplotitems.h"
 #include "kstplotview.h"
 
+#include <QDebug>
 #include <QGraphicsItem>
 
 KstPlotItem::KstPlotItem(KstPlotView *parent)
@@ -35,6 +36,12 @@ LabelItem::LabelItem(const QString &text, KstPlotView *parent)
 
 
 LabelItem::~LabelItem() {
+}
+
+
+void LabelItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+  qDebug() << "LabelItem::mousePressEvent" << endl;
+  QGraphicsItem::mousePressEvent(event);
 }
 
 

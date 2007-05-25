@@ -97,7 +97,8 @@ void KstMainWindow::about() {
 
 
 void KstMainWindow::createLabel() {
-  new CreateLabelCommand;
+  CreateLabelCommand *cmd = new CreateLabelCommand;
+  cmd->createItem();
 }
 
 

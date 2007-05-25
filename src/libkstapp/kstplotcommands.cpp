@@ -51,34 +51,33 @@ KstPlotItemCommand::~KstPlotItemCommand() {
 }
 
 
-CreateLabelCommand::CreateLabelCommand()
-    : KstPlotViewCommand(QObject::tr("Create Label")) {
-  createItem();
+CreateCommand::CreateCommand(const QString &text, QUndoCommand *parent)
+    : KstPlotViewCommand(text, parent) {
 }
 
 
-CreateLabelCommand::CreateLabelCommand(KstPlotView *view)
-    : KstPlotViewCommand(view, QObject::tr("Create Label")) {
-  createItem();
+CreateCommand::CreateCommand(KstPlotView *view, const QString &text, QUndoCommand *parent)
+    : KstPlotViewCommand(view, text, parent) {
 }
 
 
-CreateLabelCommand::~CreateLabelCommand() {
+CreateCommand::~CreateCommand() {
 }
 
 
-void CreateLabelCommand::undo() {
+void CreateCommand::undo() {
   if (_item)
     _item->graphicsItem()->hide();
 }
 
 
-void CreateLabelCommand::redo() {
+void CreateCommand::redo() {
   if (!_item)
     createItem();
 
   _item->graphicsItem()->show();
 }
+
 
 void CreateLabelCommand::createItem() {
   bool ok;
@@ -89,6 +88,11 @@ void CreateLabelCommand::createItem() {
     _item = new LabelItem(text, _view);
     _view->scene()->addItem(_item->graphicsItem());
   }
+}
+
+
+void CreateLineCommand::createItem() {
+  /*nada yet*/
 }
 
 // vim: ts=2 sw=2 et
