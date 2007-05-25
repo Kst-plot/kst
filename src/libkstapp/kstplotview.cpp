@@ -116,18 +116,21 @@ bool KstPlotView::eventFilter(QObject *obj, QEvent *event) {
   }
 }
 
+void KstPlotView::setVisible(bool visible) {
+  QGraphicsView::setVisible(visible);
 
-void KstPlotView::resizeEvent(QResizeEvent *event) {
-  QGraphicsView::resizeEvent(event);
-  setSceneRect(QRectF(0, 0, event->size().width(), event->size().height()));
+  setSceneRect(QRectF(0, 0, width(), height()));
 
   //See what I'm doing
-  QLinearGradient l(0,0,0,event->size().height());
+  QLinearGradient l(0,0,0,height());
   l.setColorAt(0, Qt::white);
   l.setColorAt(1, Qt::lightGray);
   setBackgroundBrush(l);
+}
 
-  emit resized();
+void KstPlotView::resizeEvent(QResizeEvent *event) {
+  QGraphicsView::resizeEvent(event);
+  fitInView(sceneRect());
 }
 
 #include "kstplotview.moc"

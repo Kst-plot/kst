@@ -20,6 +20,8 @@
 
 #include "kstplotview.h" //forward declare, but enums??
 
+// #define DEBUG_GEOMETRY 1
+
 class QGraphicsItem;
 
 class KST_EXPORT KstPlotItem : public QObject
@@ -36,13 +38,13 @@ public:
 Q_SIGNALS:
   void creationComplete();
 
-public Q_SLOTS:
-  void updateAspectFromGeometry();
-  void updateGeometry();
+#ifdef DEBUG_GEOMETRY
+protected:
+  void debugGeometry();
 
 private:
-  QPointF _aspectPos;   // In % from 0.0 to 100.0
-  QSizeF _aspectSize;   // In % from 0.0 to 100.0
+  QGraphicsRectItem *_rectItem;
+#endif
 };
 
 class LabelItem : public KstPlotItem, public QGraphicsSimpleTextItem

@@ -17,7 +17,15 @@
 
 KstPlotItem::KstPlotItem(KstPlotView *parent)
     : QObject(parent) {
-  connect(parent, SIGNAL(resized()), this, SLOT(updateGeometry()));
+
+#ifdef DEBUG_GEOMETRY
+  QColor semiRed(QColor(255, 0, 0, 50));
+  _rectItem = new QGraphicsRectItem;
+  _rectItem->setZValue(0);
+  _rectItem->setPen(semiRed);
+  _rectItem->setBrush(semiRed);
+  parent->scene()->addItem(_rectItem);
+#endif
 }
 
 
@@ -30,38 +38,20 @@ KstPlotView *KstPlotItem::parentView() const {
 }
 
 
-void KstPlotItem::updateAspectFromGeometry() {
-  KstPlotView *v = parentView();
-  Q_ASSERT(v);
-  QGraphicsItem *i = graphicsItem();
-  Q_ASSERT(i);
-
-  _aspectPos = QPointF(100.0 * i->scenePos().x() / v->width(),
-                       100.0 * i->scenePos().y() / v->height());
-  _aspectSize = QSizeF(100.0 * i->boundingRect().width() / v->width(),
-                       100.0 * i->boundingRect().height() / v->height());
+#ifdef DEBUG_GEOMETRY
+void KstPlotItem::debugGeometry() {
+  _rectItem->setRect(graphicsItem()->boundingRect());
 }
-
-
-void KstPlotItem::updateGeometry() {
-  KstPlotView *v = parentView();
-  Q_ASSERT(v);
-  QGraphicsItem *i = graphicsItem();
-  Q_ASSERT(i);
-
-  i->setPos(_aspectPos.x() * v->width() / 100.0,
-            _aspectPos.y() * v->height() / 100.0);
-  qreal sx = _aspectSize.width() * v->width() / (i->boundingRect().width() * 100.0);
-  qreal sy = _aspectSize.height() * v->height() / (i->boundingRect().height() * 100.0);
-  i->scale(sx, sy);
-
-  updateAspectFromGeometry();
-}
+#endif
 
 
 LabelItem::LabelItem(const QString &text, KstPlotView *parent)
     : KstPlotItem(parent), QGraphicsSimpleTextItem(text) {
-  updateAspectFromGeometry();
+
+#ifdef DEBUG_GEOMETRY
+  debugGeometry();
+#endif
+
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
 }
 
@@ -106,7 +96,11 @@ void LineItem::creationPolygonChanged(KstPlotView::CreationEvent event) {
   if (event == KstPlotView::MouseRelease) {
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(KstPlotView::MouseRelease));
     setLine(QLineF(line().p1(), poly.last())); //start and end
-    updateAspectFromGeometry();
+
+#ifdef DEBUG_GEOMETRY
+    debugGeometry();
+#endif
+
     parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
     parentView()->disconnect(this, SLOT(creationPolygonChanged(KstPlotView::CreationEvent)));
     parentView()->setMouseMode(KstPlotView::Default);

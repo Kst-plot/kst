@@ -45,10 +45,10 @@ public:
 Q_SIGNALS:
   void mouseModeChanged();
   void creationPolygonChanged(KstPlotView::CreationEvent event);
-  void resized();
 
 protected:
   bool eventFilter(QObject *obj, QEvent *event);
+  void setVisible(bool visible);
   void resizeEvent(QResizeEvent *event);
 
 private:
