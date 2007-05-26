@@ -61,6 +61,10 @@ void KstPlotView::setMouseMode(MouseMode mode) {
 
   _mouseMode = mode;
 
+  if (_mouseMode != Create) {
+    setCursor(Qt::ArrowCursor);
+  }
+
   emit mouseModeChanged();
 }
 

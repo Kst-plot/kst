@@ -50,6 +50,7 @@ LabelItem::LabelItem(KstPlotView *parent)
     : KstPlotItem(parent) {
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
   parent->setMouseMode(KstPlotView::Create);
+  parent->setCursor(Qt::IBeamCursor);
 
   //If the mouseMode is changed again before we're done with creation
   //delete ourself.
@@ -100,6 +101,7 @@ LineItem::LineItem(KstPlotView *parent)
     : KstPlotItem(parent) {
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
   parent->setMouseMode(KstPlotView::Create);
+  parent->setCursor(Qt::CrossCursor);
 
   //If the mouseMode is changed again before we're done with creation
   //delete ourself.
