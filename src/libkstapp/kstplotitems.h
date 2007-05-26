@@ -51,10 +51,13 @@ class LabelItem : public KstPlotItem, public QGraphicsSimpleTextItem
 {
   Q_OBJECT
 public:
-  LabelItem(const QString &text, KstPlotView *parent);
+  LabelItem(KstPlotView *parent);
   virtual ~LabelItem();
 
   virtual QGraphicsItem *graphicsItem() { return this; }
+
+private Q_SLOTS:
+  void creationPolygonChanged(KstPlotView::CreationEvent event);
 };
 
 class LineItem : public KstPlotItem, public QGraphicsLineItem

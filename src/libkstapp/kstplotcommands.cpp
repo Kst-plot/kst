@@ -16,7 +16,6 @@
 
 #include <QDebug>
 #include <QObject>
-#include <QInputDialog>
 #include <QGraphicsScene>
 
 KstPlotViewCommand::KstPlotViewCommand(const QString &text,
@@ -93,21 +92,12 @@ void CreateCommand::creationComplete() {
 
 
 void CreateLabelCommand::createItem() {
-  bool ok;
-  QString text = QInputDialog::getText(_view, QObject::tr("label"),
-                                       QObject::tr("label:"), QLineEdit::Normal,
-                                       QString::null, &ok);
-  if (ok && !text.isEmpty()) {
-    _item = new LabelItem(text, _view);
-    _view->scene()->addItem(_item->graphicsItem());
-    _item->graphicsItem()->setZValue(1);
+  _item = new LabelItem(_view);
+  connect(_item, SIGNAL(creationComplete()), this, SLOT(creationComplete()));
 
-    //If the item is interrupted while creating itself it will destroy itself
-    //need to delete this too in response...
-    connect(_item, SIGNAL(destroyed(QObject*)), this, SLOT(deleteLater()));
-
-    creationComplete();
-  }
+  //If the item is interrupted while creating itself it will destroy itself
+  //need to delete this too in response...
+  connect(_item, SIGNAL(destroyed(QObject*)), this, SLOT(deleteLater()));
 
 }
 
