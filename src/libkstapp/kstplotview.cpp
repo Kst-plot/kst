@@ -63,6 +63,9 @@ void KstPlotView::setMouseMode(MouseMode mode) {
 
   if (_mouseMode != Create) {
     setCursor(Qt::ArrowCursor);
+    setDragMode(QGraphicsView::RubberBandDrag);
+  } else {
+    setDragMode(QGraphicsView::NoDrag);
   }
 
   emit mouseModeChanged();
