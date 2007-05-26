@@ -56,6 +56,9 @@ public:
 
   virtual QGraphicsItem *graphicsItem() { return this; }
 
+protected:
+  QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+
 private Q_SLOTS:
   void creationPolygonChanged(KstPlotView::CreationEvent event);
 };

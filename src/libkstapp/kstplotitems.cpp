@@ -11,6 +11,8 @@
 
 #include "kstplotitems.h"
 
+#include "kstplotcommands.h"
+
 #include <QDebug>
 #include <QInputDialog>
 #include <QGraphicsItem>
@@ -62,6 +64,19 @@ LabelItem::LabelItem(KstPlotView *parent)
 
 
 LabelItem::~LabelItem() {
+}
+
+
+QVariant LabelItem::itemChange(GraphicsItemChange change, const QVariant &value) {
+  if (change == ItemPositionChange && scene()) {
+    QPointF originalPos = pos();
+    QPointF newPos = value.toPointF();
+    // FIXME this is too greedy as it produces too many undo commands.
+    // Ideally, we'd only record the move from right before the item
+    // becomes the mouse grabber to right after.
+    new MoveCommand(this, originalPos, newPos);
+  }
+  return QGraphicsItem::itemChange(change, value);
 }
 
 

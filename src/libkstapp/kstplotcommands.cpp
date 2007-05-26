@@ -111,6 +111,17 @@ void CreateLineCommand::createItem() {
   connect(_item, SIGNAL(destroyed(QObject*)), this, SLOT(deleteLater()));
 }
 
+
+void MoveCommand::undo() {
+  _item->graphicsItem()->setPos(_originalPos);
+}
+
+
+void MoveCommand::redo() {
+  _item->graphicsItem()->setPos(_newPos);
+}
+
+
 #include "kstplotcommands.moc"
 
 // vim: ts=2 sw=2 et

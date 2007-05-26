@@ -13,6 +13,7 @@
 #define KSTPLOTCOMMANDS_H
 
 #include <QObject>
+#include <QPointF>
 #include <QPointer>
 #include <QUndoCommand>
 
@@ -82,6 +83,28 @@ public:
   CreateLineCommand(KstPlotView *view) : CreateCommand(view, QObject::tr("Create Line")) {}
   virtual ~CreateLineCommand() {}
   virtual void createItem();
+};
+
+class KST_EXPORT MoveCommand : public KstPlotItemCommand
+{
+public:
+  MoveCommand(QPointF originalPos, QPointF newPos)
+      : KstPlotItemCommand(QObject::tr("Move Object")),
+        _originalPos(originalPos),
+        _newPos(newPos) {}
+  MoveCommand(KstPlotItem *item, QPointF originalPos, QPointF newPos)
+      : KstPlotItemCommand(item, QObject::tr("Move Object")),
+        _originalPos(originalPos),
+        _newPos(newPos) {}
+
+  virtual ~MoveCommand() {}
+
+  virtual void undo();
+  virtual void redo();
+
+private:
+  QPointF _originalPos;
+  QPointF _newPos;
 };
 
 /*

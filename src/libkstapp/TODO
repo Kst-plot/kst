@@ -3,3 +3,5 @@
 - Actual plot item
 - OpenGL?
 - SVG item?
+- Use some templates/factories for CreateCommands?
+- Undo/Redo for item select/focus/move and other ItemChange's.

@@ -110,7 +110,9 @@ void KstMainWindow::createLine() {
 
 void KstMainWindow::createActions() {
   _undoAct = _undoGroup->createUndoAction(this);
+  _undoAct->setShortcut(tr("Ctrl+Z"));
   _redoAct = _undoGroup->createRedoAction(this);
+  _redoAct->setShortcut(tr("Ctrl+Shift+Z"));
 
   _createLabelAct = new QAction(tr("&Create label"), this);
   _createLabelAct->setStatusTip(tr("Create a label for the current plot"));
