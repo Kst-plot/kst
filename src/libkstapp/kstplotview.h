@@ -51,6 +51,9 @@ protected:
   void setVisible(bool visible);
   void resizeEvent(QResizeEvent *event);
 
+private Q_SLOTS:
+  void initializeSceneRect();
+
 private:
   QUndoStack *_undoStack;
   KstPlotItem *_currentPlotItem;

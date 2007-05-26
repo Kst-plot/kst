@@ -14,6 +14,7 @@
 #include "kstapplication.h"
 
 #include <QDebug>
+#include <QTimer>
 #include <QUndoStack>
 #include <QResizeEvent>
 #include <QGraphicsScene>
@@ -116,10 +117,17 @@ bool KstPlotView::eventFilter(QObject *obj, QEvent *event) {
   }
 }
 
+
 void KstPlotView::setVisible(bool visible) {
   QGraphicsView::setVisible(visible);
+  QTimer::singleShot(0, this, SLOT(initializeSceneRect()));
+}
 
-  setSceneRect(QRectF(0, 0, width(), height()));
+
+void KstPlotView::initializeSceneRect() {
+
+  //Maybe this should be the size of the desktop?
+  setSceneRect(QRectF(0, 0, width() - 1.0, height() - 1.0));
 
   //See what I'm doing
   QLinearGradient l(0,0,0,height());
@@ -128,9 +136,13 @@ void KstPlotView::setVisible(bool visible) {
   setBackgroundBrush(l);
 }
 
+
 void KstPlotView::resizeEvent(QResizeEvent *event) {
   QGraphicsView::resizeEvent(event);
-  fitInView(sceneRect());
+
+  if (size() != sceneRect().size() && sceneRect().isValid()) {
+    fitInView(sceneRect());
+  }
 }
 
 #include "kstplotview.moc"
