@@ -43,6 +43,7 @@ private Q_SLOTS:
   void plotViewDestroyed(QObject *object);
 
   void createLabel();
+  void createBox();
   void createLine();
 
 private:
@@ -70,6 +71,7 @@ private:
   QAction *_undoAct;
   QAction *_redoAct;
   QAction *_createLabelAct;
+  QAction *_createBoxAct;
   QAction *_createLineAct;
 
   QAction *_exitAct;

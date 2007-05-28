@@ -5,6 +5,7 @@ set(kstapp_LIB_SRCS
    kstmainwindow.cpp
    view.cpp
    viewitem.cpp
+   boxitem.cpp
    lineitem.cpp
    labelitem.cpp
    viewcommand.cpp

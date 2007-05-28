@@ -12,6 +12,7 @@
 #include "kstmainwindow.h"
 #include "kstapplication.h"
 #include "view.h"
+#include "boxitem.h"
 #include "labelitem.h"
 #include "lineitem.h"
 
@@ -98,6 +99,12 @@ void KstMainWindow::about() {
 }
 
 
+void KstMainWindow::createBox() {
+  CreateBoxCommand *cmd = new CreateBoxCommand;
+  cmd->createItem();
+}
+
+
 void KstMainWindow::createLabel() {
   CreateLabelCommand *cmd = new CreateLabelCommand;
   cmd->createItem();
@@ -117,11 +124,15 @@ void KstMainWindow::createActions() {
   _redoAct->setShortcut(tr("Ctrl+Shift+Z"));
 
   _createLabelAct = new QAction(tr("&Create label"), this);
-  _createLabelAct->setStatusTip(tr("Create a label for the current plot"));
+  _createLabelAct->setStatusTip(tr("Create a label for the current view"));
   connect(_createLabelAct, SIGNAL(triggered()), this, SLOT(createLabel()));
 
+  _createBoxAct = new QAction(tr("&Create box"), this);
+  _createBoxAct->setStatusTip(tr("Create a box for the current view"));
+  connect(_createBoxAct, SIGNAL(triggered()), this, SLOT(createBox()));
+
   _createLineAct = new QAction(tr("&Create line"), this);
-  _createLineAct->setStatusTip(tr("Create a line for the current plot"));
+  _createLineAct->setStatusTip(tr("Create a line for the current view"));
   connect(_createLineAct, SIGNAL(triggered()), this, SLOT(createLine()));
 
   _exitAct = new QAction(tr("E&xit"), this);
@@ -149,6 +160,7 @@ void KstMainWindow::createMenus() {
 
   _plotMenu = menuBar()->addMenu(tr("&Plot"));
   _plotMenu->addAction(_createLabelAct);
+  _plotMenu->addAction(_createBoxAct);
   _plotMenu->addAction(_createLineAct);
 
   _settingsMenu = menuBar()->addMenu(tr("&Settings"));
