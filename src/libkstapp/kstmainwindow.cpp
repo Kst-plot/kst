@@ -17,6 +17,8 @@
 
 #include <QtGui>
 
+using namespace Kst;
+
 KstMainWindow::KstMainWindow() {
 
   _tabWidget = new QTabWidget(this);

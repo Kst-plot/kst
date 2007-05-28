@@ -41,7 +41,7 @@ QUndoStack *KstPlotView::undoStack() const {
 }
 
 
-KstPlotItem *KstPlotView::currentPlotItem() const {
+Kst::ViewItem *KstPlotView::currentPlotItem() const {
   return _currentPlotItem;
 }
 

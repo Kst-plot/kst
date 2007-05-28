@@ -17,7 +17,9 @@
 #include "kst_export.h"
 
 class QUndoStack;
-class KstPlotItem;
+namespace Kst {
+  class ViewItem;
+}
 
 class KST_EXPORT KstPlotView : public QGraphicsView
 {
@@ -35,7 +37,7 @@ public:
   virtual ~KstPlotView();
 
   QUndoStack *undoStack() const;
-  KstPlotItem* currentPlotItem() const;
+  Kst::ViewItem* currentPlotItem() const;
 
   MouseMode mouseMode() const;
   void setMouseMode(MouseMode mode);
@@ -56,7 +58,7 @@ private Q_SLOTS:
 
 private:
   QUndoStack *_undoStack;
-  KstPlotItem *_currentPlotItem;
+  Kst::ViewItem *_currentPlotItem;
   MouseMode _mouseMode;
   QPolygonF _creationPolygonPress;
   QPolygonF _creationPolygonMove;

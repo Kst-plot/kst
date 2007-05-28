@@ -20,35 +20,34 @@
 #include "kst_export.h"
 
 class KstPlotView;
-class KstPlotItem;
 
-class KST_EXPORT KstPlotViewCommand : public QUndoCommand
+namespace Kst {
+
+class ViewItem;
+
+class KST_EXPORT ViewCommand : public QUndoCommand
 {
 public:
-  KstPlotViewCommand(const QString &text,
-                     bool addToStack = true, QUndoCommand *parent = 0);
-  KstPlotViewCommand(KstPlotView *view, const QString &text,
-                     bool addToStack = true, QUndoCommand *parent = 0);
-  virtual ~KstPlotViewCommand();
+  ViewCommand(const QString &text, bool addToStack = true, QUndoCommand *parent = 0);
+  ViewCommand(KstPlotView *view, const QString &text, bool addToStack = true, QUndoCommand *parent = 0);
+  virtual ~ViewCommand();
 
 protected:
   QPointer<KstPlotView> _view;
 };
 
-class KST_EXPORT KstPlotItemCommand : public QUndoCommand
+class KST_EXPORT ViewItemCommand : public QUndoCommand
 {
 public:
-  KstPlotItemCommand(const QString &text,
-                     bool addToStack = true, QUndoCommand *parent = 0);
-  KstPlotItemCommand(KstPlotItem *item, const QString &text,
-                     bool addToStack = true, QUndoCommand *parent = 0);
-  virtual ~KstPlotItemCommand();
+  ViewItemCommand(const QString &text, bool addToStack = true, QUndoCommand *parent = 0);
+  ViewItemCommand(ViewItem *item, const QString &text, bool addToStack = true, QUndoCommand *parent = 0);
+  virtual ~ViewItemCommand();
 
 protected:
-  QPointer<KstPlotItem> _item;
+  QPointer<ViewItem> _item;
 };
 
-class KST_EXPORT CreateCommand : public QObject, public KstPlotViewCommand
+class KST_EXPORT CreateCommand : public QObject, public ViewCommand
 {
   Q_OBJECT
 public:
@@ -64,7 +63,7 @@ public Q_SLOTS:
   void creationComplete();
 
 protected:
-  QPointer<KstPlotItem> _item;
+  QPointer<ViewItem> _item;
 };
 
 class KST_EXPORT CreateLabelCommand : public CreateCommand
@@ -85,15 +84,15 @@ public:
   virtual void createItem();
 };
 
-class KST_EXPORT MoveCommand : public KstPlotItemCommand
+class KST_EXPORT MoveCommand : public ViewItemCommand
 {
 public:
   MoveCommand(QPointF originalPos, QPointF newPos)
-      : KstPlotItemCommand(QObject::tr("Move Object")),
+      : ViewItemCommand(QObject::tr("Move Object")),
         _originalPos(originalPos),
         _newPos(newPos) {}
-  MoveCommand(KstPlotItem *item, QPointF originalPos, QPointF newPos)
-      : KstPlotItemCommand(item, QObject::tr("Move Object")),
+  MoveCommand(ViewItem *item, QPointF originalPos, QPointF newPos)
+      : ViewItemCommand(item, QObject::tr("Move Object")),
         _originalPos(originalPos),
         _newPos(newPos) {}
 
@@ -116,6 +115,8 @@ private:
   PICTURE
   PLOT
 */
+
+}
 
 #endif
 

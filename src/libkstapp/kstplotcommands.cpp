@@ -12,21 +12,24 @@
 #include "kstplotcommands.h"
 #include "kstapplication.h"
 #include "kstplotview.h"
-#include "kstplotitems.h"
+#include "viewitem.h"
+#include "labelitem.h"
+#include "lineitem.h"
 
 #include <QDebug>
-#include <QObject>
+#include <QGraphicsItem>
 #include <QGraphicsScene>
+#include <QObject>
 
-KstPlotViewCommand::KstPlotViewCommand(const QString &text,
-                                       bool addToStack, QUndoCommand *parent)
+namespace Kst {
+ViewCommand::ViewCommand(const QString &text, bool addToStack, QUndoCommand *parent)
     : QUndoCommand(text, parent), _view(kstApp->mainWindow()->currentPlotView()) {
   if (addToStack)
     _view->undoStack()->push(this);
 }
 
 
-KstPlotViewCommand::KstPlotViewCommand(KstPlotView *view, const QString &text,
+ViewCommand::ViewCommand(KstPlotView *view, const QString &text,
                                        bool addToStack, QUndoCommand *parent)
     : QUndoCommand(text, parent), _view(view) {
   if (addToStack)
@@ -34,37 +37,35 @@ KstPlotViewCommand::KstPlotViewCommand(KstPlotView *view, const QString &text,
 }
 
 
-KstPlotViewCommand::~KstPlotViewCommand() {
+ViewCommand::~ViewCommand() {
 }
 
 
-KstPlotItemCommand::KstPlotItemCommand(const QString &text,
-                                       bool addToStack, QUndoCommand *parent)
+ViewItemCommand::ViewItemCommand(const QString &text, bool addToStack, QUndoCommand *parent)
     : QUndoCommand(text, parent), _item(kstApp->mainWindow()->currentPlotView()->currentPlotItem()) {
   if (addToStack)
     _item->parentView()->undoStack()->push(this);
 }
 
 
-KstPlotItemCommand::KstPlotItemCommand(KstPlotItem *item, const QString &text,
-                                       bool addToStack, QUndoCommand *parent)
+ViewItemCommand::ViewItemCommand(ViewItem *item, const QString &text, bool addToStack, QUndoCommand *parent)
     : QUndoCommand(text, parent), _item(item) {
   if (addToStack)
     _item->parentView()->undoStack()->push(this);
 }
 
 
-KstPlotItemCommand::~KstPlotItemCommand() {
+ViewItemCommand::~ViewItemCommand() {
 }
 
 
 CreateCommand::CreateCommand(const QString &text, QUndoCommand *parent)
-    : KstPlotViewCommand(text, false, parent) {
+    : ViewCommand(text, false, parent) {
 }
 
 
 CreateCommand::CreateCommand(KstPlotView *view, const QString &text, QUndoCommand *parent)
-    : KstPlotViewCommand(view, text, false, parent) {
+    : ViewCommand(view, text, false, parent) {
 }
 
 
@@ -121,6 +122,7 @@ void MoveCommand::redo() {
   _item->graphicsItem()->setPos(_newPos);
 }
 
+}
 
 #include "kstplotcommands.moc"
 
