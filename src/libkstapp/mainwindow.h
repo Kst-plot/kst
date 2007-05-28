@@ -74,6 +74,12 @@ private:
   QAction *_createEllipseAct;
   QAction *_createLineAct;
 
+  QAction *_newTabAct;
+  QAction *_saveAct;
+  QAction *_saveAsAct;
+  QAction *_openAct;
+  QAction *_printAct;
+  QAction *_closeTabAct;
   QAction *_exitAct;
   QAction *_aboutAct;
   QAction *_aboutQtAct;

@@ -29,6 +29,7 @@ class TabWidget : public QTabWidget
 
   public Q_SLOTS:
     View *createView();
+    void closeCurrentView();
 
   private Q_SLOTS:
     void viewDestroyed(QObject *object);

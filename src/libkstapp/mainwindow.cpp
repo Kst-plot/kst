@@ -147,6 +147,30 @@ void MainWindow::createActions() {
   _createLineAct->setStatusTip(tr("Create a line for the current view"));
   connect(_createLineAct, SIGNAL(triggered()), this, SLOT(createLine()));
 
+  _newTabAct = new QAction(tr("&New tab"), this);
+  _newTabAct->setStatusTip(tr("Create a new tab"));
+  connect(_newTabAct, SIGNAL(triggered()), tabWidget(), SLOT(createView()));
+
+  _closeTabAct = new QAction(tr("&Close tab"), this);
+  _closeTabAct->setStatusTip(tr("Close the current tab"));
+  connect(_closeTabAct, SIGNAL(triggered()), tabWidget(), SLOT(closeCurrentView()));
+
+  _saveAct = new QAction(tr("&Save"), this);
+  _saveAct->setStatusTip(tr("Save the current session"));
+  //connect(_saveAct, SIGNAL(triggered()), document(), SLOT(save()));
+
+  _saveAsAct = new QAction(tr("Save &as..."), this);
+  _saveAsAct->setStatusTip(tr("Save the current session"));
+  //connect(_saveAsAct, SIGNAL(triggered()), document(), SLOT(saveAs()));
+
+  _openAct = new QAction(tr("&Open..."), this);
+  _openAct->setStatusTip(tr("Open a new session"));
+  //connect(_openAct, SIGNAL(triggered()), this, SLOT(openDocument()));
+
+  _printAct = new QAction(tr("&Print..."), this);
+  _printAct->setStatusTip(tr("Print the current view"));
+  //connect(_printAct, SIGNAL(triggered()), this, SLOT(print()));
+
   _exitAct = new QAction(tr("E&xit"), this);
   _exitAct->setShortcut(tr("Ctrl+Q"));
   _exitAct->setStatusTip(tr("Exit the application"));
@@ -163,7 +187,14 @@ void MainWindow::createActions() {
 
 void MainWindow::createMenus() {
   _fileMenu = menuBar()->addMenu(tr("&File"));
+  _fileMenu->addAction(_newTabAct);
+  _fileMenu->addAction(_saveAct);
+  _fileMenu->addAction(_saveAsAct);
+  _fileMenu->addAction(_openAct);
   _fileMenu->addSeparator();
+  _fileMenu->addAction(_printAct);
+  _fileMenu->addSeparator();
+  _fileMenu->addAction(_closeTabAct);
   _fileMenu->addAction(_exitAct);
 
   _editMenu = menuBar()->addMenu(tr("&Edit"));

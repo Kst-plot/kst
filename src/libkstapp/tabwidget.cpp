@@ -35,11 +35,13 @@ View *TabWidget::createView() {
     parent->undoGroup()->setActiveStack(view->undoStack());
   }
 
+  static int cnt = 1;
   QString label = view->objectName().isEmpty() ?
-                  tr("Plot %1").arg(QString::number(count())) :
+                  tr("Plot %1").arg(cnt++) :
                   view->objectName();
 
   addTab(view, label);
+  setCurrentWidget(view);
   return view;
 }
 
@@ -53,6 +55,15 @@ void TabWidget::viewDestroyed(QObject *object) {
   View *view = qobject_cast<View*>(object);
   removeTab(indexOf(view));
 }
+
+
+void TabWidget::closeCurrentView() {
+  delete currentView();
+  if (count() == 0) {
+    createView();
+  }
+}
+
 
 }
 
