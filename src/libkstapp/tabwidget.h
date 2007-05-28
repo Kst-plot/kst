@@ -29,10 +29,12 @@ class TabWidget : public QTabWidget
 
   public Q_SLOTS:
     View *createView();
+    void renameCurrentView();
     void closeCurrentView();
 
   private Q_SLOTS:
     void viewDestroyed(QObject *object);
+    void contextMenu(const QPoint&);
 };
 
 }
