@@ -12,8 +12,8 @@
 #include "kstmainwindow.h"
 #include "kstapplication.h"
 #include "kstplotview.h"
-
-#include "kstplotcommands.h"
+#include "labelitem.h"
+#include "lineitem.h"
 
 #include <QtGui>
 

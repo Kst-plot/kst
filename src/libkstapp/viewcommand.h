@@ -9,34 +9,26 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef LINEITEM_H
-#define LINEITEM_H
+#ifndef VIEWCOMMAND_H
+#define VIEWCOMMAND_H
 
-#include "viewitem.h"
-#include <QGraphicsLineItem>
+#include <QPointer>
+#include <QUndoCommand>
+#include "kst_export.h"
 
-namespace Kst { 
+class KstPlotView;
 
-class LineItem : public ViewItem, public QGraphicsLineItem
-{
-  Q_OBJECT
-public:
-  LineItem(KstPlotView *parent);
-  virtual ~LineItem();
+namespace Kst {
 
-  virtual QGraphicsItem *graphicsItem() { return this; }
-
-private Q_SLOTS:
-  void creationPolygonChanged(KstPlotView::CreationEvent event);
-};
-
-class KST_EXPORT CreateLineCommand : public CreateCommand
+class KST_EXPORT ViewCommand : public QUndoCommand
 {
 public:
-  CreateLineCommand() : CreateCommand(QObject::tr("Create Line")) {}
-  CreateLineCommand(KstPlotView *view) : CreateCommand(view, QObject::tr("Create Line")) {}
-  virtual ~CreateLineCommand() {}
-  virtual void createItem();
+  ViewCommand(const QString &text, bool addToStack = true, QUndoCommand *parent = 0);
+  ViewCommand(KstPlotView *view, const QString &text, bool addToStack = true, QUndoCommand *parent = 0);
+  virtual ~ViewCommand();
+
+protected:
+  QPointer<KstPlotView> _view;
 };
 
 }

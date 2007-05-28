@@ -11,8 +11,6 @@
 
 #include "labelitem.h"
 
-#include "kstplotcommands.h"
-
 #include <QDebug>
 #include <QInputDialog>
 #include <QGraphicsItem>
@@ -82,6 +80,17 @@ void LabelItem::creationPolygonChanged(KstPlotView::CreationEvent event) {
     return;
   }
 }
+
+void CreateLabelCommand::createItem() {
+  _item = new LabelItem(_view);
+  connect(_item, SIGNAL(creationComplete()), this, SLOT(creationComplete()));
+
+  //If the item is interrupted while creating itself it will destroy itself
+  //need to delete this too in response...
+  connect(_item, SIGNAL(destroyed(QObject*)), this, SLOT(deleteLater()));
+
+}
+
 
 }
 

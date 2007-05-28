@@ -10,8 +10,7 @@
  ***************************************************************************/
 
 #include "viewitem.h"
-
-#include "kstplotcommands.h"
+#include "kstapplication.h"
 
 #include <QDebug>
 #include <QGraphicsItem>
@@ -46,6 +45,68 @@ void ViewItem::debugGeometry() {
   _rectItem->setRect(graphicsItem()->boundingRect());
 }
 #endif
+
+
+ViewItemCommand::ViewItemCommand(const QString &text, bool addToStack, QUndoCommand *parent)
+    : QUndoCommand(text, parent), _item(kstApp->mainWindow()->currentPlotView()->currentPlotItem()) {
+  if (addToStack)
+    _item->parentView()->undoStack()->push(this);
+}
+
+
+ViewItemCommand::ViewItemCommand(ViewItem *item, const QString &text, bool addToStack, QUndoCommand *parent)
+    : QUndoCommand(text, parent), _item(item) {
+  if (addToStack)
+    _item->parentView()->undoStack()->push(this);
+}
+
+
+ViewItemCommand::~ViewItemCommand() {
+}
+
+
+CreateCommand::CreateCommand(const QString &text, QUndoCommand *parent)
+    : ViewCommand(text, false, parent) {
+}
+
+
+CreateCommand::CreateCommand(KstPlotView *view, const QString &text, QUndoCommand *parent)
+    : ViewCommand(view, text, false, parent) {
+}
+
+
+CreateCommand::~CreateCommand() {
+}
+
+
+void CreateCommand::undo() {
+  if (_item)
+    _item->graphicsItem()->hide();
+}
+
+
+void CreateCommand::redo() {
+  if (!_item)
+    createItem();
+
+  _item->graphicsItem()->show();
+}
+
+
+void CreateCommand::creationComplete() {
+  _view->undoStack()->push(this);
+}
+
+
+void MoveCommand::undo() {
+  _item->graphicsItem()->setPos(_originalPos);
+}
+
+
+void MoveCommand::redo() {
+  _item->graphicsItem()->setPos(_newPos);
+}
+
 
 }
 

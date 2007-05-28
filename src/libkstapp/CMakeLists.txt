@@ -7,7 +7,7 @@ set(kstapp_LIB_SRCS
    viewitem.cpp
    lineitem.cpp
    labelitem.cpp
-   kstplotcommands.cpp
+   viewcommand.cpp
    )
 
 kde4_automoc(${kstapp_LIB_SRCS})

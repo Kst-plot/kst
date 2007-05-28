@@ -67,6 +67,15 @@ void LineItem::creationPolygonChanged(KstPlotView::CreationEvent event) {
   }
 }
 
+void CreateLineCommand::createItem() {
+  _item = new LineItem(_view);
+  connect(_item, SIGNAL(creationComplete()), this, SLOT(creationComplete()));
+
+  //If the item is interrupted while creating itself it will destroy itself
+  //need to delete this too in response...
+  connect(_item, SIGNAL(destroyed(QObject*)), this, SLOT(deleteLater()));
+}
+
 }
 
 #include "lineitem.moc"

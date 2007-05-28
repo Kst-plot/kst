@@ -9,38 +9,33 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef LINEITEM_H
-#define LINEITEM_H
+#include "viewcommand.h"
+#include "kstapplication.h"
+#include "kstplotview.h"
 
-#include "viewitem.h"
-#include <QGraphicsLineItem>
+#include <QDebug>
+#include <QObject>
 
-namespace Kst { 
+namespace Kst {
+ViewCommand::ViewCommand(const QString &text, bool addToStack, QUndoCommand *parent)
+    : QUndoCommand(text, parent), _view(kstApp->mainWindow()->currentPlotView()) {
+  if (addToStack)
+    _view->undoStack()->push(this);
+}
 
-class LineItem : public ViewItem, public QGraphicsLineItem
-{
-  Q_OBJECT
-public:
-  LineItem(KstPlotView *parent);
-  virtual ~LineItem();
 
-  virtual QGraphicsItem *graphicsItem() { return this; }
+ViewCommand::ViewCommand(KstPlotView *view, const QString &text,
+                                       bool addToStack, QUndoCommand *parent)
+    : QUndoCommand(text, parent), _view(view) {
+  if (addToStack)
+    _view->undoStack()->push(this);
+}
 
-private Q_SLOTS:
-  void creationPolygonChanged(KstPlotView::CreationEvent event);
-};
 
-class KST_EXPORT CreateLineCommand : public CreateCommand
-{
-public:
-  CreateLineCommand() : CreateCommand(QObject::tr("Create Line")) {}
-  CreateLineCommand(KstPlotView *view) : CreateCommand(view, QObject::tr("Create Line")) {}
-  virtual ~CreateLineCommand() {}
-  virtual void createItem();
-};
+ViewCommand::~ViewCommand() {
+}
 
 }
 
-#endif
 
 // vim: ts=2 sw=2 et

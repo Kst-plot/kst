@@ -33,6 +33,16 @@ private Q_SLOTS:
   void creationPolygonChanged(KstPlotView::CreationEvent event);
 };
 
+
+class KST_EXPORT CreateLabelCommand : public CreateCommand
+{
+public:
+  CreateLabelCommand() : CreateCommand(QObject::tr("Create Label")) {}
+  CreateLabelCommand(KstPlotView *view): CreateCommand(view, QObject::tr("Create Label")) {}
+  virtual ~CreateLabelCommand() {}
+  virtual void createItem();
+};
+
 }
 
 #endif
