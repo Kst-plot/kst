@@ -10,7 +10,7 @@
  ***************************************************************************/
 
 #include "view.h"
-#include "kstmainwindow.h"
+#include "mainwindow.h"
 #include "kstapplication.h"
 
 #include <QDebug>

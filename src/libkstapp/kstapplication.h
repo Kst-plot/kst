@@ -16,7 +16,7 @@
 #include <QApplication>
 
 #include "kst_export.h"
-#include "kstmainwindow.h"
+#include "mainwindow.h"
 
 #define kstApp \
   (static_cast<KstApplication*>(QCoreApplication::instance()))

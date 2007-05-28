@@ -9,7 +9,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstmainwindow.h"
+#include "mainwindow.h"
 #include "kstapplication.h"
 #include "boxitem.h"
 #include "ellipseitem.h"
@@ -213,6 +213,6 @@ void MainWindow::writeSettings() {
 
 }
 
-#include "kstmainwindow.moc"
+#include "mainwindow.moc"
 
 // vim: ts=2 sw=2 et
