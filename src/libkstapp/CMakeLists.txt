@@ -9,6 +9,7 @@ set(kstapp_LIB_SRCS
    lineitem.cpp
    mainwindow.cpp
    vectormodel.cpp
+   vectortablemodel.cpp
    viewcommand.cpp
    view.cpp
    viewitem.cpp

@@ -39,8 +39,9 @@ int VectorModel::rowCount(const QModelIndex& parent) const {
 
 QVariant VectorModel::data(const QModelIndex& index, int role) const {
   Q_UNUSED(role)
-  if (!index.isValid() || role != Qt::DisplayRole)
+  if (!index.isValid() || role != Qt::DisplayRole) {
     return QVariant();
+  }
   return QVariant(_v->value(index.row()));
 }
 
@@ -55,10 +56,17 @@ QModelIndex VectorModel::index(int row, int col, const QModelIndex& parent) cons
 }
 
 
-QModelIndex VectorModel::parent(const QModelIndex& index) const
-{
+QModelIndex VectorModel::parent(const QModelIndex& index) const {
   Q_UNUSED(index)
   return QModelIndex();
+}
+
+
+QVariant VectorModel::headerData(int section, Qt::Orientation orientation, int role) const {
+  if (role != Qt::DisplayRole || orientation == Qt::Vertical || section != 0) {
+    return QAbstractItemModel::headerData(section, orientation, role);
+  }
+  return _v->tagName();
 }
 
 }

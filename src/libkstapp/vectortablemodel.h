@@ -9,19 +9,18 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef VECTORMODEL_H
-#define VECTORMODEL_H
+#ifndef VECTORTABLEMODEL_H
+#define VECTORTABLEMODEL_H
 
-#include <QAbstractItemModel>
-#include <kstvector.h>
+#include "vectormodel.h"
 
 namespace Kst {
 
-class VectorModel : public QAbstractItemModel
+class VectorTableModel : public QAbstractItemModel
 {
 public:
-  VectorModel(KstVectorPtr v);
-  ~VectorModel();
+  VectorTableModel();
+  ~VectorTableModel();
 
   int columnCount(const QModelIndex& parent = QModelIndex()) const;
   int rowCount(const QModelIndex& parent = QModelIndex()) const;
@@ -30,8 +29,11 @@ public:
   QModelIndex parent(const QModelIndex& index) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
+  QVector<VectorModel*>& vectors() { return _vectors; }
+  const QVector<VectorModel*>& vectors() const { return _vectors; }
+
 private:
-  KstVectorPtr _v;
+  QVector<VectorModel*> _vectors;
 };
 
 }

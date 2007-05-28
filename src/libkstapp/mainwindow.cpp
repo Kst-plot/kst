@@ -23,7 +23,7 @@
 
 // Temporaries
 #include <QTableView>
-#include "vectormodel.h"
+#include "vectortablemodel.h"
 
 namespace Kst {
 
@@ -134,13 +134,22 @@ void MainWindow::demoModel() {
   QTableView *view = new QTableView;
   KstVectorPtr v = new KstVector;
   v->resize(999999);
+  KstVectorPtr v2 = new KstVector;
+  v2->resize(999999);
   double *d = const_cast<double *>(v->value()); // yay :)
+  double *d2 = const_cast<double *>(v2->value()); // yay :)
   d[0] = 1;
+  d2[0] = 1;
   for (int i = 1; i < v->length(); ++i) {
     d[i] = d[i-1] + 0.002;
+    d2[i] = d2[i-1] + 0.003;
   }
   VectorModel *m = new VectorModel(v);
-  view->setModel(m);
+  VectorModel *m2 = new VectorModel(v2);
+  VectorTableModel *tm = new VectorTableModel;
+  tm->vectors().append(m);
+  tm->vectors().append(m2);
+  view->setModel(tm);
   view->resize(300, 500);
   view->show();
 }
