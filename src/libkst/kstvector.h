@@ -72,7 +72,7 @@ class KstVector : public KstPrimitive {
     double interpolateNoHoles(int i, int ns_i) const;
 
     /** Return V[i] uninterpolated */
-    double value(int i);
+    double value(int i) const;
 
     /** Return Minimum value in Vector */
     inline double min() const { return _min; }

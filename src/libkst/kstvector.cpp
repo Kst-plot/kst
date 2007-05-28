@@ -296,7 +296,7 @@ double kstInterpolateNoHoles(double *_v, int _size, int in_i, int ns_i) {
 #undef RETURN_FIRST_NON_HOLE
 #undef GENERATE_INTERPOLATION
 
-double KstVector::value(int i) {
+double KstVector::value(int i) const {
   if (i < 0 || i >= _size) { // can't look before beginning or past end
     return 0.0;
   }
