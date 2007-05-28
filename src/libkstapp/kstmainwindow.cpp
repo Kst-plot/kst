@@ -11,10 +11,11 @@
 
 #include "kstmainwindow.h"
 #include "kstapplication.h"
-#include "view.h"
 #include "boxitem.h"
+#include "ellipseitem.h"
 #include "labelitem.h"
 #include "lineitem.h"
+#include "view.h"
 
 #include <QtGui>
 
@@ -105,6 +106,12 @@ void KstMainWindow::createBox() {
 }
 
 
+void KstMainWindow::createEllipse() {
+  CreateEllipseCommand *cmd = new CreateEllipseCommand;
+  cmd->createItem();
+}
+
+
 void KstMainWindow::createLabel() {
   CreateLabelCommand *cmd = new CreateLabelCommand;
   cmd->createItem();
@@ -130,6 +137,10 @@ void KstMainWindow::createActions() {
   _createBoxAct = new QAction(tr("&Create box"), this);
   _createBoxAct->setStatusTip(tr("Create a box for the current view"));
   connect(_createBoxAct, SIGNAL(triggered()), this, SLOT(createBox()));
+
+  _createEllipseAct = new QAction(tr("&Create ellipse"), this);
+  _createEllipseAct->setStatusTip(tr("Create an ellipse for the current view"));
+  connect(_createEllipseAct, SIGNAL(triggered()), this, SLOT(createEllipse()));
 
   _createLineAct = new QAction(tr("&Create line"), this);
   _createLineAct->setStatusTip(tr("Create a line for the current view"));
@@ -161,6 +172,7 @@ void KstMainWindow::createMenus() {
   _plotMenu = menuBar()->addMenu(tr("&Plot"));
   _plotMenu->addAction(_createLabelAct);
   _plotMenu->addAction(_createBoxAct);
+  _plotMenu->addAction(_createEllipseAct);
   _plotMenu->addAction(_createLineAct);
 
   _settingsMenu = menuBar()->addMenu(tr("&Settings"));

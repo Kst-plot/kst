@@ -6,6 +6,7 @@ set(kstapp_LIB_SRCS
    view.cpp
    viewitem.cpp
    boxitem.cpp
+   ellipseitem.cpp
    lineitem.cpp
    labelitem.cpp
    viewcommand.cpp

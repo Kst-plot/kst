@@ -44,6 +44,7 @@ private Q_SLOTS:
 
   void createLabel();
   void createBox();
+  void createEllipse();
   void createLine();
 
 private:
@@ -70,8 +71,10 @@ private:
 
   QAction *_undoAct;
   QAction *_redoAct;
+  // FIXME: move these into each object, along with the creation slot?
   QAction *_createLabelAct;
   QAction *_createBoxAct;
+  QAction *_createEllipseAct;
   QAction *_createLineAct;
 
   QAction *_exitAct;
