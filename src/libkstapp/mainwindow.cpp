@@ -19,6 +19,12 @@
 
 #include <QtGui>
 
+
+
+// Temporaries
+#include <QTableView>
+#include "vectormodel.h"
+
 namespace Kst {
 
 MainWindow::MainWindow() {
@@ -124,6 +130,22 @@ void MainWindow::createLine() {
 }
 
 
+void MainWindow::demoModel() {
+  QTableView *view = new QTableView;
+  KstVectorPtr v = new KstVector;
+  v->resize(999999);
+  double *d = const_cast<double *>(v->value()); // yay :)
+  d[0] = 1;
+  for (int i = 1; i < v->length(); ++i) {
+    d[i] = d[i-1] + 0.002;
+  }
+  VectorModel *m = new VectorModel(v);
+  view->setModel(m);
+  view->resize(300, 500);
+  view->show();
+}
+
+
 void MainWindow::createActions() {
   _undoAct = _undoGroup->createUndoAction(this);
   _undoAct->setShortcut(tr("Ctrl+Z"));
@@ -182,6 +204,12 @@ void MainWindow::createMenus() {
   _helpMenu = menuBar()->addMenu(tr("&Help"));
   _helpMenu->addAction(_aboutAct);
   _helpMenu->addAction(_aboutQtAct);
+
+  // FIXME: remove this later.
+  QMenu *demoMenu = menuBar()->addMenu("&Demo");
+  QAction *demo = new QAction("Vector model", this);
+  connect(demo, SIGNAL(triggered()), this, SLOT(demoModel()));
+  demoMenu->addAction(demo);
 }
 
 

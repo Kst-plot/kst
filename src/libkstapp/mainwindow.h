@@ -46,6 +46,8 @@ private Q_SLOTS:
   void createEllipse();
   void createLine();
 
+  void demoModel();
+
 private:
   void createActions();
   void createMenus();

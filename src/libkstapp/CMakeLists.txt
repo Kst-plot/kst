@@ -10,6 +10,7 @@ set(kstapp_LIB_SRCS
    lineitem.cpp
    labelitem.cpp
    viewcommand.cpp
+   vectormodel.cpp
    )
 
 kde4_automoc(${kstapp_LIB_SRCS})
