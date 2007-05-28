@@ -11,6 +11,7 @@
 
 #include "viewitem.h"
 #include "kstapplication.h"
+#include "tabwidget.h"
 
 #include <QDebug>
 #include <QGraphicsItem>
@@ -48,7 +49,7 @@ void ViewItem::debugGeometry() {
 
 
 ViewItemCommand::ViewItemCommand(const QString &text, bool addToStack, QUndoCommand *parent)
-    : QUndoCommand(text, parent), _item(kstApp->mainWindow()->currentPlotView()->currentPlotItem()) {
+    : QUndoCommand(text, parent), _item(kstApp->mainWindow()->tabWidget()->currentView()->currentPlotItem()) {
   if (addToStack)
     _item->parentView()->undoStack()->push(this);
 }

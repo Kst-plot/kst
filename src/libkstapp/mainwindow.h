@@ -16,11 +16,11 @@
 
 class QMenu;
 class QAction;
-class QTabWidget;
 class QUndoGroup;
 
 namespace Kst {
 class View;
+class TabWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -30,16 +30,12 @@ public:
   virtual ~MainWindow();
 
   QUndoGroup *undoGroup() const;
-  QTabWidget *tabWidget() const;
-  View *currentPlotView() const;
-
-  View *createPlotView();
+  TabWidget *tabWidget() const;
 
 private Q_SLOTS:
   void aboutToQuit();
   void about();
-  void currentPlotChanged();
-  void plotViewDestroyed(QObject *object);
+  void currentViewChanged();
 
   void createLabel();
   void createBox();
@@ -58,7 +54,7 @@ private:
   void writeSettings();
 
 private:
-  QTabWidget *_tabWidget;
+  TabWidget *_tabWidget;
   QUndoGroup *_undoGroup;
 
   QMenu *_fileMenu;

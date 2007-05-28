@@ -9,33 +9,33 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "viewcommand.h"
-#include "kstapplication.h"
-#include "tabwidget.h"
-#include "view.h"
+#ifndef TABWIDGET_H
+#define TABWIDGET_H
 
-#include <QDebug>
-#include <QObject>
+#include <QTabWidget>
 
 namespace Kst {
-ViewCommand::ViewCommand(const QString &text, bool addToStack, QUndoCommand *parent)
-    : QUndoCommand(text, parent), _view(kstApp->mainWindow()->tabWidget()->currentView()) {
-  if (addToStack)
-    _view->undoStack()->push(this);
+
+class View;
+
+class TabWidget : public QTabWidget
+{
+  Q_OBJECT
+  public:
+    TabWidget(QWidget *parent);
+    ~TabWidget();
+
+    View *currentView() const;
+
+  public Q_SLOTS:
+    View *createView();
+
+  private Q_SLOTS:
+    void viewDestroyed(QObject *object);
+};
+
 }
 
-
-ViewCommand::ViewCommand(View *view, const QString &text, bool addToStack, QUndoCommand *parent)
-    : QUndoCommand(text, parent), _view(view) {
-  if (addToStack)
-    _view->undoStack()->push(this);
-}
-
-
-ViewCommand::~ViewCommand() {
-}
-
-}
-
+#endif
 
 // vim: ts=2 sw=2 et

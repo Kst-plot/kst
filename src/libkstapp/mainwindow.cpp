@@ -15,27 +15,23 @@
 #include "ellipseitem.h"
 #include "labelitem.h"
 #include "lineitem.h"
+#include "tabwidget.h"
 #include "view.h"
 
 #include <QtGui>
 
-
-
 // Temporaries
-#include <QTableView>
 #include "vectortablemodel.h"
 
 namespace Kst {
 
 MainWindow::MainWindow() {
-
-  _tabWidget = new QTabWidget(this);
+  _tabWidget = new TabWidget(this);
   _undoGroup = new QUndoGroup(this);
 
-  connect(_tabWidget, SIGNAL(currentChanged(int)),
-          this, SLOT(currentPlotChanged()));
+  connect(_tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentViewChanged()));
 
-  createPlotView();
+  _tabWidget->createView();
 
   setCentralWidget(_tabWidget);
 
@@ -57,40 +53,14 @@ QUndoGroup *MainWindow::undoGroup() const {
 }
 
 
-QTabWidget *MainWindow::tabWidget() const {
+TabWidget *MainWindow::tabWidget() const {
   return _tabWidget;
 }
 
 
-View *MainWindow::currentPlotView() const {
-  return qobject_cast<View*>(_tabWidget->currentWidget());
-}
 
-
-View *MainWindow::createPlotView() {
-  View *plotView = new View;
-  connect(plotView, SIGNAL(destroyed(QObject*)),
-          this, SLOT(plotViewDestroyed(QObject*)));
-  _undoGroup->addStack(plotView->undoStack());
-  _undoGroup->setActiveStack(plotView->undoStack());
-
-  QString label = plotView->objectName().isEmpty() ?
-                  QString("Plot %1").arg(QString::number(_tabWidget->count())) :
-                  plotView->objectName();
-
-  _tabWidget->addTab(plotView, label);
-  return plotView;
-}
-
-
-void MainWindow::currentPlotChanged() {
-  _undoGroup->setActiveStack(currentPlotView()->undoStack());
-}
-
-
-void MainWindow::plotViewDestroyed(QObject *object) {
-  View *plotView = qobject_cast<View*>(object);
-  _tabWidget->removeTab(_tabWidget->indexOf(plotView));
+void MainWindow::currentViewChanged() {
+  _undoGroup->setActiveStack(_tabWidget->currentView()->undoStack());
 }
 
 

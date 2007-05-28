@@ -8,6 +8,7 @@ set(kstapp_LIB_SRCS
    labelitem.cpp
    lineitem.cpp
    mainwindow.cpp
+   tabwidget.cpp
    vectormodel.cpp
    vectortablemodel.cpp
    viewcommand.cpp
