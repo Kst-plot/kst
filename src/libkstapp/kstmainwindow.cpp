@@ -19,9 +19,9 @@
 
 #include <QtGui>
 
-using namespace Kst;
+namespace Kst {
 
-KstMainWindow::KstMainWindow() {
+MainWindow::MainWindow() {
 
   _tabWidget = new QTabWidget(this);
   _undoGroup = new QUndoGroup(this);
@@ -42,26 +42,26 @@ KstMainWindow::KstMainWindow() {
 }
 
 
-KstMainWindow::~KstMainWindow() {
+MainWindow::~MainWindow() {
 }
 
 
-QUndoGroup *KstMainWindow::undoGroup() const {
+QUndoGroup *MainWindow::undoGroup() const {
   return _undoGroup;
 }
 
 
-QTabWidget *KstMainWindow::tabWidget() const {
+QTabWidget *MainWindow::tabWidget() const {
   return _tabWidget;
 }
 
 
-View *KstMainWindow::currentPlotView() const {
+View *MainWindow::currentPlotView() const {
   return qobject_cast<View*>(_tabWidget->currentWidget());
 }
 
 
-View *KstMainWindow::createPlotView() {
+View *MainWindow::createPlotView() {
   View *plotView = new View;
   connect(plotView, SIGNAL(destroyed(QObject*)),
           this, SLOT(plotViewDestroyed(QObject*)));
@@ -77,54 +77,54 @@ View *KstMainWindow::createPlotView() {
 }
 
 
-void KstMainWindow::currentPlotChanged() {
+void MainWindow::currentPlotChanged() {
   _undoGroup->setActiveStack(currentPlotView()->undoStack());
 }
 
 
-void KstMainWindow::plotViewDestroyed(QObject *object) {
+void MainWindow::plotViewDestroyed(QObject *object) {
   View *plotView = qobject_cast<View*>(object);
   _tabWidget->removeTab(_tabWidget->indexOf(plotView));
 }
 
 
-void KstMainWindow::aboutToQuit() {
+void MainWindow::aboutToQuit() {
   writeSettings();
 }
 
 
-void KstMainWindow::about() {
+void MainWindow::about() {
   //FIXME Build a proper about box...
   QMessageBox::about(this, tr("About Kst"),
           tr("FIXME."));
 }
 
 
-void KstMainWindow::createBox() {
+void MainWindow::createBox() {
   CreateBoxCommand *cmd = new CreateBoxCommand;
   cmd->createItem();
 }
 
 
-void KstMainWindow::createEllipse() {
+void MainWindow::createEllipse() {
   CreateEllipseCommand *cmd = new CreateEllipseCommand;
   cmd->createItem();
 }
 
 
-void KstMainWindow::createLabel() {
+void MainWindow::createLabel() {
   CreateLabelCommand *cmd = new CreateLabelCommand;
   cmd->createItem();
 }
 
 
-void KstMainWindow::createLine() {
+void MainWindow::createLine() {
   CreateLineCommand *cmd = new CreateLineCommand;
   cmd->createItem();
 }
 
 
-void KstMainWindow::createActions() {
+void MainWindow::createActions() {
   _undoAct = _undoGroup->createUndoAction(this);
   _undoAct->setShortcut(tr("Ctrl+Z"));
   _redoAct = _undoGroup->createRedoAction(this);
@@ -160,7 +160,7 @@ void KstMainWindow::createActions() {
   connect(_aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }
 
-void KstMainWindow::createMenus() {
+void MainWindow::createMenus() {
   _fileMenu = menuBar()->addMenu(tr("&File"));
   _fileMenu->addSeparator();
   _fileMenu->addAction(_exitAct);
@@ -185,18 +185,18 @@ void KstMainWindow::createMenus() {
 }
 
 
-void KstMainWindow::createToolBars() {
+void MainWindow::createToolBars() {
   _fileToolBar = addToolBar(tr("File"));
   _editToolBar = addToolBar(tr("Edit"));
 }
 
 
-void KstMainWindow::createStatusBar() {
+void MainWindow::createStatusBar() {
   statusBar()->showMessage(tr("Ready"));
 }
 
 
-void KstMainWindow::readSettings() {
+void MainWindow::readSettings() {
   QSettings settings;
   QPoint pos = settings.value("pos", QPoint(20, 20)).toPoint();
   QSize size = settings.value("size", QSize(800, 600)).toSize();
@@ -205,10 +205,12 @@ void KstMainWindow::readSettings() {
 }
 
 
-void KstMainWindow::writeSettings() {
+void MainWindow::writeSettings() {
   QSettings settings;
   settings.setValue("pos", pos());
   settings.setValue("size", size());
+}
+
 }
 
 #include "kstmainwindow.moc"

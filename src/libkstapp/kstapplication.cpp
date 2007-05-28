@@ -16,7 +16,7 @@ KstApplication::KstApplication(int &argc, char **argv)
 
   QCoreApplication::setApplicationName("Kst");
 
-  _mainWindow = new KstMainWindow;
+  _mainWindow = new Kst::MainWindow;
   connect(this, SIGNAL(aboutToQuit()), _mainWindow, SLOT(aboutToQuit()));
 
   _mainWindow->show();
@@ -24,12 +24,11 @@ KstApplication::KstApplication(int &argc, char **argv)
 
 
 KstApplication::~KstApplication() {
-  if (_mainWindow)
-      delete _mainWindow;
+  delete _mainWindow;
 }
 
 
-KstMainWindow *KstApplication::mainWindow() const {
+Kst::MainWindow *KstApplication::mainWindow() const {
   return _mainWindow;
 }
 

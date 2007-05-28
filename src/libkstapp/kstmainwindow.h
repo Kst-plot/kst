@@ -9,8 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTMAINWINDOW_H
-#define KSTMAINWINDOW_H
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
 #include <QMainWindow>
 
@@ -21,20 +21,19 @@ class QUndoGroup;
 
 namespace Kst {
 class View;
-}
 
-class KstMainWindow : public QMainWindow
+class MainWindow : public QMainWindow
 {
   Q_OBJECT
 public:
-  KstMainWindow();
-  virtual ~KstMainWindow();
+  MainWindow();
+  virtual ~MainWindow();
 
   QUndoGroup *undoGroup() const;
   QTabWidget *tabWidget() const;
-  Kst::View *currentPlotView() const;
+  View *currentPlotView() const;
 
-  Kst::View *createPlotView();
+  View *createPlotView();
 
 private Q_SLOTS:
   void aboutToQuit();
@@ -82,6 +81,7 @@ private:
   QAction *_aboutQtAct;
 };
 
+}
 #endif
 
 // vim: ts=2 sw=2 et

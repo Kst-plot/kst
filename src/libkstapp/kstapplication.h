@@ -28,10 +28,10 @@ public:
   KstApplication(int &argc, char **argv);
   virtual ~KstApplication();
 
-  KstMainWindow *mainWindow() const;
+  Kst::MainWindow *mainWindow() const;
 
 private:
-  QPointer<KstMainWindow> _mainWindow;
+  QPointer<Kst::MainWindow> _mainWindow;
 };
 
 #endif
