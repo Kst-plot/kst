@@ -19,7 +19,9 @@ class QAction;
 class QTabWidget;
 class QUndoGroup;
 
-class KstPlotView;
+namespace Kst {
+class View;
+}
 
 class KstMainWindow : public QMainWindow
 {
@@ -30,9 +32,9 @@ public:
 
   QUndoGroup *undoGroup() const;
   QTabWidget *tabWidget() const;
-  KstPlotView *currentPlotView() const;
+  Kst::View *currentPlotView() const;
 
-  KstPlotView *createPlotView();
+  Kst::View *createPlotView();
 
 private Q_SLOTS:
   void aboutToQuit();

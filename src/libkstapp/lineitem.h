@@ -21,20 +21,20 @@ class LineItem : public ViewItem, public QGraphicsLineItem
 {
   Q_OBJECT
 public:
-  LineItem(KstPlotView *parent);
+  LineItem(View *parent);
   virtual ~LineItem();
 
   virtual QGraphicsItem *graphicsItem() { return this; }
 
 private Q_SLOTS:
-  void creationPolygonChanged(KstPlotView::CreationEvent event);
+  void creationPolygonChanged(View::CreationEvent event);
 };
 
 class KST_EXPORT CreateLineCommand : public CreateCommand
 {
 public:
   CreateLineCommand() : CreateCommand(QObject::tr("Create Line")) {}
-  CreateLineCommand(KstPlotView *view) : CreateCommand(view, QObject::tr("Create Line")) {}
+  CreateLineCommand(View *view) : CreateCommand(view, QObject::tr("Create Line")) {}
   virtual ~CreateLineCommand() {}
   virtual void createItem();
 };

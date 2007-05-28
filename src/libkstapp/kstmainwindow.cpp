@@ -11,7 +11,7 @@
 
 #include "kstmainwindow.h"
 #include "kstapplication.h"
-#include "kstplotview.h"
+#include "view.h"
 #include "labelitem.h"
 #include "lineitem.h"
 
@@ -54,13 +54,13 @@ QTabWidget *KstMainWindow::tabWidget() const {
 }
 
 
-KstPlotView *KstMainWindow::currentPlotView() const {
-  return qobject_cast<KstPlotView*>(_tabWidget->currentWidget());
+View *KstMainWindow::currentPlotView() const {
+  return qobject_cast<View*>(_tabWidget->currentWidget());
 }
 
 
-KstPlotView *KstMainWindow::createPlotView() {
-  KstPlotView *plotView = new KstPlotView;
+View *KstMainWindow::createPlotView() {
+  View *plotView = new View;
   connect(plotView, SIGNAL(destroyed(QObject*)),
           this, SLOT(plotViewDestroyed(QObject*)));
   _undoGroup->addStack(plotView->undoStack());
@@ -81,7 +81,7 @@ void KstMainWindow::currentPlotChanged() {
 
 
 void KstMainWindow::plotViewDestroyed(QObject *object) {
-  KstPlotView *plotView = qobject_cast<KstPlotView*>(object);
+  View *plotView = qobject_cast<View*>(object);
   _tabWidget->removeTab(_tabWidget->indexOf(plotView));
 }
 

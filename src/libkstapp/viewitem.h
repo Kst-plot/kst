@@ -15,7 +15,7 @@
 #include <QObject>
 #include "kst_export.h"
 #include "viewcommand.h"
-#include "kstplotview.h" //forward declare, but enums??
+#include "view.h" //forward declare, but enums??
 
 // #define DEBUG_GEOMETRY 1
 
@@ -27,10 +27,10 @@ class KST_EXPORT ViewItem : public QObject
 {
   Q_OBJECT
 public:
-  ViewItem(KstPlotView *parent);
+  ViewItem(View *parent);
   virtual ~ViewItem();
 
-  KstPlotView *parentView() const;
+  View *parentView() const;
 
   virtual QGraphicsItem *graphicsItem() = 0;
 
@@ -63,7 +63,7 @@ class KST_EXPORT CreateCommand : public QObject, public ViewCommand
   Q_OBJECT
 public:
   CreateCommand(const QString &text, QUndoCommand *parent = 0);
-  CreateCommand(KstPlotView *view, const QString &text, QUndoCommand *parent = 0);
+  CreateCommand(View *view, const QString &text, QUndoCommand *parent = 0);
   virtual ~CreateCommand();
 
   virtual void undo();

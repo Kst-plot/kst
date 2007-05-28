@@ -11,7 +11,7 @@
 
 #include "viewcommand.h"
 #include "kstapplication.h"
-#include "kstplotview.h"
+#include "view.h"
 
 #include <QDebug>
 #include <QObject>
@@ -24,8 +24,7 @@ ViewCommand::ViewCommand(const QString &text, bool addToStack, QUndoCommand *par
 }
 
 
-ViewCommand::ViewCommand(KstPlotView *view, const QString &text,
-                                       bool addToStack, QUndoCommand *parent)
+ViewCommand::ViewCommand(View *view, const QString &text, bool addToStack, QUndoCommand *parent)
     : QUndoCommand(text, parent), _view(view) {
   if (addToStack)
     _view->undoStack()->push(this);

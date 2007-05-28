@@ -17,18 +17,18 @@
 
 namespace Kst {
 
-LineItem::LineItem(KstPlotView *parent)
+LineItem::LineItem(View *parent)
     : ViewItem(parent) {
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
-  parent->setMouseMode(KstPlotView::Create);
+  parent->setMouseMode(View::Create);
   parent->setCursor(Qt::CrossCursor);
 
   //If the mouseMode is changed again before we're done with creation
   //delete ourself.
   connect(parent, SIGNAL(mouseModeChanged()), this, SLOT(deleteLater()));
 
-  connect(parent, SIGNAL(creationPolygonChanged(KstPlotView::CreationEvent)),
-          this, SLOT(creationPolygonChanged(KstPlotView::CreationEvent)));
+  connect(parent, SIGNAL(creationPolygonChanged(View::CreationEvent)),
+          this, SLOT(creationPolygonChanged(View::CreationEvent)));
 }
 
 
@@ -36,23 +36,23 @@ LineItem::~LineItem() {
 }
 
 
-void LineItem::creationPolygonChanged(KstPlotView::CreationEvent event) {
-  if (event == KstPlotView::MousePress) {
-    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(KstPlotView::MousePress));
+void LineItem::creationPolygonChanged(View::CreationEvent event) {
+  if (event == View::MousePress) {
+    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MousePress));
     setLine(QLineF(poly[0], poly[0])); //start and end
     parentView()->scene()->addItem(this);
     setZValue(1);
     return;
   }
 
-  if (event == KstPlotView::MouseMove) {
-    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(KstPlotView::MouseMove));
+  if (event == View::MouseMove) {
+    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseMove));
     setLine(QLineF(line().p1(), poly.last())); //start and end
     return;
   }
 
-  if (event == KstPlotView::MouseRelease) {
-    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(KstPlotView::MouseRelease));
+  if (event == View::MouseRelease) {
+    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseRelease));
     setLine(QLineF(line().p1(), poly.last())); //start and end
 
 #ifdef DEBUG_GEOMETRY
@@ -60,8 +60,8 @@ void LineItem::creationPolygonChanged(KstPlotView::CreationEvent event) {
 #endif
 
     parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
-    parentView()->disconnect(this, SLOT(creationPolygonChanged(KstPlotView::CreationEvent)));
-    parentView()->setMouseMode(KstPlotView::Default);
+    parentView()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
+    parentView()->setMouseMode(View::Default);
     emit creationComplete();
     return;
   }

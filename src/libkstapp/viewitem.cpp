@@ -18,7 +18,7 @@
 
 namespace Kst {
 
-ViewItem::ViewItem(KstPlotView *parent)
+ViewItem::ViewItem(View *parent)
     : QObject(parent) {
 #ifdef DEBUG_GEOMETRY
   QColor semiRed(QColor(255, 0, 0, 50));
@@ -35,8 +35,8 @@ ViewItem::~ViewItem() {
 }
 
 
-KstPlotView *ViewItem::parentView() const {
-  return qobject_cast<KstPlotView*>(parent());
+View *ViewItem::parentView() const {
+  return qobject_cast<View*>(parent());
 }
 
 
@@ -70,7 +70,7 @@ CreateCommand::CreateCommand(const QString &text, QUndoCommand *parent)
 }
 
 
-CreateCommand::CreateCommand(KstPlotView *view, const QString &text, QUndoCommand *parent)
+CreateCommand::CreateCommand(View *view, const QString &text, QUndoCommand *parent)
     : ViewCommand(view, text, false, parent) {
 }
 

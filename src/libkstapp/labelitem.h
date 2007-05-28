@@ -21,7 +21,7 @@ class LabelItem : public ViewItem, public QGraphicsSimpleTextItem
 {
   Q_OBJECT
 public:
-  LabelItem(KstPlotView *parent);
+  LabelItem(View *parent);
   virtual ~LabelItem();
 
   virtual QGraphicsItem *graphicsItem() { return this; }
@@ -30,7 +30,7 @@ protected:
   QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 private Q_SLOTS:
-  void creationPolygonChanged(KstPlotView::CreationEvent event);
+  void creationPolygonChanged(View::CreationEvent event);
 };
 
 
@@ -38,7 +38,7 @@ class KST_EXPORT CreateLabelCommand : public CreateCommand
 {
 public:
   CreateLabelCommand() : CreateCommand(QObject::tr("Create Label")) {}
-  CreateLabelCommand(KstPlotView *view): CreateCommand(view, QObject::tr("Create Label")) {}
+  CreateLabelCommand(View *view): CreateCommand(view, QObject::tr("Create Label")) {}
   virtual ~CreateLabelCommand() {}
   virtual void createItem();
 };

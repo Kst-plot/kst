@@ -16,19 +16,19 @@
 #include <QUndoCommand>
 #include "kst_export.h"
 
-class KstPlotView;
 
 namespace Kst {
+class View;
 
 class KST_EXPORT ViewCommand : public QUndoCommand
 {
 public:
   ViewCommand(const QString &text, bool addToStack = true, QUndoCommand *parent = 0);
-  ViewCommand(KstPlotView *view, const QString &text, bool addToStack = true, QUndoCommand *parent = 0);
+  ViewCommand(View *view, const QString &text, bool addToStack = true, QUndoCommand *parent = 0);
   virtual ~ViewCommand();
 
 protected:
-  QPointer<KstPlotView> _view;
+  QPointer<View> _view;
 };
 
 }

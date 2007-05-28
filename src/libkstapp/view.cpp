@@ -9,7 +9,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstplotview.h"
+#include "view.h"
 #include "kstmainwindow.h"
 #include "kstapplication.h"
 
@@ -20,7 +20,8 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 
-KstPlotView::KstPlotView()
+namespace Kst {
+View::View()
     : QGraphicsView(kstApp->mainWindow()),
       _currentPlotItem(0), _mouseMode(Default) {
 
@@ -32,26 +33,26 @@ KstPlotView::KstPlotView()
 }
 
 
-KstPlotView::~KstPlotView() {
+View::~View() {
 }
 
 
-QUndoStack *KstPlotView::undoStack() const {
+QUndoStack *View::undoStack() const {
   return _undoStack;
 }
 
 
-Kst::ViewItem *KstPlotView::currentPlotItem() const {
+Kst::ViewItem *View::currentPlotItem() const {
   return _currentPlotItem;
 }
 
 
-KstPlotView::MouseMode KstPlotView::mouseMode() const {
+View::MouseMode View::mouseMode() const {
   return _mouseMode;
 }
 
 
-void KstPlotView::setMouseMode(MouseMode mode) {
+void View::setMouseMode(MouseMode mode) {
 
   if (_mouseMode == Create) {
     _creationPolygonPress.clear();
@@ -72,28 +73,28 @@ void KstPlotView::setMouseMode(MouseMode mode) {
 }
 
 
-QPolygonF KstPlotView::creationPolygon(CreationEvents events) const {
+QPolygonF View::creationPolygon(CreationEvents events) const {
 #if 0
   QPolygonF resultSet;
-  if (events & KstPlotView::MousePress)
+  if (events & View::MousePress)
     resultSet = resultSet.united(_creationPolygonPress);
-  if (events & KstPlotView::MouseRelease)
+  if (events & View::MouseRelease)
     resultSet = resultSet.united(_creationPolygonRelease);
-  if (events & KstPlotView::MouseMove)
+  if (events & View::MouseMove)
     resultSet = resultSet.united(_creationPolygonMove);
   return resultSet;
 #endif
-  if (events == KstPlotView::MousePress)
+  if (events == View::MousePress)
      return _creationPolygonPress;
-  if (events == KstPlotView::MouseRelease)
+  if (events == View::MouseRelease)
      return _creationPolygonRelease;
-  if (events == KstPlotView::MouseMove)
+  if (events == View::MouseMove)
      return _creationPolygonMove;
   return QPolygonF();
 }
 
 
-bool KstPlotView::eventFilter(QObject *obj, QEvent *event) {
+bool View::eventFilter(QObject *obj, QEvent *event) {
   if (obj != scene() || _mouseMode != Create)
     return QGraphicsView::eventFilter(obj, event);
 
@@ -125,13 +126,13 @@ bool KstPlotView::eventFilter(QObject *obj, QEvent *event) {
 }
 
 
-void KstPlotView::setVisible(bool visible) {
+void View::setVisible(bool visible) {
   QGraphicsView::setVisible(visible);
   QTimer::singleShot(0, this, SLOT(initializeSceneRect()));
 }
 
 
-void KstPlotView::initializeSceneRect() {
+void View::initializeSceneRect() {
 
   //Maybe this should be the size of the desktop?
   setSceneRect(QRectF(0, 0, width() - 1.0, height() - 1.0));
@@ -144,14 +145,15 @@ void KstPlotView::initializeSceneRect() {
 }
 
 
-void KstPlotView::resizeEvent(QResizeEvent *event) {
+void View::resizeEvent(QResizeEvent *event) {
   QGraphicsView::resizeEvent(event);
 
   if (size() != sceneRect().size() && sceneRect().isValid()) {
     fitInView(sceneRect());
   }
 }
+}
 
-#include "kstplotview.moc"
+#include "view.moc"
 
 // vim: ts=2 sw=2 et

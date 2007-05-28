@@ -9,8 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTPLOTVIEW_H
-#define KSTPLOTVIEW_H
+#ifndef VIEW_H
+#define VIEW_H
 
 #include <QGraphicsView>
 
@@ -18,10 +18,9 @@
 
 class QUndoStack;
 namespace Kst {
-  class ViewItem;
-}
+class ViewItem;
 
-class KST_EXPORT KstPlotView : public QGraphicsView
+class KST_EXPORT View : public QGraphicsView
 {
   Q_OBJECT
 public:
@@ -33,11 +32,11 @@ public:
   };
   Q_DECLARE_FLAGS(CreationEvents, CreationEvent)
 
-  KstPlotView();
-  virtual ~KstPlotView();
+  View();
+  virtual ~View();
 
   QUndoStack *undoStack() const;
-  Kst::ViewItem* currentPlotItem() const;
+  ViewItem* currentPlotItem() const;
 
   MouseMode mouseMode() const;
   void setMouseMode(MouseMode mode);
@@ -46,7 +45,7 @@ public:
 
 Q_SIGNALS:
   void mouseModeChanged();
-  void creationPolygonChanged(KstPlotView::CreationEvent event);
+  void creationPolygonChanged(View::CreationEvent event);
 
 protected:
   bool eventFilter(QObject *obj, QEvent *event);
@@ -58,12 +57,14 @@ private Q_SLOTS:
 
 private:
   QUndoStack *_undoStack;
-  Kst::ViewItem *_currentPlotItem;
+  ViewItem *_currentPlotItem;
   MouseMode _mouseMode;
   QPolygonF _creationPolygonPress;
   QPolygonF _creationPolygonMove;
   QPolygonF _creationPolygonRelease;
 };
+
+}
 
 #endif
 
