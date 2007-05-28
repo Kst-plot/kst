@@ -12,24 +12,29 @@
 #include "view.h"
 #include "mainwindow.h"
 #include "kstapplication.h"
+#include "applicationsettings.h"
 
 #include <QDebug>
 #include <QTimer>
 #include <QUndoStack>
 #include <QResizeEvent>
+#include <QGLWidget>
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 
 namespace Kst {
+
 View::View()
-    : QGraphicsView(kstApp->mainWindow()),
-      _currentPlotItem(0), _mouseMode(Default) {
+  : QGraphicsView(kstApp->mainWindow()), _currentPlotItem(0), _mouseMode(Default) {
 
   _undoStack = new QUndoStack(this);
   setScene(new QGraphicsScene(this));
   scene()->installEventFilter(this);
   setInteractive(true);
   setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
+  if (ApplicationSettings::self()->useOpenGL()) {
+    setViewport(new QGLWidget);
+  }
 }
 
 
