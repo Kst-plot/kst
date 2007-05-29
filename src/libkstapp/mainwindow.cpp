@@ -21,6 +21,7 @@
 #include <QtGui>
 
 // Temporaries
+#include "kstavector.h"
 #include "vectortablemodel.h"
 
 namespace Kst {
@@ -106,6 +107,7 @@ void MainWindow::demoModel() {
   v->resize(999999);
   KstVectorPtr v2 = new KstVector;
   v2->resize(999999);
+  KstVectorPtr v3 = new KstAVector(25, KstObjectTag::fromString("Editable V"));
   double *d = const_cast<double *>(v->value()); // yay :)
   double *d2 = const_cast<double *>(v2->value()); // yay :)
   d[0] = 1;
@@ -116,9 +118,11 @@ void MainWindow::demoModel() {
   }
   VectorModel *m = new VectorModel(v);
   VectorModel *m2 = new VectorModel(v2);
+  VectorModel *m3 = new VectorModel(v3);
   VectorTableModel *tm = new VectorTableModel;
   tm->vectors().append(m);
   tm->vectors().append(m2);
+  tm->vectors().append(m3);
   view->setModel(tm);
   view->resize(300, 500);
   view->show();

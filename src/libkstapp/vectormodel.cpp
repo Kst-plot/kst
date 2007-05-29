@@ -69,6 +69,43 @@ QVariant VectorModel::headerData(int section, Qt::Orientation orientation, int r
   return _v->tagName();
 }
 
+
+Qt::ItemFlags VectorModel::flags(const QModelIndex& index) const {
+  Qt::ItemFlags f = QAbstractItemModel::flags(index);
+  if (!index.isValid()) {
+    return f;
+  }
+
+  if (_v->editable() && index.row() >= 0 && index.row() < _v->length()) {
+    f |= Qt::ItemIsEditable;
+  }
+
+  return f;
+}
+
+
+bool VectorModel::setData(const QModelIndex& index, const QVariant& value, int role) {
+  if (role != Qt::EditRole) {
+    return QAbstractItemModel::setData(index, value, role);
+  }
+
+  if (!index.isValid() || !_v->editable() || index.row() < 0 || index.row() >= _v->length()) {
+    return false;
+  }
+
+  bool ok = false;
+  double v = value.toDouble(&ok);
+  if (!ok) {
+    return false;
+  }
+
+  qDebug() << "UGLY!! Add setData API to KstVector!";
+  double *d = const_cast<double*>(_v->value());
+  d[index.row()] = v;
+  return true;
+}
+
+
 }
 
 // vim: ts=2 sw=2 et

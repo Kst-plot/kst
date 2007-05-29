@@ -31,6 +31,8 @@ public:
 
   QVector<VectorModel*>& vectors() { return _vectors; }
   const QVector<VectorModel*>& vectors() const { return _vectors; }
+  Qt::ItemFlags flags(const QModelIndex& index) const;
+  bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
 private:
   QVector<VectorModel*> _vectors;

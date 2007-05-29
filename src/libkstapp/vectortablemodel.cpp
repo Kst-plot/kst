@@ -41,7 +41,6 @@ int VectorTableModel::rowCount(const QModelIndex& parent) const {
 
 
 QVariant VectorTableModel::data(const QModelIndex& index, int role) const {
-  Q_UNUSED(role)
   if (!index.isValid() || role != Qt::DisplayRole) {
     return QVariant();
   }
@@ -76,6 +75,33 @@ QVariant VectorTableModel::headerData(int section, Qt::Orientation orientation, 
     return QAbstractItemModel::headerData(section, orientation, role);
   }
   return _vectors[section]->headerData(0, orientation, role);
+}
+
+
+Qt::ItemFlags VectorTableModel::flags(const QModelIndex& index) const {
+  const int col = index.column();
+  const int row = index.row();
+  if (col < 0 || col >= _vectors.count() || !index.isValid()) {
+    return QAbstractItemModel::flags(index);
+  }
+
+  VectorModel *m = _vectors[col];
+  if (row < 0 || row >= m->rowCount()) {
+    return QAbstractItemModel::flags(index);
+  }
+
+  QModelIndex idx = m->index(row, 0);
+  return m->flags(idx);
+}
+
+
+bool VectorTableModel::setData(const QModelIndex& index, const QVariant& value, int role) {
+  if (!index.isValid() || role != Qt::EditRole) {
+    return false;
+  }
+  VectorModel *m = _vectors[index.column()];
+  QModelIndex idx = m->index(index.row(), 0);
+  return m->setData(idx, value, role);
 }
 
 }
