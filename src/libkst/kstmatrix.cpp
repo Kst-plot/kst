@@ -92,7 +92,7 @@ int KstMatrix::sampleCount() const {
 }
     
 
-double KstMatrix::value(double x, double y, bool* ok) {
+double KstMatrix::value(double x, double y, bool* ok) const {
   int x_index = (int)floor((x - _minX) / (double)_stepX);
   int y_index = (int)floor((y - _minY) / (double)_stepY);
 
@@ -100,7 +100,7 @@ double KstMatrix::value(double x, double y, bool* ok) {
 }
     
 
-double KstMatrix::valueRaw(int x, int y, bool* ok) {
+double KstMatrix::valueRaw(int x, int y, bool* ok) const {
   int index = zIndex(x,y);
   if ((index < 0) || !finite(_z[index]) || KST_ISNAN(_z[index])) {
     if (ok) {
@@ -115,7 +115,7 @@ double KstMatrix::valueRaw(int x, int y, bool* ok) {
 }
 
 
-int KstMatrix::zIndex(int x, int y) {
+int KstMatrix::zIndex(int x, int y) const {
   if (x >= _nX || x < 0 || y >= _nY || y < 0) {
     return -1;
   }

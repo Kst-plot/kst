@@ -47,7 +47,7 @@ class KST_EXPORT KstMatrix: public KstPrimitive {
 
     // return the z value of the rectangle in which the specified point lies
     // ok is false if the point is out of bounds
-    double value(double x, double y, bool *ok = 0L);
+    double value(double x, double y, bool *ok = 0L) const;
     
     // set the z value of the rectangle in which the specified point lies
     // return false if the point is out of bounds
@@ -55,7 +55,7 @@ class KST_EXPORT KstMatrix: public KstPrimitive {
 
     // return the value of the specified rectangle 
     // ok is false if the rectangle does not exist
-    double valueRaw(int x, int y, bool *ok = 0L);
+    double valueRaw(int x, int y, bool *ok = 0L) const;
     
     // set the value of the specified rectangle
     // return false if the rectangle does not exist
@@ -161,7 +161,7 @@ class KST_EXPORT KstMatrix: public KstPrimitive {
     virtual bool resizeZ(int sz, bool reinit = true);
 
     // returns -1 if (x,y) is out of bounds
-    int zIndex(int x, int y);
+    int zIndex(int x, int y) const;
 
     KstObject::UpdateType internalUpdate(KstObject::UpdateType providerUpdateType);
 };
