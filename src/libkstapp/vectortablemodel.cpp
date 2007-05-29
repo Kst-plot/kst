@@ -41,7 +41,7 @@ int VectorTableModel::rowCount(const QModelIndex& parent) const {
 
 
 QVariant VectorTableModel::data(const QModelIndex& index, int role) const {
-  if (!index.isValid() || role != Qt::DisplayRole) {
+  if (!index.isValid()) {
     return QVariant();
   }
   VectorModel *m = _vectors[index.column()];

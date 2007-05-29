@@ -13,6 +13,8 @@
 
 #include <assert.h>
 
+#include <QFont>
+
 namespace Kst {
 
 VectorModel::VectorModel(KstVectorPtr v)
@@ -39,10 +41,26 @@ int VectorModel::rowCount(const QModelIndex& parent) const {
 
 QVariant VectorModel::data(const QModelIndex& index, int role) const {
   Q_UNUSED(role)
-  if (!index.isValid() || role != Qt::DisplayRole) {
-    return QVariant();
+  QVariant rc;
+  if (index.isValid()) {
+    switch (role) {
+      case Qt::DisplayRole:
+        rc = QVariant(_v->value(index.row()));
+        break;
+      case Qt::FontRole:
+        {
+          if (_v->editable()) {
+            QFont f;
+            f.setBold(true);
+            rc = f;
+          }
+        }
+        break;
+      default:
+        break;
+    }
   }
-  return QVariant(_v->value(index.row()));
+  return rc;
 }
 
 
