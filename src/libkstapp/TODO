@@ -1,8 +1,69 @@
-- More shapes/items
-- Actual plot item
-- SVG item?
-- Use some templates/factories for CreateCommands?
-- Undo/Redo for item select/focus/move and other ItemChange's
-- Make Undo/Redo of move command work for selections too
-- Movement of lines alone doesn't work
+View
+----
+- arrows
+- resizing
+- undo/redo of selection moves
+- Undo/Redo for item select/focus/move and other ItemChanges
+- movement and other mouse manipulation in general needs work
 - Box the objects so they can't be dragged out of the visible size of scene
+- Kst2DPlot
+- Add properties to Items such as border, brush, pen, padding, etc
+- Item context menus
+- Create an ItemModel to map the items into a model
+
+
+Dialogs
+-------
+- Finish off DataManager
+- Add DataWizard
+- Polish the vector dialog and hook it up
+- Item dialogs
+- Matrix Dialog
+   - make an item view that is a set of tabs containing tableviews
+- String+Scalar dialog
+- Dialogs for data objects
+- Add view manager -> just a view onto the item model
+
+
+Models
+------
+- Add support for objects appearing/disappearing
+- Implement SessionModel for the datamanager
+- Implement MatrixTableModel
+- Implement PrimitiveScalarModel (Strings+Scalars)
+     - support grouping by parent
+
+
+Plotting
+--------
+- Move algorithms into libkstmath
+- Separate Kst2DPlot into pieces
+     - axis
+     - ??
+
+
+Document
+--------
+- Save
+- Move data collections into here somehow?
+
+
+MainWindow
+----------
+- Statusbar items
+- Printing
+- Open/Save
+- Toolbar
+- Mouse modes
+
+
+Updates
+-------
+- Need a plan
+
+
+Other
+-----
+- Use some templates/factories for CreateCommands?
+- Move actions from MainWindow to each Item
+
