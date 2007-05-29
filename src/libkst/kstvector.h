@@ -106,7 +106,7 @@ class KstVector : public KstPrimitive {
     /** return a sensible top label.... */
     virtual QString fileLabel() const;
 
-    virtual bool resize(int sz, bool reinit = true);
+    virtual bool resize(int sz, bool init = true);
 
     virtual void setNewAndShift(int inNew, int inShift);
 

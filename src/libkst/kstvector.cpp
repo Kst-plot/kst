@@ -420,7 +420,7 @@ void KstVector::blank() {
 }
 
 
-bool KstVector::resize(int sz, bool reinit) {
+bool KstVector::resize(int sz, bool init) {
   //qDebug() << "resizing to: " << sz << endl;
   if (sz > 0) {
     _v = static_cast<double*>(KST::realloc(_v, sz*sizeof(double)));
@@ -428,7 +428,7 @@ bool KstVector::resize(int sz, bool reinit) {
       return false;
     }
 #ifdef ZERO_MEMORY
-    if (reinit && _size < sz) {
+    if (init && _size < sz) {
 #if ZERO_MEMORY == 2
       abort(); // must use NAN here
       memset(&_v[_size], 0, (sz - _size)*sizeof(double));
