@@ -3,17 +3,24 @@ include_directories( ${CMAKE_BINARY_DIR}/kst ${CMAKE_SOURCE_DIR}/kst/src/extdate
 set(kstapp_LIB_SRCS
    applicationsettings.cpp
    boxitem.cpp
+   datamanager.cpp
+   document.cpp
    ellipseitem.cpp
    kstapplication.cpp
    labelitem.cpp
    lineitem.cpp
    mainwindow.cpp
+   sessionmodel.cpp
    tabwidget.cpp
    vectormodel.cpp
    vectortablemodel.cpp
    viewcommand.cpp
    view.cpp
    viewitem.cpp
+   )
+
+kde4_add_ui_files(kstapp_LIB_SRCS
+   datamanager.ui
    )
 
 kde4_automoc(${kstapp_LIB_SRCS})

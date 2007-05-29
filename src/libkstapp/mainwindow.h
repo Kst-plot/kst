@@ -19,70 +19,84 @@ class QAction;
 class QUndoGroup;
 
 namespace Kst {
-class View;
+
+class DataManager;
+class Document;
 class TabWidget;
+class View;
 
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
-public:
-  MainWindow();
-  virtual ~MainWindow();
+  public:
+    MainWindow();
+    ~MainWindow();
 
-  QUndoGroup *undoGroup() const;
-  TabWidget *tabWidget() const;
+    QUndoGroup *undoGroup() const;
+    TabWidget *tabWidget() const;
+    Document *document() const;
 
-private Q_SLOTS:
-  void aboutToQuit();
-  void about();
-  void currentViewChanged();
+  public Q_SLOTS:
+    void showDataManager();
 
-  void createLabel();
-  void createBox();
-  void createEllipse();
-  void createLine();
+  private Q_SLOTS:
+    void aboutToQuit();
+    void about();
+    void currentViewChanged();
 
-  void demoModel();
+    void createLabel();
+    void createBox();
+    void createEllipse();
+    void createLine();
 
-private:
-  void createActions();
-  void createMenus();
-  void createToolBars();
-  void createStatusBar();
+    void demoModel();
 
-  void readSettings();
-  void writeSettings();
+  private:
+    void createActions();
+    void createMenus();
+    void createToolBars();
+    void createStatusBar();
 
-private:
-  TabWidget *_tabWidget;
-  QUndoGroup *_undoGroup;
+    void readSettings();
+    void writeSettings();
 
-  QMenu *_fileMenu;
-  QMenu *_editMenu;
-  QMenu *_plotMenu;
-  QMenu *_settingsMenu;
-  QMenu *_helpMenu;
+  private:
+    Document *_doc;
+    TabWidget *_tabWidget;
+    QUndoGroup *_undoGroup;
 
-  QToolBar *_fileToolBar;
-  QToolBar *_editToolBar;
+    DataManager *_dataManager;
 
-  QAction *_undoAct;
-  QAction *_redoAct;
-  // FIXME: move these into each object, along with the creation slot?
-  QAction *_createLabelAct;
-  QAction *_createBoxAct;
-  QAction *_createEllipseAct;
-  QAction *_createLineAct;
+    // Do we need these?  I don't think so...
+    QMenu *_fileMenu;
+    QMenu *_dataMenu;
+    QMenu *_editMenu;
+    QMenu *_plotMenu;
+    QMenu *_settingsMenu;
+    QMenu *_helpMenu;
 
-  QAction *_newTabAct;
-  QAction *_saveAct;
-  QAction *_saveAsAct;
-  QAction *_openAct;
-  QAction *_printAct;
-  QAction *_closeTabAct;
-  QAction *_exitAct;
-  QAction *_aboutAct;
-  QAction *_aboutQtAct;
+    // Do we need these?  I don't think so...
+    QToolBar *_fileToolBar;
+    QToolBar *_editToolBar;
+
+    QAction *_undoAct;
+    QAction *_redoAct;
+    // FIXME: move these into each object, along with the creation slot?
+    QAction *_createLabelAct;
+    QAction *_createBoxAct;
+    QAction *_createEllipseAct;
+    QAction *_createLineAct;
+
+    QAction *_newTabAct;
+    QAction *_saveAct;
+    QAction *_saveAsAct;
+    QAction *_openAct;
+    QAction *_printAct;
+    QAction *_closeTabAct;
+    QAction *_exitAct;
+    QAction *_dataManagerAct;
+    QAction *_aboutAct;
+    QAction *_aboutQtAct;
 };
 
 }

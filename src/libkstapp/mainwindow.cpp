@@ -10,9 +10,11 @@
  ***************************************************************************/
 
 #include "mainwindow.h"
-#include "kstapplication.h"
 #include "boxitem.h"
+#include "datamanager.h"
+#include "document.h"
 #include "ellipseitem.h"
+#include "kstapplication.h"
 #include "labelitem.h"
 #include "lineitem.h"
 #include "tabwidget.h"
@@ -27,6 +29,8 @@
 namespace Kst {
 
 MainWindow::MainWindow() {
+  _dataManager = 0;
+  _doc = new Document;
   _tabWidget = new TabWidget(this);
   _undoGroup = new QUndoGroup(this);
 
@@ -46,6 +50,15 @@ MainWindow::MainWindow() {
 
 
 MainWindow::~MainWindow() {
+  delete _dataManager;
+  _dataManager = 0;
+  delete _doc;
+  _doc = 0;
+}
+
+
+Document *MainWindow::document() const {
+  return _doc;
 }
 
 
@@ -57,7 +70,6 @@ QUndoGroup *MainWindow::undoGroup() const {
 TabWidget *MainWindow::tabWidget() const {
   return _tabWidget;
 }
-
 
 
 void MainWindow::currentViewChanged() {
@@ -180,6 +192,10 @@ void MainWindow::createActions() {
   _exitAct->setStatusTip(tr("Exit the application"));
   connect(_exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
+  _dataManagerAct = new QAction(tr("Data &Manager"), this);
+  _dataManagerAct->setStatusTip(tr("Show Kst's data manager window"));
+  connect(_dataManagerAct, SIGNAL(triggered()), this, SLOT(showDataManager()));
+
   _aboutAct = new QAction(tr("&About"), this);
   _aboutAct->setStatusTip(tr("Show Kst's About box"));
   connect(_aboutAct, SIGNAL(triggered()), this, SLOT(about()));
@@ -204,6 +220,9 @@ void MainWindow::createMenus() {
   _editMenu = menuBar()->addMenu(tr("&Edit"));
   _editMenu->addAction(_undoAct);
   _editMenu->addAction(_redoAct);
+
+  _dataMenu = menuBar()->addMenu(tr("&Data"));
+  _dataMenu->addAction(_dataManagerAct);
 
   _plotMenu = menuBar()->addMenu(tr("&Plot"));
   _plotMenu->addAction(_createLabelAct);
@@ -235,6 +254,14 @@ void MainWindow::createToolBars() {
 
 void MainWindow::createStatusBar() {
   statusBar()->showMessage(tr("Ready"));
+}
+
+
+void MainWindow::showDataManager() {
+  if (!_dataManager) {
+    _dataManager = new DataManager(this, _doc);
+  }
+  _dataManager->show();
 }
 
 
