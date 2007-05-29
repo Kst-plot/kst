@@ -10,6 +10,7 @@ set(kstapp_LIB_SRCS
    labelitem.cpp
    lineitem.cpp
    mainwindow.cpp
+   matrixmodel.cpp
    pictureitem.cpp
    sessionmodel.cpp
    tabwidget.cpp
