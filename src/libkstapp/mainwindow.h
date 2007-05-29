@@ -48,6 +48,7 @@ class MainWindow : public QMainWindow
     void createBox();
     void createEllipse();
     void createLine();
+    void createPicture();
 
     void demoModel();
 
@@ -86,6 +87,7 @@ class MainWindow : public QMainWindow
     QAction *_createBoxAct;
     QAction *_createEllipseAct;
     QAction *_createLineAct;
+    QAction *_createPictureAct;
 
     QAction *_newTabAct;
     QAction *_saveAct;

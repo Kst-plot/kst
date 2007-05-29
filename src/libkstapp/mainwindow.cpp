@@ -17,6 +17,7 @@
 #include "kstapplication.h"
 #include "labelitem.h"
 #include "lineitem.h"
+#include "pictureitem.h"
 #include "tabwidget.h"
 #include "view.h"
 
@@ -84,8 +85,13 @@ void MainWindow::aboutToQuit() {
 
 void MainWindow::about() {
   //FIXME Build a proper about box...
-  QMessageBox::about(this, tr("About Kst"),
-          tr("FIXME."));
+  QMessageBox::about(this, tr("About Kst"), tr("FIXME."));
+}
+
+
+void MainWindow::createPicture() {
+  CreatePictureCommand *cmd = new CreatePictureCommand;
+  cmd->createItem();
 }
 
 
@@ -154,6 +160,10 @@ void MainWindow::createActions() {
   _createBoxAct = new QAction(tr("&Create box"), this);
   _createBoxAct->setStatusTip(tr("Create a box for the current view"));
   connect(_createBoxAct, SIGNAL(triggered()), this, SLOT(createBox()));
+
+  _createPictureAct = new QAction(tr("&Create picture"), this);
+  _createPictureAct->setStatusTip(tr("Create a picture for the current view"));
+  connect(_createPictureAct, SIGNAL(triggered()), this, SLOT(createPicture()));
 
   _createEllipseAct = new QAction(tr("&Create ellipse"), this);
   _createEllipseAct->setStatusTip(tr("Create an ellipse for the current view"));
@@ -229,6 +239,7 @@ void MainWindow::createMenus() {
   _plotMenu->addAction(_createBoxAct);
   _plotMenu->addAction(_createEllipseAct);
   _plotMenu->addAction(_createLineAct);
+  _plotMenu->addAction(_createPictureAct);
 
   _settingsMenu = menuBar()->addMenu(tr("&Settings"));
 
