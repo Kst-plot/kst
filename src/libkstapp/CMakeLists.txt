@@ -12,6 +12,7 @@ set(kstapp_LIB_SRCS
    mainwindow.cpp
    matrixmodel.cpp
    pictureitem.cpp
+   plotitem.cpp
    sessionmodel.cpp
    tabwidget.cpp
    vectormodel.cpp

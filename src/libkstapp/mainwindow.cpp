@@ -18,6 +18,7 @@
 #include "labelitem.h"
 #include "lineitem.h"
 #include "pictureitem.h"
+#include "plotitem.h"
 #include "tabwidget.h"
 #include "view.h"
 
@@ -119,6 +120,12 @@ void MainWindow::createLine() {
 }
 
 
+void MainWindow::createPlot() {
+  CreatePlotCommand *cmd = new CreatePlotCommand;
+  cmd->createItem();
+}
+
+
 void MainWindow::demoModel() {
   QTableView *view = new QTableView;
   KstVectorPtr v = new KstVector;
@@ -172,6 +179,10 @@ void MainWindow::createActions() {
   _createLineAct = new QAction(tr("&Create line"), this);
   _createLineAct->setStatusTip(tr("Create a line for the current view"));
   connect(_createLineAct, SIGNAL(triggered()), this, SLOT(createLine()));
+
+  _createPlotAct = new QAction(tr("&Create plot"), this);
+  _createPlotAct->setStatusTip(tr("Create a plot for the current view"));
+  connect(_createPlotAct, SIGNAL(triggered()), this, SLOT(createPlot()));
 
   _newTabAct = new QAction(tr("&New tab"), this);
   _newTabAct->setStatusTip(tr("Create a new tab"));
@@ -240,6 +251,7 @@ void MainWindow::createMenus() {
   _plotMenu->addAction(_createEllipseAct);
   _plotMenu->addAction(_createLineAct);
   _plotMenu->addAction(_createPictureAct);
+  _plotMenu->addAction(_createPlotAct);
 
   _settingsMenu = menuBar()->addMenu(tr("&Settings"));
 

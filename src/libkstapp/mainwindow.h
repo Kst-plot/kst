@@ -49,6 +49,7 @@ class MainWindow : public QMainWindow
     void createEllipse();
     void createLine();
     void createPicture();
+    void createPlot();
 
     void demoModel();
 
@@ -88,6 +89,7 @@ class MainWindow : public QMainWindow
     QAction *_createEllipseAct;
     QAction *_createLineAct;
     QAction *_createPictureAct;
+    QAction *_createPlotAct;
 
     QAction *_newTabAct;
     QAction *_saveAct;
