@@ -26,6 +26,8 @@
 
 // Temporaries
 #include "kstavector.h"
+#include "kstdataobjectcollection.h"
+#include "kstequation.h"
 #include "vectortablemodel.h"
 
 namespace Kst {
@@ -151,6 +153,8 @@ void MainWindow::demoModel() {
   view->setModel(tm);
   view->resize(300, 500);
   view->show();
+  KstEquationPtr ep = new KstEquation("My Equation", "x^2", 0, 100, 1000);
+  KST::addDataObjectToList(ep.data());
 }
 
 

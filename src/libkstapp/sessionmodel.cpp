@@ -28,7 +28,7 @@ SessionModel::~SessionModel() {
 
 int SessionModel::columnCount(const QModelIndex& parent) const {
   Q_UNUSED(parent)
-  return 1;
+  return 5;
 }
 
 
@@ -49,14 +49,36 @@ int SessionModel::rowCount(const QModelIndex& parent) const {
 
 
 QVariant SessionModel::data(const QModelIndex& index, int role) const {
-  if (!index.isValid()) {
-    return QVariant();
+  QVariant rc;
+  if (!index.isValid() || role != Qt::DisplayRole) {
+    return rc;
   }
-  return QVariant();
+  const int row = index.row(), col = index.column();
+  KstDataObjectPtr p = KST::dataObjectList[row];
+  if (!p) {
+    return rc;
+  }
+  switch (col) {
+    case 0:
+      p->readLock();
+      rc = p->tagName();
+      p->unlock();
+      break;
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    default:
+      break;
+  }
+  return rc;
 }
 
 
 QModelIndex SessionModel::index(int row, int col, const QModelIndex& parent) const {
+  if (col < 0 || col > 4) {
+    return QModelIndex();
+  }
   return createIndex(row, col);
 }
 
@@ -71,6 +93,20 @@ QModelIndex SessionModel::parent(const QModelIndex& index) const {
 QVariant SessionModel::headerData(int section, Qt::Orientation orientation, int role) const {
   if (role != Qt::DisplayRole) {
     return QAbstractItemModel::headerData(section, orientation, role);
+  }
+  switch (section) {
+    case 0:
+      return tr("Name");
+    case 1:
+      return tr("Type");
+    case 2:
+      return tr("Used");
+    case 3:
+      return tr("Samples");
+    case 4:
+      return tr("Properties");
+    default:
+      break;
   }
   return QVariant();
 }
