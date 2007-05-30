@@ -91,7 +91,21 @@ void MainWindow::cleanup() {
 }
 
 
+bool MainWindow::promptSave() {
+    int rc = QMessageBox::warning(this, tr("Kst"), tr("Your document has been modified.\nSave changes?"), QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save);
+    if (rc == QMessageBox::Save) {
+      save();
+    } else if (rc == QMessageBox::Cancel) {
+      return false;
+    }
+    return true;
+}
+
+
 void MainWindow::closeEvent(QCloseEvent *e) {
+  if (_doc->isChanged() && !promptSave()) {
+    return;
+  }
   cleanup();
   QMainWindow::closeEvent(e);
 }
@@ -109,6 +123,76 @@ QUndoGroup *MainWindow::undoGroup() const {
 
 TabWidget *MainWindow::tabWidget() const {
   return _tabWidget;
+}
+
+
+void MainWindow::save() {
+  if (_doc->isOpen()) {
+    _doc->save();
+  }
+}
+
+
+void MainWindow::saveAs() {
+  if (_doc->isOpen()) {
+    _doc->save();
+  }
+}
+
+
+void MainWindow::open() {
+  if (_doc->isChanged() && !promptSave()) {
+    return;
+  }
+  QString fn = QFileDialog::getOpenFileName(this, tr("Kst: Open File"), QString(), tr("Kst Sessions (*.kst)"));
+  if (!fn.isEmpty()) {
+    delete _doc;
+  }
+  _doc = new Document;
+  bool ok = _doc->open(fn);
+  if (!ok) {
+    QMessageBox::critical(this, tr("Kst"), tr("Error opening document '%1':\n%2").arg(fn, _doc->lastError()));
+    delete _doc;
+    _doc = new Document;
+  }
+}
+
+
+void MainWindow::print() {
+  if (!_doc->isOpen()) {
+    return;
+  }
+
+  QPrinter printer(QPrinter::HighResolution);
+
+  QPrintDialog pd(&printer, this);
+  pd.addEnabledOption(QPrintDialog::PrintToFile);
+  pd.addEnabledOption(QPrintDialog::PrintPageRange);
+
+  if (pd.exec() == QDialog::Accepted) {
+    QPainter painter(&printer);
+    QList<QGraphicsView*> pages;
+    switch (printer.printRange()) {
+      case QPrinter::PageRange:
+        break;
+      case QPrinter::AllPages:
+        foreach (QGraphicsView *view, _tabWidget->views()) {
+          pages.append(view);
+        }
+        break;
+      case QPrinter::Selection:
+      default:
+        pages.append(_tabWidget->currentView());
+        break;
+    }
+
+    for (int i = 0; i < printer.numCopies(); ++i) {
+      foreach (QGraphicsView *view, pages) {
+        view->render(&painter, QRectF(), QRect(), Qt::KeepAspectRatio /* IgnoreAspectRatio */);
+        printer.newPage();
+      }
+    }
+  }
 }
 
 
@@ -226,19 +310,19 @@ void MainWindow::createActions() {
 
   _saveAct = new QAction(tr("&Save"), this);
   _saveAct->setStatusTip(tr("Save the current session"));
-  //connect(_saveAct, SIGNAL(triggered()), document(), SLOT(save()));
+  connect(_saveAct, SIGNAL(triggered()), this, SLOT(save()));
 
   _saveAsAct = new QAction(tr("Save &as..."), this);
   _saveAsAct->setStatusTip(tr("Save the current session"));
-  //connect(_saveAsAct, SIGNAL(triggered()), document(), SLOT(saveAs()));
+  connect(_saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
   _openAct = new QAction(tr("&Open..."), this);
   _openAct->setStatusTip(tr("Open a new session"));
-  //connect(_openAct, SIGNAL(triggered()), this, SLOT(openDocument()));
+  connect(_openAct, SIGNAL(triggered()), this, SLOT(open()));
 
   _printAct = new QAction(tr("&Print..."), this);
   _printAct->setStatusTip(tr("Print the current view"));
-  //connect(_printAct, SIGNAL(triggered()), this, SLOT(print()));
+  connect(_printAct, SIGNAL(triggered()), this, SLOT(print()));
 
   _exitAct = new QAction(tr("E&xit"), this);
   _exitAct->setShortcut(tr("Ctrl+Q"));

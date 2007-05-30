@@ -30,7 +30,26 @@ SessionModel* Document::session() const {
 }
 
 
-void Document::save(const QString& to) {
+bool Document::save(const QString& to) {
+}
+
+
+bool Document::open(const QString& file) {
+}
+
+
+QString Document::lastError() const {
+  return QString::null;
+}
+
+
+bool Document::isChanged() const {
+  return true;  // FIXME!
+}
+
+
+bool Document::isOpen() const {
+  return true;  // FIXME!
 }
 
 }

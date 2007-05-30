@@ -25,7 +25,13 @@ class Document {
 
     SessionModel* session() const;
 
-    void save(const QString& to = QString::null);
+    bool open(const QString& file);
+    bool save(const QString& to = QString::null);
+
+    bool isChanged() const;
+    bool isOpen() const;
+
+    QString lastError() const;
 
   private:
     SessionModel *_session;

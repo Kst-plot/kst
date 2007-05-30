@@ -45,14 +45,12 @@ Plotting
 Document
 --------
 - Save
+- Open
 - Move data collections into here somehow?
 
 
 MainWindow
 ----------
-- Statusbar items
-- Printing
-- Open/Save
 - Toolbar
 - Mouse modes
 

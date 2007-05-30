@@ -44,6 +44,11 @@ class MainWindow : public QMainWindow
     void showDataManager();
     void showVectorEditor();
 
+    void save();
+    void saveAs();
+    void open();
+    void print();
+
   private Q_SLOTS:
     void aboutToQuit();
     void about();
@@ -71,6 +76,7 @@ class MainWindow : public QMainWindow
 
     void readSettings();
     void writeSettings();
+    bool promptSave();
 
   private:
     Document *_doc;

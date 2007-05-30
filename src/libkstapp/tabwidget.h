@@ -26,6 +26,7 @@ class TabWidget : public QTabWidget
     ~TabWidget();
 
     View *currentView() const;
+    QList<View*> views() const;
 
   public Q_SLOTS:
     View *createView();

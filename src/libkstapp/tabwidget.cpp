@@ -56,6 +56,15 @@ View *TabWidget::currentView() const {
 }
 
 
+QList<View*> TabWidget::views() const {
+  QList<View*> v;
+  for (int i = 0; i < count(); ++i) {
+    v.append(qobject_cast<View*>(widget(i)));
+  }
+  return v;
+}
+
+
 void TabWidget::viewDestroyed(QObject *object) {
   View *view = qobject_cast<View*>(object);
   removeTab(indexOf(view));
