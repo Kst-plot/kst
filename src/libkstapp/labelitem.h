@@ -12,39 +12,45 @@
 #ifndef LABELITEM_H
 #define LABELITEM_H
 
-#include <QGraphicsSimpleTextItem>
+#include <QGraphicsRectItem>
 #include "viewitem.h"
+
+namespace Label {
+  class Parsed;
+}
 
 namespace Kst {
 
-class LabelItem : public ViewItem, public QGraphicsSimpleTextItem
-{
+class LabelItem : public ViewItem, public QGraphicsRectItem {
   Q_OBJECT
-public:
-  LabelItem(View *parent);
-  virtual ~LabelItem();
+  public:
+    LabelItem(View *parent, const QString& labelText);
+    virtual ~LabelItem();
 
-  virtual QGraphicsItem *graphicsItem() { return this; }
+    virtual QGraphicsItem *graphicsItem() { return this; }
 
-protected:
-  void mousePressEvent(QGraphicsSceneMouseEvent *event);
-  void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-private Q_SLOTS:
-  void creationPolygonChanged(View::CreationEvent event);
+  protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
-private:
-  QPointF _originalPos;
+  private Q_SLOTS:
+    void creationPolygonChanged(View::CreationEvent event);
+
+  private:
+    QPointF _originalPos;
+    Label::Parsed *_parsed;
+    QString _text;
 };
 
 
-class KST_EXPORT CreateLabelCommand : public CreateCommand
-{
-public:
-  CreateLabelCommand() : CreateCommand(QObject::tr("Create Label")) {}
-  CreateLabelCommand(View *view): CreateCommand(view, QObject::tr("Create Label")) {}
-  virtual ~CreateLabelCommand() {}
-  virtual void createItem();
+class KST_EXPORT CreateLabelCommand : public CreateCommand {
+  public:
+    CreateLabelCommand() : CreateCommand(QObject::tr("Create Label")) {}
+    CreateLabelCommand(View *view): CreateCommand(view, QObject::tr("Create Label")) {}
+    virtual ~CreateLabelCommand() {}
+    virtual void createItem();
 };
 
 }

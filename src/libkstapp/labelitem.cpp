@@ -10,6 +10,8 @@
  ***************************************************************************/
 
 #include "labelitem.h"
+#include <labelparser.h>
+#include "labelrenderer.h"
 
 #include <QDebug>
 #include <QInputDialog>
@@ -18,8 +20,8 @@
 
 namespace Kst {
 
-LabelItem::LabelItem(View *parent)
-    : ViewItem(parent) {
+LabelItem::LabelItem(View *parent, const QString& txt)
+    : ViewItem(parent), _parsed(0), _text(txt) {
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
   parent->setMouseMode(View::Create);
   parent->setCursor(Qt::IBeamCursor);
@@ -34,17 +36,41 @@ LabelItem::LabelItem(View *parent)
 
 
 LabelItem::~LabelItem() {
+  delete _parsed;
+  _parsed = 0;
+}
+
+
+void LabelItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+  if (!_parsed) {
+    _parsed = Label::parse(_text);
+  }
+
+  // We can do better here. - caching
+  if (_parsed) {
+    const qreal w = pen().widthF();
+    painter->save();
+    QRect box = rect().adjusted(w, w, -w, -w).toRect();
+    painter->translate(rect().topLeft());
+    Label::RenderContext rc(QFont().family(), 16, painter);
+    Label::renderLabel(rc, _parsed->chunk);
+    painter->restore();
+  }
+  QBrush b = brush();
+  setBrush(Qt::NoBrush);
+  QGraphicsRectItem::paint(painter, option, widget);
+  setBrush(b);
 }
 
 
 void LabelItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-  QGraphicsSimpleTextItem::mousePressEvent(event);
+  QGraphicsRectItem::mousePressEvent(event);
   _originalPos = pos();
 }
 
 
 void LabelItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-  QGraphicsSimpleTextItem::mouseReleaseEvent(event);
+  QGraphicsRectItem::mouseReleaseEvent(event);
 
   QPointF newPos = pos();
   if (_originalPos != newPos)
@@ -54,22 +80,22 @@ void LabelItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
 void LabelItem::creationPolygonChanged(View::CreationEvent event) {
   if (event == View::MousePress) {
-
-    bool ok;
-    QString text = QInputDialog::getText(parentView(), QObject::tr("label"),
-                                         QObject::tr("label:"), QLineEdit::Normal,
-                                         QString::null, &ok);
-    if (!ok || text.isEmpty()) {
-      //This will delete...
-      parentView()->setMouseMode(View::Default);
-      return;
-    }
-
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MousePress));
-    setText(text);
-    setPos(poly[0]);
+    setRect(poly.first().x(), poly.first().y(), poly.last().x() - poly.first().x(), poly.last().y() - poly.first().y());
     parentView()->scene()->addItem(this);
     setZValue(1);
+    return;
+  }
+
+  if (event == View::MouseMove) {
+    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseMove));
+    setRect(rect().x(), rect().y(), poly.last().x() - rect().x(), poly.last().y() - rect().y());
+    return;
+  }
+
+  if (event == View::MouseRelease) {
+    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseRelease));
+    setRect(rect().x(), rect().y(), poly.last().x() - rect().x(), poly.last().y() - rect().y());
 
 #ifdef DEBUG_GEOMETRY
     debugGeometry();
@@ -83,8 +109,15 @@ void LabelItem::creationPolygonChanged(View::CreationEvent event) {
   }
 }
 
+
 void CreateLabelCommand::createItem() {
-  _item = new LabelItem(_view);
+  bool ok;
+  QString text = QInputDialog::getText(_view, tr("Kst: Create Label"), tr("Label:"), QLineEdit::Normal, QString::null, &ok);
+  if (!ok || text.isEmpty()) {
+    return;
+  }
+
+  _item = new LabelItem(_view, text);
   connect(_item, SIGNAL(creationComplete()), this, SLOT(creationComplete()));
 
   //If the item is interrupted while creating itself it will destroy itself

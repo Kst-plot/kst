@@ -8,6 +8,7 @@ set(kstapp_LIB_SRCS
    ellipseitem.cpp
    kstapplication.cpp
    labelitem.cpp
+   labelrenderer.cpp
    lineitem.cpp
    mainwindow.cpp
    matrixmodel.cpp
