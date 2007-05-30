@@ -75,6 +75,7 @@ template <class T>
 class KstObjectCollection {
   public:
     KstObjectCollection();
+    KstObjectCollection(const KstObjectCollection& copy) { qDebug() << "CRASH! Deep copy required."; }
     ~KstObjectCollection();
 
     typedef typename KstObjectList<KstSharedPtr<T> >::const_iterator const_iterator;
@@ -193,11 +194,11 @@ QStringList KstObjectTreeNode<T>::fullTag() const {
 
 template <class T>
 KstObjectTreeNode<T> *KstObjectTreeNode<T>::child(const QString& tag) const {
-  if (_children.contains(tag)) {
-    return _children[tag];
-  } else {
-    return NULL;
+  typename QMap<QString, KstObjectTreeNode<T> *>::ConstIterator i = _children.find(tag);
+  if (i != _children.end()) {
+    return *i;
   }
+  return 0;
 }
 
 
@@ -245,12 +246,15 @@ KstObjectTreeNode<T> *KstObjectTreeNode<T>::addDescendant(T *o, KstObjectNameInd
       nextNode->_parent = currNode;
       currNode->_children[*i] = nextNode;
       if (index) {
-        QList<KstObjectTreeNode<T> *> *l;
-        if (!(l = index->take(*i))) {
+        QList<KstObjectTreeNode<T> *> *l = 0;
+        typename KstObjectNameIndex<T>::Iterator it = index->find(*i);
+        if (it == index->end()) {
           l = new QList<KstObjectTreeNode<T> *>;
+          index->insert(*i, l);
+        } else {
+          l = *it;
         }
         l->append(nextNode);
-        index->insert(*i, l);
       }
     }
     currNode = nextNode;
@@ -756,7 +760,8 @@ void KstObjectCollection<T>::updateDisplayTags(QList<KstObjectTreeNode<T> *> nod
 // recursion helper
 template <class T>
 void KstObjectCollection<T>::relatedNodesHelper(T *o, KstObjectTreeNode<T> *n, QHash<int, KstObjectTreeNode<T>* >& nodes) {
-
+  Q_ASSERT(o);
+  Q_ASSERT(n);
   if (n->object() && n->object() != o && !nodes.contains((long)n)) {
 #if NAMEDEBUG > 2
           qDebug() << "Found related node to" << o->tag().tagString() << ":" << n->object()->tag().tagString(); 
@@ -795,7 +800,6 @@ QList<KstObjectTreeNode<T> *> KstObjectCollection<T>::relatedNodes(T *o) {
 
   for (QStringList::ConstIterator i = ft.begin(); i != ft.end(); ++i) {
     typename KstObjectNameIndex<T>::ConstIterator ni = _index.find(*i);
-    qDebug() << "Iterate" << *i;
     if (ni != _index.end()) {
       QList<KstObjectTreeNode<T> *> *nodeList = *ni;
       for (typename QList<KstObjectTreeNode<T> *>::ConstIterator i2 = nodeList->begin(); i2 != nodeList->end(); ++i2) {
