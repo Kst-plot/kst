@@ -15,6 +15,7 @@ set(kstapp_LIB_SRCS
    plotitem.cpp
    sessionmodel.cpp
    tabwidget.cpp
+   vectoreditordialog.cpp
    vectormodel.cpp
    vectortablemodel.cpp
    viewcommand.cpp
@@ -24,6 +25,7 @@ set(kstapp_LIB_SRCS
 
 kde4_add_ui_files(kstapp_LIB_SRCS
    datamanager.ui
+   vectoreditordialog.ui
    )
 
 kde4_automoc(${kstapp_LIB_SRCS})

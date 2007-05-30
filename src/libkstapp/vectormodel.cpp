@@ -17,9 +17,9 @@
 
 namespace Kst {
 
-VectorModel::VectorModel(KstVectorPtr v)
+VectorModel::VectorModel(KstVector *v)
 : QAbstractItemModel(), _v(v) {
-  assert(v.data());
+  assert(v);
 }
 
 
@@ -35,14 +35,14 @@ int VectorModel::columnCount(const QModelIndex& parent) const {
 
 int VectorModel::rowCount(const QModelIndex& parent) const {
   Q_UNUSED(parent)
-  return _v->length();
+  return _v ? _v->length() : 0;
 }
 
 
 QVariant VectorModel::data(const QModelIndex& index, int role) const {
   Q_UNUSED(role)
   QVariant rc;
-  if (index.isValid()) {
+  if (index.isValid() && _v) {
     switch (role) {
       case Qt::DisplayRole:
         rc = QVariant(_v->value(index.row()));
@@ -67,7 +67,7 @@ QVariant VectorModel::data(const QModelIndex& index, int role) const {
 QModelIndex VectorModel::index(int row, int col, const QModelIndex& parent) const {
   Q_UNUSED(parent)
   Q_UNUSED(col)
-  if (row < _v->length()) {
+  if (_v && row < _v->length()) {
     return createIndex(row, 1);
   }
   return QModelIndex();
@@ -81,7 +81,7 @@ QModelIndex VectorModel::parent(const QModelIndex& index) const {
 
 
 QVariant VectorModel::headerData(int section, Qt::Orientation orientation, int role) const {
-  if (role != Qt::DisplayRole || orientation == Qt::Vertical || section != 0) {
+  if (!_v || role != Qt::DisplayRole || orientation == Qt::Vertical || section != 0) {
     return QAbstractItemModel::headerData(section, orientation, role);
   }
   return _v->tagName();
@@ -90,7 +90,7 @@ QVariant VectorModel::headerData(int section, Qt::Orientation orientation, int r
 
 Qt::ItemFlags VectorModel::flags(const QModelIndex& index) const {
   Qt::ItemFlags f = QAbstractItemModel::flags(index);
-  if (!index.isValid()) {
+  if (!_v || !index.isValid()) {
     return f;
   }
 
@@ -107,7 +107,7 @@ bool VectorModel::setData(const QModelIndex& index, const QVariant& value, int r
     return QAbstractItemModel::setData(index, value, role);
   }
 
-  if (!index.isValid() || !_v->editable() || index.row() < 0 || index.row() >= _v->length()) {
+  if (!_v || !index.isValid() || !_v->editable() || index.row() < 0 || index.row() >= _v->length()) {
     return false;
   }
 

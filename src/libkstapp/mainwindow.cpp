@@ -20,20 +20,23 @@
 #include "pictureitem.h"
 #include "plotitem.h"
 #include "tabwidget.h"
+#include "vectoreditordialog.h"
 #include "view.h"
 
 #include <QtGui>
 
 // Temporaries
 #include "kstavector.h"
+#include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"
 #include "kstequation.h"
-#include "vectortablemodel.h"
+
 
 namespace Kst {
 
 MainWindow::MainWindow() {
   _dataManager = 0;
+  _vectorEditor = 0;
   _doc = new Document;
   _tabWidget = new TabWidget(this);
   _undoGroup = new QUndoGroup(this);
@@ -54,10 +57,42 @@ MainWindow::MainWindow() {
 
 
 MainWindow::~MainWindow() {
+  delete _vectorEditor;
+  _vectorEditor = 0;
   delete _dataManager;
   _dataManager = 0;
   delete _doc;
   _doc = 0;
+}
+
+
+void MainWindow::cleanup() {
+  KST::dataObjectList.lock().writeLock();
+  KstDataObjectList dol = KST::dataObjectList;
+  KST::dataObjectList.clear();
+  KST::dataObjectList.lock().unlock();
+  dol.clear();
+  KST::dataSourceList.lock().writeLock();
+  KST::dataSourceList.clear();
+  KST::dataSourceList.lock().unlock();
+  KST::matrixList.lock().writeLock();
+  KST::matrixList.clear();
+  KST::matrixList.lock().unlock();
+  KST::scalarList.lock().writeLock();
+  KST::scalarList.clear();
+  KST::scalarList.lock().unlock();
+  KST::stringList.lock().writeLock();
+  KST::stringList.clear();
+  KST::stringList.lock().unlock();
+  KST::vectorList.lock().writeLock();
+  KST::vectorList.clear();
+  KST::vectorList.lock().unlock();
+}
+
+
+void MainWindow::closeEvent(QCloseEvent *e) {
+  cleanup();
+  QMainWindow::closeEvent(e);
 }
 
 
@@ -129,7 +164,6 @@ void MainWindow::createPlot() {
 
 
 void MainWindow::demoModel() {
-  QTableView *view = new QTableView;
   KstVectorPtr v = new KstVector;
   v->resize(999999);
   KstVectorPtr v2 = new KstVector;
@@ -143,17 +177,10 @@ void MainWindow::demoModel() {
     d[i] = d[i-1] + 0.002;
     d2[i] = d2[i-1] + 0.003;
   }
-  VectorModel *m = new VectorModel(v);
-  VectorModel *m2 = new VectorModel(v2);
-  VectorModel *m3 = new VectorModel(v3);
-  VectorTableModel *tm = new VectorTableModel;
-  tm->vectors().append(m);
-  tm->vectors().append(m2);
-  tm->vectors().append(m3);
-  view->setModel(tm);
-  view->resize(300, 500);
-  view->show();
   KstEquationPtr ep = new KstEquation("My Equation", "x^2", 0, 100, 1000);
+  ep->writeLock();
+  ep->update(0);
+  ep->unlock();
   KST::addDataObjectToList(ep.data());
 }
 
@@ -217,9 +244,13 @@ void MainWindow::createActions() {
   _exitAct->setStatusTip(tr("Exit the application"));
   connect(_exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
-  _dataManagerAct = new QAction(tr("Data &Manager"), this);
+  _dataManagerAct = new QAction(tr("Data &Manager..."), this);
   _dataManagerAct->setStatusTip(tr("Show Kst's data manager window"));
   connect(_dataManagerAct, SIGNAL(triggered()), this, SLOT(showDataManager()));
+
+  _vectorEditorAct = new QAction(tr("&Vectors..."), this);
+  _vectorEditorAct->setStatusTip(tr("Show all vectors in a spreadsheet"));
+  connect(_vectorEditorAct, SIGNAL(triggered()), this, SLOT(showVectorEditor()));
 
   _aboutAct = new QAction(tr("&About"), this);
   _aboutAct->setStatusTip(tr("Show Kst's About box"));
@@ -248,6 +279,7 @@ void MainWindow::createMenus() {
 
   _dataMenu = menuBar()->addMenu(tr("&Data"));
   _dataMenu->addAction(_dataManagerAct);
+  _dataMenu->addAction(_vectorEditorAct);
 
   _plotMenu = menuBar()->addMenu(tr("&Plot"));
   _plotMenu->addAction(_createLabelAct);
@@ -289,6 +321,14 @@ void MainWindow::showDataManager() {
     _dataManager = new DataManager(this, _doc);
   }
   _dataManager->show();
+}
+
+
+void MainWindow::showVectorEditor() {
+  if (!_vectorEditor) {
+    _vectorEditor = new VectorEditorDialog(this, _doc);
+  }
+  _vectorEditor->show();
 }
 
 

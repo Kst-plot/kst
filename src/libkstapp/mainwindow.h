@@ -23,6 +23,7 @@ namespace Kst {
 class DataManager;
 class Document;
 class TabWidget;
+class VectorEditorDialog;
 class View;
 
 class MainWindow : public QMainWindow
@@ -38,6 +39,7 @@ class MainWindow : public QMainWindow
 
   public Q_SLOTS:
     void showDataManager();
+    void showVectorEditor();
 
   private Q_SLOTS:
     void aboutToQuit();
@@ -52,6 +54,11 @@ class MainWindow : public QMainWindow
     void createPlot();
 
     void demoModel();
+
+    void cleanup();
+
+  protected:
+    void closeEvent(QCloseEvent *e);
 
   private:
     void createActions();
@@ -68,6 +75,7 @@ class MainWindow : public QMainWindow
     QUndoGroup *_undoGroup;
 
     DataManager *_dataManager;
+    VectorEditorDialog *_vectorEditor;
 
     // Do we need these?  I don't think so...
     QMenu *_fileMenu;
@@ -99,6 +107,7 @@ class MainWindow : public QMainWindow
     QAction *_closeTabAct;
     QAction *_exitAct;
     QAction *_dataManagerAct;
+    QAction *_vectorEditorAct;
     QAction *_aboutAct;
     QAction *_aboutQtAct;
 };

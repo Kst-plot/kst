@@ -28,11 +28,11 @@ public:
   QModelIndex index(int row, int col, const QModelIndex& parent = QModelIndex()) const;
   QModelIndex parent(const QModelIndex& index) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+  Qt::ItemFlags flags(const QModelIndex& index) const;
+  bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
   QVector<VectorModel*>& vectors() { return _vectors; }
   const QVector<VectorModel*>& vectors() const { return _vectors; }
-  Qt::ItemFlags flags(const QModelIndex& index) const;
-  bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
 private:
   QVector<VectorModel*> _vectors;

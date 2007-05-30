@@ -30,7 +30,7 @@
     </widget>
    </item>
    <item row="0" column="1" >
-    <widget class="QListView" name="session" >
+    <widget class="QTreeView" name="session" >
      <property name="sizePolicy" >
       <sizepolicy>
        <hsizetype>7</hsizetype>
