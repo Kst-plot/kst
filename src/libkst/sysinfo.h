@@ -1,4 +1,4 @@
-#ifdef HAVE_LINUX
+#ifdef __linux__
 #ifndef PROC_SYSINFO_H
 #define PROC_SYSINFO_H
 #include <sys/types.h>

@@ -13,9 +13,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPointer>
 
 class QMenu;
 class QAction;
+class QProgressBar;
 class QUndoGroup;
 
 namespace Kst {
@@ -36,6 +38,7 @@ class MainWindow : public QMainWindow
     QUndoGroup *undoGroup() const;
     TabWidget *tabWidget() const;
     Document *document() const;
+    QProgressBar *progressBar() const;
 
   public Q_SLOTS:
     void showDataManager();
@@ -76,6 +79,8 @@ class MainWindow : public QMainWindow
 
     DataManager *_dataManager;
     VectorEditorDialog *_vectorEditor;
+
+    QPointer<QProgressBar> _progressBar;
 
     // Do we need these?  I don't think so...
     QMenu *_fileMenu;

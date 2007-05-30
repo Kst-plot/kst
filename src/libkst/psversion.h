@@ -1,5 +1,5 @@
 #include "config.h"
-#ifdef HAVE_LINUX
+#ifdef __linux__
 #ifndef PROC_VERSION_H
 #define PROC_VERSION_H
 

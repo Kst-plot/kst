@@ -17,6 +17,7 @@
 #include "kstapplication.h"
 #include "labelitem.h"
 #include "lineitem.h"
+#include "memorywidget.h"
 #include "pictureitem.h"
 #include "plotitem.h"
 #include "tabwidget.h"
@@ -312,7 +313,17 @@ void MainWindow::createToolBars() {
 
 
 void MainWindow::createStatusBar() {
+  MemoryWidget *mw = new MemoryWidget(statusBar());
+  statusBar()->addPermanentWidget(mw);
+  _progressBar = new QProgressBar(statusBar());
+  _progressBar->hide();
+  statusBar()->addPermanentWidget(_progressBar);
   statusBar()->showMessage(tr("Ready"));
+}
+
+
+QProgressBar *MainWindow::progressBar() const {
+  return _progressBar;
 }
 
 

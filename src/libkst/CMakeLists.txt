@@ -26,6 +26,10 @@ set(kst_LIB_SRCS
    ksttimezones.cpp 
    kstscalar.cpp 
 #   $(PROCPS_COPY) 
+# FIXME: switch to a variable
+   sysinfo.c
+   psversion.c
+# END FIXME
    kststring.cpp 
    kstmatrix.cpp 
    kstrmatrix.cpp 
