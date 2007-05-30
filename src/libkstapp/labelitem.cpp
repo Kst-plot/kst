@@ -37,16 +37,18 @@ LabelItem::~LabelItem() {
 }
 
 
-QVariant LabelItem::itemChange(GraphicsItemChange change, const QVariant &value) {
-  if (change == ItemPositionChange && scene()) {
-    QPointF originalPos = pos();
-    QPointF newPos = value.toPointF();
-    // FIXME this is too greedy as it produces too many undo commands.
-    // Ideally, we'd only record the move from right before the item
-    // becomes the mouse grabber to right after.
-    new MoveCommand(this, originalPos, newPos);
-  }
-  return QGraphicsItem::itemChange(change, value);
+void LabelItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+  QGraphicsSimpleTextItem::mousePressEvent(event);
+  _originalPos = pos();
+}
+
+
+void LabelItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+  QGraphicsSimpleTextItem::mouseReleaseEvent(event);
+
+  QPointF newPos = pos();
+  if (_originalPos != newPos)
+    new MoveCommand(this, _originalPos, newPos);
 }
 
 
