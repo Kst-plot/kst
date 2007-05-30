@@ -77,6 +77,8 @@ class KstObjectCollection {
     KstObjectCollection();
     ~KstObjectCollection();
 
+    typedef typename KstObjectList<KstSharedPtr<T> >::const_iterator const_iterator;
+    typedef typename KstObjectList<KstSharedPtr<T> >::iterator iterator;
     bool addObject(T *o);
     bool removeObject(T *o);
     void doRename(T *o, const KstObjectTag& newTag);
