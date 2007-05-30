@@ -20,6 +20,12 @@ DataManager::DataManager(QWidget *parent, Document *doc)
 : QDialog(parent), _doc(doc) {
   ui.setupUi(this);
   ui.session->setModel(doc->session());
+  QWidget *w = new QWidget(ui.objects);
+  ui.objects->addItem(w, tr("Data"));
+  w = new QWidget(ui.objects);
+  ui.objects->addItem(w, tr("Objects"));
+  w = new QWidget(ui.objects);
+  ui.objects->addItem(w, tr("Plugins"));
 }
 
 

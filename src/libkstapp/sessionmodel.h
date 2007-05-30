@@ -30,6 +30,9 @@ public:
   QModelIndex parent(const QModelIndex& index) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
+private:
+  QVariant vectorData(const QModelIndex& index, int role) const;
+  QVariant dataObjectData(const QModelIndex& index, int role) const;
 };
 
 }
