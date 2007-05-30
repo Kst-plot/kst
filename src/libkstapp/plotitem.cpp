@@ -22,6 +22,7 @@ PlotItem::PlotItem(View *parent)
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
   parent->setMouseMode(View::Create);
   parent->setCursor(Qt::CrossCursor);
+  setBrush(Qt::white);
 
   //If the mouseMode is changed again before we're done with creation
   //delete ourself.
