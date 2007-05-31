@@ -24,8 +24,8 @@
 
 namespace KST {
 
-ExtDateTime millisecondsToExtDateTime(double ms) {
-  ExtDateTime edt;
+QDateTime millisecondsToQDateTime(double ms) {
+  QDateTime edt;
   edt.setTime_t(0);
   if (ms > 0.0) {
     double milli = fmod(ms, 1000.0);
@@ -43,7 +43,7 @@ ExtDateTime millisecondsToExtDateTime(double ms) {
 }
 
 
-double extDateTimeToMilliseconds(const ExtDateTime& edt) {
+double extDateTimeToMilliseconds(const QDateTime& edt) {
   double rc = 0.0;
   if (edt.isNull()) {
     return rc;
@@ -60,10 +60,10 @@ double extDateTimeToMilliseconds(const ExtDateTime& edt) {
 }
 
 
-ExtDateTime parsePlanckDate(const QString& dateString) {
+QDateTime parsePlanckDate(const QString& dateString) {
   QStringList secondSplit = dateString.split('.');
   if (secondSplit.isEmpty() || secondSplit.count() > 2) {
-    return ExtDateTime();
+    return QDateTime();
   }
 
   int seconds = 0;
@@ -72,14 +72,14 @@ ExtDateTime parsePlanckDate(const QString& dateString) {
   }
 
   QStringList mainSplit = secondSplit[0].split(':');
-  ExtDateTime edt = ExtDateTime::currentDateTime();
-  int offset = ExtDateTime::currentDateTime().toUTC().toTime_t() - edt.toTime_t();
-  ExtDate d = edt.date();
+  QDateTime edt = QDateTime::currentDateTime();
+  int offset = QDateTime::currentDateTime().toUTC().toTime_t() - edt.toTime_t();
+  QDate d = edt.date();
   QTime t = edt.time();
   int i = 0;
   switch (mainSplit.count()) {
     default:
-      return ExtDateTime();
+      return QDateTime();
     case 5:
       {
         int years = mainSplit[i++].toInt();

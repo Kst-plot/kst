@@ -18,7 +18,6 @@
 #ifndef KSTDATEPARSER_H
 #define KSTDATEPARSER_H
 
-// #include <kstextdatetime.h>
 #include <QTime>
 #include <QDate>
 #include <QDateTime>
@@ -26,20 +25,13 @@
 
 /* This is a public header */
 namespace KST {
-
-  /*FIXME Need to know if QDateTime in Qt4 will serve our needs or do we need to port
-  over the extdate lib*/
-  typedef QTime ExtTime;
-  typedef QDate ExtDate;
-  typedef QDateTime ExtDateTime;
-
   /*
   All times represented as doubles are the number of milliseconds since Jan 01
   1970 00:00:00.  Negative times are before then.
   */
-  KST_EXPORT extern ExtDateTime parsePlanckDate(const QString& dateString);
-  KST_EXPORT extern double extDateTimeToMilliseconds(const ExtDateTime& edt);
-  KST_EXPORT extern ExtDateTime millisecondsToExtDateTime(double ms);
+  KST_EXPORT extern QDateTime parsePlanckDate(const QString& dateString);
+  KST_EXPORT extern double extDateTimeToMilliseconds(const QDateTime& edt);
+  KST_EXPORT extern QDateTime millisecondsToQDateTime(double ms);
 }
 
 #endif

@@ -673,7 +673,7 @@ bool KstDataSource::supportsTimeConversions() const {
 }
 
 
-int KstDataSource::sampleForTime(const KST::ExtDateTime& time, bool *ok) {
+int KstDataSource::sampleForTime(const QDateTime& time, bool *ok) {
   Q_UNUSED(time)
   if (ok) {
     *ok = false;
@@ -693,12 +693,12 @@ int KstDataSource::sampleForTime(double ms, bool *ok) {
 
 
 
-KST::ExtDateTime KstDataSource::timeForSample(int sample, bool *ok) {
+QDateTime KstDataSource::timeForSample(int sample, bool *ok) {
   Q_UNUSED(sample)
   if (ok) {
     *ok = false;
   }
-  return KST::ExtDateTime::currentDateTime();
+  return QDateTime::currentDateTime();
 }
 
 

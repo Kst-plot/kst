@@ -23,7 +23,8 @@ set(kst_LIB_SRCS
    rwlock.cpp 
    kstmath.cpp 
    kstdateparser.cpp 
-   ksttimezones.cpp 
+#  Needs porting, but is unused anyway
+#   ksttimezones.cpp 
    kstscalar.cpp 
 #   $(PROCPS_COPY) 
 # FIXME: switch to a variable

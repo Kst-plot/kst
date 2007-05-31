@@ -201,11 +201,11 @@ class KST_EXPORT KstDataSource : public KstObject {
     /** Does it support time conversion of sample numbers, in general? */
     virtual bool supportsTimeConversions() const;
 
-    virtual int sampleForTime(const KST::ExtDateTime& time, bool *ok = 0L);
+    virtual int sampleForTime(const QDateTime& time, bool *ok = 0L);
 
     virtual int sampleForTime(double milliseconds, bool *ok = 0L);
 
-    virtual KST::ExtDateTime timeForSample(int sample, bool *ok = 0L);
+    virtual QDateTime timeForSample(int sample, bool *ok = 0L);
 
     // in (ms)
     virtual double relativeTimeForSample(int sample, bool *ok = 0L);
