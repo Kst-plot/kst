@@ -64,8 +64,6 @@ class KST_EXPORT KstDebug : public QObject {
     QMap<QString,int>& drawCounter() { return _drawCounter; }
 #endif
 
-  protected:
-    friend class KstApp;
     void setHandler(QObject *handler);
 
   private:
