@@ -4,6 +4,7 @@ set(kstapp_LIB_SRCS
    applicationsettings.cpp
    boxitem.cpp
    datamanager.cpp
+   debugnotifier.cpp
    document.cpp
    ellipseitem.cpp
    exportgraphicsdialog.cpp

@@ -12,6 +12,7 @@
 #include "mainwindow.h"
 #include "boxitem.h"
 #include "datamanager.h"
+#include "debugnotifier.h"
 #include "document.h"
 #include "ellipseitem.h"
 #include "exportgraphicsdialog.h"
@@ -404,11 +405,13 @@ void MainWindow::createToolBars() {
 
 
 void MainWindow::createStatusBar() {
-  MemoryWidget *mw = new MemoryWidget(statusBar());
-  statusBar()->addPermanentWidget(mw);
   _progressBar = new QProgressBar(statusBar());
   _progressBar->hide();
   statusBar()->addPermanentWidget(_progressBar);
+  MemoryWidget *mw = new MemoryWidget(statusBar());
+  statusBar()->addPermanentWidget(mw);
+  DebugNotifier *dn = new DebugNotifier(statusBar());
+  statusBar()->addPermanentWidget(dn);
   statusBar()->showMessage(tr("Ready"));
 }
 
