@@ -6,6 +6,7 @@ set(kstapp_LIB_SRCS
    datamanager.cpp
    document.cpp
    ellipseitem.cpp
+   exportgraphicsdialog.cpp
    kstapplication.cpp
    labelitem.cpp
    labelrenderer.cpp
@@ -27,6 +28,7 @@ set(kstapp_LIB_SRCS
 
 kde4_add_ui_files(kstapp_LIB_SRCS
    datamanager.ui
+   exportgraphicsdialog.ui
    vectoreditordialog.ui
    )
 

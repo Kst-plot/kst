@@ -24,6 +24,7 @@ namespace Kst {
 
 class DataManager;
 class Document;
+class ExportGraphicsDialog;
 class TabWidget;
 class VectorEditorDialog;
 class View;
@@ -42,6 +43,7 @@ class MainWindow : public QMainWindow
 
   public Q_SLOTS:
     void showDataManager();
+    void showExportGraphicsDialog();
     void showVectorEditor();
 
     void save();
@@ -85,6 +87,7 @@ class MainWindow : public QMainWindow
 
     DataManager *_dataManager;
     VectorEditorDialog *_vectorEditor;
+    ExportGraphicsDialog *_exportGraphics;
 
     QPointer<QProgressBar> _progressBar;
 
@@ -119,6 +122,7 @@ class MainWindow : public QMainWindow
     QAction *_exitAct;
     QAction *_dataManagerAct;
     QAction *_vectorEditorAct;
+    QAction *_exportGraphicsAct;
     QAction *_aboutAct;
     QAction *_aboutQtAct;
 };

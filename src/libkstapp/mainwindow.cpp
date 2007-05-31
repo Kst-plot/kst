@@ -14,6 +14,7 @@
 #include "datamanager.h"
 #include "document.h"
 #include "ellipseitem.h"
+#include "exportgraphicsdialog.h"
 #include "kstapplication.h"
 #include "labelitem.h"
 #include "lineitem.h"
@@ -37,6 +38,7 @@ namespace Kst {
 
 MainWindow::MainWindow() {
   _dataManager = 0;
+  _exportGraphics = 0;
   _vectorEditor = 0;
   _doc = new Document;
   _tabWidget = new TabWidget(this);
@@ -337,6 +339,10 @@ void MainWindow::createActions() {
   _vectorEditorAct->setStatusTip(tr("Show all vectors in a spreadsheet"));
   connect(_vectorEditorAct, SIGNAL(triggered()), this, SLOT(showVectorEditor()));
 
+  _exportGraphicsAct = new QAction(tr("&Export..."), this);
+  _exportGraphicsAct->setStatusTip(tr("Export graphics to disk"));
+  connect(_exportGraphicsAct, SIGNAL(triggered()), this, SLOT(showExportGraphicsDialog()));
+
   _aboutAct = new QAction(tr("&About"), this);
   _aboutAct->setStatusTip(tr("Show Kst's About box"));
   connect(_aboutAct, SIGNAL(triggered()), this, SLOT(about()));
@@ -354,6 +360,7 @@ void MainWindow::createMenus() {
   _fileMenu->addAction(_openAct);
   _fileMenu->addSeparator();
   _fileMenu->addAction(_printAct);
+  _fileMenu->addAction(_exportGraphicsAct);
   _fileMenu->addSeparator();
   _fileMenu->addAction(_closeTabAct);
   _fileMenu->addAction(_exitAct);
@@ -424,6 +431,14 @@ void MainWindow::showVectorEditor() {
     _vectorEditor = new VectorEditorDialog(this, _doc);
   }
   _vectorEditor->show();
+}
+
+
+void MainWindow::showExportGraphicsDialog() {
+  if (!_exportGraphics) {
+    _exportGraphics = new ExportGraphicsDialog(this);
+  }
+  _exportGraphics->show();
 }
 
 
