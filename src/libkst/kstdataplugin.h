@@ -76,10 +76,7 @@ namespace KST {
 
         QString libname = _plugLib;
         QByteArray s = QFile::encodeName(sym + "_" + libname.remove(QString("kstobject_")));
-        if (_lib->hasSymbol(s)) {
-          return _lib->symbol(s);
-        }
-        return 0L;
+	return _lib->resolveSymbol(s);
       }
 
       bool loadLibrary() const {
