@@ -66,17 +66,9 @@ Plugin *PluginLoader::loadPlugin(const QString& xmlfile, const QString& object) 
     return 0L;
   }
 
-  if (plug->_lib->hasSymbol(plug->_data._name.toLatin1())) {
-    plug->_symbol = plug->_lib->symbol(plug->_data._name.toLatin1());
-  }
-
-  if (plug->_lib->hasSymbol("freeLocalData")) {
-    plug->_freeSymbol = plug->_lib->symbol("freeLocalData");
-  }
-
-  if (plug->_lib->hasSymbol("errorCode")) {
-    plug->_errorSymbol = plug->_lib->symbol("errorCode");
-  }
+  plug->_symbol = plug->_lib->resolveSymbol(plug->_data._name.toLatin1());
+  plug->_freeSymbol = plug->_lib->resolveSymbol("freeLocalData");
+  plug->_errorSymbol = plug->_lib->resolveSymbol("errorCode");
 
   if (!plug->_symbol) {
     KstDebug::self()->log(i18n("Could not find symbol '%1' in plugin %2.").arg(plug->_data._name).arg(object), KstDebug::Error);
@@ -84,14 +76,11 @@ Plugin *PluginLoader::loadPlugin(const QString& xmlfile, const QString& object) 
     return 0L;
   }
 
-  if (plug->_lib->hasSymbol("parameterName")) {
-    plug->_parameterName = plug->_lib->symbol("parameterName");
-  }
-
+  plug->_parameterName = plug->_lib->resolveSymbol("parameterName");
   plug->_xmlFile = xmlfile;
   plug->_soFile = object;
 
-return plug;
+  return plug;
 }
 
 
