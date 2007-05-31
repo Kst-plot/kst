@@ -23,6 +23,7 @@ class QUndoGroup;
 namespace Kst {
 
 class DataManager;
+class DebugDialog;
 class Document;
 class ExportGraphicsDialog;
 class TabWidget;
@@ -43,6 +44,7 @@ class MainWindow : public QMainWindow
 
   public Q_SLOTS:
     void showDataManager();
+    void showDebugDialog();
     void showExportGraphicsDialog();
     void showVectorEditor();
 
@@ -86,8 +88,9 @@ class MainWindow : public QMainWindow
     QUndoGroup *_undoGroup;
 
     DataManager *_dataManager;
-    VectorEditorDialog *_vectorEditor;
+    DebugDialog *_debugDialog;
     ExportGraphicsDialog *_exportGraphics;
+    VectorEditorDialog *_vectorEditor;
 
     QPointer<QProgressBar> _progressBar;
 
@@ -123,6 +126,7 @@ class MainWindow : public QMainWindow
     QAction *_dataManagerAct;
     QAction *_vectorEditorAct;
     QAction *_exportGraphicsAct;
+    QAction *_debugDialogAct;
     QAction *_aboutAct;
     QAction *_aboutQtAct;
 };

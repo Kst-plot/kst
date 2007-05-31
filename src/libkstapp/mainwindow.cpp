@@ -12,6 +12,7 @@
 #include "mainwindow.h"
 #include "boxitem.h"
 #include "datamanager.h"
+#include "debugdialog.h"
 #include "debugnotifier.h"
 #include "document.h"
 #include "ellipseitem.h"
@@ -344,6 +345,10 @@ void MainWindow::createActions() {
   _exportGraphicsAct->setStatusTip(tr("Export graphics to disk"));
   connect(_exportGraphicsAct, SIGNAL(triggered()), this, SLOT(showExportGraphicsDialog()));
 
+  _debugDialogAct = new QAction(tr("&Debug Dialog..."), this);
+  _debugDialogAct->setStatusTip(tr("Show the Kst debugging dialog"));
+  connect(_debugDialogAct, SIGNAL(triggered()), this, SLOT(showDebugDialog()));
+
   _aboutAct = new QAction(tr("&About"), this);
   _aboutAct->setStatusTip(tr("Show Kst's About box"));
   connect(_aboutAct, SIGNAL(triggered()), this, SLOT(about()));
@@ -387,6 +392,7 @@ void MainWindow::createMenus() {
   menuBar()->addSeparator();
 
   _helpMenu = menuBar()->addMenu(tr("&Help"));
+  _helpMenu->addAction(_debugDialogAct);
   _helpMenu->addAction(_aboutAct);
   _helpMenu->addAction(_aboutQtAct);
 
@@ -411,6 +417,7 @@ void MainWindow::createStatusBar() {
   MemoryWidget *mw = new MemoryWidget(statusBar());
   statusBar()->addPermanentWidget(mw);
   DebugNotifier *dn = new DebugNotifier(statusBar());
+  connect(dn, SIGNAL(showDebugLog()), this, SLOT(showDebugDialog()));
   statusBar()->addPermanentWidget(dn);
   statusBar()->showMessage(tr("Ready"));
 }
@@ -434,6 +441,14 @@ void MainWindow::showVectorEditor() {
     _vectorEditor = new VectorEditorDialog(this, _doc);
   }
   _vectorEditor->show();
+}
+
+
+void MainWindow::showDebugDialog() {
+  if (!_debugDialog) {
+    _debugDialog = new DebugDialog(this);
+  }
+  _debugDialog->show();
 }
 
 

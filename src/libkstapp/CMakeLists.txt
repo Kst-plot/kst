@@ -4,6 +4,7 @@ set(kstapp_LIB_SRCS
    applicationsettings.cpp
    boxitem.cpp
    datamanager.cpp
+   debugdialog.cpp
    debugnotifier.cpp
    document.cpp
    ellipseitem.cpp
@@ -29,6 +30,7 @@ set(kstapp_LIB_SRCS
 
 kde4_add_ui_files(kstapp_LIB_SRCS
    datamanager.ui
+   debugdialog.ui
    exportgraphicsdialog.ui
    vectoreditordialog.ui
    )
