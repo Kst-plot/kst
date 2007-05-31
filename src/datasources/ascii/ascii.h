@@ -61,7 +61,7 @@ class AsciiSource : public KstDataSource {
 
     int sampleForTime(double ms, bool *ok);
 
-    int sampleForTime(const KST::ExtDateTime& time, bool *ok);
+    int sampleForTime(const QDateTime& time, bool *ok);
 
     bool fieldListIsComplete() const;
 

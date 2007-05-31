@@ -764,7 +764,7 @@ int AsciiSource::sampleForTime(double ms, bool *ok) {
 }
 
 
-int AsciiSource::sampleForTime(const KST::ExtDateTime& time, bool *ok) {
+int AsciiSource::sampleForTime(const QDateTime& time, bool *ok) {
   switch (_config->_indexInterpretation) {
     case AsciiSource::Config::Seconds:
       // FIXME: make sure "time" exists in _indexVector
