@@ -10,6 +10,9 @@
  ***************************************************************************/
 
 #include "debugdialog.h"
+#include <kstdebug.h>
+#include <kstevents.h>
+#include <logevents.h>
 
 namespace Kst {
 
@@ -20,6 +23,31 @@ DebugDialog::DebugDialog(QWidget *parent)
 
 
 DebugDialog::~DebugDialog() {
+}
+
+
+bool DebugDialog::event(QEvent* e) {
+  if (e->type() == KstEventTypeLog) {
+    LogEvent *le = dynamic_cast<LogEvent*>(e);
+    if (le) {
+      switch (le->_eventType) {
+        case LogEvent::LogAdded:
+          ui._log->append(le->_msg.msg);
+          if (le->_msg.level == KstDebug::Error) {
+            emit notifyOfError();
+          }
+          break;
+        case LogEvent::LogCleared:
+            ui._log->clear();
+            emit notifyAllClear();
+          break;
+        default:
+          break;
+      }
+    }
+    return true;
+  }
+  return false;
 }
 
 }

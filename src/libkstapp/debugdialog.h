@@ -24,6 +24,13 @@ class DebugDialog : public QDialog
     DebugDialog(QWidget *parent);
     ~DebugDialog();
 
+  Q_SIGNALS:
+    void notifyOfError();
+    void notifyAllClear();
+
+  protected:
+    bool event(QEvent *e);
+
   private:
     Ui::DebugDialog ui;
 };

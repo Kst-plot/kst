@@ -18,6 +18,7 @@
 #include "ellipseitem.h"
 #include "exportgraphicsdialog.h"
 #include "kstapplication.h"
+#include "kstdebug.h"
 #include "labelitem.h"
 #include "lineitem.h"
 #include "memorywidget.h"
@@ -45,6 +46,8 @@ MainWindow::MainWindow() {
   _doc = new Document;
   _tabWidget = new TabWidget(this);
   _undoGroup = new QUndoGroup(this);
+  _debugDialog = new DebugDialog(this); // need this early for hookups
+  KstDebug::self()->setHandler(_debugDialog);
 
   connect(_tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentViewChanged()));
 
@@ -58,6 +61,7 @@ MainWindow::MainWindow() {
   createStatusBar();
 
   readSettings();
+  QTimer::singleShot(0, this, SLOT(performHeavyStartupActions()));
 }
 
 
@@ -68,6 +72,10 @@ MainWindow::~MainWindow() {
   _dataManager = 0;
   delete _doc;
   _doc = 0;
+}
+
+
+void MainWindow::performHeavyStartupActions() {
 }
 
 
@@ -418,6 +426,8 @@ void MainWindow::createStatusBar() {
   statusBar()->addPermanentWidget(mw);
   DebugNotifier *dn = new DebugNotifier(statusBar());
   connect(dn, SIGNAL(showDebugLog()), this, SLOT(showDebugDialog()));
+  connect(_debugDialog, SIGNAL(notifyOfError()), dn, SLOT(reanimate()));
+  connect(_debugDialog, SIGNAL(notifyAllClear()), dn, SLOT(close()));
   statusBar()->addPermanentWidget(dn);
   statusBar()->showMessage(tr("Ready"));
 }

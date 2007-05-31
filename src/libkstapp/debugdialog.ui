@@ -1,318 +1,273 @@
-<ui version="4.0" stdsetdef="1" >
-  <author></author>
-  <comment></comment>
-  <exportmacro></exportmacro>
-  <class>DebugDialog</class>
-  <widget class="QDialog" name="DebugDialog" >
-    <property name="geometry" >
-      <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>708</width>
-        <height>452</height>
-      </rect>
-    </property>
-    <property name="windowTitle" >
-      <string>Kst Debug Dialog</string>
-    </property>
-    <layout class="QGridLayout" >
-      <item row="1" column="1" >
-        <widget class="QPushButton" name="_close" >
-          <property name="text" >
-            <string>&amp;Close</string>
-          </property>
+<ui version="4.0" >
+ <class>DebugDialog</class>
+ <widget class="QDialog" name="DebugDialog" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>666</width>
+    <height>422</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Kst Debug Dialog</string>
+  </property>
+  <layout class="QGridLayout" >
+   <property name="margin" >
+    <number>9</number>
+   </property>
+   <property name="spacing" >
+    <number>6</number>
+   </property>
+   <item row="0" column="0" colspan="2" >
+    <widget class="QTabWidget" name="_tabs" >
+     <property name="currentIndex" >
+      <number>1</number>
+     </property>
+     <widget class="QWidget" name="tab" >
+      <attribute name="title" >
+       <string>Build Information</string>
+      </attribute>
+      <layout class="QGridLayout" >
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item row="0" column="0" colspan="2" >
+        <widget class="QLabel" name="_buildInfo" >
+         <property name="text" >
+          <string/>
+         </property>
+         <property name="textFormat" >
+          <enum>Qt::RichText</enum>
+         </property>
+         <property name="wordWrap" >
+          <bool>false</bool>
+         </property>
         </widget>
-      </item>
-      <item row="1" column="0" >
-        <spacer name="spacer1" >
-          <property name="sizeHint" >
-            <size>
-              <width>421</width>
-              <height>20</height>
-            </size>
-          </property>
-          <property name="sizeType" >
-            <enum>Expanding</enum>
-          </property>
-          <property name="orientation" >
-            <enum>Horizontal</enum>
-          </property>
+       </item>
+       <item row="1" column="0" colspan="2" >
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType" >
+          <enum>QSizePolicy::Expanding</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>530</width>
+           <height>250</height>
+          </size>
+         </property>
         </spacer>
-      </item>
-      <item rowspan="1" row="0" column="0" colspan="2" >
-        <widget class="QTabWidget" name="_tabs" >
-          <widget class="QWidget" name="tab" >
-            <attribute name="title" >
-              <string>Build Information</string>
-            </attribute>
-            <layout class="QGridLayout" >
-              <property name="margin" >
-                <number>0</number>
-              </property>
-              <item rowspan="1" row="0" column="0" colspan="2" >
-                <widget class="QLabel" name="_buildInfo" >
-                  <property name="text" >
-                    <string/>
-                  </property>
-                  <property name="textFormat" >
-                    <enum>Qt::RichText</enum>
-                  </property>
-                  <property name="wordWrap" >
-                    <bool>false</bool>
-                  </property>
-                </widget>
-              </item>
-              <item rowspan="1" row="1" column="0" colspan="2" >
-                <spacer name="spacer3" >
-                  <property name="sizeHint" >
-                    <size>
-                      <width>530</width>
-                      <height>250</height>
-                    </size>
-                  </property>
-                  <property name="sizeType" >
-                    <enum>Expanding</enum>
-                  </property>
-                  <property name="orientation" >
-                    <enum>Vertical</enum>
-                  </property>
-                </spacer>
-              </item>
-              <item row="2" column="1" >
-                <widget class="QPushButton" name="_email" >
-                  <property name="text" >
-                    <string>&amp;Email Debugging Information</string>
-                  </property>
-                </widget>
-              </item>
-              <item row="2" column="0" >
-                <spacer name="spacer4" >
-                  <property name="sizeHint" >
-                    <size>
-                      <width>301</width>
-                      <height>21</height>
-                    </size>
-                  </property>
-                  <property name="sizeType" >
-                    <enum>Expanding</enum>
-                  </property>
-                  <property name="orientation" >
-                    <enum>Horizontal</enum>
-                  </property>
-                </spacer>
-              </item>
-            </layout>
-          </widget>
-          <widget class="QWidget" name="TabPage" >
-            <attribute name="title" >
-              <string>Log</string>
-            </attribute>
-            <layout class="QGridLayout" >
-              <property name="margin" >
-                <number>0</number>
-              </property>
-              <item row="1" column="2" >
-                <widget class="QPushButton" name="_clear" >
-                  <property name="text" >
-                    <string>Clea&amp;r</string>
-                  </property>
-                </widget>
-              </item>
-              <item row="1" column="1" >
-                <spacer name="spacer2" >
-                  <property name="sizeHint" >
-                    <size>
-                      <width>150</width>
-                      <height>20</height>
-                    </size>
-                  </property>
-                  <property name="sizeType" >
-                    <enum>Expanding</enum>
-                  </property>
-                  <property name="orientation" >
-                    <enum>Horizontal</enum>
-                  </property>
-                </spacer>
-              </item>
-              <item row="1" column="0" >
-                <widget class="QGroupBox" name="groupBoxHide" >
-                  <property name="sizePolicy" >
-                    <sizepolicy>
-                      <hsizetype>0</hsizetype>
-                      <vsizetype>0</vsizetype>
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                    </sizepolicy>
-                  </property>
-                  <property name="title" >
-                    <string>Show Messages</string>
-                  </property>
-                  <property name="alignment" >
-                    <set>Qt::AlignVCenter</set>
-                  </property>
-                  <widget class="QCheckBox" name="checkBoxShowDebug" >
-                    <property name="geometry" >
-                      <rect>
-                        <x>10</x>
-                        <y>20</y>
-                        <width>80</width>
-                        <height>31</height>
-                      </rect>
-                    </property>
-                    <property name="text" >
-                      <string>&amp;Debug</string>
-                    </property>
-                    <property name="checked" >
-                      <bool>true</bool>
-                    </property>
-                  </widget>
-                  <widget class="QCheckBox" name="checkBoxShowNotice" >
-                    <property name="geometry" >
-                      <rect>
-                        <x>90</x>
-                        <y>20</y>
-                        <width>80</width>
-                        <height>31</height>
-                      </rect>
-                    </property>
-                    <property name="text" >
-                      <string>&amp;Notice</string>
-                    </property>
-                    <property name="checked" >
-                      <bool>true</bool>
-                    </property>
-                  </widget>
-                  <widget class="QCheckBox" name="checkBoxShowWarning" >
-                    <property name="geometry" >
-                      <rect>
-                        <x>170</x>
-                        <y>20</y>
-                        <width>80</width>
-                        <height>31</height>
-                      </rect>
-                    </property>
-                    <property name="text" >
-                      <string>&amp;Warning</string>
-                    </property>
-                    <property name="checked" >
-                      <bool>true</bool>
-                    </property>
-                  </widget>
-                  <widget class="QCheckBox" name="checkBoxShowError" >
-                    <property name="geometry" >
-                      <rect>
-                        <x>260</x>
-                        <y>20</y>
-                        <width>80</width>
-                        <height>31</height>
-                      </rect>
-                    </property>
-                    <property name="text" >
-                      <string>&amp;Error</string>
-                    </property>
-                    <property name="checked" >
-                      <bool>true</bool>
-                    </property>
-                  </widget>
-                  <widget class="QCheckBox" name="checkBoxShowOther" >
-                    <property name="geometry" >
-                      <rect>
-                        <x>330</x>
-                        <y>20</y>
-                        <width>80</width>
-                        <height>31</height>
-                      </rect>
-                    </property>
-                    <property name="text" >
-                      <string>&amp;Other</string>
-                    </property>
-                    <property name="checked" >
-                      <bool>true</bool>
-                    </property>
-                  </widget>
-                </widget>
-              </item>
-              <item rowspan="1" row="0" column="0" colspan="3" >
-                <spacer name="spacer5" >
-                  <property name="sizeHint" >
-                    <size>
-                      <width>660</width>
-                      <height>310</height>
-                    </size>
-                  </property>
-                  <property name="sizeType" >
-                    <enum>Expanding</enum>
-                  </property>
-                  <property name="orientation" >
-                    <enum>Vertical</enum>
-                  </property>
-                </spacer>
-              </item>
-            </layout>
-          </widget>
-          <widget class="QWidget" name="tab" >
-            <attribute name="title" >
-              <string>Data Sources</string>
-            </attribute>
-            <layout class="QGridLayout" >
-              <property name="margin" >
-                <number>0</number>
-              </property>
-              <item row="0" column="0" >
-                <widget class="QTreeView" name="_dataSources" >
-                  <property name="rootIsDecorated" >
-                    <bool>true</bool>
-                  </property>
-                  <column>
-                    <property name="text" >
-                      <string>Plugin</string>
-                    </property>
-                    <property name="clickable" >
-                      <bool>true</bool>
-                    </property>
-                    <property name="resizable" >
-                      <bool>true</bool>
-                    </property>
-                  </column>
-                  <column>
-                    <property name="text" >
-                      <string>Loaded Instance</string>
-                    </property>
-                    <property name="clickable" >
-                      <bool>true</bool>
-                    </property>
-                    <property name="resizable" >
-                      <bool>true</bool>
-                    </property>
-                  </column>
-                </widget>
-              </item>
-            </layout>
-          </widget>
+       </item>
+       <item row="2" column="1" >
+        <widget class="QPushButton" name="_email" >
+         <property name="text" >
+          <string>&amp;Email Debugging Information</string>
+         </property>
         </widget>
-      </item>
-    </layout>
-  </widget>
-  <layoutdefault spacing="6" margin="11" />
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
-  <tabstops>
-    <tabstop>_tabs</tabstop>
-    <tabstop>_email</tabstop>
-    <tabstop>_showDebug</tabstop>
-    <tabstop>_showNotice</tabstop>
-    <tabstop>_showWarning</tabstop>
-    <tabstop>_showError</tabstop>
-    <tabstop>_showOther</tabstop>
-    <tabstop>_clear</tabstop>
-    <tabstop>_dataSources</tabstop>
-    <tabstop>_close</tabstop>
-  </tabstops>
-  <connections>
-    <connection>
-      <sender>_close</sender>
-      <signal>clicked()</signal>
-      <receiver>DebugDialog</receiver>
-      <slot>close()</slot>
-    </connection>
-  </connections>
+       </item>
+       <item row="2" column="0" >
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType" >
+          <enum>QSizePolicy::Expanding</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>301</width>
+           <height>21</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="TabPage" >
+      <attribute name="title" >
+       <string>Log</string>
+      </attribute>
+      <layout class="QGridLayout" >
+       <property name="margin" >
+        <number>9</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item row="1" column="0" >
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>221</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="0" colspan="3" >
+        <widget class="QTextBrowser" name="_log" />
+       </item>
+       <item row="1" column="1" >
+        <widget class="QGroupBox" name="groupBox" >
+         <property name="title" >
+          <string>GroupBox</string>
+         </property>
+         <layout class="QGridLayout" >
+          <property name="margin" >
+           <number>9</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item row="0" column="4" >
+           <widget class="QCheckBox" name="_showOther" >
+            <property name="text" >
+             <string>&amp;Other</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" >
+           <widget class="QCheckBox" name="_showNotice" >
+            <property name="text" >
+             <string>&amp;Notice</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3" >
+           <widget class="QCheckBox" name="_showError" >
+            <property name="text" >
+             <string>&amp;Error</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" >
+           <widget class="QCheckBox" name="_showDebug" >
+            <property name="text" >
+             <string>&amp;Debug</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2" >
+           <widget class="QCheckBox" name="_showWarning" >
+            <property name="text" >
+             <string>&amp;Warning</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="2" >
+        <widget class="QPushButton" name="_clear" >
+         <property name="text" >
+          <string>Clea&amp;r</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab" >
+      <attribute name="title" >
+       <string>Data Sources</string>
+      </attribute>
+      <layout class="QGridLayout" >
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item row="0" column="0" >
+        <widget class="QTreeView" name="_dataSources" >
+         <property name="rootIsDecorated" >
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item row="1" column="0" >
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeType" >
+      <enum>QSizePolicy::Expanding</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>421</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="1" >
+    <widget class="QPushButton" name="_close" >
+     <property name="text" >
+      <string>&amp;Close</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+ <tabstops>
+  <tabstop>_tabs</tabstop>
+  <tabstop>_email</tabstop>
+  <tabstop>_showDebug</tabstop>
+  <tabstop>_showNotice</tabstop>
+  <tabstop>_showWarning</tabstop>
+  <tabstop>_showError</tabstop>
+  <tabstop>_showOther</tabstop>
+  <tabstop>_clear</tabstop>
+  <tabstop>_dataSources</tabstop>
+  <tabstop>_close</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>_close</sender>
+   <signal>clicked()</signal>
+   <receiver>DebugDialog</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

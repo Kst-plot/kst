@@ -67,6 +67,7 @@ class MainWindow : public QMainWindow
 
     void demoModel();
 
+    void performHeavyStartupActions();
     void cleanup();
 
   protected:
