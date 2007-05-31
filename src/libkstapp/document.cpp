@@ -12,6 +12,10 @@
 #include "document.h"
 #include "sessionmodel.h"
 
+#include <QDebug>
+#include <QFile>
+#include <QXmlStreamReader>
+
 namespace Kst {
 
 Document::Document()
@@ -31,10 +35,33 @@ SessionModel* Document::session() const {
 
 
 bool Document::save(const QString& to) {
+  return false;
 }
 
 
 bool Document::open(const QString& file) {
+  QFile f(file);
+  if (!f.open(QIODevice::ReadOnly)) {
+    // QMessageBox::critical
+    return false;
+  }
+
+  QXmlStreamReader xml;
+  xml.setDevice(&f);
+
+  while (!xml.atEnd()) {
+    if (xml.isStartElement()) {
+      qDebug() << "Got a node: " << xml.name().toString();
+    }
+    xml.readNext();
+  }
+
+  if (xml.hasError()) {
+    // QMessageBox::critical
+    return false;
+  }
+
+  return true;
 }
 
 
