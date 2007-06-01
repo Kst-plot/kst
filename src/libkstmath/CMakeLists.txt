@@ -36,7 +36,9 @@ set(kstmath_LIB_SRCS
    eparse-eh.cpp 
    eparse.c 
    psdcalculator.cpp 
-   escan.c )
+   escan.c
+   objectfactory.cpp
+   )
 
 kde4_automoc(${kstmath_LIB_SRCS})
 
