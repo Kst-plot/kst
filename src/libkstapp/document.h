@@ -29,12 +29,15 @@ class Document {
     bool save(const QString& to = QString::null);
 
     bool isChanged() const;
+    void setChanged(bool changed);
     bool isOpen() const;
 
     QString lastError() const;
 
   private:
     SessionModel *_session;
+    bool _dirty;
+    bool _isOpen;
 };
 
 }

@@ -19,7 +19,7 @@
 namespace Kst {
 
 Document::Document()
-: _session(new SessionModel) {
+: _session(new SessionModel), _dirty(false), _isOpen(false) {
 }
 
 
@@ -35,11 +35,13 @@ SessionModel* Document::session() const {
 
 
 bool Document::save(const QString& to) {
+  setChanged(false);
   return false;
 }
 
 
 bool Document::open(const QString& file) {
+  _isOpen = false;
   QFile f(file);
   if (!f.open(QIODevice::ReadOnly)) {
     // QMessageBox::critical
@@ -61,7 +63,7 @@ bool Document::open(const QString& file) {
     return false;
   }
 
-  return true;
+  return _isOpen = true;
 }
 
 
@@ -71,13 +73,19 @@ QString Document::lastError() const {
 
 
 bool Document::isChanged() const {
-  return true;  // FIXME!
+  return _dirty;
 }
 
 
 bool Document::isOpen() const {
-  return true;  // FIXME!
+  return _isOpen;
 }
+
+
+void Document::setChanged(bool dirty) {
+  _dirty = dirty;
+}
+
 
 }
 
