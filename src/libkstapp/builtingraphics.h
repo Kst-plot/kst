@@ -9,14 +9,17 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstapplication.h"
-#include <builtingraphics.h>
-#include <builtinobjects.h>
+#ifndef BUILTINGRAPHICS_H
+#define BUILTINGRAPHICS_H
 
-int main(int argc, char *argv[])
-{
-    KstApplication app(argc, argv);
-    Kst::Builtins::initObjects();
-    Kst::Builtins::initGraphics();
-    return app.exec();
+#include "kst_export.h"
+
+namespace Kst {
+  namespace Builtins {
+    KST_EXPORT void initGraphics();
+  }
 }
+
+#endif
+
+// vim: ts=2 sw=2 et

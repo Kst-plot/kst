@@ -9,14 +9,31 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstapplication.h"
-#include <builtingraphics.h>
-#include <builtinobjects.h>
+#ifndef RELATIONFACTORY_H
+#define RELATIONFACTORY_H
 
-int main(int argc, char *argv[])
-{
-    KstApplication app(argc, argv);
-    Kst::Builtins::initObjects();
-    Kst::Builtins::initGraphics();
-    return app.exec();
+#include <QXmlStreamReader>
+#include <QStringList>
+
+#include "kstdataobject.h"
+#include "kst_export.h"
+
+namespace Kst {
+
+class RelationFactory {
+  public:
+    RelationFactory();
+    virtual ~RelationFactory();
+
+    // This takes ownership
+    static void registerFactory(const QString& node, RelationFactory *factory);
+    static void registerFactory(const QStringList& nodes, RelationFactory *factory);
+    KST_EXPORT static KstDataObjectPtr parse(QXmlStreamReader& stream);
+    virtual KstDataObjectPtr generateRelation(QXmlStreamReader& stream) = 0;
+};
+
 }
+
+#endif
+
+// vim: ts=2 sw=2 et

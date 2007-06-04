@@ -30,7 +30,6 @@
 #include "kstdatacollection.h"
 #include "kstdebug.h"
 #include "kstmath.h"
-#include "plugincollection.h"
 
 extern "C" int yyparse();
 extern "C" void *ParsedEquation;
@@ -399,7 +398,7 @@ static struct {
 
 
 Function::Function(char *name, ArgumentList *args)
-: Node(), _name(name), _args(args), _f(0L), _plugin(0L) {
+: Node(), _name(name), _args(args), _f(0L) {
   _argCount = 1; // Presently no functions take != 1 argument
   _inPid = 0L;
   _inScalars = 0L;
@@ -413,37 +412,10 @@ Function::Function(char *name, ArgumentList *args)
   _outputVectorCnt = 0;
   _inputVectorCnt = 0;
   //printf("%p: New Function: %s - %p\n", (void*)this, name, (void*)args);
-  if (strcasecmp("plugin", name) == 0) {
-    Identifier *pn = dynamic_cast<Identifier*>(_args->node(0));
-    if (pn) {
-      _plugin = PluginCollection::self()->plugin(pn->name());
-      if (_plugin) {
-        const QList<Plugin::Data::IOValue>& itable = _plugin->data()._inputs;
-        const QList<Plugin::Data::IOValue>& otable = _plugin->data()._outputs;
-        Plugin::countScalarsVectorsAndStrings(itable, _inputScalarCnt, _inputVectorCnt, _inputStringCnt, _inPid);
-        int ignore;
-        Plugin::countScalarsVectorsAndStrings(otable, _outputScalarCnt, _outputVectorCnt, _outputStringCnt, ignore);
-        assert(_inputStringCnt == 0 && _outputStringCnt == 0); // FIXME: implement support for strings
-        _inScalars = new double[_inputScalarCnt];
-        _outScalars = new double[_outputScalarCnt];
-        _inVectors = new double*[_inputVectorCnt];
-        _outVectors = new double*[_outputVectorCnt];
-        _inArrayLens = new int[_inputVectorCnt];
-        _outArrayLens = new int[_outputVectorCnt];
-        memset(_outVectors, 0, _outputVectorCnt*sizeof(double*));
-        memset(_outArrayLens, 0, _outputVectorCnt*sizeof(int));
-      } else {
-        KstDebug::self()->log(i18n("Equation was unable to load plugin %1.").arg(pn->name()), KstDebug::Warning);
-      }
-    } else {
-      KstDebug::self()->log(i18n("A plugin call in an equation requires the first argument to be the name of the plugin."), KstDebug::Warning);
-    }
-  } else {
-    for (int i = 0; FTable[i].name; ++i) {
-      if (strcasecmp(FTable[i].name, name) == 0) {
-        _f = (void*)FTable[i].func;
-        break;
-      }
+  for (int i = 0; FTable[i].name; ++i) {
+    if (strcasecmp(FTable[i].name, name) == 0) {
+      _f = (void*)FTable[i].func;
+      break;
     }
   }
 }
@@ -455,13 +427,6 @@ Function::~Function() {
   delete _args;
   _args = 0L;
   _f = 0L;
-  if (_localData) {
-    if (!_plugin->freeLocalData(&_localData)) {
-      free(_localData);
-    }
-    _localData = 0L;
-  }
-  _plugin = 0L;
   delete[] _inScalars;
   delete[] _inVectors;
   delete[] _outScalars;
@@ -480,108 +445,11 @@ KstObject::UpdateType Function::update(int counter, Context *ctx) {
     return KstObject::NO_CHANGE;
   }
 
-  if (!_plugin) {
-    return KstObject::NO_CHANGE;
-  }
-
-  const QList<Plugin::Data::IOValue>& itable = _plugin->data()._inputs;
-  uint itcnt = 0, vitcnt = 0, cnt = 0;
-  // Populate the input scalars and vectors
-  for (QList<Plugin::Data::IOValue>::ConstIterator it = itable.begin(); it != itable.end(); ++it) {
-    if ((*it)._type == Plugin::Data::IOValue::TableType) {
-      Data *d = dynamic_cast<Data*>(_args->node(cnt + 1));
-      if (d && d->_vector) {
-        _inVectors[vitcnt] = d->_vector->value();
-        _inArrayLens[vitcnt++] = d->_vector->length();
-      } else {
-        Identifier *pn = dynamic_cast<Identifier*>(_args->node(cnt + 1));
-        if (pn && 0 == strcmp(pn->name(), "x")) {
-          if (!ctx->xVector) {
-            _outputIndex = -424242;
-            // Hope we recover later
-            return KstObject::NO_CHANGE;
-          }
-          _inVectors[vitcnt] = ctx->xVector->value();
-          _inArrayLens[vitcnt++] = ctx->xVector->length();
-        } else {
-          _outputIndex = -424242;
-          KstDebug::self()->log(i18n("Plugin %2 failed when called from equation.  Argument %1 was not found.").arg(cnt + 1).arg(_plugin->data()._name), KstDebug::Warning);
-          return KstObject::NO_CHANGE;
-        }
-      }
-      ++cnt;
-    } else if ((*it)._type == Plugin::Data::IOValue::FloatType) {
-      Node *n = _args->node(cnt + 1);
-      _inScalars[itcnt++] = n->value(ctx);
-      ++cnt;
-    } else if ((*it)._type == Plugin::Data::IOValue::PidType) {
-      _inScalars[itcnt++] = getpid();
-    }
-  }
-
-  int rc;
-  if (_plugin->data()._localdata) {
-    rc = _plugin->call(_inVectors, _inArrayLens, _inScalars, _outVectors, _outArrayLens, _outScalars, &_localData);
-  } else {
-    rc = _plugin->call(_inVectors, _inArrayLens, _inScalars, _outVectors, _outArrayLens, _outScalars);
-  }
-
-  _outputIndex = -424242;
-  if (rc != 0) {
-    KstDebug::self()->log(i18n("Plugin %1 failed when called from equation.").arg(_plugin->data()._name), KstDebug::Warning);
-    return KstObject::NO_CHANGE;
-  }
-
-  if (!_plugin->data()._filterOutputVector.isEmpty()) {
-    int loc = 0;
-    bool found = false;
-    const QList<Plugin::Data::IOValue>& otable = _plugin->data()._outputs;
-    for (QList<Plugin::Data::IOValue>::ConstIterator it = otable.begin(); it != otable.end(); ++it) {
-      if ((*it)._type == Plugin::Data::IOValue::TableType) {
-        if ((*it)._name == _plugin->data()._filterOutputVector) {
-          found = true;
-          break;
-        }
-        loc++;
-      }
-    }
-    if (found) {
-      _outputIndex = loc;
-    }
-  }
-
-  if (_outputIndex == -424242) {
-    if (_outputVectorCnt > 0) {
-      if (_outVectors[0] && _outArrayLens[0] > 1) {
-        _outputIndex = 0;
-      }
-    } else if (_outputScalarCnt > 0 && _outScalars) { // make sense?
-      _outputIndex = -1;
-    }
-  }
-
-  return KstObject::UPDATE;
-}
-
-
-double Function::evaluatePlugin(Context *ctx) {
-  if (_outputIndex >= 0) {
-    return ::kstInterpolate(_outVectors[_outputIndex], _outArrayLens[_outputIndex], ctx->i, ctx->sampleCount);
-  } else if (_outputIndex == -424242) {
-    return ctx->noPoint;
-  } else { // make sense?
-    return _outScalars[abs(_outputIndex) - 1];
-  }
-
-  return ctx->noPoint;
+  return KstObject::NO_CHANGE;
 }
 
 
 double Function::value(Context *ctx) {
-  if (_plugin) {
-    return evaluatePlugin(ctx);
-  }
-
   if (!_f) {
     return ctx->noPoint;
   }
@@ -604,11 +472,6 @@ double Function::value(Context *ctx) {
 
 bool Function::isConst() {
   return _args->isConst();
-}
-
-
-bool Function::isPlugin() const {
-  return _plugin != 0L;
 }
 
 

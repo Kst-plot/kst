@@ -19,17 +19,8 @@
 namespace Kst {
 
 PictureItem::PictureItem(View *parent, const QImage& im)
-: ViewItem(parent), _image(QPixmap::fromImage(im)) {
+  : ViewItem(parent), _image(QPixmap::fromImage(im)) {
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
-  parent->setMouseMode(View::Create);
-  parent->setCursor(Qt::CrossCursor);
-
-  //If the mouseMode is changed again before we're done with creation
-  //delete ourself.
-  connect(parent, SIGNAL(mouseModeChanged()), this, SLOT(deleteLater()));
-
-  connect(parent, SIGNAL(creationPolygonChanged(View::CreationEvent)),
-          this, SLOT(creationPolygonChanged(View::CreationEvent)));
 }
 
 
@@ -88,8 +79,15 @@ void CreatePictureCommand::createItem() {
     im = QImage(fn);
   }
   _item = new PictureItem(_view, im);
-  connect(_item, SIGNAL(creationComplete()), this, SLOT(creationComplete()));
+  _view->setMouseMode(View::Create);
+  _view->setCursor(Qt::CrossCursor);
 
+  //If the mouseMode is changed again before we're done with creation
+  //delete ourself.
+  connect(_view, SIGNAL(mouseModeChanged()), _item, SLOT(deleteLater()));
+  connect(_view, SIGNAL(creationPolygonChanged(View::CreationEvent)),
+          _item, SLOT(creationPolygonChanged(View::CreationEvent)));
+  connect(_item, SIGNAL(creationComplete()), this, SLOT(creationComplete()));
   //If the item is interrupted while creating itself it will destroy itself
   //need to delete this too in response...
   connect(_item, SIGNAL(destroyed(QObject*)), this, SLOT(deleteLater()));

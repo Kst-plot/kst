@@ -21,17 +21,8 @@
 namespace Kst {
 
 LabelItem::LabelItem(View *parent, const QString& txt)
-    : ViewItem(parent), _parsed(0), _text(txt) {
+  : ViewItem(parent), _parsed(0), _text(txt) {
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
-  parent->setMouseMode(View::Create);
-  parent->setCursor(Qt::IBeamCursor);
-
-  //If the mouseMode is changed again before we're done with creation
-  //delete ourself.
-  connect(parent, SIGNAL(mouseModeChanged()), this, SLOT(deleteLater()));
-
-  connect(parent, SIGNAL(creationPolygonChanged(View::CreationEvent)),
-          this, SLOT(creationPolygonChanged(View::CreationEvent)));
 }
 
 
@@ -121,8 +112,15 @@ void CreateLabelCommand::createItem() {
   }
 
   _item = new LabelItem(_view, text);
-  connect(_item, SIGNAL(creationComplete()), this, SLOT(creationComplete()));
+  _view->setMouseMode(View::Create);
+  _view->setCursor(Qt::IBeamCursor);
 
+  //If the mouseMode is changed again before we're done with creation
+  //delete ourself.
+  connect(_view, SIGNAL(mouseModeChanged()), _item, SLOT(deleteLater()));
+  connect(_view, SIGNAL(creationPolygonChanged(View::CreationEvent)),
+          _item, SLOT(creationPolygonChanged(View::CreationEvent)));
+  connect(_item, SIGNAL(creationComplete()), this, SLOT(creationComplete()));
   //If the item is interrupted while creating itself it will destroy itself
   //need to delete this too in response...
   connect(_item, SIGNAL(destroyed(QObject*)), this, SLOT(deleteLater()));

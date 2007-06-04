@@ -11,6 +11,8 @@
 
 #include "boxitem.h"
 
+#include <kstdebug.h>
+
 #include <QDebug>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
@@ -20,15 +22,6 @@ namespace Kst {
 BoxItem::BoxItem(View *parent)
     : ViewItem(parent) {
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
-  parent->setMouseMode(View::Create);
-  parent->setCursor(Qt::CrossCursor);
-
-  //If the mouseMode is changed again before we're done with creation
-  //delete ourself.
-  connect(parent, SIGNAL(mouseModeChanged()), this, SLOT(deleteLater()));
-
-  connect(parent, SIGNAL(creationPolygonChanged(View::CreationEvent)),
-          this, SLOT(creationPolygonChanged(View::CreationEvent)));
 }
 
 
@@ -69,11 +62,97 @@ void BoxItem::creationPolygonChanged(View::CreationEvent event) {
 
 void CreateBoxCommand::createItem() {
   _item = new BoxItem(_view);
+  _view->setMouseMode(View::Create);
+  _view->setCursor(Qt::CrossCursor);
+  //If the mouseMode is changed again before we're done with creation
+  //delete ourself.
+  connect(_view, SIGNAL(mouseModeChanged()), _item, SLOT(deleteLater()));
+  connect(_view, SIGNAL(creationPolygonChanged(View::CreationEvent)),
+          _item, SLOT(creationPolygonChanged(View::CreationEvent)));
   connect(_item, SIGNAL(creationComplete()), this, SLOT(creationComplete()));
-
   //If the item is interrupted while creating itself it will destroy itself
   //need to delete this too in response...
   connect(_item, SIGNAL(destroyed(QObject*)), this, SLOT(deleteLater()));
+}
+
+
+BoxItemFactory::BoxItemFactory()
+: GraphicsFactory() {
+  registerFactory("box", this);
+}
+
+
+BoxItemFactory::~BoxItemFactory() {
+}
+
+
+ViewItem* BoxItemFactory::generateGraphics(QXmlStreamReader& xml, View *view, ViewItem *parent) {
+  BoxItem *rc = 0;
+  double x = 0., y = 0., w = 10., h = 10.;
+  while (!xml.atEnd()) {
+    if (xml.isStartElement()) {
+      if (xml.name().toString() == "box") {
+        Q_ASSERT(!rc);
+        rc = new BoxItem(view);
+        if (parent) {
+          rc->graphicsItem()->setParentItem(parent->graphicsItem());
+        }
+        QXmlStreamAttributes attrs = xml.attributes();
+        QStringRef av;
+        av = attrs.value("background");
+        if (!av.isNull()) {
+          QBrush b = rc->brush();
+          b.setColor(QColor(av.toString()));
+          rc->setBrush(b);
+        }
+        av = attrs.value("border");
+        if (!av.isNull()) {
+          QPen p = rc->pen();
+          p.setWidthF(av.toString().toDouble());
+          rc->setPen(p);
+        }
+        av = attrs.value("color");
+        if (!av.isNull()) {
+          QPen p = rc->pen();
+          p.setColor(QColor(av.toString()));
+          rc->setPen(p);
+        }
+        av = attrs.value("width");
+        if (!av.isNull()) {
+          w = av.toString().toDouble();
+        }
+        av = attrs.value("height");
+        if (!av.isNull()) {
+          h = av.toString().toDouble();
+        }
+        av = attrs.value("x");
+        if (!av.isNull()) {
+          x = av.toString().toDouble();
+        }
+        av = attrs.value("y");
+        if (!av.isNull()) {
+          y = av.toString().toDouble();
+        }
+      } else {
+        Q_ASSERT(rc);
+        ViewItem *i = GraphicsFactory::parse(xml, view, rc);
+        if (!i) {
+        }
+      }
+    } else if (xml.isEndElement()) {
+      if (xml.name().toString() == "box") {
+        break;
+      } else {
+        KstDebug::self()->log(QObject::tr("Error creating box object from Kst file."), KstDebug::Warning);
+        delete rc;
+        return 0;
+      }
+    }
+    xml.readNext();
+  }
+
+  rc->setRect(QRectF(QPointF(x, y), QSizeF(w, h)));
+  return rc;
 }
 
 }

@@ -3,12 +3,14 @@ include_directories( ${CMAKE_BINARY_DIR}/kst ${CMAKE_SOURCE_DIR}/kst/src/extdate
 set(kstapp_LIB_SRCS
    applicationsettings.cpp
    boxitem.cpp
+   builtingraphics.cpp
    datamanager.cpp
    debugdialog.cpp
    debugnotifier.cpp
    document.cpp
    ellipseitem.cpp
    exportgraphicsdialog.cpp
+   graphicsfactory.cpp
    kstapplication.cpp
    labelitem.cpp
    labelrenderer.cpp

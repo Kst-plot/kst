@@ -10,6 +10,8 @@
  ***************************************************************************/
 
 #include "lineitem.h"
+#include "view.h"
+#include <kstdebug.h>
 
 #include <QDebug>
 #include <QGraphicsItem>
@@ -18,17 +20,8 @@
 namespace Kst {
 
 LineItem::LineItem(View *parent)
-    : ViewItem(parent) {
+  : ViewItem(parent) {
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
-  parent->setMouseMode(View::Create);
-  parent->setCursor(Qt::CrossCursor);
-
-  //If the mouseMode is changed again before we're done with creation
-  //delete ourself.
-  connect(parent, SIGNAL(mouseModeChanged()), this, SLOT(deleteLater()));
-
-  connect(parent, SIGNAL(creationPolygonChanged(View::CreationEvent)),
-          this, SLOT(creationPolygonChanged(View::CreationEvent)));
 }
 
 
@@ -69,11 +62,90 @@ void LineItem::creationPolygonChanged(View::CreationEvent event) {
 
 void CreateLineCommand::createItem() {
   _item = new LineItem(_view);
+  _view->setMouseMode(View::Create);
+  _view->setCursor(Qt::CrossCursor);
+  //If the mouseMode is changed again before we're done with creation
+  //delete ourself.
+  connect(_view, SIGNAL(mouseModeChanged()), _item, SLOT(deleteLater()));
+  connect(_view, SIGNAL(creationPolygonChanged(View::CreationEvent)),
+          _item, SLOT(creationPolygonChanged(View::CreationEvent)));
   connect(_item, SIGNAL(creationComplete()), this, SLOT(creationComplete()));
-
   //If the item is interrupted while creating itself it will destroy itself
   //need to delete this too in response...
   connect(_item, SIGNAL(destroyed(QObject*)), this, SLOT(deleteLater()));
+}
+
+LineItemFactory::LineItemFactory()
+: GraphicsFactory() {
+  registerFactory("line", this);
+}
+
+
+LineItemFactory::~LineItemFactory() {
+}
+
+
+ViewItem* LineItemFactory::generateGraphics(QXmlStreamReader& xml, View *view, ViewItem *parent) {
+  LineItem *rc = 0;
+  double x1 = 0., y1 = 0., x2 = 10., y2 = 10.;
+  while (!xml.atEnd()) {
+    if (xml.isStartElement()) {
+      if (xml.name().toString() == "line") {
+        Q_ASSERT(!rc);
+        rc = new LineItem(view);
+        if (parent) {
+          rc->graphicsItem()->setParentItem(parent->graphicsItem());
+        }
+        QXmlStreamAttributes attrs = xml.attributes();
+        QStringRef av;
+        av = attrs.value("thickness");
+        if (!av.isNull()) {
+          QPen p = rc->pen();
+          p.setWidthF(av.toString().toDouble());
+          rc->setPen(p);
+        }
+        av = attrs.value("color");
+        if (!av.isNull()) {
+          QPen p = rc->pen();
+          p.setColor(QColor(av.toString()));
+          rc->setPen(p);
+        }
+        av = attrs.value("x1");
+        if (!av.isNull()) {
+          x1 = av.toString().toDouble();
+        }
+        av = attrs.value("y1");
+        if (!av.isNull()) {
+          y1 = av.toString().toDouble();
+        }
+        av = attrs.value("x2");
+        if (!av.isNull()) {
+          x2 = av.toString().toDouble();
+        }
+        av = attrs.value("y2");
+        if (!av.isNull()) {
+          y2 = av.toString().toDouble();
+        }
+      } else {
+        Q_ASSERT(rc);
+        ViewItem *i = GraphicsFactory::parse(xml, view, rc);
+        if (!i) {
+        }
+      }
+    } else if (xml.isEndElement()) {
+      if (xml.name().toString() == "line") {
+        break;
+      } else {
+        KstDebug::self()->log(QObject::tr("Error creating line object from Kst file."), KstDebug::Warning);
+        delete rc;
+        return 0;
+      }
+    }
+    xml.readNext();
+  }
+
+  rc->setLine(QLineF(QPointF(x1, y1), QPointF(x2, y2)));
+  return rc;
 }
 
 }

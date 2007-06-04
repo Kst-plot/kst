@@ -9,14 +9,31 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstapplication.h"
-#include <builtingraphics.h>
-#include <builtinobjects.h>
+#ifndef DATASOURCEFACTORY_H
+#define DATASOURCEFACTORY_H
 
-int main(int argc, char *argv[])
-{
-    KstApplication app(argc, argv);
-    Kst::Builtins::initObjects();
-    Kst::Builtins::initGraphics();
-    return app.exec();
+#include <QXmlStreamReader>
+#include <QStringList>
+
+#include "kstdatasource.h"
+#include "kst_export.h"
+
+namespace Kst {
+
+class DataSourceFactory {
+  public:
+    DataSourceFactory();
+    virtual ~DataSourceFactory();
+
+    // This takes ownership
+    static void registerFactory(const QString& node, DataSourceFactory *factory);
+    static void registerFactory(const QStringList& nodes, DataSourceFactory *factory);
+    KST_EXPORT static KstDataSourcePtr parse(QXmlStreamReader& stream);
+    virtual KstDataSourcePtr generateDataSource(QXmlStreamReader& stream) = 0;
+};
+
 }
+
+#endif
+
+// vim: ts=2 sw=2 et

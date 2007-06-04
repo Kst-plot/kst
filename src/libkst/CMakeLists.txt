@@ -43,7 +43,10 @@ set(kst_LIB_SRCS
    kstvectordefaults.cpp 
    kstmatrixdefaults.cpp 
    kstprimitive.cpp 
-   defaultprimitivenames.cpp)
+   defaultprimitivenames.cpp
+   primitivefactory.cpp
+   datasourcefactory.cpp
+   )
 
 kde4_automoc(${kst_LIB_SRCS})
 

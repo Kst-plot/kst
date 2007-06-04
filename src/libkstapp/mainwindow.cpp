@@ -43,7 +43,7 @@ MainWindow::MainWindow() {
   _dataManager = 0;
   _exportGraphics = 0;
   _vectorEditor = 0;
-  _doc = new Document;
+  _doc = new Document(this);
   _tabWidget = new TabWidget(this);
   _undoGroup = new QUndoGroup(this);
   _debugDialog = new DebugDialog(this); // need this early for hookups
@@ -160,12 +160,12 @@ void MainWindow::open() {
   if (!fn.isEmpty()) {
     delete _doc;
   }
-  _doc = new Document;
+  _doc = new Document(this);
   bool ok = _doc->open(fn);
   if (!ok) {
     QMessageBox::critical(this, tr("Kst"), tr("Error opening document '%1':\n%2").arg(fn, _doc->lastError()));
     delete _doc;
-    _doc = new Document;
+    _doc = new Document(this);
   }
 }
 
@@ -322,6 +322,7 @@ void MainWindow::createActions() {
 
   _saveAct = new QAction(tr("&Save"), this);
   _saveAct->setStatusTip(tr("Save the current session"));
+  _saveAct->setShortcut(tr("Ctrl+S"));
   connect(_saveAct, SIGNAL(triggered()), this, SLOT(save()));
 
   _saveAsAct = new QAction(tr("Save &as..."), this);
@@ -330,6 +331,7 @@ void MainWindow::createActions() {
 
   _openAct = new QAction(tr("&Open..."), this);
   _openAct->setStatusTip(tr("Open a new session"));
+  _openAct->setShortcut(tr("Ctrl+O"));
   connect(_openAct, SIGNAL(triggered()), this, SLOT(open()));
 
   _printAct = new QAction(tr("&Print..."), this);
@@ -369,9 +371,9 @@ void MainWindow::createActions() {
 void MainWindow::createMenus() {
   _fileMenu = menuBar()->addMenu(tr("&File"));
   _fileMenu->addAction(_newTabAct);
+  _fileMenu->addAction(_openAct);
   _fileMenu->addAction(_saveAct);
   _fileMenu->addAction(_saveAsAct);
-  _fileMenu->addAction(_openAct);
   _fileMenu->addSeparator();
   _fileMenu->addAction(_printAct);
   _fileMenu->addAction(_exportGraphicsAct);

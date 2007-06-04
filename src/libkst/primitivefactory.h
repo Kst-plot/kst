@@ -9,14 +9,31 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstapplication.h"
-#include <builtingraphics.h>
-#include <builtinobjects.h>
+#ifndef PRIMITIVEFACTORY_H
+#define PRIMITIVEFACTORY_H
 
-int main(int argc, char *argv[])
-{
-    KstApplication app(argc, argv);
-    Kst::Builtins::initObjects();
-    Kst::Builtins::initGraphics();
-    return app.exec();
+#include <QXmlStreamReader>
+#include <QStringList>
+
+#include "kstprimitive.h"
+#include "kst_export.h"
+
+namespace Kst {
+
+class PrimitiveFactory {
+  public:
+    PrimitiveFactory();
+    virtual ~PrimitiveFactory();
+
+    // This takes ownership
+    static void registerFactory(const QString& node, PrimitiveFactory *factory);
+    static void registerFactory(const QStringList& nodes, PrimitiveFactory *factory);
+    KST_EXPORT static KstPrimitivePtr parse(QXmlStreamReader& stream);
+    virtual KstPrimitivePtr generatePrimitive(QXmlStreamReader& stream) = 0;
+};
+
 }
+
+#endif
+
+// vim: ts=2 sw=2 et

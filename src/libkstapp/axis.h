@@ -1,3 +1,4 @@
+
 /***************************************************************************
  *                                                                         *
  *   copyright : (C) 2007 The University of Toronto                        *
@@ -9,14 +10,36 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstapplication.h"
-#include <builtingraphics.h>
-#include <builtinobjects.h>
+#ifndef AXIS_H
+#define AXIS_H
 
-int main(int argc, char *argv[])
-{
-    KstApplication app(argc, argv);
-    Kst::Builtins::initObjects();
-    Kst::Builtins::initGraphics();
-    return app.exec();
+namespace Kst { 
+
+// A representation of a plot axis.  This has nothing to do with the way the
+// axis is drawn - only the properties of it.
+class Axis {
+  public:
+    Axis();
+
+    bool reversed;
+    bool isLog;
+    double logBase;
+};
+
+
+// A representation of a style used to render an axis.
+class AxisStyle {
+  public:
+    AxisStyle();
+
+    bool showMinorTicks;
+    bool showMajorTicks;
+    double minorTickWidth;
+    double majorTickWidth;
+};
+
 }
+
+#endif
+
+// vim: ts=2 sw=2 et

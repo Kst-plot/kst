@@ -9,14 +9,24 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstapplication.h"
-#include <builtingraphics.h>
-#include <builtinobjects.h>
+#ifndef PLOTRENDER2D_H
+#define PLOTRENDER2D_H
 
-int main(int argc, char *argv[])
-{
-    KstApplication app(argc, argv);
-    Kst::Builtins::initObjects();
-    Kst::Builtins::initGraphics();
-    return app.exec();
+#include "axis.h"
+
+namespace Kst { 
+
+class PlotRenderer2D {
+  public:
+    PlotRenderer2D();
+
+  private:
+    Axis _xAxis, _yAxis;
+    AxisStyle _xAxisStyle, _yAxisStyle;
+};
+
 }
+
+#endif
+
+// vim: ts=2 sw=2 et

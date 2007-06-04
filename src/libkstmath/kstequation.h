@@ -22,6 +22,7 @@
 #define KSTEQUATION_H
 
 #include "kstdataobject.h"
+#include "objectfactory.h"
 #include "kst_export.h"
 
 #define MAX_DIV_REG 100
@@ -34,19 +35,19 @@ class KST_EXPORT KstEquation : public KstDataObject {
   public:
     KstEquation(const QString& in_tag, const QString& equation, double x0, double x1, int nx);
     KstEquation(const QString& in_tag, const QString& equation, KstVectorPtr xvector, bool do_interp);
-    KstEquation(const QDomElement& e);
-    virtual ~KstEquation();
+    ~KstEquation();
 
-    virtual UpdateType update(int update_counter = -1);
+    void attach();
+    UpdateType update(int update_counter = -1);
 
-    virtual void save(QTextStream &ts, const QString& indent = QString::null);
-    virtual QString propertyString() const;
+    void save(QTextStream &ts, const QString& indent = QString::null);
+    QString propertyString() const;
 
     /** equations used to edit the vector */
     void setEquation(const QString &Equation);
     void setExistingXVector(KstVectorPtr xvector, bool do_interp);
 
-    virtual QString equation() const { return _equation; }
+    const QString& equation() const { return _equation; }
     KstVectorPtr vXIn() const { return *_xInVector; }
     KstVectorPtr vX() const { return *_xOutVector; }
     KstVectorPtr vY() const { return *_yOutVector; }
@@ -55,24 +56,24 @@ class KST_EXPORT KstEquation : public KstDataObject {
 
     bool isValid() const;
 
-    virtual void setTagName(const QString& tag);
+    void setTagName(const QString& tag);
 
-    virtual void showNewDialog();
-    virtual void showEditDialog();
+    void showNewDialog();
+    void showEditDialog();
 
-    virtual QString xVTag() const { return (*_xOutVector)->tagName(); }
-    virtual QString yVTag() const { return (*_yOutVector)->tagName(); }
+    QString xVTag() const { return (*_xOutVector)->tagName(); }
+    QString yVTag() const { return (*_yOutVector)->tagName(); }
 
     const KstCurveHintList *curveHints() const;
-    
-    virtual KstDataObjectPtr makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap);
-    
-    virtual void replaceDependency(KstDataObjectPtr oldObject, KstDataObjectPtr newObject);
 
-    virtual void replaceDependency(KstVectorPtr oldVector, KstVectorPtr newVector);
-    virtual void replaceDependency(KstMatrixPtr oldMatrix, KstMatrixPtr newMatrix);
+    KstDataObjectPtr makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap);
+    
+    void replaceDependency(KstDataObjectPtr oldObject, KstDataObjectPtr newObject);
 
-    virtual bool uses(KstObjectPtr p) const;
+    void replaceDependency(KstVectorPtr oldVector, KstVectorPtr newVector);
+    void replaceDependency(KstMatrixPtr oldMatrix, KstMatrixPtr newMatrix);
+
+    bool uses(KstObjectPtr p) const;
 
   private:
     QString _equation;
@@ -94,6 +95,17 @@ class KST_EXPORT KstEquation : public KstDataObject {
     KstVectorMap::Iterator _xInVector, _xOutVector, _yOutVector;
     Equation::Node *_pe;
 };
+
+namespace Kst {
+
+class EquationObjectFactory : public ObjectFactory {
+  public:
+    EquationObjectFactory();
+    ~EquationObjectFactory();
+    KstDataObjectPtr generateObject(QXmlStreamReader& stream);
+};
+
+}
 
 typedef KstSharedPtr<KstEquation> KstEquationPtr;
 typedef KstObjectList<KstEquationPtr> KstEquationList;

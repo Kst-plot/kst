@@ -19,7 +19,6 @@
 #include "kstdatacollection.h"
 #include "kstdefaultnames.h"
 #include "ksthistogram.h"
-#include "kstcplugin.h"
 #include "kstpsd.h"
 #include "kstvcurve.h"
 

@@ -71,74 +71,15 @@ KstEquation::KstEquation(const QString& in_tag, const QString& equation, KstVect
 }
 
 
-KstEquation::KstEquation(const QDomElement &e)
-: KstDataObject(e) {
-  QString in_tag, equation;
-
-  int ns = -1;
-  double x0 = 0.0, x1 = 1.0;
-  KstObjectTag xvtag = KstObjectTag::invalidTag;
-  bool haveVector = false;
-
-  _doInterp = false;
-
-  /* parse the DOM tree */
-  QDomNode n = e.firstChild();
-  while (!n.isNull()) {
-    QDomElement e = n.toElement(); // try to convert the node to an element.
-    if (!e.isNull()) { // the node was really an element.
-      if (e.tagName() == "tag") {
-        in_tag = e.text();
-      } else if (e.tagName() == "equation") {
-        equation = e.text();
-      } else if (e.tagName() == "x0") {
-        x0 = e.text().toDouble();
-      } else if (e.tagName() == "x1") {
-        x1 = e.text().toDouble();
-      } else if (e.tagName() == "ns") {
-        ns = e.text().toInt();
-      } else if (e.tagName() == "xvtag") {
-        xvtag = KstObjectTag::fromString(e.text());
-      } else if (e.tagName() == "xvector") {
-        _inputVectorLoadQueue.append(qMakePair(XINVECTOR, e.text()));
-        haveVector = true;
-      } else if (e.tagName() == "interpolate") {
-        _doInterp = true;
-      }
-    }
-    n = n.nextSibling();
-  }
-
-  if (!haveVector) {
-    if (ns < 0) {
-      ns = 2;
-    }
-    if (x0 == x1) {
-      x1 = x0 + 2;
-    }
-
-    KstObjectTag vtag = KstObjectTag::invalidTag;
-    if (!xvtag.isValid()) {
-      vtag = KST::suggestUniqueVectorTag(KstObjectTag(QString("(%1..%2)").arg(x0).arg(x1), KstObjectTag::globalTagContext));
-    } else {
-      vtag = xvtag;
-    }
-
-    KstVectorPtr xvector = new KstSVector(x0, x1, ns, vtag);
-
-    _doInterp = false;
-    _xInVector = _inputVectors.insert(XINVECTOR, xvector);
-  } else {
-    _xInVector = _inputVectors.end();
-  }
-  commonConstructor(in_tag, equation);
-}
-
-
 KstEquation::~KstEquation() {
   delete _pe;
   _pe = 0L;
 }
+
+
+void KstEquation::attach() {
+}
+
 
 void KstEquation::commonConstructor(const QString& in_tag, const QString& in_equation) {
   _ns = 2;
@@ -619,6 +560,57 @@ bool KstEquation::uses(KstObjectPtr p) const {
     }
   }
   return KstDataObject::uses(p);
+}
+
+
+namespace Kst {
+
+EquationObjectFactory::EquationObjectFactory()
+: ObjectFactory() {
+  registerFactory("equation", this);
+}
+
+EquationObjectFactory::~EquationObjectFactory() {
+}
+
+
+KstDataObjectPtr EquationObjectFactory::generateObject(QXmlStreamReader& xml) {
+  QString eq, name, xVector, output;
+  bool interpolate = false;
+
+  while (!xml.atEnd()) {
+    if (xml.isStartElement()) {
+      const QString n = xml.name().toString();
+      if (n == "equation") {
+        QXmlStreamAttributes attrs = xml.attributes();
+        name = attrs.value("name").toString();
+        interpolate = attrs.value("interpolate").toString().toLower() == "true";
+        xVector = attrs.value("xvector").toString();
+        output = attrs.value("output").toString();
+        eq = xml.readElementText();
+      } else {
+        return 0;
+      }
+    } else if (xml.isEndElement()) {
+      if (xml.name().toString() == "equation") {
+        break;
+      } else {
+        KstDebug::self()->log(QObject::tr("Error creating equation from Kst file."), KstDebug::Warning);
+        return 0;
+      }
+    }
+    xml.readNext();
+  }
+
+  if (xml.hasError()) {
+    return 0;
+  }
+
+  KstEquationPtr ep = 0; //new KstEquation(name, eq, xVector, interpolate);
+  return ep.data();
+}
+
+
 }
 
 

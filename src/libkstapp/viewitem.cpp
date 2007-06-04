@@ -20,7 +20,7 @@
 namespace Kst {
 
 ViewItem::ViewItem(View *parent)
-    : QObject(parent) {
+  : QObject(parent) {
 #ifdef DEBUG_GEOMETRY
   QColor semiRed(QColor(255, 0, 0, 50));
   _rectItem = new QGraphicsRectItem;

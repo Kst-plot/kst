@@ -9,17 +9,17 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "objectfactory.h"
+#include "relationfactory.h"
 
 #include <QCoreApplication>
 #include <QMap>
 
 namespace Kst {
 
-static QMap<QString, ObjectFactory*> *factories = 0;
+static QMap<QString, RelationFactory*> *factories = 0;
 
-void cleanupObjects() {
-  foreach (ObjectFactory *f, *factories) {
+void cleanupRelations() {
+  foreach (RelationFactory *f, *factories) {
     delete f;
   }
   delete factories;
@@ -27,41 +27,41 @@ void cleanupObjects() {
 }
 
 
-ObjectFactory::ObjectFactory() {
+RelationFactory::RelationFactory() {
 }
 
 
-ObjectFactory::~ObjectFactory() {
+RelationFactory::~RelationFactory() {
 }
 
 
-void ObjectFactory::registerFactory(const QString& node, ObjectFactory *factory) {
+void RelationFactory::registerFactory(const QString& node, RelationFactory *factory) {
   if (!factories) {
-    factories = new QMap<QString,ObjectFactory*>;
-    qAddPostRoutine(cleanupObjects);
+    factories = new QMap<QString,RelationFactory*>;
+    qAddPostRoutine(cleanupRelations);
   }
   factories->insert(node, factory);
 }
 
 
-void ObjectFactory::registerFactory(const QStringList& nodes, ObjectFactory *factory) {
+void RelationFactory::registerFactory(const QStringList& nodes, RelationFactory *factory) {
   foreach (const QString n, nodes) {
     registerFactory(n, factory);
   }
 }
 
 
-KstDataObjectPtr ObjectFactory::parse(QXmlStreamReader& stream) {
+KstDataObjectPtr RelationFactory::parse(QXmlStreamReader& stream) {
   if (!factories) {
     return 0;
   }
 
-  ObjectFactory *f = factories->value(stream.name().toString());
+  RelationFactory *f = factories->value(stream.name().toString());
   if (!f) {
     return 0;
   }
 
-  return f->generateObject(stream);
+  return f->generateRelation(stream);
 }
 
 

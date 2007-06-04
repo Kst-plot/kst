@@ -22,8 +22,6 @@
 #include "kstvector.h"
 #include "kst_export.h"
 
-class Plugin;
-
 #define EQ_FALSE 0.0
 #define EQ_TRUE  1.0
 
@@ -114,14 +112,11 @@ namespace Equation {
   };
 
 
-  // FIXME: consider an approach to reduce the weight of this node since most
-  //        of the weight is due entirely to plugin calling.
   class Function : public Node {
     public:
       Function(char *name, ArgumentList *args);
       ~Function();
 
-      bool isPlugin() const;
       bool isConst();
       double value(Context*);
       bool collectObjects(KstVectorMap& v, KstScalarMap& s, KstStringMap& t);
@@ -133,10 +128,8 @@ namespace Equation {
       char *_name;
       ArgumentList *_args;
       void *_f;
-      KstSharedPtr<Plugin> _plugin;
 
     private:
-      double evaluatePlugin(Context *ctx);
       int _inputScalarCnt, _inputVectorCnt, _inputStringCnt;
       int _inPid, _outputScalarCnt, _outputVectorCnt, _outputStringCnt;
       int *_inArrayLens, *_outArrayLens;

@@ -9,14 +9,33 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstapplication.h"
-#include <builtingraphics.h>
-#include <builtinobjects.h>
+#ifndef GRAPHICSFACTORY_H
+#define GRAPHICSFACTORY_H
 
-int main(int argc, char *argv[])
-{
-    KstApplication app(argc, argv);
-    Kst::Builtins::initObjects();
-    Kst::Builtins::initGraphics();
-    return app.exec();
+#include <QXmlStreamReader>
+#include <QStringList>
+
+#include "kstdataobject.h"
+#include "kst_export.h"
+#include "view.h"
+
+namespace Kst {
+class ViewItem;
+
+class GraphicsFactory {
+  public:
+    GraphicsFactory();
+    virtual ~GraphicsFactory();
+
+    // This takes ownership
+    static void registerFactory(const QString& node, GraphicsFactory *factory);
+    static void registerFactory(const QStringList& nodes, GraphicsFactory *factory);
+    KST_EXPORT static ViewItem *parse(QXmlStreamReader& stream, View *view, ViewItem *parent = 0);
+    virtual ViewItem *generateGraphics(QXmlStreamReader& stream, View *view, ViewItem *parent = 0) = 0;
+};
+
 }
+
+#endif
+
+// vim: ts=2 sw=2 et

@@ -13,6 +13,7 @@
 #define LINEITEM_H
 
 #include "viewitem.h"
+#include "graphicsfactory.h"
 #include <QGraphicsLineItem>
 
 namespace Kst { 
@@ -37,6 +38,13 @@ public:
   CreateLineCommand(View *view) : CreateCommand(view, QObject::tr("Create Line")) {}
   virtual ~CreateLineCommand() {}
   virtual void createItem();
+};
+
+class LineItemFactory : public GraphicsFactory {
+  public:
+    LineItemFactory();
+    ~LineItemFactory();
+    ViewItem* generateGraphics(QXmlStreamReader& stream, View *view, ViewItem *parent = 0);
 };
 
 }

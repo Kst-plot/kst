@@ -92,6 +92,10 @@ void KstDataObject::cleanupForExit() {
 }
 
 
+void KstDataObject::attach() {
+}
+
+
 KstDataObjectPtr KstDataObject::createPlugin(KService::Ptr service) {
   int err = 0;
   KstDataObject *object = KService::createInstance<KstDataObject>(service, 0, QStringList(), &err);

@@ -13,6 +13,7 @@
 #define BOXITEM_H
 
 #include "viewitem.h"
+#include "graphicsfactory.h"
 #include <QGraphicsRectItem>
 
 namespace Kst { 
@@ -37,6 +38,13 @@ public:
   CreateBoxCommand(View *view) : CreateCommand(view, QObject::tr("Create Box")) {}
   virtual ~CreateBoxCommand() {}
   virtual void createItem();
+};
+
+class BoxItemFactory : public GraphicsFactory {
+  public:
+    BoxItemFactory();
+    ~BoxItemFactory();
+    ViewItem* generateGraphics(QXmlStreamReader& stream, View *view, ViewItem *parent = 0);
 };
 
 }

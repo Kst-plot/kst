@@ -9,14 +9,17 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstapplication.h"
-#include <builtingraphics.h>
-#include <builtinobjects.h>
+#include "builtingraphics.h"
+#include "boxitem.h"
+#include "lineitem.h"
 
-int main(int argc, char *argv[])
-{
-    KstApplication app(argc, argv);
-    Kst::Builtins::initObjects();
-    Kst::Builtins::initGraphics();
-    return app.exec();
+namespace Kst {
+  namespace Builtins {
+    void initGraphics() {
+      new BoxItemFactory;
+      new LineItemFactory;
+    }
+  }
 }
+
+// vim: ts=2 sw=2 et

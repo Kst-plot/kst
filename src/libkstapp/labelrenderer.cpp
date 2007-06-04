@@ -20,7 +20,6 @@
 #include "enodes.h"
 #include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"
-#include "kstcplugin.h"
 #include "ksttimers.h"
 #include "labelparser.h"
 
@@ -108,43 +107,6 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
               rc._cache->append(DataRef(DataRef::DRString, fi->text, QString::null, 0.0, QVariant(stp->value())));
             }
             stp->unlock();
-          } else {
-            KST::dataObjectList.lock().readLock();
-            KstDataObjectList::Iterator oi = KST::dataObjectList.findTag(fi->text);
-            KST::dataObjectList.lock().unlock();
-            if (oi != KST::dataObjectList.end()) {
-              KstCPluginPtr fit = kst_cast<KstCPlugin>(*oi);
-              if (fit) {
-                fit->readLock();
-                const QString txtAll = fit->label(rc.precision);
-                fit->unlock();
-
-                const Q3ValueList<QString> strList = txtAll.split('\n');
-                Q3ValueListConstIterator<QString> last = --(strList.end());
-                for (Q3ValueListConstIterator<QString> iter = strList.begin(); iter != strList.end(); ++iter) {
-                  txt = (*iter);
-
-                  if (iter != last) {
-                    if (rc.p) {
-                      rc.p->drawText(rc.x, rc.y, txt);
-                    } else {
-                      rc.ascent = qMax(rc.ascent, -rc.y + rc.fontAscent());
-                      if (-rc.y - rc.fontDescent() < 0) {
-                        rc.descent = qMax(rc.descent, rc.fontDescent() + rc.y);
-                      }
-                    }
-                    rc.x   += rc.fontWidth(txt);
-                    rc.xMax = qMax(rc.xMax, rc.x);
-
-                    rc.x    = oldX;
-                    rc.y   += rc.fontAscent() + rc.fontDescent() + 1;
-                  }
-                }
-                if (rc._cache) {
-                  rc._cache->append(DataRef(DataRef::DRFit, fi->text, txtAll, rc.precision, QVariant(0.0)));
-                }
-              }
-            }
           }
         }
       }

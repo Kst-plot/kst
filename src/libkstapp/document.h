@@ -12,15 +12,17 @@
 #ifndef DOCUMENT_H
 #define DOCUMENT_H
 
+#include <QPointer>
 #include <QString>
 
 namespace Kst {
 
+class MainWindow;
 class SessionModel;
 
 class Document {
   public:
-    Document();
+    Document(MainWindow *win);
     ~Document();
 
     SessionModel* session() const;
@@ -35,6 +37,7 @@ class Document {
     QString lastError() const;
 
   private:
+    QPointer<MainWindow> _win;
     SessionModel *_session;
     bool _dirty;
     bool _isOpen;

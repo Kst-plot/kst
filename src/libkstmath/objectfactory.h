@@ -16,18 +16,19 @@
 #include <QStringList>
 
 #include "kstdataobject.h"
+#include "kst_export.h"
 
 namespace Kst {
 
 class ObjectFactory {
   public:
     ObjectFactory();
-    virtual ~ObjectFactory() = 0;
+    virtual ~ObjectFactory();
 
     // This takes ownership
     static void registerFactory(const QString& node, ObjectFactory *factory);
     static void registerFactory(const QStringList& nodes, ObjectFactory *factory);
-    static KstDataObjectPtr parse(QXmlStreamReader& stream);
+    KST_EXPORT static KstDataObjectPtr parse(QXmlStreamReader& stream);
     virtual KstDataObjectPtr generateObject(QXmlStreamReader& stream) = 0;
 };
 

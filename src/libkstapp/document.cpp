@@ -10,7 +10,15 @@
  ***************************************************************************/
 
 #include "document.h"
+#include "mainwindow.h"
 #include "sessionmodel.h"
+#include "tabwidget.h"
+#include <datasourcefactory.h>
+#include <graphicsfactory.h>
+#include <objectfactory.h>
+#include <primitivefactory.h>
+#include <relationfactory.h>
+#include <viewitem.h>
 
 #include <QDebug>
 #include <QFile>
@@ -18,8 +26,8 @@
 
 namespace Kst {
 
-Document::Document()
-: _session(new SessionModel), _dirty(false), _isOpen(false) {
+Document::Document(MainWindow *window)
+: _win(window), _session(new SessionModel), _dirty(false), _isOpen(false) {
 }
 
 
@@ -35,8 +43,56 @@ SessionModel* Document::session() const {
 
 
 bool Document::save(const QString& to) {
+  // TODO:
+  // - KSaveFile-ish behavior
+  // - only save if changed
+  // - prompt overwrite
+  // - only setChanged(false) if save was successful
   setChanged(false);
-  return false;
+
+  QString fn = to;
+  QFile f(fn);
+  if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+    // QMessageBox::critical
+    return false;
+  }
+
+  QXmlStreamWriter xml;
+  xml.setDevice(&f);
+  xml.setAutoFormatting(true);
+  xml.writeStartDocument();
+  xml.writeStartElement("kst");
+  xml.writeAttribute("version", "2.0");
+
+  xml.writeStartElement("data");
+  // TODO: save each data source
+  xml.writeEndElement();
+
+  xml.writeStartElement("variables");
+  // TODO: save each primitive
+  xml.writeEndElement();
+
+  xml.writeStartElement("objects");
+  // TODO: save each data object
+  xml.writeEndElement();
+
+  xml.writeStartElement("relations");
+  // TODO: save each curve
+  xml.writeEndElement();
+
+  xml.writeStartElement("graphics");
+  for (int i = 0; i < _win->tabWidget()->count(); ++i) {
+    View *v = qobject_cast<View*>(_win->tabWidget()->widget(i));
+    xml.writeStartElement("view");
+    xml.writeAttribute("name", _win->tabWidget()->tabText(i));
+    // TODO: save each item
+    xml.writeEndElement();
+  }
+  xml.writeEndElement();
+
+  xml.writeEndDocument();
+
+  return true;
 }
 
 
@@ -48,15 +104,111 @@ bool Document::open(const QString& file) {
     return false;
   }
 
+  // If we move this into the <graphics> block then we could, if desired, open
+  // .kst files that contained only data and basically "merge" that data into
+  // the current session
+  _win->tabWidget()->clear();
+
+  View *currentView = 0;
+
   QXmlStreamReader xml;
   xml.setDevice(&f);
 
+  enum State { Unknown=0, Data, Variables, Objects, Relations, Graphics, View };
+  State state = Unknown;
+
+#define malformed()
+
   while (!xml.atEnd()) {
     if (xml.isStartElement()) {
-      qDebug() << "Got a node: " << xml.name().toString();
+      QString n = xml.name().toString();
+      if (n == "kst") {
+      } else if (n == "data") {
+        if (state != Unknown)
+          malformed();
+        state = Data;
+      } else if (n == "variables") {
+        if (state != Unknown)
+          malformed();
+        state = Variables;
+      } else if (n == "objects") {
+        if (state != Unknown)
+          malformed();
+        state = Objects;
+      } else if (n == "relations") {
+        if (state != Unknown)
+          malformed();
+        state = Relations;
+      } else if (n == "graphics") {
+        if (state != Unknown)
+          malformed();
+        state = Graphics;
+      } else {
+        switch (state) {
+          case Objects:
+            ObjectFactory::parse(xml);
+            break;
+          case Graphics:
+            {
+              if (n == "view") {
+                currentView = _win->tabWidget()->createView();
+                QXmlStreamAttributes attrs = xml.attributes();
+                QStringRef nm = attrs.value("name");
+                if (!nm.isNull()) {
+                  int idx = _win->tabWidget()->indexOf(currentView);
+                  _win->tabWidget()->setTabText(idx, nm.toString());
+                }
+                state = View;
+              } else {
+                malformed();
+              }
+            }
+            break;
+          case View:
+            {
+              ViewItem *i = GraphicsFactory::parse(xml, currentView);
+              if (i) {
+                currentView->scene()->addItem(i->graphicsItem());
+              }
+            }
+            break;
+          case Data:
+            DataSourceFactory::parse(xml);
+            break;
+          case Variables:
+            PrimitiveFactory::parse(xml);
+            break;
+          case Relations:
+            RelationFactory::parse(xml);
+            break;
+          case Unknown:
+            malformed();
+            break;
+        }
+      }
+    } else if (xml.isEndElement()) {
+      QString n = xml.name().toString();
+      if (n == "kst") {
+        if (state != Unknown)
+          malformed();
+        break;
+      } else if (n == "view") {
+        state = Graphics;
+      } else if (n == "data") {
+        state = Unknown;
+      } else if (n == "objects") {
+        state = Unknown;
+      } else if (n == "variables") {
+        state = Unknown;
+      } else if (n == "relations") {
+        state = Unknown;
+      } else if (n == "graphics") {
+        state = Unknown;
+      }
     }
     xml.readNext();
   }
+#undef malformed
 
   if (xml.hasError()) {
     // QMessageBox::critical

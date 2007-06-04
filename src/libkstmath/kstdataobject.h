@@ -44,6 +44,8 @@ class KST_EXPORT KstDataObject : public KstObject {
     KstDataObject(const KstDataObject& object);
     virtual ~KstDataObject();
 
+    virtual void attach();
+
     // These static methods are not for plugins to use
     static void cleanupForExit();
     /** Returns a list of object plugins found on the system. */

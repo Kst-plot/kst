@@ -9,14 +9,15 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstapplication.h"
-#include <builtingraphics.h>
-#include <builtinobjects.h>
+#include "builtinobjects.h"
+#include "kstequation.h"
 
-int main(int argc, char *argv[])
-{
-    KstApplication app(argc, argv);
-    Kst::Builtins::initObjects();
-    Kst::Builtins::initGraphics();
-    return app.exec();
+namespace Kst {
+  namespace Builtins {
+    void initObjects() {
+      new Kst::EquationObjectFactory;
+    }
+  }
 }
+
+// vim: ts=2 sw=2 et
