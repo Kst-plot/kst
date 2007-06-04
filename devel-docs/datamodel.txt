@@ -1,0 +1,14 @@
+
+
+A Kst session consists of a data model along with a graphical representation of
+some or all of that data model.  The data comes from various places known as
+data sources.  A data source is a file, network, or other resource that provides
+one or more primitives.  A primitive is (presently) a string, scalar, vector or
+matrix.  These can be composed with mathematical algorithms by a data object.
+Data objects also output one or more primitives.  Primitives can then be
+associated as relations, such as a curve.  Relations and primitives can then be
+used in graphical representations known as views and view items.
+
+Dialogs and wizards are used to hide these representations from the user.
+
+

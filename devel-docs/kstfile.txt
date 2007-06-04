@@ -1,0 +1,59 @@
+
+File Format for Kst 2
+
+<kst version="">
+  <data>
+    <source name="" reader="">
+    </source>
+  </data>
+  <variables>
+    <vector name="">
+    </vector>
+    <scalar name="">
+    </scalar>
+    <matrix name="">
+    </matrix>
+  </variables>
+  <objects>
+    <equation name="" xvector="" interpolate="true" output="">
+       equationtext
+    </equation>
+    <psd name="">
+    </psd>
+  </objects>
+  <relations>
+    <xycurve name="" xvector="" yvector="">
+    </xycurve>
+    <xyzcurve name="" xvector="" yvector="" zvector="">
+    </xyzcurve>
+    <images?>
+    </images>
+  </relations>
+  <graphics>
+    <view name="">
+      <plot name="">
+        <arrow name="">
+	</arrow>
+      </plot>
+      <label name="">
+      </label>
+      <line name="">
+      </line>
+    </view>
+    <view>
+    </view>
+  </graphics>
+</kst>
+
+
+Loading procedure:
+Documents are parsed once but loaded in a multi-phase routine.  First all
+objects of all types are created, with no data loaded.  Any objects that take
+inputs are loaded in a state such that they know the name of the input but do
+not have a reference to it.  Outputs for any of these objects are created,
+unpopulated.  Then attach() is called on all non-graphics objects which obtains
+references to the input vectors.  Any kstfile-stored data can be loaded as well.
+Still no updates are run.  Then all graphics objects are created but not
+rendered.  Then a render is run.  Then updates are started.
+
+
