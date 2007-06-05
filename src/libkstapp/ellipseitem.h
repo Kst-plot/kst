@@ -15,7 +15,7 @@
 #include "viewitem.h"
 #include <QGraphicsEllipseItem>
 
-namespace Kst { 
+namespace Kst {
 
 class EllipseItem : public ViewItem, public QGraphicsEllipseItem
 {

@@ -15,7 +15,7 @@
 #include "viewitem.h"
 #include <QGraphicsRectItem>
 
-namespace Kst { 
+namespace Kst {
 
 class PictureItem : public ViewItem, public QGraphicsRectItem
 {

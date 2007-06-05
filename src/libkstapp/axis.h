@@ -1,4 +1,3 @@
-
 /***************************************************************************
  *                                                                         *
  *   copyright : (C) 2007 The University of Toronto                        *
@@ -13,7 +12,7 @@
 #ifndef AXIS_H
 #define AXIS_H
 
-namespace Kst { 
+namespace Kst {
 
 // A representation of a plot axis.  This has nothing to do with the way the
 // axis is drawn - only the properties of it.

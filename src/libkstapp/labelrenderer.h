@@ -84,7 +84,7 @@ struct RenderContext {
   inline int fontAscent() const {
     return _ascent;
   }
-  
+
   inline int lineSpacing() const {
     return _lineSpacing;
   }
@@ -123,7 +123,7 @@ struct RenderContext {
   bool substitute;
   QVector<DataRef> *_cache;
   QPen pen;
-  
+
   private:
     QFont _font;
     QFontMetrics _fm;

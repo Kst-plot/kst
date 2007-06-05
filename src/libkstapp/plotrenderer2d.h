@@ -14,7 +14,7 @@
 
 #include "axis.h"
 
-namespace Kst { 
+namespace Kst {
 
 class PlotRenderer2D {
   public:

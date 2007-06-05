@@ -16,7 +16,7 @@
 #include "graphicsfactory.h"
 #include <QGraphicsLineItem>
 
-namespace Kst { 
+namespace Kst {
 
 class LineItem : public ViewItem, public QGraphicsLineItem
 {

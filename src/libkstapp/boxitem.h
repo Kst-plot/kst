@@ -16,7 +16,7 @@
 #include "graphicsfactory.h"
 #include <QGraphicsRectItem>
 
-namespace Kst { 
+namespace Kst {
 
 class BoxItem : public ViewItem, public QGraphicsRectItem
 {

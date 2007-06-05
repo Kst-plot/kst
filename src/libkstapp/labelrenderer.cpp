@@ -32,7 +32,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
   int oldSize = rc.size;
   int oldY = rc.y;
   int oldX = rc.x;
-  
+
   while (fi) {
     if (fi->vOffset != Label::Chunk::None) {
       if (fi->vOffset == Label::Chunk::Up) {
@@ -202,4 +202,5 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
 }
 
 }
+
 // vim: ts=2 sw=2 et
