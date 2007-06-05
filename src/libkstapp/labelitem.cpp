@@ -45,15 +45,20 @@ void LabelItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     QFont font;
     font.setPointSize(16);
     QFontMetrics fm(font);
-    painter->translate(QPoint(box.x(), box.y() + fm.ascent() + fm.descent() + 1));
-    Label::RenderContext rc(font.family(), 16, painter);
+    painter->translate(QPoint(box.x(), box.y() + fm.height()));
+    Label::RenderContext rc(font.family(), font.pointSize(), painter);
     Label::renderLabel(rc, _parsed->chunk);
+
+    // Make sure we have a rect for selection, movement, etc
+    setRect(QRectF(box.x(), box.y(), rc.x, fm.height()));
+
     painter->restore();
   }
-  QBrush b = brush();
-  setBrush(Qt::NoBrush);
+
+  QPen p = pen();
+  setPen(Qt::NoPen);
   QGraphicsRectItem::paint(painter, option, widget);
-  setBrush(b);
+  setPen(p);
 }
 
 
