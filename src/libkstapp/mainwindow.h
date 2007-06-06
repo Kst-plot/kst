@@ -63,6 +63,7 @@ class MainWindow : public QMainWindow
     void createEllipse();
     void createLine();
     void createPicture();
+    void createSvg();
     void createPlot();
 
     void demoModel();
@@ -116,6 +117,7 @@ class MainWindow : public QMainWindow
     QAction *_createLineAct;
     QAction *_createPictureAct;
     QAction *_createPlotAct;
+    QAction *_createSvgAct;
 
     QAction *_newTabAct;
     QAction *_saveAct;

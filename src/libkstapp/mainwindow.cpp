@@ -24,6 +24,7 @@
 #include "memorywidget.h"
 #include "pictureitem.h"
 #include "plotitem.h"
+#include "svgitem.h"
 #include "tabwidget.h"
 #include "vectoreditordialog.h"
 #include "view.h"
@@ -230,6 +231,12 @@ void MainWindow::createPicture() {
 }
 
 
+void MainWindow::createSvg() {
+  CreateSvgCommand *cmd = new CreateSvgCommand;
+  cmd->createItem();
+}
+
+
 void MainWindow::createBox() {
   CreateBoxCommand *cmd = new CreateBoxCommand;
   cmd->createItem();
@@ -299,6 +306,10 @@ void MainWindow::createActions() {
   _createPictureAct = new QAction(tr("&Create picture"), this);
   _createPictureAct->setStatusTip(tr("Create a picture for the current view"));
   connect(_createPictureAct, SIGNAL(triggered()), this, SLOT(createPicture()));
+
+  _createSvgAct = new QAction(tr("&Create svg"), this);
+  _createSvgAct->setStatusTip(tr("Create a svg for the current view"));
+  connect(_createSvgAct, SIGNAL(triggered()), this, SLOT(createSvg()));
 
   _createEllipseAct = new QAction(tr("&Create ellipse"), this);
   _createEllipseAct->setStatusTip(tr("Create an ellipse for the current view"));
@@ -396,6 +407,7 @@ void MainWindow::createMenus() {
   _plotMenu->addAction(_createLineAct);
   _plotMenu->addAction(_createPictureAct);
   _plotMenu->addAction(_createPlotAct);
+  _plotMenu->addAction(_createSvgAct);
 
   _settingsMenu = menuBar()->addMenu(tr("&Settings"));
 

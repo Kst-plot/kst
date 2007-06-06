@@ -9,31 +9,33 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "pictureitem.h"
+#include "svgitem.h"
 
 #include <QDebug>
 #include <QFileDialog>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
+#include <QSvgRenderer>
 
 namespace Kst {
 
-PictureItem::PictureItem(View *parent, const QImage &image)
-  : ViewItem(parent), _image(QPixmap::fromImage(image)) {
+SvgItem::SvgItem(View *parent, const QString &file)
+  : ViewItem(parent), _svg(new QSvgRenderer(file)) {
+  //FIXME need to set the element id??
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
 }
 
 
-PictureItem::~PictureItem() {
+SvgItem::~SvgItem() {
 }
 
 
-void PictureItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-  // We can do better here.  Cache the scaled pixmap also.
-  if (!_image.isNull()) {
-    const qreal w = pen().widthF();
-    painter->drawPixmap(rect().adjusted(w, w, -w, -w), _image, _image.rect());
+void SvgItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+  // We can do better here.  Cache the svg also.
+  if (_svg->isValid()) {
+    _svg->render(painter, boundingRect());
   }
+
   QBrush b = brush();
   setBrush(Qt::NoBrush);
   QGraphicsRectItem::paint(painter, option, widget);
@@ -41,7 +43,7 @@ void PictureItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 }
 
 
-void PictureItem::creationPolygonChanged(View::CreationEvent event) {
+void SvgItem::creationPolygonChanged(View::CreationEvent event) {
   if (event == View::MousePress) {
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MousePress));
     setRect(poly.first().x(), poly.first().y(), poly.last().x() - poly.first().x(), poly.last().y() - poly.first().y());
@@ -72,12 +74,12 @@ void PictureItem::creationPolygonChanged(View::CreationEvent event) {
   }
 }
 
-void CreatePictureCommand::createItem() {
-  QString file = QFileDialog::getOpenFileName(_view, tr("Kst: Open Image"));
+void CreateSvgCommand::createItem() {
+  QString file = QFileDialog::getOpenFileName(_view, tr("Kst: Open Svg Image"));
   if (file.isEmpty())
     return;
 
-  _item = new PictureItem(_view, QImage(file));
+  _item = new SvgItem(_view, file);
   _view->setMouseMode(View::Create);
   _view->setCursor(Qt::CrossCursor);
 
@@ -94,6 +96,6 @@ void CreatePictureCommand::createItem() {
 
 }
 
-#include "pictureitem.moc"
+#include "svgitem.moc"
 
 // vim: ts=2 sw=2 et

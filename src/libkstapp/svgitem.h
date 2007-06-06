@@ -9,20 +9,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef PICTUREITEM_H
-#define PICTUREITEM_H
+#ifndef SVGITEM_H
+#define SVGITEM_H
 
 #include "viewitem.h"
 #include <QGraphicsRectItem>
 
+class QSvgRenderer;
+
 namespace Kst {
 
-class PictureItem : public ViewItem, public QGraphicsRectItem
+class SvgItem : public ViewItem, public QGraphicsRectItem
 {
   Q_OBJECT
   public:
-    PictureItem(View *parent, const QImage &image);
-    ~PictureItem();
+    SvgItem(View *parent, const QString &file);
+    ~SvgItem();
 
     QGraphicsItem *graphicsItem() { return this; }
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
@@ -31,16 +33,16 @@ class PictureItem : public ViewItem, public QGraphicsRectItem
     void creationPolygonChanged(View::CreationEvent event);
 
   private:
-    QPixmap _image;
+    QSvgRenderer *_svg;
 };
 
 
-class KST_EXPORT CreatePictureCommand : public CreateCommand
+class KST_EXPORT CreateSvgCommand : public CreateCommand
 {
   public:
-    CreatePictureCommand() : CreateCommand(QObject::tr("Create Picture")) {}
-    CreatePictureCommand(View *view) : CreateCommand(view, QObject::tr("Create Picture")) {}
-    ~CreatePictureCommand() {}
+    CreateSvgCommand() : CreateCommand(QObject::tr("Create Svg")) {}
+    CreateSvgCommand(View *view) : CreateCommand(view, QObject::tr("Create Svg")) {}
+    ~CreateSvgCommand() {}
     void createItem();
 };
 

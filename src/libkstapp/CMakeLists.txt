@@ -21,6 +21,7 @@ set(kstapp_LIB_SRCS
    pictureitem.cpp
    plotitem.cpp
    sessionmodel.cpp
+   svgitem.cpp
    tabwidget.cpp
    vectoreditordialog.cpp
    vectormodel.cpp
