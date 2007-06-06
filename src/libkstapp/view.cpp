@@ -33,6 +33,7 @@ View::View()
   setInteractive(true);
   setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
   if (ApplicationSettings::self()->useOpenGL()) {
+    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
     setViewport(new QGLWidget);
   }
 }

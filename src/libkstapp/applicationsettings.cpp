@@ -12,6 +12,7 @@
 #include "applicationsettings.h"
 
 #include <QCoreApplication>
+#include <QGLPixelBuffer>
 
 namespace Kst {
 
@@ -32,7 +33,10 @@ ApplicationSettings *ApplicationSettings::self() {
 
 
 ApplicationSettings::ApplicationSettings() {
-  _useOpenGL = true;
+  //FIXME Not sure if this is the best test for hardware acceleration
+  // but right now opening with QGV with QGLWidget as viewport takes
+  // several seconds delay when opening application on my system.
+  _useOpenGL = QGLPixelBuffer::hasOpenGLPbuffers();
 }
 
 
