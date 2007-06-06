@@ -31,10 +31,6 @@ class LabelItem : public ViewItem, public QGraphicsRectItem {
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-  protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-
   private Q_SLOTS:
     void creationPolygonChanged(View::CreationEvent event);
 

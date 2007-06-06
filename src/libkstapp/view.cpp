@@ -100,29 +100,41 @@ QPolygonF View::creationPolygon(CreationEvents events) const {
 
 
 bool View::eventFilter(QObject *obj, QEvent *event) {
-  if (obj != scene() || _mouseMode != Create)
+  if (obj != scene())
     return QGraphicsView::eventFilter(obj, event);
 
   switch (event->type()) {
   case QEvent::GraphicsSceneMousePress:
     {
-      QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
-      _creationPolygonPress << e->buttonDownScenePos(Qt::LeftButton);
-      emit creationPolygonChanged(MousePress);
+      if (_mouseMode == Create) {
+        QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
+        _creationPolygonPress << e->buttonDownScenePos(Qt::LeftButton);
+        emit creationPolygonChanged(MousePress);
+      }
       return false;
     }
   case QEvent::GraphicsSceneMouseRelease:
     {
-      QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
-      _creationPolygonRelease << e->scenePos();
-      emit creationPolygonChanged(MouseRelease);
+      if (_mouseMode == Create) {
+        QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
+        _creationPolygonRelease << e->scenePos();
+        emit creationPolygonChanged(MouseRelease);
+      } else if (_mouseMode == Move) {
+        setMouseMode(Default);
+        _undoStack->endMacro();
+      }
       return false;
     }
   case QEvent::GraphicsSceneMouseMove:
     {
-      QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
-      _creationPolygonMove << e->scenePos();
-      emit creationPolygonChanged(MouseMove);
+      if (_mouseMode == Create) {
+        QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
+        _creationPolygonMove << e->scenePos();
+        emit creationPolygonChanged(MouseMove);
+      } else if (_mouseMode == Default && scene()->mouseGrabberItem()) {
+        setMouseMode(Move);
+        _undoStack->beginMacro(tr("Move"));
+      }
       return false;
     }
   default:

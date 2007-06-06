@@ -37,6 +37,12 @@ public:
 Q_SIGNALS:
   void creationComplete();
 
+private Q_SLOTS:
+  void mouseModeChanged();
+
+private:
+  QPointF _originalPosition;
+
 #ifdef DEBUG_GEOMETRY
 protected:
   void debugGeometry();

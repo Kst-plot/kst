@@ -29,6 +29,8 @@ ViewItem::ViewItem(View *parent)
   _rectItem->setBrush(semiRed);
   parent->scene()->addItem(_rectItem);
 #endif
+
+  connect(parent, SIGNAL(mouseModeChanged()), this, SLOT(mouseModeChanged()));
 }
 
 
@@ -38,6 +40,14 @@ ViewItem::~ViewItem() {
 
 View *ViewItem::parentView() const {
   return qobject_cast<View*>(parent());
+}
+
+
+void ViewItem::mouseModeChanged() {
+  if (parentView()->mouseMode() == View::Move)
+    _originalPosition = graphicsItem()->pos();
+  else if (_originalPosition != graphicsItem()->pos())
+    new MoveCommand(this, _originalPosition, graphicsItem()->pos());
 }
 
 

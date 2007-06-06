@@ -62,21 +62,6 @@ void LabelItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 }
 
 
-void LabelItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-  QGraphicsRectItem::mousePressEvent(event);
-  _originalPos = pos();
-}
-
-
-void LabelItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-  QGraphicsRectItem::mouseReleaseEvent(event);
-
-  QPointF newPos = pos();
-  if (_originalPos != newPos)
-    new MoveCommand(this, _originalPos, newPos);
-}
-
-
 void LabelItem::creationPolygonChanged(View::CreationEvent event) {
   if (event == View::MousePress) {
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MousePress));
