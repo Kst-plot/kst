@@ -44,7 +44,7 @@ void LabelItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     QFont font;
     font.setPointSize(16);
     QFontMetrics fm(font);
-    painter->translate(QPoint(box.x(), box.y() + fm.height()));
+    painter->translate(QPoint(box.x(), box.y() + fm.ascent()));
     Label::RenderContext rc(font.family(), font.pointSize(), painter);
     Label::renderLabel(rc, _parsed->chunk);
 
