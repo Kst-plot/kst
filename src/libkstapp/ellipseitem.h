@@ -13,18 +13,16 @@
 #define ELLIPSEITEM_H
 
 #include "viewitem.h"
-#include <QGraphicsRectItem>
 
 namespace Kst {
 
-class EllipseItem : public ViewItem, public QGraphicsRectItem
+class EllipseItem : public ViewItem
 {
   Q_OBJECT
 public:
   EllipseItem(View *parent);
   virtual ~EllipseItem();
 
-  virtual QGraphicsItem *graphicsItem() { return this; }
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
 private Q_SLOTS:

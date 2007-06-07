@@ -14,18 +14,15 @@
 
 #include "viewitem.h"
 #include "graphicsfactory.h"
-#include <QGraphicsRectItem>
 
 namespace Kst {
 
-class BoxItem : public ViewItem, public QGraphicsRectItem
+class BoxItem : public ViewItem
 {
   Q_OBJECT
 public:
   BoxItem(View *parent);
   virtual ~BoxItem();
-
-  virtual QGraphicsItem *graphicsItem() { return this; }
 
 private Q_SLOTS:
   void creationPolygonChanged(View::CreationEvent event);

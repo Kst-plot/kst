@@ -13,18 +13,16 @@
 #define PICTUREITEM_H
 
 #include "viewitem.h"
-#include <QGraphicsRectItem>
 
 namespace Kst {
 
-class PictureItem : public ViewItem, public QGraphicsRectItem
+class PictureItem : public ViewItem
 {
   Q_OBJECT
   public:
     PictureItem(View *parent, const QImage &image);
     ~PictureItem();
 
-    QGraphicsItem *graphicsItem() { return this; }
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
   private Q_SLOTS:

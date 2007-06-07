@@ -12,7 +12,6 @@
 #ifndef LABELITEM_H
 #define LABELITEM_H
 
-#include <QGraphicsRectItem>
 #include "viewitem.h"
 
 namespace Label {
@@ -21,13 +20,11 @@ namespace Label {
 
 namespace Kst {
 
-class LabelItem : public ViewItem, public QGraphicsRectItem {
+class LabelItem : public ViewItem {
   Q_OBJECT
   public:
     LabelItem(View *parent, const QString& labelText);
     virtual ~LabelItem();
-
-    virtual QGraphicsItem *graphicsItem() { return this; }
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 

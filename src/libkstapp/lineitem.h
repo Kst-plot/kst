@@ -14,18 +14,16 @@
 
 #include "viewitem.h"
 #include "graphicsfactory.h"
-#include <QGraphicsRectItem>
 
 namespace Kst {
 
-class LineItem : public ViewItem, public QGraphicsRectItem
+class LineItem : public ViewItem
 {
   Q_OBJECT
 public:
   LineItem(View *parent);
   virtual ~LineItem();
 
-  virtual QGraphicsItem *graphicsItem() { return this; }
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
   QLineF line() const;

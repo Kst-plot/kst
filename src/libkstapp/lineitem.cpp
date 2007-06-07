@@ -14,7 +14,6 @@
 #include <kstdebug.h>
 
 #include <QDebug>
-#include <QGraphicsItem>
 #include <QGraphicsScene>
 
 namespace Kst {
@@ -112,7 +111,7 @@ ViewItem* LineItemFactory::generateGraphics(QXmlStreamReader& xml, View *view, V
         Q_ASSERT(!rc);
         rc = new LineItem(view);
         if (parent) {
-          rc->graphicsItem()->setParentItem(parent->graphicsItem());
+          rc->setParentItem(parent);
         }
         QXmlStreamAttributes attrs = xml.attributes();
         QStringRef av;

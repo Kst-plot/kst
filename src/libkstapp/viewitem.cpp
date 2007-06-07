@@ -14,7 +14,6 @@
 #include "tabwidget.h"
 
 #include <QDebug>
-#include <QGraphicsItem>
 #include <QGraphicsScene>
 
 namespace Kst {
@@ -23,11 +22,8 @@ ViewItem::ViewItem(View *parent)
   : QObject(parent) {
 #ifdef DEBUG_GEOMETRY
   QColor semiRed(QColor(255, 0, 0, 50));
-  _rectItem = new QGraphicsRectItem;
-  _rectItem->setZValue(0);
-  _rectItem->setPen(semiRed);
-  _rectItem->setBrush(semiRed);
-  parent->scene()->addItem(_rectItem);
+  setPen(semiRed);
+  setBrush(semiRed);
 #endif
 
   connect(parent, SIGNAL(mouseModeChanged()), this, SLOT(mouseModeChanged()));
@@ -45,17 +41,10 @@ View *ViewItem::parentView() const {
 
 void ViewItem::mouseModeChanged() {
   if (parentView()->mouseMode() == View::Move)
-    _originalPosition = graphicsItem()->pos();
-  else if (_originalPosition != graphicsItem()->pos())
-    new MoveCommand(this, _originalPosition, graphicsItem()->pos());
+    _originalPosition = pos();
+  else if (_originalPosition != pos())
+    new MoveCommand(this, _originalPosition, pos());
 }
-
-
-#ifdef DEBUG_GEOMETRY
-void ViewItem::debugGeometry() {
-  _rectItem->setRect(graphicsItem()->boundingRect());
-}
-#endif
 
 
 ViewItemCommand::ViewItemCommand(const QString &text, bool addToStack, QUndoCommand *parent)
@@ -92,7 +81,7 @@ CreateCommand::~CreateCommand() {
 
 void CreateCommand::undo() {
   if (_item)
-    _item->graphicsItem()->hide();
+    _item->hide();
 }
 
 
@@ -100,7 +89,7 @@ void CreateCommand::redo() {
   if (!_item)
     createItem();
 
-  _item->graphicsItem()->show();
+  _item->show();
 }
 
 
@@ -110,12 +99,12 @@ void CreateCommand::creationComplete() {
 
 
 void MoveCommand::undo() {
-  _item->graphicsItem()->setPos(_originalPos);
+  _item->setPos(_originalPos);
 }
 
 
 void MoveCommand::redo() {
-  _item->graphicsItem()->setPos(_newPos);
+  _item->setPos(_newPos);
 }
 
 

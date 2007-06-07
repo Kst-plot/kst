@@ -13,20 +13,18 @@
 #define SVGITEM_H
 
 #include "viewitem.h"
-#include <QGraphicsRectItem>
 
 class QSvgRenderer;
 
 namespace Kst {
 
-class SvgItem : public ViewItem, public QGraphicsRectItem
+class SvgItem : public ViewItem
 {
   Q_OBJECT
   public:
     SvgItem(View *parent, const QString &file);
     ~SvgItem();
 
-    QGraphicsItem *graphicsItem() { return this; }
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
   private Q_SLOTS:

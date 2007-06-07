@@ -13,18 +13,15 @@
 #define PLOTITEM_H
 
 #include "viewitem.h"
-#include <QGraphicsRectItem>
 
 namespace Kst {
 
-class PlotItem : public ViewItem, public QGraphicsRectItem
+class PlotItem : public ViewItem
 {
   Q_OBJECT
 public:
   PlotItem(View *parent);
   virtual ~PlotItem();
-
-  virtual QGraphicsItem *graphicsItem() { return this; }
 
 private Q_SLOTS:
   void creationPolygonChanged(View::CreationEvent event);

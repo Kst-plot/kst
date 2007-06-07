@@ -13,7 +13,6 @@
 
 #include <QDebug>
 #include <QFileDialog>
-#include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QSvgRenderer>
 

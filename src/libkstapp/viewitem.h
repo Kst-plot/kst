@@ -13,17 +13,17 @@
 #define VIEWITEM_H
 
 #include <QObject>
+#include <QGraphicsRectItem>
+
 #include "kst_export.h"
 #include "viewcommand.h"
 #include "view.h" //forward declare, but enums??
 
 // #define DEBUG_GEOMETRY 1
 
-class QGraphicsItem;
-
 namespace Kst {
 
-class KST_EXPORT ViewItem : public QObject
+class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
 {
   Q_OBJECT
 public:
@@ -31,8 +31,6 @@ public:
   virtual ~ViewItem();
 
   View *parentView() const;
-
-  virtual QGraphicsItem *graphicsItem() = 0;
 
 Q_SIGNALS:
   void creationComplete();
@@ -42,14 +40,6 @@ private Q_SLOTS:
 
 private:
   QPointF _originalPosition;
-
-#ifdef DEBUG_GEOMETRY
-protected:
-  void debugGeometry();
-
-private:
-  QGraphicsRectItem *_rectItem;
-#endif
 };
 
 class KST_EXPORT ViewItemCommand : public QUndoCommand
