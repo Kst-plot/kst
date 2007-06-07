@@ -20,7 +20,6 @@ namespace Kst {
 
 BoxItem::BoxItem(View *parent)
     : ViewItem(parent) {
-  setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
 }
 
 

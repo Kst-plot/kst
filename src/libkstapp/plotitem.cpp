@@ -19,7 +19,6 @@ namespace Kst {
 
 PlotItem::PlotItem(View *parent)
   : ViewItem(parent) {
-  setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
   setBrush(Qt::white);
 }
 

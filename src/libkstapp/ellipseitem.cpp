@@ -19,7 +19,6 @@ namespace Kst {
 
 EllipseItem::EllipseItem(View *parent)
   : ViewItem(parent) {
-  setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
 }
 
 

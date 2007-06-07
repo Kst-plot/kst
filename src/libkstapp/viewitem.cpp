@@ -20,6 +20,7 @@ namespace Kst {
 
 ViewItem::ViewItem(View *parent)
   : QObject(parent) {
+  setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
 #ifdef DEBUG_GEOMETRY
   QColor semiRed(QColor(255, 0, 0, 50));
   setPen(semiRed);

@@ -20,7 +20,6 @@ namespace Kst {
 
 LineItem::LineItem(View *parent)
   : ViewItem(parent) {
-  setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
 }
 
 
