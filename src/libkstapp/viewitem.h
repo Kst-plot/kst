@@ -155,6 +155,27 @@ public:
   virtual void redo();
 };
 
+class KST_EXPORT ResizeCommand : public ViewItemCommand
+{
+public:
+  ResizeCommand(const QRectF &originalRect, const QRectF &newRect)
+      : ViewItemCommand(QObject::tr("Resize")),
+        _originalRect(originalRect), _newRect(newRect) {}
+
+  ResizeCommand(ViewItem *item, const QRectF &originalRect, const QRectF &newRect)
+      : ViewItemCommand(item, QObject::tr("Resize")),
+        _originalRect(originalRect), _newRect(newRect) {}
+
+  virtual ~ResizeCommand() {}
+
+  virtual void undo();
+  virtual void redo();
+
+private:
+  QRectF _originalRect;
+  QRectF _newRect;
+};
+
 }
 
 #endif

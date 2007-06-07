@@ -19,6 +19,7 @@
 #include <QUndoStack>
 #include <QResizeEvent>
 #include <QGLWidget>
+#include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 
@@ -134,7 +135,9 @@ bool View::eventFilter(QObject *obj, QEvent *event) {
         QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
         _creationPolygonMove << e->scenePos();
         emit creationPolygonChanged(MouseMove);
-      } else if (_mouseMode == Default && scene()->mouseGrabberItem()) {
+      } else if (_mouseMode == Default && scene()->mouseGrabberItem() &&
+                 /*FIXME not a good way to detect resize mode*/
+                 scene()->mouseGrabberItem()->cursor().shape() == Qt::ArrowCursor) {
         setMouseMode(Move);
         _undoStack->beginMacro(tr("Move"));
       }

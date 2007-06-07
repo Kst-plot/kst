@@ -129,7 +129,8 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
         transformed.setBottomRight(event->pos());
       }
 /*      setRect(transformed);*/
-      transformToRect(transformed);
+      ResizeCommand *resize = new ResizeCommand(this, rect(), transformed);
+      resize->redo();
       return;
     }
   case Qt::SizeBDiagCursor:
@@ -141,7 +142,8 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
         transformed.setTopRight(event->pos());
       }
 /*      setRect(transformed);*/
-      transformToRect(transformed);
+      ResizeCommand *resize = new ResizeCommand(this, rect(), transformed);
+      resize->redo();
       return;
     }
   case Qt::SizeVerCursor:
@@ -153,7 +155,8 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
         transformed.setBottom(event->pos().y());
       }
 /*      setRect(transformed);*/
-      transformToRect(transformed);
+      ResizeCommand *resize = new ResizeCommand(this, rect(), transformed);
+      resize->redo();
       return;
     }
   case Qt::SizeHorCursor:
@@ -165,8 +168,8 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
         transformed.setRight(event->pos().x());
       }
 /*      setRect(transformed);*/
-      transformToRect(transformed);
-
+      ResizeCommand *resize = new ResizeCommand(this, rect(), transformed);
+      resize->redo();
       return;
     }
   case Qt::ArrowCursor:
@@ -379,6 +382,17 @@ void LowerCommand::undo() {
 void LowerCommand::redo() {
   _item->setZValue(_item->zValue() - 1);
 }
+
+
+void ResizeCommand::undo() {
+  _item->transformToRect(_originalRect);
+}
+
+
+void ResizeCommand::redo() {
+  _item->transformToRect(_newRect);
+}
+
 
 }
 
