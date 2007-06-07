@@ -13,8 +13,10 @@
 #include "kstapplication.h"
 #include "tabwidget.h"
 
+#include <QMenu>
 #include <QDebug>
 #include <QGraphicsScene>
+#include <QGraphicsSceneContextMenuEvent>
 
 namespace Kst {
 
@@ -37,6 +39,24 @@ ViewItem::~ViewItem() {
 
 View *ViewItem::parentView() const {
   return qobject_cast<View*>(parent());
+}
+
+
+void ViewItem::removeItem() {
+  RemoveCommand *remove = new RemoveCommand(this);
+  remove->redo();
+}
+
+
+void ViewItem::zOrderUp() {
+  ZOrderUpCommand *up = new ZOrderUpCommand(this);
+  up->redo();
+}
+
+
+void ViewItem::zOrderDown() {
+  ZOrderDownCommand *down = new ZOrderDownCommand(this);
+  down->redo();
 }
 
 
@@ -68,6 +88,22 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
     emit creationComplete();
     return;
   }
+}
+
+
+void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
+  QMenu menu;
+
+  QAction *removeAction = menu.addAction(tr("Remove Object"));
+  connect(removeAction, SIGNAL(triggered()), this, SLOT(removeItem()));
+
+  QAction *zUpAction = menu.addAction(tr("Z Order Up"));
+  connect(zUpAction, SIGNAL(triggered()), this, SLOT(zOrderUp()));
+
+  QAction *zDownAction = menu.addAction(tr("Z Order Down"));
+  connect(zDownAction, SIGNAL(triggered()), this, SLOT(zOrderDown()));
+
+  menu.exec(event->screenPos());
 }
 
 
@@ -139,6 +175,35 @@ void MoveCommand::redo() {
   _item->setPos(_newPos);
 }
 
+
+void RemoveCommand::undo() {
+  _item->show();
+}
+
+
+void RemoveCommand::redo() {
+  _item->hide();
+}
+
+
+void ZOrderUpCommand::undo() {
+  _item->setZValue(_item->zValue() - 1);
+}
+
+
+void ZOrderUpCommand::redo() {
+  _item->setZValue(_item->zValue() + 1);
+}
+
+
+void ZOrderDownCommand::undo() {
+  _item->setZValue(_item->zValue() +1);
+}
+
+
+void ZOrderDownCommand::redo() {
+  _item->setZValue(_item->zValue() - 1);
+}
 
 }
 

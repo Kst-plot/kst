@@ -19,7 +19,7 @@
 #include "viewcommand.h"
 #include "view.h" //forward declare, but enums??
 
-#define DEBUG_GEOMETRY 1
+// #define DEBUG_GEOMETRY 1
 
 namespace Kst {
 
@@ -35,8 +35,16 @@ public:
 Q_SIGNALS:
   void creationComplete();
 
+public Q_SLOTS:
+  void removeItem();
+  void zOrderUp();
+  void zOrderDown();
+
 protected Q_SLOTS:
   virtual void creationPolygonChanged(View::CreationEvent event);
+
+protected:
+  virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
 private Q_SLOTS:
   void mouseModeChanged();
@@ -80,11 +88,11 @@ class KST_EXPORT MoveCommand : public ViewItemCommand
 {
 public:
   MoveCommand(QPointF originalPos, QPointF newPos)
-      : ViewItemCommand(QObject::tr("Move Object")),
+      : ViewItemCommand(QObject::tr("Move Item")),
         _originalPos(originalPos),
         _newPos(newPos) {}
   MoveCommand(ViewItem *item, QPointF originalPos, QPointF newPos)
-      : ViewItemCommand(item, QObject::tr("Move Object")),
+      : ViewItemCommand(item, QObject::tr("Move Item")),
         _originalPos(originalPos),
         _newPos(newPos) {}
 
@@ -96,6 +104,48 @@ public:
 private:
   QPointF _originalPos;
   QPointF _newPos;
+};
+
+class KST_EXPORT RemoveCommand : public ViewItemCommand
+{
+public:
+  RemoveCommand()
+      : ViewItemCommand(QObject::tr("Remove Item")) {}
+  RemoveCommand(ViewItem *item)
+      : ViewItemCommand(item, QObject::tr("Remove Item")) {}
+
+  virtual ~RemoveCommand() {}
+
+  virtual void undo();
+  virtual void redo();
+};
+
+class KST_EXPORT ZOrderUpCommand : public ViewItemCommand
+{
+public:
+  ZOrderUpCommand()
+      : ViewItemCommand(QObject::tr("Z-Order Up")) {}
+  ZOrderUpCommand(ViewItem *item)
+      : ViewItemCommand(item, QObject::tr("Z-Order Up")) {}
+
+  virtual ~ZOrderUpCommand() {}
+
+  virtual void undo();
+  virtual void redo();
+};
+
+class KST_EXPORT ZOrderDownCommand : public ViewItemCommand
+{
+public:
+  ZOrderDownCommand()
+      : ViewItemCommand(QObject::tr("Z-Order Down")) {}
+  ZOrderDownCommand(ViewItem *item)
+      : ViewItemCommand(item, QObject::tr("Z-Order Down")) {}
+
+  virtual ~ZOrderDownCommand() {}
+
+  virtual void undo();
+  virtual void redo();
 };
 
 }
