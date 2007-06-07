@@ -48,20 +48,20 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 }
 
 
-void ViewItem::removeItem() {
+void ViewItem::remove() {
   RemoveCommand *remove = new RemoveCommand(this);
   remove->redo();
 }
 
 
-void ViewItem::zOrderUp() {
-  ZOrderUpCommand *up = new ZOrderUpCommand(this);
+void ViewItem::raise() {
+  RaiseCommand *up = new RaiseCommand(this);
   up->redo();
 }
 
 
-void ViewItem::zOrderDown() {
-  ZOrderDownCommand *down = new ZOrderDownCommand(this);
+void ViewItem::lower() {
+  LowerCommand *down = new LowerCommand(this);
   down->redo();
 }
 
@@ -100,14 +100,14 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
 void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   QMenu menu;
 
-  QAction *removeAction = menu.addAction(tr("Remove Object"));
-  connect(removeAction, SIGNAL(triggered()), this, SLOT(removeItem()));
+  QAction *removeAction = menu.addAction(tr("Remove"));
+  connect(removeAction, SIGNAL(triggered()), this, SLOT(remove()));
 
-  QAction *zUpAction = menu.addAction(tr("Z Order Up"));
-  connect(zUpAction, SIGNAL(triggered()), this, SLOT(zOrderUp()));
+  QAction *raiseAction = menu.addAction(tr("Raise"));
+  connect(raiseAction, SIGNAL(triggered()), this, SLOT(raise()));
 
-  QAction *zDownAction = menu.addAction(tr("Z Order Down"));
-  connect(zDownAction, SIGNAL(triggered()), this, SLOT(zOrderDown()));
+  QAction *lowerAction = menu.addAction(tr("Lower"));
+  connect(lowerAction, SIGNAL(triggered()), this, SLOT(lower()));
 
   menu.exec(event->screenPos());
 }
@@ -361,22 +361,22 @@ void RemoveCommand::redo() {
 }
 
 
-void ZOrderUpCommand::undo() {
+void RaiseCommand::undo() {
   _item->setZValue(_item->zValue() - 1);
 }
 
 
-void ZOrderUpCommand::redo() {
+void RaiseCommand::redo() {
   _item->setZValue(_item->zValue() + 1);
 }
 
 
-void ZOrderDownCommand::undo() {
+void LowerCommand::undo() {
   _item->setZValue(_item->zValue() +1);
 }
 
 
-void ZOrderDownCommand::redo() {
+void LowerCommand::redo() {
   _item->setZValue(_item->zValue() - 1);
 }
 

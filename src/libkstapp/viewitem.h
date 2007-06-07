@@ -38,9 +38,9 @@ Q_SIGNALS:
   void creationComplete();
 
 public Q_SLOTS:
-  void removeItem();
-  void zOrderUp();
-  void zOrderDown();
+  void remove();
+  void raise();
+  void lower();
   bool transformToRect(const QRectF &newRect);
 
 protected Q_SLOTS:
@@ -117,9 +117,9 @@ class KST_EXPORT RemoveCommand : public ViewItemCommand
 {
 public:
   RemoveCommand()
-      : ViewItemCommand(QObject::tr("Remove Item")) {}
+      : ViewItemCommand(QObject::tr("Remove")) {}
   RemoveCommand(ViewItem *item)
-      : ViewItemCommand(item, QObject::tr("Remove Item")) {}
+      : ViewItemCommand(item, QObject::tr("Remove")) {}
 
   virtual ~RemoveCommand() {}
 
@@ -127,29 +127,29 @@ public:
   virtual void redo();
 };
 
-class KST_EXPORT ZOrderUpCommand : public ViewItemCommand
+class KST_EXPORT RaiseCommand : public ViewItemCommand
 {
 public:
-  ZOrderUpCommand()
-      : ViewItemCommand(QObject::tr("Z-Order Up")) {}
-  ZOrderUpCommand(ViewItem *item)
-      : ViewItemCommand(item, QObject::tr("Z-Order Up")) {}
+  RaiseCommand()
+      : ViewItemCommand(QObject::tr("Raise")) {}
+  RaiseCommand(ViewItem *item)
+      : ViewItemCommand(item, QObject::tr("Raise")) {}
 
-  virtual ~ZOrderUpCommand() {}
+  virtual ~RaiseCommand() {}
 
   virtual void undo();
   virtual void redo();
 };
 
-class KST_EXPORT ZOrderDownCommand : public ViewItemCommand
+class KST_EXPORT LowerCommand : public ViewItemCommand
 {
 public:
-  ZOrderDownCommand()
-      : ViewItemCommand(QObject::tr("Z-Order Down")) {}
-  ZOrderDownCommand(ViewItem *item)
-      : ViewItemCommand(item, QObject::tr("Z-Order Down")) {}
+  LowerCommand()
+      : ViewItemCommand(QObject::tr("Lower")) {}
+  LowerCommand(ViewItem *item)
+      : ViewItemCommand(item, QObject::tr("Lower")) {}
 
-  virtual ~ZOrderDownCommand() {}
+  virtual ~LowerCommand() {}
 
   virtual void undo();
   virtual void redo();
