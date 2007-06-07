@@ -19,7 +19,7 @@
 #include "viewcommand.h"
 #include "view.h" //forward declare, but enums??
 
-// #define DEBUG_GEOMETRY 1
+#define DEBUG_GEOMETRY 1
 
 namespace Kst {
 
@@ -34,6 +34,9 @@ public:
 
 Q_SIGNALS:
   void creationComplete();
+
+protected Q_SLOTS:
+  virtual void creationPolygonChanged(View::CreationEvent event);
 
 private Q_SLOTS:
   void mouseModeChanged();

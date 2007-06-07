@@ -23,9 +23,6 @@ class BoxItem : public ViewItem
 public:
   BoxItem(View *parent);
   virtual ~BoxItem();
-
-private Q_SLOTS:
-  void creationPolygonChanged(View::CreationEvent event);
 };
 
 class KST_EXPORT CreateBoxCommand : public CreateCommand

@@ -40,6 +40,37 @@ View *ViewItem::parentView() const {
 }
 
 
+void ViewItem::creationPolygonChanged(View::CreationEvent event) {
+  if (event == View::MousePress) {
+    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MousePress));
+    setRect(poly.first().x(), poly.first().y(),
+            poly.last().x() - poly.first().x(), poly.last().y() - poly.first().y());
+    parentView()->scene()->addItem(this);
+    setZValue(1);
+    return;
+  }
+
+  if (event == View::MouseMove) {
+    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseMove));
+    setRect(rect().x(), rect().y(),
+            poly.last().x() - rect().x(), poly.last().y() - rect().y());
+    return;
+  }
+
+  if (event == View::MouseRelease) {
+    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseRelease));
+    setRect(rect().x(), rect().y(),
+            poly.last().x() - rect().x(), poly.last().y() - rect().y());
+
+    parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
+    parentView()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
+    parentView()->setMouseMode(View::Default);
+    emit creationComplete();
+    return;
+  }
+}
+
+
 void ViewItem::mouseModeChanged() {
   if (parentView()->mouseMode() == View::Move)
     _originalPosition = pos();

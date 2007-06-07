@@ -24,9 +24,6 @@ public:
   virtual ~EllipseItem();
 
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
-
-private Q_SLOTS:
-  void creationPolygonChanged(View::CreationEvent event);
 };
 
 class KST_EXPORT CreateEllipseCommand : public CreateCommand

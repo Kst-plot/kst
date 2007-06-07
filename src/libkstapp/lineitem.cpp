@@ -64,10 +64,6 @@ void LineItem::creationPolygonChanged(View::CreationEvent event) {
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseRelease));
     setLine(QLineF(line().p1(), poly.last())); //start and end
 
-#ifdef DEBUG_GEOMETRY
-    debugGeometry();
-#endif
-
     parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
     parentView()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
     parentView()->setMouseMode(View::Default);

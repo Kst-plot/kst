@@ -25,9 +25,6 @@ class PictureItem : public ViewItem
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
-  private Q_SLOTS:
-    void creationPolygonChanged(View::CreationEvent event);
-
   private:
     QPixmap _image;
 };

@@ -19,21 +19,19 @@ namespace Kst {
 class PlotItem : public ViewItem
 {
   Q_OBJECT
-public:
-  PlotItem(View *parent);
-  virtual ~PlotItem();
+  public:
+    PlotItem(View *parent);
+    virtual ~PlotItem();
 
-private Q_SLOTS:
-  void creationPolygonChanged(View::CreationEvent event);
 };
 
 class KST_EXPORT CreatePlotCommand : public CreateCommand
 {
-public:
-  CreatePlotCommand() : CreateCommand(QObject::tr("Create Plot")) {}
-  CreatePlotCommand(View *view) : CreateCommand(view, QObject::tr("Create Plot")) {}
-  virtual ~CreatePlotCommand() {}
-  virtual void createItem();
+  public:
+    CreatePlotCommand() : CreateCommand(QObject::tr("Create Plot")) {}
+    CreatePlotCommand(View *view) : CreateCommand(view, QObject::tr("Create Plot")) {}
+    virtual ~CreatePlotCommand() {}
+    virtual void createItem();
 };
 
 }

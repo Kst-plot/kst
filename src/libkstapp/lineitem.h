@@ -29,8 +29,8 @@ public:
   QLineF line() const;
   void setLine(const QLineF &line);
 
-private Q_SLOTS:
-  void creationPolygonChanged(View::CreationEvent event);
+protected Q_SLOTS:
+  virtual void creationPolygonChanged(View::CreationEvent event);
 
 private:
   QLineF _line;
