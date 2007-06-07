@@ -123,7 +123,8 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
       } else {
         transformed.setBottomRight(event->pos());
       }
-      setRect(transformed);
+/*      setRect(transformed);*/
+      transformToRect(transformed);
       return;
     }
   case Qt::SizeBDiagCursor:
@@ -134,7 +135,8 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
       } else {
         transformed.setTopRight(event->pos());
       }
-      setRect(transformed);
+/*      setRect(transformed);*/
+      transformToRect(transformed);
       return;
     }
   case Qt::SizeVerCursor:
@@ -145,7 +147,8 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
       } else {
         transformed.setBottom(event->pos().y());
       }
-      setRect(transformed);
+/*      setRect(transformed);*/
+      transformToRect(transformed);
       return;
     }
   case Qt::SizeHorCursor:
@@ -156,7 +159,9 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
       } else {
         transformed.setRight(event->pos().x());
       }
-      setRect(transformed);
+/*      setRect(transformed);*/
+      transformToRect(transformed);
+
       return;
     }
   case Qt::ArrowCursor:
@@ -165,6 +170,18 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   }
 
   QGraphicsRectItem::mouseMoveEvent(event);
+}
+
+
+bool ViewItem::transformToRect(const QRectF &newRect) {
+  QTransform t;
+  QPolygonF one(rect());
+  one.pop_back(); //get rid of last closed point
+  QPolygonF two(newRect);
+  two.pop_back(); //get rid of last closed point
+  bool success = QTransform::quadToQuad(one, two, t);
+  if (success) setTransform(t, true);
+  return success;
 }
 
 

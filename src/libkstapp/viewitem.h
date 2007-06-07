@@ -39,6 +39,7 @@ public Q_SLOTS:
   void removeItem();
   void zOrderUp();
   void zOrderDown();
+  bool transformToRect(const QRectF &newRect);
 
 protected Q_SLOTS:
   virtual void creationPolygonChanged(View::CreationEvent event);
