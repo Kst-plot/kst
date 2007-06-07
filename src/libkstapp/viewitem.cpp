@@ -24,12 +24,6 @@ ViewItem::ViewItem(View *parent)
   : QObject(parent) {
   setAcceptsHoverEvents(true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
-#ifdef DEBUG_GEOMETRY
-  QColor semiRed(QColor(255, 0, 0, 50));
-  setPen(semiRed);
-  setBrush(semiRed);
-#endif
-
   connect(parent, SIGNAL(mouseModeChanged()), this, SLOT(mouseModeChanged()));
 }
 
@@ -40,6 +34,17 @@ ViewItem::~ViewItem() {
 
 View *ViewItem::parentView() const {
   return qobject_cast<View*>(parent());
+}
+
+
+void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+
+#ifdef DEBUG_GEOMETRY
+  QColor semiRed(QColor(255, 0, 0, 50));
+  painter->fillRect(boundingRect(), semiRed);
+#endif
+
+  QGraphicsRectItem::paint(painter, option, widget);
 }
 
 

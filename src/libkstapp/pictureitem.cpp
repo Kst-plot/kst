@@ -36,7 +36,7 @@ void PictureItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 
   QPen p = pen();
   setPen(Qt::NoPen);
-  QGraphicsRectItem::paint(painter, option, widget);
+  ViewItem::paint(painter, option, widget);
   setPen(p);
 }
 

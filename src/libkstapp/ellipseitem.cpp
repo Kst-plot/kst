@@ -31,7 +31,7 @@ void EllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
   painter->drawEllipse(rect().adjusted(w, w, -w, -w));
   QPen p = pen();
   setPen(Qt::NoPen);
-  QGraphicsRectItem::paint(painter, option, widget);
+  ViewItem::paint(painter, option, widget);
   setPen(p);
 }
 
