@@ -109,6 +109,61 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 
 
 void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+
+  if (scene()->mouseGrabberItem() != this)
+    return;
+
+  //We have the mouse grab...
+  switch(cursor().shape()) {
+  case Qt::SizeFDiagCursor:
+    {
+      QRectF transformed = rect();
+      if (event->pos().x() < rect().center().x()) {
+        transformed.setTopLeft(event->pos());
+      } else {
+        transformed.setBottomRight(event->pos());
+      }
+      setRect(transformed);
+      return;
+    }
+  case Qt::SizeBDiagCursor:
+    {
+      QRectF transformed = rect();
+      if (event->pos().x() < rect().center().x()) {
+        transformed.setBottomLeft(event->pos());
+      } else {
+        transformed.setTopRight(event->pos());
+      }
+      setRect(transformed);
+      return;
+    }
+  case Qt::SizeVerCursor:
+    {
+      QRectF transformed = rect();
+      if (event->pos().y() < rect().center().y()) {
+        transformed.setTop(event->pos().y());
+      } else {
+        transformed.setBottom(event->pos().y());
+      }
+      setRect(transformed);
+      return;
+    }
+  case Qt::SizeHorCursor:
+    {
+      QRectF transformed = rect();
+      if (event->pos().x() < rect().center().x()) {
+        transformed.setLeft(event->pos().x());
+      } else {
+        transformed.setRight(event->pos().x());
+      }
+      setRect(transformed);
+      return;
+    }
+  case Qt::ArrowCursor:
+  default:
+    break;
+  }
+
   QGraphicsRectItem::mouseMoveEvent(event);
 }
 
