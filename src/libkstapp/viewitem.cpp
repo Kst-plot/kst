@@ -107,6 +107,21 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 }
 
 
+void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+  QGraphicsRectItem::mouseMoveEvent(event);
+}
+
+
+void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+  QGraphicsRectItem::mousePressEvent(event);
+}
+
+
+void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+  QGraphicsRectItem::mouseReleaseEvent(event);
+}
+
+
 void ViewItem::mouseModeChanged() {
   if (parentView()->mouseMode() == View::Move)
     _originalPosition = pos();
@@ -158,6 +173,23 @@ void CreateCommand::redo() {
     createItem();
 
   _item->show();
+}
+
+
+void CreateCommand::createItem() {
+  Q_ASSERT(_item);
+
+  _view->setMouseMode(View::Create);
+
+  //If the mouseMode is changed again before we're done with creation
+  //delete ourself.
+  connect(_view, SIGNAL(mouseModeChanged()), _item, SLOT(deleteLater()));
+  connect(_view, SIGNAL(creationPolygonChanged(View::CreationEvent)),
+          _item, SLOT(creationPolygonChanged(View::CreationEvent)));
+  connect(_item, SIGNAL(creationComplete()), this, SLOT(creationComplete()));
+  //If the item is interrupted while creating itself it will destroy itself
+  //need to delete this too in response...
+  connect(_item, SIGNAL(destroyed(QObject*)), this, SLOT(deleteLater()));
 }
 
 

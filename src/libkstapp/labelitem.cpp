@@ -69,19 +69,9 @@ void CreateLabelCommand::createItem() {
   }
 
   _item = new LabelItem(_view, text);
-  _view->setMouseMode(View::Create);
   _view->setCursor(Qt::IBeamCursor);
 
-  //If the mouseMode is changed again before we're done with creation
-  //delete ourself.
-  connect(_view, SIGNAL(mouseModeChanged()), _item, SLOT(deleteLater()));
-  connect(_view, SIGNAL(creationPolygonChanged(View::CreationEvent)),
-          _item, SLOT(creationPolygonChanged(View::CreationEvent)));
-  connect(_item, SIGNAL(creationComplete()), this, SLOT(creationComplete()));
-  //If the item is interrupted while creating itself it will destroy itself
-  //need to delete this too in response...
-  connect(_item, SIGNAL(destroyed(QObject*)), this, SLOT(deleteLater()));
-
+  CreateCommand::createItem();
 }
 
 

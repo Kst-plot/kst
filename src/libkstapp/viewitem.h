@@ -45,6 +45,9 @@ protected Q_SLOTS:
 
 protected:
   virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
+  virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+  virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+  virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 private Q_SLOTS:
   void mouseModeChanged();
@@ -75,7 +78,7 @@ public:
 
   virtual void undo();
   virtual void redo();
-  virtual void createItem() = 0;
+  virtual void createItem();
 
 public Q_SLOTS:
   void creationComplete();
@@ -88,11 +91,11 @@ class KST_EXPORT MoveCommand : public ViewItemCommand
 {
 public:
   MoveCommand(QPointF originalPos, QPointF newPos)
-      : ViewItemCommand(QObject::tr("Move Item")),
+      : ViewItemCommand(QObject::tr("Move")),
         _originalPos(originalPos),
         _newPos(newPos) {}
   MoveCommand(ViewItem *item, QPointF originalPos, QPointF newPos)
-      : ViewItemCommand(item, QObject::tr("Move Item")),
+      : ViewItemCommand(item, QObject::tr("Move")),
         _originalPos(originalPos),
         _newPos(newPos) {}
 
