@@ -36,10 +36,10 @@ void SvgItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
     _svg->render(painter, boundingRect());
   }
 
-  QBrush b = brush();
-  setBrush(Qt::NoBrush);
+  QPen p = pen();
+  setPen(Qt::NoPen);
   QGraphicsRectItem::paint(painter, option, widget);
-  setBrush(b);
+  setPen(p);
 }
 
 

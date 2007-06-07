@@ -27,6 +27,16 @@ EllipseItem::~EllipseItem() {
 }
 
 
+void EllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+  const qreal w = pen().widthF();
+  painter->drawEllipse(rect().adjusted(w, w, -w, -w));
+  QPen p = pen();
+  setPen(Qt::NoPen);
+  QGraphicsRectItem::paint(painter, option, widget);
+  setPen(p);
+}
+
+
 void EllipseItem::creationPolygonChanged(View::CreationEvent event) {
   if (event == View::MousePress) {
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MousePress));

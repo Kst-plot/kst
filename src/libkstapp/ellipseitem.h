@@ -13,11 +13,11 @@
 #define ELLIPSEITEM_H
 
 #include "viewitem.h"
-#include <QGraphicsEllipseItem>
+#include <QGraphicsRectItem>
 
 namespace Kst {
 
-class EllipseItem : public ViewItem, public QGraphicsEllipseItem
+class EllipseItem : public ViewItem, public QGraphicsRectItem
 {
   Q_OBJECT
 public:
@@ -25,6 +25,7 @@ public:
   virtual ~EllipseItem();
 
   virtual QGraphicsItem *graphicsItem() { return this; }
+  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
 private Q_SLOTS:
   void creationPolygonChanged(View::CreationEvent event);

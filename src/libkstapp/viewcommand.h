@@ -16,7 +16,6 @@
 #include <QUndoCommand>
 #include "kst_export.h"
 
-
 namespace Kst {
 class View;
 

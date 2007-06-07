@@ -34,10 +34,11 @@ void PictureItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     const qreal w = pen().widthF();
     painter->drawPixmap(rect().adjusted(w, w, -w, -w), _image, _image.rect());
   }
-  QBrush b = brush();
-  setBrush(Qt::NoBrush);
+
+  QPen p = pen();
+  setPen(Qt::NoPen);
   QGraphicsRectItem::paint(painter, option, widget);
-  setBrush(b);
+  setPen(p);
 }
 
 
