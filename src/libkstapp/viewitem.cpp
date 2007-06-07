@@ -22,6 +22,7 @@ namespace Kst {
 
 ViewItem::ViewItem(View *parent)
   : QObject(parent) {
+  setAcceptsHoverEvents(true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
 #ifdef DEBUG_GEOMETRY
   QColor semiRed(QColor(255, 0, 0, 50));
@@ -119,6 +120,71 @@ void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
 void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   QGraphicsRectItem::mouseReleaseEvent(event);
+}
+
+
+void ViewItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
+  QGraphicsRectItem::hoverMoveEvent(event);
+
+  QRectF r;
+  r.setSize(QSizeF(14,14)); //gives us corners of 7x7
+
+  //Look for corners
+  r.moveCenter(rect().bottomRight());
+  if (r.contains(event->pos())) {
+    setCursor(Qt::SizeFDiagCursor);
+    return;
+  }
+
+  r.moveCenter(rect().topLeft());
+  if (r.contains(event->pos())) {
+    setCursor(Qt::SizeFDiagCursor);
+    return;
+  }
+
+  r.moveCenter(rect().bottomLeft());
+  if (r.contains(event->pos())) {
+    setCursor(Qt::SizeBDiagCursor);
+    return;
+  }
+
+  r.moveCenter(rect().topRight());
+  if (r.contains(event->pos())) {
+    setCursor(Qt::SizeBDiagCursor);
+    return;
+  }
+
+  //Now look for horizontal edges
+  r.setSize(QSizeF(rect().width(), 7));
+
+  r.moveTopRight(rect().topRight());
+  if (r.contains(event->pos())) {
+    setCursor(Qt::SizeVerCursor);
+    return;
+  }
+
+  r.moveBottomRight(rect().bottomRight());
+  if (r.contains(event->pos())) {
+    setCursor(Qt::SizeVerCursor);
+    return;
+  }
+
+  //Now look for vertical edges
+  r.setSize(QSizeF(7, rect().height()));
+
+  r.moveTopLeft(rect().topLeft());
+  if (r.contains(event->pos())) {
+    setCursor(Qt::SizeHorCursor);
+    return;
+  }
+
+  r.moveTopRight(rect().topRight());
+  if (r.contains(event->pos())) {
+    setCursor(Qt::SizeHorCursor);
+    return;
+  }
+
+  setCursor(Qt::ArrowCursor);
 }
 
 
