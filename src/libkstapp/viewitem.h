@@ -59,11 +59,12 @@ protected:
   virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
 
 private Q_SLOTS:
-  void viewMouseModeChanged();
+  void viewMouseModeChanged(View::MouseMode oldMode);
 
 private:
   MouseMode _mouseMode;
   QPointF _originalPosition;
+  QTransform _originalTransform;
 };
 
 class KST_EXPORT ViewItemCommand : public QUndoCommand
@@ -164,13 +165,13 @@ public:
 class KST_EXPORT ResizeCommand : public ViewItemCommand
 {
 public:
-  ResizeCommand(const QRectF &originalRect, const QRectF &newRect)
+  ResizeCommand(const QTransform &originalTransform, const QTransform &newTransform)
       : ViewItemCommand(QObject::tr("Resize")),
-        _originalRect(originalRect), _newRect(newRect) {}
+        _originalTransform(originalTransform), _newTransform(newTransform) {}
 
-  ResizeCommand(ViewItem *item, const QRectF &originalRect, const QRectF &newRect)
+  ResizeCommand(ViewItem *item, const QTransform &originalTransform, const QTransform &newTransform)
       : ViewItemCommand(item, QObject::tr("Resize")),
-        _originalRect(originalRect), _newRect(newRect) {}
+        _originalTransform(originalTransform), _newTransform(newTransform) {}
 
   virtual ~ResizeCommand() {}
 
@@ -178,8 +179,8 @@ public:
   virtual void redo();
 
 private:
-  QRectF _originalRect;
-  QRectF _newRect;
+  QTransform _originalTransform;
+  QTransform _newTransform;
 };
 
 }

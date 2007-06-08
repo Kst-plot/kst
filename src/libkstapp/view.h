@@ -44,7 +44,7 @@ public:
   QPolygonF creationPolygon(CreationEvents events) const;
 
 Q_SIGNALS:
-  void mouseModeChanged();
+  void mouseModeChanged(View::MouseMode oldMode);
   void creationPolygonChanged(View::CreationEvent event);
 
 protected:

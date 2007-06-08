@@ -61,7 +61,11 @@ View::MouseMode View::mouseMode() const {
 
 void View::setMouseMode(MouseMode mode) {
 
-  if (_mouseMode == Create) {
+  //Clear the creation polygons if we're currently
+  //in Create mode.
+  MouseMode oldMode = _mouseMode;
+
+  if (oldMode == Create) {
     _creationPolygonPress.clear();
     _creationPolygonRelease.clear();
     _creationPolygonMove.clear();
@@ -76,21 +80,11 @@ void View::setMouseMode(MouseMode mode) {
     setDragMode(QGraphicsView::NoDrag);
   }
 
-  emit mouseModeChanged();
+  emit mouseModeChanged(oldMode);
 }
 
 
 QPolygonF View::creationPolygon(CreationEvents events) const {
-#if 0
-  QPolygonF resultSet;
-  if (events & View::MousePress)
-    resultSet = resultSet.united(_creationPolygonPress);
-  if (events & View::MouseRelease)
-    resultSet = resultSet.united(_creationPolygonRelease);
-  if (events & View::MouseMove)
-    resultSet = resultSet.united(_creationPolygonMove);
-  return resultSet;
-#endif
   if (events == View::MousePress)
      return _creationPolygonPress;
   if (events == View::MouseRelease)

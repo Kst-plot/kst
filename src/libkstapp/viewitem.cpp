@@ -24,7 +24,8 @@ ViewItem::ViewItem(View *parent)
   : QObject(parent) {
   setAcceptsHoverEvents(true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
-  connect(parent, SIGNAL(mouseModeChanged()), this, SLOT(viewMouseModeChanged()));
+  connect(parent, SIGNAL(mouseModeChanged(View::MouseMode)),
+          this, SLOT(viewMouseModeChanged(View::MouseMode)));
 }
 
 
@@ -148,8 +149,7 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
       } else {
         transformed.setBottomRight(event->pos());
       }
-      ResizeCommand *resize = new ResizeCommand(this, rect(), transformed);
-      resize->redo();
+      transformToRect(transformed, true);
       return;
     }
   case Qt::SizeBDiagCursor:
@@ -160,8 +160,7 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
       } else {
         transformed.setTopRight(event->pos());
       }
-      ResizeCommand *resize = new ResizeCommand(this, rect(), transformed);
-      resize->redo();
+      transformToRect(transformed, true);
       return;
     }
   case Qt::SizeVerCursor:
@@ -172,8 +171,7 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
       } else {
         transformed.setBottom(event->pos().y());
       }
-      ResizeCommand *resize = new ResizeCommand(this, rect(), transformed);
-      resize->redo();
+      transformToRect(transformed, true);
       return;
     }
   case Qt::SizeHorCursor:
@@ -184,8 +182,7 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
       } else {
         transformed.setRight(event->pos().x());
       }
-      ResizeCommand *resize = new ResizeCommand(this, rect(), transformed);
-      resize->redo();
+      transformToRect(transformed, true);
       return;
     }
   case Qt::ArrowCursor:
@@ -302,11 +299,16 @@ void ViewItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 }
 
 
-void ViewItem::viewMouseModeChanged() {
-  if (parentView()->mouseMode() == View::Move)
+void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
+  if (parentView()->mouseMode() == View::Move) {
     _originalPosition = pos();
-  else if (_originalPosition != pos())
+  } else if (parentView()->mouseMode() == View::Resize) {
+    _originalTransform = transform();
+  } else if (oldMode == View::Move) {
     new MoveCommand(this, _originalPosition, pos());
+  } else if (oldMode == View::Resize) {
+    new ResizeCommand(this, _originalTransform, transform());
+  }
 }
 
 
@@ -363,7 +365,7 @@ void CreateCommand::createItem() {
 
   //If the mouseMode is changed again before we're done with creation
   //delete ourself.
-  connect(_view, SIGNAL(mouseModeChanged()), _item, SLOT(deleteLater()));
+  connect(_view, SIGNAL(mouseModeChanged(View::MouseMode)), _item, SLOT(deleteLater()));
   connect(_view, SIGNAL(creationPolygonChanged(View::CreationEvent)),
           _item, SLOT(creationPolygonChanged(View::CreationEvent)));
   connect(_item, SIGNAL(creationComplete()), this, SLOT(creationComplete()));
@@ -421,12 +423,12 @@ void LowerCommand::redo() {
 void ResizeCommand::undo() {
   /*FIXME Not combining this transform with previous ... undoes to much.
    * OTOH, combining it means we don't really undo...*/
-  _item->transformToRect(_originalRect);
+  _item->setTransform(_originalTransform);
 }
 
 
 void ResizeCommand::redo() {
-  _item->transformToRect(_newRect, true);
+  _item->setTransform(_newTransform);
 }
 
 
