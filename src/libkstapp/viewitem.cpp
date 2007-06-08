@@ -53,7 +53,11 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
 #ifdef DEBUG_GEOMETRY
   QColor semiRed(QColor(255, 0, 0, 50));
-  painter->fillRect(boundingRect(), semiRed);
+  painter->save();
+  painter->resetTransform();
+  QRectF bound = mapToScene(boundingRect()).boundingRect();
+  painter->fillRect(bound, semiRed);
+  painter->restore();
 #endif
 
   QGraphicsRectItem::paint(painter, option, widget);
@@ -202,60 +206,60 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 void ViewItem::setTopLeft(const QPointF &point) {
   QRectF transformed = rect();
   transformed.setTopLeft(point);
-  transformToRect(transformed, true);
+  transformToRect(transformed);
 }
 
 
 void ViewItem::setTopRight(const QPointF &point) {
   QRectF transformed = rect();
   transformed.setTopRight(point);
-  transformToRect(transformed, true);
+  transformToRect(transformed);
 }
 
 
 void ViewItem::setBottomLeft(const QPointF &point) {
   QRectF transformed = rect();
   transformed.setBottomLeft(point);
-  transformToRect(transformed, true);
+  transformToRect(transformed);
 }
 
 
 void ViewItem::setBottomRight(const QPointF &point) {
   QRectF transformed = rect();
   transformed.setBottomRight(point);
-  transformToRect(transformed, true);
+  transformToRect(transformed);
 }
 
 
 void ViewItem::setTop(qreal x) {
   QRectF transformed = rect();
   transformed.setTop(x);
-  transformToRect(transformed, true);
+  transformToRect(transformed);
 }
 
 
 void ViewItem::setBottom(qreal x) {
   QRectF transformed = rect();
   transformed.setBottom(x);
-  transformToRect(transformed, true);
+  transformToRect(transformed);
 }
 
 
 void ViewItem::setLeft(qreal x) {
   QRectF transformed = rect();
   transformed.setLeft(x);
-  transformToRect(transformed, true);
+  transformToRect(transformed);
 }
 
 
 void ViewItem::setRight(qreal x) {
   QRectF transformed = rect();
   transformed.setRight(x);
-  transformToRect(transformed, true);
+  transformToRect(transformed);
 }
 
 
-bool ViewItem::transformToRect(const QRectF &newRect, bool combine) {
+bool ViewItem::transformToRect(const QRectF &newRect) {
 
 /* setRect(newRect);*/
 
@@ -265,7 +269,7 @@ bool ViewItem::transformToRect(const QRectF &newRect, bool combine) {
   QPolygonF two(newRect);
   two.pop_back(); //get rid of last closed point
   bool success = QTransform::quadToQuad(one, two, t);
-  if (success) setTransform(t, combine);
+  if (success) setTransform(t, true);
   return success;
 }
 
@@ -286,8 +290,6 @@ void ViewItem::rotateTowards(const QPointF &corner, const QPointF &point) {
   t.translate(origin.x(), origin.y());
   t.rotate(angle);
   t.translate(-origin.x(), -origin.y());
-
-//   qDebug() << "rotateTowards" << corner << point << angle << endl;
   setTransform(t, true);
 }
 

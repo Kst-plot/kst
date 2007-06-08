@@ -19,7 +19,7 @@
 #include "viewcommand.h"
 #include "view.h" //forward declare, but enums??
 
-// #define DEBUG_GEOMETRY 1
+// #define DEBUG_GEOMETRY
 
 namespace Kst {
 
@@ -54,7 +54,7 @@ public Q_SLOTS:
   void setBottom(qreal x);
   void setLeft(qreal x);
   void setRight(qreal x);
-  bool transformToRect(const QRectF &newRect, bool combine = false);
+  bool transformToRect(const QRectF &newRect);
   void rotateTowards(const QPointF &corner, const QPointF &point);
 
 protected Q_SLOTS:
