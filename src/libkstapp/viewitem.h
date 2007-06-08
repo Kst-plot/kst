@@ -46,7 +46,16 @@ public Q_SLOTS:
   void remove();
   void raise();
   void lower();
+  void setTopLeft(const QPointF &point);
+  void setTopRight(const QPointF &point);
+  void setBottomLeft(const QPointF &point);
+  void setBottomRight(const QPointF &point);
+  void setTop(qreal x);
+  void setBottom(qreal x);
+  void setLeft(qreal x);
+  void setRight(qreal x);
   bool transformToRect(const QRectF &newRect, bool combine = false);
+  void rotateTowards(const QPointF &corner, const QPointF &point);
 
 protected Q_SLOTS:
   virtual void creationPolygonChanged(View::CreationEvent event);
@@ -57,6 +66,7 @@ protected:
   virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
   virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+  virtual void keyPressEvent(QKeyEvent *event);
 
 private Q_SLOTS:
   void viewMouseModeChanged(View::MouseMode oldMode);

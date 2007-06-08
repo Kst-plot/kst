@@ -16,6 +16,7 @@
 #include <QMenu>
 #include <QDebug>
 #include <QGraphicsScene>
+#include <QKeyEvent>
 #include <QGraphicsSceneContextMenuEvent>
 
 namespace Kst {
@@ -137,52 +138,53 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     }
   }
 
-  /*FIXME Need to compress the resize commands into one command like we do
-   * with the MoveCommand.  Otherwise, this will eat memory... */
-
   switch(cursor().shape()) {
   case Qt::SizeFDiagCursor:
     {
-      QRectF transformed = rect();
       if (event->pos().x() < rect().center().x()) {
-        transformed.setTopLeft(event->pos());
+        if (_mouseMode == Resize)
+          setTopLeft(event->pos());
+        else if (_mouseMode == Rotate)
+          rotateTowards(rect().topLeft(), event->pos());
       } else {
-        transformed.setBottomRight(event->pos());
+        if (_mouseMode == Resize)
+          setBottomRight(event->pos());
+        else if (_mouseMode == Rotate)
+          rotateTowards(rect().bottomRight(), event->pos());
       }
-      transformToRect(transformed, true);
       return;
     }
   case Qt::SizeBDiagCursor:
     {
-      QRectF transformed = rect();
       if (event->pos().x() < rect().center().x()) {
-        transformed.setBottomLeft(event->pos());
+        if (_mouseMode == Resize)
+          setBottomLeft(event->pos());
+        else if (_mouseMode == Rotate)
+          rotateTowards(rect().bottomLeft(), event->pos());
       } else {
-        transformed.setTopRight(event->pos());
+        if (_mouseMode == Resize)
+          setTopRight(event->pos());
+        else if (_mouseMode == Rotate)
+          rotateTowards(rect().topRight(), event->pos());
       }
-      transformToRect(transformed, true);
       return;
     }
   case Qt::SizeVerCursor:
     {
-      QRectF transformed = rect();
       if (event->pos().y() < rect().center().y()) {
-        transformed.setTop(event->pos().y());
+        setTop(event->pos().y());
       } else {
-        transformed.setBottom(event->pos().y());
+        setBottom(event->pos().y());
       }
-      transformToRect(transformed, true);
       return;
     }
   case Qt::SizeHorCursor:
     {
-      QRectF transformed = rect();
       if (event->pos().x() < rect().center().x()) {
-        transformed.setLeft(event->pos().x());
+        setLeft(event->pos().x());
       } else {
-        transformed.setRight(event->pos().x());
+        setRight(event->pos().x());
       }
-      transformToRect(transformed, true);
       return;
     }
   case Qt::ArrowCursor:
@@ -191,6 +193,62 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   }
 
   QGraphicsRectItem::mouseMoveEvent(event);
+}
+
+
+void ViewItem::setTopLeft(const QPointF &point) {
+  QRectF transformed = rect();
+  transformed.setTopLeft(point);
+  transformToRect(transformed, true);
+}
+
+
+void ViewItem::setTopRight(const QPointF &point) {
+  QRectF transformed = rect();
+  transformed.setTopRight(point);
+  transformToRect(transformed, true);
+}
+
+
+void ViewItem::setBottomLeft(const QPointF &point) {
+  QRectF transformed = rect();
+  transformed.setBottomLeft(point);
+  transformToRect(transformed, true);
+}
+
+
+void ViewItem::setBottomRight(const QPointF &point) {
+  QRectF transformed = rect();
+  transformed.setBottomRight(point);
+  transformToRect(transformed, true);
+}
+
+
+void ViewItem::setTop(qreal x) {
+  QRectF transformed = rect();
+  transformed.setTop(x);
+  transformToRect(transformed, true);
+}
+
+
+void ViewItem::setBottom(qreal x) {
+  QRectF transformed = rect();
+  transformed.setBottom(x);
+  transformToRect(transformed, true);
+}
+
+
+void ViewItem::setLeft(qreal x) {
+  QRectF transformed = rect();
+  transformed.setLeft(x);
+  transformToRect(transformed, true);
+}
+
+
+void ViewItem::setRight(qreal x) {
+  QRectF transformed = rect();
+  transformed.setRight(x);
+  transformToRect(transformed, true);
 }
 
 
@@ -206,6 +264,29 @@ bool ViewItem::transformToRect(const QRectF &newRect, bool combine) {
   bool success = QTransform::quadToQuad(one, two, t);
   if (success) setTransform(t, combine);
   return success;
+}
+
+
+void ViewItem::rotateTowards(const QPointF &corner, const QPointF &point) {
+  QPointF origin = rect().center();
+  QLineF unit(origin, QPointF(origin.x() + 1, origin.y()));
+  QLineF normal(origin, corner);
+  QLineF rotated(origin, point);
+
+  /*FIXME better way to check the sign*/
+  bool clockWise = unit.angle(rotated) >= unit.angle(normal);
+
+  qreal angle = normal.angle(rotated);
+  angle = (clockWise ? angle : -angle);
+
+  QTransform t = transform();
+
+  t.translate(origin.x(), origin.y());
+  t.rotate(angle);
+  t.translate(-origin.x(), -origin.y());
+
+//   qDebug() << "rotateTowards" << corner << point << angle << endl;
+  setTransform(t, false);
 }
 
 
@@ -296,6 +377,15 @@ void ViewItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 
   setMouseMode(ViewItem::Default);
   setCursor(Qt::ArrowCursor);
+}
+
+
+void ViewItem::keyPressEvent(QKeyEvent *event) {
+  QGraphicsRectItem::keyPressEvent(event);
+  if (_mouseMode == ViewItem::Resize && event->modifiers() & Qt::ShiftModifier)
+    setMouseMode(ViewItem::Rotate);
+  else if (_mouseMode == ViewItem::Rotate && event->modifiers() & Qt::ShiftModifier)
+    setMouseMode(ViewItem::Resize);
 }
 
 
