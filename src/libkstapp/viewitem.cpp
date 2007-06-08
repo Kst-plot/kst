@@ -135,6 +135,9 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     } else if (mouseMode() == ViewItem::Resize) {
       parentView()->setMouseMode(View::Resize);
       parentView()->undoStack()->beginMacro(tr("Resize"));
+    } else if (mouseMode() == ViewItem::Rotate) {
+      parentView()->setMouseMode(View::Rotate);
+      parentView()->undoStack()->beginMacro(tr("Rotate"));
     }
   }
 
@@ -279,14 +282,13 @@ void ViewItem::rotateTowards(const QPointF &corner, const QPointF &point) {
   qreal angle = normal.angle(rotated);
   angle = (clockWise ? angle : -angle);
 
-  QTransform t = transform();
-
+  QTransform t;
   t.translate(origin.x(), origin.y());
   t.rotate(angle);
   t.translate(-origin.x(), -origin.y());
 
 //   qDebug() << "rotateTowards" << corner << point << angle << endl;
-  setTransform(t, false);
+  setTransform(t, true);
 }
 
 
@@ -382,22 +384,26 @@ void ViewItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 
 void ViewItem::keyPressEvent(QKeyEvent *event) {
   QGraphicsRectItem::keyPressEvent(event);
-  if (_mouseMode == ViewItem::Resize && event->modifiers() & Qt::ShiftModifier)
+  if (_mouseMode == ViewItem::Resize && event->modifiers() & Qt::ShiftModifier) {
     setMouseMode(ViewItem::Rotate);
-  else if (_mouseMode == ViewItem::Rotate && event->modifiers() & Qt::ShiftModifier)
+  } else if (_mouseMode == ViewItem::Rotate && event->modifiers() & Qt::ShiftModifier) {
     setMouseMode(ViewItem::Resize);
+  }
 }
 
 
 void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
   if (parentView()->mouseMode() == View::Move) {
     _originalPosition = pos();
-  } else if (parentView()->mouseMode() == View::Resize) {
+  } else if (parentView()->mouseMode() == View::Resize ||
+             parentView()->mouseMode() == View::Rotate) {
     _originalTransform = transform();
   } else if (oldMode == View::Move) {
     new MoveCommand(this, _originalPosition, pos());
   } else if (oldMode == View::Resize) {
     new ResizeCommand(this, _originalTransform, transform());
+  } else if (oldMode == View::Rotate) {
+    new RotateCommand(this, _originalTransform, transform());
   }
 }
 
@@ -510,14 +516,12 @@ void LowerCommand::redo() {
 }
 
 
-void ResizeCommand::undo() {
-  /*FIXME Not combining this transform with previous ... undoes to much.
-   * OTOH, combining it means we don't really undo...*/
+void TransformCommand::undo() {
   _item->setTransform(_originalTransform);
 }
 
 
-void ResizeCommand::redo() {
+void TransformCommand::redo() {
   _item->setTransform(_newTransform);
 }
 

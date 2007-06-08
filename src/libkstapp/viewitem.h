@@ -172,18 +172,19 @@ public:
   virtual void redo();
 };
 
-class KST_EXPORT ResizeCommand : public ViewItemCommand
+class KST_EXPORT TransformCommand : public ViewItemCommand
 {
 public:
-  ResizeCommand(const QTransform &originalTransform, const QTransform &newTransform)
-      : ViewItemCommand(QObject::tr("Resize")),
+  TransformCommand(const QTransform &originalTransform, const QTransform &newTransform,
+                   const QString &text)
+      : ViewItemCommand(text), _originalTransform(originalTransform), _newTransform(newTransform) {}
+
+  TransformCommand(ViewItem *item, const QTransform &originalTransform,
+                const QTransform &newTransform, const QString &text)
+      : ViewItemCommand(item, text),
         _originalTransform(originalTransform), _newTransform(newTransform) {}
 
-  ResizeCommand(ViewItem *item, const QTransform &originalTransform, const QTransform &newTransform)
-      : ViewItemCommand(item, QObject::tr("Resize")),
-        _originalTransform(originalTransform), _newTransform(newTransform) {}
-
-  virtual ~ResizeCommand() {}
+  virtual ~TransformCommand() {}
 
   virtual void undo();
   virtual void redo();
@@ -191,6 +192,30 @@ public:
 private:
   QTransform _originalTransform;
   QTransform _newTransform;
+};
+
+class KST_EXPORT ResizeCommand : public TransformCommand
+{
+public:
+  ResizeCommand(const QTransform &originalTransform, const QTransform &newTransform)
+      : TransformCommand(originalTransform, newTransform, QObject::tr("Resize")) {}
+
+  ResizeCommand(ViewItem *item, const QTransform &originalTransform, const QTransform &newTransform)
+      : TransformCommand(item, originalTransform, newTransform, QObject::tr("Resize")) {}
+
+  virtual ~ResizeCommand() {}
+};
+
+class KST_EXPORT RotateCommand : public TransformCommand
+{
+public:
+  RotateCommand(const QTransform &originalTransform, const QTransform &newTransform)
+      : TransformCommand(originalTransform, newTransform, QObject::tr("Rotate")) {}
+
+  RotateCommand(ViewItem *item, const QTransform &originalTransform, const QTransform &newTransform)
+      : TransformCommand(item, originalTransform, newTransform, QObject::tr("Rotate")) {}
+
+  virtual ~RotateCommand() {}
 };
 
 }
