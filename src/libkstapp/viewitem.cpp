@@ -50,15 +50,17 @@ void ViewItem::setMouseMode(MouseMode mode) {
 
 
 void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+  QRectF bound = mapToScene(boundingRect()).boundingRect();
+  painter->save();
+  painter->resetTransform();
+//   painter->drawRect(bound);
 
 #ifdef DEBUG_GEOMETRY
   QColor semiRed(QColor(255, 0, 0, 50));
-  painter->save();
-  painter->resetTransform();
-  QRectF bound = mapToScene(boundingRect()).boundingRect();
   painter->fillRect(bound, semiRed);
-  painter->restore();
 #endif
+
+  painter->restore();
 
   QGraphicsRectItem::paint(painter, option, widget);
 }

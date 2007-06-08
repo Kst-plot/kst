@@ -40,11 +40,11 @@ void LabelItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
   if (_parsed) {
     const qreal w = pen().widthF();
     painter->save();
-    QRect box = rect().adjusted(w, w, -w, -w).toRect();
+    QRectF box = rect().adjusted(w, w, -w, -w);
     QFont font;
     font.setPointSize(16);
     QFontMetrics fm(font);
-    painter->translate(QPoint(box.x(), box.y() + fm.ascent()));
+    painter->translate(QPointF(box.x(), box.y() + fm.ascent()));
     Label::RenderContext rc(font.family(), font.pointSize(), painter);
     Label::renderLabel(rc, _parsed->chunk);
 
