@@ -27,21 +27,26 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
 {
   Q_OBJECT
 public:
+  enum MouseMode { Default, Move, Resize, Rotate };
   ViewItem(View *parent);
   virtual ~ViewItem();
 
   View *parentView() const;
+
+  MouseMode mouseMode() const;
+  void setMouseMode(MouseMode mode);
 
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
 Q_SIGNALS:
   void creationComplete();
 
+/*FIXME these should be made private for only undo commands to access*/
 public Q_SLOTS:
   void remove();
   void raise();
   void lower();
-  bool transformToRect(const QRectF &newRect);
+  bool transformToRect(const QRectF &newRect, bool combine = false);
 
 protected Q_SLOTS:
   virtual void creationPolygonChanged(View::CreationEvent event);
@@ -54,9 +59,10 @@ protected:
   virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
 
 private Q_SLOTS:
-  void mouseModeChanged();
+  void viewMouseModeChanged();
 
 private:
+  MouseMode _mouseMode;
   QPointF _originalPosition;
 };
 

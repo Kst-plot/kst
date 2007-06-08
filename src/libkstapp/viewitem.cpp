@@ -24,7 +24,7 @@ ViewItem::ViewItem(View *parent)
   : QObject(parent) {
   setAcceptsHoverEvents(true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
-  connect(parent, SIGNAL(mouseModeChanged()), this, SLOT(mouseModeChanged()));
+  connect(parent, SIGNAL(mouseModeChanged()), this, SLOT(viewMouseModeChanged()));
 }
 
 
@@ -34,6 +34,16 @@ ViewItem::~ViewItem() {
 
 View *ViewItem::parentView() const {
   return qobject_cast<View*>(parent());
+}
+
+
+ViewItem::MouseMode ViewItem::mouseMode() const {
+  return _mouseMode;
+}
+
+
+void ViewItem::setMouseMode(MouseMode mode) {
+  _mouseMode = mode;
 }
 
 
@@ -115,10 +125,20 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 
 void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
-  if (scene()->mouseGrabberItem() != this)
-    return;
+  if (parentView()->mouseMode() == View::Default) {
+    if (mouseMode() == ViewItem::Default ||
+        mouseMode() == ViewItem::Move) {
+      parentView()->setMouseMode(View::Move);
+      parentView()->undoStack()->beginMacro(tr("Move"));
+    } else if (mouseMode() == ViewItem::Resize) {
+      parentView()->setMouseMode(View::Resize);
+      parentView()->undoStack()->beginMacro(tr("Resize"));
+    }
+  }
 
-  //We have the mouse grab...
+  /*FIXME Need to compress the resize commands into one command like we do
+   * with the MoveCommand.  Otherwise, this will eat memory... */
+
   switch(cursor().shape()) {
   case Qt::SizeFDiagCursor:
     {
@@ -128,7 +148,6 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
       } else {
         transformed.setBottomRight(event->pos());
       }
-/*      setRect(transformed);*/
       ResizeCommand *resize = new ResizeCommand(this, rect(), transformed);
       resize->redo();
       return;
@@ -141,7 +160,6 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
       } else {
         transformed.setTopRight(event->pos());
       }
-/*      setRect(transformed);*/
       ResizeCommand *resize = new ResizeCommand(this, rect(), transformed);
       resize->redo();
       return;
@@ -154,7 +172,6 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
       } else {
         transformed.setBottom(event->pos().y());
       }
-/*      setRect(transformed);*/
       ResizeCommand *resize = new ResizeCommand(this, rect(), transformed);
       resize->redo();
       return;
@@ -167,7 +184,6 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
       } else {
         transformed.setRight(event->pos().x());
       }
-/*      setRect(transformed);*/
       ResizeCommand *resize = new ResizeCommand(this, rect(), transformed);
       resize->redo();
       return;
@@ -181,14 +197,17 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 
-bool ViewItem::transformToRect(const QRectF &newRect) {
+bool ViewItem::transformToRect(const QRectF &newRect, bool combine) {
+
+/* setRect(newRect);*/
+
   QTransform t;
   QPolygonF one(rect());
   one.pop_back(); //get rid of last closed point
   QPolygonF two(newRect);
   two.pop_back(); //get rid of last closed point
   bool success = QTransform::quadToQuad(one, two, t);
-  if (success) setTransform(t, true);
+  if (success) setTransform(t, combine);
   return success;
 }
 
@@ -199,6 +218,12 @@ void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
 
 void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+
+  if (parentView()->mouseMode() != View::Default) {
+    parentView()->setMouseMode(View::Default);
+    parentView()->undoStack()->endMacro();
+  }
+
   QGraphicsRectItem::mouseReleaseEvent(event);
 }
 
@@ -212,24 +237,28 @@ void ViewItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   //Look for corners
   r.moveCenter(rect().bottomRight());
   if (r.contains(event->pos())) {
+    setMouseMode(ViewItem::Resize);
     setCursor(Qt::SizeFDiagCursor);
     return;
   }
 
   r.moveCenter(rect().topLeft());
   if (r.contains(event->pos())) {
+    setMouseMode(ViewItem::Resize);
     setCursor(Qt::SizeFDiagCursor);
     return;
   }
 
   r.moveCenter(rect().bottomLeft());
   if (r.contains(event->pos())) {
+    setMouseMode(ViewItem::Resize);
     setCursor(Qt::SizeBDiagCursor);
     return;
   }
 
   r.moveCenter(rect().topRight());
   if (r.contains(event->pos())) {
+    setMouseMode(ViewItem::Resize);
     setCursor(Qt::SizeBDiagCursor);
     return;
   }
@@ -239,12 +268,14 @@ void ViewItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 
   r.moveTopRight(rect().topRight());
   if (r.contains(event->pos())) {
+    setMouseMode(ViewItem::Resize);
     setCursor(Qt::SizeVerCursor);
     return;
   }
 
   r.moveBottomRight(rect().bottomRight());
   if (r.contains(event->pos())) {
+    setMouseMode(ViewItem::Resize);
     setCursor(Qt::SizeVerCursor);
     return;
   }
@@ -254,21 +285,24 @@ void ViewItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 
   r.moveTopLeft(rect().topLeft());
   if (r.contains(event->pos())) {
+    setMouseMode(ViewItem::Resize);
     setCursor(Qt::SizeHorCursor);
     return;
   }
 
   r.moveTopRight(rect().topRight());
   if (r.contains(event->pos())) {
+    setMouseMode(ViewItem::Resize);
     setCursor(Qt::SizeHorCursor);
     return;
   }
 
+  setMouseMode(ViewItem::Default);
   setCursor(Qt::ArrowCursor);
 }
 
 
-void ViewItem::mouseModeChanged() {
+void ViewItem::viewMouseModeChanged() {
   if (parentView()->mouseMode() == View::Move)
     _originalPosition = pos();
   else if (_originalPosition != pos())
@@ -385,12 +419,14 @@ void LowerCommand::redo() {
 
 
 void ResizeCommand::undo() {
+  /*FIXME Not combining this transform with previous ... undoes to much.
+   * OTOH, combining it means we don't really undo...*/
   _item->transformToRect(_originalRect);
 }
 
 
 void ResizeCommand::redo() {
-  _item->transformToRect(_newRect);
+  _item->transformToRect(_newRect, true);
 }
 
 

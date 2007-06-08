@@ -102,50 +102,36 @@ QPolygonF View::creationPolygon(CreationEvents events) const {
 
 
 bool View::eventFilter(QObject *obj, QEvent *event) {
-  if (obj != scene())
+  if (obj != scene() || _mouseMode != Create)
     return QGraphicsView::eventFilter(obj, event);
 
   switch (event->type()) {
   case QEvent::GraphicsSceneMousePress:
     {
-      if (_mouseMode == Create) {
-        QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
-        _creationPolygonPress << e->buttonDownScenePos(Qt::LeftButton);
-        emit creationPolygonChanged(MousePress);
-        return true; //filter this otherwise something can grab our mouse...
-      } else {
-        return false;
-      }
+      QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
+      _creationPolygonPress << e->buttonDownScenePos(Qt::LeftButton);
+      emit creationPolygonChanged(MousePress);
+      return true; //filter this otherwise something can grab our mouse...
     }
   case QEvent::GraphicsSceneMouseRelease:
     {
-      if (_mouseMode == Create) {
-        QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
-        _creationPolygonRelease << e->scenePos();
-        emit creationPolygonChanged(MouseRelease);
-      } else if (_mouseMode == Move) {
-        setMouseMode(Default);
-        _undoStack->endMacro();
-      }
-      return false;
+      QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
+      _creationPolygonRelease << e->scenePos();
+      emit creationPolygonChanged(MouseRelease);
+      break;
     }
   case QEvent::GraphicsSceneMouseMove:
     {
-      if (_mouseMode == Create) {
-        QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
-        _creationPolygonMove << e->scenePos();
-        emit creationPolygonChanged(MouseMove);
-      } else if (_mouseMode == Default && scene()->mouseGrabberItem() &&
-                 /*FIXME not a good way to detect resize mode*/
-                 scene()->mouseGrabberItem()->cursor().shape() == Qt::ArrowCursor) {
-        setMouseMode(Move);
-        _undoStack->beginMacro(tr("Move"));
-      }
-      return false;
+      QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
+      _creationPolygonMove << e->scenePos();
+      emit creationPolygonChanged(MouseMove);
+      break;
     }
   default:
-    return QGraphicsView::eventFilter(obj, event);
+    break;
   }
+
+  return QGraphicsView::eventFilter(obj, event);
 }
 
 
