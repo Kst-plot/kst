@@ -8,5 +8,8 @@
 /* Define if you have unsetenv */
 #cmakedefine HAVE_UNSETENV 1
 
+/* Define if you have cfitsio */
+#cmakedefine HAVE_CFITSIO 1
+
 #endif
 
