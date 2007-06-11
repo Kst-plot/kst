@@ -1,7 +1,7 @@
 project(kst)
 
 # Path for cmake modules before ${CMAKE_ROOT}/Modules/ is checked
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/kst/cmake/modules")
 
 set(KST_VERSION "1.9.0_devel")
 set(KST_LIBKST_VERSION 1.9.0)
