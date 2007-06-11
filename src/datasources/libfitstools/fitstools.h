@@ -2,8 +2,8 @@
                   fitstools.h  -  general tools for FITS files
                              -------------------
     begin                : Tue May 30 2006
-    copyright            : (C) 2006 Ted Kisner
-    email                : tskisner.public@gmail.com
+    copyright            : (C) 2007 Ted Kisner
+    email                : tsk@humanityforward.org
  ***************************************************************************/
 
 /***************************************************************************
@@ -25,6 +25,7 @@
 #include <q3valuelist.h>
 #include <qstringlist.h>
 #include <qmap.h>
+#include <qregexp.h>
 
 // convenience functions
 
@@ -32,24 +33,35 @@ char **fitsSarrayAlloc( size_t nstring );
 
 int fitsSarrayFree( char **array, size_t nstring );
 
-// determine properties of the file
+void fitsGetHC( QString name, int *hdu, int *col );
+
+// determine file properties
 
 int fitsNHDU( fitsfile *fp );
 
-QMap<QString, QString> fitsKeys( fitsfile *fp, int HDU );
+QMap<QString, QString> fitsKeys( fitsfile *fp);
     
-int fitsNamesUnits( fitsfile *fp, int HDU, QStringList *names, QStringList *units );
-
-QStringList fitsFields( fitsfile *fp, int HDU );
+// create field and matrix lists
     
-QStringList fitsMatrices( fitsfile *fp, int HDU );
+int fitsFieldNamesUnits( fitsfile *fp, QStringList *names, QStringList *units );
 
-Q3ValueList<int> fitsDim( fitsfile *fp, int HDU );
+int fitsMatrixNamesUnits( fitsfile *fp, QStringList *names, QStringList *units );
+
+QStringList fitsFields( fitsfile *fp );
+    
+QStringList fitsMatrices( fitsfile *fp );
+
+// determine dimensions of fields and matrices
+
+long fitsFieldDims( fitsfile *fp, QString field, long *nX, long *nY );
+
+long fitsMatrixDims( fitsfile *fp, QString matrix, long *nX, long *nY );
 
 // read data from file
 
+long fitsReadField( fitsfile *fp, QString field, double *data, long start, long skip, long n );
 
-
+long fitsReadMatrix( fitsfile *fp, QString matrix, double *data, long xStart, long xSkip, long nX, long yStart, long ySkip, long nY );
 
 
 #endif
