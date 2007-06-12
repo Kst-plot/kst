@@ -24,6 +24,7 @@ public:
   LineItem(View *parent);
   virtual ~LineItem();
 
+  virtual QPainterPath itemShape() const;
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
   QLineF line() const;

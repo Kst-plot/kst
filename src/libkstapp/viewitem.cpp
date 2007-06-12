@@ -22,7 +22,7 @@
 namespace Kst {
 
 ViewItem::ViewItem(View *parent)
-  : QObject(parent) {
+  : QObject(parent), _mouseMode(Default), _activeGrip(NoGrip) {
   setAcceptsHoverEvents(true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
   connect(parent, SIGNAL(mouseModeChanged(View::MouseMode)),
@@ -46,21 +46,236 @@ ViewItem::MouseMode ViewItem::mouseMode() const {
 
 void ViewItem::setMouseMode(MouseMode mode) {
   _mouseMode = mode;
+  update();
 }
 
 
-void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-  QRectF realBound = mapToScene(boundingRect()).boundingRect();
+QSize ViewItem::sizeOfGrip() const {
+  return QSize(10,10);
+}
 
+
+QPainterPath ViewItem::topLeftGrip() const {
+  if (_mouseMode == Default || _mouseMode == Move)
+    return QPainterPath();
+
+  QRectF bound = gripBoundingRect();
+  QRectF grip = QRectF(bound.topLeft(), sizeOfGrip());
+  QPainterPath path;
+  if (_mouseMode == Resize)
+    path.addRect(grip);
+  else
+    path.addEllipse(grip);
+  return mapFromScene(path);
+}
+
+
+QPainterPath ViewItem::topRightGrip() const {
+  if (_mouseMode == Default || _mouseMode == Move)
+    return QPainterPath();
+
+  QRectF bound = gripBoundingRect();
+  QRectF grip = QRectF(bound.topRight() - QPoint(sizeOfGrip().width(), 0), sizeOfGrip());
+  QPainterPath path;
+  if (_mouseMode == Resize)
+    path.addRect(grip);
+  else
+    path.addEllipse(grip);
+  return mapFromScene(path);
+}
+
+
+QPainterPath ViewItem::bottomRightGrip() const {
+  if (_mouseMode == Default || _mouseMode == Move)
+    return QPainterPath();
+
+  QRectF bound = gripBoundingRect();
+  QRectF grip = QRectF(bound.bottomRight() - QPoint(sizeOfGrip().width(), sizeOfGrip().height()), sizeOfGrip());
+  QPainterPath path;
+  if (_mouseMode == Resize)
+    path.addRect(grip);
+  else
+    path.addEllipse(grip);
+  return mapFromScene(path);
+}
+
+
+QPainterPath ViewItem::bottomLeftGrip() const {
+  if (_mouseMode == Default || _mouseMode == Move)
+    return QPainterPath();
+
+  QRectF bound = gripBoundingRect();
+  QRectF grip = QRectF(bound.bottomLeft() - QPoint(0, sizeOfGrip().height()), sizeOfGrip());
+  QPainterPath path;
+  if (_mouseMode == Resize)
+    path.addRect(grip);
+  else
+    path.addEllipse(grip);
+  return mapFromScene(path);
+}
+
+
+QPainterPath ViewItem::topMidGrip() const {
+  if (_mouseMode == Default || _mouseMode == Move || _mouseMode == Rotate)
+    return QPainterPath();
+
+  QRectF bound = gripBoundingRect();
+  QRectF grip = QRectF(bound.topLeft(), sizeOfGrip());
+  grip.moveCenter(QPointF(bound.center().x(), grip.center().y()));
+
+  QPainterPath path;
+  path.addRect(grip);
+  return mapFromScene(path);
+}
+
+
+QPainterPath ViewItem::rightMidGrip() const {
+  if (_mouseMode == Default || _mouseMode == Move || _mouseMode == Rotate)
+    return QPainterPath();
+
+  QRectF bound = gripBoundingRect();
+  QRectF grip = QRectF(bound.topRight() - QPoint(sizeOfGrip().width(), 0), sizeOfGrip());
+  grip.moveCenter(QPointF(grip.center().x(), bound.center().y()));
+
+  QPainterPath path;
+  path.addRect(grip);
+  return mapFromScene(path);
+}
+
+
+QPainterPath ViewItem::bottomMidGrip() const {
+  if (_mouseMode == Default || _mouseMode == Move || _mouseMode == Rotate)
+    return QPainterPath();
+
+  QRectF bound = gripBoundingRect();
+  QRectF grip = QRectF(bound.bottomLeft() - QPoint(0, sizeOfGrip().height()), sizeOfGrip());
+  grip.moveCenter(QPointF(bound.center().x(), grip.center().y()));
+
+  QPainterPath path;
+  path.addRect(grip);
+  return mapFromScene(path);
+}
+
+
+QPainterPath ViewItem::leftMidGrip() const {
+  if (_mouseMode == Default || _mouseMode == Move || _mouseMode == Rotate)
+    return QPainterPath();
+
+  QRectF bound = gripBoundingRect();
+  QRectF grip = QRectF(bound.topLeft(), sizeOfGrip());
+  grip.moveCenter(QPointF(grip.center().x(), bound.center().y()));
+
+  QPainterPath path;
+  path.addRect(grip);
+  return mapFromScene(path);
+}
+
+
+QPainterPath ViewItem::grips() const {
+
+  if (_mouseMode == Default || _mouseMode == Move)
+    return QPainterPath();
+
+  QPainterPath grips;
+  grips.addPath(topLeftGrip());
+  grips.addPath(topRightGrip());
+  grips.addPath(bottomRightGrip());
+  grips.addPath(bottomLeftGrip());
+  grips.addPath(topMidGrip());
+  grips.addPath(rightMidGrip());
+  grips.addPath(bottomMidGrip());
+  grips.addPath(leftMidGrip());
+  return grips;
+}
+
+
+ViewItem::ActiveGrip ViewItem::activeGrip() const {
+  return _activeGrip;
+}
+
+
+void ViewItem::setActiveGrip(ActiveGrip grip) {
+  _activeGrip = grip;
+}
+
+
+QRectF ViewItem::selectBoundingRect() const {
+  return mapToScene(itemShape()).boundingRect();
+}
+
+
+QRectF ViewItem::gripBoundingRect() const {
+  QRectF bound = selectBoundingRect();
+  bound.setTopLeft(bound.topLeft() - QPoint(sizeOfGrip().width(), sizeOfGrip().height()));
+  bound.setWidth(bound.width() + sizeOfGrip().width());
+  bound.setHeight(bound.height() + sizeOfGrip().height());
+  return bound;
+}
+
+
+QRectF ViewItem::boundingRect() const {
+  if (!isSelected())
+    return QGraphicsRectItem::boundingRect();
+
+  //FIXME this isn't enough since we don't take into consideration the transform on
+  // the sizeOfGrip...
+  QRectF bound = QGraphicsRectItem::boundingRect();
+  bound.setTopLeft(bound.topLeft() - QPoint(sizeOfGrip().width(), sizeOfGrip().height()));
+  bound.setWidth(bound.width() + sizeOfGrip().width());
+  bound.setHeight(bound.height() + sizeOfGrip().height());
+  return bound;
+}
+
+
+QPainterPath ViewItem::shape() const {
+  if (!isSelected())
+    return itemShape();
+
+  QPainterPath selectPath;
+  selectPath.addPolygon(mapFromScene(selectBoundingRect()));
+  selectPath.addPath(grips());
+  return selectPath;
+}
+
+QLineF ViewItem::originLine() const {
+  QRectF r = selectBoundingRect();
+  r.setBottom(r.bottom() - (r.height() / 2));
+  QPolygonF polygon = mapFromScene(r);
+  QPointF right = polygon[2]; //bottomRight
+  return QLineF(rect().center(), right);
+}
+
+void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
   painter->save();
   painter->setPen(Qt::DotLine);
-  painter->setTransform(parentView()->viewportTransform());
-  if (isSelected())
-    painter->drawRect(realBound);
+  if (isSelected()) {
+    painter->drawPath(shape());
+    if (_mouseMode == Resize)
+      painter->fillPath(grips(), Qt::black);
+    else if (_mouseMode == Rotate)
+      painter->fillPath(grips(), Qt::red);
+  }
 
 #ifdef DEBUG_GEOMETRY
+  painter->fillRect(selectBoundingRect(), Qt::blue);
   QColor semiRed(QColor(255, 0, 0, 50));
-  painter->fillRect(realBound, semiRed);
+  painter->fillPath(shape(), semiRed);
+
+  QPen p = painter->pen();
+  painter->setPen(Qt::black);
+  painter->drawLine(originLine());
+
+  painter->setPen(Qt::white);
+  painter->drawLine(_normalLine);
+
+  painter->setPen(Qt::red);
+  painter->drawLine(_rotationLine);
+  painter->setPen(p);
+
+  painter->drawText(rect().topLeft(), "TL");
+  painter->drawText(rect().topRight(), "TR");
+  painter->drawText(rect().bottomLeft(), "BL");
+  painter->drawText(rect().bottomRight(), "BR");
 #endif
 
   painter->restore();
@@ -69,6 +284,8 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   painter->setBrush(brush());
   painter->drawRect(rect());
 
+  Q_UNUSED(option);
+  Q_UNUSED(widget);
 //   QGraphicsRectItem::paint(painter, option, widget);
 }
 
@@ -142,7 +359,8 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
   if (parentView()->mouseMode() == View::Default) {
     if (mouseMode() == ViewItem::Default ||
-        mouseMode() == ViewItem::Move) {
+        mouseMode() == ViewItem::Move ||
+        activeGrip() == NoGrip) {
       parentView()->setMouseMode(View::Move);
       parentView()->undoStack()->beginMacro(tr("Move"));
     } else if (mouseMode() == ViewItem::Resize) {
@@ -154,156 +372,187 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     }
   }
 
-  switch(cursor().shape()) {
-  case Qt::SizeFDiagCursor:
-    {
-      if (event->pos().x() < rect().center().x()) {
-        if (_mouseMode == Resize)
-          setTopLeft(event->pos());
-        else if (_mouseMode == Rotate)
-          rotateTowards(rect().topLeft(), event->pos());
-      } else {
-        if (_mouseMode == Resize)
-          setBottomRight(event->pos());
-        else if (_mouseMode == Rotate)
-          rotateTowards(rect().bottomRight(), event->pos());
-      }
-      return;
-    }
-  case Qt::SizeBDiagCursor:
-    {
-      if (event->pos().x() < rect().center().x()) {
-        if (_mouseMode == Resize)
-          setBottomLeft(event->pos());
-        else if (_mouseMode == Rotate)
-          rotateTowards(rect().bottomLeft(), event->pos());
-      } else {
-        if (_mouseMode == Resize)
-          setTopRight(event->pos());
-        else if (_mouseMode == Rotate)
-          rotateTowards(rect().topRight(), event->pos());
-      }
-      return;
-    }
-  case Qt::SizeVerCursor:
-    {
-      if (event->pos().y() < rect().center().y()) {
-        setTop(event->pos().y());
-      } else {
-        setBottom(event->pos().y());
-      }
-      return;
-    }
-  case Qt::SizeHorCursor:
-    {
-      if (event->pos().x() < rect().center().x()) {
-        setLeft(event->pos().x());
-      } else {
-        setRight(event->pos().x());
-      }
-      return;
-    }
-  case Qt::ArrowCursor:
-  default:
-    break;
-  }
+  if (activeGrip() == NoGrip)
+    return QGraphicsRectItem::mouseMoveEvent(event);
 
-  QGraphicsRectItem::mouseMoveEvent(event);
+  QPointF p = event->pos();
+  QPointF l = event->lastPos();
+  QPointF s = event->scenePos();
+
+  if (mouseMode() == ViewItem::Rotate) {
+
+    rotateTowards(l, p);
+
+  } else if (mouseMode() == ViewItem::Resize) {
+
+    switch(_activeGrip) {
+    case TopLeftGrip:
+        setTopLeft(s); break;
+    case TopRightGrip:
+        setTopRight(s); break;
+    case BottomRightGrip:
+        setBottomRight(s); break;
+    case BottomLeftGrip:
+        setBottomLeft(s); break;
+    case TopMidGrip:
+        setTop(s); break;
+    case RightMidGrip:
+        setRight(s); break;
+    case BottomMidGrip:
+        setBottom(s); break;
+    case LeftMidGrip:
+        setLeft(s); break;
+    case NoGrip:
+      break;
+    }
+
+  }
 }
 
 
 void ViewItem::setTopLeft(const QPointF &point) {
-  QRectF transformed = rect();
+//   qDebug() << "setTopLeft" << point << endl;
+
+  QRectF transformed = selectBoundingRect();
   transformed.setTopLeft(point);
   transformToRect(transformed);
 }
 
 
 void ViewItem::setTopRight(const QPointF &point) {
-  QRectF transformed = rect();
+//   qDebug() << "setTopRight" << point << endl;
+
+  QRectF transformed = selectBoundingRect();
   transformed.setTopRight(point);
   transformToRect(transformed);
 }
 
 
 void ViewItem::setBottomLeft(const QPointF &point) {
-  QRectF transformed = rect();
+//   qDebug() << "setBottomLeft" << point << endl;
+
+  QRectF transformed = selectBoundingRect();
   transformed.setBottomLeft(point);
   transformToRect(transformed);
 }
 
 
 void ViewItem::setBottomRight(const QPointF &point) {
-  QRectF transformed = rect();
+//   qDebug() << "setBottomRight" << point << endl;
+
+  QRectF transformed = selectBoundingRect();
   transformed.setBottomRight(point);
   transformToRect(transformed);
 }
 
 
-void ViewItem::setTop(qreal x) {
-  QRectF transformed = rect();
-  transformed.setTop(x);
+void ViewItem::setTop(const QPointF &point) {
+//   qDebug() << "setTop" << point << endl;
+
+  QRectF transformed = selectBoundingRect();
+  transformed.setTop(point.y());
   transformToRect(transformed);
 }
 
 
-void ViewItem::setBottom(qreal x) {
-  QRectF transformed = rect();
-  transformed.setBottom(x);
+void ViewItem::setBottom(const QPointF &point) {
+//   qDebug() << "setBottom" << point << endl;
+
+  QRectF transformed = selectBoundingRect();
+  transformed.setBottom(point.y());
   transformToRect(transformed);
 }
 
 
-void ViewItem::setLeft(qreal x) {
-  QRectF transformed = rect();
-  transformed.setLeft(x);
+void ViewItem::setLeft(const QPointF &point) {
+//   qDebug() << "setLeft" << point << endl;
+
+  QRectF transformed = selectBoundingRect();
+  transformed.setLeft(point.x());
   transformToRect(transformed);
 }
 
 
-void ViewItem::setRight(qreal x) {
-  QRectF transformed = rect();
-  transformed.setRight(x);
+void ViewItem::setRight(const QPointF &point) {
+//   qDebug() << "setRight" << point << endl;
+
+  QRectF transformed = selectBoundingRect();
+  transformed.setRight(point.x());
   transformToRect(transformed);
 }
 
 
 bool ViewItem::transformToRect(const QRectF &newRect) {
 
-/* setRect(newRect);*/
+  //FIXME This is very wrong.  I'm not sure how to combine/construct
+  //the correct transformation matrix...
+
+  //Not sure how to handle yet
+  if (!newRect.isValid()) {
+    return false;
+  }
 
   QTransform t;
-  QPolygonF one(rect());
+  QPolygonF one(selectBoundingRect());
   one.pop_back(); //get rid of last closed point
   QPolygonF two(newRect);
   two.pop_back(); //get rid of last closed point
   bool success = QTransform::quadToQuad(one, two, t);
+
+//   qDebug() << t << endl;
+
   if (success) setTransform(t, true);
   return success;
 }
 
 
 void ViewItem::rotateTowards(const QPointF &corner, const QPointF &point) {
+
   QPointF origin = rect().center();
-  QLineF unit(origin, QPointF(origin.x() + 1, origin.y()));
-  QLineF normal(origin, corner);
-  QLineF rotated(origin, point);
+  _normalLine = QLineF(origin, corner);
+  _rotationLine = QLineF(origin, point);
 
-  /*FIXME better way to check the sign*/
-  bool clockWise = unit.angle(rotated) >= unit.angle(normal);
+  qreal angle;
 
-  qreal angle = normal.angle(rotated);
-  angle = (clockWise ? angle : -angle);
+  if (mapToScene(point).y() >= mapToScene(origin).y()) {
+/*    qDebug() << "positive" << endl;*/
+    angle = originLine().angle(_rotationLine) - originLine().angle(_normalLine);
+  } else {
+/*    qDebug() << "negative" << endl;*/
+    angle =  originLine().angle(_normalLine) - originLine().angle(_rotationLine);
+  }
 
   QTransform t;
   t.translate(origin.x(), origin.y());
   t.rotate(angle);
   t.translate(-origin.x(), -origin.y());
+
   setTransform(t, true);
 }
 
 
 void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+  QPointF p = event->pos();
+  if (topLeftGrip().contains(p)) {
+    setActiveGrip(TopLeftGrip);
+  } else if (topRightGrip().contains(p)) {
+    setActiveGrip(TopRightGrip);
+  } else if (bottomRightGrip().contains(p)) {
+    setActiveGrip(BottomRightGrip);
+  } else if (bottomLeftGrip().contains(p)) {
+    setActiveGrip(BottomLeftGrip);
+  } else if (topMidGrip().contains(p)) {
+    setActiveGrip(TopMidGrip);
+  } else if (rightMidGrip().contains(p)) {
+    setActiveGrip(RightMidGrip);
+  } else if (bottomMidGrip().contains(p)) {
+    setActiveGrip(BottomMidGrip);
+  } else if (leftMidGrip().contains(p)) {
+    setActiveGrip(LeftMidGrip);
+  } else {
+    setActiveGrip(NoGrip);
+  }
+
   QGraphicsRectItem::mousePressEvent(event);
 }
 
@@ -313,6 +562,23 @@ void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   if (parentView()->mouseMode() != View::Default) {
     parentView()->setMouseMode(View::Default);
     parentView()->undoStack()->endMacro();
+    return QGraphicsRectItem::mouseReleaseEvent(event);
+  }
+
+  if (grips().contains(event->pos()))
+    return QGraphicsRectItem::mouseReleaseEvent(event);
+
+  switch (_mouseMode) {
+  case Default:
+  case Move:
+  case Rotate:
+    setMouseMode(Resize);
+    break;
+  case Resize:
+    setMouseMode(Rotate);
+    break;
+  default:
+    break;
   }
 
   QGraphicsRectItem::mouseReleaseEvent(event);
@@ -321,85 +587,17 @@ void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
 void ViewItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   QGraphicsRectItem::hoverMoveEvent(event);
-
-  QRectF r;
-  r.setSize(QSizeF(14,14)); //gives us corners of 7x7
-
-  //Look for corners
-  r.moveCenter(rect().bottomRight());
-  if (r.contains(event->pos())) {
-    setMouseMode(ViewItem::Resize);
-    setCursor(Qt::SizeFDiagCursor);
-    return;
-  }
-
-  r.moveCenter(rect().topLeft());
-  if (r.contains(event->pos())) {
-    setMouseMode(ViewItem::Resize);
-    setCursor(Qt::SizeFDiagCursor);
-    return;
-  }
-
-  r.moveCenter(rect().bottomLeft());
-  if (r.contains(event->pos())) {
-    setMouseMode(ViewItem::Resize);
-    setCursor(Qt::SizeBDiagCursor);
-    return;
-  }
-
-  r.moveCenter(rect().topRight());
-  if (r.contains(event->pos())) {
-    setMouseMode(ViewItem::Resize);
-    setCursor(Qt::SizeBDiagCursor);
-    return;
-  }
-
-  //Now look for horizontal edges
-  r.setSize(QSizeF(rect().width(), 7));
-
-  r.moveTopRight(rect().topRight());
-  if (r.contains(event->pos())) {
-    setMouseMode(ViewItem::Resize);
-    setCursor(Qt::SizeVerCursor);
-    return;
-  }
-
-  r.moveBottomRight(rect().bottomRight());
-  if (r.contains(event->pos())) {
-    setMouseMode(ViewItem::Resize);
-    setCursor(Qt::SizeVerCursor);
-    return;
-  }
-
-  //Now look for vertical edges
-  r.setSize(QSizeF(7, rect().height()));
-
-  r.moveTopLeft(rect().topLeft());
-  if (r.contains(event->pos())) {
-    setMouseMode(ViewItem::Resize);
-    setCursor(Qt::SizeHorCursor);
-    return;
-  }
-
-  r.moveTopRight(rect().topRight());
-  if (r.contains(event->pos())) {
-    setMouseMode(ViewItem::Resize);
-    setCursor(Qt::SizeHorCursor);
-    return;
-  }
-
-  setMouseMode(ViewItem::Default);
-  setCursor(Qt::ArrowCursor);
 }
 
 
-void ViewItem::keyPressEvent(QKeyEvent *event) {
-  QGraphicsRectItem::keyPressEvent(event);
-  if (_mouseMode == ViewItem::Resize && event->modifiers() & Qt::ShiftModifier) {
-    setMouseMode(ViewItem::Rotate);
-  } else if (_mouseMode == ViewItem::Rotate && event->modifiers() & Qt::ShiftModifier) {
-    setMouseMode(ViewItem::Resize);
+QVariant ViewItem::itemChange(GraphicsItemChange change, const QVariant &value) {
+
+  if (change == ItemSelectedChange && !value.toBool()) {
+    setMouseMode(ViewItem::Default);
+    update();
   }
+
+  return QGraphicsItem::itemChange(change, value);
 }
 
 

@@ -28,8 +28,33 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
   Q_OBJECT
 public:
   enum MouseMode { Default, Move, Resize, Rotate };
+
+  enum ActiveGrip {
+    NoGrip, TopLeftGrip, TopRightGrip, BottomRightGrip, BottomLeftGrip,
+    TopMidGrip, RightMidGrip, BottomMidGrip, LeftMidGrip
+  };
+
   ViewItem(View *parent);
   virtual ~ViewItem();
+
+  QSize sizeOfGrip() const;
+  QPainterPath topLeftGrip() const;
+  QPainterPath topRightGrip() const;
+  QPainterPath bottomRightGrip() const;
+  QPainterPath bottomLeftGrip() const;
+  QPainterPath topMidGrip() const;
+  QPainterPath rightMidGrip() const;
+  QPainterPath bottomMidGrip() const;
+  QPainterPath leftMidGrip() const;
+  QPainterPath grips() const;
+  ActiveGrip activeGrip() const;
+  void setActiveGrip(ActiveGrip grip);
+
+  QRectF selectBoundingRect() const;
+  QRectF gripBoundingRect() const;
+  virtual QRectF boundingRect() const;
+  virtual QPainterPath shape() const;
+  virtual QPainterPath itemShape() const { return QGraphicsRectItem::shape(); }
 
   View *parentView() const;
 
@@ -50,10 +75,10 @@ public Q_SLOTS:
   void setTopRight(const QPointF &point);
   void setBottomLeft(const QPointF &point);
   void setBottomRight(const QPointF &point);
-  void setTop(qreal x);
-  void setBottom(qreal x);
-  void setLeft(qreal x);
-  void setRight(qreal x);
+  void setTop(const QPointF &point);
+  void setBottom(const QPointF &point);
+  void setLeft(const QPointF &point);
+  void setRight(const QPointF &point);
   bool transformToRect(const QRectF &newRect);
   void rotateTowards(const QPointF &corner, const QPointF &point);
 
@@ -66,15 +91,21 @@ protected:
   virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
   virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
-  virtual void keyPressEvent(QKeyEvent *event);
+  virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 private Q_SLOTS:
   void viewMouseModeChanged(View::MouseMode oldMode);
 
 private:
+  QLineF originLine() const;
+
+private:
   MouseMode _mouseMode;
   QPointF _originalPosition;
   QTransform _originalTransform;
+  QLineF _normalLine;
+  QLineF _rotationLine;
+  ActiveGrip _activeGrip;
 };
 
 class KST_EXPORT ViewItemCommand : public QUndoCommand

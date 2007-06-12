@@ -23,6 +23,7 @@ public:
   EllipseItem(View *parent);
   virtual ~EllipseItem();
 
+  virtual QPainterPath itemShape() const;
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 };
 

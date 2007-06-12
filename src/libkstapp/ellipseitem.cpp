@@ -26,6 +26,13 @@ EllipseItem::~EllipseItem() {
 }
 
 
+QPainterPath EllipseItem::itemShape() const {
+  QPainterPath path;
+  path.addEllipse(rect());
+  return path;
+}
+
+
 void EllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
   const qreal w = pen().widthF();
   painter->drawEllipse(rect().adjusted(w, w, -w, -w));

@@ -27,6 +27,13 @@ LineItem::~LineItem() {
 }
 
 
+QPainterPath LineItem::itemShape() const {
+  QPainterPath path(_line.p1());
+  path.lineTo(_line.p2());
+  return path;
+}
+
+
 void LineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
   painter->drawLine(_line);
   QPen p = pen();
