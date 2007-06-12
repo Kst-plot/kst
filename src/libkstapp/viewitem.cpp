@@ -257,7 +257,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   }
 
 #ifdef DEBUG_GEOMETRY
-  painter->fillRect(selectBoundingRect(), Qt::blue);
+//   painter->fillRect(selectBoundingRect(), Qt::blue);
   QColor semiRed(QColor(255, 0, 0, 50));
   painter->fillPath(shape(), semiRed);
 
@@ -483,10 +483,6 @@ void ViewItem::setRight(const QPointF &point) {
 
 
 bool ViewItem::transformToRect(const QRectF &newRect) {
-
-  //FIXME This is very wrong.  I'm not sure how to combine/construct
-  //the correct transformation matrix...
-
   //Not sure how to handle yet
   if (!newRect.isValid()) {
     return false;
@@ -499,9 +495,11 @@ bool ViewItem::transformToRect(const QRectF &newRect) {
   two.pop_back(); //get rid of last closed point
   bool success = QTransform::quadToQuad(one, two, t);
 
+  t = transform() * t;
+
 //   qDebug() << t << endl;
 
-  if (success) setTransform(t, true);
+  if (success) setTransform(t, false);
   return success;
 }
 
