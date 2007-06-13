@@ -54,10 +54,10 @@ void LabelItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     painter->restore();
   }
 
-  QPen p = pen();
-  setPen(Qt::NoPen);
+//   QPen p = pen();
+//   setPen(Qt::NoPen);
   ViewItem::paint(painter, option, widget);
-  setPen(p);
+//   setPen(p);
 }
 
 

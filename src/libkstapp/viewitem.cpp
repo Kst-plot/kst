@@ -257,7 +257,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   }
 
 #ifdef DEBUG_GEOMETRY
-//   painter->fillRect(selectBoundingRect(), Qt::blue);
+//  painter->fillRect(selectBoundingRect(), Qt::blue);
   QColor semiRed(QColor(255, 0, 0, 50));
   painter->fillPath(shape(), semiRed);
 
@@ -413,91 +413,133 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 void ViewItem::setTopLeft(const QPointF &point) {
 //   qDebug() << "setTopLeft" << point << endl;
 
-  QRectF transformed = selectBoundingRect();
-  transformed.setTopLeft(point);
-  transformToRect(transformed);
+  QRectF from = selectBoundingRect();
+  QRectF to = from;
+
+  to.setTopLeft(point);
+  from.moveBottomRight(transform().map(rect().bottomRight()));
+  to.moveBottomRight(transform().map(rect().bottomRight()));
+  transformToRect(from, to);
 }
 
 
 void ViewItem::setTopRight(const QPointF &point) {
 //   qDebug() << "setTopRight" << point << endl;
 
-  QRectF transformed = selectBoundingRect();
-  transformed.setTopRight(point);
-  transformToRect(transformed);
+  QRectF from = selectBoundingRect();
+  QRectF to = from;
+
+  to.setTopRight(point);
+  from.moveBottomLeft(transform().map(rect().bottomLeft()));
+  to.moveBottomLeft(transform().map(rect().bottomLeft()));
+  transformToRect(from, to);
 }
 
 
 void ViewItem::setBottomLeft(const QPointF &point) {
 //   qDebug() << "setBottomLeft" << point << endl;
 
-  QRectF transformed = selectBoundingRect();
-  transformed.setBottomLeft(point);
-  transformToRect(transformed);
+  QRectF from = selectBoundingRect();
+  QRectF to = from;
+
+  to.setBottomLeft(point);
+  from.moveTopRight(transform().map(rect().topRight()));
+  to.moveTopRight(transform().map(rect().topRight()));
+  transformToRect(from, to);
 }
 
 
 void ViewItem::setBottomRight(const QPointF &point) {
 //   qDebug() << "setBottomRight" << point << endl;
 
-  QRectF transformed = selectBoundingRect();
-  transformed.setBottomRight(point);
-  transformToRect(transformed);
+  QRectF from = selectBoundingRect();
+  QRectF to = from;
+
+  to.setBottomRight(point);
+  from.moveTopLeft(transform().map(rect().topLeft()));
+  to.moveTopLeft(transform().map(rect().topLeft()));
+  transformToRect(from, to);
 }
 
 
 void ViewItem::setTop(const QPointF &point) {
 //   qDebug() << "setTop" << point << endl;
 
-  QRectF transformed = selectBoundingRect();
-  transformed.setTop(point.y());
-  transformToRect(transformed);
+  QRectF from = selectBoundingRect();
+  QRectF to = from;
+
+  to.setTop(point.y());
+  from.moveBottomLeft(transform().map(rect().bottomLeft()));
+  to.moveBottomLeft(transform().map(rect().bottomLeft()));
+  transformToRect(from, to);
 }
 
 
 void ViewItem::setBottom(const QPointF &point) {
 //   qDebug() << "setBottom" << point << endl;
 
-  QRectF transformed = selectBoundingRect();
-  transformed.setBottom(point.y());
-  transformToRect(transformed);
+  QRectF from = selectBoundingRect();
+  QRectF to = from;
+
+  to.setBottom(point.y());
+  from.moveTopLeft(transform().map(rect().topLeft()));
+  to.moveTopLeft(transform().map(rect().topLeft()));
+  transformToRect(from, to);
 }
 
 
 void ViewItem::setLeft(const QPointF &point) {
 //   qDebug() << "setLeft" << point << endl;
 
-  QRectF transformed = selectBoundingRect();
-  transformed.setLeft(point.x());
-  transformToRect(transformed);
+  QRectF from = selectBoundingRect();
+  QRectF to = from;
+
+  to.setLeft(point.x());
+  from.moveTopRight(transform().map(rect().topRight()));
+  to.moveTopRight(transform().map(rect().topRight()));
+  transformToRect(from, to);
 }
 
 
 void ViewItem::setRight(const QPointF &point) {
 //   qDebug() << "setRight" << point << endl;
 
-  QRectF transformed = selectBoundingRect();
-  transformed.setRight(point.x());
-  transformToRect(transformed);
+  QRectF from = selectBoundingRect();
+  QRectF to = from;
+  to.setRight(point.x());
+
+  from.moveBottomLeft(transform().map(rect().bottomLeft()));
+  to.moveBottomLeft(transform().map(rect().bottomLeft()));
+  transformToRect(from, to);
 }
 
 
-bool ViewItem::transformToRect(const QRectF &newRect) {
+bool ViewItem::transformToRect(const QRectF &from, const QRectF &to) {
   //Not sure how to handle yet
-  if (!newRect.isValid()) {
+  if (!to.isValid()) {
     return false;
   }
 
+  qDebug() << "Mapping from " << from << "to" << to << endl;
+  qDebug() << "Pos is " << pos() << endl;
+  qDebug() << "ScenePos is " << scenePos() << endl;
+  qDebug() << "ItemShape is " << itemShape().controlPointRect() << endl;
+  qDebug() << "BoundingRect is " << QGraphicsRectItem::boundingRect() << endl;
+  qDebug() << "Rect is " << rect() << endl;
+
+  QPolygonF from_(from);
+  from_.pop_back(); //get rid of last closed point
+  QPolygonF to_(to);
+  to_.pop_back(); //get rid of last closed point
+  return transformToRect(from_, to_);
+}
+
+bool ViewItem::transformToRect(const QPolygonF &from, const QPolygonF &to) {
+
   QTransform t;
-  QPolygonF one(selectBoundingRect());
-  one.pop_back(); //get rid of last closed point
-  QPolygonF two(newRect);
-  two.pop_back(); //get rid of last closed point
-  bool success = QTransform::quadToQuad(one, two, t);
+  bool success = QTransform::quadToQuad(from, to, t);
 
   t = transform() * t;
-
-//   qDebug() << t << endl;
 
   if (success) setTransform(t, false);
   return success;

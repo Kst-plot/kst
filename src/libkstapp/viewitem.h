@@ -79,7 +79,8 @@ public Q_SLOTS:
   void setBottom(const QPointF &point);
   void setLeft(const QPointF &point);
   void setRight(const QPointF &point);
-  bool transformToRect(const QRectF &newRect);
+  bool transformToRect(const QRectF &from, const QRectF &to);
+  bool transformToRect(const QPolygonF &from, const QPolygonF &to);
   void rotateTowards(const QPointF &corner, const QPointF &point);
 
 protected Q_SLOTS:
