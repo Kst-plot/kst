@@ -217,13 +217,8 @@ QRectF ViewItem::boundingRect() const {
   if (!isSelected())
     return QGraphicsRectItem::boundingRect();
 
-  //FIXME this isn't enough since we don't take into consideration the transform on
-  // the sizeOfGrip...
-  QRectF bound = QGraphicsRectItem::boundingRect();
-  bound.setTopLeft(bound.topLeft() - QPoint(sizeOfGrip().width(), sizeOfGrip().height()));
-  bound.setWidth(bound.width() + sizeOfGrip().width());
-  bound.setHeight(bound.height() + sizeOfGrip().height());
-  return bound;
+  QPolygonF gripBound = mapFromScene(gripBoundingRect());
+  return QRectF(gripBound[0], gripBound[2]);
 }
 
 
@@ -668,9 +663,12 @@ void ViewItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 
 QVariant ViewItem::itemChange(GraphicsItemChange change, const QVariant &value) {
 
-  if (change == ItemSelectedChange && !value.toBool()) {
-    setMouseMode(ViewItem::Default);
-    update();
+  if (change == ItemSelectedChange) {
+    bool selected = value.toBool();
+    if (!selected) {
+      setMouseMode(ViewItem::Default);
+      update();
+    }
   }
 
   return QGraphicsItem::itemChange(change, value);
