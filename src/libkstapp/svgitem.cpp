@@ -31,7 +31,7 @@ SvgItem::~SvgItem() {
 void SvgItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
   // We can do better here.  Cache the svg also.
   if (_svg->isValid()) {
-    _svg->render(painter, boundingRect());
+    _svg->render(painter, rect());
   }
 
   QPen p = pen();
