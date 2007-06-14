@@ -26,7 +26,7 @@ class LabelItem : public ViewItem {
     LabelItem(View *parent, const QString& labelText);
     virtual ~LabelItem();
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    virtual void paint(QPainter *painter);
 
   private:
     Label::Parsed *_parsed;

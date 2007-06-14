@@ -23,7 +23,7 @@ class PictureItem : public ViewItem
     PictureItem(View *parent, const QImage &image);
     ~PictureItem();
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+    virtual void paint(QPainter *painter);
 
   private:
     QPixmap _image;

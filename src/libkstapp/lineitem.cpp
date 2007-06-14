@@ -34,12 +34,8 @@ QPainterPath LineItem::itemShape() const {
 }
 
 
-void LineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+void LineItem::paint(QPainter *painter) {
   painter->drawLine(_line);
-  QPen p = pen();
-  setPen(Qt::NoPen);
-  ViewItem::paint(painter, option, widget);
-  setPen(p);
 }
 
 QLineF LineItem::line() const {

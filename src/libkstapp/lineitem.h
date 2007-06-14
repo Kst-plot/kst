@@ -25,7 +25,7 @@ public:
   virtual ~LineItem();
 
   virtual QPainterPath itemShape() const;
-  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+  virtual void paint(QPainter *painter);
 
   QLineF line() const;
   void setLine(const QLineF &line);

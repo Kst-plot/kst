@@ -24,7 +24,7 @@ public:
   virtual ~EllipseItem();
 
   virtual QPainterPath itemShape() const;
-  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+  virtual void paint(QPainter *painter);
 };
 
 class KST_EXPORT CreateEllipseCommand : public CreateCommand

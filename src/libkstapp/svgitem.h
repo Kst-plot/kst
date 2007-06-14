@@ -25,7 +25,7 @@ class SvgItem : public ViewItem
     SvgItem(View *parent, const QString &file);
     ~SvgItem();
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+    virtual void paint(QPainter *painter);
 
   private:
     QSvgRenderer *_svg;

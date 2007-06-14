@@ -33,13 +33,9 @@ QPainterPath EllipseItem::itemShape() const {
 }
 
 
-void EllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+void EllipseItem::paint(QPainter *painter) {
   const qreal w = pen().widthF();
   painter->drawEllipse(rect().adjusted(w, w, -w, -w));
-  QPen p = pen();
-  setPen(Qt::NoPen);
-  ViewItem::paint(painter, option, widget);
-  setPen(p);
 }
 
 

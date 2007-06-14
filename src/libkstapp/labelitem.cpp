@@ -31,7 +31,7 @@ LabelItem::~LabelItem() {
 }
 
 
-void LabelItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+void LabelItem::paint(QPainter *painter) {
   if (!_parsed) {
     _parsed = Label::parse(_text);
   }
@@ -53,11 +53,6 @@ void LabelItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 
     painter->restore();
   }
-
-  QPen p = pen();
-  setPen(Qt::NoPen);
-  ViewItem::paint(painter, option, widget);
-  setPen(p);
 }
 
 

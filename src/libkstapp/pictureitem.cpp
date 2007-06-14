@@ -27,17 +27,12 @@ PictureItem::~PictureItem() {
 }
 
 
-void PictureItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+void PictureItem::paint(QPainter *painter) {
   // We can do better here.  Cache the scaled pixmap also.
-  if (!_image.isNull()) {
+  if (!_image.isNull() && rect().isValid()) {
     const qreal w = pen().widthF();
     painter->drawPixmap(rect().adjusted(w, w, -w, -w), _image, _image.rect());
   }
-
-  QPen p = pen();
-  setPen(Qt::NoPen);
-  ViewItem::paint(painter, option, widget);
-  setPen(p);
 }
 
 

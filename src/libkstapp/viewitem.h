@@ -37,6 +37,11 @@ public:
   ViewItem(View *parent);
   virtual ~ViewItem();
 
+  View *parentView() const;
+
+  MouseMode mouseMode() const;
+  void setMouseMode(MouseMode mode);
+
   QSize sizeOfGrip() const;
   QPainterPath topLeftGrip() const;
   QPainterPath topRightGrip() const;
@@ -52,16 +57,12 @@ public:
 
   QRectF selectBoundingRect() const;
   QRectF gripBoundingRect() const;
+
   virtual QRectF boundingRect() const;
   virtual QPainterPath shape() const;
   virtual QPainterPath itemShape() const { return QGraphicsRectItem::shape(); }
-
-  View *parentView() const;
-
-  MouseMode mouseMode() const;
-  void setMouseMode(MouseMode mode);
-
-  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+  virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+  virtual void paint(QPainter *painter);
 
 Q_SIGNALS:
   void creationComplete();

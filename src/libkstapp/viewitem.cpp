@@ -241,6 +241,7 @@ QLineF ViewItem::originLine() const {
 }
 
 void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+
   painter->save();
   painter->setPen(Qt::DotLine);
   if (isSelected()) {
@@ -272,16 +273,21 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   painter->drawText(rect().bottomLeft(), "BL");
   painter->drawText(rect().bottomRight(), "BR");
 #endif
-
   painter->restore();
-
-  painter->setPen(pen());
-  painter->setBrush(brush());
-  painter->drawRect(rect());
 
   Q_UNUSED(option);
   Q_UNUSED(widget);
+
+  paint(painter); //this is the overload that subclasses should use...
+
 //   QGraphicsRectItem::paint(painter, option, widget);
+}
+
+
+void ViewItem::paint(QPainter *painter) {
+  painter->setPen(pen());
+  painter->setBrush(brush());
+  painter->drawRect(rect());
 }
 
 

@@ -28,16 +28,11 @@ SvgItem::~SvgItem() {
 }
 
 
-void SvgItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+void SvgItem::paint(QPainter *painter) {
   // We can do better here.  Cache the svg also.
-  if (_svg->isValid()) {
+  if (_svg->isValid() && rect().isValid()) {
     _svg->render(painter, rect());
   }
-
-  QPen p = pen();
-  setPen(Qt::NoPen);
-  ViewItem::paint(painter, option, widget);
-  setPen(p);
 }
 
 
