@@ -413,12 +413,14 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 void ViewItem::setTopLeft(const QPointF &point) {
 //   qDebug() << "setTopLeft" << point << endl;
 
+  QPointF anchor = selectTransform().map(rect().bottomRight());
+
   QRectF from = selectBoundingRect();
   QRectF to = from;
 
   to.setTopLeft(point);
-  from.moveBottomRight(transform().map(rect().bottomRight()));
-  to.moveBottomRight(transform().map(rect().bottomRight()));
+  from.moveBottomRight(anchor);
+  to.moveBottomRight(anchor);
   transformToRect(from, to);
 }
 
@@ -426,12 +428,14 @@ void ViewItem::setTopLeft(const QPointF &point) {
 void ViewItem::setTopRight(const QPointF &point) {
 //   qDebug() << "setTopRight" << point << endl;
 
+  QPointF anchor = selectTransform().map(rect().bottomLeft());
+
   QRectF from = selectBoundingRect();
   QRectF to = from;
 
   to.setTopRight(point);
-  from.moveBottomLeft(transform().map(rect().bottomLeft()));
-  to.moveBottomLeft(transform().map(rect().bottomLeft()));
+  from.moveBottomLeft(anchor);
+  to.moveBottomLeft(anchor);
   transformToRect(from, to);
 }
 
@@ -439,12 +443,14 @@ void ViewItem::setTopRight(const QPointF &point) {
 void ViewItem::setBottomLeft(const QPointF &point) {
 //   qDebug() << "setBottomLeft" << point << endl;
 
+  QPointF anchor = selectTransform().map(rect().topRight());
+
   QRectF from = selectBoundingRect();
   QRectF to = from;
 
   to.setBottomLeft(point);
-  from.moveTopRight(transform().map(rect().topRight()));
-  to.moveTopRight(transform().map(rect().topRight()));
+  from.moveTopRight(anchor);
+  to.moveTopRight(anchor);
   transformToRect(from, to);
 }
 
@@ -452,12 +458,14 @@ void ViewItem::setBottomLeft(const QPointF &point) {
 void ViewItem::setBottomRight(const QPointF &point) {
 //   qDebug() << "setBottomRight" << point << endl;
 
+  QPointF anchor = selectTransform().map(rect().topLeft());
+
   QRectF from = selectBoundingRect();
   QRectF to = from;
 
   to.setBottomRight(point);
-  from.moveTopLeft(transform().map(rect().topLeft()));
-  to.moveTopLeft(transform().map(rect().topLeft()));
+  from.moveTopLeft(anchor);
+  to.moveTopLeft(anchor);
   transformToRect(from, to);
 }
 
@@ -465,12 +473,14 @@ void ViewItem::setBottomRight(const QPointF &point) {
 void ViewItem::setTop(const QPointF &point) {
 //   qDebug() << "setTop" << point << endl;
 
+  QPointF anchor = selectTransform().map(rect().bottomLeft());
+
   QRectF from = selectBoundingRect();
   QRectF to = from;
 
   to.setTop(point.y());
-  from.moveBottomLeft(transform().map(rect().bottomLeft()));
-  to.moveBottomLeft(transform().map(rect().bottomLeft()));
+  from.moveBottomLeft(anchor);
+  to.moveBottomLeft(anchor);
   transformToRect(from, to);
 }
 
@@ -478,12 +488,14 @@ void ViewItem::setTop(const QPointF &point) {
 void ViewItem::setBottom(const QPointF &point) {
 //   qDebug() << "setBottom" << point << endl;
 
+  QPointF anchor = selectTransform().map(rect().topLeft());
+
   QRectF from = selectBoundingRect();
   QRectF to = from;
 
   to.setBottom(point.y());
-  from.moveTopLeft(transform().map(rect().topLeft()));
-  to.moveTopLeft(transform().map(rect().topLeft()));
+  from.moveTopLeft(anchor);
+  to.moveTopLeft(anchor);
   transformToRect(from, to);
 }
 
@@ -491,12 +503,14 @@ void ViewItem::setBottom(const QPointF &point) {
 void ViewItem::setLeft(const QPointF &point) {
 //   qDebug() << "setLeft" << point << endl;
 
+  QPointF anchor = selectTransform().map(rect().topRight());
+
   QRectF from = selectBoundingRect();
   QRectF to = from;
 
   to.setLeft(point.x());
-  from.moveTopRight(transform().map(rect().topRight()));
-  to.moveTopRight(transform().map(rect().topRight()));
+  from.moveTopRight(anchor);
+  to.moveTopRight(anchor);
   transformToRect(from, to);
 }
 
@@ -504,13 +518,38 @@ void ViewItem::setLeft(const QPointF &point) {
 void ViewItem::setRight(const QPointF &point) {
 //   qDebug() << "setRight" << point << endl;
 
+  QPointF anchor = selectTransform().map(rect().topLeft());
+
   QRectF from = selectBoundingRect();
   QRectF to = from;
-  to.setRight(point.x());
 
-  from.moveBottomLeft(transform().map(rect().bottomLeft()));
-  to.moveBottomLeft(transform().map(rect().bottomLeft()));
+  to.setRight(point.x());
+  from.moveTopLeft(anchor);
+  to.moveTopLeft(anchor);
   transformToRect(from, to);
+}
+
+
+QTransform ViewItem::selectTransform() const {
+
+  /* Converts a point on the rect() to a point on the selectBoundingRect()
+     or the inverse by using selectTransform().inverted()...
+  */
+
+  QRectF from = rect();
+  QRectF to = selectBoundingRect();
+  QTransform rt = _rotationTransform.inverted(); //inverse rotation so far
+
+  QPolygonF from_ = QPolygonF(rt.map(from));
+  from_.pop_back(); //get rid of last closed point
+
+  QPolygonF to_ = QPolygonF(mapFromScene(to));
+  to_.pop_back(); //get rid of last closed point
+
+  QTransform select;
+  QTransform::quadToQuad(from_, to_, select);
+
+  return _rotationTransform.inverted() * select * transform();
 }
 
 
@@ -520,12 +559,7 @@ bool ViewItem::transformToRect(const QRectF &from, const QRectF &to) {
     return false;
   }
 
-  qDebug() << "Mapping from " << from << "to" << to << endl;
-  qDebug() << "Pos is " << pos() << endl;
-  qDebug() << "ScenePos is " << scenePos() << endl;
-  qDebug() << "ItemShape is " << itemShape().controlPointRect() << endl;
-  qDebug() << "BoundingRect is " << QGraphicsRectItem::boundingRect() << endl;
-  qDebug() << "Rect is " << rect() << endl;
+//   qDebug() << "Mapping from " << from << "to" << to << endl;
 
   QPolygonF from_(from);
   from_.pop_back(); //get rid of last closed point
@@ -566,6 +600,8 @@ void ViewItem::rotateTowards(const QPointF &corner, const QPointF &point) {
   t.translate(origin.x(), origin.y());
   t.rotate(angle);
   t.translate(-origin.x(), -origin.y());
+
+  _rotationTransform = t * _rotationTransform;
 
   setTransform(t, true);
 }

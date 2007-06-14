@@ -19,7 +19,7 @@
 #include "viewcommand.h"
 #include "view.h" //forward declare, but enums??
 
-// #define DEBUG_GEOMETRY
+#define DEBUG_GEOMETRY
 
 namespace Kst {
 
@@ -79,6 +79,7 @@ public Q_SLOTS:
   void setBottom(const QPointF &point);
   void setLeft(const QPointF &point);
   void setRight(const QPointF &point);
+  QTransform selectTransform() const;
   bool transformToRect(const QRectF &from, const QRectF &to);
   bool transformToRect(const QPolygonF &from, const QPolygonF &to);
   void rotateTowards(const QPointF &corner, const QPointF &point);
@@ -107,6 +108,7 @@ private:
   QLineF _normalLine;
   QLineF _rotationLine;
   ActiveGrip _activeGrip;
+  QTransform _rotationTransform;
 };
 
 class KST_EXPORT ViewItemCommand : public QUndoCommand
