@@ -12,6 +12,7 @@
 #include "viewitem.h"
 #include "kstapplication.h"
 #include "tabwidget.h"
+#include "viewitemdialog.h"
 
 #include <QMenu>
 #include <QDebug>
@@ -309,6 +310,18 @@ void ViewItem::lower() {
 }
 
 
+void ViewItem::edit() {
+
+  QList<ViewItem*> list;
+  QList<QGraphicsItem*> select = scene()->selectedItems();
+  foreach(QGraphicsItem *item, select) {
+    list << qgraphicsitem_cast<ViewItem*>(item);
+  }
+
+  ViewItemDialog::self()->show(list);
+}
+
+
 void ViewItem::creationPolygonChanged(View::CreationEvent event) {
   if (event == View::MousePress) {
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MousePress));
@@ -351,6 +364,9 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 
   QAction *lowerAction = menu.addAction(tr("Lower"));
   connect(lowerAction, SIGNAL(triggered()), this, SLOT(lower()));
+
+  QAction *editAction = menu.addAction(tr("Edit"));
+  connect(editAction, SIGNAL(triggered()), this, SLOT(edit()));
 
   menu.exec(event->screenPos());
 }

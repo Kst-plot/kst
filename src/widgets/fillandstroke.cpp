@@ -66,6 +66,17 @@ FillAndStroke::FillAndStroke(QWidget *parent)
   _capStyle->addItem("FlatCap", Qt::FlatCap);
   _capStyle->addItem("SquareCap", Qt::SquareCap);
   _capStyle->addItem("RoundCap", Qt::RoundCap);
+
+
+  connect(_color, SIGNAL(changed(const QColor &)), this, SIGNAL(fillChanged()));
+  connect(_fillStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(fillChanged()));
+
+  connect(_strokeStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(strokeChanged()));
+  connect(_width, SIGNAL(valueChanged(double)), this, SIGNAL(strokeChanged()));
+  connect(_brushColor, SIGNAL(changed(const QColor &)), this, SIGNAL(strokeChanged()));
+  connect(_brushStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(strokeChanged()));
+  connect(_joinStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(strokeChanged()));
+  connect(_capStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(strokeChanged()));
 }
 
 

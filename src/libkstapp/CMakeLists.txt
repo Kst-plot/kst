@@ -29,6 +29,7 @@ set(kstapp_LIB_SRCS
    viewcommand.cpp
    view.cpp
    viewitem.cpp
+   viewitemdialog.cpp
    )
 
 kde4_add_ui_files(kstapp_LIB_SRCS
@@ -42,7 +43,7 @@ kde4_automoc(${kstapp_LIB_SRCS})
 
 kde4_add_library(kstapp SHARED ${kstapp_LIB_SRCS})
 
-target_link_libraries(kstapp kstmath QtOpenGL)
+target_link_libraries(kstapp kstmath kstwidgets QtOpenGL)
 
 set_target_properties(kstapp PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 2)
 install(TARGETS kstapp DESTINATION ${LIB_INSTALL_DIR} )

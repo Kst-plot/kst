@@ -9,49 +9,44 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FILLANDSTROKE_H
-#define FILLANDSTROKE_H
+#ifndef VIEWITEMDIALOG_H
+#define VIEWITEMDIALOG_H
 
-#include <QWidget>
-#include "ui_fillandstroke.h"
+#include <QDialog>
+#include <QPointer>
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class KST_EXPORT FillAndStroke : public QWidget, Ui::FillAndStroke {
+class ViewItem;
+class FillAndStroke;
+
+class KST_EXPORT ViewItemDialog : public QDialog
+{
   Q_OBJECT
 public:
-  FillAndStroke(QWidget *parent = 0);
-  virtual ~FillAndStroke();
+  static ViewItemDialog *self();
 
-  QColor fillColor() const;
-  void setFillColor(const QColor &color);
+  void show(QList<ViewItem*> items);
 
-  Qt::BrushStyle fillStyle() const;
-  void setFillStyle(Qt::BrushStyle style);
+private:
+  ViewItemDialog(QWidget *parent = 0);
+  virtual ~ViewItemDialog();
+  void setupFill();
+  void setupStroke();
+  static void cleanup();
 
-  Qt::PenStyle strokeStyle() const;
-  void setStrokeStyle(Qt::PenStyle style);
-
-  qreal strokeWidth() const;
-  void setStrokeWidth(qreal width);
-
-  QColor brushColor() const;
-  void setBrushColor(const QColor &color);
-
-  Qt::BrushStyle brushStyle() const;
-  void setBrushStyle(Qt::BrushStyle style);
-
-  Qt::PenJoinStyle joinStyle() const;
-  void setJoinStyle(Qt::PenJoinStyle style);
-
-  Qt::PenCapStyle capStyle() const;
-  void setCapStyle(Qt::PenCapStyle style);
-
-Q_SIGNALS:
+private Q_SLOTS:
   void fillChanged();
   void strokeChanged();
+
+protected:
+  void setVisible(bool visible);
+
+private:
+  QList<ViewItem*> _items;
+  FillAndStroke *_fillAndStroke;
 };
 
 }
