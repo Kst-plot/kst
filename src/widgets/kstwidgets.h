@@ -40,7 +40,7 @@ public:
   }
 
   QString includeFile() const {
-    return name().toLower() + ".h";
+    return name().replace("Kst::", "").toLower() + ".h";
   }
 
   QString domXml() const {
@@ -85,6 +85,21 @@ public:
 };
 
 
+#include "fillandstroke.h"
+class FillAndStrokePlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  FillAndStrokePlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("Kst::FillAndStroke");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new Kst::FillAndStroke(parent);
+  }
+};
+
+
 class KstWidgets : public QObject, public QDesignerCustomWidgetCollectionInterface {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
@@ -105,6 +120,7 @@ KstWidgets::KstWidgets(QObject *parent)
     : QObject(parent) {
   (void) new KComponentData("kstwidgets");
   _plugins.append(new ColorButtonPlugin(this));
+  _plugins.append(new FillAndStrokePlugin(this));
 }
 
 #endif

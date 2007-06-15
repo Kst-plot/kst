@@ -41,6 +41,7 @@ QColor ColorButton::color() const {
 
 void ColorButton::setColor(const QColor &color) {
   _color = color;
+  update();
   emit changed(color);
 }
 

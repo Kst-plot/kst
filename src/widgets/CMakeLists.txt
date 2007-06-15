@@ -7,11 +7,13 @@ include_directories( ${CMAKE_BINARY_DIR}/kst ${CMAKE_SOURCE_DIR}/kst/src/libkst 
 set(kstwidgets_LIB_SRCS
    kstwidgets.cpp
    colorbutton.cpp
+   fillandstroke.cpp
    )
 
 kde4_automoc(${kstwidgets_LIB_SRCS})
 
 kde4_add_ui_files(kstwidgets_LIB_SRCS
+   fillandstroke.ui
    )
 
 kde4_add_library(kstwidgets SHARED ${kstwidgets_LIB_SRCS})
