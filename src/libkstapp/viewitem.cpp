@@ -639,23 +639,21 @@ void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   if (parentView()->mouseMode() != View::Default) {
     parentView()->setMouseMode(View::Default);
     parentView()->undoStack()->endMacro();
-    return QGraphicsRectItem::mouseReleaseEvent(event);
   }
 
-  if (grips().contains(event->pos()))
-    return QGraphicsRectItem::mouseReleaseEvent(event);
-
-  switch (_mouseMode) {
-  case Default:
-  case Move:
-  case Rotate:
-    setMouseMode(Resize);
-    break;
-  case Resize:
-    setMouseMode(Rotate);
-    break;
-  default:
-    break;
+  if (!grips().contains(event->pos()) && event->button() & Qt::LeftButton) {
+    switch (_mouseMode) {
+    case Default:
+    case Move:
+    case Rotate:
+      setMouseMode(Resize);
+      break;
+    case Resize:
+      setMouseMode(Rotate);
+      break;
+    default:
+      break;
+    }
   }
 
   QGraphicsRectItem::mouseReleaseEvent(event);
