@@ -31,6 +31,9 @@ public:
   Qt::BrushStyle fillStyle() const;
   void setFillStyle(Qt::BrushStyle style);
 
+  QGradient fillGradient() const;
+  void setFillGradient(const QGradient &gradient);
+
   Qt::PenStyle strokeStyle() const;
   void setStrokeStyle(Qt::PenStyle style);
 

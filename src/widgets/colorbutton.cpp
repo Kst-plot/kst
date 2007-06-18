@@ -48,11 +48,13 @@ void ColorButton::setColor(const QColor &color) {
 
 void ColorButton::paintEvent(QPaintEvent *event)
 {
-  Q_UNUSED(event);
+  QToolButton::paintEvent(event);
+  if (!isEnabled())
+      return;
 
   QPainter painter(this);
   QBrush brush(_color);
-  qDrawShadePanel(&painter, rect().x(), rect().y(), rect().width(), rect().height(),
+  qDrawShadePanel(&painter, rect().x() + 2, rect().y() + 2, rect().width() - 4, rect().height() - 4,
                   palette(), /*sunken*/ isDown(), /*lineWidth*/ 1, /*fill*/ &brush);
 }
 
@@ -60,8 +62,10 @@ void ColorButton::paintEvent(QPaintEvent *event)
 void ColorButton::chooseColor() {
 
   bool ok;
-  QRgb color = QColorDialog::getRgba(_color.rgba(), &ok, parentWidget());
+  QRgb rgba = QColorDialog::getRgba(_color.rgba(), &ok, parentWidget());
   if (ok) {
+    QColor color;
+    color.setRgba(rgba);
     setColor(color);
   }
 }

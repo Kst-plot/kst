@@ -38,12 +38,15 @@ ViewItemDialog::ViewItemDialog(QWidget *parent)
     : QDialog(parent) {
 
   setModal(false);
+  setWindowTitle(tr("Edit View Item"));
 
   _fillAndStroke = new FillAndStroke(this);
   connect(_fillAndStroke, SIGNAL(fillChanged()), this, SLOT(fillChanged()));
   connect(_fillAndStroke, SIGNAL(strokeChanged()), this, SLOT(strokeChanged()));
 
-  QHBoxLayout *layout = new QHBoxLayout(this);
+  QVBoxLayout *layout = new QVBoxLayout(this);
+  layout->setMargin(0);
+  layout->setSpacing(0);
   layout->addWidget(_fillAndStroke);
   setLayout(layout);
 }
@@ -73,6 +76,9 @@ void ViewItemDialog::setupFill() {
 
   _fillAndStroke->setFillColor(b.color());
   _fillAndStroke->setFillStyle(b.style());
+  if (const QGradient *gradient = b.gradient()) {
+    _fillAndStroke->setFillGradient(*gradient);
+  }
 }
 
 
@@ -102,6 +108,10 @@ void ViewItemDialog::fillChanged() {
 
   b.setColor(_fillAndStroke->fillColor());
   b.setStyle(_fillAndStroke->fillStyle());
+
+  QGradient gradient = _fillAndStroke->fillGradient();
+  if (gradient.type() != QGradient::NoGradient)
+    b = QBrush(gradient);
 
   foreach(ViewItem *item, _items) {
     item->setBrush(b);

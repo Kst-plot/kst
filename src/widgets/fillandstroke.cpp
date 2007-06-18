@@ -70,6 +70,7 @@ FillAndStroke::FillAndStroke(QWidget *parent)
 
   connect(_color, SIGNAL(changed(const QColor &)), this, SIGNAL(fillChanged()));
   connect(_fillStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(fillChanged()));
+  connect(_gradientEditor, SIGNAL(changed(const QGradient &)), this, SIGNAL(fillChanged()));
 
   connect(_strokeStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(strokeChanged()));
   connect(_width, SIGNAL(valueChanged(double)), this, SIGNAL(strokeChanged()));
@@ -77,6 +78,8 @@ FillAndStroke::FillAndStroke(QWidget *parent)
   connect(_brushStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(strokeChanged()));
   connect(_joinStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(strokeChanged()));
   connect(_capStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(strokeChanged()));
+
+  _gradientEditor->setEnabled(true);
 }
 
 
@@ -101,6 +104,16 @@ Qt::BrushStyle FillAndStroke::fillStyle() const {
 
 void FillAndStroke::setFillStyle(Qt::BrushStyle style) {
   _fillStyle->setCurrentIndex(_fillStyle->findData(QVariant(style)));
+}
+
+
+QGradient FillAndStroke::fillGradient() const {
+  return _gradientEditor->gradient();
+}
+
+
+void FillAndStroke::setFillGradient(const QGradient &gradient) {
+  _gradientEditor->setGradient(gradient);
 }
 
 

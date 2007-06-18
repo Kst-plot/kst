@@ -100,6 +100,21 @@ public:
 };
 
 
+#include "gradienteditor.h"
+class GradientEditorPlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  GradientEditorPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("Kst::GradientEditor");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new Kst::GradientEditor(parent);
+  }
+};
+
+
 class KstWidgets : public QObject, public QDesignerCustomWidgetCollectionInterface {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
@@ -121,6 +136,7 @@ KstWidgets::KstWidgets(QObject *parent)
   (void) new KComponentData("kstwidgets");
   _plugins.append(new ColorButtonPlugin(this));
   _plugins.append(new FillAndStrokePlugin(this));
+  _plugins.append(new GradientEditorPlugin(this));
 }
 
 #endif

@@ -24,37 +24,35 @@
       </attribute>
       <layout class="QGridLayout" >
        <item row="0" column="0" >
-        <widget class="QLabel" name="label" >
-         <property name="text" >
-          <string>Color:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1" >
-        <widget class="Kst::ColorButton" name="_color" />
+        <layout class="QGridLayout" >
+         <item row="0" column="0" >
+          <widget class="QLabel" name="label" >
+           <property name="text" >
+            <string>Color:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1" >
+          <widget class="Kst::ColorButton" name="_color" />
+         </item>
+         <item row="1" column="0" >
+          <widget class="QLabel" name="label_2" >
+           <property name="text" >
+            <string>Style:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1" >
+          <widget class="QComboBox" name="_fillStyle" />
+         </item>
+        </layout>
        </item>
        <item row="1" column="0" >
-        <widget class="QLabel" name="label_2" >
-         <property name="text" >
-          <string>Style:</string>
+        <widget class="Kst::GradientEditor" name="_gradientEditor" >
+         <property name="enabled" >
+          <bool>false</bool>
          </property>
         </widget>
-       </item>
-       <item row="1" column="1" >
-        <widget class="QComboBox" name="_fillStyle" />
-       </item>
-       <item row="2" column="0" colspan="2" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
@@ -148,8 +146,12 @@
    <extends>QToolButton</extends>
    <header>colorbutton.h</header>
   </customwidget>
+  <customwidget>
+   <class>Kst::GradientEditor</class>
+   <extends>QWidget</extends>
+   <header>gradienteditor.h</header>
+  </customwidget>
  </customwidgets>
- <includes/>
  <resources/>
  <connections/>
 </ui>
