@@ -279,6 +279,8 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   Q_UNUSED(option);
   Q_UNUSED(widget);
 
+  painter->setPen(pen());
+  painter->setBrush(brush());
   paint(painter); //this is the overload that subclasses should use...
 
 //   QGraphicsRectItem::paint(painter, option, widget);
@@ -286,8 +288,6 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
 
 void ViewItem::paint(QPainter *painter) {
-  painter->setPen(pen());
-  painter->setBrush(brush());
   painter->drawRect(rect());
 }
 

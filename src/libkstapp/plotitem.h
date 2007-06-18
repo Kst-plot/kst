@@ -29,18 +29,17 @@ class PlotItem : public ViewItem
   public:
     PlotItem(View *parent);
     virtual ~PlotItem();
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
     void paint(QPainter *painter);
-    
+
     // List of renderers to use
     QList<PlotRenderer2D> renderers;
-    
+
   private:
-    
+
     // Options common to the plot and all rendered data
     QColor _backgroundColor;
     QStack<QColor> _colorStack;
-    
+
 };
 
 class KST_EXPORT CreatePlotCommand : public CreateCommand

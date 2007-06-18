@@ -29,12 +29,12 @@ PlotItem::PlotItem(View *parent)
   // FIXME: temporary test code
   QColor temp = Qt::black;
   _colorStack.push(temp);
-  
+
   // FIXME: fake data for testing rendering
   KstVectorPtr xTest = new KstSVector(0.0, 100.0, 10000, KstObjectTag::fromString("X vector"));
   KstVectorPtr yTest = new KstSVector(-100.0, 100.0, 10000, KstObjectTag::fromString("Y vector"));
   KstVCurvePtr renderTest = new KstVCurve(QString("rendertest"), xTest, yTest, NULL, NULL, NULL, NULL, QColor(Qt::red));
-  
+
   Render2DCartesian carTest(QString("cartesiantest"));
   carTest.sources.append(kst_cast<KstBaseCurve>(renderTest));
   renderers.append(carTest);
@@ -52,18 +52,17 @@ void CreatePlotCommand::createItem() {
   CreateCommand::createItem();
 }
 
-void PlotItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+
+void PlotItem::paint(QPainter *painter) {
+  ViewItem::paint(painter);
+
   QPainterPath path;
   setBrush(Qt::transparent);
   //FIXME:  temporary test code
   const qreal w = pen().widthF();
   path.addEllipse(rect().adjusted(w, w, -w, -w));
   painter->drawPath(path);
-  QPen p = pen();
-  setPen(Qt::NoPen);
-  ViewItem::paint(painter, option, widget);
-  setPen(p);
-  
+
   //QFont testFont;
   //QColor fg = Qt::black;
   //QPen testPen(fg);
@@ -73,9 +72,6 @@ void PlotItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     (*i)->paint(&path);
   }
   */
-}
-
-void PlotItem::paint(QPainter *painter) {
 }
 
 }
