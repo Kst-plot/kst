@@ -85,6 +85,4 @@ void PlotRenderer2D::projectPointInv(const QPointF& pold, QPointF *pnew) {
 
 }
 
-#include "plotrenderer2d.moc"
-
 // vim: ts=2 sw=2 et

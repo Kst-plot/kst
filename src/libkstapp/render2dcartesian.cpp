@@ -22,6 +22,4 @@ Render2DCartesian::~Render2DCartesian() {
 
 }
 
-#include "render2dcartesian.moc"
-
 // vim: ts=2 sw=2 et

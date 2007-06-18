@@ -20,7 +20,6 @@ class Render2DCartesian : public PlotRenderer2D {
   public:
     Render2DCartesian(const QString &name);
     ~Render2DCartesian();
-    
 };
 
 }
