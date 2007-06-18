@@ -16,24 +16,20 @@ namespace Kst {
 Axis::Axis() {
   reversed = false;
   isLog = false;
-  logBase = 0.0;  
+  logBase = 0.0;
 }
 
-Axis::~Axis() {  
+Axis::~Axis() {
 }
 
 
-
-
-AxisStyle::AxisStyle() {  
-  
+AxisStyle::AxisStyle() {
 }
 
-AxisStyle::~AxisStyle() {  
+
+AxisStyle::~AxisStyle() {
 }
 
 }
-
-#include "plotrenderer2d.moc"
 
 // vim: ts=2 sw=2 et
