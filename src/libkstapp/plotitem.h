@@ -12,7 +12,14 @@
 #ifndef PLOTITEM_H
 #define PLOTITEM_H
 
+#include <QObject>
+#include <QColor>
+#include <QStack>
+#include <QGraphicsItem>
+
 #include "viewitem.h"
+#include "kstbasecurve.h"
+#include "plotrenderer2d.h"
 
 namespace Kst {
 
@@ -22,7 +29,18 @@ class PlotItem : public ViewItem
   public:
     PlotItem(View *parent);
     virtual ~PlotItem();
-
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+    void paint(QPainter *painter);
+    
+    // List of renderers to use
+    QList<PlotRenderer2D> renderers;
+    
+  private:
+    
+    // Options common to the plot and all rendered data
+    QColor _backgroundColor;
+    QStack<QColor> _colorStack;
+    
 };
 
 class KST_EXPORT CreatePlotCommand : public CreateCommand

@@ -1,4 +1,4 @@
-include_directories( ${CMAKE_BINARY_DIR}/kst ${CMAKE_SOURCE_DIR}/kst/src/extdate ${CMAKE_SOURCE_DIR}/kst/src/widgets ${CMAKE_BINARY_DIR}/kst/src/widgets ${CMAKE_SOURCE_DIR}/kst/src/libkst ${CMAKE_BINARY_DIR}/kst/src/libkst ${CMAKE_SOURCE_DIR}/kst/src/libkstmath ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
+include_directories( ${CMAKE_BINARY_DIR}/kst ${CMAKE_SOURCE_DIR}/kst/src/extdate ${CMAKE_SOURCE_DIR}/kst/src/widgets ${CMAKE_BINARY_DIR}/kst/src/widgets ${CMAKE_SOURCE_DIR}/kst/src/libkst ${CMAKE_BINARY_DIR}/kst/src/libkst ${CMAKE_SOURCE_DIR}/kst/src/libkstapp ${CMAKE_BINARY_DIR}/kst/src/libkstapp ${CMAKE_SOURCE_DIR}/kst/src/libkstmath ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
 
 set(kstapp_LIB_SRCS
    applicationsettings.cpp
@@ -30,6 +30,9 @@ set(kstapp_LIB_SRCS
    view.cpp
    viewitem.cpp
    viewitemdialog.cpp
+   axis.cpp
+   plotrenderer2d.cpp
+   render2dcartesian.cpp
    )
 
 kde4_add_ui_files(kstapp_LIB_SRCS
