@@ -17,16 +17,20 @@ PlotRenderer2D::PlotRenderer2D(const QString &name) {
   _name = name;
 }
 
+
 PlotRenderer2D::~PlotRenderer2D() {
 }
+
 
 void PlotRenderer2D::setType(RenderType2D type) {
   _type = type;
 }
 
+
 RenderType2D PlotRenderer2D::type() {
   return _type;
 }
+
 
 void PlotRenderer2D::setRangeXY(const QRectF& range) {
   _xyRange = range;
@@ -39,6 +43,7 @@ void PlotRenderer2D::setRangeXY(const QRectF& range) {
   refreshRange();
 }
 
+
 void PlotRenderer2D::setRangeUV(const QRectF& range) {
   _uvRange = range;
   QPointF topLeft;
@@ -50,23 +55,29 @@ void PlotRenderer2D::setRangeUV(const QRectF& range) {
   refreshRange();
 }
 
+
 void PlotRenderer2D::rangeXY(QRectF *range) {
   (*range) = _xyRange;
 }
+
 
 void PlotRenderer2D::rangeUV(QRectF *range) {
   (*range) = _uvRange;
 }
 
+
 void PlotRenderer2D::refreshRange() {
 }
+
 
 void PlotRenderer2D::projectPath(QPainterPath *path) {
 }
 
+
 void PlotRenderer2D::projectPoint(const QPointF& pold, QPointF *pnew) {
   (*pnew) = pold;
 }
+
 
 void PlotRenderer2D::projectPointInv(const QPointF& pold, QPointF *pnew) {
   (*pnew) = pold;

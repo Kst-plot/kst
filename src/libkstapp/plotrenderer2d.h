@@ -38,36 +38,36 @@ class PlotRenderer2D {
     virtual void projectPoint(const QPointF& pold, QPointF *pnew);
     // Inverse projection of a single point
     virtual void projectPointInv(const QPointF& pold, QPointF *pnew);
-    
+
     // Set and get the renderer type
     void setType(RenderType2D type);
     RenderType2D type();
-    
+
     // The list of things to render
     KstBaseCurveList sources;
 
   protected:
     // Recompute auxilliary range information if the
     // properties of the full plot have changed.
-    void refreshRange(); 
-    
+    void refreshRange();
+
     // Range of plot in projected coordinates
     QRectF _xyRange;
     // Range of plot in native coordinates
     QRectF _uvRange;
-    
-    // Axes 
+
+    // Axes
     Axis _xAxis, _yAxis;
     // Axis styles
     AxisStyle _xAxisStyle, _yAxisStyle;
-    
+
   private:
     // Name of the plot
     QString _name;
-    
+
     // Type of the plot
     RenderType2D _type;
-    
+
 };
 
 }
