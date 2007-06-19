@@ -624,6 +624,11 @@ void ViewItem::rotateTowards(const QPointF &corner, const QPointF &point) {
 }
 
 
+void ViewItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
+  edit();
+}
+
+
 void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   QPointF p = event->pos();
   if (topLeftGrip().contains(p)) {
@@ -655,9 +660,7 @@ void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   if (parentView()->mouseMode() != View::Default) {
     parentView()->setMouseMode(View::Default);
     parentView()->undoStack()->endMacro();
-  }
-
-  if (!grips().contains(event->pos()) && event->button() & Qt::LeftButton) {
+  } else if (!grips().contains(event->pos()) && event->button() & Qt::LeftButton) {
     switch (_mouseMode) {
     case Default:
     case Move:

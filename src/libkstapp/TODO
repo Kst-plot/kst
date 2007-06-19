@@ -1,15 +1,12 @@
 View
 ----
 - arrows
-- resizing
-- undo/redo of selection moves
-- Undo/Redo for item select/focus/move and other ItemChanges
-- movement and other mouse manipulation in general needs work
 - Box the objects so they can't be dragged out of the visible size of scene
 - Kst2DPlot
 - Add properties to Items such as border, brush, pen, padding, etc
-- Item context menus
 - Create an ItemModel to map the items into a model
+- gradient editor doesn't work
+- Edit dialog needs to be parented and probably should be one-per-view
 
 
 Dialogs
