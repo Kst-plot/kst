@@ -356,8 +356,8 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
 void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   QMenu menu;
 
-  QAction *removeAction = menu.addAction(tr("Remove"));
-  connect(removeAction, SIGNAL(triggered()), this, SLOT(remove()));
+  QAction *editAction = menu.addAction(tr("Edit"));
+  connect(editAction, SIGNAL(triggered()), this, SLOT(edit()));
 
   QAction *raiseAction = menu.addAction(tr("Raise"));
   connect(raiseAction, SIGNAL(triggered()), this, SLOT(raise()));
@@ -365,8 +365,8 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   QAction *lowerAction = menu.addAction(tr("Lower"));
   connect(lowerAction, SIGNAL(triggered()), this, SLOT(lower()));
 
-  QAction *editAction = menu.addAction(tr("Edit"));
-  connect(editAction, SIGNAL(triggered()), this, SLOT(edit()));
+  QAction *removeAction = menu.addAction(tr("Remove"));
+  connect(removeAction, SIGNAL(triggered()), this, SLOT(remove()));
 
   menu.exec(event->screenPos());
 }
