@@ -76,9 +76,9 @@ void ViewItemDialog::setupFill() {
 
   _fillAndStroke->setFillColor(b.color());
   _fillAndStroke->setFillStyle(b.style());
-  if (const QGradient *gradient = b.gradient()) {
-    _fillAndStroke->setFillGradient(*gradient);
-  }
+//   if (const QGradient *gradient = b.gradient()) {
+//     _fillAndStroke->setFillGradient(*gradient);
+//   }
 }
 
 
@@ -109,9 +109,9 @@ void ViewItemDialog::fillChanged() {
   b.setColor(_fillAndStroke->fillColor());
   b.setStyle(_fillAndStroke->fillStyle());
 
-  QGradient gradient = _fillAndStroke->fillGradient();
-  if (gradient.type() != QGradient::NoGradient)
-    b = QBrush(gradient);
+//   QGradient gradient = _fillAndStroke->fillGradient();
+//   if (gradient.type() != QGradient::NoGradient)
+//     b = QBrush(gradient);
 
   foreach(ViewItem *item, _items) {
     item->setBrush(b);
