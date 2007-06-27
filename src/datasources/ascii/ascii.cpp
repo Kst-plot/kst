@@ -218,6 +218,9 @@ bool AsciiSource::reset() {
 
 int AsciiSource::readFullLine(QFile &file, QByteArray &str) {
   str = file.readLine(1000);
+  if (str.isEmpty())
+    return str.size();
+
   QByteArray strExtra;
   while (str[str.size()-1] != '\n') {
     strExtra = file.readLine(1000);

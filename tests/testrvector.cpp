@@ -153,6 +153,7 @@ void testAscii() {
 
   {
     QTemporaryFile tf;
+    tf.open();
     QTextStream ts(&tf);
     ts << "2 4" << endl;
 
@@ -257,7 +258,9 @@ void testAscii() {
 
     tf.close();
 
+    rvp->writeLock();
     rvp->reload();
+    rvp->unlock();
     doTest(!rvp->isValid());
   }
 }
