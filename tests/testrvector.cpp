@@ -256,6 +256,7 @@ void testAscii() {
     doTest(rvp->value()[2] == 1024.5);
     doTest(rvp->value()[3898] == 39984.5);
 
+    QFile::remove(dsp->fileName());
     tf.close();
 
     rvp->writeLock();
