@@ -29,6 +29,9 @@
 #include <qfile.h>
 #include <qfileinfo.h>
 #include <qtextdocument.h>
+#include <qdir.h>
+#include <qapplication.h>
+#include <qpluginloader.h>
 
 #include "kstdatacollection.h"
 #include "kstdebug.h"
@@ -44,9 +47,9 @@ void KstDataSource::setupOnStartup(KConfig *cfg) {
 }
 
 
-static KST::PluginInfoList pluginInfo;
+static KstPluginList _pluginList;
 void KstDataSource::cleanupForExit() {
-  pluginInfo.clear();
+  _pluginList.clear();
   kConfigObject = 0L;
   for (QMap<QString,QString>::Iterator i = urlMap.begin(); i != urlMap.end(); ++i) {
     KIO::NetAccess::removeTempFile(i.value());
@@ -72,24 +75,16 @@ static QString obtainFile(const QString& source) {
     return urlMap[source];
   }
 
-#if KDE_VERSION >= KDE_MAKE_VERSION(3,3,0)
   // FIXME: come up with a way to indicate the "widget" and fill it in here so
   //        that KIO dialogs are associated with the proper window
   if (!KIO::NetAccess::exists(url, true, 0L)) {
-#else
-  if (!KIO::NetAccess::exists(url, true)) {
-#endif
     return QString::null;
   }
 
   QString tmpFile;
-#if KDE_VERSION >= KDE_MAKE_VERSION(3,3,0)
   // FIXME: come up with a way to indicate the "widget" and fill it in here so
   //        that KIO dialogs are associated with the proper window
   if (!KIO::NetAccess::download(url, tmpFile, 0L)) {
-#else
-  if (!KIO::NetAccess::download(url, tmpFile)) {
-#endif
     return QString::null;
   }
 
@@ -99,51 +94,58 @@ static QString obtainFile(const QString& source) {
 }
 
 
-// Scans for plugins and stores the information for them in "pluginInfo"
+// Scans for plugins and stores the information for them in "_pluginList"
 static void scanPlugins() {
-  KST::PluginInfoList tmpList;
+  KstPluginList tmpList;
 
   KstDebug::self()->log(i18n("Scanning for data-source plugins."));
 
-  KService::List sl = KServiceTypeTrader::self()->query("Kst Data Source");
-  for (KService::List::ConstIterator it = sl.begin(); it != sl.end(); ++it) {
-    for (KST::PluginInfoList::ConstIterator i2 = pluginInfo.begin(); i2 != pluginInfo.end(); ++i2) {
-      if ((*i2)->service == *it) {
-        tmpList.append(*i2);
-        continue;
-      }
-    }
+  //const QDir pluginsDir = QDir(qApp->applicationDirPath());
+  const QDir pluginsDir = QDir("/home/kde/build/home/kde/branches/work/kst/portto4/lib");
 
-    KstSharedPtr<KST::Plugin> p = new KST::DataSourcePlugin(*it);
-    tmpList.append(p);
+  foreach (QObject *plugin, QPluginLoader::staticInstances()) {
+    //try a cast
+    if (KstDataSourcePluginInterface *ds = qobject_cast<KstDataSourcePluginInterface*>(plugin)) {
+      tmpList.append(ds);
+    }
+  }
+
+  foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
+      QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
+      QObject *plugin = loader.instance();
+      if (plugin) {
+        if (KstDataSourcePluginInterface *ds = qobject_cast<KstDataSourcePluginInterface*>(plugin)) {
+          tmpList.append(ds);
+        }
+      }
   }
 
   // This cleans up plugins that have been uninstalled and adds in new ones.
   // Since it is a shared pointer it can't dangle anywhere.
-  pluginInfo.clear();
-  pluginInfo = tmpList;
+  _pluginList.clear();
+  _pluginList = tmpList;
 }
 
 
 QStringList KstDataSource::pluginList() {
-  QStringList rc;
+  QStringList plugins;
 
-  if (pluginInfo.isEmpty()) {
+  if (_pluginList.isEmpty()) {
     scanPlugins();
   }
 
-  for (KST::PluginInfoList::ConstIterator it = pluginInfo.begin(); it != pluginInfo.end(); ++it) {
-    rc += (*it)->service->property("Name").toString();
+  for (KstPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+    plugins += (*it)->pluginName();
   }
 
-  return rc;
+  return plugins;
 }
 
 
 namespace {
 class PluginSortContainer {
   public:
-    KstSharedPtr<KST::DataSourcePlugin> plugin;
+    KstSharedPtr<KstDataSourcePluginInterface> plugin;
     int match;
     int operator<(const PluginSortContainer& x) const {
       return match > x.match; // yes, this is by design.  biggest go first
@@ -157,15 +159,15 @@ class PluginSortContainer {
 
 static QList<PluginSortContainer> bestPluginsForSource(const QString& filename, const QString& type) {
   QList<PluginSortContainer> bestPlugins;
-  if (pluginInfo.isEmpty()) {
+  if (_pluginList.isEmpty()) {
     scanPlugins();
   }
 
-  KST::PluginInfoList info = pluginInfo;
+  KstPluginList info = _pluginList;
 
   if (!type.isEmpty()) {
-    for (KST::PluginInfoList::ConstIterator it = info.begin(); it != info.end(); ++it) {
-      if (KST::DataSourcePlugin *p = kst_cast<KST::DataSourcePlugin>(*it)) {
+    for (KstPluginList::ConstIterator it = info.begin(); it != info.end(); ++it) {
+      if (KstDataSourcePluginInterface *p = kst_cast<KstDataSourcePluginInterface>(*it)) {
         if (p->provides(type)) {
           PluginSortContainer psc;
           psc.match = 100;
@@ -177,9 +179,9 @@ static QList<PluginSortContainer> bestPluginsForSource(const QString& filename, 
     }
   }
 
-  for (KST::PluginInfoList::ConstIterator it = info.begin(); it != info.end(); ++it) {
+  for (KstPluginList::ConstIterator it = info.begin(); it != info.end(); ++it) {
     PluginSortContainer psc;
-    if (KST::DataSourcePlugin *p = kst_cast<KST::DataSourcePlugin>(*it)) {
+    if (KstDataSourcePluginInterface *p = kst_cast<KstDataSourcePluginInterface>(*it)) {
       if ((psc.match = p->understands(kConfigObject, filename)) > 0) {
         psc.plugin = p;
         bestPlugins.append(psc);
@@ -243,14 +245,14 @@ KstDataSourceConfigWidget* KstDataSource::configWidget() const {
 
 
 bool KstDataSource::pluginHasConfigWidget(const QString& plugin) {
-  if (pluginInfo.isEmpty()) {
+  if (_pluginList.isEmpty()) {
     scanPlugins();
   }
 
-  KST::PluginInfoList info = pluginInfo;
+  KstPluginList info = _pluginList;
 
-  for (KST::PluginInfoList::ConstIterator it = info.begin(); it != info.end(); ++it) {
-    if ((*it)->service->property("Name").toString() == plugin) {
+  for (KstPluginList::ConstIterator it = info.begin(); it != info.end(); ++it) {
+    if ((*it)->pluginName() == plugin) {
       return (*it)->hasConfigWidget();
     }
   }
@@ -260,15 +262,15 @@ bool KstDataSource::pluginHasConfigWidget(const QString& plugin) {
 
 
 KstDataSourceConfigWidget* KstDataSource::configWidgetForPlugin(const QString& plugin) {
-  if (pluginInfo.isEmpty()) {
+  if (_pluginList.isEmpty()) {
     scanPlugins();
   }
 
-  KST::PluginInfoList info = pluginInfo;
+  KstPluginList info = _pluginList;
 
-  for (KST::PluginInfoList::ConstIterator it = info.begin(); it != info.end(); ++it) {
-    if (KST::DataSourcePlugin *p = kst_cast<KST::DataSourcePlugin>(*it)) {
-      if (p->service->property("Name").toString() == plugin) {
+  for (KstPluginList::ConstIterator it = info.begin(); it != info.end(); ++it) {
+    if (KstDataSourcePluginInterface *p = kst_cast<KstDataSourcePluginInterface>(*it)) {
+      if (p->pluginName() == plugin) {
         return p->configWidget(kConfigObject, QString::null);
       }
     }

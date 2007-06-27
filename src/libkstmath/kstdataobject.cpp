@@ -97,6 +97,7 @@ void KstDataObject::attach() {
 
 
 KstDataObjectPtr KstDataObject::createPlugin(KService::Ptr service) {
+#if 0
   int err = 0;
   KstDataObject *object = KService::createInstance<KstDataObject>(service, 0, QStringList(), &err);
 
@@ -121,6 +122,7 @@ KstDataObjectPtr KstDataObject::createPlugin(KService::Ptr service) {
   }
 
   KstDebug::self()->log(i18n("Could not load data-object plugin %1.").arg(service->name()), KstDebug::Error);
+#endif
   return 0L;
 }
 

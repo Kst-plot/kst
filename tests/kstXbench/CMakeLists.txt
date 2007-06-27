@@ -12,7 +12,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(kstXBench ${kstXBench_SRCS})
 
-target_link_libraries(kstXBench  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(kstXBench  ${KDE4_KDECORE_LIBS} ${KDE4_KDE3SUPPORT_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 

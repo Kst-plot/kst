@@ -21,6 +21,7 @@
 #include <qfile.h>
 
 #include <kstdatasource.h>
+#include <kstdataplugin.h>
 
 class AsciiSource : public KstDataSource {
   public:
@@ -84,6 +85,42 @@ class AsciiSource : public KstDataSource {
     mutable bool _fieldListComplete;
 };
 
+
+class AsciiPluginInterface : public QObject, public KstDataSourcePluginInterface {
+    Q_OBJECT
+    Q_INTERFACES(KstDataSourcePluginInterface)
+  public:
+    virtual ~AsciiPluginInterface() {}
+
+    virtual QString pluginName() const;
+
+    virtual KstDataSource *create(KConfig *cfg,
+                                  const QString &filename,
+                                  const QString &type,
+                                  const QDomElement &element) const;
+
+    virtual QStringList matrixList(KConfig *cfg,
+                                  const QString& filename,
+                                  const QString& type,
+                                  QString *typeSuggestion,
+                                  bool *complete) const;
+
+    virtual QStringList fieldList(KConfig *cfg,
+                                  const QString& filename,
+                                  const QString& type,
+                                  QString *typeSuggestion,
+                                  bool *complete) const;
+
+    virtual int understands(KConfig *cfg, const QString& filename) const;
+
+    virtual bool supportsTime(KConfig *cfg, const QString& filename) const;
+
+    virtual QStringList provides() const;
+
+    virtual KstDataSourceConfigWidget *configWidget(KConfig *cfg, const QString& filename) const;
+};
+
+Q_EXPORT_PLUGIN2(kstdata_ascii, AsciiPluginInterface)
 
 #endif
 // vim: ts=2 sw=2 et

@@ -1006,6 +1006,149 @@ QWidget *widget_ascii(const QString& filename) {
 
 }
 
-KST_KEY_DATASOURCE_PLUGIN(ascii)
+
+QString AsciiPluginInterface::pluginName() const { return "ASCII File Reader"; }
+
+KstDataSource *AsciiPluginInterface::create(KConfig *cfg,
+                                            const QString &filename,
+                                            const QString &type,
+                                            const QDomElement &element) const {
+
+  return new AsciiSource(cfg, filename, type, element);
+}
+
+QStringList AsciiPluginInterface::matrixList(KConfig *cfg,
+                                             const QString& filename,
+                                             const QString& type,
+                                             QString *typeSuggestion,
+                                             bool *complete) const {
+
+
+  if (typeSuggestion) {
+    *typeSuggestion = "ASCII";
+  }
+  if ((!type.isEmpty() && !provides_ascii().contains(type)) ||
+      0 == understands_ascii(cfg, filename)) {
+    if (complete) {
+      *complete = false;
+    }
+    return QStringList();
+  }
+  return QStringList();
+}
+
+QStringList AsciiPluginInterface::fieldList(KConfig *cfg,
+                                            const QString& filename,
+                                            const QString& type,
+                                            QString *typeSuggestion,
+                                            bool *complete) const {
+
+  if ((!type.isEmpty() && !provides_ascii().contains(type)) ||
+      0 == understands_ascii(cfg, filename)) {
+    if (complete) {
+      *complete = false;
+    }
+    return QStringList();
+  }
+
+  if (typeSuggestion) {
+    *typeSuggestion = "ASCII";
+  }
+
+  AsciiSource::Config config;
+  config.read(cfg, filename);
+  QStringList rc = AsciiSource::fieldListFor(filename, &config);
+
+  if (complete) {
+    *complete = rc.count() > 1;
+  }
+
+  return rc;
+
+}
+
+int AsciiPluginInterface::understands(KConfig *cfg, const QString& filename) const {
+  AsciiSource::Config config;
+  config.read(cfg, filename);
+
+  if (!config._fileNamePattern.isEmpty()) {
+    QRegExp filenamePattern(config._fileNamePattern);
+    filenamePattern.setPatternSyntax(QRegExp::Wildcard);
+    if (filenamePattern.exactMatch(filename)) {
+      return 100;
+    }
+  }
+
+  if (!QFile::exists(filename) || QFileInfo(filename).isDir()) {
+    return 0;
+  }
+
+  QFile f(filename);
+  if (f.open(QIODevice::ReadOnly)) {
+    QByteArray s;
+    qint64 rc = 0;
+    bool done = false;
+
+    QRegExp commentRE, dataRE;
+    if (config._columnType == AsciiSource::Config::Custom && !config._columnDelimiter.isEmpty()) {
+      commentRE.setPattern(QString("^[%1]*[%2].*").arg(QRegExp::escape(config._columnDelimiter)).arg(config._delimiters));
+      dataRE.setPattern(QString("^[%1]*(([Nn][Aa][Nn]|(\\-\\+)?[Ii][Nn][Ff]|[0-9\\+\\-\\.eE]+)[\\s]*)+").arg(QRegExp::escape(config._columnDelimiter)));
+    } else {
+      commentRE.setPattern(QString("^\\s*[%1].*").arg(config._delimiters));
+      dataRE.setPattern(QString("^[\\s]*(([Nn][Aa][Nn]|(\\-\\+)?[Ii][Nn][Ff]|[0-9\\+\\-\\.eE]+)[\\s]*)+"));
+    }
+
+    int skip = config._dataLine;
+
+    while (!done) {
+      rc = AsciiSource::readFullLine(f, s);
+      if (skip > 0) {
+        --skip;
+        if (rc <= 0) {
+          done = true;
+        }
+        continue;
+      }
+      if (rc <= 0) {
+        done = true;
+      } else if (rc == 1) {
+        // empty line; do nothing
+      } else if (commentRE.exactMatch(s)) {
+        // comment; do nothing
+      } else if (dataRE.exactMatch(s)) {
+        // a number - this may be an ascii file - assume that it is
+        // This line checks for an indirect file and gives that a chance too.
+        // Indirect files look like ascii files.
+        return QFile::exists(s.trimmed()) ? 49 : 75;
+      } else {
+        return 20;
+      }
+    }
+  } else {
+    return 0;
+  }
+
+  return 1; // still might be ascii - ex: header with no data yet.
+}
+
+bool AsciiPluginInterface::supportsTime(KConfig *cfg, const QString& filename) const {
+  return true;
+}
+
+QStringList AsciiPluginInterface::provides() const {
+  QStringList rc;
+  rc += "ASCII";
+  return rc;
+}
+
+KstDataSourceConfigWidget *AsciiPluginInterface::configWidget(KConfig *cfg, const QString& filename) const {
+
+  Q_UNUSED(filename)
+  return new ConfigWidgetAscii;
+
+}
+
+// KST_KEY_DATASOURCE_PLUGIN(ascii)
+#include "ascii.moc"
 
 // vim: ts=2 sw=2 et

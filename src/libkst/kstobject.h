@@ -24,31 +24,10 @@
 #include <qstring.h>
 #include <qstringlist.h>
 
-#include <kglobal.h>
-
 #include "kst_export.h"
 #include "kstsharedptr.h"
 #include <qdebug.h>
 #include "rwlock.h"
-
-//We define two different keys for datasource VS dataobject plugins
-//so that if the API for one changes, the other doesn't have to be
-//updated also...
-#define KST_CURRENT_DATASOURCE_KEY 0x00000006
-
-#define KST_KEY_DATASOURCE_PLUGIN(x) extern "C" quint32 key_##x() { return KST_CURRENT_DATASOURCE_KEY; }
-
-#define KST_CURRENT_DATAOBJECT_KEY 0x00000006
-
-#define KST_KEY_DATAOBJECT_PLUGIN(x) extern "C" quint32 key_##x() { return KST_CURRENT_DATAOBJECT_KEY; }
-
-class KstObjectPrivate;
-
-// NOTE: In order to preserve binary compatibility with plugins, you must
-//       update the plugin keys whenever you add, remove, or change member
-//       variables or virtual functions, or when you remove or change
-//       non-virtual functions.
-
 
 class KstObjectTag {
   public:

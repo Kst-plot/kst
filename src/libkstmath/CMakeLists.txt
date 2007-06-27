@@ -1,5 +1,5 @@
 
-include_directories( ${CMAKE_BINARY_DIR}/kst ${CMAKE_SOURCE_DIR}/kst/src/extdate ${CMAKE_SOURCE_DIR}/kst/src/libkst ${CMAKE_BINARY_DIR}/kst/src/libkst ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
+include_directories( ${CMAKE_BINARY_DIR}/kst ${CMAKE_SOURCE_DIR}/kst/src/extdate ${CMAKE_SOURCE_DIR}/kst/src/libkst ${CMAKE_BINARY_DIR}/kst/src/libkst ${QT_INCLUDES}  )
 
 
 ########### next target ###############
@@ -41,7 +41,7 @@ kde4_automoc(${kstmath_LIB_SRCS})
 
 kde4_add_library(kstmath SHARED ${kstmath_LIB_SRCS})
 
-target_link_libraries(kstmath  ${KDE4_KDECORE_LIBS} kst )
+target_link_libraries(kstmath kst )
 
 set_target_properties(kstmath PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 2 )
 install(TARGETS kstmath DESTINATION ${LIB_INSTALL_DIR} )

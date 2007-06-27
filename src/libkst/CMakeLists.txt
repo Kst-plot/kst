@@ -9,7 +9,7 @@
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/kstrevision.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kstrevision.h)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ksttimers.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/ksttimers.h)
 
-include_directories(${CMAKE_BINARY_DIR}/kst ${CMAKE_SOURCE_DIR}/kst/src/extdate ${KDE4_INCLUDE_DIR} ${QT_INCLUDES})
+include_directories(${CMAKE_BINARY_DIR}/kst ${CMAKE_SOURCE_DIR}/kst/src/extdate ${QT_INCLUDES})
 
 ########### next target ###############
 
@@ -53,7 +53,7 @@ kde4_automoc(${kst_LIB_SRCS})
 kde4_add_library(kst SHARED ${kst_LIB_SRCS})
 
 # target_link_libraries(kst kstextdate)
-target_link_libraries(kst ${KDE4_KDECORE_LIBS} ${KDE4_KDE3SUPPORT_LIBS})
+target_link_libraries(kst ${KDE4_KDE3SUPPORT_LIBS})
 
 set_target_properties(kst PROPERTIES VERSION ${KST_LIBKST_VERSION} SOVERSION 2)
 install(TARGETS kst DESTINATION ${LIB_INSTALL_DIR})

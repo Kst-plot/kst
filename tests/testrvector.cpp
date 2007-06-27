@@ -56,11 +56,10 @@ void testAscii() {
     ts << "1" << endl;
     ts << ".2" << endl;
 
-    tf.close();
-
     KstDataSourcePtr dsp = KstDataSource::loadSource(tf.fileName());
 
     doTest(dsp);
+
     doTest(dsp->isValid());
     doTest(dsp->isValidField("INDEX"));
     doTest(dsp->isValidField("1"));
@@ -78,21 +77,25 @@ void testAscii() {
     doTest(!dsp->isEmpty());
 
     KstRVectorPtr rvp = new KstRVector(dsp, "1", KstObjectTag::fromString("RVTestAscii1"), 0, -1, 0, false, false);
+    rvp->writeLock();
     rvp->update(0);
+    rvp->unlock();
     doTest(rvp->isValid());
     doTest(rvp->length() == 3);
     doTest(rvp->value()[0] == 2.0);
     doTest(rvp->value()[1] == 1.0);
     doTest(rvp->value()[2] == 0.2);
     rvp = new KstRVector(dsp, "INDEX", KstObjectTag::fromString("RVTestAscii2"), 0, -1, 0, false, false);
+    rvp->writeLock();
     rvp->update(0);
+    rvp->unlock();
     doTest(rvp->isValid());
     doTest(rvp->length() == 3);
     doTest(rvp->value()[0] == 0.0);
     doTest(rvp->value()[1] == 1.0);
     doTest(rvp->value()[2] == 2.0);
 
-    QFile::remove(tf.fileName());
+    tf.close();
   }
 
   {
@@ -103,8 +106,6 @@ void testAscii() {
     ts << "nan -.4e-2" << endl;
     ts << "inf\t1" << endl;
     ts << "0.000000000000000000000000000000000000000000000000 0" << endl;
-
-    tf.close();
 
     KstDataSourcePtr dsp = KstDataSource::loadSource(tf.fileName());
 
@@ -127,7 +128,9 @@ void testAscii() {
     doTest(!dsp->isEmpty());
 
     KstRVectorPtr rvp = new KstRVector(dsp, "1", KstObjectTag::fromString("RVTestAscii1"), 0, -1, 0, false, false);
+    rvp->writeLock();
     rvp->update(0);
+    rvp->unlock();
     doTest(rvp->isValid());
     doTest(rvp->length() == 4);
     doTest(rvp->value()[0] == 0.2);
@@ -135,7 +138,9 @@ void testAscii() {
     doTest(rvp->value()[2] == INF);
     doTest(rvp->value()[3] == 0);
     rvp = new KstRVector(dsp, "2", KstObjectTag::fromString("RVTestAscii2"), 0, -1, 0, false, false);
+    rvp->writeLock();
     rvp->update(0);
+    rvp->unlock();
     doTest(rvp->isValid());
     doTest(rvp->length() == 4);
     doTest(rvp->value()[0] == 0.1415);
@@ -143,15 +148,13 @@ void testAscii() {
     doTest(rvp->value()[2] == 1.0);
     doTest(rvp->value()[3] == 0.0);
 
-    QFile::remove(tf.fileName());
+    tf.close();
   }
 
   {
     QTemporaryFile tf;
     QTextStream ts(&tf);
     ts << "2 4" << endl;
-
-    tf.close();
 
     KstDataSourcePtr dsp = KstDataSource::loadSource(tf.fileName());
 
@@ -174,17 +177,21 @@ void testAscii() {
     doTest(!dsp->isEmpty());
 
     KstRVectorPtr rvp = new KstRVector(dsp, "1", KstObjectTag::fromString("RVTestAscii1"), 0, -1, 0, false, false);
+    rvp->writeLock();
     rvp->update(0);
+    rvp->unlock();
     doTest(rvp->isValid());
     doTest(rvp->length() == 1); // Are we allowed to have vectors of 1?
     doTest(rvp->value()[0] == 2);
     rvp = new KstRVector(dsp, "2", KstObjectTag::fromString("RVTestAscii2"), 0, -1, 0, false, false);
+    rvp->writeLock();
     rvp->update(0);
+    rvp->unlock();
     doTest(rvp->isValid());
     doTest(rvp->length() == 1);
     doTest(rvp->value()[0] == 4);
 
-    QFile::remove(tf.fileName());
+    tf.close();
   }
 
   {
@@ -193,12 +200,10 @@ void testAscii() {
     QTextStream ts(&tf);
     ts << ";" << endl;
 
-    tf.close();
-
     KstDataSourcePtr dsp = KstDataSource::loadSource(tf.fileName());
 
     doTest(dsp);
-    QFile::remove(tf.fileName());
+    tf.close();
   }
 
   {
@@ -208,8 +213,6 @@ void testAscii() {
     for (int i = 0; i < 39000; ++i) {
       ts << i << " " <<  i + 100 << " " << i + 1000 << endl;
     }
-
-    tf.close();
 
     KstDataSourcePtr dsp = KstDataSource::loadSource(tf.fileName());
     dsp->update(0);
@@ -225,11 +228,15 @@ void testAscii() {
     doTest(!dsp->isEmpty());
 
     KstRVectorPtr rvp = new KstRVector(dsp, "1", KstObjectTag::fromString("RVTestAscii1"), 0, -1, 0, false, false);
+    rvp->writeLock();
     rvp->update(0);
+    rvp->unlock();
     doTest(rvp->isValid());
     doTest(rvp->length() == 39000);
     rvp = new KstRVector(dsp, "2", KstObjectTag::fromString("RVTestAscii2"), 0, -1, 10, true, false);
+    rvp->writeLock();
     rvp->update(0);
+    rvp->unlock();
     doTest(rvp->isValid());
     doTest(rvp->length() == 3900);
     doTest(rvp->value()[0] == 100);
@@ -238,7 +245,9 @@ void testAscii() {
     doTest(rvp->value()[3898] == 39080);
 
     rvp = new KstRVector(dsp, "3", KstObjectTag::fromString("RVTestAscii2"), 0, -1, 10, true, true);
+    rvp->writeLock();
     rvp->update(0);
+    rvp->unlock();
     doTest(rvp->isValid());
     doTest(rvp->length() == 3900);
     doTest(rvp->value()[0] == 1004.5);
@@ -246,7 +255,7 @@ void testAscii() {
     doTest(rvp->value()[2] == 1024.5);
     doTest(rvp->value()[3898] == 39984.5);
 
-    QFile::remove(tf.fileName());
+    tf.close();
 
     rvp->reload();
     doTest(!rvp->isValid());
@@ -300,7 +309,9 @@ void testDirfile(const char *srcfile) {
   {
     //Skip FIVE frames...
     KstRVectorPtr rvp = new KstRVector(dsp, "INDEX", KstObjectTag::fromString("RVTestDirfile"), 0, -1, 5, true, false);
+    rvp->writeLock();
     rvp->update(0);
+    rvp->unlock();
 
     //We should have length equal to three...  items {0, 5, 10}
     //NOTE: The last item, index #14, does not fit in the skip boundary...
@@ -326,7 +337,9 @@ void testDirfile(const char *srcfile) {
   {
     //Skip FIVE frames...
     KstRVectorPtr rvp = new KstRVector(dsp, "INDEX", KstObjectTag::fromString("RVTestDirfile"), 3, -1, 5, true, false);
+    rvp->writeLock();
     rvp->update(0);
+    rvp->unlock();
 
     //We should have length equal to three...  items {5, 10}
     doTestV("length", 2, rvp->length());
@@ -351,7 +364,9 @@ void testDirfile(const char *srcfile) {
   {
     //Skip FIVE frames...
     KstRVectorPtr rvp = new KstRVector(dsp, "INDEX", KstObjectTag::fromString("RVTestDirfile"), 0, 11, 5, true, false);
+    rvp->writeLock();
     rvp->update(0);
+    rvp->unlock();
 
     //We should have length equal to three...  items {0, 5, 10}
     doTestV("length", 3, rvp->length());
@@ -376,7 +391,9 @@ void testDirfile(const char *srcfile) {
   {
     //Skip FIVE frames and countFromEOF()...
     KstRVectorPtr rvp = new KstRVector(dsp, "INDEX", KstObjectTag::fromString("RVTestDirfile"), -1, 10, 5, true, false);
+    rvp->writeLock();
     rvp->update(0);
+    rvp->unlock();
 
     //We should have length equal to two...  items {5, 10}
     doTestV("length", 2, rvp->length());
@@ -481,11 +498,14 @@ void doTests(const char *srcfile) {
 
 }
 
-
+#include <kaboutdata.h>
 int main(int argc, char **argv) {
   atexit(exitHelper);
 
   QCoreApplication app(argc, argv);
+
+  KAboutData  *about = new KAboutData("testrvector", "testrvector", "1.0");
+  KGlobal::setActiveComponent(KComponentData(about));
 
   KConfig *kConfigObject = new KConfig("kstdatarc");
   KstDataSource::setupOnStartup(kConfigObject);

@@ -123,6 +123,8 @@ int main(int argc, char *argv[]) {
   }
 
   KstDataSourcePtr out_file;
+//FIXME
+#if 0
   KService::List sl = KServiceTypeTrader::self()->query("Kst Data Source");
   for (KService::List::ConstIterator it = sl.begin(); it != sl.end(); ++it) {
     if ((*it)->library() == out_type) {
@@ -130,7 +132,8 @@ int main(int argc, char *argv[]) {
       out_file = p->create(kConfigObject, out_filename, QString::null);
       break;
     }
-  } 
+  }
+#endif
 
   if (out_file) {
     for (int i = 0; i < n_field; i++) {
