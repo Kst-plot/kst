@@ -34,7 +34,7 @@
 # endif
 #endif
 
-KstStdinSource::KstStdinSource(KConfig *cfg)
+KstStdinSource::KstStdinSource(QSettings *cfg)
 : KstDataSource(cfg, "stdin", "stdin") {
   _file = new K3TempFile;
   _filename = _file->name();

@@ -17,6 +17,7 @@
 
 #include <stdlib.h> // atoi
 #include <kconfig.h>
+#include <qsettings.h>
 
 // hack to make main() a friend of kstdatasource
 #define protected public
@@ -45,8 +46,8 @@ static void exitHelper() {
 int main(int argc, char *argv[]) {
   atexit(exitHelper);
 
-  KConfig *kConfigObject = new KConfig("kstdatarc");
-  KstDataSource::setupOnStartup(kConfigObject);
+  QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
+  KstDataSource::setupOnStartup(settingsObject);
 
   char field_list[40][120], in_filename[180], out_filename[180], out_type[40];
   int n_field=0;

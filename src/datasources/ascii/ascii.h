@@ -25,7 +25,7 @@
 
 class AsciiSource : public KstDataSource {
   public:
-    AsciiSource(KConfig *cfg, const QString& filename, const QString& type, const QDomElement& e = QDomElement());
+    AsciiSource(QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e = QDomElement());
 
     ~AsciiSource();
 
@@ -94,30 +94,30 @@ class AsciiPlugin : public QObject, public KstDataSourcePluginInterface {
 
     virtual QString pluginName() const;
 
-    virtual KstDataSource *create(KConfig *cfg,
+    virtual KstDataSource *create(QSettings *cfg,
                                   const QString &filename,
                                   const QString &type,
                                   const QDomElement &element) const;
 
-    virtual QStringList matrixList(KConfig *cfg,
+    virtual QStringList matrixList(QSettings *cfg,
                                   const QString& filename,
                                   const QString& type,
                                   QString *typeSuggestion,
                                   bool *complete) const;
 
-    virtual QStringList fieldList(KConfig *cfg,
+    virtual QStringList fieldList(QSettings *cfg,
                                   const QString& filename,
                                   const QString& type,
                                   QString *typeSuggestion,
                                   bool *complete) const;
 
-    virtual int understands(KConfig *cfg, const QString& filename) const;
+    virtual int understands(QSettings *cfg, const QString& filename) const;
 
-    virtual bool supportsTime(KConfig *cfg, const QString& filename) const;
+    virtual bool supportsTime(QSettings *cfg, const QString& filename) const;
 
     virtual QStringList provides() const;
 
-    virtual KstDataSourceConfigWidget *configWidget(KConfig *cfg, const QString& filename) const;
+    virtual KstDataSourceConfigWidget *configWidget(QSettings *cfg, const QString& filename) const;
 };
 
 Q_EXPORT_PLUGIN2(kstdata_ascii, AsciiPlugin)

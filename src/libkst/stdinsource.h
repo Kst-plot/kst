@@ -26,7 +26,7 @@ class K3TempFile;
 
 class KST_EXPORT KstStdinSource : public KstDataSource {
   public:
-    KstStdinSource(KConfig *cfg);
+    KstStdinSource(QSettings *cfg);
 
     virtual ~KstStdinSource();
 

@@ -10,6 +10,7 @@
 
 #include "ksttestcase.h"
 #include <kconfig.h>
+#include <qsettings.h>
 #include <kstdataobjectcollection.h>
 #include <kstandarddirs.h>
 #include <QTemporaryFile>
@@ -508,11 +509,8 @@ int main(int argc, char **argv) {
 
   QCoreApplication app(argc, argv);
 
-  KAboutData  *about = new KAboutData("testrvector", "testrvector", "1.0");
-  KGlobal::setActiveComponent(KComponentData(about));
-
-  KConfig *kConfigObject = new KConfig("kstdatarc");
-  KstDataSource::setupOnStartup(kConfigObject);
+  QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
+  KstDataSource::setupOnStartup(settingsObject);
 
   doTests(argc ? argv[1] : "");
   // Don't put tests in main because we need to ensure that no KstObjects

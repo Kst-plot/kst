@@ -26,6 +26,7 @@
 #include <qwidget.h>
 
 #include <kconfig.h>
+#include <qsettings.h>
 
 #include "kstdateparser.h"
 #include "kstobject.h"
@@ -50,9 +51,9 @@ typedef KstSharedPtr<KstScalar> KstScalarPtr;
 
 class KST_EXPORT KstDataSource : public KstObject {
   protected:
-    KstDataSource(KConfig *cfg, const QString& filename, const QString& type);
+    KstDataSource(QSettings *cfg, const QString& filename, const QString& type);
     friend class KstApp;
-    static void setupOnStartup(KConfig*);
+    static void setupOnStartup(QSettings*);
     static void cleanupForExit();
 
   public:
@@ -236,7 +237,7 @@ class KST_EXPORT KstDataSource : public KstObject {
 
     QHash<QString, KstString*> _metaData;
 
-    KConfig *_cfg;
+    QSettings *_cfg;
 
     KstScalarPtr _numFramesScalar;
 
@@ -292,7 +293,7 @@ class KstDataSourceConfigWidget : public QWidget {
     KstDataSourceConfigWidget(); // will be reparented later
     virtual ~KstDataSourceConfigWidget();
 
-    virtual void setConfig(KConfig*);
+    virtual void setConfig(QSettings*);
 
     KST_EXPORT void setInstance(KstDataSourcePtr inst);
     KST_EXPORT KstDataSourcePtr instance() const;
@@ -302,7 +303,7 @@ class KstDataSourceConfigWidget : public QWidget {
     virtual void save();
 
   protected:
-    KConfig *_cfg;
+    QSettings *_cfg;
     // If _instance is nonzero, then your settings are to be saved for this
     // particular instance of the source, as opposed to globally.
     KstDataSourcePtr _instance;

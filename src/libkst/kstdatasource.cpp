@@ -40,17 +40,17 @@
 
 #include "kstdataplugin.h"
 
-static KConfig *kConfigObject = 0L;
+static QSettings *settingsObject = 0L;
 static QMap<QString,QString> urlMap;
-void KstDataSource::setupOnStartup(KConfig *cfg) {
-  kConfigObject = cfg;
+void KstDataSource::setupOnStartup(QSettings *cfg) {
+  settingsObject = cfg;
 }
 
 
 static KstPluginList _pluginList;
 void KstDataSource::cleanupForExit() {
   _pluginList.clear();
-  kConfigObject = 0L;
+  settingsObject = 0L;
   for (QMap<QString,QString>::Iterator i = urlMap.begin(); i != urlMap.end(); ++i) {
     KIO::NetAccess::removeTempFile(i.value());
   }
@@ -182,7 +182,7 @@ static QList<PluginSortContainer> bestPluginsForSource(const QString& filename, 
   for (KstPluginList::ConstIterator it = info.begin(); it != info.end(); ++it) {
     PluginSortContainer psc;
     if (KstDataSourcePluginInterface *p = kst_cast<KstDataSourcePluginInterface>(*it)) {
-      if ((psc.match = p->understands(kConfigObject, filename)) > 0) {
+      if ((psc.match = p->understands(settingsObject, filename)) > 0) {
         psc.plugin = p;
         bestPlugins.append(psc);
       }
@@ -199,7 +199,7 @@ static KstDataSourcePtr findPluginFor(const QString& filename, const QString& ty
   QList<PluginSortContainer> bestPlugins = bestPluginsForSource(filename, type);
 
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
-    KstDataSourcePtr plugin = (*i).plugin->create(kConfigObject, filename, QString::null, e);
+    KstDataSourcePtr plugin = (*i).plugin->create(settingsObject, filename, QString::null, e);
     if (plugin) {
       // restore tag if present
       QDomNodeList l = e.elementsByTagName("tag");
@@ -220,7 +220,7 @@ static KstDataSourcePtr findPluginFor(const QString& filename, const QString& ty
 
 KstDataSourcePtr KstDataSource::loadSource(const QString& filename, const QString& type) {
   if (filename == "stdin" || filename == "-") {
-    return new KstStdinSource(kConfigObject);
+    return new KstStdinSource(settingsObject);
   }
 
   QString fn = obtainFile(filename);
@@ -271,7 +271,7 @@ KstDataSourceConfigWidget* KstDataSource::configWidgetForPlugin(const QString& p
   for (KstPluginList::ConstIterator it = info.begin(); it != info.end(); ++it) {
     if (KstDataSourcePluginInterface *p = kst_cast<KstDataSourcePluginInterface>(*it)) {
       if (p->pluginName() == plugin) {
-        return p->configWidget(kConfigObject, QString::null);
+        return p->configWidget(settingsObject, QString::null);
       }
     }
   }
@@ -292,7 +292,7 @@ KstDataSourceConfigWidget* KstDataSource::configWidgetForSource(const QString& f
 
   QList<PluginSortContainer> bestPlugins = bestPluginsForSource(fn, type);
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
-    KstDataSourceConfigWidget *w = (*i).plugin->configWidget(kConfigObject, fn);
+    KstDataSourceConfigWidget *w = (*i).plugin->configWidget(settingsObject, fn);
     // Don't iterate.
     return w;
   }
@@ -316,7 +316,7 @@ bool KstDataSource::supportsTime(const QString& filename, const QString& type) {
   if (bestPlugins.isEmpty()) {
     return false;
   }
-  return (*bestPlugins.begin()).plugin->supportsTime(kConfigObject, fn);
+  return (*bestPlugins.begin()).plugin->supportsTime(settingsObject, fn);
 }
 
 
@@ -334,7 +334,7 @@ QStringList KstDataSource::fieldListForSource(const QString& filename, const QSt
   QStringList rc;
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
     QString typeSuggestion;
-    rc = (*i).plugin->fieldList(kConfigObject, fn, QString::null, &typeSuggestion, complete);
+    rc = (*i).plugin->fieldList(settingsObject, fn, QString::null, &typeSuggestion, complete);
     if (!rc.isEmpty()) {
       if (outType) {
         if (typeSuggestion.isEmpty()) {
@@ -365,7 +365,7 @@ QStringList KstDataSource::matrixListForSource(const QString& filename, const QS
   QStringList rc;
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
     QString typeSuggestion;
-    rc = (*i).plugin->matrixList(kConfigObject, fn, QString::null, &typeSuggestion, complete);
+    rc = (*i).plugin->matrixList(settingsObject, fn, QString::null, &typeSuggestion, complete);
     if (!rc.isEmpty()) {
       if (outType) {
         if (typeSuggestion.isEmpty()) {
@@ -403,14 +403,14 @@ KstDataSourcePtr KstDataSource::loadSource(QDomElement& e) {
   }
 
   if (filename == "stdin" || filename == "-") {
-    return new KstStdinSource(kConfigObject);
+    return new KstStdinSource(settingsObject);
   }
 
   return findPluginFor(filename, type, e);
 }
 
 
-KstDataSource::KstDataSource(KConfig *cfg, const QString& filename, const QString& type)
+KstDataSource::KstDataSource(QSettings *cfg, const QString& filename, const QString& type)
 : KstObject(), _filename(filename), _cfg(cfg) {
   Q_UNUSED(type)
   _valid = false;
@@ -742,7 +742,7 @@ void KstDataSourceConfigWidget::load() {
 }
 
 
-void KstDataSourceConfigWidget::setConfig(KConfig *cfg) {
+void KstDataSourceConfigWidget::setConfig(QSettings *cfg) {
   _cfg = cfg;
 }
 

@@ -17,6 +17,7 @@
 
 #include <stdlib.h> // atoi
 #include <kconfig.h>
+#include <qsettings.h>
 
 // hack to make main() a friend of kstdatasource
 #define protected public
@@ -44,8 +45,8 @@ int main(int argc, char *argv[]) {
   KstDataSourcePtr file;
   int i;
 
-  KConfig *kConfigObject = new KConfig("kstdatarc");
-  KstDataSource::setupOnStartup(kConfigObject);
+  QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
+  KstDataSource::setupOnStartup(settingsObject);
 
   char field_list[40][120], filename[180];
   bool do_hex[40];

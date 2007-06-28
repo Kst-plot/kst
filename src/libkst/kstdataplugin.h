@@ -30,32 +30,32 @@ class KstDataSourcePluginInterface : public KstPluginInterface {
   public:
     virtual ~KstDataSourcePluginInterface() {}
 
-    virtual KstDataSource *create(KConfig *cfg,
+    virtual KstDataSource *create(QSettings *cfg,
                                   const QString &filename,
                                   const QString &type,
                                   const QDomElement &element) const = 0;
 
-    virtual QStringList matrixList(KConfig *cfg,
+    virtual QStringList matrixList(QSettings *cfg,
                                   const QString& filename,
                                   const QString& type,
                                   QString *typeSuggestion,
                                   bool *complete) const = 0;
 
-    virtual QStringList fieldList(KConfig *cfg,
+    virtual QStringList fieldList(QSettings *cfg,
                                   const QString& filename,
                                   const QString& type,
                                   QString *typeSuggestion,
                                   bool *complete) const = 0;
 
-    virtual int understands(KConfig *cfg, const QString& filename) const = 0;
+    virtual int understands(QSettings *cfg, const QString& filename) const = 0;
 
-    virtual bool supportsTime(KConfig *cfg, const QString& filename) const = 0;
+    virtual bool supportsTime(QSettings *cfg, const QString& filename) const = 0;
 
     virtual QStringList provides() const = 0;
 
     bool provides(const QString& type) const { return provides().contains(type); }
 
-    virtual KstDataSourceConfigWidget *configWidget(KConfig *cfg, const QString& filename) const = 0;
+    virtual KstDataSourceConfigWidget *configWidget(QSettings *cfg, const QString& filename) const = 0;
 };
 
 
