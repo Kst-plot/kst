@@ -86,11 +86,11 @@ class AsciiSource : public KstDataSource {
 };
 
 
-class AsciiPluginInterface : public QObject, public KstDataSourcePluginInterface {
+class AsciiPlugin : public QObject, public KstDataSourcePluginInterface {
     Q_OBJECT
     Q_INTERFACES(KstDataSourcePluginInterface)
   public:
-    virtual ~AsciiPluginInterface() {}
+    virtual ~AsciiPlugin() {}
 
     virtual QString pluginName() const;
 
@@ -120,7 +120,7 @@ class AsciiPluginInterface : public QObject, public KstDataSourcePluginInterface
     virtual KstDataSourceConfigWidget *configWidget(KConfig *cfg, const QString& filename) const;
 };
 
-Q_EXPORT_PLUGIN2(kstdata_ascii, AsciiPluginInterface)
+Q_EXPORT_PLUGIN2(kstdata_ascii, AsciiPlugin)
 
 #endif
 // vim: ts=2 sw=2 et
