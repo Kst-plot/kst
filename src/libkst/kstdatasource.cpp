@@ -21,10 +21,6 @@
 
 #include <qdebug.h>
 #include <kio/netaccess.h>
-#include <klibloader.h>
-#include <klocale.h>
-#include <kservicetype.h>
-#include <kservicetypetrader.h>
 
 #include <qfile.h>
 #include <qfileinfo.h>
@@ -98,7 +94,7 @@ static QString obtainFile(const QString& source) {
 static void scanPlugins() {
   KstPluginList tmpList;
 
-  KstDebug::self()->log(i18n("Scanning for data-source plugins."));
+  KstDebug::self()->log(QObject::tr("Scanning for data-source plugins."));
 
   //const QDir pluginsDir = QDir(qApp->applicationDirPath());
   const QDir pluginsDir = QDir("/home/kde/build/home/kde/branches/work/kst/portto4/lib");
@@ -297,7 +293,7 @@ KstDataSourceConfigWidget* KstDataSource::configWidgetForSource(const QString& f
     return w;
   }
 
-  KstDebug::self()->log(i18n("Could not find a datasource for '%1'(%2), but we found one just prior.  Something is wrong with Kst.", filename, type), KstDebug::Error);
+  KstDebug::self()->log(QString("Could not find a datasource for '%1'(%2), but we found one just prior.  Something is wrong with Kst.").arg(filename, type), KstDebug::Error);
   return 0L;
 }
 
@@ -422,7 +418,7 @@ KstDataSource::KstDataSource(QSettings *cfg, const QString& filename, const QStr
     shortFilename.truncate(shortFilename.length() - 1);
   }
   shortFilename = shortFilename.section('/', -1);
-  QString tn = i18n("DS-%1", shortFilename);
+  QString tn = QString("DS-%1").arg(shortFilename);
   int count = 1;
 
   KstObject::setTagName(KstObjectTag(tn, KstObjectTag::globalTagContext));  // are DataSources always top-level?
