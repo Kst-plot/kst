@@ -118,28 +118,28 @@ void KstDebug::clear() {
 QString KstDebug::label(LogLevel level) const {
   switch (level) {
     case Notice:
-      return tr("log level notice", "Notice");
+      return i18nc("log level notice", "Notice");
     case Warning:
-      return tr("log level warning", "Warning");
+      return i18nc("log level warning", "Warning");
     case Error:
-      return tr("log level error", "Error");
+      return i18nc("log level error", "Error");
     case Debug:
-      return tr("log level debug", "Debug");
+      return i18nc("log level debug", "Debug");
     default:
-      return tr("log level other", "Other");
+      return i18nc("log level other", "Other");
   }    
 }
 
 
 QString KstDebug::text() {
   QMutexLocker ml(&_lock);
-  QString body = QString("Kst version %1\n\n\nKst log:\n").arg(QString::fromLatin1(KSTVERSION));
+  QString body = i18n("Kst version %1\n\n\nKst log:\n", QString::fromLatin1(KSTVERSION));
 
   for (int i = 0; i < _messages.count(); i++ ) {
-    body += QString("%1 %2: %3\n").arg(KGlobal::locale()->formatDateTime(_messages[i].date), label(_messages[i].level), _messages[i].msg);
+    body += i18nc("date leveltext: message", "%1 %2: %3\n", KGlobal::locale()->formatDateTime(_messages[i].date), label(_messages[i].level), _messages[i].msg);
   }
 
-  body += tr("\n\nData-source plugins:");
+  body += i18n("\n\nData-source plugins:");
   QStringList dsp = dataSourcePlugins();
   for (QStringList::ConstIterator it = dsp.begin(); it != dsp.end(); ++it) {
     body += '\n';
@@ -158,7 +158,7 @@ void KstDebug::setLimit(bool applyLimit, int limit) {
 
 
 void KstDebug::sendEmail() {
-  KToolInvocation::invokeMailer(QString::null, QString::null, QString::null, tr("Kst Debugging Information"), text());
+  KToolInvocation::invokeMailer(QString::null, QString::null, QString::null, i18n("Kst Debugging Information"), text());
 }
 
 

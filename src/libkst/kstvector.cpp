@@ -59,7 +59,7 @@ KstVector::KstVector(KstObjectTag in_tag, int size, KstObject *provider, bool is
 
   if (!in_tag.isValid()) {
     do {
-      KstObject::setTagName(KstObjectTag(QString("Anonymous Vector %1").arg(anonymousVectorCounter++), in_tag.context()));
+      KstObject::setTagName(KstObjectTag(i18n("Anonymous Vector %1", anonymousVectorCounter++), in_tag.context()));
     } while (KstData::self()->vectorTagNameNotUnique(tagName(), false));
   } else {
     KstObject::setTagName(KST::suggestUniqueVectorTag(in_tag));
@@ -117,7 +117,7 @@ KstVector::KstVector(const QDomElement& e)
 
   if (!in_tag.isValid()) {
     do {
-      KstObject::setTagName(KstObjectTag(QString("Anonymous Vector %1").arg(anonymousVectorCounter++), in_tag.context()));
+      KstObject::setTagName(KstObjectTag(i18n("Anonymous Vector %1", anonymousVectorCounter++), in_tag.context()));
     } while (KstData::self()->vectorTagNameNotUnique(tagName(), false));
   } else {
     KstObject::setTagName(KST::suggestUniqueVectorTag(in_tag));

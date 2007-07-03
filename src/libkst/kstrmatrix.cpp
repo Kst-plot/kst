@@ -208,7 +208,7 @@ QString KstRMatrix::label() const {
   if (ok && _file) {
     _file->readLock();
     if (_file->fileType() == "ASCII") {
-      returnLabel = QString("Column %1").arg(_field);
+      returnLabel = i18n("Column %1").arg(_field);
     } else {
       returnLabel = _field;
     }
@@ -539,7 +539,7 @@ void KstRMatrix::commonConstructor(KstDataSourcePtr file, const QString &field,
   _editable = true;
 
   if (!_file) {
-    KstDebug::self()->log(QString("Data file for matrix %1 was not opened.").arg(tagName()), KstDebug::Warning);
+    KstDebug::self()->log(i18n("Data file for matrix %1 was not opened.", tagName()), KstDebug::Warning);
   } else {
     _samplesPerFrameCache = _file->samplesPerFrame(_field);
   }
@@ -589,7 +589,7 @@ void KstRMatrix::changeFile(KstDataSourcePtr file) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (!file) {
-    KstDebug::self()->log(QString("Data file for vector %1 was not opened.").arg(tagName()), KstDebug::Warning);
+    KstDebug::self()->log(i18n("Data file for vector %1 was not opened.", tagName()), KstDebug::Warning);
   }
   _file = file;
   if (_file) {
