@@ -18,15 +18,14 @@
 #ifndef DIALOGLAUNCHER_H
 #define DIALOGLAUNCHER_H
 #include <qstring.h>
-#include <kstaticdeleter.h>
 #include "kst_export.h"
 
 class QWidget;
 
 class KstDialogs {
-  friend class KStaticDeleter<KstDialogs>;
   protected:
     static KstDialogs *_self;
+    static void cleanup();
     KstDialogs();
     virtual ~KstDialogs();
 

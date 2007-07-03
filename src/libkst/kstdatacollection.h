@@ -18,7 +18,6 @@
 #ifndef KSTDATACOLLECTION_H
 #define KSTDATACOLLECTION_H
 
-#include <kstaticdeleter.h>
 #include "kstdatasource.h"
 #include "kststring.h"
 #include "kstvector.h"
@@ -30,9 +29,9 @@ class QFile;
 class KstBaseCurve;
 
 class KstData {
-  friend class KStaticDeleter<KstData>;
   protected:
     static KstData *_self;
+    static void cleanup();
     KstData();
     virtual ~KstData();
 

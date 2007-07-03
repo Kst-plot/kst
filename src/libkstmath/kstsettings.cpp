@@ -18,10 +18,10 @@
 // include files for KDE
 #include <kemailsettings.h>
 #include <kprinter.h>
-#include <kstaticdeleter.h>
 #include "ksttimezones.h"
 
 #include <qsettings.h>
+#include <qapplication.h>
 
 // application specific includes
 #include "kstsettings.h"
@@ -138,11 +138,16 @@ KstSettings& KstSettings::operator=(const KstSettings& x) {
 
 
 KstSettings *KstSettings::_self = 0L;
-static KStaticDeleter<KstSettings> kstsettingssd;
+void KstSettings::cleanup() {
+    delete _self;
+    _self = 0;
+}
+
 
 KstSettings *KstSettings::globalSettings() {
   if (!_self) {
-    kstsettingssd.setObject(_self, new KstSettings);
+    _self = new KstSettings;
+    qAddPostRoutine(KstSettings::cleanup);
     _self->reload();
   }
 

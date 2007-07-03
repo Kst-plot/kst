@@ -25,14 +25,11 @@
 #include <qobject.h>
 #include <qmutex.h>
 
-#include <kstaticdeleter.h>
-
 #include "kst_export.h"
 
 // This class has to be threadsafe
 class KST_EXPORT KstDebug : public QObject {
   Q_OBJECT
-  friend class KStaticDeleter<KstDebug>;
   public:
     enum LogLevel { Unknown = 0, Notice = 1, Warning = 2, Error = 4, Debug = 8, None = 16384 };
     struct LogMessage {
@@ -44,9 +41,8 @@ class KST_EXPORT KstDebug : public QObject {
 
     void clear();
     void log(const QString& msg, LogLevel level = Notice);
-    void setLimit(bool applyLimit, int limit);   
+    void setLimit(bool applyLimit, int limit);
     QString text();
-    void sendEmail();
 
     int logLength() const;
     QList<LogMessage> messages() const;
@@ -71,6 +67,8 @@ class KST_EXPORT KstDebug : public QObject {
     ~KstDebug();
 
     static KstDebug *_self;
+    static void cleanup();
+
     QList<LogMessage> _messages;
     bool _applyLimit;
     bool _hasNewError;

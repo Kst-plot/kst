@@ -20,23 +20,25 @@
 #include "kstrevision.h"
 #include "logevents.h"
 
-#include <kapplication.h>
-#include <ktoolinvocation.h>
+#include <qapplication.h>
 #include <qdebug.h>
-#include <kglobal.h>
 #include <klocale.h>
 
 #include <ksttimers.h>
 
-static KStaticDeleter<KstDebug> sd;
-
 KstDebug *KstDebug::_self = 0L;
+void KstDebug::cleanup() {
+    delete _self;
+    _self = 0;
+}
+
 
 static QMutex soLock;
 KstDebug *KstDebug::self() {
   QMutexLocker ml(&soLock);
   if (!_self) {
-    sd.setObject(_self, new KstDebug);
+    _self = new KstDebug;
+    qAddPostRoutine(KstDebug::cleanup);
   }
 
   return _self;
@@ -154,11 +156,6 @@ void KstDebug::setLimit(bool applyLimit, int limit) {
   QMutexLocker ml(&_lock);
   _applyLimit = applyLimit;
   _limit = limit;
-}
-
-
-void KstDebug::sendEmail() {
-  KToolInvocation::invokeMailer(QString::null, QString::null, QString::null, i18n("Kst Debugging Information"), text());
 }
 
 

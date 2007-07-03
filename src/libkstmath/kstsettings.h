@@ -118,6 +118,7 @@ class KstSettings {
 
   private:
     static KstSettings *_self;
+    static void cleanup();
 };
 
 #endif

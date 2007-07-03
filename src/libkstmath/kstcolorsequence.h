@@ -19,14 +19,12 @@
 #define _KST_CS_H
 
 #include <qcolor.h>
-#include <kstaticdeleter.h>
 #include "kstvcurve.h"
 #include "kst_export.h"
 
 class KPalette;
 
 class KstColorSequence {
-  friend class KStaticDeleter<KstColorSequence>;
   public:
     enum ColorMode { MonoChrome, GrayScale, Color };
     KST_EXPORT void createPalette();
@@ -44,6 +42,7 @@ class KstColorSequence {
     KstColorSequence();
     ~KstColorSequence();
     static KstColorSequence* _self;
+    static void cleanup();
     KPalette* _pal;
     int _count;
     int _ptr;  // pointer to the next color

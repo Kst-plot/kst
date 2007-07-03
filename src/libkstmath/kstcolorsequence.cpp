@@ -26,6 +26,7 @@
 #include "kstcolorsequence.h"
 #include "kstsettings.h"
 #include <QVector>
+#include <qapplication.h>
 
 // Default palette that is used if "Kst Colors" is not found.
 static const char *const colors[] = { "red",
@@ -38,7 +39,6 @@ static const char *const colors[] = { "red",
                                       "#105010"
                                       };
 static const int colorcnt = sizeof(colors) / sizeof(char*);
-static KStaticDeleter<KstColorSequence> sdColorSequence;
 
 
 KstColorSequence::KstColorSequence()
@@ -76,6 +76,12 @@ void KstColorSequence::createPalette( ) {
 }
 
 
+void KstColorSequence::cleanup() {
+    delete _self;
+    _self = 0;
+}
+
+
 QColor KstColorSequence::next(const KstVCurveList& curves, const QColor& badColor) {
   QColor color;
   int dark_factor;
@@ -83,7 +89,8 @@ QColor KstColorSequence::next(const KstVCurveList& curves, const QColor& badColo
   int start;
 
   if (!_self) {
-    _self = sdColorSequence.setObject(_self, new KstColorSequence);
+    _self = new KstColorSequence;
+    qAddPostRoutine(KstColorSequence::cleanup);
   }
   _self->createPalette();
   
@@ -156,7 +163,8 @@ QColor KstColorSequence::next(const KstVCurveList& curves, const QColor& badColo
 
 QColor KstColorSequence::next() {
   if (!_self) {
-    sdColorSequence.setObject(_self, new KstColorSequence);
+    _self = new KstColorSequence;
+    qAddPostRoutine(KstColorSequence::cleanup);
   }
   _self->createPalette();
 
@@ -174,7 +182,8 @@ QColor KstColorSequence::next(const QColor& badColor) {
   int dark_factor;
 
   if (!_self) {
-    sdColorSequence.setObject(_self, new KstColorSequence);
+    _self = new KstColorSequence;
+    qAddPostRoutine(KstColorSequence::cleanup);
   }
   _self->createPalette();
 
@@ -241,7 +250,8 @@ bool KstColorSequence::colorsTooClose(const QColor& color, const QColor& badColo
 
 KstColorSequence::ColorMode KstColorSequence::colorMode() {
   if (!_self) {
-    sdColorSequence.setObject(_self, new KstColorSequence);
+    _self = new KstColorSequence;
+    qAddPostRoutine(KstColorSequence::cleanup);
   }
 
   return _self->_mode;
@@ -250,7 +260,8 @@ KstColorSequence::ColorMode KstColorSequence::colorMode() {
 
 void KstColorSequence::setColorMode(KstColorSequence::ColorMode mode) {
   if (!_self) {
-    sdColorSequence.setObject(_self, new KstColorSequence);
+    _self = new KstColorSequence;
+    qAddPostRoutine(KstColorSequence::cleanup);
   }
 
   _self->_mode = mode;
@@ -259,7 +270,8 @@ void KstColorSequence::setColorMode(KstColorSequence::ColorMode mode) {
 
 int KstColorSequence::count() {
   if (!_self) {
-    sdColorSequence.setObject(_self, new KstColorSequence);
+    _self = new KstColorSequence;
+    qAddPostRoutine(KstColorSequence::cleanup);
   }
   _self->createPalette();
 
@@ -269,7 +281,8 @@ int KstColorSequence::count() {
 
 void KstColorSequence::reset() {
   if (!_self) {
-    sdColorSequence.setObject(_self, new KstColorSequence);
+    _self = new KstColorSequence;
+    qAddPostRoutine(KstColorSequence::cleanup);
   }
 
   _self->_ptr = 0;
@@ -278,7 +291,8 @@ void KstColorSequence::reset() {
 
 QColor KstColorSequence::entry(int ptr) {
   if (!_self) {
-    sdColorSequence.setObject(_self, new KstColorSequence);
+    _self = new KstColorSequence;
+    qAddPostRoutine(KstColorSequence::cleanup);
   }
   _self->createPalette();
 

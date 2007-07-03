@@ -20,7 +20,6 @@
 #include <assert.h>
 
 #include <qdebug.h>
-#include <kio/netaccess.h>
 #include <klocale.h>
 
 #include <qfile.h>
@@ -48,9 +47,9 @@ static KstPluginList _pluginList;
 void KstDataSource::cleanupForExit() {
   _pluginList.clear();
   settingsObject = 0L;
-  for (QMap<QString,QString>::Iterator i = urlMap.begin(); i != urlMap.end(); ++i) {
-    KIO::NetAccess::removeTempFile(i.value());
-  }
+//   for (QMap<QString,QString>::Iterator i = urlMap.begin(); i != urlMap.end(); ++i) {
+//     KIO::NetAccess::removeTempFile(i.value());
+//   }
   urlMap.clear();
 }
 
@@ -74,16 +73,16 @@ static QString obtainFile(const QString& source) {
 
   // FIXME: come up with a way to indicate the "widget" and fill it in here so
   //        that KIO dialogs are associated with the proper window
-  if (!KIO::NetAccess::exists(url, true, 0L)) {
-    return QString::null;
-  }
+//   if (!KIO::NetAccess::exists(url, true, 0L)) {
+//     return QString::null;
+//   }
 
   QString tmpFile;
   // FIXME: come up with a way to indicate the "widget" and fill it in here so
   //        that KIO dialogs are associated with the proper window
-  if (!KIO::NetAccess::download(url, tmpFile, 0L)) {
-    return QString::null;
-  }
+//   if (!KIO::NetAccess::download(url, tmpFile, 0L)) {
+//     return QString::null;
+//   }
 
   urlMap[source] = tmpFile;
 

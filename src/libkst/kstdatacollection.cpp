@@ -18,6 +18,7 @@
 #include <config.h>
 
 #include <stdlib.h>
+#include <qapplication.h>
 
 #include "kstdatacollection.h"
 
@@ -70,12 +71,17 @@ void *KST::malloc(size_t size) {
 }
 
 
-static KStaticDeleter<KstData> sdData;
 KstData *KstData::_self = 0L;
+void KstData::cleanup() {
+    delete _self;
+    _self = 0;
+}
+
 
 KstData *KstData::self() {
   if (!_self) {
-    _self = sdData.setObject(_self, new KstData);
+    _self = new KstData;
+    qAddPostRoutine(KstData::cleanup);
   }
   return _self;
 }
@@ -84,7 +90,7 @@ KstData *KstData::self() {
 void KstData::replaceSelf(KstData *newInstance) {
   delete _self;
   _self = 0L;
-  _self = sdData.setObject(_self, newInstance);
+  _self = newInstance;
 }
 
 
