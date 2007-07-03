@@ -76,7 +76,7 @@ KstAMatrix::KstAMatrix(const QDomElement &e) : KstMatrix() {
             qds >> _z[i];  // stored in the same order as it was saved
           }
           if (i < in_nX*in_nY) {
-            KstDebug::self()->log(i18n("Saved matrix contains less data than it claims."), KstDebug::Warning);
+            KstDebug::self()->log(tr("Saved matrix contains less data than it claims."), KstDebug::Warning);
             resizeZ(i, false);
           }
         }

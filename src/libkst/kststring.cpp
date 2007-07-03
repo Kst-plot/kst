@@ -29,7 +29,7 @@ KstString::KstString(KstObjectTag in_tag, KstObject *provider, const QString& va
   QString _tag = in_tag.tag();
   if (!in_tag.isValid()) {
     do {
-      _tag = i18n("Anonymous String %1", anonymousStringCounter++);
+      _tag = QString("Anonymous String %1").arg(anonymousStringCounter++);
     } while (KstData::self()->vectorTagNameNotUniqueInternal(_tag));  // FIXME: why vector?
     KstObject::setTagName(KstObjectTag(_tag, in_tag.context()));
   } else {
