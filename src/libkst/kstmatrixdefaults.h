@@ -21,7 +21,7 @@
 #include <qstring.h>
 #include "kst_export.h"
 
-class KConfigGroup;
+class QSettings;
 
 class KST_EXPORT KstMatrixDefaults {
   public:
@@ -29,8 +29,8 @@ class KST_EXPORT KstMatrixDefaults {
     KstMatrixDefaults();
     // get last used settings and store them in this KstMatrixDefaults
     void sync();
-    void readConfig(KConfigGroup *config);
-    void writeConfig(KConfigGroup *config);
+    void readConfig(QSettings *config);
+    void writeConfig(QSettings *config);
     
     const QString& dataSource() const;
     int xStart() const;

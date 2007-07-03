@@ -20,7 +20,7 @@
 #include "kstrmatrix.h"
 #include "stdinsource.h"
 
-#include <kconfiggroup.h>
+#include <qsettings.h>
 
 KstMatrixDefaults KST::matrixDefaults;
 
@@ -129,27 +129,27 @@ void KstMatrixDefaults::sync() {
   }
 }
 
-void KstMatrixDefaults::writeConfig(KConfigGroup *config) {
-  config->writeEntry("defaultMatrixDataSource", KST::matrixDefaults.dataSource());
-  config->writeEntry("defaultXStart", KST::matrixDefaults.xStart());
-  config->writeEntry("defaultYStart", KST::matrixDefaults.yStart());
-  config->writeEntry("defaultXNumSteps", KST::matrixDefaults.xNumSteps());
-  config->writeEntry("defaultYNumSteps", KST::matrixDefaults.yNumSteps());
-  config->writeEntry("defaultMatrixDoSkip", KST::matrixDefaults.doSkip());
-  config->writeEntry("defaultMatrixDoAverage", KST::matrixDefaults.doAverage());
-  config->writeEntry("defaultMatrixSkip", KST::matrixDefaults.skip());
+void KstMatrixDefaults::writeConfig(QSettings *config) {
+  config->setValue("defaultMatrixDataSource", KST::matrixDefaults.dataSource());
+  config->setValue("defaultXStart", KST::matrixDefaults.xStart());
+  config->setValue("defaultYStart", KST::matrixDefaults.yStart());
+  config->setValue("defaultXNumSteps", KST::matrixDefaults.xNumSteps());
+  config->setValue("defaultYNumSteps", KST::matrixDefaults.yNumSteps());
+  config->setValue("defaultMatrixDoSkip", KST::matrixDefaults.doSkip());
+  config->setValue("defaultMatrixDoAverage", KST::matrixDefaults.doAverage());
+  config->setValue("defaultMatrixSkip", KST::matrixDefaults.skip());
 }
 
 
-void KstMatrixDefaults::readConfig(KConfigGroup *config) {
-  _dataSource = config->readEntry("defaultMatrixDataSource", ".");
-  _xStart = config->readEntry("defaultXStart", 0);
-  _yStart = config->readEntry("defaultYStart", 0);
-  _xNumSteps = config->readEntry("defaultXNumSteps", -1);
-  _yNumSteps = config->readEntry("defaultYNumSteps", -1);
-  _doSkip = config->readEntry("defaultMatrixDoSkip", 0);
-  _doAve = config->readEntry("defaultMatrixDoAverage", 0);
-  _skip = config->readEntry("defaultMatrixSkip", 0);
+void KstMatrixDefaults::readConfig(QSettings *config) {
+  _dataSource = config->value("defaultMatrixDataSource", ".").toString();
+  _xStart = config->value("defaultXStart", 0).toInt();
+  _yStart = config->value("defaultYStart", 0).toInt();
+  _xNumSteps = config->value("defaultXNumSteps", -1).toInt();
+  _yNumSteps = config->value("defaultYNumSteps", -1).toInt();
+  _doSkip = config->value("defaultMatrixDoSkip", 0).toInt();
+  _doAve = config->value("defaultMatrixDoAverage", 0).toInt();
+  _skip = config->value("defaultMatrixSkip", 0).toInt();
 }
 
 

@@ -25,7 +25,6 @@
 #include <qtextstream.h>
 #include <qwidget.h>
 
-#include <kconfig.h>
 #include <qsettings.h>
 
 #include "kstdateparser.h"
