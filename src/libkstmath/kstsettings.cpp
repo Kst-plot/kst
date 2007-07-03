@@ -16,11 +16,12 @@
  ***************************************************************************/
 
 // include files for KDE
-#include <kconfig.h>
 #include <kemailsettings.h>
 #include <kprinter.h>
 #include <kstaticdeleter.h>
 #include "ksttimezones.h"
+
+#include <qsettings.h>
 
 // application specific includes
 #include "kstsettings.h"
@@ -156,150 +157,164 @@ void KstSettings::setGlobalSettings(const KstSettings *settings) {
 
 
 void KstSettings::save() {
-  KConfig c(QString("kstrc"));
-  KConfigGroup cfg(&c, "Kst");
+  QSettings cfg(QString("kstrc"));
 
-  cfg.writeEntry("Plot Update Timer", qlonglong(plotUpdateTimer));
-  cfg.writeEntry("Plot Font Size", qlonglong(plotFontSize));
-  cfg.writeEntry("Plot Font Min Size", qlonglong(plotFontMinSize));
-  cfg.writeEntry("Background Color", backgroundColor);
-  cfg.writeEntry("Foreground Color", foregroundColor);
-  cfg.writeEntry("Prompt on Window Close", promptWindowClose);
-  cfg.writeEntry("Show QuickStart", showQuickStart);
-  cfg.writeEntry("Tied-zoom Global", tiedZoomGlobal);
-  cfg.writeEntry("Curve Color Sequence", curveColorSequencePalette);
-  
-  cfg.writeEntry("Timezone", timezone);
-  cfg.writeEntry("OffsetSeconds", offsetSeconds);
-  
-  cfg.changeGroup("Grid Lines");
-  cfg.writeEntry("X Major", xMajor);
-  cfg.writeEntry("Y Major", yMajor);
-  cfg.writeEntry("X Minor", xMinor);
-  cfg.writeEntry("Y Minor", yMinor);
-  cfg.writeEntry("Major Color", majorColor);
-  cfg.writeEntry("Minor Color", minorColor);
-  cfg.writeEntry("Default Major Color", majorGridColorDefault);
-  cfg.writeEntry("Default Minor Color", minorGridColorDefault);
+  cfg.beginGroup("Kst");
+  cfg.setValue("Plot Update Timer", qlonglong(plotUpdateTimer));
+  cfg.setValue("Plot Font Size", qlonglong(plotFontSize));
+  cfg.setValue("Plot Font Min Size", qlonglong(plotFontMinSize));
+  cfg.setValue("Background Color", backgroundColor);
+  cfg.setValue("Foreground Color", foregroundColor);
+  cfg.setValue("Prompt on Window Close", promptWindowClose);
+  cfg.setValue("Show QuickStart", showQuickStart);
+  cfg.setValue("Tied-zoom Global", tiedZoomGlobal);
+  cfg.setValue("Curve Color Sequence", curveColorSequencePalette);
 
-  cfg.changeGroup("X Axis");
-  cfg.writeEntry("Interpret", xAxisInterpret);
-  cfg.writeEntry("Interpretation", int(xAxisInterpretation));
-  cfg.writeEntry("Display", int(xAxisDisplay));
+  cfg.setValue("Timezone", timezone);
+  cfg.setValue("OffsetSeconds", offsetSeconds);
+  cfg.endGroup();
 
-  cfg.changeGroup("Y Axis");
-  cfg.writeEntry("Interpret", yAxisInterpret);
-  cfg.writeEntry("Interpretation", int(yAxisInterpretation));
-  cfg.writeEntry("Display", int(yAxisDisplay));
+  cfg.beginGroup("Grid Lines");
+  cfg.setValue("X Major", xMajor);
+  cfg.setValue("Y Major", yMajor);
+  cfg.setValue("X Minor", xMinor);
+  cfg.setValue("Y Minor", yMinor);
+  cfg.setValue("Major Color", majorColor);
+  cfg.setValue("Minor Color", minorColor);
+  cfg.setValue("Default Major Color", majorGridColorDefault);
+  cfg.setValue("Default Minor Color", minorGridColorDefault);
+  cfg.endGroup();
 
-  cfg.changeGroup("Curve");
-  cfg.writeEntry("DefaultLineWeight", defaultLineWeight);
-  
-  cfg.changeGroup("EMail");
-  cfg.writeEntry("Sender", emailSender);
-  cfg.writeEntry("Server", emailSMTPServer);
-  cfg.writeEntry("Port", emailSMTPPort);
-  cfg.writeEntry("Authenticate", emailRequiresAuthentication);
-  cfg.writeEntry("Username", emailUsername);
-  cfg.writeEntry("Password", emailPassword);
-  cfg.writeEntry("Encryption", int(emailEncryption));
-  cfg.writeEntry("Authentication", int(emailAuthentication));
+  cfg.beginGroup("X Axis");
+  cfg.setValue("Interpret", xAxisInterpret);
+  cfg.setValue("Interpretation", int(xAxisInterpretation));
+  cfg.setValue("Display", int(xAxisDisplay));
+  cfg.endGroup();
 
-  cfg.changeGroup("Printing");
-  cfg.writeEntry("kde-pagesize", printing.pageSize);
-  cfg.writeEntry("kde-orientation", printing.orientation);
-  cfg.writeEntry("kst-plot-datetime-footer", printing.plotDateTimeFooter);
-  cfg.writeEntry("kst-plot-maintain-aspect-ratio", printing.maintainAspect);
-  cfg.writeEntry("kst-plot-curve-width-adjust", printing.curveWidthAdjust);
-  cfg.writeEntry("kst-plot-monochrome", printing.monochrome);
-  
-  cfg.writeEntry("kst-plot-monochromesettings-enhancereadability", 
+  cfg.beginGroup("Y Axis");
+  cfg.setValue("Interpret", yAxisInterpret);
+  cfg.setValue("Interpretation", int(yAxisInterpretation));
+  cfg.setValue("Display", int(yAxisDisplay));
+  cfg.endGroup();
+
+  cfg.beginGroup("Curve");
+  cfg.setValue("DefaultLineWeight", defaultLineWeight);
+  cfg.endGroup();
+
+  cfg.beginGroup("EMail");
+  cfg.setValue("Sender", emailSender);
+  cfg.setValue("Server", emailSMTPServer);
+  cfg.setValue("Port", emailSMTPPort);
+  cfg.setValue("Authenticate", emailRequiresAuthentication);
+  cfg.setValue("Username", emailUsername);
+  cfg.setValue("Password", emailPassword);
+  cfg.setValue("Encryption", int(emailEncryption));
+  cfg.setValue("Authentication", int(emailAuthentication));
+  cfg.endGroup();
+
+  cfg.beginGroup("Printing");
+  cfg.setValue("kde-pagesize", printing.pageSize);
+  cfg.setValue("kde-orientation", printing.orientation);
+  cfg.setValue("kst-plot-datetime-footer", printing.plotDateTimeFooter);
+  cfg.setValue("kst-plot-maintain-aspect-ratio", printing.maintainAspect);
+  cfg.setValue("kst-plot-curve-width-adjust", printing.curveWidthAdjust);
+  cfg.setValue("kst-plot-monochrome", printing.monochrome);
+
+  cfg.setValue("kst-plot-monochromesettings-enhancereadability",
                  printing.monochromeSettings.enhanceReadability);
-  cfg.writeEntry("kst-plot-monochromesettings-pointstyleorder",
+  cfg.setValue("kst-plot-monochromesettings-pointstyleorder",
                  printing.monochromeSettings.pointStyleOrder);
-  cfg.writeEntry("kst-plot-monochromesettings-linestyleorder",
+  cfg.setValue("kst-plot-monochromesettings-linestyleorder",
                  printing.monochromeSettings.lineStyleOrder);
-  cfg.writeEntry("kst-plot-monochromesettings-linewidthorder",
+  cfg.setValue("kst-plot-monochromesettings-linewidthorder",
                  printing.monochromeSettings.lineWidthOrder);
-  cfg.writeEntry("kst-plot-monochromesettings-maxlinewidth",
+  cfg.setValue("kst-plot-monochromesettings-maxlinewidth",
                  printing.monochromeSettings.maxLineWidth);
-  cfg.writeEntry("kst-plot-monochromesettings-pointdensity",
+  cfg.setValue("kst-plot-monochromesettings-pointdensity",
                  printing.monochromeSettings.pointDensity);
+  cfg.endGroup();
 
-  c.sync();
+  cfg.sync();
 }
 
 
 void KstSettings::reload() {
-  KConfig c("kstrc");
-  KConfigGroup cfg(&c, "Kst");
+  QSettings cfg("kstrc");
 
-  plotUpdateTimer = cfg.readEntry("Plot Update Timer", 200);
-  plotFontSize    = cfg.readEntry("Plot Font Size", 12);
-  plotFontMinSize = cfg.readEntry("Plot Font Min Size", 5);
-  backgroundColor = cfg.readEntry("Background Color", backgroundColor);
-  foregroundColor = cfg.readEntry("Foreground Color", foregroundColor);
-  promptWindowClose = cfg.readEntry("Prompt on Window Close", true);
-  showQuickStart = cfg.readEntry("Show QuickStart", true);
-  tiedZoomGlobal = cfg.readEntry("Tied-zoom Global", true);
-  curveColorSequencePalette = cfg.readEntry("Curve Color Sequence", "Kst Colors");
-  
-  timezone = cfg.readEntry("Timezone", "UTC");
-  offsetSeconds = cfg.readEntry("OffsetSeconds", 0);
-  
-  cfg.changeGroup("Grid Lines");
-  xMajor = cfg.readEntry("X Major", false);
-  yMajor = cfg.readEntry("Y Major", false);
-  xMinor = cfg.readEntry("X Minor", false);
-  yMinor = cfg.readEntry("Y Minor", false);
-  majorColor = cfg.readEntry("Major Color", majorColor);
-  minorColor = cfg.readEntry("Minor Color", minorColor);
-  majorGridColorDefault = cfg.readEntry("Default Major Color", true);
-  minorGridColorDefault = cfg.readEntry("Default Minor Color", true);
+  cfg.beginGroup("Kst");
+  plotUpdateTimer = cfg.value("Plot Update Timer", 200).toInt();
+  plotFontSize    = cfg.value("Plot Font Size", 12).toInt();
+  plotFontMinSize = cfg.value("Plot Font Min Size", 5).toInt();
+  backgroundColor = cfg.value("Background Color", backgroundColor).value<QColor>();
+  foregroundColor = cfg.value("Foreground Color", foregroundColor).value<QColor>();
+  promptWindowClose = cfg.value("Prompt on Window Close", true).toBool();
+  showQuickStart = cfg.value("Show QuickStart", true).toBool();
+  tiedZoomGlobal = cfg.value("Tied-zoom Global", true).toBool();
+  curveColorSequencePalette = cfg.value("Curve Color Sequence", "Kst Colors").toString();
 
-  cfg.changeGroup("X Axis");
-  xAxisInterpret = cfg.readEntry("Interpret", false);
-  xAxisInterpretation = (KstAxisInterpretation)cfg.readEntry("Interpretation", (int)AXIS_INTERP_CTIME);
-  xAxisDisplay = (KstAxisDisplay)cfg.readEntry("Display", static_cast<int>(AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS));
+  timezone = cfg.value("Timezone", "UTC").toString();
+  offsetSeconds = cfg.value("OffsetSeconds", 0).toBool();
+  cfg.endGroup();
 
-  cfg.changeGroup("Y Axis");
-  yAxisInterpret = cfg.readEntry("Interpret", false);
-  yAxisInterpretation = (KstAxisInterpretation)cfg.readEntry("Interpretation", (int)AXIS_INTERP_CTIME);
-  yAxisDisplay = (KstAxisDisplay)cfg.readEntry("Display", static_cast<int>(AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS));
+  cfg.beginGroup("Grid Lines");
+  xMajor = cfg.value("X Major", false).toBool();
+  yMajor = cfg.value("Y Major", false).toBool();
+  xMinor = cfg.value("X Minor", false).toBool();
+  yMinor = cfg.value("Y Minor", false).toBool();
+  majorColor = cfg.value("Major Color", majorColor).value<QColor>();
+  minorColor = cfg.value("Minor Color", minorColor).value<QColor>();
+  majorGridColorDefault = cfg.value("Default Major Color", true).toBool();
+  minorGridColorDefault = cfg.value("Default Minor Color", true).toBool();
+  cfg.endGroup();
 
-  cfg.changeGroup("Curve");
-  defaultLineWeight = cfg.readEntry("DefaultLineWeight", 0);
-  
-  cfg.changeGroup("EMail");
+  cfg.beginGroup("X Axis");
+  xAxisInterpret = cfg.value("Interpret", false).toBool();
+  xAxisInterpretation = (KstAxisInterpretation)cfg.value("Interpretation", (int)AXIS_INTERP_CTIME).toInt();
+  xAxisDisplay = (KstAxisDisplay)cfg.value("Display", static_cast<int>(AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS)).toInt();
+  cfg.endGroup();
+
+  cfg.beginGroup("Y Axis");
+  yAxisInterpret = cfg.value("Interpret", false).toBool();
+  yAxisInterpretation = (KstAxisInterpretation)cfg.value("Interpretation", (int)AXIS_INTERP_CTIME).toInt();
+  yAxisDisplay = (KstAxisDisplay)cfg.value("Display", static_cast<int>(AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS)).toInt();
+  cfg.endGroup();
+
+  cfg.beginGroup("Curve");
+  defaultLineWeight = cfg.value("DefaultLineWeight", 0).toInt();
+  cfg.endGroup();
+
+  cfg.beginGroup("EMail");
   KEMailSettings es;
-  emailSender = cfg.readEntry("Sender", es.getSetting(KEMailSettings::EmailAddress));
-  emailSMTPServer = cfg.readEntry("Server", es.getSetting(KEMailSettings::OutServer));
-  emailSMTPPort = cfg.readEntry("Port", 25); // FIXME: no KEMailSettings for this?
-  emailRequiresAuthentication = cfg.readEntry("Authenticate", !es.getSetting(KEMailSettings::OutServerLogin).isEmpty());
-  emailUsername = cfg.readEntry("Username", es.getSetting(KEMailSettings::OutServerLogin));
-  emailPassword = cfg.readEntry("Password", es.getSetting(KEMailSettings::OutServerPass));
-  emailEncryption = (EMailEncryption)cfg.readEntry("Encryption", static_cast<int>(es.getSetting(KEMailSettings::OutServerTLS) == "true" ? EMailEncryptionTLS : EMailEncryptionNone));
-  emailAuthentication = (EMailAuthentication)cfg.readEntry("Authentication", static_cast<int>(EMailAuthenticationPLAIN)); // FIXME: no KEMailSettings for this?
+  emailSender = cfg.value("Sender", es.getSetting(KEMailSettings::EmailAddress)).toString();
+  emailSMTPServer = cfg.value("Server", es.getSetting(KEMailSettings::OutServer)).toString();
+  emailSMTPPort = cfg.value("Port", 25).toInt(); // FIXME: no KEMailSettings for this?
+  emailRequiresAuthentication = cfg.value("Authenticate", !es.getSetting(KEMailSettings::OutServerLogin).isEmpty()).toBool();
+  emailUsername = cfg.value("Username", es.getSetting(KEMailSettings::OutServerLogin)).toString();
+  emailPassword = cfg.value("Password", es.getSetting(KEMailSettings::OutServerPass)).toString();
+  emailEncryption = (EMailEncryption)cfg.value("Encryption", static_cast<int>(es.getSetting(KEMailSettings::OutServerTLS) == "true" ? EMailEncryptionTLS : EMailEncryptionNone)).toBool();
+  emailAuthentication = (EMailAuthentication)cfg.value("Authentication", static_cast<int>(EMailAuthenticationPLAIN)).toBool(); // FIXME: no KEMailSettings for this?
+  cfg.endGroup();
 
-  cfg.changeGroup("Printing");
-  printing.pageSize = cfg.readEntry("kde-pagesize", QString::number((int)KPrinter::Letter));
-  printing.orientation = cfg.readEntry("kde-orientation", "Landscape");
-  printing.plotDateTimeFooter = cfg.readEntry("kst-plot-datetime-footer", "0");
-  printing.maintainAspect = cfg.readEntry("kst-plot-maintain-aspect-ratio", "0");
-  printing.curveWidthAdjust = cfg.readEntry("kst-plot-curve-width-adjust", "0");
-  printing.monochrome = cfg.readEntry("kst-plot-monochrome", "0");
+  cfg.beginGroup("Printing");
+  printing.pageSize = cfg.value("kde-pagesize", QString::number((int)KPrinter::Letter)).toString();
+  printing.orientation = cfg.value("kde-orientation", "Landscape").toString();
+  printing.plotDateTimeFooter = cfg.value("kst-plot-datetime-footer", "0").toString();
+  printing.maintainAspect = cfg.value("kst-plot-maintain-aspect-ratio", "0").toString();
+  printing.curveWidthAdjust = cfg.value("kst-plot-curve-width-adjust", "0").toString();
+  printing.monochrome = cfg.value("kst-plot-monochrome", "0").toString();
   printing.monochromeSettings.enhanceReadability = 
-      cfg.readEntry("kst-plot-monochromesettings-enhancereadability", "0");
+      cfg.value("kst-plot-monochromesettings-enhancereadability", "0").toString();
   printing.monochromeSettings.pointStyleOrder = 
-      cfg.readEntry("kst-plot-monochromesettings-pointstyleorder", "0");
+      cfg.value("kst-plot-monochromesettings-pointstyleorder", "0").toString();
   printing.monochromeSettings.lineStyleOrder = 
-      cfg.readEntry("kst-plot-monochromesettings-linestyleorder", "1");
+      cfg.value("kst-plot-monochromesettings-linestyleorder", "1").toString();
   printing.monochromeSettings.lineWidthOrder = 
-      cfg.readEntry("kst-plot-monochromesettings-linewidthorder", "2");
+      cfg.value("kst-plot-monochromesettings-linewidthorder", "2").toString();
   printing.monochromeSettings.maxLineWidth = 
-      cfg.readEntry("kst-plot-monochromesettings-maxlinewidth", "3");
+      cfg.value("kst-plot-monochromesettings-maxlinewidth", "3").toString();
   printing.monochromeSettings.pointDensity = 
-      cfg.readEntry("kst-plot-monochromesettings-pointdensity", "2");
+      cfg.value("kst-plot-monochromesettings-pointdensity", "2").toString();
+  cfg.endGroup();
 }
 
 

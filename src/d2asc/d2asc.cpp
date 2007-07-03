@@ -16,7 +16,6 @@
  ***************************************************************************/
 
 #include <stdlib.h> // atoi
-#include <kconfig.h>
 #include <qsettings.h>
 
 // hack to make main() a friend of kstdatasource
