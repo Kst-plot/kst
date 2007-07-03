@@ -84,6 +84,7 @@ void PSDCalculator::updateWindowFxn(ApodizeFunction apodizeFxn, double gaussianS
         _w[i] = 0.42 + 0.5 * cos(M_PI * x / a) + 0.08 * cos(2 * M_PI * x/a);
         sW += _w[i] * _w[i];
       }
+      break;
 
     case WindowConnes: 
       for (int i = 0; i < _awLen; ++i) {
@@ -91,6 +92,7 @@ void PSDCalculator::updateWindowFxn(ApodizeFunction apodizeFxn, double gaussianS
         _w[i] = pow(1.0 - (x * x) / (a * a), 2.0);
         sW += _w[i] * _w[i];
       }
+      break;
 
     case WindowCosine:
       for (int i = 0; i < _awLen; ++i) {
@@ -98,12 +100,14 @@ void PSDCalculator::updateWindowFxn(ApodizeFunction apodizeFxn, double gaussianS
         _w[i] = cos(M_PI * x / (2.0 * a));
         sW += _w[i] * _w[i];
       }
+      break;
 
     case WindowGaussian:
       for (int i = 0; i < _awLen; ++i) {
         x = i - a;
         _w[i] = exp(-1.0 * x * x/(2.0 * gaussianSigma * gaussianSigma));
       }
+      break;
 
     case WindowHamming:
       for (int i = 0; i < _awLen; ++i) {
@@ -111,6 +115,7 @@ void PSDCalculator::updateWindowFxn(ApodizeFunction apodizeFxn, double gaussianS
         _w[i] = 0.53836 + 0.46164 * cos(M_PI * x / a);
         sW += _w[i] * _w[i];
       }
+      break;
 
     case WindowHann:
       for (int i = 0; i < _awLen; ++i) {
@@ -118,6 +123,7 @@ void PSDCalculator::updateWindowFxn(ApodizeFunction apodizeFxn, double gaussianS
         _w[i] = pow(cos(M_PI * x/(2.0 * a)), 2.0);
         sW += _w[i] * _w[i];
       }
+      break;
 
     case WindowWelch:
       for (int i = 0; i < _awLen; ++i) {
@@ -125,6 +131,7 @@ void PSDCalculator::updateWindowFxn(ApodizeFunction apodizeFxn, double gaussianS
         _w[i] = 1.0 - x * x / (a * a);
         sW += _w[i] * _w[i];
       }
+      break;
 
     case WindowUniform:
     default:
@@ -185,8 +192,14 @@ int PSDCalculator::calculatePowerSpectrum(
   for (i_subset = 0; !done; i_subset++) {
     ioffset = i_subset*outputLen; //overlapping average => i_subset*outputLen
 
-    if (ioffset + _awLen < inputLen) {
+    // only zero pad if we really have to.  It is better to adjust the last chunk's
+    // overlap.
+    if (ioffset + _awLen*5/4 < inputLen) {
       currentCopyLen = _awLen; //will copy a complete window.
+    } else if (_awLen<inputLen) {  // count the last one from the end.
+      ioffset = inputLen-_awLen - 1;
+      currentCopyLen = _awLen; //will copy a complete window.
+      done = true;
     } else {
       currentCopyLen = inputLen - ioffset; //will copy a partial window.
       memset(&_a[currentCopyLen], 0, sizeof(double)*(_awLen - currentCopyLen)); //zero the leftovers.
@@ -301,7 +314,7 @@ int PSDCalculator::calculatePowerSpectrum(
 int PSDCalculator::calculateOutputVectorLength(int inputLen, bool average, int averageLen) {
   int psdloglen;
 
-  if (average) {
+  if (average && pow(2.0, averageLen) < inputLen) {
     psdloglen = averageLen;
   } else {
     psdloglen = int(ceil(log(double(inputLen)) / log(2.0)));
