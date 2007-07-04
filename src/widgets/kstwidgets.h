@@ -15,9 +15,6 @@
 #include <QObject>
 #include <QDesignerCustomWidgetInterface>
 
-//FIXME Remove this eventually...
-#include <kcomponentdata.h>
-
 #include <QtPlugin>
 
 class KstWidgetPlugin : public QObject, public QDesignerCustomWidgetInterface {
@@ -133,7 +130,6 @@ Q_EXPORT_PLUGIN2(kstwidgets, KstWidgets)
 
 KstWidgets::KstWidgets(QObject *parent)
     : QObject(parent) {
-  (void) new KComponentData("kstwidgets");
   _plugins.append(new ColorButtonPlugin(this));
   _plugins.append(new FillAndStrokePlugin(this));
   _plugins.append(new GradientEditorPlugin(this));

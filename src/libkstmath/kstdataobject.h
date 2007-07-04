@@ -25,9 +25,6 @@
 #include "kstmatrix.h"
 #include "kst_export.h"
 
-#include <kservice.h>
-#include <kservicetype.h>
-
 typedef KstSharedPtr<KstDataObject> KstDataObjectPtr;
 typedef KstObjectList<KstDataObjectPtr> KstDataObjectList;
 typedef QMap<KstDataObjectPtr, KstDataObjectPtr> KstDataObjectDataObjectMap;
@@ -165,7 +162,7 @@ class KST_EXPORT KstDataObject : public KstObject {
 
   private:
     static void scanPlugins();
-    static KstDataObjectPtr createPlugin(KService::Ptr);
+    static KstDataObjectPtr createPlugin();
 };
 
 

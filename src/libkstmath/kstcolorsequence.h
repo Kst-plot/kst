@@ -43,7 +43,7 @@ class KstColorSequence {
     ~KstColorSequence();
     static KstColorSequence* _self;
     static void cleanup();
-    KPalette* _pal;
+    QHash<int, QColor> _pal;
     int _count;
     int _ptr;  // pointer to the next color
     ColorMode _mode;

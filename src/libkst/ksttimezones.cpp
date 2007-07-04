@@ -20,10 +20,6 @@
 #include <config.h>
 
 #include "ksttimezones.h"
-#include <kcodecs.h>
-#include <kprocess.h>
-#include <kstringhandler.h>
-#include <k3tempfile.h>
 
 #include <qdatetime.h>
 #include <qfile.h>

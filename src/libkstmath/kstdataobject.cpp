@@ -28,9 +28,6 @@
 #include <assert.h>
 
 #include "kst_i18n.h"
-#include <klibloader.h>
-#include <kparts/componentfactory.h>
-
 #include "kstdataplugin.h"
 
 //#define LOCKTRACE
@@ -96,7 +93,7 @@ void KstDataObject::attach() {
 }
 
 
-KstDataObjectPtr KstDataObject::createPlugin(KService::Ptr service) {
+KstDataObjectPtr KstDataObject::createPlugin() {
 #if 0
   int err = 0;
   KstDataObject *object = KService::createInstance<KstDataObject>(service, 0, QStringList(), &err);
@@ -133,12 +130,14 @@ void KstDataObject::scanPlugins() {
 
   pluginInfo.clear(); //FIXME?
 
+#if 0
   KService::List sl = KServiceTypeTrader::self()->query("Kst Data Object");
   for (KService::List::ConstIterator it = sl.begin(); it != sl.end(); ++it) {
     if (KstDataObjectPtr object = createPlugin(*it)) {
       pluginInfo.insert((*it)->name(), KstDataObjectPtr(object));
     }
   }
+#endif
 }
 
 
@@ -165,6 +164,7 @@ KstDataObjectPtr KstDataObject::plugin(const QString& name) {
 
 
 KstDataObjectPtr KstDataObject::createPlugin(const QString& name) {
+#if 0
   KService::List sl = KServiceTypeTrader::self()->query("Kst Data Object");
   for (KService::List::ConstIterator it = sl.begin(); it != sl.end(); ++it) {
     if ((*it)->name() != name) {
@@ -173,6 +173,7 @@ KstDataObjectPtr KstDataObject::createPlugin(const QString& name) {
       return object;
     }
   }
+#endif
   return 0L;
 }
 

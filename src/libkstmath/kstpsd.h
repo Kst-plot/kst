@@ -120,9 +120,6 @@ class KST_EXPORT KstPSD : public KstDataObject {
     QString _rUnits;
 
     KstVectorMap::Iterator _sVector, _fVector;
-    static const QString& INVECTOR;
-    static const QString& SVECTOR;
-    static const QString& FVECTOR;
 };
 
 typedef KstSharedPtr<KstPSD> KstPSDPtr;

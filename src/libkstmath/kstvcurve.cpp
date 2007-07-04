@@ -47,12 +47,12 @@
 // for painting
 #define MAX_NUM_POLYLINES       1000
 
-static const QString& COLOR_XVECTOR = KGlobal::staticQString("X");
-static const QString& COLOR_YVECTOR = KGlobal::staticQString("Y");
-static const QString& EXVECTOR = KGlobal::staticQString("EX");
-static const QString& EYVECTOR = KGlobal::staticQString("EY");
-static const QString& EXMINUSVECTOR = KGlobal::staticQString("EXMinus");
-static const QString& EYMINUSVECTOR = KGlobal::staticQString("EYMinus");
+static const QLatin1String& COLOR_XVECTOR = QLatin1String("X");
+static const QLatin1String& COLOR_YVECTOR = QLatin1String("Y");
+static const QLatin1String& EXVECTOR = QLatin1String("EX");
+static const QLatin1String& EYVECTOR = QLatin1String("EY");
+static const QLatin1String& EXMINUSVECTOR = QLatin1String("EXMinus");
+static const QLatin1String& EYMINUSVECTOR = QLatin1String("EYMinus");
 
 KstVCurve::KstVCurve(const QString &in_tag, KstVectorPtr in_X, KstVectorPtr in_Y,
                       KstVectorPtr in_EX, KstVectorPtr in_EY,
@@ -166,22 +166,22 @@ KstVCurve::KstVCurve(QDomElement &e)
   }
 
   if (!xname.isEmpty()) {
-    _inputVectorLoadQueue.append(qMakePair(COLOR_XVECTOR, xname));
+    _inputVectorLoadQueue.append(qMakePair(QString(COLOR_XVECTOR), xname));
   }
   if (!yname.isEmpty()) {
-    _inputVectorLoadQueue.append(qMakePair(COLOR_YVECTOR, yname));
+    _inputVectorLoadQueue.append(qMakePair(QString(COLOR_YVECTOR), yname));
   }
   if (!exname.isEmpty()) {
-    _inputVectorLoadQueue.append(qMakePair(EXVECTOR, exname));
+    _inputVectorLoadQueue.append(qMakePair(QString(EXVECTOR), exname));
   }
   if (!eyname.isEmpty()) {
-    _inputVectorLoadQueue.append(qMakePair(EYVECTOR, eyname));
+    _inputVectorLoadQueue.append(qMakePair(QString(EYVECTOR), eyname));
   }
   if (!exminusname.isEmpty()) {
-    _inputVectorLoadQueue.append(qMakePair(EXMINUSVECTOR, exminusname));
+    _inputVectorLoadQueue.append(qMakePair(QString(EXMINUSVECTOR), exminusname));
   }
   if (!eyminusname.isEmpty()) {
-    _inputVectorLoadQueue.append(qMakePair(EYMINUSVECTOR, eyminusname));
+    _inputVectorLoadQueue.append(qMakePair(QString(EYMINUSVECTOR), eyminusname));
   }
   commonConstructor(in_tag, in_color);
 }

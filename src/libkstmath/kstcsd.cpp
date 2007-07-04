@@ -23,6 +23,7 @@
 #include <math.h>
 
 #include <QTextDocument>
+#include <QLatin1String>
 
 #include "kst_i18n.h"
 
@@ -35,8 +36,8 @@
 
 extern "C" void rdft(int n, int isgn, double *a);
 
-static const QString& INVECTOR = KGlobal::staticQString("I");
-static const QString& OUTMATRIX = KGlobal::staticQString("M");
+static const QLatin1String INVECTOR = QLatin1String("I");
+static const QLatin1String& OUTMATRIX = QLatin1String("M");
 
 #define KSTCSDMAXLEN 27
 KstCSD::KstCSD(const QString &in_tag, KstVectorPtr in_V,
@@ -103,7 +104,7 @@ KstCSD::KstCSD(const QDomElement &e)
       n = n.nextSibling();
     }
     
-    _inputVectorLoadQueue.append(qMakePair(INVECTOR, vecName));
+    _inputVectorLoadQueue.append(qMakePair(QString(INVECTOR), vecName));
     
     commonConstructor(in_tag, in_V, in_freq, in_average, in_removeMean,
                       in_apodize, in_apodizeFxn, in_windowSize, in_averageLength, in_gaussianSigma,

@@ -18,11 +18,13 @@
 #ifndef KSTIMAGE_H
 #define KSTIMAGE_H
 
-#include <kpalette.h>
-
 #include "kstmatrix.h"
 #include "kstbasecurve.h"
 #include "kst_export.h"
+
+#include <QHash>
+
+typedef QHash<int, QColor> KstPalette;
 
 /**A class for handling images for Kst
  *@author University of British Columbia
@@ -30,7 +32,7 @@
 class KST_EXPORT KstImage: public KstBaseCurve {
   public:
     //constructor for colormap only
-    KstImage(const QString &in_tag, KstMatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, KPalette* pal);
+    KstImage(const QString &in_tag, KstMatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const KstPalette &pal);
     //constructor for contour map only
     KstImage(const QString &in_tag, KstMatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight);
     //constructor for both colormap and contour map
@@ -39,7 +41,7 @@ class KST_EXPORT KstImage: public KstBaseCurve {
         double lowerZ,
         double upperZ,
         bool autoThreshold,
-        KPalette* pal,
+        const KstPalette &pal,
         int numContours,
         const QColor& contourColor,
         int contourWeight);
@@ -57,7 +59,7 @@ class KST_EXPORT KstImage: public KstBaseCurve {
 
     virtual bool getNearestZ(double x, double y, double& z);
     virtual QColor getMappedColor(double x, double y);
-    virtual void setPalette(KPalette* pal);
+    virtual void setPalette(const KstPalette &pal);
     virtual void setUpperThreshold(double z);
     virtual void setLowerThreshold(double z);
     virtual void setAutoThreshold(bool yes);
@@ -71,16 +73,16 @@ class KST_EXPORT KstImage: public KstBaseCurve {
     virtual QString matrixTag() const;
     virtual KstMatrixPtr matrix() const;
     virtual QString paletteName() const;
-    virtual KPalette* palette() const { return _pal; }
+    virtual const KstPalette &palette() const { return _pal; }
 
     virtual void matrixDimensions(double &x, double &y, double &width, double &height);
 
     virtual void changeToColorOnly(const QString &in_tag, KstMatrixPtr in_matrix,
-        double lowerZ, double upperZ, bool autoThreshold, KPalette* pal);
+        double lowerZ, double upperZ, bool autoThreshold, const KstPalette &pal);
     virtual void changeToContourOnly(const QString &in_tag, KstMatrixPtr in_matrix,
         int numContours, const QColor& contourColor, int contourWeight);
     virtual void changeToColorAndContour(const QString &in_tag, KstMatrixPtr in_matrix,
-        double lowerZ, double upperZ, bool autoThreshold, KPalette* pal,
+        double lowerZ, double upperZ, bool autoThreshold, const KstPalette &pal,
         int numContours, const QColor& contourColor, int contourWeight);
 
     //contour lines
@@ -122,7 +124,7 @@ class KST_EXPORT KstImage: public KstBaseCurve {
     //use these to set defaults when either is not used.
     void setColorDefaults();
     void setContourDefaults();
-    KPalette* _pal;
+    KstPalette _pal;
     //upper and lower thresholds
     double _zUpper;
     double _zLower;

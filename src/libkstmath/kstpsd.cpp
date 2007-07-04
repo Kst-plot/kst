@@ -36,9 +36,9 @@
 
 extern "C" void rdft(int n, int isgn, double *a);
 
-const QString& KstPSD::INVECTOR = KGlobal::staticQString("I");
-const QString& KstPSD::SVECTOR = KGlobal::staticQString("S");
-const QString& KstPSD::FVECTOR = KGlobal::staticQString("F");
+const QLatin1String& INVECTOR = QLatin1String("I");
+const QLatin1String& SVECTOR = QLatin1String("S");
+const QLatin1String& FVECTOR = QLatin1String("F");
 
 #define KSTPSDMAXLEN 27
 KstPSD::KstPSD(const QString &in_tag, KstVectorPtr in_V,
@@ -119,7 +119,7 @@ KstPSD::KstPSD(const QDomElement &e)
     n = n.nextSibling();
   }
 
-  _inputVectorLoadQueue.append(qMakePair(INVECTOR, vecName));
+  _inputVectorLoadQueue.append(qMakePair(QString(INVECTOR), vecName));
   commonConstructor(in_tag, in_V, in_freq, in_average, in_averageLen,
                     in_apodize, in_removeMean,
                     in_VUnits, in_RUnits, in_apodizeFxn, in_gaussianSigma,

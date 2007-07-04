@@ -27,9 +27,9 @@
 #include "kstdefaultnames.h"
 #include "ksthistogram.h"
 
-static const QString& RAWVECTOR  = KGlobal::staticQString("I");
-static const QString& BINS = KGlobal::staticQString("B");
-static const QString& HIST = KGlobal::staticQString("H");
+static const QLatin1String& RAWVECTOR  = QLatin1String("I");
+static const QLatin1String& BINS = QLatin1String("B");
+static const QLatin1String& HIST = QLatin1String("H");
 
 KstHistogram::KstHistogram(const QString &in_tag, KstVectorPtr in_V,
                            double xmin_in, double xmax_in,
@@ -86,7 +86,7 @@ KstHistogram::KstHistogram(const QDomElement &e)
     n = n.nextSibling();
   }
 
-  _inputVectorLoadQueue.append(qMakePair(RAWVECTOR, rawName));
+  _inputVectorLoadQueue.append(qMakePair(QString(RAWVECTOR), rawName));
   commonConstructor(in_tag, in_V, xmin_in, xmax_in, in_n_bins, in_norm_mode);
 }
 

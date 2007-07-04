@@ -15,9 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-// include files for KDE
-#include <kemailsettings.h>
-#include <kprinter.h>
+#include <qprinter.h>
 #include "ksttimezones.h"
 
 #include <qsettings.h>
@@ -55,11 +53,6 @@ KstSettings::KstSettings() {
   
   defaultLineWeight = 0;
   
-  emailSMTPPort = 25;
-  emailRequiresAuthentication = false;
-  emailEncryption = EMailEncryptionNone;
-  emailAuthentication = EMailAuthenticationPLAIN;
-
   timezone = "UTC";
   offsetSeconds = 0;
   
@@ -104,15 +97,6 @@ KstSettings& KstSettings::operator=(const KstSettings& x) {
 
   defaultLineWeight = x.defaultLineWeight;
   
-  emailSender = x.emailSender;
-  emailSMTPServer = x.emailSMTPServer;
-  emailSMTPPort = x.emailSMTPPort;
-  emailRequiresAuthentication = x.emailRequiresAuthentication;
-  emailUsername = x.emailUsername;
-  emailPassword = x.emailPassword;
-  emailEncryption = x.emailEncryption;
-  emailAuthentication = x.emailAuthentication;
-
   printing.pageSize = x.printing.pageSize;
   printing.orientation = x.printing.orientation;
   printing.plotDateTimeFooter = x.printing.plotDateTimeFooter;
@@ -206,17 +190,6 @@ void KstSettings::save() {
   cfg.setValue("DefaultLineWeight", defaultLineWeight);
   cfg.endGroup();
 
-  cfg.beginGroup("EMail");
-  cfg.setValue("Sender", emailSender);
-  cfg.setValue("Server", emailSMTPServer);
-  cfg.setValue("Port", emailSMTPPort);
-  cfg.setValue("Authenticate", emailRequiresAuthentication);
-  cfg.setValue("Username", emailUsername);
-  cfg.setValue("Password", emailPassword);
-  cfg.setValue("Encryption", int(emailEncryption));
-  cfg.setValue("Authentication", int(emailAuthentication));
-  cfg.endGroup();
-
   cfg.beginGroup("Printing");
   cfg.setValue("kde-pagesize", printing.pageSize);
   cfg.setValue("kde-orientation", printing.orientation);
@@ -288,20 +261,8 @@ void KstSettings::reload() {
   defaultLineWeight = cfg.value("DefaultLineWeight", 0).toInt();
   cfg.endGroup();
 
-  cfg.beginGroup("EMail");
-  KEMailSettings es;
-  emailSender = cfg.value("Sender", es.getSetting(KEMailSettings::EmailAddress)).toString();
-  emailSMTPServer = cfg.value("Server", es.getSetting(KEMailSettings::OutServer)).toString();
-  emailSMTPPort = cfg.value("Port", 25).toInt(); // FIXME: no KEMailSettings for this?
-  emailRequiresAuthentication = cfg.value("Authenticate", !es.getSetting(KEMailSettings::OutServerLogin).isEmpty()).toBool();
-  emailUsername = cfg.value("Username", es.getSetting(KEMailSettings::OutServerLogin)).toString();
-  emailPassword = cfg.value("Password", es.getSetting(KEMailSettings::OutServerPass)).toString();
-  emailEncryption = (EMailEncryption)cfg.value("Encryption", static_cast<int>(es.getSetting(KEMailSettings::OutServerTLS) == "true" ? EMailEncryptionTLS : EMailEncryptionNone)).toBool();
-  emailAuthentication = (EMailAuthentication)cfg.value("Authentication", static_cast<int>(EMailAuthenticationPLAIN)).toBool(); // FIXME: no KEMailSettings for this?
-  cfg.endGroup();
-
   cfg.beginGroup("Printing");
-  printing.pageSize = cfg.value("kde-pagesize", QString::number((int)KPrinter::Letter)).toString();
+  printing.pageSize = cfg.value("kde-pagesize", QString::number((int)QPrinter::Letter)).toString();
   printing.orientation = cfg.value("kde-orientation", "Landscape").toString();
   printing.plotDateTimeFooter = cfg.value("kst-plot-datetime-footer", "0").toString();
   printing.maintainAspect = cfg.value("kst-plot-maintain-aspect-ratio", "0").toString();
@@ -329,7 +290,7 @@ void KstSettings::checkUpdates() {
 
 
 void KstSettings::setPrintingDefaults() {
-  printing.pageSize = QString::number((int)KPrinter::Letter);
+  printing.pageSize = QString::number((int)QPrinter::Letter);
   printing.orientation = "Landscape";
   printing.plotDateTimeFooter = "0";
   printing.maintainAspect = "0";
