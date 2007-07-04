@@ -104,7 +104,7 @@ KstObject::UpdateType KstStdinSource::update(int u) {
     }
   } while (++i < 100000 && new_data);
 
-  fflush(fp);
+  fclose(fp);
 
   if (got_some && _src) {
     return setLastUpdateResult(_src->update(u));
