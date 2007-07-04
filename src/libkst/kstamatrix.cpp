@@ -23,7 +23,6 @@
 #include <qbytearray.h>
 #include <qtextdocument.h>
 #include "kst_i18n.h"
-#include <kcodecs.h>
 
 KstAMatrix::KstAMatrix(const QDomElement &e) : KstMatrix() {
   _editable = true;
@@ -66,8 +65,7 @@ KstAMatrix::KstAMatrix(const QDomElement &e) : KstMatrix() {
       if (!e.isNull()) {
         if (e.tagName() == "data") {
           QString qcs(e.text().toLatin1());
-          QByteArray qbca;
-          KCodecs::base64Decode(qcs.toLatin1(), qbca);
+          QByteArray qbca = QByteArray::fromBase64(qcs.toLatin1());
           QByteArray qba = qUncompress(qbca);
           QDataStream qds(&qba, QIODevice::ReadOnly);
           int i;
@@ -114,7 +112,7 @@ void KstAMatrix::save(QTextStream &ts, const QString& indent) {
   ts << indent << indent2 << "<ny>" << yNumSteps() << "</ny>" << endl;
   ts << indent << indent2 << "<xstep>" << xStepSize() << "</xstep>" << endl;
   ts << indent << indent2 << "<ystep>" << xStepSize() << "</ystep>" << endl;
-  ts << indent << indent2 << "<data>" << KCodecs::base64Encode(qCompress(qba)) << "</data>" << endl;
+  ts << indent << indent2 << "<data>" << qCompress(qba).toBase64() << "</data>" << endl;
   ts << indent << "</amatrix>" << endl;
 }
 

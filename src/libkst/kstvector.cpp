@@ -23,7 +23,6 @@
 #include <qtextdocument.h>
 
 #include "kst_i18n.h"
-#include <kcodecs.h>
 
 #include <qdebug.h>
 #include "kstdatacollection.h"
@@ -105,8 +104,7 @@ KstVector::KstVector(const QDomElement& e)
         in_tag = KstObjectTag::fromString(e.text());
       } else if (e.tagName() == "data") {
         QString qcs(e.text().toLatin1());
-        QByteArray qbca;
-        KCodecs::base64Decode(qcs.toLatin1(), qbca);
+        QByteArray qbca = QByteArray::fromBase64(qcs.toLatin1());
         qba = qUncompress(qbca);
         sz = qMax((size_t)(INITSIZE), qba.size()/sizeof(double));
       }
@@ -592,7 +590,7 @@ void KstVector::save(QTextStream &ts, const QString& indent, bool saveAbsolutePo
       qds << _v[i];
     }
 
-    ts << indent << "<data>" << KCodecs::base64Encode(qCompress(qba)) << "</data>" << endl;
+    ts << indent << "<data>" << qCompress(qba).toBase64() << "</data>" << endl;
   }
 }
 
