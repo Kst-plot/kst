@@ -21,8 +21,7 @@
 #include <assert.h>
 #include <math.h>
 
-#include <kglobal.h>
-#include <klocale.h>
+#include "kst_i18n.h"
 
 #include "kstdebug.h"
 #include "psdcalculator.h"

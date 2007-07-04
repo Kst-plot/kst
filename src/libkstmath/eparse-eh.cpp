@@ -18,7 +18,7 @@
 #include <qstring.h>
 #include <qstringlist.h>
 
-#include <klocale.h>
+#include "kst_i18n.h"
 #include "kst_export.h"
 
 namespace Equation {

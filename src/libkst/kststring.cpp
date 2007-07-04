@@ -20,7 +20,7 @@
 
 #include <qtextdocument.h>
 
-#include <klocale.h>
+#include "kst_i18n.h"
 
 static int anonymousStringCounter = 0;
 

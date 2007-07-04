@@ -23,7 +23,7 @@
 #include <qtextdocument.h>
 
 #include <qdebug.h>
-#include <klocale.h>
+#include "kst_i18n.h"
 
 #include "kstdatacollection.h"
 #include "kstdebug.h"

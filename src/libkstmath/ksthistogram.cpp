@@ -20,8 +20,7 @@
 #include <stdlib.h>
 
 #include <QTextDocument>
-#include <kglobal.h>
-#include <klocale.h>
+#include "kst_i18n.h"
 
 #include "dialoglauncher.h"
 #include "kstdatacollection.h"

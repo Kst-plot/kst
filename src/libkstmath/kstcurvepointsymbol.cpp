@@ -18,7 +18,6 @@
 
 
 #include "kstcurvepointsymbol.h"
-#include <kglobal.h>
 #include <QPolygon>
 
 namespace KstCurvePointSymbol {

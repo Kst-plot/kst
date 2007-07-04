@@ -25,7 +25,7 @@
 
 #include <qtextdocument.h>
 
-#include <klocale.h>
+#include "kst_i18n.h"
 
 #include "dialoglauncher.h"
 #include "enodes.h"

@@ -17,7 +17,7 @@
 
 #include <qtextdocument.h>
 
-#include <klocale.h>
+#include "kst_i18n.h"
 
 #include "kstscalar.h"
 #include "kstdatacollection.h"

@@ -19,16 +19,16 @@
 
 #include <assert.h>
 
-#include <qdebug.h>
-#include <klocale.h>
-
+#include <qdir.h>
+#include <qurl.h>
 #include <qfile.h>
+#include <qdebug.h>
 #include <qfileinfo.h>
 #include <qtextdocument.h>
-#include <qdir.h>
 #include <qapplication.h>
 #include <qpluginloader.h>
 
+#include "kst_i18n.h"
 #include "kstdatacollection.h"
 #include "kstdebug.h"
 #include "kstscalar.h"
@@ -55,17 +55,17 @@ void KstDataSource::cleanupForExit() {
 
 
 static QString obtainFile(const QString& source) {
-  KUrl url;
+  QUrl url;
   
   if (QFile::exists(source) && QFileInfo(source).isRelative()) {
     url.setPath(source);
   } else {
-    url = KUrl(source);
+    url = QUrl(source);
   }
 
-  if (url.isLocalFile() || url.protocol().isEmpty() || url.protocol().toLower() == "nad") {
+//   if (url.isLocalFile() || url.protocol().isEmpty() || url.protocol().toLower() == "nad") {
     return source;
-  }
+//   }
 
   if (urlMap.contains(source)) {
     return urlMap[source];

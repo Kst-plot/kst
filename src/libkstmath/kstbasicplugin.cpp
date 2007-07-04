@@ -20,7 +20,7 @@
 
 #include <QTextDocument>
 
-#include <klocale.h>
+#include "kst_i18n.h"
 
 #include "kstdebug.h"
 #include "kstbasicplugin.h"

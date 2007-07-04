@@ -21,7 +21,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include <klocale.h>
+#include "kst_i18n.h"
 
 #include <qmutex.h>
 #include <qregexp.h>

@@ -22,8 +22,7 @@
 
 #include <qtextdocument.h>
 
-#include <kglobal.h>
-#include <klocale.h>
+#include "kst_i18n.h"
 #include <kcodecs.h>
 
 #include <qdebug.h>

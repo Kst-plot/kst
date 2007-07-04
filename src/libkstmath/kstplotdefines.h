@@ -21,11 +21,7 @@
 #define MARKER_LABEL_PRECISION        15
 
 #include <qstringlist.h>
-#include <klocale.h>
-
-#ifndef I18N_NOOP2
-#define I18N_NOOP2( comment,x ) x
-#endif
+#include "kst_i18n.h"
 
 enum KstAxisInterpretation { 
   AXIS_INTERP_YEAR,

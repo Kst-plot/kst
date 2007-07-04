@@ -24,8 +24,7 @@
 
 #include <QTextDocument>
 
-#include <kglobal.h>
-#include <klocale.h>
+#include "kst_i18n.h"
 
 #include "dialoglauncher.h"
 #include "kstcsd.h"

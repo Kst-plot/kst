@@ -23,7 +23,7 @@
 #include "kstvcurve.h"
 
 #include <qregexp.h>
-#include <klocale.h>
+#include "kst_i18n.h"
 #include <stdio.h>
 
 QString KST::suggestPlotName() {

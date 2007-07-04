@@ -27,7 +27,7 @@
 
 #include <assert.h>
 
-#include <klocale.h>
+#include "kst_i18n.h"
 #include <klibloader.h>
 #include <kparts/componentfactory.h>
 

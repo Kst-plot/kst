@@ -20,9 +20,10 @@
 #include "kstrevision.h"
 #include "logevents.h"
 
+#include <qlocale.h>
 #include <qapplication.h>
 #include <qdebug.h>
-#include <klocale.h>
+#include "kst_i18n.h"
 
 #include <ksttimers.h>
 
@@ -137,8 +138,9 @@ QString KstDebug::text() {
   QMutexLocker ml(&_lock);
   QString body = i18n("Kst version %1\n\n\nKst log:\n", QString::fromLatin1(KSTVERSION));
 
+  QLocale locale;
   for (int i = 0; i < _messages.count(); i++ ) {
-    body += i18nc("date leveltext: message", "%1 %2: %3\n", KGlobal::locale()->formatDateTime(_messages[i].date), label(_messages[i].level), _messages[i].msg);
+    body += i18nc("date leveltext: message", "%1 %2: %3\n", _messages[i].date.toString(locale.dateFormat()), label(_messages[i].level), _messages[i].msg);
   }
 
   body += i18n("\n\nData-source plugins:");

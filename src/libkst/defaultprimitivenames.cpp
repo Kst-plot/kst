@@ -21,7 +21,7 @@
 #include "defaultprimitivenames.h"
 
 #include <qregexp.h>
-#include <klocale.h>
+#include "kst_i18n.h"
 #include <stdio.h>
 
 // takes a field name and returns a unique tag name, which will be

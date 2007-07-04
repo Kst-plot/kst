@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include <klocale.h>
+#include "kst_i18n.h"
 
 #include "defaultprimitivenames.h"
 #include "kstdatacollection.h"

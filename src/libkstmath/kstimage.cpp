@@ -22,7 +22,7 @@
 #include "kstimage.h"
 #include "kstmath.h"
 
-#include <klocale.h>
+#include "kst_i18n.h"
 
 #include <qimage.h>
 #include <qpainter.h>
