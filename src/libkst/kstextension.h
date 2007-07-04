@@ -23,7 +23,7 @@
 
 #include "kst_export.h"
 
-class KMainWindow;
+class QMainWindow;
 
 class KST_EXPORT KstExtension : public QObject {
   Q_OBJECT
@@ -40,7 +40,7 @@ class KST_EXPORT KstExtension : public QObject {
     // Clear internal state
     virtual void clear();
 
-    KMainWindow *app() const;
+    QMainWindow *app() const;
 
   signals:
     void unregister();

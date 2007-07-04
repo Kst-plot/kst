@@ -18,7 +18,7 @@
 #include "config.h"
 #include "stdinsource.h"
 
-#include <k3tempfile.h>
+#include <qtemporaryfile.h>
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -36,8 +36,8 @@
 
 KstStdinSource::KstStdinSource(QSettings *cfg)
 : KstDataSource(cfg, "stdin", "stdin") {
-  _file = new K3TempFile;
-  _filename = _file->name();
+  _file = new QTemporaryFile;
+  _filename = _file->fileName();
   // Unfortunately we have to update here.  stdin is a special case.
   update();
   _src = KstDataSource::loadSource(_filename, "ASCII");
@@ -49,7 +49,6 @@ KstStdinSource::KstStdinSource(QSettings *cfg)
 
 KstStdinSource::~KstStdinSource() {
   _file->close();
-  _file->unlink();
   delete _file;
   _file = 0L;
 }
@@ -77,7 +76,8 @@ KstObject::UpdateType KstStdinSource::update(int u) {
   bool new_data = false;
   bool got_some = false;
 
-  FILE *fp = _file->fstream();
+  int handle = _file->handle();
+  FILE *fp = fdopen(handle, "w+");
 
   if (!fp) {
     return setLastUpdateResult(KstObject::NO_CHANGE);

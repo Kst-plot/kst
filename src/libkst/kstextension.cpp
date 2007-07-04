@@ -19,7 +19,7 @@
 
 // application specific includes
 #include "kstextension.h"
-#include <kmainwindow.h>
+#include <qmainwindow.h>
 
 KstExtension::KstExtension(QObject *parent, const QStringList&) : QObject(parent) {
 }
@@ -45,8 +45,8 @@ void KstExtension::clear() {
 }
 
 
-KMainWindow* KstExtension::app() const {
-  return static_cast<KMainWindow*>(parent());
+QMainWindow* KstExtension::app() const {
+  return qobject_cast<QMainWindow*>(parent());
 }
 
 
