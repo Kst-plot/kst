@@ -1,0 +1,543 @@
+<appendix id="supportingadditionalfileformats">
+<title>Supporting Additional File Formats</title>
+<para>
+This section describes
+how to create additional
+readers for unsupported file formats.  If you are not already familiar with data source
+concepts, please read
+<link linkend="supportingadditionalfileformatsdatasourceconcepts">Data Source Concepts</link>
+</para>
+
+
+
+<sect1 id="supportingadditionalfileformatscreatingdatasource">
+<title>Creating Datasource Readers</title>
+
+<para>
+If you wish to use a file format other than those currently supported, you might choose to write
+custom datasource readers.
+</para>
+<para>
+All &kst; datasource readers are regular &kde; plugins.
+Like all &kde; plugins, each datasource reader must have a shared object file
+and a <filename>*.desktop</filename> file.  Before writing the reader, the
+library name of the plugin must be decided.  This name must be a valid
+variable name in C, as it will be used in the function names of the shared object.
+For example, the library name of the reader for ASCII files is
+<quote>ascii</quote>.
+</para>
+<note>
+<para>
+&kde; plugins are <emphasis>not</emphasis>
+the same as the &kst; plugins used to manipulate data.  All references to
+plugins in this section are to &kde; plugins.
+</para>
+</note>
+
+<sect2 id="supportingadditionalfileformatscreatingdatasourceobjectfile">
+<title>The Shared Object</title>
+<para>
+A datasource reader should be a subclass of the abstract
+<classname>KstDataSource</classname>  class.  Ensure that you include the header file
+for <classname>KstDataSource</classname> in the source code for your datasource reader:
+<screen>
+#include &lt;kstdatasource.h&gt;
+</screen>
+There are certain requirements that a datasource reader must meet.  One requirement
+concerns the presence of exported C functions.  Other requirements
+are consequences of the fact that datasource readers inherit from <classname>KstDataSource</classname>.
+Both sets of requirements, along with suggestions and general explanations, are provided in the
+following sections.
+</para>
+
+<sect3 id="supportingadditionalfileformatscreatingdatasourceobjectfileexportedfxns">
+<title>Exported C Functions</title>
+<para>
+The exported C functions are listed below. In the following
+examples, all instances of <varname>&lt;libname&gt;</varname> should be replaced with
+the actual library name of the plugin.
+</para>
+<variablelist>
+<varlistentry>
+<term><function><returnvalue>KstDataSource *</returnvalue>create_&lt;libname&gt;(const QString&amp; <parameter>filename</parameter>, const QString&amp; <parameter>type</parameter>)</function></term>
+<listitem>
+<para>
+This function should create a new datasource reader of type <varname>&lt;libname&gt;</varname>,
+where <varname>&lt;libname&gt;</varname> is the library name of the plugin.  A pointer of type
+<classname>KstDataSource</classname> to the new reader should be returned.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><function><returnvalue>bool</returnvalue> understands_&lt;libname&gt;(const QString&amp; <parameter>filename</parameter>)</function></term>
+<listitem>
+<para>
+This function should return true if the file specified by <varname>filename</varname> is
+of a valid type supported by this reader, and false otherwise.
+The function should check the contents of the
+file for validity, and not rely on any filename extensions.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><function><returnvalue>QStringList</returnvalue> provides_&lt;libname&gt;()</function></term>
+<listitem>
+<para>
+This function should return a <classname>QStringList</classname> of the file types
+supported by this reader.  The strings returned are arbitrary, but should be
+descriptive of and appropriate for the actual file types.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+<sect3 id="supportingadditionalfileformatscreatingdatasourceobjectfilemembervars">
+<title>Protected Member Variables</title>
+<para>
+<classname>KstDataSource</classname> contains various protected member variables that
+the custom datasource reader can use.  These variables are described below.
+</para>
+
+<variablelist>
+<varlistentry>
+<term><varname>bool _valid</varname></term>
+<listitem>
+<para>
+This variable should be <literal>true</literal> if the custom datasource reader is
+valid.  Most likely the reader will be valid, unless there is an error condition (such
+as the data file being unreadable by the reader).  This variable is used by the
+<function>isValid()</function> function of <classname>KstDataSource</classname>, which
+is usually not reimplemented in subclasses.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><varname>QStringList _fieldList</varname></term>
+<listitem>
+<para>
+This variable should hold a list of the field names in the data source.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><varname>QString _filename</varname></term>
+<listitem>
+<para>
+This variable should hold the name of the data file this datasource reader is
+associated with.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><varname>QString _source</varname></term>
+<listitem>
+<para>
+This variable should hold the type name of the source.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</sect3>
+
+<sect3 id="supportingadditionalfileformatscreatingdatasourceobjectfilevirtualfxns">
+<title>Virtual Functions</title>
+<para>
+The <classname>KstDataSource</classname> class contains many virtual functions that
+should be redefined in the custom datasource reader.  These functions are
+in the template files <filename>template.h</filename> and <filename>template.cpp</filename>,
+listed in the
+<link linkend="supportingadditionalfileformatscreatingdatasourceobjectfileexample">Example Templates</link>
+section.   Descriptions of the functions follow.
+</para>
+
+<variablelist>
+<varlistentry>
+<term><function>TemplateSource(const QString&amp;amp; <parameter>filename</parameter>, const QString&amp;amp; <parameter>type</parameter>) </function></term>
+<listitem>
+<para>
+The constructor for the datasource reader.  <varname>filename</varname> is the name of the
+file to read data from, and <varname>type</varname> is the type of data the file contains.
+This constructor should most likely invoke the <classname>KstDataSource</classname> constructor
+in the constructor initializer list, and probably call the <function>update</function>
+function listed below to initialize member variables. In particular, the
+<varname>bool _valid</varname> variable should be set appropriately.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><function>virtual ~TemplateSource()</function></term>
+<listitem>
+<para>
+The destructor for the datasource reader. Any dynamically allocated memory should be
+freed.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><function>virtual <returnvalue>KstObject::UpdateType</returnvalue> update(<parameter>int = -1</parameter>) </function></term>
+<listitem>
+<para>
+This function should read any new data entered in the data file since the last time <function>update</function>
+was called, and update the member variables appropriately.  The function should return
+<varname>KstObject::UPDATE</varname> if the file contained changes, or <varname>KstObject::NO_CHANGE</varname>
+otherwise.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><function>virtual <returnvalue>int</returnvalue> readField(double *<parameter>v</parameter>, const QString &amp;<parameter>field</parameter>, int <parameter>s</parameter>, int <parameter>n</parameter>)</function></term>
+<listitem>
+<para>
+This function should read <varname>n</varname>
+frames of data, starting at frame <varname>s</varname> from the field specified by the field name
+<varname>field</varname>, and return the contents in the array <varname>v</varname>.
+If <varname>n</varname> is less than 0, the function should instead read 1 sample from the start of
+frame <varname>s</varname>.  The number of samples that were read should be returned.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><function>virtual <returnvalue>bool</returnvalue> isValidField(const QString &amp;<parameter>field</parameter>) const</function></term>
+<listitem>
+<para>
+This function should return true of the field specified by the field name <varname>field</varname>
+is a valid field in the current data source, or false if the field is not a valid field.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><function>virtual <returnvalue>int</returnvalue> samplesPerFrame(const QString&amp; <parameter>field</parameter>)</function></term>
+<listitem>
+<para>
+This function should return the ratio of samples per frame for the field specified by the field
+name <varname>field</varname>.  For data sources that do not make use of this concept, the number of samples
+per frame can be set to <literal>1</literal>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><function>virtual <returnvalue>int</returnvalue> frameCount() const</function></term>
+<listitem>
+<para>
+This function should return the total number of frames in the data source, as of the last time
+<function>update</function> was called.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><function>virtual <returnvalue>QString</returnvalue> fileType() const <parameter></parameter></function></term>
+<listitem>
+<para>
+This function should return the file type of the data file currently being used, usually the
+same as the <varname>type</varname> parameter that was passed to the constructor. Alternatively, it
+can contain an error message (to indicate, for example, that the file is not
+valid).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><function>virtual <returnvalue>void</returnvalue> save(QTextStream &amp;<parameter>ts</parameter>)</function></term>
+<listitem>
+<para>
+This function should save the file description information to <varname>ts</varname>.  In most cases
+the implementation provided by <classname>KstDataSource</classname> should be sufficient.
+</para>
+</listitem>
+</varlistentry>
+
+
+</variablelist>
+
+</sect3>
+
+<sect3 id="supportingadditionalfileformatscreatingdatasourceobjectfileexample">
+<title>Example Templates</title>
+<para>
+In general, the following two template files can be used to create new shared object files.
+Simply modify the function bodies as appropriate for your particular data source.
+</para>
+<informalexample>
+<screen>
+/***************************************************************************
+                  template.h  -  data source plugin template
+                             -------------------
+    begin                : Fri Oct 17 2003
+    copyright            : (C) 2003 The University of Toronto
+    email                :
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
+#ifndef TEMPLATE_H
+#define TEMPLATE_H
+
+#include &amp;lt;kstdatasource.h&amp;gt;
+
+
+class TemplateSource : public KstDataSource {
+public:
+  TemplateSource(const QString&amp; filename, const QString&amp; type);
+
+  virtual ~TemplateSource();
+
+  virtual KstObject::UpdateType update(int = -1);
+
+  virtual int readField(double *v, const QString &amp;field, int s, int n);
+
+  virtual bool isValidField(const QString &amp;field) const;
+
+  virtual int samplesPerFrame(const QString &amp;field);
+
+  virtual int frameCount() const;
+
+  virtual QString fileType() const;
+
+  virtual void save(QTextStream &amp;ts);
+};
+
+
+#endif
+</screen>
+</informalexample>
+<para>
+
+</para>
+<informalexample>
+<screen>
+/***************************************************************************
+                    template.cpp  -  data source template
+                             -------------------
+    begin                : Fri Oct 17 2003
+    copyright            : (C) 2003 The University of Toronto
+    email                :
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
+#include "template.h"
+
+
+TemplateSource::TemplateSource(const QString&amp; filename, const QString&amp; type)
+: KstDataSource(filename, type) {
+}
+
+
+TemplateSource::~TemplateSource() {
+}
+
+
+KstObject::UpdateType TemplateSource::update(int u) {
+  Q_UNUSED(u)
+  return KstObject::NO_CHANGE;
+}
+
+
+int TemplateSource::readField(double *v, const QString&amp; field, int s, int n) {
+  Q_UNUSED(v)
+  Q_UNUSED(field)
+  Q_UNUSED(s)
+  Q_UNUSED(n)
+  return -1;
+}
+
+
+bool TemplateSource::isValidField(const QString&amp; field) const {
+  Q_UNUSED(field)
+  return false;
+}
+
+
+int TemplateSource::samplesPerFrame(const QString &amp;field) {
+  Q_UNUSED(field)
+  return 0;
+}
+
+
+int TemplateSource::frameCount() const {
+  return 0;
+}
+
+
+QString TemplateSource::fileType() const {
+  return QString::null;
+}
+
+
+void TemplateSource::save(QTextStream &amp;ts) {
+  KstDataSource::save(ts);
+}
+
+
+extern "C" {
+KstDataSource *create_template(const QString&amp; filename, const QString&amp; type) {
+  return new TemplateSource(filename, type);
+}
+
+QStringList provides_template() {
+  QStringList rc;
+  // create the stringlist
+  return rc;
+}
+
+bool understands_template(const QString&amp; filename) {
+  // determine if it is an X file
+  Q_UNUSED(filename)
+  return false;
+}
+
+}
+</screen>
+</informalexample>
+</sect3>
+
+</sect2>
+
+<sect2 id="supportingadditionalfileformatscreatingdatasourcedesktopfile">
+<title>The <filename>.desktop</filename> File</title>
+<para>
+The following is an example of a <filename>.desktop</filename> file for the template plugin:
+</para>
+<informalexample>
+<screen>
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Source
+X-KDE-ModuleType=Plugin
+X-Kst-Plugin-Library=template
+X-Kst-Plugin-Author=The University of Toronto
+Name=File Reader Template
+Comment=Long description of the file reader template.
+</screen>
+</informalexample>
+
+<para>
+You should add translations in additional languages for the Name and Comment fields
+by adding additional Name and Comment fields with <literal>[xx]</literal> appended
+to the end of the field names, where <literal>xx</literal> is the two-letter
+language code.  For example, to add Spanish translations, the following lines would
+need to be added:
+</para>
+<informalexample>
+<screen>
+Name[es]=Plantilla de lectura de ficheros
+Comment[es]=Plantilla de código para hacer un complemento de lectura de ficheros.
+</screen>
+</informalexample>
+<para>
+The field <literal>X-Kst-Plugin-Library</literal> should be exactly the same
+as the decided library name for the plugin.
+</para>
+</sect2>
+
+<sect2 id="supportingadditionalfileformatscreatingdatasourcecompiling">
+<title>Compiling and Copying</title>
+<para>
+To compile and install the new custom datasource reader, create a new directory under
+<filename>kst/datasources</filename> of the source package.  Place the source
+files for the object, along with 
+the <filename>.desktop</filename> file in the new directory.  Then, edit
+<filename>kst/datasources/Makefile.am</filename> so that <varname>SUBDIRS</varname>
+contains the name of the new subdirectory.  For example, if the new subdirectory is called
+<filename>template</filename>, <varname>SUBDIRS</varname> might be changed to the
+following:
+<informalexample>
+<screen>
+SUBDIRS=ascii dirfile frame indirect template $(PIOLIB_SUBDIR) $(FITSIO_SUBDIR)
+</screen>
+</informalexample>
+</para>
+
+
+<para>
+After the required files are in the newly created subdirectory, a <filename>Makefile.am</filename>
+needs to be created in there as well.  Use the following sample as a template, replacing
+all instances of <quote>template</quote> with your custom library name in
+<varname>kde_module_LTLIBRARIES</varname>, <varname>kstdata_template_la_SOURCES</varname>
+ and <varname>services_DATA</varname>.
+</para>
+<informalexample>
+<screen>
+INCLUDES=-I$(srcdir)/../.. $(all_includes)
+
+kde_module_LTLIBRARIES=kstdata_template.la
+
+kstdata_template_la_LDFLAGS=$(all_libraries) -module -avoid-version
+kstdata_template_la_SOURCES=template.cpp
+
+METASOURCES=AUTO
+
+services_DATA=kstdata_template.desktop
+servicesdir=$(kde_servicesdir)/kst
+</screen>
+</informalexample>
+
+<para>
+Once this is done, you can compile and re-install &kst; from the modified source package, or alternatively,
+only install the new libraries, like follows (using the <quote>template</quote> subdirectory as an example).
+First change to the root directory of the &kst; source package.  Then,
+<screen><userinput><command>./configure --prefix=`kde-config --prefix`</command>
+<command>cd ./kst/datasources/template</command>
+<command>make</command>
+<command>make install</command></userinput></screen>
+</para>
+
+<para>
+Restart &kst; and the new datasource reader should be loaded.
+</para>
+</sect2>
+
+</sect1>
+
+
+</appendix>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:0
+sgml-indent-data:true
+sgml-parent-document:("index.docbook" "book" "appendix")
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->

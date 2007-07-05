@@ -116,6 +116,4 @@ ViewItem* BoxItemFactory::generateGraphics(QXmlStreamReader& xml, View *view, Vi
 
 }
 
-#include "boxitem.moc"
-
 // vim: ts=2 sw=2 et

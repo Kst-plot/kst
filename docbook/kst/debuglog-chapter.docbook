@@ -1,0 +1,224 @@
+<appendix id="debuglog">
+<title>The Debug Dialog</title>
+<para>
+The &kst; debug dialog can sometimes provide useful information about certain
+problems encountered, and contains all notices, warnings, and errors logged by
+&kst;.  To access the debug dialog, select <guimenuitem>Debug Kst...</guimenuitem>
+from the <guimenu>Help</guimenu> menu.
+</para>
+
+<sect1 id="debuglog-debuglog">
+<title>The Debug Log</title>
+<para>
+The debug log is located on the <guilabel>Log</guilabel> tab of the debug dialog.
+The following lists the different messages that can appear in the log, with
+brief explanations and suggested actions (where appropriate).
+</para>
+
+<informaltable>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Type</entry>
+<entry>Message</entry>
+<entry>Explanation/Suggested Action</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>Unknown</entry>
+<entry>Kst Extension %1 loaded</entry>
+<entry>None.</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>Error trying to load Kst extension %1.  Code=%2, \"%3\"</entry>
+<entry>Make sure extension exists, meets the requirements for a &kst; extension,
+and is in the correct location.</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>Unable to find required vector [%1] for data object %2.</entry>
+<entry>Ensure the indicated vector exists in the Data Manager.
+  If so, try recreating the data object.</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>Unable to find required scalar [%1] for data object %2.</entry>
+<entry>Ensure that the indicated scalar exists (try searching in
+<guimenuitem>View Scalars</guimenuitem> of the <guimenu>Data</guimenu> menu.</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>Error loading data-source plugin [%1]: %2</entry>
+<entry>A datasource reader (&kde; plugin) could not be loaded.
+Make sure the data-source reader meets requirements described in
+<link linkend="supportingadditionalfileformatscreatingdatasource">Creating Datasource Readers</link>
+and is compiled correctly.
+If it is a built-in datasource reader, try recompiling and installing it again from the source package.</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>Scanning for data-source plugins.</entry>
+<entry>&kst; is scanning for datasource readers. No action required.</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>No data in file %1</entry>
+<entry>Make sure file is supported by one of the datasource readers, and that the data is
+formatted correctly and is not corrupt.</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>Unsupported element '%1' in file %2</entry>
+<entry>Ensure that the file is not corrupt, and meets the specifications for the
+file format.</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>Unable to find X vector for %2: [%1]</entry>
+<entry>???</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>Unable to find Y vector for %2: [%1]</entry>
+<entry>???</entry>
+</row>
+<row>
+<entry>Unknown</entry>
+<entry>Undefined justification %1 in label \"%2\"</entry>
+<entry>This should not happen.  Most likely it is the result of a bug.</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>Internal error: No X scale type checked in %1.</entry>
+<entry>None.</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>Internal error: No Y scale type checked in %1.</entry>
+<entry>None.</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>Unable to load plugin %1 for \"%2\"</entry>
+<entry>Make sure that the plugin meets the requirements described in
+<link linkend="creatingplugins">Creating Additional Plugins</link>.  In particular,
+make sure the shared object and <filename>*.xml</filename> file are in the same directory.
+If the plugin is a built-in plugin, try re-installing the plugin from the source
+package.
+</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>Input vector [%1] for plugin %2 not found.  Unable to continue.</entry>
+<entry>Ensure that the <filename>*.xml</filename> file for the plugin
+specifies all the inputs correctly and in the correct order.  Check the source
+code for the shared object to ensure that it is using the correct arrays from the
+input array.  Also ensure that
+the specified input vector still exists (check in the Data Manager).</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>Output vector [%1] for plugin %2 not found.  Unable to continue.</entry>
+<entry>Ensure that the <filename>*.xml</filename> file for the plugin
+specifies all the outputs correctly and in the correct order. Check the source
+code for the shared object to ensure that it is outputting the correct arrays
+in the output array. </entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>Data file for vector %1 was not opened.</entry>
+<entry>???</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>Error parsing XML file '%1'; skipping.</entry>
+<entry>Check the XML file to make sure it has correct syntax and form for the
+intended use.  If is an XML file for a plugin, check
+<link linkend="creatingplugins">Creating Additional Plugins</link>
+for more information.
+</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>Detected disappearance of '%1'.</entry>
+<entry>None.</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>Could not parse xml file '%1'.</entry>
+<entry>Check the XML file to make sure it has correct syntax and form for the
+intended use.  If is an XML file for a plugin, check
+<link linkend="creatingplugins">Creating Additional Plugins</link>
+for more information.</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>Could not find library '%1' while loading plugin.</entry>
+<entry>Make sure the library exists and is in the correct location. If this is a built-in plugin,
+try recompiling and installing the plugin again.</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>Could not find symbol '%1' in plugin %2.</entry>
+<entry>A required C symbol could not be found in the plugin.
+Make sure the plugin meets the requirements described in
+<link linkend="creatingplugins">Creating Additional Plugins</link>.  If this is a built-in plugin,
+try recompiling and re-installing the plugin.</entry>
+</row>
+
+<row>
+<entry>Unknown</entry>
+<entry>The %1 font was not found and was replaced by the %2 font; as a
+result, some labels may not display correctly."</entry>
+<entry>If this causes problems, install the missing font.</entry>
+</row>
+
+
+
+</tbody>
+</tgroup>
+</informaltable>
+
+</sect1>
+</appendix>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:0
+sgml-indent-data:true
+sgml-parent-document:("index.docbook" "book" "appendix")
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->

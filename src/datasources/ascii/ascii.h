@@ -120,7 +120,5 @@ class AsciiPlugin : public QObject, public KstDataSourcePluginInterface {
     virtual KstDataSourceConfigWidget *configWidget(QSettings *cfg, const QString& filename) const;
 };
 
-Q_EXPORT_PLUGIN2(kstdata_ascii, AsciiPlugin)
-
 #endif
 // vim: ts=2 sw=2 et

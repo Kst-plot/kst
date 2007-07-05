@@ -31,7 +31,7 @@
 #include <qspinbox.h>
 #include <qtextdocument.h>
 
-#include <kcombobox.h>
+#include <qcombobox.h>
 
 #include <kstmath.h>
 #include "ascii.h"
@@ -1054,6 +1054,6 @@ KstDataSourceConfigWidget *AsciiPlugin::configWidget(QSettings *cfg, const QStri
 
 }
 
-#include "ascii.moc"
+Q_EXPORT_PLUGIN2(kstdata_ascii, AsciiPlugin)
 
 // vim: ts=2 sw=2 et

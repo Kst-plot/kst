@@ -64,7 +64,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KComboBox" name="_indexVector" >
+      <widget class="QComboBox" name="_indexVector" >
        <property name="sizePolicy" >
         <sizepolicy>
          <hsizetype>1</hsizetype>
@@ -89,7 +89,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KComboBox" name="_indexType" >
+      <widget class="QComboBox" name="_indexType" >
        <property name="sizePolicy" >
         <sizepolicy>
          <hsizetype>1</hsizetype>
@@ -132,9 +132,6 @@
        </property>
        <property name="wordWrap" >
         <bool>false</bool>
-       </property>
-       <property name="buddy" >
-        <cstring>lineEdit2</cstring>
        </property>
       </widget>
      </item>
@@ -423,22 +420,11 @@
  </widget>
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
- <customwidgets>
-  <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
-  </customwidget>
- </customwidgets>
  <tabstops>
   <tabstop>_delimiters</tabstop>
   <tabstop>_indexVector</tabstop>
   <tabstop>_indexType</tabstop>
  </tabstops>
- <includes>
-  <include location="local" >kcombobox.h</include>
-  <include location="local" >kcombobox.h</include>
- </includes>
  <resources/>
  <connections>
   <connection>

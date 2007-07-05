@@ -129,5 +129,4 @@ void KstString::setValue(const QString& inV) {
   emit trigger();
 }
 
-#include "kststring.moc"
 // vim: ts=2 sw=2 et

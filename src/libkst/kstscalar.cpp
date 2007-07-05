@@ -195,5 +195,4 @@ void KstScalar::setTagName(const KstObjectTag& newTag) {
   KST::scalarList.doRename(this, newTag);
 }
 
-#include "kstscalar.moc"
 // vim: et ts=2 sw=2

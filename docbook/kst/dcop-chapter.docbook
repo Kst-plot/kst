@@ -1,0 +1,28 @@
+<appendix id="kstdcopinterface">
+<title>The &kst; &DCOP; Interface</title>
+<para>&kst; provides an interface that acts as a client using the
+the &kde; Desktop COmmunications Protocol (&DCOP;).  The set of functions provided in the <classname>KstIface</classname>
+ interface
+allows for easy control of &kst; by other applications or scripts. For more information on &DCOP;, refer
+to
+<ulink url="http://developer.kde.org/documentation/library/kdeqt/dcop.html">this webpage</ulink>.</para>
+</appendix>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:0
+sgml-indent-data:true
+sgml-parent-document:("index.docbook" "book" "appendix")
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->

@@ -1,2 +1,0 @@
-SUBDIRS=gaussian gaussian_weighted lorentzian lorentzian_weighted exponential exponential_weighted
-

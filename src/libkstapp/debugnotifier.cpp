@@ -92,5 +92,5 @@ void DebugNotifier::mouseReleaseEvent(QMouseEvent *e) {
 }
 
 #undef TIMER_ITERATIONS
-#include "debugnotifier.moc"
+
 // vim: ts=2 sw=2 et

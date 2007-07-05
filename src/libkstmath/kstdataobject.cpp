@@ -759,6 +759,4 @@ bool KstDataObject::uses(KstObjectPtr p) const {
   return false;
 }
 
-
-#include "kstdataobject.moc"
 // vim: ts=2 sw=2 et

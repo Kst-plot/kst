@@ -1,0 +1,243 @@
+<chapter id="miscellaneousfeatures">
+<title>The Toolbar and Keyboard Shortcuts</title>
+<para>
+This chapter describes miscellaneous time-saving and convenience features available in &kst;.
+</para>
+
+<sect1 id="miscellaneousfeatures-toolbar">
+<title>The Toolbar</title>
+<para>
+The toolbar provides one-click access to commonly used menu functions in &kst;.
+To toggle the toolbar, select <guimenuitem>Show Toolbar</guimenuitem>
+from the <guimenu>Settings</guimenu> menu.
+</para>
+
+<sect2 id="miscellaneousfeatures-toolbar-toolbarmenu">
+<title>The Toolbar Menu</title>
+<para>
+The toolbar menu, accessible by right-clicking anywhere on the toolbar, contains
+functions for modifying the layout, appearance, and behaviour of the toolbar.
+The three submenus available are described below.
+</para>
+
+<sect3 id="miscellaneousfeatures-toolbar-toolbarmenu-orientation">
+<title>Orientation</title>
+<para>
+The <guisubmenu>Orientation</guisubmenu> submenu contains layout options for the toolbar.
+</para>
+<variablelist>
+<varlistentry>
+<term><guimenuitem>Top</guimenuitem>, <guimenuitem>Left</guimenuitem>, <guimenuitem>Right</guimenuitem>,
+and <guimenuitem>Bottom</guimenuitem></term>
+<listitem>
+<para>
+Docks the toolbar at the corresponding edge of the &kst; window.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Flat</guimenuitem></term>
+<listitem>
+<para>
+Hides the toolbar and turns it into a slim bar at the top of &kst; window. To unhide the toolbar, click on the
+<quote>gripper</quote> that is still visible.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para>
+You can also move the toolbar by dragging the gripper on the edge of the toolbar.  Dragging the toolbar close to an edge
+of the &kst; window docks it.  Dragging the toolbar anywhere else turns it into a floating toolbar.
+</para>
+
+</sect3>
+
+<sect3 id="miscellaneousfeatures-toolbar-toolbarmenu-textposition">
+<title>Text Position</title>
+<para>
+The <guisubmenu>Text Position</guisubmenu> submenu specifies if and how text and icons should be displayed
+on the toolbar.
+</para>
+<variablelist>
+<varlistentry>
+<term><guimenuitem>Icons Only</guimenuitem></term>
+<listitem>
+<para>
+Does not display any text labels and only displays icons. However, the text for each icon is still available as a
+tooltip associated with the icon (viewable by momentarily holding the cursor of the icon).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Text Only</guimenuitem></term>
+<listitem>
+<para>
+Does not display any icons on the toolbar, but displays all text labels.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Text Alongside Icons</guimenuitem></term>
+<listitem>
+<para>
+Displays all icons.  Text labels are displayed to the right of the icons.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Text Under Icons</guimenuitem></term>
+<listitem>
+<para>
+Displays all icons.  Text labels are displayed underneath the icons.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+<sect3 id="miscellaneousfeatures-toolbar-toolbarmenu-iconsize">
+<title>Icon Size</title>
+<para>
+The <guisubmenu>Icon Size</guisubmenu> submenu specifies the size of the icons on the toolbar.
+Select a size from the submenu, or select <guilabel>Default</guilabel> to use the default size
+(usually the same as <guilabel>Medium</guilabel>).
+The options in this menu do not have any effect if <guimenuitem>Text Only</guimenuitem>
+is selected for <guisubmenu>Text Position</guisubmenu>.
+</para>
+</sect3>
+
+</sect2>
+
+</sect1>
+
+<sect1 id="miscellaneousfeatures-customkeyboardshortcuts">
+<title>Custom Shortcut Keys</title>
+<para>You can create custom shortcut keys to make working in &kst; more
+efficient.  To modify the shortcut keys, select
+<guimenuitem>Configure Shortcuts...</guimenuitem> from the <guimenu>Settings</guimenu> menu.
+The following dialog will be displayed.
+</para>
+<!-- TODO: Redo this screenshot if the 'shade sort column' thing changes -->
+<screenshot>
+<screeninfo>Configure Shortcuts Window</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-configureshortcutswindow.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Configure Shortcuts Window</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+<para>
+A list of available actions and their associated shortcuts are shown in the dialog. Each action is
+allowed two shortcuts&mdash;a primary shortcut and an alternate shortcut. Either shortcut can be used at any time.
+To define or change a shortcut for an action, simply highlight the appropriate row in the shortcut list.
+Under <guilabel>Shortcut for Selected Action</guilabel>, there are three choices:
+<variablelist>
+<varlistentry>
+<term><guilabel>None</guilabel></term>
+<listitem>
+<para>
+Select this option to disable any shortcut keys for the selected action.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Default</guilabel></term>
+<listitem>
+<para>
+Select this option to use the default shortcut key(s) for the selected action.
+Note that not all actions have default shortcuts defined.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Custom</guilabel></term>
+<listitem>
+<para>
+Select this option to define a custom shortcut for the selected action.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para>
+
+<para>
+If you select the <guilabel>Custom</guilabel> option, the Define Shortcut dialog will appear
+(alternatively, you can also click on the key-shaped button to open the dialog).
+</para>
+<screenshot>
+<screeninfo>Define Shortcut Window</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-defineshortcutwindow.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Define Shortcut Window</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+<para>
+By default, the <guilabel>Auto-close</guilabel> option is checked, so once a key combination is entered,
+the key combination will be automatically saved and the dialog closed.  You can uncheck this option if you
+wish to experiment with the dialog.
+</para>
+<para>
+To define a key combination, select <guilabel>Primary</guilabel> or <guilabel>Alternate</guilabel>.  If you
+wish to define a key <emphasis>sequence</emphasis>, check the <guilabel>Multi-key</guilabel> option.  Now enter
+the key combination or sequence to be used for this action.  Click <guibutton>OK</guibutton> when you are done.
+</para>
+
+<tip>
+<para>
+When using shortcuts defined with the multi-key option, a small menu is displayed after the first key of the
+shortcut is pressed, showing the possible shortcut key completions.  Pressing
+additional keys of the shortcut further filters the list.  This list can be a useful reminder of the defined
+shortcuts.
+</para>
+</tip>
+<note>
+<para>
+The action associated with a multi-key shortcut is performed as soon as only one action matches the
+keys pressed so far. For example, if a multi-key shortcut of
+<keycombo action="seq"><keycap>A</keycap><keycap>B</keycap><keycap>C</keycap></keycombo>
+ is defined, and no
+other multi-key shortcuts are defined, the action associated with the shortcut will be performed as soon as
+<keycap>A</keycap> is pressed.
+</para>
+</note>
+
+
+</sect1>
+
+
+</chapter>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:0
+sgml-indent-data:true
+sgml-parent-document:("index.docbook" "book" "chapter")
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->

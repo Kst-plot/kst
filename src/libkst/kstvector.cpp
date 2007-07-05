@@ -708,9 +708,7 @@ void KstVector::setSaveData(bool save) {
   _saveData = save;
 }
 
-
 #undef ZERO_MEMORY
 #undef INITSIZE
 
-#include "kstvector.moc"
 // vim: et sw=2 ts=2

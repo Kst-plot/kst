@@ -178,6 +178,4 @@ void FillAndStroke::setCapStyle(Qt::PenCapStyle style) {
 
 }
 
-#include "fillandstroke.moc"
-
 // vim: ts=2 sw=2 et

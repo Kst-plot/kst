@@ -1,0 +1,271 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+ <!ENTITY kappname "kst">
+ <!ENTITY package "kdeextragear-2">
+ <!ENTITY kst "<application>KST</application>">
+ <!ENTITY kjs "<application>KstScript</application>">
+ <!ENTITY % addindex "IGNORE">
+ <!ENTITY % English "INCLUDE" > <!-- change language only here -->
+
+ ]>
+
+<book lang="&language;">
+
+<bookinfo>
+<title>The &kjs; Tutorial</title>
+
+<authorgroup>
+<author>
+<firstname>Barth</firstname>
+<othername></othername>
+<surname>Netterfield</surname>
+<affiliation><address><email>kst@kde.org</email></address></affiliation>
+</author>
+</authorgroup>
+
+
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+
+<copyright>
+<year>2006</year>
+<holder>Barth Netterfield</holder>
+</copyright>
+<!-- Translators: put here the copyright notice of the translation -->
+<!-- Put here the FDL notice.  Read the explanation in fdl-notice.docbook
+     and in the FDL itself on how to use it. -->
+<!-- <legalnotice>
+&FDLNotice;
+</legalnotice> -->
+
+<!-- Date and version information of the documentation
+Don't forget to include this last date and this last revision number, we
+need them for translation coordination !
+Please respect the format of the date (YYYY-MM-DD) and of the version
+(V.MM.LL), it could be used by automation scripts.
+Do NOT change these in the translation. -->
+
+<date>2006-03-19</date>
+<releaseinfo>1.2.0</releaseinfo>
+
+<!-- Abstract about this handbook -->
+
+<abstract>
+<para>
+&kjs; is a JavaScript binding for &kst;.  It offers full control
+over all aspects of &kst;
+</para>
+</abstract>
+
+<!-- This is a set of Keywords for indexing by search engines.
+Please at least include KDE, the KDE package it is in, the name
+ of your application, and a few relevant keywords. -->
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>kdeextragear</keyword>
+<keyword>Kst</keyword>
+<keyword>plotting</keyword>
+<keyword>plot</keyword>
+<keyword>JavaScript</keyword>
+</keywordset>
+
+</bookinfo>
+
+<chapter id="RunningaKstScript">
+<title>Running a KstScript</title>
+<para>
+&kjs; is a JavaScript binding to &kst;.  There are three ways to to run a &kjs;
+</para>
+
+<itemizedlist>
+<listitem> <para>
+  from the command line when starting &kst;:
+<screen><userinput><command>
+kst -E js:"loadScript('myscript.js')"
+</command></userinput></screen>
+
+</para> </listitem>
+<listitem> <para>
+  using kstcmd
+<screen><userinput><command>
+kstcmd
+</command></userinput>
+Attached to Kst session kst-17704
+kst> <command>loadScript(myscript.js)</command>
+</screen>
+</para> </listitem>
+<listitem> <para>
+  from the menu once &kst; is loaded: File->LoadJavaScript
+</para> </listitem>
+</itemizedlist>
+<para>
+Note that with the first two methods, any KstScript command, or collection of KstScript commands can be substituted for the loadscript command.
+</para>
+
+</chapter>
+
+<chapter id="SimpleScript">
+<title>A simple KstScript</title>
+<para>
+Here we have the 'hello world' of KstScripts: plot a curve from a file.  
+</para>
+<para> <screen>
+// simple.js: A very simple KstScript demo: plot column 1 of a file vs line number
+
+// open the file "demodata.dat"
+file = new DataSource("demodata.dat");
+
+// grab the window
+var w = Kst.windows[0];
+
+// add a plot to the window
+var p = new Plot(w);
+
+// create the X vector which is the line number of the file
+var x = new DataVector(file,"INDEX");
+
+// create the Y vector, which is column 1
+var y = new DataVector(file,"1");
+
+// create a curve from x and y
+var c = new Curve(x,y);
+
+// put the curve in the plot
+p.curves.append(c);
+</screen></para>
+<para>
+This script
+plots column 1 of the file 'demodata.dat' vs line number.  It can be run by any of the three 
+methods from <xref linkend="RunningaKstScript"/>.  For example,
+<screen><userinput><command>
+kst -E js:"loadScript('simple.js')"
+</command></userinput></screen>
+</para>
+<screenshot>
+<screeninfo>Simple Output</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-scripttutorial-simple.png" format="PNG"/>
+</imageobject>
+<textobject>
+<phrase></phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+</chapter>
+
+<chapter id="VariableNames">
+<title>Tagnames and Variable names</title>
+<para>
+In the simple script from <xref linkend="SimpleScript"/>, we refered to all of the objects we
+created by their KstScript names.  This, however, is not how they are refered to from the Kst UI.
+
+In the UI, objects are refered to by their Tag Name (or "Unique Name").  The script above did not define the tag names of any of the objects we created (plots, vectors and curves), so if you
+try to look things up in the data manager, you will get cryptic names like "anonymous vector 1", or, for the curve, "".  If you ever plan to use the UI to work with objects you have created with a KstScript, you will want to set their tag name:
+<screen>
+x.tagName = "xv"
+</screen>
+Once you have set the tagName, you can use it to refer to the object as a parameter in the built in KstScript function calls.  The following script does the same thing as the script in <xref linkend="SimpleScript"/>, except that it sets and refers to objects by their tagName.
+
+</para>
+<para> <screen>
+// very simple KstScript demo: plot a vector collumn from a file
+file = new DataSource("demodata.dat")
+
+var w = new Window;
+var p = new Plot(w);
+
+var x = new DataVector(file,"INDEX");
+x.tagName = "xv"
+
+var y = new DataVector(file,"1");
+y.tagName = "yv"
+
+var c = new Curve("xv","yv");
+c.tagName = "c"
+
+p.curves.append("c");
+</screen></para>
+</chapter>
+
+<chapter id="Subroutines">
+<title>Writing, Including, and Calling Subroutines</title>
+<para>
+As with any JavaScript environment, you can write and call functions with KstScript.  Additionally, KstScript posseses a means for a KstScript to load functions from disk.  Consider the following example:
+</para>
+<para> <screen>
+// subroutines.js
+// plot a field from a datasource in a previously created plot
+function addField(plot, field, f0, n, datasource) {
+  var x1 = new DataVector(datasource, "INDEX", f0, n);
+  x1.tagName = "INDEX"
+  var y1 = new DataVector(datasource, field, f0, n);
+  y1.tagName=field
+  var c1 = new Curve(x1, y1);
+  c1.tagName = field
+  plot.curves.append(c1)
+  plot.topLabel =  plot.topLabel + field + " "
+}
+
+// create a plot and add a field curve to it.
+function plotField(field, f0, n, datasource) {
+  var p1 = new Plot(Kst.windows[0]);
+  p1.topLabel = "File: " + datasource.fileName + "   Fields: "
+  addField(p1,field, f0, n, datasource);
+  p1.xAxis.label = "Index"
+  return p1
+}
+</screen>
+</para>
+<para>
+This example contains two functions: <command>addField()</command> reads data from a datasource, makes a curve from it, and plots the curve in an exisiting plot.  Additionally, it appends the field name to the top label.  <command>plotField()</command> creates a new plot, plots a curve in it, and sets the X axis label, and top label.
+</para>
+<para>
+The following script loads <filename>subroutines.js</filename>, and then uses <command>plotField()</command> and <command>addField()</command> to plot 3 columns of data from <filename>demodata.dat</filename>.  Notice that <filename>subroutines.js</filename> is loaded using <command>loadScript()</command>, the same call that we used from the command line in <xref linkend="RunningaKstScript"/>.  
+</para>
+<para> <screen>
+// callsubs.js
+// demonstrate calling subroutines
+
+loadScript('subroutines.js');
+
+file = new DataSource("demodata.dat");
+
+var p = plotField("1", 0, -1, file);
+addField(p, "2", 0, -1, file);
+addField(p, "3", 0, -1, file);
+</screen>
+</para>
+<screenshot>
+<screeninfo>CallSubs Output</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-scripttutorial-subroutines.png" format="PNG"/>
+</imageobject>
+<textobject>
+<phrase></phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+</chapter>
+</book>
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:0
+sgml-indent-data:true
+sgml-parent-document:("index.docbook" "book" "chapter")
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->
+

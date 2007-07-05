@@ -1,0 +1,340 @@
+<chapter id="eventmonitoring">
+<title>Event Monitoring</title>
+<para>
+An event monitor data object essentially keeps track of one or more vectors
+or scalars, and performs a specified action when a specified condition involving the vectors or scalars is true.
+Event monitors are usually used in conjunction with <quote>live</quote>, or streaming data. For example, an event monitor
+could be created to monitor whether or not elements of a data vector representing temperature exceed a predefined value.
+</para>
+
+<sect1 id="eventmonitordialog">
+<title>Event Monitor Dialog</title>
+
+<para>
+The following is a screenshot of the window displayed when creating or editing events.  Explanations of the
+settings are listed below.
+<!-- TODO: How do you make the dialog appear? Data->New Event Monitor -->
+</para>
+
+<screenshot>
+<screeninfo>Event Monitor Window</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-eventmonitor.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Event Monitor Window</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<sect2 id="eventsexpression">
+<title>Expression</title>
+<para>
+The condition to monitor for, along with other event properties, can be modified in this section.
+</para>
+
+<variablelist>
+<varlistentry>
+<term>
+<guilabel>Operators</guilabel>
+</term>
+<listitem>
+<para>
+A list of available operators.  Choosing an operator from the list inserts the operator at the current
+insertion point in the <guilabel>Expression</guilabel> text box.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Vectors</guilabel>
+</term>
+<listitem>
+<para>
+A list of the current vector objects in &kst;.  Choosing a vector from the list inserts the vector at the current
+insertion point in the <guilabel>Expression</guilabel> text box.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Scalars</guilabel>
+</term>
+<listitem>
+<para>
+A list of the available scalar values.  This list is composed of both the scalar values in the current &kst;
+session as well as some built-in constants.  Choosing a scalar from the list inserts the scalar at the current
+insertion point in the <guilabel>Expression</guilabel> text box.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+<guilabel>Expression</guilabel>
+</term>
+<listitem>
+<para>
+The expression to monitor.  You may type directly in this textbox, or select items to insert using the above drop-down
+lists.  Ensure that the expression entered in this textbox is a boolean expression (i.e. it evaluates to either true or
+false).  This usually entails using an equality or inequality in the expression.  Note that vectors entered in the textbox
+will be monitored according to their individual elements.
+</para>
+<para>
+Whenever this expression is true, the event will be triggered.  The action taken upon an event trigger depends on the
+settings specified in the next two sections.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Description</guilabel>
+</term>
+<listitem>
+<para>
+This textbox is used to store a short description of the event.  The description is primarily available as a
+method for keeping track of multiple events.  You can enter any text you wish in this textbox.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect2>
+
+<sect2 id="eventskstdebuglog">
+<title>Kst Debug Log</title>
+<para>
+This section specifies settings for entries added to the &kst; debug log when events are triggered.
+</para>
+<variablelist>
+<varlistentry>
+<term><guilabel>Log as:</guilabel></term>
+<listitem>
+<para>
+Enable this checkbox to have entries added to the &kst; debug log when this event is triggered.
+There are three types of entries in the debug log&mdash;notices, warnings, and errors.
+Select the desired type of entry using the corresponding radio button.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+
+</sect2>
+
+<sect2 id="eventsemailnotification">
+<title>E-Mail Notification</title>
+<para>
+In this section, settings for sending e-mail notifications of event triggers can be specified.
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Notify</guilabel></term>
+<listitem>
+<para>
+Enable this checkbox to have &kst; send e-mail notifications to the specified address when this
+event is triggered.  Also enter in the email address you would like to appear in the
+<quote>From</quote> field of the email in the <guilabel>Sender</guilabel> textbox.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect2>
+
+<sect2 id="eventselog">
+<title>ELOG</title>
+<para>
+&kst; supports adding entries to an ELOG logbook upon event triggers.  This can be useful for remotely
+monitoring live data, or for obtaining summaries of event activity.
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Notify</guilabel></term>
+<listitem>
+<para>
+Selecting this checkbox enables ELOG logging functionality for this event monitor. Click
+<guibutton>Configure...</guibutton> to specify server and logging settings.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect2>
+
+</sect1>
+
+<sect1 id="elogextension">
+<title>The ELOG Extension</title>
+<para>
+The ELOG extension allows event monitors to create logbook entries on a server running the Electronic Logbook (ELOG)
+application. The created logbook entries can be used, for example, to remotely monitor &kst; events or to produce
+periodical reports on data.  For information on configuring and maintaining an ELOG server, please see the official
+<ulink url="http://midas.psi.ch/elog/">ELOG Homepage</ulink>.  To enable the ELOG extension in &kst;, select
+<guimenuitem>Extensions...</guimenuitem> from the <guimenu>Settings</guimenu> menu and ensure that
+<quote>ELOG Extension</quote> is checked.
+</para>
+
+<sect2 id="elogextensionsettings">
+<title>Server and Logging Settings</title>
+<para>
+Server and logging settings should be configured if ELOG functionality is enabled for an event monitor object.
+To configure logging settings, click the <guibutton>Configure...</guibutton> button in the <guilabel>ELOG</guilabel>
+section of the Event Monitor dialog. The ELOG Event Entry dialog should be displayed:
+</para>
+<screenshot>
+<screeninfo>Event Monitor Logging Settings</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-eventmonitor-loggingsettings.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Event Monitor Logging Settings</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+Use the three checkboxes at the bottom to select the type of information to be logged.
+<guilabel>Include Kst capture</guilabel> specifies that a screen capture of the
+currently active window should be included in the entry.  <guilabel>Include Kst configuration file</guilabel>
+specifies that <filename>*.kst</filename> save file should be attached to the entry. Finally, if
+<guilabel>Include Kst debugging information</guilabel> is checked, a copy of the
+<link linkend="debuglog">debug log</link> will be attached to the entry as well.
+</para>
+
+<para>
+Additional fields
+will appear in this dialog once ELOG server settings are configured.  To customize ELOG server settings, click the <guibutton>Configuration...</guibutton> button. The
+following dialog should be displayed:
+</para>
+
+<screenshot>
+<screeninfo>Event Monitor Server Settings</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-eventmonitor-serversettings.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Event Monitor Server Settings</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+Descriptions of the settings in this dialog follow.
+</para>
+<variablelist>
+<varlistentry>
+<term>
+<guilabel>Configuration</guilabel>, <guibutton>Save</guibutton>, and <guibutton>Load</guibutton>
+</term>
+<listitem>
+<para>
+The <guilabel>Configuration</guilabel> drop down list contains a list of saved ELOG server configurations.
+To load a set of configuration settings, select an item from the list and click the <guibutton>Load</guibutton> button.
+To save the current configuration settings in this dialog into a slot, select the desired slot and click the
+<guibutton>Save</guibutton> button.
+</para>
+<caution>
+<para>
+Saving settings into a slot overwrites any existing settings in that slot.
+</para>
+</caution>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>IP address</guilabel> and <guilabel>Port number</guilabel></term>
+<listitem>
+<para>
+Enter the IP address of the machine running the ELOG server application.  The port number that the ELOG server
+listens on is configurable through the server, but by default it is 8080, so if you are unsure, enter 8080 as
+the port number.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Logbook</guilabel></term>
+<listitem>
+<para>
+Each ELOG server can contain one or more logbooks, so the name of the logbook to write entries to must be
+specified.  Ensure that the spelling of the logbook is correct.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>User name</guilabel>, <guilabel>User password</guilabel>, and <guilabel>Write password</guilabel></term>
+<listitem>
+<para>
+Depending on the how the ELOG server application is configured, these settings may or may not be necessary.
+If they are, enter the correct login credentials in the appropriate textboxes.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Capture size</guilabel></term>
+<listitem>
+<para>
+Use this list box to select the size, in pixels, of the &kst; screen capture to attach (if specified).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Submit as HTML text</guilabel></term>
+<listitem>
+<para>
+If this checkbox is selected, HTML tags may be used in the logbook entry.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Suppress e-mail notification</guilabel></term>
+<listitem>
+<para>
+If the logbook is configured to send e-mail notifications of new entries, selecting this checkbox
+will disable the notifications.  Note that this option is not related to &kst;'s own e-mail notification
+setting for event monitors.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+Click the <guibutton>Apply</guibutton> button to apply the entered settings.  Click <guibutton>Update</guibutton>
+to update the ELOG Event Entry dialog (the previous dialog).  Additional fields should appear in the
+ELOG Event Entry dialog.  These fields are unique to the selected logbook.  Once you are satisfied with the settings,
+the <guibutton>Test</guibutton> button
+can be used to send a test logbook entry.  Click <guibutton>Close</guibutton> to exit the dialog.
+</para>
+</sect2>
+
+</sect1>
+</chapter>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:0
+sgml-indent-data:true
+sgml-parent-document:("index.docbook" "book" "chapter")
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->

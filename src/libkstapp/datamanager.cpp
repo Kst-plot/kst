@@ -34,5 +34,4 @@ DataManager::~DataManager() {
 
 }
 
-#include "datamanager.moc"
 // vim: ts=2 sw=2 et

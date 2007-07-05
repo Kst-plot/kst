@@ -155,8 +155,7 @@ void View::resizeEvent(QResizeEvent *event) {
     fitInView(sceneRect());
   }
 }
-}
 
-#include "view.moc"
+}
 
 // vim: ts=2 sw=2 et

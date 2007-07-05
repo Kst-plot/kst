@@ -1,0 +1,180 @@
+<appendix id="installation">
+<title>Installation</title>
+<para>
+The following sections contain detailed instructions for obtaining, compiling, and installing &kst;
+along with any optional libraries or packages.  If you use a package management system, you may use
+it to install &kst; instead.
+</para>
+
+
+<sect1 id="obtainingkst">
+<title>Obtaining &kst;</title>
+<para>
+&kst; is part of the kdeextragear-2 module of &kde;.  You can also download the latest version
+separately from the &kst; <ulink url="http://omega.astro.utoronto.ca/kst/">website
+</ulink>.  If you wish to download &kst; from CVS, it is available via anonymous CVS for &kde;
+or via the &kde;
+<ulink url="http://kdewebcvs.pandmservices.com/cgi-bin/cvsweb.cgi/">WebCVS</ulink> repository.
+
+</para>
+</sect1>
+
+<sect1 id="installingfromsource">
+<title>Installing &kst; from Source</title>
+<para>
+The following sections detail how to compile and install &kst; from source code.
+</para>
+
+<sect2 id="installingrequirements">
+<title>Requirements</title>
+<para>
+&kst; v1.2.0 requires the &kde; 3.1 libraries and &Qt; 3.1.  Almost all major &Linux; distributions have packages
+for &kde; and &Qt;.  Since &Qt; is a dependency of &kde;, having the required version of &kde; should
+be sufficient.  It is recommended that you refer to your particular distribution's documentation for
+&kde; library installation.    Note that the entire &kde; desktop environment
+is not required&mdash;in most cases, look for packages called <filename>kdebase-*</filename> and
+<filename>kdelibs-*</filename>.  Alternatively, more information is available on the &kde;
+<ulink url="http://www.kde.org/download/">website</ulink>.
+</para>
+</sect2>
+
+<sect2 id="optionallibrariesandpackages">
+<title>Optional Libraries and Packages</title>
+<para>The following libraries and packages are optional, but provide full plugin and data source functionality
+in &kst; if installed.  The installation instructions assume you have root access on your system.</para>
+<note>
+<para>
+You may already have some or all of these libraries and packages installed, in which case there is no
+need to reinstall them.  Also, check first to see if pre-compiled binaries for the libraries and packages
+exist in your distribution's package management system, as it may be easier to install the binary packages.
+</para>
+</note>
+
+<sect3 id="gslrequirement">
+<title>&GNU; Scientific Library (GSL)</title>
+<para>
+The &GNU; Scientific Library provides a variety of mathematical operations for the built-in
+&kst; plugins.  Having GSL installed enables a variety of plugins such as linear and non-linear fitting,
+ correlation, and interpolation plugins.  The library can be found at <ulink url="ftp://ftp.gnu.org/gnu/gsl/">ftp://ftp.gnu.org/gnu/gsl/</ulink>.
+Alternatively, you can find GSL under <filename>/gnu/gsl</filename> on the mirrors listed at
+<ulink url="http://www.gnu.org/prep/ftp.html">http://www.gnu.org/prep/ftp.html</ulink>.
+</para>
+
+<para>
+Download <filename>gsl-<replaceable>version</replaceable>.tar.gz</filename>, where <replaceable>version</replaceable> is the greatest version number found in the directory.
+</para>
+
+<para>
+Then unzip and untar the file:
+</para>
+<screen><userinput><command>tar -zxvf gsl-<replaceable>version</replaceable>.tar.gz</command></userinput></screen>
+<para>
+replacing <replaceable>version</replaceable> with the version number of the downloaded file.
+</para>
+<para>
+Read the <filename>INSTALL</filename> file in the resultant directory for detailed installation instructions.
+For most systems, the following will work:
+<screen><userinput><command>cd gsl-<replaceable>version</replaceable></command>
+<command>./configure</command>
+<command>make</command>
+<command>make install</command></userinput></screen>
+</para>
+
+</sect3>
+
+<sect3 id="fitsiorequirement">
+<title>CFITSIO</title>
+<para>
+The CFITSIO library provides support for reading and writing to the FITS (Flexible Image Transport System) data
+format.  The libary can be found at
+<ulink url="ftp://heasarc.gsfc.nasa.gov/software/fitsio/c/">ftp://heasarc.gsfc.nasa.gov/software/fitsio/c/</ulink>.
+You only need to install the library if you anticipate reading or writing to the FITS file format.
+</para>
+
+<para>
+Download <filename>cfitsio<replaceable>version</replaceable>.tar.gz</filename>, where <replaceable>version</replaceable> is the greatest version number found the directory.
+</para>
+
+<para>
+Then unzip and untar the file:
+<screen><userinput><command>tar -zxvf cfitsio<replaceable>version</replaceable>.tar.gz</command></userinput></screen>
+replacing <replaceable>version</replaceable> with the version number of the downloaded file.
+</para>
+
+<para>
+Read the <filename>README</filename> file in the resultant directory for installation instructions.  For most
+systems, the following will work:
+<screen><userinput><command>cd cfitsio</command>
+<command>./configure --prefix=/usr</command>
+<command>make</command>
+<command>make install</command></userinput></screen>
+</para>
+
+<para>
+You may need to change the directory specified for the <option>--prefix</option> option, but the most
+common directory is <filename>/usr</filename>
+</para>
+</sect3>
+</sect2>
+
+<sect2 id="compilingandinstalling">
+<title>Compiling and Installing</title>
+<para>
+Once all of the prerequisites have been met on your system you can compile and install &kst;.  It
+is assumed that you have already downloaded the &kst; source package.  If not, please see
+<link linkend="obtainingkst">Obtaining &kst;</link>.
+</para>
+
+<para>
+The simplest way to install &kst; is:
+<screen><userinput><command>tar -zxvf kst-<replaceable>version</replaceable>.tar.gz</command>
+<command>cd kst-<replaceable>version</replaceable></command>
+<command>./configure --prefix=`kde-config --prefix`</command>
+<command>make</command>
+<command>make install</command></userinput></screen>
+replacing <replaceable>version</replaceable> with the version of &kst; you have.
+</para>
+<important>
+<para>Note that <command>kde-config --prefix</command> is surrounded by backquotes.  It is very
+important that the <command>kde-config</command> utility returns the correct path (most likely
+<filename>/usr</filename>), otherwise &kst; will <emphasis>not</emphasis> install properly.
+You can double-check by running it directly:
+<screen><userinput><command>kde-config --prefix</command></userinput></screen>
+Ensure that a non-null path is displayed.
+</para>
+</important>
+
+<para>
+You can read through the messages displayed by the <command>configure</command> script&mdash;if it
+reports any missing libraries (such as GSL) that should not be missing, please go back and ensure
+that the libraries and header files have been correctly installed in the appropriate locations.
+</para>
+
+
+
+</sect2>
+
+
+
+</sect1>
+
+</appendix>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:0
+sgml-indent-data:true
+sgml-parent-document:("index.docbook" "book" "appendix")
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->

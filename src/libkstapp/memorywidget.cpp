@@ -39,5 +39,4 @@ void MemoryWidget::updateFreeMemory() {
 
 }
 
-#include "memorywidget.moc"
 // vim: ts=2 sw=2 et

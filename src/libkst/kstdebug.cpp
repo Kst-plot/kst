@@ -199,6 +199,4 @@ void KstDebug::clearHasNewError() {
   _hasNewError = false;
 }
 
-
-#include "kstdebug.moc"
 // vim: ts=2 sw=2 et

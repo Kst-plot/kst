@@ -52,5 +52,4 @@ bool DebugDialog::event(QEvent* e) {
 
 }
 
-#include "debugdialog.moc"
 // vim: ts=2 sw=2 et

@@ -1,0 +1,315 @@
+<appendix id="command-lineoptions">
+
+<appendixinfo>
+<author>
+<firstname>Barth</firstname>
+<surname>Netterfield</surname>
+<affiliation>
+<address><email>kst@omega.astro.utoronto.ca</email></address>
+</affiliation>
+</author>
+</appendixinfo>
+
+<title>Command Line Usage and Examples</title>
+<para>
+A typical use of kst is from the command line to make X-Y plots or Z images from data files. kst can read ascii data, readdata/dirfile compatible binary files, and optionally (with external libraries) FITS images, PIOLib files, netCDF files, and HEALPix FITS files.
+</para>
+
+<refentry id="command-linesynopsis">
+
+<refmeta>
+<refentrytitle>&kst; Command Line Synopsis</refentrytitle>
+</refmeta>
+
+<refnamediv>
+<refname>kst</refname>
+<refpurpose>A plotting and data viewing program</refpurpose>
+</refnamediv>
+
+
+<refsynopsisdiv>
+<para>The options are:</para>
+<cmdsynopsis>
+<command>kst</command>
+<arg>Qt-options</arg>
+<arg>KDE-options</arg>
+<arg>options</arg>
+<arg rep="repeat"><replaceable>file</replaceable></arg>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1 id="cmdline-options">
+<title>Options</title>
+
+<variablelist>
+<!-- TODO: Add <replaceable>s here -->
+<varlistentry>
+<term><option>[file...]</option></term>
+<listitem>
+<para>
+A .kst file, or one or more data files.  Supported formats are ASCII columns, BOOMERANG frame files, BLAST dirfile files, and other optionally supported types.  A .kst files stores all options that can be set by other flags.  The following flags can be used to override the options set in the .kst file:
+<option>-F datafile</option>, <option>-n NS</option>, <option>-s NS</option>,
+<option>-f F0</option>, <option>-a</option>.
+The rest can not be overridden.  If an override flag is given, it is applied
+to all vectors in the plot.
+</para>
+<para>
+ASCII data from stdin can be plotted by including "stdin" in the
+list <option>[file...]</option>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-y Y</option></term>
+<listitem>
+<para>
+The source for the Y axis data.  For ASCII files, this
+is the column.  For binary files, this is the field name.  To plot multiple
+curves, this may be specified multiple times.  The same source file, sample
+ranges, and X axis data are assumed.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-e E</option></term>
+<listitem>
+<para>
+Error bars for Y axis data.  For ASCII file, refer
+to the column holding the data.  For binary files use the field name.
+If multiple <option>-y Y</option> options are given, this may also be
+used multiple times.  Individual Y entries are associated in order with
+multiple E entries.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-x X</option></term>
+<listitem>
+<para>
+The source for the X axis data.  For ASCII files, this
+is the column.  For readata files, this is the field name.  If this option
+is not specified, the row number in the file is used.  This option can only
+be given once.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-z Z</option></term>
+<listitem>
+<para>
+The source for the Z matrix data (which gets displayed as an image).  For ASCII files, this
+is the column containing the z data.  For other optional formats (HEALPix, FITS image, etc), this is the name of the desired matrix field, as displayed in the matrix dialog.  Some matrix-compatible datasources also allow using an alias which is the number of the desired matrix field.  To plot multiple matrices, this may be specified multiple times.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-p P</option></term>
+<listitem>
+<para>
+The source for power spectra.  For ASCII files, this
+is the column.  For binary files, this is the field name.  To plot power
+spectra of multiple curves, this may be specified multiple times.  The
+same source file, sample ranges and fft lengths are used for all Power
+Spectra requested from the command line.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-l P</option></term>
+<listitem>
+<para>
+The length of the FFT used in power specra
+estimation is 2^P.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-h H</option></term>
+<listitem>
+<para>
+The source for histograms.  For ASCII files, this
+is the column.  For binary files, this is the field name.  Multiple
+histograms can be defined from the command line.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-m NC</option></term>
+<listitem>
+<para>
+Used when multiple curves have been defined.
+Rather than plotting all curves in the same plot, plot each in its own plot,
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-f F0</option></term>
+<listitem>
+<para>
+The starting frame number (for readdata files) or
+row (for ASCII files) to read.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-n</option></term>
+<listitem>
+<para>
+The number of frames (for readdata files) or rows
+(for ASCII files) to read.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-s NS</option></term>
+<listitem>
+<para>
+The number of frames or rows to skip each read.  This
+is useful when working with very large data files, to speed up response and
+conserve memory, in the case that the data are slowly varying.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-a</option></term>
+<listitem>
+<para>
+Used in with the <option> -s NS</option>: rather than
+skipping each NS frames, average them.  This provides a combination of
+very basic high pass filtering, and memory conservation.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-F Datafile</option></term>
+<listitem>
+<para>
+Override the file to read the data from for
+all vectors listed in the .kst file.  Can only be used in conjunction with
+a kst file.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--print psfile</option></term>
+<listitem>
+<para>
+Rather than displaying the plot, export
+the image to a postscript file and exit. *BUG note: even though no
+windows are opened on screen, access to the X server is still required.*
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--png pngfile</option></term>
+<listitem>
+<para>
+Rather than displaying the plot, export
+the image to a png file of dimensions 640x480 and exit.  *BUG note: even
+though no windows are opened on screen, access to the X server is still
+required.*
+</para>
+</listitem>
+</varlistentry>
+
+
+</variablelist>
+
+</refsect1>
+
+<refsect1 id="command-lineexamples">
+<title>Command Line Examples</title>
+
+<para>
+Several examples of typical use follow.
+</para>
+
+<informalexample>
+<para>To plot column 1 a file (tmp.dat) of ASCII data:
+<screen><userinput><command>kst -y 1
+tmp.dat</command></userinput></screen>
+</para>
+</informalexample>
+
+<informalexample>
+<para>To plot column 2, 3, and 4 vs. column 1 of an ASCII file, in 1 plot:
+<screen><userinput><command>kst -x 1 -y 2 -y 3 -y 4 tmp.dat</command></userinput></screen>
+</para>
+</informalexample>
+
+
+<informalexample>
+<para>
+To plot column 2, 3, and 4 vs. column 1 of an ASCII file, in 3 plots,
+arranged in 1 column:
+<screen><userinput><command>kst -x 1 -y 2 -y 3 -y 4 -m 1 tmp.dat</command></userinput></screen>
+</para>
+</informalexample>
+
+<informalexample>
+<para>
+To plot 500 rows of column 2 of an ASCII file, starting at line 100:
+<screen><userinput><command>kst -y 2 -f 100 -n 500 tmp.dat</command></userinput></screen>
+</para>
+</informalexample>
+
+<informalexample>
+<para>
+To plot the first 100,000 rows of column 2 of an ASCII file, averaging every 100 rows:
+<screen><userinput><command>kst -y 2 -f 0 -n 100000 -s 100 -a tmp.dat</command></userinput></screen>
+</para>
+</informalexample>
+
+<informalexample>
+<para>
+(Using optional HEALPix Data Source) To plot the first 3 maps in a HEALPix FITS file in a 2x2 grid:
+<screen><userinput><command>kst -z 1 -z 2 -z 3 -m 2 healpix_example_sm.fits</command></userinput></screen>
+</para>
+</informalexample>
+
+<informalexample>
+<para>
+(Using optional HEALPix Data Source) To plot a map with a specific field name in a HEALPix FITS file:
+<screen><userinput><command>kst -z "1 - TEMPERATURE (Kelvin)" healpix_example_sm.fits</command></userinput></screen>
+</para>
+</informalexample>
+
+</refsect1>
+
+</refentry>
+
+</appendix>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:0
+sgml-indent-data:true
+sgml-parent-document:("index.docbook" "book" "appendix")
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->

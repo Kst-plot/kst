@@ -1,0 +1,1696 @@
+<chapter id="workingwithplotsandwindows">
+<title>Working with Plots and Windows</title>
+<para>
+This chapter details the concepts behind plots and windows, and provides information on viewing and
+manipulating the layout of plots and windows in &kst;.  The following
+diagram illustrates the relationships between windows, plots, and plottable data objects.
+</para>
+
+<para>
+<inlinemediaobject>
+<imageobject>
+<imagedata fileref="Diagram-kst-windowplotrelation.png" format="PNG"/>
+</imageobject>
+<textobject>
+<phrase>&kst; Window, Plot, and Curve relationships</phrase>
+</textobject>
+</inlinemediaobject>
+</para>
+
+<para>
+As can be seen from the above diagram, each window in &kst; can contain zero or more plots, and each
+plot can contain zero or more plottable data objects.
+</para>
+
+<sect1 id="plotsandplotdialog">
+<title>The Plot Dialog</title>
+<para>
+The plot dialog provides a central location for managing plots.  To access it, select
+<guimenuitem>Edit Plot...</guimenuitem> from the <guimenu>Plots</guimenu> menu.  At the top of the dialog
+box you should see two drop-down lists:
+</para>
+<screenshot>
+<screeninfo>Top of Plot Dialog</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-plotdialogtop.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Top of Plot Dialog</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+To modify a plot, select the window that contains the plot from the left drop-down list,
+and select the plot itself from the right drop-down list.  New windows can be created by
+clicking the button in the middle.
+</para>
+
+<para>
+At the bottom of the plot dialog are four buttons.  <guibutton>Delete</guibutton> deletes
+the currently selected plot, <guibutton>Apply as New</guibutton> applies the current
+plot settings to a new plot, <guibutton>Apply Edits</guibutton> applies the plot settings
+to the currently selected plot, and <guibutton>Close</guibutton> closes the plot dialog
+without applying or saving any settings.
+</para>
+
+<para>
+The plot settings available on each tab of the plot dialog are described below.
+</para>
+
+<sect2 id="plotdialogcontent">
+<title>Content</title>
+<para>
+Below is a screenshot of the <guilabel>Content</guilabel> tab.
+</para>
+<screenshot>
+<screeninfo>Plot Dialog Content Tab</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-plotdialogcontent.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Plot Dialog Content Tab</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+As the name implies, the settings on this tab specify the content of the plot.
+The following are brief explanations of the settings.
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Unique plot name</guilabel></term>
+<listitem>
+<para>
+The unique plot name is the identifier for the plot.  There cannot be duplicate plot names.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Displayed objects</guilabel> and <guilabel>Available objects</guilabel></term>
+<listitem>
+<para>
+<guilabel>Displayed objects</guilabel> lists the plottable data objects that
+should be plotted in the plot. <guilabel>Available objects</guilabel> lists all the
+current plottable data objects in &kst; that are not in the <guilabel>Displayed objects</guilabel>
+list. To move an item from one list to the other, first highlight the desired item, and click the
+appropriate arrow button in between the two lists (the left arrow to move a item from
+<guilabel>Available objects</guilabel> to <guilabel>Displayed objects</guilabel>, and the right
+arrow to move a item from <guilabel>Displayed objects</guilabel> to <guilabel>Available objects</guilabel>).
+Alternatively, dragging and dropping the items works as well.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Foreground and background colors</guilabel></term>
+<listitem>
+<para>
+Select the foreground and background colors to use for this plot using the standard &kde; color chooser.
+ The upper left box indicates the foreground
+colour, while the lower right box indicates the background colour.  To edit a colour,
+double-click on the desired box, and a standard colour chooser dialog will appear.
+Click
+<inlinemediaobject>
+<imageobject>
+<imagedata fileref="Widget-kst-swapcolour.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
+to swap the foreground and background colours.  If you wish to quickly switch to a white background and black
+foreground, click
+<inlinemediaobject>
+<imageobject>
+<imagedata fileref="Widget-kst-defaultcolours.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
+Note that the foreground color only affects the axes lines and axes labels,
+and is independent of any colors used to plot data objects.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Re-grid</guilabel> and <guilabel>Columns</guilabel></term>
+<listitem>
+<para>
+Check the <guilabel>Re-grid</guilabel> option to rearrange all plots in the selected window in a
+grid pattern with the specified number of columns.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</sect2>
+
+<sect2 id="plotdialoglimits">
+<title>Axes</title>
+<para>
+Below is a screenshot of the <guilabel>Axes</guilabel> tab.
+</para>
+<screenshot>
+<screeninfo>Plot Dialog Axes Tab</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-plotdialoglimits.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Plot Dialog Axes Tab</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+The settings for the plot axes are specified on this tab. The axis settings are split into
+two identical sections&mdash;an x axis section and a y axis section.
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Auto scale</guilabel></term>
+<listitem>
+<para>
+Select this option to let &kst; automatically choose a scale for this axis based on the
+highest and lowest values for this axis found in the plotted objects.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Auto up</guilabel></term>
+<listitem>
+<para>
+This option behaves similarly to <guilabel>Auto Scale</guilabel>, but the upper axis limit
+will only increase, and the lower axis limit will only decrease.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Spike Insensitive Auto scale</guilabel></term>
+<listitem>
+<para>
+Select this option to let &kst; automatically choose a scale for this axis that is
+based on the values found in the plotted objects. In general, <quote>spikes</quote>, or
+sudden short increases or decreases in the value, will be ignored when determining the scale.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Mean-centered</guilabel></term>
+<listitem>
+<para>
+Select this option to center the axis around the mean of the values found in the plot (x values
+are used to calculate the mean for the x axis, and y values are used to calculate
+the mean for the y axis). Specify
+the length of the axis in the <guilabel>Range</guilabel> text box.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Fixed</guilabel></term>
+<listitem>
+<para>
+Manually specify lower and upper limits for the axis. Enter the limits in the textboxes to the right of
+<guilabel>Range</guilabel>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Logarithmic</guilabel></term>
+<listitem>
+<para>
+Enable this checkbox if you wish to use a logarithmic scale for the axis.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Major tick density</guilabel>, <guilabel>Minor ticks</guilabel>, and <guilabel>Auto minor</guilabel></term>
+<listitem>
+<para>
+Change the density value for the major ticks on this axis by using the <guilabel>Major tick density</guilabel> field.
+The number of major ticks on the axis will be approximately equal to the density value, with slight variations depending
+on the plot size and zoom level.  Select the number of minor ticks to show in between major ticks using the
+<guilabel>Minor ticks</guilabel> field.  If <guilabel>Auto minor</guilabel> is checked, the number of minor ticks
+is automatically determined based on zoom level.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+In addition to axis ticks, grid lines can be shown on plots as well. Grid lines are drawn as thin dotted lines
+using the specified colors.
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Show major</guilabel></term>
+<listitem>
+<para>
+Select <guilabel>X major</guilabel> to show vertical grid lines corresponding to the x axis major tick marks.
+Select <guilabel>Y major</guilabel> to show horizontal grid lines corresponding to the y axis major tick marks.
+The color of both types of major lines can be specified by clicking the button next to <guilabel>Color</guilabel>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Show minor</guilabel></term>
+<listitem>
+<para>
+Select <guilabel>X minor</guilabel> to show vertical grid lines corresponding to the x axis minor tick marks.
+Select <guilabel>Y minor</guilabel> to show horizontal grid lines corresponding to the y axis minor tick marks.
+The color of both types of minor lines can be specified by clicking the button next to <guilabel>Color</guilabel>.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect2>
+
+
+
+
+<sect2 id="plotdialoglabels">
+<title>Labels</title>
+<para>
+Below is a screenshot of the <guilabel>Labels</guilabel> tab.
+</para>
+<screenshot>
+<screeninfo>Plot Dialog Labels Tab</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-plotdialoglabels.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Plot Dialog Labels Tab</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+Settings for the plot labels can be specified on this tab. Brief descriptions of the settings
+are provided below.
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Current scalar list</guilabel></term>
+<listitem>
+<para>
+A list of the current scalars defined in &kst;. This list is primarily used to quickly insert
+values in the label texts.  Choosing an item from this list will insert the item at the current
+text cursor position.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Top label</guilabel></term>
+<listitem>
+<para>
+The label located at the top of the plot. Select a font size and enter the text for the label
+using the controls in this row.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Y axis</guilabel></term>
+<listitem>
+<para>
+The label located vertically next to the y axis of the plot. Select a font size and enter
+the text for the label using the controls in this row.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>X axis</guilabel></term>
+<listitem>
+<para>
+The label located vertically next to the x axis of the plot. Select a font size and enter
+the text for the label using the controls in this row.
+</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry>
+<term><guilabel>Numbers</guilabel>, <guilabel>X angle</guilabel> and <guilabel>Y angle</guilabel></term>
+<listitem>
+<para>
+The numbers used to label both the x axis and the y axis of the plot. The size and angles of the
+numbers can be specified.  Positive angles rotate the text clockwise, while negative angles
+rotate the text counter-clockwise.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Font family</guilabel></term>
+<listitem>
+<para>
+The font used for all labels of the plot.  Select an available font using the drop-down list.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Also Apply Font and Angle Settings To</guilabel></term>
+<listitem>
+<para>
+Select the plots to which the specified label settings (except Label Text) should be applied.
+</para>
+<note>
+<para>
+If <guilabel>All other plots</guilabel> or <guilabel>All other plots in this window</guilabel>
+is selected, previous label settings for the affected plots will be lost.
+</para>
+</note>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Auto Label</guilabel></term>
+<listitem>
+<para>
+Click this button to automatically generate label texts for all labels on the plot.
+The text for <guilabel>Top label</guilabel> will be a list of paths to the data files
+used in the plot.  The text for <guilabel>Y axis</guilabel> will be a list of the dependent
+variable descriptions (e.g. <quote>Number in Bin</quote> for a histogram).  The text for
+<guilabel>X axis</guilabel> will be the name of the vector used as the independent variable.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Labels</guilabel> (preview)</term>
+<listitem>
+<para>
+The preview image at the bottom of the <guilabel>Labels</guilabel> tab provides previews of
+all four labels at 100&percnt; zoom.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+
+</sect2>
+
+<sect2 id="plotdialoglegend">
+<title>Legend</title>
+<para>
+Below is a screenshot of the <guilabel>Legend</guilabel> tab.
+</para>
+<screenshot>
+<screeninfo>Plot Dialog Legend Tab</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-plotdialoglegend.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Plot Dialog Legend Tab</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+Legend settings for the plot can be specified on this tab; most of these settings concern the
+appearance of the legend.  The legend itself is optional.
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Show legend</guilabel></term>
+<listitem>
+<para>
+This option enables or disables the legend for the plot.  If you wish to use a legend, you must
+select this checkbox.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Display in legend box</guilabel></term>
+<listitem>
+<para>
+Select this option to display a border around the legend.  Selecting this option also allows the background
+of the legend to be set using the color chooser located on this tab.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Alignment</guilabel></term>
+<listitem>
+<para>
+The horizontal (left and right) alignment of the items in the legend.  The available settings in the drop-down list are
+<guilabel>Right</guilabel>, <guilabel>Center</guilabel>, and <guilabel>Left</guilabel>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Font family</guilabel></term>
+<listitem>
+<para>
+The font to use for the legend text.  Select a font from the drop-down list.
+</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry>
+<term><guilabel>Font size</guilabel></term>
+<listitem>
+<para>
+The size of the legend text.  Note that the size is not specified in points, but is relative to a default
+size of 0.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Colors</guilabel></term>
+<listitem>
+<para>
+This widget can be used to specify the colour of the legend text.  The upper left box indicates the foreground
+colour, while the lower right box indicates the background colour (applicable only if <guilabel>Display in legend box</guilabel>
+is checked).  To edit a colour,
+double-click on the desired box, and a standard colour chooser dialog will appear.
+Click
+<inlinemediaobject>
+<imageobject>
+<imagedata fileref="Widget-kst-swapcolour.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
+to swap the foreground and background colours.  If you wish to quickly return to the default colours, click
+<inlinemediaobject>
+<imageobject>
+<imagedata fileref="Widget-kst-defaultcolours.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Also Apply Settings To</guilabel></term>
+<listitem>
+<para>
+Select the plots to which the specified legend settings should be applied.
+</para>
+<note>
+<para>
+If <guilabel>All other plots</guilabel> or <guilabel>All other plots in this window</guilabel>
+is selected, previous legend settings for the affected plots will be lost.
+</para>
+</note>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Legend</guilabel> (preview)</term>
+<listitem>
+<para>
+The image at the bottom of this tab provides a preview of the legend text at
+100&percnt; zoom.  Among other things, the preview can be useful in determining appropriate font sizes.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+
+</sect2>
+
+<sect2 id="plotdialogmarkers">
+<title>Markers</title>
+<para>
+Below is a screenshot of the <guilabel>Markers</guilabel> tab.
+</para>
+<screenshot>
+<screeninfo>Plot Dialog Markers Tab</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-plotdialogmarkers.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Plot Dialog Markers Tab</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+Plot markers provide an easy means of flagging areas of interest on a plot.  The <guilabel>Markers</guilabel>
+tab provides full access to plot marker settings and options.  Navigation functions for plot markers are described
+in the <link linkend="zoomingandscrollingscrollmenu">Scroll Menu</link> section.
+</para>
+<tip>
+<para>
+To quickly create plot markers on a plot, place the mouse cursor over the plot and press the
+<keycap>Insert</keycap> key.  A vertical dashed line should appear indicating the position of the
+plot marker.
+</para>
+</tip>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>New</guilabel> and <guibutton>Add</guibutton></term>
+<listitem>
+<para>
+Use the <guilabel>New</guilabel> text field to manually enter a plot marker value.  Values can be
+entered in floating point or scientific notation.  Values in scientific notation must be entered in
+the form <literal>mEx</literal> or <literal>mex</literal>, where <literal>m</literal> is the
+mantissa and <literal>x</literal> is the exponent.  For example, one way to enter the value 15000 in scientific
+notation is by typing <userinput>1.5e4</userinput>. </para>
+<para>
+Click the <guilabel>Add</guilabel> button to create a new plot marker with the specified value. You will be
+warned if duplicate plot markers already exist, or if the entered value is not valid.  Note that plot marker
+additions or removals made from the <guilabel>Markers</guilabel> tab are not applied unless
+the plot dialog settings are applied.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Defined plot markers</guilabel>, <guibutton>Remove</guibutton>, and <guibutton>Remove All</guibutton></term>
+<listitem>
+<para>
+The list of existing plot markers for this plot are listed under <guilabel>Defined plot markers</guilabel>.
+To remove plot markers, highlight the desired markers in the list and click the <guibutton>Remove</guibutton> button.
+Multiple markers can be selected for removal by clicking and dragging within the list, or by holding down the
+<keycap>Shift</keycap> or <keycap>Ctrl</keycap> key and clicking on items in the list. To remove all plot markers
+for this plot, click the <guilabel>Remove All</guilabel> button.  Note that plot marker
+additions or removals made from the <guilabel>Markers</guilabel> tab are not applied unless
+the plot dialog settings are applied.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Automatic Marker Generation</guilabel></term>
+<listitem>
+<para>
+In addition to individually defining plot markers, curves, equations, power spectra, and histograms
+ can be used to automatically
+generate plot markers as well.  To use one of these data objects for plot marker generation, check the
+<guilabel>Use data object as marker source</guilabel> checkbox and select an item from the drop down list.
+Then select the criteria to use for creating plot markers.
+Selecting <guilabel>Rising edge</guilabel> causes plot markers to be created when the y value of the
+selected data object changes from zero to non-zero.  Selecting <guilabel>Falling edge</guilabel> causes
+plot markers to be created when the y value of the selected data object changes from non-zero to zero.
+Selecting <guilabel>Both</guilabel> causes plot markers to be created on both rising edges and
+falling edges of the data object. In all cases, the x value of the point in the data object with the non-zero
+y value is used to create the new plot marker.
+</para>
+<para>
+If the selected data object is subsequently updated, additional plot markers will be created if necessary.
+However, plot markers will never be removed as a consequence of data object changes, so manually created
+plot markers will never be affected.
+</para>
+</listitem>
+</varlistentry>
+
+
+</variablelist>
+
+
+</sect2>
+
+</sect1>
+
+
+<sect1 id="theplotcontextmenu">
+<title>The Plot Context Menu</title>
+<para>
+When working with plots, right-clicking on any plot will bring up a context menu that
+provides commonly used functions.  The following list provides a brief overview of the menu items,
+often referring to other sections of this document that describe the functions in more detail.
+</para>
+<variablelist>
+<varlistentry>
+<term><guimenuitem>Delete</guimenuitem></term>
+<listitem>
+<para>
+Deletes the plot.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Edit...</guimenuitem></term>
+<listitem>
+<para>
+Brings up the Plot Dialog, with this plot selected.  See the
+<link linkend="plotsandplotdialog">Plot Dialog</link> section for information on the settings.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Maximize</guimenuitem></term>
+<listitem>
+<para>
+Expands the plot so that it takes up the entire area of the window.  Uncheck this option
+to return the plot to its previous size.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Pause</guimenuitem></term>
+<listitem>
+<para>
+Pauses automatic update of live data.  This menu item duplicates the functionality
+of <guimenuitem>Pause</guimenuitem> from the <guimenu>Range</guimenu> menu.  See
+<link linkend="zoomingandscrollingworkingwithlivedata">Working with Live Data</link>
+for more information.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guisubmenu>Zoom</guisubmenu> (submenu)</term>
+<listitem>
+<para>
+The <guisubmenu>Zoom</guisubmenu> submenu is described in the section entitled
+<link linkend="zoomingandscrollingthezoommenu">The Zoom Menu</link>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guisubmenu>Scroll</guisubmenu> (submenu)</term>
+<listitem>
+<para>
+This menu is described in the section entitled
+<link linkend="zoomingandscrollingscrollmenu">The Scroll Menu</link>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guisubmenu>Edit</guisubmenu> (submenu)</term>
+<listitem>
+<para>
+This submenu displays a list of objects available for editing.  Clicking on an object
+name from the submenu displays the Edit dialog for the object. Details on this
+dialog are available in the <link linkend="curves">Curves</link>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guisubmenu>Fit</guisubmenu> (submenu)</term>
+<listitem>
+<para>
+This submenu displays a list of curves, histograms, power spectra, and equations
+ that can be fit. Selecting a name from
+the submenu displays the Fit Function dialog.   This dialog is similar to the
+<link linkend="builtinplugins">plugins dialog</link>,
+but displays only those plugins that perform fits.  The input vectors are
+selected based on the data object.  In addition, curve appearance properties can be changed,
+as the <guilabel>Fit</guilabel> function creates vectors, and curves based on the
+vectors.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guisubmenu>Filter</guisubmenu> (submenu)</term>
+<listitem>
+<para>
+This submenu displays a list of data objects that can be filtered. Selecting a name from
+the submenu displays the Filter Function dialog.  This dialog is similar to the
+<link linkend="builtinplugins">plugins dialog</link>,
+but displays only those plugins that perform filtering.  The input vector to be filtered
+is selected based on the curve.  In addition, curve appearance properties can be changed,
+as the <guilabel>Filter</guilabel> function creates vectors, and curves based on the
+vectors.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guisubmenu>Remove</guisubmenu> (submenu)</term>
+<listitem>
+<para>
+This submenu displays a list of curves currently in the plot. Clicking on a curve
+name from the submenu removes the curve from the plot (the curve itself, however, is
+not removed as a data object).
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect1>
+
+
+
+
+
+<sect1 id="thelabeleditor">
+<title>The Label Editor</title>
+<para>
+<!--TODO: Read through this section - check it's up-to-date -->
+The label editor allows custom labels to be placed in arbitrary locations in &kst; plot windows, in addition
+to the fixed labels created as part of plots.
+To use the label editor, select <guimenuitem>Label Mode</guimenuitem> from the <guimenu>Plots</guimenu>
+menu.  The mouse mode will change to label editor mode.  To exit label editor mode, select another mouse mode
+(such as XY Mouse Zoom).  The following sections describe the functions available when in label editor mode.
+</para>
+
+<sect2 id="thelabeleditor-creatingnewlabels">
+<title>Creating New Labels</title>
+<para>
+To create a new label using the label editor, click anywhere within the x and y axes of a plot where
+there is not already an existing label.  The label editor dialog should appear:
+</para>
+<screenshot>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-labeleditor.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+</screenshot>
+<para>
+The following are explanations of the dialog box elements.
+</para>
+<variablelist>
+<varlistentry>
+<term><guilabel>Scalars</guilabel></term>
+<listitem>
+<para>
+A list of scalars currently defined in &kst;. Selecting an item from the dropdown list inserts
+the value of the item at the current cursor position in <guilabel>Label text</guilabel>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Label text</guilabel></term>
+<listitem>
+<para>
+The text displayed by the label.  You may enter text manually in this dialog and in combination
+with scalars selected from the <guilabel>Scalars</guilabel> dropdown list if you wish.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Font</guilabel></term>
+<listitem>
+<para>
+The font to use for the label text.  Select a font from the dropdown list.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Size</guilabel></term>
+<listitem>
+<para>
+The size of the label text.  0 is the default value.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Rotation</guilabel></term>
+<listitem>
+<para>
+The number of degrees to rotate the label.  Positive values rotate the label clockwise, while negative
+values rotate the label counter-clockwise.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Alignment</guilabel></term>
+<listitem>
+<para>
+The horizontal alignment of the label.  Select one of <guilabel>Left</guilabel>, <guilabel>Center</guilabel>,
+or <guilabel>Right</guilabel>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Color</guilabel></term>
+<listitem>
+<para>
+Select the color to use for the label text.  Clicking the <inlinemediaobject><imageobject><imagedata fileref="Widget-kst-colourchooser.png" format="PNG"/></imageobject></inlinemediaobject> button displays
+the standard &kde; color chooser.  Selecting <guilabel>Use plot color</guilabel> uses the foreground
+color specified for the plot.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para>
+Once you are satisfied with the label settings, click <guibutton>Apply</guibutton> to apply the label settings
+without closing the label editor dialog.  Click <guibutton>OK</guibutton> to apply the label settings and close the
+dialog.  Alternatively, you can click <guibutton>Close</guibutton> to close the label editor dialog without
+applying any label settings.
+</para>
+</sect2>
+
+<sect2 id="thelabeleditor-editinglabels">
+<title>Editing and Deleting Existing Labels</title>
+<para>
+To edit an existing label, click on the label in the plot. The
+<link linkend="thelabeleditor-creatingnewlabels">label editor dialog</link> should be displayed.
+You can delete the label from the label editor dialog by clicking the <guibutton>Delete</guibutton> button.
+</para>
+</sect2>
+
+<sect2 id="thelabeleditor-movinglabels">
+<title>Moving Labels</title>
+<para>
+To move an existing label in label editor mode, simply drag the label to the desired location, anywhere within
+the plot. 
+</para>
+</sect2>
+</sect1>
+
+
+<sect1 id="datamode">
+<title>Data Mode</title>
+<para>Data mode allows precise viewing of the data points use in a plotted data object.  To toggle data mode,
+select <guimenuitem>Data Mode</guimenuitem> from the <guimenu>Plots</guimenu> menu. Now, when the cursor
+is moved over a plot, a coloured dot will indicate the closest data point to the cursor, as shown in the
+screenshot below.  The status bar will
+display the coordinates of the data point (in terms of the x and y vectors used to plot the data object) in status bar at the
+lower right corner of the &kst; window.
+The status bar will also display the x, y, and z coordinates of any visible image.  If images overlap, only the coordinates of the
+topmost image will be displayed.
+Note that all zooming functions are still available while in data mode.
+</para>
+<screenshot>
+<screeninfo>Top of Plot Dialog</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-datamode.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Top of Plot Dialog</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+<tip>
+<para>
+If the status bar is not visible, make sure <guimenuitem>Show Statusbar</guimenuitem> is checked in the
+<guimenu>Status</guimenu> menu.
+</para>
+</tip>
+</sect1>
+
+
+<sect1 id="zoomingandscrolling">
+<title>Zooming and Scrolling</title>
+<para>
+Zooming and scrolling in plots is easy and intuitive with &kst;.  The following sections explain
+the different zooming and scrolling modes.
+</para>
+
+<sect2 id="zoomingandscrollingzoommodes">
+<title>Mouse Zoom Modes</title>
+<para>
+To access the different zoom modes, choose one of <guimenuitem>XY Mouse Zoom</guimenuitem>,
+<guimenuitem>X Mouse Zoom</guimenuitem>, or <guimenuitem>Y Mouse Zoom</guimenuitem> from the
+<guimenu>Plots</guimenu> menu.  The different modes are described below.
+</para>
+
+<sect3 id="zoomingandscrollingzoommodesxymousezoom">
+<title>XY Mouse Zoom</title>
+<para>
+In XY Mouse Zoom mode, you can zoom into a specific rectangular area of the plot by simply
+clicking and dragging to draw a rectangle where desired. The x and y axes of the plot will
+change to reflect the new scale.  This mode is often useful for quickly looking at an interesting
+area of the plot without having to specify exact axis scales.
+</para>
+</sect3>
+
+<sect3 id="zoomingandscrollingzoommodesxmousezoom">
+<title>X Mouse Zoom</title>
+<para>
+In X Mouse Zoom mode, the y axis is fixed.  Zooming in is performed by clicking and dragging a
+rectangular area; however, the upper and lower limits of the rectangle will always be equal to
+the current upper and lower limits of the y axis.  This mode is often useful for looking at
+a certain time range, if the x axis happens to represent a time vector.
+</para>
+<tip>
+<para>
+You can quickly switch to X Mouse Zoom mode by holding down <keycap>Ctrl</keycap>.  The mouse
+cursor will change to indicate the new mode. Releasing
+ <keycap>Ctrl</keycap> will return you to the previous mouse zoom mode.
+</para>
+</tip>
+
+</sect3>
+
+<sect3 id="zoomingandscrollingzoommodesymousezoom">
+<title>Y Mouse Zoom</title>
+<para>
+In Y Mouse Zoom mode, the x axis is fixed.  Zooming in is performed by clicking and dragging a
+rectangular area; however, the left and right limits of the rectangle will always be equal to the
+current left and right limits of the x axis.  This mode is often useful for zooming in on data that
+is concentrated around a horizontal line.
+</para>
+<tip>
+<para>
+You can quickly switch to Y Mouse Zoom mode by holding down <keycap>Shift</keycap>.  The mouse
+cursor will change to indicate the new mode. Releasing
+ <keycap>Shift</keycap> will return you to the previous mouse zoom mode.
+</para>
+</tip>
+</sect3>
+
+</sect2>
+
+<sect2 id="zoomingandscrollingthezoommenu">
+<title>The Zoom Menu</title>
+<para>
+The <guisubmenu>Zoom</guisubmenu> menu can be accessed by right-clicking on a plot and selecting the
+<guisubmenu>Zoom</guisubmenu> submenu from the context menu.  A list of zoom actions and their corresponding
+keyboard shortcuts will be displayed.  These actions are described below.
+</para>
+<informaltable>
+<tgroup cols="3">
+<thead>
+<row>
+<entry>Zoom Action</entry>
+<entry>Keyboard Shortcut</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry><guimenuitem>Zoom Maximum</guimenuitem></entry>
+<entry><keycap>M</keycap></entry>
+<entry>Sets both the x axis and the y axis scales so that all data points are displayed.
+This is equivalent to the <guilabel>AutoScale</guilabel> setting of the Plot Dialog.</entry>
+</row>
+<row>
+<entry><guimenuitem>Zoom Max Spike Insensitive</guimenuitem></entry>
+<entry><keycap>S</keycap></entry>
+<entry>Sets both the x axis and the y axis scales so that most data points are displayed.
+Spikes, or sudden increases or decreases in x or y values, are excluded from the plot display.</entry>
+</row>
+<row>
+<entry><guimenuitem>Zoom Previous</guimenuitem></entry>
+<entry><keycap>R</keycap></entry>
+<entry>Returns to the most recent zoom setting used.</entry>
+</row>
+<row>
+<entry><guimenuitem>Y-Zoom Mean-centered</guimenuitem></entry>
+<entry><keycap>A</keycap></entry>
+<entry>Sets the Y axis so that the mean of the y values in the plot is centered vertically.
+The actual zoom level is not changed.</entry>
+</row>
+<row>
+<entry><guimenuitem>X-Zoom Maximum</guimenuitem></entry>
+<entry><keycombo action="simul"><keycap>Ctrl</keycap><keycap>M</keycap></keycombo></entry>
+<entry>Sets the x axis scale such that the x values for all data points are between the
+minimum and maximum of the x axis.  The y axis scale is unaltered.</entry>
+</row>
+<row>
+<entry><guimenuitem>X-Zoom Out</guimenuitem></entry>
+<entry><keycombo action="simul"><keycap>Shift</keycap><keysym>Right</keysym></keycombo></entry>
+<entry>For a non-logarithmic x axis, increases the length of the x axis by a factor of approximately 0.5, without changing the
+midpoint of the x axis.  The y axis scale is unaltered.</entry>
+</row>
+<row>
+<entry><guimenuitem>X-Zoom In</guimenuitem></entry>
+<entry><keycombo action="simul"><keycap>Shift</keycap><keysym>Left</keysym></keycombo></entry>
+<entry>For a non-logarithmic x axis, decreases the length of the x axis by a factor of approximately 0.5, without changing the
+midpoint of the x axis. The y axis scale is unaltered.</entry>
+</row>
+<row>
+<entry><guimenuitem>Toggle Log X Axis</guimenuitem></entry>
+<entry><keycap>G</keycap></entry>
+<entry>Enables or disables using a logarithmic scale for the x axis.</entry>
+</row>
+<row>
+<entry><guimenuitem>Y-Zoom Maximum</guimenuitem></entry>
+<entry><keycombo action="simul"><keycap>Shift</keycap><keycap>M</keycap></keycombo></entry>
+<entry>Sets the y axis scale such that the y values for all data points are between the
+minimum and maximum of the y axis.  The x axis scale is unaltered.</entry>
+</row>
+<row>
+<entry><guimenuitem>Y-Zoom Out</guimenuitem></entry>
+<entry><keycombo action="simul"><keycap>Shift</keycap><keysym>Up</keysym></keycombo></entry>
+<entry>For a non-logarithmic y axis, increases the length of the y axis by a factor of approximately 0.5, without changing the
+midpoint of the y axis.  The x axis scale is unaltered.</entry>
+</row>
+<row>
+<entry><guimenuitem>Y-Zoom In</guimenuitem></entry>
+<entry><keycombo action="simul"><keycap>Shift</keycap><keysym>Down</keysym></keycombo></entry>
+<entry>For a non-logarithmic y axis, decreases the length of the y axis by a factor of approximately 0.5, without changing the
+midpoint of the y axis.  The x axis scale is unaltered.</entry>
+</row>
+<row>
+<entry><guimenuitem>Toggle Log Y Axis</guimenuitem></entry>
+<entry><keycap>L</keycap></entry>
+<entry>Enables or disables using a logarithmic scale for the y axis.</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+<para>
+Many of the zoom actions are best used in conjunction with the various
+<link linkend="zoomingandscrollingzoommodes">mouse zoom modes</link>.
+</para>
+</sect2>
+
+<sect2 id="zoomingandscrollingmatchaxis">
+<title>Match Axis</title>
+<para>
+To quickly change the axes of a plot to match those of another plot, right-click on the plot
+and select a different plot name from the <guisubmenu>Match Axis...</guisubmenu> menu.
+Both the x and y axes scales of the current plot will change to match those of the selected plot.
+Note that this does not permanently tie the axes scales together; changing the zoom on either plot
+will unmatch the axes scales again.  To tie the axes scales of two or more plots together, use the
+<link linkend="zoomingandscrollingtiedzoom">Tied Zoom</link> feature.
+</para>
+</sect2>
+
+<sect2 id="zoomingandscrollingscrollmenu">
+<title>The Scroll Menu</title>
+<para>
+Functions for scrolling a plot are available by right-clicking a plot and selecting
+the <guisubmenu>Scroll</guisubmenu> submenu from the context menu.
+Most scrolling functions and their keyboard shortcuts should be self-explanatory.  To quickly jump
+to a plot marker, select <guilabel>Next Plot Marker</guilabel> (to jump right) or
+<guilabel>Previous Plot Marker</guilabel> (to jump left).  For more information on plot markers, see
+the <link linkend="plotdialogmarkers">Markers</link> section.
+</para>
+<para>
+Assuming non-logarithmic axis scales are used, each function scrolls the plot in
+the indicated direction by 0.1 of the current length of the x axis
+ (when scrolling left or right), or 0.25 of the current length of the y axis (when scrolling up or down).
+</para>
+<tip>
+<para>
+You can also scroll left or right in a plot by using the mouse wheel (if available).
+</para>
+</tip>
+
+<tip>
+<para>
+To quickly go forwards or backwards along the x axis, select <guimenuitem>Back 1 Screen</guimenuitem>
+or <guimenuitem>Advance 1 Screen</guimenuitem> from the <guimenu>Range</guimenu> menu.  The keyboard
+shortcuts, <keycombo action="simul"><keycap>Ctrl</keycap><keysym>Left</keysym></keycombo> and
+<keycombo action="simul"><keycap>Ctrl</keycap><keysym>Right</keysym></keycombo> respectively, can be
+used as well.
+</para>
+</tip>
+</sect2>
+
+
+<sect2 id="zoomingandscrollingtiedzoom">
+<title>Tied Zoom</title>
+<para>
+When looking at two or more related plots (for example, two curves on separate plots
+both dependent on the same time vector), it can sometimes be useful to zoom or scroll the plots simultaneously.
+This is possible using &kst;'s tied zoom feature.  To activate tied zoom, click the small square
+at the top-right corner of the plots you wish to tie together.  The squares will change colour to indicate the plots are tied, as shown below.
+</para>
+<screenshot>
+<screeninfo>Top of Plot Dialog</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-tiedzoom.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Top of Plot Dialog</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+<para>
+Zooming and scrolling actions performed on one plot in a group of tied plots will be performed on
+ on all the plots in the group.
+ To remove a plot from the tied group,
+simply click on the small square at the top-right corner of the plot again.
+The square will become transparent to indicate that
+the plot is not tied.
+</para>
+<tip>
+<para>
+To quickly tie or untie all plots (including plots in other windows), select <guimenuitem>Tied Zoom</guimenuitem>
+from the <guimenu>Plots</guimenu> menu, or the corresponding icon on the &kst; toolbar.
+</para>
+</tip>
+
+</sect2>
+
+
+<sect2 id="zoomingandscrollingworkingwithlivedata">
+<title>Working with Live Data</title>
+<para>
+&kst; features special zooming and scrolling functions designed to make it easy to work with
+<quote>live</quote> data, or data that is being updated while &kst; is running.  These features
+are designed to be used in conjunction with the regular zooming and scrolling functions.
+</para>
+<sect3 id="zoomingandscrollingworkingwithlivedatareadfromend">
+<title>Updating Plots Automatically</title>
+<para>
+To have a plot automatically update as data is being added to a data file, choose
+<guimenuitem>Read From End</guimenuitem> from the <guimenu>Range</guimenu> menu.
+The plot will automatically scroll to the right periodically, to display new data points.
+The update interval can be changed by selecting <guimenuitem>Configure Kst...</guimenuitem>
+from the <guimenu>Settings</guimenu> menu.  Specify the update interval in the
+<guilabel>Plot Update Timer</guilabel> field.
+</para>
+</sect3>
+
+<sect3 id="zoomingandscrollingworkingwithlivedatapausingupdate">
+<title>Pausing Plot Updates</title>
+<para>To pause automatic updating of plots, select <guimenuitem>Pause</guimenuitem> from the
+<guimenu>Range</guimenu> menu.  You can still perform zooming and scrolling functions while the
+updating is paused.  Selecting <guimenuitem>Read From End</guimenuitem> from the <guimenu>Range</guimenu> menu
+will resume automatic updating.
+</para>
+</sect3>
+
+<sect3 id="zoomingandscrollingworkingwithlivedatachangingdatasampleranges">
+<title>Changing Data Sample Ranges</title>
+<para>To quickly change sample range settings associated with vectors, select
+<guimenuitem>Change Data Sample Ranges</guimenuitem> from the <guimenu>Range</guimenu> menu.
+Select one or more vectors, change the desired settings for the vectors,
+and click <guibutton>Apply</guibutton> to save the settings.
+These settings are a subset of those found in the <link linkend="vectors">Edit Vectors</link> dialog.
+</para>
+</sect3>
+
+</sect2>
+
+</sect1>
+
+<sect1 id="manipulatingplotlayout">
+<title>Manipulating Plot Layout</title>
+<para>
+Plots in a &kst; window are arranged in layers.  Each plot is positioned on one layer, and each layer
+contains one plot.  Thus, plots can overlap, with plots in higher layers taking precedence in visibility
+ over those in lower ones.  To change the layout of plots in &kst;, layout mode must be activated.
+ Layout mode can be toggled by selecting <guimenuitem>Layout Mode</guimenuitem>
+ from the <guimenu>Plots</guimenu> menu.
+</para>
+
+<sect2 id="manipulatingplotlayoutcontextmenu">
+<title>Layout Mode Context Menu</title>
+<para>
+ While layout mode is activated, right-clicking on any plot displays
+a modified context menu.  The selections available in this menu are listed below.
+</para>
+<variablelist>
+<varlistentry>
+<term><guimenuitem>Delete</guimenuitem></term>
+<listitem>
+<para>
+Deletes the plot.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Raise</guimenuitem></term>
+<listitem>
+<para>
+Raises the plot one layer up.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Lower</guimenuitem></term>
+<listitem>
+<para>
+Lowers the plot one layer down.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Raise to Top</guimenuitem></term>
+<listitem>
+<para>
+Raises the plot to the top-most layer, guaranteeing it will be visible.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Lower to Bottom</guimenuitem></term>
+<listitem>
+<para>
+Lowers the plot to the bottom-most layer.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Rename...</guimenuitem></term>
+<listitem>
+<para>
+Selecting this item displays a dialog box that allows the unique name of the
+plot to be changed.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Move To</guimenuitem></term>
+<listitem>
+<para>
+Selecting a window name from this submenu moves the plot to the window with the corresponding
+name.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Cleanup Layout</guimenuitem></term>
+<listitem>
+<para>
+Arranges the plots in the current window in a tile type pattern, with no overlap between plots.
+This action applies to all plots in the current window.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect2>
+
+<sect2 id="manipulatingplotlayoutmovingandresizing">
+<title>Moving and Resizing Plots</title>
+<para>
+Moving and resizing plots in layout mode is analogous to moving and
+resizing regular windows. To move a plot, simply click anywhere on the desired plot
+and drag the plot. An outline of the plot will appear, indicating where the plot
+will be placed.  You can drag plots anywhere within the current window.  To
+resize a plot, move the mouse cursor to any edge or corner of the plot. The cursor
+will change to indicate that the plot can be resized.  Click and drag the outline of the plot
+until the plot is the desired shape and size.
+</para>
+</sect2>
+
+<sect2 id="manipulatingplotlayoutgroupingplots">
+<title>Selecting Multiple Plots and Grouping Plots</title>
+<para>
+Two or more plots can be selected together in layout mode.  To select the plots,
+hold down the <keycap>Shift</keycap> key and either sequentially click on each plot you wish to
+select, or drag to draw a dotted rectangle around a group of plots.  The selected plots
+will be indicated by a gray border around each plot:
+</para>
+<screenshot>
+<screeninfo>Multiple Selected Plots</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-multipleselectedplots.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Multiple Selected Plots</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+Multiple selected plots can be moved simultaneously by dragging any single plot that is part of the
+selection (note that resizing any plot in the selection
+removes the selection). In addition, the layout mode context menu contains three additional items when multiple
+plots are selected.  These items are described below.
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guisubmenu>Make Same</guisubmenu></term>
+<listitem>
+<para>
+Resizes all the selected plots in the chosen dimension(s) to match the dimension(s) of the plot from which
+the context menu was invoked.  For example, right-clicking on a plot in the group and selecting
+<guimenuitem>Width</guimenuitem> from the <guisubmenu>Make Same</guisubmenu> submenu
+will match the width of all the plots in the group to the width of the first plot.
+If <guimenuitem>Size</guimenuitem>
+is chosen, both the width and height of each plot in the selection will change.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Align</guimenuitem></term>
+<listitem>
+<para>
+Aligns all plots in the selection to the plot directly underneath the context menu.  Select from
+<guimenuitem>Left</guimenuitem>, <guimenuitem>Right</guimenuitem>, <guimenuitem>Top</guimenuitem>, or
+<guimenuitem>Bottom</guimenuitem>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guisubmenu>Pack</guisubmenu> (submenu)</term>
+<listitem>
+<para>
+The <guisubmenu>Pack</guisubmenu> submenu contains two functions.  <guimenuitem>Pack Horizontally</guimenuitem>
+divides the entire width of the plot group evenly between the individual plot widths, while
+<guimenuitem>Pack Vertically</guimenuitem> divides the entire height of the plot group evenly between the
+individual plot heights.  Packing plots usually results in a staggered or <quote>checkered</quote> pattern.
+To align the plots in a grid, use the <guimenuitem>Cleanup Layout</guimenuitem> function of the layout mode
+context menu.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Group Objects</guimenuitem></term>
+<listitem>
+<para>
+Groups all the selected plots together.  A group of plots is indicated by a blue outline around the entire
+group.  The layout of the plots within a group cannot be altered, but a group of plots can be resized or
+moved as a whole in the same way the layout of a single plot can be changed.  Grouped plots remain
+grouped even when layout mode is exited, so the <guimenuitem>Maximize</guimenuitem> or
+<guimenuitem>Delete</guimenuitem> functions of the
+<link linkend="theplotcontextmenu">plot context menu</link> can be used on an entire group.
+</para>
+<para>
+To ungroup a group of plots, simply right-click on the group and select <guimenuitem>Ungroup</guimenuitem>.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</sect2>
+
+</sect1>
+
+
+<sect1 id="workingwithwindows">
+<title>Working with Windows</title>
+<para>
+&kst; has a flexible window layout that makes use of Kmdi.  Organizing plots on different windows
+allows for efficient viewing and manipulating of plots.
+</para>
+
+<sect2 id="windowmdimodes">
+<title>MDI Modes</title>
+<para>
+There is a choice of four different MDI (Multi-Document Interface) modes available.
+To select a mode, choose one of the menu items from the <guisubmenu>MDI Mode...</guisubmenu>
+submenu of the <guimenu>Window</guimenu> menu.  The selected MDI mode will take effect
+immediately.
+The sections below provide more information on each mode.
+</para>
+
+<sect3 id="mdimode-toplevel">
+<title>Top Level Mode</title>
+<para>
+Top level mode is the mode traditionally used by other &kde; applications. In this mode, the
+parent window (the window containing all the main menus, toolbars, and status bars)
+is a separate window from the plot windows.  The plot windows, while still functionally
+tied to the main window, appear as separate windows on the desktop.
+</para>
+<para>
+To quickly switch between plot windows in top level mode, you can click the buttons on the
+parent window, as shown below.
+</para>
+<screenshot>
+<screeninfo>Switching windows in top level mode</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-mditoplevel.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Switching windows in top level mode</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+</sect3>
+
+<sect3 id="mdimode-childframe">
+<title>Childframe Mode</title>
+<para>
+In childframe mode, all the plot windows appear inside the main &kst; window and can be individually
+resized.  Each plot window contains buttons for minimizing, maximizing, closing, and docking themselves.
+The main &kst; window also contains functions for arranging the plot windows.
+The following lists the functionality
+of the buttons located in the top right corner of each plot window:
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term><inlinemediaobject><imageobject>
+<imagedata fileref="Widget-kst-undock.png" format="PNG"/>
+</imageobject></inlinemediaobject></term>
+<listitem>
+<para>
+Undocks the plot window.  An undocked window is not contained within the main &kst; window,
+but is located directly on the desktop.
+</para>
+<tip>
+<para>
+You can also undock or dock a window by selecting its name from the <guisubmenu>Dock/Undock</guisubmenu>
+submenu of the <guimenu>Window</guimenu> menu.  This is also the only way to dock an undocked window.
+</para>
+</tip>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><inlinemediaobject><imageobject>
+<imagedata fileref="Widget-kst-minimize.png" format="PNG"/>
+</imageobject></inlinemediaobject></term>
+<listitem>
+<para>
+Minimizes the plot window.  Since the plot window is contained within the main &kst; window,
+clicking this button will minimize the window to a titlebar within the &kst; window.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><inlinemediaobject><imageobject>
+<imagedata fileref="Widget-kst-maximize.png" format="PNG"/>
+</imageobject></inlinemediaobject></term>
+<listitem>
+<para>
+Maximizes the plot window.  The plot window will take up the entirety of the main &kst;
+window.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><inlinemediaobject><imageobject>
+<imagedata fileref="Widget-kst-close.png" format="PNG"/>
+</imageobject></inlinemediaobject></term>
+<listitem>
+<para>
+Closes the plot window.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+To quickly switch between plot windows in childframe mode, you can click the buttons on the
+parent window, as shown below.
+</para>
+<screenshot>
+<screeninfo>Switching windows in top level mode</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-mditoplevel.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Switching windows in top level mode</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+To easily organize the plot windows within the main &kst; window, you can choose one of the
+tiling functions from the <guisubmenu>Tile...</guisubmenu> submenu of the <guimenu>Window</guimenu>
+menu.  These functions are described below.
+</para>
+<variablelist>
+<varlistentry>
+<term><guimenuitem>Cascade Windows</guimenuitem></term>
+<listitem>
+<para>
+Cascades the windows starting from the top left corner, maintaining the original window sizes.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Cascade Windows</guimenuitem></term>
+<listitem>
+<para>
+Cascades the windows starting from the top left corner, but resizes each window so that the
+bottom right corner of each window reaches the bottom right of the main &kst; window.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Expand Vertically</guimenuitem></term>
+<listitem>
+<para>
+Resizes each window to its maximum height.  The widths of the windows are not changed.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Expand Horizontally</guimenuitem></term>
+<listitem>
+<para>
+Resizes each window to its maximum width.  The heights of the windows are not changed.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Tile Non-overlapped</guimenuitem></term>
+<listitem>
+<para>
+Arranges the windows in a tile pattern, with no windows overlapping and
+each window being as close to a square as possible.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Tile Overlapped</guimenuitem></term>
+<listitem>
+<para>
+Arranges the windows in three or four stacks, depending on the number of windows and the main
+&kst; window size.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Tile Vertically</guimenuitem></term>
+<listitem>
+<para>
+Arranges the windows in a tile pattern, with each window having maximum height
+and no windows overlapping.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+
+
+
+</sect3>
+
+
+<sect3 id="mdimode-tabpage">
+<title>Tab Page Mode</title>
+<para>
+Tab page mode arranges each plot window on a separate tab within the main &kst; window.  In this
+mode, the plot windows are not independently resizeable or moveable&mdash;they conform to the size
+and shape of the main &kst; window.
+</para>
+<para>
+To switch between plot windows in tab page mode, you can click on the tabs corresponding to each
+window, as shown below.
+</para>
+
+<screenshot>
+<screeninfo>Switching windows in tab page mode</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-mditabpage.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Switching windows in tab page mode</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+</sect3>
+
+<sect3 id="mdimode-ideal">
+<title>IDEAl Mode</title>
+<para>
+IDEAl mode seems to be identical to tab page mode.
+</para>
+</sect3>
+
+</sect2>
+
+<sect2 id="creatingdeletingwindows">
+<title>Creating and Deleting Windows</title>
+<para>
+New windows in &kst; can be created in a number of ways.  To create
+a new, empty, window, select <guimenuitem>New Window</guimenuitem> from the <guimenu>File</guimenu>
+menu.  You will be prompted for a unique name for the new window.  You can also create a new window
+while creating a new plottable data object.  See <link linkend="curveplacement">Placement</link>
+for the specific details.
+</para>
+
+<para>
+To delete an existing window, simply select <guimenuitem>Close</guimenuitem> from the <guimenu>Window</guimenu>
+menu.  To delete all current windows in &kst;, select <guimenuitem>Close All</guimenuitem> from
+the <guimenu>Window</guimenu> menu.  By default, &kst; prompts for confirmation before closing any window. This
+behaviour can be changed by selecting <guimenuitem>Configure Kst...</guimenuitem> from the
+<guimenu>Settings</guimenu> menu and clicking on <guilabel>Prompt before closing windows</guilabel>.
+</para>
+<important>
+<para>
+When a window is deleted, all plots within that window are deleted as well.  However, data objects, such
+as curves, are not deleted.
+</para>
+</important>
+</sect2>
+
+<sect2 id="addingremovingplotsfromwindows">
+<title>Moving Plots Between Windows</title>
+<para>
+To move a plot from one window to another, you can use the <guimenuitem>Move To</guimenuitem> function of the
+<link linkend="manipulatingplotlayoutcontextmenu">layout mode context menu</link>.  
+</para>
+
+
+</sect2>
+</sect1>
+
+
+</chapter>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:0
+sgml-indent-data:true
+sgml-parent-document:("index.docbook" "book" "chapter")
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->

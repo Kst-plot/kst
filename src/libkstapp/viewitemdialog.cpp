@@ -152,6 +152,4 @@ void ViewItemDialog::setVisible(bool visible) {
 
 }
 
-#include "viewitemdialog.moc"
-
 // vim: ts=2 sw=2 et

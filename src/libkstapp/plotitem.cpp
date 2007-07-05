@@ -76,6 +76,4 @@ void PlotItem::paint(QPainter *painter) {
 
 }
 
-#include "plotitem.moc"
-
 // vim: ts=2 sw=2 et

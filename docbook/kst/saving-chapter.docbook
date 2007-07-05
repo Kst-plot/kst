@@ -1,0 +1,235 @@
+<chapter id="savingandexporting">
+<title>Saving and Printing</title>
+<para>
+&kst; provides various methods of saving and exporting data and plots.  These methods are described below.
+</para>
+
+<sect1 id="savingplotdefinitions">
+<title>Saving Plot Definitions</title>
+<para>
+A plot definition is essentially a capture of a &kst; session.  It contains all the plots, data objects, and plot layouts
+that are present at the time of saving.
+</para>
+<para>
+To save a plot definition, simply select <guimenuitem>Save</guimenuitem> or <guimenuitem>Save As...</guimenuitem>
+(depending on whether or not you wish to save to a new file) from the <guimenu>File</guimenu> menu.  Browse to
+the location you wish to save the plot definition, enter a filename, and click <guibutton>Save</guibutton>.
+The plot definition will be saved as a <filename>*.kst</filename> file.
+</para>
+
+</sect1>
+
+<sect1 id="exportingvectorsandgraphics">
+<title>Exporting Vectors and Plots</title>
+<para>
+Vectors and plots in &kst; can be exported to files.  This can be useful, for example, in capturing plots of live data
+or using generated vectors in a different application.
+</para>
+<sect2 id="exportingvectors">
+<title>Exporting Vectors</title>
+<para>
+To export or save a vector to a file, select <guimenuitem>Save Vectors to Disk...</guimenuitem>
+from the <guimenu>File</guimenu> menu.  The vector will be saved as an ASCII data file.  The single column
+of the file will contain the elements of the selected vector. See below for an example of an exported vector.
+</para>
+<informalexample>
+<screen>
+3776
+5380
+5245
+2942
+1861
+2424
+2520
+1868
+1736
+1736
+1174
+499
+</screen>
+</informalexample>
+</sect2>
+
+
+<sect2 id="exportinggraphics">
+<title>Exporting Plots</title>
+<para>
+To export a &kst; plot to a graphics file, select <guimenuitem>Export to Graphics File...</guimenuitem>
+from the <guimenu>File</guimenu> menu.  The following dialog box will appear.
+</para>
+<screenshot>
+<screeninfo>Export to Graphics File</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-exportgraphics.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Export to Graphics File</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+The following settings and options are available when saving:
+</para>
+<variablelist>
+
+<varlistentry>
+<term>
+<guilabel>Save location</guilabel>
+</term>
+<listitem>
+<para>
+The path to the graphics file.  Enter a location manually, or click the button to right of the
+text box to browse to a location.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>File Format</guilabel>
+</term>
+<listitem>
+<para>
+The format to use for the saved graphics file.  PNG is suggested if you are not sure which format to use.
+</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry>
+<term>
+<guilabel>Size</guilabel>
+</term>
+<listitem>
+<para>
+Select the dimensions, in pixels, of the graphic.  Check the <guilabel>Square</guilabel>
+option if you wish for the length and width of the graphic to be equal.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Windows</guilabel>
+</term>
+<listitem>
+<para>
+Select whether to export only the plots in the current window, or all plots.  If <guilabel>All</guilabel>
+is selected, one graphics file will be created for each window, each with filename <filename>file_n.fmt</filename>,
+where <filename>file</filename> is the filename specified in <guilabel>Save location</guilabel>, <filename>n</filename>
+is an index number assigned to each window, and <guilabel>fmt</guilabel> is an extension representing the selected
+file format.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Autosave</guilabel>
+</term>
+<listitem>
+<para>
+Check this option if you want &kst; to automatically save the plot to the specified file
+on a specified time interval.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Save interval</guilabel>
+</term>
+<listitem>
+<para>
+The time interval used to perform autosave, in seconds.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+
+<para>
+Click <guibutton>Save Once</guibutton> to immediately perform a save with the specified options and settings.
+Click <guibutton>Close</guibutton> to close the dialog box (autosave will still be performed at the specified
+intervals, if selected).
+
+</para>
+
+</sect2>
+
+
+</sect1>
+
+
+
+<sect1 id="savingandexportingprinting">
+<title>Printing</title>
+<para>
+To print all the plots in the current window, select
+<guimenuitem>Print...</guimenuitem> from the <guimenu>File</guimenu>
+menu.  A standard &kde; print dialog will be displayed. Some
+&kst;-specific options can be set by clicking on the
+<guibutton>Options >></guibutton> button, and selecting the
+<guilabel>Kst Options</guilabel> tab. The options are:
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Append plot information to each page</guilabel></term>
+<listitem><para>If selected, a footer showing page number, plot name
+and the date and time is printed on each page.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Maintain aspect ratio</guilabel></term>
+<listitem><para>If selected, the aspect ratio of the plots in the
+&kst; window is retained in the print output. If unselected, the plots
+are resized to fill the printed page in both directions.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Print in monochrome</guilabel></term>
+<listitem><para>If selected, the plot is printed in monochrome
+(black-and-white). If not, the colors of the on-screen plot are used.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Curve width adjustment</guilabel></term>
+<listitem><para>Adjusts the width of all curves in the printed output
+by this number of pixels relative to the width of the curve in the
+plot window. You can set a negative value to reduce the width of the
+curves in the print output.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</para>
+</sect1>
+
+
+</chapter>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:0
+sgml-indent-data:true
+sgml-parent-document:("index.docbook" "book" "chapter")
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->

@@ -1,0 +1,182 @@
+<chapter id="introduction">
+<title>Introduction</title>
+
+<sect1 id="whatiskst">
+<title>What is &kst;?</title>
+<para>
+&kst; is a data plotting and viewing program.  Some of the features include:
+<itemizedlist>
+<listitem><para>Robust plotting of live "streaming" data.</para></listitem>
+<listitem><para>Powerful keyboard and mouse plot manipulation.</para></listitem>
+<listitem><para>Powerful plugins and extensions support.</para></listitem>
+<listitem><para>Large selection of built-in plotting and data manipulation functions,
+such as histograms, equations, and power spectra.</para></listitem>
+<listitem><para>Color mapping and contour mapping capabilities for three-dimensional data.</para></listitem>
+<listitem><para>Monitoring of events and notifications support.</para></listitem>
+<listitem><para>Built-in filtering and curve fitting capabilities.</para></listitem>
+<listitem><para>Convenient command-line interface.</para></listitem>
+<listitem><para>Powerful graphical user interface.</para></listitem>
+
+</itemizedlist>
+</para>
+</sect1>
+
+<sect1 id="gettingstarted">
+<title>Getting Started</title>
+
+<para>
+There are two main methods of quickly obtaining plots in &kst;.  The &kst; command-line
+interface provides quick access to the main &kst; features, while the graphical data wizard
+enables intuitive fine tuning of plot and data settings.
+</para>
+<para>
+We first need a data file.  Copy and paste this simple 40-line set of data into a text file,
+and save it as <filename>simpledata.dat</filename>:
+</para>
+<screen>
+-20 100
+-19 90.25
+-18 81
+-17 72.25
+-16 64
+-15 56.25
+-14 49
+-13 42.25
+-12 36
+-11 30.25
+-10 25
+-9 20.25
+-8 16
+-7 12.25
+-6 9
+-5 6.25
+-4 4
+-3 2.25
+-2 1
+-1 0.25
+0 0
+1 0.25
+2 1
+3 2.25
+4 4
+5 6.25
+6 9
+7 12.25
+8 16
+9 20.25
+10 25
+11 30.25
+12 36
+13 42.25
+14 49
+15 56.25
+16 64
+17 72.25
+18 81
+19 90.25
+20 100
+</screen>
+
+<para>
+<filename>simpledata.dat</filename> is an example of an ASCII data file, one of the many file types
+&kst; is capable of reading. For further details on file types, see
+<link linkend="fileformats">Supported File Formats</link>.  To produce a simple plot using
+ the first column (or <quote>field</quote>)
+of this file an x vector, and the second column as a y vector, enter the following:
+</para>
+<para>
+<userinput><command>kst -x 1 -y 2 simpledata.dat</command></userinput>
+</para>
+<para>
+&kst; should start with the plot displayed:
+</para>
+<screenshot>
+<screeninfo>Simpledata plot</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-simpledata.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Simpledata plot</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+Numerous other command-line options are available&mdash;using the command-line only, plots of data
+can be printed directly to files, and simple data manipulation such as creation of
+power spectra can be performed as well.  For a complete list of command-line options, see
+<link linkend="command-lineoptions">Command Line Usage and Examples</link>.
+</para>
+
+
+<para>
+If &kst; is started without any command-line options, a QuickStart dialog is shown by default:
+</para>
+<screenshot>
+<screeninfo>The QuickStart dialog</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-quickstart.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>The QuickStart dialog</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+The QuickStart dialog provides both a convenient facility for opening previously saved &kst; sessions
+and a shortcut to the data wizard. To open an existing &kst; session, either select a file from the
+<guilabel>Recent files</guilabel> list, or enter a path in the textbox underneath, and click
+<guibutton>Open File</guibutton>.  Clicking the button
+to the right of the textbox displays a file browser dialog that can be used to graphically browse to a
+&kst; file.  If this is your first time using &kst;, you most likely will not have any saved sessions.
+In this case, the data wizard can be used to quickly import data and produce plots.
+To start the data wizard, click the <guimenuitem>Data Wizard...</guimenuitem> button.
+The data wizard walks through specification of a data file, selection of fields, and selection of plot options.
+For detailed descriptions of
+the data wizard options and settings, refer to the <link linkend="datawizard">Data Wizard</link> section.
+</para>
+<tip>
+<para>
+If you do not want the QuickStart dialog to be displayed at startup, simply uncheck
+<guilabel>Show this dialog at startup</guilabel> at the bottom of the QuickStart dialog.  The QuickStart
+dialog can also be toggled by selecting <guimenuitem>Configure Kst...</guimenuitem> from the
+<guimenu>Settings</guimenu> menu and clicking on <guilabel>Show QuickStart dialog on startup</guilabel>.
+</para>
+</tip>
+
+<para>
+Any plot displayed in &kst; can be manipulated.  For example, dragging a rectangle anywhere within a plot
+will zoom in to that section of the plot.  Holding <keycap>Ctrl</keycap> or <keycap>Shift</keycap> while
+dragging will zoom in on the x or y axis only, respectively, and tapping the arrow keys scrolls a plot.
+See
+<link linkend="workingwithplotsandwindows">Working with Plots and Window</link> for more details on
+manipulating plots and plot layout, as well as the different mouse modes.
+</para>
+
+
+
+</sect1>
+
+</chapter>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:0
+sgml-indent-data:true
+sgml-parent-document:("index.docbook" "book" "chapter")
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->

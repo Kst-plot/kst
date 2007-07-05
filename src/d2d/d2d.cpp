@@ -27,8 +27,6 @@
 
 #include "kstdataplugin.h"
 
-#include <kservicetypetrader.h>
-
 void Usage() {
   fprintf(stderr, "usage: d2d in_filename out_filename [-t <out_type>]\n");
   fprintf(stderr, "           [-f <first frame>] [-n <numframes>] [-s skip [-a]] \n");

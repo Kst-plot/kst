@@ -78,5 +78,4 @@ void KstBaseCurve::setLegendText(const QString& theValue) {
   emit modifiedLegendEntry();
 }
 
-#include "kstbasecurve.moc"
 // vim: ts=2 sw=2 et

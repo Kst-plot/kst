@@ -49,6 +49,4 @@ void CreateSvgCommand::createItem() {
 
 }
 
-#include "svgitem.moc"
-
 // vim: ts=2 sw=2 et

@@ -45,5 +45,4 @@ VectorEditorDialog::~VectorEditorDialog() {
 
 }
 
-#include "vectoreditordialog.moc"
 // vim: ts=2 sw=2 et

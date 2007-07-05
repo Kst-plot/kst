@@ -1,3 +1,3 @@
 #ifndef KSTREVISION
-#define KSTREVISION "${libkst_WC_REVISION}"
+#define KSTREVISION 1
 #endif

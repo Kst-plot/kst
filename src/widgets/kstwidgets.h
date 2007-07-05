@@ -125,15 +125,6 @@ public:
 private:
   QList<QDesignerCustomWidgetInterface*> _plugins;
 };
-Q_EXPORT_PLUGIN2(kstwidgets, KstWidgets)
-
-
-KstWidgets::KstWidgets(QObject *parent)
-    : QObject(parent) {
-  _plugins.append(new ColorButtonPlugin(this));
-  _plugins.append(new FillAndStrokePlugin(this));
-  _plugins.append(new GradientEditorPlugin(this));
-}
 
 #endif
 // vim: ts=2 sw=2 et

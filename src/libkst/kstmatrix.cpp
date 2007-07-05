@@ -548,10 +548,8 @@ void KstMatrix::change(const KstObjectTag& newTag, uint nX, uint nY, double minX
   _stepY = stepY;
   _minX = minX;
   _minY = minY;
-  
-  setDirty();  
+
+  setDirty();
 }
 
-
-#include "kstmatrix.moc"
 // vim: ts=2 sw=2 et

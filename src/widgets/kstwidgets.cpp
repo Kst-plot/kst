@@ -10,4 +10,12 @@
  ***************************************************************************/
 
 #include "kstwidgets.h"
-#include "kstwidgets.moc"
+
+KstWidgets::KstWidgets(QObject *parent)
+    : QObject(parent) {
+  _plugins.append(new ColorButtonPlugin(this));
+  _plugins.append(new FillAndStrokePlugin(this));
+  _plugins.append(new GradientEditorPlugin(this));
+}
+
+Q_EXPORT_PLUGIN2(kstwidgets, KstWidgets)

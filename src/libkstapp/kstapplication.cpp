@@ -32,6 +32,4 @@ Kst::MainWindow *KstApplication::mainWindow() const {
   return _mainWindow;
 }
 
-#include "kstapplication.moc"
-
 // vim: ts=2 sw=2 et

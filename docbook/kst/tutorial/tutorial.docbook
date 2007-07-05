@@ -1,0 +1,984 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+ <!ENTITY kappname "kst">
+ <!ENTITY package "kdeextragear-2">
+ <!ENTITY kst "<application>KST</application>">
+ <!ENTITY % addindex "IGNORE">
+ <!ENTITY % English "INCLUDE" > <!-- change language only here -->
+
+ ]>
+
+<book lang="&language;">
+
+<bookinfo>
+<title>The &kst; Tutorial</title>
+
+<authorgroup>
+<author>
+<firstname>Barth</firstname>
+<othername></othername>
+<surname>Netterfield</surname>
+<affiliation><address><email>kst@kde.org</email></address></affiliation>
+</author>
+<author>
+<firstname>Rick</firstname>
+<othername></othername>
+<surname>Chern</surname>
+<affiliation><address><email>kst@kde.org</email></address></affiliation>
+</author>
+</authorgroup>
+
+
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+
+<copyright>
+<year>2004</year>
+<holder>The University of British Columbia</holder>
+</copyright>
+<!-- Translators: put here the copyright notice of the translation -->
+<!-- Put here the FDL notice.  Read the explanation in fdl-notice.docbook
+     and in the FDL itself on how to use it. -->
+<legalnotice>
+&FDLNotice;
+</legalnotice>
+
+<!-- Date and version information of the documentation
+Don't forget to include this last date and this last revision number, we
+need them for translation coordination !
+Please respect the format of the date (YYYY-MM-DD) and of the version
+(V.MM.LL), it could be used by automation scripts.
+Do NOT change these in the translation. -->
+
+<date>2004-06-23</date>
+<releaseinfo>0.98</releaseinfo>
+
+<!-- Abstract about this handbook -->
+
+<abstract>
+<para>
+&kst; is a data plotting and manipulation program with powerful plugin support.
+</para>
+</abstract>
+
+<!-- This is a set of Keywords for indexing by search engines.
+Please at least include KDE, the KDE package it is in, the name
+ of your application, and a few relevant keywords. -->
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>kdeextragear</keyword>
+<keyword>kdeextragear-2</keyword>
+<keyword>Kst</keyword>
+<keyword>plotting</keyword>
+<keyword>plot</keyword>
+</keywordset>
+
+</bookinfo>
+
+<chapter id="Welcome">
+<title>Welcome</title>
+<para>
+Welcome to &kst;!  In a few minutes, you will be on your way to exploring the rich features of this
+plotting and data manipulation package. Here are just some of the tasks you can accomplish using
+&kst;:
+</para>
+<itemizedlist>
+<listitem>
+<para>
+Quickly plot multiple graphs using only the command-line.
+</para>
+</listitem>
+<listitem>
+<para>
+Analyze data using an extensive set of tools including histograms, power spectra, and custom equations.
+</para>
+</listitem>
+<listitem>
+<para>
+Effortlessly zoom in and out of interesting areas of plots using either the mouse or keyboard
+</para>
+</listitem>
+<listitem>
+<para>
+Monitor live streaming data using &kst;'s real-time plotting capabilities.
+</para>
+</listitem>
+</itemizedlist>
+<para>
+This tutorial covers the basics of installing, running, and working with &kst;.  You are invited
+to further investigate any features at any time.  All features are documented in the official
+<productname>Kst Handbook</productname>, available by selecting <guimenuitem>Kst Handbook</guimenuitem>
+from the <guimenu>Help</guimenu> menu of &kst;.
+</para>
+</chapter>
+
+<chapter id="installation">
+<title>Installation</title>
+<para>
+In most cases, performing a basic installation of &kst; is easy.  The only prerequisites for &kst;
+are versions 3.1 or greater of &kde; and &Qt;.  However, optional libraries such as the &GNU; Scientific Library
+enable &kst; to be compiled with additional plugin and file support functionality, and are highly recommended
+as they are required for certain portions of this tutorial.
+</para>
+<tip>
+<para>
+If you use a package management system, you may use
+it to install &kst; instead.  However, be aware that the version available in the repository
+may not be the latest version.
+</para>
+</tip>
+
+<para>
+First, you should make sure that the required &kde; and &Qt; libraries have been installed
+on your system.  &kst; v0.99 requires &kde; 3.1 and &Qt; 3.1.  Almost all major &Linux; distributions have packages
+for &kde; and &Qt;, so it is recommended that you refer to your particular distribution's documentation for
+&kde; installation. More information is available on the &kde;
+<ulink url="http://www.kde.org/download/">website</ulink>.
+</para>
+
+
+<para>
+The &GNU; Scientific Library provides a variety of mathematical operations for the built-in
+&kst; plugins.  The library can be found at <ulink url="ftp://ftp.gnu.org/gnu/gsl/">ftp://ftp.gnu.org/gnu/gsl/</ulink>.
+Alternatively, you can find GSL under <filename>/gnu/gsl</filename> on the mirrors listed at
+<ulink url="http://www.gnu.org/prep/ftp.html">http://www.gnu.org/prep/ftp.html</ulink>. Download <filename>gsl-[ver].tar.gz</filename>, where [ver] is the greatest version number found in the directory.
+
+Then unzip and untar the file:
+</para>
+<screen><userinput><command>tar -zxvf gsl-[ver].tar.gz</command></userinput></screen>
+<para>
+replacing [ver] with the version number of the downloaded file.
+</para>
+<para>
+Read the <filename>INSTALL</filename> file in the resultant directory for detailed installation instructions.
+For most systems, the following will work:
+<screen><userinput><command>cd gsl-[ver]</command>
+<command>./configure</command>
+<command>make</command>
+<command>make install</command></userinput></screen>
+</para>
+
+<para>
+The second optional (but highly recommended) library is the CFITSIO library.
+It provides support for reading and writing to the FITS (Flexible Image Transport System) data
+format.  The libary can be found at
+<ulink url="ftp://heasarc.gsfc.nasa.gov/software/fitsio/c/">ftp://heasarc.gsfc.nasa.gov/software/fitsio/c/</ulink>.
+
+Download <filename>cfitsio[ver].tar.gz</filename>, where [ver] is the greatest version number found the directory.
+
+Then unzip and untar the file:
+</para>
+<screen><userinput><command>tar -zxvf cfitsio[ver].tar.gz</command></userinput></screen>
+<para>
+replacing [ver] with the version number of the downloaded file.
+</para>
+
+<para>
+Read the <filename>README</filename> file in the resultant directory for installation instructions.  For most
+systems, the following will work:
+<screen><userinput><command>cd cfitsio</command>
+<command>./configure --prefix=/usr</command>
+<command>make</command>
+<command>make install</command></userinput></screen>
+</para>
+
+<para>
+You may need to modify the <option>--prefix</option> option for your particular system, but for
+most systems, <filename>/usr</filename> will work.
+</para>
+
+
+
+<para>
+Once all of the prerequisites have been met on your system you can compile and install &kst;.
+Download the latest source package
+separately from the &kst; <ulink url="http://omega.astro.utoronto.ca/kst/">website
+</ulink>.  Then, type the following:
+</para>
+<screen><userinput><command>tar -zxvf kst-[ver].tar.gz</command>
+<command>cd kst-[ver]</command>
+<command>./configure --enable-final --prefix=`kde-config --prefix`</command>
+<command>make</command>
+<command>make install</command></userinput></screen>
+<para>
+replacing [ver] with the version of &kst; you have.
+</para>
+<important>
+<para>Note that <command>kde-config --prefix</command> is surrounded by backquotes.  It is very
+important that the <command>kde-config</command> utility returns the correct path (most likely
+<filename>/usr</filename>), otherwise &kst; will <emphasis>not</emphasis> install properly.
+You can double-check by running it directly:
+</para>
+<screen><userinput><command>kde-config --prefix</command></userinput></screen>
+<para>
+Ensure that a non-null path is displayed.
+</para>
+</important>
+
+<para>
+You can read through the messages displayed by the <command>configure</command> script&mdash;if it
+reports any missing libraries (such as GSL) that should not be missing, please go back and ensure
+that the libraries and header files have been correctly installed in the appropriate locations.
+If installation was successful, you can now go on to the next section of this tutorial.
+</para>
+
+</chapter>
+
+
+
+
+
+
+<chapter id="commandline">
+<title>Starting &kst; from the Command-line</title>
+<para>
+A common use of &kst; is to quickly produce plots of data from the command-line.
+This method of producing plots requires almost no knowledge of &kst;'s graphical user interface,
+yet produces immediate, useful results.
+</para>
+
+<para>
+This tutorial uses a demo package of data files available
+<ulink url="http://omega.astro.utoronto.ca/kst/tutorial/kst_tutorialdata.tgz">here</ulink>.  Download and
+untar the package, and change to the resulting directory:
+<screen><userinput><command>tar -zxvf kst_tutorialdata.tgz</command>
+<command>cd kst_tutorialdata</command></userinput></screen>
+</para>
+
+<para>
+To obtain an overview of all available &kst; command-line options, type:
+<screen><userinput><command>kst --help</command></userinput></screen>
+</para>
+<para>
+A syntax description and list of commands similar to the following will be displayed:
+<screen>
+Usage: kst [Qt-options] [KDE-options] [options] [Files]
+
+Kst: a data viewing program.
+
+Generic options:
+  --help                    Show help about options
+  --help-qt                 Show Qt specific options
+  --help-kde                Show KDE specific options
+  --help-all                Show all options
+  --author                  Show author information
+  -v, --version             Show version information
+  --license                 Show license information
+  --                        End of options
+
+Options:
+  -F &lt;dataFile&gt;             Specify data file: used to override a kst file default [|]
+  -y &lt;Y&gt;                    Field for Y axis (multiple allowed)
+  --ye &lt;equation&gt;           Equation for Y axis (multiple allowed)
+  -e &lt;E&gt;                    Field for Y errors (multiple allowed)
+  -x &lt;X&gt;                    Field or range for X axis [INDEX]
+  --xe &lt;X&gt;                  X vector for equations x0:x1:n [INDEX]
+  -p &lt;Y&gt;                    Field for power spectrum (multiple allowed)
+  -h &lt;Y&gt;                    Field for histogram (multiple allowed)
+  -r &lt;f&gt;                    Sample rate for power spectrum [60.0]
+  --ru &lt;U&gt;                  Units for psd sample rate [Hz]
+  --yu &lt;U&gt;                  Units for y vectors [V]
+  -l &lt;P&gt;                    Length of FFTs is 2^P [10]
+  -f &lt;F0&gt;                   First frame to read [-2]
+  -n &lt;NS&gt;                   Number of frames to read [-2]
+  -s &lt;NS&gt;                   Number of frames to skip each read [-1]
+  -a                        Apply boxcar filter before skipping frames
+  -m &lt;NC&gt;                   Separate plots arranged in &lt;NC&gt; columns
+  -d                        Display as points rather than curves
+  -g                        Provide a legend box
+  --print &lt;file&gt;            Print to file and exit [&lt;none&gt;]
+  --png &lt;file&gt;              Save as a png file and exit [&lt;none&gt;]
+
+Arguments:
+  Files                     Data files (if -y given) or *.kst file
+</screen>
+</para>
+
+<para>
+&kst; specific options are listed under the <literal>Options:</literal> section.  Where appropriate,
+default values are indicated with square brackets at the end of the option descriptions&mdash;these values
+will be used for any unspecified options.
+</para>
+
+<para>
+We will first take a look at the ASCII file <filename>gyrodata.dat</filename>, included in the demo package.
+ASCII files are one of the many file types &kst; is capable of reading.
+In ASCII files, data is arranged in columns, with each column corresponding to a field, and the column
+numbers (beginning with 1 from left to right) corresponding to field names.  This particular ASCII
+file contains 3 columns, and thus has field names 1, 2, and 3.  To produce a plot of the first column,
+simply type:
+<screen><userinput><command>kst -y 1 gyrodata.dat</command></userinput></screen>
+</para>
+<para>
+All the data in the first column will be plotted:
+</para>
+<screenshot>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-tutorial-gyro1.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+</screenshot>
+<para>
+Note that no field was specified for the X axis of the plot, so &kst; used the default INDEX vector, as
+expected.
+The INDEX vector is a special vector in &kst; that contains integers from 0 to N-1, where N is the number
+of data values in the corresponding Y axis vector.  Close &kst; by selecting <guimenuitem>Quit</guimenuitem>
+from the <guimenu>File</guimenu> menu, or by typing
+<keycombo action="simul"><keycap>Ctrl</keycap><keycap>Q</keycap></keycombo>.
+</para>
+
+<para>
+<filename>gyrodata.dat</filename> contains 20000 frames, so you may wish to only look at a portion of the
+data.  To only plot 10000 frames starting from frame 7000, type:
+<screen><userinput><command>kst -y 1 -f 7000 -n 10000 gyrodata.dat</command></userinput></screen>
+</para>
+
+<para>
+One of &kst;'s strengths is its ability to plot real-time data.  Imagine that new data was being continually
+added to the end of <filename>gyrodata.dat</filename>.  In such a scenario, it would be useful to only
+plot the most recent portion of the data.  To plot only the last 10000 frames of <filename>gyrodata.dat</filename>,
+enter the following:
+<screen><userinput><command>kst -y 1 -n 10000 gyrodata.dat</command></userinput></screen>
+</para>
+<para>
+If <filename>gyrodata.dat</filename> was being updated, the plot would continuously
+scroll to display only the last 10000 frames.
+</para>
+
+<para>
+Instead of directly reading an input file, &kst; can use ASCII data from stdin as a data source. To specify stdin
+as an input, simply enter <filename>stdin</filename> as one of the filenames.  There are many uses of this
+capability, such as using &kst; as part of a sequence of pipes:
+<screen><userinput><command>cat gyrodata.dat | awk '{print $1 + 2}' | kst -y 1 stdin</command></userinput></screen>
+</para>
+<para>
+The above command uses <command>awk</command> to add 2 to column one of <filename>gyrodata.dat</filename> before
+piping the result to &kst;.
+</para>
+
+<para>
+Note that the description of the <option>y</option> option states that multiple instances of the option are
+allowed. This allows quick plotting of more than one curve, or even more than one plot.
+To plot all three fields in <filename>gyrodata.dat</filename> in separate plots, enter the following:
+<screen><userinput><command>kst -y 1 -y 2 -y 3 -m 1 gyrodata.dat</command></userinput></screen>
+</para>
+<para>
+The <option>m</option> option specifies that separate plots should be used instead of one single plot,
+as shown below:
+</para>
+<screenshot>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-tutorial-gyro-multiple.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+</screenshot>
+
+</chapter>
+
+<chapter id="datawizard">
+<title>A Quick Tour of the Data Wizard</title>
+<para>
+While using &kst; from the command-line is fast and convenient, there may be situations in which
+it is easier to import data from the graphical user interface&mdash;for example, if you already have &kst;
+open with other data loaded.  Or, you may simply prefer using the graphical user interface.
+Becoming familiar with both methods
+of importing data will allow you to make more efficient use of &kst;.
+</para>
+
+<para>
+The Data Wizard provides a quick and easy way of creating vectors, curves, and plots in &kst; from data files.
+  To launch the wizard,
+select <guimenuitem>Data Wizard...</guimenuitem> from the <guimenu>Data</guimenu> menu or click the
+<inlinemediaobject><imageobject><imagedata fileref="Icon-kst-datawizard.png" format="PNG"/></imageobject></inlinemediaobject>
+button on the toolbar.
+ You will be
+prompted to select a data source.  Browse to the <filename>gyrodata.dat</filename> file used in the command-line
+examples and
+click <guibutton>Next</guibutton>.  The following window will be displayed.
+</para>
+<screenshot>
+<screeninfo>Data Wizard Screen 2</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-datawizard2.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Data Wizard Screen 2</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+The fields available in <filename>gyrodata.dat</filename> are listed to the left.
+You may filter the list of highlighted fields by entering a
+string to match (wildcards such as <literal>*</literal> are supported) into the text box above the list.
+Enter <literal>*</literal> to match anything (i.e. highlight all the the available fields), and then click
+<guibutton>Check Selected</guibutton> to select all the highlighted fields (which in this case happens to be all
+the fields).
+</para>
+
+<para>
+The <guilabel>Data Range</guilabel> section is used to specify the range of data to read from the selected
+vectors in the input file. The following discussion assumes knowledge of <quote>frames</quote>.  In brief,
+a frame is simply a number of data samples, and each data file is composed of a number of frames.
+For a detailed description of this concept, see the <productname>Kst Handbook</productname>.
+</para>
+<variablelist>
+<varlistentry>
+<term>
+<guilabel>Starting frame</guilabel>, <guilabel>Count from end</guilabel>,
+<guilabel>Number of frames</guilabel>, and <guilabel>Read to end</guilabel>
+</term>
+<listitem>
+<para>
+Using these four settings, the lower and upper boundaries of
+the data range can be set. As an example, select <guilabel>Count from end</guilabel> and enter
+10000 for <guilabel>Number of frames</guilabel> to read only the last 10000 frames.
+If <filename>gyrodata.dat</filename> was being updated in real-time, subsequent
+additions to the end of the file would be read.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Read 1 sample per N frames</guilabel> and <guilabel>Boxcar filter first</guilabel>
+</term>
+<listitem>
+<para>
+In addition to the lower and upper range boundaries, the samples to read from the selected range can be set.
+If <guilabel>Read 1 sample per N frames</guilabel> (where N is the entered value) is not selected,
+all samples in the selected range will be read.
+Alternatively, frames in the data file can be skipped by selecting <guilabel>Read 1 sample per N frames</guilabel>
+For now, deselect <guilabel>Read 1 sample per N frames</guilabel>.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+
+
+<para>
+Power Spectrum and X axis settings can be specified within the <guilabel>Plot Types</guilabel> section.
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<guilabel>XY</guilabel>, <guilabel>Power Spectrum</guilabel>, and <guilabel>XY and Power Spectrum</guilabel>
+</term>
+<listitem>
+<para>
+Select <guilabel>XY and Power Spectrum</guilabel> to produce plots of both the data itself and its power spectrum.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>X Axis Vector</guilabel>
+</term>
+<listitem>
+<para>
+The vector to be used as the independent vector for the plots.  You may select a field from your
+data file, or the INDEX vector.  Since <filename>gyrodata.dat</filename> does not contain an X axis vector,
+leave the selection as INDEX.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+The <guilabel>FFT Options</guilabel> subsection
+ in the <guilabel>Plot Types</guilabel> section is available only if a power spectrum
+is to be plotted.  This tutorial will not deal with the details of power spectra, so use
+the default settings for this subsection.
+</para>
+
+<para>
+Once you are satisfied with all the settings, click <guibutton>Next</guibutton> to advance to the next window.
+</para>
+
+<screenshot>
+<screeninfo>Data Wizard Screen 3</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-datawizard3.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Data Wizard Screen 3</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+From here, you can change general plotting settings.  Most of the settings are self-explanatory.
+Select <guilabel>1 new plot per curve</guilabel> for <guilabel>Curve Placement</guilabel>
+and <guilabel>In new window</guilabel> for <guilabel>Plot Placement</guilabel>.  This will place
+all six plots (three curves and three power spectra) in the same window.
+</para>
+
+
+<para>
+Once you are satisfied with all the settings, click <guibutton>Finish</guibutton> and the plots will be generated:
+</para>
+<screenshot>
+<screeninfo>The Generated Plots</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-tutorial-datawizard-done.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>The Generated Plots</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+Generating these plots took a bit of effort, so we should save the current &kst; session (it will be used in the
+next section of this tutorial). Select <guimenuitem>Save As...</guimenuitem> from the <guimenu>File</guimenu> menu, and
+save the session
+as <filename>mykstsession.kst</filename>:
+</para>
+<screenshot>
+<screeninfo>Saving a KST session</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-filesave.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Saving a KST session</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+<para>
+Saving a &kst; session saves all the plots, data objects (you will learn about these later), and layouts that exist
+at the time of saving.
+</para>
+<para>
+Once the file has been saved, you can exit &kst;.
+</para>
+</chapter>
+
+<chapter id="mousezooming">
+<title>The Basics of Plot Manipulation</title>
+<para>
+Now that you are comfortable with creating plots in &kst;, we can explore some of the plot manipulation features
+available through the &kst; graphical user interface.
+Start &kst; from the command-line with the
+<filename>mykstsession.kst</filename> file you saved earlier:
+</para>
+<screen><userinput><command>kst mykstsession.kst</command></userinput></screen>
+<para>
+All the plots you created earlier should now be loaded in &kst;.
+Examine the plot with the y axis label of <literal>PSD of Column 2 (V/Hz^{1/2})</literal>.
+To take a closer look at the plot, right click on it and select the <guimenuitem>Maximize</guimenuitem>
+menu item, as shown below:
+</para>
+<screenshot>
+<screeninfo>Maximizing a plot</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-zoom.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Maximizing a plot</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+The plot is now maximized within the current window.
+Note that anything beyond about 4 Hz does not look interesting in this plot, so it would be
+useful to view only the area of the plot that looks interesting.  To do so,
+make sure you are in XY Mouse Zoom mode (select <guimenuitem>XY Mouse Zoom</guimenuitem> from
+the <guimenu>Plots</guimenu> menu, or click the
+<inlinemediaobject><imageobject><imagedata fileref="Icon-kst-xymousezoom.png" format="PNG"/></imageobject></inlinemediaobject>
+toolbar button). Then, simply drag
+a rectangle from approximately (4, 0.025) to (0,0), as shown below.
+ Note that the coordinates of the mouse cursor
+are displayed in the lower right corner of the &kst; window (if they are not, ensure that
+<guimenuitem>Show Statusbar</guimenuitem> is checked in the <guimenu>Settings</guimenu>
+menu).
+</para>
+
+<screenshot>
+<screeninfo>Zooming in on a plot</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-zoomin.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Zooming in on a plot</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+<para>
+The plot axes will change to <quote>zoom in</quote> on the selected area of the plot.  You may notice
+that there is a peak at the left end of the power spectrum that extends beyond the new upper y axis limit.
+Suppose that you wish to view the top of this peak. Right-click on the plot and select <guimenuitem>Up</guimenuitem>
+from the <guimenu>Scroll</guimenu> submenu.  The plot should scroll upwards. Of course, it is most likely
+easier to use the shortcut key associated with the menu item&semi; this is true for most of the zooming
+and scrolling functions.  In this case, the shortcut key is <keysym>Up Arrow</keysym>, so the quickest way to
+scroll upwards would be to hold down the <keysym>Up Arrow</keysym> key.
+To return to maximum zoom at any time, right-click on the plot and select <guimenuitem>Zoom Maximum</guimenuitem>
+from the <guisubmenu>Zoom</guisubmenu> submenu (or type <keycap>M</keycap>, the shortcut key associated with
+<guimenuitem>Zoom Maximum</guimenuitem>).
+</para>
+
+<para>
+Restore the size of the power spectrum plot by right-clicking the plot and unchecking
+<guimenuitem>Maximize</guimenuitem>.
+</para>
+
+<para>
+Now look at the plots with y axes labelled <literal>Column 2</literal> and <literal>Column 3</literal>.
+These are plots of the pitch gyro and roll gyro, respectively, from the 1998 BOOMERANG flight.
+Since these two plots are related, it can be useful to zoom and scroll them simultaneously.  Click on the
+squares located at the top right corners of the two plots.  They should turn dark in colour to indicate that
+the two plots are now tied together:
+</para>
+<screenshot>
+<screeninfo>Tied Zoom</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-tiedzoom.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Tied Zoom</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+<para>
+Before we try zooming in, we should delete all plots other than the two we are working with.  Select
+<guimenuitem>Layout Mode</guimenuitem> from the <guimenu>Plots</guimenu> menu or click the
+<inlinemediaobject><imageobject><imagedata fileref="Icon-kst-layoutmode.png" format="PNG"/></imageobject></inlinemediaobject>
+toolbar button.  For each plot other than
+the two we want to keep, right-click on the plot and select <guimenuitem>Delete</guimenuitem>.  Then,
+right-click anywhere inside the current window and select <guimenuitem>Cleanup Layout</guimenuitem>.
+Now the two plots should share maximal space inside the window.  Return to XY Mouse Zoom mode when you
+are done.
+</para>
+
+<para>
+Now try zooming in on any portion of the upper plot.  You will find that the lower plot will become blank.
+This is because the lower plot axes have changed to match the upper plot axes, and there is no data in that particular
+region of the lower plot. Type <keycap>M</keycap> while the mouse cursor is over either plot
+to return to maximum zoom on both plots.  Now hold down <keycap>Ctrl</keycap> (this is equivalent to
+selecting <guimenu>X Mouse Zoom Mode</guimenu> from the <guimenu>Plots</guimenu> menu or clicking the
+<inlinemediaobject><imageobject><imagedata fileref="Icon-kst-xmousezoom.png" format="PNG"/></imageobject></inlinemediaobject>
+toolbar button). The mouse cursor
+will change shape as visual feedback.  While keeping <keycap>Ctrl</keycap> held down, drag a rectangle in the upper
+plot.  Note that the height of the dotted rectangle is restricted so that only the x axis will be zoomed.
+Now both plots will display data when zoomed in, as the y axis for either plot was not changed.
+</para>
+<tip>
+<para>
+You can quickly tie or untie all the plots in the window by selecting <guimenuitem>Tied Zoom</guimenuitem>
+from the <guimenu>Plots</guimenu> menu or by clicking the
+<inlinemediaobject><imageobject><imagedata fileref="Icon-kst-tiedzoom.png" format="PNG"/></imageobject></inlinemediaobject>
+toolbar button.
+</para>
+</tip>
+<para>
+When you are finished experimenting with the zooming features, you can close &kst;.  There is no need
+to save the plots this time (unless you wish to).
+</para>
+
+</chapter>
+
+
+
+<chapter id="overviewdataobjects">
+<title>A Brief Overview of Data Objects</title>
+<para>
+There is more to &kst; than simple plotting and viewing of data.  From the data wizard, you have already
+seen that &kst; has the ability to create power spectra of data. In fact, &kst; is also capable of creating other
+data objects such as histograms, equations, and plugins.  A utility called the Data Manager
+can help you keep track of all the data objects you create.
+</para>
+
+<para>
+Start &kst; with the file <filename>demo.kst</filename>, included in the demo package:
+</para>
+<screen><userinput><command>kst demo.kst</command></userinput></screen>
+<screenshot>
+<screeninfo>Kst with demo.kst</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-demo.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Kst with demo.kst</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+<para>
+This &kst; session contains vectors and other data objects created from data in <filename>gyrodata.dat</filename>.
+The top plot contains the azimuth data, the middle plot contains the pitch data in blue, and the bottom plot
+shows the power spectrum of the pitch data in blue.  Let us first examine the plots more closely.
+Tie the top two plots together using the techniques
+you learned in the previous section.
+Then hold down <keycap>Ctrl</keycap> to enter X Mouse Zoom mode.  Now zoom in on a small region
+of the top plot (say from 50000 to 53000), to cause both tied plots to zoom.
+You will notice that the the blue pitch curve is negatively correlated with the red azimuth curve.
+This is because the pitch gyro was slightly rotated relative to the azimuth axis (by -0.69 degrees).
+The true pitch <literal>p'</literal> is:
+</para>
+<para>
+<inlineequation>
+<inlinemediaobject>
+<imageobject>
+<imagedata fileref="Equation-kst-correctedpitch.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
+</inlineequation>
+</para>
+
+<para>
+where <literal>p</literal> is the original pitch,
+<inlinemediaobject><imageobject><imagedata fileref="Symbol-kst-theta.png" format="PNG"/></imageobject></inlinemediaobject>
+is the rotation of the pitch gyro relative to the azimuth axis, and <literal>a</literal> is the azimuth gyro.
+<literal>p'</literal> is plotted as the black curve in the middle plot.  The power spectrum of <literal>p'</literal>
+is the black curve in the bottom plot.
+</para>
+
+<para>
+Now let us take a look at how the three plots were created.
+To display the Data Manager, select <guimenuitem>Data Manager...</guimenuitem> from the <guimenu>Data</guimenu>
+menu, or click the
+<inlinemediaobject><imageobject><imagedata fileref="Icon-kst-datamanager.png" format="PNG"/></imageobject></inlinemediaobject>
+toolbar button:
+</para>
+<screenshot>
+<screeninfo>The Data Manager</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-datamanager.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>The Data Manager</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+The Data Manager contains the definitive list of data objects in the current &kst; session.  It also allows
+you edit or create new data objects.  As you can see, there are three curves (each created from a
+pair of vectors), one equation,
+two power spectra, and four data vectors listed.  Right-click on C2-GY_PITCH and select
+<guimenuitem>W1-P1</guimenuitem> from the <guisubmenu>Remove From Plot</guisubmenu> submenu.  This removes
+the curve from plot P1 in window W1. Also remove PSD2-V3-GY_PITCH from plot P3 in window W1 using the same
+procedure.  Now only the corrected curves should be displayed in the plots:
+</para>
+<screenshot>
+<screeninfo>Corrected Curves Only</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-democorrected.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Corrected Curves Only</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+To see how the corrected pitch gyro was created, highlight C4-cleaned_pitch and click the <guibutton>Edit</guibutton>
+button.  The Edit Equation dialog should be displayed:
+</para>
+<screenshot>
+<screeninfo>Edit Equation</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-editequation.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Edit Equation</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+Note that the equation used to calculate <literal>p'</literal> was entered in the <guilabel>Equation</guilabel>
+text box (an approximation of 1 was used for <literal>cos(-0.69)</literal>). Feel free to experiment with the
+settings in this dialog.  Click <guibutton>OK</guibutton> (to save any changes made)
+ or <guibutton>Cancel</guibutton> when you are done.
+</para>
+
+<para>
+Note that all data objects have a number listed under the <guilabel># Used</guilabel> column.
+This number indicates the number of times the data object is either used by other data objects or by plots.
+Since we removed a curve and a power spectrum, at least two data objects should have 0 listed under this column.
+Click <guibutton>Purge</guibutton> to permanently remove all unused data objects.
+</para>
+
+<para>
+Click <guibutton>Close</guibutton> to close the Data Manager.  You can exit &kst; now if you wish.
+</para>
+</chapter>
+
+<chapter id="pluginsandevents">
+<title>A Look at Plugins and Events</title>
+<para>
+We end our journey through &kst; by looking at two specific data types&mdash;plugins and event monitors.
+</para>
+
+<para>
+A plugin is a flexible data object whose behaviour depends entirely on the specific plugin file selected.
+The plugin file can be one that is included with the standard &kst; distribution, or it can be a third-party
+plugin file.  In fact, the <productname>Kst Handbook</productname> includes instructions on how to write and
+compile custom plugin files.  Plugins allow &kst; to perform arbitrary operations on a set of data, as the only
+requirements for a plugin file are that they receive a set of input vectors and scalars, and output a set of
+vectors and scalars.
+</para>
+
+<para>
+As an example, we will try fitting a simple line to a small set of data points. Start &kst; with a plot of the
+first field of the <filename>maxima.dat</filename> data file included in the demo package:
+</para>
+<screen><userinput><command>kst -y 1 -d maxima.dat</command></userinput></screen>
+<para>
+The <option>d</option> option specifies that only points should be plotted, not lines. The plot of data points
+should now be displayed:
+</para>
+<screenshot>
+<screeninfo>Plot of Data Points</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-maxima-datapoints.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Plot of Data Points</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+<para>
+Now, open the Data Manager. Click <guibutton>Plugin...</guibutton>
+in the <guilabel>New</guilabel> section to create a new plugin object. Under <guilabel>Plugin Selection</guilabel>,
+select the <guimenuitem>Fit linear</guimenuitem> plugin.  This particular plugin requires two input vectors&mdash;one
+containing the x values and one containing the y values of the data points to be fitted.  Select
+<guimenuitem>V1-INDEX</guimenuitem> for <guilabel>Input Vector - X Array</guilabel>, and <guimenuitem>V2-1</guimenuitem>
+for <guilabel>Input Vector - Y Array</guilabel>.  Then, click <guibutton>OK</guibutton>.  You will notice that the
+new plugin object has created slave vectors to store its outputs.  Click on <guibutton>Curve...</guibutton> to create a new
+curve from the output vectors. Select <guimenuitem>V1-INDEX</guimenuitem> for <guilabel>X axis vector</guilabel> and
+<guimenuitem>P1-kstfit_linear_unweighted-Y Fitted</guimenuitem> for <guilabel>Y axis vector</guilabel>.  We want
+to place the curve on top of the data points in the existing plot, so under <guilabel>Curve Placement</guilabel>,
+select <guilabel>Place in existing plot</guilabel> and deselect <guilabel>Place in new plot</guilabel>.  Finally,
+click <guibutton>OK</guibutton> to create the curve.  Close the data manager to view the fitted line:
+</para>
+
+<screenshot>
+<screeninfo>Fitted Line</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-fittedline.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Fitted Line</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+A procedure similar to the one you have just followed will allow you to create and plot the outputs of
+any type of plugin object.
+However, there is a shortcut for creating fit plugins. Right-clicking on a plot will display the context
+menu, which contains a <guisubmenu>Fit...</guisubmenu> submenu.  Selecting a curve from the submenu will
+bring up the Fit Function dialog with the x and y vectors preselected. After the fit plugin is selected,
+a click of the
+<guibutton>OK</guibutton> button will create the plugin object, create the curve from the plugin outputs,
+and place the curve on the existing plot.
+</para>
+
+<para>
+Let us now take a look at events.  Event objects usually monitor other vectors or scalars and perform
+specified actions when certain conditions involving those vectors or scalars are true.  Click
+<guibutton>EventMonitor...</guibutton> in the <guilabel>New</guilabel> section of the Data Manager
+to create a new event:
+</para>
+<screenshot>
+<screeninfo>Event Monitor</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-eventmonitor.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Event Monitor</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+Suppose that the pitch gyro data was being updated in real time, and that we
+wanted to be notified whenever the corrected pitch gyro falls outside the range
+<literal>[-0.60, -0.40]</literal>.  To set up the event in this manner, enter the following in the
+<guilabel>Expression</guilabel> textbox:
+</para>
+<para>
+<literal>[C4-cleaned_pitch-sv]&gt;(-0.40) | [C4-cleaned_pitch-sv]&lt;(-0.60)</literal>
+</para>
+<para>
+Note that anything entered as an expression must be a boolean expression.  This particular
+expression will evaluate to true whenever either of the inequalities is true.
+Select both <guilabel>Log as</guilabel> and <guilabel>Notify</guilabel>, and enter in your email
+address to the right of the <guilabel>Notify</guilabel> checkbox.  Click <guibutton>OK</guibutton>,
+and the event will be created.
+</para>
+<para>
+Now select <guimenuitem>Debug Kst...</guimenuitem> from the <guimenu>Help</guimenu> menu.  Click the
+<guilabel>Log</guilabel> tab to view the debug log.  If the event was set up correctly, you should see
+warnings indicating the x values for which the event was triggered.  Check that the values roughly match
+those you would expect from looking at the plot:
+</para>
+<screenshot>
+<screeninfo>Debug Log</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-debuglog.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Debug Log</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+If the pitch gyro data was being updated in real-time, the event monitor would be triggered for any new data
+when appropriate as well.
+</para>
+
+<para>
+Once you are done, you can close &kst;.
+</para>
+</chapter>
+
+
+<chapter id="conclusion">
+<title>Conclusion</title>
+
+<para>
+This concludes the &kst; tutorial.  Hopefully you have gained enough knowledge to become comfortable with
+&kst;. Keep in mind that this tutorial does not cover all the functionality of &kst;&mdash;there
+is still much to explore and experiment with.  The <productname>Kst Handbook</productname>, available through the
+<guimenu>Help</guimenu> menu of &kst;, can be your in-depth guide to concepts ranging from window layout
+fundamentals to creation of custom plugins and data source readers.  You are encouraged to use &kst; in interesting
+and innovative ways&mdash;you will most likely find that it not only meets, but exceeds your needs and requirements.
+</para>
+</chapter>
+
+<chapter id="licensing">
+<title>Credits and Licensing</title>
+<para>
+This tutorial is based on the original &kst; Quick Tour written by Barth Netterfield.
+</para>
+
+&underFDL;
+
+</chapter>
+
+</book>

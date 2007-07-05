@@ -1,2 +1,0 @@
-SUBDIRS=convolve deconvolve
-

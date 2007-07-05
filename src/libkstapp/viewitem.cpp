@@ -831,9 +831,6 @@ void TransformCommand::redo() {
   _item->setTransform(_newTransform);
 }
 
-
 }
-
-#include "viewitem.moc"
 
 // vim: ts=2 sw=2 et

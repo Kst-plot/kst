@@ -201,6 +201,4 @@ void GradientEditor::setGradientStops(const QGradientStops &stops) {
 
 }
 
-#include "gradienteditor.moc"
-
 // vim: ts=2 sw=2 et

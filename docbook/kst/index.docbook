@@ -1,0 +1,157 @@
+<?xml version="1.0" ?>
+  <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+
+ <!ENTITY kappname "kst">
+ <!ENTITY package "kdeextragear-2">
+ <!ENTITY kst "<application>Kst</application>">
+ <!ENTITY % addindex "IGNORE">
+ <!ENTITY % English "INCLUDE" > <!-- change language only here -->
+
+ <!-- Chapter Information -->
+ <!ENTITY intro-chapter SYSTEM "intro-chapter.docbook">
+ <!ENTITY tutorial SYSTEM "tutorial.docbook">
+ <!ENTITY commontasks-chapter SYSTEM "commontasks-chapter.docbook">
+ <!ENTITY data-chapter SYSTEM "data-chapter.docbook">
+ <!ENTITY plugins-chapter SYSTEM "plugins-chapter.docbook">
+ <!ENTITY install-chapter SYSTEM "install-chapter.docbook">
+ <!ENTITY license-chapter SYSTEM "license-chapter.docbook">
+ <!ENTITY saving-chapter SYSTEM "saving-chapter.docbook">
+ <!ENTITY plotsandwindows-chapter SYSTEM "plotsandwindows-chapter.docbook">
+ <!ENTITY additionalformats-chapter SYSTEM "additionalformats-chapter.docbook">
+ <!ENTITY creatingplugins-chapter SYSTEM "creatingplugins-chapter-new.docbook">
+ <!ENTITY miscfeatures-chapter SYSTEM "miscfeatures-chapter.docbook">
+ <!ENTITY debuglog-chapter SYSTEM "debuglog-chapter.docbook">
+ <!ENTITY dcop-chapter SYSTEM "dcop-chapter.docbook">
+ <!ENTITY commandline-chapter SYSTEM "commandline-chapter.docbook">
+ <!ENTITY eventmonitoring-chapter SYSTEM "eventmonitoring-chapter.docbook">
+ ]>
+
+<book lang="&language;">
+
+<bookinfo>
+<title>The &kst; Handbook</title>
+
+<authorgroup>
+<author>
+<firstname>Rick</firstname>
+<othername></othername>
+<surname>Chern</surname>
+<affiliation><address><email>kst@kde.org</email></address></affiliation>
+</author>
+<author>
+<firstname>Philip</firstname>
+<surname>Rodrigues</surname>
+<affiliation><address><email>phil@kde.org</email></address>
+</affiliation>
+</author>
+</authorgroup>
+
+
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+
+<copyright>
+<year>2004</year>
+<holder>The University of British Columbia</holder>
+</copyright>
+
+<copyright>
+<year>2005</year>
+<holder>The University of Toronto</holder>
+</copyright>
+
+<!-- Translators: put here the copyright notice of the translation -->
+<!-- Put here the FDL notice.  Read the explanation in fdl-notice.docbook
+     and in the FDL itself on how to use it. -->
+<legalnotice>
+&FDLNotice;
+</legalnotice>
+
+<!-- Date and version information of the documentation
+Don't forget to include this last date and this last revision number, we
+need them for translation coordination !
+Please respect the format of the date (YYYY-MM-DD) and of the version
+(V.MM.LL), it could be used by automation scripts.
+Do NOT change these in the translation. -->
+
+<date>2005-04-14</date>
+<releaseinfo>1.2.0</releaseinfo>
+
+<!-- Abstract about this handbook -->
+
+<abstract>
+<para>
+&kst; is a data plotting and manipulation program with powerful plugin support.
+</para>
+</abstract>
+
+<!-- This is a set of Keywords for indexing by search engines.
+Please at least include KDE, the KDE package it is in, the name
+ of your application, and a few relevant keywords. -->
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>kdeextragear</keyword>
+<keyword>kdeextragear-2</keyword>
+<keyword>Kst</keyword>
+<keyword>plotting</keyword>
+<keyword>plot</keyword>
+</keywordset>
+
+</bookinfo>
+
+<!-- Here are the chapters.  Rearrange the chapters by changing
+the order. -->
+
+&intro-chapter;
+
+&tutorial;
+
+&commontasks-chapter;
+
+&data-chapter;
+
+&plotsandwindows-chapter;
+
+&saving-chapter;
+
+&eventmonitoring-chapter;
+
+&plugins-chapter;
+
+&miscfeatures-chapter;
+
+&license-chapter;
+
+<!--appendices start here-->
+&commandline-chapter;
+
+&creatingplugins-chapter;
+
+&additionalformats-chapter;
+
+&dcop-chapter;
+
+&debuglog-chapter;
+
+&install-chapter;
+
+</book>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:0
+sgml-indent-data:true
+sgml-parent-document:nil
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->

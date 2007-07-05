@@ -1,0 +1,1594 @@
+<chapter id="workingwithdata">
+<title>Working With Data</title>
+
+<sect1 id="fileformats">
+<title>Supported File Formats</title>
+<para>
+Currently, Kst supports ASCII text files, BOOMERANG frame files, and BLAST dirfile
+files as data sources, as well as PIOLib and FITS files with the appropriate libraries.
+This section describes basic data source concepts common to all file types, and
+specifically details the ASCII and BLAST dirfile file types.
+</para>
+
+<sect2 id="supportingadditionalfileformatsdatasourceconcepts">
+<title>Data Source Concepts</title>
+<para>
+A data source in &kst; is simply a supported data file.
+The following concepts are important in understanding how &kst; works with
+different data sources.
+Some terminology is also introduced in this section.
+</para>
+
+<sect3 id="supportingadditionalfileformatsdatasourceconceptssamples">
+<title>Samples</title>
+<para>
+A sample is considered to be the fundamental unit with respect to data files.
+Each sample consists of one data value in the file.  Note, however, that one sample
+may not correspond to one value in a data vector in &kst;, due to the concept of
+<link linkend="supportingadditionalfileformatsdatasourceconceptsframes">frames</link>.
+</para>
+</sect3>
+
+<sect3 id="supportingadditionalfileformatsdatasourceconceptsfields">
+<title>Fields</title>
+<para>
+A field usually corresponds to one vector in &kst;.  For example, a column in an
+ASCII data file is considered to be one field.  Each field can have an explicit
+or implicit name.  Datasource readers provide functions for reading and obtaining
+fields and field names.
+</para>
+</sect3>
+
+<sect3 id="supportingadditionalfileformatsdatasourceconceptsframes">
+<title>Frames</title>
+<para>
+A frame corresponds to a set number of samples, and each field in a data file
+can have its own ratio of samples per frame.  The size of a data file
+is measured by the number of frames it contains.  For ASCII data files, the number of samples
+per frame is 1, but for some data files, there may be multiple samples per frame.  In the below
+illustration, the first 3 frames of an imaginary data file are shown.  In this particular data
+file, Field 1 has a ratio of 5 samples per frame, Field 2 has a ratio of 2 samples per frame,
+Field 3 has a ratio of 3 samples per frame, and Field 4 has a ratio of 1 sample per frame.
+</para>
+<para>
+<inlinemediaobject>
+<imageobject>
+<imagedata fileref="Diagram-kst-frames.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
+</para>
+<para>
+Depending on the specific data vector settings in &kst;, data from files may be read as
+frames instead of samples, with either the first sample in a frame or the mean of all the samples in a frame
+representing the value of the frame.
+</para>
+</sect3>
+
+<sect3 id="supportingadditionalfileformatsdatasourceconceptsindex">
+<title>INDEX Field</title>
+<para>
+Some data files may not have a field that represents the x axis of a plot. However, &kst;
+implicitly creates an INDEX field for all data sources.  The INDEX field simply contains
+integers from 0 to N-1, where N is the number of frames in the data file.
+</para>
+</sect3>
+
+</sect2>
+
+<sect2 id="creatingascii">
+<title>ASCII Input Files</title>
+<para>
+The simplest input file format is the ASCII text file.  These files are usually human-readable and
+can be easily created by hand or simple scripts if desired.  The following is an example of an ASCII input file.
+</para>
+
+<informalexample>
+<screen>
+112.5 3776 428
+187.5 5380 429
+262.5 5245 345
+337.5 2942 184
+412.5 1861 119
+487.5 2424 138
+567.5 2520 162
+637.5 1868 144
+712.5 1736 211
+787.5 1736 211
+862.5 2172 292
+937.5 1174 377
+1000.5 499 623
+</screen>
+</informalexample>
+
+<para>
+Each column of this file represents a field, while each row represents one frame.
+Columns are separated by tabs or spaces, and rows are separated by carriage returns.
+Note that due to their structure, ASCII files cannot have multiple samples per frame.
+Also, since the columns do not have labels, field names are assigned by &kst; based on the
+order of the columns (the leftmost column has a field name of <literal>1</literal>).
+</para>
+
+<para>
+Commented lines in ASCII files start with one of the characters in the set
+<literal>{#, !, /, ;, c}</literal>.  All commented lines and empty lines
+are ignored by &kst;.  Valid numbers include those with decimals, negative signs,
+or <literal>e</literal>, to indicate scientific notation. Invalid numbers (such as
+English words) are replaced with 0 by &kst;.
+</para>
+
+</sect2>
+
+
+<sect2 id="blastdirfiles">
+<title>BLAST Dirfiles</title>
+<para>
+BLAST dirfile data sources are actually directories of files.  Each directory represents
+one data source, and each file in the directory, with the exception of a file called
+<filename>format</filename>, represents a single field. The file named <filename>format</filename>
+lists each field and its properties.  Below is example of such a file:
+</para>
+<informalexample>
+<screen>scount RAW f 1
+fcount RAW f 20
+sine RAW f 20
+ssine RAW f 1
+cos RAW f 20</screen>
+</informalexample>
+<para>
+In this example, <literal>scount</literal>, <literal>fcount</literal>, <literal>sine</literal>,
+<literal>ssine</literal>, and <literal>cos</literal> are field names.  <literal>RAW</literal> indicates
+the file is written in raw format, and the last number in each row is the number of samples per frame.
+</para>
+
+<para>
+When selecting a BLAST dirfile for use in &kst;, the directory containing the field files should be
+selected. &kst; will when automatically look for a <filename>format</filename> file, if it exists,
+to determine the fields and their properties.
+</para>
+
+</sect2>
+</sect1>
+
+<sect1 id="datawizard">
+<title>The Data Wizard</title>
+<para>
+The Data Wizard provides a quick and easy way of creating vectors, curves, power spectra, and plots in &kst; from data files.
+  To launch the wizard,
+select <guimenuitem>Data Wizard...</guimenuitem> from the <guimenu>Data</guimenu> menu.  You will be
+prompted to select a data source.  Browse to a valid data file (or enter in the path to a data file) and
+click <guibutton>Next</guibutton>.  The following window will be displayed.
+</para>
+<screenshot>
+<screeninfo>Data Wizard Screen 2</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-datawizard2.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Data Wizard Screen 2</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+Select the fields you wish to import into &kst;.  You may filter the list of fields by entering a
+string to match (wildcards such as <literal>*</literal> are supported) into the text box above the list.
+</para>
+
+<para>
+The <guilabel>Data Range</guilabel> section is used to specify the range of data to read from the selected
+vectors in the input file. The following discussion assumes knowledge of <quote>frames</quote>.  For a detailed
+description of this concept, see <link linkend="fileformats">File Formats</link>.
+</para>
+<variablelist>
+<varlistentry>
+<term>
+<guilabel>Starting frame</guilabel>, <guilabel>Count from end</guilabel>,
+<guilabel>Number of frames</guilabel>, and <guilabel>Read to end</guilabel>
+</term>
+<listitem>
+<para>
+Using these four settings, the lower and upper boundaries of
+the data range can be set. For example, to read from frame 10 to frame 900, enter <userinput>10</userinput> for
+<guilabel>Starting frame</guilabel> and <userinput>890</userinput> for <guilabel>Number of frames</guilabel>.
+To read from frame 500 to the end of the file, enter <userinput>500</userinput> for <guilabel>Starting frame</guilabel>
+and select the <guilabel>Read to end</guilabel> option. To read only the last 450 frames from the file, select the
+<guilabel>Count from end</guilabel> option and enter <userinput>450</userinput> for <guilabel>Number of frames</guilabel>.
+The combinations used in the previous two examples are often useful for reading data
+from a file that is being updated in real time.  Subsequent additions to the file are read, causing associated
+vectors to be updated as well.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Read 1 sample per N frames</guilabel> and <guilabel>Boxcar filter first</guilabel>
+</term>
+<listitem>
+<para>
+In addition to the lower and upper range boundaries, the samples to read from the selected range can be set.
+If <guilabel>Read 1 sample per N frames</guilabel> (where N is the entered value) is not selected,
+all samples in the selected range will be read.
+Alternatively, frames in the data file can be skipped by selecting <guilabel>Read 1 sample per N frames</guilabel>
+The value of the 1 sample that is used to represent a frame depends on whether or not
+<guilabel>Boxcar filter first</guilabel> is selected.  If <guilabel>Boxcar filter first</guilabel> is not selected,
+the value is the same as the value of the 1st sample in the frame. If <guilabel>Boxcar filter first</guilabel>
+is selected, the value is the mean (average) of all the samples in that particular frame.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+
+
+<para>
+Power Spectrum and X axis settings can be specified within the <guilabel>Plot Types</guilabel> section.
+These settings are described below.
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<guilabel>XY</guilabel>, <guilabel>Power Spectrum</guilabel>, and <guilabel>XY and Power Spectrum</guilabel>
+</term>
+<listitem>
+<para>
+Select whether to plot the power spectrum only, data (XY) only, or both.  If the power spectrum is selected for
+plotting, additional settings in this section become available.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>X Axis Vector</guilabel>
+</term>
+<listitem>
+<para>
+The vector to be used as the independent vector for the plots.  You may select a field from your
+data file, or the INDEX vector.  The INDEX
+vector is simply a vector containing elements from 0 to N-1, where N is the number of frames in the
+data file.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+The <guilabel>FFT Options</guilabel> subsection
+ in the <guilabel>Plot Types</guilabel> section is available only if a power spectrum
+is to be plotted.  The below definitions assume basic knowledge of power spectra&mdash;for further details,
+refer to Numerical Recipes in C: The Art of Scientific Computing, published by Cambridge University Press.
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<guilabel>Interleaved average</guilabel> and <guilabel>FFT Length</guilabel>
+</term>
+<listitem>
+<para>
+The power spectrum is defined as <quote>the square root of the absolute value of the
+mean of the interleaved Fast Fourier Transforms of length <literal>2^x</literal></quote>, where x is the
+value entered in the <guilabel>FFT Length</guilabel> selection box.
+Selecting <guilabel>Interleaved average</guilabel> allows the length of the interleaved Fast Fourier
+Transforms to be specified.  If <guilabel>Interleaved average</guilabel> is unchecked, &kst;
+will determine the length based on the length of the vector.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Data units</guilabel> and <guilabel>Rate units</guilabel>
+</term>
+<listitem>
+<para>
+The units specified in these textboxes are used for the purpose of auto-generating axes labels for the plots.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guibutton>Sample rate</guibutton>
+</term>
+<listitem>
+<para>
+The sample rate is used to generate the X axis of power spectrum plots.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Apodize</guilabel>
+</term>
+<listitem>
+<para>
+If this option is selected, the data is apodized using a Hanning window, to reduce bin-to-bin leakage.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Remove Mean</guilabel>
+</term>
+<listitem>
+<para>
+Select this option to remove the mean from the selected data (i.e. translate the data so that the mean is zero).
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+<para>
+Once you are satisfied with all the settings, click <guibutton>Next</guibutton> to advance to the next window.
+Select any filters you wish to apply to the data, and click <guibutton>Next</guibutton> to advance to the final
+window.
+</para>
+
+<screenshot>
+<screeninfo>Data Wizard Screen 3</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-datawizard3.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Data Wizard Screen 3</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+From here, you can change general plotting settings.  Most of the settings are self-explanatory.
+A brief overview of each section is provided below.
+</para>
+
+<variablelist>
+<varlistentry>
+<term>
+<guilabel>Curve Style</guilabel>
+</term>
+<listitem>
+<para>
+Select whether to plot data points only, lines connecting the data points only, or both.
+By default, lines are continuous with weight 0, and data points are marked using crosses.
+Line and data point colours are chosen so that curves with identical colours are minimized.
+Note that the curve style settings apply to both Power Spectra
+and XY plots.
+</para>
+</listitem>
+</varlistentry>
+
+
+
+<varlistentry>
+<term>
+<guilabel>Curve Placement</guilabel>
+</term>
+<listitem>
+<para>
+Select the plots to place the new curves on.  <guilabel>Cycle through</guilabel> distributes the
+curves on the plots by cycling through the plots.  Note that the curve placement settings apply
+to both Power Spectra and XY plots.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Label Generation</guilabel>
+</term>
+<listitem>
+<para>
+Select the desired labels and legends to be placed on the plots.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Plot Placement</guilabel>
+</term>
+<listitem>
+<para>
+Select the desired window(s) to place the new plots on.  New windows can be created for the plots by selecting
+<guilabel>In new window</guilabel>.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+Once you are satisfied with all the settings, click <guibutton>Finish</guibutton> and the plots will be generated.
+</para>
+
+</sect1>
+
+<sect1 id="datamanager">
+<title>The Data Manager</title>
+<para>
+The Data Manager provides a central location for adding, deleting, and modifying all the data objects used in &kst;.
+It can be accessed by selecting <guimenuitem>Data Manager</guimenuitem> from the <guimenu>Data</guimenu> menu.
+</para>
+<sect2 id="creatingdata">
+<title>Creating New Data Objects</title>
+<para>
+To create a new data object from the Data Manager, click on one of the buttons listed under <guilabel>New:</guilabel>.
+A new window will be displayed, allowing options and settings for the data object to be set.</para>
+
+<tip><para>You can also create new curves by right-clicking on a vector and choosing
+<guimenuitem>Make Curve...</guimenuitem></para></tip>
+
+<para>
+Since you are creating a new data object, you may enter a unique name to identify the object.  The default name
+can be used as well (if it is unique).
+</para>
+<para>
+The settings for all plottable data objects except images have two common sections&mdash;Appearance and Placement
+(images only have the Placement section).
+These sections are described below.  For data-specific settings, see <link linkend="datatypes">Data Types</link>.
+</para>
+<screenshot>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-curveoptions.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+</screenshot>
+
+<sect3 id="curveappearance">
+<title>Appearance</title>
+<para>
+The Appearance section allows you to change the appearance of the data object when it is plotted.
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<inlinemediaobject><imageobject><imagedata fileref="Widget-kst-colourchooser.png" format="PNG"/></imageobject></inlinemediaobject>
+</term>
+<listitem>
+<para>
+Clicking this button displays a colour chooser dialog box, which can be used to change the colour of
+both the lines and points.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Show points</guilabel>
+</term>
+<listitem>
+<para>
+Selecting this checkbox shows the data points used to plot the data object.  The drop-down list to the right
+allows the shape of the points to be changed.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Show lines</guilabel>
+</term>
+<listitem>
+<para>
+Selecting this checkbox shows the lines joining the data points for the data object.  The thickness of the line
+as well as the line style can be changed.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+
+</sect3>
+
+<sect3 id="curveplacement">
+<title>Placement</title>
+<para>
+The Placement section specifies the plotting location of new plottable data objects.
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<guilabel>Plot window</guilabel>
+</term>
+<listitem>
+<para>
+Specify the window in which to plot the data object.  You may create a new window by clicking the <guibutton>New...</guibutton> button.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Place in existing plot</guilabel>, <guilabel>Place in new plot</guilabel>
+and <guilabel>Do not place in any plot</guilabel>
+</term>
+<listitem>
+<para>
+You can choose whether or not to immediately plot the data object on a new or existing plot.  If
+<guilabel>Place in new plot</guilabel> is selected, you can also choose to re-arrange the layout of the
+plots by selecting <guilabel>re-grid</guilabel> and entering the number of columns to use for the
+new layout grid.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+
+</term>
+<listitem>
+<para>
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+Once all the desired settings for the new data object have been set, click the <guibutton>OK</guibutton>
+button to create the new data object.
+</para>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="editinganddeletingdata">
+<title>Editing and Deleting Existing Data Objects</title>
+<para>
+To edit an existing data object, simply highlight it in the Data Manager window and click the <guibutton>Edit</guibutton>
+button.  The settings window for the selected object will be displayed.  This window is identical to the one displayed
+when creating new data objects (with the exception that the Placement section may be absent), so refer to <link linkend="creatingdata">Creating New Data Objects</link> for more information
+on the settings and options.
+</para>
+<para>
+To delete a data object, highlight it in the Data Manager window and click the <guibutton>Delete</guibutton> button.
+Note that the entry in the <guilabel># Used</guilabel> column for an object must be 0 before the object can be
+deleted.  The <guilabel># Used</guilabel> column indicates the number of times that a particular data object and its children
+(if any) are used by either other data objects or by plots.
+Listed below are some consequences of this restriction to keep in mind when attempting to delete data objects.
+</para>
+
+<itemizedlist>
+<listitem>
+<para>
+All plottable objects (curves, equations, histograms, power spectra, and images) must be removed from plots before they can be
+deleted.  An object can be removed from a plot by right-clicking on it in the Data Manager window and selecting the desired
+plot from the <guisubmenu>Remove From Plot</guisubmenu> submenu.
+</para>
+</listitem>
+
+<listitem>
+<para>
+All data objects that use a particular data vector must be deleted before the data vector can be deleted.
+</para>
+</listitem>
+
+<listitem>
+<para>
+All children of a parent data object must be unused before the parent data object can be deleted.
+</para>
+</listitem>
+</itemizedlist>
+
+<para>
+After a sequence of deletions and removals of plottable data objects from plots, you may find that there are numerous unused data objects
+displayed in the Data Manager.  To quickly remove these objects, you can click the <guibutton>Purge</guibutton> button.
+</para>
+
+
+
+</sect2>
+
+</sect1>
+
+<sect1 id="datatypes">
+<title>Data Types</title>
+
+<para>
+There are nine main types of data objects in &kst;.  Data objects can contain other data objects,
+as represented by the tree structure view in the
+Data Manager.  The following diagram illustrates the relationships between the different data types.
+</para>
+
+<para>
+<inlinemediaobject>
+<imageobject>
+<imagedata fileref="Diagram-kst-datatypes.png" format="PNG"/>
+</imageobject>
+<textobject>
+<phrase>&kst; Data Types</phrase>
+</textobject>
+</inlinemediaobject>
+</para>
+
+<para>
+As can be seen from the above diagram, the curve, equation, histogram, power spectrum and image data objects
+are the only data objects that are plottable.  All data objects (other than vectors) have the capability of
+using vectors, while equations, power spectra, events, and plugins all contain slave vectors.
+</para>
+
+<para>
+Descriptions of each data type are provided below, along with overviews of the settings and options
+available when creating or editing each type of data object.  Settings common to almost all data types have been
+omitted&mdash;see <link linkend="creatingdata">Creating New Data Objects</link> for more information.
+</para>
+
+<sect2 id="vectors">
+<title>Vectors</title>
+<para>
+Vectors are one of the most often-used data objects in &kst;.  As their name implies, vectors are simply ordered
+lists of numbers.  Most often they contain the x or y coordinates of a set of data points.
+</para>
+<!-- TODO: This doesn't seem to be the case here. Check -->
+<para>
+As vectors can be potentially quite large, it is a good idea to be aware of the amount of memory &kst; has
+allocated for use.  The current available memory is displayed in the lower right corner of the status bar
+of the main &kst; window.
+</para>
+<tip>
+<para>
+If the status bar is not available, ensure that <guimenuitem>Show Statusbar</guimenuitem> is checked
+in the <guimenu>Settings</guimenu> menu.
+</para>
+</tip>
+
+<para>
+The following is a screenshot of the window displayed when creating or editing vectors.  Explanations of the
+settings are listed below.
+</para>
+
+<screenshot>
+<screeninfo>Edit Vectors</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-vectorwindow.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Edit Vectors</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<sect3 id="datavectorparameters">
+<title>Data Vector Parameters</title>
+<para>
+The source file and field to read can be set using the following options.
+</para>
+<variablelist>
+
+<varlistentry>
+<term>
+<guilabel>File name</guilabel>
+</term>
+<listitem>
+<para>
+The path to the desired data file.  Clicking the button to the right displays a file browser
+window that can be used to graphically browse to the file.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Field or column</guilabel>
+</term>
+<listitem>
+<para>
+The field or column to create a vector from.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+
+<sect3 id="datarange">
+<title>Data Range</title>
+<para>
+This section specifies the range of data to use from the selected field for the data vector.
+</para>
+<variablelist>
+<varlistentry>
+<term>
+<guilabel>Starting frame</guilabel>, <guilabel>Count from end</guilabel>,
+<guilabel>Number of frames</guilabel>, and <guilabel>Read to end</guilabel>
+</term>
+<listitem>
+<para>
+Using these four settings, the lower and upper boundaries of
+the data range can be set. For example, to read from frame 10 to frame 900, enter <userinput>10</userinput> for
+<guilabel>Starting frame</guilabel> and <userinput>890</userinput> for <guilabel>Number of frames</guilabel>.
+To read from frame 500 to the end of the file, enter <userinput>500</userinput> for <guilabel>Starting frame</guilabel>
+and select the <guilabel>Read to end</guilabel> option. To read only the last 450 frames from the file, select the
+<guilabel>Count from end</guilabel> option and enter <userinput>450</userinput> for <guilabel>Number of frames</guilabel>.
+The combinations used in the previous two examples are often useful for reading data
+from a file that is being updated in real time.  Subsequent additions to the file are read, causing associated
+vectors to be updated as well.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Read 1 sample per</guilabel> and <guilabel>Boxcar filter first</guilabel>
+</term>
+<listitem>
+<para>
+In addition to the lower and upper range boundaries, the samples to read from the selected range can be set.
+If <guilabel>Read 1 sample per</guilabel> is not selected, all samples in the selected range will be read.
+If <guilabel>Read 1 sample per</guilabel> is selected, only 1 sample per <literal>N</literal> frames will be read,
+where <literal>N</literal> is the number entered in selection box to the right.
+The value of the 1 sample that is used to represent a frame depends on whether or not
+<guilabel>Boxcar filter first</guilabel> is selected.  If <guilabel>Boxcar filter first</guilabel> is not selected,
+the value is the same as the value of the 1st sample in the frame. If <guilabel>Boxcar filter first</guilabel>
+is selected, the value is the mean (average) of all the samples in that particular frame.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</sect3>
+</sect2>
+
+<sect2 id="curves">
+<title>Curves</title>
+<para>
+Curves are primarily used to create plottable objects from vectors.  Curves are created from two vectors - an <quote>X axis vector</quote> and a <quote>Y axis vector</quote>, that presumably provide a set of data points.  Thus, a curve can be thought
+of as a set of data points and the lines that connect them (even though the points or lines may not be visible on plots).
+</para>
+<para>
+The following is a screenshot of the window displayed when creating or editing curves.  Explanations of the
+settings are listed below.
+</para>
+
+<screenshot>
+<screeninfo>Edit Curves</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-curvewindow.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Edit Curves</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<sect3 id="curvecontents">
+<title>Curve Contents</title>
+<para>
+The contents of the curve can be set from this section.
+</para>
+<variablelist>
+<varlistentry>
+<term>
+<guilabel>X axis vector</guilabel>
+</term>
+<listitem>
+<para>
+The vector to use for the independent (horizontal) axis.
+</para>
+</listitem>
+
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Y axis vector</guilabel>
+</term>
+<listitem>
+<para>
+The vector to use for the dependent (vertical) axis.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>+X error bar</guilabel> and <guilabel>+Y error bar</guilabel>
+</term>
+<listitem>
+<para>
+The vectors containing error values corresponding to the X axis vector and Y axis vector, respectively.
+The vectors should contain the sizes of the error bars in the same order as the data points.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Use +<replaceable>X/Y</replaceable> error bar for
+-<replaceable>X/Y</replaceable></guilabel></term> <listitem><para>If
+this item is checked, the error bars are drawn symmetrically about the
+data point. To draw asymmetric error bars in the x or y direction,
+uncheck the box, and choose a vector for the length of the error bar
+below the data point in the <guilabel>-<replaceable>X/Y</replaceable>
+error bar</guilabel> combo box.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>-<replaceable>X/Y</replaceable> error
+bar</guilabel></term>
+<listitem><para>The vector to use for the error bar below the data
+point. See the previous entry for more detail on using asymmetric
+error bars.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect3>
+</sect2>
+
+<sect2 id="equations">
+<title>Equations</title>
+<para>
+An equation data object consists of a mathematical expression and an independent variable.  The expression
+is built using a combination of scalars, vectors, and operators, and usually represents the values of the
+dependent variable.  The independent variable can be an existing vector or it can be generated when the equation
+object is created or edited.  Since an equation ultimately consists of a set of data points, an equation object
+is plottable.
+</para>
+<para>
+The following is a screenshot of the window displayed when creating or editing equations.  Explanations of the
+settings are listed below.
+</para>
+
+<screenshot>
+<screeninfo>Edit Equation</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-equationwindow.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Edit Equation</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<sect3 id="equation">
+<title>Equation</title>
+<para>
+The mathematical expression representing the dependent variable can be modified from this section.
+</para>
+
+<variablelist>
+<varlistentry>
+<term>
+<guilabel>Operators</guilabel>
+</term>
+<listitem>
+<para>
+A list of available operators.  Choosing an operator from the list inserts the operator at the current
+insertion point in the <guilabel>Equation</guilabel> text box.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Vectors</guilabel>
+</term>
+<listitem>
+<para>
+A list of the current vector objects in &kst;.  Choosing a vector from the list inserts the vector at the current
+insertion point in the <guilabel>Equation</guilabel> text box.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Scalars</guilabel>
+</term>
+<listitem>
+<para>
+A list of the available scalar values.  This list is composed of both the scalar values in the current &kst;
+session as well as some built-in constants.  Choosing a scalar from the list inserts the scalar at the current
+insertion point in the <guilabel>Equation</guilabel> text box.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Equation</guilabel>
+</term>
+<listitem>
+<para>
+The mathematical expression representing the independent variable.  You may manually type in this text box or
+you may select items to insert using the above drop-down lists.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+
+
+<sect3 id="independentvariable">
+<title>Independent Variable</title>
+<para>
+<!-- TODO: Note that the independent variable is x. Maybe give some -->
+<!-- simple examples -->
+This section is used to specify the source of the values for the independent variable.
+</para>
+<variablelist>
+
+<varlistentry>
+<term>
+<guilabel>Use</guilabel>
+</term>
+<listitem>
+<para>
+Select this option to use an existing vector as the independent variable. Select a vector from the
+drop-down list, or quickly create a new one by clicking the button to the right.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Interpolate to highest resolution vector</guilabel>
+</term>
+<listitem>
+<para>
+Selecting this option interpolates the selected vector to the greatest number of samples possible.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Generate</guilabel>
+</term>
+<listitem>
+<para>
+Select this to generate a set of values to use as the independent variable. Specify the lowest value
+to generate in the <guilabel>From</guilabel> field, and the highest value to generate in the <guilabel>to</guilabel> field.
+Set the value for <guilabel>Number of samples</guilabel> to be the number of equally spaced values to generate between the
+lowest value and the highest value (inclusive).
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect3>
+
+</sect2>
+
+<sect2 id="Histograms">
+<title>Histograms</title>
+<para>
+A histogram data object simply represents a histogram of a particular vector.  Histogram objects are plottable.
+</para>
+<para>
+The following is a screenshot of the window displayed when creating or editing histograms.  Explanations of the
+settings are listed below.
+</para>
+
+<screenshot>
+<screeninfo>Edit Equation</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-histogramwindow.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Edit Equation</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<sect3 id="histogramproperties">
+<title>Histogram Properties</title>
+<para>
+The source vector, as well as basic histogram properties, can be modified from this section.
+You can either manually specify settings or use the <guibutton>Auto Bin</guibutton> button.
+</para>
+
+<variablelist>
+<varlistentry>
+<term>
+<guilabel>Data vector</guilabel>
+</term>
+<listitem>
+<para>
+The data vector to create the histogram from.  Although a vector is needed to create a histogram, the
+vector is treated as an unordered set for the purposes of creating a histogram.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>From</guilabel> and <guilabel>to</guilabel>
+</term>
+<listitem>
+<para>
+The <guilabel>From</guilabel> field contains the left bound for the leftmost bin in the histogram.
+The <guilabel>to</guilabel> field contains the right bound for the rightmost bin in the histogram.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Num bins</guilabel>
+</term>
+<listitem>
+<para>
+Enter the total number of bins to use in the <guilabel>Num bins</guilabel> field.
+
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guibutton>Auto Bin</guibutton>
+</term>
+<listitem>
+<para>
+Instead of specifying values for <guilabel>From</guilabel>, <guilabel>to</guilabel>, and
+<guilabel>Num bins</guilabel>, you can click <guibutton>Auto Bin</guibutton> to automatically generate
+values for all three fields based based on the lowest and highest values, as well as the number
+of elements found in the source vector.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect3>
+
+
+<sect3 id="yaxisnormalization">
+<title>Y Axis Normalization</title>
+<para>
+This section is used to specify the type of normalization used for the y axis of the histogram.
+</para>
+<variablelist>
+
+<varlistentry>
+<term>
+<guilabel>Number in bin</guilabel>
+</term>
+<listitem>
+<para>
+Selecting this option causes the y axis to represent the number of elements in each bin.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Fraction in bin</guilabel>
+</term>
+<listitem>
+<para>
+Selecting this option causes the y axis to represent the fraction of elements in each bin
+out of the total number of elements.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Percent in bin</guilabel>
+</term>
+<listitem>
+<para>
+Selecting this option causes the y axis to represent the percentage of elements (out of the total
+number of elements) in each bin.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Peak bin = 1.0</guilabel>
+</term>
+<listitem>
+<para>
+Selecting this option causes the y axis to represent the number of elements in each bin divided by
+the number of elements in the largest bin (the bin with the greatest number of elements).  In other words,
+the y axis is normalized to 1.0.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect3>
+
+
+</sect2>
+
+<sect2 id="power-spectra">
+<title>Power Spectra</title>
+<para>
+A power spectrum data object represents the power spectrum of a vector, defined as
+<quote>the square root of the absolute value of the
+mean of the interleaved Fast Fourier Transforms of length <literal>2^x</literal> of the vector</quote>, where x is the
+value entered in the <guilabel>FFT Length</guilabel> selection box. The below definitions assume
+basic knowledge of power spectra&mdash;for further details,
+refer to Numerical Recipes in C: The Art of Scientific Computing, published by Cambridge University Press.
+</para>
+
+<screenshot>
+<screeninfo>Power Spectra Window</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-powerspectrawindow.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Power Spectra Window</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<sect3 id="powerspectracurvecontents">
+<title>Curve Contents</title>
+<para>
+The source vector, as well as basic power spectrum properties, can be modified from this section.
+</para>
+
+<variablelist>
+<varlistentry>
+<term>
+<guilabel>Data vector</guilabel>
+</term>
+<listitem>
+<para>
+The data vector to create a power spectrum from.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Interleaved average</guilabel> and <guilabel>FFT Length</guilabel>
+</term>
+<listitem>
+<para>
+Selecting <guilabel>Interleaved average</guilabel> allows the length of the interleaved Fast Fourier
+Transforms to be specified.  The length is specified as a power of 2.
+  If <guilabel>Interleaved average</guilabel> is unchecked, &kst;
+will determine the length based on the length of the vector.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Data units</guilabel> and <guilabel>Rate units</guilabel>
+</term>
+<listitem>
+<para>
+The units specified in these textboxes are used for the purpose of auto-generating axes labels for the plots.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guibutton>Sample rate</guibutton>
+</term>
+<listitem>
+<para>
+The sample rate is used to generate the X axis of power spectrum plots.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Apodize</guilabel>
+</term>
+<listitem>
+<para>
+If this option is selected, the data is apodized using a Hanning window, to reduce bin-to-bin leakage.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Remove Mean</guilabel>
+</term>
+<listitem>
+<para>
+Select this option to remove the mean from the selected data (i.e. translate the data so that the mean is zero).
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect3>
+
+</sect2>
+
+<sect2 id="plugins">
+<title>Plugins</title>
+<para>
+A plugin data object represents a &kst; plugin.  All plugins have a common format, and show up as type <quote>Plugin</quote>
+in the Data Manager.  For more information about plugins, please see <link linkend="pluginsandfilters">Plugins and Filters</link>
+</para>
+</sect2>
+
+<sect2 id="events">
+<title>Event Monitors</title>
+<para>
+An event monitor data object represents an instance of an event monitor.  For more information on monitoring of events, see
+<link linkend="eventmonitoring">Event Monitoring</link>.
+</para>
+</sect2>
+
+
+<sect2 id="arrays">
+<title>Matrices</title>
+<para>
+A matrix represents a set of three-dimensional data points (x, y, z) arranged in a two-dimensional grid.
+The z values of the matrix are obtained from a vector, and the grid structure is manually specified using
+the Edit or New Matrix dialog.  The descriptions below refer to the following diagram depicting
+&kst;'s matrix structure.
+</para>
+<para>
+<inlinemediaobject>
+<imageobject>
+<imagedata fileref="Diagram-kst-matrix.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
+</para>
+<para>
+A screenshot and explanation of the matrix dialog follow.
+</para>
+<screenshot>
+<screeninfo>Matrix Window</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-matrixwindow.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Matrix Window</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<sect3 id="arrayvectorselection">
+<title>Vector Selection</title>
+
+<variablelist>
+<varlistentry>
+<term>
+<guilabel>Z Vector</guilabel>
+</term>
+<listitem>
+<para>
+The data vector to obtain the z values from.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+
+<sect3 id="arraygridparameters">
+<title>Grid Parameters</title>
+
+<variablelist>
+<varlistentry>
+<term>
+<guilabel>X Minimum</guilabel> and <guilabel>Y Minimum</guilabel>
+</term>
+<listitem>
+<para>
+The origin of the matrix is specified by the coordinates (X Minimum, Y Minimum).
+The location of the origin is represented by a red circle in the above diagram.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>X Step Size</guilabel> and <guilabel>Y Step Size</guilabel>
+</term>
+<listitem>
+<para>
+These two values specify the dimensions of each rectangular cell in the matrix grid. All cells
+in the matrix have identical dimensions.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Dimensions</guilabel> and <guilabel>Use maximum x length</guilabel>
+</term>
+<listitem>
+<para>
+Enter the number of steps for the x dimension of the matrix, followed by the number of
+steps for the y dimension of the matrix.  If <guilabel>Use maximum x length</guilabel> is
+checked, the x dimension of the matrix will be determined based on the length of the vector
+and the entered y dimension.  If this option is checked and the length of the vector
+subsequently changes, the x dimension of the matrix will be updated accordingly.
+</para>
+<para>
+Note that the minimum allowed y dimension is 1, while the minimum allowed x dimension is 0.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+
+</sect2>
+
+<sect2 id="images">
+<title>Images</title>
+<para>
+Images are graphical representations of <link linkend="arrays">Matrices</link>.  Images can be plotted
+as color maps, contour maps, or both.
+</para>
+<screenshot>
+<screeninfo>Image Window</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-imagewindow.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Image Window</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<sect3 id="imagearrayselection">
+<title>Matrix Selection</title>
+
+<variablelist>
+<varlistentry>
+<term>
+<guilabel>Matrix</guilabel>
+</term>
+<listitem>
+<para>
+Select the matrix to use for this image.  New matrices can be created by clicking on the button to the right.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+
+<sect3 id="imageimagetype">
+<title>Image Type</title>
+
+<variablelist>
+<varlistentry>
+<term>
+<guilabel>Color Map</guilabel>, <guilabel>Contour Map</guilabel>, and <guilabel>Color Map and Contour Map</guilabel>
+</term>
+<listitem>
+<para>
+Select the type of image to be plotted. Changing this selection enables or disables sections of the image dialog
+as appropriate.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+
+<sect3 id="imagecolormapparameters">
+<title>Color Map Parameters</title>
+<para>
+A color map represents the z value of each cell in the matrix using a color. This section is only available
+if <guilabel>Color Map</guilabel> or <guilabel>Color Map and Contour Map</guilabel> is selected under
+<guilabel>Image Type</guilabel>.
+</para>
+
+<variablelist>
+<varlistentry>
+<term>
+<guilabel>Color palette</guilabel>
+</term>
+<listitem>
+<para>
+Select the color palette to use for the color map. By default, two palettes suitable for color maps are installed
+by &kst;&mdash;Kst Grayscale 256 (a 256 color grayscale palette) and Kst Spectrum 1021 (a 1021 color rainbow
+spectrum that ranges from blue to red). Additional palettes can be installed by simply copying
+<productname>GIMP</productname> compatible palette files to the <filename>colors</filename> subdirectory of
+the user configuration directory (for example, <filename>/usr/share/config/colors/</filename>).  Note that
+saved images using a non-default palette may not be viewable by other users of &kst; if they do not have
+the required palette. In such cases, a default grayscale palette is used instead.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Lower Z threshold</guilabel>, <guilabel>Upper Z threshold</guilabel> and <guibutton>Auto Threshold</guibutton>
+</term>
+<listitem>
+<para>
+Enter the lower and upper thresholds to use for the mapping of colors.  Palette colors are evenly distributed
+between <guilabel>Lower Z threshold</guilabel> and <guilabel>Upper Z threshold</guilabel>.  Any cells in the
+selected matrix with z values less than <guilabel>Lower Z threshold</guilabel> are mapped to the first color in the palette.
+Any cells in the selected matrix with z values greater than <guilabel>Upper Z threshold</guilabel> are mapped
+to the last color in the palette.  Clicking <guibutton>Auto Threshold</guibutton> will fill in the
+lower and upper threshold values using the least and greatest z values found in the selected matrix.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+
+<sect3 id="imagecontourmapparameters">
+<title>Contour Map Parameters</title>
+<para>
+A contour map draws a set of lines, with each line representing a certain z value. This section is only available
+if <guilabel>Contour Map</guilabel> or <guilabel>Color Map and Contour Map</guilabel> is selected under
+<guilabel>Image Type</guilabel>.
+</para>
+
+<variablelist>
+<varlistentry>
+<term>
+<guilabel>Number of contour levels</guilabel>
+</term>
+<listitem>
+<para>
+Select the number of contour levels to use.  The contour levels will be distributed evenly between the lowest
+and highest z values found in the matrix.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guibutton>Color</guibutton>
+</term>
+<listitem>
+<para>
+Select the color to use for the contour lines.  Clicking this button displays a standard &kde; color chooser
+dialog.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Weight</guilabel> and <guilabel>Use variable line weight</guilabel>
+</term>
+<listitem>
+<para>
+Select the weight, or <quote>thickness</quote> of the contour lines.  If <guilabel>Use variable line weight</guilabel>
+is selected, contour lines representing higher elevations are drawn thicker than those representing lower elevations.
+Use discretion when selecting this option, as images with high contour line densities may become unreadable.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect3>
+
+</sect2>
+
+</sect1>
+
+
+<sect1 id="thedatamenu">
+<title>The Data Menu</title>
+<para>
+The <guimenu>Data</guimenu> menu provides quick access to many features related to data objects in
+&kst;.  Most of the menu functions duplicate functions found elsewhere, so only brief descriptions are
+provided below.
+</para>
+<variablelist>
+<varlistentry>
+<term><guimenuitem>Reload</guimenuitem></term>
+<listitem>
+<para>
+Reloads all data vectors from their source files.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Data Wizard...</guimenuitem></term>
+<listitem>
+<para>
+Displays the <link linkend="datawizard">Data Wizard</link>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Data Manager</guimenuitem></term>
+<listitem>
+<para>
+Displays the <link linkend="datamanager">Data Manager</link>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>New</guimenuitem> [data object]</term>
+<listitem>
+<para>
+Displays the corresponding dialog for creating the data object. Refer to
+<link linkend="datatypes">Data Types</link> for descriptions of
+each dialog.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>View Scalars</guimenuitem></term>
+<listitem>
+<para>
+Displays a dialog from which the values of all the scalars in the current &kst; session
+can be viewed. The dialog is updated dynamically if the values change.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>View Vectors</guimenuitem></term>
+<listitem>
+<para>
+Displays a dialog from which the values in all the current vectors can be viewed. Select
+a vector to view using the drop-down list. The dialog
+is updated dynamically if the values change.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>View Fit Results</guimenuitem></term>
+<listitem>
+<para>
+Displays a dialog which shows all the resulting values from performed fits. Select
+a fit result to view using the drop-down list. The dialog
+is updated dynamically if the values change.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guimenuitem>Change Data File</guimenuitem></term>
+<listitem>
+<para>
+Displays a dialog for quickly changing data files that vectors are associated with.   Select the vectors
+to change, and then browse to a different data file. Click <guibutton>Apply</guibutton> to save the changes.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</sect1>
+</chapter>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:0
+sgml-indent-data:true
+sgml-parent-document:("index.docbook" "book" "chapter")
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->

@@ -110,7 +110,4 @@ void TabWidget::contextMenu(const QPoint& pos) {
 
 }
 
-
-#include "tabwidget.moc"
-
 // vim: ts=2 sw=2 et

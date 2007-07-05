@@ -1,0 +1,820 @@
+<appendix id="creatingplugins">
+<title>Creating Additional Plugins</title>
+<para>
+&kst; has a simple and standardized interface that facilitates easy creation of additional plugins.
+In addition to detailing basic requirements for plugins, the following sections describe how to make
+use of pre-written header files to create certain types of plugins.
+</para>
+
+<sect1 id="creatingbasicplugin">
+<title>Creating a Basic Plugin</title>
+<para>
+A &kst; plugin consists of two files&mdash;a KDE desktop service file and a shared object file.
+</para>
+
+<sect2 id="creatingbasicplugindesktopfile">
+<title>The KDE Desktop Service File</title>
+<para>
+The KDE desktop service file provides information about the plugin to the &kst; plugin loading infrastructure.  The following is an example of a KDE desktop service file for a &kst; plugin:
+</para>
+
+<informalexample>
+<screen>
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=kst_FOO_plugin
+X-Kst-Plugin-Author=FOO
+Name=FOO Plugin
+Comment=The FOO algorithm for Kst.
+</screen>
+</informalexample>
+
+<para>
+Generally, you can use the example above as a template and modify the FOO entries to fit your plugin.
+As can be seen from the example, the desktop service file consists of a series of key value pairs.  The
+<literal>ServiceTypes</literal> entry should be left as seen above. This key indicates that the plugin inherits
+the KstDataObject class.  See the API documentation for the interfaces this class exposes.  The
+<literal>X-KDE-Library</literal> key points to the shared object file that implements your plugin.  Do not
+include the shared object's file extension.
+</para>
+
+<para>
+Once you have completed the desktop file, save it as <filename>[X-KDE-LIBRARY].desktop</filename>, where
+<filename>[X-KDE-LIBRARY]</filename> is the value of the key in the desktop file.
+</para>
+
+</sect2>
+
+<sect2 id="creatingbasicpluginobjectfile">
+<title>The Shared Object File</title>
+<para>
+The shared object file contains the actual functionality of the plugin.  The following are the
+requirements for the shared object file:
+</para>
+
+<itemizedlist>
+
+<listitem>
+<para>
+The object must inherit the KstDataObject class:
+
+<informalexample>
+<screen>
+#ifndef FOOPLUGIN_H
+#define FOOPLUGIN_H
+
+#include &lt;kstdataobject.h&gt;
+
+class FooPlugin : public KstDataObject {
+  Q_OBJECT
+public:
+    FooPlugin(QObject *parent, const char *name, const QStringList &#038;args);
+    virtual ~FooPlugin();
+
+    virtual KstObject::UpdateType update(int);
+    virtual QString propertyString() const;
+    virtual KstDataObjectPtr makeDuplicate(KstDataObjectDataObjectMap&#038;);
+
+protected slots:
+    virtual void _showDialog();
+};
+
+#endif
+
+</screen>
+</informalexample>
+</para>
+
+</listitem>
+
+</itemizedlist>
+
+<para>
+The following is an example of the shared object file source code for a simple
+plugin:
+</para>
+<informalexample>
+<screen>
+</screen>
+</informalexample>
+</sect2>
+
+
+<sect2 id="compilingplugin">
+<title>Compiling the Plugin</title>
+<para>
+If you are using &gcc; to compile your plugin, simply compile the object file:
+<screen><userinput><command>cc -Wall -c -o myplugin.o myplugin.c -fPIC -DPIC</command></userinput></screen>
+</para>
+<para>and then create the shared library:
+<screen><userinput><command>ld -o myplugin.so -shared myplugin.o</command></userinput></screen>
+</para>
+<para>
+The resulting <filename>*.so</filename> file and <filename>*.xml</filename> file must be put in the same
+directory.  When you use &kst;'s Plugin Manager to load the XML file, it will automatically look for the
+shared object file in the same directory.
+</para>
+
+</sect2>
+</sect1>
+
+<sect1 id="creatinglinearfittingplugins">
+<title>Creating Linear Fit Plugins</title>
+<para>
+To create a linear fit plugin, you could implement your own fitting algorithms and output the appropriate
+vectors.  However, &kst; already comes with header files that make it easy for you to implement linear
+least-squares fit plugins by just providing a few functions.
+This section will describe how to take advantage of these files.
+</para>
+
+<sect2 id="headerslinearfittingplugins">
+<title>Header Files</title>
+<para>
+Two header files are provided for performing linear fits, <filename>linear.h</filename>
+ (for unweighted linear fits) and
+<filename>linear_weighted.h</filename> (for weighted linear fits).  They are both located under
+<filename>kst/plugins/fits/</filename> in the &kst; source tarball.  To use these files, include only one
+of them in the source code for your plugin:
+<screen>
+#include &lt;../linear.h&gt;
+</screen>
+or
+<screen>
+#include &lt;../linear_weighted.h&gt;
+</screen>
+(by convention, we will place the source code for the plugin one directory below where the header files
+are).
+</para>
+
+</sect2>
+
+<sect2 id="reqfunctionsfittingplugins">
+<title>Implementing Required Functions</title>
+<para>
+Given a general linear model:
+</para>
+<para>
+<inlinemediaobject>
+<imageobject>
+<imagedata fileref="Formula-kst-generallinearmodel.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
+</para>
+<para>
+where <literal>y</literal> is a vector of <literal>n</literal> observations, <literal>X</literal>
+is an <literal>n</literal> by <literal>p</literal> matrix of predictor variables, and <literal>c</literal>
+is the vector of <literal>p</literal> best-fit parameters that are to be estimated, the header files
+provide functions for estimating <literal>c</literal> for a given <literal>y</literal> and
+<literal>X</literal>.  To provide <literal>X</literal>, the following function needs to be
+implemented in the source code for the plugin:
+<literallayout><function><returnvalue>double</returnvalue> calculate_matrix_entry( double <parameter>dX</parameter>, int <parameter>iPos</parameter> )</function></literallayout>
+</para>
+<para>
+This function should return the value of the entry in column <literal>iPos</literal>
+of the matrix of predictor variables, using <literal>x</literal> value <literal>dX</literal>.
+This function will be called by linear.h or linear_weighted.h.  The implementation of this function
+depends on the model you wish to use for the fit, and is unique to each linear fit plugin.
+For example, to fit to a polynomial model, <function>calculate_matrix_entry</function> could
+be implemented as follows:
+<informalexample>
+<screen>
+double calculate_matrix_entry( double dX, int iPos ) {
+  double dY;
+  dY = pow( dX, (double)iPos );
+  return dY;
+}
+</screen>
+</informalexample>
+</para>
+
+</sect2>
+
+<sect2 id="callingfittingfunctionslinearfittingplugins">
+<title>Calling the Fitting Functions</title>
+<para>
+Once the appropriate header file has been included and <function>calculate_matrix_entry</function>
+has been implemented, call the appropriate fitting function included from the header file:
+<screen>
+<function>kstfit_linear_unweighted( <parameter>inArrays</parameter>, <parameter>inArrayLens</parameter>,
+                          <parameter>outArrays</parameter>, <parameter>outArrayLens</parameter>,
+                          <parameter>outScalars</parameter>, <parameter>iNumParams</parameter> )</function>;
+</screen>
+or
+<screen>
+<function>kstfit_linear_weighted( <parameter>inArrays</parameter>, <parameter>inArrayLens</parameter>,
+                        <parameter>outArrays</parameter>, <parameter>outArrayLens</parameter>,
+                        <parameter>outScalars</parameter>, <parameter>iNumParams</parameter> )</function>;
+</screen>
+</para>
+<para>
+Each function will return <literal>0</literal> on success, or <literal>-1</literal> on
+error, so it is a good idea to set the return value of the exported C function to be equal to the return
+value of the fitting function. To maintain simplicity, the code for the plugin can simply pass the
+ arguments given to the exported C function to the fitting function. Note, however, that inArrays must
+be structured as follows:
+</para>
+<itemizedlist>
+<listitem>
+<para>
+<varname>inArrays[0]</varname> must contain the array of x coordinates of the data points
+</para>
+</listitem>
+
+<listitem>
+<para>
+<varname>inArrays[1]</varname> must contain the array of y coordinates of the data points
+</para>
+</listitem>
+
+<listitem>
+<para>
+<varname>inArrays[2]</varname> only exists if <function>kstfit_linear_weighted</function>
+is being called, and must contain the array of weights to use for the fit.
+</para>
+</listitem>
+</itemizedlist>
+<para>
+The easiest way to ensure that inArrays is structured correctly is to specify the correct
+order of input vectors in the XML file for the plugin.
+</para>
+<para>
+<varname>iNumParams</varname> is the number of parameters in the fitting model used, which
+should be equal to the number of columns in the matrix <literal>X</literal> of
+predictor variables.  <varname>iNumParams</varname> must be set correctly before the fitting
+function is called.
+</para>
+<para>
+After <function>kstfit_linear_unweighted</function> or <function>kstfit_linear_weighted</function>
+is called, <varname>outArrays</varname> and <varname>outScalars</varname>
+will be set as follows:
+</para>
+<itemizedlist>
+<listitem>
+<para>
+<varname>outArrays[0]</varname> will contain the array of fitted y values.
+</para>
+</listitem>
+
+<listitem>
+<para>
+<varname>outArrays[1]</varname> will contain the array of residuals.
+</para>
+</listitem>
+
+<listitem>
+<para>
+<varname>outArrays[2]</varname> will contain the array of best-fit parameters that were estimated.
+</para>
+</listitem>
+
+<listitem>
+<para>
+<varname>outArrays[3]</varname> will contain the covariance matrix, returned row after row in an array.
+</para>
+</listitem>
+
+<listitem>
+<para>
+<varname>outScalars[0]</varname> will contain chi^2/nu, where chi^2 is the weighted sum of squares of the residuals,
+and nu is the degrees of freedom.
+</para>
+</listitem>
+</itemizedlist>
+<para>
+<varname>outArrayLens</varname> will be correctly set to indicate the length of each output array.
+</para>
+
+<para>
+Ensure that the specified outputs in the XML file match those that the exported C function returns (which
+in most cases will simply be the outputs returned by the fitting function).
+</para>
+
+
+</sect2>
+
+<sect2 id="examplelinearfittingplugins">
+<title>Example</title>
+<para>
+The following is an example of the source code for a linear fit plugin.
+</para>
+<informalexample>
+<screen>
+/*
+ *  Polynomial fitting plugin for KST.
+ *  Copyright 2004, The University of British Columbia
+ *  Released under the terms of the GPL.
+ */
+
+#include "../linear.h"
+
+double calculate_matrix_entry( double dX, int iPos ) {
+  double dY;
+
+  dY = pow( dX, (double)iPos );
+
+  return dY;
+}
+
+extern "C" int kstfit_polynomial_unweighted(
+  const double *const inArrays[],
+  const int inArrayLens[],
+  const double inScalars[],
+  double *outArrays[], int outArrayLens[],
+  double outScalars[]);
+
+int kstfit_polynomial_unweighted(
+  const double *const inArrays[],
+  const int inArrayLens[],
+	const double inScalars[],
+	double *outArrays[], int outArrayLens[],
+	double outScalars[])
+{
+  int iRetVal = -1;
+  int iNumParams;
+
+  iNumParams = 1 + (int)floor( inScalars[0] );
+  if( iNumParams &gt; 0 ) {
+    iRetVal = kstfit_linear_unweighted( inArrays, inArrayLens,
+                                        outArrays, outArrayLens,
+                                        outScalars, iNumParams );
+  }
+
+  return iRetVal;
+}
+</screen>
+</informalexample>
+</sect2>
+
+</sect1>
+
+<sect1 id="creatingnonlinearfitplugin">
+<title>Creating Non-linear Fit Plugins</title>
+<para>
+&kst; provides header files designed to simplify the creation of non-linear least-squares fit plugins.
+The following sections detail the use of the header files.
+</para>
+
+<sect2 id="headersnonlinearfittingplugins">
+<title>Header Files and Definitions</title>
+<para>
+The non-linear fit header files are located in <filename>kst/plugins/fits_nonlinear</filename> of
+the &kst; source tarball.  The files are named <filename>non_linear.h</filename> and
+<filename>non_linear_weighted.h</filename> for unweighted and weighted fits, respectively.
+To use these files, include only one of them in the source code for your plugin:
+<screen>
+#include &lt;../non_linear.h&gt;
+</screen>
+or
+<screen>
+#include &lt;../non_linear_weighted.h&gt;
+</screen>
+(by convention, we will place the source code for the plugin one directory below where the header files
+are).
+</para>
+
+<para>
+As non-linear fitting is an iterative process, you must also define the maximum number of iterations
+that should be performed.  The non-linear fitting algorithm will stop when at least one of the following
+conditions is true:
+</para>
+<itemizedlist>
+<listitem>
+<para>
+The maximum number of iterations has been reached.
+</para>
+</listitem>
+<listitem>
+<para>
+A precision of 10<superscript>-4</superscript> has been reached.
+</para>
+</listitem>
+</itemizedlist>
+<para>
+In addition, you need to define the number of parameters in the model, as it is not passed to the fitting
+function explicitly.  To define these two values, include the following at the top of your source code:
+</para>
+<screen>
+#define NUM_PARAMS [num1]
+#define MAX_NUM_ITERATIONS [num2]
+</screen>
+<para>
+replacing <literal>[num1]</literal> with the number of parameters in the model, and <literal>[num2]</literal>
+with the maximum number of iterations to perform.
+</para>
+</sect2>
+
+<sect2 id="reqfunctionsnonlinearfittingplugins">
+<title>Implementing Required Functions</title>
+<para>
+To use the header files for non-linear fits, you must provide the function to use as the model,
+the partial derivatives of the function with respect to each parameter, and initial estimates
+of the best-fit parameters.
+To do this, three functions must be implemented. These functions
+are described below.
+</para>
+<variablelist>
+<varlistentry>
+<term><function><returnvalue>double</returnvalue> function_calculate( double <parameter>dX</parameter>, double* <parameter>pdParameters</parameter> )</function></term>
+<listitem>
+<para>
+This function calculates the y value of the fitting model for a given x value <literal>dX</literal>,
+using the supplied array of parameters <varname>pdParameters</varname>.  The order of parameters in
+<varname>pdParameters</varname> is arbitrary, but should be consistent with the other two
+implemented functions.
+For example, for an exponential model,
+<function>function_calculate</function> could be implemented as follows:
+</para>
+<informalexample>
+<screen>
+double function_calculate( double dX, double* pdParameters ) {
+  double dScale	 = pdParameters[0];
+  double dLambda = pdParameters[1];
+  double dOffset = pdParameters[2];
+  double dY;
+
+  dY  = ( dScale * exp( -dLambda * dX ) ) + dOffset;
+
+  return dY;
+}
+</screen>
+</informalexample>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><function><returnvalue>void</returnvalue> function_derivative( double <parameter>dX</parameter>, double* <parameter>pdParameters</parameter>, double* <parameter>pdDerivatives</parameter> )</function></term>
+<listitem>
+<para>
+This function calculates the partial derivatives of the model function for
+a give value of x <literal>dX</literal>.  The partial derivatives should be returned in
+<varname>pdDerivatives</varname>.  The order of the partial derivatives in the array
+<varname>pdDerivatives</varname> should correspond to the order of the parameters
+in <varname>pdParameters</varname> (i.e. if <varname>pdParameters[0]</varname> contains
+the parameter lambda for an exponential model, <varname>pdDerivatives[0]</varname> should
+contain the derivative of the model with respect to lambda).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><function><returnvalue>void</returnvalue> function_initial_estimate(
+const double* <parameter>pdX</parameter>, const double* <parameter>pdY</parameter>,
+int <parameter>iLength</parameter>, double* <parameter>pdParameterEstimates</parameter> )</function></term>
+<listitem>
+<para>
+This function provides an initial estimate of the best-fit parameters to the fitting function. The array of
+x values and y values of the data points are provided in <varname>pdX</varname> and <varname>pdY</varname>
+respectively, and the number of data points is provided by <varname>iLength</varname>.  You can use any or
+none of these parameters at your discretion to calculate the initial estimate.  The function should put the
+calculated initial estimates in <varname>pdParameterEstimates</varname>, with the order of the estimates
+corresponding to the order of the parameters in <varname>pdParameters</varname> of
+<function>function_calculate</function> and <function>function_derivative</function>.  Keep in mind that the
+initial estimate is important in determining whether or not the fitting function converges to a solution.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="callingnonlinearfittingplugins">
+<title>Calling the Fitting Functions</title>
+<para>
+Once all the required functions have been implemented, the fitting function from the included header file
+can be called:
+<screen>
+kstfit_nonlinear( <parameter>inArrays</parameter>, <parameter>inArrayLens</parameter>,
+		  <parameter>inScalars</parameter>, <parameter>outArrays</parameter>,
+		  <parameter>outArrayLens</parameter>, <parameter>outScalars</parameter> );
+</screen>
+or
+<screen>
+kstfit_nonlinear_weighted( <parameter>inArrays</parameter>, <parameter>inArrayLens</parameter>,
+                           <parameter>inScalars</parameter>, <parameter>outArrays</parameter>,
+                           <parameter>outArrayLens</parameter>, <parameter>outScalars</parameter> );
+</screen>
+depending on whether you are implementing a non-weighted fit or a weighted fit.
+</para>
+
+<para>
+The function will return <literal>0</literal> on success, or <literal>-1</literal> on
+error, so it is simplest to set the return value of the exported C function to be equal to the return
+value of the fitting function. To maintain simplicity, the code for the plugin can simply pass the
+ arguments given to the exported C function to the fitting function. Note, however, that inArrays must
+be structured as follows:
+</para>
+<itemizedlist>
+<listitem>
+<para>
+<varname>inArrays[0]</varname> must contain the array of x coordinates of the data points
+</para>
+</listitem>
+
+<listitem>
+<para>
+<varname>inArrays[1]</varname> must contain the array of y coordinates of the data points
+</para>
+</listitem>
+
+<listitem>
+<para>
+<varname>inArrays[2]</varname> only exists if <function>kstfit_linear_weighted</function>
+is being called, and must contain the array of weights to use for the fit.
+</para>
+</listitem>
+</itemizedlist>
+<para>
+The easiest way to ensure that inArrays is structured correctly is to specify the correct
+order of input vectors in the XML file for the plugin.
+</para>
+<para>
+After <function>kstfit_linear_unweighted</function> or <function>kstfit_linear_weighted</function>
+is called, <varname>outArrays</varname> and <varname>outScalars</varname>
+will be set as follows:
+</para>
+<itemizedlist>
+<listitem>
+<para>
+<varname>outArrays[0]</varname> will contain the array of fitted y values.
+</para>
+</listitem>
+
+<listitem>
+<para>
+<varname>outArrays[1]</varname> will contain the array of residuals.
+</para>
+</listitem>
+
+<listitem>
+<para>
+<varname>outArrays[2]</varname> will contain the array of best-fit parameters that were estimated.
+</para>
+</listitem>
+
+<listitem>
+<para>
+<varname>outArrays[3]</varname> will contain the covariance matrix, returned row after row in an array.
+</para>
+</listitem>
+
+<listitem>
+<para>
+<varname>outScalars[0]</varname> will contain chi^2/nu, where chi^2 is the weighted sum of squares of the residuals,
+and nu is the degrees of freedom.
+</para>
+</listitem>
+</itemizedlist>
+<para>
+<varname>outArrayLens</varname> will be correctly set to indicate the length of each output array.
+</para>
+
+<para>
+Ensure that the specified outputs in the XML file match those that the exported C function returns (which
+in most cases will simply be the outputs returned by the fitting function).
+</para>
+
+</sect2>
+
+<sect2 id="nonlinearfittingpluginexample">
+<title>Example</title>
+<para>The following is an example of a non-linear fit plugin that performs a fit to an exponential model.</para>
+<informalexample>
+<screen>
+/*
+ *  Exponential fit plugin for KST.
+ *  Copyright 2004, The University of British Columbia
+ *  Released under the terms of the GPL.
+ */
+
+#define NUM_PARAMS 3
+#define MAX_NUM_ITERATIONS 500
+
+#include "../non_linear.h"
+
+void function_initial_estimate( const double* pdX, const double* pdY,
+                                int iLength, double* pdParameterEstimates ) {
+  KST_UNUSED( pdX )
+  KST_UNUSED( pdY )
+  KST_UNUSED( iLength )
+
+  pdParameterEstimates[0] =  1.0;
+  pdParameterEstimates[1] =  0.0;
+  pdParameterEstimates[2] =  0.0;
+}
+
+double function_calculate( double dX, double* pdParameters ) {
+  double dScale	 = pdParameters[0];
+  double dLambda = pdParameters[1];
+  double dOffset = pdParameters[2];
+  double dY;
+
+  dY  = ( dScale * exp( -dLambda * dX ) ) + dOffset;
+
+  return dY;
+}
+
+void function_derivative( double dX, double* pdParameters, double* pdDerivatives ) {
+  double dScale	 = pdParameters[0];
+  double dLambda = pdParameters[1];
+  double dExp;  
+  double ddScale;
+  double ddLambda;
+  double ddOffset;
+  
+  dExp     = exp( -dLambda * dX );
+  ddScale  = dExp;
+  ddLambda = -dX * dScale * dExp;
+  ddOffset = 1.0;
+
+  pdDerivatives[0] = ddScale;
+  pdDerivatives[1] = ddLambda;
+  pdDerivatives[2] = ddOffset;
+}
+
+extern "C" int kstfit_exponential(const double *const inArrays[], const int inArrayLens[],
+		const double inScalars[],
+		double *outArrays[], int outArrayLens[],
+		double outScalars[]);
+
+int kstfit_exponential(const double *const inArrays[], const int inArrayLens[],
+		const double inScalars[],
+		double *outArrays[], int outArrayLens[],
+		double outScalars[])
+{
+  return kstfit_nonlinear( inArrays, inArrayLens,
+                           inScalars, outArrays,
+			   outArrayLens, outScalars );
+}
+</screen>
+</informalexample>
+
+</sect2>
+</sect1>
+
+<sect1 id="creatingpassfilterplugins">
+<title>Creating Pass Filter Plugins</title>
+<para>
+&kst; provides header files to simplify the implementation of pass filter plugins. The use of these
+header files is described below.
+</para>
+<sect2 id="creatingpassfilterpluginsheaderfiles">
+<title>Header Files</title>
+<para>
+The pass filter header file is located in <filename>kst/plugins/pass_filters</filename> of
+the &kst; source tarball.  The file is named <filename>filters.h</filename>
+To use this file, include it in the source code for your plugin:
+<screen>
+#include &lt;../filters.h&gt;
+</screen>
+(by convention, we will place the source code for the plugin one directory below where the header files
+are).
+</para>
+</sect2>
+
+<sect2 id="creatingpassfilterpluginsrequirements">
+<title>Required Functions</title>
+<para>
+The <filename>filters.h</filename> header file contains a single function that calculates the Fourier
+transform of a supplied function, applies the supplied filter to the Fourier transform, and then calculates
+the inverse Fourier transform of the filtered Fourier transform.  To supply the filter, the following
+function needs to be implemented in the source code for your plugin:
+</para>
+<para><function><returnvalue>double</returnvalue> filter_calculate( double <parameter>dFreqValue</parameter>, const double <parameter>inScalars[]</parameter> )</function></para>
+<para>
+This function should calculate the filtered amplitude for the frequency <literal>dFreqValue</literal>.
+<literal>inScalars[]</literal> will contain the unaltered input scalars for the plugin, specified in the
+XML file.  Most likely <literal>inScalars[]</literal> will contain cutoff frequencies or other
+properties of the filter.  For example, to implement a Butterworth high-pass filter,
+<function>filter_calculate</function> could be implemented as follows:
+</para>
+<informalexample>
+<screen>
+double filter_calculate( double dFreqValue, const double inScalars[] ) {
+  double dValue;
+  if( dFreqValue > 0.0 ) {
+    dValue = 1.0 / ( 1.0 +
+    		pow( inScalars[1] / dFreqValue, 2.0 * (double)inScalars[0] ) );
+  } else {
+    dValue = 0.0;
+  }
+  return dValue;
+}
+</screen>
+</informalexample>
+</sect2>
+
+<sect2 id="creatingpassfilterpluginscallingfunction">
+<title>Calling the Filter Function</title>
+<para>
+Once the required <function>filter_calculate</function> has been implemented, the filter function
+from the header file can be called:
+</para>
+<literallayout><function>kst_pass_filter( <parameter>inArrays</parameter>,
+                 <parameter>inArrayLens</parameter>,
+                 <parameter>inScalars</parameter>,
+                 <parameter>outArrays</parameter>,
+                 <parameter>outArrayLens</parameter>,
+                 <parameter>outScalars</parameter> );</function></literallayout>
+<para>
+The arguments supplied to the exported C function can usually be passed to
+<function>kst_pass_filter</function> without modification.  However, there are a few restrictions
+on the arguments:
+</para>
+<itemizedlist>
+<listitem>
+<para>
+<varname>inArrays[0]</varname> must contain the array of data to filter.
+</para>
+</listitem>
+
+<listitem>
+<para>
+<varname>inScalars</varname> should contain the filter-specific parameters to be used by
+the <function>filter_calculate</function> function.
+</para>
+</listitem>
+</itemizedlist>
+<para>
+After the function call, <varname>outArrays[0]</varname> will contain the filtered array of data, and
+<varname>outArrayLens</varname> will be set appropriately.  The <function>kst_pass_filter</function>
+function does not use <varname>outScalars</varname>.
+</para>
+</sect2>
+
+<sect2 id="creatingpassfilterpluginsexample">
+<title>Example</title>
+<para>
+The following is an example of a pass filter plugin that implements the Butterworth high-pass filter.
+</para>
+<informalexample>
+<screen>/*
+ *  Butterworth low pass filter plugin for KST.
+ *  Copyright 2004, The University of British Columbia
+ *  Released under the terms of the GPL.
+ */
+
+#include &lt;stdlib.h&gt;
+#include &lt;math.h&gt;
+#include "../filters.h"
+
+extern "C" int butterworth_highpass(const double *const inArrays[], const int inArrayLens[],
+		const double inScalars[],
+		double *outArrays[], int outArrayLens[],
+		double outScalars[]);
+
+int butterworth_highpass(const double *const inArrays[], const int inArrayLens[],
+		const double inScalars[],
+		double *outArrays[], int outArrayLens[],
+		double outScalars[])
+{
+  int iReturn;
+
+  iReturn = kst_pass_filter( inArrays,
+                             inArrayLens,
+                             inScalars,
+                             outArrays,
+                             outArrayLens,
+                             outScalars );
+
+  return iReturn;
+}
+
+double filter_calculate( double dFreqValue, const double inScalars[] ) {
+  double dValue;
+
+  if( dFreqValue &gt; 0.0 ) {
+    dValue = 1.0 / ( 1.0 + pow( inScalars[1] / dFreqValue, 2.0 * (double)inScalars[0] ) );
+  } else {
+    dValue = 0.0;
+  }
+
+  return dValue;
+}</screen>
+</informalexample>
+</sect2>
+
+</sect1>
+</appendix>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:0
+sgml-indent-data:true
+sgml-parent-document:("index.docbook" "book" "appendix")
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->

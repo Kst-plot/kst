@@ -54,5 +54,4 @@ void KstExtension::processArguments(const QString& args) {
   Q_UNUSED(args)
 }
 
-#include "kstextension.moc"
 // vim: ts=2 sw=2 et
