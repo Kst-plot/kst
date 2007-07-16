@@ -108,12 +108,12 @@ void GradientEditor::paintEvent(QPaintEvent *event)
 {
   Q_UNUSED(event);
 
+  if (!isEnabled()) {
+    return;
+  }
+
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing, true);
-
-//   if (!isEnabled()) {
-//     return;
-//   }
 
   painter.fillRect(rect(), QBrush(gradient()));
 
