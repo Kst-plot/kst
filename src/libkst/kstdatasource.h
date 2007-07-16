@@ -27,9 +27,10 @@
 
 #include <qsettings.h>
 
-#include "kstdateparser.h"
-#include "kstobject.h"
 #include "kst_export.h"
+#include "kstobject.h"
+#include "kstdateparser.h"
+#include "kstobjectlist.h"
 
 class QXmlStreamWriter;
 

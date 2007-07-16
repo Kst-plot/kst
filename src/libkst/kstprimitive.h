@@ -20,6 +20,8 @@
 
 #include "kst_export.h"
 #include "kstobject.h"
+#include "kstobjectmap.h"
+#include "kstobjectlist.h"
 #include <qpointer.h>
 
 class KST_EXPORT KstPrimitive : public KstObject {

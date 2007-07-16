@@ -20,6 +20,8 @@
 
 #include <qdom.h>
 #include "kstprimitive.h"
+#include "kstobjectlist.h"
+#include "kstobjectmap.h"
 #include "kstobjectcollection.h"
 
 class QXmlStreamWriter;

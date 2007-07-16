@@ -24,6 +24,7 @@
 #include <QHash>
 #include <qdebug.h>
 #include "kstobject.h"
+#include "kstobjectlist.h"
 
 // Forward Declarations
 template <class T>
