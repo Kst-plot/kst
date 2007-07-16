@@ -82,10 +82,11 @@ void MainWindow::performHeavyStartupActions() {
 
 void MainWindow::cleanup() {
   KST::dataObjectList.lock().writeLock();
-  KstDataObjectList dol = KST::dataObjectList;
+  KstDataObjectList dol = KST::dataObjectList; //FIXME What is going on here?
   KST::dataObjectList.clear();
   KST::dataObjectList.lock().unlock();
-  dol.clear();
+  dol.clear(); //and here?
+
   KST::dataSourceList.lock().writeLock();
   KST::dataSourceList.clear();
   KST::dataSourceList.lock().unlock();
@@ -142,14 +143,18 @@ TabWidget *MainWindow::tabWidget() const {
 void MainWindow::save() {
   if (_doc->isOpen()) {
     _doc->save();
+  } else {
+    saveAs();
   }
 }
 
 
 void MainWindow::saveAs() {
-  if (_doc->isOpen()) {
-    _doc->save();
+  QString fn = QFileDialog::getSaveFileName(this, tr("Kst: Save File"), _doc->fileName(), tr("Kst Sessions (*.kst)"));
+  if (fn.isEmpty()) {
+    return;
   }
+  _doc->save(fn);
 }
 
 
@@ -157,10 +162,12 @@ void MainWindow::open() {
   if (_doc->isChanged() && !promptSave()) {
     return;
   }
-  QString fn = QFileDialog::getOpenFileName(this, tr("Kst: Open File"), QString(), tr("Kst Sessions (*.kst)"));
-  if (!fn.isEmpty()) {
-    delete _doc;
+  QString fn = QFileDialog::getOpenFileName(this, tr("Kst: Open File"), _doc->fileName(), tr("Kst Sessions (*.kst)"));
+  if (fn.isEmpty()) {
+    return;
   }
+
+  delete _doc;
   _doc = new Document(this);
   bool ok = _doc->open(fn);
   if (!ok) {

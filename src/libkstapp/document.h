@@ -27,6 +27,8 @@ class Document {
 
     SessionModel* session() const;
 
+    QString fileName() const;
+
     bool open(const QString& file);
     bool save(const QString& to = QString::null);
 
@@ -41,6 +43,7 @@ class Document {
     SessionModel *_session;
     bool _dirty;
     bool _isOpen;
+    QString _fileName;
 };
 
 }

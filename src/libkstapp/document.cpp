@@ -24,12 +24,13 @@
 
 #include <QDebug>
 #include <QFile>
+#include <QMessageBox>
 #include <QXmlStreamReader>
 
 namespace Kst {
 
 Document::Document(MainWindow *window)
-: _win(window), _session(new SessionModel), _dirty(false), _isOpen(false) {
+: _win(window), _session(new SessionModel), _dirty(false), _isOpen(false), _fileName(QString::null) {
 }
 
 
@@ -44,20 +45,27 @@ SessionModel* Document::session() const {
 }
 
 
+QString Document::fileName() const {
+  return _fileName;
+}
+
+
 bool Document::save(const QString& to) {
   // TODO:
   // - KSaveFile-ish behavior
   // - only save if changed
-  // - prompt overwrite
   // - only setChanged(false) if save was successful
   setChanged(false);
 
-  QString fn = to;
+  QString fn = !to.isEmpty() ? to : _fileName;
   QFile f(fn);
   if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-    // QMessageBox::critical
+    QMessageBox::critical(_win, QObject::tr("Kst: Critical"),
+                          QObject::tr("File '%1' could not be opened for writing.").arg(fn));
     return false;
   }
+
+  _fileName = fn;
 
   QXmlStreamWriter xml;
   xml.setDevice(&f);
@@ -119,9 +127,12 @@ bool Document::open(const QString& file) {
   _isOpen = false;
   QFile f(file);
   if (!f.open(QIODevice::ReadOnly)) {
-    // QMessageBox::critical
+    QMessageBox::critical(_win, QObject::tr("Kst: Critical"),
+                          QObject::tr("File '%1' could not be opened for reading.").arg(file));
     return false;
   }
+
+  _fileName = file;
 
   // If we move this into the <graphics> block then we could, if desired, open
   // .kst files that contained only data and basically "merge" that data into
@@ -230,7 +241,8 @@ bool Document::open(const QString& file) {
 #undef malformed
 
   if (xml.hasError()) {
-    // QMessageBox::critical
+    QMessageBox::critical(_win, QObject::tr("Kst: Critical"),
+                          QObject::tr("File '%1' is malformed and encountered an error when opening.").arg(file));
     return false;
   }
 
