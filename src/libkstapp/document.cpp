@@ -24,7 +24,6 @@
 
 #include <QDebug>
 #include <QFile>
-#include <QMessageBox>
 #include <QXmlStreamReader>
 
 namespace Kst {
@@ -57,15 +56,14 @@ bool Document::save(const QString& to) {
   // - only setChanged(false) if save was successful
   setChanged(false);
 
-  QString fn = !to.isEmpty() ? to : _fileName;
-  QFile f(fn);
+  QString file = !to.isEmpty() ? to : _fileName;
+  QFile f(file);
   if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-    QMessageBox::critical(_win, QObject::tr("Kst: Critical"),
-                          QObject::tr("File '%1' could not be opened for writing.").arg(fn));
+    _lastError = QObject::tr("File '%1' could not be opened for writing.").arg(file);
     return false;
   }
 
-  _fileName = fn;
+  _fileName = file;
 
   QXmlStreamWriter xml;
   xml.setDevice(&f);
@@ -127,8 +125,7 @@ bool Document::open(const QString& file) {
   _isOpen = false;
   QFile f(file);
   if (!f.open(QIODevice::ReadOnly)) {
-    QMessageBox::critical(_win, QObject::tr("Kst: Critical"),
-                          QObject::tr("File '%1' could not be opened for reading.").arg(file));
+    _lastError = QObject::tr("File '%1' could not be opened for reading.").arg(file);
     return false;
   }
 
@@ -241,8 +238,7 @@ bool Document::open(const QString& file) {
 #undef malformed
 
   if (xml.hasError()) {
-    QMessageBox::critical(_win, QObject::tr("Kst: Critical"),
-                          QObject::tr("File '%1' is malformed and encountered an error when opening.").arg(file));
+    _lastError = QObject::tr("File '%1' is malformed and encountered an error when reading.").arg(file);
     return false;
   }
 
@@ -251,7 +247,7 @@ bool Document::open(const QString& file) {
 
 
 QString Document::lastError() const {
-  return QString::null;
+  return _lastError;
 }
 
 

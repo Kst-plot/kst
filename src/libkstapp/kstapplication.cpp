@@ -19,6 +19,11 @@ KstApplication::KstApplication(int &argc, char **argv)
   _mainWindow = new Kst::MainWindow;
   connect(this, SIGNAL(aboutToQuit()), _mainWindow, SLOT(aboutToQuit()));
 
+  //FIXME need a real getopt here...
+  QStringList args = QCoreApplication::arguments();
+  if (!args.at(1).isEmpty())
+    _mainWindow->openFile(args.at(1));
+
   _mainWindow->show();
 }
 

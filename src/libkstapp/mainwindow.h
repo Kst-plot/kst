@@ -51,6 +51,7 @@ class MainWindow : public QMainWindow
     void save();
     void saveAs();
     void open();
+    void openFile(const QString &file);
     void print();
 
   private Q_SLOTS:

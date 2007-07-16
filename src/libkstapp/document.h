@@ -44,6 +44,7 @@ class Document {
     bool _dirty;
     bool _isOpen;
     QString _fileName;
+    QString _lastError;
 };
 
 }

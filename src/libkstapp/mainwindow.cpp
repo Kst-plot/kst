@@ -167,11 +167,16 @@ void MainWindow::open() {
     return;
   }
 
+  openFile(fn);
+}
+
+
+void MainWindow::openFile(const QString &file) {
   delete _doc;
   _doc = new Document(this);
-  bool ok = _doc->open(fn);
+  bool ok = _doc->open(file);
   if (!ok) {
-    QMessageBox::critical(this, tr("Kst"), tr("Error opening document '%1':\n%2").arg(fn, _doc->lastError()));
+    QMessageBox::critical(this, tr("Kst"), tr("Error opening document '%1':\n%2").arg(file, _doc->lastError()));
     delete _doc;
     _doc = new Document(this);
   }
