@@ -20,29 +20,12 @@
 /** The list of data objects which are in use */
 KstDataObjectList KST::dataObjectList;
 
+KstRelationList KST::relationList;
+
 void KST::addDataObjectToList(KstDataObjectPtr d) {
   KST::dataObjectList.lock().writeLock();
   KST::dataObjectList.append(d);
   KST::dataObjectList.lock().unlock();
 }
-
-#if 0
-bool KstData::dataTagNameNotUnique(const QString& tag, bool warn, void *p) {
-  Q_UNUSED(p)
-  Q_UNUSED(warn)
-  /* verify that the tag name is not empty */
-  if (tag.trimmed().isEmpty()) {
-      return true;
-  }
-
-  /* verify that the tag name is not used by a data object */
-  KstReadLocker ml(&KST::dataObjectList.lock());
-  if (KST::dataObjectList.findTag(tag) != KST::dataObjectList.end()) {
-      return true;
-  }
-
-  return false;
-}
-#endif
 
 // vim: ts=2 sw=2 et

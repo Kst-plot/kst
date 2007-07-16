@@ -16,17 +16,19 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "kstmatrix.h"
+
 #include <stdlib.h>
 #include <math.h>
-
-#include "kst_i18n.h"
 
 #include "defaultprimitivenames.h"
 #include "kstdatacollection.h"
 #include "kstdebug.h"
-#include <qdebug.h>
-#include "kstmatrix.h"
+#include "kst_i18n.h"
 #include "kstmath.h"
+
+#include <qdebug.h>
+#include <QXmlStreamWriter>
 
 // used for resizing; set to 1 for loop zeroing, 2 to use memset
 #define ZERO_MEMORY 2
@@ -525,10 +527,8 @@ bool KstMatrix::resize(int xSize, int ySize, bool reinit) {
 }
 
 
-void KstMatrix::save(QTextStream &ts, const QString& indent) {
-  Q_UNUSED(ts);
-  Q_UNUSED(indent);
-
+void KstMatrix::save(QXmlStreamWriter &s) {
+  Q_UNUSED(s)
   // no saving
 }
 

@@ -22,12 +22,12 @@
 #ifndef KSTHISTOGRAM_H
 #define KSTHISTOGRAM_H
 
-#include "kstbasecurve.h"
+#include "kstdataobject.h"
 #include "kst_export.h"
 
 enum KstHsNormType { KST_HS_NUMBER, KST_HS_PERCENT, KST_HS_FRACTION, KST_HS_MAX_ONE};
 
-class KST_EXPORT KstHistogram: public KstDataObject {
+class KST_EXPORT KstHistogram : public KstDataObject {
 public:
   KstHistogram(const QString &in_tag, KstVectorPtr in_V,
                double xmin_in, double xmax_in,

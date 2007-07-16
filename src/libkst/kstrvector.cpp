@@ -21,6 +21,7 @@
 #include <stdlib.h>
 
 #include <qtextdocument.h>
+#include <QXmlStreamWriter>
 
 #include <qdebug.h>
 #include "kst_i18n.h"
@@ -329,30 +330,29 @@ int KstRVector::reqStartFrame() const {
 
 
 /** Save vector information */
-void KstRVector::save(QTextStream &ts, const QString& indent, bool saveAbsolutePosition) {
+void KstRVector::save(QXmlStreamWriter &s) {
   if (_file) {    
-    ts << indent << "<vector>" << endl;
-    KstVector::save(ts, indent + "  ", saveAbsolutePosition);
+    s.writeStartElement("rvector");
     _file->readLock();
-    ts << indent << "  <provider>" << Qt::escape(_file->tag().tagString()) << "</provider>" << endl;
-    ts << indent << "  <filename>" << Qt::escape(_file->fileName()) << "</filename>" << endl;
+    s.writeAttribute("provider", _file->tag().tagString());
+    s.writeAttribute("file", _file->fileName());
     _file->unlock();
+    s.writeAttribute("field", _field);
 
-    ts << indent << "  <field>" << _field << "</field>" << endl;
-    if (saveAbsolutePosition) {
-      ts << indent << "  <start>" << F0 << "</start>" << endl;
-      ts << indent << "  <num>" << NF << "</num>" << endl;
+    if (/*saveAbsolutePosition*/ true) { // FIXME
+      s.writeAttribute("start", QString::number(F0));
+      s.writeAttribute("count", QString::number(NF));
     } else {
-      ts << indent << "  <start>" << ReqF0 << "</start>" << endl;
-      ts << indent << "  <num>" << ReqNF << "</num>" << endl;
+      s.writeAttribute("start", QString::number(ReqF0));
+      s.writeAttribute("count", QString::number(ReqNF));
     }
     if (doSkip()) {
-      ts << indent << "  <skip>" << Skip << "</skip>" << endl;
+      s.writeAttribute("skip", QString::number(Skip));
       if (doAve()) {
-        ts << indent << "  <doAve/>" << endl;
+        s.writeAttribute("doAve", "true");
       }
     }
-    ts << indent << "</vector>" << endl;
+    s.writeEndElement();
   }
 }
 

@@ -26,7 +26,7 @@
 #include "kstobjectcollection.h"
 
 class QFile;
-class KstBaseCurve;
+class KstRelation;
 
 class KstData {
   protected:
@@ -50,7 +50,7 @@ class KstData {
 
     virtual bool viewObjectNameNotUnique(const QString& tag);
 
-    virtual void removeCurveFromPlots(KstBaseCurve *c); // no sharedptr here
+    virtual void removeCurveFromPlots(KstRelation *c); // no sharedptr here
 
     /** Save a vector to a file */
     virtual int vectorToFile(KstVectorPtr v, QFile *f);

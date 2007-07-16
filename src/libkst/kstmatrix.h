@@ -24,9 +24,10 @@
 
 class KstMatrix;
 class KstDataObject;
+class QXmlStreamWriter;
 typedef KstSharedPtr<KstMatrix> KstMatrixPtr;
 
-class KST_EXPORT KstMatrix: public KstPrimitive {
+class KST_EXPORT KstMatrix : public KstPrimitive {
   Q_OBJECT
   public:
     // Matrices do not automatically add themselves to the global matrix list
@@ -96,7 +97,7 @@ class KST_EXPORT KstMatrix: public KstPrimitive {
     virtual int getUsage() const;
 
     // save the matrix
-    virtual void save(QTextStream &ts, const QString& indent = QString::null);
+    virtual void save(QXmlStreamWriter &s);
 
     // set tag name of the matrix
     virtual void setTagName(const KstObjectTag& tag);

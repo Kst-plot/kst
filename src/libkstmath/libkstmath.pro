@@ -25,7 +25,7 @@ SOURCES += \
     kstdataobjectcollection.cpp \
     kstcsd.cpp \
     kstpsd.cpp \
-    kstbasecurve.cpp \
+    kstrelation.cpp \
     kstcurvepointsymbol.cpp \
     kstlinestyle.cpp \
     kstvcurve.cpp \
@@ -54,7 +54,7 @@ HEADERS += \
     enodes.h \
     eparse-eh.h \
     eparse.h \
-    kstbasecurve.h \
+    kstrelation.h \
     kstbasicplugin.h \
     kstcolorsequence.h \
     kstcsd.h \

@@ -31,6 +31,8 @@
 #include "kstobject.h"
 #include "kst_export.h"
 
+class QXmlStreamWriter;
+
 namespace KST {
   class DataSourcePlugin;
 }
@@ -168,9 +170,10 @@ class KST_EXPORT KstDataSource : public KstObject {
       to this are ignored.  It is updated each time the fn is called */
     virtual QString fileType() const;
 
-    /** Save file description info into stream ts.
-      Remember to call the base class if you reimplement this. */
-    virtual void save(QTextStream &ts, const QString& indent = QString::null);
+    void saveSource(QXmlStreamWriter &s);
+
+    /** Save file description info into stream s. */
+    virtual void save(QXmlStreamWriter &s);
 
     const QString& sourceName() const { return _source; }
 

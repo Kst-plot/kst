@@ -22,6 +22,7 @@
 #include <stdlib.h>
 
 #include <qcheckbox.h>
+#include <qcombobox.h>
 #include <qfile.h>
 #include <qfileinfo.h>
 #include <qlayout.h>
@@ -30,8 +31,7 @@
 #include <qregexp.h>
 #include <qspinbox.h>
 #include <qtextdocument.h>
-
-#include <qcombobox.h>
+#include <QXmlStreamWriter>
 
 #include <kstmath.h>
 #include "ascii.h"
@@ -97,23 +97,30 @@ class AsciiSource::Config {
     bool _readFields;
     int _fieldsLine;
 
-    void save(QTextStream& str, const QString& indent) {
+    void save(QXmlStreamWriter& s) {
       if (_indexInterpretation != AsciiSource::Config::Unknown) {
-        str << indent << "<index vector=\"" << Qt::escape(_indexVector) << "\" interpretation=\"" << int(_indexInterpretation) << "\"/>" << endl;
+        s.writeStartElement("index");
+        s.writeAttribute("vector", _indexVector);
+        s.writeAttribute("interpretation", QString::number(int(_indexInterpretation)));
+        s.writeEndElement();
       }
-      str << indent << "<comment delimiters=\"" << Qt::escape(_delimiters) << "\"/>" << endl;
-      str << indent << "<columns type=\"" << int(_columnType) << "\"";
+      s.writeStartElement("comment");
+      s.writeAttribute("delimiters", _delimiters);
+      s.writeEndElement();
+      s.writeStartElement("columns");
+      s.writeAttribute("type", QString::number(int(_columnType)));
       if (_columnType == Fixed) {
-        str << " width=\"" << _columnWidth << "\"";
+        s.writeAttribute("width", QString::number(_columnWidth));
       } else if (_columnType == Custom) {
-        str << " delimiters=\"" << Qt::escape(_columnDelimiter) << "\"";
+        s.writeAttribute("delimiters", _columnDelimiter);
       }
-      str << "/>" << endl;
-      str << indent << "<header start=\"" << _dataLine << "\"";
+      s.writeEndElement();
+      s.writeStartElement("header");
+      s.writeAttribute("start", QString::number(_dataLine));
       if (_readFields) {
-        str << " fields=\"" << _fieldsLine << "\"";
+        s.writeAttribute("fields", QString::number(_fieldsLine));
       }
-      str << "/>" << endl;
+      s.writeEndElement();
     }
 
     void load(const QDomElement& e) {
@@ -738,9 +745,9 @@ QStringList AsciiSource::matrixList() const {
 }
 
 
-void AsciiSource::save(QTextStream &ts, const QString& indent) {
-  KstDataSource::save(ts, indent);
-  _config->save(ts, indent);
+void AsciiSource::save(QXmlStreamWriter &s) {
+  KstDataSource::save(s);
+  _config->save(s);
 }
 
 

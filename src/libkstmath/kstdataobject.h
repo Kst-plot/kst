@@ -30,6 +30,9 @@ typedef KstObjectList<KstDataObjectPtr> KstDataObjectList;
 typedef QMap<KstDataObjectPtr, KstDataObjectPtr> KstDataObjectDataObjectMap;
 typedef QMap<QString, int> KstPluginInfoList;
 
+class QXmlStreamReader;
+class QXmlStreamWriter;
+
 class KST_EXPORT KstDataObject : public KstObject {
   Q_OBJECT
 
@@ -80,8 +83,8 @@ class KST_EXPORT KstDataObject : public KstObject {
     KstMatrixMap& inputMatrices() { return _inputMatrices; }
     KstMatrixMap& outputMatrices() { return _outputMatrices; }
 
-    virtual void load(const QDomElement& e);
-    virtual void save(QTextStream& ts, const QString& indent = QString::null);
+    virtual void load(const QXmlStreamReader& s);
+    virtual void save(QXmlStreamWriter& s);
 
     virtual bool loadInputs();
 

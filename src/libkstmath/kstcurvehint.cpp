@@ -15,9 +15,9 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstbasecurve.h"
 #include "kstcurvehint.h"
 #include "kstdatacollection.h"
+#include "kstrelation.h"
 #include "kstvcurve.h"
 
 #include <qdebug.h>
@@ -51,7 +51,7 @@ KstVectorPtr KstCurveHint::yVector() const {
 }
 
 
-KstBaseCurvePtr KstCurveHint::makeCurve(const QString& tag, const QColor& color) const {
+KstRelationPtr KstCurveHint::makeCurve(const QString& tag, const QColor& color) const {
   KstVectorPtr x = xVector();
   KstVectorPtr y = yVector();
   if (!x || !y) {

@@ -24,7 +24,7 @@
 
 #include "kstvector.h"
 
-class KstBaseCurve;
+class KstRelation;
 
 class KstCurveHint : public KstShared {
   friend class KstDataObject;
@@ -40,7 +40,7 @@ class KstCurveHint : public KstShared {
     virtual KstVectorPtr xVector() const;
     virtual KstVectorPtr yVector() const;
 
-    virtual KstSharedPtr<KstBaseCurve> makeCurve(const QString& tag, const QColor& color) const;
+    virtual KstSharedPtr<KstRelation> makeCurve(const QString& tag, const QColor& color) const;
 
   protected:
     QString _curveName, _xVectorName, _yVectorName;

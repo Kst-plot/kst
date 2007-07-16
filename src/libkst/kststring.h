@@ -22,6 +22,8 @@
 #include "kstprimitive.h"
 #include "kstobjectcollection.h"
 
+class QXmlStreamWriter;
+
 class KST_EXPORT KstString : public KstPrimitive {
   Q_OBJECT
   Q_PROPERTY(bool orphan READ orphan WRITE setOrphan)
@@ -35,7 +37,7 @@ class KST_EXPORT KstString : public KstPrimitive {
     void setTagName(const KstObjectTag& tag);
 
     /** Save information */
-    void save(QTextStream &ts, const QString& indent = QString::null);
+    void save(QXmlStreamWriter &s);
 
     /** Update the vector.  Return true if there was new data. */
     UpdateType update(int updateCounter = -1);

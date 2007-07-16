@@ -19,7 +19,7 @@
 #define KSTIMAGE_H
 
 #include "kstmatrix.h"
-#include "kstbasecurve.h"
+#include "kstrelation.h"
 #include "kst_export.h"
 
 #include <QHash>
@@ -29,7 +29,7 @@ typedef QHash<int, QColor> KstPalette;
 /**A class for handling images for Kst
  *@author University of British Columbia
  */
-class KST_EXPORT KstImage: public KstBaseCurve {
+class KST_EXPORT KstImage : public KstRelation {
   public:
     //constructor for colormap only
     KstImage(const QString &in_tag, KstMatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const KstPalette &pal);
@@ -103,21 +103,23 @@ class KST_EXPORT KstImage: public KstBaseCurve {
     virtual QString yLabel() const;
     virtual QString topLabel() const;
     
+#if 0
     virtual KstDataObjectPtr makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap);
+#endif
 
-    // see KstBaseCurve::providerDataObject
+    // see KstRelation::providerDataObject
     virtual KstDataObjectPtr providerDataObject() const;
     
-    // see KstBaseCurve::distanceToPoint
+    // see KstRelation::distanceToPoint
     virtual double distanceToPoint(double xpos, double dx, double ypos) const;
     
-    // see KstBaseCurve::paint
+    // see KstRelation::paint
     virtual void paint(const KstCurveRenderContext& context);
     
-    // see KstBaseCurve::yRange
+    // see KstRelation::yRange
     virtual void yRange(double xFrom, double xTo, double* yMin, double* yMax);
     
-    // see KstBaseCurve::paintLegendSymbol
+    // see KstRelation::paintLegendSymbol
     virtual void paintLegendSymbol(KstPainter *p, const QRect& bound);
 
   private:

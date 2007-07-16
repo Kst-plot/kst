@@ -18,7 +18,7 @@
 #ifndef KSTVCURVE_H
 #define KSTVCURVE_H
 
-#include "kstbasecurve.h"
+#include "kstrelation.h"
 #include "kstpainter.h"
 #include "kstcurvepointsymbol.h"
 #include "kst_export.h"
@@ -29,7 +29,7 @@
  *@author C. Barth Netterfield
  */
 
-class KST_EXPORT KstVCurve: public KstBaseCurve {
+class KST_EXPORT KstVCurve: public KstRelation {
   public:
     KstVCurve(const QString &in_tag, KstVectorPtr in_X, KstVectorPtr in_Y,
         KstVectorPtr in_EX, KstVectorPtr in_EY,
@@ -138,7 +138,9 @@ class KST_EXPORT KstVCurve: public KstBaseCurve {
     
     int pointType;
     
-    virtual KstDataObjectPtr makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap);
+#if 0
+    virtual KstRelationPtr makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap);
+#endif
     
     // render this vcurve
     virtual void paint(const KstCurveRenderContext& context);
@@ -146,10 +148,10 @@ class KST_EXPORT KstVCurve: public KstBaseCurve {
     // render the legend symbol for this curve
     virtual void paintLegendSymbol(KstPainter *p, const QRect& bound);
     
-    // see KstBaseCurve::distanceToPoint
+    // see KstRelation::distanceToPoint
     virtual double distanceToPoint(double xpos, double dx, double ypos) const;
     
-    // see KstBaseCurve::providerDataObject
+    // see KstRelation::providerDataObject
     virtual KstDataObjectPtr providerDataObject() const;
 
   private:

@@ -21,6 +21,7 @@
 #include <stdlib.h>
 
 #include <qtextdocument.h>
+#include <QXmlStreamWriter>
 
 #include "kst_i18n.h"
 
@@ -579,9 +580,9 @@ KstObject::UpdateType KstVector::internalUpdate(KstObject::UpdateType providerRC
 
 
 
-void KstVector::save(QTextStream &ts, const QString& indent, bool saveAbsolutePosition) {
-  Q_UNUSED(saveAbsolutePosition)
-  ts << indent << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
+void KstVector::save(QXmlStreamWriter &s) {
+  s.writeStartElement("vector");
+  s.writeAttribute("tag", tag().tagString());
   if (_saveData) {
     QByteArray qba(length()*sizeof(double), '\0');
     QDataStream qds(&qba, QIODevice::WriteOnly);
@@ -590,8 +591,9 @@ void KstVector::save(QTextStream &ts, const QString& indent, bool saveAbsolutePo
       qds << _v[i];
     }
 
-    ts << indent << "<data>" << qCompress(qba).toBase64() << "</data>" << endl;
+    s.writeTextElement("data", qCompress(qba).toBase64());
   }
+  s.writeEndElement();
 }
 
 

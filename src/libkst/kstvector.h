@@ -26,6 +26,8 @@
 #include "kstscalar.h"
 #include "kst_export.h"
 
+class QXmlStreamWriter;
+
 #define IS_POINT(x) (!isnan(x))
 #define NOT_POINT(x) (isnan(x))
 
@@ -125,7 +127,7 @@ class KstVector : public KstPrimitive {
     virtual int getUsage() const;
 
     /** Save vector information */
-    virtual void save(QTextStream &ts, const QString& indent = QString::null, bool saveAbsolutePosition = false);
+    virtual void save(QXmlStreamWriter &s);
 
     /** Generate a new vector [x0..x1] with n total points */
     // #### Remove

@@ -14,7 +14,7 @@
 
 #include <QPainterPath>
 #include "axis.h"
-#include "kstbasecurve.h"
+#include "kstrelation.h"
 
 namespace Kst {
 
@@ -44,7 +44,7 @@ class PlotRenderer2D {
     RenderType2D type();
 
     // The list of things to render
-    KstBaseCurveList sources;
+    KstRelationList sources;
 
   protected:
     // Recompute auxilliary range information if the

@@ -17,6 +17,7 @@
 #include "kstsvector.h"
 #include <qdebug.h>
 #include <qtextstream.h>
+#include <QXmlStreamWriter>
 
 KstSVector::KstSVector(const QDomElement &e) : KstVector(e) {
   double in_x0 = 0.0;
@@ -53,13 +54,13 @@ KstSVector::KstSVector(double x0, double x1, int n, KstObjectTag tag) :
 }
 
 
-void KstSVector::save(QTextStream &ts, const QString& indent, bool saveAbsolutePosition) {
-  ts << indent << "<svector>" << endl;
-  KstVector::save(ts, indent + "  ", saveAbsolutePosition);
-  ts << indent << "  <min>" << min() << "</min>" << endl;
-  ts << indent << "  <max>" << max() << "</max>" << endl;
-  ts << indent << "  <N>" << length() << "</N>" << endl;
-  ts << indent << "</svector>" << endl;
+void KstSVector::save(QXmlStreamWriter &s) {
+  s.writeStartElement("svector");
+  s.writeAttribute("tag", tag().tagString());
+  s.writeAttribute("min", QString::number(min()));
+  s.writeAttribute("max", QString::number(max()));
+  s.writeAttribute("count", QString::number(length()));
+  s.writeEndElement();
 }
 
 

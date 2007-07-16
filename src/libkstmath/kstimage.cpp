@@ -32,7 +32,7 @@
 
 static const QLatin1String& THEMATRIX = QLatin1String("THEMATRIX");
 
-KstImage::KstImage(const QDomElement& e) : KstBaseCurve(e) {
+KstImage::KstImage(const QDomElement& e) : KstRelation(e) {
   QString in_matrixName, in_paletteName;
   bool in_hasColorMap = false, in_hasContourMap = false;
   double in_zLower = 0, in_zUpper = 0;
@@ -102,7 +102,7 @@ KstImage::KstImage(const QDomElement& e) : KstBaseCurve(e) {
 
 
 //constructor for colormap only
-KstImage::KstImage(const QString &in_tag, KstMatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const KstPalette &pal) : KstBaseCurve(){
+KstImage::KstImage(const QString &in_tag, KstMatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const KstPalette &pal) : KstRelation(){
 
   _inputMatrices[THEMATRIX] = in_matrix;
   setTagName(KstObjectTag(in_tag, KstObjectTag::globalTagContext));  // FIXME: always top-level?
@@ -121,7 +121,7 @@ KstImage::KstImage(const QString &in_tag, KstMatrixPtr in_matrix, double lowerZ,
 
 
 //constructor for contour map only
-KstImage::KstImage(const QString &in_tag, KstMatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight) : KstBaseCurve(){
+KstImage::KstImage(const QString &in_tag, KstMatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight) : KstRelation(){
   _inputMatrices[THEMATRIX] = in_matrix;
   setTagName(KstObjectTag(in_tag, KstObjectTag::globalTagContext));  // FIXME: always top-level?
   _typeString = i18n("Image");
@@ -465,6 +465,7 @@ void KstImage::setAutoThreshold(bool yes) {
 }
 
 
+#if 0
 KstDataObjectPtr KstImage::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap) {
   QString name(tagName() + '\'');
   while (KstData::self()->dataTagNameNotUnique(name, false)) {
@@ -474,6 +475,7 @@ KstDataObjectPtr KstImage::makeDuplicate(KstDataObjectDataObjectMap& duplicatedM
   duplicatedMap.insert(this, KstDataObjectPtr(image));
   return KstDataObjectPtr(image);
 }
+#endif
 
 
 QString KstImage::matrixTag() const {

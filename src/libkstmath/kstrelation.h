@@ -1,5 +1,5 @@
 /***************************************************************************
-                     kstbasecurve.h: base curve type for kst
+                     kstrelation.h: base curve type for kst
                              -------------------
     begin                : Fri Oct 22 2000
     copyright            : (C) 2000 by C. Barth Netterfield
@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTBASECURVE_H
-#define KSTBASECURVE_H
+#ifndef KSTRELATION_H
+#define KSTRELATION_H
 
 #include <qcolor.h>
 #include <q3valuestack.h>
@@ -56,16 +56,19 @@ class KstCurveRenderContext {
 
 enum KstCurveType { KST_VCURVE, KST_HISTOGRAM, KST_IMAGE };
 
-class KST_EXPORT KstBaseCurve : public KstDataObject {
+class QXmlStreamWriter;
+
+class KST_EXPORT KstRelation : public KstObject {
   Q_OBJECT
   public:
-    KstBaseCurve();
-    KstBaseCurve(const QDomElement& e);
-    virtual ~KstBaseCurve();
+    KstRelation();
+    KstRelation(const QDomElement& e);
+    virtual ~KstRelation();
 
     virtual void showNewDialog() { }
     virtual void showEditDialog() { }
-    virtual void save(QTextStream &ts, const QString& indent = QString::null) = 0;
+    virtual void save(QXmlStreamWriter &s);
+
     virtual QString propertyString() const = 0;
 
     virtual KstCurveType curveType() const = 0;
@@ -129,7 +132,25 @@ class KST_EXPORT KstBaseCurve : public KstDataObject {
     QString legendText() const { return _legendText;}
 
   protected:
+    virtual void writeLockInputsAndOutputs() const;
+    virtual void unlockInputsAndOutputs() const;
  
+    bool _isInputLoaded;
+    QList<QPair<QString,QString> > _inputVectorLoadQueue;
+    QList<QPair<QString,QString> > _inputScalarLoadQueue;
+    QList<QPair<QString,QString> > _inputStringLoadQueue;
+    QList<QPair<QString,QString> > _inputMatrixLoadQueue;
+    KstCurveHintList *_curveHints;
+    QString _typeString, _type;
+    KstVectorMap _inputVectors;
+    KstVectorMap _outputVectors;
+    KstScalarMap _inputScalars;
+    KstScalarMap _outputScalars;
+    KstStringMap _inputStrings;
+    KstStringMap _outputStrings;
+    KstMatrixMap _inputMatrices;
+    KstMatrixMap _outputMatrices;
+
     double _ns_maxx;
     double _ns_minx;
     double _ns_maxy;
@@ -158,8 +179,8 @@ class KST_EXPORT KstBaseCurve : public KstDataObject {
 };
 
 
-typedef KstSharedPtr<KstBaseCurve> KstBaseCurvePtr;
-typedef KstObjectList<KstBaseCurvePtr> KstBaseCurveList;
+typedef KstSharedPtr<KstRelation> KstRelationPtr;
+typedef KstObjectList<KstRelationPtr> KstRelationList;
 
 #endif
 // vim: ts=2 sw=2 et

@@ -22,6 +22,8 @@
 #include "kstprimitive.h"
 #include "kstobjectcollection.h"
 
+class QXmlStreamWriter;
+
 /** The base class for all scalars. */
 class KST_EXPORT KstScalar : public KstPrimitive {
   Q_OBJECT
@@ -48,7 +50,7 @@ class KST_EXPORT KstScalar : public KstPrimitive {
     QString label() const;
 
     /** Save scalar information */
-    virtual void save(QTextStream &ts, const QString& indent = QString::null);
+    virtual void save(QXmlStreamWriter &s);
 
     /** Update the scalar.  Return true if there was new data. */
     UpdateType update(int updateCounter = -1);

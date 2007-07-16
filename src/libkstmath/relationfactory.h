@@ -15,7 +15,7 @@
 #include <QXmlStreamReader>
 #include <QStringList>
 
-#include "kstdataobject.h"
+#include "kstrelation.h"
 #include "kst_export.h"
 
 namespace Kst {
@@ -28,8 +28,8 @@ class RelationFactory {
     // This takes ownership
     static void registerFactory(const QString& node, RelationFactory *factory);
     static void registerFactory(const QStringList& nodes, RelationFactory *factory);
-    KST_EXPORT static KstDataObjectPtr parse(QXmlStreamReader& stream);
-    virtual KstDataObjectPtr generateRelation(QXmlStreamReader& stream) = 0;
+    KST_EXPORT static KstRelationPtr parse(QXmlStreamReader& stream);
+    virtual KstRelationPtr generateRelation(QXmlStreamReader& stream) = 0;
 };
 
 }

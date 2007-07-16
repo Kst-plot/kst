@@ -18,17 +18,18 @@
 
 #include "kstdataobject.h"
 
-#include <qdebug.h>
-#include "kstdebug.h"
 #include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"
+#include "kstdataplugin.h"
+#include "kstdebug.h"
+#include "kst_i18n.h"
 
+#include <qdebug.h>
 #include <qtimer.h>
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 
 #include <assert.h>
-
-#include "kst_i18n.h"
-#include "kstdataplugin.h"
 
 //#define LOCKTRACE
 
@@ -191,14 +192,13 @@ double *KstDataObject::vectorRealloced(KstVectorPtr v, double *memptr, int newSi
 }
 
 
-void KstDataObject::load(const QDomElement &e) {
+void KstDataObject::load(const QXmlStreamReader &e) {
   Q_UNUSED(e)
 }
 
 
-void KstDataObject::save(QTextStream& ts, const QString& indent) {
+void KstDataObject::save(QXmlStreamWriter& ts) {
   Q_UNUSED(ts)
-  Q_UNUSED(indent)
 }
 
 

@@ -19,6 +19,7 @@
 #include "stdinsource.h"
 
 #include <qtemporaryfile.h>
+#include <QXmlStreamWriter>
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -153,11 +154,11 @@ QString KstStdinSource::fileType() const {
 }
 
 
-void KstStdinSource::save(QTextStream &ts, const QString& indent) {
+void KstStdinSource::save(QXmlStreamWriter &s) {
   if (isValid()) {
-    return _src->save(ts, indent);
+    return _src->save(s);
   }
-  KstDataSource::save(ts, indent);
+  KstDataSource::save(s);
 }
 
 

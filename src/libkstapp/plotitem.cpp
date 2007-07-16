@@ -36,7 +36,7 @@ PlotItem::PlotItem(View *parent)
   KstVCurvePtr renderTest = new KstVCurve(QString("rendertest"), xTest, yTest, NULL, NULL, NULL, NULL, QColor(Qt::red));
 
   Render2DCartesian carTest(QString("cartesiantest"));
-  carTest.sources.append(kst_cast<KstBaseCurve>(renderTest));
+  carTest.sources.append(kst_cast<KstRelation>(renderTest));
   renderers.append(carTest);
 }
 
@@ -68,7 +68,7 @@ void PlotItem::paint(QPainter *painter) {
   //QPen testPen(fg);
   //path.addText(100, 100, testFont, tr("This is a test")); 
   /*
-  for (KstBaseCurveList::Iterator i = _sources.begin(); i != _sources.end(); ++i) {
+  for (KstRelationList::Iterator i = _sources.begin(); i != _sources.end(); ++i) {
     (*i)->paint(&path);
   }
   */

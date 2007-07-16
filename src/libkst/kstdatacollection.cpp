@@ -211,7 +211,7 @@ QStringList KstData::plotList(const QString& window) {
 }
 
 
-void KstData::removeCurveFromPlots(KstBaseCurve *c) {
+void KstData::removeCurveFromPlots(KstRelation *c) {
   Q_UNUSED(c)
   // meaningless in no GUI: no plots!
 }

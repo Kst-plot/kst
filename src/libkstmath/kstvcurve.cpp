@@ -58,7 +58,7 @@ KstVCurve::KstVCurve(const QString &in_tag, KstVectorPtr in_X, KstVectorPtr in_Y
                       KstVectorPtr in_EX, KstVectorPtr in_EY,
                       KstVectorPtr in_EXMinus, KstVectorPtr in_EYMinus,
                       const QColor &in_color)
-: KstBaseCurve() {
+: KstRelation() {
   setHasPoints(false);
   setHasBars(false);
   setHasLines(true);
@@ -97,7 +97,7 @@ KstVCurve::KstVCurve(const QString &in_tag, KstVectorPtr in_X, KstVectorPtr in_Y
 
 
 KstVCurve::KstVCurve(QDomElement &e)
-: KstBaseCurve(e) {
+: KstRelation(e) {
   QString in_tag, xname, yname, exname, eyname, exminusname, eyminusname;
   // QColor in_color(KstColorSequence::next(-1));
   QColor in_color("red"); // the above line is invalid.
@@ -818,7 +818,8 @@ double KstVCurve::minX() const {
 }
 
 
-KstDataObjectPtr KstVCurve::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap) {
+#if 0
+KstRelationPtr KstVCurve::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap) {
   KstVectorPtr VX = *_inputVectors.find(COLOR_XVECTOR);
   KstVectorPtr VY = *_inputVectors.find(COLOR_YVECTOR);
   KstVectorPtr EX = *_inputVectors.find(EXVECTOR);
@@ -840,9 +841,10 @@ KstDataObjectPtr KstVCurve::makeDuplicate(KstDataObjectDataObjectMap& duplicated
   vcurve->setLineStyle(LineStyle);
   vcurve->setPointDensity(PointDensity);
 
-  duplicatedMap.insert(this, KstDataObjectPtr(vcurve));
-  return KstDataObjectPtr(vcurve);
+  duplicatedMap.insert(this, KstRelationPtr(vcurve));
+  return KstRelationPtr(vcurve);
 }
+#endif
 
 
 void KstVCurve::paint(const KstCurveRenderContext& context) {

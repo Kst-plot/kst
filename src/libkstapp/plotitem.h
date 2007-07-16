@@ -18,7 +18,7 @@
 #include <QGraphicsItem>
 
 #include "viewitem.h"
-#include "kstbasecurve.h"
+#include "kstrelation.h"
 #include "plotrenderer2d.h"
 
 namespace Kst {

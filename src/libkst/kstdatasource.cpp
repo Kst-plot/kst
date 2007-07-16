@@ -19,14 +19,15 @@
 
 #include <assert.h>
 
-#include <qdir.h>
-#include <qurl.h>
-#include <qfile.h>
-#include <qdebug.h>
-#include <qfileinfo.h>
-#include <qtextdocument.h>
 #include <qapplication.h>
+#include <qdebug.h>
+#include <qdir.h>
+#include <qfile.h>
+#include <qfileinfo.h>
 #include <qpluginloader.h>
+#include <qtextdocument.h>
+#include <qurl.h>
+#include <QXmlStreamWriter>
 
 #include "kst_i18n.h"
 #include "kstdatacollection.h"
@@ -597,18 +598,25 @@ QString KstDataSource::fileType() const {
 }
 
 
-void KstDataSource::save(QTextStream &ts, const QString& indent) {
-  QString name = Qt::escape(_filename);
+void KstDataSource::save(QXmlStreamWriter &s) {
+}
+
+
+void KstDataSource::saveSource(QXmlStreamWriter &s) {
+  QString name = _filename;
   // Look to see if it was a URL and save the URL instead
   for (QMap<QString,QString>::ConstIterator i = urlMap.begin(); i != urlMap.end(); ++i) {
     if (i.value() == _filename) {
-      name = Qt::escape(i.key());
+      name = i.key();
       break;
     }
   }
-  ts << indent << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
-  ts << indent << "<filename>" << name << "</filename>" << endl;
-  ts << indent << "<type>" << Qt::escape(fileType()) << "</type>" << endl;
+  s.writeStartElement("source");
+  s.writeAttribute("tag", tag().tagString());
+  s.writeAttribute("reader", fileType());
+  s.writeAttribute("file", name);
+  save(s);
+  s.writeEndElement();
 }
 
 

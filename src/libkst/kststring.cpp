@@ -15,12 +15,15 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstdatacollection.h"
+#include "kststring.h"
+
 #include "defaultprimitivenames.h"
+#include "kstdatacollection.h"
+#include "kst_i18n.h"
 
 #include <qtextdocument.h>
+#include <QXmlStreamWriter>
 
-#include "kst_i18n.h"
 
 static int anonymousStringCounter = 0;
 
@@ -80,15 +83,17 @@ void KstString::setTagName(const KstObjectTag& tag) {
 }
 
 
-void KstString::save(QTextStream &ts, const QString& indent) {
-  ts << indent << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
+void KstString::save(QXmlStreamWriter &s) {
+  s.writeStartElement("string");
+  s.writeAttribute("tag", tag().tagString());
   if (_orphan) {
-    ts << indent << "<orphan/>" << endl;
+    s.writeAttribute("orphan", "true");
   }
   if (_editable) {
-    ts << indent << "<editable/>" << endl;
+    s.writeAttribute("editable", "true");
   }
-  ts << indent << "<value>" << Qt::escape(value()) << "</value>" << endl;
+  s.writeAttribute("value", value());
+  s.writeEndElement();
 }
 
 

@@ -38,13 +38,6 @@ KstAVector::KstAVector(int n, KstObjectTag tag)
 }
 
 
-void KstAVector::save(QTextStream &ts, const QString& indent, bool saveAbsolutePosition) {
-  ts << indent << "<avector>" << endl;
-  KstVector::save(ts, indent + "  ", saveAbsolutePosition);
-  ts << indent << "</avector>" << endl;
-}
-
-
 KstObject::UpdateType KstAVector::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 

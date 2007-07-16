@@ -54,7 +54,7 @@ class AsciiSource : public KstDataSource {
     
     QStringList matrixList() const;
 
-    void save(QTextStream &ts, const QString& indent = QString::null);
+    void save(QXmlStreamWriter &s);
 
     bool isEmpty() const;
 

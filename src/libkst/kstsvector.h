@@ -28,7 +28,7 @@ class KST_EXPORT KstSVector : public KstVector {
   KstSVector(const QDomElement &e);
   KstSVector(double x0, double x1, int n, KstObjectTag tag);
 
-  void save(QTextStream &ts, const QString& indent = QString::null, bool saveAbsolutePosition = false);
+  void save(QXmlStreamWriter &s);
 
   void changeRange(double x0, double x1, int n);
   KstObject::UpdateType update(int update_counter);

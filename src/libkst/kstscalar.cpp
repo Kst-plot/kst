@@ -15,14 +15,16 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <qtextdocument.h>
+#include "kstscalar.h"
 
 #include "kst_i18n.h"
 
-#include "kstscalar.h"
 #include "kstdatacollection.h"
 #include "defaultprimitivenames.h"
+
 #include <qdebug.h>
+#include <qtextdocument.h>
+#include <QXmlStreamWriter>
 
 
 static int iAnonymousScalarCounter = 0;
@@ -117,15 +119,17 @@ KstObject::UpdateType KstScalar::update(int updateCounter) {
 }
 
 
-void KstScalar::save(QTextStream &ts, const QString& indent) {
-  ts << indent << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
+void KstScalar::save(QXmlStreamWriter &s) {
+  s.writeStartElement("scalar");
+  s.writeAttribute("tag", tag().tagString());
   if (_orphan) {
-    ts << indent << "<orphan/>" << endl;
+    s.writeAttribute("orphan", "true");
   }
   if (_editable) {
-    ts << indent << "<editable/>" << endl;
+    s.writeAttribute("editable", "true");
   }
-  ts << indent << "<value>" << value() << "</value>" << endl;
+  s.writeAttribute("value", QString::number(value()));
+  s.writeEndElement();
 }
 
 

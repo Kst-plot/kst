@@ -15,6 +15,8 @@
 #include "tabwidget.h"
 #include <datasourcefactory.h>
 #include <graphicsfactory.h>
+#include <kstdatacollection.h>
+#include <kstdataobjectcollection.h>
 #include <objectfactory.h>
 #include <primitivefactory.h>
 #include <relationfactory.h>
@@ -65,19 +67,36 @@ bool Document::save(const QString& to) {
   xml.writeAttribute("version", "2.0");
 
   xml.writeStartElement("data");
-  // TODO: save each data source
+  foreach (KstDataSourcePtr s, KST::dataSourceList) {
+    s->saveSource(xml);
+  }
   xml.writeEndElement();
 
   xml.writeStartElement("variables");
-  // TODO: save each primitive
+  foreach (KstVectorPtr s, KST::vectorList) {
+    s->save(xml);
+  }
+  foreach (KstMatrixPtr s, KST::matrixList) {
+    s->save(xml);
+  }
+  foreach (KstScalarPtr s, KST::scalarList) {
+    s->save(xml);
+  }
+  foreach (KstStringPtr s, KST::stringList) {
+    s->save(xml);
+  }
   xml.writeEndElement();
 
   xml.writeStartElement("objects");
-  // TODO: save each data object
+  foreach (KstDataObjectPtr s, KST::dataObjectList) {
+    s->save(xml);
+  }
   xml.writeEndElement();
 
   xml.writeStartElement("relations");
-  // TODO: save each curve
+  foreach (KstRelationPtr s, KST::relationList) {
+    s->save(xml);
+  }
   xml.writeEndElement();
 
   xml.writeStartElement("graphics");
