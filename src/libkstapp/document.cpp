@@ -59,7 +59,7 @@ bool Document::save(const QString& to) {
   QString file = !to.isEmpty() ? to : _fileName;
   QFile f(file);
   if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-    _lastError = QObject::tr("File '%1' could not be opened for writing.").arg(file);
+    _lastError = QObject::tr("File could not be opened for writing.");
     return false;
   }
 
@@ -79,16 +79,17 @@ bool Document::save(const QString& to) {
   xml.writeEndElement();
 
   xml.writeStartElement("variables");
-  foreach (KstVectorPtr s, KST::vectorList) {
+
+  foreach (KstVectorPtr s, KST::vectorList.list()) {
     s->save(xml);
   }
-  foreach (KstMatrixPtr s, KST::matrixList) {
+  foreach (KstMatrixPtr s, KST::matrixList.list()) {
     s->save(xml);
   }
-  foreach (KstScalarPtr s, KST::scalarList) {
+  foreach (KstScalarPtr s, KST::scalarList.list()) {
     s->save(xml);
   }
-  foreach (KstStringPtr s, KST::stringList) {
+  foreach (KstStringPtr s, KST::stringList.list()) {
     s->save(xml);
   }
   xml.writeEndElement();
@@ -125,7 +126,7 @@ bool Document::open(const QString& file) {
   _isOpen = false;
   QFile f(file);
   if (!f.open(QIODevice::ReadOnly)) {
-    _lastError = QObject::tr("File '%1' could not be opened for reading.").arg(file);
+    _lastError = QObject::tr("File could not be opened for reading.");
     return false;
   }
 
@@ -238,7 +239,7 @@ bool Document::open(const QString& file) {
 #undef malformed
 
   if (xml.hasError()) {
-    _lastError = QObject::tr("File '%1' is malformed and encountered an error when reading.").arg(file);
+    _lastError = QObject::tr("File is malformed and encountered an error while reading.");
     return false;
   }
 
