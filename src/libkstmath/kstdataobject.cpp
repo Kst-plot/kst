@@ -193,11 +193,13 @@ double *KstDataObject::vectorRealloced(KstVectorPtr v, double *memptr, int newSi
 
 
 void KstDataObject::load(const QXmlStreamReader &e) {
+  qDebug() << QString("FIXME! Loading of %1 is not implemented yet.").arg(typeString()) << endl;
   Q_UNUSED(e)
 }
 
 
 void KstDataObject::save(QXmlStreamWriter& ts) {
+  qDebug() << QString("FIXME! Saving of %1 is not implemented yet.").arg(typeString()) << endl;
   Q_UNUSED(ts)
 }
 
