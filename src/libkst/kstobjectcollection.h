@@ -21,8 +21,10 @@
 // NAMEDEBUG: 0 for no debug, 1 for some debug, 2 for more debug, 3 for all debug
 #define NAMEDEBUG 0
 
-#include <QHash>
+#include <qhash.h>
 #include <qdebug.h>
+
+#include "kst_export.h"
 #include "kstobject.h"
 #include "kstobjectlist.h"
 
@@ -138,9 +140,6 @@ class KstObjectCollection {
     KstObjectList<KstSharedPtr<T> > _list; // owns the objects
 };
 
-
-/******************************************************************************/
-
 // FIXME: this should probably return a KstObjectCollection
 template<class T, class S>
 KstObjectList<KstSharedPtr<S> > kstObjectSubList(KstObjectCollection<T>& coll) {
@@ -159,9 +158,6 @@ KstObjectList<KstSharedPtr<S> > kstObjectSubList(KstObjectCollection<T>& coll) {
   list.lock().unlock();
   return rc;
 }
-
-/******************************************************************************/
-
 
 template <class T>
 KstObjectTreeNode<T>::KstObjectTreeNode(const QString& tag) : _tag(tag),
@@ -336,9 +332,6 @@ void KstObjectTreeNode<T>::clear() {
   qDeleteAll(_children);
   _children.clear();
 }
-
-
-/******************************************************************************/
 
 
 template <class T>
@@ -817,6 +810,6 @@ QList<KstObjectTreeNode<T> *> KstObjectCollection<T>::relatedNodes(T *o) {
   return outNodes;
 }
 
-
 #endif
+
 // vim: ts=2 sw=2 et

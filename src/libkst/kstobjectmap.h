@@ -13,6 +13,7 @@
 #define KSTOBJECTMAP_H
 
 #include <qmap.h>
+#include <qstringlist.h>
 
 template<class T>
 class KstObjectMap : public QMap<QString,T> {

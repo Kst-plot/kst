@@ -13,6 +13,7 @@
 #define KSTOBJECTLIST_H
 
 #include <qlist.h>
+#include <qstringlist.h>
 
 #include "rwlock.h"
 #include "kstsharedptr.h"

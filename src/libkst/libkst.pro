@@ -44,7 +44,11 @@ SOURCES += \
     kstprimitive.cpp \
     defaultprimitivenames.cpp \
     primitivefactory.cpp \
-    datasourcefactory.cpp
+    datasourcefactory.cpp \
+    kstobjectcollection.cpp \
+    kstobjectlist.cpp \
+    kstobjectmap.cpp \
+    kstobjecttag.cpp
 
 HEADERS += \
     datasourcefactory.h \
@@ -85,4 +89,8 @@ HEADERS += \
     psversion.h \
     rwlock.h \
     stdinsource.h \
-    sysinfo.h
+    sysinfo.h \
+    kstobjectcollection.h \
+    kstobjectlist.h \
+    kstobjectmap.h \
+    kstobjecttag.h

@@ -12,6 +12,11 @@
 #ifndef KSTOBJECTTAG_H
 #define KSTOBJECTTAG_H
 
+#include <qstring.h>
+#include <qstringlist.h>
+
+#include "kst_export.h"
+
 class KstObjectTag {
   public:
     static const KstObjectTag invalidTag;
@@ -23,123 +28,53 @@ class KstObjectTag {
     static const QStringList constantTagContext;
     static const QStringList orphanTagContext;
 
-
+    // construct a null tag
+    KstObjectTag();
     // construct a tag in a given context
-    KstObjectTag(const QString& tag, const QStringList& context,
-        unsigned int minDisplayComponents = 1) : _tag(cleanTag(tag)),
-                                                 _context(context),
-                                                 _minDisplayComponents(minDisplayComponents),
-                                                 _uniqueDisplayComponents(UINT_MAX)
-    {
-    }
-
+    KstObjectTag(const QString& tag, const QStringList& context, unsigned int minDisplayComponents = 1);
     // construct a tag in the context of another tag
-    KstObjectTag(const QString& tag, const KstObjectTag& contextTag, bool alwaysShowContext = true) :
-      _uniqueDisplayComponents(UINT_MAX)
-    {
-      _tag = cleanTag(tag);
-      _context = contextTag.fullTag();
-      _minDisplayComponents = 1 + (alwaysShowContext ? qMax(contextTag._minDisplayComponents, (unsigned int)1) : 0);
-    }
-
+    KstObjectTag(const QString& tag, const KstObjectTag& contextTag, bool alwaysShowContext = true);
     // construct a tag from a fullTag representation
-    KstObjectTag(QStringList fullTag) : _minDisplayComponents(1), _uniqueDisplayComponents(UINT_MAX) {
-      _tag = cleanTag(fullTag.last());
-      fullTag.pop_back();
-      _context = fullTag;
-    }
+    KstObjectTag(const QStringList &fullTag);
 
-    QString tag() const { return _tag; }
-    QStringList fullTag() const { 
-      QStringList ft(_context);
-      ft << _tag;
-      return ft;
-    }
-    QStringList context() const { return _context; }
+    QString tag() const;
+    QStringList fullTag() const;
+    QStringList context() const;
 
-    unsigned int components() const { 
-      if (!isValid()) {
-        return 0;
-      } else {
-        return 1 + _context.count();
-      }
-    }
+    unsigned int components() const;
 
     // change the tag, maintaining context
-    void setTag(const QString& tag) {
-      _tag = cleanTag(tag);
-      _uniqueDisplayComponents = UINT_MAX;
-    }
+    void setTag(const QString& tag);
 
     // change the context
-    void setContext(const QStringList& context) {
-      _context = context;
-      _uniqueDisplayComponents = UINT_MAX;
-    }
+    void setContext(const QStringList& context);
 
     // change the tag and context
-    void setTag(const QString& tag, const QStringList& context) {
-      setTag(tag);
-      setContext(context);
-    }
+    void setTag(const QString& tag, const QStringList& context);
 
-    bool isValid() const { return !_tag.isEmpty(); }
+    bool isValid() const;
 
-    QString tagString() const { return fullTag().join(tagSeparator); }
+    QString tagString() const;
 
     // display methods
-    void setUniqueDisplayComponents(unsigned int n) {
-      _uniqueDisplayComponents = n;
-    }
-    unsigned int uniqueDisplayComponents() const { return _uniqueDisplayComponents; }
+    void setUniqueDisplayComponents(unsigned int n);
 
-    void setMinDisplayComponents(unsigned int n) {
-      _minDisplayComponents = n;
-    }
+    unsigned int uniqueDisplayComponents() const;
 
-    QStringList displayFullTag() const { 
-      QStringList out_tag = _context + QStringList(_tag);
-      int componentsToDisplay = qMin(qMax(_uniqueDisplayComponents, _minDisplayComponents), components());
-      while (out_tag.count() > componentsToDisplay) {
-        out_tag.pop_front();
-      }
-      return out_tag;
-    }
+    void setMinDisplayComponents(unsigned int n);
 
-    QString displayString() const { 
-      return displayFullTag().join(tagSeparator);
-    }
+    QStringList displayFullTag() const;
+
+    QString displayString() const;
 
     // factory for String representation
-    static KstObjectTag fromString(const QString& str) {
-      QStringList l = str.split(tagSeparator);
-      if (l.isEmpty()) {
-        return invalidTag;
-      }
+    static KstObjectTag fromString(const QString& str);
 
-      QString t = l.last();
-      l.pop_back();
-      return KstObjectTag(t, l);
-    }
+    bool operator==(const KstObjectTag& tag) const;
 
-    bool operator==(const KstObjectTag& tag) const {
-      return (_tag == tag._tag && _context == tag._context);
-    }
+    bool operator!=(const KstObjectTag& tag) const;
 
-    bool operator!=(const KstObjectTag& tag) const {
-      return (_tag != tag._tag || _context != tag._context);
-    }
-
-    static QString cleanTag(const QString& in_tag) {
-      if (in_tag.contains(tagSeparator)) {
-        QString tag = in_tag;
-        tag.replace(tagSeparator, tagSeparatorReplacement);
-//        kstdWarning() << "cleaning tag name containing " << tagSeparator << ":\"" << in_tag << "\" -> \"" << tag << "\"" << endl;
-        return tag;
-      } else {
-        return in_tag;
-      }
-    }
+    static QString cleanTag(const QString& in_tag);
 
   private:
     QString _tag;
