@@ -49,7 +49,8 @@ SOURCES += \
     kstobjectlist.cpp \
     kstobjectmap.cpp \
     kstobjecttag.cpp \
-    builtinprimitives.cpp
+    builtinprimitives.cpp \
+    vectorfactory.cpp
 
 HEADERS += \
     datasourcefactory.h \
@@ -95,4 +96,5 @@ HEADERS += \
     kstobjectlist.h \
     kstobjectmap.h \
     kstobjecttag.h \
-    builtinprimitives.h
+    builtinprimitives.h \
+    vectorfactory.h

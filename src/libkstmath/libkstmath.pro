@@ -45,7 +45,8 @@ SOURCES += \
     escan.c \
     objectfactory.cpp \
     relationfactory.cpp \
-    builtinobjects.cpp
+    builtinobjects.cpp \
+    equationfactory.cpp
 
 HEADERS += \
     builtinobjects.h \
@@ -76,4 +77,5 @@ HEADERS += \
     labelparser.h \
     objectfactory.h \
     psdcalculator.h \
-    relationfactory.h
+    relationfactory.h \
+    equationfactory.h

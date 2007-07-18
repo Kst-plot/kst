@@ -9,15 +9,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "builtinobjects.h"
-#include "equationfactory.h"
+#ifndef VECTORFACTORY_H
+#define VECTORFACTORY_H
+
+#include "primitivefactory.h"
 
 namespace Kst {
-  namespace Builtins {
-    void initObjects() {
-      new EquationFactory;
-    }
-  }
+
+class VectorFactory : public PrimitiveFactory {
+  public:
+    VectorFactory();
+    ~VectorFactory();
+    KstPrimitivePtr generatePrimitive(QXmlStreamReader& stream);
+};
+
 }
+
+#endif
 
 // vim: ts=2 sw=2 et

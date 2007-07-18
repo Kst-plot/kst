@@ -10,10 +10,12 @@
  ***************************************************************************/
 
 #include "builtinprimitives.h"
+#include "vectorfactory.h"
 
 namespace Kst {
   namespace Builtins {
     void initPrimitives() {
+      new VectorFactory;
     }
   }
 }

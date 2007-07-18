@@ -30,6 +30,7 @@
 #include "defaultprimitivenames.h"
 #include "kstmath.h"
 #include "kstvector.h"
+#include "kstdebug.h"
 
 static int anonymousVectorCounter = 1;
 

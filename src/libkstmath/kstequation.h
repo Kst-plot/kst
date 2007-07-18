@@ -98,17 +98,6 @@ class KST_EXPORT KstEquation : public KstDataObject {
     Equation::Node *_pe;
 };
 
-namespace Kst {
-
-class EquationObjectFactory : public ObjectFactory {
-  public:
-    EquationObjectFactory();
-    ~EquationObjectFactory();
-    KstDataObjectPtr generateObject(QXmlStreamReader& stream);
-};
-
-}
-
 typedef KstSharedPtr<KstEquation> KstEquationPtr;
 typedef KstObjectList<KstEquationPtr> KstEquationList;
 

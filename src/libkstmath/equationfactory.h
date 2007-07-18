@@ -9,15 +9,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "builtinobjects.h"
-#include "equationfactory.h"
+#ifndef EQUATIONFACTORY_H
+#define EQUATIONFACTORY_H
+
+#include "objectfactory.h"
 
 namespace Kst {
-  namespace Builtins {
-    void initObjects() {
-      new EquationFactory;
-    }
-  }
+
+class EquationFactory : public ObjectFactory {
+  public:
+    EquationFactory();
+    ~EquationFactory();
+    KstDataObjectPtr generateObject(QXmlStreamReader& stream);
+};
+
 }
+
+#endif
 
 // vim: ts=2 sw=2 et
