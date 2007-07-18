@@ -108,6 +108,7 @@ class MainWindow : public QMainWindow
     // Do we need these?  I don't think so...
     QToolBar *_fileToolBar;
     QToolBar *_editToolBar;
+    QToolBar *_kstToolBar;
 
     QAction *_undoAct;
     QAction *_redoAct;

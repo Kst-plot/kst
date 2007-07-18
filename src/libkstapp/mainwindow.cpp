@@ -58,7 +58,7 @@ MainWindow::MainWindow() {
 
   createActions();
   createMenus();
-//   createToolBars();
+  createToolBars();
   createStatusBar();
 
   readSettings();
@@ -391,6 +391,7 @@ void MainWindow::createActions() {
   connect(_aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }
 
+
 void MainWindow::createMenus() {
   _fileMenu = menuBar()->addMenu(tr("&File"));
   _fileMenu->addAction(_newTabAct);
@@ -441,6 +442,10 @@ void MainWindow::createMenus() {
 void MainWindow::createToolBars() {
   _fileToolBar = addToolBar(tr("File"));
   _editToolBar = addToolBar(tr("Edit"));
+  _kstToolBar = addToolBar(tr("Kst"));
+
+  // Hook up the kst toolbar
+  _kstToolBar->addAction(_dataManagerAct);
 }
 
 
