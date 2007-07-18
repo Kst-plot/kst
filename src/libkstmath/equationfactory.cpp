@@ -22,6 +22,7 @@ EquationFactory::EquationFactory()
   registerFactory("equation", this);
 }
 
+
 EquationFactory::~EquationFactory() {
 }
 

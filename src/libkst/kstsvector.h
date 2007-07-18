@@ -25,7 +25,7 @@
  */
 class KST_EXPORT KstSVector : public KstVector {
  public:
-  KstSVector(const QString &tag, const QByteArray &data, double x0 = 0.0, double x1 = 1.0, int n = 2);
+  KstSVector(const QString &tag, const QByteArray &data, double x0, double x1, int n);
   KstSVector(double x0, double x1, int n, KstObjectTag tag);
 
   void save(QXmlStreamWriter &s);

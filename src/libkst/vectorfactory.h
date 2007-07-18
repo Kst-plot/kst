@@ -23,6 +23,27 @@ class VectorFactory : public PrimitiveFactory {
     KstPrimitivePtr generatePrimitive(QXmlStreamReader& stream);
 };
 
+class SVectorFactory : public PrimitiveFactory {
+  public:
+    SVectorFactory();
+    ~SVectorFactory();
+    KstPrimitivePtr generatePrimitive(QXmlStreamReader& stream);
+};
+
+class AVectorFactory : public PrimitiveFactory {
+  public:
+    AVectorFactory();
+    ~AVectorFactory();
+    KstPrimitivePtr generatePrimitive(QXmlStreamReader& stream);
+};
+
+class RVectorFactory : public PrimitiveFactory {
+  public:
+    RVectorFactory();
+    ~RVectorFactory();
+    KstPrimitivePtr generatePrimitive(QXmlStreamReader& stream);
+};
+
 }
 
 #endif

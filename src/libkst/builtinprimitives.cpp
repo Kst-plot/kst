@@ -16,6 +16,9 @@ namespace Kst {
   namespace Builtins {
     void initPrimitives() {
       new VectorFactory;
+      new SVectorFactory;
+      new AVectorFactory;
+      new RVectorFactory;
     }
   }
 }
