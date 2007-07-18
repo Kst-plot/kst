@@ -59,7 +59,7 @@ class KstVector : public KstPrimitive {
      */
     KstVector(KstObjectTag in_tag = KstObjectTag::invalidTag, int size = 0,
         KstObject *provider = 0L, bool bIsScalarList = false);
-    KstVector(const QDomElement& e);
+    KstVector(const QString &tag, const QByteArray &data);
 
   protected:
     virtual ~KstVector();

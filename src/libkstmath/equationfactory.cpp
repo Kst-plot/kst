@@ -31,8 +31,8 @@ KstDataObjectPtr EquationFactory::generateObject(QXmlStreamReader& xml) {
   bool interpolate = false;
 
   while (!xml.atEnd()) {
+    const QString n = xml.name().toString();
     if (xml.isStartElement()) {
-      const QString n = xml.name().toString();
       if (n == "equation") {
         QXmlStreamAttributes attrs = xml.attributes();
         name = attrs.value("name").toString();
@@ -46,7 +46,7 @@ KstDataObjectPtr EquationFactory::generateObject(QXmlStreamReader& xml) {
         return 0;
       }
     } else if (xml.isEndElement()) {
-      if (xml.name().toString() == "equation") {
+      if (n == "equation") {
         break;
       } else {
         KstDebug::self()->log(QObject::tr("Error creating equation from Kst file."), KstDebug::Warning);

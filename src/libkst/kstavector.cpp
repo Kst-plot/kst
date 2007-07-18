@@ -22,8 +22,8 @@
 #include "kstdebug.h"
 #include <qtextstream.h>
 
-KstAVector::KstAVector(const QDomElement &e)
-: KstVector(e) {
+KstAVector::KstAVector(const QString &tag, const QByteArray &data)
+: KstVector(tag, data) {
   _editable = true;
   _saveable = true;
   _saveData = true;

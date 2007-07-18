@@ -25,7 +25,7 @@
  */
 class KstAVector : public KstVector {
  public:
-  KST_EXPORT KstAVector(const QDomElement &e);
+  KST_EXPORT KstAVector(const QString &tag, const QByteArray &data);
   KST_EXPORT KstAVector(int n, KstObjectTag tag);
 
   KstObject::UpdateType update(int update_counter);

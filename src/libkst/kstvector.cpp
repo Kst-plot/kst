@@ -83,7 +83,7 @@ KstVector::KstVector(KstObjectTag in_tag, int size, KstObject *provider, bool is
 }
 
 
-KstVector::KstVector(const QDomElement& e)
+KstVector::KstVector(const QString &tag, const QByteArray& data)
 : KstPrimitive(), _nsum(0) {
   QByteArray qba;
   _v = 0L;
@@ -98,21 +98,9 @@ KstVector::KstVector(const QDomElement& e)
   _saveable = false;
   _saveData = false;
 
-  QDomNode n = e.firstChild();
-  while (!n.isNull()) {
-    QDomElement e = n.toElement();
-    if (!e.isNull()) {
-      if (e.tagName() == "tag") {
-        in_tag = KstObjectTag::fromString(e.text());
-      } else if (e.tagName() == "data") {
-        QString qcs(e.text().toLatin1());
-        QByteArray qbca = QByteArray::fromBase64(qcs.toLatin1());
-        qba = qUncompress(qbca);
-        sz = qMax((size_t)(INITSIZE), qba.size()/sizeof(double));
-      }
-    }
-    n = n.nextSibling();
-  }
+  in_tag = KstObjectTag::fromString(tag);
+  qba = data;
+  sz = qMax((size_t)(INITSIZE), qba.size()/sizeof(double));
 
   if (!in_tag.isValid()) {
     do {

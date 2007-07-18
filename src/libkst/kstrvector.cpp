@@ -52,9 +52,13 @@ KstRVector::KstRVector(KstDataSourcePtr in_file, const QString &in_field,
 }
 
 
-KstRVector::KstRVector(const QDomElement &e, const QString &o_file,
+KstRVector::KstRVector(const QString &tag, const QByteArray &data,
+                       const QString &provider, const QString &file,
+                       const QString &field, int start, int num,
+                       int skip, bool doAve,
+                       const QString &o_file,
                        int o_n, int o_f, int o_s, bool o_ave)
-: KstVector(e) {
+: KstVector(tag, data) {
   KstDataSourcePtr in_file, in_provider;
   QString in_field;
   int in_f0 = 0;
@@ -63,53 +67,57 @@ KstRVector::KstRVector(const QDomElement &e, const QString &o_file,
   bool in_DoSkip = false;
   bool in_DoAve = false;
 
-  /* parse the DOM tree */
-  QDomNode n = e.firstChild();
-  while (!n.isNull()) {
-    QDomElement e = n.toElement();
-    if (!e.isNull()) {
-      if (e.tagName() == "provider") {
-        KST::dataSourceList.lock().readLock();
-        in_provider = *KST::dataSourceList.findTag(e.text());
-        KST::dataSourceList.lock().unlock();
-      } else if (e.tagName() == "filename") {
-        if (!in_provider) {
-          KST::dataSourceList.lock().readLock();
-          if (o_file == "|") {
-            in_file = *KST::dataSourceList.findFileName(e.text());
-          } else {
-            in_file = *KST::dataSourceList.findFileName(o_file);
-          }
-          KST::dataSourceList.lock().unlock();
-        }
-      } else if (e.tagName() == "field") {
-        in_field = e.text();
-      } else if (e.tagName() == "start") {
-        in_f0 = e.text().toInt();
-      } else if (e.tagName() == "num") {
-        in_n = e.text().toInt();
-      } else if (e.tagName() == "skip") {
-        in_skip = e.text().toInt();
-        in_DoSkip = in_skip > 0;
-      } else if (e.tagName() == "doAve") {
-        in_DoAve = true;
-        in_DoSkip = true;
-        if (in_skip < 1) {
-          in_skip = 1;
-        }
-      }
+  //FIXME THIS CTOR IS SO OBFUSCATED IT IS LAUGHABLE!
+  if (!provider.isEmpty()) {
+      KST::dataSourceList.lock().readLock();
+      in_provider = *KST::dataSourceList.findTag(provider);
+      KST::dataSourceList.lock().unlock();
+  }
+
+  if (!in_provider && !file.isEmpty()) {
+    KST::dataSourceList.lock().readLock();
+    if (o_file == "|") {
+      in_file = *KST::dataSourceList.findFileName(file);
+    } else {
+      in_file = *KST::dataSourceList.findFileName(o_file);
     }
-    n = n.nextSibling();
+    KST::dataSourceList.lock().unlock();
+  }
+
+  if (!field.isEmpty()) {
+    in_field = field;
+  }
+
+  if (start > 0) {
+    in_f0 = start;
+  }
+
+  if (num > 0) {
+    in_n = num;
+  }
+
+  if (skip > 0) {
+    in_skip = skip;
+    in_DoSkip = in_skip > 0;
+  }
+
+  if (doAve) {
+    in_DoAve = true;
+    in_DoSkip = true;
+    if (in_skip < 1) {
+      in_skip = 1;
+    }
   }
 
   if (in_provider) {
     // provider overrides filename
     in_file = in_provider;
   }
+
   if (in_file) {
     // use datasource as tag context for this RVector
     // allow unique vector names to be displayed at top-level
-    setTagName(KstObjectTag(tag().tag(), in_file->tag(), false));
+    setTagName(KstObjectTag(this->tag().tag(), in_file->tag(), false));
   }
 
   if (o_n > -2) {

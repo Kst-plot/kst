@@ -32,19 +32,22 @@ KstPrimitivePtr VectorFactory::generatePrimitive(QXmlStreamReader& xml) {
   QByteArray data;
 
   while (!xml.atEnd()) {
-    if (xml.isStartElement()) {
       const QString n = xml.name().toString();
+    if (xml.isStartElement()) {
       if (n == "vector") {
         QXmlStreamAttributes attrs = xml.attributes();
         tag = attrs.value("tag").toString();
-//         QString qcs(xml.readElementText().toLatin1());
-//         QByteArray qbca = QByteArray::fromBase64(qcs.toLatin1());
-//         data = qUncompress(qbca);
+      } else if (n == "data") {
+
+        QString qcs(xml.readElementText().toLatin1());
+        QByteArray qbca = QByteArray::fromBase64(qcs.toLatin1());
+        data = qUncompress(qbca);
+
       } else {
         return 0;
       }
     } else if (xml.isEndElement()) {
-      if (xml.name().toString() == "vector") {
+      if (n == "vector") {
         break;
       } else {
         KstDebug::self()->log(QObject::tr("Error creating vector from Kst file."), KstDebug::Warning);
@@ -58,7 +61,7 @@ KstPrimitivePtr VectorFactory::generatePrimitive(QXmlStreamReader& xml) {
     return 0;
   }
 
-  KstVectorPtr vector = 0;
+  KstVectorPtr vector = new KstVector(tag, data);
   return vector.data();
 }
 

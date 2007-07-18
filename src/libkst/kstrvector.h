@@ -40,8 +40,11 @@ public:
              int skip, bool in_doSkip,
              bool in_doAve);
 
-  KstRVector(const QDomElement &e,
-             const QString &o_file="|",
+  KstRVector(const QString &tag, const QByteArray &data,
+             const QString &provider = QString(), const QString &file = QString(),
+             const QString &field = QString(), int start = -1, int num = -1,
+             int skip = -1, bool doAve = false,
+             const QString &o_file = "|",
              int o_n = -2, int o_f = -2,
              int o_s = -1, bool o_ave = false);
 
