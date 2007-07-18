@@ -24,16 +24,16 @@
 #include <stdlib.h>
 
 #include <qtextdocument.h>
+#include <QXmlStreamWriter>
 
-#include "kst_i18n.h"
-
+#include "defaultprimitivenames.h"
 #include "dialoglauncher.h"
 #include "enodes.h"
 #include "eparse-eh.h"
 #include "kstdatacollection.h"
-#include "defaultprimitivenames.h"
 #include "kstdebug.h"
 #include "kstequation.h"
+#include "kst_i18n.h"
 #include "kstsvector.h"
 
 extern "C" int yyparse();
@@ -168,11 +168,9 @@ KstObject::UpdateType KstEquation::update(int update_counter) {
 }
 
 
-void KstEquation::save(QTextStream &ts, const QString& indent) {
-  QString l2 = indent + "  ";
-  ts << indent << "<equationobject>" << endl;
-  ts << l2 << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
-
+void KstEquation::save(QXmlStreamWriter &s) {
+  s.writeStartElement("equation");
+  s.writeAttribute("tag", tag().tagString());
   // Reparse the equation, then write it back out in text so that we can update
   // any vectors or scalars that had name changes, but we don't get affected by
   // the optimizer
@@ -187,18 +185,18 @@ void KstEquation::save(QTextStream &ts, const QString& indent) {
         KstDebug::self()->log(i18n("Equation [%1] failed to find its vectors when saving.  Resulting Kst file may have issues.").arg(_equation), KstDebug::Warning);
       }
       QString etext = en->text();
-      ts << l2 << "<equation>" << Qt::escape(etext) << "</equation>" << endl;
+      s.writeAttribute("expression", etext);
     }
     delete en;
     ParsedEquation = 0L;
   }
 
-  ts << l2 << "<xvector>" << Qt::escape((*_xInVector)->tag().tagString()) << "</xvector>" << endl;
+  s.writeAttribute("xvector", (*_xInVector)->tag().tagString());
   if (_doInterp) {
-    ts << l2 << "<interpolate/>" << endl;
+    s.writeAttribute("interpolate", "true");
   }
 
-  ts << indent << "</equationobject>" << endl;
+  s.writeEndElement();
 }
 
 

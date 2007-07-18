@@ -31,6 +31,8 @@ namespace Equation {
   class Node;
 }
 
+class QXmlStreamWriter;
+
 class KST_EXPORT KstEquation : public KstDataObject {
   public:
     KstEquation(const QString& in_tag, const QString& equation, double x0, double x1, int nx);
@@ -40,7 +42,7 @@ class KST_EXPORT KstEquation : public KstDataObject {
     void attach();
     UpdateType update(int update_counter = -1);
 
-    void save(QTextStream &ts, const QString& indent = QString::null);
+    void save(QXmlStreamWriter &s);
     QString propertyString() const;
 
     /** equations used to edit the vector */
