@@ -19,15 +19,16 @@
 #include <qtextstream.h>
 #include <QXmlStreamWriter>
 
-KstSVector::KstSVector(const QString &tag, const QByteArray &data, double x0, double x1, int n) : KstVector(tag, data) {
+KstSVector::KstSVector(const QString &tag, const QByteArray &data, double x0, double x1, int n)
+  : KstVector(tag, data) {
   _saveable = true;
   _saveData = false;
   changeRange( x0,  x1,  n );
 }
 
 
-KstSVector::KstSVector(double x0, double x1, int n, KstObjectTag tag) :
-    KstVector(tag, n) {
+KstSVector::KstSVector(double x0, double x1, int n, KstObjectTag tag)
+  : KstVector(tag, n) {
   _saveable = true;
   _saveData = false;
   changeRange( x0, x1, n );

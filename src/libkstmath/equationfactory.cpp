@@ -28,7 +28,7 @@ EquationFactory::~EquationFactory() {
 
 
 KstDataObjectPtr EquationFactory::generateObject(QXmlStreamReader& xml) {
-  QString eq, name, xVector, output;
+  QString tag, expression, xVector, output;
   bool interpolate = false;
 
   while (!xml.atEnd()) {
@@ -36,7 +36,8 @@ KstDataObjectPtr EquationFactory::generateObject(QXmlStreamReader& xml) {
     if (xml.isStartElement()) {
       if (n == "equation") {
         QXmlStreamAttributes attrs = xml.attributes();
-        name = attrs.value("name").toString();
+        tag = attrs.value("tag").toString();
+        expression = attrs.value("expression").toString();
         interpolate = attrs.value("interpolate").toString().toLower() == "true";
         xVector = attrs.value("xvector").toString();
         output = attrs.value("output").toString();
@@ -61,10 +62,17 @@ KstDataObjectPtr EquationFactory::generateObject(QXmlStreamReader& xml) {
     return 0;
   }
 
-  //FIXME verify this works when we get real vectors loading
-  KstVectorPtr vector = KST::vectorList.retrieveObject(QStringList(xVector));
+  KstVectorPtr vector = 0;
+  if (!xVector.isEmpty()) {
+    vector = *KST::vectorList.findTag(xVector);
+  }
 
-  KstEquationPtr ep = new KstEquation(name, eq, vector, interpolate);
+  if (!vector) {
+    KstDebug::self()->log(QObject::tr("Error creating equation from Kst file.  Could not find xVector."), KstDebug::Warning);
+    return 0;
+  }
+
+  KstEquationPtr ep = new KstEquation(tag, expression, vector, interpolate);
   return ep.data();
 }
 
