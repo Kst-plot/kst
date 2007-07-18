@@ -9,38 +9,48 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstapplication.h"
-#include "qgetoptions.h"
+#ifndef QGETOPTIONS_H
+#define QGETOPTIONS_H
 
-KstApplication::KstApplication(int &argc, char **argv)
-    : QApplication(argc, argv) {
+#include <QVariant>
+#include <QHash>
+#include <QStringList>
 
-  QCoreApplication::setApplicationName("Kst");
+class QOption {
+  public:
+    enum Type { Argument, Switch, Option };
 
-  _mainWindow = new Kst::MainWindow;
-  connect(this, SIGNAL(aboutToQuit()), _mainWindow, SLOT(aboutToQuit()));
+    QOption();
+    QOption(const QString &name, Type type, QVariant *value);
 
-  QGetOptions options;
+    QString name() const;
+    Type type() const;
+    QVariant *value() const;
 
-  QVariant file;
-  options.addOption("file", QOption::Argument, &file);
+  private:
+    QString _name;
+    Type _type;
+    QVariant *_value;
+};
 
-  options.getValues();
+class QGetOptions
+{
+  public:
+    QGetOptions();
+    ~QGetOptions();
 
-  if (!file.toString().isEmpty())
-    _mainWindow->openFile(file.toString());
+    void addOption(const QString &name, QOption::Type type, QVariant *value);
+    void getValues();
+    void usage() const;
 
-  _mainWindow->show();
-}
+  private:
+    bool getNextValue(const QString &argument);
 
+    QHash<QString, QOption> _arguments;
+    QHash<QString, QOption> _switches;
+    QHash<QString, QOption> _options;
+};
 
-KstApplication::~KstApplication() {
-  delete _mainWindow;
-}
-
-
-Kst::MainWindow *KstApplication::mainWindow() const {
-  return _mainWindow;
-}
+#endif
 
 // vim: ts=2 sw=2 et

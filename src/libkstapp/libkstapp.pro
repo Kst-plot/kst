@@ -50,7 +50,8 @@ SOURCES += \
     viewitemdialog.cpp \
     axis.cpp \
     plotrenderer2d.cpp \
-    render2dcartesian.cpp
+    render2dcartesian.cpp \
+    qgetoptions.cpp
 
 HEADERS += \
     applicationsettings.h \
@@ -85,7 +86,8 @@ HEADERS += \
     viewcommand.h \
     view.h \
     viewitemdialog.h \
-    viewitem.h
+    viewitem.h \
+    qgetoptions.h
 
 FORMS += \
     datamanager.ui \
