@@ -120,6 +120,9 @@ KstObject::UpdateType KstScalar::update(int updateCounter) {
 
 
 void KstScalar::save(QXmlStreamWriter &s) {
+  if (provider()) {
+    return;
+  }
   s.writeStartElement("scalar");
   s.writeAttribute("tag", tag().tagString());
   if (_orphan) {

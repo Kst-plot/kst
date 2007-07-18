@@ -581,6 +581,9 @@ KstObject::UpdateType KstVector::internalUpdate(KstObject::UpdateType providerRC
 
 
 void KstVector::save(QXmlStreamWriter &s) {
+  if (provider()) {
+    return;
+  }
   s.writeStartElement("vector");
   s.writeAttribute("tag", tag().tagString());
   if (_saveData) {
