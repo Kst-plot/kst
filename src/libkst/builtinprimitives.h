@@ -9,15 +9,17 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "builtinobjects.h"
-#include "kstequation.h"
+#ifndef BUILTINPRIMITIVES_H
+#define BUILTINPRIMITIVES_H
+
+#include "kst_export.h"
 
 namespace Kst {
   namespace Builtins {
-    void initObjects() {
-      new EquationObjectFactory;
-    }
+    KST_EXPORT void initPrimitives();
   }
 }
+
+#endif
 
 // vim: ts=2 sw=2 et

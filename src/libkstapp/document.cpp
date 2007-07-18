@@ -174,8 +174,14 @@ bool Document::open(const QString& file) {
       } else {
         switch (state) {
           case Objects:
-            ObjectFactory::parse(xml);
-            break;
+            {
+              KstDataObjectPtr object = ObjectFactory::parse(xml);
+              if (object)
+                KST::addDataObjectToList(object);
+              else
+                malformed();
+              break;
+            }
           case Graphics:
             {
               if (n == "view") {

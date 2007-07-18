@@ -9,13 +9,11 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "builtinobjects.h"
-#include "kstequation.h"
+#include "builtinprimitives.h"
 
 namespace Kst {
   namespace Builtins {
-    void initObjects() {
-      new EquationObjectFactory;
+    void initPrimitives() {
     }
   }
 }

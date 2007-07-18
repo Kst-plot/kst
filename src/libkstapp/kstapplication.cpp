@@ -12,10 +12,18 @@
 #include "kstapplication.h"
 #include "qgetoptions.h"
 
+#include "builtinprimitives.h"
+#include "builtinobjects.h"
+#include "builtingraphics.h"
+
 KstApplication::KstApplication(int &argc, char **argv)
     : QApplication(argc, argv) {
 
   QCoreApplication::setApplicationName("Kst");
+
+  Kst::Builtins::initPrimitives(); //libkst
+  Kst::Builtins::initObjects();    //libkstmath
+  Kst::Builtins::initGraphics();   //libkstapp
 
   _mainWindow = new Kst::MainWindow;
   connect(this, SIGNAL(aboutToQuit()), _mainWindow, SLOT(aboutToQuit()));

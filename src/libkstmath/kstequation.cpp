@@ -585,7 +585,9 @@ KstDataObjectPtr EquationObjectFactory::generateObject(QXmlStreamReader& xml) {
         interpolate = attrs.value("interpolate").toString().toLower() == "true";
         xVector = attrs.value("xvector").toString();
         output = attrs.value("output").toString();
-        eq = xml.readElementText();
+        //FIXME Don't know if this is a bug in QXmlStreamReader or what, but readElementNext takes us
+        //past the </equation> node to the </objects> node...
+        //eq = xml.readElementText();
       } else {
         return 0;
       }
@@ -604,7 +606,10 @@ KstDataObjectPtr EquationObjectFactory::generateObject(QXmlStreamReader& xml) {
     return 0;
   }
 
-  KstEquationPtr ep = 0; //new KstEquation(name, eq, xVector, interpolate);
+  //FIXME verify this works when we get real vectors loading
+  KstVectorPtr vector = KST::vectorList.retrieveObject(QStringList(xVector));
+
+  KstEquationPtr ep = new KstEquation(name, eq, vector, interpolate);
   return ep.data();
 }
 
