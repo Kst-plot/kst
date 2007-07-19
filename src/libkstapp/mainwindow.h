@@ -29,6 +29,7 @@ class ExportGraphicsDialog;
 class TabWidget;
 class VectorEditorDialog;
 class View;
+class ViewManager;
 
 class MainWindow : public QMainWindow
 {
@@ -47,6 +48,7 @@ class MainWindow : public QMainWindow
     void showDebugDialog();
     void showExportGraphicsDialog();
     void showVectorEditor();
+    void showViewManager();
 
     void save();
     void saveAs();
@@ -59,13 +61,13 @@ class MainWindow : public QMainWindow
     void about();
     void currentViewChanged();
 
-    void createLabel();
     void createBox();
     void createEllipse();
+    void createLabel();
     void createLine();
     void createPicture();
-    void createSvg();
     void createPlot();
+    void createSvg();
 
     void demoModel();
 
@@ -78,8 +80,8 @@ class MainWindow : public QMainWindow
   private:
     void createActions();
     void createMenus();
-    void createToolBars();
     void createStatusBar();
+    void createToolBars();
 
     void readSettings();
     void writeSettings();
@@ -94,6 +96,7 @@ class MainWindow : public QMainWindow
     DebugDialog *_debugDialog;
     ExportGraphicsDialog *_exportGraphics;
     VectorEditorDialog *_vectorEditor;
+    ViewManager *_viewManager;
 
     QPointer<QProgressBar> _progressBar;
 
@@ -121,18 +124,19 @@ class MainWindow : public QMainWindow
     QAction *_createPlotAct;
     QAction *_createSvgAct;
 
+    QAction *_aboutAct;
+    QAction *_closeTabAct;
+    QAction *_dataManagerAct;
+    QAction *_debugDialogAct;
+    QAction *_exitAct;
+    QAction *_exportGraphicsAct;
     QAction *_newTabAct;
-    QAction *_saveAct;
-    QAction *_saveAsAct;
     QAction *_openAct;
     QAction *_printAct;
-    QAction *_closeTabAct;
-    QAction *_exitAct;
-    QAction *_dataManagerAct;
+    QAction *_saveAct;
+    QAction *_saveAsAct;
     QAction *_vectorEditorAct;
-    QAction *_exportGraphicsAct;
-    QAction *_debugDialogAct;
-    QAction *_aboutAct;
+    QAction *_viewManagerAct;
 };
 
 }

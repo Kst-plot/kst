@@ -26,8 +26,10 @@
 #include "plotitem.h"
 #include "svgitem.h"
 #include "tabwidget.h"
+#include "ui_aboutdialog.h"
 #include "vectoreditordialog.h"
 #include "view.h"
+#include "viewmanager.h"
 
 #include <QtGui>
 
@@ -71,6 +73,8 @@ MainWindow::~MainWindow() {
   _vectorEditor = 0;
   delete _dataManager;
   _dataManager = 0;
+  delete _viewManager;
+  _viewManager = 0;
   delete _doc;
   _doc = 0;
 }
@@ -232,8 +236,30 @@ void MainWindow::aboutToQuit() {
 
 
 void MainWindow::about() {
-  //FIXME Build a proper about box...
-  QMessageBox::about(this, tr("About Kst"), tr("FIXME."));
+  QDialog dlg;
+  Ui::AboutDialog ui;
+  ui.setupUi(&dlg);
+  // Sorted alphabetically, first group is 2.0 contributors
+  const QString msg = tr(
+  "<qt><h2>Kst 2.0 - A data viewing program.</h2>\n<hr>\n"
+  "Copyright &copy; 2000-2007 Barth Netterfield<br>"
+  "<a href=\"http://kst.kde.org/\">http://kst.kde.org/</a><br>"
+  "Please report bugs to: <a href=\"http://bugs.kde.org/\">http://bugs.kde.org/</a><br>"
+  "Authors:<ul>"
+  "<li>Barth Netterfield</li>"
+  "<li><a href=\"http://www.staikos.net/\">Staikos Computing Services Inc.</a></li>"
+  "<li>Ted Kisner</li>"
+  "<li>The University of Toronto</li>"
+  "</ul><ul>"
+  "<li>Matthew Truch</li>"
+  "<li>Nicolas Brisset</li>"
+  "<li>Rick Chern</li>"
+  "<li>Sumus Technology Limited</li>"
+  "<li>The University of British Columbia</li>"
+  "</ul>"
+  );
+  ui.text->setText(msg);
+  dlg.exec();
 }
 
 
@@ -379,6 +405,11 @@ void MainWindow::createActions() {
   _dataManagerAct->setIcon(QPixmap(":kst_datamanager.png"));
   connect(_dataManagerAct, SIGNAL(triggered()), this, SLOT(showDataManager()));
 
+  _viewManagerAct = new QAction(tr("View &Manager..."), this);
+  _viewManagerAct->setStatusTip(tr("Show Kst's view manager window"));
+  _viewManagerAct->setIcon(QPixmap(":kst_viewmanager.png"));
+  connect(_viewManagerAct, SIGNAL(triggered()), this, SLOT(showViewManager()));
+
   _vectorEditorAct = new QAction(tr("&Vectors..."), this);
   _vectorEditorAct->setStatusTip(tr("Show all vectors in a spreadsheet"));
   connect(_vectorEditorAct, SIGNAL(triggered()), this, SLOT(showVectorEditor()));
@@ -419,6 +450,7 @@ void MainWindow::createMenus() {
   _dataMenu->addAction(_vectorEditorAct);
 
   _plotMenu = menuBar()->addMenu(tr("&Plot"));
+  _plotMenu->addAction(_viewManagerAct);
   _plotMenu->addAction(_createLabelAct);
   _plotMenu->addAction(_createBoxAct);
   _plotMenu->addAction(_createEllipseAct);
@@ -450,6 +482,7 @@ void MainWindow::createToolBars() {
 
   // Hook up the kst toolbar
   _kstToolBar->addAction(_dataManagerAct);
+  _kstToolBar->addAction(_viewManagerAct);
 }
 
 
@@ -478,6 +511,14 @@ void MainWindow::showDataManager() {
     _dataManager = new DataManager(this, _doc);
   }
   _dataManager->show();
+}
+
+
+void MainWindow::showViewManager() {
+  if (!_viewManager) {
+    _viewManager = new ViewManager(this);
+  }
+  _viewManager->show();
 }
 
 

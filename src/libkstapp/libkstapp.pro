@@ -20,6 +20,7 @@ LIBS += -lkst -lkstmath -lkstwidgets
 
 SOURCES += \
     applicationsettings.cpp \
+    axis.cpp \
     boxitem.cpp \
     builtingraphics.cpp \
     datamanager.cpp \
@@ -38,6 +39,9 @@ SOURCES += \
     memorywidget.cpp \
     pictureitem.cpp \
     plotitem.cpp \
+    plotrenderer2d.cpp \
+    qgetoptions.cpp \
+    render2dcartesian.cpp \
     sessionmodel.cpp \
     svgitem.cpp \
     tabwidget.cpp \
@@ -48,10 +52,7 @@ SOURCES += \
     view.cpp \
     viewitem.cpp \
     viewitemdialog.cpp \
-    axis.cpp \
-    plotrenderer2d.cpp \
-    render2dcartesian.cpp \
-    qgetoptions.cpp
+    viewmanager.cpp
 
 HEADERS += \
     applicationsettings.h \
@@ -76,6 +77,7 @@ HEADERS += \
     pictureitem.h \
     plotitem.h \
     plotrenderer2d.h \
+    qgetoptions.h \
     render2dcartesian.h \
     sessionmodel.h \
     svgitem.h \
@@ -87,10 +89,13 @@ HEADERS += \
     view.h \
     viewitemdialog.h \
     viewitem.h \
-    qgetoptions.h
+    viewmanager.h
 
 FORMS += \
+    aboutdialog.ui \
     datamanager.ui \
     debugdialog.ui \
     exportgraphicsdialog.ui \
-    vectoreditordialog.ui
+    vectoreditordialog.ui \
+    viewmanager.ui
+
