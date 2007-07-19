@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.45"
+   sodipodi:docbase="/data/home/cbn/notes/kst/kst"
+   sodipodi:docname="SinglePlotGeometry.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/data/home/cbn/notes/kst/kst/SinglePlotGeometry.png"
+   inkscape:export-xdpi="150"
+   inkscape:export-ydpi="150"
+   sodipodi:modified="TRUE">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow2Mend"
+       style="overflow:visible;">
+      <path
+         id="path10202"
+         style="font-size:12.0;fill-rule:evenodd;stroke-width:0.62500000;stroke-linejoin:round;"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         transform="scale(0.6) rotate(180) translate(0,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4"
+     inkscape:cx="367.85714"
+     inkscape:cy="719.03608"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:window-width="1280"
+     inkscape:window-height="717"
+     inkscape:window-x="0"
+     inkscape:window-y="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:0;fill-rule:evenodd;stroke:#b10000;stroke-width:3;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect2170"
+       width="310"
+       height="250"
+       x="181.5"
+       y="130.86218" />
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:0;fill-rule:evenodd;stroke:#00008c;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:9,3;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect2174"
+       width="230.78276"
+       height="172.12135"
+       x="221.5"
+       y="170.86218" />
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif"
+       x="45.736328"
+       y="185.47937"
+       id="text5127"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan10294"
+         x="45.736328"
+         y="185.47937">ViewObject points </tspan><tspan
+         sodipodi:role="line"
+         id="tspan10296"
+         x="45.736328"
+         y="200.47937">inside the plot</tspan><tspan
+         sodipodi:role="line"
+         id="tspan10298"
+         x="45.736328"
+         y="215.47937">rect are placed</tspan><tspan
+         sodipodi:role="line"
+         id="tspan10300"
+         x="45.736328"
+         y="230.47937">relative to the</tspan><tspan
+         sodipodi:role="line"
+         id="tspan10302"
+         x="45.736328"
+         y="245.47937">plot rect.</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif"
+       x="29.050781"
+       y="462.49304"
+       id="text6100"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan10741"
+         x="29.050781"
+         y="462.49304">Multiple Plots can share the same Outer Box.</tspan><tspan
+         sodipodi:role="line"
+         id="tspan10743"
+         x="29.050781"
+         y="477.49304"> -The PlotRects must all adjust to be the same size. </tspan><tspan
+         sodipodi:role="line"
+         id="tspan10745"
+         x="29.050781"
+         y="492.49304"> -The first plot in the list that has use for it gets the Left and Bottom label regions.</tspan><tspan
+         sodipodi:role="line"
+         id="tspan10747"
+         x="29.050781"
+         y="507.49304"> -The second gets the right and top label regions.</tspan><tspan
+         sodipodi:role="line"
+         id="tspan10749"
+         x="29.050781"
+         y="522.49304"> -All subsequent plots don't get Label regions.</tspan><tspan
+         sodipodi:role="line"
+         id="tspan10751"
+         x="29.050781"
+         y="537.49304"> -All plots may put axis lines and labels inside the Plot Region.</tspan><tspan
+         sodipodi:role="line"
+         id="tspan10753"
+         x="29.050781"
+         y="552.49304"> -The axis lines and labels for all plots get printed on the bottom layer; the lines and matrixes get plotted above</tspan><tspan
+         sodipodi:role="line"
+         id="tspan10755"
+         x="29.050781"
+         y="567.49304">them (in order) and the child ViewObjects get plotted on top.</tspan><tspan
+         sodipodi:role="line"
+         id="tspan10757"
+         x="29.050781"
+         y="582.49304"> -normally, zoom rects get interpreted by each plot separately. However, a UI must be </tspan><tspan
+         sodipodi:role="line"
+         id="tspan10759"
+         x="29.050781"
+         y="597.49304">provided to allow zooming of only one of the plots.</tspan><tspan
+         sodipodi:role="line"
+         id="tspan10761"
+         x="29.050781"
+         y="612.49304" /><tspan
+         sodipodi:role="line"
+         id="tspan10763"
+         x="29.050781"
+         y="627.49304" /><tspan
+         sodipodi:role="line"
+         id="tspan10765"
+         x="29.050781"
+         y="642.49304">Potential Simplification:</tspan><tspan
+         sodipodi:role="line"
+         id="tspan10767"
+         x="29.050781"
+         y="657.49304">Allow at most 2 plots to share the same outer box:</tspan><tspan
+         sodipodi:role="line"
+         id="tspan10769"
+         x="29.050781"
+         y="672.49304">   -Would this be easier (including UI)?</tspan><tspan
+         sodipodi:role="line"
+         id="tspan10771"
+         x="29.050781"
+         y="687.49304">   -Is there a use case to argue against it?</tspan></text>
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:1,1;stroke-dashoffset:0"
+       d="M 220,262.36218 C 250,262.36218 290,332.36218 290,342.36218"
+       id="path6124" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:1,1;stroke-dashoffset:0"
+       d="M 221.25058,182.98284 C 271.88976,189.23573 377.82171,308.40095 380,342.36218"
+       id="path6126"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:1,1;stroke-dashoffset:0"
+       d="M 340,172.36218 C 371.8805,180.49094 451.87587,282.98747 451.87587,312.98747"
+       id="path6128"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#a10606;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       d="M 220,312.36218 C 302.51968,312.36218 319.73422,281.77709 337.50347,242.9921 C 353.64603,207.75772 391.87587,186.10928 451.87587,191.73689"
+       id="path7099"
+       sodipodi:nodetypes="csc" />
+    <rect
+       style="opacity:1;fill:#eee5e5;fill-opacity:1;fill-rule:evenodd;stroke:#0ea106;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8074"
+       width="48.893005"
+       height="38.994911"
+       x="260"
+       y="192.36218" />
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif"
+       x="269.4375"
+       y="122.19226"
+       id="text9061"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan10318"
+         x="269.4375"
+         y="122.19226">Plot Rect</tspan></text>
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#Arrow2Mend);stroke-opacity:1"
+       d="M 268.00927,124.21952 L 241.75174,168.61044"
+       id="path9067"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#Arrow2Mend);stroke-opacity:1"
+       d="M 159.8773,186.90113 L 255.73384,194.0324"
+       id="path10236"
+       sodipodi:nodetypes="cc" />
+    <rect
+       style="opacity:1;fill:#eee5e5;fill-opacity:1;fill-rule:evenodd;stroke:#0ea106;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect10246"
+       width="40"
+       height="20"
+       x="410"
+       y="142.36218" />
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif"
+       x="500.73392"
+       y="142.04773"
+       id="text10248"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan10304"
+         x="500.73392"
+         y="142.04773">ViewObject points </tspan><tspan
+         sodipodi:role="line"
+         id="tspan10306"
+         x="500.73392"
+         y="157.04773">outside the plot</tspan><tspan
+         sodipodi:role="line"
+         id="tspan10308"
+         x="500.73392"
+         y="172.04773">rect are placed</tspan><tspan
+         sodipodi:role="line"
+         id="tspan10310"
+         x="500.73392"
+         y="187.04773">relative to the</tspan><tspan
+         sodipodi:role="line"
+         id="tspan10312"
+         x="500.73392"
+         y="202.04773">Outer Box.</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif"
+       x="52.519531"
+       y="155.11023"
+       id="text10274"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan10316"
+         x="52.519531"
+         y="155.11023">Outer Box</tspan></text>
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#Arrow2Mend);stroke-opacity:1"
+       d="M 123.79313,152.75404 L 176.32208,160.25288"
+       id="path10280"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#Arrow2Mend);stroke-opacity:1"
+       d="M 497.09096,154.6438 L 453.95061,144.63453"
+       id="path10282"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="250.74107"
+       y="363.29318"
+       id="text10320"><tspan
+         sodipodi:role="line"
+         id="tspan10322"
+         x="250.74107"
+         y="363.29318" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif"
+       x="254.07031"
+       y="363.69617"
+       id="text10324"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan10376"
+         x="254.07031"
+         y="363.69617">Bottom Axis Label region</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif"
+       x="27.882812"
+       y="317.26843"
+       id="text10338"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan10348"
+         x="27.882812"
+         y="317.26843">Some projections</tspan><tspan
+         sodipodi:role="line"
+         id="tspan10350"
+         x="27.882812"
+         y="332.26843">may put axis lines </tspan><tspan
+         sodipodi:role="line"
+         id="tspan10352"
+         x="27.882812"
+         y="347.26843">and labels inside </tspan><tspan
+         sodipodi:role="line"
+         id="tspan10354"
+         x="27.882812"
+         y="362.26843">the Plot Rect</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:10.99999142px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="357.04694"
+       y="33.964455"
+       id="text10356"
+       sodipodi:linespacing="125%"
+       transform="matrix(0.7392647,0.6734149,-0.6734149,0.7392647,0,0)"><tspan
+         sodipodi:role="line"
+         id="tspan10360"
+         x="357.04694"
+         y="33.964455">-10.0</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:10.99999142px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="413.96249"
+       y="-233.04463"
+       id="text10362"
+       sodipodi:linespacing="125%"
+       transform="matrix(0.5162346,0.8564472,-0.8564472,0.5162346,0,0)"><tspan
+         sodipodi:role="line"
+         id="tspan10366"
+         x="413.96249"
+         y="-233.04463">10.0</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:10.99999046px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="419.3576"
+       y="-78.531532"
+       id="text10368"
+       sodipodi:linespacing="125%"
+       transform="matrix(0.6580252,0.7529959,-0.7529959,0.6580252,0,0)"
+       inkscape:transform-center-x="32.448452"
+       inkscape:transform-center-y="37.513279"><tspan
+         sodipodi:role="line"
+         id="tspan10372"
+         x="419.3576"
+         y="-78.531532">0.0</tspan></text>
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#Arrow2Mend);stroke-opacity:1"
+       d="M 143.0596,317.68177 L 238.38448,274.45474"
+       id="path10374"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif"
+       x="264.20337"
+       y="158.17323"
+       id="text10378"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan10382"
+         x="264.20337"
+         y="158.17323">Top Axis Label region</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif"
+       x="178.28575"
+       y="-465.43866"
+       id="text10384"
+       sodipodi:linespacing="125%"
+       transform="matrix(-9.0397505e-3,0.9999591,-0.9999591,-9.0397505e-3,0,0)"><tspan
+         sodipodi:role="line"
+         id="tspan10388"
+         x="178.28575"
+         y="-465.43866">Right Axis Label region</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:11.99997044px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif"
+       x="189.67784"
+       y="-200.12321"
+       id="text10390"
+       sodipodi:linespacing="125%"
+       transform="matrix(-9.0397629e-3,0.9999591,-0.9999591,-9.0397629e-3,0,0)"><tspan
+         sodipodi:role="line"
+         id="tspan10394"
+         x="189.67784"
+         y="-200.12321">Left Axis Label region</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif"
+       x="509.88281"
+       y="267.69617"
+       id="text10551"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan10773"
+         x="509.88281"
+         y="267.69617">Font sizes and line widths are </tspan><tspan
+         sodipodi:role="line"
+         id="tspan10775"
+         x="509.88281"
+         y="282.69617">caculated based on the width </tspan><tspan
+         sodipodi:role="line"
+         id="tspan10777"
+         x="509.88281"
+         y="297.69617">and height of the Plot Region, </tspan><tspan
+         sodipodi:role="line"
+         id="tspan10779"
+         x="509.88281"
+         y="312.69617">not the Outer Box. The sizes </tspan><tspan
+         sodipodi:role="line"
+         id="tspan10781"
+         x="509.88281"
+         y="327.69617">are calculated in double </tspan><tspan
+         sodipodi:role="line"
+         id="tspan10783"
+         x="509.88281"
+         y="342.69617">precision, allowing for the </tspan><tspan
+         sodipodi:role="line"
+         id="tspan10785"
+         x="509.88281"
+         y="357.69617">desired sizes to be determined </tspan><tspan
+         sodipodi:role="line"
+         id="tspan10787"
+         x="509.88281"
+         y="372.69617">without regenerating the labels.  </tspan><tspan
+         sodipodi:role="line"
+         id="tspan10789"
+         x="509.88281"
+         y="387.69617" /><tspan
+         sodipodi:role="line"
+         id="tspan10791"
+         x="509.88281"
+         y="402.69617">All dimensions saved in a plot </tspan><tspan
+         sodipodi:role="line"
+         id="tspan10793"
+         x="509.88281"
+         y="417.69617">are unitless and double precision.  </tspan><tspan
+         sodipodi:role="line"
+         id="tspan10795"
+         x="509.88281"
+         y="432.69617">No reference may be made to </tspan><tspan
+         sodipodi:role="line"
+         id="tspan10797"
+         x="509.88281"
+         y="447.69617">the number of pixels.</tspan><tspan
+         sodipodi:role="line"
+         id="tspan10799"
+         x="509.88281"
+         y="462.69617" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif"
+       x="149"
+       y="53.933609"
+       id="text10611"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan10613"
+         x="149"
+         y="53.933609">Single Plot Geometry</tspan></text>
+  </g>
+</svg>

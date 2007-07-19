@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.45"
+   sodipodi:docbase="/data/home/cbn/notes/kst/kst"
+   sodipodi:docname="MultiShared.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/data/home/cbn/notes/kst/kst/MultiShared.png"
+   inkscape:export-xdpi="150"
+   inkscape:export-ydpi="150"
+   sodipodi:modified="TRUE">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="TriangleOutM"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="TriangleOutM"
+       style="overflow:visible">
+      <path
+         id="path10128"
+         d="M 5.77,0.0 L -2.88,5.0 L -2.88,-5.0 L 5.77,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none"
+         transform="scale(0.4)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow2Mend"
+       style="overflow:visible;">
+      <path
+         id="path10202"
+         style="font-size:12.0;fill-rule:evenodd;stroke-width:0.62500000;stroke-linejoin:round;"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         transform="scale(0.6) rotate(180) translate(0,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4"
+     inkscape:cx="389.79702"
+     inkscape:cy="689.77494"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:window-width="1280"
+     inkscape:window-height="717"
+     inkscape:window-x="1365"
+     inkscape:window-y="33" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:0;fill-rule:evenodd;stroke:#b10000;stroke-width:3;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect3271"
+       width="290"
+       height="210"
+       x="40"
+       y="482.36218" />
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:0;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect3259"
+       width="240"
+       height="170"
+       x="80"
+       y="482.36218" />
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:0;fill-rule:evenodd;stroke:#b10000;stroke-width:3;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect2170"
+       width="290"
+       height="190"
+       x="40"
+       y="122.36218" />
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:0;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect2174"
+       width="240"
+       height="170"
+       x="80"
+       y="142.36218" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#a10606;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 83,280.24082 C 165.51968,280.24082 182.73422,249.65573 200.50347,210.87074 C 216.64603,175.63636 257.73301,153.98792 317.73301,159.61553"
+       id="path7099"
+       sodipodi:nodetypes="csc" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="250.74107"
+       y="363.29318"
+       id="text10320"><tspan
+         sodipodi:role="line"
+         id="tspan10322"
+         x="250.74107"
+         y="363.29318" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif"
+       x="49.753906"
+       y="53.475464"
+       id="text10611"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan2263"
+         x="49.753906"
+         y="53.475464">Plot Geometry with shared Axis.</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif"
+       x="-280.09186"
+       y="56.056347"
+       id="text10901"
+       sodipodi:linespacing="125%"
+       transform="matrix(-2.4149982e-3,-0.9999971,0.9999971,-2.4149982e-3,0,0)"><tspan
+         sodipodi:role="line"
+         id="tspan10905"
+         x="-280.09186"
+         y="56.056347">Requires Large </tspan><tspan
+         sodipodi:role="line"
+         id="tspan10907"
+         x="-280.09186"
+         y="73.556347">Label Region</tspan></text>
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:0;fill-rule:evenodd;stroke:#b10000;stroke-width:3;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect13035"
+       width="290"
+       height="170"
+       x="40"
+       y="312.36218" />
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:0;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect13037"
+       width="240"
+       height="170"
+       x="80"
+       y="312.36218" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#11a106;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 81.467964,356.79074 C 113.98764,341.07646 175.31453,353.14944 202.54286,385.99209 C 220.11399,407.18628 266.20097,461.25212 318.34383,449.02259"
+       id="path13045"
+       sodipodi:nodetypes="csc" />
+    <text
+       xml:space="preserve"
+       style="font-size:8px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif"
+       x="-448.73178"
+       y="65.279419"
+       id="text13133"
+       sodipodi:linespacing="125%"
+       transform="matrix(-2.4149982e-3,-0.9999971,0.9999971,-2.4149982e-3,0,0)"><tspan
+         sodipodi:role="line"
+         id="tspan13135"
+         x="-448.73178"
+         y="65.279419">Requires small Label Region</tspan></text>
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#061ca1;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 79.967959,528.29076 C 112.48764,512.57648 155.81229,626.01471 198.18572,621.06354 C 230.75685,617.25773 257.55811,503.46643 318.98669,505.52261"
+       id="path3261"
+       sodipodi:nodetypes="csc" />
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif"
+       x="368.14285"
+       y="132.79074"
+       id="text3273"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan2217"
+         x="368.14285"
+         y="132.79074">When the following conditions are true, plots will share </tspan><tspan
+         sodipodi:role="line"
+         id="tspan2219"
+         x="368.14285"
+         y="144.79074">their  X axis as shown to the left.</tspan><tspan
+         sodipodi:role="line"
+         id="tspan2221"
+         x="368.14285"
+         y="156.79074" /><tspan
+         sodipodi:role="line"
+         id="tspan2223"
+         x="368.14285"
+         y="168.79074">A) Tied Zoom condition:</tspan><tspan
+         sodipodi:role="line"
+         id="tspan2225"
+         x="368.14285"
+         y="180.79074">   -The plot zooms are tied</tspan><tspan
+         sodipodi:role="line"
+         id="tspan2227"
+         x="368.14285"
+         y="192.79074">   -The plots are aligned in a column</tspan><tspan
+         sodipodi:role="line"
+         id="tspan2229"
+         x="368.14285"
+         y="204.79074">   -The X axis range is the same</tspan><tspan
+         sodipodi:role="line"
+         id="tspan2231"
+         x="368.14285"
+         y="216.79074" /><tspan
+         sodipodi:role="line"
+         id="tspan2233"
+         x="368.14285"
+         y="228.79074">B) Parent option Condition:</tspan><tspan
+         sodipodi:role="line"
+         id="tspan2235"
+         x="368.14285"
+         y="240.79074">   -The parent of the plots  (eg, a group) has </tspan><tspan
+         sodipodi:role="line"
+         id="tspan2237"
+         x="368.14285"
+         y="252.79074">    'Share axis when possible' set</tspan><tspan
+         sodipodi:role="line"
+         id="tspan2239"
+         x="368.14285"
+         y="264.79074">   -The plots are aligned in a column</tspan><tspan
+         sodipodi:role="line"
+         id="tspan2241"
+         x="368.14285"
+         y="276.79074">   -The X axis range is the same</tspan><tspan
+         sodipodi:role="line"
+         id="tspan2243"
+         x="368.14285"
+         y="288.79074" /><tspan
+         sodipodi:role="line"
+         id="tspan2245"
+         x="368.14285"
+         y="300.79074">When plots are sharing their X axis: </tspan><tspan
+         sodipodi:role="line"
+         id="tspan2247"
+         x="368.14285"
+         y="312.79074">   -the top and bottom label regions of the intermediate </tspan><tspan
+         sodipodi:role="line"
+         id="tspan2249"
+         x="368.14285"
+         y="324.79074">    plots are suppressed.</tspan><tspan
+         sodipodi:role="line"
+         id="tspan2251"
+         x="368.14285"
+         y="336.79074">   -The intermediate plots share axis lines</tspan><tspan
+         sodipodi:role="line"
+         id="tspan2253"
+         x="368.14285"
+         y="348.79074">   -Tick marks are still present</tspan><tspan
+         sodipodi:role="line"
+         id="tspan2255"
+         x="368.14285"
+         y="360.79074">   -The outer boxes of the plots are adjusted within the</tspan><tspan
+         sodipodi:role="line"
+         id="tspan2257"
+         x="368.14285"
+         y="372.79074">    column to maintain a constant Plot Region size.  This is</tspan><tspan
+         sodipodi:role="line"
+         id="tspan2259"
+         x="368.14285"
+         y="384.79074">    dynamic on resize.</tspan><tspan
+         sodipodi:role="line"
+         id="tspan2261"
+         x="368.14285"
+         y="396.79074" /><tspan
+         sodipodi:role="line"
+         id="tspan2264"
+         x="368.14285"
+         y="408.79074">If the conditions are only met for part of the column, then</tspan><tspan
+         sodipodi:role="line"
+         id="tspan2266"
+         x="368.14285"
+         y="420.79074">the only plots which meet the condition still have their </tspan><tspan
+         sodipodi:role="line"
+         id="tspan2268"
+         x="368.14285"
+         y="432.79074">zooms tied.</tspan><tspan
+         sodipodi:role="line"
+         id="tspan2270"
+         x="368.14285"
+         y="444.79074" /><tspan
+         sodipodi:role="line"
+         id="tspan2272"
+         x="368.14285"
+         y="456.79074">If the shared axis conditions cease to be met, the plots </tspan><tspan
+         sodipodi:role="line"
+         id="tspan2274"
+         x="368.14285"
+         y="468.79074">return to their original size and condition.</tspan><tspan
+         sodipodi:role="line"
+         id="tspan2276"
+         x="368.14285"
+         y="480.79074" /><tspan
+         sodipodi:role="line"
+         id="tspan2278"
+         x="368.14285"
+         y="492.79074">Analogous behaviour applies for Y axis sharing.</tspan><tspan
+         sodipodi:role="line"
+         x="368.14285"
+         y="504.79074"
+         id="tspan6200" /><tspan
+         sodipodi:role="line"
+         x="368.14285"
+         y="516.79074"
+         id="tspan6202" /><tspan
+         sodipodi:role="line"
+         x="368.14285"
+         y="528.81297"
+         id="tspan6204"><tspan
+   style="font-weight:bold"
+   id="tspan6210">Tolerances</tspan>:  Alignment needs to be within 1% of the size </tspan><tspan
+         sodipodi:role="line"
+         x="368.14285"
+         y="540.81297"
+         id="tspan6206">of the Top Level View to be considered aligned.</tspan><tspan
+         sodipodi:role="line"
+         x="368.14285"
+         y="552.81297"
+         id="tspan6208" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif"
+       x="-625.92279"
+       y="53.74601"
+       id="text3389"
+       sodipodi:linespacing="125%"
+       transform="matrix(-2.4149982e-3,-0.9999971,0.9999971,-2.4149982e-3,0,0)"><tspan
+         sodipodi:role="line"
+         id="tspan3391"
+         x="-625.92279"
+         y="53.74601">Requires Large </tspan><tspan
+         sodipodi:role="line"
+         id="tspan3393"
+         x="-625.92279"
+         y="71.24601">Label Region</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif"
+       x="138"
+       y="677.36218"
+       id="text3399"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan3401"
+         x="138"
+         y="677.36218">Label Region</tspan></text>
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 130,322.36218 L 130,302.36218"
+       id="path2280" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 180,322.36218 L 180,302.36218"
+       id="path2282" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 229.5,322.86218 L 229.5,302.86218"
+       id="path2284" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 279.5,322.86218 L 279.5,302.86218"
+       id="path2286" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 130,492.86218 L 130,472.86218"
+       id="path2288" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 180,492.86218 L 180,472.86218"
+       id="path2290" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 229.5,493.36218 L 229.5,473.36218"
+       id="path2292" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 279.5,493.36218 L 279.5,473.36218"
+       id="path2294" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 130,652.36218 L 130,642.36218"
+       id="path2296" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 180,652.36218 L 180,642.36218"
+       id="path2298" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 230,652.36218 L 230,642.36218"
+       id="path2300" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 280,652.36218 L 280,642.36218"
+       id="path2302" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 129.5,152.86218 L 129.5,142.86218"
+       id="path2304" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 179.5,152.86218 L 179.5,142.86218"
+       id="path2306" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 229.5,152.86218 L 229.5,142.86218"
+       id="path2308" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 279.5,152.86218 L 279.5,142.86218"
+       id="path2310" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#TriangleOutM)"
+       d="M 370,332.36218 L 310.71429,318.79075"
+       id="path5221"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-opacity:1"
+       d="M 377.07133,313.44058 L 334.21419,312.012"
+       id="path6192"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-opacity:1"
+       d="M 374.92847,344.15486 L 235.64276,318.44058"
+       id="path6194"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-opacity:1"
+       d="M 374.21418,362.7263 L 335.64276,379.86915"
+       id="path6196"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-opacity:1"
+       d="M 373.4999,367.01201 L 332.78562,555.58344"
+       id="path6198"
+       sodipodi:nodetypes="cc" />
+  </g>
+</svg>
