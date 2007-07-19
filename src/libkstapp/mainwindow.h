@@ -133,7 +133,6 @@ class MainWindow : public QMainWindow
     QAction *_exportGraphicsAct;
     QAction *_debugDialogAct;
     QAction *_aboutAct;
-    QAction *_aboutQtAct;
 };
 
 }

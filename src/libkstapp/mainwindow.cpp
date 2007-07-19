@@ -309,14 +309,17 @@ void MainWindow::createActions() {
 
   _createLabelAct = new QAction(tr("&Create label"), this);
   _createLabelAct->setStatusTip(tr("Create a label for the current view"));
+  _createLabelAct->setIcon(QPixmap(":kst_gfx_label.png"));
   connect(_createLabelAct, SIGNAL(triggered()), this, SLOT(createLabel()));
 
   _createBoxAct = new QAction(tr("&Create box"), this);
   _createBoxAct->setStatusTip(tr("Create a box for the current view"));
+  _createBoxAct->setIcon(QPixmap(":kst_gfx_rectangle.png"));
   connect(_createBoxAct, SIGNAL(triggered()), this, SLOT(createBox()));
 
   _createPictureAct = new QAction(tr("&Create picture"), this);
   _createPictureAct->setStatusTip(tr("Create a picture for the current view"));
+  _createPictureAct->setIcon(QPixmap(":kst_gfx_picture.png"));
   connect(_createPictureAct, SIGNAL(triggered()), this, SLOT(createPicture()));
 
   _createSvgAct = new QAction(tr("&Create svg"), this);
@@ -325,22 +328,27 @@ void MainWindow::createActions() {
 
   _createEllipseAct = new QAction(tr("&Create ellipse"), this);
   _createEllipseAct->setStatusTip(tr("Create an ellipse for the current view"));
+  _createEllipseAct->setIcon(QPixmap(":kst_gfx_ellipse.png"));
   connect(_createEllipseAct, SIGNAL(triggered()), this, SLOT(createEllipse()));
 
   _createLineAct = new QAction(tr("&Create line"), this);
   _createLineAct->setStatusTip(tr("Create a line for the current view"));
+  _createLineAct->setIcon(QPixmap(":kst_gfx_line.png"));
   connect(_createLineAct, SIGNAL(triggered()), this, SLOT(createLine()));
 
   _createPlotAct = new QAction(tr("&Create plot"), this);
   _createPlotAct->setStatusTip(tr("Create a plot for the current view"));
+  _createPlotAct->setIcon(QPixmap(":kst_newplot.png"));
   connect(_createPlotAct, SIGNAL(triggered()), this, SLOT(createPlot()));
 
   _newTabAct = new QAction(tr("&New tab"), this);
   _newTabAct->setStatusTip(tr("Create a new tab"));
+  _newTabAct->setIcon(QPixmap(":kst_newtab.png"));
   connect(_newTabAct, SIGNAL(triggered()), tabWidget(), SLOT(createView()));
 
   _closeTabAct = new QAction(tr("&Close tab"), this);
   _closeTabAct->setStatusTip(tr("Close the current tab"));
+  _closeTabAct->setIcon(QPixmap(":kst_closetab.png"));
   connect(_closeTabAct, SIGNAL(triggered()), tabWidget(), SLOT(closeCurrentView()));
 
   _saveAct = new QAction(tr("&Save"), this);
@@ -368,6 +376,7 @@ void MainWindow::createActions() {
 
   _dataManagerAct = new QAction(tr("Data &Manager..."), this);
   _dataManagerAct->setStatusTip(tr("Show Kst's data manager window"));
+  _dataManagerAct->setIcon(QPixmap(":kst_datamanager.png"));
   connect(_dataManagerAct, SIGNAL(triggered()), this, SLOT(showDataManager()));
 
   _vectorEditorAct = new QAction(tr("&Vectors..."), this);
@@ -385,10 +394,6 @@ void MainWindow::createActions() {
   _aboutAct = new QAction(tr("&About"), this);
   _aboutAct->setStatusTip(tr("Show Kst's About box"));
   connect(_aboutAct, SIGNAL(triggered()), this, SLOT(about()));
-
-  _aboutQtAct = new QAction(tr("About &Qt"), this);
-  _aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
-  connect(_aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }
 
 
@@ -429,7 +434,6 @@ void MainWindow::createMenus() {
   _helpMenu = menuBar()->addMenu(tr("&Help"));
   _helpMenu->addAction(_debugDialogAct);
   _helpMenu->addAction(_aboutAct);
-  _helpMenu->addAction(_aboutQtAct);
 
   // FIXME: remove this later.
   QMenu *demoMenu = menuBar()->addMenu("&Demo");
