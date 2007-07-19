@@ -1,29 +1,11 @@
 Please place porting todo items in this file categorized by lib/module
 
-**** cmake build system ****
+**** qmake build system ****
   A. Need to port over all the configure checks found in configure.in.in
-
-**** extdate ****
-  A. Decide whether this lib even belongs anymore.  Will Qt4's date/time classes serve us?
-  B. If we are going to continue using this should we start with Qt4's classes and revamp them?
 
 **** libkst ****:
   A. Numerous changes WRT Qt4's threading package
     Probably should get rid of own threading classes and use Qt4's versions...
     KstRWLock -> QReadWriteLock etc, etc
-  B. Revamp the plugin manager to use Qt4's plugin system?
-  C. Rename kstdebug classes as they really are loggers and should be named as such.
+  B. Rename kstdebug classes as they really are loggers and should be named as such.
 
-**** libkstmath ****:
-
-**** libkstapp ****:
-  A. Get rid of KMdi* classes.  Using typedefs for now, but these need to go away
-  B. NOTES on kst2dplot:
-    I'm using the following mapping for QPainter::rasterOp in 3.x to QPainter::compositionMode in 4.x
-      CopyROP = CompositionMode_Source
-      XorROP = CompositionMode_Xor
-      NotROP = CompositionMode_Destination
-      SetROP = CompositionMode_Source
-  C. Several places in libkstapp use QMouseEvent's combined with the info they present about the state
-     of the keyboard modifiers.  This facility isn't present in Qt4 AFAIK.  The code is just commented
-     out.  Grep through kst2dplot for 'stateAfter' for instance.
