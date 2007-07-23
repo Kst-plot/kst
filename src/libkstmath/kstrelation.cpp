@@ -159,7 +159,7 @@ void KstRelation::writeLockInputsAndOutputs() const {
       qDebug() << (void*)this << this->tag().tagString() << ") KstDataObject::writeLockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": write locking output \"" << (*outputIt)->tag().tagString() << "\" (" << (void*)((KstRWLock*)*outputIt) << ")" << endl;
 #endif
       if ((*outputIt)->provider() != this) {
-        KstDebug::self()->log(i18n("KstDataObject::writeLockInputsAndOutputs() by tid=%1: write locking output %2 (not provider) -- this is probably an error. Please email kst@kde.org with details.").arg((int)QThread::currentThread()).arg((*outputIt)->tagName()), KstDebug::Error);
+        KstDebug::self()->log(i18n("KstDataObject::writeLockInputsAndOutputs() by tid=%1: write locking output %2 (not provider) -- this is probably an error. Please email kst@kde.org with details.").arg(reinterpret_cast<qint64>(QThread::currentThread())).arg((*outputIt)->tagName()), KstDebug::Error);
       }
       (*outputIt)->writeLock();
       ++outputIt;

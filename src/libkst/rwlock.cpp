@@ -139,14 +139,14 @@ void KstRWLock::unlock() const {
   } else if (_writeCount > 0) {
     if (_writeLocker != me) {
       // write locked but not by me -- ERROR
-      qDebug() << "Thread " << (int)QThread::currentThread() << " tried to unlock KstRWLock " << (void*)this << " (write locked) without holding the lock" << endl;
+      qDebug() << "Thread " << QThread::currentThread() << " tried to unlock KstRWLock " << (void*)this << " (write locked) without holding the lock" << endl;
       return;
     } else {
       --_writeCount;
     }
   } else if (_readCount == 0 && _writeCount == 0) {
     // not locked -- ERROR
-    qDebug() << "Thread " << (int)QThread::currentThread() << " tried to unlock KstRWLock " << (void*)this << " (unlocked) without holding the lock" << endl;
+    qDebug() << "Thread " << QThread::currentThread() << " tried to unlock KstRWLock " << (void*)this << " (unlocked) without holding the lock" << endl;
     return;
   }
 
