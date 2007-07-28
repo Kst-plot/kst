@@ -1,0 +1,73 @@
+Layout Mode comments: (July 28, 07)
+
+Overall:
+Lets copy inkscape's UI as much as is reasonable.  BUT: remember, we are
+annotating plots, not making icons!
+
+  -in layout mode, we need a toolbar to select the various tools.
+
+Handles:
+  -need mouseover feedback on handles (inkscape changes colours)
+  -need feedback on potential selection. Inkscape uses mouse feedback,
+   but since most objects will over a plot, this is mostly useless.  I think
+   showing ghost handles would be better.
+  -Handle dimensions should be fixed and should not depend on window/object/
+   parent size.
+   (It could be cool to have the the size fixed relative to the screen size.)
+  -Handles should lie outside the object so that they are accesible with 0
+   size objects (eg, horizontal line).
+  -Handles need to have some indication what they are/do (like inkscape).
+  -to get to rotate mode, you have to click twice, which is too much like
+   a double click (which calls up the properties dialog).  So, get rid
+   of double click to properties dialog.  Instead get it from the rmb or
+   from button 2. 
+  -On resize, you should be able flip through zero to mirror the object.
+   This is especially important for lines.
+  -Sometimes clicking on an object does not bring up the handles.
+   Is this a bug, or just a different mode?
+
+Line Properties:
+  -By default, line properties should depend on the size (width + height) of
+   the page/TopLevelView/Window and should not depend on the aspect ratio of
+   the object, or its parent or the TLV.  This includes:
+    -line widths
+    -dash dimensions
+    -arrow dimensions
+    -Ends of wide lines - (should be always perpendicular to line)
+   so,
+    -resizing an object and not the window should not change its line
+     widths. NOTE: this is not the same behavior as inkscape.
+    -The vertical and horizontal lines of a box should always be equal 
+     regardless of any resizing.
+  -For 2.x, we should consider a per-object option to allow the line properties
+   to be a function of the parent size, rather than the TLV size. 
+  -Line property units should be 'points, if printed to US Letter'
+
+Aspect ratio
+  -All objects except lines should have a 'preserve aspect ratio' option.
+     -Fonts and Pictures should default to having this set. 
+     -All others should default to this unset. 
+  -When it is set, changing the aspect ratio of the object's parent or TLV will
+   not change the aspect ratio of the objects
+  -When it is set, moving the grab boxes should uniformly scale the object
+   (but not Line Properties).
+  -When it is set, rotations need to be in display space, to preserve
+   relative angle.
+  SO:
+     -rectangles stay rectangles
+     -fonts don't get distorted
+  -When it is not set, rotations are in the (0-1, 0-1) space, so objects
+   will only preserve their apparent aspect ratio if the TLV is square.
+
+
+Object Specific changes:
+Labels:
+  -To create a lable, click to location, which pops up the dialog (same as 1.4)
+   Apply/OK on dialog draws the label.  In the first instance, we don't need
+   to support in-place text editing.
+
+Dialogs:
+  -Inkscape uses multiple dialogs to edit different properties of an object.
+   We should not.  Use tabbed dialogs instead.
+  -They need to support everything the 1.4 dialogs support.
+
