@@ -24,20 +24,27 @@ Render2DCartesian::~Render2DCartesian() {
 }
 
 QList<QPainterPath> Render2DCartesian::projectedPaths() {
-    qDebug() << "FIXME!! PUBLISH THE PLOT PATHS!" << endl;
-    return QList<QPainterPath>();
+  QList<QPainterPath> paths;
+
+  foreach (KstRelationPtr relation, relationList()) {
+    QPainterPath path;
+    KstCurveRenderContext context;
+    context.path = &path;
+    context.rect = range().toRect();
+    relation->paint(context);
+    paths << path;
+  }
+  return paths;
 }
 
 
 QPointF Render2DCartesian::mapToProjection(const QPointF &point) {
-    qDebug() << "FIXME!! DO SOMETHING WITH" << point << endl;
-    return QPointF();
+  return point;
 }
 
 
 QPointF Render2DCartesian::mapFromProjection(const QPointF &point) {
-    qDebug() << "FIXME!! DO SOMETHING WITH" << point << endl;
-    return QPointF();
+  return point;
 }
 
 }

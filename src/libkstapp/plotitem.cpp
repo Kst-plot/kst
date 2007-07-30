@@ -20,6 +20,8 @@
 #include "kstdataobjectcollection.h"
 #include "render2dcartesian.h"
 
+#include <QDebug>
+
 namespace Kst {
 
 PlotItem::PlotItem(View *parent)
@@ -28,7 +30,11 @@ PlotItem::PlotItem(View *parent)
   // FIXME fake data for testing rendering
   KstVectorPtr xTest = new KstSVector(0.0, 100.0, 10000, KstObjectTag::fromString("X vector"));
   KstVectorPtr yTest = new KstSVector(-100.0, 100.0, 10000, KstObjectTag::fromString("Y vector"));
-  KstVCurvePtr renderTest = new KstVCurve(QString("rendertest"), xTest, yTest, NULL, NULL, NULL, NULL, QColor(Qt::red));
+
+  KstVCurvePtr renderTest = new KstVCurve(QString("rendertest"), xTest, yTest, xTest, yTest, xTest, yTest, QColor(Qt::red));
+  renderTest->writeLock();
+  renderTest->update(0);
+  renderTest->unlock();
 
   KstRelationList relationList;
   relationList.append(kst_cast<KstRelation>(renderTest));
@@ -55,7 +61,12 @@ void CreatePlotCommand::createItem() {
 void PlotItem::paint(QPainter *painter) {
   ViewItem::paint(painter);
 
+  painter->translate(rect().x(), rect().y());
+
   foreach (PlotRenderer2D *renderer, _renderers) {
+
+    renderer->setRange(painter->window()); //FIXME no idea if this is the idea...
+
     QList<QPainterPath> paths = renderer->projectedPaths();
     foreach (QPainterPath path, paths) {
       painter->drawPath(path);

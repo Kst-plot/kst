@@ -20,6 +20,7 @@
 
 #include <qcolor.h>
 #include <q3valuestack.h>
+#include <QPainterPath>
 
 #include "kstdataobject.h"
 #include "kstpainter.h"
@@ -34,7 +35,8 @@
 class KstCurveRenderContext {
   public:
     // FIXME: use reasonable defaults
-    KstCurveRenderContext() : p(0L), Lx(0.0), Hx(0.0), Ly(0.0), Hy(0.0),
+    KstCurveRenderContext() : path(0L), p(0L),
+                              Lx(0.0), Hx(0.0), Ly(0.0), Hy(0.0),
                               m_X(0.0), m_Y(0.0), b_X(0.0), b_Y(0.0),
                               x_max(0.0), y_max(0.0), x_min(0.0), y_min(0.0),
                               XMin(0.0), YMin(0.0), XMax(0.0), YMax(0.0),
@@ -42,6 +44,8 @@ class KstCurveRenderContext {
                               yLogBase(0.0), penWidth(0)
     {}
 
+    QPainterPath *path;
+    QRect rect;
     KstPainter* p;
     double Lx, Hx, Ly, Hy;
     double m_X, m_Y, b_X, b_Y;
