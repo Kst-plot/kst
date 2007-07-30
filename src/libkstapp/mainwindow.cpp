@@ -46,6 +46,7 @@ MainWindow::MainWindow() {
   _dataManager = 0;
   _exportGraphics = 0;
   _vectorEditor = 0;
+  _viewManager = 0;
   _doc = new Document(this);
   _tabWidget = new TabWidget(this);
   _undoGroup = new QUndoGroup(this);
