@@ -12,8 +12,9 @@
 #ifndef PLOTRENDERER2D_H
 #define PLOTRENDERER2D_H
 
+#include <QList>
 #include <QPainterPath>
-#include "axis.h"
+
 #include "kstrelation.h"
 
 namespace Kst {
@@ -24,50 +25,43 @@ class PlotRenderer2D {
   public:
     PlotRenderer2D(const QString &name);
     virtual ~PlotRenderer2D();
-    // Set data range in terms of projected coordinates
-    virtual void setRangeXY(const QRectF& range);
-    // Set data range in terms of native coordinates
-    virtual void setRangeUV(const QRectF& range);
-    // Get data range in terms of projected coordinates
-    virtual void rangeXY(QRectF *range);
-    // Get data range in terms of native coordinates
-    virtual void rangeUV(QRectF *range);
-    // Take a PainterPath in native coordinates and project
-    virtual void projectPath(QPainterPath *path);
-    // Project a single point
-    virtual void projectPoint(const QPointF& pold, QPointF *pnew);
-    // Inverse projection of a single point
-    virtual void projectPointInv(const QPointF& pold, QPointF *pnew);
 
-    // Set and get the renderer type
     void setType(RenderType2D type);
     RenderType2D type();
 
-    // The list of things to render
-    KstRelationList sources;
+    // FIXME better name?
+    void setRange(const QRectF &range);
+    QRectF range();
+
+    // FIXME better name?
+    void setProjectedRange(const QRectF &range);
+    QRectF projectedRange();
+
+    void setRelationList(const KstRelationList &relationList);
+    KstRelationList relationList() const;
+
+    virtual QList<QPainterPath> projectedPaths() = 0;
 
   protected:
+    virtual QPointF mapToProjection(const QPointF &point) = 0;
+    virtual QPointF mapFromProjection(const QPointF &point) = 0;
+
+    QRectF mapToProjection(const QRectF &rect);
+    QRectF mapFromProjection(const QRectF &rect);
+
+    // FIXME still not clear...
     // Recompute auxilliary range information if the
     // properties of the full plot have changed.
     void refreshRange();
 
-    // Range of plot in projected coordinates
-    QRectF _xyRange;
-    // Range of plot in native coordinates
-    QRectF _uvRange;
-
-    // Axes
-    Axis _xAxis, _yAxis;
-    // Axis styles
-    AxisStyle _xAxisStyle, _yAxisStyle;
-
   private:
-    // Name of the plot
     QString _name;
-
-    // Type of the plot
     RenderType2D _type;
 
+    QRectF _range;
+    QRectF _projectedRange;
+
+    KstRelationList _relationList;
 };
 
 }

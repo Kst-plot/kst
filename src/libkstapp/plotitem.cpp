@@ -14,7 +14,6 @@
 
 #include "plotitem.h"
 
-// FIXME temporary
 #include "kstsvector.h"
 #include "kstvcurve.h"
 #include "kstdatacollection.h"
@@ -25,19 +24,19 @@ namespace Kst {
 
 PlotItem::PlotItem(View *parent)
   : ViewItem(parent) {
-  _backgroundColor = Qt::transparent;
-  // FIXME: temporary test code
-  QColor temp = Qt::black;
-  _colorStack.push(temp);
 
-  // FIXME: fake data for testing rendering
+  // FIXME fake data for testing rendering
   KstVectorPtr xTest = new KstSVector(0.0, 100.0, 10000, KstObjectTag::fromString("X vector"));
   KstVectorPtr yTest = new KstSVector(-100.0, 100.0, 10000, KstObjectTag::fromString("Y vector"));
   KstVCurvePtr renderTest = new KstVCurve(QString("rendertest"), xTest, yTest, NULL, NULL, NULL, NULL, QColor(Qt::red));
 
-  Render2DCartesian carTest(QString("cartesiantest"));
-  carTest.sources.append(kst_cast<KstRelation>(renderTest));
-  renderers.append(carTest);
+  KstRelationList relationList;
+  relationList.append(kst_cast<KstRelation>(renderTest));
+
+  Render2DCartesian *test = new Render2DCartesian("cartesiantest");
+  test->setRelationList(relationList);
+
+  _renderers.append(test);
 }
 
 
@@ -56,22 +55,12 @@ void CreatePlotCommand::createItem() {
 void PlotItem::paint(QPainter *painter) {
   ViewItem::paint(painter);
 
-  QPainterPath path;
-  setBrush(Qt::transparent);
-  //FIXME:  temporary test code
-  const qreal w = pen().widthF();
-  path.addEllipse(rect().adjusted(w, w, -w, -w));
-  painter->drawPath(path);
-
-  //QFont testFont;
-  //QColor fg = Qt::black;
-  //QPen testPen(fg);
-  //path.addText(100, 100, testFont, tr("This is a test")); 
-  /*
-  for (KstRelationList::Iterator i = _sources.begin(); i != _sources.end(); ++i) {
-    (*i)->paint(&path);
+  foreach (PlotRenderer2D *renderer, _renderers) {
+    QList<QPainterPath> paths = renderer->projectedPaths();
+    foreach (QPainterPath path, paths) {
+      painter->drawPath(path);
+    }
   }
-  */
 }
 
 }

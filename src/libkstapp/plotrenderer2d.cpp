@@ -32,55 +32,55 @@ RenderType2D PlotRenderer2D::type() {
 }
 
 
-void PlotRenderer2D::setRangeXY(const QRectF& range) {
-  _xyRange = range;
-  QPointF topLeft;
-  QPointF bottomRight;
-  projectPointInv(range.topLeft(), &topLeft);
-  projectPointInv(range.bottomRight(), &bottomRight);
-  _uvRange.setTopLeft(topLeft);
-  _uvRange.setBottomRight(bottomRight);
+void PlotRenderer2D::setProjectedRange(const QRectF &range) {
+  _projectedRange = range;
+
+  _range =  mapFromProjection(range);
+
   refreshRange();
 }
 
 
-void PlotRenderer2D::setRangeUV(const QRectF& range) {
-  _uvRange = range;
-  QPointF topLeft;
-  QPointF bottomRight;
-  projectPoint(range.topLeft(), &topLeft);
-  projectPoint(range.bottomRight(), &bottomRight);
-  _xyRange.setTopLeft(topLeft);
-  _xyRange.setBottomRight(bottomRight);
+void PlotRenderer2D::setRange(const QRectF &range) {
+  _range = range;
+
+  _projectedRange = mapToProjection(range);
+
   refreshRange();
 }
 
 
-void PlotRenderer2D::rangeXY(QRectF *range) {
-  (*range) = _xyRange;
+void PlotRenderer2D::setRelationList(const KstRelationList &relationList) {
+  _relationList = relationList;
 }
 
 
-void PlotRenderer2D::rangeUV(QRectF *range) {
-  (*range) = _uvRange;
+KstRelationList PlotRenderer2D::relationList() const {
+  return _relationList;
+}
+
+
+QRectF PlotRenderer2D::projectedRange() {
+  return _projectedRange;
+}
+
+
+QRectF PlotRenderer2D::range() {
+  return _range;
+}
+
+
+QRectF PlotRenderer2D::mapToProjection(const QRectF &rect) {
+    return QRectF(mapToProjection(rect.topLeft()), mapToProjection(rect.bottomRight()));
+}
+
+
+QRectF PlotRenderer2D::mapFromProjection(const QRectF &rect) {
+    return QRectF(mapFromProjection(rect.topLeft()), mapFromProjection(rect.bottomRight()));
 }
 
 
 void PlotRenderer2D::refreshRange() {
-}
-
-
-void PlotRenderer2D::projectPath(QPainterPath *path) {
-}
-
-
-void PlotRenderer2D::projectPoint(const QPointF& pold, QPointF *pnew) {
-  (*pnew) = pold;
-}
-
-
-void PlotRenderer2D::projectPointInv(const QPointF& pold, QPointF *pnew) {
-  (*pnew) = pold;
 }
 
 }

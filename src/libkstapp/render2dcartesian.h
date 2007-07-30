@@ -19,7 +19,13 @@ namespace Kst {
 class Render2DCartesian : public PlotRenderer2D {
   public:
     Render2DCartesian(const QString &name);
-    ~Render2DCartesian();
+    virtual ~Render2DCartesian();
+
+    virtual QList<QPainterPath> projectedPaths();
+
+  protected:
+    virtual QPointF mapToProjection(const QPointF &point);
+    virtual QPointF mapFromProjection(const QPointF &point);
 };
 
 }
