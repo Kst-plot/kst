@@ -30,17 +30,17 @@ void VectorCurveRenderItem::paint(QPainter *painter) {
 
 
 QList<QPainterPath> VectorCurveRenderItem::projectedPaths() {
-  QList<QPainterPath> paths;
-
-  foreach (KstRelationPtr relation, relationList()) {
-    QPainterPath path;
-    KstCurveRenderContext context;
-    context.path = &path;
-    context.rect = range().toRect();
-    relation->paint(context);
-    paths << path;
-  }
-  return paths;
+//   QList<QPainterPath> paths;
+// 
+//   foreach (KstRelationPtr relation, relationList()) {
+//     QPainterPath path;
+//     KstCurveRenderContext context;
+//     context.path = &path;
+//     context.rect = range().toRect();
+//     relation->paint(context);
+//     paths << path;
+//   }
+//   return paths;
 }
 
 

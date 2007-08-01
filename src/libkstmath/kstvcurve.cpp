@@ -854,8 +854,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
     return;
   }
 
-  QPainterPath *path = context.path;
-//   KstPainter *p = context.p;
+  KstPainter *p = context.p;
   QColor foregroundColor = context.foregroundColor;
   double Lx = context.Lx, Hx = context.Hx, Ly = context.Ly, Hy = context.Hy;
   double m_X = context.m_X, m_Y = context.m_Y;
@@ -880,9 +879,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
   benchtmp.start();
 #endif
 
-  //FIXME have no idea how to deal with this..
-  int pointDim = KstCurvePointSymbol::dim(context.rect);
-
+  int pointDim = KstCurvePointSymbol::dim(p);
   if (sampleCount() > 0) {
     Qt::PenStyle style = KstLineStyle[lineStyle()];
     int i0, iN;
@@ -918,8 +915,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
       int index = 0;
       int i0Start = i0;
 
-      //FIXME renderer has to provide this i guess...
-//       p->setPen(QPen(color(), width, style));
+      p->setPen(QPen(color(), width, style));
 
 // optimize - isnan seems expensive, at least in gcc debug mode
 //            cachegrind backs this up.
@@ -977,8 +973,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
           if (index > 0) {
             QPolygon poly;
             poly.putPoints(0, index, points);
-            //p->drawPolyline(poly);
-            path->addPolygon(QPolygonF(poly));
+            p->drawPolyline(poly);
           }
           index = 0;
           if (overlap) {
@@ -988,9 +983,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
               if (minY < Ly && maxY >= Ly)
                 minY = Ly;
               if (minY >= Ly && minY <= Hy && maxY >= Ly && maxY <= Hy) {
-                //p->drawLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY));
-                path->moveTo(d2i(X2), d2i(minY));
-                path->lineTo(d2i(X2), d2i(maxY));
+                p->drawLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY));
               }
             }
             overlap = false;
@@ -1040,8 +1033,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
                   if (index >= MAX_NUM_POLYLINES-2) {
                     QPolygon poly;
                     poly.putPoints(0, index, points);
-                    //p->drawPolyline(poly);
-                    path->addPolygon(QPolygonF(poly));
+                    p->drawPolyline(poly);
                     index = 0;
                   }
                   if (KDE_ISUNLIKELY(minYi == maxYi)) {
@@ -1072,13 +1064,10 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
                     if (index > 0) {
                       QPolygon poly;
                       poly.putPoints(0, index, points);
-                      //p->drawPolyline(poly);
-                      path->addPolygon(QPolygonF(poly));
+                      p->drawPolyline(poly);
                       index = 0;
                     }
-                    //p->drawLine(X2i, d2i(minY), X2i, d2i(maxY));
-                    path->moveTo(X2i, d2i(minY));
-                    path->lineTo(X2i, d2i(maxY));
+                    p->drawLine(X2i, d2i(minY), X2i, d2i(maxY));
                   }
                 }
               }
@@ -1173,8 +1162,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
                   if (KDE_ISLIKELY(index > 1)) {
                     QPolygon poly;
                     poly.putPoints(0, index, points);
-                    //p->drawPolyline(poly);
-                    path->addPolygon(QPolygonF(poly));
+                    p->drawPolyline(poly);
                   }
                   index = 0;
                   points.setPoint(index++, X2i, Y2i);
@@ -1192,8 +1180,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
       if (index > 1) {
         QPolygon poly;
         poly.putPoints(0, index, points);
-        //p->drawPolyline(poly);
-        path->addPolygon(QPolygonF(poly));
+        p->drawPolyline(poly);
         index = 0;
       }
 
@@ -1207,9 +1194,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
             minY = Ly;
           }
           if (minY >= Ly && minY <= Hy && maxY >= Ly && maxY <= Hy) {
-            //p->drawLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY));
-            path->moveTo(d2i(X2), d2i(minY));
-            path->lineTo(d2i(X2), d2i(maxY));
+            p->drawLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY));
           }
         }
         overlap = false;
@@ -1235,12 +1220,11 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
       double rX2 = 0.0;
       double drX = 0.0;
 
-      //FIXME maybe move this to renderer??
-//       if (barStyle() == 1) { // filled
-//         p->setPen(QPen(foregroundColor, width, style));
-//       } else {
-//         p->setPen(QPen(color(), width, style));
-//       }
+      if (barStyle() == 1) { // filled
+        p->setPen(QPen(foregroundColor, width, style));
+      } else {
+        p->setPen(QPen(color(), width, style));
+      }
 
       if (!exv) {        
         // determine the bar position width. NOTE: This is done
@@ -1335,32 +1319,23 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
           if (barStyle() == 1) { // filled
             int X1i = d2i(X1);
             int Y1i = d2i(Y1);
-            //p->fillRect(X1i, Y1i, d2i(X2) - X1i, d2i(Y2) - Y1i, color());
-            path->addRect(X1i, Y1i, d2i(X2) - X1i, d2i(Y2) - Y1i);
+            p->fillRect(X1i, Y1i, d2i(X2) - X1i, d2i(Y2) - Y1i, color());
           }
           if (has_top) {
             int Y1i = d2i(Y1);
-            //p->drawLine(d2i(X1-(width/2)), Y1i, d2i(X2+(width/2)), Y1i);
-            path->moveTo(d2i(X1-(width/2)), Y1i);
-            path->lineTo(d2i(X2+(width/2)), Y1i);
+            p->drawLine(d2i(X1-(width/2)), Y1i, d2i(X2+(width/2)), Y1i);
           }
           if (has_bot) {
             int Y2i = d2i(Y2);
-            //p->drawLine(d2i(X1-(width/2)), Y2i, d2i(X2-(width/2)), Y2i);
-            path->moveTo(d2i(X1-(width/2)), Y2i);
-            path->lineTo(d2i(X2-(width/2)), Y2i);
+            p->drawLine(d2i(X1-(width/2)), Y2i, d2i(X2-(width/2)), Y2i);
           }
           if (has_left) {
             int X1i = d2i(X1);
-            //p->drawLine(X1i, d2i(Y1-(width/2)), X1i, d2i(Y2+(width/2)));
-            path->moveTo(X1i, d2i(Y1-(width/2)));
-            path->lineTo(X1i, d2i(Y2+(width/2)));
+            p->drawLine(X1i, d2i(Y1-(width/2)), X1i, d2i(Y2+(width/2)));
           }
           if (has_right) {
             int X2i = d2i(X2);
-            //p->drawLine(X2i, d2i(Y1-(width/2)), X2i, d2i(Y2+(width/2)));
-            path->moveTo(X2i, d2i(Y1-(width/2)));
-            path->lineTo(X2i, d2i(Y2+(width/2)));
+            p->drawLine(X2i, d2i(Y1-(width/2)), X2i, d2i(Y2+(width/2)));
           }
         }
       }
@@ -1370,8 +1345,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
     b_2 = benchtmp.elapsed();
 #endif
 
-    //FIXME renderer??
-    //p->setPen(QPen(color(), width));
+    p->setPen(QPen(color(), width));
 
     // draw the points, if any...
     if (hasPoints()) {
@@ -1394,7 +1368,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
           pt.setX(d2i(m_X * rX + b_X));
           pt.setY(d2i(m_Y * rY + b_Y));
           if (rgn.contains(pt)) {
-            KstCurvePointSymbol::draw(pointType, path, pt.x(), pt.y(), width);
+            KstCurvePointSymbol::draw(pointType, p, pt.x(), pt.y(), width);
             rgn -= QRegion(pt.x()-(size/2), pt.y()-(size/2), size, size, QRegion::Ellipse);
           }
         }
@@ -1412,7 +1386,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
           X1 = m_X * rX + b_X;
           Y1 = m_Y * rY + b_Y;
           if (X1 >= Lx && X1 <= Hx && Y1 >= Ly && Y1 <= Hy) {
-            KstCurvePointSymbol::draw(pointType, path, d2i(X1), d2i(Y1), width);
+            KstCurvePointSymbol::draw(pointType, p, d2i(X1), d2i(Y1), width);
           }
         }
       }
@@ -1502,18 +1476,12 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
           int X1i = d2i(X1);
           int X2i = d2i(X2);
           int Y1i = d2i(Y1);
-          //p->drawLine(X1i, Y1i, X2i, Y1i);
-          path->moveTo(X1i, Y1i);
-          path->lineTo(X2i, Y1i);
+          p->drawLine(X1i, Y1i, X2i, Y1i);
           if (do_low_flag) {
-            //p->drawLine(X1i, Y1i + pointDim, X1i, Y1i - pointDim);
-            path->moveTo(X1i, Y1i + pointDim);
-            path->lineTo(X1i, Y1i - pointDim);
+            p->drawLine(X1i, Y1i + pointDim, X1i, Y1i - pointDim);
           }
           if (do_high_flag) {
-            //p->drawLine(X2i, Y1i + pointDim, X2i, Y1i - pointDim);
-            path->moveTo(X2i, Y1i + pointDim);
-            path->lineTo(X2i, Y1i - pointDim);
+            p->drawLine(X2i, Y1i + pointDim, X2i, Y1i - pointDim);
           }
         }
       }
@@ -1599,18 +1567,12 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
           int X1i = d2i(X1);
           int Y1i = d2i(Y1);
           int Y2i = d2i(Y2);
-          //p->drawLine(X1i, Y1i, X1i, Y2i);
-          path->moveTo(X1i, Y1i);
-          path->lineTo(X1i, Y2i);
+          p->drawLine(X1i, Y1i, X1i, Y2i);
           if (do_low_flag) {
-            //p->drawLine(X1i + pointDim, Y1i, X1i - pointDim, Y1i);
-            path->moveTo(X1i + pointDim, Y1i);
-            path->lineTo(X1i - pointDim, Y1i);
+            p->drawLine(X1i + pointDim, Y1i, X1i - pointDim, Y1i);
           }
           if (do_high_flag) {
-            //p->drawLine(X1i + pointDim, Y2i, X1i - pointDim, Y2i);
-            path->moveTo(X1i + pointDim, Y2i);
-            path->lineTo(X1i - pointDim, Y2i);
+            p->drawLine(X1i + pointDim, Y2i, X1i - pointDim, Y2i);
           }
         }
       }
@@ -1745,27 +1707,27 @@ double KstVCurve::distanceToPoint(double xpos, double dx, double ypos) const {
 
 
 void KstVCurve::paintLegendSymbol(KstPainter *p, const QRect& bound) {
-//   int width;
-//   
-//   if (lineWidth() == 0) {
-//     width = p->lineWidthAdjustmentFactor();
-//   } else {  
-//     width = lineWidth() * p->lineWidthAdjustmentFactor();
-//   }
-//   
-//   p->save();
-//   if (hasLines()) {
-//     // draw a line from left to right centered vertically
-//     p->setPen(QPen(color(), width, KstLineStyle[lineStyle()]));
-//     p->drawLine(bound.left(), bound.top() + bound.height()/2,
-//                 bound.right(), bound.top() + bound.height()/2);
-//   }
-//   if (hasPoints()) {
-//     // draw a point in the middle
-//     p->setPen(QPen(color(), width));
-//     KstCurvePointSymbol::draw(pointType, p, bound.left() + bound.width()/2, bound.top() + bound.height()/2, width, 600);
-//   }
-//   p->restore();
+  int width;
+  
+  if (lineWidth() == 0) {
+    width = p->lineWidthAdjustmentFactor();
+  } else {  
+    width = lineWidth() * p->lineWidthAdjustmentFactor();
+  }
+  
+  p->save();
+  if (hasLines()) {
+    // draw a line from left to right centered vertically
+    p->setPen(QPen(color(), width, KstLineStyle[lineStyle()]));
+    p->drawLine(bound.left(), bound.top() + bound.height()/2,
+                bound.right(), bound.top() + bound.height()/2);
+  }
+  if (hasPoints()) {
+    // draw a point in the middle
+    p->setPen(QPen(color(), width));
+    KstCurvePointSymbol::draw(pointType, p, bound.left() + bound.width()/2, bound.top() + bound.height()/2, width, 600);
+  }
+  p->restore();
 }
 
 
