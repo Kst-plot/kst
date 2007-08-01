@@ -19,9 +19,10 @@
 
 #include "viewitem.h"
 #include "kstrelation.h"
-#include "plotrenderer2d.h"
 
 namespace Kst {
+
+class PlotRenderItem;
 
 class PlotItem : public ViewItem
 {
@@ -32,7 +33,7 @@ class PlotItem : public ViewItem
     void paint(QPainter *painter);
 
   private:
-    QList<PlotRenderer2D*> _renderers;
+    QList<PlotRenderItem*> _renderers;
 };
 
 class KST_EXPORT CreatePlotCommand : public CreateCommand

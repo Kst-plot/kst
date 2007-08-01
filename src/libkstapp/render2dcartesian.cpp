@@ -16,7 +16,7 @@
 namespace Kst {
 
 Render2DCartesian::Render2DCartesian(const QString &name)
-  : PlotRenderer2D(name) {
+  : PlotRenderItem(name) {
   setType(Cartesian);
 }
 

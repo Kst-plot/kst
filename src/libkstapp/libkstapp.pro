@@ -39,7 +39,7 @@ SOURCES += \
     memorywidget.cpp \
     pictureitem.cpp \
     plotitem.cpp \
-    plotrenderer2d.cpp \
+    plotrenderitem.cpp \
     qgetoptions.cpp \
     render2dcartesian.cpp \
     sessionmodel.cpp \
@@ -76,7 +76,7 @@ HEADERS += \
     memorywidget.h \
     pictureitem.h \
     plotitem.h \
-    plotrenderer2d.h \
+    plotrenderitem.h \
     qgetoptions.h \
     render2dcartesian.h \
     sessionmodel.h \

@@ -12,11 +12,11 @@
 #ifndef RENDER2DCARTESIAN_H
 #define RENDER2DCARTESIAN_H
 
-#include "plotrenderer2d.h"
+#include "plotrenderitem.h"
 
 namespace Kst {
 
-class Render2DCartesian : public PlotRenderer2D {
+class Render2DCartesian : public PlotRenderItem {
   public:
     Render2DCartesian(const QString &name);
     virtual ~Render2DCartesian();

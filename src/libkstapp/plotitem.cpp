@@ -14,6 +14,8 @@
 
 #include "plotitem.h"
 
+#include "plotrenderitem.h"
+
 #include "kstsvector.h"
 #include "kstvcurve.h"
 #include "kstdatacollection.h"
@@ -63,7 +65,7 @@ void PlotItem::paint(QPainter *painter) {
 
   painter->translate(rect().x(), rect().y());
 
-  foreach (PlotRenderer2D *renderer, _renderers) {
+  foreach (PlotRenderItem *renderer, _renderers) {
 
     renderer->setRange(painter->window()); //FIXME no idea if this is the idea...
 

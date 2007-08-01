@@ -9,30 +9,30 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "plotrenderer2d.h"
+#include "plotrenderitem.h"
 
 namespace Kst {
 
-PlotRenderer2D::PlotRenderer2D(const QString &name) {
+PlotRenderItem::PlotRenderItem(const QString &name) {
   _name = name;
 }
 
 
-PlotRenderer2D::~PlotRenderer2D() {
+PlotRenderItem::~PlotRenderItem() {
 }
 
 
-void PlotRenderer2D::setType(RenderType2D type) {
+void PlotRenderItem::setType(RenderType type) {
   _type = type;
 }
 
 
-RenderType2D PlotRenderer2D::type() {
+RenderType PlotRenderItem::type() {
   return _type;
 }
 
 
-void PlotRenderer2D::setProjectedRange(const QRectF &range) {
+void PlotRenderItem::setProjectedRange(const QRectF &range) {
   _projectedRange = range;
 
   _range =  mapFromProjection(range);
@@ -41,7 +41,7 @@ void PlotRenderer2D::setProjectedRange(const QRectF &range) {
 }
 
 
-void PlotRenderer2D::setRange(const QRectF &range) {
+void PlotRenderItem::setRange(const QRectF &range) {
   _range = range;
 
   _projectedRange = mapToProjection(range);
@@ -50,37 +50,37 @@ void PlotRenderer2D::setRange(const QRectF &range) {
 }
 
 
-void PlotRenderer2D::setRelationList(const KstRelationList &relationList) {
+void PlotRenderItem::setRelationList(const KstRelationList &relationList) {
   _relationList = relationList;
 }
 
 
-KstRelationList PlotRenderer2D::relationList() const {
+KstRelationList PlotRenderItem::relationList() const {
   return _relationList;
 }
 
 
-QRectF PlotRenderer2D::projectedRange() {
+QRectF PlotRenderItem::projectedRange() {
   return _projectedRange;
 }
 
 
-QRectF PlotRenderer2D::range() {
+QRectF PlotRenderItem::range() {
   return _range;
 }
 
 
-QRectF PlotRenderer2D::mapToProjection(const QRectF &rect) {
+QRectF PlotRenderItem::mapToProjection(const QRectF &rect) {
     return QRectF(mapToProjection(rect.topLeft()), mapToProjection(rect.bottomRight()));
 }
 
 
-QRectF PlotRenderer2D::mapFromProjection(const QRectF &rect) {
+QRectF PlotRenderItem::mapFromProjection(const QRectF &rect) {
     return QRectF(mapFromProjection(rect.topLeft()), mapFromProjection(rect.bottomRight()));
 }
 
 
-void PlotRenderer2D::refreshRange() {
+void PlotRenderItem::refreshRange() {
 }
 
 }

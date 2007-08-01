@@ -9,8 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef PLOTRENDERER2D_H
-#define PLOTRENDERER2D_H
+#ifndef PLOTRENDERITEM_H
+#define PLOTRENDERITEM_H
 
 #include <QList>
 #include <QPainterPath>
@@ -19,15 +19,15 @@
 
 namespace Kst {
 
-enum RenderType2D { Cartesian, Polar, Sinusoidal };
+enum RenderType { Cartesian, Polar, Sinusoidal };
 
-class PlotRenderer2D {
+class PlotRenderItem {
   public:
-    PlotRenderer2D(const QString &name);
-    virtual ~PlotRenderer2D();
+    PlotRenderItem(const QString &name);
+    virtual ~PlotRenderItem();
 
-    void setType(RenderType2D type);
-    RenderType2D type();
+    void setType(RenderType type);
+    RenderType type();
 
     // FIXME better name?
     void setRange(const QRectF &range);
@@ -56,7 +56,7 @@ class PlotRenderer2D {
 
   private:
     QString _name;
-    RenderType2D _type;
+    RenderType _type;
 
     QRectF _range;
     QRectF _projectedRange;
