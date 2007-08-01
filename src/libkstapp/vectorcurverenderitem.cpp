@@ -25,22 +25,12 @@ VectorCurveRenderItem::~VectorCurveRenderItem() {
 
 
 void VectorCurveRenderItem::paint(QPainter *painter) {
-    Q_UNUSED(painter);
-}
-
-
-QList<QPainterPath> VectorCurveRenderItem::projectedPaths() {
-//   QList<QPainterPath> paths;
-// 
-//   foreach (KstRelationPtr relation, relationList()) {
-//     QPainterPath path;
-//     KstCurveRenderContext context;
-//     context.path = &path;
-//     context.rect = range().toRect();
-//     relation->paint(context);
-//     paths << path;
-//   }
-//   return paths;
+    foreach (KstRelationPtr relation, relationList()) {
+      KstCurveRenderContext context;
+      context.p = painter;
+      context.window = range().toRect(); //no idea if this should be floating point
+      relation->paint(context);
+    }
 }
 
 

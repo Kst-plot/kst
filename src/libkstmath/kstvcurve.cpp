@@ -854,7 +854,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
     return;
   }
 
-  KstPainter *p = context.p;
+  /*Kst*/QPainter *p = context.p;
   QColor foregroundColor = context.foregroundColor;
   double Lx = context.Lx, Hx = context.Hx, Ly = context.Ly, Hy = context.Hy;
   double m_X = context.m_X, m_Y = context.m_Y;
@@ -879,7 +879,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
   benchtmp.start();
 #endif
 
-  int pointDim = KstCurvePointSymbol::dim(p);
+  int pointDim = KstCurvePointSymbol::dim(context.window);
   if (sampleCount() > 0) {
     Qt::PenStyle style = KstLineStyle[lineStyle()];
     int i0, iN;

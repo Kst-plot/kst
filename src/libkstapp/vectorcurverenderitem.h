@@ -22,7 +22,6 @@ class VectorCurveRenderItem : public PlotRenderItem {
     virtual ~VectorCurveRenderItem();
 
     virtual void paint(QPainter *painter);
-    virtual QList<QPainterPath> projectedPaths();
 
   protected:
     virtual QPointF mapToProjection(const QPointF &point);

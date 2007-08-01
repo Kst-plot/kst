@@ -42,8 +42,6 @@ class PlotRenderItem {
 
     virtual void paint(QPainter *painter) = 0;
 
-    virtual QList<QPainterPath> projectedPaths() = 0;
-
   protected:
     virtual QPointF mapToProjection(const QPointF &point) = 0;
     virtual QPointF mapFromProjection(const QPointF &point) = 0;

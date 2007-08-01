@@ -65,14 +65,14 @@ void PlotItem::paint(QPainter *painter) {
 
   painter->translate(rect().x(), rect().y());
 
+  QRectF range = boundingRect();
+  range = painter->transform().mapRect(range);
+  range.moveTopLeft(QPoint(0,0));
+
   foreach (PlotRenderItem *renderer, _renderers) {
 
-    renderer->setRange(painter->window()); //FIXME no idea if this is the idea...
-
-    QList<QPainterPath> paths = renderer->projectedPaths();
-    foreach (QPainterPath path, paths) {
-      painter->drawPath(path);
-    }
+    renderer->setRange(range); //FIXME no idea if this is the idea...
+    renderer->paint(painter);
   }
 }
 

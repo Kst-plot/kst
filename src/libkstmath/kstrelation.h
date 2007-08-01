@@ -42,7 +42,8 @@ class KstCurveRenderContext {
                               yLogBase(0.0), penWidth(0)
     {}
 
-    KstPainter* p;
+    QPainter* p;
+    QRect window;
     double Lx, Hx, Ly, Hy;
     double m_X, m_Y, b_X, b_Y;
     double x_max, y_max, x_min, y_min;

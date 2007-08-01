@@ -559,7 +559,7 @@ void KstImage::paint(const KstCurveRenderContext& context) {
   bool xLog = context.xLog, yLog = context.yLog;
   double xLogBase = context.xLogBase;
   double yLogBase = context.yLogBase;
-  KstPainter* p = context.p;
+  /*Kst*/QPainter* p = context.p;
   QColor invalid = context.backgroundColor;
   
   double x, y, width, height;
