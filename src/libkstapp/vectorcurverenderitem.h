@@ -9,18 +9,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef RENDER2DCARTESIAN_H
-#define RENDER2DCARTESIAN_H
+#ifndef VECTORCURVERENDERITEM_H
+#define VECTORCURVERENDERITEM_H
 
 #include "plotrenderitem.h"
 
 namespace Kst {
 
-class Render2DCartesian : public PlotRenderItem {
+class VectorCurveRenderItem : public PlotRenderItem {
   public:
-    Render2DCartesian(const QString &name);
-    virtual ~Render2DCartesian();
+    VectorCurveRenderItem(const QString &name);
+    virtual ~VectorCurveRenderItem();
 
+    virtual void paint(QPainter *painter);
     virtual QList<QPainterPath> projectedPaths();
 
   protected:

@@ -41,7 +41,7 @@ SOURCES += \
     plotitem.cpp \
     plotrenderitem.cpp \
     qgetoptions.cpp \
-    render2dcartesian.cpp \
+    vectorcurverenderitem.cpp \
     sessionmodel.cpp \
     svgitem.cpp \
     tabwidget.cpp \
@@ -78,7 +78,7 @@ HEADERS += \
     plotitem.h \
     plotrenderitem.h \
     qgetoptions.h \
-    render2dcartesian.h \
+    vectorcurverenderitem.h \
     sessionmodel.h \
     svgitem.h \
     tabwidget.h \

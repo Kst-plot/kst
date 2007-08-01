@@ -9,21 +9,27 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "render2dcartesian.h"
+#include "vectorcurverenderitem.h"
 
 #include <QDebug>
 
 namespace Kst {
 
-Render2DCartesian::Render2DCartesian(const QString &name)
+VectorCurveRenderItem::VectorCurveRenderItem(const QString &name)
   : PlotRenderItem(name) {
   setType(Cartesian);
 }
 
-Render2DCartesian::~Render2DCartesian() {
+VectorCurveRenderItem::~VectorCurveRenderItem() {
 }
 
-QList<QPainterPath> Render2DCartesian::projectedPaths() {
+
+void VectorCurveRenderItem::paint(QPainter *painter) {
+    Q_UNUSED(painter);
+}
+
+
+QList<QPainterPath> VectorCurveRenderItem::projectedPaths() {
   QList<QPainterPath> paths;
 
   foreach (KstRelationPtr relation, relationList()) {
@@ -38,12 +44,12 @@ QList<QPainterPath> Render2DCartesian::projectedPaths() {
 }
 
 
-QPointF Render2DCartesian::mapToProjection(const QPointF &point) {
+QPointF VectorCurveRenderItem::mapToProjection(const QPointF &point) {
   return point;
 }
 
 
-QPointF Render2DCartesian::mapFromProjection(const QPointF &point) {
+QPointF VectorCurveRenderItem::mapFromProjection(const QPointF &point) {
   return point;
 }
 

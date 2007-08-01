@@ -20,7 +20,7 @@
 #include "kstvcurve.h"
 #include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"
-#include "render2dcartesian.h"
+#include "vectorcurverenderitem.h"
 
 #include <QDebug>
 
@@ -41,7 +41,7 @@ PlotItem::PlotItem(View *parent)
   KstRelationList relationList;
   relationList.append(kst_cast<KstRelation>(renderTest));
 
-  Render2DCartesian *test = new Render2DCartesian("cartesiantest");
+  VectorCurveRenderItem *test = new VectorCurveRenderItem("cartesiantest");
   test->setRelationList(relationList);
 
   _renderers.append(test);

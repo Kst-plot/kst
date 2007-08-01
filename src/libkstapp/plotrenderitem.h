@@ -40,6 +40,8 @@ class PlotRenderItem {
     void setRelationList(const KstRelationList &relationList);
     KstRelationList relationList() const;
 
+    virtual void paint(QPainter *painter) = 0;
+
     virtual QList<QPainterPath> projectedPaths() = 0;
 
   protected:
