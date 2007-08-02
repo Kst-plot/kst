@@ -63,7 +63,7 @@ void CreatePlotCommand::createItem() {
 void PlotItem::paint(QPainter *painter) {
   ViewItem::paint(painter);
 
-  painter->translate(rect().x(), rect().y());
+  painter->translate(rect().x(), rect().y() + rect().height());
 
   QRectF range = boundingRect();
   range = painter->transform().mapRect(range);

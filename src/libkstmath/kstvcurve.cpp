@@ -854,7 +854,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
     return;
   }
 
-  /*Kst*/QPainter *p = context.p;
+  /*Kst*/QPainter *p = context.painter;
   QColor foregroundColor = context.foregroundColor;
   double Lx = context.Lx, Hx = context.Hx, Ly = context.Ly, Hy = context.Hy;
   double m_X = context.m_X, m_Y = context.m_Y;
