@@ -22,4 +22,5 @@ SOURCES += \
 QMAKE_RPATHDIR += $$OUTPUT_DIR/lib $$OUTPUT_DIR/plugin
 
 RESOURCES += \
-    ../images/images.qrc
+    $$TOPLEVELDIR/src/images/images.qrc
+

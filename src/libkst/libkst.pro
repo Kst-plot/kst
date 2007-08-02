@@ -12,6 +12,7 @@ INCLUDEPATH += \
     tmp \
     $$OUTPUT_DIR/src/libkst/tmp
 
+x11:!macx:PROCPS += sysinfo.c psversion.c
 SOURCES += \
     kstobject.cpp \
     kstdatasource.cpp \
@@ -26,10 +27,7 @@ SOURCES += \
     #ksttimezones.cpp \
     kstscalar.cpp \
     # $(PROCPS_COPY) \
-    # FIXME: switch to a variable
-    sysinfo.c \
-    psversion.c \
-    # END FIXME
+    $$PROCPS \
     kststring.cpp \
     kstmatrix.cpp \
     kstrmatrix.cpp \
