@@ -34,6 +34,8 @@
 
 #include <time.h>
 
+// #define DEBUB_VECTOR_CURVE
+
 #ifndef KDE_IS_LIKELY
 #if __GNUC__ - 0 >= 3
 # define KDE_ISLIKELY( x )    __builtin_expect(!!(x),1)
@@ -973,6 +975,9 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
           if (index > 0) {
             QPolygon poly;
             poly.putPoints(0, index, points);
+#ifdef DEBUG_VECTOR_CURVE
+qDebug() << "976 drawPolyline" << poly << endl;
+#endif
             p->drawPolyline(poly);
           }
           index = 0;
@@ -983,6 +988,9 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
               if (minY < Ly && maxY >= Ly)
                 minY = Ly;
               if (minY >= Ly && minY <= Hy && maxY >= Ly && maxY <= Hy) {
+#ifdef DEBUG_VECTOR_CURVE
+qDebug() << "987 drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY)) << endl;
+#endif
                 p->drawLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY));
               }
             }
@@ -1033,21 +1041,39 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
                   if (index >= MAX_NUM_POLYLINES-2) {
                     QPolygon poly;
                     poly.putPoints(0, index, points);
+#ifdef DEBUG_VECTOR_CURVE
+qDebug() << "1037 drawPolyline" << poly << endl;
+#endif
                     p->drawPolyline(poly);
                     index = 0;
                   }
                   if (KDE_ISUNLIKELY(minYi == maxYi)) {
+#ifdef DEBUG_VECTOR_CURVE
+qDebug() << "1042 index++" << index << endl;
+#endif
                     points.setPoint(index++, X2i, maxYi);
                   } else if (KDE_ISUNLIKELY(Y2 == minY)) {
+#ifdef DEBUG_VECTOR_CURVE
+qDebug() << "1045 index++" << index << endl;
+#endif
                     points.setPoint(index++, X2i, maxYi);
                     points.setPoint(index++, X2i, minYi);
                   } else if (KDE_ISUNLIKELY(Y2 == maxY)) {
+#ifdef DEBUG_VECTOR_CURVE
+qDebug() << "1049 index++" << index << endl;
+#endif
                     points.setPoint(index++, X2i, minYi);
                     points.setPoint(index++, X2i, maxYi);
                   } else {
+#ifdef DEBUG_VECTOR_CURVE
+qDebug() << "1053 index++" << index << endl;
+#endif
                     points.setPoint(index++, X2i, minYi);
                     points.setPoint(index++, X2i, maxYi);
                     if (KDE_ISLIKELY(Y2 >= Ly && Y2 <= Hy)) {
+#ifdef DEBUG_VECTOR_CURVE
+qDebug() << "1057 index++" << index << endl;
+#endif
                       points.setPoint(index++, X2i, Y2i);
                     }
                   }
@@ -1064,9 +1090,15 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
                     if (index > 0) {
                       QPolygon poly;
                       poly.putPoints(0, index, points);
+#ifdef DEBUG_VECTOR_CURVE
+qDebug() << "1069 drawPolyline" << poly << endl;
+#endif
                       p->drawPolyline(poly);
                       index = 0;
                     }
+#ifdef DEBUG_VECTOR_CURVE
+qDebug() << "1079 drawLine" << QLine(X2i, d2i(minY), X2i, d2i(maxY)) << endl;
+#endif
                     p->drawLine(X2i, d2i(minY), X2i, d2i(maxY));
                   }
                 }
@@ -1075,6 +1107,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
             }
 
             if (KDE_ISLIKELY(!((X1 < Lx && X2 < Lx) || (X1 > Hx && X2 > Hx)))) {
+
               // trim the line to be within the plot...
               if (KDE_ISUNLIKELY(isinf(X1))) {
                 Y1 = Y2;
@@ -1144,6 +1177,12 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
                 Y1 = Hy;
               }
 
+#ifdef DEBUG_VECTOR_CURVE
+qDebug() << "x in bounds" << ((X1 >= Lx && X1 <= Hx && X2 >= Lx && X2 <= Hx) ? "true" : "false")
+         << "y in bounds" << ((Y1 >= Ly && Y1 <= Hy && Y2 >= Ly && Y2 <= Hy) ? "true" : "false")
+         << endl;
+#endif
+
               if (X1 >= Lx && X1 <= Hx && X2 >= Lx && X2 <= Hx &&
                   Y1 >= Ly && Y1 <= Hy && Y2 >= Ly && Y2 <= Hy) {
                 int X1i = d2i(X1);
@@ -1151,20 +1190,36 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
                 int X2i = d2i(X2);
                 int Y2i = d2i(Y2);
 
+#ifdef DEBUG_VECTOR_CURVE
+qDebug() << "MY POINTS ARE GOOD!!" << index << endl;
+#endif
+
                 if (KDE_ISUNLIKELY(index == 0)) {
+#ifdef DEBUG_VECTOR_CURVE
+qDebug() << "1063 index++" << index << endl;
+#endif
                   points.setPoint(index++, X2i, Y2i);
                   points.setPoint(index++, X1i, Y1i);
                 } else if (lastPlottedX == X2i &&
                     lastPlottedY == Y2i &&
                     index < MAX_NUM_POLYLINES) {
+#ifdef DEBUG_VECTOR_CURVE
+qDebug() << "1069 index++" << index << endl;
+#endif
                   points.setPoint(index++, X1i, Y1i);
                 } else {
                   if (KDE_ISLIKELY(index > 1)) {
                     QPolygon poly;
                     poly.putPoints(0, index, points);
+#ifdef DEBUG_VECTOR_CURVE
+qDebug() << "1168 drawPolyline" << poly << endl;
+#endif
                     p->drawPolyline(poly);
                   }
                   index = 0;
+#ifdef DEBUG_VECTOR_CURVE
+qDebug() << "1079 index++" << index << endl;
+#endif
                   points.setPoint(index++, X2i, Y2i);
                   points.setPoint(index++, X1i, Y1i);
                 }
@@ -1180,6 +1235,9 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
       if (index > 1) {
         QPolygon poly;
         poly.putPoints(0, index, points);
+#ifdef DEBUG_VECTOR_CURVE
+qDebug() << "1187 drawPolyline" << poly << endl;
+#endif
         p->drawPolyline(poly);
         index = 0;
       }
@@ -1194,6 +1252,9 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
             minY = Ly;
           }
           if (minY >= Ly && minY <= Hy && maxY >= Ly && maxY <= Hy) {
+#ifdef DEBUG_VECTOR_CURVE
+qDebug() << "1212 drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY)) << endl;
+#endif
             p->drawLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY));
           }
         }

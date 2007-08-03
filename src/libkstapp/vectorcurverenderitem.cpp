@@ -30,8 +30,6 @@ void VectorCurveRenderItem::paint(QPainter *painter) {
     context.painter = painter;
     context.window = range().toRect(); //no idea if this should be floating point
 
-    qDebug() << range() << endl;
-
     //Everything that comes next is magic...  I took most from kst2dplot, hints
     //from barth and trial and error...
 
@@ -42,9 +40,9 @@ void VectorCurveRenderItem::paint(QPainter *painter) {
     context.YMax = 0.1;
 
     //These are the bounding box in regular QGV coord
-    context.Lx = 0;
+    context.Lx = range().left();
     context.Hx = range().right();
-    context.Ly = 0;
+    context.Ly = range().top();
     context.Hy = range().bottom();
 
     //To convert between the last two...
@@ -59,10 +57,10 @@ void VectorCurveRenderItem::paint(QPainter *painter) {
     context.b_Y = b_Y;
 
     painter->save();
-    QTransform t;
-    t.scale(1, -1); //i guess this is dependent upon the Y vector range
-    painter->setTransform(t, true);
-    painter->translate(0, int(-1.0 * context.Hy - context.Ly));
+
+//     qDebug() << "origin of plot:" << QPoint(context.Lx, context.Hy) << endl;
+//     qDebug() << "origin of relation:" << QPoint(relation->minX(), relation->minY()) << endl;
+
     relation->paint(context);
     painter->restore();
   }

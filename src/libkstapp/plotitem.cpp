@@ -31,9 +31,12 @@ PlotItem::PlotItem(View *parent)
 
   // FIXME fake data for testing rendering
   KstVectorPtr xTest = new KstSVector(0.0, 100.0, 10000, KstObjectTag::fromString("X vector"));
-  KstVectorPtr yTest = new KstSVector(-100.0, 100.0, 10000, KstObjectTag::fromString("Y vector"));
+  KstVectorPtr yTest = new KstSVector(0.0, 100.0, 10000, KstObjectTag::fromString("Y vector"));
 
-  KstVCurvePtr renderTest = new KstVCurve(QString("rendertest"), xTest, yTest, xTest, yTest, xTest, yTest, QColor(Qt::red));
+  KstVectorPtr errorX = new KstSVector(0.0, 0.0, 0, KstObjectTag::fromString("X error"));
+  KstVectorPtr errorY = new KstSVector(0.0, 0.0, 0, KstObjectTag::fromString("y error"));
+
+  KstVCurvePtr renderTest = new KstVCurve(QString("rendertest"), xTest, yTest, errorX, errorY, errorX, errorY, QColor(Qt::red));
   renderTest->writeLock();
   renderTest->update(0);
   renderTest->unlock();
@@ -63,15 +66,14 @@ void CreatePlotCommand::createItem() {
 void PlotItem::paint(QPainter *painter) {
   ViewItem::paint(painter);
 
-  painter->translate(rect().x(), rect().y() + rect().height());
-
-  QRectF range = boundingRect();
-  range = painter->transform().mapRect(range);
+  QRectF range = rect();
+  range = range.normalized();
+  painter->translate(range.x(), range.y());
   range.moveTopLeft(QPoint(0,0));
 
   foreach (PlotRenderItem *renderer, _renderers) {
 
-    renderer->setRange(range); //FIXME no idea if this is the idea...
+    renderer->setRange(range);
     renderer->paint(painter);
   }
 }
