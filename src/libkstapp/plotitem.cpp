@@ -66,14 +66,13 @@ void CreatePlotCommand::createItem() {
 void PlotItem::paint(QPainter *painter) {
   ViewItem::paint(painter);
 
-  QRectF range = rect();
-  range = range.normalized();
-  painter->translate(range.x(), range.y());
-  range.moveTopLeft(QPoint(0,0));
+  QRectF plotRect = rect();
+  plotRect = plotRect.normalized();
+  painter->translate(plotRect.x(), plotRect.y());
+  plotRect.moveTopLeft(QPoint(0,0));
 
   foreach (PlotRenderItem *renderer, _renderers) {
-
-    renderer->setRange(range);
+    renderer->setPlotRect(plotRect);
     renderer->paint(painter);
   }
 }

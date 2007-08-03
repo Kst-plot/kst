@@ -32,21 +32,13 @@ RenderType PlotRenderItem::type() {
 }
 
 
-void PlotRenderItem::setProjectedRange(const QRectF &range) {
-  _projectedRange = range;
-
-  _range =  mapFromProjection(range);
-
-  refreshRange();
+void PlotRenderItem::setPlotRect(const QRectF &plotRect) {
+  _plotRect = plotRect;
 }
 
 
-void PlotRenderItem::setRange(const QRectF &range) {
-  _range = range;
-
-  _projectedRange = mapToProjection(range);
-
-  refreshRange();
+QRectF PlotRenderItem::plotRect() {
+  return _plotRect;
 }
 
 
@@ -60,16 +52,6 @@ KstRelationList PlotRenderItem::relationList() const {
 }
 
 
-QRectF PlotRenderItem::projectedRange() {
-  return _projectedRange;
-}
-
-
-QRectF PlotRenderItem::range() {
-  return _range;
-}
-
-
 QRectF PlotRenderItem::mapToProjection(const QRectF &rect) {
     return QRectF(mapToProjection(rect.topLeft()), mapToProjection(rect.bottomRight()));
 }
@@ -77,10 +59,6 @@ QRectF PlotRenderItem::mapToProjection(const QRectF &rect) {
 
 QRectF PlotRenderItem::mapFromProjection(const QRectF &rect) {
     return QRectF(mapFromProjection(rect.topLeft()), mapFromProjection(rect.bottomRight()));
-}
-
-
-void PlotRenderItem::refreshRange() {
 }
 
 }

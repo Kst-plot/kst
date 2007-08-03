@@ -33,7 +33,7 @@ void VectorCurveRenderItem::paint(QPainter *painter) {
 
     KstCurveRenderContext context;
     context.painter = painter;
-    context.window = range().toRect(); //no idea if this should be floating point
+    context.window = plotRect().toRect(); //no idea if this should be floating point
 
     //FIXME rename these methods in kstvcurve
     QRectF vectorRect(relation->minX(),
@@ -48,13 +48,10 @@ void VectorCurveRenderItem::paint(QPainter *painter) {
     QRectF zoomRect = t.mapRect(vectorRect);
     zoomRect.moveTopLeft(vectorRect.topLeft());
 
-    //FIXME this should no longer be called range...
-    QRectF plotRect = range();
-
 //     qDebug() << "============================================================>"
 //              << "vectorRect" << vectorRect
 //              << "zoombox" << zoomRect
-//              << "plotRect" << plotRect << endl;
+//              << "plotRect" << plotRect() << endl;
 
     //FIXME Completely refactor KstCurveRenderContext now that we know what these are
 
@@ -65,14 +62,14 @@ void VectorCurveRenderItem::paint(QPainter *painter) {
     context.YMax = zoomRect.bottom();
 
     //These are the bounding box in regular QGV coord
-    context.Lx = plotRect.left();
-    context.Hx = plotRect.right();
-    context.Ly = plotRect.top();
-    context.Hy = plotRect.bottom();
+    context.Lx = plotRect().left();
+    context.Hx = plotRect().right();
+    context.Ly = plotRect().top();
+    context.Hy = plotRect().bottom();
 
     //To convert between the last two...
-    double m_X =  double(plotRect.width()-1)/(context.XMax - context.XMin);
-    double m_Y = -double(plotRect.height()-1)/(context.YMax - context.YMin);
+    double m_X =  double(plotRect().width()-1)/(context.XMax - context.XMin);
+    double m_Y = -double(plotRect().height()-1)/(context.YMax - context.YMin);
     double b_X = context.Lx - m_X * context.XMin;
     double b_Y = context.Ly - m_Y * context.YMax;
 

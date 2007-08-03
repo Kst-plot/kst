@@ -29,13 +29,8 @@ class PlotRenderItem {
     void setType(RenderType type);
     RenderType type();
 
-    // FIXME better name?
-    void setRange(const QRectF &range);
-    QRectF range();
-
-    // FIXME better name?
-    void setProjectedRange(const QRectF &range);
-    QRectF projectedRange();
+    void setPlotRect(const QRectF &plotRect);
+    QRectF plotRect();
 
     void setRelationList(const KstRelationList &relationList);
     KstRelationList relationList() const;
@@ -49,17 +44,11 @@ class PlotRenderItem {
     QRectF mapToProjection(const QRectF &rect);
     QRectF mapFromProjection(const QRectF &rect);
 
-    // FIXME still not clear...
-    // Recompute auxilliary range information if the
-    // properties of the full plot have changed.
-    void refreshRange();
-
   private:
     QString _name;
     RenderType _type;
 
-    QRectF _range;
-    QRectF _projectedRange;
+    QRectF _plotRect;
 
     KstRelationList _relationList;
 };
