@@ -13,6 +13,9 @@
 
 #include <QDebug>
 
+//FIXME how many?
+static int DESIRED_NUMBER_OF_POINTS_FOR_INITIAL_VIEW = 100;
+
 namespace Kst {
 
 VectorCurveRenderItem::VectorCurveRenderItem(const QString &name)
@@ -26,28 +29,50 @@ VectorCurveRenderItem::~VectorCurveRenderItem() {
 
 void VectorCurveRenderItem::paint(QPainter *painter) {
   foreach (KstRelationPtr relation, relationList()) {
+    //FIXME static_cast to kstvcurve and take advantage of extra api
+
     KstCurveRenderContext context;
     context.painter = painter;
     context.window = range().toRect(); //no idea if this should be floating point
 
-    //Everything that comes next is magic...  I took most from kst2dplot, hints
-    //from barth and trial and error...
+    //FIXME rename these methods in kstvcurve
+    QRectF vectorRect(relation->minX(),
+                      relation->minY(),
+                      relation->maxX(),
+                      relation->maxY());
 
-    //These are the region of the plot in vector coord
-    context.XMin = 0.0;
-    context.XMax = 0.1;
-    context.YMin = 0.0;
-    context.YMax = 0.1;
+    QTransform t;
+    qreal scaleFactor = 1.0 / (relation->sampleCount() / DESIRED_NUMBER_OF_POINTS_FOR_INITIAL_VIEW);
+    t.scale(scaleFactor, scaleFactor);
+
+    QRectF zoomRect = t.mapRect(vectorRect);
+    zoomRect.moveTopLeft(vectorRect.topLeft());
+
+    //FIXME this should no longer be called range...
+    QRectF plotRect = range();
+
+//     qDebug() << "============================================================>"
+//              << "vectorRect" << vectorRect
+//              << "zoombox" << zoomRect
+//              << "plotRect" << plotRect << endl;
+
+    //FIXME Completely refactor KstCurveRenderContext now that we know what these are
+
+    //Set what amounts to the zoombox...
+    context.XMin = zoomRect.left();
+    context.XMax = zoomRect.right();
+    context.YMin = zoomRect.top();
+    context.YMax = zoomRect.bottom();
 
     //These are the bounding box in regular QGV coord
-    context.Lx = range().left();
-    context.Hx = range().right();
-    context.Ly = range().top();
-    context.Hy = range().bottom();
+    context.Lx = plotRect.left();
+    context.Hx = plotRect.right();
+    context.Ly = plotRect.top();
+    context.Hy = plotRect.bottom();
 
     //To convert between the last two...
-    double m_X =  double(range().width()-1)/(context.XMax - context.XMin);
-    double m_Y = -double(range().height()-1)/(context.YMax - context.YMin);
+    double m_X =  double(plotRect.width()-1)/(context.XMax - context.XMin);
+    double m_Y = -double(plotRect.height()-1)/(context.YMax - context.YMin);
     double b_X = context.Lx - m_X * context.XMin;
     double b_Y = context.Ly - m_Y * context.YMax;
 
@@ -57,10 +82,6 @@ void VectorCurveRenderItem::paint(QPainter *painter) {
     context.b_Y = b_Y;
 
     painter->save();
-
-//     qDebug() << "origin of plot:" << QPoint(context.Lx, context.Hy) << endl;
-//     qDebug() << "origin of relation:" << QPoint(relation->minX(), relation->minY()) << endl;
-
     relation->paint(context);
     painter->restore();
   }

@@ -34,7 +34,7 @@
 
 #include <time.h>
 
-// #define DEBUB_VECTOR_CURVE
+// #define DEBUG_VECTOR_CURVE
 
 #ifndef KDE_IS_LIKELY
 #if __GNUC__ - 0 >= 3
@@ -976,7 +976,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
             QPolygon poly;
             poly.putPoints(0, index, points);
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << "976 drawPolyline" << poly << endl;
+qDebug() << __LINE__ << "drawPolyline" << poly << endl;
 #endif
             p->drawPolyline(poly);
           }
@@ -989,7 +989,7 @@ qDebug() << "976 drawPolyline" << poly << endl;
                 minY = Ly;
               if (minY >= Ly && minY <= Hy && maxY >= Ly && maxY <= Hy) {
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << "987 drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY)) << endl;
+qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY)) << endl;
 #endif
                 p->drawLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY));
               }
@@ -1042,37 +1042,37 @@ qDebug() << "987 drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY)) << e
                     QPolygon poly;
                     poly.putPoints(0, index, points);
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << "1037 drawPolyline" << poly << endl;
+qDebug() << __LINE__ << "drawPolyline" << poly << endl;
 #endif
                     p->drawPolyline(poly);
                     index = 0;
                   }
                   if (KDE_ISUNLIKELY(minYi == maxYi)) {
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << "1042 index++" << index << endl;
+qDebug() << __LINE__ << "index++" << index << endl;
 #endif
                     points.setPoint(index++, X2i, maxYi);
                   } else if (KDE_ISUNLIKELY(Y2 == minY)) {
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << "1045 index++" << index << endl;
+qDebug() << __LINE__ << "index++" << index << endl;
 #endif
                     points.setPoint(index++, X2i, maxYi);
                     points.setPoint(index++, X2i, minYi);
                   } else if (KDE_ISUNLIKELY(Y2 == maxY)) {
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << "1049 index++" << index << endl;
+qDebug() << __LINE__ << "index++" << index << endl;
 #endif
                     points.setPoint(index++, X2i, minYi);
                     points.setPoint(index++, X2i, maxYi);
                   } else {
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << "1053 index++" << index << endl;
+qDebug() << __LINE__ << "index++" << index << endl;
 #endif
                     points.setPoint(index++, X2i, minYi);
                     points.setPoint(index++, X2i, maxYi);
                     if (KDE_ISLIKELY(Y2 >= Ly && Y2 <= Hy)) {
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << "1057 index++" << index << endl;
+qDebug() << __LINE__ << "index++" << index << endl;
 #endif
                       points.setPoint(index++, X2i, Y2i);
                     }
@@ -1091,13 +1091,13 @@ qDebug() << "1057 index++" << index << endl;
                       QPolygon poly;
                       poly.putPoints(0, index, points);
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << "1069 drawPolyline" << poly << endl;
+qDebug() << __LINE__ << "drawPolyline" << poly << endl;
 #endif
                       p->drawPolyline(poly);
                       index = 0;
                     }
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << "1079 drawLine" << QLine(X2i, d2i(minY), X2i, d2i(maxY)) << endl;
+qDebug() << __LINE__ << "drawLine" << QLine(X2i, d2i(minY), X2i, d2i(maxY)) << endl;
 #endif
                     p->drawLine(X2i, d2i(minY), X2i, d2i(maxY));
                   }
@@ -1177,9 +1177,24 @@ qDebug() << "1079 drawLine" << QLine(X2i, d2i(minY), X2i, d2i(maxY)) << endl;
                 Y1 = Hy;
               }
 
+
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << "x in bounds" << ((X1 >= Lx && X1 <= Hx && X2 >= Lx && X2 <= Hx) ? "true" : "false")
-         << "y in bounds" << ((Y1 >= Ly && Y1 <= Hy && Y2 >= Ly && Y2 <= Hy) ? "true" : "false")
+bool xInBounds = (X1 >= Lx && X1 <= Hx && X2 >= Lx && X2 <= Hx);
+bool yInBounds = (Y1 >= Ly && Y1 <= Hy && Y2 >= Ly && Y2 <= Hy);
+
+if (!xInBounds)
+qDebug() << "x not in bounds"
+         << "X1:" << X1
+         << "X2:" << X2
+         << "Lx:" << Lx
+         << "Hx:" << Hx
+         << endl;
+if (!yInBounds)
+qDebug() << "y not in bounds"
+         << "Y1:" << Y1
+         << "Y2:" << Y2
+         << "Ly:" << Ly
+         << "Hy:" << Hy
          << endl;
 #endif
 
@@ -1196,7 +1211,7 @@ qDebug() << "MY POINTS ARE GOOD!!" << index << endl;
 
                 if (KDE_ISUNLIKELY(index == 0)) {
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << "1063 index++" << index << endl;
+qDebug() << __LINE__ << "index++" << index << endl;
 #endif
                   points.setPoint(index++, X2i, Y2i);
                   points.setPoint(index++, X1i, Y1i);
@@ -1204,7 +1219,7 @@ qDebug() << "1063 index++" << index << endl;
                     lastPlottedY == Y2i &&
                     index < MAX_NUM_POLYLINES) {
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << "1069 index++" << index << endl;
+qDebug() << __LINE__ << "index++" << index << endl;
 #endif
                   points.setPoint(index++, X1i, Y1i);
                 } else {
@@ -1212,13 +1227,13 @@ qDebug() << "1069 index++" << index << endl;
                     QPolygon poly;
                     poly.putPoints(0, index, points);
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << "1168 drawPolyline" << poly << endl;
+qDebug() << __LINE__ << "drawPolyline" << poly << endl;
 #endif
                     p->drawPolyline(poly);
                   }
                   index = 0;
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << "1079 index++" << index << endl;
+qDebug() << __LINE__ << "index++" << index << endl;
 #endif
                   points.setPoint(index++, X2i, Y2i);
                   points.setPoint(index++, X1i, Y1i);
@@ -1236,7 +1251,7 @@ qDebug() << "1079 index++" << index << endl;
         QPolygon poly;
         poly.putPoints(0, index, points);
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << "1187 drawPolyline" << poly << endl;
+qDebug() << __LINE__ << "drawPolyline" << poly << endl;
 #endif
         p->drawPolyline(poly);
         index = 0;
@@ -1253,7 +1268,7 @@ qDebug() << "1187 drawPolyline" << poly << endl;
           }
           if (minY >= Ly && minY <= Hy && maxY >= Ly && maxY <= Hy) {
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << "1212 drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY)) << endl;
+qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY)) << endl;
 #endif
             p->drawLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY));
           }

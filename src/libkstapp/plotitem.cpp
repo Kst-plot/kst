@@ -31,7 +31,7 @@ PlotItem::PlotItem(View *parent)
 
   // FIXME fake data for testing rendering
   KstVectorPtr xTest = new KstSVector(0.0, 100.0, 10000, KstObjectTag::fromString("X vector"));
-  KstVectorPtr yTest = new KstSVector(0.0, 100.0, 10000, KstObjectTag::fromString("Y vector"));
+  KstVectorPtr yTest = new KstSVector(-100.0, 100.0, 10000, KstObjectTag::fromString("Y vector"));
 
   KstVectorPtr errorX = new KstSVector(0.0, 0.0, 0, KstObjectTag::fromString("X error"));
   KstVectorPtr errorY = new KstSVector(0.0, 0.0, 0, KstObjectTag::fromString("y error"));
