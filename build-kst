@@ -7,5 +7,5 @@ export BUILDDIR=$PWD/build
 
 mkdir -p $BUILDDIR
 cd $BUILDDIR
-qmake $SCRIPTDIR/kst.pro
+qmake -r $SCRIPTDIR/kst.pro
 make
