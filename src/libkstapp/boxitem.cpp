@@ -110,7 +110,7 @@ ViewItem* BoxItemFactory::generateGraphics(QXmlStreamReader& xml, View *view, Vi
     xml.readNext();
   }
 
-  rc->setRect(QRectF(QPointF(x, y), QSizeF(w, h)));
+  rc->setViewRect(QRectF(QPointF(x, y), QSizeF(w, h)));
   return rc;
 }
 

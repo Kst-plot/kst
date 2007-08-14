@@ -32,8 +32,33 @@ class PlotItem : public ViewItem
     virtual ~PlotItem();
     void paint(QPainter *painter);
 
+    qreal width() const { return viewRect().width(); }
+    qreal height() const { return viewRect().height(); }
+
+    qreal marginWidth() const;
+    void setMarginWidth(qreal marginWidth);
+
+    qreal marginHeight() const;
+    void setMarginHeight(qreal marginHeight);
+
+    QString leftLabel() const;
+    QString bottomLabel() const;
+    QString rightLabel() const;
+    QString topLabel() const;
+
+  private:
+    QRectF horizontalLabelRect() const;
+    QRectF verticalLabelRect() const;
+
+    void calculateLeftLabelBound(QPainter *painter);
+    void calculateBottomLabelBound(QPainter *painter);
+    void calculateRightLabelBound(QPainter *painter);
+    void calculateTopLabelBound(QPainter *painter);
+
   private:
     QList<PlotRenderItem*> _renderers;
+    qreal _marginWidth;
+    qreal _marginHeight;
 };
 
 class KST_EXPORT CreatePlotCommand : public CreateCommand

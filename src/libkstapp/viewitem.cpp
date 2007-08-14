@@ -51,6 +51,22 @@ void ViewItem::setMouseMode(MouseMode mode) {
 }
 
 
+QRectF ViewItem::viewRect() const {
+  return rect();
+}
+
+
+void ViewItem::setViewRect(const QRectF &viewRect) {
+  setRect(viewRect);
+  emit geometryChanged();
+}
+
+
+void ViewItem::setViewRect(qreal x, qreal y, qreal width, qreal height) {
+  setViewRect(QRectF(x, y, width, height));
+}
+
+
 QSize ViewItem::sizeOfGrip() const {
   return QSize(10,10);
 }
@@ -325,7 +341,7 @@ void ViewItem::edit() {
 void ViewItem::creationPolygonChanged(View::CreationEvent event) {
   if (event == View::MousePress) {
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MousePress));
-    setRect(poly.first().x(), poly.first().y(),
+    setViewRect(poly.first().x(), poly.first().y(),
             poly.last().x() - poly.first().x(), poly.last().y() - poly.first().y());
     parentView()->scene()->addItem(this);
     setZValue(1);
@@ -334,14 +350,14 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
 
   if (event == View::MouseMove) {
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseMove));
-    setRect(rect().x(), rect().y(),
+    setViewRect(rect().x(), rect().y(),
             poly.last().x() - rect().x(), poly.last().y() - rect().y());
     return;
   }
 
   if (event == View::MouseRelease) {
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseRelease));
-    setRect(rect().x(), rect().y(),
+    setViewRect(rect().x(), rect().y(),
             poly.last().x() - rect().x(), poly.last().y() - rect().y());
 
     parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself

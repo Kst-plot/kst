@@ -44,7 +44,7 @@ QLineF LineItem::line() const {
 
 void LineItem::setLine(const QLineF &line) {
   _line = line;
-  setRect(QRectF(_line.p1(), _line.p2()));
+  setViewRect(QRectF(_line.p1(), _line.p2()));
 }
 
 

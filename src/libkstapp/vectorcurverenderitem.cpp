@@ -12,28 +12,43 @@
 #include "vectorcurverenderitem.h"
 
 #include <QDebug>
+#include <QGraphicsSceneMouseEvent>
 
 //FIXME how many?
 static int DESIRED_NUMBER_OF_POINTS_FOR_INITIAL_VIEW = 100;
 
 namespace Kst {
 
-VectorCurveRenderItem::VectorCurveRenderItem(const QString &name)
-  : PlotRenderItem(name) {
+VectorCurveRenderItem::VectorCurveRenderItem(const QString &name, PlotItem *parentItem)
+  : PlotRenderItem(name, parentItem) {
   setType(Cartesian);
 }
+
 
 VectorCurveRenderItem::~VectorCurveRenderItem() {
 }
 
 
 void VectorCurveRenderItem::paint(QPainter *painter) {
+
+  QRectF normalRect = rect();
+  normalRect = normalRect.normalized();
+
+  if (_selectionRect.isValid() && !_selectionRect.isEmpty()) {
+    painter->save();
+    painter->setPen(Qt::black);
+    painter->drawRect(_selectionRect);
+    painter->restore();
+  }
+
+  painter->translate(normalRect.x(), normalRect.y());
+
   foreach (KstRelationPtr relation, relationList()) {
     //FIXME static_cast to kstvcurve and take advantage of extra api
 
     KstCurveRenderContext context;
     context.painter = painter;
-    context.window = plotRect().toRect(); //no idea if this should be floating point
+    context.window = QRect();//plotRect().toRect(); //no idea if this should be floating point
 
     //FIXME rename these methods in kstvcurve
     QRectF vectorRect(relation->minX(),
@@ -48,9 +63,9 @@ void VectorCurveRenderItem::paint(QPainter *painter) {
     QRectF zoomRect = t.mapRect(vectorRect);
     zoomRect.moveTopLeft(vectorRect.topLeft());
 
-//     qDebug() << "============================================================>"
-//              << "vectorRect" << vectorRect
-//              << "zoombox" << zoomRect
+//     qDebug() << "============================================================>\n"
+//              << "vectorRect" << vectorRect << "\n"
+//              << "zoomRect" << zoomRect << "\n"
 //              << "plotRect" << plotRect() << endl;
 
     //FIXME Completely refactor KstCurveRenderContext now that we know what these are
@@ -82,6 +97,24 @@ void VectorCurveRenderItem::paint(QPainter *painter) {
     relation->paint(context);
     painter->restore();
   }
+}
+
+
+void VectorCurveRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+  _selectionRect.setBottomRight(event->pos());
+  update(_selectionRect);
+}
+
+
+void VectorCurveRenderItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+  _selectionRect = QRectF(event->pos(), QSizeF(0,0));
+}
+
+
+void VectorCurveRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+  Q_UNUSED(event);
+  _selectionRect = QRectF();
+  update();
 }
 
 

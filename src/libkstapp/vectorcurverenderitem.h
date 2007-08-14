@@ -16,16 +16,25 @@
 
 namespace Kst {
 
-class VectorCurveRenderItem : public PlotRenderItem {
+class VectorCurveRenderItem : public PlotRenderItem
+{
+  Q_OBJECT
   public:
-    VectorCurveRenderItem(const QString &name);
+    VectorCurveRenderItem(const QString &name, PlotItem *parentItem);
     virtual ~VectorCurveRenderItem();
 
     virtual void paint(QPainter *painter);
 
   protected:
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+
     virtual QPointF mapToProjection(const QPointF &point);
     virtual QPointF mapFromProjection(const QPointF &point);
+
+  private:
+    QRectF _selectionRect;
 };
 
 }

@@ -42,6 +42,11 @@ public:
   MouseMode mouseMode() const;
   void setMouseMode(MouseMode mode);
 
+  //NOTE This should be used in place of QGraphicsRectItem::setRect()...
+  QRectF viewRect() const;
+  void setViewRect(const QRectF &viewRect);
+  void setViewRect(qreal x, qreal y, qreal width, qreal height);
+
   QSize sizeOfGrip() const;
   QPainterPath topLeftGrip() const;
   QPainterPath topRightGrip() const;
@@ -65,6 +70,7 @@ public:
   virtual void paint(QPainter *painter);
 
 Q_SIGNALS:
+  void geometryChanged();
   void creationComplete();
 
 /*FIXME these should be made private for only undo commands to access*/
