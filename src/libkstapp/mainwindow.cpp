@@ -33,12 +33,13 @@
 
 #include <QtGui>
 
-// Temporaries
+//FIXME Temporaries REMOVE!!
 #include "kstavector.h"
 #include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"
 #include "kstequation.h"
 
+#include "plotlayoutitem.h"
 
 namespace Kst {
 
@@ -306,6 +307,23 @@ void MainWindow::createPlot() {
 }
 
 
+void MainWindow::demoPlotLayout() {
+
+  View *v = tabWidget()->currentView();
+  PlotLayoutItem *layout = new PlotLayoutItem(v);
+  v->scene()->addItem(layout);
+  layout->setZValue(1);
+  foreach (QGraphicsItem *item, v->items()) {
+    if (PlotItem *plot = qgraphicsitem_cast<PlotItem*>(item)) {
+      plot->setParentItem(layout);
+    }
+  }
+
+  layout->setViewRect(QRectF(0,0,300,300));
+
+}
+
+
 void MainWindow::demoModel() {
   KstVectorPtr v = new KstVector;
   v->resize(999999);
@@ -470,9 +488,14 @@ void MainWindow::createMenus() {
 
   // FIXME: remove this later.
   QMenu *demoMenu = menuBar()->addMenu("&Demo");
-  QAction *demo = new QAction("Vector model", this);
-  connect(demo, SIGNAL(triggered()), this, SLOT(demoModel()));
-  demoMenu->addAction(demo);
+
+  QAction *demoLayout = new QAction("Plot layout", this);
+  connect(demoLayout, SIGNAL(triggered()), this, SLOT(demoPlotLayout()));
+  demoMenu->addAction(demoLayout);
+
+  QAction *demoModel = new QAction("Vector model", this);
+  connect(demoModel, SIGNAL(triggered()), this, SLOT(demoModel()));
+  demoMenu->addAction(demoModel);
 }
 
 

@@ -30,6 +30,10 @@ class PlotItem : public ViewItem
   public:
     PlotItem(View *parent);
     virtual ~PlotItem();
+
+    enum { Type = UserType + 1 };
+    int type() const { return Type; }
+
     void paint(QPainter *painter);
 
     qreal width() const { return viewRect().normalized().width(); }

@@ -9,9 +9,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QDebug>
-#include <QPainterPath>
-
 #include "plotitem.h"
 
 #include "plotrenderitem.h"

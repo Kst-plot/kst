@@ -39,6 +39,7 @@ SOURCES += \
     memorywidget.cpp \
     pictureitem.cpp \
     plotitem.cpp \
+    plotlayoutitem.cpp \
     plotrenderitem.cpp \
     qgetoptions.cpp \
     vectorcurverenderitem.cpp \
@@ -76,6 +77,7 @@ HEADERS += \
     memorywidget.h \
     pictureitem.h \
     plotitem.h \
+    plotlayoutitem.h \
     plotrenderitem.h \
     qgetoptions.h \
     vectorcurverenderitem.h \

@@ -69,6 +69,7 @@ class MainWindow : public QMainWindow
     void createPlot();
     void createSvg();
 
+    void demoPlotLayout();
     void demoModel();
 
     void performHeavyStartupActions();
