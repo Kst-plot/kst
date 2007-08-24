@@ -34,14 +34,11 @@ PlotItem *PlotRenderItem::plotItem() const {
 
 
 void PlotRenderItem::updateGeometry() {
-  //FIXME bound this so that the rect is never larger than parent rect...
-  QRectF rect = plotItem()->rect();
-  rect = rect.normalized();
-  rect = rect.adjusted(plotItem()->marginWidth(),
-                       plotItem()->marginHeight(),
-                       -(plotItem()->marginHeight()),
-                       -(plotItem()->marginHeight()));
-  setRect(rect);
+  QRectF rect = plotItem()->rect().normalized();
+  QPointF margin(plotItem()->marginWidth(), plotItem()->marginHeight());
+  QPointF topLeft(rect.topLeft() + margin);
+  QPointF bottomRight(rect.bottomRight() - margin);
+  setRect(QRectF(topLeft, bottomRight));
 }
 
 
@@ -77,7 +74,7 @@ void PlotRenderItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
   Q_UNUSED(option);
   Q_UNUSED(widget);
   painter->fillRect(rect(), Qt::white);
-  paint(painter);
+//   paint(painter);
 }
 
 
