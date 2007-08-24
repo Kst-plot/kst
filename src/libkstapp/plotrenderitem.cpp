@@ -74,7 +74,7 @@ void PlotRenderItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
   Q_UNUSED(option);
   Q_UNUSED(widget);
   painter->fillRect(rect(), Qt::white);
-//   paint(painter);
+  paint(painter);
 }
 
 

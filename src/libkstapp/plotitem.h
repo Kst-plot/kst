@@ -50,10 +50,14 @@ class PlotItem : public ViewItem
     QRectF horizontalLabelRect() const;
     QRectF verticalLabelRect() const;
 
-    void calculateLeftLabelBound(QPainter *painter);
-    void calculateBottomLabelBound(QPainter *painter);
-    void calculateRightLabelBound(QPainter *painter);
-    void calculateTopLabelBound(QPainter *painter);
+    void paintLeftLabel(QPainter *painter);
+    QSizeF calculateLeftLabelBound(QPainter *painter);
+    void paintBottomLabel(QPainter *painter);
+    QSizeF calculateBottomLabelBound(QPainter *painter);
+    void paintRightLabel(QPainter *painter);
+    QSizeF calculateRightLabelBound(QPainter *painter);
+    void paintTopLabel(QPainter *painter);
+    QSizeF calculateTopLabelBound(QPainter *painter);
 
   private:
     QList<PlotRenderItem*> _renderers;
