@@ -39,7 +39,9 @@ void PlotLayoutItem::updateGeometry() {
     Q_ASSERT(plotItem);
 
     QPointF topLeft(0, itemHeight);
-    plotItem->setViewRect(QRectF(topLeft, QSizeF(width(), height() / plotItems.count())));
+    plotItem->resetTransform();
+    plotItem->setPos(topLeft);
+    plotItem->setViewRect(QRectF(QPoint(0,0), QSizeF(width(), height() / plotItems.count())));
     itemHeight += height() / plotItems.count();
   }
 }

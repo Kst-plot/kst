@@ -37,6 +37,9 @@ public:
   ViewItem(View *parent);
   virtual ~ViewItem();
 
+  enum { Type = UserType + 1 };
+  int type() const { return Type; }
+
   View *parentView() const;
 
   MouseMode mouseMode() const;

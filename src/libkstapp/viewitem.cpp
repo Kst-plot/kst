@@ -390,6 +390,11 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 
 void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
+  if (ViewItem *item = qgraphicsitem_cast<ViewItem*>(parentItem())) {
+    event->ignore();
+    return;
+  }
+
   if (parentView()->mouseMode() == View::Default) {
     if (mouseMode() == ViewItem::Default ||
         mouseMode() == ViewItem::Move ||
@@ -641,11 +646,23 @@ void ViewItem::rotateTowards(const QPointF &corner, const QPointF &point) {
 
 
 void ViewItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
+
+  if (ViewItem *item = qgraphicsitem_cast<ViewItem*>(parentItem())) {
+    event->ignore();
+    return;
+  }
+
   edit();
 }
 
 
 void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+
+  if (ViewItem *item = qgraphicsitem_cast<ViewItem*>(parentItem())) {
+    event->ignore();
+    return;
+  }
+
   QPointF p = event->pos();
   if (topLeftGrip().contains(p)) {
     setActiveGrip(TopLeftGrip);
@@ -672,6 +689,11 @@ void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
 
 void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+
+  if (ViewItem *item = qgraphicsitem_cast<ViewItem*>(parentItem())) {
+    event->ignore();
+    return;
+  }
 
   if (parentView()->mouseMode() != View::Default) {
     parentView()->setMouseMode(View::Default);
