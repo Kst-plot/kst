@@ -26,7 +26,7 @@
 namespace Kst {
 
 View::View()
-  : QGraphicsView(kstApp->mainWindow()), _currentPlotItem(0), _mouseMode(Default) {
+  : QGraphicsView(kstApp->mainWindow()), _currentPlotItem(0), _mouseMode(Default), _snapToGrid(true) {
 
   _undoStack = new QUndoStack(this);
   setScene(new QGraphicsScene(this));
@@ -95,6 +95,24 @@ QPolygonF View::creationPolygon(CreationEvents events) const {
 }
 
 
+QPointF View::snapPoint(const QPointF &point) {
+
+  if (!_snapToGrid)
+    return point;
+
+  //FIXME floating point?
+  QPointF p(point.x() - int(point.x()) % int(gridSpacing().width()),
+            point.y() - int(point.y()) % int(gridSpacing().height()));
+
+//   qDebug() << "snap "
+//             << "before:" << point
+//             << "after:" << p
+//             << endl;
+
+  return p;
+}
+
+
 bool View::eventFilter(QObject *obj, QEvent *event) {
   if (obj != scene() || _mouseMode != Create)
     return QGraphicsView::eventFilter(obj, event);
@@ -103,21 +121,21 @@ bool View::eventFilter(QObject *obj, QEvent *event) {
   case QEvent::GraphicsSceneMousePress:
     {
       QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
-      _creationPolygonPress << e->buttonDownScenePos(Qt::LeftButton);
+      _creationPolygonPress << snapPoint(e->buttonDownScenePos(Qt::LeftButton));
       emit creationPolygonChanged(MousePress);
       return true; //filter this otherwise something can grab our mouse...
     }
   case QEvent::GraphicsSceneMouseRelease:
     {
       QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
-      _creationPolygonRelease << e->scenePos();
+      _creationPolygonRelease << snapPoint(e->scenePos());
       emit creationPolygonChanged(MouseRelease);
       break;
     }
   case QEvent::GraphicsSceneMouseMove:
     {
       QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
-      _creationPolygonMove << e->scenePos();
+      _creationPolygonMove << snapPoint(e->scenePos());
       emit creationPolygonChanged(MouseMove);
       break;
     }
@@ -154,6 +172,41 @@ void View::resizeEvent(QResizeEvent *event) {
   if (size() != sceneRect().size() && sceneRect().isValid()) {
     fitInView(sceneRect());
   }
+}
+
+
+void View::drawBackground(QPainter *painter, const QRectF &rect) {
+
+  QGraphicsView::drawBackground(painter, rect);
+
+  painter->save();
+  painter->setPen(Qt::gray);
+  painter->setOpacity(0.2);
+
+  const QRectF r = sceneRect();
+  qreal spacing = gridSpacing().width();
+
+  //FIXME We should probably only draw those lines that intercept rect
+
+  //vertical lines
+  qreal x = r.left() + spacing;
+  while (x < r.right()) {
+    QLineF line(QPointF(x, r.top()), QPointF(x, r.bottom()));
+    painter->drawLine(line);
+    x += spacing;
+  }
+
+  spacing = gridSpacing().height();
+
+  //horizontal lines
+  qreal y = r.top() + spacing;
+  while (y < r.bottom()) {
+    QLineF line(QPointF(r.left(), y), QPointF(r.right(), y));
+    painter->drawLine(line);
+    y += spacing;
+  }
+
+  painter->restore();
 }
 
 }

@@ -753,6 +753,9 @@ void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
              parentView()->mouseMode() == View::Rotate) {
     _originalTransform = transform();
   } else if (oldMode == View::Move) {
+
+    setPos(parentView()->snapPoint(pos()));
+
     new MoveCommand(this, _originalPosition, pos());
   } else if (oldMode == View::Resize) {
     new ResizeCommand(this, _originalTransform, transform());

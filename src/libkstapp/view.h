@@ -43,6 +43,15 @@ public:
 
   QPolygonF creationPolygon(CreationEvents events) const;
 
+  //FIXME make configurable...
+  QSizeF gridSpacing() const { return QSizeF(20,20); }
+
+  //FIXME make configurable...
+  bool snapToGrid() const { return _snapToGrid; }
+  void setSnapToGrid(bool snapToGrid) { _snapToGrid = snapToGrid; }
+
+  QPointF snapPoint(const QPointF &point);
+
 Q_SIGNALS:
   void mouseModeChanged(View::MouseMode oldMode);
   void creationPolygonChanged(View::CreationEvent event);
@@ -51,6 +60,7 @@ protected:
   bool eventFilter(QObject *obj, QEvent *event);
   void setVisible(bool visible);
   void resizeEvent(QResizeEvent *event);
+  void drawBackground(QPainter *painter, const QRectF &rect);
 
 private Q_SLOTS:
   void initializeSceneRect();
@@ -62,6 +72,7 @@ private:
   QPolygonF _creationPolygonPress;
   QPolygonF _creationPolygonMove;
   QPolygonF _creationPolygonRelease;
+  bool _snapToGrid;
 };
 
 }
