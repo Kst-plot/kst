@@ -9,30 +9,46 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef PLOTLAYOUTITEM_H
-#define PLOTLAYOUTITEM_H
+#ifndef VIEWGRIDLAYOUT_H
+#define VIEWGRIDLAYOUT_H
 
-#include "viewitem.h"
+#include <QObject>
 
 namespace Kst {
 
-class PlotLayoutItem : public ViewItem
+class ViewItem;
+
+class ViewGridLayout : public QObject
 {
   Q_OBJECT
   public:
-    PlotLayoutItem(View *parent);
-    virtual ~PlotLayoutItem();
+    ViewGridLayout(ViewItem *parent);
+    virtual ~ViewGridLayout();
 
-    qreal width() const { return viewRect().normalized().width(); }
-    qreal height() const { return viewRect().normalized().height(); }
+    ViewItem *parentItem() const;
 
-    Qt::Orientation orientation() const { return _orientation; }
+    void addViewItem(ViewItem *viewItem, int row, int column);
+    void addViewItem(ViewItem *viewItem, int row, int column, int rowSpan, int columnSpan);
+
+    int rowCount() const;
+    int columnCount() const;
 
   public Q_SLOTS:
-    void updateGeometry();
+    void update();
 
   private:
-    Qt::Orientation _orientation;
+    struct LayoutItem {
+      ViewItem *viewItem;
+      int row;
+      int column;
+      int rowSpan;
+      int columnSpan;
+    };
+
+    int _rowCount;
+    int _columnCount;
+
+    QList<LayoutItem> _items;
 };
 
 }

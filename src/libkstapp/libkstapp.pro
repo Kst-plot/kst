@@ -39,7 +39,6 @@ SOURCES += \
     memorywidget.cpp \
     pictureitem.cpp \
     plotitem.cpp \
-    plotlayoutitem.cpp \
     plotrenderitem.cpp \
     qgetoptions.cpp \
     vectorcurverenderitem.cpp \
@@ -51,6 +50,7 @@ SOURCES += \
     vectortablemodel.cpp \
     viewcommand.cpp \
     view.cpp \
+    viewgridlayout.cpp \
     viewitem.cpp \
     viewitemdialog.cpp \
     viewmanager.cpp
@@ -77,7 +77,6 @@ HEADERS += \
     memorywidget.h \
     pictureitem.h \
     plotitem.h \
-    plotlayoutitem.h \
     plotrenderitem.h \
     qgetoptions.h \
     vectorcurverenderitem.h \
@@ -89,6 +88,7 @@ HEADERS += \
     vectortablemodel.h \
     viewcommand.h \
     view.h \
+    viewgridlayout.h \
     viewitemdialog.h \
     viewitem.h \
     viewmanager.h

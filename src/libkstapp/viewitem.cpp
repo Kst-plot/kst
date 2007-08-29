@@ -23,7 +23,7 @@
 namespace Kst {
 
 ViewItem::ViewItem(View *parent)
-  : QObject(parent), _mouseMode(Default), _activeGrip(NoGrip) {
+  : QObject(parent), _mouseMode(Default), _layout(0), _activeGrip(NoGrip) {
   setAcceptsHoverEvents(true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
   connect(parent, SIGNAL(mouseModeChanged(View::MouseMode)),
@@ -48,6 +48,16 @@ ViewItem::MouseMode ViewItem::mouseMode() const {
 void ViewItem::setMouseMode(MouseMode mode) {
   _mouseMode = mode;
   update();
+}
+
+
+ViewGridLayout *ViewItem::layout() const {
+  return _layout;
+}
+
+
+void ViewItem::setLayout(ViewGridLayout *layout) {
+  _layout = layout;
 }
 
 
@@ -390,7 +400,7 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 
 void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
-  if (ViewItem *item = qgraphicsitem_cast<ViewItem*>(parentItem())) {
+  if (qgraphicsitem_cast<ViewItem*>(parentItem())) {
     event->ignore();
     return;
   }
@@ -647,7 +657,7 @@ void ViewItem::rotateTowards(const QPointF &corner, const QPointF &point) {
 
 void ViewItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
 
-  if (ViewItem *item = qgraphicsitem_cast<ViewItem*>(parentItem())) {
+  if (qgraphicsitem_cast<ViewItem*>(parentItem())) {
     event->ignore();
     return;
   }
@@ -658,7 +668,7 @@ void ViewItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
 
 void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
-  if (ViewItem *item = qgraphicsitem_cast<ViewItem*>(parentItem())) {
+  if (qgraphicsitem_cast<ViewItem*>(parentItem())) {
     event->ignore();
     return;
   }
@@ -690,7 +700,7 @@ void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
 void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
-  if (ViewItem *item = qgraphicsitem_cast<ViewItem*>(parentItem())) {
+  if (qgraphicsitem_cast<ViewItem*>(parentItem())) {
     event->ignore();
     return;
   }

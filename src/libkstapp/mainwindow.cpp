@@ -39,7 +39,7 @@
 #include "kstdataobjectcollection.h"
 #include "kstequation.h"
 
-#include "plotlayoutitem.h"
+#include "viewgridlayout.h"
 
 namespace Kst {
 
@@ -310,17 +310,22 @@ void MainWindow::createPlot() {
 void MainWindow::demoPlotLayout() {
 
   View *v = tabWidget()->currentView();
-  PlotLayoutItem *layout = new PlotLayoutItem(v);
-  v->scene()->addItem(layout);
-  layout->setZValue(1);
+
+  ViewItem *viewItem = new ViewItem(v);
+  v->scene()->addItem(viewItem);
+  viewItem->setZValue(1);
+
+  ViewGridLayout *layout = new ViewGridLayout(viewItem);
+
+  int r = 0; int c = 0;
   foreach (QGraphicsItem *item, v->items()) {
-    if (PlotItem *plot = qgraphicsitem_cast<PlotItem*>(item)) {
-      plot->setParentItem(layout);
+    if (PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(item)) {
+      plotItem->setParentItem(viewItem);
+      layout->addViewItem(plotItem, r++, c++);
     }
   }
 
-  layout->setViewRect(QRectF(0,0,300,300));
-
+  viewItem->setViewRect(QRectF(0,0,300,300));
 }
 
 

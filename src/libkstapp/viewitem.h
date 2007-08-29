@@ -23,6 +23,8 @@
 
 namespace Kst {
 
+class ViewGridLayout;
+
 class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
 {
   Q_OBJECT
@@ -45,10 +47,18 @@ public:
   MouseMode mouseMode() const;
   void setMouseMode(MouseMode mode);
 
+  //NOTE We can change this to a generic abstract class once we have
+  //more layouts besides grid layout...
+  ViewGridLayout *layout() const;
+  void setLayout(ViewGridLayout *layout);
+
   //NOTE This should be used in place of QGraphicsRectItem::setRect()...
   QRectF viewRect() const;
   void setViewRect(const QRectF &viewRect);
   void setViewRect(qreal x, qreal y, qreal width, qreal height);
+
+  qreal width() const { return viewRect().normalized().width(); }
+  qreal height() const { return viewRect().normalized().height(); }
 
   QSize sizeOfGrip() const;
   QPainterPath topLeftGrip() const;
@@ -115,6 +125,7 @@ private:
 
 private:
   MouseMode _mouseMode;
+  ViewGridLayout *_layout;
   QPointF _originalPosition;
   QTransform _originalTransform;
   QLineF _normalLine;

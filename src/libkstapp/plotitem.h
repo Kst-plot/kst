@@ -36,9 +36,6 @@ class PlotItem : public ViewItem
 
     void paint(QPainter *painter);
 
-    qreal width() const { return viewRect().normalized().width(); }
-    qreal height() const { return viewRect().normalized().height(); }
-
     qreal marginWidth() const;
     void setMarginWidth(qreal marginWidth);
 
