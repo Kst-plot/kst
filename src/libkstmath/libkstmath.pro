@@ -15,6 +15,11 @@ INCLUDEPATH += \
 
 LIBS += -lkst
 
+#Don't trigger qmake's lex/yacc handling by default.
+#Rather we want to use the files that are pre-generated and checked in.
+QMAKE_EXT_LEX = .lex
+QMAKE_EXT_YACC = .yacc
+
 SOURCES += \
     kstpainter.cpp \
     kstcolorsequence.cpp \
