@@ -24,7 +24,7 @@ class KST_EXPORT View : public QGraphicsView
 {
   Q_OBJECT
 public:
-  enum MouseMode { Default, Move, Create, Resize, Rotate };
+  enum MouseMode { Default, Move, Create, Resize, Scale, Rotate };
   enum CreationEvent {
     MousePress = 0x0,
     MouseRelease =0x1,

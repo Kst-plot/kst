@@ -29,7 +29,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
 {
   Q_OBJECT
 public:
-  enum MouseMode { Default, Move, Resize, Rotate };
+  enum MouseMode { Default, Move, Resize, Scale, Rotate };
 
   enum ActiveGrip {
     NoGrip, TopLeftGrip, TopRightGrip, BottomRightGrip, BottomLeftGrip,
@@ -100,6 +100,8 @@ public Q_SLOTS:
   void setBottom(const QPointF &point);
   void setLeft(const QPointF &point);
   void setRight(const QPointF &point);
+
+private:
   QTransform selectTransform() const;
   bool transformToRect(const QRectF &from, const QRectF &to);
   bool transformToRect(const QPolygonF &from, const QPolygonF &to);

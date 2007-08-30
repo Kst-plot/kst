@@ -89,7 +89,7 @@ QPainterPath ViewItem::topLeftGrip() const {
   QRectF bound = gripBoundingRect();
   QRectF grip = QRectF(bound.topLeft(), sizeOfGrip());
   QPainterPath path;
-  if (_mouseMode == Resize)
+  if (_mouseMode == Resize || _mouseMode == Scale)
     path.addRect(grip);
   else
     path.addEllipse(grip);
@@ -104,7 +104,7 @@ QPainterPath ViewItem::topRightGrip() const {
   QRectF bound = gripBoundingRect();
   QRectF grip = QRectF(bound.topRight() - QPoint(sizeOfGrip().width(), 0), sizeOfGrip());
   QPainterPath path;
-  if (_mouseMode == Resize)
+  if (_mouseMode == Resize || _mouseMode == Scale)
     path.addRect(grip);
   else
     path.addEllipse(grip);
@@ -119,7 +119,7 @@ QPainterPath ViewItem::bottomRightGrip() const {
   QRectF bound = gripBoundingRect();
   QRectF grip = QRectF(bound.bottomRight() - QPoint(sizeOfGrip().width(), sizeOfGrip().height()), sizeOfGrip());
   QPainterPath path;
-  if (_mouseMode == Resize)
+  if (_mouseMode == Resize || _mouseMode == Scale)
     path.addRect(grip);
   else
     path.addEllipse(grip);
@@ -134,7 +134,7 @@ QPainterPath ViewItem::bottomLeftGrip() const {
   QRectF bound = gripBoundingRect();
   QRectF grip = QRectF(bound.bottomLeft() - QPoint(0, sizeOfGrip().height()), sizeOfGrip());
   QPainterPath path;
-  if (_mouseMode == Resize)
+  if (_mouseMode == Resize || _mouseMode == Scale)
     path.addRect(grip);
   else
     path.addEllipse(grip);
@@ -274,6 +274,8 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   if (isSelected()) {
     painter->drawPath(shape());
     if (_mouseMode == Resize)
+      painter->fillPath(grips(), Qt::blue);
+    else if (_mouseMode == Scale)
       painter->fillPath(grips(), Qt::black);
     else if (_mouseMode == Rotate)
       painter->fillPath(grips(), Qt::red);
@@ -414,6 +416,9 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     } else if (mouseMode() == ViewItem::Resize) {
       parentView()->setMouseMode(View::Resize);
       parentView()->undoStack()->beginMacro(tr("Resize"));
+    } else if (mouseMode() == ViewItem::Scale) {
+      parentView()->setMouseMode(View::Scale);
+      parentView()->undoStack()->beginMacro(tr("Scale"));
     } else if (mouseMode() == ViewItem::Rotate) {
       parentView()->setMouseMode(View::Rotate);
       parentView()->undoStack()->beginMacro(tr("Rotate"));
@@ -431,7 +436,7 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
     rotateTowards(l, p);
 
-  } else if (mouseMode() == ViewItem::Resize) {
+  } else if (mouseMode() == ViewItem::Resize || mouseMode() == ViewItem::Scale) {
 
     switch(_activeGrip) {
     case TopLeftGrip:
@@ -469,7 +474,12 @@ void ViewItem::setTopLeft(const QPointF &point) {
   to.setTopLeft(point);
   from.moveBottomRight(anchor);
   to.moveBottomRight(anchor);
-  transformToRect(from, to);
+
+  if (_mouseMode == Scale) {
+    transformToRect(from, to);
+  } else if (_mouseMode == Resize) {
+    //FIXME;
+  }
 }
 
 
@@ -716,6 +726,9 @@ void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
       setMouseMode(Resize);
       break;
     case Resize:
+      setMouseMode(Scale);
+      break;
+    case Scale:
       setMouseMode(Rotate);
       break;
     default:
@@ -750,6 +763,7 @@ void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
   if (parentView()->mouseMode() == View::Move) {
     _originalPosition = pos();
   } else if (parentView()->mouseMode() == View::Resize ||
+             parentView()->mouseMode() == View::Scale ||
              parentView()->mouseMode() == View::Rotate) {
     _originalTransform = transform();
   } else if (oldMode == View::Move) {
@@ -759,6 +773,8 @@ void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
     new MoveCommand(this, _originalPosition, pos());
   } else if (oldMode == View::Resize) {
     new ResizeCommand(this, _originalTransform, transform());
+  } else if (oldMode == View::Scale) {
+    //new ScaleCommand(this, _originalTransform, transform());
   } else if (oldMode == View::Rotate) {
     new RotateCommand(this, _originalTransform, transform());
   }
