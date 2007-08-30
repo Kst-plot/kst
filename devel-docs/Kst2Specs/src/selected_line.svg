@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="360"
+   height="450"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.45"
+   version="1.0"
+   sodipodi:docname="selected_line.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   sodipodi:docbase="/home/cbn/programs/kst/kst2/portto4/kst/devel-docs/Kst2Specs/src"
+   inkscape:export-filename="/home/cbn/programs/kst/kst2/portto4/kst/devel-docs/Kst2Specs/src/selected_line.png"
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300"
+   sodipodi:modified="TRUE">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="TriangleOutL"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="TriangleOutL"
+       style="overflow:visible">
+      <path
+         id="path3240"
+         d="M 5.77,0.0 L -2.88,5.0 L -2.88,-5.0 L 5.77,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none"
+         transform="scale(0.8)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.0000001"
+     inkscape:cx="169.98183"
+     inkscape:cy="322.68455"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     width="4in"
+     height="5in"
+     units="in"
+     inkscape:window-width="1280"
+     inkscape:window-height="717"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     showgrid="false"
+     showguides="false" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-size:22px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif"
+       x="168"
+       y="25"
+       id="text8986"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4310"
+         x="168"
+         y="25">Selected Line</tspan></text>
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 85.504555,110.71577 L 256.26188,27.397491"
+       id="path3324" />
+    <rect
+       style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8982"
+       width="7.0710697"
+       height="7.7781768"
+       x="23.29248"
+       y="133.37622"
+       transform="matrix(0.8987228,-0.4385173,0.4385173,0.8987228,0,0)" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#ffffff;stroke-width:1.05061984;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 81.507903,113.03756 L 87.200066,110.11159"
+       id="path6364" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#ffffff;stroke-width:1.05408418;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 85.926856,114.66077 L 82.978741,108.49028"
+       id="path3316" />
+    <rect
+       style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect3329"
+       width="7.0710697"
+       height="7.7781768"
+       x="214.74168"
+       y="133.02269"
+       transform="matrix(0.8987228,-0.4385173,0.4385173,0.8987228,0,0)" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#ffffff;stroke-width:1.05061984;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 253.41258,28.766053 L 259.10475,25.840084"
+       id="path3331" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#ffffff;stroke-width:1.05408418;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 257.83154,30.389268 L 254.88342,24.218777"
+       id="path3333" />
+    <rect
+       style="opacity:1;fill:#000000;fill-opacity:0;fill-rule:evenodd;stroke:#000000;stroke-width:0.9672932;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:0.96729316, 1.9345863;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect3335"
+       width="198.49751"
+       height="8.0179882"
+       x="22.978035"
+       y="133.02017"
+       transform="matrix(0.8987228,-0.4385173,0.4385173,0.8987228,0,0)" />
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Serif;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr;line-height:100%"
+       x="167"
+       y="90.500008"
+       id="text4312"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan4322"
+         x="167"
+         y="90.500008">Selection Box appears when</tspan><tspan
+         sodipodi:role="line"
+         id="tspan4324"
+         x="167"
+         y="102.50001">the mouse is over it, whether </tspan><tspan
+         sodipodi:role="line"
+         id="tspan4326"
+         x="167"
+         y="114.50001">selected or not.</tspan></text>
+  </g>
+</svg>
