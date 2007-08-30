@@ -227,22 +227,22 @@ KstObject::UpdateType KstVCurve::update(int update_counter) {
   depUpdated = UPDATE == cxV->update(update_counter) || depUpdated;
   depUpdated = UPDATE == cyV->update(update_counter) || depUpdated;
 
-  KstVectorPtr exV = *_inputVectors.find(EXVECTOR);
+  KstVectorPtr exV = _inputVectors.contains(EXVECTOR) ? *_inputVectors.find(EXVECTOR) : 0;
   if (exV) {
     depUpdated = UPDATE == exV->update(update_counter) || depUpdated;
   }
 
-  KstVectorPtr eyV = *_inputVectors.find(EYVECTOR);
+  KstVectorPtr eyV = _inputVectors.contains(EYVECTOR) ? *_inputVectors.find(EYVECTOR) : 0;
   if (eyV) {
     depUpdated = UPDATE == eyV->update(update_counter) || depUpdated;
   }
 
-  KstVectorPtr exmV = *_inputVectors.find(EXMINUSVECTOR);
+  KstVectorPtr exmV = _inputVectors.contains(EXMINUSVECTOR) ? *_inputVectors.find(EXMINUSVECTOR) : 0;
   if (exmV) {
     depUpdated = UPDATE == exmV->update(update_counter) || depUpdated;
   }
 
-  KstVectorPtr eymV = *_inputVectors.find(EYMINUSVECTOR);
+  KstVectorPtr eymV = _inputVectors.contains(EYMINUSVECTOR) ? *_inputVectors.find(EYMINUSVECTOR) : 0;
   if (eymV) {
     depUpdated = UPDATE == eymV->update(update_counter) || depUpdated;
   }
@@ -1282,10 +1282,10 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
     b_1 = benchtmp.elapsed();
 #endif
 
-    KstVectorPtr exv = *_inputVectors.find(EXVECTOR);
-    KstVectorPtr eyv = *_inputVectors.find(EYVECTOR);
-    KstVectorPtr exmv = *_inputVectors.find(EXMINUSVECTOR);
-    KstVectorPtr eymv = *_inputVectors.find(EYMINUSVECTOR);
+    KstVectorPtr exv = _inputVectors.contains(EXVECTOR) ? *_inputVectors.find(EXVECTOR) : 0;
+    KstVectorPtr eyv = _inputVectors.contains(EYVECTOR) ? *_inputVectors.find(EYVECTOR) : 0;
+    KstVectorPtr exmv = _inputVectors.contains(EXMINUSVECTOR) ? *_inputVectors.find(EXMINUSVECTOR) : 0;
+    KstVectorPtr eymv = _inputVectors.contains(EYMINUSVECTOR) ? *_inputVectors.find(EYMINUSVECTOR) : 0;
     // draw the bargraph bars, if any...
     if (hasBars()) {
       bool has_top = true;

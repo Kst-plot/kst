@@ -38,15 +38,12 @@ PlotItem::PlotItem(View *parent)
   KstVectorPtr yTest2 = new KstSVector(-100.0, 100.0, 10000, KstObjectTag::fromString("Y vector 2"));
   yTest2->setLabel("another nice y label");
 
-  KstVectorPtr errorX = new KstSVector(0.0, 0.0, 0, KstObjectTag::fromString("X error"));
-  KstVectorPtr errorY = new KstSVector(0.0, 0.0, 0, KstObjectTag::fromString("y error"));
-
-  KstVCurvePtr renderTest = new KstVCurve(QString("rendertest"), xTest, yTest, errorX, errorY, errorX, errorY, QColor(Qt::red));
+  KstVCurvePtr renderTest = new KstVCurve(QString("rendertest"), xTest, yTest, 0, 0, 0, 0, QColor(Qt::red));
   renderTest->writeLock();
   renderTest->update(0);
   renderTest->unlock();
 
-  KstVCurvePtr renderTest2 = new KstVCurve(QString("rendertest2"), xTest, yTest2, errorX, errorY, errorX, errorY, QColor(Qt::blue));
+  KstVCurvePtr renderTest2 = new KstVCurve(QString("rendertest2"), xTest, yTest2, 0, 0, 0, 0, QColor(Qt::blue));
   renderTest2->writeLock();
   renderTest2->update(0);
   renderTest2->unlock();
