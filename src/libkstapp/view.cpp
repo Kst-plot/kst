@@ -14,6 +14,8 @@
 #include "kstapplication.h"
 #include "applicationsettings.h"
 
+#include <math.h>
+
 #include <QDebug>
 #include <QTimer>
 #include <QUndoStack>
@@ -26,7 +28,12 @@
 namespace Kst {
 
 View::View()
-  : QGraphicsView(kstApp->mainWindow()), _currentPlotItem(0), _mouseMode(Default), _snapToGrid(true) {
+  : QGraphicsView(kstApp->mainWindow()),
+    _currentPlotItem(0),
+    _mouseMode(Default),
+    _gridSpacing(QSizeF(20,20)),
+    _snapToGridHorizontal(true),
+    _snapToGridVertical(true) {
 
   _undoStack = new QUndoStack(this);
   setScene(new QGraphicsScene(this));
@@ -96,20 +103,15 @@ QPolygonF View::creationPolygon(CreationEvents events) const {
 
 
 QPointF View::snapPoint(const QPointF &point) {
+  qreal x = point.x();
+  qreal y = point.y();
+  if (_snapToGridHorizontal && gridSpacing().width() > 0)
+    x -= fmod(point.x(), gridSpacing().width());
 
-  if (!_snapToGrid)
-    return point;
+  if (_snapToGridVertical && gridSpacing().height() > 0)
+    y -= fmod(point.y(), gridSpacing().height());
 
-  //FIXME floating point?
-  QPointF p(point.x() - int(point.x()) % int(gridSpacing().width()),
-            point.y() - int(point.y()) % int(gridSpacing().height()));
-
-//   qDebug() << "snap "
-//             << "before:" << point
-//             << "after:" << p
-//             << endl;
-
-  return p;
+  return QPointF(x, y);
 }
 
 
@@ -190,7 +192,7 @@ void View::drawBackground(QPainter *painter, const QRectF &rect) {
 
   //vertical lines
   qreal x = r.left() + spacing;
-  while (x < r.right()) {
+  while (x < r.right() && spacing > 0) {
     QLineF line(QPointF(x, r.top()), QPointF(x, r.bottom()));
     painter->drawLine(line);
     x += spacing;
@@ -200,7 +202,7 @@ void View::drawBackground(QPainter *painter, const QRectF &rect) {
 
   //horizontal lines
   qreal y = r.top() + spacing;
-  while (y < r.bottom()) {
+  while (y < r.bottom() && spacing > 0) {
     QLineF line(QPointF(r.left(), y), QPointF(r.right(), y));
     painter->drawLine(line);
     y += spacing;

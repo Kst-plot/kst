@@ -43,12 +43,23 @@ public:
 
   QPolygonF creationPolygon(CreationEvents events) const;
 
-  //FIXME make configurable...
-  QSizeF gridSpacing() const { return QSizeF(20,20); }
+  QSizeF gridSpacing() const { return _gridSpacing; }
+  void setGridSpacing(const QSizeF &gridSpacing) { _gridSpacing = gridSpacing; }
 
-  //FIXME make configurable...
-  bool snapToGrid() const { return _snapToGrid; }
-  void setSnapToGrid(bool snapToGrid) { _snapToGrid = snapToGrid; }
+  bool snapToGridHorizontal() const
+  { return _snapToGridHorizontal; }
+  void setSnapToGridHorizontal(bool snapToGridHorizontal)
+  { _snapToGridHorizontal = snapToGridHorizontal; }
+
+  bool snapToGridVertical() const
+  { return _snapToGridVertical; }
+  void setSnapToGridVertical(bool snapToGridVertical)
+  { _snapToGridVertical = snapToGridVertical; }
+
+  bool snapToGrid() const
+  { return _snapToGridHorizontal && _snapToGridVertical; }
+  void setSnapToGrid(bool snapToGrid)
+  { _snapToGridHorizontal = snapToGrid; _snapToGridVertical = snapToGrid; }
 
   QPointF snapPoint(const QPointF &point);
 
@@ -72,7 +83,9 @@ private:
   QPolygonF _creationPolygonPress;
   QPolygonF _creationPolygonMove;
   QPolygonF _creationPolygonRelease;
-  bool _snapToGrid;
+  QSizeF _gridSpacing;
+  bool _snapToGridHorizontal;
+  bool _snapToGridVertical;
 };
 
 }
