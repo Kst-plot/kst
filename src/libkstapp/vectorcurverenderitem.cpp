@@ -14,9 +14,6 @@
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
 
-//FIXME how many?
-static int DESIRED_NUMBER_OF_POINTS_FOR_INITIAL_VIEW = 100;
-
 namespace Kst {
 
 VectorCurveRenderItem::VectorCurveRenderItem(const QString &name, PlotItem *parentItem)
@@ -57,7 +54,7 @@ void VectorCurveRenderItem::paint(QPainter *painter) {
                       relation->maxY());
 
     QTransform t;
-    qreal scaleFactor = 1.0 / (relation->sampleCount() / DESIRED_NUMBER_OF_POINTS_FOR_INITIAL_VIEW);
+    qreal scaleFactor = 1.0;
     t.scale(scaleFactor, scaleFactor);
 
     QRectF zoomRect = t.mapRect(vectorRect);
