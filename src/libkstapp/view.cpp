@@ -123,6 +123,7 @@ bool View::eventFilter(QObject *obj, QEvent *event) {
   case QEvent::GraphicsSceneMousePress:
     {
       QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
+      if (e->button() != Qt::LeftButton) break;
       _creationPolygonPress << snapPoint(e->buttonDownScenePos(Qt::LeftButton));
       emit creationPolygonChanged(MousePress);
       return true; //filter this otherwise something can grab our mouse...
@@ -130,7 +131,8 @@ bool View::eventFilter(QObject *obj, QEvent *event) {
   case QEvent::GraphicsSceneMouseRelease:
     {
       QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
-      _creationPolygonRelease << snapPoint(e->scenePos());
+      if (e->button() != Qt::LeftButton) break;
+      _creationPolygonRelease << snapPoint(e->buttonDownScenePos(Qt::LeftButton));
       emit creationPolygonChanged(MouseRelease);
       break;
     }
