@@ -103,16 +103,14 @@ class MainWindow : public QMainWindow
 
     // Do we need these?  I don't think so...
     QMenu *_fileMenu;
-    QMenu *_dataMenu;
     QMenu *_editMenu;
-    QMenu *_plotMenu;
+    QMenu *_dataMenu;
+    QMenu *_viewMenu;
     QMenu *_settingsMenu;
     QMenu *_helpMenu;
 
-    // Do we need these?  I don't think so...
-    QToolBar *_fileToolBar;
-    QToolBar *_editToolBar;
-    QToolBar *_kstToolBar;
+    QToolBar *_dataToolBar;
+    QToolBar *_viewToolBar;
 
     QAction *_undoAct;
     QAction *_redoAct;

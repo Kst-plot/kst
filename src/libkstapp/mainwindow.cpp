@@ -473,15 +473,15 @@ void MainWindow::createMenus() {
   _dataMenu->addAction(_dataManagerAct);
   _dataMenu->addAction(_vectorEditorAct);
 
-  _plotMenu = menuBar()->addMenu(tr("&Plot"));
-  _plotMenu->addAction(_viewManagerAct);
-  _plotMenu->addAction(_createLabelAct);
-  _plotMenu->addAction(_createBoxAct);
-  _plotMenu->addAction(_createEllipseAct);
-  _plotMenu->addAction(_createLineAct);
-  _plotMenu->addAction(_createPictureAct);
-  _plotMenu->addAction(_createPlotAct);
-  _plotMenu->addAction(_createSvgAct);
+  _viewMenu = menuBar()->addMenu(tr("&View"));
+  _viewMenu->addAction(_viewManagerAct);
+  _viewMenu->addAction(_createLabelAct);
+  _viewMenu->addAction(_createBoxAct);
+  _viewMenu->addAction(_createEllipseAct);
+  _viewMenu->addAction(_createLineAct);
+  _viewMenu->addAction(_createPictureAct);
+  _viewMenu->addAction(_createPlotAct);
+  _viewMenu->addAction(_createSvgAct);
 
   _settingsMenu = menuBar()->addMenu(tr("&Settings"));
 
@@ -505,13 +505,21 @@ void MainWindow::createMenus() {
 
 
 void MainWindow::createToolBars() {
-  _fileToolBar = addToolBar(tr("File"));
-  _editToolBar = addToolBar(tr("Edit"));
-  _kstToolBar = addToolBar(tr("Kst"));
+  setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-  // Hook up the kst toolbar
-  _kstToolBar->addAction(_dataManagerAct);
-  _kstToolBar->addAction(_viewManagerAct);
+  _dataToolBar = addToolBar(tr("Data"));
+  _dataToolBar->addAction(_dataManagerAct);
+//   _dataToolBar->addAction(_vectorEditorAct); //no icon
+
+  _viewToolBar = addToolBar(tr("View"));
+  _viewToolBar->addAction(_viewManagerAct);
+//  _viewToolBar->addAction(_createLabelAct); //no icon
+  _viewToolBar->addAction(_createBoxAct);
+  _viewToolBar->addAction(_createEllipseAct);
+  _viewToolBar->addAction(_createLineAct);
+  _viewToolBar->addAction(_createPictureAct);
+  _viewToolBar->addAction(_createPlotAct);
+//  _viewToolBar->addAction(_createSvgAct); //no icon
 }
 
 

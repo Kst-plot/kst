@@ -42,7 +42,7 @@ View *TabWidget::createView() {
 
   static int cnt = 1;
   QString label = view->objectName().isEmpty() ?
-                  tr("Plot %1").arg(cnt++) :
+                  tr("View %1").arg(cnt++) :
                   view->objectName();
 
   addTab(view, label);
