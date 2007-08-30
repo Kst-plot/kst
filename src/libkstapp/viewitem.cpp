@@ -431,12 +431,29 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   QPointF p = event->pos();
   QPointF l = event->lastPos();
   QPointF s = event->scenePos();
+  QPointF ls = event->lastScenePos();
 
   if (mouseMode() == ViewItem::Rotate) {
 
     rotateTowards(l, p);
 
-  } else if (mouseMode() == ViewItem::Resize || mouseMode() == ViewItem::Scale) {
+  } else if (mouseMode() == ViewItem::Resize) {
+
+    switch(_activeGrip) {
+    case TopLeftGrip:
+        resizeTopLeft(s - ls); break;
+    case TopRightGrip:
+    case BottomRightGrip:
+    case BottomLeftGrip:
+    case TopMidGrip:
+    case RightMidGrip:
+    case BottomMidGrip:
+    case LeftMidGrip:
+    case NoGrip:
+      break;
+    }
+
+  } else if (mouseMode() == ViewItem::Scale) {
 
     switch(_activeGrip) {
     case TopLeftGrip:
@@ -463,6 +480,14 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 
+void ViewItem::resizeTopLeft(const QPointF &vector) {
+    //FIXME need to take into account transform...
+    QRectF r = rect();
+    r.setTopLeft(r.topLeft() + vector);
+    setViewRect(r);
+}
+
+
 void ViewItem::setTopLeft(const QPointF &point) {
 //   qDebug() << "setTopLeft" << point << endl;
 
@@ -474,12 +499,7 @@ void ViewItem::setTopLeft(const QPointF &point) {
   to.setTopLeft(point);
   from.moveBottomRight(anchor);
   to.moveBottomRight(anchor);
-
-  if (_mouseMode == Scale) {
-    transformToRect(from, to);
-  } else if (_mouseMode == Resize) {
-    //FIXME;
-  }
+  transformToRect(from, to);
 }
 
 
@@ -625,6 +645,7 @@ bool ViewItem::transformToRect(const QRectF &from, const QRectF &to) {
   to_.pop_back(); //get rid of last closed point
   return transformToRect(from_, to_);
 }
+
 
 bool ViewItem::transformToRect(const QPolygonF &from, const QPolygonF &to) {
 

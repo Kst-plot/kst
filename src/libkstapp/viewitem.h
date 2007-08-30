@@ -92,6 +92,7 @@ public Q_SLOTS:
   void raise();
   void lower();
   void edit();
+  void resizeTopLeft(const QPointF &vector);
   void setTopLeft(const QPointF &point);
   void setTopRight(const QPointF &point);
   void setBottomLeft(const QPointF &point);
