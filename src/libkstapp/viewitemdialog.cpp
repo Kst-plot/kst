@@ -11,9 +11,11 @@
 
 #include "viewitemdialog.h"
 
-#include "viewitem.h"
 #include "fillandstroke.h"
 
+#include <QPen>
+#include <QBrush>
+#include <QAbstractGraphicsShapeItem>
 #include <QDebug>
 
 namespace Kst {
@@ -55,7 +57,7 @@ ViewItemDialog::ViewItemDialog(QWidget *parent)
 ViewItemDialog::~ViewItemDialog() {
 }
 
-void ViewItemDialog::show(QList<ViewItem*> items) {
+void ViewItemDialog::show(QList<QGraphicsItem*> items) {
   Q_ASSERT(!items.isEmpty());
 
   _items = items;
@@ -69,7 +71,7 @@ void ViewItemDialog::show(QList<ViewItem*> items) {
 }
 
 void ViewItemDialog::setupFill() {
-  ViewItem *first = _items.first();
+  QAbstractGraphicsShapeItem *first = qgraphicsitem_cast<QAbstractGraphicsShapeItem*>(_items.first());
   Q_ASSERT(first);
 
   QBrush b = first->brush();
@@ -83,7 +85,7 @@ void ViewItemDialog::setupFill() {
 
 
 void ViewItemDialog::setupStroke() {
-  ViewItem *first = _items.first();
+  QAbstractGraphicsShapeItem *first = qgraphicsitem_cast<QAbstractGraphicsShapeItem*>(_items.first());
   Q_ASSERT(first);
 
   QPen p = first->pen();
@@ -101,7 +103,7 @@ void ViewItemDialog::setupStroke() {
 
 
 void ViewItemDialog::fillChanged() {
-  ViewItem *first = _items.first();
+  QAbstractGraphicsShapeItem *first = qgraphicsitem_cast<QAbstractGraphicsShapeItem*>(_items.first());
   Q_ASSERT(first);
 
   QBrush b = first->brush();
@@ -113,14 +115,15 @@ void ViewItemDialog::fillChanged() {
 //   if (gradient.type() != QGradient::NoGradient)
 //     b = QBrush(gradient);
 
-  foreach(ViewItem *item, _items) {
-    item->setBrush(b);
+  foreach(QGraphicsItem *item, _items) {
+    QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem*>(item);
+    shape->setBrush(b);
   }
 }
 
 
 void ViewItemDialog::strokeChanged() {
-  ViewItem *first = _items.first();
+  QAbstractGraphicsShapeItem *first = qgraphicsitem_cast<QAbstractGraphicsShapeItem*>(_items.first());
   Q_ASSERT(first);
 
   QPen p = first->pen();
@@ -136,8 +139,9 @@ void ViewItemDialog::strokeChanged() {
   p.setCapStyle(_fillAndStroke->capStyle());
   p.setBrush(b);
 
-  foreach(ViewItem *item, _items) {
-    item->setPen(p);
+  foreach(QGraphicsItem *item, _items) {
+    QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem*>(item);
+    shape->setPen(p);
   }
 }
 

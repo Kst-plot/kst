@@ -79,7 +79,7 @@ FillAndStroke::FillAndStroke(QWidget *parent)
   connect(_joinStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(strokeChanged()));
   connect(_capStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(strokeChanged()));
 
-  _gradientEditor->setEnabled(true);
+  _gradientEditor->setEnabled(false);
 }
 
 

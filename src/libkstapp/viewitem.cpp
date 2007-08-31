@@ -378,13 +378,9 @@ void ViewItem::lower() {
 
 void ViewItem::edit() {
 
-  QList<ViewItem*> list;
-  QList<QGraphicsItem*> select = scene()->selectedItems();
-  foreach(QGraphicsItem *item, select) {
-    list << qgraphicsitem_cast<ViewItem*>(item);
-  }
-
-  ViewItemDialog::self()->show(list);
+  QList<QGraphicsItem*> list = scene()->selectedItems();
+  if (!list.isEmpty())
+    ViewItemDialog::self()->show(list);
 }
 
 
