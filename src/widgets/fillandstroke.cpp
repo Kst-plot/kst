@@ -79,6 +79,7 @@ FillAndStroke::FillAndStroke(QWidget *parent)
   connect(_joinStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(strokeChanged()));
   connect(_capStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(strokeChanged()));
 
+  //FIXME gradient editor is disabled for now as it is not ready
   _gradientEditor->setEnabled(false);
 }
 

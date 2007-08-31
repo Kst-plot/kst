@@ -78,9 +78,13 @@ void ViewItemDialog::setupFill() {
 
   _fillAndStroke->setFillColor(b.color());
   _fillAndStroke->setFillStyle(b.style());
-//   if (const QGradient *gradient = b.gradient()) {
-//     _fillAndStroke->setFillGradient(*gradient);
-//   }
+
+  //FIXME gradient editor is disabled for now as it is not ready
+#if 0
+  if (const QGradient *gradient = b.gradient()) {
+    _fillAndStroke->setFillGradient(*gradient);
+  }
+#endif
 }
 
 
@@ -111,9 +115,12 @@ void ViewItemDialog::fillChanged() {
   b.setColor(_fillAndStroke->fillColor());
   b.setStyle(_fillAndStroke->fillStyle());
 
-//   QGradient gradient = _fillAndStroke->fillGradient();
-//   if (gradient.type() != QGradient::NoGradient)
-//     b = QBrush(gradient);
+  //FIXME gradient editor is disabled for now as it is not ready
+#if 0
+  QGradient gradient = _fillAndStroke->fillGradient();
+  if (gradient.type() != QGradient::NoGradient)
+    b = QBrush(gradient);
+#endif
 
   foreach(QGraphicsItem *item, _items) {
     QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem*>(item);
