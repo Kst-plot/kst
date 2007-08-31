@@ -93,7 +93,11 @@ QPainterPath ViewItem::topLeftGrip() const {
     path.addRect(grip);
   else
     path.addEllipse(grip);
-  return mapFromScene(path);
+
+//   if (_mouseMode != Resize)
+    return mapFromScene(path);
+//   else
+//     return path;
 }
 
 
@@ -108,7 +112,11 @@ QPainterPath ViewItem::topRightGrip() const {
     path.addRect(grip);
   else
     path.addEllipse(grip);
-  return mapFromScene(path);
+
+//   if (_mouseMode != Resize)
+    return mapFromScene(path);
+//   else
+//     return path;
 }
 
 
@@ -123,7 +131,11 @@ QPainterPath ViewItem::bottomRightGrip() const {
     path.addRect(grip);
   else
     path.addEllipse(grip);
-  return mapFromScene(path);
+
+//   if (_mouseMode != Resize)
+    return mapFromScene(path);
+//   else
+//     return path;
 }
 
 
@@ -138,7 +150,11 @@ QPainterPath ViewItem::bottomLeftGrip() const {
     path.addRect(grip);
   else
     path.addEllipse(grip);
-  return mapFromScene(path);
+
+//   if (_mouseMode != Resize)
+    return mapFromScene(path);
+//   else
+//     return path;
 }
 
 
@@ -152,7 +168,10 @@ QPainterPath ViewItem::topMidGrip() const {
 
   QPainterPath path;
   path.addRect(grip);
-  return mapFromScene(path);
+//   if (_mouseMode != Resize)
+    return mapFromScene(path);
+//   else
+//     return path;
 }
 
 
@@ -166,7 +185,10 @@ QPainterPath ViewItem::rightMidGrip() const {
 
   QPainterPath path;
   path.addRect(grip);
-  return mapFromScene(path);
+//   if (_mouseMode != Resize)
+    return mapFromScene(path);
+//   else
+//     return path;
 }
 
 
@@ -180,7 +202,10 @@ QPainterPath ViewItem::bottomMidGrip() const {
 
   QPainterPath path;
   path.addRect(grip);
-  return mapFromScene(path);
+//   if (_mouseMode != Resize)
+    return mapFromScene(path);
+//   else
+//     return path;
 }
 
 
@@ -194,7 +219,10 @@ QPainterPath ViewItem::leftMidGrip() const {
 
   QPainterPath path;
   path.addRect(grip);
-  return mapFromScene(path);
+//   if (_mouseMode != Resize)
+    return mapFromScene(path);
+//   else
+//     return path;
 }
 
 
@@ -232,7 +260,7 @@ QRectF ViewItem::selectBoundingRect() const {
 
 
 QRectF ViewItem::gripBoundingRect() const {
-  QRectF bound = selectBoundingRect();
+  QRectF bound = /*_mouseMode != Resize ?*/ selectBoundingRect() /*: rect()*/;
   bound.setTopLeft(bound.topLeft() - QPoint(sizeOfGrip().width(), sizeOfGrip().height()));
   bound.setWidth(bound.width() + sizeOfGrip().width());
   bound.setHeight(bound.height() + sizeOfGrip().height());
@@ -254,7 +282,12 @@ QPainterPath ViewItem::shape() const {
     return itemShape();
 
   QPainterPath selectPath;
-  selectPath.addPolygon(mapFromScene(selectBoundingRect()));
+
+//   if (_mouseMode != Resize)
+    selectPath.addPolygon(mapFromScene(selectBoundingRect()));
+//   else
+//     selectPath.addPolygon(rect());
+
   selectPath.addPath(grips());
   return selectPath;
 }
