@@ -132,7 +132,7 @@ bool View::eventFilter(QObject *obj, QEvent *event) {
     {
       QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
       if (e->button() != Qt::LeftButton) break;
-      _creationPolygonRelease << snapPoint(e->buttonDownScenePos(Qt::LeftButton));
+      _creationPolygonRelease << snapPoint(e->scenePos());
       emit creationPolygonChanged(MouseRelease);
       break;
     }
