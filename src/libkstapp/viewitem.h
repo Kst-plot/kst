@@ -47,6 +47,9 @@ public:
   MouseMode mouseMode() const;
   void setMouseMode(MouseMode mode);
 
+  bool lockAspectRatio() const { return _lockAspectRatio; }
+  void setLockAspectRatio(bool lockAspectRatio) { _lockAspectRatio = lockAspectRatio; }
+
   //NOTE We can change this to a generic abstract class once we have
   //more layouts besides grid layout...
   ViewGridLayout *layout() const;
@@ -92,10 +95,10 @@ public Q_SLOTS:
   void raise();
   void lower();
   void edit();
-  void resizeTopLeft(const QPointF &vector);
-  void resizeTopRight(const QPointF &vector);
-  void resizeBottomLeft(const QPointF &vector);
-  void resizeBottomRight(const QPointF &vector);
+  void resizeTopLeft(const QPointF &offset);
+  void resizeTopRight(const QPointF &offset);
+  void resizeBottomLeft(const QPointF &offset);
+  void resizeBottomRight(const QPointF &offset);
   void resizeTop(qreal offset);
   void resizeBottom(qreal offset);
   void resizeLeft(qreal offset);
@@ -114,6 +117,7 @@ private:
   bool transformToRect(const QRectF &from, const QRectF &to);
   bool transformToRect(const QPolygonF &from, const QPolygonF &to);
   void rotateTowards(const QPointF &corner, const QPointF &point);
+  QPointF lockOffset(const QPointF &offset, qreal ratio, bool oddCorner) const;
 
 protected Q_SLOTS:
   virtual void creationPolygonChanged(View::CreationEvent event);
@@ -135,6 +139,7 @@ private:
 
 private:
   MouseMode _mouseMode;
+  bool _lockAspectRatio;
   ViewGridLayout *_layout;
   QPointF _originalPosition;
   QTransform _originalTransform;

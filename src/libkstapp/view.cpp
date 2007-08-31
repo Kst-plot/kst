@@ -32,8 +32,8 @@ View::View()
     _currentPlotItem(0),
     _mouseMode(Default),
     _gridSpacing(QSizeF(20,20)),
-    _snapToGridHorizontal(true),
-    _snapToGridVertical(true) {
+    _snapToGridHorizontal(false),
+    _snapToGridVertical(false) {
 
   _undoStack = new QUndoStack(this);
   setScene(new QGraphicsScene(this));

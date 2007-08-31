@@ -23,7 +23,12 @@
 namespace Kst {
 
 ViewItem::ViewItem(View *parent)
-  : QObject(parent), _mouseMode(Default), _layout(0), _activeGrip(NoGrip) {
+  : QObject(parent),
+    _mouseMode(Default),
+    _lockAspectRatio(false),
+    _layout(0),
+    _activeGrip(NoGrip) {
+
   setAcceptsHoverEvents(true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
   connect(parent, SIGNAL(mouseModeChanged(View::MouseMode)),
@@ -519,71 +524,100 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 
-void ViewItem::resizeTopLeft(const QPointF &vector) {
-    QRectF r = rect();
-    r.setTopLeft(r.topLeft() + vector);
-    setViewRect(r);
+void ViewItem::resizeTopLeft(const QPointF &offset) {
+  const qreal oldAspect = rect().width() / rect().height();
+
+  QRectF r = rect();
+  QPointF o = _lockAspectRatio ? lockOffset(offset, oldAspect, false) : offset;
+  r.setTopLeft(r.topLeft() + o);
+
+  const qreal newAspect = r.width() / r.height();
+  Q_ASSERT_X(_lockAspectRatio ? qFuzzyCompare(newAspect, oldAspect) : true,
+              "lockAspect error", QString::number(newAspect) + "!=" + QString::number(oldAspect));
+  setViewRect(r);
 }
 
 
-void ViewItem::resizeTopRight(const QPointF &vector) {
-    QRectF r = rect();
-    r.setTopRight(r.topRight() + vector);
-    setViewRect(r);
+void ViewItem::resizeTopRight(const QPointF &offset) {
+  const qreal oldAspect = rect().width() / rect().height();
+
+  QRectF r = rect();
+  QPointF o = _lockAspectRatio ? lockOffset(offset, oldAspect, true) : offset;
+  r.setTopRight(r.topRight() + o);
+
+  const qreal newAspect = r.width() / r.height();
+  Q_ASSERT_X(_lockAspectRatio ? qFuzzyCompare(newAspect, oldAspect) : true,
+              "lockAspect error", QString::number(newAspect) + "!=" + QString::number(oldAspect));
+  setViewRect(r);
 }
 
 
-void ViewItem::resizeBottomLeft(const QPointF &vector) {
-    QRectF r = rect();
-    r.setBottomLeft(r.bottomLeft() + vector);
-    setViewRect(r);
+void ViewItem::resizeBottomLeft(const QPointF &offset) {
+  const qreal oldAspect = rect().width() / rect().height();
+
+  QRectF r = rect();
+  QPointF o = _lockAspectRatio ? lockOffset(offset, oldAspect, true) : offset;
+  r.setBottomLeft(r.bottomLeft() + o);
+
+  const qreal newAspect = r.width() / r.height();
+  Q_ASSERT_X(_lockAspectRatio ? qFuzzyCompare(newAspect, oldAspect) : true,
+              "lockAspect error", QString::number(newAspect) + "!=" + QString::number(oldAspect));
+  setViewRect(r);
 }
 
 
-void ViewItem::resizeBottomRight(const QPointF &vector) {
-    QRectF r = rect();
-    r.setBottomRight(r.bottomRight() + vector);
-    setViewRect(r);
+void ViewItem::resizeBottomRight(const QPointF &offset) {
+  const qreal oldAspect = rect().width() / rect().height();
+
+  QRectF r = rect();
+  QPointF o = _lockAspectRatio ? lockOffset(offset, oldAspect, false) : offset;
+  r.setBottomRight(r.bottomRight() + o);
+
+  const qreal newAspect = r.width() / r.height();
+  Q_ASSERT_X(_lockAspectRatio ? qFuzzyCompare(newAspect, oldAspect) : true,
+              "lockAspect error", QString::number(newAspect) + "!=" + QString::number(oldAspect));
+  setViewRect(r);
 }
 
 
 void ViewItem::resizeTop(qreal offset) {
-    QRectF r = rect();
-    r.setTop(r.top() + offset);
-    setViewRect(r);
+  QRectF r = rect();
+  r.setTop(r.top() + offset);
+  setViewRect(r);
 }
 
 
 void ViewItem::resizeBottom(qreal offset) {
-    QRectF r = rect();
-    r.setBottom(r.bottom() + offset);
-    setViewRect(r);
+  QRectF r = rect();
+  r.setBottom(r.bottom() + offset);
+  setViewRect(r);
 }
 
 
 void ViewItem::resizeLeft(qreal offset) {
-    QRectF r = rect();
-    r.setLeft(r.left() + offset);
-    setViewRect(r);
+  QRectF r = rect();
+  r.setLeft(r.left() + offset);
+  setViewRect(r);
 }
 
 
 void ViewItem::resizeRight(qreal offset) {
-    QRectF r = rect();
-    r.setRight(r.right() + offset);
-    setViewRect(r);
+  QRectF r = rect();
+  r.setRight(r.right() + offset);
+  setViewRect(r);
 }
 
 
 void ViewItem::setTopLeft(const QPointF &point) {
 //   qDebug() << "setTopLeft" << point << endl;
+  QPointF p = point;
 
   QPointF anchor = selectTransform().map(rect().bottomRight());
 
   QRectF from = selectBoundingRect();
   QRectF to = from;
 
-  to.setTopLeft(point);
+  to.setTopLeft(p);
   from.moveBottomRight(anchor);
   to.moveBottomRight(anchor);
   transformToRect(from, to);
@@ -592,13 +626,14 @@ void ViewItem::setTopLeft(const QPointF &point) {
 
 void ViewItem::setTopRight(const QPointF &point) {
 //   qDebug() << "setTopRight" << point << endl;
+  QPointF p = point;
 
   QPointF anchor = selectTransform().map(rect().bottomLeft());
 
   QRectF from = selectBoundingRect();
   QRectF to = from;
 
-  to.setTopRight(point);
+  to.setTopRight(p);
   from.moveBottomLeft(anchor);
   to.moveBottomLeft(anchor);
   transformToRect(from, to);
@@ -607,13 +642,14 @@ void ViewItem::setTopRight(const QPointF &point) {
 
 void ViewItem::setBottomLeft(const QPointF &point) {
 //   qDebug() << "setBottomLeft" << point << endl;
+  QPointF p = point;
 
   QPointF anchor = selectTransform().map(rect().topRight());
 
   QRectF from = selectBoundingRect();
   QRectF to = from;
 
-  to.setBottomLeft(point);
+  to.setBottomLeft(p);
   from.moveTopRight(anchor);
   to.moveTopRight(anchor);
   transformToRect(from, to);
@@ -622,13 +658,14 @@ void ViewItem::setBottomLeft(const QPointF &point) {
 
 void ViewItem::setBottomRight(const QPointF &point) {
 //   qDebug() << "setBottomRight" << point << endl;
+  QPointF p = point;
 
   QPointF anchor = selectTransform().map(rect().topLeft());
 
   QRectF from = selectBoundingRect();
   QRectF to = from;
 
-  to.setBottomRight(point);
+  to.setBottomRight(p);
   from.moveTopLeft(anchor);
   to.moveTopLeft(anchor);
   transformToRect(from, to);
@@ -770,6 +807,42 @@ void ViewItem::rotateTowards(const QPointF &corner, const QPointF &point) {
   _rotationTransform = t * _rotationTransform;
 
   setTransform(t, true);
+}
+
+
+QPointF ViewItem::lockOffset(const QPointF &offset, qreal ratio, bool oddCorner) const {
+  qreal x;
+  qreal y;
+
+  if (offset.x() < 0 && offset.y() > 0) {
+    x = offset.x();
+    y = x == 0 ? 0 : (1 / ratio) * x;
+  } else if (offset.y() < 0 && offset.x() > 0) {
+    y = offset.y();
+    x = y == 0 ? 0 : ratio * y;
+  } else if (qAbs(offset.x()) < qAbs(offset.y())) {
+    x = offset.x();
+    y = x == 0 ? 0 : (1 / ratio) * x;
+  } else {
+    y = offset.y();
+    x = y == 0 ? 0 : ratio * y;
+  }
+
+  QPointF o = offset;
+  if (oddCorner) {
+    o = QPointF(y == offset.y() ? -x : x,
+                x == offset.x() ? -y : y);
+  } else {
+    o = QPointF(x, y);
+  }
+
+//   qDebug() << "lockOffset"
+//             << "ratio:" << ratio
+//             << "offset:" << offset
+//             << "o:" << o
+//             << endl;
+
+  return o;
 }
 
 
