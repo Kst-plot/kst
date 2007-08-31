@@ -946,6 +946,7 @@ void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
   } else if (parentView()->mouseMode() == View::Resize ||
              parentView()->mouseMode() == View::Scale ||
              parentView()->mouseMode() == View::Rotate) {
+    _originalRect = rect();
     _originalTransform = transform();
   } else if (oldMode == View::Move) {
 
@@ -953,9 +954,9 @@ void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
 
     new MoveCommand(this, _originalPosition, pos());
   } else if (oldMode == View::Resize) {
-    new ResizeCommand(this, _originalTransform, transform());
+    new ResizeCommand(this, _originalRect, rect());
   } else if (oldMode == View::Scale) {
-    //new ScaleCommand(this, _originalTransform, transform());
+    new ScaleCommand(this, _originalTransform, transform());
   } else if (oldMode == View::Rotate) {
     new RotateCommand(this, _originalTransform, transform());
   }
@@ -1037,6 +1038,16 @@ void MoveCommand::undo() {
 
 void MoveCommand::redo() {
   _item->setPos(_newPos);
+}
+
+
+void ResizeCommand::undo() {
+  _item->setViewRect(_originalRect);
+}
+
+
+void ResizeCommand::redo() {
+  _item->setViewRect(_newRect);
 }
 
 

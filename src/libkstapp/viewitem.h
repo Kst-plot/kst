@@ -142,6 +142,7 @@ private:
   bool _lockAspectRatio;
   ViewGridLayout *_layout;
   QPointF _originalPosition;
+  QRectF _originalRect;
   QTransform _originalTransform;
   QLineF _normalLine;
   QLineF _rotationLine;
@@ -183,11 +184,11 @@ protected:
 class KST_EXPORT MoveCommand : public ViewItemCommand
 {
 public:
-  MoveCommand(QPointF originalPos, QPointF newPos)
+  MoveCommand(const QPointF &originalPos, const QPointF &newPos)
       : ViewItemCommand(QObject::tr("Move")),
         _originalPos(originalPos),
         _newPos(newPos) {}
-  MoveCommand(ViewItem *item, QPointF originalPos, QPointF newPos)
+  MoveCommand(ViewItem *item, const QPointF &originalPos, const QPointF &newPos)
       : ViewItemCommand(item, QObject::tr("Move")),
         _originalPos(originalPos),
         _newPos(newPos) {}
@@ -200,6 +201,28 @@ public:
 private:
   QPointF _originalPos;
   QPointF _newPos;
+};
+
+class KST_EXPORT ResizeCommand : public ViewItemCommand
+{
+public:
+  ResizeCommand(const QRectF &originalRect, const QRectF &newRect)
+      : ViewItemCommand(QObject::tr("Resize")),
+        _originalRect(originalRect),
+        _newRect(newRect) {}
+  ResizeCommand(ViewItem *item, const QRectF &originalRect, const QRectF &newRect)
+      : ViewItemCommand(item, QObject::tr("Resize")),
+        _originalRect(originalRect),
+        _newRect(newRect) {}
+
+  virtual ~ResizeCommand() {}
+
+  virtual void undo();
+  virtual void redo();
+
+private:
+  QRectF _originalRect;
+  QRectF _newRect;
 };
 
 class KST_EXPORT RemoveCommand : public ViewItemCommand
@@ -266,16 +289,16 @@ private:
   QTransform _newTransform;
 };
 
-class KST_EXPORT ResizeCommand : public TransformCommand
+class KST_EXPORT ScaleCommand : public TransformCommand
 {
 public:
-  ResizeCommand(const QTransform &originalTransform, const QTransform &newTransform)
-      : TransformCommand(originalTransform, newTransform, QObject::tr("Resize")) {}
+  ScaleCommand(const QTransform &originalTransform, const QTransform &newTransform)
+      : TransformCommand(originalTransform, newTransform, QObject::tr("Scale")) {}
 
-  ResizeCommand(ViewItem *item, const QTransform &originalTransform, const QTransform &newTransform)
-      : TransformCommand(item, originalTransform, newTransform, QObject::tr("Resize")) {}
+  ScaleCommand(ViewItem *item, const QTransform &originalTransform, const QTransform &newTransform)
+      : TransformCommand(item, originalTransform, newTransform, QObject::tr("Scale")) {}
 
-  virtual ~ResizeCommand() {}
+  virtual ~ScaleCommand() {}
 };
 
 class KST_EXPORT RotateCommand : public TransformCommand
