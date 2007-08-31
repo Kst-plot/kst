@@ -93,14 +93,21 @@ public Q_SLOTS:
   void lower();
   void edit();
   void resizeTopLeft(const QPointF &vector);
+  void resizeTopRight(const QPointF &vector);
+  void resizeBottomLeft(const QPointF &vector);
+  void resizeBottomRight(const QPointF &vector);
+  void resizeTop(qreal offset);
+  void resizeBottom(qreal offset);
+  void resizeLeft(qreal offset);
+  void resizeRight(qreal offset);
   void setTopLeft(const QPointF &point);
   void setTopRight(const QPointF &point);
   void setBottomLeft(const QPointF &point);
   void setBottomRight(const QPointF &point);
-  void setTop(const QPointF &point);
-  void setBottom(const QPointF &point);
-  void setLeft(const QPointF &point);
-  void setRight(const QPointF &point);
+  void setTop(qreal y);
+  void setBottom(qreal y);
+  void setLeft(qreal x);
+  void setRight(qreal x);
 
 private:
   QTransform selectTransform() const;
