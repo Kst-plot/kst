@@ -72,7 +72,7 @@ void ViewGridLayout::update() {
 
   //For now we divide up equally... can do stretch factors and such later...
   qreal itemWidth = parentItem()->width() / columnCount();
-  qreal itemHeight = parentItem()->width() / rowCount();
+  qreal itemHeight = parentItem()->height() / rowCount();
 
 //   qDebug() << "layouting" << _items.count()
 //            << "itemWidth:" << itemWidth

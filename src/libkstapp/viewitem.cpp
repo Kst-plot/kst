@@ -13,6 +13,7 @@
 #include "kstapplication.h"
 #include "tabwidget.h"
 #include "viewitemdialog.h"
+#include "viewgridlayout.h"
 
 #include <QMenu>
 #include <QDebug>
@@ -358,9 +359,35 @@ void ViewItem::paint(QPainter *painter) {
 }
 
 
-void ViewItem::remove() {
-  RemoveCommand *remove = new RemoveCommand(this);
-  remove->redo();
+void ViewItem::edit() {
+
+  QList<QGraphicsItem*> list = scene()->selectedItems();
+  if (!list.isEmpty())
+    ViewItemDialog::self()->show(list);
+}
+
+
+void ViewItem::layout() {
+
+  ViewItem *viewItem = new ViewItem(parentView());
+  parentView()->scene()->addItem(viewItem);
+  viewItem->setZValue(1);
+
+  ViewGridLayout *layout = new ViewGridLayout(viewItem);
+
+  QRectF itemRect;
+
+  int column = 0;
+
+  QList<QGraphicsItem*> list = scene()->selectedItems();
+  foreach (QGraphicsItem *item, list) {
+    item->setParentItem(viewItem);
+    layout->addViewItem(static_cast<ViewItem*>(item), 0, column++);
+    itemRect = itemRect.united(item->boundingRect());
+  }
+
+  viewItem->setPos(itemRect.topLeft());
+  viewItem->setViewRect(QRectF(QPointF(0, 0), itemRect.size()));
 }
 
 
@@ -376,11 +403,9 @@ void ViewItem::lower() {
 }
 
 
-void ViewItem::edit() {
-
-  QList<QGraphicsItem*> list = scene()->selectedItems();
-  if (!list.isEmpty())
-    ViewItemDialog::self()->show(list);
+void ViewItem::remove() {
+  RemoveCommand *remove = new RemoveCommand(this);
+  remove->redo();
 }
 
 
@@ -420,6 +445,9 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 
   QAction *editAction = menu.addAction(tr("Edit"));
   connect(editAction, SIGNAL(triggered()), this, SLOT(edit()));
+
+  QAction *layoutAction = menu.addAction(tr("Layout"));
+  connect(layoutAction, SIGNAL(triggered()), this, SLOT(layout()));
 
   QAction *raiseAction = menu.addAction(tr("Raise"));
   connect(raiseAction, SIGNAL(triggered()), this, SLOT(raise()));

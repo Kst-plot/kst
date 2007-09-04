@@ -91,10 +91,11 @@ Q_SIGNALS:
 
 /*FIXME these should be made private for only undo commands to access*/
 public Q_SLOTS:
-  void remove();
+  void edit();
+  void layout();
   void raise();
   void lower();
-  void edit();
+  void remove();
   void resizeTopLeft(const QPointF &offset);
   void resizeTopRight(const QPointF &offset);
   void resizeBottomLeft(const QPointF &offset);
