@@ -876,8 +876,6 @@ void ViewItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
     event->ignore();
     return;
   }
-
-  edit();
 }
 
 
