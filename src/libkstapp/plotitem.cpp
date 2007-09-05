@@ -72,7 +72,7 @@ void CreatePlotCommand::createItem() {
 
 
 void PlotItem::paint(QPainter *painter) {
-  ViewItem::paint(painter);
+  painter->drawRect(rect());
 
   painter->save();
   painter->translate(QPointF(rect().x(), rect().y()));

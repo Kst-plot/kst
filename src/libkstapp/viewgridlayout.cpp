@@ -21,7 +21,6 @@ ViewGridLayout::ViewGridLayout(ViewItem *parent)
   : QObject(parent), _rowCount(0), _columnCount(0) {
 
   parent->setLayout(this);
-  connect(parent, SIGNAL(geometryChanged()), this, SLOT(update()));
 }
 
 
@@ -82,6 +81,7 @@ void ViewGridLayout::update() {
   foreach (LayoutItem item, _items) {
     QPointF topLeft(itemWidth * item.column, itemHeight * item.row);
     QSizeF size(itemWidth * item.columnSpan, itemHeight * item.rowSpan);
+    topLeft += parentItem()->rect().topLeft();
 
     item.viewItem->resetTransform();
     item.viewItem->setPos(topLeft);

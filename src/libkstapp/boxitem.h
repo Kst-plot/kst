@@ -19,19 +19,21 @@ namespace Kst {
 
 class BoxItem : public ViewItem
 {
-  Q_OBJECT
-public:
-  BoxItem(View *parent);
-  virtual ~BoxItem();
+    Q_OBJECT
+  public:
+    BoxItem(View *parent);
+    virtual ~BoxItem();
+
+    void paint(QPainter *painter);
 };
 
 class KST_EXPORT CreateBoxCommand : public CreateCommand
 {
-public:
-  CreateBoxCommand() : CreateCommand(QObject::tr("Create Box")) {}
-  CreateBoxCommand(View *view) : CreateCommand(view, QObject::tr("Create Box")) {}
-  virtual ~CreateBoxCommand() {}
-  virtual void createItem();
+  public:
+    CreateBoxCommand() : CreateCommand(QObject::tr("Create Box")) {}
+    CreateBoxCommand(View *view) : CreateCommand(view, QObject::tr("Create Box")) {}
+    virtual ~CreateBoxCommand() {}
+    virtual void createItem();
 };
 
 class BoxItemFactory : public GraphicsFactory {

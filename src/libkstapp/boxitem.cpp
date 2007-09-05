@@ -27,6 +27,11 @@ BoxItem::~BoxItem() {
 }
 
 
+void BoxItem::paint(QPainter *painter) {
+  painter->drawRect(rect());
+}
+
+
 void CreateBoxCommand::createItem() {
   _item = new BoxItem(_view);
   _view->setCursor(Qt::CrossCursor);

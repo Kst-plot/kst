@@ -92,9 +92,10 @@ Q_SIGNALS:
 /*FIXME these should be made private for only undo commands to access*/
 public Q_SLOTS:
   void edit();
-  void layout();
   void raise();
   void lower();
+  void createLayout();
+  void breakLayout();
   void remove();
   void resizeTopLeft(const QPointF &offset);
   void resizeTopRight(const QPointF &offset);
@@ -136,6 +137,7 @@ private Q_SLOTS:
   void viewMouseModeChanged(View::MouseMode oldMode);
 
 private:
+  void maybeReparent();
   QLineF originLine() const;
 
 private:
@@ -175,11 +177,50 @@ public:
   virtual void redo();
   virtual void createItem();
 
+  ViewItem *item() const { return _item; }
+
 public Q_SLOTS:
   void creationComplete();
 
 protected:
   QPointer<ViewItem> _item;
+};
+
+class KST_EXPORT CreateLayoutBoxCommand : public CreateCommand
+{
+public:
+  CreateLayoutBoxCommand() : CreateCommand(QObject::tr("Create Layout Box")) {}
+  CreateLayoutBoxCommand(View *view) : CreateCommand(view, QObject::tr("Create Layout Box")) {}
+  virtual ~CreateLayoutBoxCommand() {}
+  virtual void createItem();
+};
+
+class KST_EXPORT LayoutCommand : public ViewItemCommand
+{
+public:
+  LayoutCommand()
+      : ViewItemCommand(QObject::tr("Layout")) {}
+  LayoutCommand(ViewItem *item)
+      : ViewItemCommand(item, QObject::tr("Layout")) {}
+
+  virtual ~LayoutCommand() {}
+
+  virtual void undo();
+  virtual void redo();
+};
+
+class KST_EXPORT BreakLayoutCommand : public ViewItemCommand
+{
+public:
+  BreakLayoutCommand()
+      : ViewItemCommand(QObject::tr("Break Layout")) {}
+  BreakLayoutCommand(ViewItem *item)
+      : ViewItemCommand(item, QObject::tr("Break Layout")) {}
+
+  virtual ~BreakLayoutCommand() {}
+
+  virtual void undo();
+  virtual void redo();
 };
 
 class KST_EXPORT MoveCommand : public ViewItemCommand

@@ -36,12 +36,15 @@ public:
   virtual ~View();
 
   QUndoStack *undoStack() const;
-  ViewItem* currentPlotItem() const;
+  ViewItem* currentViewItem() const;
 
   MouseMode mouseMode() const;
   void setMouseMode(MouseMode mode);
 
   QPolygonF creationPolygon(CreationEvents events) const;
+
+  ViewItem* layoutBoxItem() const { return _layoutBoxItem; }
+  void setLayoutBoxItem(ViewItem *layoutBoxItem) { _layoutBoxItem = layoutBoxItem; }
 
   QSizeF gridSpacing() const { return _gridSpacing; }
   void setGridSpacing(const QSizeF &gridSpacing) { _gridSpacing = gridSpacing; }
@@ -67,6 +70,9 @@ Q_SIGNALS:
   void mouseModeChanged(View::MouseMode oldMode);
   void creationPolygonChanged(View::CreationEvent event);
 
+public Q_SLOTS:
+  void createLayout();
+
 protected:
   bool eventFilter(QObject *obj, QEvent *event);
   void setVisible(bool visible);
@@ -78,8 +84,9 @@ private Q_SLOTS:
 
 private:
   QUndoStack *_undoStack;
-  ViewItem *_currentPlotItem;
+  ViewItem *_currentViewItem;
   MouseMode _mouseMode;
+  ViewItem *_layoutBoxItem;
   QPolygonF _creationPolygonPress;
   QPolygonF _creationPolygonMove;
   QPolygonF _creationPolygonRelease;

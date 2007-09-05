@@ -265,18 +265,6 @@ void MainWindow::about() {
 }
 
 
-void MainWindow::createPicture() {
-  CreatePictureCommand *cmd = new CreatePictureCommand;
-  cmd->createItem();
-}
-
-
-void MainWindow::createSvg() {
-  CreateSvgCommand *cmd = new CreateSvgCommand;
-  cmd->createItem();
-}
-
-
 void MainWindow::createBox() {
   CreateBoxCommand *cmd = new CreateBoxCommand;
   cmd->createItem();
@@ -301,9 +289,45 @@ void MainWindow::createLine() {
 }
 
 
+void MainWindow::createPicture() {
+  CreatePictureCommand *cmd = new CreatePictureCommand;
+  cmd->createItem();
+}
+
+
 void MainWindow::createPlot() {
   CreatePlotCommand *cmd = new CreatePlotCommand;
   cmd->createItem();
+}
+
+
+void MainWindow::createSvg() {
+  CreateSvgCommand *cmd = new CreateSvgCommand;
+  cmd->createItem();
+}
+
+
+void MainWindow::createLayout() {
+  View *view = tabWidget()->currentView();
+  QList<QGraphicsItem*> selectedItems = view->scene()->selectedItems();
+  if (!selectedItems.isEmpty()) {
+    ViewItem *viewItem = dynamic_cast<ViewItem*>(selectedItems.first());
+    Q_ASSERT(viewItem);
+    viewItem->createLayout();
+  } else {
+    view->createLayout();
+  }
+}
+
+
+void MainWindow::breakLayout() {
+  View *view = tabWidget()->currentView();
+  QList<QGraphicsItem*> selectedItems = view->scene()->selectedItems();
+  if (!selectedItems.isEmpty()) {
+    ViewItem *viewItem = dynamic_cast<ViewItem*>(selectedItems.first());
+    Q_ASSERT(viewItem);
+    viewItem->breakLayout();
+  }
 }
 
 
@@ -367,15 +391,6 @@ void MainWindow::createActions() {
   _createBoxAct->setIcon(QPixmap(":kst_gfx_rectangle.png"));
   connect(_createBoxAct, SIGNAL(triggered()), this, SLOT(createBox()));
 
-  _createPictureAct = new QAction(tr("&Create picture"), this);
-  _createPictureAct->setStatusTip(tr("Create a picture for the current view"));
-  _createPictureAct->setIcon(QPixmap(":kst_gfx_picture.png"));
-  connect(_createPictureAct, SIGNAL(triggered()), this, SLOT(createPicture()));
-
-  _createSvgAct = new QAction(tr("&Create svg"), this);
-  _createSvgAct->setStatusTip(tr("Create a svg for the current view"));
-  connect(_createSvgAct, SIGNAL(triggered()), this, SLOT(createSvg()));
-
   _createEllipseAct = new QAction(tr("&Create ellipse"), this);
   _createEllipseAct->setStatusTip(tr("Create an ellipse for the current view"));
   _createEllipseAct->setIcon(QPixmap(":kst_gfx_ellipse.png"));
@@ -386,10 +401,29 @@ void MainWindow::createActions() {
   _createLineAct->setIcon(QPixmap(":kst_gfx_line.png"));
   connect(_createLineAct, SIGNAL(triggered()), this, SLOT(createLine()));
 
+  _createPictureAct = new QAction(tr("&Create picture"), this);
+  _createPictureAct->setStatusTip(tr("Create a picture for the current view"));
+  _createPictureAct->setIcon(QPixmap(":kst_gfx_picture.png"));
+  connect(_createPictureAct, SIGNAL(triggered()), this, SLOT(createPicture()));
+
   _createPlotAct = new QAction(tr("&Create plot"), this);
   _createPlotAct->setStatusTip(tr("Create a plot for the current view"));
   _createPlotAct->setIcon(QPixmap(":kst_newplot.png"));
   connect(_createPlotAct, SIGNAL(triggered()), this, SLOT(createPlot()));
+
+  _createSvgAct = new QAction(tr("&Create svg"), this);
+  _createSvgAct->setStatusTip(tr("Create a svg for the current view"));
+  connect(_createSvgAct, SIGNAL(triggered()), this, SLOT(createSvg()));
+
+  _createLayoutAct = new QAction(tr("&Create layout"), this);
+  _createLayoutAct->setStatusTip(tr("Create a layout for the current item"));
+  _createLayoutAct->setIcon(QPixmap(":kst_gfx_layout.png"));
+  connect(_createLayoutAct, SIGNAL(triggered()), this, SLOT(createLayout()));
+
+  _breakLayoutAct = new QAction(tr("&Break layout"), this);
+  _breakLayoutAct->setStatusTip(tr("Break the layout for the current item"));
+  _breakLayoutAct->setIcon(QPixmap(":kst_gfx_breaklayout.png"));
+  connect(_breakLayoutAct, SIGNAL(triggered()), this, SLOT(breakLayout()));
 
   _newTabAct = new QAction(tr("&New tab"), this);
   _newTabAct->setStatusTip(tr("Create a new tab"));
@@ -520,6 +554,9 @@ void MainWindow::createToolBars() {
   _viewToolBar->addAction(_createPictureAct);
   _viewToolBar->addAction(_createPlotAct);
 //  _viewToolBar->addAction(_createSvgAct); //no icon
+
+  _viewToolBar->addAction(_createLayoutAct);
+  _viewToolBar->addAction(_breakLayoutAct);
 }
 
 

@@ -63,7 +63,16 @@ ViewGridLayout *ViewItem::layout() const {
 
 
 void ViewItem::setLayout(ViewGridLayout *layout) {
+  //disconnect previous layout...
+  if (_layout) {
+    disconnect(this, SIGNAL(geometryChanged()), _layout, SLOT(update()));
+  }
+
   _layout = layout;
+
+  if (_layout) {
+    connect(this, SIGNAL(geometryChanged()), _layout, SLOT(update()));
+  }
 }
 
 
@@ -355,7 +364,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
 
 void ViewItem::paint(QPainter *painter) {
-  painter->drawRect(rect());
+  Q_UNUSED(painter);
 }
 
 
@@ -367,27 +376,15 @@ void ViewItem::edit() {
 }
 
 
-void ViewItem::layout() {
+void ViewItem::createLayout() {
+  LayoutCommand *layout = new LayoutCommand(this);
+  layout->redo();
+}
 
-  ViewItem *viewItem = new ViewItem(parentView());
-  parentView()->scene()->addItem(viewItem);
-  viewItem->setZValue(1);
 
-  ViewGridLayout *layout = new ViewGridLayout(viewItem);
-
-  QRectF itemRect;
-
-  int column = 0;
-
-  QList<QGraphicsItem*> list = scene()->selectedItems();
-  foreach (QGraphicsItem *item, list) {
-    item->setParentItem(viewItem);
-    layout->addViewItem(static_cast<ViewItem*>(item), 0, column++);
-    itemRect = itemRect.united(item->boundingRect());
-  }
-
-  viewItem->setPos(itemRect.topLeft());
-  viewItem->setViewRect(QRectF(QPointF(0, 0), itemRect.size()));
+void ViewItem::breakLayout() {
+  BreakLayoutCommand *layout = new BreakLayoutCommand(this);
+  layout->redo();
 }
 
 
@@ -446,14 +443,17 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   QAction *editAction = menu.addAction(tr("Edit"));
   connect(editAction, SIGNAL(triggered()), this, SLOT(edit()));
 
-  QAction *layoutAction = menu.addAction(tr("Layout"));
-  connect(layoutAction, SIGNAL(triggered()), this, SLOT(layout()));
-
   QAction *raiseAction = menu.addAction(tr("Raise"));
   connect(raiseAction, SIGNAL(triggered()), this, SLOT(raise()));
 
   QAction *lowerAction = menu.addAction(tr("Lower"));
   connect(lowerAction, SIGNAL(triggered()), this, SLOT(lower()));
+
+  QAction *layoutAction = menu.addAction(tr("Create Layout"));
+  connect(layoutAction, SIGNAL(triggered()), this, SLOT(createLayout()));
+
+  QAction *breakLayoutAction = menu.addAction(tr("Break Layout"));
+  connect(breakLayoutAction, SIGNAL(triggered()), this, SLOT(breakLayout()));
 
   QAction *removeAction = menu.addAction(tr("Remove"));
   connect(removeAction, SIGNAL(triggered()), this, SLOT(remove()));
@@ -982,11 +982,17 @@ void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
   } else if (oldMode == View::Rotate) {
     new RotateCommand(this, _originalTransform, transform());
   }
+
+  maybeReparent();
+}
+
+
+void ViewItem::maybeReparent() {
 }
 
 
 ViewItemCommand::ViewItemCommand(const QString &text, bool addToStack, QUndoCommand *parent)
-    : QUndoCommand(text, parent), _item(kstApp->mainWindow()->tabWidget()->currentView()->currentPlotItem()) {
+    : QUndoCommand(text, parent), _item(kstApp->mainWindow()->tabWidget()->currentView()->currentViewItem()) {
   if (addToStack)
     _item->parentView()->undoStack()->push(this);
 }
@@ -1050,6 +1056,78 @@ void CreateCommand::createItem() {
 
 void CreateCommand::creationComplete() {
   _view->undoStack()->push(this);
+}
+
+
+void CreateLayoutBoxCommand::createItem() {
+  _item = new ViewItem(_view);
+  _view->scene()->addItem(_item);
+  _item->setZValue(1);
+  _item->setPos(_view->sceneRect().topLeft());
+  _item->setViewRect(_view->sceneRect());
+
+  QList<QGraphicsItem*> list = _view->items();
+  foreach (QGraphicsItem *item, list) {
+    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
+    if (!viewItem || viewItem->parentItem() || !viewItem->isVisible() || viewItem == _item)
+      continue;
+
+    viewItem->setParentItem(_item);
+  }
+  _item->createLayout();
+  _view->setLayoutBoxItem(_item);
+}
+
+
+void LayoutCommand::undo() {
+  ViewGridLayout *layout = _item->layout();
+  if (!layout)
+    return;
+
+  _item->setLayout(0);
+  delete layout;
+}
+
+
+void LayoutCommand::redo() {
+  ViewGridLayout *layout = new ViewGridLayout(_item);
+
+  int column = 0;
+
+  QList<QGraphicsItem*> list = _item->QGraphicsItem::children();
+  foreach (QGraphicsItem *item, list) {
+    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
+    if (!viewItem)
+      continue;
+    layout->addViewItem(viewItem, 0, column++);
+  }
+  layout->update();
+}
+
+
+void BreakLayoutCommand::undo() {
+  ViewGridLayout *layout = new ViewGridLayout(_item);
+
+  int column = 0;
+
+  QList<QGraphicsItem*> list = _item->QGraphicsItem::children();
+  foreach (QGraphicsItem *item, list) {
+    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
+    if (!viewItem)
+      continue;
+    layout->addViewItem(viewItem, 0, column++);
+  }
+  layout->update();
+}
+
+
+void BreakLayoutCommand::redo() {
+  ViewGridLayout *layout = _item->layout();
+  if (!layout)
+    return;
+
+  _item->setLayout(0);
+  delete layout;
 }
 
 

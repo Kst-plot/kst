@@ -10,6 +10,7 @@
  ***************************************************************************/
 
 #include "view.h"
+#include "viewitem.h"
 #include "mainwindow.h"
 #include "kstapplication.h"
 #include "applicationsettings.h"
@@ -29,8 +30,9 @@ namespace Kst {
 
 View::View()
   : QGraphicsView(kstApp->mainWindow()),
-    _currentPlotItem(0),
+    _currentViewItem(0),
     _mouseMode(Default),
+    _layoutBoxItem(0),
     _gridSpacing(QSizeF(20,20)),
     _snapToGridHorizontal(false),
     _snapToGridVertical(false) {
@@ -56,8 +58,8 @@ QUndoStack *View::undoStack() const {
 }
 
 
-Kst::ViewItem *View::currentPlotItem() const {
-  return _currentPlotItem;
+Kst::ViewItem *View::currentViewItem() const {
+  return _currentViewItem;
 }
 
 
@@ -157,13 +159,24 @@ void View::setVisible(bool visible) {
 }
 
 
+void View::createLayout() {
+  if (_layoutBoxItem && _layoutBoxItem->isVisible() && _layoutBoxItem->layout() )
+    return;
+
+  CreateLayoutBoxCommand *box = new CreateLayoutBoxCommand(this);
+  box->redo();
+}
+
+
 void View::initializeSceneRect() {
 
   //Maybe this should be the size of the desktop?
-  setSceneRect(QRectF(0, 0, width() - 1.0, height() - 1.0));
+  setSceneRect(QRectF(0, 0, 800, 600));
+
+  fitInView(sceneRect(), Qt::KeepAspectRatioByExpanding);
 
   //See what I'm doing
-  QLinearGradient l(0,0,0,height());
+  QLinearGradient l(0,0,0,600);
   l.setColorAt(0, Qt::white);
   l.setColorAt(1, Qt::lightGray);
   setBackgroundBrush(l);
@@ -174,7 +187,7 @@ void View::resizeEvent(QResizeEvent *event) {
   QGraphicsView::resizeEvent(event);
 
   if (size() != sceneRect().size() && sceneRect().isValid()) {
-    fitInView(sceneRect());
+    fitInView(sceneRect(), Qt::KeepAspectRatioByExpanding);
   }
 }
 
