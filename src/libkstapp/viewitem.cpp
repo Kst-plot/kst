@@ -372,10 +372,7 @@ void ViewItem::paint(QPainter *painter) {
 
 
 void ViewItem::edit() {
-
-  QList<QGraphicsItem*> list = scene()->selectedItems();
-  if (!list.isEmpty())
-    ViewItemDialog::self()->show(list);
+  ViewItemDialog::self()->show(this);
 }
 
 

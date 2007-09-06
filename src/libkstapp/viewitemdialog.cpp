@@ -11,11 +11,11 @@
 
 #include "viewitemdialog.h"
 
+#include "viewitem.h"
 #include "fillandstroke.h"
 
 #include <QPen>
 #include <QBrush>
-#include <QAbstractGraphicsShapeItem>
 #include <QDebug>
 
 namespace Kst {
@@ -57,10 +57,8 @@ ViewItemDialog::ViewItemDialog(QWidget *parent)
 ViewItemDialog::~ViewItemDialog() {
 }
 
-void ViewItemDialog::show(QList<QGraphicsItem*> items) {
-  Q_ASSERT(!items.isEmpty());
-
-  _items = items;
+void ViewItemDialog::show(ViewItem *item) {
+  _item = item;
 
   setupFill();
   setupStroke();
@@ -71,10 +69,8 @@ void ViewItemDialog::show(QList<QGraphicsItem*> items) {
 }
 
 void ViewItemDialog::setupFill() {
-  QAbstractGraphicsShapeItem *first = qgraphicsitem_cast<QAbstractGraphicsShapeItem*>(_items.first());
-  Q_ASSERT(first);
-
-  QBrush b = first->brush();
+  Q_ASSERT(_item);
+  QBrush b = _item->brush();
 
   _fillAndStroke->setFillColor(b.color());
   _fillAndStroke->setFillStyle(b.style());
@@ -89,10 +85,8 @@ void ViewItemDialog::setupFill() {
 
 
 void ViewItemDialog::setupStroke() {
-  QAbstractGraphicsShapeItem *first = qgraphicsitem_cast<QAbstractGraphicsShapeItem*>(_items.first());
-  Q_ASSERT(first);
-
-  QPen p = first->pen();
+  Q_ASSERT(_item);
+  QPen p = _item->pen();
   QBrush b = p.brush();
 
   _fillAndStroke->setStrokeStyle(p.style());
@@ -107,10 +101,7 @@ void ViewItemDialog::setupStroke() {
 
 
 void ViewItemDialog::fillChanged() {
-  QAbstractGraphicsShapeItem *first = qgraphicsitem_cast<QAbstractGraphicsShapeItem*>(_items.first());
-  Q_ASSERT(first);
-
-  QBrush b = first->brush();
+  QBrush b = _item->brush();
 
   b.setColor(_fillAndStroke->fillColor());
   b.setStyle(_fillAndStroke->fillStyle());
@@ -122,18 +113,14 @@ void ViewItemDialog::fillChanged() {
     b = QBrush(gradient);
 #endif
 
-  foreach(QGraphicsItem *item, _items) {
-    QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem*>(item);
-    shape->setBrush(b);
-  }
+  Q_ASSERT(_item);
+  _item->setBrush(b);
 }
 
 
 void ViewItemDialog::strokeChanged() {
-  QAbstractGraphicsShapeItem *first = qgraphicsitem_cast<QAbstractGraphicsShapeItem*>(_items.first());
-  Q_ASSERT(first);
-
-  QPen p = first->pen();
+  Q_ASSERT(_item);
+  QPen p = _item->pen();
   QBrush b = p.brush();
 
   p.setStyle(_fillAndStroke->strokeStyle());
@@ -146,15 +133,12 @@ void ViewItemDialog::strokeChanged() {
   p.setCapStyle(_fillAndStroke->capStyle());
   p.setBrush(b);
 
-  foreach(QGraphicsItem *item, _items) {
-    QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem*>(item);
-    shape->setPen(p);
-  }
+  _item->setPen(p);
 }
 
 
 void ViewItemDialog::setVisible(bool visible) {
-  if (visible && _items.isEmpty())
+  if (visible && !_item)
     return; //nothing to show...
 
   QDialog::setVisible(visible);

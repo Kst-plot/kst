@@ -17,10 +17,9 @@
 
 #include "kst_export.h"
 
-class QGraphicsItem;
-
 namespace Kst {
 
+class ViewItem;
 class FillAndStroke;
 
 class KST_EXPORT ViewItemDialog : public QDialog
@@ -29,7 +28,7 @@ class KST_EXPORT ViewItemDialog : public QDialog
 public:
   static ViewItemDialog *self();
 
-  void show(QList<QGraphicsItem*> items);
+  void show(ViewItem *item);
 
 private:
   ViewItemDialog(QWidget *parent = 0);
@@ -46,7 +45,7 @@ protected:
   void setVisible(bool visible);
 
 private:
-  QList<QGraphicsItem*> _items;
+  QPointer<ViewItem> _item;
   FillAndStroke *_fillAndStroke;
 };
 
