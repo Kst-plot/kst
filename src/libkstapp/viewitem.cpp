@@ -464,6 +464,11 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 
 void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
+  if (parentView()->viewMode() == View::Data) {
+    event->ignore();
+    return;
+  }
+
   if (parentView()->mouseMode() == View::Default) {
     if (mouseMode() == ViewItem::Default ||
         mouseMode() == ViewItem::Move ||
@@ -866,10 +871,19 @@ QPointF ViewItem::lockOffset(const QPointF &offset, qreal ratio, bool oddCorner)
 
 
 void ViewItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
+  if (parentView()->viewMode() == View::Data) {
+    event->ignore();
+    return;
+  }
 }
 
 
 void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+
+  if (parentView()->viewMode() == View::Data) {
+    event->ignore();
+    return;
+  }
 
   QPointF p = event->pos();
   if (topLeftGrip().contains(p)) {
@@ -897,6 +911,11 @@ void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
 
 void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+
+  if (parentView()->viewMode() == View::Data) {
+    event->ignore();
+    return;
+  }
 
   if (parentView()->mouseMode() != View::Default) {
     parentView()->setMouseMode(View::Default);

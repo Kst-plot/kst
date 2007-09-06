@@ -31,6 +31,7 @@ namespace Kst {
 View::View()
   : QGraphicsView(kstApp->mainWindow()),
     _currentViewItem(0),
+    _viewMode(Layout),
     _mouseMode(Default),
     _layoutBoxItem(0),
     _gridSpacing(QSizeF(20,20)),
@@ -63,6 +64,18 @@ Kst::ViewItem *View::currentViewItem() const {
 }
 
 
+View::ViewMode View::viewMode() const {
+  return _viewMode;
+}
+
+
+void View::setViewMode(ViewMode mode) {
+  ViewMode oldMode = _viewMode;
+  _viewMode = mode;
+  emit viewModeChanged(oldMode);
+}
+
+
 View::MouseMode View::mouseMode() const {
   return _mouseMode;
 }
@@ -71,7 +84,7 @@ View::MouseMode View::mouseMode() const {
 void View::setMouseMode(MouseMode mode) {
 
   //Clear the creation polygons if we're currently
-  //in Create mode.
+  //in Create mouse mode.
   MouseMode oldMode = _mouseMode;
 
   if (oldMode == Create) {

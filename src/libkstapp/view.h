@@ -24,6 +24,7 @@ class KST_EXPORT View : public QGraphicsView
 {
   Q_OBJECT
 public:
+  enum ViewMode { Data, Layout };
   enum MouseMode { Default, Move, Create, Resize, Scale, Rotate };
   enum CreationEvent {
     MousePress = 0x0,
@@ -37,6 +38,9 @@ public:
 
   QUndoStack *undoStack() const;
   ViewItem* currentViewItem() const;
+
+  ViewMode viewMode() const;
+  void setViewMode(ViewMode mode);
 
   MouseMode mouseMode() const;
   void setMouseMode(MouseMode mode);
@@ -67,6 +71,7 @@ public:
   QPointF snapPoint(const QPointF &point);
 
 Q_SIGNALS:
+  void viewModeChanged(View::ViewMode oldMode);
   void mouseModeChanged(View::MouseMode oldMode);
   void creationPolygonChanged(View::CreationEvent event);
 
@@ -85,6 +90,7 @@ private Q_SLOTS:
 private:
   QUndoStack *_undoStack;
   ViewItem *_currentViewItem;
+  ViewMode _viewMode;
   MouseMode _mouseMode;
   ViewItem *_layoutBoxItem;
   QPolygonF _creationPolygonPress;

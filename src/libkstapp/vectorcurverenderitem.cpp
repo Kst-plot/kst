@@ -11,6 +11,8 @@
 
 #include "vectorcurverenderitem.h"
 
+#include "plotitem.h"
+
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
 
@@ -98,18 +100,32 @@ void VectorCurveRenderItem::paint(QPainter *painter) {
 
 
 void VectorCurveRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+  if (plotItem()->parentView()->viewMode() != View::Data) {
+    event->ignore();
+    return;
+  }
+
   _selectionRect.setBottomRight(event->pos());
   update(_selectionRect);
 }
 
 
 void VectorCurveRenderItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+  if (plotItem()->parentView()->viewMode() != View::Data) {
+    event->ignore();
+    return;
+  }
+
   _selectionRect = QRectF(event->pos(), QSizeF(0,0));
 }
 
 
 void VectorCurveRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-  Q_UNUSED(event);
+  if (plotItem()->parentView()->viewMode() != View::Data) {
+    event->ignore();
+    return;
+  }
+
   _selectionRect = QRectF();
   update();
 }
