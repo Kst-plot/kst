@@ -77,6 +77,8 @@ class MainWindow : public QMainWindow
     void performHeavyStartupActions();
     void cleanup();
 
+    void setLayoutMode(bool layoutMode);
+
   protected:
     void closeEvent(QCloseEvent *e);
 
@@ -108,14 +110,17 @@ class MainWindow : public QMainWindow
     QMenu *_editMenu;
     QMenu *_dataMenu;
     QMenu *_viewMenu;
+    QMenu *_layoutMenu;
     QMenu *_settingsMenu;
     QMenu *_helpMenu;
 
     QToolBar *_dataToolBar;
     QToolBar *_viewToolBar;
+    QToolBar *_layoutToolBar;
 
     QAction *_undoAct;
     QAction *_redoAct;
+
     // FIXME: move these into each object, along with the creation slot?
     QAction *_createLabelAct;
     QAction *_createBoxAct;
@@ -139,7 +144,9 @@ class MainWindow : public QMainWindow
     QAction *_saveAct;
     QAction *_saveAsAct;
     QAction *_vectorEditorAct;
+
     QAction *_viewManagerAct;
+    QAction *_layoutModeAct;
 };
 
 }

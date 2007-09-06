@@ -111,14 +111,38 @@ void MainWindow::cleanup() {
 }
 
 
+void MainWindow::setLayoutMode(bool layoutMode) {
+  View *v = tabWidget()->currentView();
+  Q_ASSERT(v);
+
+  if (layoutMode)
+    v->setViewMode(View::Layout);
+  else
+    v->setViewMode(View::Data);
+
+  //disable all layout actions
+  _createLabelAct->setEnabled(layoutMode);
+  _createBoxAct->setEnabled(layoutMode);
+  _createEllipseAct->setEnabled(layoutMode);
+  _createLineAct->setEnabled(layoutMode);
+  _createPictureAct->setEnabled(layoutMode);
+  _createPlotAct->setEnabled(layoutMode);
+  _createSvgAct->setEnabled(layoutMode);
+  _createLayoutAct->setEnabled(layoutMode);
+  _breakLayoutAct->setEnabled(layoutMode);
+
+  _layoutToolBar->setVisible(layoutMode);
+}
+
+
 bool MainWindow::promptSave() {
-    int rc = QMessageBox::warning(this, tr("Kst"), tr("Your document has been modified.\nSave changes?"), QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save);
-    if (rc == QMessageBox::Save) {
-      save();
-    } else if (rc == QMessageBox::Cancel) {
-      return false;
-    }
-    return true;
+  int rc = QMessageBox::warning(this, tr("Kst"), tr("Your document has been modified.\nSave changes?"), QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save);
+  if (rc == QMessageBox::Save) {
+    save();
+  } else if (rc == QMessageBox::Cancel) {
+    return false;
+  }
+  return true;
 }
 
 
@@ -384,46 +408,61 @@ void MainWindow::createActions() {
   _createLabelAct = new QAction(tr("&Create label"), this);
   _createLabelAct->setStatusTip(tr("Create a label for the current view"));
   _createLabelAct->setIcon(QPixmap(":kst_gfx_label.png"));
+  _createLabelAct->setEnabled(false);
   connect(_createLabelAct, SIGNAL(triggered()), this, SLOT(createLabel()));
 
   _createBoxAct = new QAction(tr("&Create box"), this);
   _createBoxAct->setStatusTip(tr("Create a box for the current view"));
   _createBoxAct->setIcon(QPixmap(":kst_gfx_rectangle.png"));
+  _createBoxAct->setEnabled(false);
   connect(_createBoxAct, SIGNAL(triggered()), this, SLOT(createBox()));
 
   _createEllipseAct = new QAction(tr("&Create ellipse"), this);
   _createEllipseAct->setStatusTip(tr("Create an ellipse for the current view"));
   _createEllipseAct->setIcon(QPixmap(":kst_gfx_ellipse.png"));
+  _createEllipseAct->setEnabled(false);
   connect(_createEllipseAct, SIGNAL(triggered()), this, SLOT(createEllipse()));
 
   _createLineAct = new QAction(tr("&Create line"), this);
   _createLineAct->setStatusTip(tr("Create a line for the current view"));
   _createLineAct->setIcon(QPixmap(":kst_gfx_line.png"));
+  _createLineAct->setEnabled(false);
   connect(_createLineAct, SIGNAL(triggered()), this, SLOT(createLine()));
 
   _createPictureAct = new QAction(tr("&Create picture"), this);
   _createPictureAct->setStatusTip(tr("Create a picture for the current view"));
   _createPictureAct->setIcon(QPixmap(":kst_gfx_picture.png"));
+  _createPictureAct->setEnabled(false);
   connect(_createPictureAct, SIGNAL(triggered()), this, SLOT(createPicture()));
 
   _createPlotAct = new QAction(tr("&Create plot"), this);
   _createPlotAct->setStatusTip(tr("Create a plot for the current view"));
   _createPlotAct->setIcon(QPixmap(":kst_newplot.png"));
+  _createPlotAct->setEnabled(false);
   connect(_createPlotAct, SIGNAL(triggered()), this, SLOT(createPlot()));
 
   _createSvgAct = new QAction(tr("&Create svg"), this);
   _createSvgAct->setStatusTip(tr("Create a svg for the current view"));
+  _createSvgAct->setEnabled(false);
   connect(_createSvgAct, SIGNAL(triggered()), this, SLOT(createSvg()));
 
   _createLayoutAct = new QAction(tr("&Create layout"), this);
   _createLayoutAct->setStatusTip(tr("Create a layout for the current item"));
   _createLayoutAct->setIcon(QPixmap(":kst_gfx_layout.png"));
+  _createLayoutAct->setEnabled(false);
   connect(_createLayoutAct, SIGNAL(triggered()), this, SLOT(createLayout()));
 
   _breakLayoutAct = new QAction(tr("&Break layout"), this);
   _breakLayoutAct->setStatusTip(tr("Break the layout for the current item"));
   _breakLayoutAct->setIcon(QPixmap(":kst_gfx_breaklayout.png"));
+  _breakLayoutAct->setEnabled(false);
   connect(_breakLayoutAct, SIGNAL(triggered()), this, SLOT(breakLayout()));
+
+  _layoutModeAct = new QAction(tr("&Layout Mode"), this);
+  _layoutModeAct->setStatusTip(tr("Toggle the current view's layout mode"));
+  _layoutModeAct->setIcon(QPixmap(":kst_layoutmode.png"));
+  _layoutModeAct->setCheckable(true);
+  connect(_layoutModeAct, SIGNAL(toggled(bool)), this, SLOT(setLayoutMode(bool)));
 
   _newTabAct = new QAction(tr("&New tab"), this);
   _newTabAct->setStatusTip(tr("Create a new tab"));
@@ -509,13 +548,16 @@ void MainWindow::createMenus() {
 
   _viewMenu = menuBar()->addMenu(tr("&View"));
   _viewMenu->addAction(_viewManagerAct);
-  _viewMenu->addAction(_createLabelAct);
-  _viewMenu->addAction(_createBoxAct);
-  _viewMenu->addAction(_createEllipseAct);
-  _viewMenu->addAction(_createLineAct);
-  _viewMenu->addAction(_createPictureAct);
-  _viewMenu->addAction(_createPlotAct);
-  _viewMenu->addAction(_createSvgAct);
+  _viewMenu->addAction(_layoutModeAct);
+
+  _layoutMenu = _viewMenu->addMenu(tr("&Layout"));
+  _layoutMenu->addAction(_createLabelAct);
+  _layoutMenu->addAction(_createBoxAct);
+  _layoutMenu->addAction(_createEllipseAct);
+  _layoutMenu->addAction(_createLineAct);
+  _layoutMenu->addAction(_createPictureAct);
+  _layoutMenu->addAction(_createPlotAct);
+  _layoutMenu->addAction(_createSvgAct);
 
   _settingsMenu = menuBar()->addMenu(tr("&Settings"));
 
@@ -547,16 +589,24 @@ void MainWindow::createToolBars() {
 
   _viewToolBar = addToolBar(tr("View"));
   _viewToolBar->addAction(_viewManagerAct);
-//  _viewToolBar->addAction(_createLabelAct); //no icon
-  _viewToolBar->addAction(_createBoxAct);
-  _viewToolBar->addAction(_createEllipseAct);
-  _viewToolBar->addAction(_createLineAct);
-  _viewToolBar->addAction(_createPictureAct);
-  _viewToolBar->addAction(_createPlotAct);
-//  _viewToolBar->addAction(_createSvgAct); //no icon
+  _viewToolBar->addAction(_layoutModeAct);
 
-  _viewToolBar->addAction(_createLayoutAct);
-  _viewToolBar->addAction(_breakLayoutAct);
+  _layoutToolBar = new QToolBar(tr("Layout"), this);
+//  _layoutToolBar->addAction(_createLabelAct); //no icon
+  _layoutToolBar->addAction(_createBoxAct);
+  _layoutToolBar->addAction(_createEllipseAct);
+  _layoutToolBar->addAction(_createLineAct);
+  _layoutToolBar->addAction(_createPictureAct);
+  _layoutToolBar->addAction(_createPlotAct);
+//  _layoutToolBar->addAction(_createSvgAct); //no icon
+
+  _layoutToolBar->addSeparator();
+
+  _layoutToolBar->addAction(_createLayoutAct);
+  _layoutToolBar->addAction(_breakLayoutAct);
+  _layoutToolBar->setVisible(false);
+
+  addToolBar(Qt::TopToolBarArea, _layoutToolBar);
 }
 
 
