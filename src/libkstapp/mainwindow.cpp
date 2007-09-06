@@ -39,8 +39,6 @@
 #include "kstdataobjectcollection.h"
 #include "kstequation.h"
 
-#include "viewgridlayout.h"
-
 namespace Kst {
 
 MainWindow::MainWindow() {
@@ -355,28 +353,6 @@ void MainWindow::breakLayout() {
 }
 
 
-void MainWindow::demoPlotLayout() {
-
-  View *v = tabWidget()->currentView();
-
-  ViewItem *viewItem = new ViewItem(v);
-  v->scene()->addItem(viewItem);
-  viewItem->setZValue(1);
-
-  ViewGridLayout *layout = new ViewGridLayout(viewItem);
-
-  int r = 0; int c = 0;
-  foreach (QGraphicsItem *item, v->items()) {
-    if (PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(item)) {
-      plotItem->setParentItem(viewItem);
-      layout->addViewItem(plotItem, r++, c++);
-    }
-  }
-
-  viewItem->setViewRect(QRectF(0,0,300,300));
-}
-
-
 void MainWindow::demoModel() {
   KstVectorPtr v = new KstVector;
   v->resize(999999);
@@ -569,10 +545,6 @@ void MainWindow::createMenus() {
 
   // FIXME: remove this later.
   QMenu *demoMenu = menuBar()->addMenu("&Demo");
-
-  QAction *demoLayout = new QAction("Plot layout", this);
-  connect(demoLayout, SIGNAL(triggered()), this, SLOT(demoPlotLayout()));
-  demoMenu->addAction(demoLayout);
 
   QAction *demoModel = new QAction("Vector model", this);
   connect(demoModel, SIGNAL(triggered()), this, SLOT(demoModel()));

@@ -71,7 +71,6 @@ class MainWindow : public QMainWindow
     void createLayout();
     void breakLayout();
 
-    void demoPlotLayout();
     void demoModel();
 
     void performHeavyStartupActions();
