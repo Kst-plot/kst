@@ -13,6 +13,7 @@
 #define VIEWGRIDLAYOUT_H
 
 #include <QObject>
+#include <QSizeF>
 
 namespace Kst {
 
@@ -33,6 +34,12 @@ class ViewGridLayout : public QObject
     int rowCount() const;
     int columnCount() const;
 
+    QSizeF spacing() const { return _spacing; }
+    void setSpacing(const QSizeF &spacing) { _spacing = spacing; }
+
+    QSizeF margin() const { return _margin; }
+    void setMargin(const QSizeF &margin) { _margin = margin; }
+
   public Q_SLOTS:
     void update();
 
@@ -47,6 +54,9 @@ class ViewGridLayout : public QObject
 
     int _rowCount;
     int _columnCount;
+
+    QSizeF _spacing;
+    QSizeF _margin;
 
     QList<LayoutItem> _items;
 };

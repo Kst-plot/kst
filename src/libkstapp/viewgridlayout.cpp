@@ -15,10 +15,16 @@
 
 #include <QDebug>
 
+static qreal DEFAULT_STRUT = 20.0;
+
 namespace Kst {
 
 ViewGridLayout::ViewGridLayout(ViewItem *parent)
-  : QObject(parent), _rowCount(0), _columnCount(0) {
+  : QObject(parent),
+    _rowCount(0),
+    _columnCount(0),
+    _spacing(QSizeF(DEFAULT_STRUT,DEFAULT_STRUT)),
+    _margin(QSizeF(DEFAULT_STRUT,DEFAULT_STRUT)) {
 
   parent->setLayout(this);
 }
@@ -70,8 +76,17 @@ int ViewGridLayout::columnCount() const {
 void ViewGridLayout::update() {
 
   //For now we divide up equally... can do stretch factors and such later...
-  qreal itemWidth = parentItem()->width() / columnCount();
-  qreal itemHeight = parentItem()->height() / rowCount();
+
+  QSizeF layoutSize(parentItem()->width() - _margin.width() * 2,
+                    parentItem()->height() - _margin.height() * 2);
+
+  QPointF layoutTopLeft = parentItem()->rect().topLeft();
+  layoutTopLeft += QPointF(_margin.width(), _margin.height());
+
+  QRectF layoutRect(layoutTopLeft, layoutSize);
+
+  qreal itemWidth = layoutSize.width() / columnCount();
+  qreal itemHeight = layoutSize.height() / rowCount();
 
 //   qDebug() << "layouting" << _items.count()
 //            << "itemWidth:" << itemWidth
@@ -81,19 +96,29 @@ void ViewGridLayout::update() {
   foreach (LayoutItem item, _items) {
     QPointF topLeft(itemWidth * item.column, itemHeight * item.row);
     QSizeF size(itemWidth * item.columnSpan, itemHeight * item.rowSpan);
-    topLeft += parentItem()->rect().topLeft();
+    topLeft += layoutTopLeft;
+
+    QRectF itemRect(topLeft, size);
+
+    if (itemRect.top() != layoutRect.top())
+      itemRect.setTop(itemRect.top() + _spacing.height() / 2);
+    if (itemRect.left() != layoutRect.left())
+      itemRect.setLeft(itemRect.left() + _spacing.width() / 2);
+    if (itemRect.bottom() != layoutRect.bottom())
+      itemRect.setBottom(itemRect.bottom() - _spacing.height() / 2);
+    if (itemRect.right() != layoutRect.right())
+      itemRect.setRight(itemRect.right() - _spacing.width() / 2);
 
     item.viewItem->resetTransform();
-    item.viewItem->setPos(topLeft);
-    item.viewItem->setViewRect(QRectF(QPoint(0,0), size));
+    item.viewItem->setPos(itemRect.topLeft());
+    item.viewItem->setViewRect(QRectF(QPoint(0,0), itemRect.size()));
 
 //     qDebug() << "layout"
 //              << "row:" << item.row
 //              << "column:" << item.column
 //              << "rowSpan:" << item.rowSpan
 //              << "columnSpan:" << item.columnSpan
-//              << "topLeft:" << topLeft
-//              << "size:" << size
+//              << "itemRect:" << itemRect
 //              << endl;
   }
 
