@@ -20,6 +20,7 @@ namespace Kst {
 
 LineItem::LineItem(View *parent)
   : ViewItem(parent) {
+  setName("LineItem");
 }
 
 

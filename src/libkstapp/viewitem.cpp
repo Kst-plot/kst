@@ -30,6 +30,7 @@ ViewItem::ViewItem(View *parent)
     _layout(0),
     _activeGrip(NoGrip) {
 
+  setName("ViewItem");
   setAcceptsHoverEvents(true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
   connect(parent, SIGNAL(mouseModeChanged(View::MouseMode)),
@@ -73,6 +74,8 @@ void ViewItem::setLayout(ViewGridLayout *layout) {
   if (_layout) {
     connect(this, SIGNAL(geometryChanged()), _layout, SLOT(update()));
   }
+
+  setHandlesChildEvents(_layout);
 }
 
 
@@ -409,8 +412,8 @@ void ViewItem::remove() {
 void ViewItem::creationPolygonChanged(View::CreationEvent event) {
   if (event == View::MousePress) {
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MousePress));
-    setViewRect(poly.first().x(), poly.first().y(),
-            poly.last().x() - poly.first().x(), poly.last().y() - poly.first().y());
+    setPos(poly.first().x(), poly.first().y());
+    setViewRect(0, 0, 0, 0);
     parentView()->scene()->addItem(this);
     setZValue(1);
     return;
@@ -463,11 +466,6 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 
 
 void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-
-  if (qgraphicsitem_cast<ViewItem*>(parentItem())) {
-    event->ignore();
-    return;
-  }
 
   if (parentView()->mouseMode() == View::Default) {
     if (mouseMode() == ViewItem::Default ||
@@ -871,20 +869,10 @@ QPointF ViewItem::lockOffset(const QPointF &offset, qreal ratio, bool oddCorner)
 
 
 void ViewItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
-
-  if (qgraphicsitem_cast<ViewItem*>(parentItem())) {
-    event->ignore();
-    return;
-  }
 }
 
 
 void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-
-  if (qgraphicsitem_cast<ViewItem*>(parentItem())) {
-    event->ignore();
-    return;
-  }
 
   QPointF p = event->pos();
   if (topLeftGrip().contains(p)) {
@@ -912,11 +900,6 @@ void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
 
 void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-
-  if (qgraphicsitem_cast<ViewItem*>(parentItem())) {
-    event->ignore();
-    return;
-  }
 
   if (parentView()->mouseMode() != View::Default) {
     parentView()->setMouseMode(View::Default);
@@ -970,26 +953,91 @@ void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
              parentView()->mouseMode() == View::Rotate) {
     _originalRect = rect();
     _originalTransform = transform();
-  } else if (oldMode == View::Move) {
-
+  } else if (oldMode == View::Move && _originalPosition != pos()) {
     setPos(parentView()->snapPoint(pos()));
-
     new MoveCommand(this, _originalPosition, pos());
-  } else if (oldMode == View::Resize) {
+
+    maybeReparent();
+  } else if (oldMode == View::Resize && _originalRect != rect()) {
     new ResizeCommand(this, _originalRect, rect());
-  } else if (oldMode == View::Scale) {
+
+    maybeReparent();
+  } else if (oldMode == View::Scale && _originalTransform != transform()) {
     new ScaleCommand(this, _originalTransform, transform());
-  } else if (oldMode == View::Rotate) {
+
+    maybeReparent();
+  } else if (oldMode == View::Rotate && _originalTransform != transform()) {
     new RotateCommand(this, _originalTransform, transform());
+
+    maybeReparent();
+  }
+}
+
+
+bool ViewItem::maybeReparent() {
+  //First get a list of all items that collide with this one
+  QList<QGraphicsItem*> collisions = collidingItems(Qt::IntersectsItemShape);
+
+  bool topLevel = !parentItem();
+  QPointF scenePos = topLevel ? pos() : parentItem()->mapToScene(pos());
+
+#ifdef DEBUG_REPARENT
+  qDebug() << "maybeReparent" << this
+           << "topLevel:" << (topLevel ? "true" : "false")
+           << "scenePos:" << scenePos
+           << endl;
+#endif
+
+  //Doesn't collide then reparent to top-level
+  if (collisions.isEmpty() && !topLevel) {
+#ifdef DEBUG_REPARENT
+    qDebug() << "reparent to topLevel" << endl;
+#endif
+    setParentItem(0);
+    setPos(scenePos);
+    return true;
   }
 
-  maybeReparent();
+  //Look for collisions that completely contain us
+  foreach (QGraphicsItem *item, collisions) {
+    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
+
+    if (!viewItem || viewItem->layout() /*don't break existing layouts*/)
+      continue;
+
+    if (viewItem->collidesWithItem(this, Qt::ContainsItemShape)) {
+
+      if (parentItem() == viewItem) /*already done*/
+        return false;
+
+#ifdef DEBUG_REPARENT
+      qDebug() << "reparent to" << viewItem << endl;
+#endif
+      setParentItem(viewItem);
+      setPos(viewItem->mapFromScene(scenePos));
+      return true;
+    }
+  }
+
+  //No suitable collisions then reparent to top-level
+  if (!topLevel) {
+#ifdef DEBUG_REPARENT
+    qDebug() << "reparent to topLevel" << endl;
+#endif
+    setParentItem(0);
+    setPos(scenePos);
+    return true;
+  }
+
+  return false;
 }
 
-
-void ViewItem::maybeReparent() {
+#ifndef QT_NO_DEBUG_STREAM
+QDebug operator<<(QDebug dbg, ViewItem *viewItem) {
+    dbg.nospace() << viewItem->name();
+    return dbg.space();
 }
-
+#endif
 
 ViewItemCommand::ViewItemCommand(const QString &text, bool addToStack, QUndoCommand *parent)
     : QUndoCommand(text, parent), _item(kstApp->mainWindow()->tabWidget()->currentView()->currentViewItem()) {

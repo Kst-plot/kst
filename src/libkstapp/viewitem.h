@@ -20,6 +20,7 @@
 #include "view.h" //forward declare, but enums??
 
 // #define DEBUG_GEOMETRY
+// #define DEBUG_REPARENT
 
 namespace Kst {
 
@@ -137,7 +138,7 @@ private Q_SLOTS:
   void viewMouseModeChanged(View::MouseMode oldMode);
 
 private:
-  void maybeReparent();
+  bool maybeReparent();
   QLineF originLine() const;
 
 private:
@@ -152,6 +153,10 @@ private:
   ActiveGrip _activeGrip;
   QTransform _rotationTransform;
 };
+
+#ifndef QT_NO_DEBUG_STREAM
+Q_CORE_EXPORT QDebug operator<<(QDebug, ViewItem*);
+#endif
 
 class KST_EXPORT ViewItemCommand : public QUndoCommand
 {

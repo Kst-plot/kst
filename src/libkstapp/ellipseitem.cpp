@@ -19,6 +19,7 @@ namespace Kst {
 
 EllipseItem::EllipseItem(View *parent)
   : ViewItem(parent) {
+  setName("EllipseItem");
 }
 
 

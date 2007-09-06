@@ -20,6 +20,7 @@ namespace Kst {
 
 PictureItem::PictureItem(View *parent, const QImage &image)
   : ViewItem(parent), _image(QPixmap::fromImage(image)) {
+  setName("PictureItem");
   setLockAspectRatio(true);
 }
 

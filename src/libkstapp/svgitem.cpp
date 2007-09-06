@@ -21,6 +21,7 @@ namespace Kst {
 SvgItem::SvgItem(View *parent, const QString &file)
   : ViewItem(parent), _svg(new QSvgRenderer(file)) {
   //FIXME need to set the element id??
+  setName("SvgItem");
   setLockAspectRatio(true);
 }
 

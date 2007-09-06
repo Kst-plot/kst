@@ -29,6 +29,8 @@ namespace Kst {
 PlotItem::PlotItem(View *parent)
   : ViewItem(parent), _marginWidth(0), _marginHeight(0) {
 
+  setName("PlotItem");
+
   // FIXME fake data for testing rendering
   KstVectorPtr xTest = new KstSVector(0.0, 100.0, 10000, KstObjectTag::fromString("X vector"));
   xTest->setLabel("a nice x label");
