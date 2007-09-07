@@ -9,30 +9,33 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FILLTAB_H
-#define FILLTAB_H
+#ifndef LAYOUTTAB_H
+#define LAYOUTTAB_H
 
 #include "dialogtab.h"
-#include "ui_filltab.h"
+#include "ui_layouttab.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class KST_EXPORT FillTab : public DialogTab, Ui::FillTab {
+class KST_EXPORT LayoutTab : public DialogTab, Ui::LayoutTab {
   Q_OBJECT
   public:
-    FillTab(QWidget *parent = 0);
-    virtual ~FillTab();
+    LayoutTab(QWidget *parent = 0);
+    virtual ~LayoutTab();
 
-    QColor color() const;
-    void setColor(const QColor &color);
+    double horizontalMargin() const;
+    void setHorizontalMargin(double horizontalMargin);
 
-    Qt::BrushStyle style() const;
-    void setStyle(Qt::BrushStyle style);
+    double verticalMargin() const;
+    void setVerticalMargin(double verticalMargin);
 
-    QGradient gradient() const;
-    void setGradient(const QGradient &gradient);
+    double horizontalSpacing() const;
+    void setHorizontalSpacing(double horizontalSpacing);
+
+    double verticalSpacing() const;
+    void setVerticalSpacing(double verticalSpacing);
 };
 
 }

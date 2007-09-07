@@ -14,7 +14,9 @@
 #include "viewitem.h"
 #include "filltab.h"
 #include "stroketab.h"
+#include "layouttab.h"
 #include "dialogpage.h"
+#include "viewgridlayout.h"
 
 #include <QPen>
 #include <QBrush>
@@ -29,13 +31,16 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
 
   _fillTab = new FillTab(this);
   _strokeTab = new StrokeTab(this);
+  _layoutTab = new LayoutTab(this);
   connect(_fillTab, SIGNAL(apply()), this, SLOT(fillChanged()));
   connect(_strokeTab, SIGNAL(apply()), this, SLOT(strokeChanged()));
+  connect(_layoutTab, SIGNAL(apply()), this, SLOT(layoutChanged()));
 
   DialogPage *page = new DialogPage(this);
   page->setPageTitle(tr("Appearance"));
   page->addDialogTab(_fillTab);
   page->addDialogTab(_strokeTab);
+  page->addDialogTab(_layoutTab);
   addDialogPage(page);
 
   QList<DialogPage*> dialogPages = _item->dialogPages();
@@ -44,6 +49,7 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
 
   setupFill();
   setupStroke();
+  setupLayout();
 }
 
 
@@ -83,6 +89,22 @@ void ViewItemDialog::setupStroke() {
 }
 
 
+void ViewItemDialog::setupLayout() {
+  Q_ASSERT(_item);
+  ViewGridLayout *layout = _item->layout();
+
+  if (!layout) {
+    _layoutTab->setEnabled(false);
+    return;
+  }
+
+  _layoutTab->setHorizontalMargin(layout->margin().width());
+  _layoutTab->setVerticalMargin(layout->margin().height());
+  _layoutTab->setHorizontalSpacing(layout->spacing().width());
+  _layoutTab->setVerticalSpacing(layout->spacing().height());
+}
+
+
 void ViewItemDialog::fillChanged() {
   QBrush b = _item->brush();
 
@@ -118,6 +140,24 @@ void ViewItemDialog::strokeChanged() {
 
   _item->setPen(p);
 }
+
+
+void ViewItemDialog::layoutChanged() {
+  Q_ASSERT(_item);
+  ViewGridLayout *layout = _item->layout();
+
+  if (!layout) {
+    _layoutTab->setEnabled(false);
+    return;
+  }
+
+  layout->setMargin(QSizeF(_layoutTab->horizontalMargin(),
+                              _layoutTab->verticalMargin()));
+  layout->setSpacing(QSizeF(_layoutTab->horizontalSpacing(),
+                               _layoutTab->verticalSpacing()));
+  layout->update();
+}
+
 
 }
 

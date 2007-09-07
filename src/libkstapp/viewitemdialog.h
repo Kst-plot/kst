@@ -23,6 +23,7 @@ namespace Kst {
 class ViewItem;
 class FillTab;
 class StrokeTab;
+class LayoutTab;
 
 class KST_EXPORT ViewItemDialog : public Dialog
 {
@@ -34,15 +35,18 @@ class KST_EXPORT ViewItemDialog : public Dialog
   private Q_SLOTS:
     void fillChanged();
     void strokeChanged();
+    void layoutChanged();
 
   private:
     void setupFill();
     void setupStroke();
+    void setupLayout();
 
   private:
     QPointer<ViewItem> _item;
     FillTab *_fillTab;
     StrokeTab *_strokeTab;
+    LayoutTab *_layoutTab;
 };
 
 }

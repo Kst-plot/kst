@@ -37,6 +37,7 @@ SOURCES += \
     graphicsfactory.cpp \
     labelitem.cpp \
     labelrenderer.cpp \
+    layouttab.cpp \
     lineitem.cpp \
     mainwindow.cpp \
     matrixmodel.cpp \
@@ -80,6 +81,7 @@ HEADERS += \
     graphicsfactory.h \
     labelitem.h \
     labelrenderer.h \
+    layouttab.h \
     lineitem.h \
     mainwindow.h \
     matrixmodel.h \
@@ -111,6 +113,7 @@ FORMS += \
     debugdialog.ui \
     exportgraphicsdialog.ui \
     filltab.ui \
+    layouttab.ui \
     stroketab.ui \
     vectoreditordialog.ui \
     viewmanager.ui
