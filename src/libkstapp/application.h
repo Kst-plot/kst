@@ -9,8 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTAPPLICATION_H
-#define KSTAPPLICATION_H
+#ifndef APPLICATION_H
+#define APPLICATION_H
 
 #include <QPointer>
 #include <QApplication>
@@ -19,20 +19,24 @@
 #include "mainwindow.h"
 
 #define kstApp \
-  (static_cast<KstApplication*>(QCoreApplication::instance()))
+  (static_cast<Kst::Application*>(QCoreApplication::instance()))
 
-class KST_EXPORT KstApplication : public QApplication
+namespace Kst {
+
+class KST_EXPORT Application : public QApplication
 {
   Q_OBJECT
 public:
-  KstApplication(int &argc, char **argv);
-  virtual ~KstApplication();
+  Application(int &argc, char **argv);
+  virtual ~Application();
 
-  Kst::MainWindow *mainWindow() const;
+  MainWindow *mainWindow() const;
 
 private:
-  QPointer<Kst::MainWindow> _mainWindow;
+  QPointer<MainWindow> _mainWindow;
 };
+
+}
 
 #endif
 

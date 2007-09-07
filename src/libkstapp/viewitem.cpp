@@ -10,7 +10,7 @@
  ***************************************************************************/
 
 #include "viewitem.h"
-#include "kstapplication.h"
+#include "application.h"
 #include "tabwidget.h"
 #include "viewitemdialog.h"
 #include "viewgridlayout.h"
@@ -372,7 +372,8 @@ void ViewItem::paint(QPainter *painter) {
 
 
 void ViewItem::edit() {
-  ViewItemDialog::self()->show(this);
+  ViewItemDialog editDialog(this);
+  editDialog.exec();
 }
 
 

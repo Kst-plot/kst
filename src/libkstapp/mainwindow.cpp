@@ -17,7 +17,7 @@
 #include "document.h"
 #include "ellipseitem.h"
 #include "exportgraphicsdialog.h"
-#include "kstapplication.h"
+#include "application.h"
 #include "kstdebug.h"
 #include "labelitem.h"
 #include "lineitem.h"

@@ -9,23 +9,25 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstapplication.h"
+#include "application.h"
 #include "qgetoptions.h"
 
 #include "builtinprimitives.h"
 #include "builtinobjects.h"
 #include "builtingraphics.h"
 
-KstApplication::KstApplication(int &argc, char **argv)
+namespace Kst {
+
+Application::Application(int &argc, char **argv)
     : QApplication(argc, argv) {
 
   QCoreApplication::setApplicationName("Kst");
 
-  Kst::Builtins::initPrimitives(); //libkst
-  Kst::Builtins::initObjects();    //libkstmath
-  Kst::Builtins::initGraphics();   //libkstapp
+  Builtins::initPrimitives(); //libkst
+  Builtins::initObjects();    //libkstmath
+  Builtins::initGraphics();   //libkstapp
 
-  _mainWindow = new Kst::MainWindow;
+  _mainWindow = new MainWindow;
   connect(this, SIGNAL(aboutToQuit()), _mainWindow, SLOT(aboutToQuit()));
 
   QGetOptions options;
@@ -42,13 +44,15 @@ KstApplication::KstApplication(int &argc, char **argv)
 }
 
 
-KstApplication::~KstApplication() {
+Application::~Application() {
   delete _mainWindow;
 }
 
 
-Kst::MainWindow *KstApplication::mainWindow() const {
+MainWindow *Application::mainWindow() const {
   return _mainWindow;
+}
+
 }
 
 // vim: ts=2 sw=2 et

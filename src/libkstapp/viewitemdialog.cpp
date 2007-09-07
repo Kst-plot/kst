@@ -12,11 +12,9 @@
 #include "viewitemdialog.h"
 
 #include "viewitem.h"
-
-#include "dialogpage.h"
-
 #include "filltab.h"
 #include "stroketab.h"
+#include "dialogpage.h"
 
 #include <QPen>
 #include <QBrush>
@@ -24,28 +22,10 @@
 
 namespace Kst {
 
-static ViewItemDialog *_self = 0;
-void ViewItemDialog::cleanup() {
-  delete _self;
-  _self = 0;
-}
-
-
-ViewItemDialog *ViewItemDialog::self() {
-  if (!_self) {
-    _self = new ViewItemDialog;
-    qAddPostRoutine(cleanup);
-  }
-  return _self;
-}
-
-
-ViewItemDialog::ViewItemDialog(QWidget *parent)
-    : Dialog(parent) {
+ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
+    : Dialog(parent), _item(item) {
 
   setWindowTitle(tr("Edit View Item"));
-
-  setModal(true);
 
   _fillTab = new FillTab(this);
   _strokeTab = new StrokeTab(this);
@@ -57,22 +37,19 @@ ViewItemDialog::ViewItemDialog(QWidget *parent)
   page->addDialogTab(_fillTab);
   page->addDialogTab(_strokeTab);
   addDialogPage(page);
+
+  QList<DialogPage*> dialogPages = _item->dialogPages();
+  foreach (DialogPage *dialogPage, dialogPages)
+    addDialogPage(dialogPage);
+
+  setupFill();
+  setupStroke();
 }
 
 
 ViewItemDialog::~ViewItemDialog() {
 }
 
-void ViewItemDialog::show(ViewItem *item) {
-  _item = item;
-
-  setupFill();
-  setupStroke();
-
-  Dialog::show();
-  Dialog::raise();
-  Dialog::activateWindow();
-}
 
 void ViewItemDialog::setupFill() {
   Q_ASSERT(_item);
@@ -141,15 +118,6 @@ void ViewItemDialog::strokeChanged() {
 
   _item->setPen(p);
 }
-
-
-void ViewItemDialog::setVisible(bool visible) {
-  if (visible && !_item)
-    return; //nothing to show...
-
-  Dialog::setVisible(visible);
-}
-
 
 }
 

@@ -27,29 +27,22 @@ class StrokeTab;
 class KST_EXPORT ViewItemDialog : public Dialog
 {
   Q_OBJECT
-public:
-  static ViewItemDialog *self();
+  public:
+    ViewItemDialog(ViewItem *item, QWidget *parent = 0);
+    virtual ~ViewItemDialog();
 
-  void show(ViewItem *item);
+  private Q_SLOTS:
+    void fillChanged();
+    void strokeChanged();
 
-private:
-  ViewItemDialog(QWidget *parent = 0);
-  virtual ~ViewItemDialog();
-  void setupFill();
-  void setupStroke();
-  static void cleanup();
+  private:
+    void setupFill();
+    void setupStroke();
 
-private Q_SLOTS:
-  void fillChanged();
-  void strokeChanged();
-
-protected:
-  void setVisible(bool visible);
-
-private:
-  QPointer<ViewItem> _item;
-  FillTab *_fillTab;
-  StrokeTab *_strokeTab;
+  private:
+    QPointer<ViewItem> _item;
+    FillTab *_fillTab;
+    StrokeTab *_strokeTab;
 };
 
 }

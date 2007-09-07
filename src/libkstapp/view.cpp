@@ -12,7 +12,7 @@
 #include "view.h"
 #include "viewitem.h"
 #include "mainwindow.h"
-#include "kstapplication.h"
+#include "application.h"
 #include "applicationsettings.h"
 
 #include <math.h>

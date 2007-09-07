@@ -10,7 +10,7 @@
  ***************************************************************************/
 
 #include "viewcommand.h"
-#include "kstapplication.h"
+#include "application.h"
 #include "tabwidget.h"
 #include "view.h"
 

@@ -19,6 +19,7 @@ INCLUDEPATH += \
 LIBS += -lkst -lkstmath -lkstwidgets
 
 SOURCES += \
+    application.cpp \
     applicationsettings.cpp \
     axis.cpp \
     boxitem.cpp \
@@ -34,7 +35,6 @@ SOURCES += \
     exportgraphicsdialog.cpp \
     filltab.cpp \
     graphicsfactory.cpp \
-    kstapplication.cpp \
     labelitem.cpp \
     labelrenderer.cpp \
     lineitem.cpp \
@@ -61,6 +61,7 @@ SOURCES += \
     viewmanager.cpp
 
 HEADERS += \
+    application.h \
     applicationsettings.h \
     axis.h \
     boxitem.h \
@@ -77,7 +78,6 @@ HEADERS += \
     exportgraphicsdialog.h \
     filltab.h \
     graphicsfactory.h \
-    kstapplication.h \
     labelitem.h \
     labelrenderer.h \
     lineitem.h \

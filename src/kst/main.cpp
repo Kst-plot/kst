@@ -9,13 +9,13 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstapplication.h"
+#include <application.h>
 #include <builtingraphics.h>
 #include <builtinobjects.h>
 
 int main(int argc, char *argv[])
 {
-    KstApplication app(argc, argv);
+    Kst::Application app(argc, argv);
     Kst::Builtins::initObjects();
     Kst::Builtins::initGraphics();
     return app.exec();

@@ -24,6 +24,7 @@
 
 namespace Kst {
 
+class DialogPage;
 class ViewGridLayout;
 
 class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
@@ -85,6 +86,8 @@ public:
   virtual QPainterPath itemShape() const { return QGraphicsRectItem::shape(); }
   virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
   virtual void paint(QPainter *painter);
+
+  virtual QList<DialogPage*> dialogPages() const { return QList<DialogPage*>(); }
 
 Q_SIGNALS:
   void geometryChanged();
