@@ -82,21 +82,6 @@ public:
 };
 
 
-#include "fillandstroke.h"
-class FillAndStrokePlugin : public KstWidgetPlugin {
-  Q_OBJECT
-  Q_INTERFACES(QDesignerCustomWidgetInterface)
-public:
-  FillAndStrokePlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
-  QString name() const {
-    return QLatin1String("Kst::FillAndStroke");
-  } //do not translate
-  QWidget *createWidget(QWidget *parent) {
-    return new Kst::FillAndStroke(parent);
-  }
-};
-
-
 #include "gradienteditor.h"
 class GradientEditorPlugin : public KstWidgetPlugin {
   Q_OBJECT

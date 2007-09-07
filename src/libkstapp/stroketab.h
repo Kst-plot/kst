@@ -9,47 +9,42 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef VIEWITEMDIALOG_H
-#define VIEWITEMDIALOG_H
+#ifndef STROKETAB_H
+#define STROKETAB_H
 
-#include "dialog.h"
-
-#include <QPointer>
+#include "dialogtab.h"
+#include "ui_stroketab.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class ViewItem;
-class FillTab;
-class StrokeTab;
-
-class KST_EXPORT ViewItemDialog : public Dialog
-{
+class KST_EXPORT StrokeTab : public DialogTab, Ui::StrokeTab {
   Q_OBJECT
 public:
-  static ViewItemDialog *self();
+  StrokeTab(QWidget *parent = 0);
+  virtual ~StrokeTab();
 
-  void show(ViewItem *item);
+  Qt::PenStyle style() const;
+  void setStyle(Qt::PenStyle style);
 
-private:
-  ViewItemDialog(QWidget *parent = 0);
-  virtual ~ViewItemDialog();
-  void setupFill();
-  void setupStroke();
-  static void cleanup();
+  qreal width() const;
+  void setWidth(qreal width);
 
-private Q_SLOTS:
-  void fillChanged();
-  void strokeChanged();
+  QColor brushColor() const;
+  void setBrushColor(const QColor &color);
 
-protected:
-  void setVisible(bool visible);
+  Qt::BrushStyle brushStyle() const;
+  void setBrushStyle(Qt::BrushStyle style);
 
-private:
-  QPointer<ViewItem> _item;
-  FillTab *_fillTab;
-  StrokeTab *_strokeTab;
+  Qt::PenJoinStyle joinStyle() const;
+  void setJoinStyle(Qt::PenJoinStyle style);
+
+  Qt::PenCapStyle capStyle() const;
+  void setCapStyle(Qt::PenCapStyle style);
+
+Q_SIGNALS:
+  void changed();
 };
 
 }

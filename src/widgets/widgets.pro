@@ -22,13 +22,9 @@ INCLUDEPATH += \
 SOURCES += \
     kstwidgets.cpp \
     colorbutton.cpp \
-    fillandstroke.cpp \
     gradienteditor.cpp
 
 HEADERS += \
     colorbutton.h \
     gradienteditor.h \
-    fillandstroke.h \
     kstwidgets.h
-
-FORMS += fillandstroke.ui

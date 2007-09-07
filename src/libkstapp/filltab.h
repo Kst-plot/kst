@@ -9,12 +9,37 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstwidgets.h"
+#ifndef FILLTAB_H
+#define FILLTAB_H
 
-KstWidgets::KstWidgets(QObject *parent)
-    : QObject(parent) {
-  _plugins.append(new ColorButtonPlugin(this));
-  _plugins.append(new GradientEditorPlugin(this));
+#include "dialogtab.h"
+#include "ui_filltab.h"
+
+#include "kst_export.h"
+
+namespace Kst {
+
+class KST_EXPORT FillTab : public DialogTab, Ui::FillTab {
+  Q_OBJECT
+public:
+  FillTab(QWidget *parent = 0);
+  virtual ~FillTab();
+
+  QColor color() const;
+  void setColor(const QColor &color);
+
+  Qt::BrushStyle style() const;
+  void setStyle(Qt::BrushStyle style);
+
+  QGradient gradient() const;
+  void setGradient(const QGradient &gradient);
+
+Q_SIGNALS:
+  void changed();
+};
+
 }
 
-Q_EXPORT_PLUGIN2(kstwidgets, KstWidgets)
+#endif
+
+// vim: ts=2 sw=2 et

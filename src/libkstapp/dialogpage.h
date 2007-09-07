@@ -9,47 +9,45 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef VIEWITEMDIALOG_H
-#define VIEWITEMDIALOG_H
+#ifndef DIALOGPAGE_H
+#define DIALOGPAGE_H
 
-#include "dialog.h"
-
-#include <QPointer>
+#include <QWidget>
 
 #include "kst_export.h"
 
+#include "ui_dialogpage.h"
+
 namespace Kst {
 
-class ViewItem;
-class FillTab;
-class StrokeTab;
+class DialogTab;
 
-class KST_EXPORT ViewItemDialog : public Dialog
+class KST_EXPORT DialogPage : public QWidget, public Ui::DialogPage
 {
   Q_OBJECT
-public:
-  static ViewItemDialog *self();
+  public:
+    DialogPage(QWidget *parent);
+    virtual ~DialogPage();
 
-  void show(ViewItem *item);
+    QString pageTitle() const { return _pageTitle; }
+    void setPageTitle(const QString &pageTitle) { _pageTitle = pageTitle; }
 
-private:
-  ViewItemDialog(QWidget *parent = 0);
-  virtual ~ViewItemDialog();
-  void setupFill();
-  void setupStroke();
-  static void cleanup();
+    QPixmap pageIcon() const { return _pageIcon; }
+    void setPageIcon(const QPixmap &pageIcon) { _pageIcon = pageIcon; }
 
-private Q_SLOTS:
-  void fillChanged();
-  void strokeChanged();
+    void addDialogTab(DialogTab *tab);
 
-protected:
-  void setVisible(bool visible);
+  Q_SIGNALS:
+    void apply();
+    void restoreDefaults();
+    void modified(bool isModified);
 
-private:
-  QPointer<ViewItem> _item;
-  FillTab *_fillTab;
-  StrokeTab *_strokeTab;
+  protected:
+    virtual void showEvent(QShowEvent *event);
+
+  private:
+    QString _pageTitle;
+    QPixmap _pageIcon;
 };
 
 }

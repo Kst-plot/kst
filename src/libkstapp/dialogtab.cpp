@@ -9,12 +9,34 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstwidgets.h"
+#include "dialogtab.h"
 
-KstWidgets::KstWidgets(QObject *parent)
-    : QObject(parent) {
-  _plugins.append(new ColorButtonPlugin(this));
-  _plugins.append(new GradientEditorPlugin(this));
+namespace Kst {
+
+DialogTab::DialogTab(QWidget *parent)
+  : QWidget(parent) {
 }
 
-Q_EXPORT_PLUGIN2(kstwidgets, KstWidgets)
+
+DialogTab::~DialogTab() {
+}
+
+
+void DialogTab::apply() {
+  emit modified(false);
+}
+
+
+void DialogTab::restoreDefaults() {
+  emit modified(false);
+}
+
+
+void DialogTab::showEvent(QShowEvent *event) {
+  restoreDefaults();
+  QWidget::showEvent(event);
+}
+
+}
+
+// vim: ts=2 sw=2 et

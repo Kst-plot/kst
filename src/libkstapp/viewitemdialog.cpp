@@ -12,7 +12,11 @@
 #include "viewitemdialog.h"
 
 #include "viewitem.h"
-#include "fillandstroke.h"
+
+#include "dialogpage.h"
+
+#include "filltab.h"
+#include "stroketab.h"
 
 #include <QPen>
 #include <QBrush>
@@ -37,20 +41,22 @@ ViewItemDialog *ViewItemDialog::self() {
 
 
 ViewItemDialog::ViewItemDialog(QWidget *parent)
-    : QDialog(parent) {
+    : Dialog(parent) {
 
-  setModal(false);
   setWindowTitle(tr("Edit View Item"));
 
-  _fillAndStroke = new FillAndStroke(this);
-  connect(_fillAndStroke, SIGNAL(fillChanged()), this, SLOT(fillChanged()));
-  connect(_fillAndStroke, SIGNAL(strokeChanged()), this, SLOT(strokeChanged()));
+  setModal(true);
 
-  QVBoxLayout *layout = new QVBoxLayout(this);
-  layout->setMargin(0);
-  layout->setSpacing(0);
-  layout->addWidget(_fillAndStroke);
-  setLayout(layout);
+  _fillTab = new FillTab(this);
+  _strokeTab = new StrokeTab(this);
+  connect(_fillTab, SIGNAL(changed()), this, SLOT(fillChanged()));
+  connect(_strokeTab, SIGNAL(changed()), this, SLOT(strokeChanged()));
+
+  DialogPage *page = new DialogPage(this);
+  page->setPageTitle(tr("Appearance"));
+  page->addDialogTab(_fillTab);
+  page->addDialogTab(_strokeTab);
+  addDialogPage(page);
 }
 
 
@@ -63,22 +69,22 @@ void ViewItemDialog::show(ViewItem *item) {
   setupFill();
   setupStroke();
 
-  QDialog::show();
-  QDialog::raise();
-  QDialog::activateWindow();
+  Dialog::show();
+  Dialog::raise();
+  Dialog::activateWindow();
 }
 
 void ViewItemDialog::setupFill() {
   Q_ASSERT(_item);
   QBrush b = _item->brush();
 
-  _fillAndStroke->setFillColor(b.color());
-  _fillAndStroke->setFillStyle(b.style());
+  _fillTab->setColor(b.color());
+  _fillTab->setStyle(b.style());
 
   //FIXME gradient editor is disabled for now as it is not ready
 #if 0
   if (const QGradient *gradient = b.gradient()) {
-    _fillAndStroke->setFillGradient(*gradient);
+    _fillTab->setGradient(*gradient);
   }
 #endif
 }
@@ -89,26 +95,26 @@ void ViewItemDialog::setupStroke() {
   QPen p = _item->pen();
   QBrush b = p.brush();
 
-  _fillAndStroke->setStrokeStyle(p.style());
-  _fillAndStroke->setStrokeWidth(p.widthF());
+  _strokeTab->setStyle(p.style());
+  _strokeTab->setWidth(p.widthF());
 
-  _fillAndStroke->setBrushColor(b.color());
-  _fillAndStroke->setBrushStyle(b.style());
+  _strokeTab->setBrushColor(b.color());
+  _strokeTab->setBrushStyle(b.style());
 
-  _fillAndStroke->setJoinStyle(p.joinStyle());
-  _fillAndStroke->setCapStyle(p.capStyle());
+  _strokeTab->setJoinStyle(p.joinStyle());
+  _strokeTab->setCapStyle(p.capStyle());
 }
 
 
 void ViewItemDialog::fillChanged() {
   QBrush b = _item->brush();
 
-  b.setColor(_fillAndStroke->fillColor());
-  b.setStyle(_fillAndStroke->fillStyle());
+  b.setColor(_fillTab->color());
+  b.setStyle(_fillTab->style());
 
   //FIXME gradient editor is disabled for now as it is not ready
 #if 0
-  QGradient gradient = _fillAndStroke->fillGradient();
+  QGradient gradient = _fillTab->gradient();
   if (gradient.type() != QGradient::NoGradient)
     b = QBrush(gradient);
 #endif
@@ -123,14 +129,14 @@ void ViewItemDialog::strokeChanged() {
   QPen p = _item->pen();
   QBrush b = p.brush();
 
-  p.setStyle(_fillAndStroke->strokeStyle());
-  p.setWidthF(_fillAndStroke->strokeWidth());
+  p.setStyle(_strokeTab->style());
+  p.setWidthF(_strokeTab->width());
 
-  b.setColor(_fillAndStroke->brushColor());
-  b.setStyle(_fillAndStroke->brushStyle());
+  b.setColor(_strokeTab->brushColor());
+  b.setStyle(_strokeTab->brushStyle());
 
-  p.setJoinStyle(_fillAndStroke->joinStyle());
-  p.setCapStyle(_fillAndStroke->capStyle());
+  p.setJoinStyle(_strokeTab->joinStyle());
+  p.setCapStyle(_strokeTab->capStyle());
   p.setBrush(b);
 
   _item->setPen(p);
@@ -141,7 +147,7 @@ void ViewItemDialog::setVisible(bool visible) {
   if (visible && !_item)
     return; //nothing to show...
 
-  QDialog::setVisible(visible);
+  Dialog::setVisible(visible);
 }
 
 

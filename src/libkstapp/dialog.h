@@ -9,47 +9,49 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef VIEWITEMDIALOG_H
-#define VIEWITEMDIALOG_H
+#ifndef DIALOG_H
+#define DIALOG_H
 
-#include "dialog.h"
-
-#include <QPointer>
+#include <QDialog>
 
 #include "kst_export.h"
 
+#include "ui_dialog.h"
+
+template<class Key, class Value>
+class QHash;
+
 namespace Kst {
 
-class ViewItem;
-class FillTab;
-class StrokeTab;
+class DialogPage;
 
-class KST_EXPORT ViewItemDialog : public Dialog
+class KST_EXPORT Dialog : public QDialog, public Ui::Dialog
 {
   Q_OBJECT
-public:
-  static ViewItemDialog *self();
+  public:
+    Dialog(QWidget *parent = 0);
+    virtual ~Dialog();
 
-  void show(ViewItem *item);
+    void addDialogPage(DialogPage *page);
 
-private:
-  ViewItemDialog(QWidget *parent = 0);
-  virtual ~ViewItemDialog();
-  void setupFill();
-  void setupStroke();
-  static void cleanup();
+  public Q_SLOTS:
+    virtual void accept();
+    virtual void reject();
 
-private Q_SLOTS:
-  void fillChanged();
-  void strokeChanged();
+  Q_SIGNALS:
+    void apply();
+    void restoreDefaults();
 
-protected:
-  void setVisible(bool visible);
+  protected:
+    void setVisible(bool visible);
 
-private:
-  QPointer<ViewItem> _item;
-  FillTab *_fillTab;
-  StrokeTab *_strokeTab;
+  private Q_SLOTS:
+    void selectPageForItem(QListWidgetItem *item);
+    void buttonClicked(QAbstractButton *button);
+    void modified(bool isModified);
+
+  private:
+    QHash<QListWidgetItem*, DialogPage*> _itemHash;
 };
 
 }

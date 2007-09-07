@@ -26,9 +26,13 @@ SOURCES += \
     datamanager.cpp \
     debugdialog.cpp \
     debugnotifier.cpp \
+    dialog.cpp \
+    dialogpage.cpp \
+    dialogtab.cpp \
     document.cpp \
     ellipseitem.cpp \
     exportgraphicsdialog.cpp \
+    filltab.cpp \
     graphicsfactory.cpp \
     kstapplication.cpp \
     labelitem.cpp \
@@ -43,6 +47,7 @@ SOURCES += \
     qgetoptions.cpp \
     vectorcurverenderitem.cpp \
     sessionmodel.cpp \
+    stroketab.cpp \
     svgitem.cpp \
     tabwidget.cpp \
     vectoreditordialog.cpp \
@@ -64,9 +69,13 @@ HEADERS += \
     dataref.h \
     debugdialog.h \
     debugnotifier.h \
+    dialog.h \
+    dialogpage.h \
+    dialogtab.h \
     document.h \
     ellipseitem.h \
     exportgraphicsdialog.h \
+    filltab.h \
     graphicsfactory.h \
     kstapplication.h \
     labelitem.h \
@@ -82,6 +91,7 @@ HEADERS += \
     vectorcurverenderitem.h \
     sessionmodel.h \
     svgitem.h \
+    stroketab.h \
     tabwidget.h \
     vectoreditordialog.h \
     vectormodel.h \
@@ -96,8 +106,12 @@ HEADERS += \
 FORMS += \
     aboutdialog.ui \
     datamanager.ui \
+    dialog.ui \
+    dialogpage.ui \
     debugdialog.ui \
     exportgraphicsdialog.ui \
+    filltab.ui \
+    stroketab.ui \
     vectoreditordialog.ui \
     viewmanager.ui
 

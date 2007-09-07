@@ -9,12 +9,36 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstwidgets.h"
+#include "dialogpage.h"
 
-KstWidgets::KstWidgets(QObject *parent)
-    : QObject(parent) {
-  _plugins.append(new ColorButtonPlugin(this));
-  _plugins.append(new GradientEditorPlugin(this));
+#include "dialogtab.h"
+
+namespace Kst {
+
+DialogPage::DialogPage(QWidget *parent)
+  : QWidget(parent) {
+  setupUi(this);
+  _label->setVisible(false); //FIXME not sure what to do with this yet...
 }
 
-Q_EXPORT_PLUGIN2(kstwidgets, KstWidgets)
+
+DialogPage::~DialogPage() {
+}
+
+
+void DialogPage::addDialogTab(DialogTab *tab) {
+  connect(tab, SIGNAL(modified(bool)), this, SIGNAL(modified(bool)));
+  connect(this, SIGNAL(apply()), tab, SLOT(apply()));
+  connect(this, SIGNAL(restoreDefaults()), tab, SLOT(restoreDefaults()));
+  _tab->addTab(tab, tab->tabTitle());
+}
+
+
+void DialogPage::showEvent(QShowEvent *event) {
+  restoreDefaults();
+  QWidget::showEvent(event);
+}
+
+}
+
+// vim: ts=2 sw=2 et

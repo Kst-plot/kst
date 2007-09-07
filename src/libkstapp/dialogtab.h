@@ -9,12 +9,43 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstwidgets.h"
+#ifndef DIALOGTAB_H
+#define DIALOGTAB_H
 
-KstWidgets::KstWidgets(QObject *parent)
-    : QObject(parent) {
-  _plugins.append(new ColorButtonPlugin(this));
-  _plugins.append(new GradientEditorPlugin(this));
+#include <QWidget>
+
+#include "kst_export.h"
+
+namespace Kst {
+
+//FIXME maybe we should really have a model...
+
+class KST_EXPORT DialogTab : public QWidget
+{
+  Q_OBJECT
+  public:
+    DialogTab(QWidget *parent);
+    virtual ~DialogTab();
+
+    QString tabTitle() const { return _tabTitle; }
+    void setTabTitle(const QString &tabTitle) { _tabTitle = tabTitle; }
+
+  public Q_SLOTS:
+    virtual void apply();
+    virtual void restoreDefaults();
+
+  Q_SIGNALS:
+    void modified(bool isModified);
+
+  protected:
+    virtual void showEvent(QShowEvent *event);
+
+  private:
+    QString _tabTitle;
+};
+
 }
 
-Q_EXPORT_PLUGIN2(kstwidgets, KstWidgets)
+#endif
+
+// vim: ts=2 sw=2 et
