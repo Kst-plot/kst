@@ -34,13 +34,10 @@ class KST_EXPORT Dialog : public QDialog, public Ui::Dialog
 
     void addDialogPage(DialogPage *page);
 
-  public Q_SLOTS:
-    virtual void accept();
-    virtual void reject();
-
   Q_SIGNALS:
+    void ok();
     void apply();
-    void restoreDefaults();
+    void cancel();
 
   protected:
     void setVisible(bool visible);
@@ -48,7 +45,7 @@ class KST_EXPORT Dialog : public QDialog, public Ui::Dialog
   private Q_SLOTS:
     void selectPageForItem(QListWidgetItem *item);
     void buttonClicked(QAbstractButton *button);
-    void modified(bool isModified);
+    void modified();
 
   private:
     QHash<QListWidgetItem*, DialogPage*> _itemHash;

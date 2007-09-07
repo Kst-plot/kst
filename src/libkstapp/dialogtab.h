@@ -24,21 +24,21 @@ class KST_EXPORT DialogTab : public QWidget
 {
   Q_OBJECT
   public:
+    typedef QMap<QString, QVariant> ValueMap;
+
     DialogTab(QWidget *parent);
     virtual ~DialogTab();
 
     QString tabTitle() const { return _tabTitle; }
     void setTabTitle(const QString &tabTitle) { _tabTitle = tabTitle; }
 
-  public Q_SLOTS:
-    virtual void apply();
-    virtual void restoreDefaults();
-
   Q_SIGNALS:
-    void modified(bool isModified);
+    void ok();
+    void apply();
+    void cancel();
 
-  protected:
-    virtual void showEvent(QShowEvent *event);
+    //subclasses must emit...
+    void modified();
 
   private:
     QString _tabTitle;

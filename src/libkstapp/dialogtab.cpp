@@ -21,22 +21,6 @@ DialogTab::DialogTab(QWidget *parent)
 DialogTab::~DialogTab() {
 }
 
-
-void DialogTab::apply() {
-  emit modified(false);
-}
-
-
-void DialogTab::restoreDefaults() {
-  emit modified(false);
-}
-
-
-void DialogTab::showEvent(QShowEvent *event) {
-  restoreDefaults();
-  QWidget::showEvent(event);
-}
-
 }
 
 // vim: ts=2 sw=2 et

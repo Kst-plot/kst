@@ -38,12 +38,10 @@ class KST_EXPORT DialogPage : public QWidget, public Ui::DialogPage
     void addDialogTab(DialogTab *tab);
 
   Q_SIGNALS:
+    void ok();
     void apply();
-    void restoreDefaults();
-    void modified(bool isModified);
-
-  protected:
-    virtual void showEvent(QShowEvent *event);
+    void cancel();
+    void modified();
 
   private:
     QString _pageTitle;

@@ -35,9 +35,9 @@ FillTab::FillTab(QWidget *parent)
   _style->addItem("FDiagPattern", Qt::FDiagPattern);
   _style->addItem("DiagCrossPattern", Qt::DiagCrossPattern);
 
-  connect(_color, SIGNAL(changed(const QColor &)), this, SIGNAL(changed()));
-  connect(_style, SIGNAL(currentIndexChanged(int)), this, SIGNAL(changed()));
-  connect(_gradientEditor, SIGNAL(changed(const QGradient &)), this, SIGNAL(changed()));
+  connect(_color, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
+  connect(_style, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
+  connect(_gradientEditor, SIGNAL(changed(const QGradient &)), this, SIGNAL(modified()));
 
   //FIXME gradient editor is disabled for now as it is not ready
   _gradientEditor->setEnabled(false);

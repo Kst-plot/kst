@@ -27,16 +27,11 @@ DialogPage::~DialogPage() {
 
 
 void DialogPage::addDialogTab(DialogTab *tab) {
-  connect(tab, SIGNAL(modified(bool)), this, SIGNAL(modified(bool)));
-  connect(this, SIGNAL(apply()), tab, SLOT(apply()));
-  connect(this, SIGNAL(restoreDefaults()), tab, SLOT(restoreDefaults()));
+  connect(this, SIGNAL(ok()), tab, SIGNAL(ok()));
+  connect(this, SIGNAL(apply()), tab, SIGNAL(apply()));
+  connect(this, SIGNAL(cancel()), tab, SIGNAL(cancel()));
+  connect(tab, SIGNAL(modified()), this, SIGNAL(modified()));
   _tab->addTab(tab, tab->tabTitle());
-}
-
-
-void DialogPage::showEvent(QShowEvent *event) {
-  restoreDefaults();
-  QWidget::showEvent(event);
 }
 
 }

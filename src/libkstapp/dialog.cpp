@@ -38,9 +38,8 @@ Dialog::~Dialog() {
 
 
 void Dialog::addDialogPage(DialogPage *page) {
-  connect(page, SIGNAL(modified(bool)), this, SLOT(modified(bool)));
+  connect(page, SIGNAL(modified()), this, SLOT(modified()));
   connect(this, SIGNAL(apply()), page, SIGNAL(apply()));
-  connect(this, SIGNAL(restoreDefaults()), page, SIGNAL(restoreDefaults()));
   QListWidgetItem *item = new QListWidgetItem(page->pageIcon(), page->pageTitle(), _listWidget);
   _listWidget->addItem(item);
   _stackedWidget->addWidget(page);
@@ -48,21 +47,10 @@ void Dialog::addDialogPage(DialogPage *page) {
 }
 
 
-void Dialog::accept() {
-  modified(false);
-  QDialog::accept();
-}
-
-
-void Dialog::reject() {
-  modified(false);
-  QDialog::reject();
-}
-
-
 void Dialog::setVisible(bool visible) {
 
   _listWidget->setVisible(_itemHash.count() > 2);
+  _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
 
   QDialog::setVisible(visible);
 }
@@ -77,11 +65,15 @@ void Dialog::selectPageForItem(QListWidgetItem *item) {
 void Dialog::buttonClicked(QAbstractButton *button) {
   QDialogButtonBox::StandardButton std = _buttonBox->standardButton(button);
   switch(std) {
+  case QDialogButtonBox::Ok:
+    emit ok();
+    break;
   case QDialogButtonBox::Apply:
+    _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
     emit apply();
     break;
-  case QDialogButtonBox::RestoreDefaults:
-    emit restoreDefaults();
+  case QDialogButtonBox::Cancel:
+    emit cancel();
     break;
   default:
     break;
@@ -89,11 +81,8 @@ void Dialog::buttonClicked(QAbstractButton *button) {
 }
 
 
-void Dialog::modified(bool isModified) {
-  Q_UNUSED(isModified)
-/*FIXME
-  _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(isModified);
-  _buttonBox->button(QDialogButtonBox::RestoreDefaults)->setEnabled(isModified);*/
+void Dialog::modified() {
+  _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(true);
 }
 
 }

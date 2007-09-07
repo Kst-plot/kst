@@ -52,12 +52,12 @@ StrokeTab::StrokeTab(QWidget *parent)
   _capStyle->addItem("SquareCap", Qt::SquareCap);
   _capStyle->addItem("RoundCap", Qt::RoundCap);
 
-  connect(_style, SIGNAL(currentIndexChanged(int)), this, SIGNAL(changed()));
-  connect(_width, SIGNAL(valueChanged(double)), this, SIGNAL(changed()));
-  connect(_brushColor, SIGNAL(changed(const QColor &)), this, SIGNAL(changed()));
-  connect(_brushStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(changed()));
-  connect(_joinStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(changed()));
-  connect(_capStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(changed()));
+  connect(_style, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
+  connect(_width, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
+  connect(_brushColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
+  connect(_brushStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
+  connect(_joinStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
+  connect(_capStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
 }
 
 

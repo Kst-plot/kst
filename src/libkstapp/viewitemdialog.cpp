@@ -49,8 +49,8 @@ ViewItemDialog::ViewItemDialog(QWidget *parent)
 
   _fillTab = new FillTab(this);
   _strokeTab = new StrokeTab(this);
-  connect(_fillTab, SIGNAL(changed()), this, SLOT(fillChanged()));
-  connect(_strokeTab, SIGNAL(changed()), this, SLOT(strokeChanged()));
+  connect(_fillTab, SIGNAL(apply()), this, SLOT(fillChanged()));
+  connect(_strokeTab, SIGNAL(apply()), this, SLOT(strokeChanged()));
 
   DialogPage *page = new DialogPage(this);
   page->setPageTitle(tr("Appearance"));

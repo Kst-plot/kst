@@ -33,9 +33,6 @@ public:
 
   QGradient gradient() const;
   void setGradient(const QGradient &gradient);
-
-Q_SIGNALS:
-  void changed();
 };
 
 }

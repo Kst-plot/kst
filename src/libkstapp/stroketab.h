@@ -42,9 +42,6 @@ public:
 
   Qt::PenCapStyle capStyle() const;
   void setCapStyle(Qt::PenCapStyle style);
-
-Q_SIGNALS:
-  void changed();
 };
 
 }
