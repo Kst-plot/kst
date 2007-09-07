@@ -30,6 +30,14 @@ LayoutTab::~LayoutTab() {
 }
 
 
+void LayoutTab::setLayoutEnabled(bool layoutEnabled) {
+  _horMargin->setEnabled(layoutEnabled);
+  _verMargin->setEnabled(layoutEnabled);
+  _horSpacing->setEnabled(layoutEnabled);
+  _verSpacing->setEnabled(layoutEnabled);
+}
+
+
 double LayoutTab::horizontalMargin() const {
   return _horMargin->value();
 }

@@ -94,7 +94,7 @@ void ViewItemDialog::setupLayout() {
   ViewGridLayout *layout = _item->layout();
 
   if (!layout) {
-    _layoutTab->setEnabled(false);
+    _layoutTab->setLayoutEnabled(false);
     return;
   }
 
@@ -147,7 +147,7 @@ void ViewItemDialog::layoutChanged() {
   ViewGridLayout *layout = _item->layout();
 
   if (!layout) {
-    _layoutTab->setEnabled(false);
+    _layoutTab->setLayoutEnabled(false);
     return;
   }
 

@@ -25,6 +25,8 @@ class KST_EXPORT LayoutTab : public DialogTab, Ui::LayoutTab {
     LayoutTab(QWidget *parent = 0);
     virtual ~LayoutTab();
 
+    void setLayoutEnabled(bool layoutEnabled);
+
     double horizontalMargin() const;
     void setHorizontalMargin(double horizontalMargin);
 
