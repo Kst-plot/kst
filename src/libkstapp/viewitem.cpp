@@ -26,6 +26,7 @@ namespace Kst {
 ViewItem::ViewItem(View *parent)
   : QObject(parent),
     _mouseMode(Default),
+    _hovering(false),
     _lockAspectRatio(false),
     _layout(0),
     _activeGrip(NoGrip) {
@@ -95,8 +96,10 @@ void ViewItem::setViewRect(qreal x, qreal y, qreal width, qreal height) {
 }
 
 
-QSize ViewItem::sizeOfGrip() const {
-  return QSize(10,10);
+QSizeF ViewItem::sizeOfGrip() const {
+
+  int base = 15;
+  return mapFromScene(parentView()->mapToScene(QRect(0, 0, base, base)).boundingRect()).boundingRect().size();
 }
 
 
@@ -124,7 +127,7 @@ QPainterPath ViewItem::topRightGrip() const {
     return QPainterPath();
 
   QRectF bound = gripBoundingRect();
-  QRectF grip = QRectF(bound.topRight() - QPoint(sizeOfGrip().width(), 0), sizeOfGrip());
+  QRectF grip = QRectF(bound.topRight() - QPointF(sizeOfGrip().width(), 0), sizeOfGrip());
   QPainterPath path;
   if (_mouseMode == Resize || _mouseMode == Scale)
     path.addRect(grip);
@@ -143,7 +146,7 @@ QPainterPath ViewItem::bottomRightGrip() const {
     return QPainterPath();
 
   QRectF bound = gripBoundingRect();
-  QRectF grip = QRectF(bound.bottomRight() - QPoint(sizeOfGrip().width(), sizeOfGrip().height()), sizeOfGrip());
+  QRectF grip = QRectF(bound.bottomRight() - QPointF(sizeOfGrip().width(), sizeOfGrip().height()), sizeOfGrip());
   QPainterPath path;
   if (_mouseMode == Resize || _mouseMode == Scale)
     path.addRect(grip);
@@ -162,7 +165,7 @@ QPainterPath ViewItem::bottomLeftGrip() const {
     return QPainterPath();
 
   QRectF bound = gripBoundingRect();
-  QRectF grip = QRectF(bound.bottomLeft() - QPoint(0, sizeOfGrip().height()), sizeOfGrip());
+  QRectF grip = QRectF(bound.bottomLeft() - QPointF(0, sizeOfGrip().height()), sizeOfGrip());
   QPainterPath path;
   if (_mouseMode == Resize || _mouseMode == Scale)
     path.addRect(grip);
@@ -198,7 +201,7 @@ QPainterPath ViewItem::rightMidGrip() const {
     return QPainterPath();
 
   QRectF bound = gripBoundingRect();
-  QRectF grip = QRectF(bound.topRight() - QPoint(sizeOfGrip().width(), 0), sizeOfGrip());
+  QRectF grip = QRectF(bound.topRight() - QPointF(sizeOfGrip().width(), 0), sizeOfGrip());
   grip.moveCenter(QPointF(grip.center().x(), bound.center().y()));
 
   QPainterPath path;
@@ -215,7 +218,7 @@ QPainterPath ViewItem::bottomMidGrip() const {
     return QPainterPath();
 
   QRectF bound = gripBoundingRect();
-  QRectF grip = QRectF(bound.bottomLeft() - QPoint(0, sizeOfGrip().height()), sizeOfGrip());
+  QRectF grip = QRectF(bound.bottomLeft() - QPointF(0, sizeOfGrip().height()), sizeOfGrip());
   grip.moveCenter(QPointF(bound.center().x(), grip.center().y()));
 
   QPainterPath path;
@@ -279,7 +282,7 @@ QRectF ViewItem::selectBoundingRect() const {
 
 QRectF ViewItem::gripBoundingRect() const {
   QRectF bound = /*_mouseMode != Resize ?*/ selectBoundingRect() /*: rect()*/;
-  bound.setTopLeft(bound.topLeft() - QPoint(sizeOfGrip().width(), sizeOfGrip().height()));
+  bound.setTopLeft(bound.topLeft() - QPointF(sizeOfGrip().width(), sizeOfGrip().height()));
   bound.setWidth(bound.width() + sizeOfGrip().width());
   bound.setHeight(bound.height() + sizeOfGrip().height());
   return bound;
@@ -287,7 +290,7 @@ QRectF ViewItem::gripBoundingRect() const {
 
 
 QRectF ViewItem::boundingRect() const {
-  if (!isSelected())
+  if (!isSelected() && !_hovering)
     return QGraphicsRectItem::boundingRect();
 
   QPolygonF gripBound = mapFromScene(gripBoundingRect());
@@ -296,7 +299,7 @@ QRectF ViewItem::boundingRect() const {
 
 
 QPainterPath ViewItem::shape() const {
-  if (!isSelected())
+  if (!isSelected() && !_hovering)
     return itemShape();
 
   QPainterPath selectPath;
@@ -322,7 +325,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
   painter->save();
   painter->setPen(Qt::DotLine);
-  if (isSelected()) {
+  if (isSelected() || _hovering) {
     painter->drawPath(shape());
     if (_mouseMode == Resize)
       painter->fillPath(grips(), Qt::blue);
@@ -945,6 +948,20 @@ void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
 void ViewItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   QGraphicsRectItem::hoverMoveEvent(event);
+}
+
+
+void ViewItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
+  QGraphicsRectItem::hoverMoveEvent(event);
+  _hovering = true;
+  update();
+}
+
+
+void ViewItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
+  QGraphicsRectItem::hoverMoveEvent(event);
+  _hovering = false;
+  update();
 }
 
 

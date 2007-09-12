@@ -27,6 +27,22 @@ LineItem::LineItem(View *parent)
 LineItem::~LineItem() {
 }
 
+QPainterPath LineItem::shape() const {
+
+  QPolygonF polygon;
+  QLineF left = _line;
+  left.translate(-5.0, 5.0);
+  QLineF right = _line;
+  right.translate(5.0, -5.0);
+  polygon << left.p1();
+  polygon << right.p1();
+  polygon << right.p2();
+  polygon << left.p2();
+  polygon << left.p1();
+  QPainterPath p;
+  p.addPolygon(polygon);
+  return p;
+}
 
 QPainterPath LineItem::itemShape() const {
   QPainterPath path(_line.p1());
@@ -46,6 +62,27 @@ QLineF LineItem::line() const {
 void LineItem::setLine(const QLineF &line) {
   _line = line;
   setViewRect(QRectF(_line.p1(), _line.p2()));
+}
+
+
+QPainterPath LineItem::p1Grip() const {
+    return topLeftGrip();
+}
+
+
+QPainterPath LineItem::p2Grip() const {
+    return bottomRightGrip();
+}
+
+
+QPainterPath LineItem::grips() const {
+  if (mouseMode() == Default || mouseMode() == Move)
+    return QPainterPath();
+
+  QPainterPath grips;
+  grips.addPath(p1Grip());
+  grips.addPath(p2Grip());
+  return grips;
 }
 
 
@@ -75,6 +112,27 @@ void LineItem::creationPolygonChanged(View::CreationEvent event) {
     return;
   }
 }
+
+
+void LineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+  ViewItem::mouseMoveEvent(event);
+}
+
+
+void LineItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+  ViewItem::mousePressEvent(event);
+}
+
+
+void LineItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+  ViewItem::mouseReleaseEvent(event);
+}
+
+
+void LineItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
+  ViewItem::mouseDoubleClickEvent(event);
+}
+
 
 void CreateLineCommand::createItem() {
   _item = new LineItem(_view);

@@ -24,14 +24,27 @@ public:
   LineItem(View *parent);
   virtual ~LineItem();
 
+  virtual QPainterPath shape() const;
   virtual QPainterPath itemShape() const;
   virtual void paint(QPainter *painter);
 
   QLineF line() const;
   void setLine(const QLineF &line);
 
+  virtual QPainterPath grips() const;
+
 protected Q_SLOTS:
   virtual void creationPolygonChanged(View::CreationEvent event);
+
+protected:
+  virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+  virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+  virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+  virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+
+private:
+  QPainterPath p1Grip() const;
+  QPainterPath p2Grip() const;
 
 private:
   QLineF _line;

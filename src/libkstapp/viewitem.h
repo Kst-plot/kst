@@ -65,21 +65,14 @@ public:
   qreal width() const { return viewRect().normalized().width(); }
   qreal height() const { return viewRect().normalized().height(); }
 
-  QSize sizeOfGrip() const;
-  QPainterPath topLeftGrip() const;
-  QPainterPath topRightGrip() const;
-  QPainterPath bottomRightGrip() const;
-  QPainterPath bottomLeftGrip() const;
-  QPainterPath topMidGrip() const;
-  QPainterPath rightMidGrip() const;
-  QPainterPath bottomMidGrip() const;
-  QPainterPath leftMidGrip() const;
-  QPainterPath grips() const;
   ActiveGrip activeGrip() const;
   void setActiveGrip(ActiveGrip grip);
 
-  QRectF selectBoundingRect() const;
-  QRectF gripBoundingRect() const;
+  virtual QSizeF sizeOfGrip() const;
+  virtual QPainterPath grips() const;
+
+  virtual QRectF selectBoundingRect() const;
+  virtual QRectF gripBoundingRect() const;
 
   virtual QRectF boundingRect() const;
   virtual QPainterPath shape() const;
@@ -118,6 +111,16 @@ public Q_SLOTS:
   void setLeft(qreal x);
   void setRight(qreal x);
 
+protected:
+  QPainterPath topLeftGrip() const;
+  QPainterPath topRightGrip() const;
+  QPainterPath bottomRightGrip() const;
+  QPainterPath bottomLeftGrip() const;
+  QPainterPath topMidGrip() const;
+  QPainterPath rightMidGrip() const;
+  QPainterPath bottomMidGrip() const;
+  QPainterPath leftMidGrip() const;
+
 private:
   QTransform selectTransform() const;
   bool transformToRect(const QRectF &from, const QRectF &to);
@@ -135,6 +138,8 @@ protected:
   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
   virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
   virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+  virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+  virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
   virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 private Q_SLOTS:
@@ -146,6 +151,7 @@ private:
 
 private:
   MouseMode _mouseMode;
+  bool _hovering;
   bool _lockAspectRatio;
   ViewGridLayout *_layout;
   QPointF _originalPosition;
