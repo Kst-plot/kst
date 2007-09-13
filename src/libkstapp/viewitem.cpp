@@ -15,6 +15,8 @@
 #include "viewitemdialog.h"
 #include "viewgridlayout.h"
 
+#include "gridlayouthelper.h"
+
 #include <math.h>
 
 #include <QMenu>
@@ -1232,15 +1234,32 @@ void LayoutCommand::undo() {
 void LayoutCommand::redo() {
   ViewGridLayout *layout = new ViewGridLayout(_item);
 
-  int column = 0;
-
+  QList<ViewItem*> viewItems;
   QList<QGraphicsItem*> list = _item->QGraphicsItem::children();
   foreach (QGraphicsItem *item, list) {
     ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
     if (!viewItem)
       continue;
-    layout->addViewItem(viewItem, 0, column++);
+    viewItems.append(viewItem);
   }
+
+  Grid *grid = Grid::buildGrid(viewItems);
+
+  Q_ASSERT(grid);
+
+  foreach (ViewItem *v, viewItems) {
+    int r = 0, c = 0, rs = 0, cs = 0;
+    if (grid->locateWidget(v, r, c, rs, cs)) {
+      if (rs * cs == 1) {
+        layout->addViewItem(v, r, c, 1, 1);
+      } else {
+        layout->addViewItem(v, r, c, rs, cs);
+      }
+    } else {
+      qDebug() << "ooops, viewItem does not fit in layout" << endl;
+    }
+  }
+
   layout->update();
 }
 
@@ -1248,15 +1267,32 @@ void LayoutCommand::redo() {
 void BreakLayoutCommand::undo() {
   ViewGridLayout *layout = new ViewGridLayout(_item);
 
-  int column = 0;
-
+  QList<ViewItem*> viewItems;
   QList<QGraphicsItem*> list = _item->QGraphicsItem::children();
   foreach (QGraphicsItem *item, list) {
     ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
     if (!viewItem)
       continue;
-    layout->addViewItem(viewItem, 0, column++);
+    viewItems.append(viewItem);
   }
+
+  Grid *grid = Grid::buildGrid(viewItems);
+
+  Q_ASSERT(grid);
+
+  foreach (ViewItem *v, viewItems) {
+    int r = 0, c = 0, rs = 0, cs = 0;
+    if (grid->locateWidget(v, r, c, rs, cs)) {
+      if (rs * cs == 1) {
+        layout->addViewItem(v, r, c, 1, 1);
+      } else {
+        layout->addViewItem(v, r, c, rs, cs);
+      }
+    } else {
+      qDebug() << "ooops, viewItem does not fit in layout" << endl;
+    }
+  }
+
   layout->update();
 }
 

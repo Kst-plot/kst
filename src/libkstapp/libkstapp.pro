@@ -35,6 +35,7 @@ SOURCES += \
     exportgraphicsdialog.cpp \
     filltab.cpp \
     graphicsfactory.cpp \
+    gridlayouthelper.cpp \
     labelitem.cpp \
     labelrenderer.cpp \
     layouttab.cpp \
@@ -79,6 +80,7 @@ HEADERS += \
     exportgraphicsdialog.h \
     filltab.h \
     graphicsfactory.h \
+    gridlayouthelper.h \
     labelitem.h \
     labelrenderer.h \
     layouttab.h \
