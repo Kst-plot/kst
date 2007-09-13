@@ -82,6 +82,10 @@ public:
 
   virtual QList<DialogPage*> dialogPages() const { return QList<DialogPage*>(); }
 
+  virtual QPointF centerOfRotation() const { return rect().center(); }
+
+  bool isHovering() const { return _hovering; }
+
 Q_SIGNALS:
   void geometryChanged();
   void creationComplete();
@@ -112,16 +116,14 @@ public Q_SLOTS:
   void setRight(qreal x);
 
 protected:
-  QPainterPath topLeftGrip() const;
-  QPainterPath topRightGrip() const;
-  QPainterPath bottomRightGrip() const;
-  QPainterPath bottomLeftGrip() const;
-  QPainterPath topMidGrip() const;
-  QPainterPath rightMidGrip() const;
-  QPainterPath bottomMidGrip() const;
-  QPainterPath leftMidGrip() const;
-
-private:
+  virtual QPainterPath topLeftGrip() const;
+  virtual QPainterPath topRightGrip() const;
+  virtual QPainterPath bottomRightGrip() const;
+  virtual QPainterPath bottomLeftGrip() const;
+  virtual QPainterPath topMidGrip() const;
+  virtual QPainterPath rightMidGrip() const;
+  virtual QPainterPath bottomMidGrip() const;
+  virtual QPainterPath leftMidGrip() const;
   QTransform selectTransform() const;
   bool transformToRect(const QRectF &from, const QRectF &to);
   bool transformToRect(const QPolygonF &from, const QPolygonF &to);
@@ -147,7 +149,6 @@ private Q_SLOTS:
 
 private:
   bool maybeReparent();
-  QLineF originLine() const;
 
 private:
   MouseMode _mouseMode;

@@ -15,11 +15,20 @@
 #include "viewitemdialog.h"
 #include "viewgridlayout.h"
 
+#include <math.h>
+
 #include <QMenu>
 #include <QDebug>
 #include <QGraphicsScene>
 #include <QKeyEvent>
 #include <QGraphicsSceneContextMenuEvent>
+
+static const double ONE_PI = 3.14159265358979323846264338327950288419717;
+static double TWO_PI = 2.0 * ONE_PI;
+static double RAD2DEG = 180.0 / ONE_PI;
+
+#define SELECT_BOUND 0
+#define SUPPRESS_SCALE 1
 
 namespace Kst {
 
@@ -54,6 +63,10 @@ ViewItem::MouseMode ViewItem::mouseMode() const {
 
 
 void ViewItem::setMouseMode(MouseMode mode) {
+#if SUPPRESS_SCALE
+  if (mode == Scale)
+    return;
+#endif
   _mouseMode = mode;
   update();
 }
@@ -97,9 +110,12 @@ void ViewItem::setViewRect(qreal x, qreal y, qreal width, qreal height) {
 
 
 QSizeF ViewItem::sizeOfGrip() const {
-
   int base = 15;
+#if SELECT_BOUND
   return mapFromScene(parentView()->mapToScene(QRect(0, 0, base, base)).boundingRect()).boundingRect().size();
+#else
+  return parentView()->mapToScene(QRect(0, 0, base, base)).boundingRect().size();
+#endif
 }
 
 
@@ -115,10 +131,11 @@ QPainterPath ViewItem::topLeftGrip() const {
   else
     path.addEllipse(grip);
 
-//   if (_mouseMode != Resize)
+#if SELECT_BOUND
     return mapFromScene(path);
-//   else
-//     return path;
+#else
+    return path;
+#endif
 }
 
 
@@ -134,10 +151,11 @@ QPainterPath ViewItem::topRightGrip() const {
   else
     path.addEllipse(grip);
 
-//   if (_mouseMode != Resize)
+#if SELECT_BOUND
     return mapFromScene(path);
-//   else
-//     return path;
+#else
+    return path;
+#endif
 }
 
 
@@ -153,10 +171,11 @@ QPainterPath ViewItem::bottomRightGrip() const {
   else
     path.addEllipse(grip);
 
-//   if (_mouseMode != Resize)
+#if SELECT_BOUND
     return mapFromScene(path);
-//   else
-//     return path;
+#else
+    return path;
+#endif
 }
 
 
@@ -172,10 +191,11 @@ QPainterPath ViewItem::bottomLeftGrip() const {
   else
     path.addEllipse(grip);
 
-//   if (_mouseMode != Resize)
+#if SELECT_BOUND
     return mapFromScene(path);
-//   else
-//     return path;
+#else
+    return path;
+#endif
 }
 
 
@@ -189,10 +209,12 @@ QPainterPath ViewItem::topMidGrip() const {
 
   QPainterPath path;
   path.addRect(grip);
-//   if (_mouseMode != Resize)
+
+#if SELECT_BOUND
     return mapFromScene(path);
-//   else
-//     return path;
+#else
+    return path;
+#endif
 }
 
 
@@ -206,10 +228,12 @@ QPainterPath ViewItem::rightMidGrip() const {
 
   QPainterPath path;
   path.addRect(grip);
-//   if (_mouseMode != Resize)
+
+#if SELECT_BOUND
     return mapFromScene(path);
-//   else
-//     return path;
+#else
+    return path;
+#endif
 }
 
 
@@ -223,10 +247,12 @@ QPainterPath ViewItem::bottomMidGrip() const {
 
   QPainterPath path;
   path.addRect(grip);
-//   if (_mouseMode != Resize)
+
+#if SELECT_BOUND
     return mapFromScene(path);
-//   else
-//     return path;
+#else
+    return path;
+#endif
 }
 
 
@@ -240,10 +266,12 @@ QPainterPath ViewItem::leftMidGrip() const {
 
   QPainterPath path;
   path.addRect(grip);
-//   if (_mouseMode != Resize)
+
+#if SELECT_BOUND
     return mapFromScene(path);
-//   else
-//     return path;
+#else
+    return path;
+#endif
 }
 
 
@@ -276,12 +304,16 @@ void ViewItem::setActiveGrip(ActiveGrip grip) {
 
 
 QRectF ViewItem::selectBoundingRect() const {
+#if SELECT_BOUND
   return mapToScene(itemShape()).boundingRect();
+#else
+  return rect();
+#endif
 }
 
 
 QRectF ViewItem::gripBoundingRect() const {
-  QRectF bound = /*_mouseMode != Resize ?*/ selectBoundingRect() /*: rect()*/;
+  QRectF bound = selectBoundingRect();
   bound.setTopLeft(bound.topLeft() - QPointF(sizeOfGrip().width(), sizeOfGrip().height()));
   bound.setWidth(bound.width() + sizeOfGrip().width());
   bound.setHeight(bound.height() + sizeOfGrip().height());
@@ -290,42 +322,40 @@ QRectF ViewItem::gripBoundingRect() const {
 
 
 QRectF ViewItem::boundingRect() const {
-  if (!isSelected() && !_hovering)
+  if (!isSelected() && !isHovering() || parentView()->mouseMode() == View::Create)
     return QGraphicsRectItem::boundingRect();
 
+#if SELECT_BOUND
   QPolygonF gripBound = mapFromScene(gripBoundingRect());
+#else
+  QPolygonF gripBound = gripBoundingRect();
+#endif
   return QRectF(gripBound[0], gripBound[2]);
 }
 
 
 QPainterPath ViewItem::shape() const {
-  if (!isSelected() && !_hovering)
+  if (!isSelected() && !isHovering() || parentView()->mouseMode() == View::Create)
     return itemShape();
 
   QPainterPath selectPath;
 
-//   if (_mouseMode != Resize)
+#if SELECT_BOUND
     selectPath.addPolygon(mapFromScene(selectBoundingRect()));
-//   else
-//     selectPath.addPolygon(rect());
+#else
+    selectPath.addPolygon(rect());
+#endif
 
   selectPath.addPath(grips());
   return selectPath;
 }
 
-QLineF ViewItem::originLine() const {
-  QRectF r = selectBoundingRect();
-  r.setBottom(r.bottom() - (r.height() / 2));
-  QPolygonF polygon = mapFromScene(r);
-  QPointF right = polygon[2]; //bottomRight
-  return QLineF(rect().center(), right);
-}
 
 void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
 
   painter->save();
   painter->setPen(Qt::DotLine);
-  if (isSelected() || _hovering) {
+  if (isSelected() || isHovering() && parentView()->mouseMode() != View::Create) {
     painter->drawPath(shape());
     if (_mouseMode == Resize)
       painter->fillPath(grips(), Qt::blue);
@@ -341,8 +371,6 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   painter->fillPath(shape(), semiRed);
 
   QPen p = painter->pen();
-  painter->setPen(Qt::black);
-  painter->drawLine(originLine());
 
   painter->setPen(Qt::white);
   painter->drawLine(_normalLine);
@@ -414,7 +442,7 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
   if (event == View::MousePress) {
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MousePress));
     setPos(poly.first().x(), poly.first().y());
-    setViewRect(0, 0, 0, 0);
+    setViewRect(0.0, 0.0, 0.0, 0.0);
     parentView()->scene()->addItem(this);
     setZValue(1);
     return;
@@ -500,7 +528,30 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
   if (mouseMode() == ViewItem::Rotate) {
 
+#if SELECT_BOUND
     rotateTowards(l, p);
+#else
+    switch(_activeGrip) {
+    case TopLeftGrip:
+        rotateTowards(topLeftGrip().boundingRect().center(), p); break;
+    case TopRightGrip:
+        rotateTowards(topRightGrip().boundingRect().center(), p); break;
+    case BottomRightGrip:
+        rotateTowards(bottomRightGrip().boundingRect().center(), p); break;
+    case BottomLeftGrip:
+        rotateTowards(bottomLeftGrip().boundingRect().center(), p); break;
+    case TopMidGrip:
+        rotateTowards(topMidGrip().boundingRect().center(), p); break;
+    case RightMidGrip:
+        rotateTowards(rightMidGrip().boundingRect().center(), p); break;
+    case BottomMidGrip:
+        rotateTowards(bottomMidGrip().boundingRect().center(), p); break;
+    case LeftMidGrip:
+        rotateTowards(leftMidGrip().boundingRect().center(), p); break;
+    case NoGrip:
+      break;
+    }
+#endif
 
   } else if (mouseMode() == ViewItem::Resize) {
 
@@ -813,19 +864,22 @@ bool ViewItem::transformToRect(const QPolygonF &from, const QPolygonF &to) {
 
 void ViewItem::rotateTowards(const QPointF &corner, const QPointF &point) {
 
-  QPointF origin = rect().center();
+  QPointF origin = centerOfRotation();
+  if (origin == corner || origin == point)
+    return;
+
   _normalLine = QLineF(origin, corner);
   _rotationLine = QLineF(origin, point);
 
-  qreal angle;
+  qreal angle1 = ::acos(_normalLine.dx() / _normalLine.length());
+  if (_normalLine.dy() >= 0)
+      angle1 = TWO_PI - angle1;
 
-  if (mapToScene(point).y() >= mapToScene(origin).y()) {
-/*    qDebug() << "positive" << endl;*/
-    angle = originLine().angle(_rotationLine) - originLine().angle(_normalLine);
-  } else {
-/*    qDebug() << "negative" << endl;*/
-    angle =  originLine().angle(_normalLine) - originLine().angle(_rotationLine);
-  }
+  qreal angle2 = ::acos(_rotationLine.dx() / _rotationLine.length());
+  if (_rotationLine.dy() >= 0)
+      angle2 = TWO_PI - angle2;
+
+  qreal angle = RAD2DEG * (angle1 - angle2);
 
   QTransform t;
   t.translate(origin.x(), origin.y());
@@ -932,7 +986,11 @@ void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
       setMouseMode(Resize);
       break;
     case Resize:
+#if SUPPRESS_SCALE
+      setMouseMode(Rotate);
+#else
       setMouseMode(Scale);
+#endif
       break;
     case Scale:
       setMouseMode(Rotate);

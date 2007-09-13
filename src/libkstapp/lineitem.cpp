@@ -15,6 +15,7 @@
 
 #include <QDebug>
 #include <QGraphicsScene>
+#include <QGraphicsSceneContextMenuEvent>
 
 namespace Kst {
 
@@ -27,51 +28,62 @@ LineItem::LineItem(View *parent)
 LineItem::~LineItem() {
 }
 
-QPainterPath LineItem::shape() const {
 
-  QPolygonF polygon;
-  QLineF left = _line;
-  left.translate(-5.0, 5.0);
-  QLineF right = _line;
-  right.translate(5.0, -5.0);
-  polygon << left.p1();
-  polygon << right.p1();
-  polygon << right.p2();
-  polygon << left.p2();
-  polygon << left.p1();
-  QPainterPath p;
-  p.addPolygon(polygon);
-  return p;
+void LineItem::paint(QPainter *painter) {
+  painter->drawLine(line());
 }
 
-QPainterPath LineItem::itemShape() const {
-  QPainterPath path(_line.p1());
-  path.lineTo(_line.p2());
+
+QLineF LineItem::line() const {
+  return QLineF(rect().left(), rect().center().y(), rect().right(), rect().center().y());
+}
+
+
+void LineItem::setLine(const QLineF &line_) {
+  setPos(line_.p1());
+  setViewRect(QRectF(0.0, 0.0, 0.0, sizeOfGrip().height()));
+
+  if (!rect().isEmpty()) {
+    rotateTowards(line().p2(), line_.p2());
+  }
+
+  QRectF r = rect();
+  r.setSize(QSizeF(QLineF(line().p1(), line_.p2()).length(), r.height()));
+  setViewRect(r);
+}
+
+
+QPainterPath LineItem::leftMidGrip() const {
+  if (mouseMode() == Default || mouseMode() == Move)
+    return QPainterPath();
+
+  QRectF bound = gripBoundingRect();
+  QRectF grip = QRectF(bound.topLeft(), sizeOfGrip());
+  grip.moveCenter(QPointF(grip.center().x(), bound.center().y()));
+  QPainterPath path;
+  if (mouseMode() == Resize || mouseMode() == Scale)
+    path.addRect(grip);
+  else
+    path.addEllipse(grip);
+
   return path;
 }
 
 
-void LineItem::paint(QPainter *painter) {
-  painter->drawLine(_line);
-}
+QPainterPath LineItem::rightMidGrip() const {
+  if (mouseMode() == Default || mouseMode() == Move)
+    return QPainterPath();
 
-QLineF LineItem::line() const {
-  return _line;
-}
+  QRectF bound = gripBoundingRect();
+  QRectF grip = QRectF(bound.topRight() - QPointF(sizeOfGrip().width(), 0), sizeOfGrip());
+  grip.moveCenter(QPointF(grip.center().x(), bound.center().y()));
+  QPainterPath path;
+  if (mouseMode() == Resize || mouseMode() == Scale)
+    path.addRect(grip);
+  else
+    path.addEllipse(grip);
 
-void LineItem::setLine(const QLineF &line) {
-  _line = line;
-  setViewRect(QRectF(_line.p1(), _line.p2()));
-}
-
-
-QPainterPath LineItem::p1Grip() const {
-    return topLeftGrip();
-}
-
-
-QPainterPath LineItem::p2Grip() const {
-    return bottomRightGrip();
+  return path;
 }
 
 
@@ -80,16 +92,27 @@ QPainterPath LineItem::grips() const {
     return QPainterPath();
 
   QPainterPath grips;
-  grips.addPath(p1Grip());
-  grips.addPath(p2Grip());
+  grips.addPath(leftMidGrip());
+  grips.addPath(rightMidGrip());
   return grips;
+}
+
+
+QPointF LineItem::centerOfRotation() const {
+  if (activeGrip() == RightMidGrip)
+    return line().p1();
+  else if (activeGrip() == LeftMidGrip)
+    return line().p2();
+
+  return line().p1();
 }
 
 
 void LineItem::creationPolygonChanged(View::CreationEvent event) {
   if (event == View::MousePress) {
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MousePress));
-    setLine(QLineF(poly[0], poly[0])); //start and end
+    setPos(poly.first().x(), poly.first().y());
+    setViewRect(QRectF(0.0, 0.0, 0.0, sizeOfGrip().height()));
     parentView()->scene()->addItem(this);
     setZValue(1);
     return;
@@ -97,14 +120,17 @@ void LineItem::creationPolygonChanged(View::CreationEvent event) {
 
   if (event == View::MouseMove) {
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseMove));
-    setLine(QLineF(line().p1(), poly.last())); //start and end
+    if (!rect().isEmpty()) {
+      rotateTowards(line().p2(), poly.last());
+    }
+    QRectF r = rect();
+    r.setSize(QSizeF(QLineF(line().p1(), poly.last()).length(), r.height()));
+    setViewRect(r);
     return;
   }
 
   if (event == View::MouseRelease) {
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseRelease));
-    setLine(QLineF(line().p1(), poly.last())); //start and end
-
     parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
     parentView()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
     parentView()->setMouseMode(View::Default);
@@ -120,7 +146,22 @@ void LineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
 
 void LineItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-  ViewItem::mousePressEvent(event);
+
+  if (parentView()->viewMode() == View::Data) {
+    event->ignore();
+    return;
+  }
+
+  QPointF p = event->pos();
+  if (leftMidGrip().contains(p)) {
+    setActiveGrip(LeftMidGrip);
+  } else if (rightMidGrip().contains(p)) {
+    setActiveGrip(RightMidGrip);
+  } else {
+    setActiveGrip(NoGrip);
+  }
+
+  QGraphicsRectItem::mousePressEvent(event);
 }
 
 
