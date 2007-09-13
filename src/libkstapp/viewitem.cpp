@@ -29,6 +29,8 @@ static const double ONE_PI = 3.14159265358979323846264338327950288419717;
 static double TWO_PI = 2.0 * ONE_PI;
 static double RAD2DEG = 180.0 / ONE_PI;
 
+// #define DEBUG_GEOMETRY
+// #define DEBUG_REPARENT
 #define SELECT_BOUND 0
 #define SUPPRESS_SCALE 1
 
@@ -324,7 +326,10 @@ QRectF ViewItem::gripBoundingRect() const {
 
 
 QRectF ViewItem::boundingRect() const {
-  if (!isSelected() && !isHovering() || parentView()->mouseMode() == View::Create)
+  bool inCreation = false;
+  if (parentView()) /* false when exiting */
+    inCreation = parentView()->mouseMode() == View::Create;
+  if (!isSelected() && !isHovering() || inCreation)
     return QGraphicsRectItem::boundingRect();
 
 #if SELECT_BOUND
@@ -1096,21 +1101,28 @@ bool ViewItem::maybeReparent() {
   foreach (QGraphicsItem *item, collisions) {
     ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
 
-    if (!viewItem || viewItem->layout() /*don't break existing layouts*/)
+    if (!viewItem) /*bah*/
       continue;
 
-    if (viewItem->collidesWithItem(this, Qt::ContainsItemShape)) {
+    if (!viewItem->collidesWithItem(this, Qt::ContainsItemShape)) /*doesn't contain*/
+      continue;
 
-      if (parentItem() == viewItem) /*already done*/
-        return false;
+    if (parentItem() == viewItem) { /*already done*/
+#ifdef DEBUG_REPARENT
+      qDebug() << "already in containing parent" << endl;
+#endif
+      return false;
+    }
+
+    if (viewItem->layout()) /*don't crash existing layout*/
+      continue;
 
 #ifdef DEBUG_REPARENT
-      qDebug() << "reparent to" << viewItem << endl;
+    qDebug() << "reparent to" << viewItem << endl;
 #endif
-      setParentItem(viewItem);
-      setPos(viewItem->mapFromScene(scenePos));
-      return true;
-    }
+    setParentItem(viewItem);
+    setPos(viewItem->mapFromScene(scenePos));
+    return true;
   }
 
   //No suitable collisions then reparent to top-level
@@ -1232,10 +1244,11 @@ void LayoutCommand::undo() {
 
 
 void LayoutCommand::redo() {
-  ViewGridLayout *layout = new ViewGridLayout(_item);
-
   QList<ViewItem*> viewItems;
   QList<QGraphicsItem*> list = _item->QGraphicsItem::children();
+  if (list.isEmpty())
+    return;
+
   foreach (QGraphicsItem *item, list) {
     ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
     if (!viewItem)
@@ -1243,9 +1256,13 @@ void LayoutCommand::redo() {
     viewItems.append(viewItem);
   }
 
-  Grid *grid = Grid::buildGrid(viewItems);
+  if (viewItems.isEmpty())
+    return;
 
+  Grid *grid = Grid::buildGrid(viewItems);
   Q_ASSERT(grid);
+
+  ViewGridLayout *layout = new ViewGridLayout(_item);
 
   foreach (ViewItem *v, viewItems) {
     int r = 0, c = 0, rs = 0, cs = 0;
@@ -1264,11 +1281,11 @@ void LayoutCommand::redo() {
 }
 
 
-void BreakLayoutCommand::undo() {
-  ViewGridLayout *layout = new ViewGridLayout(_item);
-
-  QList<ViewItem*> viewItems;
+void BreakLayoutCommand::undo() {  QList<ViewItem*> viewItems;
   QList<QGraphicsItem*> list = _item->QGraphicsItem::children();
+  if (list.isEmpty())
+    return;
+
   foreach (QGraphicsItem *item, list) {
     ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
     if (!viewItem)
@@ -1276,9 +1293,13 @@ void BreakLayoutCommand::undo() {
     viewItems.append(viewItem);
   }
 
-  Grid *grid = Grid::buildGrid(viewItems);
+  if (viewItems.isEmpty())
+    return;
 
+  Grid *grid = Grid::buildGrid(viewItems);
   Q_ASSERT(grid);
+
+  ViewGridLayout *layout = new ViewGridLayout(_item);
 
   foreach (ViewItem *v, viewItems) {
     int r = 0, c = 0, rs = 0, cs = 0;

@@ -13,6 +13,8 @@
 
 #include "plotrenderitem.h"
 
+#include "viewgridlayout.h"
+
 #include "kstsvector.h"
 #include "kstvcurve.h"
 #include "kstdatacollection.h"
@@ -23,6 +25,8 @@
 
 static qreal MARGIN_WIDTH = 20.0;
 static qreal MARGIN_HEIGHT = 20.0;
+
+static uint COUNT = 0;
 
 namespace Kst {
 
@@ -38,7 +42,12 @@ PlotItem::PlotItem(View *parent)
   yTest->setLabel("a nice y label");
 
   KstVectorPtr yTest2 = new KstSVector(-100.0, 100.0, 10000, KstObjectTag::fromString("Y vector 2"));
-  yTest2->setLabel("another nice y label");
+  if (COUNT % 2) {
+    yTest2->setLabel("another nice y label");
+  } else {
+    yTest2->setLabel("another really REALLY REALLY REALLY nice y label");
+  }
+  COUNT = COUNT + 1;
 
   KstVCurvePtr renderTest = new KstVCurve(QString("rendertest"), xTest, yTest, 0, 0, 0, 0, QColor(Qt::red));
   renderTest->writeLock();
@@ -179,13 +188,39 @@ QString PlotItem::topLabel() const {
 }
 
 
-QRectF PlotItem::horizontalLabelRect() const {
-  return QRectF(0.0, 0.0, width() - 2.0 * marginWidth(), marginHeight());
+qreal PlotItem::layoutMarginWidth() const {
+  ViewItem *viewItem = dynamic_cast<ViewItem*>(parentItem());
+  if (viewItem && viewItem->layout()) {
+    return viewItem->layout()->plotMarginWidth();
+  } else {
+    return marginWidth();
+  }
 }
 
 
-QRectF PlotItem::verticalLabelRect() const {
-  return QRectF(0.0, 0.0, marginWidth(), height() - 2.0 * marginHeight());
+qreal PlotItem::layoutMarginHeight() const {
+  ViewItem *viewItem = dynamic_cast<ViewItem*>(parentItem());
+  if (viewItem && viewItem->layout()) {
+    return viewItem->layout()->plotMarginHeight();
+  } else {
+    return marginHeight();
+  }
+}
+
+
+QRectF PlotItem::horizontalLabelRect(bool calc) const {
+  if (calc)
+    return QRectF(0.0, 0.0, width() - 2.0 * marginWidth(), marginHeight());
+  else
+    return QRectF(0.0, 0.0, width() - 2.0 * layoutMarginWidth(), layoutMarginHeight());
+}
+
+
+QRectF PlotItem::verticalLabelRect(bool calc) const {
+  if (calc)
+    return QRectF(0.0, 0.0, marginWidth(), height() - 2.0 * marginHeight());
+  else
+    return QRectF(0.0, 0.0, layoutMarginWidth(), height() - 2.0 * layoutMarginHeight());
 }
 
 
@@ -195,8 +230,8 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
   t.rotate(90.0);
   painter->rotate(-90.0);
 
-  QRectF leftLabelRect = verticalLabelRect();
-  leftLabelRect.moveTopLeft(QPointF(0.0, marginHeight()));
+  QRectF leftLabelRect = verticalLabelRect(false);
+  leftLabelRect.moveTopLeft(QPointF(0.0, layoutMarginHeight()));
   painter->drawText(t.mapRect(leftLabelRect), Qt::TextWordWrap | Qt::AlignCenter, leftLabel());
   painter->restore();
 }
@@ -220,8 +255,8 @@ QSizeF PlotItem::calculateLeftLabelBound(QPainter *painter) {
 
 void PlotItem::paintBottomLabel(QPainter *painter) {
   painter->save();
-  QRectF bottomLabelRect = horizontalLabelRect();
-  bottomLabelRect.moveTopLeft(QPointF(marginWidth(), height() - marginHeight()));
+  QRectF bottomLabelRect = horizontalLabelRect(false);
+  bottomLabelRect.moveTopLeft(QPointF(layoutMarginWidth(), height() - layoutMarginHeight()));
   painter->drawText(bottomLabelRect, Qt::TextWordWrap | Qt::AlignCenter, bottomLabel());
   painter->restore();
 }
@@ -239,14 +274,14 @@ QSizeF PlotItem::calculateBottomLabelBound(QPainter *painter) {
 
 void PlotItem::paintRightLabel(QPainter *painter) {
   painter->save();
-  painter->translate(width() - marginWidth(), 0.0);
+  painter->translate(width() - layoutMarginWidth(), 0.0);
   QTransform t;
   t.rotate(-90.0);
   painter->rotate(90.0);
 
   //same as left but painter is translated
-  QRectF rightLabelRect = verticalLabelRect();
-  rightLabelRect.moveTopLeft(QPointF(0.0, marginHeight()));
+  QRectF rightLabelRect = verticalLabelRect(false);
+  rightLabelRect.moveTopLeft(QPointF(0.0, layoutMarginHeight()));
   painter->drawText(t.mapRect(rightLabelRect), Qt::TextWordWrap | Qt::AlignCenter, rightLabel());
   painter->restore();
 }
@@ -269,8 +304,8 @@ QSizeF PlotItem::calculateRightLabelBound(QPainter *painter) {
 
 void PlotItem::paintTopLabel(QPainter *painter) {
   painter->save();
-  QRectF topLabelRect = horizontalLabelRect();
-  topLabelRect.moveTopLeft(QPointF(marginWidth(), 0.0));
+  QRectF topLabelRect = horizontalLabelRect(false);
+  topLabelRect.moveTopLeft(QPointF(layoutMarginWidth(), 0.0));
   painter->drawText(topLabelRect, Qt::TextWordWrap | Qt::AlignCenter, bottomLabel());
   painter->restore();
 }

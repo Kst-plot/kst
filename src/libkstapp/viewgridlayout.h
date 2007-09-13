@@ -40,8 +40,14 @@ class ViewGridLayout : public QObject
     QSizeF margin() const { return _margin; }
     void setMargin(const QSizeF &margin) { _margin = margin; }
 
+    qreal plotMarginWidth() const;
+    qreal plotMarginHeight() const;
+
   public Q_SLOTS:
     void update();
+
+  private Q_SLOTS:
+    void updatePlotMargins();
 
   private:
     struct LayoutItem {
@@ -59,6 +65,8 @@ class ViewGridLayout : public QObject
     QSizeF _margin;
 
     QList<LayoutItem> _items;
+    qreal _plotMarginWidth;
+    qreal _plotMarginHeight;
 };
 
 }

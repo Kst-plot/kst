@@ -42,14 +42,17 @@ class PlotItem : public ViewItem
     qreal marginHeight() const;
     void setMarginHeight(qreal marginHeight);
 
+    qreal layoutMarginWidth() const;
+    qreal layoutMarginHeight() const;
+
     QString leftLabel() const;
     QString bottomLabel() const;
     QString rightLabel() const;
     QString topLabel() const;
 
   private:
-    QRectF horizontalLabelRect() const;
-    QRectF verticalLabelRect() const;
+    QRectF horizontalLabelRect(bool calc = true) const;
+    QRectF verticalLabelRect(bool calc = true) const;
 
     void paintLeftLabel(QPainter *painter);
     QSizeF calculateLeftLabelBound(QPainter *painter);
@@ -64,6 +67,8 @@ class PlotItem : public ViewItem
     QList<PlotRenderItem*> _renderers;
     qreal _marginWidth;
     qreal _marginHeight;
+
+    friend class ViewGridLayout;
 };
 
 class KST_EXPORT CreatePlotCommand : public CreateCommand

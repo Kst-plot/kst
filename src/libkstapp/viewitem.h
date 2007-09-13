@@ -19,9 +19,6 @@
 #include "viewcommand.h"
 #include "view.h" //forward declare, but enums??
 
-// #define DEBUG_GEOMETRY
-// #define DEBUG_REPARENT
-
 namespace Kst {
 
 class DialogPage;

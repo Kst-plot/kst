@@ -12,8 +12,11 @@
 #include "viewgridlayout.h"
 
 #include "viewitem.h"
+#include "plotitem.h"
 
 #include <QDebug>
+
+// #define DEBUG_LAYOUT
 
 static qreal DEFAULT_STRUT = 20.0;
 
@@ -24,7 +27,9 @@ ViewGridLayout::ViewGridLayout(ViewItem *parent)
     _rowCount(0),
     _columnCount(0),
     _spacing(QSizeF(DEFAULT_STRUT,DEFAULT_STRUT)),
-    _margin(QSizeF(DEFAULT_STRUT,DEFAULT_STRUT)) {
+    _margin(QSizeF(DEFAULT_STRUT,DEFAULT_STRUT)),
+    _plotMarginWidth(0.0),
+    _plotMarginHeight(0.0) {
 
   parent->setLayout(this);
 }
@@ -73,7 +78,19 @@ int ViewGridLayout::columnCount() const {
 }
 
 
+qreal ViewGridLayout::plotMarginWidth() const {
+  return _plotMarginWidth;
+}
+
+
+qreal ViewGridLayout::plotMarginHeight() const {
+  return _plotMarginHeight;
+}
+
+
 void ViewGridLayout::update() {
+
+  updatePlotMargins();
 
   //For now we divide up equally... can do stretch factors and such later...
 
@@ -88,10 +105,12 @@ void ViewGridLayout::update() {
   qreal itemWidth = layoutSize.width() / columnCount();
   qreal itemHeight = layoutSize.height() / rowCount();
 
-//   qDebug() << "layouting" << _items.count()
-//            << "itemWidth:" << itemWidth
-//            << "itemHeight:" << itemHeight
-//            << endl;
+#ifdef DEBUG_LAYOUT
+  qDebug() << "layouting" << _items.count()
+           << "itemWidth:" << itemWidth
+           << "itemHeight:" << itemHeight
+           << endl;
+#endif
 
   foreach (LayoutItem item, _items) {
     QPointF topLeft(itemWidth * item.column, itemHeight * item.row);
@@ -113,15 +132,31 @@ void ViewGridLayout::update() {
     item.viewItem->setPos(itemRect.topLeft());
     item.viewItem->setViewRect(QRectF(QPoint(0,0), itemRect.size()));
 
-//     qDebug() << "layout"
-//              << "row:" << item.row
-//              << "column:" << item.column
-//              << "rowSpan:" << item.rowSpan
-//              << "columnSpan:" << item.columnSpan
-//              << "itemRect:" << itemRect
-//              << endl;
+#ifdef DEBUG_LAYOUT
+    qDebug() << "layout"
+             << "row:" << item.row
+             << "column:" << item.column
+             << "rowSpan:" << item.rowSpan
+             << "columnSpan:" << item.columnSpan
+             << "itemRect:" << itemRect
+             << endl;
+#endif
   }
+}
 
+
+void ViewGridLayout::updatePlotMargins() {
+  _plotMarginWidth = 0.0;
+  _plotMarginHeight = 0.0;
+  foreach (LayoutItem item, _items) {
+    PlotItem *plotItem = dynamic_cast<PlotItem*>(item.viewItem);
+
+    if (!plotItem)
+      continue;
+
+    _plotMarginWidth = qMax(_plotMarginWidth, plotItem->marginWidth());
+    _plotMarginHeight = qMax(_plotMarginHeight, plotItem->marginHeight());
+  }
 }
 
 }

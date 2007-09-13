@@ -35,7 +35,7 @@ PlotItem *PlotRenderItem::plotItem() const {
 
 void PlotRenderItem::updateGeometry() {
   QRectF rect = plotItem()->rect().normalized();
-  QPointF margin(plotItem()->marginWidth(), plotItem()->marginHeight());
+  QPointF margin(plotItem()->layoutMarginWidth(), plotItem()->layoutMarginHeight());
   QPointF topLeft(rect.topLeft() + margin);
   QPointF bottomRight(rect.bottomRight() - margin);
   setRect(QRectF(topLeft, bottomRight));
