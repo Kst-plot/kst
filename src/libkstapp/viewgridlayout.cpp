@@ -154,8 +154,8 @@ void ViewGridLayout::updatePlotMargins() {
     if (!plotItem)
       continue;
 
-    _plotMarginWidth = qMax(_plotMarginWidth, plotItem->marginWidth());
-    _plotMarginHeight = qMax(_plotMarginHeight, plotItem->marginHeight());
+    _plotMarginWidth = qMax(_plotMarginWidth, plotItem->calculatedMarginWidth());
+    _plotMarginHeight = qMax(_plotMarginHeight, plotItem->calculatedMarginHeight());
   }
 }
 

@@ -31,7 +31,7 @@ static uint COUNT = 0;
 namespace Kst {
 
 PlotItem::PlotItem(View *parent)
-  : ViewItem(parent), _marginWidth(0), _marginHeight(0) {
+  : ViewItem(parent), _calculatedMarginWidth(0), _calculatedMarginHeight(0) {
 
   setName("PlotItem");
 
@@ -96,10 +96,10 @@ void PlotItem::paint(QPainter *painter) {
   margins = margins.expandedTo(calculateTopLabelBound(painter));
 
 //  qDebug() << "setting margin width" << margins.width() << endl;
-  setMarginWidth(margins.width());
+  setCalculatedMarginWidth(margins.width());
 
 //  qDebug() << "setting margin height" << margins.height() << endl;
-  setMarginHeight(margins.height());
+  setCalculatedMarginHeight(margins.height());
 
 //  qDebug() << "=============> leftLabel:" << leftLabel() << endl;
   paintLeftLabel(painter);
@@ -114,8 +114,8 @@ void PlotItem::paint(QPainter *painter) {
 }
 
 
-qreal PlotItem::marginWidth() const {
-  qreal m = qMax(MARGIN_WIDTH, _marginWidth);
+qreal PlotItem::calculatedMarginWidth() const {
+  qreal m = qMax(MARGIN_WIDTH, _calculatedMarginWidth);
 
   //No more than 1/4 the width of the plot
   if (width() < m * 4)
@@ -125,16 +125,16 @@ qreal PlotItem::marginWidth() const {
 }
 
 
-void PlotItem::setMarginWidth(qreal marginWidth) {
-  qreal before = this->marginWidth();
-  _marginWidth = marginWidth;
-  if (before != this->marginWidth())
+void PlotItem::setCalculatedMarginWidth(qreal marginWidth) {
+  qreal before = this->calculatedMarginWidth();
+  _calculatedMarginWidth = marginWidth;
+  if (before != this->calculatedMarginWidth())
     emit geometryChanged();
 }
 
 
-qreal PlotItem::marginHeight() const {
-  qreal m = qMax(MARGIN_HEIGHT, _marginHeight);
+qreal PlotItem::calculatedMarginHeight() const {
+  qreal m = qMax(MARGIN_HEIGHT, _calculatedMarginHeight);
 
   //No more than 1/4 the height of the plot
   if (height() < m * 4)
@@ -144,10 +144,10 @@ qreal PlotItem::marginHeight() const {
 }
 
 
-void PlotItem::setMarginHeight(qreal marginHeight) {
-  qreal before = this->marginHeight();
-  _marginHeight = marginHeight;
-  if (before != this->marginHeight())
+void PlotItem::setCalculatedMarginHeight(qreal marginHeight) {
+  qreal before = this->calculatedMarginHeight();
+  _calculatedMarginHeight = marginHeight;
+  if (before != this->calculatedMarginHeight())
     emit geometryChanged();
 }
 
@@ -188,39 +188,39 @@ QString PlotItem::topLabel() const {
 }
 
 
-qreal PlotItem::layoutMarginWidth() const {
+qreal PlotItem::marginWidth() const {
   ViewItem *viewItem = dynamic_cast<ViewItem*>(parentItem());
   if (viewItem && viewItem->layout()) {
     return viewItem->layout()->plotMarginWidth();
   } else {
-    return marginWidth();
+    return calculatedMarginWidth();
   }
 }
 
 
-qreal PlotItem::layoutMarginHeight() const {
+qreal PlotItem::marginHeight() const {
   ViewItem *viewItem = dynamic_cast<ViewItem*>(parentItem());
   if (viewItem && viewItem->layout()) {
     return viewItem->layout()->plotMarginHeight();
   } else {
-    return marginHeight();
+    return calculatedMarginHeight();
   }
 }
 
 
 QRectF PlotItem::horizontalLabelRect(bool calc) const {
   if (calc)
-    return QRectF(0.0, 0.0, width() - 2.0 * marginWidth(), marginHeight());
+    return QRectF(0.0, 0.0, width() - 2.0 * calculatedMarginWidth(), calculatedMarginHeight());
   else
-    return QRectF(0.0, 0.0, width() - 2.0 * layoutMarginWidth(), layoutMarginHeight());
+    return QRectF(0.0, 0.0, width() - 2.0 * marginWidth(), marginHeight());
 }
 
 
 QRectF PlotItem::verticalLabelRect(bool calc) const {
   if (calc)
-    return QRectF(0.0, 0.0, marginWidth(), height() - 2.0 * marginHeight());
+    return QRectF(0.0, 0.0, calculatedMarginWidth(), height() - 2.0 * calculatedMarginHeight());
   else
-    return QRectF(0.0, 0.0, layoutMarginWidth(), height() - 2.0 * layoutMarginHeight());
+    return QRectF(0.0, 0.0, marginWidth(), height() - 2.0 * marginHeight());
 }
 
 
@@ -231,7 +231,7 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
   painter->rotate(-90.0);
 
   QRectF leftLabelRect = verticalLabelRect(false);
-  leftLabelRect.moveTopLeft(QPointF(0.0, layoutMarginHeight()));
+  leftLabelRect.moveTopLeft(QPointF(0.0, marginHeight()));
   painter->drawText(t.mapRect(leftLabelRect), Qt::TextWordWrap | Qt::AlignCenter, leftLabel());
   painter->restore();
 }
@@ -243,7 +243,7 @@ QSizeF PlotItem::calculateLeftLabelBound(QPainter *painter) {
   t.rotate(90.0);
   painter->rotate(-90.0);
 
-  QRectF leftLabelBound = painter->boundingRect(t.mapRect(verticalLabelRect()),
+  QRectF leftLabelBound = painter->boundingRect(t.mapRect(verticalLabelRect(true)),
                                                 Qt::TextWordWrap | Qt::AlignCenter, leftLabel());
   painter->restore();
 
@@ -256,14 +256,14 @@ QSizeF PlotItem::calculateLeftLabelBound(QPainter *painter) {
 void PlotItem::paintBottomLabel(QPainter *painter) {
   painter->save();
   QRectF bottomLabelRect = horizontalLabelRect(false);
-  bottomLabelRect.moveTopLeft(QPointF(layoutMarginWidth(), height() - layoutMarginHeight()));
+  bottomLabelRect.moveTopLeft(QPointF(marginWidth(), height() - marginHeight()));
   painter->drawText(bottomLabelRect, Qt::TextWordWrap | Qt::AlignCenter, bottomLabel());
   painter->restore();
 }
 
 
 QSizeF PlotItem::calculateBottomLabelBound(QPainter *painter) {
-  QRectF bottomLabelBound = painter->boundingRect(horizontalLabelRect(),
+  QRectF bottomLabelBound = painter->boundingRect(horizontalLabelRect(true),
                                                   Qt::TextWordWrap | Qt::AlignCenter, bottomLabel());
 
   QSizeF margins;
@@ -274,14 +274,14 @@ QSizeF PlotItem::calculateBottomLabelBound(QPainter *painter) {
 
 void PlotItem::paintRightLabel(QPainter *painter) {
   painter->save();
-  painter->translate(width() - layoutMarginWidth(), 0.0);
+  painter->translate(width() - marginWidth(), 0.0);
   QTransform t;
   t.rotate(-90.0);
   painter->rotate(90.0);
 
   //same as left but painter is translated
   QRectF rightLabelRect = verticalLabelRect(false);
-  rightLabelRect.moveTopLeft(QPointF(0.0, layoutMarginHeight()));
+  rightLabelRect.moveTopLeft(QPointF(0.0, marginHeight()));
   painter->drawText(t.mapRect(rightLabelRect), Qt::TextWordWrap | Qt::AlignCenter, rightLabel());
   painter->restore();
 }
@@ -292,7 +292,7 @@ QSizeF PlotItem::calculateRightLabelBound(QPainter *painter) {
   QTransform t;
   t.rotate(-90.0);
   painter->rotate(90.0);
-  QRectF rightLabelBound = painter->boundingRect(t.mapRect(verticalLabelRect()),
+  QRectF rightLabelBound = painter->boundingRect(t.mapRect(verticalLabelRect(true)),
                                                  Qt::TextWordWrap | Qt::AlignCenter, rightLabel());
   painter->restore();
 
@@ -305,14 +305,14 @@ QSizeF PlotItem::calculateRightLabelBound(QPainter *painter) {
 void PlotItem::paintTopLabel(QPainter *painter) {
   painter->save();
   QRectF topLabelRect = horizontalLabelRect(false);
-  topLabelRect.moveTopLeft(QPointF(layoutMarginWidth(), 0.0));
+  topLabelRect.moveTopLeft(QPointF(marginWidth(), 0.0));
   painter->drawText(topLabelRect, Qt::TextWordWrap | Qt::AlignCenter, bottomLabel());
   painter->restore();
 }
 
 
 QSizeF PlotItem::calculateTopLabelBound(QPainter *painter) {
-  QRectF topLabelBound = painter->boundingRect(horizontalLabelRect(),
+  QRectF topLabelBound = painter->boundingRect(horizontalLabelRect(true),
                                                Qt::TextWordWrap | Qt::AlignCenter, topLabel());
 
   QSizeF margins;

@@ -37,13 +37,7 @@ class PlotItem : public ViewItem
     void paint(QPainter *painter);
 
     qreal marginWidth() const;
-    void setMarginWidth(qreal marginWidth);
-
     qreal marginHeight() const;
-    void setMarginHeight(qreal marginHeight);
-
-    qreal layoutMarginWidth() const;
-    qreal layoutMarginHeight() const;
 
     QString leftLabel() const;
     QString bottomLabel() const;
@@ -51,8 +45,14 @@ class PlotItem : public ViewItem
     QString topLabel() const;
 
   private:
-    QRectF horizontalLabelRect(bool calc = true) const;
-    QRectF verticalLabelRect(bool calc = true) const;
+    qreal calculatedMarginWidth() const;
+    void setCalculatedMarginWidth(qreal marginWidth);
+
+    qreal calculatedMarginHeight() const;
+    void setCalculatedMarginHeight(qreal marginHeight);
+
+    QRectF horizontalLabelRect(bool calc) const;
+    QRectF verticalLabelRect(bool calc) const;
 
     void paintLeftLabel(QPainter *painter);
     QSizeF calculateLeftLabelBound(QPainter *painter);
@@ -65,8 +65,8 @@ class PlotItem : public ViewItem
 
   private:
     QList<PlotRenderItem*> _renderers;
-    qreal _marginWidth;
-    qreal _marginHeight;
+    qreal _calculatedMarginWidth;
+    qreal _calculatedMarginHeight;
 
     friend class ViewGridLayout;
 };
