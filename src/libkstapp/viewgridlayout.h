@@ -14,10 +14,12 @@
 
 #include <QObject>
 #include <QSizeF>
+#include <QHash>
 
 namespace Kst {
 
 class ViewItem;
+class PlotItem;
 
 class ViewGridLayout : public QObject
 {
@@ -40,8 +42,8 @@ class ViewGridLayout : public QObject
     QSizeF margin() const { return _margin; }
     void setMargin(const QSizeF &margin) { _margin = margin; }
 
-    qreal plotMarginWidth() const;
-    qreal plotMarginHeight() const;
+    qreal plotMarginWidth(const PlotItem *plotItem) const;
+    qreal plotMarginHeight(const PlotItem *plotItem) const;
 
   public Q_SLOTS:
     void update();
@@ -65,8 +67,9 @@ class ViewGridLayout : public QObject
     QSizeF _margin;
 
     QList<LayoutItem> _items;
-    qreal _plotMarginWidth;
-    qreal _plotMarginHeight;
+    QHash<int, qreal> _plotMarginWidth;
+    QHash<int, qreal> _plotMarginHeight;
+    QHash<const ViewItem*, LayoutItem> _itemInfos;
 };
 
 }

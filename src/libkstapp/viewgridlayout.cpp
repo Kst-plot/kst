@@ -27,9 +27,7 @@ ViewGridLayout::ViewGridLayout(ViewItem *parent)
     _rowCount(0),
     _columnCount(0),
     _spacing(QSizeF(DEFAULT_STRUT,DEFAULT_STRUT)),
-    _margin(QSizeF(DEFAULT_STRUT,DEFAULT_STRUT)),
-    _plotMarginWidth(0.0),
-    _plotMarginHeight(0.0) {
+    _margin(QSizeF(DEFAULT_STRUT,DEFAULT_STRUT)) {
 
   parent->setLayout(this);
 }
@@ -65,6 +63,7 @@ void ViewGridLayout::addViewItem(ViewItem *viewItem, int row, int column, int ro
   _columnCount = maxColumn > _columnCount ? maxColumn : _columnCount;
 
   _items.append(item);
+  _itemInfos.insert(viewItem, item);
 }
 
 
@@ -78,13 +77,25 @@ int ViewGridLayout::columnCount() const {
 }
 
 
-qreal ViewGridLayout::plotMarginWidth() const {
-  return _plotMarginWidth;
+qreal ViewGridLayout::plotMarginWidth(const PlotItem *plotItem) const {
+  if (_itemInfos.contains(plotItem)) {
+    LayoutItem item = _itemInfos.value(plotItem);
+    if (_plotMarginWidth.contains(item.columnSpan))
+      return _plotMarginWidth.value(item.columnSpan);
+  }
+
+  return 0.0;
 }
 
 
-qreal ViewGridLayout::plotMarginHeight() const {
-  return _plotMarginHeight;
+qreal ViewGridLayout::plotMarginHeight(const PlotItem *plotItem) const {
+  if (_itemInfos.contains(plotItem)) {
+    LayoutItem item = _itemInfos.value(plotItem);
+    if (_plotMarginHeight.contains(item.rowSpan))
+      return _plotMarginHeight.value(item.rowSpan);
+  }
+
+  return 0.0;
 }
 
 
@@ -146,16 +157,23 @@ void ViewGridLayout::update() {
 
 
 void ViewGridLayout::updatePlotMargins() {
-  _plotMarginWidth = 0.0;
-  _plotMarginHeight = 0.0;
+  _plotMarginWidth.clear();
+  _plotMarginHeight.clear();
   foreach (LayoutItem item, _items) {
     PlotItem *plotItem = dynamic_cast<PlotItem*>(item.viewItem);
 
     if (!plotItem)
       continue;
 
-    _plotMarginWidth = qMax(_plotMarginWidth, plotItem->calculatedMarginWidth());
-    _plotMarginHeight = qMax(_plotMarginHeight, plotItem->calculatedMarginHeight());
+    qreal marginForColumnSpan = plotItem->calculatedMarginWidth();
+    if (_plotMarginWidth.contains(item.columnSpan))
+      marginForColumnSpan = qMax(marginForColumnSpan, _plotMarginWidth.value(item.columnSpan));
+    _plotMarginWidth.insert(item.columnSpan, marginForColumnSpan);
+
+    qreal marginForRowSpan = plotItem->calculatedMarginHeight();
+    if (_plotMarginHeight.contains(item.rowSpan))
+      marginForRowSpan = qMax(marginForRowSpan, _plotMarginHeight.value(item.rowSpan));
+    _plotMarginHeight.insert(item.rowSpan, marginForRowSpan);
   }
 }
 

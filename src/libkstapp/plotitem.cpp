@@ -45,7 +45,7 @@ PlotItem::PlotItem(View *parent)
   if (COUNT % 2) {
     yTest2->setLabel("another nice y label");
   } else {
-    yTest2->setLabel("another really REALLY REALLY REALLY nice y label");
+    yTest2->setLabel("another much much longer nice y label");
   }
   COUNT = COUNT + 1;
 
@@ -191,7 +191,7 @@ QString PlotItem::topLabel() const {
 qreal PlotItem::marginWidth() const {
   ViewItem *viewItem = dynamic_cast<ViewItem*>(parentItem());
   if (viewItem && viewItem->layout()) {
-    return viewItem->layout()->plotMarginWidth();
+    return viewItem->layout()->plotMarginWidth(this);
   } else {
     return calculatedMarginWidth();
   }
@@ -201,7 +201,7 @@ qreal PlotItem::marginWidth() const {
 qreal PlotItem::marginHeight() const {
   ViewItem *viewItem = dynamic_cast<ViewItem*>(parentItem());
   if (viewItem && viewItem->layout()) {
-    return viewItem->layout()->plotMarginHeight();
+    return viewItem->layout()->plotMarginHeight(this);
   } else {
     return calculatedMarginHeight();
   }
