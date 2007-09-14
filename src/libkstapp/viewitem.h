@@ -126,6 +126,7 @@ protected:
   bool transformToRect(const QPolygonF &from, const QPolygonF &to);
   void rotateTowards(const QPointF &corner, const QPointF &point);
   QPointF lockOffset(const QPointF &offset, qreal ratio, bool oddCorner) const;
+  bool maybeReparent();
 
 protected Q_SLOTS:
   virtual void creationPolygonChanged(View::CreationEvent event);
@@ -143,9 +144,6 @@ protected:
 
 private Q_SLOTS:
   void viewMouseModeChanged(View::MouseMode oldMode);
-
-private:
-  bool maybeReparent();
 
 private:
   MouseMode _mouseMode;

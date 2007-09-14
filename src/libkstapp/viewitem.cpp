@@ -470,6 +470,7 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
     parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
     parentView()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
     parentView()->setMouseMode(View::Default);
+    maybeReparent();
     emit creationComplete();
     return;
   }
@@ -935,6 +936,72 @@ QPointF ViewItem::lockOffset(const QPointF &offset, qreal ratio, bool oddCorner)
 }
 
 
+bool ViewItem::maybeReparent() {
+  //First get a list of all items that collide with this one
+  QList<QGraphicsItem*> collisions = collidingItems(Qt::IntersectsItemShape);
+
+  bool topLevel = !parentItem();
+  QPointF scenePos = topLevel ? pos() : parentItem()->mapToScene(pos());
+
+#ifdef DEBUG_REPARENT
+  qDebug() << "maybeReparent" << this
+           << "topLevel:" << (topLevel ? "true" : "false")
+           << "scenePos:" << scenePos
+           << endl;
+#endif
+
+  //Doesn't collide then reparent to top-level
+  if (collisions.isEmpty() && !topLevel) {
+#ifdef DEBUG_REPARENT
+    qDebug() << "reparent to topLevel" << endl;
+#endif
+    setParentItem(0);
+    setPos(scenePos);
+    return true;
+  }
+
+  //Look for collisions that completely contain us
+  foreach (QGraphicsItem *item, collisions) {
+    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
+
+    if (!viewItem) /*bah*/
+      continue;
+
+    if (!viewItem->collidesWithItem(this, Qt::ContainsItemShape)) /*doesn't contain*/
+      continue;
+
+    if (parentItem() == viewItem) { /*already done*/
+#ifdef DEBUG_REPARENT
+      qDebug() << "already in containing parent" << endl;
+#endif
+      return false;
+    }
+
+    if (viewItem->layout()) /*don't crash existing layout*/
+      continue;
+
+#ifdef DEBUG_REPARENT
+    qDebug() << "reparent to" << viewItem << endl;
+#endif
+    setParentItem(viewItem);
+    setPos(viewItem->mapFromScene(scenePos));
+    return true;
+  }
+
+  //No suitable collisions then reparent to top-level
+  if (!topLevel) {
+#ifdef DEBUG_REPARENT
+    qDebug() << "reparent to topLevel" << endl;
+#endif
+    setParentItem(0);
+    setPos(scenePos);
+    return true;
+  }
+
+  return false;
+}
+
+
 void ViewItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
   if (parentView()->viewMode() == View::Data) {
     event->ignore();
@@ -1073,77 +1140,13 @@ void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
 }
 
 
-bool ViewItem::maybeReparent() {
-  //First get a list of all items that collide with this one
-  QList<QGraphicsItem*> collisions = collidingItems(Qt::IntersectsItemShape);
-
-  bool topLevel = !parentItem();
-  QPointF scenePos = topLevel ? pos() : parentItem()->mapToScene(pos());
-
-#ifdef DEBUG_REPARENT
-  qDebug() << "maybeReparent" << this
-           << "topLevel:" << (topLevel ? "true" : "false")
-           << "scenePos:" << scenePos
-           << endl;
-#endif
-
-  //Doesn't collide then reparent to top-level
-  if (collisions.isEmpty() && !topLevel) {
-#ifdef DEBUG_REPARENT
-    qDebug() << "reparent to topLevel" << endl;
-#endif
-    setParentItem(0);
-    setPos(scenePos);
-    return true;
-  }
-
-  //Look for collisions that completely contain us
-  foreach (QGraphicsItem *item, collisions) {
-    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
-
-    if (!viewItem) /*bah*/
-      continue;
-
-    if (!viewItem->collidesWithItem(this, Qt::ContainsItemShape)) /*doesn't contain*/
-      continue;
-
-    if (parentItem() == viewItem) { /*already done*/
-#ifdef DEBUG_REPARENT
-      qDebug() << "already in containing parent" << endl;
-#endif
-      return false;
-    }
-
-    if (viewItem->layout()) /*don't crash existing layout*/
-      continue;
-
-#ifdef DEBUG_REPARENT
-    qDebug() << "reparent to" << viewItem << endl;
-#endif
-    setParentItem(viewItem);
-    setPos(viewItem->mapFromScene(scenePos));
-    return true;
-  }
-
-  //No suitable collisions then reparent to top-level
-  if (!topLevel) {
-#ifdef DEBUG_REPARENT
-    qDebug() << "reparent to topLevel" << endl;
-#endif
-    setParentItem(0);
-    setPos(scenePos);
-    return true;
-  }
-
-  return false;
-}
-
 #ifndef QT_NO_DEBUG_STREAM
 QDebug operator<<(QDebug dbg, ViewItem *viewItem) {
     dbg.nospace() << viewItem->name();
     return dbg.space();
 }
 #endif
+
 
 ViewItemCommand::ViewItemCommand(const QString &text, bool addToStack, QUndoCommand *parent)
     : QUndoCommand(text, parent), _item(kstApp->mainWindow()->tabWidget()->currentView()->currentViewItem()) {
