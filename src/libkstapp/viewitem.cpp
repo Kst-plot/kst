@@ -1254,7 +1254,7 @@ void LayoutCommand::redo() {
 
   foreach (QGraphicsItem *item, list) {
     ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
-    if (!viewItem)
+    if (!viewItem || viewItem->parentItem() != _item)
       continue;
     viewItems.append(viewItem);
   }
@@ -1291,7 +1291,7 @@ void BreakLayoutCommand::undo() {  QList<ViewItem*> viewItems;
 
   foreach (QGraphicsItem *item, list) {
     ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
-    if (!viewItem)
+    if (!viewItem || viewItem->parentItem() != _item)
       continue;
     viewItems.append(viewItem);
   }
