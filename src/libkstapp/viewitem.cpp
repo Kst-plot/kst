@@ -31,7 +31,7 @@ static double RAD2DEG = 180.0 / ONE_PI;
 
 // #define DEBUG_GEOMETRY
 // #define DEBUG_REPARENT
-#define SELECT_BOUND 0
+#define INKSCAPE_MODE 0
 #define SUPPRESS_SCALE 1
 
 namespace Kst {
@@ -115,7 +115,7 @@ void ViewItem::setViewRect(qreal x, qreal y, qreal width, qreal height) {
 
 QSizeF ViewItem::sizeOfGrip() const {
   int base = 15;
-#if SELECT_BOUND
+#if INKSCAPE_MODE
   return mapFromScene(parentView()->mapToScene(QRect(0, 0, base, base)).boundingRect()).boundingRect().size();
 #else
   return parentView()->mapToScene(QRect(0, 0, base, base)).boundingRect().size();
@@ -135,7 +135,7 @@ QPainterPath ViewItem::topLeftGrip() const {
   else
     path.addEllipse(grip);
 
-#if SELECT_BOUND
+#if INKSCAPE_MODE
     return mapFromScene(path);
 #else
     return path;
@@ -155,7 +155,7 @@ QPainterPath ViewItem::topRightGrip() const {
   else
     path.addEllipse(grip);
 
-#if SELECT_BOUND
+#if INKSCAPE_MODE
     return mapFromScene(path);
 #else
     return path;
@@ -175,7 +175,7 @@ QPainterPath ViewItem::bottomRightGrip() const {
   else
     path.addEllipse(grip);
 
-#if SELECT_BOUND
+#if INKSCAPE_MODE
     return mapFromScene(path);
 #else
     return path;
@@ -195,7 +195,7 @@ QPainterPath ViewItem::bottomLeftGrip() const {
   else
     path.addEllipse(grip);
 
-#if SELECT_BOUND
+#if INKSCAPE_MODE
     return mapFromScene(path);
 #else
     return path;
@@ -214,7 +214,7 @@ QPainterPath ViewItem::topMidGrip() const {
   QPainterPath path;
   path.addRect(grip);
 
-#if SELECT_BOUND
+#if INKSCAPE_MODE
     return mapFromScene(path);
 #else
     return path;
@@ -233,7 +233,7 @@ QPainterPath ViewItem::rightMidGrip() const {
   QPainterPath path;
   path.addRect(grip);
 
-#if SELECT_BOUND
+#if INKSCAPE_MODE
     return mapFromScene(path);
 #else
     return path;
@@ -252,7 +252,7 @@ QPainterPath ViewItem::bottomMidGrip() const {
   QPainterPath path;
   path.addRect(grip);
 
-#if SELECT_BOUND
+#if INKSCAPE_MODE
     return mapFromScene(path);
 #else
     return path;
@@ -271,7 +271,7 @@ QPainterPath ViewItem::leftMidGrip() const {
   QPainterPath path;
   path.addRect(grip);
 
-#if SELECT_BOUND
+#if INKSCAPE_MODE
     return mapFromScene(path);
 #else
     return path;
@@ -308,7 +308,7 @@ void ViewItem::setActiveGrip(ActiveGrip grip) {
 
 
 QRectF ViewItem::selectBoundingRect() const {
-#if SELECT_BOUND
+#if INKSCAPE_MODE
   return mapToScene(itemShape()).boundingRect();
 #else
   return rect();
@@ -332,7 +332,7 @@ QRectF ViewItem::boundingRect() const {
   if (!isSelected() && !isHovering() || inCreation)
     return QGraphicsRectItem::boundingRect();
 
-#if SELECT_BOUND
+#if INKSCAPE_MODE
   QPolygonF gripBound = mapFromScene(gripBoundingRect());
 #else
   QPolygonF gripBound = gripBoundingRect();
@@ -347,7 +347,7 @@ QPainterPath ViewItem::shape() const {
 
   QPainterPath selectPath;
 
-#if SELECT_BOUND
+#if INKSCAPE_MODE
     selectPath.addPolygon(mapFromScene(selectBoundingRect()));
 #else
     selectPath.addPolygon(rect());
@@ -536,7 +536,7 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
   if (mouseMode() == ViewItem::Rotate) {
 
-#if SELECT_BOUND
+#if INKSCAPE_MODE
     rotateTowards(l, p);
 #else
     switch(_activeGrip) {
@@ -941,12 +941,13 @@ bool ViewItem::maybeReparent() {
   QList<QGraphicsItem*> collisions = collidingItems(Qt::IntersectsItemShape);
 
   bool topLevel = !parentItem();
-  QPointF scenePos = topLevel ? pos() : parentItem()->mapToScene(pos());
+  QPointF origin = mapToScene(QPointF(0,0));
 
 #ifdef DEBUG_REPARENT
   qDebug() << "maybeReparent" << this
            << "topLevel:" << (topLevel ? "true" : "false")
-           << "scenePos:" << scenePos
+           << "origin:" << origin
+
            << endl;
 #endif
 
@@ -954,9 +955,30 @@ bool ViewItem::maybeReparent() {
   if (collisions.isEmpty() && !topLevel) {
 #ifdef DEBUG_REPARENT
     qDebug() << "reparent to topLevel" << endl;
+
+    qDebug() << "before transform"
+             << "origin:" << mapToScene(QPointF(0,0))
+             << endl;
 #endif
+
+    /*bring the old parent's transform with us*/
+    setTransform(parentItem()->transform(), true);
+
+#ifdef DEBUG_REPARENT
+    qDebug() << "after transform"
+             << "origin:" << mapToScene(QPointF(0,0))
+             << endl;
+#endif
+
     setParentItem(0);
-    setPos(scenePos);
+    setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
+
+#ifdef DEBUG_REPARENT
+    qDebug() << "after new parent"
+             << "origin:" << mapToScene(QPointF(0,0))
+             << endl;
+#endif
+
     return true;
   }
 
@@ -982,9 +1004,33 @@ bool ViewItem::maybeReparent() {
 
 #ifdef DEBUG_REPARENT
     qDebug() << "reparent to" << viewItem << endl;
+
+    qDebug() << "before transform"
+             << "origin:" << mapToScene(QPointF(0,0))
+             << endl;
 #endif
+
+    if (!topLevel) /*bring the old parent's transform with us*/
+      setTransform(parentItem()->transform(), true);
+
+    /*cancel out the new parent's initial transform*/
+    setTransform(viewItem->transform().inverted(), true);
+
+#ifdef DEBUG_REPARENT
+    qDebug() << "after transform"
+             << "origin:" << mapToScene(QPointF(0,0))
+             << endl;
+#endif
+
     setParentItem(viewItem);
-    setPos(viewItem->mapFromScene(scenePos));
+    setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
+
+#ifdef DEBUG_REPARENT
+    qDebug() << "after new parent"
+             << "origin:" << mapToScene(QPointF(0,0))
+             << endl;
+#endif
+
     return true;
   }
 
@@ -992,9 +1038,30 @@ bool ViewItem::maybeReparent() {
   if (!topLevel) {
 #ifdef DEBUG_REPARENT
     qDebug() << "reparent to topLevel" << endl;
+
+    qDebug() << "before transform"
+             << "origin:" << mapToScene(QPointF(0,0))
+             << endl;
 #endif
+
+    /*bring the old parent's transform with us*/
+    setTransform(parentItem()->transform(), true);
+
+#ifdef DEBUG_REPARENT
+    qDebug() << "after transform"
+             << "origin:" << mapToScene(QPointF(0,0))
+             << endl;
+#endif
+
     setParentItem(0);
-    setPos(scenePos);
+    setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
+
+#ifdef DEBUG_REPARENT
+    qDebug() << "after new parent"
+             << "origin:" << mapToScene(QPointF(0,0))
+             << endl;
+#endif
+
     return true;
   }
 
