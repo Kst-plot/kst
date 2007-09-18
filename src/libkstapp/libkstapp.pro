@@ -47,12 +47,12 @@ SOURCES += \
     plotitem.cpp \
     plotrenderitem.cpp \
     qgetoptions.cpp \
-    vectorcurverenderitem.cpp \
     sessionmodel.cpp \
     stroketab.cpp \
     svgitem.cpp \
     tabwidget.cpp \
     vectoreditordialog.cpp \
+    vectorcurverenderitem.cpp \
     vectormodel.cpp \
     vectortablemodel.cpp \
     viewcommand.cpp \
@@ -92,13 +92,13 @@ HEADERS += \
     plotitem.h \
     plotrenderitem.h \
     qgetoptions.h \
-    vectorcurverenderitem.h \
     sessionmodel.h \
     svgitem.h \
     stroketab.h \
     tabwidget.h \
     vectoreditordialog.h \
     vectormodel.h \
+    vectorcurverenderitem.h \
     vectortablemodel.h \
     viewcommand.h \
     view.h \
@@ -110,9 +110,9 @@ HEADERS += \
 FORMS += \
     aboutdialog.ui \
     datamanager.ui \
+    debugdialog.ui \
     dialog.ui \
     dialogpage.ui \
-    debugdialog.ui \
     exportgraphicsdialog.ui \
     filltab.ui \
     layouttab.ui \

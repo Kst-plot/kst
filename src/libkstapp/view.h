@@ -80,12 +80,11 @@ public Q_SLOTS:
 
 protected:
   bool eventFilter(QObject *obj, QEvent *event);
-  void setVisible(bool visible);
   void resizeEvent(QResizeEvent *event);
   void drawBackground(QPainter *painter, const QRectF &rect);
 
-private Q_SLOTS:
-  void initializeSceneRect();
+private:
+  void updateChildGeometry(const QRectF &oldSceneRect);
 
 private:
   QUndoStack *_undoStack;

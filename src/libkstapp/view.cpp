@@ -166,12 +166,6 @@ bool View::eventFilter(QObject *obj, QEvent *event) {
 }
 
 
-void View::setVisible(bool visible) {
-  QGraphicsView::setVisible(visible);
-  QTimer::singleShot(0, this, SLOT(initializeSceneRect()));
-}
-
-
 void View::createLayout() {
   if (_layoutBoxItem && _layoutBoxItem->isVisible() && _layoutBoxItem->layout() )
     return;
@@ -181,26 +175,28 @@ void View::createLayout() {
 }
 
 
-void View::initializeSceneRect() {
-
-  //Maybe this should be the size of the desktop?
-  setSceneRect(QRectF(0, 0, 800, 600));
-
-  fitInView(sceneRect(), Qt::KeepAspectRatioByExpanding);
-
-  //See what I'm doing
-  QLinearGradient l(0,0,0,600);
-  l.setColorAt(0, Qt::white);
-  l.setColorAt(1, Qt::lightGray);
-  setBackgroundBrush(l);
-}
-
-
 void View::resizeEvent(QResizeEvent *event) {
   QGraphicsView::resizeEvent(event);
 
-  if (size() != sceneRect().size() && sceneRect().isValid()) {
-    fitInView(sceneRect(), Qt::KeepAspectRatioByExpanding);
+  if (size() != sceneRect().size()) {
+    QRectF oldSceneRect = sceneRect();
+
+    setSceneRect(QRectF(0.0, 0.0, width() - 4.0, height() - 4.0));
+
+    QLinearGradient l(0.0, 0.0, 0.0, height() - 4.0);
+    l.setColorAt(0.0, Qt::white);
+    l.setColorAt(1.0, Qt::lightGray);
+    setBackgroundBrush(l);
+
+    foreach (QGraphicsItem *item, items()) {
+      if (item->parentItem())
+        continue;
+
+      ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
+      Q_ASSERT(viewItem);
+
+      ViewItem::updateChildGeometry(viewItem, oldSceneRect, sceneRect());
+    }
   }
 }
 
@@ -238,6 +234,20 @@ void View::drawBackground(QPainter *painter, const QRectF &rect) {
 
   painter->restore();
 }
+
+
+void View::updateChildGeometry(const QRectF &oldSceneRect) {
+  foreach (QGraphicsItem *item, items()) {
+    if (item->parentItem())
+      continue;
+
+    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
+    Q_ASSERT(viewItem);
+
+    ViewItem::updateChildGeometry(viewItem, oldSceneRect, sceneRect());
+  }
+}
+
 
 }
 

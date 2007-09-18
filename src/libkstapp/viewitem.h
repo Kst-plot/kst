@@ -146,6 +146,10 @@ private Q_SLOTS:
   void viewMouseModeChanged(View::MouseMode oldMode);
 
 private:
+  static void updateChildGeometry(ViewItem *child, const QRectF &oldParentRect,
+                                                   const QRectF &newParentRect);
+
+private:
   MouseMode _mouseMode;
   bool _hovering;
   bool _lockAspectRatio;
@@ -157,6 +161,8 @@ private:
   QLineF _rotationLine;
   ActiveGrip _activeGrip;
   QTransform _rotationTransform;
+
+  friend class View;
 };
 
 #ifndef QT_NO_DEBUG_STREAM
