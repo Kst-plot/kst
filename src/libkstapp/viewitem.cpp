@@ -366,6 +366,7 @@ QPainterPath ViewItem::shape() const {
     return itemShape();
 
   QPainterPath selectPath;
+  selectPath.setFillRule(Qt::WindingFill);
 
 #if INKSCAPE_MODE
     selectPath.addPolygon(mapFromScene(selectBoundingRect()));
@@ -379,6 +380,13 @@ QPainterPath ViewItem::shape() const {
 
 
 void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+
+  Q_UNUSED(option);
+  Q_UNUSED(widget);
+
+  painter->setPen(pen());
+  painter->setBrush(brush());
+  paint(painter); //this is the overload that subclasses should use...
 
   painter->save();
   painter->setPen(Qt::DotLine);
@@ -412,13 +420,6 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   painter->drawText(rect().bottomRight(), "BR");
 #endif
   painter->restore();
-
-  Q_UNUSED(option);
-  Q_UNUSED(widget);
-
-  painter->setPen(pen());
-  painter->setBrush(brush());
-  paint(painter); //this is the overload that subclasses should use...
 
 //   QGraphicsRectItem::paint(painter, option, widget);
 }
@@ -1106,10 +1107,15 @@ void ViewItem::updateChildGeometry(ViewItem *child, const QRectF &oldParentRect,
   //do not extend outside of parent.
 
   //FIXME is the child rotated with respect to the parent is the real question...
-  if (child->transform().isRotating()) {
+  if (child->transform().isRotating() /*|| child->lockAspectRatio()*/) {
     dx = qMin(dx, dy);
     dy = dx;
   }
+
+//   if (child->lockAspectRatio()) {
+//     dx = qMax(dx, dy);
+//     dy = dx;
+//   }
 
   QRectF rect = child->rect();
 
