@@ -1101,11 +1101,15 @@ void ViewItem::updateChildGeometry(ViewItem *child, const QRectF &oldParentRect,
   bool bottomChanged = oldParentRect.bottom() != newParentRect.bottom();
   bool rightChanged = oldParentRect.right() != newParentRect.right();
 
-#if 0
-  //Lock aspect ratio for rotating objects...
-  if (viewItem->transform().isRotating()) {
+  //Lock aspect ratio for rotating objects.
+  //Always pick the smaller resize factor so the bounds of the rotated object
+  //do not extend outside of parent.
+
+  //FIXME is the child rotated with respect to the parent is the real question...
+  if (child->transform().isRotating()) {
+    dx = qMin(dx, dy);
+    dy = dx;
   }
-#endif
 
   QRectF rect = child->rect();
 
