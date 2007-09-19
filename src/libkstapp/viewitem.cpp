@@ -338,9 +338,9 @@ QRectF ViewItem::selectBoundingRect() const {
 
 QRectF ViewItem::gripBoundingRect() const {
   QRectF bound = selectBoundingRect();
-  bound.setTopLeft(bound.topLeft() - QPointF(sizeOfGrip().width(), sizeOfGrip().height()));
-  bound.setWidth(bound.width() + sizeOfGrip().width());
-  bound.setHeight(bound.height() + sizeOfGrip().height());
+  bound.setTopLeft(bound.topLeft() - QPointF(sizeOfGrip().width() / 2.0, sizeOfGrip().height() / 2.0));
+  bound.setWidth(bound.width() + sizeOfGrip().width() / 2.0);
+  bound.setHeight(bound.height() + sizeOfGrip().height() / 2.0);
   return bound;
 }
 
