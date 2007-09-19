@@ -73,6 +73,7 @@ KstRelationList PlotRenderItem::relationList() const {
 void PlotRenderItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
   Q_UNUSED(option);
   Q_UNUSED(widget);
+  painter->drawRect(rect());
   painter->fillRect(rect(), Qt::white);
   paint(painter);
 }

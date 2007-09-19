@@ -34,6 +34,7 @@ PlotItem::PlotItem(View *parent)
   : ViewItem(parent), _calculatedMarginWidth(0), _calculatedMarginHeight(0) {
 
   setName("PlotItem");
+  setBrush(Qt::white);
 
   // FIXME fake data for testing rendering
   KstVectorPtr xTest = new KstSVector(0.0, 100.0, 10000, KstObjectTag::fromString("X vector"));
@@ -83,7 +84,10 @@ void CreatePlotCommand::createItem() {
 
 
 void PlotItem::paint(QPainter *painter) {
+  painter->save();
+  painter->setPen(Qt::NoPen);
   painter->drawRect(rect());
+  painter->restore();
 
   painter->save();
   painter->translate(QPointF(rect().x(), rect().y()));

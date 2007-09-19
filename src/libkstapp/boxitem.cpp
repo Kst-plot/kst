@@ -21,6 +21,7 @@ namespace Kst {
 BoxItem::BoxItem(View *parent)
     : ViewItem(parent) {
   setName("BoxItem");
+  setBrush(Qt::white);
 }
 
 

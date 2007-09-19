@@ -390,6 +390,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
   painter->save();
   painter->setPen(Qt::DotLine);
+  painter->setBrush(Qt::NoBrush);
   if (isSelected() || isHovering() && parentView()->mouseMode() != View::Create) {
     painter->drawPath(shape());
     if (_mouseMode == Resize)
