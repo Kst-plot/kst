@@ -32,17 +32,19 @@ static double RAD2DEG = 180.0 / ONE_PI;
 // #define DEBUG_GEOMETRY
 // #define DEBUG_REPARENT
 #define INKSCAPE_MODE 0
-#define SUPPRESS_SCALE 1
 
 namespace Kst {
 
 ViewItem::ViewItem(View *parent)
   : QObject(parent),
-    _mouseMode(Default),
+    _gripMode(Move),
+    _allowedGripModes(Move | Resize | Rotate /*| Scale*/),
     _hovering(false),
     _lockAspectRatio(false),
     _layout(0),
-    _activeGrip(NoGrip) {
+    _activeGrip(NoGrip),
+    _allowedGrips(TopLeftGrip | TopRightGrip | BottomRightGrip | BottomLeftGrip |
+                  TopMidGrip | RightMidGrip | BottomMidGrip | LeftMidGrip) {
 
   setName("ViewItem");
   setAcceptsHoverEvents(true);
@@ -61,18 +63,29 @@ View *ViewItem::parentView() const {
 }
 
 
-ViewItem::MouseMode ViewItem::mouseMode() const {
-  return _mouseMode;
+ViewItem::GripMode ViewItem::gripMode() const {
+  return _gripMode;
 }
 
 
-void ViewItem::setMouseMode(MouseMode mode) {
-#if SUPPRESS_SCALE
-  if (mode == Scale)
-    return;
-#endif
-  _mouseMode = mode;
+void ViewItem::setGripMode(GripMode mode) {
+  _gripMode = mode;
   update();
+}
+
+
+ViewItem::GripModes ViewItem::allowedGripModes() const {
+  return _allowedGripModes;
+}
+
+
+void ViewItem::setAllowedGripModes(GripModes modes) {
+  _allowedGripModes = modes;
+}
+
+
+bool ViewItem::isAllowed(GripMode mode) const {
+  return _allowedGripModes & mode;
 }
 
 
@@ -134,6 +147,9 @@ void ViewItem::setViewRect(qreal x, qreal y, qreal width, qreal height) {
 
 
 QSizeF ViewItem::sizeOfGrip() const {
+  if (!parentView())
+    return QSizeF();
+
   int base = 15;
 #if INKSCAPE_MODE
   return mapFromScene(parentView()->mapToScene(QRect(0, 0, base, base)).boundingRect()).boundingRect().size();
@@ -144,13 +160,13 @@ QSizeF ViewItem::sizeOfGrip() const {
 
 
 QPainterPath ViewItem::topLeftGrip() const {
-  if (_mouseMode == Default || _mouseMode == Move)
+  if (_gripMode == Move)
     return QPainterPath();
 
   QRectF bound = gripBoundingRect();
   QRectF grip = QRectF(bound.topLeft(), sizeOfGrip());
   QPainterPath path;
-  if (_mouseMode == Resize || _mouseMode == Scale)
+  if (_gripMode == Resize || _gripMode == Scale)
     path.addRect(grip);
   else
     path.addEllipse(grip);
@@ -164,13 +180,13 @@ QPainterPath ViewItem::topLeftGrip() const {
 
 
 QPainterPath ViewItem::topRightGrip() const {
-  if (_mouseMode == Default || _mouseMode == Move)
+  if (_gripMode == Move)
     return QPainterPath();
 
   QRectF bound = gripBoundingRect();
   QRectF grip = QRectF(bound.topRight() - QPointF(sizeOfGrip().width(), 0), sizeOfGrip());
   QPainterPath path;
-  if (_mouseMode == Resize || _mouseMode == Scale)
+  if (_gripMode == Resize || _gripMode == Scale)
     path.addRect(grip);
   else
     path.addEllipse(grip);
@@ -184,13 +200,13 @@ QPainterPath ViewItem::topRightGrip() const {
 
 
 QPainterPath ViewItem::bottomRightGrip() const {
-  if (_mouseMode == Default || _mouseMode == Move)
+  if (_gripMode == Move)
     return QPainterPath();
 
   QRectF bound = gripBoundingRect();
   QRectF grip = QRectF(bound.bottomRight() - QPointF(sizeOfGrip().width(), sizeOfGrip().height()), sizeOfGrip());
   QPainterPath path;
-  if (_mouseMode == Resize || _mouseMode == Scale)
+  if (_gripMode == Resize || _gripMode == Scale)
     path.addRect(grip);
   else
     path.addEllipse(grip);
@@ -204,13 +220,13 @@ QPainterPath ViewItem::bottomRightGrip() const {
 
 
 QPainterPath ViewItem::bottomLeftGrip() const {
-  if (_mouseMode == Default || _mouseMode == Move)
+  if (_gripMode == Move)
     return QPainterPath();
 
   QRectF bound = gripBoundingRect();
   QRectF grip = QRectF(bound.bottomLeft() - QPointF(0, sizeOfGrip().height()), sizeOfGrip());
   QPainterPath path;
-  if (_mouseMode == Resize || _mouseMode == Scale)
+  if (_gripMode == Resize || _gripMode == Scale)
     path.addRect(grip);
   else
     path.addEllipse(grip);
@@ -224,7 +240,7 @@ QPainterPath ViewItem::bottomLeftGrip() const {
 
 
 QPainterPath ViewItem::topMidGrip() const {
-  if (_mouseMode == Default || _mouseMode == Move || _mouseMode == Rotate)
+  if (_gripMode == Move || _gripMode == Rotate)
     return QPainterPath();
 
   QRectF bound = gripBoundingRect();
@@ -243,7 +259,7 @@ QPainterPath ViewItem::topMidGrip() const {
 
 
 QPainterPath ViewItem::rightMidGrip() const {
-  if (_mouseMode == Default || _mouseMode == Move || _mouseMode == Rotate)
+  if (_gripMode == Move || _gripMode == Rotate)
     return QPainterPath();
 
   QRectF bound = gripBoundingRect();
@@ -262,7 +278,7 @@ QPainterPath ViewItem::rightMidGrip() const {
 
 
 QPainterPath ViewItem::bottomMidGrip() const {
-  if (_mouseMode == Default || _mouseMode == Move || _mouseMode == Rotate)
+  if (_gripMode == Move || _gripMode == Rotate)
     return QPainterPath();
 
   QRectF bound = gripBoundingRect();
@@ -281,7 +297,7 @@ QPainterPath ViewItem::bottomMidGrip() const {
 
 
 QPainterPath ViewItem::leftMidGrip() const {
-  if (_mouseMode == Default || _mouseMode == Move || _mouseMode == Rotate)
+  if (_gripMode == Move || _gripMode == Rotate)
     return QPainterPath();
 
   QRectF bound = gripBoundingRect();
@@ -301,7 +317,7 @@ QPainterPath ViewItem::leftMidGrip() const {
 
 QPainterPath ViewItem::grips() const {
 
-  if (_mouseMode == Default || _mouseMode == Move)
+  if (_gripMode == Move)
     return QPainterPath();
 
   QPainterPath grips;
@@ -324,6 +340,21 @@ ViewItem::ActiveGrip ViewItem::activeGrip() const {
 
 void ViewItem::setActiveGrip(ActiveGrip grip) {
   _activeGrip = grip;
+}
+
+
+ViewItem::ActiveGrips ViewItem::allowedGrips() const {
+  return _allowedGrips;
+}
+
+
+void ViewItem::setAllowedGrips(ActiveGrips grips) {
+  _allowedGrips = grips;
+}
+
+
+bool ViewItem::isAllowed(ActiveGrip grip) const {
+  return _allowedGrips & grip;
 }
 
 
@@ -393,11 +424,11 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   painter->setBrush(Qt::NoBrush);
   if (isSelected() || isHovering() && parentView()->mouseMode() != View::Create) {
     painter->drawPath(shape());
-    if (_mouseMode == Resize)
+    if (_gripMode == Resize)
       painter->fillPath(grips(), Qt::blue);
-    else if (_mouseMode == Scale)
+    else if (_gripMode == Scale)
       painter->fillPath(grips(), Qt::black);
-    else if (_mouseMode == Rotate)
+    else if (_gripMode == Rotate)
       painter->fillPath(grips(), Qt::red);
   }
 
@@ -532,18 +563,16 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   }
 
   if (parentView()->mouseMode() == View::Default) {
-    if (mouseMode() == ViewItem::Default ||
-        mouseMode() == ViewItem::Move ||
-        activeGrip() == NoGrip) {
+    if (gripMode() == ViewItem::Move || activeGrip() == NoGrip) {
       parentView()->setMouseMode(View::Move);
       parentView()->undoStack()->beginMacro(tr("Move"));
-    } else if (mouseMode() == ViewItem::Resize) {
+    } else if (gripMode() == ViewItem::Resize) {
       parentView()->setMouseMode(View::Resize);
       parentView()->undoStack()->beginMacro(tr("Resize"));
-    } else if (mouseMode() == ViewItem::Scale) {
+    } else if (gripMode() == ViewItem::Scale) {
       parentView()->setMouseMode(View::Scale);
       parentView()->undoStack()->beginMacro(tr("Scale"));
-    } else if (mouseMode() == ViewItem::Rotate) {
+    } else if (gripMode() == ViewItem::Rotate) {
       parentView()->setMouseMode(View::Rotate);
       parentView()->undoStack()->beginMacro(tr("Rotate"));
     }
@@ -556,7 +585,7 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   QPointF l = event->lastPos();
   QPointF s = event->scenePos();
 
-  if (mouseMode() == ViewItem::Rotate) {
+  if (gripMode() == ViewItem::Rotate) {
 
 #if INKSCAPE_MODE
     rotateTowards(l, p);
@@ -583,7 +612,7 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     }
 #endif
 
-  } else if (mouseMode() == ViewItem::Resize) {
+  } else if (gripMode() == ViewItem::Resize) {
 
     switch(_activeGrip) {
     case TopLeftGrip:
@@ -606,7 +635,7 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
       break;
     }
 
-  } else if (mouseMode() == ViewItem::Scale) {
+  } else if (gripMode() == ViewItem::Scale) {
 
     switch(_activeGrip) {
     case TopLeftGrip:
@@ -1219,27 +1248,68 @@ void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   }
 
   QPointF p = event->pos();
-  if (topLeftGrip().contains(p)) {
+  if (isAllowed(TopLeftGrip) && topLeftGrip().contains(p)) {
     setActiveGrip(TopLeftGrip);
-  } else if (topRightGrip().contains(p)) {
+  } else if (isAllowed(TopRightGrip) && topRightGrip().contains(p)) {
     setActiveGrip(TopRightGrip);
-  } else if (bottomRightGrip().contains(p)) {
+  } else if (isAllowed(BottomRightGrip) && bottomRightGrip().contains(p)) {
     setActiveGrip(BottomRightGrip);
-  } else if (bottomLeftGrip().contains(p)) {
+  } else if (isAllowed(BottomLeftGrip) && bottomLeftGrip().contains(p)) {
     setActiveGrip(BottomLeftGrip);
-  } else if (topMidGrip().contains(p)) {
+  } else if (isAllowed(TopMidGrip) && topMidGrip().contains(p)) {
     setActiveGrip(TopMidGrip);
-  } else if (rightMidGrip().contains(p)) {
+  } else if (isAllowed(RightMidGrip) && rightMidGrip().contains(p)) {
     setActiveGrip(RightMidGrip);
-  } else if (bottomMidGrip().contains(p)) {
+  } else if (isAllowed(BottomMidGrip) && bottomMidGrip().contains(p)) {
     setActiveGrip(BottomMidGrip);
-  } else if (leftMidGrip().contains(p)) {
+  } else if (isAllowed(LeftMidGrip) && leftMidGrip().contains(p)) {
     setActiveGrip(LeftMidGrip);
   } else {
     setActiveGrip(NoGrip);
   }
 
+  if (!grips().contains(event->pos()) && event->button() & Qt::LeftButton) {
+    setGripMode(nextGripMode(_gripMode));
+  }
+
   QGraphicsRectItem::mousePressEvent(event);
+}
+
+
+ViewItem::GripMode ViewItem::nextGripMode(GripMode currentMode) const {
+  if (!(_allowedGripModes & (Resize | Rotate | Scale)))
+    return currentMode;
+
+  switch (currentMode) {
+  case Move:
+    if (isAllowed(Resize))
+      return Resize;
+    else
+      return nextGripMode(Resize);
+    break;
+  case Resize:
+    if (isAllowed(Scale))
+      return Scale;
+    else
+      return nextGripMode(Scale);
+    break;
+  case Scale:
+    if (isAllowed(Rotate))
+      return Rotate;
+    else
+      return nextGripMode(Rotate);
+    break;
+  case Rotate:
+    if (isAllowed(Resize))
+      return Resize;
+    else
+      return nextGripMode(Resize);
+    break;
+  default:
+    break;
+  }
+
+  return currentMode;
 }
 
 
@@ -1253,26 +1323,6 @@ void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   if (parentView()->mouseMode() != View::Default) {
     parentView()->setMouseMode(View::Default);
     parentView()->undoStack()->endMacro();
-  } else if (!grips().contains(event->pos()) && event->button() & Qt::LeftButton) {
-    switch (_mouseMode) {
-    case Default:
-    case Move:
-    case Rotate:
-      setMouseMode(Resize);
-      break;
-    case Resize:
-#if SUPPRESS_SCALE
-      setMouseMode(Rotate);
-#else
-      setMouseMode(Scale);
-#endif
-      break;
-    case Scale:
-      setMouseMode(Rotate);
-      break;
-    default:
-      break;
-    }
   }
 
   QGraphicsRectItem::mouseReleaseEvent(event);
@@ -1303,7 +1353,7 @@ QVariant ViewItem::itemChange(GraphicsItemChange change, const QVariant &value) 
   if (change == ItemSelectedChange) {
     bool selected = value.toBool();
     if (!selected) {
-      setMouseMode(ViewItem::Default);
+      setGripMode(ViewItem::Move);
       update();
     }
   }

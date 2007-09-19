@@ -28,12 +28,26 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
 {
   Q_OBJECT
 public:
-  enum MouseMode { Default, Move, Resize, Scale, Rotate };
+  enum GripMode {
+    Move    = 1,
+    Resize  = 2,
+    Scale   = 4,
+    Rotate  = 8
+  };
+  Q_DECLARE_FLAGS(GripModes, GripMode)
 
   enum ActiveGrip {
-    NoGrip, TopLeftGrip, TopRightGrip, BottomRightGrip, BottomLeftGrip,
-    TopMidGrip, RightMidGrip, BottomMidGrip, LeftMidGrip
+    NoGrip          = 1,
+    TopLeftGrip     = 2,
+    TopRightGrip    = 4,
+    BottomRightGrip = 8,
+    BottomLeftGrip  = 16,
+    TopMidGrip      = 32,
+    RightMidGrip    = 64,
+    BottomMidGrip   = 128,
+    LeftMidGrip     = 256
   };
+  Q_DECLARE_FLAGS(ActiveGrips, ActiveGrip)
 
   ViewItem(View *parent);
   virtual ~ViewItem();
@@ -43,8 +57,12 @@ public:
 
   View *parentView() const;
 
-  MouseMode mouseMode() const;
-  void setMouseMode(MouseMode mode);
+  GripMode gripMode() const;
+  void setGripMode(GripMode mode);
+
+  GripModes allowedGripModes() const;
+  void setAllowedGripModes(GripModes modes);
+  bool isAllowed(GripMode mode) const;
 
   bool lockAspectRatio() const { return _lockAspectRatio; }
   void setLockAspectRatio(bool lockAspectRatio) { _lockAspectRatio = lockAspectRatio; }
@@ -64,6 +82,10 @@ public:
 
   ActiveGrip activeGrip() const;
   void setActiveGrip(ActiveGrip grip);
+
+  ActiveGrips allowedGrips() const;
+  void setAllowedGrips(ActiveGrips grips);
+  bool isAllowed(ActiveGrip grip) const;
 
   virtual QSizeF sizeOfGrip() const;
   virtual QPainterPath grips() const;
@@ -127,6 +149,7 @@ protected:
   void rotateTowards(const QPointF &corner, const QPointF &point);
   QPointF lockOffset(const QPointF &offset, qreal ratio, bool oddCorner) const;
   bool maybeReparent();
+  GripMode nextGripMode(GripMode currentMode) const;
 
 protected Q_SLOTS:
   virtual void creationPolygonChanged(View::CreationEvent event);
@@ -150,7 +173,8 @@ private:
                                                    const QRectF &newParentRect);
 
 private:
-  MouseMode _mouseMode;
+  GripMode _gripMode;
+  GripModes _allowedGripModes;
   bool _hovering;
   bool _lockAspectRatio;
   ViewGridLayout *_layout;
@@ -160,10 +184,14 @@ private:
   QLineF _normalLine;
   QLineF _rotationLine;
   ActiveGrip _activeGrip;
+  ActiveGrips _allowedGrips;
   QTransform _rotationTransform;
 
   friend class View;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(ViewItem::GripModes)
+Q_DECLARE_OPERATORS_FOR_FLAGS(ViewItem::ActiveGrips)
 
 #ifndef QT_NO_DEBUG_STREAM
 Q_CORE_EXPORT QDebug operator<<(QDebug, ViewItem*);

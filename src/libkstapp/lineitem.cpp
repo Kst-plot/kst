@@ -22,6 +22,7 @@ namespace Kst {
 LineItem::LineItem(View *parent)
   : ViewItem(parent) {
   setName("LineItem");
+  setAllowedGrips(RightMidGrip | LeftMidGrip);
 }
 
 
@@ -54,14 +55,14 @@ void LineItem::setLine(const QLineF &line_) {
 
 
 QPainterPath LineItem::leftMidGrip() const {
-  if (mouseMode() == Default || mouseMode() == Move)
+  if (gripMode() == Move)
     return QPainterPath();
 
   QRectF bound = gripBoundingRect();
   QRectF grip = QRectF(bound.topLeft(), sizeOfGrip());
   grip.moveCenter(QPointF(grip.center().x(), bound.center().y()));
   QPainterPath path;
-  if (mouseMode() == Resize || mouseMode() == Scale)
+  if (gripMode() == Resize || gripMode() == Scale)
     path.addRect(grip);
   else
     path.addEllipse(grip);
@@ -71,14 +72,14 @@ QPainterPath LineItem::leftMidGrip() const {
 
 
 QPainterPath LineItem::rightMidGrip() const {
-  if (mouseMode() == Default || mouseMode() == Move)
+  if (gripMode() == Move)
     return QPainterPath();
 
   QRectF bound = gripBoundingRect();
   QRectF grip = QRectF(bound.topRight() - QPointF(sizeOfGrip().width(), 0), sizeOfGrip());
   grip.moveCenter(QPointF(grip.center().x(), bound.center().y()));
   QPainterPath path;
-  if (mouseMode() == Resize || mouseMode() == Scale)
+  if (gripMode() == Resize || gripMode() == Scale)
     path.addRect(grip);
   else
     path.addEllipse(grip);
@@ -88,7 +89,7 @@ QPainterPath LineItem::rightMidGrip() const {
 
 
 QPainterPath LineItem::grips() const {
-  if (mouseMode() == Default || mouseMode() == Move)
+  if (gripMode() == Move)
     return QPainterPath();
 
   QPainterPath grips;
@@ -148,21 +149,21 @@ void LineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
 void LineItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
-  if (parentView()->viewMode() == View::Data) {
-    event->ignore();
-    return;
-  }
+//   if (parentView()->viewMode() == View::Data) {
+//     event->ignore();
+//     return;
+//   }
+// 
+//   QPointF p = event->pos();
+//   if (leftMidGrip().contains(p)) {
+//     setActiveGrip(LeftMidGrip);
+//   } else if (rightMidGrip().contains(p)) {
+//     setActiveGrip(RightMidGrip);
+//   } else {
+//     setActiveGrip(NoGrip);
+//   }
 
-  QPointF p = event->pos();
-  if (leftMidGrip().contains(p)) {
-    setActiveGrip(LeftMidGrip);
-  } else if (rightMidGrip().contains(p)) {
-    setActiveGrip(RightMidGrip);
-  } else {
-    setActiveGrip(NoGrip);
-  }
-
-  QGraphicsRectItem::mousePressEvent(event);
+  ViewItem::mousePressEvent(event);
 }
 
 
