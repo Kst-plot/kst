@@ -26,14 +26,14 @@ namespace Kst {
 class KST_EXPORT Application : public QApplication
 {
   Q_OBJECT
-public:
-  Application(int &argc, char **argv);
-  virtual ~Application();
+  public:
+    Application(int &argc, char **argv);
+    virtual ~Application();
 
-  MainWindow *mainWindow() const;
+    MainWindow *mainWindow() const;
 
-private:
-  QPointer<MainWindow> _mainWindow;
+  private:
+    QPointer<MainWindow> _mainWindow;
 };
 
 }

@@ -11,6 +11,7 @@
 
 #include "view.h"
 #include "viewitem.h"
+#include "layoutboxitem.h"
 #include "mainwindow.h"
 #include "application.h"
 #include "applicationsettings.h"
@@ -30,7 +31,6 @@ namespace Kst {
 
 View::View()
   : QGraphicsView(kstApp->mainWindow()),
-    _currentViewItem(0),
     _viewMode(Layout),
     _mouseMode(Default),
     _layoutBoxItem(0),
@@ -56,11 +56,6 @@ View::~View() {
 
 QUndoStack *View::undoStack() const {
   return _undoStack;
-}
-
-
-Kst::ViewItem *View::currentViewItem() const {
-  return _currentViewItem;
 }
 
 
@@ -170,8 +165,7 @@ void View::createLayout() {
   if (_layoutBoxItem && _layoutBoxItem->isVisible() && _layoutBoxItem->layout() )
     return;
 
-  CreateLayoutBoxCommand *box = new CreateLayoutBoxCommand(this);
-  box->redo();
+  new LayoutBoxItem(this);
 }
 
 

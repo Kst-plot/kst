@@ -542,11 +542,13 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   QAction *lowerAction = menu.addAction(tr("Lower"));
   connect(lowerAction, SIGNAL(triggered()), this, SLOT(lower()));
 
-  QAction *layoutAction = menu.addAction(tr("Create Layout"));
+  QAction *layoutAction = menu.addAction(tr("Create layout"));
   connect(layoutAction, SIGNAL(triggered()), this, SLOT(createLayout()));
+  layoutAction->setEnabled(!layout());
 
-  QAction *breakLayoutAction = menu.addAction(tr("Break Layout"));
+  QAction *breakLayoutAction = menu.addAction(tr("Break layout"));
   connect(breakLayoutAction, SIGNAL(triggered()), this, SLOT(breakLayout()));
+  breakLayoutAction->setEnabled(layout());
 
   QAction *removeAction = menu.addAction(tr("Remove"));
   connect(removeAction, SIGNAL(triggered()), this, SLOT(remove()));
@@ -1399,13 +1401,6 @@ QDebug operator<<(QDebug dbg, ViewItem *viewItem) {
 #endif
 
 
-ViewItemCommand::ViewItemCommand(const QString &text, bool addToStack, QUndoCommand *parent)
-    : QUndoCommand(text, parent), _item(kstApp->mainWindow()->tabWidget()->currentView()->currentViewItem()) {
-  if (addToStack)
-    _item->parentView()->undoStack()->push(this);
-}
-
-
 ViewItemCommand::ViewItemCommand(ViewItem *item, const QString &text, bool addToStack, QUndoCommand *parent)
     : QUndoCommand(text, parent), _item(item) {
   if (addToStack)
@@ -1467,31 +1462,12 @@ void CreateCommand::creationComplete() {
 }
 
 
-void CreateLayoutBoxCommand::createItem() {
-  _item = new ViewItem(_view);
-  _view->scene()->addItem(_item);
-  _item->setZValue(1);
-  _item->setPos(_view->sceneRect().topLeft());
-  _item->setViewRect(_view->sceneRect());
-
-  QList<QGraphicsItem*> list = _view->items();
-  foreach (QGraphicsItem *item, list) {
-    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
-    if (!viewItem || viewItem->parentItem() || !viewItem->isVisible() || viewItem == _item)
-      continue;
-
-    viewItem->setParentItem(_item);
-  }
-  _item->createLayout();
-  _view->setLayoutBoxItem(_item);
-}
-
-
 void LayoutCommand::undo() {
   ViewGridLayout *layout = _item->layout();
   if (!layout)
     return;
 
+  layout->reset();
   _item->setLayout(0);
   delete layout;
 }

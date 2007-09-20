@@ -14,6 +14,9 @@
 
 #include <QObject>
 #include <QSizeF>
+#include <QRectF>
+#include <QPointF>
+#include <QTransform>
 #include <QHash>
 
 namespace Kst {
@@ -45,6 +48,8 @@ class ViewGridLayout : public QObject
     qreal plotMarginWidth(const PlotItem *plotItem) const;
     qreal plotMarginHeight(const PlotItem *plotItem) const;
 
+    void reset();
+
   public Q_SLOTS:
     void update();
 
@@ -58,6 +63,9 @@ class ViewGridLayout : public QObject
       int column;
       int rowSpan;
       int columnSpan;
+      QTransform transform;
+      QPointF position;
+      QRectF rect;
     };
 
     int _rowCount;

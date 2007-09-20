@@ -38,6 +38,7 @@ SOURCES += \
     gridlayouthelper.cpp \
     labelitem.cpp \
     labelrenderer.cpp \
+    layoutboxitem.cpp \
     layouttab.cpp \
     lineitem.cpp \
     mainwindow.cpp \
@@ -83,6 +84,7 @@ HEADERS += \
     gridlayouthelper.h \
     labelitem.h \
     labelrenderer.h \
+    layoutboxitem.h \
     layouttab.h \
     lineitem.h \
     mainwindow.h \

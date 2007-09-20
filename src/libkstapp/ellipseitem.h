@@ -19,21 +19,21 @@ namespace Kst {
 class EllipseItem : public ViewItem
 {
   Q_OBJECT
-public:
-  EllipseItem(View *parent);
-  virtual ~EllipseItem();
+  public:
+    EllipseItem(View *parent);
+    virtual ~EllipseItem();
 
-  virtual QPainterPath itemShape() const;
-  virtual void paint(QPainter *painter);
+    virtual QPainterPath itemShape() const;
+    virtual void paint(QPainter *painter);
 };
 
 class KST_EXPORT CreateEllipseCommand : public CreateCommand
 {
-public:
-  CreateEllipseCommand() : CreateCommand(QObject::tr("Create Ellipse")) {}
-  CreateEllipseCommand(View *view) : CreateCommand(view, QObject::tr("Create Ellipse")) {}
-  virtual ~CreateEllipseCommand() {}
-  virtual void createItem();
+  public:
+    CreateEllipseCommand() : CreateCommand(QObject::tr("Create Ellipse")) {}
+    CreateEllipseCommand(View *view) : CreateCommand(view, QObject::tr("Create Ellipse")) {}
+    virtual ~CreateEllipseCommand() {}
+    virtual void createItem();
 };
 
 }

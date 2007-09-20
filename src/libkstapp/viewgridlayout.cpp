@@ -54,6 +54,9 @@ void ViewGridLayout::addViewItem(ViewItem *viewItem, int row, int column, int ro
   item.column = column;
   item.rowSpan = rowSpan;
   item.columnSpan = columnSpan;
+  item.transform = viewItem->transform();
+  item.position = viewItem->pos();
+  item.rect = viewItem->rect();
 
   //Update the row/column counts...
   int maxRow = row + rowSpan;
@@ -96,6 +99,15 @@ qreal ViewGridLayout::plotMarginHeight(const PlotItem *plotItem) const {
   }
 
   return 0.0;
+}
+
+
+void ViewGridLayout::reset() {
+  foreach (LayoutItem item, _items) {
+    item.viewItem->setTransform(item.transform);
+    item.viewItem->setPos(item.position);
+    item.viewItem->setViewRect(item.rect);
+  }
 }
 
 

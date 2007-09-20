@@ -19,12 +19,12 @@ namespace Kst {
 
 class BoxItem : public ViewItem
 {
-    Q_OBJECT
+  Q_OBJECT
   public:
     BoxItem(View *parent);
     virtual ~BoxItem();
 
-    void paint(QPainter *painter);
+    virtual void paint(QPainter *painter);
 };
 
 class KST_EXPORT CreateBoxCommand : public CreateCommand

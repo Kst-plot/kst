@@ -20,42 +20,42 @@ namespace Kst {
 class LineItem : public ViewItem
 {
   Q_OBJECT
-public:
-  LineItem(View *parent);
-  virtual ~LineItem();
+  public:
+    LineItem(View *parent);
+    virtual ~LineItem();
 
-  QLineF line() const;
-  void setLine(const QLineF &line);
+    QLineF line() const;
+    void setLine(const QLineF &line);
 
-  virtual void paint(QPainter *painter);
+    virtual void paint(QPainter *painter);
 
-  virtual QPainterPath grips() const;
+    virtual QPainterPath grips() const;
 
-  virtual QPointF centerOfRotation() const;
+    virtual QPointF centerOfRotation() const;
 
-protected Q_SLOTS:
-  virtual void creationPolygonChanged(View::CreationEvent event);
+  protected Q_SLOTS:
+    virtual void creationPolygonChanged(View::CreationEvent event);
 
-protected:
-  virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-  virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
-  virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-  virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+  protected:
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
-  virtual QPainterPath leftMidGrip() const;
-  virtual QPainterPath rightMidGrip() const;
+    virtual QPainterPath leftMidGrip() const;
+    virtual QPainterPath rightMidGrip() const;
 
-private:
-  QLineF _line;
+  private:
+    QLineF _line;
 };
 
 class KST_EXPORT CreateLineCommand : public CreateCommand
 {
-public:
-  CreateLineCommand() : CreateCommand(QObject::tr("Create Line")) {}
-  CreateLineCommand(View *view) : CreateCommand(view, QObject::tr("Create Line")) {}
-  virtual ~CreateLineCommand() {}
-  virtual void createItem();
+  public:
+    CreateLineCommand() : CreateCommand(QObject::tr("Create Line")) {}
+    CreateLineCommand(View *view) : CreateCommand(view, QObject::tr("Create Line")) {}
+    virtual ~CreateLineCommand() {}
+    virtual void createItem();
 };
 
 class LineItemFactory : public GraphicsFactory {

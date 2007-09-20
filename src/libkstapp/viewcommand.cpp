@@ -20,15 +20,17 @@
 namespace Kst {
 ViewCommand::ViewCommand(const QString &text, bool addToStack, QUndoCommand *parent)
     : QUndoCommand(text, parent), _view(kstApp->mainWindow()->tabWidget()->currentView()) {
-  if (addToStack)
+  if (addToStack) {
     _view->undoStack()->push(this);
+  }
 }
 
 
 ViewCommand::ViewCommand(View *view, const QString &text, bool addToStack, QUndoCommand *parent)
     : QUndoCommand(text, parent), _view(view) {
-  if (addToStack)
+  if (addToStack) {
     _view->undoStack()->push(this);
+  }
 }
 
 
