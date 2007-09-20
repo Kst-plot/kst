@@ -233,7 +233,7 @@ class KST_EXPORT LayoutCommand : public ViewItemCommand
 {
   public:
     LayoutCommand(ViewItem *item)
-        : ViewItemCommand(item, QObject::tr("Layout"), false) {}
+        : ViewItemCommand(item, QObject::tr("Create layout"), false) {}
 
     virtual ~LayoutCommand() {}
 
@@ -249,7 +249,7 @@ class KST_EXPORT BreakLayoutCommand : public ViewItemCommand
 {
   public:
     BreakLayoutCommand(ViewItem *item)
-        : ViewItemCommand(item, QObject::tr("Break Layout")) {}
+        : ViewItemCommand(item, QObject::tr("Break layout")) {}
 
     virtual ~BreakLayoutCommand() {}
 

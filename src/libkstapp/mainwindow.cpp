@@ -251,6 +251,7 @@ void MainWindow::print() {
 
 void MainWindow::currentViewChanged() {
   _undoGroup->setActiveStack(_tabWidget->currentView()->undoStack());
+  _layoutModeAct->setChecked(_tabWidget->currentView()->viewMode() == View::Layout);
 }
 
 
@@ -524,9 +525,13 @@ void MainWindow::createMenus() {
 
   _viewMenu = menuBar()->addMenu(tr("&View"));
   _viewMenu->addAction(_viewManagerAct);
-  _viewMenu->addAction(_layoutModeAct);
 
   _layoutMenu = _viewMenu->addMenu(tr("&Layout"));
+
+  _layoutMenu->setIcon(QPixmap(":kst_layoutmode.png"));
+
+  _layoutMenu->addAction(_layoutModeAct);
+  _layoutMenu->addSeparator();
   _layoutMenu->addAction(_createLabelAct);
   _layoutMenu->addAction(_createBoxAct);
   _layoutMenu->addAction(_createEllipseAct);

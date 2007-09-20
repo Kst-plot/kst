@@ -201,6 +201,32 @@ void ViewGridLayout::updatePlotMargins() {
   }
 }
 
+
+#if 0
+void LayoutMarginCommand::undo() {
+  Q_ASSERT(_layout);
+  _layout->setMargin(_originalMargin);
+}
+
+
+void LayoutMarginCommand::redo() {
+  Q_ASSERT(_layout);
+  _layout->setMargin(_newMargin);
+}
+
+
+void LayoutSpacingCommand::undo() {
+  Q_ASSERT(_layout);
+  _layout->setSpacing(_originalSpacing);
+}
+
+
+void LayoutSpacingCommand::redo() {
+  Q_ASSERT(_layout);
+  _layout->setSpacing(_newSpacing);
+}
+#endif
+
 }
 
 // vim: ts=2 sw=2 et

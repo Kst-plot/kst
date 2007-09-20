@@ -1523,6 +1523,8 @@ void LayoutCommand::createLayout() {
   }
 
   if (qobject_cast<LayoutBoxItem*>(_item)) {
+    _layout->setMargin(QSizeF());
+    _layout->setSpacing(QSizeF());
     QObject::connect(_layout, SIGNAL(enabledChanged(bool)),
                      _item, SLOT(setEnabled(bool)));
   }
