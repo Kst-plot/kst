@@ -165,7 +165,8 @@ void View::createLayout() {
   if (_layoutBoxItem && _layoutBoxItem->isVisible() && _layoutBoxItem->layout() )
     return;
 
-  new LayoutBoxItem(this);
+  LayoutCommand *layout = new LayoutCommand(new LayoutBoxItem(this));
+  layout->createLayout();
 }
 
 

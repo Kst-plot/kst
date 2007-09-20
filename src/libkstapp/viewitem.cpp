@@ -15,6 +15,8 @@
 #include "viewitemdialog.h"
 #include "viewgridlayout.h"
 
+#include "layoutboxitem.h"
+
 #include "gridlayouthelper.h"
 
 #include <math.h>
@@ -95,14 +97,19 @@ ViewGridLayout *ViewItem::layout() const {
 
 
 void ViewItem::setLayout(ViewGridLayout *layout) {
+  if (_layout == layout)
+    return;
+
   //disconnect previous layout...
   if (_layout) {
+    _layout->setEnabled(false);
     disconnect(this, SIGNAL(geometryChanged()), _layout, SLOT(update()));
   }
 
   _layout = layout;
 
   if (_layout) {
+    _layout->setEnabled(true);
     connect(this, SIGNAL(geometryChanged()), _layout, SLOT(update()));
   }
 
@@ -470,11 +477,14 @@ void ViewItem::edit() {
 
 void ViewItem::createLayout() {
   LayoutCommand *layout = new LayoutCommand(this);
-  layout->redo();
+  layout->createLayout();
 }
 
 
 void ViewItem::breakLayout() {
+  if (!layout())
+    return;
+
   BreakLayoutCommand *layout = new BreakLayoutCommand(this);
   layout->redo();
 }
@@ -1427,21 +1437,20 @@ CreateCommand::~CreateCommand() {
 
 
 void CreateCommand::undo() {
-  if (_item)
-    _item->hide();
+  Q_ASSERT(_item);
+  _item->hide();
 }
 
 
 void CreateCommand::redo() {
-  if (!_item)
-    createItem();
-
+  Q_ASSERT(_item);
   _item->show();
 }
 
 
 void CreateCommand::createItem() {
   Q_ASSERT(_item);
+  Q_ASSERT(_view);
 
   _view->setMouseMode(View::Create);
 
@@ -1463,58 +1472,27 @@ void CreateCommand::creationComplete() {
 
 
 void LayoutCommand::undo() {
-  ViewGridLayout *layout = _item->layout();
-  if (!layout)
-    return;
-
-  layout->reset();
+  Q_ASSERT(_layout);
+  _layout->reset();
   _item->setLayout(0);
-  delete layout;
 }
 
 
 void LayoutCommand::redo() {
-  QList<ViewItem*> viewItems;
-  QList<QGraphicsItem*> list = _item->QGraphicsItem::children();
-  if (list.isEmpty())
-    return;
-
-  foreach (QGraphicsItem *item, list) {
-    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
-    if (!viewItem || viewItem->parentItem() != _item)
-      continue;
-    viewItems.append(viewItem);
-  }
-
-  if (viewItems.isEmpty())
-    return;
-
-  Grid *grid = Grid::buildGrid(viewItems);
-  Q_ASSERT(grid);
-
-  ViewGridLayout *layout = new ViewGridLayout(_item);
-
-  foreach (ViewItem *v, viewItems) {
-    int r = 0, c = 0, rs = 0, cs = 0;
-    if (grid->locateWidget(v, r, c, rs, cs)) {
-      if (rs * cs == 1) {
-        layout->addViewItem(v, r, c, 1, 1);
-      } else {
-        layout->addViewItem(v, r, c, rs, cs);
-      }
-    } else {
-      qDebug() << "ooops, viewItem does not fit in layout" << endl;
-    }
-  }
-
-  layout->update();
+  Q_ASSERT(_layout);
+  _item->setLayout(_layout);
+  _layout->update();
 }
 
 
-void BreakLayoutCommand::undo() {  QList<ViewItem*> viewItems;
+void LayoutCommand::createLayout() {
+  Q_ASSERT(_item);
+  Q_ASSERT(_item->parentView());
+
+  QList<ViewItem*> viewItems;
   QList<QGraphicsItem*> list = _item->QGraphicsItem::children();
   if (list.isEmpty())
-    return;
+    return; //not added to undostack
 
   foreach (QGraphicsItem *item, list) {
     ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
@@ -1524,96 +1502,118 @@ void BreakLayoutCommand::undo() {  QList<ViewItem*> viewItems;
   }
 
   if (viewItems.isEmpty())
-    return;
+    return; //not added to undostack
 
   Grid *grid = Grid::buildGrid(viewItems);
   Q_ASSERT(grid);
 
-  ViewGridLayout *layout = new ViewGridLayout(_item);
+  _layout = new ViewGridLayout(_item);
 
   foreach (ViewItem *v, viewItems) {
     int r = 0, c = 0, rs = 0, cs = 0;
     if (grid->locateWidget(v, r, c, rs, cs)) {
       if (rs * cs == 1) {
-        layout->addViewItem(v, r, c, 1, 1);
+        _layout->addViewItem(v, r, c, 1, 1);
       } else {
-        layout->addViewItem(v, r, c, rs, cs);
+        _layout->addViewItem(v, r, c, rs, cs);
       }
     } else {
       qDebug() << "ooops, viewItem does not fit in layout" << endl;
     }
   }
 
-  layout->update();
+  if (qobject_cast<LayoutBoxItem*>(_item)) {
+    QObject::connect(_layout, SIGNAL(enabledChanged(bool)),
+                     _item, SLOT(setEnabled(bool)));
+  }
+
+  _layout->update();
+  _item->parentView()->undoStack()->push(this);
+}
+
+
+void BreakLayoutCommand::undo() {
+  Q_ASSERT(_layout);
+  _item->setLayout(_layout);
+  _layout->update();
 }
 
 
 void BreakLayoutCommand::redo() {
-  ViewGridLayout *layout = _item->layout();
-  if (!layout)
-    return;
-
+  _layout = _item->layout();
+  Q_ASSERT(_layout);
   _item->setLayout(0);
-  delete layout;
 }
 
 
 void MoveCommand::undo() {
+  Q_ASSERT(_item);
   _item->setPos(_originalPos);
 }
 
 
 void MoveCommand::redo() {
+  Q_ASSERT(_item);
   _item->setPos(_newPos);
 }
 
 
 void ResizeCommand::undo() {
+  Q_ASSERT(_item);
   _item->setViewRect(_originalRect);
 }
 
 
 void ResizeCommand::redo() {
+  Q_ASSERT(_item);
   _item->setViewRect(_newRect);
 }
 
 
 void RemoveCommand::undo() {
+  Q_ASSERT(_item);
   _item->show();
 }
 
 
 void RemoveCommand::redo() {
+  Q_ASSERT(_item);
   _item->hide();
 }
 
 
 void RaiseCommand::undo() {
+  Q_ASSERT(_item);
   _item->setZValue(_item->zValue() - 1);
 }
 
 
 void RaiseCommand::redo() {
+  Q_ASSERT(_item);
   _item->setZValue(_item->zValue() + 1);
 }
 
 
 void LowerCommand::undo() {
+  Q_ASSERT(_item);
   _item->setZValue(_item->zValue() +1);
 }
 
 
 void LowerCommand::redo() {
+  Q_ASSERT(_item);
   _item->setZValue(_item->zValue() - 1);
 }
 
 
 void TransformCommand::undo() {
+  Q_ASSERT(_item);
   _item->setTransform(_originalTransform);
 }
 
 
 void TransformCommand::redo() {
+  Q_ASSERT(_item);
   _item->setTransform(_newTransform);
 }
 

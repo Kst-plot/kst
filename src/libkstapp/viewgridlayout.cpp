@@ -24,6 +24,7 @@ namespace Kst {
 
 ViewGridLayout::ViewGridLayout(ViewItem *parent)
   : QObject(parent),
+    _enabled(false),
     _rowCount(0),
     _columnCount(0),
     _spacing(QSizeF(DEFAULT_STRUT,DEFAULT_STRUT)),
@@ -99,6 +100,17 @@ qreal ViewGridLayout::plotMarginHeight(const PlotItem *plotItem) const {
   }
 
   return 0.0;
+}
+
+
+bool ViewGridLayout::isEnabled() const {
+  return _enabled;
+}
+
+
+void ViewGridLayout::setEnabled(bool enabled) {
+  _enabled = enabled;
+  emit enabledChanged(_enabled);
 }
 
 

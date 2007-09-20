@@ -48,10 +48,15 @@ class ViewGridLayout : public QObject
     qreal plotMarginWidth(const PlotItem *plotItem) const;
     qreal plotMarginHeight(const PlotItem *plotItem) const;
 
-    void reset();
+    bool isEnabled() const;
+    void setEnabled(bool enabled);
 
   public Q_SLOTS:
+    void reset();
     void update();
+
+  Q_SIGNALS:
+    void enabledChanged(bool enabled);
 
   private Q_SLOTS:
     void updatePlotMargins();
@@ -68,6 +73,7 @@ class ViewGridLayout : public QObject
       QRectF rect;
     };
 
+    bool _enabled;
     int _rowCount;
     int _columnCount;
 

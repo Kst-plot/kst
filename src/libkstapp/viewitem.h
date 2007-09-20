@@ -233,12 +233,16 @@ class KST_EXPORT LayoutCommand : public ViewItemCommand
 {
   public:
     LayoutCommand(ViewItem *item)
-        : ViewItemCommand(item, QObject::tr("Layout")) {}
+        : ViewItemCommand(item, QObject::tr("Layout"), false) {}
 
     virtual ~LayoutCommand() {}
 
     virtual void undo();
     virtual void redo();
+    void createLayout();
+
+  private:
+    QPointer<ViewGridLayout> _layout;
 };
 
 class KST_EXPORT BreakLayoutCommand : public ViewItemCommand
@@ -251,6 +255,9 @@ class KST_EXPORT BreakLayoutCommand : public ViewItemCommand
 
     virtual void undo();
     virtual void redo();
+
+  private:
+    QPointer<ViewGridLayout> _layout;
 };
 
 class KST_EXPORT MoveCommand : public ViewItemCommand
