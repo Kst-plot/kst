@@ -184,7 +184,7 @@ void ViewGridLayout::updatePlotMargins() {
   _plotMarginWidth.clear();
   _plotMarginHeight.clear();
   foreach (LayoutItem item, _items) {
-    PlotItem *plotItem = dynamic_cast<PlotItem*>(item.viewItem);
+    PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(item.viewItem);
 
     if (!plotItem)
       continue;

@@ -193,7 +193,7 @@ QString PlotItem::topLabel() const {
 
 
 qreal PlotItem::marginWidth() const {
-  ViewItem *viewItem = dynamic_cast<ViewItem*>(parentItem());
+  ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(parentItem());
   if (viewItem && viewItem->layout()) {
     return viewItem->layout()->plotMarginWidth(this);
   } else {
@@ -203,7 +203,7 @@ qreal PlotItem::marginWidth() const {
 
 
 qreal PlotItem::marginHeight() const {
-  ViewItem *viewItem = dynamic_cast<ViewItem*>(parentItem());
+  ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(parentItem());
   if (viewItem && viewItem->layout()) {
     return viewItem->layout()->plotMarginHeight(this);
   } else {

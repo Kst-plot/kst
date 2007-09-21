@@ -138,7 +138,7 @@ void ViewItem::setViewRect(const QRectF &viewRect) {
     if (item->parentItem() != this)
       continue;
 
-    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
+    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
 
     if (!viewItem)
       continue;
@@ -1047,7 +1047,7 @@ bool ViewItem::maybeReparent() {
 
   //Look for collisions that completely contain us
   foreach (QGraphicsItem *item, collisions) {
-    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
+    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
 
     if (!viewItem) /*bah*/
       continue;
@@ -1495,7 +1495,7 @@ void LayoutCommand::createLayout() {
     return; //not added to undostack
 
   foreach (QGraphicsItem *item, list) {
-    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
+    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
     if (!viewItem || viewItem->parentItem() != _item)
       continue;
     viewItems.append(viewItem);

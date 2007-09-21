@@ -29,7 +29,7 @@ PlotRenderItem::~PlotRenderItem() {
 
 
 PlotItem *PlotRenderItem::plotItem() const {
-  return qgraphicsitem_cast<PlotItem*>(parentItem());
+  return qobject_cast<PlotItem*>(qgraphicsitem_cast<ViewItem*>(parentItem()));
 }
 
 

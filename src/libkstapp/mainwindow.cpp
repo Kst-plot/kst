@@ -336,7 +336,7 @@ void MainWindow::createLayout() {
   View *view = tabWidget()->currentView();
   QList<QGraphicsItem*> selectedItems = view->scene()->selectedItems();
   if (!selectedItems.isEmpty()) {
-    ViewItem *viewItem = dynamic_cast<ViewItem*>(selectedItems.first());
+    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(selectedItems.first());
     Q_ASSERT(viewItem);
     viewItem->createLayout();
   } else {
@@ -349,7 +349,7 @@ void MainWindow::breakLayout() {
   View *view = tabWidget()->currentView();
   QList<QGraphicsItem*> selectedItems = view->scene()->selectedItems();
   if (!selectedItems.isEmpty()) {
-    ViewItem *viewItem = dynamic_cast<ViewItem*>(selectedItems.first());
+    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(selectedItems.first());
     Q_ASSERT(viewItem);
     viewItem->breakLayout();
   }

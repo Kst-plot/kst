@@ -226,7 +226,7 @@ void View::resizeEvent(QResizeEvent *event) {
       if (item->parentItem())
         continue;
 
-      ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
+      ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
       Q_ASSERT(viewItem);
 
       ViewItem::updateChildGeometry(viewItem, oldSceneRect, sceneRect());
@@ -292,7 +292,7 @@ void View::updateChildGeometry(const QRectF &oldSceneRect) {
     if (item->parentItem())
       continue;
 
-    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
+    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
     Q_ASSERT(viewItem);
 
     ViewItem::updateChildGeometry(viewItem, oldSceneRect, sceneRect());

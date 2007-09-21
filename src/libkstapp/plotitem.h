@@ -31,9 +31,6 @@ class PlotItem : public ViewItem
     PlotItem(View *parent);
     virtual ~PlotItem();
 
-    enum { Type = UserType + 2 };
-    int type() const { return Type; }
-
     virtual void paint(QPainter *painter);
 
     qreal marginWidth() const;
