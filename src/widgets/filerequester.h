@@ -9,15 +9,45 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstwidgets.h"
+#ifndef FILEREQUESTER_H
+#define FILEREQUESTER_H
 
-KstWidgets::KstWidgets(QObject *parent)
-    : QObject(parent) {
-  _plugins.append(new ColorButtonPlugin(this));
-  _plugins.append(new GradientEditorPlugin(this));
-  _plugins.append(new FileRequesterPlugin(this));
-  _plugins.append(new ComboBoxPlugin(this));
-  _plugins.append(new DataRangePlugin(this));
+#include <QWidget>
+
+#include "kst_export.h"
+
+class QLineEdit;
+class QToolButton;
+
+namespace Kst {
+
+class KST_EXPORT FileRequester : public QWidget {
+  Q_OBJECT
+  Q_PROPERTY(QString file READ file WRITE setFile USER true)
+  public:
+    FileRequester(QWidget *parent = 0);
+    FileRequester(const QString &file, QWidget *parent = 0);
+    virtual ~FileRequester();
+
+    QString file() const;
+
+  public Q_SLOTS:
+    void setFile(const QString &file);
+
+  Q_SIGNALS:
+    void changed(const QString &file);
+
+  private Q_SLOTS:
+    void chooseFile();
+
+  private:
+    QLineEdit *_fileEdit;
+    QToolButton *_fileButton;
+    QString _file;
+};
+
 }
 
-Q_EXPORT_PLUGIN2(kstwidgets, KstWidgets)
+#endif
+
+// vim: ts=2 sw=2 et

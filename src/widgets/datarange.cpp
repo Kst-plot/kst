@@ -9,15 +9,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstwidgets.h"
+#include "datarange.h"
 
-KstWidgets::KstWidgets(QObject *parent)
-    : QObject(parent) {
-  _plugins.append(new ColorButtonPlugin(this));
-  _plugins.append(new GradientEditorPlugin(this));
-  _plugins.append(new FileRequesterPlugin(this));
-  _plugins.append(new ComboBoxPlugin(this));
-  _plugins.append(new DataRangePlugin(this));
+namespace Kst {
+
+DataRange::DataRange(QWidget *parent)
+  : QWidget(parent) {
+  setupUi(this);
 }
 
-Q_EXPORT_PLUGIN2(kstwidgets, KstWidgets)
+
+DataRange::~DataRange() {
+}
+
+}
+
+// vim: ts=2 sw=2 et

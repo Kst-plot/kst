@@ -96,6 +96,48 @@ public:
   }
 };
 
+#include "filerequester.h"
+class FileRequesterPlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  FileRequesterPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("Kst::FileRequester");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new Kst::FileRequester(parent);
+  }
+};
+
+#include "combobox.h"
+class ComboBoxPlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  ComboBoxPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("Kst::ComboBox");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new Kst::ComboBox(parent);
+  }
+};
+
+#include "datarange.h"
+class DataRangePlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  DataRangePlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("Kst::DataRange");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new Kst::DataRange(parent);
+  }
+};
+
 
 class KstWidgets : public QObject, public QDesignerCustomWidgetCollectionInterface {
   Q_OBJECT

@@ -9,15 +9,34 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstwidgets.h"
+#ifndef COMBOBOX_H
+#define COMBOBOX_H
 
-KstWidgets::KstWidgets(QObject *parent)
-    : QObject(parent) {
-  _plugins.append(new ColorButtonPlugin(this));
-  _plugins.append(new GradientEditorPlugin(this));
-  _plugins.append(new FileRequesterPlugin(this));
-  _plugins.append(new ComboBoxPlugin(this));
-  _plugins.append(new DataRangePlugin(this));
+#include <QComboBox>
+
+#include "kst_export.h"
+
+/*
+FIXME!! This class needs to be rewritten to give completion...
+*/
+
+namespace Kst {
+
+class  KST_EXPORT ComboBox : public QComboBox {
+  Q_OBJECT
+  public:
+    ComboBox(QWidget *parent=0);
+    ComboBox(bool editable, QWidget *parent=0);
+    virtual ~ComboBox();
+
+    void setEditable(bool editable);
+
+  private:
+    bool _editable;
+};
+
 }
 
-Q_EXPORT_PLUGIN2(kstwidgets, KstWidgets)
+#endif
+
+// vim: ts=2 sw=2 et

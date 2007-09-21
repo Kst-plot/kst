@@ -21,27 +21,27 @@ namespace Kst {
 class KST_EXPORT ColorButton : public QToolButton {
   Q_OBJECT
   Q_PROPERTY(QColor color READ color WRITE setColor USER true)
-public:
-  ColorButton(QWidget *parent = 0);
-  ColorButton(const QColor &color, QWidget *parent = 0);
-  virtual ~ColorButton();
+  public:
+    ColorButton(QWidget *parent = 0);
+    ColorButton(const QColor &color, QWidget *parent = 0);
+    virtual ~ColorButton();
 
-  QColor color() const;
+    QColor color() const;
 
-public Q_SLOTS:
-  void setColor(const QColor &color);
+  public Q_SLOTS:
+    void setColor(const QColor &color);
 
-Q_SIGNALS:
-  void changed(const QColor &color);
+  Q_SIGNALS:
+    void changed(const QColor &color);
 
-protected:
-  virtual void paintEvent(QPaintEvent *event);
+  protected:
+    virtual void paintEvent(QPaintEvent *event);
 
-private Q_SLOTS:
-  void chooseColor();
+  private Q_SLOTS:
+    void chooseColor();
 
-private:
-  QColor _color;
+  private:
+    QColor _color;
 };
 
 }

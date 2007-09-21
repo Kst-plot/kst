@@ -22,9 +22,21 @@ INCLUDEPATH += \
 SOURCES += \
     kstwidgets.cpp \
     colorbutton.cpp \
+    combobox.cpp \
+    datarange.cpp \
+    filerequester.cpp \
     gradienteditor.cpp
 
 HEADERS += \
     colorbutton.h \
+    combobox.h \
+    datarange.h \
+    filerequester.h \
     gradienteditor.h \
     kstwidgets.h
+
+FORMS += \
+    datarange.ui
+
+RESOURCES += \
+    $$TOPLEVELDIR/src/images/images.qrc
