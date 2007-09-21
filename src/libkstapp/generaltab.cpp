@@ -24,6 +24,11 @@ GeneralTab::GeneralTab(QWidget *parent)
   connect(_refViewHeight, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_refFontSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_minFontSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+
+  _refViewWidth->setEnabled(false);
+  _refViewHeight->setEnabled(false);
+  _refFontSize->setEnabled(false);
+  _minFontSize->setEnabled(false);
 }
 
 
