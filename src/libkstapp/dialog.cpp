@@ -30,6 +30,7 @@ Dialog::Dialog(QWidget *parent)
           this, SLOT(buttonClicked(QAbstractButton *)));
 
   setMaximumSize(QSize(1024, 768));
+  resize(minimumSizeHint());
 }
 
 

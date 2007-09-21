@@ -12,21 +12,63 @@
 #ifndef APPLICATIONSETTINGS_H
 #define APPLICATIONSETTINGS_H
 
+#include <QObject>
+
 namespace Kst {
 
-class ApplicationSettings
+class ApplicationSettingsDialog;
+
+class ApplicationSettings : public QObject
 {
-public:
-  static ApplicationSettings *self();
+  Q_OBJECT
+  public:
+    static ApplicationSettings *self();
 
-  bool useOpenGL() const;
-  void setUseOpenGL(bool use);
+    bool useOpenGL() const;
+    void setUseOpenGL(bool useOpenGL);
 
-private:
-  ApplicationSettings();
-  ~ApplicationSettings();
-  static void cleanup();
-  bool _useOpenGL;
+    qreal referenceViewWidth() const;
+    void setReferenceViewWidth(qreal width);
+
+    qreal referenceViewHeight() const;
+    void setReferenceViewHeight(qreal height);
+
+    int referenceFontSize() const;
+    void setReferenceFontSize(int points);
+
+    int minimumFontSize() const;
+    void setMinimumFontSize(int points);
+
+    bool showGrid() const;
+    void setShowGrid(bool showGrid);
+
+    bool snapToGrid() const;
+    void setSnapToGrid(bool snapToGrid);
+
+    qreal gridHorizontalSpacing() const;
+    void setGridHorizontalSpacing(qreal spacing);
+
+    qreal gridVerticalSpacing() const;
+    void setGridVerticalSpacing(qreal spacing);
+
+  Q_SIGNALS:
+    void modified();
+
+  private:
+    ApplicationSettings();
+    ~ApplicationSettings();
+    static void cleanup();
+    bool _useOpenGL;
+    qreal _refViewWidth;
+    qreal _refViewHeight;
+    int _refFontSize;
+    int _minFontSize;
+    bool _showGrid;
+    bool _snapToGrid;
+    qreal _gridHorSpacing;
+    qreal _gridVerSpacing;
+
+    friend class ApplicationSettingsDialog;
 };
 
 }

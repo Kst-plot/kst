@@ -11,6 +11,7 @@
 
 #include "applicationsettingsdialog.h"
 
+#include "applicationsettings.h"
 #include "gridtab.h"
 #include "generaltab.h"
 #include "dialogpage.h"
@@ -49,18 +50,46 @@ ApplicationSettingsDialog::~ApplicationSettingsDialog() {
 
 
 void ApplicationSettingsDialog::setupGeneral() {
+  _generalTab->setUseOpenGL(ApplicationSettings::self()->useOpenGL());
+  _generalTab->setReferenceViewWidth(ApplicationSettings::self()->referenceViewWidth());
+  _generalTab->setReferenceViewHeight(ApplicationSettings::self()->referenceViewHeight());
+  _generalTab->setReferenceFontSize(ApplicationSettings::self()->referenceFontSize());
+  _generalTab->setMinimumFontSize(ApplicationSettings::self()->minimumFontSize());
 }
 
 
 void ApplicationSettingsDialog::setupGrid() {
+  _gridTab->setShowGrid(ApplicationSettings::self()->showGrid());
+  _gridTab->setSnapToGrid(ApplicationSettings::self()->snapToGrid());
+  _gridTab->setGridHorizontalSpacing(ApplicationSettings::self()->gridHorizontalSpacing());
+  _gridTab->setGridVerticalSpacing(ApplicationSettings::self()->gridVerticalSpacing());
 }
 
 
 void ApplicationSettingsDialog::generalChanged() {
+  //Need to block the signals so that the modified signal only goes out once...
+  ApplicationSettings::self()->blockSignals(true);
+  ApplicationSettings::self()->setUseOpenGL(_generalTab->useOpenGL());
+  ApplicationSettings::self()->setReferenceViewWidth(_generalTab->referenceViewWidth());
+  ApplicationSettings::self()->setReferenceViewHeight(_generalTab->referenceViewHeight());
+  ApplicationSettings::self()->setReferenceFontSize(_generalTab->referenceFontSize());
+  ApplicationSettings::self()->setMinimumFontSize(_generalTab->minimumFontSize());
+  ApplicationSettings::self()->blockSignals(false);
+
+  emit ApplicationSettings::self()->modified();
 }
 
 
 void ApplicationSettingsDialog::gridChanged() {
+  //Need to block the signals so that the modified signal only goes out once...
+  ApplicationSettings::self()->blockSignals(true);
+  ApplicationSettings::self()->setShowGrid(_gridTab->showGrid());
+  ApplicationSettings::self()->setSnapToGrid(_gridTab->snapToGrid());
+  ApplicationSettings::self()->setGridHorizontalSpacing(_gridTab->gridHorizontalSpacing());
+  ApplicationSettings::self()->setGridVerticalSpacing(_gridTab->gridVerticalSpacing());
+  ApplicationSettings::self()->blockSignals(false);
+
+  emit ApplicationSettings::self()->modified();
 }
 
 }

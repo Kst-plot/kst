@@ -24,6 +24,21 @@ class KST_EXPORT GeneralTab : public DialogTab, Ui::GeneralTab {
   public:
     GeneralTab(QWidget *parent = 0);
     virtual ~GeneralTab();
+
+    bool useOpenGL() const;
+    void setUseOpenGL(bool useOpenGL);
+
+    qreal referenceViewWidth() const;
+    void setReferenceViewWidth(qreal width);
+
+    qreal referenceViewHeight() const;
+    void setReferenceViewHeight(qreal height);
+
+    int referenceFontSize() const;
+    void setReferenceFontSize(int points);
+
+    int minimumFontSize() const;
+    void setMinimumFontSize(int points);
 };
 
 }

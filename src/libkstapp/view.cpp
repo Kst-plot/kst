@@ -34,6 +34,7 @@ View::View()
     _viewMode(Layout),
     _mouseMode(Default),
     _layoutBoxItem(0),
+    _useOpenGL(false),
     _gridSpacing(QSizeF(20,20)),
     _snapToGridHorizontal(false),
     _snapToGridVertical(false) {
@@ -43,14 +44,31 @@ View::View()
   scene()->installEventFilter(this);
   setInteractive(true);
   setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
-  if (ApplicationSettings::self()->useOpenGL()) {
-    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-    setViewport(new QGLWidget);
-  }
+  connect(ApplicationSettings::self(), SIGNAL(modified()), this, SLOT(updateSettings()));
+  updateSettings();
 }
 
 
 View::~View() {
+}
+
+bool View::useOpenGL() const {
+  return _useOpenGL;
+}
+
+
+void View::setUseOpenGL(bool useOpenGL) {
+  //This is an expensive operation...
+  if (_useOpenGL == useOpenGL)
+    return;
+
+  if (useOpenGL) {
+    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+    setViewport(new QGLWidget);
+  } else {
+    setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
+    setViewport(0);
+  }
 }
 
 
@@ -109,6 +127,26 @@ QPolygonF View::creationPolygon(CreationEvents events) const {
   if (events == View::MouseMove)
      return _creationPolygonMove;
   return QPolygonF();
+}
+
+
+void View::setShowGrid(bool showGrid) {
+  //Don't repaint unless absolutely necessary
+  if (_showGrid == showGrid)
+    return;
+
+  _showGrid = showGrid;
+  invalidateScene(sceneRect(), QGraphicsScene::BackgroundLayer);
+}
+
+
+void View::setGridSpacing(const QSizeF &gridSpacing) {
+  //Don't repaint unless absolutely necessary
+  if (_gridSpacing == gridSpacing)
+    return;
+
+  _gridSpacing = gridSpacing;
+  invalidateScene(sceneRect(), QGraphicsScene::BackgroundLayer);
 }
 
 
@@ -182,6 +220,7 @@ void View::resizeEvent(QResizeEvent *event) {
     l.setColorAt(0.0, Qt::white);
     l.setColorAt(1.0, Qt::lightGray);
     setBackgroundBrush(l);
+    setCacheMode(QGraphicsView::CacheBackground);
 
     foreach (QGraphicsItem *item, items()) {
       if (item->parentItem())
@@ -199,6 +238,9 @@ void View::resizeEvent(QResizeEvent *event) {
 void View::drawBackground(QPainter *painter, const QRectF &rect) {
 
   QGraphicsView::drawBackground(painter, rect);
+
+  if (!showGrid())
+    return;
 
   painter->save();
   painter->setPen(Qt::gray);
@@ -228,6 +270,20 @@ void View::drawBackground(QPainter *painter, const QRectF &rect) {
   }
 
   painter->restore();
+}
+
+
+void View::updateSettings() {
+
+  setUseOpenGL(ApplicationSettings::self()->useOpenGL());
+
+  setShowGrid(ApplicationSettings::self()->showGrid());
+
+  setSnapToGrid(ApplicationSettings::self()->snapToGrid());
+
+  setGridSpacing(QSizeF(ApplicationSettings::self()->gridHorizontalSpacing(),
+                        ApplicationSettings::self()->gridVerticalSpacing()));
+
 }
 
 

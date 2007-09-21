@@ -18,10 +18,55 @@ GridTab::GridTab(QWidget *parent)
 
   setupUi(this);
   setTabTitle(tr("Grid"));
+
+  connect(_showGrid, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_snapToGrid, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_gridHorSpacing, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
+  connect(_gridVerSpacing, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
 }
 
 
 GridTab::~GridTab() {
+}
+
+
+bool GridTab::showGrid() const {
+  return _showGrid->isChecked();
+}
+
+
+void GridTab::setShowGrid(bool showGrid) {
+  _showGrid->setChecked(showGrid);
+}
+
+
+bool GridTab::snapToGrid() const {
+  return _snapToGrid->isChecked();
+}
+
+
+void GridTab::setSnapToGrid(bool snapToGrid) {
+  _snapToGrid->setChecked(snapToGrid);
+}
+
+
+qreal GridTab::gridHorizontalSpacing() const {
+  return _gridHorSpacing->value();
+}
+
+
+void GridTab::setGridHorizontalSpacing(qreal spacing) {
+  _gridHorSpacing->setValue(spacing);
+}
+
+
+qreal GridTab::gridVerticalSpacing() const {
+  return _gridVerSpacing->value();
+}
+
+
+void GridTab::setGridVerticalSpacing(qreal spacing) {
+  _gridVerSpacing->setValue(spacing);
 }
 
 }

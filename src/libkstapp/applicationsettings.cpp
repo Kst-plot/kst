@@ -37,6 +37,16 @@ ApplicationSettings::ApplicationSettings() {
   // but right now opening with QGV with QGLWidget as viewport takes
   // several seconds delay when opening application on my system.
   _useOpenGL = QGLPixelBuffer::hasOpenGLPbuffers();
+
+  _refViewWidth = 10.0; //cm
+  _refViewHeight = 7.0; //cm
+  _refFontSize = 16; //points
+  _minFontSize = 10; //points
+
+  _showGrid = true;
+  _snapToGrid = false;
+  _gridHorSpacing = 20.0;
+  _gridVerSpacing = 20.0;
 }
 
 
@@ -49,8 +59,96 @@ bool ApplicationSettings::useOpenGL() const {
 }
 
 
-void ApplicationSettings::setUseOpenGL(bool use) {
-  _useOpenGL = use;
+void ApplicationSettings::setUseOpenGL(bool useOpenGL) {
+  _useOpenGL = useOpenGL;
+  emit modified();
+}
+
+
+qreal ApplicationSettings::referenceViewWidth() const {
+  return _refViewWidth;
+}
+
+
+void ApplicationSettings::setReferenceViewWidth(qreal width) {
+  _refViewWidth = width;
+  emit modified();
+}
+
+
+qreal ApplicationSettings::referenceViewHeight() const {
+  return _refViewHeight;
+}
+
+
+void ApplicationSettings::setReferenceViewHeight(qreal height) {
+  _refViewHeight = height;
+  emit modified();
+}
+
+
+int ApplicationSettings::referenceFontSize() const {
+  return _refFontSize;
+}
+
+
+void ApplicationSettings::setReferenceFontSize(int points) {
+  _refFontSize = points;
+  emit modified();
+}
+
+
+int ApplicationSettings::minimumFontSize() const {
+  return _minFontSize;
+}
+
+
+void ApplicationSettings::setMinimumFontSize(int points) {
+  _minFontSize = points;
+  emit modified();
+}
+
+bool ApplicationSettings::showGrid() const {
+  return _showGrid;
+}
+
+
+void ApplicationSettings::setShowGrid(bool showGrid) {
+  _showGrid = showGrid;
+  emit modified();
+}
+
+
+bool ApplicationSettings::snapToGrid() const {
+  return _snapToGrid;
+}
+
+
+void ApplicationSettings::setSnapToGrid(bool snapToGrid) {
+  _snapToGrid = snapToGrid;
+  emit modified();
+}
+
+
+qreal ApplicationSettings::gridHorizontalSpacing() const {
+  return _gridHorSpacing;
+}
+
+
+void ApplicationSettings::setGridHorizontalSpacing(qreal spacing) {
+  _gridHorSpacing = spacing;
+  emit modified();
+}
+
+
+qreal ApplicationSettings::gridVerticalSpacing() const {
+  return _gridVerSpacing;
+}
+
+
+void ApplicationSettings::setGridVerticalSpacing(qreal spacing) {
+  _gridVerSpacing = spacing;
+  emit modified();
 }
 
 }

@@ -39,6 +39,9 @@ class KST_EXPORT View : public QGraphicsView
     View();
     virtual ~View();
 
+    bool useOpenGL() const;
+    void setUseOpenGL(bool useOpenGL);
+
     QUndoStack *undoStack() const;
 
     ViewMode viewMode() const;
@@ -52,8 +55,11 @@ class KST_EXPORT View : public QGraphicsView
     LayoutBoxItem* layoutBoxItem() const { return _layoutBoxItem; }
     void setLayoutBoxItem(LayoutBoxItem *layoutBoxItem) { _layoutBoxItem = layoutBoxItem; }
 
+    bool showGrid() const { return _showGrid; }
+    void setShowGrid(bool showGrid);
+
     QSizeF gridSpacing() const { return _gridSpacing; }
-    void setGridSpacing(const QSizeF &gridSpacing) { _gridSpacing = gridSpacing; }
+    void setGridSpacing(const QSizeF &gridSpacing);
 
     bool snapToGridHorizontal() const
     { return _snapToGridHorizontal; }
@@ -85,6 +91,9 @@ class KST_EXPORT View : public QGraphicsView
     void resizeEvent(QResizeEvent *event);
     void drawBackground(QPainter *painter, const QRectF &rect);
 
+  private Q_SLOTS:
+    void updateSettings();
+
   private:
     void updateChildGeometry(const QRectF &oldSceneRect);
 
@@ -96,7 +105,9 @@ class KST_EXPORT View : public QGraphicsView
     QPolygonF _creationPolygonPress;
     QPolygonF _creationPolygonMove;
     QPolygonF _creationPolygonRelease;
+    bool _useOpenGL;
     QSizeF _gridSpacing;
+    bool _showGrid;
     bool _snapToGridHorizontal;
     bool _snapToGridVertical;
 };

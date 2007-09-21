@@ -24,6 +24,18 @@ class KST_EXPORT GridTab : public DialogTab, Ui::GridTab {
   public:
     GridTab(QWidget *parent = 0);
     virtual ~GridTab();
+
+    bool showGrid() const;
+    void setShowGrid(bool showGrid);
+
+    bool snapToGrid() const;
+    void setSnapToGrid(bool snapToGrid);
+
+    qreal gridHorizontalSpacing() const;
+    void setGridHorizontalSpacing(qreal spacing);
+
+    qreal gridVerticalSpacing() const;
+    void setGridVerticalSpacing(qreal spacing);
 };
 
 }
