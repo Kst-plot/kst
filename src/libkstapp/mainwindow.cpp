@@ -31,6 +31,8 @@
 #include "view.h"
 #include "viewmanager.h"
 
+#include "applicationsettingsdialog.h"
+
 #include <QtGui>
 
 //FIXME Temporaries REMOVE!!
@@ -499,6 +501,10 @@ void MainWindow::createActions() {
   _aboutAct = new QAction(tr("&About"), this);
   _aboutAct->setStatusTip(tr("Show Kst's About box"));
   connect(_aboutAct, SIGNAL(triggered()), this, SLOT(about()));
+
+  _settingsDialogAct = new QAction(tr("&Configure Kst"), this);
+  _settingsDialogAct->setStatusTip(tr("Show Kst's Configuration Dialog"));
+  connect(_settingsDialogAct, SIGNAL(triggered()), this, SLOT(showSettingsDialog()));
 }
 
 
@@ -541,6 +547,7 @@ void MainWindow::createMenus() {
   _layoutMenu->addAction(_createSvgAct);
 
   _settingsMenu = menuBar()->addMenu(tr("&Settings"));
+  _settingsMenu->addAction(_settingsDialogAct);
 
   menuBar()->addSeparator();
 
@@ -644,6 +651,12 @@ void MainWindow::showExportGraphicsDialog() {
     _exportGraphics = new ExportGraphicsDialog(this);
   }
   _exportGraphics->show();
+}
+
+
+void MainWindow::showSettingsDialog() {
+  ApplicationSettingsDialog settingsDialog(this);
+  settingsDialog.exec();
 }
 
 

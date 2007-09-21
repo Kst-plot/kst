@@ -13,12 +13,14 @@
 
 #include "dialogtab.h"
 
+#include <QTabBar>
+
 namespace Kst {
 
 DialogPage::DialogPage(QWidget *parent)
-  : QWidget(parent) {
-  setupUi(this);
-  _label->setVisible(false); //FIXME not sure what to do with this yet...
+  : QTabWidget(parent) {
+
+  tabBar()->setVisible(false);
 }
 
 
@@ -31,7 +33,15 @@ void DialogPage::addDialogTab(DialogTab *tab) {
   connect(this, SIGNAL(apply()), tab, SIGNAL(apply()));
   connect(this, SIGNAL(cancel()), tab, SIGNAL(cancel()));
   connect(tab, SIGNAL(modified()), this, SIGNAL(modified()));
-  _tab->addTab(tab, tab->tabTitle());
+  addTab(tab, tab->tabTitle());
+}
+
+
+void DialogPage::setVisible(bool visible) {
+
+  tabBar()->setVisible(count() > 1);
+
+  QTabWidget::setVisible(visible);
 }
 
 }

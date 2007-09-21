@@ -9,44 +9,21 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef DIALOGPAGE_H
-#define DIALOGPAGE_H
+#ifndef GRIDTAB_H
+#define GRIDTAB_H
 
-#include <QTabWidget>
+#include "dialogtab.h"
+#include "ui_gridtab.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class DialogTab;
-
-class KST_EXPORT DialogPage : public QTabWidget
-{
+class KST_EXPORT GridTab : public DialogTab, Ui::GridTab {
   Q_OBJECT
   public:
-    DialogPage(QWidget *parent);
-    virtual ~DialogPage();
-
-    QString pageTitle() const { return _pageTitle; }
-    void setPageTitle(const QString &pageTitle) { _pageTitle = pageTitle; }
-
-    QPixmap pageIcon() const { return _pageIcon; }
-    void setPageIcon(const QPixmap &pageIcon) { _pageIcon = pageIcon; }
-
-    void addDialogTab(DialogTab *tab);
-
-  Q_SIGNALS:
-    void ok();
-    void apply();
-    void cancel();
-    void modified();
-
-  protected:
-    void setVisible(bool visible);
-
-  private:
-    QString _pageTitle;
-    QPixmap _pageIcon;
+    GridTab(QWidget *parent = 0);
+    virtual ~GridTab();
 };
 
 }

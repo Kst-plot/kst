@@ -9,44 +9,38 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef DIALOGPAGE_H
-#define DIALOGPAGE_H
+#ifndef APPLICATIONSETTINGSDIALOG_H
+#define APPLICATIONSETTINGSDIALOG_H
 
-#include <QTabWidget>
+#include "dialog.h"
+
+#include <QPointer>
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class DialogTab;
+class GeneralTab;
+class GridTab;
 
-class KST_EXPORT DialogPage : public QTabWidget
+class KST_EXPORT ApplicationSettingsDialog : public Dialog
 {
   Q_OBJECT
   public:
-    DialogPage(QWidget *parent);
-    virtual ~DialogPage();
+    ApplicationSettingsDialog(QWidget *parent = 0);
+    virtual ~ApplicationSettingsDialog();
 
-    QString pageTitle() const { return _pageTitle; }
-    void setPageTitle(const QString &pageTitle) { _pageTitle = pageTitle; }
-
-    QPixmap pageIcon() const { return _pageIcon; }
-    void setPageIcon(const QPixmap &pageIcon) { _pageIcon = pageIcon; }
-
-    void addDialogTab(DialogTab *tab);
-
-  Q_SIGNALS:
-    void ok();
-    void apply();
-    void cancel();
-    void modified();
-
-  protected:
-    void setVisible(bool visible);
+  private Q_SLOTS:
+    void generalChanged();
+    void gridChanged();
 
   private:
-    QString _pageTitle;
-    QPixmap _pageIcon;
+    void setupGeneral();
+    void setupGrid();
+
+  private:
+    GeneralTab *_generalTab;
+    GridTab *_gridTab;
 };
 
 }

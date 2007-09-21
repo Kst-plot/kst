@@ -23,7 +23,7 @@ Dialog::Dialog(QWidget *parent)
 
   setupUi(this);
 
-  connect(_listWidget, SIGNAL(itemActivated(QListWidgetItem *)),
+  connect(_listWidget, SIGNAL(itemClicked(QListWidgetItem *)),
           this, SLOT(selectPageForItem(QListWidgetItem *)));
 
   connect(_buttonBox, SIGNAL(clicked(QAbstractButton *)),
@@ -49,7 +49,7 @@ void Dialog::addDialogPage(DialogPage *page) {
 
 void Dialog::setVisible(bool visible) {
 
-  _listWidget->setVisible(_itemHash.count() > 2);
+  _listWidget->setVisible(_itemHash.count() > 1);
   _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
 
   QDialog::setVisible(visible);

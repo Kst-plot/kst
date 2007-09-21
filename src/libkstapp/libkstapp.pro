@@ -21,6 +21,7 @@ LIBS += -lkst -lkstmath -lkstwidgets
 SOURCES += \
     application.cpp \
     applicationsettings.cpp \
+    applicationsettingsdialog.cpp \
     axis.cpp \
     boxitem.cpp \
     builtingraphics.cpp \
@@ -34,8 +35,10 @@ SOURCES += \
     ellipseitem.cpp \
     exportgraphicsdialog.cpp \
     filltab.cpp \
+    generaltab.cpp \
     graphicsfactory.cpp \
     gridlayouthelper.cpp \
+    gridtab.cpp \
     labelitem.cpp \
     labelrenderer.cpp \
     layoutboxitem.cpp \
@@ -66,6 +69,7 @@ SOURCES += \
 HEADERS += \
     application.h \
     applicationsettings.h \
+    applicationsettingsdialog.h \
     axis.h \
     boxitem.h \
     builtingraphics.h \
@@ -80,8 +84,10 @@ HEADERS += \
     ellipseitem.h \
     exportgraphicsdialog.h \
     filltab.h \
+    generaltab.h \
     graphicsfactory.h \
     gridlayouthelper.h \
+    gridtab.h \
     labelitem.h \
     labelrenderer.h \
     layoutboxitem.h \
@@ -114,9 +120,10 @@ FORMS += \
     datamanager.ui \
     debugdialog.ui \
     dialog.ui \
-    dialogpage.ui \
     exportgraphicsdialog.ui \
     filltab.ui \
+    generaltab.ui \
+    gridtab.ui \
     layouttab.ui \
     stroketab.ui \
     vectoreditordialog.ui \

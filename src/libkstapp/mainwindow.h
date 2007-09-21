@@ -49,6 +49,7 @@ class MainWindow : public QMainWindow
     void showExportGraphicsDialog();
     void showVectorEditor();
     void showViewManager();
+    void showSettingsDialog();
 
     void save();
     void saveAs();
@@ -146,6 +147,8 @@ class MainWindow : public QMainWindow
 
     QAction *_viewManagerAct;
     QAction *_layoutModeAct;
+
+    QAction *_settingsDialogAct;
 };
 
 }

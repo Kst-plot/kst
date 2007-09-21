@@ -1,0 +1,81 @@
+<ui version="4.0" >
+ <class>GridTab</class>
+ <widget class="QWidget" name="GridTab" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>212</width>
+    <height>166</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" >
+   <item row="0" column="0" colspan="2" >
+    <widget class="QLabel" name="label_8" >
+     <property name="text" >
+      <string>Show Grid:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2" >
+    <widget class="QRadioButton" name="_showGrid" >
+     <property name="text" >
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2" >
+    <widget class="QLabel" name="label_7" >
+     <property name="text" >
+      <string>Snap To Grid:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2" >
+    <widget class="QRadioButton" name="_snapToGrid" >
+     <property name="text" >
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="2" >
+    <widget class="QLabel" name="label_5" >
+     <property name="text" >
+      <string>Grid Horizontal Spacing:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2" >
+    <widget class="QDoubleSpinBox" name="_gridHorSpacing" />
+   </item>
+   <item row="3" column="0" colspan="2" >
+    <widget class="QLabel" name="label_6" >
+     <property name="text" >
+      <string>Grid Vertical Spacing:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2" >
+    <widget class="QDoubleSpinBox" name="_gridVerSpacing" />
+   </item>
+   <item row="4" column="0" >
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
