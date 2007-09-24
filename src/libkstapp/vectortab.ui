@@ -229,6 +229,9 @@
         <property name="wordWrap" >
          <bool>false</bool>
         </property>
+        <property name="buddy" >
+         <cstring>N</cstring>
+        </property>
        </widget>
       </item>
       <item row="1" column="0" colspan="2" >
@@ -262,15 +265,18 @@
           <property name="wordWrap" >
            <bool>false</bool>
           </property>
+          <property name="buddy" >
+           <cstring>XMin</cstring>
+          </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="_xMin" >
+         <widget class="QSpinBox" name="_to" >
           <property name="whatsThis" >
            <string>The minimum value of the independent variable.</string>
           </property>
-          <property name="text" >
-           <string>-10.0</string>
+          <property name="value" >
+           <number>-10.0</number>
           </property>
          </widget>
         </item>
@@ -288,15 +294,18 @@
           <property name="wordWrap" >
            <bool>false</bool>
           </property>
+          <property name="buddy" >
+           <cstring>XMax</cstring>
+          </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="_xMax" >
+         <widget class="QSpinBox" name="_from" >
           <property name="whatsThis" >
            <string>The maximum value of the independent variable.</string>
           </property>
-          <property name="text" >
-           <string>10.0</string>
+          <property name="value" >
+           <number>10.0</number>
           </property>
          </widget>
         </item>

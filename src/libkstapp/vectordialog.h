@@ -24,8 +24,29 @@ namespace Kst {
 class KST_EXPORT VectorTab : public DialogTab, Ui::VectorTab {
   Q_OBJECT
   public:
+    enum Mode { ReadOnlyVector, SlaveVector };
+
     VectorTab(QWidget *parent = 0);
     virtual ~VectorTab();
+
+    Mode mode() const { return _mode; }
+    void setMode(Mode mode) { _mode = mode; }
+
+    //Slave vector mode methods...
+    int from() const;
+    void setFrom(int from);
+
+    int to() const;
+    void setTo(int to);
+
+    int numberOfSamples() const;
+    void setNumberOfSamples(int numberOfSamples);
+
+  private Q_SLOTS:
+    void sourceChanged();
+
+  private:
+    Mode _mode;
 };
 
 class KST_EXPORT VectorDialog : public DataDialog {
@@ -38,6 +59,9 @@ class KST_EXPORT VectorDialog : public DataDialog {
   protected:
     virtual KstObjectPtr createNewDataObject() const;
     virtual KstObjectPtr editExistingDataObject() const;
+
+  private:
+    void setDefaults();
 
   private:
     VectorTab *_vectorTab;

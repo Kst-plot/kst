@@ -18,6 +18,8 @@
 
 #include "kstdataobject.h"
 
+class QLineEdit;
+
 namespace Kst {
 
 class DialogTab;
@@ -32,6 +34,8 @@ class KST_EXPORT DataDialog : public Dialog {
     void addDataTab(DialogTab *tab);
 
   protected:
+    QString tagName() const;
+
     KstObjectPtr dataObject() const { return _dataObject; }
     void setDataObject(KstObjectPtr dataObject) { _dataObject = dataObject; }
 
@@ -45,6 +49,7 @@ class KST_EXPORT DataDialog : public Dialog {
     void createGui();
 
   private:
+    QLineEdit *_tagName;
     KstObjectPtr _dataObject;
 };
 

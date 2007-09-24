@@ -13,17 +13,49 @@
 
 #include "dialogpage.h"
 
+#include "kstsvector.h"
+
 namespace Kst {
 
 VectorTab::VectorTab(QWidget *parent)
-  : DialogTab(parent) {
+  : DialogTab(parent), _mode(ReadOnlyVector) {
 
   setupUi(this);
   setTabTitle(tr("Vector"));
+
+  connect(_readFromSource, SIGNAL(toggled(bool)), this, SLOT(sourceChanged()));
 }
 
 
 VectorTab::~VectorTab() {
+}
+
+
+int VectorTab::from() const {
+  return _from->value();
+}
+
+
+int VectorTab::to() const {
+  return _to->value();
+}
+
+
+int VectorTab::numberOfSamples() const {
+  return _numberOfSamples->value();
+}
+
+
+void VectorTab::sourceChanged() {
+
+  if (_readFromSource->isChecked())
+    setMode(ReadOnlyVector);
+  else
+    setMode(SlaveVector);
+
+  _rvectorGroup->setEnabled(_readFromSource->isChecked());
+  _dataRange->setEnabled(_readFromSource->isChecked());
+  _svectorGroup->setEnabled(!_readFromSource->isChecked());
 }
 
 
@@ -50,8 +82,31 @@ VectorDialog::VectorDialog(KstObjectPtr dataObject, QWidget *parent)
 VectorDialog::~VectorDialog() {
 }
 
+
+void VectorDialog::setDefaults() {
+  //FIXME
+}
+
+
 KstObjectPtr VectorDialog::createNewDataObject() const {
-  qDebug() << "createNewDataObject" << endl;
+
+  if (_vectorTab->mode() == VectorTab::ReadOnlyVector) {
+
+    qDebug() << "ReadOnlyVectors not supported yet...!" << endl;
+    return 0;
+
+  } else if (_vectorTab->mode() == VectorTab::SlaveVector) {
+
+    const int from = _vectorTab->from();
+    const int to = _vectorTab->to();
+    const int numberOfSamples = _vectorTab->numberOfSamples();
+    const KstObjectTag tag = KstObjectTag(tagName(), KstObjectTag::globalTagContext);
+
+    KstSVectorPtr vector = new KstSVector(from, to, numberOfSamples, tag);
+    return static_cast<KstObjectPtr>(vector);
+
+  }
+
   return 0;
 }
 

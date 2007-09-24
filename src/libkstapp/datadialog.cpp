@@ -51,17 +51,23 @@ void DataDialog::createGui() {
   QHBoxLayout *layout = new QHBoxLayout(box);
   layout->setContentsMargins(0, -1, 0, -1);
 
-  QLabel *name = new QLabel(tr("Unique Name:"), box);
-  QLineEdit *edit = new QLineEdit(box);
+  QLabel *label = new QLabel(tr("Unique Name:"), box);
+  _tagName = new QLineEdit(box);
 
   if (_dataObject)
-    edit->setText(_dataObject->tagName());
+    _tagName->setText(_dataObject->tagName());
 
-  layout->addWidget(name);
-  layout->addWidget(edit);
+  layout->addWidget(label);
+  layout->addWidget(_tagName);
 
   box->setLayout(layout);
 }
+
+
+QString DataDialog::tagName() const {
+  return _tagName->text();
+}
+
 
 void DataDialog::addDataTab(DialogTab *tab) {
   DialogPage *page = new DialogPage(this);
