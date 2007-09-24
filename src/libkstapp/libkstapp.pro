@@ -128,7 +128,7 @@ FORMS += \
     gridtab.ui \
     layouttab.ui \
     stroketab.ui \
-    vectordialog.ui \
     vectoreditordialog.ui \
+    vectortab.ui \
     viewmanager.ui
 

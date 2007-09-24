@@ -15,13 +15,13 @@
 #include "dialog.h"
 #include "dialogtab.h"
 
-#include "ui_vectordialog.h"
+#include "ui_vectortab.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class KST_EXPORT VectorTab : public DialogTab, Ui::VectorDialog {
+class KST_EXPORT VectorTab : public DialogTab, Ui::VectorTab {
   Q_OBJECT
   public:
     VectorTab(QWidget *parent = 0);

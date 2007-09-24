@@ -1,12 +1,12 @@
 <ui version="4.0" >
- <class>VectorDialog</class>
- <widget class="QWidget" name="VectorDialog" >
+ <class>VectorTab</class>
+ <widget class="QWidget" name="VectorTab" >
   <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>413</width>
-    <height>340</height>
+    <width>431</width>
+    <height>377</height>
    </rect>
   </property>
   <layout class="QGridLayout" >
@@ -230,7 +230,7 @@
          <bool>false</bool>
         </property>
         <property name="buddy" >
-         <cstring>N</cstring>
+         <cstring>_N</cstring>
         </property>
        </widget>
       </item>
@@ -266,7 +266,7 @@
            <bool>false</bool>
           </property>
           <property name="buddy" >
-           <cstring>XMin</cstring>
+           <cstring>_xMin</cstring>
           </property>
          </widget>
         </item>
@@ -295,7 +295,7 @@
            <bool>false</bool>
           </property>
           <property name="buddy" >
-           <cstring>XMax</cstring>
+           <cstring>_xMax</cstring>
           </property>
          </widget>
         </item>
@@ -357,17 +357,6 @@
    <header>datarange.h</header>
   </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>_readFromSource</tabstop>
-  <tabstop>_generateX</tabstop>
-  <tabstop>FileName</tabstop>
-  <tabstop>Field</tabstop>
-  <tabstop>_configure</tabstop>
-  <tabstop>_dataRange</tabstop>
-  <tabstop>_N</tabstop>
-  <tabstop>_xMin</tabstop>
-  <tabstop>_xMax</tabstop>
- </tabstops>
  <resources/>
  <connections/>
 </ui>
