@@ -14,14 +14,37 @@
 #include "dialogtab.h"
 #include "dialogpage.h"
 
+#include "kstdataobject.h"
+
 #include <QLabel>
 #include <QLineEdit>
 #include <QHBoxLayout>
+#include <QPushButton>
+#include <QDialogButtonBox>
 
 namespace Kst {
 
 DataDialog::DataDialog(QWidget *parent)
-  : Dialog(parent) {
+  : Dialog(parent), _dataObject(0) {
+
+  createGui();
+}
+
+DataDialog::DataDialog(KstObjectPtr dataObject, QWidget *parent)
+  : Dialog(parent), _dataObject(dataObject) {
+
+  createGui();
+}
+
+
+DataDialog::~DataDialog() {
+}
+
+void DataDialog::createGui() {
+
+  buttonBox()->button(QDialogButtonBox::Apply)->setVisible(false);
+
+  connect(this, SIGNAL(ok()), this, SLOT(slotOk()));
 
   QWidget *box = topCustomWidget();
 
@@ -30,15 +53,14 @@ DataDialog::DataDialog(QWidget *parent)
 
   QLabel *name = new QLabel(tr("Unique Name:"), box);
   QLineEdit *edit = new QLineEdit(box);
+
+  if (_dataObject)
+    edit->setText(_dataObject->tagName());
+
   layout->addWidget(name);
   layout->addWidget(edit);
 
   box->setLayout(layout);
-
-}
-
-
-DataDialog::~DataDialog() {
 }
 
 void DataDialog::addDataTab(DialogTab *tab) {
@@ -46,6 +68,15 @@ void DataDialog::addDataTab(DialogTab *tab) {
   page->setPageTitle(tab->tabTitle());
   page->addDialogTab(tab);
   addDialogPage(page);
+}
+
+void DataDialog::slotOk() {
+  KstObjectPtr ptr;
+  if (!dataObject())
+    ptr = createNewDataObject();
+  else
+    ptr = editExistingDataObject();
+  setDataObject(ptr);
 }
 
 }

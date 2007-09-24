@@ -46,6 +46,7 @@ class KST_EXPORT Dialog : public QDialog, public Ui::Dialog
     QWidget *rightCustomWidget() const;
     QWidget *topCustomWidget() const;
     QWidget *bottomCustomWidget() const;
+    QDialogButtonBox *buttonBox() const;
 
   private Q_SLOTS:
     void selectPageForItem(QListWidgetItem *item);

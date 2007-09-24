@@ -33,12 +33,32 @@ VectorDialog::VectorDialog(QWidget *parent)
   setWindowTitle(tr("New Vector"));
 
   _vectorTab = new VectorTab(this);
-//  connect(_vectorTab, SIGNAL(apply()), this, SLOT(vectorChanged()));
+  addDataTab(_vectorTab);
+}
+
+
+VectorDialog::VectorDialog(KstObjectPtr dataObject, QWidget *parent)
+  : DataDialog(dataObject, parent) {
+
+  setWindowTitle(tr("Edit Vector"));
+
+  _vectorTab = new VectorTab(this);
   addDataTab(_vectorTab);
 }
 
 
 VectorDialog::~VectorDialog() {
+}
+
+KstObjectPtr VectorDialog::createNewDataObject() const {
+  qDebug() << "createNewDataObject" << endl;
+  return 0;
+}
+
+
+KstObjectPtr VectorDialog::editExistingDataObject() const {
+  qDebug() << "editExistingDataObject" << endl;
+  return 0;
 }
 
 }

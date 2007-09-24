@@ -32,7 +32,12 @@ class KST_EXPORT VectorDialog : public DataDialog {
   Q_OBJECT
   public:
     VectorDialog(QWidget *parent = 0);
+    VectorDialog(KstObjectPtr dataObject, QWidget *parent = 0);
     virtual ~VectorDialog();
+
+  protected:
+    virtual KstObjectPtr createNewDataObject() const;
+    virtual KstObjectPtr editExistingDataObject() const;
 
   private:
     VectorTab *_vectorTab;

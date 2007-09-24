@@ -76,6 +76,11 @@ QWidget *Dialog::bottomCustomWidget() const {
   return _bottomCustom;
 }
 
+
+QDialogButtonBox *Dialog::buttonBox() const {
+ return _buttonBox;
+}
+
 void Dialog::selectPageForItem(QListWidgetItem *item) {
   if (_itemHash.contains(item))
     _stackedWidget->setCurrentWidget(_itemHash.value(item));
