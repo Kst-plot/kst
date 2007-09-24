@@ -12,7 +12,8 @@
 #ifndef VECTORDIALOG_H
 #define VECTORDIALOG_H
 
-#include <QDialog>
+#include "dialog.h"
+#include "dialogtab.h"
 
 #include "ui_vectordialog.h"
 
@@ -20,11 +21,21 @@
 
 namespace Kst {
 
-class KST_EXPORT VectorDialog : public QDialog, Ui::VectorDialog {
+class KST_EXPORT VectorTab : public DialogTab, Ui::VectorDialog {
+  Q_OBJECT
+  public:
+    VectorTab(QWidget *parent = 0);
+    virtual ~VectorTab();
+};
+
+class KST_EXPORT VectorDialog : public Dialog {
   Q_OBJECT
   public:
     VectorDialog(QWidget *parent = 0);
     virtual ~VectorDialog();
+
+  private:
+    VectorTab *_vectorTab;
 };
 
 }

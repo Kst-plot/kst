@@ -25,6 +25,7 @@ FileRequester::FileRequester(QWidget *parent)
   _fileButton = new QToolButton(this);
 
   QHBoxLayout * layout = new QHBoxLayout(this);
+  layout->setMargin(0);
   layout->addWidget(_fileEdit);
   layout->addWidget(_fileButton);
   setLayout(layout);

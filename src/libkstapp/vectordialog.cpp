@@ -11,13 +11,34 @@
 
 #include "vectordialog.h"
 
+#include "dialogpage.h"
+
 namespace Kst {
 
-VectorDialog::VectorDialog(QWidget *parent)
-  : QDialog(parent) {
+VectorTab::VectorTab(QWidget *parent)
+  : DialogTab(parent) {
 
   setupUi(this);
+  setTabTitle(tr("Vector"));
+}
+
+
+VectorTab::~VectorTab() {
+}
+
+
+VectorDialog::VectorDialog(QWidget *parent)
+  : Dialog(parent) {
+
   setWindowTitle(tr("New Vector"));
+
+  _vectorTab = new VectorTab(this);
+//  connect(_vectorTab, SIGNAL(apply()), this, SLOT(vectorChanged()));
+
+  DialogPage *page = new DialogPage(this);
+  page->setPageTitle(tr("Vector"));
+  page->addDialogTab(_vectorTab);
+  addDialogPage(page);
 }
 
 
