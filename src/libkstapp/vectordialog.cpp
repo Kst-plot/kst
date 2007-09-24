@@ -28,17 +28,13 @@ VectorTab::~VectorTab() {
 
 
 VectorDialog::VectorDialog(QWidget *parent)
-  : Dialog(parent) {
+  : DataDialog(parent) {
 
   setWindowTitle(tr("New Vector"));
 
   _vectorTab = new VectorTab(this);
 //  connect(_vectorTab, SIGNAL(apply()), this, SLOT(vectorChanged()));
-
-  DialogPage *page = new DialogPage(this);
-  page->setPageTitle(tr("Vector"));
-  page->addDialogTab(_vectorTab);
-  addDialogPage(page);
+  addDataTab(_vectorTab);
 }
 
 

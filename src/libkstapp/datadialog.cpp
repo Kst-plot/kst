@@ -9,37 +9,45 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef VECTORDIALOG_H
-#define VECTORDIALOG_H
-
 #include "datadialog.h"
+
 #include "dialogtab.h"
+#include "dialogpage.h"
 
-#include "ui_vectortab.h"
-
-#include "kst_export.h"
+#include <QLabel>
+#include <QLineEdit>
+#include <QHBoxLayout>
 
 namespace Kst {
 
-class KST_EXPORT VectorTab : public DialogTab, Ui::VectorTab {
-  Q_OBJECT
-  public:
-    VectorTab(QWidget *parent = 0);
-    virtual ~VectorTab();
-};
+DataDialog::DataDialog(QWidget *parent)
+  : Dialog(parent) {
 
-class KST_EXPORT VectorDialog : public DataDialog {
-  Q_OBJECT
-  public:
-    VectorDialog(QWidget *parent = 0);
-    virtual ~VectorDialog();
+  QWidget *box = topCustomWidget();
 
-  private:
-    VectorTab *_vectorTab;
-};
+  QHBoxLayout *layout = new QHBoxLayout(box);
+  layout->setContentsMargins(0, -1, 0, -1);
+
+  QLabel *name = new QLabel(tr("Unique Name:"), box);
+  QLineEdit *edit = new QLineEdit(box);
+  layout->addWidget(name);
+  layout->addWidget(edit);
+
+  box->setLayout(layout);
 
 }
 
-#endif
+
+DataDialog::~DataDialog() {
+}
+
+void DataDialog::addDataTab(DialogTab *tab) {
+  DialogPage *page = new DialogPage(this);
+  page->setPageTitle(tab->tabTitle());
+  page->addDialogTab(tab);
+  addDialogPage(page);
+}
+
+}
 
 // vim: ts=2 sw=2 et

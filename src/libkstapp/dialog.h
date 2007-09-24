@@ -42,6 +42,11 @@ class KST_EXPORT Dialog : public QDialog, public Ui::Dialog
   protected:
     void setVisible(bool visible);
 
+    QWidget *leftCustomWidget() const;
+    QWidget *rightCustomWidget() const;
+    QWidget *topCustomWidget() const;
+    QWidget *bottomCustomWidget() const;
+
   private Q_SLOTS:
     void selectPageForItem(QListWidgetItem *item);
     void buttonClicked(QAbstractButton *button);

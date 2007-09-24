@@ -9,33 +9,24 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef VECTORDIALOG_H
-#define VECTORDIALOG_H
+#ifndef DATADIALOG_H
+#define DATADIALOG_H
 
-#include "datadialog.h"
-#include "dialogtab.h"
-
-#include "ui_vectortab.h"
+#include "dialog.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class KST_EXPORT VectorTab : public DialogTab, Ui::VectorTab {
+class DialogTab;
+
+class KST_EXPORT DataDialog : public Dialog {
   Q_OBJECT
   public:
-    VectorTab(QWidget *parent = 0);
-    virtual ~VectorTab();
-};
+    DataDialog(QWidget *parent = 0);
+    virtual ~DataDialog();
 
-class KST_EXPORT VectorDialog : public DataDialog {
-  Q_OBJECT
-  public:
-    VectorDialog(QWidget *parent = 0);
-    virtual ~VectorDialog();
-
-  private:
-    VectorTab *_vectorTab;
+    void addDataTab(DialogTab *tab);
 };
 
 }

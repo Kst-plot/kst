@@ -57,6 +57,25 @@ void Dialog::setVisible(bool visible) {
 }
 
 
+QWidget *Dialog::leftCustomWidget() const {
+  return _leftCustom;
+}
+
+
+QWidget *Dialog::rightCustomWidget() const {
+  return _rightCustom;
+}
+
+
+QWidget *Dialog::topCustomWidget() const {
+  return _topCustom;
+}
+
+
+QWidget *Dialog::bottomCustomWidget() const {
+  return _bottomCustom;
+}
+
 void Dialog::selectPageForItem(QListWidgetItem *item) {
   if (_itemHash.contains(item))
     _stackedWidget->setCurrentWidget(_itemHash.value(item));
