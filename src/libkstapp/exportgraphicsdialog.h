@@ -13,21 +13,21 @@
 #define EXPORTGRAPHICSDIALOG_H
 
 #include <QDialog>
+
 #include "ui_exportgraphicsdialog.h"
 
+#include "kst_export.h"
+
 namespace Kst {
+
 class MainWindow;
 
-class ExportGraphicsDialog : public QDialog
+class KST_EXPORT ExportGraphicsDialog : public QDialog, Ui::ExportGraphicsDialog
 {
   Q_OBJECT
   public:
     ExportGraphicsDialog(MainWindow *win);
-    ~ExportGraphicsDialog();
-
-  private:
-    Ui::ExportGraphicsDialog ui;
-    MainWindow *_win;
+    virtual ~ExportGraphicsDialog();
 };
 
 }

@@ -486,7 +486,7 @@ void MainWindow::createActions() {
   _viewManagerAct->setIcon(QPixmap(":kst_viewmanager.png"));
   connect(_viewManagerAct, SIGNAL(triggered()), this, SLOT(showViewManager()));
 
-  _vectorEditorAct = new QAction(tr("&Vectors..."), this);
+  _vectorEditorAct = new QAction(tr("&Edit Vectors..."), this);
   _vectorEditorAct->setStatusTip(tr("Show all vectors in a spreadsheet"));
   connect(_vectorEditorAct, SIGNAL(triggered()), this, SLOT(showVectorEditor()));
 
@@ -527,10 +527,12 @@ void MainWindow::createMenus() {
 
   _dataMenu = menuBar()->addMenu(tr("&Data"));
   _dataMenu->addAction(_dataManagerAct);
+  _dataMenu->addSeparator();
   _dataMenu->addAction(_vectorEditorAct);
 
   _viewMenu = menuBar()->addMenu(tr("&View"));
   _viewMenu->addAction(_viewManagerAct);
+  _viewMenu->addSeparator();
 
   _layoutMenu = _viewMenu->addMenu(tr("&Layout"));
 

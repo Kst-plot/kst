@@ -19,7 +19,7 @@
 namespace Kst {
 
 VectorEditorDialog::VectorEditorDialog(QWidget *parent, Document *doc)
-: QDialog(parent), _doc(doc) {
+  : QDialog(parent), _doc(doc) {
   _model = new VectorTableModel;
   // TODO: Extract this model so the dialog can be reused, and make a new model
   // or modification to the model so that it tracks all the vector creates and
@@ -30,13 +30,13 @@ VectorEditorDialog::VectorEditorDialog(QWidget *parent, Document *doc)
     _model->vectors().append(vm);
   }
   KST::vectorList.lock().unlock();
-  ui.setupUi(this);
-  ui.vectors->setModel(_model);
+  setupUi(this);
+  _vectors->setModel(_model);
 }
 
 
 VectorEditorDialog::~VectorEditorDialog() {
-  ui.vectors->setModel(0);
+  _vectors->setModel(0);
   qDeleteAll(_model->vectors());
   _model->vectors().clear();
   delete _model;

@@ -13,21 +13,34 @@
 #define DATAMANAGER_H
 
 #include <QDialog>
+
 #include "ui_datamanager.h"
 
+#include "kst_export.h"
+
+class QToolBar;
+
 namespace Kst {
+
 class Document;
 
-class DataManager : public QDialog
+class KST_EXPORT DataManager : public QDialog, Ui::DataManager
 {
   Q_OBJECT
   public:
     DataManager(QWidget *parent, Document *doc);
-    ~DataManager();
+    virtual ~DataManager();
+
+  private Q_SLOTS:
+    void showVectorDialog();
 
   private:
-    Ui::DataManager ui;
     Document *_doc;
+
+    QToolBar *_primitives;
+    QToolBar *_dataObjects;
+    QToolBar *_fits;
+    QToolBar *_filters;
 };
 
 }

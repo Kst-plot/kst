@@ -9,45 +9,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "debugdialog.h"
-#include <kstdebug.h>
-#include <kstevents.h>
-#include <logevents.h>
+#include "vectordialog.h"
 
 namespace Kst {
 
-DebugDialog::DebugDialog(QWidget *parent)
+VectorDialog::VectorDialog(QWidget *parent)
   : QDialog(parent) {
+
   setupUi(this);
+  setWindowTitle(tr("New Vector"));
 }
 
 
-DebugDialog::~DebugDialog() {
-}
-
-
-bool DebugDialog::event(QEvent* e) {
-  if (e->type() == KstEventTypeLog) {
-    LogEvent *le = dynamic_cast<LogEvent*>(e);
-    if (le) {
-      switch (le->_eventType) {
-        case LogEvent::LogAdded:
-          _log->append(le->_msg.msg);
-          if (le->_msg.level == KstDebug::Error) {
-            emit notifyOfError();
-          }
-          break;
-        case LogEvent::LogCleared:
-            _log->clear();
-            emit notifyAllClear();
-          break;
-        default:
-          break;
-      }
-    }
-    return true;
-  }
-  return false;
+VectorDialog::~VectorDialog() {
 }
 
 }

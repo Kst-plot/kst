@@ -9,47 +9,26 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "debugdialog.h"
-#include <kstdebug.h>
-#include <kstevents.h>
-#include <logevents.h>
+#ifndef VECTORDIALOG_H
+#define VECTORDIALOG_H
+
+#include <QDialog>
+
+#include "ui_vectordialog.h"
+
+#include "kst_export.h"
 
 namespace Kst {
 
-DebugDialog::DebugDialog(QWidget *parent)
-  : QDialog(parent) {
-  setupUi(this);
-}
-
-
-DebugDialog::~DebugDialog() {
-}
-
-
-bool DebugDialog::event(QEvent* e) {
-  if (e->type() == KstEventTypeLog) {
-    LogEvent *le = dynamic_cast<LogEvent*>(e);
-    if (le) {
-      switch (le->_eventType) {
-        case LogEvent::LogAdded:
-          _log->append(le->_msg.msg);
-          if (le->_msg.level == KstDebug::Error) {
-            emit notifyOfError();
-          }
-          break;
-        case LogEvent::LogCleared:
-            _log->clear();
-            emit notifyAllClear();
-          break;
-        default:
-          break;
-      }
-    }
-    return true;
-  }
-  return false;
-}
+class KST_EXPORT VectorDialog : public QDialog, Ui::VectorDialog {
+  Q_OBJECT
+  public:
+    VectorDialog(QWidget *parent = 0);
+    virtual ~VectorDialog();
+};
 
 }
+
+#endif
 
 // vim: ts=2 sw=2 et

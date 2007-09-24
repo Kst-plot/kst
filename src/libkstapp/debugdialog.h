@@ -13,16 +13,19 @@
 #define DEBUGDIALOG_H
 
 #include <QDialog>
+
 #include "ui_debugdialog.h"
+
+#include "kst_export.h"
 
 namespace Kst {
 
-class DebugDialog : public QDialog
+class KST_EXPORT DebugDialog : public QDialog, Ui::DebugDialog
 {
   Q_OBJECT
   public:
     DebugDialog(QWidget *parent);
-    ~DebugDialog();
+    virtual ~DebugDialog();
 
   Q_SIGNALS:
     void notifyOfError();
@@ -30,9 +33,6 @@ class DebugDialog : public QDialog
 
   protected:
     bool event(QEvent *e);
-
-  private:
-    Ui::DebugDialog ui;
 };
 
 }

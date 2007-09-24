@@ -55,6 +55,7 @@ SOURCES += \
     stroketab.cpp \
     svgitem.cpp \
     tabwidget.cpp \
+    vectordialog.cpp \
     vectoreditordialog.cpp \
     vectorcurverenderitem.cpp \
     vectormodel.cpp \
@@ -104,6 +105,7 @@ HEADERS += \
     svgitem.h \
     stroketab.h \
     tabwidget.h \
+    vectordialog.h \
     vectoreditordialog.h \
     vectormodel.h \
     vectorcurverenderitem.h \
@@ -126,6 +128,7 @@ FORMS += \
     gridtab.ui \
     layouttab.ui \
     stroketab.ui \
+    vectordialog.ui \
     vectoreditordialog.ui \
     viewmanager.ui
 

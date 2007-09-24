@@ -20,7 +20,7 @@
     <number>6</number>
    </property>
    <item row="0" column="0" >
-    <widget class="QTableView" name="vectors" />
+    <widget class="QTableView" name="_vectors" />
    </item>
    <item row="1" column="0" >
     <widget class="QDialogButtonBox" name="buttonBox" >

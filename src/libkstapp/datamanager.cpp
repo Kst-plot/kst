@@ -11,25 +11,94 @@
 
 #include "datamanager.h"
 
+#include "vectordialog.h"
+
 #include "document.h"
 #include "sessionmodel.h"
+
+#include <QToolBar>
 
 namespace Kst {
 
 DataManager::DataManager(QWidget *parent, Document *doc)
-: QDialog(parent), _doc(doc) {
-  ui.setupUi(this);
-  ui.session->setModel(doc->session());
-  QWidget *w = new QWidget(ui.objects);
-  ui.objects->addItem(w, tr("Data"));
-  w = new QWidget(ui.objects);
-  ui.objects->addItem(w, tr("Objects"));
-  w = new QWidget(ui.objects);
-  ui.objects->addItem(w, tr("Plugins"));
+  : QDialog(parent), _doc(doc) {
+
+  setupUi(this);
+  _session->setModel(doc->session());
+
+  _primitives = new QToolBar(_objects);
+  _primitives->setOrientation(Qt::Vertical);
+  _primitives->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+  _dataObjects = new QToolBar(_objects);
+  _dataObjects->setOrientation(Qt::Vertical);
+  _dataObjects->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+  _fits = new QToolBar(_objects);
+  _fits->setOrientation(Qt::Vertical);
+  _fits->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+  _filters = new QToolBar(_objects);
+  _filters->setOrientation(Qt::Vertical);
+  _filters->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+  _objects->addItem(_primitives, tr("Create Primitive"));
+  _objects->addItem(_dataObjects, tr("Create Data Object"));
+  _objects->addItem(_fits, tr("Create Fit"));
+  _objects->addItem(_filters, tr("Create Filter"));
+
+//   Create canonical items...
+
+//FIXME "Scalar"
+
+  QAction *action = _primitives->addAction(tr("Vector"));
+  connect(action, SIGNAL(triggered()), this, SLOT(showVectorDialog()));
+  QWidget *widget = _primitives->widgetForAction(action);
+  widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+  action = _primitives->addAction(tr("Matrix"));
+  widget = _primitives->widgetForAction(action);
+  widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+//FIXME "String"
+
+  action = _dataObjects->addAction(tr("Curve"));
+  widget = _dataObjects->widgetForAction(action);
+  widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+  action = _dataObjects->addAction(tr("Equation"));
+  widget = _dataObjects->widgetForAction(action);
+  widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+  action = _dataObjects->addAction(tr("Histogram"));
+  widget = _dataObjects->widgetForAction(action);
+  widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+  action = _dataObjects->addAction(tr("Power Spectrum"));
+  widget = _dataObjects->widgetForAction(action);
+  widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+  action = _dataObjects->addAction(tr("Event Monitor"));
+  widget = _dataObjects->widgetForAction(action);
+  widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+  action = _dataObjects->addAction(tr("Image"));
+  widget = _dataObjects->widgetForAction(action);
+  widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+  action = _dataObjects->addAction(tr("CSD"));
+  widget = _dataObjects->widgetForAction(action);
+  widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 }
 
 
 DataManager::~DataManager() {
+}
+
+
+void DataManager::showVectorDialog() {
+  VectorDialog dialog(this);
+  dialog.exec();
 }
 
 }

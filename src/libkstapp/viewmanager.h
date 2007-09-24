@@ -13,21 +13,21 @@
 #define VIEWMANAGER_H
 
 #include <QDialog>
+
 #include "ui_viewmanager.h"
 
+#include "kst_export.h"
+
 namespace Kst {
+
 class MainWindow;
 
-class ViewManager : public QDialog
+class KST_EXPORT ViewManager : public QDialog, Ui::ViewManager
 {
   Q_OBJECT
   public:
     ViewManager(MainWindow *parent);
-    ~ViewManager();
-
-  private:
-    Ui::ViewManager ui;
-    MainWindow *_win;
+    virtual ~ViewManager();
 };
 
 }

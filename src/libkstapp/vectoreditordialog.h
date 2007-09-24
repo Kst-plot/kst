@@ -13,21 +13,24 @@
 #define VECTOREDITORDIALOG_H
 
 #include <QDialog>
+
 #include "ui_vectoreditordialog.h"
 
+#include "kst_export.h"
+
 namespace Kst {
+
 class Document;
 class VectorTableModel;
 
-class VectorEditorDialog : public QDialog
+class KST_EXPORT VectorEditorDialog : public QDialog, Ui::VectorEditorDialog
 {
   Q_OBJECT
   public:
     VectorEditorDialog(QWidget *parent, Document *doc);
-    ~VectorEditorDialog();
+    virtual ~VectorEditorDialog();
 
   private:
-    Ui::VectorEditorDialog ui;
     Document *_doc;
     VectorTableModel *_model;
 };

@@ -16,8 +16,8 @@
 namespace Kst {
 
 ExportGraphicsDialog::ExportGraphicsDialog(MainWindow *parent)
-: QDialog(parent), _win(parent) {
-  ui.setupUi(this);
+  : QDialog(parent) {
+  setupUi(this);
 }
 
 

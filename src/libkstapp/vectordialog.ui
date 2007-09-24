@@ -386,9 +386,6 @@
   <tabstop>_xMin</tabstop>
   <tabstop>_xMax</tabstop>
  </tabstops>
- <includes>
-  <include location="local" >kstdatarange.h</include>
- </includes>
  <resources/>
  <connections/>
 </ui>

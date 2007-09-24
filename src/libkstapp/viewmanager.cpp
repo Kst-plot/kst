@@ -11,6 +11,7 @@
 
 #include "viewmanager.h"
 
+#include "application.h"
 #include "mainwindow.h"
 #include "sessionmodel.h"
 #include "tabwidget.h"
@@ -21,13 +22,13 @@
 namespace Kst {
 
 ViewManager::ViewManager(MainWindow *parent)
-: QDialog(parent), _win(parent) {
-  ui.setupUi(this);
-  View *v = _win->tabWidget()->currentView();
+  : QDialog(parent) {
+  setupUi(this);
+  View *v = kstApp->mainWindow()->tabWidget()->currentView();
   if (v) {
     QGraphicsScene *scene = v->scene();
     // Setup a model for the scene
-    //ui.view->setModel(scene);
+    //_view->setModel(scene);
   }
 }
 
