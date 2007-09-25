@@ -17,7 +17,11 @@
 
 #include "ui_vectortab.h"
 
+#include <QPointer>
+
 #include "kst_export.h"
+
+class KstDataSourceConfigWidget;
 
 namespace Kst {
 
@@ -45,9 +49,12 @@ class KST_EXPORT VectorTab : public DialogTab, Ui::VectorTab {
   private Q_SLOTS:
     void readFromSourceChanged();
     void fileNameChanged(const QString &file);
+    void showConfigWidget();
 
   private:
     Mode _mode;
+
+    QPointer<KstDataSourceConfigWidget> _configWidget;
 };
 
 class KST_EXPORT VectorDialog : public DataDialog {

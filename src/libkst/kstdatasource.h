@@ -257,23 +257,23 @@ class KstDataSourceList : public KstObjectList<KstDataSourcePtr> {
     KstDataSourceList(const KstDataSourceList& x) : KstObjectList<KstDataSourcePtr>(x) {}
     virtual ~KstDataSourceList() {}
 
-    virtual KstDataSourceList::Iterator findFileName(const QString& x) {
+    virtual KstDataSourcePtr findFileName(const QString& x) {
       for (KstDataSourceList::Iterator it = begin(); it != end(); ++it) {
         if ((*it)->fileName() == x) {
-          return it;
+          return *it;
         }
       }
-      return end();
+      return 0;
     }
 
     // @since 1.1.0
-    KstDataSourceList::Iterator findReusableFileName(const QString& x) {
+    KstDataSourcePtr findReusableFileName(const QString& x) {
       for (KstDataSourceList::Iterator it = begin(); it != end(); ++it) {
         if ((*it)->reusable() && (*it)->fileName() == x) {
-          return it;
+          return *it;
         }
       }
-      return end();
+      return 0;
     }
 
     // @since 1.1.0

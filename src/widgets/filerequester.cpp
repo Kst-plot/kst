@@ -80,7 +80,7 @@ void FileRequester::setFile(const QString &file) {
 
 void FileRequester::chooseFile() {
 
-  QString file = QFileDialog::getOpenFileName(this);
+  QString file = QFileDialog::getOpenFileName(this, QString(), _file);
   if (!file.isEmpty()) {
     setFile(file);
   }

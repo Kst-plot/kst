@@ -15,7 +15,11 @@
 
 #include "kstsvector.h"
 
+#include "kstdatacollection.h"
+#include "kstdataobjectcollection.h"
+
 #include <QDir>
+#include <QUrl>
 
 namespace Kst {
 
@@ -29,8 +33,13 @@ VectorTab::VectorTab(QWidget *parent)
           this, SLOT(readFromSourceChanged()));
   connect(_fileName, SIGNAL(changed(const QString &)),
           this, SLOT(fileNameChanged(const QString &)));
+  connect(_configure, SIGNAL(clicked()),
+          this, SLOT(showConfigWidget()));
 
   _fileName->setFile(QDir::currentPath());
+
+  //FIXME need a solution for replacing kio for this...
+  _connect->setVisible(false);
 }
 
 
@@ -77,10 +86,57 @@ void VectorTab::readFromSourceChanged() {
 
 
 void VectorTab::fileNameChanged(const QString &file) {
-  //FIXME deep magic...
   QFileInfo info(file);
-  if (info.exists() && info.isFile())
-    qDebug() << "fileNameChanged" << endl;
+  if (!info.exists() || !info.isFile())
+    return;
+
+  _field->clear();
+
+  KST::dataSourceList.lock().readLock();
+
+  KstDataSourcePtr ds = KST::dataSourceList.findReusableFileName(QUrl(file));
+  KST::dataSourceList.lock().unlock();
+
+  //FIXME this can't be good...
+  delete _configWidget;
+  _configWidget = 0L;
+
+  QStringList list;
+  if (ds) {
+
+    ds->readLock();
+    list = ds->fieldList();
+    _field->setEditable(!ds->fieldListIsComplete());
+    _configWidget = ds->configWidget();
+    ds->unlock();
+    _field->setEnabled(true);
+    //_dataRange->setAllowTime(ds->supportsTimeConversions());
+
+  } else {
+
+    QString type;
+    bool complete = false;
+
+    list = KstDataSource::fieldListForSource(QUrl(file), QString::null, &type, &complete);
+
+    _field->setEditable(!complete);
+    _field->setEnabled(!list.isEmpty());
+
+    if (!list.isEmpty() && !type.isEmpty()) {
+      _configWidget = KstDataSource::configWidgetForSource(QUrl(file), type);
+    }
+
+    //_dataRange->setAllowTime(KstDataSource::supportsTime(QUrl(file), type));
+  }
+
+  _configure->setEnabled(_configWidget);
+
+  _field->addItems(list);
+}
+
+
+void VectorTab::showConfigWidget() {
+  _configWidget->show();
 }
 
 
@@ -101,6 +157,8 @@ VectorDialog::VectorDialog(KstObjectPtr dataObject, QWidget *parent)
 
   _vectorTab = new VectorTab(this);
   addDataTab(_vectorTab);
+
+  //FIXME need to do validation to enable/disable ok button...
 }
 
 

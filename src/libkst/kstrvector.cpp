@@ -77,9 +77,9 @@ KstRVector::KstRVector(const QString &tag, const QByteArray &data,
   if (!in_provider && !file.isEmpty()) {
     KST::dataSourceList.lock().readLock();
     if (o_file == "|") {
-      in_file = *KST::dataSourceList.findFileName(file);
+      in_file = KST::dataSourceList.findFileName(file);
     } else {
-      in_file = *KST::dataSourceList.findFileName(o_file);
+      in_file = KST::dataSourceList.findFileName(o_file);
     }
     KST::dataSourceList.lock().unlock();
   }

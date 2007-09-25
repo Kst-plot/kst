@@ -62,7 +62,7 @@ KstRMatrix::KstRMatrix(const QDomElement &e) : KstMatrix(KstObjectTag::invalidTa
         in_tag = e.text();
       } else if (e.tagName() == "file") {
         KST::dataSourceList.lock().readLock();
-        in_file = *KST::dataSourceList.findFileName(e.text());
+        in_file = KST::dataSourceList.findFileName(e.text());
         KST::dataSourceList.lock().unlock();
       } else if (e.tagName() == "provider") {
         KST::dataSourceList.lock().readLock();
