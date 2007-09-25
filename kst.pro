@@ -9,8 +9,8 @@ SUBDIRS += \
     src/libkstapp \
     src/kst \
     src/d2asc \
-    src/d2d
+    src/d2d \
+#    tests
 #     src/plugins \
 #     src/extensions \
-#     tests \
 #     misc
