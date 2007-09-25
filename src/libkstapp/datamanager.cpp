@@ -10,6 +10,8 @@
  ***************************************************************************/
 
 #include "datamanager.h"
+#include "databuttonaction.h"
+#include "databutton.h"
 
 #include "vectordialog.h"
 
@@ -51,42 +53,43 @@ DataManager::DataManager(QWidget *parent, Document *doc)
 
 //FIXME "Scalar"
 
-  QAction *action = _primitives->addAction(tr("Vector"));
+  QAction *action = new DataButtonAction(tr("Vector"));
+  _primitives->addAction(action);
   connect(action, SIGNAL(triggered()), this, SLOT(showVectorDialog()));
   QWidget *widget = _primitives->widgetForAction(action);
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
-  action = _primitives->addAction(tr("Matrix"));
+  action = _primitives->addWidget(new DataButton(tr("Matrix")));
   widget = _primitives->widgetForAction(action);
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
 //FIXME "String"
 
-  action = _dataObjects->addAction(tr("Curve"));
+  action = _dataObjects->addWidget(new DataButton(tr("Curve")));
   widget = _dataObjects->widgetForAction(action);
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
-  action = _dataObjects->addAction(tr("Equation"));
+  action = _dataObjects->addWidget(new DataButton(tr("Equation")));
   widget = _dataObjects->widgetForAction(action);
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
-  action = _dataObjects->addAction(tr("Histogram"));
+  action = _dataObjects->addWidget(new DataButton(tr("Histogram")));
   widget = _dataObjects->widgetForAction(action);
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
-  action = _dataObjects->addAction(tr("Power Spectrum"));
+  action = _dataObjects->addWidget(new DataButton(tr("Power Spectrum")));
   widget = _dataObjects->widgetForAction(action);
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
-  action = _dataObjects->addAction(tr("Event Monitor"));
+  action = _dataObjects->addWidget(new DataButton(tr("Event Monitor")));
   widget = _dataObjects->widgetForAction(action);
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
-  action = _dataObjects->addAction(tr("Image"));
+  action = _dataObjects->addWidget(new DataButton(tr("Image")));
   widget = _dataObjects->widgetForAction(action);
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
-  action = _dataObjects->addAction(tr("CSD"));
+  action = _dataObjects->addWidget(new DataButton(tr("CSD")));
   widget = _dataObjects->widgetForAction(action);
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 }

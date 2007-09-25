@@ -27,6 +27,8 @@ SOURCES += \
     builtingraphics.cpp \
     datadialog.cpp \
     datamanager.cpp \
+    databutton.cpp \
+    databuttonaction.cpp \
     debugdialog.cpp \
     debugnotifier.cpp \
     dialog.cpp \
@@ -75,6 +77,8 @@ HEADERS += \
     axis.h \
     boxitem.h \
     builtingraphics.h \
+    databutton.h \
+    databuttonaction.h \
     datadialog.h \
     datamanager.h \
     dataref.h \
