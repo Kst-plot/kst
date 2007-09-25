@@ -61,36 +61,44 @@ DataManager::DataManager(QWidget *parent, Document *doc)
 
   action = _primitives->addWidget(new DataButton(tr("Matrix")));
   widget = _primitives->widgetForAction(action);
+  widget->setEnabled(false);
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
 //FIXME "String"
 
   action = _dataObjects->addWidget(new DataButton(tr("Curve")));
   widget = _dataObjects->widgetForAction(action);
+  widget->setEnabled(false);
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
   action = _dataObjects->addWidget(new DataButton(tr("Equation")));
   widget = _dataObjects->widgetForAction(action);
+  widget->setEnabled(false);
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
   action = _dataObjects->addWidget(new DataButton(tr("Histogram")));
   widget = _dataObjects->widgetForAction(action);
+  widget->setEnabled(false);
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
   action = _dataObjects->addWidget(new DataButton(tr("Power Spectrum")));
   widget = _dataObjects->widgetForAction(action);
+  widget->setEnabled(false);
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
   action = _dataObjects->addWidget(new DataButton(tr("Event Monitor")));
   widget = _dataObjects->widgetForAction(action);
+  widget->setEnabled(false);
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
   action = _dataObjects->addWidget(new DataButton(tr("Image")));
   widget = _dataObjects->widgetForAction(action);
+  widget->setEnabled(false);
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
   action = _dataObjects->addWidget(new DataButton(tr("CSD")));
   widget = _dataObjects->widgetForAction(action);
+  widget->setEnabled(false);
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 }
 
