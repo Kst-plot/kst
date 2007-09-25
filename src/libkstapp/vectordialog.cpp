@@ -15,6 +15,8 @@
 
 #include "kstsvector.h"
 
+#include <limits.h>
+
 namespace Kst {
 
 VectorTab::VectorTab(QWidget *parent)
@@ -31,13 +33,23 @@ VectorTab::~VectorTab() {
 }
 
 
-int VectorTab::from() const {
-  return _from->value();
+qreal VectorTab::from() const {
+  return _from->text().toDouble();
 }
 
 
-int VectorTab::to() const {
-  return _to->value();
+void VectorTab::setFrom(qreal from) {
+  _from->setText(QString::number(from));
+}
+
+
+qreal VectorTab::to() const {
+  return _to->text().toDouble();
+}
+
+
+void VectorTab::setTo(qreal to) {
+  _to->setText(QString::number(to));
 }
 
 

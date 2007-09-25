@@ -271,12 +271,12 @@
          </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="_to" >
+         <widget class="QLineEdit" name="_to" >
           <property name="whatsThis" >
            <string>The minimum value of the independent variable.</string>
           </property>
-          <property name="value" >
-           <number>-10.0</number>
+          <property name="text" >
+           <string>-10.0</string>
           </property>
          </widget>
         </item>
@@ -300,12 +300,12 @@
          </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="_from" >
+         <widget class="QLineEdit" name="_from" >
           <property name="whatsThis" >
            <string>The maximum value of the independent variable.</string>
           </property>
-          <property name="value" >
-           <number>10.0</number>
+          <property name="text" >
+           <string>10.0</string>
           </property>
          </widget>
         </item>

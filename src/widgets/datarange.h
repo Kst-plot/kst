@@ -19,11 +19,48 @@
 
 namespace Kst {
 
+//FIXME Need to add time related methods/functionality
+
 class  KST_EXPORT DataRange : public QWidget, public Ui::DataRange {
   Q_OBJECT
   public:
     DataRange(QWidget *parent = 0);
     virtual ~DataRange();
+
+    qreal start() const;
+    void setStart(qreal start);
+
+    //FIXME Probably should be an enum...
+    QString startUnits() const;
+    void setStartUnits(const QString &startUnits) const;
+
+    qreal range() const;
+    void setRange(qreal range);
+
+    //FIXME Probably should be an enum...
+    QString rangeUnits() const;
+    void setRangeUnits(const QString &rangeUnits) const;
+
+    int skip() const;
+    void setSkip(int skip);
+
+    bool countFromEnd() const;
+    void setCountFromEnd(bool countFromEnd);
+
+    bool readToEnd() const;
+    void setReadToEnd(bool readToEnd);
+
+    bool doSkip() const;
+    void setDoSkip(bool doSkip);
+
+    bool doFilter() const;
+    void setDoFilter(bool doFilter);
+
+  private Q_SLOTS:
+    void countFromEndChanged();
+    void readToEndChanged();
+    void doSkipChanged();
+
 };
 
 }

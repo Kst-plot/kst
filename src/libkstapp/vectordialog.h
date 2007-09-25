@@ -33,11 +33,11 @@ class KST_EXPORT VectorTab : public DialogTab, Ui::VectorTab {
     void setMode(Mode mode) { _mode = mode; }
 
     //Slave vector mode methods...
-    int from() const;
-    void setFrom(int from);
+    qreal from() const;
+    void setFrom(qreal from);
 
-    int to() const;
-    void setTo(int to);
+    qreal to() const;
+    void setTo(qreal to);
 
     int numberOfSamples() const;
     void setNumberOfSamples(int numberOfSamples);
