@@ -15,7 +15,7 @@
 
 #include "kstsvector.h"
 
-#include <limits.h>
+#include <QDir>
 
 namespace Kst {
 
@@ -25,7 +25,12 @@ VectorTab::VectorTab(QWidget *parent)
   setupUi(this);
   setTabTitle(tr("Vector"));
 
-  connect(_readFromSource, SIGNAL(toggled(bool)), this, SLOT(sourceChanged()));
+  connect(_readFromSource, SIGNAL(toggled(bool)),
+          this, SLOT(readFromSourceChanged()));
+  connect(_fileName, SIGNAL(changed(const QString &)),
+          this, SLOT(fileNameChanged(const QString &)));
+
+  _fileName->setFile(QDir::currentPath());
 }
 
 
@@ -58,7 +63,7 @@ int VectorTab::numberOfSamples() const {
 }
 
 
-void VectorTab::sourceChanged() {
+void VectorTab::readFromSourceChanged() {
 
   if (_readFromSource->isChecked())
     setMode(ReadOnlyVector);
@@ -68,6 +73,14 @@ void VectorTab::sourceChanged() {
   _rvectorGroup->setEnabled(_readFromSource->isChecked());
   _dataRange->setEnabled(_readFromSource->isChecked());
   _svectorGroup->setEnabled(!_readFromSource->isChecked());
+}
+
+
+void VectorTab::fileNameChanged(const QString &file) {
+  //FIXME deep magic...
+  QFileInfo info(file);
+  if (info.exists() && info.isFile())
+    qDebug() << "fileNameChanged" << endl;
 }
 
 
@@ -109,8 +122,8 @@ KstObjectPtr VectorDialog::createNewDataObject() const {
 
   } else if (_vectorTab->mode() == VectorTab::SlaveVector) {
 
-    const int from = _vectorTab->from();
-    const int to = _vectorTab->to();
+    const qreal from = _vectorTab->from();
+    const qreal to = _vectorTab->to();
     const int numberOfSamples = _vectorTab->numberOfSamples();
     const KstObjectTag tag = KstObjectTag(tagName(), KstObjectTag::globalTagContext);
 

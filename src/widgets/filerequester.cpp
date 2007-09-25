@@ -16,6 +16,8 @@
 #include <QHBoxLayout>
 #include <QFileDialog>
 
+#include <QDebug>
+
 namespace Kst {
 
 FileRequester::FileRequester(QWidget *parent)
@@ -52,7 +54,7 @@ FileRequester::FileRequester(const QString &file, QWidget *parent)
   _fileButton->setIcon(QPixmap(":kst_changefile.png"));
 
   setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-  connect (_fileEdit, SIGNAL(textChanged(const QString &)), this, SLOT(setFile(const QString &)));
+  connect (_fileEdit, SIGNAL(textEdited(const QString &)), this, SLOT(setFile(const QString &)));
   connect (_fileButton, SIGNAL(clicked()), this, SLOT(chooseFile()));
 }
 
@@ -68,16 +70,19 @@ QString FileRequester::file() const {
 
 void FileRequester::setFile(const QString &file) {
   _file = file;
+  //FIXME grrr QLineEdit doc *lies* to me... the textEdited signal is being triggered!!
+  _fileEdit->blockSignals(true);
+  _fileEdit->setText(_file);
+  _fileEdit->blockSignals(false);
   emit changed(file);
 }
 
 
 void FileRequester::chooseFile() {
 
-  bool ok;
   QString file = QFileDialog::getOpenFileName(this);
-  if (ok && !file.isEmpty()) {
-    _fileEdit->setText(file); //will call setFile...
+  if (!file.isEmpty()) {
+    setFile(file);
   }
 }
 

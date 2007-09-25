@@ -137,7 +137,11 @@
        </widget>
       </item>
       <item row="1" column="1" >
-       <widget class="Kst::ComboBox" name="_field" />
+       <widget class="Kst::ComboBox" name="_field" >
+        <property name="enabled" >
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
       <item row="2" column="0" colspan="2" >
        <layout class="QHBoxLayout" >
@@ -171,6 +175,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="_connect" >
+          <property name="enabled" >
+           <bool>false</bool>
+          </property>
           <property name="text" >
            <string>Conn&amp;ect</string>
           </property>
@@ -178,6 +185,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="_configure" >
+          <property name="enabled" >
+           <bool>false</bool>
+          </property>
           <property name="text" >
            <string>Con&amp;figure...</string>
           </property>

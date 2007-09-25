@@ -43,7 +43,8 @@ class KST_EXPORT VectorTab : public DialogTab, Ui::VectorTab {
     void setNumberOfSamples(int numberOfSamples);
 
   private Q_SLOTS:
-    void sourceChanged();
+    void readFromSourceChanged();
+    void fileNameChanged(const QString &file);
 
   private:
     Mode _mode;
