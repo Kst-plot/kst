@@ -1,0 +1,198 @@
+<ui version="4.0" >
+ <class>EditMultipleWidget</class>
+ <widget class="QWidget" name="EditMultipleWidget" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>325</width>
+    <height>342</height>
+   </rect>
+  </property>
+  <property name="sizePolicy" >
+   <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle" >
+   <string>EditMultipleWidget</string>
+  </property>
+  <layout class="QGridLayout" >
+   <item row="0" column="0" >
+    <widget class="QGroupBox" name="groupBox6" >
+     <property name="title" >
+      <string>Select Objects</string>
+     </property>
+     <widget class="QLabel" name="textLabel1" >
+      <property name="geometry" >
+       <rect>
+        <x>2</x>
+        <y>18</y>
+        <width>30</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="text" >
+       <string>Filter:</string>
+      </property>
+      <property name="wordWrap" >
+       <bool>false</bool>
+      </property>
+      <property name="buddy" >
+       <cstring>_filterEdit</cstring>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="_filterEdit" >
+      <property name="geometry" >
+       <rect>
+        <x>37</x>
+        <y>18</y>
+        <width>161</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QWidget" name="layoutWidget" >
+      <property name="geometry" >
+       <rect>
+        <x>210</x>
+        <y>20</y>
+        <width>88</width>
+        <height>301</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" >
+       <property name="leftMargin" >
+        <number>0</number>
+       </property>
+       <property name="topMargin" >
+        <number>0</number>
+       </property>
+       <property name="rightMargin" >
+        <number>0</number>
+       </property>
+       <property name="bottomMargin" >
+        <number>0</number>
+       </property>
+       <item row="1" column="0" >
+        <widget class="QPushButton" name="_selectAllBut" >
+         <property name="text" >
+          <string>Select &amp;All</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" >
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType" >
+          <enum>QSizePolicy::Expanding</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>86</width>
+           <height>160</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="3" column="0" >
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType" >
+          <enum>QSizePolicy::Expanding</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>86</width>
+           <height>160</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="2" column="0" >
+        <widget class="QPushButton" name="_selectNoneBut" >
+         <property name="text" >
+          <string>Select &amp;None</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QListWidget" name="_objectList" >
+      <property name="geometry" >
+       <rect>
+        <x>2</x>
+        <y>42</y>
+        <width>201</width>
+        <height>281</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+ <tabstops>
+  <tabstop>_filterEdit</tabstop>
+  <tabstop>_selectAllBut</tabstop>
+  <tabstop>_selectNoneBut</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>_selectAllBut</sender>
+   <signal>clicked()</signal>
+   <receiver>EditMultipleWidget</receiver>
+   <slot>selectAllObjects()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_filterEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>EditMultipleWidget</receiver>
+   <slot>applyFilter(QString)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_selectNoneBut</sender>
+   <signal>clicked()</signal>
+   <receiver>_objectList</receiver>
+   <slot>clearSelection()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>136</x>
+     <y>142</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

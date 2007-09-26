@@ -44,6 +44,7 @@ class KST_EXPORT DataDialog : public Dialog {
 
   private Q_SLOTS:
     void slotOk();
+    void slotEditMultiple();
 
   private:
     void createGui();

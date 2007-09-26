@@ -77,9 +77,15 @@ QWidget *Dialog::bottomCustomWidget() const {
 }
 
 
+QWidget *Dialog::extensionWidget() const {
+  return _extensionWidget;
+}
+
+
 QDialogButtonBox *Dialog::buttonBox() const {
  return _buttonBox;
 }
+
 
 void Dialog::selectPageForItem(QListWidgetItem *item) {
   if (_itemHash.contains(item))

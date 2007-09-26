@@ -14,6 +14,8 @@
 #include "dialogtab.h"
 #include "dialogpage.h"
 
+#include "editmultiplewidget.h"
+
 #include "kstdataobject.h"
 
 #include <QLabel>
@@ -46,6 +48,17 @@ void DataDialog::createGui() {
 
   connect(this, SIGNAL(ok()), this, SLOT(slotOk()));
 
+  QWidget *extension = extensionWidget();
+
+  QVBoxLayout *extensionLayout = new QVBoxLayout(extension);
+  extensionLayout->setContentsMargins(0, -1, 0, -1);
+
+  EditMultipleWidget *editMultipleWidget = new EditMultipleWidget();
+  extensionLayout->addWidget(editMultipleWidget);
+
+  extension->setLayout(extensionLayout);
+  extension->hide();
+
   QWidget *box = topCustomWidget();
 
   QHBoxLayout *layout = new QHBoxLayout(box);
@@ -54,11 +67,17 @@ void DataDialog::createGui() {
   QLabel *label = new QLabel(tr("Unique Name:"), box);
   _tagName = new QLineEdit(box);
 
+  QPushButton *button = new QPushButton(tr("Edit Multiple >>"));
+  connect(button, SIGNAL(clicked()), this, SLOT(slotEditMultiple()));
+
   if (_dataObject)
     _tagName->setText(_dataObject->tagName());
+  else
+    button->setVisible(false);
 
   layout->addWidget(label);
   layout->addWidget(_tagName);
+  layout->addWidget(button);
 
   box->setLayout(layout);
 }
@@ -84,6 +103,15 @@ void DataDialog::slotOk() {
     ptr = editExistingDataObject();
   setDataObject(ptr);
 }
+
+
+void DataDialog::slotEditMultiple() {
+  if (extensionWidget()->isVisible())
+    extensionWidget()->hide();
+  else
+    extensionWidget()->show();
+}
+
 
 }
 
