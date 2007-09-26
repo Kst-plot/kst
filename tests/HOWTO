@@ -1,0 +1,14 @@
+This testsuite is based on QTestLib from Trolltech.  To add a test just
+create a new class called TestFoo and add this class to main.cpp.  You can
+use TestVector as a pretty good example of how to do this.
+
+Here are some nice links to learn more about QTestLib:
+
+############# QTESTLIB MANUAL #############
+1) http://doc.trolltech.com/4.3/qtestlib-manual.html
+
+############# GREAT TUTORIAL #############
+2) http://techbase.kde.org/Development/Tutorials/Unittests
+
+############# QTEST DOCS #############
+3) http://doc.trolltech.com/4.3/qtest.html
