@@ -93,55 +93,57 @@ void VectorTab::fileNameChanged(const QString &file) {
   _field->clear();
 
   KST::dataSourceList.lock().readLock();
-
-  KstDataSourcePtr ds = KST::dataSourceList.findReusableFileName(QUrl(file));
+  _dataSource = KST::dataSourceList.findReusableFileName(QUrl(file));
   KST::dataSourceList.lock().unlock();
 
-  //FIXME this can't be good...
-  delete _configWidget;
-  _configWidget = 0L;
-
-  QStringList list;
-  if (ds) {
-
-    ds->readLock();
-    list = ds->fieldList();
-    _field->setEditable(!ds->fieldListIsComplete());
-    _configWidget = ds->configWidget();
-    ds->unlock();
-    _field->setEnabled(true);
-    //_dataRange->setAllowTime(ds->supportsTimeConversions());
-
-  } else {
-
-    QString type;
-    bool complete = false;
-
-    list = KstDataSource::fieldListForSource(QUrl(file), QString::null, &type, &complete);
-
-    _field->setEditable(!complete);
-    _field->setEnabled(!list.isEmpty());
-
-    if (!list.isEmpty() && !type.isEmpty()) {
-      _configWidget = KstDataSource::configWidgetForSource(QUrl(file), type);
-    }
-
-    //_dataRange->setAllowTime(KstDataSource::supportsTime(QUrl(file), type));
+  if (!_dataSource) {
+    _dataSource = KstDataSource::loadSource(QUrl(file), QString());
   }
 
-  _configure->setEnabled(_configWidget);
+  if (!_dataSource) {
+    _field->setEnabled(false);
+    _configure->setEnabled(false);
+    return; //Couldn't find a suitable datasource
+  }
 
-  _field->addItems(list);
+  _field->setEnabled(true);
+
+  _dataSource->readLock();
+
+  _field->addItems(_dataSource->fieldList());
+  _field->setEditable(!_dataSource->fieldListIsComplete());
+  _configure->setEnabled(_dataSource->hasConfigWidget());
+
+  //FIXME deal with time...
+  //_dataRange->setAllowTime(ds->supportsTimeConversions());
+
+  _dataSource->unlock();
 }
 
 
 void VectorTab::showConfigWidget() {
   QDialog dialog(this);
 
-  QHBoxLayout layout(&dialog);
-  layout.addWidget(_configWidget);
-  dialog.setLayout(&layout);
+  QVBoxLayout layout(&dialog);
 
+  _dataSource->readLock();
+  QWidget *widget = _dataSource->configWidget();
+  widget->setParent(&dialog);
+  layout.addWidget(widget);
+  _dataSource->unlock();
+
+  QDialogButtonBox box(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+  layout.addWidget(&box);
+
+//   if (isNew) {
+//     connect(dlg, SIGNAL(okClicked()), _configWidget, SLOT(save()));
+//     connect(dlg, SIGNAL(applyClicked()), _configWidget, SLOT(save()));
+//   } else {
+//     connect(dlg, SIGNAL(okClicked()), this, SLOT(markSourceAndSave()));
+//     connect(dlg, SIGNAL(applyClicked()), this, SLOT(markSourceAndSave()));
+//   }
+
+  dialog.setLayout(&layout);
   dialog.exec();
 }
 

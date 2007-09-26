@@ -234,14 +234,21 @@ KstDataSourcePtr KstDataSource::loadSource(const QString& filename, const QStrin
 }
 
 
-KstDataSourceConfigWidget* KstDataSource::configWidget() const {
+bool KstDataSource::hasConfigWidget() const {
+  return sourceHasConfigWidget(_filename, fileType());
+}
+
+
+KstDataSourceConfigWidget* KstDataSource::configWidget() {
+  if (!hasConfigWidget())
+    return 0;
+
   KstDataSourceConfigWidget *w = configWidgetForSource(_filename, fileType());
-  if (w) {
-    // FIXME: what to do here?  This is ugly, but the method is const and we
-    //        can't put a const shared pointer in the config widget.  Fix for
-    //        Kst 2.0 by making this non-const?
-    w->_instance = const_cast<KstDataSource*>(this);
-  }
+  Q_ASSERT(w);
+
+  //This is still ugly to me...
+  w->_instance = this;
+
   return w;
 }
 
@@ -279,6 +286,26 @@ KstDataSourceConfigWidget* KstDataSource::configWidgetForPlugin(const QString& p
   }
 
   return 0L;
+}
+
+
+bool KstDataSource::sourceHasConfigWidget(const QString& filename, const QString& type) {
+  if (filename == "stdin" || filename == "-") {
+    return 0L;
+  }
+
+  QString fn = obtainFile(filename);
+  if (fn.isEmpty()) {
+    return 0L;
+  }
+
+  QList<PluginSortContainer> bestPlugins = bestPluginsForSource(fn, type);
+  for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
+    return (*i).plugin->hasConfigWidget();
+  }
+
+  KstDebug::self()->log(i18n("Could not find a datasource for '%1'(%2), but we found one just prior.  Something is wrong with Kst.", filename, type), KstDebug::Error);
+  return false;
 }
 
 

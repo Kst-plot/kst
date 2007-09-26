@@ -24,8 +24,6 @@ class KST_EXPORT DialogTab : public QWidget
 {
   Q_OBJECT
   public:
-    typedef QMap<QString, QVariant> ValueMap;
-
     DialogTab(QWidget *parent);
     virtual ~DialogTab();
 

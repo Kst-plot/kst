@@ -53,32 +53,32 @@ typedef KstSharedPtr<KstScalar> KstScalarPtr;
 
 class KST_EXPORT KstDataSource : public KstObject {
   public:
-    KstDataSource(QSettings *cfg, const QString& filename, const QString& type);
-    friend class KstApp;
     static void setupOnStartup(QSettings*);
     static void cleanupForExit();
 
-    virtual ~KstDataSource();
-
-    void setTagName(const KstObjectTag& tag);
-
-    // These six static methods are not for plugins to use
     /** Returns a list of plugins found on the system. */
     static QStringList pluginList();
 
     static KstSharedPtr<KstDataSource> loadSource(const QString& filename, const QString& type = QString::null);
     static KstSharedPtr<KstDataSource> loadSource(QDomElement& e);
-    static QStringList fieldListForSource(const QString& filename, const QString& type = QString::null, QString *outType = 0L, bool *complete = 0L);
-    static QStringList matrixListForSource(const QString& filename, const QString& type = QString::null, QString *outType = 0L, bool *complete = 0L);
-    static KstDataSourceConfigWidget *configWidgetForSource(const QString& filename, const QString& type);
-    static KstDataSourceConfigWidget *configWidgetForPlugin(const QString& plugin);
-    // @since 1.1.0
+    static QStringList fieldListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
+    static QStringList matrixListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
+
+    static bool sourceHasConfigWidget(const QString& filename, const QString& type = QString());
+    static KstDataSourceConfigWidget *configWidgetForSource(const QString& filename, const QString& type = QString());
+
     static bool pluginHasConfigWidget(const QString& plugin);
-    // @since 1.1.0
+    static KstDataSourceConfigWidget *configWidgetForPlugin(const QString& plugin);
+
     static bool supportsTime(const QString& plugin, const QString& type = QString::null);
 
+    KstDataSource(QSettings *cfg, const QString& filename, const QString& type);
+    virtual ~KstDataSource();
 
-    KstDataSourceConfigWidget *configWidget() const;
+    void setTagName(const KstObjectTag& tag);
+
+    bool hasConfigWidget() const;
+    KstDataSourceConfigWidget *configWidget();
 
     // @since 1.1.0
     bool reusable() const;

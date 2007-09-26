@@ -94,6 +94,8 @@ class AsciiPlugin : public QObject, public KstDataSourcePluginInterface {
 
     virtual QString pluginName() const;
 
+    virtual bool hasConfigWidget() const { return true; }
+
     virtual KstDataSource *create(QSettings *cfg,
                                   const QString &filename,
                                   const QString &type,
