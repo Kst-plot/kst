@@ -21,15 +21,15 @@ LIBS += -lkst -lkstmath -lkstwidgets -lkstapp
 
 SOURCES += \
     main.cpp \
-    testdatasources.cpp \
+    testdatasource.cpp \
     testvector.cpp \
-    testscalars.cpp \
+    testscalar.cpp \
     testmatrix.cpp
 
 HEADERS += \
-    testdatasources.h \
+    testdatasource.h \
     testvector.h \
-    testscalars.h \
+    testscalar.h \
     testmatrix.h
 
 QMAKE_RPATHDIR += $$OUTPUT_DIR/lib $$OUTPUT_DIR/plugin

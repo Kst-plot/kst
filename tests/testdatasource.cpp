@@ -9,7 +9,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "testdatasources.h"
+#include "testdatasource.h"
 
 // HACK to get at methods we shouldn't be getting at
 #define protected public
@@ -33,14 +33,14 @@
 double INF = 1.0/0.0;
 #endif
 
-void TestDataSources::initTestCase() {
+void TestDataSource::initTestCase() {
   QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
   KstDataSource::setupOnStartup(settingsObject);
   _plugins = KstDataSource::pluginList();
 }
 
 
-void TestDataSources::cleanupTestCase() {
+void TestDataSource::cleanupTestCase() {
   KST::dataSourceList.clear();
   KST::vectorList.clear();
   KST::scalarList.clear();
@@ -48,7 +48,7 @@ void TestDataSources::cleanupTestCase() {
 }
 
 
-void TestDataSources::testAscii() {
+void TestDataSource::testAscii() {
   if (!_plugins.contains("ASCII File Reader"))
     QSKIP("...couldn't find plugin.", SkipAll);
 
@@ -279,7 +279,7 @@ void TestDataSources::testAscii() {
 }
 
 
-void TestDataSources::testDirfile() {
+void TestDataSource::testDirfile() {
   if (!_plugins.contains("DirFile Reader"))
     QSKIP("...couldn't find plugin.", SkipAll);
 
@@ -427,37 +427,37 @@ void TestDataSources::testDirfile() {
 }
 
 
-void TestDataSources::testCDF() {
+void TestDataSource::testCDF() {
   if (!_plugins.contains("CDF File Reader"))
     QSKIP("...couldn't find plugin.", SkipAll);
 }
 
 
-void TestDataSources::testFrame() {
+void TestDataSource::testFrame() {
   if (!_plugins.contains("Frame Reader"))
     QSKIP("...couldn't find plugin.", SkipAll);
 }
 
 
-void TestDataSources::testIndirect() {
+void TestDataSource::testIndirect() {
   if (!_plugins.contains("Indirect File Reader"))
     QSKIP("...couldn't find plugin.", SkipAll);
 }
 
 
-void TestDataSources::testLFI() {
+void TestDataSource::testLFI() {
   if (!_plugins.contains("LFIIO Reader"))
     QSKIP("...couldn't find plugin.", SkipAll);
 }
 
 
-void TestDataSources::testPlanck() {
+void TestDataSource::testPlanck() {
   if (!_plugins.contains("PLANCK Plugin"))
     QSKIP("...couldn't find plugin.", SkipAll);
 }
 
 
-void TestDataSources::testStdin() {
+void TestDataSource::testStdin() {
 }
 
 // vim: ts=2 sw=2 et

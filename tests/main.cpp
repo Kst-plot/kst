@@ -13,16 +13,16 @@
 
 #include <QtTest>
 
-#include "testdatasources.h"
+#include "testdatasource.h"
 #include "testvector.h"
-#include "testscalars.h"
+#include "testscalar.h"
 #include "testmatrix.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
 
-    TestDataSources test1;
+    TestDataSource test1;
     QTest::qExec(&test1, argc, argv);
 
     TestVector test2;

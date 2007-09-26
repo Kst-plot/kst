@@ -9,13 +9,13 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TESTDATASOURCES_H
-#define TESTDATASOURCES_H
+#ifndef TESTDATASOURCE_H
+#define TESTDATASOURCE_H
 
 #include <QObject>
 #include <QStringList>
 
-class TestDataSources : public QObject
+class TestDataSource : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:

@@ -9,7 +9,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "testscalars.h"
+#include "testscalar.h"
 
 #include <QtTest>
 
