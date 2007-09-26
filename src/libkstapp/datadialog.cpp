@@ -106,10 +106,7 @@ void DataDialog::slotOk() {
 
 
 void DataDialog::slotEditMultiple() {
-  if (extensionWidget()->isVisible())
-    extensionWidget()->hide();
-  else
-    extensionWidget()->show();
+  extensionWidget()->setVisible(extensionWidget()->isVisible());
 }
 
 
