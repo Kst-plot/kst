@@ -52,13 +52,12 @@ class KstDataSourceConfigWidget;
 typedef KstSharedPtr<KstScalar> KstScalarPtr;
 
 class KST_EXPORT KstDataSource : public KstObject {
-  protected:
+  public:
     KstDataSource(QSettings *cfg, const QString& filename, const QString& type);
     friend class KstApp;
     static void setupOnStartup(QSettings*);
     static void cleanupForExit();
 
-  public:
     virtual ~KstDataSource();
 
     void setTagName(const KstObjectTag& tag);

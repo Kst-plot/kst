@@ -16,6 +16,8 @@
 #include "builtinobjects.h"
 #include "builtingraphics.h"
 
+#include "kstdatasource.h"
+
 namespace Kst {
 
 Application::Application(int &argc, char **argv)
@@ -26,6 +28,12 @@ Application::Application(int &argc, char **argv)
   Builtins::initPrimitives(); //libkst
   Builtins::initObjects();    //libkstmath
   Builtins::initGraphics();   //libkstapp
+
+  //FIXME Set the datasource settings file...
+  //I think that KstDataSource can have a manager singleton that does this itself
+  //inside of libkst... no?
+  QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
+  KstDataSource::setupOnStartup(settingsObject);
 
   _mainWindow = new MainWindow;
   connect(this, SIGNAL(aboutToQuit()), _mainWindow, SLOT(aboutToQuit()));

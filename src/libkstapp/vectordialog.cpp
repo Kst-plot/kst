@@ -136,7 +136,13 @@ void VectorTab::fileNameChanged(const QString &file) {
 
 
 void VectorTab::showConfigWidget() {
-  _configWidget->show();
+  QDialog dialog(this);
+
+  QHBoxLayout layout(&dialog);
+  layout.addWidget(_configWidget);
+  dialog.setLayout(&layout);
+
+  dialog.exec();
 }
 
 
