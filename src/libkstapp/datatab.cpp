@@ -9,32 +9,23 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "dialogtab.h"
+#include "datatab.h"
 
-#include "dialog.h"
-#include "dialogpage.h"
+#include "datadialog.h"
 
 namespace Kst {
 
-DialogTab::DialogTab(QWidget *parent)
-  : QWidget(parent) {
+DataTab::DataTab(QWidget *parent)
+  : DialogTab(parent) {
 }
 
 
-DialogTab::~DialogTab() {
+DataTab::~DataTab() {
 }
 
 
-Dialog *DialogTab::dialog() const {
-  if (dialogPage())
-    return dialogPage()->dialog();
-  else
-    return 0;
-}
-
-
-DialogPage *DialogTab::dialogPage() const {
-  return qobject_cast<DialogPage*>(parentWidget()->parentWidget());
+DataDialog *DataTab::dataDialog() const {
+  return qobject_cast<DataDialog*>(dialog());
 }
 
 }

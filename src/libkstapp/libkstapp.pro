@@ -25,10 +25,12 @@ SOURCES += \
     axis.cpp \
     boxitem.cpp \
     builtingraphics.cpp \
-    datadialog.cpp \
-    datamanager.cpp \
     databutton.cpp \
     databuttonaction.cpp \
+    datadialog.cpp \
+    datamanager.cpp \
+    datasourcedialog.cpp \
+    datatab.cpp \
     debugdialog.cpp \
     debugnotifier.cpp \
     dialog.cpp \
@@ -82,6 +84,8 @@ HEADERS += \
     datadialog.h \
     datamanager.h \
     dataref.h \
+    datasourcedialog.h \
+    datatab.h \
     debugdialog.h \
     debugnotifier.h \
     dialog.h \

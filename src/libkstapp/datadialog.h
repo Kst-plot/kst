@@ -22,19 +22,24 @@ class QLineEdit;
 
 namespace Kst {
 
-class DialogTab;
+class DataTab;
 
 class KST_EXPORT DataDialog : public Dialog {
   Q_OBJECT
   public:
+    enum EditMode { New, Edit };
     DataDialog(QWidget *parent = 0);
     DataDialog(KstObjectPtr dataObject, QWidget *parent = 0);
     virtual ~DataDialog();
 
-    void addDataTab(DialogTab *tab);
+    EditMode editMode() const { return _mode; }
+    void addDataTab(DataTab *tab);
 
   protected:
-    QString tagName() const;
+    virtual QString tagName() const;
+    void setTagName(const QString &tagName);
+
+    QString defaultTag() const { return _defaultTag; }
 
     KstObjectPtr dataObject() const { return _dataObject; }
     void setDataObject(KstObjectPtr dataObject) { _dataObject = dataObject; }
@@ -50,8 +55,10 @@ class KST_EXPORT DataDialog : public Dialog {
     void createGui();
 
   private:
+    QString _defaultTag;
     QLineEdit *_tagName;
     KstObjectPtr _dataObject;
+    EditMode _mode;
 };
 
 }

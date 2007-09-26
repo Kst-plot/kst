@@ -12,19 +12,23 @@
 #include "vectordialog.h"
 
 #include "dialogpage.h"
+#include "datasourcedialog.h"
 
+#include "kstrvector.h"
 #include "kstsvector.h"
 
 #include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"
 
+#include "kstvectordefaults.h"
+#include "defaultprimitivenames.h"
+
 #include <QDir>
-#include <QUrl>
 
 namespace Kst {
 
 VectorTab::VectorTab(QWidget *parent)
-  : DialogTab(parent), _mode(ReadOnlyVector) {
+  : DataTab(parent), _mode(DataVector) {
 
   setupUi(this);
   setTabTitle(tr("Vector"));
@@ -37,6 +41,7 @@ VectorTab::VectorTab(QWidget *parent)
           this, SLOT(showConfigWidget()));
 
   _fileName->setFile(QDir::currentPath());
+  //_fileName->setFile(KST::vectorDefaults.dataSource());
 
   //FIXME need a solution for replacing kio for this...
   _connect->setVisible(false);
@@ -44,6 +49,47 @@ VectorTab::VectorTab(QWidget *parent)
 
 
 VectorTab::~VectorTab() {
+}
+
+
+KstDataSourcePtr VectorTab::dataSource() const {
+  return _dataSource;
+}
+
+
+void VectorTab::setDataSource(KstDataSourcePtr dataSource) {
+  _dataSource = dataSource;
+}
+
+
+QString VectorTab::file() const {
+  return _fileName->file();
+}
+
+
+void VectorTab::setFile(const QString &file) {
+  _fileName->setFile(file);
+}
+
+
+QString VectorTab::field() const {
+  return _field->currentText();
+}
+
+
+void VectorTab::setField(const QString &field) {
+  _field->setCurrentIndex(_field->findText(field));
+}
+
+
+void VectorTab::setFieldList(const QStringList &fieldList) {
+  _field->clear();
+  _field->addItems(fieldList);
+}
+
+
+DataRange *VectorTab::dataRange() const {
+  return _dataRange;
 }
 
 
@@ -75,9 +121,9 @@ int VectorTab::numberOfSamples() const {
 void VectorTab::readFromSourceChanged() {
 
   if (_readFromSource->isChecked())
-    setMode(ReadOnlyVector);
+    setVectorMode(DataVector);
   else
-    setMode(SlaveVector);
+    setVectorMode(GeneratedVector);
 
   _rvectorGroup->setEnabled(_readFromSource->isChecked());
   _dataRange->setEnabled(_readFromSource->isChecked());
@@ -93,11 +139,11 @@ void VectorTab::fileNameChanged(const QString &file) {
   _field->clear();
 
   KST::dataSourceList.lock().readLock();
-  _dataSource = KST::dataSourceList.findReusableFileName(QUrl(file));
+  _dataSource = KST::dataSourceList.findReusableFileName(file);
   KST::dataSourceList.lock().unlock();
 
   if (!_dataSource) {
-    _dataSource = KstDataSource::loadSource(QUrl(file), QString());
+    _dataSource = KstDataSource::loadSource(file, QString());
   }
 
   if (!_dataSource) {
@@ -122,28 +168,7 @@ void VectorTab::fileNameChanged(const QString &file) {
 
 
 void VectorTab::showConfigWidget() {
-  QDialog dialog(this);
-
-  QVBoxLayout layout(&dialog);
-
-  _dataSource->readLock();
-  QWidget *widget = _dataSource->configWidget();
-  widget->setParent(&dialog);
-  layout.addWidget(widget);
-  _dataSource->unlock();
-
-  QDialogButtonBox box(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-  layout.addWidget(&box);
-
-//   if (isNew) {
-//     connect(dlg, SIGNAL(okClicked()), _configWidget, SLOT(save()));
-//     connect(dlg, SIGNAL(applyClicked()), _configWidget, SLOT(save()));
-//   } else {
-//     connect(dlg, SIGNAL(okClicked()), this, SLOT(markSourceAndSave()));
-//     connect(dlg, SIGNAL(applyClicked()), this, SLOT(markSourceAndSave()));
-//   }
-
-  dialog.setLayout(&layout);
+  DataSourceDialog dialog(dataDialog()->editMode(), _dataSource, this);
   dialog.exec();
 }
 
@@ -174,31 +199,90 @@ VectorDialog::~VectorDialog() {
 }
 
 
-void VectorDialog::setDefaults() {
-  //FIXME
+QString VectorDialog::tagName() const {
+  switch(_vectorTab->vectorMode()) {
+  case VectorTab::DataVector:
+    {
+      QString tagName = DataDialog::tagName();
+      tagName.replace(defaultTag(), _vectorTab->field());
+      return KST::suggestVectorName(tagName);
+    }
+  case VectorTab::GeneratedVector:
+    {
+      if (DataDialog::tagName() == defaultTag()) {
+        const qreal from = _vectorTab->from();
+        const qreal to = _vectorTab->to();
+        return KST::suggestVectorName(QString("(%1..%2)").arg(from).arg(to));
+      }
+    }
+  default:
+    return DataDialog::tagName();
+  }
 }
 
 
 KstObjectPtr VectorDialog::createNewDataObject() const {
+  switch(_vectorTab->vectorMode()) {
+  case VectorTab::DataVector:
+    return createNewDataVector();
+  case VectorTab::GeneratedVector:
+    return createNewGeneratedVector();
+  default:
+    return 0;
+  }
+}
 
-  if (_vectorTab->mode() == VectorTab::ReadOnlyVector) {
 
-    qDebug() << "ReadOnlyVectors not supported yet...!" << endl;
+KstObjectPtr VectorDialog::createNewDataVector() const {
+  const KstDataSourcePtr dataSource = _vectorTab->dataSource();
+
+  //FIXME better validation than this please...
+  if (!dataSource)
     return 0;
 
-  } else if (_vectorTab->mode() == VectorTab::SlaveVector) {
+  const QString field = _vectorTab->field();
+  const DataRange *dataRange = _vectorTab->dataRange();
+  const KstObjectTag tag = KstObjectTag(tagName(), dataSource->tag(), false);
 
-    const qreal from = _vectorTab->from();
-    const qreal to = _vectorTab->to();
-    const int numberOfSamples = _vectorTab->numberOfSamples();
-    const KstObjectTag tag = KstObjectTag(tagName(), KstObjectTag::globalTagContext);
+  qDebug() << "Creating new data vector ===>"
+           << "\n\tfileName:" << dataSource->fileName()
+           << "\n\tfileType:" << dataSource->fileType()
+           << "\n\tfield:" << field
+           << "\n\ttag:" << tag.tag()
+           << "\n\tstart:" << (dataRange->countFromEnd() ? -1 : int(dataRange->start()))
+           << "\n\trange:" << (dataRange->readToEnd() ? -1 : int(dataRange->range()))
+           << "\n\tskip:" << dataRange->skip()
+           << "\n\tdoSkip:" << (dataRange->doSkip() ? "true" : "false")
+           << "\n\tdoFilter:" << (dataRange->doFilter() ? "true" : "false")
+           << endl;
 
-    KstSVectorPtr vector = new KstSVector(from, to, numberOfSamples, tag);
-    return static_cast<KstObjectPtr>(vector);
+  KstRVectorPtr vector = new KstRVector(
+      dataSource, field, tag,
+      dataRange->countFromEnd() ? -1 : int(dataRange->start()),
+      dataRange->readToEnd() ? -1 : int(dataRange->range()),
+      dataRange->skip(),
+      dataRange->doSkip(),
+      dataRange->doFilter());
 
-  }
+  return static_cast<KstObjectPtr>(vector);
+}
 
-  return 0;
+
+KstObjectPtr VectorDialog::createNewGeneratedVector() const {
+  const qreal from = _vectorTab->from();
+  const qreal to = _vectorTab->to();
+  const int numberOfSamples = _vectorTab->numberOfSamples();
+  const KstObjectTag tag = KstObjectTag(tagName(), KstObjectTag::globalTagContext);
+
+  qDebug() << "Creating new generated vector ===>"
+           << "\n\tfrom:" << from
+           << "\n\tto:" << to
+           << "\n\tnumberOfSamples:" << numberOfSamples
+           << "\n\ttag:" << tag.tag()
+           << endl;
+
+  KstSVectorPtr vector = new KstSVector(from, to, numberOfSamples, tag);
+  return static_cast<KstObjectPtr>(vector);
 }
 
 

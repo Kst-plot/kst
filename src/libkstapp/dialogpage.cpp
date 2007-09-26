@@ -11,20 +11,26 @@
 
 #include "dialogpage.h"
 
+#include "dialog.h"
 #include "dialogtab.h"
 
 #include <QTabBar>
 
 namespace Kst {
 
-DialogPage::DialogPage(QWidget *parent)
-  : QTabWidget(parent) {
+DialogPage::DialogPage(Dialog *parent)
+  : QTabWidget(parent), _dialog(parent) {
 
   tabBar()->setVisible(false);
 }
 
 
 DialogPage::~DialogPage() {
+}
+
+
+Dialog *DialogPage::dialog() const {
+  return _dialog;
 }
 
 

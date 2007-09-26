@@ -11,7 +11,7 @@
 
 #include "datadialog.h"
 
-#include "dialogtab.h"
+#include "datatab.h"
 #include "dialogpage.h"
 
 #include "editmultiplewidget.h"
@@ -27,13 +27,13 @@
 namespace Kst {
 
 DataDialog::DataDialog(QWidget *parent)
-  : Dialog(parent), _dataObject(0) {
+  : Dialog(parent), _defaultTag("<Auto Name>"), _dataObject(0), _mode(New) {
 
   createGui();
 }
 
 DataDialog::DataDialog(KstObjectPtr dataObject, QWidget *parent)
-  : Dialog(parent), _dataObject(dataObject) {
+  : Dialog(parent), _dataObject(dataObject), _mode(Edit) {
 
   createGui();
 }
@@ -70,10 +70,12 @@ void DataDialog::createGui() {
   QPushButton *button = new QPushButton(tr("Edit Multiple >>"));
   connect(button, SIGNAL(clicked()), this, SLOT(slotEditMultiple()));
 
-  if (_dataObject)
-    _tagName->setText(_dataObject->tagName());
-  else
+  if (_dataObject) {
+    setTagName(_dataObject->tagName());
+  } else {
+    setTagName(tagName());
     button->setVisible(false);
+  }
 
   layout->addWidget(label);
   layout->addWidget(_tagName);
@@ -84,11 +86,17 @@ void DataDialog::createGui() {
 
 
 QString DataDialog::tagName() const {
-  return _tagName->text();
+  const QString tag = _tagName->text();
+  return tag.isEmpty() ? _defaultTag : tag;
 }
 
 
-void DataDialog::addDataTab(DialogTab *tab) {
+void DataDialog::setTagName(const QString &tagName) {
+  _tagName->setText(tagName);
+}
+
+
+void DataDialog::addDataTab(DataTab *tab) {
   DialogPage *page = new DialogPage(this);
   page->setPageTitle(tab->tabTitle());
   page->addDialogTab(tab);

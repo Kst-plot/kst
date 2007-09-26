@@ -18,6 +18,9 @@
 
 namespace Kst {
 
+class Dialog;
+class DialogPage;
+
 //FIXME maybe we should really have a model...
 
 class KST_EXPORT DialogTab : public QWidget
@@ -26,6 +29,9 @@ class KST_EXPORT DialogTab : public QWidget
   public:
     DialogTab(QWidget *parent);
     virtual ~DialogTab();
+
+    Dialog *dialog() const;
+    DialogPage *dialogPage() const;
 
     QString tabTitle() const { return _tabTitle; }
     void setTabTitle(const QString &tabTitle) { _tabTitle = tabTitle; }

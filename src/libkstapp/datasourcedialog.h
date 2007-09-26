@@ -9,49 +9,41 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef DIALOGPAGE_H
-#define DIALOGPAGE_H
+#ifndef DATASOURCEDIALOG_H
+#define DATASOURCEDIALOG_H
 
-#include <QTabWidget>
-#include <QPointer>
+#include <QDialog>
 
 #include "kst_export.h"
 
+#include "datadialog.h"
+#include "kstdatasource.h"
+
+class QAbstractButton;
+class QDialogButtonBox;
+
 namespace Kst {
 
-class Dialog;
-class DialogTab;
-
-class KST_EXPORT DialogPage : public QTabWidget
+class KST_EXPORT DataSourceDialog : public QDialog
 {
   Q_OBJECT
   public:
-    DialogPage(Dialog *parent);
-    virtual ~DialogPage();
+    DataSourceDialog(DataDialog::EditMode mode, KstDataSourcePtr dataSource, QWidget *parent = 0);
+    virtual ~DataSourceDialog();
 
-    Dialog *dialog() const;
-
-    QString pageTitle() const { return _pageTitle; }
-    void setPageTitle(const QString &pageTitle) { _pageTitle = pageTitle; }
-
-    QPixmap pageIcon() const { return _pageIcon; }
-    void setPageIcon(const QPixmap &pageIcon) { _pageIcon = pageIcon; }
-
-    void addDialogTab(DialogTab *tab);
+    KstDataSourcePtr dataSource() const { return _dataSource; }
 
   Q_SIGNALS:
     void ok();
-    void apply();
     void cancel();
-    void modified();
 
-  protected:
-    void setVisible(bool visible);
+  private Q_SLOTS:
+    void disableReuse();
+    void buttonClicked(QAbstractButton *button);
 
   private:
-    QString _pageTitle;
-    QPixmap _pageIcon;
-    QPointer<Dialog> _dialog;
+    KstDataSourcePtr _dataSource;
+    QDialogButtonBox *_buttonBox;
 };
 
 }

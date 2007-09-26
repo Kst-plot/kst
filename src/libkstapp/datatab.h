@@ -9,49 +9,25 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef DIALOGPAGE_H
-#define DIALOGPAGE_H
+#ifndef DATATAB_H
+#define DATATAB_H
 
-#include <QTabWidget>
-#include <QPointer>
+#include "dialogtab.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class Dialog;
-class DialogTab;
+class DataDialog;
 
-class KST_EXPORT DialogPage : public QTabWidget
+class KST_EXPORT DataTab : public DialogTab
 {
   Q_OBJECT
   public:
-    DialogPage(Dialog *parent);
-    virtual ~DialogPage();
+    DataTab(QWidget *parent);
+    virtual ~DataTab();
 
-    Dialog *dialog() const;
-
-    QString pageTitle() const { return _pageTitle; }
-    void setPageTitle(const QString &pageTitle) { _pageTitle = pageTitle; }
-
-    QPixmap pageIcon() const { return _pageIcon; }
-    void setPageIcon(const QPixmap &pageIcon) { _pageIcon = pageIcon; }
-
-    void addDialogTab(DialogTab *tab);
-
-  Q_SIGNALS:
-    void ok();
-    void apply();
-    void cancel();
-    void modified();
-
-  protected:
-    void setVisible(bool visible);
-
-  private:
-    QString _pageTitle;
-    QPixmap _pageIcon;
-    QPointer<Dialog> _dialog;
+    DataDialog *dataDialog() const;
 };
 
 }

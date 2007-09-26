@@ -13,7 +13,7 @@
 #define VECTORDIALOG_H
 
 #include "datadialog.h"
-#include "dialogtab.h"
+#include "datatab.h"
 
 #include "ui_vectortab.h"
 
@@ -25,18 +25,32 @@
 
 namespace Kst {
 
-class KST_EXPORT VectorTab : public DialogTab, Ui::VectorTab {
+class KST_EXPORT VectorTab : public DataTab, Ui::VectorTab {
   Q_OBJECT
   public:
-    enum Mode { ReadOnlyVector, SlaveVector };
+    enum VectorMode { DataVector, GeneratedVector };
 
     VectorTab(QWidget *parent = 0);
     virtual ~VectorTab();
 
-    Mode mode() const { return _mode; }
-    void setMode(Mode mode) { _mode = mode; }
+    VectorMode vectorMode() const { return _mode; }
+    void setVectorMode(VectorMode mode) { _mode = mode; }
 
-    //Slave vector mode methods...
+    //DataVector mode methods...
+    KstDataSourcePtr dataSource() const;
+    void setDataSource(KstDataSourcePtr dataSource);
+
+    QString file() const;
+    void setFile(const QString &file);
+
+    QString field() const;
+    void setField(const QString &field);
+
+    void setFieldList(const QStringList &fieldList);
+
+    DataRange *dataRange() const;
+
+    //GeneratedVector methods...
     qreal from() const;
     void setFrom(qreal from);
 
@@ -52,7 +66,7 @@ class KST_EXPORT VectorTab : public DialogTab, Ui::VectorTab {
     void showConfigWidget();
 
   private:
-    Mode _mode;
+    VectorMode _mode;
     KstDataSourcePtr _dataSource;
 };
 
@@ -64,11 +78,13 @@ class KST_EXPORT VectorDialog : public DataDialog {
     virtual ~VectorDialog();
 
   protected:
+    virtual QString tagName() const;
     virtual KstObjectPtr createNewDataObject() const;
     virtual KstObjectPtr editExistingDataObject() const;
 
   private:
-    void setDefaults();
+    KstObjectPtr createNewDataVector() const;
+    KstObjectPtr createNewGeneratedVector() const;
 
   private:
     VectorTab *_vectorTab;
