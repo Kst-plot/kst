@@ -24,6 +24,7 @@
 #include <qdir.h>
 #include <qfile.h>
 #include <qfileinfo.h>
+#include <qlibraryinfo.h>
 #include <qpluginloader.h>
 #include <qtextdocument.h>
 #include <qurl.h>
@@ -97,9 +98,6 @@ static void scanPlugins() {
 
   KstDebug::self()->log(i18n("Scanning for data-source plugins."));
 
-  //const QDir pluginsDir = QDir(qApp->applicationDirPath());
-  const QDir pluginsDir = QDir("/home/kde/build/home/kde/branches/work/kst/portto4/lib");
-
   foreach (QObject *plugin, QPluginLoader::staticInstances()) {
     //try a cast
     if (KstDataSourcePluginInterface *ds = qobject_cast<KstDataSourcePluginInterface*>(plugin)) {
@@ -107,14 +105,21 @@ static void scanPlugins() {
     }
   }
 
-  foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
-      QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
-      QObject *plugin = loader.instance();
-      if (plugin) {
-        if (KstDataSourcePluginInterface *ds = qobject_cast<KstDataSourcePluginInterface*>(plugin)) {
-          tmpList.append(ds);
+  QStringList pluginPaths;
+  pluginPaths << QLibraryInfo::location(QLibraryInfo::PluginsPath);
+  pluginPaths << QString(qApp->applicationDirPath()).replace("bin", "plugin");
+
+  foreach (QString pluginPath, pluginPaths) {
+    QDir d(pluginPath);
+    foreach (QString fileName, d.entryList(QDir::Files)) {
+        QPluginLoader loader(d.absoluteFilePath(fileName));
+        QObject *plugin = loader.instance();
+        if (plugin) {
+          if (KstDataSourcePluginInterface *ds = qobject_cast<KstDataSourcePluginInterface*>(plugin)) {
+            tmpList.append(ds);
+          }
         }
-      }
+    }
   }
 
   // This cleans up plugins that have been uninstalled and adds in new ones.

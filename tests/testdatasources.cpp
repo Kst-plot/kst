@@ -31,9 +31,8 @@ void TestDataSources::cleanupTestCase() {
 
 
 void TestDataSources::testAscii() {
-
   if (!_plugins.contains("ASCII File Reader"))
-    QFAIL("Not running tests for ASCII File Reader - couldn't find plugin.");
+    QFAIL("...couldn't find plugin.");
 
   {
     QTemporaryFile tf;
@@ -260,9 +259,8 @@ void TestDataSources::testAscii() {
 
 
 void TestDataSources::testDirfile() {
-
   if (!_plugins.contains("DirFile Reader"))
-    QFAIL("Not running tests for DirFile Reader - couldn't find plugin.");
+    QFAIL("...couldn't find plugin.");
 
   QWARN("These tests assume that the dirfile was generated with dirfile_maker");
 
@@ -410,35 +408,31 @@ void TestDataSources::testDirfile() {
 
 void TestDataSources::testCDF() {
   if (!_plugins.contains("CDF File Reader"))
-    QFAIL("Not running tests for CDF File Reader - couldn't find plugin.");
+    QFAIL("...couldn't find plugin.");
 }
 
 
 void TestDataSources::testFrame() {
-
   if (!_plugins.contains("Frame Reader"))
-    QFAIL("Not running tests for Frame Reader - couldn't find plugin.");
+    QFAIL("...couldn't find plugin.");
 }
 
 
 void TestDataSources::testIndirect() {
-
   if (!_plugins.contains("Indirect File Reader"))
-    QFAIL("Not running tests for Indirect File Reader - couldn't find plugin.");
+    QFAIL("...couldn't find plugin.");
 }
 
 
 void TestDataSources::testLFI() {
-
   if (!_plugins.contains("LFIIO Reader"))
-    QFAIL("Not running tests for LFIIO Reader - couldn't find plugin.");
+    QFAIL("...couldn't find plugin.");
 }
 
 
 void TestDataSources::testPlanck() {
-
   if (!_plugins.contains("PLANCK Plugin"))
-    QFAIL("Not running tests for x - couldn't find plugin.");
+    QFAIL("...couldn't find plugin.");
 }
 
 

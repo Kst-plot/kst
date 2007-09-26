@@ -21,5 +21,5 @@ int main(int argc, char *argv[])
 
     QTest::qExec(&test1, argc, argv);
 
-    return app.exec();
+    return 0;
 }

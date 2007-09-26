@@ -25,3 +25,5 @@ SOURCES += \
 
 HEADERS += \
     testdatasources.h
+
+QMAKE_RPATHDIR += $$OUTPUT_DIR/lib $$OUTPUT_DIR/plugin
