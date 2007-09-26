@@ -244,17 +244,17 @@ KstObjectPtr VectorDialog::createNewDataVector() const {
   const DataRange *dataRange = _vectorTab->dataRange();
   const KstObjectTag tag = KstObjectTag(tagName(), dataSource->tag(), false);
 
-  qDebug() << "Creating new data vector ===>"
-           << "\n\tfileName:" << dataSource->fileName()
-           << "\n\tfileType:" << dataSource->fileType()
-           << "\n\tfield:" << field
-           << "\n\ttag:" << tag.tag()
-           << "\n\tstart:" << (dataRange->countFromEnd() ? -1 : int(dataRange->start()))
-           << "\n\trange:" << (dataRange->readToEnd() ? -1 : int(dataRange->range()))
-           << "\n\tskip:" << dataRange->skip()
-           << "\n\tdoSkip:" << (dataRange->doSkip() ? "true" : "false")
-           << "\n\tdoFilter:" << (dataRange->doFilter() ? "true" : "false")
-           << endl;
+//   qDebug() << "Creating new data vector ===>"
+//            << "\n\tfileName:" << dataSource->fileName()
+//            << "\n\tfileType:" << dataSource->fileType()
+//            << "\n\tfield:" << field
+//            << "\n\ttag:" << tag.tag()
+//            << "\n\tstart:" << (dataRange->countFromEnd() ? -1 : int(dataRange->start()))
+//            << "\n\trange:" << (dataRange->readToEnd() ? -1 : int(dataRange->range()))
+//            << "\n\tskip:" << dataRange->skip()
+//            << "\n\tdoSkip:" << (dataRange->doSkip() ? "true" : "false")
+//            << "\n\tdoFilter:" << (dataRange->doFilter() ? "true" : "false")
+//            << endl;
 
   KstRVectorPtr vector = new KstRVector(
       dataSource, field, tag,
@@ -263,6 +263,10 @@ KstObjectPtr VectorDialog::createNewDataVector() const {
       dataRange->skip(),
       dataRange->doSkip(),
       dataRange->doFilter());
+
+  vector->writeLock();
+  vector->update(0);
+  vector->unlock();
 
   return static_cast<KstObjectPtr>(vector);
 }
@@ -274,12 +278,12 @@ KstObjectPtr VectorDialog::createNewGeneratedVector() const {
   const int numberOfSamples = _vectorTab->numberOfSamples();
   const KstObjectTag tag = KstObjectTag(tagName(), KstObjectTag::globalTagContext);
 
-  qDebug() << "Creating new generated vector ===>"
-           << "\n\tfrom:" << from
-           << "\n\tto:" << to
-           << "\n\tnumberOfSamples:" << numberOfSamples
-           << "\n\ttag:" << tag.tag()
-           << endl;
+//   qDebug() << "Creating new generated vector ===>"
+//            << "\n\tfrom:" << from
+//            << "\n\tto:" << to
+//            << "\n\tnumberOfSamples:" << numberOfSamples
+//            << "\n\ttag:" << tag.tag()
+//            << endl;
 
   KstSVectorPtr vector = new KstSVector(from, to, numberOfSamples, tag);
   return static_cast<KstObjectPtr>(vector);
