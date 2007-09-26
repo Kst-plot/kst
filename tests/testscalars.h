@@ -9,30 +9,31 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QCoreApplication>
+#ifndef TESTSCALAR_H
+#define TESTSCALAR_H
 
-#include <QtTest>
+#include <QObject>
 
-#include "testdatasources.h"
-#include "testvector.h"
-#include "testscalars.h"
-#include "testmatrix.h"
+class SListener : public QObject {
+  Q_OBJECT
+  public:
+    SListener();
+    virtual ~SListener();
+    int _trigger;
 
-int main(int argc, char *argv[])
+  public Q_SLOTS:
+    void trigger();
+};
+
+class TestScalar : public QObject
 {
-    QCoreApplication app(argc, argv);
+  Q_OBJECT
+  private Q_SLOTS:
+    void cleanupTestCase();
 
-    TestDataSources test1;
-    QTest::qExec(&test1, argc, argv);
+    void testScalar();
+};
 
-    TestVector test2;
-    QTest::qExec(&test2, argc, argv);
+#endif
 
-    TestScalar test3;
-    QTest::qExec(&test3, argc, argv);
-
-    TestMatrix test4;
-    QTest::qExec(&test4, argc, argv);
-
-    return 0;
-}
+// vim: ts=2 sw=2 et

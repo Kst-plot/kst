@@ -11,6 +11,24 @@
 
 #include "testdatasources.h"
 
+// HACK to get at methods we shouldn't be getting at
+#define protected public
+#include <kstdatasource.h>
+#undef protected
+
+#include <QtTest>
+
+#include <QDir>
+#include <QFile>
+#include <QSettings>
+#include <QTemporaryFile>
+
+#include <kstrvector.h>
+#include <kstdatacollection.h>
+#include <kstdataobjectcollection.h>
+
+#include <math.h>
+
 #ifndef INF
 double INF = 1.0/0.0;
 #endif
@@ -32,7 +50,7 @@ void TestDataSources::cleanupTestCase() {
 
 void TestDataSources::testAscii() {
   if (!_plugins.contains("ASCII File Reader"))
-    QFAIL("...couldn't find plugin.");
+    QSKIP("...couldn't find plugin.", SkipAll);
 
   {
     QTemporaryFile tf;
@@ -126,7 +144,10 @@ void TestDataSources::testAscii() {
     QCOMPARE(rvp->length(), 4);
     QCOMPARE(rvp->value()[0], 0.2);
     QVERIFY(rvp->value()[1] != rvp->value()[1]);
+
+    QEXPECT_FAIL("", "Bug in Qt qFuzzyCompare can not compare inf...", Continue);
     QCOMPARE(rvp->value()[2], INF);
+
     QCOMPARE(rvp->value()[3], 0.0);
     rvp = new KstRVector(dsp, "2", KstObjectTag::fromString("RVTestAscii2"), 0, -1, 0, false, false);
     rvp->writeLock();
@@ -260,7 +281,7 @@ void TestDataSources::testAscii() {
 
 void TestDataSources::testDirfile() {
   if (!_plugins.contains("DirFile Reader"))
-    QFAIL("...couldn't find plugin.");
+    QSKIP("...couldn't find plugin.", SkipAll);
 
   QWARN("These tests assume that the dirfile was generated with dirfile_maker");
 
@@ -408,31 +429,31 @@ void TestDataSources::testDirfile() {
 
 void TestDataSources::testCDF() {
   if (!_plugins.contains("CDF File Reader"))
-    QFAIL("...couldn't find plugin.");
+    QSKIP("...couldn't find plugin.", SkipAll);
 }
 
 
 void TestDataSources::testFrame() {
   if (!_plugins.contains("Frame Reader"))
-    QFAIL("...couldn't find plugin.");
+    QSKIP("...couldn't find plugin.", SkipAll);
 }
 
 
 void TestDataSources::testIndirect() {
   if (!_plugins.contains("Indirect File Reader"))
-    QFAIL("...couldn't find plugin.");
+    QSKIP("...couldn't find plugin.", SkipAll);
 }
 
 
 void TestDataSources::testLFI() {
   if (!_plugins.contains("LFIIO Reader"))
-    QFAIL("...couldn't find plugin.");
+    QSKIP("...couldn't find plugin.", SkipAll);
 }
 
 
 void TestDataSources::testPlanck() {
   if (!_plugins.contains("PLANCK Plugin"))
-    QFAIL("...couldn't find plugin.");
+    QSKIP("...couldn't find plugin.", SkipAll);
 }
 
 

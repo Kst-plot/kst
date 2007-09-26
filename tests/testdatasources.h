@@ -12,32 +12,12 @@
 #ifndef TESTDATASOURCES_H
 #define TESTDATASOURCES_H
 
-// HACK to get at methods we shouldn't be getting at
-#define protected public
-#include <kstdatasource.h>
-#undef protected
-
-#include <QtTest>
-
-#include <QDir>
 #include <QObject>
-#include <QFile>
-#include <QSettings>
-#include <QTemporaryFile>
-
-#include <kstrvector.h>
-#include <kstdatacollection.h>
-#include <kstdataobjectcollection.h>
-
-#include <math.h>
+#include <QStringList>
 
 class TestDataSources : public QObject
 {
   Q_OBJECT
-  public:
-    TestDataSources() : QObject() {}
-    virtual ~TestDataSources() {}
-
   private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
