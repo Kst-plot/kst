@@ -11,11 +11,6 @@
 
 #include "testdatasource.h"
 
-// HACK to get at methods we shouldn't be getting at
-#define protected public
-#include <kstdatasource.h>
-#undef protected
-
 #include <QtTest>
 
 #include <QDir>
