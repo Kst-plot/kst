@@ -84,8 +84,7 @@ void TestScalar::testScalar() {
   QVERIFY(sp->value() != sp->value());
   sp->setValue(_INF );
 
-  QEXPECT_FAIL("", "Bug in Qt qFuzzyCompare can not compare inf...", Continue);
-  QCOMPARE(sp->value(), _INF );
+  QVERIFY(sp->value() == _INF);
 
   QCOMPARE((*sp = 2.0).value(), 2.0);
   SListener *listener = new SListener;
@@ -129,15 +128,13 @@ void TestScalar::testScalar() {
   e = n.toElement();
   sp4 = new KstScalar(e);
 
-  QEXPECT_FAIL("", "Bug in Qt qFuzzyCompare can not compare inf...", Continue);
-  QCOMPARE(sp4->value(), _INF);
+  QVERIFY(sp4->value() == _INF);
 
   n = makeDOM1("load4", "-INF").firstChild();
   e = n.toElement();
   sp4 = new KstScalar(e);
 
-  QEXPECT_FAIL("", "Bug in Qt qFuzzyCompare can not compare inf...", Continue);
-  QCOMPARE(sp4->value(), -_INF );
+  QVERIFY(sp4->value() == -_INF);
 
   delete listener;
 }

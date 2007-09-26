@@ -143,8 +143,7 @@ void TestDataSource::testAscii() {
     QCOMPARE(rvp->value()[0], 0.2);
     QVERIFY(rvp->value()[1] != rvp->value()[1]);
 
-    QEXPECT_FAIL("", "Bug in Qt qFuzzyCompare can not compare inf...", Continue);
-    QCOMPARE(rvp->value()[2], INF);
+    QVERIFY(rvp->value()[2] == INF);
 
     QCOMPARE(rvp->value()[3], 0.0);
     rvp = new KstRVector(dsp, "2", KstObjectTag::fromString("RVTestAscii2"), 0, -1, 0, false, false);
