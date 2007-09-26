@@ -9,17 +9,20 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "testrvector.h"
+#include "testdatasources.h"
 
-void testDataSources::initTestCase() {
+#ifndef INF
+double INF = 1.0/0.0;
+#endif
 
+void TestDataSources::initTestCase() {
   QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
   KstDataSource::setupOnStartup(settingsObject);
   _plugins = KstDataSource::pluginList();
 }
 
 
-void testDataSources::cleanupTestCase() {
+void TestDataSources::cleanupTestCase() {
   KST::dataSourceList.clear();
   KST::vectorList.clear();
   KST::scalarList.clear();
@@ -27,7 +30,7 @@ void testDataSources::cleanupTestCase() {
 }
 
 
-void testDataSources::testAscii() {
+void TestDataSources::testAscii() {
 
   if (!_plugins.contains("ASCII File Reader"))
     QFAIL("Not running tests for ASCII File Reader - couldn't find plugin.");
@@ -125,7 +128,7 @@ void testDataSources::testAscii() {
     QCOMPARE(rvp->value()[0], 0.2);
     QVERIFY(rvp->value()[1] != rvp->value()[1]);
     QCOMPARE(rvp->value()[2], INF);
-    QCOMPARE(rvp->value()[3], 0);
+    QCOMPARE(rvp->value()[3], 0.0);
     rvp = new KstRVector(dsp, "2", KstObjectTag::fromString("RVTestAscii2"), 0, -1, 0, false, false);
     rvp->writeLock();
     rvp->update(0);
@@ -172,14 +175,14 @@ void testDataSources::testAscii() {
     rvp->unlock();
     QVERIFY(rvp->isValid());
     QCOMPARE(rvp->length(), 1); // Are we allowed to have vectors of 1?
-    QCOMPARE(rvp->value()[0], 2);
+    QCOMPARE(rvp->value()[0], 2.0);
     rvp = new KstRVector(dsp, "2", KstObjectTag::fromString("RVTestAscii2"), 0, -1, 0, false, false);
     rvp->writeLock();
     rvp->update(0);
     rvp->unlock();
     QVERIFY(rvp->isValid());
     QCOMPARE(rvp->length(), 1);
-    QCOMPARE(rvp->value()[0], 4);
+    QCOMPARE(rvp->value()[0], 4.0);
 
     tf.close();
   }
@@ -229,10 +232,10 @@ void testDataSources::testAscii() {
     rvp->unlock();
     QVERIFY(rvp->isValid());
     QCOMPARE(rvp->length(), 3900);
-    QCOMPARE(rvp->value()[0], 100);
-    QCOMPARE(rvp->value()[1], 110);
-    QCOMPARE(rvp->value()[2], 120);
-    QCOMPARE(rvp->value()[3898], 39080);
+    QCOMPARE(rvp->value()[0], 100.0);
+    QCOMPARE(rvp->value()[1], 110.0);
+    QCOMPARE(rvp->value()[2], 120.0);
+    QCOMPARE(rvp->value()[3898], 39080.0);
 
     rvp = new KstRVector(dsp, "3", KstObjectTag::fromString("RVTestAscii2"), 0, -1, 10, true, true);
     rvp->writeLock();
@@ -256,7 +259,7 @@ void testDataSources::testAscii() {
 }
 
 
-void testDataSources::testDirfile() {
+void TestDataSources::testDirfile() {
 
   if (!_plugins.contains("DirFile Reader"))
     QFAIL("Not running tests for DirFile Reader - couldn't find plugin.");
@@ -303,9 +306,9 @@ void testDataSources::testDirfile() {
     //We should have length equal to three...  items {0, 5, 10}
     //NOTE: The last item, index #14, does not fit in the skip boundary...
     QCOMPARE(3, rvp->length());
-    QCOMPARE(0, rvp->value(0));
-    QCOMPARE(5, rvp->value(1));
-    QCOMPARE(10, rvp->value(2));
+    QCOMPARE(0.0, rvp->value(0));
+    QCOMPARE(5.0, rvp->value(1));
+    QCOMPARE(10.0, rvp->value(2));
 
     //The numFrames should report 11 as it lies on the skip boundary
     QCOMPARE(11, rvp->numFrames());
@@ -330,9 +333,9 @@ void testDataSources::testDirfile() {
 
     //We should have length equal to three...  items {5, 10}
     QCOMPARE(2, rvp->length());
-    QCOMPARE(5, rvp->value(0));
-    QCOMPARE(10, rvp->value(1));
-    //QCOMPARE(13, rvp->value(2));
+    QCOMPARE(5.0, rvp->value(0));
+    QCOMPARE(10.0, rvp->value(1));
+    QCOMPARE(13.0, rvp->value(2));
 
     //The numFrames should still report 11 as it lies on the skip boundary
     QCOMPARE(6, rvp->numFrames());
@@ -357,9 +360,9 @@ void testDataSources::testDirfile() {
 
     //We should have length equal to three...  items {0, 5, 10}
     QCOMPARE(3, rvp->length());
-    QCOMPARE(0, rvp->value(0));
-    QCOMPARE(5, rvp->value(1));
-    QCOMPARE(10, rvp->value(2));
+    QCOMPARE(0.0, rvp->value(0));
+    QCOMPARE(5.0, rvp->value(1));
+    QCOMPARE(10.0, rvp->value(2));
 
     //The numFrames should still report 11 as it lies on the skip boundary
     QCOMPARE(11, rvp->numFrames());
@@ -384,8 +387,8 @@ void testDataSources::testDirfile() {
 
     //We should have length equal to two...  items {5, 10}
     QCOMPARE(2, rvp->length());
-    QCOMPARE(5, rvp->value(0));
-    QCOMPARE(10, rvp->value(1));
+    QCOMPARE(5.0, rvp->value(0));
+    QCOMPARE(10.0, rvp->value(1));
 
     //The numFrames should report 6 as it lies on the skip boundary
     QCOMPARE(6, rvp->numFrames());
@@ -405,41 +408,41 @@ void testDataSources::testDirfile() {
 }
 
 
-void testDataSources::testCDF() {
+void TestDataSources::testCDF() {
   if (!_plugins.contains("CDF File Reader"))
     QFAIL("Not running tests for CDF File Reader - couldn't find plugin.");
 }
 
 
-void testDataSources::testFrame() {
+void TestDataSources::testFrame() {
 
   if (!_plugins.contains("Frame Reader"))
     QFAIL("Not running tests for Frame Reader - couldn't find plugin.");
 }
 
 
-void testDataSources::testIndirect() {
+void TestDataSources::testIndirect() {
 
   if (!_plugins.contains("Indirect File Reader"))
     QFAIL("Not running tests for Indirect File Reader - couldn't find plugin.");
 }
 
 
-void testDataSources::testLFI() {
+void TestDataSources::testLFI() {
 
   if (!_plugins.contains("LFIIO Reader"))
     QFAIL("Not running tests for LFIIO Reader - couldn't find plugin.");
 }
 
 
-void testDataSources::testPlanck() {
+void TestDataSources::testPlanck() {
 
   if (!_plugins.contains("PLANCK Plugin"))
     QFAIL("Not running tests for x - couldn't find plugin.");
 }
 
 
-void testDataSources::testStdin() {
+void TestDataSources::testStdin() {
 }
 
 // vim: ts=2 sw=2 et

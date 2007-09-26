@@ -10,7 +10,7 @@ SUBDIRS += \
     src/kst \
     src/d2asc \
     src/d2d \
-#    tests
+    tests
 #     src/plugins \
 #     src/extensions \
 #     misc
