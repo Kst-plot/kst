@@ -24,12 +24,14 @@ SOURCES += \
     testdatasource.cpp \
     testvector.cpp \
     testscalar.cpp \
-    testmatrix.cpp
+    testmatrix.cpp \
+    testpsd.cpp
 
 HEADERS += \
     testdatasource.h \
     testvector.h \
     testscalar.h \
-    testmatrix.h
+    testmatrix.h \
+    testpsd.h
 
 QMAKE_RPATHDIR += $$OUTPUT_DIR/lib $$OUTPUT_DIR/plugin

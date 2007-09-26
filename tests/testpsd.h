@@ -9,35 +9,20 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QCoreApplication>
+#ifndef TESTPSD_H
+#define TESTPSD_H
 
-#include <QtTest>
+#include <QObject>
 
-#include "testdatasource.h"
-#include "testvector.h"
-#include "testscalar.h"
-#include "testmatrix.h"
-#include "testpsd.h"
+class TestPSD : public QObject
+{
+  Q_OBJECT
+  private Q_SLOTS:
+    void cleanupTestCase();
 
-int main(int argc, char *argv[]) {
-  QCoreApplication app(argc, argv);
+    void testPSD();
+};
 
-  TestDataSource test1;
-  QTest::qExec(&test1, argc, argv);
-
-  TestVector test2;
-  QTest::qExec(&test2, argc, argv);
-
-  TestScalar test3;
-  QTest::qExec(&test3, argc, argv);
-
-  TestMatrix test4;
-  QTest::qExec(&test4, argc, argv);
-
-  TestPSD test5;
-  QTest::qExec(&test5, argc, argv);
-
-  return 0;
-}
+#endif
 
 // vim: ts=2 sw=2 et
