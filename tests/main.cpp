@@ -18,21 +18,22 @@
 #include "testscalar.h"
 #include "testmatrix.h"
 
-int main(int argc, char *argv[])
-{
-    QCoreApplication app(argc, argv);
+int main(int argc, char *argv[]) {
+  QCoreApplication app(argc, argv);
 
-    TestDataSource test1;
-    QTest::qExec(&test1, argc, argv);
+  TestDataSource test1;
+  QTest::qExec(&test1, argc, argv);
 
-    TestVector test2;
-    QTest::qExec(&test2, argc, argv);
+  TestVector test2;
+  QTest::qExec(&test2, argc, argv);
 
-    TestScalar test3;
-    QTest::qExec(&test3, argc, argv);
+  TestScalar test3;
+  QTest::qExec(&test3, argc, argv);
 
-    TestMatrix test4;
-    QTest::qExec(&test4, argc, argv);
+  TestMatrix test4;
+  QTest::qExec(&test4, argc, argv);
 
-    return 0;
+  return 0;
 }
+
+// vim: ts=2 sw=2 et
