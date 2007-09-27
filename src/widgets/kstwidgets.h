@@ -138,7 +138,6 @@ public:
   }
 };
 
-
 class KstWidgets : public QObject, public QDesignerCustomWidgetCollectionInterface {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)

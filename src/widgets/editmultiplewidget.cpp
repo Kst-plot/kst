@@ -1,12 +1,6 @@
 /***************************************************************************
-                   editmultiplewidget.cpp
-                             -------------------
-    begin                : 02/27/07
-    copyright            : (C) 2007 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,8 +13,10 @@
 
 #include <QRegExp>
 
+namespace Kst {
+
 EditMultipleWidget::EditMultipleWidget(QWidget *parent)
-    : QWidget(parent) {
+  : QWidget(parent) {
   setupUi(this);
 
   connect(_selectAllBut, SIGNAL(clicked()), this, SLOT(selectAllObjects()));
@@ -53,5 +49,6 @@ void EditMultipleWidget::applyFilter(const QString& filter) {
   }
 }
 
+}
 
 // vim: ts=2 sw=2 et

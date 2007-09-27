@@ -1,12 +1,6 @@
 /***************************************************************************
-                   editmultiplewidget.h
-                             -------------------
-    begin                : 02/27/07
-    copyright            : (C) 2007 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,17 +17,21 @@
 
 #include "kst_export.h"
 
-class EditMultipleWidget : public QWidget, public Ui::EditMultipleWidget {
+namespace Kst {
+
+class KST_EXPORT EditMultipleWidget : public QWidget, public Ui::EditMultipleWidget {
   Q_OBJECT
+  public:
+    EditMultipleWidget(QWidget *parent = 0);
+    virtual ~EditMultipleWidget();
 
-public:
-  EditMultipleWidget(QWidget *parent = 0);
-  ~EditMultipleWidget();
+  public slots:
+    void selectAllObjects();
+    void applyFilter(const QString &filter);
+};
 
-public slots:
-  void selectAllObjects();
-  void applyFilter(const QString &filter);
-} KST_EXPORT;
+}
 
 #endif
+
 // vim: ts=2 sw=2 et
