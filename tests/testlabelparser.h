@@ -9,31 +9,23 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TESTSCALAR_H
-#define TESTSCALAR_H
+#ifndef TESTLABELPARSER_H
+#define TESTLABELPARSER_H
 
 #include <QObject>
-#include <QDomDocument>
+#include <labelparser.h>
 
-class SListener : public QObject {
-  Q_OBJECT
-  public:
-    SListener();
-    virtual ~SListener();
-    int _trigger;
-  public Q_SLOTS:
-    void trigger();
-};
-
-class TestScalar : public QObject
+class TestLabelParser : public QObject
 {
   Q_OBJECT
   private:
-    QDomDocument makeDOMDocument(const QString& tag, const QString& val, bool orphan = false);
+    void dumpAttributes(Label::Chunk *l, QString indent);
+    void dumpTree(Label::Chunk *l, QString indent = "");
+    void dumpTree(Label::Parsed *l);
   private Q_SLOTS:
     void cleanupTestCase();
 
-    void testScalar();
+    void testLabelParser();
 };
 
 #endif

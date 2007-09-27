@@ -15,7 +15,6 @@
 
 #include <QDir>
 #include <QFile>
-#include <QDomDocument>
 #include <QTemporaryFile>
 
 #include <kstpsd.h>
@@ -29,7 +28,7 @@ void TestPSD::cleanupTestCase() {
 }
 
 
-QDomDocument makeDOMElement(const QString& tag, const QString& val) {
+QDomDocument TestPSD::makeDOMElement(const QString& tag, const QString& val) {
 // Should be some boundary checking in the constructor.
   QDomDocument psdDOM("psddocument");
   QDomElement psdElement, child;

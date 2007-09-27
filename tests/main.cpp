@@ -17,7 +17,12 @@
 #include "testvector.h"
 #include "testscalar.h"
 #include "testmatrix.h"
+#include "testcsd.h"
 #include "testpsd.h"
+#include "testhistogram.h"
+#include "testamatrix.h"
+#include "testlabelparser.h"
+#include "testeqparser.h"
 
 int main(int argc, char *argv[]) {
   QCoreApplication app(argc, argv);
@@ -36,6 +41,22 @@ int main(int argc, char *argv[]) {
 
   TestPSD test5;
   QTest::qExec(&test5, argc, argv);
+
+  TestHistogram test6;
+  QTest::qExec(&test6, argc, argv);
+
+  TestCSD test7;
+  QTest::qExec(&test7, argc, argv);
+
+  TestAMatrix test8;
+  QTest::qExec(&test8, argc, argv);
+
+  TestLabelParser test9;
+  QTest::qExec(&test9, argc, argv);
+
+  TestEqParser test10;
+  QTest::qExec(&test10, argc, argv);
+
 
   return 0;
 }

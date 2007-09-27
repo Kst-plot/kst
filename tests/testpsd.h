@@ -13,10 +13,13 @@
 #define TESTPSD_H
 
 #include <QObject>
+#include <QDomDocument>
 
 class TestPSD : public QObject
 {
   Q_OBJECT
+  private:
+    QDomDocument makeDOMElement(const QString& tag, const QString& val);
   private Q_SLOTS:
     void cleanupTestCase();
 

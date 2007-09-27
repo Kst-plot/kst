@@ -9,31 +9,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TESTSCALAR_H
-#define TESTSCALAR_H
+#ifndef TESTCSD_H
+#define TESTCSD_H
 
 #include <QObject>
 #include <QDomDocument>
 
-class SListener : public QObject {
-  Q_OBJECT
-  public:
-    SListener();
-    virtual ~SListener();
-    int _trigger;
-  public Q_SLOTS:
-    void trigger();
-};
-
-class TestScalar : public QObject
+class TestCSD : public QObject
 {
   Q_OBJECT
+
   private:
-    QDomDocument makeDOMDocument(const QString& tag, const QString& val, bool orphan = false);
+    QDomDocument makeDOMElement(const QString& tag, const QString& val);
   private Q_SLOTS:
     void cleanupTestCase();
 
-    void testScalar();
+    void testCSD();
 };
 
 #endif

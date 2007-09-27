@@ -9,31 +9,21 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TESTSCALAR_H
-#define TESTSCALAR_H
+#ifndef TESTAMATRIX_H
+#define TESTAMATRIX_H
 
 #include <QObject>
 #include <QDomDocument>
 
-class SListener : public QObject {
-  Q_OBJECT
-  public:
-    SListener();
-    virtual ~SListener();
-    int _trigger;
-  public Q_SLOTS:
-    void trigger();
-};
-
-class TestScalar : public QObject
+class TestAMatrix : public QObject
 {
   Q_OBJECT
   private:
-    QDomDocument makeDOMDocument(const QString& tag, const QString& val, bool orphan = false);
+    QDomDocument makeDOMElement(const QString& tag, const int nx, const int ny, const double xmin, const double ymin, const double xstep, const double ystep, const int dataSize);
   private Q_SLOTS:
     void cleanupTestCase();
 
-    void testScalar();
+    void testAMatrix();
 };
 
 #endif

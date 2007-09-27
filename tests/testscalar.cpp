@@ -36,7 +36,7 @@ SListener::~SListener() {}
 void SListener::trigger() { _trigger++; }
 
 
-QDomDocument makeDOM1(const QString& tag, const QString& val, bool orphan = false) {
+QDomDocument TestScalar::makeDOMDocument(const QString& tag, const QString& val, bool orphan) {
   QDomDocument loadTest("scalardocument");
   QDomElement scalardoc, child;
   QDomText text;
@@ -103,7 +103,7 @@ void TestScalar::testScalar() {
 
   QDomNode n;
   QDomElement e;
-  n = makeDOM1("load1", "2.14159265").firstChild();
+  n = makeDOMDocument("load1", "2.14159265").firstChild();
   e = n.toElement();
   KstScalarPtr sp3 = new KstScalar(e);
   QCOMPARE(sp3->orphan(), false);
@@ -111,7 +111,7 @@ void TestScalar::testScalar() {
   QCOMPARE(sp3->tagName(), QLatin1String("load1"));
   QVERIFY(sp3->displayable());
 
-  n = makeDOM1("55.4232", "55.4232", true).firstChild();
+  n = makeDOMDocument("55.4232", "55.4232", true).firstChild();
   e = n.toElement();
   KstScalarPtr sp4 = new KstScalar(e);
   QVERIFY(sp4->orphan());
@@ -119,18 +119,18 @@ void TestScalar::testScalar() {
   QCOMPARE(sp4->tagName(), QLatin1String("55.4232"));
   QVERIFY(!sp4->displayable());
 
-  n = makeDOM1("load2", "NAN").firstChild();
+  n = makeDOMDocument("load2", "NAN").firstChild();
   e = n.toElement();
   sp4 = new KstScalar(e);
   QVERIFY(sp4->value() != sp4->value());
 
-  n = makeDOM1("load3", "INF").firstChild();
+  n = makeDOMDocument("load3", "INF").firstChild();
   e = n.toElement();
   sp4 = new KstScalar(e);
 
   QVERIFY(sp4->value() == _INF);
 
-  n = makeDOM1("load4", "-INF").firstChild();
+  n = makeDOMDocument("load4", "-INF").firstChild();
   e = n.toElement();
   sp4 = new KstScalar(e);
 
