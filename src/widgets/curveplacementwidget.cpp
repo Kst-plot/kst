@@ -11,14 +11,17 @@
 
 #include "curveplacementwidget.h"
 
-CurvePlacementWidget::CurvePlacementWidget(QWidget *parent)
-    : QWidget(parent) {
-  setupUi(this);
+namespace Kst {
 
+CurvePlacementWidget::CurvePlacementWidget(QWidget *parent)
+  : QWidget(parent) {
+  setupUi(this);
 }
 
 
-CurvePlacementWidget::~CurvePlacementWidget() {}
+CurvePlacementWidget::~CurvePlacementWidget() {
+}
 
+}
 
 // vim: ts=2 sw=2 et

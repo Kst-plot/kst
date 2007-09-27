@@ -11,14 +11,17 @@
 
 #include "curveappearancewidget.h"
 
+namespace Kst {
 
 CurveAppearanceWidget::CurveAppearanceWidget(QWidget *parent)
-    : QWidget(parent) {
+  : QWidget(parent) {
   setupUi(this);
 }
 
 
-CurveAppearanceWidget::~CurveAppearanceWidget() {}
+CurveAppearanceWidget::~CurveAppearanceWidget() {
+}
 
+}
 
 // vim: ts=2 sw=2 et

@@ -17,14 +17,17 @@
 
 #include "kst_export.h"
 
-class CurvePlacementWidget : public QWidget, public Ui::CurvePlacementWidget {
+namespace Kst {
+
+class KST_EXPORT CurvePlacementWidget : public QWidget, public Ui::CurvePlacementWidget {
   Q_OBJECT
+  public:
+    CurvePlacementWidget(QWidget *parent = 0);
+    virtual ~CurvePlacementWidget();
+};
 
-public:
-  CurvePlacementWidget(QWidget *parent = 0);
-  ~CurvePlacementWidget();
-
-} KST_EXPORT;
+}
 
 #endif
+
 // vim: ts=2 sw=2 et

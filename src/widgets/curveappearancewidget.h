@@ -17,14 +17,17 @@
 
 #include "kst_export.h"
 
-class CurveAppearanceWidget : public QWidget, public Ui::CurveAppearanceWidget {
+namespace Kst {
+
+class KST_EXPORT CurveAppearanceWidget : public QWidget, public Ui::CurveAppearanceWidget {
   Q_OBJECT
+  public:
+    CurveAppearanceWidget(QWidget *parent = 0);
+    virtual ~CurveAppearanceWidget();
+};
 
-public:
-  CurveAppearanceWidget(QWidget *parent = 0);
-  ~CurveAppearanceWidget();
-
-} KST_EXPORT;
+}
 
 #endif
+
 // vim: ts=2 sw=2 et

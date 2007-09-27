@@ -11,10 +11,12 @@
 
 #include "vectorselector.h"
 
+#include "kstdatacollection.h"
+
 namespace Kst {
 
 VectorSelector::VectorSelector(QWidget *parent)
-  : QWidget(parent) {
+  : QWidget(parent), _allowEmptySelection(true) {
 
   setupUi(this);
 
@@ -25,6 +27,8 @@ VectorSelector::VectorSelector(QWidget *parent)
 
   _newVector->setFixedSize(size + 8, size + 8);
   _editVector->setFixedSize(size + 8, size + 8);
+
+  fillVectors();
 }
 
 
@@ -39,6 +43,35 @@ KstVectorPtr VectorSelector::selectedVector() const {
 
 void VectorSelector::setSelectedVector(KstVectorPtr selectedVector) {
   Q_UNUSED(selectedVector);
+}
+
+
+void VectorSelector::fillVectors() {
+  QStringList vectors;
+
+  KST::vectorList.lock().readLock();
+
+  KstVectorList::ConstIterator it = KST::vectorList.begin();
+  for (; it != KST::vectorList.end(); ++it) {
+    KstVectorPtr vector = (*it);
+    if (vector->isScalarList())
+      continue;
+
+    vector->readLock();
+    vectors << vector->tag().displayString();
+    vector->unlock();
+  }
+
+  KST::vectorList.lock().unlock();
+
+  qSort(vectors);
+
+  if (allowEmptySelection()) {
+    vectors.prepend(tr("<None>"));
+  }
+
+  _vector->clear();
+  _vector->addItems(vectors);
 }
 
 }
