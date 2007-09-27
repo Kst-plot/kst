@@ -23,6 +23,8 @@ SOURCES += \
     kstwidgets.cpp \
     colorbutton.cpp \
     combobox.cpp \
+    curveappearancewidget.cpp \
+    curveplacementwidget.cpp \
     datarange.cpp \
     filerequester.cpp \
     gradienteditor.cpp \
@@ -34,6 +36,8 @@ SOURCES += \
 HEADERS += \
     colorbutton.h \
     combobox.h \
+    curveappearancewidget.h \
+    curveplacementwidget.h \
     datarange.h \
     filerequester.h \
     gradienteditor.h \
@@ -45,6 +49,8 @@ HEADERS += \
 
 FORMS += \
     datarange.ui \
+    curveappearancewidget.ui \
+    curveplacementwidget.ui \
     matrixselector.ui \
     scalarselector.ui \
     stringselector.ui \
