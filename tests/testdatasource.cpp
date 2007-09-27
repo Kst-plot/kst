@@ -433,30 +433,40 @@ void TestDataSource::testDirfile() {
 
 
 void TestDataSource::testCDF() {
+  return; //FIXME remove when we actually have some tests for this datasource.
+
   if (!_plugins.contains("CDF File Reader"))
     QSKIP("...couldn't find plugin.", SkipAll);
 }
 
 
 void TestDataSource::testFrame() {
+  return; //FIXME remove when we actually have some tests for this datasource.
+
   if (!_plugins.contains("Frame Reader"))
     QSKIP("...couldn't find plugin.", SkipAll);
 }
 
 
 void TestDataSource::testIndirect() {
+  return; //FIXME remove when we actually have some tests for this datasource.
+
   if (!_plugins.contains("Indirect File Reader"))
     QSKIP("...couldn't find plugin.", SkipAll);
 }
 
 
 void TestDataSource::testLFI() {
+  return; //FIXME remove when we actually have some tests for this datasource.
+
   if (!_plugins.contains("LFIIO Reader"))
     QSKIP("...couldn't find plugin.", SkipAll);
 }
 
 
 void TestDataSource::testPlanck() {
+  return; //FIXME remove when we actually have some tests for this datasource.
+
   if (!_plugins.contains("PLANCK Plugin"))
     QSKIP("...couldn't find plugin.", SkipAll);
 }
