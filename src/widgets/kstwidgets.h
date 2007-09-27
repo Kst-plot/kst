@@ -177,6 +177,34 @@ public:
   }
 };
 
+#include "curveappearancewidget.h"
+class CurveAppearancePlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  CurveAppearancePlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("Kst::CurveAppearance");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new Kst::CurveAppearanceWidget(parent);
+  }
+};
+
+#include "curveplacementwidget.h"
+class CurvePlacementPlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  CurvePlacementPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("Kst::CurvePlacement");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new Kst::CurvePlacementWidget(parent);
+  }
+};
+
 #endif
 
 // vim: ts=2 sw=2 et

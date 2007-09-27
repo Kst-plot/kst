@@ -22,6 +22,8 @@ KstWidgets::KstWidgets(QObject *parent)
   _plugins.append(new MatrixSelectorPlugin(this));
   _plugins.append(new ScalarSelectorPlugin(this));
   _plugins.append(new StringSelectorPlugin(this));
+  _plugins.append(new CurvePlacementPlugin(this));
+  _plugins.append(new CurveAppearancePlugin(this));
 }
 
 
