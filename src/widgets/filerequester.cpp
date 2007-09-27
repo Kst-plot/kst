@@ -11,6 +11,7 @@
 
 #include "filerequester.h"
 
+#include <QStyle>
 #include <QLineEdit>
 #include <QToolButton>
 #include <QHBoxLayout>
@@ -51,7 +52,9 @@ FileRequester::FileRequester(const QString &file, QWidget *parent)
   layout->addWidget(_fileButton);
   setLayout(layout);
 
+  int size = style()->pixelMetric(QStyle::PM_SmallIconSize);
   _fileButton->setIcon(QPixmap(":kst_changefile.png"));
+  _fileButton->setFixedSize(size + 8, size + 8);
 
   setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
   connect (_fileEdit, SIGNAL(textEdited(const QString &)), this, SLOT(setFile(const QString &)));

@@ -1,6 +1,6 @@
 include($$PWD/../../kst.pri)
 
-QT += gui xml
+QT += gui xml qt3support
 
 TEMPLATE = lib
 CONFIG += designer plugin
@@ -25,7 +25,11 @@ SOURCES += \
     combobox.cpp \
     datarange.cpp \
     filerequester.cpp \
-    gradienteditor.cpp
+    gradienteditor.cpp \
+    matrixselector.cpp \
+    scalarselector.cpp \
+    stringselector.cpp \
+    vectorselector.cpp
 
 HEADERS += \
     colorbutton.h \
@@ -33,10 +37,18 @@ HEADERS += \
     datarange.h \
     filerequester.h \
     gradienteditor.h \
+    matrixselector.h \
+    scalarselector.h \
+    stringselector.h \
+    vectorselector.h \
     kstwidgets.h
 
 FORMS += \
     datarange.ui \
+    matrixselector.ui \
+    scalarselector.ui \
+    stringselector.ui \
+    vectorselector.ui
 
 RESOURCES += \
     $$TOPLEVELDIR/src/images/images.qrc

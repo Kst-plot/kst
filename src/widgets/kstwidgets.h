@@ -17,55 +17,39 @@
 
 #include <QtPlugin>
 
+class KstWidgets : public QObject, public QDesignerCustomWidgetCollectionInterface {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
+public:
+  KstWidgets(QObject *parent = 0);
+  virtual ~KstWidgets();
+  QList<QDesignerCustomWidgetInterface*> customWidgets() const {
+    return _plugins;
+  }
+
+private:
+  QList<QDesignerCustomWidgetInterface*> _plugins;
+};
+
 class KstWidgetPlugin : public QObject, public QDesignerCustomWidgetInterface {
 public:
-  KstWidgetPlugin(QObject *parent = 0) : QObject(parent), _initialized(false) {}
+  KstWidgetPlugin(QObject *parent = 0);
+  virtual ~KstWidgetPlugin();
 
-  QString group() const {
-    return tr("Kst Widgets");
-  }
-  QString toolTip() const {
-    return QString::null;
-  }
-  QString whatsThis() const {
-    return QString::null;
-  }
-
-  QString instanceName() const {
-    QChar camel = name().at(0).toLower();
-    return name().replace(0,1,camel.toLower());
-  }
-
-  QString includeFile() const {
-    return name().replace("Kst::", "").toLower() + ".h";
-  }
-
-  QString domXml() const {
-    return QString::fromUtf8("<widget class=\"%1\" name=\"%2\"/>")
-           .arg(name()).arg(instanceName().toLower());
-  }
-
-  bool isContainer() const {
-    return false;
-  }
-  bool isInitialized() const {
-    return _initialized;
-  }
-  QIcon icon() const {
-    return QIcon();
-  }
-
-  void initialize(QDesignerFormEditorInterface *) {
-    if (_initialized)
-      return;
-
-    _initialized = true;
-  }
+  QString group() const;
+  QString toolTip() const;
+  QString whatsThis() const;
+  QString instanceName() const;
+  QString includeFile() const;
+  QString domXml() const;
+  bool isContainer() const;
+  bool isInitialized() const;
+  QIcon icon() const;
+  void initialize(QDesignerFormEditorInterface *);
 
 private:
   bool _initialized;
 };
-
 
 #include "colorbutton.h"
 class ColorButtonPlugin : public KstWidgetPlugin {
@@ -80,7 +64,6 @@ public:
     return new Kst::ColorButton(parent);
   }
 };
-
 
 #include "gradienteditor.h"
 class GradientEditorPlugin : public KstWidgetPlugin {
@@ -138,19 +121,62 @@ public:
   }
 };
 
-class KstWidgets : public QObject, public QDesignerCustomWidgetCollectionInterface {
+#include "vectorselector.h"
+class VectorSelectorPlugin : public KstWidgetPlugin {
   Q_OBJECT
-  Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
 public:
-  KstWidgets(QObject *parent = 0);
-  virtual ~KstWidgets() {}
-  QList<QDesignerCustomWidgetInterface*> customWidgets() const {
-    return _plugins;
+  VectorSelectorPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("Kst::VectorSelector");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new Kst::VectorSelector(parent);
   }
+};
 
-private:
-  QList<QDesignerCustomWidgetInterface*> _plugins;
+#include "matrixselector.h"
+class MatrixSelectorPlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  MatrixSelectorPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("Kst::MatrixSelector");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new Kst::MatrixSelector(parent);
+  }
+};
+
+#include "scalarselector.h"
+class ScalarSelectorPlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  ScalarSelectorPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("Kst::ScalarSelector");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new Kst::ScalarSelector(parent);
+  }
+};
+
+#include "stringselector.h"
+class StringSelectorPlugin : public KstWidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+public:
+  StringSelectorPlugin(QObject *parent = 0) : KstWidgetPlugin(parent) {}
+  QString name() const {
+    return QLatin1String("Kst::StringSelector");
+  } //do not translate
+  QWidget *createWidget(QWidget *parent) {
+    return new Kst::StringSelector(parent);
+  }
 };
 
 #endif
+
 // vim: ts=2 sw=2 et
