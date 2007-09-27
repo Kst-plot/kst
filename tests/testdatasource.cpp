@@ -286,7 +286,7 @@ void TestDataSource::testDirfile() {
   if (!_plugins.contains("DirFile Reader"))
     QSKIP("...couldn't find plugin.", SkipAll);
 
-  QWARN("These tests assume that the dirfile was generated with dirfile_maker");
+  //These tests assume that the dirfile was generated with dirfile_maker
 
   {
     QString fifteen = QDir::currentPath() + QDir::separator() + QString("dirfile_testcase") +
