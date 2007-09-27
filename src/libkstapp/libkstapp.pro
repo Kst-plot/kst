@@ -37,6 +37,7 @@ SOURCES += \
     dialogpage.cpp \
     dialogtab.cpp \
     document.cpp \
+    editmultiplewidget.cpp \
     ellipseitem.cpp \
     exportgraphicsdialog.cpp \
     filltab.cpp \
@@ -92,6 +93,7 @@ HEADERS += \
     dialogpage.h \
     dialogtab.h \
     document.h \
+    editmultiplewidget.h \
     ellipseitem.h \
     exportgraphicsdialog.h \
     filltab.h \
@@ -132,6 +134,7 @@ FORMS += \
     datamanager.ui \
     debugdialog.ui \
     dialog.ui \
+    editmultiplewidget.ui \
     exportgraphicsdialog.ui \
     filltab.ui \
     generaltab.ui \

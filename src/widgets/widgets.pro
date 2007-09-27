@@ -24,7 +24,6 @@ SOURCES += \
     colorbutton.cpp \
     combobox.cpp \
     datarange.cpp \
-    editmultiplewidget.cpp \
     filerequester.cpp \
     gradienteditor.cpp
 
@@ -32,14 +31,12 @@ HEADERS += \
     colorbutton.h \
     combobox.h \
     datarange.h \
-    editmultiplewidget.h \
     filerequester.h \
     gradienteditor.h \
     kstwidgets.h
 
 FORMS += \
     datarange.ui \
-    editmultiplewidget.ui
 
 RESOURCES += \
     $$TOPLEVELDIR/src/images/images.qrc
