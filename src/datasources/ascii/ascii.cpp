@@ -1055,9 +1055,10 @@ QStringList AsciiPlugin::provides() const {
 
 KstDataSourceConfigWidget *AsciiPlugin::configWidget(QSettings *cfg, const QString& filename) const {
 
-  Q_UNUSED(cfg)
   Q_UNUSED(filename)
-  return new ConfigWidgetAscii;
+  ConfigWidgetAscii *config = new ConfigWidgetAscii;
+  config->setConfig(cfg);
+  return config;
 
 }
 
