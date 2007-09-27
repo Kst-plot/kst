@@ -2,9 +2,9 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 SUBDIRS += \
-    ascii
+    ascii \
+    dirfile
 #     cdf \
-#     dirfile \
 #     fitsimage \
 #     frame \
 #     healpix \

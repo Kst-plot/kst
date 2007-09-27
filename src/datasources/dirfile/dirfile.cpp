@@ -20,12 +20,46 @@
 #include "getdata_struct.h"
 
 
-DirFileSource::DirFileSource(KConfig *cfg, const QString& filename, const QString& type)
-: KstDataSource(cfg, filename, type) {
-  if (init()) {
-    _valid = true;
+class DirFileSource::Config {
+  public:
+    Config() {
+    }
+
+    void read(QSettings *cfg, const QString& fileName = QString::null) {
+      Q_UNUSED(fileName);
+      cfg->beginGroup("Directory of Binary Files");
+      cfg->endGroup();
+    }
+
+    void save(QXmlStreamWriter& s) {
+      Q_UNUSED(s);
+    }
+
+    void load(const QDomElement& e) {
+      Q_UNUSED(e);
+    }
+};
+
+
+DirFileSource::DirFileSource(QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
+: KstDataSource(cfg, filename, type), _rowIndex(0L), _config(0L), _tmpBuf(0L), _tmpBufSize(0) {
+  _valid = false;
+  _haveHeader = false;
+  _fieldListComplete = false;
+  if (!type.isEmpty() && type != "Directory of Binary Files") {
+    return;
   }
+
+  _config = new DirFileSource::Config;
+  _config->read(cfg, filename);
+  if (!e.isNull()) {
+    _config->load(e);
+  }
+
+  _valid = true;
+  update();
 }
+
 
 
 DirFileSource::~DirFileSource() {
@@ -152,38 +186,52 @@ QString DirFileSource::fileType() const {
 }
 
 
-void DirFileSource::save(QTextStream &ts, const QString& indent) {
-  KstDataSource::save(ts, indent);
+void DirFileSource::save(QXmlStreamWriter &streamWriter) {
+  KstDataSource::save(streamWriter);
 }
 
-//#include <kdebug.h>
 
-extern "C" {
-KstDataSource *create_dirfile(KConfig *cfg, const QString& filename, const QString& type) {
-  return new DirFileSource(cfg, filename, type);
+QString DirFilePlugin::pluginName() const { return "DirFile Reader"; }
+
+
+KstDataSource *DirFilePlugin::create(QSettings *cfg,
+                                            const QString &filename,
+                                            const QString &type,
+                                            const QDomElement &element) const {
+
+  return new DirFileSource(cfg, filename, type, element);
 }
 
-QStringList provides_dirfile() {
-  QStringList rc;
-  rc += "Directory of Binary Files";
-  return rc;
-}
 
-int understands_dirfile(KConfig*, const QString& filename) {
-  // FIXME: GetNFrames causes a memory error here.  I think it is due to
-  // the lfilename parameter.
-  int err = 0;
-  int frameCount = GetNFrames(filename.toLatin1(), &err, 0L);
-  if (frameCount > 0 && err == GD_E_OK) {
-    return 98;
+
+QStringList DirFilePlugin::matrixList(QSettings *cfg,
+                                             const QString& filename,
+                                             const QString& type,
+                                             QString *typeSuggestion,
+                                             bool *complete) const {
+
+
+  if (typeSuggestion) {
+    *typeSuggestion = "Directory of Binary Files";
   }
-
-  //kdDebug() << "Don't understand.  filename = [" << filename << "] FrameCount=" << frameCount << " err=" << err << endl;
-  return 0;
+  if ((!type.isEmpty() && !provides().contains(type)) ||
+      0 == understands(cfg, filename)) {
+    if (complete) {
+      *complete = false;
+    }
+    return QStringList();
+  }
+  return QStringList();
 }
 
 
-QStringList fieldList_dirfile(KConfig*, const QString& filename, const QString& type, QString *typeSuggestion, bool *complete) {
+QStringList DirFilePlugin::fieldList(QSettings *cfg,
+                                            const QString& filename,
+                                            const QString& type,
+                                            QString *typeSuggestion,
+                                            bool *complete) const {
+
+  Q_UNUSED(cfg);
   Q_UNUSED(type)
   int err = 0;
   struct FormatType *ft = GetFormat(filename.toLatin1(), &err);
@@ -224,10 +272,51 @@ QStringList fieldList_dirfile(KConfig*, const QString& filename, const QString& 
     }
   }
   return fieldList;
-}
 
 }
 
-KST_KEY_DATASOURCE_PLUGIN(dirfile)
+
+
+int DirFilePlugin::understands(QSettings *cfg, const QString& filename) const {
+  // FIXME: GetNFrames causes a memory error here.  I think it is due to
+  // the lfilename parameter.
+  Q_UNUSED(cfg);
+  int err = 0;
+  int frameCount = GetNFrames(filename.toLatin1(), &err, 0L);
+  if (frameCount > 0 && err == GD_E_OK) {
+    return 98;
+  }
+
+  //kdDebug() << "Don't understand.  filename = [" << filename << "] FrameCount=" << frameCount << " err=" << err << endl;
+  return 0;
+}
+
+
+
+bool DirFilePlugin::supportsTime(QSettings *cfg, const QString& filename) const {
+  //FIXME
+  Q_UNUSED(cfg)
+  Q_UNUSED(filename)
+  return true;
+}
+
+
+QStringList DirFilePlugin::provides() const {
+  QStringList rc;
+  rc += "Directory of Binary Files";
+  return rc;
+}
+
+
+KstDataSourceConfigWidget *DirFilePlugin::configWidget(QSettings *cfg, const QString& filename) const {
+
+  Q_UNUSED(cfg)
+  Q_UNUSED(filename)
+  return 0;;
+
+}
+
+Q_EXPORT_PLUGIN2(kstdata_dirfile, DirFilePlugin)
+
 
 // vim: ts=2 sw=2 et

@@ -19,11 +19,11 @@
 #define DIRFILE_H
 
 #include <kstdatasource.h>
-
+#include <kstdataplugin.h>
 
 class DirFileSource : public KstDataSource {
   public:
-    DirFileSource(KConfig *cfg, const QString& filename, const QString& type);
+    DirFileSource(QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e);
 
     ~DirFileSource();
 
@@ -43,14 +43,63 @@ class DirFileSource : public KstDataSource {
 
     QString fileType() const;
 
-    void save(QTextStream &ts, const QString& indent = QString::null);
+    void save(QXmlStreamWriter &streamWriter);
 
     bool isEmpty() const;
 
     bool reset();
 
+    class Config;
+
   private:
     int _frameCount;
+    int *_rowIndex;
+    int _numLinesAlloc;
+    int _numFrames;
+    int _byteLength;
+    mutable QStringList _fields;
+    mutable Config *_config;
+    char *_tmpBuf;
+    uint _tmpBufSize;
+    bool _haveHeader;
+    mutable bool _fieldListComplete;
+};
+
+
+class DirFilePlugin : public QObject, public KstDataSourcePluginInterface {
+    Q_OBJECT
+    Q_INTERFACES(KstDataSourcePluginInterface)
+  public:
+    virtual ~DirFilePlugin() {}
+
+    virtual QString pluginName() const;
+
+    virtual bool hasConfigWidget() const { return false; }
+
+    virtual KstDataSource *create(QSettings *cfg,
+                                  const QString &filename,
+                                  const QString &type,
+                                  const QDomElement &element) const;
+
+    virtual QStringList matrixList(QSettings *cfg,
+                                  const QString& filename,
+                                  const QString& type,
+                                  QString *typeSuggestion,
+                                  bool *complete) const;
+
+    virtual QStringList fieldList(QSettings *cfg,
+                                  const QString& filename,
+                                  const QString& type,
+                                  QString *typeSuggestion,
+                                  bool *complete) const;
+
+    virtual int understands(QSettings *cfg, const QString& filename) const;
+
+    virtual bool supportsTime(QSettings *cfg, const QString& filename) const;
+
+    virtual QStringList provides() const;
+
+    virtual KstDataSourceConfigWidget *configWidget(QSettings *cfg, const QString& filename) const;
 };
 
 
