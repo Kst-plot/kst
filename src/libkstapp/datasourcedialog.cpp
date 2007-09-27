@@ -20,6 +20,8 @@ namespace Kst {
 DataSourceDialog::DataSourceDialog(DataDialog::EditMode mode, KstDataSourcePtr dataSource, QWidget *parent)
   : QDialog(parent), _dataSource(dataSource) {
 
+  setWindowTitle(QString("Configure %1").arg(_dataSource->fileType()));
+
   QVBoxLayout *layout = new QVBoxLayout(this);
 
   _dataSource->readLock();
