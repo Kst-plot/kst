@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>CurveAppearanceWidget</class>
- <widget class="QWidget" name="CurveAppearanceWidget" >
+ <class>CurveAppearance</class>
+ <widget class="QWidget" name="CurveAppearance" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -81,7 +81,7 @@
        </spacer>
       </item>
       <item row="0" column="1" >
-       <widget class="Kst::ColorButton" native="1" name="_color" >
+       <widget class="Kst::ColorButton" name="_color" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
           <horstretch>0</horstretch>
@@ -502,6 +502,13 @@
  </widget>
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+ <customwidgets>
+  <customwidget>
+   <class>Kst::ColorButton</class>
+   <extends>QToolButton</extends>
+   <header>colorbutton.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>_color</tabstop>
   <tabstop>_showPoints</tabstop>
@@ -515,239 +522,7 @@
  </tabstops>
  <includes>
   <include location="global" >kst_export.h</include>
-</includes>
+ </includes>
  <resources/>
- <connections>
-  <connection>
-   <sender>_color</sender>
-   <signal>changed(QColor)</signal>
-   <receiver>CurveAppearanceWidget</receiver>
-   <slot>fillCombo()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_color</sender>
-   <signal>changed(QColor)</signal>
-   <receiver>CurveAppearanceWidget</receiver>
-   <slot>drawLine()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_showLines</sender>
-   <signal>clicked()</signal>
-   <receiver>CurveAppearanceWidget</receiver>
-   <slot>drawLine()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_showPoints</sender>
-   <signal>clicked()</signal>
-   <receiver>CurveAppearanceWidget</receiver>
-   <slot>drawLine()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_combo</sender>
-   <signal>activated(int)</signal>
-   <receiver>CurveAppearanceWidget</receiver>
-   <slot>drawLine()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_combo</sender>
-   <signal>activated(int)</signal>
-   <receiver>CurveAppearanceWidget</receiver>
-   <slot>comboChanged()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_comboLineStyle</sender>
-   <signal>activated(int)</signal>
-   <receiver>CurveAppearanceWidget</receiver>
-   <slot>drawLine()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_spinBoxLineWidth</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>CurveAppearanceWidget</receiver>
-   <slot>drawLine()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_color</sender>
-   <signal>changed(QColor)</signal>
-   <receiver>CurveAppearanceWidget</receiver>
-   <slot>fillLineStyleCombo()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_showPoints</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>CurveAppearanceWidget</receiver>
-   <slot>enableSettings()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_showLines</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>CurveAppearanceWidget</receiver>
-   <slot>enableSettings()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_showBars</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>CurveAppearanceWidget</receiver>
-   <slot>enableSettings()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_barStyle</sender>
-   <signal>activated(int)</signal>
-   <receiver>CurveAppearanceWidget</receiver>
-   <slot>drawLine()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_showBars</sender>
-   <signal>clicked()</signal>
-   <receiver>CurveAppearanceWidget</receiver>
-   <slot>drawLine()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
-  <customwidgets>
-  <customwidget>
-  <class>Kst::ColorButton</class>
-  <extends>QToolButton</extends>
-  <header>colorbutton.h</header>
-  </customwidget>
- </customwidgets>
+ <connections/>
 </ui>

@@ -9,9 +9,11 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstwidgets.h"
+#include "widgets.h"
 
-KstWidgets::KstWidgets(QObject *parent)
+namespace Kst {
+
+Widgets::Widgets(QObject *parent)
     : QObject(parent) {
   _plugins.append(new ColorButtonPlugin(this));
   _plugins.append(new GradientEditorPlugin(this));
@@ -27,75 +29,77 @@ KstWidgets::KstWidgets(QObject *parent)
 }
 
 
-KstWidgets::~KstWidgets() {
+Widgets::~Widgets() {
 }
 
 
-KstWidgetPlugin::KstWidgetPlugin(QObject *parent)
+WidgetPlugin::WidgetPlugin(QObject *parent)
   : QObject(parent), _initialized(false) {
 }
 
 
-KstWidgetPlugin::~KstWidgetPlugin() {
+WidgetPlugin::~WidgetPlugin() {
 }
 
 
-QString KstWidgetPlugin::group() const {
+QString WidgetPlugin::group() const {
   return tr("Kst Widgets");
 }
 
 
-QString KstWidgetPlugin::toolTip() const {
+QString WidgetPlugin::toolTip() const {
   return QString::null;
 }
 
 
-QString KstWidgetPlugin::whatsThis() const {
+QString WidgetPlugin::whatsThis() const {
   return QString::null;
 }
 
 
-QString KstWidgetPlugin::instanceName() const {
+QString WidgetPlugin::instanceName() const {
   QString name = static_cast<const QDesignerCustomWidgetInterface*>(this)->name().replace("Kst::", "");
   QChar camel = name.at(0).toLower();
   return name.replace(0,1,camel.toLower());
 }
 
 
-QString KstWidgetPlugin::includeFile() const {
+QString WidgetPlugin::includeFile() const {
   return instanceName().toLower() + ".h";
 }
 
 
-QString KstWidgetPlugin::domXml() const {
+QString WidgetPlugin::domXml() const {
   QString name = static_cast<const QDesignerCustomWidgetInterface*>(this)->name();
   return QString::fromUtf8("<widget class=\"%1\" name=\"%2\"/>")
           .arg(name).arg(instanceName());
 }
 
 
-bool KstWidgetPlugin::isContainer() const {
+bool WidgetPlugin::isContainer() const {
   return false;
 }
 
 
-bool KstWidgetPlugin::isInitialized() const {
+bool WidgetPlugin::isInitialized() const {
   return _initialized;
 }
 
 
-QIcon KstWidgetPlugin::icon() const {
+QIcon WidgetPlugin::icon() const {
   return QIcon();
 }
 
 
-void KstWidgetPlugin::initialize(QDesignerFormEditorInterface *) {
+void WidgetPlugin::initialize(QDesignerFormEditorInterface *) {
   if (_initialized)
     return;
 
   _initialized = true;
 }
 
-Q_EXPORT_PLUGIN2(kstwidgets, KstWidgets)
+Q_EXPORT_PLUGIN2(widgets, Widgets)
+
+}
 
 // vim: ts=2 sw=2 et

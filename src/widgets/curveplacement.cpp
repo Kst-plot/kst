@@ -9,17 +9,17 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "curveplacementwidget.h"
+#include "curveplacement.h"
 
 namespace Kst {
 
-CurvePlacementWidget::CurvePlacementWidget(QWidget *parent)
+CurvePlacement::CurvePlacement(QWidget *parent)
   : QWidget(parent) {
   setupUi(this);
 }
 
 
-CurvePlacementWidget::~CurvePlacementWidget() {
+CurvePlacement::~CurvePlacement() {
 }
 
 }

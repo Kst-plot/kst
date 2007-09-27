@@ -9,21 +9,21 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef CURVEPLACEMENTWIDGET_H
-#define CURVEPLACEMENTWIDGET_H
+#ifndef CURVEPLACEMENT_H
+#define CURVEPLACEMENT_H
 
 #include <QWidget>
-#include "ui_curveplacementwidget.h"
+#include "ui_curveplacement.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class KST_EXPORT CurvePlacementWidget : public QWidget, public Ui::CurvePlacementWidget {
+class KST_EXPORT CurvePlacement : public QWidget, public Ui::CurvePlacement {
   Q_OBJECT
   public:
-    CurvePlacementWidget(QWidget *parent = 0);
-    virtual ~CurvePlacementWidget();
+    CurvePlacement(QWidget *parent = 0);
+    virtual ~CurvePlacement();
 };
 
 }

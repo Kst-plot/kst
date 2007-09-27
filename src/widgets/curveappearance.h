@@ -9,21 +9,21 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef CURVEAPPEARANCEWIDGET_H
-#define CURVEAPPEARANCEWIDGET_H
+#ifndef CURVEAPPEARANCE_H
+#define CURVEAPPEARANCE_H
 
 #include <QWidget>
-#include "ui_curveappearancewidget.h"
+#include "ui_curveappearance.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class KST_EXPORT CurveAppearanceWidget : public QWidget, public Ui::CurveAppearanceWidget {
+class KST_EXPORT CurveAppearance : public QWidget, public Ui::CurveAppearance {
   Q_OBJECT
   public:
-    CurveAppearanceWidget(QWidget *parent = 0);
-    virtual ~CurveAppearanceWidget();
+    CurveAppearance(QWidget *parent = 0);
+    virtual ~CurveAppearance();
 };
 
 }

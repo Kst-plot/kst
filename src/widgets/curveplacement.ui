@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>CurvePlacementWidget</class>
- <widget class="QWidget" name="CurvePlacementWidget" >
+ <class>CurvePlacement</class>
+ <widget class="QWidget" name="CurvePlacement" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -184,118 +184,5 @@
   <tabstop>_dontPlace</tabstop>
  </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>_plotWindow</sender>
-   <signal>activated(int)</signal>
-   <receiver>CurvePlacementWidget</receiver>
-   <slot>updatePlotList()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_newWindow</sender>
-   <signal>clicked()</signal>
-   <receiver>CurvePlacementWidget</receiver>
-   <slot>newWindow()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_inPlot</sender>
-   <signal>clicked()</signal>
-   <receiver>CurvePlacementWidget</receiver>
-   <slot>updateEnabled()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_newPlot</sender>
-   <signal>clicked()</signal>
-   <receiver>CurvePlacementWidget</receiver>
-   <slot>updateEnabled()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_dontPlace</sender>
-   <signal>clicked()</signal>
-   <receiver>CurvePlacementWidget</receiver>
-   <slot>updateEnabled()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_plotWindow</sender>
-   <signal>textChanged(QString)</signal>
-   <receiver>CurvePlacementWidget</receiver>
-   <slot>updateGrid()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_reGrid</sender>
-   <signal>clicked()</signal>
-   <receiver>CurvePlacementWidget</receiver>
-   <slot>updateEnabled()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

@@ -9,17 +9,17 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "curveappearancewidget.h"
+#include "curveappearance.h"
 
 namespace Kst {
 
-CurveAppearanceWidget::CurveAppearanceWidget(QWidget *parent)
+CurveAppearance::CurveAppearance(QWidget *parent)
   : QWidget(parent) {
   setupUi(this);
 }
 
 
-CurveAppearanceWidget::~CurveAppearanceWidget() {
+CurveAppearance::~CurveAppearance() {
 }
 
 }

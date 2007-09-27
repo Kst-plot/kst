@@ -20,24 +20,24 @@ INCLUDEPATH += \
     $$OUTPUT_DIR/src/widgets/tmp
 
 SOURCES += \
-    kstwidgets.cpp \
     colorbutton.cpp \
     combobox.cpp \
-    curveappearancewidget.cpp \
-    curveplacementwidget.cpp \
+    curveappearance.cpp \
+    curveplacement.cpp \
     datarange.cpp \
     filerequester.cpp \
     gradienteditor.cpp \
     matrixselector.cpp \
     scalarselector.cpp \
     stringselector.cpp \
-    vectorselector.cpp
+    vectorselector.cpp \
+    widgets.cpp
 
 HEADERS += \
     colorbutton.h \
     combobox.h \
-    curveappearancewidget.h \
-    curveplacementwidget.h \
+    curveappearance.h \
+    curveplacement.h \
     datarange.h \
     filerequester.h \
     gradienteditor.h \
@@ -45,12 +45,12 @@ HEADERS += \
     scalarselector.h \
     stringselector.h \
     vectorselector.h \
-    kstwidgets.h
+    widgets.h
 
 FORMS += \
     datarange.ui \
-    curveappearancewidget.ui \
-    curveplacementwidget.ui \
+    curveappearance.ui \
+    curveplacement.ui \
     matrixselector.ui \
     scalarselector.ui \
     stringselector.ui \
