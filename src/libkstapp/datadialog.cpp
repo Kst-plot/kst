@@ -57,7 +57,6 @@ void DataDialog::createGui() {
   extensionLayout->addWidget(editMultipleWidget);
 
   extension->setLayout(extensionLayout);
-  extension->hide();
 
   QWidget *box = topCustomWidget();
 

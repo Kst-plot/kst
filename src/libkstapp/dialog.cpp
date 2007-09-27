@@ -23,6 +23,8 @@ Dialog::Dialog(QWidget *parent)
 
   setupUi(this);
 
+  extensionWidget()->hide();
+
   connect(_listWidget, SIGNAL(itemClicked(QListWidgetItem *)),
           this, SLOT(selectPageForItem(QListWidgetItem *)));
 

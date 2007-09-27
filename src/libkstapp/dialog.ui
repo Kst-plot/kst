@@ -107,6 +107,9 @@
      </item>
      <item rowspan="3" row="0" column="3" >
       <widget class="QWidget" native="1" name="_extensionWidget" >
+       <property name="enabled" >
+        <bool>true</bool>
+       </property>
        <property name="sizePolicy" >
         <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
          <horstretch>0</horstretch>
