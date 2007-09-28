@@ -25,6 +25,7 @@ SOURCES += \
     axis.cpp \
     boxitem.cpp \
     builtingraphics.cpp \
+    curvedialog.cpp \
     databutton.cpp \
     databuttonaction.cpp \
     datadialog.cpp \
@@ -80,6 +81,7 @@ HEADERS += \
     axis.h \
     boxitem.h \
     builtingraphics.h \
+    curvedialog.h \
     databutton.h \
     databuttonaction.h \
     datadialog.h \
@@ -131,6 +133,7 @@ HEADERS += \
 
 FORMS += \
     aboutdialog.ui \
+    curvetab.ui \
     datamanager.ui \
     debugdialog.ui \
     dialog.ui \

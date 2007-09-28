@@ -33,6 +33,7 @@ class KST_EXPORT DataManager : public QDialog, Ui::DataManager
 
   private Q_SLOTS:
     void showVectorDialog();
+    void showCurveDialog();
 
   private:
     Document *_doc;

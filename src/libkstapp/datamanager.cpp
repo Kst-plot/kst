@@ -14,6 +14,7 @@
 #include "databutton.h"
 
 #include "vectordialog.h"
+#include "curvedialog.h"
 
 #include "document.h"
 #include "sessionmodel.h"
@@ -31,18 +32,22 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   _primitives = new QToolBar(_objects);
   _primitives->setOrientation(Qt::Vertical);
   _primitives->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+  _primitives->setBackgroundRole(QPalette::Base);
 
   _dataObjects = new QToolBar(_objects);
   _dataObjects->setOrientation(Qt::Vertical);
   _dataObjects->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+  _dataObjects->setBackgroundRole(QPalette::Base);
 
   _fits = new QToolBar(_objects);
   _fits->setOrientation(Qt::Vertical);
   _fits->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+  _fits->setBackgroundRole(QPalette::Base);
 
   _filters = new QToolBar(_objects);
   _filters->setOrientation(Qt::Vertical);
   _filters->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+  _filters->setBackgroundRole(QPalette::Base);
 
   _objects->addItem(_primitives, tr("Create Primitive"));
   _objects->addItem(_dataObjects, tr("Create Data Object"));
@@ -51,55 +56,49 @@ DataManager::DataManager(QWidget *parent, Document *doc)
 
 //   Create canonical items...
 
-//FIXME "Scalar"
-
   QAction *action = new DataButtonAction(tr("Vector"));
-  _primitives->addAction(action);
   connect(action, SIGNAL(triggered()), this, SLOT(showVectorDialog()));
-  QWidget *widget = _primitives->widgetForAction(action);
-  widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+  _primitives->addAction(action);
 
-  action = _primitives->addWidget(new DataButton(tr("Matrix")));
-  widget = _primitives->widgetForAction(action);
-  widget->setEnabled(false);
-  widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+//   action = new DataButtonAction(tr("Matrix"));
+//   connect(action, SIGNAL(triggered()), this, SLOT(showMatrixDialog()));
+//   _primitives->addAction(action);
+// 
+//   action = new DataButtonAction(tr("Scalar"));
+//   connect(action, SIGNAL(triggered()), this, SLOT(showScalarDialog()));
+//   _primitives->addAction(action);
+// 
+//   action = new DataButtonAction(tr("String"));
+//   connect(action, SIGNAL(triggered()), this, SLOT(showStringDialog()));
+//   _primitives->addAction(action);
 
-//FIXME "String"
+  action = new DataButtonAction(tr("Curve"));
+  connect(action, SIGNAL(triggered()), this, SLOT(showCurveDialog()));
+  _dataObjects->addAction(action);
 
-  action = _dataObjects->addWidget(new DataButton(tr("Curve")));
-  widget = _dataObjects->widgetForAction(action);
-  widget->setEnabled(false);
-  widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-
-  action = _dataObjects->addWidget(new DataButton(tr("Equation")));
-  widget = _dataObjects->widgetForAction(action);
-  widget->setEnabled(false);
-  widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-
-  action = _dataObjects->addWidget(new DataButton(tr("Histogram")));
-  widget = _dataObjects->widgetForAction(action);
-  widget->setEnabled(false);
-  widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-
-  action = _dataObjects->addWidget(new DataButton(tr("Power Spectrum")));
-  widget = _dataObjects->widgetForAction(action);
-  widget->setEnabled(false);
-  widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-
-  action = _dataObjects->addWidget(new DataButton(tr("Event Monitor")));
-  widget = _dataObjects->widgetForAction(action);
-  widget->setEnabled(false);
-  widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-
-  action = _dataObjects->addWidget(new DataButton(tr("Image")));
-  widget = _dataObjects->widgetForAction(action);
-  widget->setEnabled(false);
-  widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-
-  action = _dataObjects->addWidget(new DataButton(tr("CSD")));
-  widget = _dataObjects->widgetForAction(action);
-  widget->setEnabled(false);
-  widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+//   action = new DataButtonAction(tr("Equation"));
+//   connect(action, SIGNAL(triggered()), this, SLOT(showEquationDialog()));
+//   _dataObjects->addAction(action);
+// 
+//   action = new DataButtonAction(tr("Histogram"));
+//   connect(action, SIGNAL(triggered()), this, SLOT(showHistogramDialog()));
+//   _dataObjects->addAction(action);
+// 
+//   action = new DataButtonAction(tr("Power Spectrum"));
+//   connect(action, SIGNAL(triggered()), this, SLOT(showPowerSpectrumDialog()));
+//   _dataObjects->addAction(action);
+// 
+//   action = new DataButtonAction(tr("Event Monitor")));
+//   connect(action, SIGNAL(triggered()), this, SLOT(showEventMonitorDialog()));
+//   _dataObjects->addAction(action);
+// 
+//   action = new DataButtonAction(tr("Image"));
+//   connect(action, SIGNAL(triggered()), this, SLOT(showImageDialog()));
+//   _dataObjects->addAction(action);
+// 
+//   action = new DataButtonAction(tr("CSD"));
+//   connect(action, SIGNAL(triggered()), this, SLOT(showCSDDialog()));
+//   _dataObjects->addAction(action);
 }
 
 
@@ -109,6 +108,12 @@ DataManager::~DataManager() {
 
 void DataManager::showVectorDialog() {
   VectorDialog dialog(this);
+  dialog.exec();
+}
+
+
+void DataManager::showCurveDialog() {
+  CurveDialog dialog(this);
   dialog.exec();
 }
 

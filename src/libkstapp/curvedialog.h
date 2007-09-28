@@ -9,40 +9,48 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "databutton.h"
+#ifndef CURVEDIALOG_H
+#define CURVEDIALOG_H
 
-#include <QStylePainter>
-#include <QStyleOption>
+#include "datadialog.h"
+#include "datatab.h"
 
+#include "ui_curvetab.h"
+
+#include <QPointer>
+
+#include "kst_export.h"
 
 namespace Kst {
 
-DataButton::DataButton(const QString &text, QWidget *parent)
-  : QPushButton(text, parent) {
-  setBackgroundRole(QPalette::Base);
-  setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+class KST_EXPORT CurveTab : public DataTab, Ui::CurveTab {
+  Q_OBJECT
+  public:
+    CurveTab(QWidget *parent = 0);
+    virtual ~CurveTab();
+
+  private Q_SLOTS:
+  private:
+};
+
+class KST_EXPORT CurveDialog : public DataDialog {
+  Q_OBJECT
+  public:
+    CurveDialog(QWidget *parent = 0);
+    CurveDialog(KstObjectPtr dataObject, QWidget *parent = 0);
+    virtual ~CurveDialog();
+
+  protected:
+    virtual QString tagName() const;
+    virtual KstObjectPtr createNewDataObject() const;
+    virtual KstObjectPtr editExistingDataObject() const;
+
+  private:
+    CurveTab *_curveTab;
+};
+
 }
 
-
-DataButton::~DataButton() {
-}
-
-
-void DataButton::paintEvent(QPaintEvent *) {
-  QStylePainter p(this);
-  QStyleOptionButton option;
-  initStyleOption(&option);
-
-  option.features = QStyleOptionButton::Flat;
-
-  p.drawControl(QStyle::CE_PushButtonBevel, option);
-  p.drawPrimitive(QStyle::PE_FrameFocusRect, option);
-
-  QRect textPosition(rect());
-  textPosition.setX(textPosition.x() + 5);
-  p.drawText(textPosition, QPushButton::text(), QTextOption(Qt::AlignLeft|Qt::AlignVCenter));
-}
-
-}
+#endif
 
 // vim: ts=2 sw=2 et
