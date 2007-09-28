@@ -2,8 +2,11 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 SUBDIRS += \
-    ascii \
-    dirfile
+    ascii
+
+
+!win32:SUBDIRS += dirfile
+
 #     cdf \
 #     fitsimage \
 #     frame \
