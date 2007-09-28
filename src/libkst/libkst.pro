@@ -16,7 +16,6 @@ x11:!macx:PROCPS += sysinfo.c psversion.c
 SOURCES += \
     kstobject.cpp \
     kstdatasource.cpp \
-    stdinsource.cpp \
     kstextension.cpp \
     kstdatacollection.cpp \
     kstdebug.cpp \
@@ -49,6 +48,8 @@ SOURCES += \
     kstobjecttag.cpp \
     builtinprimitives.cpp \
     vectorfactory.cpp
+
+!win32:SOURCES += stdinsource.cpp
 
 HEADERS += \
     datasourcefactory.h \
