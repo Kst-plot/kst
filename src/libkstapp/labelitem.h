@@ -15,7 +15,7 @@
 #include "viewitem.h"
 
 namespace Label {
-  class Parsed;
+  struct Parsed;
 }
 
 namespace Kst {

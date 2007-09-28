@@ -132,7 +132,7 @@ struct RenderContext {
     int _fontSize;
 };
 
-class Chunk;
+struct Chunk;
 KST_EXPORT void renderLabel(RenderContext& rc, Chunk *fi);
 }
 
