@@ -19,8 +19,5 @@ LIBS += -lkst -lkstmath -lkstwidgets -lkstapp
 SOURCES += \
     main.cpp
 
-QMAKE_RPATHDIR += $$OUTPUT_DIR/lib $$OUTPUT_DIR/plugin
-
 RESOURCES += \
     $$TOPLEVELDIR/src/images/images.qrc
-

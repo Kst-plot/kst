@@ -38,7 +38,7 @@ class KST_EXPORT VectorSelector : public QWidget, public Ui::VectorSelector {
     void selectionChanged();
 
   private:
-//     void fillVectors();
+    void fillVectors();
 
   private:
     bool _allowEmptySelection;

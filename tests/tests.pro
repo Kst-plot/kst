@@ -43,6 +43,4 @@ HEADERS += \
     testscalar.h \
     testmatrix.h \
     testpsd.h \
-    testvector.h 
-
-QMAKE_RPATHDIR += $$OUTPUT_DIR/lib $$OUTPUT_DIR/plugin
+    testvector.h

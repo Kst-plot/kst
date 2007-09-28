@@ -148,3 +148,5 @@ FORMS += \
     vectortab.ui \
     viewmanager.ui
 
+RESOURCES += \
+    $$TOPLEVELDIR/src/images/images.qrc
