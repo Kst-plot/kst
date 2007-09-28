@@ -2,6 +2,7 @@ include($$PWD/../kst.pri)
 
 QT += gui network svg xml opengl qt3support
 
+macx:CONFIG -= app_bundle
 CONFIG += qtestlib
 TEMPLATE = app
 OBJECTS_DIR = tmp
