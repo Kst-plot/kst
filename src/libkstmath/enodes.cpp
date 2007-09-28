@@ -19,7 +19,12 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <qnamespace.h>
+#ifndef Q_WS_WIN32
 #include <unistd.h>
+#else
+#define strcasecmp _stricmp
+#endif
 
 #include "kst_i18n.h"
 
@@ -379,7 +384,9 @@ static struct {
   {"acos", &acos},
   {"asin", &asin},
   {"atan", &atan},
+#ifndef Q_WS_WIN32
   {"cbrt", &cbrt},
+#endif
   {"cos",  &cos},
   {"cosh", &cosh},
   {"cot",  &cot},

@@ -88,6 +88,10 @@ inline int isinf(double x) { return x == x && !finite(x); }
 #ifdef Q_WS_WIN32
 #define isnan _isnan
 #define finite _finite
+#ifndef M_PI
+#define M_PI 3.14159265358979323
+#endif
+#define isinf !_finite
 #endif
 
 inline double logXLo(double x, double base = 10.0) {

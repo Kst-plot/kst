@@ -19,13 +19,15 @@
 */
 
 #include <assert.h>
-#include <math.h>
 
 #include "kst_i18n.h"
 
 #include "kstdebug.h"
 #include "psdcalculator.h"
 #include "kstvector.h"
+
+#include <qnamespace.h>
+#include <kstmath.h>
 
 extern "C" void rdft(int n, int isgn, double *a);
 
@@ -88,7 +90,7 @@ void PSDCalculator::updateWindowFxn(ApodizeFunction apodizeFxn, double gaussianS
     case WindowConnes: 
       for (int i = 0; i < _awLen; ++i) {
         x = i - a;
-        _w[i] = pow(1.0 - (x * x) / (a * a), 2.0);
+        _w[i] = pow(static_cast<double>(1.0 - (x * x) / (a * a)), 2);
         sW += _w[i] * _w[i];
       }
       break;
@@ -119,7 +121,7 @@ void PSDCalculator::updateWindowFxn(ApodizeFunction apodizeFxn, double gaussianS
     case WindowHann:
       for (int i = 0; i < _awLen; ++i) {
         x = i - a;
-        _w[i] = pow(cos(M_PI * x/(2.0 * a)), 2.0);
+        _w[i] = pow(static_cast<double>(cos(M_PI * x/(2.0 * a))), 2);
         sW += _w[i] * _w[i];
       }
       break;
@@ -327,7 +329,7 @@ int PSDCalculator::calculateOutputVectorLength(int inputLen, bool average, int a
     psdloglen = PSDMAXLEN;
   }
 
-  return int(pow(2, psdloglen - 1));
+  return int(pow(2.0, psdloglen - 1));
 }
 
 // vim: ts=2 sw=2 et

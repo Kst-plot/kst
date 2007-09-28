@@ -824,7 +824,7 @@ void KstImage::paintLegendSymbol(KstPainter *p, const QRect& bound) {
     int l = bound.left(), r = bound.right(), t = bound.top(), b = bound.bottom();
     // draw the color palette
     for (int i = l; i <= r; i++) {
-      int index = (int)floor(((i - l) * (_pal.count() - 1)) / (r - l));
+      int index = (int)floor(static_cast<double>(((i - l) * (_pal.count() - 1))) / (r - l));
       QColor sliceColor = _pal.value(index).rgb();
       p->setPen(QPen(sliceColor, 0));
       p->drawLine(i, t, i, b);

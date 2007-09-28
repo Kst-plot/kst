@@ -15,13 +15,12 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <math.h>
-
 // application specific includes
 #include "kstcolorsequence.h"
 #include "kstsettings.h"
 #include <QVector>
 #include <qapplication.h>
+#include <kstmath.h>
 
 // Default palette that is used if "Kst Colors" is not found.
 static const char *const colors[] = { "red",

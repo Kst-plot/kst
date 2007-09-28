@@ -16,9 +16,12 @@
  ***************************************************************************/
 
 #include <stdlib.h>
-#include <unistd.h>
 
 #include <QTextDocument>
+
+#ifndef Q_WS_WIN32
+#include <unistd.h>
+#endif
 
 #include "kst_i18n.h"
 
