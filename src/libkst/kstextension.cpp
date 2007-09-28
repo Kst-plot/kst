@@ -20,6 +20,7 @@
 // application specific includes
 #include "kstextension.h"
 #include <qmainwindow.h>
+#include <QTextStream>
 
 KstExtension::KstExtension(QObject *parent, const QStringList&) : QObject(parent) {
 }
