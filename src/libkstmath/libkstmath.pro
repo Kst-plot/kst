@@ -7,6 +7,7 @@ OBJECTS_DIR = tmp
 MOC_DIR = tmp
 TARGET = kstmath
 DESTDIR = $$OUTPUT_DIR/lib
+win32:CONFIG += staticlib
 
 INCLUDEPATH += \
     tmp \

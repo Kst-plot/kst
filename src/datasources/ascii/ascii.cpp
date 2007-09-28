@@ -37,10 +37,6 @@
 #include "ascii.h"
 #include "ui_asciiconfig.h"
 
-#ifndef INF
-double INF = 1.0/0.0;
-#endif
-
 #define DEFAULT_DELIMITERS "#/c!;"
 #define DEFAULT_COLUMN_WIDTH 16
 
