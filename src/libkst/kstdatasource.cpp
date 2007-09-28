@@ -221,9 +221,11 @@ static KstDataSourcePtr findPluginFor(const QString& filename, const QString& ty
 
 
 KstDataSourcePtr KstDataSource::loadSource(const QString& filename, const QString& type) {
+#ifndef Q_WS_WIN32
   if (filename == "stdin" || filename == "-") {
     return new KstStdinSource(settingsObject);
   }
+#endif
 
   QString fn = obtainFile(filename);
   if (fn.isEmpty()) {
@@ -431,9 +433,11 @@ KstDataSourcePtr KstDataSource::loadSource(QDomElement& e) {
     return 0L;
   }
 
+#ifndef Q_WS_WIN32
   if (filename == "stdin" || filename == "-") {
     return new KstStdinSource(settingsObject);
   }
+#endif
 
   return findPluginFor(filename, type, e);
 }

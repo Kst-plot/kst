@@ -90,7 +90,11 @@ void KstVectorDefaults::sync() {
     vl[j]->readLock();
     KstDataSourcePtr dsp = vl[j]->dataSource();
     vl[j]->unlock();
+#ifdef Q_WS_WIN32
+    if (dsp) {
+#else
     if (dsp && !kst_cast<KstStdinSource>(dsp)) {
+#endif
       break;
     }
     --j;

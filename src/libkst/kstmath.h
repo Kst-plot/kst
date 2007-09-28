@@ -85,6 +85,10 @@ inline int d2i(double x) {
 inline int isinf(double x) { return x == x && !finite(x); }
 #endif
 
+#ifdef Q_WS_WIN32
+#define isnan _isnan
+#define finite _finite
+#endif
 
 inline double logXLo(double x, double base = 10.0) {
   if (base == 10.0) {

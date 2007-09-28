@@ -802,10 +802,10 @@ QList<KstObjectTreeNode<T> *> KstObjectCollection<T>::relatedNodes(T *o) {
     }
   }
 
-  QHashIterator<int, KstObjectTreeNode<T>* > i(nodes);
-  while (i.hasNext()) {
-    i.next();
-    outNodes << i.value();
+  QHashIterator<int, KstObjectTreeNode<T>* > j(nodes);
+  while (j.hasNext()) {
+    j.next();
+    outNodes << j.value();
   }
   return outNodes;
 }

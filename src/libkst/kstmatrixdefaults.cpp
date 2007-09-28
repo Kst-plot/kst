@@ -106,7 +106,11 @@ void KstMatrixDefaults::sync() {
     rmatrixList[j]->readLock();
     KstDataSourcePtr dsp = rmatrixList[j]->dataSource();
     rmatrixList[j]->unlock();
+#ifdef Q_WS_WIN32
+    if (dsp) {
+#else
     if (dsp && !kst_cast<KstStdinSource>(dsp)) {
+#endif
       break;
     }
     --j;
