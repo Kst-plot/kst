@@ -19,6 +19,7 @@
 #include "getdata.h"
 #include "getdata_struct.h"
 
+#include <QXmlStreamWriter>
 
 class DirFileSource::Config {
   public:
