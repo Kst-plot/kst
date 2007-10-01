@@ -1,12 +1,6 @@
 /***************************************************************************
-                 kstmatrix.h - a matrix with nX*nY editable points
-                             -------------------
-    begin                : July 2005
-    copyright            : (C) 2005 by University of British Columbia
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,7 +25,7 @@ class KST_EXPORT EditableMatrix : public KstMatrix {
 };
 
 typedef KstSharedPtr<EditableMatrix> EditableMatrixPtr;
-typedef KstObjectList<EditableMatrix> EditableMatrixList;
+typedef KstObjectList<EditableMatrixPtr> EditableMatrixList;
 
 }
 
