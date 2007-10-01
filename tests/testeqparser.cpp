@@ -239,10 +239,12 @@ void TestEqParser::testEqParser() {
   QVERIFY(validateEquation("sqrt(-1)", 0.0, _NOPOINT));
   QVERIFY(validateEquation("sqrt(2)", 0.0, 1.4142135623730951));
 
+#ifndef Q_WS_WIN32
   QVERIFY(validateEquation("cbrt(0.0) == 0.0", 0.0, 1.0));
   QVERIFY(validateEquation("cbrt(8.0) == 2.0", 0.0, 1.0));
   QVERIFY(validateEquation("cbrt(-1)", 0.0, -1.0));
   QVERIFY(validateEquation("cbrt(2)", 0.0, 1.2599210498948734));
+#endif
 
   // TODO: cosh, exp, log, ln, sinh, tanh
 
