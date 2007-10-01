@@ -10,16 +10,30 @@
  ***************************************************************************/
 
 #include "combobox.h"
+#include <QLineEdit>
+#include <QCompleter>
 
 namespace Kst {
 
 ComboBox::ComboBox(QWidget *parent)
   : QComboBox(parent), _editable(true) {
+  setupLineEdit();
 }
 
 
 ComboBox::ComboBox(bool editable, QWidget *parent)
   : QComboBox(parent), _editable(editable) {
+  setupLineEdit();
+}
+
+void ComboBox::setupLineEdit(void) {
+  setInsertPolicy(QComboBox::NoInsert);
+
+  QLineEdit *lineEdit = new QLineEdit(this);
+  setLineEdit(lineEdit);
+
+  QCompleter *currentCompleter = completer();
+  currentCompleter->setCompletionMode(QCompleter::PopupCompletion);
 }
 
 
@@ -30,6 +44,7 @@ ComboBox::~ComboBox() {
 void ComboBox::setEditable(bool editable) {
   _editable = editable;
 }
+
 
 }
 

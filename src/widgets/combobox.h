@@ -32,6 +32,9 @@ class  KST_EXPORT ComboBox : public QComboBox {
     void setEditable(bool editable);
 
   private:
+    void setupLineEdit(void);
+
+  private:
     bool _editable;
 };
 
