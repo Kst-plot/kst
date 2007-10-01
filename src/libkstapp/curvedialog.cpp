@@ -13,6 +13,16 @@
 
 #include "dialogpage.h"
 
+#include "kstvcurve.h"
+
+#include "view.h"
+#include "plotitem.h"
+#include "tabwidget.h"
+#include "mainwindow.h"
+#include "application.h"
+#include "vectorcurverenderitem.h"
+
+#include "kstdefaultnames.h"
 #include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"
 
@@ -27,6 +37,66 @@ CurveTab::CurveTab(QWidget *parent)
 
 
 CurveTab::~CurveTab() {
+}
+
+
+KstVectorPtr CurveTab::xVector() const {
+  return _xVector->selectedVector();
+}
+
+
+void CurveTab::setXVector(KstVectorPtr vector) {
+  _xVector->setSelectedVector(vector);
+}
+
+
+KstVectorPtr CurveTab::yVector() const {
+  return _yVector->selectedVector();
+}
+
+
+void CurveTab::setYVector(KstVectorPtr vector) {
+  _yVector->setSelectedVector(vector);
+}
+
+
+KstVectorPtr CurveTab::xError() const {
+  return _xError->selectedVector();
+}
+
+
+void CurveTab::setXError(KstVectorPtr vector) {
+  _xError->setSelectedVector(vector);
+}
+
+
+KstVectorPtr CurveTab::yError() const {
+  return _yError->selectedVector();
+}
+
+
+void CurveTab::setYError(KstVectorPtr vector) {
+  _yError->setSelectedVector(vector);
+}
+
+
+KstVectorPtr CurveTab::xMinusError() const {
+  return _xMinusError->selectedVector();
+}
+
+
+void CurveTab::setXMinusError(KstVectorPtr vector) {
+  _xMinusError->setSelectedVector(vector);
+}
+
+
+KstVectorPtr CurveTab::yMinusError() const {
+  return _yMinusError->selectedVector();
+}
+
+
+void CurveTab::setYMinusError(KstVectorPtr vector) {
+  _yMinusError->setSelectedVector(vector);
 }
 
 
@@ -55,8 +125,39 @@ QString CurveDialog::tagName() const {
 
 
 KstObjectPtr CurveDialog::createNewDataObject() const {
-  qDebug() << "createNewDataObject" << endl;
-  return 0;
+  //FIXME Eli, how should I construct this tag??
+  KstVCurvePtr curve = new KstVCurve(tagName(),
+                                     _curveTab->xVector(),
+                                     _curveTab->yVector(),
+                                     _curveTab->xError(),
+                                     _curveTab->yError(),
+                                     _curveTab->xMinusError(),
+                                     _curveTab->yMinusError(),
+                                     QColor(Qt::red));
+
+  curve->writeLock();
+  curve->update(0);
+  curve->unlock();
+
+  //FIXME assume new plot for now...
+  //FIXME this should be a command...
+  //FIXME need some smart placement...
+  //FIXME need to hook up appearance and placement...
+  PlotItem *plotItem = new PlotItem(kstApp->mainWindow()->tabWidget()->currentView());
+  plotItem->setPos(0, 0);
+  plotItem->setViewRect(0.0, 0.0, 100.0, 100.0);
+  plotItem->parentView()->scene()->addItem(plotItem);
+  plotItem->setZValue(1);
+
+  KstRelationList relationList;
+  relationList.append(kst_cast<KstRelation>(curve));
+
+  VectorCurveRenderItem *test = new VectorCurveRenderItem("cartesiantest", plotItem);
+  test->setRelationList(relationList);
+
+  plotItem->addRenderItem(test);
+
+  return KstObjectPtr(curve.data());
 }
 
 

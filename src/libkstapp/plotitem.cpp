@@ -35,43 +35,33 @@ PlotItem::PlotItem(View *parent)
 
   setName("PlotItem");
   setBrush(Qt::white);
-
-  // FIXME fake data for testing rendering
-  KstVectorPtr xTest = new KstSVector(0.0, 100.0, 10000, KstObjectTag::fromString("X vector"));
-  xTest->setLabel("a nice x label");
-  KstVectorPtr yTest = new KstSVector(0.0, 100.0, 10000, KstObjectTag::fromString("Y vector"));
-  yTest->setLabel("a nice y label");
-
-  KstVectorPtr yTest2 = new KstSVector(-100.0, 100.0, 10000, KstObjectTag::fromString("Y vector 2"));
-  if (COUNT % 2) {
-    yTest2->setLabel("another nice y label");
-  } else {
-    yTest2->setLabel("another much much longer nice y label");
-  }
-  COUNT = COUNT + 1;
-
-  KstVCurvePtr renderTest = new KstVCurve(QString("rendertest"), xTest, yTest, 0, 0, 0, 0, QColor(Qt::red));
-  renderTest->writeLock();
-  renderTest->update(0);
-  renderTest->unlock();
-
-  KstVCurvePtr renderTest2 = new KstVCurve(QString("rendertest2"), xTest, yTest2, 0, 0, 0, 0, QColor(Qt::blue));
-  renderTest2->writeLock();
-  renderTest2->update(0);
-  renderTest2->unlock();
-
-  KstRelationList relationList;
-  relationList.append(kst_cast<KstRelation>(renderTest));
-  relationList.append(kst_cast<KstRelation>(renderTest2));
-
-  VectorCurveRenderItem *test = new VectorCurveRenderItem("cartesiantest", this);
-  test->setRelationList(relationList);
-
-  _renderers.append(test);
 }
 
 
 PlotItem::~PlotItem() {
+}
+
+
+QList<PlotRenderItem*> PlotItem::renderItems() const {
+  return _renderers;
+}
+
+
+void PlotItem::addRenderItem(PlotRenderItem *renderItem) {
+  _renderers.append(renderItem);
+  update();
+}
+
+
+void PlotItem::removeRenderItem(PlotRenderItem *renderItem) {
+  _renderers.removeAll(renderItem);
+  update();
+}
+
+
+void PlotItem::clearRenderItems() {
+  _renderers.clear();
+  update();
 }
 
 

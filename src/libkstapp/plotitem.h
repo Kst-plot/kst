@@ -31,6 +31,11 @@ class PlotItem : public ViewItem
     PlotItem(View *parent);
     virtual ~PlotItem();
 
+    QList<PlotRenderItem*> renderItems() const;
+    void addRenderItem(PlotRenderItem *renderItem);
+    void removeRenderItem(PlotRenderItem *renderItem);
+    void clearRenderItems();
+
     virtual void paint(QPainter *painter);
 
     qreal marginWidth() const;

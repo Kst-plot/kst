@@ -29,6 +29,24 @@ class KST_EXPORT CurveTab : public DataTab, Ui::CurveTab {
     CurveTab(QWidget *parent = 0);
     virtual ~CurveTab();
 
+    KstVectorPtr xVector() const;
+    void setXVector(KstVectorPtr vector);
+
+    KstVectorPtr yVector() const;
+    void setYVector(KstVectorPtr vector);
+
+    KstVectorPtr xError() const;
+    void setXError(KstVectorPtr vector);
+
+    KstVectorPtr yError() const;
+    void setYError(KstVectorPtr vector);
+
+    KstVectorPtr xMinusError() const;
+    void setXMinusError(KstVectorPtr vector);
+
+    KstVectorPtr yMinusError() const;
+    void setYMinusError(KstVectorPtr vector);
+
   private Q_SLOTS:
   private:
 };
