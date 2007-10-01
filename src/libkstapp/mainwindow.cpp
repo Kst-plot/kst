@@ -36,7 +36,7 @@
 #include <QtGui>
 
 //FIXME Temporaries REMOVE!!
-#include "kstavector.h"
+#include "editablevector.h"
 #include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"
 #include "kstequation.h"
@@ -361,7 +361,7 @@ void MainWindow::demoModel() {
   v->resize(999999);
   KstVectorPtr v2 = new KstVector;
   v2->resize(999999);
-  KstVectorPtr v3 = new KstAVector(25, KstObjectTag::fromString("Editable V"));
+  EditableVectorPtr v3 = new EditableVector(25, KstObjectTag::fromString("Editable V"));
   double *d = const_cast<double *>(v->value()); // yay :)
   double *d2 = const_cast<double *>(v2->value()); // yay :)
   d[0] = 1;
