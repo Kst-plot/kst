@@ -13,6 +13,7 @@
 
 #include <QtTest>
 
+#include <kstmath.h>
 #include <kstdatacollection.h>
 #include <kstdataobjectcollection.h>
 

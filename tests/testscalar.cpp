@@ -15,21 +15,12 @@
 
 #include <QDomDocument>
 
+#include <kstmath.h>
 #include <kstscalar.h>
 #include <kstdatacollection.h>
 #include <kstdataobjectcollection.h>
 
-#include <math.h>
-
-#ifdef NAN
 double NOPOINT = NAN;
-#else
-double NOPOINT = 0.0/0.0; // NaN
-#endif
-
-#ifndef INF
-double _INF = 1.0/0.0;
-#endif
 
 SListener::SListener() : QObject(), _trigger(0) {}
 SListener::~SListener() {}
@@ -82,9 +73,9 @@ void TestScalar::testScalar() {
   QCOMPARE(sp->value(), 2.1415);
   sp->setValue(NOPOINT);
   QVERIFY(sp->value() != sp->value());
-  sp->setValue(_INF );
+  sp->setValue(INF );
 
-  QVERIFY(sp->value() == _INF);
+  QVERIFY(sp->value() == INF);
 
   QCOMPARE((*sp = 2.0).value(), 2.0);
   SListener *listener = new SListener;
@@ -128,13 +119,13 @@ void TestScalar::testScalar() {
   e = n.toElement();
   sp4 = new KstScalar(e);
 
-  QVERIFY(sp4->value() == _INF);
+  QVERIFY(sp4->value() == INF);
 
   n = makeDOMDocument("load4", "-INF").firstChild();
   e = n.toElement();
   sp4 = new KstScalar(e);
 
-  QVERIFY(sp4->value() == -_INF);
+  QVERIFY(sp4->value() == -INF);
 
   delete listener;
 }

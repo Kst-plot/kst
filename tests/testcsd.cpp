@@ -13,6 +13,7 @@
 
 #include <QtTest>
 
+#include <kstmath.h>
 #include <kstobject.h>
 #include <qdir.h>
 #include <qfile.h>

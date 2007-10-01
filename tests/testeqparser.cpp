@@ -13,6 +13,7 @@
 
 #include <QtTest>
 
+#include <kstmath.h>
 #include <enodes.h>
 #include <eparse-eh.h>
 
@@ -29,16 +30,7 @@ KstVectorPtr xVector;
 #include <kstdatacollection.h>
 #include <kstdataobjectcollection.h>
 
-#ifdef NAN
 double _NOPOINT = NAN;
-#else
-double _NOPOINT = 0.0/0.0; // NaN
-#endif
-
-#ifndef INFINITE
-double INFINITE = 1.0/0.0;
-#endif
-
 
 void TestEqParser::cleanupTestCase() {
   xVector = 0L;
@@ -119,7 +111,7 @@ bool TestEqParser::validateEquation(const char *equation, double x, double resul
     eq->update(-1, &ctx);
     double v = eq->value(&ctx);
     delete eq;
-    if (fabs(v - result) < tol || (result != result && v != v) || (result == INFINITE && v == INFINITE) || (result == -INFINITE && v == -INFINITE)) {
+    if (fabs(v - result) < tol || (result != result && v != v) || (result == INF && v == INF) || (result == -INF && v == -INF)) {
       return true;
     } else {
       printf("Result: %.16f\n", v);
@@ -231,8 +223,8 @@ void TestEqParser::testEqParser() {
   QVERIFY(validateEquation("abs(x)", 1.0, 1.0));
   QVERIFY(validateEquation("abs(x)", -1.0, 1.0));
   QVERIFY(validateEquation("abs(x)", _NOPOINT, _NOPOINT));
-  QVERIFY(validateEquation("abs(x)", INFINITE, INFINITE));
-  QVERIFY(validateEquation("abs(x)", -INFINITE, INFINITE));
+  QVERIFY(validateEquation("abs(x)", INF, INF));
+  QVERIFY(validateEquation("abs(x)", -INF, INF));
   QVERIFY(validateEquation("abs(-0.000000000001)", 0.0, 0.000000000001));
 
   QVERIFY(validateEquation("cos(acos(x))", 0.3875823288, 0.3875823288, 0.0000000001));
@@ -275,7 +267,7 @@ void TestEqParser::testEqParser() {
   QVERIFY(validateEquation("0.0<=1.0", 0.0, 1.0));
   QVERIFY(validateEquation("(0.0/0.0)==(0.0/0.0)", 0.0, 0.0));
   QVERIFY(validateEquation("(0.0/0.0)==(1.0/0.0)", 0.0, 0.0));
-  QVERIFY(validateEquation("(1.0/0.0)==(1.0/0.0)", 0.0, 1.0)); // INFINITE == INFINITE
+  QVERIFY(validateEquation("(1.0/0.0)==(1.0/0.0)", 0.0, 1.0)); // INF == INF
   QVERIFY(validateEquation("(1.0/0.0)==-(1.0/0.0)", 0.0, 0.0));
   QVERIFY(validateEquation("(0.0/0.0)==-(1.0/0.0)", 0.0, 0.0));
   QVERIFY(validateEquation("(1.0/0.0)==(0.0/0.0)", 0.0, 0.0));
@@ -309,7 +301,7 @@ void TestEqParser::testEqParser() {
   QVERIFY(validateEquation("!1.0", 0.0, 0.0));
   QVERIFY(validateEquation("!-1.0", 0.0, 0.0));
   QVERIFY(validateEquation("!2.0", 0.0, 0.0));
-  QVERIFY(validateEquation("!x", INFINITE, 0.0));
+  QVERIFY(validateEquation("!x", INF, 0.0));
   QVERIFY(validateEquation("!x", _NOPOINT, 1.0));
   QVERIFY(validateEquation("!(1 > 2)", 0.0, 1.0));
   QVERIFY(validateEquation("!1.0 > -1.0", 0.0, 1.0));  // (!1.0) > -1.0
@@ -334,8 +326,8 @@ void TestEqParser::testEqParser() {
   new KstScalar(KstObjectTag::fromString("test2"), 0L, 0.0, true);
   new KstScalar(KstObjectTag::fromString("test3"), 0L, -1.0, true);
   new KstScalar(KstObjectTag::fromString("test4"), 0L, _NOPOINT, true);
-  new KstScalar(KstObjectTag::fromString("test5"), 0L, INFINITE, true);
-  new KstScalar(KstObjectTag::fromString("test6"), 0L, -INFINITE, true);
+  new KstScalar(KstObjectTag::fromString("test5"), 0L, INF, true);
+  new KstScalar(KstObjectTag::fromString("test6"), 0L, -INF, true);
 
   QVERIFY(validateEquation("[test1]", 0.0, 1.0));
   QVERIFY(validateEquation("[test4]", 0.0, _NOPOINT));
