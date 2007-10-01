@@ -143,11 +143,10 @@ KstObjectPtr CurveDialog::createNewDataObject() const {
   //FIXME this should be a command...
   //FIXME need some smart placement...
   //FIXME need to hook up appearance and placement...
-  PlotItem *plotItem = new PlotItem(kstApp->mainWindow()->tabWidget()->currentView());
-  plotItem->setPos(0, 0);
-  plotItem->setViewRect(0.0, 0.0, 100.0, 100.0);
-  plotItem->parentView()->scene()->addItem(plotItem);
-  plotItem->setZValue(1);
+  CreatePlotForCurve *cmd = new CreatePlotForCurve;
+  cmd->createItem();
+
+  PlotItem *plotItem = static_cast<PlotItem*>(cmd->item());
 
   KstRelationList relationList;
   relationList.append(kst_cast<KstRelation>(curve));

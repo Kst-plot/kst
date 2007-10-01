@@ -31,6 +31,11 @@ class PlotItem : public ViewItem
     PlotItem(View *parent);
     virtual ~PlotItem();
 
+    /* Returns a list of the PlotItems in the main window's
+     * current view.
+     */
+    static QList<PlotItem*> plotItems();
+
     QList<PlotRenderItem*> renderItems() const;
     void addRenderItem(PlotRenderItem *renderItem);
     void removeRenderItem(PlotRenderItem *renderItem);
@@ -79,6 +84,15 @@ class KST_EXPORT CreatePlotCommand : public CreateCommand
     CreatePlotCommand() : CreateCommand(QObject::tr("Create Plot")) {}
     CreatePlotCommand(View *view) : CreateCommand(view, QObject::tr("Create Plot")) {}
     virtual ~CreatePlotCommand() {}
+    virtual void createItem();
+};
+
+class KST_EXPORT CreatePlotForCurve : public CreateCommand
+{
+  public:
+    CreatePlotForCurve() : CreateCommand(QObject::tr("Create Plot For Curve")) {}
+    CreatePlotForCurve(View *view) : CreateCommand(view, QObject::tr("Create Plot For Curve")) {}
+    virtual ~CreatePlotForCurve() {}
     virtual void createItem();
 };
 

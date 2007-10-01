@@ -15,6 +15,10 @@
 
 #include "viewgridlayout.h"
 
+#include "application.h"
+#include "mainwindow.h"
+#include "tabwidget.h"
+
 #include "kstsvector.h"
 #include "kstvcurve.h"
 #include "kstdatacollection.h"
@@ -42,6 +46,21 @@ PlotItem::~PlotItem() {
 }
 
 
+QList<PlotItem*> PlotItem::plotItems() {
+  View *view = kstApp->mainWindow()->tabWidget()->currentView();
+  if (!view)
+    return QList<PlotItem*>();
+
+  QList<PlotItem*> plots;
+  QList<QGraphicsItem*> items = view->items();
+  foreach (QGraphicsItem *item, items) {
+    if (PlotItem *plot = qobject_cast<PlotItem*>(qgraphicsitem_cast<ViewItem*>(item)))
+      plots << plot;
+  }
+  return plots;
+}
+
+
 QList<PlotRenderItem*> PlotItem::renderItems() const {
   return _renderers;
 }
@@ -62,14 +81,6 @@ void PlotItem::removeRenderItem(PlotRenderItem *renderItem) {
 void PlotItem::clearRenderItems() {
   _renderers.clear();
   update();
-}
-
-
-void CreatePlotCommand::createItem() {
-  _item = new PlotItem(_view);
-  _view->setCursor(Qt::CrossCursor);
-
-  CreateCommand::createItem();
 }
 
 
@@ -312,6 +323,24 @@ QSizeF PlotItem::calculateTopLabelBound(QPainter *painter) {
   QSizeF margins;
   margins.setHeight(topLabelBound.height());
   return margins;
+}
+
+void CreatePlotCommand::createItem() {
+  _item = new PlotItem(_view);
+  _view->setCursor(Qt::CrossCursor);
+
+  CreateCommand::createItem();
+}
+
+void CreatePlotForCurve::createItem() {
+  QPointF center = _view->sceneRect().center();
+  center -= QPointF(100.0, 100.0);
+
+  _item = new PlotItem(_view);
+  _item->setPos(center);
+  _item->setViewRect(0.0, 0.0, 200.0, 200.0);
+  _item->setZValue(1);
+  _view->scene()->addItem(_item);
 }
 
 }

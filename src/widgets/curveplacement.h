@@ -22,8 +22,21 @@ namespace Kst {
 class KST_EXPORT CurvePlacement : public QWidget, public Ui::CurvePlacement {
   Q_OBJECT
   public:
+    enum Place { NewPlot, ExistingPlot, NoPlot };
     CurvePlacement(QWidget *parent = 0);
     virtual ~CurvePlacement();
+
+    Place place() const;
+    void setPlace(Place place);
+
+    QString existingPlot() const;
+    void setExistingPlots(const QStringList &existingPlots);
+
+    bool relayout() const;
+    void setRelayout(bool relayout);
+
+    int numberOfColumns() const;
+    void setNumberOfColumns(int numberOfColumns);
 };
 
 }

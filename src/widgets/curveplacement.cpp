@@ -22,6 +22,46 @@ CurvePlacement::CurvePlacement(QWidget *parent)
 CurvePlacement::~CurvePlacement() {
 }
 
+
+CurvePlacement::Place CurvePlacement::place() const {
+  return NewPlot;
+}
+
+
+void CurvePlacement::setPlace(CurvePlacement::Place place) {
+  Q_UNUSED(place);
+}
+
+
+QString CurvePlacement::existingPlot() const {
+  return QString();
+}
+
+
+void CurvePlacement::setExistingPlots(const QStringList &existingPlots) {
+  Q_UNUSED(existingPlots);
+}
+
+
+bool CurvePlacement::relayout() const {
+  return false;
+}
+
+
+void CurvePlacement::setRelayout(bool relayout) {
+  Q_UNUSED(relayout);
+}
+
+
+int CurvePlacement::numberOfColumns() const {
+  return -1;
+}
+
+
+void CurvePlacement::setNumberOfColumns(int numberOfColumns) {
+  Q_UNUSED(numberOfColumns);
+}
+
 }
 
 // vim: ts=2 sw=2 et
