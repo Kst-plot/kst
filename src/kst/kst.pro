@@ -21,3 +21,5 @@ SOURCES += \
 
 RESOURCES += \
     $$TOPLEVELDIR/src/images/images.qrc
+
+win32:QT += xml svg opengl qt3support
