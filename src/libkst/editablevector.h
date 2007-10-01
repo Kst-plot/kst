@@ -1,12 +1,6 @@
 /***************************************************************************
-                          kstavector.h - a vector with editable points.
-                             -------------------
-    begin                : april, 2005
-    copyright            : (C) 2005 by cbn
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -14,8 +8,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef KSTAVECTOR_H
-#define KSTAVECTOR_H
+#ifndef EDITABLEVECTOR_H
+#define EDITABLEVECTOR_H
 
 #include "kstvector.h"
 #include "kst_export.h"
@@ -23,20 +17,23 @@
 /**A vector  with n editable pts
  *@author cbn
  */
-class KstAVector : public KstVector {
+
+namespace Kst {
+
+class EditableVector : public KstVector {
  public:
-  KST_EXPORT KstAVector(const QString &tag, const QByteArray &data);
-  KST_EXPORT KstAVector(int n, KstObjectTag tag);
+  KST_EXPORT EditableVector(const QString &tag, const QByteArray &data);
+  KST_EXPORT EditableVector(int n, KstObjectTag tag);
 
   KstObject::UpdateType update(int update_counter);
 
   void setSaveData(bool save);
 };
 
-typedef KstSharedPtr<KstAVector> KstAVectorPtr;
-typedef KstObjectList<KstAVectorPtr> KstAVectorList;
+typedef KstSharedPtr<EditableVector> EditableVectorPtr;
+typedef KstObjectList<EditableVectorPtr> EditableVectorList;
 
-
+}
 
 #endif
 // vim: ts=2 sw=2 et

@@ -1,12 +1,6 @@
 /***************************************************************************
-                          kstavector.cpp - a vector with editable points.
-                             -------------------
-    begin                : april, 2005
-    copyright            : (C) 2005 by cbn
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,11 +12,13 @@
 // Create QDataStream into a QByteArray
 // qCompress the bytearray
 
-#include "kstavector.h"
+#include "editablevector.h"
 #include "kstdebug.h"
 #include <qtextstream.h>
 
-KstAVector::KstAVector(const QString &tag, const QByteArray &data)
+namespace Kst {
+
+EditableVector::EditableVector(const QString &tag, const QByteArray &data)
 : KstVector(tag, data) {
   _editable = true;
   _saveable = true;
@@ -30,7 +26,7 @@ KstAVector::KstAVector(const QString &tag, const QByteArray &data)
 }
 
 
-KstAVector::KstAVector(int n, KstObjectTag tag)
+EditableVector::EditableVector(int n, KstObjectTag tag)
 : KstVector(tag, n) {
   _editable = true;
   _saveable = true;
@@ -38,7 +34,7 @@ KstAVector::KstAVector(int n, KstObjectTag tag)
 }
 
 
-KstObject::UpdateType KstAVector::update(int update_counter) {
+KstObject::UpdateType EditableVector::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
@@ -56,8 +52,9 @@ KstObject::UpdateType KstAVector::update(int update_counter) {
 }
 
 
-void KstAVector::setSaveData(bool save) {
+void EditableVector::setSaveData(bool save) {
   Q_UNUSED(save)
 }
 
+}
 // vim: ts=2 sw=2 et
