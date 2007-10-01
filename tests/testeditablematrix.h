@@ -9,13 +9,13 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TESTAMATRIX_H
-#define TESTAMATRIX_H
+#ifndef TESTEDITABLEMATRIX_H
+#define TESTEDITABLEMATRIX_H
 
 #include <QObject>
 #include <QDomDocument>
 
-class TestAMatrix : public QObject
+class TestEditableMatrix : public QObject
 {
   Q_OBJECT
   private:
@@ -23,7 +23,7 @@ class TestAMatrix : public QObject
   private Q_SLOTS:
     void cleanupTestCase();
 
-    void testAMatrix();
+    void testEditableMatrix();
 };
 
 #endif

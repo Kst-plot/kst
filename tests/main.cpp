@@ -20,7 +20,7 @@
 #include "testcsd.h"
 #include "testpsd.h"
 #include "testhistogram.h"
-#include "testamatrix.h"
+#include "testeditablematrix.h"
 #include "testlabelparser.h"
 #include "testeqparser.h"
 
@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
   TestCSD test7;
   QTest::qExec(&test7, argc, argv);
 
-  TestAMatrix test8;
+  TestEditableMatrix test8;
   QTest::qExec(&test8, argc, argv);
 
   TestLabelParser test9;

@@ -32,7 +32,7 @@ SOURCES += \
     kstmatrix.cpp \
     kstrmatrix.cpp \
     kstsmatrix.cpp \
-    kstamatrix.cpp \
+    editablematrix.cpp \
     kstvector.cpp \
     kstsvector.cpp \
     kstavector.cpp \
@@ -55,7 +55,7 @@ SOURCES += \
 HEADERS += \
     datasourcefactory.h \
     defaultprimitivenames.h \
-    kstamatrix.h \
+    editablematrix.h \
     kstavector.h \
     kstdatacollection.h \
     kstdataplugin.h \

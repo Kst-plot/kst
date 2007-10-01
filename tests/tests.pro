@@ -22,7 +22,7 @@ LIBS += -lkst -lkstmath -lkstwidgets -lkstapp
 
 SOURCES += \
     main.cpp \
-    testamatrix.cpp \
+    testeditablematrix.cpp \
     testcsd.cpp \
     testdatasource.cpp \
     testeqparser.cpp \
@@ -34,7 +34,7 @@ SOURCES += \
     testvector.cpp 
 
 HEADERS += \
-    testamatrix.h \
+    testeditablematrix.h \
     testcsd.h \
     testdatasource.h \
     testhistogram.h \

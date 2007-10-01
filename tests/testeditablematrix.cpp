@@ -9,23 +9,23 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "testamatrix.h"
+#include "testeditablematrix.h"
 
 #include <QtTest>
 
 #include <kstdatacollection.h>
 #include <kstdataobjectcollection.h>
-#include <kstamatrix.h>
+#include <editablematrix.h>
 
 
-void TestAMatrix::cleanupTestCase() {
+void TestEditableMatrix::cleanupTestCase() {
   KST::matrixList.clear();
   KST::scalarList.clear();
   KST::dataObjectList.clear();
 }
 
 
-QDomDocument TestAMatrix::makeDOMElement(const QString& tag, const int nx, const int ny, const double xmin, const double ymin, const double xstep, const double ystep, const int dataSize) {
+QDomDocument TestEditableMatrix::makeDOMElement(const QString& tag, const int nx, const int ny, const double xmin, const double ymin, const double xstep, const double ystep, const int dataSize) {
   // Should be some boundary checking in the constructor.
   QDomDocument amDOM("amdocument");
   QDomElement amElement, child, dataset;
@@ -88,7 +88,7 @@ QDomDocument TestAMatrix::makeDOMElement(const QString& tag, const int nx, const
   return amDOM;
 }
 
-void TestAMatrix::testAMatrix() {
+void TestEditableMatrix::testEditableMatrix() {
 
   bool ok = true;
   
@@ -96,7 +96,7 @@ void TestAMatrix::testAMatrix() {
   QDomElement e = n.toElement();
 
   //basic default constructor values
-  KstAMatrix* am1 = new KstAMatrix(e);
+  Kst::EditableMatrix* am1 = new Kst::EditableMatrix(e);
   QVERIFY(am1->tagName().startsWith("amDOM"));
   QCOMPARE(am1->sampleCount(), 0);
   QCOMPARE(am1->minValue(), 0.0);
@@ -113,7 +113,7 @@ void TestAMatrix::testAMatrix() {
   e = n.toElement();
 
   //basic default constructor values
-  KstAMatrix* am2 = new KstAMatrix(e);
+  Kst::EditableMatrix* am2 = new Kst::EditableMatrix(e);
   
   QCOMPARE(am2->tagName(), QLatin1String("Symetrical"));
   QVERIFY(am2->resize(3, 3, true));
@@ -159,7 +159,7 @@ void TestAMatrix::testAMatrix() {
   QVERIFY(am2->value(1, 1) != 5.0);
   QVERIFY(am2->setValueRaw(2, 2, 6.0)); //fails
 
-  KstAMatrix* um1 = new KstAMatrix(KstObjectTag::fromString("Unity"), 3, 3, 0.0, 0.0, 1.0, 1.0);
+  Kst::EditableMatrix* um1 = new Kst::EditableMatrix(KstObjectTag::fromString("Unity"), 3, 3, 0.0, 0.0, 1.0, 1.0);
   um1->setEditable(true);
   QVERIFY(um1->setValue(0, 0, 1));
   QVERIFY(um1->setValue(1, 1, 1));
@@ -285,7 +285,7 @@ void TestAMatrix::testAMatrix() {
   QCOMPARE(um1->minValue(), 0.0);
   QCOMPARE(um1->maxValue(), 0.0);
 
-  KstAMatrix* sm = new KstAMatrix(KstObjectTag::fromString("Spike"), 2, 2, 0.0, 0.0, 1.0, 1.0);
+  Kst::EditableMatrix* sm = new Kst::EditableMatrix(KstObjectTag::fromString("Spike"), 2, 2, 0.0, 0.0, 1.0, 1.0);
   
   sm->setEditable(true);
   QVERIFY(sm->resize(2, 2, false));

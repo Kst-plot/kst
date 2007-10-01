@@ -1,12 +1,6 @@
 /***************************************************************************
-              kstamatrix.cpp - a matrix with nX*nY editable points.
-                             -------------------
-    begin                : July, 2005
-    copyright            : (C) 2005 by University of British Columbia
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,13 +12,15 @@
 // Create QDataStream into a QByteArray
 // qCompress the bytearray
 
-#include "kstamatrix.h"
+#include "editablematrix.h"
 #include "kstdebug.h"
 #include <qbytearray.h>
 #include <qtextdocument.h>
 #include "kst_i18n.h"
 
-KstAMatrix::KstAMatrix(const QDomElement &e) : KstMatrix() {
+namespace Kst {
+
+EditableMatrix::EditableMatrix(const QDomElement &e) : KstMatrix() {
   _editable = true;
 
   double in_xMin = 0, in_yMin = 0, in_xStep = 1, in_yStep = 1;
@@ -85,7 +81,7 @@ KstAMatrix::KstAMatrix(const QDomElement &e) : KstMatrix() {
 }
 
 
-KstAMatrix::KstAMatrix(KstObjectTag in_tag, uint nX, uint nY, double minX, double minY, double stepX, double stepY)
+EditableMatrix::EditableMatrix(KstObjectTag in_tag, uint nX, uint nY, double minX, double minY, double stepX, double stepY)
 : KstMatrix(in_tag, 0L, nX, nY, minX, minY, stepX, stepY) {
   _editable = true;
   _saveable = true;
@@ -93,7 +89,7 @@ KstAMatrix::KstAMatrix(KstObjectTag in_tag, uint nX, uint nY, double minX, doubl
 }
 
 
-void KstAMatrix::save(QTextStream &ts, const QString& indent) {
+void EditableMatrix::save(QTextStream &ts, const QString& indent) {
 
   QString indent2 = "  ";
   
@@ -116,5 +112,5 @@ void KstAMatrix::save(QTextStream &ts, const QString& indent) {
   ts << indent << "</amatrix>" << endl;
 }
 
-
+}
 // vim: ts=2 sw=2 et

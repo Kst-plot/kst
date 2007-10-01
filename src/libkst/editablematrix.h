@@ -14,24 +14,26 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef KSTAMATRIX_H
-#define KSTAMATRIX_H
+#ifndef EDITABLEMATRIX_H
+#define EDITABLEMATRIX_H
 
 #include "kstmatrix.h"
 #include "kst_export.h"
 
-class KST_EXPORT KstAMatrix : public KstMatrix {
+namespace Kst {
+
+class KST_EXPORT EditableMatrix : public KstMatrix {
   public:
-    KstAMatrix(const QDomElement &e);
-    KstAMatrix(KstObjectTag in_tag, uint nX, uint nY, double minX, double minY, double stepX, double stepY);
+    EditableMatrix(const QDomElement &e);
+    EditableMatrix(KstObjectTag in_tag, uint nX, uint nY, double minX, double minY, double stepX, double stepY);
 
     virtual void save(QTextStream &ts, const QString& indent = QString::null);
 };
 
-typedef KstSharedPtr<KstAMatrix> KstAMatrixPtr;
-typedef KstObjectList<KstAMatrixPtr> KstAMatrixList;
+typedef KstSharedPtr<EditableMatrix> EditableMatrixPtr;
+typedef KstObjectList<EditableMatrix> EditableMatrixList;
 
-
+}
 
 #endif
 // vim: ts=2 sw=2 et
