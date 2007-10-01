@@ -26,11 +26,10 @@ ComboBox::ComboBox(bool editable, QWidget *parent)
   setupLineEdit();
 }
 
-void ComboBox::setupLineEdit(void) {
+void ComboBox::setupLineEdit() {
   setInsertPolicy(QComboBox::NoInsert);
 
-  QLineEdit *lineEdit = new QLineEdit(this);
-  setLineEdit(lineEdit);
+  setLineEdit(new QLineEdit(this));
 
   QCompleter *currentCompleter = completer();
   currentCompleter->setCompletionMode(QCompleter::PopupCompletion);
