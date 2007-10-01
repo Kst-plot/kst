@@ -14,7 +14,7 @@
 #include "kstdebug.h"
 #include "kstvector.h"
 #include "kstsvector.h"
-#include "kstavector.h"
+#include "editablevector.h"
 #include "kstrvector.h"
 #include "kstdatacollection.h"
 
@@ -169,7 +169,7 @@ KstPrimitivePtr AVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
     return 0;
   }
 
-  KstVectorPtr vector = new KstAVector(tag, data);
+  KstVectorPtr vector = new EditableVector(tag, data);
   return vector.data();
 }
 
