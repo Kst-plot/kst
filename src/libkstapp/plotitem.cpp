@@ -341,6 +341,7 @@ void CreatePlotForCurve::createItem() {
   _item->setViewRect(0.0, 0.0, 200.0, 200.0);
   _item->setZValue(1);
   _view->scene()->addItem(_item);
+  creationComplete(); //add to undo stack
 }
 
 }
