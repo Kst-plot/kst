@@ -173,20 +173,13 @@ void VectorTab::showConfigWidget() {
 }
 
 
-VectorDialog::VectorDialog(QWidget *parent)
-  : DataDialog(parent) {
-
-  setWindowTitle(tr("New Vector"));
-
-  _vectorTab = new VectorTab(this);
-  addDataTab(_vectorTab);
-}
-
-
 VectorDialog::VectorDialog(KstObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
-  setWindowTitle(tr("Edit Vector"));
+  if (editMode() == Edit)
+    setWindowTitle(tr("Edit Vector"));
+  else
+    setWindowTitle(tr("New Vector"));
 
   _vectorTab = new VectorTab(this);
   addDataTab(_vectorTab);

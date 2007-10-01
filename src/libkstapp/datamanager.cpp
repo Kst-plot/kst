@@ -13,8 +13,7 @@
 #include "databuttonaction.h"
 #include "databutton.h"
 
-#include "vectordialog.h"
-#include "curvedialog.h"
+#include "dialoglauncher.h"
 
 #include "document.h"
 #include "sessionmodel.h"
@@ -57,7 +56,7 @@ DataManager::DataManager(QWidget *parent, Document *doc)
 //   Create canonical items...
 
   QAction *action = new DataButtonAction(tr("Vector"));
-  connect(action, SIGNAL(triggered()), this, SLOT(showVectorDialog()));
+  connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showVectorDialog()));
   _primitives->addAction(action);
 
 //   action = new DataButtonAction(tr("Matrix"));
@@ -73,48 +72,36 @@ DataManager::DataManager(QWidget *parent, Document *doc)
 //   _primitives->addAction(action);
 
   action = new DataButtonAction(tr("Curve"));
-  connect(action, SIGNAL(triggered()), this, SLOT(showCurveDialog()));
+  connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showCurveDialog()));
   _dataObjects->addAction(action);
 
 //   action = new DataButtonAction(tr("Equation"));
-//   connect(action, SIGNAL(triggered()), this, SLOT(showEquationDialog()));
+//   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showEquationDialog()));
 //   _dataObjects->addAction(action);
 // 
 //   action = new DataButtonAction(tr("Histogram"));
-//   connect(action, SIGNAL(triggered()), this, SLOT(showHistogramDialog()));
+//   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showHistogramDialog()));
 //   _dataObjects->addAction(action);
 // 
 //   action = new DataButtonAction(tr("Power Spectrum"));
-//   connect(action, SIGNAL(triggered()), this, SLOT(showPowerSpectrumDialog()));
+//   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showPowerSpectrumDialog()));
 //   _dataObjects->addAction(action);
 // 
 //   action = new DataButtonAction(tr("Event Monitor")));
-//   connect(action, SIGNAL(triggered()), this, SLOT(showEventMonitorDialog()));
+//   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showEventMonitorDialog()));
 //   _dataObjects->addAction(action);
 // 
 //   action = new DataButtonAction(tr("Image"));
-//   connect(action, SIGNAL(triggered()), this, SLOT(showImageDialog()));
+//   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showImageDialog()));
 //   _dataObjects->addAction(action);
 // 
 //   action = new DataButtonAction(tr("CSD"));
-//   connect(action, SIGNAL(triggered()), this, SLOT(showCSDDialog()));
+//   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showCSDDialog()));
 //   _dataObjects->addAction(action);
 }
 
 
 DataManager::~DataManager() {
-}
-
-
-void DataManager::showVectorDialog() {
-  VectorDialog dialog(this);
-  dialog.exec();
-}
-
-
-void DataManager::showCurveDialog() {
-  CurveDialog dialog(this);
-  dialog.exec();
 }
 
 }

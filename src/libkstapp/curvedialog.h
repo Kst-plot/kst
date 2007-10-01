@@ -36,7 +36,6 @@ class KST_EXPORT CurveTab : public DataTab, Ui::CurveTab {
 class KST_EXPORT CurveDialog : public DataDialog {
   Q_OBJECT
   public:
-    CurveDialog(QWidget *parent = 0);
     CurveDialog(KstObjectPtr dataObject, QWidget *parent = 0);
     virtual ~CurveDialog();
 

@@ -1,12 +1,6 @@
 /***************************************************************************
-                              dialoglauncher.h
-                             -------------------
-    begin                : Nov. 24, 2004
-    copyright            : (C) 2004 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,30 +9,20 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef DIALOGLAUNCHER_H
-#define DIALOGLAUNCHER_H
+#ifndef DIALOGLAUNCHERGUI_H
+#define DIALOGLAUNCHERGUI_H
 
-#include <QObject>
-
-#include "kstobject.h"
+#include "dialoglauncher.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class KST_EXPORT DialogLauncher : public QObject {
-  Q_OBJECT
-  protected:
-    static DialogLauncher *_self;
-    static void cleanup();
-    DialogLauncher();
-    virtual ~DialogLauncher();
-
+class KST_EXPORT DialogLauncherGui : public DialogLauncher {
   public:
-    static void replaceSelf(DialogLauncher *newInstance);
-    static DialogLauncher *self();
+    DialogLauncherGui();
+    virtual ~DialogLauncherGui();
 
-  public Q_SLOTS:
     //primitives
     virtual void showVectorDialog(KstObjectPtr objectPtr = 0);
 

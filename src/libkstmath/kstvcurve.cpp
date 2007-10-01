@@ -595,12 +595,12 @@ QString KstVCurve::propertyString() const {
 
 
 void KstVCurve::showNewDialog() {
-  KstDialogs::self()->showCurveDialog();
+  Kst::DialogLauncher::self()->showCurveDialog();
 }
 
 
 void KstVCurve::showEditDialog() {
-  KstDialogs::self()->showCurveDialog(tagName(), true);
+  Kst::DialogLauncher::self()->showCurveDialog(this);
 }
 
 

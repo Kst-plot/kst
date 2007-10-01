@@ -17,113 +17,95 @@
 
 #include "dialoglauncher.h"
 
-#include <qapplication.h>
+#include <QApplication>
 
-KstDialogs *KstDialogs::_self = 0L;
-void KstDialogs::cleanup() {
+namespace Kst {
+
+DialogLauncher *DialogLauncher::_self = 0L;
+void DialogLauncher::cleanup() {
     delete _self;
     _self = 0;
 }
 
 
-KstDialogs *KstDialogs::self() {
+DialogLauncher *DialogLauncher::self() {
   if (!_self) {
-    _self = new KstDialogs;
-    qAddPostRoutine(KstDialogs::cleanup);
+    _self = new DialogLauncher;
+    qAddPostRoutine(DialogLauncher::cleanup);
   }
   return _self;
 }
 
 
-void KstDialogs::replaceSelf(KstDialogs *newInstance) {
+void DialogLauncher::replaceSelf(DialogLauncher *newInstance) {
   delete _self;
   _self = 0L;
   _self = newInstance;
 }
 
 
-KstDialogs::KstDialogs() {
+DialogLauncher::DialogLauncher() {
 }
 
 
-KstDialogs::~KstDialogs() {
+DialogLauncher::~DialogLauncher() {
 }
 
 
-void KstDialogs::showHistogramDialog(const QString& name, bool edit) {
-  Q_UNUSED(name)
-  Q_UNUSED(edit)
+void DialogLauncher::showVectorDialog(KstObjectPtr objectPtr) {
+  Q_UNUSED(objectPtr);
 }
 
 
-void KstDialogs::showCPluginDialog(const QString& name, bool edit) {
-  Q_UNUSED(name)
-  Q_UNUSED(edit)
+void DialogLauncher::showMatrixDialog(KstObjectPtr objectPtr) {
+  Q_UNUSED(objectPtr);
 }
 
 
-void KstDialogs::showBasicPluginDialog(const QString& name, bool edit) {
-  Q_UNUSED(name)
-  Q_UNUSED(edit)
+void DialogLauncher::showScalarDialog(KstObjectPtr objectPtr) {
+  Q_UNUSED(objectPtr);
 }
 
 
-void KstDialogs::showEquationDialog(const QString& name, bool edit) {
-  Q_UNUSED(name)
-  Q_UNUSED(edit)
+void DialogLauncher::showStringDialog(KstObjectPtr objectPtr) {
+  Q_UNUSED(objectPtr);
 }
 
 
-void KstDialogs::showCSDDialog(const QString& name, bool edit) {
-  Q_UNUSED(name)
-  Q_UNUSED(edit)
+void DialogLauncher::showCurveDialog(KstObjectPtr objectPtr) {
+  Q_UNUSED(objectPtr);
 }
 
 
-void KstDialogs::showPSDDialog(const QString& name, bool edit) {
-  Q_UNUSED(name)
-  Q_UNUSED(edit)
+void DialogLauncher::showImageDialog(KstObjectPtr objectPtr) {
+  Q_UNUSED(objectPtr);
 }
 
 
-void KstDialogs::newVectorDialog(QWidget *parent, const char *createdSlot, const char *selectedSlot, const char *updateSlot) {
-  Q_UNUSED(parent)
-  Q_UNUSED(createdSlot)
-  Q_UNUSED(selectedSlot)
-  Q_UNUSED(updateSlot)
+void DialogLauncher::showEquationDialog(KstObjectPtr objectPtr) {
+  Q_UNUSED(objectPtr);
 }
 
 
-void KstDialogs::showVectorDialog(const QString& name, bool edit) {
-  Q_UNUSED(name)
-  Q_UNUSED(edit)
+void DialogLauncher::showHistogramDialog(KstObjectPtr objectPtr) {
+  Q_UNUSED(objectPtr);
 }
 
 
-void KstDialogs::newMatrixDialog(QWidget *parent, const char *createdSlot, const char *selectedSlot, const char *updateSlot) {
-  Q_UNUSED(parent)
-  Q_UNUSED(createdSlot)
-  Q_UNUSED(selectedSlot)
-  Q_UNUSED(updateSlot)
+void DialogLauncher::showPSDDialog(KstObjectPtr objectPtr) {
+  Q_UNUSED(objectPtr);
 }
 
 
-void KstDialogs::showMatrixDialog(const QString& name, bool edit) {
-  Q_UNUSED(name)
-  Q_UNUSED(edit)
+void DialogLauncher::showCSDDialog(KstObjectPtr objectPtr) {
+  Q_UNUSED(objectPtr);
 }
 
 
-void KstDialogs::showImageDialog(const QString& name, bool edit) {
-  Q_UNUSED(name)
-  Q_UNUSED(edit)
+void DialogLauncher::showBasicPluginDialog(KstObjectPtr objectPtr) {
+  Q_UNUSED(objectPtr);
 }
 
-
-void KstDialogs::showCurveDialog(const QString& name, bool edit) {
-  Q_UNUSED(name)
-  Q_UNUSED(edit)
 }
-
 
 // vim: ts=2 sw=2 et

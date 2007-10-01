@@ -395,12 +395,12 @@ QString KstPSD::propertyString() const {
 
 
 void KstPSD::showNewDialog() {
-  KstDialogs::self()->showPSDDialog();
+  Kst::DialogLauncher::self()->showPSDDialog();
 }
 
 
 void KstPSD::showEditDialog() {
-  KstDialogs::self()->showPSDDialog(tagName(), true);
+  Kst::DialogLauncher::self()->showPSDDialog(this);
 }
 
 

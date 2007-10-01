@@ -84,13 +84,12 @@ KstDataObjectPtr KstBasicPlugin::makeDuplicate(KstDataObjectDataObjectMap &map) 
 }
 
 void KstBasicPlugin::showNewDialog() {
-  //FIXME shouldn't tagName() == propertyString() ??
-  KstDialogs::self()->showBasicPluginDialog(propertyString());
+  Kst::DialogLauncher::self()->showBasicPluginDialog();
 }
 
 
 void KstBasicPlugin::showEditDialog() {
-  KstDialogs::self()->showBasicPluginDialog(tagName(), true);
+  Kst::DialogLauncher::self()->showBasicPluginDialog(this);
 }
 
 

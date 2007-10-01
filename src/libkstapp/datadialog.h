@@ -28,8 +28,7 @@ class KST_EXPORT DataDialog : public Dialog {
   Q_OBJECT
   public:
     enum EditMode { New, Edit };
-    DataDialog(QWidget *parent = 0);
-    DataDialog(KstObjectPtr dataObject, QWidget *parent = 0);
+    DataDialog(KstObjectPtr dataObject = 0, QWidget *parent = 0);
     virtual ~DataDialog();
 
     EditMode editMode() const { return _mode; }

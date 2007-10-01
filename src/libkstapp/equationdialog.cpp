@@ -30,20 +30,13 @@ EquationTab::~EquationTab() {
 }
 
 
-EquationDialog::EquationDialog(QWidget *parent)
-  : DataDialog(parent) {
-
-  setWindowTitle(tr("New Equation"));
-
-  _equationTab = new EquationTab(this);
-  addDataTab(_equationTab);
-}
-
-
 EquationDialog::EquationDialog(KstObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
-  setWindowTitle(tr("Edit Equation"));
+  if (editMode() == Edit)
+    setWindowTitle(tr("Edit Equation"));
+  else
+    setWindowTitle(tr("New Equation"));
 
   _equationTab = new EquationTab(this);
   addDataTab(_equationTab);

@@ -36,6 +36,7 @@ SOURCES += \
     debugdialog.cpp \
     debugnotifier.cpp \
     dialog.cpp \
+    dialoglaunchergui.cpp \
     dialogpage.cpp \
     dialogtab.cpp \
     document.cpp \
@@ -94,6 +95,7 @@ HEADERS += \
     debugdialog.h \
     debugnotifier.h \
     dialog.h \
+    dialoglaunchergui.h \
     dialogpage.h \
     dialogtab.h \
     document.h \

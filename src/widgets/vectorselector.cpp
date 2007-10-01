@@ -11,6 +11,7 @@
 
 #include "vectorselector.h"
 
+#include "dialoglauncher.h"
 #include "kstdatacollection.h"
 
 namespace Kst {
@@ -29,6 +30,9 @@ VectorSelector::VectorSelector(QWidget *parent)
   _editVector->setFixedSize(size + 8, size + 8);
 
   fillVectors();
+
+  connect(_newVector, SIGNAL(pressed()), this, SLOT(newVector()));
+  connect(_editVector, SIGNAL(pressed()), this, SLOT(editVector()));
 }
 
 
@@ -43,6 +47,15 @@ KstVectorPtr VectorSelector::selectedVector() const {
 
 void VectorSelector::setSelectedVector(KstVectorPtr selectedVector) {
   Q_UNUSED(selectedVector);
+}
+
+
+void VectorSelector::newVector() {
+  DialogLauncher::self()->showVectorDialog();
+}
+
+
+void VectorSelector::editVector() {
 }
 
 

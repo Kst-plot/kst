@@ -16,6 +16,7 @@
 #include "builtinobjects.h"
 #include "builtingraphics.h"
 
+#include "dialoglaunchergui.h"
 #include "kstdatasource.h"
 
 namespace Kst {
@@ -34,6 +35,9 @@ Application::Application(int &argc, char **argv)
   //inside of libkst... no?
   QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
   KstDataSource::setupOnStartup(settingsObject);
+
+  //Replace the dialoglauncher singleton with one that actually works
+  DialogLauncher::replaceSelf(new DialogLauncherGui);
 
   _mainWindow = new MainWindow;
   connect(this, SIGNAL(aboutToQuit()), _mainWindow, SLOT(aboutToQuit()));

@@ -26,14 +26,13 @@
 
 namespace Kst {
 
-DataDialog::DataDialog(QWidget *parent)
-  : Dialog(parent), _defaultTag("<Auto Name>"), _dataObject(0), _mode(New) {
-
-  createGui();
-}
-
 DataDialog::DataDialog(KstObjectPtr dataObject, QWidget *parent)
-  : Dialog(parent), _dataObject(dataObject), _mode(Edit) {
+  : Dialog(parent), _defaultTag("<Auto Name>"), _dataObject(dataObject) {
+
+  if (_dataObject)
+    _mode = Edit;
+  else
+    _mode = New;
 
   createGui();
 }
@@ -41,6 +40,7 @@ DataDialog::DataDialog(KstObjectPtr dataObject, QWidget *parent)
 
 DataDialog::~DataDialog() {
 }
+
 
 void DataDialog::createGui() {
 

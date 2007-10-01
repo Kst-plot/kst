@@ -423,12 +423,12 @@ QString KstEquation::propertyString() const {
 
 
 void KstEquation::showNewDialog() {
-  KstDialogs::self()->showEquationDialog();
+  Kst::DialogLauncher::self()->showEquationDialog();
 }
 
 
 void KstEquation::showEditDialog() {
-  KstDialogs::self()->showEquationDialog(tagName(), true);
+  Kst::DialogLauncher::self()->showEquationDialog(this);
 }
 
 

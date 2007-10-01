@@ -31,10 +31,6 @@ class KST_EXPORT DataManager : public QDialog, Ui::DataManager
     DataManager(QWidget *parent, Document *doc);
     virtual ~DataManager();
 
-  private Q_SLOTS:
-    void showVectorDialog();
-    void showCurveDialog();
-
   private:
     Document *_doc;
 

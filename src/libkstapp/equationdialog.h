@@ -36,7 +36,6 @@ class KST_EXPORT EquationTab : public DataTab, Ui::EquationTab {
 class KST_EXPORT EquationDialog : public DataDialog {
   Q_OBJECT
   public:
-    EquationDialog(QWidget *parent = 0);
     EquationDialog(KstObjectPtr dataObject, QWidget *parent = 0);
     virtual ~EquationDialog();
 

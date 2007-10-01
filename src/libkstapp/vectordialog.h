@@ -73,7 +73,6 @@ class KST_EXPORT VectorTab : public DataTab, Ui::VectorTab {
 class KST_EXPORT VectorDialog : public DataDialog {
   Q_OBJECT
   public:
-    VectorDialog(QWidget *parent = 0);
     VectorDialog(KstObjectPtr dataObject, QWidget *parent = 0);
     virtual ~VectorDialog();
 

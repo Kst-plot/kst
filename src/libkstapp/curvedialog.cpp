@@ -30,20 +30,13 @@ CurveTab::~CurveTab() {
 }
 
 
-CurveDialog::CurveDialog(QWidget *parent)
-  : DataDialog(parent) {
-
-  setWindowTitle(tr("New Curve"));
-
-  _curveTab = new CurveTab(this);
-  addDataTab(_curveTab);
-}
-
-
 CurveDialog::CurveDialog(KstObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
-  setWindowTitle(tr("Edit Curve"));
+  if (editMode() == Edit)
+    setWindowTitle(tr("Edit Curve"));
+  else
+    setWindowTitle(tr("New Curve"));
 
   _curveTab = new CurveTab(this);
   addDataTab(_curveTab);

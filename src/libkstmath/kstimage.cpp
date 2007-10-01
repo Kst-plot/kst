@@ -298,12 +298,12 @@ void KstImage::setPalette(const KstPalette &pal) {
 
 
 void KstImage::showNewDialog() {
-  KstDialogs::self()->showImageDialog();
+  Kst::DialogLauncher::self()->showImageDialog();
 }
 
 
 void KstImage::showEditDialog() {
-  KstDialogs::self()->showImageDialog(tagName(), true);
+  Kst::DialogLauncher::self()->showImageDialog(this);
 }
 
 

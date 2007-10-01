@@ -280,12 +280,12 @@ QString KstCSD::propertyString() const {
 
 
 void KstCSD::showNewDialog() {
-  KstDialogs::self()->showCSDDialog();
+  Kst::DialogLauncher::self()->showCSDDialog();
 }
 
 
 void KstCSD::showEditDialog() {
-  KstDialogs::self()->showCSDDialog(tagName(), true);
+  Kst::DialogLauncher::self()->showCSDDialog(this);
 }
 
 
