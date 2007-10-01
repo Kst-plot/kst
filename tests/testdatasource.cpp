@@ -23,12 +23,6 @@
 #include <kstdatacollection.h>
 #include <kstdataobjectcollection.h>
 
-#include <math.h>
-
-#ifndef INF
-double INF = 1.0/0.0;
-#endif
-
 void TestDataSource::initTestCase() {
   QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
   KstDataSource::setupOnStartup(settingsObject);
@@ -60,6 +54,7 @@ void TestDataSource::testAscii() {
     ts << "2.0" << endl;
     ts << "1" << endl;
     ts << ".2" << endl;
+    ts.flush();
 
     KstDataSourcePtr dsp = KstDataSource::loadSource(tf.fileName());
 
