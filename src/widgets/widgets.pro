@@ -7,6 +7,7 @@ CONFIG += designer plugin
 OBJECTS_DIR = tmp
 MOC_DIR = tmp
 TARGET = kstwidgets
+win32:CONFIG += staticlib
 
 target.path = $$[QT_INSTALL_PLUGINS]/designer
 INSTALLS += target
