@@ -314,7 +314,7 @@ KstObject::UpdateType AsciiSource::update(int u) {
   int bufstart, bufread;
   bool new_data = false;
   char tmpbuf[MAXBUFREADLEN+1];
-  const char *del = _config->_delimiters.toLatin1(); // beware
+  char *del = strdup(_config->_delimiters.toLatin1());
   
   do {
     /* Read the tmpbuffer, starting at row_index[_numFrames] */
@@ -355,6 +355,8 @@ KstObject::UpdateType AsciiSource::update(int u) {
     }
   } while (bufread == MAXBUFREADLEN);
   
+  free(del);
+
   file.close();
 
   updateNumFramesScalar();
