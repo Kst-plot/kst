@@ -167,6 +167,8 @@ class KST_EXPORT KstMatrix : public KstPrimitive {
     KstObject::UpdateType internalUpdate(KstObject::UpdateType providerUpdateType);
 };
 
+Q_DECLARE_METATYPE(KstMatrix*)
+
 typedef KstObjectList<KstMatrixPtr> KstMatrixList;
 typedef KstObjectMap<KstMatrixPtr> KstMatrixMap;
 typedef KstObjectCollection<KstMatrix> KstMatrixCollection;

@@ -15,9 +15,6 @@
 #include <kstdatacollection.h>
 #include <kstdataobjectcollection.h>
 
-Q_DECLARE_METATYPE(KstVector*)
-Q_DECLARE_METATYPE(KstDataObject*)
-
 namespace Kst {
 
 SessionModel::SessionModel()

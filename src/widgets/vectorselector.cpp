@@ -33,6 +33,8 @@ VectorSelector::VectorSelector(QWidget *parent)
 
   connect(_newVector, SIGNAL(pressed()), this, SLOT(newVector()));
   connect(_editVector, SIGNAL(pressed()), this, SLOT(editVector()));
+
+  //FIXME need to find a way to call fillVectors when the vectorList changes
 }
 
 
@@ -41,26 +43,30 @@ VectorSelector::~VectorSelector() {
 
 
 KstVectorPtr VectorSelector::selectedVector() const {
-  return 0;
+  return qVariantValue<KstVector*>(_vector->itemData(_vector->currentIndex()));
 }
 
 
 void VectorSelector::setSelectedVector(KstVectorPtr selectedVector) {
-  Q_UNUSED(selectedVector);
+  int i = _vector->findData(qVariantFromValue(selectedVector.data()));
+  Q_ASSERT(i != -1);
+  _vector->setCurrentIndex(i);
 }
 
 
 void VectorSelector::newVector() {
   DialogLauncher::self()->showVectorDialog();
+  fillVectors();
 }
 
 
 void VectorSelector::editVector() {
+  DialogLauncher::self()->showVectorDialog(KstObjectPtr(selectedVector()));
 }
 
 
 void VectorSelector::fillVectors() {
-  QStringList vectors;
+  QHash<QString, KstVectorPtr> vectors;
 
   KST::vectorList.lock().readLock();
 
@@ -71,20 +77,31 @@ void VectorSelector::fillVectors() {
       continue;
 
     vector->readLock();
-    vectors << vector->tag().displayString();
+    vectors.insert(vector->tag().displayString(), vector);
     vector->unlock();
   }
 
   KST::vectorList.lock().unlock();
 
-  qSort(vectors);
+  QStringList list = vectors.keys();
+
+  qSort(list);
 
   if (allowEmptySelection()) {
-    vectors.prepend(tr("<None>"));
+    list.prepend(tr("<None>"));
+    vectors.insert(tr("<None>"), KstVectorPtr());
   }
 
+  KstVectorPtr current = selectedVector();
+
   _vector->clear();
-  _vector->addItems(vectors);
+  foreach (QString string, list) {
+    KstVectorPtr v = vectors.value(string);
+    _vector->addItem(string, qVariantFromValue(v.data()));
+  }
+
+  if (current)
+    setSelectedVector(current);
 }
 
 }

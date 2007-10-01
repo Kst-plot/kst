@@ -168,6 +168,7 @@ class KST_EXPORT KstDataObject : public KstObject {
     static KstDataObjectPtr createPlugin();
 };
 
+Q_DECLARE_METATYPE(KstDataObject*)
 
 #endif
 // vim: ts=2 sw=2 et

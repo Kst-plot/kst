@@ -82,6 +82,8 @@ class KST_EXPORT KstScalar : public KstPrimitive {
     bool _editable;
 };
 
+Q_DECLARE_METATYPE(KstScalar*)
+
 typedef KstSharedPtr<KstScalar> KstScalarPtr;
 typedef KstObjectList<KstScalarPtr> KstScalarList;
 typedef KstObjectMap<KstScalarPtr> KstScalarMap;

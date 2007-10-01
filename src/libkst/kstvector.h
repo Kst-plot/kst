@@ -206,6 +206,8 @@ class KstVector : public KstPrimitive {
     KstObject::UpdateType internalUpdate(KstObject::UpdateType providerRC);
 } KST_EXPORT;
 
+Q_DECLARE_METATYPE(KstVector*)
+
 typedef KstObjectList<KstVectorPtr> KstVectorList;
 typedef KstObjectMap<KstVectorPtr> KstVectorMap;
 typedef KstObjectCollection<KstVector> KstVectorCollection;

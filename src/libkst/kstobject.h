@@ -24,6 +24,7 @@
 #include <qstring.h>
 #include <qdebug.h>
 #include <qstringlist.h>
+#include <QMetaType>
 
 #include "kst_export.h"
 #include "kstsharedptr.h"
@@ -76,6 +77,8 @@ class KstObject : public KstShared, public QObject, public KstRWLock {
     bool _dirty;
     KstObject::UpdateType _lastUpdate;
 } KST_EXPORT;
+
+Q_DECLARE_METATYPE(KstObject*)
 
 typedef KstSharedPtr<KstObject> KstObjectPtr;
 

@@ -69,6 +69,8 @@ class KST_EXPORT KstString : public KstPrimitive {
     bool _editable;
 };
 
+Q_DECLARE_METATYPE(KstString*)
+
 typedef KstSharedPtr<KstString> KstStringPtr;
 typedef KstObjectList<KstStringPtr> KstStringList;
 typedef KstObjectMap<KstStringPtr> KstStringMap;
