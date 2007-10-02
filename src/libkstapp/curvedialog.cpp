@@ -33,6 +33,12 @@ CurveTab::CurveTab(QWidget *parent)
 
   setupUi(this);
   setTabTitle(tr("Curve"));
+
+  _xError->setAllowEmptySelection(true);
+  _yError->setAllowEmptySelection(true);
+
+  _xMinusError->setAllowEmptySelection(true);
+  _yMinusError->setAllowEmptySelection(true);
 }
 
 

@@ -17,7 +17,7 @@
 namespace Kst {
 
 VectorSelector::VectorSelector(QWidget *parent)
-  : QWidget(parent), _allowEmptySelection(true) {
+  : QWidget(parent), _allowEmptySelection(false) {
 
   setupUi(this);
 
@@ -54,6 +54,25 @@ void VectorSelector::setSelectedVector(KstVectorPtr selectedVector) {
 }
 
 
+bool VectorSelector::allowEmptySelection() const {
+  return _allowEmptySelection;
+}
+
+
+void VectorSelector::setAllowEmptySelection(bool allowEmptySelection) {
+  _allowEmptySelection = allowEmptySelection;
+
+  int i = _vector->findText(tr("<None>"));
+  if (i != -1)
+    _vector->removeItem(i);
+
+  if (_allowEmptySelection) {
+    _vector->insertItem(0, tr("<None>"), qVariantFromValue(0));
+    _vector->setCurrentIndex(0);
+  }
+}
+
+
 void VectorSelector::newVector() {
   DialogLauncher::self()->showVectorDialog();
   fillVectors();
@@ -86,11 +105,6 @@ void VectorSelector::fillVectors() {
   QStringList list = vectors.keys();
 
   qSort(list);
-
-  if (allowEmptySelection()) {
-    list.prepend(tr("<None>"));
-    vectors.insert(tr("<None>"), KstVectorPtr());
-  }
 
   KstVectorPtr current = selectedVector();
 
