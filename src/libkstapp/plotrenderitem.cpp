@@ -11,7 +11,11 @@
 
 #include "plotrenderitem.h"
 
+#include <QTime>
+
 #include "plotitem.h"
+
+//#define CURVE_DRAWING_TIME
 
 namespace Kst {
 
@@ -75,7 +79,18 @@ void PlotRenderItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
   Q_UNUSED(widget);
   painter->drawRect(rect());
   painter->fillRect(rect(), Qt::white);
+
+#ifdef CURVE_DRAWING_TIME
+  QTime time;
+  time.start();
+#endif
+
   paint(painter);
+
+#ifdef CURVE_DRAWING_TIME
+  int elapsed = time.elapsed();
+  qDebug()<<"curve drawing took" << elapsed << "to render.";
+#endif
 }
 
 

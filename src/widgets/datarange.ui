@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>422</width>
-    <height>124</height>
+    <width>440</width>
+    <height>119</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -40,18 +40,6 @@
       <string>Data Range</string>
      </property>
      <layout class="QGridLayout" >
-      <property name="leftMargin" >
-       <number>0</number>
-      </property>
-      <property name="topMargin" >
-       <number>0</number>
-      </property>
-      <property name="rightMargin" >
-       <number>0</number>
-      </property>
-      <property name="bottomMargin" >
-       <number>0</number>
-      </property>
       <item row="2" column="5" >
        <widget class="QCheckBox" name="_doFilter" >
         <property name="enabled" >

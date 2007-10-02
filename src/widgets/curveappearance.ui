@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>406</width>
-    <height>163</height>
+    <width>373</width>
+    <height>148</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -16,6 +16,18 @@
    </sizepolicy>
   </property>
   <layout class="QVBoxLayout" >
+   <property name="leftMargin" >
+    <number>0</number>
+   </property>
+   <property name="topMargin" >
+    <number>0</number>
+   </property>
+   <property name="rightMargin" >
+    <number>0</number>
+   </property>
+   <property name="bottomMargin" >
+    <number>0</number>
+   </property>
    <item>
     <widget class="QGroupBox" name="GroupBox9_2_2_2" >
      <property name="sizePolicy" >
