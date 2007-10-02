@@ -47,13 +47,12 @@ void VectorCurveRenderItem::paint(QPainter *painter) {
 
     KstCurveRenderContext context;
     context.painter = painter;
-    context.window = QRect();//plotRect().toRect(); //no idea if this should be floating point
+    context.window = QRect(); //no idea if this should be floating point
+    context.penWidth = 1.0;
 
     //FIXME rename these methods in kstvcurve
-    QRectF vectorRect(relation->minX(),
-                      relation->minY(),
-                      relation->maxX(),
-                      relation->maxY());
+    QRectF vectorRect(QPointF(relation->minX(), relation->minY()),
+                      QPointF(relation->maxX(), relation->maxY()));
 
     QTransform t;
     qreal scaleFactor = 1.0;
@@ -82,7 +81,7 @@ void VectorCurveRenderItem::paint(QPainter *painter) {
     context.Hy = plotRect().bottom();
 
     //To convert between the last two...
-    double m_X =  double(plotRect().width()-1)/(context.XMax - context.XMin);
+    double m_X = double(plotRect().width()-1)/(context.XMax - context.XMin);
     double m_Y = -double(plotRect().height()-1)/(context.YMax - context.YMin);
     double b_X = context.Lx - m_X * context.XMin;
     double b_Y = context.Ly - m_Y * context.YMax;
@@ -93,6 +92,7 @@ void VectorCurveRenderItem::paint(QPainter *painter) {
     context.b_Y = b_Y;
 
     painter->save();
+    painter->setRenderHint(QPainter::Antialiasing, false);
     relation->paint(context);
     painter->restore();
   }

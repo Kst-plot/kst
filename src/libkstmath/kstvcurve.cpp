@@ -879,6 +879,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
   int b_1 = 0, b_2 = 0, b_3 = 0, b_4 = 0;
   bench_time.start();
   benchtmp.start();
+  int numberOfLinesDrawn = 0;
 #endif
 
   int pointDim = KstCurvePointSymbol::dim(context.window);
@@ -978,6 +979,9 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
 #ifdef DEBUG_VECTOR_CURVE
 qDebug() << __LINE__ << "drawPolyline" << poly << endl;
 #endif
+#ifdef BENCHMARK
+  ++numberOfLinesDrawn;
+#endif
             p->drawPolyline(poly);
           }
           index = 0;
@@ -990,6 +994,9 @@ qDebug() << __LINE__ << "drawPolyline" << poly << endl;
               if (minY >= Ly && minY <= Hy && maxY >= Ly && maxY <= Hy) {
 #ifdef DEBUG_VECTOR_CURVE
 qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY)) << endl;
+#endif
+#ifdef BENCHMARK
+  ++numberOfLinesDrawn;
 #endif
                 p->drawLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY));
               }
@@ -1044,6 +1051,9 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
 #ifdef DEBUG_VECTOR_CURVE
 qDebug() << __LINE__ << "drawPolyline" << poly << endl;
 #endif
+#ifdef BENCHMARK
+  ++numberOfLinesDrawn;
+#endif
                     p->drawPolyline(poly);
                     index = 0;
                   }
@@ -1093,11 +1103,17 @@ qDebug() << __LINE__ << "index++" << index << endl;
 #ifdef DEBUG_VECTOR_CURVE
 qDebug() << __LINE__ << "drawPolyline" << poly << endl;
 #endif
+#ifdef BENCHMARK
+  ++numberOfLinesDrawn;
+#endif
                       p->drawPolyline(poly);
                       index = 0;
                     }
 #ifdef DEBUG_VECTOR_CURVE
 qDebug() << __LINE__ << "drawLine" << QLine(X2i, d2i(minY), X2i, d2i(maxY)) << endl;
+#endif
+#ifdef BENCHMARK
+  ++numberOfLinesDrawn;
 #endif
                     p->drawLine(X2i, d2i(minY), X2i, d2i(maxY));
                   }
@@ -1229,6 +1245,9 @@ qDebug() << __LINE__ << "index++" << index << endl;
 #ifdef DEBUG_VECTOR_CURVE
 qDebug() << __LINE__ << "drawPolyline" << poly << endl;
 #endif
+#ifdef BENCHMARK
+  ++numberOfLinesDrawn;
+#endif
                     p->drawPolyline(poly);
                   }
                   index = 0;
@@ -1253,6 +1272,9 @@ qDebug() << __LINE__ << "index++" << index << endl;
 #ifdef DEBUG_VECTOR_CURVE
 qDebug() << __LINE__ << "drawPolyline" << poly << endl;
 #endif
+#ifdef BENCHMARK
+  ++numberOfLinesDrawn;
+#endif
         p->drawPolyline(poly);
         index = 0;
       }
@@ -1269,6 +1291,9 @@ qDebug() << __LINE__ << "drawPolyline" << poly << endl;
           if (minY >= Ly && minY <= Hy && maxY >= Ly && maxY <= Hy) {
 #ifdef DEBUG_VECTOR_CURVE
 qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY)) << endl;
+#endif
+#ifdef BENCHMARK
+  ++numberOfLinesDrawn;
 #endif
             p->drawLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY));
           }
@@ -1662,6 +1687,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
   int i = bench_time.elapsed();
   qDebug() << "Plotting curve " << (void *)this << ": " << i << "ms" << endl;
   qDebug() << "    Without locks: " << b_4 << "ms" << endl;
+  qDebug() << "    Nnumber of lines drawn:" << numberOfLinesDrawn << endl;
   if (b_1 > 0)       qDebug() << "            Lines: " << b_1 << "ms" << endl;
   if (b_2 - b_1 > 0) qDebug() << "             Bars: " << (b_2 - b_1) << "ms" << endl;
   if (b_3 - b_2 > 0) qDebug() << "           Points: " << (b_3 - b_2) << "ms" << endl;

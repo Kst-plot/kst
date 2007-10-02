@@ -15,7 +15,7 @@
 
 #include "plotitem.h"
 
-//#define CURVE_DRAWING_TIME
+// #define CURVE_DRAWING_TIME
 
 namespace Kst {
 
