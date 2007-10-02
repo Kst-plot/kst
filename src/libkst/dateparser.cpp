@@ -1,12 +1,6 @@
 /***************************************************************************
-                              kstdateparser.cpp
-                             -------------------
-    begin                : Nov 07, 2005
-    copyright            : (C) 2005 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2005 The University of Toronto                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,14 +9,14 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstdateparser.h"
+#include "dateparser.h"
 #include <qstringlist.h>
 
 #include <assert.h>
 #include <math.h>
 #include <stdlib.h>
 
-namespace KST {
+namespace Kst {
 
 QDateTime millisecondsToQDateTime(double ms) {
   QDateTime edt;

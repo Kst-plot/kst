@@ -22,7 +22,7 @@ SOURCES += \
     kstdebug.cpp \
     rwlock.cpp \
     kstmath.cpp \
-    kstdateparser.cpp \
+    dateparser.cpp \
     #  Needs porting, but is unused anyway
     #ksttimezones.cpp \
     scalar.cpp \
@@ -60,7 +60,7 @@ HEADERS += \
     kstdatacollection.h \
     kstdataplugin.h \
     kstdatasource.h \
-    kstdateparser.h \
+    dateparser.h \
     kstdebug.h \
     kstevents.h \
     kst_export.h \

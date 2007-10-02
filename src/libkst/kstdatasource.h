@@ -29,7 +29,7 @@
 
 #include "kst_export.h"
 #include "kstobject.h"
-#include "kstdateparser.h"
+#include "dateparser.h"
 #include "kstobjectlist.h"
 #include "scalar.h"
 
