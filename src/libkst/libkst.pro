@@ -31,7 +31,7 @@ SOURCES += \
     kststring.cpp \
     kstmatrix.cpp \
     datamatrix.cpp \
-    kstsmatrix.cpp \
+    generatedmatrix.cpp \
     editablematrix.cpp \
     kstvector.cpp \
     kstsvector.cpp \
@@ -78,7 +78,7 @@ HEADERS += \
     datavector.h \
     kstscalar.h \
     kstsharedptr.h \
-    kstsmatrix.h \
+    generatedmatrix.h \
     kststring.h \
     kstsvector.h \
     ksttimers.h \

@@ -1,13 +1,7 @@
 /***************************************************************************
-        kstsmatrix.h  - a gradient from gradZMin, gradZMax that goes across
-                        in x or y direction 
-                             -------------------
-    begin                : July, 2005
-    copyright            : (C) 2005 by University of British Columbia
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
+ *   copyright : (C) 2005  University of British Columbia                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,16 +9,19 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef KSTSMATRIX_H
-#define KSTSMATRIX_H
+
+#ifndef GENERATEDMATRIX_H
+#define GENERATEDMATRIX_H
 
 #include "kstmatrix.h"
 #include "kst_export.h"
 
-class KST_EXPORT KstSMatrix : public KstMatrix {
+namespace Kst {
+
+class KST_EXPORT GeneratedMatrix : public KstMatrix {
   public:
-    KstSMatrix(const QDomElement &e);
-    KstSMatrix(KstObjectTag tag, uint nX, uint nY,
+    GeneratedMatrix(const QDomElement &e);
+    GeneratedMatrix(KstObjectTag tag, uint nX, uint nY,
                double minX, double minY, double stepX, double stepY,
                double gradZMin, double gradZMax, bool xDirection);
 
@@ -45,8 +42,10 @@ class KST_EXPORT KstSMatrix : public KstMatrix {
     bool _xDirection;
 };
 
-typedef KstSharedPtr<KstSMatrix> KstSMatrixPtr;
-typedef KstObjectList<KstSMatrixPtr> KstSMatrixList;
+typedef KstSharedPtr<GeneratedMatrix> GeneratedMatrixPtr;
+typedef KstObjectList<GeneratedMatrixPtr> GeneratedMatrixList;
+
+}
 
 #endif
 // vim: ts=2 sw=2 et
