@@ -24,9 +24,6 @@ class DataButton : public QPushButton
   public:
     DataButton(const QString & text, QWidget * parent = 0);
     virtual ~DataButton();
-
-  protected:
-    void paintEvent(QPaintEvent *);
 };
 
 }

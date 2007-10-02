@@ -19,28 +19,31 @@ namespace Kst {
 
 DataButton::DataButton(const QString &text, QWidget *parent)
   : QPushButton(text, parent) {
-  setBackgroundRole(QPalette::Base);
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+  setStyleSheet("QPushButton {"
+                  "border: 1px solid;"
+                  "background-color: white;"
+                  "text-align: left;"
+                  "margin: 5;"
+                "}"
+
+                "QPushButton:hover {"
+                  "border-bottom: 1px solid;"
+                  "border-right: 1px solid;"
+                "}"
+
+                "QPushButton:pressed {"
+                  "border-bottom: 0px solid;"
+                  "border-right: 0px solid;"
+                  "border-top: 1px solid;"
+                  "border-left: 1px solid;"
+                "}"
+                );
 }
 
 
 DataButton::~DataButton() {
-}
-
-
-void DataButton::paintEvent(QPaintEvent *) {
-  QStylePainter p(this);
-  QStyleOptionButton option;
-  initStyleOption(&option);
-
-  option.features = QStyleOptionButton::Flat;
-
-  p.drawControl(QStyle::CE_PushButtonBevel, option);
-  p.drawPrimitive(QStyle::PE_FrameFocusRect, option);
-
-  QRect textPosition(rect());
-  textPosition.setX(textPosition.x() + 5);
-  p.drawText(textPosition, QPushButton::text(), QTextOption(Qt::AlignLeft|Qt::AlignVCenter));
 }
 
 }

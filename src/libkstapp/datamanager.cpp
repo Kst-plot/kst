@@ -28,25 +28,25 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   setupUi(this);
   _session->setModel(doc->session());
 
+  _objects->setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
+  _objects->setStyleSheet("background-color: white;");
+
+
   _primitives = new QToolBar(_objects);
   _primitives->setOrientation(Qt::Vertical);
   _primitives->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-  _primitives->setBackgroundRole(QPalette::Base);
 
   _dataObjects = new QToolBar(_objects);
   _dataObjects->setOrientation(Qt::Vertical);
   _dataObjects->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-  _dataObjects->setBackgroundRole(QPalette::Base);
 
   _fits = new QToolBar(_objects);
   _fits->setOrientation(Qt::Vertical);
   _fits->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-  _fits->setBackgroundRole(QPalette::Base);
 
   _filters = new QToolBar(_objects);
   _filters->setOrientation(Qt::Vertical);
   _filters->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-  _filters->setBackgroundRole(QPalette::Base);
 
   _objects->addItem(_primitives, tr("Create Primitive"));
   _objects->addItem(_dataObjects, tr("Create Data Object"));
