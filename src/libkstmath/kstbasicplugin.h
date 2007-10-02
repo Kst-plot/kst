@@ -58,16 +58,16 @@ class KST_EXPORT KstBasicPlugin : public KstDataObject {
   public:
     //Returns the respective input object for name
     KstVectorPtr inputVector(const QString& name) const;
-    KstScalarPtr inputScalar(const QString& name) const;
+    Kst::ScalarPtr inputScalar(const QString& name) const;
     KstStringPtr inputString(const QString& name) const;
 
     //Returns the respective output object for name
     KstVectorPtr outputVector(const QString& name) const;
-    KstScalarPtr outputScalar(const QString& name) const;
+    Kst::ScalarPtr outputScalar(const QString& name) const;
     KstStringPtr outputString(const QString& name) const;
 
     void setInputVector(const QString &type, KstVectorPtr ptr);
-    void setInputScalar(const QString &type, KstScalarPtr ptr);
+    void setInputScalar(const QString &type, Kst::ScalarPtr ptr);
     void setInputString(const QString &type, KstStringPtr ptr);
     void setOutputVector(const QString &type, const QString &name);
     void setOutputScalar(const QString &type, const QString &name);

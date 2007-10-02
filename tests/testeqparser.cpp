@@ -105,7 +105,7 @@ bool TestEqParser::validateEquation(const char *equation, double x, double resul
       delete eq;
       eq = new Equation::Number(v);
     }
-    KstScalarMap scm;
+    Kst::ScalarMap scm;
     KstStringMap stm;
     eq->collectObjects(vectorsUsed, scm, stm);
     eq->update(-1, &ctx);
@@ -324,12 +324,12 @@ void TestEqParser::testEqParser() {
   QVERIFY(validateEquation("257|-1", 0.0, -1));
 
   // Scalars
-  new KstScalar(KstObjectTag::fromString("test1"), 0L, 1.0, true);
-  new KstScalar(KstObjectTag::fromString("test2"), 0L, 0.0, true);
-  new KstScalar(KstObjectTag::fromString("test3"), 0L, -1.0, true);
-  new KstScalar(KstObjectTag::fromString("test4"), 0L, _NOPOINT, true);
-  new KstScalar(KstObjectTag::fromString("test5"), 0L, INF, true);
-  new KstScalar(KstObjectTag::fromString("test6"), 0L, -INF, true);
+  new Kst::Scalar(KstObjectTag::fromString("test1"), 0L, 1.0, true);
+  new Kst::Scalar(KstObjectTag::fromString("test2"), 0L, 0.0, true);
+  new Kst::Scalar(KstObjectTag::fromString("test3"), 0L, -1.0, true);
+  new Kst::Scalar(KstObjectTag::fromString("test4"), 0L, _NOPOINT, true);
+  new Kst::Scalar(KstObjectTag::fromString("test5"), 0L, INF, true);
+  new Kst::Scalar(KstObjectTag::fromString("test6"), 0L, -INF, true);
 
   QVERIFY(validateEquation("[test1]", 0.0, 1.0));
   QVERIFY(validateEquation("[test4]", 0.0, _NOPOINT));

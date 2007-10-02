@@ -75,7 +75,7 @@ KstMatrix::~KstMatrix() {
   // get rid of the stat scalars
   KST::scalarList.lock().writeLock();
   KST::scalarList.setUpdateDisplayTags(false);
-  for (QHash<QString, KstScalar*>::Iterator iter = _statScalars.begin(); iter != _statScalars.end(); ++iter) {
+  for (QHash<QString, Kst::Scalar*>::Iterator iter = _statScalars.begin(); iter != _statScalars.end(); ++iter) {
     KST::scalarList.remove(iter.value());
     iter.value()->_KShared_unref();  
   }
@@ -310,7 +310,7 @@ void KstMatrix::blank() {
 
 int KstMatrix::getUsage() const {
   int scalarUsage = 0;
-  for (QHash<QString, KstScalar*>::ConstIterator it = _statScalars.begin(); it != _statScalars.end(); ++it) {
+  for (QHash<QString, Kst::Scalar*>::ConstIterator it = _statScalars.begin(); it != _statScalars.end(); ++it) {
     scalarUsage += it.value()->getUsage() - 1;
   }
   return KstObject::getUsage() + scalarUsage;
@@ -382,7 +382,7 @@ void KstMatrix::setTagName(const KstObjectTag& tag) {
 }
 
 
-const QHash<QString, KstScalar*>& KstMatrix::scalars() const {
+const QHash<QString, Kst::Scalar*>& KstMatrix::scalars() const {
   return _statScalars;
 }
     
@@ -426,23 +426,23 @@ void KstMatrix::createScalars() {
   KstWriteLocker sl(&KST::scalarList.lock());
   KST::scalarList.setUpdateDisplayTags(false);
 
-  _statScalars.insert("max", new KstScalar(KstObjectTag("Max", tag()), this));
+  _statScalars.insert("max", new Kst::Scalar(KstObjectTag("Max", tag()), this));
   _statScalars["max"]->_KShared_ref();
-  _statScalars.insert("min", new KstScalar(KstObjectTag("Min", tag()), this));
+  _statScalars.insert("min", new Kst::Scalar(KstObjectTag("Min", tag()), this));
   _statScalars["min"]->_KShared_ref();
-  _statScalars.insert("mean", new KstScalar(KstObjectTag("Mean", tag()), this));
+  _statScalars.insert("mean", new Kst::Scalar(KstObjectTag("Mean", tag()), this));
   _statScalars["mean"]->_KShared_ref();
-  _statScalars.insert("sigma", new KstScalar(KstObjectTag("Sigma", tag()), this));
+  _statScalars.insert("sigma", new Kst::Scalar(KstObjectTag("Sigma", tag()), this));
   _statScalars["sigma"]->_KShared_ref();
-  _statScalars.insert("rms", new KstScalar(KstObjectTag("Rms", tag()), this));
+  _statScalars.insert("rms", new Kst::Scalar(KstObjectTag("Rms", tag()), this));
   _statScalars["rms"]->_KShared_ref();
-  _statScalars.insert("ns", new KstScalar(KstObjectTag("NS", tag()), this));
+  _statScalars.insert("ns", new Kst::Scalar(KstObjectTag("NS", tag()), this));
   _statScalars["ns"]->_KShared_ref();
-  _statScalars.insert("sum", new KstScalar(KstObjectTag("Sum", tag()), this));
+  _statScalars.insert("sum", new Kst::Scalar(KstObjectTag("Sum", tag()), this));
   _statScalars["sum"]->_KShared_ref();
-  _statScalars.insert("sumsquared", new KstScalar(KstObjectTag("SumSquared", tag()), this));
+  _statScalars.insert("sumsquared", new Kst::Scalar(KstObjectTag("SumSquared", tag()), this));
   _statScalars["sumsquared"]->_KShared_ref();
-  _statScalars.insert("minpos", new KstScalar(KstObjectTag("MinPos", tag()), this));
+  _statScalars.insert("minpos", new Kst::Scalar(KstObjectTag("MinPos", tag()), this));
   _statScalars["minpos"]->_KShared_ref();
 
   KST::scalarList.setUpdateDisplayTags(true);

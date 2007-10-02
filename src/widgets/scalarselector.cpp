@@ -33,12 +33,12 @@ ScalarSelector::~ScalarSelector() {
 }
 
 
-KstScalarPtr ScalarSelector::selectedScalar() const {
+ScalarPtr ScalarSelector::selectedScalar() const {
   return 0;
 }
 
 
-void ScalarSelector::setSelectedScalar(KstScalarPtr selectedScalar) {
+void ScalarSelector::setSelectedScalar(ScalarPtr selectedScalar) {
   Q_UNUSED(selectedScalar);
 }
 

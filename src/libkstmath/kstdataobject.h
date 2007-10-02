@@ -68,10 +68,10 @@ class KST_EXPORT KstDataObject : public KstObject {
     KstVectorMap& inputVectors() { return _inputVectors;  }
     KstVectorMap& outputVectors() { return _outputVectors; }
 
-    const KstScalarMap& inputScalars()  const { return _inputScalars;  }
-    const KstScalarMap& outputScalars() const { return _outputScalars; }
-    KstScalarMap& inputScalars() { return _inputScalars;  }
-    KstScalarMap& outputScalars() { return _outputScalars; }
+    const Kst::ScalarMap& inputScalars()  const { return _inputScalars;  }
+    const Kst::ScalarMap& outputScalars() const { return _outputScalars; }
+    Kst::ScalarMap& inputScalars() { return _inputScalars;  }
+    Kst::ScalarMap& outputScalars() { return _outputScalars; }
 
     const KstStringMap& inputStrings()  const { return _inputStrings;  }
     const KstStringMap& outputStrings() const { return _outputStrings; }
@@ -140,8 +140,8 @@ class KST_EXPORT KstDataObject : public KstObject {
 
     KstVectorMap _inputVectors;
     KstVectorMap _outputVectors;
-    KstScalarMap _inputScalars;
-    KstScalarMap _outputScalars;
+    Kst::ScalarMap _inputScalars;
+    Kst::ScalarMap _outputScalars;
     KstStringMap _inputStrings;
     KstStringMap _outputStrings;
     KstMatrixMap _inputMatrices;

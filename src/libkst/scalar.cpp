@@ -1,5 +1,5 @@
 /***************************************************************************
-                          kstscalar.cpp  -  the base scalar type
+                          scalar.cpp  -  the base scalar type
                              -------------------
     begin                : March 24, 2003
     copyright            : (C) 2003 by cbn
@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstscalar.h"
+#include "scalar.h"
 
 #include "kst_i18n.h"
 
@@ -27,23 +27,25 @@
 #include <QXmlStreamWriter>
 
 
+namespace Kst {
+
 static int iAnonymousScalarCounter = 0;
 
 static bool dirtyScalars = false;
 
-bool KstScalar::scalarsDirty() {
+bool Scalar::scalarsDirty() {
   // Should use a mutex, but let's play with fire to be fast
   return dirtyScalars;
 }
 
 
-void KstScalar::clearScalarsDirty() {
+void Scalar::clearScalarsDirty() {
   // Should use a mutex, but let's play with fire to be fast
   dirtyScalars = false;
 }
 
 /** Create the base scalar */
-KstScalar::KstScalar(KstObjectTag in_tag, KstObject *provider, double val, bool orphan, bool displayable, bool editable)
+Scalar::Scalar(KstObjectTag in_tag, KstObject *provider, double val, bool orphan, bool displayable, bool editable)
 : KstPrimitive(provider), _value(val), _orphan(orphan), _displayable(displayable), _editable(editable) {
   QString _tag = in_tag.tag();
   if (_tag.isEmpty()) {
@@ -62,7 +64,7 @@ KstScalar::KstScalar(KstObjectTag in_tag, KstObject *provider, double val, bool 
 }
 
 
-KstScalar::KstScalar(const QDomElement& e)
+Scalar::Scalar(const QDomElement& e)
 : KstPrimitive(), _orphan(false), _displayable(true), _editable(false) {
   QDomNode n = e.firstChild();
   bool ok;
@@ -93,11 +95,11 @@ KstScalar::KstScalar(const QDomElement& e)
 }
 
 
-KstScalar::~KstScalar() {
+Scalar::~Scalar() {
 }
 
 
-KstObject::UpdateType KstScalar::update(int updateCounter) {
+KstObject::UpdateType Scalar::update(int updateCounter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
@@ -119,7 +121,7 @@ KstObject::UpdateType KstScalar::update(int updateCounter) {
 }
 
 
-void KstScalar::save(QXmlStreamWriter &s) {
+void Scalar::save(QXmlStreamWriter &s) {
   if (provider()) {
     return;
   }
@@ -136,13 +138,13 @@ void KstScalar::save(QXmlStreamWriter &s) {
 }
 
 
-KstScalar& KstScalar::operator=(double v) {
+Scalar& Scalar::operator=(double v) {
   setValue(v);
   return *this;
 }
 
 
-void KstScalar::setValue(double inV) {
+void Scalar::setValue(double inV) {
   if (_value != inV) {
     setDirty();
     dirtyScalars = true;
@@ -152,47 +154,47 @@ void KstScalar::setValue(double inV) {
 }
 
 
-QString KstScalar::label() const {
+QString Scalar::label() const {
   return QString::number(_value);
 }
 
 
-double KstScalar::value() const {
+double Scalar::value() const {
   return _value;
 }
 
 
-bool KstScalar::orphan() const {
+bool Scalar::orphan() const {
   return _orphan;
 }
 
 
-void KstScalar::setOrphan(bool orphan) {
+void Scalar::setOrphan(bool orphan) {
   _orphan = orphan;
 }
 
 
-bool KstScalar::displayable() const {
+bool Scalar::displayable() const {
   return _displayable;
 }
 
 
-void KstScalar::setDisplayable(bool displayable) {
+void Scalar::setDisplayable(bool displayable) {
   _displayable = displayable;
 }
 
 
-bool KstScalar::editable() const {
+bool Scalar::editable() const {
   return _editable;
 }
 
 
-void KstScalar::setEditable(bool editable) {
+void Scalar::setEditable(bool editable) {
   _editable = editable;
 }
 
 
-void KstScalar::setTagName(const KstObjectTag& newTag) {
+void Scalar::setTagName(const KstObjectTag& newTag) {
   if (newTag == tag()) {
     return;
   }
@@ -202,4 +204,5 @@ void KstScalar::setTagName(const KstObjectTag& newTag) {
   KST::scalarList.doRename(this, newTag);
 }
 
+}
 // vim: et ts=2 sw=2

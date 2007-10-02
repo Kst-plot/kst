@@ -78,7 +78,7 @@ namespace KST {
     KST_EXPORT extern KstVectorCollection vectorList;
 
     /** The list of Scalars which have been generated */
-    KST_EXPORT extern KstScalarCollection scalarList;
+    KST_EXPORT extern Kst::ScalarCollection scalarList;
 
     /** The list of Strings */
     KST_EXPORT extern KstStringCollection stringList;

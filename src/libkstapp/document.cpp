@@ -86,7 +86,7 @@ bool Document::save(const QString& to) {
   foreach (KstMatrixPtr s, KST::matrixList.list()) {
     s->save(xml);
   }
-  foreach (KstScalarPtr s, KST::scalarList.list()) {
+  foreach (ScalarPtr s, KST::scalarList.list()) {
     s->save(xml);
   }
   foreach (KstStringPtr s, KST::stringList.list()) {

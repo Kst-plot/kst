@@ -33,7 +33,7 @@
 #include "kst_i18n.h"
 #include "kstdatacollection.h"
 #include "kstdebug.h"
-#include "kstscalar.h"
+#include "scalar.h"
 #include "stdinsource.h"
 
 #include "kstdataplugin.h"
@@ -463,7 +463,7 @@ KstDataSource::KstDataSource(QSettings *cfg, const QString& filename, const QStr
     KstObject::setTagName(KstObjectTag(tn + QString::number(-(count++)), KstObjectTag::globalTagContext));  // are DataSources always top-level?
   }
 
-  _numFramesScalar = new KstScalar(KstObjectTag("frames", tag()));
+  _numFramesScalar = new Kst::Scalar(KstObjectTag("frames", tag()));
   // Don't set provider - this is always up-to-date
 }
 

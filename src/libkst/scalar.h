@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTSCALAR_H
-#define KSTSCALAR_H
+#ifndef SCALAR_H
+#define SCALAR_H
 
 #include <qdom.h>
 #include "kstprimitive.h"
@@ -24,19 +24,21 @@
 
 class QXmlStreamWriter;
 
+namespace Kst {
+
 /** The base class for all scalars. */
-class KST_EXPORT KstScalar : public KstPrimitive {
+class KST_EXPORT Scalar : public KstPrimitive {
   Q_OBJECT
   Q_PROPERTY(bool orphan READ orphan WRITE setOrphan)
   Q_PROPERTY(double value READ value WRITE setValue)
   Q_PROPERTY(bool displayable READ displayable WRITE setDisplayable)
   public:
-    KstScalar(KstObjectTag tag = KstObjectTag::invalidTag,
+    Scalar(KstObjectTag tag = KstObjectTag::invalidTag,
               KstObject *provider = 0L, double val = 0.0, bool orphan = false,
               bool displayable = true, bool editable = false);
-    KstScalar(const QDomElement& e);
+    Scalar(const QDomElement& e);
 
-    virtual ~KstScalar();
+    virtual ~Scalar();
 
   public:
     void setTagName(const KstObjectTag& tag);
@@ -55,7 +57,7 @@ class KST_EXPORT KstScalar : public KstPrimitive {
     /** Update the scalar.  Return true if there was new data. */
     UpdateType update(int updateCounter = -1);
 
-    KstScalar& operator=(double v);
+    Scalar& operator=(double v);
 
   public slots:
     double value() const;
@@ -82,12 +84,15 @@ class KST_EXPORT KstScalar : public KstPrimitive {
     bool _editable;
 };
 
-Q_DECLARE_METATYPE(KstScalar*)
 
-typedef KstSharedPtr<KstScalar> KstScalarPtr;
-typedef KstObjectList<KstScalarPtr> KstScalarList;
-typedef KstObjectMap<KstScalarPtr> KstScalarMap;
-typedef KstObjectCollection<KstScalar> KstScalarCollection;
+typedef KstSharedPtr<Scalar> ScalarPtr;
+typedef KstObjectList<ScalarPtr> ScalarList;
+typedef KstObjectMap<ScalarPtr> ScalarMap;
+typedef KstObjectCollection<Scalar> ScalarCollection;
+
+}
+
+Q_DECLARE_METATYPE(Kst::Scalar*)
 
 #endif
 // vim: ts=2 sw=2 et

@@ -31,6 +31,7 @@
 #include "kstobject.h"
 #include "kstdateparser.h"
 #include "kstobjectlist.h"
+#include "scalar.h"
 
 class QXmlStreamWriter;
 
@@ -46,10 +47,10 @@ struct KstMatrixData {
   double *z; // the data
 };
 
-class KstScalar;
+class Scalar;
 class KstString;
 class KstDataSourceConfigWidget;
-typedef KstSharedPtr<KstScalar> KstScalarPtr;
+typedef KstSharedPtr<Scalar> ScalarPtr;
 
 class KST_EXPORT KstDataSource : public KstObject {
   public:
@@ -241,7 +242,7 @@ class KST_EXPORT KstDataSource : public KstObject {
 
     QSettings *_cfg;
 
-    KstScalarPtr _numFramesScalar;
+    Kst::ScalarPtr _numFramesScalar;
 
     // NOTE: You must bump the version key if you add new member variables
     //       or change or add virtual functions.

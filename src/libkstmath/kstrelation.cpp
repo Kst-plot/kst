@@ -106,12 +106,12 @@ void KstRelation::writeLockInputsAndOutputs() const {
     outputs += (*i).data();
   }
   
-  QList<KstScalarPtr> sc = _inputScalars.values();
-  for (QList<KstScalarPtr>::Iterator i = sc.begin(); i != sc.end(); ++i) {
+  QList<Kst::ScalarPtr> sc = _inputScalars.values();
+  for (QList<Kst::ScalarPtr>::Iterator i = sc.begin(); i != sc.end(); ++i) {
     inputs += (*i).data();
   }
   sc = _outputScalars.values();
-  for (QList<KstScalarPtr>::Iterator i = sc.begin(); i != sc.end(); ++i) {
+  for (QList<Kst::ScalarPtr>::Iterator i = sc.begin(); i != sc.end(); ++i) {
     outputs += (*i).data();
   }
   
@@ -213,7 +213,7 @@ void KstRelation::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (KstScalarMap::ConstIterator i = _outputScalars.begin(); i != _outputScalars.end(); ++i) {
+  for (Kst::ScalarMap::ConstIterator i = _outputScalars.begin(); i != _outputScalars.end(); ++i) {
     if (!(*i)) {
       qWarning() << "Output scalar for data object " << this->tag().displayString() << " is invalid." << endl;
     }
@@ -223,7 +223,7 @@ void KstRelation::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (KstScalarMap::ConstIterator i = _inputScalars.begin(); i != _inputScalars.end(); ++i) {
+  for (Kst::ScalarMap::ConstIterator i = _inputScalars.begin(); i != _inputScalars.end(); ++i) {
     if (!(*i)) {
       qWarning() << "Input scalar for data object " << this->tag().displayString() << " is invalid." << endl;
     }

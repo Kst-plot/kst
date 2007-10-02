@@ -55,7 +55,7 @@ namespace Equation {
       virtual ~Node();
 
       virtual bool isConst() = 0; // can't be const
-      virtual bool collectObjects(KstVectorMap& v, KstScalarMap& s, KstStringMap& t);
+      virtual bool collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
       virtual bool takeVectors(const KstVectorMap& c);
       virtual double value(Context*) = 0;
       virtual void visit(NodeVisitor*);
@@ -73,7 +73,7 @@ namespace Equation {
       BinaryNode(Node *left, Node *right);
       virtual ~BinaryNode();
 
-      virtual bool collectObjects(KstVectorMap& v, KstScalarMap& s, KstStringMap& t);
+      virtual bool collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
       virtual bool takeVectors(const KstVectorMap& c);
       virtual void visit(NodeVisitor*);
       virtual KstObject::UpdateType update(int counter, Context *ctx);
@@ -100,7 +100,7 @@ namespace Equation {
       double value(Context*) { return 0.0; }
 
       bool isConst();
-      bool collectObjects(KstVectorMap& v, KstScalarMap& s, KstStringMap& t);
+      bool collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
       bool takeVectors(const KstVectorMap& c);
       double at(int, Context*);
       Node *node(int idx);
@@ -119,7 +119,7 @@ namespace Equation {
 
       bool isConst();
       double value(Context*);
-      bool collectObjects(KstVectorMap& v, KstScalarMap& s, KstStringMap& t);
+      bool collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
       bool takeVectors(const KstVectorMap& c);
       KstObject::UpdateType update(int counter, Context *ctx);
       QString text() const;
@@ -179,7 +179,7 @@ namespace Equation {
 
       bool isConst();
       double value(Context*);
-      bool collectObjects(KstVectorMap& v, KstScalarMap& s, KstStringMap& t);
+      bool collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
       bool takeVectors(const KstVectorMap& c);
       KstObject::UpdateType update(int counter, Context *ctx);
       QString text() const;
@@ -187,7 +187,7 @@ namespace Equation {
     protected:
       QString _tagName;
       KstVectorPtr _vector;
-      KstScalarPtr _scalar;
+      Kst::ScalarPtr _scalar;
       bool _isEquation;
       Node *_equation;
       QString _vectorIndex;

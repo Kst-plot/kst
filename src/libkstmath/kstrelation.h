@@ -145,8 +145,8 @@ class KST_EXPORT KstRelation : public KstObject {
     QString _typeString, _type;
     KstVectorMap _inputVectors;
     KstVectorMap _outputVectors;
-    KstScalarMap _inputScalars;
-    KstScalarMap _outputScalars;
+    Kst::ScalarMap _inputScalars;
+    Kst::ScalarMap _outputScalars;
     KstStringMap _inputStrings;
     KstStringMap _outputStrings;
     KstMatrixMap _inputMatrices;

@@ -81,7 +81,7 @@ class KST_EXPORT KstEquation : public KstDataObject {
     QString _equation;
 
     KstVectorMap VectorsUsed;
-    KstScalarMap ScalarsUsed;
+    Kst::ScalarMap ScalarsUsed;
 
     void commonConstructor(const QString& in_tag, const QString& equation);
 

@@ -33,7 +33,7 @@ template <class T>
 class KstObjectTreeNode;
 
 class KstMatrix;
-class KstScalar;
+class Scalar;
 class KstString;
 class KstVector;
 

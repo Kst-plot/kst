@@ -23,7 +23,7 @@
 #include <qpointer.h>
 #include "kstobjectcollection.h"
 #include "kstprimitive.h"
-#include "kstscalar.h"
+#include "scalar.h"
 #include "kst_export.h"
 
 class QXmlStreamWriter;
@@ -141,7 +141,7 @@ class KstVector : public KstPrimitive {
     /** access functions for _isScalarList */
     bool isScalarList() const { return _isScalarList; }
     
-    const QHash<QString, KstScalar*>& scalars() const;
+    const QHash<QString, Kst::Scalar*>& scalars() const;
 
     void setLabel(const QString& label_in);
 
@@ -174,7 +174,7 @@ class KstVector : public KstPrimitive {
     int NumNew;
 
     /** Statistics Scalars */
-    QHash<QString, KstScalar*> _scalars;
+    QHash<QString, Kst::Scalar*> _scalars;
 
     /** is the vector monotonically rising */
     bool _is_rising : 1;

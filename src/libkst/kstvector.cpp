@@ -134,7 +134,7 @@ KstVector::~KstVector() {
   // qDebug() << "+++ DELETING VECTOR: " << (void*) this;
   KST::scalarList.lock().writeLock();
   KST::scalarList.setUpdateDisplayTags(false);
-  for (QHash<QString, KstScalar*>::Iterator it = _scalars.begin(); it != _scalars.end(); ++it) {
+  for (QHash<QString, Kst::Scalar*>::Iterator it = _scalars.begin(); it != _scalars.end(); ++it) {
     KST::scalarList.remove(it.value());
     it.value()->_KShared_unref();
   }
@@ -297,28 +297,28 @@ void KstVector::CreateScalars() {
     KstWriteLocker sl(&KST::scalarList.lock());
     KST::scalarList.setUpdateDisplayTags(false);
 
-    KstScalarPtr sp;
-    _scalars.insert("max", sp = new KstScalar(KstObjectTag("Max", tag()), this));
+    Kst::ScalarPtr sp;
+    _scalars.insert("max", sp = new Kst::Scalar(KstObjectTag("Max", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("min", sp = new KstScalar(KstObjectTag("Min", tag()), this));
+    _scalars.insert("min", sp = new Kst::Scalar(KstObjectTag("Min", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("last", sp = new KstScalar(KstObjectTag("Last", tag()), this));
+    _scalars.insert("last", sp = new Kst::Scalar(KstObjectTag("Last", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("first", sp = new KstScalar(KstObjectTag("First", tag()), this));
+    _scalars.insert("first", sp = new Kst::Scalar(KstObjectTag("First", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("mean", sp = new KstScalar(KstObjectTag("Mean", tag()), this));
+    _scalars.insert("mean", sp = new Kst::Scalar(KstObjectTag("Mean", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("sigma", sp = new KstScalar(KstObjectTag("Sigma", tag()), this));
+    _scalars.insert("sigma", sp = new Kst::Scalar(KstObjectTag("Sigma", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("rms", sp = new KstScalar(KstObjectTag("Rms", tag()), this));
+    _scalars.insert("rms", sp = new Kst::Scalar(KstObjectTag("Rms", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("ns", sp = new KstScalar(KstObjectTag("NS", tag()), this));
+    _scalars.insert("ns", sp = new Kst::Scalar(KstObjectTag("NS", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("sum", sp = new KstScalar(KstObjectTag("Sum", tag()), this));
+    _scalars.insert("sum", sp = new Kst::Scalar(KstObjectTag("Sum", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("sumsquared", sp = new KstScalar(KstObjectTag("SumSquared", tag()), this));
+    _scalars.insert("sumsquared", sp = new Kst::Scalar(KstObjectTag("SumSquared", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("minpos", sp = new KstScalar(KstObjectTag("MinPos", tag()), this));
+    _scalars.insert("minpos", sp = new Kst::Scalar(KstObjectTag("MinPos", tag()), this));
     sp->_KShared_ref();
 
     KST::scalarList.setUpdateDisplayTags(true);
@@ -365,7 +365,7 @@ void KstVector::updateScalars() {
 }
 
 
-const QHash<QString, KstScalar*>& KstVector::scalars() const {  
+const QHash<QString, Kst::Scalar*>& KstVector::scalars() const {
   return _scalars;
 }
 
@@ -671,7 +671,7 @@ void KstVector::setLabel(const QString& label_in) {
 
 int KstVector::getUsage() const {
   int adj = 0;
-  for (QHash<QString, KstScalar*>::ConstIterator it = _scalars.begin(); it != _scalars.end(); ++it) {
+  for (QHash<QString, Kst::Scalar*>::ConstIterator it = _scalars.begin(); it != _scalars.end(); ++it) {
     adj += it.value()->getUsage() - 1;
   }
   return KstObject::getUsage() + adj;

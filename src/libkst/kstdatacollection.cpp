@@ -35,7 +35,7 @@ KstVectorCollection KST::vectorList;
 KstMatrixCollection KST::matrixList;
 
 /** The list of Scalars which have been generated */
-KstScalarCollection KST::scalarList;
+Kst::ScalarCollection KST::scalarList;
 
 /** The list of Strings */
 KstStringCollection KST::stringList;

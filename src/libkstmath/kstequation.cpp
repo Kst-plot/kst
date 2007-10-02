@@ -454,7 +454,7 @@ void KstEquation::replaceDependency(KstDataObjectPtr oldObject, KstDataObjectPtr
     newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
   }
   
-  for (KstScalarMap::Iterator j = oldObject->outputScalars().begin(); j != oldObject->outputScalars().end(); ++j) {
+  for (Kst::ScalarMap::Iterator j = oldObject->outputScalars().begin(); j != oldObject->outputScalars().end(); ++j) {
     QString oldTag = j.value()->tagName();
     QString newTag = ((newObject->outputScalars())[j.key()])->tagName();
     newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
@@ -462,7 +462,7 @@ void KstEquation::replaceDependency(KstDataObjectPtr oldObject, KstDataObjectPtr
   
   // and dependencies on matrix stats (there won't be matrices themselves in the expression)
   for (KstMatrixMap::Iterator j = oldObject->outputMatrices().begin(); j != oldObject->outputMatrices().end(); ++j) {
-    QHashIterator<QString, KstScalar*> scalarDictIter(j.value()->scalars());
+    QHashIterator<QString, Kst::Scalar*> scalarDictIter(j.value()->scalars());
     while (scalarDictIter.hasNext()) {
       scalarDictIter.next();
       QString oldTag = scalarDictIter.value()->tagName();
@@ -480,7 +480,7 @@ void KstEquation::replaceDependency(KstDataObjectPtr oldObject, KstDataObjectPtr
       }
     }
     // and dependencies on vector stats
-    QHashIterator<QString, KstScalar*> scalarDictIter(j.value()->scalars());
+    QHashIterator<QString, Kst::Scalar*> scalarDictIter(j.value()->scalars());
     while (scalarDictIter.hasNext()) {
       scalarDictIter.next();
       QString oldTag = scalarDictIter.value()->tagName();
@@ -501,7 +501,7 @@ void KstEquation::replaceDependency(KstVectorPtr oldVector, KstVectorPtr newVect
   QString newExp = _equation.replace("["+oldTag+"]", "["+newTag+"]");
   
   // also replace all occurences of scalar stats for the oldVector
-  QHashIterator<QString, KstScalar*> scalarDictIter(oldVector->scalars());
+  QHashIterator<QString, Kst::Scalar*> scalarDictIter(oldVector->scalars());
   while (scalarDictIter.hasNext()) {
     scalarDictIter.next();
     QString oldTag = scalarDictIter.value()->tagName();
@@ -526,7 +526,7 @@ void KstEquation::replaceDependency(KstMatrixPtr oldMatrix, KstMatrixPtr newMatr
   QString newExp = _equation;
   
   // also replace all occurences of scalar stats for the oldMatrix
-  QHashIterator<QString, KstScalar*> scalarDictIter(oldMatrix->scalars());
+  QHashIterator<QString, Kst::Scalar*> scalarDictIter(oldMatrix->scalars());
   while (scalarDictIter.hasNext()) {
     scalarDictIter.next();
     QString oldTag = scalarDictIter.value()->tagName();

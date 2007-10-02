@@ -18,7 +18,6 @@
 #ifndef LABELPARSER_H
 #define LABELPARSER_H
 
-#include "kstscalar.h"
 #include "kststring.h"
 #include "kst_export.h"
 

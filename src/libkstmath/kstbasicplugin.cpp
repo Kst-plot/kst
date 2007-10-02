@@ -55,7 +55,7 @@ KstDataObjectPtr KstBasicPlugin::makeDuplicate(KstDataObjectDataObjectMap &map) 
   for (KstVectorMap::ConstIterator iter = _inputVectors.begin(); iter != _inputVectors.end(); ++iter) {
     plugin->inputVectors().insert(iter.key(), iter.value());
   }
-  for (KstScalarMap::ConstIterator iter = _inputScalars.begin(); iter != _inputScalars.end(); ++iter) {
+  for (Kst::ScalarMap::ConstIterator iter = _inputScalars.begin(); iter != _inputScalars.end(); ++iter) {
     plugin->inputScalars().insert(iter.key(), iter.value());
   }
   for (KstStringMap::ConstIterator iter = _inputStrings.begin(); iter != _inputStrings.end(); ++iter) {
@@ -68,8 +68,8 @@ KstDataObjectPtr KstBasicPlugin::makeDuplicate(KstDataObjectDataObjectMap &map) 
     KstVectorPtr v = new KstVector(KstObjectTag(iter.value()->tag().tag() + "'", iter.value()->tag().context()), 0, plugin.data()); // FIXME: unique tag generation
     plugin->outputVectors().insert(iter.key(), v);
   }
-  for (KstScalarMap::ConstIterator iter = outputScalars().begin(); iter != outputScalars().end(); ++iter) {
-    KstScalarPtr s = new KstScalar(KstObjectTag(iter.value()->tag().tag() + "'", iter.value()->tag().context()), plugin.data()); // FIXME: unique tag generation
+  for (Kst::ScalarMap::ConstIterator iter = outputScalars().begin(); iter != outputScalars().end(); ++iter) {
+    Kst::ScalarPtr s = new Kst::Scalar(KstObjectTag(iter.value()->tag().tag() + "'", iter.value()->tag().context()), plugin.data()); // FIXME: unique tag generation
     plugin->outputScalars().insert(iter.key(), s);
   }
   for (KstStringMap::ConstIterator iter = outputStrings().begin(); iter != outputStrings().end(); ++iter) {
@@ -102,8 +102,8 @@ KstVectorPtr KstBasicPlugin::inputVector(const QString& vector) const {
 }
 
 
-KstScalarPtr KstBasicPlugin::inputScalar(const QString& scalar) const {
-  KstScalarMap::ConstIterator i = _inputScalars.find(scalar);
+Kst::ScalarPtr KstBasicPlugin::inputScalar(const QString& scalar) const {
+  Kst::ScalarMap::ConstIterator i = _inputScalars.find(scalar);
   if (i != _inputScalars.end())
     return *i;
   else
@@ -129,8 +129,8 @@ KstVectorPtr KstBasicPlugin::outputVector(const QString& vector) const {
 }
 
 
-KstScalarPtr KstBasicPlugin::outputScalar(const QString& scalar) const {
-  KstScalarMap::ConstIterator i = _outputScalars.find(scalar);
+Kst::ScalarPtr KstBasicPlugin::outputScalar(const QString& scalar) const {
+  Kst::ScalarMap::ConstIterator i = _outputScalars.find(scalar);
   if (i != _outputScalars.end())
     return *i;
   else
@@ -158,7 +158,7 @@ void KstBasicPlugin::setInputVector(const QString &type, KstVectorPtr ptr) {
 }
 
 
-void KstBasicPlugin::setInputScalar(const QString &type, KstScalarPtr ptr) {
+void KstBasicPlugin::setInputScalar(const QString &type, Kst::ScalarPtr ptr) {
   // TODO: deal with tags
   if (ptr) {
     _inputScalars[type] = ptr;
@@ -189,7 +189,7 @@ void KstBasicPlugin::setOutputVector(const QString &type, const QString &name) {
 
 void KstBasicPlugin::setOutputScalar(const QString &type, const QString &name) {
   QString txt = !name.isEmpty() ? name : type;
-  KstScalarPtr s = new KstScalar(KstObjectTag(txt, tag()), this);
+  Kst::ScalarPtr s = new Kst::Scalar(KstObjectTag(txt, tag()), this);
   _outputScalars.insert(type, s);
 }
 
@@ -263,7 +263,7 @@ void KstBasicPlugin::load(const QDomElement &e) {
         _outputVectors.insert(e.attribute("name"), v);
       } else if (e.tagName() == "oscalar") {
         KstWriteLocker blockScalarUpdates(&KST::scalarList.lock());
-        KstScalarPtr sp = new KstScalar(KstObjectTag(e.text(), tag()), this);
+        Kst::ScalarPtr sp = new Kst::Scalar(KstObjectTag(e.text(), tag()), this);
         _outputScalars.insert(e.attribute("name"), sp);
       } else if (e.tagName() == "ostring") {
         KstWriteLocker blockStringUpdates(&KST::stringList.lock());
@@ -295,7 +295,7 @@ void KstBasicPlugin::createFitScalars() {
            paramName = parameterName(++i)) {
         double scalarValue = vectorParam->value(i);
         if (!_outputScalars.contains(paramName)) {
-          KstScalarPtr s = new KstScalar(KstObjectTag(paramName, tag()), this, scalarValue);
+          Kst::ScalarPtr s = new Kst::Scalar(KstObjectTag(paramName, tag()), this, scalarValue);
           s->KstObject::writeLock();  // must write lock, since fit scalars are created from update()
           _outputScalars.insert(paramName, s);
         } else {
@@ -326,7 +326,7 @@ QString KstBasicPlugin::label(int precision) const {
     for (strParamName = parameterName(0);
         !strParamName.isEmpty() && i < length;
         strParamName = parameterName(++i)) {
-      KstScalarPtr scalar = outputScalars()[strParamName];
+      Kst::ScalarPtr scalar = outputScalars()[strParamName];
       if (scalar) {
         strValue = QString::number(scalar->value(), 'g', precision);
         label += i18n("\n%1: %2").arg(strParamName).arg(strValue);
@@ -348,7 +348,7 @@ void KstBasicPlugin::save(QTextStream& ts, const QString& indent) {
         << Qt::escape(i.value()->tag().tagString())
         << "</ivector>" << endl;
   }
-  for (KstScalarMap::Iterator i = _inputScalars.begin(); i != _inputScalars.end(); ++i) {
+  for (Kst::ScalarMap::Iterator i = _inputScalars.begin(); i != _inputScalars.end(); ++i) {
     ts << l2 << "<iscalar name=\"" << Qt::escape(i.key()) << "\">"
         << Qt::escape(i.value()->tag().tagString())
         << "</iscalar>" << endl;
@@ -366,7 +366,7 @@ void KstBasicPlugin::save(QTextStream& ts, const QString& indent) {
     ts << "\">" << Qt::escape(i.value()->tag().tag())
         << "</ovector>" << endl;
   }
-  for (KstScalarMap::Iterator i = _outputScalars.begin(); i != _outputScalars.end(); ++i) {
+  for (Kst::ScalarMap::Iterator i = _outputScalars.begin(); i != _outputScalars.end(); ++i) {
     ts << l2 << "<oscalar name=\"" << Qt::escape(i.key()) << "\">"
         << Qt::escape(i.value()->tag().tag())
         << "</oscalar>" << endl;
@@ -460,7 +460,7 @@ void KstBasicPlugin::updateOutput(int updateCounter) const {
   QStringList os = outputScalarList();
   QStringList::ConstIterator osI = os.begin();
   for (; osI != os.end(); ++osI) {
-    if (KstScalarPtr o = outputScalar(*osI)) {
+    if (Kst::ScalarPtr o = outputScalar(*osI)) {
       Q_ASSERT(o->myLockStatus() == KstRWLock::WRITELOCKED);
       o->update(updateCounter);
     }

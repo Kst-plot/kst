@@ -25,7 +25,7 @@ SOURCES += \
     kstdateparser.cpp \
     #  Needs porting, but is unused anyway
     #ksttimezones.cpp \
-    kstscalar.cpp \
+    scalar.cpp \
     # $(PROCPS_COPY) \
     $$PROCPS \
     kststring.cpp \
@@ -76,7 +76,7 @@ HEADERS += \
     kstrevision.h \
     datamatrix.h \
     datavector.h \
-    kstscalar.h \
+    scalar.h \
     kstsharedptr.h \
     generatedmatrix.h \
     kststring.h \

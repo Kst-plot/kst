@@ -105,7 +105,7 @@ Node::~Node() {
 }
 
 
-bool Node::collectObjects(KstVectorMap&, KstScalarMap&, KstStringMap&) {
+bool Node::collectObjects(KstVectorMap&, Kst::ScalarMap&, KstStringMap&) {
   return true;
 }
 
@@ -141,7 +141,7 @@ BinaryNode::~BinaryNode() {
 }
 
 
-bool BinaryNode::collectObjects(KstVectorMap& v, KstScalarMap& s, KstStringMap& t) {
+bool BinaryNode::collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap& t) {
   bool ok = true;
   ok = _left->collectObjects(v, s, t) ? ok : false;
   ok = _right->collectObjects(v, s, t) ? ok : false;
@@ -482,7 +482,7 @@ bool Function::isConst() {
 }
 
 
-bool Function::collectObjects(KstVectorMap& v, KstScalarMap& s, KstStringMap& t) {
+bool Function::collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap& t) {
   return _args->collectObjects(v, s, t);
 }
 
@@ -533,7 +533,7 @@ bool ArgumentList::isConst() {
 }
 
 
-bool ArgumentList::collectObjects(KstVectorMap& v, KstScalarMap& s, KstStringMap& t) {
+bool ArgumentList::collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap& t) {
   bool ok = true;
   foreach (Node *i, _args) {
     ok = i->collectObjects(v, s, t) ? ok : false;
@@ -737,7 +737,7 @@ bool Data::isConst() {
 }
 
 
-bool Data::collectObjects(KstVectorMap& v, KstScalarMap& s, KstStringMap& t) {
+bool Data::collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap& t) {
   if (_isEquation) {
     if (_equation) {
       _equation->collectObjects(v, s, t);

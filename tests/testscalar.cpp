@@ -16,7 +16,7 @@
 #include <QDomDocument>
 
 #include <kstmath.h>
-#include <kstscalar.h>
+#include <scalar.h>
 #include <kstdatacollection.h>
 #include <kstdataobjectcollection.h>
 
@@ -63,7 +63,7 @@ void TestScalar::cleanupTestCase() {
 
 
 void TestScalar::testScalar() {
-  KstScalarPtr sp = new KstScalar;
+  Kst::ScalarPtr sp = new Kst::Scalar;
   QVERIFY(!sp->tagName().isEmpty());
   QCOMPARE(sp->value(), 0.0);
   *sp = 3.1415;
@@ -87,7 +87,7 @@ void TestScalar::testScalar() {
   *sp = 1.1415;
   QCOMPARE(listener->_trigger, 2);
 
-  KstScalarPtr sp2 = new KstScalar(KstObjectTag::fromString(sp->tagName()));
+  Kst::ScalarPtr sp2 = new Kst::Scalar(KstObjectTag::fromString(sp->tagName()));
 
   QVERIFY(sp->displayable());
   QVERIFY(sp2->displayable());
@@ -96,7 +96,7 @@ void TestScalar::testScalar() {
   QDomElement e;
   n = makeDOMDocument("load1", "2.14159265").firstChild();
   e = n.toElement();
-  KstScalarPtr sp3 = new KstScalar(e);
+  Kst::ScalarPtr sp3 = new Kst::Scalar(e);
   QCOMPARE(sp3->orphan(), false);
   QCOMPARE(sp3->value(), 2.14159265);
   QCOMPARE(sp3->tagName(), QLatin1String("load1"));
@@ -104,7 +104,7 @@ void TestScalar::testScalar() {
 
   n = makeDOMDocument("55.4232", "55.4232", true).firstChild();
   e = n.toElement();
-  KstScalarPtr sp4 = new KstScalar(e);
+  Kst::ScalarPtr sp4 = new Kst::Scalar(e);
   QVERIFY(sp4->orphan());
   QCOMPARE(sp4->value(), 55.4232);
   QCOMPARE(sp4->tagName(), QLatin1String("55.4232"));
@@ -112,18 +112,18 @@ void TestScalar::testScalar() {
 
   n = makeDOMDocument("load2", "NAN").firstChild();
   e = n.toElement();
-  sp4 = new KstScalar(e);
+  sp4 = new Kst::Scalar(e);
   QVERIFY(sp4->value() != sp4->value());
 
   n = makeDOMDocument("load3", "INF").firstChild();
   e = n.toElement();
-  sp4 = new KstScalar(e);
+  sp4 = new Kst::Scalar(e);
 
   QVERIFY(sp4->value() == INF);
 
   n = makeDOMDocument("load4", "-INF").firstChild();
   e = n.toElement();
-  sp4 = new KstScalar(e);
+  sp4 = new Kst::Scalar(e);
 
   QVERIFY(sp4->value() == -INF);
 

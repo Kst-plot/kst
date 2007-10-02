@@ -15,7 +15,7 @@
 #include <QWidget>
 #include "ui_scalarselector.h"
 
-#include <kstscalar.h>
+#include <scalar.h>
 
 #include "kst_export.h"
 
@@ -27,8 +27,8 @@ class KST_EXPORT ScalarSelector : public QWidget, public Ui::ScalarSelector {
     ScalarSelector(QWidget *parent = 0);
     virtual ~ScalarSelector();
 
-    KstScalarPtr selectedScalar() const;
-    void setSelectedScalar(KstScalarPtr selectedScalar);
+    ScalarPtr selectedScalar() const;
+    void setSelectedScalar(ScalarPtr selectedScalar);
 
   Q_SIGNALS:
     void selectionChanged();

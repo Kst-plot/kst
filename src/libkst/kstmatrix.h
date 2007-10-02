@@ -19,7 +19,7 @@
 #define KSTMATRIX_H
 
 #include <qhash.h>
-#include "kstscalar.h"
+#include "scalar.h"
 #include "kstprimitive.h"
 
 class KstMatrix;
@@ -103,7 +103,7 @@ class KST_EXPORT KstMatrix : public KstPrimitive {
     virtual void setTagName(const KstObjectTag& tag);
 
     // the statistics scalars for this matrix
-    const QHash<QString, KstScalar*>& scalars() const;
+    const QHash<QString, Kst::Scalar*>& scalars() const;
 
     // set the labels for this matrix
     void setLabel(const QString& newLabel);
@@ -138,7 +138,7 @@ class KST_EXPORT KstMatrix : public KstPrimitive {
     double _stepX;
     double _stepY;
     int _numNew; // number of new samples
-    QHash<QString, KstScalar*> _statScalars; // statistics scalars
+    QHash<QString, Kst::Scalar*> _statScalars; // statistics scalars
     bool _editable : 1;
     bool _saveable : 1;
 
