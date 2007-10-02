@@ -36,7 +36,7 @@ SOURCES += \
     kstvector.cpp \
     kstsvector.cpp \
     editablevector.cpp \
-    kstrvector.cpp \
+    datavector.cpp \
     kstvectordefaults.cpp \
     kstmatrixdefaults.cpp \
     kstprimitive.cpp \
@@ -75,7 +75,7 @@ HEADERS += \
     kstprimitive.h \
     kstrevision.h \
     datamatrix.h \
-    kstrvector.h \
+    datavector.h \
     kstscalar.h \
     kstsharedptr.h \
     kstsmatrix.h \

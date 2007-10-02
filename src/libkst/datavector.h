@@ -1,5 +1,5 @@
 /***************************************************************************
-                          kstvector.h  -  description
+                          datavector.h  -  description
                              -------------------
     begin                : Fri Sep 22 2000
     copyright            : (C) 2000 by cbn
@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTRVECTOR_H
-#define KSTRVECTOR_H
+#ifndef DATAVECTOR_H
+#define DATAVECTOR_H
 
 #include "kstvector.h"
 
@@ -27,20 +27,22 @@ namespace Equation {
   class Node;
 }
 
+namespace Kst {
+
 /**A class for handling data vectors for kst.
  *@author cbn
  */
    
-class KST_EXPORT KstRVector : public KstVector {
+class KST_EXPORT DataVector : public KstVector {
 public:
   /** Create an RVECTOR */
-  KstRVector(KstDataSourcePtr file, const QString &field,
+  DataVector(KstDataSourcePtr file, const QString &field,
              KstObjectTag tag,
              int f0, int n,
              int skip, bool in_doSkip,
              bool in_doAve);
 
-  KstRVector(const QString &tag, const QByteArray &data,
+  DataVector(const QString &tag, const QByteArray &data,
              const QString &provider = QString(), const QString &file = QString(),
              const QString &field = QString(), int start = -1, int num = -1,
              int skip = -1, bool doAve = false,
@@ -48,9 +50,9 @@ public:
              int o_n = -2, int o_f = -2,
              int o_s = -1, bool o_ave = false);
 
-  virtual ~KstRVector();
+  virtual ~DataVector();
 
-  /** change the properties of a kstrvector */
+  /** change the properties of a DataVector */
   void change(KstDataSourcePtr file, const QString &field,
               KstObjectTag tag,
               int f0, int n, int skip,
@@ -119,7 +121,7 @@ public:
   void setFromEnd();
   
   // make a copy
-  KstSharedPtr<KstRVector> makeDuplicate() const;
+  KstSharedPtr<DataVector> makeDuplicate() const;
 
 private:
   KstObject::UpdateType doUpdate(bool force = false);
@@ -172,8 +174,10 @@ private:
   bool _dontUseSkipAccel;
 };
 
-typedef KstSharedPtr<KstRVector> KstRVectorPtr;
-typedef KstObjectList<KstRVectorPtr> KstRVectorList;
+typedef KstSharedPtr<DataVector> DataVectorPtr;
+typedef KstObjectList<DataVectorPtr> DataVectorList;
+
+}
 
 #endif
 // vim: ts=2 sw=2 et

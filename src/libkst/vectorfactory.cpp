@@ -15,7 +15,7 @@
 #include "kstvector.h"
 #include "kstsvector.h"
 #include "editablevector.h"
-#include "kstrvector.h"
+#include "datavector.h"
 #include "kstdatacollection.h"
 
 namespace Kst {
@@ -231,7 +231,7 @@ KstPrimitivePtr RVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
     return 0;
   }
 
-  KstVectorPtr vector = new KstRVector(tag, data, provider, file, field, start, count, skip, doAve);
+  KstVectorPtr vector = new Kst::DataVector(tag, data, provider, file, field, start, count, skip, doAve);
   return vector.data();
 }
 

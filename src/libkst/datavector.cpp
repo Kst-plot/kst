@@ -1,5 +1,5 @@
 /***************************************************************************
-                          kstrvector.cpp  -  description
+                          datavector.cpp  -  description
                              -------------------
     begin                : Fri Sep 22 2000
     copyright            : (C) 2000 by cbn
@@ -28,7 +28,7 @@
 
 #include "kstdatacollection.h"
 #include "kstdebug.h"
-#include "kstrvector.h"
+#include "datavector.h"
 #include "kstmath.h"
 
 // ReqNF <=0 means read from ReqF0 to end of File
@@ -41,8 +41,10 @@
 //  > 1        < 0       read the last ReqNF frames from the file
 //  > 1        >=0       Read ReqNF frames starting at frame ReqF0
 
-/** Create a KstRVector: raw data from a file */
-KstRVector::KstRVector(KstDataSourcePtr in_file, const QString &in_field,
+namespace Kst {
+
+/** Create a DataVector: raw data from a file */
+DataVector::DataVector(KstDataSourcePtr in_file, const QString &in_field,
                        KstObjectTag in_tag,
                        int in_f0, int in_n, int skip, bool in_DoSkip,
                        bool in_DoAve)
@@ -52,7 +54,7 @@ KstRVector::KstRVector(KstDataSourcePtr in_file, const QString &in_field,
 }
 
 
-KstRVector::KstRVector(const QString &tag, const QByteArray &data,
+DataVector::DataVector(const QString &tag, const QByteArray &data,
                        const QString &provider, const QString &file,
                        const QString &field, int start, int num,
                        int skip, bool doAve,
@@ -140,7 +142,7 @@ KstRVector::KstRVector(const QString &tag, const QByteArray &data,
 }
 
 
-void KstRVector::commonRVConstructor(KstDataSourcePtr in_file,
+void DataVector::commonRVConstructor(KstDataSourcePtr in_file,
                                      const QString &in_field, int in_f0,
                                      int in_n, int in_skip, bool in_DoSkip,
                                      bool in_DoAve) {
@@ -182,7 +184,7 @@ void KstRVector::commonRVConstructor(KstDataSourcePtr in_file,
 }
 
 
-void KstRVector::change(KstDataSourcePtr in_file, const QString &in_field,
+void DataVector::change(KstDataSourcePtr in_file, const QString &in_field,
                         KstObjectTag in_tag,
                         int in_f0, int in_n,
                         int in_skip, bool in_DoSkip,
@@ -220,7 +222,7 @@ void KstRVector::change(KstDataSourcePtr in_file, const QString &in_field,
 }
 
 
-void KstRVector::changeFile(KstDataSourcePtr in_file) {
+void DataVector::changeFile(KstDataSourcePtr in_file) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (!in_file) {
@@ -238,7 +240,7 @@ void KstRVector::changeFile(KstDataSourcePtr in_file) {
 }
 
 
-void KstRVector::changeFrames(int in_f0, int in_n,
+void DataVector::changeFrames(int in_f0, int in_n,
                               int in_skip, bool in_DoSkip,
                               bool in_DoAve) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
@@ -266,7 +268,7 @@ void KstRVector::changeFrames(int in_f0, int in_n,
 }
 
 
-void KstRVector::setFromEnd() {
+void DataVector::setFromEnd() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   ReqF0 = -1;
@@ -279,7 +281,7 @@ void KstRVector::setFromEnd() {
 }
 
 
-KstRVector::~KstRVector() {  
+DataVector::~DataVector() {
   _file = 0;
 
   if (AveReadBuf) {
@@ -289,56 +291,56 @@ KstRVector::~KstRVector() {
 }
 
 
-bool KstRVector::readToEOF() const {
+bool DataVector::readToEOF() const {
   return ReqNF <= 0;
 }
 
 
-bool KstRVector::countFromEOF() const {
+bool DataVector::countFromEOF() const {
   return ReqF0 < 0;
 }
 
 
 /** Return Starting Frame of Vector */
-int KstRVector::startFrame() const {
+int DataVector::startFrame() const {
   return F0;
 }
 
 
 /** Return frames per skip to read */
-int KstRVector::skip() const {
+int DataVector::skip() const {
   return DoSkip ? Skip : 0;
 }
 
 
-bool KstRVector::doSkip() const {
+bool DataVector::doSkip() const {
   return DoSkip;
 }
 
 
-bool KstRVector::doAve() const {
+bool DataVector::doAve() const {
   return DoAve;
 }
 
 
 /** Return frames held in Vector */
-int KstRVector::numFrames() const {
+int DataVector::numFrames() const {
   return NF;
 }
 
 
-int KstRVector::reqNumFrames() const {
+int DataVector::reqNumFrames() const {
   return ReqNF;
 }
 
 
-int KstRVector::reqStartFrame() const {
+int DataVector::reqStartFrame() const {
   return ReqF0;
 }
 
 
 /** Save vector information */
-void KstRVector::save(QXmlStreamWriter &s) {
+void DataVector::save(QXmlStreamWriter &s) {
   if (_file) {    
     s.writeStartElement("rvector");
     _file->readLock();
@@ -366,7 +368,7 @@ void KstRVector::save(QXmlStreamWriter &s) {
 
 
 /** return the name of the file */
-QString KstRVector::filename() const {
+QString DataVector::filename() const {
   QString rc;
   if (_file) {
     _file->readLock();
@@ -378,12 +380,12 @@ QString KstRVector::filename() const {
 
 
 /** return the field */
-const QString& KstRVector::field() const {
+const QString& DataVector::field() const {
   return _field;
 }
 
 
-QString KstRVector::label() const {
+QString DataVector::label() const {
   bool ok;
   QString label;
 
@@ -404,7 +406,7 @@ QString KstRVector::label() const {
 }
 
 
-void KstRVector::reset() { // must be called with a lock
+void DataVector::reset() { // must be called with a lock
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   _dontUseSkipAccel = false;
@@ -418,7 +420,7 @@ void KstRVector::reset() { // must be called with a lock
 }
 
 
-void KstRVector::checkIntegrity() {
+void DataVector::checkIntegrity() {
   if (DoSkip && Skip < 1) {
     Skip = 1;
   }
@@ -444,7 +446,7 @@ void KstRVector::checkIntegrity() {
 
 
 /** Update an RVECTOR */
-KstObject::UpdateType KstRVector::update(int update_counter) {
+KstObject::UpdateType DataVector::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
@@ -487,7 +489,7 @@ KstObject::UpdateType KstRVector::update(int update_counter) {
 //     read with skip enabled are read on 'skip boundries'... ie, the first samples of
 //     frame 0, Skip, 2*Skip... N*skip, and never M*Skip+1.
 
-KstObject::UpdateType KstRVector::doUpdate(bool force) {
+KstObject::UpdateType DataVector::doUpdate(bool force) {
   int i, k, shift, n_read=0;
   int ave_nread;
   int new_f0, new_nf;
@@ -689,13 +691,13 @@ KstObject::UpdateType KstRVector::doUpdate(bool force) {
 
 
 /** Returns intrinsic samples per frame */
-int KstRVector::samplesPerFrame() const {
+int DataVector::samplesPerFrame() const {
   return SPF;
 }
 
 
 /** return true if it has a valid file and field, or false otherwise */
-bool KstRVector::isValid() const {
+bool DataVector::isValid() const {
   if (_file) {
     _file->readLock();
     bool rc = _file->isValidField(_field);
@@ -706,7 +708,7 @@ bool KstRVector::isValid() const {
 }
 
 
-int KstRVector::fileLength() const {
+int DataVector::fileLength() const {
   if (_file) {
     _file->readLock();
     int rc = _file->frameCount(_field);
@@ -719,7 +721,7 @@ int KstRVector::fileLength() const {
 }
 
 
-void KstRVector::reload() {
+void DataVector::reload() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (_file) {
@@ -746,15 +748,16 @@ void KstRVector::reload() {
 }
 
 
-KstDataSourcePtr KstRVector::dataSource() const {
+KstDataSourcePtr DataVector::dataSource() const {
   return _file;
 }
 
 
-KstRVectorPtr KstRVector::makeDuplicate() const {
+DataVectorPtr DataVector::makeDuplicate() const {
   QString newTag = tag().tag() + "'";
-  return new KstRVector(_file, _field, KstObjectTag(newTag, tag().context()), ReqF0, ReqNF, Skip, DoSkip, DoAve);
+  return new DataVector(_file, _field, KstObjectTag(newTag, tag().context()), ReqF0, ReqNF, Skip, DoSkip, DoAve);
 }
 
 
+}
 // vim: ts=2 sw=2 et

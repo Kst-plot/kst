@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include "kstvectordefaults.h"
-#include "kstrvector.h"
+#include "datavector.h"
 #include "kstdatacollection.h"
 #include "stdinsource.h"
 
@@ -81,7 +81,7 @@ int KstVectorDefaults::skip() const {
 
 void KstVectorDefaults::sync() {
   KST::vectorList.lock().readLock();
-  KstRVectorList vl = kstObjectSubList<KstVector,KstRVector>(KST::vectorList);
+  Kst::DataVectorList vl = kstObjectSubList<KstVector,Kst::DataVector>(KST::vectorList);
   KST::vectorList.lock().unlock();
   int j = vl.count() - 1;
 

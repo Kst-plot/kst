@@ -20,7 +20,7 @@
 
 // hack to make main() a friend of kstdatasource
 #define protected public
-#include "kstrvector.h"
+#include "datavector.h"
 #include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"
 #undef protected
@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
   }
 
   /** make vectors and fill the list **/
-  QList<KstRVector*> vlist;
+  QList<Kst::DataVector*> vlist;
 
   for (int i = 0; i < n_field; i++) {
     if (!file->isValidField(field_list[i])) {
@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
               field_list[i], in_filename);
       return -3;
     }
-    KstRVectorPtr v = new KstRVector(file, field_list[i], KstObjectTag(field_list[i], file->tag()), start_frame, n_frames, n_skip, n_skip>0, do_ave);
+    Kst::DataVectorPtr v = new Kst::DataVector(file, field_list[i], KstObjectTag(field_list[i], file->tag()), start_frame, n_frames, n_skip, n_skip>0, do_ave);
     vlist.append(v);
   }
 

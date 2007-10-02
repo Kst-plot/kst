@@ -14,7 +14,7 @@
 #include "dialogpage.h"
 #include "datasourcedialog.h"
 
-#include "kstrvector.h"
+#include "datavector.h"
 #include "kstsvector.h"
 
 #include "kstdatacollection.h"
@@ -249,7 +249,7 @@ KstObjectPtr VectorDialog::createNewDataVector() const {
 //            << "\n\tdoFilter:" << (dataRange->doFilter() ? "true" : "false")
 //            << endl;
 
-  KstRVectorPtr vector = new KstRVector(
+  Kst::DataVectorPtr vector = new Kst::DataVector(
       dataSource, field, tag,
       dataRange->countFromEnd() ? -1 : int(dataRange->start()),
       dataRange->readToEnd() ? -1 : int(dataRange->range()),

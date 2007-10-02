@@ -28,7 +28,7 @@
 #include "kstdebug.h"
 #include "kstlinestyle.h"
 #include "kstmath.h"
-#include "kstrvector.h"
+#include "datavector.h"
 #include "kstvcurve.h"
 #include "ksttimers.h"
 
@@ -605,7 +605,7 @@ void KstVCurve::showEditDialog() {
 
 
 int KstVCurve::samplesPerFrame() const {
-  const KstRVector *rvp = dynamic_cast<const KstRVector*>(_inputVectors[COLOR_YVECTOR].data());
+  const Kst::DataVector *rvp = dynamic_cast<const Kst::DataVector*>(_inputVectors[COLOR_YVECTOR].data());
   return rvp ? rvp->samplesPerFrame() : 1;
 }
 
