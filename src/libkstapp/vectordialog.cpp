@@ -15,7 +15,7 @@
 #include "datasourcedialog.h"
 
 #include "datavector.h"
-#include "kstsvector.h"
+#include "generatedvector.h"
 
 #include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"
@@ -278,7 +278,7 @@ KstObjectPtr VectorDialog::createNewGeneratedVector() const {
 //            << "\n\ttag:" << tag.tag()
 //            << endl;
 
-  KstSVectorPtr vector = new KstSVector(from, to, numberOfSamples, tag);
+  GeneratedVectorPtr vector = new GeneratedVector(from, to, numberOfSamples, tag);
   return static_cast<KstObjectPtr>(vector);
 }
 

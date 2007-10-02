@@ -19,7 +19,6 @@
 #include "mainwindow.h"
 #include "tabwidget.h"
 
-#include "kstsvector.h"
 #include "kstvcurve.h"
 #include "kstdatacollection.h"
 #include "kstdataobjectcollection.h"

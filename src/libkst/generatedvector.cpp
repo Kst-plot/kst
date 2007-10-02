@@ -1,5 +1,5 @@
 /***************************************************************************
-                          kstsvector.cpp - a vector from x0 to x1 with n pts
+                          generatedvector.cpp - a vector from x0 to x1 with n pts
                              -------------------
     begin                : March, 2005
     copyright            : (C) 2005 by cbn
@@ -14,12 +14,14 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "kstsvector.h"
+#include "generatedvector.h"
 #include <qdebug.h>
 #include <qtextstream.h>
 #include <QXmlStreamWriter>
 
-KstSVector::KstSVector(const QString &tag, const QByteArray &data, double x0, double x1, int n)
+namespace Kst {
+
+GeneratedVector::GeneratedVector(const QString &tag, const QByteArray &data, double x0, double x1, int n)
   : KstVector(tag, data) {
   _saveable = true;
   _saveData = false;
@@ -27,7 +29,7 @@ KstSVector::KstSVector(const QString &tag, const QByteArray &data, double x0, do
 }
 
 
-KstSVector::KstSVector(double x0, double x1, int n, KstObjectTag tag)
+GeneratedVector::GeneratedVector(double x0, double x1, int n, KstObjectTag tag)
   : KstVector(tag, n) {
   _saveable = true;
   _saveData = false;
@@ -35,7 +37,7 @@ KstSVector::KstSVector(double x0, double x1, int n, KstObjectTag tag)
 }
 
 
-void KstSVector::save(QXmlStreamWriter &s) {
+void GeneratedVector::save(QXmlStreamWriter &s) {
   s.writeStartElement("svector");
   s.writeAttribute("tag", tag().tagString());
   s.writeAttribute("min", QString::number(min()));
@@ -45,7 +47,7 @@ void KstSVector::save(QXmlStreamWriter &s) {
 }
 
 
-void KstSVector::changeRange(double x0, double x1, int n) {
+void GeneratedVector::changeRange(double x0, double x1, int n) {
   if (n < 2) {
     n = 2;
   }
@@ -74,7 +76,7 @@ void KstSVector::changeRange(double x0, double x1, int n) {
 }
 
 
-KstObject::UpdateType KstSVector::update(int update_counter) {
+KstObject::UpdateType GeneratedVector::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
@@ -87,9 +89,10 @@ KstObject::UpdateType KstSVector::update(int update_counter) {
 }
 
 
-void KstSVector::setSaveData(bool save) {
+void GeneratedVector::setSaveData(bool save) {
   Q_UNUSED(save)
 }
 
+}
 
 // vim: ts=2 sw=2 et

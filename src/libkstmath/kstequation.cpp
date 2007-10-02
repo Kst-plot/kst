@@ -34,7 +34,7 @@
 #include "kstdebug.h"
 #include "kstequation.h"
 #include "kst_i18n.h"
-#include "kstsvector.h"
+#include "generatedvector.h"
 
 extern "C" int yyparse();
 extern "C" void *ParsedEquation;
@@ -51,7 +51,7 @@ KstEquation::KstEquation(const QString& in_tag, const QString& equation, double 
   KstVectorPtr xvector;
   QString vtag = KST::suggestVectorName(QString( "(%1..%2)" ).arg( x0 ).arg( x1 ) );
 
-  xvector = new KstSVector(x0, x1, nx, KstObjectTag(vtag, QStringList(in_tag)));
+  xvector = new Kst::GeneratedVector(x0, x1, nx, KstObjectTag(vtag, QStringList(in_tag)));
 
   _doInterp = false;
   _xInVector = _inputVectors.insert(XINVECTOR, xvector);

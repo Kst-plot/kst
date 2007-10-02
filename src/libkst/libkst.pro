@@ -34,7 +34,7 @@ SOURCES += \
     generatedmatrix.cpp \
     editablematrix.cpp \
     kstvector.cpp \
-    kstsvector.cpp \
+    generatedvector.cpp \
     editablevector.cpp \
     datavector.cpp \
     kstvectordefaults.cpp \
@@ -80,7 +80,7 @@ HEADERS += \
     kstsharedptr.h \
     generatedmatrix.h \
     kststring.h \
-    kstsvector.h \
+    generatedvector.h \
     ksttimers.h \
     ksttimezones.h \
     kstvectordefaults.h \
