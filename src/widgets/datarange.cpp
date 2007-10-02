@@ -122,8 +122,8 @@ void DataRange::countFromEndChanged() {
     setReadToEnd(false);
   }
 
-  _range->setEnabled(!countFromEnd());
-  _rangeUnits->setEnabled(!countFromEnd());
+  _start->setEnabled(!countFromEnd());
+  _startUnits->setEnabled(!countFromEnd());
 }
 
 
@@ -132,8 +132,8 @@ void DataRange::readToEndChanged() {
     setCountFromEnd(false);
   }
 
-  _start->setEnabled(!readToEnd());
-  _startUnits->setEnabled(!readToEnd());
+  _range->setEnabled(!readToEnd());
+  _rangeUnits->setEnabled(!readToEnd());
 }
 
 
