@@ -30,7 +30,7 @@ SOURCES += \
     $$PROCPS \
     kststring.cpp \
     kstmatrix.cpp \
-    kstrmatrix.cpp \
+    datamatrix.cpp \
     kstsmatrix.cpp \
     editablematrix.cpp \
     kstvector.cpp \
@@ -74,7 +74,7 @@ HEADERS += \
     kstobject.h \
     kstprimitive.h \
     kstrevision.h \
-    kstrmatrix.h \
+    datamatrix.h \
     kstrvector.h \
     kstscalar.h \
     kstsharedptr.h \

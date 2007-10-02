@@ -1,18 +1,12 @@
 /***************************************************************************
-                          kstrmatrix.cpp  -  matrix from file
-                             -------------------
-    begin                : 2005
-    copyright            : (C) 2005 by University of British Columbia
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
+ *   copyright : (C) 2005  University of British Columbia                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
- *   Permission is granted to link with any opensource library             *
  *                                                                         *
  ***************************************************************************/
 
@@ -26,13 +20,15 @@
 
 #include "kstdatacollection.h"
 #include "kstdebug.h"
-#include "kstrmatrix.h"
+#include "datamatrix.h"
 
 
 // xStart, yStart < 0             count from end
 // xNumSteps, yNumSteps < 1       read to end
 
-KstRMatrix::KstRMatrix(KstDataSourcePtr file, const QString &field, KstObjectTag tag,
+namespace Kst {
+
+DataMatrix::DataMatrix(KstDataSourcePtr file, const QString &field, KstObjectTag tag,
                        int xStart, int yStart,
                        int xNumSteps, int yNumSteps,
                        bool doAve, bool doSkip, int skip)
@@ -41,7 +37,7 @@ KstRMatrix::KstRMatrix(KstDataSourcePtr file, const QString &field, KstObjectTag
 }
 
 
-KstRMatrix::KstRMatrix(const QDomElement &e) : KstMatrix(KstObjectTag::invalidTag, 0L, 1,1,0,0,1,1) {
+DataMatrix::DataMatrix(const QDomElement &e) : KstMatrix(KstObjectTag::invalidTag, 0L, 1,1,0,0,1,1) {
   KstDataSourcePtr in_file = 0L, in_provider = 0L;
   QString in_field;
   QString in_tag;
@@ -105,7 +101,7 @@ KstRMatrix::KstRMatrix(const QDomElement &e) : KstMatrix(KstObjectTag::invalidTa
 }
 
 
-void KstRMatrix::save(QTextStream &ts, const QString& indent) {
+void DataMatrix::save(QTextStream &ts, const QString& indent) {
   if (_file) {
 
     QString indent2 = "  ";
@@ -128,12 +124,12 @@ void KstRMatrix::save(QTextStream &ts, const QString& indent) {
   }
 }
 
-KstRMatrix::~KstRMatrix() {
+DataMatrix::~DataMatrix() {
   _file = 0;
 }
 
 
-void KstRMatrix::change(KstDataSourcePtr file, const QString &field,
+void DataMatrix::change(KstDataSourcePtr file, const QString &field,
                         KstObjectTag tag,
                         int xStart, int yStart,
                         int xNumSteps, int yNumSteps,
@@ -147,27 +143,27 @@ void KstRMatrix::change(KstDataSourcePtr file, const QString &field,
 }
 
 
-int KstRMatrix::reqXStart() const {
+int DataMatrix::reqXStart() const {
   return _reqXStart;
 }
 
 
-int KstRMatrix::reqYStart() const {
+int DataMatrix::reqYStart() const {
   return _reqYStart;
 }
 
 
-int KstRMatrix::reqXNumSteps() const {
+int DataMatrix::reqXNumSteps() const {
   return _reqNX;
 }
 
 
-int KstRMatrix::reqYNumSteps() const {
+int DataMatrix::reqYNumSteps() const {
   return _reqNY;
 }
 
 
-QString KstRMatrix::filename() const {
+QString DataMatrix::filename() const {
   if (_file) {
     return QString(_file->fileName());
   }
@@ -175,32 +171,32 @@ QString KstRMatrix::filename() const {
 }
 
 
-const QString& KstRMatrix::field() const {
+const QString& DataMatrix::field() const {
   return _field;
 }
 
 
-bool KstRMatrix::xReadToEnd() const {
+bool DataMatrix::xReadToEnd() const {
   return (_reqNX <= 0);
 }
 
 
-bool KstRMatrix::yReadToEnd() const {
+bool DataMatrix::yReadToEnd() const {
   return (_reqNY <= 0);
 }
 
 
-bool KstRMatrix::xCountFromEnd() const {
+bool DataMatrix::xCountFromEnd() const {
   return (_reqXStart < 0);
 }
 
 
-bool KstRMatrix::yCountFromEnd() const {
+bool DataMatrix::yCountFromEnd() const {
   return (_reqYStart < 0);
 }
 
 
-QString KstRMatrix::label() const {
+QString DataMatrix::label() const {
   bool ok;
   QString returnLabel;
 
@@ -220,17 +216,17 @@ QString KstRMatrix::label() const {
 }
 
 
-QString KstRMatrix::fileLabel() const {
+QString DataMatrix::fileLabel() const {
   return filename();
 }
 
 
-KstDataSourcePtr KstRMatrix::dataSource() const {
+KstDataSourcePtr DataMatrix::dataSource() const {
   return _file;
 }
 
 
-bool KstRMatrix::isValid() const {
+bool DataMatrix::isValid() const {
   if (_file) {
     _file->readLock();
     bool fieldValid = _file->isValidMatrix(_field);
@@ -241,7 +237,7 @@ bool KstRMatrix::isValid() const {
 }
 
 
-KstObject::UpdateType KstRMatrix::update(int update_counter) {
+KstObject::UpdateType DataMatrix::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
@@ -263,7 +259,7 @@ KstObject::UpdateType KstRMatrix::update(int update_counter) {
 }
 
 
-bool KstRMatrix::doUpdateSkip(int realXStart, int realYStart, bool force) {
+bool DataMatrix::doUpdateSkip(int realXStart, int realYStart, bool force) {
 
   // since we are skipping, we don't need all the pixels
   // also, samples per frame is always 1 with skipping
@@ -364,7 +360,7 @@ bool KstRMatrix::doUpdateSkip(int realXStart, int realYStart, bool force) {
 }
 
 
-bool KstRMatrix::doUpdateNoSkip(int realXStart, int realYStart, bool force) {
+bool DataMatrix::doUpdateNoSkip(int realXStart, int realYStart, bool force) {
 
   // unless we are forced to, don't update if the range is the same
   if (realXStart == _lastXStart && realYStart == _lastYStart && _nX == _lastNX && _nY == _lastNY &&
@@ -396,7 +392,7 @@ bool KstRMatrix::doUpdateNoSkip(int realXStart, int realYStart, bool force) {
 }
 
 
-KstObject::UpdateType KstRMatrix::doUpdate(bool force) {
+KstObject::UpdateType DataMatrix::doUpdate(bool force) {
 
   if (!_file) {
     return NO_CHANGE;
@@ -487,7 +483,7 @@ KstObject::UpdateType KstRMatrix::doUpdate(bool force) {
 }
 
 
-void KstRMatrix::reload() {
+void DataMatrix::reload() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (_file) {
@@ -513,18 +509,18 @@ void KstRMatrix::reload() {
 }
 
 
-KstRMatrixPtr KstRMatrix::makeDuplicate() const {
+DataMatrixPtr DataMatrix::makeDuplicate() const {
   QString newTag = tag().tag() + "'";
-  return new KstRMatrix(_file, _field, KstObjectTag(newTag, tag().context()),
+  return new DataMatrix(_file, _field, KstObjectTag(newTag, tag().context()),
                         _reqXStart, _reqYStart, _reqNX, _reqNY,
                         _doAve, _doSkip, _skip);
 }
 
 
-void KstRMatrix::commonConstructor(KstDataSourcePtr file, const QString &field,
+void DataMatrix::commonConstructor(KstDataSourcePtr file, const QString &field,
                                    int reqXStart, int reqYStart, int reqNX, int reqNY,
                                    bool doAve, bool doSkip, int skip) {
-//  qDebug() << "constructing KstRMatrix " << tag().displayString() << " from file " << file->tag().displayString() << " (" << (void*)(&(*file)) << ")" << endl;
+//  qDebug() << "constructing DataMatrix " << tag().displayString() << " from file " << file->tag().displayString() << " (" << (void*)(&(*file)) << ")" << endl;
   _reqXStart = reqXStart;
   _reqYStart = reqYStart;
   _reqNX = reqNX;
@@ -556,7 +552,7 @@ void KstRMatrix::commonConstructor(KstDataSourcePtr file, const QString &field,
 }
 
 
-void KstRMatrix::reset() { // must be called with a lock
+void DataMatrix::reset() { // must be called with a lock
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
   
   if (_file) {
@@ -570,22 +566,22 @@ void KstRMatrix::reset() { // must be called with a lock
 }
 
 
-bool KstRMatrix::doSkip() const {
+bool DataMatrix::doSkip() const {
   return _doSkip;
 }
 
 
-bool KstRMatrix::doAverage() const {
+bool DataMatrix::doAverage() const {
   return _doAve;
 }
 
 
-int KstRMatrix::skip() const {
+int DataMatrix::skip() const {
   return _skip;
 }
 
 
-void KstRMatrix::changeFile(KstDataSourcePtr file) {
+void DataMatrix::changeFile(KstDataSourcePtr file) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (!file) {
@@ -602,4 +598,5 @@ void KstRMatrix::changeFile(KstDataSourcePtr file) {
   }
 }
 
+}
 // vim: ts=2 sw=2 et

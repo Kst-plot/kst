@@ -1,12 +1,7 @@
 /***************************************************************************
-                          kstrmatrix.h  -  matrix from a datasource
-                             -------------------
-    begin                : 2005
-    copyright            : (C) 2005 University of British Columbia
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
+ *   copyright : (C) 2005  University of British Columbia                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,40 +10,42 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTRMATRIX_H
-#define KSTRMATRIX_H
+#ifndef DATAMATRIX_H
+#define DATAMATRIX_H
 
 #include "kstmatrix.h"
 #include "kstsharedptr.h"
 #include "kstdatasource.h"
 #include "kst_export.h"
+
+namespace Kst {
    
-class KST_EXPORT KstRMatrix : public KstMatrix {
+class KST_EXPORT DataMatrix : public KstMatrix {
 
   public:
     
     // constructor
-    KstRMatrix(KstDataSourcePtr file, const QString &field, KstObjectTag tag,
+    DataMatrix(KstDataSourcePtr file, const QString &field, KstObjectTag tag,
                int xStart, int yStart,
                int xNumSteps, int yNumSteps,
                bool doAve, bool doSkip, int skip);
     
-    // constructor to create a saved KstRMatrix
-    KstRMatrix(const QDomElement &e);
+    // constructor to create a saved DataMatrix
+    DataMatrix(const QDomElement &e);
     
-    // save KstRMatrix
+    // save DataMatrix
     virtual void save(QTextStream &ts, const QString& indent = QString::null);
     
-    virtual ~KstRMatrix();
+    virtual ~DataMatrix();
     
-    // change properties of KstRMatrix
+    // change properties of DataMatrix
     void change(KstDataSourcePtr file, const QString &field,
                 KstObjectTag tag,
                 int xStart, int yStart,
                 int xNumSteps, int yNumSteps,
                 bool doAve, bool doSkip, int skip);
     
-    // return properties of KstRMatrix
+    // return properties of DataMatrix
     int reqXStart() const;
     int reqYStart() const;
     int reqXNumSteps() const;
@@ -67,23 +64,23 @@ class KST_EXPORT KstRMatrix : public KstMatrix {
     virtual QString label() const;
     virtual QString fileLabel() const;
     
-    // the data source this KstRMatrix is using
+    // the data source this DataMatrix is using
     KstDataSourcePtr dataSource() const;
     
     // returns true if the file and field is valid; false otherwise 
     bool isValid() const;
     
-    // update KstRMatrix
+    // update DataMatrix
     virtual UpdateType update(int update_counter = -1);
 
-    // reload contents of KstRMatrix from file
+    // reload contents of DataMatrix from file
     void reload();
     
     // change the datasource for this matrix
     void changeFile(KstDataSourcePtr file);
     
-    // make a "copy" of this KstRMatrix 
-    KstSharedPtr<KstRMatrix> makeDuplicate() const;
+    // make a "copy" of this DataMatrix 
+    KstSharedPtr<DataMatrix> makeDuplicate() const;
     
   private:
     void commonConstructor(KstDataSourcePtr file, const QString &field,
@@ -118,8 +115,9 @@ class KST_EXPORT KstRMatrix : public KstMatrix {
     int _samplesPerFrameCache; // cache the samples per frame of the field in datasource
 };
 
-typedef KstSharedPtr<KstRMatrix> KstRMatrixPtr;
-typedef KstObjectList<KstRMatrixPtr> KstRMatrixList;
+typedef KstSharedPtr<DataMatrix> DataMatrixPtr;
+typedef KstObjectList<DataMatrixPtr> DataMatrixList;
 
+}
 #endif
 // vim: ts=2 sw=2 et

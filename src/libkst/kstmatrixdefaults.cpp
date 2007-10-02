@@ -17,7 +17,7 @@
 
 #include "kstdatacollection.h" 
 #include "kstmatrixdefaults.h"
-#include "kstrmatrix.h"
+#include "datamatrix.h"
 #include "stdinsource.h"
 
 #include <qsettings.h>
@@ -97,15 +97,15 @@ int KstMatrixDefaults::skip() const {
 
 void KstMatrixDefaults::sync() {
   KST::matrixList.lock().readLock();
-  KstRMatrixList rmatrixList = kstObjectSubList<KstMatrix,KstRMatrix>(KST::matrixList);
+  Kst::DataMatrixList dataMatrixList = kstObjectSubList<KstMatrix,Kst::DataMatrix>(KST::matrixList);
   KST::matrixList.lock().unlock();
-  int j = rmatrixList.count() - 1;
+  int j = dataMatrixList.count() - 1;
 
   // Find a non-stdin source
   while (j >= 0) {
-    rmatrixList[j]->readLock();
-    KstDataSourcePtr dsp = rmatrixList[j]->dataSource();
-    rmatrixList[j]->unlock();
+    dataMatrixList[j]->readLock();
+    KstDataSourcePtr dsp = dataMatrixList[j]->dataSource();
+    dataMatrixList[j]->unlock();
 #ifdef Q_WS_WIN32
     if (dsp) {
 #else
@@ -117,19 +117,19 @@ void KstMatrixDefaults::sync() {
   }
 
   if (j >= 0) {
-    rmatrixList[j]->readLock();
+    dataMatrixList[j]->readLock();
     
     // get the settings
-    _dataSource = rmatrixList[j]->filename();
-    _xStart = rmatrixList[j]->reqXStart();
-    _yStart = rmatrixList[j]->reqYStart();
-    _xNumSteps = rmatrixList[j]->reqXNumSteps();
-    _yNumSteps = rmatrixList[j]->reqYNumSteps();
-    _skip = rmatrixList[j]->skip();
-    _doAve = rmatrixList[j]->doAverage();
-    _doSkip = rmatrixList[j]->doSkip();
+    _dataSource = dataMatrixList[j]->filename();
+    _xStart = dataMatrixList[j]->reqXStart();
+    _yStart = dataMatrixList[j]->reqYStart();
+    _xNumSteps = dataMatrixList[j]->reqXNumSteps();
+    _yNumSteps = dataMatrixList[j]->reqYNumSteps();
+    _skip = dataMatrixList[j]->skip();
+    _doAve = dataMatrixList[j]->doAverage();
+    _doSkip = dataMatrixList[j]->doSkip();
     
-    rmatrixList[j]->unlock();
+    dataMatrixList[j]->unlock();
   }
 }
 
