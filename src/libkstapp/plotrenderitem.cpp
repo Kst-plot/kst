@@ -114,8 +114,6 @@ QString PlotRenderItem::topLabel() const {
   foreach (KstRelationPtr relation, relationList()) {
     if (!relation->xLabel().isEmpty() && relation->xLabel() != bottom)
       return relation->xLabel();
-    if (!relation->topLabel().isEmpty())
-      return relation->topLabel();
   }
   return QString();
 }

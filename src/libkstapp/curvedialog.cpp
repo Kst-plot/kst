@@ -151,10 +151,10 @@ KstObjectPtr CurveDialog::createNewDataObject() const {
   KstRelationList relationList;
   relationList.append(kst_cast<KstRelation>(curve));
 
-  VectorCurveRenderItem *test = new VectorCurveRenderItem("cartesiantest", plotItem);
-  test->setRelationList(relationList);
+  VectorCurveRenderItem *vectorCurve = new VectorCurveRenderItem("vectorCurve", plotItem);
+  vectorCurve->setRelationList(relationList);
 
-  plotItem->addRenderItem(test);
+  plotItem->addRenderItem(vectorCurve);
 
   return KstObjectPtr(curve.data());
 }

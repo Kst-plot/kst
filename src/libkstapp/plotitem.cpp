@@ -310,7 +310,7 @@ void PlotItem::paintTopLabel(QPainter *painter) {
   painter->save();
   QRectF topLabelRect = horizontalLabelRect(false);
   topLabelRect.moveTopLeft(QPointF(marginWidth(), 0.0));
-  painter->drawText(topLabelRect, Qt::TextWordWrap | Qt::AlignCenter, bottomLabel());
+  painter->drawText(topLabelRect, Qt::TextWordWrap | Qt::AlignCenter, topLabel());
   painter->restore();
 }
 

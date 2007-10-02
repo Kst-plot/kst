@@ -22,7 +22,7 @@ DataButton::DataButton(const QString &text, QWidget *parent)
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
   setStyleSheet("QPushButton {"
-                  "border: 1px solid;"
+                  "border: 0px solid;"
                   "background-color: white;"
                   "text-align: left;"
                   "margin: 5;"
