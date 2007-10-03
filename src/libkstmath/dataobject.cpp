@@ -20,7 +20,7 @@
 
 #include "datacollection.h"
 #include "kstdataobjectcollection.h"
-#include "kstdataplugin.h"
+#include "dataplugin.h"
 #include "kstdebug.h"
 #include "kst_i18n.h"
 

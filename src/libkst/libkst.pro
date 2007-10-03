@@ -58,7 +58,7 @@ HEADERS += \
     editablematrix.h \
     editablevector.h \
     datacollection.h \
-    kstdataplugin.h \
+    dataplugin.h \
     datasource.h \
     dateparser.h \
     kstdebug.h \

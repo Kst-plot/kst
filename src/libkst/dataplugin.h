@@ -16,11 +16,13 @@
 #include <QtPlugin>
 #include <QSettings>
 
-class KstPluginInterface : public KstShared {
-  public:
-    KstPluginInterface() {}
+namespace Kst {
 
-    virtual ~KstPluginInterface() {}
+class PluginInterface : public KstShared {
+  public:
+    PluginInterface() {}
+
+    virtual ~PluginInterface() {}
 
     virtual QString pluginName() const { return QString::null; }
 
@@ -28,11 +30,11 @@ class KstPluginInterface : public KstShared {
 };
 
 
-class KstDataSourcePluginInterface : public KstPluginInterface {
+class DataSourcePluginInterface : public PluginInterface {
   public:
-    virtual ~KstDataSourcePluginInterface() {}
+    virtual ~DataSourcePluginInterface() {}
 
-    virtual Kst::DataSource *create(QSettings *cfg,
+    virtual DataSource *create(QSettings *cfg,
                                   const QString &filename,
                                   const QString &type,
                                   const QDomElement &element) const = 0;
@@ -57,21 +59,21 @@ class KstDataSourcePluginInterface : public KstPluginInterface {
 
     bool provides(const QString& type) const { return provides().contains(type); }
 
-    virtual Kst::DataSourceConfigWidget *configWidget(QSettings *cfg, const QString& filename) const = 0;
+    virtual DataSourceConfigWidget *configWidget(QSettings *cfg, const QString& filename) const = 0;
 };
 
 
-class KstDataObjectPluginInterface : public KstPluginInterface {
+class DataObjectPluginInterface : public PluginInterface {
   public:
-    virtual ~KstDataObjectPluginInterface() {}
+    virtual ~DataObjectPluginInterface() {}
 
     virtual QWidget *configWidget(const QString& name) const = 0;
 };
 
 
-class KstBasicPluginInterface : public KstDataObjectPluginInterface {
+class BasicPluginInterface : public DataObjectPluginInterface {
   public:
-    virtual ~KstBasicPluginInterface() {}
+    virtual ~BasicPluginInterface() {}
 
     virtual QStringList inputVectorList() const = 0;
 
@@ -86,9 +88,11 @@ class KstBasicPluginInterface : public KstDataObjectPluginInterface {
     virtual QStringList outputStringList() const = 0;
 };
 
-Q_DECLARE_INTERFACE(KstPluginInterface, "com.kst.KstPluginInterface/1.0")
-Q_DECLARE_INTERFACE(KstDataSourcePluginInterface, "com.kst.KstDataSourcePluginInterface/1.0")
-Q_DECLARE_INTERFACE(KstDataObjectPluginInterface, "com.kst.KstDataObjectPluginInterface/1.0")
-Q_DECLARE_INTERFACE(KstBasicPluginInterface, "com.kst.KstBasicPluginInterface/1.0")
+typedef QList<KstSharedPtr<PluginInterface> > PluginList;
 
-typedef QList<KstSharedPtr<KstPluginInterface> > KstPluginList;
+}
+
+Q_DECLARE_INTERFACE(Kst::PluginInterface, "com.kst.KstPluginInterface/1.0")
+Q_DECLARE_INTERFACE(Kst::DataSourcePluginInterface, "com.kst.KstDataSourcePluginInterface/1.0")
+Q_DECLARE_INTERFACE(Kst::DataObjectPluginInterface, "com.kst.KstDataObjectPluginInterface/1.0")
+Q_DECLARE_INTERFACE(Kst::BasicPluginInterface, "com.kst.KstBasicPluginInterface/1.0")

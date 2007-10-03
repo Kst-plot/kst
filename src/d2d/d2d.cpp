@@ -25,7 +25,7 @@
 #include "kstdataobjectcollection.h"
 #undef protected
 
-#include "kstdataplugin.h"
+#include "dataplugin.h"
 
 void Usage() {
   fprintf(stderr, "usage: d2d in_filename out_filename [-t <out_type>]\n");

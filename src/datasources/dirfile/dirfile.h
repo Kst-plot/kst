@@ -19,7 +19,7 @@
 #define DIRFILE_H
 
 #include <datasource.h>
-#include <kstdataplugin.h>
+#include <dataplugin.h>
 
 class DirFileSource : public Kst::DataSource {
   public:
@@ -66,9 +66,9 @@ class DirFileSource : public Kst::DataSource {
 };
 
 
-class DirFilePlugin : public QObject, public KstDataSourcePluginInterface {
+class DirFilePlugin : public QObject, public Kst::DataSourcePluginInterface {
     Q_OBJECT
-    Q_INTERFACES(KstDataSourcePluginInterface)
+    Q_INTERFACES(Kst::DataSourcePluginInterface)
   public:
     virtual ~DirFilePlugin() {}
 

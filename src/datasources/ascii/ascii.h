@@ -21,7 +21,7 @@
 #include <qfile.h>
 
 #include <datasource.h>
-#include <kstdataplugin.h>
+#include <dataplugin.h>
 
 class AsciiSource : public Kst::DataSource {
   public:
@@ -86,9 +86,9 @@ class AsciiSource : public Kst::DataSource {
 };
 
 
-class AsciiPlugin : public QObject, public KstDataSourcePluginInterface {
+class AsciiPlugin : public QObject, public Kst::DataSourcePluginInterface {
     Q_OBJECT
-    Q_INTERFACES(KstDataSourcePluginInterface)
+    Q_INTERFACES(Kst::DataSourcePluginInterface)
   public:
     virtual ~AsciiPlugin() {}
 
