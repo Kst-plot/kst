@@ -81,8 +81,8 @@ KstRelationList PlotRenderItem::relationList() const {
 
 void PlotRenderItem::paint(QPainter *painter) {
   painter->setRenderHint(QPainter::Antialiasing, false);
-  painter->setClipRect(rect());
   painter->drawRect(rect());
+  painter->setClipRect(rect());
 
 #ifdef CURVE_DRAWING_TIME
   QTime time;
