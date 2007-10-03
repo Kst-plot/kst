@@ -21,7 +21,7 @@
 #ifndef KSTEQUATION_H
 #define KSTEQUATION_H
 
-#include "kstdataobject.h"
+#include "dataobject.h"
 #include "objectfactory.h"
 #include "kst_export.h"
 
@@ -33,10 +33,10 @@ namespace Equation {
 
 class QXmlStreamWriter;
 
-class KST_EXPORT KstEquation : public KstDataObject {
+class KST_EXPORT KstEquation : public Kst::DataObject {
   public:
     KstEquation(const QString& in_tag, const QString& equation, double x0, double x1, int nx);
-    KstEquation(const QString& in_tag, const QString& equation, KstVectorPtr xvector, bool do_interp);
+    KstEquation(const QString& in_tag, const QString& equation, Kst::VectorPtr xvector, bool do_interp);
     ~KstEquation();
 
     void attach();
@@ -47,12 +47,12 @@ class KST_EXPORT KstEquation : public KstDataObject {
 
     /** equations used to edit the vector */
     void setEquation(const QString &Equation);
-    void setExistingXVector(KstVectorPtr xvector, bool do_interp);
+    void setExistingXVector(Kst::VectorPtr xvector, bool do_interp);
 
     const QString& equation() const { return _equation; }
-    KstVectorPtr vXIn() const { return *_xInVector; }
-    KstVectorPtr vX() const { return *_xOutVector; }
-    KstVectorPtr vY() const { return *_yOutVector; }
+    Kst::VectorPtr vXIn() const { return *_xInVector; }
+    Kst::VectorPtr vX() const { return *_xOutVector; }
+    Kst::VectorPtr vY() const { return *_yOutVector; }
 
     bool doInterp() const { return _doInterp; }
 
@@ -68,11 +68,11 @@ class KST_EXPORT KstEquation : public KstDataObject {
 
     const KstCurveHintList *curveHints() const;
 
-    KstDataObjectPtr makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap);
+    Kst::DataObjectPtr makeDuplicate(Kst::DataObjectDataObjectMap& duplicatedMap);
     
-    void replaceDependency(KstDataObjectPtr oldObject, KstDataObjectPtr newObject);
+    void replaceDependency(Kst::DataObjectPtr oldObject, Kst::DataObjectPtr newObject);
 
-    void replaceDependency(KstVectorPtr oldVector, KstVectorPtr newVector);
+    void replaceDependency(Kst::VectorPtr oldVector, Kst::VectorPtr newVector);
     void replaceDependency(KstMatrixPtr oldMatrix, KstMatrixPtr newMatrix);
 
     bool uses(KstObjectPtr p) const;
@@ -80,7 +80,7 @@ class KST_EXPORT KstEquation : public KstDataObject {
   private:
     QString _equation;
 
-    KstVectorMap VectorsUsed;
+    Kst::VectorMap VectorsUsed;
     Kst::ScalarMap ScalarsUsed;
 
     void commonConstructor(const QString& in_tag, const QString& equation);
@@ -94,7 +94,7 @@ class KST_EXPORT KstEquation : public KstDataObject {
     static const QString XINVECTOR;
     static const QString XOUTVECTOR;
     static const QString YOUTVECTOR;
-    KstVectorMap::Iterator _xInVector, _xOutVector, _yOutVector;
+    Kst::VectorMap::Iterator _xInVector, _xOutVector, _yOutVector;
     Equation::Node *_pe;
 };
 

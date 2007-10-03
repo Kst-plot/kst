@@ -19,7 +19,7 @@
 #define ENODES_H
 
 #include "kststring.h"
-#include "kstvector.h"
+#include "vector.h"
 #include "kst_export.h"
 
 #define EQ_FALSE 0.0
@@ -42,7 +42,7 @@ namespace Equation {
 
       long i;
       double x;
-      KstVectorPtr xVector;
+      Kst::VectorPtr xVector;
       double noPoint;
       long sampleCount;
   };
@@ -55,8 +55,8 @@ namespace Equation {
       virtual ~Node();
 
       virtual bool isConst() = 0; // can't be const
-      virtual bool collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
-      virtual bool takeVectors(const KstVectorMap& c);
+      virtual bool collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
+      virtual bool takeVectors(const Kst::VectorMap& c);
       virtual double value(Context*) = 0;
       virtual void visit(NodeVisitor*);
       virtual KstObject::UpdateType update(int counter, Context *ctx);
@@ -73,8 +73,8 @@ namespace Equation {
       BinaryNode(Node *left, Node *right);
       virtual ~BinaryNode();
 
-      virtual bool collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
-      virtual bool takeVectors(const KstVectorMap& c);
+      virtual bool collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
+      virtual bool takeVectors(const Kst::VectorMap& c);
       virtual void visit(NodeVisitor*);
       virtual KstObject::UpdateType update(int counter, Context *ctx);
 
@@ -100,8 +100,8 @@ namespace Equation {
       double value(Context*) { return 0.0; }
 
       bool isConst();
-      bool collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
-      bool takeVectors(const KstVectorMap& c);
+      bool collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
+      bool takeVectors(const Kst::VectorMap& c);
       double at(int, Context*);
       Node *node(int idx);
       KstObject::UpdateType update(int counter, Context *ctx);
@@ -119,8 +119,8 @@ namespace Equation {
 
       bool isConst();
       double value(Context*);
-      bool collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
-      bool takeVectors(const KstVectorMap& c);
+      bool collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
+      bool takeVectors(const Kst::VectorMap& c);
       KstObject::UpdateType update(int counter, Context *ctx);
       QString text() const;
 
@@ -179,14 +179,14 @@ namespace Equation {
 
       bool isConst();
       double value(Context*);
-      bool collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
-      bool takeVectors(const KstVectorMap& c);
+      bool collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
+      bool takeVectors(const Kst::VectorMap& c);
       KstObject::UpdateType update(int counter, Context *ctx);
       QString text() const;
 
     protected:
       QString _tagName;
-      KstVectorPtr _vector;
+      Kst::VectorPtr _vector;
       Kst::ScalarPtr _scalar;
       bool _isEquation;
       Node *_equation;

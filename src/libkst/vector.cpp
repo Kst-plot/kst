@@ -29,7 +29,7 @@
 #include "kstdatacollection.h"
 #include "defaultprimitivenames.h"
 #include "kstmath.h"
-#include "kstvector.h"
+#include "vector.h"
 #include "kstdebug.h"
 
 static int anonymousVectorCounter = 1;
@@ -41,8 +41,10 @@ static int anonymousVectorCounter = 1;
 
 #define INITSIZE 1
 
+namespace Kst {
+
 /** Create a vector */
-KstVector::KstVector(KstObjectTag in_tag, int size, KstObject *provider, bool isScalarList)
+Vector::Vector(KstObjectTag in_tag, int size, KstObject *provider, bool isScalarList)
 : KstPrimitive(provider), _nsum(0) {
   // qDebug() << "+++ CREATING VECTOR: " << (void*) this;
   _editable = false;
@@ -83,7 +85,7 @@ KstVector::KstVector(KstObjectTag in_tag, int size, KstObject *provider, bool is
 }
 
 
-KstVector::KstVector(const QString &tag, const QByteArray& data)
+Vector::Vector(const QString &tag, const QByteArray& data)
 : KstPrimitive(), _nsum(0) {
   QByteArray qba;
   _v = 0L;
@@ -130,11 +132,11 @@ KstVector::KstVector(const QString &tag, const QByteArray& data)
 }
 
 
-KstVector::~KstVector() {
+Vector::~Vector() {
   // qDebug() << "+++ DELETING VECTOR: " << (void*) this;
   KST::scalarList.lock().writeLock();
   KST::scalarList.setUpdateDisplayTags(false);
-  for (QHash<QString, Kst::Scalar*>::Iterator it = _scalars.begin(); it != _scalars.end(); ++it) {
+  for (QHash<QString, Scalar*>::Iterator it = _scalars.begin(); it != _scalars.end(); ++it) {
     KST::scalarList.remove(it.value());
     it.value()->_KShared_unref();
   }
@@ -181,7 +183,7 @@ KstVector::~KstVector() {
 //        expensive here.
 /** Return v[i], i is sample number, interpolated to have ns_i total
     samples in vector */
-double KstVector::interpolate(int in_i, int ns_i) const {
+double Vector::interpolate(int in_i, int ns_i) const {
   GENERATE_INTERPOLATION
 }
 
@@ -268,7 +270,7 @@ double kstInterpolate(double *_v, int _size, int in_i, int ns_i) {
 
 // FIXME: optimize me - possible that floor() (especially) and isnan() are
 //        expensive here.
-double KstVector::interpolateNoHoles(int in_i, int ns_i) const {
+double Vector::interpolateNoHoles(int in_i, int ns_i) const {
   GENERATE_INTERPOLATION
 }
 
@@ -283,49 +285,49 @@ double kstInterpolateNoHoles(double *_v, int _size, int in_i, int ns_i) {
 #undef RETURN_FIRST_NON_HOLE
 #undef GENERATE_INTERPOLATION
 
-double KstVector::value(int i) const {
+double Vector::value(int i) const {
   if (i < 0 || i >= _size) { // can't look before beginning or past end
     return 0.0;
   }
   return _v[i];
 }
 
-void KstVector::CreateScalars() {
+void Vector::CreateScalars() {
   if (!_isScalarList) {
     _min = _max = _mean = _minPos = 0.0;
 
     KstWriteLocker sl(&KST::scalarList.lock());
     KST::scalarList.setUpdateDisplayTags(false);
 
-    Kst::ScalarPtr sp;
-    _scalars.insert("max", sp = new Kst::Scalar(KstObjectTag("Max", tag()), this));
+    ScalarPtr sp;
+    _scalars.insert("max", sp = new Scalar(KstObjectTag("Max", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("min", sp = new Kst::Scalar(KstObjectTag("Min", tag()), this));
+    _scalars.insert("min", sp = new Scalar(KstObjectTag("Min", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("last", sp = new Kst::Scalar(KstObjectTag("Last", tag()), this));
+    _scalars.insert("last", sp = new Scalar(KstObjectTag("Last", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("first", sp = new Kst::Scalar(KstObjectTag("First", tag()), this));
+    _scalars.insert("first", sp = new Scalar(KstObjectTag("First", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("mean", sp = new Kst::Scalar(KstObjectTag("Mean", tag()), this));
+    _scalars.insert("mean", sp = new Scalar(KstObjectTag("Mean", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("sigma", sp = new Kst::Scalar(KstObjectTag("Sigma", tag()), this));
+    _scalars.insert("sigma", sp = new Scalar(KstObjectTag("Sigma", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("rms", sp = new Kst::Scalar(KstObjectTag("Rms", tag()), this));
+    _scalars.insert("rms", sp = new Scalar(KstObjectTag("Rms", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("ns", sp = new Kst::Scalar(KstObjectTag("NS", tag()), this));
+    _scalars.insert("ns", sp = new Scalar(KstObjectTag("NS", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("sum", sp = new Kst::Scalar(KstObjectTag("Sum", tag()), this));
+    _scalars.insert("sum", sp = new Scalar(KstObjectTag("Sum", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("sumsquared", sp = new Kst::Scalar(KstObjectTag("SumSquared", tag()), this));
+    _scalars.insert("sumsquared", sp = new Scalar(KstObjectTag("SumSquared", tag()), this));
     sp->_KShared_ref();
-    _scalars.insert("minpos", sp = new Kst::Scalar(KstObjectTag("MinPos", tag()), this));
+    _scalars.insert("minpos", sp = new Scalar(KstObjectTag("MinPos", tag()), this));
     sp->_KShared_ref();
 
     KST::scalarList.setUpdateDisplayTags(true);
   }
 }
 
-void KstVector::RenameScalars() {
+void Vector::RenameScalars() {
   if (!_isScalarList) {
     KstWriteLocker sl(&KST::scalarList.lock());
     KST::scalarList.setUpdateDisplayTags(false);
@@ -346,7 +348,7 @@ void KstVector::RenameScalars() {
   }
 }
 
-void KstVector::updateScalars() {
+void Vector::updateScalars() {
   if (!_isScalarList) {
     _scalars["ns"]->setValue(_size);
 
@@ -365,12 +367,12 @@ void KstVector::updateScalars() {
 }
 
 
-const QHash<QString, Kst::Scalar*>& KstVector::scalars() const {
+const QHash<QString, Scalar*>& Vector::scalars() const {
   return _scalars;
 }
 
 
-double* KstVector::realloced(double *memptr, int newSize) {
+double* Vector::realloced(double *memptr, int newSize) {
   double *old = _v;
   _v = memptr;
   if (newSize < _size) {
@@ -384,7 +386,7 @@ double* KstVector::realloced(double *memptr, int newSize) {
 }
 
 
-void KstVector::zero() {
+void Vector::zero() {
   setDirty();
   _ns_min = _ns_max = 0.0;
   memset(_v, 0, sizeof(double)*_size);
@@ -392,7 +394,7 @@ void KstVector::zero() {
 }
 
 
-void KstVector::blank() {
+void Vector::blank() {
   setDirty();
   _ns_min = _ns_max = 0.0;
 #if 0 
@@ -407,7 +409,7 @@ void KstVector::blank() {
 }
 
 
-bool KstVector::resize(int sz, bool init) {
+bool Vector::resize(int sz, bool init) {
   //qDebug() << "resizing to: " << sz;
   if (sz > 0) {
     _v = static_cast<double*>(KST::realloc(_v, sz*sizeof(double)));
@@ -437,7 +439,7 @@ bool KstVector::resize(int sz, bool init) {
 }
 
 
-KstObject::UpdateType KstVector::internalUpdate(KstObject::UpdateType providerRC) {
+KstObject::UpdateType Vector::internalUpdate(KstObject::UpdateType providerRC) {
   int i, i0;
   double sum, sum2, last, first, v;
   double last_v;
@@ -569,7 +571,7 @@ KstObject::UpdateType KstVector::internalUpdate(KstObject::UpdateType providerRC
 
 
 
-void KstVector::save(QXmlStreamWriter &s) {
+void Vector::save(QXmlStreamWriter &s) {
   if (provider()) {
     return;
   }
@@ -589,7 +591,7 @@ void KstVector::save(QXmlStreamWriter &s) {
 }
 
 
-void KstVector::setTagName(const KstObjectTag& newTag) {
+void Vector::setTagName(const KstObjectTag& newTag) {
   if (newTag == tag()) {
     return;
   }
@@ -602,33 +604,33 @@ void KstVector::setTagName(const KstObjectTag& newTag) {
 }
 
 
-void KstVector::setNewAndShift(int inNew, int inShift) {
+void Vector::setNewAndShift(int inNew, int inShift) {
   NumNew = inNew;
   NumShifted = inShift;
 }
 
 
-QString KstVector::label() const {
+QString Vector::label() const {
   return _label; // default
 }
 
 
-QString KstVector::fileLabel() const {
+QString Vector::fileLabel() const {
   return QString::null;
 }
 
 
-double *const KstVector::value() const {
+double *const Vector::value() const {
   return _v;
 }
 
 
-void KstVector::newSync() {
+void Vector::newSync() {
   NumNew = NumShifted = 0;
 }
 
 
-KstVectorPtr KstVector::generateVector(double x0, double x1, int n, const KstObjectTag& tag) {
+VectorPtr Vector::generateVector(double x0, double x1, int n, const KstObjectTag& tag) {
   if (n < 2) {
     n = 2;
   }
@@ -649,7 +651,7 @@ KstVectorPtr KstVector::generateVector(double x0, double x1, int n, const KstObj
     t = KST::suggestVectorName("X(" + QString::number(x0) + ".." + QString::number(x1) + ")");
   }
 
-  KstVectorPtr xv = new KstVector(KstObjectTag(t, tag.context()), n);
+  VectorPtr xv = new Vector(KstObjectTag(t, tag.context()), n);
   xv->_saveable = false;
 
   for (int i = 0; i < n; i++) {
@@ -664,42 +666,44 @@ KstVectorPtr KstVector::generateVector(double x0, double x1, int n, const KstObj
 }
 
 
-void KstVector::setLabel(const QString& label_in) {
+void Vector::setLabel(const QString& label_in) {
   _label = label_in;
 }
 
 
-int KstVector::getUsage() const {
+int Vector::getUsage() const {
   int adj = 0;
-  for (QHash<QString, Kst::Scalar*>::ConstIterator it = _scalars.begin(); it != _scalars.end(); ++it) {
+  for (QHash<QString, Scalar*>::ConstIterator it = _scalars.begin(); it != _scalars.end(); ++it) {
     adj += it.value()->getUsage() - 1;
   }
   return KstObject::getUsage() + adj;
 }
 
 
-bool KstVector::saveable() const {
+bool Vector::saveable() const {
   return _saveable;
 }
 
 
-bool KstVector::editable() const {
+bool Vector::editable() const {
   return _editable;
 }
 
 
-void KstVector::setEditable(bool editable) {
+void Vector::setEditable(bool editable) {
   _editable = editable;
 }
 
 
-bool KstVector::saveData() const {
+bool Vector::saveData() const {
   return _saveData;
 }
 
 
-void KstVector::setSaveData(bool save) {
+void Vector::setSaveData(bool save) {
   _saveData = save;
+}
+
 }
 
 #undef ZERO_MEMORY

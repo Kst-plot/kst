@@ -15,7 +15,7 @@
 #include <QXmlStreamReader>
 #include <QStringList>
 
-#include "kstdataobject.h"
+#include "dataobject.h"
 #include "kst_export.h"
 #include "view.h"
 

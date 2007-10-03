@@ -16,7 +16,7 @@
 
 #include "editmultiplewidget.h"
 
-#include "kstdataobject.h"
+#include "dataobject.h"
 
 #include <QLabel>
 #include <QLineEdit>

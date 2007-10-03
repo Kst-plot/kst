@@ -22,7 +22,7 @@
 #include <qcolor.h>
 #include <q3valuelist.h>
 
-#include "kstvector.h"
+#include "vector.h"
 
 class KstRelation;
 
@@ -37,8 +37,8 @@ class KstCurveHint : public KstShared {
     virtual const QString& xVectorName() const;
     virtual const QString& yVectorName() const;
 
-    virtual KstVectorPtr xVector() const;
-    virtual KstVectorPtr yVector() const;
+    virtual Kst::VectorPtr xVector() const;
+    virtual Kst::VectorPtr yVector() const;
 
     virtual KstSharedPtr<KstRelation> makeCurve(const QString& tag, const QColor& color) const;
 

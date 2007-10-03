@@ -22,13 +22,13 @@
 #ifndef KSTPSD_H
 #define KSTPSD_H
 
-#include "kstdataobject.h"
+#include "dataobject.h"
 #include "psdcalculator.h"
 #include "kst_export.h"
 
-class KST_EXPORT KstPSD : public KstDataObject {
+class KST_EXPORT KstPSD : public Kst::DataObject {
   public:
-    KstPSD(const QString& in_tag, KstVectorPtr in_V, double freq,
+    KstPSD(const QString& in_tag, Kst::VectorPtr in_V, double freq,
         bool average, int average_len,
         bool in_apodize, bool in_removeMean,
         const QString& VUnits, const QString& RUnits, ApodizeFunction in_apodizeFxn = WindowOriginal, double in_gaussianSigma = 3.0, PSDType in_output = PSDAmplitudeSpectralDensity);
@@ -62,7 +62,7 @@ class KST_EXPORT KstPSD : public KstDataObject {
     void setLen(int in_len);
 
     QString vTag() const;
-    void setVector(KstVectorPtr);
+    void setVector(Kst::VectorPtr);
 
     const QString& vUnits() const;
     void setVUnits(const QString& units);
@@ -84,15 +84,15 @@ class KST_EXPORT KstPSD : public KstDataObject {
     virtual QString xVTag() const { return (*_fVector)->tagName(); }
     virtual QString yVTag() const { return (*_sVector)->tagName(); }
 
-    KstVectorPtr vX() const { return *_fVector; }
-    KstVectorPtr vY() const { return *_sVector; }
+    Kst::VectorPtr vX() const { return *_fVector; }
+    Kst::VectorPtr vY() const { return *_sVector; }
 
     const KstCurveHintList *curveHints() const;
     
-    virtual KstDataObjectPtr makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap);
+    virtual Kst::DataObjectPtr makeDuplicate(Kst::DataObjectDataObjectMap& duplicatedMap);
 
   private:
-    void commonConstructor(const QString& in_tag, KstVectorPtr in_V,
+    void commonConstructor(const QString& in_tag, Kst::VectorPtr in_V,
         double freq, bool average, int average_len, bool apodize, bool removeMean,
         const QString& VUnits, const QString& RUnits, ApodizeFunction in_apodizeFxn, 
         double in_gaussianSigma, PSDType in_output, bool interpolateHoles);
@@ -119,7 +119,7 @@ class KST_EXPORT KstPSD : public KstDataObject {
     QString _vUnits;
     QString _rUnits;
 
-    KstVectorMap::Iterator _sVector, _fVector;
+    Kst::VectorMap::Iterator _sVector, _fVector;
 };
 
 typedef KstSharedPtr<KstPSD> KstPSDPtr;

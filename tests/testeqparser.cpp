@@ -23,8 +23,8 @@ extern "C" struct yy_buffer_state *yy_scan_string(const char*);
 
 bool optimizerFailed = false;
 
-KstVectorMap vectorsUsed;
-KstVectorPtr xVector;
+Kst::VectorMap vectorsUsed;
+Kst::VectorPtr xVector;
 
 
 #include <kstdatacollection.h>
@@ -341,12 +341,12 @@ void TestEqParser::testEqParser() {
   QVERIFY(validateEquation("[=10+10]", 0.0, 20.0));
   
   // Vectors
-  KstVector::generateVector(0, 1.0, 10, KstObjectTag::fromString("1"));
-  KstVector::generateVector(0, 1.0, 10, KstObjectTag::fromString("V1"));
-  KstVector::generateVector(1.0, 2.0, 10, KstObjectTag::fromString("V2"));
-  KstVector::generateVector(0, 1.0, 2, KstObjectTag::fromString("V3"));
-  KstVector::generateVector(-1.0, 1.0, 1000, KstObjectTag::fromString("V4"));
-  KstVector::generateVector(-1.0, 1.0, 1000, KstObjectTag::fromString("V5-%+-_!"));
+  Kst::Vector::generateVector(0, 1.0, 10, KstObjectTag::fromString("1"));
+  Kst::Vector::generateVector(0, 1.0, 10, KstObjectTag::fromString("V1"));
+  Kst::Vector::generateVector(1.0, 2.0, 10, KstObjectTag::fromString("V2"));
+  Kst::Vector::generateVector(0, 1.0, 2, KstObjectTag::fromString("V3"));
+  Kst::Vector::generateVector(-1.0, 1.0, 1000, KstObjectTag::fromString("V4"));
+  Kst::Vector::generateVector(-1.0, 1.0, 1000, KstObjectTag::fromString("V5-%+-_!"));
   QVERIFY(validateEquation("[V2] - [V1]", 0.0, 1.0));
   QVERIFY(validateEquation("[V2[9]]", 0.0, 2.0));
   QVERIFY(validateEquation("[V2[5+4]]", 0.0, 2.0));
@@ -358,7 +358,7 @@ void TestEqParser::testEqParser() {
   QVERIFY(validateEquation("2*plugin(bin, [V4], 12)", 1.0, -1.9779779779779778));
   QVERIFY(validateEquation("4*plugin(bin, [V4], x)", 5.0, -3.9839839839839839));
   QVERIFY(validateEquation("-3*plugin(bin, x, 12)", 2.0, _NOPOINT));
-  xVector = KstVector::generateVector(0, 100, 2000, KstObjectTag::fromString("XVector"));
+  xVector = Kst::Vector::generateVector(0, 100, 2000, KstObjectTag::fromString("XVector"));
   QVERIFY(validateEquation("-3*plugin(bin, x, 12)", 2.0, -0.8254127063531767));
   QVERIFY(validateEquation("-3*plugin(bin, y, 12)", 2.0, _NOPOINT));
 

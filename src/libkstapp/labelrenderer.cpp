@@ -117,7 +117,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
     } else if (fi->vector) {
       QString txt;
       KST::vectorList.lock().readLock();
-      KstVectorPtr vp = *KST::vectorList.findTag(fi->text);
+      Kst::VectorPtr vp = *KST::vectorList.findTag(fi->text);
       KST::vectorList.lock().unlock();
       if (vp) {
         if (!fi->expression.isEmpty()) {

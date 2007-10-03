@@ -88,7 +88,7 @@ void MainWindow::performHeavyStartupActions() {
 
 void MainWindow::cleanup() {
   KST::dataObjectList.lock().writeLock();
-  KstDataObjectList dol = KST::dataObjectList; //FIXME What is going on here?
+  DataObjectList dol = KST::dataObjectList; //FIXME What is going on here?
   KST::dataObjectList.clear();
   KST::dataObjectList.lock().unlock();
   dol.clear(); //and here?
@@ -357,9 +357,9 @@ void MainWindow::breakLayout() {
 
 
 void MainWindow::demoModel() {
-  KstVectorPtr v = new KstVector;
+  VectorPtr v = new Vector;
   v->resize(999999);
-  KstVectorPtr v2 = new KstVector;
+  VectorPtr v2 = new Vector;
   v2->resize(999999);
   EditableVectorPtr v3 = new EditableVector(25, KstObjectTag::fromString("Editable V"));
   double *d = const_cast<double *>(v->value()); // yay :)

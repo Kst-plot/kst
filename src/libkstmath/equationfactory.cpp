@@ -27,7 +27,7 @@ EquationFactory::~EquationFactory() {
 }
 
 
-KstDataObjectPtr EquationFactory::generateObject(QXmlStreamReader& xml) {
+DataObjectPtr EquationFactory::generateObject(QXmlStreamReader& xml) {
   QString tag, expression, xVector, output;
   bool interpolate = false;
 
@@ -62,7 +62,7 @@ KstDataObjectPtr EquationFactory::generateObject(QXmlStreamReader& xml) {
     return 0;
   }
 
-  KstVectorPtr vector = 0;
+  VectorPtr vector = 0;
   if (!xVector.isEmpty()) {
     vector = *KST::vectorList.findTag(xVector);
   }

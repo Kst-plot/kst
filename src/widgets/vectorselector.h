@@ -15,7 +15,7 @@
 #include <QWidget>
 #include "ui_vectorselector.h"
 
-#include <kstvector.h>
+#include <vector.h>
 
 #include "kst_export.h"
 
@@ -27,8 +27,8 @@ class KST_EXPORT VectorSelector : public QWidget, public Ui::VectorSelector {
     VectorSelector(QWidget *parent = 0);
     virtual ~VectorSelector();
 
-    KstVectorPtr selectedVector() const;
-    void setSelectedVector(KstVectorPtr selectedVector);
+    VectorPtr selectedVector() const;
+    void setSelectedVector(VectorPtr selectedVector);
 
     bool allowEmptySelection() const;
     void setAllowEmptySelection(bool allowEmptySelection);

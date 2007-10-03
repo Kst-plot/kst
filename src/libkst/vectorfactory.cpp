@@ -12,7 +12,7 @@
 #include "vectorfactory.h"
 
 #include "kstdebug.h"
-#include "kstvector.h"
+#include "vector.h"
 #include "generatedvector.h"
 #include "editablevector.h"
 #include "datavector.h"
@@ -65,7 +65,7 @@ KstPrimitivePtr VectorFactory::generatePrimitive(QXmlStreamReader& xml) {
     return 0;
   }
 
-  KstVectorPtr vector = new KstVector(tag, data);
+  VectorPtr vector = new Vector(tag, data);
   return vector.data();
 }
 
@@ -120,7 +120,7 @@ KstPrimitivePtr SVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
     return 0;
   }
 
-  KstVectorPtr vector = new GeneratedVector(tag, data, min, max, count);
+  VectorPtr vector = new GeneratedVector(tag, data, min, max, count);
   return vector.data();
 }
 
@@ -169,7 +169,7 @@ KstPrimitivePtr AVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
     return 0;
   }
 
-  KstVectorPtr vector = new EditableVector(tag, data);
+  VectorPtr vector = new EditableVector(tag, data);
   return vector.data();
 }
 
@@ -231,7 +231,7 @@ KstPrimitivePtr RVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
     return 0;
   }
 
-  KstVectorPtr vector = new Kst::DataVector(tag, data, provider, file, field, start, count, skip, doAve);
+  VectorPtr vector = new Kst::DataVector(tag, data, provider, file, field, start, count, skip, doAve);
   return vector.data();
 }
 

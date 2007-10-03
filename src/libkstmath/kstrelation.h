@@ -21,7 +21,7 @@
 #include <qcolor.h>
 #include <q3valuestack.h>
 
-#include "kstdataobject.h"
+#include "dataobject.h"
 #include "kstpainter.h"
 #include "kst_export.h"
 #include "labelparser.h"
@@ -105,7 +105,7 @@ class KST_EXPORT KstRelation : public KstObject {
     // E.g. for VCurves, it returns the data object providing the y vector
     // E.g. for Images, it returns the data object providing the matrix
     // Null is returned if no provider exists
-    virtual KstDataObjectPtr providerDataObject() const = 0;
+    virtual Kst::DataObjectPtr providerDataObject() const = 0;
     
     // return closest distance to the given point
     // images always return a rating >= 5
@@ -143,8 +143,8 @@ class KST_EXPORT KstRelation : public KstObject {
     QList<QPair<QString,QString> > _inputMatrixLoadQueue;
     KstCurveHintList *_curveHints;
     QString _typeString, _type;
-    KstVectorMap _inputVectors;
-    KstVectorMap _outputVectors;
+    Kst::VectorMap _inputVectors;
+    Kst::VectorMap _outputVectors;
     Kst::ScalarMap _inputScalars;
     Kst::ScalarMap _outputScalars;
     KstStringMap _inputStrings;

@@ -31,9 +31,9 @@
 
 class KST_EXPORT KstVCurve: public KstRelation {
   public:
-    KstVCurve(const QString &in_tag, KstVectorPtr in_X, KstVectorPtr in_Y,
-        KstVectorPtr in_EX, KstVectorPtr in_EY,
-        KstVectorPtr in_EXMinus, KstVectorPtr in_EYMinus,
+    KstVCurve(const QString &in_tag, Kst::VectorPtr in_X, Kst::VectorPtr in_Y,
+        Kst::VectorPtr in_EX, Kst::VectorPtr in_EY,
+        Kst::VectorPtr in_EXMinus, Kst::VectorPtr in_EYMinus,
         const QColor &in_color);
     
     KstVCurve(QDomElement &e);
@@ -65,12 +65,12 @@ class KST_EXPORT KstVCurve: public KstRelation {
     KstObjectTag xEMinusTag() const;
     KstObjectTag yEMinusTag() const;
 
-    void setXVector(KstVectorPtr new_vx);
-    void setYVector(KstVectorPtr new_vy);
-    void setXError(KstVectorPtr new_ex);
-    void setYError(KstVectorPtr new_ey);
-    void setXMinusError(KstVectorPtr new_ex);
-    void setYMinusError(KstVectorPtr new_ey);
+    void setXVector(Kst::VectorPtr new_vx);
+    void setYVector(Kst::VectorPtr new_vy);
+    void setXError(Kst::VectorPtr new_ex);
+    void setYError(Kst::VectorPtr new_ey);
+    void setXMinusError(Kst::VectorPtr new_ex);
+    void setYMinusError(Kst::VectorPtr new_ey);
 
     /** Save curve information */
     void save(QTextStream &ts, const QString& indent = QString::null);
@@ -94,12 +94,12 @@ class KST_EXPORT KstVCurve: public KstRelation {
     virtual void showNewDialog();
     virtual void showEditDialog();
 
-    KstVectorPtr xVector() const;
-    KstVectorPtr yVector() const;
-    KstVectorPtr xErrorVector() const;
-    KstVectorPtr yErrorVector() const;
-    KstVectorPtr xMinusErrorVector() const;
-    KstVectorPtr yMinusErrorVector() const;
+    Kst::VectorPtr xVector() const;
+    Kst::VectorPtr yVector() const;
+    Kst::VectorPtr xErrorVector() const;
+    Kst::VectorPtr yErrorVector() const;
+    Kst::VectorPtr xMinusErrorVector() const;
+    Kst::VectorPtr yMinusErrorVector() const;
     
     virtual bool hasPoints()    const { return HasPoints; }
     virtual bool hasLines()     const { return HasLines; }
@@ -152,7 +152,7 @@ class KST_EXPORT KstVCurve: public KstRelation {
     virtual double distanceToPoint(double xpos, double dx, double ypos) const;
     
     // see KstRelation::providerDataObject
-    virtual KstDataObjectPtr providerDataObject() const;
+    virtual Kst::DataObjectPtr providerDataObject() const;
 
   private:
     inline void commonConstructor(const QString& in_tag, const QColor& in_color);

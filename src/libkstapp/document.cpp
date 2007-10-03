@@ -80,7 +80,7 @@ bool Document::save(const QString& to) {
 
   xml.writeStartElement("variables");
 
-  foreach (KstVectorPtr s, KST::vectorList.list()) {
+  foreach (VectorPtr s, KST::vectorList.list()) {
     s->save(xml);
   }
   foreach (KstMatrixPtr s, KST::matrixList.list()) {
@@ -95,7 +95,7 @@ bool Document::save(const QString& to) {
   xml.writeEndElement();
 
   xml.writeStartElement("objects");
-  foreach (KstDataObjectPtr s, KST::dataObjectList) {
+  foreach (DataObjectPtr s, KST::dataObjectList) {
     s->save(xml);
   }
   xml.writeEndElement();
@@ -175,7 +175,7 @@ bool Document::open(const QString& file) {
         switch (state) {
           case Objects:
             {
-              KstDataObjectPtr object = ObjectFactory::parse(xml);
+              DataObjectPtr object = ObjectFactory::parse(xml);
               if (object)
                 KST::addDataObjectToList(object);
               else

@@ -56,9 +56,9 @@ static const QLatin1String& EYVECTOR = QLatin1String("EY");
 static const QLatin1String& EXMINUSVECTOR = QLatin1String("EXMinus");
 static const QLatin1String& EYMINUSVECTOR = QLatin1String("EYMinus");
 
-KstVCurve::KstVCurve(const QString &in_tag, KstVectorPtr in_X, KstVectorPtr in_Y,
-                      KstVectorPtr in_EX, KstVectorPtr in_EY,
-                      KstVectorPtr in_EXMinus, KstVectorPtr in_EYMinus,
+KstVCurve::KstVCurve(const QString &in_tag, Kst::VectorPtr in_X, Kst::VectorPtr in_Y,
+                      Kst::VectorPtr in_EX, Kst::VectorPtr in_EY,
+                      Kst::VectorPtr in_EXMinus, Kst::VectorPtr in_EYMinus,
                       const QColor &in_color)
 : KstRelation() {
   setHasPoints(false);
@@ -214,8 +214,8 @@ KstObject::UpdateType KstVCurve::update(int update_counter) {
     return lastUpdateResult();
   }
 
-  KstVectorPtr cxV = *_inputVectors.find(COLOR_XVECTOR);
-  KstVectorPtr cyV = *_inputVectors.find(COLOR_YVECTOR);
+  Kst::VectorPtr cxV = *_inputVectors.find(COLOR_XVECTOR);
+  Kst::VectorPtr cyV = *_inputVectors.find(COLOR_YVECTOR);
   if (!cxV || !cyV) {
     return setLastUpdateResult(NO_CHANGE);
   }
@@ -227,22 +227,22 @@ KstObject::UpdateType KstVCurve::update(int update_counter) {
   depUpdated = UPDATE == cxV->update(update_counter) || depUpdated;
   depUpdated = UPDATE == cyV->update(update_counter) || depUpdated;
 
-  KstVectorPtr exV = _inputVectors.contains(EXVECTOR) ? *_inputVectors.find(EXVECTOR) : 0;
+  Kst::VectorPtr exV = _inputVectors.contains(EXVECTOR) ? *_inputVectors.find(EXVECTOR) : 0;
   if (exV) {
     depUpdated = UPDATE == exV->update(update_counter) || depUpdated;
   }
 
-  KstVectorPtr eyV = _inputVectors.contains(EYVECTOR) ? *_inputVectors.find(EYVECTOR) : 0;
+  Kst::VectorPtr eyV = _inputVectors.contains(EYVECTOR) ? *_inputVectors.find(EYVECTOR) : 0;
   if (eyV) {
     depUpdated = UPDATE == eyV->update(update_counter) || depUpdated;
   }
 
-  KstVectorPtr exmV = _inputVectors.contains(EXMINUSVECTOR) ? *_inputVectors.find(EXMINUSVECTOR) : 0;
+  Kst::VectorPtr exmV = _inputVectors.contains(EXMINUSVECTOR) ? *_inputVectors.find(EXMINUSVECTOR) : 0;
   if (exmV) {
     depUpdated = UPDATE == exmV->update(update_counter) || depUpdated;
   }
 
-  KstVectorPtr eymV = _inputVectors.contains(EYMINUSVECTOR) ? *_inputVectors.find(EYMINUSVECTOR) : 0;
+  Kst::VectorPtr eymV = _inputVectors.contains(EYMINUSVECTOR) ? *_inputVectors.find(EYMINUSVECTOR) : 0;
   if (eymV) {
     depUpdated = UPDATE == eymV->update(update_counter) || depUpdated;
   }
@@ -277,11 +277,11 @@ KstObject::UpdateType KstVCurve::update(int update_counter) {
 
 
 void KstVCurve::point(int i, double &x, double &y) const {
-  KstVectorPtr xv = xVector();
+  Kst::VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
   }
-  KstVectorPtr yv = yVector();
+  Kst::VectorPtr yv = yVector();
   if (yv) {
     y = yv->interpolate(i, NS);
   }
@@ -289,15 +289,15 @@ void KstVCurve::point(int i, double &x, double &y) const {
 
 
 void KstVCurve::getEXPoint(int i, double &x, double &y, double &ex) {
-  KstVectorPtr xv = xVector();
+  Kst::VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
   }
-  KstVectorPtr yv = yVector();
+  Kst::VectorPtr yv = yVector();
   if (yv) {
     y = yv->interpolate(i, NS);
   }
-  KstVectorPtr exv = xErrorVector();
+  Kst::VectorPtr exv = xErrorVector();
   if (exv) {
     ex = exv->interpolate(i, NS);
   }
@@ -305,15 +305,15 @@ void KstVCurve::getEXPoint(int i, double &x, double &y, double &ex) {
 
 
 void KstVCurve::getEXMinusPoint(int i, double &x, double &y, double &ex) {
-  KstVectorPtr xv = xVector();
+  Kst::VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
   }
-  KstVectorPtr yv = yVector();
+  Kst::VectorPtr yv = yVector();
   if (yv) {
     y = yv->interpolate(i, NS);
   }
-  KstVectorPtr exmv = xMinusErrorVector();
+  Kst::VectorPtr exmv = xMinusErrorVector();
   if (exmv) {
     ex = exmv->interpolate(i, NS);
   }
@@ -321,19 +321,19 @@ void KstVCurve::getEXMinusPoint(int i, double &x, double &y, double &ex) {
 
 
 void KstVCurve::getEXPoints(int i, double &x, double &y, double &exminus, double &explus) {
-  KstVectorPtr xv = xVector();
+  Kst::VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
   }
-  KstVectorPtr yv = yVector();
+  Kst::VectorPtr yv = yVector();
   if (yv) {
     y = yv->interpolate(i, NS);
   }
-  KstVectorPtr exv = xErrorVector();
+  Kst::VectorPtr exv = xErrorVector();
   if (exv) {
     explus = exv->interpolate(i, NS);
   }
-  KstVectorPtr exmv = xMinusErrorVector();
+  Kst::VectorPtr exmv = xMinusErrorVector();
   if (exmv) {
     exminus = exmv->interpolate(i, NS);
   }
@@ -341,15 +341,15 @@ void KstVCurve::getEXPoints(int i, double &x, double &y, double &exminus, double
 
 
 void KstVCurve::getEYPoint(int i, double &x, double &y, double &ey) {
-  KstVectorPtr xv = xVector();
+  Kst::VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
   }
-  KstVectorPtr yv = yVector();
+  Kst::VectorPtr yv = yVector();
   if (yv) {
     y = yv->interpolate(i, NS);
   }
-  KstVectorPtr eyv = yErrorVector();
+  Kst::VectorPtr eyv = yErrorVector();
   if (eyv) {
     ey = eyv->interpolate(i, NS);
   }
@@ -357,15 +357,15 @@ void KstVCurve::getEYPoint(int i, double &x, double &y, double &ey) {
 
 
 void KstVCurve::getEYMinusPoint(int i, double &x, double &y, double &ey) {
-  KstVectorPtr xv = xVector();
+  Kst::VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
   }
-  KstVectorPtr yv = yVector();
+  Kst::VectorPtr yv = yVector();
   if (yv) {
     y = yv->interpolate(i, NS);
   }
-  KstVectorPtr eyv = yMinusErrorVector();
+  Kst::VectorPtr eyv = yMinusErrorVector();
   if (eyv) {
     ey = eyv->interpolate(i, NS);
   }
@@ -373,19 +373,19 @@ void KstVCurve::getEYMinusPoint(int i, double &x, double &y, double &ey) {
 
 
 void KstVCurve::getEYPoints(int i, double &x, double &y, double &eyminus, double &eyplus) {
-  KstVectorPtr xv = xVector();
+  Kst::VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
   }
-  KstVectorPtr yv = yVector();
+  Kst::VectorPtr yv = yVector();
   if (yv) {
     y = yv->interpolate(i, NS);
   }
-  KstVectorPtr eyv = yErrorVector();
+  Kst::VectorPtr eyv = yErrorVector();
   if (eyv) {
     eyplus = eyv->interpolate(i, NS);
   }
-  KstVectorPtr eymv = yMinusErrorVector();
+  Kst::VectorPtr eymv = yMinusErrorVector();
   if (eymv) {
     eyminus = eymv->interpolate(i, NS);
   }
@@ -393,7 +393,7 @@ void KstVCurve::getEYPoints(int i, double &x, double &y, double &eyminus, double
 
 
 KstObjectTag KstVCurve::xVTag() const {
-  KstVectorPtr xv = xVector();
+  Kst::VectorPtr xv = xVector();
   if (xv) {
     return xv->tag();
   }
@@ -402,7 +402,7 @@ KstObjectTag KstVCurve::xVTag() const {
 
 
 KstObjectTag KstVCurve::yVTag() const {
-  KstVectorPtr yv = yVector();
+  Kst::VectorPtr yv = yVector();
   if (yv) {
     return yv->tag();
   }
@@ -411,7 +411,7 @@ KstObjectTag KstVCurve::yVTag() const {
 
 
 KstObjectTag KstVCurve::xETag() const {
-  KstVectorPtr v = xErrorVector();
+  Kst::VectorPtr v = xErrorVector();
   if (v) {
     return v->tag();
   }
@@ -420,7 +420,7 @@ KstObjectTag KstVCurve::xETag() const {
 
 
 KstObjectTag KstVCurve::yETag() const {
-  KstVectorPtr v = yErrorVector();
+  Kst::VectorPtr v = yErrorVector();
   if (v) {
     return v->tag();
   }
@@ -429,7 +429,7 @@ KstObjectTag KstVCurve::yETag() const {
 
 
 KstObjectTag KstVCurve::xEMinusTag() const {
-  KstVectorPtr v = xMinusErrorVector();
+  Kst::VectorPtr v = xMinusErrorVector();
   if (v) {
     return v->tag();
   }
@@ -438,7 +438,7 @@ KstObjectTag KstVCurve::xEMinusTag() const {
 
 
 KstObjectTag KstVCurve::yEMinusTag() const {
-  KstVectorPtr v = yMinusErrorVector();
+  Kst::VectorPtr v = yMinusErrorVector();
   if (v) {
     return v->tag();
   }
@@ -508,7 +508,7 @@ void KstVCurve::save(QTextStream &ts, const QString& indent) {
 }
 
 
-void KstVCurve::setXVector(KstVectorPtr new_vx) {
+void KstVCurve::setXVector(Kst::VectorPtr new_vx) {
   if (new_vx) {
     _inputVectors[COLOR_XVECTOR] = new_vx;
   } else {
@@ -518,7 +518,7 @@ void KstVCurve::setXVector(KstVectorPtr new_vx) {
 }
 
 
-void KstVCurve::setYVector(KstVectorPtr new_vy) {
+void KstVCurve::setYVector(Kst::VectorPtr new_vy) {
   if (new_vy) {
     _inputVectors[COLOR_YVECTOR] = new_vy;
   } else {
@@ -528,7 +528,7 @@ void KstVCurve::setYVector(KstVectorPtr new_vy) {
 }
 
 
-void KstVCurve::setXError(KstVectorPtr new_ex) {
+void KstVCurve::setXError(Kst::VectorPtr new_ex) {
   if (new_ex) {
     _inputVectors[EXVECTOR] = new_ex;
   } else {
@@ -538,7 +538,7 @@ void KstVCurve::setXError(KstVectorPtr new_ex) {
 }
 
 
-void KstVCurve::setYError(KstVectorPtr new_ey) {
+void KstVCurve::setYError(Kst::VectorPtr new_ey) {
   if (new_ey) {
     _inputVectors[EYVECTOR] = new_ey;
   } else {
@@ -548,7 +548,7 @@ void KstVCurve::setYError(KstVectorPtr new_ey) {
 }
 
 
-void KstVCurve::setXMinusError(KstVectorPtr new_ex) {
+void KstVCurve::setXMinusError(Kst::VectorPtr new_ex) {
   if (new_ex) {
     _inputVectors[EXMINUSVECTOR] = new_ex;
   } else {
@@ -558,7 +558,7 @@ void KstVCurve::setXMinusError(KstVectorPtr new_ex) {
 }
 
 
-void KstVCurve::setYMinusError(KstVectorPtr new_ey) {
+void KstVCurve::setYMinusError(Kst::VectorPtr new_ey) {
   if (new_ey) {
     _inputVectors[EYMINUSVECTOR] = new_ey;
   } else {
@@ -610,32 +610,32 @@ int KstVCurve::samplesPerFrame() const {
 }
 
 
-KstVectorPtr KstVCurve::xVector() const {
+Kst::VectorPtr KstVCurve::xVector() const {
   return *_inputVectors.find(COLOR_XVECTOR);
 }
 
 
-KstVectorPtr KstVCurve::yVector() const {
+Kst::VectorPtr KstVCurve::yVector() const {
   return *_inputVectors.find(COLOR_YVECTOR);
 }
 
 
-KstVectorPtr KstVCurve::xErrorVector() const {
+Kst::VectorPtr KstVCurve::xErrorVector() const {
   return *_inputVectors.find(EXVECTOR);
 }
 
 
-KstVectorPtr KstVCurve::yErrorVector() const {
+Kst::VectorPtr KstVCurve::yErrorVector() const {
   return *_inputVectors.find(EYVECTOR);
 }
 
 
-KstVectorPtr KstVCurve::xMinusErrorVector() const {
+Kst::VectorPtr KstVCurve::xMinusErrorVector() const {
   return *_inputVectors.find(EXMINUSVECTOR);
 }
 
 
-KstVectorPtr KstVCurve::yMinusErrorVector() const {
+Kst::VectorPtr KstVCurve::yMinusErrorVector() const {
   return *_inputVectors.find(EYMINUSVECTOR);
 }
 
@@ -645,7 +645,7 @@ bool KstVCurve::xIsRising() const {
 }
 
 
-inline int indexNearX(double x, KstVectorPtr& xv, int NS) {
+inline int indexNearX(double x, Kst::VectorPtr& xv, int NS) {
   // monotonically rising: we can do a binary search
   // should be reasonably fast
   if (xv->isRising()) {
@@ -693,8 +693,8 @@ inline int indexNearX(double x, KstVectorPtr& xv, int NS) {
 /** getIndexNearXY: return index of point within (or closest too)
     x +- dx which is closest to y **/
 int KstVCurve::getIndexNearXY(double x, double dx_per_pix, double y) const {
-  KstVectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
-  KstVectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
+  Kst::VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
+  Kst::VectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
   if (!xv || !yv) {
     return 0; // anything better we can do?
   }
@@ -822,12 +822,12 @@ double KstVCurve::minX() const {
 
 #if 0
 KstRelationPtr KstVCurve::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap) {
-  KstVectorPtr VX = *_inputVectors.find(COLOR_XVECTOR);
-  KstVectorPtr VY = *_inputVectors.find(COLOR_YVECTOR);
-  KstVectorPtr EX = *_inputVectors.find(EXVECTOR);
-  KstVectorPtr EY = *_inputVectors.find(EYVECTOR);
-  KstVectorPtr EXMinus = *_inputVectors.find(EXMINUSVECTOR);
-  KstVectorPtr EYMinus = *_inputVectors.find(EYMINUSVECTOR);
+  Kst::VectorPtr VX = *_inputVectors.find(COLOR_XVECTOR);
+  Kst::VectorPtr VY = *_inputVectors.find(COLOR_YVECTOR);
+  Kst::VectorPtr EX = *_inputVectors.find(EXVECTOR);
+  Kst::VectorPtr EY = *_inputVectors.find(EYVECTOR);
+  Kst::VectorPtr EXMinus = *_inputVectors.find(EXMINUSVECTOR);
+  Kst::VectorPtr EYMinus = *_inputVectors.find(EYMINUSVECTOR);
 
   QString name(tagName() + '\'');
   while (KstData::self()->dataTagNameNotUnique(name, false)) {
@@ -850,8 +850,8 @@ KstRelationPtr KstVCurve::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMa
 
 
 void KstVCurve::paint(const KstCurveRenderContext& context) {
-  KstVectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
-  KstVectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
+  Kst::VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
+  Kst::VectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
   if (!xv || !yv) {
     return;
   }
@@ -1307,10 +1307,10 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
     b_1 = benchtmp.elapsed();
 #endif
 
-    KstVectorPtr exv = _inputVectors.contains(EXVECTOR) ? *_inputVectors.find(EXVECTOR) : 0;
-    KstVectorPtr eyv = _inputVectors.contains(EYVECTOR) ? *_inputVectors.find(EYVECTOR) : 0;
-    KstVectorPtr exmv = _inputVectors.contains(EXMINUSVECTOR) ? *_inputVectors.find(EXMINUSVECTOR) : 0;
-    KstVectorPtr eymv = _inputVectors.contains(EYMINUSVECTOR) ? *_inputVectors.find(EYMINUSVECTOR) : 0;
+    Kst::VectorPtr exv = _inputVectors.contains(EXVECTOR) ? *_inputVectors.find(EXVECTOR) : 0;
+    Kst::VectorPtr eyv = _inputVectors.contains(EYVECTOR) ? *_inputVectors.find(EYVECTOR) : 0;
+    Kst::VectorPtr exmv = _inputVectors.contains(EXMINUSVECTOR) ? *_inputVectors.find(EXMINUSVECTOR) : 0;
+    Kst::VectorPtr eymv = _inputVectors.contains(EYMINUSVECTOR) ? *_inputVectors.find(EYMINUSVECTOR) : 0;
     // draw the bargraph bars, if any...
     if (hasBars()) {
       bool has_top = true;
@@ -1701,8 +1701,8 @@ void KstVCurve::yRange(double xFrom, double xTo, double* yMin, double* yMax) {
     return;
   }
 
-  KstVectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
-  KstVectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
+  Kst::VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
+  Kst::VectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
   if (!xv || !yv) {
     *yMin = *yMax = 0;
     return;
@@ -1740,14 +1740,14 @@ void KstVCurve::yRange(double xFrom, double xTo, double* yMin, double* yMax) {
 }
 
 
-KstDataObjectPtr KstVCurve::providerDataObject() const {
+Kst::DataObjectPtr KstVCurve::providerDataObject() const {
   KST::vectorList.lock().readLock();
-  KstVectorPtr vp = *KST::vectorList.findTag(yVTag().tag());  // FIXME: should use full tag
+  Kst::VectorPtr vp = *KST::vectorList.findTag(yVTag().tag());  // FIXME: should use full tag
   KST::vectorList.lock().unlock();
-  KstDataObjectPtr provider = 0L;
+  Kst::DataObjectPtr provider = 0L;
   if (vp) {
     vp->readLock();
-    provider = kst_cast<KstDataObject>(vp->provider());
+    provider = kst_cast<Kst::DataObject>(vp->provider());
     vp->unlock();
   }
   return provider;
@@ -1756,7 +1756,7 @@ KstDataObjectPtr KstVCurve::providerDataObject() const {
 
 double KstVCurve::distanceToPoint(double xpos, double dx, double ypos) const {
 // find the y distance between the curve and a point. return 1.0E300 if this distance is undefined. i don't want to use -1 because it will make the code which uses this function messy.
-  KstVectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
+  Kst::VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
   if (!xv) {
     return 1.0E300; // anything better we can do?
   }

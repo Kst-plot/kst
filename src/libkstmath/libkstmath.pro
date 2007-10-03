@@ -27,7 +27,7 @@ SOURCES += \
     kstsettings.cpp \
     kstobjectdefaults.cpp \
     labelparser.cpp \
-    kstdataobject.cpp \
+    dataobject.cpp \
     kstdataobjectcollection.cpp \
     kstcsd.cpp \
     kstpsd.cpp \
@@ -68,7 +68,7 @@ HEADERS += \
     kstcurvehint.h \
     kstcurvepointsymbol.h \
     kstdataobjectcollection.h \
-    kstdataobject.h \
+    dataobject.h \
     kstdefaultnames.h \
     kstequation.h \
     ksthistogram.h \

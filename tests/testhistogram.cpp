@@ -13,7 +13,7 @@
 
 #include <QtTest>
 
-#include <kstvector.h>
+#include <vector.h>
 #include <ksthistogram.h>
 #include <kstdatacollection.h>
 #include <kstdataobjectcollection.h>
@@ -25,7 +25,7 @@ void TestHistogram::cleanupTestCase() {
 }
 
 void TestHistogram::testHistogram() {
-  KstVectorPtr vp = KstVector::generateVector(0, 10, 100, KstObjectTag::fromString("V1"));
+  Kst::VectorPtr vp = Kst::Vector::generateVector(0, 10, 100, KstObjectTag::fromString("V1"));
   KstHistogramPtr h1 = new KstHistogram("H1", vp, 0, 10, 10, KST_HS_NUMBER);
   KST::dataObjectList.append(h1.data());
 

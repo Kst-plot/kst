@@ -108,7 +108,7 @@ QDomDocument TestCSD::makeDOMElement(const QString& tag, const QString& val) {
 
 void TestCSD::testCSD() {
 
-  KstVectorPtr vp = new KstVector(KstObjectTag::fromString("tempVector"), 10);
+  Kst::VectorPtr vp = new Kst::Vector(KstObjectTag::fromString("tempVector"), 10);
   for (int i = 0; i < 10; i++){
     vp->value()[i] = i;
   }
@@ -168,7 +168,7 @@ void TestCSD::testCSD() {
   QCOMPARE(csdDOM->gaussianSigma(), 0.01);
   QCOMPARE(csdDOM->windowSize(), 5000);
 
-  KstVectorPtr vp2 = new KstVector(KstObjectTag::fromString("tempVector2"), 10);
+  Kst::VectorPtr vp2 = new Kst::Vector(KstObjectTag::fromString("tempVector2"), 10);
   for (int i = 0; i < 10; i++){
     vp2->value()[i] = i;
   }

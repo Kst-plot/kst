@@ -1,5 +1,5 @@
 /***************************************************************************
-                   kstdataobject.h: base class for data objects
+                   dataobject.h: base class for data objects
                              -------------------
     begin                : May 20, 2003
     copyright            : (C) 2003 by C. Barth Netterfield
@@ -16,33 +16,37 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTDATAOBJECT_H
-#define KSTDATAOBJECT_H
+#ifndef DATAOBJECT_H
+#define DATAOBJECT_H
 
 #include "kstcurvehint.h"
 #include "kststring.h"
-#include "kstvector.h"
+#include "vector.h"
 #include "kstmatrix.h"
 #include "kst_export.h"
-
-typedef KstSharedPtr<KstDataObject> KstDataObjectPtr;
-typedef KstObjectList<KstDataObjectPtr> KstDataObjectList;
-typedef QMap<KstDataObjectPtr, KstDataObjectPtr> KstDataObjectDataObjectMap;
-typedef QMap<QString, int> KstPluginInfoList;
 
 class QXmlStreamReader;
 class QXmlStreamWriter;
 
-class KST_EXPORT KstDataObject : public KstObject {
+namespace Kst {
+
+class DataObject;
+
+typedef KstSharedPtr<DataObject> DataObjectPtr;
+typedef KstObjectList<DataObjectPtr> DataObjectList;
+typedef QMap<DataObjectPtr, DataObjectPtr> DataObjectDataObjectMap;
+typedef QMap<QString, int> KstPluginInfoList;
+
+class KST_EXPORT DataObject : public KstObject {
   Q_OBJECT
 
   public:
     enum Kind { Generic, Primitive, Fit, Filter };
 
-    KstDataObject();
-    KstDataObject(const QDomElement& e);
-    KstDataObject(const KstDataObject& object);
-    virtual ~KstDataObject();
+    DataObject();
+    DataObject(const QDomElement& e);
+    DataObject(const DataObject& object);
+    virtual ~DataObject();
 
     virtual void attach();
 
@@ -50,8 +54,8 @@ class KST_EXPORT KstDataObject : public KstObject {
     static void cleanupForExit();
     /** Returns a list of object plugins found on the system. */
     static KstPluginInfoList pluginInfoList();
-    static KstDataObjectPtr plugin(const QString& name);
-    static KstDataObjectPtr createPlugin(const QString& name);
+    static DataObjectPtr plugin(const QString& name);
+    static DataObjectPtr createPlugin(const QString& name);
 
     virtual UpdateType update(int updateCounter = -1) = 0;
     virtual const QString& typeString() const { return _typeString; }
@@ -63,15 +67,15 @@ class KST_EXPORT KstDataObject : public KstObject {
 
     // If you use these, you must lock() and unlock() the object as long as you
     // hold the reference
-    const KstVectorMap& inputVectors()  const { return _inputVectors;  }
-    const KstVectorMap& outputVectors() const { return _outputVectors; }
-    KstVectorMap& inputVectors() { return _inputVectors;  }
-    KstVectorMap& outputVectors() { return _outputVectors; }
+    const VectorMap& inputVectors()  const { return _inputVectors;  }
+    const VectorMap& outputVectors() const { return _outputVectors; }
+    VectorMap& inputVectors() { return _inputVectors;  }
+    VectorMap& outputVectors() { return _outputVectors; }
 
-    const Kst::ScalarMap& inputScalars()  const { return _inputScalars;  }
-    const Kst::ScalarMap& outputScalars() const { return _outputScalars; }
-    Kst::ScalarMap& inputScalars() { return _inputScalars;  }
-    Kst::ScalarMap& outputScalars() { return _outputScalars; }
+    const ScalarMap& inputScalars()  const { return _inputScalars;  }
+    const ScalarMap& outputScalars() const { return _outputScalars; }
+    ScalarMap& inputScalars() { return _inputScalars;  }
+    ScalarMap& outputScalars() { return _outputScalars; }
 
     const KstStringMap& inputStrings()  const { return _inputStrings;  }
     const KstStringMap& outputStrings() const { return _outputStrings; }
@@ -100,12 +104,12 @@ class KST_EXPORT KstDataObject : public KstObject {
     
     virtual bool deleteDependents();
     
-    bool duplicateDependents(KstDataObjectDataObjectMap& duplicatedMap);
+    bool duplicateDependents(DataObjectDataObjectMap& duplicatedMap);
     
-    virtual KstDataObjectPtr makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap) = 0;
+    virtual DataObjectPtr makeDuplicate(DataObjectDataObjectMap& duplicatedMap) = 0;
     
-    virtual void replaceDependency(KstDataObjectPtr oldObject, KstDataObjectPtr newObject);
-    virtual void replaceDependency(KstVectorPtr oldVector, KstVectorPtr newVector);
+    virtual void replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObject);
+    virtual void replaceDependency(VectorPtr oldVector, VectorPtr newVector);
     virtual void replaceDependency(KstMatrixPtr oldMatrix, KstMatrixPtr newMatrix);
 
     virtual bool uses(KstObjectPtr p) const;
@@ -125,7 +129,7 @@ class KST_EXPORT KstDataObject : public KstObject {
 
   protected:
     
-    double *vectorRealloced(KstVectorPtr v, double *memptr, int newSize) const;
+    double *vectorRealloced(VectorPtr v, double *memptr, int newSize) const;
 
     //The plugin infrastructure will read the desktop file and set these
     //Other objects that inherit can set the ones that apply if desired...
@@ -138,10 +142,10 @@ class KST_EXPORT KstDataObject : public KstObject {
     virtual void writeLockInputsAndOutputs() const;
     virtual void unlockInputsAndOutputs() const;
 
-    KstVectorMap _inputVectors;
-    KstVectorMap _outputVectors;
-    Kst::ScalarMap _inputScalars;
-    Kst::ScalarMap _outputScalars;
+    VectorMap _inputVectors;
+    VectorMap _outputVectors;
+    ScalarMap _inputScalars;
+    ScalarMap _outputScalars;
     KstStringMap _inputStrings;
     KstStringMap _outputStrings;
     KstMatrixMap _inputMatrices;
@@ -165,10 +169,12 @@ class KST_EXPORT KstDataObject : public KstObject {
 
   private:
     static void scanPlugins();
-    static KstDataObjectPtr createPlugin();
+    static DataObjectPtr createPlugin();
 };
 
-Q_DECLARE_METATYPE(KstDataObject*)
+}
+
+Q_DECLARE_METATYPE(Kst::DataObject*)
 
 #endif
 // vim: ts=2 sw=2 et

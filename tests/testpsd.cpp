@@ -108,7 +108,7 @@ QDomDocument TestPSD::makeDOMElement(const QString& tag, const QString& val) {
 
 void TestPSD::testPSD() {
 
-  KstVectorPtr vp = new KstVector(KstObjectTag::fromString("tempVector"), 10);
+  Kst::VectorPtr vp = new Kst::Vector(KstObjectTag::fromString("tempVector"), 10);
   for (int i = 0; i < 10; i++){
     vp->value()[i] = i;
   }
@@ -123,8 +123,8 @@ void TestPSD::testPSD() {
   QCOMPARE(psd->freq(), 0.0);
   QCOMPARE(psd->apodizeFxn(), WindowUndefined);
   QCOMPARE(psd->gaussianSigma(), 0.0);
-  KstVectorPtr vpVX = psd->vX();
-  KstVectorPtr vpVY = psd->vY();
+  Kst::VectorPtr vpVX = psd->vX();
+  Kst::VectorPtr vpVY = psd->vY();
 
   QCOMPARE(vpVX->length(), 1);
   QVERIFY(vpVX->value()[0] != vpVX->value()[0]);
@@ -184,11 +184,11 @@ void TestPSD::testPSD() {
   QCOMPARE(psdDOM->apodizeFxn(), WindowOriginal);
   QCOMPARE(psdDOM->gaussianSigma(), 0.01);
 
-//   KstVectorPtr vpVX = psdDOM->vX();
+//   Kst::VectorPtr vpVX = psdDOM->vX();
 //   for(int j = 0; j < vpVX->length(); j++){
 //       printf("[%d][%lf]", j, vpVX->value()[j]);
 //   }
-//   KstVectorPtr vpVY = psdDOM->vY();
+//   Kst::VectorPtr vpVY = psdDOM->vY();
 }
 
 // vim: ts=2 sw=2 et

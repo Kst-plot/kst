@@ -35,7 +35,7 @@ class KstObjectTreeNode;
 class KstMatrix;
 class Scalar;
 class KstString;
-class KstVector;
+class Vector;
 
 // Typedefs
 template <class T>

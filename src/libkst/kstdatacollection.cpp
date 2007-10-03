@@ -29,7 +29,7 @@
 KstDataSourceList KST::dataSourceList;
 
 /** The list of vectors that are being read */
-KstVectorCollection KST::vectorList;
+Kst::VectorCollection KST::vectorList;
 
 /** The list of matrices that are being read */
 KstMatrixCollection KST::matrixList;
@@ -222,13 +222,13 @@ bool KstData::viewObjectNameNotUnique(const QString& tag) {
   return false;
 }
 
-int KstData::vectorToFile(KstVectorPtr v, QFile *f) {
+int KstData::vectorToFile(Kst::VectorPtr v, QFile *f) {
   // FIXME: implement me (non-gui)
   return 0;
 }
 
 
-int KstData::vectorsToFile(const KstVectorList& l, QFile *f, bool interpolate) {
+int KstData::vectorsToFile(const Kst::VectorList& l, QFile *f, bool interpolate) {
   // FIXME: implement me (non-gui)
   return 0;
 }

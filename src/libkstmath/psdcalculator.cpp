@@ -24,7 +24,7 @@
 
 #include "kstdebug.h"
 #include "psdcalculator.h"
-#include "kstvector.h"
+#include "vector.h"
 
 #include <qnamespace.h>
 #include <kstmath.h>
@@ -220,7 +220,7 @@ int PSDCalculator::calculatePowerSpectrum(
     // separate cases for speed- although this shouldn't really matter- the rdft should be the most time consuming step by far for any large data set.
     if (removeMean && apodize && interpolateHoles) {
       for (i_samp = 0; i_samp < currentCopyLen; i_samp++) {
-        _a[i_samp] = (kstInterpolateNoHoles(input, inputLen, i_samp + ioffset, inputLen) - mean)*_w[i_samp];
+        _a[i_samp] = (Kst::kstInterpolateNoHoles(input, inputLen, i_samp + ioffset, inputLen) - mean)*_w[i_samp];
       }
     } else if (removeMean && apodize) {
       for (i_samp = 0; i_samp < currentCopyLen; i_samp++) {
@@ -228,11 +228,11 @@ int PSDCalculator::calculatePowerSpectrum(
       }
     } else if (removeMean && interpolateHoles) {
       for (i_samp = 0; i_samp < currentCopyLen; i_samp++) {
-        _a[i_samp] = kstInterpolateNoHoles(input, inputLen, i_samp + ioffset, inputLen) - mean;
+        _a[i_samp] = Kst::kstInterpolateNoHoles(input, inputLen, i_samp + ioffset, inputLen) - mean;
       }
     } else if (apodize && interpolateHoles) {
       for (i_samp = 0; i_samp < currentCopyLen; i_samp++) {
-        _a[i_samp] = kstInterpolateNoHoles(input, inputLen, i_samp + ioffset, inputLen)*_w[i_samp];
+        _a[i_samp] = Kst::kstInterpolateNoHoles(input, inputLen, i_samp + ioffset, inputLen)*_w[i_samp];
       }
     } else if (removeMean) {
       for (i_samp = 0; i_samp < currentCopyLen; i_samp++) {
@@ -244,7 +244,7 @@ int PSDCalculator::calculatePowerSpectrum(
       }
     } else if (interpolateHoles) {
       for (i_samp = 0; i_samp < currentCopyLen; i_samp++) {
-        _a[i_samp] = kstInterpolateNoHoles(input, inputLen, i_samp + ioffset, inputLen);
+        _a[i_samp] = Kst::kstInterpolateNoHoles(input, inputLen, i_samp + ioffset, inputLen);
       }
     } else {
       for (i_samp = 0; i_samp < currentCopyLen; i_samp++) {

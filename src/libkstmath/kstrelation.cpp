@@ -115,12 +115,12 @@ void KstRelation::writeLockInputsAndOutputs() const {
     outputs += (*i).data();
   }
   
-  QList<KstVectorPtr> vl = _inputVectors.values();
-  for (QList<KstVectorPtr>::Iterator i = vl.begin(); i != vl.end(); ++i) {
+  QList<Kst::VectorPtr> vl = _inputVectors.values();
+  for (QList<Kst::VectorPtr>::Iterator i = vl.begin(); i != vl.end(); ++i) {
     inputs += (*i).data();
   }
   vl = _outputVectors.values();
-  for (QList<KstVectorPtr>::Iterator i = vl.begin(); i != vl.end(); ++i) {
+  for (QList<Kst::VectorPtr>::Iterator i = vl.begin(); i != vl.end(); ++i) {
     outputs += (*i).data();
   }
   
@@ -193,7 +193,7 @@ void KstRelation::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (KstVectorMap::ConstIterator i = _outputVectors.begin(); i != _outputVectors.end(); ++i) {
+  for (Kst::VectorMap::ConstIterator i = _outputVectors.begin(); i != _outputVectors.end(); ++i) {
     if (!(*i)) {
       qWarning() << "Output vector for data object " << this->tag().displayString() << " is invalid." << endl;
     }
@@ -203,7 +203,7 @@ void KstRelation::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (KstVectorMap::ConstIterator i = _inputVectors.begin(); i != _inputVectors.end(); ++i) {
+  for (Kst::VectorMap::ConstIterator i = _inputVectors.begin(); i != _inputVectors.end(); ++i) {
     if (!(*i)) {
       qWarning() << "Input vector for data object " << this->tag().displayString() << " is invalid." << endl;
     }

@@ -16,7 +16,7 @@
 
 #include "kst_export.h"
 
-#include "kstdataobject.h"
+#include "dataobject.h"
 
 class QLineEdit;
 

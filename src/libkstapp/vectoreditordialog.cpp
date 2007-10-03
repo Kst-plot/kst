@@ -25,7 +25,7 @@ VectorEditorDialog::VectorEditorDialog(QWidget *parent, Document *doc)
   // or modification to the model so that it tracks all the vector creates and
   // destroys
   KST::vectorList.lock().readLock();
-  foreach (KstVectorPtr v, KST::vectorList.list()) {
+  foreach (VectorPtr v, KST::vectorList.list()) {
     VectorModel *vm = new VectorModel(v);
     _model->vectors().append(vm);
   }

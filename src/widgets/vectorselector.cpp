@@ -42,12 +42,12 @@ VectorSelector::~VectorSelector() {
 }
 
 
-KstVectorPtr VectorSelector::selectedVector() const {
-  return qVariantValue<KstVector*>(_vector->itemData(_vector->currentIndex()));
+VectorPtr VectorSelector::selectedVector() const {
+  return qVariantValue<Vector*>(_vector->itemData(_vector->currentIndex()));
 }
 
 
-void VectorSelector::setSelectedVector(KstVectorPtr selectedVector) {
+void VectorSelector::setSelectedVector(VectorPtr selectedVector) {
   int i = _vector->findData(qVariantFromValue(selectedVector.data()));
   Q_ASSERT(i != -1);
   _vector->setCurrentIndex(i);
@@ -85,13 +85,13 @@ void VectorSelector::editVector() {
 
 
 void VectorSelector::fillVectors() {
-  QHash<QString, KstVectorPtr> vectors;
+  QHash<QString, VectorPtr> vectors;
 
   KST::vectorList.lock().readLock();
 
-  KstVectorList::ConstIterator it = KST::vectorList.begin();
+  VectorList::ConstIterator it = KST::vectorList.begin();
   for (; it != KST::vectorList.end(); ++it) {
-    KstVectorPtr vector = (*it);
+    VectorPtr vector = (*it);
     if (vector->isScalarList())
       continue;
 
@@ -106,11 +106,11 @@ void VectorSelector::fillVectors() {
 
   qSort(list);
 
-  KstVectorPtr current = selectedVector();
+  VectorPtr current = selectedVector();
 
   _vector->clear();
   foreach (QString string, list) {
-    KstVectorPtr v = vectors.value(string);
+    VectorPtr v = vectors.value(string);
     _vector->addItem(string, qVariantFromValue(v.data()));
   }
 

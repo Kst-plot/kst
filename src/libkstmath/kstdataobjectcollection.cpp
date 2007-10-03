@@ -18,11 +18,11 @@
 #include "kstdataobjectcollection.h"
 
 /** The list of data objects which are in use */
-KstDataObjectList KST::dataObjectList;
+Kst::DataObjectList KST::dataObjectList;
 
 KstRelationList KST::relationList;
 
-void KST::addDataObjectToList(KstDataObjectPtr d) {
+void KST::addDataObjectToList(Kst::DataObjectPtr d) {
   KST::dataObjectList.lock().writeLock();
   KST::dataObjectList.append(d);
   KST::dataObjectList.lock().unlock();

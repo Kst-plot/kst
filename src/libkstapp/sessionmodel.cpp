@@ -46,7 +46,7 @@ int SessionModel::rowCount(const QModelIndex& parent) const {
   }
 
   KST::dataObjectList.lock().readLock();
-  KstDataObject *pdo = KST::dataObjectList.at(parent.row());
+  DataObject *pdo = KST::dataObjectList.at(parent.row());
   KST::dataObjectList.lock().unlock();
   Q_ASSERT(pdo);
   if (pdo) {
@@ -67,12 +67,12 @@ QVariant SessionModel::data(const QModelIndex& index, int role) const {
     if (index.parent().isValid()) {
       Q_ASSERT(!index.parent().parent().isValid());
       QVariant p = data(index.parent(), role);
-      KstDataObjectPtr parent = qVariantValue<KstDataObject*>(p);
-      KstVectorPtr v = parent->outputVectors().values()[index.row()];
+      DataObjectPtr parent = qVariantValue<DataObject*>(p);
+      VectorPtr v = parent->outputVectors().values()[index.row()];
       return qVariantFromValue(v.data());
     } else {
       KST::dataObjectList.lock().readLock();
-      KstDataObjectPtr p = KST::dataObjectList[index.row()];
+      DataObjectPtr p = KST::dataObjectList[index.row()];
       KST::dataObjectList.lock().unlock();
       return qVariantFromValue(p.data());
     }
@@ -95,13 +95,13 @@ QVariant SessionModel::vectorData(const QModelIndex& index, int role) const {
   Q_UNUSED(role)
   QVariant rc;
 
-  KstDataObject *parent = static_cast<KstDataObject*>(index.internalPointer());
+  DataObject *parent = static_cast<DataObject*>(index.internalPointer());
   if (!parent) {
     return rc;
   }
 
   const int row = index.row(), col = index.column();
-  KstVectorPtr v = parent->outputVectors().values()[row];
+  VectorPtr v = parent->outputVectors().values()[row];
   if (!v) {
     return rc;
   }
@@ -139,7 +139,7 @@ QVariant SessionModel::dataObjectData(const QModelIndex& index, int role) const 
   QVariant rc;
   const int row = index.row(), col = index.column();
   KST::dataObjectList.lock().readLock();
-  KstDataObjectPtr p = KST::dataObjectList[row];
+  DataObjectPtr p = KST::dataObjectList[row];
   KST::dataObjectList.lock().unlock();
   if (!p) {
     return rc;
@@ -190,7 +190,7 @@ QModelIndex SessionModel::index(int row, int col, const QModelIndex& parent) con
 
   KST::dataObjectList.lock().readLock();
   const int cnt = KST::dataObjectList.count();
-  KstDataObject *p = 0;
+  DataObject *p = 0;
   if (row >= 0 && row < cnt) {
     p = KST::dataObjectList.at(row);
   }
@@ -211,7 +211,7 @@ QModelIndex SessionModel::index(int row, int col, const QModelIndex& parent) con
 
 QModelIndex SessionModel::parent(const QModelIndex& index) const {
   // If it is a primitive and has a provider, return the index of that provider
-  KstDataObject *dop = static_cast<KstDataObject*>(index.internalPointer());
+  DataObject *dop = static_cast<DataObject*>(index.internalPointer());
   if (!dop) {
     return QModelIndex();
   }

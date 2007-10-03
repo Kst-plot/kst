@@ -17,7 +17,7 @@
 #ifndef GENERATEDVECTOR_H
 #define GENERATEDVECTOR_H
 
-#include "kstvector.h"
+#include "vector.h"
 #include "kst_export.h"
 
 namespace Kst {
@@ -26,7 +26,7 @@ namespace Kst {
  *@author cbn
  */
 
-class KST_EXPORT GeneratedVector : public KstVector {
+class KST_EXPORT GeneratedVector : public Vector {
  public:
   GeneratedVector(const QString &tag, const QByteArray &data, double x0, double x1, int n);
   GeneratedVector(double x0, double x1, int n, KstObjectTag tag);

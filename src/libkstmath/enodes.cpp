@@ -105,12 +105,12 @@ Node::~Node() {
 }
 
 
-bool Node::collectObjects(KstVectorMap&, Kst::ScalarMap&, KstStringMap&) {
+bool Node::collectObjects(Kst::VectorMap&, Kst::ScalarMap&, KstStringMap&) {
   return true;
 }
 
 
-bool Node::takeVectors(const KstVectorMap&) {
+bool Node::takeVectors(const Kst::VectorMap&) {
   return true;
 }
 
@@ -141,7 +141,7 @@ BinaryNode::~BinaryNode() {
 }
 
 
-bool BinaryNode::collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap& t) {
+bool BinaryNode::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t) {
   bool ok = true;
   ok = _left->collectObjects(v, s, t) ? ok : false;
   ok = _right->collectObjects(v, s, t) ? ok : false;
@@ -149,7 +149,7 @@ bool BinaryNode::collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap
 }
 
 
-bool BinaryNode::takeVectors(const KstVectorMap& c) {
+bool BinaryNode::takeVectors(const Kst::VectorMap& c) {
   bool rc = _left->takeVectors(c);
   rc = _right->takeVectors(c) && rc;
   return rc;
@@ -482,12 +482,12 @@ bool Function::isConst() {
 }
 
 
-bool Function::collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap& t) {
+bool Function::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t) {
   return _args->collectObjects(v, s, t);
 }
 
 
-bool Function::takeVectors(const KstVectorMap& c) {
+bool Function::takeVectors(const Kst::VectorMap& c) {
   return _args->takeVectors(c);
 }
 
@@ -533,7 +533,7 @@ bool ArgumentList::isConst() {
 }
 
 
-bool ArgumentList::collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap& t) {
+bool ArgumentList::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t) {
   bool ok = true;
   foreach (Node *i, _args) {
     ok = i->collectObjects(v, s, t) ? ok : false;
@@ -542,7 +542,7 @@ bool ArgumentList::collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringM
 }
 
 
-bool ArgumentList::takeVectors(const KstVectorMap& c) {
+bool ArgumentList::takeVectors(const Kst::VectorMap& c) {
   bool rc = true;
   foreach (Node *i, _args) {
     rc = i->takeVectors(c) && rc;
@@ -737,7 +737,7 @@ bool Data::isConst() {
 }
 
 
-bool Data::collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap& t) {
+bool Data::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t) {
   if (_isEquation) {
     if (_equation) {
       _equation->collectObjects(v, s, t);
@@ -754,7 +754,7 @@ bool Data::collectObjects(KstVectorMap& v, Kst::ScalarMap& s, KstStringMap& t) {
 }
 
 
-bool Data::takeVectors(const KstVectorMap& c) {
+bool Data::takeVectors(const Kst::VectorMap& c) {
   if (_isEquation) {
     if (_equation) {
       return _equation->takeVectors(c);

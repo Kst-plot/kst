@@ -41,12 +41,12 @@ const QLatin1String& SVECTOR = QLatin1String("S");
 const QLatin1String& FVECTOR = QLatin1String("F");
 
 #define KSTPSDMAXLEN 27
-KstPSD::KstPSD(const QString &in_tag, KstVectorPtr in_V,
+KstPSD::KstPSD(const QString &in_tag, Kst::VectorPtr in_V,
                          double in_freq, bool in_average, int in_averageLen,
                          bool in_apodize, bool in_removeMean,
                          const QString &in_VUnits, const QString &in_RUnits, ApodizeFunction in_apodizeFxn, 
                          double in_gaussianSigma, PSDType in_output)
-: KstDataObject() {
+: Kst::DataObject() {
   commonConstructor(in_tag, in_V, in_freq, in_average, in_averageLen,
                     in_apodize, in_removeMean,
                     in_VUnits, in_RUnits, in_apodizeFxn, in_gaussianSigma,
@@ -56,12 +56,12 @@ KstPSD::KstPSD(const QString &in_tag, KstVectorPtr in_V,
 
 
 KstPSD::KstPSD(const QDomElement &e)
-: KstDataObject(e) {
+: Kst::DataObject(e) {
   QString in_VUnits;
   QString in_RUnits;
   QString in_tag;
   QString vecName;
-  KstVectorPtr in_V;
+  Kst::VectorPtr in_V;
   double in_freq = 60.0;
   bool in_average = true;
   bool in_removeMean = true;
@@ -127,7 +127,7 @@ KstPSD::KstPSD(const QDomElement &e)
 }
 
 
-void KstPSD::commonConstructor(const QString& in_tag, KstVectorPtr in_V,
+void KstPSD::commonConstructor(const QString& in_tag, Kst::VectorPtr in_V,
                                double in_freq, bool in_average, int in_averageLen, bool in_apodize, 
                                bool in_removeMean, const QString& in_VUnits, const QString& in_RUnits, 
                                ApodizeFunction in_apodizeFxn, double in_gaussianSigma, PSDType in_output,
@@ -156,10 +156,10 @@ void KstPSD::commonConstructor(const QString& in_tag, KstVectorPtr in_V,
   _last_n_new = 0;
 
   _PSDLen = 1;
-  KstVectorPtr ov = new KstVector(KstObjectTag("freq", tag()), _PSDLen, this);
+  Kst::VectorPtr ov = new Kst::Vector(KstObjectTag("freq", tag()), _PSDLen, this);
   _fVector = _outputVectors.insert(FVECTOR, ov);
 
-  ov = new KstVector(KstObjectTag("sv", tag()), _PSDLen, this);
+  ov = new Kst::Vector(KstObjectTag("sv", tag()), _PSDLen, this);
   _sVector = _outputVectors.insert(SVECTOR, ov);
 
   updateVectorLabels();
@@ -195,7 +195,7 @@ KstObject::UpdateType KstPSD::update(int update_counter) {
 
   writeLockInputsAndOutputs();
 
-  KstVectorPtr iv = _inputVectors[INVECTOR];
+  Kst::VectorPtr iv = _inputVectors[INVECTOR];
 
   if (update_counter <= 0) {
     assert(update_counter == 0);
@@ -366,10 +366,10 @@ QString KstPSD::vTag() const {
 }
 
 
-void KstPSD::setVector(KstVectorPtr new_v) {
+void KstPSD::setVector(Kst::VectorPtr new_v) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  KstVectorPtr v = _inputVectors[INVECTOR];
+  Kst::VectorPtr v = _inputVectors[INVECTOR];
   if (v) {
     if (v == new_v) {
       return;
@@ -450,7 +450,7 @@ void KstPSD::setGaussianSigma(double in_gaussianSigma) {
 }
 
  
-KstDataObjectPtr KstPSD::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap) {
+Kst::DataObjectPtr KstPSD::makeDuplicate(Kst::DataObjectDataObjectMap& duplicatedMap) {
   QString name(tagName() + '\'');
   while (KstData::self()->dataTagNameNotUnique(name, false)) {
     name += '\'';
@@ -458,8 +458,8 @@ KstDataObjectPtr KstPSD::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap
   KstPSDPtr psd = new KstPSD(name, _inputVectors[INVECTOR], _Freq,
                              _Average, _averageLen, _Apodize, _RemoveMean, _vUnits, _rUnits, 
                              _apodizeFxn, _gaussianSigma, _Output);
-  duplicatedMap.insert(this, KstDataObjectPtr(psd));    
-  return KstDataObjectPtr(psd);
+  duplicatedMap.insert(this, Kst::DataObjectPtr(psd));
+  return Kst::DataObjectPtr(psd);
 }
 
 

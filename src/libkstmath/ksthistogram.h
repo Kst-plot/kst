@@ -22,14 +22,14 @@
 #ifndef KSTHISTOGRAM_H
 #define KSTHISTOGRAM_H
 
-#include "kstdataobject.h"
+#include "dataobject.h"
 #include "kst_export.h"
 
 enum KstHsNormType { KST_HS_NUMBER, KST_HS_PERCENT, KST_HS_FRACTION, KST_HS_MAX_ONE};
 
-class KST_EXPORT KstHistogram : public KstDataObject {
+class KST_EXPORT KstHistogram : public Kst::DataObject {
 public:
-  KstHistogram(const QString &in_tag, KstVectorPtr in_V,
+  KstHistogram(const QString &in_tag, Kst::VectorPtr in_V,
                double xmin_in, double xmax_in,
                int in_n_bins,
                KstHsNormType new_norm_in);
@@ -47,7 +47,7 @@ public:
 
   QString vTag() const;
 
-  void setVector(KstVectorPtr);
+  void setVector(Kst::VectorPtr);
 
   virtual QString yLabel() const;
   virtual QString xLabel() const;
@@ -61,7 +61,7 @@ public:
   bool isNormOne()        const { return _NormMode == KST_HS_MAX_ONE; }
   void setIsNormOne()           { _NormMode = KST_HS_MAX_ONE; }
 
-  static void AutoBin(const KstVectorPtr, int *n, double *max, double *min);
+  static void AutoBin(const Kst::VectorPtr, int *n, double *max, double *min);
 
   virtual void showNewDialog();
   virtual void showEditDialog();
@@ -74,8 +74,8 @@ public:
   void setRealTimeAutoBin(bool autobin);
   bool realTimeAutoBin() const;
 
-  KstVectorPtr vX() const { return *_bVector; }
-  KstVectorPtr vY() const { return *_hVector; }
+  Kst::VectorPtr vX() const { return *_bVector; }
+  Kst::VectorPtr vY() const { return *_hVector; }
 
   double xMin() const { return _MinX; }
   double xMax() const { return _MaxX; }
@@ -85,12 +85,12 @@ public:
   double vMin() const;
   int vNumSamples() const;
   
-  virtual KstDataObjectPtr makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap);
+  virtual Kst::DataObjectPtr makeDuplicate(Kst::DataObjectDataObjectMap& duplicatedMap);
 
 private:
   KstHsNormType _NormMode;
-  KstVectorMap::Iterator _bVector;
-  KstVectorMap::Iterator _hVector;
+  Kst::VectorMap::Iterator _bVector;
+  Kst::VectorMap::Iterator _hVector;
   double _MaxX;
   double _MinX;
   int _NS;
@@ -100,7 +100,7 @@ private:
   double _W;
   bool _realTimeAutoBin;
   
-  void commonConstructor(const QString &in_tag, KstVectorPtr in_V,
+  void commonConstructor(const QString &in_tag, Kst::VectorPtr in_V,
                          double xmin_in, double xmax_in,
                          int in_n_bins,
                          KstHsNormType in_norm);

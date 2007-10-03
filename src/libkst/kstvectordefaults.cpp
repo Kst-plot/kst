@@ -81,7 +81,7 @@ int KstVectorDefaults::skip() const {
 
 void KstVectorDefaults::sync() {
   KST::vectorList.lock().readLock();
-  Kst::DataVectorList vl = kstObjectSubList<KstVector,Kst::DataVector>(KST::vectorList);
+  Kst::DataVectorList vl = kstObjectSubList<Kst::Vector,Kst::DataVector>(KST::vectorList);
   KST::vectorList.lock().unlock();
   int j = vl.count() - 1;
 

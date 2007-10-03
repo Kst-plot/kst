@@ -108,7 +108,7 @@ class KST_EXPORT KstImage : public KstRelation {
 #endif
 
     // see KstRelation::providerDataObject
-    virtual KstDataObjectPtr providerDataObject() const;
+    virtual Kst::DataObjectPtr providerDataObject() const;
     
     // see KstRelation::distanceToPoint
     virtual double distanceToPoint(double xpos, double dx, double ypos) const;

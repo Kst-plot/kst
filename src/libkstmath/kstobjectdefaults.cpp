@@ -38,7 +38,7 @@ KstObjectDefaults::KstObjectDefaults() {
 
 
 void KstObjectDefaults::sync() {
-  KstPSDList pl = kstObjectSubList<KstDataObject, KstPSD>(KST::dataObjectList);
+  KstPSDList pl = kstObjectSubList<Kst::DataObject, KstPSD>(KST::dataObjectList);
 
   const int j = pl.count() - 1;
   if (j >= 0) {

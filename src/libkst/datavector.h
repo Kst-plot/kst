@@ -18,7 +18,7 @@
 #ifndef DATAVECTOR_H
 #define DATAVECTOR_H
 
-#include "kstvector.h"
+#include "vector.h"
 
 #include "kstdatasource.h"
 #include "kst_export.h"
@@ -33,7 +33,7 @@ namespace Kst {
  *@author cbn
  */
    
-class KST_EXPORT DataVector : public KstVector {
+class KST_EXPORT DataVector : public Vector {
 public:
   /** Create an RVECTOR */
   DataVector(KstDataSourcePtr file, const QString &field,

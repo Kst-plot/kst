@@ -31,20 +31,20 @@ static const QLatin1String& RAWVECTOR  = QLatin1String("I");
 static const QLatin1String& BINS = QLatin1String("B");
 static const QLatin1String& HIST = QLatin1String("H");
 
-KstHistogram::KstHistogram(const QString &in_tag, KstVectorPtr in_V,
+KstHistogram::KstHistogram(const QString &in_tag, Kst::VectorPtr in_V,
                            double xmin_in, double xmax_in,
                            int in_n_bins,
                            KstHsNormType in_norm_mode)
-: KstDataObject() {
+: Kst::DataObject() {
   setRealTimeAutoBin(false);
 
   commonConstructor(in_tag, in_V, xmin_in, xmax_in, in_n_bins, in_norm_mode);
 }
 
 KstHistogram::KstHistogram(const QDomElement &e)
-: KstDataObject(e) {
+: Kst::DataObject(e) {
   KstHsNormType in_norm_mode;
-  KstVectorPtr in_V;
+  Kst::VectorPtr in_V;
   QString rawName;
   QString in_tag;
   double xmax_in =  1.0;
@@ -91,7 +91,7 @@ KstHistogram::KstHistogram(const QDomElement &e)
 }
 
 
-void KstHistogram::commonConstructor(const QString &in_tag, KstVectorPtr in_V,
+void KstHistogram::commonConstructor(const QString &in_tag, Kst::VectorPtr in_V,
                                      double xmin_in,
                                      double xmax_in,
                                      int in_n_bins,
@@ -124,10 +124,10 @@ void KstHistogram::commonConstructor(const QString &in_tag, KstVectorPtr in_V,
   _Bins = new unsigned long[_NBins];
   _NS = 3 * _NBins + 1;
 
-  KstVectorPtr v = new KstVector(KstObjectTag("bins", tag()), _NBins, this);
+  Kst::VectorPtr v = new Kst::Vector(KstObjectTag("bins", tag()), _NBins, this);
   _bVector = _outputVectors.insert(BINS, v);
 
-  v = new KstVector(KstObjectTag("sv", tag()), _NBins, this);
+  v = new Kst::Vector(KstObjectTag("sv", tag()), _NBins, this);
   _hVector = _outputVectors.insert(HIST, v);
 
   setDirty();
@@ -313,7 +313,7 @@ QString KstHistogram::vTag() const {
 }
 
 
-void KstHistogram::setVector(KstVectorPtr new_v) {
+void KstHistogram::setVector(Kst::VectorPtr new_v) {
   _inputVectors[RAWVECTOR] = new_v;
 }
 
@@ -386,7 +386,7 @@ void KstHistogram::showEditDialog() {
 }
 
 
-void KstHistogram::AutoBin(KstVectorPtr V, int *n, double *max, double *min) {
+void KstHistogram::AutoBin(Kst::VectorPtr V, int *n, double *max, double *min) {
   double m;
 
   *max = V->max();
@@ -450,15 +450,15 @@ int KstHistogram::vNumSamples() const {
 }
 
 
-KstDataObjectPtr KstHistogram::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap) {
+Kst::DataObjectPtr KstHistogram::makeDuplicate(Kst::DataObjectDataObjectMap& duplicatedMap) {
   QString name(tagName() + '\'');
   while (KstData::self()->dataTagNameNotUnique(name, false)) {
     name += '\'';
   }
   KstHistogramPtr histogram = new KstHistogram(name, _inputVectors[RAWVECTOR],
                                                _MinX, _MaxX, _NBins, _NormMode);
-  duplicatedMap.insert(this, KstDataObjectPtr(histogram));
-  return KstDataObjectPtr(histogram);
+  duplicatedMap.insert(this, Kst::DataObjectPtr(histogram));
+  return Kst::DataObjectPtr(histogram);
 }
 
 

@@ -41,19 +41,19 @@ const QString& KstCurveHint::yVectorName() const {
 }
 
 
-KstVectorPtr KstCurveHint::xVector() const {
+Kst::VectorPtr KstCurveHint::xVector() const {
   return *KST::vectorList.findTag(_xVectorName);
 }
 
 
-KstVectorPtr KstCurveHint::yVector() const {
+Kst::VectorPtr KstCurveHint::yVector() const {
   return *KST::vectorList.findTag(_yVectorName);
 }
 
 
 KstRelationPtr KstCurveHint::makeCurve(const QString& tag, const QColor& color) const {
-  KstVectorPtr x = xVector();
-  KstVectorPtr y = yVector();
+  Kst::VectorPtr x = xVector();
+  Kst::VectorPtr y = yVector();
   if (!x || !y) {
     qDebug() << "Couldn't find either " << _xVectorName << " or " << _yVectorName << endl;
     return 0L;

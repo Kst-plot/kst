@@ -12,7 +12,7 @@
 #ifndef EDITABLEVECTOR_H
 #define EDITABLEVECTOR_H
 
-#include "kstvector.h"
+#include "vector.h"
 #include "kst_export.h"
 
 /**A vector  with n editable pts
@@ -21,7 +21,7 @@
 
 namespace Kst {
 
-class EditableVector : public KstVector {
+class EditableVector : public Vector {
  public:
   KST_EXPORT EditableVector(const QString &tag, const QByteArray &data);
   KST_EXPORT EditableVector(int n, KstObjectTag tag);

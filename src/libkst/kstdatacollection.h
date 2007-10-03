@@ -20,7 +20,7 @@
 
 #include "kstdatasource.h"
 #include "kststring.h"
-#include "kstvector.h"
+#include "vector.h"
 #include "kstmatrix.h"
 #include "kst_export.h"
 #include "kstobjectcollection.h"
@@ -53,8 +53,8 @@ class KstData {
     virtual void removeCurveFromPlots(KstRelation *c); // no sharedptr here
 
     /** Save a vector to a file */
-    virtual int vectorToFile(KstVectorPtr v, QFile *f);
-    virtual int vectorsToFile(const KstVectorList& l, QFile *f, bool interpolate);
+    virtual int vectorToFile(Kst::VectorPtr v, QFile *f);
+    virtual int vectorsToFile(const Kst::VectorList& l, QFile *f, bool interpolate);
 
     /** The list of plots for the given window.  Returns all plots if
         the window is empty/null. */
@@ -75,7 +75,7 @@ namespace KST {
     KST_EXPORT extern KstDataSourceList dataSourceList;
 
     /** The list of vectors that are being read */
-    KST_EXPORT extern KstVectorCollection vectorList;
+    KST_EXPORT extern Kst::VectorCollection vectorList;
 
     /** The list of Scalars which have been generated */
     KST_EXPORT extern Kst::ScalarCollection scalarList;

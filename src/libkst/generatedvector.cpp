@@ -22,7 +22,7 @@
 namespace Kst {
 
 GeneratedVector::GeneratedVector(const QString &tag, const QByteArray &data, double x0, double x1, int n)
-  : KstVector(tag, data) {
+  : Vector(tag, data) {
   _saveable = true;
   _saveData = false;
   changeRange( x0,  x1,  n );
@@ -30,7 +30,7 @@ GeneratedVector::GeneratedVector(const QString &tag, const QByteArray &data, dou
 
 
 GeneratedVector::GeneratedVector(double x0, double x1, int n, KstObjectTag tag)
-  : KstVector(tag, n) {
+  : Vector(tag, n) {
   _saveable = true;
   _saveData = false;
   changeRange( x0, x1, n );
@@ -80,7 +80,7 @@ KstObject::UpdateType GeneratedVector::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
-  KstObject::UpdateType baseRC = KstVector::update(update_counter);
+  KstObject::UpdateType baseRC = Vector::update(update_counter);
   if (force) {
     baseRC = UPDATE;
   }

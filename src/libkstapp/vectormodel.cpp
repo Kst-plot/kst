@@ -17,7 +17,7 @@
 
 namespace Kst {
 
-VectorModel::VectorModel(KstVector *v)
+VectorModel::VectorModel(Vector *v)
 : QAbstractItemModel(), _v(v) {
   assert(v);
 }

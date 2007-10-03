@@ -40,11 +40,11 @@ static const QLatin1String INVECTOR = QLatin1String("I");
 static const QLatin1String& OUTMATRIX = QLatin1String("M");
 
 #define KSTCSDMAXLEN 27
-KstCSD::KstCSD(const QString &in_tag, KstVectorPtr in_V,
+KstCSD::KstCSD(const QString &in_tag, Kst::VectorPtr in_V,
                double in_freq, bool in_average, bool in_removeMean, bool in_apodize, 
                ApodizeFunction in_apodizeFxn, int in_windowSize, int in_averageLength, double in_gaussianSigma, 
                PSDType in_outputType, const QString &in_vectorUnits, const QString &in_rateUnits)
-: KstDataObject() {
+: Kst::DataObject() {
   commonConstructor(in_tag, in_V, in_freq, in_average, in_removeMean,
                     in_apodize, in_apodizeFxn, in_windowSize, in_averageLength, in_gaussianSigma, 
                     in_vectorUnits, in_rateUnits, in_outputType, in_V->tagName());
@@ -53,12 +53,12 @@ KstCSD::KstCSD(const QString &in_tag, KstVectorPtr in_V,
 
 
 KstCSD::KstCSD(const QDomElement &e)
-: KstDataObject(e) {
+: Kst::DataObject(e) {
   
     QString in_tag;
     QString vecName;
     QString in_vectorUnits, in_rateUnits;
-    KstVectorPtr in_V;
+    Kst::VectorPtr in_V;
     double in_freq = 60.0;
     bool in_average = true;
     int in_averageLength = 8;
@@ -112,7 +112,7 @@ KstCSD::KstCSD(const QDomElement &e)
 }
 
 
-void KstCSD::commonConstructor(const QString& in_tag, KstVectorPtr in_V,
+void KstCSD::commonConstructor(const QString& in_tag, Kst::VectorPtr in_V,
                                double in_freq, bool in_average, bool in_removeMean, bool in_apodize, 
                                ApodizeFunction in_apodizeFxn, int in_windowSize, int in_averageLength, 
                                double in_gaussianSigma, const QString& in_vectorUnits, 
@@ -162,7 +162,7 @@ KstCSD::~KstCSD() {
 KstObject::UpdateType KstCSD::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  KstVectorPtr inVector = _inputVectors[INVECTOR];
+  Kst::VectorPtr inVector = _inputVectors[INVECTOR];
 
   bool force = dirty();
   setDirty(false);
@@ -253,8 +253,8 @@ QString KstCSD::vTag() const {
 }
 
 
-void KstCSD::setVector(KstVectorPtr new_v) {
-  KstVectorPtr v = _inputVectors[INVECTOR];
+void KstCSD::setVector(Kst::VectorPtr new_v) {
+  Kst::VectorPtr v = _inputVectors[INVECTOR];
   if (v) {
     if (v == new_v) {
       return;
@@ -412,7 +412,7 @@ void KstCSD::setRateUnits(const QString& units) {
 }
 
  
-KstDataObjectPtr KstCSD::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap) {
+Kst::DataObjectPtr KstCSD::makeDuplicate(Kst::DataObjectDataObjectMap& duplicatedMap) {
   QString name(tagName() + '\'');
   while (KstData::self()->dataTagNameNotUnique(name, false)) {
     name += '\'';
@@ -420,8 +420,8 @@ KstDataObjectPtr KstCSD::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap
   KstCSDPtr csd = new KstCSD(name, _inputVectors[INVECTOR], _frequency, _average, _removeMean,
                              _apodize, _apodizeFxn, _windowSize, _averageLength, _gaussianSigma, 
                              _outputType, _vectorUnits, _rateUnits);
-  duplicatedMap.insert(this, KstDataObjectPtr(csd));
-  return KstDataObjectPtr(csd);
+  duplicatedMap.insert(this, Kst::DataObjectPtr(csd));
+  return Kst::DataObjectPtr(csd);
 }
 
 void KstCSD::updateMatrixLabels(void) {

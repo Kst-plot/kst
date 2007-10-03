@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTVECTOR_H
-#define KSTVECTOR_H
+#ifndef VECTOR_H
+#define VECTOR_H
 
 #include <math.h>
 #include <qhash.h>
@@ -40,10 +40,13 @@ namespace Equation {
   class Node;
 }
 
+
+namespace Kst {
+
 class KstDataObject;
 
-class KstVector;
-typedef KstSharedPtr<KstVector> KstVectorPtr;
+class Vector;
+typedef KstSharedPtr<Vector> VectorPtr;
 // KST::interpolate is still too polluting
 extern double kstInterpolate(double *v, int _size, int in_i, int ns_i) KST_EXPORT;
 extern double kstInterpolateNoHoles(double *v, int _size, int in_i, int ns_i) KST_EXPORT;
@@ -51,18 +54,18 @@ extern double kstInterpolateNoHoles(double *v, int _size, int in_i, int ns_i) KS
 /**A class for handling data vectors for kst.
  *@author cbn
  */
-class KstVector : public KstPrimitive {
+class Vector : public KstPrimitive {
   Q_OBJECT
   public:
     /**
      * Vectors do not automatically add themselves to the global vector list
      */
-    KstVector(KstObjectTag in_tag = KstObjectTag::invalidTag, int size = 0,
+    Vector(KstObjectTag in_tag = KstObjectTag::invalidTag, int size = 0,
         KstObject *provider = 0L, bool bIsScalarList = false);
-    KstVector(const QString &tag, const QByteArray &data);
+    Vector(const QString &tag, const QByteArray &data);
 
   protected:
-    virtual ~KstVector();
+    virtual ~Vector();
 
   public:
     inline int length() const { return _size; }
@@ -131,7 +134,7 @@ class KstVector : public KstPrimitive {
 
     /** Generate a new vector [x0..x1] with n total points */
     // #### Remove
-    static KstVectorPtr generateVector(double x0, double x1, int n, const KstObjectTag& tag);
+    static VectorPtr generateVector(double x0, double x1, int n, const KstObjectTag& tag);
 
     virtual void setTagName(const KstObjectTag& newTag);
 
@@ -141,7 +144,7 @@ class KstVector : public KstPrimitive {
     /** access functions for _isScalarList */
     bool isScalarList() const { return _isScalarList; }
     
-    const QHash<QString, Kst::Scalar*>& scalars() const;
+    const QHash<QString, Scalar*>& scalars() const;
 
     void setLabel(const QString& label_in);
 
@@ -174,7 +177,7 @@ class KstVector : public KstPrimitive {
     int NumNew;
 
     /** Statistics Scalars */
-    QHash<QString, Kst::Scalar*> _scalars;
+    QHash<QString, Scalar*> _scalars;
 
     /** is the vector monotonically rising */
     bool _is_rising : 1;
@@ -201,16 +204,17 @@ class KstVector : public KstPrimitive {
 
     QString _label;
     
-    friend class KstDataObject;
+    friend class DataObject;
     virtual double* realloced(double *memptr, int newSize);
     KstObject::UpdateType internalUpdate(KstObject::UpdateType providerRC);
 } KST_EXPORT;
 
-Q_DECLARE_METATYPE(KstVector*)
+typedef KstObjectList<VectorPtr> VectorList;
+typedef KstObjectMap<VectorPtr> VectorMap;
+typedef KstObjectCollection<Vector> VectorCollection;
 
-typedef KstObjectList<KstVectorPtr> KstVectorList;
-typedef KstObjectMap<KstVectorPtr> KstVectorMap;
-typedef KstObjectCollection<KstVector> KstVectorCollection;
+}
 
+Q_DECLARE_METATYPE(Kst::Vector*)
 #endif
 // vim: ts=2 sw=2 et

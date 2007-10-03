@@ -46,62 +46,62 @@ CurveTab::~CurveTab() {
 }
 
 
-KstVectorPtr CurveTab::xVector() const {
+VectorPtr CurveTab::xVector() const {
   return _xVector->selectedVector();
 }
 
 
-void CurveTab::setXVector(KstVectorPtr vector) {
+void CurveTab::setXVector(VectorPtr vector) {
   _xVector->setSelectedVector(vector);
 }
 
 
-KstVectorPtr CurveTab::yVector() const {
+VectorPtr CurveTab::yVector() const {
   return _yVector->selectedVector();
 }
 
 
-void CurveTab::setYVector(KstVectorPtr vector) {
+void CurveTab::setYVector(VectorPtr vector) {
   _yVector->setSelectedVector(vector);
 }
 
 
-KstVectorPtr CurveTab::xError() const {
+VectorPtr CurveTab::xError() const {
   return _xError->selectedVector();
 }
 
 
-void CurveTab::setXError(KstVectorPtr vector) {
+void CurveTab::setXError(VectorPtr vector) {
   _xError->setSelectedVector(vector);
 }
 
 
-KstVectorPtr CurveTab::yError() const {
+VectorPtr CurveTab::yError() const {
   return _yError->selectedVector();
 }
 
 
-void CurveTab::setYError(KstVectorPtr vector) {
+void CurveTab::setYError(VectorPtr vector) {
   _yError->setSelectedVector(vector);
 }
 
 
-KstVectorPtr CurveTab::xMinusError() const {
+VectorPtr CurveTab::xMinusError() const {
   return _xMinusError->selectedVector();
 }
 
 
-void CurveTab::setXMinusError(KstVectorPtr vector) {
+void CurveTab::setXMinusError(VectorPtr vector) {
   _xMinusError->setSelectedVector(vector);
 }
 
 
-KstVectorPtr CurveTab::yMinusError() const {
+VectorPtr CurveTab::yMinusError() const {
   return _yMinusError->selectedVector();
 }
 
 
-void CurveTab::setYMinusError(KstVectorPtr vector) {
+void CurveTab::setYMinusError(VectorPtr vector) {
   _yMinusError->setSelectedVector(vector);
 }
 

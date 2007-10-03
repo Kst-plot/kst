@@ -20,7 +20,7 @@
 namespace Kst {
 
 EditableVector::EditableVector(const QString &tag, const QByteArray &data)
-: KstVector(tag, data) {
+: Vector(tag, data) {
   _editable = true;
   _saveable = true;
   _saveData = true;
@@ -28,7 +28,7 @@ EditableVector::EditableVector(const QString &tag, const QByteArray &data)
 
 
 EditableVector::EditableVector(int n, KstObjectTag tag)
-: KstVector(tag, n) {
+: Vector(tag, n) {
   _editable = true;
   _saveable = true;
   _saveData = true;
@@ -44,7 +44,7 @@ KstObject::UpdateType EditableVector::update(int update_counter) {
     return lastUpdateResult();
   }
 
-  KstObject::UpdateType baseRC = KstVector::update(update_counter);
+  KstObject::UpdateType baseRC = Vector::update(update_counter);
   if (force) {
     baseRC = UPDATE;
   }

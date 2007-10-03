@@ -14,14 +14,14 @@
 
 #include <QAbstractItemModel>
 #include <QPointer>
-#include <kstvector.h>
+#include <vector.h>
 
 namespace Kst {
 
 class VectorModel : public QAbstractItemModel
 {
 public:
-  VectorModel(KstVector *v);
+  VectorModel(Vector *v);
   ~VectorModel();
 
   int columnCount(const QModelIndex& parent = QModelIndex()) const;
@@ -34,7 +34,7 @@ public:
   bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
 private:
-  QPointer<KstVector> _v;
+  QPointer<Vector> _v;
 };
 
 }

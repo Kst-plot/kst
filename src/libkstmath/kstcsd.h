@@ -21,14 +21,14 @@
 #ifndef KSTCSD_H
 #define KSTCSD_H
 
-#include "kstdataobject.h"
+#include "dataobject.h"
 #include "psdcalculator.h"
 #include "kst_export.h"
 
 
-class KST_EXPORT KstCSD : public KstDataObject {
+class KST_EXPORT KstCSD : public Kst::DataObject {
   public:
-    KstCSD(const QString &in_tag, KstVectorPtr in_V, double in_freq, bool in_average, bool in_removeMean,
+    KstCSD(const QString &in_tag, Kst::VectorPtr in_V, double in_freq, bool in_average, bool in_removeMean,
            bool in_apodize, ApodizeFunction in_apodizeFxn, int in_windowSize, int in_length,
            double in_gaussianSigma, PSDType in_outputType, const QString& in_vectorUnits = QString::null, 
            const QString& in_rateUnits = QString::null);
@@ -41,7 +41,7 @@ class KST_EXPORT KstCSD : public KstDataObject {
     virtual QString propertyString() const;
     
     QString vTag() const;
-    void setVector(KstVectorPtr);
+    void setVector(Kst::VectorPtr);
 
     virtual bool slaveVectorsUsed() const;
 
@@ -83,10 +83,10 @@ class KST_EXPORT KstCSD : public KstDataObject {
     
     KstMatrixPtr outputMatrix() const;
     
-    virtual KstDataObjectPtr makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap);
+    virtual Kst::DataObjectPtr makeDuplicate(Kst::DataObjectDataObjectMap& duplicatedMap);
 
   private:
-    void commonConstructor(const QString &in_tag, KstVectorPtr in_V, double in_freq, bool in_average, 
+    void commonConstructor(const QString &in_tag, Kst::VectorPtr in_V, double in_freq, bool in_average,
                             bool in_removeMean, bool in_apodize, ApodizeFunction in_apodizeFxn, 
                             int in_windowSize, int in_length, double in_gaussianSigma, 
                             const QString& in_vectorUnits, const QString& in_rateUnits, 

@@ -48,7 +48,7 @@ DataVector::DataVector(KstDataSourcePtr in_file, const QString &in_field,
                        KstObjectTag in_tag,
                        int in_f0, int in_n, int skip, bool in_DoSkip,
                        bool in_DoAve)
-: KstVector(in_tag) {
+: Vector(in_tag) {
   commonRVConstructor(in_file, in_field, in_f0, in_n, skip,
       in_DoSkip, in_DoAve);
 }
@@ -60,7 +60,7 @@ DataVector::DataVector(const QString &tag, const QByteArray &data,
                        int skip, bool doAve,
                        const QString &o_file,
                        int o_n, int o_f, int o_s, bool o_ave)
-: KstVector(tag, data) {
+: Vector(tag, data) {
   KstDataSourcePtr in_file, in_provider;
   QString in_field;
   int in_f0 = 0;
@@ -686,7 +686,7 @@ KstObject::UpdateType DataVector::doUpdate(bool force) {
     NumShifted = _size;
   }
 
-  return KstVector::internalUpdate(UPDATE);
+  return Vector::internalUpdate(UPDATE);
 }
 
 
