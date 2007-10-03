@@ -52,12 +52,12 @@ VectorTab::~VectorTab() {
 }
 
 
-KstDataSourcePtr VectorTab::dataSource() const {
+DataSourcePtr VectorTab::dataSource() const {
   return _dataSource;
 }
 
 
-void VectorTab::setDataSource(KstDataSourcePtr dataSource) {
+void VectorTab::setDataSource(DataSourcePtr dataSource) {
   _dataSource = dataSource;
 }
 
@@ -143,7 +143,7 @@ void VectorTab::fileNameChanged(const QString &file) {
   dataSourceList.lock().unlock();
 
   if (!_dataSource) {
-    _dataSource = KstDataSource::loadSource(file, QString());
+    _dataSource = DataSource::loadSource(file, QString());
   }
 
   if (!_dataSource) {
@@ -227,7 +227,7 @@ KstObjectPtr VectorDialog::createNewDataObject() const {
 
 
 KstObjectPtr VectorDialog::createNewDataVector() const {
-  const KstDataSourcePtr dataSource = _vectorTab->dataSource();
+  const DataSourcePtr dataSource = _vectorTab->dataSource();
 
   //FIXME better validation than this please...
   if (!dataSource)

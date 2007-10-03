@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
   atexit(exitHelper);
 
   QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
-  KstDataSource::setupOnStartup(settingsObject);
+  Kst::DataSource::setupOnStartup(settingsObject);
 
   char field_list[40][120], in_filename[180], out_filename[180], out_type[40];
   int n_field=0;
@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
 
   if (!do_skip) do_ave = false;
 
-  KstDataSourcePtr file = KstDataSource::loadSource(in_filename);
+  Kst::DataSourcePtr file = Kst::DataSource::loadSource(in_filename);
   if (!file || !file->isValid() || file->isEmpty()) {
     fprintf(stderr, "d2asc error: file %s has no data\n", in_filename);
     return -2;
@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
       NS = vlist.at(i)->length();
   }
 
-  KstDataSourcePtr out_file;
+  Kst::DataSourcePtr out_file;
 //FIXME
 #if 0
   KService::List sl = KServiceTypeTrader::self()->query("Kst Data Source");

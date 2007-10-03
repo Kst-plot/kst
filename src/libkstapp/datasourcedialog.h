@@ -17,7 +17,7 @@
 #include "kst_export.h"
 
 #include "datadialog.h"
-#include "kstdatasource.h"
+#include "datasource.h"
 
 class QAbstractButton;
 class QDialogButtonBox;
@@ -28,10 +28,10 @@ class KST_EXPORT DataSourceDialog : public QDialog
 {
   Q_OBJECT
   public:
-    DataSourceDialog(DataDialog::EditMode mode, KstDataSourcePtr dataSource, QWidget *parent = 0);
+    DataSourceDialog(DataDialog::EditMode mode, DataSourcePtr dataSource, QWidget *parent = 0);
     virtual ~DataSourceDialog();
 
-    KstDataSourcePtr dataSource() const { return _dataSource; }
+    DataSourcePtr dataSource() const { return _dataSource; }
 
   Q_SIGNALS:
     void ok();
@@ -42,7 +42,7 @@ class KST_EXPORT DataSourceDialog : public QDialog
     void buttonClicked(QAbstractButton *button);
 
   private:
-    KstDataSourcePtr _dataSource;
+    DataSourcePtr _dataSource;
     QDialogButtonBox *_buttonBox;
 };
 

@@ -11,7 +11,7 @@
 
 
 #include "kstsharedptr.h"
-#include "kstdatasource.h"
+#include "datasource.h"
 
 #include <QtPlugin>
 #include <QSettings>
@@ -32,7 +32,7 @@ class KstDataSourcePluginInterface : public KstPluginInterface {
   public:
     virtual ~KstDataSourcePluginInterface() {}
 
-    virtual KstDataSource *create(QSettings *cfg,
+    virtual Kst::DataSource *create(QSettings *cfg,
                                   const QString &filename,
                                   const QString &type,
                                   const QDomElement &element) const = 0;
@@ -57,7 +57,7 @@ class KstDataSourcePluginInterface : public KstPluginInterface {
 
     bool provides(const QString& type) const { return provides().contains(type); }
 
-    virtual KstDataSourceConfigWidget *configWidget(QSettings *cfg, const QString& filename) const = 0;
+    virtual Kst::DataSourceConfigWidget *configWidget(QSettings *cfg, const QString& filename) const = 0;
 };
 
 

@@ -35,33 +35,35 @@
 # endif
 #endif
 
-KstStdinSource::KstStdinSource(QSettings *cfg)
-: KstDataSource(cfg, "stdin", "stdin") {
+namespace Kst {
+
+StdinSource::StdinSource(QSettings *cfg)
+: DataSource(cfg, "stdin", "stdin") {
   _file = new QTemporaryFile;
   _filename = _file->fileName();
   // Unfortunately we have to update here.  stdin is a special case.
   update();
-  _src = KstDataSource::loadSource(_filename, "ASCII");
+  _src = DataSource::loadSource(_filename, "ASCII");
   if (_src && _src->isValid()) {
     _valid = true;
   }
 }
 
 
-KstStdinSource::~KstStdinSource() {
+StdinSource::~StdinSource() {
   _file->close();
   delete _file;
   _file = 0L;
 }
 
 
-KstObject::UpdateType KstStdinSource::update(int u) {
+KstObject::UpdateType StdinSource::update(int u) {
   if (KstObject::checkUpdateCounter(u)) {
     return lastUpdateResult();
   }
 
   if (!_valid) {
-    _src = KstDataSource::loadSource(_filename, "ASCII");
+    _src = DataSource::loadSource(_filename, "ASCII");
     if (_src && _src->isValid()) {
       _valid = true;
     } else {
@@ -114,7 +116,7 @@ KstObject::UpdateType KstStdinSource::update(int u) {
 }
 
 
-int KstStdinSource::readField(double *v, const QString& field, int s, int n) {
+int StdinSource::readField(double *v, const QString& field, int s, int n) {
   if (isValid()) {
     return _src->readField(v, field, s, n);
   }
@@ -122,7 +124,7 @@ int KstStdinSource::readField(double *v, const QString& field, int s, int n) {
 }
 
 
-bool KstStdinSource::isValidField(const QString& field) const {
+bool StdinSource::isValidField(const QString& field) const {
   if (isValid()) {
     return _src->isValidField(field);
   }
@@ -130,7 +132,7 @@ bool KstStdinSource::isValidField(const QString& field) const {
 }
 
 
-int KstStdinSource::samplesPerFrame(const QString& field) {
+int StdinSource::samplesPerFrame(const QString& field) {
   if (isValid()) {
     return _src->samplesPerFrame(field);
   }
@@ -138,7 +140,7 @@ int KstStdinSource::samplesPerFrame(const QString& field) {
 }
 
 
-int KstStdinSource::frameCount(const QString& field) const {
+int StdinSource::frameCount(const QString& field) const {
   if (isValid()) {
     return _src->frameCount(field);
   }
@@ -146,7 +148,7 @@ int KstStdinSource::frameCount(const QString& field) const {
 }
 
 
-QString KstStdinSource::fileType() const {
+QString StdinSource::fileType() const {
   if (isValid()) {
     return _src->fileType();
   }
@@ -154,21 +156,22 @@ QString KstStdinSource::fileType() const {
 }
 
 
-void KstStdinSource::save(QXmlStreamWriter &s) {
+void StdinSource::save(QXmlStreamWriter &s) {
   if (isValid()) {
     return _src->save(s);
   }
-  KstDataSource::save(s);
+  DataSource::save(s);
 }
 
 
-bool KstStdinSource::isValid() const {
+bool StdinSource::isValid() const {
   return _valid && _src && _src->isValid();
 }
 
 
-bool KstStdinSource::isEmpty() const {
+bool StdinSource::isEmpty() const {
   return !isValid() || _src->isEmpty();
 }
 
+}
 // vim: ts=2 sw=2 et

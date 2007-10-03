@@ -18,10 +18,10 @@
 #ifndef DIRFILE_H
 #define DIRFILE_H
 
-#include <kstdatasource.h>
+#include <datasource.h>
 #include <kstdataplugin.h>
 
-class DirFileSource : public KstDataSource {
+class DirFileSource : public Kst::DataSource {
   public:
     DirFileSource(QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e);
 
@@ -76,7 +76,7 @@ class DirFilePlugin : public QObject, public KstDataSourcePluginInterface {
 
     virtual bool hasConfigWidget() const { return false; }
 
-    virtual KstDataSource *create(QSettings *cfg,
+    virtual Kst::DataSource *create(QSettings *cfg,
                                   const QString &filename,
                                   const QString &type,
                                   const QDomElement &element) const;
@@ -99,7 +99,7 @@ class DirFilePlugin : public QObject, public KstDataSourcePluginInterface {
 
     virtual QStringList provides() const;
 
-    virtual KstDataSourceConfigWidget *configWidget(QSettings *cfg, const QString& filename) const;
+    virtual Kst::DataSourceConfigWidget *configWidget(QSettings *cfg, const QString& filename) const;
 };
 
 

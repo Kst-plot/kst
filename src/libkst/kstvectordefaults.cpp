@@ -88,12 +88,12 @@ void KstVectorDefaults::sync() {
   // Find a non-stdin source
   while (j >= 0) {
     vl[j]->readLock();
-    KstDataSourcePtr dsp = vl[j]->dataSource();
+    Kst::DataSourcePtr dsp = vl[j]->dataSource();
     vl[j]->unlock();
 #ifdef Q_WS_WIN32
     if (dsp) {
 #else
-    if (dsp && !kst_cast<KstStdinSource>(dsp)) {
+    if (dsp && !kst_cast<Kst::StdinSource>(dsp)) {
 #endif
       break;
     }

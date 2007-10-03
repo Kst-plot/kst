@@ -1,13 +1,7 @@
 /***************************************************************************
-                   kstdatasource.cpp  -  abstract data source
-                             -------------------
-    begin                : Thu Oct 16 2003
-    copyright            : (C) 2003 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
+ *   copyright : (C) 2003 The University of Toronto                        *
+*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -15,7 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstdatasource.h"
+
+#include "datasource.h"
 
 #include <assert.h>
 
@@ -38,15 +33,17 @@
 
 #include "kstdataplugin.h"
 
+namespace Kst {
+
 static QSettings *settingsObject = 0L;
 static QMap<QString,QString> urlMap;
-void KstDataSource::setupOnStartup(QSettings *cfg) {
+void DataSource::setupOnStartup(QSettings *cfg) {
   settingsObject = cfg;
 }
 
 
 static KstPluginList _pluginList;
-void KstDataSource::cleanupForExit() {
+void DataSource::cleanupForExit() {
   _pluginList.clear();
   settingsObject = 0L;
 //   for (QMap<QString,QString>::Iterator i = urlMap.begin(); i != urlMap.end(); ++i) {
@@ -129,7 +126,7 @@ static void scanPlugins() {
 }
 
 
-QStringList KstDataSource::pluginList() {
+QStringList DataSource::pluginList() {
   QStringList plugins;
 
   if (_pluginList.isEmpty()) {
@@ -196,19 +193,19 @@ static QList<PluginSortContainer> bestPluginsForSource(const QString& filename, 
 }
 
 
-static KstDataSourcePtr findPluginFor(const QString& filename, const QString& type, const QDomElement& e = QDomElement()) {
+static DataSourcePtr findPluginFor(const QString& filename, const QString& type, const QDomElement& e = QDomElement()) {
 
   QList<PluginSortContainer> bestPlugins = bestPluginsForSource(filename, type);
 
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
-    KstDataSourcePtr plugin = (*i).plugin->create(settingsObject, filename, QString::null, e);
+    DataSourcePtr plugin = (*i).plugin->create(settingsObject, filename, QString::null, e);
     if (plugin) {
       // restore tag if present
       QDomNodeList l = e.elementsByTagName("tag");
       if (l.count() > 0) {
         QDomElement e2 = l.item(0).toElement();
         if (!e2.isNull()) {
-          qDebug() << "Restoring tag " << e2.text() << " to KstDataSource" << endl;
+          qDebug() << "Restoring tag " << e2.text() << " to DataSource" << endl;
           plugin->setTagName(KstObjectTag::fromString(e2.text()));
         }
       }
@@ -220,10 +217,10 @@ static KstDataSourcePtr findPluginFor(const QString& filename, const QString& ty
 }
 
 
-KstDataSourcePtr KstDataSource::loadSource(const QString& filename, const QString& type) {
+DataSourcePtr DataSource::loadSource(const QString& filename, const QString& type) {
 #ifndef Q_WS_WIN32
   if (filename == "stdin" || filename == "-") {
-    return new KstStdinSource(settingsObject);
+    return new StdinSource(settingsObject);
   }
 #endif
 
@@ -236,16 +233,16 @@ KstDataSourcePtr KstDataSource::loadSource(const QString& filename, const QStrin
 }
 
 
-bool KstDataSource::hasConfigWidget() const {
+bool DataSource::hasConfigWidget() const {
   return sourceHasConfigWidget(_filename, fileType());
 }
 
 
-KstDataSourceConfigWidget* KstDataSource::configWidget() {
+DataSourceConfigWidget* DataSource::configWidget() {
   if (!hasConfigWidget())
     return 0;
 
-  KstDataSourceConfigWidget *w = configWidgetForSource(_filename, fileType());
+  DataSourceConfigWidget *w = configWidgetForSource(_filename, fileType());
   Q_ASSERT(w);
 
   //This is still ugly to me...
@@ -255,7 +252,7 @@ KstDataSourceConfigWidget* KstDataSource::configWidget() {
 }
 
 
-bool KstDataSource::pluginHasConfigWidget(const QString& plugin) {
+bool DataSource::pluginHasConfigWidget(const QString& plugin) {
   if (_pluginList.isEmpty()) {
     scanPlugins();
   }
@@ -272,7 +269,7 @@ bool KstDataSource::pluginHasConfigWidget(const QString& plugin) {
 }
 
 
-KstDataSourceConfigWidget* KstDataSource::configWidgetForPlugin(const QString& plugin) {
+DataSourceConfigWidget* DataSource::configWidgetForPlugin(const QString& plugin) {
   if (_pluginList.isEmpty()) {
     scanPlugins();
   }
@@ -291,7 +288,7 @@ KstDataSourceConfigWidget* KstDataSource::configWidgetForPlugin(const QString& p
 }
 
 
-bool KstDataSource::sourceHasConfigWidget(const QString& filename, const QString& type) {
+bool DataSource::sourceHasConfigWidget(const QString& filename, const QString& type) {
   if (filename == "stdin" || filename == "-") {
     return 0L;
   }
@@ -311,7 +308,7 @@ bool KstDataSource::sourceHasConfigWidget(const QString& filename, const QString
 }
 
 
-KstDataSourceConfigWidget* KstDataSource::configWidgetForSource(const QString& filename, const QString& type) {
+DataSourceConfigWidget* DataSource::configWidgetForSource(const QString& filename, const QString& type) {
   if (filename == "stdin" || filename == "-") {
     return 0L;
   }
@@ -323,7 +320,7 @@ KstDataSourceConfigWidget* KstDataSource::configWidgetForSource(const QString& f
 
   QList<PluginSortContainer> bestPlugins = bestPluginsForSource(fn, type);
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
-    KstDataSourceConfigWidget *w = (*i).plugin->configWidget(settingsObject, fn);
+    DataSourceConfigWidget *w = (*i).plugin->configWidget(settingsObject, fn);
     // Don't iterate.
     return w;
   }
@@ -333,7 +330,7 @@ KstDataSourceConfigWidget* KstDataSource::configWidgetForSource(const QString& f
 }
 
 
-bool KstDataSource::supportsTime(const QString& filename, const QString& type) {
+bool DataSource::supportsTime(const QString& filename, const QString& type) {
   if (filename.isEmpty() || filename == "stdin" || filename == "-") {
     return false;
   }
@@ -351,7 +348,7 @@ bool KstDataSource::supportsTime(const QString& filename, const QString& type) {
 }
 
 
-QStringList KstDataSource::fieldListForSource(const QString& filename, const QString& type, QString *outType, bool *complete) {
+QStringList DataSource::fieldListForSource(const QString& filename, const QString& type, QString *outType, bool *complete) {
   if (filename == "stdin" || filename == "-") {
     return QStringList();
   }
@@ -382,7 +379,7 @@ QStringList KstDataSource::fieldListForSource(const QString& filename, const QSt
 }
 
 
-QStringList KstDataSource::matrixListForSource(const QString& filename, const QString& type, QString *outType, bool *complete) {
+QStringList DataSource::matrixListForSource(const QString& filename, const QString& type, QString *outType, bool *complete) {
   if (filename == "stdin" || filename == "-") {
     return QStringList();
   }
@@ -413,7 +410,7 @@ QStringList KstDataSource::matrixListForSource(const QString& filename, const QS
 }
 
 
-KstDataSourcePtr KstDataSource::loadSource(QDomElement& e) {
+DataSourcePtr DataSource::loadSource(QDomElement& e) {
   QString filename, type, tag;
 
   QDomNode n = e.firstChild();
@@ -435,7 +432,7 @@ KstDataSourcePtr KstDataSource::loadSource(QDomElement& e) {
 
 #ifndef Q_WS_WIN32
   if (filename == "stdin" || filename == "-") {
-    return new KstStdinSource(settingsObject);
+    return new StdinSource(settingsObject);
   }
 #endif
 
@@ -443,7 +440,7 @@ KstDataSourcePtr KstDataSource::loadSource(QDomElement& e) {
 }
 
 
-KstDataSource::KstDataSource(QSettings *cfg, const QString& filename, const QString& type)
+DataSource::DataSource(QSettings *cfg, const QString& filename, const QString& type)
 : KstObject(), _filename(filename), _cfg(cfg) {
   Q_UNUSED(type)
   _valid = false;
@@ -459,37 +456,37 @@ KstDataSource::KstDataSource(QSettings *cfg, const QString& filename, const QStr
   int count = 1;
 
   KstObject::setTagName(KstObjectTag(tn, KstObjectTag::globalTagContext));  // are DataSources always top-level?
-  while (Kst::Data::self()->dataSourceTagNameNotUnique(tagName(), false)) {
+  while (Data::self()->dataSourceTagNameNotUnique(tagName(), false)) {
     KstObject::setTagName(KstObjectTag(tn + QString::number(-(count++)), KstObjectTag::globalTagContext));  // are DataSources always top-level?
   }
 
-  _numFramesScalar = new Kst::Scalar(KstObjectTag("frames", tag()));
+  _numFramesScalar = new Scalar(KstObjectTag("frames", tag()));
   // Don't set provider - this is always up-to-date
 }
 
 
-KstDataSource::~KstDataSource() {
-//  qDebug() << "KstDataSource destructor: " << tag().tagString() << endl;
-  Kst::scalarList.lock().writeLock();
+DataSource::~DataSource() {
+//  qDebug() << "DataSource destructor: " << tag().tagString() << endl;
+  scalarList.lock().writeLock();
 //  qDebug() << "  removing numFrames scalar" << endl;
-  Kst::scalarList.remove(_numFramesScalar);
-  Kst::scalarList.lock().unlock();
+  scalarList.remove(_numFramesScalar);
+  scalarList.lock().unlock();
 
 //  qDebug() << "  removing metadata strings" << endl;
-  Kst::stringList.lock().writeLock();
-  Kst::stringList.setUpdateDisplayTags(false);
+  stringList.lock().writeLock();
+  stringList.setUpdateDisplayTags(false);
   for (QHash<QString, KstString*>::Iterator it = _metaData.begin(); it != _metaData.end(); ++it) {
 //    qDebug() << "    removing " << it.current()->tag().tagString() << endl;
-    Kst::stringList.remove(it.value());
+    stringList.remove(it.value());
   }
-  Kst::stringList.setUpdateDisplayTags(true);
-  Kst::stringList.lock().unlock();
+  stringList.setUpdateDisplayTags(true);
+  stringList.lock().unlock();
 
   _numFramesScalar = 0L;
 }
 
 
-void KstDataSource::setTagName(const KstObjectTag& in_tag) {
+void DataSource::setTagName(const KstObjectTag& in_tag) {
   if (in_tag == tag()) {
     return;
   }
@@ -504,7 +501,7 @@ void KstDataSource::setTagName(const KstObjectTag& in_tag) {
 }
 
 
-KstObject::UpdateType KstDataSource::update(int u) {
+KstObject::UpdateType DataSource::update(int u) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   Q_UNUSED(u)
@@ -512,12 +509,12 @@ KstObject::UpdateType KstDataSource::update(int u) {
 }
 
 
-void KstDataSource::updateNumFramesScalar() {
+void DataSource::updateNumFramesScalar() {
   _numFramesScalar->setValue(frameCount());
 }
 
 
-int KstDataSource::readField(double *v, const QString& field, int s, int n, int skip, int *lastFrameRead) {
+int DataSource::readField(double *v, const QString& field, int s, int n, int skip, int *lastFrameRead) {
   Q_UNUSED(v)
   Q_UNUSED(field)
   Q_UNUSED(s)
@@ -528,7 +525,7 @@ int KstDataSource::readField(double *v, const QString& field, int s, int n, int 
 }
 
 
-int KstDataSource::readField(double *v, const QString& field, int s, int n) {
+int DataSource::readField(double *v, const QString& field, int s, int n) {
   Q_UNUSED(v)
   Q_UNUSED(field)
   Q_UNUSED(s)
@@ -536,11 +533,11 @@ int KstDataSource::readField(double *v, const QString& field, int s, int n) {
   return -1;
 }
 
-bool KstDataSource::isWritable() const {
+bool DataSource::isWritable() const {
   return _writable;
 }
 
-int KstDataSource::writeField(const double *v, const QString& field, int s, int n) {
+int DataSource::writeField(const double *v, const QString& field, int s, int n) {
   Q_UNUSED(v)
   Q_UNUSED(field)
   Q_UNUSED(s)
@@ -548,7 +545,7 @@ int KstDataSource::writeField(const double *v, const QString& field, int s, int 
   return -1;
 }
 
-int KstDataSource::readMatrix(KstMatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps, int skip) {
+int DataSource::readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps, int skip) {
   Q_UNUSED(data)
   Q_UNUSED(matrix)
   Q_UNUSED(xStart)
@@ -560,7 +557,7 @@ int KstDataSource::readMatrix(KstMatrixData* data, const QString& matrix, int xS
 }
  
   
-int KstDataSource::readMatrix(KstMatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps) {
+int DataSource::readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps) {
   Q_UNUSED(data)
   Q_UNUSED(matrix)
   Q_UNUSED(xStart)
@@ -571,7 +568,7 @@ int KstDataSource::readMatrix(KstMatrixData* data, const QString& matrix, int xS
 }
 
 
-bool KstDataSource::matrixDimensions(const QString& matrix, int* xDim, int* yDim) {
+bool DataSource::matrixDimensions(const QString& matrix, int* xDim, int* yDim) {
   Q_UNUSED(matrix)
   Q_UNUSED(xDim)
   Q_UNUSED(yDim)
@@ -579,36 +576,36 @@ bool KstDataSource::matrixDimensions(const QString& matrix, int* xDim, int* yDim
 }
 
 
-bool KstDataSource::isValid() const {
+bool DataSource::isValid() const {
   return _valid;
 }
 
 
-bool KstDataSource::isValidField(const QString& field) const {
+bool DataSource::isValidField(const QString& field) const {
   Q_UNUSED(field)
   return false;
 }
 
 
-bool KstDataSource::isValidMatrix(const QString& field) const {
+bool DataSource::isValidMatrix(const QString& field) const {
   Q_UNUSED(field)
   return false;  
 }
 
 
-int KstDataSource::samplesPerFrame(const QString &field) {
+int DataSource::samplesPerFrame(const QString &field) {
   Q_UNUSED(field)
   return 0;
 }
 
 
-int KstDataSource::frameCount(const QString& field) const {
+int DataSource::frameCount(const QString& field) const {
   Q_UNUSED(field)
   return 0;
 }
 
 
-QString KstDataSource::fileName() const {
+QString DataSource::fileName() const {
   // Look to see if it was a URL and save the URL instead
   for (QMap<QString,QString>::ConstIterator i = urlMap.begin(); i != urlMap.end(); ++i) {
     if (i.value() == _filename) {
@@ -619,26 +616,26 @@ QString KstDataSource::fileName() const {
 }
 
 
-QStringList KstDataSource::fieldList() const {
+QStringList DataSource::fieldList() const {
   return _fieldList;
 }
 
 
-QStringList KstDataSource::matrixList() const { 
+QStringList DataSource::matrixList() const {
   return _matrixList;  
 }
 
 
-QString KstDataSource::fileType() const {
+QString DataSource::fileType() const {
   return QString::null;
 }
 
 
-void KstDataSource::save(QXmlStreamWriter &s) {
+void DataSource::save(QXmlStreamWriter &s) {
 }
 
 
-void KstDataSource::saveSource(QXmlStreamWriter &s) {
+void DataSource::saveSource(QXmlStreamWriter &s) {
   QString name = _filename;
   // Look to see if it was a URL and save the URL instead
   for (QMap<QString,QString>::ConstIterator i = urlMap.begin(); i != urlMap.end(); ++i) {
@@ -656,42 +653,42 @@ void KstDataSource::saveSource(QXmlStreamWriter &s) {
 }
 
 
-void *KstDataSource::bufferMalloc(size_t size) {
-  return Kst::malloc(size);
+void *DataSource::bufferMalloc(size_t size) {
+  return malloc(size);
 }
 
 
-void KstDataSource::bufferFree(void *ptr) {
+void DataSource::bufferFree(void *ptr) {
   return ::free(ptr);
 }
 
 
-void *KstDataSource::bufferRealloc(void *ptr, size_t size) {
-  return Kst::realloc(ptr, size);
+void *DataSource::bufferRealloc(void *ptr, size_t size) {
+  return realloc(ptr, size);
 }
 
 
-bool KstDataSource::fieldListIsComplete() const {
+bool DataSource::fieldListIsComplete() const {
   return true;
 }
 
 
-bool KstDataSource::isEmpty() const {
+bool DataSource::isEmpty() const {
   return true;
 }
 
 
-bool KstDataSource::reset() {
+bool DataSource::reset() {
   return false;
 }
 
 
-const QHash<QString, KstString*>& KstDataSource::metaData() const {
+const QHash<QString, KstString*>& DataSource::metaData() const {
   return _metaData;
 }
 
 
-QString KstDataSource::metaData(const QString& key) const {
+QString DataSource::metaData(const QString& key) const {
   if (_metaData[key]) {
     return _metaData[key]->value();
   } else {
@@ -700,22 +697,22 @@ QString KstDataSource::metaData(const QString& key) const {
 }
 
 
-bool KstDataSource::hasMetaData() const {
+bool DataSource::hasMetaData() const {
   return !_metaData.isEmpty();
 }
 
 
-bool KstDataSource::hasMetaData(const QString& key) const {
+bool DataSource::hasMetaData(const QString& key) const {
   return (_metaData[key] != NULL);
 }
 
 
-bool KstDataSource::supportsTimeConversions() const {
+bool DataSource::supportsTimeConversions() const {
   return false;
 }
 
 
-int KstDataSource::sampleForTime(const QDateTime& time, bool *ok) {
+int DataSource::sampleForTime(const QDateTime& time, bool *ok) {
   Q_UNUSED(time)
   if (ok) {
     *ok = false;
@@ -725,7 +722,7 @@ int KstDataSource::sampleForTime(const QDateTime& time, bool *ok) {
 
 
 
-int KstDataSource::sampleForTime(double ms, bool *ok) {
+int DataSource::sampleForTime(double ms, bool *ok) {
   Q_UNUSED(ms)
   if (ok) {
     *ok = false;
@@ -735,7 +732,7 @@ int KstDataSource::sampleForTime(double ms, bool *ok) {
 
 
 
-QDateTime KstDataSource::timeForSample(int sample, bool *ok) {
+QDateTime DataSource::timeForSample(int sample, bool *ok) {
   Q_UNUSED(sample)
   if (ok) {
     *ok = false;
@@ -745,7 +742,7 @@ QDateTime KstDataSource::timeForSample(int sample, bool *ok) {
 
 
 
-double KstDataSource::relativeTimeForSample(int sample, bool *ok) {
+double DataSource::relativeTimeForSample(int sample, bool *ok) {
   Q_UNUSED(sample)
   if (ok) {
     *ok = false;
@@ -754,46 +751,47 @@ double KstDataSource::relativeTimeForSample(int sample, bool *ok) {
 }
 
 
-bool KstDataSource::reusable() const {
+bool DataSource::reusable() const {
   return _reusable;
 }
 
 
-void KstDataSource::disableReuse() {
+void DataSource::disableReuse() {
   _reusable = false;
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-KstDataSourceConfigWidget::KstDataSourceConfigWidget()
+DataSourceConfigWidget::DataSourceConfigWidget()
 : QWidget(0L), _cfg(0L) {
 }
 
 
-KstDataSourceConfigWidget::~KstDataSourceConfigWidget() {
+DataSourceConfigWidget::~DataSourceConfigWidget() {
 }
 
 
-void KstDataSourceConfigWidget::save() {
+void DataSourceConfigWidget::save() {
 }
 
 
-void KstDataSourceConfigWidget::load() {
+void DataSourceConfigWidget::load() {
 }
 
 
-void KstDataSourceConfigWidget::setConfig(QSettings *cfg) {
+void DataSourceConfigWidget::setConfig(QSettings *cfg) {
   _cfg = cfg;
 }
 
 
-void KstDataSourceConfigWidget::setInstance(KstDataSourcePtr inst) {
+void DataSourceConfigWidget::setInstance(DataSourcePtr inst) {
   _instance = inst;
 }
 
 
-KstDataSourcePtr KstDataSourceConfigWidget::instance() const {
+DataSourcePtr DataSourceConfigWidget::instance() const {
   return _instance;
 }
 
+}
 // vim: ts=2 sw=2 et

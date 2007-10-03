@@ -18,17 +18,19 @@
 #ifndef STDINSRC_H
 #define STDINSRC_H
 
-#include <kstdatasource.h>
+#include <datasource.h>
 
 #include "kst_export.h"
 
 class QTemporaryFile;
 
-class KST_EXPORT KstStdinSource : public KstDataSource {
-  public:
-    KstStdinSource(QSettings *cfg);
+namespace Kst {
 
-    virtual ~KstStdinSource();
+class KST_EXPORT StdinSource : public DataSource {
+  public:
+    StdinSource(QSettings *cfg);
+
+    virtual ~StdinSource();
 
     virtual KstObject::UpdateType update(int = -1);
 
@@ -49,10 +51,10 @@ class KST_EXPORT KstStdinSource : public KstDataSource {
     virtual bool isEmpty() const;
 
   private:
-    KstDataSourcePtr _src;
+    DataSourcePtr _src;
     QTemporaryFile *_file;
 };
 
-
+}
 #endif
 // vim: ts=2 sw=2 et

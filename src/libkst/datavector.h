@@ -20,7 +20,7 @@
 
 #include "vector.h"
 
-#include "kstdatasource.h"
+#include "datasource.h"
 #include "kst_export.h"
 
 namespace Equation {
@@ -36,7 +36,7 @@ namespace Kst {
 class KST_EXPORT DataVector : public Vector {
 public:
   /** Create an RVECTOR */
-  DataVector(KstDataSourcePtr file, const QString &field,
+  DataVector(DataSourcePtr file, const QString &field,
              KstObjectTag tag,
              int f0, int n,
              int skip, bool in_doSkip,
@@ -53,12 +53,12 @@ public:
   virtual ~DataVector();
 
   /** change the properties of a DataVector */
-  void change(KstDataSourcePtr file, const QString &field,
+  void change(DataSourcePtr file, const QString &field,
               KstObjectTag tag,
               int f0, int n, int skip,
               bool in_doSkip, bool in_doAve);
 
-  void changeFile(KstDataSourcePtr file);
+  void changeFile(DataSourcePtr file);
 
   void changeFrames(int f0, int n, int skip,
                     bool in_doSkip, bool in_doAve);
@@ -115,7 +115,7 @@ public:
   bool isValid() const;
 
   /** the data source */
-  KstDataSourcePtr dataSource() const;
+  DataSourcePtr dataSource() const;
 
   /** Read from end */
   void setFromEnd();
@@ -129,7 +129,7 @@ private:
   bool _dirty; // different from the KstObject dirty flag
 
   /** Common contructor for an RVector */
-  void commonRVConstructor(KstDataSourcePtr file,
+  void commonRVConstructor(DataSourcePtr file,
       const QString &field,
       int f0, int n,
       int skip, bool in_doSkip,
@@ -156,7 +156,7 @@ private:
   int ReqF0;
 
   /** file to read for rvectors */
-  KstDataSourcePtr _file;
+  DataSourcePtr _file;
 
   /** For rvector, the field.  For fvector, the equation. */
   QString _field;

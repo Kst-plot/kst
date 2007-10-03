@@ -43,7 +43,7 @@ class DirFileSource::Config {
 
 
 DirFileSource::DirFileSource(QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
-: KstDataSource(cfg, filename, type), _rowIndex(0L), _config(0L), _tmpBuf(0L), _tmpBufSize(0) {
+: Kst::DataSource(cfg, filename, type), _rowIndex(0L), _config(0L), _tmpBuf(0L), _tmpBufSize(0) {
   _valid = false;
   _haveHeader = false;
   _fieldListComplete = false;
@@ -188,14 +188,14 @@ QString DirFileSource::fileType() const {
 
 
 void DirFileSource::save(QXmlStreamWriter &streamWriter) {
-  KstDataSource::save(streamWriter);
+  Kst::DataSource::save(streamWriter);
 }
 
 
 QString DirFilePlugin::pluginName() const { return "DirFile Reader"; }
 
 
-KstDataSource *DirFilePlugin::create(QSettings *cfg,
+Kst::DataSource *DirFilePlugin::create(QSettings *cfg,
                                             const QString &filename,
                                             const QString &type,
                                             const QDomElement &element) const {
@@ -309,7 +309,7 @@ QStringList DirFilePlugin::provides() const {
 }
 
 
-KstDataSourceConfigWidget *DirFilePlugin::configWidget(QSettings *cfg, const QString& filename) const {
+Kst::DataSourceConfigWidget *DirFilePlugin::configWidget(QSettings *cfg, const QString& filename) const {
 
   Q_UNUSED(cfg)
   Q_UNUSED(filename)

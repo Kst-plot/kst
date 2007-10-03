@@ -44,7 +44,7 @@
 namespace Kst {
 
 /** Create a DataVector: raw data from a file */
-DataVector::DataVector(KstDataSourcePtr in_file, const QString &in_field,
+DataVector::DataVector(DataSourcePtr in_file, const QString &in_field,
                        KstObjectTag in_tag,
                        int in_f0, int in_n, int skip, bool in_DoSkip,
                        bool in_DoAve)
@@ -61,7 +61,7 @@ DataVector::DataVector(const QString &tag, const QByteArray &data,
                        const QString &o_file,
                        int o_n, int o_f, int o_s, bool o_ave)
 : Vector(tag, data) {
-  KstDataSourcePtr in_file, in_provider;
+  DataSourcePtr in_file, in_provider;
   QString in_field;
   int in_f0 = 0;
   int in_n = -1;
@@ -142,7 +142,7 @@ DataVector::DataVector(const QString &tag, const QByteArray &data,
 }
 
 
-void DataVector::commonRVConstructor(KstDataSourcePtr in_file,
+void DataVector::commonRVConstructor(DataSourcePtr in_file,
                                      const QString &in_field, int in_f0,
                                      int in_n, int in_skip, bool in_DoSkip,
                                      bool in_DoAve) {
@@ -184,7 +184,7 @@ void DataVector::commonRVConstructor(KstDataSourcePtr in_file,
 }
 
 
-void DataVector::change(KstDataSourcePtr in_file, const QString &in_field,
+void DataVector::change(DataSourcePtr in_file, const QString &in_field,
                         KstObjectTag in_tag,
                         int in_f0, int in_n,
                         int in_skip, bool in_DoSkip,
@@ -222,7 +222,7 @@ void DataVector::change(KstDataSourcePtr in_file, const QString &in_field,
 }
 
 
-void DataVector::changeFile(KstDataSourcePtr in_file) {
+void DataVector::changeFile(DataSourcePtr in_file) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (!in_file) {
@@ -729,7 +729,7 @@ void DataVector::reload() {
     if (_file->reset()) { // try the efficient way first
       reset();
     } else { // the inefficient way
-      KstDataSourcePtr newsrc = KstDataSource::loadSource(_file->fileName(), _file->fileType());
+      DataSourcePtr newsrc = DataSource::loadSource(_file->fileName(), _file->fileType());
       assert(newsrc != _file);
       if (newsrc) {
         _file->unlock();
@@ -748,7 +748,7 @@ void DataVector::reload() {
 }
 
 
-KstDataSourcePtr DataVector::dataSource() const {
+DataSourcePtr DataVector::dataSource() const {
   return _file;
 }
 

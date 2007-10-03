@@ -16,7 +16,7 @@ INCLUDEPATH += \
 x11:!macx:PROCPS += sysinfo.c psversion.c
 SOURCES += \
     kstobject.cpp \
-    kstdatasource.cpp \
+    datasource.cpp \
     kstextension.cpp \
     datacollection.cpp \
     kstdebug.cpp \
@@ -59,7 +59,7 @@ HEADERS += \
     editablevector.h \
     datacollection.h \
     kstdataplugin.h \
-    kstdatasource.h \
+    datasource.h \
     dateparser.h \
     kstdebug.h \
     kstevents.h \

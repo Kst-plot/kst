@@ -161,7 +161,7 @@ class AsciiSource::Config {
 
 
 AsciiSource::AsciiSource(QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
-: KstDataSource(cfg, filename, type), _rowIndex(0L), _config(0L), _tmpBuf(0L), _tmpBufSize(0) {
+: Kst::DataSource(cfg, filename, type), _rowIndex(0L), _config(0L), _tmpBuf(0L), _tmpBufSize(0) {
   _valid = false;
   _haveHeader = false;
   _fieldListComplete = false;
@@ -385,7 +385,7 @@ bool AsciiSource::matrixDimensions(const QString& matrix, int* xDim, int* yDim) 
 }
 
 
-int AsciiSource::readMatrix(KstMatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps) {
+int AsciiSource::readMatrix(Kst::MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps) {
   
   if (!isValidMatrix(matrix)) {
     return 0;  
@@ -744,7 +744,7 @@ QStringList AsciiSource::matrixList() const {
 
 
 void AsciiSource::save(QXmlStreamWriter &s) {
-  KstDataSource::save(s);
+  Kst::DataSource::save(s);
   _config->save(s);
 }
 
@@ -769,7 +769,7 @@ int AsciiSource::sampleForTime(double ms, bool *ok) {
       }
       return 0;
     default:
-      return KstDataSource::sampleForTime(ms, ok);
+      return Kst::DataSource::sampleForTime(ms, ok);
   }
 }
 
@@ -789,7 +789,7 @@ int AsciiSource::sampleForTime(const QDateTime& time, bool *ok) {
       }
       return time.toTime_t();
     default:
-      return KstDataSource::sampleForTime(time, ok);
+      return Kst::DataSource::sampleForTime(time, ok);
   }
 }
 
@@ -800,9 +800,9 @@ class ConfigWidgetAsciiInternal : public QWidget, public Ui_AsciiConfig {
 };
 
 
-class ConfigWidgetAscii : public KstDataSourceConfigWidget {
+class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
   public:
-    ConfigWidgetAscii() : KstDataSourceConfigWidget() {
+    ConfigWidgetAscii() : Kst::DataSourceConfigWidget() {
       QGridLayout *layout = new QGridLayout(this);
       _ac = new ConfigWidgetAsciiInternal(this);
       layout->addWidget(_ac, 0, 0);
@@ -812,7 +812,7 @@ class ConfigWidgetAscii : public KstDataSourceConfigWidget {
     ~ConfigWidgetAscii() {}
 
     void setConfig(QSettings *cfg) {
-      KstDataSourceConfigWidget::setConfig(cfg);
+      Kst::DataSourceConfigWidget::setConfig(cfg);
     }
 
     void load() {
@@ -911,7 +911,7 @@ class ConfigWidgetAscii : public KstDataSourceConfigWidget {
 QString AsciiPlugin::pluginName() const { return "ASCII File Reader"; }
 
 
-KstDataSource *AsciiPlugin::create(QSettings *cfg,
+Kst::DataSource *AsciiPlugin::create(QSettings *cfg,
                                             const QString &filename,
                                             const QString &type,
                                             const QDomElement &element) const {
@@ -1051,7 +1051,7 @@ QStringList AsciiPlugin::provides() const {
 }
 
 
-KstDataSourceConfigWidget *AsciiPlugin::configWidget(QSettings *cfg, const QString& filename) const {
+Kst::DataSourceConfigWidget *AsciiPlugin::configWidget(QSettings *cfg, const QString& filename) const {
 
   Q_UNUSED(filename)
   ConfigWidgetAscii *config = new ConfigWidgetAscii;

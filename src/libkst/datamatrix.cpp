@@ -28,7 +28,7 @@
 
 namespace Kst {
 
-DataMatrix::DataMatrix(KstDataSourcePtr file, const QString &field, KstObjectTag tag,
+DataMatrix::DataMatrix(DataSourcePtr file, const QString &field, KstObjectTag tag,
                        int xStart, int yStart,
                        int xNumSteps, int yNumSteps,
                        bool doAve, bool doSkip, int skip)
@@ -38,7 +38,7 @@ DataMatrix::DataMatrix(KstDataSourcePtr file, const QString &field, KstObjectTag
 
 
 DataMatrix::DataMatrix(const QDomElement &e) : KstMatrix(KstObjectTag::invalidTag, 0L, 1,1,0,0,1,1) {
-  KstDataSourcePtr in_file = 0L, in_provider = 0L;
+  DataSourcePtr in_file = 0L, in_provider = 0L;
   QString in_field;
   QString in_tag;
   int in_xStart = 0;
@@ -129,7 +129,7 @@ DataMatrix::~DataMatrix() {
 }
 
 
-void DataMatrix::change(KstDataSourcePtr file, const QString &field,
+void DataMatrix::change(DataSourcePtr file, const QString &field,
                         KstObjectTag tag,
                         int xStart, int yStart,
                         int xNumSteps, int yNumSteps,
@@ -221,7 +221,7 @@ QString DataMatrix::fileLabel() const {
 }
 
 
-KstDataSourcePtr DataMatrix::dataSource() const {
+DataSourcePtr DataMatrix::dataSource() const {
   return _file;
 }
 
@@ -282,7 +282,7 @@ bool DataMatrix::doUpdateSkip(int realXStart, int realYStart, bool force) {
   }
 
   // return data from readMatrix
-  KstMatrixData matData;
+  MatrixData matData;
 
   if (!_doAve) {
     // try to use the datasource's read with skip function - it will automatically
@@ -377,7 +377,7 @@ bool DataMatrix::doUpdateNoSkip(int realXStart, int realYStart, bool force) {
     }
   }
   // read new data from file
-  KstMatrixData matData;
+  MatrixData matData;
   matData.z=_z;
 
   _NS = _file->readMatrix(&matData, _field, realXStart, realYStart, _nX, _nY);
@@ -491,7 +491,7 @@ void DataMatrix::reload() {
     if (_file->reset()) { // try the efficient way first
       reset();
     } else { // the inefficient way
-      KstDataSourcePtr newsrc = KstDataSource::loadSource(_file->fileName(), _file->fileType());
+      DataSourcePtr newsrc = DataSource::loadSource(_file->fileName(), _file->fileType());
       assert(newsrc != _file);
       if (newsrc) {
         _file->unlock();
@@ -517,7 +517,7 @@ DataMatrixPtr DataMatrix::makeDuplicate() const {
 }
 
 
-void DataMatrix::commonConstructor(KstDataSourcePtr file, const QString &field,
+void DataMatrix::commonConstructor(DataSourcePtr file, const QString &field,
                                    int reqXStart, int reqYStart, int reqNX, int reqNY,
                                    bool doAve, bool doSkip, int skip) {
 //  qDebug() << "constructing DataMatrix " << tag().displayString() << " from file " << file->tag().displayString() << " (" << (void*)(&(*file)) << ")" << endl;
@@ -581,7 +581,7 @@ int DataMatrix::skip() const {
 }
 
 
-void DataMatrix::changeFile(KstDataSourcePtr file) {
+void DataMatrix::changeFile(DataSourcePtr file) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (!file) {

@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstdatasource.h"
+#include "datasource.h"
 #include "kstdebug.h"
 #include "kstrevision.h"
 #include "logevents.h"
@@ -72,7 +72,7 @@ int KstDebug::limit() const {
 
 
 QStringList KstDebug::dataSourcePlugins() const {
-  return KstDataSource::pluginList();
+  return Kst::DataSource::pluginList();
 }
 
 

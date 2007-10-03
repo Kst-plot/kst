@@ -12,7 +12,7 @@
 #ifndef DATACOLLECTION_H
 #define DATACOLLECTION_H
 
-#include "kstdatasource.h"
+#include "datasource.h"
 #include "kststring.h"
 #include "vector.h"
 #include "kstmatrix.h"
@@ -67,7 +67,7 @@ class Data {
 } KST_EXPORT;
 
     /** The list of data sources (files) */
-    KST_EXPORT extern KstDataSourceList dataSourceList;
+    KST_EXPORT extern DataSourceList dataSourceList;
 
     /** The list of vectors that are being read */
     KST_EXPORT extern VectorCollection vectorList;

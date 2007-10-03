@@ -41,11 +41,11 @@ static void exitHelper() {
 
 int main(int argc, char *argv[]) {
   atexit(exitHelper);
-  KstDataSourcePtr file;
+  Kst::DataSourcePtr file;
   int i;
 
   QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
-  KstDataSource::setupOnStartup(settingsObject);
+  Kst::DataSource::setupOnStartup(settingsObject);
 
   char field_list[40][120], filename[180];
   bool do_hex[40];
@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
 
   if (!do_skip) do_ave = false;
 
-  file = KstDataSource::loadSource(filename);
+  file = Kst::DataSource::loadSource(filename);
   if (!file || !file->isValid() || file->isEmpty()) {
     fprintf(stderr, "d2asc error: file %s has no data\n", filename);
     return -2;

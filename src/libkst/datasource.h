@@ -1,13 +1,7 @@
 /***************************************************************************
-                     kstdatasource.h  -  abstract data source
-                             -------------------
-    begin                : Thu Oct 16 2003
-    copyright            : (C) 2003 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
+ *   copyright : (C) 2003 The University of Toronto                        *
+*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -15,8 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTDATASOURCE_H
-#define KSTDATASOURCE_H
+#ifndef DATASOURCE_H
+#define DATASOURCE_H
 
 #include <qhash.h>
 #include <qdom.h>
@@ -39,7 +33,11 @@ namespace KST {
   class DataSourcePlugin;
 }
 
-struct KstMatrixData {
+class KstString;
+
+namespace Kst {
+
+struct MatrixData {
   double xMin;
   double yMin;
   double xStepSize;
@@ -48,11 +46,10 @@ struct KstMatrixData {
 };
 
 class Scalar;
-class KstString;
-class KstDataSourceConfigWidget;
+class DataSourceConfigWidget;
 typedef KstSharedPtr<Scalar> ScalarPtr;
 
-class KST_EXPORT KstDataSource : public KstObject {
+class KST_EXPORT DataSource : public KstObject {
   public:
     static void setupOnStartup(QSettings*);
     static void cleanupForExit();
@@ -60,26 +57,26 @@ class KST_EXPORT KstDataSource : public KstObject {
     /** Returns a list of plugins found on the system. */
     static QStringList pluginList();
 
-    static KstSharedPtr<KstDataSource> loadSource(const QString& filename, const QString& type = QString::null);
-    static KstSharedPtr<KstDataSource> loadSource(QDomElement& e);
+    static KstSharedPtr<DataSource> loadSource(const QString& filename, const QString& type = QString::null);
+    static KstSharedPtr<DataSource> loadSource(QDomElement& e);
     static QStringList fieldListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
     static QStringList matrixListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
 
     static bool sourceHasConfigWidget(const QString& filename, const QString& type = QString());
-    static KstDataSourceConfigWidget *configWidgetForSource(const QString& filename, const QString& type = QString());
+    static DataSourceConfigWidget *configWidgetForSource(const QString& filename, const QString& type = QString());
 
     static bool pluginHasConfigWidget(const QString& plugin);
-    static KstDataSourceConfigWidget *configWidgetForPlugin(const QString& plugin);
+    static DataSourceConfigWidget *configWidgetForPlugin(const QString& plugin);
 
     static bool supportsTime(const QString& plugin, const QString& type = QString::null);
 
-    KstDataSource(QSettings *cfg, const QString& filename, const QString& type);
-    virtual ~KstDataSource();
+    DataSource(QSettings *cfg, const QString& filename, const QString& type);
+    virtual ~DataSource();
 
     void setTagName(const KstObjectTag& tag);
 
     bool hasConfigWidget() const;
-    KstDataSourceConfigWidget *configWidget();
+    DataSourceConfigWidget *configWidget();
 
     // @since 1.1.0
     bool reusable() const;
@@ -128,7 +125,7 @@ class KST_EXPORT KstDataSource : public KstObject {
         use the non-skip version instead.
         The suggested scaling and translation is returned in xMin, yMin, xStepSize, and yStepSize
         Returns the number of *samples* read **/
-    virtual int readMatrix(KstMatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps, int skip);
+    virtual int readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps, int skip);
     
     /** Read the specified sub-range of the matrix, flat-packed in z in row-major order (non-skipping)
         xStart - starting x *frame*
@@ -137,7 +134,7 @@ class KST_EXPORT KstDataSource : public KstObject {
         yNumSteps - number of *frames* to read in y direction; -1 to read 1 *sample* from yStart
         The suggested scaling and translation is returned in xMin, yMin, xStepSize, and yStepSize
         Returns the number of *samples* read **/
-    virtual int readMatrix(KstMatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps);
+    virtual int readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps);
     
     /** Return the current dimensions of the matrix: xDim*yDim <= total frames **/
     virtual bool matrixDimensions(const QString& matrix, int* xDim, int* yDim);
@@ -242,23 +239,23 @@ class KST_EXPORT KstDataSource : public KstObject {
 
     QSettings *_cfg;
 
-    Kst::ScalarPtr _numFramesScalar;
+    ScalarPtr _numFramesScalar;
 
     // NOTE: You must bump the version key if you add new member variables
     //       or change or add virtual functions.
 };
 
 
-typedef KstSharedPtr<KstDataSource> KstDataSourcePtr;
+typedef KstSharedPtr<DataSource> DataSourcePtr;
 
-class KstDataSourceList : public KstObjectList<KstDataSourcePtr> {
+class DataSourceList : public KstObjectList<DataSourcePtr> {
   public:
-    KstDataSourceList() : KstObjectList<KstDataSourcePtr>() {}
-    KstDataSourceList(const KstDataSourceList& x) : KstObjectList<KstDataSourcePtr>(x) {}
-    virtual ~KstDataSourceList() {}
+    DataSourceList() : KstObjectList<DataSourcePtr>() {}
+    DataSourceList(const DataSourceList& x) : KstObjectList<DataSourcePtr>(x) {}
+    virtual ~DataSourceList() {}
 
-    virtual KstDataSourcePtr findFileName(const QString& x) {
-      for (KstDataSourceList::Iterator it = begin(); it != end(); ++it) {
+    virtual DataSourcePtr findFileName(const QString& x) {
+      for (DataSourceList::Iterator it = begin(); it != end(); ++it) {
         if ((*it)->fileName() == x) {
           return *it;
         }
@@ -267,8 +264,8 @@ class KstDataSourceList : public KstObjectList<KstDataSourcePtr> {
     }
 
     // @since 1.1.0
-    KstDataSourcePtr findReusableFileName(const QString& x) {
-      for (KstDataSourceList::Iterator it = begin(); it != end(); ++it) {
+    DataSourcePtr findReusableFileName(const QString& x) {
+      for (DataSourceList::Iterator it = begin(); it != end(); ++it) {
         if ((*it)->reusable() && (*it)->fileName() == x) {
           return *it;
         }
@@ -279,7 +276,7 @@ class KstDataSourceList : public KstObjectList<KstDataSourcePtr> {
     // @since 1.1.0
     QStringList fileNames() const {
       QStringList rc;
-      for (KstDataSourceList::ConstIterator it = begin(); it != end(); ++it) {
+      for (DataSourceList::ConstIterator it = begin(); it != end(); ++it) {
         rc << (*it)->fileName();
       }
       return rc;
@@ -289,17 +286,17 @@ class KstDataSourceList : public KstObjectList<KstDataSourcePtr> {
 
 
 // @since 1.1.0
-class KstDataSourceConfigWidget : public QWidget {
+class DataSourceConfigWidget : public QWidget {
   Q_OBJECT
-  friend class KstDataSource;
+  friend class DataSource;
   public:
-    KstDataSourceConfigWidget(); // will be reparented later
-    virtual ~KstDataSourceConfigWidget();
+    DataSourceConfigWidget(); // will be reparented later
+    virtual ~DataSourceConfigWidget();
 
     virtual void setConfig(QSettings*);
 
-    KST_EXPORT void setInstance(KstDataSourcePtr inst);
-    KST_EXPORT KstDataSourcePtr instance() const;
+    KST_EXPORT void setInstance(DataSourcePtr inst);
+    KST_EXPORT DataSourcePtr instance() const;
 
   public slots:
     virtual void load();
@@ -309,8 +306,9 @@ class KstDataSourceConfigWidget : public QWidget {
     QSettings *_cfg;
     // If _instance is nonzero, then your settings are to be saved for this
     // particular instance of the source, as opposed to globally.
-    KstDataSourcePtr _instance;
+    DataSourcePtr _instance;
 } KST_EXPORT;
 
+}
 #endif
 // vim: ts=2 sw=2 et

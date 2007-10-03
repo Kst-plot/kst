@@ -22,7 +22,7 @@
 namespace Kst {
 
 /** The list of data sources (files) */
-KstDataSourceList dataSourceList;
+DataSourceList dataSourceList;
 
 /** The list of vectors that are being read */
 VectorCollection vectorList;

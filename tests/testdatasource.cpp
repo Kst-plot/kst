@@ -25,8 +25,8 @@
 
 void TestDataSource::initTestCase() {
   QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
-  KstDataSource::setupOnStartup(settingsObject);
-  _plugins = KstDataSource::pluginList();
+  Kst::DataSource::setupOnStartup(settingsObject);
+  _plugins = Kst::DataSource::pluginList();
 }
 
 
@@ -56,7 +56,7 @@ void TestDataSource::testAscii() {
     ts << ".2" << endl;
     ts.flush();
 
-    KstDataSourcePtr dsp = KstDataSource::loadSource(tf.fileName());
+    Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(tf.fileName());
 
     QVERIFY(dsp);
     QVERIFY(dsp->isValid());
@@ -108,7 +108,7 @@ void TestDataSource::testAscii() {
     ts << "inf\t1" << endl;
     ts << "0.000000000000000000000000000000000000000000000000 0" << endl;
 
-    KstDataSourcePtr dsp = KstDataSource::loadSource(tf.fileName());
+    Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(tf.fileName());
 
     QVERIFY(dsp);
     QVERIFY(dsp->isValid());
@@ -162,7 +162,7 @@ void TestDataSource::testAscii() {
     QTextStream ts(&tf);
     ts << "2 4" << endl;
 
-    KstDataSourcePtr dsp = KstDataSource::loadSource(tf.fileName());
+    Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(tf.fileName());
 
     QVERIFY(dsp);
     QVERIFY(dsp->isValid());
@@ -208,7 +208,7 @@ void TestDataSource::testAscii() {
     QTextStream ts(&tf);
     ts << ";" << endl;
 
-    KstDataSourcePtr dsp = KstDataSource::loadSource(tf.fileName());
+    Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(tf.fileName());
 
     QVERIFY(dsp);
     QVERIFY(dsp->hasConfigWidget());
@@ -224,7 +224,7 @@ void TestDataSource::testAscii() {
       ts << i << " " <<  i + 100 << " " << i + 1000 << endl;
     }
 
-    KstDataSourcePtr dsp = KstDataSource::loadSource(tf.fileName());
+    Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(tf.fileName());
     dsp->update(0);
 
     QVERIFY(dsp);
@@ -292,7 +292,7 @@ void TestDataSource::testDirfile() {
     }
     printf("Opening dirfile = %s for test.\n", fifteen.toLatin1().data());
 
-    KstDataSourcePtr dsp = KstDataSource::loadSource(fifteen);
+    Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(fifteen);
     dsp->update(0);
 
     QVERIFY(dsp);

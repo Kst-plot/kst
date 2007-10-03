@@ -51,7 +51,7 @@ void DataSourceFactory::registerFactory(const QStringList& nodes, DataSourceFact
 }
 
 
-KstDataSourcePtr DataSourceFactory::parse(QXmlStreamReader& stream) {
+DataSourcePtr DataSourceFactory::parse(QXmlStreamReader& stream) {
   if (!factories) {
     return 0;
   }

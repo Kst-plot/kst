@@ -21,7 +21,7 @@
 
 #include "kst_export.h"
 
-#include "kstdatasource.h"
+#include "datasource.h"
 
 namespace Kst {
 
@@ -37,8 +37,8 @@ class KST_EXPORT VectorTab : public DataTab, Ui::VectorTab {
     void setVectorMode(VectorMode mode) { _mode = mode; }
 
     //DataVector mode methods...
-    KstDataSourcePtr dataSource() const;
-    void setDataSource(KstDataSourcePtr dataSource);
+    DataSourcePtr dataSource() const;
+    void setDataSource(DataSourcePtr dataSource);
 
     QString file() const;
     void setFile(const QString &file);
@@ -67,7 +67,7 @@ class KST_EXPORT VectorTab : public DataTab, Ui::VectorTab {
 
   private:
     VectorMode _mode;
-    KstDataSourcePtr _dataSource;
+    DataSourcePtr _dataSource;
 };
 
 class KST_EXPORT VectorDialog : public DataDialog {

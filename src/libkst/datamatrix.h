@@ -15,7 +15,7 @@
 
 #include "kstmatrix.h"
 #include "kstsharedptr.h"
-#include "kstdatasource.h"
+#include "datasource.h"
 #include "kst_export.h"
 
 namespace Kst {
@@ -25,7 +25,7 @@ class KST_EXPORT DataMatrix : public KstMatrix {
   public:
     
     // constructor
-    DataMatrix(KstDataSourcePtr file, const QString &field, KstObjectTag tag,
+    DataMatrix(DataSourcePtr file, const QString &field, KstObjectTag tag,
                int xStart, int yStart,
                int xNumSteps, int yNumSteps,
                bool doAve, bool doSkip, int skip);
@@ -39,7 +39,7 @@ class KST_EXPORT DataMatrix : public KstMatrix {
     virtual ~DataMatrix();
     
     // change properties of DataMatrix
-    void change(KstDataSourcePtr file, const QString &field,
+    void change(DataSourcePtr file, const QString &field,
                 KstObjectTag tag,
                 int xStart, int yStart,
                 int xNumSteps, int yNumSteps,
@@ -65,7 +65,7 @@ class KST_EXPORT DataMatrix : public KstMatrix {
     virtual QString fileLabel() const;
     
     // the data source this DataMatrix is using
-    KstDataSourcePtr dataSource() const;
+    DataSourcePtr dataSource() const;
     
     // returns true if the file and field is valid; false otherwise 
     bool isValid() const;
@@ -77,13 +77,13 @@ class KST_EXPORT DataMatrix : public KstMatrix {
     void reload();
     
     // change the datasource for this matrix
-    void changeFile(KstDataSourcePtr file);
+    void changeFile(DataSourcePtr file);
     
     // make a "copy" of this DataMatrix 
     KstSharedPtr<DataMatrix> makeDuplicate() const;
     
   private:
-    void commonConstructor(KstDataSourcePtr file, const QString &field,
+    void commonConstructor(DataSourcePtr file, const QString &field,
                            int reqXStart, int reqYStart, int reqNX, int reqNY, 
                            bool doAve, bool doSkip, int skip);
     
@@ -107,7 +107,7 @@ class KST_EXPORT DataMatrix : public KstMatrix {
     double* _aveReadBuffer; // buffer used when performing boxcar filter
     int _aveReadBufferSize; 
     
-    KstDataSourcePtr _file;
+    DataSourcePtr _file;
     QString _field; // field to read from _file
     bool _doAve : 1;
     bool _doSkip : 1;

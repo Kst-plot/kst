@@ -17,7 +17,7 @@
 
 namespace Kst {
 
-DataSourceDialog::DataSourceDialog(DataDialog::EditMode mode, KstDataSourcePtr dataSource, QWidget *parent)
+DataSourceDialog::DataSourceDialog(DataDialog::EditMode mode, DataSourcePtr dataSource, QWidget *parent)
   : QDialog(parent), _dataSource(dataSource) {
 
   setWindowTitle(QString("Configure %1").arg(_dataSource->fileType()));

@@ -17,7 +17,7 @@
 #include "builtingraphics.h"
 
 #include "dialoglaunchergui.h"
-#include "kstdatasource.h"
+#include "datasource.h"
 
 namespace Kst {
 
@@ -34,7 +34,7 @@ Application::Application(int &argc, char **argv)
   //I think that KstDataSource can have a manager singleton that does this itself
   //inside of libkst... no?
   QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
-  KstDataSource::setupOnStartup(settingsObject);
+  DataSource::setupOnStartup(settingsObject);
 
   //Replace the dialoglauncher singleton with one that actually works
   DialogLauncher::replaceSelf(new DialogLauncherGui);

@@ -20,10 +20,10 @@
 
 #include <qfile.h>
 
-#include <kstdatasource.h>
+#include <datasource.h>
 #include <kstdataplugin.h>
 
-class AsciiSource : public KstDataSource {
+class AsciiSource : public Kst::DataSource {
   public:
     AsciiSource(QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e = QDomElement());
 
@@ -36,7 +36,7 @@ class AsciiSource : public KstDataSource {
 
     int readField(double *v, const QString &field, int s, int n);
     
-    virtual int readMatrix(KstMatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps);
+    virtual int readMatrix(Kst::MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps);
     
     bool matrixDimensions(const QString& matrix, int* xDim, int* yDim);
     
@@ -96,7 +96,7 @@ class AsciiPlugin : public QObject, public KstDataSourcePluginInterface {
 
     virtual bool hasConfigWidget() const { return true; }
 
-    virtual KstDataSource *create(QSettings *cfg,
+    virtual Kst::DataSource *create(QSettings *cfg,
                                   const QString &filename,
                                   const QString &type,
                                   const QDomElement &element) const;
@@ -119,7 +119,7 @@ class AsciiPlugin : public QObject, public KstDataSourcePluginInterface {
 
     virtual QStringList provides() const;
 
-    virtual KstDataSourceConfigWidget *configWidget(QSettings *cfg, const QString& filename) const;
+    virtual Kst::DataSourceConfigWidget *configWidget(QSettings *cfg, const QString& filename) const;
 };
 
 #endif

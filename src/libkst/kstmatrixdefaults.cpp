@@ -104,12 +104,12 @@ void KstMatrixDefaults::sync() {
   // Find a non-stdin source
   while (j >= 0) {
     dataMatrixList[j]->readLock();
-    KstDataSourcePtr dsp = dataMatrixList[j]->dataSource();
+    Kst::DataSourcePtr dsp = dataMatrixList[j]->dataSource();
     dataMatrixList[j]->unlock();
 #ifdef Q_WS_WIN32
     if (dsp) {
 #else
-    if (dsp && !kst_cast<KstStdinSource>(dsp)) {
+    if (dsp && !kst_cast<Kst::StdinSource>(dsp)) {
 #endif
       break;
     }
