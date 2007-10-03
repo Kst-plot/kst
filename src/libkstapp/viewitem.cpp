@@ -43,6 +43,7 @@ ViewItem::ViewItem(View *parent)
     _allowedGripModes(Move | Resize | Rotate /*| Scale*/),
     _hovering(false),
     _lockAspectRatio(false),
+    _hasStaticGeometry(false),
     _layout(0),
     _activeGrip(NoGrip),
     _allowedGrips(TopLeftGrip | TopRightGrip | BottomRightGrip | BottomLeftGrip |
@@ -62,6 +63,16 @@ ViewItem::~ViewItem() {
 
 View *ViewItem::parentView() const {
   return qobject_cast<View*>(parent());
+}
+
+
+ViewItem *ViewItem::parentViewItem() const {
+  return qgraphicsitem_cast<ViewItem*>(parentItem());
+}
+
+
+bool ViewItem::itemInLayout() const {
+  return parentViewItem() && parentViewItem()->layout();
 }
 
 
@@ -112,8 +123,6 @@ void ViewItem::setLayout(ViewGridLayout *layout) {
     _layout->setEnabled(true);
     connect(this, SIGNAL(geometryChanged()), _layout, SLOT(update()));
   }
-
-  setHandlesChildEvents(_layout);
 }
 
 
@@ -141,6 +150,9 @@ void ViewItem::setViewRect(const QRectF &viewRect) {
     ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
 
     if (!viewItem)
+      continue;
+
+    if (viewItem->hasStaticGeometry())
       continue;
 
     ViewItem::updateChildGeometry(viewItem, oldViewRect, viewRect);
@@ -520,15 +532,19 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
 
   if (event == View::MouseMove) {
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseMove));
-    setViewRect(rect().x(), rect().y(),
-            poly.last().x() - rect().x(), poly.last().y() - rect().y());
+    QRectF newRect(rect().x(), rect().y(),
+                   poly.last().x() - rect().x(),
+                   poly.last().y() - rect().y());
+    setViewRect(newRect);
     return;
   }
 
   if (event == View::MouseRelease) {
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseRelease));
-    setViewRect(rect().x(), rect().y(),
-            poly.last().x() - rect().x(), poly.last().y() - rect().y());
+    QRectF newRect(rect().x(), rect().y(),
+                   poly.last().x() - rect().x(),
+                   poly.last().y() - rect().y());
+    setViewRect(newRect.normalized());
 
     parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
     parentView()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
@@ -569,7 +585,7 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 
 void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
-  if (parentView()->viewMode() == View::Data) {
+  if (parentView()->viewMode() == View::Data || itemInLayout()) {
     event->ignore();
     return;
   }
@@ -680,6 +696,7 @@ void ViewItem::resizeTopLeft(const QPointF &offset) {
   QRectF r = rect();
   QPointF o = _lockAspectRatio ? lockOffset(offset, oldAspect, false) : offset;
   r.setTopLeft(r.topLeft() + o);
+  if (!r.isValid()) return;
 
   const qreal newAspect = r.width() / r.height();
   Q_ASSERT_X(_lockAspectRatio ? qFuzzyCompare(newAspect, oldAspect) : true,
@@ -694,6 +711,7 @@ void ViewItem::resizeTopRight(const QPointF &offset) {
   QRectF r = rect();
   QPointF o = _lockAspectRatio ? lockOffset(offset, oldAspect, true) : offset;
   r.setTopRight(r.topRight() + o);
+  if (!r.isValid()) return;
 
   const qreal newAspect = r.width() / r.height();
   Q_ASSERT_X(_lockAspectRatio ? qFuzzyCompare(newAspect, oldAspect) : true,
@@ -708,6 +726,7 @@ void ViewItem::resizeBottomLeft(const QPointF &offset) {
   QRectF r = rect();
   QPointF o = _lockAspectRatio ? lockOffset(offset, oldAspect, true) : offset;
   r.setBottomLeft(r.bottomLeft() + o);
+  if (!r.isValid()) return;
 
   const qreal newAspect = r.width() / r.height();
   Q_ASSERT_X(_lockAspectRatio ? qFuzzyCompare(newAspect, oldAspect) : true,
@@ -722,6 +741,7 @@ void ViewItem::resizeBottomRight(const QPointF &offset) {
   QRectF r = rect();
   QPointF o = _lockAspectRatio ? lockOffset(offset, oldAspect, false) : offset;
   r.setBottomRight(r.bottomRight() + o);
+  if (!r.isValid()) return;
 
   const qreal newAspect = r.width() / r.height();
   Q_ASSERT_X(_lockAspectRatio ? qFuzzyCompare(newAspect, oldAspect) : true,
@@ -733,6 +753,7 @@ void ViewItem::resizeBottomRight(const QPointF &offset) {
 void ViewItem::resizeTop(qreal offset) {
   QRectF r = rect();
   r.setTop(r.top() + offset);
+  if (!r.isValid()) return;
   setViewRect(r);
 }
 
@@ -740,6 +761,7 @@ void ViewItem::resizeTop(qreal offset) {
 void ViewItem::resizeBottom(qreal offset) {
   QRectF r = rect();
   r.setBottom(r.bottom() + offset);
+  if (!r.isValid()) return;
   setViewRect(r);
 }
 
@@ -747,6 +769,7 @@ void ViewItem::resizeBottom(qreal offset) {
 void ViewItem::resizeLeft(qreal offset) {
   QRectF r = rect();
   r.setLeft(r.left() + offset);
+  if (!r.isValid()) return;
   setViewRect(r);
 }
 
@@ -754,6 +777,7 @@ void ViewItem::resizeLeft(qreal offset) {
 void ViewItem::resizeRight(qreal offset) {
   QRectF r = rect();
   r.setRight(r.right() + offset);
+  if (!r.isValid()) return;
   setViewRect(r);
 }
 
@@ -1245,7 +1269,7 @@ void ViewItem::updateChildGeometry(ViewItem *child, const QRectF &oldParentRect,
 
 
 void ViewItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
-  if (parentView()->viewMode() == View::Data) {
+  if (parentView()->viewMode() == View::Data || itemInLayout()) {
     event->ignore();
     return;
   }
@@ -1254,7 +1278,7 @@ void ViewItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
 
 void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
-  if (parentView()->viewMode() == View::Data) {
+  if (parentView()->viewMode() == View::Data || itemInLayout()) {
     event->ignore();
     return;
   }
@@ -1327,7 +1351,7 @@ ViewItem::GripMode ViewItem::nextGripMode(GripMode currentMode) const {
 
 void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
-  if (parentView()->viewMode() == View::Data) {
+  if (parentView()->viewMode() == View::Data || itemInLayout()) {
     event->ignore();
     return;
   }
@@ -1362,7 +1386,7 @@ void ViewItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
 
 QVariant ViewItem::itemChange(GraphicsItemChange change, const QVariant &value) {
 
-  if (change == ItemSelectedChange) {
+if (change == ItemSelectedChange) {
     bool selected = value.toBool();
     if (!selected) {
       setGripMode(ViewItem::Move);
@@ -1496,7 +1520,7 @@ void LayoutCommand::createLayout() {
 
   foreach (QGraphicsItem *item, list) {
     ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
-    if (!viewItem || viewItem->parentItem() != _item)
+    if (!viewItem || viewItem->hasStaticGeometry() || viewItem->parentItem() != _item)
       continue;
     viewItems.append(viewItem);
   }

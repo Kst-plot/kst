@@ -28,18 +28,12 @@ VectorCurveRenderItem::~VectorCurveRenderItem() {
 }
 
 
-void VectorCurveRenderItem::paint(QPainter *painter) {
+void VectorCurveRenderItem::paintRelations(QPainter *painter) {
 
   QRectF normalRect = rect();
   normalRect = normalRect.normalized();
 
-  if (_selectionRect.isValid() && !_selectionRect.isEmpty()) {
-    painter->save();
-    painter->setPen(Qt::black);
-    painter->drawRect(_selectionRect);
-    painter->restore();
-  }
-
+  painter->save();
   painter->translate(normalRect.x(), normalRect.y());
 
   foreach (KstRelationPtr relation, relationList()) {
@@ -91,9 +85,15 @@ void VectorCurveRenderItem::paint(QPainter *painter) {
     context.b_X = b_X;
     context.b_Y = b_Y;
 
-    painter->save();
-    painter->setRenderHint(QPainter::Antialiasing, false);
     relation->paint(context);
+  }
+
+  painter->restore();
+
+  if (_selectionRect.isValid() && !_selectionRect.isEmpty()) {
+    painter->save();
+    painter->setPen(Qt::black);
+    painter->drawRect(_selectionRect);
     painter->restore();
   }
 }
@@ -106,7 +106,7 @@ void VectorCurveRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   }
 
   _selectionRect.setBottomRight(event->pos());
-  update(_selectionRect);
+  update(); //FIXME should optimize instead of redrawing entire curve?
 }
 
 

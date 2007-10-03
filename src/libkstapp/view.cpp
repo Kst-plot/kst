@@ -31,7 +31,7 @@ namespace Kst {
 
 View::View()
   : QGraphicsView(kstApp->mainWindow()),
-    _viewMode(Layout),
+    _viewMode(Data),
     _mouseMode(Default),
     _layoutBoxItem(0),
     _useOpenGL(false),

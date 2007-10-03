@@ -23,7 +23,7 @@ class VectorCurveRenderItem : public PlotRenderItem
     VectorCurveRenderItem(const QString &name, PlotItem *parentItem);
     virtual ~VectorCurveRenderItem();
 
-    virtual void paint(QPainter *painter);
+    virtual void paintRelations(QPainter *painter);
 
   protected:
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);

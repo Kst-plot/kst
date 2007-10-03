@@ -20,8 +20,13 @@
 namespace Kst {
 
 PlotRenderItem::PlotRenderItem(const QString &name, PlotItem *parentItem)
-  : QObject(parentItem), QGraphicsRectItem(parentItem) {
-  _name = name;
+  : ViewItem(parentItem->parentView()) {
+
+  setName(name);
+  setParentItem(parentItem);
+  setHasStaticGeometry(true);
+  setAllowedGripModes(0);
+  setAllowedGrips(0);
 
   connect(parentItem, SIGNAL(geometryChanged()), this, SLOT(updateGeometry()));
   updateGeometry(); //the initial rect
@@ -42,7 +47,7 @@ void PlotRenderItem::updateGeometry() {
   QPointF margin(plotItem()->marginWidth(), plotItem()->marginHeight());
   QPointF topLeft(rect.topLeft() + margin);
   QPointF bottomRight(rect.bottomRight() - margin);
-  setRect(QRectF(topLeft, bottomRight));
+  setViewRect(QRectF(topLeft, bottomRight));
 }
 
 
@@ -59,7 +64,7 @@ RenderType PlotRenderItem::type() {
 QRectF PlotRenderItem::plotRect() const {
   QRectF plotRect = rect();
   plotRect = plotRect.normalized();
-  plotRect.moveTopLeft(QPoint(0,0));
+  plotRect.moveTopLeft(QPointF(0.0, 0.0));
   return plotRect;
 }
 
@@ -74,18 +79,17 @@ KstRelationList PlotRenderItem::relationList() const {
 }
 
 
-void PlotRenderItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-  Q_UNUSED(option);
-  Q_UNUSED(widget);
+void PlotRenderItem::paint(QPainter *painter) {
+  painter->setRenderHint(QPainter::Antialiasing, false);
+  painter->setClipRect(rect());
   painter->drawRect(rect());
-  painter->fillRect(rect(), Qt::white);
 
 #ifdef CURVE_DRAWING_TIME
   QTime time;
   time.start();
 #endif
 
-  paint(painter);
+  paintRelations(painter);
 
 #ifdef CURVE_DRAWING_TIME
   int elapsed = time.elapsed();

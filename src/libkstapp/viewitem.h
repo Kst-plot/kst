@@ -56,6 +56,8 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     int type() const { return Type; }
 
     View *parentView() const;
+    ViewItem *parentViewItem() const;
+    bool itemInLayout() const;
 
     GripMode gripMode() const;
     void setGripMode(GripMode mode);
@@ -66,6 +68,9 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
 
     bool lockAspectRatio() const { return _lockAspectRatio; }
     void setLockAspectRatio(bool lockAspectRatio) { _lockAspectRatio = lockAspectRatio; }
+
+    bool hasStaticGeometry() { return _hasStaticGeometry; }
+    void setHasStaticGeometry(bool hasStaticGeometry ) { _hasStaticGeometry = hasStaticGeometry; }
 
     //NOTE We can change this to a generic abstract class once we have
     //more layouts besides grid layout...
@@ -177,6 +182,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     GripModes _allowedGripModes;
     bool _hovering;
     bool _lockAspectRatio;
+    bool _hasStaticGeometry;
     ViewGridLayout *_layout;
     QPointF _originalPosition;
     QRectF _originalRect;

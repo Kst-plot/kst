@@ -12,10 +12,10 @@
 #ifndef PLOTRENDERITEM_H
 #define PLOTRENDERITEM_H
 
+#include "viewitem.h"
+
 #include <QList>
-#include <QObject>
 #include <QPainterPath>
-#include <QGraphicsRectItem>
 
 #include "kstrelation.h"
 
@@ -25,7 +25,7 @@ class PlotItem;
 
 enum RenderType { Cartesian, Polar, Sinusoidal };
 
-class PlotRenderItem : public QObject, public QGraphicsRectItem
+class PlotRenderItem : public ViewItem
 {
   Q_OBJECT
   public:
@@ -42,8 +42,8 @@ class PlotRenderItem : public QObject, public QGraphicsRectItem
     void setRelationList(const KstRelationList &relationList);
     KstRelationList relationList() const;
 
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
-    virtual void paint(QPainter *painter) = 0;
+    virtual void paint(QPainter *painter);
+    virtual void paintRelations(QPainter *painter) = 0;
 
     QString leftLabel() const;
     QString bottomLabel() const;
@@ -61,7 +61,6 @@ class PlotRenderItem : public QObject, public QGraphicsRectItem
     QRectF mapFromProjection(const QRectF &rect);
 
   private:
-    QString _name;
     RenderType _type;
 
     KstRelationList _relationList;
