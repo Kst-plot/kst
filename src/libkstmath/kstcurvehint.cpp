@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include "kstcurvehint.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstrelation.h"
 #include "kstvcurve.h"
 
@@ -42,12 +42,12 @@ const QString& KstCurveHint::yVectorName() const {
 
 
 Kst::VectorPtr KstCurveHint::xVector() const {
-  return *KST::vectorList.findTag(_xVectorName);
+  return *Kst::vectorList.findTag(_xVectorName);
 }
 
 
 Kst::VectorPtr KstCurveHint::yVector() const {
-  return *KST::vectorList.findTag(_yVectorName);
+  return *Kst::vectorList.findTag(_yVectorName);
 }
 
 

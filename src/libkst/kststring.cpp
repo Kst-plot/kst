@@ -18,7 +18,7 @@
 #include "kststring.h"
 
 #include "defaultprimitivenames.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kst_i18n.h"
 
 #include <qtextdocument.h>
@@ -33,15 +33,15 @@ KstString::KstString(KstObjectTag in_tag, KstObject *provider, const QString& va
   if (!in_tag.isValid()) {
     do {
       _tag = i18n("Anonymous String %1", anonymousStringCounter++);
-    } while (KstData::self()->vectorTagNameNotUniqueInternal(_tag));  // FIXME: why vector?
+    } while (Kst::Data::self()->vectorTagNameNotUniqueInternal(_tag));  // FIXME: why vector?
     KstObject::setTagName(KstObjectTag(_tag, in_tag.context()));
   } else {
     KstObject::setTagName(KST::suggestUniqueStringTag(in_tag));
   }
 
-  KST::stringList.lock().writeLock();
-  KST::stringList.append(this);
-  KST::stringList.lock().unlock();
+  Kst::stringList.lock().writeLock();
+  Kst::stringList.append(this);
+  Kst::stringList.lock().unlock();
 }
 
 
@@ -64,7 +64,7 @@ KstString::KstString(QDomElement& e)
     }
     n = n.nextSibling();
   }
-  KST::stringList.append(this);
+  Kst::stringList.append(this);
 }
 
 
@@ -77,9 +77,9 @@ void KstString::setTagName(const KstObjectTag& tag) {
     return;
   }
 
-  KstWriteLocker l(&KST::stringList.lock());
+  KstWriteLocker l(&Kst::stringList.lock());
 
-  KST::stringList.doRename(this, tag);
+  Kst::stringList.doRename(this, tag);
 }
 
 

@@ -27,7 +27,7 @@ Kst::VectorMap vectorsUsed;
 Kst::VectorPtr xVector;
 
 
-#include <kstdatacollection.h>
+#include <datacollection.h>
 #include <kstdataobjectcollection.h>
 
 double _NOPOINT = NAN;
@@ -35,8 +35,8 @@ double _NOPOINT = NAN;
 void TestEqParser::cleanupTestCase() {
   xVector = 0L;
   vectorsUsed.clear();
-  KST::vectorList.clear();
-  KST::scalarList.clear();
+  Kst::vectorList.clear();
+  Kst::scalarList.clear();
   KST::dataObjectList.clear();
 }
 

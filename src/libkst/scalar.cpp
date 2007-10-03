@@ -19,7 +19,7 @@
 
 #include "kst_i18n.h"
 
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "defaultprimitivenames.h"
 
 #include <qdebug.h>
@@ -51,16 +51,16 @@ Scalar::Scalar(KstObjectTag in_tag, KstObject *provider, double val, bool orphan
   if (_tag.isEmpty()) {
     do {
       _tag = i18n("Anonymous Scalar %1", iAnonymousScalarCounter++);
-    } while (KstData::self()->vectorTagNameNotUniqueInternal(_tag));  // FIXME: why vector?
+    } while (Data::self()->vectorTagNameNotUniqueInternal(_tag));  // FIXME: why vector?
     KstObject::setTagName(KstObjectTag(_tag, in_tag.context()));
   } else {
     KstObject::setTagName(KST::suggestUniqueScalarTag(in_tag));
   }
 
 
-  KST::scalarList.lock().writeLock();
-  KST::scalarList.append(this);
-  KST::scalarList.lock().unlock();
+  scalarList.lock().writeLock();
+  scalarList.append(this);
+  scalarList.lock().unlock();
 }
 
 
@@ -91,7 +91,7 @@ Scalar::Scalar(const QDomElement& e)
     _displayable = false;
   }
 
-  KST::scalarList.append(this);
+  scalarList.append(this);
 }
 
 
@@ -199,9 +199,9 @@ void Scalar::setTagName(const KstObjectTag& newTag) {
     return;
   }
 
-  KstWriteLocker l(&KST::scalarList.lock());
+  KstWriteLocker l(&scalarList.lock());
 
-  KST::scalarList.doRename(this, newTag);
+  scalarList.doRename(this, newTag);
 }
 
 }

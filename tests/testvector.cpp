@@ -14,12 +14,12 @@
 #include <QtTest>
 
 #include <vector.h>
-#include <kstdatacollection.h>
+#include <datacollection.h>
 #include <kstdataobjectcollection.h>
 
 void TestVector::cleanupTestCase() {
-  KST::vectorList.clear();
-  KST::scalarList.clear();
+  Kst::vectorList.clear();
+  Kst::scalarList.clear();
   KST::dataObjectList.clear();
 }
 

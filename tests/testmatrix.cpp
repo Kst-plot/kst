@@ -14,12 +14,12 @@
 #include <QtTest>
 
 #include <kstmath.h>
-#include <kstdatacollection.h>
+#include <datacollection.h>
 #include <kstdataobjectcollection.h>
 
 void TestMatrix::cleanupTestCase() {
-  KST::matrixList.clear();
-  KST::scalarList.clear();
+  Kst::matrixList.clear();
+  Kst::scalarList.clear();
   KST::dataObjectList.clear();
 }
 

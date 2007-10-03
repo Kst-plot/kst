@@ -20,7 +20,7 @@
 
 #include <kstmath.h>
 #include <datavector.h>
-#include <kstdatacollection.h>
+#include <datacollection.h>
 #include <kstdataobjectcollection.h>
 
 void TestDataSource::initTestCase() {
@@ -31,9 +31,9 @@ void TestDataSource::initTestCase() {
 
 
 void TestDataSource::cleanupTestCase() {
-  KST::dataSourceList.clear();
-  KST::vectorList.clear();
-  KST::scalarList.clear();
+  Kst::dataSourceList.clear();
+  Kst::vectorList.clear();
+  Kst::scalarList.clear();
   KST::dataObjectList.clear();
 }
 

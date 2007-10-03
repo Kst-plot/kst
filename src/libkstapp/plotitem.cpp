@@ -20,7 +20,7 @@
 #include "tabwidget.h"
 
 #include "kstvcurve.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdataobjectcollection.h"
 #include "vectorcurverenderitem.h"
 

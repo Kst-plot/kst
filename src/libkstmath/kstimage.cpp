@@ -17,7 +17,7 @@
  ***************************************************************************/
 
 #include "dialoglauncher.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdebug.h"
 #include "kstimage.h"
 #include "kstmath.h"
@@ -529,9 +529,9 @@ KstCurveType KstImage::curveType() const {
 
 
 Kst::DataObjectPtr KstImage::providerDataObject() const {
-  KST::matrixList.lock().readLock();
-  KstMatrixPtr mp = *KST::matrixList.findTag(matrixTag());
-  KST::matrixList.lock().unlock();
+  Kst::matrixList.lock().readLock();
+  KstMatrixPtr mp = *Kst::matrixList.findTag(matrixTag());
+  Kst::matrixList.lock().unlock();
   Kst::DataObjectPtr provider = 0L;
   if (mp) {
     mp->readLock();

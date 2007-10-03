@@ -28,7 +28,7 @@
 #include <qdebug.h>
 
 #include "dialoglauncher.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdebug.h"
 #include "kstpsd.h"
 #include "psdcalculator.h"
@@ -169,10 +169,10 @@ void KstPSD::commonConstructor(const QString& in_tag, Kst::VectorPtr in_V,
 KstPSD::~KstPSD() {
   _sVector = _outputVectors.end();
   _fVector = _outputVectors.end();
-  KST::vectorList.lock().writeLock();
-  KST::vectorList.remove(_outputVectors[SVECTOR]);
-  KST::vectorList.remove(_outputVectors[FVECTOR]);
-  KST::vectorList.lock().unlock();
+  Kst::vectorList.lock().writeLock();
+  Kst::vectorList.remove(_outputVectors[SVECTOR]);
+  Kst::vectorList.remove(_outputVectors[FVECTOR]);
+  Kst::vectorList.lock().unlock();
 }
 
 
@@ -452,7 +452,7 @@ void KstPSD::setGaussianSigma(double in_gaussianSigma) {
  
 Kst::DataObjectPtr KstPSD::makeDuplicate(Kst::DataObjectDataObjectMap& duplicatedMap) {
   QString name(tagName() + '\'');
-  while (KstData::self()->dataTagNameNotUnique(name, false)) {
+  while (Kst::Data::self()->dataTagNameNotUnique(name, false)) {
     name += '\'';
   }
   KstPSDPtr psd = new KstPSD(name, _inputVectors[INVECTOR], _Freq,

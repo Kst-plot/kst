@@ -11,8 +11,10 @@
 
 
 #include "kstsharedptr.h"
+#include "kstdatasource.h"
 
 #include <QtPlugin>
+#include <QSettings>
 
 class KstPluginInterface : public KstShared {
   public:

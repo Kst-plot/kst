@@ -32,7 +32,7 @@
 #include <qregexp.h>
 
 #include "enodes.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdebug.h"
 #include "kstmath.h"
 
@@ -647,16 +647,16 @@ Data::Data(char *name)
     QRegExp re("(.*)\\[(.*)\\]");
     int hit = re.indexIn(_tagName);
     if (hit > -1 && re.numCaptures() == 2) {
-      _vector = *KST::vectorList.findTag(re.cap(1));
+      _vector = *Kst::vectorList.findTag(re.cap(1));
       if (_vector) {
         _vectorIndex = re.cap(2);
       }
     }
   } else {
     _tagName = QString(name).trimmed();
-    _vector = *KST::vectorList.findTag(_tagName);
+    _vector = *Kst::vectorList.findTag(_tagName);
     if (!_vector) {
-      _scalar = *KST::scalarList.findTag(_tagName);
+      _scalar = *Kst::scalarList.findTag(_tagName);
     }
   }
   free(name);

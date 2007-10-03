@@ -18,7 +18,7 @@
 #include "labelrenderer.h"
 
 #include "enodes.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdataobjectcollection.h"
 #include "ksttimers.h"
 #include "labelparser.h"
@@ -86,9 +86,9 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
           rc._cache->append(DataRef(DataRef::DRExpression, fi->text, QString::null, 0.0, QVariant(eqResult)));
         }
       } else {
-        KST::scalarList.lock().readLock();
-        Kst::ScalarPtr scp = KST::scalarList.retrieveObject(KstObjectTag::fromString(fi->text));
-        KST::scalarList.lock().unlock();
+        Kst::scalarList.lock().readLock();
+        Kst::ScalarPtr scp = Kst::scalarList.retrieveObject(KstObjectTag::fromString(fi->text));
+        Kst::scalarList.lock().unlock();
         if (scp) {
           scp->readLock();
           txt = QString::number(scp->value(), 'g', rc.precision);
@@ -97,9 +97,9 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
           }
           scp->unlock();
         } else {
-          KST::stringList.lock().readLock();
-          KstStringPtr stp = KST::stringList.retrieveObject(KstObjectTag::fromString(fi->text));
-          KST::stringList.lock().unlock();
+          Kst::stringList.lock().readLock();
+          KstStringPtr stp = Kst::stringList.retrieveObject(KstObjectTag::fromString(fi->text));
+          Kst::stringList.lock().unlock();
           if (stp) {
             stp->readLock();
             txt = stp->value();
@@ -116,9 +116,9 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
       rc.x += rc.fontWidth(txt);
     } else if (fi->vector) {
       QString txt;
-      KST::vectorList.lock().readLock();
-      Kst::VectorPtr vp = *KST::vectorList.findTag(fi->text);
-      KST::vectorList.lock().unlock();
+      Kst::vectorList.lock().readLock();
+      Kst::VectorPtr vp = *Kst::vectorList.findTag(fi->text);
+      Kst::vectorList.lock().unlock();
       if (vp) {
         if (!fi->expression.isEmpty()) {
           // Parse and evaluate as an equation

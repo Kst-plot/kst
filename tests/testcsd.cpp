@@ -18,13 +18,13 @@
 #include <qdir.h>
 #include <qfile.h>
 #include <kstcsd.h>
-#include <kstdatacollection.h>
+#include <datacollection.h>
 #include <kstdataobjectcollection.h>
 
 
 void TestCSD::cleanupTestCase() {
-  KST::vectorList.clear();
-  KST::scalarList.clear();
+  Kst::vectorList.clear();
+  Kst::scalarList.clear();
   KST::dataObjectList.clear();
 }
 

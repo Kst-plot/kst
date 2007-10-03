@@ -12,7 +12,7 @@
 #include "vectorselector.h"
 
 #include "dialoglauncher.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 
 namespace Kst {
 
@@ -87,10 +87,10 @@ void VectorSelector::editVector() {
 void VectorSelector::fillVectors() {
   QHash<QString, VectorPtr> vectors;
 
-  KST::vectorList.lock().readLock();
+  Kst::vectorList.lock().readLock();
 
-  VectorList::ConstIterator it = KST::vectorList.begin();
-  for (; it != KST::vectorList.end(); ++it) {
+  VectorList::ConstIterator it = Kst::vectorList.begin();
+  for (; it != Kst::vectorList.end(); ++it) {
     VectorPtr vector = (*it);
     if (vector->isScalarList())
       continue;
@@ -100,7 +100,7 @@ void VectorSelector::fillVectors() {
     vector->unlock();
   }
 
-  KST::vectorList.lock().unlock();
+  Kst::vectorList.lock().unlock();
 
   QStringList list = vectors.keys();
 

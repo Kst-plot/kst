@@ -28,7 +28,7 @@
 #include "kstdebug.h"
 #include "kstbasicplugin.h"
 #include "dialoglauncher.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 
 KstBasicPlugin::KstBasicPlugin()
 : Kst::DataObject(), _isFit(false) {
@@ -64,7 +64,7 @@ Kst::DataObjectPtr KstBasicPlugin::makeDuplicate(Kst::DataObjectDataObjectMap &m
 
   // create new outputs
   for (Kst::VectorMap::ConstIterator iter = outputVectors().begin(); iter != outputVectors().end(); ++iter) {
-    KstWriteLocker blockVectorUpdates(&KST::vectorList.lock());
+    KstWriteLocker blockVectorUpdates(&Kst::vectorList.lock());
     Kst::VectorPtr v = new Kst::Vector(KstObjectTag(iter.value()->tag().tag() + "'", iter.value()->tag().context()), 0, plugin.data()); // FIXME: unique tag generation
     plugin->outputVectors().insert(iter.key(), v);
   }
@@ -253,7 +253,7 @@ void KstBasicPlugin::load(const QDomElement &e) {
       } else if (e.tagName() == "istring") {
         _inputStringLoadQueue.append(qMakePair(e.attribute("name"), e.text()));
       } else if (e.tagName() == "ovector") {
-        KstWriteLocker blockVectorUpdates(&KST::vectorList.lock());
+        KstWriteLocker blockVectorUpdates(&Kst::vectorList.lock());
         Kst::VectorPtr v;
         if (e.attribute("scalarList", "0").toInt()) {
           v = new Kst::Vector(KstObjectTag(e.text(), tag()), 0, this, true);
@@ -262,11 +262,11 @@ void KstBasicPlugin::load(const QDomElement &e) {
         }
         _outputVectors.insert(e.attribute("name"), v);
       } else if (e.tagName() == "oscalar") {
-        KstWriteLocker blockScalarUpdates(&KST::scalarList.lock());
+        KstWriteLocker blockScalarUpdates(&Kst::scalarList.lock());
         Kst::ScalarPtr sp = new Kst::Scalar(KstObjectTag(e.text(), tag()), this);
         _outputScalars.insert(e.attribute("name"), sp);
       } else if (e.tagName() == "ostring") {
-        KstWriteLocker blockStringUpdates(&KST::stringList.lock());
+        KstWriteLocker blockStringUpdates(&Kst::stringList.lock());
         KstStringPtr sp = new KstString(KstObjectTag(e.text(), tag()), this);
         _outputStrings.insert(e.attribute("name"), sp);
       }
@@ -288,8 +288,8 @@ void KstBasicPlugin::createFitScalars() {
       int i = 0;
       int length = vectorParam->length();
 
-      KstWriteLocker blockScalarUpdates(&KST::scalarList.lock());
-      KST::scalarList.setUpdateDisplayTags(false);
+      KstWriteLocker blockScalarUpdates(&Kst::scalarList.lock());
+      Kst::scalarList.setUpdateDisplayTags(false);
       for (paramName = parameterName(i);
           !paramName.isEmpty() && i < length;
            paramName = parameterName(++i)) {
@@ -302,7 +302,7 @@ void KstBasicPlugin::createFitScalars() {
           _outputScalars[paramName]->setValue(scalarValue);
         }
       }
-      KST::scalarList.setUpdateDisplayTags(true);
+      Kst::scalarList.setUpdateDisplayTags(true);
     }
   }
 }

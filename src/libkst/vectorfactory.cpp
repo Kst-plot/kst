@@ -16,7 +16,7 @@
 #include "generatedvector.h"
 #include "editablevector.h"
 #include "datavector.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 
 namespace Kst {
 

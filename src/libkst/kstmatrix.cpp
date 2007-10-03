@@ -22,7 +22,7 @@
 #include <math.h>
 
 #include "defaultprimitivenames.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdebug.h"
 #include "kst_i18n.h"
 #include "kstmath.h"
@@ -56,7 +56,7 @@ KstMatrix::KstMatrix(KstObjectTag in_tag, KstObject *provider, uint nX, uint nY,
   if (!in_tag.isValid()) {
     do {
       _tag = i18n("Anonymous Matrix %1", anonymousMatrixCounter++);
-    } while (KstData::self()->matrixTagNameNotUnique(_tag, false));
+    } while (Kst::Data::self()->matrixTagNameNotUnique(_tag, false));
     KstObject::setTagName(KstObjectTag(_tag, in_tag.context()));
   } else {
     KstObject::setTagName(KST::suggestUniqueMatrixTag(in_tag));
@@ -65,22 +65,22 @@ KstMatrix::KstMatrix(KstObjectTag in_tag, KstObject *provider, uint nX, uint nY,
   createScalars();
   setDirty();
 
-  KST::matrixList.lock().writeLock();
-  KST::matrixList.append(this);
-  KST::matrixList.lock().unlock();
+  Kst::matrixList.lock().writeLock();
+  Kst::matrixList.append(this);
+  Kst::matrixList.lock().unlock();
 }
 
 
 KstMatrix::~KstMatrix() {
   // get rid of the stat scalars
-  KST::scalarList.lock().writeLock();
-  KST::scalarList.setUpdateDisplayTags(false);
+  Kst::scalarList.lock().writeLock();
+  Kst::scalarList.setUpdateDisplayTags(false);
   for (QHash<QString, Kst::Scalar*>::Iterator iter = _statScalars.begin(); iter != _statScalars.end(); ++iter) {
-    KST::scalarList.remove(iter.value());
+    Kst::scalarList.remove(iter.value());
     iter.value()->_KShared_unref();  
   }
-  KST::scalarList.setUpdateDisplayTags(true);
-  KST::scalarList.lock().unlock();
+  Kst::scalarList.setUpdateDisplayTags(true);
+  Kst::scalarList.lock().unlock();
 
   if (_z) {
     free(_z);
@@ -374,9 +374,9 @@ void KstMatrix::setTagName(const KstObjectTag& tag) {
     return;
   }
 
-  KstWriteLocker l(&KST::matrixList.lock());
+  KstWriteLocker l(&Kst::matrixList.lock());
 
-  KST::matrixList.doRename(this, tag);
+  Kst::matrixList.doRename(this, tag);
 
   renameScalars();
 }
@@ -423,8 +423,8 @@ void KstMatrix::setEditable(bool editable) {
 
 
 void KstMatrix::createScalars() {
-  KstWriteLocker sl(&KST::scalarList.lock());
-  KST::scalarList.setUpdateDisplayTags(false);
+  KstWriteLocker sl(&Kst::scalarList.lock());
+  Kst::scalarList.setUpdateDisplayTags(false);
 
   _statScalars.insert("max", new Kst::Scalar(KstObjectTag("Max", tag()), this));
   _statScalars["max"]->_KShared_ref();
@@ -445,13 +445,13 @@ void KstMatrix::createScalars() {
   _statScalars.insert("minpos", new Kst::Scalar(KstObjectTag("MinPos", tag()), this));
   _statScalars["minpos"]->_KShared_ref();
 
-  KST::scalarList.setUpdateDisplayTags(true);
+  Kst::scalarList.setUpdateDisplayTags(true);
 }
 
 
 void KstMatrix::renameScalars() {
-  KstWriteLocker sl(&KST::scalarList.lock());
-  KST::scalarList.setUpdateDisplayTags(false);
+  KstWriteLocker sl(&Kst::scalarList.lock());
+  Kst::scalarList.setUpdateDisplayTags(false);
 
   _statScalars["max"]->setTagName(KstObjectTag("Max", tag()));
   _statScalars["min"]->setTagName(KstObjectTag("Min", tag()));
@@ -463,7 +463,7 @@ void KstMatrix::renameScalars() {
   _statScalars["sumsquared"]->setTagName(KstObjectTag("SumSquared", tag()));
   _statScalars["minpos"]->setTagName(KstObjectTag("MinPos", tag()));
 
-  KST::scalarList.setUpdateDisplayTags(true);
+  Kst::scalarList.setUpdateDisplayTags(true);
 }
 
 
@@ -485,7 +485,7 @@ void KstMatrix::updateScalars() {
 bool KstMatrix::resizeZ(int sz, bool reinit) {
   //kdDebug() << "resizing to: " << sz << endl;
   if (sz >= 1) {
-    _z = static_cast<double*>(KST::realloc(_z, sz*sizeof(double)));
+    _z = static_cast<double*>(Kst::realloc(_z, sz*sizeof(double)));
     if (!_z) {
       return false;
     }

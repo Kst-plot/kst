@@ -21,7 +21,7 @@
 // hack to make main() a friend of kstdatasource
 #define protected public
 #include "datavector.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdataobjectcollection.h"
 #undef protected
 
@@ -35,8 +35,8 @@ void Usage() {
 
 
 static void exitHelper() {
-  KST::vectorList.clear();
-  KST::scalarList.clear();
+  Kst::vectorList.clear();
+  Kst::scalarList.clear();
   KST::dataObjectList.clear();
 }
 

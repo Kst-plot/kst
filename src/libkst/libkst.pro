@@ -18,7 +18,7 @@ SOURCES += \
     kstobject.cpp \
     kstdatasource.cpp \
     kstextension.cpp \
-    kstdatacollection.cpp \
+    datacollection.cpp \
     kstdebug.cpp \
     rwlock.cpp \
     kstmath.cpp \
@@ -57,7 +57,7 @@ HEADERS += \
     defaultprimitivenames.h \
     editablematrix.h \
     editablevector.h \
-    kstdatacollection.h \
+    datacollection.h \
     kstdataplugin.h \
     kstdatasource.h \
     dateparser.h \

@@ -1,13 +1,7 @@
 /***************************************************************************
-                            kstdatacollection.cpp
-                             -------------------
-    begin                : June 12, 2003
-    copyright            : (C) 2003 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
+ *   copyright : (C) 2003 The University of Toronto                        *
+*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -20,29 +14,31 @@
 #include <stdlib.h>
 #include <qapplication.h>
 
-#include "kstdatacollection.h"
+#include "datacollection.h"
 
 #include "sysinfo.h"
 #include "psversion.h"
 
+namespace Kst {
+
 /** The list of data sources (files) */
-KstDataSourceList KST::dataSourceList;
+KstDataSourceList dataSourceList;
 
 /** The list of vectors that are being read */
-Kst::VectorCollection KST::vectorList;
+VectorCollection vectorList;
 
 /** The list of matrices that are being read */
-KstMatrixCollection KST::matrixList;
+KstMatrixCollection matrixList;
 
 /** The list of Scalars which have been generated */
-Kst::ScalarCollection KST::scalarList;
+ScalarCollection scalarList;
 
 /** The list of Strings */
-KstStringCollection KST::stringList;
+KstStringCollection stringList;
 
 static QMutex bigLock;
 
-void *KST::realloc(void *ptr, size_t size) {
+void *realloc(void *ptr, size_t size) {
 #ifdef HAVE_LINUX
   QMutexLocker ml(&bigLock);
   meminfo();
@@ -56,7 +52,7 @@ void *KST::realloc(void *ptr, size_t size) {
   return ::realloc(ptr, size);
 }
 
-void *KST::malloc(size_t size) {
+void *malloc(size_t size) {
 #ifdef HAVE_LINUX
   QMutexLocker ml(&bigLock);
   meminfo();
@@ -71,79 +67,79 @@ void *KST::malloc(size_t size) {
 }
 
 
-KstData *KstData::_self = 0L;
-void KstData::cleanup() {
+Data *Data::_self = 0L;
+void Data::cleanup() {
     delete _self;
     _self = 0;
 }
 
 
-KstData *KstData::self() {
+Data *Data::self() {
   if (!_self) {
-    _self = new KstData;
-    qAddPostRoutine(KstData::cleanup);
+    _self = new Data;
+    qAddPostRoutine(Data::cleanup);
   }
   return _self;
 }
 
 
-void KstData::replaceSelf(KstData *newInstance) {
+void Data::replaceSelf(Data *newInstance) {
   delete _self;
   _self = 0L;
   _self = newInstance;
 }
 
 
-KstData::KstData() {
+Data::Data() {
 }
 
 
-KstData::~KstData() {
+Data::~Data() {
 }
 
 
-bool KstData::vectorTagNameNotUniqueInternal(const QString& tag) {
+bool Data::vectorTagNameNotUniqueInternal(const QString& tag) {
   /* verify that the tag name is not empty */
   if (tag.trimmed().isEmpty()) {
       return true;
   }
 
   /* verify that the tag name is not used by a data object */
-  KST::vectorList.lock().readLock();
-  bool vc = KST::vectorList.tagExists(tag);
-  KST::vectorList.lock().unlock();
+  vectorList.lock().readLock();
+  bool vc = vectorList.tagExists(tag);
+  vectorList.lock().unlock();
   if (!vc) {
-    KST::scalarList.lock().readLock();
-    vc = KST::scalarList.tagExists(tag);
-    KST::scalarList.lock().unlock();
+    scalarList.lock().readLock();
+    vc = scalarList.tagExists(tag);
+    scalarList.lock().unlock();
   }
   return vc;
 }
 
 
-bool KstData::matrixTagNameNotUniqueInternal(const QString& tag) {
+bool Data::matrixTagNameNotUniqueInternal(const QString& tag) {
   /* verify that the tag name is not empty */
   if (tag.trimmed().isEmpty()) {
     return true;
   }
 
   /* verify that the tag name is not used by a data object */
-  KstReadLocker ml(&KST::matrixList.lock());
-  KstReadLocker ml2(&KST::scalarList.lock());
-  if (KST::matrixList.tagExists(tag) || KST::scalarList.tagExists(tag)) {
+  KstReadLocker ml(&matrixList.lock());
+  KstReadLocker ml2(&scalarList.lock());
+  if (matrixList.tagExists(tag) || scalarList.tagExists(tag)) {
     return true;
   }
   return false;  
 }
 
 
-bool KstData::tagNameNotUnique(const QString& tag, bool warn, void *p) {
+bool Data::tagNameNotUnique(const QString& tag, bool warn, void *p) {
   Q_UNUSED(p)
   return dataTagNameNotUnique(tag, warn) || vectorTagNameNotUnique(tag, warn);
 }
 
 
-bool KstData::dataTagNameNotUnique(const QString& tag, bool warn, void *parent) {
+bool Data::dataTagNameNotUnique(const QString& tag, bool warn, void *parent) {
   Q_UNUSED(tag)
   Q_UNUSED(warn)
   Q_UNUSED(parent)
@@ -151,7 +147,7 @@ bool KstData::dataTagNameNotUnique(const QString& tag, bool warn, void *parent) 
 }
 
 
-bool KstData::vectorTagNameNotUnique(const QString& tag, bool warn, void *p) {
+bool Data::vectorTagNameNotUnique(const QString& tag, bool warn, void *p) {
   Q_UNUSED(p)
   Q_UNUSED(warn)
   /* verify that the tag name is not empty */
@@ -160,9 +156,9 @@ bool KstData::vectorTagNameNotUnique(const QString& tag, bool warn, void *p) {
   }
 
   /* verify that the tag name is not used by a data object */
-  KstReadLocker ml(&KST::vectorList.lock());
-  KstReadLocker ml2(&KST::scalarList.lock());
-  if (KST::vectorList.tagExists(tag) || KST::scalarList.tagExists(tag)) {
+  KstReadLocker ml(&vectorList.lock());
+  KstReadLocker ml2(&scalarList.lock());
+  if (vectorList.tagExists(tag) || scalarList.tagExists(tag)) {
       return true;
   }
 
@@ -170,7 +166,7 @@ bool KstData::vectorTagNameNotUnique(const QString& tag, bool warn, void *p) {
 }
 
 
-bool KstData::matrixTagNameNotUnique(const QString& tag, bool warn, void *p) {
+bool Data::matrixTagNameNotUnique(const QString& tag, bool warn, void *p) {
   Q_UNUSED(p)
   Q_UNUSED(warn)
   /* verify that the tag name is not empty */
@@ -179,16 +175,16 @@ bool KstData::matrixTagNameNotUnique(const QString& tag, bool warn, void *p) {
   }
 
   /* verify that the tag name is not used by a data object */
-  KstReadLocker ml(&KST::matrixList.lock());
-  KstReadLocker ml2(&KST::scalarList.lock());
-  if (KST::matrixList.tagExists(tag) || KST::scalarList.tagExists(tag)) {
+  KstReadLocker ml(&matrixList.lock());
+  KstReadLocker ml2(&scalarList.lock());
+  if (matrixList.tagExists(tag) || scalarList.tagExists(tag)) {
     return true;
   }
   return false;
 }
 
 
-bool KstData::dataSourceTagNameNotUnique(const QString& tag, bool warn, void *p) {
+bool Data::dataSourceTagNameNotUnique(const QString& tag, bool warn, void *p) {
   Q_UNUSED(p)
   Q_UNUSED(warn)
   /* verify that the tag name is not empty */
@@ -197,62 +193,62 @@ bool KstData::dataSourceTagNameNotUnique(const QString& tag, bool warn, void *p)
   }
 
   /* verify that the tag name is not used by a data source */
-  KstReadLocker l(&KST::dataSourceList.lock());
-  if (KST::dataSourceList.findTag(tag) != KST::dataSourceList.end()) {
+  KstReadLocker l(&dataSourceList.lock());
+  if (dataSourceList.findTag(tag) != dataSourceList.end()) {
     return true;
   }
   return false;
 }
 
 
-QStringList KstData::plotList(const QString& window) {
+QStringList Data::plotList(const QString& window) {
   Q_UNUSED(window)
   return QStringList();
 }
 
 
-void KstData::removeCurveFromPlots(KstRelation *c) {
+void Data::removeCurveFromPlots(KstRelation *c) {
   Q_UNUSED(c)
   // meaningless in no GUI: no plots!
 }
 
-bool KstData::viewObjectNameNotUnique(const QString& tag) {
+bool Data::viewObjectNameNotUnique(const QString& tag) {
   Q_UNUSED(tag)
   // meaningless in no GUI: no view objects!
   return false;
 }
 
-int KstData::vectorToFile(Kst::VectorPtr v, QFile *f) {
+int Data::vectorToFile(Kst::VectorPtr v, QFile *f) {
   // FIXME: implement me (non-gui)
   return 0;
 }
 
 
-int KstData::vectorsToFile(const Kst::VectorList& l, QFile *f, bool interpolate) {
+int Data::vectorsToFile(const Kst::VectorList& l, QFile *f, bool interpolate) {
   // FIXME: implement me (non-gui)
   return 0;
 }
 
 
-int KstData::columns(const QString& window) {
+int Data::columns(const QString& window) {
   Q_UNUSED(window)
   return 0;
 }
 
 
-void KstData::newWindow(QWidget *dialogParent) {
+void Data::newWindow(QWidget *dialogParent) {
   Q_UNUSED(dialogParent)
 }
 
 
-QStringList KstData::windowList() {
+QStringList Data::windowList() {
   return QStringList();
 }
 
 
-QString KstData::currentWindow() {
+QString Data::currentWindow() {
   return QString::null;
 }
 
-
+}
 // vim: ts=2 sw=2 et

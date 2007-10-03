@@ -18,12 +18,12 @@
 #include <QTemporaryFile>
 
 #include <kstpsd.h>
-#include <kstdatacollection.h>
+#include <datacollection.h>
 #include <kstdataobjectcollection.h>
 
 void TestPSD::cleanupTestCase() {
-  KST::vectorList.clear();
-  KST::scalarList.clear();
+  Kst::vectorList.clear();
+  Kst::scalarList.clear();
   KST::dataObjectList.clear();
 }
 

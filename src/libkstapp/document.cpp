@@ -15,7 +15,7 @@
 #include "tabwidget.h"
 #include <datasourcefactory.h>
 #include <graphicsfactory.h>
-#include <kstdatacollection.h>
+#include <datacollection.h>
 #include <kstdataobjectcollection.h>
 #include <objectfactory.h>
 #include <primitivefactory.h>
@@ -73,23 +73,23 @@ bool Document::save(const QString& to) {
   xml.writeAttribute("version", "2.0");
 
   xml.writeStartElement("data");
-  foreach (KstDataSourcePtr s, KST::dataSourceList) {
+  foreach (KstDataSourcePtr s, dataSourceList) {
     s->saveSource(xml);
   }
   xml.writeEndElement();
 
   xml.writeStartElement("variables");
 
-  foreach (VectorPtr s, KST::vectorList.list()) {
+  foreach (VectorPtr s, vectorList.list()) {
     s->save(xml);
   }
-  foreach (KstMatrixPtr s, KST::matrixList.list()) {
+  foreach (KstMatrixPtr s, matrixList.list()) {
     s->save(xml);
   }
-  foreach (ScalarPtr s, KST::scalarList.list()) {
+  foreach (ScalarPtr s, scalarList.list()) {
     s->save(xml);
   }
-  foreach (KstStringPtr s, KST::stringList.list()) {
+  foreach (KstStringPtr s, stringList.list()) {
     s->save(xml);
   }
   xml.writeEndElement();

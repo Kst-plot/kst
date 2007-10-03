@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstdatacollection.h" 
+#include "datacollection.h"
 #include "kstmatrixdefaults.h"
 #include "datamatrix.h"
 #include "stdinsource.h"
@@ -96,9 +96,9 @@ int KstMatrixDefaults::skip() const {
 }
 
 void KstMatrixDefaults::sync() {
-  KST::matrixList.lock().readLock();
-  Kst::DataMatrixList dataMatrixList = kstObjectSubList<KstMatrix,Kst::DataMatrix>(KST::matrixList);
-  KST::matrixList.lock().unlock();
+  Kst::matrixList.lock().readLock();
+  Kst::DataMatrixList dataMatrixList = kstObjectSubList<KstMatrix,Kst::DataMatrix>(Kst::matrixList);
+  Kst::matrixList.lock().unlock();
   int j = dataMatrixList.count() - 1;
 
   // Find a non-stdin source

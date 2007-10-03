@@ -17,7 +17,7 @@
 
 #include "kstvectordefaults.h"
 #include "datavector.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "stdinsource.h"
 
 #include <qsettings.h>
@@ -80,9 +80,9 @@ int KstVectorDefaults::skip() const {
 
 
 void KstVectorDefaults::sync() {
-  KST::vectorList.lock().readLock();
-  Kst::DataVectorList vl = kstObjectSubList<Kst::Vector,Kst::DataVector>(KST::vectorList);
-  KST::vectorList.lock().unlock();
+  Kst::vectorList.lock().readLock();
+  Kst::DataVectorList vl = kstObjectSubList<Kst::Vector,Kst::DataVector>(Kst::vectorList);
+  Kst::vectorList.lock().unlock();
   int j = vl.count() - 1;
 
   // Find a non-stdin source

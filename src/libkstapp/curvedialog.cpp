@@ -23,7 +23,7 @@
 #include "vectorcurverenderitem.h"
 
 #include "kstdefaultnames.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdataobjectcollection.h"
 
 namespace Kst {

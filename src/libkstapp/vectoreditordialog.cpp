@@ -14,7 +14,7 @@
 #include "document.h"
 #include "vectortablemodel.h"
 
-#include <kstdatacollection.h>
+#include <datacollection.h>
 
 namespace Kst {
 
@@ -24,12 +24,12 @@ VectorEditorDialog::VectorEditorDialog(QWidget *parent, Document *doc)
   // TODO: Extract this model so the dialog can be reused, and make a new model
   // or modification to the model so that it tracks all the vector creates and
   // destroys
-  KST::vectorList.lock().readLock();
-  foreach (VectorPtr v, KST::vectorList.list()) {
+  vectorList.lock().readLock();
+  foreach (VectorPtr v, vectorList.list()) {
     VectorModel *vm = new VectorModel(v);
     _model->vectors().append(vm);
   }
-  KST::vectorList.lock().unlock();
+  vectorList.lock().unlock();
   setupUi(this);
   _vectors->setModel(_model);
 }

@@ -23,7 +23,7 @@
 #include "kst_i18n.h"
 
 #include "dialoglauncher.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdefaultnames.h"
 #include "ksthistogram.h"
 
@@ -137,10 +137,10 @@ void KstHistogram::commonConstructor(const QString &in_tag, Kst::VectorPtr in_V,
 KstHistogram::~KstHistogram() {
   _bVector = _outputVectors.end();
   _hVector = _outputVectors.end();
-  KST::vectorList.lock().writeLock();
-  KST::vectorList.remove(_outputVectors[BINS]);
-  KST::vectorList.remove(_outputVectors[HIST]);
-  KST::vectorList.lock().unlock();
+  Kst::vectorList.lock().writeLock();
+  Kst::vectorList.remove(_outputVectors[BINS]);
+  Kst::vectorList.remove(_outputVectors[HIST]);
+  Kst::vectorList.lock().unlock();
 
   delete[] _Bins;
   _Bins = 0L;
@@ -452,7 +452,7 @@ int KstHistogram::vNumSamples() const {
 
 Kst::DataObjectPtr KstHistogram::makeDuplicate(Kst::DataObjectDataObjectMap& duplicatedMap) {
   QString name(tagName() + '\'');
-  while (KstData::self()->dataTagNameNotUnique(name, false)) {
+  while (Kst::Data::self()->dataTagNameNotUnique(name, false)) {
     name += '\'';
   }
   KstHistogramPtr histogram = new KstHistogram(name, _inputVectors[RAWVECTOR],

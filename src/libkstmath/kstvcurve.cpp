@@ -24,7 +24,7 @@
 // application specific includes
 #include "dialoglauncher.h"
 #include "kstcolorsequence.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdebug.h"
 #include "kstlinestyle.h"
 #include "kstmath.h"
@@ -1741,9 +1741,9 @@ void KstVCurve::yRange(double xFrom, double xTo, double* yMin, double* yMax) {
 
 
 Kst::DataObjectPtr KstVCurve::providerDataObject() const {
-  KST::vectorList.lock().readLock();
-  Kst::VectorPtr vp = *KST::vectorList.findTag(yVTag().tag());  // FIXME: should use full tag
-  KST::vectorList.lock().unlock();
+  Kst::vectorList.lock().readLock();
+  Kst::VectorPtr vp = *Kst::vectorList.findTag(yVTag().tag());  // FIXME: should use full tag
+  Kst::vectorList.lock().unlock();
   Kst::DataObjectPtr provider = 0L;
   if (vp) {
     vp->readLock();

@@ -1,13 +1,7 @@
 /***************************************************************************
-                             kstdatacollection.h
-                             -------------------
-    begin                : June 12, 2003
-    copyright            : (C) 2003 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
+ *   copyright : (C) 2003 The University of Toronto                        *
+*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -15,8 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTDATACOLLECTION_H
-#define KSTDATACOLLECTION_H
+#ifndef DATACOLLECTION_H
+#define DATACOLLECTION_H
 
 #include "kstdatasource.h"
 #include "kststring.h"
@@ -28,16 +22,18 @@
 class QFile;
 class KstRelation;
 
-class KstData {
+namespace Kst {
+
+class Data {
   protected:
-    static KstData *_self;
+    static Data *_self;
     static void cleanup();
-    KstData();
-    virtual ~KstData();
+    Data();
+    virtual ~Data();
 
   public:
-    static KstData *self();
-    static void replaceSelf(KstData *newInstance);
+    static Data *self();
+    static void replaceSelf(Data *newInstance);
 
     /** check that a tag has not been used by any other tags */
     virtual bool tagNameNotUnique(const QString& tag, bool warn = true, void *parent = 0L);
@@ -70,15 +66,14 @@ class KstData {
     virtual QString currentWindow();
 } KST_EXPORT;
 
-namespace KST {
     /** The list of data sources (files) */
     KST_EXPORT extern KstDataSourceList dataSourceList;
 
     /** The list of vectors that are being read */
-    KST_EXPORT extern Kst::VectorCollection vectorList;
+    KST_EXPORT extern VectorCollection vectorList;
 
     /** The list of Scalars which have been generated */
-    KST_EXPORT extern Kst::ScalarCollection scalarList;
+    KST_EXPORT extern ScalarCollection scalarList;
 
     /** The list of Strings */
     KST_EXPORT extern KstStringCollection stringList;
@@ -89,6 +84,7 @@ namespace KST {
     /** Bad choice for location - maybe move it later */
     KST_EXPORT void *malloc(size_t size);
     KST_EXPORT void *realloc(void *ptr, size_t size);
+
 }
 
 #endif

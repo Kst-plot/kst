@@ -37,7 +37,7 @@
 
 //FIXME Temporaries REMOVE!!
 #include "editablevector.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdataobjectcollection.h"
 #include "kstequation.h"
 
@@ -93,21 +93,21 @@ void MainWindow::cleanup() {
   KST::dataObjectList.lock().unlock();
   dol.clear(); //and here?
 
-  KST::dataSourceList.lock().writeLock();
-  KST::dataSourceList.clear();
-  KST::dataSourceList.lock().unlock();
-  KST::matrixList.lock().writeLock();
-  KST::matrixList.clear();
-  KST::matrixList.lock().unlock();
-  KST::scalarList.lock().writeLock();
-  KST::scalarList.clear();
-  KST::scalarList.lock().unlock();
-  KST::stringList.lock().writeLock();
-  KST::stringList.clear();
-  KST::stringList.lock().unlock();
-  KST::vectorList.lock().writeLock();
-  KST::vectorList.clear();
-  KST::vectorList.lock().unlock();
+  dataSourceList.lock().writeLock();
+  dataSourceList.clear();
+  dataSourceList.lock().unlock();
+  matrixList.lock().writeLock();
+  matrixList.clear();
+  matrixList.lock().unlock();
+  scalarList.lock().writeLock();
+  scalarList.clear();
+  scalarList.lock().unlock();
+  stringList.lock().writeLock();
+  stringList.clear();
+  stringList.lock().unlock();
+  vectorList.lock().writeLock();
+  vectorList.clear();
+  vectorList.lock().unlock();
 }
 
 

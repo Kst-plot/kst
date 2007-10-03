@@ -13,7 +13,7 @@
 
 #include "kstdebug.h"
 #include "kstequation.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 
 namespace Kst {
 
@@ -64,7 +64,7 @@ DataObjectPtr EquationFactory::generateObject(QXmlStreamReader& xml) {
 
   VectorPtr vector = 0;
   if (!xVector.isEmpty()) {
-    vector = *KST::vectorList.findTag(xVector);
+    vector = *Kst::vectorList.findTag(xVector);
   }
 
   if (!vector) {

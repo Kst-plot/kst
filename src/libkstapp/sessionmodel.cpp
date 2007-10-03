@@ -12,7 +12,7 @@
 #include "sessionmodel.h"
 
 #include <assert.h>
-#include <kstdatacollection.h>
+#include <datacollection.h>
 #include <kstdataobjectcollection.h>
 
 namespace Kst {

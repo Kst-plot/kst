@@ -31,7 +31,7 @@
 #include <QXmlStreamWriter>
 
 #include "kst_i18n.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdebug.h"
 #include "scalar.h"
 #include "stdinsource.h"
@@ -459,7 +459,7 @@ KstDataSource::KstDataSource(QSettings *cfg, const QString& filename, const QStr
   int count = 1;
 
   KstObject::setTagName(KstObjectTag(tn, KstObjectTag::globalTagContext));  // are DataSources always top-level?
-  while (KstData::self()->dataSourceTagNameNotUnique(tagName(), false)) {
+  while (Kst::Data::self()->dataSourceTagNameNotUnique(tagName(), false)) {
     KstObject::setTagName(KstObjectTag(tn + QString::number(-(count++)), KstObjectTag::globalTagContext));  // are DataSources always top-level?
   }
 
@@ -470,20 +470,20 @@ KstDataSource::KstDataSource(QSettings *cfg, const QString& filename, const QStr
 
 KstDataSource::~KstDataSource() {
 //  qDebug() << "KstDataSource destructor: " << tag().tagString() << endl;
-  KST::scalarList.lock().writeLock();
+  Kst::scalarList.lock().writeLock();
 //  qDebug() << "  removing numFrames scalar" << endl;
-  KST::scalarList.remove(_numFramesScalar);
-  KST::scalarList.lock().unlock();
+  Kst::scalarList.remove(_numFramesScalar);
+  Kst::scalarList.lock().unlock();
 
 //  qDebug() << "  removing metadata strings" << endl;
-  KST::stringList.lock().writeLock();
-  KST::stringList.setUpdateDisplayTags(false);
+  Kst::stringList.lock().writeLock();
+  Kst::stringList.setUpdateDisplayTags(false);
   for (QHash<QString, KstString*>::Iterator it = _metaData.begin(); it != _metaData.end(); ++it) {
 //    qDebug() << "    removing " << it.current()->tag().tagString() << endl;
-    KST::stringList.remove(it.value());
+    Kst::stringList.remove(it.value());
   }
-  KST::stringList.setUpdateDisplayTags(true);
-  KST::stringList.lock().unlock();
+  Kst::stringList.setUpdateDisplayTags(true);
+  Kst::stringList.lock().unlock();
 
   _numFramesScalar = 0L;
 }
@@ -657,7 +657,7 @@ void KstDataSource::saveSource(QXmlStreamWriter &s) {
 
 
 void *KstDataSource::bufferMalloc(size_t size) {
-  return KST::malloc(size);
+  return Kst::malloc(size);
 }
 
 
@@ -667,7 +667,7 @@ void KstDataSource::bufferFree(void *ptr) {
 
 
 void *KstDataSource::bufferRealloc(void *ptr, size_t size) {
-  return KST::realloc(ptr, size);
+  return Kst::realloc(ptr, size);
 }
 
 

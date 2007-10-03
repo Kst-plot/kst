@@ -18,7 +18,7 @@
 
 #include "kst_i18n.h"
 
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdebug.h"
 #include "datamatrix.h"
 
@@ -57,13 +57,13 @@ DataMatrix::DataMatrix(const QDomElement &e) : KstMatrix(KstObjectTag::invalidTa
       if (e.tagName() == "tag") {
         in_tag = e.text();
       } else if (e.tagName() == "file") {
-        KST::dataSourceList.lock().readLock();
-        in_file = KST::dataSourceList.findFileName(e.text());
-        KST::dataSourceList.lock().unlock();
+        dataSourceList.lock().readLock();
+        in_file = dataSourceList.findFileName(e.text());
+        dataSourceList.lock().unlock();
       } else if (e.tagName() == "provider") {
-        KST::dataSourceList.lock().readLock();
-        in_provider = *KST::dataSourceList.findTag(e.text());
-        KST::dataSourceList.lock().unlock();
+        dataSourceList.lock().readLock();
+        in_provider = *dataSourceList.findTag(e.text());
+        dataSourceList.lock().unlock();
       } else if (e.tagName() == "field") {
         in_field = e.text();
       } else if (e.tagName() == "reqxstart") {
@@ -495,12 +495,12 @@ void DataMatrix::reload() {
       assert(newsrc != _file);
       if (newsrc) {
         _file->unlock();
-        KST::dataSourceList.lock().writeLock();
-        KST::dataSourceList.removeAll(_file);
+        dataSourceList.lock().writeLock();
+        dataSourceList.removeAll(_file);
         _file = newsrc;
         _file->writeLock();
-        KST::dataSourceList.append(_file);
-        KST::dataSourceList.lock().unlock();
+        dataSourceList.append(_file);
+        dataSourceList.lock().unlock();
         reset();
       }
     }

@@ -17,7 +17,7 @@
  ***************************************************************************/
 
 #include "kstrelation.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdebug.h"
 #include "kst_i18n.h"
 
@@ -54,7 +54,7 @@ void KstRelation::save(QXmlStreamWriter &s) {
 
 
 bool KstRelation::deleteDependents() {
-  KstData::self()->removeCurveFromPlots(this);
+  Kst::Data::self()->removeCurveFromPlots(this);
   return true;
 }
 

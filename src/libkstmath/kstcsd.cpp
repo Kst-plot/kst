@@ -29,7 +29,7 @@
 
 #include "dialoglauncher.h"
 #include "kstcsd.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdebug.h"
 #include "psdcalculator.h"
 #include "kstobjectdefaults.h"
@@ -138,7 +138,7 @@ void KstCSD::commonConstructor(const QString& in_tag, Kst::VectorPtr in_V,
   }
  
   {
-    KstWriteLocker blockMatrixUpdates(&KST::matrixList.lock());
+    KstWriteLocker blockMatrixUpdates(&Kst::matrixList.lock());
 
     KstMatrixPtr outMatrix = new KstMatrix(KstObjectTag("csd", tag()), this, 1, 1);
     outMatrix->setLabel(i18n("Power [%1/%2^{1/2}]").arg(_vectorUnits).arg(_rateUnits));
@@ -154,9 +154,9 @@ void KstCSD::commonConstructor(const QString& in_tag, Kst::VectorPtr in_V,
 
 KstCSD::~KstCSD() {
   _outMatrix = _outputMatrices.end();
-  KST::matrixList.lock().writeLock();
-  KST::matrixList.remove(_outputMatrices[OUTMATRIX]);
-  KST::matrixList.lock().unlock();
+  Kst::matrixList.lock().writeLock();
+  Kst::matrixList.remove(_outputMatrices[OUTMATRIX]);
+  Kst::matrixList.lock().unlock();
 }
 
 KstObject::UpdateType KstCSD::update(int update_counter) {
@@ -414,7 +414,7 @@ void KstCSD::setRateUnits(const QString& units) {
  
 Kst::DataObjectPtr KstCSD::makeDuplicate(Kst::DataObjectDataObjectMap& duplicatedMap) {
   QString name(tagName() + '\'');
-  while (KstData::self()->dataTagNameNotUnique(name, false)) {
+  while (Kst::Data::self()->dataTagNameNotUnique(name, false)) {
     name += '\'';
   }
   KstCSDPtr csd = new KstCSD(name, _inputVectors[INVECTOR], _frequency, _average, _removeMean,

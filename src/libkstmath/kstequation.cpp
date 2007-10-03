@@ -30,7 +30,7 @@
 #include "dialoglauncher.h"
 #include "enodes.h"
 #include "eparse-eh.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdebug.h"
 #include "kstequation.h"
 #include "kst_i18n.h"
@@ -434,7 +434,7 @@ void KstEquation::showEditDialog() {
 
 Kst::DataObjectPtr KstEquation::makeDuplicate(Kst::DataObjectDataObjectMap& duplicatedMap) {
   QString name(tagName() + '\'');
-  while (KstData::self()->dataTagNameNotUnique(name, false)) {
+  while (Kst::Data::self()->dataTagNameNotUnique(name, false)) {
     name += '\'';
   }
   KstEquationPtr eq = new KstEquation(name, _equation, _inputVectors[XINVECTOR], _doInterp);

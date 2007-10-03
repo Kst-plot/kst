@@ -26,7 +26,7 @@
 #include "kst_i18n.h"
 
 #include <qdebug.h>
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "defaultprimitivenames.h"
 #include "kstmath.h"
 #include "vector.h"
@@ -62,14 +62,14 @@ Vector::Vector(KstObjectTag in_tag, int size, KstObject *provider, bool isScalar
   if (!in_tag.isValid()) {
     do {
       KstObject::setTagName(KstObjectTag(i18n("Anonymous Vector %1", anonymousVectorCounter++), in_tag.context()));
-    } while (KstData::self()->vectorTagNameNotUnique(tagName(), false));
+    } while (Data::self()->vectorTagNameNotUnique(tagName(), false));
   } else {
     KstObject::setTagName(KST::suggestUniqueVectorTag(in_tag));
   }
 
-  _v = static_cast<double*>(KST::malloc(size * sizeof(double)));
+  _v = static_cast<double*>(malloc(size * sizeof(double)));
   if (!_v) { // Malloc failed
-    _v = static_cast<double*>(KST::malloc(sizeof(double)));
+    _v = static_cast<double*>(malloc(sizeof(double)));
     _size = 1;
   } else {
     _size = size;
@@ -79,9 +79,9 @@ Vector::Vector(KstObjectTag in_tag, int size, KstObject *provider, bool isScalar
   CreateScalars();
   blank();
 
-  KST::vectorList.lock().writeLock();
-  KST::vectorList.append(this);
-  KST::vectorList.lock().unlock();
+  vectorList.lock().writeLock();
+  vectorList.append(this);
+  vectorList.lock().unlock();
 }
 
 
@@ -107,7 +107,7 @@ Vector::Vector(const QString &tag, const QByteArray& data)
   if (!in_tag.isValid()) {
     do {
       KstObject::setTagName(KstObjectTag(i18n("Anonymous Vector %1", anonymousVectorCounter++), in_tag.context()));
-    } while (KstData::self()->vectorTagNameNotUnique(tagName(), false));
+    } while (Data::self()->vectorTagNameNotUnique(tagName(), false));
   } else {
     KstObject::setTagName(KST::suggestUniqueVectorTag(in_tag));
   }
@@ -126,22 +126,22 @@ Vector::Vector(const QString &tag, const QByteArray& data)
 
   _is_rising = false;
 
-  KST::vectorList.lock().writeLock();
-  KST::vectorList.append(this);
-  KST::vectorList.lock().unlock();
+  vectorList.lock().writeLock();
+  vectorList.append(this);
+  vectorList.lock().unlock();
 }
 
 
 Vector::~Vector() {
   // qDebug() << "+++ DELETING VECTOR: " << (void*) this;
-  KST::scalarList.lock().writeLock();
-  KST::scalarList.setUpdateDisplayTags(false);
+  scalarList.lock().writeLock();
+  scalarList.setUpdateDisplayTags(false);
   for (QHash<QString, Scalar*>::Iterator it = _scalars.begin(); it != _scalars.end(); ++it) {
-    KST::scalarList.remove(it.value());
+    scalarList.remove(it.value());
     it.value()->_KShared_unref();
   }
-  KST::scalarList.setUpdateDisplayTags(true);
-  KST::scalarList.lock().unlock();
+  scalarList.setUpdateDisplayTags(true);
+  scalarList.lock().unlock();
 
   if (_v) {
     free(_v);
@@ -296,8 +296,8 @@ void Vector::CreateScalars() {
   if (!_isScalarList) {
     _min = _max = _mean = _minPos = 0.0;
 
-    KstWriteLocker sl(&KST::scalarList.lock());
-    KST::scalarList.setUpdateDisplayTags(false);
+    KstWriteLocker sl(&scalarList.lock());
+    scalarList.setUpdateDisplayTags(false);
 
     ScalarPtr sp;
     _scalars.insert("max", sp = new Scalar(KstObjectTag("Max", tag()), this));
@@ -323,14 +323,14 @@ void Vector::CreateScalars() {
     _scalars.insert("minpos", sp = new Scalar(KstObjectTag("MinPos", tag()), this));
     sp->_KShared_ref();
 
-    KST::scalarList.setUpdateDisplayTags(true);
+    scalarList.setUpdateDisplayTags(true);
   }
 }
 
 void Vector::RenameScalars() {
   if (!_isScalarList) {
-    KstWriteLocker sl(&KST::scalarList.lock());
-    KST::scalarList.setUpdateDisplayTags(false);
+    KstWriteLocker sl(&scalarList.lock());
+    scalarList.setUpdateDisplayTags(false);
 
     _scalars["max"]->setTagName(KstObjectTag("Max", tag()));
     _scalars["min"]->setTagName(KstObjectTag("Min", tag()));
@@ -344,7 +344,7 @@ void Vector::RenameScalars() {
     _scalars["sumsquared"]->setTagName(KstObjectTag("SumSquared", tag()));
     _scalars["minpos"]->setTagName(KstObjectTag("MinPos", tag()));
 
-    KST::scalarList.setUpdateDisplayTags(true);
+    scalarList.setUpdateDisplayTags(true);
   }
 }
 
@@ -412,7 +412,7 @@ void Vector::blank() {
 bool Vector::resize(int sz, bool init) {
   //qDebug() << "resizing to: " << sz;
   if (sz > 0) {
-    _v = static_cast<double*>(KST::realloc(_v, sz*sizeof(double)));
+    _v = static_cast<double*>(realloc(_v, sz*sizeof(double)));
     if (!_v) {
       return false;
     }
@@ -596,9 +596,9 @@ void Vector::setTagName(const KstObjectTag& newTag) {
     return;
   }
 
-  KstWriteLocker l(&KST::vectorList.lock());
+  KstWriteLocker l(&vectorList.lock());
 
-  KST::vectorList.doRename(this, newTag);
+  vectorList.doRename(this, newTag);
 
   RenameScalars();
 }

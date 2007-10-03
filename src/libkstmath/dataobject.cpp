@@ -18,7 +18,7 @@
 
 #include "dataobject.h"
 
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdataobjectcollection.h"
 #include "kstdataplugin.h"
 #include "kstdebug.h"
@@ -51,37 +51,37 @@ DataObject::DataObject(const QDomElement& e) : KstObject() {
 
 DataObject::~DataObject() {
   // Remove our slave vectors, scalars, and strings, and matrices
-  KST::stringList.lock().writeLock();
+  stringList.lock().writeLock();
   for (KstStringMap::Iterator it = _outputStrings.begin();
                                it != _outputStrings.end();
                                                       ++it) {
-    KST::stringList.remove(it.value());
+    stringList.remove(it.value());
   }
-  KST::stringList.lock().unlock();
+  stringList.lock().unlock();
 
-  KST::scalarList.lock().writeLock();
+  scalarList.lock().writeLock();
   for (ScalarMap::Iterator it = _outputScalars.begin();
                                it != _outputScalars.end();
                                                       ++it) {
-    KST::scalarList.remove(it.value());
+    scalarList.remove(it.value());
   }
-  KST::scalarList.lock().unlock();
+  scalarList.lock().unlock();
 
-  KST::vectorList.lock().writeLock();
+  vectorList.lock().writeLock();
   for (VectorMap::Iterator it = _outputVectors.begin();
                                it != _outputVectors.end();
                                                       ++it) {
-    KST::vectorList.remove(it.value());
+    vectorList.remove(it.value());
   }
-  KST::vectorList.lock().unlock();
+  vectorList.lock().unlock();
   
-  KST::matrixList.lock().writeLock();
+  matrixList.lock().writeLock();
   for (KstMatrixMap::Iterator it = _outputMatrices.begin();
        it != _outputMatrices.end();
        ++it) {
-    KST::matrixList.remove(it.value());       
+    matrixList.remove(it.value());
   }
-  KST::matrixList.lock().unlock();
+  matrixList.lock().unlock();
 //  qDebug() << "Destroying Data Object: " << tag().displayString() << endl;
   delete _curveHints;
 }
@@ -101,7 +101,7 @@ DataObjectPtr DataObject::createPlugin() {
   int err = 0;
   DataObject *object = KService::createInstance<DataObject>(service, 0, QStringList(), &err);
 
-  KstSharedPtr<KST::Plugin> p = new KST::DataObjectPlugin(service);
+  KstSharedPtr<Plugin> p = new DataObjectPlugin(service);
 
   if (object && p->key()) {
     const QString name = service->property("Name").toString();
@@ -210,10 +210,10 @@ bool DataObject::loadInputs() {
   bool rc = true;
   QList<QPair<QString,QString> >::Iterator i;
   
-  KST::vectorList.lock().readLock();
+  vectorList.lock().readLock();
   for (i = _inputVectorLoadQueue.begin(); i != _inputVectorLoadQueue.end(); ++i) {
-    VectorList::Iterator it = KST::vectorList.findTag((*i).second);
-    if (it != KST::vectorList.end()) {
+    VectorList::Iterator it = vectorList.findTag((*i).second);
+    if (it != vectorList.end()) {
       assert(*it);
       _inputVectors.insert((*i).first, *it);
     } else {
@@ -221,43 +221,43 @@ bool DataObject::loadInputs() {
       rc = false;
     }
   }
-  KST::vectorList.lock().unlock();
+  vectorList.lock().unlock();
 
-  KST::scalarList.lock().readLock();
+  scalarList.lock().readLock();
   for (i = _inputScalarLoadQueue.begin(); i != _inputScalarLoadQueue.end(); ++i) {
-    ScalarList::Iterator it = KST::scalarList.findTag((*i).second);
-    if (it != KST::scalarList.end()) {
+    ScalarList::Iterator it = scalarList.findTag((*i).second);
+    if (it != scalarList.end()) {
       _inputScalars.insert((*i).first, *it);
     } else {
       KstDebug::self()->log(i18n("Unable to find required scalar [%1] for data object %2.").arg((*i).second).arg(tagName()), KstDebug::Error);
       rc = false;
     }
   }
-  KST::scalarList.lock().unlock();
+  scalarList.lock().unlock();
 
-  KST::stringList.lock().readLock();
+  stringList.lock().readLock();
   for (i = _inputStringLoadQueue.begin(); i != _inputStringLoadQueue.end(); ++i) {
-    KstStringList::Iterator it = KST::stringList.findTag((*i).second);
-    if (it != KST::stringList.end()) {
+    KstStringList::Iterator it = stringList.findTag((*i).second);
+    if (it != stringList.end()) {
       _inputStrings.insert((*i).first, *it);
     } else {
       KstDebug::self()->log(i18n("Unable to find required string [%1] for data object %2.").arg((*i).second).arg(tagName()), KstDebug::Error);
       rc = false;
     }
   }
-  KST::stringList.lock().unlock();
+  stringList.lock().unlock();
   
-  KST::matrixList.lock().readLock();
+  matrixList.lock().readLock();
   for (i = _inputMatrixLoadQueue.begin(); i != _inputMatrixLoadQueue.end(); ++i) {
-    KstMatrixList::Iterator it = KST::matrixList.findTag((*i).second);
-    if (it != KST::matrixList.end()) {
+    KstMatrixList::Iterator it = matrixList.findTag((*i).second);
+    if (it != matrixList.end()) {
       _inputMatrices.insert((*i).first, *it);
     } else {
       KstDebug::self()->log(i18n("Unable to find required matrix [%1] for data object %2.").arg((*i).second).arg(tagName()), KstDebug::Error);
       rc = false;
     }
   }
-  KST::matrixList.lock().unlock();
+  matrixList.lock().unlock();
 
   _inputVectorLoadQueue.clear();
   _inputScalarLoadQueue.clear();

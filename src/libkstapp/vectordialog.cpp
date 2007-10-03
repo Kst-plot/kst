@@ -17,7 +17,7 @@
 #include "datavector.h"
 #include "generatedvector.h"
 
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdataobjectcollection.h"
 
 #include "kstvectordefaults.h"
@@ -138,9 +138,9 @@ void VectorTab::fileNameChanged(const QString &file) {
 
   _field->clear();
 
-  KST::dataSourceList.lock().readLock();
-  _dataSource = KST::dataSourceList.findReusableFileName(file);
-  KST::dataSourceList.lock().unlock();
+  dataSourceList.lock().readLock();
+  _dataSource = dataSourceList.findReusableFileName(file);
+  dataSourceList.lock().unlock();
 
   if (!_dataSource) {
     _dataSource = KstDataSource::loadSource(file, QString());

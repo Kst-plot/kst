@@ -26,7 +26,7 @@
 #include <qdebug.h>
 #include "kst_i18n.h"
 
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdebug.h"
 #include "datavector.h"
 #include "kstmath.h"
@@ -71,19 +71,19 @@ DataVector::DataVector(const QString &tag, const QByteArray &data,
 
   //FIXME THIS CTOR IS SO OBFUSCATED IT IS LAUGHABLE!
   if (!provider.isEmpty()) {
-      KST::dataSourceList.lock().readLock();
-      in_provider = *KST::dataSourceList.findTag(provider);
-      KST::dataSourceList.lock().unlock();
+      dataSourceList.lock().readLock();
+      in_provider = *dataSourceList.findTag(provider);
+      dataSourceList.lock().unlock();
   }
 
   if (!in_provider && !file.isEmpty()) {
-    KST::dataSourceList.lock().readLock();
+    dataSourceList.lock().readLock();
     if (o_file == "|") {
-      in_file = KST::dataSourceList.findFileName(file);
+      in_file = dataSourceList.findFileName(file);
     } else {
-      in_file = KST::dataSourceList.findFileName(o_file);
+      in_file = dataSourceList.findFileName(o_file);
     }
-    KST::dataSourceList.lock().unlock();
+    dataSourceList.lock().unlock();
   }
 
   if (!field.isEmpty()) {
@@ -733,13 +733,13 @@ void DataVector::reload() {
       assert(newsrc != _file);
       if (newsrc) {
         _file->unlock();
-        KST::dataSourceList.lock().writeLock();
-        KST::dataSourceList.removeAll(_file);
+        dataSourceList.lock().writeLock();
+        dataSourceList.removeAll(_file);
         _dontUseSkipAccel = false;
         _file = newsrc;
         _file->writeLock();
-        KST::dataSourceList.append(_file);
-        KST::dataSourceList.lock().unlock();
+        dataSourceList.append(_file);
+        dataSourceList.lock().unlock();
         reset();
       }
     }

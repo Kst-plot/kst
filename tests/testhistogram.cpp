@@ -15,12 +15,12 @@
 
 #include <vector.h>
 #include <ksthistogram.h>
-#include <kstdatacollection.h>
+#include <datacollection.h>
 #include <kstdataobjectcollection.h>
 
 void TestHistogram::cleanupTestCase() {
-  KST::vectorList.clear();
-  KST::scalarList.clear();
+  Kst::vectorList.clear();
+  Kst::scalarList.clear();
   KST::dataObjectList.clear();
 }
 

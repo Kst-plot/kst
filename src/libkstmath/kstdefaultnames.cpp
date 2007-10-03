@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include "kstdataobjectcollection.h"
-#include "kstdatacollection.h"
+#include "datacollection.h"
 #include "kstdefaultnames.h"
 #include "ksthistogram.h"
 #include "kstpsd.h"
@@ -33,7 +33,7 @@ QString KST::suggestPlotName() {
 
   do {
     tag = QString("P%1").arg(++last);
-  } while (KstData::self()->viewObjectNameNotUnique(tag));
+  } while (Kst::Data::self()->viewObjectNameNotUnique(tag));
 
   return tag;
 }
