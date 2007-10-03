@@ -38,6 +38,8 @@ class PlotRenderItem : public ViewItem
     RenderType type();
 
     QRectF plotRect() const;
+    QRectF zoomRect() const;
+    QRectF projectionRect() const;
 
     void setRelationList(const KstRelationList &relationList);
     KstRelationList relationList() const;
@@ -50,20 +52,31 @@ class PlotRenderItem : public ViewItem
     QString rightLabel() const;
     QString topLabel() const;
 
-  public Q_SLOTS:
-    void updateGeometry();
+    QPointF mapToProjection(const QPointF &point) const;
+    QPointF mapFromProjection(const QPointF &point) const;
+    QRectF mapToProjection(const QRectF &rect) const;
+    QRectF mapFromProjection(const QRectF &rect) const;
 
   protected:
-    virtual QPointF mapToProjection(const QPointF &point) = 0;
-    virtual QPointF mapFromProjection(const QPointF &point) = 0;
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
-    QRectF mapToProjection(const QRectF &rect);
-    QRectF mapFromProjection(const QRectF &rect);
+    virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+
+    virtual QTransform projectionTransform() const;
+
+  private Q_SLOTS:
+    void updateGeometry();
+    void updateViewMode();
 
   private:
     RenderType _type;
-
     KstRelationList _relationList;
+    QRectF _zoomRect;
+    QRectF _selectionRect;
 };
 
 }

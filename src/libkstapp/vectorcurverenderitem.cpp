@@ -11,10 +11,10 @@
 
 #include "vectorcurverenderitem.h"
 
-#include "plotitem.h"
-
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
+
+#include "plotitem.h"
 
 namespace Kst {
 
@@ -45,28 +45,19 @@ void VectorCurveRenderItem::paintRelations(QPainter *painter) {
     context.penWidth = 1.0;
 
     //FIXME rename these methods in kstvcurve
-    QRectF vectorRect(QPointF(relation->minX(), relation->minY()),
-                      QPointF(relation->maxX(), relation->maxY()));
 
-    QTransform t;
-    qreal scaleFactor = 1.0;
-    t.scale(scaleFactor, scaleFactor);
-
-    QRectF zoomRect = t.mapRect(vectorRect);
-    zoomRect.moveTopLeft(vectorRect.topLeft());
-
-//     qDebug() << "============================================================>\n"
-//              << "vectorRect" << vectorRect << "\n"
-//              << "zoomRect" << zoomRect << "\n"
-//              << "plotRect" << plotRect() << endl;
+    qDebug() << "============================================================>\n"
+             << "projectionRect" << projectionRect() << "\n"
+             << "zoomRect" << zoomRect() << "\n"
+             << "plotRect" << plotRect() << endl;
 
     //FIXME Completely refactor KstCurveRenderContext now that we know what these are
 
     //Set what amounts to the zoombox...
-    context.XMin = zoomRect.left();
-    context.XMax = zoomRect.right();
-    context.YMin = zoomRect.top();
-    context.YMax = zoomRect.bottom();
+    context.XMin = zoomRect().left();
+    context.XMax = zoomRect().right();
+    context.YMin = zoomRect().top();
+    context.YMax = zoomRect().bottom();
 
     //These are the bounding box in regular QGV coord
     context.Lx = plotRect().left();
@@ -89,55 +80,6 @@ void VectorCurveRenderItem::paintRelations(QPainter *painter) {
   }
 
   painter->restore();
-
-  if (_selectionRect.isValid() && !_selectionRect.isEmpty()) {
-    painter->save();
-    painter->setPen(Qt::black);
-    painter->drawRect(_selectionRect);
-    painter->restore();
-  }
-}
-
-
-void VectorCurveRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-  if (plotItem()->parentView()->viewMode() != View::Data) {
-    event->ignore();
-    return;
-  }
-
-  _selectionRect.setBottomRight(event->pos());
-  update(); //FIXME should optimize instead of redrawing entire curve?
-}
-
-
-void VectorCurveRenderItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-  if (plotItem()->parentView()->viewMode() != View::Data) {
-    event->ignore();
-    return;
-  }
-
-  _selectionRect = QRectF(event->pos(), QSizeF(0,0));
-}
-
-
-void VectorCurveRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-  if (plotItem()->parentView()->viewMode() != View::Data) {
-    event->ignore();
-    return;
-  }
-
-  _selectionRect = QRectF();
-  update();
-}
-
-
-QPointF VectorCurveRenderItem::mapToProjection(const QPointF &point) {
-  return point;
-}
-
-
-QPointF VectorCurveRenderItem::mapFromProjection(const QPointF &point) {
-  return point;
 }
 
 }

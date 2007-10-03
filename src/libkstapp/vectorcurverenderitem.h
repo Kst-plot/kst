@@ -24,17 +24,6 @@ class VectorCurveRenderItem : public PlotRenderItem
     virtual ~VectorCurveRenderItem();
 
     virtual void paintRelations(QPainter *painter);
-
-  protected:
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-
-    virtual QPointF mapToProjection(const QPointF &point);
-    virtual QPointF mapFromProjection(const QPointF &point);
-
-  private:
-    QRectF _selectionRect;
 };
 
 }

@@ -12,15 +12,19 @@
 #include "plotrenderitem.h"
 
 #include <QTime>
+#include <QStatusBar>
+#include <QMainWindow>
+#include <QGraphicsSceneHoverEvent>
 
 #include "plotitem.h"
+#include "application.h"
 
 // #define CURVE_DRAWING_TIME
 
 namespace Kst {
 
 PlotRenderItem::PlotRenderItem(const QString &name, PlotItem *parentItem)
-  : ViewItem(parentItem->parentView()) {
+  : ViewItem(parentItem->parentView()), _zoomRect(QRectF()), _selectionRect(QRectF()) {
 
   setName(name);
   setParentItem(parentItem);
@@ -28,8 +32,13 @@ PlotRenderItem::PlotRenderItem(const QString &name, PlotItem *parentItem)
   setAllowedGripModes(0);
   setAllowedGrips(0);
 
-  connect(parentItem, SIGNAL(geometryChanged()), this, SLOT(updateGeometry()));
+  connect(parentItem, SIGNAL(geometryChanged()),
+          this, SLOT(updateGeometry()));
+  connect(parentItem->parentView(), SIGNAL(viewModeChanged(View::ViewMode)),
+          this, SLOT(updateViewMode()));
+
   updateGeometry(); //the initial rect
+  updateViewMode(); //the initial view
 }
 
 
@@ -39,15 +48,6 @@ PlotRenderItem::~PlotRenderItem() {
 
 PlotItem *PlotRenderItem::plotItem() const {
   return qobject_cast<PlotItem*>(qgraphicsitem_cast<ViewItem*>(parentItem()));
-}
-
-
-void PlotRenderItem::updateGeometry() {
-  QRectF rect = plotItem()->rect().normalized();
-  QPointF margin(plotItem()->marginWidth(), plotItem()->marginHeight());
-  QPointF topLeft(rect.topLeft() + margin);
-  QPointF bottomRight(rect.bottomRight() - margin);
-  setViewRect(QRectF(topLeft, bottomRight));
 }
 
 
@@ -66,6 +66,27 @@ QRectF PlotRenderItem::plotRect() const {
   plotRect = plotRect.normalized();
   plotRect.moveTopLeft(QPointF(0.0, 0.0));
   return plotRect;
+}
+
+
+QRectF PlotRenderItem::zoomRect() const {
+  if (_zoomRect.isEmpty() || !_zoomRect.isValid())
+    return projectionRect();
+  else
+    return _zoomRect;
+}
+
+
+QRectF PlotRenderItem::projectionRect() const {
+  qreal minX, maxX, minY, maxY = 0.0;
+  foreach (KstRelationPtr relation, relationList()) {
+      minX = qMin(relation->minX(), minX);
+      minY = qMin(relation->minY(), minY);
+      maxX = qMax(relation->maxX(), maxX);
+      maxY = qMax(relation->maxY(), maxY);
+  }
+  return QRectF(QPointF(minX, minY),
+                QPointF(maxX, maxY));
 }
 
 
@@ -90,6 +111,13 @@ void PlotRenderItem::paint(QPainter *painter) {
 #endif
 
   paintRelations(painter);
+
+  if (_selectionRect.isValid() && !_selectionRect.isEmpty()) {
+    painter->save();
+    painter->setPen(Qt::black);
+    painter->drawRect(_selectionRect);
+    painter->restore();
+  }
 
 #ifdef CURVE_DRAWING_TIME
   int elapsed = time.elapsed();
@@ -138,13 +166,120 @@ QString PlotRenderItem::topLabel() const {
 }
 
 
-QRectF PlotRenderItem::mapToProjection(const QRectF &rect) {
-  return QRectF(mapToProjection(rect.topLeft()), mapToProjection(rect.bottomRight()));
+void PlotRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+  if (parentView()->viewMode() != View::Data) {
+    event->ignore();
+    return;
+  }
+
+  _selectionRect.setBottomRight(event->pos());
+  update(); //FIXME should optimize instead of redrawing entire curve?
 }
 
 
-QRectF PlotRenderItem::mapFromProjection(const QRectF &rect) {
-  return QRectF(mapFromProjection(rect.topLeft()), mapFromProjection(rect.bottomRight()));
+void PlotRenderItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+  if (parentView()->viewMode() != View::Data) {
+    event->ignore();
+    return;
+  }
+
+  _selectionRect = QRectF(event->pos(), QSizeF(0,0));
+}
+
+
+void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+  if (parentView()->viewMode() != View::Data) {
+    event->ignore();
+    return;
+  }
+
+  _zoomRect = mapToProjection(_selectionRect);
+  _selectionRect = QRectF();
+  update();
+}
+
+
+void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
+  ViewItem::hoverMoveEvent(event);
+
+  const QPointF p = mapToProjection(event->pos());
+  QString message = QString("(%1, %2)").arg(QString::number(p.x())).arg(QString::number(p.y()));
+  kstApp->mainWindow()->statusBar()->showMessage(message);
+}
+
+
+void PlotRenderItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
+  ViewItem::hoverEnterEvent(event);
+
+  const QPointF p = mapToProjection(event->pos());
+  QString message = QString("(%1, %2)").arg(QString::number(p.x())).arg(QString::number(p.y()));
+  kstApp->mainWindow()->statusBar()->showMessage(message);
+}
+
+
+void PlotRenderItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
+  ViewItem::hoverLeaveEvent(event);
+
+  kstApp->mainWindow()->statusBar()->showMessage(QString());
+}
+
+
+QTransform PlotRenderItem::projectionTransform() const {
+  QTransform t;
+
+  QRectF v = QRectF(rect().bottomLeft(), viewRect().topRight());
+
+  QPolygonF from_ = QPolygonF(v);
+  from_.pop_back(); //get rid of last closed point
+
+  QPolygonF to_ = QPolygonF(zoomRect());
+  to_.pop_back(); //get rid of last closed point
+
+  QTransform::quadToQuad(from_, to_, t);
+  return t;
+}
+
+
+QPointF PlotRenderItem::mapToProjection(const QPointF &point) const {
+  return projectionTransform().map(point);
+}
+
+
+QPointF PlotRenderItem::mapFromProjection(const QPointF &point) const {
+  return projectionTransform().inverted().map(point);
+}
+
+
+QRectF PlotRenderItem::mapToProjection(const QRectF &rect) const {
+  return projectionTransform().mapRect(rect);
+}
+
+
+QRectF PlotRenderItem::mapFromProjection(const QRectF &rect) const {
+  return projectionTransform().inverted().mapRect(rect);
+}
+
+
+void PlotRenderItem::updateGeometry() {
+  QRectF rect = plotItem()->rect().normalized();
+  QPointF margin(plotItem()->marginWidth(), plotItem()->marginHeight());
+  QPointF topLeft(rect.topLeft() + margin);
+  QPointF bottomRight(rect.bottomRight() - margin);
+  setViewRect(QRectF(topLeft, bottomRight));
+}
+
+
+void PlotRenderItem::updateViewMode() {
+  switch (parentView()->viewMode()) {
+  case View::Data:
+    setCursor(Qt::CrossCursor);
+    break;
+  case View::Layout:
+    setCursor(Qt::ArrowCursor);
+    break;
+  default:
+    break;
+  }
 }
 
 }
