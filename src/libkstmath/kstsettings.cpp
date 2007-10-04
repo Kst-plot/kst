@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include <qprinter.h>
-#include "ksttimezones.h"
+#include "timezones.h"
 
 #include <qsettings.h>
 #include <qapplication.h>

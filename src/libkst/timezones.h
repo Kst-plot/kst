@@ -17,8 +17,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef _KstTIMEZONES_H
-#define _KstTIMEZONES_H
+#ifndef _TIMEZONES_H
+#define _TIMEZONES_H
 
 #include <qdatetime.h>
 #include <qnamespace.h>
@@ -26,10 +26,13 @@
 #include <qstring.h>
 #include "sharedptr.h"
 #include <kst_export.h>
-class KstTimezoneDetails;
-class KstTimezoneDetailsPrivate;
-class KstTimezonePrivate;
-class KstTimezonesPrivate;
+
+namespace Kst {
+
+class TimezoneDetails;
+class TimezoneDetailsPrivate;
+class TimezonePrivate;
+class TimezonesPrivate;
 
 /**
  * The KTimezoneSource class contains information source-dependent functions
@@ -47,12 +50,12 @@ class KstTimezonesPrivate;
  * @since 3.5
  * @author S.R.Haque <srhaque@iee.org>.
  */
-class KST_EXPORT KstTimezoneSource :
-    public Kst::Shared
+class KST_EXPORT TimezoneSource :
+    public Shared
 {
 public:
-    KstTimezoneSource(const QString &db);
-    virtual ~KstTimezoneSource();
+    TimezoneSource(const QString &db);
+    virtual ~TimezoneSource();
 
     /**
      * Location of system timezone information.
@@ -65,23 +68,23 @@ public:
      * of a parser for zoneinfo files in tzfile(5).
      * @return true if the parse encountered no errors.
      */
-    virtual bool parse(const QString &zone, KstTimezoneDetails &dataReceiver) const;
+    virtual bool parse(const QString &zone, TimezoneDetails &dataReceiver) const;
 
 private:
     QString m_db;
 };
 
 /**
- * The KstTimezone class contains core functions related to a timezone. Instances
- * are created in the context of a {@link KstTimezoneSource } which provides
- * extended functionality via {@link KstTimezoneDetails }.
+ * The Timezone class contains core functions related to a timezone. Instances
+ * are created in the context of a {@link TimezoneSource } which provides
+ * extended functionality via {@link TimezoneDetails }.
  *
- * @see KstTimezoneSource
- * @see KstTimezoneDetails
+ * @see TimezoneSource
+ * @see TimezoneDetails
  * @since 3.5
  * @author S.R.Haque <srhaque@iee.org>.
  */
-class KST_EXPORT KstTimezone
+class KST_EXPORT Timezone
 {
 public:
     /**
@@ -112,11 +115,11 @@ public:
      * @param longitude in degrees, UNKNOWN if not known.
      * @param comment description of the timezone, if any.
      */
-    KstTimezone(
-        Kst::SharedPtr<KstTimezoneSource> db, const QString &name,
+    Timezone(
+        SharedPtr<TimezoneSource> db, const QString &name,
         const QString &countryCode = QString(), float latitude = UNKNOWN, float longitude = UNKNOWN,
         const QString &comment = QString());
-    ~KstTimezone();
+    ~Timezone();
 
     /**
      * Returns the name of the timezone.
@@ -171,7 +174,7 @@ public:
      *
      * @return converted date/time.
      */
-    QDateTime convert(const KstTimezone *newZone, const QDateTime &dateTime) const;
+    QDateTime convert(const Timezone *newZone, const QDateTime &dateTime) const;
 
     /**
      * Returns any comment for the timezone.
@@ -184,20 +187,20 @@ public:
      * Extract timezone detail information.
      * @return true if the parse encountered no errors.
      */
-    bool parse(KstTimezoneDetails &dataReceiver) const;
+    bool parse(TimezoneDetails &dataReceiver) const;
 
 private:
-    Kst::SharedPtr<KstTimezoneSource> m_db;
+    SharedPtr<TimezoneSource> m_db;
     QString m_name;
     QString m_countryCode;
     float m_latitude;
     float m_longitude;
     QString m_comment;
-    KstTimezonePrivate *d;
+    TimezonePrivate *d;
 };
 
 /**
- * The KstTimezoneDetails class contains extended functions related to a
+ * The TimezoneDetails class contains extended functions related to a
  * timezone.
  *
  * The parser must be customised by overriding the given virtual callbacks:
@@ -214,15 +217,15 @@ private:
  *    <li>{@link gotIsUTC() }
  *</ul>
  *
- * @see KstTimezone
+ * @see Timezone
  * @since 3.5
  * @author S.R.Haque <srhaque@iee.org>.
  */
-class KST_EXPORT KstTimezoneDetails
+class KST_EXPORT TimezoneDetails
 {
 public:
-    KstTimezoneDetails();
-    virtual ~KstTimezoneDetails();
+    TimezoneDetails();
+    virtual ~TimezoneDetails();
 
     /**
      * Always called after all other callbacks.
@@ -279,21 +282,21 @@ public:
     virtual void gotIsUTC(int index, bool isUTC);
 
 private:
-    KstTimezoneDetailsPrivate *d;
+    TimezoneDetailsPrivate *d;
 };
 
 /**
- * The KstTimezones class models a timezone database. It supports system
+ * The Timezones class models a timezone database. It supports system
  * timezones, and also has support for private timezone entries.
  *
  * @since 3.5
  * @author S.R.Haque <srhaque@iee.org>.
  */
-class KST_EXPORT KstTimezones
+class KST_EXPORT Timezones
 {
 public:
-    KstTimezones();
-    ~KstTimezones();
+    Timezones();
+    ~Timezones();
 
     /**
      * Returns the local timezone. The idea of this routine is to provide a
@@ -304,12 +307,12 @@ public:
      * if you set your timezone to "Europe/London", then the tzname[]
      * maintained by tzset() typically returns { "GMT", "BST" }. The point of
      * this routine is to actually return "Europe/London" (or rather, the
-     * corresponding KstTimezone).
+     * corresponding Timezone).
      *
      * @return local timezone. If necessary, we will use a series of heuristics
      *         which end by returning UTC. We will never return NULL.
      */
-    const KstTimezone *local();
+    const Timezone *local();
 
     /**
      * Returns the given timezone.
@@ -317,9 +320,9 @@ public:
      * @param name Name of timezone. Empty is equivalent to UTC.
      * @return named timezone, NULL on error.
      */
-    const KstTimezone *zone(const QString &name);
+    const Timezone *zone(const QString &name);
 
-    typedef QMap<QString, KstTimezone *> ZoneMap;
+    typedef QMap<QString, Timezone *> ZoneMap;
 
     /**
      * Return timezone database.
@@ -330,15 +333,17 @@ public:
     /**
      * Add user-defined timezone to database.
      */
-    void add(KstTimezone *zone);
+    void add(Timezone *zone);
 
 private:
     float convertCoordinate(const QString &coordinate);
 
     QString m_zoneinfoDir;
     ZoneMap *m_zones;
-    KstTimezone *m_UTC;
-    KstTimezonesPrivate *d;
+    Timezone *m_UTC;
+    TimezonesPrivate *d;
 };
+
+}
 
 #endif
