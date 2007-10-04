@@ -17,7 +17,7 @@
 namespace Kst {
 
 ColorButton::ColorButton(QWidget *parent)
-  : QToolButton(parent), _color(Qt::white) {
+  : QToolButton(parent), _color(Qt::black) {
   setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
   connect (this, SIGNAL(clicked()), this, SLOT(chooseColor()));
 }
