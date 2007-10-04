@@ -11,6 +11,8 @@
 
 #include "selectionrect.h"
 
+#include <QDebug>
+
 SelectionRect::SelectionRect() {
   reset();
 }
@@ -21,7 +23,7 @@ SelectionRect::~SelectionRect() {
 
 
 bool SelectionRect::isValid() const {
-  return _validFrom && _validTo;
+  return _validFrom && _validTo && _from != _to;
 }
 
 
@@ -44,6 +46,9 @@ void SelectionRect::reset() {
 
 
 QRectF SelectionRect::rect() const {
+  if (!isValid())
+    return QRectF();
+
   return QRectF(_from, _to).normalized();
 }
 

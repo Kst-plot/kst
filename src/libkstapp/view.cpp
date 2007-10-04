@@ -164,7 +164,7 @@ QPointF View::snapPoint(const QPointF &point) {
 
 
 void View::registerShortcut(QAction *action) {
-  grabShortcut(action->shortcut(), Qt::WidgetShortcut);
+  grabShortcut(action->shortcut(), Qt::ApplicationShortcut);
   _shortcutMap.insert(action->shortcut().toString(), action);
 }
 
@@ -173,12 +173,12 @@ bool View::event(QEvent *event) {
 
   if (event->type() == QEvent::Shortcut) {
     QShortcutEvent *e = static_cast<QShortcutEvent*>(event);
-    if (!_shortcutMap.contains(e->key()))
-        return QGraphicsView::event(event);
 
-    if (QAction *action = _shortcutMap.value(e->key())) {
-      ViewItem *i = qgraphicsitem_cast<ViewItem*>(scene()->itemAt(mapToScene(mapFromGlobal(QCursor::pos()))));
-      if (i == action->parent()) {
+    if (_shortcutMap.contains(e->key())) {
+      QAction *action = _shortcutMap.value(e->key());
+      QPointF mousePos = mapToScene(mapFromGlobal(QCursor::pos()));
+      ViewItem *item = qgraphicsitem_cast<ViewItem*>(scene()->itemAt(mousePos));
+      if (action->isEnabled() && action->parent() == item) {
         action->trigger();
         return true;
       }

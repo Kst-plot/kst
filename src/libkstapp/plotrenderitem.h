@@ -30,20 +30,36 @@ class PlotRenderItem : public ViewItem
 {
   Q_OBJECT
   public:
+    enum ZoomMode { Auto, AutoBorder, Expression, SpikeInsensitive, MeanCentered };
+
     PlotRenderItem(PlotItem *parentItem);
     virtual ~PlotRenderItem();
 
     PlotItem *plotItem() const;
 
-    void setType(RenderType type);
     RenderType type();
+    void setType(RenderType type);
+
+    ZoomMode xAxisZoomMode() const;
+    void setXAxisZoomMode(ZoomMode mode);
+
+    ZoomMode yAxisZoomMode() const;
+    void setYAxisZoomMode(ZoomMode mode);
+
+    bool isXAxisLog() const;
+    void setXAxisLog(bool log);
+
+    bool isYAxisLog() const;
+    void setYAxisLog(bool log);
 
     QRectF plotRect() const;
-    QRectF zoomRect() const;
-    QRectF projectionRect() const;
+    QRectF computedProjectionRect() const;
 
-    void setRelationList(const KstRelationList &relationList);
+    QRectF projectionRect() const;
+    void setProjectionRect(const QRectF &rect);
+
     KstRelationList relationList() const;
+    void setRelationList(const KstRelationList &relationList);
 
     virtual void paint(QPainter *painter);
     virtual void paintRelations(QPainter *painter) = 0;
@@ -57,6 +73,23 @@ class PlotRenderItem : public ViewItem
     QPointF mapFromProjection(const QPointF &point) const;
     QRectF mapToProjection(const QRectF &rect) const;
     QRectF mapFromProjection(const QRectF &rect) const;
+
+public Q_SLOTS:
+    void zoomMaximum();
+    void zoomMaxSpikeInsensitive();
+//     void zoomPrevious();
+    void zoomYMeanCentered();
+    void zoomXMaximum();
+    void zoomXOut();
+    void zoomXIn();
+    void zoomNormalizeXtoY();
+    void zoomLogX();
+    void zoomYLocalMaximum();
+    void zoomYMaximum();
+    void zoomYOut();
+    void zoomYIn();
+    void zoomNormalizeYtoX();
+    void zoomLogY();
 
   protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
@@ -73,30 +106,21 @@ class PlotRenderItem : public ViewItem
   private Q_SLOTS:
     void updateGeometry();
     void updateViewMode();
-
-    void zoomMaximum();
-    void zoomMaxSpikeInsensitive();
-//     void zoomPrevious();
-    void zoomYMeanCentered();
-    void zoomXMaximum();
-    void zoomXOut();
-    void zoomXIn();
-    void zoomNormalizeXtoY();
-    void zoomToggleLogX();
-    void zoomYLocalMaximum();
-    void zoomYMaximum();
-    void zoomYOut();
-    void zoomYIn();
-    void zoomNormalizeYtoX();
-    void zoomToggleLogY();
+    void xAxisRange(qreal *min, qreal *max) const;
+    void yAxisRange(qreal *min, qreal *max) const;
 
   private:
     void createActions();
 
   private:
     RenderType _type;
+    ZoomMode _xAxisZoomMode;
+    ZoomMode _yAxisZoomMode;
+    bool _isXAxisLog;
+    bool _isYAxisLog;
+
     KstRelationList _relationList;
-    QRectF _zoomRect;
+    QRectF _projectionRect;
     SelectionRect _selectionRect;
 
     QAction *_zoomMaximum;
@@ -107,13 +131,13 @@ class PlotRenderItem : public ViewItem
     QAction *_zoomXOut;
     QAction *_zoomXIn;
     QAction *_zoomNormalizeXtoY;
-    QAction *_zoomToggleLogX;
+    QAction *_zoomLogX;
     QAction *_zoomYLocalMaximum;
     QAction *_zoomYMaximum;
     QAction *_zoomYOut;
     QAction *_zoomYIn;
     QAction *_zoomNormalizeYtoX;
-    QAction *_zoomToggleLogY;
+    QAction *_zoomLogY;
 
 };
 

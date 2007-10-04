@@ -14,6 +14,8 @@
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
 
+#include "math_kst.h"
+
 #include "plotitem.h"
 
 namespace Kst {
@@ -43,22 +45,27 @@ void VectorCurveRenderItem::paintRelations(QPainter *painter) {
     KstCurveRenderContext context;
     context.painter = painter;
     context.window = QRect(); //no idea if this should be floating point
-    context.penWidth = 1.0;
+    context.penWidth = 1.0; //FIXME hardcode
+    context.xLog = isXAxisLog();
+    context.yLog = isYAxisLog();
+    context.xLogBase = 10.0; //FIXME hardcode
+    context.yLogBase = 10.0; //FIXME hardcode
 
     //FIXME rename these methods in kstvcurve
-
-    qDebug() << "============================================================>\n"
-             << "projectionRect" << projectionRect() << "\n"
-             << "zoomRect" << zoomRect() << "\n"
-             << "plotRect" << plotRect() << endl;
-
     //FIXME Completely refactor KstCurveRenderContext now that we know what these are
 
-    //Set what amounts to the zoombox...
-    context.XMin = zoomRect().left();
-    context.XMax = zoomRect().right();
-    context.YMin = zoomRect().top();
-    context.YMax = zoomRect().bottom();
+    //Set the projection box...
+    context.XMin = projectionRect().left();
+    context.XMax = projectionRect().right();
+    context.YMin = projectionRect().top();
+    context.YMax = projectionRect().bottom();
+
+    //Set the log box...
+    //Big FIXME!!
+    context.x_max = isXAxisLog() ? logXHi(context.XMax + .00001, context.xLogBase) : context.XMax;
+    context.y_max = isYAxisLog() ? logXHi(context.YMax + .00001, context.yLogBase) : context.YMax;
+    context.x_min = isXAxisLog() ? logXLo(context.XMin + .00001, context.xLogBase) : context.XMin;
+    context.y_min = isYAxisLog() ? logXLo(context.YMin + .00001, context.yLogBase) : context.YMin;
 
     //These are the bounding box in regular QGV coord
     context.Lx = plotRect().left();
@@ -67,10 +74,10 @@ void VectorCurveRenderItem::paintRelations(QPainter *painter) {
     context.Hy = plotRect().bottom();
 
     //To convert between the last two...
-    double m_X = double(plotRect().width()-1)/(context.XMax - context.XMin);
-    double m_Y = -double(plotRect().height()-1)/(context.YMax - context.YMin);
-    double b_X = context.Lx - m_X * context.XMin;
-    double b_Y = context.Ly - m_Y * context.YMax;
+    double m_X = double(plotRect().width()-1)/(context.x_max - context.x_min);
+    double m_Y = -double(plotRect().height()-1)/(context.y_max - context.y_min);
+    double b_X = context.Lx - m_X * context.x_min;
+    double b_Y = context.Ly - m_Y * context.y_max;
 
     context.m_X = m_X;
     context.m_Y = m_Y;
