@@ -61,6 +61,7 @@ SOURCES += \
     plotitem.cpp \
     plotrenderitem.cpp \
     qgetoptions.cpp \
+    selectionrect.cpp \
     sessionmodel.cpp \
     stroketab.cpp \
     svgitem.cpp \
@@ -120,6 +121,7 @@ HEADERS += \
     plotitem.h \
     plotrenderitem.h \
     qgetoptions.h \
+    selectionrect.h \
     sessionmodel.h \
     svgitem.h \
     stroketab.h \

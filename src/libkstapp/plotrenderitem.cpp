@@ -24,7 +24,7 @@
 namespace Kst {
 
 PlotRenderItem::PlotRenderItem(const QString &name, PlotItem *parentItem)
-  : ViewItem(parentItem->parentView()), _zoomRect(QRectF()), _selectionRect(QRectF()) {
+  : ViewItem(parentItem->parentView()), _zoomRect(QRectF()) {
 
   setName(name);
   setParentItem(parentItem);
@@ -112,10 +112,10 @@ void PlotRenderItem::paint(QPainter *painter) {
 
   paintRelations(painter);
 
-  if (_selectionRect.isValid() && !_selectionRect.isEmpty()) {
+  if (_selectionRect.isValid()) {
     painter->save();
     painter->setPen(Qt::black);
-    painter->drawRect(_selectionRect);
+    painter->drawRect(_selectionRect.rect());
     painter->restore();
   }
 
@@ -172,8 +172,10 @@ void PlotRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     return;
   }
 
-  _selectionRect.setBottomRight(event->pos());
-  update(); //FIXME should optimize instead of redrawing entire curve?
+  _selectionRect.setTo(event->pos());
+  if (_selectionRect.isValid()) {
+    update(); //FIXME should optimize instead of redrawing entire curve?
+  }
 }
 
 
@@ -183,7 +185,7 @@ void PlotRenderItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     return;
   }
 
-  _selectionRect = QRectF(event->pos(), QSizeF(0,0));
+  _selectionRect.setFrom(event->pos());
 }
 
 
@@ -193,8 +195,8 @@ void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     return;
   }
 
-  _zoomRect = mapToProjection(_selectionRect);
-  _selectionRect = QRectF();
+  _zoomRect = mapToProjection(_selectionRect.rect());
+  _selectionRect.reset();
   update();
 }
 

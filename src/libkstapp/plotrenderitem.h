@@ -18,6 +18,7 @@
 #include <QPainterPath>
 
 #include "kstrelation.h"
+#include "selectionrect.h"
 
 namespace Kst {
 
@@ -76,7 +77,7 @@ class PlotRenderItem : public ViewItem
     RenderType _type;
     KstRelationList _relationList;
     QRectF _zoomRect;
-    QRectF _selectionRect;
+    SelectionRect _selectionRect;
 };
 
 }
