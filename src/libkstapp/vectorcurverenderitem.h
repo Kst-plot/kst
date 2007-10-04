@@ -20,7 +20,7 @@ class VectorCurveRenderItem : public PlotRenderItem
 {
   Q_OBJECT
   public:
-    VectorCurveRenderItem(const QString &name, PlotItem *parentItem);
+    VectorCurveRenderItem(PlotItem *parentItem);
     virtual ~VectorCurveRenderItem();
 
     virtual void paintRelations(QPainter *painter);

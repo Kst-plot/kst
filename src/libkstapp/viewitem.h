@@ -155,6 +155,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     QPointF lockOffset(const QPointF &offset, qreal ratio, bool oddCorner) const;
     bool maybeReparent();
     GripMode nextGripMode(GripMode currentMode) const;
+    void addTitle(QMenu *menu) const;
 
   protected Q_SLOTS:
     virtual void creationPolygonChanged(View::CreationEvent event);

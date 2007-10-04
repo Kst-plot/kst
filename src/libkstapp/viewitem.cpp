@@ -23,8 +23,10 @@
 
 #include <QMenu>
 #include <QDebug>
+#include <QLabel>
+#include <QHBoxLayout>
+#include <QWidgetAction>
 #include <QGraphicsScene>
-#include <QKeyEvent>
 #include <QGraphicsSceneContextMenuEvent>
 
 static const double ONE_PI = 3.14159265358979323846264338327950288419717;
@@ -49,7 +51,7 @@ ViewItem::ViewItem(View *parent)
     _allowedGrips(TopLeftGrip | TopRightGrip | BottomRightGrip | BottomLeftGrip |
                   TopMidGrip | RightMidGrip | BottomMidGrip | LeftMidGrip) {
 
-  setName("ViewItem");
+  setName("View Item");
   setAcceptsHoverEvents(true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
   connect(parent, SIGNAL(mouseModeChanged(View::MouseMode)),
@@ -556,8 +558,27 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
 }
 
 
+void ViewItem::addTitle(QMenu *menu) const {
+  QWidgetAction *action = new QWidgetAction(menu);
+  action->setEnabled(false);
+
+  QLabel *label = new QLabel(name() + tr(" Menu"), menu);
+  label->setAlignment(Qt::AlignCenter);
+  label->setStyleSheet("QLabel {"
+                       "border-bottom: 2px solid lightGray;"
+                       "font: bold large;"
+                       "padding: 3px;"
+                       "margin: 1px;"
+                       "}");
+  action->setDefaultWidget(label);
+  menu->addAction(action);
+}
+
+
 void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   QMenu menu;
+
+  addTitle(&menu);
 
   QAction *editAction = menu.addAction(tr("Edit"));
   connect(editAction, SIGNAL(triggered()), this, SLOT(edit()));

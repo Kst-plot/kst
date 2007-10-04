@@ -12,9 +12,12 @@
 #include "plotrenderitem.h"
 
 #include <QTime>
+#include <QMenu>
 #include <QStatusBar>
 #include <QMainWindow>
 #include <QGraphicsSceneHoverEvent>
+#include <QGraphicsSceneMouseEvent>
+#include <QGraphicsSceneContextMenuEvent>
 
 #include "plotitem.h"
 #include "application.h"
@@ -23,10 +26,10 @@
 
 namespace Kst {
 
-PlotRenderItem::PlotRenderItem(const QString &name, PlotItem *parentItem)
+PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
   : ViewItem(parentItem->parentView()), _zoomRect(QRectF()) {
 
-  setName(name);
+  setName(tr("Plot Render"));
   setParentItem(parentItem);
   setHasStaticGeometry(true);
   setAllowedGripModes(0);
@@ -39,6 +42,7 @@ PlotRenderItem::PlotRenderItem(const QString &name, PlotItem *parentItem)
 
   updateGeometry(); //the initial rect
   updateViewMode(); //the initial view
+  createActions();
 }
 
 
@@ -166,6 +170,95 @@ QString PlotRenderItem::topLabel() const {
 }
 
 
+void PlotRenderItem::createActions() {
+  _zoomMaximum = new QAction(tr("Zoom Maximum"), this);
+  _zoomMaximum->setShortcut(Qt::Key_M);
+  plotItem()->parentView()->registerShortcut(_zoomMaximum);
+  connect(_zoomMaximum, SIGNAL(triggered()), this, SLOT(zoomMaximum()));
+
+  _zoomMaxSpikeInsensitive = new QAction(tr("Zoom Max Spike Insensitive"), this);
+  _zoomMaxSpikeInsensitive->setShortcut(Qt::Key_S);
+
+//   _zoomPrevious = new QAction(tr("Zoom Previous"), this);
+//   _zoomPrevious->setShortcut(Qt::Key_R);
+
+  _zoomYMeanCentered = new QAction(tr("Y-Zoom Mean-centered"), this);
+  _zoomYMeanCentered->setShortcut(Qt::Key_A);
+
+  _zoomXMaximum = new QAction(tr("X-Zoom Maximum"), this);
+  _zoomXMaximum->setShortcut(Qt::CTRL+Qt::Key_M);
+
+  _zoomXOut = new QAction(tr("X-Zoom Out"), this);
+  _zoomXOut->setShortcut(Qt::SHIFT+Qt::Key_Right);
+
+  _zoomXIn = new QAction(tr("X-Zoom In"), this);
+  _zoomXIn->setShortcut(Qt::SHIFT+Qt::Key_Left);
+
+  _zoomNormalizeXtoY = new QAction(tr("Normalize X Axis to Y Axis"), this);
+  _zoomNormalizeXtoY->setShortcut(Qt::Key_N);
+
+  _zoomToggleLogX = new QAction(tr("Toggle Log X Axis"), this);
+  _zoomToggleLogX->setShortcut(Qt::Key_G);
+
+  _zoomYLocalMaximum = new QAction(tr("Y-Zoom Local Maximum"), this);
+  _zoomYLocalMaximum->setShortcut(Qt::SHIFT+Qt::Key_L);
+
+  _zoomYMaximum = new QAction(tr("Y-Zoom Maximum"), this);
+  _zoomYMaximum->setShortcut(Qt::SHIFT+Qt::Key_M);
+
+  _zoomYOut = new QAction(tr("Y-Zoom Out"), this);
+  _zoomYOut->setShortcut(Qt::SHIFT+Qt::Key_Up);
+
+  _zoomYIn = new QAction(tr("Y-Zoom In"), this);
+  _zoomYIn->setShortcut(Qt::SHIFT+Qt::Key_Down);
+
+  _zoomNormalizeYtoX = new QAction(tr("Normalize Y Axis to X Axis"), this);
+  _zoomNormalizeYtoX->setShortcut(Qt::SHIFT+Qt::Key_N);
+
+  _zoomToggleLogY = new QAction(tr("Toggle Log Y Axis"), this);
+  _zoomToggleLogY->setShortcut(Qt::Key_L);
+}
+
+
+void PlotRenderItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
+  QMenu menu;
+
+  addTitle(&menu);
+
+  QAction *editAction = menu.addAction(tr("Edit"));
+  connect(editAction, SIGNAL(triggered()), this, SLOT(edit()));
+
+  QMenu zoom;
+  zoom.setTitle(tr("Zoom"));
+
+  zoom.addAction(_zoomMaximum);
+  zoom.addAction(_zoomMaxSpikeInsensitive);
+//   zoom.addAction(_zoomPrevious);
+  zoom.addAction(_zoomYMeanCentered);
+
+  zoom.addSeparator();
+
+  zoom.addAction(_zoomXMaximum);
+  zoom.addAction(_zoomXOut);
+  zoom.addAction(_zoomXIn);
+  zoom.addAction(_zoomNormalizeXtoY);
+  zoom.addAction(_zoomToggleLogX);
+
+  zoom.addSeparator();
+
+  zoom.addAction(_zoomYLocalMaximum);
+  zoom.addAction(_zoomYMaximum);
+  zoom.addAction(_zoomYOut);
+  zoom.addAction(_zoomYIn);
+  zoom.addAction(_zoomNormalizeYtoX);
+  zoom.addAction(_zoomToggleLogY);
+
+  menu.addMenu(&zoom);
+
+  menu.exec(event->screenPos());
+}
+
+
 void PlotRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   if (parentView()->viewMode() != View::Data) {
     event->ignore();
@@ -282,6 +375,67 @@ void PlotRenderItem::updateViewMode() {
   default:
     break;
   }
+}
+
+
+void PlotRenderItem::zoomMaximum() {
+  qDebug() << "Zoom Maximum" << endl;
+}
+
+
+void PlotRenderItem::zoomMaxSpikeInsensitive() {
+}
+
+
+// void PlotRenderItem::zoomPrevious() {
+// }
+
+
+void PlotRenderItem::zoomYMeanCentered() {
+}
+
+
+void PlotRenderItem::zoomXMaximum() {
+}
+
+
+void PlotRenderItem::zoomXOut() {
+}
+
+
+void PlotRenderItem::zoomXIn() {
+}
+
+
+void PlotRenderItem::zoomNormalizeXtoY() {
+}
+
+
+void PlotRenderItem::zoomToggleLogX() {
+}
+
+
+void PlotRenderItem::zoomYLocalMaximum() {
+}
+
+
+void PlotRenderItem::zoomYMaximum() {
+}
+
+
+void PlotRenderItem::zoomYOut() {
+}
+
+
+void PlotRenderItem::zoomYIn() {
+}
+
+
+void PlotRenderItem::zoomNormalizeYtoX() {
+}
+
+
+void PlotRenderItem::zoomToggleLogY() {
 }
 
 }

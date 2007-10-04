@@ -23,7 +23,7 @@ namespace Kst {
 
 LayoutBoxItem::LayoutBoxItem(View *parent)
     : ViewItem(parent) {
-  setName("LayoutBoxItem");
+  setName("Layout Box");
   setPen(Qt::NoPen);
   setBrush(Qt::NoBrush);
   setAllowedGripModes(Move);
@@ -87,6 +87,8 @@ void LayoutBoxItem::setEnabled(bool enabled) {
 
 void LayoutBoxItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   QMenu menu;
+
+  addTitle(&menu);
 
   QAction *editAction = menu.addAction(tr("Edit"));
   connect(editAction, SIGNAL(triggered()), this, SLOT(edit()));

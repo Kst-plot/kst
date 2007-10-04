@@ -18,9 +18,10 @@
 
 namespace Kst {
 
-VectorCurveRenderItem::VectorCurveRenderItem(const QString &name, PlotItem *parentItem)
-  : PlotRenderItem(name, parentItem) {
+VectorCurveRenderItem::VectorCurveRenderItem(PlotItem *parentItem)
+  : PlotRenderItem(parentItem) {
   setType(Cartesian);
+  setName(tr("Vector Curve"));
 }
 
 

@@ -163,6 +163,32 @@ QPointF View::snapPoint(const QPointF &point) {
 }
 
 
+void View::registerShortcut(QAction *action) {
+  grabShortcut(action->shortcut(), Qt::WidgetShortcut);
+  _shortcutMap.insert(action->shortcut().toString(), action);
+}
+
+
+bool View::event(QEvent *event) {
+
+  if (event->type() == QEvent::Shortcut) {
+    QShortcutEvent *e = static_cast<QShortcutEvent*>(event);
+    if (!_shortcutMap.contains(e->key()))
+        return QGraphicsView::event(event);
+
+    if (QAction *action = _shortcutMap.value(e->key())) {
+      ViewItem *i = qgraphicsitem_cast<ViewItem*>(scene()->itemAt(mapToScene(mapFromGlobal(QCursor::pos()))));
+      if (i == action->parent()) {
+        action->trigger();
+        return true;
+      }
+    }
+  }
+
+  return QGraphicsView::event(event);
+}
+
+
 bool View::eventFilter(QObject *obj, QEvent *event) {
   if (obj != scene() || _mouseMode != Create)
     return QGraphicsView::eventFilter(obj, event);

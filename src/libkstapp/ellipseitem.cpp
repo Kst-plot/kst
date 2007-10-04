@@ -19,7 +19,7 @@ namespace Kst {
 
 EllipseItem::EllipseItem(View *parent)
   : ViewItem(parent) {
-  setName("EllipseItem");
+  setName("Ellipse");
   setBrush(Qt::white);
 }
 

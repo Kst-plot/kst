@@ -29,14 +29,12 @@
 static qreal MARGIN_WIDTH = 20.0;
 static qreal MARGIN_HEIGHT = 20.0;
 
-static uint COUNT = 0;
-
 namespace Kst {
 
 PlotItem::PlotItem(View *parent)
   : ViewItem(parent), _calculatedMarginWidth(0), _calculatedMarginHeight(0) {
 
-  setName("PlotItem");
+  setName("Plot");
   setBrush(Qt::white);
 }
 

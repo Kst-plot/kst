@@ -30,7 +30,7 @@ class PlotRenderItem : public ViewItem
 {
   Q_OBJECT
   public:
-    PlotRenderItem(const QString &name, PlotItem *parentItem);
+    PlotRenderItem(PlotItem *parentItem);
     virtual ~PlotRenderItem();
 
     PlotItem *plotItem() const;
@@ -59,6 +59,7 @@ class PlotRenderItem : public ViewItem
     QRectF mapFromProjection(const QRectF &rect) const;
 
   protected:
+    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
@@ -73,11 +74,47 @@ class PlotRenderItem : public ViewItem
     void updateGeometry();
     void updateViewMode();
 
+    void zoomMaximum();
+    void zoomMaxSpikeInsensitive();
+//     void zoomPrevious();
+    void zoomYMeanCentered();
+    void zoomXMaximum();
+    void zoomXOut();
+    void zoomXIn();
+    void zoomNormalizeXtoY();
+    void zoomToggleLogX();
+    void zoomYLocalMaximum();
+    void zoomYMaximum();
+    void zoomYOut();
+    void zoomYIn();
+    void zoomNormalizeYtoX();
+    void zoomToggleLogY();
+
+  private:
+    void createActions();
+
   private:
     RenderType _type;
     KstRelationList _relationList;
     QRectF _zoomRect;
     SelectionRect _selectionRect;
+
+    QAction *_zoomMaximum;
+    QAction *_zoomMaxSpikeInsensitive;
+    QAction *_zoomPrevious;
+    QAction *_zoomYMeanCentered;
+    QAction *_zoomXMaximum;
+    QAction *_zoomXOut;
+    QAction *_zoomXIn;
+    QAction *_zoomNormalizeXtoY;
+    QAction *_zoomToggleLogX;
+    QAction *_zoomYLocalMaximum;
+    QAction *_zoomYMaximum;
+    QAction *_zoomYOut;
+    QAction *_zoomYIn;
+    QAction *_zoomNormalizeYtoX;
+    QAction *_zoomToggleLogY;
+
 };
 
 }
