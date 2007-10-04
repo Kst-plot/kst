@@ -23,7 +23,7 @@ QMAKE_EXT_YACC = .yacc
 
 SOURCES += \
     kstpainter.cpp \
-    kstcolorsequence.cpp \
+    colorsequence.cpp \
     kstsettings.cpp \
     kstobjectdefaults.cpp \
     labelparser.cpp \
@@ -63,7 +63,7 @@ HEADERS += \
     eparse.h \
     kstrelation.h \
     basicplugin.h \
-    kstcolorsequence.h \
+    colorsequence.h \
     kstcsd.h \
     kstcurvehint.h \
     kstcurvepointsymbol.h \

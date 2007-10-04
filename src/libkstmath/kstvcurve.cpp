@@ -23,7 +23,7 @@
 
 // application specific includes
 #include "dialoglauncher.h"
-#include "kstcolorsequence.h"
+#include "colorsequence.h"
 #include "datacollection.h"
 #include "debug.h"
 #include "kstlinestyle.h"

@@ -1,12 +1,6 @@
 /***************************************************************************
-                      kstcolorsequence.h  -  Part of KST
-                             -------------------
-    begin                : Mon Jul 07 2003
-    copyright            : (C) 2003 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2003 The University of Toronto                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,8 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _KST_CS_H
-#define _KST_CS_H
+#ifndef _COLORSEQUENCE_H
+#define _COLORSEQUENCE_H
 
 #include <qcolor.h>
 #include "kstvcurve.h"
@@ -24,7 +18,9 @@
 
 class KPalette;
 
-class KstColorSequence {
+namespace Kst {
+
+class ColorSequence {
   public:
     enum ColorMode { MonoChrome, GrayScale, Color };
     KST_EXPORT void createPalette();
@@ -39,9 +35,9 @@ class KstColorSequence {
     static KST_EXPORT QColor entry(int ptr);
     
   private:
-    KstColorSequence();
-    ~KstColorSequence();
-    static KstColorSequence* _self;
+    ColorSequence();
+    ~ColorSequence();
+    static ColorSequence* _self;
     static void cleanup();
     QHash<int, QColor> _pal;
     int _count;
@@ -50,6 +46,7 @@ class KstColorSequence {
     QString _palette;
 };
 
+}
 #endif
 
 // vim: ts=2 sw=2 et
