@@ -75,10 +75,10 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showCurveDialog()));
   _dataObjects->addAction(action);
 
-//   action = new DataButtonAction(tr("Equation"));
-//   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showEquationDialog()));
-//   _dataObjects->addAction(action);
-// 
+  action = new DataButtonAction(tr("Equation"));
+  connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showEquationDialog()));
+  _dataObjects->addAction(action);
+
 //   action = new DataButtonAction(tr("Histogram"));
 //   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showHistogramDialog()));
 //   _dataObjects->addAction(action);

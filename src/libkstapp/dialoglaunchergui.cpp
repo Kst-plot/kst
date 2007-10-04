@@ -12,9 +12,9 @@
 #include "dialoglaunchergui.h"
 
 #include "application.h"
-
-#include "vectordialog.h"
 #include "curvedialog.h"
+#include "equationdialog.h"
+#include "vectordialog.h"
 
 namespace Kst {
 
@@ -59,7 +59,7 @@ void DialogLauncherGui::showImageDialog(KstObjectPtr objectPtr) {
 
 
 void DialogLauncherGui::showEquationDialog(KstObjectPtr objectPtr) {
-  Q_UNUSED(objectPtr);
+  EquationDialog(objectPtr, kstApp->mainWindow()).exec();
 }
 
 
