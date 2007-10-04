@@ -40,7 +40,7 @@ SOURCES += \
     ksthistogram.cpp \
     kstequation.cpp \
     kstcurvehint.cpp \
-    kstbasicplugin.cpp \
+    basicplugin.cpp \
     fftsg_h.c \
     enodes.cpp \
     enodefactory.cpp \
@@ -62,7 +62,7 @@ HEADERS += \
     eparse-eh.h \
     eparse.h \
     kstrelation.h \
-    kstbasicplugin.h \
+    basicplugin.h \
     kstcolorsequence.h \
     kstcsd.h \
     kstcurvehint.h \
