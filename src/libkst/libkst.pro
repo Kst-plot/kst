@@ -37,7 +37,7 @@ SOURCES += \
     generatedvector.cpp \
     editablevector.cpp \
     datavector.cpp \
-    kstvectordefaults.cpp \
+    vectordefaults.cpp \
     matrixdefaults.cpp \
     kstprimitive.cpp \
     defaultprimitivenames.cpp \
@@ -83,7 +83,7 @@ HEADERS += \
     generatedvector.h \
     ksttimers.h \
     ksttimezones.h \
-    kstvectordefaults.h \
+    vectordefaults.h \
     vector.h \
     logevents.h \
     primitivefactory.h \

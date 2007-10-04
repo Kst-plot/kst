@@ -1,12 +1,6 @@
 /***************************************************************************
-                             kstvectordefaults.h
-                             -------------------
-    begin                : May 28, 2004
-    copyright            : (C) 2004 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2004 The University of Toronto                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -14,18 +8,19 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-#ifndef KSTVECTORDEFAULTS_H
-#define KSTVECTORDEFAULTS_H
+#ifndef VECTORDEFAULTS_H
+#define VECTORDEFAULTS_H
 
 #include <qstring.h>
 #include "kst_export.h"
 
 class QSettings;
 
-class KST_EXPORT KstVectorDefaults {
+namespace Kst {
+
+class KST_EXPORT VectorDefaults {
   public:
-    KstVectorDefaults();
+    VectorDefaults();
     void sync();
     const QString& dataSource() const;
     const QString& wizardXVector() const;
@@ -50,8 +45,8 @@ class KST_EXPORT KstVectorDefaults {
     int _skip;
 };
 
-namespace KST {
-  extern KST_EXPORT KstVectorDefaults vectorDefaults;
+  extern KST_EXPORT VectorDefaults vectorDefaults;
+
 }
 
 #endif

@@ -20,7 +20,7 @@
 #include "datacollection.h"
 #include "dataobjectcollection.h"
 
-#include "kstvectordefaults.h"
+#include "vectordefaults.h"
 #include "defaultprimitivenames.h"
 
 #include <QDir>

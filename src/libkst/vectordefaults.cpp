@@ -1,12 +1,6 @@
 /***************************************************************************
-                            kstvectordefaults.cpp
-                             -------------------
-    begin                : May 28, 2004
-    copyright            : (C) 2004 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2004 The University of Toronto                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,16 +9,18 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstvectordefaults.h"
+#include "vectordefaults.h"
 #include "datavector.h"
 #include "datacollection.h"
 #include "stdinsource.h"
 
 #include <qsettings.h>
 
-KstVectorDefaults KST::vectorDefaults;
+namespace Kst {
 
-KstVectorDefaults::KstVectorDefaults() {
+VectorDefaults vectorDefaults;
+
+VectorDefaults::VectorDefaults() {
   _dataSource = ".";
   _f0 = 0;
   _n = -1;
@@ -34,66 +30,66 @@ KstVectorDefaults::KstVectorDefaults() {
 }
 
 
-double KstVectorDefaults::f0() const {
+double VectorDefaults::f0() const {
   return _f0;
 }
 
 
-double KstVectorDefaults::n() const {
+double VectorDefaults::n() const {
   return _n;
 }
 
 
-bool KstVectorDefaults::readToEOF() const {
+bool VectorDefaults::readToEOF() const {
   return _n <= 0;
 }
 
 
-bool KstVectorDefaults::countFromEOF() const {
+bool VectorDefaults::countFromEOF() const {
   return _f0 < 0;
 }
 
 
-const QString& KstVectorDefaults::wizardXVector() const {
+const QString& VectorDefaults::wizardXVector() const {
   return _wizardX;
 }
 
 
-const QString& KstVectorDefaults::dataSource() const {
+const QString& VectorDefaults::dataSource() const {
   return _dataSource;
 }
 
 
-bool KstVectorDefaults::doSkip() const {
+bool VectorDefaults::doSkip() const {
   return _doSkip;
 }
 
 
-bool KstVectorDefaults::doAve() const {
+bool VectorDefaults::doAve() const {
   return _doAve;
 }
 
 
-int KstVectorDefaults::skip() const {
+int VectorDefaults::skip() const {
   return _skip;
 }
 
 
-void KstVectorDefaults::sync() {
-  Kst::vectorList.lock().readLock();
-  Kst::DataVectorList vl = Kst::ObjectSubList<Kst::Vector,Kst::DataVector>(Kst::vectorList);
-  Kst::vectorList.lock().unlock();
+void VectorDefaults::sync() {
+  vectorList.lock().readLock();
+  DataVectorList vl = ObjectSubList<Vector,DataVector>(vectorList);
+  vectorList.lock().unlock();
   int j = vl.count() - 1;
 
   // Find a non-stdin source
   while (j >= 0) {
     vl[j]->readLock();
-    Kst::DataSourcePtr dsp = vl[j]->dataSource();
+    DataSourcePtr dsp = vl[j]->dataSource();
     vl[j]->unlock();
 #ifdef Q_WS_WIN32
     if (dsp) {
 #else
-    if (dsp && !Kst::kst_cast<Kst::StdinSource>(dsp)) {
+    if (dsp && !kst_cast<StdinSource>(dsp)) {
 #endif
       break;
     }
@@ -113,18 +109,18 @@ void KstVectorDefaults::sync() {
 }
 
 
-void KstVectorDefaults::writeConfig(QSettings *config) {
-  config->setValue("defaultDataSource", KST::vectorDefaults.dataSource());
-  config->setValue("defaultWizardXVector", KST::vectorDefaults.wizardXVector());
-  config->setValue("defaultStartFrame", KST::vectorDefaults.f0());
-  config->setValue("defaultNumFrames", KST::vectorDefaults.n());
-  config->setValue("defaultDoSkip", KST::vectorDefaults.doSkip());
-  config->setValue("defaultDoAve", KST::vectorDefaults.doAve());
-  config->setValue("defaultSkip", KST::vectorDefaults.skip());
+void VectorDefaults::writeConfig(QSettings *config) {
+  config->setValue("defaultDataSource", vectorDefaults.dataSource());
+  config->setValue("defaultWizardXVector", vectorDefaults.wizardXVector());
+  config->setValue("defaultStartFrame", vectorDefaults.f0());
+  config->setValue("defaultNumFrames", vectorDefaults.n());
+  config->setValue("defaultDoSkip", vectorDefaults.doSkip());
+  config->setValue("defaultDoAve", vectorDefaults.doAve());
+  config->setValue("defaultSkip", vectorDefaults.skip());
 }
 
 
-void KstVectorDefaults::readConfig(QSettings *config) {
+void VectorDefaults::readConfig(QSettings *config) {
   _f0 = config->value("defaultStartFrame", 0).toInt();
   _n = config->value("defaultNumFrames", -1).toInt();
   _dataSource = config->value("defaultDataSource", ".").toString();
@@ -135,8 +131,9 @@ void KstVectorDefaults::readConfig(QSettings *config) {
 }
 
 
-void KstVectorDefaults::setWizardXVector(const QString& vector) {
+void VectorDefaults::setWizardXVector(const QString& vector) {
   _wizardX = vector;
 }
 
+}
 // vim: ts=2 sw=2 et
