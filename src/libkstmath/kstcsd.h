@@ -81,7 +81,7 @@ class KST_EXPORT KstCSD : public Kst::DataObject {
     PSDType output() const;
     void setOutput(PSDType in_outputType);
     
-    KstMatrixPtr outputMatrix() const;
+    Kst::MatrixPtr outputMatrix() const;
     
     virtual Kst::DataObjectPtr makeDuplicate(Kst::DataObjectDataObjectMap& duplicatedMap);
 
@@ -110,7 +110,7 @@ class KST_EXPORT KstCSD : public Kst::DataObject {
     PSDCalculator _psdCalculator;
 
     // output matrix
-    KstMatrixMap::Iterator _outMatrix;
+    Kst::MatrixMap::Iterator _outMatrix;
 };
 
 typedef KstSharedPtr<KstCSD> KstCSDPtr;

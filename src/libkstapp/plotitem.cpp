@@ -21,7 +21,7 @@
 
 #include "kstvcurve.h"
 #include "datacollection.h"
-#include "kstdataobjectcollection.h"
+#include "dataobjectcollection.h"
 #include "vectorcurverenderitem.h"
 
 #include <QDebug>

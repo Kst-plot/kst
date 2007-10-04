@@ -13,7 +13,7 @@
 
 #include <assert.h>
 #include <datacollection.h>
-#include <kstdataobjectcollection.h>
+#include <dataobjectcollection.h>
 
 namespace Kst {
 
@@ -35,9 +35,9 @@ int SessionModel::columnCount(const QModelIndex& parent) const {
 int SessionModel::rowCount(const QModelIndex& parent) const {
   int rc = 0;
   if (!parent.isValid()) {
-    KST::dataObjectList.lock().readLock();
-    rc = KST::dataObjectList.count() /* + generated primitives */;
-    KST::dataObjectList.lock().unlock();
+    dataObjectList.lock().readLock();
+    rc = dataObjectList.count() /* + generated primitives */;
+    dataObjectList.lock().unlock();
     return rc;
   }
 
@@ -45,9 +45,9 @@ int SessionModel::rowCount(const QModelIndex& parent) const {
     return rc;
   }
 
-  KST::dataObjectList.lock().readLock();
-  DataObject *pdo = KST::dataObjectList.at(parent.row());
-  KST::dataObjectList.lock().unlock();
+  dataObjectList.lock().readLock();
+  DataObject *pdo = dataObjectList.at(parent.row());
+  dataObjectList.lock().unlock();
   Q_ASSERT(pdo);
   if (pdo) {
     pdo->readLock();
@@ -71,9 +71,9 @@ QVariant SessionModel::data(const QModelIndex& index, int role) const {
       VectorPtr v = parent->outputVectors().values()[index.row()];
       return qVariantFromValue(v.data());
     } else {
-      KST::dataObjectList.lock().readLock();
-      DataObjectPtr p = KST::dataObjectList[index.row()];
-      KST::dataObjectList.lock().unlock();
+      dataObjectList.lock().readLock();
+      DataObjectPtr p = dataObjectList[index.row()];
+      dataObjectList.lock().unlock();
       return qVariantFromValue(p.data());
     }
   }
@@ -138,9 +138,9 @@ QVariant SessionModel::dataObjectData(const QModelIndex& index, int role) const 
   Q_UNUSED(role)
   QVariant rc;
   const int row = index.row(), col = index.column();
-  KST::dataObjectList.lock().readLock();
-  DataObjectPtr p = KST::dataObjectList[row];
-  KST::dataObjectList.lock().unlock();
+  dataObjectList.lock().readLock();
+  DataObjectPtr p = dataObjectList[row];
+  dataObjectList.lock().unlock();
   if (!p) {
     return rc;
   }
@@ -179,22 +179,22 @@ QModelIndex SessionModel::index(int row, int col, const QModelIndex& parent) con
     return QModelIndex();
   }
   if (!parent.isValid()) {
-    KST::dataObjectList.lock().readLock();
-    const int cnt = KST::dataObjectList.count();
-    KST::dataObjectList.lock().unlock();
+    dataObjectList.lock().readLock();
+    const int cnt = dataObjectList.count();
+    dataObjectList.lock().unlock();
     if (row >= cnt) {
       return QModelIndex();
     }
     return createIndex(row, col);
   }
 
-  KST::dataObjectList.lock().readLock();
-  const int cnt = KST::dataObjectList.count();
+  dataObjectList.lock().readLock();
+  const int cnt = dataObjectList.count();
   DataObject *p = 0;
   if (row >= 0 && row < cnt) {
-    p = KST::dataObjectList.at(row);
+    p = dataObjectList.at(row);
   }
-  KST::dataObjectList.lock().unlock();
+  dataObjectList.lock().unlock();
   if (!p) {
     return QModelIndex();
   }
@@ -215,9 +215,9 @@ QModelIndex SessionModel::parent(const QModelIndex& index) const {
   if (!dop) {
     return QModelIndex();
   }
-  KST::dataObjectList.lock().readLock();
-  const int cnt = KST::dataObjectList.indexOf(dop);
-  KST::dataObjectList.lock().unlock();
+  dataObjectList.lock().readLock();
+  const int cnt = dataObjectList.indexOf(dop);
+  dataObjectList.lock().unlock();
   if (cnt < 0) {
     return QModelIndex();
   }

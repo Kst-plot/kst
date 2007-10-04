@@ -32,12 +32,12 @@ DataMatrix::DataMatrix(DataSourcePtr file, const QString &field, ObjectTag tag,
                        int xStart, int yStart,
                        int xNumSteps, int yNumSteps,
                        bool doAve, bool doSkip, int skip)
-: KstMatrix(tag, 0L, 1, 1, 0,0,1,1) {
+: Matrix(tag, 0L, 1, 1, 0,0,1,1) {
   commonConstructor(file, field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip);
 }
 
 
-DataMatrix::DataMatrix(const QDomElement &e) : KstMatrix(ObjectTag::invalidTag, 0L, 1,1,0,0,1,1) {
+DataMatrix::DataMatrix(const QDomElement &e) : Matrix(ObjectTag::invalidTag, 0L, 1,1,0,0,1,1) {
   DataSourcePtr in_file = 0L, in_provider = 0L;
   QString in_field;
   QString in_tag;
@@ -479,7 +479,7 @@ Object::UpdateType DataMatrix::doUpdate(bool force) {
   _lastDoSkip = _doSkip;
   _lastSkip = _skip;
 
-  return KstMatrix::internalUpdate(UPDATE);
+  return Matrix::internalUpdate(UPDATE);
 }
 
 

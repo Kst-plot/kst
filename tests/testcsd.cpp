@@ -19,13 +19,13 @@
 #include <qfile.h>
 #include <kstcsd.h>
 #include <datacollection.h>
-#include <kstdataobjectcollection.h>
+#include <dataobjectcollection.h>
 
 
 void TestCSD::cleanupTestCase() {
   Kst::vectorList.clear();
   Kst::scalarList.clear();
-  KST::dataObjectList.clear();
+  Kst::dataObjectList.clear();
 }
 
 QDomDocument TestCSD::makeDOMElement(const QString& tag, const QString& val) {
@@ -175,7 +175,7 @@ void TestCSD::testCSD() {
   csdDOM->setVector(vp2);
   QCOMPARE(csdDOM->vTag(), QLatin1String("tempVector2"));
   csdDOM->setWindowSize(9);
-  KstMatrixPtr outMatrix = csdDOM->outputMatrix();
+  Kst::MatrixPtr outMatrix = csdDOM->outputMatrix();
   
   QVERIFY(outMatrix->resize(3, 3, false)); // very odd thing to do?
   QVERIFY(outMatrix->setValue(0, 0, 1.716299));

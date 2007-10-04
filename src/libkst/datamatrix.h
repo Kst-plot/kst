@@ -13,14 +13,14 @@
 #ifndef DATAMATRIX_H
 #define DATAMATRIX_H
 
-#include "kstmatrix.h"
+#include "matrix.h"
 #include "kstsharedptr.h"
 #include "datasource.h"
 #include "kst_export.h"
 
 namespace Kst {
    
-class KST_EXPORT DataMatrix : public KstMatrix {
+class KST_EXPORT DataMatrix : public Matrix {
 
   public:
     

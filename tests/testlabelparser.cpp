@@ -14,13 +14,13 @@
 #include <QtTest>
 
 #include <datacollection.h>
-#include <kstdataobjectcollection.h>
+#include <dataobjectcollection.h>
 
 
 void TestLabelParser::cleanupTestCase() {
   Kst::vectorList.clear();
   Kst::scalarList.clear();
-  KST::dataObjectList.clear();
+  Kst::dataObjectList.clear();
 }
 
 

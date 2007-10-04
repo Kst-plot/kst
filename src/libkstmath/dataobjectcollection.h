@@ -1,5 +1,5 @@
 /***************************************************************************
-                          kstdataobjectcollection.h
+                          dataobjectcollection.h
                              -------------------
     begin                : Feb 10, 2006
     copyright            : (C) 2006 The University of Toronto
@@ -15,18 +15,18 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTDATAOBJECTCOLLECTION_H
-#define KSTDATAOBJECTCOLLECTION_H
+#ifndef DATAOBJECTCOLLECTION_H
+#define DATAOBJECTCOLLECTION_H
 
 #include "dataobject.h"
 #include "kstrelation.h"
 #include <kst_export.h>
 
-namespace KST {
+namespace Kst {
     /** The list of data objects which are in use */
-    KST_EXPORT extern Kst::DataObjectList dataObjectList;
+    KST_EXPORT extern DataObjectList dataObjectList;
     KST_EXPORT extern KstRelationList relationList;
-    KST_EXPORT extern void addDataObjectToList(Kst::DataObjectPtr d);
+    KST_EXPORT extern void addDataObjectToList(DataObjectPtr d);
 }
 
 #endif

@@ -16,7 +16,7 @@
 #include <datasourcefactory.h>
 #include <graphicsfactory.h>
 #include <datacollection.h>
-#include <kstdataobjectcollection.h>
+#include <dataobjectcollection.h>
 #include <objectfactory.h>
 #include <primitivefactory.h>
 #include <relationfactory.h>
@@ -83,7 +83,7 @@ bool Document::save(const QString& to) {
   foreach (VectorPtr s, vectorList.list()) {
     s->save(xml);
   }
-  foreach (KstMatrixPtr s, matrixList.list()) {
+  foreach (MatrixPtr s, matrixList.list()) {
     s->save(xml);
   }
   foreach (ScalarPtr s, scalarList.list()) {
@@ -95,13 +95,13 @@ bool Document::save(const QString& to) {
   xml.writeEndElement();
 
   xml.writeStartElement("objects");
-  foreach (DataObjectPtr s, KST::dataObjectList) {
+  foreach (DataObjectPtr s, dataObjectList) {
     s->save(xml);
   }
   xml.writeEndElement();
 
   xml.writeStartElement("relations");
-  foreach (KstRelationPtr s, KST::relationList) {
+  foreach (KstRelationPtr s, relationList) {
     s->save(xml);
   }
   xml.writeEndElement();
@@ -177,7 +177,7 @@ bool Document::open(const QString& file) {
             {
               DataObjectPtr object = ObjectFactory::parse(xml);
               if (object)
-                KST::addDataObjectToList(object);
+                addDataObjectToList(object);
               else
                 malformed();
               break;

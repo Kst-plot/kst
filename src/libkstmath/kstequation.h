@@ -73,7 +73,7 @@ class KST_EXPORT KstEquation : public Kst::DataObject {
     void replaceDependency(Kst::DataObjectPtr oldObject, Kst::DataObjectPtr newObject);
 
     void replaceDependency(Kst::VectorPtr oldVector, Kst::VectorPtr newVector);
-    void replaceDependency(KstMatrixPtr oldMatrix, KstMatrixPtr newMatrix);
+    void replaceDependency(Kst::MatrixPtr oldMatrix, Kst::MatrixPtr newMatrix);
 
     bool uses(Kst::ObjectPtr p) const;
 

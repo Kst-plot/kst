@@ -140,7 +140,7 @@ void KstCSD::commonConstructor(const QString& in_tag, Kst::VectorPtr in_V,
   {
     KstWriteLocker blockMatrixUpdates(&Kst::matrixList.lock());
 
-    KstMatrixPtr outMatrix = new KstMatrix(Kst::ObjectTag("csd", tag()), this, 1, 1);
+    Kst::MatrixPtr outMatrix = new Kst::Matrix(Kst::ObjectTag("csd", tag()), this, 1, 1);
     outMatrix->setLabel(i18n("Power [%1/%2^{1/2}]").arg(_vectorUnits).arg(_rateUnits));
     outMatrix->setXLabel(i18n("%1 [%2]").arg(vecName).arg(_vectorUnits));
     outMatrix->setYLabel(i18n("Frequency [%1]").arg(_rateUnits));
@@ -387,7 +387,7 @@ void KstCSD::setGaussianSigma(double in_sigma) {
 }
 
 
-KstMatrixPtr KstCSD::outputMatrix() const {
+Kst::MatrixPtr KstCSD::outputMatrix() const {
   return *_outMatrix;  
 }
 

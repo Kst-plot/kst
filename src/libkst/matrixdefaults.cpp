@@ -1,12 +1,7 @@
 /***************************************************************************
-                            kstvectordefaults.cpp
-                             -------------------
-    begin                : May 28, 2004
-    copyright            : (C) 2004 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
+ *   copyright : (C) 2005  University of British Columbia                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,15 +11,17 @@
  ***************************************************************************/
 
 #include "datacollection.h"
-#include "kstmatrixdefaults.h"
+#include "matrixdefaults.h"
 #include "datamatrix.h"
 #include "stdinsource.h"
 
 #include <qsettings.h>
 
-KstMatrixDefaults KST::matrixDefaults;
+namespace Kst {
 
-KstMatrixDefaults::KstMatrixDefaults() {
+MatrixDefaults matrixDefaults;
+
+MatrixDefaults::MatrixDefaults() {
   // some arbitrary defaults for the defaults
   _dataSource = ".";
   _xStart = 0;
@@ -36,80 +33,80 @@ KstMatrixDefaults::KstMatrixDefaults() {
   _skip = 0;
 }
 
-const QString& KstMatrixDefaults::dataSource() const {
+const QString& MatrixDefaults::dataSource() const {
   return _dataSource;  
 }
 
 
-int KstMatrixDefaults::xStart() const {
+int MatrixDefaults::xStart() const {
   return _xStart;  
 }
 
 
-bool KstMatrixDefaults::xCountFromEnd() const {
+bool MatrixDefaults::xCountFromEnd() const {
   return _xStart < 0;  
 }
 
 
-int KstMatrixDefaults::yStart() const {
+int MatrixDefaults::yStart() const {
   return _yStart;  
 }
 
 
-bool KstMatrixDefaults::yCountFromEnd() const {
+bool MatrixDefaults::yCountFromEnd() const {
   return _yStart < 0;  
 }
 
 
-int KstMatrixDefaults::xNumSteps() const {
+int MatrixDefaults::xNumSteps() const {
   return _xNumSteps;  
 }
 
 
-bool KstMatrixDefaults::xReadToEnd() const {
+bool MatrixDefaults::xReadToEnd() const {
   return _xNumSteps < 1;  
 }
 
 
-int KstMatrixDefaults::yNumSteps() const {
+int MatrixDefaults::yNumSteps() const {
   return _yNumSteps;  
 }
 
 
-bool KstMatrixDefaults::yReadToEnd() const {
+bool MatrixDefaults::yReadToEnd() const {
   return _yNumSteps < 1;  
 }
 
 
-bool KstMatrixDefaults::doSkip() const {
+bool MatrixDefaults::doSkip() const {
   return _doSkip;  
 }
 
 
-bool KstMatrixDefaults::doAverage() const {
+bool MatrixDefaults::doAverage() const {
   return _doAve;  
 }
 
 
-int KstMatrixDefaults::skip() const {
+int MatrixDefaults::skip() const {
   return _skip;  
 }
 
-void KstMatrixDefaults::sync() {
-  Kst::matrixList.lock().readLock();
-  Kst::DataMatrixList dataMatrixList = kstObjectSubList<KstMatrix,Kst::DataMatrix>(Kst::matrixList);
-  Kst::matrixList.lock().unlock();
+void MatrixDefaults::sync() {
+  matrixList.lock().readLock();
+  DataMatrixList dataMatrixList = ObjectSubList<Matrix,DataMatrix>(matrixList);
+  matrixList.lock().unlock();
   int j = dataMatrixList.count() - 1;
 
   // Find a non-stdin source
   while (j >= 0) {
     dataMatrixList[j]->readLock();
-    Kst::DataSourcePtr dsp = dataMatrixList[j]->dataSource();
+    DataSourcePtr dsp = dataMatrixList[j]->dataSource();
     dataMatrixList[j]->unlock();
 #ifdef Q_WS_WIN32
     if (dsp) {
 #else
-    if (dsp && !Kst::kst_cast<Kst::StdinSource>(dsp)) {
+    if (dsp && !kst_cast<StdinSource>(dsp)) {
 #endif
       break;
     }
@@ -133,19 +130,19 @@ void KstMatrixDefaults::sync() {
   }
 }
 
-void KstMatrixDefaults::writeConfig(QSettings *config) {
-  config->setValue("defaultMatrixDataSource", KST::matrixDefaults.dataSource());
-  config->setValue("defaultXStart", KST::matrixDefaults.xStart());
-  config->setValue("defaultYStart", KST::matrixDefaults.yStart());
-  config->setValue("defaultXNumSteps", KST::matrixDefaults.xNumSteps());
-  config->setValue("defaultYNumSteps", KST::matrixDefaults.yNumSteps());
-  config->setValue("defaultMatrixDoSkip", KST::matrixDefaults.doSkip());
-  config->setValue("defaultMatrixDoAverage", KST::matrixDefaults.doAverage());
-  config->setValue("defaultMatrixSkip", KST::matrixDefaults.skip());
+void MatrixDefaults::writeConfig(QSettings *config) {
+  config->setValue("defaultMatrixDataSource", matrixDefaults.dataSource());
+  config->setValue("defaultXStart", matrixDefaults.xStart());
+  config->setValue("defaultYStart", matrixDefaults.yStart());
+  config->setValue("defaultXNumSteps", matrixDefaults.xNumSteps());
+  config->setValue("defaultYNumSteps", matrixDefaults.yNumSteps());
+  config->setValue("defaultMatrixDoSkip", matrixDefaults.doSkip());
+  config->setValue("defaultMatrixDoAverage", matrixDefaults.doAverage());
+  config->setValue("defaultMatrixSkip", matrixDefaults.skip());
 }
 
 
-void KstMatrixDefaults::readConfig(QSettings *config) {
+void MatrixDefaults::readConfig(QSettings *config) {
   _dataSource = config->value("defaultMatrixDataSource", ".").toString();
   _xStart = config->value("defaultXStart", 0).toInt();
   _yStart = config->value("defaultYStart", 0).toInt();
@@ -156,5 +153,5 @@ void KstMatrixDefaults::readConfig(QSettings *config) {
   _skip = config->value("defaultMatrixSkip", 0).toInt();
 }
 
-
+}
 // vim: ts=2 sw=2 et

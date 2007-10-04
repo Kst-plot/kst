@@ -18,7 +18,7 @@
 #include "generatedvector.h"
 
 #include "datacollection.h"
-#include "kstdataobjectcollection.h"
+#include "dataobjectcollection.h"
 
 #include "kstvectordefaults.h"
 #include "defaultprimitivenames.h"

@@ -18,7 +18,7 @@
 #ifndef KSTIMAGE_H
 #define KSTIMAGE_H
 
-#include "kstmatrix.h"
+#include "matrix.h"
 #include "kstrelation.h"
 #include "kst_export.h"
 
@@ -32,12 +32,12 @@ typedef QHash<int, QColor> KstPalette;
 class KST_EXPORT KstImage : public KstRelation {
   public:
     //constructor for colormap only
-    KstImage(const QString &in_tag, KstMatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const KstPalette &pal);
+    KstImage(const QString &in_tag, Kst::MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const KstPalette &pal);
     //constructor for contour map only
-    KstImage(const QString &in_tag, KstMatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight);
+    KstImage(const QString &in_tag, Kst::MatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight);
     //constructor for both colormap and contour map
     KstImage(const QString &in_tag,
-        KstMatrixPtr in_matrix,
+        Kst::MatrixPtr in_matrix,
         double lowerZ,
         double upperZ,
         bool autoThreshold,
@@ -71,17 +71,17 @@ class KST_EXPORT KstImage : public KstRelation {
     virtual bool autoThreshold() const { return _autoThreshold; }
 
     virtual QString matrixTag() const;
-    virtual KstMatrixPtr matrix() const;
+    virtual Kst::MatrixPtr matrix() const;
     virtual QString paletteName() const;
     virtual const KstPalette &palette() const { return _pal; }
 
     virtual void matrixDimensions(double &x, double &y, double &width, double &height);
 
-    virtual void changeToColorOnly(const QString &in_tag, KstMatrixPtr in_matrix,
+    virtual void changeToColorOnly(const QString &in_tag, Kst::MatrixPtr in_matrix,
         double lowerZ, double upperZ, bool autoThreshold, const KstPalette &pal);
-    virtual void changeToContourOnly(const QString &in_tag, KstMatrixPtr in_matrix,
+    virtual void changeToContourOnly(const QString &in_tag, Kst::MatrixPtr in_matrix,
         int numContours, const QColor& contourColor, int contourWeight);
-    virtual void changeToColorAndContour(const QString &in_tag, KstMatrixPtr in_matrix,
+    virtual void changeToColorAndContour(const QString &in_tag, Kst::MatrixPtr in_matrix,
         double lowerZ, double upperZ, bool autoThreshold, const KstPalette &pal,
         int numContours, const QColor& contourColor, int contourWeight);
 

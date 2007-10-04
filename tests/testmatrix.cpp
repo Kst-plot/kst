@@ -15,12 +15,12 @@
 
 #include <kstmath.h>
 #include <datacollection.h>
-#include <kstdataobjectcollection.h>
+#include <dataobjectcollection.h>
 
 void TestMatrix::cleanupTestCase() {
   Kst::matrixList.clear();
   Kst::scalarList.clear();
-  KST::dataObjectList.clear();
+  Kst::dataObjectList.clear();
 }
 
 
@@ -28,7 +28,7 @@ void TestMatrix::testMatrix() {
   bool ok = true;
 
   //basic default constructor values
-  KstMatrixPtr m1 = new KstMatrix(Kst::ObjectTag::fromString(QString::null));
+  Kst::MatrixPtr m1 = new Kst::Matrix(Kst::ObjectTag::fromString(QString::null));
   QVERIFY(m1->tagName().startsWith("Anonymous"));
   QCOMPARE(m1->sampleCount(), 0);
   QCOMPARE(m1->minValue(), 0.0);
@@ -41,7 +41,7 @@ void TestMatrix::testMatrix() {
   QCOMPARE(m1->meanValue(), 0.0);
 
   //basic symetrical matrix
-  KstMatrixPtr m2 = new KstMatrix(Kst::ObjectTag::fromString("Symetrical"), 0L, 3, 3);
+  Kst::MatrixPtr m2 = new Kst::Matrix(Kst::ObjectTag::fromString("Symetrical"), 0L, 3, 3);
   QCOMPARE(m2->tagName(),  QLatin1String("Symetrical"));
 
   QVERIFY(m2->resize(3, 3, true));
@@ -84,7 +84,7 @@ void TestMatrix::testMatrix() {
   QVERIFY(m2->value(1, 1) != 5.0);
   QVERIFY(m2->setValueRaw(2, 2, 6.0)); //fails
 
-  KstMatrixPtr um1 = new KstMatrix(Kst::ObjectTag::fromString("Unity"), 0L, 3, 3, 0, 0, 1, 1);
+  Kst::MatrixPtr um1 = new Kst::Matrix(Kst::ObjectTag::fromString("Unity"), 0L, 3, 3, 0, 0, 1, 1);
   um1->setEditable(true);
   um1->zero();
   QVERIFY(!um1->setValue(0, 0, 1.0));
@@ -151,7 +151,7 @@ void TestMatrix::testMatrix() {
   QCOMPARE(um1->minValue(), 0.0);
   QCOMPARE(um1->maxValue(), 0.0);
 
-  KstMatrixPtr sm = new KstMatrix(Kst::ObjectTag::fromString("Spike"), 0L, 2, 2, 0, 0, 1, 1);
+  Kst::MatrixPtr sm = new Kst::Matrix(Kst::ObjectTag::fromString("Spike"), 0L, 2, 2, 0, 0, 1, 1);
 
   sm->setEditable(true);
   QVERIFY(sm->resize(2, 2, false));

@@ -19,8 +19,6 @@
 
 #include "ui_equationtab.h"
 
-#include "kst_export.h"
-
 namespace Kst {
 
 class KST_EXPORT EquationTab : public DataTab, Ui::EquationTab {

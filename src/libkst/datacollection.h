@@ -15,9 +15,9 @@
 #include "datasource.h"
 #include "kststring.h"
 #include "vector.h"
-#include "kstmatrix.h"
+#include "matrix.h"
 #include "kst_export.h"
-#include "kstobjectcollection.h"
+#include "objectcollection.h"
 
 class QFile;
 class KstRelation;
@@ -79,7 +79,7 @@ class Data {
     KST_EXPORT extern KstStringCollection stringList;
 
     /** The list of matrices that are being read */
-    KST_EXPORT extern KstMatrixCollection matrixList;
+    KST_EXPORT extern MatrixCollection matrixList;
 
     /** Bad choice for location - maybe move it later */
     KST_EXPORT void *malloc(size_t size);

@@ -22,7 +22,7 @@
 #include "kstprimitive.h"
 #include "kstobjectlist.h"
 #include "kstobjectmap.h"
-#include "kstobjectcollection.h"
+#include "objectcollection.h"
 
 class QXmlStreamWriter;
 
@@ -74,7 +74,7 @@ Q_DECLARE_METATYPE(KstString*)
 typedef KstSharedPtr<KstString> KstStringPtr;
 typedef KstObjectList<KstStringPtr> KstStringList;
 typedef KstObjectMap<KstStringPtr> KstStringMap;
-typedef KstObjectCollection<KstString> KstStringCollection;
+typedef Kst::ObjectCollection<KstString> KstStringCollection;
 
 #endif
 // vim: ts=2 sw=2 et

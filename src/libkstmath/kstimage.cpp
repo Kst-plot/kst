@@ -102,7 +102,7 @@ KstImage::KstImage(const QDomElement& e) : KstRelation(e) {
 
 
 //constructor for colormap only
-KstImage::KstImage(const QString &in_tag, KstMatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const KstPalette &pal) : KstRelation(){
+KstImage::KstImage(const QString &in_tag, Kst::MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const KstPalette &pal) : KstRelation(){
 
   _inputMatrices[THEMATRIX] = in_matrix;
   setTagName(Kst::ObjectTag(in_tag, Kst::ObjectTag::globalTagContext));  // FIXME: always top-level?
@@ -121,7 +121,7 @@ KstImage::KstImage(const QString &in_tag, KstMatrixPtr in_matrix, double lowerZ,
 
 
 //constructor for contour map only
-KstImage::KstImage(const QString &in_tag, KstMatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight) : KstRelation(){
+KstImage::KstImage(const QString &in_tag, Kst::MatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight) : KstRelation(){
   _inputMatrices[THEMATRIX] = in_matrix;
   setTagName(Kst::ObjectTag(in_tag, Kst::ObjectTag::globalTagContext));  // FIXME: always top-level?
   _typeString = i18n("Image");
@@ -140,7 +140,7 @@ KstImage::KstImage(const QString &in_tag, KstMatrixPtr in_matrix, int numContour
 
 //constructor for both colormap and contour map
 KstImage::KstImage(const QString &in_tag,
-                   KstMatrixPtr in_matrix,
+                   Kst::MatrixPtr in_matrix,
                    double lowerZ,
                    double upperZ,
                    bool autoThreshold,
@@ -210,7 +210,7 @@ Kst::Object::UpdateType KstImage::update(int update_counter) {
   writeLockInputsAndOutputs();
 
   if (_inputMatrices.contains(THEMATRIX)) {
-    KstMatrixPtr mp = _inputMatrices[THEMATRIX];
+    Kst::MatrixPtr mp = _inputMatrices[THEMATRIX];
     bool updated = UPDATE == mp->update(update_counter);
   
     if (updated || force) {
@@ -332,7 +332,7 @@ void KstImage::setThresholdToSpikeInsensitive(double per) {
 }
 
 
-void KstImage::changeToColorOnly(const QString &in_tag, KstMatrixPtr in_matrix,
+void KstImage::changeToColorOnly(const QString &in_tag, Kst::MatrixPtr in_matrix,
                                      double lowerZ, double upperZ, bool autoThreshold, const KstPalette &pal) {
   setTagName(Kst::ObjectTag(in_tag, Kst::ObjectTag::globalTagContext));  // FIXME: always top-level?
   if (_inputMatrices.contains(THEMATRIX)) {
@@ -350,7 +350,7 @@ void KstImage::changeToColorOnly(const QString &in_tag, KstMatrixPtr in_matrix,
 }
 
 
-void KstImage::changeToContourOnly(const QString &in_tag, KstMatrixPtr in_matrix,
+void KstImage::changeToContourOnly(const QString &in_tag, Kst::MatrixPtr in_matrix,
                                        int numContours, const QColor& contourColor, int contourWeight) {
   setTagName(Kst::ObjectTag(in_tag, Kst::ObjectTag::globalTagContext));  // FIXME: always top-level?
   if (_inputMatrices.contains(THEMATRIX)) {
@@ -373,7 +373,7 @@ void KstImage::changeToContourOnly(const QString &in_tag, KstMatrixPtr in_matrix
 }
 
 
-void KstImage::changeToColorAndContour(const QString &in_tag, KstMatrixPtr in_matrix,
+void KstImage::changeToColorAndContour(const QString &in_tag, Kst::MatrixPtr in_matrix,
                                                double lowerZ, double upperZ, bool autoThreshold, const KstPalette &pal,
                                                int numContours, const QColor& contourColor, int contourWeight) {
   setTagName(Kst::ObjectTag(in_tag, Kst::ObjectTag::globalTagContext));  // FIXME: always top-level?
@@ -397,7 +397,7 @@ void KstImage::changeToColorAndContour(const QString &in_tag, KstMatrixPtr in_ma
 
 void KstImage::matrixDimensions(double &x, double &y, double &width, double &height) {
   if (_inputMatrices.contains(THEMATRIX)) {
-    KstMatrixPtr mp = _inputMatrices[THEMATRIX];
+    Kst::MatrixPtr mp = _inputMatrices[THEMATRIX];
     if (_inputMatrices.contains(THEMATRIX)) {
       x = mp->minX();
       y = mp->minY();
@@ -487,7 +487,7 @@ QString KstImage::matrixTag() const {
 }
 
 
-KstMatrixPtr KstImage::matrix() const {
+Kst::MatrixPtr KstImage::matrix() const {
   if (_inputMatrices.contains(THEMATRIX)) {
     return _inputMatrices[THEMATRIX]; 
   } else {
@@ -530,7 +530,7 @@ KstCurveType KstImage::curveType() const {
 
 Kst::DataObjectPtr KstImage::providerDataObject() const {
   Kst::matrixList.lock().readLock();
-  KstMatrixPtr mp = *Kst::matrixList.findTag(matrixTag());
+  Kst::MatrixPtr mp = *Kst::matrixList.findTag(matrixTag());
   Kst::matrixList.lock().unlock();
   Kst::DataObjectPtr provider = 0L;
   if (mp) {
@@ -666,7 +666,7 @@ void KstImage::paint(const KstCurveRenderContext& context) {
         QList<double> lines = image->contourLines();
         QPoint lastPoint; // used to remember the previous point
         bool hasPrevBottom = false;
-        KstMatrixPtr mp = _inputMatrices[THEMATRIX];
+        Kst::MatrixPtr mp = _inputMatrices[THEMATRIX];
         for (int k = 0; k < lines.count(); ++k) {
           double lineK = lines[k];
           if (variableWeight) {

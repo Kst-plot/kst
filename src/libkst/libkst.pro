@@ -29,7 +29,7 @@ SOURCES += \
     # $(PROCPS_COPY) \
     $$PROCPS \
     kststring.cpp \
-    kstmatrix.cpp \
+    matrix.cpp \
     datamatrix.cpp \
     generatedmatrix.cpp \
     editablematrix.cpp \
@@ -38,12 +38,12 @@ SOURCES += \
     editablevector.cpp \
     datavector.cpp \
     kstvectordefaults.cpp \
-    kstmatrixdefaults.cpp \
+    matrixdefaults.cpp \
     kstprimitive.cpp \
     defaultprimitivenames.cpp \
     primitivefactory.cpp \
     datasourcefactory.cpp \
-    kstobjectcollection.cpp \
+    objectcollection.cpp \
     kstobjectlist.cpp \
     kstobjectmap.cpp \
     objecttag.cpp \
@@ -68,9 +68,9 @@ HEADERS += \
     kst_i18n.h \
     kstindex.h \
     kstmath.h \
-    kstmatrixdefaults.h \
-    kstmatrix.h \
-    kstobjectcollection.h \
+    matrixdefaults.h \
+    matrix.h \
+    objectcollection.h \
     object.h \
     kstprimitive.h \
     kstrevision.h \

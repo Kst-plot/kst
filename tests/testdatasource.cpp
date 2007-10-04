@@ -21,7 +21,7 @@
 #include <kstmath.h>
 #include <datavector.h>
 #include <datacollection.h>
-#include <kstdataobjectcollection.h>
+#include <dataobjectcollection.h>
 
 void TestDataSource::initTestCase() {
   QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
@@ -34,7 +34,7 @@ void TestDataSource::cleanupTestCase() {
   Kst::dataSourceList.clear();
   Kst::vectorList.clear();
   Kst::scalarList.clear();
-  KST::dataObjectList.clear();
+  Kst::dataObjectList.clear();
 }
 
 

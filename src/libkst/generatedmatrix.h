@@ -13,12 +13,12 @@
 #ifndef GENERATEDMATRIX_H
 #define GENERATEDMATRIX_H
 
-#include "kstmatrix.h"
+#include "matrix.h"
 #include "kst_export.h"
 
 namespace Kst {
 
-class KST_EXPORT GeneratedMatrix : public KstMatrix {
+class KST_EXPORT GeneratedMatrix : public Matrix {
   public:
     GeneratedMatrix(const QDomElement &e);
     GeneratedMatrix(ObjectTag tag, uint nX, uint nY,

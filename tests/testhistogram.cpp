@@ -16,18 +16,18 @@
 #include <vector.h>
 #include <ksthistogram.h>
 #include <datacollection.h>
-#include <kstdataobjectcollection.h>
+#include <dataobjectcollection.h>
 
 void TestHistogram::cleanupTestCase() {
   Kst::vectorList.clear();
   Kst::scalarList.clear();
-  KST::dataObjectList.clear();
+  Kst::dataObjectList.clear();
 }
 
 void TestHistogram::testHistogram() {
   Kst::VectorPtr vp = Kst::Vector::generateVector(0, 10, 100, Kst::ObjectTag::fromString("V1"));
   KstHistogramPtr h1 = new KstHistogram("H1", vp, 0, 10, 10, KST_HS_NUMBER);
-  KST::dataObjectList.append(h1.data());
+  Kst::dataObjectList.append(h1.data());
 
   QCOMPARE(h1->propertyString(), QLatin1String("Histogram: V1"));
   QVERIFY(!h1->realTimeAutoBin()); // should be false by default

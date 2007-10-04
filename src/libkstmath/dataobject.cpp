@@ -19,7 +19,7 @@
 #include "dataobject.h"
 
 #include "datacollection.h"
-#include "kstdataobjectcollection.h"
+#include "dataobjectcollection.h"
 #include "dataplugin.h"
 #include "debug.h"
 #include "kst_i18n.h"
@@ -76,7 +76,7 @@ DataObject::~DataObject() {
   vectorList.lock().unlock();
   
   matrixList.lock().writeLock();
-  for (KstMatrixMap::Iterator it = _outputMatrices.begin();
+  for (MatrixMap::Iterator it = _outputMatrices.begin();
        it != _outputMatrices.end();
        ++it) {
     matrixList.remove(it.value());
@@ -249,7 +249,7 @@ bool DataObject::loadInputs() {
   
   matrixList.lock().readLock();
   for (i = _inputMatrixLoadQueue.begin(); i != _inputMatrixLoadQueue.end(); ++i) {
-    KstMatrixList::Iterator it = matrixList.findTag((*i).second);
+    MatrixList::Iterator it = matrixList.findTag((*i).second);
     if (it != matrixList.end()) {
       _inputMatrices.insert((*i).first, *it);
     } else {
@@ -292,7 +292,7 @@ int DataObject::getUsage() const {
     }
   }
   
-  for (KstMatrixMap::ConstIterator i = _outputMatrices.begin(); i != _outputMatrices.end(); ++i) {
+  for (MatrixMap::ConstIterator i = _outputMatrices.begin(); i != _outputMatrices.end(); ++i) {
     if (i.value().data()) {
       rc += i.value()->getUsage() - 1;  
     }  
@@ -375,12 +375,12 @@ void DataObject::writeLockInputsAndOutputs() const {
     outputs += (*i).data();
   }
   
-  QList<KstMatrixPtr> ml = _inputMatrices.values();
-  for (QList<KstMatrixPtr>::Iterator i = ml.begin(); i != ml.end(); ++i) {
+  QList<MatrixPtr> ml = _inputMatrices.values();
+  for (QList<MatrixPtr>::Iterator i = ml.begin(); i != ml.end(); ++i) {
     inputs += (*i).data();
   }
   ml = _outputMatrices.values();
-  for (QList<KstMatrixPtr>::Iterator i = ml.begin(); i != ml.end(); ++i) {
+  for (QList<MatrixPtr>::Iterator i = ml.begin(); i != ml.end(); ++i) {
     outputs += (*i).data();
   }
 
@@ -424,7 +424,7 @@ void DataObject::unlockInputsAndOutputs() const {
   qDebug() << (void*)this << " (" << this->type() << ": " << this->tag().tagString() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << endl;
   #endif
 
-  for (KstMatrixMap::ConstIterator i = _outputMatrices.begin(); i != _outputMatrices.end(); ++i) {
+  for (MatrixMap::ConstIterator i = _outputMatrices.begin(); i != _outputMatrices.end(); ++i) {
     if (!(*i)) {
       qWarning() << "Output matrix for data object " << this->tag().displayString() << " is invalid." << endl;
     }
@@ -434,7 +434,7 @@ void DataObject::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (KstMatrixMap::ConstIterator i = _inputMatrices.begin(); i != _inputMatrices.end(); ++i) {
+  for (MatrixMap::ConstIterator i = _inputMatrices.begin(); i != _inputMatrices.end(); ++i) {
     if (!(*i)) {
       qWarning() << "Input matrix for data object " << this->tag().displayString() << " is invalid." << endl;
     }
@@ -517,9 +517,9 @@ const KstCurveHintList* DataObject::curveHints() const {
 
 
 bool DataObject::deleteDependents() {
-  KST::dataObjectList.lock().readLock();
-  DataObjectList dol = KST::dataObjectList;
-  KST::dataObjectList.lock().unlock();
+  dataObjectList.lock().readLock();
+  DataObjectList dol = dataObjectList;
+  dataObjectList.lock().unlock();
   for (DataObjectList::Iterator i = dol.begin(); i != dol.end(); ++i) {
     bool user = (*i)->uses(this);
     if (!user) {
@@ -535,9 +535,9 @@ bool DataObject::deleteDependents() {
     }
     if (user) {
       DataObjectPtr dop = *i;
-      KST::dataObjectList.lock().writeLock();
-      KST::dataObjectList.removeAll(dop);
-      KST::dataObjectList.lock().unlock();
+      dataObjectList.lock().writeLock();
+      dataObjectList.removeAll(dop);
+      dataObjectList.lock().unlock();
       dop->deleteDependents();
     }
   } 
@@ -548,9 +548,9 @@ bool DataObject::deleteDependents() {
 
 bool DataObject::duplicateDependents(QMap<DataObjectPtr, DataObjectPtr> &duplicatedMap) {
   // work with a copy of the data object list
-  KST::dataObjectList.lock().readLock();
-  DataObjectList dol = KST::dataObjectList;
-  KST::dataObjectList.lock().unlock();
+  dataObjectList.lock().readLock();
+  DataObjectList dol = dataObjectList;
+  dataObjectList.lock().unlock();
   
   for (DataObjectList::Iterator i = dol.begin(); i != dol.end(); ++i) {
     if ((*i)->uses(this)) {
@@ -558,9 +558,9 @@ bool DataObject::duplicateDependents(QMap<DataObjectPtr, DataObjectPtr> &duplica
         (duplicatedMap[*i])->replaceDependency(this, duplicatedMap[this]);
       } else {
         DataObjectPtr newObject = (*i)->makeDuplicate(duplicatedMap);
-        KST::dataObjectList.lock().writeLock();
-        KST::dataObjectList.append(newObject.data());
-        KST::dataObjectList.lock().unlock();
+        dataObjectList.lock().writeLock();
+        dataObjectList.append(newObject.data());
+        dataObjectList.lock().unlock();
         (duplicatedMap[*i])->replaceDependency(this, duplicatedMap[this]);
         (*i)->duplicateDependents(duplicatedMap);
       }
@@ -595,8 +595,8 @@ void DataObject::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObj
   }
   
   // matrices
-  for (KstMatrixMap::Iterator j = oldObject->outputMatrices().begin(); j != oldObject->outputMatrices().end(); ++j) {
-    for (KstMatrixMap::Iterator k = _inputMatrices.begin(); k != _inputMatrices.end(); ++k) {
+  for (MatrixMap::Iterator j = oldObject->outputMatrices().begin(); j != oldObject->outputMatrices().end(); ++j) {
+    for (MatrixMap::Iterator k = _inputMatrices.begin(); k != _inputMatrices.end(); ++k) {
       if (j.value().data() == k.value().data()) {
         // replace input with the output from newObject
         _inputMatrices[k.key()] = (newObject->outputMatrices())[j.key()]; 
@@ -655,8 +655,8 @@ void DataObject::replaceDependency(VectorPtr oldVector, VectorPtr newVector) {
 }
 
 
-void DataObject::replaceDependency(KstMatrixPtr oldMatrix, KstMatrixPtr newMatrix) {
-  for (KstMatrixMap::Iterator j = _inputMatrices.begin(); j != _inputMatrices.end(); ++j) {
+void DataObject::replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix) {
+  for (MatrixMap::Iterator j = _inputMatrices.begin(); j != _inputMatrices.end(); ++j) {
     if (j.value() == oldMatrix) {
       _inputMatrices[j.key()] = newMatrix;  
     }      
@@ -691,8 +691,8 @@ bool DataObject::uses(ObjectPtr p) const {
         }  
       }
     }
-  } else if (KstMatrixPtr matrix = kst_cast<KstMatrix>(p)) {
-    for (KstMatrixMap::ConstIterator j = _inputMatrices.begin(); j != _inputMatrices.end(); ++j) {
+  } else if (MatrixPtr matrix = kst_cast<Matrix>(p)) {
+    for (MatrixMap::ConstIterator j = _inputMatrices.begin(); j != _inputMatrices.end(); ++j) {
       if (j.value() == matrix) {
         return true;
       }
@@ -726,8 +726,8 @@ bool DataObject::uses(ObjectPtr p) const {
       }
     }
   
-    for (KstMatrixMap::Iterator j = obj->outputMatrices().begin(); j != obj->outputMatrices().end(); ++j) {
-      for (KstMatrixMap::ConstIterator k = _inputMatrices.begin(); k != _inputMatrices.end(); ++k) {
+    for (MatrixMap::Iterator j = obj->outputMatrices().begin(); j != obj->outputMatrices().end(); ++j) {
+      for (MatrixMap::ConstIterator k = _inputMatrices.begin(); k != _inputMatrices.end(); ++k) {
         if (j.value() == k.value()) {
           return true;
         }

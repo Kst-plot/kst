@@ -461,7 +461,7 @@ void KstEquation::replaceDependency(Kst::DataObjectPtr oldObject, Kst::DataObjec
   }
   
   // and dependencies on matrix stats (there won't be matrices themselves in the expression)
-  for (KstMatrixMap::Iterator j = oldObject->outputMatrices().begin(); j != oldObject->outputMatrices().end(); ++j) {
+  for (Kst::MatrixMap::Iterator j = oldObject->outputMatrices().begin(); j != oldObject->outputMatrices().end(); ++j) {
     QHashIterator<QString, Kst::Scalar*> scalarDictIter(j.value()->scalars());
     while (scalarDictIter.hasNext()) {
       scalarDictIter.next();
@@ -521,7 +521,7 @@ void KstEquation::replaceDependency(Kst::VectorPtr oldVector, Kst::VectorPtr new
 }
 
 
-void KstEquation::replaceDependency(KstMatrixPtr oldMatrix, KstMatrixPtr newMatrix) {
+void KstEquation::replaceDependency(Kst::MatrixPtr oldMatrix, Kst::MatrixPtr newMatrix) {
 
   QString newExp = _equation;
   

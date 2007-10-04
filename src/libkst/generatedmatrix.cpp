@@ -16,7 +16,7 @@
 
 namespace Kst {
 
-GeneratedMatrix::GeneratedMatrix(const QDomElement &e) : KstMatrix() {
+GeneratedMatrix::GeneratedMatrix(const QDomElement &e) : Matrix() {
   double in_xMin = 0, in_yMin = 0, in_xStep = 1, in_yStep = 1;
   double in_gradZMin = 0, in_gradZMax = 1;
   bool in_xDirection = true;
@@ -63,7 +63,7 @@ GeneratedMatrix::GeneratedMatrix(ObjectTag tag,
                        uint nX, uint nY, double minX, double minY,
                        double stepX, double stepY,
                        double gradZMin, double gradZMax,
-                       bool xDirection) : KstMatrix() {
+                       bool xDirection) : Matrix() {
   _saveable = true;
   _editable = true;
   _zSize = 0;

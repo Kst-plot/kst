@@ -1,13 +1,7 @@
 /***************************************************************************
-              kstobjectcollection.h: collection of KstObjects
-                             -------------------
-    begin                : November 22, 2006
-    copyright            : (C) 2006 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
+ *   copyright : (C) 2006 The University of Toronto                        *
+*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -15,8 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTOBJECTCOLLECTION_H
-#define KSTOBJECTCOLLECTION_H
+#ifndef OBJECTCOLLECTION_H
+#define OBJECTCOLLECTION_H
 
 // NAMEDEBUG: 0 for no debug, 1 for some debug, 2 for more debug, 3 for all debug
 #define NAMEDEBUG 0
@@ -28,58 +22,61 @@
 #include "object.h"
 #include "kstobjectlist.h"
 
+class KstString;
+
+
+namespace Kst {
+
 // Forward Declarations
 template <class T>
-class KstObjectTreeNode;
+class ObjectTreeNode;
 
-class KstMatrix;
 class Scalar;
-class KstString;
 class Vector;
 
 // Typedefs
 template <class T>
-class KstObjectNameIndex : public QHash<QString, QList<KstObjectTreeNode<T> *>* > {
+class ObjectNameIndex : public QHash<QString, QList<ObjectTreeNode<T> *>* > {
 };
 
 
 /** KstObject Naming Tree */
 template <class T>
-class KstObjectTreeNode {
+class ObjectTreeNode {
   public:
-    KstObjectTreeNode(const QString& tag = QString::null);
-    ~KstObjectTreeNode();
+    ObjectTreeNode(const QString& tag = QString::null);
+    ~ObjectTreeNode();
 
     QString nodeTag() const { return _tag; }
     QStringList fullTag() const;
 
     T *object() const { return _object; }
 
-    KstObjectTreeNode<T> *parent() const { return _parent; }
-    KstObjectTreeNode<T> *child(const QString& tag) const;
-    QMap<QString, KstObjectTreeNode<T> *> children() const { return _children; }
+    ObjectTreeNode<T> *parent() const { return _parent; }
+    ObjectTreeNode<T> *child(const QString& tag) const;
+    QMap<QString, ObjectTreeNode<T> *> children() const { return _children; }
 
-    KstObjectTreeNode<T> *descendant(const QStringList& tag);
-    const KstObjectTreeNode<T> *descendant(const QStringList& tag) const;
-    KstObjectTreeNode<T> *addDescendant(T *o, KstObjectNameIndex<T> *index = NULL);
-    bool removeDescendant(T *o, KstObjectNameIndex<T> *index = NULL);
+    ObjectTreeNode<T> *descendant(const QStringList& tag);
+    const ObjectTreeNode<T> *descendant(const QStringList& tag) const;
+    ObjectTreeNode<T> *addDescendant(T *o, ObjectNameIndex<T> *index = NULL);
+    bool removeDescendant(T *o, ObjectNameIndex<T> *index = NULL);
 
     void clear();
 
   private:
     QString _tag;
     QPointer<T> _object;
-    KstObjectTreeNode<T> *_parent;
-    QMap<QString, KstObjectTreeNode<T> *> _children;
+    ObjectTreeNode<T> *_parent;
+    QMap<QString, ObjectTreeNode<T> *> _children;
 };
 
 
 template <class T>
-class KstObjectCollection {
+class ObjectCollection {
   public:
-    KstObjectCollection();
-    KstObjectCollection(const KstObjectCollection& copy) { qDebug() << "CRASH! Deep copy required."; }
-    ~KstObjectCollection();
+    ObjectCollection();
+    ObjectCollection(const ObjectCollection& copy) { qDebug() << "CRASH! Deep copy required."; }
+    ~ObjectCollection();
 
     typedef typename KstObjectList<KstSharedPtr<T> >::const_iterator const_iterator;
     typedef typename KstObjectList<KstSharedPtr<T> >::iterator iterator;
@@ -99,7 +96,7 @@ class KstObjectCollection {
 
     void setUpdateDisplayTags(bool u);
 
-    KstObjectTreeNode<T> *nameTreeRoot() { return &_root; }
+    ObjectTreeNode<T> *nameTreeRoot() { return &_root; }
 
     // QValueList compatibility
     bool isEmpty() const { return _list.isEmpty(); }
@@ -125,24 +122,24 @@ class KstObjectCollection {
     KstRWLock& lock() const { return _list.lock(); }
 
   private:
-    QList<KstObjectTreeNode<T> *> relatedNodes(T *obj);
-    void relatedNodesHelper(T *o, KstObjectTreeNode<T> *n, QHash<int, KstObjectTreeNode<T>* >& nodes);
+    QList<ObjectTreeNode<T> *> relatedNodes(T *obj);
+    void relatedNodesHelper(T *o, ObjectTreeNode<T> *n, QHash<int, ObjectTreeNode<T>* >& nodes);
 
     // must be called AFTER the object is added to the index, while holding a write lock
     void updateAllDisplayTags();
     void updateDisplayTag(T *obj);
-    void updateDisplayTags(QList<KstObjectTreeNode<T> *> nodes);
+    void updateDisplayTags(QList<ObjectTreeNode<T> *> nodes);
 
     bool _updateDisplayTags;
 
-    KstObjectTreeNode<T> _root;
-    KstObjectNameIndex<T> _index;
+    ObjectTreeNode<T> _root;
+    ObjectNameIndex<T> _index;
     KstObjectList<KstSharedPtr<T> > _list; // owns the objects
 };
 
-// FIXME: this should probably return a KstObjectCollection
+// FIXME: this should probably return a ObjectCollection
 template<class T, class S>
-KstObjectList<KstSharedPtr<S> > kstObjectSubList(KstObjectCollection<T>& coll) {
+KstObjectList<KstSharedPtr<S> > ObjectSubList(ObjectCollection<T>& coll) {
   KstObjectList<KstSharedPtr<T> > list = coll.list();
   list.lock().readLock();
   KstObjectList<KstSharedPtr<S> > rc;
@@ -160,7 +157,7 @@ KstObjectList<KstSharedPtr<S> > kstObjectSubList(KstObjectCollection<T>& coll) {
 }
 
 template <class T>
-KstObjectTreeNode<T>::KstObjectTreeNode(const QString& tag) : _tag(tag),
+ObjectTreeNode<T>::ObjectTreeNode(const QString& tag) : _tag(tag),
                                                            _object(NULL),
                                                            _parent(NULL)
 {
@@ -168,15 +165,15 @@ KstObjectTreeNode<T>::KstObjectTreeNode(const QString& tag) : _tag(tag),
 
 
 template <class T>
-KstObjectTreeNode<T>::~KstObjectTreeNode() {
+ObjectTreeNode<T>::~ObjectTreeNode() {
   qDeleteAll(_children);
 }
 
 
 template <class T>
-QStringList KstObjectTreeNode<T>::fullTag() const {
+QStringList ObjectTreeNode<T>::fullTag() const {
   QStringList tag;
-  const KstObjectTreeNode *p = this;
+  const ObjectTreeNode *p = this;
 
   while (p) {
     if (!p->_tag.isEmpty()) {
@@ -190,8 +187,8 @@ QStringList KstObjectTreeNode<T>::fullTag() const {
 
 
 template <class T>
-KstObjectTreeNode<T> *KstObjectTreeNode<T>::child(const QString& tag) const {
-  typename QMap<QString, KstObjectTreeNode<T> *>::ConstIterator i = _children.find(tag);
+ObjectTreeNode<T> *ObjectTreeNode<T>::child(const QString& tag) const {
+  typename QMap<QString, ObjectTreeNode<T> *>::ConstIterator i = _children.find(tag);
   if (i != _children.end()) {
     return *i;
   }
@@ -200,8 +197,8 @@ KstObjectTreeNode<T> *KstObjectTreeNode<T>::child(const QString& tag) const {
 
 
 template <class T>
-const KstObjectTreeNode<T> *KstObjectTreeNode<T>::descendant(const QStringList& tag) const {
-  const KstObjectTreeNode<T> *currNode = this;
+const ObjectTreeNode<T> *ObjectTreeNode<T>::descendant(const QStringList& tag) const {
+  const ObjectTreeNode<T> *currNode = this;
   for (QStringList::ConstIterator i = tag.begin(); i != tag.end(); ++i) {
     currNode = currNode->child(*i);
     if (!currNode) {
@@ -214,8 +211,8 @@ const KstObjectTreeNode<T> *KstObjectTreeNode<T>::descendant(const QStringList& 
 
 
 template <class T>
-KstObjectTreeNode<T> *KstObjectTreeNode<T>::descendant(const QStringList& tag) {
-  KstObjectTreeNode<T> *currNode = this;
+ObjectTreeNode<T> *ObjectTreeNode<T>::descendant(const QStringList& tag) {
+  ObjectTreeNode<T> *currNode = this;
   for (QStringList::ConstIterator i = tag.begin(); i != tag.end(); ++i) {
     currNode = currNode->child(*i);
     if (!currNode) {
@@ -228,25 +225,25 @@ KstObjectTreeNode<T> *KstObjectTreeNode<T>::descendant(const QStringList& tag) {
 
 
 template <class T>
-KstObjectTreeNode<T> *KstObjectTreeNode<T>::addDescendant(T *o, KstObjectNameIndex<T> *index) {
+ObjectTreeNode<T> *ObjectTreeNode<T>::addDescendant(T *o, ObjectNameIndex<T> *index) {
   if (!o) {
     return NULL;
   }
 
   QStringList tag = o->tag().fullTag();
 
-  KstObjectTreeNode<T> *currNode = this;
+  ObjectTreeNode<T> *currNode = this;
   for (QStringList::ConstIterator i = tag.begin(); i != tag.end(); ++i) {
-    KstObjectTreeNode<T> *nextNode = currNode->child(*i);
+    ObjectTreeNode<T> *nextNode = currNode->child(*i);
     if (!nextNode) {
-      nextNode = new KstObjectTreeNode<T>(*i);
+      nextNode = new ObjectTreeNode<T>(*i);
       nextNode->_parent = currNode;
       currNode->_children[*i] = nextNode;
       if (index) {
-        QList<KstObjectTreeNode<T> *> *l = 0;
-        typename KstObjectNameIndex<T>::Iterator it = index->find(*i);
+        QList<ObjectTreeNode<T> *> *l = 0;
+        typename ObjectNameIndex<T>::Iterator it = index->find(*i);
         if (it == index->end()) {
-          l = new QList<KstObjectTreeNode<T> *>;
+          l = new QList<ObjectTreeNode<T> *>;
           index->insert(*i, l);
         } else {
           l = *it;
@@ -273,16 +270,16 @@ KstObjectTreeNode<T> *KstObjectTreeNode<T>::addDescendant(T *o, KstObjectNameInd
 
 
 template <class T>
-bool KstObjectTreeNode<T>::removeDescendant(T *o, KstObjectNameIndex<T> *index) {
+bool ObjectTreeNode<T>::removeDescendant(T *o, ObjectNameIndex<T> *index) {
   if (!o) {
     return false;
   }
 
   QStringList tag = o->tag().fullTag();
 
-  KstObjectTreeNode<T> *currNode = this;
+  ObjectTreeNode<T> *currNode = this;
   for (QStringList::ConstIterator i = tag.begin(); i != tag.end(); ++i) {
-    KstObjectTreeNode<T> *nextNode = currNode->child(*i);
+    ObjectTreeNode<T> *nextNode = currNode->child(*i);
     if (!nextNode) {
 #if NAMEDEBUG > 0
       qDebug() << "Tried to remove KstObject from naming tree" << o->tag().tagString() << ", but the node is not in the tree";
@@ -302,13 +299,13 @@ bool KstObjectTreeNode<T>::removeDescendant(T *o, KstObjectNameIndex<T> *index) 
     QStringList::ConstIterator i = tag.end();
     while (i != tag.begin() && currNode->_object.isNull() && currNode->_children.isEmpty()) {
       --i;
-      KstObjectTreeNode<T> *lastNode = currNode->_parent;
+      ObjectTreeNode<T> *lastNode = currNode->_parent;
       lastNode->_children.remove(*i);
 #if NAMEDEBUG > 1
       qDebug() << "Removed naming tree node" << currNode->fullTag().join(Kst::ObjectTag::tagSeparator);
 #endif
       if (index) {
-        QList<KstObjectTreeNode<T> *> *l = index->take(*i);
+        QList<ObjectTreeNode<T> *> *l = index->take(*i);
         if (l) {
           l->removeAll(currNode);
           index->insert(*i, l);
@@ -325,7 +322,7 @@ bool KstObjectTreeNode<T>::removeDescendant(T *o, KstObjectNameIndex<T> *index) 
 }
 
 template <class T>
-void KstObjectTreeNode<T>::clear() {
+void ObjectTreeNode<T>::clear() {
   _tag = QString::null;
   _parent = 0;
   _object = 0;
@@ -335,32 +332,32 @@ void KstObjectTreeNode<T>::clear() {
 
 
 template <class T>
-KstObjectCollection<T>::KstObjectCollection() : _updateDisplayTags(true)
+ObjectCollection<T>::ObjectCollection() : _updateDisplayTags(true)
 {
 }
 
 
 template <class T>
-KstObjectCollection<T>::~KstObjectCollection()
+ObjectCollection<T>::~ObjectCollection()
 {
   qDeleteAll(_index);
 }
 
 
 template <class T>
-bool KstObjectCollection<T>::addObject(T *o) {
+bool ObjectCollection<T>::addObject(T *o) {
   if (!o) {
     return false;
   }
 
   _list.append(o);
 
-  QList<KstObjectTreeNode<T> *> relNodes;
+  QList<ObjectTreeNode<T> *> relNodes;
   if (_updateDisplayTags) {
     relNodes = relatedNodes(o);
   }
 
-  KstObjectTreeNode<T> *n = _root.addDescendant(o, &_index);
+  ObjectTreeNode<T> *n = _root.addDescendant(o, &_index);
 
   if (n) {
     if (_updateDisplayTags) {
@@ -376,7 +373,7 @@ bool KstObjectCollection<T>::addObject(T *o) {
 
 
 template <class T>
-bool KstObjectCollection<T>::removeObject(T *o) {
+bool ObjectCollection<T>::removeObject(T *o) {
   if (!o) {
     return false;
   }
@@ -392,7 +389,7 @@ bool KstObjectCollection<T>::removeObject(T *o) {
   qDebug() << "Removing object from the collection: " << o->tag().tagString();
 #endif
 
-  QList<KstObjectTreeNode<T> *> relNodes;
+  QList<ObjectTreeNode<T> *> relNodes;
   if (_updateDisplayTags) {
 #if NAMEDEBUG > 2
     qDebug() << "  fetching related nodes";
@@ -428,12 +425,12 @@ bool KstObjectCollection<T>::removeObject(T *o) {
 // Updates the display components of all related objects. This can be somewhat
 // expensive, but it shouldn't happen very often.
 template <class T>
-void KstObjectCollection<T>::doRename(T *o, const Kst::ObjectTag& newTag) {
+void ObjectCollection<T>::doRename(T *o, const Kst::ObjectTag& newTag) {
   if (!o) {
     return;
   }
 
-  QList<KstObjectTreeNode<T> *> relNodes;
+  QList<ObjectTreeNode<T> *> relNodes;
   if (_updateDisplayTags) {
     relNodes = relatedNodes(o);
   }
@@ -455,7 +452,7 @@ void KstObjectCollection<T>::doRename(T *o, const Kst::ObjectTag& newTag) {
 
 
 template <class T>
-KstSharedPtr<T> KstObjectCollection<T>::retrieveObject(QStringList tag) const {
+KstSharedPtr<T> ObjectCollection<T>::retrieveObject(QStringList tag) const {
 #if NAMEDEBUG > 1
   qDebug() << "Retrieving object with tag" << tag.join(Kst::ObjectTag::tagSeparator);
 #endif
@@ -464,14 +461,14 @@ KstSharedPtr<T> KstObjectCollection<T>::retrieveObject(QStringList tag) const {
     return NULL;
   }
 
-  typename KstObjectNameIndex<T>::ConstIterator ni = _index.find(tag.first());
+  typename ObjectNameIndex<T>::ConstIterator ni = _index.find(tag.first());
   if (ni != _index.end() && (*ni)->count() == 1) {
     // the first tag element is unique, so use the index
 #if NAMEDEBUG > 2
     qDebug() << "  first tag element" << tag.first() << "is unique in index";
 #endif
 
-    KstObjectTreeNode<T> *n = (*ni)->first();
+    ObjectTreeNode<T> *n = (*ni)->first();
     if (n) {
       tag.pop_front();
       n = n->descendant(tag);
@@ -485,7 +482,7 @@ KstSharedPtr<T> KstObjectCollection<T>::retrieveObject(QStringList tag) const {
   }
 
   // search through the tree
-  const KstObjectTreeNode<T> *n = _root.descendant(tag);
+  const ObjectTreeNode<T> *n = _root.descendant(tag);
   if (n) {
 #if NAMEDEBUG > 1
     qDebug() << "  found node, returning object " << (void*) n->object();
@@ -500,7 +497,7 @@ KstSharedPtr<T> KstObjectCollection<T>::retrieveObject(QStringList tag) const {
 }
 
 template <class T>
-KstSharedPtr<T> KstObjectCollection<T>::retrieveObject(const Kst::ObjectTag& tag) const {
+KstSharedPtr<T> ObjectCollection<T>::retrieveObject(const Kst::ObjectTag& tag) const {
   if (!tag.isValid()) {
     return NULL;
   }
@@ -509,18 +506,18 @@ KstSharedPtr<T> KstObjectCollection<T>::retrieveObject(const Kst::ObjectTag& tag
 }
 
 template <class T>
-bool KstObjectCollection<T>::tagExists(const QString& tag) const {
-  typename KstObjectNameIndex<T>::ConstIterator ni = _index.find(tag);
+bool ObjectCollection<T>::tagExists(const QString& tag) const {
+  typename ObjectNameIndex<T>::ConstIterator ni = _index.find(tag);
   return ni != _index.end() && (*ni)->count() > 0;
 }
 
 template <class T>
-bool KstObjectCollection<T>::tagExists(const Kst::ObjectTag& tag) const {
+bool ObjectCollection<T>::tagExists(const Kst::ObjectTag& tag) const {
   return 0 != _root.descendant(tag.fullTag());
 }
 
 template <class T>
-Kst::ObjectTag KstObjectCollection<T>::shortestUniqueTag(const Kst::ObjectTag& tag) const {
+Kst::ObjectTag ObjectCollection<T>::shortestUniqueTag(const Kst::ObjectTag& tag) const {
   QStringList in_tag = tag.fullTag();
   QStringList out_tag;
 
@@ -533,7 +530,7 @@ Kst::ObjectTag KstObjectCollection<T>::shortestUniqueTag(const Kst::ObjectTag& t
   do {
     --it;
     out_tag.prepend(*it);
-    typename KstObjectNameIndex<T>::ConstIterator ni = _index.find(*it);
+    typename ObjectNameIndex<T>::ConstIterator ni = _index.find(*it);
     if (ni != _index.end() && (*ni)->count() == 1) {
       // found unique tag
       break;
@@ -544,7 +541,7 @@ Kst::ObjectTag KstObjectCollection<T>::shortestUniqueTag(const Kst::ObjectTag& t
 }
 
 template <class T>
-unsigned int KstObjectCollection<T>::componentsForUniqueTag(const Kst::ObjectTag& tag) const {
+unsigned int ObjectCollection<T>::componentsForUniqueTag(const Kst::ObjectTag& tag) const {
   QStringList in_tag = tag.fullTag();
   unsigned int components = 0;
 
@@ -558,7 +555,7 @@ unsigned int KstObjectCollection<T>::componentsForUniqueTag(const Kst::ObjectTag
   do {
     --it;
     components++;
-    typename KstObjectNameIndex<T>::ConstIterator ni = _index.find(*it);
+    typename ObjectNameIndex<T>::ConstIterator ni = _index.find(*it);
     if (ni != _index.end() && (*ni)->count() == 1) {
       // found unique tag
       break;
@@ -571,17 +568,17 @@ unsigned int KstObjectCollection<T>::componentsForUniqueTag(const Kst::ObjectTag
 
 // KstObjectList compatibility
 template <class T>
-void KstObjectCollection<T>::append(T *o) {
+void ObjectCollection<T>::append(T *o) {
   addObject(o);
 }
 
 template <class T>
-void KstObjectCollection<T>::remove(T *o) {
+void ObjectCollection<T>::remove(T *o) {
   removeObject(o);
 }
 
 template <class T>
-void KstObjectCollection<T>::clear() {
+void ObjectCollection<T>::clear() {
 #if NAMEDEBUG > 0
   qDebug () << "Clearing object collection " << (void*) this;
 #endif
@@ -591,12 +588,12 @@ void KstObjectCollection<T>::clear() {
 }
 
 template <class T>
-QStringList KstObjectCollection<T>::tagNames() const {
+QStringList ObjectCollection<T>::tagNames() const {
   return _list.tagNames();
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::Iterator KstObjectCollection<T>::removeTag(const QString& x) {
+typename KstObjectList<KstSharedPtr<T> >::Iterator ObjectCollection<T>::removeTag(const QString& x) {
   // find object in tree
   T *obj = retrieveObject(Kst::ObjectTag::fromString(x));
 
@@ -614,7 +611,7 @@ typename KstObjectList<KstSharedPtr<T> >::Iterator KstObjectCollection<T>::remov
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::Iterator KstObjectCollection<T>::findTag(const Kst::ObjectTag& x) {
+typename KstObjectList<KstSharedPtr<T> >::Iterator ObjectCollection<T>::findTag(const Kst::ObjectTag& x) {
   T *obj = retrieveObject(x);
   if (obj) {
     // Can't use qFind() due to ambiguity.  Also have to do ugly implementation.
@@ -651,12 +648,12 @@ typename KstObjectList<KstSharedPtr<T> >::Iterator KstObjectCollection<T>::findT
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::Iterator KstObjectCollection<T>::findTag(const QString& x) {
+typename KstObjectList<KstSharedPtr<T> >::Iterator ObjectCollection<T>::findTag(const QString& x) {
   return findTag(Kst::ObjectTag::fromString(x));
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::ConstIterator KstObjectCollection<T>::findTag(const Kst::ObjectTag& x) const {
+typename KstObjectList<KstSharedPtr<T> >::ConstIterator ObjectCollection<T>::findTag(const Kst::ObjectTag& x) const {
   T *obj = retrieveObject(x);
   if (obj) {
     return _list.find(obj);
@@ -675,33 +672,33 @@ typename KstObjectList<KstSharedPtr<T> >::ConstIterator KstObjectCollection<T>::
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::ConstIterator KstObjectCollection<T>::findTag(const QString& x) const {
+typename KstObjectList<KstSharedPtr<T> >::ConstIterator ObjectCollection<T>::findTag(const QString& x) const {
   return findTag(Kst::ObjectTag::fromString(x));
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::Iterator KstObjectCollection<T>::begin() {
+typename KstObjectList<KstSharedPtr<T> >::Iterator ObjectCollection<T>::begin() {
   return _list.begin();
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::ConstIterator KstObjectCollection<T>::begin() const {
+typename KstObjectList<KstSharedPtr<T> >::ConstIterator ObjectCollection<T>::begin() const {
   return _list.begin();
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::Iterator KstObjectCollection<T>::end() {
+typename KstObjectList<KstSharedPtr<T> >::Iterator ObjectCollection<T>::end() {
   return _list.end();
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::ConstIterator KstObjectCollection<T>::end() const {
+typename KstObjectList<KstSharedPtr<T> >::ConstIterator ObjectCollection<T>::end() const {
   return _list.end();
 }
 
 
 template <class T>
-void KstObjectCollection<T>::setUpdateDisplayTags(bool u) {
+void ObjectCollection<T>::setUpdateDisplayTags(bool u) {
   if (u && !_updateDisplayTags) {
     // turning on _updateDisplayTags, so do an update
     updateAllDisplayTags();
@@ -713,7 +710,7 @@ void KstObjectCollection<T>::setUpdateDisplayTags(bool u) {
 
 // update the display tags for all the objects in the collection
 template <class T>
-void KstObjectCollection<T>::updateAllDisplayTags() {
+void ObjectCollection<T>::updateAllDisplayTags() {
   Q_ASSERT(lock().myLockStatus() == KstRWLock::WRITELOCKED);
 
   for (typename KstObjectList<KstSharedPtr<T> >::Iterator i = _list.begin(); i != _list.end(); ++i) {
@@ -723,7 +720,7 @@ void KstObjectCollection<T>::updateAllDisplayTags() {
 
 // must be called AFTER the object is added to the index, while holding a write lock
 template <class T>
-void KstObjectCollection<T>::updateDisplayTag(T *obj) {
+void ObjectCollection<T>::updateDisplayTag(T *obj) {
   if (!obj) {
     return;
   }
@@ -744,8 +741,8 @@ void KstObjectCollection<T>::updateDisplayTag(T *obj) {
 }
 
 template <class T>
-void KstObjectCollection<T>::updateDisplayTags(QList<KstObjectTreeNode<T> *> nodes) {
-  for (typename QList<KstObjectTreeNode<T> *>::Iterator i = nodes.begin(); i != nodes.end(); ++i) {
+void ObjectCollection<T>::updateDisplayTags(QList<ObjectTreeNode<T> *> nodes) {
+  for (typename QList<ObjectTreeNode<T> *>::Iterator i = nodes.begin(); i != nodes.end(); ++i) {
     updateDisplayTag((*i)->object());
   }
 }
@@ -753,7 +750,7 @@ void KstObjectCollection<T>::updateDisplayTags(QList<KstObjectTreeNode<T> *> nod
 
 // recursion helper
 template <class T>
-void KstObjectCollection<T>::relatedNodesHelper(T *o, KstObjectTreeNode<T> *n, QHash<int, KstObjectTreeNode<T>* >& nodes) {
+void ObjectCollection<T>::relatedNodesHelper(T *o, ObjectTreeNode<T> *n, QHash<int, ObjectTreeNode<T>* >& nodes) {
   Q_ASSERT(o);
   Q_ASSERT(n);
   if (n->object() && n->object() != o && !nodes.contains((long)n)) {
@@ -765,8 +762,8 @@ void KstObjectCollection<T>::relatedNodesHelper(T *o, KstObjectTreeNode<T> *n, Q
 
   if (!n->children().isEmpty()) {
     // non-leaf node, so recurse
-    QMap<QString, KstObjectTreeNode<T> *> children = n->children();
-    for (typename QMap<QString, KstObjectTreeNode<T> *>::ConstIterator i = children.begin(); i != children.end(); ++i) {
+    QMap<QString, ObjectTreeNode<T> *> children = n->children();
+    for (typename QMap<QString, ObjectTreeNode<T> *>::ConstIterator i = children.begin(); i != children.end(); ++i) {
       relatedNodesHelper(o, *i, nodes);
     }
   }
@@ -777,9 +774,9 @@ void KstObjectCollection<T>::relatedNodesHelper(T *o, KstObjectTreeNode<T> *n, Q
 //
 // There should not be any duplicates in the returned list.
 template <class T>
-QList<KstObjectTreeNode<T> *> KstObjectCollection<T>::relatedNodes(T *o) {
-  QHash<int, KstObjectTreeNode<T>* > nodes;
-  QList<KstObjectTreeNode<T> *> outNodes;
+QList<ObjectTreeNode<T> *> ObjectCollection<T>::relatedNodes(T *o) {
+  QHash<int, ObjectTreeNode<T>* > nodes;
+  QList<ObjectTreeNode<T> *> outNodes;
 
   if (!o) {
     return outNodes;
@@ -793,16 +790,16 @@ QList<KstObjectTreeNode<T> *> KstObjectCollection<T>::relatedNodes(T *o) {
   QStringList ft = o->tag().fullTag();
 
   for (QStringList::ConstIterator i = ft.begin(); i != ft.end(); ++i) {
-    typename KstObjectNameIndex<T>::ConstIterator ni = _index.find(*i);
+    typename ObjectNameIndex<T>::ConstIterator ni = _index.find(*i);
     if (ni != _index.end()) {
-      QList<KstObjectTreeNode<T> *> *nodeList = *ni;
-      for (typename QList<KstObjectTreeNode<T> *>::ConstIterator i2 = nodeList->begin(); i2 != nodeList->end(); ++i2) {
+      QList<ObjectTreeNode<T> *> *nodeList = *ni;
+      for (typename QList<ObjectTreeNode<T> *>::ConstIterator i2 = nodeList->begin(); i2 != nodeList->end(); ++i2) {
         relatedNodesHelper(o, *i2, nodes);
       }
     }
   }
 
-  QHashIterator<int, KstObjectTreeNode<T>* > j(nodes);
+  QHashIterator<int, ObjectTreeNode<T>* > j(nodes);
   while (j.hasNext()) {
     j.next();
     outNodes << j.value();
@@ -810,6 +807,7 @@ QList<KstObjectTreeNode<T> *> KstObjectCollection<T>::relatedNodes(T *o) {
   return outNodes;
 }
 
+}
 #endif
 
 // vim: ts=2 sw=2 et

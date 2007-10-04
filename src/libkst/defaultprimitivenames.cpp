@@ -17,7 +17,7 @@
 
 #include "datacollection.h"
 #include "object.h"
-#include "kstobjectcollection.h"
+#include "objectcollection.h"
 #include "defaultprimitivenames.h"
 
 #include <qregexp.h>
@@ -54,7 +54,7 @@ QString suggestMatrixName(const QString& vectorName) {
 
 
 template <class T>
-ObjectTag suggestUniqueTag(const ObjectTag& baseTag, const KstObjectCollection<T>& coll) {
+ObjectTag suggestUniqueTag(const ObjectTag& baseTag, const ObjectCollection<T>& coll) {
   int i = 0;
   ObjectTag tag = baseTag;
 

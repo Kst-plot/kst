@@ -32,12 +32,12 @@ MatrixSelector::~MatrixSelector() {
 }
 
 
-KstMatrixPtr MatrixSelector::selectedMatrix() const {
+MatrixPtr MatrixSelector::selectedMatrix() const {
   return 0;
 }
 
 
-void MatrixSelector::setSelectedMatrix(KstMatrixPtr selectedMatrix) {
+void MatrixSelector::setSelectedMatrix(MatrixPtr selectedMatrix) {
   Q_UNUSED(selectedMatrix);
 }
 

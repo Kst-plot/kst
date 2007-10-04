@@ -21,7 +21,7 @@
 #include <math.h>
 #include <qhash.h>
 #include <qpointer.h>
-#include "kstobjectcollection.h"
+#include "objectcollection.h"
 #include "kstprimitive.h"
 #include "scalar.h"
 #include "kst_export.h"
@@ -211,7 +211,7 @@ class Vector : public KstPrimitive {
 
 typedef KstObjectList<VectorPtr> VectorList;
 typedef KstObjectMap<VectorPtr> VectorMap;
-typedef KstObjectCollection<Vector> VectorCollection;
+typedef ObjectCollection<Vector> VectorCollection;
 
 }
 

@@ -28,7 +28,7 @@ DataSourceList dataSourceList;
 VectorCollection vectorList;
 
 /** The list of matrices that are being read */
-KstMatrixCollection matrixList;
+MatrixCollection matrixList;
 
 /** The list of Scalars which have been generated */
 ScalarCollection scalarList;

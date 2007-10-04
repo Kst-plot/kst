@@ -19,7 +19,7 @@
 
 #include "enodes.h"
 #include "datacollection.h"
-#include "kstdataobjectcollection.h"
+#include "dataobjectcollection.h"
 #include "ksttimers.h"
 #include "labelparser.h"
 

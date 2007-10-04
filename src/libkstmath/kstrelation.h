@@ -149,8 +149,8 @@ class KST_EXPORT KstRelation : public Kst::Object {
     Kst::ScalarMap _outputScalars;
     KstStringMap _inputStrings;
     KstStringMap _outputStrings;
-    KstMatrixMap _inputMatrices;
-    KstMatrixMap _outputMatrices;
+    Kst::MatrixMap _inputMatrices;
+    Kst::MatrixMap _outputMatrices;
 
     double _ns_maxx;
     double _ns_minx;

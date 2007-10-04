@@ -20,7 +20,7 @@
 
 #include <qdom.h>
 #include "kstprimitive.h"
-#include "kstobjectcollection.h"
+#include "objectcollection.h"
 
 class QXmlStreamWriter;
 
@@ -88,7 +88,7 @@ class KST_EXPORT Scalar : public KstPrimitive {
 typedef KstSharedPtr<Scalar> ScalarPtr;
 typedef KstObjectList<ScalarPtr> ScalarList;
 typedef KstObjectMap<ScalarPtr> ScalarMap;
-typedef KstObjectCollection<Scalar> ScalarCollection;
+typedef ObjectCollection<Scalar> ScalarCollection;
 
 }
 

@@ -22,7 +22,7 @@
 #define protected public
 #include "datavector.h"
 #include "datacollection.h"
-#include "kstdataobjectcollection.h"
+#include "dataobjectcollection.h"
 #undef protected
 
 void Usage() {
@@ -36,7 +36,7 @@ void Usage() {
 static void exitHelper() {
   Kst::vectorList.clear();
   Kst::scalarList.clear();
-  KST::dataObjectList.clear();
+  Kst::dataObjectList.clear();
 }
 
 int main(int argc, char *argv[]) {

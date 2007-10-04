@@ -17,7 +17,7 @@
 
 namespace Kst {
 
-MatrixModel::MatrixModel(KstMatrixPtr m)
+MatrixModel::MatrixModel(MatrixPtr m)
 : QAbstractItemModel(), _m(m) {
   assert(m.data());
 }

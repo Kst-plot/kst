@@ -1,22 +1,16 @@
 /***************************************************************************
-                   kstmatrix.cpp: 2D matrix type for kst
-                             -------------------
-    begin                : July 2004
-    copyright            : (C) 2004 University of British Columbia
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
+ *   copyright : (C) 2004  University of British Columbia                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
- *   Permission is granted to link with any opensource library             *
  *                                                                         *
  ***************************************************************************/
 
-#include "kstmatrix.h"
+#include "matrix.h"
 
 #include <stdlib.h>
 #include <math.h>
@@ -33,9 +27,11 @@
 // used for resizing; set to 1 for loop zeroing, 2 to use memset
 #define ZERO_MEMORY 2
 
+namespace Kst {
+
 static int anonymousMatrixCounter = 1;
 
-KstMatrix::KstMatrix(Kst::ObjectTag in_tag, Kst::Object *provider, uint nX, uint nY, double minX, double minY, double stepX, double stepY)
+Matrix::Matrix(ObjectTag in_tag, Object *provider, uint nX, uint nY, double minX, double minY, double stepX, double stepY)
 : KstPrimitive(provider) {
  
   _nX = nX;
@@ -56,31 +52,31 @@ KstMatrix::KstMatrix(Kst::ObjectTag in_tag, Kst::Object *provider, uint nX, uint
   if (!in_tag.isValid()) {
     do {
       _tag = i18n("Anonymous Matrix %1", anonymousMatrixCounter++);
-    } while (Kst::Data::self()->matrixTagNameNotUnique(_tag, false));
-    Kst::Object::setTagName(Kst::ObjectTag(_tag, in_tag.context()));
+    } while (Data::self()->matrixTagNameNotUnique(_tag, false));
+    Object::setTagName(ObjectTag(_tag, in_tag.context()));
   } else {
-    Kst::Object::setTagName(Kst::suggestUniqueMatrixTag(in_tag));
+    Object::setTagName(suggestUniqueMatrixTag(in_tag));
   }
 
   createScalars();
   setDirty();
 
-  Kst::matrixList.lock().writeLock();
-  Kst::matrixList.append(this);
-  Kst::matrixList.lock().unlock();
+  matrixList.lock().writeLock();
+  matrixList.append(this);
+  matrixList.lock().unlock();
 }
 
 
-KstMatrix::~KstMatrix() {
+Matrix::~Matrix() {
   // get rid of the stat scalars
-  Kst::scalarList.lock().writeLock();
-  Kst::scalarList.setUpdateDisplayTags(false);
-  for (QHash<QString, Kst::Scalar*>::Iterator iter = _statScalars.begin(); iter != _statScalars.end(); ++iter) {
-    Kst::scalarList.remove(iter.value());
+  scalarList.lock().writeLock();
+  scalarList.setUpdateDisplayTags(false);
+  for (QHash<QString, Scalar*>::Iterator iter = _statScalars.begin(); iter != _statScalars.end(); ++iter) {
+    scalarList.remove(iter.value());
     iter.value()->_KShared_unref();  
   }
-  Kst::scalarList.setUpdateDisplayTags(true);
-  Kst::scalarList.lock().unlock();
+  scalarList.setUpdateDisplayTags(true);
+  scalarList.lock().unlock();
 
   if (_z) {
     free(_z);
@@ -89,12 +85,12 @@ KstMatrix::~KstMatrix() {
 }
 
 
-int KstMatrix::sampleCount() const {
+int Matrix::sampleCount() const {
   return _nX*_nY;  
 }
     
 
-double KstMatrix::value(double x, double y, bool* ok) const {
+double Matrix::value(double x, double y, bool* ok) const {
   int x_index = (int)floor((x - _minX) / (double)_stepX);
   int y_index = (int)floor((y - _minY) / (double)_stepY);
 
@@ -102,7 +98,7 @@ double KstMatrix::value(double x, double y, bool* ok) const {
 }
     
 
-double KstMatrix::valueRaw(int x, int y, bool* ok) const {
+double Matrix::valueRaw(int x, int y, bool* ok) const {
   int index = zIndex(x,y);
   if ((index < 0) || !finite(_z[index]) || KST_ISNAN(_z[index])) {
     if (ok) {
@@ -117,7 +113,7 @@ double KstMatrix::valueRaw(int x, int y, bool* ok) const {
 }
 
 
-int KstMatrix::zIndex(int x, int y) const {
+int Matrix::zIndex(int x, int y) const {
   if (x >= _nX || x < 0 || y >= _nY || y < 0) {
     return -1;
   }
@@ -129,14 +125,14 @@ int KstMatrix::zIndex(int x, int y) const {
 }
 
 
-bool KstMatrix::setValue(double x, double y, double z) {
+bool Matrix::setValue(double x, double y, double z) {
   int x_index = (int)floor((x - _minX) / (double)_stepX);
   int y_index = (int)floor((y - _minY) / (double)_stepY);
   return setValueRaw(x_index, y_index, z);
 }
 
 
-bool KstMatrix::setValueRaw(int x, int y, double z) {
+bool Matrix::setValueRaw(int x, int y, double z) {
   int index = zIndex(x,y);
   if (index < 0) {
     return false;  
@@ -145,16 +141,16 @@ bool KstMatrix::setValueRaw(int x, int y, double z) {
   return true;
 }
 
-double KstMatrix::minValue() const {
+double Matrix::minValue() const {
   return _statScalars["min"]->value();  
 }
 
 
-double KstMatrix::maxValue() const {
+double Matrix::maxValue() const {
   return _statScalars["max"]->value();  
 }
 
-double KstMatrix::minValueNoSpike() const {
+double Matrix::minValueNoSpike() const {
   // FIXME: it is expensive to calcNoSpikeRange
   // so we have chosen here to only call it expicitly
   // and no attempt is made to check if it is still up to date...
@@ -163,7 +159,7 @@ double KstMatrix::minValueNoSpike() const {
   return _minNoSpike;
 }
 
-double KstMatrix::maxValueNoSpike() const {
+double Matrix::maxValueNoSpike() const {
   // FIXME: it is expensive to calcNoSpikeRange
   // so we have chosen here to only call it expicitly
   // and no attempt is made to check if it is still up to date...
@@ -173,7 +169,7 @@ double KstMatrix::maxValueNoSpike() const {
   return _maxNoSpike;
 }
 
-void KstMatrix::calcNoSpikeRange(double per) {
+void Matrix::calcNoSpikeRange(double per) {
   double *min_list, *max_list, min_of_max, max_of_min;
   int n_list;
   int max_n = 50000; // the most samples we will look at...
@@ -267,30 +263,30 @@ void KstMatrix::calcNoSpikeRange(double per) {
   free(max_list);
 }
 
-double KstMatrix::meanValue() const {
+double Matrix::meanValue() const {
   return _statScalars["mean"]->value();
 }
 
-double KstMatrix::minValuePositive() const {
+double Matrix::minValuePositive() const {
   return _statScalars["minpos"]->value();  
 }
 
-int KstMatrix::numNew() const {
+int Matrix::numNew() const {
   return _numNew;  
 }
 
 
-void KstMatrix::resetNumNew() {
+void Matrix::resetNumNew() {
   _numNew = 0;  
 }
 
     
-QString KstMatrix::label() const {
+QString Matrix::label() const {
   return _label;
 }
 
     
-void KstMatrix::zero() {
+void Matrix::zero() {
   for (int i = 0; i < _zSize; i++) {
     _z[i] = 0.0;  
   }
@@ -299,7 +295,7 @@ void KstMatrix::zero() {
 }
     
 
-void KstMatrix::blank() {
+void Matrix::blank() {
   for (int i = 0; i < _zSize; ++i) {
     _z[i] = KST::NOPOINT;
   }
@@ -308,16 +304,16 @@ void KstMatrix::blank() {
 }
     
 
-int KstMatrix::getUsage() const {
+int Matrix::getUsage() const {
   int scalarUsage = 0;
-  for (QHash<QString, Kst::Scalar*>::ConstIterator it = _statScalars.begin(); it != _statScalars.end(); ++it) {
+  for (QHash<QString, Scalar*>::ConstIterator it = _statScalars.begin(); it != _statScalars.end(); ++it) {
     scalarUsage += it.value()->getUsage() - 1;
   }
-  return Kst::Object::getUsage() + scalarUsage;
+  return Object::getUsage() + scalarUsage;
 }
 
 
-Kst::Object::UpdateType KstMatrix::internalUpdate(Kst::Object::UpdateType providerUpdateType) {
+Object::UpdateType Matrix::internalUpdate(Object::UpdateType providerUpdateType) {
   // calculate stats
   _NS = _nX * _nY;
 
@@ -369,105 +365,105 @@ Kst::Object::UpdateType KstMatrix::internalUpdate(Kst::Object::UpdateType provid
 }
     
     
-void KstMatrix::setTagName(const Kst::ObjectTag& tag) {
+void Matrix::setTagName(const ObjectTag& tag) {
   if (tag == this->tag()) {
     return;
   }
 
-  KstWriteLocker l(&Kst::matrixList.lock());
+  KstWriteLocker l(&matrixList.lock());
 
-  Kst::matrixList.doRename(this, tag);
+  matrixList.doRename(this, tag);
 
   renameScalars();
 }
 
 
-const QHash<QString, Kst::Scalar*>& KstMatrix::scalars() const {
+const QHash<QString, Scalar*>& Matrix::scalars() const {
   return _statScalars;
 }
     
     
-void KstMatrix::setLabel(const QString& newLabel) {
+void Matrix::setLabel(const QString& newLabel) {
   _label = newLabel;
 }
 
 
-void KstMatrix::setXLabel(const QString& newLabel) {
+void Matrix::setXLabel(const QString& newLabel) {
   _xLabel = newLabel;  
 }
 
 
-void KstMatrix::setYLabel(const QString& newLabel) {
+void Matrix::setYLabel(const QString& newLabel) {
   _yLabel = newLabel;
 }
 
 
-QString KstMatrix::xLabel() const {
+QString Matrix::xLabel() const {
   return _xLabel;
 }
 
 
-QString KstMatrix::yLabel() const {
+QString Matrix::yLabel() const {
   return _yLabel;
 }
 
 
-bool KstMatrix::editable() const {
+bool Matrix::editable() const {
   return _editable;  
 }
 
 
-void KstMatrix::setEditable(bool editable) {
+void Matrix::setEditable(bool editable) {
   _editable = editable;  
 }
 
 
-void KstMatrix::createScalars() {
-  KstWriteLocker sl(&Kst::scalarList.lock());
-  Kst::scalarList.setUpdateDisplayTags(false);
+void Matrix::createScalars() {
+  KstWriteLocker sl(&scalarList.lock());
+  scalarList.setUpdateDisplayTags(false);
 
-  _statScalars.insert("max", new Kst::Scalar(Kst::ObjectTag("Max", tag()), this));
+  _statScalars.insert("max", new Scalar(ObjectTag("Max", tag()), this));
   _statScalars["max"]->_KShared_ref();
-  _statScalars.insert("min", new Kst::Scalar(Kst::ObjectTag("Min", tag()), this));
+  _statScalars.insert("min", new Scalar(ObjectTag("Min", tag()), this));
   _statScalars["min"]->_KShared_ref();
-  _statScalars.insert("mean", new Kst::Scalar(Kst::ObjectTag("Mean", tag()), this));
+  _statScalars.insert("mean", new Scalar(ObjectTag("Mean", tag()), this));
   _statScalars["mean"]->_KShared_ref();
-  _statScalars.insert("sigma", new Kst::Scalar(Kst::ObjectTag("Sigma", tag()), this));
+  _statScalars.insert("sigma", new Scalar(ObjectTag("Sigma", tag()), this));
   _statScalars["sigma"]->_KShared_ref();
-  _statScalars.insert("rms", new Kst::Scalar(Kst::ObjectTag("Rms", tag()), this));
+  _statScalars.insert("rms", new Scalar(ObjectTag("Rms", tag()), this));
   _statScalars["rms"]->_KShared_ref();
-  _statScalars.insert("ns", new Kst::Scalar(Kst::ObjectTag("NS", tag()), this));
+  _statScalars.insert("ns", new Scalar(ObjectTag("NS", tag()), this));
   _statScalars["ns"]->_KShared_ref();
-  _statScalars.insert("sum", new Kst::Scalar(Kst::ObjectTag("Sum", tag()), this));
+  _statScalars.insert("sum", new Scalar(ObjectTag("Sum", tag()), this));
   _statScalars["sum"]->_KShared_ref();
-  _statScalars.insert("sumsquared", new Kst::Scalar(Kst::ObjectTag("SumSquared", tag()), this));
+  _statScalars.insert("sumsquared", new Scalar(ObjectTag("SumSquared", tag()), this));
   _statScalars["sumsquared"]->_KShared_ref();
-  _statScalars.insert("minpos", new Kst::Scalar(Kst::ObjectTag("MinPos", tag()), this));
+  _statScalars.insert("minpos", new Scalar(ObjectTag("MinPos", tag()), this));
   _statScalars["minpos"]->_KShared_ref();
 
-  Kst::scalarList.setUpdateDisplayTags(true);
+  scalarList.setUpdateDisplayTags(true);
 }
 
 
-void KstMatrix::renameScalars() {
-  KstWriteLocker sl(&Kst::scalarList.lock());
-  Kst::scalarList.setUpdateDisplayTags(false);
+void Matrix::renameScalars() {
+  KstWriteLocker sl(&scalarList.lock());
+  scalarList.setUpdateDisplayTags(false);
 
-  _statScalars["max"]->setTagName(Kst::ObjectTag("Max", tag()));
-  _statScalars["min"]->setTagName(Kst::ObjectTag("Min", tag()));
-  _statScalars["mean"]->setTagName(Kst::ObjectTag("Mean", tag()));
-  _statScalars["sigma"]->setTagName(Kst::ObjectTag("Sigma", tag()));
-  _statScalars["rms"]->setTagName(Kst::ObjectTag("Rms", tag()));
-  _statScalars["ns"]->setTagName(Kst::ObjectTag("NS", tag()));
-  _statScalars["sum"]->setTagName(Kst::ObjectTag("Sum", tag()));
-  _statScalars["sumsquared"]->setTagName(Kst::ObjectTag("SumSquared", tag()));
-  _statScalars["minpos"]->setTagName(Kst::ObjectTag("MinPos", tag()));
+  _statScalars["max"]->setTagName(ObjectTag("Max", tag()));
+  _statScalars["min"]->setTagName(ObjectTag("Min", tag()));
+  _statScalars["mean"]->setTagName(ObjectTag("Mean", tag()));
+  _statScalars["sigma"]->setTagName(ObjectTag("Sigma", tag()));
+  _statScalars["rms"]->setTagName(ObjectTag("Rms", tag()));
+  _statScalars["ns"]->setTagName(ObjectTag("NS", tag()));
+  _statScalars["sum"]->setTagName(ObjectTag("Sum", tag()));
+  _statScalars["sumsquared"]->setTagName(ObjectTag("SumSquared", tag()));
+  _statScalars["minpos"]->setTagName(ObjectTag("MinPos", tag()));
 
-  Kst::scalarList.setUpdateDisplayTags(true);
+  scalarList.setUpdateDisplayTags(true);
 }
 
 
-void KstMatrix::updateScalars() {  
+void Matrix::updateScalars() {
   _statScalars["ns"]->setValue(_NS);
   if (_NRealS >= 2) {
     _statScalars["mean"]->setValue(_statScalars["sum"]->value()/double(_NRealS));
@@ -482,10 +478,10 @@ void KstMatrix::updateScalars() {
 }
 
 
-bool KstMatrix::resizeZ(int sz, bool reinit) {
+bool Matrix::resizeZ(int sz, bool reinit) {
   //kdDebug() << "resizing to: " << sz << endl;
   if (sz >= 1) {
-    _z = static_cast<double*>(Kst::realloc(_z, sz*sizeof(double)));
+    _z = static_cast<double*>(realloc(_z, sz*sizeof(double)));
     if (!_z) {
       return false;
     }
@@ -512,7 +508,7 @@ bool KstMatrix::resizeZ(int sz, bool reinit) {
 }
 
 
-bool KstMatrix::resize(int xSize, int ySize, bool reinit) {
+bool Matrix::resize(int xSize, int ySize, bool reinit) {
   int oldNX = _nX;
   int oldNY = _nY;
   _nX = xSize;
@@ -527,18 +523,18 @@ bool KstMatrix::resize(int xSize, int ySize, bool reinit) {
 }
 
 
-void KstMatrix::save(QXmlStreamWriter &s) {
+void Matrix::save(QXmlStreamWriter &s) {
   Q_UNUSED(s)
   // no saving
 }
 
 
-bool KstMatrix::saveable() const {
+bool Matrix::saveable() const {
   return _saveable;  
 }
 
 
-void KstMatrix::change(const Kst::ObjectTag& newTag, uint nX, uint nY, double minX, double minY, double stepX, double stepY) {
+void Matrix::change(const ObjectTag& newTag, uint nX, uint nY, double minX, double minY, double stepX, double stepY) {
   if (tag() != newTag) {
     setTagName(newTag);
   }
@@ -552,4 +548,5 @@ void KstMatrix::change(const Kst::ObjectTag& newTag, uint nX, uint nY, double mi
   setDirty();
 }
 
+}
 // vim: ts=2 sw=2 et

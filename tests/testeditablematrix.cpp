@@ -15,14 +15,14 @@
 
 #include <kstmath.h>
 #include <datacollection.h>
-#include <kstdataobjectcollection.h>
+#include <dataobjectcollection.h>
 #include <editablematrix.h>
 
 
 void TestEditableMatrix::cleanupTestCase() {
   Kst::matrixList.clear();
   Kst::scalarList.clear();
-  KST::dataObjectList.clear();
+  Kst::dataObjectList.clear();
 }
 
 

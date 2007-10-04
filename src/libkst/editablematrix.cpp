@@ -21,7 +21,7 @@
 
 namespace Kst {
 
-EditableMatrix::EditableMatrix(const QDomElement &e) : KstMatrix() {
+EditableMatrix::EditableMatrix(const QDomElement &e) : Matrix() {
   _editable = true;
 
   double in_xMin = 0, in_yMin = 0, in_xStep = 1, in_yStep = 1;
@@ -83,7 +83,7 @@ EditableMatrix::EditableMatrix(const QDomElement &e) : KstMatrix() {
 
 
 EditableMatrix::EditableMatrix(ObjectTag in_tag, uint nX, uint nY, double minX, double minY, double stepX, double stepY)
-: KstMatrix(in_tag, 0L, nX, nY, minX, minY, stepX, stepY) {
+: Matrix(in_tag, 0L, nX, nY, minX, minY, stepX, stepY) {
   _editable = true;
   _saveable = true;
   resizeZ(nX*nY, true);

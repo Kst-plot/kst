@@ -38,7 +38,7 @@
 //FIXME Temporaries REMOVE!!
 #include "editablevector.h"
 #include "datacollection.h"
-#include "kstdataobjectcollection.h"
+#include "dataobjectcollection.h"
 #include "kstequation.h"
 
 namespace Kst {
@@ -87,10 +87,10 @@ void MainWindow::performHeavyStartupActions() {
 
 
 void MainWindow::cleanup() {
-  KST::dataObjectList.lock().writeLock();
-  DataObjectList dol = KST::dataObjectList; //FIXME What is going on here?
-  KST::dataObjectList.clear();
-  KST::dataObjectList.lock().unlock();
+  dataObjectList.lock().writeLock();
+  DataObjectList dol = dataObjectList; //FIXME What is going on here?
+  dataObjectList.clear();
+  dataObjectList.lock().unlock();
   dol.clear(); //and here?
 
   dataSourceList.lock().writeLock();
@@ -374,7 +374,7 @@ void MainWindow::demoModel() {
   ep->writeLock();
   ep->update(0);
   ep->unlock();
-  KST::addDataObjectToList(ep.data());
+  addDataObjectToList(ep.data());
 }
 
 

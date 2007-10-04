@@ -1,5 +1,5 @@
 /***************************************************************************
-                        kstdataobjectcollection.cpp
+                        dataobjectcollection.cpp
                              -------------------
     begin                : Feb 10, 2006
     copyright            : (C) 2006 The University of Toronto
@@ -15,17 +15,20 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstdataobjectcollection.h"
+#include "dataobjectcollection.h"
+
+namespace Kst {
 
 /** The list of data objects which are in use */
-Kst::DataObjectList KST::dataObjectList;
+DataObjectList dataObjectList;
 
-KstRelationList KST::relationList;
+KstRelationList relationList;
 
-void KST::addDataObjectToList(Kst::DataObjectPtr d) {
-  KST::dataObjectList.lock().writeLock();
-  KST::dataObjectList.append(d);
-  KST::dataObjectList.lock().unlock();
+void addDataObjectToList(DataObjectPtr d) {
+  dataObjectList.lock().writeLock();
+  dataObjectList.append(d);
+  dataObjectList.lock().unlock();
 }
 
+}
 // vim: ts=2 sw=2 et

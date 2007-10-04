@@ -1,12 +1,7 @@
 /***************************************************************************
-                             kstmatrixdefaults.h
-                             -------------------
-    begin                : 2005
-    copyright            : (C) 2005 The University of British Columbia
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
+ *   copyright : (C) 2005  University of British Columbia                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,19 +10,21 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTMATRIXDEFAULTS_H
-#define KSTMATRIXDEFAULTS_H
+#ifndef MATRIXDEFAULTS_H
+#define MATRIXDEFAULTS_H
 
 #include <qstring.h>
 #include "kst_export.h"
 
 class QSettings;
 
-class KST_EXPORT KstMatrixDefaults {
+namespace Kst {
+
+class KST_EXPORT MatrixDefaults {
   public:
     // constructor
-    KstMatrixDefaults();
-    // get last used settings and store them in this KstMatrixDefaults
+    MatrixDefaults();
+    // get last used settings and store them in this MatrixDefaults
     void sync();
     void readConfig(QSettings *config);
     void writeConfig(QSettings *config);
@@ -56,8 +53,8 @@ class KST_EXPORT KstMatrixDefaults {
     int _skip;
 };
 
-namespace KST {
-  extern KST_EXPORT KstMatrixDefaults matrixDefaults;
+  extern KST_EXPORT MatrixDefaults matrixDefaults;
+
 }
 
 #endif

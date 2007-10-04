@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include "kstobjectdefaults.h"
-#include "kstdataobjectcollection.h"
+#include "dataobjectcollection.h"
 #include "kstpsd.h"
 
 #include <qsettings.h>
@@ -38,7 +38,7 @@ KstObjectDefaults::KstObjectDefaults() {
 
 
 void KstObjectDefaults::sync() {
-  KstPSDList pl = kstObjectSubList<Kst::DataObject, KstPSD>(KST::dataObjectList);
+  KstPSDList pl = kstObjectSubList<Kst::DataObject, KstPSD>(Kst::dataObjectList);
 
   const int j = pl.count() - 1;
   if (j >= 0) {

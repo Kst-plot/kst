@@ -18,7 +18,7 @@
 #include <kstmath.h>
 #include <scalar.h>
 #include <datacollection.h>
-#include <kstdataobjectcollection.h>
+#include <dataobjectcollection.h>
 
 double NOPOINT = NAN;
 
@@ -58,7 +58,7 @@ QDomDocument TestScalar::makeDOMDocument(const QString& tag, const QString& val,
 void TestScalar::cleanupTestCase() {
   Kst::vectorList.clear();
   Kst::scalarList.clear();
-  KST::dataObjectList.clear();
+  Kst::dataObjectList.clear();
 }
 
 

@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstdataobjectcollection.h"
+#include "dataobjectcollection.h"
 #include "datacollection.h"
 #include "defaultnames.h"
 #include "ksthistogram.h"
@@ -53,7 +53,7 @@ QString suggestDataObjectName(const QString& field,
     name = cleanedField;
   }
 
-  while (KST::dataObjectList.findTag(name) != KST::dataObjectList.end()) {
+  while (dataObjectList.findTag(name) != dataObjectList.end()) {
     name = QString("%1-%2%3").arg(cleanedField).arg(A).arg(++i);
   }
 

@@ -15,7 +15,7 @@
 #include <QWidget>
 #include "ui_matrixselector.h"
 
-#include <kstmatrix.h>
+#include <matrix.h>
 
 #include "kst_export.h"
 
@@ -27,8 +27,8 @@ class KST_EXPORT MatrixSelector : public QWidget, public Ui::MatrixSelector {
     MatrixSelector(QWidget *parent = 0);
     virtual ~MatrixSelector();
 
-    KstMatrixPtr selectedMatrix() const;
-    void setSelectedMatrix(KstMatrixPtr selectedMatrix);
+    MatrixPtr selectedMatrix() const;
+    void setSelectedMatrix(MatrixPtr selectedMatrix);
 
   Q_SIGNALS:
     void selectionChanged();

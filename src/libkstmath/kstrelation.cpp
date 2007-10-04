@@ -124,12 +124,12 @@ void KstRelation::writeLockInputsAndOutputs() const {
     outputs += (*i).data();
   }
   
-  QList<KstMatrixPtr> ml = _inputMatrices.values();
-  for (QList<KstMatrixPtr>::Iterator i = ml.begin(); i != ml.end(); ++i) {
+  QList<Kst::MatrixPtr> ml = _inputMatrices.values();
+  for (QList<Kst::MatrixPtr>::Iterator i = ml.begin(); i != ml.end(); ++i) {
     inputs += (*i).data();
   }
   ml = _outputMatrices.values();
-  for (QList<KstMatrixPtr>::Iterator i = ml.begin(); i != ml.end(); ++i) {
+  for (QList<Kst::MatrixPtr>::Iterator i = ml.begin(); i != ml.end(); ++i) {
     outputs += (*i).data();
   }
 
@@ -173,7 +173,7 @@ void KstRelation::unlockInputsAndOutputs() const {
   qDebug() << (void*)this << this->tag().tagString() << ") KstRelation::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << endl;
   #endif
 
-  for (KstMatrixMap::ConstIterator i = _outputMatrices.begin(); i != _outputMatrices.end(); ++i) {
+  for (Kst::MatrixMap::ConstIterator i = _outputMatrices.begin(); i != _outputMatrices.end(); ++i) {
     if (!(*i)) {
       qWarning() << "Output matrix for data object " << this->tag().displayString() << " is invalid." << endl;
     }
@@ -183,7 +183,7 @@ void KstRelation::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (KstMatrixMap::ConstIterator i = _inputMatrices.begin(); i != _inputMatrices.end(); ++i) {
+  for (Kst::MatrixMap::ConstIterator i = _inputMatrices.begin(); i != _inputMatrices.end(); ++i) {
     if (!(*i)) {
       qWarning() << "Input matrix for data object " << this->tag().displayString() << " is invalid." << endl;
     }

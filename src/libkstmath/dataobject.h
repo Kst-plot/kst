@@ -22,7 +22,7 @@
 #include "kstcurvehint.h"
 #include "kststring.h"
 #include "vector.h"
-#include "kstmatrix.h"
+#include "matrix.h"
 #include "kst_export.h"
 
 class QXmlStreamReader;
@@ -82,10 +82,10 @@ class KST_EXPORT DataObject : public Object {
     KstStringMap& inputStrings() { return _inputStrings;  }
     KstStringMap& outputStrings() { return _outputStrings; }
     
-    const KstMatrixMap& inputMatrices() const { return _inputMatrices; }
-    const KstMatrixMap& outputMatrices() const { return _outputMatrices; }
-    KstMatrixMap& inputMatrices() { return _inputMatrices; }
-    KstMatrixMap& outputMatrices() { return _outputMatrices; }
+    const MatrixMap& inputMatrices() const { return _inputMatrices; }
+    const MatrixMap& outputMatrices() const { return _outputMatrices; }
+    MatrixMap& inputMatrices() { return _inputMatrices; }
+    MatrixMap& outputMatrices() { return _outputMatrices; }
 
     virtual void load(const QXmlStreamReader& s);
     virtual void save(QXmlStreamWriter& s);
@@ -110,7 +110,7 @@ class KST_EXPORT DataObject : public Object {
     
     virtual void replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObject);
     virtual void replaceDependency(VectorPtr oldVector, VectorPtr newVector);
-    virtual void replaceDependency(KstMatrixPtr oldMatrix, KstMatrixPtr newMatrix);
+    virtual void replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix);
 
     virtual bool uses(ObjectPtr p) const;
 
@@ -148,8 +148,8 @@ class KST_EXPORT DataObject : public Object {
     ScalarMap _outputScalars;
     KstStringMap _inputStrings;
     KstStringMap _outputStrings;
-    KstMatrixMap _inputMatrices;
-    KstMatrixMap _outputMatrices;
+    MatrixMap _inputMatrices;
+    MatrixMap _outputMatrices;
 
     QString _typeString, _type;
 

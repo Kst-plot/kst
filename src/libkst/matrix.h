@@ -1,12 +1,7 @@
 /***************************************************************************
-                     kstmatrix.h: 2D matrix type for kst
-                             -------------------
-    begin                : Mon July 19 2004
-    copyright            : (C) 2004 by University of British Columbia
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
+ *   copyright : (C) 2004  University of British Columbia                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,32 +10,37 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTMATRIX_H
-#define KSTMATRIX_H
+#ifndef MATRIX_H
+#define MATRIX_H
 
 #include <qhash.h>
 #include "scalar.h"
 #include "kstprimitive.h"
 
-class KstMatrix;
+
 class KstDataObject;
 class QXmlStreamWriter;
-typedef KstSharedPtr<KstMatrix> KstMatrixPtr;
 
-class KST_EXPORT KstMatrix : public KstPrimitive {
+namespace Kst {
+
+class Matrix;
+
+typedef KstSharedPtr<Matrix> MatrixPtr;
+
+class KST_EXPORT Matrix : public KstPrimitive {
   Q_OBJECT
   public:
     // Matrices do not automatically add themselves to the global matrix list
-    KstMatrix(Kst::ObjectTag in_tag = Kst::ObjectTag::invalidTag,
-              Kst::Object *provider = 0L, uint nX = 1, uint nY = 0,
+    Matrix(ObjectTag in_tag = ObjectTag::invalidTag,
+              Object *provider = 0L, uint nX = 1, uint nY = 0,
               double minX = 0, double minY = 0,
               double stepX = 1, double stepY = 1);
 
   protected:
-    ~KstMatrix();
+    ~Matrix();
     
   public:
-    void change(const Kst::ObjectTag& tag, uint nX, uint nY, double minX, double minY,
+    void change(const ObjectTag& tag, uint nX, uint nY, double minX, double minY,
         double stepX, double stepY);
 
     // Return the sample count (x times y) of the matrix
@@ -100,10 +100,10 @@ class KST_EXPORT KstMatrix : public KstPrimitive {
     virtual void save(QXmlStreamWriter &s);
 
     // set tag name of the matrix
-    virtual void setTagName(const Kst::ObjectTag& tag);
+    virtual void setTagName(const ObjectTag& tag);
 
     // the statistics scalars for this matrix
-    const QHash<QString, Kst::Scalar*>& scalars() const;
+    const QHash<QString, Scalar*>& scalars() const;
 
     // set the labels for this matrix
     void setLabel(const QString& newLabel);
@@ -138,7 +138,7 @@ class KST_EXPORT KstMatrix : public KstPrimitive {
     double _stepX;
     double _stepY;
     int _numNew; // number of new samples
-    QHash<QString, Kst::Scalar*> _statScalars; // statistics scalars
+    QHash<QString, Scalar*> _statScalars; // statistics scalars
     bool _editable : 1;
     bool _saveable : 1;
 
@@ -164,14 +164,16 @@ class KST_EXPORT KstMatrix : public KstPrimitive {
     // returns -1 if (x,y) is out of bounds
     int zIndex(int x, int y) const;
 
-    Kst::Object::UpdateType internalUpdate(Kst::Object::UpdateType providerUpdateType);
+    Object::UpdateType internalUpdate(Object::UpdateType providerUpdateType);
 };
 
-Q_DECLARE_METATYPE(KstMatrix*)
+typedef KstObjectList<MatrixPtr> MatrixList;
+typedef KstObjectMap<MatrixPtr> MatrixMap;
+typedef ObjectCollection<Matrix> MatrixCollection;
 
-typedef KstObjectList<KstMatrixPtr> KstMatrixList;
-typedef KstObjectMap<KstMatrixPtr> KstMatrixMap;
-typedef KstObjectCollection<KstMatrix> KstMatrixCollection;
+}
+
+Q_DECLARE_METATYPE(Kst::Matrix*)
 
 #endif
 // vim: ts=2 sw=2 et

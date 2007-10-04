@@ -24,7 +24,7 @@
 
 #include "defaultnames.h"
 #include "datacollection.h"
-#include "kstdataobjectcollection.h"
+#include "dataobjectcollection.h"
 
 namespace Kst {
 

@@ -12,12 +12,12 @@
 #ifndef EDITABLEMATRIX_H
 #define EDITABLEMATRIX_H
 
-#include "kstmatrix.h"
+#include "matrix.h"
 #include "kst_export.h"
 
 namespace Kst {
 
-class KST_EXPORT EditableMatrix : public KstMatrix {
+class KST_EXPORT EditableMatrix : public Matrix {
   public:
     EditableMatrix(const QDomElement &e);
     EditableMatrix(ObjectTag in_tag, uint nX, uint nY, double minX, double minY, double stepX, double stepY);

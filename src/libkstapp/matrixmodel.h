@@ -13,14 +13,14 @@
 #define MATRIXMODEL_H
 
 #include <QAbstractItemModel>
-#include <kstmatrix.h>
+#include <matrix.h>
 
 namespace Kst {
 
 class MatrixModel : public QAbstractItemModel
 {
 public:
-  MatrixModel(KstMatrixPtr v);
+  MatrixModel(MatrixPtr v);
   ~MatrixModel();
 
   int columnCount(const QModelIndex& parent = QModelIndex()) const;
@@ -33,7 +33,7 @@ public:
   bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
 private:
-  KstMatrixPtr _m;
+  MatrixPtr _m;
 };
 
 }
