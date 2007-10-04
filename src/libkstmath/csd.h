@@ -1,12 +1,7 @@
 /***************************************************************************
-                          kstcsd.h: Cumulative Spectral Decay for KST
-                             -------------------
-    begin                : 2005
-    copyright            : (C) 2005 by University of British Columbia
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
+ *   copyright : (C) 2005 by University of British Columbia
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,22 +13,23 @@
 /** A class for handling cumulative spectral decay for kst
  */
 
-#ifndef KSTCSD_H
-#define KSTCSD_H
+#ifndef CSD_H
+#define CSD_H
 
 #include "dataobject.h"
 #include "psdcalculator.h"
 #include "kst_export.h"
 
+namespace Kst {
 
-class KST_EXPORT KstCSD : public Kst::DataObject {
+class KST_EXPORT CSD : public DataObject {
   public:
-    KstCSD(const QString &in_tag, Kst::VectorPtr in_V, double in_freq, bool in_average, bool in_removeMean,
+    CSD(const QString &in_tag, VectorPtr in_V, double in_freq, bool in_average, bool in_removeMean,
            bool in_apodize, ApodizeFunction in_apodizeFxn, int in_windowSize, int in_length,
            double in_gaussianSigma, PSDType in_outputType, const QString& in_vectorUnits = QString::null, 
            const QString& in_rateUnits = QString::null);
-    KstCSD(const QDomElement& e);
-    virtual ~KstCSD();
+    CSD(const QDomElement& e);
+    virtual ~CSD();
 
     virtual UpdateType update(int update_counter = -1);
 
@@ -41,7 +37,7 @@ class KST_EXPORT KstCSD : public Kst::DataObject {
     virtual QString propertyString() const;
     
     QString vTag() const;
-    void setVector(Kst::VectorPtr);
+    void setVector(VectorPtr);
 
     virtual bool slaveVectorsUsed() const;
 
@@ -81,12 +77,12 @@ class KST_EXPORT KstCSD : public Kst::DataObject {
     PSDType output() const;
     void setOutput(PSDType in_outputType);
     
-    Kst::MatrixPtr outputMatrix() const;
+    MatrixPtr outputMatrix() const;
     
-    virtual Kst::DataObjectPtr makeDuplicate(Kst::DataObjectDataObjectMap& duplicatedMap);
+    virtual DataObjectPtr makeDuplicate(DataObjectDataObjectMap& duplicatedMap);
 
   private:
-    void commonConstructor(const QString &in_tag, Kst::VectorPtr in_V, double in_freq, bool in_average,
+    void commonConstructor(const QString &in_tag, VectorPtr in_V, double in_freq, bool in_average,
                             bool in_removeMean, bool in_apodize, ApodizeFunction in_apodizeFxn, 
                             int in_windowSize, int in_length, double in_gaussianSigma, 
                             const QString& in_vectorUnits, const QString& in_rateUnits, 
@@ -110,11 +106,13 @@ class KST_EXPORT KstCSD : public Kst::DataObject {
     PSDCalculator _psdCalculator;
 
     // output matrix
-    Kst::MatrixMap::Iterator _outMatrix;
+    MatrixMap::Iterator _outMatrix;
 };
 
-typedef Kst::SharedPtr<KstCSD> KstCSDPtr;
-typedef Kst::ObjectList<KstCSDPtr> KstCSDList;
+typedef SharedPtr<CSD> CSDPtr;
+typedef ObjectList<CSDPtr> CSDList;
+
+}
 
 #endif
 // vim: ts=2 sw=2 et

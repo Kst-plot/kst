@@ -17,7 +17,7 @@
 #include <object.h>
 #include <qdir.h>
 #include <qfile.h>
-#include <kstcsd.h>
+#include <csd.h>
 #include <datacollection.h>
 #include <dataobjectcollection.h>
 
@@ -113,7 +113,7 @@ void TestCSD::testCSD() {
     vp->value()[i] = i;
   }
 
-  KstCSDPtr csd = new KstCSD("csdTest", vp, 0.0, false, false, false, WindowUndefined, 0, 0, 0.0, PSDUndefined, QString::null, QString::null);
+  Kst::CSDPtr csd = new Kst::CSD("csdTest", vp, 0.0, false, false, false, WindowUndefined, 0, 0, 0.0, PSDUndefined, QString::null, QString::null);
   QCOMPARE(csd->tagName(), QLatin1String("csdTest"));
   QCOMPARE(csd->vTag(), QLatin1String("tempVector"));
   QCOMPARE(csd->output(), PSDUndefined);
@@ -156,7 +156,7 @@ void TestCSD::testCSD() {
 
   QDomNode n = makeDOMElement("csdDOMCsd", "csdDOMVector").firstChild();
   QDomElement e = n.toElement();
-  KstCSDPtr csdDOM = new KstCSD(e);
+  Kst::CSDPtr csdDOM = new Kst::CSD(e);
 
   QCOMPARE(csdDOM->tagName(), QLatin1String("csdDOMCsd"));
   QCOMPARE(csdDOM->output(), PSDPowerSpectralDensity);

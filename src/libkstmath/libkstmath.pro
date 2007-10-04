@@ -29,7 +29,7 @@ SOURCES += \
     labelparser.cpp \
     dataobject.cpp \
     dataobjectcollection.cpp \
-    kstcsd.cpp \
+    csd.cpp \
     kstpsd.cpp \
     kstrelation.cpp \
     kstcurvepointsymbol.cpp \
@@ -64,7 +64,7 @@ HEADERS += \
     kstrelation.h \
     basicplugin.h \
     colorsequence.h \
-    kstcsd.h \
+    csd.h \
     kstcurvehint.h \
     kstcurvepointsymbol.h \
     dataobjectcollection.h \

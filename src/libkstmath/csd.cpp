@@ -1,13 +1,7 @@
-
 /***************************************************************************
-                          kstcsd.cpp: Cumulative Spectral Decay for KST
-                             -------------------
-    begin                : 2005
-    copyright            : (C) 2005 by University of British Columbia
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
+ *   copyright : (C) 2005 by University of British Columbia
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,7 +22,7 @@
 #include "kst_i18n.h"
 
 #include "dialoglauncher.h"
-#include "kstcsd.h"
+#include "csd.h"
 #include "datacollection.h"
 #include "debug.h"
 #include "psdcalculator.h"
@@ -36,15 +30,17 @@
 
 extern "C" void rdft(int n, int isgn, double *a);
 
+namespace Kst {
+
 static const QLatin1String INVECTOR = QLatin1String("I");
 static const QLatin1String& OUTMATRIX = QLatin1String("M");
 
 #define KSTCSDMAXLEN 27
-KstCSD::KstCSD(const QString &in_tag, Kst::VectorPtr in_V,
+CSD::CSD(const QString &in_tag, VectorPtr in_V,
                double in_freq, bool in_average, bool in_removeMean, bool in_apodize, 
                ApodizeFunction in_apodizeFxn, int in_windowSize, int in_averageLength, double in_gaussianSigma, 
                PSDType in_outputType, const QString &in_vectorUnits, const QString &in_rateUnits)
-: Kst::DataObject() {
+: DataObject() {
   commonConstructor(in_tag, in_V, in_freq, in_average, in_removeMean,
                     in_apodize, in_apodizeFxn, in_windowSize, in_averageLength, in_gaussianSigma, 
                     in_vectorUnits, in_rateUnits, in_outputType, in_V->tagName());
@@ -52,13 +48,13 @@ KstCSD::KstCSD(const QString &in_tag, Kst::VectorPtr in_V,
 }
 
 
-KstCSD::KstCSD(const QDomElement &e)
-: Kst::DataObject(e) {
+CSD::CSD(const QDomElement &e)
+: DataObject(e) {
   
     QString in_tag;
     QString vecName;
     QString in_vectorUnits, in_rateUnits;
-    Kst::VectorPtr in_V;
+    VectorPtr in_V;
     double in_freq = 60.0;
     bool in_average = true;
     int in_averageLength = 8;
@@ -112,7 +108,7 @@ KstCSD::KstCSD(const QDomElement &e)
 }
 
 
-void KstCSD::commonConstructor(const QString& in_tag, Kst::VectorPtr in_V,
+void CSD::commonConstructor(const QString& in_tag, VectorPtr in_V,
                                double in_freq, bool in_average, bool in_removeMean, bool in_apodize, 
                                ApodizeFunction in_apodizeFxn, int in_windowSize, int in_averageLength, 
                                double in_gaussianSigma, const QString& in_vectorUnits, 
@@ -120,7 +116,7 @@ void KstCSD::commonConstructor(const QString& in_tag, Kst::VectorPtr in_V,
   _typeString = i18n("Cumulative Spectral Decay");
   _type = "Cumulative Spectral Decay";
   _inputVectors[INVECTOR] = in_V;
-  setTagName(Kst::ObjectTag::fromString(in_tag));
+  setTagName(ObjectTag::fromString(in_tag));
   _frequency = in_freq;
   _average = in_average;
   _apodize = in_apodize;
@@ -138,9 +134,9 @@ void KstCSD::commonConstructor(const QString& in_tag, Kst::VectorPtr in_V,
   }
  
   {
-    KstWriteLocker blockMatrixUpdates(&Kst::matrixList.lock());
+    KstWriteLocker blockMatrixUpdates(&matrixList.lock());
 
-    Kst::MatrixPtr outMatrix = new Kst::Matrix(Kst::ObjectTag("csd", tag()), this, 1, 1);
+    MatrixPtr outMatrix = new Matrix(ObjectTag("csd", tag()), this, 1, 1);
     outMatrix->setLabel(i18n("Power [%1/%2^{1/2}]").arg(_vectorUnits).arg(_rateUnits));
     outMatrix->setXLabel(i18n("%1 [%2]").arg(vecName).arg(_vectorUnits));
     outMatrix->setYLabel(i18n("Frequency [%1]").arg(_rateUnits));
@@ -152,22 +148,22 @@ void KstCSD::commonConstructor(const QString& in_tag, Kst::VectorPtr in_V,
 }
 
 
-KstCSD::~KstCSD() {
+CSD::~CSD() {
   _outMatrix = _outputMatrices.end();
-  Kst::matrixList.lock().writeLock();
-  Kst::matrixList.remove(_outputMatrices[OUTMATRIX]);
-  Kst::matrixList.lock().unlock();
+  matrixList.lock().writeLock();
+  matrixList.remove(_outputMatrices[OUTMATRIX]);
+  matrixList.lock().unlock();
 }
 
-Kst::Object::UpdateType KstCSD::update(int update_counter) {
+Object::UpdateType CSD::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  Kst::VectorPtr inVector = _inputVectors[INVECTOR];
+  VectorPtr inVector = _inputVectors[INVECTOR];
 
   bool force = dirty();
   setDirty(false);
 
-  if (Kst::Object::checkUpdateCounter(update_counter) && !force) {
+  if (Object::checkUpdateCounter(update_counter) && !force) {
     return lastUpdateResult();
   }
 
@@ -178,7 +174,7 @@ Kst::Object::UpdateType KstCSD::update(int update_counter) {
     force = true;
   }
 
-  bool xUpdated = Kst::Object::UPDATE == inVector->update(update_counter);
+  bool xUpdated = Object::UPDATE == inVector->update(update_counter);
   // if vector was not changed, don't update the CSD
   if (!xUpdated && !force) {
     unlockInputsAndOutputs();
@@ -210,7 +206,7 @@ Kst::Object::UpdateType KstCSD::update(int update_counter) {
         (*_outMatrix)->setValueRaw(xSize, j, tempOutput[j]);
       }
     } else {
-      Kst::Debug::self()->log(i18n("Could not allocate sufficient memory for CSD."), Kst::Debug::Error);
+      Debug::self()->log(i18n("Could not allocate sufficient memory for CSD."), Debug::Error);
       break;
     }
 
@@ -229,7 +225,7 @@ Kst::Object::UpdateType KstCSD::update(int update_counter) {
   return setLastUpdateResult(UPDATE);
 }
 
-void KstCSD::save(QTextStream &ts, const QString& indent) {
+void CSD::save(QTextStream &ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<csdobject>" << endl;
   ts << l2 << "<tag>" << Qt::escape(tagName()) << "</tag>" << endl;
@@ -248,13 +244,13 @@ void KstCSD::save(QTextStream &ts, const QString& indent) {
 }
 
 
-QString KstCSD::vTag() const {
+QString CSD::vTag() const {
   return _inputVectors[INVECTOR]->tag().displayString();
 }
 
 
-void KstCSD::setVector(Kst::VectorPtr new_v) {
-  Kst::VectorPtr v = _inputVectors[INVECTOR];
+void CSD::setVector(VectorPtr new_v) {
+  VectorPtr v = _inputVectors[INVECTOR];
   if (v) {
     if (v == new_v) {
       return;
@@ -269,37 +265,37 @@ void KstCSD::setVector(Kst::VectorPtr new_v) {
 }
 
 
-bool KstCSD::slaveVectorsUsed() const {
+bool CSD::slaveVectorsUsed() const {
   return true;
 }
 
 
-QString KstCSD::propertyString() const {
+QString CSD::propertyString() const {
   return i18n("CSD: %1").arg(_inputVectors[INVECTOR]->tag().displayString());
 }
 
 
-void KstCSD::showNewDialog() {
-  Kst::DialogLauncher::self()->showCSDDialog();
+void CSD::showNewDialog() {
+  DialogLauncher::self()->showCSDDialog();
 }
 
 
-void KstCSD::showEditDialog() {
-  Kst::DialogLauncher::self()->showCSDDialog(this);
+void CSD::showEditDialog() {
+  DialogLauncher::self()->showCSDDialog(this);
 }
 
 
-bool KstCSD::apodize() const {
+bool CSD::apodize() const {
   return _apodize;
 }
 
 
-PSDType KstCSD::output() const {
+PSDType CSD::output() const {
   return _outputType;
 }
 
 
-void KstCSD::setOutput(PSDType in_outputType)  {
+void CSD::setOutput(PSDType in_outputType)  {
   setDirty();
   _outputType = in_outputType;
 
@@ -307,40 +303,40 @@ void KstCSD::setOutput(PSDType in_outputType)  {
 }
 
 
-void KstCSD::setApodize(bool in_apodize)  {
+void CSD::setApodize(bool in_apodize)  {
   setDirty();
   _apodize = in_apodize;
 }
 
 
-bool KstCSD::removeMean() const {
+bool CSD::removeMean() const {
   return _removeMean;
 }
 
 
-void KstCSD::setRemoveMean(bool in_removeMean) {
+void CSD::setRemoveMean(bool in_removeMean) {
   setDirty();
   _removeMean = in_removeMean;
 }
 
 
-bool KstCSD::average() const {
+bool CSD::average() const {
   return _average;
 }
 
 
-void KstCSD::setAverage(bool in_average) {
+void CSD::setAverage(bool in_average) {
   setDirty();
   _average = in_average;
 }
 
 
-double KstCSD::freq() const {
+double CSD::freq() const {
   return _frequency;
 }
 
 
-void KstCSD::setFreq(double in_freq) {
+void CSD::setFreq(double in_freq) {
   setDirty();
   if (in_freq > 0.0) {
     _frequency = in_freq;
@@ -349,82 +345,82 @@ void KstCSD::setFreq(double in_freq) {
   }
 }
 
-ApodizeFunction KstCSD::apodizeFxn() const {
+ApodizeFunction CSD::apodizeFxn() const {
   return _apodizeFxn;
 } 
 
-void KstCSD::setApodizeFxn(ApodizeFunction in_fxn) {
+void CSD::setApodizeFxn(ApodizeFunction in_fxn) {
   setDirty();
   _apodizeFxn = in_fxn;
 }
 
-int KstCSD::length() const { 
+int CSD::length() const {
   return _averageLength;
 }
 
-void KstCSD::setLength(int in_length) {
+void CSD::setLength(int in_length) {
   _averageLength = in_length;
 }
 
 
-int KstCSD::windowSize() const {
+int CSD::windowSize() const {
   return _windowSize;
 }
 
 
-void KstCSD::setWindowSize(int in_size) {
+void CSD::setWindowSize(int in_size) {
   setDirty();
   _windowSize = in_size;  
 }
 
-double KstCSD::gaussianSigma() const {
+double CSD::gaussianSigma() const {
   return _gaussianSigma;
 }
 
-void KstCSD::setGaussianSigma(double in_sigma) {
+void CSD::setGaussianSigma(double in_sigma) {
   setDirty();
   _gaussianSigma = in_sigma;
 }
 
 
-Kst::MatrixPtr KstCSD::outputMatrix() const {
+MatrixPtr CSD::outputMatrix() const {
   return *_outMatrix;  
 }
 
 
-const QString& KstCSD::vectorUnits() const {
+const QString& CSD::vectorUnits() const {
   return _vectorUnits;  
 }
 
 
-void KstCSD::setVectorUnits(const QString& units) {
+void CSD::setVectorUnits(const QString& units) {
   _vectorUnits = units;
 }
 
 
-const QString& KstCSD::rateUnits() const {
+const QString& CSD::rateUnits() const {
   return _rateUnits;
 }
 
 
-void KstCSD::setRateUnits(const QString& units) {
+void CSD::setRateUnits(const QString& units) {
   _rateUnits = units;
 }
 
  
-Kst::DataObjectPtr KstCSD::makeDuplicate(Kst::DataObjectDataObjectMap& duplicatedMap) {
+DataObjectPtr CSD::makeDuplicate(DataObjectDataObjectMap& duplicatedMap) {
   QString name(tagName() + '\'');
-  while (Kst::Data::self()->dataTagNameNotUnique(name, false)) {
+  while (Data::self()->dataTagNameNotUnique(name, false)) {
     name += '\'';
   }
-  KstCSDPtr csd = new KstCSD(name, _inputVectors[INVECTOR], _frequency, _average, _removeMean,
+  CSDPtr csd = new CSD(name, _inputVectors[INVECTOR], _frequency, _average, _removeMean,
                              _apodize, _apodizeFxn, _windowSize, _averageLength, _gaussianSigma, 
                              _outputType, _vectorUnits, _rateUnits);
-  duplicatedMap.insert(this, Kst::DataObjectPtr(csd));
-  return Kst::DataObjectPtr(csd);
+  duplicatedMap.insert(this, DataObjectPtr(csd));
+  return DataObjectPtr(csd);
 }
 
-void KstCSD::updateMatrixLabels(void) {
+void CSD::updateMatrixLabels(void) {
     switch (_outputType) {
     default:
     case 0: // amplitude spectral density (default) [V/Hz^1/2]
@@ -442,4 +438,5 @@ void KstCSD::updateMatrixLabels(void) {
   }
 }
 
+}
 // vim: ts=2 sw=2 et
