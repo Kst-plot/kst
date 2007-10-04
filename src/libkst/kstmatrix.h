@@ -31,8 +31,8 @@ class KST_EXPORT KstMatrix : public KstPrimitive {
   Q_OBJECT
   public:
     // Matrices do not automatically add themselves to the global matrix list
-    KstMatrix(KstObjectTag in_tag = KstObjectTag::invalidTag,
-              KstObject *provider = 0L, uint nX = 1, uint nY = 0,
+    KstMatrix(Kst::ObjectTag in_tag = Kst::ObjectTag::invalidTag,
+              Kst::Object *provider = 0L, uint nX = 1, uint nY = 0,
               double minX = 0, double minY = 0,
               double stepX = 1, double stepY = 1);
 
@@ -40,7 +40,7 @@ class KST_EXPORT KstMatrix : public KstPrimitive {
     ~KstMatrix();
     
   public:
-    void change(const KstObjectTag& tag, uint nX, uint nY, double minX, double minY,
+    void change(const Kst::ObjectTag& tag, uint nX, uint nY, double minX, double minY,
         double stepX, double stepY);
 
     // Return the sample count (x times y) of the matrix
@@ -100,7 +100,7 @@ class KST_EXPORT KstMatrix : public KstPrimitive {
     virtual void save(QXmlStreamWriter &s);
 
     // set tag name of the matrix
-    virtual void setTagName(const KstObjectTag& tag);
+    virtual void setTagName(const Kst::ObjectTag& tag);
 
     // the statistics scalars for this matrix
     const QHash<QString, Kst::Scalar*>& scalars() const;
@@ -164,7 +164,7 @@ class KST_EXPORT KstMatrix : public KstPrimitive {
     // returns -1 if (x,y) is out of bounds
     int zIndex(int x, int y) const;
 
-    KstObject::UpdateType internalUpdate(KstObject::UpdateType providerUpdateType);
+    Kst::Object::UpdateType internalUpdate(Kst::Object::UpdateType providerUpdateType);
 };
 
 Q_DECLARE_METATYPE(KstMatrix*)

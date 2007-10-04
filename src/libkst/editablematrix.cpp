@@ -34,7 +34,7 @@ EditableMatrix::EditableMatrix(const QDomElement &e) : KstMatrix() {
     QDomElement e = n.toElement();
     if (!e.isNull()) {
       if (e.tagName() == "tag") {
-        setTagName(KstObjectTag::fromString(e.text()));
+        setTagName(ObjectTag::fromString(e.text()));
       } else if (e.tagName() == "nx") {
         in_nX = e.text().toInt();
       } else if (e.tagName() == "ny") {
@@ -82,7 +82,7 @@ EditableMatrix::EditableMatrix(const QDomElement &e) : KstMatrix() {
 }
 
 
-EditableMatrix::EditableMatrix(KstObjectTag in_tag, uint nX, uint nY, double minX, double minY, double stepX, double stepY)
+EditableMatrix::EditableMatrix(ObjectTag in_tag, uint nX, uint nY, double minX, double minY, double stepX, double stepY)
 : KstMatrix(in_tag, 0L, nX, nY, minX, minY, stepX, stepY) {
   _editable = true;
   _saveable = true;

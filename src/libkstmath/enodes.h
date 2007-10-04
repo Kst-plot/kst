@@ -59,7 +59,7 @@ namespace Equation {
       virtual bool takeVectors(const Kst::VectorMap& c);
       virtual double value(Context*) = 0;
       virtual void visit(NodeVisitor*);
-      virtual KstObject::UpdateType update(int counter, Context *ctx);
+      virtual Kst::Object::UpdateType update(int counter, Context *ctx);
       virtual QString text() const = 0;
 
       void parenthesize() { _parentheses = true; }
@@ -76,7 +76,7 @@ namespace Equation {
       virtual bool collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
       virtual bool takeVectors(const Kst::VectorMap& c);
       virtual void visit(NodeVisitor*);
-      virtual KstObject::UpdateType update(int counter, Context *ctx);
+      virtual Kst::Object::UpdateType update(int counter, Context *ctx);
 
       Node *& left();
       Node *& right(); 
@@ -104,7 +104,7 @@ namespace Equation {
       bool takeVectors(const Kst::VectorMap& c);
       double at(int, Context*);
       Node *node(int idx);
-      KstObject::UpdateType update(int counter, Context *ctx);
+      Kst::Object::UpdateType update(int counter, Context *ctx);
       QString text() const;
 
     protected:
@@ -121,7 +121,7 @@ namespace Equation {
       double value(Context*);
       bool collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
       bool takeVectors(const Kst::VectorMap& c);
-      KstObject::UpdateType update(int counter, Context *ctx);
+      Kst::Object::UpdateType update(int counter, Context *ctx);
       QString text() const;
 
     protected:
@@ -181,7 +181,7 @@ namespace Equation {
       double value(Context*);
       bool collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
       bool takeVectors(const Kst::VectorMap& c);
-      KstObject::UpdateType update(int counter, Context *ctx);
+      Kst::Object::UpdateType update(int counter, Context *ctx);
       QString text() const;
 
     protected:

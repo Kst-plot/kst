@@ -24,7 +24,7 @@ void TestVector::cleanupTestCase() {
 }
 
 void TestVector::testVector() {
-  Kst::VectorPtr v1 = new Kst::Vector(KstObjectTag::fromString("V1"), 15);
+  Kst::VectorPtr v1 = new Kst::Vector(Kst::ObjectTag::fromString("V1"), 15);
   QCOMPARE(v1->tagName(), QLatin1String("V1"));
   QCOMPARE(v1->length(), 15);
   v1->zero();
@@ -37,12 +37,12 @@ void TestVector::testVector() {
   QCOMPARE(v1->length(), 3);
   QCOMPARE(v1->value()[0], -42.0);
 
-  Kst::VectorPtr v2 = new Kst::Vector(KstObjectTag::fromString(QString::null), 0);
+  Kst::VectorPtr v2 = new Kst::Vector(Kst::ObjectTag::fromString(QString::null), 0);
   QCOMPARE(v2->length(), 1);
   QVERIFY(v2->tagName().startsWith("Anonymous")); // valid only in en_*
-  v2 = new Kst::Vector(KstObjectTag::fromString("V2"), 1);
+  v2 = new Kst::Vector(Kst::ObjectTag::fromString("V2"), 1);
   QCOMPARE(v2->length(), 1);
-  v2 = new Kst::Vector(KstObjectTag::fromString("V2"), 2);
+  v2 = new Kst::Vector(Kst::ObjectTag::fromString("V2"), 2);
   QCOMPARE(v2->length(), 2);
 
   v2->resize(3);

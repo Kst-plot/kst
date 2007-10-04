@@ -87,7 +87,7 @@ void TestScalar::testScalar() {
   *sp = 1.1415;
   QCOMPARE(listener->_trigger, 2);
 
-  Kst::ScalarPtr sp2 = new Kst::Scalar(KstObjectTag::fromString(sp->tagName()));
+  Kst::ScalarPtr sp2 = new Kst::Scalar(Kst::ObjectTag::fromString(sp->tagName()));
 
   QVERIFY(sp->displayable());
   QVERIFY(sp2->displayable());

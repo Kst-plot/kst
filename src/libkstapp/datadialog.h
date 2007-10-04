@@ -28,7 +28,7 @@ class KST_EXPORT DataDialog : public Dialog {
   Q_OBJECT
   public:
     enum EditMode { New, Edit };
-    DataDialog(KstObjectPtr dataObject = 0, QWidget *parent = 0);
+    DataDialog(Kst::ObjectPtr dataObject = 0, QWidget *parent = 0);
     virtual ~DataDialog();
 
     EditMode editMode() const { return _mode; }
@@ -40,11 +40,11 @@ class KST_EXPORT DataDialog : public Dialog {
 
     QString defaultTag() const { return _defaultTag; }
 
-    KstObjectPtr dataObject() const { return _dataObject; }
-    void setDataObject(KstObjectPtr dataObject) { _dataObject = dataObject; }
+    Kst::ObjectPtr dataObject() const { return _dataObject; }
+    void setDataObject(Kst::ObjectPtr dataObject) { _dataObject = dataObject; }
 
-    virtual KstObjectPtr createNewDataObject() const = 0;
-    virtual KstObjectPtr editExistingDataObject() const = 0;
+    virtual Kst::ObjectPtr createNewDataObject() const = 0;
+    virtual Kst::ObjectPtr editExistingDataObject() const = 0;
 
   private Q_SLOTS:
     void slotOk();
@@ -56,7 +56,7 @@ class KST_EXPORT DataDialog : public Dialog {
   private:
     QString _defaultTag;
     QLineEdit *_tagName;
-    KstObjectPtr _dataObject;
+    Kst::ObjectPtr _dataObject;
     EditMode _mode;
 };
 

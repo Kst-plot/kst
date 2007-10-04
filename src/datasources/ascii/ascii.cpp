@@ -273,15 +273,15 @@ bool AsciiSource::initRowIndex() {
 
 
 #define MAXBUFREADLEN 32768
-KstObject::UpdateType AsciiSource::update(int u) {
-  if (KstObject::checkUpdateCounter(u)) {
+Kst::Object::UpdateType AsciiSource::update(int u) {
+  if (Kst::Object::checkUpdateCounter(u)) {
     return lastUpdateResult();
   }
 
   if (!_haveHeader) {
     _haveHeader = initRowIndex();
     if (!_haveHeader) {
-      return setLastUpdateResult(KstObject::NO_CHANGE);
+      return setLastUpdateResult(Kst::Object::NO_CHANGE);
     }
     // Re-update the field list since we have one now
     _fields = fieldListFor(_filename, _config);
@@ -300,13 +300,13 @@ KstObject::UpdateType AsciiSource::update(int u) {
     _byteLength = file.size();
   } else {
     _valid = false;
-    return setLastUpdateResult(KstObject::NO_CHANGE);
+    return setLastUpdateResult(Kst::Object::NO_CHANGE);
   }
 
   if (!file.open(QIODevice::ReadOnly)) {
     // quietly fail - no data to be had here
     _valid = false;
-    return setLastUpdateResult(KstObject::NO_CHANGE);
+    return setLastUpdateResult(Kst::Object::NO_CHANGE);
   }
 
   _valid = true;
@@ -360,7 +360,7 @@ KstObject::UpdateType AsciiSource::update(int u) {
   file.close();
 
   updateNumFramesScalar();
-  return setLastUpdateResult(forceUpdate ? KstObject::UPDATE : (new_data ? KstObject::UPDATE : KstObject::NO_CHANGE));
+  return setLastUpdateResult(forceUpdate ? Kst::Object::UPDATE : (new_data ? Kst::Object::UPDATE : Kst::Object::NO_CHANGE));
 }
 
 
@@ -836,7 +836,7 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
       _ac->_indexVector->clear();
       if (hasInstance) {
         _ac->_indexVector->addItems(_instance->fieldList());
-        KstSharedPtr<AsciiSource> src = kst_cast<AsciiSource>(_instance);
+        KstSharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(_instance);
         assert(src);
         _ac->_indexType->setCurrentIndex(src->_config->_indexInterpretation - 1);
         if (_instance->fieldList().contains(src->_config->_indexVector)) {
@@ -877,7 +877,7 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
       _cfg->beginGroup("ASCII General");
       _cfg->setValue("Filename Pattern", _ac->_fileNamePattern->text());
       // If we have an instance, save settings for that instance only
-      KstSharedPtr<AsciiSource> src = kst_cast<AsciiSource>(_instance);
+      KstSharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(_instance);
       if (src) {
         _cfg->endGroup();
         _cfg->beginGroup(src->fileName());

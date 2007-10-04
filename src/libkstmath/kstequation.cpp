@@ -49,9 +49,9 @@ KstEquation::KstEquation(const QString& in_tag, const QString& equation, double 
 : Kst::DataObject() {
 
   Kst::VectorPtr xvector;
-  QString vtag = KST::suggestVectorName(QString( "(%1..%2)" ).arg( x0 ).arg( x1 ) );
+  QString vtag = Kst::suggestVectorName(QString( "(%1..%2)" ).arg( x0 ).arg( x1 ) );
 
-  xvector = new Kst::GeneratedVector(x0, x1, nx, KstObjectTag(vtag, QStringList(in_tag)));
+  xvector = new Kst::GeneratedVector(x0, x1, nx, Kst::ObjectTag(vtag, QStringList(in_tag)));
 
   _doInterp = false;
   _xInVector = _inputVectors.insert(XINVECTOR, xvector);
@@ -86,12 +86,12 @@ void KstEquation::commonConstructor(const QString& in_tag, const QString& in_equ
   _pe = 0L;
   _typeString = i18n("Equation");
   _type = "Equation";
-  KstObject::setTagName(KstObjectTag::fromString(in_tag));
+  Kst::Object::setTagName(Kst::ObjectTag::fromString(in_tag));
 
-  Kst::VectorPtr xv = new Kst::Vector(KstObjectTag("xsv", tag()), 2, this);
+  Kst::VectorPtr xv = new Kst::Vector(Kst::ObjectTag("xsv", tag()), 2, this);
   _xOutVector = _outputVectors.insert(XOUTVECTOR, xv);
     
-  Kst::VectorPtr yv = new Kst::Vector(KstObjectTag("sv", tag()), 2, this);
+  Kst::VectorPtr yv = new Kst::Vector(Kst::ObjectTag("sv", tag()), 2, this);
   _yOutVector = _outputVectors.insert(YOUTVECTOR, yv);
 
   _isValid = false;
@@ -114,7 +114,7 @@ bool KstEquation::isValid() const {
 }
 
 
-KstObject::UpdateType KstEquation::update(int update_counter) {
+Kst::Object::UpdateType KstEquation::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
@@ -123,7 +123,7 @@ KstObject::UpdateType KstEquation::update(int update_counter) {
   bool xUpdated = false;
   bool usedUpdated = false;
 
-  if (KstObject::checkUpdateCounter(update_counter) && !force) {
+  if (Kst::Object::checkUpdateCounter(update_counter) && !force) {
     return lastUpdateResult();
   }
 
@@ -144,14 +144,14 @@ KstObject::UpdateType KstEquation::update(int update_counter) {
 
   Kst::VectorPtr v = *_xInVector;
 
-  xUpdated = KstObject::UPDATE == v->update(update_counter);
+  xUpdated = Kst::Object::UPDATE == v->update(update_counter);
 
   Equation::Context ctx;
   ctx.sampleCount = _ns;
   ctx.xVector = v;
-  usedUpdated = _pe && KstObject::UPDATE == _pe->update(update_counter, &ctx);
+  usedUpdated = _pe && Kst::Object::UPDATE == _pe->update(update_counter, &ctx);
 
-  KstObject::UpdateType rc = NO_CHANGE; // if force, rc = UPDATE anyway.
+  Kst::Object::UpdateType rc = NO_CHANGE; // if force, rc = UPDATE anyway.
   if (force || xUpdated || usedUpdated) {
     _isValid = FillY(force);
     rc = UPDATE;
@@ -268,15 +268,15 @@ void KstEquation::setExistingXVector(Kst::VectorPtr in_xv, bool do_interp) {
 
 
 void KstEquation::setTagName(const QString &in_tag) {
-  KstObjectTag newTag(in_tag, tag().context());  // FIXME: always the same context?
+  Kst::ObjectTag newTag(in_tag, tag().context());  // FIXME: always the same context?
 
   if (newTag == tag()) {
     return;
   }
 
-  KstObject::setTagName(newTag);
-  (*_xOutVector)->setTagName(KstObjectTag("xsv", tag()));
-  (*_yOutVector)->setTagName(KstObjectTag("sv", tag()));
+  Kst::Object::setTagName(newTag);
+  (*_xOutVector)->setTagName(Kst::ObjectTag("xsv", tag()));
+  (*_yOutVector)->setTagName(Kst::ObjectTag("sv", tag()));
 }
 
 
@@ -538,16 +538,16 @@ void KstEquation::replaceDependency(KstMatrixPtr oldMatrix, KstMatrixPtr newMatr
 }
 
 
-bool KstEquation::uses(KstObjectPtr p) const {
+bool KstEquation::uses(Kst::ObjectPtr p) const {
   
   // check VectorsUsed in addition to _input*'s
-  if (Kst::VectorPtr vect = kst_cast<Kst::Vector>(p)) {
+  if (Kst::VectorPtr vect = Kst::kst_cast<Kst::Vector>(p)) {
     for (Kst::VectorMap::ConstIterator j = VectorsUsed.begin(); j != VectorsUsed.end(); ++j) {
       if (j.value() == vect) {
         return true;
       }
     }
-  } else if (Kst::DataObjectPtr obj = kst_cast<Kst::DataObject>(p) ) {
+  } else if (Kst::DataObjectPtr obj = Kst::kst_cast<Kst::DataObject>(p) ) {
     // check all connections from this expression to p
     for (Kst::VectorMap::Iterator j = obj->outputVectors().begin(); j != obj->outputVectors().end(); ++j) {
       for (Kst::VectorMap::ConstIterator k = VectorsUsed.begin(); k != VectorsUsed.end(); ++k) {

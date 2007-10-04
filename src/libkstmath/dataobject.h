@@ -37,7 +37,7 @@ typedef KstObjectList<DataObjectPtr> DataObjectList;
 typedef QMap<DataObjectPtr, DataObjectPtr> DataObjectDataObjectMap;
 typedef QMap<QString, int> KstPluginInfoList;
 
-class KST_EXPORT DataObject : public KstObject {
+class KST_EXPORT DataObject : public Object {
   Q_OBJECT
 
   public:
@@ -112,7 +112,7 @@ class KST_EXPORT DataObject : public KstObject {
     virtual void replaceDependency(VectorPtr oldVector, VectorPtr newVector);
     virtual void replaceDependency(KstMatrixPtr oldMatrix, KstMatrixPtr newMatrix);
 
-    virtual bool uses(KstObjectPtr p) const;
+    virtual bool uses(ObjectPtr p) const;
 
     //These are generally only valid for plugins...
     const QString& name() const { return _name; }

@@ -25,7 +25,7 @@
 #include <qdebug.h>
 
 #include "kst_export.h"
-#include "kstobject.h"
+#include "object.h"
 #include "kstobjectlist.h"
 
 // Forward Declarations
@@ -85,17 +85,17 @@ class KstObjectCollection {
     typedef typename KstObjectList<KstSharedPtr<T> >::iterator iterator;
     bool addObject(T *o);
     bool removeObject(T *o);
-    void doRename(T *o, const KstObjectTag& newTag);
+    void doRename(T *o, const Kst::ObjectTag& newTag);
 
     KstSharedPtr<T> retrieveObject(QStringList tag) const;
-    KstSharedPtr<T> retrieveObject(const KstObjectTag& tag) const;
+    KstSharedPtr<T> retrieveObject(const Kst::ObjectTag& tag) const;
     bool tagExists(const QString& tag) const;
-    bool tagExists(const KstObjectTag& tag) const;
+    bool tagExists(const Kst::ObjectTag& tag) const;
 
     // get the shortest unique tag in in_tag
-    KstObjectTag shortestUniqueTag(const KstObjectTag& in_tag) const;
+    Kst::ObjectTag shortestUniqueTag(const Kst::ObjectTag& in_tag) const;
     // get the minimum number of tag components of in_tag necessary for a unique tag
-    unsigned int componentsForUniqueTag(const KstObjectTag& in_tag) const;
+    unsigned int componentsForUniqueTag(const Kst::ObjectTag& in_tag) const;
 
     void setUpdateDisplayTags(bool u);
 
@@ -111,8 +111,8 @@ class KstObjectCollection {
     typename KstObjectList<KstSharedPtr<T> >::Iterator removeTag(const QString& x);
     typename KstObjectList<KstSharedPtr<T> >::Iterator findTag(const QString& x);
     typename KstObjectList<KstSharedPtr<T> >::ConstIterator findTag(const QString& x) const;
-    typename KstObjectList<KstSharedPtr<T> >::Iterator findTag(const KstObjectTag& x);
-    typename KstObjectList<KstSharedPtr<T> >::ConstIterator findTag(const KstObjectTag& x) const;
+    typename KstObjectList<KstSharedPtr<T> >::Iterator findTag(const Kst::ObjectTag& x);
+    typename KstObjectList<KstSharedPtr<T> >::ConstIterator findTag(const Kst::ObjectTag& x) const;
     typename KstObjectList<KstSharedPtr<T> >::Iterator begin();
     typename KstObjectList<KstSharedPtr<T> >::ConstIterator begin() const;
     typename KstObjectList<KstSharedPtr<T> >::Iterator end();
@@ -292,7 +292,7 @@ bool KstObjectTreeNode<T>::removeDescendant(T *o, KstObjectNameIndex<T> *index) 
     currNode = nextNode;
   }
 
-  if (currNode->_object != QPointer<KstObject>(o)) {
+  if (currNode->_object != QPointer<Kst::Object>(o)) {
 #if NAMEDEBUG > 0
     qDebug() << "Tried to remove KstObject from naming tree" << o->tag().tagString() << ", but the object is not in the tree";
 #endif
@@ -305,7 +305,7 @@ bool KstObjectTreeNode<T>::removeDescendant(T *o, KstObjectNameIndex<T> *index) 
       KstObjectTreeNode<T> *lastNode = currNode->_parent;
       lastNode->_children.remove(*i);
 #if NAMEDEBUG > 1
-      qDebug() << "Removed naming tree node" << currNode->fullTag().join(KstObjectTag::tagSeparator);
+      qDebug() << "Removed naming tree node" << currNode->fullTag().join(Kst::ObjectTag::tagSeparator);
 #endif
       if (index) {
         QList<KstObjectTreeNode<T> *> *l = index->take(*i);
@@ -428,7 +428,7 @@ bool KstObjectCollection<T>::removeObject(T *o) {
 // Updates the display components of all related objects. This can be somewhat
 // expensive, but it shouldn't happen very often.
 template <class T>
-void KstObjectCollection<T>::doRename(T *o, const KstObjectTag& newTag) {
+void KstObjectCollection<T>::doRename(T *o, const Kst::ObjectTag& newTag) {
   if (!o) {
     return;
   }
@@ -440,7 +440,7 @@ void KstObjectCollection<T>::doRename(T *o, const KstObjectTag& newTag) {
 
   _root.removeDescendant(o, &_index);
 
-  o->KstObject::setTagName(newTag);
+  o->Kst::Object::setTagName(newTag);
 
   if (_root.addDescendant(o, &_index)) {
     if (_updateDisplayTags) {
@@ -457,7 +457,7 @@ void KstObjectCollection<T>::doRename(T *o, const KstObjectTag& newTag) {
 template <class T>
 KstSharedPtr<T> KstObjectCollection<T>::retrieveObject(QStringList tag) const {
 #if NAMEDEBUG > 1
-  qDebug() << "Retrieving object with tag" << tag.join(KstObjectTag::tagSeparator);
+  qDebug() << "Retrieving object with tag" << tag.join(Kst::ObjectTag::tagSeparator);
 #endif
 
   if (tag.isEmpty()) {
@@ -500,7 +500,7 @@ KstSharedPtr<T> KstObjectCollection<T>::retrieveObject(QStringList tag) const {
 }
 
 template <class T>
-KstSharedPtr<T> KstObjectCollection<T>::retrieveObject(const KstObjectTag& tag) const {
+KstSharedPtr<T> KstObjectCollection<T>::retrieveObject(const Kst::ObjectTag& tag) const {
   if (!tag.isValid()) {
     return NULL;
   }
@@ -515,18 +515,18 @@ bool KstObjectCollection<T>::tagExists(const QString& tag) const {
 }
 
 template <class T>
-bool KstObjectCollection<T>::tagExists(const KstObjectTag& tag) const {
+bool KstObjectCollection<T>::tagExists(const Kst::ObjectTag& tag) const {
   return 0 != _root.descendant(tag.fullTag());
 }
 
 template <class T>
-KstObjectTag KstObjectCollection<T>::shortestUniqueTag(const KstObjectTag& tag) const {
+Kst::ObjectTag KstObjectCollection<T>::shortestUniqueTag(const Kst::ObjectTag& tag) const {
   QStringList in_tag = tag.fullTag();
   QStringList out_tag;
 
   QStringList::ConstIterator it = in_tag.end();
   if (it == in_tag.begin()) {
-    return KstObjectTag::invalidTag;
+    return Kst::ObjectTag::invalidTag;
   }
 
   // add components starting from the end until a unique tag is found
@@ -540,11 +540,11 @@ KstObjectTag KstObjectCollection<T>::shortestUniqueTag(const KstObjectTag& tag) 
     }
   } while (it != in_tag.begin());
 
-  return KstObjectTag(out_tag);
+  return Kst::ObjectTag(out_tag);
 }
 
 template <class T>
-unsigned int KstObjectCollection<T>::componentsForUniqueTag(const KstObjectTag& tag) const {
+unsigned int KstObjectCollection<T>::componentsForUniqueTag(const Kst::ObjectTag& tag) const {
   QStringList in_tag = tag.fullTag();
   unsigned int components = 0;
 
@@ -598,7 +598,7 @@ QStringList KstObjectCollection<T>::tagNames() const {
 template <class T>
 typename KstObjectList<KstSharedPtr<T> >::Iterator KstObjectCollection<T>::removeTag(const QString& x) {
   // find object in tree
-  T *obj = retrieveObject(KstObjectTag::fromString(x));
+  T *obj = retrieveObject(Kst::ObjectTag::fromString(x));
 
   if (obj) {
     // remove object from tree
@@ -614,7 +614,7 @@ typename KstObjectList<KstSharedPtr<T> >::Iterator KstObjectCollection<T>::remov
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::Iterator KstObjectCollection<T>::findTag(const KstObjectTag& x) {
+typename KstObjectList<KstSharedPtr<T> >::Iterator KstObjectCollection<T>::findTag(const Kst::ObjectTag& x) {
   T *obj = retrieveObject(x);
   if (obj) {
     // Can't use qFind() due to ambiguity.  Also have to do ugly implementation.
@@ -632,8 +632,8 @@ typename KstObjectList<KstSharedPtr<T> >::Iterator KstObjectCollection<T>::findT
     // previously, output vectors of equations, PSDs, etc. were named PSD1-ABCDE-freq
     // now, they are PSD1-ABCDE/freq
     QString newTag = x.tagString();
-    newTag.replace(newTag.lastIndexOf('-'), 1, KstObjectTag::tagSeparator);
-    obj = retrieveObject(KstObjectTag::fromString(newTag));
+    newTag.replace(newTag.lastIndexOf('-'), 1, Kst::ObjectTag::tagSeparator);
+    obj = retrieveObject(Kst::ObjectTag::fromString(newTag));
     if (obj) {
       // Can't use qFind() due to ambiguity.
       typename KstObjectList<KstSharedPtr<T> >::Iterator i = _list.begin();
@@ -652,11 +652,11 @@ typename KstObjectList<KstSharedPtr<T> >::Iterator KstObjectCollection<T>::findT
 
 template <class T>
 typename KstObjectList<KstSharedPtr<T> >::Iterator KstObjectCollection<T>::findTag(const QString& x) {
-  return findTag(KstObjectTag::fromString(x));
+  return findTag(Kst::ObjectTag::fromString(x));
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::ConstIterator KstObjectCollection<T>::findTag(const KstObjectTag& x) const {
+typename KstObjectList<KstSharedPtr<T> >::ConstIterator KstObjectCollection<T>::findTag(const Kst::ObjectTag& x) const {
   T *obj = retrieveObject(x);
   if (obj) {
     return _list.find(obj);
@@ -665,8 +665,8 @@ typename KstObjectList<KstSharedPtr<T> >::ConstIterator KstObjectCollection<T>::
     // previously, output vectors of equations, PSDs, etc. were named PSD1-ABCDE-freq
     // now, they are PSD1-ABCDE/freq
     QString newTag = x.tagString();
-    newTag.replace(newTag.lastIndexOf('-'), 1, KstObjectTag::tagSeparator);
-    obj = retrieveObject(KstObjectTag::fromString(newTag));
+    newTag.replace(newTag.lastIndexOf('-'), 1, Kst::ObjectTag::tagSeparator);
+    obj = retrieveObject(Kst::ObjectTag::fromString(newTag));
     if (obj) {
       return _list.find(obj);
     }
@@ -676,7 +676,7 @@ typename KstObjectList<KstSharedPtr<T> >::ConstIterator KstObjectCollection<T>::
 
 template <class T>
 typename KstObjectList<KstSharedPtr<T> >::ConstIterator KstObjectCollection<T>::findTag(const QString& x) const {
-  return findTag(KstObjectTag::fromString(x));
+  return findTag(Kst::ObjectTag::fromString(x));
 }
 
 template <class T>
@@ -728,7 +728,7 @@ void KstObjectCollection<T>::updateDisplayTag(T *obj) {
     return;
   }
 
-  KstObjectTag tag = obj->tag();
+  Kst::ObjectTag tag = obj->tag();
 
   if (!_index.contains(tag.tag())) {
     return;

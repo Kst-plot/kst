@@ -20,7 +20,7 @@ namespace Kst {
 class KST_EXPORT EditableMatrix : public KstMatrix {
   public:
     EditableMatrix(const QDomElement &e);
-    EditableMatrix(KstObjectTag in_tag, uint nX, uint nY, double minX, double minY, double stepX, double stepY);
+    EditableMatrix(ObjectTag in_tag, uint nX, uint nY, double minX, double minY, double stepX, double stepY);
 
     virtual void save(QTextStream &ts, const QString& indent = QString::null);
 };

@@ -14,7 +14,7 @@
 #include <QtTest>
 
 #include <kstmath.h>
-#include <kstobject.h>
+#include <object.h>
 #include <qdir.h>
 #include <qfile.h>
 #include <kstcsd.h>
@@ -108,7 +108,7 @@ QDomDocument TestCSD::makeDOMElement(const QString& tag, const QString& val) {
 
 void TestCSD::testCSD() {
 
-  Kst::VectorPtr vp = new Kst::Vector(KstObjectTag::fromString("tempVector"), 10);
+  Kst::VectorPtr vp = new Kst::Vector(Kst::ObjectTag::fromString("tempVector"), 10);
   for (int i = 0; i < 10; i++){
     vp->value()[i] = i;
   }
@@ -168,7 +168,7 @@ void TestCSD::testCSD() {
   QCOMPARE(csdDOM->gaussianSigma(), 0.01);
   QCOMPARE(csdDOM->windowSize(), 5000);
 
-  Kst::VectorPtr vp2 = new Kst::Vector(KstObjectTag::fromString("tempVector2"), 10);
+  Kst::VectorPtr vp2 = new Kst::Vector(Kst::ObjectTag::fromString("tempVector2"), 10);
   for (int i = 0; i < 10; i++){
     vp2->value()[i] = i;
   }
@@ -200,7 +200,7 @@ void TestCSD::testCSD() {
   QCOMPARE(outMatrix->value(2, 2), -0.293267);
 
   csdDOM->writeLock();
-  QCOMPARE(csdDOM->update(0), KstObject::UPDATE);
+  QCOMPARE(csdDOM->update(0), Kst::Object::UPDATE);
   csdDOM->unlock();
 
   outMatrix = csdDOM->outputMatrix();

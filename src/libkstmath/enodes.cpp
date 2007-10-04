@@ -120,10 +120,10 @@ void Node::visit(NodeVisitor* v) {
 }
 
 
-KstObject::UpdateType Node::update(int counter, Context *ctx) {
+Kst::Object::UpdateType Node::update(int counter, Context *ctx) {
   Q_UNUSED(counter)
   Q_UNUSED(ctx)
-  return KstObject::NO_CHANGE;
+  return Kst::Object::NO_CHANGE;
 }
 
 
@@ -171,11 +171,11 @@ Node *& BinaryNode::right() {
 }
 
 
-KstObject::UpdateType BinaryNode::update(int counter, Context *ctx) {
-  KstObject::UpdateType l = _left->update(counter, ctx);
-  KstObject::UpdateType r = _right->update(counter, ctx);
+Kst::Object::UpdateType BinaryNode::update(int counter, Context *ctx) {
+  Kst::Object::UpdateType l = _left->update(counter, ctx);
+  Kst::Object::UpdateType r = _right->update(counter, ctx);
 
-  return (l == KstObject::UPDATE || r == KstObject::UPDATE) ? KstObject::UPDATE : KstObject::NO_CHANGE;
+  return (l == Kst::Object::UPDATE || r == Kst::Object::UPDATE) ? Kst::Object::UPDATE : Kst::Object::NO_CHANGE;
 }
 
 
@@ -446,13 +446,13 @@ Function::~Function() {
 }
 
 
-KstObject::UpdateType Function::update(int counter, Context *ctx) {
-  KstObject::UpdateType ut = _args->update(counter, ctx);
-  if (ut == KstObject::NO_CHANGE && counter != -1) {
-    return KstObject::NO_CHANGE;
+Kst::Object::UpdateType Function::update(int counter, Context *ctx) {
+  Kst::Object::UpdateType ut = _args->update(counter, ctx);
+  if (ut == Kst::Object::NO_CHANGE && counter != -1) {
+    return Kst::Object::NO_CHANGE;
   }
 
-  return KstObject::NO_CHANGE;
+  return Kst::Object::NO_CHANGE;
 }
 
 
@@ -556,12 +556,12 @@ Node *ArgumentList::node(int idx) {
 }
 
 
-KstObject::UpdateType ArgumentList::update(int counter, Context *ctx) {
+Kst::Object::UpdateType ArgumentList::update(int counter, Context *ctx) {
   bool updated = false;
   foreach (Node *i, _args) {
-    updated = updated || KstObject::UPDATE == i->update(counter, ctx);
+    updated = updated || Kst::Object::UPDATE == i->update(counter, ctx);
   }
-  return updated ? KstObject::UPDATE : KstObject::NO_CHANGE;
+  return updated ? Kst::Object::UPDATE : Kst::Object::NO_CHANGE;
 }
 
 
@@ -772,7 +772,7 @@ bool Data::takeVectors(const Kst::VectorMap& c) {
 }
 
 
-KstObject::UpdateType Data::update(int counter, Context *ctx) {
+Kst::Object::UpdateType Data::update(int counter, Context *ctx) {
   Q_UNUSED(ctx)
   if (_isEquation) {
     if (_equation) {
@@ -785,7 +785,7 @@ KstObject::UpdateType Data::update(int counter, Context *ctx) {
     KstWriteLocker l(_scalar);
     return _scalar->update(counter);
   }
-  return KstObject::NO_CHANGE;
+  return Kst::Object::NO_CHANGE;
 }
 
 

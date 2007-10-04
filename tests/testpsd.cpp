@@ -108,7 +108,7 @@ QDomDocument TestPSD::makeDOMElement(const QString& tag, const QString& val) {
 
 void TestPSD::testPSD() {
 
-  Kst::VectorPtr vp = new Kst::Vector(KstObjectTag::fromString("tempVector"), 10);
+  Kst::VectorPtr vp = new Kst::Vector(Kst::ObjectTag::fromString("tempVector"), 10);
   for (int i = 0; i < 10; i++){
     vp->value()[i] = i;
   }
@@ -132,7 +132,7 @@ void TestPSD::testPSD() {
   QVERIFY(vpVY->value()[0] != vpVY->value()[0]);
 
   psd->writeLock();
-  QCOMPARE(psd->update(0), KstObject::UPDATE);
+  QCOMPARE(psd->update(0), Kst::Object::UPDATE);
   psd->unlock();
 
   for(int j = 0; j < vpVX->length(); j++){
@@ -157,7 +157,7 @@ void TestPSD::testPSD() {
   QCOMPARE(psd->apodizeFxn(), WindowOriginal);
   QCOMPARE(psd->gaussianSigma(), 0.2);
 
-//   doTest(psd->update(0) == KstObject::UPDATE);
+//   doTest(psd->update(0) == Kst::Object::UPDATE);
 //   QString ps = "PSD: " + psd->vTag();
 //   doTest(psd->propertyString() == ps);
 //    doTest(!psd->curveHints().curveName() == "");

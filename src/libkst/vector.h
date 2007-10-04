@@ -60,8 +60,8 @@ class Vector : public KstPrimitive {
     /**
      * Vectors do not automatically add themselves to the global vector list
      */
-    Vector(KstObjectTag in_tag = KstObjectTag::invalidTag, int size = 0,
-        KstObject *provider = 0L, bool bIsScalarList = false);
+    Vector(ObjectTag in_tag = ObjectTag::invalidTag, int size = 0,
+        Object *provider = 0L, bool bIsScalarList = false);
     Vector(const QString &tag, const QByteArray &data);
 
   protected:
@@ -134,9 +134,9 @@ class Vector : public KstPrimitive {
 
     /** Generate a new vector [x0..x1] with n total points */
     // #### Remove
-    static VectorPtr generateVector(double x0, double x1, int n, const KstObjectTag& tag);
+    static VectorPtr generateVector(double x0, double x1, int n, const ObjectTag& tag);
 
-    virtual void setTagName(const KstObjectTag& newTag);
+    virtual void setTagName(const ObjectTag& newTag);
 
     /** Return a pointer to the raw vector */
     double *const value() const;
@@ -206,7 +206,7 @@ class Vector : public KstPrimitive {
     
     friend class DataObject;
     virtual double* realloced(double *memptr, int newSize);
-    KstObject::UpdateType internalUpdate(KstObject::UpdateType providerRC);
+    Object::UpdateType internalUpdate(Object::UpdateType providerRC);
 } KST_EXPORT;
 
 typedef KstObjectList<VectorPtr> VectorList;

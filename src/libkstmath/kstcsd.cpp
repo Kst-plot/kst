@@ -120,7 +120,7 @@ void KstCSD::commonConstructor(const QString& in_tag, Kst::VectorPtr in_V,
   _typeString = i18n("Cumulative Spectral Decay");
   _type = "Cumulative Spectral Decay";
   _inputVectors[INVECTOR] = in_V;
-  setTagName(KstObjectTag::fromString(in_tag));
+  setTagName(Kst::ObjectTag::fromString(in_tag));
   _frequency = in_freq;
   _average = in_average;
   _apodize = in_apodize;
@@ -140,7 +140,7 @@ void KstCSD::commonConstructor(const QString& in_tag, Kst::VectorPtr in_V,
   {
     KstWriteLocker blockMatrixUpdates(&Kst::matrixList.lock());
 
-    KstMatrixPtr outMatrix = new KstMatrix(KstObjectTag("csd", tag()), this, 1, 1);
+    KstMatrixPtr outMatrix = new KstMatrix(Kst::ObjectTag("csd", tag()), this, 1, 1);
     outMatrix->setLabel(i18n("Power [%1/%2^{1/2}]").arg(_vectorUnits).arg(_rateUnits));
     outMatrix->setXLabel(i18n("%1 [%2]").arg(vecName).arg(_vectorUnits));
     outMatrix->setYLabel(i18n("Frequency [%1]").arg(_rateUnits));
@@ -159,7 +159,7 @@ KstCSD::~KstCSD() {
   Kst::matrixList.lock().unlock();
 }
 
-KstObject::UpdateType KstCSD::update(int update_counter) {
+Kst::Object::UpdateType KstCSD::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   Kst::VectorPtr inVector = _inputVectors[INVECTOR];
@@ -167,7 +167,7 @@ KstObject::UpdateType KstCSD::update(int update_counter) {
   bool force = dirty();
   setDirty(false);
 
-  if (KstObject::checkUpdateCounter(update_counter) && !force) {
+  if (Kst::Object::checkUpdateCounter(update_counter) && !force) {
     return lastUpdateResult();
   }
 
@@ -178,7 +178,7 @@ KstObject::UpdateType KstCSD::update(int update_counter) {
     force = true;
   }
 
-  bool xUpdated = KstObject::UPDATE == inVector->update(update_counter);
+  bool xUpdated = Kst::Object::UPDATE == inVector->update(update_counter);
   // if vector was not changed, don't update the CSD
   if (!xUpdated && !force) {
     unlockInputsAndOutputs();

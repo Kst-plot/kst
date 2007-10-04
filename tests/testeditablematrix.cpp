@@ -142,7 +142,7 @@ void TestEditableMatrix::testEditableMatrix() {
 
   am2->blank();
 
-  am2->change(KstObjectTag::fromString(am2->tagName()), 3, 3, 0, 0, 0, 0); //should not be legal
+  am2->change(Kst::ObjectTag::fromString(am2->tagName()), 3, 3, 0, 0, 0, 0); //should not be legal
   QCOMPARE(am2->xNumSteps(), 3);
   QCOMPARE(am2->yNumSteps(), 3);
   QCOMPARE(am2->minX(), 0.0);
@@ -160,7 +160,7 @@ void TestEditableMatrix::testEditableMatrix() {
   QVERIFY(am2->value(1, 1) != 5.0);
   QVERIFY(am2->setValueRaw(2, 2, 6.0)); //fails
 
-  Kst::EditableMatrix* um1 = new Kst::EditableMatrix(KstObjectTag::fromString("Unity"), 3, 3, 0.0, 0.0, 1.0, 1.0);
+  Kst::EditableMatrix* um1 = new Kst::EditableMatrix(Kst::ObjectTag::fromString("Unity"), 3, 3, 0.0, 0.0, 1.0, 1.0);
   um1->setEditable(true);
   QVERIFY(um1->setValue(0, 0, 1));
   QVERIFY(um1->setValue(1, 1, 1));
@@ -286,7 +286,7 @@ void TestEditableMatrix::testEditableMatrix() {
   QCOMPARE(um1->minValue(), 0.0);
   QCOMPARE(um1->maxValue(), 0.0);
 
-  Kst::EditableMatrix* sm = new Kst::EditableMatrix(KstObjectTag::fromString("Spike"), 2, 2, 0.0, 0.0, 1.0, 1.0);
+  Kst::EditableMatrix* sm = new Kst::EditableMatrix(Kst::ObjectTag::fromString("Spike"), 2, 2, 0.0, 0.0, 1.0, 1.0);
   
   sm->setEditable(true);
   QVERIFY(sm->resize(2, 2, false));

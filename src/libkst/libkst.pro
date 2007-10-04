@@ -15,7 +15,7 @@ INCLUDEPATH += \
 
 x11:!macx:PROCPS += sysinfo.c psversion.c
 SOURCES += \
-    kstobject.cpp \
+    object.cpp \
     datasource.cpp \
     kstextension.cpp \
     datacollection.cpp \
@@ -46,7 +46,7 @@ SOURCES += \
     kstobjectcollection.cpp \
     kstobjectlist.cpp \
     kstobjectmap.cpp \
-    kstobjecttag.cpp \
+    objecttag.cpp \
     builtinprimitives.cpp \
     vectorfactory.cpp
 
@@ -71,7 +71,7 @@ HEADERS += \
     kstmatrixdefaults.h \
     kstmatrix.h \
     kstobjectcollection.h \
-    kstobject.h \
+    object.h \
     kstprimitive.h \
     kstrevision.h \
     datamatrix.h \
@@ -95,6 +95,6 @@ HEADERS += \
     kstobjectcollection.h \
     kstobjectlist.h \
     kstobjectmap.h \
-    kstobjecttag.h \
+    objecttag.h \
     builtinprimitives.h \
     vectorfactory.h

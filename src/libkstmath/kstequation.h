@@ -75,7 +75,7 @@ class KST_EXPORT KstEquation : public Kst::DataObject {
     void replaceDependency(Kst::VectorPtr oldVector, Kst::VectorPtr newVector);
     void replaceDependency(KstMatrixPtr oldMatrix, KstMatrixPtr newMatrix);
 
-    bool uses(KstObjectPtr p) const;
+    bool uses(Kst::ObjectPtr p) const;
 
   private:
     QString _equation;

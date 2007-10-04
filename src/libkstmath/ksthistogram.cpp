@@ -24,7 +24,7 @@
 
 #include "dialoglauncher.h"
 #include "datacollection.h"
-#include "kstdefaultnames.h"
+#include "defaultnames.h"
 #include "ksthistogram.h"
 
 static const QLatin1String& RAWVECTOR  = QLatin1String("I");
@@ -102,7 +102,7 @@ void KstHistogram::commonConstructor(const QString &in_tag, Kst::VectorPtr in_V,
   _Bins = 0L;
   _NBins = 0;
   
-  setTagName(KstObjectTag::fromString(in_tag));
+  setTagName(Kst::ObjectTag::fromString(in_tag));
   _inputVectors[RAWVECTOR] = in_V;
 
   if (xmax_in>xmin_in) {
@@ -124,10 +124,10 @@ void KstHistogram::commonConstructor(const QString &in_tag, Kst::VectorPtr in_V,
   _Bins = new unsigned long[_NBins];
   _NS = 3 * _NBins + 1;
 
-  Kst::VectorPtr v = new Kst::Vector(KstObjectTag("bins", tag()), _NBins, this);
+  Kst::VectorPtr v = new Kst::Vector(Kst::ObjectTag("bins", tag()), _NBins, this);
   _bVector = _outputVectors.insert(BINS, v);
 
-  v = new Kst::Vector(KstObjectTag("sv", tag()), _NBins, this);
+  v = new Kst::Vector(Kst::ObjectTag("sv", tag()), _NBins, this);
   _hVector = _outputVectors.insert(HIST, v);
 
   setDirty();
@@ -147,13 +147,13 @@ KstHistogram::~KstHistogram() {
 }
 
 
-KstObject::UpdateType KstHistogram::update(int update_counter) {
+Kst::Object::UpdateType KstHistogram::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
   setDirty(false);
 
-  if (KstObject::checkUpdateCounter(update_counter) && !force) {
+  if (Kst::Object::checkUpdateCounter(update_counter) && !force) {
     return lastUpdateResult();
   }
 
@@ -164,10 +164,10 @@ KstObject::UpdateType KstHistogram::update(int update_counter) {
     force = true;
   }
 
-  bool xUpdated = KstObject::UPDATE == _inputVectors[RAWVECTOR]->update(update_counter);
+  bool xUpdated = Kst::Object::UPDATE == _inputVectors[RAWVECTOR]->update(update_counter);
   if (!xUpdated && !force) {
     unlockInputsAndOutputs();
-    return setLastUpdateResult(KstObject::NO_CHANGE);
+    return setLastUpdateResult(Kst::Object::NO_CHANGE);
   }
 
   int i_bin, i_pt, ns;

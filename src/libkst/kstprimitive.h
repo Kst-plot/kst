@@ -19,34 +19,34 @@
 #define KSTPRIMITIVE_H
 
 #include "kst_export.h"
-#include "kstobject.h"
+#include "object.h"
 #include "kstobjectmap.h"
 #include "kstobjectlist.h"
 #include <qpointer.h>
 
-class KST_EXPORT KstPrimitive : public KstObject {
+class KST_EXPORT KstPrimitive : public Kst::Object {
   public:
-    KstPrimitive(KstObject* provider = 0L);
+    KstPrimitive(Kst::Object* provider = 0L);
 
   protected:
     ~KstPrimitive();
 
   public:
-    // Must not be a KstObjectPtr!
-//    virtual void setProvider(KstObject* obj);
-    inline KstObjectPtr provider() const { return KstObjectPtr(_provider); }
+    // Must not be a Kst::ObjectPtr!
+//    virtual void setProvider(Kst::Object* obj);
+    inline Kst::ObjectPtr provider() const { return Kst::ObjectPtr(_provider); }
 
     /** Update the primitive via the provider and/or internalUpdate().
         Return true if there was new data. */
     UpdateType update(int update_counter = -1);
 
   protected:
-    virtual KstObject::UpdateType internalUpdate(KstObject::UpdateType providerRC);
+    virtual Kst::Object::UpdateType internalUpdate(Kst::Object::UpdateType providerRC);
 
     /** Possibly null.  Be careful, this is non-standard usage of a KstShared.
      * The purpose of this is to trigger hierarchical updates properly.
      */
-    QPointer<KstObject> _provider;
+    QPointer<Kst::Object> _provider;
 };
 
 typedef KstSharedPtr<KstPrimitive> KstPrimitivePtr;

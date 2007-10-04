@@ -27,16 +27,16 @@
 
 static int anonymousStringCounter = 0;
 
-KstString::KstString(KstObjectTag in_tag, KstObject *provider, const QString& val, bool orphan)
+KstString::KstString(Kst::ObjectTag in_tag, Kst::Object *provider, const QString& val, bool orphan)
 : KstPrimitive(provider), _value(val), _orphan(orphan), _editable(false) {
   QString _tag = in_tag.tag();
   if (!in_tag.isValid()) {
     do {
       _tag = i18n("Anonymous String %1", anonymousStringCounter++);
     } while (Kst::Data::self()->vectorTagNameNotUniqueInternal(_tag));  // FIXME: why vector?
-    KstObject::setTagName(KstObjectTag(_tag, in_tag.context()));
+    Kst::Object::setTagName(Kst::ObjectTag(_tag, in_tag.context()));
   } else {
-    KstObject::setTagName(KST::suggestUniqueStringTag(in_tag));
+    Kst::Object::setTagName(suggestUniqueStringTag(in_tag));
   }
 
   Kst::stringList.lock().writeLock();
@@ -53,7 +53,7 @@ KstString::KstString(QDomElement& e)
     QDomElement e = n.toElement();
     if (!e.isNull()) {
       if (e.tagName() == "tag") {
-        setTagName(KstObjectTag::fromString(e.text()));
+        setTagName(Kst::ObjectTag::fromString(e.text()));
       } else if (e.tagName() == "orphan") {
         _orphan = true;
       } else if (e.tagName() == "value") {
@@ -72,7 +72,7 @@ KstString::~KstString() {
 }
 
 
-void KstString::setTagName(const KstObjectTag& tag) {
+void KstString::setTagName(const Kst::ObjectTag& tag) {
   if (tag == this->tag()) {
     return;
   }
@@ -97,13 +97,13 @@ void KstString::save(QXmlStreamWriter &s) {
 }
 
 
-KstObject::UpdateType KstString::update(int updateCounter) {
+Kst::Object::UpdateType KstString::update(int updateCounter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
   setDirty(false);
 
-  if (KstObject::checkUpdateCounter(updateCounter) && !force) {
+  if (Kst::Object::checkUpdateCounter(updateCounter) && !force) {
     return lastUpdateResult();
   }
 

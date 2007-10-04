@@ -36,7 +36,7 @@ SOURCES += \
     kstlinestyle.cpp \
     kstvcurve.cpp \
     kstimage.cpp \
-    kstdefaultnames.cpp \
+    defaultnames.cpp \
     ksthistogram.cpp \
     kstequation.cpp \
     kstcurvehint.cpp \
@@ -69,7 +69,7 @@ HEADERS += \
     kstcurvepointsymbol.h \
     kstdataobjectcollection.h \
     dataobject.h \
-    kstdefaultnames.h \
+    defaultnames.h \
     kstequation.h \
     ksthistogram.h \
     kstimage.h \

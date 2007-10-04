@@ -45,7 +45,7 @@ namespace Kst {
 
 /** Create a DataVector: raw data from a file */
 DataVector::DataVector(DataSourcePtr in_file, const QString &in_field,
-                       KstObjectTag in_tag,
+                       ObjectTag in_tag,
                        int in_f0, int in_n, int skip, bool in_DoSkip,
                        bool in_DoAve)
 : Vector(in_tag) {
@@ -119,7 +119,7 @@ DataVector::DataVector(const QString &tag, const QByteArray &data,
   if (in_file) {
     // use datasource as tag context for this RVector
     // allow unique vector names to be displayed at top-level
-    setTagName(KstObjectTag(this->tag().tag(), in_file->tag(), false));
+    setTagName(ObjectTag(this->tag().tag(), in_file->tag(), false));
   }
 
   if (o_n > -2) {
@@ -185,7 +185,7 @@ void DataVector::commonRVConstructor(DataSourcePtr in_file,
 
 
 void DataVector::change(DataSourcePtr in_file, const QString &in_field,
-                        KstObjectTag in_tag,
+                        ObjectTag in_tag,
                         int in_f0, int in_n,
                         int in_skip, bool in_DoSkip,
                         bool in_DoAve) {
@@ -232,7 +232,7 @@ void DataVector::changeFile(DataSourcePtr in_file) {
   if (_file) {
     _file->writeLock();
   }
-  setTagName(KstObjectTag(tag().tag(), _file->tag(), false));
+  setTagName(ObjectTag(tag().tag(), _file->tag(), false));
   reset();
   if (_file) {
     _file->unlock();
@@ -446,19 +446,19 @@ void DataVector::checkIntegrity() {
 
 
 /** Update an RVECTOR */
-KstObject::UpdateType DataVector::update(int update_counter) {
+Object::UpdateType DataVector::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
   setDirty(false);
-  if (KstObject::checkUpdateCounter(update_counter) && !force) {
+  if (Object::checkUpdateCounter(update_counter) && !force) {
     return lastUpdateResult();
   }
 
   if (_file) {
     _file->writeLock();
   }
-  KstObject::UpdateType rc = doUpdate(force);
+  Object::UpdateType rc = doUpdate(force);
   if (_file) {
     _file->unlock();
   }
@@ -489,7 +489,7 @@ KstObject::UpdateType DataVector::update(int update_counter) {
 //     read with skip enabled are read on 'skip boundries'... ie, the first samples of
 //     frame 0, Skip, 2*Skip... N*skip, and never M*Skip+1.
 
-KstObject::UpdateType DataVector::doUpdate(bool force) {
+Object::UpdateType DataVector::doUpdate(bool force) {
   int i, k, shift, n_read=0;
   int ave_nread;
   int new_f0, new_nf;
@@ -755,7 +755,7 @@ DataSourcePtr DataVector::dataSource() const {
 
 DataVectorPtr DataVector::makeDuplicate() const {
   QString newTag = tag().tag() + "'";
-  return new DataVector(_file, _field, KstObjectTag(newTag, tag().context()), ReqF0, ReqNF, Skip, DoSkip, DoAve);
+  return new DataVector(_file, _field, ObjectTag(newTag, tag().context()), ReqF0, ReqNF, Skip, DoSkip, DoAve);
 }
 
 

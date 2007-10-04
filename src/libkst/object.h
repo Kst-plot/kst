@@ -1,12 +1,6 @@
 /***************************************************************************
-              kstobject.h: abstract base class for all Kst objects
-                             -------------------
-    begin                : May 22, 2003
-    copyright            : (C) 2003 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2003 The University of Toronto                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,8 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTOBJECT_H
-#define KSTOBJECT_H
+#ifndef OBJECT_H
+#define OBJECT_H
 
 #include <qpointer.h>
 #include <qmutex.h>
@@ -29,20 +23,22 @@
 #include "kst_export.h"
 #include "kstsharedptr.h"
 #include "rwlock.h"
-#include "kstobjecttag.h"
+#include "objecttag.h"
 
-class KstObject : public KstShared, public QObject, public KstRWLock {
+namespace Kst {
+
+class Object : public KstShared, public QObject, public KstRWLock {
   public:
-    KstObject();
+    Object();
 
     enum UpdateType { NO_CHANGE = 0, UPDATE };
 
     virtual UpdateType update(int updateCounter = -1) = 0;
 
     virtual QString tagName() const;
-    virtual KstObjectTag& tag();
-    virtual const KstObjectTag& tag() const;
-    virtual void setTagName(const KstObjectTag& tag);
+    virtual ObjectTag& tag();
+    virtual const ObjectTag& tag() const;
+    virtual void setTagName(const ObjectTag& tag);
 
     virtual QString tagLabel() const;
     // Returns count - 2 to account for "this" and the list pointer, therefore
@@ -62,7 +58,7 @@ class KstObject : public KstShared, public QObject, public KstRWLock {
     bool dirty() const;
 
   protected:
-    virtual ~KstObject();
+    virtual ~Object();
 
     friend class UpdateThread;
     int _lastUpdateCounter;
@@ -73,19 +69,22 @@ class KstObject : public KstShared, public QObject, public KstRWLock {
     UpdateType lastUpdateResult() const;
 
   private:
-    KstObjectTag _tag;
+    ObjectTag _tag;
     bool _dirty;
-    KstObject::UpdateType _lastUpdate;
+    Object::UpdateType _lastUpdate;
 } KST_EXPORT;
 
-Q_DECLARE_METATYPE(KstObject*)
-
-typedef KstSharedPtr<KstObject> KstObjectPtr;
+typedef KstSharedPtr<Object> ObjectPtr;
 
 template <typename T, typename U>
 inline KstSharedPtr<T> kst_cast(KstSharedPtr<U> object) {
   return dynamic_cast<T*>(object.data());
 }
+
+
+}
+
+Q_DECLARE_METATYPE(Kst::Object*)
 
 #endif
 

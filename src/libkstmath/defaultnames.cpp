@@ -1,5 +1,5 @@
 /***************************************************************************
-                            kstdefaultnames.cpp
+                            defaultnames.cpp
                              -------------------
     begin                : July 31, 2004
     copyright            : (C) 2003 C. Barth Netterfield
@@ -17,7 +17,7 @@
 
 #include "kstdataobjectcollection.h"
 #include "datacollection.h"
-#include "kstdefaultnames.h"
+#include "defaultnames.h"
 #include "ksthistogram.h"
 #include "kstpsd.h"
 #include "kstvcurve.h"
@@ -26,14 +26,16 @@
 #include "kst_i18n.h"
 #include <stdio.h>
 
-QString KST::suggestPlotName() {
+namespace Kst {
+
+QString suggestPlotName() {
   static int last = 0;
 
   QString tag;
 
   do {
     tag = QString("P%1").arg(++last);
-  } while (Kst::Data::self()->viewObjectNameNotUnique(tag));
+  } while (Data::self()->viewObjectNameNotUnique(tag));
 
   return tag;
 }
@@ -43,7 +45,7 @@ QString suggestDataObjectName(const QString& field,
                               const QString &A, bool add_c) {
   QString name;
   int i=1;
-  QString cleanedField = KstObjectTag::cleanTag(field);
+  QString cleanedField = ObjectTag::cleanTag(field);
 
   if (add_c) {
     name = QString("%1-%2").arg(cleanedField).arg(A);
@@ -65,42 +67,42 @@ QString suggestDataObjectName(const QString& field,
 /* adding it would appear unique.  This is important because in many */
 /* dialogs, a curve is created from an object before the object has */
 /* been put on the list */
-QString KST::suggestCurveName( KstObjectTag vector_name, bool add_c ) {
+QString suggestCurveName( ObjectTag vector_name, bool add_c ) {
   return suggestDataObjectName(vector_name.displayString(), 
                       i18nc("Minimal abbreviation for 'Curve'", "C"), 
                       add_c);
 }
 
 
-QString KST::suggestPSDName( KstObjectTag vector_name ) {
+QString suggestPSDName( ObjectTag vector_name ) {
   return suggestDataObjectName(vector_name.tag(), 
                       i18nc("Minimal abbreviation for 'Power spectrum'", "P"),
                       true);
 }
 
 
-QString KST::suggestCSDName( KstObjectTag vector_name ) {
+QString suggestCSDName( ObjectTag vector_name ) {
   return suggestDataObjectName(vector_name.tag(),
                                i18nc("Minimal abbreviation for 'Cumulative Spectral Decay'", "S"),
                                true);
 }
 
 
-QString KST::suggestHistogramName( KstObjectTag vector_name ) {
+QString suggestHistogramName( ObjectTag vector_name ) {
   return suggestDataObjectName(vector_name.tag(), 
                       i18nc("Minimal abbreviation for 'Histogram'", "H"),
                       true);
 }
 
 
-QString KST::suggestEQName(const QString& name_in) {
+QString suggestEQName(const QString& name_in) {
   return suggestDataObjectName(name_in, 
                       i18nc("Minimal abbreviation for 'Equation'", "E"),
                       false);
 }
 
 
-QString KST::suggestPluginName(const QString& pname, KstObjectTag vname) {
+QString suggestPluginName(const QString& pname, ObjectTag vname) {
   QString tag;
   
   if (!vname.isValid()) {
@@ -114,9 +116,11 @@ QString KST::suggestPluginName(const QString& pname, KstObjectTag vname) {
 }
 
 
-QString KST::suggestImageName(KstObjectTag matrix_name) {
+QString suggestImageName(ObjectTag matrix_name) {
   return suggestDataObjectName(matrix_name.tag(), 
                       i18nc("Minimal abbreviation for 'Image'", "I"),
                       true);
+}
+
 }
 // vim: ts=2 sw=2 et

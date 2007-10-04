@@ -36,13 +36,13 @@ class KST_EXPORT EquationTab : public DataTab, Ui::EquationTab {
 class KST_EXPORT EquationDialog : public DataDialog {
   Q_OBJECT
   public:
-    EquationDialog(KstObjectPtr dataObject, QWidget *parent = 0);
+    EquationDialog(Kst::ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~EquationDialog();
 
   protected:
     virtual QString tagName() const;
-    virtual KstObjectPtr createNewDataObject() const;
-    virtual KstObjectPtr editExistingDataObject() const;
+    virtual Kst::ObjectPtr createNewDataObject() const;
+    virtual Kst::ObjectPtr editExistingDataObject() const;
 
   private:
     EquationTab *_equationTab;

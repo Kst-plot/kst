@@ -108,12 +108,12 @@ bool DirFileSource::init() {
 
     _writable = true;
   }
-  return update() == KstObject::UPDATE;
+  return update() == Kst::Object::UPDATE;
 }
 
 
-KstObject::UpdateType DirFileSource::update(int u) {
-  if (KstObject::checkUpdateCounter(u)) {
+Kst::Object::UpdateType DirFileSource::update(int u) {
+  if (Kst::Object::checkUpdateCounter(u)) {
     return lastUpdateResult();
   }
 
@@ -124,7 +124,7 @@ KstObject::UpdateType DirFileSource::update(int u) {
   _frameCount = newNF;
 
   updateNumFramesScalar();
-  return setLastUpdateResult(isnew ? KstObject::UPDATE : KstObject::NO_CHANGE);
+  return setLastUpdateResult(isnew ? Kst::Object::UPDATE : Kst::Object::NO_CHANGE);
 }
 
 

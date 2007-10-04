@@ -206,7 +206,7 @@ static DataSourcePtr findPluginFor(const QString& filename, const QString& type,
         QDomElement e2 = l.item(0).toElement();
         if (!e2.isNull()) {
           qDebug() << "Restoring tag " << e2.text() << " to DataSource" << endl;
-          plugin->setTagName(KstObjectTag::fromString(e2.text()));
+          plugin->setTagName(ObjectTag::fromString(e2.text()));
         }
       }
       return plugin;
@@ -441,7 +441,7 @@ DataSourcePtr DataSource::loadSource(QDomElement& e) {
 
 
 DataSource::DataSource(QSettings *cfg, const QString& filename, const QString& type)
-: KstObject(), _filename(filename), _cfg(cfg) {
+: Object(), _filename(filename), _cfg(cfg) {
   Q_UNUSED(type)
   _valid = false;
   _reusable = true;
@@ -455,12 +455,12 @@ DataSource::DataSource(QSettings *cfg, const QString& filename, const QString& t
   QString tn = i18n("DS-%1", shortFilename);
   int count = 1;
 
-  KstObject::setTagName(KstObjectTag(tn, KstObjectTag::globalTagContext));  // are DataSources always top-level?
+  Object::setTagName(ObjectTag(tn, ObjectTag::globalTagContext));  // are DataSources always top-level?
   while (Data::self()->dataSourceTagNameNotUnique(tagName(), false)) {
-    KstObject::setTagName(KstObjectTag(tn + QString::number(-(count++)), KstObjectTag::globalTagContext));  // are DataSources always top-level?
+    Object::setTagName(ObjectTag(tn + QString::number(-(count++)), ObjectTag::globalTagContext));  // are DataSources always top-level?
   }
 
-  _numFramesScalar = new Scalar(KstObjectTag("frames", tag()));
+  _numFramesScalar = new Scalar(ObjectTag("frames", tag()));
   // Don't set provider - this is always up-to-date
 }
 
@@ -486,26 +486,26 @@ DataSource::~DataSource() {
 }
 
 
-void DataSource::setTagName(const KstObjectTag& in_tag) {
+void DataSource::setTagName(const ObjectTag& in_tag) {
   if (in_tag == tag()) {
     return;
   }
 
-  KstObject::setTagName(in_tag);
-  _numFramesScalar->setTagName(KstObjectTag("frames", tag()));
+  Object::setTagName(in_tag);
+  _numFramesScalar->setTagName(ObjectTag("frames", tag()));
   for (QHash<QString, KstString*>::Iterator it = _metaData.begin(); it != _metaData.end(); ++it) {
-    KstObjectTag stag = it.value()->tag();
+    ObjectTag stag = it.value()->tag();
     stag.setContext(tag().fullTag());
     it.value()->setTagName(stag);
   }
 }
 
 
-KstObject::UpdateType DataSource::update(int u) {
+Object::UpdateType DataSource::update(int u) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   Q_UNUSED(u)
-  return KstObject::NO_CHANGE;
+  return Object::NO_CHANGE;
 }
 
 

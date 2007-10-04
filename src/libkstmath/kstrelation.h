@@ -59,7 +59,7 @@ enum KstCurveType { KST_VCURVE, KST_HISTOGRAM, KST_IMAGE };
 
 class QXmlStreamWriter;
 
-class KST_EXPORT KstRelation : public KstObject {
+class KST_EXPORT KstRelation : public Kst::Object {
   Q_OBJECT
   public:
     KstRelation();

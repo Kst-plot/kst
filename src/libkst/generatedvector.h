@@ -29,12 +29,12 @@ namespace Kst {
 class KST_EXPORT GeneratedVector : public Vector {
  public:
   GeneratedVector(const QString &tag, const QByteArray &data, double x0, double x1, int n);
-  GeneratedVector(double x0, double x1, int n, KstObjectTag tag);
+  GeneratedVector(double x0, double x1, int n, ObjectTag tag);
 
   void save(QXmlStreamWriter &s);
 
   void changeRange(double x0, double x1, int n);
-  KstObject::UpdateType update(int update_counter);
+  Object::UpdateType update(int update_counter);
   void setSaveData(bool save);
 };
 

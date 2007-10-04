@@ -87,7 +87,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
         }
       } else {
         Kst::scalarList.lock().readLock();
-        Kst::ScalarPtr scp = Kst::scalarList.retrieveObject(KstObjectTag::fromString(fi->text));
+        Kst::ScalarPtr scp = Kst::scalarList.retrieveObject(Kst::ObjectTag::fromString(fi->text));
         Kst::scalarList.lock().unlock();
         if (scp) {
           scp->readLock();
@@ -98,7 +98,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
           scp->unlock();
         } else {
           Kst::stringList.lock().readLock();
-          KstStringPtr stp = Kst::stringList.retrieveObject(KstObjectTag::fromString(fi->text));
+          KstStringPtr stp = Kst::stringList.retrieveObject(Kst::ObjectTag::fromString(fi->text));
           Kst::stringList.lock().unlock();
           if (stp) {
             stp->readLock();

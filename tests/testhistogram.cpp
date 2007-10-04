@@ -25,7 +25,7 @@ void TestHistogram::cleanupTestCase() {
 }
 
 void TestHistogram::testHistogram() {
-  Kst::VectorPtr vp = Kst::Vector::generateVector(0, 10, 100, KstObjectTag::fromString("V1"));
+  Kst::VectorPtr vp = Kst::Vector::generateVector(0, 10, 100, Kst::ObjectTag::fromString("V1"));
   KstHistogramPtr h1 = new KstHistogram("H1", vp, 0, 10, 10, KST_HS_NUMBER);
   KST::dataObjectList.append(h1.data());
 

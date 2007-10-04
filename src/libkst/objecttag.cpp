@@ -9,14 +9,16 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstobjecttag.h"
+#include "objecttag.h"
 
-KstObjectTag::KstObjectTag()
+namespace Kst {
+
+ObjectTag::ObjectTag()
   : _minDisplayComponents(0), _uniqueDisplayComponents(UINT_MAX) {
 }
 
 
-KstObjectTag::KstObjectTag(const QString& tag, const QStringList& context,
+ObjectTag::ObjectTag(const QString& tag, const QStringList& context,
                            unsigned int minDisplayComponents)
   : _tag(cleanTag(tag)),
     _context(context),
@@ -25,7 +27,7 @@ KstObjectTag::KstObjectTag(const QString& tag, const QStringList& context,
 }
 
 
-KstObjectTag::KstObjectTag(const QString& tag, const KstObjectTag& contextTag,
+ObjectTag::ObjectTag(const QString& tag, const ObjectTag& contextTag,
                            bool alwaysShowContext)
   : _uniqueDisplayComponents(UINT_MAX) {
 
@@ -35,7 +37,7 @@ KstObjectTag::KstObjectTag(const QString& tag, const KstObjectTag& contextTag,
 }
 
 
-KstObjectTag::KstObjectTag(const QStringList &fullTag)
+ObjectTag::ObjectTag(const QStringList &fullTag)
   : _minDisplayComponents(1), _uniqueDisplayComponents(UINT_MAX) {
 
   QStringList context = fullTag;
@@ -45,24 +47,24 @@ KstObjectTag::KstObjectTag(const QStringList &fullTag)
 }
 
 
-QString KstObjectTag::tag() const {
+QString ObjectTag::tag() const {
   return _tag;
 }
 
 
-QStringList KstObjectTag::fullTag() const {
+QStringList ObjectTag::fullTag() const {
   QStringList ft(_context);
   ft << _tag;
   return ft;
 }
 
 
-QStringList KstObjectTag::context() const {
+QStringList ObjectTag::context() const {
   return _context;
 }
 
 
-unsigned int KstObjectTag::components() const {
+unsigned int ObjectTag::components() const {
   if (!isValid()) {
     return 0;
   } else {
@@ -71,50 +73,50 @@ unsigned int KstObjectTag::components() const {
 }
 
 
-void KstObjectTag::setTag(const QString& tag) {
+void ObjectTag::setTag(const QString& tag) {
   _tag = cleanTag(tag);
   _uniqueDisplayComponents = UINT_MAX;
 }
 
 
-void KstObjectTag::setContext(const QStringList& context) {
+void ObjectTag::setContext(const QStringList& context) {
   _context = context;
   _uniqueDisplayComponents = UINT_MAX;
 }
 
 
-void KstObjectTag::setTag(const QString& tag, const QStringList& context) {
+void ObjectTag::setTag(const QString& tag, const QStringList& context) {
   setTag(tag);
   setContext(context);
 }
 
 
-bool KstObjectTag::isValid() const {
+bool ObjectTag::isValid() const {
   return !_tag.isEmpty();
 }
 
 
-QString KstObjectTag::tagString() const {
+QString ObjectTag::tagString() const {
   return fullTag().join(tagSeparator);
 }
 
 
-void KstObjectTag::setUniqueDisplayComponents(unsigned int n) {
+void ObjectTag::setUniqueDisplayComponents(unsigned int n) {
   _uniqueDisplayComponents = n;
 }
 
 
-unsigned int KstObjectTag::uniqueDisplayComponents() const {
+unsigned int ObjectTag::uniqueDisplayComponents() const {
   return _uniqueDisplayComponents;
 }
 
 
-void KstObjectTag::setMinDisplayComponents(unsigned int n) {
+void ObjectTag::setMinDisplayComponents(unsigned int n) {
   _minDisplayComponents = n;
 }
 
 
-QStringList KstObjectTag::displayFullTag() const {
+QStringList ObjectTag::displayFullTag() const {
   QStringList out_tag = _context + QStringList(_tag);
   int componentsToDisplay = qMin(qMax(_uniqueDisplayComponents, _minDisplayComponents), components());
   while (out_tag.count() > componentsToDisplay) {
@@ -124,12 +126,12 @@ QStringList KstObjectTag::displayFullTag() const {
 }
 
 
-QString KstObjectTag::displayString() const {
+QString ObjectTag::displayString() const {
   return displayFullTag().join(tagSeparator);
 }
 
 
-KstObjectTag KstObjectTag::fromString(const QString& str) {
+ObjectTag ObjectTag::fromString(const QString& str) {
   QStringList l = str.split(tagSeparator);
   if (l.isEmpty()) {
     return invalidTag;
@@ -137,21 +139,21 @@ KstObjectTag KstObjectTag::fromString(const QString& str) {
 
   QString t = l.last();
   l.pop_back();
-  return KstObjectTag(t, l);
+  return ObjectTag(t, l);
 }
 
 
-bool KstObjectTag::operator==(const KstObjectTag& tag) const {
+bool ObjectTag::operator==(const ObjectTag& tag) const {
   return (_tag == tag._tag && _context == tag._context);
 }
 
 
-bool KstObjectTag::operator!=(const KstObjectTag& tag) const {
+bool ObjectTag::operator!=(const ObjectTag& tag) const {
   return (_tag != tag._tag || _context != tag._context);
 }
 
 
-QString KstObjectTag::cleanTag(const QString& in_tag) {
+QString ObjectTag::cleanTag(const QString& in_tag) {
   if (in_tag.contains(tagSeparator)) {
     QString tag = in_tag;
     tag.replace(tagSeparator, tagSeparatorReplacement);
@@ -162,4 +164,5 @@ QString KstObjectTag::cleanTag(const QString& in_tag) {
   }
 }
 
+}
 // vim: ts=2 sw=2 et

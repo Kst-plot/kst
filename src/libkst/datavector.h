@@ -37,7 +37,7 @@ class KST_EXPORT DataVector : public Vector {
 public:
   /** Create an RVECTOR */
   DataVector(DataSourcePtr file, const QString &field,
-             KstObjectTag tag,
+             ObjectTag tag,
              int f0, int n,
              int skip, bool in_doSkip,
              bool in_doAve);
@@ -54,7 +54,7 @@ public:
 
   /** change the properties of a DataVector */
   void change(DataSourcePtr file, const QString &field,
-              KstObjectTag tag,
+              ObjectTag tag,
               int f0, int n, int skip,
               bool in_doSkip, bool in_doAve);
 
@@ -124,9 +124,9 @@ public:
   KstSharedPtr<DataVector> makeDuplicate() const;
 
 private:
-  KstObject::UpdateType doUpdate(bool force = false);
+  Object::UpdateType doUpdate(bool force = false);
 
-  bool _dirty; // different from the KstObject dirty flag
+  bool _dirty; // different from the Object dirty flag
 
   /** Common contructor for an RVector */
   void commonRVConstructor(DataSourcePtr file,

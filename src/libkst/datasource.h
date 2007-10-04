@@ -22,7 +22,7 @@
 #include <qsettings.h>
 
 #include "kst_export.h"
-#include "kstobject.h"
+#include "object.h"
 #include "dateparser.h"
 #include "kstobjectlist.h"
 #include "scalar.h"
@@ -49,7 +49,7 @@ class Scalar;
 class DataSourceConfigWidget;
 typedef KstSharedPtr<Scalar> ScalarPtr;
 
-class KST_EXPORT DataSource : public KstObject {
+class KST_EXPORT DataSource : public Object {
   public:
     static void setupOnStartup(QSettings*);
     static void cleanupForExit();
@@ -73,7 +73,7 @@ class KST_EXPORT DataSource : public KstObject {
     DataSource(QSettings *cfg, const QString& filename, const QString& type);
     virtual ~DataSource();
 
-    void setTagName(const KstObjectTag& tag);
+    void setTagName(const ObjectTag& tag);
 
     bool hasConfigWidget() const;
     DataSourceConfigWidget *configWidget();
@@ -89,7 +89,7 @@ class KST_EXPORT DataSource : public KstObject {
     /** Updates number of samples.
       For ascii files, it also reads and writes to a temporary binary file.
       It returns 1 if there was new data. */
-    virtual KstObject::UpdateType update(int = -1);
+    virtual Object::UpdateType update(int = -1);
 
     /** Reads a field from the file.  Data is returned in the
       double Array v[]

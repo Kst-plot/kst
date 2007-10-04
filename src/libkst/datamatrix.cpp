@@ -28,7 +28,7 @@
 
 namespace Kst {
 
-DataMatrix::DataMatrix(DataSourcePtr file, const QString &field, KstObjectTag tag,
+DataMatrix::DataMatrix(DataSourcePtr file, const QString &field, ObjectTag tag,
                        int xStart, int yStart,
                        int xNumSteps, int yNumSteps,
                        bool doAve, bool doSkip, int skip)
@@ -37,7 +37,7 @@ DataMatrix::DataMatrix(DataSourcePtr file, const QString &field, KstObjectTag ta
 }
 
 
-DataMatrix::DataMatrix(const QDomElement &e) : KstMatrix(KstObjectTag::invalidTag, 0L, 1,1,0,0,1,1) {
+DataMatrix::DataMatrix(const QDomElement &e) : KstMatrix(ObjectTag::invalidTag, 0L, 1,1,0,0,1,1) {
   DataSourcePtr in_file = 0L, in_provider = 0L;
   QString in_field;
   QString in_tag;
@@ -90,7 +90,7 @@ DataMatrix::DataMatrix(const QDomElement &e) : KstMatrix(KstObjectTag::invalidTa
     in_file = in_provider;
   }
 
-  KstObjectTag tag = KstObjectTag::fromString(in_tag);
+  ObjectTag tag = ObjectTag::fromString(in_tag);
   if (in_file) {
     tag.setContext(in_file->tag().fullTag());
   }
@@ -130,7 +130,7 @@ DataMatrix::~DataMatrix() {
 
 
 void DataMatrix::change(DataSourcePtr file, const QString &field,
-                        KstObjectTag tag,
+                        ObjectTag tag,
                         int xStart, int yStart,
                         int xNumSteps, int yNumSteps,
                         bool doAve, bool doSkip, int skip) {
@@ -237,19 +237,19 @@ bool DataMatrix::isValid() const {
 }
 
 
-KstObject::UpdateType DataMatrix::update(int update_counter) {
+Object::UpdateType DataMatrix::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
   setDirty(false);
-  if (KstObject::checkUpdateCounter(update_counter) && !force) {
+  if (Object::checkUpdateCounter(update_counter) && !force) {
     return lastUpdateResult();
   }
 
   if (_file) {
     _file->writeLock();
   }
-  KstObject::UpdateType rc = doUpdate(force);
+  Object::UpdateType rc = doUpdate(force);
   if (_file) {
     _file->unlock();
   }
@@ -392,7 +392,7 @@ bool DataMatrix::doUpdateNoSkip(int realXStart, int realYStart, bool force) {
 }
 
 
-KstObject::UpdateType DataMatrix::doUpdate(bool force) {
+Object::UpdateType DataMatrix::doUpdate(bool force) {
 
   if (!_file) {
     return NO_CHANGE;
@@ -511,7 +511,7 @@ void DataMatrix::reload() {
 
 DataMatrixPtr DataMatrix::makeDuplicate() const {
   QString newTag = tag().tag() + "'";
-  return new DataMatrix(_file, _field, KstObjectTag(newTag, tag().context()),
+  return new DataMatrix(_file, _field, ObjectTag(newTag, tag().context()),
                         _reqXStart, _reqYStart, _reqNX, _reqNY,
                         _doAve, _doSkip, _skip);
 }
@@ -591,7 +591,7 @@ void DataMatrix::changeFile(DataSourcePtr file) {
   if (_file) {
     _file->writeLock();
   }
-  setTagName(KstObjectTag(tag().tag(), _file->tag(), false));
+  setTagName(ObjectTag(tag().tag(), _file->tag(), false));
   reset();
   if (_file) {
     _file->unlock();

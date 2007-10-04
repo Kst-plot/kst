@@ -30,13 +30,13 @@ class KST_EXPORT KstString : public KstPrimitive {
   Q_OBJECT
   Q_PROPERTY(bool orphan READ orphan WRITE setOrphan)
   public:
-    KstString(KstObjectTag in_tag = KstObjectTag::invalidTag, KstObject *provider = 0L, const QString& val = QString::null, bool orphan = false);
+    KstString(Kst::ObjectTag in_tag = Kst::ObjectTag::invalidTag, Kst::Object *provider = 0L, const QString& val = QString::null, bool orphan = false);
     KstString(QDomElement& e);
 
     ~KstString();
 
   public:
-    void setTagName(const KstObjectTag& tag);
+    void setTagName(const Kst::ObjectTag& tag);
 
     /** Save information */
     void save(QXmlStreamWriter &s);

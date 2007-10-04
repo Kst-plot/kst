@@ -138,7 +138,7 @@ void KstPSD::commonConstructor(const QString& in_tag, Kst::VectorPtr in_V,
   if (in_V) {
     _inputVectors[INVECTOR] = in_V;
   }
-  setTagName(KstObjectTag::fromString(in_tag));
+  setTagName(Kst::ObjectTag::fromString(in_tag));
   _Freq = in_freq;
   _Average = in_average;
   _Apodize = in_apodize;
@@ -156,10 +156,10 @@ void KstPSD::commonConstructor(const QString& in_tag, Kst::VectorPtr in_V,
   _last_n_new = 0;
 
   _PSDLen = 1;
-  Kst::VectorPtr ov = new Kst::Vector(KstObjectTag("freq", tag()), _PSDLen, this);
+  Kst::VectorPtr ov = new Kst::Vector(Kst::ObjectTag("freq", tag()), _PSDLen, this);
   _fVector = _outputVectors.insert(FVECTOR, ov);
 
-  ov = new Kst::Vector(KstObjectTag("sv", tag()), _PSDLen, this);
+  ov = new Kst::Vector(Kst::ObjectTag("sv", tag()), _PSDLen, this);
   _sVector = _outputVectors.insert(SVECTOR, ov);
 
   updateVectorLabels();
@@ -183,13 +183,13 @@ const KstCurveHintList *KstPSD::curveHints() const {
 }
 
 
-KstObject::UpdateType KstPSD::update(int update_counter) {
+Kst::Object::UpdateType KstPSD::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
   setDirty(false);
 
-  if (KstObject::checkUpdateCounter(update_counter) && !force) {
+  if (Kst::Object::checkUpdateCounter(update_counter) && !force) {
     return lastUpdateResult();
   }
 
@@ -202,7 +202,7 @@ KstObject::UpdateType KstPSD::update(int update_counter) {
     force = true;
   }
 
-  bool xUpdated = KstObject::UPDATE == iv->update(update_counter);
+  bool xUpdated = Kst::Object::UPDATE == iv->update(update_counter);
 
   const int v_len = iv->length();
 

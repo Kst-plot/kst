@@ -75,7 +75,7 @@ class KST_EXPORT KstBasicPlugin : public Kst::DataObject {
 
     //Pure virtual methods inherited from Kst::DataObject
     //We do this one ourselves for benefit of all plugins...
-    KstObject::UpdateType update(int updateCounter = -1);
+    Kst::Object::UpdateType update(int updateCounter = -1);
 
     //Regular virtual methods from Kst::DataObject
     void load(const QDomElement &e);

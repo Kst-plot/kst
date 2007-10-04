@@ -41,7 +41,7 @@ VectorTab::VectorTab(QWidget *parent)
           this, SLOT(showConfigWidget()));
 
   _fileName->setFile(QDir::currentPath());
-  //_fileName->setFile(KST::vectorDefaults.dataSource());
+  //_fileName->setFile(vectorDefaults.dataSource());
 
   //FIXME need a solution for replacing kio for this...
   _connect->setVisible(false);
@@ -173,7 +173,7 @@ void VectorTab::showConfigWidget() {
 }
 
 
-VectorDialog::VectorDialog(KstObjectPtr dataObject, QWidget *parent)
+VectorDialog::VectorDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
   if (editMode() == Edit)
@@ -198,14 +198,14 @@ QString VectorDialog::tagName() const {
     {
       QString tagName = DataDialog::tagName();
       tagName.replace(defaultTag(), _vectorTab->field());
-      return KST::suggestVectorName(tagName);
+      return suggestVectorName(tagName);
     }
   case VectorTab::GeneratedVector:
     {
       if (DataDialog::tagName() == defaultTag()) {
         const qreal from = _vectorTab->from();
         const qreal to = _vectorTab->to();
-        return KST::suggestVectorName(QString("(%1..%2)").arg(from).arg(to));
+        return suggestVectorName(QString("(%1..%2)").arg(from).arg(to));
       }
     }
   default:
@@ -214,7 +214,7 @@ QString VectorDialog::tagName() const {
 }
 
 
-KstObjectPtr VectorDialog::createNewDataObject() const {
+ObjectPtr VectorDialog::createNewDataObject() const {
   switch(_vectorTab->vectorMode()) {
   case VectorTab::DataVector:
     return createNewDataVector();
@@ -226,7 +226,7 @@ KstObjectPtr VectorDialog::createNewDataObject() const {
 }
 
 
-KstObjectPtr VectorDialog::createNewDataVector() const {
+ObjectPtr VectorDialog::createNewDataVector() const {
   const DataSourcePtr dataSource = _vectorTab->dataSource();
 
   //FIXME better validation than this please...
@@ -235,7 +235,7 @@ KstObjectPtr VectorDialog::createNewDataVector() const {
 
   const QString field = _vectorTab->field();
   const DataRange *dataRange = _vectorTab->dataRange();
-  const KstObjectTag tag = KstObjectTag(tagName(), dataSource->tag(), false);
+  const ObjectTag tag = ObjectTag(tagName(), dataSource->tag(), false);
 
 //   qDebug() << "Creating new data vector ===>"
 //            << "\n\tfileName:" << dataSource->fileName()
@@ -261,15 +261,15 @@ KstObjectPtr VectorDialog::createNewDataVector() const {
   vector->update(0);
   vector->unlock();
 
-  return static_cast<KstObjectPtr>(vector);
+  return static_cast<ObjectPtr>(vector);
 }
 
 
-KstObjectPtr VectorDialog::createNewGeneratedVector() const {
+ObjectPtr VectorDialog::createNewGeneratedVector() const {
   const qreal from = _vectorTab->from();
   const qreal to = _vectorTab->to();
   const int numberOfSamples = _vectorTab->numberOfSamples();
-  const KstObjectTag tag = KstObjectTag(tagName(), KstObjectTag::globalTagContext);
+  const ObjectTag tag = ObjectTag(tagName(), ObjectTag::globalTagContext);
 
 //   qDebug() << "Creating new generated vector ===>"
 //            << "\n\tfrom:" << from
@@ -279,11 +279,11 @@ KstObjectPtr VectorDialog::createNewGeneratedVector() const {
 //            << endl;
 
   GeneratedVectorPtr vector = new GeneratedVector(from, to, numberOfSamples, tag);
-  return static_cast<KstObjectPtr>(vector);
+  return static_cast<ObjectPtr>(vector);
 }
 
 
-KstObjectPtr VectorDialog::editExistingDataObject() const {
+ObjectPtr VectorDialog::editExistingDataObject() const {
   qDebug() << "editExistingDataObject" << endl;
   return 0;
 }

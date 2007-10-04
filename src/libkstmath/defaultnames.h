@@ -1,5 +1,5 @@
 /***************************************************************************
-                             kstdefaultnames.h
+                             defaultnames.h
                              -------------------
     begin                : July 31, 2004
     copyright            : (C) 2004 C. Barth Netterfield
@@ -15,22 +15,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTDEFAULTNAMES_H
-#define KSTDEFAULTNAMES_H
+#ifndef DEFAULTNAMES_H
+#define DEFAULTNAMES_H
 
 #include <qstring.h>
 
 #include "kst_export.h"
 
-namespace KST {
+namespace Kst {
   extern KST_EXPORT QString suggestPlotName();
-  extern KST_EXPORT QString suggestCurveName(KstObjectTag vector_name, bool add_c=false);
-  extern KST_EXPORT QString suggestPSDName(KstObjectTag vector_name);
-  extern KST_EXPORT QString suggestCSDName(KstObjectTag vector_name);
+  extern KST_EXPORT QString suggestCurveName(ObjectTag vector_name, bool add_c=false);
+  extern KST_EXPORT QString suggestPSDName(ObjectTag vector_name);
+  extern KST_EXPORT QString suggestCSDName(ObjectTag vector_name);
   extern KST_EXPORT QString suggestEQName(const QString& name_in);
-  extern KST_EXPORT QString suggestHistogramName(KstObjectTag vector_name);
-  extern KST_EXPORT QString suggestPluginName(const QString& pname, KstObjectTag vname = KstObjectTag::invalidTag);
-  extern KST_EXPORT QString suggestImageName(KstObjectTag matrix_name);
+  extern KST_EXPORT QString suggestHistogramName(ObjectTag vector_name);
+  extern KST_EXPORT QString suggestPluginName(const QString& pname, ObjectTag vname = ObjectTag::invalidTag);
+  extern KST_EXPORT QString suggestImageName(ObjectTag matrix_name);
 }
 
 #endif

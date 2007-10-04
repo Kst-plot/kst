@@ -361,7 +361,7 @@ void MainWindow::demoModel() {
   v->resize(999999);
   VectorPtr v2 = new Vector;
   v2->resize(999999);
-  EditableVectorPtr v3 = new EditableVector(25, KstObjectTag::fromString("Editable V"));
+  EditableVectorPtr v3 = new EditableVector(25, ObjectTag::fromString("Editable V"));
   double *d = const_cast<double *>(v->value()); // yay :)
   double *d2 = const_cast<double *>(v2->value()); // yay :)
   d[0] = 1;

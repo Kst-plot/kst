@@ -27,7 +27,7 @@ EditableVector::EditableVector(const QString &tag, const QByteArray &data)
 }
 
 
-EditableVector::EditableVector(int n, KstObjectTag tag)
+EditableVector::EditableVector(int n, ObjectTag tag)
 : Vector(tag, n) {
   _editable = true;
   _saveable = true;
@@ -35,16 +35,16 @@ EditableVector::EditableVector(int n, KstObjectTag tag)
 }
 
 
-KstObject::UpdateType EditableVector::update(int update_counter) {
+Object::UpdateType EditableVector::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
 
-  if (KstObject::checkUpdateCounter(update_counter) && !force) {
+  if (Object::checkUpdateCounter(update_counter) && !force) {
     return lastUpdateResult();
   }
 
-  KstObject::UpdateType baseRC = Vector::update(update_counter);
+  Object::UpdateType baseRC = Vector::update(update_counter);
   if (force) {
     baseRC = UPDATE;
   }

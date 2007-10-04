@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include "datacollection.h"
-#include "kstobject.h"
+#include "object.h"
 #include "kstobjectcollection.h"
 #include "defaultprimitivenames.h"
 
@@ -24,14 +24,16 @@
 #include "kst_i18n.h"
 #include <stdio.h>
 
+namespace Kst {
+
 // takes a field name and returns a unique tag name, which will be
 // the field if that is unique, or field-N if there are already N
 // vectors of that name
-QString KST::suggestVectorName(const QString& field) {
+QString suggestVectorName(const QString& field) {
   int i = 0;
   QString name(field);
 
-  while (Kst::Data::self()->vectorTagNameNotUnique(name, false)) {
+  while (Data::self()->vectorTagNameNotUnique(name, false)) {
     name = QString("%1-%2").arg(field).arg(++i);
   }
 
@@ -39,11 +41,11 @@ QString KST::suggestVectorName(const QString& field) {
 }
 
 
-QString KST::suggestMatrixName(const QString& vectorName) {
+QString suggestMatrixName(const QString& vectorName) {
   int i = 1;
   QString name(vectorName);
 
-  while (Kst::matrixList.tagExists(name)) {
+  while (matrixList.tagExists(name)) {
     name = QString("%1-%2").arg(vectorName).arg(++i);
   }
 
@@ -52,9 +54,9 @@ QString KST::suggestMatrixName(const QString& vectorName) {
 
 
 template <class T>
-KstObjectTag suggestUniqueTag(const KstObjectTag& baseTag, const KstObjectCollection<T>& coll) {
+ObjectTag suggestUniqueTag(const ObjectTag& baseTag, const KstObjectCollection<T>& coll) {
   int i = 0;
-  KstObjectTag tag = baseTag;
+  ObjectTag tag = baseTag;
 
   while (coll.tagExists(tag)) {
     tag.setTag((QString("%1-%2").arg(baseTag.tag()).arg(++i)));
@@ -72,20 +74,22 @@ KstObjectTag suggestUniqueTag(const KstObjectTag& baseTag, const KstObjectCollec
   */
 }
 
-KstObjectTag KST::suggestUniqueMatrixTag(KstObjectTag baseTag) {
-  return suggestUniqueTag(baseTag, Kst::matrixList);
+ObjectTag suggestUniqueMatrixTag(ObjectTag baseTag) {
+  return suggestUniqueTag(baseTag, matrixList);
 }
 
-KstObjectTag KST::suggestUniqueScalarTag(KstObjectTag baseTag) {
-  return suggestUniqueTag(baseTag, Kst::scalarList);
+ObjectTag suggestUniqueScalarTag(ObjectTag baseTag) {
+  return suggestUniqueTag(baseTag, scalarList);
 }
 
-KstObjectTag KST::suggestUniqueStringTag(KstObjectTag baseTag) {
-  return suggestUniqueTag(baseTag, Kst::stringList);
+ObjectTag suggestUniqueStringTag(ObjectTag baseTag) {
+  return suggestUniqueTag(baseTag, stringList);
 }
 
-KstObjectTag KST::suggestUniqueVectorTag(KstObjectTag baseTag) {
-  return suggestUniqueTag(baseTag, Kst::vectorList);
+ObjectTag suggestUniqueVectorTag(ObjectTag baseTag) {
+  return suggestUniqueTag(baseTag, vectorList);
+}
+
 }
 
 // vim: ts=2 sw=2 et

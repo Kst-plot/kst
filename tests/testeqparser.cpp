@@ -324,12 +324,12 @@ void TestEqParser::testEqParser() {
   QVERIFY(validateEquation("257|-1", 0.0, -1));
 
   // Scalars
-  new Kst::Scalar(KstObjectTag::fromString("test1"), 0L, 1.0, true);
-  new Kst::Scalar(KstObjectTag::fromString("test2"), 0L, 0.0, true);
-  new Kst::Scalar(KstObjectTag::fromString("test3"), 0L, -1.0, true);
-  new Kst::Scalar(KstObjectTag::fromString("test4"), 0L, _NOPOINT, true);
-  new Kst::Scalar(KstObjectTag::fromString("test5"), 0L, INF, true);
-  new Kst::Scalar(KstObjectTag::fromString("test6"), 0L, -INF, true);
+  new Kst::Scalar(Kst::ObjectTag::fromString("test1"), 0L, 1.0, true);
+  new Kst::Scalar(Kst::ObjectTag::fromString("test2"), 0L, 0.0, true);
+  new Kst::Scalar(Kst::ObjectTag::fromString("test3"), 0L, -1.0, true);
+  new Kst::Scalar(Kst::ObjectTag::fromString("test4"), 0L, _NOPOINT, true);
+  new Kst::Scalar(Kst::ObjectTag::fromString("test5"), 0L, INF, true);
+  new Kst::Scalar(Kst::ObjectTag::fromString("test6"), 0L, -INF, true);
 
   QVERIFY(validateEquation("[test1]", 0.0, 1.0));
   QVERIFY(validateEquation("[test4]", 0.0, _NOPOINT));
@@ -341,12 +341,12 @@ void TestEqParser::testEqParser() {
   QVERIFY(validateEquation("[=10+10]", 0.0, 20.0));
   
   // Vectors
-  Kst::Vector::generateVector(0, 1.0, 10, KstObjectTag::fromString("1"));
-  Kst::Vector::generateVector(0, 1.0, 10, KstObjectTag::fromString("V1"));
-  Kst::Vector::generateVector(1.0, 2.0, 10, KstObjectTag::fromString("V2"));
-  Kst::Vector::generateVector(0, 1.0, 2, KstObjectTag::fromString("V3"));
-  Kst::Vector::generateVector(-1.0, 1.0, 1000, KstObjectTag::fromString("V4"));
-  Kst::Vector::generateVector(-1.0, 1.0, 1000, KstObjectTag::fromString("V5-%+-_!"));
+  Kst::Vector::generateVector(0, 1.0, 10, Kst::ObjectTag::fromString("1"));
+  Kst::Vector::generateVector(0, 1.0, 10, Kst::ObjectTag::fromString("V1"));
+  Kst::Vector::generateVector(1.0, 2.0, 10, Kst::ObjectTag::fromString("V2"));
+  Kst::Vector::generateVector(0, 1.0, 2, Kst::ObjectTag::fromString("V3"));
+  Kst::Vector::generateVector(-1.0, 1.0, 1000, Kst::ObjectTag::fromString("V4"));
+  Kst::Vector::generateVector(-1.0, 1.0, 1000, Kst::ObjectTag::fromString("V5-%+-_!"));
   QVERIFY(validateEquation("[V2] - [V1]", 0.0, 1.0));
   QVERIFY(validateEquation("[V2[9]]", 0.0, 2.0));
   QVERIFY(validateEquation("[V2[5+4]]", 0.0, 2.0));
@@ -358,7 +358,7 @@ void TestEqParser::testEqParser() {
   QVERIFY(validateEquation("2*plugin(bin, [V4], 12)", 1.0, -1.9779779779779778));
   QVERIFY(validateEquation("4*plugin(bin, [V4], x)", 5.0, -3.9839839839839839));
   QVERIFY(validateEquation("-3*plugin(bin, x, 12)", 2.0, _NOPOINT));
-  xVector = Kst::Vector::generateVector(0, 100, 2000, KstObjectTag::fromString("XVector"));
+  xVector = Kst::Vector::generateVector(0, 100, 2000, Kst::ObjectTag::fromString("XVector"));
   QVERIFY(validateEquation("-3*plugin(bin, x, 12)", 2.0, -0.8254127063531767));
   QVERIFY(validateEquation("-3*plugin(bin, y, 12)", 2.0, _NOPOINT));
 

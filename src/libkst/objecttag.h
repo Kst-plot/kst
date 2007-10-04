@@ -9,17 +9,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTOBJECTTAG_H
-#define KSTOBJECTTAG_H
+#ifndef OBJECTTAG_H
+#define OBJECTTAG_H
 
 #include <qstring.h>
 #include <qstringlist.h>
 
 #include "kst_export.h"
 
-class KstObjectTag {
+namespace Kst {
+
+class ObjectTag {
   public:
-    static const KstObjectTag invalidTag;
+    static const ObjectTag invalidTag;
 
     static const QChar tagSeparator;
     static const QChar tagSeparatorReplacement;
@@ -29,13 +31,13 @@ class KstObjectTag {
     static const QStringList orphanTagContext;
 
     // construct a null tag
-    KstObjectTag();
+    ObjectTag();
     // construct a tag in a given context
-    KstObjectTag(const QString& tag, const QStringList& context, unsigned int minDisplayComponents = 1);
+    ObjectTag(const QString& tag, const QStringList& context, unsigned int minDisplayComponents = 1);
     // construct a tag in the context of another tag
-    KstObjectTag(const QString& tag, const KstObjectTag& contextTag, bool alwaysShowContext = true);
+    ObjectTag(const QString& tag, const ObjectTag& contextTag, bool alwaysShowContext = true);
     // construct a tag from a fullTag representation
-    KstObjectTag(const QStringList &fullTag);
+    ObjectTag(const QStringList &fullTag);
 
     QString tag() const;
     QStringList fullTag() const;
@@ -68,11 +70,11 @@ class KstObjectTag {
     QString displayString() const;
 
     // factory for String representation
-    static KstObjectTag fromString(const QString& str);
+    static ObjectTag fromString(const QString& str);
 
-    bool operator==(const KstObjectTag& tag) const;
+    bool operator==(const ObjectTag& tag) const;
 
-    bool operator!=(const KstObjectTag& tag) const;
+    bool operator!=(const ObjectTag& tag) const;
 
     static QString cleanTag(const QString& in_tag);
 
@@ -83,6 +85,7 @@ class KstObjectTag {
     unsigned int _uniqueDisplayComponents;  // number of components necessary for unique display tag
 } KST_EXPORT;
 
+}
 #endif
 
 // vim: ts=2 sw=2 et

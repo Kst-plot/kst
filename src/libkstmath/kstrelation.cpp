@@ -28,7 +28,7 @@ KstRelation::KstRelation(const QDomElement& e) {
 }
 
 
-KstRelation::KstRelation() : KstObject() {
+KstRelation::KstRelation() : Kst::Object() {
   commonConstructor();
 }
 

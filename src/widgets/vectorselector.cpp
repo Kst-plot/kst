@@ -80,7 +80,7 @@ void VectorSelector::newVector() {
 
 
 void VectorSelector::editVector() {
-  DialogLauncher::self()->showVectorDialog(KstObjectPtr(selectedVector()));
+  DialogLauncher::self()->showVectorDialog(ObjectPtr(selectedVector()));
 }
 
 

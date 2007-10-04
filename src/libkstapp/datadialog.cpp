@@ -26,7 +26,7 @@
 
 namespace Kst {
 
-DataDialog::DataDialog(KstObjectPtr dataObject, QWidget *parent)
+DataDialog::DataDialog(Kst::ObjectPtr dataObject, QWidget *parent)
   : Dialog(parent), _defaultTag("<Auto Name>"), _dataObject(dataObject) {
 
   if (_dataObject)
@@ -103,7 +103,7 @@ void DataDialog::addDataTab(DataTab *tab) {
 }
 
 void DataDialog::slotOk() {
-  KstObjectPtr ptr;
+  Kst::ObjectPtr ptr;
   if (!dataObject())
     ptr = createNewDataObject();
   else

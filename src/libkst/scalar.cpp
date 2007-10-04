@@ -45,16 +45,16 @@ void Scalar::clearScalarsDirty() {
 }
 
 /** Create the base scalar */
-Scalar::Scalar(KstObjectTag in_tag, KstObject *provider, double val, bool orphan, bool displayable, bool editable)
+Scalar::Scalar(ObjectTag in_tag, Object *provider, double val, bool orphan, bool displayable, bool editable)
 : KstPrimitive(provider), _value(val), _orphan(orphan), _displayable(displayable), _editable(editable) {
   QString _tag = in_tag.tag();
   if (_tag.isEmpty()) {
     do {
       _tag = i18n("Anonymous Scalar %1", iAnonymousScalarCounter++);
     } while (Data::self()->vectorTagNameNotUniqueInternal(_tag));  // FIXME: why vector?
-    KstObject::setTagName(KstObjectTag(_tag, in_tag.context()));
+    Object::setTagName(ObjectTag(_tag, in_tag.context()));
   } else {
-    KstObject::setTagName(KST::suggestUniqueScalarTag(in_tag));
+    Object::setTagName(suggestUniqueScalarTag(in_tag));
   }
 
 
@@ -75,7 +75,7 @@ Scalar::Scalar(const QDomElement& e)
     QDomElement e = n.toElement();
     if(!e.isNull()) {
       if (e.tagName() == "tag") {
-        setTagName(KstObjectTag::fromString(e.text()));
+        setTagName(ObjectTag::fromString(e.text()));
       } else if (e.tagName() == "orphan") {
         _orphan = true;
       } else if (e.tagName() == "value") {
@@ -99,13 +99,13 @@ Scalar::~Scalar() {
 }
 
 
-KstObject::UpdateType Scalar::update(int updateCounter) {
+Object::UpdateType Scalar::update(int updateCounter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
   setDirty(false);
 
-  if (KstObject::checkUpdateCounter(updateCounter) && !force) {
+  if (Object::checkUpdateCounter(updateCounter) && !force) {
     return lastUpdateResult();
   }
 
@@ -194,7 +194,7 @@ void Scalar::setEditable(bool editable) {
 }
 
 
-void Scalar::setTagName(const KstObjectTag& newTag) {
+void Scalar::setTagName(const ObjectTag& newTag) {
   if (newTag == tag()) {
     return;
   }

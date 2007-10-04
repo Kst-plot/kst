@@ -24,9 +24,9 @@ namespace Kst {
 class EditableVector : public Vector {
  public:
   KST_EXPORT EditableVector(const QString &tag, const QByteArray &data);
-  KST_EXPORT EditableVector(int n, KstObjectTag tag);
+  KST_EXPORT EditableVector(int n, ObjectTag tag);
 
-  KstObject::UpdateType update(int update_counter);
+  Object::UpdateType update(int update_counter);
 
   void setSaveData(bool save);
 };

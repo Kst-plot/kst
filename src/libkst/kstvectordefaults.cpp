@@ -93,7 +93,7 @@ void KstVectorDefaults::sync() {
 #ifdef Q_WS_WIN32
     if (dsp) {
 #else
-    if (dsp && !kst_cast<Kst::StdinSource>(dsp)) {
+    if (dsp && !Kst::kst_cast<Kst::StdinSource>(dsp)) {
 #endif
       break;
     }

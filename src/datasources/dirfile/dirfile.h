@@ -29,7 +29,7 @@ class DirFileSource : public Kst::DataSource {
 
     bool init();
 
-    KstObject::UpdateType update(int = -1);
+    Kst::Object::UpdateType update(int = -1);
 
     int readField(double *v, const QString &field, int s, int n);
 

@@ -106,14 +106,14 @@ int main(int argc, char *argv[]) {
               field_list[i], in_filename);
       return -3;
     }
-    Kst::DataVectorPtr v = new Kst::DataVector(file, field_list[i], KstObjectTag(field_list[i], file->tag()), start_frame, n_frames, n_skip, n_skip>0, do_ave);
+    Kst::DataVectorPtr v = new Kst::DataVector(file, field_list[i], Kst::ObjectTag(field_list[i], file->tag()), start_frame, n_frames, n_skip, n_skip>0, do_ave);
     vlist.append(v);
   }
 
   /* find NS */
   int NS=0;
   for (int i = 0; i < n_field; i++) {
-    while (vlist.at(i)->update(-1) != KstObject::NO_CHANGE)
+    while (vlist.at(i)->update(-1) != Kst::Object::NO_CHANGE)
       ; // read vector
 
     if (vlist.at(i)->length() > NS)

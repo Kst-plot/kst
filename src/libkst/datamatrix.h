@@ -25,7 +25,7 @@ class KST_EXPORT DataMatrix : public KstMatrix {
   public:
     
     // constructor
-    DataMatrix(DataSourcePtr file, const QString &field, KstObjectTag tag,
+    DataMatrix(DataSourcePtr file, const QString &field, ObjectTag tag,
                int xStart, int yStart,
                int xNumSteps, int yNumSteps,
                bool doAve, bool doSkip, int skip);
@@ -40,7 +40,7 @@ class KST_EXPORT DataMatrix : public KstMatrix {
     
     // change properties of DataMatrix
     void change(DataSourcePtr file, const QString &field,
-                KstObjectTag tag,
+                ObjectTag tag,
                 int xStart, int yStart,
                 int xNumSteps, int yNumSteps,
                 bool doAve, bool doSkip, int skip);
@@ -88,7 +88,7 @@ class KST_EXPORT DataMatrix : public KstMatrix {
                            bool doAve, bool doSkip, int skip);
     
     // internal update function, called by update()
-    KstObject::UpdateType doUpdate(bool force = false);
+    Object::UpdateType doUpdate(bool force = false);
     
     bool doUpdateSkip(int realXStart, int realYStart, bool force);
     bool doUpdateNoSkip(int realXStart, int realYStart, bool force);

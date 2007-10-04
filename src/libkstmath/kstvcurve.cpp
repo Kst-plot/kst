@@ -195,7 +195,7 @@ void KstVCurve::commonConstructor(const QString &in_tag, const QColor &in_color)
   _typeString = i18n("Curve");
   _type = "Curve";
   Color = in_color;
-  setTagName(KstObjectTag::fromString(in_tag));
+  setTagName(Kst::ObjectTag::fromString(in_tag));
   updateParsedLegendTag();
 }
 
@@ -204,13 +204,13 @@ KstVCurve::~KstVCurve() {
 }
 
 
-KstObject::UpdateType KstVCurve::update(int update_counter) {
+Kst::Object::UpdateType KstVCurve::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
   setDirty(false);
 
-  if (KstObject::checkUpdateCounter(update_counter) && !force) {
+  if (Kst::Object::checkUpdateCounter(update_counter) && !force) {
     return lastUpdateResult();
   }
 
@@ -392,57 +392,57 @@ void KstVCurve::getEYPoints(int i, double &x, double &y, double &eyminus, double
 }
 
 
-KstObjectTag KstVCurve::xVTag() const {
+Kst::ObjectTag KstVCurve::xVTag() const {
   Kst::VectorPtr xv = xVector();
   if (xv) {
     return xv->tag();
   }
-  return KstObjectTag::invalidTag;
+  return Kst::ObjectTag::invalidTag;
 }
 
 
-KstObjectTag KstVCurve::yVTag() const {
+Kst::ObjectTag KstVCurve::yVTag() const {
   Kst::VectorPtr yv = yVector();
   if (yv) {
     return yv->tag();
   }
-  return KstObjectTag::invalidTag;
+  return Kst::ObjectTag::invalidTag;
 }
 
 
-KstObjectTag KstVCurve::xETag() const {
+Kst::ObjectTag KstVCurve::xETag() const {
   Kst::VectorPtr v = xErrorVector();
   if (v) {
     return v->tag();
   }
-  return KstObjectTag::invalidTag;
+  return Kst::ObjectTag::invalidTag;
 }
 
 
-KstObjectTag KstVCurve::yETag() const {
+Kst::ObjectTag KstVCurve::yETag() const {
   Kst::VectorPtr v = yErrorVector();
   if (v) {
     return v->tag();
   }
-  return KstObjectTag::invalidTag;
+  return Kst::ObjectTag::invalidTag;
 }
 
 
-KstObjectTag KstVCurve::xEMinusTag() const {
+Kst::ObjectTag KstVCurve::xEMinusTag() const {
   Kst::VectorPtr v = xMinusErrorVector();
   if (v) {
     return v->tag();
   }
-  return KstObjectTag::invalidTag;
+  return Kst::ObjectTag::invalidTag;
 }
 
 
-KstObjectTag KstVCurve::yEMinusTag() const {
+Kst::ObjectTag KstVCurve::yEMinusTag() const {
   Kst::VectorPtr v = yMinusErrorVector();
   if (v) {
     return v->tag();
   }
-  return KstObjectTag::invalidTag;
+  return Kst::ObjectTag::invalidTag;
 }
 
 
@@ -1747,7 +1747,7 @@ Kst::DataObjectPtr KstVCurve::providerDataObject() const {
   Kst::DataObjectPtr provider = 0L;
   if (vp) {
     vp->readLock();
-    provider = kst_cast<Kst::DataObject>(vp->provider());
+    provider = Kst::kst_cast<Kst::DataObject>(vp->provider());
     vp->unlock();
   }
   return provider;

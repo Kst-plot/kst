@@ -73,17 +73,17 @@ class KST_EXPORT VectorTab : public DataTab, Ui::VectorTab {
 class KST_EXPORT VectorDialog : public DataDialog {
   Q_OBJECT
   public:
-    VectorDialog(KstObjectPtr dataObject, QWidget *parent = 0);
+    VectorDialog(Kst::ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~VectorDialog();
 
   protected:
     virtual QString tagName() const;
-    virtual KstObjectPtr createNewDataObject() const;
-    virtual KstObjectPtr editExistingDataObject() const;
+    virtual Kst::ObjectPtr createNewDataObject() const;
+    virtual Kst::ObjectPtr editExistingDataObject() const;
 
   private:
-    KstObjectPtr createNewDataVector() const;
-    KstObjectPtr createNewGeneratedVector() const;
+    Kst::ObjectPtr createNewDataVector() const;
+    Kst::ObjectPtr createNewGeneratedVector() const;
 
   private:
     VectorTab *_vectorTab;

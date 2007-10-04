@@ -24,30 +24,30 @@ class KST_EXPORT DialogLauncherGui : public DialogLauncher {
     virtual ~DialogLauncherGui();
 
     //primitives
-    virtual void showVectorDialog(KstObjectPtr objectPtr = 0);
+    virtual void showVectorDialog(Kst::ObjectPtr objectPtr = 0);
 
-    virtual void showMatrixDialog(KstObjectPtr objectPtr = 0);
+    virtual void showMatrixDialog(Kst::ObjectPtr objectPtr = 0);
 
-    virtual void showScalarDialog(KstObjectPtr objectPtr = 0);
+    virtual void showScalarDialog(Kst::ObjectPtr objectPtr = 0);
 
-    virtual void showStringDialog(KstObjectPtr objectPtr = 0);
+    virtual void showStringDialog(Kst::ObjectPtr objectPtr = 0);
 
     //standard objects
-    virtual void showCurveDialog(KstObjectPtr objectPtr = 0);
+    virtual void showCurveDialog(Kst::ObjectPtr objectPtr = 0);
 
-    virtual void showImageDialog(KstObjectPtr objectPtr = 0);
+    virtual void showImageDialog(Kst::ObjectPtr objectPtr = 0);
 
     //standard data objects
-    virtual void showEquationDialog(KstObjectPtr objectPtr = 0);
+    virtual void showEquationDialog(Kst::ObjectPtr objectPtr = 0);
 
-    virtual void showHistogramDialog(KstObjectPtr objectPtr = 0);
+    virtual void showHistogramDialog(Kst::ObjectPtr objectPtr = 0);
 
-    virtual void showPSDDialog(KstObjectPtr objectPtr = 0);
+    virtual void showPSDDialog(Kst::ObjectPtr objectPtr = 0);
 
-    virtual void showCSDDialog(KstObjectPtr objectPtr = 0);
+    virtual void showCSDDialog(Kst::ObjectPtr objectPtr = 0);
 
     //plugins
-    virtual void showBasicPluginDialog(KstObjectPtr objectPtr = 0);
+    virtual void showBasicPluginDialog(Kst::ObjectPtr objectPtr = 0);
 };
 
 }

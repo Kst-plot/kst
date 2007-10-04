@@ -33,15 +33,15 @@ class KST_EXPORT Scalar : public KstPrimitive {
   Q_PROPERTY(double value READ value WRITE setValue)
   Q_PROPERTY(bool displayable READ displayable WRITE setDisplayable)
   public:
-    Scalar(KstObjectTag tag = KstObjectTag::invalidTag,
-              KstObject *provider = 0L, double val = 0.0, bool orphan = false,
+    Scalar(ObjectTag tag = ObjectTag::invalidTag,
+              Object *provider = 0L, double val = 0.0, bool orphan = false,
               bool displayable = true, bool editable = false);
     Scalar(const QDomElement& e);
 
     virtual ~Scalar();
 
   public:
-    void setTagName(const KstObjectTag& tag);
+    void setTagName(const ObjectTag& tag);
 
     /* return true if any scalars are dirty at the moment */
     static bool scalarsDirty();

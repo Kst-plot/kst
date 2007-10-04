@@ -26,59 +26,59 @@ DialogLauncherGui::~DialogLauncherGui() {
 }
 
 
-void DialogLauncherGui::showVectorDialog(KstObjectPtr objectPtr) {
+void DialogLauncherGui::showVectorDialog(Kst::ObjectPtr objectPtr) {
   VectorDialog dialog(objectPtr, kstApp->mainWindow());
   dialog.exec();
 }
 
 
-void DialogLauncherGui::showMatrixDialog(KstObjectPtr objectPtr) {
+void DialogLauncherGui::showMatrixDialog(Kst::ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncherGui::showScalarDialog(KstObjectPtr objectPtr) {
+void DialogLauncherGui::showScalarDialog(Kst::ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncherGui::showStringDialog(KstObjectPtr objectPtr) {
+void DialogLauncherGui::showStringDialog(Kst::ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncherGui::showCurveDialog(KstObjectPtr objectPtr) {
+void DialogLauncherGui::showCurveDialog(Kst::ObjectPtr objectPtr) {
   CurveDialog dialog(objectPtr, kstApp->mainWindow());
   dialog.exec();
 }
 
 
-void DialogLauncherGui::showImageDialog(KstObjectPtr objectPtr) {
+void DialogLauncherGui::showImageDialog(Kst::ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncherGui::showEquationDialog(KstObjectPtr objectPtr) {
+void DialogLauncherGui::showEquationDialog(Kst::ObjectPtr objectPtr) {
   EquationDialog(objectPtr, kstApp->mainWindow()).exec();
 }
 
 
-void DialogLauncherGui::showHistogramDialog(KstObjectPtr objectPtr) {
+void DialogLauncherGui::showHistogramDialog(Kst::ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncherGui::showPSDDialog(KstObjectPtr objectPtr) {
+void DialogLauncherGui::showPSDDialog(Kst::ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncherGui::showCSDDialog(KstObjectPtr objectPtr) {
+void DialogLauncherGui::showCSDDialog(Kst::ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncherGui::showBasicPluginDialog(KstObjectPtr objectPtr) {
+void DialogLauncherGui::showBasicPluginDialog(Kst::ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 

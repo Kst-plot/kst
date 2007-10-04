@@ -21,13 +21,13 @@ namespace Kst {
 class KST_EXPORT GeneratedMatrix : public KstMatrix {
   public:
     GeneratedMatrix(const QDomElement &e);
-    GeneratedMatrix(KstObjectTag tag, uint nX, uint nY,
+    GeneratedMatrix(ObjectTag tag, uint nX, uint nY,
                double minX, double minY, double stepX, double stepY,
                double gradZMin, double gradZMax, bool xDirection);
 
     virtual void save(QTextStream &ts, const QString& indent = QString::null);
 
-    void change(KstObjectTag tag, uint nX, uint nY,
+    void change(ObjectTag tag, uint nX, uint nY,
                 double minX, double minY, double stepX, double stepY,
                 double gradZMin, double gradZMax, bool xDirection);
     

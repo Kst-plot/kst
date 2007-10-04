@@ -35,13 +35,13 @@
 
 namespace Kst {
 
-DataObject::DataObject() : KstObject() {
+DataObject::DataObject() : Object() {
   //qDebug() << "+++ CREATING DATA OBJECT: " << (void*)this << endl;
   _curveHints = new KstCurveHintList;
   _isInputLoaded = false;
 }
 
-DataObject::DataObject(const QDomElement& e) : KstObject() {
+DataObject::DataObject(const QDomElement& e) : Object() {
   Q_UNUSED(e)
   //qDebug() << "+++ CREATING DATA OBJECT: " << (void*)this << endl;
   _curveHints = new KstCurveHintList;
@@ -298,7 +298,7 @@ int DataObject::getUsage() const {
     }  
   }
 
-  return KstObject::getUsage() + rc;
+  return Object::getUsage() + rc;
 }
 
 
@@ -316,7 +316,7 @@ void DataObject::readLock() const {
   qDebug() << (void*)this << " (" << this->type() << ": " << this->tag().tagString() << ") DataObject::readLock() by tid=" << (int)QThread::currentThread() << ": read locking myself" << endl;
   #endif
 
-  KstObject::readLock();
+  Object::readLock();
 }
 
 
@@ -325,7 +325,7 @@ void DataObject::writeLock() const {
   qDebug() << (void*)this << " (" << this->type() << ": " << this->tag().tagString() << ") DataObject::writeLock() by tid=" << (int)QThread::currentThread() << ": write locking myself" << endl;
   #endif
 
-  KstObject::writeLock();
+  Object::writeLock();
 }
 
 
@@ -334,7 +334,7 @@ void DataObject::unlock() const {
   qDebug() << (void*)this << " (" << this->type() << ": " << this->tag().tagString() << ") DataObject::unlock() by tid=" << (int)QThread::currentThread() << ": unlocking myself" << endl;
   #endif
 
-  KstObject::unlock();
+  Object::unlock();
 }
 
 
@@ -674,7 +674,7 @@ void DataObject::replaceDependency(KstMatrixPtr oldMatrix, KstMatrixPtr newMatri
 }
 
 
-bool DataObject::uses(KstObjectPtr p) const {
+bool DataObject::uses(ObjectPtr p) const {
   VectorPtr v = kst_cast<Vector>(p);
   if (v) {
     for (VectorMap::ConstIterator j = _inputVectors.begin(); j != _inputVectors.end(); ++j) {

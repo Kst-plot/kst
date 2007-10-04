@@ -25,8 +25,8 @@
 #include <qdebug.h>
 
 
-KstPrimitive::KstPrimitive(KstObject *provider)
-: KstObject(), _provider(provider) {
+KstPrimitive::KstPrimitive(Kst::Object *provider)
+: Kst::Object(), _provider(provider) {
 }
 
 
@@ -34,7 +34,7 @@ KstPrimitive::~KstPrimitive() {
 }
 
 
-KstObject::UpdateType KstPrimitive::update(int update_counter) {
+Kst::Object::UpdateType KstPrimitive::update(int update_counter) {
 #ifdef UPDATEDEBUG
   qDebug() << "Updating Primitive " << tag().displayString() << endl;
 #endif
@@ -43,31 +43,31 @@ KstObject::UpdateType KstPrimitive::update(int update_counter) {
   bool force = dirty();
   setDirty(false);
 
-  if (KstObject::checkUpdateCounter(update_counter) && !force) {
+  if (Kst::Object::checkUpdateCounter(update_counter) && !force) {
     return lastUpdateResult();
   }
 
-  KstObject::UpdateType providerRC = NO_CHANGE;
+  Kst::Object::UpdateType providerRC = NO_CHANGE;
 
   if (update_counter > 0) {
-    KstObjectPtr prov = KstObjectPtr(_provider);  // use a KstObjectPtr to prevent provider being deleted during update
+    Kst::ObjectPtr prov = Kst::ObjectPtr(_provider);  // use a KstObjectPtr to prevent provider being deleted during update
     if (prov) {
       KstWriteLocker pl(prov);
 
       providerRC = prov->update(update_counter);
-      if (!force && providerRC == KstObject::NO_CHANGE) {
+      if (!force && providerRC == Kst::Object::NO_CHANGE) {
         return setLastUpdateResult(providerRC);
       }
     }
   }
 
-  KstObject::UpdateType rc = internalUpdate(providerRC);
+  Kst::Object::UpdateType rc = internalUpdate(providerRC);
   setDirty(false);
   return rc;
 }
 
 
-KstObject::UpdateType KstPrimitive::internalUpdate(KstObject::UpdateType providerRC) {
+Kst::Object::UpdateType KstPrimitive::internalUpdate(Kst::Object::UpdateType providerRC) {
   Q_UNUSED(providerRC)
   return setLastUpdateResult(NO_CHANGE);
 }

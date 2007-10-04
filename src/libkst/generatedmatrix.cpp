@@ -56,10 +56,10 @@ GeneratedMatrix::GeneratedMatrix(const QDomElement &e) : KstMatrix() {
   _saveable = true;
   _editable = true;
   _zSize = 0;
-  change(KstObjectTag::fromString(in_tag), in_nX, in_nY, in_xMin, in_yMin, in_xStep, in_yStep, in_gradZMin, in_gradZMax, in_xDirection);
+  change(ObjectTag::fromString(in_tag), in_nX, in_nY, in_xMin, in_yMin, in_xStep, in_yStep, in_gradZMin, in_gradZMax, in_xDirection);
 }
 
-GeneratedMatrix::GeneratedMatrix(KstObjectTag tag,
+GeneratedMatrix::GeneratedMatrix(ObjectTag tag,
                        uint nX, uint nY, double minX, double minY,
                        double stepX, double stepY,
                        double gradZMin, double gradZMax,
@@ -88,7 +88,7 @@ void GeneratedMatrix::save(QTextStream &ts, const QString& indent) {
   ts << indent << "</smatrix>" << endl;
 }
 
-void GeneratedMatrix::change(KstObjectTag tag, uint nX,
+void GeneratedMatrix::change(ObjectTag tag, uint nX,
                         uint nY, double minX, double minY, double stepX,
                         double stepY, double gradZMin, double gradZMax,
                         bool xDirection) {

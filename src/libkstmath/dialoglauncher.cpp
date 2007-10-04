@@ -52,57 +52,57 @@ DialogLauncher::~DialogLauncher() {
 }
 
 
-void DialogLauncher::showVectorDialog(KstObjectPtr objectPtr) {
+void DialogLauncher::showVectorDialog(Kst::ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncher::showMatrixDialog(KstObjectPtr objectPtr) {
+void DialogLauncher::showMatrixDialog(Kst::ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncher::showScalarDialog(KstObjectPtr objectPtr) {
+void DialogLauncher::showScalarDialog(Kst::ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncher::showStringDialog(KstObjectPtr objectPtr) {
+void DialogLauncher::showStringDialog(Kst::ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncher::showCurveDialog(KstObjectPtr objectPtr) {
+void DialogLauncher::showCurveDialog(Kst::ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncher::showImageDialog(KstObjectPtr objectPtr) {
+void DialogLauncher::showImageDialog(Kst::ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncher::showEquationDialog(KstObjectPtr objectPtr) {
+void DialogLauncher::showEquationDialog(Kst::ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncher::showHistogramDialog(KstObjectPtr objectPtr) {
+void DialogLauncher::showHistogramDialog(Kst::ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncher::showPSDDialog(KstObjectPtr objectPtr) {
+void DialogLauncher::showPSDDialog(Kst::ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncher::showCSDDialog(KstObjectPtr objectPtr) {
+void DialogLauncher::showCSDDialog(Kst::ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncher::showBasicPluginDialog(KstObjectPtr objectPtr) {
+void DialogLauncher::showBasicPluginDialog(Kst::ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 

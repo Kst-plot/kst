@@ -57,8 +57,8 @@ StdinSource::~StdinSource() {
 }
 
 
-KstObject::UpdateType StdinSource::update(int u) {
-  if (KstObject::checkUpdateCounter(u)) {
+Object::UpdateType StdinSource::update(int u) {
+  if (Object::checkUpdateCounter(u)) {
     return lastUpdateResult();
   }
 
@@ -67,7 +67,7 @@ KstObject::UpdateType StdinSource::update(int u) {
     if (_src && _src->isValid()) {
       _valid = true;
     } else {
-      return setLastUpdateResult(KstObject::NO_CHANGE);
+      return setLastUpdateResult(Object::NO_CHANGE);
     }
   }
 
@@ -83,7 +83,7 @@ KstObject::UpdateType StdinSource::update(int u) {
   FILE *fp = fdopen(handle, "w+");
 
   if (!fp) {
-    return setLastUpdateResult(KstObject::NO_CHANGE);
+    return setLastUpdateResult(Object::NO_CHANGE);
   }
 
   do {
@@ -112,7 +112,7 @@ KstObject::UpdateType StdinSource::update(int u) {
   if (got_some && _src) {
     return setLastUpdateResult(_src->update(u));
   }
-  return setLastUpdateResult(KstObject::NO_CHANGE);
+  return setLastUpdateResult(Object::NO_CHANGE);
 }
 
 
