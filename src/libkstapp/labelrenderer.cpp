@@ -98,7 +98,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
           scp->unlock();
         } else {
           Kst::stringList.lock().readLock();
-          KstStringPtr stp = Kst::stringList.retrieveObject(Kst::ObjectTag::fromString(fi->text));
+          Kst::StringPtr stp = Kst::stringList.retrieveObject(Kst::ObjectTag::fromString(fi->text));
           Kst::stringList.lock().unlock();
           if (stp) {
             stp->readLock();

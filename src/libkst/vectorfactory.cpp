@@ -30,7 +30,7 @@ VectorFactory::~VectorFactory() {
 }
 
 
-KstPrimitivePtr VectorFactory::generatePrimitive(QXmlStreamReader& xml) {
+PrimitivePtr VectorFactory::generatePrimitive(QXmlStreamReader& xml) {
 
   QString tag;
   QByteArray data;
@@ -80,7 +80,7 @@ SVectorFactory::~SVectorFactory() {
 }
 
 
-KstPrimitivePtr SVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
+PrimitivePtr SVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
 
   QString tag;
   QByteArray data;
@@ -134,7 +134,7 @@ AVectorFactory::~AVectorFactory() {
 }
 
 
-KstPrimitivePtr AVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
+PrimitivePtr AVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
 
   QString tag;
   QByteArray data;
@@ -184,7 +184,7 @@ RVectorFactory::~RVectorFactory() {
 }
 
 
-KstPrimitivePtr RVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
+PrimitivePtr RVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
 
   QString tag;
   QByteArray data;

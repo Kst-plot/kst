@@ -179,7 +179,7 @@ class KST_EXPORT KstVCurve: public KstRelation {
 
 };
 
-typedef KstSharedPtr<KstVCurve> KstVCurvePtr;
+typedef Kst::SharedPtr<KstVCurve> KstVCurvePtr;
 typedef Kst::ObjectList<KstVCurvePtr> KstVCurveList;
 
 #endif

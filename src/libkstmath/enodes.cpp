@@ -105,7 +105,7 @@ Node::~Node() {
 }
 
 
-bool Node::collectObjects(Kst::VectorMap&, Kst::ScalarMap&, KstStringMap&) {
+bool Node::collectObjects(Kst::VectorMap&, Kst::ScalarMap&, Kst::StringMap&) {
   return true;
 }
 
@@ -141,7 +141,7 @@ BinaryNode::~BinaryNode() {
 }
 
 
-bool BinaryNode::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t) {
+bool BinaryNode::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, Kst::StringMap& t) {
   bool ok = true;
   ok = _left->collectObjects(v, s, t) ? ok : false;
   ok = _right->collectObjects(v, s, t) ? ok : false;
@@ -482,7 +482,7 @@ bool Function::isConst() {
 }
 
 
-bool Function::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t) {
+bool Function::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, Kst::StringMap& t) {
   return _args->collectObjects(v, s, t);
 }
 
@@ -533,7 +533,7 @@ bool ArgumentList::isConst() {
 }
 
 
-bool ArgumentList::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t) {
+bool ArgumentList::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, Kst::StringMap& t) {
   bool ok = true;
   foreach (Node *i, _args) {
     ok = i->collectObjects(v, s, t) ? ok : false;
@@ -737,7 +737,7 @@ bool Data::isConst() {
 }
 
 
-bool Data::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t) {
+bool Data::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, Kst::StringMap& t) {
   if (_isEquation) {
     if (_equation) {
       _equation->collectObjects(v, s, t);

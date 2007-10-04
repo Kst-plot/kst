@@ -15,7 +15,7 @@
 #include <QWidget>
 #include "ui_stringselector.h"
 
-#include <kststring.h>
+#include <string_kst.h>
 
 #include "kst_export.h"
 
@@ -27,8 +27,8 @@ class KST_EXPORT StringSelector : public QWidget, public Ui::StringSelector {
     StringSelector(QWidget *parent = 0);
     virtual ~StringSelector();
 
-    KstStringPtr selectedString() const;
-    void setSelectedString(KstStringPtr selectedString);
+    Kst::StringPtr selectedString() const;
+    void setSelectedString(Kst::StringPtr selectedString);
 
   Q_SIGNALS:
     void selectionChanged();

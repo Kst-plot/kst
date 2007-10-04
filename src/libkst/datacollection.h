@@ -13,7 +13,7 @@
 #define DATACOLLECTION_H
 
 #include "datasource.h"
-#include "kststring.h"
+#include "string_kst.h"
 #include "vector.h"
 #include "matrix.h"
 #include "kst_export.h"
@@ -49,7 +49,7 @@ class Data {
     virtual void removeCurveFromPlots(KstRelation *c); // no sharedptr here
 
     /** Save a vector to a file */
-    virtual int vectorToFile(Kst::VectorPtr v, QFile *f);
+    virtual int vectorToFile(VectorPtr v, QFile *f);
     virtual int vectorsToFile(const VectorList& l, QFile *f, bool interpolate);
 
     /** The list of plots for the given window.  Returns all plots if
@@ -76,7 +76,7 @@ class Data {
     KST_EXPORT extern ScalarCollection scalarList;
 
     /** The list of Strings */
-    KST_EXPORT extern KstStringCollection stringList;
+    KST_EXPORT extern StringCollection stringList;
 
     /** The list of matrices that are being read */
     KST_EXPORT extern MatrixCollection matrixList;

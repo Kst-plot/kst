@@ -59,16 +59,16 @@ class KST_EXPORT KstBasicPlugin : public Kst::DataObject {
     //Returns the respective input object for name
     Kst::VectorPtr inputVector(const QString& name) const;
     Kst::ScalarPtr inputScalar(const QString& name) const;
-    KstStringPtr inputString(const QString& name) const;
+    Kst::StringPtr inputString(const QString& name) const;
 
     //Returns the respective output object for name
     Kst::VectorPtr outputVector(const QString& name) const;
     Kst::ScalarPtr outputScalar(const QString& name) const;
-    KstStringPtr outputString(const QString& name) const;
+    Kst::StringPtr outputString(const QString& name) const;
 
     void setInputVector(const QString &type, Kst::VectorPtr ptr);
     void setInputScalar(const QString &type, Kst::ScalarPtr ptr);
-    void setInputString(const QString &type, KstStringPtr ptr);
+    void setInputString(const QString &type, Kst::StringPtr ptr);
     void setOutputVector(const QString &type, const QString &name);
     void setOutputScalar(const QString &type, const QString &name);
     void setOutputString(const QString &type, const QString &name);
@@ -96,7 +96,7 @@ class KST_EXPORT KstBasicPlugin : public Kst::DataObject {
     void updateOutput(int updateCounter) const;
 };
 
-typedef KstSharedPtr<KstBasicPlugin> KstBasicPluginPtr;
+typedef Kst::SharedPtr<KstBasicPlugin> KstBasicPluginPtr;
 typedef Kst::ObjectList<KstBasicPluginPtr> KstBasicPluginList;
 
 #endif

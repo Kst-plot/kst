@@ -26,7 +26,7 @@ const ObjectTag ObjectTag::invalidTag = ObjectTag(QString::null, ObjectTag::glob
 
 static int i = 0;
 
-Object::Object() : KstShared(), QObject(), KstRWLock(),
+Object::Object() : Shared(), QObject(), KstRWLock(),
                          _lastUpdateCounter(0),
                          _tag(tr("Object %1").arg(++i), ObjectTag::globalTagContext)
 {

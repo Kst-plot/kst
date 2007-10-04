@@ -106,7 +106,7 @@ bool TestEqParser::validateEquation(const char *equation, double x, double resul
       eq = new Equation::Number(v);
     }
     Kst::ScalarMap scm;
-    KstStringMap stm;
+    Kst::StringMap stm;
     eq->collectObjects(vectorsUsed, scm, stm);
     eq->update(-1, &ctx);
     double v = eq->value(&ctx);

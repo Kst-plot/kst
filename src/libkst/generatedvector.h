@@ -38,7 +38,7 @@ class KST_EXPORT GeneratedVector : public Vector {
   void setSaveData(bool save);
 };
 
-typedef KstSharedPtr<GeneratedVector> GeneratedVectorPtr;
+typedef SharedPtr<GeneratedVector> GeneratedVectorPtr;
 typedef ObjectList<GeneratedVectorPtr> GeneratedVectorList;
 
 }

@@ -122,7 +122,7 @@ class KST_EXPORT KstPSD : public Kst::DataObject {
     Kst::VectorMap::Iterator _sVector, _fVector;
 };
 
-typedef KstSharedPtr<KstPSD> KstPSDPtr;
+typedef Kst::SharedPtr<KstPSD> KstPSDPtr;
 typedef Kst::ObjectList<KstPSDPtr> KstPSDList;
 
 #endif

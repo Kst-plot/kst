@@ -1,12 +1,6 @@
 /***************************************************************************
-                    kststring.cpp  -  the base string type
-                             -------------------
-    begin                : Sept 29, 2004
-    copyright            : (C) 2004 by The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2003 The University of Toronto                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,7 +9,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kststring.h"
+#include "string_kst.h"
 
 #include "defaultprimitivenames.h"
 #include "datacollection.h"
@@ -25,35 +19,37 @@
 #include <QXmlStreamWriter>
 
 
+namespace Kst {
+
 static int anonymousStringCounter = 0;
 
-KstString::KstString(Kst::ObjectTag in_tag, Kst::Object *provider, const QString& val, bool orphan)
-: KstPrimitive(provider), _value(val), _orphan(orphan), _editable(false) {
+String::String(ObjectTag in_tag, Object *provider, const QString& val, bool orphan)
+: Primitive(provider), _value(val), _orphan(orphan), _editable(false) {
   QString _tag = in_tag.tag();
   if (!in_tag.isValid()) {
     do {
       _tag = i18n("Anonymous String %1", anonymousStringCounter++);
-    } while (Kst::Data::self()->vectorTagNameNotUniqueInternal(_tag));  // FIXME: why vector?
-    Kst::Object::setTagName(Kst::ObjectTag(_tag, in_tag.context()));
+    } while (Data::self()->vectorTagNameNotUniqueInternal(_tag));  // FIXME: why vector?
+    Object::setTagName(ObjectTag(_tag, in_tag.context()));
   } else {
-    Kst::Object::setTagName(suggestUniqueStringTag(in_tag));
+    Object::setTagName(suggestUniqueStringTag(in_tag));
   }
 
-  Kst::stringList.lock().writeLock();
-  Kst::stringList.append(this);
-  Kst::stringList.lock().unlock();
+  stringList.lock().writeLock();
+  stringList.append(this);
+  stringList.lock().unlock();
 }
 
 
-KstString::KstString(QDomElement& e)
-: KstPrimitive(), _orphan(false), _editable(false) {
+String::String(QDomElement& e)
+: Primitive(), _orphan(false), _editable(false) {
   QDomNode n = e.firstChild();
 
   while (!n.isNull()) {
     QDomElement e = n.toElement();
     if (!e.isNull()) {
       if (e.tagName() == "tag") {
-        setTagName(Kst::ObjectTag::fromString(e.text()));
+        setTagName(ObjectTag::fromString(e.text()));
       } else if (e.tagName() == "orphan") {
         _orphan = true;
       } else if (e.tagName() == "value") {
@@ -64,26 +60,26 @@ KstString::KstString(QDomElement& e)
     }
     n = n.nextSibling();
   }
-  Kst::stringList.append(this);
+  stringList.append(this);
 }
 
 
-KstString::~KstString() {
+String::~String() {
 }
 
 
-void KstString::setTagName(const Kst::ObjectTag& tag) {
+void String::setTagName(const ObjectTag& tag) {
   if (tag == this->tag()) {
     return;
   }
 
-  KstWriteLocker l(&Kst::stringList.lock());
+  KstWriteLocker l(&stringList.lock());
 
-  Kst::stringList.doRename(this, tag);
+  stringList.doRename(this, tag);
 }
 
 
-void KstString::save(QXmlStreamWriter &s) {
+void String::save(QXmlStreamWriter &s) {
   s.writeStartElement("string");
   s.writeAttribute("tag", tag().tagString());
   if (_orphan) {
@@ -97,13 +93,13 @@ void KstString::save(QXmlStreamWriter &s) {
 }
 
 
-Kst::Object::UpdateType KstString::update(int updateCounter) {
+Object::UpdateType String::update(int updateCounter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
   setDirty(false);
 
-  if (Kst::Object::checkUpdateCounter(updateCounter) && !force) {
+  if (Object::checkUpdateCounter(updateCounter) && !force) {
     return lastUpdateResult();
   }
 
@@ -116,22 +112,23 @@ Kst::Object::UpdateType KstString::update(int updateCounter) {
 }
 
 
-KstString& KstString::operator=(const QString& v) {
+String& String::operator=(const QString& v) {
   setValue(v);
   return *this;
 }
 
 
-KstString& KstString::operator=(const char *v) {
+String& String::operator=(const char *v) {
   setValue(v);
   return *this;
 }
 
 
-void KstString::setValue(const QString& inV) {
+void String::setValue(const QString& inV) {
   setDirty();
   _value = inV;
   emit trigger();
 }
 
+}
 // vim: ts=2 sw=2 et

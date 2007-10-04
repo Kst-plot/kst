@@ -15,19 +15,19 @@
 
 #include <qhash.h>
 #include "scalar.h"
-#include "kstprimitive.h"
+#include "primitive.h"
 
 
-class KstDataObject;
 class QXmlStreamWriter;
 
 namespace Kst {
 
+class DataObject;
 class Matrix;
 
-typedef KstSharedPtr<Matrix> MatrixPtr;
+typedef SharedPtr<Matrix> MatrixPtr;
 
-class KST_EXPORT Matrix : public KstPrimitive {
+class KST_EXPORT Matrix : public Primitive {
   Q_OBJECT
   public:
     // Matrices do not automatically add themselves to the global matrix list

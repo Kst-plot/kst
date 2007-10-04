@@ -20,7 +20,7 @@
 #define DATAOBJECT_H
 
 #include "kstcurvehint.h"
-#include "kststring.h"
+#include "string_kst.h"
 #include "vector.h"
 #include "matrix.h"
 #include "kst_export.h"
@@ -32,7 +32,7 @@ namespace Kst {
 
 class DataObject;
 
-typedef KstSharedPtr<DataObject> DataObjectPtr;
+typedef SharedPtr<DataObject> DataObjectPtr;
 typedef ObjectList<DataObjectPtr> DataObjectList;
 typedef QMap<DataObjectPtr, DataObjectPtr> DataObjectDataObjectMap;
 typedef QMap<QString, int> KstPluginInfoList;
@@ -77,10 +77,10 @@ class KST_EXPORT DataObject : public Object {
     ScalarMap& inputScalars() { return _inputScalars;  }
     ScalarMap& outputScalars() { return _outputScalars; }
 
-    const KstStringMap& inputStrings()  const { return _inputStrings;  }
-    const KstStringMap& outputStrings() const { return _outputStrings; }
-    KstStringMap& inputStrings() { return _inputStrings;  }
-    KstStringMap& outputStrings() { return _outputStrings; }
+    const StringMap& inputStrings()  const { return _inputStrings;  }
+    const StringMap& outputStrings() const { return _outputStrings; }
+    StringMap& inputStrings() { return _inputStrings;  }
+    StringMap& outputStrings() { return _outputStrings; }
     
     const MatrixMap& inputMatrices() const { return _inputMatrices; }
     const MatrixMap& outputMatrices() const { return _outputMatrices; }
@@ -146,8 +146,8 @@ class KST_EXPORT DataObject : public Object {
     VectorMap _outputVectors;
     ScalarMap _inputScalars;
     ScalarMap _outputScalars;
-    KstStringMap _inputStrings;
-    KstStringMap _outputStrings;
+    StringMap _inputStrings;
+    StringMap _outputStrings;
     MatrixMap _inputMatrices;
     MatrixMap _outputMatrices;
 

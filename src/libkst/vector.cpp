@@ -45,7 +45,7 @@ namespace Kst {
 
 /** Create a vector */
 Vector::Vector(ObjectTag in_tag, int size, Object *provider, bool isScalarList)
-: KstPrimitive(provider), _nsum(0) {
+: Primitive(provider), _nsum(0) {
   // qDebug() << "+++ CREATING VECTOR: " << (void*) this;
   _editable = false;
   NumShifted = 0;
@@ -86,7 +86,7 @@ Vector::Vector(ObjectTag in_tag, int size, Object *provider, bool isScalarList)
 
 
 Vector::Vector(const QString &tag, const QByteArray& data)
-: KstPrimitive(), _nsum(0) {
+: Primitive(), _nsum(0) {
   QByteArray qba;
   _v = 0L;
   _size = 0;

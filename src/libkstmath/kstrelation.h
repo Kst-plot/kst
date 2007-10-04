@@ -147,8 +147,8 @@ class KST_EXPORT KstRelation : public Kst::Object {
     Kst::VectorMap _outputVectors;
     Kst::ScalarMap _inputScalars;
     Kst::ScalarMap _outputScalars;
-    KstStringMap _inputStrings;
-    KstStringMap _outputStrings;
+    Kst::StringMap _inputStrings;
+    Kst::StringMap _outputStrings;
     Kst::MatrixMap _inputMatrices;
     Kst::MatrixMap _outputMatrices;
 
@@ -180,7 +180,7 @@ class KST_EXPORT KstRelation : public Kst::Object {
 };
 
 
-typedef KstSharedPtr<KstRelation> KstRelationPtr;
+typedef Kst::SharedPtr<KstRelation> KstRelationPtr;
 typedef Kst::ObjectList<KstRelationPtr> KstRelationList;
 
 #endif

@@ -113,7 +113,7 @@ class KST_EXPORT KstCSD : public Kst::DataObject {
     Kst::MatrixMap::Iterator _outMatrix;
 };
 
-typedef KstSharedPtr<KstCSD> KstCSDPtr;
+typedef Kst::SharedPtr<KstCSD> KstCSDPtr;
 typedef Kst::ObjectList<KstCSDPtr> KstCSDList;
 
 #endif

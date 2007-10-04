@@ -143,7 +143,7 @@ class KST_EXPORT KstImage : public KstRelation {
 };
 
 
-typedef KstSharedPtr<KstImage> KstImagePtr;
+typedef Kst::SharedPtr<KstImage> KstImagePtr;
 typedef Kst::ObjectList<KstImagePtr> KstImageList;
 
 #endif

@@ -46,7 +46,7 @@ void Scalar::clearScalarsDirty() {
 
 /** Create the base scalar */
 Scalar::Scalar(ObjectTag in_tag, Object *provider, double val, bool orphan, bool displayable, bool editable)
-: KstPrimitive(provider), _value(val), _orphan(orphan), _displayable(displayable), _editable(editable) {
+: Primitive(provider), _value(val), _orphan(orphan), _displayable(displayable), _editable(editable) {
   QString _tag = in_tag.tag();
   if (_tag.isEmpty()) {
     do {
@@ -65,7 +65,7 @@ Scalar::Scalar(ObjectTag in_tag, Object *provider, double val, bool orphan, bool
 
 
 Scalar::Scalar(const QDomElement& e)
-: KstPrimitive(), _orphan(false), _displayable(true), _editable(false) {
+: Primitive(), _orphan(false), _displayable(true), _editable(false) {
   QDomNode n = e.firstChild();
   bool ok;
 

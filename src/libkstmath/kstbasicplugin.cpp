@@ -58,7 +58,7 @@ Kst::DataObjectPtr KstBasicPlugin::makeDuplicate(Kst::DataObjectDataObjectMap &m
   for (Kst::ScalarMap::ConstIterator iter = _inputScalars.begin(); iter != _inputScalars.end(); ++iter) {
     plugin->inputScalars().insert(iter.key(), iter.value());
   }
-  for (KstStringMap::ConstIterator iter = _inputStrings.begin(); iter != _inputStrings.end(); ++iter) {
+  for (Kst::StringMap::ConstIterator iter = _inputStrings.begin(); iter != _inputStrings.end(); ++iter) {
     plugin->inputStrings().insert(iter.key(), iter.value());
   }
 
@@ -72,8 +72,8 @@ Kst::DataObjectPtr KstBasicPlugin::makeDuplicate(Kst::DataObjectDataObjectMap &m
     Kst::ScalarPtr s = new Kst::Scalar(Kst::ObjectTag(iter.value()->tag().tag() + "'", iter.value()->tag().context()), plugin.data()); // FIXME: unique tag generation
     plugin->outputScalars().insert(iter.key(), s);
   }
-  for (KstStringMap::ConstIterator iter = outputStrings().begin(); iter != outputStrings().end(); ++iter) {
-    KstStringPtr s = new KstString(Kst::ObjectTag(iter.value()->tag().tag() + "'", iter.value()->tag().context()), plugin.data()); // FIXME: unique tag generation
+  for (Kst::StringMap::ConstIterator iter = outputStrings().begin(); iter != outputStrings().end(); ++iter) {
+    Kst::StringPtr s = new Kst::String(Kst::ObjectTag(iter.value()->tag().tag() + "'", iter.value()->tag().context()), plugin.data()); // FIXME: unique tag generation
     plugin->outputStrings().insert(iter.key(), s);
   }
 
@@ -111,8 +111,8 @@ Kst::ScalarPtr KstBasicPlugin::inputScalar(const QString& scalar) const {
 }
 
 
-KstStringPtr KstBasicPlugin::inputString(const QString& string) const {
-  KstStringMap::ConstIterator i = _inputStrings.find(string);
+Kst::StringPtr KstBasicPlugin::inputString(const QString& string) const {
+  Kst::StringMap::ConstIterator i = _inputStrings.find(string);
   if (i != _inputStrings.end())
     return *i;
   else
@@ -138,8 +138,8 @@ Kst::ScalarPtr KstBasicPlugin::outputScalar(const QString& scalar) const {
 }
 
 
-KstStringPtr KstBasicPlugin::outputString(const QString& string) const {
-  KstStringMap::ConstIterator i = _outputStrings.find(string);
+Kst::StringPtr KstBasicPlugin::outputString(const QString& string) const {
+  Kst::StringMap::ConstIterator i = _outputStrings.find(string);
   if (i != _outputStrings.end())
     return *i;
   else
@@ -169,7 +169,7 @@ void KstBasicPlugin::setInputScalar(const QString &type, Kst::ScalarPtr ptr) {
 }
 
 
-void KstBasicPlugin::setInputString(const QString &type, KstStringPtr ptr) {
+void KstBasicPlugin::setInputString(const QString &type, Kst::StringPtr ptr) {
   // TODO: deal with tags
   if (ptr) {
     _inputStrings[type] = ptr;
@@ -196,7 +196,7 @@ void KstBasicPlugin::setOutputScalar(const QString &type, const QString &name) {
 
 void KstBasicPlugin::setOutputString(const QString &type, const QString &name) {
   QString txt = !name.isEmpty() ? name : type;
-  KstStringPtr s = new KstString(Kst::ObjectTag(txt, tag()), this);
+  Kst::StringPtr s = new Kst::String(Kst::ObjectTag(txt, tag()), this);
   _outputStrings.insert(type, s);
 }
 
@@ -267,7 +267,7 @@ void KstBasicPlugin::load(const QDomElement &e) {
         _outputScalars.insert(e.attribute("name"), sp);
       } else if (e.tagName() == "ostring") {
         KstWriteLocker blockStringUpdates(&Kst::stringList.lock());
-        KstStringPtr sp = new KstString(Kst::ObjectTag(e.text(), tag()), this);
+        Kst::StringPtr sp = new Kst::String(Kst::ObjectTag(e.text(), tag()), this);
         _outputStrings.insert(e.attribute("name"), sp);
       }
     }
@@ -353,7 +353,7 @@ void KstBasicPlugin::save(QTextStream& ts, const QString& indent) {
         << Qt::escape(i.value()->tag().tagString())
         << "</iscalar>" << endl;
   }
-  for (KstStringMap::Iterator i = _inputStrings.begin(); i != _inputStrings.end(); ++i) {
+  for (Kst::StringMap::Iterator i = _inputStrings.begin(); i != _inputStrings.end(); ++i) {
     ts << l2 << "<istring name=\"" << Qt::escape(i.key()) << "\">"
         << Qt::escape(i.value()->tag().tagString())
         << "</istring>" << endl;
@@ -371,7 +371,7 @@ void KstBasicPlugin::save(QTextStream& ts, const QString& indent) {
         << Qt::escape(i.value()->tag().tag())
         << "</oscalar>" << endl;
   }
-  for (KstStringMap::Iterator i = _outputStrings.begin(); i != _outputStrings.end(); ++i) {
+  for (Kst::StringMap::Iterator i = _outputStrings.begin(); i != _outputStrings.end(); ++i) {
     ts << l2 << "<ostring name=\"" << Qt::escape(i.key()) << "\">"
         << Qt::escape(i.value()->tag().tag())
         << "</ostring>" << endl;
@@ -470,7 +470,7 @@ void KstBasicPlugin::updateOutput(int updateCounter) const {
   QStringList ostr = outputStringList();
   QStringList::ConstIterator ostrI = ostr.begin();
   for (; ostrI != ostr.end(); ++ostrI) {
-    if (KstStringPtr o = outputString(*ostrI)) {
+    if (Kst::StringPtr o = outputString(*ostrI)) {
       Q_ASSERT(o->myLockStatus() == KstRWLock::WRITELOCKED);
       o->update(updateCounter);
     }

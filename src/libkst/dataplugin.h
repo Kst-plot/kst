@@ -10,7 +10,7 @@
  ***************************************************************************/
 
 
-#include "kstsharedptr.h"
+#include "sharedptr.h"
 #include "datasource.h"
 
 #include <QtPlugin>
@@ -18,7 +18,7 @@
 
 namespace Kst {
 
-class PluginInterface : public KstShared {
+class PluginInterface : public Shared {
   public:
     PluginInterface() {}
 
@@ -88,7 +88,7 @@ class BasicPluginInterface : public DataObjectPluginInterface {
     virtual QStringList outputStringList() const = 0;
 };
 
-typedef QList<KstSharedPtr<PluginInterface> > PluginList;
+typedef QList<SharedPtr<PluginInterface> > PluginList;
 
 }
 

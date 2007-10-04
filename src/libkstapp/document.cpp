@@ -89,7 +89,7 @@ bool Document::save(const QString& to) {
   foreach (ScalarPtr s, scalarList.list()) {
     s->save(xml);
   }
-  foreach (KstStringPtr s, stringList.list()) {
+  foreach (StringPtr s, stringList.list()) {
     s->save(xml);
   }
   xml.writeEndElement();

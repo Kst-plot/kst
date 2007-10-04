@@ -52,7 +52,7 @@ DataObject::DataObject(const QDomElement& e) : Object() {
 DataObject::~DataObject() {
   // Remove our slave vectors, scalars, and strings, and matrices
   stringList.lock().writeLock();
-  for (KstStringMap::Iterator it = _outputStrings.begin();
+  for (StringMap::Iterator it = _outputStrings.begin();
                                it != _outputStrings.end();
                                                       ++it) {
     stringList.remove(it.value());
@@ -237,7 +237,7 @@ bool DataObject::loadInputs() {
 
   stringList.lock().readLock();
   for (i = _inputStringLoadQueue.begin(); i != _inputStringLoadQueue.end(); ++i) {
-    KstStringList::Iterator it = stringList.findTag((*i).second);
+    StringList::Iterator it = stringList.findTag((*i).second);
     if (it != stringList.end()) {
       _inputStrings.insert((*i).first, *it);
     } else {
@@ -286,7 +286,7 @@ int DataObject::getUsage() const {
     }
   }
 
-  for (KstStringMap::ConstIterator i = _outputStrings.begin(); i != _outputStrings.end(); ++i) {
+  for (StringMap::ConstIterator i = _outputStrings.begin(); i != _outputStrings.end(); ++i) {
     if (i.value().data()) {
       rc += i.value()->getUsage() - 1;
     }
@@ -345,15 +345,15 @@ void DataObject::writeLockInputsAndOutputs() const {
   qDebug() << (void*)this << " (" << this->type() << ": " << this->tag().tagString() << ") DataObject::writeLockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << endl;
   #endif
 
-  QList<KstPrimitivePtr> inputs;
-  QList<KstPrimitivePtr> outputs;
+  QList<PrimitivePtr> inputs;
+  QList<PrimitivePtr> outputs;
 
-  QList<KstStringPtr> sl = _inputStrings.values();
-  for (QList<KstStringPtr>::Iterator i = sl.begin(); i != sl.end(); ++i) {
+  QList<StringPtr> sl = _inputStrings.values();
+  for (QList<StringPtr>::Iterator i = sl.begin(); i != sl.end(); ++i) {
     inputs += (*i).data();
   }
   sl = _outputStrings.values();
-  for (QList<KstStringPtr>::Iterator i = sl.begin(); i != sl.end(); ++i) {
+  for (QList<StringPtr>::Iterator i = sl.begin(); i != sl.end(); ++i) {
     outputs += (*i).data();
   }
   
@@ -387,8 +387,8 @@ void DataObject::writeLockInputsAndOutputs() const {
   qSort(inputs);
   qSort(outputs);
 
-  QList<KstPrimitivePtr>::ConstIterator inputIt = inputs.begin();
-  QList<KstPrimitivePtr>::ConstIterator outputIt = outputs.begin();
+  QList<PrimitivePtr>::ConstIterator inputIt = inputs.begin();
+  QList<PrimitivePtr>::ConstIterator outputIt = outputs.begin();
 
   while (inputIt != inputs.end() || outputIt != outputs.end()) {
     if (inputIt != inputs.end() && (outputIt == outputs.end() || (void*)(*inputIt) < (void*)(*outputIt))) {
@@ -484,7 +484,7 @@ void DataObject::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (KstStringMap::ConstIterator i = _outputStrings.begin(); i != _outputStrings.end(); ++i) {
+  for (StringMap::ConstIterator i = _outputStrings.begin(); i != _outputStrings.end(); ++i) {
     if (!(*i)) {
       qWarning() << "Output string for data object " << this->tag().displayString() << " is invalid." << endl;
     }
@@ -494,7 +494,7 @@ void DataObject::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (KstStringMap::ConstIterator i = _inputStrings.begin(); i != _inputStrings.end(); ++i) {
+  for (StringMap::ConstIterator i = _inputStrings.begin(); i != _inputStrings.end(); ++i) {
     if (!(*i)) {
       qWarning() << "Input string for data object " << this->tag().displayString() << " is invalid." << endl;
     }
@@ -529,7 +529,7 @@ bool DataObject::deleteDependents() {
       for (ScalarMap::Iterator j = _outputScalars.begin(); !user && j != _outputScalars.end(); ++j) {
         user = (*i)->uses(j.value().data());
       }
-      for (KstStringMap::Iterator j = _outputStrings.begin(); !user && j != _outputStrings.end(); ++j) {
+      for (StringMap::Iterator j = _outputStrings.begin(); !user && j != _outputStrings.end(); ++j) {
         user = (*i)->uses(j.value().data());
       }
     }
@@ -625,8 +625,8 @@ void DataObject::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObj
   }
   
   // strings 
-  for (KstStringMap::Iterator j = oldObject->outputStrings().begin(); j != oldObject->outputStrings().end(); ++j) {
-    for (KstStringMap::Iterator k = _inputStrings.begin(); k != _inputStrings.end(); ++k) {
+  for (StringMap::Iterator j = oldObject->outputStrings().begin(); j != oldObject->outputStrings().end(); ++j) {
+    for (StringMap::Iterator k = _inputStrings.begin(); k != _inputStrings.end(); ++k) {
       if (j.value().data() == k.value().data()) {
         // replace input with the output from newObject
         _inputStrings[k.key()] = (newObject->outputStrings())[j.key()];  
@@ -752,8 +752,8 @@ bool DataObject::uses(ObjectPtr p) const {
       } 
     }
   
-    for (KstStringMap::Iterator j = obj->outputStrings().begin(); j != obj->outputStrings().end(); ++j) {
-      for (KstStringMap::ConstIterator k = _inputStrings.begin(); k != _inputStrings.end(); ++k) {
+    for (StringMap::Iterator j = obj->outputStrings().begin(); j != obj->outputStrings().end(); ++j) {
+      for (StringMap::ConstIterator k = _inputStrings.begin(); k != _inputStrings.end(); ++k) {
         if (j.value() == k.value()) {
           return true;
         }

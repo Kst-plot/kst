@@ -836,7 +836,7 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
       _ac->_indexVector->clear();
       if (hasInstance) {
         _ac->_indexVector->addItems(_instance->fieldList());
-        KstSharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(_instance);
+        Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(_instance);
         assert(src);
         _ac->_indexType->setCurrentIndex(src->_config->_indexInterpretation - 1);
         if (_instance->fieldList().contains(src->_config->_indexVector)) {
@@ -877,7 +877,7 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
       _cfg->beginGroup("ASCII General");
       _cfg->setValue("Filename Pattern", _ac->_fileNamePattern->text());
       // If we have an instance, save settings for that instance only
-      KstSharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(_instance);
+      Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(_instance);
       if (src) {
         _cfg->endGroup();
         _cfg->beginGroup(src->fileName());

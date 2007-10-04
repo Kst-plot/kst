@@ -26,7 +26,7 @@
 
 class KstRelation;
 
-class KstCurveHint : public KstShared {
+class KstCurveHint : public Kst::Shared {
   friend class KstDataObject;
   public:
     KstCurveHint(const QString& name = QString::null, const QString& x = QString::null, const QString& y = QString::null);
@@ -40,13 +40,13 @@ class KstCurveHint : public KstShared {
     virtual Kst::VectorPtr xVector() const;
     virtual Kst::VectorPtr yVector() const;
 
-    virtual KstSharedPtr<KstRelation> makeCurve(const QString& tag, const QColor& color) const;
+    virtual Kst::SharedPtr<KstRelation> makeCurve(const QString& tag, const QColor& color) const;
 
   protected:
     QString _curveName, _xVectorName, _yVectorName;
 };
 
-typedef KstSharedPtr<KstCurveHint> KstCurveHintPtr;
+typedef Kst::SharedPtr<KstCurveHint> KstCurveHintPtr;
 typedef QList<KstCurveHintPtr> KstCurveHintList;
 
 #endif

@@ -107,7 +107,7 @@ private:
   void internalSetNBins(int in_n_bins);
 };
 
-typedef KstSharedPtr<KstHistogram> KstHistogramPtr;
+typedef Kst::SharedPtr<KstHistogram> KstHistogramPtr;
 typedef Kst::ObjectList<KstHistogramPtr> KstHistogramList;
 
 #endif

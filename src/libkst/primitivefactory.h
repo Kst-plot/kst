@@ -15,7 +15,7 @@
 #include <QXmlStreamReader>
 #include <QStringList>
 
-#include "kstprimitive.h"
+#include "primitive.h"
 #include "kst_export.h"
 
 namespace Kst {
@@ -28,8 +28,8 @@ class PrimitiveFactory {
     // This takes ownership
     static void registerFactory(const QString& node, PrimitiveFactory *factory);
     static void registerFactory(const QStringList& nodes, PrimitiveFactory *factory);
-    KST_EXPORT static KstPrimitivePtr parse(QXmlStreamReader& stream);
-    virtual KstPrimitivePtr generatePrimitive(QXmlStreamReader& stream) = 0;
+    KST_EXPORT static PrimitivePtr parse(QXmlStreamReader& stream);
+    virtual PrimitivePtr generatePrimitive(QXmlStreamReader& stream) = 0;
 };
 
 }

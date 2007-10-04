@@ -24,7 +24,7 @@
 #include <qnamespace.h>
 #include <qmap.h>
 #include <qstring.h>
-#include "kstsharedptr.h"
+#include "sharedptr.h"
 #include <kst_export.h>
 class KstTimezoneDetails;
 class KstTimezoneDetailsPrivate;
@@ -48,7 +48,7 @@ class KstTimezonesPrivate;
  * @author S.R.Haque <srhaque@iee.org>.
  */
 class KST_EXPORT KstTimezoneSource :
-    public KstShared
+    public Kst::Shared
 {
 public:
     KstTimezoneSource(const QString &db);
@@ -113,7 +113,7 @@ public:
      * @param comment description of the timezone, if any.
      */
     KstTimezone(
-        KstSharedPtr<KstTimezoneSource> db, const QString &name,
+        Kst::SharedPtr<KstTimezoneSource> db, const QString &name,
         const QString &countryCode = QString(), float latitude = UNKNOWN, float longitude = UNKNOWN,
         const QString &comment = QString());
     ~KstTimezone();
@@ -187,7 +187,7 @@ public:
     bool parse(KstTimezoneDetails &dataReceiver) const;
 
 private:
-    KstSharedPtr<KstTimezoneSource> m_db;
+    Kst::SharedPtr<KstTimezoneSource> m_db;
     QString m_name;
     QString m_countryCode;
     float m_latitude;

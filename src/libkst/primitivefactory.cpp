@@ -51,7 +51,7 @@ void PrimitiveFactory::registerFactory(const QStringList& nodes, PrimitiveFactor
 }
 
 
-KstPrimitivePtr PrimitiveFactory::parse(QXmlStreamReader& stream) {
+PrimitivePtr PrimitiveFactory::parse(QXmlStreamReader& stream) {
   if (!factories) {
     return 0;
   }

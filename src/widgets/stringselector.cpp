@@ -33,12 +33,12 @@ StringSelector::~StringSelector() {
 }
 
 
-KstStringPtr StringSelector::selectedString() const {
+Kst::StringPtr StringSelector::selectedString() const {
   return 0;
 }
 
 
-void StringSelector::setSelectedString(KstStringPtr selectedString) {
+void StringSelector::setSelectedString(Kst::StringPtr selectedString) {
   Q_UNUSED(selectedString);
 }
 

@@ -28,7 +28,7 @@ SOURCES += \
     scalar.cpp \
     # $(PROCPS_COPY) \
     $$PROCPS \
-    kststring.cpp \
+    string_kst.cpp \
     matrix.cpp \
     datamatrix.cpp \
     generatedmatrix.cpp \
@@ -39,7 +39,7 @@ SOURCES += \
     datavector.cpp \
     vectordefaults.cpp \
     matrixdefaults.cpp \
-    kstprimitive.cpp \
+    primitive.cpp \
     defaultprimitivenames.cpp \
     primitivefactory.cpp \
     datasourcefactory.cpp \
@@ -72,14 +72,14 @@ HEADERS += \
     matrix.h \
     objectcollection.h \
     object.h \
-    kstprimitive.h \
+    primitive.h \
     kstrevision.h \
     datamatrix.h \
     datavector.h \
     scalar.h \
-    kstsharedptr.h \
+    sharedptr.h \
     generatedmatrix.h \
-    kststring.h \
+    string_kst.h \
     generatedvector.h \
     ksttimers.h \
     ksttimezones.h \

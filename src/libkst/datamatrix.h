@@ -14,7 +14,7 @@
 #define DATAMATRIX_H
 
 #include "matrix.h"
-#include "kstsharedptr.h"
+#include "sharedptr.h"
 #include "datasource.h"
 #include "kst_export.h"
 
@@ -80,7 +80,7 @@ class KST_EXPORT DataMatrix : public Matrix {
     void changeFile(DataSourcePtr file);
     
     // make a "copy" of this DataMatrix 
-    KstSharedPtr<DataMatrix> makeDuplicate() const;
+    SharedPtr<DataMatrix> makeDuplicate() const;
     
   private:
     void commonConstructor(DataSourcePtr file, const QString &field,
@@ -115,7 +115,7 @@ class KST_EXPORT DataMatrix : public Matrix {
     int _samplesPerFrameCache; // cache the samples per frame of the field in datasource
 };
 
-typedef KstSharedPtr<DataMatrix> DataMatrixPtr;
+typedef SharedPtr<DataMatrix> DataMatrixPtr;
 typedef ObjectList<DataMatrixPtr> DataMatrixList;
 
 }

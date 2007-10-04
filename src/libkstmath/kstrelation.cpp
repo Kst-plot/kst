@@ -94,15 +94,15 @@ void KstRelation::writeLockInputsAndOutputs() const {
   qDebug() << (void*)this << this->tag().tagString() << ") KstRelation::writeLockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << endl;
   #endif
 
-  QList<KstPrimitivePtr> inputs;
-  QList<KstPrimitivePtr> outputs;
+  QList<Kst::PrimitivePtr> inputs;
+  QList<Kst::PrimitivePtr> outputs;
 
-  QList<KstStringPtr> sl = _inputStrings.values();
-  for (QList<KstStringPtr>::Iterator i = sl.begin(); i != sl.end(); ++i) {
+  QList<Kst::StringPtr> sl = _inputStrings.values();
+  for (QList<Kst::StringPtr>::Iterator i = sl.begin(); i != sl.end(); ++i) {
     inputs += (*i).data();
   }
   sl = _outputStrings.values();
-  for (QList<KstStringPtr>::Iterator i = sl.begin(); i != sl.end(); ++i) {
+  for (QList<Kst::StringPtr>::Iterator i = sl.begin(); i != sl.end(); ++i) {
     outputs += (*i).data();
   }
   
@@ -136,8 +136,8 @@ void KstRelation::writeLockInputsAndOutputs() const {
   qSort(inputs);
   qSort(outputs);
 
-  QList<KstPrimitivePtr>::ConstIterator inputIt = inputs.begin();
-  QList<KstPrimitivePtr>::ConstIterator outputIt = outputs.begin();
+  QList<Kst::PrimitivePtr>::ConstIterator inputIt = inputs.begin();
+  QList<Kst::PrimitivePtr>::ConstIterator outputIt = outputs.begin();
 
   while (inputIt != inputs.end() || outputIt != outputs.end()) {
     if (inputIt != inputs.end() && (outputIt == outputs.end() || (void*)(*inputIt) < (void*)(*outputIt))) {
@@ -233,7 +233,7 @@ void KstRelation::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (KstStringMap::ConstIterator i = _outputStrings.begin(); i != _outputStrings.end(); ++i) {
+  for (Kst::StringMap::ConstIterator i = _outputStrings.begin(); i != _outputStrings.end(); ++i) {
     if (!(*i)) {
       qWarning() << "Output string for data object " << this->tag().displayString() << " is invalid." << endl;
     }
@@ -243,7 +243,7 @@ void KstRelation::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (KstStringMap::ConstIterator i = _inputStrings.begin(); i != _inputStrings.end(); ++i) {
+  for (Kst::StringMap::ConstIterator i = _inputStrings.begin(); i != _inputStrings.end(); ++i) {
     if (!(*i)) {
       qWarning() << "Input string for data object " << this->tag().displayString() << " is invalid." << endl;
     }

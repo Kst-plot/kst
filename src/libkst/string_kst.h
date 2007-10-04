@@ -1,12 +1,6 @@
 /***************************************************************************
-                     kststring.h  -  the base string type
-                             -------------------
-    begin                : Sept 29, 2004
-    copyright            : (C) 2004 by The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2003 The University of Toronto                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,28 +9,30 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTSTRING_H
-#define KSTSTRING_H
+#ifndef STRING_KST_H
+#define STRING_KST_H
 
 #include <qdom.h>
-#include "kstprimitive.h"
+#include "primitive.h"
 #include "objectlist.h"
 #include "objectmap.h"
 #include "objectcollection.h"
 
 class QXmlStreamWriter;
 
-class KST_EXPORT KstString : public KstPrimitive {
+namespace Kst {
+
+class KST_EXPORT String : public Primitive {
   Q_OBJECT
   Q_PROPERTY(bool orphan READ orphan WRITE setOrphan)
   public:
-    KstString(Kst::ObjectTag in_tag = Kst::ObjectTag::invalidTag, Kst::Object *provider = 0L, const QString& val = QString::null, bool orphan = false);
-    KstString(QDomElement& e);
+    String(ObjectTag in_tag = ObjectTag::invalidTag, Object *provider = 0L, const QString& val = QString::null, bool orphan = false);
+    String(QDomElement& e);
 
-    ~KstString();
+    ~String();
 
   public:
-    void setTagName(const Kst::ObjectTag& tag);
+    void setTagName(const ObjectTag& tag);
 
     /** Save information */
     void save(QXmlStreamWriter &s);
@@ -44,8 +40,8 @@ class KST_EXPORT KstString : public KstPrimitive {
     /** Update the vector.  Return true if there was new data. */
     UpdateType update(int updateCounter = -1);
 
-    KstString& operator=(const QString& v);
-    KstString& operator=(const char *v);
+    String& operator=(const QString& v);
+    String& operator=(const char *v);
 
   public slots:
     /* return the value of the string */
@@ -69,12 +65,14 @@ class KST_EXPORT KstString : public KstPrimitive {
     bool _editable;
 };
 
-Q_DECLARE_METATYPE(KstString*)
+typedef SharedPtr<String> StringPtr;
+typedef ObjectList<StringPtr> StringList;
+typedef ObjectMap<StringPtr> StringMap;
+typedef ObjectCollection<String> StringCollection;
 
-typedef KstSharedPtr<KstString> KstStringPtr;
-typedef Kst::ObjectList<KstStringPtr> KstStringList;
-typedef Kst::ObjectMap<KstStringPtr> KstStringMap;
-typedef Kst::ObjectCollection<KstString> KstStringCollection;
+}
+
+Q_DECLARE_METATYPE(Kst::String*)
 
 #endif
 // vim: ts=2 sw=2 et

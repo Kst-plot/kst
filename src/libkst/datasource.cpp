@@ -144,7 +144,7 @@ QStringList DataSource::pluginList() {
 namespace {
 class PluginSortContainer {
   public:
-    KstSharedPtr<DataSourcePluginInterface> plugin;
+    SharedPtr<DataSourcePluginInterface> plugin;
     int match;
     int operator<(const PluginSortContainer& x) const {
       return match > x.match; // yes, this is by design.  biggest go first
@@ -475,7 +475,7 @@ DataSource::~DataSource() {
 //  qDebug() << "  removing metadata strings" << endl;
   stringList.lock().writeLock();
   stringList.setUpdateDisplayTags(false);
-  for (QHash<QString, KstString*>::Iterator it = _metaData.begin(); it != _metaData.end(); ++it) {
+  for (QHash<QString, String*>::Iterator it = _metaData.begin(); it != _metaData.end(); ++it) {
 //    qDebug() << "    removing " << it.current()->tag().tagString() << endl;
     stringList.remove(it.value());
   }
@@ -493,7 +493,7 @@ void DataSource::setTagName(const ObjectTag& in_tag) {
 
   Object::setTagName(in_tag);
   _numFramesScalar->setTagName(ObjectTag("frames", tag()));
-  for (QHash<QString, KstString*>::Iterator it = _metaData.begin(); it != _metaData.end(); ++it) {
+  for (QHash<QString, String*>::Iterator it = _metaData.begin(); it != _metaData.end(); ++it) {
     ObjectTag stag = it.value()->tag();
     stag.setContext(tag().fullTag());
     it.value()->setTagName(stag);
@@ -683,7 +683,7 @@ bool DataSource::reset() {
 }
 
 
-const QHash<QString, KstString*>& DataSource::metaData() const {
+const QHash<QString, String*>& DataSource::metaData() const {
   return _metaData;
 }
 

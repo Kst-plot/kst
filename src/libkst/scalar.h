@@ -19,7 +19,7 @@
 #define SCALAR_H
 
 #include <qdom.h>
-#include "kstprimitive.h"
+#include "primitive.h"
 #include "objectcollection.h"
 
 class QXmlStreamWriter;
@@ -27,7 +27,7 @@ class QXmlStreamWriter;
 namespace Kst {
 
 /** The base class for all scalars. */
-class KST_EXPORT Scalar : public KstPrimitive {
+class KST_EXPORT Scalar : public Primitive {
   Q_OBJECT
   Q_PROPERTY(bool orphan READ orphan WRITE setOrphan)
   Q_PROPERTY(double value READ value WRITE setValue)
@@ -85,7 +85,7 @@ class KST_EXPORT Scalar : public KstPrimitive {
 };
 
 
-typedef KstSharedPtr<Scalar> ScalarPtr;
+typedef SharedPtr<Scalar> ScalarPtr;
 typedef ObjectList<ScalarPtr> ScalarList;
 typedef ObjectMap<ScalarPtr> ScalarMap;
 typedef ObjectCollection<Scalar> ScalarCollection;

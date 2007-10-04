@@ -16,7 +16,7 @@
 #include <qstringlist.h>
 
 #include "rwlock.h"
-#include "kstsharedptr.h"
+#include "sharedptr.h"
 
 namespace Kst {
 
@@ -94,10 +94,10 @@ class ObjectList : public QList<T> {
 
 /* Does locking for you automatically. */
 template<class T, class S>
-ObjectList<KstSharedPtr<S> > ObjectSubList(ObjectList<KstSharedPtr<T> >& list) {
+ObjectList<SharedPtr<S> > ObjectSubList(ObjectList<SharedPtr<T> >& list) {
   list.lock().readLock();
-  ObjectList<KstSharedPtr<S> > rc;
-  typename ObjectList<KstSharedPtr<T> >::Iterator it;
+  ObjectList<SharedPtr<S> > rc;
+  typename ObjectList<SharedPtr<T> >::Iterator it;
 
   for (it = list.begin(); it != list.end(); ++it) {
     S *x = dynamic_cast<S*>((*it).data());
@@ -113,9 +113,9 @@ ObjectList<KstSharedPtr<S> > ObjectSubList(ObjectList<KstSharedPtr<T> >& list) {
 
 /* Does locking for you automatically. */
 template<class T, class S>
-void ObjectSplitList(ObjectList<KstSharedPtr<T> >& list, ObjectList<KstSharedPtr<S> >& inclusive, ObjectList<KstSharedPtr<T> >& exclusive) {
+void ObjectSplitList(ObjectList<SharedPtr<T> >& list, ObjectList<SharedPtr<S> >& inclusive, ObjectList<SharedPtr<T> >& exclusive) {
   list.lock().readLock();
-  typename ObjectList<KstSharedPtr<T> >::Iterator it;
+  typename ObjectList<SharedPtr<T> >::Iterator it;
 
   for (it = list.begin(); it != list.end(); ++it) {
     S *x = dynamic_cast<S*>((*it).data());

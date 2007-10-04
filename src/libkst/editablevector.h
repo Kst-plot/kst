@@ -31,7 +31,7 @@ class EditableVector : public Vector {
   void setSaveData(bool save);
 };
 
-typedef KstSharedPtr<EditableVector> EditableVectorPtr;
+typedef SharedPtr<EditableVector> EditableVectorPtr;
 typedef ObjectList<EditableVectorPtr> EditableVectorList;
 
 }

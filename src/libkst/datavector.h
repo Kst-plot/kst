@@ -121,7 +121,7 @@ public:
   void setFromEnd();
   
   // make a copy
-  KstSharedPtr<DataVector> makeDuplicate() const;
+  SharedPtr<DataVector> makeDuplicate() const;
 
 private:
   Object::UpdateType doUpdate(bool force = false);
@@ -174,7 +174,7 @@ private:
   bool _dontUseSkipAccel;
 };
 
-typedef KstSharedPtr<DataVector> DataVectorPtr;
+typedef SharedPtr<DataVector> DataVectorPtr;
 typedef ObjectList<DataVectorPtr> DataVectorList;
 
 }

@@ -98,7 +98,7 @@ class KST_EXPORT KstEquation : public Kst::DataObject {
     Equation::Node *_pe;
 };
 
-typedef KstSharedPtr<KstEquation> KstEquationPtr;
+typedef Kst::SharedPtr<KstEquation> KstEquationPtr;
 typedef Kst::ObjectList<KstEquationPtr> KstEquationList;
 
 #endif

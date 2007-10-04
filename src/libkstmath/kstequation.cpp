@@ -224,7 +224,7 @@ void KstEquation::setEquation(const QString& in_fn) {
       ctx.sampleCount = _ns;
       ctx.xVector = *_xInVector;
       Equation::FoldVisitor vis(&ctx, &_pe);
-      KstStringMap sm;
+      Kst::StringMap sm;
 
       if (_pe->collectObjects(VectorsUsed, ScalarsUsed, sm)) {
         _pe->update(-1, &ctx);
@@ -388,7 +388,7 @@ bool KstEquation::FillY(bool force) {
     _pe = static_cast<Equation::Node*>(ParsedEquation);
     if (_pe && rc == 0) {
       Equation::FoldVisitor vis(&ctx, &_pe);
-      KstStringMap sm;
+      Kst::StringMap sm;
       _pe->collectObjects(VectorsUsed, ScalarsUsed, sm);
       ParsedEquation = 0L;
     } else {

@@ -34,7 +34,7 @@ MatrixCollection matrixList;
 ScalarCollection scalarList;
 
 /** The list of Strings */
-KstStringCollection stringList;
+StringCollection stringList;
 
 static QMutex bigLock;
 

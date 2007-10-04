@@ -18,7 +18,7 @@
 #ifndef LABELPARSER_H
 #define LABELPARSER_H
 
-#include "kststring.h"
+#include "string_kst.h"
 #include "kst_export.h"
 
 #include <qcolor.h>

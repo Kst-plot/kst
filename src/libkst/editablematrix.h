@@ -25,7 +25,7 @@ class KST_EXPORT EditableMatrix : public Matrix {
     virtual void save(QTextStream &ts, const QString& indent = QString::null);
 };
 
-typedef KstSharedPtr<EditableMatrix> EditableMatrixPtr;
+typedef SharedPtr<EditableMatrix> EditableMatrixPtr;
 typedef ObjectList<EditableMatrixPtr> EditableMatrixList;
 
 }

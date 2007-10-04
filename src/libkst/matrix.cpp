@@ -32,7 +32,7 @@ namespace Kst {
 static int anonymousMatrixCounter = 1;
 
 Matrix::Matrix(ObjectTag in_tag, Object *provider, uint nX, uint nY, double minX, double minY, double stepX, double stepY)
-: KstPrimitive(provider) {
+: Primitive(provider) {
  
   _nX = nX;
   _nY = nY;

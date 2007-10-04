@@ -18,7 +18,7 @@
 #ifndef ENODES_H
 #define ENODES_H
 
-#include "kststring.h"
+#include "string_kst.h"
 #include "vector.h"
 #include "kst_export.h"
 
@@ -55,7 +55,7 @@ namespace Equation {
       virtual ~Node();
 
       virtual bool isConst() = 0; // can't be const
-      virtual bool collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
+      virtual bool collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, Kst::StringMap& t);
       virtual bool takeVectors(const Kst::VectorMap& c);
       virtual double value(Context*) = 0;
       virtual void visit(NodeVisitor*);
@@ -73,7 +73,7 @@ namespace Equation {
       BinaryNode(Node *left, Node *right);
       virtual ~BinaryNode();
 
-      virtual bool collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
+      virtual bool collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, Kst::StringMap& t);
       virtual bool takeVectors(const Kst::VectorMap& c);
       virtual void visit(NodeVisitor*);
       virtual Kst::Object::UpdateType update(int counter, Context *ctx);
@@ -100,7 +100,7 @@ namespace Equation {
       double value(Context*) { return 0.0; }
 
       bool isConst();
-      bool collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
+      bool collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, Kst::StringMap& t);
       bool takeVectors(const Kst::VectorMap& c);
       double at(int, Context*);
       Node *node(int idx);
@@ -119,7 +119,7 @@ namespace Equation {
 
       bool isConst();
       double value(Context*);
-      bool collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
+      bool collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, Kst::StringMap& t);
       bool takeVectors(const Kst::VectorMap& c);
       Kst::Object::UpdateType update(int counter, Context *ctx);
       QString text() const;
@@ -179,7 +179,7 @@ namespace Equation {
 
       bool isConst();
       double value(Context*);
-      bool collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t);
+      bool collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, Kst::StringMap& t);
       bool takeVectors(const Kst::VectorMap& c);
       Kst::Object::UpdateType update(int counter, Context *ctx);
       QString text() const;

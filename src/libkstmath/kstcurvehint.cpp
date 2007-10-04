@@ -23,7 +23,7 @@
 #include <qdebug.h>
 
 KstCurveHint::KstCurveHint(const QString& name, const QString& x, const QString& y)
-: KstShared(),  _curveName(name), _xVectorName(x), _yVectorName(y) {
+: Kst::Shared(),  _curveName(name), _xVectorName(x), _yVectorName(y) {
 }
 
 

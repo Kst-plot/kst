@@ -21,13 +21,13 @@
 #include <QMetaType>
 
 #include "kst_export.h"
-#include "kstsharedptr.h"
+#include "sharedptr.h"
 #include "rwlock.h"
 #include "objecttag.h"
 
 namespace Kst {
 
-class Object : public KstShared, public QObject, public KstRWLock {
+class Object : public Shared, public QObject, public KstRWLock {
   public:
     Object();
 
@@ -74,10 +74,10 @@ class Object : public KstShared, public QObject, public KstRWLock {
     Object::UpdateType _lastUpdate;
 } KST_EXPORT;
 
-typedef KstSharedPtr<Object> ObjectPtr;
+typedef SharedPtr<Object> ObjectPtr;
 
 template <typename T, typename U>
-inline KstSharedPtr<T> kst_cast(KstSharedPtr<U> object) {
+inline SharedPtr<T> kst_cast(SharedPtr<U> object) {
   return dynamic_cast<T*>(object.data());
 }
 

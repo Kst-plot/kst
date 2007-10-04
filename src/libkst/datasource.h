@@ -33,7 +33,6 @@ namespace KST {
   class DataSourcePlugin;
 }
 
-class KstString;
 
 namespace Kst {
 
@@ -45,9 +44,10 @@ struct MatrixData {
   double *z; // the data
 };
 
+class String;
 class Scalar;
 class DataSourceConfigWidget;
-typedef KstSharedPtr<Scalar> ScalarPtr;
+typedef SharedPtr<Scalar> ScalarPtr;
 
 class KST_EXPORT DataSource : public Object {
   public:
@@ -57,8 +57,8 @@ class KST_EXPORT DataSource : public Object {
     /** Returns a list of plugins found on the system. */
     static QStringList pluginList();
 
-    static KstSharedPtr<DataSource> loadSource(const QString& filename, const QString& type = QString::null);
-    static KstSharedPtr<DataSource> loadSource(QDomElement& e);
+    static SharedPtr<DataSource> loadSource(const QString& filename, const QString& type = QString::null);
+    static SharedPtr<DataSource> loadSource(QDomElement& e);
     static QStringList fieldListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
     static QStringList matrixListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
 
@@ -191,7 +191,7 @@ class KST_EXPORT DataSource : public Object {
      */
     virtual bool reset();
 
-    virtual const QHash<QString, KstString*>& metaData() const;
+    virtual const QHash<QString, String*>& metaData() const;
 
     virtual QString metaData(const QString& key) const;
 
@@ -235,7 +235,7 @@ class KST_EXPORT DataSource : public Object {
     /** The source type name. */
     QString _source;
 
-    QHash<QString, KstString*> _metaData;
+    QHash<QString, String*> _metaData;
 
     QSettings *_cfg;
 
@@ -246,7 +246,7 @@ class KST_EXPORT DataSource : public Object {
 };
 
 
-typedef KstSharedPtr<DataSource> DataSourcePtr;
+typedef SharedPtr<DataSource> DataSourcePtr;
 
 class DataSourceList : public ObjectList<DataSourcePtr> {
   public:

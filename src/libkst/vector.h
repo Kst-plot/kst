@@ -22,7 +22,7 @@
 #include <qhash.h>
 #include <qpointer.h>
 #include "objectcollection.h"
-#include "kstprimitive.h"
+#include "primitive.h"
 #include "scalar.h"
 #include "kst_export.h"
 
@@ -46,7 +46,7 @@ namespace Kst {
 class KstDataObject;
 
 class Vector;
-typedef KstSharedPtr<Vector> VectorPtr;
+typedef SharedPtr<Vector> VectorPtr;
 // KST::interpolate is still too polluting
 extern double kstInterpolate(double *v, int _size, int in_i, int ns_i) KST_EXPORT;
 extern double kstInterpolateNoHoles(double *v, int _size, int in_i, int ns_i) KST_EXPORT;
@@ -54,7 +54,7 @@ extern double kstInterpolateNoHoles(double *v, int _size, int in_i, int ns_i) KS
 /**A class for handling data vectors for kst.
  *@author cbn
  */
-class Vector : public KstPrimitive {
+class Vector : public Primitive {
   Q_OBJECT
   public:
     /**

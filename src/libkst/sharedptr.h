@@ -16,8 +16,8 @@
    the Free Software Foundation, Inc., 51 Franklin Steet, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#ifndef KstSharedPTR_H
-#define KstSharedPTR_H
+#ifndef SharedPTR_H
+#define SharedPTR_H
 
 #include <q3semaphore.h>
 
@@ -29,24 +29,26 @@
 
 // See KSharedPtr in KDE libraries for more information
 
-class KstShared {
+namespace Kst {
+
+class Shared {
 public:
    /**
     * Standard constructor.  This will initialize the reference count
     * on this object to 0.
     */
-   KstShared() : sem(999999) { }
+   Shared() : sem(999999) { }
 
    /**
     * Copy constructor.  This will @em not actually copy the objects
     * but it will initialize the reference count on this object to 0.
     */
-   KstShared( const KstShared & ) : sem(999999) { }
+   Shared( const Shared & ) : sem(999999) { }
 
    /**
     * Overloaded assignment operator.
     */
-   KstShared &operator=(const KstShared & ) { return *this; }
+   Shared &operator=(const Shared & ) { return *this; }
 
    /**
     * Increases the reference count by one.
@@ -76,54 +78,54 @@ public:
    int _KShared_count() const { return sem.total() - sem.available(); }
 
 protected:
-   virtual ~KstShared() { }
+   virtual ~Shared() { }
 private:
    mutable Q3Semaphore sem;
 };
 
 template< class T >
-struct KstSharedPtr
+struct SharedPtr
 {
 public:
   /**
    * Creates a null pointer.
    */
-  KstSharedPtr() : ptr(0) { }
+  SharedPtr() : ptr(0) { }
   /**
    * Creates a new pointer.
    * @param t the pointer
    */
-  KstSharedPtr( T* t ) : ptr(t) { if ( ptr ) ptr->_KShared_ref(); }
+  SharedPtr( T* t ) : ptr(t) { if ( ptr ) ptr->_KShared_ref(); }
 
   /**
    * Copies a pointer.
    * @param p the pointer to copy
    */
-  KstSharedPtr( const KstSharedPtr& p )
+  SharedPtr( const SharedPtr& p )
     : ptr(p.ptr) { if ( ptr ) ptr->_KShared_ref(); }
 
   /**
    * Unreferences the object that this pointer points to. If it was
    * the last reference, the object will be deleted.
    */
-  ~KstSharedPtr() { if ( ptr ) ptr->_KShared_unref(); }
+  ~SharedPtr() { if ( ptr ) ptr->_KShared_unref(); }
 
-  KstSharedPtr<T>& operator= ( const KstSharedPtr<T>& p ) {
+  SharedPtr<T>& operator= ( const SharedPtr<T>& p ) {
     if ( ptr == p.ptr ) return *this;
     if ( ptr ) ptr->_KShared_unref();
     ptr = p.ptr;
     if ( ptr ) ptr->_KShared_ref();
     return *this;
   }
-  KstSharedPtr<T>& operator= ( T* p ) {
+  SharedPtr<T>& operator= ( T* p ) {
     if ( ptr == p ) return *this;
     if ( ptr ) ptr->_KShared_unref();
     ptr = p;
     if ( ptr ) ptr->_KShared_ref();
     return *this;
   }
-  bool operator== ( const KstSharedPtr<T>& p ) const { return ( ptr == p.ptr ); }
-  bool operator!= ( const KstSharedPtr<T>& p ) const { return ( ptr != p.ptr ); }
+  bool operator== ( const SharedPtr<T>& p ) const { return ( ptr == p.ptr ); }
+  bool operator!= ( const SharedPtr<T>& p ) const { return ( ptr != p.ptr ); }
   bool operator== ( const T* p ) const { return ( ptr == p ); }
   bool operator!= ( const T* p ) const { return ( ptr != p ); }
   bool operator!() const { return ( ptr == 0 ); }
@@ -155,4 +157,5 @@ private:
   T* ptr;
 };
 
+}
 #endif
