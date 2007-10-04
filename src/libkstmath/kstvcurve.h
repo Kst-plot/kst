@@ -180,7 +180,7 @@ class KST_EXPORT KstVCurve: public KstRelation {
 };
 
 typedef KstSharedPtr<KstVCurve> KstVCurvePtr;
-typedef KstObjectList<KstVCurvePtr> KstVCurveList;
+typedef Kst::ObjectList<KstVCurvePtr> KstVCurveList;
 
 #endif
 // vim: ts=2 sw=2 et

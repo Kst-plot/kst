@@ -20,7 +20,7 @@
 
 #include "kst_export.h"
 #include "object.h"
-#include "kstobjectlist.h"
+#include "objectlist.h"
 
 class KstString;
 
@@ -78,8 +78,8 @@ class ObjectCollection {
     ObjectCollection(const ObjectCollection& copy) { qDebug() << "CRASH! Deep copy required."; }
     ~ObjectCollection();
 
-    typedef typename KstObjectList<KstSharedPtr<T> >::const_iterator const_iterator;
-    typedef typename KstObjectList<KstSharedPtr<T> >::iterator iterator;
+    typedef typename ObjectList<KstSharedPtr<T> >::const_iterator const_iterator;
+    typedef typename ObjectList<KstSharedPtr<T> >::iterator iterator;
     bool addObject(T *o);
     bool removeObject(T *o);
     void doRename(T *o, const Kst::ObjectTag& newTag);
@@ -100,21 +100,21 @@ class ObjectCollection {
 
     // QValueList compatibility
     bool isEmpty() const { return _list.isEmpty(); }
-    typename KstObjectList<KstSharedPtr<T> >::size_type count() const { return _list.count(); }
+    typename ObjectList<KstSharedPtr<T> >::size_type count() const { return _list.count(); }
     void append(T *o);
     void remove(T *o);
     void clear();
     QStringList tagNames() const;
-    typename KstObjectList<KstSharedPtr<T> >::Iterator removeTag(const QString& x);
-    typename KstObjectList<KstSharedPtr<T> >::Iterator findTag(const QString& x);
-    typename KstObjectList<KstSharedPtr<T> >::ConstIterator findTag(const QString& x) const;
-    typename KstObjectList<KstSharedPtr<T> >::Iterator findTag(const Kst::ObjectTag& x);
-    typename KstObjectList<KstSharedPtr<T> >::ConstIterator findTag(const Kst::ObjectTag& x) const;
-    typename KstObjectList<KstSharedPtr<T> >::Iterator begin();
-    typename KstObjectList<KstSharedPtr<T> >::ConstIterator begin() const;
-    typename KstObjectList<KstSharedPtr<T> >::Iterator end();
-    typename KstObjectList<KstSharedPtr<T> >::ConstIterator end() const;
-    const KstObjectList<KstSharedPtr<T> >& list() const { return _list; }
+    typename ObjectList<KstSharedPtr<T> >::Iterator removeTag(const QString& x);
+    typename ObjectList<KstSharedPtr<T> >::Iterator findTag(const QString& x);
+    typename ObjectList<KstSharedPtr<T> >::ConstIterator findTag(const QString& x) const;
+    typename ObjectList<KstSharedPtr<T> >::Iterator findTag(const Kst::ObjectTag& x);
+    typename ObjectList<KstSharedPtr<T> >::ConstIterator findTag(const Kst::ObjectTag& x) const;
+    typename ObjectList<KstSharedPtr<T> >::Iterator begin();
+    typename ObjectList<KstSharedPtr<T> >::ConstIterator begin() const;
+    typename ObjectList<KstSharedPtr<T> >::Iterator end();
+    typename ObjectList<KstSharedPtr<T> >::ConstIterator end() const;
+    const ObjectList<KstSharedPtr<T> >& list() const { return _list; }
     KstSharedPtr<T>& operator[](int i) { return _list.at(i); }
     const KstSharedPtr<T>& operator[](int i) const { return _list.at(i); }
 
@@ -134,16 +134,16 @@ class ObjectCollection {
 
     ObjectTreeNode<T> _root;
     ObjectNameIndex<T> _index;
-    KstObjectList<KstSharedPtr<T> > _list; // owns the objects
+    ObjectList<KstSharedPtr<T> > _list; // owns the objects
 };
 
 // FIXME: this should probably return a ObjectCollection
 template<class T, class S>
-KstObjectList<KstSharedPtr<S> > ObjectSubList(ObjectCollection<T>& coll) {
-  KstObjectList<KstSharedPtr<T> > list = coll.list();
+ObjectList<KstSharedPtr<S> > ObjectSubList(ObjectCollection<T>& coll) {
+  ObjectList<KstSharedPtr<T> > list = coll.list();
   list.lock().readLock();
-  KstObjectList<KstSharedPtr<S> > rc;
-  typename KstObjectList<KstSharedPtr<T> >::Iterator it;
+  ObjectList<KstSharedPtr<S> > rc;
+  typename ObjectList<KstSharedPtr<T> >::Iterator it;
 
   for (it = list.begin(); it != list.end(); ++it) {
     S *x = dynamic_cast<S*>((*it).data());
@@ -566,7 +566,7 @@ unsigned int ObjectCollection<T>::componentsForUniqueTag(const Kst::ObjectTag& t
 }
 
 
-// KstObjectList compatibility
+// ObjectList compatibility
 template <class T>
 void ObjectCollection<T>::append(T *o) {
   addObject(o);
@@ -593,7 +593,7 @@ QStringList ObjectCollection<T>::tagNames() const {
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::Iterator ObjectCollection<T>::removeTag(const QString& x) {
+typename ObjectList<KstSharedPtr<T> >::Iterator ObjectCollection<T>::removeTag(const QString& x) {
   // find object in tree
   T *obj = retrieveObject(Kst::ObjectTag::fromString(x));
 
@@ -602,7 +602,7 @@ typename KstObjectList<KstSharedPtr<T> >::Iterator ObjectCollection<T>::removeTa
     _root.removeDescendant(obj, &_index);
 
     // remove object from list
-    typename KstObjectList<KstSharedPtr<T> >::Iterator it = _list.find(obj);
+    typename ObjectList<KstSharedPtr<T> >::Iterator it = _list.find(obj);
     if (it != _list.end()) {
       return _list.remove(it);
     }
@@ -611,12 +611,12 @@ typename KstObjectList<KstSharedPtr<T> >::Iterator ObjectCollection<T>::removeTa
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::Iterator ObjectCollection<T>::findTag(const Kst::ObjectTag& x) {
+typename ObjectList<KstSharedPtr<T> >::Iterator ObjectCollection<T>::findTag(const Kst::ObjectTag& x) {
   T *obj = retrieveObject(x);
   if (obj) {
     // Can't use qFind() due to ambiguity.  Also have to do ugly implementation.
-    typename KstObjectList<KstSharedPtr<T> >::Iterator i = _list.begin();
-    typename KstObjectList<KstSharedPtr<T> >::Iterator j = _list.end();
+    typename ObjectList<KstSharedPtr<T> >::Iterator i = _list.begin();
+    typename ObjectList<KstSharedPtr<T> >::Iterator j = _list.end();
     while (i != j) {
       if ((T*)(*i) == obj) {
         break;
@@ -633,8 +633,8 @@ typename KstObjectList<KstSharedPtr<T> >::Iterator ObjectCollection<T>::findTag(
     obj = retrieveObject(Kst::ObjectTag::fromString(newTag));
     if (obj) {
       // Can't use qFind() due to ambiguity.
-      typename KstObjectList<KstSharedPtr<T> >::Iterator i = _list.begin();
-      typename KstObjectList<KstSharedPtr<T> >::Iterator j = _list.end();
+      typename ObjectList<KstSharedPtr<T> >::Iterator i = _list.begin();
+      typename ObjectList<KstSharedPtr<T> >::Iterator j = _list.end();
       while (i != j) {
         if ((T*)(*i) == obj) {
           break;
@@ -648,12 +648,12 @@ typename KstObjectList<KstSharedPtr<T> >::Iterator ObjectCollection<T>::findTag(
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::Iterator ObjectCollection<T>::findTag(const QString& x) {
+typename ObjectList<KstSharedPtr<T> >::Iterator ObjectCollection<T>::findTag(const QString& x) {
   return findTag(Kst::ObjectTag::fromString(x));
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::ConstIterator ObjectCollection<T>::findTag(const Kst::ObjectTag& x) const {
+typename ObjectList<KstSharedPtr<T> >::ConstIterator ObjectCollection<T>::findTag(const Kst::ObjectTag& x) const {
   T *obj = retrieveObject(x);
   if (obj) {
     return _list.find(obj);
@@ -672,27 +672,27 @@ typename KstObjectList<KstSharedPtr<T> >::ConstIterator ObjectCollection<T>::fin
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::ConstIterator ObjectCollection<T>::findTag(const QString& x) const {
+typename ObjectList<KstSharedPtr<T> >::ConstIterator ObjectCollection<T>::findTag(const QString& x) const {
   return findTag(Kst::ObjectTag::fromString(x));
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::Iterator ObjectCollection<T>::begin() {
+typename ObjectList<KstSharedPtr<T> >::Iterator ObjectCollection<T>::begin() {
   return _list.begin();
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::ConstIterator ObjectCollection<T>::begin() const {
+typename ObjectList<KstSharedPtr<T> >::ConstIterator ObjectCollection<T>::begin() const {
   return _list.begin();
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::Iterator ObjectCollection<T>::end() {
+typename ObjectList<KstSharedPtr<T> >::Iterator ObjectCollection<T>::end() {
   return _list.end();
 }
 
 template <class T>
-typename KstObjectList<KstSharedPtr<T> >::ConstIterator ObjectCollection<T>::end() const {
+typename ObjectList<KstSharedPtr<T> >::ConstIterator ObjectCollection<T>::end() const {
   return _list.end();
 }
 
@@ -713,7 +713,7 @@ template <class T>
 void ObjectCollection<T>::updateAllDisplayTags() {
   Q_ASSERT(lock().myLockStatus() == KstRWLock::WRITELOCKED);
 
-  for (typename KstObjectList<KstSharedPtr<T> >::Iterator i = _list.begin(); i != _list.end(); ++i) {
+  for (typename ObjectList<KstSharedPtr<T> >::Iterator i = _list.begin(); i != _list.end(); ++i) {
     updateDisplayTag(*i);
   }
 }

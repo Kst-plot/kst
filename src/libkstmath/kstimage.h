@@ -144,7 +144,7 @@ class KST_EXPORT KstImage : public KstRelation {
 
 
 typedef KstSharedPtr<KstImage> KstImagePtr;
-typedef KstObjectList<KstImagePtr> KstImageList;
+typedef Kst::ObjectList<KstImagePtr> KstImageList;
 
 #endif
 // vim: ts=2 sw=2 et

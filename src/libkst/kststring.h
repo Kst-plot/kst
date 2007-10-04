@@ -20,8 +20,8 @@
 
 #include <qdom.h>
 #include "kstprimitive.h"
-#include "kstobjectlist.h"
-#include "kstobjectmap.h"
+#include "objectlist.h"
+#include "objectmap.h"
 #include "objectcollection.h"
 
 class QXmlStreamWriter;
@@ -72,8 +72,8 @@ class KST_EXPORT KstString : public KstPrimitive {
 Q_DECLARE_METATYPE(KstString*)
 
 typedef KstSharedPtr<KstString> KstStringPtr;
-typedef KstObjectList<KstStringPtr> KstStringList;
-typedef KstObjectMap<KstStringPtr> KstStringMap;
+typedef Kst::ObjectList<KstStringPtr> KstStringList;
+typedef Kst::ObjectMap<KstStringPtr> KstStringMap;
 typedef Kst::ObjectCollection<KstString> KstStringCollection;
 
 #endif

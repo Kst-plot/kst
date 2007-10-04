@@ -97,7 +97,7 @@ class KST_EXPORT KstBasicPlugin : public Kst::DataObject {
 };
 
 typedef KstSharedPtr<KstBasicPlugin> KstBasicPluginPtr;
-typedef KstObjectList<KstBasicPluginPtr> KstBasicPluginList;
+typedef Kst::ObjectList<KstBasicPluginPtr> KstBasicPluginList;
 
 #endif
 

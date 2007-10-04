@@ -86,8 +86,8 @@ class KST_EXPORT Scalar : public KstPrimitive {
 
 
 typedef KstSharedPtr<Scalar> ScalarPtr;
-typedef KstObjectList<ScalarPtr> ScalarList;
-typedef KstObjectMap<ScalarPtr> ScalarMap;
+typedef ObjectList<ScalarPtr> ScalarList;
+typedef ObjectMap<ScalarPtr> ScalarMap;
 typedef ObjectCollection<Scalar> ScalarCollection;
 
 }

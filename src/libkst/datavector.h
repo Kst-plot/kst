@@ -175,7 +175,7 @@ private:
 };
 
 typedef KstSharedPtr<DataVector> DataVectorPtr;
-typedef KstObjectList<DataVectorPtr> DataVectorList;
+typedef ObjectList<DataVectorPtr> DataVectorList;
 
 }
 

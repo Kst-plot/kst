@@ -116,7 +116,7 @@ class KST_EXPORT DataMatrix : public Matrix {
 };
 
 typedef KstSharedPtr<DataMatrix> DataMatrixPtr;
-typedef KstObjectList<DataMatrixPtr> DataMatrixList;
+typedef ObjectList<DataMatrixPtr> DataMatrixList;
 
 }
 #endif

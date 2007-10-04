@@ -26,7 +26,7 @@ class KST_EXPORT EditableMatrix : public Matrix {
 };
 
 typedef KstSharedPtr<EditableMatrix> EditableMatrixPtr;
-typedef KstObjectList<EditableMatrixPtr> EditableMatrixList;
+typedef ObjectList<EditableMatrixPtr> EditableMatrixList;
 
 }
 

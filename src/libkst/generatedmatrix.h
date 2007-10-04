@@ -43,7 +43,7 @@ class KST_EXPORT GeneratedMatrix : public Matrix {
 };
 
 typedef KstSharedPtr<GeneratedMatrix> GeneratedMatrixPtr;
-typedef KstObjectList<GeneratedMatrixPtr> GeneratedMatrixList;
+typedef ObjectList<GeneratedMatrixPtr> GeneratedMatrixList;
 
 }
 

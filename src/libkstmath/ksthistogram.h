@@ -108,7 +108,7 @@ private:
 };
 
 typedef KstSharedPtr<KstHistogram> KstHistogramPtr;
-typedef KstObjectList<KstHistogramPtr> KstHistogramList;
+typedef Kst::ObjectList<KstHistogramPtr> KstHistogramList;
 
 #endif
 // vim: ts=2 sw=2 et

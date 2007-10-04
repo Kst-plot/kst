@@ -44,8 +44,8 @@ SOURCES += \
     primitivefactory.cpp \
     datasourcefactory.cpp \
     objectcollection.cpp \
-    kstobjectlist.cpp \
-    kstobjectmap.cpp \
+    objectlist.cpp \
+    objectmap.cpp \
     objecttag.cpp \
     builtinprimitives.cpp \
     vectorfactory.cpp
@@ -92,9 +92,9 @@ HEADERS += \
     rwlock.h \
     stdinsource.h \
     sysinfo.h \
-    kstobjectcollection.h \
-    kstobjectlist.h \
-    kstobjectmap.h \
+    objectcollection.h \
+    objectlist.h \
+    objectmap.h \
     objecttag.h \
     builtinprimitives.h \
     vectorfactory.h

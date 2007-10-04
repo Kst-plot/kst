@@ -24,7 +24,7 @@
 #include "kst_export.h"
 #include "object.h"
 #include "dateparser.h"
-#include "kstobjectlist.h"
+#include "objectlist.h"
 #include "scalar.h"
 
 class QXmlStreamWriter;
@@ -248,10 +248,10 @@ class KST_EXPORT DataSource : public Object {
 
 typedef KstSharedPtr<DataSource> DataSourcePtr;
 
-class DataSourceList : public KstObjectList<DataSourcePtr> {
+class DataSourceList : public ObjectList<DataSourcePtr> {
   public:
-    DataSourceList() : KstObjectList<DataSourcePtr>() {}
-    DataSourceList(const DataSourceList& x) : KstObjectList<DataSourcePtr>(x) {}
+    DataSourceList() : ObjectList<DataSourcePtr>() {}
+    DataSourceList(const DataSourceList& x) : ObjectList<DataSourcePtr>(x) {}
     virtual ~DataSourceList() {}
 
     virtual DataSourcePtr findFileName(const QString& x) {

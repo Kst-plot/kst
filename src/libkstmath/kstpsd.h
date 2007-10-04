@@ -123,7 +123,7 @@ class KST_EXPORT KstPSD : public Kst::DataObject {
 };
 
 typedef KstSharedPtr<KstPSD> KstPSDPtr;
-typedef KstObjectList<KstPSDPtr> KstPSDList;
+typedef Kst::ObjectList<KstPSDPtr> KstPSDList;
 
 #endif
 // vim: ts=2 sw=2 et

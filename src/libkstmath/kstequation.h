@@ -99,7 +99,7 @@ class KST_EXPORT KstEquation : public Kst::DataObject {
 };
 
 typedef KstSharedPtr<KstEquation> KstEquationPtr;
-typedef KstObjectList<KstEquationPtr> KstEquationList;
+typedef Kst::ObjectList<KstEquationPtr> KstEquationList;
 
 #endif
 // vim: ts=2 sw=2 et

@@ -209,8 +209,8 @@ class Vector : public KstPrimitive {
     Object::UpdateType internalUpdate(Object::UpdateType providerRC);
 } KST_EXPORT;
 
-typedef KstObjectList<VectorPtr> VectorList;
-typedef KstObjectMap<VectorPtr> VectorMap;
+typedef ObjectList<VectorPtr> VectorList;
+typedef ObjectMap<VectorPtr> VectorMap;
 typedef ObjectCollection<Vector> VectorCollection;
 
 }

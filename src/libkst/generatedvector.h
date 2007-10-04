@@ -39,7 +39,7 @@ class KST_EXPORT GeneratedVector : public Vector {
 };
 
 typedef KstSharedPtr<GeneratedVector> GeneratedVectorPtr;
-typedef KstObjectList<GeneratedVectorPtr> GeneratedVectorList;
+typedef ObjectList<GeneratedVectorPtr> GeneratedVectorList;
 
 }
 

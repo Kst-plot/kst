@@ -20,8 +20,8 @@
 
 #include "kst_export.h"
 #include "object.h"
-#include "kstobjectmap.h"
-#include "kstobjectlist.h"
+#include "objectmap.h"
+#include "objectlist.h"
 #include <qpointer.h>
 
 class KST_EXPORT KstPrimitive : public Kst::Object {
@@ -50,8 +50,8 @@ class KST_EXPORT KstPrimitive : public Kst::Object {
 };
 
 typedef KstSharedPtr<KstPrimitive> KstPrimitivePtr;
-typedef KstObjectList<KstPrimitivePtr> KstPrimitiveList;
-typedef KstObjectMap<KstPrimitivePtr> KstPrimitiveMap;
+typedef Kst::ObjectList<KstPrimitivePtr> KstPrimitiveList;
+typedef Kst::ObjectMap<KstPrimitivePtr> KstPrimitiveMap;
 
 #endif
 // vim: ts=2 sw=2 et

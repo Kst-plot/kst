@@ -181,7 +181,7 @@ class KST_EXPORT KstRelation : public Kst::Object {
 
 
 typedef KstSharedPtr<KstRelation> KstRelationPtr;
-typedef KstObjectList<KstRelationPtr> KstRelationList;
+typedef Kst::ObjectList<KstRelationPtr> KstRelationList;
 
 #endif
 // vim: ts=2 sw=2 et

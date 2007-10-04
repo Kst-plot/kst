@@ -33,7 +33,7 @@ namespace Kst {
 class DataObject;
 
 typedef KstSharedPtr<DataObject> DataObjectPtr;
-typedef KstObjectList<DataObjectPtr> DataObjectList;
+typedef ObjectList<DataObjectPtr> DataObjectList;
 typedef QMap<DataObjectPtr, DataObjectPtr> DataObjectDataObjectMap;
 typedef QMap<QString, int> KstPluginInfoList;
 

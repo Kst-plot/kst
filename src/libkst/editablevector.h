@@ -32,7 +32,7 @@ class EditableVector : public Vector {
 };
 
 typedef KstSharedPtr<EditableVector> EditableVectorPtr;
-typedef KstObjectList<EditableVectorPtr> EditableVectorList;
+typedef ObjectList<EditableVectorPtr> EditableVectorList;
 
 }
 

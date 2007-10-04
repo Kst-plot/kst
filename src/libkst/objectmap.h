@@ -9,17 +9,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTOBJECTMAP_H
-#define KSTOBJECTMAP_H
+#ifndef OBJECTMAP_H
+#define OBJECTMAP_H
 
 #include <qmap.h>
 #include <qstringlist.h>
 
+namespace Kst {
+
 template<class T>
-class KstObjectMap : public QMap<QString,T> {
+class ObjectMap : public QMap<QString,T> {
   public:
-    KstObjectMap() : QMap<QString,T>() {}
-    virtual ~KstObjectMap() {}
+    ObjectMap() : QMap<QString,T>() {}
+    virtual ~ObjectMap() {}
 
     virtual QStringList tagNames() {
       QStringList rc;
@@ -70,6 +72,7 @@ These are wrong.  We should not assume that key(x) == x->tagName().
 */
 };
 
+}
 #endif
 
 // vim: ts=2 sw=2 et

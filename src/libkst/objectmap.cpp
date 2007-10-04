@@ -9,6 +9,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstobjectlist.h"
+#include "objectmap.h"
 
 // vim: ts=2 sw=2 et

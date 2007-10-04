@@ -50,7 +50,7 @@ class Data {
 
     /** Save a vector to a file */
     virtual int vectorToFile(Kst::VectorPtr v, QFile *f);
-    virtual int vectorsToFile(const Kst::VectorList& l, QFile *f, bool interpolate);
+    virtual int vectorsToFile(const VectorList& l, QFile *f, bool interpolate);
 
     /** The list of plots for the given window.  Returns all plots if
         the window is empty/null. */

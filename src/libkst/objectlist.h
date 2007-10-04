@@ -9,8 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTOBJECTLIST_H
-#define KSTOBJECTLIST_H
+#ifndef OBJECTLIST_H
+#define OBJECTLIST_H
 
 #include <qlist.h>
 #include <qstringlist.h>
@@ -18,14 +18,16 @@
 #include "rwlock.h"
 #include "kstsharedptr.h"
 
-template<class T>
-class KstObjectList : public QList<T> {
-  public:
-    KstObjectList() : QList<T>() {}
-    KstObjectList(const KstObjectList<T>& x) : QList<T>(x) {}
-    virtual ~KstObjectList() { }
+namespace Kst {
 
-    KstObjectList& operator=(const KstObjectList& l) {
+template<class T>
+class ObjectList : public QList<T> {
+  public:
+    ObjectList() : QList<T>() {}
+    ObjectList(const ObjectList<T>& x) : QList<T>(x) {}
+    virtual ~ObjectList() { }
+
+    ObjectList& operator=(const ObjectList& l) {
       this->QList<T>::operator=(l);
       return *this;
     }
@@ -92,10 +94,10 @@ class KstObjectList : public QList<T> {
 
 /* Does locking for you automatically. */
 template<class T, class S>
-KstObjectList<KstSharedPtr<S> > kstObjectSubList(KstObjectList<KstSharedPtr<T> >& list) {
+ObjectList<KstSharedPtr<S> > ObjectSubList(ObjectList<KstSharedPtr<T> >& list) {
   list.lock().readLock();
-  KstObjectList<KstSharedPtr<S> > rc;
-  typename KstObjectList<KstSharedPtr<T> >::Iterator it;
+  ObjectList<KstSharedPtr<S> > rc;
+  typename ObjectList<KstSharedPtr<T> >::Iterator it;
 
   for (it = list.begin(); it != list.end(); ++it) {
     S *x = dynamic_cast<S*>((*it).data());
@@ -111,9 +113,9 @@ KstObjectList<KstSharedPtr<S> > kstObjectSubList(KstObjectList<KstSharedPtr<T> >
 
 /* Does locking for you automatically. */
 template<class T, class S>
-void kstObjectSplitList(KstObjectList<KstSharedPtr<T> >& list, KstObjectList<KstSharedPtr<S> >& inclusive, KstObjectList<KstSharedPtr<T> >& exclusive) {
+void ObjectSplitList(ObjectList<KstSharedPtr<T> >& list, ObjectList<KstSharedPtr<S> >& inclusive, ObjectList<KstSharedPtr<T> >& exclusive) {
   list.lock().readLock();
-  typename KstObjectList<KstSharedPtr<T> >::Iterator it;
+  typename ObjectList<KstSharedPtr<T> >::Iterator it;
 
   for (it = list.begin(); it != list.end(); ++it) {
     S *x = dynamic_cast<S*>((*it).data());
@@ -125,6 +127,8 @@ void kstObjectSplitList(KstObjectList<KstSharedPtr<T> >& list, KstObjectList<Kst
   }
 
   list.lock().unlock();
+}
+
 }
 
 #endif

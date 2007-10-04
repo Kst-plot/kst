@@ -114,7 +114,7 @@ class KST_EXPORT KstCSD : public Kst::DataObject {
 };
 
 typedef KstSharedPtr<KstCSD> KstCSDPtr;
-typedef KstObjectList<KstCSDPtr> KstCSDList;
+typedef Kst::ObjectList<KstCSDPtr> KstCSDList;
 
 #endif
 // vim: ts=2 sw=2 et

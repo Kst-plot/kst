@@ -167,8 +167,8 @@ class KST_EXPORT Matrix : public KstPrimitive {
     Object::UpdateType internalUpdate(Object::UpdateType providerUpdateType);
 };
 
-typedef KstObjectList<MatrixPtr> MatrixList;
-typedef KstObjectMap<MatrixPtr> MatrixMap;
+typedef ObjectList<MatrixPtr> MatrixList;
+typedef ObjectMap<MatrixPtr> MatrixMap;
 typedef ObjectCollection<Matrix> MatrixCollection;
 
 }
