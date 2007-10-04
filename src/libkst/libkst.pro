@@ -19,7 +19,7 @@ SOURCES += \
     datasource.cpp \
     kstextension.cpp \
     datacollection.cpp \
-    kstdebug.cpp \
+    debug.cpp \
     rwlock.cpp \
     kstmath.cpp \
     dateparser.cpp \
@@ -61,7 +61,7 @@ HEADERS += \
     dataplugin.h \
     datasource.h \
     dateparser.h \
-    kstdebug.h \
+    debug.h \
     kstevents.h \
     kst_export.h \
     kstextension.h \

@@ -27,7 +27,7 @@
 
 #include "kst_i18n.h"
 #include "datacollection.h"
-#include "kstdebug.h"
+#include "debug.h"
 #include "scalar.h"
 #include "stdinsource.h"
 
@@ -93,7 +93,7 @@ static QString obtainFile(const QString& source) {
 static void scanPlugins() {
   PluginList tmpList;
 
-  KstDebug::self()->log(i18n("Scanning for data-source plugins."));
+  Debug::self()->log(i18n("Scanning for data-source plugins."));
 
   foreach (QObject *plugin, QPluginLoader::staticInstances()) {
     //try a cast
@@ -303,7 +303,7 @@ bool DataSource::sourceHasConfigWidget(const QString& filename, const QString& t
     return (*i).plugin->hasConfigWidget();
   }
 
-  KstDebug::self()->log(i18n("Could not find a datasource for '%1'(%2), but we found one just prior.  Something is wrong with Kst.", filename, type), KstDebug::Error);
+  Debug::self()->log(i18n("Could not find a datasource for '%1'(%2), but we found one just prior.  Something is wrong with Kst.", filename, type), Debug::Error);
   return false;
 }
 
@@ -325,7 +325,7 @@ DataSourceConfigWidget* DataSource::configWidgetForSource(const QString& filenam
     return w;
   }
 
-  KstDebug::self()->log(i18n("Could not find a datasource for '%1'(%2), but we found one just prior.  Something is wrong with Kst.", filename, type), KstDebug::Error);
+  Debug::self()->log(i18n("Could not find a datasource for '%1'(%2), but we found one just prior.  Something is wrong with Kst.", filename, type), Debug::Error);
   return 0L;
 }
 

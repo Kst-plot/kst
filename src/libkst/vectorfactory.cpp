@@ -11,7 +11,7 @@
 
 #include "vectorfactory.h"
 
-#include "kstdebug.h"
+#include "debug.h"
 #include "vector.h"
 #include "generatedvector.h"
 #include "editablevector.h"
@@ -54,7 +54,7 @@ KstPrimitivePtr VectorFactory::generatePrimitive(QXmlStreamReader& xml) {
       if (n == "vector") {
         break;
       } else {
-        KstDebug::self()->log(QObject::tr("Error creating vector from Kst file."), KstDebug::Warning);
+        Debug::self()->log(QObject::tr("Error creating vector from Kst file."), Debug::Warning);
         return 0;
       }
     }
@@ -109,7 +109,7 @@ KstPrimitivePtr SVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
       if (n == "svector") {
         break;
       } else {
-        KstDebug::self()->log(QObject::tr("Error creating vector from Kst file."), KstDebug::Warning);
+        Debug::self()->log(QObject::tr("Error creating vector from Kst file."), Debug::Warning);
         return 0;
       }
     }
@@ -158,7 +158,7 @@ KstPrimitivePtr AVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
       if (n == "avector") {
         break;
       } else {
-        KstDebug::self()->log(QObject::tr("Error creating vector from Kst file."), KstDebug::Warning);
+        Debug::self()->log(QObject::tr("Error creating vector from Kst file."), Debug::Warning);
         return 0;
       }
     }
@@ -220,7 +220,7 @@ KstPrimitivePtr RVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
       if (n == "rvector") {
         break;
       } else {
-        KstDebug::self()->log(QObject::tr("Error creating vector from Kst file."), KstDebug::Warning);
+        Debug::self()->log(QObject::tr("Error creating vector from Kst file."), Debug::Warning);
         return 0;
       }
     }

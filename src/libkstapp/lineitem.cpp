@@ -11,7 +11,7 @@
 
 #include "lineitem.h"
 #include "view.h"
-#include <kstdebug.h>
+#include <debug.h>
 
 #include <QDebug>
 #include <QGraphicsScene>
@@ -245,7 +245,7 @@ ViewItem* LineItemFactory::generateGraphics(QXmlStreamReader& xml, View *view, V
       if (xml.name().toString() == "line") {
         break;
       } else {
-        KstDebug::self()->log(QObject::tr("Error creating line object from Kst file."), KstDebug::Warning);
+        Debug::self()->log(QObject::tr("Error creating line object from Kst file."), Debug::Warning);
         delete rc;
         return 0;
       }

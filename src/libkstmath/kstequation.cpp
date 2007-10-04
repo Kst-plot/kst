@@ -31,7 +31,7 @@
 #include "enodes.h"
 #include "eparse-eh.h"
 #include "datacollection.h"
-#include "kstdebug.h"
+#include "debug.h"
 #include "kstequation.h"
 #include "kst_i18n.h"
 #include "generatedvector.h"
@@ -182,7 +182,7 @@ void KstEquation::save(QXmlStreamWriter &s) {
     Equation::Node *en = static_cast<Equation::Node*>(ParsedEquation);
     if (rc == 0 && en) {
       if (!en->takeVectors(VectorsUsed)) {
-        KstDebug::self()->log(i18n("Equation [%1] failed to find its vectors when saving.  Resulting Kst file may have issues.").arg(_equation), KstDebug::Warning);
+        Kst::Debug::self()->log(i18n("Equation [%1] failed to find its vectors when saving.  Resulting Kst file may have issues.").arg(_equation), Kst::Debug::Warning);
       }
       QString etext = en->text();
       s.writeAttribute("expression", etext);
@@ -230,16 +230,16 @@ void KstEquation::setEquation(const QString& in_fn) {
         _pe->update(-1, &ctx);
       } else {
         //we have bad objects...
-        KstDebug::self()->log(i18n("Equation [%1] references non-existent objects.").arg(_equation), KstDebug::Error);
+        Kst::Debug::self()->log(i18n("Equation [%1] references non-existent objects.").arg(_equation), Kst::Debug::Error);
         delete (Equation::Node*)ParsedEquation;
         ParsedEquation = 0L;
         Equation::mutex().unlock();
       }
     } else {
       // Parse error
-      KstDebug::self()->log(i18n("Equation [%1] failed to parse.  Errors follow.").arg(_equation), KstDebug::Warning);
+      Kst::Debug::self()->log(i18n("Equation [%1] failed to parse.  Errors follow.").arg(_equation), Kst::Debug::Warning);
       for (QStringList::ConstIterator i = Equation::errorStack.begin(); i != Equation::errorStack.end(); ++i) {
-        KstDebug::self()->log(i18n("Parse Error: %1").arg(*i), KstDebug::Warning);
+        Kst::Debug::self()->log(i18n("Parse Error: %1").arg(*i), Kst::Debug::Warning);
       }
       delete (Equation::Node*)ParsedEquation;
       ParsedEquation = 0L;

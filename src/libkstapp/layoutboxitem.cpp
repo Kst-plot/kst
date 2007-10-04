@@ -12,7 +12,7 @@
 #include "layoutboxitem.h"
 #include "viewgridlayout.h"
 
-#include <kstdebug.h>
+#include <debug.h>
 
 #include <QDebug>
 #include <QMenu>

@@ -23,7 +23,7 @@
 
 #include "defaultprimitivenames.h"
 #include "datacollection.h"
-#include "kstdebug.h"
+#include "debug.h"
 #include "kst_i18n.h"
 #include "kstmath.h"
 

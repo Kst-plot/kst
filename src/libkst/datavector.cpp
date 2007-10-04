@@ -27,7 +27,7 @@
 #include "kst_i18n.h"
 
 #include "datacollection.h"
-#include "kstdebug.h"
+#include "debug.h"
 #include "datavector.h"
 #include "kstmath.h"
 
@@ -179,7 +179,7 @@ void DataVector::commonRVConstructor(DataSourcePtr in_file,
   _dirty = true;
 
   if (!in_file) {
-    KstDebug::self()->log(i18n("Data file for vector %1 was not opened.", tagName()), KstDebug::Warning);
+    Debug::self()->log(i18n("Data file for vector %1 was not opened.", tagName()), Debug::Warning);
   }
 }
 
@@ -226,7 +226,7 @@ void DataVector::changeFile(DataSourcePtr in_file) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (!in_file) {
-    KstDebug::self()->log(i18n("Data file for vector %1 was not opened.", tagName()), KstDebug::Warning);
+    Debug::self()->log(i18n("Data file for vector %1 was not opened.", tagName()), Debug::Warning);
   }
   _file = in_file;
   if (_file) {

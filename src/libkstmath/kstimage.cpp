@@ -18,7 +18,7 @@
 
 #include "dialoglauncher.h"
 #include "datacollection.h"
-#include "kstdebug.h"
+#include "debug.h"
 #include "kstimage.h"
 #include "kstmath.h"
 
@@ -88,7 +88,7 @@ KstImage::KstImage(const QDomElement& e) : KstRelation(e) {
     for (int i = 0; i < 256; i++) {
       in_pal.insert(i, QColor(i,i,i));
     }
-    KstDebug::self()->log(i18n("Unable to find palette %1.  Using a 256 color grayscale palette instead.").arg(in_paletteName), KstDebug::Warning);
+    Kst::Debug::self()->log(i18n("Unable to find palette %1.  Using a 256 color grayscale palette instead.").arg(in_paletteName), Kst::Debug::Warning);
     _pal = in_pal;
   }
 

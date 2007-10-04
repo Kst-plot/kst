@@ -11,7 +11,7 @@
 
 #include "equationfactory.h"
 
-#include "kstdebug.h"
+#include "debug.h"
 #include "kstequation.h"
 #include "datacollection.h"
 
@@ -51,7 +51,7 @@ DataObjectPtr EquationFactory::generateObject(QXmlStreamReader& xml) {
       if (n == "equation") {
         break;
       } else {
-        KstDebug::self()->log(QObject::tr("Error creating equation from Kst file."), KstDebug::Warning);
+        Kst::Debug::self()->log(QObject::tr("Error creating equation from Kst file."), Kst::Debug::Warning);
         return 0;
       }
     }
@@ -68,7 +68,7 @@ DataObjectPtr EquationFactory::generateObject(QXmlStreamReader& xml) {
   }
 
   if (!vector) {
-    KstDebug::self()->log(QObject::tr("Error creating equation from Kst file.  Could not find xVector."), KstDebug::Warning);
+    Kst::Debug::self()->log(QObject::tr("Error creating equation from Kst file.  Could not find xVector."), Kst::Debug::Warning);
     return 0;
   }
 

@@ -18,10 +18,12 @@
 #ifndef LOGEVENTS_H
 #define LOGEVENTS_H
 
-#include "kstdebug.h"
+#include "debug.h"
 #include "kstevents.h"
 //Added by qt3to4:
 #include <QEvent>
+
+namespace Kst {
 
 class LogEvent : public QEvent {
   public:
@@ -31,9 +33,10 @@ class LogEvent : public QEvent {
     virtual ~LogEvent() {}
 
     LogEventType _eventType;
-    KstDebug::LogMessage _msg;
+    Debug::LogMessage _msg;
 };
 
+}
 
 #endif
 

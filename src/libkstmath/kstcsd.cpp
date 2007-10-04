@@ -30,7 +30,7 @@
 #include "dialoglauncher.h"
 #include "kstcsd.h"
 #include "datacollection.h"
-#include "kstdebug.h"
+#include "debug.h"
 #include "psdcalculator.h"
 #include "kstobjectdefaults.h"
 
@@ -210,7 +210,7 @@ Kst::Object::UpdateType KstCSD::update(int update_counter) {
         (*_outMatrix)->setValueRaw(xSize, j, tempOutput[j]);
       }
     } else {
-      KstDebug::self()->log(i18n("Could not allocate sufficient memory for CSD."), KstDebug::Error);
+      Kst::Debug::self()->log(i18n("Could not allocate sufficient memory for CSD."), Kst::Debug::Error);
       break;
     }
 

@@ -10,7 +10,7 @@
  ***************************************************************************/
 
 #include "debugdialog.h"
-#include <kstdebug.h>
+#include <debug.h>
 #include <kstevents.h>
 #include <logevents.h>
 
@@ -33,7 +33,7 @@ bool DebugDialog::event(QEvent* e) {
       switch (le->_eventType) {
         case LogEvent::LogAdded:
           _log->append(le->_msg.msg);
-          if (le->_msg.level == KstDebug::Error) {
+          if (le->_msg.level == Debug::Error) {
             emit notifyOfError();
           }
           break;

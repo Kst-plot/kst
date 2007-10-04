@@ -14,7 +14,7 @@
 // qCompress the bytearray
 
 #include "editablevector.h"
-#include "kstdebug.h"
+#include "debug.h"
 #include <qtextstream.h>
 
 namespace Kst {

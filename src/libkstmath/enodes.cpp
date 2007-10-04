@@ -33,7 +33,7 @@
 
 #include "enodes.h"
 #include "datacollection.h"
-#include "kstdebug.h"
+#include "debug.h"
 #include "kstmath.h"
 
 extern "C" int yyparse();
@@ -747,7 +747,7 @@ bool Data::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, KstStringMap& t)
   } else if (_scalar && !s.contains(_tagName)) {
     s.insert(_tagName, _scalar);
   } else if (!_scalar && !_vector) {
-    KstDebug::self()->log(i18n("Equation has unknown object [%1].").arg(_tagName), KstDebug::Error);
+    Kst::Debug::self()->log(i18n("Equation has unknown object [%1].").arg(_tagName), Kst::Debug::Error);
     return false;
   }
   return true;

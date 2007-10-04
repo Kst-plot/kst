@@ -1,13 +1,7 @@
 /***************************************************************************
-                                 kstdebug.h
-                             -------------------
-    begin                : Mar 07 2004
-    copyright            : (C) 2004 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
+ *   copyright : (C) 2004 The University of Toronto                        *
+*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -15,8 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTDEBUG_H
-#define KSTDEBUG_H
+#ifndef DEBUG_H
+#define DEBUG_H
 
 #include <config.h>
 
@@ -27,17 +21,19 @@
 
 #include "kst_export.h"
 
+namespace Kst {
+
 // This class has to be threadsafe
-class KST_EXPORT KstDebug : public QObject {
+class KST_EXPORT Debug : public QObject {
   Q_OBJECT
   public:
-    enum LogLevel { Unknown = 0, Notice = 1, Warning = 2, Error = 4, Debug = 8, None = 16384 };
+    enum LogLevel { Unknown = 0, Notice = 1, Warning = 2, Error = 4, DebugLog = 8, None = 16384 };
     struct LogMessage {
       QDateTime date;
       QString msg;
       LogLevel level;
     };
-    static KstDebug *self();
+    static Debug *self();
 
     void clear();
     void log(const QString& msg, LogLevel level = Notice);
@@ -46,7 +42,7 @@ class KST_EXPORT KstDebug : public QObject {
 
     int logLength() const;
     QList<LogMessage> messages() const;
-    KstDebug::LogMessage message(unsigned n) const;
+    Debug::LogMessage message(unsigned n) const;
     QStringList dataSourcePlugins() const;
     QString label(LogLevel level) const;
     const QString& kstRevision() const;
@@ -63,10 +59,10 @@ class KST_EXPORT KstDebug : public QObject {
     void setHandler(QObject *handler);
 
   private:
-    KstDebug();
-    ~KstDebug();
+    Debug();
+    ~Debug();
 
-    static KstDebug *_self;
+    static Debug *_self;
     static void cleanup();
 
     QList<LogMessage> _messages;
@@ -82,7 +78,7 @@ class KST_EXPORT KstDebug : public QObject {
     QString _kstRevision;
 };
 
-
+}
 #endif
 
 // vim: ts=2 sw=2 et

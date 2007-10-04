@@ -11,7 +11,7 @@
 
 #include "boxitem.h"
 
-#include <kstdebug.h>
+#include <debug.h>
 
 #include <QDebug>
 #include <QGraphicsScene>
@@ -109,7 +109,7 @@ ViewItem* BoxItemFactory::generateGraphics(QXmlStreamReader& xml, View *view, Vi
       if (xml.name().toString() == "box") {
         break;
       } else {
-        KstDebug::self()->log(QObject::tr("Error creating box object from Kst file."), KstDebug::Warning);
+        Debug::self()->log(QObject::tr("Error creating box object from Kst file."), Debug::Warning);
         delete rc;
         return 0;
       }

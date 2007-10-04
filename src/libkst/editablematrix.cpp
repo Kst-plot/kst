@@ -14,7 +14,7 @@
 // qCompress the bytearray
 
 #include "editablematrix.h"
-#include "kstdebug.h"
+#include "debug.h"
 #include <qbytearray.h>
 #include <qtextdocument.h>
 #include "kst_i18n.h"
@@ -71,7 +71,7 @@ EditableMatrix::EditableMatrix(const QDomElement &e) : KstMatrix() {
             qds >> _z[i];  // stored in the same order as it was saved
           }
           if (i < in_nX*in_nY) {
-            KstDebug::self()->log(i18n("Saved matrix contains less data than it claims."), KstDebug::Warning);
+            Debug::self()->log(i18n("Saved matrix contains less data than it claims."), Debug::Warning);
             resizeZ(i, false);
           }
         }

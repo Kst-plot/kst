@@ -29,7 +29,7 @@
 
 #include "dialoglauncher.h"
 #include "datacollection.h"
-#include "kstdebug.h"
+#include "debug.h"
 #include "kstpsd.h"
 #include "psdcalculator.h"
 #include "kstobjectdefaults.h"
@@ -260,7 +260,7 @@ void KstPSD::_adjustLengths() {
     if ( ((*_sVector)->length() == nPSDLen) && ((*_fVector)->length() == nPSDLen) ) {
       _PSDLen = nPSDLen;
     } else {
-      KstDebug::self()->log(i18n("Attempted to create a PSD that used all memory."), KstDebug::Error);
+      Kst::Debug::self()->log(i18n("Attempted to create a PSD that used all memory."), Kst::Debug::Error);
     }
 
     _last_n_subsets = 0;

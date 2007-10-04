@@ -25,7 +25,7 @@
 
 #include "kst_i18n.h"
 
-#include "kstdebug.h"
+#include "debug.h"
 #include "kstbasicplugin.h"
 #include "dialoglauncher.h"
 #include "datacollection.h"
@@ -223,7 +223,7 @@ Kst::Object::UpdateType KstBasicPlugin::update(int updateCounter) {
   //Call the plugins algorithm to operate on the inputs
   //and produce the outputs
   if ( !algorithm() ) {
-    KstDebug::self()->log(i18n("There is an error in the %1 algorithm.").arg(propertyString()), KstDebug::Error);
+    Kst::Debug::self()->log(i18n("There is an error in the %1 algorithm.").arg(propertyString()), Kst::Debug::Error);
     unlockInputsAndOutputs();
     return lastUpdateResult();
   }

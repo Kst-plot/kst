@@ -18,7 +18,7 @@
 #include "ellipseitem.h"
 #include "exportgraphicsdialog.h"
 #include "application.h"
-#include "kstdebug.h"
+#include "debug.h"
 #include "labelitem.h"
 #include "lineitem.h"
 #include "memorywidget.h"
@@ -52,7 +52,7 @@ MainWindow::MainWindow() {
   _tabWidget = new TabWidget(this);
   _undoGroup = new QUndoGroup(this);
   _debugDialog = new DebugDialog(this); // need this early for hookups
-  KstDebug::self()->setHandler(_debugDialog);
+  Debug::self()->setHandler(_debugDialog);
 
   connect(_tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentViewChanged()));
 

@@ -25,7 +25,7 @@
 #include "dialoglauncher.h"
 #include "kstcolorsequence.h"
 #include "datacollection.h"
-#include "kstdebug.h"
+#include "debug.h"
 #include "kstlinestyle.h"
 #include "kstmath.h"
 #include "datavector.h"

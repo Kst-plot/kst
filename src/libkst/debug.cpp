@@ -1,13 +1,7 @@
 /***************************************************************************
-                                kstdebug.cpp
-                             -------------------
-    begin                : Mar 07 2004
-    copyright            : (C) 2004 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
+ *   copyright : (C) 2004 The University of Toronto                        *
+*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -16,7 +10,7 @@
  ***************************************************************************/
 
 #include "datasource.h"
-#include "kstdebug.h"
+#include "debug.h"
 #include "kstrevision.h"
 #include "logevents.h"
 
@@ -27,26 +21,28 @@
 
 #include <ksttimers.h>
 
-KstDebug *KstDebug::_self = 0L;
-void KstDebug::cleanup() {
+namespace Kst {
+
+Debug *Debug::_self = 0L;
+void Debug::cleanup() {
     delete _self;
     _self = 0;
 }
 
 
 static QMutex soLock;
-KstDebug *KstDebug::self() {
+Debug *Debug::self() {
   QMutexLocker ml(&soLock);
   if (!_self) {
-    _self = new KstDebug;
-    qAddPostRoutine(KstDebug::cleanup);
+    _self = new Debug;
+    qAddPostRoutine(Debug::cleanup);
   }
 
   return _self;
 }
 
 
-KstDebug::KstDebug()
+Debug::Debug()
 : QObject() {
   _applyLimit = false;
   _limit = 10000;
@@ -55,7 +51,7 @@ KstDebug::KstDebug()
 }
 
 
-KstDebug::~KstDebug() {
+Debug::~Debug() {
 #ifdef BENCHMARK
   qDebug() << "DRAW COUNTS ---------------------------------------" << endl;
   for (QMap<QString,int>::ConstIterator i = _drawCounter.begin(); i != _drawCounter.end(); ++i) {
@@ -65,23 +61,23 @@ KstDebug::~KstDebug() {
 }
 
 
-int KstDebug::limit() const {
+int Debug::limit() const {
   QMutexLocker ml(&_lock);
   return _limit;
 }
 
 
-QStringList KstDebug::dataSourcePlugins() const {
-  return Kst::DataSource::pluginList();
+QStringList Debug::dataSourcePlugins() const {
+  return DataSource::pluginList();
 }
 
 
-void KstDebug::setHandler(QObject *handler) {
+void Debug::setHandler(QObject *handler) {
   _handler = handler;
 }
 
 
-void KstDebug::log(const QString& msg, LogLevel level) {
+void Debug::log(const QString& msg, LogLevel level) {
   QMutexLocker ml(&_lock);
   LogMessage message;
 
@@ -109,7 +105,7 @@ void KstDebug::log(const QString& msg, LogLevel level) {
 }
 
 
-void KstDebug::clear() {
+void Debug::clear() {
   clearHasNewError(); // has to be before the lock is acquired
   QMutexLocker ml(&_lock);
   _messages.clear(); 
@@ -118,7 +114,7 @@ void KstDebug::clear() {
 }
 
 
-QString KstDebug::label(LogLevel level) const {
+QString Debug::label(LogLevel level) const {
   switch (level) {
     case Notice:
       return i18nc("log level notice", "Notice");
@@ -126,7 +122,7 @@ QString KstDebug::label(LogLevel level) const {
       return i18nc("log level warning", "Warning");
     case Error:
       return i18nc("log level error", "Error");
-    case Debug:
+    case DebugLog:
       return i18nc("log level debug", "Debug");
     default:
       return i18nc("log level other", "Other");
@@ -134,7 +130,7 @@ QString KstDebug::label(LogLevel level) const {
 }
 
 
-QString KstDebug::text() {
+QString Debug::text() {
   QMutexLocker ml(&_lock);
   QString body = i18n("Kst version %1\n\n\nKst log:\n", QString::fromLatin1(KSTVERSION));
 
@@ -154,49 +150,50 @@ QString KstDebug::text() {
 }
 
 
-void KstDebug::setLimit(bool applyLimit, int limit) {
+void Debug::setLimit(bool applyLimit, int limit) {
   QMutexLocker ml(&_lock);
   _applyLimit = applyLimit;
   _limit = limit;
 }
 
 
-QList<KstDebug::LogMessage> KstDebug::messages() const {
+QList<Debug::LogMessage> Debug::messages() const {
   QMutexLocker ml(&_lock);
   return _messages;
 }
 
 
-KstDebug::LogMessage KstDebug::message(unsigned n) const {
+Debug::LogMessage Debug::message(unsigned n) const {
   QMutexLocker ml(&_lock);
   if (_messages.size() > int(n)) {
     return _messages[n];
   }
-  return KstDebug::LogMessage();
+  return Debug::LogMessage();
 }
 
 
-int KstDebug::logLength() const {
+int Debug::logLength() const {
   QMutexLocker ml(&_lock);
   return _messages.size();
 }
 
 
-const QString& KstDebug::kstRevision() const {
+const QString& Debug::kstRevision() const {
   QMutexLocker ml(&_lock);
   return _kstRevision;
 }
 
 
-bool KstDebug::hasNewError() const {
+bool Debug::hasNewError() const {
   QMutexLocker ml(&_lock);
   return _hasNewError;
 }
 
 
-void KstDebug::clearHasNewError() {
+void Debug::clearHasNewError() {
   QMutexLocker ml(&_lock);
   _hasNewError = false;
 }
 
+}
 // vim: ts=2 sw=2 et
