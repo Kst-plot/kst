@@ -29,7 +29,7 @@
 #include "datacollection.h"
 #include "debug.h"
 #include "datavector.h"
-#include "kstmath.h"
+#include "math_kst.h"
 
 // ReqNF <=0 means read from ReqF0 to end of File
 // ReqF0 < means start at EndOfFile-ReqNF.
@@ -641,7 +641,7 @@ Object::UpdateType DataVector::doUpdate(bool force) {
 
     // read the new data from file
     if (start_past_eof) {
-      _v[0] = KST::NOPOINT;
+      _v[0] = NOPOINT;
       n_read = 1;
     } else if (_file->samplesPerFrame(_field) > 1) {
       assert(new_nf - NF - 1 > 0 || new_nf - NF - 1 == -1 || force);

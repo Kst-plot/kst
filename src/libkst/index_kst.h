@@ -1,13 +1,7 @@
 /***************************************************************************
-                     kstmath.cpp  -  Math portability tools
-                             -------------------
-    begin                : Oct 20, 2004
-    copyright            : (C) 2004 by The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
+ *   copyright : (C) 2006 The University of Toronto                        *
+*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -15,14 +9,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstmath.h"
+#ifndef INDEX_KST_H
+#define INDEX_KST_H
 
-namespace KST {
-#ifdef NAN
-const double NOPOINT = NAN;
-#else
-const double NOPOINT = 0.0/0.0; // NaN
-#endif
+namespace Kst {
+
+class Index {
+  public:
+    Index() : isTime(false), index(0), time(0.0) {}
+    bool isTime;
+    union {
+      int index;
+      double time;
+    };
+};
+
 }
+#endif
 
 // vim: ts=2 sw=2 et

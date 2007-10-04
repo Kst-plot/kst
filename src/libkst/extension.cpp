@@ -1,13 +1,7 @@
 /***************************************************************************
-                              kstextension.cpp
-                             -------------------
-    begin                : Feb 09 2004
-    copyright            : (C) 2004 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
+ *   copyright : (C) 2004 The University of Toronto                        *
+*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -18,41 +12,44 @@
 // include files for KDE
 
 // application specific includes
-#include "kstextension.h"
+#include "extension.h"
 #include <qmainwindow.h>
 #include <QTextStream>
 
-KstExtension::KstExtension(QObject *parent, const QStringList&) : QObject(parent) {
+namespace Kst {
+
+Extension::Extension(QObject *parent, const QStringList&) : QObject(parent) {
 }
 
 
-KstExtension::~KstExtension() {
+Extension::~Extension() {
   emit unregister();
 }
 
 
-void KstExtension::load(const QDomElement& e) {
+void Extension::load(const QDomElement& e) {
   Q_UNUSED(e)
 }
 
 
-void KstExtension::save(QTextStream& ts, const QString& indent) {
+void Extension::save(QTextStream& ts, const QString& indent) {
   Q_UNUSED(ts)
   Q_UNUSED(indent)
 }
 
 
-void KstExtension::clear() {
+void Extension::clear() {
 }
 
 
-QMainWindow* KstExtension::app() const {
+QMainWindow* Extension::app() const {
   return qobject_cast<QMainWindow*>(parent());
 }
 
 
-void KstExtension::processArguments(const QString& args) {
+void Extension::processArguments(const QString& args) {
   Q_UNUSED(args)
 }
 
+}
 // vim: ts=2 sw=2 et

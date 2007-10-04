@@ -15,7 +15,7 @@
 
 #include <QDomDocument>
 
-#include <kstmath.h>
+#include <math_kst.h>
 #include <scalar.h>
 #include <datacollection.h>
 #include <dataobjectcollection.h>

@@ -28,7 +28,7 @@
 #include <qdebug.h>
 #include "datacollection.h"
 #include "defaultprimitivenames.h"
-#include "kstmath.h"
+#include "math_kst.h"
 #include "vector.h"
 #include "debug.h"
 
@@ -171,7 +171,7 @@ Vector::~Vector() {
   int j = int(floor(fj)); /* index of sample one lower */ \
   assert(j+1 < _size && j >= 0);            \
   if (_v[j + 1] != _v[j + 1] || _v[j] != _v[j]) { \
-    return KST::NOPOINT;                    \
+    return NOPOINT;                    \
   }                                         \
                                             \
   double fdj = fj - float(j); /* fdj is fraction between _v[j] and _v[j+1] */ \
@@ -260,7 +260,7 @@ double kstInterpolate(double *_v, int _size, int in_i, int ns_i) {
   int j = int(floor(fj)); /* index of sample one lower */ \
   assert(j+1 < _size && j >= 0);            \
   if (_v[j + 1] != _v[j + 1] || _v[j] != _v[j]) { \
-    return KST::NOPOINT;                    \
+    return NOPOINT;                    \
   }                                         \
                                             \
   double fdj = fj - float(j); /* fdj is fraction between _v[j] and _v[j+1] */ \
@@ -361,7 +361,7 @@ void Vector::updateScalars() {
     } else {
       _scalars["sigma"]->setValue(_max - _min);
       _scalars["rms"]->setValue(sqrt(_scalars["sumsquared"]->value()));
-      _scalars["mean"]->setValue(_mean = KST::NOPOINT);
+      _scalars["mean"]->setValue(_mean = NOPOINT);
     }
   }
 }
@@ -402,7 +402,7 @@ void Vector::blank() {
   memset(_v, 0, sizeof(double)*_size);
 #else
   for (int i = 0; i < _size; ++i) {
-    _v[i] = KST::NOPOINT;
+    _v[i] = NOPOINT;
   }
 #endif
   updateScalars();
@@ -423,7 +423,7 @@ bool Vector::resize(int sz, bool init) {
       memset(&_v[_size], 0, (sz - _size)*sizeof(double));
 #else
       for (int i = _size; i < sz; i++) {
-        _v[i] = KST::NOPOINT;
+        _v[i] = NOPOINT;
       }
 #endif
     }
@@ -445,7 +445,7 @@ Object::UpdateType Vector::internalUpdate(Object::UpdateType providerRC) {
   double last_v;
   double dv2 = 0.0, dv, no_spike_max_dv;
   
-  _max = _min = sum = sum2 = _minPos = last = first = KST::NOPOINT;
+  _max = _min = sum = sum2 = _minPos = last = first = NOPOINT;
   _nsum = 0;
   
   if (_size > 0) {

@@ -1,13 +1,7 @@
 /***************************************************************************
-                     kstmath.h  -  Math portability tools
-                             -------------------
-    begin                : Oct 20, 2004
-    copyright            : (C) 2004 by The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
+ *   copyright : (C) 2004 The University of Toronto                        *
+*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -17,8 +11,8 @@
 
 // NOTE: only include this from .cpp files
 
-#ifndef KSTMATH_H
-#define KSTMATH_H
+#ifndef MATH_KST_H
+#define MATH_KST_H
 
 #include <math.h>
 #include <float.h>
@@ -31,6 +25,29 @@
 
 #include "kst_export.h"
 
+
+#if !defined(INF)
+#include <qconfig.h>
+static double inf__()
+{
+  /* work around some strict alignment requirements
+     for double variables on some architectures (e.g. PA-RISC) */
+  typedef union { unsigned char b[8]; double d; } kjs_double_t;
+#if Q_BYTE_ORDER == Q_BIG_ENDIAN
+  static const kjs_double_t Inf_Bytes = { { 0x7f, 0xf0, 0, 0, 0, 0, 0, 0 } };
+#elif defined(arm)
+  static const kjs_double_t Inf_Bytes = { { 0, 0, 0xf0, 0x7f, 0, 0, 0, 0 } };
+#else
+  static const kjs_double_t Inf_Bytes = { { 0, 0, 0, 0, 0, 0, 0xf0, 0x7f } };
+#endif
+
+  const double Inf = Inf_Bytes.d;
+  return Inf;
+}
+#define INF (::inf__())
+#endif
+
+namespace Kst {
 /*
 ** For systems without NAN, this is a NAN in IEEE double format.
 ** Code from KDE's kjs libarary.
@@ -56,27 +73,6 @@ static double nan__()
 #define NAN (::nan__())
 #endif
 
-#if !defined(INF)
-#include <qconfig.h>
-static double inf__()
-{
-  /* work around some strict alignment requirements
-     for double variables on some architectures (e.g. PA-RISC) */
-  typedef union { unsigned char b[8]; double d; } kjs_double_t;
-#if Q_BYTE_ORDER == Q_BIG_ENDIAN
-  static const kjs_double_t Inf_Bytes = { { 0x7f, 0xf0, 0, 0, 0, 0, 0, 0 } };
-#elif defined(arm)
-  static const kjs_double_t Inf_Bytes = { { 0, 0, 0xf0, 0x7f, 0, 0, 0, 0 } };
-#else
-  static const kjs_double_t Inf_Bytes = { { 0, 0, 0, 0, 0, 0, 0xf0, 0x7f } };
-#endif
-
-  const double Inf = Inf_Bytes.d;
-  return Inf;
-}
-#define INF (::inf__())
-#endif
-
 /*
 ** Both Solaris and FreeBSD-current do weird things with the
 ** isnan() defined in math.h - in particular on FreeBSD it
@@ -93,9 +89,7 @@ static double inf__()
 #endif
 
 
-namespace KST {
 KST_EXPORT extern const double NOPOINT;
-}
 
 inline int d2i(double x) {
   return int(floor(x+0.5));
@@ -147,6 +141,7 @@ inline double logYHi(double x, double base = 10.0) {
   }
 }
 
+}
 #endif
 
 // vim: ts=2 sw=2 et

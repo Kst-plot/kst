@@ -18,7 +18,7 @@
 #include <QSettings>
 #include <QTemporaryFile>
 
-#include <kstmath.h>
+#include <math_kst.h>
 #include <datavector.h>
 #include <datacollection.h>
 #include <dataobjectcollection.h>

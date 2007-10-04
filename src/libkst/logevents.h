@@ -19,7 +19,7 @@
 #define LOGEVENTS_H
 
 #include "debug.h"
-#include "kstevents.h"
+#include "events.h"
 //Added by qt3to4:
 #include <QEvent>
 
@@ -29,7 +29,7 @@ class LogEvent : public QEvent {
   public:
     enum LogEventType { Unknown = 0, LogAdded, LogCleared };
 
-    LogEvent(LogEventType et) : QEvent(QEvent::Type(KstEventTypeLog)), _eventType(et) {}
+    LogEvent(LogEventType et) : QEvent(QEvent::Type(EventTypeLog)), _eventType(et) {}
     virtual ~LogEvent() {}
 
     LogEventType _eventType;

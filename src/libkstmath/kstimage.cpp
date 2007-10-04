@@ -20,7 +20,7 @@
 #include "datacollection.h"
 #include "debug.h"
 #include "kstimage.h"
-#include "kstmath.h"
+#include "math_kst.h"
 
 #include "kst_i18n.h"
 
@@ -586,7 +586,7 @@ void KstImage::paint(const KstCurveRenderContext& context) {
         img_Lx_pix = Lx;
       } else {
         if (xLog) {
-          img_Lx_pix = logXLo(x, xLogBase) * m_X + b_X;
+          img_Lx_pix = Kst::logXLo(x, xLogBase) * m_X + b_X;
         } else {
           img_Lx_pix = x * m_X + b_X;
         }
@@ -595,7 +595,7 @@ void KstImage::paint(const KstCurveRenderContext& context) {
         img_Hy_pix = Hy;
       } else {
         if (yLog) {
-          img_Hy_pix = logYLo(y, yLogBase) * m_Y + b_Y;
+          img_Hy_pix = Kst::logYLo(y, yLogBase) * m_Y + b_Y;
         } else {
           img_Hy_pix = y * m_Y + b_Y;
         }
@@ -604,7 +604,7 @@ void KstImage::paint(const KstCurveRenderContext& context) {
         img_Hx_pix = Hx;
       } else {
         if (xLog) {
-          img_Hx_pix = logXLo(x + width, xLogBase) * m_X + b_X;
+          img_Hx_pix = Kst::logXLo(x + width, xLogBase) * m_X + b_X;
         } else {
           img_Hx_pix = (x + width) * m_X + b_X;
         }
@@ -613,7 +613,7 @@ void KstImage::paint(const KstCurveRenderContext& context) {
         img_Ly_pix = Ly;
       } else {
         if (yLog) {
-          img_Ly_pix = logYLo(y + height, yLogBase) * m_Y + b_Y;
+          img_Ly_pix = Kst::logYLo(y + height, yLogBase) * m_Y + b_Y;
         } else {
           img_Ly_pix = (y + height) * m_Y + b_Y;
         }
@@ -622,8 +622,8 @@ void KstImage::paint(const KstCurveRenderContext& context) {
       // color map
       QColor thisPixel;
       if (image->hasColorMap()) {
-        int hXlXDiff = d2i(img_Hx_pix - img_Lx_pix);
-        int hYlYDiff = d2i(img_Hy_pix - img_Ly_pix - 1);
+        int hXlXDiff = Kst::d2i(img_Hx_pix - img_Lx_pix);
+        int hYlYDiff = Kst::d2i(img_Hy_pix - img_Ly_pix - 1);
         QImage tempImage(hXlXDiff, hYlYDiff, QImage::Format_RGB32);
         for (int i = 0; i < hXlXDiff; ++i) {
           for (int j = 0; j < hYlYDiff; ++j) {
@@ -646,7 +646,7 @@ void KstImage::paint(const KstCurveRenderContext& context) {
             }
           }
         }
-        p->drawImage(d2i(img_Lx_pix), d2i(img_Ly_pix + 1), tempImage);
+        p->drawImage(Kst::d2i(img_Lx_pix), Kst::d2i(img_Ly_pix + 1), tempImage);
       }
       //*******************************************************************
       // CONTOURS
@@ -673,11 +673,11 @@ void KstImage::paint(const KstCurveRenderContext& context) {
             // + 1 because 0 and 1 are the same width
             p->setPen(QPen(tempColor, k + 1, Qt::SolidLine, Qt::RoundCap, Qt::MiterJoin));
           }
-          int flImgHx = d2i(floor(img_Hx_pix));
-          int flImgHy = d2i(floor(img_Hy_pix));
-          int ceImgLy = d2i(ceil(img_Ly_pix));
-          for (int i = d2i(ceil(img_Lx_pix)); i + CONTOUR_STEP < flImgHx; i += CONTOUR_STEP) {
-            for (int j = d2i(ceil(img_Ly_pix)); j + CONTOUR_STEP < flImgHy; j += CONTOUR_STEP) {
+          int flImgHx = Kst::d2i(floor(img_Hx_pix));
+          int flImgHy = Kst::d2i(floor(img_Hy_pix));
+          int ceImgLy = Kst::d2i(ceil(img_Ly_pix));
+          for (int i = Kst::d2i(ceil(img_Lx_pix)); i + CONTOUR_STEP < flImgHx; i += CONTOUR_STEP) {
+            for (int j = Kst::d2i(ceil(img_Ly_pix)); j + CONTOUR_STEP < flImgHy; j += CONTOUR_STEP) {
               // look at this group of 4 pixels and get the z values
               double zTL, zTR, zBL, zBR;
               double new_x_small = (i - b_X) / m_X, new_y_small = (j + 1 - b_Y) / m_Y;

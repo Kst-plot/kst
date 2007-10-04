@@ -33,7 +33,7 @@
 #include <qtextdocument.h>
 #include <QXmlStreamWriter>
 
-#include <kstmath.h>
+#include <math_kst.h>
 #include "ascii.h"
 #include "ui_asciiconfig.h"
 
@@ -509,7 +509,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
     for (int i = 0; i < n; ++i, ++s) {
       bool incol = false;
       int i_col = 0;
-      v[i] = KST::NOPOINT;
+      v[i] = Kst::NOPOINT;
       for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
         if (_config->_columnDelimiter.contains(_tmpBuf[ch])) {
           incol = false;
@@ -539,7 +539,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
       bool incol = false;
       int i_col = 0;
       
-      v[i] = KST::NOPOINT;
+      v[i] = Kst::NOPOINT;
       for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {     
         if (isspace(_tmpBuf[ch])) {
           if (_tmpBuf[ch] == '\n' || _tmpBuf[ch] == '\r') {

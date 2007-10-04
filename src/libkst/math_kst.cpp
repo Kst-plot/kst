@@ -1,13 +1,7 @@
 /***************************************************************************
-                                 kstindex.h
-                             -------------------
-    begin                : Oct 17 2006
-    copyright            : (C) 2006 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
+ *   copyright : (C) 2004 The University of Toronto                        *
+*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -15,19 +9,14 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTINDEX_H
-#define KSTINDEX_H
+#include "math_kst.h"
 
-class KstIndex {
-  public:
-    KstIndex() : isTime(false), index(0), time(0.0) {}
-    bool isTime;
-    union {
-      int index;
-      double time;
-    };
-};
-
+namespace Kst {
+#ifdef NAN
+const double NOPOINT = NAN;
+#else
+const double NOPOINT = 0.0/0.0; // NaN
 #endif
+}
 
 // vim: ts=2 sw=2 et

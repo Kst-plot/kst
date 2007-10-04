@@ -13,7 +13,7 @@
 
 #include <QtTest>
 
-#include <kstmath.h>
+#include <math_kst.h>
 #include <enodes.h>
 #include <eparse-eh.h>
 

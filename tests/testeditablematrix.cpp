@@ -13,7 +13,7 @@
 
 #include <QtTest>
 
-#include <kstmath.h>
+#include <math_kst.h>
 #include <datacollection.h>
 #include <dataobjectcollection.h>
 #include <editablematrix.h>

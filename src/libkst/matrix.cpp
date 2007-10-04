@@ -19,7 +19,7 @@
 #include "datacollection.h"
 #include "debug.h"
 #include "kst_i18n.h"
-#include "kstmath.h"
+#include "math_kst.h"
 
 #include <qdebug.h>
 #include <QXmlStreamWriter>
@@ -297,7 +297,7 @@ void Matrix::zero() {
 
 void Matrix::blank() {
   for (int i = 0; i < _zSize; ++i) {
-    _z[i] = KST::NOPOINT;
+    _z[i] = NOPOINT;
   }
   setDirty();
   updateScalars();

@@ -27,7 +27,7 @@
 #include "vector.h"
 
 #include <qnamespace.h>
-#include <kstmath.h>
+#include <math_kst.h>
 
 extern "C" void rdft(int n, int isgn, double *a);
 

@@ -34,7 +34,7 @@
 #include "enodes.h"
 #include "datacollection.h"
 #include "debug.h"
-#include "kstmath.h"
+#include "math_kst.h"
 
 extern "C" int yyparse();
 extern "C" void *ParsedEquation;
@@ -75,7 +75,7 @@ double Equation::interpret(const char *txt, bool *ok, int len) {
     mutex().unlock();
     Equation::Context ctx;
     ctx.sampleCount = 2;
-    ctx.noPoint = KST::NOPOINT;
+    ctx.noPoint = Kst::NOPOINT;
     ctx.x = 0.0;
     ctx.xVector = 0L;
     Equation::FoldVisitor vis(&ctx, &eq);
@@ -683,7 +683,7 @@ double Data::value(Context *ctx) {
         mutex().unlock();
         Equation::Context ctx;
         ctx.sampleCount = 2;
-        ctx.noPoint = KST::NOPOINT;
+        ctx.noPoint = Kst::NOPOINT;
         ctx.x = 0.0;
         ctx.xVector = 0L;
         Equation::FoldVisitor vis(&ctx, &_equation);
@@ -707,7 +707,7 @@ double Data::value(Context *ctx) {
         mutex().unlock();
         Equation::Context ctx;
         ctx.sampleCount = 2;
-        ctx.noPoint = KST::NOPOINT;
+        ctx.noPoint = Kst::NOPOINT;
         ctx.x = 0.0;
         ctx.xVector = 0L;
         Equation::FoldVisitor vis(&ctx, &_equation);

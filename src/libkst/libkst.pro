@@ -17,11 +17,11 @@ x11:!macx:PROCPS += sysinfo.c psversion.c
 SOURCES += \
     object.cpp \
     datasource.cpp \
-    kstextension.cpp \
+    extension.cpp \
     datacollection.cpp \
     debug.cpp \
     rwlock.cpp \
-    kstmath.cpp \
+    math_kst.cpp \
     dateparser.cpp \
     #  Needs porting, but is unused anyway
     #timezones.cpp \
@@ -62,12 +62,12 @@ HEADERS += \
     datasource.h \
     dateparser.h \
     debug.h \
-    kstevents.h \
+    events.h \
     kst_export.h \
-    kstextension.h \
+    extension.h \
     kst_i18n.h \
-    kstindex.h \
-    kstmath.h \
+    index_kst.h \
+    math_kst.h \
     matrixdefaults.h \
     matrix.h \
     objectcollection.h \

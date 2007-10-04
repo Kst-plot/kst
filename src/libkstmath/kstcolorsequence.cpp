@@ -20,7 +20,7 @@
 #include "kstsettings.h"
 #include <QVector>
 #include <qapplication.h>
-#include <kstmath.h>
+#include <math_kst.h>
 
 // Default palette that is used if "Kst Colors" is not found.
 static const char *const colors[] = { "red",

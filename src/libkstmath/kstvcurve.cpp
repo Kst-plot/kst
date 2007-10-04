@@ -27,7 +27,7 @@
 #include "datacollection.h"
 #include "debug.h"
 #include "kstlinestyle.h"
-#include "kstmath.h"
+#include "math_kst.h"
 #include "datavector.h"
 #include "kstvcurve.h"
 #include "ksttimers.h"
@@ -944,10 +944,10 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
       }
  
       if (xLog) {
-        rX = logXLo(rX, xLogBase);
+        rX = Kst::logXLo(rX, xLogBase);
       }
       if (yLog) {
-        rY = logYLo(rY, yLogBase);
+        rY = Kst::logYLo(rY, yLogBase);
       }
       last_x1 = m_X*rX + b_X;
       last_y1 = m_Y*rY + b_Y;
@@ -993,12 +993,12 @@ qDebug() << __LINE__ << "drawPolyline" << poly << endl;
                 minY = Ly;
               if (minY >= Ly && minY <= Hy && maxY >= Ly && maxY <= Hy) {
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY)) << endl;
+qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d2i(X2), Kst::d2i(maxY)) << endl;
 #endif
 #ifdef BENCHMARK
   ++numberOfLinesDrawn;
 #endif
-                p->drawLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY));
+                p->drawLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d2i(X2), Kst::d2i(maxY));
               }
             }
             overlap = false;
@@ -1006,10 +1006,10 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         }
 
         if (xLog) {
-          rX = logXLo(rX, xLogBase);
+          rX = Kst::logXLo(rX, xLogBase);
         }
         if (yLog) {
-          rY = logYLo(rY, yLogBase);
+          rY = Kst::logYLo(rY, yLogBase);
         }
         X1 = m_X*rX + b_X;
         Y1 = m_Y*rY + b_Y;
@@ -1017,8 +1017,8 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         last_y1 = Y1;
 
         if (KDE_ISLIKELY(!foundNan)) {
-          int X1i = d2i(X1);
-          int X2i = d2i(X2);
+          int X1i = Kst::d2i(X1);
+          int X2i = Kst::d2i(X2);
           if (KDE_ISLIKELY(X1i == X2i)) {
             if (KDE_ISLIKELY(overlap)) {
               if (KDE_ISUNLIKELY(Y1 > maxY)) {
@@ -1041,9 +1041,9 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
             if (KDE_ISLIKELY(overlap)) {
               if (KDE_ISLIKELY(X2 >= Lx && X2 <= Hx)) {
                 if (KDE_ISUNLIKELY(maxY <= Hy && minY >= Ly)) {
-                  int Y2i = d2i(Y2);
-                  int maxYi = d2i(maxY);
-                  int minYi = d2i(minY);
+                  int Y2i = Kst::d2i(Y2);
+                  int maxYi = Kst::d2i(maxY);
+                  int minYi = Kst::d2i(minY);
 
                   if (index >= MAX_NUM_POLYLINES-2) {
                     QPolygon poly;
@@ -1110,12 +1110,12 @@ qDebug() << __LINE__ << "drawPolyline" << poly << endl;
                       index = 0;
                     }
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "drawLine" << QLine(X2i, d2i(minY), X2i, d2i(maxY)) << endl;
+qDebug() << __LINE__ << "drawLine" << QLine(X2i, Kst::d2i(minY), X2i, Kst::d2i(maxY)) << endl;
 #endif
 #ifdef BENCHMARK
   ++numberOfLinesDrawn;
 #endif
-                    p->drawLine(X2i, d2i(minY), X2i, d2i(maxY));
+                    p->drawLine(X2i, Kst::d2i(minY), X2i, Kst::d2i(maxY));
                   }
                 }
               }
@@ -1216,10 +1216,10 @@ qDebug() << "y not in bounds"
 
               if (X1 >= Lx && X1 <= Hx && X2 >= Lx && X2 <= Hx &&
                   Y1 >= Ly && Y1 <= Hy && Y2 >= Ly && Y2 <= Hy) {
-                int X1i = d2i(X1);
-                int Y1i = d2i(Y1);
-                int X2i = d2i(X2);
-                int Y2i = d2i(Y2);
+                int X1i = Kst::d2i(X1);
+                int Y1i = Kst::d2i(Y1);
+                int X2i = Kst::d2i(X2);
+                int Y2i = Kst::d2i(Y2);
 
 #ifdef DEBUG_VECTOR_CURVE
 qDebug() << "MY POINTS ARE GOOD!!" << index << endl;
@@ -1290,12 +1290,12 @@ qDebug() << __LINE__ << "drawPolyline" << poly << endl;
           }
           if (minY >= Ly && minY <= Hy && maxY >= Ly && maxY <= Hy) {
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY)) << endl;
+qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d2i(X2), Kst::d2i(maxY)) << endl;
 #endif
 #ifdef BENCHMARK
   ++numberOfLinesDrawn;
 #endif
-            p->drawLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY));
+            p->drawLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d2i(X2), Kst::d2i(maxY));
           }
         }
         overlap = false;
@@ -1358,11 +1358,11 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         rX -= drX/2.0;
         rX2 = rX + drX;
         if (xLog) {
-          rX = logXLo(rX, xLogBase);
-          rX2 = logXLo(rX2, xLogBase);
+          rX = Kst::logXLo(rX, xLogBase);
+          rX2 = Kst::logXLo(rX2, xLogBase);
         }
         if (yLog) {
-          rY = logYLo(rY, yLogBase);
+          rY = Kst::logYLo(rY, yLogBase);
         }
 
         X1 = m_X * rX + b_X;
@@ -1418,25 +1418,25 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
 
         if (visible) {
           if (barStyle() == 1) { // filled
-            int X1i = d2i(X1);
-            int Y1i = d2i(Y1);
-            p->fillRect(X1i, Y1i, d2i(X2) - X1i, d2i(Y2) - Y1i, color());
+            int X1i = Kst::d2i(X1);
+            int Y1i = Kst::d2i(Y1);
+            p->fillRect(X1i, Y1i, Kst::d2i(X2) - X1i, Kst::d2i(Y2) - Y1i, color());
           }
           if (has_top) {
-            int Y1i = d2i(Y1);
-            p->drawLine(d2i(X1-(width/2)), Y1i, d2i(X2+(width/2)), Y1i);
+            int Y1i = Kst::d2i(Y1);
+            p->drawLine(Kst::d2i(X1-(width/2)), Y1i, Kst::d2i(X2+(width/2)), Y1i);
           }
           if (has_bot) {
-            int Y2i = d2i(Y2);
-            p->drawLine(d2i(X1-(width/2)), Y2i, d2i(X2-(width/2)), Y2i);
+            int Y2i = Kst::d2i(Y2);
+            p->drawLine(Kst::d2i(X1-(width/2)), Y2i, Kst::d2i(X2-(width/2)), Y2i);
           }
           if (has_left) {
-            int X1i = d2i(X1);
-            p->drawLine(X1i, d2i(Y1-(width/2)), X1i, d2i(Y2+(width/2)));
+            int X1i = Kst::d2i(X1);
+            p->drawLine(X1i, Kst::d2i(Y1-(width/2)), X1i, Kst::d2i(Y2+(width/2)));
           }
           if (has_right) {
-            int X2i = d2i(X2);
-            p->drawLine(X2i, d2i(Y1-(width/2)), X2i, d2i(Y2+(width/2)));
+            int X2i = Kst::d2i(X2);
+            p->drawLine(X2i, Kst::d2i(Y1-(width/2)), X2i, Kst::d2i(Y2+(width/2)));
           }
         }
       }
@@ -1460,14 +1460,14 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
           rX = xv->interpolate(i_pt, NS);
           rY = yv->interpolate(i_pt, NS);
           if (xLog) {
-            rX = logXLo(rX, xLogBase);
+            rX = Kst::logXLo(rX, xLogBase);
           }
           if (yLog) {
-            rY = logYLo(rY, yLogBase);
+            rY = Kst::logYLo(rY, yLogBase);
           }
 
-          pt.setX(d2i(m_X * rX + b_X));
-          pt.setY(d2i(m_Y * rY + b_Y));
+          pt.setX(Kst::d2i(m_X * rX + b_X));
+          pt.setY(Kst::d2i(m_Y * rY + b_Y));
           if (rgn.contains(pt)) {
             KstCurvePointSymbol::draw(pointType, p, pt.x(), pt.y(), width);
             rgn -= QRegion(pt.x()-(size/2), pt.y()-(size/2), size, size, QRegion::Ellipse);
@@ -1478,16 +1478,16 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
           rX = xv->interpolate(i_pt, NS);
           rY = yv->interpolate(i_pt, NS);
           if (xLog) {
-            rX = logXLo(rX, xLogBase);
+            rX = Kst::logXLo(rX, xLogBase);
           }
           if (yLog) {
-            rY = logYLo(rY, yLogBase);
+            rY = Kst::logYLo(rY, yLogBase);
           }
 
           X1 = m_X * rX + b_X;
           Y1 = m_Y * rY + b_Y;
           if (X1 >= Lx && X1 <= Hx && Y1 >= Ly && Y1 <= Hy) {
-            KstCurvePointSymbol::draw(pointType, p, d2i(X1), d2i(Y1), width);
+            KstCurvePointSymbol::draw(pointType, p, Kst::d2i(X1), Kst::d2i(Y1), width);
           }
         }
       }
@@ -1518,8 +1518,8 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         if (errorSame) {
           rEX = fabs(exv->interpolate(i_pt, NS));
           if (xLog) {
-            rX1 = logXLo(rX - rEX, xLogBase);
-            rX2 = logXLo(rX + rEX, xLogBase);
+            rX1 = Kst::logXLo(rX - rEX, xLogBase);
+            rX2 = Kst::logXLo(rX + rEX, xLogBase);
           } else {
             rX1 = rX - rEX;
             rX2 = rX + rEX;
@@ -1528,8 +1528,8 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
           double rEXHi = fabs(exv->interpolate(i_pt, NS));
           double rEXLo = fabs(exmv->interpolate(i_pt, NS));
           if (xLog) {
-            rX1 = logXLo(rX - rEXLo, xLogBase);
-            rX2 = logXLo(rX + rEXHi, xLogBase);
+            rX1 = Kst::logXLo(rX - rEXLo, xLogBase);
+            rX2 = Kst::logXLo(rX + rEXHi, xLogBase);
           } else {
             rX1 = rX - rEXLo;
             rX2 = rX + rEXHi;
@@ -1537,8 +1537,8 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         } else if (exv) {
           rEX = exv->interpolate(i_pt, NS);
           if (xLog) {
-            rX1 = logXLo(rX, xLogBase);
-            rX2 = logXLo(rX + fabs(rEX), xLogBase);
+            rX1 = Kst::logXLo(rX, xLogBase);
+            rX2 = Kst::logXLo(rX + fabs(rEX), xLogBase);
           } else {
             rX1 = rX;
             rX2 = rX + fabs(rEX);
@@ -1547,8 +1547,8 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         } else {
           rEX = fabs(exmv->interpolate(i_pt, NS));
           if (xLog) {
-            rX1 = logXLo(rX - rEX, xLogBase);
-            rX2 = logXLo(rX, xLogBase);
+            rX1 = Kst::logXLo(rX - rEX, xLogBase);
+            rX2 = Kst::logXLo(rX, xLogBase);
           } else {
             rX1 = rX - rEX;
             rX2 = rX;
@@ -1557,7 +1557,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         }
 
         if (yLog) {
-          rY = logYLo(rY, yLogBase);
+          rY = Kst::logYLo(rY, yLogBase);
         }
 
         X1 = m_X * rX1 + b_X;
@@ -1574,9 +1574,9 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         }
 
         if (X1 >= Lx && X2 <= Hx && Y1 >= Ly && Y1 <= Hy) {
-          int X1i = d2i(X1);
-          int X2i = d2i(X2);
-          int Y1i = d2i(Y1);
+          int X1i = Kst::d2i(X1);
+          int X2i = Kst::d2i(X2);
+          int Y1i = Kst::d2i(Y1);
           p->drawLine(X1i, Y1i, X2i, Y1i);
           if (do_low_flag) {
             p->drawLine(X1i, Y1i + pointDim, X1i, Y1i - pointDim);
@@ -1609,8 +1609,8 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         if (errorSame) {
           rEY = eyv->interpolate(i_pt, NS);
           if (yLog) {
-            rY1 = logYLo(rY-fabs(rEY), yLogBase);
-            rY2 = logYLo(rY+fabs(rEY), yLogBase);
+            rY1 = Kst::logYLo(rY-fabs(rEY), yLogBase);
+            rY2 = Kst::logYLo(rY+fabs(rEY), yLogBase);
           } else {
             rY1 = rY-fabs(rEY);
             rY2 = rY+fabs(rEY);
@@ -1619,8 +1619,8 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
           double rEYHi = fabs(eyv->interpolate(i_pt, NS));
           double rEYLo = fabs(eymv->interpolate(i_pt, NS));
           if (yLog) {
-            rY1 = logYLo(rY - rEYLo, yLogBase);
-            rY2 = logYLo(rY + rEYHi, yLogBase);
+            rY1 = Kst::logYLo(rY - rEYLo, yLogBase);
+            rY2 = Kst::logYLo(rY + rEYHi, yLogBase);
           } else {
             rY1 = rY - rEYLo;
             rY2 = rY + rEYHi;
@@ -1628,8 +1628,8 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         } else if (eyv) {
           rEY = fabs(eyv->interpolate(i_pt, NS));
           if (yLog) {
-            rY1 = logYLo(rY, yLogBase);
-            rY2 = logYLo(rY + rEY, yLogBase);
+            rY1 = Kst::logYLo(rY, yLogBase);
+            rY2 = Kst::logYLo(rY + rEY, yLogBase);
           } else {
             rY1 = rY;
             rY2 = rY + rEY;
@@ -1638,8 +1638,8 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         } else {
           rEY = fabs(eymv->interpolate(i_pt, NS));
           if (yLog) {
-            rY1 = logYLo(rY - rEY, yLogBase);
-            rY2 = logYLo(rY, yLogBase);
+            rY1 = Kst::logYLo(rY - rEY, yLogBase);
+            rY2 = Kst::logYLo(rY, yLogBase);
           } else {
             rY1 = rY - rEY;
             rY2 = rY;
@@ -1648,7 +1648,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         }
 
         if (xLog) {
-          rX = logXLo(rX, xLogBase);
+          rX = Kst::logXLo(rX, xLogBase);
         }
 
         X1 = m_X * rX + b_X;
@@ -1665,9 +1665,9 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         }
 
         if (X1 >= Lx && X1 <= Hx && Y1 >= Ly && Y2 <= Hy) {
-          int X1i = d2i(X1);
-          int Y1i = d2i(Y1);
-          int Y2i = d2i(Y2);
+          int X1i = Kst::d2i(X1);
+          int Y1i = Kst::d2i(Y1);
+          int Y2i = Kst::d2i(Y2);
           p->drawLine(X1i, Y1i, X1i, Y2i);
           if (do_low_flag) {
             p->drawLine(X1i + pointDim, Y1i, X1i - pointDim, Y1i);

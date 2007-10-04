@@ -11,7 +11,7 @@
 
 #include "debugdialog.h"
 #include <debug.h>
-#include <kstevents.h>
+#include <events.h>
 #include <logevents.h>
 
 namespace Kst {
@@ -27,7 +27,7 @@ DebugDialog::~DebugDialog() {
 
 
 bool DebugDialog::event(QEvent* e) {
-  if (e->type() == KstEventTypeLog) {
+  if (e->type() == EventTypeLog) {
     LogEvent *le = dynamic_cast<LogEvent*>(e);
     if (le) {
       switch (le->_eventType) {
