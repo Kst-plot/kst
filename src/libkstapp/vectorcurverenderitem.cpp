@@ -45,11 +45,13 @@ void VectorCurveRenderItem::paintRelations(QPainter *painter) {
     KstCurveRenderContext context;
     context.painter = painter;
     context.window = QRect(); //no idea if this should be floating point
-    context.penWidth = 1; //FIXME hardcode
+    context.penWidth = painter->pen().width(); //floating point??
     context.xLog = isXAxisLog();
     context.yLog = isYAxisLog();
     context.xLogBase = xLogBase();
     context.yLogBase = yLogBase();
+    context.foregroundColor = painter->pen().color();
+    context.backgroundColor = painter->brush().color();
 
     //FIXME rename these methods in kstvcurve
     //FIXME Completely refactor KstCurveRenderContext now that we know what these are

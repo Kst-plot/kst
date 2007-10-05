@@ -276,21 +276,21 @@ void PlotRenderItem::setRelationList(const KstRelationList &relationList) {
 void PlotRenderItem::paint(QPainter *painter) {
   painter->setRenderHint(QPainter::Antialiasing, false);
   painter->drawRect(rect());
-  painter->setClipRect(rect());
 
 #ifdef CURVE_DRAWING_TIME
   QTime time;
   time.start();
 #endif
 
+  painter->save();
+  painter->setClipRect(rect());
   paintRelations(painter);
 
   if (_selectionRect.isValid()) {
-    painter->save();
-    painter->setPen(Qt::black);
+    painter->setPen(QPen(QBrush(Qt::black), 1.0, Qt::DotLine));
     painter->drawRect(_selectionRect.rect());
-    painter->restore();
   }
+  painter->restore();
 
 #ifdef CURVE_DRAWING_TIME
   int elapsed = time.elapsed();
@@ -474,7 +474,16 @@ void PlotRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     return;
   }
 
-  _selectionRect.setTo(event->pos());
+  const QPointF p = event->pos();
+  const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
+  if (modifiers & Qt::ShiftModifier) {
+    _selectionRect.setTo(QPointF(rect().right(), p.y()));
+  } else if (modifiers & Qt::ControlModifier) {
+    _selectionRect.setTo(QPointF(p.x(), rect().bottom()));
+  } else {
+    _selectionRect.setTo(p);
+  }
+
   if (_selectionRect.isValid()) {
     update(); //FIXME should optimize instead of redrawing entire curve?
   }
@@ -487,7 +496,19 @@ void PlotRenderItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     return;
   }
 
-  _selectionRect.setFrom(event->pos());
+  const QPointF p = event->pos();
+  const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
+  if (modifiers & Qt::ShiftModifier) {
+    setCursor(Qt::SizeVerCursor);
+    _selectionRect.setFrom(QPointF(rect().left(), p.y()));
+    _selectionRect.setTo(QPointF(rect().right(), p.y()));
+  } else if (modifiers & Qt::ControlModifier) {
+    setCursor(Qt::SizeHorCursor);
+    _selectionRect.setFrom(QPointF(p.x(), rect().top()));
+    _selectionRect.setTo(QPointF(p.x(), rect().bottom()));
+  } else {
+    _selectionRect.setFrom(p);
+  }
 }
 
 
@@ -497,6 +518,7 @@ void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     return;
   }
 
+  setCursor(Qt::CrossCursor);
   const QRectF projection = mapToProjection(_selectionRect.rect());
   _selectionRect.reset();
   setProjectionRect(projection);

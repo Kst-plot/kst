@@ -52,6 +52,7 @@ View::View()
 View::~View() {
 }
 
+
 bool View::useOpenGL() const {
   return _useOpenGL;
 }
