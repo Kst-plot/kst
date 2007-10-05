@@ -15,6 +15,11 @@
 
 #include "datacollection.h"
 #include "dataobjectcollection.h"
+#include "equation.h"
+#include "plotitem.h"
+#include "vectorcurverenderitem.h"
+#include "curve.h"
+#include "defaultnames.h"
 
 namespace Kst {
 
@@ -23,12 +28,89 @@ EquationTab::EquationTab(QWidget *parent)
 
   setupUi(this);
   setTabTitle(tr("Equation"));
+
+  populateFunctionList();
 }
 
 
 EquationTab::~EquationTab() {
 }
 
+
+void EquationTab::populateFunctionList() {
+  Operators->clear();
+  Operators->addItem("+");
+  Operators->addItem("-");
+  Operators->addItem("*");
+  Operators->addItem("/");
+  Operators->addItem("%");
+  Operators->addItem("^");
+  Operators->addItem("&");
+  Operators->addItem("|");
+  Operators->addItem("&&");
+  Operators->addItem("||");
+  Operators->addItem("!");
+  Operators->addItem("<");
+  Operators->addItem("<=");
+  Operators->addItem("==");
+  Operators->addItem(">=");
+  Operators->addItem(">");
+  Operators->addItem("!=");
+  Operators->addItem("PI");
+  Operators->addItem("e");
+  Operators->addItem("STEP()");
+  Operators->addItem("ABS()");
+  Operators->addItem("SQRT()");
+  Operators->addItem("CBRT()");
+  Operators->addItem("SIN()");
+  Operators->addItem("COS()");
+  Operators->addItem("TAN()");
+  Operators->addItem("ASIN()");
+  Operators->addItem("ACOS()");
+  Operators->addItem("ATAN()");
+  Operators->addItem("SEC()");
+  Operators->addItem("CSC()");
+  Operators->addItem("COT()");
+  Operators->addItem("SINH()");
+  Operators->addItem("COSH()");
+  Operators->addItem("TANH()");
+  Operators->addItem("EXP()");
+  Operators->addItem("LN()");
+  Operators->addItem("LOG()");
+  Operators->addItem("PLUGIN()");
+
+}
+
+
+VectorPtr EquationTab::xVector() const {
+  return _xVectors->selectedVector();
+}
+
+
+void EquationTab::setXVector(VectorPtr vector) {
+  _xVectors->setSelectedVector(vector);
+}
+
+QString EquationTab::Equation() const {
+  return _equation->text();
+}
+
+
+void EquationTab::setEquation(QString equation) {
+  _equation->setText(equation);
+}
+
+bool EquationTab::DoInterpolation() const {
+  return _doInterpolation->checkState() == Qt::Checked;
+}
+
+
+void EquationTab::setDoInterpolation(bool doInterpolation) {
+  if (doInterpolation)
+    _doInterpolation->setCheckState(Qt::Checked);
+  else
+    _doInterpolation->setCheckState(Qt::Unchecked);
+}
 
 EquationDialog::EquationDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
@@ -55,8 +137,45 @@ QString EquationDialog::tagName() const {
 
 
 ObjectPtr EquationDialog::createNewDataObject() const {
-  qDebug() << "createNewDataObject" << endl;
-  return 0;
+  //FIXME Eli, how should I construct this tag??
+  EquationPtr equation = new Equation(tagName(),
+                                     _equationTab->Equation(),
+                                     _equationTab->xVector(),
+                                     _equationTab->DoInterpolation());
+
+  equation->writeLock();
+  equation->update(0);
+  equation->unlock();
+
+  //FIXME assume new plot for now...
+  //FIXME this should be a command...
+  //FIXME need some smart placement...
+  //FIXME need to hook up appearance and placement...
+
+  CurvePtr curve = new Curve(suggestCurveName(equation->tag(), true),
+                                     equation->vX(),
+                                     equation->vY(),
+                                     0L, 0L, 0L, 0L,
+                                     QColor(Qt::red));
+
+  curve->writeLock();
+  curve->update(0);
+  curve->unlock();
+
+  CreatePlotForCurve *cmd = new CreatePlotForCurve;
+  cmd->createItem();
+
+  PlotItem *plotItem = static_cast<PlotItem*>(cmd->item());
+
+  RelationList relationList;
+  relationList.append(kst_cast<Relation>(curve));
+
+  VectorCurveRenderItem *vectorCurve = new VectorCurveRenderItem(plotItem);
+  vectorCurve->setRelationList(relationList);
+
+  plotItem->addRenderItem(vectorCurve);
+
+  return ObjectPtr(equation.data());
 }
 
 

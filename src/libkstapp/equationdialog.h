@@ -27,8 +27,18 @@ class KST_EXPORT EquationTab : public DataTab, Ui::EquationTab {
     EquationTab(QWidget *parent = 0);
     virtual ~EquationTab();
 
+    VectorPtr xVector() const;
+    void setXVector(VectorPtr vector);
+
+    QString Equation() const;
+    void setEquation(QString equation);
+
+    bool DoInterpolation() const;
+    void setDoInterpolation(bool doInterpolation);
+
   private Q_SLOTS:
   private:
+    void populateFunctionList();
 };
 
 class KST_EXPORT EquationDialog : public DataDialog {

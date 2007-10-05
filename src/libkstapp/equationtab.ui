@@ -11,22 +11,22 @@
   </property>
   <layout class="QGridLayout" >
    <property name="leftMargin" >
-    <number>0</number>
+    <number>9</number>
    </property>
    <property name="topMargin" >
-    <number>0</number>
+    <number>9</number>
    </property>
    <property name="rightMargin" >
-    <number>0</number>
+    <number>9</number>
    </property>
    <property name="bottomMargin" >
-    <number>0</number>
+    <number>9</number>
    </property>
    <property name="horizontalSpacing" >
-    <number>0</number>
+    <number>-1</number>
    </property>
    <property name="verticalSpacing" >
-    <number>0</number>
+    <number>-1</number>
    </property>
    <item row="2" column="0" >
     <widget class="Kst::CurvePlacement" native="1" name="_curvePlacement" />
@@ -177,11 +177,6 @@
    <header>vectorselector.h</header>
   </customwidget>
   <customwidget>
-   <class>Kst::ScalarSelector</class>
-   <extends>QWidget</extends>
-   <header>scalarselector.h</header>
-  </customwidget>
-  <customwidget>
    <class>Kst::CurvePlacement</class>
    <extends>QWidget</extends>
    <header>curveplacement.h</header>
@@ -190,6 +185,11 @@
    <class>Kst::CurveAppearance</class>
    <extends>QWidget</extends>
    <header>curveappearance.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Kst::ScalarSelector</class>
+   <extends>QWidget</extends>
+   <header>scalarselector.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
