@@ -445,7 +445,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   painter->setBrush(Qt::NoBrush);
   if (isSelected() || isHovering()
       && parentView()->mouseMode() != View::Create
-      && parentView()->mouseMode() != View::Data) {
+      && parentView()->viewMode() != View::Data) {
     painter->drawPath(shape());
     if (_gripMode == Resize)
       painter->fillPath(grips(), Qt::blue);
@@ -1611,7 +1611,9 @@ void BreakLayoutCommand::undo() {
 void BreakLayoutCommand::redo() {
   _layout = _item->layout();
   Q_ASSERT(_layout);
+  _layout->resetSharedAxis();
   _item->setLayout(0);
+
 }
 
 

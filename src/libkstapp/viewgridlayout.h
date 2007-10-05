@@ -53,6 +53,7 @@ class ViewGridLayout : public QObject
 
   public Q_SLOTS:
     void reset();
+    void resetSharedAxis();
     void update();
 
   Q_SIGNALS:
@@ -73,6 +74,14 @@ class ViewGridLayout : public QObject
       QRectF rect;
     };
 
+  private:
+    void updateSharedAxis();
+    void shareAxisWithPlotToLeft(LayoutItem item) const;
+    void shareAxisWithPlotToRight(LayoutItem item) const;
+    void shareAxisWithPlotAbove(LayoutItem item) const;
+    void shareAxisWithPlotBelow(LayoutItem item) const;
+
+  private:
     bool _enabled;
     int _rowCount;
     int _columnCount;
@@ -84,6 +93,7 @@ class ViewGridLayout : public QObject
     QHash<int, qreal> _plotMarginWidth;
     QHash<int, qreal> _plotMarginHeight;
     QHash<const ViewItem*, LayoutItem> _itemInfos;
+    QHash< QPair<int, int>, LayoutItem> _itemLayouts;
 };
 
 //FIXME How far should we go with the command pattern?

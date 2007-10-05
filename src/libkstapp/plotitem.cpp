@@ -32,7 +32,13 @@ static qreal MARGIN_HEIGHT = 20.0;
 namespace Kst {
 
 PlotItem::PlotItem(View *parent)
-  : ViewItem(parent), _calculatedMarginWidth(0), _calculatedMarginHeight(0) {
+  : ViewItem(parent),
+  _isLeftLabelVisible(true),
+  _isBottomLabelVisible(true),
+  _isRightLabelVisible(true),
+  _isTopLabelVisible(true),
+  _calculatedMarginWidth(0.0),
+  _calculatedMarginHeight(0.0) {
 
   setName("Plot");
   setBrush(Qt::white);
@@ -116,41 +122,46 @@ void PlotItem::paint(QPainter *painter) {
 }
 
 
-qreal PlotItem::calculatedMarginWidth() const {
-  qreal m = qMax(MARGIN_WIDTH, _calculatedMarginWidth);
+QRectF PlotItem::plotRegion() const {
+  qreal left = isLeftLabelVisible() ? marginWidth() : 0.5;
+  qreal bottom = isBottomLabelVisible() ? marginHeight() : 0.5;
+  qreal right = isRightLabelVisible() ? marginWidth() : 0.5;
+  qreal top = isTopLabelVisible() ? marginHeight() : 0.5;
 
-  //No more than 1/4 the width of the plot
-  if (width() < m * 4)
-    return width() / 4;
+  QPointF topLeft(rect().topLeft() + QPointF(left, top));
+  QPointF bottomRight(rect().bottomRight() - QPointF(right, bottom));
 
-  return m;
+  return QRectF(topLeft, bottomRight);
 }
 
 
-void PlotItem::setCalculatedMarginWidth(qreal marginWidth) {
-  qreal before = this->calculatedMarginWidth();
-  _calculatedMarginWidth = marginWidth;
-  if (before != this->calculatedMarginWidth())
-    emit geometryChanged();
+QRectF PlotItem::projectionRect() const {
+  QRectF rect(QPointF(-0.1, -0.1), QPointF(0.1, 0.1)); //default
+  foreach (PlotRenderItem *renderer, _renderers) {
+    if (!renderer->projectionRect().isEmpty())
+      rect = rect.united(renderer->projectionRect());
+  }
+  return rect;
 }
 
 
-qreal PlotItem::calculatedMarginHeight() const {
-  qreal m = qMax(MARGIN_HEIGHT, _calculatedMarginHeight);
-
-  //No more than 1/4 the height of the plot
-  if (height() < m * 4)
-    return height() / 4;
-
-  return m;
+qreal PlotItem::marginWidth() const {
+  ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(parentItem());
+  if (viewItem && viewItem->layout()) {
+    return viewItem->layout()->plotMarginWidth(this);
+  } else {
+    return calculatedMarginWidth();
+  }
 }
 
 
-void PlotItem::setCalculatedMarginHeight(qreal marginHeight) {
-  qreal before = this->calculatedMarginHeight();
-  _calculatedMarginHeight = marginHeight;
-  if (before != this->calculatedMarginHeight())
-    emit geometryChanged();
+qreal PlotItem::marginHeight() const {
+  ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(parentItem());
+  if (viewItem && viewItem->layout()) {
+    return viewItem->layout()->plotMarginHeight(this);
+  } else {
+    return calculatedMarginHeight();
+  }
 }
 
 
@@ -190,23 +201,90 @@ QString PlotItem::topLabel() const {
 }
 
 
-qreal PlotItem::marginWidth() const {
-  ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(parentItem());
-  if (viewItem && viewItem->layout()) {
-    return viewItem->layout()->plotMarginWidth(this);
-  } else {
-    return calculatedMarginWidth();
-  }
+bool PlotItem::PlotItem::isLeftLabelVisible() const {
+  return _isLeftLabelVisible;
 }
 
 
-qreal PlotItem::marginHeight() const {
-  ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(parentItem());
-  if (viewItem && viewItem->layout()) {
-    return viewItem->layout()->plotMarginHeight(this);
-  } else {
-    return calculatedMarginHeight();
-  }
+void PlotItem::PlotItem::setLeftLabelVisible(bool visible) {
+  _isLeftLabelVisible = visible;
+}
+
+
+bool PlotItem::PlotItem::isBottomLabelVisible() const {
+  return _isBottomLabelVisible;
+}
+
+
+void PlotItem::PlotItem::setBottomLabelVisible(bool visible) {
+  _isBottomLabelVisible = visible;
+}
+
+
+bool PlotItem::PlotItem::isRightLabelVisible() const {
+  return _isRightLabelVisible;
+}
+
+
+void PlotItem::PlotItem::setRightLabelVisible(bool visible) {
+  _isRightLabelVisible = visible;
+}
+
+
+bool PlotItem::PlotItem::isTopLabelVisible() const {
+  return _isTopLabelVisible;
+}
+
+
+void PlotItem::PlotItem::setTopLabelVisible(bool visible) {
+  _isTopLabelVisible = visible;
+}
+
+
+void PlotItem::setLabelsVisible(bool visible) {
+  setLeftLabelVisible(visible);
+  setRightLabelVisible(visible);
+  setBottomLabelVisible(visible);
+  setTopLabelVisible(visible);
+  emit labelsVisibleChanged();
+}
+
+
+qreal PlotItem::calculatedMarginWidth() const {
+  qreal m = qMax(MARGIN_WIDTH, _calculatedMarginWidth);
+
+  //No more than 1/4 the width of the plot
+  if (width() < m * 4)
+    return width() / 4;
+
+  return m;
+}
+
+
+void PlotItem::setCalculatedMarginWidth(qreal marginWidth) {
+  qreal before = this->calculatedMarginWidth();
+  _calculatedMarginWidth = marginWidth;
+  if (before != this->calculatedMarginWidth())
+    emit geometryChanged();
+}
+
+
+qreal PlotItem::calculatedMarginHeight() const {
+  qreal m = qMax(MARGIN_HEIGHT, _calculatedMarginHeight);
+
+  //No more than 1/4 the height of the plot
+  if (height() < m * 4)
+    return height() / 4;
+
+  return m;
+}
+
+
+void PlotItem::setCalculatedMarginHeight(qreal marginHeight) {
+  qreal before = this->calculatedMarginHeight();
+  _calculatedMarginHeight = marginHeight;
+  if (before != this->calculatedMarginHeight())
+    emit geometryChanged();
 }
 
 

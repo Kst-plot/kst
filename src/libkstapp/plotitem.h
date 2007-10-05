@@ -43,6 +43,9 @@ class PlotItem : public ViewItem
 
     virtual void paint(QPainter *painter);
 
+    QRectF plotRegion() const;
+    QRectF projectionRect() const;
+
     qreal marginWidth() const;
     qreal marginHeight() const;
 
@@ -50,6 +53,23 @@ class PlotItem : public ViewItem
     QString bottomLabel() const;
     QString rightLabel() const;
     QString topLabel() const;
+
+    bool isLeftLabelVisible() const;
+    void setLeftLabelVisible(bool visible);
+
+    bool isBottomLabelVisible() const;
+    void setBottomLabelVisible(bool visible);
+
+    bool isRightLabelVisible() const;
+    void setRightLabelVisible(bool visible);
+
+    bool isTopLabelVisible() const;
+    void setTopLabelVisible(bool visible);
+
+    void setLabelsVisible(bool visible);
+
+  Q_SIGNALS:
+    void labelsVisibleChanged(); //only emitted when 'setLabelsVisible' is called
 
   private:
     qreal calculatedMarginWidth() const;
@@ -72,6 +92,10 @@ class PlotItem : public ViewItem
 
   private:
     QList<PlotRenderItem*> _renderers;
+    bool _isLeftLabelVisible;
+    bool _isBottomLabelVisible;
+    bool _isRightLabelVisible;
+    bool _isTopLabelVisible;
     qreal _calculatedMarginWidth;
     qreal _calculatedMarginHeight;
 

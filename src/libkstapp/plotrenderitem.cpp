@@ -44,6 +44,8 @@ PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
 
   connect(parentItem, SIGNAL(geometryChanged()),
           this, SLOT(updateGeometry()));
+  connect(parentItem, SIGNAL(labelsVisibleChanged()),
+          this, SLOT(updateGeometry()));
   connect(parentItem->parentView(), SIGNAL(viewModeChanged(View::ViewMode)),
           this, SLOT(updateViewMode()));
 
@@ -805,6 +807,11 @@ QSizeF PlotRenderItem::sizeOfGrip() const {
 }
 
 
+bool PlotRenderItem::maybeReparent() {
+  return false; //never reparent a plot renderer
+}
+
+
 QRectF PlotRenderItem::checkBoxBoundingRect() const {
   QRectF bound = selectBoundingRect();
   bound.setTopLeft(bound.topLeft() - QPointF(sizeOfGrip().width(), sizeOfGrip().height()));
@@ -824,11 +831,7 @@ QPainterPath PlotRenderItem::checkBox() const {
 
 
 void PlotRenderItem::updateGeometry() {
-  QRectF rect = plotItem()->rect().normalized();
-  QPointF margin(plotItem()->marginWidth(), plotItem()->marginHeight());
-  QPointF topLeft(rect.topLeft() + margin);
-  QPointF bottomRight(rect.bottomRight() - margin);
-  setViewRect(QRectF(topLeft, bottomRight));
+  setViewRect(plotItem()->plotRegion());
 }
 
 

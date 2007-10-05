@@ -156,7 +156,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     bool transformToRect(const QPolygonF &from, const QPolygonF &to);
     void rotateTowards(const QPointF &corner, const QPointF &point);
     QPointF lockOffset(const QPointF &offset, qreal ratio, bool oddCorner) const;
-    bool maybeReparent();
+    virtual bool maybeReparent();
     GripMode nextGripMode(GripMode currentMode) const;
     void addTitle(QMenu *menu) const;
     void registerShortcut(QAction *action);

@@ -66,8 +66,10 @@ void ViewGridLayout::addViewItem(ViewItem *viewItem, int row, int column, int ro
   _rowCount = maxRow > _rowCount ? maxRow : _rowCount;
   _columnCount = maxColumn > _columnCount ? maxColumn : _columnCount;
 
+  //FIXME these could be consolidated
   _items.append(item);
   _itemInfos.insert(viewItem, item);
+  _itemLayouts.insert(qMakePair(item.row, item.column), item);
 }
 
 
@@ -119,6 +121,16 @@ void ViewGridLayout::reset() {
     item.viewItem->setTransform(item.transform);
     item.viewItem->setPos(item.position);
     item.viewItem->setViewRect(item.rect);
+    if (PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(item.viewItem))
+      plotItem->setLabelsVisible(true);
+  }
+}
+
+
+void ViewGridLayout::resetSharedAxis() {
+  foreach (LayoutItem item, _items) {
+    if (PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(item.viewItem))
+      plotItem->setLabelsVisible(true);
   }
 }
 
@@ -126,6 +138,7 @@ void ViewGridLayout::reset() {
 void ViewGridLayout::update() {
 
   updatePlotMargins();
+  updateSharedAxis();
 
   //For now we divide up equally... can do stretch factors and such later...
 
@@ -198,6 +211,120 @@ void ViewGridLayout::updatePlotMargins() {
     if (_plotMarginHeight.contains(item.rowSpan))
       marginForRowSpan = qMax(marginForRowSpan, _plotMarginHeight.value(item.rowSpan));
     _plotMarginHeight.insert(item.rowSpan, marginForRowSpan);
+  }
+}
+
+
+void ViewGridLayout::updateSharedAxis() {
+
+  foreach (LayoutItem item, _items) {
+    PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(item.viewItem);
+
+    if (!plotItem)
+      continue;
+
+    //same horizontal range and same row/rowspan
+    //same vertical range and same col/colspan
+    shareAxisWithPlotToLeft(item);
+    shareAxisWithPlotToRight(item);
+    shareAxisWithPlotAbove(item);
+    shareAxisWithPlotBelow(item);
+  }
+}
+
+
+void ViewGridLayout::shareAxisWithPlotToLeft(LayoutItem item) const {
+  QPair<int, int> key = qMakePair(item.row, item.column - 1);
+  if (!_itemLayouts.contains(key))
+    return;
+
+  LayoutItem left = _itemLayouts.value(key);
+  PlotItem *leftItem = qgraphicsitem_cast<PlotItem*>(left.viewItem);
+  if (!leftItem)
+    return;
+
+  PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(item.viewItem);
+
+  //horizontal range check...
+  if (plotItem->projectionRect().left() != leftItem->projectionRect().left() ||
+      plotItem->projectionRect().right() != leftItem->projectionRect().right())
+    return;
+
+  if (item.rowSpan == left.rowSpan && item.columnSpan == left.columnSpan) {
+    plotItem->setLeftLabelVisible(false);
+    leftItem->setRightLabelVisible(false);
+  }
+}
+
+
+void ViewGridLayout::shareAxisWithPlotToRight(LayoutItem item) const {
+  QPair<int, int> key = qMakePair(item.row, item.column + 1);
+  if (!_itemLayouts.contains(key))
+    return;
+
+  LayoutItem right = _itemLayouts.value(key);
+  PlotItem *rightItem = qgraphicsitem_cast<PlotItem*>(right.viewItem);
+  if (!rightItem)
+    return;
+
+  PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(item.viewItem);
+
+  //horizontal range check...
+  if (plotItem->projectionRect().left() != rightItem->projectionRect().left() ||
+      plotItem->projectionRect().right() != rightItem->projectionRect().right())
+    return;
+
+  if (item.rowSpan == right.rowSpan && item.columnSpan == right.columnSpan) {
+    plotItem->setRightLabelVisible(false);
+    rightItem->setLeftLabelVisible(false);
+  }
+}
+
+
+void ViewGridLayout::shareAxisWithPlotAbove(LayoutItem item) const {
+  QPair<int, int> key = qMakePair(item.row - 1, item.column);
+  if (!_itemLayouts.contains(key))
+    return;
+
+  LayoutItem top = _itemLayouts.value(key);
+  PlotItem *topItem = qgraphicsitem_cast<PlotItem*>(top.viewItem);
+  if (!topItem)
+    return;
+
+  PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(item.viewItem);
+
+  //vertical range check...
+  if (plotItem->projectionRect().top() != topItem->projectionRect().top() ||
+      plotItem->projectionRect().bottom() != topItem->projectionRect().bottom())
+    return;
+
+  if (item.rowSpan == top.rowSpan && item.columnSpan == top.columnSpan) {
+    plotItem->setTopLabelVisible(false);
+    topItem->setBottomLabelVisible(false);
+  }
+}
+
+
+void ViewGridLayout::shareAxisWithPlotBelow(LayoutItem item) const {
+  QPair<int, int> key = qMakePair(item.row + 1, item.column);
+  if (!_itemLayouts.contains(key))
+    return;
+
+  LayoutItem bottom = _itemLayouts.value(key);
+  PlotItem *bottomItem = qgraphicsitem_cast<PlotItem*>(bottom.viewItem);
+  if (!bottomItem)
+    return;
+
+  PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(item.viewItem);
+
+  //vertical range check...
+  if (plotItem->projectionRect().top() != bottomItem->projectionRect().top() ||
+      plotItem->projectionRect().bottom() != bottomItem->projectionRect().bottom())
+    return;
+
+  if (item.rowSpan == bottom.rowSpan && item.columnSpan == bottom.columnSpan) {
+    plotItem->setBottomLabelVisible(false);
+    bottomItem->setTopLabelVisible(false);
   }
 }
 
