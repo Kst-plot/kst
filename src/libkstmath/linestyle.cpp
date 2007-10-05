@@ -1,12 +1,7 @@
 /***************************************************************************
-                 kstlinestyle.cpp: defines line styles for kst
-                             -------------------
-    begin                : Apr 22 2004
-    copyright            : (C) 2001 The University of British Columbia
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
+ *   copyright : (C) 2004 by University of British Columbia
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,11 +10,13 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstlinestyle.h"
+#include "linestyle.h"
 
-const unsigned int KSTLINESTYLE_MAXTYPE = 5;
+namespace Kst {
 
-Qt::PenStyle KstLineStyle[KSTLINESTYLE_MAXTYPE] = { 
+const unsigned int LINESTYLE_MAXTYPE = 5;
+
+Qt::PenStyle LineStyle[LINESTYLE_MAXTYPE] = {
   Qt::SolidLine, 
   Qt::DashLine, 
   Qt::DotLine, 
@@ -27,4 +24,5 @@ Qt::PenStyle KstLineStyle[KSTLINESTYLE_MAXTYPE] = {
   Qt::DashDotDotLine
 };
 
+}
 // vim: ts=2 sw=2 et

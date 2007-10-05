@@ -1,5 +1,5 @@
 /***************************************************************************
-                          kstvcurve.h: defines a curve for kst
+                          vcurve.h: defines a curve for kst
                              -------------------
     begin                : Fri Oct 22 2000
     copyright            : (C) 2000 by C. Barth Netterfield
@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTVCURVE_H
-#define KSTVCURVE_H
+#ifndef VCURVE_H
+#define VCURVE_H
 
 #include "kstrelation.h"
 #include "kstpainter.h"
@@ -29,15 +29,17 @@
  *@author C. Barth Netterfield
  */
 
-class KST_EXPORT KstVCurve: public KstRelation {
+namespace Kst {
+
+class KST_EXPORT VCurve: public KstRelation {
   public:
-    KstVCurve(const QString &in_tag, Kst::VectorPtr in_X, Kst::VectorPtr in_Y,
-        Kst::VectorPtr in_EX, Kst::VectorPtr in_EY,
-        Kst::VectorPtr in_EXMinus, Kst::VectorPtr in_EYMinus,
+    VCurve(const QString &in_tag, VectorPtr in_X, VectorPtr in_Y,
+        VectorPtr in_EX, VectorPtr in_EY,
+        VectorPtr in_EXMinus, VectorPtr in_EYMinus,
         const QColor &in_color);
     
-    KstVCurve(QDomElement &e);
-    virtual ~KstVCurve();
+    VCurve(QDomElement &e);
+    virtual ~VCurve();
 
     virtual UpdateType update(int update_counter = -1);
     virtual QString propertyString() const;
@@ -58,19 +60,19 @@ class KST_EXPORT KstVCurve: public KstRelation {
     virtual void getEXPoints(int i, double &x, double &y, double &ex, double &exminus);
     virtual void getEYPoints(int i, double &x, double &y, double &ey, double &eyminus);
 
-    Kst::ObjectTag xVTag() const;
-    Kst::ObjectTag yVTag() const;
-    Kst::ObjectTag xETag() const;
-    Kst::ObjectTag yETag() const;
-    Kst::ObjectTag xEMinusTag() const;
-    Kst::ObjectTag yEMinusTag() const;
+    ObjectTag xVTag() const;
+    ObjectTag yVTag() const;
+    ObjectTag xETag() const;
+    ObjectTag yETag() const;
+    ObjectTag xEMinusTag() const;
+    ObjectTag yEMinusTag() const;
 
-    void setXVector(Kst::VectorPtr new_vx);
-    void setYVector(Kst::VectorPtr new_vy);
-    void setXError(Kst::VectorPtr new_ex);
-    void setYError(Kst::VectorPtr new_ey);
-    void setXMinusError(Kst::VectorPtr new_ex);
-    void setYMinusError(Kst::VectorPtr new_ey);
+    void setXVector(VectorPtr new_vx);
+    void setYVector(VectorPtr new_vy);
+    void setXError(VectorPtr new_ex);
+    void setYError(VectorPtr new_ey);
+    void setXMinusError(VectorPtr new_ex);
+    void setYMinusError(VectorPtr new_ey);
 
     /** Save curve information */
     void save(QTextStream &ts, const QString& indent = QString::null);
@@ -94,12 +96,12 @@ class KST_EXPORT KstVCurve: public KstRelation {
     virtual void showNewDialog();
     virtual void showEditDialog();
 
-    Kst::VectorPtr xVector() const;
-    Kst::VectorPtr yVector() const;
-    Kst::VectorPtr xErrorVector() const;
-    Kst::VectorPtr yErrorVector() const;
-    Kst::VectorPtr xMinusErrorVector() const;
-    Kst::VectorPtr yMinusErrorVector() const;
+    VectorPtr xVector() const;
+    VectorPtr yVector() const;
+    VectorPtr xErrorVector() const;
+    VectorPtr yErrorVector() const;
+    VectorPtr xMinusErrorVector() const;
+    VectorPtr yMinusErrorVector() const;
     
     virtual bool hasPoints()    const { return HasPoints; }
     virtual bool hasLines()     const { return HasLines; }
@@ -152,7 +154,7 @@ class KST_EXPORT KstVCurve: public KstRelation {
     virtual double distanceToPoint(double xpos, double dx, double ypos) const;
     
     // see KstRelation::providerDataObject
-    virtual Kst::DataObjectPtr providerDataObject() const;
+    virtual DataObjectPtr providerDataObject() const;
 
   private:
     inline void commonConstructor(const QString& in_tag, const QColor& in_color);
@@ -179,8 +181,9 @@ class KST_EXPORT KstVCurve: public KstRelation {
 
 };
 
-typedef Kst::SharedPtr<KstVCurve> KstVCurvePtr;
-typedef Kst::ObjectList<KstVCurvePtr> KstVCurveList;
+typedef SharedPtr<VCurve> VCurvePtr;
+typedef ObjectList<VCurvePtr> VCurveList;
 
+}
 #endif
 // vim: ts=2 sw=2 et

@@ -65,7 +65,7 @@ void ColorSequence::cleanup() {
 }
 
 
-QColor ColorSequence::next(const KstVCurveList& curves, const QColor& badColor) {
+QColor ColorSequence::next(const VCurveList& curves, const QColor& badColor) {
   QColor color;
   int dark_factor;
   int ptrMin;

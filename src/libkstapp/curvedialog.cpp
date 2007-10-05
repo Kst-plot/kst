@@ -13,7 +13,7 @@
 
 #include "dialogpage.h"
 
-#include "kstvcurve.h"
+#include "vcurve.h"
 
 #include "view.h"
 #include "plotitem.h"
@@ -106,7 +106,7 @@ void CurveTab::setYMinusError(VectorPtr vector) {
 }
 
 
-CurveDialog::CurveDialog(Kst::ObjectPtr dataObject, QWidget *parent)
+CurveDialog::CurveDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
   if (editMode() == Edit)
@@ -130,9 +130,9 @@ QString CurveDialog::tagName() const {
 }
 
 
-Kst::ObjectPtr CurveDialog::createNewDataObject() const {
+ObjectPtr CurveDialog::createNewDataObject() const {
   //FIXME Eli, how should I construct this tag??
-  KstVCurvePtr curve = new KstVCurve(tagName(),
+  VCurvePtr curve = new VCurve(tagName(),
                                      _curveTab->xVector(),
                                      _curveTab->yVector(),
                                      _curveTab->xError(),
@@ -162,11 +162,11 @@ Kst::ObjectPtr CurveDialog::createNewDataObject() const {
 
   plotItem->addRenderItem(vectorCurve);
 
-  return Kst::ObjectPtr(curve.data());
+  return ObjectPtr(curve.data());
 }
 
 
-Kst::ObjectPtr CurveDialog::editExistingDataObject() const {
+ObjectPtr CurveDialog::editExistingDataObject() const {
   qDebug() << "editExistingDataObject" << endl;
   return 0;
 }

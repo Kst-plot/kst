@@ -1,12 +1,7 @@
 /***************************************************************************
-                          kstlinestyle.h: defines line styles for kst
-                             -------------------
-    begin                : Apr 22 2004
-    copyright            : (C) 2001 The University of British Columbia
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
+ *   copyright : (C) 2004 by University of British Columbia
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,16 +11,20 @@
  ***************************************************************************/
 #include <qnamespace.h>
 
-#ifndef KSTLINESTYLE_H
-#define KSTLINESTYLE_H
+#ifndef LINESTYLE_H
+#define LINESTYLE_H
 
 #include "kst_export.h"
 
-KST_EXPORT extern const unsigned int KSTLINESTYLE_MAXTYPE;
-KST_EXPORT extern Qt::PenStyle KstLineStyle[];
+namespace Kst {
 
-#define KSTPOINTDENSITY_MAXTYPE 4
-#define KSTLINEWIDTH_MAX        5
+KST_EXPORT extern const unsigned int LINESTYLE_MAXTYPE;
+KST_EXPORT extern Qt::PenStyle LineStyle[];
+
+#define POINTDENSITY_MAXTYPE 4
+#define LINEWIDTH_MAX        5
+
+}
 
 #endif
 // vim: ts=2 sw=2 et

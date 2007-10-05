@@ -13,7 +13,7 @@
 #include "curvehint.h"
 #include "datacollection.h"
 #include "kstrelation.h"
-#include "kstvcurve.h"
+#include "vcurve.h"
 
 #include <qdebug.h>
 
@@ -56,7 +56,7 @@ KstRelationPtr CurveHint::makeCurve(const QString& tag, const QColor& color) con
     return 0L;
   }
 
-  return new KstVCurve(tag, x, y, 0L, 0L, 0L, 0L, color);
+  return new VCurve(tag, x, y, 0L, 0L, 0L, 0L, color);
 }
 
 }

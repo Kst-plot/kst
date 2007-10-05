@@ -1,5 +1,5 @@
 /***************************************************************************
-                          kstcurve.cpp: holds info for a curve
+                          vcurve.cpp: holds info for a curve
                              -------------------
     begin                : Fri Nov 3 2000
     copyright            : (C) 2000 by cbn
@@ -26,10 +26,10 @@
 #include "colorsequence.h"
 #include "datacollection.h"
 #include "debug.h"
-#include "kstlinestyle.h"
+#include "linestyle.h"
 #include "math_kst.h"
 #include "datavector.h"
-#include "kstvcurve.h"
+#include "vcurve.h"
 #include "ksttimers.h"
 
 #include <time.h>
@@ -49,6 +49,8 @@
 // for painting
 #define MAX_NUM_POLYLINES       1000
 
+namespace Kst {
+
 static const QLatin1String& COLOR_XVECTOR = QLatin1String("X");
 static const QLatin1String& COLOR_YVECTOR = QLatin1String("Y");
 static const QLatin1String& EXVECTOR = QLatin1String("EX");
@@ -56,9 +58,9 @@ static const QLatin1String& EYVECTOR = QLatin1String("EY");
 static const QLatin1String& EXMINUSVECTOR = QLatin1String("EXMinus");
 static const QLatin1String& EYMINUSVECTOR = QLatin1String("EYMinus");
 
-KstVCurve::KstVCurve(const QString &in_tag, Kst::VectorPtr in_X, Kst::VectorPtr in_Y,
-                      Kst::VectorPtr in_EX, Kst::VectorPtr in_EY,
-                      Kst::VectorPtr in_EXMinus, Kst::VectorPtr in_EYMinus,
+VCurve::VCurve(const QString &in_tag, VectorPtr in_X, VectorPtr in_Y,
+                      VectorPtr in_EX, VectorPtr in_EY,
+                      VectorPtr in_EXMinus, VectorPtr in_EYMinus,
                       const QColor &in_color)
 : KstRelation() {
   setHasPoints(false);
@@ -98,7 +100,7 @@ KstVCurve::KstVCurve(const QString &in_tag, Kst::VectorPtr in_X, Kst::VectorPtr 
 }
 
 
-KstVCurve::KstVCurve(QDomElement &e)
+VCurve::VCurve(QDomElement &e)
 : KstRelation(e) {
   QString in_tag, xname, yname, exname, eyname, exminusname, eyminusname;
   // QColor in_color(KstColorSequence::next(-1));
@@ -189,33 +191,33 @@ KstVCurve::KstVCurve(QDomElement &e)
 }
 
 
-void KstVCurve::commonConstructor(const QString &in_tag, const QColor &in_color) {
+void VCurve::commonConstructor(const QString &in_tag, const QColor &in_color) {
   MaxX = MinX = MeanX = MaxY = MinY = MeanY = MinPosX = MinPosY = 0;
   NS = 0;
   _typeString = i18n("Curve");
   _type = "Curve";
   Color = in_color;
-  setTagName(Kst::ObjectTag::fromString(in_tag));
+  setTagName(ObjectTag::fromString(in_tag));
   updateParsedLegendTag();
 }
 
 
-KstVCurve::~KstVCurve() {
+VCurve::~VCurve() {
 }
 
 
-Kst::Object::UpdateType KstVCurve::update(int update_counter) {
+Object::UpdateType VCurve::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
   setDirty(false);
 
-  if (Kst::Object::checkUpdateCounter(update_counter) && !force) {
+  if (Object::checkUpdateCounter(update_counter) && !force) {
     return lastUpdateResult();
   }
 
-  Kst::VectorPtr cxV = *_inputVectors.find(COLOR_XVECTOR);
-  Kst::VectorPtr cyV = *_inputVectors.find(COLOR_YVECTOR);
+  VectorPtr cxV = *_inputVectors.find(COLOR_XVECTOR);
+  VectorPtr cyV = *_inputVectors.find(COLOR_YVECTOR);
   if (!cxV || !cyV) {
     return setLastUpdateResult(NO_CHANGE);
   }
@@ -227,22 +229,22 @@ Kst::Object::UpdateType KstVCurve::update(int update_counter) {
   depUpdated = UPDATE == cxV->update(update_counter) || depUpdated;
   depUpdated = UPDATE == cyV->update(update_counter) || depUpdated;
 
-  Kst::VectorPtr exV = _inputVectors.contains(EXVECTOR) ? *_inputVectors.find(EXVECTOR) : 0;
+  VectorPtr exV = _inputVectors.contains(EXVECTOR) ? *_inputVectors.find(EXVECTOR) : 0;
   if (exV) {
     depUpdated = UPDATE == exV->update(update_counter) || depUpdated;
   }
 
-  Kst::VectorPtr eyV = _inputVectors.contains(EYVECTOR) ? *_inputVectors.find(EYVECTOR) : 0;
+  VectorPtr eyV = _inputVectors.contains(EYVECTOR) ? *_inputVectors.find(EYVECTOR) : 0;
   if (eyV) {
     depUpdated = UPDATE == eyV->update(update_counter) || depUpdated;
   }
 
-  Kst::VectorPtr exmV = _inputVectors.contains(EXMINUSVECTOR) ? *_inputVectors.find(EXMINUSVECTOR) : 0;
+  VectorPtr exmV = _inputVectors.contains(EXMINUSVECTOR) ? *_inputVectors.find(EXMINUSVECTOR) : 0;
   if (exmV) {
     depUpdated = UPDATE == exmV->update(update_counter) || depUpdated;
   }
 
-  Kst::VectorPtr eymV = _inputVectors.contains(EYMINUSVECTOR) ? *_inputVectors.find(EYMINUSVECTOR) : 0;
+  VectorPtr eymV = _inputVectors.contains(EYMINUSVECTOR) ? *_inputVectors.find(EYMINUSVECTOR) : 0;
   if (eymV) {
     depUpdated = UPDATE == eymV->update(update_counter) || depUpdated;
   }
@@ -276,197 +278,197 @@ Kst::Object::UpdateType KstVCurve::update(int update_counter) {
 }
 
 
-void KstVCurve::point(int i, double &x, double &y) const {
-  Kst::VectorPtr xv = xVector();
+void VCurve::point(int i, double &x, double &y) const {
+  VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
   }
-  Kst::VectorPtr yv = yVector();
+  VectorPtr yv = yVector();
   if (yv) {
     y = yv->interpolate(i, NS);
   }
 }
 
 
-void KstVCurve::getEXPoint(int i, double &x, double &y, double &ex) {
-  Kst::VectorPtr xv = xVector();
+void VCurve::getEXPoint(int i, double &x, double &y, double &ex) {
+  VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
   }
-  Kst::VectorPtr yv = yVector();
+  VectorPtr yv = yVector();
   if (yv) {
     y = yv->interpolate(i, NS);
   }
-  Kst::VectorPtr exv = xErrorVector();
+  VectorPtr exv = xErrorVector();
   if (exv) {
     ex = exv->interpolate(i, NS);
   }
 }
 
 
-void KstVCurve::getEXMinusPoint(int i, double &x, double &y, double &ex) {
-  Kst::VectorPtr xv = xVector();
+void VCurve::getEXMinusPoint(int i, double &x, double &y, double &ex) {
+  VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
   }
-  Kst::VectorPtr yv = yVector();
+  VectorPtr yv = yVector();
   if (yv) {
     y = yv->interpolate(i, NS);
   }
-  Kst::VectorPtr exmv = xMinusErrorVector();
+  VectorPtr exmv = xMinusErrorVector();
   if (exmv) {
     ex = exmv->interpolate(i, NS);
   }
 }
 
 
-void KstVCurve::getEXPoints(int i, double &x, double &y, double &exminus, double &explus) {
-  Kst::VectorPtr xv = xVector();
+void VCurve::getEXPoints(int i, double &x, double &y, double &exminus, double &explus) {
+  VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
   }
-  Kst::VectorPtr yv = yVector();
+  VectorPtr yv = yVector();
   if (yv) {
     y = yv->interpolate(i, NS);
   }
-  Kst::VectorPtr exv = xErrorVector();
+  VectorPtr exv = xErrorVector();
   if (exv) {
     explus = exv->interpolate(i, NS);
   }
-  Kst::VectorPtr exmv = xMinusErrorVector();
+  VectorPtr exmv = xMinusErrorVector();
   if (exmv) {
     exminus = exmv->interpolate(i, NS);
   }
 }
 
 
-void KstVCurve::getEYPoint(int i, double &x, double &y, double &ey) {
-  Kst::VectorPtr xv = xVector();
+void VCurve::getEYPoint(int i, double &x, double &y, double &ey) {
+  VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
   }
-  Kst::VectorPtr yv = yVector();
+  VectorPtr yv = yVector();
   if (yv) {
     y = yv->interpolate(i, NS);
   }
-  Kst::VectorPtr eyv = yErrorVector();
+  VectorPtr eyv = yErrorVector();
   if (eyv) {
     ey = eyv->interpolate(i, NS);
   }
 }
 
 
-void KstVCurve::getEYMinusPoint(int i, double &x, double &y, double &ey) {
-  Kst::VectorPtr xv = xVector();
+void VCurve::getEYMinusPoint(int i, double &x, double &y, double &ey) {
+  VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
   }
-  Kst::VectorPtr yv = yVector();
+  VectorPtr yv = yVector();
   if (yv) {
     y = yv->interpolate(i, NS);
   }
-  Kst::VectorPtr eyv = yMinusErrorVector();
+  VectorPtr eyv = yMinusErrorVector();
   if (eyv) {
     ey = eyv->interpolate(i, NS);
   }
 }
 
 
-void KstVCurve::getEYPoints(int i, double &x, double &y, double &eyminus, double &eyplus) {
-  Kst::VectorPtr xv = xVector();
+void VCurve::getEYPoints(int i, double &x, double &y, double &eyminus, double &eyplus) {
+  VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
   }
-  Kst::VectorPtr yv = yVector();
+  VectorPtr yv = yVector();
   if (yv) {
     y = yv->interpolate(i, NS);
   }
-  Kst::VectorPtr eyv = yErrorVector();
+  VectorPtr eyv = yErrorVector();
   if (eyv) {
     eyplus = eyv->interpolate(i, NS);
   }
-  Kst::VectorPtr eymv = yMinusErrorVector();
+  VectorPtr eymv = yMinusErrorVector();
   if (eymv) {
     eyminus = eymv->interpolate(i, NS);
   }
 }
 
 
-Kst::ObjectTag KstVCurve::xVTag() const {
-  Kst::VectorPtr xv = xVector();
+ObjectTag VCurve::xVTag() const {
+  VectorPtr xv = xVector();
   if (xv) {
     return xv->tag();
   }
-  return Kst::ObjectTag::invalidTag;
+  return ObjectTag::invalidTag;
 }
 
 
-Kst::ObjectTag KstVCurve::yVTag() const {
-  Kst::VectorPtr yv = yVector();
+ObjectTag VCurve::yVTag() const {
+  VectorPtr yv = yVector();
   if (yv) {
     return yv->tag();
   }
-  return Kst::ObjectTag::invalidTag;
+  return ObjectTag::invalidTag;
 }
 
 
-Kst::ObjectTag KstVCurve::xETag() const {
-  Kst::VectorPtr v = xErrorVector();
+ObjectTag VCurve::xETag() const {
+  VectorPtr v = xErrorVector();
   if (v) {
     return v->tag();
   }
-  return Kst::ObjectTag::invalidTag;
+  return ObjectTag::invalidTag;
 }
 
 
-Kst::ObjectTag KstVCurve::yETag() const {
-  Kst::VectorPtr v = yErrorVector();
+ObjectTag VCurve::yETag() const {
+  VectorPtr v = yErrorVector();
   if (v) {
     return v->tag();
   }
-  return Kst::ObjectTag::invalidTag;
+  return ObjectTag::invalidTag;
 }
 
 
-Kst::ObjectTag KstVCurve::xEMinusTag() const {
-  Kst::VectorPtr v = xMinusErrorVector();
+ObjectTag VCurve::xEMinusTag() const {
+  VectorPtr v = xMinusErrorVector();
   if (v) {
     return v->tag();
   }
-  return Kst::ObjectTag::invalidTag;
+  return ObjectTag::invalidTag;
 }
 
 
-Kst::ObjectTag KstVCurve::yEMinusTag() const {
-  Kst::VectorPtr v = yMinusErrorVector();
+ObjectTag VCurve::yEMinusTag() const {
+  VectorPtr v = yMinusErrorVector();
   if (v) {
     return v->tag();
   }
-  return Kst::ObjectTag::invalidTag;
+  return ObjectTag::invalidTag;
 }
 
 
-bool KstVCurve::hasXError() const {
+bool VCurve::hasXError() const {
   return _inputVectors.contains(EXVECTOR);
 }
 
 
-bool KstVCurve::hasYError() const {
+bool VCurve::hasYError() const {
   return _inputVectors.contains(EYVECTOR);
 }
 
 
-bool KstVCurve::hasXMinusError() const {
+bool VCurve::hasXMinusError() const {
   return _inputVectors.contains(EXMINUSVECTOR);
 }
 
 
-bool KstVCurve::hasYMinusError() const {
+bool VCurve::hasYMinusError() const {
   return _inputVectors.contains(EYMINUSVECTOR);
 }
 
 
-void KstVCurve::save(QTextStream &ts, const QString& indent) {
+void VCurve::save(QTextStream &ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<curve>" << endl;
   ts << l2 << "<tag>" << Qt::escape(tagName()) << "</tag>" << endl;
@@ -508,7 +510,7 @@ void KstVCurve::save(QTextStream &ts, const QString& indent) {
 }
 
 
-void KstVCurve::setXVector(Kst::VectorPtr new_vx) {
+void VCurve::setXVector(VectorPtr new_vx) {
   if (new_vx) {
     _inputVectors[COLOR_XVECTOR] = new_vx;
   } else {
@@ -518,7 +520,7 @@ void KstVCurve::setXVector(Kst::VectorPtr new_vx) {
 }
 
 
-void KstVCurve::setYVector(Kst::VectorPtr new_vy) {
+void VCurve::setYVector(VectorPtr new_vy) {
   if (new_vy) {
     _inputVectors[COLOR_YVECTOR] = new_vy;
   } else {
@@ -528,7 +530,7 @@ void KstVCurve::setYVector(Kst::VectorPtr new_vy) {
 }
 
 
-void KstVCurve::setXError(Kst::VectorPtr new_ex) {
+void VCurve::setXError(VectorPtr new_ex) {
   if (new_ex) {
     _inputVectors[EXVECTOR] = new_ex;
   } else {
@@ -538,7 +540,7 @@ void KstVCurve::setXError(Kst::VectorPtr new_ex) {
 }
 
 
-void KstVCurve::setYError(Kst::VectorPtr new_ey) {
+void VCurve::setYError(VectorPtr new_ey) {
   if (new_ey) {
     _inputVectors[EYVECTOR] = new_ey;
   } else {
@@ -548,7 +550,7 @@ void KstVCurve::setYError(Kst::VectorPtr new_ey) {
 }
 
 
-void KstVCurve::setXMinusError(Kst::VectorPtr new_ex) {
+void VCurve::setXMinusError(VectorPtr new_ex) {
   if (new_ex) {
     _inputVectors[EXMINUSVECTOR] = new_ex;
   } else {
@@ -558,7 +560,7 @@ void KstVCurve::setXMinusError(Kst::VectorPtr new_ex) {
 }
 
 
-void KstVCurve::setYMinusError(Kst::VectorPtr new_ey) {
+void VCurve::setYMinusError(VectorPtr new_ey) {
   if (new_ey) {
     _inputVectors[EYMINUSVECTOR] = new_ey;
   } else {
@@ -568,84 +570,84 @@ void KstVCurve::setYMinusError(Kst::VectorPtr new_ey) {
 }
 
 
-QString KstVCurve::xLabel() const {
+QString VCurve::xLabel() const {
   return _inputVectors[COLOR_XVECTOR]->label();
 }
 
 
-QString KstVCurve::yLabel() const {
+QString VCurve::yLabel() const {
   return _inputVectors[COLOR_YVECTOR]->label();
 }
 
 
-QString KstVCurve::topLabel() const {
+QString VCurve::topLabel() const {
   return QString::null;
   //return VY->fileLabel();
 }
 
 
-KstCurveType KstVCurve::curveType() const {
+KstCurveType VCurve::curveType() const {
   return KST_VCURVE;
 }
 
 
-QString KstVCurve::propertyString() const {
+QString VCurve::propertyString() const {
   return i18n("%1 vs %2").arg(yVTag().displayString()).arg(xVTag().displayString());
 }
 
 
-void KstVCurve::showNewDialog() {
-  Kst::DialogLauncher::self()->showCurveDialog();
+void VCurve::showNewDialog() {
+  DialogLauncher::self()->showCurveDialog();
 }
 
 
-void KstVCurve::showEditDialog() {
-  Kst::DialogLauncher::self()->showCurveDialog(this);
+void VCurve::showEditDialog() {
+  DialogLauncher::self()->showCurveDialog(this);
 }
 
 
-int KstVCurve::samplesPerFrame() const {
-  const Kst::DataVector *rvp = dynamic_cast<const Kst::DataVector*>(_inputVectors[COLOR_YVECTOR].data());
+int VCurve::samplesPerFrame() const {
+  const DataVector *rvp = dynamic_cast<const DataVector*>(_inputVectors[COLOR_YVECTOR].data());
   return rvp ? rvp->samplesPerFrame() : 1;
 }
 
 
-Kst::VectorPtr KstVCurve::xVector() const {
+VectorPtr VCurve::xVector() const {
   return *_inputVectors.find(COLOR_XVECTOR);
 }
 
 
-Kst::VectorPtr KstVCurve::yVector() const {
+VectorPtr VCurve::yVector() const {
   return *_inputVectors.find(COLOR_YVECTOR);
 }
 
 
-Kst::VectorPtr KstVCurve::xErrorVector() const {
+VectorPtr VCurve::xErrorVector() const {
   return *_inputVectors.find(EXVECTOR);
 }
 
 
-Kst::VectorPtr KstVCurve::yErrorVector() const {
+VectorPtr VCurve::yErrorVector() const {
   return *_inputVectors.find(EYVECTOR);
 }
 
 
-Kst::VectorPtr KstVCurve::xMinusErrorVector() const {
+VectorPtr VCurve::xMinusErrorVector() const {
   return *_inputVectors.find(EXMINUSVECTOR);
 }
 
 
-Kst::VectorPtr KstVCurve::yMinusErrorVector() const {
+VectorPtr VCurve::yMinusErrorVector() const {
   return *_inputVectors.find(EYMINUSVECTOR);
 }
 
 
-bool KstVCurve::xIsRising() const {
+bool VCurve::xIsRising() const {
   return _inputVectors[COLOR_XVECTOR]->isRising();
 }
 
 
-inline int indexNearX(double x, Kst::VectorPtr& xv, int NS) {
+inline int indexNearX(double x, VectorPtr& xv, int NS) {
   // monotonically rising: we can do a binary search
   // should be reasonably fast
   if (xv->isRising()) {
@@ -692,9 +694,9 @@ inline int indexNearX(double x, Kst::VectorPtr& xv, int NS) {
 
 /** getIndexNearXY: return index of point within (or closest too)
     x +- dx which is closest to y **/
-int KstVCurve::getIndexNearXY(double x, double dx_per_pix, double y) const {
-  Kst::VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
-  Kst::VectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
+int VCurve::getIndexNearXY(double x, double dx_per_pix, double y) const {
+  VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
+  VectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
   if (!xv || !yv) {
     return 0; // anything better we can do?
   }
@@ -748,63 +750,63 @@ int KstVCurve::getIndexNearXY(double x, double dx_per_pix, double y) const {
 }
 
 
-void KstVCurve::setHasPoints(bool in_HasPoints) {
+void VCurve::setHasPoints(bool in_HasPoints) {
   HasPoints = in_HasPoints;
   setDirty();
   emit modifiedLegendEntry();
 }
 
 
-void KstVCurve::setHasLines(bool in_HasLines) {
+void VCurve::setHasLines(bool in_HasLines) {
   HasLines = in_HasLines;
   setDirty();
   emit modifiedLegendEntry();
 }
 
 
-void KstVCurve::setHasBars(bool in_HasBars) {
+void VCurve::setHasBars(bool in_HasBars) {
   HasBars = in_HasBars;
   setDirty();
   emit modifiedLegendEntry();
 }
 
 
-void KstVCurve::setLineWidth(int in_LineWidth) {
+void VCurve::setLineWidth(int in_LineWidth) {
   LineWidth = in_LineWidth;
   setDirty();
   emit modifiedLegendEntry();
 }
 
 
-void KstVCurve::setLineStyle(int in_LineStyle) {
+void VCurve::setLineStyle(int in_LineStyle) {
   LineStyle = in_LineStyle;
   setDirty();
   emit modifiedLegendEntry();
 }
 
 
-void KstVCurve::setBarStyle(int in_BarStyle) {
+void VCurve::setBarStyle(int in_BarStyle) {
   BarStyle = in_BarStyle;
   setDirty();
   emit modifiedLegendEntry();
 }
 
 
-void KstVCurve::setPointDensity(int in_PointDensity) {
+void VCurve::setPointDensity(int in_PointDensity) {
   PointDensity = in_PointDensity;
   setDirty();
   emit modifiedLegendEntry();
 }
 
 
-void KstVCurve::setColor(const QColor& new_c) {
+void VCurve::setColor(const QColor& new_c) {
   setDirty();
   Color = new_c;
   emit modifiedLegendEntry();
 }
 
 
-double KstVCurve::maxX() const {
+double VCurve::maxX() const {
   if (hasBars() && sampleCount() > 0) {
     return MaxX + (MaxX - MinX)/(2*(sampleCount()-1));
   }
@@ -812,7 +814,7 @@ double KstVCurve::maxX() const {
 }
 
 
-double KstVCurve::minX() const {
+double VCurve::minX() const {
   if (hasBars() && sampleCount() > 0) {
     return MinX - (MaxX - MinX)/(2*(sampleCount()-1));
   }
@@ -821,19 +823,19 @@ double KstVCurve::minX() const {
 
 
 #if 0
-KstRelationPtr KstVCurve::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap) {
-  Kst::VectorPtr VX = *_inputVectors.find(COLOR_XVECTOR);
-  Kst::VectorPtr VY = *_inputVectors.find(COLOR_YVECTOR);
-  Kst::VectorPtr EX = *_inputVectors.find(EXVECTOR);
-  Kst::VectorPtr EY = *_inputVectors.find(EYVECTOR);
-  Kst::VectorPtr EXMinus = *_inputVectors.find(EXMINUSVECTOR);
-  Kst::VectorPtr EYMinus = *_inputVectors.find(EYMINUSVECTOR);
+KstRelationPtr VCurve::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap) {
+  VectorPtr VX = *_inputVectors.find(COLOR_XVECTOR);
+  VectorPtr VY = *_inputVectors.find(COLOR_YVECTOR);
+  VectorPtr EX = *_inputVectors.find(EXVECTOR);
+  VectorPtr EY = *_inputVectors.find(EYVECTOR);
+  VectorPtr EXMinus = *_inputVectors.find(EXMINUSVECTOR);
+  VectorPtr EYMinus = *_inputVectors.find(EYMINUSVECTOR);
 
   QString name(tagName() + '\'');
   while (KstData::self()->dataTagNameNotUnique(name, false)) {
     name += '\'';
   }
-  KstVCurvePtr vcurve = new KstVCurve(name, VX, VY, EX, EY, EXMinus, EYMinus, Color);
+  VCurvePtr vcurve = new VCurve(name, VX, VY, EX, EY, EXMinus, EYMinus, Color);
   // copy some other properties as well
   vcurve->setHasPoints(HasPoints);
   vcurve->setHasLines(HasLines);
@@ -849,9 +851,9 @@ KstRelationPtr KstVCurve::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMa
 #endif
 
 
-void KstVCurve::paint(const KstCurveRenderContext& context) {
-  Kst::VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
-  Kst::VectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
+void VCurve::paint(const KstCurveRenderContext& context) {
+  VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
+  VectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
   if (!xv || !yv) {
     return;
   }
@@ -882,9 +884,9 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
   int numberOfLinesDrawn = 0;
 #endif
 
-  int pointDim = Kst::CurvePointSymbol::dim(context.window);
+  int pointDim = CurvePointSymbol::dim(context.window);
   if (sampleCount() > 0) {
-    Qt::PenStyle style = KstLineStyle[lineStyle()];
+    Qt::PenStyle style = Kst::LineStyle[lineStyle()];
     int i0, iN;
     int width;
     
@@ -944,10 +946,10 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
       }
  
       if (xLog) {
-        rX = Kst::logXLo(rX, xLogBase);
+        rX = logXLo(rX, xLogBase);
       }
       if (yLog) {
-        rY = Kst::logYLo(rY, yLogBase);
+        rY = logYLo(rY, yLogBase);
       }
       last_x1 = m_X*rX + b_X;
       last_y1 = m_Y*rY + b_Y;
@@ -993,12 +995,12 @@ qDebug() << __LINE__ << "drawPolyline" << poly << endl;
                 minY = Ly;
               if (minY >= Ly && minY <= Hy && maxY >= Ly && maxY <= Hy) {
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d2i(X2), Kst::d2i(maxY)) << endl;
+qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY)) << endl;
 #endif
 #ifdef BENCHMARK
   ++numberOfLinesDrawn;
 #endif
-                p->drawLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d2i(X2), Kst::d2i(maxY));
+                p->drawLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY));
               }
             }
             overlap = false;
@@ -1006,10 +1008,10 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
         }
 
         if (xLog) {
-          rX = Kst::logXLo(rX, xLogBase);
+          rX = logXLo(rX, xLogBase);
         }
         if (yLog) {
-          rY = Kst::logYLo(rY, yLogBase);
+          rY = logYLo(rY, yLogBase);
         }
         X1 = m_X*rX + b_X;
         Y1 = m_Y*rY + b_Y;
@@ -1017,8 +1019,8 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
         last_y1 = Y1;
 
         if (KDE_ISLIKELY(!foundNan)) {
-          int X1i = Kst::d2i(X1);
-          int X2i = Kst::d2i(X2);
+          int X1i = d2i(X1);
+          int X2i = d2i(X2);
           if (KDE_ISLIKELY(X1i == X2i)) {
             if (KDE_ISLIKELY(overlap)) {
               if (KDE_ISUNLIKELY(Y1 > maxY)) {
@@ -1041,9 +1043,9 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
             if (KDE_ISLIKELY(overlap)) {
               if (KDE_ISLIKELY(X2 >= Lx && X2 <= Hx)) {
                 if (KDE_ISUNLIKELY(maxY <= Hy && minY >= Ly)) {
-                  int Y2i = Kst::d2i(Y2);
-                  int maxYi = Kst::d2i(maxY);
-                  int minYi = Kst::d2i(minY);
+                  int Y2i = d2i(Y2);
+                  int maxYi = d2i(maxY);
+                  int minYi = d2i(minY);
 
                   if (index >= MAX_NUM_POLYLINES-2) {
                     QPolygon poly;
@@ -1110,12 +1112,12 @@ qDebug() << __LINE__ << "drawPolyline" << poly << endl;
                       index = 0;
                     }
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "drawLine" << QLine(X2i, Kst::d2i(minY), X2i, Kst::d2i(maxY)) << endl;
+qDebug() << __LINE__ << "drawLine" << QLine(X2i, d2i(minY), X2i, d2i(maxY)) << endl;
 #endif
 #ifdef BENCHMARK
   ++numberOfLinesDrawn;
 #endif
-                    p->drawLine(X2i, Kst::d2i(minY), X2i, Kst::d2i(maxY));
+                    p->drawLine(X2i, d2i(minY), X2i, d2i(maxY));
                   }
                 }
               }
@@ -1216,10 +1218,10 @@ qDebug() << "y not in bounds"
 
               if (X1 >= Lx && X1 <= Hx && X2 >= Lx && X2 <= Hx &&
                   Y1 >= Ly && Y1 <= Hy && Y2 >= Ly && Y2 <= Hy) {
-                int X1i = Kst::d2i(X1);
-                int Y1i = Kst::d2i(Y1);
-                int X2i = Kst::d2i(X2);
-                int Y2i = Kst::d2i(Y2);
+                int X1i = d2i(X1);
+                int Y1i = d2i(Y1);
+                int X2i = d2i(X2);
+                int Y2i = d2i(Y2);
 
 #ifdef DEBUG_VECTOR_CURVE
 qDebug() << "MY POINTS ARE GOOD!!" << index << endl;
@@ -1290,12 +1292,12 @@ qDebug() << __LINE__ << "drawPolyline" << poly << endl;
           }
           if (minY >= Ly && minY <= Hy && maxY >= Ly && maxY <= Hy) {
 #ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d2i(X2), Kst::d2i(maxY)) << endl;
+qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY)) << endl;
 #endif
 #ifdef BENCHMARK
   ++numberOfLinesDrawn;
 #endif
-            p->drawLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d2i(X2), Kst::d2i(maxY));
+            p->drawLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY));
           }
         }
         overlap = false;
@@ -1307,10 +1309,10 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
     b_1 = benchtmp.elapsed();
 #endif
 
-    Kst::VectorPtr exv = _inputVectors.contains(EXVECTOR) ? *_inputVectors.find(EXVECTOR) : 0;
-    Kst::VectorPtr eyv = _inputVectors.contains(EYVECTOR) ? *_inputVectors.find(EYVECTOR) : 0;
-    Kst::VectorPtr exmv = _inputVectors.contains(EXMINUSVECTOR) ? *_inputVectors.find(EXMINUSVECTOR) : 0;
-    Kst::VectorPtr eymv = _inputVectors.contains(EYMINUSVECTOR) ? *_inputVectors.find(EYMINUSVECTOR) : 0;
+    VectorPtr exv = _inputVectors.contains(EXVECTOR) ? *_inputVectors.find(EXVECTOR) : 0;
+    VectorPtr eyv = _inputVectors.contains(EYVECTOR) ? *_inputVectors.find(EYVECTOR) : 0;
+    VectorPtr exmv = _inputVectors.contains(EXMINUSVECTOR) ? *_inputVectors.find(EXMINUSVECTOR) : 0;
+    VectorPtr eymv = _inputVectors.contains(EYMINUSVECTOR) ? *_inputVectors.find(EYMINUSVECTOR) : 0;
     // draw the bargraph bars, if any...
     if (hasBars()) {
       bool has_top = true;
@@ -1358,11 +1360,11 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
         rX -= drX/2.0;
         rX2 = rX + drX;
         if (xLog) {
-          rX = Kst::logXLo(rX, xLogBase);
-          rX2 = Kst::logXLo(rX2, xLogBase);
+          rX = logXLo(rX, xLogBase);
+          rX2 = logXLo(rX2, xLogBase);
         }
         if (yLog) {
-          rY = Kst::logYLo(rY, yLogBase);
+          rY = logYLo(rY, yLogBase);
         }
 
         X1 = m_X * rX + b_X;
@@ -1418,25 +1420,25 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
 
         if (visible) {
           if (barStyle() == 1) { // filled
-            int X1i = Kst::d2i(X1);
-            int Y1i = Kst::d2i(Y1);
-            p->fillRect(X1i, Y1i, Kst::d2i(X2) - X1i, Kst::d2i(Y2) - Y1i, color());
+            int X1i = d2i(X1);
+            int Y1i = d2i(Y1);
+            p->fillRect(X1i, Y1i, d2i(X2) - X1i, d2i(Y2) - Y1i, color());
           }
           if (has_top) {
-            int Y1i = Kst::d2i(Y1);
-            p->drawLine(Kst::d2i(X1-(width/2)), Y1i, Kst::d2i(X2+(width/2)), Y1i);
+            int Y1i = d2i(Y1);
+            p->drawLine(d2i(X1-(width/2)), Y1i, d2i(X2+(width/2)), Y1i);
           }
           if (has_bot) {
-            int Y2i = Kst::d2i(Y2);
-            p->drawLine(Kst::d2i(X1-(width/2)), Y2i, Kst::d2i(X2-(width/2)), Y2i);
+            int Y2i = d2i(Y2);
+            p->drawLine(d2i(X1-(width/2)), Y2i, d2i(X2-(width/2)), Y2i);
           }
           if (has_left) {
-            int X1i = Kst::d2i(X1);
-            p->drawLine(X1i, Kst::d2i(Y1-(width/2)), X1i, Kst::d2i(Y2+(width/2)));
+            int X1i = d2i(X1);
+            p->drawLine(X1i, d2i(Y1-(width/2)), X1i, d2i(Y2+(width/2)));
           }
           if (has_right) {
-            int X2i = Kst::d2i(X2);
-            p->drawLine(X2i, Kst::d2i(Y1-(width/2)), X2i, Kst::d2i(Y2+(width/2)));
+            int X2i = d2i(X2);
+            p->drawLine(X2i, d2i(Y1-(width/2)), X2i, d2i(Y2+(width/2)));
           }
         }
       }
@@ -1454,22 +1456,22 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
         const double w = Hx - Lx;
         const double h = Hy - Ly;
         QRegion rgn((int)Lx, (int)Ly, (int)w, (int)h);
-        const int size = int(qMax(w, h)) / int(pow(3.0, KSTPOINTDENSITY_MAXTYPE - pointDensity()));
+        const int size = int(qMax(w, h)) / int(pow(3.0, POINTDENSITY_MAXTYPE - pointDensity()));
         QPoint pt;
         for (i_pt = i0; i_pt <= iN; ++i_pt) {
           rX = xv->interpolate(i_pt, NS);
           rY = yv->interpolate(i_pt, NS);
           if (xLog) {
-            rX = Kst::logXLo(rX, xLogBase);
+            rX = logXLo(rX, xLogBase);
           }
           if (yLog) {
-            rY = Kst::logYLo(rY, yLogBase);
+            rY = logYLo(rY, yLogBase);
           }
 
-          pt.setX(Kst::d2i(m_X * rX + b_X));
-          pt.setY(Kst::d2i(m_Y * rY + b_Y));
+          pt.setX(d2i(m_X * rX + b_X));
+          pt.setY(d2i(m_Y * rY + b_Y));
           if (rgn.contains(pt)) {
-            Kst::CurvePointSymbol::draw(pointType, p, pt.x(), pt.y(), width);
+            CurvePointSymbol::draw(pointType, p, pt.x(), pt.y(), width);
             rgn -= QRegion(pt.x()-(size/2), pt.y()-(size/2), size, size, QRegion::Ellipse);
           }
         }
@@ -1478,16 +1480,16 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
           rX = xv->interpolate(i_pt, NS);
           rY = yv->interpolate(i_pt, NS);
           if (xLog) {
-            rX = Kst::logXLo(rX, xLogBase);
+            rX = logXLo(rX, xLogBase);
           }
           if (yLog) {
-            rY = Kst::logYLo(rY, yLogBase);
+            rY = logYLo(rY, yLogBase);
           }
 
           X1 = m_X * rX + b_X;
           Y1 = m_Y * rY + b_Y;
           if (X1 >= Lx && X1 <= Hx && Y1 >= Ly && Y1 <= Hy) {
-            Kst::CurvePointSymbol::draw(pointType, p, Kst::d2i(X1), Kst::d2i(Y1), width);
+            CurvePointSymbol::draw(pointType, p, d2i(X1), d2i(Y1), width);
           }
         }
       }
@@ -1518,8 +1520,8 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
         if (errorSame) {
           rEX = fabs(exv->interpolate(i_pt, NS));
           if (xLog) {
-            rX1 = Kst::logXLo(rX - rEX, xLogBase);
-            rX2 = Kst::logXLo(rX + rEX, xLogBase);
+            rX1 = logXLo(rX - rEX, xLogBase);
+            rX2 = logXLo(rX + rEX, xLogBase);
           } else {
             rX1 = rX - rEX;
             rX2 = rX + rEX;
@@ -1528,8 +1530,8 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
           double rEXHi = fabs(exv->interpolate(i_pt, NS));
           double rEXLo = fabs(exmv->interpolate(i_pt, NS));
           if (xLog) {
-            rX1 = Kst::logXLo(rX - rEXLo, xLogBase);
-            rX2 = Kst::logXLo(rX + rEXHi, xLogBase);
+            rX1 = logXLo(rX - rEXLo, xLogBase);
+            rX2 = logXLo(rX + rEXHi, xLogBase);
           } else {
             rX1 = rX - rEXLo;
             rX2 = rX + rEXHi;
@@ -1537,8 +1539,8 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
         } else if (exv) {
           rEX = exv->interpolate(i_pt, NS);
           if (xLog) {
-            rX1 = Kst::logXLo(rX, xLogBase);
-            rX2 = Kst::logXLo(rX + fabs(rEX), xLogBase);
+            rX1 = logXLo(rX, xLogBase);
+            rX2 = logXLo(rX + fabs(rEX), xLogBase);
           } else {
             rX1 = rX;
             rX2 = rX + fabs(rEX);
@@ -1547,8 +1549,8 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
         } else {
           rEX = fabs(exmv->interpolate(i_pt, NS));
           if (xLog) {
-            rX1 = Kst::logXLo(rX - rEX, xLogBase);
-            rX2 = Kst::logXLo(rX, xLogBase);
+            rX1 = logXLo(rX - rEX, xLogBase);
+            rX2 = logXLo(rX, xLogBase);
           } else {
             rX1 = rX - rEX;
             rX2 = rX;
@@ -1557,7 +1559,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
         }
 
         if (yLog) {
-          rY = Kst::logYLo(rY, yLogBase);
+          rY = logYLo(rY, yLogBase);
         }
 
         X1 = m_X * rX1 + b_X;
@@ -1574,9 +1576,9 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
         }
 
         if (X1 >= Lx && X2 <= Hx && Y1 >= Ly && Y1 <= Hy) {
-          int X1i = Kst::d2i(X1);
-          int X2i = Kst::d2i(X2);
-          int Y1i = Kst::d2i(Y1);
+          int X1i = d2i(X1);
+          int X2i = d2i(X2);
+          int Y1i = d2i(Y1);
           p->drawLine(X1i, Y1i, X2i, Y1i);
           if (do_low_flag) {
             p->drawLine(X1i, Y1i + pointDim, X1i, Y1i - pointDim);
@@ -1609,8 +1611,8 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
         if (errorSame) {
           rEY = eyv->interpolate(i_pt, NS);
           if (yLog) {
-            rY1 = Kst::logYLo(rY-fabs(rEY), yLogBase);
-            rY2 = Kst::logYLo(rY+fabs(rEY), yLogBase);
+            rY1 = logYLo(rY-fabs(rEY), yLogBase);
+            rY2 = logYLo(rY+fabs(rEY), yLogBase);
           } else {
             rY1 = rY-fabs(rEY);
             rY2 = rY+fabs(rEY);
@@ -1619,8 +1621,8 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
           double rEYHi = fabs(eyv->interpolate(i_pt, NS));
           double rEYLo = fabs(eymv->interpolate(i_pt, NS));
           if (yLog) {
-            rY1 = Kst::logYLo(rY - rEYLo, yLogBase);
-            rY2 = Kst::logYLo(rY + rEYHi, yLogBase);
+            rY1 = logYLo(rY - rEYLo, yLogBase);
+            rY2 = logYLo(rY + rEYHi, yLogBase);
           } else {
             rY1 = rY - rEYLo;
             rY2 = rY + rEYHi;
@@ -1628,8 +1630,8 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
         } else if (eyv) {
           rEY = fabs(eyv->interpolate(i_pt, NS));
           if (yLog) {
-            rY1 = Kst::logYLo(rY, yLogBase);
-            rY2 = Kst::logYLo(rY + rEY, yLogBase);
+            rY1 = logYLo(rY, yLogBase);
+            rY2 = logYLo(rY + rEY, yLogBase);
           } else {
             rY1 = rY;
             rY2 = rY + rEY;
@@ -1638,8 +1640,8 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
         } else {
           rEY = fabs(eymv->interpolate(i_pt, NS));
           if (yLog) {
-            rY1 = Kst::logYLo(rY - rEY, yLogBase);
-            rY2 = Kst::logYLo(rY, yLogBase);
+            rY1 = logYLo(rY - rEY, yLogBase);
+            rY2 = logYLo(rY, yLogBase);
           } else {
             rY1 = rY - rEY;
             rY2 = rY;
@@ -1648,7 +1650,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
         }
 
         if (xLog) {
-          rX = Kst::logXLo(rX, xLogBase);
+          rX = logXLo(rX, xLogBase);
         }
 
         X1 = m_X * rX + b_X;
@@ -1665,9 +1667,9 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
         }
 
         if (X1 >= Lx && X1 <= Hx && Y1 >= Ly && Y2 <= Hy) {
-          int X1i = Kst::d2i(X1);
-          int Y1i = Kst::d2i(Y1);
-          int Y2i = Kst::d2i(Y2);
+          int X1i = d2i(X1);
+          int Y1i = d2i(Y1);
+          int Y2i = d2i(Y2);
           p->drawLine(X1i, Y1i, X1i, Y2i);
           if (do_low_flag) {
             p->drawLine(X1i + pointDim, Y1i, X1i - pointDim, Y1i);
@@ -1696,13 +1698,13 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
 }
 
 
-void KstVCurve::yRange(double xFrom, double xTo, double* yMin, double* yMax) {
+void VCurve::yRange(double xFrom, double xTo, double* yMin, double* yMax) {
   if (!yMin || !yMax) {
     return;
   }
 
-  Kst::VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
-  Kst::VectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
+  VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
+  VectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
   if (!xv || !yv) {
     *yMin = *yMax = 0;
     return;
@@ -1740,23 +1742,23 @@ void KstVCurve::yRange(double xFrom, double xTo, double* yMin, double* yMax) {
 }
 
 
-Kst::DataObjectPtr KstVCurve::providerDataObject() const {
-  Kst::vectorList.lock().readLock();
-  Kst::VectorPtr vp = *Kst::vectorList.findTag(yVTag().tag());  // FIXME: should use full tag
-  Kst::vectorList.lock().unlock();
-  Kst::DataObjectPtr provider = 0L;
+DataObjectPtr VCurve::providerDataObject() const {
+  vectorList.lock().readLock();
+  VectorPtr vp = *vectorList.findTag(yVTag().tag());  // FIXME: should use full tag
+  vectorList.lock().unlock();
+  DataObjectPtr provider = 0L;
   if (vp) {
     vp->readLock();
-    provider = Kst::kst_cast<Kst::DataObject>(vp->provider());
+    provider = kst_cast<DataObject>(vp->provider());
     vp->unlock();
   }
   return provider;
 }
 
 
-double KstVCurve::distanceToPoint(double xpos, double dx, double ypos) const {
+double VCurve::distanceToPoint(double xpos, double dx, double ypos) const {
 // find the y distance between the curve and a point. return 1.0E300 if this distance is undefined. i don't want to use -1 because it will make the code which uses this function messy.
-  Kst::VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
+  VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
   if (!xv) {
     return 1.0E300; // anything better we can do?
   }
@@ -1808,7 +1810,7 @@ double KstVCurve::distanceToPoint(double xpos, double dx, double ypos) const {
 }
 
 
-void KstVCurve::paintLegendSymbol(KstPainter *p, const QRect& bound) {
+void VCurve::paintLegendSymbol(KstPainter *p, const QRect& bound) {
   int width;
   
   if (lineWidth() == 0) {
@@ -1820,17 +1822,17 @@ void KstVCurve::paintLegendSymbol(KstPainter *p, const QRect& bound) {
   p->save();
   if (hasLines()) {
     // draw a line from left to right centered vertically
-    p->setPen(QPen(color(), width, KstLineStyle[lineStyle()]));
+    p->setPen(QPen(color(), width, Kst::LineStyle[lineStyle()]));
     p->drawLine(bound.left(), bound.top() + bound.height()/2,
                 bound.right(), bound.top() + bound.height()/2);
   }
   if (hasPoints()) {
     // draw a point in the middle
     p->setPen(QPen(color(), width));
-    Kst::CurvePointSymbol::draw(pointType, p, bound.left() + bound.width()/2, bound.top() + bound.height()/2, width, 600);
+    CurvePointSymbol::draw(pointType, p, bound.left() + bound.width()/2, bound.top() + bound.height()/2, width, 600);
   }
   p->restore();
 }
 
-
+}
 // vim: ts=2 sw=2 et

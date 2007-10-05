@@ -33,9 +33,9 @@ SOURCES += \
     kstpsd.cpp \
     kstrelation.cpp \
     curvepointsymbol.cpp \
-    kstlinestyle.cpp \
-    kstvcurve.cpp \
-    kstimage.cpp \
+    linestyle.cpp \
+    vcurve.cpp \
+    image.cpp \
     defaultnames.cpp \
     histogram.cpp \
     equation.cpp \
@@ -72,14 +72,14 @@ HEADERS += \
     defaultnames.h \
     equation.h \
     histogram.h \
-    kstimage.h \
-    kstlinestyle.h \
+    image.h \
+    linestyle.h \
     kstobjectdefaults.h \
     kstpainter.h \
     kstplotdefines.h \
     kstpsd.h \
     kstsettings.h \
-    kstvcurve.h \
+    vcurve.h \
     labelparser.h \
     objectfactory.h \
     psdcalculator.h \

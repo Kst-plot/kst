@@ -1,12 +1,7 @@
 /***************************************************************************
-                     kstimage.h: image type for kst
-                             -------------------
-    begin                : Mon July 19 2004
-    copyright            : (C) 2005 by University of British Columbia
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
+ *   copyright : (C) 2005 by University of British Columbia
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,8 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTIMAGE_H
-#define KSTIMAGE_H
+#ifndef IMAGE_H
+#define IMAGE_H
 
 #include "matrix.h"
 #include "kstrelation.h"
@@ -24,30 +19,32 @@
 
 #include <QHash>
 
-typedef QHash<int, QColor> KstPalette;
+namespace Kst {
+
+typedef QHash<int, QColor> Palette;
 
 /**A class for handling images for Kst
  *@author University of British Columbia
  */
-class KST_EXPORT KstImage : public KstRelation {
+class KST_EXPORT Image : public KstRelation {
   public:
     //constructor for colormap only
-    KstImage(const QString &in_tag, Kst::MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const KstPalette &pal);
+    Image(const QString &in_tag, MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const Palette &pal);
     //constructor for contour map only
-    KstImage(const QString &in_tag, Kst::MatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight);
+    Image(const QString &in_tag, MatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight);
     //constructor for both colormap and contour map
-    KstImage(const QString &in_tag,
-        Kst::MatrixPtr in_matrix,
+    Image(const QString &in_tag,
+        MatrixPtr in_matrix,
         double lowerZ,
         double upperZ,
         bool autoThreshold,
-        const KstPalette &pal,
+        const Palette &pal,
         int numContours,
         const QColor& contourColor,
         int contourWeight);
 
-    KstImage(const QDomElement& e);
-    virtual ~KstImage();
+    Image(const QDomElement& e);
+    virtual ~Image();
 
     virtual void showNewDialog();
     virtual void showEditDialog();
@@ -59,7 +56,7 @@ class KST_EXPORT KstImage : public KstRelation {
 
     virtual bool getNearestZ(double x, double y, double& z);
     virtual QColor getMappedColor(double x, double y);
-    virtual void setPalette(const KstPalette &pal);
+    virtual void setPalette(const Palette &pal);
     virtual void setUpperThreshold(double z);
     virtual void setLowerThreshold(double z);
     virtual void setAutoThreshold(bool yes);
@@ -71,18 +68,18 @@ class KST_EXPORT KstImage : public KstRelation {
     virtual bool autoThreshold() const { return _autoThreshold; }
 
     virtual QString matrixTag() const;
-    virtual Kst::MatrixPtr matrix() const;
+    virtual MatrixPtr matrix() const;
     virtual QString paletteName() const;
-    virtual const KstPalette &palette() const { return _pal; }
+    virtual const Palette &palette() const { return _pal; }
 
     virtual void matrixDimensions(double &x, double &y, double &width, double &height);
 
-    virtual void changeToColorOnly(const QString &in_tag, Kst::MatrixPtr in_matrix,
-        double lowerZ, double upperZ, bool autoThreshold, const KstPalette &pal);
-    virtual void changeToContourOnly(const QString &in_tag, Kst::MatrixPtr in_matrix,
+    virtual void changeToColorOnly(const QString &in_tag, MatrixPtr in_matrix,
+        double lowerZ, double upperZ, bool autoThreshold, const Palette &pal);
+    virtual void changeToContourOnly(const QString &in_tag, MatrixPtr in_matrix,
         int numContours, const QColor& contourColor, int contourWeight);
-    virtual void changeToColorAndContour(const QString &in_tag, Kst::MatrixPtr in_matrix,
-        double lowerZ, double upperZ, bool autoThreshold, const KstPalette &pal,
+    virtual void changeToColorAndContour(const QString &in_tag, MatrixPtr in_matrix,
+        double lowerZ, double upperZ, bool autoThreshold, const Palette &pal,
         int numContours, const QColor& contourColor, int contourWeight);
 
     //contour lines
@@ -108,7 +105,7 @@ class KST_EXPORT KstImage : public KstRelation {
 #endif
 
     // see KstRelation::providerDataObject
-    virtual Kst::DataObjectPtr providerDataObject() const;
+    virtual DataObjectPtr providerDataObject() const;
     
     // see KstRelation::distanceToPoint
     virtual double distanceToPoint(double xpos, double dx, double ypos) const;
@@ -126,7 +123,7 @@ class KST_EXPORT KstImage : public KstRelation {
     //use these to set defaults when either is not used.
     void setColorDefaults();
     void setContourDefaults();
-    KstPalette _pal;
+    Palette _pal;
     //upper and lower thresholds
     double _zUpper;
     double _zLower;
@@ -143,8 +140,10 @@ class KST_EXPORT KstImage : public KstRelation {
 };
 
 
-typedef Kst::SharedPtr<KstImage> KstImagePtr;
-typedef Kst::ObjectList<KstImagePtr> KstImageList;
+typedef SharedPtr<Image> ImagePtr;
+typedef ObjectList<ImagePtr> ImageList;
+
+}
 
 #endif
 // vim: ts=2 sw=2 et

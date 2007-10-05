@@ -20,7 +20,7 @@
 #include "defaultnames.h"
 #include "histogram.h"
 #include "kstpsd.h"
-#include "kstvcurve.h"
+#include "vcurve.h"
 
 #include <qregexp.h>
 #include "kst_i18n.h"

@@ -13,7 +13,7 @@
 #define _COLORSEQUENCE_H
 
 #include <qcolor.h>
-#include "kstvcurve.h"
+#include "vcurve.h"
 #include "kst_export.h"
 
 class KPalette;
@@ -26,7 +26,7 @@ class ColorSequence {
     KST_EXPORT void createPalette();
     static KST_EXPORT QColor next();
     static KST_EXPORT QColor next(const QColor& badColor);
-    static KST_EXPORT QColor next(const KstVCurveList& Curves, const QColor& badColor);
+    static KST_EXPORT QColor next(const VCurveList& Curves, const QColor& badColor);
     static KST_EXPORT bool colorsTooClose(const QColor& color, const QColor& badColor);
     static KST_EXPORT ColorMode colorMode();
     static KST_EXPORT void setColorMode(ColorMode mode);
