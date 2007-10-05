@@ -201,42 +201,42 @@ QString PlotItem::topLabel() const {
 }
 
 
-bool PlotItem::PlotItem::isLeftLabelVisible() const {
+bool PlotItem::isLeftLabelVisible() const {
   return _isLeftLabelVisible;
 }
 
 
-void PlotItem::PlotItem::setLeftLabelVisible(bool visible) {
+void PlotItem::setLeftLabelVisible(bool visible) {
   _isLeftLabelVisible = visible;
 }
 
 
-bool PlotItem::PlotItem::isBottomLabelVisible() const {
+bool PlotItem::isBottomLabelVisible() const {
   return _isBottomLabelVisible;
 }
 
 
-void PlotItem::PlotItem::setBottomLabelVisible(bool visible) {
+void PlotItem::setBottomLabelVisible(bool visible) {
   _isBottomLabelVisible = visible;
 }
 
 
-bool PlotItem::PlotItem::isRightLabelVisible() const {
+bool PlotItem::isRightLabelVisible() const {
   return _isRightLabelVisible;
 }
 
 
-void PlotItem::PlotItem::setRightLabelVisible(bool visible) {
+void PlotItem::setRightLabelVisible(bool visible) {
   _isRightLabelVisible = visible;
 }
 
 
-bool PlotItem::PlotItem::isTopLabelVisible() const {
+bool PlotItem::isTopLabelVisible() const {
   return _isTopLabelVisible;
 }
 
 
-void PlotItem::PlotItem::setTopLabelVisible(bool visible) {
+void PlotItem::setTopLabelVisible(bool visible) {
   _isTopLabelVisible = visible;
 }
 
