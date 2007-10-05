@@ -70,7 +70,7 @@ static double nan__()
   const double NaN = NaN_Bytes.d;
   return NaN;
 }
-#define NAN (::nan__())
+#define NAN (Kst::nan__())
 #endif
 
 /*
