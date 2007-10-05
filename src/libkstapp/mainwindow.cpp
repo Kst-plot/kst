@@ -135,6 +135,11 @@ void MainWindow::setLayoutMode(bool layoutMode) {
 }
 
 
+void MainWindow::setTiedZoom(bool tiedZoom) {
+  qDebug() << "Tied zoom FIXME!!" << endl;
+}
+
+
 bool MainWindow::promptSave() {
   int rc = QMessageBox::warning(this, tr("Kst"), tr("Your document has been modified.\nSave changes?"), QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save);
   if (rc == QMessageBox::Save) {
@@ -443,6 +448,12 @@ void MainWindow::createActions() {
   _layoutModeAct->setCheckable(true);
   connect(_layoutModeAct, SIGNAL(toggled(bool)), this, SLOT(setLayoutMode(bool)));
 
+  _tiedZoomAct = new QAction(tr("&Tied Zoom"), this);
+  _tiedZoomAct->setStatusTip(tr("Toggle the current view's tied zoom"));
+  _tiedZoomAct->setIcon(QPixmap(":kst_zoomtie.png"));
+  _tiedZoomAct->setCheckable(true);
+  connect(_tiedZoomAct, SIGNAL(toggled(bool)), this, SLOT(setTiedZoom(bool)));
+
   _newTabAct = new QAction(tr("&New tab"), this);
   _newTabAct->setStatusTip(tr("Create a new tab"));
   _newTabAct->setIcon(QPixmap(":kst_newtab.png"));
@@ -532,6 +543,7 @@ void MainWindow::createMenus() {
 
   _viewMenu = menuBar()->addMenu(tr("&View"));
   _viewMenu->addAction(_viewManagerAct);
+  _viewMenu->addAction(_tiedZoomAct);
   _viewMenu->addSeparator();
 
   _layoutMenu = _viewMenu->addMenu(tr("&Layout"));
@@ -575,6 +587,7 @@ void MainWindow::createToolBars() {
 
   _viewToolBar = addToolBar(tr("View"));
   _viewToolBar->addAction(_viewManagerAct);
+  _viewToolBar->addAction(_tiedZoomAct);
   _viewToolBar->addAction(_layoutModeAct);
 
   _layoutToolBar = new QToolBar(tr("Layout"), this);

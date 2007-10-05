@@ -28,6 +28,7 @@ namespace Kst {
 
 PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
   : ViewItem(parentItem->parentView()),
+  _isTiedZoom(false),
   _xAxisZoomMode(Auto),
   _yAxisZoomMode(AutoBorder),
   _isXAxisLog(false),
@@ -68,6 +69,16 @@ RenderType PlotRenderItem::type() {
 
 void PlotRenderItem::setType(RenderType type) {
   _type = type;
+}
+
+
+bool PlotRenderItem::isTiedZoom() const {
+  return _isTiedZoom;
+}
+
+
+void PlotRenderItem::setTiedZoom(bool tiedZoom) {
+  _isTiedZoom = tiedZoom;
 }
 
 
@@ -292,6 +303,26 @@ void PlotRenderItem::paint(QPainter *painter) {
   }
   painter->restore();
 
+  painter->save();
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->fillPath(checkBox(), Qt::white);
+  if (isHovering()) {
+    QRectF check = checkBox().boundingRect();
+    check.setSize(QSizeF(check.width() / 1.8, check.height() / 1.8));
+    check.moveCenter(checkBox().boundingRect().center());
+    QPainterPath p;
+    p.addEllipse(check);
+    painter->fillPath(p, Qt::black);
+  }
+  if (isTiedZoom()) {
+    painter->save();
+    painter->setOpacity(0.5);
+    painter->fillPath(checkBox(), Qt::black);
+    painter->restore();
+  }
+  painter->drawPath(checkBox());
+  painter->restore();
+
 #ifdef CURVE_DRAWING_TIME
   int elapsed = time.elapsed();
   qDebug()<<"curve drawing took" << elapsed << "to render.";
@@ -342,89 +373,89 @@ QString PlotRenderItem::topLabel() const {
 void PlotRenderItem::createActions() {
   _zoomMaximum = new QAction(tr("Zoom Maximum"), this);
   _zoomMaximum->setShortcut(Qt::Key_M);
-  parentView()->registerShortcut(_zoomMaximum);
+  registerShortcut(_zoomMaximum);
   connect(_zoomMaximum, SIGNAL(triggered()), this, SLOT(zoomMaximum()));
 
   _zoomMaxSpikeInsensitive = new QAction(tr("Zoom Max Spike Insensitive"), this);
   _zoomMaxSpikeInsensitive->setShortcut(Qt::Key_S);
-  parentView()->registerShortcut(_zoomMaxSpikeInsensitive);
+  registerShortcut(_zoomMaxSpikeInsensitive);
   connect(_zoomMaxSpikeInsensitive, SIGNAL(triggered()), this, SLOT(zoomMaxSpikeInsensitive()));
   _zoomMaxSpikeInsensitive->setEnabled(false);
 
 //   _zoomPrevious = new QAction(tr("Zoom Previous"), this);
 //   _zoomPrevious->setShortcut(Qt::Key_R);
-//   parentView()->registerShortcut(_zoomPrevious);
+//   registerShortcut(_zoomPrevious);
 //   connect(_zoomPrevious, SIGNAL(triggered()), this, SLOT(_zoomPrevious()));
 //   _zoomPrevious->setEnabled(false);
 
   _zoomYMeanCentered = new QAction(tr("Y-Zoom Mean-centered"), this);
   _zoomYMeanCentered->setShortcut(Qt::Key_A);
-  parentView()->registerShortcut(_zoomYMeanCentered);
+  registerShortcut(_zoomYMeanCentered);
   connect(_zoomYMeanCentered, SIGNAL(triggered()), this, SLOT(zoomYMeanCentered()));
   _zoomYMeanCentered->setEnabled(false);
 
   _zoomXMaximum = new QAction(tr("X-Zoom Maximum"), this);
   _zoomXMaximum->setShortcut(Qt::CTRL+Qt::Key_M);
-  parentView()->registerShortcut(_zoomXMaximum);
+  registerShortcut(_zoomXMaximum);
   connect(_zoomXMaximum, SIGNAL(triggered()), this, SLOT(zoomXMaximum()));
 
   _zoomXOut = new QAction(tr("X-Zoom Out"), this);
   _zoomXOut->setShortcut(Qt::SHIFT+Qt::Key_Right);
-  parentView()->registerShortcut(_zoomXOut);
+  registerShortcut(_zoomXOut);
   connect(_zoomXOut, SIGNAL(triggered()), this, SLOT(zoomXOut()));
   _zoomXOut->setEnabled(false);
 
   _zoomXIn = new QAction(tr("X-Zoom In"), this);
   _zoomXIn->setShortcut(Qt::SHIFT+Qt::Key_Left);
-  parentView()->registerShortcut(_zoomXIn);
+  registerShortcut(_zoomXIn);
   connect(_zoomXIn, SIGNAL(triggered()), this, SLOT(zoomXIn()));
   _zoomXIn->setEnabled(false);
 
   _zoomNormalizeXtoY = new QAction(tr("Normalize X Axis to Y Axis"), this);
   _zoomNormalizeXtoY->setShortcut(Qt::Key_N);
-  parentView()->registerShortcut(_zoomNormalizeXtoY);
+  registerShortcut(_zoomNormalizeXtoY);
   connect(_zoomNormalizeXtoY, SIGNAL(triggered()), this, SLOT(zoomNormalizeXtoY()));
   _zoomNormalizeXtoY->setEnabled(false);
 
   _zoomLogX = new QAction(tr("Log X Axis"), this);
   _zoomLogX->setShortcut(Qt::Key_G);
   _zoomLogX->setCheckable(true);
-  parentView()->registerShortcut(_zoomLogX);
+  registerShortcut(_zoomLogX);
   connect(_zoomLogX, SIGNAL(triggered()), this, SLOT(zoomLogX()));
 
   _zoomYLocalMaximum = new QAction(tr("Y-Zoom Local Maximum"), this);
   _zoomYLocalMaximum->setShortcut(Qt::SHIFT+Qt::Key_L);
-  parentView()->registerShortcut(_zoomYLocalMaximum);
+  registerShortcut(_zoomYLocalMaximum);
   connect(_zoomYLocalMaximum, SIGNAL(triggered()), this, SLOT(zoomYLocalMaximum()));
   _zoomYLocalMaximum->setEnabled(false);
 
   _zoomYMaximum = new QAction(tr("Y-Zoom Maximum"), this);
   _zoomYMaximum->setShortcut(Qt::SHIFT+Qt::Key_M);
-  parentView()->registerShortcut(_zoomYMaximum);
+  registerShortcut(_zoomYMaximum);
   connect(_zoomYMaximum, SIGNAL(triggered()), this, SLOT(zoomYMaximum()));
 
   _zoomYOut = new QAction(tr("Y-Zoom Out"), this);
   _zoomYOut->setShortcut(Qt::SHIFT+Qt::Key_Up);
-  parentView()->registerShortcut(_zoomYOut);
+  registerShortcut(_zoomYOut);
   connect(_zoomYOut, SIGNAL(triggered()), this, SLOT(zoomYOut()));
   _zoomYOut->setEnabled(false);
 
   _zoomYIn = new QAction(tr("Y-Zoom In"), this);
   _zoomYIn->setShortcut(Qt::SHIFT+Qt::Key_Down);
-  parentView()->registerShortcut(_zoomYIn);
+  registerShortcut(_zoomYIn);
   connect(_zoomYIn, SIGNAL(triggered()), this, SLOT(zoomYIn()));
   _zoomYIn->setEnabled(false);
 
   _zoomNormalizeYtoX = new QAction(tr("Normalize Y Axis to X Axis"), this);
   _zoomNormalizeYtoX->setShortcut(Qt::SHIFT+Qt::Key_N);
-  parentView()->registerShortcut(_zoomNormalizeYtoX);
+  registerShortcut(_zoomNormalizeYtoX);
   connect(_zoomNormalizeYtoX, SIGNAL(triggered()), this, SLOT(zoomNormalizeYtoX()));
   _zoomNormalizeYtoX->setEnabled(false);
 
   _zoomLogY = new QAction(tr("Log Y Axis"), this);
   _zoomLogY->setShortcut(Qt::Key_L);
   _zoomLogY->setCheckable(true);
-  parentView()->registerShortcut(_zoomLogY);
+  registerShortcut(_zoomLogY);
   connect(_zoomLogY, SIGNAL(triggered()), this, SLOT(zoomLogY()));
 }
 
@@ -496,6 +527,11 @@ void PlotRenderItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     return;
   }
 
+  if (checkBox().contains(event->pos())) {
+    setTiedZoom(!isTiedZoom());
+    update(); //FIXME should optimize instead of redrawing entire curve!
+  }
+
   const QPointF p = event->pos();
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::ShiftModifier) {
@@ -518,7 +554,7 @@ void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     return;
   }
 
-  setCursor(Qt::CrossCursor);
+  updateCursor(event->pos());
   const QRectF projection = mapToProjection(_selectionRect.rect());
   _selectionRect.reset();
   setProjectionRect(projection);
@@ -527,6 +563,8 @@ void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
 void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   ViewItem::hoverMoveEvent(event);
+
+  updateCursor(event->pos());
 
   const QPointF p = mapToProjection(event->pos());
   QString message = QString("(%1, %2)").arg(QString::number(p.x())).arg(QString::number(p.y()));
@@ -537,6 +575,8 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 void PlotRenderItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
   ViewItem::hoverEnterEvent(event);
 
+  updateCursor(event->pos());
+
   const QPointF p = mapToProjection(event->pos());
   QString message = QString("(%1, %2)").arg(QString::number(p.x())).arg(QString::number(p.y()));
   kstApp->mainWindow()->statusBar()->showMessage(message);
@@ -545,6 +585,8 @@ void PlotRenderItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
 
 void PlotRenderItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
   ViewItem::hoverLeaveEvent(event);
+
+  updateCursor(event->pos());
 
   kstApp->mainWindow()->statusBar()->showMessage(QString());
 }
@@ -743,6 +785,44 @@ void PlotRenderItem::zoomLogY() {
 }
 
 
+QPainterPath PlotRenderItem::shape() const {
+  QPainterPath selectPath;
+  selectPath.setFillRule(Qt::WindingFill);
+  selectPath.addPolygon(rect());
+  selectPath.addPath(checkBox());
+  return selectPath;
+}
+
+
+QRectF PlotRenderItem::boundingRect() const {
+  QPolygonF checkBound = checkBoxBoundingRect();
+  return QRectF(checkBound[0], checkBound[2]);
+}
+
+
+QSizeF PlotRenderItem::sizeOfGrip() const {
+  return ViewItem::sizeOfGrip() / 1.2;
+}
+
+
+QRectF PlotRenderItem::checkBoxBoundingRect() const {
+  QRectF bound = selectBoundingRect();
+  bound.setTopLeft(bound.topLeft() - QPointF(sizeOfGrip().width(), sizeOfGrip().height()));
+  bound.setWidth(bound.width() + sizeOfGrip().width());
+  bound.setHeight(bound.height() + sizeOfGrip().height());
+  return bound;
+}
+
+
+QPainterPath PlotRenderItem::checkBox() const {
+  QRectF bound = checkBoxBoundingRect();
+  QRectF grip = QRectF(bound.topRight() - QPointF(sizeOfGrip().width(), 0), sizeOfGrip());
+  QPainterPath path;
+  path.addEllipse(grip);
+  return path;
+}
+
+
 void PlotRenderItem::updateGeometry() {
   QRectF rect = plotItem()->rect().normalized();
   QPointF margin(plotItem()->marginWidth(), plotItem()->marginHeight());
@@ -762,6 +842,14 @@ void PlotRenderItem::updateViewMode() {
     break;
   default:
     break;
+  }
+}
+
+void PlotRenderItem::updateCursor(const QPointF &pos) {
+  if (checkBox().contains(pos)) {
+    setCursor(Qt::ArrowCursor);
+  } else {
+    updateViewMode();
   }
 }
 

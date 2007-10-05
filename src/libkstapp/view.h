@@ -12,8 +12,6 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include <QHash>
-#include <QAction>
 #include <QGraphicsView>
 
 #include "kst_export.h"
@@ -45,6 +43,8 @@ class KST_EXPORT View : public QGraphicsView
     void setUseOpenGL(bool useOpenGL);
 
     QUndoStack *undoStack() const;
+
+    ViewItem *selectedViewItem() const;
 
     ViewMode viewMode() const;
     void setViewMode(ViewMode mode);
@@ -80,8 +80,6 @@ class KST_EXPORT View : public QGraphicsView
 
     QPointF snapPoint(const QPointF &point);
 
-    void registerShortcut(QAction *action);
-
   Q_SIGNALS:
     void viewModeChanged(View::ViewMode oldMode);
     void mouseModeChanged(View::MouseMode oldMode);
@@ -115,7 +113,6 @@ class KST_EXPORT View : public QGraphicsView
     bool _showGrid;
     bool _snapToGridHorizontal;
     bool _snapToGridVertical;
-    QHash<QString, QAction*> _shortcutMap;
 };
 
 }

@@ -40,6 +40,9 @@ class PlotRenderItem : public ViewItem
     RenderType type();
     void setType(RenderType type);
 
+    bool isTiedZoom() const;
+    void setTiedZoom(bool tiedZoom);
+
     ZoomMode xAxisZoomMode() const;
     void setXAxisZoomMode(ZoomMode mode);
 
@@ -109,6 +112,12 @@ public Q_SLOTS:
 
     virtual QTransform projectionTransform() const;
 
+    virtual QPainterPath shape() const;
+    virtual QRectF boundingRect() const;
+    virtual QSizeF sizeOfGrip() const;
+    QRectF checkBoxBoundingRect() const;
+    QPainterPath checkBox() const;
+
   private Q_SLOTS:
     void updateGeometry();
     void updateViewMode();
@@ -117,9 +126,11 @@ public Q_SLOTS:
 
   private:
     void createActions();
+    void updateCursor(const QPointF &pos);
 
   private:
     RenderType _type;
+    bool _isTiedZoom;
     ZoomMode _xAxisZoomMode;
     ZoomMode _yAxisZoomMode;
     bool _isXAxisLog;

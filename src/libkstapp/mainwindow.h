@@ -78,6 +78,7 @@ class MainWindow : public QMainWindow
     void cleanup();
 
     void setLayoutMode(bool layoutMode);
+    void setTiedZoom(bool tiedZoom);
 
   protected:
     void closeEvent(QCloseEvent *e);
@@ -147,6 +148,7 @@ class MainWindow : public QMainWindow
 
     QAction *_viewManagerAct;
     QAction *_layoutModeAct;
+    QAction *_tiedZoomAct;
 
     QAction *_settingsDialogAct;
 };

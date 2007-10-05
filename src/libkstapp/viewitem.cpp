@@ -43,9 +43,9 @@ ViewItem::ViewItem(View *parent)
   : QObject(parent),
     _gripMode(Move),
     _allowedGripModes(Move | Resize | Rotate /*| Scale*/),
-    _hovering(false),
     _lockAspectRatio(false),
     _hasStaticGeometry(false),
+    _hovering(false),
     _layout(0),
     _activeGrip(NoGrip),
     _allowedGrips(TopLeftGrip | TopRightGrip | BottomRightGrip | BottomLeftGrip |
@@ -443,7 +443,9 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   painter->save();
   painter->setPen(Qt::DotLine);
   painter->setBrush(Qt::NoBrush);
-  if (isSelected() || isHovering() && parentView()->mouseMode() != View::Create) {
+  if (isSelected() || isHovering()
+      && parentView()->mouseMode() != View::Create
+      && parentView()->mouseMode() != View::Data) {
     painter->drawPath(shape());
     if (_gripMode == Resize)
       painter->fillPath(grips(), Qt::blue);
@@ -1445,6 +1447,26 @@ void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
 
     maybeReparent();
   }
+}
+
+
+void ViewItem::registerShortcut(QAction *action) {
+  Q_ASSERT(action->parent() == this);
+  parentView()->grabShortcut(action->shortcut(), Qt::ApplicationShortcut);
+  _shortcutMap.insert(action->shortcut(), action);
+}
+
+
+bool ViewItem::tryShortcut(const QString &shortcut) {
+  if (!_shortcutMap.contains(shortcut))
+    return false;
+
+  QAction *action = _shortcutMap.value(shortcut);
+  if (!action->isEnabled())
+    return false;
+
+  action->trigger();
+  return true;
 }
 
 

@@ -15,6 +15,9 @@
 #include <QObject>
 #include <QGraphicsRectItem>
 
+#include <QHash>
+#include <QAction>
+
 #include "kst_export.h"
 #include "viewcommand.h"
 #include "view.h" //forward declare, but enums??
@@ -156,6 +159,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     bool maybeReparent();
     GripMode nextGripMode(GripMode currentMode) const;
     void addTitle(QMenu *menu) const;
+    void registerShortcut(QAction *action);
 
   protected Q_SLOTS:
     virtual void creationPolygonChanged(View::CreationEvent event);
@@ -175,15 +179,16 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     void viewMouseModeChanged(View::MouseMode oldMode);
 
   private:
+    bool tryShortcut(const QString &keySequence);
     static void updateChildGeometry(ViewItem *child, const QRectF &oldParentRect,
                                                     const QRectF &newParentRect);
 
   private:
     GripMode _gripMode;
     GripModes _allowedGripModes;
-    bool _hovering;
     bool _lockAspectRatio;
     bool _hasStaticGeometry;
+    bool _hovering;
     ViewGridLayout *_layout;
     QPointF _originalPosition;
     QRectF _originalRect;
@@ -193,6 +198,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     ActiveGrip _activeGrip;
     ActiveGrips _allowedGrips;
     QTransform _rotationTransform;
+    QHash<QString, QAction*> _shortcutMap;
 
     friend class View;
 };
