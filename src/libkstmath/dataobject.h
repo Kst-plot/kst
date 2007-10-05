@@ -19,7 +19,7 @@
 #ifndef DATAOBJECT_H
 #define DATAOBJECT_H
 
-#include "kstcurvehint.h"
+#include "curvehint.h"
 #include "string_kst.h"
 #include "vector.h"
 #include "matrix.h"
@@ -100,7 +100,7 @@ class KST_EXPORT DataObject : public Object {
 
     virtual bool isValid() const;
 
-    virtual const KstCurveHintList* curveHints() const;
+    virtual const CurveHintList* curveHints() const;
     
     virtual bool deleteDependents();
     
@@ -158,7 +158,7 @@ class KST_EXPORT DataObject : public Object {
     QList<QPair<QString,QString> > _inputScalarLoadQueue;
     QList<QPair<QString,QString> > _inputStringLoadQueue;
     QList<QPair<QString,QString> > _inputMatrixLoadQueue;
-    KstCurveHintList *_curveHints;
+    CurveHintList *_curveHints;
 
   private:
     QString _name;

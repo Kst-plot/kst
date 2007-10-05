@@ -1,5 +1,5 @@
 /***************************************************************************
-                           kstcurvepointsymbol.cpp
+                           curvepointsymbol.cpp
                              -------------------
     begin                : Sunday June 17, 2001
     copyright            : (C) 2001 by cbn
@@ -17,10 +17,12 @@
  ***************************************************************************/
 
 
-#include "kstcurvepointsymbol.h"
+#include "curvepointsymbol.h"
 #include <QPolygon>
 
-namespace KstCurvePointSymbol {
+namespace Kst {
+
+namespace CurvePointSymbol {
 
 void draw(int Type, QPainter *p, int x, int y, int lineSize, int size) {
   Q_UNUSED(size)
@@ -140,4 +142,5 @@ int dim(const QRect &window) {
 
 }
 
+}
 // vim: ts=2 sw=2 et

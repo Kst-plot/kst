@@ -20,7 +20,7 @@
 
 #include "kstrelation.h"
 #include "kstpainter.h"
-#include "kstcurvepointsymbol.h"
+#include "curvepointsymbol.h"
 #include "kst_export.h"
 
 #include <QStack>

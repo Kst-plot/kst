@@ -21,13 +21,13 @@
 #include "kst_i18n.h"
 #include "kst_export.h"
 
-namespace Equation {
+namespace Equations {
   KST_EXPORT QStringList errorStack;
 }
 
 
 static const char *EParseErrorUnknown = I18N_NOOP("parse error"); // from bison
-extern "C" const char *EParseErrorEmpty = I18N_NOOP("Equation is empty.");
+extern "C" const char *EParseErrorEmpty = I18N_NOOP("Equations is empty.");
 extern "C" const char *EParseErrorEmptyArg = I18N_NOOP("Function argument is empty.");
 extern "C" const char *EParseErrorTwoOperands = I18N_NOOP("Two operands are required.");
 extern "C" const char *EParseErrorEmptyParentheses = I18N_NOOP("Empty parentheses are forbidden except in function calls.");
@@ -38,21 +38,21 @@ extern "C" const char *EParseErrorToken = I18N_NOOP("Unknown character '%1'.");
 
 
 extern "C" void yyClearErrors() {
-  Equation::errorStack.clear();
+  Equations::errorStack.clear();
 }
 
 
 extern "C" int yyErrorCount() {
-  return Equation::errorStack.count();
+  return Equations::errorStack.count();
 }
 
 
 extern "C" void yyerror(const char *s) {
-  Equation::errorStack << i18n(s);
+  Equations::errorStack << i18n(s);
 }
 
 extern "C" void yyerrortoken(char c) {
-  Equation::errorStack << i18n(EParseErrorToken).arg(c);
+  Equations::errorStack << i18n(EParseErrorToken).arg(c);
 }
 
 // vim: ts=2 sw=2 et

@@ -176,9 +176,9 @@ KstPSD::~KstPSD() {
 }
 
 
-const KstCurveHintList *KstPSD::curveHints() const {
+const Kst::CurveHintList *KstPSD::curveHints() const {
   _curveHints->clear();
-  _curveHints->append(new KstCurveHint(i18n("PSD Curve"), (*_fVector)->tagName(), (*_sVector)->tagName()));
+  _curveHints->append(new Kst::CurveHint(i18n("PSD Curve"), (*_fVector)->tagName(), (*_sVector)->tagName()));
   return _curveHints;
 }
 

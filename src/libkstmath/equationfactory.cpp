@@ -12,7 +12,7 @@
 #include "equationfactory.h"
 
 #include "debug.h"
-#include "kstequation.h"
+#include "equation.h"
 #include "datacollection.h"
 
 namespace Kst {
@@ -51,7 +51,7 @@ DataObjectPtr EquationFactory::generateObject(QXmlStreamReader& xml) {
       if (n == "equation") {
         break;
       } else {
-        Kst::Debug::self()->log(QObject::tr("Error creating equation from Kst file."), Kst::Debug::Warning);
+        Debug::self()->log(QObject::tr("Error creating equation from Kst file."), Debug::Warning);
         return 0;
       }
     }
@@ -64,15 +64,15 @@ DataObjectPtr EquationFactory::generateObject(QXmlStreamReader& xml) {
 
   VectorPtr vector = 0;
   if (!xVector.isEmpty()) {
-    vector = *Kst::vectorList.findTag(xVector);
+    vector = *vectorList.findTag(xVector);
   }
 
   if (!vector) {
-    Kst::Debug::self()->log(QObject::tr("Error creating equation from Kst file.  Could not find xVector."), Kst::Debug::Warning);
+    Debug::self()->log(QObject::tr("Error creating equation from Kst file.  Could not find xVector."), Debug::Warning);
     return 0;
   }
 
-  KstEquationPtr ep = new KstEquation(tag, expression, vector, interpolate);
+  EquationPtr ep = new Equation(tag, expression, vector, interpolate);
   return ep.data();
 }
 

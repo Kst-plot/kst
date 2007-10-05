@@ -18,7 +18,7 @@
 #include "enodefactory.h"
 #include "enodes.h"
 
-using namespace Equation;
+using namespace Equations;
 
 
 extern "C" {

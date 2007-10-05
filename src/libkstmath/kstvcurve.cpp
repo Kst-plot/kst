@@ -882,7 +882,7 @@ void KstVCurve::paint(const KstCurveRenderContext& context) {
   int numberOfLinesDrawn = 0;
 #endif
 
-  int pointDim = KstCurvePointSymbol::dim(context.window);
+  int pointDim = Kst::CurvePointSymbol::dim(context.window);
   if (sampleCount() > 0) {
     Qt::PenStyle style = KstLineStyle[lineStyle()];
     int i0, iN;
@@ -1469,7 +1469,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
           pt.setX(Kst::d2i(m_X * rX + b_X));
           pt.setY(Kst::d2i(m_Y * rY + b_Y));
           if (rgn.contains(pt)) {
-            KstCurvePointSymbol::draw(pointType, p, pt.x(), pt.y(), width);
+            Kst::CurvePointSymbol::draw(pointType, p, pt.x(), pt.y(), width);
             rgn -= QRegion(pt.x()-(size/2), pt.y()-(size/2), size, size, QRegion::Ellipse);
           }
         }
@@ -1487,7 +1487,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(Kst::d2i(X2), Kst::d2i(minY), Kst::d
           X1 = m_X * rX + b_X;
           Y1 = m_Y * rY + b_Y;
           if (X1 >= Lx && X1 <= Hx && Y1 >= Ly && Y1 <= Hy) {
-            KstCurvePointSymbol::draw(pointType, p, Kst::d2i(X1), Kst::d2i(Y1), width);
+            Kst::CurvePointSymbol::draw(pointType, p, Kst::d2i(X1), Kst::d2i(Y1), width);
           }
         }
       }
@@ -1827,7 +1827,7 @@ void KstVCurve::paintLegendSymbol(KstPainter *p, const QRect& bound) {
   if (hasPoints()) {
     // draw a point in the middle
     p->setPen(QPen(color(), width));
-    KstCurvePointSymbol::draw(pointType, p, bound.left() + bound.width()/2, bound.top() + bound.height()/2, width, 600);
+    Kst::CurvePointSymbol::draw(pointType, p, bound.left() + bound.width()/2, bound.top() + bound.height()/2, width, 600);
   }
   p->restore();
 }

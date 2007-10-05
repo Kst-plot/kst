@@ -39,7 +39,7 @@
 #include "editablevector.h"
 #include "datacollection.h"
 #include "dataobjectcollection.h"
-#include "kstequation.h"
+#include "equation.h"
 
 namespace Kst {
 
@@ -370,7 +370,7 @@ void MainWindow::demoModel() {
     d[i] = d[i-1] + 0.002;
     d2[i] = d2[i-1] + 0.003;
   }
-  KstEquationPtr ep = new KstEquation("My Equation", "x^2", 0, 100, 1000);
+  EquationPtr ep = new Equation("My Equation", "x^2", 0, 100, 1000);
   ep->writeLock();
   ep->update(0);
   ep->unlock();

@@ -87,7 +87,7 @@ class KST_EXPORT KstPSD : public Kst::DataObject {
     Kst::VectorPtr vX() const { return *_fVector; }
     Kst::VectorPtr vY() const { return *_sVector; }
 
-    const KstCurveHintList *curveHints() const;
+    const Kst::CurveHintList *curveHints() const;
     
     virtual Kst::DataObjectPtr makeDuplicate(Kst::DataObjectDataObjectMap& duplicatedMap);
 

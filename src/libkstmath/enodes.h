@@ -25,7 +25,7 @@
 #define EQ_FALSE 0.0
 #define EQ_TRUE  1.0
 
-namespace Equation {
+namespace Equations {
 
   /* Global lock for the parser */
   KST_EXPORT QMutex& mutex();

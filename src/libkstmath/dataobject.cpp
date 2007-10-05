@@ -37,14 +37,14 @@ namespace Kst {
 
 DataObject::DataObject() : Object() {
   //qDebug() << "+++ CREATING DATA OBJECT: " << (void*)this << endl;
-  _curveHints = new KstCurveHintList;
+  _curveHints = new CurveHintList;
   _isInputLoaded = false;
 }
 
 DataObject::DataObject(const QDomElement& e) : Object() {
   Q_UNUSED(e)
   //qDebug() << "+++ CREATING DATA OBJECT: " << (void*)this << endl;
-  _curveHints = new KstCurveHintList;
+  _curveHints = new CurveHintList;
   _isInputLoaded = false;
 }
 
@@ -511,7 +511,7 @@ bool DataObject::isValid() const {
 }
 
 
-const KstCurveHintList* DataObject::curveHints() const {
+const CurveHintList* DataObject::curveHints() const {
   return _curveHints;
 }
 

@@ -32,14 +32,14 @@ SOURCES += \
     csd.cpp \
     kstpsd.cpp \
     kstrelation.cpp \
-    kstcurvepointsymbol.cpp \
+    curvepointsymbol.cpp \
     kstlinestyle.cpp \
     kstvcurve.cpp \
     kstimage.cpp \
     defaultnames.cpp \
     ksthistogram.cpp \
-    kstequation.cpp \
-    kstcurvehint.cpp \
+    equation.cpp \
+    curvehint.cpp \
     basicplugin.cpp \
     fftsg_h.c \
     enodes.cpp \
@@ -65,12 +65,12 @@ HEADERS += \
     basicplugin.h \
     colorsequence.h \
     csd.h \
-    kstcurvehint.h \
-    kstcurvepointsymbol.h \
+    curvehint.h \
+    curvepointsymbol.h \
     dataobjectcollection.h \
     dataobject.h \
     defaultnames.h \
-    kstequation.h \
+    equation.h \
     ksthistogram.h \
     kstimage.h \
     kstlinestyle.h \

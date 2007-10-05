@@ -48,7 +48,7 @@ bool TestEqParser::validateText(const char *equation, const char *expect) {
   int rc = yyparse();
   if (rc == 0) {
     vectorsUsed.clear();
-    Equation::Node *eq = static_cast<Equation::Node*>(ParsedEquation);
+    Equations::Node *eq = static_cast<Equations::Node*>(ParsedEquation);
     if (!eq)
       return false;
     ParsedEquation = 0L;
@@ -58,15 +58,15 @@ bool TestEqParser::validateText(const char *equation, const char *expect) {
     delete eq;
   } else {
     // Parse error
-    delete (Equation::Node*)ParsedEquation;
+    delete (Equations::Node*)ParsedEquation;
     ParsedEquation = 0L;
     failure = true;
   }
 
   if (failure) {
-    if (!Equation::errorStack.isEmpty()) {
+    if (!Equations::errorStack.isEmpty()) {
       printf("Failures on [%s] -------------------------\n", equation);
-      for (QStringList::ConstIterator i = Equation::errorStack.constBegin(); i != Equation::errorStack.constEnd(); ++i) {
+      for (QStringList::ConstIterator i = Equations::errorStack.constBegin(); i != Equations::errorStack.constEnd(); ++i) {
         printf("%s\n", (*i).toLatin1().data());
       }
       printf("------------------------------------------\n");
@@ -83,11 +83,11 @@ bool TestEqParser::validateEquation(const char *equation, double x, double resul
   int rc = yyparse();
   if (rc == 0) {
     vectorsUsed.clear();
-    Equation::Node *eq = static_cast<Equation::Node*>(ParsedEquation);
+    Equations::Node *eq = static_cast<Equations::Node*>(ParsedEquation);
     if (!eq)
       return false;
     ParsedEquation = 0L;
-    Equation::Context ctx;
+    Equations::Context ctx;
     ctx.sampleCount = 2;
     ctx.noPoint = _NOPOINT;
     ctx.x = x;
@@ -95,15 +95,15 @@ bool TestEqParser::validateEquation(const char *equation, double x, double resul
     if (xVector) {
       ctx.sampleCount = xVector->length();
     }
-    Equation::FoldVisitor vis(&ctx, &eq);
-    if (eq->isConst() && !dynamic_cast<Equation::Number*>(eq)) {
+    Equations::FoldVisitor vis(&ctx, &eq);
+    if (eq->isConst() && !dynamic_cast<Equations::Number*>(eq)) {
       if (!optimizerFailed) {
         optimizerFailed = true;
         printf("Optimizer bug: found an unoptimized const equation.  Optimizing for coverage purposes.\n");
       }
       double v = eq->value(&ctx);
       delete eq;
-      eq = new Equation::Number(v);
+      eq = new Equations::Number(v);
     }
     Kst::ScalarMap scm;
     Kst::StringMap stm;
@@ -120,11 +120,11 @@ bool TestEqParser::validateEquation(const char *equation, double x, double resul
   } else {
     // Parse error
     printf("Failures on [%s] -------------------------\n", equation);
-    for (QStringList::ConstIterator i = Equation::errorStack.constBegin(); i != Equation::errorStack.constEnd(); ++i) {
+    for (QStringList::ConstIterator i = Equations::errorStack.constBegin(); i != Equations::errorStack.constEnd(); ++i) {
       printf("%s\n", (*i).toLatin1().data());
     }
     printf("------------------------------------------\n");
-    delete (Equation::Node*)ParsedEquation;
+    delete (Equations::Node*)ParsedEquation;
     ParsedEquation = 0L;
     return false;
   }
@@ -138,13 +138,13 @@ bool TestEqParser::validateParserFailures(const char *equation) {
     printf("Test of (%s) parsing passed, but should have failed.\n", equation);
     success = false;
   } else {
-    if (Equation::errorStack.count() == 1 && (Equation::errorStack.first() == "parse error" || Equation::errorStack.first() == "syntax error")) {
+    if (Equations::errorStack.count() == 1 && (Equations::errorStack.first() == "parse error" || Equations::errorStack.first() == "syntax error")) {
       printf("ERROR: [%s] doesn't have error handling yet!\n", equation);
       success = false;
 #ifdef DUMP_FAIL_MSGS
     } else {
       printf("Failures on [%s] -------------------------\n", equation);
-      for (QStringList::ConstIterator i = Equation::errorStack.constBegin(); i != Equation::errorStack.constEnd(); ++i) {
+      for (QStringList::ConstIterator i = Equations::errorStack.constBegin(); i != Equations::errorStack.constEnd(); ++i) {
         printf("%s\n", (*i).toLatin1().data());
       }
       printf("------------------------------------------\n");

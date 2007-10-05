@@ -24,7 +24,7 @@
 
 #include "kst_export.h"
 
-namespace Equation {
+namespace Equations {
    KST_EXPORT extern QStringList errorStack;
 }
 #endif

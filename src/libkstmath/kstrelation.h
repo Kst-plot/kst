@@ -141,7 +141,7 @@ class KST_EXPORT KstRelation : public Kst::Object {
     QList<QPair<QString,QString> > _inputScalarLoadQueue;
     QList<QPair<QString,QString> > _inputStringLoadQueue;
     QList<QPair<QString,QString> > _inputMatrixLoadQueue;
-    KstCurveHintList *_curveHints;
+    Kst::CurveHintList *_curveHints;
     QString _typeString, _type;
     Kst::VectorMap _inputVectors;
     Kst::VectorMap _outputVectors;

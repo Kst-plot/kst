@@ -43,16 +43,16 @@ extern "C" struct yy_buffer_state *yy_scan_bytes(const char*, int);
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 extern "C" void yy_delete_buffer(YY_BUFFER_STATE);
 
-using namespace Equation;
+using namespace Equations;
 
 static QMutex _mutex;
 
-QMutex& Equation::mutex() {
+QMutex& Equations::mutex() {
   return _mutex;
 }
 
 
-double Equation::interpret(const char *txt, bool *ok, int len) {
+double Equations::interpret(const char *txt, bool *ok, int len) {
   if (!txt || !*txt) {
     if (ok) {
       *ok = false;
@@ -70,15 +70,15 @@ double Equation::interpret(const char *txt, bool *ok, int len) {
   int rc = yyparse();
   yy_delete_buffer(b);
   if (rc == 0) {
-    Equation::Node *eq = static_cast<Equation::Node*>(ParsedEquation);
+    Equations::Node *eq = static_cast<Equations::Node*>(ParsedEquation);
     ParsedEquation = 0L;
     mutex().unlock();
-    Equation::Context ctx;
+    Equations::Context ctx;
     ctx.sampleCount = 2;
     ctx.noPoint = Kst::NOPOINT;
     ctx.x = 0.0;
     ctx.xVector = 0L;
-    Equation::FoldVisitor vis(&ctx, &eq);
+    Equations::FoldVisitor vis(&ctx, &eq);
     double v = eq->value(&ctx);
     delete eq;
     if (ok) {
@@ -678,15 +678,15 @@ double Data::value(Context *ctx) {
       int rc = yyparse();
       yy_delete_buffer(b);
       if (rc == 0 && ParsedEquation) {
-        _equation = static_cast<Equation::Node*>(ParsedEquation);
+        _equation = static_cast<Equations::Node*>(ParsedEquation);
         ParsedEquation = 0L;
         mutex().unlock();
-        Equation::Context ctx;
+        Equations::Context ctx;
         ctx.sampleCount = 2;
         ctx.noPoint = Kst::NOPOINT;
         ctx.x = 0.0;
         ctx.xVector = 0L;
-        Equation::FoldVisitor vis(&ctx, &_equation);
+        Equations::FoldVisitor vis(&ctx, &_equation);
       } else {
         ParsedEquation = 0L;
         mutex().unlock();
@@ -702,15 +702,15 @@ double Data::value(Context *ctx) {
       int rc = yyparse();
       yy_delete_buffer(b);
       if (rc == 0 && ParsedEquation) {
-        _equation = static_cast<Equation::Node*>(ParsedEquation);
+        _equation = static_cast<Equations::Node*>(ParsedEquation);
         ParsedEquation = 0L;
         mutex().unlock();
-        Equation::Context ctx;
+        Equations::Context ctx;
         ctx.sampleCount = 2;
         ctx.noPoint = Kst::NOPOINT;
         ctx.x = 0.0;
         ctx.xVector = 0L;
-        Equation::FoldVisitor vis(&ctx, &_equation);
+        Equations::FoldVisitor vis(&ctx, &_equation);
       } else {
         ParsedEquation = 0L;
         mutex().unlock();
@@ -747,7 +747,7 @@ bool Data::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, Kst::StringMap& 
   } else if (_scalar && !s.contains(_tagName)) {
     s.insert(_tagName, _scalar);
   } else if (!_scalar && !_vector) {
-    Kst::Debug::self()->log(i18n("Equation has unknown object [%1].").arg(_tagName), Kst::Debug::Error);
+    Kst::Debug::self()->log(i18n("Equations has unknown object [%1].").arg(_tagName), Kst::Debug::Error);
     return false;
   }
   return true;

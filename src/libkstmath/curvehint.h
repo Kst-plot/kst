@@ -1,13 +1,7 @@
 /***************************************************************************
-                        kstcurvehint.h  -  Part of KST
-                             -------------------
-    begin                : Sun Sep 26 2004
-    copyright            : (C) 2004 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
+ *   copyright : (C) 2004 The University of Toronto                        *
+*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -15,8 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _KST_CURVEHINT_H
-#define _KST_CURVEHINT_H
+#ifndef CURVEHINT_H
+#define CURVEHINT_H
 
 #include <qstring.h>
 #include <qcolor.h>
@@ -26,28 +20,32 @@
 
 class KstRelation;
 
-class KstCurveHint : public Kst::Shared {
-  friend class KstDataObject;
+namespace Kst {
+
+class CurveHint : public Shared {
+  friend class DataObject;
   public:
-    KstCurveHint(const QString& name = QString::null, const QString& x = QString::null, const QString& y = QString::null);
+    CurveHint(const QString& name = QString::null, const QString& x = QString::null, const QString& y = QString::null);
     
-    virtual ~KstCurveHint();
+    virtual ~CurveHint();
 
     virtual const QString& curveName() const { return _curveName; }
     virtual const QString& xVectorName() const;
     virtual const QString& yVectorName() const;
 
-    virtual Kst::VectorPtr xVector() const;
-    virtual Kst::VectorPtr yVector() const;
+    virtual VectorPtr xVector() const;
+    virtual VectorPtr yVector() const;
 
-    virtual Kst::SharedPtr<KstRelation> makeCurve(const QString& tag, const QColor& color) const;
+    virtual SharedPtr<KstRelation> makeCurve(const QString& tag, const QColor& color) const;
 
   protected:
     QString _curveName, _xVectorName, _yVectorName;
 };
 
-typedef Kst::SharedPtr<KstCurveHint> KstCurveHintPtr;
-typedef QList<KstCurveHintPtr> KstCurveHintList;
+typedef SharedPtr<CurveHint> CurveHintPtr;
+typedef QList<CurveHintPtr> CurveHintList;
+
+}
 
 #endif
 

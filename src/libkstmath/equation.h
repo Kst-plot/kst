@@ -1,5 +1,5 @@
 /***************************************************************************
-                          kstequation.h: Equation for KST
+                          equation.h: Equation for KST
                              -------------------
     begin                : Fri Feb 10 2002
     copyright            : (C) 2002 by C. Barth Netterfield
@@ -18,8 +18,8 @@
 /** A class for handling equations for kst
  *@author C. Barth Netterfield
  */
-#ifndef KSTEQUATION_H
-#define KSTEQUATION_H
+#ifndef EQUATION_H
+#define EQUATION_H
 
 #include "dataobject.h"
 #include "objectfactory.h"
@@ -27,17 +27,19 @@
 
 #define MAX_DIV_REG 100
 
-namespace Equation {
+class QXmlStreamWriter;
+
+namespace Equations {
   class Node;
 }
 
-class QXmlStreamWriter;
+namespace Kst {
 
-class KST_EXPORT KstEquation : public Kst::DataObject {
+class KST_EXPORT Equation : public DataObject {
   public:
-    KstEquation(const QString& in_tag, const QString& equation, double x0, double x1, int nx);
-    KstEquation(const QString& in_tag, const QString& equation, Kst::VectorPtr xvector, bool do_interp);
-    ~KstEquation();
+    Equation(const QString& in_tag, const QString& equation, double x0, double x1, int nx);
+    Equation(const QString& in_tag, const QString& equation, VectorPtr xvector, bool do_interp);
+    ~Equation();
 
     void attach();
     UpdateType update(int update_counter = -1);
@@ -47,12 +49,12 @@ class KST_EXPORT KstEquation : public Kst::DataObject {
 
     /** equations used to edit the vector */
     void setEquation(const QString &Equation);
-    void setExistingXVector(Kst::VectorPtr xvector, bool do_interp);
+    void setExistingXVector(VectorPtr xvector, bool do_interp);
 
     const QString& equation() const { return _equation; }
-    Kst::VectorPtr vXIn() const { return *_xInVector; }
-    Kst::VectorPtr vX() const { return *_xOutVector; }
-    Kst::VectorPtr vY() const { return *_yOutVector; }
+    VectorPtr vXIn() const { return *_xInVector; }
+    VectorPtr vX() const { return *_xOutVector; }
+    VectorPtr vY() const { return *_yOutVector; }
 
     bool doInterp() const { return _doInterp; }
 
@@ -66,22 +68,22 @@ class KST_EXPORT KstEquation : public Kst::DataObject {
     QString xVTag() const { return (*_xOutVector)->tagName(); }
     QString yVTag() const { return (*_yOutVector)->tagName(); }
 
-    const KstCurveHintList *curveHints() const;
+    const CurveHintList *curveHints() const;
 
-    Kst::DataObjectPtr makeDuplicate(Kst::DataObjectDataObjectMap& duplicatedMap);
+    DataObjectPtr makeDuplicate(DataObjectDataObjectMap& duplicatedMap);
     
-    void replaceDependency(Kst::DataObjectPtr oldObject, Kst::DataObjectPtr newObject);
+    void replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObject);
 
-    void replaceDependency(Kst::VectorPtr oldVector, Kst::VectorPtr newVector);
-    void replaceDependency(Kst::MatrixPtr oldMatrix, Kst::MatrixPtr newMatrix);
+    void replaceDependency(VectorPtr oldVector, VectorPtr newVector);
+    void replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix);
 
-    bool uses(Kst::ObjectPtr p) const;
+    bool uses(ObjectPtr p) const;
 
   private:
     QString _equation;
 
-    Kst::VectorMap VectorsUsed;
-    Kst::ScalarMap ScalarsUsed;
+    VectorMap VectorsUsed;
+    ScalarMap ScalarsUsed;
 
     void commonConstructor(const QString& in_tag, const QString& equation);
 
@@ -94,12 +96,13 @@ class KST_EXPORT KstEquation : public Kst::DataObject {
     static const QString XINVECTOR;
     static const QString XOUTVECTOR;
     static const QString YOUTVECTOR;
-    Kst::VectorMap::Iterator _xInVector, _xOutVector, _yOutVector;
-    Equation::Node *_pe;
+    VectorMap::Iterator _xInVector, _xOutVector, _yOutVector;
+    Equations::Node *_pe;
 };
 
-typedef Kst::SharedPtr<KstEquation> KstEquationPtr;
-typedef Kst::ObjectList<KstEquationPtr> KstEquationList;
+typedef SharedPtr<Equation> EquationPtr;
+typedef ObjectList<EquationPtr> EquationList;
 
+}
 #endif
 // vim: ts=2 sw=2 et
