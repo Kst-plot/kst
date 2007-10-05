@@ -34,7 +34,7 @@ TabWidget::~TabWidget() {
 View *TabWidget::createView() {
   View *view = new View;
   connect(view, SIGNAL(destroyed(QObject*)), this, SLOT(viewDestroyed(QObject*)));
-  MainWindow *parent = qobject_cast<Kst::MainWindow*>(this->parent());
+  MainWindow *parent = qobject_cast<MainWindow*>(this->parent());
   if (parent) {
     parent->undoGroup()->addStack(view->undoStack());
     parent->undoGroup()->setActiveStack(view->undoStack());
@@ -52,7 +52,7 @@ View *TabWidget::createView() {
 
 
 View *TabWidget::currentView() const {
-  return qobject_cast<Kst::View*>(currentWidget());
+  return qobject_cast<View*>(currentWidget());
 }
 
 

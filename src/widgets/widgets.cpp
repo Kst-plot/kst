@@ -58,7 +58,7 @@ QString WidgetPlugin::whatsThis() const {
 
 
 QString WidgetPlugin::instanceName() const {
-  QString name = static_cast<const QDesignerCustomWidgetInterface*>(this)->name().replace("Kst::", "");
+  QString name = static_cast<const QDesignerCustomWidgetInterface*>(this)->name().replace("", "");
   QChar camel = name.at(0).toLower();
   return name.replace(0,1,camel.toLower());
 }

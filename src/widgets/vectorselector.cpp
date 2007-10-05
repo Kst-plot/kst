@@ -87,10 +87,10 @@ void VectorSelector::editVector() {
 void VectorSelector::fillVectors() {
   QHash<QString, VectorPtr> vectors;
 
-  Kst::vectorList.lock().readLock();
+  vectorList.lock().readLock();
 
-  VectorList::ConstIterator it = Kst::vectorList.begin();
-  for (; it != Kst::vectorList.end(); ++it) {
+  VectorList::ConstIterator it = vectorList.begin();
+  for (; it != vectorList.end(); ++it) {
     VectorPtr vector = (*it);
     if (vector->isScalarList())
       continue;
@@ -100,7 +100,7 @@ void VectorSelector::fillVectors() {
     vector->unlock();
   }
 
-  Kst::vectorList.lock().unlock();
+  vectorList.lock().unlock();
 
   QStringList list = vectors.keys();
 

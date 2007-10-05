@@ -26,59 +26,59 @@ DialogLauncherGui::~DialogLauncherGui() {
 }
 
 
-void DialogLauncherGui::showVectorDialog(Kst::ObjectPtr objectPtr) {
+void DialogLauncherGui::showVectorDialog(ObjectPtr objectPtr) {
   VectorDialog dialog(objectPtr, kstApp->mainWindow());
   dialog.exec();
 }
 
 
-void DialogLauncherGui::showMatrixDialog(Kst::ObjectPtr objectPtr) {
+void DialogLauncherGui::showMatrixDialog(ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncherGui::showScalarDialog(Kst::ObjectPtr objectPtr) {
+void DialogLauncherGui::showScalarDialog(ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncherGui::showStringDialog(Kst::ObjectPtr objectPtr) {
+void DialogLauncherGui::showStringDialog(ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncherGui::showCurveDialog(Kst::ObjectPtr objectPtr) {
+void DialogLauncherGui::showCurveDialog(ObjectPtr objectPtr) {
   CurveDialog dialog(objectPtr, kstApp->mainWindow());
   dialog.exec();
 }
 
 
-void DialogLauncherGui::showImageDialog(Kst::ObjectPtr objectPtr) {
+void DialogLauncherGui::showImageDialog(ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncherGui::showEquationDialog(Kst::ObjectPtr objectPtr) {
+void DialogLauncherGui::showEquationDialog(ObjectPtr objectPtr) {
   EquationDialog(objectPtr, kstApp->mainWindow()).exec();
 }
 
 
-void DialogLauncherGui::showHistogramDialog(Kst::ObjectPtr objectPtr) {
+void DialogLauncherGui::showHistogramDialog(ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncherGui::showPSDDialog(Kst::ObjectPtr objectPtr) {
+void DialogLauncherGui::showPSDDialog(ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncherGui::showCSDDialog(Kst::ObjectPtr objectPtr) {
+void DialogLauncherGui::showCSDDialog(ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 
 
-void DialogLauncherGui::showBasicPluginDialog(Kst::ObjectPtr objectPtr) {
+void DialogLauncherGui::showBasicPluginDialog(ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 

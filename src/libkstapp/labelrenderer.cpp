@@ -88,7 +88,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
       } else {
         Kst::scalarList.lock().readLock();
         Kst::ScalarPtr scp = Kst::scalarList.retrieveObject(Kst::ObjectTag::fromString(fi->text));
-        Kst::scalarList.lock().unlock();
+       Kst:: scalarList.lock().unlock();
         if (scp) {
           scp->readLock();
           txt = QString::number(scp->value(), 'g', rc.precision);

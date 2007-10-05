@@ -249,7 +249,7 @@ ObjectPtr VectorDialog::createNewDataVector() const {
 //            << "\n\tdoFilter:" << (dataRange->doFilter() ? "true" : "false")
 //            << endl;
 
-  Kst::DataVectorPtr vector = new Kst::DataVector(
+  DataVectorPtr vector = new DataVector(
       dataSource, field, tag,
       dataRange->countFromEnd() ? -1 : int(dataRange->start()),
       dataRange->readToEnd() ? -1 : int(dataRange->range()),

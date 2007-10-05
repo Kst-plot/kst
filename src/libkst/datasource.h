@@ -230,7 +230,7 @@ class KST_EXPORT DataSource : public Object {
     /** The filename.  Populated by the base class constructor.  */
     QString _filename;
 
-    friend class KST::DataSourcePlugin;
+    friend class DataSourcePlugin;
 
     /** The source type name. */
     QString _source;

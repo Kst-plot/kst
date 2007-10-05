@@ -30,7 +30,7 @@ EquationTab::~EquationTab() {
 }
 
 
-EquationDialog::EquationDialog(Kst::ObjectPtr dataObject, QWidget *parent)
+EquationDialog::EquationDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
   if (editMode() == Edit)
@@ -54,13 +54,13 @@ QString EquationDialog::tagName() const {
 }
 
 
-Kst::ObjectPtr EquationDialog::createNewDataObject() const {
+ObjectPtr EquationDialog::createNewDataObject() const {
   qDebug() << "createNewDataObject" << endl;
   return 0;
 }
 
 
-Kst::ObjectPtr EquationDialog::editExistingDataObject() const {
+ObjectPtr EquationDialog::editExistingDataObject() const {
   qDebug() << "editExistingDataObject" << endl;
   return 0;
 }

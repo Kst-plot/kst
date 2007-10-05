@@ -11,7 +11,7 @@
 
 // application specific includes
 #include "colorsequence.h"
-#include "kstsettings.h"
+#include "settings.h"
 #include <QVector>
 #include <qapplication.h>
 #include <math_kst.h>
@@ -45,9 +45,9 @@ ColorSequence *ColorSequence::_self = 0L;
 
 
 void ColorSequence::createPalette( ) {
-  if (_palette != KstSettings::globalSettings()->curveColorSequencePalette) {
+  if (_palette != Settings::globalSettings()->curveColorSequencePalette) {
     _pal.clear();
-    _palette = KstSettings::globalSettings()->curveColorSequencePalette;
+    _palette = Settings::globalSettings()->curveColorSequencePalette;
 
     for (int i = 0; i < colorcnt; i++) {
       _pal.insert(i, QColor(colors[i]));

@@ -231,7 +231,7 @@ PrimitivePtr RVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
     return 0;
   }
 
-  VectorPtr vector = new Kst::DataVector(tag, data, provider, file, field, start, count, skip, doAve);
+  VectorPtr vector = new DataVector(tag, data, provider, file, field, start, count, skip, doAve);
   return vector.data();
 }
 

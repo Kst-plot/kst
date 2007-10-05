@@ -1,13 +1,7 @@
 /***************************************************************************
-              kstsettings.h: a collection of settings for kst
-                             -------------------
-    begin                : Nov 23, 2003
-    copyright            : (C) 2003 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
+ *   copyright : (C) 2003 The University of Toronto                        *
+*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -15,13 +9,15 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTSETTINGS_H
-#define KSTSETTINGS_H
+#ifndef SETTINGS_H
+#define SETTINGS_H
 
 #include <qcolor.h>
 
-#include "kstplotdefines.h"
+#include "plotdefines.h"
 #include "kst_export.h"
+
+namespace Kst {
 
 enum EMailEncryption {
   EMailEncryptionNone,
@@ -38,15 +34,15 @@ enum EMailAuthentication {
   EMailAuthenticationMAXIMUM
 };
 
-class KstSettings {
+class Settings {
   public:
-    KST_EXPORT KstSettings();
-    KST_EXPORT KstSettings(const KstSettings&);
-    KST_EXPORT KstSettings& operator=(const KstSettings&);
+    KST_EXPORT Settings();
+    KST_EXPORT Settings(const Settings&);
+    KST_EXPORT Settings& operator=(const Settings&);
 
     // do not delete this object
-    KST_EXPORT static KstSettings *globalSettings();
-    KST_EXPORT static void setGlobalSettings(const KstSettings *settings);
+    KST_EXPORT static Settings *globalSettings();
+    KST_EXPORT static void setGlobalSettings(const Settings *settings);
     KST_EXPORT static void checkUpdates();
     KST_EXPORT void save();
     void reload();
@@ -117,9 +113,10 @@ class KstSettings {
     Printing printing;
 
   private:
-    static KstSettings *_self;
+    static Settings *_self;
     static void cleanup();
 };
 
+}
 #endif
 // vim: ts=2 sw=2 et

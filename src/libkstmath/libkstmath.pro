@@ -24,7 +24,7 @@ QMAKE_EXT_YACC = .yacc
 SOURCES += \
     painter.cpp \
     colorsequence.cpp \
-    kstsettings.cpp \
+    settings.cpp \
     objectdefaults.cpp \
     labelparser.cpp \
     dataobject.cpp \
@@ -76,9 +76,9 @@ HEADERS += \
     linestyle.h \
     objectdefaults.h \
     painter.h \
-    kstplotdefines.h \
+    plotdefines.h \
     psd.h \
-    kstsettings.h \
+    settings.h \
     curve.h \
     labelparser.h \
     objectfactory.h \

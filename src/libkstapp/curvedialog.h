@@ -54,13 +54,13 @@ class KST_EXPORT CurveTab : public DataTab, Ui::CurveTab {
 class KST_EXPORT CurveDialog : public DataDialog {
   Q_OBJECT
   public:
-    CurveDialog(Kst::ObjectPtr dataObject, QWidget *parent = 0);
+    CurveDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~CurveDialog();
 
   protected:
     virtual QString tagName() const;
-    virtual Kst::ObjectPtr createNewDataObject() const;
-    virtual Kst::ObjectPtr editExistingDataObject() const;
+    virtual ObjectPtr createNewDataObject() const;
+    virtual ObjectPtr editExistingDataObject() const;
 
   private:
     CurveTab *_curveTab;

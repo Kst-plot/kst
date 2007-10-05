@@ -71,10 +71,10 @@ class ColorButtonPlugin : public WidgetPlugin {
   public:
     ColorButtonPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
-      return QLatin1String("Kst::ColorButton");
+      return QLatin1String("ColorButton");
     } //do not translate
     QWidget *createWidget(QWidget *parent) {
-      return new Kst::ColorButton(parent);
+      return new ColorButton(parent);
     }
 };
 
@@ -84,10 +84,10 @@ class GradientEditorPlugin : public WidgetPlugin {
   public:
     GradientEditorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
-      return QLatin1String("Kst::GradientEditor");
+      return QLatin1String("GradientEditor");
     } //do not translate
     QWidget *createWidget(QWidget *parent) {
-      return new Kst::GradientEditor(parent);
+      return new GradientEditor(parent);
     }
 };
 
@@ -97,10 +97,10 @@ class FileRequesterPlugin : public WidgetPlugin {
   public:
     FileRequesterPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
-      return QLatin1String("Kst::FileRequester");
+      return QLatin1String("FileRequester");
     } //do not translate
     QWidget *createWidget(QWidget *parent) {
-      return new Kst::FileRequester(parent);
+      return new FileRequester(parent);
     }
 };
 
@@ -110,10 +110,10 @@ class ComboBoxPlugin : public WidgetPlugin {
   public:
     ComboBoxPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
-      return QLatin1String("Kst::ComboBox");
+      return QLatin1String("ComboBox");
     } //do not translate
     QWidget *createWidget(QWidget *parent) {
-      return new Kst::ComboBox(parent);
+      return new ComboBox(parent);
     }
 };
 
@@ -123,10 +123,10 @@ class DataRangePlugin : public WidgetPlugin {
   public:
     DataRangePlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
-      return QLatin1String("Kst::DataRange");
+      return QLatin1String("DataRange");
     } //do not translate
     QWidget *createWidget(QWidget *parent) {
-      return new Kst::DataRange(parent);
+      return new DataRange(parent);
     }
 };
 
@@ -136,10 +136,10 @@ class VectorSelectorPlugin : public WidgetPlugin {
   public:
     VectorSelectorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
-      return QLatin1String("Kst::VectorSelector");
+      return QLatin1String("VectorSelector");
     } //do not translate
     QWidget *createWidget(QWidget *parent) {
-      return new Kst::VectorSelector(parent);
+      return new VectorSelector(parent);
     }
 };
 
@@ -149,10 +149,10 @@ class MatrixSelectorPlugin : public WidgetPlugin {
   public:
     MatrixSelectorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
-      return QLatin1String("Kst::MatrixSelector");
+      return QLatin1String("MatrixSelector");
     } //do not translate
     QWidget *createWidget(QWidget *parent) {
-      return new Kst::MatrixSelector(parent);
+      return new MatrixSelector(parent);
     }
 };
 
@@ -162,10 +162,10 @@ class ScalarSelectorPlugin : public WidgetPlugin {
   public:
     ScalarSelectorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
-      return QLatin1String("Kst::ScalarSelector");
+      return QLatin1String("ScalarSelector");
     } //do not translate
     QWidget *createWidget(QWidget *parent) {
-      return new Kst::ScalarSelector(parent);
+      return new ScalarSelector(parent);
     }
 };
 
@@ -175,10 +175,10 @@ class StringSelectorPlugin : public WidgetPlugin {
   public:
     StringSelectorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
-      return QLatin1String("Kst::StringSelector");
+      return QLatin1String("StringSelector");
     } //do not translate
     QWidget *createWidget(QWidget *parent) {
-      return new Kst::StringSelector(parent);
+      return new StringSelector(parent);
     }
 };
 
@@ -188,10 +188,10 @@ class CurveAppearancePlugin : public WidgetPlugin {
   public:
     CurveAppearancePlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
-      return QLatin1String("Kst::CurveAppearance");
+      return QLatin1String("CurveAppearance");
     } //do not translate
     QWidget *createWidget(QWidget *parent) {
-      return new Kst::CurveAppearance(parent);
+      return new CurveAppearance(parent);
     }
 };
 
@@ -201,10 +201,10 @@ class CurvePlacementPlugin : public WidgetPlugin {
   public:
     CurvePlacementPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
-      return QLatin1String("Kst::CurvePlacement");
+      return QLatin1String("CurvePlacement");
     } //do not translate
     QWidget *createWidget(QWidget *parent) {
-      return new Kst::CurvePlacement(parent);
+      return new CurvePlacement(parent);
     }
 };
 

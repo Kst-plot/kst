@@ -27,8 +27,8 @@ class KST_EXPORT StringSelector : public QWidget, public Ui::StringSelector {
     StringSelector(QWidget *parent = 0);
     virtual ~StringSelector();
 
-    Kst::StringPtr selectedString() const;
-    void setSelectedString(Kst::StringPtr selectedString);
+    StringPtr selectedString() const;
+    void setSelectedString(StringPtr selectedString);
 
   Q_SIGNALS:
     void selectionChanged();

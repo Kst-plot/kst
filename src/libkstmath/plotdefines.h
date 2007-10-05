@@ -1,12 +1,7 @@
 /***************************************************************************
-                              plotdefines.h
-                             ---------------
-    begin                : Oct 18, 2004
-    copyright            : (C) 2004 The University of British Columbia
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
+ *   copyright : (C) 2004 by University of British Columbia
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,7 +18,7 @@
 #include <qstringlist.h>
 #include "kst_i18n.h"
 
-enum KstAxisInterpretation { 
+enum KstAxisInterpretation {
   AXIS_INTERP_YEAR,
   AXIS_INTERP_CTIME,
   AXIS_INTERP_JD,
@@ -98,7 +93,6 @@ class TickParameters {
 
 const unsigned int numAxisInterpretations = sizeof( AxisInterpretations ) / sizeof( AxisInterpretation );
 const unsigned int numAxisDisplays = sizeof( AxisDisplays ) / sizeof( AxisDisplay );
-
 
 #endif
 // vim: ts=2 sw=2 et

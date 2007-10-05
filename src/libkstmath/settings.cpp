@@ -1,19 +1,14 @@
 /***************************************************************************
-             kstsettings.cpp: a collection of settings for kst
-                             -------------------
-    begin                : Nov 23, 2003
-    copyright            : (C) 2003 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
+ *   copyright : (C) 2003 The University of Toronto                        *
+*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
 
 #include <qprinter.h>
 #include "timezones.h"
@@ -22,9 +17,11 @@
 #include <qapplication.h>
 
 // application specific includes
-#include "kstsettings.h"
+#include "settings.h"
 
-KstSettings::KstSettings() {
+namespace Kst {
+
+Settings::Settings() {
   plotUpdateTimer = 200;
   plotFontSize    = 12;
   plotFontMinSize = 5;
@@ -60,12 +57,12 @@ KstSettings::KstSettings() {
 }
 
 
-KstSettings::KstSettings(const KstSettings& x) {
+Settings::Settings(const Settings& x) {
   *this = x;
 }
 
 
-KstSettings& KstSettings::operator=(const KstSettings& x) {
+Settings& Settings::operator=(const Settings& x) {
   plotUpdateTimer = x.plotUpdateTimer;
   plotFontSize    = x.plotFontSize;
   plotFontMinSize = x.plotFontMinSize;
@@ -121,17 +118,17 @@ KstSettings& KstSettings::operator=(const KstSettings& x) {
 }
 
 
-KstSettings *KstSettings::_self = 0L;
-void KstSettings::cleanup() {
+Settings *Settings::_self = 0L;
+void Settings::cleanup() {
     delete _self;
     _self = 0;
 }
 
 
-KstSettings *KstSettings::globalSettings() {
+Settings *Settings::globalSettings() {
   if (!_self) {
-    _self = new KstSettings;
-    qAddPostRoutine(KstSettings::cleanup);
+    _self = new Settings;
+    qAddPostRoutine(Settings::cleanup);
     _self->reload();
   }
 
@@ -139,13 +136,13 @@ KstSettings *KstSettings::globalSettings() {
 }
 
 
-void KstSettings::setGlobalSettings(const KstSettings *settings) {
+void Settings::setGlobalSettings(const Settings *settings) {
   globalSettings(); // force instantiation
   *_self = *settings;
 }
 
 
-void KstSettings::save() {
+void Settings::save() {
   QSettings cfg(QString("kstrc"));
 
   cfg.beginGroup("Kst");
@@ -216,7 +213,7 @@ void KstSettings::save() {
 }
 
 
-void KstSettings::reload() {
+void Settings::reload() {
   QSettings cfg("kstrc");
 
   cfg.beginGroup("Kst");
@@ -284,12 +281,12 @@ void KstSettings::reload() {
 }
 
 
-void KstSettings::checkUpdates() {
+void Settings::checkUpdates() {
   // ### Do KDE3->4 update (?)
 }
 
 
-void KstSettings::setPrintingDefaults() {
+void Settings::setPrintingDefaults() {
   printing.pageSize = QString::number((int)QPrinter::Letter);
   printing.orientation = "Landscape";
   printing.plotDateTimeFooter = "0";
@@ -305,9 +302,10 @@ void KstSettings::setPrintingDefaults() {
 }
 
 
-int KstSettings::utcOffset() {
+int Settings::utcOffset() {
   return offsetSeconds;
 }
 
+}
 
 // vim: ts=2 sw=2 et
