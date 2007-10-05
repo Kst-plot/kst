@@ -51,7 +51,7 @@ void RelationFactory::registerFactory(const QStringList& nodes, RelationFactory 
 }
 
 
-KstRelationPtr RelationFactory::parse(QXmlStreamReader& stream) {
+RelationPtr RelationFactory::parse(QXmlStreamReader& stream) {
   if (!factories) {
     return 0;
   }

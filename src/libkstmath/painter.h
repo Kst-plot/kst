@@ -1,13 +1,7 @@
 /***************************************************************************
-                                kstpainter.h
-                             -------------------
-    begin                : Nov 25, 2005
-    copyright            : (C) 2005 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
+ *   copyright : (C) 2005 The University of Toronto                        *
+*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -15,14 +9,17 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTPAINTER_H
-#define KSTPAINTER_H
+
+#ifndef PAINTER_H
+#define PAINTER_H
 
 #include <qpainter.h>
 
 #include "kst_export.h"
 
-class KstPainter : public QPainter {
+namespace Kst {
+
+class Painter : public QPainter {
   public:
     // KstPaintType - hints to paint to allow optimizations
     // P_PAINT: Neither 'data' nor 'plot' needs to change
@@ -33,8 +30,8 @@ class KstPainter : public QPainter {
      */
     enum PaintType { P_PAINT = 0, P_PLOT, P_ZOOM, P_UPDATE, P_PRINT, P_EXPORT };
 
-    KstPainter(PaintType t = P_PAINT);
-    virtual ~KstPainter();
+    Painter(PaintType t = P_PAINT);
+    virtual ~Painter();
 
     // Defalut: P_PAINT
     void setType(PaintType t);
@@ -58,5 +55,6 @@ class KstPainter : public QPainter {
     QRegion _uiMask;
 } KST_EXPORT;
 
+}
 #endif
 // vim: ts=2 sw=2 et

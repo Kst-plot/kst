@@ -1,5 +1,5 @@
 /***************************************************************************
-                          kstpsd.h: Power Spectra for KST
+                          psd.h: Power Spectra for KST
                              -------------------
     begin                : Fri Feb 10 2002
     copyright            : (C) 2002 by C. Barth Netterfield
@@ -19,21 +19,23 @@
  *@author C. Barth Netterfield
  */
 
-#ifndef KSTPSD_H
-#define KSTPSD_H
+#ifndef PSD_H
+#define PSD_H
 
 #include "dataobject.h"
 #include "psdcalculator.h"
 #include "kst_export.h"
 
-class KST_EXPORT KstPSD : public Kst::DataObject {
+namespace Kst {
+
+class KST_EXPORT PSD : public DataObject {
   public:
-    KstPSD(const QString& in_tag, Kst::VectorPtr in_V, double freq,
+    PSD(const QString& in_tag, VectorPtr in_V, double freq,
         bool average, int average_len,
         bool in_apodize, bool in_removeMean,
         const QString& VUnits, const QString& RUnits, ApodizeFunction in_apodizeFxn = WindowOriginal, double in_gaussianSigma = 3.0, PSDType in_output = PSDAmplitudeSpectralDensity);
-    KstPSD(const QDomElement& e);
-    virtual ~KstPSD();
+    PSD(const QDomElement& e);
+    virtual ~PSD();
 
     virtual UpdateType update(int update_counter = -1);
 
@@ -62,7 +64,7 @@ class KST_EXPORT KstPSD : public Kst::DataObject {
     void setLen(int in_len);
 
     QString vTag() const;
-    void setVector(Kst::VectorPtr);
+    void setVector(VectorPtr);
 
     const QString& vUnits() const;
     void setVUnits(const QString& units);
@@ -84,15 +86,15 @@ class KST_EXPORT KstPSD : public Kst::DataObject {
     virtual QString xVTag() const { return (*_fVector)->tagName(); }
     virtual QString yVTag() const { return (*_sVector)->tagName(); }
 
-    Kst::VectorPtr vX() const { return *_fVector; }
-    Kst::VectorPtr vY() const { return *_sVector; }
+    VectorPtr vX() const { return *_fVector; }
+    VectorPtr vY() const { return *_sVector; }
 
-    const Kst::CurveHintList *curveHints() const;
+    const CurveHintList *curveHints() const;
     
-    virtual Kst::DataObjectPtr makeDuplicate(Kst::DataObjectDataObjectMap& duplicatedMap);
+    virtual DataObjectPtr makeDuplicate(DataObjectDataObjectMap& duplicatedMap);
 
   private:
-    void commonConstructor(const QString& in_tag, Kst::VectorPtr in_V,
+    void commonConstructor(const QString& in_tag, VectorPtr in_V,
         double freq, bool average, int average_len, bool apodize, bool removeMean,
         const QString& VUnits, const QString& RUnits, ApodizeFunction in_apodizeFxn, 
         double in_gaussianSigma, PSDType in_output, bool interpolateHoles);
@@ -119,11 +121,13 @@ class KST_EXPORT KstPSD : public Kst::DataObject {
     QString _vUnits;
     QString _rUnits;
 
-    Kst::VectorMap::Iterator _sVector, _fVector;
+    VectorMap::Iterator _sVector, _fVector;
 };
 
-typedef Kst::SharedPtr<KstPSD> KstPSDPtr;
-typedef Kst::ObjectList<KstPSDPtr> KstPSDList;
+typedef SharedPtr<PSD> PSDPtr;
+typedef ObjectList<PSDPtr> PSDList;
+
+}
 
 #endif
 // vim: ts=2 sw=2 et

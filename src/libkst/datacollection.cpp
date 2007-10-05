@@ -207,7 +207,7 @@ QStringList Data::plotList(const QString& window) {
 }
 
 
-void Data::removeCurveFromPlots(KstRelation *c) {
+void Data::removeCurveFromPlots(Relation *c) {
   Q_UNUSED(c)
   // meaningless in no GUI: no plots!
 }
@@ -218,13 +218,18 @@ bool Data::viewObjectNameNotUnique(const QString& tag) {
   return false;
 }
 
-int Data::vectorToFile(Kst::VectorPtr v, QFile *f) {
+int Data::vectorToFile(VectorPtr v, QFile *f) {
+  Q_UNUSED(v)
+  Q_UNUSED(f)
   // FIXME: implement me (non-gui)
   return 0;
 }
 
 
-int Data::vectorsToFile(const Kst::VectorList& l, QFile *f, bool interpolate) {
+int Data::vectorsToFile(const VectorList& l, QFile *f, bool interpolate) {
+  Q_UNUSED(l)
+  Q_UNUSED(f)
+  Q_UNUSED(interpolate)
   // FIXME: implement me (non-gui)
   return 0;
 }

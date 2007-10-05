@@ -12,8 +12,8 @@
 
 #include "curvehint.h"
 #include "datacollection.h"
-#include "kstrelation.h"
-#include "vcurve.h"
+#include "relation.h"
+#include "curve.h"
 
 #include <qdebug.h>
 
@@ -48,7 +48,7 @@ VectorPtr CurveHint::yVector() const {
 }
 
 
-KstRelationPtr CurveHint::makeCurve(const QString& tag, const QColor& color) const {
+RelationPtr CurveHint::makeCurve(const QString& tag, const QColor& color) const {
   VectorPtr x = xVector();
   VectorPtr y = yVector();
   if (!x || !y) {
@@ -56,7 +56,7 @@ KstRelationPtr CurveHint::makeCurve(const QString& tag, const QColor& color) con
     return 0L;
   }
 
-  return new VCurve(tag, x, y, 0L, 0L, 0L, 0L, color);
+  return new Curve(tag, x, y, 0L, 0L, 0L, 0L, color);
 }
 
 }

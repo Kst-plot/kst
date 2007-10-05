@@ -101,7 +101,7 @@ bool Document::save(const QString& to) {
   xml.writeEndElement();
 
   xml.writeStartElement("relations");
-  foreach (KstRelationPtr s, relationList) {
+  foreach (RelationPtr s, relationList) {
     s->save(xml);
   }
   xml.writeEndElement();

@@ -19,8 +19,8 @@
 #include "datacollection.h"
 #include "defaultnames.h"
 #include "histogram.h"
-#include "kstpsd.h"
-#include "vcurve.h"
+#include "psd.h"
+#include "curve.h"
 
 #include <qregexp.h>
 #include "kst_i18n.h"

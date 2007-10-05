@@ -1,13 +1,7 @@
 /***************************************************************************
-                            kstobjectdefaults.cpp
-                             -------------------
-    begin                : May 28, 2004
-    copyright            : (C) 2004 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
+ *   copyright : (C) 2004 The University of Toronto                        *
+*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -15,15 +9,17 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstobjectdefaults.h"
+#include "objectdefaults.h"
 #include "dataobjectcollection.h"
-#include "kstpsd.h"
+#include "psd.h"
 
 #include <qsettings.h>
 
-KstObjectDefaults KST::objectDefaults;
+namespace Kst {
 
-KstObjectDefaults::KstObjectDefaults() {
+ObjectDefaults objectDefaults;
+
+ObjectDefaults::ObjectDefaults() {
   _psd_freq = 1.0;
   _fft_len = 10;
   _vUnits = "V";
@@ -37,8 +33,8 @@ KstObjectDefaults::KstObjectDefaults() {
 }
 
 
-void KstObjectDefaults::sync() {
-  KstPSDList pl = Kst::ObjectSubList<Kst::DataObject, KstPSD>(Kst::dataObjectList);
+void ObjectDefaults::sync() {
+  PSDList pl = ObjectSubList<DataObject, PSD>(dataObjectList);
 
   const int j = pl.count() - 1;
   if (j >= 0) {
@@ -60,31 +56,31 @@ void KstObjectDefaults::sync() {
 }
 
 
-double KstObjectDefaults::psdFreq() const { 
+double ObjectDefaults::psdFreq() const {
   return _psd_freq; 
 }
 
 
-int KstObjectDefaults::fftLen() const { 
+int ObjectDefaults::fftLen() const {
   return _fft_len; 
 }
 
 
-void KstObjectDefaults::writeConfig(QSettings *config) {
-  config->setValue("defaultFFTLen", KST::objectDefaults.fftLen());
-  config->setValue("defaultPSDFreq", KST::objectDefaults.psdFreq());
-  config->setValue("defaultVUnits", KST::objectDefaults.vUnits());
-  config->setValue("defaultRUnits", KST::objectDefaults.rUnits());
-  config->setValue("defaultApodize", KST::objectDefaults.apodize());
-  config->setValue("defaultRemoveMean", KST::objectDefaults.removeMean());
-  config->setValue("defaultPSDAverage", KST::objectDefaults.psdAverage());
-  config->setValue("defaultApodizeFxn", KST::objectDefaults.apodizeFxn());
-  config->setValue("defaultOutput", KST::objectDefaults.output());
-  config->setValue("defaultInterpolateHoles", KST::objectDefaults.interpolateHoles());
+void ObjectDefaults::writeConfig(QSettings *config) {
+  config->setValue("defaultFFTLen", objectDefaults.fftLen());
+  config->setValue("defaultPSDFreq", objectDefaults.psdFreq());
+  config->setValue("defaultVUnits", objectDefaults.vUnits());
+  config->setValue("defaultRUnits", objectDefaults.rUnits());
+  config->setValue("defaultApodize", objectDefaults.apodize());
+  config->setValue("defaultRemoveMean", objectDefaults.removeMean());
+  config->setValue("defaultPSDAverage", objectDefaults.psdAverage());
+  config->setValue("defaultApodizeFxn", objectDefaults.apodizeFxn());
+  config->setValue("defaultOutput", objectDefaults.output());
+  config->setValue("defaultInterpolateHoles", objectDefaults.interpolateHoles());
 }
 
 
-void KstObjectDefaults::readConfig(QSettings *config) {
+void ObjectDefaults::readConfig(QSettings *config) {
   _fft_len = config->value("defaultFFTLen", 10).toInt();
   _psd_freq = config->value("defaultPSDFreq", 100.0).toDouble();
   _vUnits = config->value("defaultVUnits", "V").toString();
@@ -97,5 +93,5 @@ void KstObjectDefaults::readConfig(QSettings *config) {
   _interpolateHoles = config->value("defaultInterpolateHoles", false).toBool();
 }
 
-
+}
 // vim: ts=2 sw=2 et

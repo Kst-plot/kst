@@ -1,5 +1,5 @@
 /***************************************************************************
-                          kstpsd.cpp: Power Spectra for KST
+                          psd.cpp: Power Spectra for KST
                              -------------------
     begin                : Fri Feb 10 2002
     copyright            : (C) 2002 by C. Barth Netterfield
@@ -30,23 +30,25 @@
 #include "dialoglauncher.h"
 #include "datacollection.h"
 #include "debug.h"
-#include "kstpsd.h"
+#include "psd.h"
 #include "psdcalculator.h"
-#include "kstobjectdefaults.h"
+#include "objectdefaults.h"
 
 extern "C" void rdft(int n, int isgn, double *a);
+
+namespace Kst {
 
 const QLatin1String& INVECTOR = QLatin1String("I");
 const QLatin1String& SVECTOR = QLatin1String("S");
 const QLatin1String& FVECTOR = QLatin1String("F");
 
 #define KSTPSDMAXLEN 27
-KstPSD::KstPSD(const QString &in_tag, Kst::VectorPtr in_V,
+PSD::PSD(const QString &in_tag, VectorPtr in_V,
                          double in_freq, bool in_average, int in_averageLen,
                          bool in_apodize, bool in_removeMean,
                          const QString &in_VUnits, const QString &in_RUnits, ApodizeFunction in_apodizeFxn, 
                          double in_gaussianSigma, PSDType in_output)
-: Kst::DataObject() {
+: DataObject() {
   commonConstructor(in_tag, in_V, in_freq, in_average, in_averageLen,
                     in_apodize, in_removeMean,
                     in_VUnits, in_RUnits, in_apodizeFxn, in_gaussianSigma,
@@ -55,13 +57,13 @@ KstPSD::KstPSD(const QString &in_tag, Kst::VectorPtr in_V,
 }
 
 
-KstPSD::KstPSD(const QDomElement &e)
-: Kst::DataObject(e) {
+PSD::PSD(const QDomElement &e)
+: DataObject(e) {
   QString in_VUnits;
   QString in_RUnits;
   QString in_tag;
   QString vecName;
-  Kst::VectorPtr in_V;
+  VectorPtr in_V;
   double in_freq = 60.0;
   bool in_average = true;
   bool in_removeMean = true;
@@ -127,7 +129,7 @@ KstPSD::KstPSD(const QDomElement &e)
 }
 
 
-void KstPSD::commonConstructor(const QString& in_tag, Kst::VectorPtr in_V,
+void PSD::commonConstructor(const QString& in_tag, VectorPtr in_V,
                                double in_freq, bool in_average, int in_averageLen, bool in_apodize, 
                                bool in_removeMean, const QString& in_VUnits, const QString& in_RUnits, 
                                ApodizeFunction in_apodizeFxn, double in_gaussianSigma, PSDType in_output,
@@ -138,7 +140,7 @@ void KstPSD::commonConstructor(const QString& in_tag, Kst::VectorPtr in_V,
   if (in_V) {
     _inputVectors[INVECTOR] = in_V;
   }
-  setTagName(Kst::ObjectTag::fromString(in_tag));
+  setTagName(ObjectTag::fromString(in_tag));
   _Freq = in_freq;
   _Average = in_average;
   _Apodize = in_apodize;
@@ -156,53 +158,53 @@ void KstPSD::commonConstructor(const QString& in_tag, Kst::VectorPtr in_V,
   _last_n_new = 0;
 
   _PSDLen = 1;
-  Kst::VectorPtr ov = new Kst::Vector(Kst::ObjectTag("freq", tag()), _PSDLen, this);
+  VectorPtr ov = new Vector(ObjectTag("freq", tag()), _PSDLen, this);
   _fVector = _outputVectors.insert(FVECTOR, ov);
 
-  ov = new Kst::Vector(Kst::ObjectTag("sv", tag()), _PSDLen, this);
+  ov = new Vector(ObjectTag("sv", tag()), _PSDLen, this);
   _sVector = _outputVectors.insert(SVECTOR, ov);
 
   updateVectorLabels();
 }
 
 
-KstPSD::~KstPSD() {
+PSD::~PSD() {
   _sVector = _outputVectors.end();
   _fVector = _outputVectors.end();
-  Kst::vectorList.lock().writeLock();
-  Kst::vectorList.remove(_outputVectors[SVECTOR]);
-  Kst::vectorList.remove(_outputVectors[FVECTOR]);
-  Kst::vectorList.lock().unlock();
+  vectorList.lock().writeLock();
+  vectorList.remove(_outputVectors[SVECTOR]);
+  vectorList.remove(_outputVectors[FVECTOR]);
+  vectorList.lock().unlock();
 }
 
 
-const Kst::CurveHintList *KstPSD::curveHints() const {
+const CurveHintList *PSD::curveHints() const {
   _curveHints->clear();
-  _curveHints->append(new Kst::CurveHint(i18n("PSD Curve"), (*_fVector)->tagName(), (*_sVector)->tagName()));
+  _curveHints->append(new CurveHint(i18n("PSD Curve"), (*_fVector)->tagName(), (*_sVector)->tagName()));
   return _curveHints;
 }
 
 
-Kst::Object::UpdateType KstPSD::update(int update_counter) {
+Object::UpdateType PSD::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
   setDirty(false);
 
-  if (Kst::Object::checkUpdateCounter(update_counter) && !force) {
+  if (Object::checkUpdateCounter(update_counter) && !force) {
     return lastUpdateResult();
   }
 
   writeLockInputsAndOutputs();
 
-  Kst::VectorPtr iv = _inputVectors[INVECTOR];
+  VectorPtr iv = _inputVectors[INVECTOR];
 
   if (update_counter <= 0) {
     assert(update_counter == 0);
     force = true;
   }
 
-  bool xUpdated = Kst::Object::UPDATE == iv->update(update_counter);
+  bool xUpdated = Object::UPDATE == iv->update(update_counter);
 
   const int v_len = iv->length();
 
@@ -250,7 +252,7 @@ Kst::Object::UpdateType KstPSD::update(int update_counter) {
 }
 
 
-void KstPSD::_adjustLengths() {
+void PSD::_adjustLengths() {
   int nPSDLen = PSDCalculator::calculateOutputVectorLength(_inputVectors[INVECTOR]->length(), _Average, _averageLen);
 
   if (_PSDLen != nPSDLen) {
@@ -260,14 +262,14 @@ void KstPSD::_adjustLengths() {
     if ( ((*_sVector)->length() == nPSDLen) && ((*_fVector)->length() == nPSDLen) ) {
       _PSDLen = nPSDLen;
     } else {
-      Kst::Debug::self()->log(i18n("Attempted to create a PSD that used all memory."), Kst::Debug::Error);
+      Debug::self()->log(i18n("Attempted to create a PSD that used all memory."), Debug::Error);
     }
 
     _last_n_subsets = 0;
   }
 }
 
-void KstPSD::save(QTextStream &ts, const QString& indent) {
+void PSD::save(QTextStream &ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<psdobject>" << endl;
   ts << l2 << "<tag>" << Qt::escape(tagName()) << "</tag>" << endl;
@@ -287,60 +289,60 @@ void KstPSD::save(QTextStream &ts, const QString& indent) {
 }
 
 
-bool KstPSD::apodize() const {
+bool PSD::apodize() const {
   return _Apodize;
 }
 
 
-void KstPSD::setApodize(bool in_apodize)  {
+void PSD::setApodize(bool in_apodize)  {
   setDirty();
   _Apodize = in_apodize;
 }
 
 
-bool KstPSD::removeMean() const {
+bool PSD::removeMean() const {
   return _RemoveMean;
 }
 
 
-void KstPSD::setRemoveMean(bool in_removeMean) {
+void PSD::setRemoveMean(bool in_removeMean) {
   setDirty();
   _RemoveMean = in_removeMean;
 }
 
 
-bool KstPSD::average() const {
+bool PSD::average() const {
   return _Average;
 }
 
 
-void KstPSD::setAverage(bool in_average) {
+void PSD::setAverage(bool in_average) {
   setDirty();
   _Average = in_average;
 }
 
 
-double KstPSD::freq() const {
+double PSD::freq() const {
   return _Freq;
 }
 
 
-void KstPSD::setFreq(double in_freq) {
+void PSD::setFreq(double in_freq) {
   setDirty();
   if (in_freq > 0.0) {
     _Freq = in_freq;
   } else {
-    _Freq = KST::objectDefaults.psdFreq();
+    _Freq = objectDefaults.psdFreq();
   }
 }
 
 
-int KstPSD::len() const {
+int PSD::len() const {
   return _averageLen;
 }
 
 
-void KstPSD::setLen(int in_len) {
+void PSD::setLen(int in_len) {
   if (in_len != _averageLen) {
     _averageLen = in_len;
     setDirty();
@@ -348,12 +350,12 @@ void KstPSD::setLen(int in_len) {
 }
 
 
-PSDType KstPSD::output() const {
+PSDType PSD::output() const {
   return _Output;
 }
 
 
-void KstPSD::setOutput(PSDType in_output)  {
+void PSD::setOutput(PSDType in_output)  {
   if (in_output != _Output) {
     setDirty();
     _Output = in_output;
@@ -361,15 +363,15 @@ void KstPSD::setOutput(PSDType in_output)  {
 }
 
 
-QString KstPSD::vTag() const {
+QString PSD::vTag() const {
   return _inputVectors[INVECTOR]->tag().displayString();
 }
 
 
-void KstPSD::setVector(Kst::VectorPtr new_v) {
+void PSD::setVector(VectorPtr new_v) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  Kst::VectorPtr v = _inputVectors[INVECTOR];
+  VectorPtr v = _inputVectors[INVECTOR];
   if (v) {
     if (v == new_v) {
       return;
@@ -384,52 +386,52 @@ void KstPSD::setVector(Kst::VectorPtr new_v) {
 }
 
 
-bool KstPSD::slaveVectorsUsed() const {
+bool PSD::slaveVectorsUsed() const {
   return true;
 }
 
 
-QString KstPSD::propertyString() const {
+QString PSD::propertyString() const {
   return i18n("PSD: %1", vTag());
 }
 
 
-void KstPSD::showNewDialog() {
-  Kst::DialogLauncher::self()->showPSDDialog();
+void PSD::showNewDialog() {
+  DialogLauncher::self()->showPSDDialog();
 }
 
 
-void KstPSD::showEditDialog() {
-  Kst::DialogLauncher::self()->showPSDDialog(this);
+void PSD::showEditDialog() {
+  DialogLauncher::self()->showPSDDialog(this);
 }
 
 
-const QString& KstPSD::vUnits() const {
+const QString& PSD::vUnits() const {
   return _vUnits;
 }
 
 
-void KstPSD::setVUnits(const QString& units) {
+void PSD::setVUnits(const QString& units) {
   _vUnits = units;
 }
 
 
-const QString& KstPSD::rUnits() const {
+const QString& PSD::rUnits() const {
   return _rUnits;
 }
 
 
-void KstPSD::setRUnits(const QString& units) {
+void PSD::setRUnits(const QString& units) {
   _rUnits = units;
 }
 
 
-ApodizeFunction KstPSD::apodizeFxn() const {
+ApodizeFunction PSD::apodizeFxn() const {
   return _apodizeFxn;
 }
 
 
-void KstPSD::setApodizeFxn(ApodizeFunction in_apodizeFxn) {
+void PSD::setApodizeFxn(ApodizeFunction in_apodizeFxn) {
   if (_apodizeFxn != in_apodizeFxn) {
     setDirty();
     _apodizeFxn = in_apodizeFxn;
@@ -437,12 +439,12 @@ void KstPSD::setApodizeFxn(ApodizeFunction in_apodizeFxn) {
 }
 
 
-double KstPSD::gaussianSigma() const {
+double PSD::gaussianSigma() const {
   return _gaussianSigma;
 }
 
 
-void KstPSD::setGaussianSigma(double in_gaussianSigma) {
+void PSD::setGaussianSigma(double in_gaussianSigma) {
   if (_gaussianSigma != in_gaussianSigma) {
     setDirty();
     _gaussianSigma = in_gaussianSigma;
@@ -450,32 +452,32 @@ void KstPSD::setGaussianSigma(double in_gaussianSigma) {
 }
 
  
-Kst::DataObjectPtr KstPSD::makeDuplicate(Kst::DataObjectDataObjectMap& duplicatedMap) {
+DataObjectPtr PSD::makeDuplicate(DataObjectDataObjectMap& duplicatedMap) {
   QString name(tagName() + '\'');
-  while (Kst::Data::self()->dataTagNameNotUnique(name, false)) {
+  while (Data::self()->dataTagNameNotUnique(name, false)) {
     name += '\'';
   }
-  KstPSDPtr psd = new KstPSD(name, _inputVectors[INVECTOR], _Freq,
+  PSDPtr psd = new PSD(name, _inputVectors[INVECTOR], _Freq,
                              _Average, _averageLen, _Apodize, _RemoveMean, _vUnits, _rUnits, 
                              _apodizeFxn, _gaussianSigma, _Output);
-  duplicatedMap.insert(this, Kst::DataObjectPtr(psd));
-  return Kst::DataObjectPtr(psd);
+  duplicatedMap.insert(this, DataObjectPtr(psd));
+  return DataObjectPtr(psd);
 }
 
 
-bool KstPSD::interpolateHoles() const {
+bool PSD::interpolateHoles() const {
   return _interpolateHoles;
 }
 
 
-void KstPSD::setInterpolateHoles(bool interpolate) {
+void PSD::setInterpolateHoles(bool interpolate) {
   if (interpolate != _interpolateHoles) {
     _interpolateHoles = interpolate;
     setDirty();
   }
 }
 
-void KstPSD::updateVectorLabels() {
+void PSD::updateVectorLabels() {
   switch (_Output) {
     default:
     case 0: // amplitude spectral density (default) [V/Hz^1/2]
@@ -494,5 +496,5 @@ void KstPSD::updateVectorLabels() {
   (*_fVector)->setLabel(i18n("Frequency \\[%1\\]", _rUnits));
 }
 
-
+}
 // vim: ts=2 sw=2 et

@@ -19,13 +19,13 @@
 #define DATAOBJECTCOLLECTION_H
 
 #include "dataobject.h"
-#include "kstrelation.h"
+#include "relation.h"
 #include <kst_export.h>
 
 namespace Kst {
     /** The list of data objects which are in use */
     KST_EXPORT extern DataObjectList dataObjectList;
-    KST_EXPORT extern KstRelationList relationList;
+    KST_EXPORT extern RelationList relationList;
     KST_EXPORT extern void addDataObjectToList(DataObjectPtr d);
 }
 

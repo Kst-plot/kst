@@ -1,5 +1,5 @@
 /***************************************************************************
-                     kstrelation.h: base curve type for kst
+                     relation.h: base curve type for kst
                              -------------------
     begin                : Fri Oct 22 2000
     copyright            : (C) 2000 by C. Barth Netterfield
@@ -15,14 +15,14 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTRELATION_H
-#define KSTRELATION_H
+#ifndef RELATION_H
+#define RELATION_H
 
 #include <qcolor.h>
 #include <q3valuestack.h>
 
 #include "dataobject.h"
-#include "kstpainter.h"
+#include "painter.h"
 #include "kst_export.h"
 #include "labelparser.h"
 
@@ -30,11 +30,15 @@
  *@author C. Barth Netterfield
  */
 
+class QXmlStreamWriter;
+
+namespace Kst {
+
 // context for rendering a curve in a plot
-class KstCurveRenderContext {
+class CurveRenderContext {
   public:
     // FIXME: use reasonable defaults
-    KstCurveRenderContext() : painter(0L), Lx(0.0), Hx(0.0), Ly(0.0), Hy(0.0),
+    CurveRenderContext() : painter(0L), Lx(0.0), Hx(0.0), Ly(0.0), Hy(0.0),
                               m_X(0.0), m_Y(0.0), b_X(0.0), b_Y(0.0),
                               x_max(0.0), y_max(0.0), x_min(0.0), y_min(0.0),
                               XMin(0.0), YMin(0.0), XMax(0.0), YMax(0.0),
@@ -55,16 +59,14 @@ class KstCurveRenderContext {
     int penWidth;
 };
 
-enum KstCurveType { KST_VCURVE, KST_HISTOGRAM, KST_IMAGE };
+enum CurveType { VCURVE, HISTOGRAM, IMAGE };
 
-class QXmlStreamWriter;
-
-class KST_EXPORT KstRelation : public Kst::Object {
+class KST_EXPORT Relation : public Object {
   Q_OBJECT
   public:
-    KstRelation();
-    KstRelation(const QDomElement& e);
-    virtual ~KstRelation();
+    Relation();
+    Relation(const QDomElement& e);
+    virtual ~Relation();
 
     virtual void showNewDialog() { }
     virtual void showEditDialog() { }
@@ -72,7 +74,7 @@ class KST_EXPORT KstRelation : public Kst::Object {
 
     virtual QString propertyString() const = 0;
 
-    virtual KstCurveType curveType() const = 0;
+    virtual CurveType curveType() const = 0;
 
     virtual int sampleCount() const { return NS; }
 
@@ -92,13 +94,10 @@ class KST_EXPORT KstRelation : public Kst::Object {
     virtual double maxY() const { return MaxY; }
     virtual double minY() const { return MinY; }
     virtual double minPosY() const { return MinPosY; }
-
-    //NoSpike
     virtual double ns_maxX()    const { return _ns_maxx; }
     virtual double ns_minX()    const { return _ns_minx; }
     virtual double ns_maxY()    const { return _ns_maxy; }
     virtual double ns_minY()    const { return _ns_miny; }
-
     virtual double minPosX() const { return MinPosX; }
     virtual double midX() const { return (MaxX+MinX)*0.5; }
     virtual double midY() const { return (MaxY+MinY)*0.5; }
@@ -108,17 +107,17 @@ class KST_EXPORT KstRelation : public Kst::Object {
     // E.g. for VCurves, it returns the data object providing the y vector
     // E.g. for Images, it returns the data object providing the matrix
     // Null is returned if no provider exists
-    virtual Kst::DataObjectPtr providerDataObject() const = 0;
+    virtual DataObjectPtr providerDataObject() const = 0;
     
     // return closest distance to the given point
     // images always return a rating >= 5
     virtual double distanceToPoint(double xpos, double dx, double ypos) const = 0;
     
     // render this curve 
-    virtual void paint(const KstCurveRenderContext& context) = 0;
+    virtual void paint(const CurveRenderContext& context) = 0;
     
     // render the legend symbol for this curve
-    virtual void paintLegendSymbol(KstPainter *p, const QRect& bound) = 0;
+    virtual void paintLegendSymbol(Painter *p, const QRect& bound) = 0;
     
 
     // just store the size of the legend tag here.  The viewLegend actually uses and calculates it.
@@ -144,16 +143,16 @@ class KST_EXPORT KstRelation : public Kst::Object {
     QList<QPair<QString,QString> > _inputScalarLoadQueue;
     QList<QPair<QString,QString> > _inputStringLoadQueue;
     QList<QPair<QString,QString> > _inputMatrixLoadQueue;
-    Kst::CurveHintList *_curveHints;
+    CurveHintList *_curveHints;
     QString _typeString, _type;
-    Kst::VectorMap _inputVectors;
-    Kst::VectorMap _outputVectors;
-    Kst::ScalarMap _inputScalars;
-    Kst::ScalarMap _outputScalars;
-    Kst::StringMap _inputStrings;
-    Kst::StringMap _outputStrings;
-    Kst::MatrixMap _inputMatrices;
-    Kst::MatrixMap _outputMatrices;
+    VectorMap _inputVectors;
+    VectorMap _outputVectors;
+    ScalarMap _inputScalars;
+    ScalarMap _outputScalars;
+    StringMap _inputStrings;
+    StringMap _outputStrings;
+    MatrixMap _inputMatrices;
+    MatrixMap _outputMatrices;
 
     double _ns_maxx;
     double _ns_minx;
@@ -183,8 +182,10 @@ class KST_EXPORT KstRelation : public Kst::Object {
 };
 
 
-typedef Kst::SharedPtr<KstRelation> KstRelationPtr;
-typedef Kst::ObjectList<KstRelationPtr> KstRelationList;
+typedef SharedPtr<Relation> RelationPtr;
+typedef ObjectList<RelationPtr> RelationList;
+
+}
 
 #endif
 // vim: ts=2 sw=2 et

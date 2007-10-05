@@ -17,7 +17,7 @@
 #include <QFile>
 #include <QTemporaryFile>
 
-#include <kstpsd.h>
+#include <psd.h>
 #include <datacollection.h>
 #include <dataobjectcollection.h>
 
@@ -113,7 +113,7 @@ void TestPSD::testPSD() {
     vp->value()[i] = i;
   }
 
-  KstPSDPtr psd = new KstPSD(QString("psdTest"), vp, 0.0, false, 10, false, false, QString("vUnits"), QString("rUnits"), WindowUndefined, 0.0, PSDUndefined);
+  Kst::PSDPtr psd = new Kst::PSD(QString("psdTest"), vp, 0.0, false, 10, false, false, QString("vUnits"), QString("rUnits"), WindowUndefined, 0.0, PSDUndefined);
   QCOMPARE(psd->tagName(), QLatin1String("psdTest"));
   QCOMPARE(psd->vTag(), QLatin1String("tempVector"));
   QCOMPARE(psd->output(), PSDUndefined);
@@ -173,7 +173,7 @@ void TestPSD::testPSD() {
 
   QDomNode n = makeDOMElement("psdDOMPsd", "psdDOMVector").firstChild();
   QDomElement e = n.toElement();
-  KstPSDPtr psdDOM = new KstPSD(e);
+  Kst::PSDPtr psdDOM = new Kst::PSD(e);
 
   QCOMPARE(psdDOM->tagName(), QLatin1String("psdDOMPsd"));
   QCOMPARE(psdDOM->output(), PSDAmplitudeSpectralDensity);

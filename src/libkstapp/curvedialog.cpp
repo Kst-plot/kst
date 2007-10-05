@@ -13,7 +13,7 @@
 
 #include "dialogpage.h"
 
-#include "vcurve.h"
+#include "curve.h"
 
 #include "view.h"
 #include "plotitem.h"
@@ -132,7 +132,7 @@ QString CurveDialog::tagName() const {
 
 ObjectPtr CurveDialog::createNewDataObject() const {
   //FIXME Eli, how should I construct this tag??
-  VCurvePtr curve = new VCurve(tagName(),
+  CurvePtr curve = new Curve(tagName(),
                                      _curveTab->xVector(),
                                      _curveTab->yVector(),
                                      _curveTab->xError(),
@@ -154,8 +154,8 @@ ObjectPtr CurveDialog::createNewDataObject() const {
 
   PlotItem *plotItem = static_cast<PlotItem*>(cmd->item());
 
-  KstRelationList relationList;
-  relationList.append(kst_cast<KstRelation>(curve));
+  RelationList relationList;
+  relationList.append(kst_cast<Relation>(curve));
 
   VectorCurveRenderItem *vectorCurve = new VectorCurveRenderItem(plotItem);
   vectorCurve->setRelationList(relationList);

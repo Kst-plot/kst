@@ -18,9 +18,9 @@
 
 #include "vector.h"
 
-class KstRelation;
-
 namespace Kst {
+
+class Relation;
 
 class CurveHint : public Shared {
   friend class DataObject;
@@ -36,7 +36,7 @@ class CurveHint : public Shared {
     virtual VectorPtr xVector() const;
     virtual VectorPtr yVector() const;
 
-    virtual SharedPtr<KstRelation> makeCurve(const QString& tag, const QColor& color) const;
+    virtual SharedPtr<Relation> makeCurve(const QString& tag, const QColor& color) const;
 
   protected:
     QString _curveName, _xVectorName, _yVectorName;

@@ -14,7 +14,7 @@
 #define IMAGE_H
 
 #include "matrix.h"
-#include "kstrelation.h"
+#include "relation.h"
 #include "kst_export.h"
 
 #include <QHash>
@@ -26,7 +26,7 @@ typedef QHash<int, QColor> Palette;
 /**A class for handling images for Kst
  *@author University of British Columbia
  */
-class KST_EXPORT Image : public KstRelation {
+class KST_EXPORT Image : public Relation {
   public:
     //constructor for colormap only
     Image(const QString &in_tag, MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const Palette &pal);
@@ -52,7 +52,7 @@ class KST_EXPORT Image : public KstRelation {
     virtual UpdateType update(int update_counter = -1);
     virtual QString propertyString() const;
 
-    virtual KstCurveType curveType() const;
+    virtual CurveType curveType() const;
 
     virtual bool getNearestZ(double x, double y, double& z);
     virtual QColor getMappedColor(double x, double y);
@@ -111,13 +111,13 @@ class KST_EXPORT Image : public KstRelation {
     virtual double distanceToPoint(double xpos, double dx, double ypos) const;
     
     // see KstRelation::paint
-    virtual void paint(const KstCurveRenderContext& context);
+    virtual void paint(const CurveRenderContext& context);
     
     // see KstRelation::yRange
     virtual void yRange(double xFrom, double xTo, double* yMin, double* yMax);
     
     // see KstRelation::paintLegendSymbol
-    virtual void paintLegendSymbol(KstPainter *p, const QRect& bound);
+    virtual void paintLegendSymbol(Painter *p, const QRect& bound);
 
   private:
     //use these to set defaults when either is not used.

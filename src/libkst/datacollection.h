@@ -20,9 +20,10 @@
 #include "objectcollection.h"
 
 class QFile;
-class KstRelation;
 
 namespace Kst {
+
+class Relation;
 
 class Data {
   protected:
@@ -46,7 +47,7 @@ class Data {
 
     virtual bool viewObjectNameNotUnique(const QString& tag);
 
-    virtual void removeCurveFromPlots(KstRelation *c); // no sharedptr here
+    virtual void removeCurveFromPlots(Relation *c); // no sharedptr here
 
     /** Save a vector to a file */
     virtual int vectorToFile(VectorPtr v, QFile *f);

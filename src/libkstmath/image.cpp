@@ -28,7 +28,7 @@ namespace Kst {
 
 static const QLatin1String& THEMATRIX = QLatin1String("THEMATRIX");
 
-Image::Image(const QDomElement& e) : KstRelation(e) {
+Image::Image(const QDomElement& e) : Relation(e) {
   QString in_matrixName, in_paletteName;
   bool in_hasColorMap = false, in_hasContourMap = false;
   double in_zLower = 0, in_zUpper = 0;
@@ -98,7 +98,7 @@ Image::Image(const QDomElement& e) : KstRelation(e) {
 
 
 //constructor for colormap only
-Image::Image(const QString &in_tag, MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const Palette &pal) : KstRelation(){
+Image::Image(const QString &in_tag, MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const Palette &pal) : Relation(){
 
   _inputMatrices[THEMATRIX] = in_matrix;
   setTagName(ObjectTag(in_tag, ObjectTag::globalTagContext));  // FIXME: always top-level?
@@ -117,7 +117,7 @@ Image::Image(const QString &in_tag, MatrixPtr in_matrix, double lowerZ, double u
 
 
 //constructor for contour map only
-Image::Image(const QString &in_tag, MatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight) : KstRelation(){
+Image::Image(const QString &in_tag, MatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight) : Relation(){
   _inputMatrices[THEMATRIX] = in_matrix;
   setTagName(ObjectTag(in_tag, ObjectTag::globalTagContext));  // FIXME: always top-level?
   _typeString = i18n("Image");
@@ -519,8 +519,8 @@ QString Image::topLabel() const {
 }
 
 
-KstCurveType Image::curveType() const {
-  return KST_IMAGE;  
+CurveType Image::curveType() const {
+  return IMAGE;
 }
 
 
@@ -548,7 +548,7 @@ double Image::distanceToPoint(double xpos, double dx, double ypos) const {
 }
 
 
-void Image::paint(const KstCurveRenderContext& context) {
+void Image::paint(const CurveRenderContext& context) {
   double Lx = context.Lx, Hx = context.Hx, Ly = context.Ly, Hy = context.Hy;
   double m_X = context.m_X, m_Y = context.m_Y, b_X = context.b_X, b_Y = context.b_Y;
   double x_max = context.x_max, y_max = context.y_max, x_min = context.x_min, y_min = context.y_min;
@@ -815,7 +815,7 @@ void Image::yRange(double xFrom, double xTo, double* yMin, double* yMax) {
 }
 
 
-void Image::paintLegendSymbol(KstPainter *p, const QRect& bound) {
+void Image::paintLegendSymbol(Painter *p, const QRect& bound) {
   if (hasColorMap() && !_pal.isEmpty()) {
     int l = bound.left(), r = bound.right(), t = bound.top(), b = bound.bottom();
     // draw the color palette

@@ -29,7 +29,7 @@
 #include "linestyle.h"
 #include "math_kst.h"
 #include "datavector.h"
-#include "vcurve.h"
+#include "curve.h"
 #include "ksttimers.h"
 
 #include <time.h>
@@ -58,11 +58,11 @@ static const QLatin1String& EYVECTOR = QLatin1String("EY");
 static const QLatin1String& EXMINUSVECTOR = QLatin1String("EXMinus");
 static const QLatin1String& EYMINUSVECTOR = QLatin1String("EYMinus");
 
-VCurve::VCurve(const QString &in_tag, VectorPtr in_X, VectorPtr in_Y,
+Curve::Curve(const QString &in_tag, VectorPtr in_X, VectorPtr in_Y,
                       VectorPtr in_EX, VectorPtr in_EY,
                       VectorPtr in_EXMinus, VectorPtr in_EYMinus,
                       const QColor &in_color)
-: KstRelation() {
+: Relation() {
   setHasPoints(false);
   setHasBars(false);
   setHasLines(true);
@@ -100,8 +100,8 @@ VCurve::VCurve(const QString &in_tag, VectorPtr in_X, VectorPtr in_Y,
 }
 
 
-VCurve::VCurve(QDomElement &e)
-: KstRelation(e) {
+Curve::Curve(QDomElement &e)
+: Relation(e) {
   QString in_tag, xname, yname, exname, eyname, exminusname, eyminusname;
   // QColor in_color(KstColorSequence::next(-1));
   QColor in_color("red"); // the above line is invalid.
@@ -191,7 +191,7 @@ VCurve::VCurve(QDomElement &e)
 }
 
 
-void VCurve::commonConstructor(const QString &in_tag, const QColor &in_color) {
+void Curve::commonConstructor(const QString &in_tag, const QColor &in_color) {
   MaxX = MinX = MeanX = MaxY = MinY = MeanY = MinPosX = MinPosY = 0;
   NS = 0;
   _typeString = i18n("Curve");
@@ -202,11 +202,11 @@ void VCurve::commonConstructor(const QString &in_tag, const QColor &in_color) {
 }
 
 
-VCurve::~VCurve() {
+Curve::~Curve() {
 }
 
 
-Object::UpdateType VCurve::update(int update_counter) {
+Object::UpdateType Curve::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
@@ -278,7 +278,7 @@ Object::UpdateType VCurve::update(int update_counter) {
 }
 
 
-void VCurve::point(int i, double &x, double &y) const {
+void Curve::point(int i, double &x, double &y) const {
   VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
@@ -290,7 +290,7 @@ void VCurve::point(int i, double &x, double &y) const {
 }
 
 
-void VCurve::getEXPoint(int i, double &x, double &y, double &ex) {
+void Curve::getEXPoint(int i, double &x, double &y, double &ex) {
   VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
@@ -306,7 +306,7 @@ void VCurve::getEXPoint(int i, double &x, double &y, double &ex) {
 }
 
 
-void VCurve::getEXMinusPoint(int i, double &x, double &y, double &ex) {
+void Curve::getEXMinusPoint(int i, double &x, double &y, double &ex) {
   VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
@@ -322,7 +322,7 @@ void VCurve::getEXMinusPoint(int i, double &x, double &y, double &ex) {
 }
 
 
-void VCurve::getEXPoints(int i, double &x, double &y, double &exminus, double &explus) {
+void Curve::getEXPoints(int i, double &x, double &y, double &exminus, double &explus) {
   VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
@@ -342,7 +342,7 @@ void VCurve::getEXPoints(int i, double &x, double &y, double &exminus, double &e
 }
 
 
-void VCurve::getEYPoint(int i, double &x, double &y, double &ey) {
+void Curve::getEYPoint(int i, double &x, double &y, double &ey) {
   VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
@@ -358,7 +358,7 @@ void VCurve::getEYPoint(int i, double &x, double &y, double &ey) {
 }
 
 
-void VCurve::getEYMinusPoint(int i, double &x, double &y, double &ey) {
+void Curve::getEYMinusPoint(int i, double &x, double &y, double &ey) {
   VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
@@ -374,7 +374,7 @@ void VCurve::getEYMinusPoint(int i, double &x, double &y, double &ey) {
 }
 
 
-void VCurve::getEYPoints(int i, double &x, double &y, double &eyminus, double &eyplus) {
+void Curve::getEYPoints(int i, double &x, double &y, double &eyminus, double &eyplus) {
   VectorPtr xv = xVector();
   if (xv) {
     x = xv->interpolate(i, NS);
@@ -394,7 +394,7 @@ void VCurve::getEYPoints(int i, double &x, double &y, double &eyminus, double &e
 }
 
 
-ObjectTag VCurve::xVTag() const {
+ObjectTag Curve::xVTag() const {
   VectorPtr xv = xVector();
   if (xv) {
     return xv->tag();
@@ -403,7 +403,7 @@ ObjectTag VCurve::xVTag() const {
 }
 
 
-ObjectTag VCurve::yVTag() const {
+ObjectTag Curve::yVTag() const {
   VectorPtr yv = yVector();
   if (yv) {
     return yv->tag();
@@ -412,7 +412,7 @@ ObjectTag VCurve::yVTag() const {
 }
 
 
-ObjectTag VCurve::xETag() const {
+ObjectTag Curve::xETag() const {
   VectorPtr v = xErrorVector();
   if (v) {
     return v->tag();
@@ -421,7 +421,7 @@ ObjectTag VCurve::xETag() const {
 }
 
 
-ObjectTag VCurve::yETag() const {
+ObjectTag Curve::yETag() const {
   VectorPtr v = yErrorVector();
   if (v) {
     return v->tag();
@@ -430,7 +430,7 @@ ObjectTag VCurve::yETag() const {
 }
 
 
-ObjectTag VCurve::xEMinusTag() const {
+ObjectTag Curve::xEMinusTag() const {
   VectorPtr v = xMinusErrorVector();
   if (v) {
     return v->tag();
@@ -439,7 +439,7 @@ ObjectTag VCurve::xEMinusTag() const {
 }
 
 
-ObjectTag VCurve::yEMinusTag() const {
+ObjectTag Curve::yEMinusTag() const {
   VectorPtr v = yMinusErrorVector();
   if (v) {
     return v->tag();
@@ -448,27 +448,27 @@ ObjectTag VCurve::yEMinusTag() const {
 }
 
 
-bool VCurve::hasXError() const {
+bool Curve::hasXError() const {
   return _inputVectors.contains(EXVECTOR);
 }
 
 
-bool VCurve::hasYError() const {
+bool Curve::hasYError() const {
   return _inputVectors.contains(EYVECTOR);
 }
 
 
-bool VCurve::hasXMinusError() const {
+bool Curve::hasXMinusError() const {
   return _inputVectors.contains(EXMINUSVECTOR);
 }
 
 
-bool VCurve::hasYMinusError() const {
+bool Curve::hasYMinusError() const {
   return _inputVectors.contains(EYMINUSVECTOR);
 }
 
 
-void VCurve::save(QTextStream &ts, const QString& indent) {
+void Curve::save(QTextStream &ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<curve>" << endl;
   ts << l2 << "<tag>" << Qt::escape(tagName()) << "</tag>" << endl;
@@ -510,7 +510,7 @@ void VCurve::save(QTextStream &ts, const QString& indent) {
 }
 
 
-void VCurve::setXVector(VectorPtr new_vx) {
+void Curve::setXVector(VectorPtr new_vx) {
   if (new_vx) {
     _inputVectors[COLOR_XVECTOR] = new_vx;
   } else {
@@ -520,7 +520,7 @@ void VCurve::setXVector(VectorPtr new_vx) {
 }
 
 
-void VCurve::setYVector(VectorPtr new_vy) {
+void Curve::setYVector(VectorPtr new_vy) {
   if (new_vy) {
     _inputVectors[COLOR_YVECTOR] = new_vy;
   } else {
@@ -530,7 +530,7 @@ void VCurve::setYVector(VectorPtr new_vy) {
 }
 
 
-void VCurve::setXError(VectorPtr new_ex) {
+void Curve::setXError(VectorPtr new_ex) {
   if (new_ex) {
     _inputVectors[EXVECTOR] = new_ex;
   } else {
@@ -540,7 +540,7 @@ void VCurve::setXError(VectorPtr new_ex) {
 }
 
 
-void VCurve::setYError(VectorPtr new_ey) {
+void Curve::setYError(VectorPtr new_ey) {
   if (new_ey) {
     _inputVectors[EYVECTOR] = new_ey;
   } else {
@@ -550,7 +550,7 @@ void VCurve::setYError(VectorPtr new_ey) {
 }
 
 
-void VCurve::setXMinusError(VectorPtr new_ex) {
+void Curve::setXMinusError(VectorPtr new_ex) {
   if (new_ex) {
     _inputVectors[EXMINUSVECTOR] = new_ex;
   } else {
@@ -560,7 +560,7 @@ void VCurve::setXMinusError(VectorPtr new_ex) {
 }
 
 
-void VCurve::setYMinusError(VectorPtr new_ey) {
+void Curve::setYMinusError(VectorPtr new_ey) {
   if (new_ey) {
     _inputVectors[EYMINUSVECTOR] = new_ey;
   } else {
@@ -570,79 +570,79 @@ void VCurve::setYMinusError(VectorPtr new_ey) {
 }
 
 
-QString VCurve::xLabel() const {
+QString Curve::xLabel() const {
   return _inputVectors[COLOR_XVECTOR]->label();
 }
 
 
-QString VCurve::yLabel() const {
+QString Curve::yLabel() const {
   return _inputVectors[COLOR_YVECTOR]->label();
 }
 
 
-QString VCurve::topLabel() const {
+QString Curve::topLabel() const {
   return QString::null;
   //return VY->fileLabel();
 }
 
 
-KstCurveType VCurve::curveType() const {
-  return KST_VCURVE;
+CurveType Curve::curveType() const {
+  return VCURVE;
 }
 
 
-QString VCurve::propertyString() const {
+QString Curve::propertyString() const {
   return i18n("%1 vs %2").arg(yVTag().displayString()).arg(xVTag().displayString());
 }
 
 
-void VCurve::showNewDialog() {
+void Curve::showNewDialog() {
   DialogLauncher::self()->showCurveDialog();
 }
 
 
-void VCurve::showEditDialog() {
+void Curve::showEditDialog() {
   DialogLauncher::self()->showCurveDialog(this);
 }
 
 
-int VCurve::samplesPerFrame() const {
+int Curve::samplesPerFrame() const {
   const DataVector *rvp = dynamic_cast<const DataVector*>(_inputVectors[COLOR_YVECTOR].data());
   return rvp ? rvp->samplesPerFrame() : 1;
 }
 
 
-VectorPtr VCurve::xVector() const {
+VectorPtr Curve::xVector() const {
   return *_inputVectors.find(COLOR_XVECTOR);
 }
 
 
-VectorPtr VCurve::yVector() const {
+VectorPtr Curve::yVector() const {
   return *_inputVectors.find(COLOR_YVECTOR);
 }
 
 
-VectorPtr VCurve::xErrorVector() const {
+VectorPtr Curve::xErrorVector() const {
   return *_inputVectors.find(EXVECTOR);
 }
 
 
-VectorPtr VCurve::yErrorVector() const {
+VectorPtr Curve::yErrorVector() const {
   return *_inputVectors.find(EYVECTOR);
 }
 
 
-VectorPtr VCurve::xMinusErrorVector() const {
+VectorPtr Curve::xMinusErrorVector() const {
   return *_inputVectors.find(EXMINUSVECTOR);
 }
 
 
-VectorPtr VCurve::yMinusErrorVector() const {
+VectorPtr Curve::yMinusErrorVector() const {
   return *_inputVectors.find(EYMINUSVECTOR);
 }
 
 
-bool VCurve::xIsRising() const {
+bool Curve::xIsRising() const {
   return _inputVectors[COLOR_XVECTOR]->isRising();
 }
 
@@ -694,7 +694,7 @@ inline int indexNearX(double x, VectorPtr& xv, int NS) {
 
 /** getIndexNearXY: return index of point within (or closest too)
     x +- dx which is closest to y **/
-int VCurve::getIndexNearXY(double x, double dx_per_pix, double y) const {
+int Curve::getIndexNearXY(double x, double dx_per_pix, double y) const {
   VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
   VectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
   if (!xv || !yv) {
@@ -750,63 +750,63 @@ int VCurve::getIndexNearXY(double x, double dx_per_pix, double y) const {
 }
 
 
-void VCurve::setHasPoints(bool in_HasPoints) {
+void Curve::setHasPoints(bool in_HasPoints) {
   HasPoints = in_HasPoints;
   setDirty();
   emit modifiedLegendEntry();
 }
 
 
-void VCurve::setHasLines(bool in_HasLines) {
+void Curve::setHasLines(bool in_HasLines) {
   HasLines = in_HasLines;
   setDirty();
   emit modifiedLegendEntry();
 }
 
 
-void VCurve::setHasBars(bool in_HasBars) {
+void Curve::setHasBars(bool in_HasBars) {
   HasBars = in_HasBars;
   setDirty();
   emit modifiedLegendEntry();
 }
 
 
-void VCurve::setLineWidth(int in_LineWidth) {
+void Curve::setLineWidth(int in_LineWidth) {
   LineWidth = in_LineWidth;
   setDirty();
   emit modifiedLegendEntry();
 }
 
 
-void VCurve::setLineStyle(int in_LineStyle) {
+void Curve::setLineStyle(int in_LineStyle) {
   LineStyle = in_LineStyle;
   setDirty();
   emit modifiedLegendEntry();
 }
 
 
-void VCurve::setBarStyle(int in_BarStyle) {
+void Curve::setBarStyle(int in_BarStyle) {
   BarStyle = in_BarStyle;
   setDirty();
   emit modifiedLegendEntry();
 }
 
 
-void VCurve::setPointDensity(int in_PointDensity) {
+void Curve::setPointDensity(int in_PointDensity) {
   PointDensity = in_PointDensity;
   setDirty();
   emit modifiedLegendEntry();
 }
 
 
-void VCurve::setColor(const QColor& new_c) {
+void Curve::setColor(const QColor& new_c) {
   setDirty();
   Color = new_c;
   emit modifiedLegendEntry();
 }
 
 
-double VCurve::maxX() const {
+double Curve::maxX() const {
   if (hasBars() && sampleCount() > 0) {
     return MaxX + (MaxX - MinX)/(2*(sampleCount()-1));
   }
@@ -814,7 +814,7 @@ double VCurve::maxX() const {
 }
 
 
-double VCurve::minX() const {
+double Curve::minX() const {
   if (hasBars() && sampleCount() > 0) {
     return MinX - (MaxX - MinX)/(2*(sampleCount()-1));
   }
@@ -823,7 +823,7 @@ double VCurve::minX() const {
 
 
 #if 0
-KstRelationPtr VCurve::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap) {
+RelationPtr Curve::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap) {
   VectorPtr VX = *_inputVectors.find(COLOR_XVECTOR);
   VectorPtr VY = *_inputVectors.find(COLOR_YVECTOR);
   VectorPtr EX = *_inputVectors.find(EXVECTOR);
@@ -835,7 +835,7 @@ KstRelationPtr VCurve::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap) 
   while (KstData::self()->dataTagNameNotUnique(name, false)) {
     name += '\'';
   }
-  VCurvePtr vcurve = new VCurve(name, VX, VY, EX, EY, EXMinus, EYMinus, Color);
+  CurvePtr vcurve = new Curve(name, VX, VY, EX, EY, EXMinus, EYMinus, Color);
   // copy some other properties as well
   vcurve->setHasPoints(HasPoints);
   vcurve->setHasLines(HasLines);
@@ -845,13 +845,13 @@ KstRelationPtr VCurve::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap) 
   vcurve->setLineStyle(LineStyle);
   vcurve->setPointDensity(PointDensity);
 
-  duplicatedMap.insert(this, KstRelationPtr(vcurve));
-  return KstRelationPtr(vcurve);
+  duplicatedMap.insert(this, RelationPtr(vcurve));
+  return RelationPtr(vcurve);
 }
 #endif
 
 
-void VCurve::paint(const KstCurveRenderContext& context) {
+void Curve::paint(const CurveRenderContext& context) {
   VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
   VectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
   if (!xv || !yv) {
@@ -1698,7 +1698,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
 }
 
 
-void VCurve::yRange(double xFrom, double xTo, double* yMin, double* yMax) {
+void Curve::yRange(double xFrom, double xTo, double* yMin, double* yMax) {
   if (!yMin || !yMax) {
     return;
   }
@@ -1742,7 +1742,7 @@ void VCurve::yRange(double xFrom, double xTo, double* yMin, double* yMax) {
 }
 
 
-DataObjectPtr VCurve::providerDataObject() const {
+DataObjectPtr Curve::providerDataObject() const {
   vectorList.lock().readLock();
   VectorPtr vp = *vectorList.findTag(yVTag().tag());  // FIXME: should use full tag
   vectorList.lock().unlock();
@@ -1756,7 +1756,7 @@ DataObjectPtr VCurve::providerDataObject() const {
 }
 
 
-double VCurve::distanceToPoint(double xpos, double dx, double ypos) const {
+double Curve::distanceToPoint(double xpos, double dx, double ypos) const {
 // find the y distance between the curve and a point. return 1.0E300 if this distance is undefined. i don't want to use -1 because it will make the code which uses this function messy.
   VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
   if (!xv) {
@@ -1810,7 +1810,7 @@ double VCurve::distanceToPoint(double xpos, double dx, double ypos) const {
 }
 
 
-void VCurve::paintLegendSymbol(KstPainter *p, const QRect& bound) {
+void Curve::paintLegendSymbol(Painter *p, const QRect& bound) {
   int width;
   
   if (lineWidth() == 0) {

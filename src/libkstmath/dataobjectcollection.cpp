@@ -22,7 +22,7 @@ namespace Kst {
 /** The list of data objects which are in use */
 DataObjectList dataObjectList;
 
-KstRelationList relationList;
+RelationList relationList;
 
 void addDataObjectToList(DataObjectPtr d) {
   dataObjectList.lock().writeLock();

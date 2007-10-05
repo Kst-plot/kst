@@ -19,7 +19,7 @@
 #include "mainwindow.h"
 #include "tabwidget.h"
 
-#include "vcurve.h"
+#include "curve.h"
 #include "datacollection.h"
 #include "dataobjectcollection.h"
 #include "vectorcurverenderitem.h"

@@ -39,10 +39,10 @@ void VectorCurveRenderItem::paintRelations(QPainter *painter) {
   painter->save();
   painter->translate(normalRect.x(), normalRect.y());
 
-  foreach (KstRelationPtr relation, relationList()) {
+  foreach (RelationPtr relation, relationList()) {
     //FIXME static_cast to kstvcurve and take advantage of extra api
 
-    KstCurveRenderContext context;
+    CurveRenderContext context;
     context.painter = painter;
     context.window = QRect(); //no idea if this should be floating point
     context.penWidth = painter->pen().width(); //floating point??

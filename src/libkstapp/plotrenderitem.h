@@ -17,7 +17,7 @@
 #include <QList>
 #include <QPainterPath>
 
-#include "kstrelation.h"
+#include "relation.h"
 #include "selectionrect.h"
 
 namespace Kst {
@@ -64,8 +64,8 @@ class PlotRenderItem : public ViewItem
     QRectF projectionRect() const;
     void setProjectionRect(const QRectF &rect);
 
-    KstRelationList relationList() const;
-    void setRelationList(const KstRelationList &relationList);
+    RelationList relationList() const;
+    void setRelationList(const RelationList &relationList);
 
     virtual void paint(QPainter *painter);
     virtual void paintRelations(QPainter *painter) = 0;
@@ -127,7 +127,7 @@ public Q_SLOTS:
     qreal _xLogBase;
     qreal _yLogBase;
 
-    KstRelationList _relationList;
+    RelationList _relationList;
     QRectF _projectionRect;
     SelectionRect _selectionRect;
 

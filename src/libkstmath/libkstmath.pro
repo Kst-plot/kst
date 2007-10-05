@@ -22,19 +22,19 @@ QMAKE_EXT_LEX = .lex
 QMAKE_EXT_YACC = .yacc
 
 SOURCES += \
-    kstpainter.cpp \
+    painter.cpp \
     colorsequence.cpp \
     kstsettings.cpp \
-    kstobjectdefaults.cpp \
+    objectdefaults.cpp \
     labelparser.cpp \
     dataobject.cpp \
     dataobjectcollection.cpp \
     csd.cpp \
-    kstpsd.cpp \
-    kstrelation.cpp \
+    psd.cpp \
+    relation.cpp \
     curvepointsymbol.cpp \
     linestyle.cpp \
-    vcurve.cpp \
+    curve.cpp \
     image.cpp \
     defaultnames.cpp \
     histogram.cpp \
@@ -61,7 +61,7 @@ HEADERS += \
     enodes.h \
     eparse-eh.h \
     eparse.h \
-    kstrelation.h \
+    relation.h \
     basicplugin.h \
     colorsequence.h \
     csd.h \
@@ -74,12 +74,12 @@ HEADERS += \
     histogram.h \
     image.h \
     linestyle.h \
-    kstobjectdefaults.h \
-    kstpainter.h \
+    objectdefaults.h \
+    painter.h \
     kstplotdefines.h \
-    kstpsd.h \
+    psd.h \
     kstsettings.h \
-    vcurve.h \
+    curve.h \
     labelparser.h \
     objectfactory.h \
     psdcalculator.h \

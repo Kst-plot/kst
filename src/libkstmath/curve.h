@@ -15,11 +15,11 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef VCURVE_H
-#define VCURVE_H
+#ifndef CURVE_H
+#define CURVE_H
 
-#include "kstrelation.h"
-#include "kstpainter.h"
+#include "relation.h"
+#include "painter.h"
 #include "curvepointsymbol.h"
 #include "kst_export.h"
 
@@ -31,15 +31,15 @@
 
 namespace Kst {
 
-class KST_EXPORT VCurve: public KstRelation {
+class KST_EXPORT Curve: public Relation {
   public:
-    VCurve(const QString &in_tag, VectorPtr in_X, VectorPtr in_Y,
+    Curve(const QString &in_tag, VectorPtr in_X, VectorPtr in_Y,
         VectorPtr in_EX, VectorPtr in_EY,
         VectorPtr in_EXMinus, VectorPtr in_EYMinus,
         const QColor &in_color);
     
-    VCurve(QDomElement &e);
-    virtual ~VCurve();
+    Curve(QDomElement &e);
+    virtual ~Curve();
 
     virtual UpdateType update(int update_counter = -1);
     virtual QString propertyString() const;
@@ -81,7 +81,7 @@ class KST_EXPORT VCurve: public KstRelation {
     QString yLabel() const;
     QString topLabel() const;
 
-    virtual KstCurveType curveType() const;
+    virtual CurveType curveType() const;
 
     virtual bool xIsRising() const;
 
@@ -145,10 +145,10 @@ class KST_EXPORT VCurve: public KstRelation {
 #endif
     
     // render this vcurve
-    virtual void paint(const KstCurveRenderContext& context);
+    virtual void paint(const CurveRenderContext& context);
     
     // render the legend symbol for this curve
-    virtual void paintLegendSymbol(KstPainter *p, const QRect& bound);
+    virtual void paintLegendSymbol(Painter *p, const QRect& bound);
     
     // see KstRelation::distanceToPoint
     virtual double distanceToPoint(double xpos, double dx, double ypos) const;
@@ -181,8 +181,8 @@ class KST_EXPORT VCurve: public KstRelation {
 
 };
 
-typedef SharedPtr<VCurve> VCurvePtr;
-typedef ObjectList<VCurvePtr> VCurveList;
+typedef SharedPtr<Curve> CurvePtr;
+typedef ObjectList<CurvePtr> CurveList;
 
 }
 #endif

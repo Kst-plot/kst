@@ -26,7 +26,7 @@
 #include "datacollection.h"
 #include "debug.h"
 #include "psdcalculator.h"
-#include "kstobjectdefaults.h"
+#include "objectdefaults.h"
 
 extern "C" void rdft(int n, int isgn, double *a);
 
@@ -341,7 +341,7 @@ void CSD::setFreq(double in_freq) {
   if (in_freq > 0.0) {
     _frequency = in_freq;
   } else {
-    _frequency = KST::objectDefaults.psdFreq();
+    _frequency = objectDefaults.psdFreq();
   }
 }
 

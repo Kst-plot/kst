@@ -18,7 +18,7 @@
 #include <QGraphicsItem>
 
 #include "viewitem.h"
-#include "kstrelation.h"
+#include "relation.h"
 
 namespace Kst {
 

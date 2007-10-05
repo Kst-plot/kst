@@ -1,13 +1,7 @@
 /***************************************************************************
-                               kstpainter.cpp
-                             -------------------
-    begin                : Nov 25, 2005
-    copyright            : (C) 2005 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
+ *   copyright : (C) 2005 The University of Toronto                        *
+*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -15,48 +9,51 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kstpainter.h"
 
-KstPainter::KstPainter(PaintType t)
+#include "painter.h"
+
+namespace Kst {
+
+Painter::Painter(PaintType t)
 : QPainter(), _type(t), _drawInlineUI(false), _makingMask(false) {
 }
 
 
-KstPainter::~KstPainter() {
+Painter::~Painter() {
 }
 
 
-void KstPainter::setType(PaintType t) {
+void Painter::setType(PaintType t) {
   _type = t;
 }
 
 
-KstPainter::PaintType KstPainter::type() const {
+Painter::PaintType Painter::type() const {
   return _type;
 }
 
 
-bool KstPainter::drawInlineUI() const {
+bool Painter::drawInlineUI() const {
   return _drawInlineUI;
 }
 
 
-void KstPainter::setDrawInlineUI(bool draw) {
+void Painter::setDrawInlineUI(bool draw) {
   _drawInlineUI = draw;
 }
 
 
-bool KstPainter::makingMask() const {
+bool Painter::makingMask() const {
   return _makingMask;
 }
 
 
-void KstPainter::setMakingMask(bool making) {
+void Painter::setMakingMask(bool making) {
   _makingMask = making;
 }
 
 
-int KstPainter::lineWidthAdjustmentFactor() const {
+int Painter::lineWidthAdjustmentFactor() const {
   int factor = 1;
   
   if (type() == P_PRINT || type() == P_EXPORT) {
@@ -82,4 +79,5 @@ int KstPainter::lineWidthAdjustmentFactor() const {
   return factor > 0 ? factor : 1;
 }
 
+}
 // vim: ts=2 sw=2 et

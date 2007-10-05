@@ -170,7 +170,7 @@ QRectF PlotRenderItem::computedProjectionRect() const {
 void PlotRenderItem::xAxisRange(qreal *min, qreal *max) const {
   qreal minimum = isXAxisLog() ? 0.0 : -0.1;
   qreal maximum = 0.1;
-  foreach (KstRelationPtr relation, relationList()) {
+  foreach (RelationPtr relation, relationList()) {
       if (relation->ignoreAutoScale())
         continue;
 
@@ -217,7 +217,7 @@ void PlotRenderItem::xAxisRange(qreal *min, qreal *max) const {
 void PlotRenderItem::yAxisRange(qreal *min, qreal *max) const {
   qreal minimum = isYAxisLog() ? 0.0 : -0.1;
   qreal maximum = 0.1;
-  foreach (KstRelationPtr relation, relationList()) {
+  foreach (RelationPtr relation, relationList()) {
       if (relation->ignoreAutoScale())
         continue;
 
@@ -262,12 +262,12 @@ void PlotRenderItem::yAxisRange(qreal *min, qreal *max) const {
 }
 
 
-KstRelationList PlotRenderItem::relationList() const {
+RelationList PlotRenderItem::relationList() const {
   return _relationList;
 }
 
 
-void PlotRenderItem::setRelationList(const KstRelationList &relationList) {
+void PlotRenderItem::setRelationList(const RelationList &relationList) {
   _relationList = relationList;
   zoomMaximum();
 }
@@ -300,7 +300,7 @@ void PlotRenderItem::paint(QPainter *painter) {
 
 
 QString PlotRenderItem::leftLabel() const {
-  foreach (KstRelationPtr relation, relationList()) {
+  foreach (RelationPtr relation, relationList()) {
     if (!relation->yLabel().isEmpty())
       return relation->yLabel();
   }
@@ -309,7 +309,7 @@ QString PlotRenderItem::leftLabel() const {
 
 
 QString PlotRenderItem::bottomLabel() const {
-  foreach (KstRelationPtr relation, relationList()) {
+  foreach (RelationPtr relation, relationList()) {
     if (!relation->xLabel().isEmpty())
       return relation->xLabel();
   }
@@ -320,7 +320,7 @@ QString PlotRenderItem::bottomLabel() const {
 QString PlotRenderItem::rightLabel() const {
   //FIXME much less than ideal
   QString left = leftLabel();
-  foreach (KstRelationPtr relation, relationList()) {
+  foreach (RelationPtr relation, relationList()) {
     if (!relation->yLabel().isEmpty() && relation->yLabel() != left)
       return relation->yLabel();
   }
@@ -331,7 +331,7 @@ QString PlotRenderItem::rightLabel() const {
 QString PlotRenderItem::topLabel() const {
   //FIXME much less than ideal
   QString bottom = bottomLabel();
-  foreach (KstRelationPtr relation, relationList()) {
+  foreach (RelationPtr relation, relationList()) {
     if (!relation->xLabel().isEmpty() && relation->xLabel() != bottom)
       return relation->xLabel();
   }

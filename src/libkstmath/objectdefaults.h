@@ -1,13 +1,7 @@
 /***************************************************************************
-                             kstobjectdefaults.h
-                             -------------------
-    begin                : May 28, 2004
-    copyright            : (C) 2004 The University of Toronto
-    email                :
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
+ *   copyright : (C) 2004 The University of Toronto                        *
+*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -15,17 +9,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSTOBJECTDEFAULTS_H
-#define KSTOBJECTDEFAULTS_H
+#ifndef OBJECTDEFAULTS_H
+#define OBJECTDEFAULTS_H
 
 #include <qstring.h>
 #include "kst_export.h"
 
 class QSettings;
 
-class KST_EXPORT KstObjectDefaults {
+namespace Kst {
+
+class KST_EXPORT ObjectDefaults {
   public:
-    KstObjectDefaults();
+    ObjectDefaults();
     void sync();
     double psdFreq() const;
     int fftLen() const;
@@ -55,9 +51,8 @@ class KST_EXPORT KstObjectDefaults {
     bool _interpolateHoles;
 };
 
-namespace KST {
-  extern KST_EXPORT KstObjectDefaults objectDefaults;
-}
+  extern KST_EXPORT ObjectDefaults objectDefaults;
 
+}
 #endif
 // vim: ts=2 sw=2 et
