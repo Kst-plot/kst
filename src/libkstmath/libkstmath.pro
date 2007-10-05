@@ -37,7 +37,7 @@ SOURCES += \
     kstvcurve.cpp \
     kstimage.cpp \
     defaultnames.cpp \
-    ksthistogram.cpp \
+    histogram.cpp \
     equation.cpp \
     curvehint.cpp \
     basicplugin.cpp \
@@ -71,7 +71,7 @@ HEADERS += \
     dataobject.h \
     defaultnames.h \
     equation.h \
-    ksthistogram.h \
+    histogram.h \
     kstimage.h \
     kstlinestyle.h \
     kstobjectdefaults.h \

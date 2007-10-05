@@ -18,7 +18,7 @@
 #include "dataobjectcollection.h"
 #include "datacollection.h"
 #include "defaultnames.h"
-#include "ksthistogram.h"
+#include "histogram.h"
 #include "kstpsd.h"
 #include "kstvcurve.h"
 

@@ -14,7 +14,7 @@
 #include <QtTest>
 
 #include <vector.h>
-#include <ksthistogram.h>
+#include <histogram.h>
 #include <datacollection.h>
 #include <dataobjectcollection.h>
 
@@ -26,7 +26,7 @@ void TestHistogram::cleanupTestCase() {
 
 void TestHistogram::testHistogram() {
   Kst::VectorPtr vp = Kst::Vector::generateVector(0, 10, 100, Kst::ObjectTag::fromString("V1"));
-  KstHistogramPtr h1 = new KstHistogram("H1", vp, 0, 10, 10, KST_HS_NUMBER);
+  Kst::HistogramPtr h1 = new Kst::Histogram("H1", vp, 0, 10, 10, Kst::KST_HS_NUMBER);
   Kst::dataObjectList.append(h1.data());
 
   QCOMPARE(h1->propertyString(), QLatin1String("Histogram: V1"));
@@ -82,7 +82,7 @@ void TestHistogram::testHistogram() {
   //dumpPoints(h1, 9);
   QCOMPARE(count, 100); // should still account for the whole vector
   // min > max
-  h1 = new KstHistogram("H2", vp, 10, 0, 10, KST_HS_NUMBER);
+  h1 = new Kst::Histogram("H2", vp, 10, 0, 10, Kst::KST_HS_NUMBER);
   QCOMPARE(h1->nBins(), 10);
   QCOMPARE(h1->xMin(), 0.0);
   QCOMPARE(h1->xMax(), 10.0);
@@ -90,7 +90,7 @@ void TestHistogram::testHistogram() {
   QCOMPARE(h1->vMax(), 10.0);
   QCOMPARE(h1->vNumSamples(), 100);
   // min == max
-  h1 = new KstHistogram("H3", vp, 10, 10, 2, KST_HS_NUMBER);
+  h1 = new Kst::Histogram("H3", vp, 10, 10, 2, Kst::KST_HS_NUMBER);
   QCOMPARE(h1->nBins(), 2);
   QCOMPARE(h1->xMin(), 9.0);
   QCOMPARE(h1->xMax(), 11.0);
@@ -98,7 +98,7 @@ void TestHistogram::testHistogram() {
   QCOMPARE(h1->vMax(), 10.0);
   QCOMPARE(h1->vNumSamples(), 100);
   // max < min
-  h1 = new KstHistogram("H4", vp, 11, 9, 1, KST_HS_NUMBER);
+  h1 = new Kst::Histogram("H4", vp, 11, 9, 1, Kst::KST_HS_NUMBER);
   QCOMPARE(h1->nBins(), 2);
   QCOMPARE(h1->xMax(), 11.0);
   QCOMPARE(h1->xMin(), 9.0);

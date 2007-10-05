@@ -1,5 +1,5 @@
 /***************************************************************************
-                          ksthistogram.h: Histogram for KST
+                          histogram.h: Histogram for KST
                              -------------------
     begin                : Wed July 11 2002
     copyright            : (C) 2002 by C. Barth Netterfield
@@ -19,22 +19,24 @@
 
  *@author C. Barth Netterfield
  */
-#ifndef KSTHISTOGRAM_H
-#define KSTHISTOGRAM_H
+#ifndef HISTOGRAM_H
+#define HISTOGRAM_H
 
 #include "dataobject.h"
 #include "kst_export.h"
 
-enum KstHsNormType { KST_HS_NUMBER, KST_HS_PERCENT, KST_HS_FRACTION, KST_HS_MAX_ONE};
+namespace Kst {
 
-class KST_EXPORT KstHistogram : public Kst::DataObject {
+enum HsNormType { KST_HS_NUMBER, KST_HS_PERCENT, KST_HS_FRACTION, KST_HS_MAX_ONE};
+
+class KST_EXPORT Histogram : public DataObject {
 public:
-  KstHistogram(const QString &in_tag, Kst::VectorPtr in_V,
+  Histogram(const QString &in_tag, VectorPtr in_V,
                double xmin_in, double xmax_in,
                int in_n_bins,
-               KstHsNormType new_norm_in);
-  KstHistogram(const QDomElement &e);
-  virtual ~KstHistogram();
+               HsNormType new_norm_in);
+  Histogram(const QDomElement &e);
+  virtual ~Histogram();
 
   virtual UpdateType update(int update_counter = -1);
   virtual void save(QTextStream &ts, const QString& indent = QString::null);
@@ -47,7 +49,7 @@ public:
 
   QString vTag() const;
 
-  void setVector(Kst::VectorPtr);
+  void setVector(VectorPtr);
 
   virtual QString yLabel() const;
   virtual QString xLabel() const;
@@ -61,7 +63,7 @@ public:
   bool isNormOne()        const { return _NormMode == KST_HS_MAX_ONE; }
   void setIsNormOne()           { _NormMode = KST_HS_MAX_ONE; }
 
-  static void AutoBin(const Kst::VectorPtr, int *n, double *max, double *min);
+  static void AutoBin(const VectorPtr, int *n, double *max, double *min);
 
   virtual void showNewDialog();
   virtual void showEditDialog();
@@ -74,8 +76,8 @@ public:
   void setRealTimeAutoBin(bool autobin);
   bool realTimeAutoBin() const;
 
-  Kst::VectorPtr vX() const { return *_bVector; }
-  Kst::VectorPtr vY() const { return *_hVector; }
+  VectorPtr vX() const { return *_bVector; }
+  VectorPtr vY() const { return *_hVector; }
 
   double xMin() const { return _MinX; }
   double xMax() const { return _MaxX; }
@@ -85,12 +87,12 @@ public:
   double vMin() const;
   int vNumSamples() const;
   
-  virtual Kst::DataObjectPtr makeDuplicate(Kst::DataObjectDataObjectMap& duplicatedMap);
+  virtual DataObjectPtr makeDuplicate(DataObjectDataObjectMap& duplicatedMap);
 
 private:
-  KstHsNormType _NormMode;
-  Kst::VectorMap::Iterator _bVector;
-  Kst::VectorMap::Iterator _hVector;
+  HsNormType _NormMode;
+  VectorMap::Iterator _bVector;
+  VectorMap::Iterator _hVector;
   double _MaxX;
   double _MinX;
   int _NS;
@@ -100,15 +102,17 @@ private:
   double _W;
   bool _realTimeAutoBin;
   
-  void commonConstructor(const QString &in_tag, Kst::VectorPtr in_V,
+  void commonConstructor(const QString &in_tag, VectorPtr in_V,
                          double xmin_in, double xmax_in,
                          int in_n_bins,
-                         KstHsNormType in_norm);
+                         HsNormType in_norm);
   void internalSetNBins(int in_n_bins);
 };
 
-typedef Kst::SharedPtr<KstHistogram> KstHistogramPtr;
-typedef Kst::ObjectList<KstHistogramPtr> KstHistogramList;
+typedef SharedPtr<Histogram> HistogramPtr;
+typedef ObjectList<HistogramPtr> HistogramList;
+
+}
 
 #endif
 // vim: ts=2 sw=2 et
