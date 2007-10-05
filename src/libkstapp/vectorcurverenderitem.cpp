@@ -45,11 +45,11 @@ void VectorCurveRenderItem::paintRelations(QPainter *painter) {
     KstCurveRenderContext context;
     context.painter = painter;
     context.window = QRect(); //no idea if this should be floating point
-    context.penWidth = 1.0; //FIXME hardcode
+    context.penWidth = 1; //FIXME hardcode
     context.xLog = isXAxisLog();
     context.yLog = isYAxisLog();
-    context.xLogBase = 10.0; //FIXME hardcode
-    context.yLogBase = 10.0; //FIXME hardcode
+    context.xLogBase = xLogBase();
+    context.yLogBase = yLogBase();
 
     //FIXME rename these methods in kstvcurve
     //FIXME Completely refactor KstCurveRenderContext now that we know what these are
@@ -61,11 +61,10 @@ void VectorCurveRenderItem::paintRelations(QPainter *painter) {
     context.YMax = projectionRect().bottom();
 
     //Set the log box...
-    //Big FIXME!!
-    context.x_max = isXAxisLog() ? logXHi(context.XMax + .00001, context.xLogBase) : context.XMax;
-    context.y_max = isYAxisLog() ? logXHi(context.YMax + .00001, context.yLogBase) : context.YMax;
-    context.x_min = isXAxisLog() ? logXLo(context.XMin + .00001, context.xLogBase) : context.XMin;
-    context.y_min = isYAxisLog() ? logXLo(context.YMin + .00001, context.yLogBase) : context.YMin;
+    context.x_max = isXAxisLog() ? logXHi(context.XMax, context.xLogBase) : context.XMax;
+    context.y_max = isYAxisLog() ? logXHi(context.YMax, context.yLogBase) : context.YMax;
+    context.x_min = isXAxisLog() ? logXLo(context.XMin, context.xLogBase) : context.XMin;
+    context.y_min = isYAxisLog() ? logXLo(context.YMin, context.yLogBase) : context.YMin;
 
     //These are the bounding box in regular QGV coord
     context.Lx = plotRect().left();

@@ -92,10 +92,13 @@ class KST_EXPORT KstRelation : public Kst::Object {
     virtual double maxY() const { return MaxY; }
     virtual double minY() const { return MinY; }
     virtual double minPosY() const { return MinPosY; }
+
+    //NoSpike
     virtual double ns_maxX()    const { return _ns_maxx; }
     virtual double ns_minX()    const { return _ns_minx; }
     virtual double ns_maxY()    const { return _ns_maxy; }
     virtual double ns_minY()    const { return _ns_miny; }
+
     virtual double minPosX() const { return MinPosX; }
     virtual double midX() const { return (MaxX+MinX)*0.5; }
     virtual double midY() const { return (MaxY+MinY)*0.5; }

@@ -49,8 +49,14 @@ class PlotRenderItem : public ViewItem
     bool isXAxisLog() const;
     void setXAxisLog(bool log);
 
+    qreal xLogBase() const;
+    void setXLogBase(qreal xLogBase);
+
     bool isYAxisLog() const;
     void setYAxisLog(bool log);
+
+    qreal yLogBase() const;
+    void setYLogBase(qreal yLogBase);
 
     QRectF plotRect() const;
     QRectF computedProjectionRect() const;
@@ -118,6 +124,8 @@ public Q_SLOTS:
     ZoomMode _yAxisZoomMode;
     bool _isXAxisLog;
     bool _isYAxisLog;
+    qreal _xLogBase;
+    qreal _yLogBase;
 
     KstRelationList _relationList;
     QRectF _projectionRect;

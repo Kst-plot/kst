@@ -31,7 +31,9 @@ PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
   _xAxisZoomMode(Auto),
   _yAxisZoomMode(AutoBorder),
   _isXAxisLog(false),
-  _isYAxisLog(false) {
+  _isYAxisLog(false),
+  _xLogBase(10.0),
+  _yLogBase(10.0) {
 
   setName(tr("Plot Render"));
   setParentItem(parentItem);
@@ -99,6 +101,16 @@ void PlotRenderItem::setXAxisLog(bool log) {
 }
 
 
+qreal PlotRenderItem::xLogBase() const {
+  return _xLogBase;
+}
+
+
+void PlotRenderItem::setXLogBase(qreal xLogBase) {
+  _xLogBase = xLogBase;
+}
+
+
 bool PlotRenderItem::isYAxisLog() const {
   return _isYAxisLog;
 }
@@ -106,6 +118,16 @@ bool PlotRenderItem::isYAxisLog() const {
 
 void PlotRenderItem::setYAxisLog(bool log) {
   _isYAxisLog = log;
+}
+
+
+qreal PlotRenderItem::yLogBase() const {
+  return _yLogBase;
+}
+
+
+void PlotRenderItem::setYLogBase(qreal yLogBase) {
+  _yLogBase = yLogBase;
 }
 
 
@@ -154,7 +176,9 @@ void PlotRenderItem::xAxisRange(qreal *min, qreal *max) const {
 
       //If the axis is in log mode, the lower extent will be the
       //minimum value larger than zero.
-      if (!isXAxisLog() || relation->minX() > 0.0)
+      if (isXAxisLog())
+        minimum = minimum <= 0.0 ? relation->minPosX() : qMin(relation->minPosX(), minimum);
+      else
         minimum = qMin(relation->minX(), minimum);
 
       maximum = qMax(relation->maxX(), maximum);
@@ -164,7 +188,17 @@ void PlotRenderItem::xAxisRange(qreal *min, qreal *max) const {
   case Auto:
     break; //nothing more...
   case AutoBorder:
-    break; //FIXME auto mode, plus a 2.5% border on top and bottom.
+    if (isXAxisLog()) {
+      minimum = log10(minimum)/log10(xLogBase());
+      maximum = maximum > 0.0 ? log10(maximum) : 0.0;
+      qreal dx = qAbs(maximum - minimum) * 0.025;
+      maximum = pow(xLogBase(), maximum + dx);
+      minimum = pow(xLogBase(), minimum - dx);
+    } else {
+      qreal dx = qAbs(maximum - minimum) * 0.025;
+      maximum += dx;
+      minimum -= dx;
+    }
   case Expression:
     break; //FIXME limits are given by scalar equations
   case SpikeInsensitive:
@@ -189,7 +223,9 @@ void PlotRenderItem::yAxisRange(qreal *min, qreal *max) const {
 
       //If the axis is in log mode, the lower extent will be the
       //minimum value larger than zero.
-      if (!isYAxisLog() || relation->minY() > 0.0)
+      if (isYAxisLog())
+        minimum = minimum <= 0.0 ? relation->minPosY() : qMin(relation->minPosY(), minimum);
+      else
         minimum = qMin(relation->minY(), minimum);
 
       maximum = qMax(relation->maxY(), maximum);
@@ -199,7 +235,18 @@ void PlotRenderItem::yAxisRange(qreal *min, qreal *max) const {
   case Auto:
     break; //nothing more...
   case AutoBorder:
-    break; //FIXME auto mode, plus a 2.5% border on top and bottom.
+    if (isYAxisLog()) {
+      minimum = log10(minimum)/log10(yLogBase());
+      maximum = maximum > 0.0 ? log10(maximum) : 0.0;
+      qreal dy = qAbs(maximum - minimum) * 0.025;
+      maximum = pow(yLogBase(), maximum + dy);
+      minimum = pow(yLogBase(), minimum - dy);
+    } else {
+      qreal dy = qAbs(maximum - minimum) * 0.025;
+      maximum += dy;
+      minimum -= dy;
+    }
+    break; //auto mode, plus a 2.5% border on top and bottom.
   case Expression:
     break; //FIXME limits are given by scalar equations
   case SpikeInsensitive:
