@@ -233,7 +233,7 @@ void ViewGridLayout::updateSharedAxis() {
 }
 
 
-void ViewGridLayout::shareAxisWithPlotToLeft(LayoutItem item) const {
+void ViewGridLayout::shareAxisWithPlotToLeft(LayoutItem item) {
   QPair<int, int> key = qMakePair(item.row, item.column - 1);
   if (!_itemLayouts.contains(key))
     return;
@@ -253,11 +253,12 @@ void ViewGridLayout::shareAxisWithPlotToLeft(LayoutItem item) const {
   if (item.rowSpan == left.rowSpan && item.columnSpan == left.columnSpan) {
     plotItem->setLeftLabelVisible(false);
     leftItem->setRightLabelVisible(false);
+    setSpacing(QSizeF(0.0, spacing().height()));
   }
 }
 
 
-void ViewGridLayout::shareAxisWithPlotToRight(LayoutItem item) const {
+void ViewGridLayout::shareAxisWithPlotToRight(LayoutItem item) {
   QPair<int, int> key = qMakePair(item.row, item.column + 1);
   if (!_itemLayouts.contains(key))
     return;
@@ -277,11 +278,12 @@ void ViewGridLayout::shareAxisWithPlotToRight(LayoutItem item) const {
   if (item.rowSpan == right.rowSpan && item.columnSpan == right.columnSpan) {
     plotItem->setRightLabelVisible(false);
     rightItem->setLeftLabelVisible(false);
+    setSpacing(QSizeF(0.0, spacing().height()));
   }
 }
 
 
-void ViewGridLayout::shareAxisWithPlotAbove(LayoutItem item) const {
+void ViewGridLayout::shareAxisWithPlotAbove(LayoutItem item) {
   QPair<int, int> key = qMakePair(item.row - 1, item.column);
   if (!_itemLayouts.contains(key))
     return;
@@ -301,11 +303,12 @@ void ViewGridLayout::shareAxisWithPlotAbove(LayoutItem item) const {
   if (item.rowSpan == top.rowSpan && item.columnSpan == top.columnSpan) {
     plotItem->setTopLabelVisible(false);
     topItem->setBottomLabelVisible(false);
+    setSpacing(QSizeF(spacing().width(), 0.0));
   }
 }
 
 
-void ViewGridLayout::shareAxisWithPlotBelow(LayoutItem item) const {
+void ViewGridLayout::shareAxisWithPlotBelow(LayoutItem item) {
   QPair<int, int> key = qMakePair(item.row + 1, item.column);
   if (!_itemLayouts.contains(key))
     return;
@@ -325,6 +328,7 @@ void ViewGridLayout::shareAxisWithPlotBelow(LayoutItem item) const {
   if (item.rowSpan == bottom.rowSpan && item.columnSpan == bottom.columnSpan) {
     plotItem->setBottomLabelVisible(false);
     bottomItem->setTopLabelVisible(false);
+    setSpacing(QSizeF(spacing().width(), 0.0));
   }
 }
 

@@ -69,7 +69,7 @@ class PlotItem : public ViewItem
     void setLabelsVisible(bool visible);
 
   Q_SIGNALS:
-    void labelsVisibleChanged(); //only emitted when 'setLabelsVisible' is called
+    void labelVisibilityChanged();
 
   private:
     qreal calculatedMarginWidth() const;

@@ -44,7 +44,7 @@ PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
 
   connect(parentItem, SIGNAL(geometryChanged()),
           this, SLOT(updateGeometry()));
-  connect(parentItem, SIGNAL(labelsVisibleChanged()),
+  connect(parentItem, SIGNAL(labelVisibilityChanged()),
           this, SLOT(updateGeometry()));
   connect(parentItem->parentView(), SIGNAL(viewModeChanged(View::ViewMode)),
           this, SLOT(updateViewMode()));
@@ -713,7 +713,6 @@ void PlotRenderItem::zoomNormalizeXtoY() {
 void PlotRenderItem::zoomLogX() {
   qDebug() << "zoomLogX" << endl;
   setXAxisLog(_zoomLogX->isChecked());
-  zoomMaximum(); //FIXME this is wrong of course, but working on debugging..
   update();
 }
 
@@ -782,7 +781,6 @@ void PlotRenderItem::zoomNormalizeYtoX() {
 void PlotRenderItem::zoomLogY() {
   qDebug() << "zoomLogY" << endl;
   setYAxisLog(_zoomLogY->isChecked());
-  zoomMaximum(); //FIXME this is wrong of course, but working on debugging..
   update();
 }
 

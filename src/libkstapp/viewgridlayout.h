@@ -76,10 +76,10 @@ class ViewGridLayout : public QObject
 
   private:
     void updateSharedAxis();
-    void shareAxisWithPlotToLeft(LayoutItem item) const;
-    void shareAxisWithPlotToRight(LayoutItem item) const;
-    void shareAxisWithPlotAbove(LayoutItem item) const;
-    void shareAxisWithPlotBelow(LayoutItem item) const;
+    void shareAxisWithPlotToLeft(LayoutItem item);
+    void shareAxisWithPlotToRight(LayoutItem item);
+    void shareAxisWithPlotAbove(LayoutItem item);
+    void shareAxisWithPlotBelow(LayoutItem item);
 
   private:
     bool _enabled;

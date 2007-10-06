@@ -152,9 +152,9 @@ void ViewItemDialog::layoutChanged() {
   }
 
   layout->setMargin(QSizeF(_layoutTab->horizontalMargin(),
-                              _layoutTab->verticalMargin()));
+                           _layoutTab->verticalMargin()));
   layout->setSpacing(QSizeF(_layoutTab->horizontalSpacing(),
-                               _layoutTab->verticalSpacing()));
+                            _layoutTab->verticalSpacing()));
   layout->update();
 }
 

@@ -207,7 +207,11 @@ bool PlotItem::isLeftLabelVisible() const {
 
 
 void PlotItem::setLeftLabelVisible(bool visible) {
+  if (_isLeftLabelVisible == visible)
+    return;
+
   _isLeftLabelVisible = visible;
+  emit labelVisibilityChanged();
 }
 
 
@@ -217,7 +221,11 @@ bool PlotItem::isBottomLabelVisible() const {
 
 
 void PlotItem::setBottomLabelVisible(bool visible) {
+  if (_isBottomLabelVisible == visible)
+    return;
+
   _isBottomLabelVisible = visible;
+  emit labelVisibilityChanged();
 }
 
 
@@ -227,7 +235,11 @@ bool PlotItem::isRightLabelVisible() const {
 
 
 void PlotItem::setRightLabelVisible(bool visible) {
+  if (_isRightLabelVisible == visible)
+    return;
+
   _isRightLabelVisible = visible;
+  emit labelVisibilityChanged();
 }
 
 
@@ -237,7 +249,11 @@ bool PlotItem::isTopLabelVisible() const {
 
 
 void PlotItem::setTopLabelVisible(bool visible) {
+  if (_isTopLabelVisible == visible)
+    return;
+
   _isTopLabelVisible = visible;
+  emit labelVisibilityChanged();
 }
 
 
@@ -246,7 +262,6 @@ void PlotItem::setLabelsVisible(bool visible) {
   setRightLabelVisible(visible);
   setBottomLabelVisible(visible);
   setTopLabelVisible(visible);
-  emit labelsVisibleChanged();
 }
 
 
@@ -305,6 +320,9 @@ QRectF PlotItem::verticalLabelRect(bool calc) const {
 
 
 void PlotItem::paintLeftLabel(QPainter *painter) {
+  if (!isLeftLabelVisible())
+    return;
+
   painter->save();
   QTransform t;
   t.rotate(90.0);
@@ -318,6 +336,9 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
 
 
 QSizeF PlotItem::calculateLeftLabelBound(QPainter *painter) {
+  if (!isLeftLabelVisible())
+    return QSizeF();
+
   painter->save();
   QTransform t;
   t.rotate(90.0);
@@ -334,6 +355,9 @@ QSizeF PlotItem::calculateLeftLabelBound(QPainter *painter) {
 
 
 void PlotItem::paintBottomLabel(QPainter *painter) {
+  if (!isBottomLabelVisible())
+    return;
+
   painter->save();
   QRectF bottomLabelRect = horizontalLabelRect(false);
   bottomLabelRect.moveTopLeft(QPointF(marginWidth(), height() - marginHeight()));
@@ -343,6 +367,9 @@ void PlotItem::paintBottomLabel(QPainter *painter) {
 
 
 QSizeF PlotItem::calculateBottomLabelBound(QPainter *painter) {
+  if (!isBottomLabelVisible())
+    return QSizeF();
+
   QRectF bottomLabelBound = painter->boundingRect(horizontalLabelRect(true),
                                                   Qt::TextWordWrap | Qt::AlignCenter, bottomLabel());
 
@@ -353,6 +380,9 @@ QSizeF PlotItem::calculateBottomLabelBound(QPainter *painter) {
 
 
 void PlotItem::paintRightLabel(QPainter *painter) {
+  if (!isRightLabelVisible())
+    return;
+
   painter->save();
   painter->translate(width() - marginWidth(), 0.0);
   QTransform t;
@@ -368,6 +398,9 @@ void PlotItem::paintRightLabel(QPainter *painter) {
 
 
 QSizeF PlotItem::calculateRightLabelBound(QPainter *painter) {
+  if (!isRightLabelVisible())
+    return QSizeF();
+
   painter->save();
   QTransform t;
   t.rotate(-90.0);
@@ -383,6 +416,9 @@ QSizeF PlotItem::calculateRightLabelBound(QPainter *painter) {
 
 
 void PlotItem::paintTopLabel(QPainter *painter) {
+  if (!isTopLabelVisible())
+    return;
+
   painter->save();
   QRectF topLabelRect = horizontalLabelRect(false);
   topLabelRect.moveTopLeft(QPointF(marginWidth(), 0.0));
@@ -392,6 +428,9 @@ void PlotItem::paintTopLabel(QPainter *painter) {
 
 
 QSizeF PlotItem::calculateTopLabelBound(QPainter *painter) {
+  if (!isTopLabelVisible())
+    return QSizeF();
+
   QRectF topLabelBound = painter->boundingRect(horizontalLabelRect(true),
                                                Qt::TextWordWrap | Qt::AlignCenter, topLabel());
 
