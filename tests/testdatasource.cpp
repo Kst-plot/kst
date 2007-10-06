@@ -273,7 +273,10 @@ void TestDataSource::testAscii() {
     rvp->writeLock();
     rvp->reload();
     rvp->unlock();
+#ifndef Q_WS_WIN32
+    // Win32 you can't erase a file that's open
     QVERIFY(!rvp->isValid());
+#endif
   }
 }
 
