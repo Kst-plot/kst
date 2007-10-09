@@ -111,6 +111,11 @@ void EquationTab::setDoInterpolation(bool doInterpolation) {
 }
 
 
+CurveAppearance* EquationTab::curveAppearanceWidget() {
+  return _curveAppearance;
+}
+
+
 EquationDialog::EquationDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
@@ -149,13 +154,22 @@ ObjectPtr EquationDialog::createNewDataObject() const {
   //FIXME assume new plot for now...
   //FIXME this should be a command...
   //FIXME need some smart placement...
-  //FIXME need to hook up appearance and placement...
+  //FIXME need to hook up placement...
 
   CurvePtr curve = new Curve(suggestCurveName(equation->tag(), true),
                                      equation->vX(),
                                      equation->vY(),
                                      0L, 0L, 0L, 0L,
-                                     QColor(Qt::red));
+                                     _equationTab->curveAppearanceWidget()->color());
+
+  curve->setHasPoints(_equationTab->curveAppearanceWidget()->showPoints());
+  curve->setHasLines(_equationTab->curveAppearanceWidget()->showLines());
+  curve->setHasBars(_equationTab->curveAppearanceWidget()->showBars());
+  curve->setLineWidth(_equationTab->curveAppearanceWidget()->lineWidth());
+  curve->setLineStyle(_equationTab->curveAppearanceWidget()->lineStyle());
+  curve->pointType = _equationTab->curveAppearanceWidget()->pointType();
+  curve->setPointDensity(_equationTab->curveAppearanceWidget()->pointDensity());
+  curve->setBarStyle(_equationTab->curveAppearanceWidget()->barStyle());
 
   curve->writeLock();
   curve->update(0);

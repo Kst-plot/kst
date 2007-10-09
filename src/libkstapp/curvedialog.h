@@ -47,6 +47,8 @@ class KST_EXPORT CurveTab : public DataTab, Ui::CurveTab {
     VectorPtr yMinusError() const;
     void setYMinusError(VectorPtr vector);
 
+    CurveAppearance* curveAppearanceWidget();
+
   private Q_SLOTS:
   private:
 };

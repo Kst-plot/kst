@@ -24,6 +24,22 @@ class KST_EXPORT CurveAppearance : public QWidget, public Ui::CurveAppearance {
   public:
     CurveAppearance(QWidget *parent = 0);
     virtual ~CurveAppearance();
+
+    bool showLines();
+    bool showPoints();
+    bool showBars();
+    QColor color();
+    int pointType();
+    int lineStyle();
+    int lineWidth();
+    int barStyle();
+    int pointDensity();
+
+  private slots:
+    void enableSettings();
+    void drawSampleLine();
+    void populatePointSymbolCombo();
+    void populateLineStyleCombo();
 };
 
 }

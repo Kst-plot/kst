@@ -106,6 +106,11 @@ void CurveTab::setYMinusError(VectorPtr vector) {
 }
 
 
+CurveAppearance* CurveTab::curveAppearanceWidget() {
+  return _curveAppearance;
+}
+
+
 CurveDialog::CurveDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
@@ -139,7 +144,16 @@ ObjectPtr CurveDialog::createNewDataObject() const {
                                      _curveTab->yError(),
                                      _curveTab->xMinusError(),
                                      _curveTab->yMinusError(),
-                                     QColor(Qt::red));
+                                     _curveTab->curveAppearanceWidget()->color());
+
+  curve->setHasPoints(_curveTab->curveAppearanceWidget()->showPoints());
+  curve->setHasLines(_curveTab->curveAppearanceWidget()->showLines());
+  curve->setHasBars(_curveTab->curveAppearanceWidget()->showBars());
+  curve->setLineWidth(_curveTab->curveAppearanceWidget()->lineWidth());
+  curve->setLineStyle(_curveTab->curveAppearanceWidget()->lineStyle());
+  curve->pointType = _curveTab->curveAppearanceWidget()->pointType();
+  curve->setPointDensity(_curveTab->curveAppearanceWidget()->pointDensity());
+  curve->setBarStyle(_curveTab->curveAppearanceWidget()->barStyle());
 
   curve->writeLock();
   curve->update(0);
