@@ -20,6 +20,7 @@
 #include <QGraphicsSceneContextMenuEvent>
 
 #include "plotitem.h"
+#include "plotitemmanager.h"
 #include "application.h"
 
 // #define CURVE_DRAWING_TIME
@@ -28,7 +29,6 @@ namespace Kst {
 
 PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
   : ViewItem(parentItem->parentView()),
-  _isTiedZoom(false),
   _xAxisZoomMode(Auto),
   _yAxisZoomMode(AutoBorder),
   _isXAxisLog(false),
@@ -75,12 +75,12 @@ void PlotRenderItem::setType(RenderType type) {
 
 
 bool PlotRenderItem::isTiedZoom() const {
-  return _isTiedZoom;
+  return plotItem()->isTiedZoom();
 }
 
 
 void PlotRenderItem::setTiedZoom(bool tiedZoom) {
-  _isTiedZoom = tiedZoom;
+  return plotItem()->setTiedZoom(tiedZoom);
 }
 
 
@@ -166,7 +166,6 @@ void PlotRenderItem::setProjectionRect(const QRectF &rect) {
             << "before:" << _projectionRect << "\n"
             << "after:" << rect << endl;
   _projectionRect = rect;
-  update();
 }
 
 
@@ -559,7 +558,11 @@ void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   updateCursor(event->pos());
   const QRectF projection = mapToProjection(_selectionRect.rect());
   _selectionRect.reset();
-  setProjectionRect(projection);
+
+  ZoomState newState = currentZoomState();
+  newState.projectionRect = projection;
+  ZoomCommand *cmd = new ZoomCommand(this, newState, "Set Fixed Projection");
+  cmd->redo();
 }
 
 
@@ -712,8 +715,12 @@ void PlotRenderItem::zoomNormalizeXtoY() {
  */
 void PlotRenderItem::zoomLogX() {
   qDebug() << "zoomLogX" << endl;
-  setXAxisLog(_zoomLogX->isChecked());
-  update();
+
+  ZoomState newState = currentZoomState();
+  newState.isXAxisLog = _zoomLogX->isChecked();
+
+  ZoomCommand *cmd = new ZoomCommand(this, newState, _zoomLogY->text());
+  cmd->redo();
 }
 
 
@@ -780,8 +787,12 @@ void PlotRenderItem::zoomNormalizeYtoX() {
  */
 void PlotRenderItem::zoomLogY() {
   qDebug() << "zoomLogY" << endl;
-  setYAxisLog(_zoomLogY->isChecked());
-  update();
+
+  ZoomState newState = currentZoomState();
+  newState.isYAxisLog = _zoomLogY->isChecked();
+
+  ZoomCommand *cmd = new ZoomCommand(this, newState, _zoomLogY->text());
+  cmd->redo();
 }
 
 
@@ -846,11 +857,73 @@ void PlotRenderItem::updateViewMode() {
   }
 }
 
+
 void PlotRenderItem::updateCursor(const QPointF &pos) {
   if (checkBox().contains(pos)) {
     setCursor(Qt::ArrowCursor);
   } else {
     updateViewMode();
+  }
+}
+
+
+ZoomState PlotRenderItem::currentZoomState() {
+  ZoomState zoomState;
+  zoomState.plotRenderItem = this;
+  zoomState.projectionRect = projectionRect();
+  zoomState.xAxisZoomMode = xAxisZoomMode();
+  zoomState.yAxisZoomMode = yAxisZoomMode();
+  zoomState.isXAxisLog = isXAxisLog();
+  zoomState.isYAxisLog = isYAxisLog();
+  zoomState.xLogBase = xLogBase();
+  zoomState.yLogBase = yLogBase();
+  return zoomState;
+}
+
+
+void PlotRenderItem::setCurrentZoomState(ZoomState zoomState) {
+  setProjectionRect(zoomState.projectionRect);
+  setXAxisZoomMode(ZoomMode(zoomState.xAxisZoomMode));
+  setYAxisZoomMode(ZoomMode(zoomState.yAxisZoomMode));
+  setXAxisLog(zoomState.isXAxisLog);
+  setYAxisLog(zoomState.isYAxisLog);
+  setXLogBase(zoomState.xLogBase);
+  setYLogBase(zoomState.yLogBase);
+  update();
+}
+
+
+ZoomCommand::ZoomCommand(PlotRenderItem *item, ZoomState newState, const QString &text)
+    : ViewItemCommand(item, text), _newState(newState) {
+
+  if (!item->isTiedZoom()) {
+    _originalStates << item->currentZoomState();
+  } else {
+    QList<PlotItem*> plots = PlotItemManager::tiedZoomPlotsForView(item->parentView());
+    foreach (PlotItem *plotItem, plots) {
+      QList<PlotRenderItem *> renderers = plotItem->renderItems();
+      foreach (PlotRenderItem *renderItem, renderers) {
+        _originalStates << renderItem->currentZoomState();
+      }
+    }
+  }
+}
+
+
+ZoomCommand::~ZoomCommand() {
+}
+
+
+void ZoomCommand::undo() {
+  foreach (ZoomState state, _originalStates) {
+    state.plotRenderItem->setCurrentZoomState(state);
+  }
+}
+
+
+void ZoomCommand::redo() {
+  foreach (ZoomState state, _originalStates) {
+    state.plotRenderItem->setCurrentZoomState(_newState);
   }
 }
 

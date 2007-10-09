@@ -11,6 +11,7 @@
 
 #include "plotitem.h"
 
+#include "plotitemmanager.h"
 #include "plotrenderitem.h"
 
 #include "viewgridlayout.h"
@@ -33,6 +34,7 @@ namespace Kst {
 
 PlotItem::PlotItem(View *parent)
   : ViewItem(parent),
+  _isTiedZoom(false),
   _isLeftLabelVisible(true),
   _isBottomLabelVisible(true),
   _isRightLabelVisible(true),
@@ -42,10 +44,13 @@ PlotItem::PlotItem(View *parent)
 
   setName("Plot");
   setBrush(Qt::white);
+
+  PlotItemManager::self()->addPlot(this);
 }
 
 
 PlotItem::~PlotItem() {
+  PlotItemManager::self()->removePlot(this);
 }
 
 
@@ -142,6 +147,27 @@ QRectF PlotItem::projectionRect() const {
       rect = rect.united(renderer->projectionRect());
   }
   return rect;
+}
+
+
+bool PlotItem::isTiedZoom() const {
+  return _isTiedZoom;
+}
+
+
+void PlotItem::setTiedZoom(bool tiedZoom) {
+  if (_isTiedZoom == tiedZoom)
+    return;
+
+  _isTiedZoom = tiedZoom;
+
+  if (_isTiedZoom)
+    PlotItemManager::self()->addTiedZoomPlot(this);
+  else
+    PlotItemManager::self()->removeTiedZoomPlot(this);
+
+  //FIXME ugh, this is expensive, but need to redraw the renderitems checkboxes...
+  update();
 }
 
 

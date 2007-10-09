@@ -26,6 +26,19 @@ class PlotItem;
 
 enum RenderType { Cartesian, Polar, Sinusoidal };
 
+class PlotRenderItem;
+
+struct ZoomState {
+  PlotRenderItem *plotRenderItem;
+  QRectF projectionRect;
+  int xAxisZoomMode;
+  int yAxisZoomMode;
+  bool isXAxisLog;
+  bool isYAxisLog;
+  qreal xLogBase;
+  qreal yLogBase;
+};
+
 class PlotRenderItem : public ViewItem
 {
   Q_OBJECT
@@ -128,10 +141,11 @@ public Q_SLOTS:
   private:
     void createActions();
     void updateCursor(const QPointF &pos);
+    ZoomState currentZoomState();
+    void setCurrentZoomState(ZoomState zoomState);
 
   private:
     RenderType _type;
-    bool _isTiedZoom;
     ZoomMode _xAxisZoomMode;
     ZoomMode _yAxisZoomMode;
     bool _isXAxisLog;
@@ -159,6 +173,21 @@ public Q_SLOTS:
     QAction *_zoomNormalizeYtoX;
     QAction *_zoomLogY;
 
+    friend class ZoomCommand;
+};
+
+class KST_EXPORT ZoomCommand : public ViewItemCommand
+{
+  public:
+    ZoomCommand(PlotRenderItem *item, ZoomState newState, const QString &text);
+    virtual ~ZoomCommand();
+
+    virtual void undo();
+    virtual void redo();
+
+  private:
+    QList<ZoomState> _originalStates;
+    ZoomState _newState;
 };
 
 }

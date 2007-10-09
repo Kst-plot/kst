@@ -46,6 +46,9 @@ class PlotItem : public ViewItem
     QRectF plotRegion() const;
     QRectF projectionRect() const;
 
+    bool isTiedZoom() const;
+    void setTiedZoom(bool tiedZoom);
+
     qreal marginWidth() const;
     qreal marginHeight() const;
 
@@ -92,6 +95,7 @@ class PlotItem : public ViewItem
 
   private:
     QList<PlotRenderItem*> _renderers;
+    bool _isTiedZoom;
     bool _isLeftLabelVisible;
     bool _isBottomLabelVisible;
     bool _isRightLabelVisible;

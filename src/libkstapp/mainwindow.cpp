@@ -24,6 +24,7 @@
 #include "memorywidget.h"
 #include "pictureitem.h"
 #include "plotitem.h"
+#include "plotitemmanager.h"
 #include "svgitem.h"
 #include "tabwidget.h"
 #include "ui_aboutdialog.h"
@@ -136,7 +137,11 @@ void MainWindow::setLayoutMode(bool layoutMode) {
 
 
 void MainWindow::setTiedZoom(bool tiedZoom) {
-  qDebug() << "Tied zoom FIXME!!" << endl;
+  View *v = tabWidget()->currentView();
+  QList<PlotItem*> plots = PlotItemManager::plotsForView(v);
+  foreach (PlotItem *plotItem, plots) {
+    plotItem->setTiedZoom(tiedZoom);
+  }
 }
 
 

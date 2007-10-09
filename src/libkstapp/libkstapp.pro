@@ -59,6 +59,7 @@ SOURCES += \
     memorywidget.cpp \
     pictureitem.cpp \
     plotitem.cpp \
+    plotitemmanager.cpp \
     plotrenderitem.cpp \
     qgetoptions.cpp \
     selectionrect.cpp \
@@ -119,6 +120,7 @@ HEADERS += \
     memorywidget.h \
     pictureitem.h \
     plotitem.h \
+    plotitemmanager.h \
     plotrenderitem.h \
     qgetoptions.h \
     selectionrect.h \
