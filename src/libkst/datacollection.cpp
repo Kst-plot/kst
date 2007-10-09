@@ -201,22 +201,18 @@ bool Data::dataSourceTagNameNotUnique(const QString& tag, bool warn, void *p) {
 }
 
 
-QStringList Data::plotList(const QString& window) {
-  Q_UNUSED(window)
-  return QStringList();
-}
-
-
 void Data::removeCurveFromPlots(Relation *c) {
   Q_UNUSED(c)
   // meaningless in no GUI: no plots!
 }
+
 
 bool Data::viewObjectNameNotUnique(const QString& tag) {
   Q_UNUSED(tag)
   // meaningless in no GUI: no view objects!
   return false;
 }
+
 
 int Data::vectorToFile(VectorPtr v, QFile *f) {
   Q_UNUSED(v)
@@ -235,25 +231,20 @@ int Data::vectorsToFile(const VectorList& l, QFile *f, bool interpolate) {
 }
 
 
-int Data::columns(const QString& window) {
-  Q_UNUSED(window)
-  return 0;
+QList<PlotItemInterface*> Data::plotList() const {
+  return QList<PlotItemInterface*>();
 }
 
 
-void Data::newWindow(QWidget *dialogParent) {
-  Q_UNUSED(dialogParent)
+int Data::rows() const {
+  return -1;
 }
 
 
-QStringList Data::windowList() {
-  return QStringList();
-}
-
-
-QString Data::currentWindow() {
-  return QString::null;
+int Data::columns() const {
+  return -1;
 }
 
 }
+
 // vim: ts=2 sw=2 et

@@ -30,6 +30,7 @@ SOURCES += \
     databutton.cpp \
     databuttonaction.cpp \
     datadialog.cpp \
+    datagui.cpp \
     datamanager.cpp \
     datasourcedialog.cpp \
     datatab.cpp \
@@ -90,6 +91,7 @@ HEADERS += \
     databutton.h \
     databuttonaction.h \
     datadialog.h \
+    datagui.h \
     datamanager.h \
     dataref.h \
     datasourcedialog.h \

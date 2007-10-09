@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>363</width>
-    <height>121</height>
+    <width>341</width>
+    <height>141</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -40,14 +40,21 @@
       <string>Placement</string>
      </property>
      <layout class="QGridLayout" >
-      <item row="0" column="0" >
-       <widget class="QRadioButton" name="_inPlot" >
+      <item row="0" column="0" colspan="2" >
+       <widget class="QRadioButton" name="_noPlot" >
+        <property name="text" >
+         <string>Do not place in any plot</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" >
+       <widget class="QRadioButton" name="_existingPlot" >
         <property name="text" >
          <string>Place in &amp;existing plot:</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" colspan="2" >
+      <item row="1" column="1" >
        <widget class="QComboBox" name="_plotList" >
         <property name="enabled" >
          <bool>false</bool>
@@ -75,7 +82,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0" >
+      <item row="2" column="0" >
        <widget class="QRadioButton" name="_newPlot" >
         <property name="text" >
          <string>Place in &amp;new plot</string>
@@ -85,42 +92,23 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1" >
-       <widget class="QCheckBox" name="_reGrid" >
+      <item row="2" column="1" >
+       <widget class="QCheckBox" name="_createLayout" >
         <property name="text" >
-         <string>Re-grid  Columns:</string>
+         <string>Create Layout if Necessary</string>
+        </property>
+        <property name="checked" >
+         <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="1" column="2" >
-       <widget class="QSpinBox" name="_plotColumns" >
-        <property name="enabled" >
-         <bool>false</bool>
-        </property>
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
-          <horstretch>1</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="whatsThis" >
-         <string>AutoLayout will place the plots in a grid with this many columns.</string>
-        </property>
-        <property name="minimum" >
-         <number>1</number>
-        </property>
-        <property name="maximum" >
-         <number>10</number>
-        </property>
-        <property name="value" >
-         <number>1</number>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="2" >
-       <widget class="QRadioButton" name="_dontPlace" >
+      <item row="3" column="1" >
+       <widget class="QCheckBox" name="_appendToLayout" >
         <property name="text" >
-         <string>Do not place in any plot</string>
+         <string>Append if existing Layout</string>
+        </property>
+        <property name="checked" >
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -134,10 +122,8 @@
  <tabstops>
   <tabstop>_newPlot</tabstop>
   <tabstop>_plotList</tabstop>
-  <tabstop>_reGrid</tabstop>
-  <tabstop>_plotColumns</tabstop>
-  <tabstop>_inPlot</tabstop>
-  <tabstop>_dontPlace</tabstop>
+  <tabstop>_existingPlot</tabstop>
+  <tabstop>_noPlot</tabstop>
  </tabstops>
  <resources/>
  <connections/>

@@ -37,6 +37,18 @@ LayoutBoxItem::LayoutBoxItem(View *parent)
 }
 
 
+void LayoutBoxItem::appendItem(ViewItem *item) {
+  if (item->parentItem() == this)
+    return;
+
+  item->setParentItem(this);
+  layout()->addViewItem(item, layout()->rowCount(), 0, 1, layout()->columnCount());
+  setPos(parentView()->sceneRect().topLeft());
+  setViewRect(parentView()->sceneRect());
+  layout()->update();
+}
+
+
 void LayoutBoxItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
   Q_UNUSED(option);
   Q_UNUSED(widget);

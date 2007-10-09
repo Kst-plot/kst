@@ -30,6 +30,8 @@ EquationTab::EquationTab(QWidget *parent)
   setTabTitle(tr("Equation"));
 
   populateFunctionList();
+
+  _curvePlacement->setExistingPlots(Data::self()->plotList());
 }
 
 
@@ -111,8 +113,13 @@ void EquationTab::setDoInterpolation(bool doInterpolation) {
 }
 
 
-CurveAppearance* EquationTab::curveAppearanceWidget() {
+CurveAppearance* EquationTab::curveAppearance() const {
   return _curveAppearance;
+}
+
+
+CurvePlacement* EquationTab::curvePlacement() const {
+  return _curvePlacement;
 }
 
 
@@ -160,29 +167,48 @@ ObjectPtr EquationDialog::createNewDataObject() const {
                                      equation->vX(),
                                      equation->vY(),
                                      0L, 0L, 0L, 0L,
-                                     _equationTab->curveAppearanceWidget()->color());
+                                     _equationTab->curveAppearance()->color());
 
-  curve->setHasPoints(_equationTab->curveAppearanceWidget()->showPoints());
-  curve->setHasLines(_equationTab->curveAppearanceWidget()->showLines());
-  curve->setHasBars(_equationTab->curveAppearanceWidget()->showBars());
-  curve->setLineWidth(_equationTab->curveAppearanceWidget()->lineWidth());
-  curve->setLineStyle(_equationTab->curveAppearanceWidget()->lineStyle());
-  curve->pointType = _equationTab->curveAppearanceWidget()->pointType();
-  curve->setPointDensity(_equationTab->curveAppearanceWidget()->pointDensity());
-  curve->setBarStyle(_equationTab->curveAppearanceWidget()->barStyle());
+  curve->setHasPoints(_equationTab->curveAppearance()->showPoints());
+  curve->setHasLines(_equationTab->curveAppearance()->showLines());
+  curve->setHasBars(_equationTab->curveAppearance()->showBars());
+  curve->setLineWidth(_equationTab->curveAppearance()->lineWidth());
+  curve->setLineStyle(_equationTab->curveAppearance()->lineStyle());
+  curve->pointType = _equationTab->curveAppearance()->pointType();
+  curve->setPointDensity(_equationTab->curveAppearance()->pointDensity());
+  curve->setBarStyle(_equationTab->curveAppearance()->barStyle());
 
   curve->writeLock();
   curve->update(0);
   curve->unlock();
 
-  CreatePlotForCurve *cmd = new CreatePlotForCurve;
-  cmd->createItem();
+  PlotItem *plotItem = 0;
+  switch (_equationTab->curvePlacement()->place()) {
+  case CurvePlacement::NoPlot:
+    break;
+  case CurvePlacement::ExistingPlot:
+    {
+      plotItem = static_cast<PlotItem*>(_equationTab->curvePlacement()->existingPlot());
+      break;
+    }
+  case CurvePlacement::NewPlot:
+    {
+      CreatePlotForCurve *cmd = new CreatePlotForCurve(
+        _equationTab->curvePlacement()->createLayout(),
+        _equationTab->curvePlacement()->appendToLayout());
+      cmd->createItem();
 
-  PlotItem *plotItem = static_cast<PlotItem*>(cmd->item());
+      plotItem = static_cast<PlotItem*>(cmd->item());
+      break;
+    }
+  default:
+    break;
+  }
 
   RelationList relationList;
   relationList.append(kst_cast<Relation>(curve));
 
+  //FIXME Should check for existing one...
   VectorCurveRenderItem *vectorCurve = new VectorCurveRenderItem(plotItem);
   vectorCurve->setRelationList(relationList);
 

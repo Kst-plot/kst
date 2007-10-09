@@ -19,6 +19,8 @@
 
 namespace Kst {
 
+class PlotItemInterface;
+
 class KST_EXPORT CurvePlacement : public QWidget, public Ui::CurvePlacement {
   Q_OBJECT
   public:
@@ -29,14 +31,14 @@ class KST_EXPORT CurvePlacement : public QWidget, public Ui::CurvePlacement {
     Place place() const;
     void setPlace(Place place);
 
-    QString existingPlot() const;
-    void setExistingPlots(const QStringList &existingPlots);
+    PlotItemInterface *existingPlot() const;
+    void setExistingPlots(const QList<PlotItemInterface*> &existingPlots);
 
-    bool relayout() const;
-    void setRelayout(bool relayout);
+    bool createLayout() const;
+    void setCreateLayout(bool createLayout);
 
-    int numberOfColumns() const;
-    void setNumberOfColumns(int numberOfColumns);
+    bool appendToLayout() const;
+    void setAppendToLayout(bool appendToLayout);
 };
 
 }

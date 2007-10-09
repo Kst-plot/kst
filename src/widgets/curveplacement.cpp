@@ -11,11 +11,15 @@
 
 #include "curveplacement.h"
 
+#include "plotiteminterface.h"
+
 namespace Kst {
 
 CurvePlacement::CurvePlacement(QWidget *parent)
   : QWidget(parent) {
   setupUi(this);
+
+  connect(_existingPlot, SIGNAL(toggled(bool)), _plotList, SLOT(setEnabled(bool)));
 }
 
 
@@ -24,42 +28,61 @@ CurvePlacement::~CurvePlacement() {
 
 
 CurvePlacement::Place CurvePlacement::place() const {
-  return NewPlot;
+  if (_noPlot->isChecked())
+    return NoPlot;
+  else if (_existingPlot->isChecked())
+    return ExistingPlot;
+  else
+    return NewPlot;
 }
 
 
 void CurvePlacement::setPlace(CurvePlacement::Place place) {
-  Q_UNUSED(place);
+  switch (place) {
+  case NoPlot:
+    _noPlot->setChecked(true);
+    break;
+  case ExistingPlot:
+    _existingPlot->setChecked(true);
+    break;
+  case NewPlot:
+    _newPlot->setChecked(true);
+    break;
+  default:
+    break;
+  }
 }
 
 
-QString CurvePlacement::existingPlot() const {
-  return QString();
+PlotItemInterface *CurvePlacement::existingPlot() const {
+  return qVariantValue<PlotItemInterface*>(_plotList->itemData(_plotList->currentIndex()));
 }
 
 
-void CurvePlacement::setExistingPlots(const QStringList &existingPlots) {
-  Q_UNUSED(existingPlots);
+void CurvePlacement::setExistingPlots(const QList<PlotItemInterface*> &existingPlots) {
+  foreach (PlotItemInterface *plot, existingPlots) {
+    _plotList->addItem(plot->plotName(), qVariantFromValue(plot));
+  }
 }
 
 
-bool CurvePlacement::relayout() const {
-  return false;
+bool CurvePlacement::createLayout() const {
+  return _createLayout->isChecked();
 }
 
 
-void CurvePlacement::setRelayout(bool relayout) {
-  Q_UNUSED(relayout);
+void CurvePlacement::setCreateLayout(bool createLayout) {
+  _createLayout->setChecked(createLayout);
 }
 
 
-int CurvePlacement::numberOfColumns() const {
-  return -1;
+bool CurvePlacement::appendToLayout() const {
+  return _appendToLayout->isChecked();
 }
 
 
-void CurvePlacement::setNumberOfColumns(int numberOfColumns) {
-  Q_UNUSED(numberOfColumns);
+void CurvePlacement::setAppendToLayout(bool appendToLayout) {
+  _appendToLayout->setChecked(appendToLayout);
 }
 
 }

@@ -9,30 +9,25 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef LAYOUTBOXITEM_H
-#define LAYOUTBOXITEM_H
+#ifndef DATAGUI_H
+#define DATAGUI_H
 
-#include "viewitem.h"
+#include "datacollection.h"
+
+#include "kst_export.h"
 
 namespace Kst {
 
-class LayoutBoxItem : public ViewItem
-{
-  Q_OBJECT
+class KST_EXPORT DataGui : public Data {
   public:
-    LayoutBoxItem(View *parent);
-    virtual ~LayoutBoxItem();
+    DataGui();
+    virtual ~DataGui();
 
-    void appendItem(ViewItem *item);
+    virtual QList<PlotItemInterface*> plotList() const;
 
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    virtual int rows() const;
 
-  public Q_SLOTS:
-    void setEnabled(bool enabled);
-
-  protected:
-    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    virtual int columns() const;
 };
 
 }

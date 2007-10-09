@@ -112,47 +112,47 @@ void CurveAppearance::enableSettings() {
 }
 
 
-bool CurveAppearance::showLines() {
+bool CurveAppearance::showLines() const {
   return _showLines->isChecked();
 }
 
 
-bool CurveAppearance::showPoints() {
+bool CurveAppearance::showPoints() const {
   return _showPoints->isChecked();
 }
 
 
-bool CurveAppearance::showBars() {
+bool CurveAppearance::showBars() const {
   return _showBars->isChecked();
 }
 
 
-QColor CurveAppearance::color() {
+QColor CurveAppearance::color() const {
   return _color->color();
 }
 
 
-int CurveAppearance::pointType() {
+int CurveAppearance::pointType() const {
   return _comboPointSymbol->currentIndex();
 }
 
 
-int CurveAppearance::lineStyle() {
+int CurveAppearance::lineStyle() const {
   return _comboLineStyle->currentIndex();
 }
 
 
-int CurveAppearance::barStyle() {
+int CurveAppearance::barStyle() const {
  return _barStyle->currentIndex();
 }
 
 
-int CurveAppearance::pointDensity() {
+int CurveAppearance::pointDensity() const {
   return _comboPointDensity->currentIndex();
 }
 
 
-int CurveAppearance::lineWidth() {
+int CurveAppearance::lineWidth() const {
   if (_spinBoxLineWidth->text() == " ") {
     return 0;
   } else {

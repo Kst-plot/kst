@@ -9,34 +9,52 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef LAYOUTBOXITEM_H
-#define LAYOUTBOXITEM_H
+#include "datagui.h"
 
+#include "application.h"
+#include "mainwindow.h"
+#include "tabwidget.h"
+#include "view.h"
 #include "viewitem.h"
+#include "viewgridlayout.h"
+#include "plotitem.h"
+#include "plotitemmanager.h"
 
 namespace Kst {
 
-class LayoutBoxItem : public ViewItem
-{
-  Q_OBJECT
-  public:
-    LayoutBoxItem(View *parent);
-    virtual ~LayoutBoxItem();
-
-    void appendItem(ViewItem *item);
-
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-
-  public Q_SLOTS:
-    void setEnabled(bool enabled);
-
-  protected:
-    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-};
-
+DataGui::DataGui() {
 }
 
-#endif
+
+DataGui::~DataGui() {
+}
+
+
+QList<PlotItemInterface*> DataGui::plotList() const {
+
+  QList<PlotItemInterface*> plots;
+  View *view = kstApp->mainWindow()->tabWidget()->currentView();
+  if (!view)
+    return plots;
+
+  QList<PlotItem*> list = PlotItemManager::plotsForView(view);
+  foreach (PlotItem *plotItem, list) {
+    plots << plotItem;
+  }
+  return plots;
+}
+
+
+int DataGui::rows() const {
+  return -1;
+}
+
+
+
+int DataGui::columns() const {
+  return -1;
+}
+
+}
 
 // vim: ts=2 sw=2 et

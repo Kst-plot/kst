@@ -24,6 +24,7 @@ class QFile;
 namespace Kst {
 
 class Relation;
+class PlotItemInterface;
 
 class Data {
   protected:
@@ -53,18 +54,18 @@ class Data {
     virtual int vectorToFile(VectorPtr v, QFile *f);
     virtual int vectorsToFile(const VectorList& l, QFile *f, bool interpolate);
 
-    /** The list of plots for the given window.  Returns all plots if
-        the window is empty/null. */
-    virtual QStringList plotList(const QString& window = QString::null);
-    /** FIXME: move these to a new class in 1.3 */
-    /** Returns the number of columns in the given window.  -1 if not on grid */
-    virtual int columns(const QString& window);
-    /** Triggers creation of a new window. */
-    virtual void newWindow(QWidget *dialogParent = 0L);
-    /** Returns the names of all windows. */
-    virtual QStringList windowList();
-    /** Returns the name of the current window. */
-    virtual QString currentWindow();
+    /** The list of plots for the current view. */
+    virtual QList<PlotItemInterface*> plotList() const;
+
+    /** Returns the number of rows in the current view's layout.
+      * -1 if not in layout.
+      */
+    virtual int rows() const;
+
+    /** Returns the number of columns in the given view's layout.
+      * -1 if not in layout.
+      */
+    virtual int columns() const;
 } KST_EXPORT;
 
     /** The list of data sources (files) */

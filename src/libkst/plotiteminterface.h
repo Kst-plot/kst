@@ -9,33 +9,26 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef LAYOUTBOXITEM_H
-#define LAYOUTBOXITEM_H
+#ifndef PLOTITEMINTERFACE_H
+#define PLOTITEMINTERFACE_H
 
-#include "viewitem.h"
+#include <QString>
+#include <QMetaType>
 
 namespace Kst {
 
-class LayoutBoxItem : public ViewItem
+class PlotItemInterface
 {
-  Q_OBJECT
   public:
-    LayoutBoxItem(View *parent);
-    virtual ~LayoutBoxItem();
+    PlotItemInterface();
+    virtual ~PlotItemInterface();
 
-    void appendItem(ViewItem *item);
-
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-
-  public Q_SLOTS:
-    void setEnabled(bool enabled);
-
-  protected:
-    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    virtual QString plotName() const = 0;
 };
 
 }
+
+Q_DECLARE_METATYPE(Kst::PlotItemInterface*)
 
 #endif
 

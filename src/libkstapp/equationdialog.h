@@ -36,7 +36,9 @@ class KST_EXPORT EquationTab : public DataTab, Ui::EquationTab {
     bool doInterpolation() const;
     void setDoInterpolation(bool doInterpolation);
 
-    CurveAppearance *curveAppearanceWidget();
+    CurveAppearance *curveAppearance() const;
+
+    CurvePlacement *curvePlacement() const;
 
   private Q_SLOTS:
   private:

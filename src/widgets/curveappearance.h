@@ -25,15 +25,15 @@ class KST_EXPORT CurveAppearance : public QWidget, public Ui::CurveAppearance {
     CurveAppearance(QWidget *parent = 0);
     virtual ~CurveAppearance();
 
-    bool showLines();
-    bool showPoints();
-    bool showBars();
-    QColor color();
-    int pointType();
-    int lineStyle();
-    int lineWidth();
-    int barStyle();
-    int pointDensity();
+    bool showLines() const;
+    bool showPoints() const;
+    bool showBars() const;
+    QColor color() const;
+    int pointType() const;
+    int lineStyle() const;
+    int lineWidth() const;
+    int barStyle() const;
+    int pointDensity() const;
 
   private slots:
     void enableSettings();

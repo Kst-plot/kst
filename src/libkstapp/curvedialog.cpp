@@ -39,6 +39,8 @@ CurveTab::CurveTab(QWidget *parent)
 
   _xMinusError->setAllowEmptySelection(true);
   _yMinusError->setAllowEmptySelection(true);
+
+  _curvePlacement->setExistingPlots(Data::self()->plotList());
 }
 
 
@@ -106,8 +108,13 @@ void CurveTab::setYMinusError(VectorPtr vector) {
 }
 
 
-CurveAppearance* CurveTab::curveAppearanceWidget() {
+CurveAppearance* CurveTab::curveAppearance() const {
   return _curveAppearance;
+}
+
+
+CurvePlacement* CurveTab::curvePlacement() const {
+  return _curvePlacement;
 }
 
 
@@ -144,33 +151,48 @@ ObjectPtr CurveDialog::createNewDataObject() const {
                                      _curveTab->yError(),
                                      _curveTab->xMinusError(),
                                      _curveTab->yMinusError(),
-                                     _curveTab->curveAppearanceWidget()->color());
+                                     _curveTab->curveAppearance()->color());
 
-  curve->setHasPoints(_curveTab->curveAppearanceWidget()->showPoints());
-  curve->setHasLines(_curveTab->curveAppearanceWidget()->showLines());
-  curve->setHasBars(_curveTab->curveAppearanceWidget()->showBars());
-  curve->setLineWidth(_curveTab->curveAppearanceWidget()->lineWidth());
-  curve->setLineStyle(_curveTab->curveAppearanceWidget()->lineStyle());
-  curve->pointType = _curveTab->curveAppearanceWidget()->pointType();
-  curve->setPointDensity(_curveTab->curveAppearanceWidget()->pointDensity());
-  curve->setBarStyle(_curveTab->curveAppearanceWidget()->barStyle());
+  curve->setHasPoints(_curveTab->curveAppearance()->showPoints());
+  curve->setHasLines(_curveTab->curveAppearance()->showLines());
+  curve->setHasBars(_curveTab->curveAppearance()->showBars());
+  curve->setLineWidth(_curveTab->curveAppearance()->lineWidth());
+  curve->setLineStyle(_curveTab->curveAppearance()->lineStyle());
+  curve->pointType = _curveTab->curveAppearance()->pointType();
+  curve->setPointDensity(_curveTab->curveAppearance()->pointDensity());
+  curve->setBarStyle(_curveTab->curveAppearance()->barStyle());
 
   curve->writeLock();
   curve->update(0);
   curve->unlock();
 
-  //FIXME assume new plot for now...
-  //FIXME this should be a command...
-  //FIXME need some smart placement...
-  //FIXME need to hook up appearance and placement...
-  CreatePlotForCurve *cmd = new CreatePlotForCurve;
-  cmd->createItem();
+  PlotItem *plotItem = 0;
+  switch (_curveTab->curvePlacement()->place()) {
+  case CurvePlacement::NoPlot:
+    break;
+  case CurvePlacement::ExistingPlot:
+    {
+      plotItem = static_cast<PlotItem*>(_curveTab->curvePlacement()->existingPlot());
+      break;
+    }
+  case CurvePlacement::NewPlot:
+    {
+      CreatePlotForCurve *cmd = new CreatePlotForCurve(
+        _curveTab->curvePlacement()->createLayout(),
+        _curveTab->curvePlacement()->appendToLayout());
+      cmd->createItem();
 
-  PlotItem *plotItem = static_cast<PlotItem*>(cmd->item());
+      plotItem = static_cast<PlotItem*>(cmd->item());
+      break;
+    }
+  default:
+    break;
+  }
 
   RelationList relationList;
   relationList.append(kst_cast<Relation>(curve));
 
+  //FIXME Should check for existing one...
   VectorCurveRenderItem *vectorCurve = new VectorCurveRenderItem(plotItem);
   vectorCurve->setRelationList(relationList);
 

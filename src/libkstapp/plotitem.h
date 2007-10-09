@@ -17,6 +17,7 @@
 #include <QStack>
 #include <QGraphicsItem>
 
+#include "plotiteminterface.h"
 #include "viewitem.h"
 #include "relation.h"
 
@@ -24,17 +25,14 @@ namespace Kst {
 
 class PlotRenderItem;
 
-class PlotItem : public ViewItem
+class PlotItem : public ViewItem, public PlotItemInterface
 {
   Q_OBJECT
   public:
     PlotItem(View *parent);
     virtual ~PlotItem();
 
-    /* Returns a list of the PlotItems in the main window's
-     * current view.
-     */
-    static QList<PlotItem*> plotItems();
+    virtual QString plotName() const; //from PlotItemInterface
 
     QList<PlotRenderItem*> renderItems() const;
     void addRenderItem(PlotRenderItem *renderItem);
@@ -118,10 +116,20 @@ class KST_EXPORT CreatePlotCommand : public CreateCommand
 class KST_EXPORT CreatePlotForCurve : public CreateCommand
 {
   public:
-    CreatePlotForCurve() : CreateCommand(QObject::tr("Create Plot For Curve")) {}
-    CreatePlotForCurve(View *view) : CreateCommand(view, QObject::tr("Create Plot For Curve")) {}
+    CreatePlotForCurve(bool createLayout, bool appendToLayout)
+      : CreateCommand(QObject::tr("Create Plot For Curve")),
+        _createLayout(createLayout),
+        _appendToLayout(appendToLayout) {}
+    CreatePlotForCurve(bool createLayout, bool appendToLayout, View *view)
+      : CreateCommand(view, QObject::tr("Create Plot For Curve")),
+        _createLayout(createLayout),
+        _appendToLayout(appendToLayout) {}
     virtual ~CreatePlotForCurve() {}
     virtual void createItem();
+
+  private:
+    bool _createLayout;
+    bool _appendToLayout;
 };
 
 }

@@ -14,6 +14,7 @@
 #include "plotitemmanager.h"
 #include "plotrenderitem.h"
 
+#include "layoutboxitem.h"
 #include "viewgridlayout.h"
 
 #include "application.h"
@@ -54,18 +55,8 @@ PlotItem::~PlotItem() {
 }
 
 
-QList<PlotItem*> PlotItem::plotItems() {
-  View *view = kstApp->mainWindow()->tabWidget()->currentView();
-  if (!view)
-    return QList<PlotItem*>();
-
-  QList<PlotItem*> plots;
-  QList<QGraphicsItem*> items = view->items();
-  foreach (QGraphicsItem *item, items) {
-    if (PlotItem *plot = qobject_cast<PlotItem*>(qgraphicsitem_cast<ViewItem*>(item)))
-      plots << plot;
-  }
-  return plots;
+QString PlotItem::plotName() const {
+  return name();
 }
 
 
@@ -481,6 +472,15 @@ void CreatePlotForCurve::createItem() {
   _item->setViewRect(0.0, 0.0, 200.0, 200.0);
   _item->setZValue(1);
   _view->scene()->addItem(_item);
+
+  if (_createLayout) {
+    _view->createLayout();
+  }
+
+  if (_appendToLayout && _view->layoutBoxItem()) {
+    _view->layoutBoxItem()->appendItem(_item);
+  }
+
   creationComplete(); //add to undo stack
 }
 

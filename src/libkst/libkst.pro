@@ -39,6 +39,7 @@ SOURCES += \
     datavector.cpp \
     vectordefaults.cpp \
     matrixdefaults.cpp \
+    plotiteminterface.cpp \
     primitive.cpp \
     defaultprimitivenames.cpp \
     primitivefactory.cpp \
@@ -72,6 +73,7 @@ HEADERS += \
     matrix.h \
     objectcollection.h \
     object.h \
+    plotiteminterface.h \
     primitive.h \
     kstrevision.h \
     datamatrix.h \

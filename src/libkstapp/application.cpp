@@ -16,6 +16,8 @@
 #include "builtinobjects.h"
 #include "builtingraphics.h"
 
+#include "datagui.h"
+#include "datacollection.h"
 #include "dialoglaunchergui.h"
 #include "datasource.h"
 
@@ -36,10 +38,14 @@ Application::Application(int &argc, char **argv)
   QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
   DataSource::setupOnStartup(settingsObject);
 
+  _mainWindow = new MainWindow;
+
+  //Replace the data singleton with one that actually works
+  Data::replaceSelf(new DataGui);
+
   //Replace the dialoglauncher singleton with one that actually works
   DialogLauncher::replaceSelf(new DialogLauncherGui);
 
-  _mainWindow = new MainWindow;
   connect(this, SIGNAL(aboutToQuit()), _mainWindow, SLOT(aboutToQuit()));
 
   QGetOptions options;
