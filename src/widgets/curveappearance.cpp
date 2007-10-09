@@ -65,7 +65,7 @@ void CurveAppearance::populatePointSymbolCombo() {
   rect.setTop( rect.top() + 2 );
   rect.setBottom( rect.bottom() - 2 );
 
-_comboPointSymbol->setIconSize(QSize(rect.height(), rect.width()));
+_comboPointSymbol->setIconSize(QSize(rect.width(), rect.height()));
 
   // fill the point type dialog with point types
   QPixmap ppix( rect.width(), rect.height() );
@@ -181,7 +181,7 @@ void CurveAppearance::populateLineStyleCombo() {
   rect.setTop(rect.top() + 2);
   rect.setBottom(rect.bottom() - 2);
 
-_comboLineStyle->setIconSize(QSize(rect.height(), rect.width()));
+_comboLineStyle->setIconSize(QSize(rect.width(), rect.height()));
 
   // fill the point type dialog with point types
   QPixmap ppix(rect.width(), rect.height());
