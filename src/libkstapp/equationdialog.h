@@ -30,10 +30,10 @@ class KST_EXPORT EquationTab : public DataTab, Ui::EquationTab {
     VectorPtr xVector() const;
     void setXVector(VectorPtr vector);
 
-    QString Equation() const;
-    void setEquation(QString equation);
+    QString equation() const;
+    void setEquation(const QString &equation);
 
-    bool DoInterpolation() const;
+    bool doInterpolation() const;
     void setDoInterpolation(bool doInterpolation);
 
   private Q_SLOTS:
@@ -58,6 +58,6 @@ class KST_EXPORT EquationDialog : public DataDialog {
 
 }
 
-
 #endif
+
 // vim: ts=2 sw=2 et

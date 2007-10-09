@@ -78,7 +78,6 @@ void EquationTab::populateFunctionList() {
   Operators->addItem("LN()");
   Operators->addItem("LOG()");
   Operators->addItem("PLUGIN()");
-
 }
 
 
@@ -91,26 +90,26 @@ void EquationTab::setXVector(VectorPtr vector) {
   _xVectors->setSelectedVector(vector);
 }
 
-QString EquationTab::Equation() const {
+
+QString EquationTab::equation() const {
   return _equation->text();
 }
 
 
-void EquationTab::setEquation(QString equation) {
+void EquationTab::setEquation(const QString &equation) {
   _equation->setText(equation);
 }
 
-bool EquationTab::DoInterpolation() const {
-  return _doInterpolation->checkState() == Qt::Checked;
+
+bool EquationTab::doInterpolation() const {
+  return _doInterpolation->isChecked();
 }
 
 
 void EquationTab::setDoInterpolation(bool doInterpolation) {
-  if (doInterpolation)
-    _doInterpolation->setCheckState(Qt::Checked);
-  else
-    _doInterpolation->setCheckState(Qt::Unchecked);
+  _doInterpolation->setChecked(doInterpolation);
 }
+
 
 EquationDialog::EquationDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
@@ -139,9 +138,9 @@ QString EquationDialog::tagName() const {
 ObjectPtr EquationDialog::createNewDataObject() const {
   //FIXME Eli, how should I construct this tag??
   EquationPtr equation = new Equation(tagName(),
-                                     _equationTab->Equation(),
+                                     _equationTab->equation(),
                                      _equationTab->xVector(),
-                                     _equationTab->DoInterpolation());
+                                     _equationTab->doInterpolation());
 
   equation->writeLock();
   equation->update(0);
