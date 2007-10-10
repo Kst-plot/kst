@@ -16,6 +16,7 @@
 
 #include <QDebug>
 #include <QMenu>
+#include <QTimer>
 #include <QGraphicsScene>
 #include <QGraphicsSceneContextMenuEvent>
 
@@ -45,7 +46,8 @@ void LayoutBoxItem::appendItem(ViewItem *item) {
   layout()->addViewItem(item, layout()->rowCount(), 0, 1, layout()->columnCount());
   setPos(parentView()->sceneRect().topLeft());
   setViewRect(parentView()->sceneRect());
-  layout()->update();
+  //singleshot to give plots a chance to set a projection rect
+  QTimer::singleShot(0, layout(), SLOT(update()));
 }
 
 
