@@ -169,111 +169,6 @@ void PlotRenderItem::setProjectionRect(const QRectF &rect) {
 }
 
 
-QRectF PlotRenderItem::computedProjectionRect() const {
-  qreal minX, minY, maxX, maxY;
-  xAxisRange(&minX, &maxX);
-  yAxisRange(&minY, &maxY);
-
-  return QRectF(QPointF(minX, minY),
-                QPointF(maxX, maxY));
-}
-
-
-void PlotRenderItem::xAxisRange(qreal *min, qreal *max) const {
-  qreal minimum = isXAxisLog() ? 0.0 : -0.1;
-  qreal maximum = 0.1;
-  foreach (RelationPtr relation, relationList()) {
-      if (relation->ignoreAutoScale())
-        continue;
-
-      //If the axis is in log mode, the lower extent will be the
-      //minimum value larger than zero.
-      if (isXAxisLog())
-        minimum = minimum <= 0.0 ? relation->minPosX() : qMin(relation->minPosX(), minimum);
-      else
-        minimum = qMin(relation->minX(), minimum);
-
-      maximum = qMax(relation->maxX(), maximum);
-  }
-
-  switch (_xAxisZoomMode) {
-  case Auto:
-    break; //nothing more...
-  case AutoBorder:
-    if (isXAxisLog()) {
-      minimum = log10(minimum)/log10(xLogBase());
-      maximum = maximum > 0.0 ? log10(maximum) : 0.0;
-      qreal dx = qAbs(maximum - minimum) * 0.025;
-      maximum = pow(xLogBase(), maximum + dx);
-      minimum = pow(xLogBase(), minimum - dx);
-    } else {
-      qreal dx = qAbs(maximum - minimum) * 0.025;
-      maximum += dx;
-      minimum -= dx;
-    }
-  case Expression:
-    break; //FIXME limits are given by scalar equations
-  case SpikeInsensitive:
-    break; //FIXME auto with algorithm to detect spikes TBD
-  case MeanCentered:
-    break; //FIXME the mean of all active curves
-  default:
-    break;
-  }
-
-  *min = minimum;
-  *max = maximum;
-}
-
-
-void PlotRenderItem::yAxisRange(qreal *min, qreal *max) const {
-  qreal minimum = isYAxisLog() ? 0.0 : -0.1;
-  qreal maximum = 0.1;
-  foreach (RelationPtr relation, relationList()) {
-      if (relation->ignoreAutoScale())
-        continue;
-
-      //If the axis is in log mode, the lower extent will be the
-      //minimum value larger than zero.
-      if (isYAxisLog())
-        minimum = minimum <= 0.0 ? relation->minPosY() : qMin(relation->minPosY(), minimum);
-      else
-        minimum = qMin(relation->minY(), minimum);
-
-      maximum = qMax(relation->maxY(), maximum);
-  }
-
-  switch (_yAxisZoomMode) {
-  case Auto:
-    break; //nothing more...
-  case AutoBorder:
-    if (isYAxisLog()) {
-      minimum = log10(minimum)/log10(yLogBase());
-      maximum = maximum > 0.0 ? log10(maximum) : 0.0;
-      qreal dy = qAbs(maximum - minimum) * 0.025;
-      maximum = pow(yLogBase(), maximum + dy);
-      minimum = pow(yLogBase(), minimum - dy);
-    } else {
-      qreal dy = qAbs(maximum - minimum) * 0.025;
-      maximum += dy;
-      minimum -= dy;
-    }
-    break; //auto mode, plus a 2.5% border on top and bottom.
-  case Expression:
-    break; //FIXME limits are given by scalar equations
-  case SpikeInsensitive:
-    break; //FIXME auto with algorithm to detect spikes TBD
-  case MeanCentered:
-    break; //FIXME the mean of all active curves
-  default:
-    break;
-  }
-
-  *min = minimum;
-  *max = maximum;
-}
-
-
 RelationList PlotRenderItem::relationList() const {
   return _relationList;
 }
@@ -383,12 +278,6 @@ void PlotRenderItem::createActions() {
   connect(_zoomMaxSpikeInsensitive, SIGNAL(triggered()), this, SLOT(zoomMaxSpikeInsensitive()));
   _zoomMaxSpikeInsensitive->setEnabled(false);
 
-//   _zoomPrevious = new QAction(tr("Zoom Previous"), this);
-//   _zoomPrevious->setShortcut(Qt::Key_R);
-//   registerShortcut(_zoomPrevious);
-//   connect(_zoomPrevious, SIGNAL(triggered()), this, SLOT(_zoomPrevious()));
-//   _zoomPrevious->setEnabled(false);
-
   _zoomYMeanCentered = new QAction(tr("Y-Zoom Mean-centered"), this);
   _zoomYMeanCentered->setShortcut(Qt::Key_A);
   registerShortcut(_zoomYMeanCentered);
@@ -474,7 +363,6 @@ void PlotRenderItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 
   zoom.addAction(_zoomMaximum);
   zoom.addAction(_zoomMaxSpikeInsensitive);
-//   zoom.addAction(_zoomPrevious);
   zoom.addAction(_zoomYMeanCentered);
 
   zoom.addSeparator();
@@ -559,10 +447,7 @@ void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   const QRectF projection = mapToProjection(_selectionRect.rect());
   _selectionRect.reset();
 
-  ZoomState newState = currentZoomState();
-  newState.projectionRect = projection;
-  ZoomCommand *cmd = new ZoomCommand(this, newState, "Set Fixed Projection");
-  cmd->redo();
+  zoomFixedExpression(projection);
 }
 
 
@@ -634,13 +519,22 @@ QRectF PlotRenderItem::mapFromProjection(const QRectF &rect) const {
 
 
 /*
+ * X axis zoom to FixedExpression, Y axis zoom to FixedExpression.
+ */
+void PlotRenderItem::zoomFixedExpression(const QRectF &projection) {
+  qDebug() << "zoomFixedExpression" << endl;
+  ZoomCommand *cmd = new ZoomFixedExpressionCommand(this, projection);
+  cmd->redo();
+}
+
+
+/*
  * X axis zoom to Auto, Y axis zoom to AutoBorder.
  */
 void PlotRenderItem::zoomMaximum() {
   qDebug() << "zoomMaximum" << endl;
-  setXAxisZoomMode(Auto);
-  setYAxisZoomMode(AutoBorder);
-  setProjectionRect(computedProjectionRect());
+  ZoomCommand *cmd = new ZoomMaximumCommand(this);
+  cmd->redo();
 }
 
 
@@ -650,11 +544,6 @@ void PlotRenderItem::zoomMaximum() {
 void PlotRenderItem::zoomMaxSpikeInsensitive() {
   qDebug() << "FIXME: zoomMaxSpikeInsensitive" << endl;
 }
-
-
-// void PlotRenderItem::zoomPrevious() {
-//   qDebug() << "FIXME: zoomPrevious" << endl;
-// }
 
 
 /*
@@ -670,13 +559,8 @@ void PlotRenderItem::zoomYMeanCentered() {
  */
 void PlotRenderItem::zoomXMaximum() {
   qDebug() << "zoomXMaximum" << endl;
-
-  setXAxisZoomMode(Auto);
-  QRectF compute = computedProjectionRect();
-  setProjectionRect(QRectF(compute.x(),
-                           _projectionRect.y(),
-                           compute.width(),
-                           _projectionRect.height()));
+  ZoomCommand *cmd = new ZoomXMaximumCommand(this);
+  cmd->redo();
 }
 
 
@@ -716,11 +600,9 @@ void PlotRenderItem::zoomNormalizeXtoY() {
 void PlotRenderItem::zoomLogX() {
   qDebug() << "zoomLogX" << endl;
 
-  ZoomState newState = currentZoomState();
-  newState.isXAxisLog = _zoomLogX->isChecked();
-
-  ZoomCommand *cmd = new ZoomCommand(this, newState, _zoomLogY->text());
-  cmd->redo();
+  //NOT TIED!!
+  setXAxisLog(_zoomLogX->isChecked());
+  update();
 }
 
 
@@ -740,13 +622,8 @@ void PlotRenderItem::zoomYLocalMaximum() {
  */
 void PlotRenderItem::zoomYMaximum() {
   qDebug() << "zoomYMaximum" << endl;
-
-  setYAxisZoomMode(Auto);
-  QRectF compute = computedProjectionRect();
-  setProjectionRect(QRectF(_projectionRect.x(),
-                           compute.y(),
-                           _projectionRect.width(),
-                           compute.height()));
+  ZoomCommand *cmd = new ZoomYMaximumCommand(this);
+  cmd->redo();
 }
 
 
@@ -788,11 +665,9 @@ void PlotRenderItem::zoomNormalizeYtoX() {
 void PlotRenderItem::zoomLogY() {
   qDebug() << "zoomLogY" << endl;
 
-  ZoomState newState = currentZoomState();
-  newState.isYAxisLog = _zoomLogY->isChecked();
-
-  ZoomCommand *cmd = new ZoomCommand(this, newState, _zoomLogY->text());
-  cmd->redo();
+  //NOT TIED!!
+  setYAxisLog(_zoomLogY->isChecked());
+  update();
 }
 
 
@@ -869,7 +744,7 @@ void PlotRenderItem::updateCursor(const QPointF &pos) {
 
 ZoomState PlotRenderItem::currentZoomState() {
   ZoomState zoomState;
-  zoomState.plotRenderItem = this;
+  zoomState.item = this; //the origin of this ZoomState
   zoomState.projectionRect = projectionRect();
   zoomState.xAxisZoomMode = xAxisZoomMode();
   zoomState.yAxisZoomMode = yAxisZoomMode();
@@ -893,8 +768,113 @@ void PlotRenderItem::setCurrentZoomState(ZoomState zoomState) {
 }
 
 
-ZoomCommand::ZoomCommand(PlotRenderItem *item, ZoomState newState, const QString &text)
-    : ViewItemCommand(item, text), _newState(newState) {
+QRectF PlotRenderItem::computedProjectionRect() const {
+  qreal minX, minY, maxX, maxY;
+  xAxisRange(&minX, &maxX);
+  yAxisRange(&minY, &maxY);
+
+  return QRectF(QPointF(minX, minY),
+                QPointF(maxX, maxY));
+}
+
+
+void PlotRenderItem::xAxisRange(qreal *min, qreal *max) const {
+  qreal minimum = isXAxisLog() ? 0.0 : -0.1;
+  qreal maximum = 0.1;
+  foreach (RelationPtr relation, relationList()) {
+      if (relation->ignoreAutoScale())
+        continue;
+
+      //If the axis is in log mode, the lower extent will be the
+      //minimum value larger than zero.
+      if (isXAxisLog())
+        minimum = minimum <= 0.0 ? relation->minPosX() : qMin(relation->minPosX(), minimum);
+      else
+        minimum = qMin(relation->minX(), minimum);
+
+      maximum = qMax(relation->maxX(), maximum);
+  }
+
+  switch (_xAxisZoomMode) {
+  case Auto:
+    break; //nothing more...
+  case AutoBorder:
+    if (isXAxisLog()) {
+      minimum = log10(minimum)/log10(xLogBase());
+      maximum = maximum > 0.0 ? log10(maximum) : 0.0;
+      qreal dx = qAbs(maximum - minimum) * 0.025;
+      maximum = pow(xLogBase(), maximum + dx);
+      minimum = pow(xLogBase(), minimum - dx);
+    } else {
+      qreal dx = qAbs(maximum - minimum) * 0.025;
+      maximum += dx;
+      minimum -= dx;
+    }
+  case FixedExpression:
+    break; //FIXME limits are given by scalar equations
+  case SpikeInsensitive:
+    break; //FIXME auto with algorithm to detect spikes TBD
+  case MeanCentered:
+    break; //FIXME the mean of all active curves
+  default:
+    break;
+  }
+
+  *min = minimum;
+  *max = maximum;
+}
+
+
+void PlotRenderItem::yAxisRange(qreal *min, qreal *max) const {
+  qreal minimum = isYAxisLog() ? 0.0 : -0.1;
+  qreal maximum = 0.1;
+  foreach (RelationPtr relation, relationList()) {
+      if (relation->ignoreAutoScale())
+        continue;
+
+      //If the axis is in log mode, the lower extent will be the
+      //minimum value larger than zero.
+      if (isYAxisLog())
+        minimum = minimum <= 0.0 ? relation->minPosY() : qMin(relation->minPosY(), minimum);
+      else
+        minimum = qMin(relation->minY(), minimum);
+
+      maximum = qMax(relation->maxY(), maximum);
+  }
+
+  switch (_yAxisZoomMode) {
+  case Auto:
+    break; //nothing more...
+  case AutoBorder:
+    if (isYAxisLog()) {
+      minimum = log10(minimum)/log10(yLogBase());
+      maximum = maximum > 0.0 ? log10(maximum) : 0.0;
+      qreal dy = qAbs(maximum - minimum) * 0.025;
+      maximum = pow(yLogBase(), maximum + dy);
+      minimum = pow(yLogBase(), minimum - dy);
+    } else {
+      qreal dy = qAbs(maximum - minimum) * 0.025;
+      maximum += dy;
+      minimum -= dy;
+    }
+    break; //auto mode, plus a 2.5% border on top and bottom.
+  case FixedExpression:
+    break; //FIXME limits are given by scalar equations
+  case SpikeInsensitive:
+    break; //FIXME auto with algorithm to detect spikes TBD
+  case MeanCentered:
+    break; //FIXME the mean of all active curves
+  default:
+    break;
+  }
+
+  *min = minimum;
+  *max = maximum;
+}
+
+
+ZoomCommand::ZoomCommand(PlotRenderItem *item, const QString &text)
+    : ViewItemCommand(item, text) {
 
   if (!item->isTiedZoom()) {
     _originalStates << item->currentZoomState();
@@ -916,16 +896,59 @@ ZoomCommand::~ZoomCommand() {
 
 void ZoomCommand::undo() {
   foreach (ZoomState state, _originalStates) {
-    state.plotRenderItem->setCurrentZoomState(state);
+    state.item->setCurrentZoomState(state);
   }
 }
 
 
 void ZoomCommand::redo() {
   foreach (ZoomState state, _originalStates) {
-    state.plotRenderItem->setCurrentZoomState(_newState);
+    applyZoomTo(state.item);
   }
 }
+
+
+void ZoomFixedExpressionCommand::applyZoomTo(PlotRenderItem *item) {
+  item->setXAxisZoomMode(PlotRenderItem::FixedExpression);
+  item->setYAxisZoomMode(PlotRenderItem::FixedExpression);
+  item->setProjectionRect(_fixed);
+  item->update();
+}
+
+
+void ZoomMaximumCommand::applyZoomTo(PlotRenderItem *item) {
+  item->setXAxisZoomMode(PlotRenderItem::Auto);
+  item->setYAxisZoomMode(PlotRenderItem::AutoBorder);
+  item->setProjectionRect(item->computedProjectionRect());
+  item->update();
+}
+
+
+void ZoomXMaximumCommand::applyZoomTo(PlotRenderItem *item) {
+
+  item->setXAxisZoomMode(PlotRenderItem::Auto);
+  QRectF compute = item->computedProjectionRect();
+  item->setProjectionRect(QRectF(compute.x(),
+                           item->projectionRect().y(),
+                           compute.width(),
+                           item->projectionRect().height()));
+
+  item->update();
+}
+
+
+void ZoomYMaximumCommand::applyZoomTo(PlotRenderItem *item) {
+
+  item->setYAxisZoomMode(PlotRenderItem::Auto);
+  QRectF compute = item->computedProjectionRect();
+  item->setProjectionRect(QRectF(item->projectionRect().x(),
+                           compute.y(),
+                           item->projectionRect().width(),
+                           compute.height()));
+
+  item->update();
+}
+
 
 }
 

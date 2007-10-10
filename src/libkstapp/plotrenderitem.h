@@ -29,7 +29,7 @@ enum RenderType { Cartesian, Polar, Sinusoidal };
 class PlotRenderItem;
 
 struct ZoomState {
-  PlotRenderItem *plotRenderItem;
+  QPointer<PlotRenderItem> item;
   QRectF projectionRect;
   int xAxisZoomMode;
   int yAxisZoomMode;
@@ -43,7 +43,7 @@ class PlotRenderItem : public ViewItem
 {
   Q_OBJECT
   public:
-    enum ZoomMode { Auto, AutoBorder, Expression, SpikeInsensitive, MeanCentered };
+    enum ZoomMode { Auto, AutoBorder, FixedExpression, SpikeInsensitive, MeanCentered };
 
     PlotRenderItem(PlotItem *parentItem);
     virtual ~PlotRenderItem();
@@ -75,7 +75,6 @@ class PlotRenderItem : public ViewItem
     void setYLogBase(qreal yLogBase);
 
     QRectF plotRect() const;
-    QRectF computedProjectionRect() const;
 
     QRectF projectionRect() const;
     void setProjectionRect(const QRectF &rect);
@@ -97,9 +96,9 @@ class PlotRenderItem : public ViewItem
     QRectF mapFromProjection(const QRectF &rect) const;
 
 public Q_SLOTS:
+    void zoomFixedExpression(const QRectF &projection);
     void zoomMaximum();
     void zoomMaxSpikeInsensitive();
-//     void zoomPrevious();
     void zoomYMeanCentered();
     void zoomXMaximum();
     void zoomXOut();
@@ -135,14 +134,17 @@ public Q_SLOTS:
   private Q_SLOTS:
     void updateGeometry();
     void updateViewMode();
-    void xAxisRange(qreal *min, qreal *max) const;
-    void yAxisRange(qreal *min, qreal *max) const;
 
   private:
     void createActions();
     void updateCursor(const QPointF &pos);
+
     ZoomState currentZoomState();
     void setCurrentZoomState(ZoomState zoomState);
+
+    void xAxisRange(qreal *min, qreal *max) const;
+    void yAxisRange(qreal *min, qreal *max) const;
+    QRectF computedProjectionRect() const;
 
   private:
     RenderType _type;
@@ -174,20 +176,67 @@ public Q_SLOTS:
     QAction *_zoomLogY;
 
     friend class ZoomCommand;
+    friend class ZoomMaximumCommand;
+    friend class ZoomXMaximumCommand;
+    friend class ZoomYMaximumCommand;
 };
 
 class KST_EXPORT ZoomCommand : public ViewItemCommand
 {
   public:
-    ZoomCommand(PlotRenderItem *item, ZoomState newState, const QString &text);
+    ZoomCommand(PlotRenderItem *item, const QString &text);
     virtual ~ZoomCommand();
 
     virtual void undo();
     virtual void redo();
 
+    virtual void applyZoomTo(PlotRenderItem *item) = 0;
+
   private:
     QList<ZoomState> _originalStates;
-    ZoomState _newState;
+};
+
+class KST_EXPORT ZoomFixedExpressionCommand : public ZoomCommand
+{
+  public:
+    ZoomFixedExpressionCommand(PlotRenderItem *item, const QRectF &fixed)
+        : ZoomCommand(item, QObject::tr("Zoom Fixed Expression")), _fixed(fixed) {}
+    virtual ~ZoomFixedExpressionCommand() {}
+
+    virtual void applyZoomTo(PlotRenderItem *item);
+
+  private:
+    QRectF _fixed;
+};
+
+class KST_EXPORT ZoomMaximumCommand : public ZoomCommand
+{
+  public:
+    ZoomMaximumCommand(PlotRenderItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Maximum")) {}
+    virtual ~ZoomMaximumCommand() {}
+
+    virtual void applyZoomTo(PlotRenderItem *item);
+};
+
+class KST_EXPORT ZoomXMaximumCommand : public ZoomCommand
+{
+  public:
+    ZoomXMaximumCommand(PlotRenderItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom X Maximum")) {}
+    virtual ~ZoomXMaximumCommand() {}
+
+    virtual void applyZoomTo(PlotRenderItem *item);
+};
+
+class KST_EXPORT ZoomYMaximumCommand : public ZoomCommand
+{
+  public:
+    ZoomYMaximumCommand(PlotRenderItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y Maximum")) {}
+    virtual ~ZoomYMaximumCommand() {}
+
+    virtual void applyZoomTo(PlotRenderItem *item);
 };
 
 }
