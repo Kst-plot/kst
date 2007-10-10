@@ -9,38 +9,53 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef SCALARSELECTOR_H
-#define SCALARSELECTOR_H
+#ifndef SCALARDIALOG_H
+#define SCALARDIALOG_H
 
-#include <QWidget>
-#include "ui_scalarselector.h"
+#include "datadialog.h"
+#include "datatab.h"
+#include "datasource.h"
 
-#include <scalar.h>
+#include "ui_scalartab.h"
+
+#include <QPointer>
 
 #include "kst_export.h"
 
+
 namespace Kst {
 
-class KST_EXPORT ScalarSelector : public QWidget, public Ui::ScalarSelector {
+class KST_EXPORT ScalarTab : public DataTab, Ui::ScalarTab {
   Q_OBJECT
   public:
-    ScalarSelector(QWidget *parent = 0);
-    virtual ~ScalarSelector();
+    ScalarTab(QWidget *parent = 0);
+    virtual ~ScalarTab();
 
-    ScalarPtr selectedScalar() const;
-    void setSelectedScalar(ScalarPtr selectedScalar);
+    //DataVector mode methods...
+    DataSourcePtr dataSource() const;
+    void setDataSource(DataSourcePtr dataSource);
 
-  Q_SIGNALS:
-    void selectionChanged();
-
-  private Q_SLOTS:
-    void newScalar();
-    void editScalar();
+    QString value() const;
+    void setValue(const QString &value);
 
   private:
-    void fillScalars();
+    DataSourcePtr _dataSource;
+};
 
 
+class KST_EXPORT ScalarDialog : public DataDialog {
+  Q_OBJECT
+  public:
+    ScalarDialog(ObjectPtr dataObject, QWidget *parent = 0);
+    virtual ~ScalarDialog();
+
+  protected:
+    virtual QString tagName() const;
+    virtual ObjectPtr createNewDataObject() const;
+    virtual ObjectPtr editExistingDataObject() const;
+
+  private:
+    ScalarTab *_scalarTab;
 };
 
 }

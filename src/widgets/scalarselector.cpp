@@ -11,6 +11,9 @@
 
 #include "scalarselector.h"
 
+#include "dialoglauncher.h"
+#include "datacollection.h"
+
 namespace Kst {
 
 ScalarSelector::ScalarSelector(QWidget *parent)
@@ -26,6 +29,12 @@ ScalarSelector::ScalarSelector(QWidget *parent)
   _newScalar->setFixedSize(size + 8, size + 8);
   _editScalar->setFixedSize(size + 8, size + 8);
   _selectScalar->setFixedSize(size + 8, size + 8);
+
+  fillScalars();
+
+  connect(_newScalar, SIGNAL(pressed()), this, SLOT(newScalar()));
+  connect(_editScalar, SIGNAL(pressed()), this, SLOT(editScalar()));
+
 }
 
 
@@ -34,12 +43,56 @@ ScalarSelector::~ScalarSelector() {
 
 
 ScalarPtr ScalarSelector::selectedScalar() const {
-  return 0;
+  return qVariantValue<Scalar*>(_scalar->itemData(_scalar->currentIndex()));
 }
 
 
 void ScalarSelector::setSelectedScalar(ScalarPtr selectedScalar) {
   Q_UNUSED(selectedScalar);
+}
+
+
+void ScalarSelector::newScalar() {
+  DialogLauncher::self()->showScalarDialog();
+  fillScalars();
+}
+
+
+void ScalarSelector::editScalar() {
+  DialogLauncher::self()->showScalarDialog(ObjectPtr(selectedScalar()));
+}
+
+
+void ScalarSelector::fillScalars() {
+  QHash<QString, ScalarPtr> scalars;
+
+  scalarList.lock().readLock();
+
+  ScalarList::ConstIterator it = scalarList.begin();
+  for (; it != scalarList.end(); ++it) {
+    ScalarPtr scalar = (*it);
+
+    scalar->readLock();
+    scalars.insert(scalar->tag().displayString(), scalar);
+    scalar->unlock();
+  }
+
+  scalarList.lock().unlock();
+
+  QStringList list = scalars.keys();
+
+  qSort(list);
+
+  ScalarPtr current = selectedScalar();
+
+  _scalar->clear();
+  foreach (QString string, list) {
+    ScalarPtr v = scalars.value(string);
+    _scalar->addItem(string, qVariantFromValue(v.data()));
+  }
+
+  if (current)
+    setSelectedScalar(current);
 }
 
 }

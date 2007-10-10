@@ -65,6 +65,7 @@ SOURCES += \
     qgetoptions.cpp \
     selectionrect.cpp \
     sessionmodel.cpp \
+    scalardialog.cpp \
     stroketab.cpp \
     svgitem.cpp \
     tabwidget.cpp \
@@ -127,6 +128,7 @@ HEADERS += \
     qgetoptions.h \
     selectionrect.h \
     sessionmodel.h \
+    scalardialog.h \
     svgitem.h \
     stroketab.h \
     tabwidget.h \
@@ -155,6 +157,7 @@ FORMS += \
     generaltab.ui \
     gridtab.ui \
     layouttab.ui \
+    scalartab.ui \
     stroketab.ui \
     vectoreditordialog.ui \
     vectortab.ui \
