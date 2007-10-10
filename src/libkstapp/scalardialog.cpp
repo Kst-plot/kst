@@ -60,7 +60,10 @@ QString ScalarDialog::tagName() const {
 
 ObjectPtr ScalarDialog::createNewDataObject() const {
   bool ok = false;
+
+  //FIXME We don't have a 'suggestScalarName' like we do with vectors... eli?
   QString tagName = DataDialog::tagName();
+
   double value = _scalarTab->value().toDouble(&ok);
   if (!ok) {
     value = Equations::interpret(_scalarTab->value().toLatin1(), &ok);
