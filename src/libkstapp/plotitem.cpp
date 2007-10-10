@@ -119,10 +119,10 @@ void PlotItem::paint(QPainter *painter) {
 
 
 QRectF PlotItem::plotRegion() const {
-  qreal left = isLeftLabelVisible() ? marginWidth() : 0.5;
-  qreal bottom = isBottomLabelVisible() ? marginHeight() : 0.5;
-  qreal right = isRightLabelVisible() ? marginWidth() : 0.5;
-  qreal top = isTopLabelVisible() ? marginHeight() : 0.5;
+  qreal left = isLeftLabelVisible() ? marginWidth() : 0.0;
+  qreal bottom = isBottomLabelVisible() ? marginHeight() : 0.0;
+  qreal right = isRightLabelVisible() ? marginWidth() : 0.0;
+  qreal top = isTopLabelVisible() ? marginHeight() : 0.0;
 
   QPointF topLeft(rect().topLeft() + QPointF(left, top));
   QPointF bottomRight(rect().bottomRight() - QPointF(right, bottom));
