@@ -22,7 +22,6 @@
 
 #include "kst_export.h"
 
-
 namespace Kst {
 
 class KST_EXPORT ScalarTab : public DataTab, Ui::ScalarTab {
@@ -31,17 +30,9 @@ class KST_EXPORT ScalarTab : public DataTab, Ui::ScalarTab {
     ScalarTab(QWidget *parent = 0);
     virtual ~ScalarTab();
 
-    //DataVector mode methods...
-    DataSourcePtr dataSource() const;
-    void setDataSource(DataSourcePtr dataSource);
-
     QString value() const;
     void setValue(const QString &value);
-
-  private:
-    DataSourcePtr _dataSource;
 };
-
 
 class KST_EXPORT ScalarDialog : public DataDialog {
   Q_OBJECT

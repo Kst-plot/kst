@@ -26,16 +26,6 @@ ScalarTab::~ScalarTab() {
 }
 
 
-DataSourcePtr ScalarTab::dataSource() const {
-  return _dataSource;
-}
-
-
-void ScalarTab::setDataSource(DataSourcePtr dataSource) {
-  _dataSource = dataSource;
-}
-
-
 QString ScalarTab::value() const {
   return _scalarValue->text();
 }
@@ -56,11 +46,11 @@ ScalarDialog::ScalarDialog(ObjectPtr dataObject, QWidget *parent)
 
   _scalarTab = new ScalarTab(this);
   addDataTab(_scalarTab);
-
 }
 
 
-ScalarDialog::~ScalarDialog() {}
+ScalarDialog::~ScalarDialog() {
+}
 
 
 QString ScalarDialog::tagName() const {
@@ -69,13 +59,15 @@ QString ScalarDialog::tagName() const {
 
 
 ObjectPtr ScalarDialog::createNewDataObject() const {
-  const DataSourcePtr dataSource = _scalarTab->dataSource();
-
   bool ok = false;
   QString tagName = DataDialog::tagName();
-  double value = _scalarTab->value().toFloat(&ok);
+  double value = _scalarTab->value().toDouble(&ok);
   if (!ok) {
     value = Equations::interpret(_scalarTab->value().toLatin1(), &ok);
+  }
+
+  if (!ok) {
+    return 0; //invalid
   }
 
 //   qDebug() << "Creating new scalar  ===>"
@@ -83,20 +75,17 @@ ObjectPtr ScalarDialog::createNewDataObject() const {
 //            << "\n\tvalue:" << value
 //            << endl;
 
-    if (ok) {
-      ScalarPtr scalar = new Scalar(ObjectTag(DataDialog::tagName(), ObjectTag::globalTagContext), 0L, value);
+  ScalarPtr scalar = new Scalar(ObjectTag(DataDialog::tagName(),
+                                ObjectTag::globalTagContext), 0L, value);
 
-      scalar->setOrphan(true);
-      scalar->setEditable(true);
+  scalar->setOrphan(true);
+  scalar->setEditable(true);
 
-      scalar->writeLock();
-      scalar->update(0);
-      scalar->unlock();
+  scalar->writeLock();
+  scalar->update(0);
+  scalar->unlock();
 
-      return static_cast<ObjectPtr>(scalar);
-  }
-
-  return 0;
+  return static_cast<ObjectPtr>(scalar);
 }
 
 
@@ -106,4 +95,5 @@ ObjectPtr ScalarDialog::editExistingDataObject() const {
 }
 
 }
+
 // vim: ts=2 sw=2 et
