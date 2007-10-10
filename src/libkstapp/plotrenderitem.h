@@ -142,9 +142,11 @@ public Q_SLOTS:
     ZoomState currentZoomState();
     void setCurrentZoomState(ZoomState zoomState);
 
-    void xAxisRange(qreal *min, qreal *max) const;
-    void yAxisRange(qreal *min, qreal *max) const;
     QRectF computedProjectionRect() const;
+    void computeXAxisRange(qreal *min, qreal *max) const;
+    void computeYAxisRange(qreal *min, qreal *max) const;
+    void computeAuto(Qt::Orientation orientation, qreal *min, qreal *max) const;
+    void computeBorder(Qt::Orientation orientation, qreal *min, qreal *max) const;
 
   private:
     RenderType _type;
@@ -178,6 +180,7 @@ public Q_SLOTS:
     friend class ZoomCommand;
     friend class ZoomMaximumCommand;
     friend class ZoomXMaximumCommand;
+    friend class ZoomYLocalMaximumCommand;
     friend class ZoomYMaximumCommand;
 };
 
@@ -229,12 +232,62 @@ class KST_EXPORT ZoomXMaximumCommand : public ZoomCommand
     virtual void applyZoomTo(PlotRenderItem *item);
 };
 
+class KST_EXPORT ZoomXOutCommand : public ZoomCommand
+{
+  public:
+    ZoomXOutCommand(PlotRenderItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom X Out")) {}
+    virtual ~ZoomXOutCommand() {}
+
+    virtual void applyZoomTo(PlotRenderItem *item);
+};
+
+class KST_EXPORT ZoomXInCommand : public ZoomCommand
+{
+  public:
+    ZoomXInCommand(PlotRenderItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom X In")) {}
+    virtual ~ZoomXInCommand() {}
+
+    virtual void applyZoomTo(PlotRenderItem *item);
+};
+
+class KST_EXPORT ZoomYLocalMaximumCommand : public ZoomCommand
+{
+  public:
+    ZoomYLocalMaximumCommand(PlotRenderItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y Local Maximum")) {}
+    virtual ~ZoomYLocalMaximumCommand() {}
+
+    virtual void applyZoomTo(PlotRenderItem *item);
+};
+
 class KST_EXPORT ZoomYMaximumCommand : public ZoomCommand
 {
   public:
     ZoomYMaximumCommand(PlotRenderItem *item)
         : ZoomCommand(item, QObject::tr("Zoom Y Maximum")) {}
     virtual ~ZoomYMaximumCommand() {}
+
+    virtual void applyZoomTo(PlotRenderItem *item);
+};
+
+class KST_EXPORT ZoomYOutCommand : public ZoomCommand
+{
+  public:
+    ZoomYOutCommand(PlotRenderItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y Out")) {}
+    virtual ~ZoomYOutCommand() {}
+
+    virtual void applyZoomTo(PlotRenderItem *item);
+};
+
+class KST_EXPORT ZoomYInCommand : public ZoomCommand
+{
+  public:
+    ZoomYInCommand(PlotRenderItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y In")) {}
+    virtual ~ZoomYInCommand() {}
 
     virtual void applyZoomTo(PlotRenderItem *item);
 };
