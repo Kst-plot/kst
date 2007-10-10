@@ -121,7 +121,7 @@ void ViewGridLayout::reset() {
     item.viewItem->setTransform(item.transform);
     item.viewItem->setPos(item.position);
     item.viewItem->setViewRect(item.rect);
-    if (PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(item.viewItem))
+    if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem))
       plotItem->setLabelsVisible(true);
   }
 }
@@ -129,7 +129,7 @@ void ViewGridLayout::reset() {
 
 void ViewGridLayout::resetSharedAxis() {
   foreach (LayoutItem item, _items) {
-    if (PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(item.viewItem))
+    if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem))
       plotItem->setLabelsVisible(true);
   }
 }
@@ -197,7 +197,7 @@ void ViewGridLayout::updatePlotMargins() {
   _plotMarginWidth.clear();
   _plotMarginHeight.clear();
   foreach (LayoutItem item, _items) {
-    PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(item.viewItem);
+    PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
 
     if (!plotItem)
       continue;
@@ -218,7 +218,7 @@ void ViewGridLayout::updatePlotMargins() {
 void ViewGridLayout::updateSharedAxis() {
 
   foreach (LayoutItem item, _items) {
-    PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(item.viewItem);
+    PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
 
     if (!plotItem)
       continue;
@@ -239,11 +239,11 @@ void ViewGridLayout::shareAxisWithPlotToLeft(LayoutItem item) {
     return;
 
   LayoutItem left = _itemLayouts.value(key);
-  PlotItem *leftItem = qgraphicsitem_cast<PlotItem*>(left.viewItem);
+  PlotItem *leftItem = qobject_cast<PlotItem*>(left.viewItem);
   if (!leftItem)
     return;
 
-  PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(item.viewItem);
+  PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
 
   //horizontal range check...
   if (plotItem->projectionRect().left() != leftItem->projectionRect().left() ||
@@ -264,11 +264,11 @@ void ViewGridLayout::shareAxisWithPlotToRight(LayoutItem item) {
     return;
 
   LayoutItem right = _itemLayouts.value(key);
-  PlotItem *rightItem = qgraphicsitem_cast<PlotItem*>(right.viewItem);
+  PlotItem *rightItem = qobject_cast<PlotItem*>(right.viewItem);
   if (!rightItem)
     return;
 
-  PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(item.viewItem);
+  PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
 
   //horizontal range check...
   if (plotItem->projectionRect().left() != rightItem->projectionRect().left() ||
@@ -289,11 +289,11 @@ void ViewGridLayout::shareAxisWithPlotAbove(LayoutItem item) {
     return;
 
   LayoutItem top = _itemLayouts.value(key);
-  PlotItem *topItem = qgraphicsitem_cast<PlotItem*>(top.viewItem);
+  PlotItem *topItem = qobject_cast<PlotItem*>(top.viewItem);
   if (!topItem)
     return;
 
-  PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(item.viewItem);
+  PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
 
   //vertical range check...
   if (plotItem->projectionRect().top() != topItem->projectionRect().top() ||
@@ -314,11 +314,11 @@ void ViewGridLayout::shareAxisWithPlotBelow(LayoutItem item) {
     return;
 
   LayoutItem bottom = _itemLayouts.value(key);
-  PlotItem *bottomItem = qgraphicsitem_cast<PlotItem*>(bottom.viewItem);
+  PlotItem *bottomItem = qobject_cast<PlotItem*>(bottom.viewItem);
   if (!bottomItem)
     return;
 
-  PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(item.viewItem);
+  PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
 
   //vertical range check...
   if (plotItem->projectionRect().top() != bottomItem->projectionRect().top() ||
