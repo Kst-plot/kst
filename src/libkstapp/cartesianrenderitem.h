@@ -9,19 +9,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef VECTORCURVERENDERITEM_H
-#define VECTORCURVERENDERITEM_H
+#ifndef CARTESIANRENDERITEM_H
+#define CARTESIANRENDERITEM_H
 
 #include "plotrenderitem.h"
 
 namespace Kst {
 
-class VectorCurveRenderItem : public PlotRenderItem
+class CartesianRenderItem : public PlotRenderItem
 {
   Q_OBJECT
   public:
-    VectorCurveRenderItem(PlotItem *parentItem);
-    virtual ~VectorCurveRenderItem();
+    CartesianRenderItem(PlotItem *parentItem);
+    virtual ~CartesianRenderItem();
 
     virtual void paintRelations(QPainter *painter);
 };

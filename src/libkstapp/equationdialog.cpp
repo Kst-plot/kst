@@ -17,7 +17,7 @@
 #include "dataobjectcollection.h"
 #include "equation.h"
 #include "plotitem.h"
-#include "vectorcurverenderitem.h"
+#include "plotrenderitem.h"
 #include "curve.h"
 #include "defaultnames.h"
 

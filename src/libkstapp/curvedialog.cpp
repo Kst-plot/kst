@@ -20,7 +20,7 @@
 #include "tabwidget.h"
 #include "mainwindow.h"
 #include "application.h"
-#include "vectorcurverenderitem.h"
+#include "plotrenderitem.h"
 
 #include "defaultnames.h"
 #include "datacollection.h"

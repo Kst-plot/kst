@@ -23,7 +23,7 @@
 
 #include "datacollection.h"
 #include "dataobjectcollection.h"
-#include "vectorcurverenderitem.h"
+#include "cartesianrenderitem.h"
 
 #include <QDebug>
 
@@ -71,7 +71,7 @@ PlotRenderItem *PlotItem::renderItem(PlotRenderItem::RenderType type) {
   switch (type) {
   case PlotRenderItem::Cartesian:
     {
-      VectorCurveRenderItem *renderItem = new VectorCurveRenderItem(this);
+      CartesianRenderItem *renderItem = new CartesianRenderItem(this);
       _renderers.insert(type, renderItem);
       return renderItem;
     }

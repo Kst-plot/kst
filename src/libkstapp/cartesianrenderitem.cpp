@@ -9,7 +9,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "vectorcurverenderitem.h"
+#include "cartesianrenderitem.h"
 
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
@@ -20,18 +20,18 @@
 
 namespace Kst {
 
-VectorCurveRenderItem::VectorCurveRenderItem(PlotItem *parentItem)
+CartesianRenderItem::CartesianRenderItem(PlotItem *parentItem)
   : PlotRenderItem(parentItem) {
   setType(Cartesian);
-  setName(tr("Vector Curve"));
+  setName(tr("Cartesian Render Item"));
 }
 
 
-VectorCurveRenderItem::~VectorCurveRenderItem() {
+CartesianRenderItem::~CartesianRenderItem() {
 }
 
 
-void VectorCurveRenderItem::paintRelations(QPainter *painter) {
+void CartesianRenderItem::paintRelations(QPainter *painter) {
 
   QRectF normalRect = rect();
   normalRect = normalRect.normalized();

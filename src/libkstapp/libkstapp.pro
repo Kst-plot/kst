@@ -26,6 +26,7 @@ SOURCES += \
     axis.cpp \
     boxitem.cpp \
     builtingraphics.cpp \
+    cartesianrenderitem.cpp \
     curvedialog.cpp \
     databutton.cpp \
     databuttonaction.cpp \
@@ -71,7 +72,6 @@ SOURCES += \
     tabwidget.cpp \
     vectordialog.cpp \
     vectoreditordialog.cpp \
-    vectorcurverenderitem.cpp \
     vectormodel.cpp \
     vectortablemodel.cpp \
     viewcommand.cpp \
@@ -88,6 +88,7 @@ HEADERS += \
     axis.h \
     boxitem.h \
     builtingraphics.h \
+    cartesianrenderitem.h \
     curvedialog.h \
     databutton.h \
     databuttonaction.h \
@@ -135,7 +136,6 @@ HEADERS += \
     vectordialog.h \
     vectoreditordialog.h \
     vectormodel.h \
-    vectorcurverenderitem.h \
     vectortablemodel.h \
     viewcommand.h \
     view.h \
