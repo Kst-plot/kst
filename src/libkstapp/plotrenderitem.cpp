@@ -577,6 +577,7 @@ void PlotRenderItem::zoomNormalizeXtoY() {
 void PlotRenderItem::zoomLogX() {
   qDebug() << "zoomLogX" << endl;
   setXAxisLog(_zoomLogX->isChecked());
+  setProjectionRect(computedProjectionRect()); //need to recompute
   update();
 }
 
@@ -622,6 +623,7 @@ void PlotRenderItem::zoomNormalizeYtoX() {
 void PlotRenderItem::zoomLogY() {
   qDebug() << "zoomLogY" << endl;
   setYAxisLog(_zoomLogY->isChecked());
+  setProjectionRect(computedProjectionRect()); //need to recompute
   update();
 }
 
