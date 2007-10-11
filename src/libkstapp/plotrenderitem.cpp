@@ -796,12 +796,13 @@ void PlotRenderItem::computeYAxisRange(qreal *min, qreal *max) const {
 
 
 void PlotRenderItem::computeAuto(Qt::Orientation orientation, qreal *min, qreal *max) const {
-  bool axisLog = orientation == Qt::Horizontal ? isXAxisLog() : isYAxisLog();
-
   //The previous values are of no consequence as this algorithm does not depend
-  //on the previous values.  So start over...
-  qreal minimum = axisLog ? 0.0 : -0.1;
-  qreal maximum = 0.1;
+  //on the previous values.  So start over so that first active relation initializes.
+  qreal minimum;
+  qreal maximum;
+  bool unInitialized = true;
+
+  bool axisLog = orientation == Qt::Horizontal ? isXAxisLog() : isYAxisLog();
 
   foreach (RelationPtr relation, relationList()) {
       if (relation->ignoreAutoScale())
@@ -814,11 +815,18 @@ void PlotRenderItem::computeAuto(Qt::Orientation orientation, qreal *min, qreal 
       //If the axis is in log mode, the lower extent will be the
       //minimum value larger than zero.
       if (axisLog)
-        minimum = minimum <= 0.0 ? minPos_ : qMin(minPos_, minimum);
+        minimum = unInitialized ? minPos_ : qMin(minPos_, minimum);
       else
-        minimum = qMin(min_, minimum);
+        minimum = unInitialized ? min_ : qMin(min_, minimum);
 
-      maximum = qMax(max_, maximum);
+      maximum = unInitialized ? max_ : qMax(max_, maximum);
+
+      unInitialized = false;
+  }
+
+  if (unInitialized || maximum <= minimum) {
+    minimum = axisLog ? 0.0 : -0.1;
+    minimum = 0.1;
   }
 
   *min = minimum;
