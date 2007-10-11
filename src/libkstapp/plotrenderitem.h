@@ -147,6 +147,7 @@ public Q_SLOTS:
     void computeYAxisRange(qreal *min, qreal *max) const;
     void computeAuto(Qt::Orientation orientation, qreal *min, qreal *max) const;
     void computeBorder(Qt::Orientation orientation, qreal *min, qreal *max) const;
+    void computeMeanCentered(Qt::Orientation orientation, qreal *min, qreal *max) const;
 
   private:
     RenderType _type;
@@ -179,6 +180,8 @@ public Q_SLOTS:
 
     friend class ZoomCommand;
     friend class ZoomMaximumCommand;
+    friend class ZoomMaxSpikeInsensitiveCommand;
+    friend class ZoomYMeanCenteredCommand;
     friend class ZoomXMaximumCommand;
     friend class ZoomYLocalMaximumCommand;
     friend class ZoomYMaximumCommand;
@@ -222,6 +225,26 @@ class KST_EXPORT ZoomMaximumCommand : public ZoomCommand
     virtual void applyZoomTo(PlotRenderItem *item);
 };
 
+class KST_EXPORT ZoomMaxSpikeInsensitiveCommand : public ZoomCommand
+{
+  public:
+    ZoomMaxSpikeInsensitiveCommand(PlotRenderItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Max Spike Insensitive")) {}
+    virtual ~ZoomMaxSpikeInsensitiveCommand() {}
+
+    virtual void applyZoomTo(PlotRenderItem *item);
+};
+
+class KST_EXPORT ZoomYMeanCenteredCommand : public ZoomCommand
+{
+  public:
+    ZoomYMeanCenteredCommand(PlotRenderItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y Mean Centered")) {}
+    virtual ~ZoomYMeanCenteredCommand() {}
+
+    virtual void applyZoomTo(PlotRenderItem *item);
+};
+
 class KST_EXPORT ZoomXMaximumCommand : public ZoomCommand
 {
   public:
@@ -248,6 +271,16 @@ class KST_EXPORT ZoomXInCommand : public ZoomCommand
     ZoomXInCommand(PlotRenderItem *item)
         : ZoomCommand(item, QObject::tr("Zoom X In")) {}
     virtual ~ZoomXInCommand() {}
+
+    virtual void applyZoomTo(PlotRenderItem *item);
+};
+
+class KST_EXPORT ZoomNormalizeXToYCommand : public ZoomCommand
+{
+  public:
+    ZoomNormalizeXToYCommand(PlotRenderItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Normalize X to Y")) {}
+    virtual ~ZoomNormalizeXToYCommand() {}
 
     virtual void applyZoomTo(PlotRenderItem *item);
 };
@@ -288,6 +321,16 @@ class KST_EXPORT ZoomYInCommand : public ZoomCommand
     ZoomYInCommand(PlotRenderItem *item)
         : ZoomCommand(item, QObject::tr("Zoom Y In")) {}
     virtual ~ZoomYInCommand() {}
+
+    virtual void applyZoomTo(PlotRenderItem *item);
+};
+
+class KST_EXPORT ZoomNormalizeYToXCommand : public ZoomCommand
+{
+  public:
+    ZoomNormalizeYToXCommand(PlotRenderItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Normalize Y to X")) {}
+    virtual ~ZoomNormalizeYToXCommand() {}
 
     virtual void applyZoomTo(PlotRenderItem *item);
 };
