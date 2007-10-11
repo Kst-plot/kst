@@ -12,18 +12,15 @@
 #ifndef PLOTITEM_H
 #define PLOTITEM_H
 
-#include <QObject>
-#include <QColor>
-#include <QStack>
-#include <QGraphicsItem>
-
-#include "plotiteminterface.h"
 #include "viewitem.h"
+
+#include <QHash>
+
 #include "relation.h"
+#include "plotrenderitem.h"
+#include "plotiteminterface.h"
 
 namespace Kst {
-
-class PlotRenderItem;
 
 class PlotItem : public ViewItem, public PlotItemInterface
 {
@@ -35,9 +32,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     virtual QString plotName() const; //from PlotItemInterface
 
     QList<PlotRenderItem*> renderItems() const;
-    void addRenderItem(PlotRenderItem *renderItem);
-    void removeRenderItem(PlotRenderItem *renderItem);
-    void clearRenderItems();
+    PlotRenderItem *renderItem(PlotRenderItem::RenderType type);
 
     virtual void paint(QPainter *painter);
 
@@ -92,7 +87,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QSizeF calculateTopLabelBound(QPainter *painter);
 
   private:
-    QList<PlotRenderItem*> _renderers;
+    QHash<PlotRenderItem::RenderType, PlotRenderItem*> _renderers;
     bool _isTiedZoom;
     bool _isLeftLabelVisible;
     bool _isBottomLabelVisible;

@@ -189,14 +189,9 @@ ObjectPtr CurveDialog::createNewDataObject() const {
     break;
   }
 
-  RelationList relationList;
-  relationList.append(kst_cast<Relation>(curve));
-
-  //FIXME Should check for existing one...
-  VectorCurveRenderItem *vectorCurve = new VectorCurveRenderItem(plotItem);
-  vectorCurve->setRelationList(relationList);
-
-  plotItem->addRenderItem(vectorCurve);
+  PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
+  renderItem->addRelation(kst_cast<Relation>(curve));
+  plotItem->update();
 
   return ObjectPtr(curve.data());
 }

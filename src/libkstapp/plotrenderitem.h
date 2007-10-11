@@ -23,9 +23,6 @@
 namespace Kst {
 
 class PlotItem;
-
-enum RenderType { Cartesian, Polar, Sinusoidal };
-
 class PlotRenderItem;
 
 struct ZoomState {
@@ -43,6 +40,7 @@ class PlotRenderItem : public ViewItem
 {
   Q_OBJECT
   public:
+    enum RenderType { Cartesian, Polar, Sinusoidal };
     enum ZoomMode { Auto, AutoBorder, FixedExpression, SpikeInsensitive, MeanCentered };
 
     PlotRenderItem(PlotItem *parentItem);
@@ -80,7 +78,9 @@ class PlotRenderItem : public ViewItem
     void setProjectionRect(const QRectF &rect);
 
     RelationList relationList() const;
-    void setRelationList(const RelationList &relationList);
+    void addRelation(RelationPtr relation);
+    void removeRelation(RelationPtr relation);
+    void clearRelations();
 
     virtual void paint(QPainter *painter);
     virtual void paintRelations(QPainter *painter) = 0;

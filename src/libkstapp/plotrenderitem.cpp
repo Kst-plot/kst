@@ -64,12 +64,12 @@ PlotItem *PlotRenderItem::plotItem() const {
 }
 
 
-RenderType PlotRenderItem::type() {
+PlotRenderItem::RenderType PlotRenderItem::type() {
   return _type;
 }
 
 
-void PlotRenderItem::setType(RenderType type) {
+void PlotRenderItem::setType(PlotRenderItem::RenderType type) {
   _type = type;
 }
 
@@ -174,8 +174,20 @@ RelationList PlotRenderItem::relationList() const {
 }
 
 
-void PlotRenderItem::setRelationList(const RelationList &relationList) {
-  _relationList = relationList;
+void PlotRenderItem::addRelation(RelationPtr relation) {
+  _relationList.append(relation);
+  zoomMaximum();
+}
+
+
+void PlotRenderItem::removeRelation(RelationPtr relation) {
+  _relationList.removeAll(relation);
+  zoomMaximum();
+}
+
+
+void PlotRenderItem::clearRelations() {
+  _relationList.clear();
   zoomMaximum();
 }
 

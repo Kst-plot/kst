@@ -21,7 +21,6 @@
 #include "mainwindow.h"
 #include "tabwidget.h"
 
-#include "curve.h"
 #include "datacollection.h"
 #include "dataobjectcollection.h"
 #include "vectorcurverenderitem.h"
@@ -61,25 +60,26 @@ QString PlotItem::plotName() const {
 
 
 QList<PlotRenderItem*> PlotItem::renderItems() const {
-  return _renderers;
+  return _renderers.values();
 }
 
 
-void PlotItem::addRenderItem(PlotRenderItem *renderItem) {
-  _renderers.append(renderItem);
-  update();
-}
+PlotRenderItem *PlotItem::renderItem(PlotRenderItem::RenderType type) {
+  if (_renderers.contains(type))
+    return _renderers.value(type);
 
-
-void PlotItem::removeRenderItem(PlotRenderItem *renderItem) {
-  _renderers.removeAll(renderItem);
-  update();
-}
-
-
-void PlotItem::clearRenderItems() {
-  _renderers.clear();
-  update();
+  switch (type) {
+  case PlotRenderItem::Cartesian:
+    {
+      VectorCurveRenderItem *renderItem = new VectorCurveRenderItem(this);
+      _renderers.insert(type, renderItem);
+      return renderItem;
+    }
+  case PlotRenderItem::Polar:
+  case PlotRenderItem::Sinusoidal:
+  default:
+    return 0;
+  }
 }
 
 
@@ -132,11 +132,20 @@ QRectF PlotItem::plotRegion() const {
 
 
 QRectF PlotItem::projectionRect() const {
-  QRectF rect(QPointF(-0.1, -0.1), QPointF(0.1, 0.1)); //default
-  foreach (PlotRenderItem *renderer, _renderers) {
-    if (!renderer->projectionRect().isEmpty())
-      rect = rect.united(renderer->projectionRect());
+  QRectF rect;
+  foreach (PlotRenderItem *renderer, renderItems()) {
+    if (!renderer->projectionRect().isEmpty()) {
+      if (rect.isValid()) {
+        rect = rect.united(renderer->projectionRect());
+      } else {
+        rect = renderer->projectionRect();
+      }
+    }
   }
+
+  if (!rect.isValid())
+    rect = QRectF(QPointF(-0.1, -0.1), QPointF(0.1, 0.1)); //default
+
   return rect;
 }
 
@@ -183,7 +192,7 @@ qreal PlotItem::marginHeight() const {
 
 
 QString PlotItem::leftLabel() const {
-  foreach (PlotRenderItem *renderer, _renderers) {
+  foreach (PlotRenderItem *renderer, renderItems()) {
     if (!renderer->leftLabel().isEmpty())
       return renderer->leftLabel();
   }
@@ -192,7 +201,7 @@ QString PlotItem::leftLabel() const {
 
 
 QString PlotItem::bottomLabel() const {
-  foreach (PlotRenderItem *renderer, _renderers) {
+  foreach (PlotRenderItem *renderer, renderItems()) {
     if (!renderer->bottomLabel().isEmpty())
       return renderer->bottomLabel();
   }
@@ -201,7 +210,7 @@ QString PlotItem::bottomLabel() const {
 
 
 QString PlotItem::rightLabel() const {
-  foreach (PlotRenderItem *renderer, _renderers) {
+  foreach (PlotRenderItem *renderer, renderItems()) {
     if (!renderer->rightLabel().isEmpty())
       return renderer->rightLabel();
   }
@@ -210,7 +219,7 @@ QString PlotItem::rightLabel() const {
 
 
 QString PlotItem::topLabel() const {
-  foreach (PlotRenderItem *renderer, _renderers) {
+  foreach (PlotRenderItem *renderer, renderItems()) {
     if (!renderer->topLabel().isEmpty())
       return renderer->topLabel();
   }
