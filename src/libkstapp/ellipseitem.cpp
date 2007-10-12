@@ -15,6 +15,8 @@
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 
+#include <debug.h>
+
 namespace Kst {
 
 EllipseItem::EllipseItem(View *parent)
@@ -25,6 +27,13 @@ EllipseItem::EllipseItem(View *parent)
 
 
 EllipseItem::~EllipseItem() {
+}
+
+
+void EllipseItem::save(QXmlStreamWriter &xml) {
+  xml.writeStartElement("ellipse");
+  ViewItem::save(xml);
+  xml.writeEndElement();
 }
 
 
@@ -46,6 +55,55 @@ void CreateEllipseCommand::createItem() {
   _view->setCursor(Qt::CrossCursor);
 
   CreateCommand::createItem();
+}
+
+
+EllipseItemFactory::EllipseItemFactory()
+: GraphicsFactory() {
+  registerFactory("ellipse", this);
+}
+
+
+EllipseItemFactory::~EllipseItemFactory() {
+}
+
+
+ViewItem* EllipseItemFactory::generateGraphics(QXmlStreamReader& xml, View *view, ViewItem *parent) {
+  EllipseItem *rc = 0;
+  while (!xml.atEnd()) {
+    bool validTag = true;
+    if (xml.isStartElement()) {
+      if (xml.name().toString() == "ellipse") {
+        Q_ASSERT(!rc);
+        rc = new EllipseItem(view);
+        if (parent) {
+          rc->setParentItem(parent);
+        // TODO add any specialized BoxItem Properties here.
+        }
+      } else {
+        Q_ASSERT(rc);
+        if (!rc->parse(xml, validTag) && validTag) {
+          ViewItem *i = GraphicsFactory::parse(xml, view, rc);
+          if (!i) {
+          }
+        }
+      }
+    } else if (xml.isEndElement()) {
+      if (xml.name().toString() == "ellipse") {
+        break;
+      } else {
+        validTag = false;
+      }
+    }
+    if (!validTag) {
+      qDebug("invalid Tag\n");
+      Debug::self()->log(QObject::tr("Error creating ellipse object from Kst file."), Debug::Warning);
+      delete rc;
+      return 0;
+    }
+    xml.readNext();
+  }
+  return rc;
 }
 
 }

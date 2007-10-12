@@ -13,6 +13,7 @@
 #define ELLIPSEITEM_H
 
 #include "viewitem.h"
+#include "graphicsfactory.h"
 
 namespace Kst {
 
@@ -23,6 +24,7 @@ class EllipseItem : public ViewItem
     EllipseItem(View *parent);
     virtual ~EllipseItem();
 
+    virtual void save(QXmlStreamWriter &xml);
     virtual QPainterPath itemShape() const;
     virtual void paint(QPainter *painter);
 };
@@ -36,6 +38,12 @@ class KST_EXPORT CreateEllipseCommand : public CreateCommand
     virtual void createItem();
 };
 
+class EllipseItemFactory : public GraphicsFactory {
+  public:
+    EllipseItemFactory();
+    ~EllipseItemFactory();
+    ViewItem* generateGraphics(QXmlStreamReader& stream, View *view, ViewItem *parent = 0);
+};
 }
 
 #endif
