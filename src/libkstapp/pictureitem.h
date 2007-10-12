@@ -13,6 +13,7 @@
 #define PICTUREITEM_H
 
 #include "viewitem.h"
+#include "graphicsfactory.h"
 
 namespace Kst {
 
@@ -23,6 +24,7 @@ class PictureItem : public ViewItem
     PictureItem(View *parent, const QImage &image);
     ~PictureItem();
 
+    virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
 
   private:
@@ -37,6 +39,14 @@ class KST_EXPORT CreatePictureCommand : public CreateCommand
     CreatePictureCommand(View *view) : CreateCommand(view, QObject::tr("Create Picture")) {}
     ~CreatePictureCommand() {}
     void createItem();
+};
+
+
+class PictureItemFactory : public GraphicsFactory {
+  public:
+    PictureItemFactory();
+    ~PictureItemFactory();
+    ViewItem* generateGraphics(QXmlStreamReader& stream, View *view, ViewItem *parent = 0);
 };
 
 }
