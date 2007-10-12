@@ -88,6 +88,16 @@ ViewItem *View::selectedViewItem() const {
 }
 
 
+void View::save(QXmlStreamWriter &xml) {
+  QList<QGraphicsItem*> items = scene()->items();
+
+  foreach(QGraphicsItem* viewItem, items) {
+    qgraphicsitem_cast<ViewItem*>(viewItem)->save(xml);
+  }
+}
+
+
+
 View::ViewMode View::viewMode() const {
   return _viewMode;
 }

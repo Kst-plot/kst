@@ -14,7 +14,7 @@
 
 #include <QObject>
 #include <QGraphicsRectItem>
-
+#include <QXmlStreamWriter>
 #include <QHash>
 #include <QAction>
 
@@ -55,6 +55,8 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     ViewItem(View *parent);
     virtual ~ViewItem();
 
+    virtual void save(QXmlStreamWriter &xml);
+    bool parse(QXmlStreamReader &xml, bool &validChildTag);
     enum { Type = UserType + 1 };
     int type() const { return Type; }
 

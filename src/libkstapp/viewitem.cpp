@@ -62,6 +62,194 @@ ViewItem::ViewItem(View *parent)
 ViewItem::~ViewItem() {
 }
 
+void ViewItem::save(QXmlStreamWriter &xml) {
+//  TODO Add proper writing of ObjectTag
+//   xml.writeAttribute("name", name());
+  xml.writeStartElement("position");
+  xml.writeAttribute("x", QVariant(pos().x()).toString());
+  xml.writeAttribute("y", QVariant(pos().y()).toString());
+  xml.writeEndElement();
+  xml.writeStartElement("rect");
+  xml.writeAttribute("x", QVariant(viewRect().x()).toString());
+  xml.writeAttribute("y", QVariant(viewRect().y()).toString());
+  xml.writeAttribute("width", QVariant(viewRect().width()).toString());
+  xml.writeAttribute("height", QVariant(viewRect().height()).toString());
+  xml.writeEndElement();
+  xml.writeStartElement("transform");
+  xml.writeAttribute("m11", QVariant(transform().m11()).toString());
+  xml.writeAttribute("m12", QVariant(transform().m12()).toString());
+  xml.writeAttribute("m13", QVariant(transform().m13()).toString());
+  xml.writeAttribute("m21", QVariant(transform().m21()).toString());
+  xml.writeAttribute("m22", QVariant(transform().m22()).toString());
+  xml.writeAttribute("m23", QVariant(transform().m23()).toString());
+  xml.writeAttribute("m31", QVariant(transform().m31()).toString());
+  xml.writeAttribute("m32", QVariant(transform().m32()).toString());
+  xml.writeAttribute("m33", QVariant(transform().m33()).toString());
+  xml.writeEndElement();
+  xml.writeStartElement("pen");
+  xml.writeAttribute("style", QVariant(pen().style()).toString());
+  xml.writeAttribute("width", QVariant(pen().widthF()).toString());
+  xml.writeAttribute("miterlimit", QVariant(pen().miterLimit()).toString());
+  xml.writeAttribute("cap", QVariant(pen().capStyle()).toString());
+  xml.writeAttribute("joinStyle", QVariant(pen().joinStyle()).toString());
+  xml.writeStartElement("brush");
+  xml.writeAttribute("color", pen().brush().color().name());
+  xml.writeAttribute("style", QVariant(pen().brush().style()).toString());
+  xml.writeEndElement();
+  xml.writeEndElement();
+  xml.writeStartElement("brush");
+  xml.writeAttribute("color", brush().color().name());
+  xml.writeAttribute("style", QVariant(brush().style()).toString());
+  xml.writeEndElement();
+}
+
+
+bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
+  bool knownTag = false;
+  QString expectedTag;
+  if (xml.isStartElement()) {
+    expectedTag = xml.name().toString();
+    QXmlStreamAttributes attrs = xml.attributes();
+    QStringRef av;
+    if (xml.name().toString() == "name") {
+      knownTag = true;
+//      TODO Add proper parsing of ObjectTag when format is set.
+//       av = attrs.value("name");
+//       if (!av.isNull()) {
+//         setName(av.toString());
+//      }
+    } else if (xml.name().toString() == "position") {
+      knownTag = true;
+      double x = 0, y = 0;
+      av = attrs.value("x");
+      if (!av.isNull()) {
+        x = av.toString().toDouble();
+      }
+      av = attrs.value("y");
+      if (!av.isNull()) {
+        y = av.toString().toDouble();
+     }
+     setPos(x, y);
+    } else if (xml.name().toString() == "brush") {
+      knownTag = true;
+      av = attrs.value("color");
+      if (!av.isNull()) {
+          brush().setColor(QColor(av.toString()));
+      }
+      av = attrs.value("style");
+      if (!av.isNull()) {
+        brush().setStyle((Qt::BrushStyle)av.toString().toInt());
+     }
+    } else if (xml.name().toString() == "pen") {
+      knownTag = true;
+      QStringRef av;
+      av = attrs.value("style");
+      if (!av.isNull()) {
+        pen().setStyle((Qt::PenStyle)av.toString().toInt());
+      }
+      av = attrs.value("width");
+      if (!av.isNull()) {
+        pen().setWidthF(av.toString().toDouble());
+      }
+      av = attrs.value("miterlimit");
+      if (!av.isNull()) {
+        pen().setMiterLimit(av.toString().toDouble());
+      }
+      av = attrs.value("cap");
+      if (!av.isNull()) {
+        pen().setCapStyle((Qt::PenCapStyle)av.toString().toInt());
+      }
+      av = attrs.value("joinstyle");
+      if (!av.isNull()) {
+        pen().setJoinStyle((Qt::PenJoinStyle)av.toString().toInt());
+      }
+      xml.readNext();
+      xml.readNext();
+      if (xml.isStartElement() && (xml.name().toString() == "brush")) {
+        av = attrs.value("color");
+        if (!av.isNull()) {
+            brush().setColor(QColor(av.toString()));
+        }
+        av = attrs.value("style");
+        if (!av.isNull()) {
+          brush().setStyle((Qt::BrushStyle)av.toString().toInt());
+        }
+        xml.readNext();
+        if (!xml.isEndElement() || (xml.name().toString() != "brush")) {
+          expectedTag = "InvalidTag";
+        }
+        xml.readNext();
+      }
+    } else if (xml.name().toString() == "rect") {
+      knownTag = true;
+      double x = 0, y = 0, w = 10, h = 10;
+      av = attrs.value("width");
+      if (!av.isNull()) {
+        w = av.toString().toDouble();
+      }
+      av = attrs.value("height");
+      if (!av.isNull()) {
+        h = av.toString().toDouble();
+      }
+      av = attrs.value("x");
+      if (!av.isNull()) {
+         x = av.toString().toDouble();
+      }
+      av = attrs.value("y");
+      if (!av.isNull()) {
+        y = av.toString().toDouble();
+      }
+     setViewRect(QRectF(QPointF(x, y), QSizeF(w, h)));
+    } else if (xml.name().toString() == "transform") {
+      double m11 = 1.0, m12 = 0, m13 = 0, m21 = 0, m22 = 1.0, m23 = 0, m31 = 0, m32= 0, m33 = 1.0;
+      av = attrs.value("m11");
+      if (!av.isNull()) {
+        m11 = av.toString().toDouble();
+      }
+      av = attrs.value("m12");
+      if (!av.isNull()) {
+        m12 = av.toString().toDouble();
+      }
+      av = attrs.value("m13");
+      if (!av.isNull()) {
+        m13 = av.toString().toDouble();
+      }
+      av = attrs.value("m21");
+      if (!av.isNull()) {
+        m21 = av.toString().toDouble();
+      }
+      av = attrs.value("m22");
+      if (!av.isNull()) {
+        m22 = av.toString().toDouble();
+      }
+      av = attrs.value("m23");
+      if (!av.isNull()) {
+        m23 = av.toString().toDouble();
+      }
+      av = attrs.value("m31");
+      if (!av.isNull()) {
+        m31 = av.toString().toDouble();
+      }
+      av = attrs.value("m32");
+      if (!av.isNull()) {
+        m32 = av.toString().toDouble();
+      }
+      av = attrs.value("m33");
+      if (!av.isNull()) {
+        m33 = av.toString().toDouble();
+      }
+      setTransform(QTransform(m11, m12, m13, m21, m22, m23, m31, m32, m33));
+    }
+  }
+
+  xml.readNext();
+  if (xml.isEndElement()) {
+    if ((xml.name().toString() == expectedTag) ) {
+    validChildTag = true;
+    }
+  }
+  return knownTag;
+}
 
 View *ViewItem::parentView() const {
   return qobject_cast<View*>(parent());

@@ -111,7 +111,9 @@ bool Document::save(const QString& to) {
     View *v = qobject_cast<View*>(_win->tabWidget()->widget(i));
     xml.writeStartElement("view");
     xml.writeAttribute("name", _win->tabWidget()->tabText(i));
-    // TODO: save each item
+
+    v->save(xml);
+
     xml.writeEndElement();
   }
   xml.writeEndElement();

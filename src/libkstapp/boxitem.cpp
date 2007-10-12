@@ -34,6 +34,13 @@ void BoxItem::paint(QPainter *painter) {
 }
 
 
+void BoxItem::save(QXmlStreamWriter &xml) {
+  xml.writeStartElement("box");
+  ViewItem::save(xml);
+  xml.writeEndElement();
+}
+
+
 void CreateBoxCommand::createItem() {
   _item = new BoxItem(_view);
   _view->setCursor(Qt::CrossCursor);
@@ -54,70 +61,39 @@ BoxItemFactory::~BoxItemFactory() {
 
 ViewItem* BoxItemFactory::generateGraphics(QXmlStreamReader& xml, View *view, ViewItem *parent) {
   BoxItem *rc = 0;
-  double x = 0., y = 0., w = 10., h = 10.;
   while (!xml.atEnd()) {
+    bool validTag = true;
     if (xml.isStartElement()) {
       if (xml.name().toString() == "box") {
         Q_ASSERT(!rc);
         rc = new BoxItem(view);
         if (parent) {
           rc->setParentItem(parent);
-        }
-        QXmlStreamAttributes attrs = xml.attributes();
-        QStringRef av;
-        av = attrs.value("background");
-        if (!av.isNull()) {
-          QBrush b = rc->brush();
-          b.setColor(QColor(av.toString()));
-          rc->setBrush(b);
-        }
-        av = attrs.value("border");
-        if (!av.isNull()) {
-          QPen p = rc->pen();
-          p.setWidthF(av.toString().toDouble());
-          rc->setPen(p);
-        }
-        av = attrs.value("color");
-        if (!av.isNull()) {
-          QPen p = rc->pen();
-          p.setColor(QColor(av.toString()));
-          rc->setPen(p);
-        }
-        av = attrs.value("width");
-        if (!av.isNull()) {
-          w = av.toString().toDouble();
-        }
-        av = attrs.value("height");
-        if (!av.isNull()) {
-          h = av.toString().toDouble();
-        }
-        av = attrs.value("x");
-        if (!av.isNull()) {
-          x = av.toString().toDouble();
-        }
-        av = attrs.value("y");
-        if (!av.isNull()) {
-          y = av.toString().toDouble();
+        // TODO add any specialized BoxItem Properties here.
         }
       } else {
         Q_ASSERT(rc);
-        ViewItem *i = GraphicsFactory::parse(xml, view, rc);
-        if (!i) {
+        if (!rc->parse(xml, validTag) && validTag) {
+          ViewItem *i = GraphicsFactory::parse(xml, view, rc);
+          if (!i) {
+          }
         }
       }
     } else if (xml.isEndElement()) {
       if (xml.name().toString() == "box") {
         break;
       } else {
-        Debug::self()->log(QObject::tr("Error creating box object from Kst file."), Debug::Warning);
-        delete rc;
-        return 0;
+        validTag = false;
       }
+    }
+    if (!validTag) {
+      qDebug("invalid Tag\n");
+      Debug::self()->log(QObject::tr("Error creating box object from Kst file."), Debug::Warning);
+      delete rc;
+      return 0;
     }
     xml.readNext();
   }
-
-  rc->setViewRect(QRectF(QPointF(x, y), QSizeF(w, h)));
   return rc;
 }
 

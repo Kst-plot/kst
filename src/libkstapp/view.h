@@ -17,6 +17,7 @@
 #include "kst_export.h"
 
 class QUndoStack;
+class QXmlStreamWriter;
 
 namespace Kst {
 
@@ -38,6 +39,8 @@ class KST_EXPORT View : public QGraphicsView
 
     View();
     virtual ~View();
+
+    virtual void save(QXmlStreamWriter &xml);
 
     bool useOpenGL() const;
     void setUseOpenGL(bool useOpenGL);

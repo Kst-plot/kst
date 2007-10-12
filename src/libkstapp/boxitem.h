@@ -24,6 +24,7 @@ class BoxItem : public ViewItem
     BoxItem(View *parent);
     virtual ~BoxItem();
 
+    virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
 };
 
