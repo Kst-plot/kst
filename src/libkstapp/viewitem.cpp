@@ -132,54 +132,60 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
      setPos(x, y);
     } else if (xml.name().toString() == "brush") {
       knownTag = true;
+      QBrush brush;
       av = attrs.value("color");
       if (!av.isNull()) {
-          brush().setColor(QColor(av.toString()));
+          brush.setColor(QColor(av.toString()));
       }
       av = attrs.value("style");
       if (!av.isNull()) {
-        brush().setStyle((Qt::BrushStyle)av.toString().toInt());
-     }
+        brush.setStyle((Qt::BrushStyle)av.toString().toInt());
+      }
+      setBrush(brush);
     } else if (xml.name().toString() == "pen") {
       knownTag = true;
-      QStringRef av;
+      QPen pen;
       av = attrs.value("style");
       if (!av.isNull()) {
-        pen().setStyle((Qt::PenStyle)av.toString().toInt());
+        pen.setStyle((Qt::PenStyle)av.toString().toInt());
       }
       av = attrs.value("width");
       if (!av.isNull()) {
-        pen().setWidthF(av.toString().toDouble());
+        pen.setWidthF(av.toString().toDouble());
       }
       av = attrs.value("miterlimit");
       if (!av.isNull()) {
-        pen().setMiterLimit(av.toString().toDouble());
+        pen.setMiterLimit(av.toString().toDouble());
       }
       av = attrs.value("cap");
       if (!av.isNull()) {
-        pen().setCapStyle((Qt::PenCapStyle)av.toString().toInt());
+        pen.setCapStyle((Qt::PenCapStyle)av.toString().toInt());
       }
       av = attrs.value("joinstyle");
       if (!av.isNull()) {
-        pen().setJoinStyle((Qt::PenJoinStyle)av.toString().toInt());
+        pen.setJoinStyle((Qt::PenJoinStyle)av.toString().toInt());
       }
       xml.readNext();
       xml.readNext();
       if (xml.isStartElement() && (xml.name().toString() == "brush")) {
+        QBrush penBrush;
+        attrs = xml.attributes();
         av = attrs.value("color");
         if (!av.isNull()) {
-            brush().setColor(QColor(av.toString()));
+            penBrush.setColor(QColor(av.toString()));
         }
         av = attrs.value("style");
         if (!av.isNull()) {
-          brush().setStyle((Qt::BrushStyle)av.toString().toInt());
+          penBrush.setStyle((Qt::BrushStyle)av.toString().toInt());
         }
+        pen.setBrush(penBrush);
         xml.readNext();
         if (!xml.isEndElement() || (xml.name().toString() != "brush")) {
           expectedTag = "InvalidTag";
         }
         xml.readNext();
       }
+      setPen(pen);
     } else if (xml.name().toString() == "rect") {
       knownTag = true;
       double x = 0, y = 0, w = 10, h = 10;

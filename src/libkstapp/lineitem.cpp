@@ -35,6 +35,13 @@ void LineItem::paint(QPainter *painter) {
 }
 
 
+void LineItem::save(QXmlStreamWriter &xml) {
+  xml.writeStartElement("line");
+  ViewItem::save(xml);
+  xml.writeEndElement();
+}
+
+
 QLineF LineItem::line() const {
   return QLineF(rect().left(), rect().center().y(), rect().right(), rect().center().y());
 }
@@ -198,6 +205,7 @@ ViewItem* LineItemFactory::generateGraphics(QXmlStreamReader& xml, View *view, V
   LineItem *rc = 0;
   double x1 = 0., y1 = 0., x2 = 10., y2 = 10.;
   while (!xml.atEnd()) {
+    bool validTag = true;
     if (xml.isStartElement()) {
       if (xml.name().toString() == "line") {
         Q_ASSERT(!rc);
@@ -205,55 +213,31 @@ ViewItem* LineItemFactory::generateGraphics(QXmlStreamReader& xml, View *view, V
         if (parent) {
           rc->setParentItem(parent);
         }
-        QXmlStreamAttributes attrs = xml.attributes();
-        QStringRef av;
-        av = attrs.value("thickness");
-        if (!av.isNull()) {
-          QPen p = rc->pen();
-          p.setWidthF(av.toString().toDouble());
-          rc->setPen(p);
-        }
-        av = attrs.value("color");
-        if (!av.isNull()) {
-          QPen p = rc->pen();
-          p.setColor(QColor(av.toString()));
-          rc->setPen(p);
-        }
-        av = attrs.value("x1");
-        if (!av.isNull()) {
-          x1 = av.toString().toDouble();
-        }
-        av = attrs.value("y1");
-        if (!av.isNull()) {
-          y1 = av.toString().toDouble();
-        }
-        av = attrs.value("x2");
-        if (!av.isNull()) {
-          x2 = av.toString().toDouble();
-        }
-        av = attrs.value("y2");
-        if (!av.isNull()) {
-          y2 = av.toString().toDouble();
-        }
+        // TODO add any specialized LineItem Properties here.
       } else {
         Q_ASSERT(rc);
-        ViewItem *i = GraphicsFactory::parse(xml, view, rc);
-        if (!i) {
+        if (!rc->parse(xml, validTag) && validTag) {
+          ViewItem *i = GraphicsFactory::parse(xml, view, rc);
+          if (!i) {
+          }
         }
       }
     } else if (xml.isEndElement()) {
       if (xml.name().toString() == "line") {
         break;
       } else {
-        Debug::self()->log(QObject::tr("Error creating line object from Kst file."), Debug::Warning);
-        delete rc;
-        return 0;
+        validTag = false;
       }
+    }
+    if (!validTag) {
+      qDebug("invalid Tag\n");
+      Debug::self()->log(QObject::tr("Error creating line object from Kst file."), Debug::Warning);
+      delete rc;
+      return 0;
     }
     xml.readNext();
   }
 
-  rc->setLine(QLineF(QPointF(x1, y1), QPointF(x2, y2)));
   return rc;
 }
 

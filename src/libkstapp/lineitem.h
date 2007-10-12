@@ -27,6 +27,7 @@ class LineItem : public ViewItem
     QLineF line() const;
     void setLine(const QLineF &line);
 
+    virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
 
     virtual QPainterPath grips() const;
