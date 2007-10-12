@@ -13,6 +13,8 @@
 #include <labelparser.h>
 #include "labelrenderer.h"
 
+#include "debug.h"
+
 #include <QDebug>
 #include <QInputDialog>
 #include <QGraphicsItem>
@@ -59,6 +61,14 @@ void LabelItem::paint(QPainter *painter) {
 }
 
 
+void LabelItem::save(QXmlStreamWriter &xml) {
+  xml.writeStartElement("label");
+  xml.writeAttribute("text", _text);
+  ViewItem::save(xml);
+  xml.writeEndElement();
+}
+
+
 void CreateLabelCommand::createItem() {
   bool ok;
   QString text = QInputDialog::getText(_view, tr("Kst: Create Label"), tr("Label:"), QLineEdit::Normal, QString::null, &ok);
@@ -70,6 +80,60 @@ void CreateLabelCommand::createItem() {
   _view->setCursor(Qt::IBeamCursor);
 
   CreateCommand::createItem();
+}
+
+
+LabelItemFactory::LabelItemFactory()
+: GraphicsFactory() {
+  registerFactory("label", this);
+}
+
+
+LabelItemFactory::~LabelItemFactory() {
+}
+
+
+ViewItem* LabelItemFactory::generateGraphics(QXmlStreamReader& xml, View *view, ViewItem *parent) {
+  LabelItem *rc = 0;
+  while (!xml.atEnd()) {
+    bool validTag = true;
+    if (xml.isStartElement()) {
+      if (xml.name().toString() == "label") {
+      QXmlStreamAttributes attrs = xml.attributes();
+      QStringRef av;
+      av = attrs.value("text");
+      if (!av.isNull()) {
+        Q_ASSERT(!rc);
+        rc = new LabelItem(view, av.toString());
+        if (parent) {
+          rc->setParentItem(parent);
+         // TODO add any specialized LabelItem Properties here.
+          }
+        }
+      } else {
+        Q_ASSERT(rc);
+        if (!rc->parse(xml, validTag) && validTag) {
+          ViewItem *i = GraphicsFactory::parse(xml, view, rc);
+          if (!i) {
+          }
+        }
+      }
+    } else if (xml.isEndElement()) {
+      if (xml.name().toString() == "label") {
+        break;
+      } else {
+        validTag = false;
+      }
+    }
+    if (!validTag) {
+      qDebug("invalid Tag\n");
+      Debug::self()->log(QObject::tr("Error creating box object from Kst file."), Debug::Warning);
+      delete rc;
+      return 0;
+    }
+    xml.readNext();
+  }
+  return rc;
 }
 
 

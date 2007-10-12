@@ -13,6 +13,7 @@
 #include "boxitem.h"
 #include "lineitem.h"
 #include "ellipseitem.h"
+#include "labelitem.h"
 
 namespace Kst {
   namespace Builtins {
@@ -20,6 +21,7 @@ namespace Kst {
       new BoxItemFactory;
       new LineItemFactory;
       new EllipseItemFactory;
+      new LabelItemFactory;
     }
   }
 }

@@ -13,6 +13,7 @@
 #define LABELITEM_H
 
 #include "viewitem.h"
+#include "graphicsfactory.h"
 
 namespace Label {
   struct Parsed;
@@ -26,6 +27,7 @@ class LabelItem : public ViewItem {
     LabelItem(View *parent, const QString& labelText);
     virtual ~LabelItem();
 
+    virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
 
   private:
@@ -40,6 +42,13 @@ class KST_EXPORT CreateLabelCommand : public CreateCommand {
     CreateLabelCommand(View *view): CreateCommand(view, QObject::tr("Create Label")) {}
     virtual ~CreateLabelCommand() {}
     virtual void createItem();
+};
+
+class LabelItemFactory : public GraphicsFactory {
+  public:
+    LabelItemFactory();
+    ~LabelItemFactory();
+    ViewItem* generateGraphics(QXmlStreamReader& stream, View *view, ViewItem *parent = 0);
 };
 
 }
