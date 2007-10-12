@@ -68,6 +68,15 @@ File Format for Kst 2
                 </pen>
                 <brush color="#000000" style="0"></brush>
             </label>
+            <line>
+                <position x="" y=""></position>
+                <rect x="" y="" width="" height=""></rect>
+                <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"></transform>
+                <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                    <brush color="#000000" style="1"></brush>
+                </pen>
+                <brush color="#ffffff" style="1"></brush>
+            </line>
     </view>
   </graphics>
 </kst>
