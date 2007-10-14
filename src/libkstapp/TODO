@@ -2,8 +2,6 @@ View
 ----
 - arrows
 - Box the objects so they can't be dragged out of the visible size of scene
-- Kst2DPlot
-- Add properties to Items such as border, brush, pen, padding, etc
 - Create an ItemModel to map the items into a model
 - gradient editor doesn't work
 - Edit dialog needs to be parented and probably should be one-per-view
@@ -44,18 +42,12 @@ Document
 - Move data collections into here somehow?
 
 
-MainWindow
-----------
-- Mouse modes
-
-
 Updates
 -------
-- Need a plan
+- Add update loop
 
 
 Other
 -----
-- Use some templates/factories for CreateCommands?
 - Move actions from MainWindow to each Item
 
