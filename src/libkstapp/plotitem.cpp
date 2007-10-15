@@ -18,6 +18,7 @@
 
 #include "layoutboxitem.h"
 #include "viewgridlayout.h"
+#include "debug.h"
 
 #include "application.h"
 #include "mainwindow.h"
@@ -61,6 +62,22 @@ PlotItem::~PlotItem() {
 
 QString PlotItem::plotName() const {
   return name();
+}
+
+
+void PlotItem::save(QXmlStreamWriter &xml) {
+  xml.writeStartElement("plot");
+  xml.writeAttribute("tiedzoom", QVariant(_isTiedZoom).toString());
+  xml.writeAttribute("leftlabelvisible", QVariant(_isLeftLabelVisible).toString());
+  xml.writeAttribute("bottomlabelvisible", QVariant(_isBottomLabelVisible).toString());
+  xml.writeAttribute("rightlabelvisible", QVariant(_isRightLabelVisible).toString());
+  xml.writeAttribute("toplabelvisible", QVariant(_isTopLabelVisible).toString());
+  ViewItem::save(xml);
+  _axisItem->saveInPlot(xml);
+//TODO Save PlotRenderItems.
+  xml.writeEndElement();
+
+
 }
 
 
@@ -506,6 +523,80 @@ void CreatePlotForCurve::createItem() {
   }
 
   creationComplete(); //add to undo stack
+}
+
+
+PlotItemFactory::PlotItemFactory()
+: GraphicsFactory() {
+  registerFactory("plot", this);
+}
+
+
+PlotItemFactory::~PlotItemFactory() {
+}
+
+
+ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, View *view, ViewItem *parent) {
+  PlotItem *rc = 0;
+  while (!xml.atEnd()) {
+    bool validTag = true;
+    if (xml.isStartElement()) {
+      if (xml.name().toString() == "plot") {
+        Q_ASSERT(!rc);
+        rc = new PlotItem(view);
+        if (parent) {
+          rc->setParentItem(parent);
+        }
+        QXmlStreamAttributes attrs = xml.attributes();
+        QStringRef av;
+        av = attrs.value("tiedzoom");
+        if (!av.isNull()) {
+          rc->setTiedZoom(QVariant(av.toString()).toBool());
+        }
+        av = attrs.value("leftlabelvisible");
+        if (!av.isNull()) {
+          rc->setLeftLabelVisible(QVariant(av.toString()).toBool());
+        }
+        av = attrs.value("bottomlabelvisible");
+        if (!av.isNull()) {
+          rc->setBottomLabelVisible(QVariant(av.toString()).toBool());
+        }
+        av = attrs.value("rightlabelvisible");
+        if (!av.isNull()) {
+          rc->setRightLabelVisible(QVariant(av.toString()).toBool());
+        }
+        av = attrs.value("toplabelvisible");
+        if (!av.isNull()) {
+          rc->setTopLabelVisible(QVariant(av.toString()).toBool());
+        }
+        // TODO add any specialized PlotItem Properties here.
+      } else if (xml.name().toString() == "plotaxis") {
+        Q_ASSERT(rc);
+        validTag = rc->plotAxisItem()->configureFromXml(xml);
+      } else {
+        Q_ASSERT(rc);
+        if (!rc->parse(xml, validTag) && validTag) {
+          ViewItem *i = GraphicsFactory::parse(xml, view, rc);
+          if (!i) {
+          }
+        }
+      }
+    } else if (xml.isEndElement()) {
+      if (xml.name().toString() == "plot") {
+        break;
+      } else {
+        validTag = false;
+      }
+    }
+    if (!validTag) {
+      qDebug("invalid Tag\n");
+      Debug::self()->log(QObject::tr("Error creating plot object from Kst file."), Debug::Warning);
+      delete rc;
+      return 0;
+    }
+    xml.readNext();
+  }
+  return rc;
 }
 
 }

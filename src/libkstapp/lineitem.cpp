@@ -207,7 +207,6 @@ LineItemFactory::~LineItemFactory() {
 
 ViewItem* LineItemFactory::generateGraphics(QXmlStreamReader& xml, View *view, ViewItem *parent) {
   LineItem *rc = 0;
-  double x1 = 0., y1 = 0., x2 = 10., y2 = 10.;
   while (!xml.atEnd()) {
     bool validTag = true;
     if (xml.isStartElement()) {

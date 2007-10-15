@@ -135,6 +135,41 @@ void PlotAxisItem::paint(QPainter *painter) {
 }
 
 
+void PlotAxisItem::save(QXmlStreamWriter &xml) {
+    Q_UNUSED(xml);
+}
+
+
+void PlotAxisItem::saveInPlot(QXmlStreamWriter &xml) {
+  xml.writeStartElement("plotaxis");
+  xml.writeAttribute("xtickmode", QVariant(_xAxisMajorTickMode).toString());
+  xml.writeAttribute("ytickmode", QVariant(_yAxisMajorTickMode).toString());
+  xml.writeEndElement();
+}
+
+
+bool PlotAxisItem::configureFromXml(QXmlStreamReader &xml) {
+  bool validTag = false;
+  if (xml.isStartElement() && xml.name().toString() == "plotaxis") {
+    QXmlStreamAttributes attrs = xml.attributes();
+    QStringRef av;
+    av = attrs.value("xtickmode");
+    if (!av.isNull()) {
+      setXAxisMajorTickMode((MajorTickMode)av.toString().toInt());
+    }
+    av = attrs.value("ytickmode");
+    if (!av.isNull()) {
+      setYAxisMajorTickMode((MajorTickMode)av.toString().toInt());
+    }
+    xml.readNext();
+    if (xml.isEndElement() && xml.name().toString() == "plotaxis") {
+      validTag = true;
+    }
+  }
+  return validTag;
+}
+
+
 void PlotAxisItem::paintMajorGridLines(QPainter *painter,
                                        const QList<qreal> &xMajorTicks,
                                        const QList<qreal> &yMajorTicks) {

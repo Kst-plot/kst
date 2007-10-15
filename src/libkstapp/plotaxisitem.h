@@ -46,6 +46,9 @@ class PlotAxisItem : public ViewItem
     qreal marginWidth() const;
     qreal marginHeight() const;
 
+    virtual void save(QXmlStreamWriter &xml);
+    void saveInPlot(QXmlStreamWriter &xml);
+    bool configureFromXml(QXmlStreamReader &xml);
     virtual void paint(QPainter *painter);
 
     virtual void paintMajorGridLines(QPainter *painter,

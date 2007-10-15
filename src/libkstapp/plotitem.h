@@ -13,6 +13,7 @@
 #define PLOTITEM_H
 
 #include "viewitem.h"
+#include "graphicsfactory.h"
 
 #include <QHash>
 
@@ -36,6 +37,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QList<PlotRenderItem*> renderItems() const;
     PlotRenderItem *renderItem(PlotRenderItem::RenderType type);
 
+    virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
 
     /* This is the rectangle of the PlotAxisItem and includes the axis labels. */
@@ -136,6 +138,13 @@ class KST_EXPORT CreatePlotForCurve : public CreateCommand
   private:
     bool _createLayout;
     bool _appendToLayout;
+};
+
+class PlotItemFactory : public GraphicsFactory {
+  public:
+    PlotItemFactory();
+    ~PlotItemFactory();
+    ViewItem* generateGraphics(QXmlStreamReader& stream, View *view, ViewItem *parent = 0);
 };
 
 }
