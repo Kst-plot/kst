@@ -15,6 +15,7 @@
 #include "ellipseitem.h"
 #include "labelitem.h"
 #include "pictureitem.h"
+#include "svgitem.h"
 
 namespace Kst {
   namespace Builtins {
@@ -24,6 +25,7 @@ namespace Kst {
       new EllipseItemFactory;
       new LabelItemFactory;
       new PictureItemFactory;
+      new SvgItemFactory;
     }
   }
 }

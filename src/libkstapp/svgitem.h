@@ -13,6 +13,7 @@
 #define SVGITEM_H
 
 #include "viewitem.h"
+#include "graphicsfactory.h"
 
 class QSvgRenderer;
 
@@ -22,13 +23,17 @@ class SvgItem : public ViewItem
 {
   Q_OBJECT
   public:
-    SvgItem(View *parent, const QString &file);
+    SvgItem(View *parent, const QString &file = QString());
     ~SvgItem();
 
+    virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
+
+    void setSvgData(const QByteArray &svgData);
 
   private:
     QSvgRenderer *_svg;
+    QByteArray _svgData;
 };
 
 
@@ -39,6 +44,14 @@ class KST_EXPORT CreateSvgCommand : public CreateCommand
     CreateSvgCommand(View *view) : CreateCommand(view, QObject::tr("Create Svg")) {}
     ~CreateSvgCommand() {}
     void createItem();
+};
+
+
+class SvgItemFactory : public GraphicsFactory {
+  public:
+    SvgItemFactory();
+    ~SvgItemFactory();
+    ViewItem* generateGraphics(QXmlStreamReader& stream, View *view, ViewItem *parent = 0);
 };
 
 }
