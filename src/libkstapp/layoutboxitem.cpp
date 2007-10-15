@@ -52,6 +52,13 @@ void LayoutBoxItem::appendItem(ViewItem *item) {
 }
 
 
+void LayoutBoxItem::save(QXmlStreamWriter &xml) {
+  xml.writeStartElement("layoutbox");
+  ViewItem::save(xml);
+  xml.writeEndElement();
+}
+
+
 void LayoutBoxItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
   Q_UNUSED(option);
   Q_UNUSED(widget);

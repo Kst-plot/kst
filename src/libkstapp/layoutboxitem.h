@@ -25,6 +25,7 @@ class LayoutBoxItem : public ViewItem
 
     void appendItem(ViewItem *item);
 
+    virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
   public Q_SLOTS:

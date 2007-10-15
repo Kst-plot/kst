@@ -197,6 +197,11 @@ void PlotRenderItem::clearRelations() {
 }
 
 
+void PlotRenderItem::save(QXmlStreamWriter &xml) {
+    Q_UNUSED(xml);
+}
+
+
 void PlotRenderItem::paint(QPainter *painter) {
   painter->setRenderHint(QPainter::Antialiasing, false);
   painter->drawRect(rect());

@@ -82,6 +82,7 @@ class PlotRenderItem : public ViewItem
     void removeRelation(RelationPtr relation);
     void clearRelations();
 
+    virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
     virtual void paintRelations(QPainter *painter) = 0;
 
