@@ -22,7 +22,10 @@
 namespace Kst {
 
 PictureItem::PictureItem(View *parent, const QImage &image)
-  : ViewItem(parent), _image(QPixmap::fromImage(image)) {
+  : ViewItem(parent) {
+  if (!image.isNull()) {
+    _image = QPixmap::fromImage(image);
+  }
   setName("Picture");
   setLockAspectRatio(true);
 }
@@ -34,13 +37,21 @@ PictureItem::~PictureItem() {
 
 void PictureItem::save(QXmlStreamWriter &xml) {
   xml.writeStartElement("picture");
+  ViewItem::save(xml);
+  xml.writeStartElement("data");
   QByteArray qba;
   QBuffer buffer(&qba);
   buffer.open(QIODevice::WriteOnly);
   QImage(_image).save(&buffer, "PNG"); // writes image into ba in PNG format
-  xml.writeAttribute("data", qCompress(qba).toBase64());
-  ViewItem::save(xml);
+  xml.writeCharacters(qCompress(qba).toBase64());
   xml.writeEndElement();
+  xml.writeEndElement();
+}
+
+
+void PictureItem::setImage(const QImage &image)
+{
+  _image = QPixmap::fromImage(image);
 }
 
 
@@ -82,15 +93,23 @@ ViewItem* PictureItemFactory::generateGraphics(QXmlStreamReader& xml, View *view
     if (xml.isStartElement()) {
       if (xml.name().toString() == "picture") {
         Q_ASSERT(!rc);
-        QXmlStreamAttributes attrs = xml.attributes();
-        QImage loadedImage;
-        QByteArray qbca = QByteArray::fromBase64(attrs.value("data").toString().toLatin1());
-        loadedImage.loadFromData(qUncompress(qbca));
-        rc = new PictureItem(view, loadedImage);
+        rc = new PictureItem(view);
         if (parent) {
           rc->setParentItem(parent);
         }
         // TODO add any specialized PictureItem Properties here.
+      } else if (xml.name().toString() == "data") {
+        Q_ASSERT(rc);
+        xml.readNext();
+        QImage loadedImage;
+        QByteArray qbca = QByteArray::fromBase64(xml.text().toString().toLatin1());
+        loadedImage.loadFromData(qUncompress(qbca));
+        rc->setImage(loadedImage);
+        xml.readNext();
+        if (!xml.isEndElement() || (xml.name().toString() != "data")) {
+          validTag = false;
+        }
+        xml.readNext();
       } else {
         Q_ASSERT(rc);
         if (!rc->parse(xml, validTag) && validTag) {

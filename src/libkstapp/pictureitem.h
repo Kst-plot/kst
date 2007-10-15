@@ -21,11 +21,13 @@ class PictureItem : public ViewItem
 {
   Q_OBJECT
   public:
-    PictureItem(View *parent, const QImage &image);
+    PictureItem(View *parent, const QImage &image = QImage());
     ~PictureItem();
 
     virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
+
+    void setImage(const QImage &image);
 
   private:
     QPixmap _image;
