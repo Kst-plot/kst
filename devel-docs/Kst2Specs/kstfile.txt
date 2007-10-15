@@ -77,7 +77,7 @@ File Format for Kst 2
                 </pen>
                 <brush color="#ffffff" style="1"></brush>
             </line>
-            <picture data="Base64 Encoded qCompressed PNG Data">
+            <picture>
                 <position x="" y=""></position>
                 <rect x="" y="" width="" height=""></rect>
                 <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"></transform>
@@ -85,6 +85,7 @@ File Format for Kst 2
                     <brush color="#000000" style="1"></brush>
                 </pen>
                 <brush color="#ffffff" style="1"></brush>
+                <data>Base64 Encoded qCompressed PNG Data</data>
             </picture>
     </view>
   </graphics>
