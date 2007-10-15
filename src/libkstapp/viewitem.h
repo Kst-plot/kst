@@ -115,6 +115,15 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
 
     bool isHovering() const { return _hovering; }
 
+    bool acceptsChildItems() const { return _acceptsChildItems; }
+    void setAcceptsChildItems(bool acceptsChildItems) { _acceptsChildItems = acceptsChildItems; }
+
+    //This is a workaround for context menu bug in Qt4.3 graphicsview
+    bool acceptsContextMenuEvents() const
+    { return _acceptsContextMenuEvents; }
+    void setAcceptsContextMenuEvents(bool acceptsContextMenuEvents)
+    { _acceptsContextMenuEvents = acceptsContextMenuEvents; }
+
   Q_SIGNALS:
     void geometryChanged();
     void creationComplete();
@@ -191,6 +200,8 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     bool _lockAspectRatio;
     bool _hasStaticGeometry;
     bool _hovering;
+    bool _acceptsChildItems;
+    bool _acceptsContextMenuEvents;
     ViewGridLayout *_layout;
     QPointF _originalPosition;
     QRectF _originalRect;
@@ -203,6 +214,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     QHash<QString, QAction*> _shortcutMap;
 
     friend class View;
+    friend class Scene;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(ViewItem::GripModes)

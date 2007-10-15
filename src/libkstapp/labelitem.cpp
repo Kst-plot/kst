@@ -10,8 +10,10 @@
  ***************************************************************************/
 
 #include "labelitem.h"
+
 #include <labelparser.h>
 #include "labelrenderer.h"
+#include "viewitemzorder.h"
 
 #include "debug.h"
 
@@ -25,6 +27,7 @@ namespace Kst {
 LabelItem::LabelItem(View *parent, const QString& txt)
   : ViewItem(parent), _parsed(0), _text(txt) {
   setName("Label");
+  setZValue(LABEL_ZVALUE);
 
   setAllowedGripModes(Move /*| Resize*/ | Rotate /*| Scale*/);
 }

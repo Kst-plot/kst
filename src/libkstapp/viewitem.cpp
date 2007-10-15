@@ -46,11 +46,14 @@ ViewItem::ViewItem(View *parent)
     _lockAspectRatio(false),
     _hasStaticGeometry(false),
     _hovering(false),
+    _acceptsChildItems(true),
+    _acceptsContextMenuEvents(true),
     _layout(0),
     _activeGrip(NoGrip),
     _allowedGrips(TopLeftGrip | TopRightGrip | BottomRightGrip | BottomLeftGrip |
                   TopMidGrip | RightMidGrip | BottomMidGrip | LeftMidGrip) {
 
+  setZValue(1);
   setName("View Item");
   setAcceptsHoverEvents(true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
@@ -575,7 +578,7 @@ bool ViewItem::isAllowed(ActiveGrip grip) const {
 
 QRectF ViewItem::selectBoundingRect() const {
 #if INKSCAPE_MODE
-  return mapToScene(itemShape()).boundingRect();
+  return mapToScene(itemShape()).controlPointRect();
 #else
   return rect();
 #endif
@@ -724,7 +727,7 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
     setPos(poly.first().x(), poly.first().y());
     setViewRect(0.0, 0.0, 0.0, 0.0);
     parentView()->scene()->addItem(this);
-    setZValue(1);
+    //setZValue(1);
     return;
   }
 
@@ -837,21 +840,21 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 #else
     switch(_activeGrip) {
     case TopLeftGrip:
-        rotateTowards(topLeftGrip().boundingRect().center(), p); break;
+        rotateTowards(topLeftGrip().controlPointRect().center(), p); break;
     case TopRightGrip:
-        rotateTowards(topRightGrip().boundingRect().center(), p); break;
+        rotateTowards(topRightGrip().controlPointRect().center(), p); break;
     case BottomRightGrip:
-        rotateTowards(bottomRightGrip().boundingRect().center(), p); break;
+        rotateTowards(bottomRightGrip().controlPointRect().center(), p); break;
     case BottomLeftGrip:
-        rotateTowards(bottomLeftGrip().boundingRect().center(), p); break;
+        rotateTowards(bottomLeftGrip().controlPointRect().center(), p); break;
     case TopMidGrip:
-        rotateTowards(topMidGrip().boundingRect().center(), p); break;
+        rotateTowards(topMidGrip().controlPointRect().center(), p); break;
     case RightMidGrip:
-        rotateTowards(rightMidGrip().boundingRect().center(), p); break;
+        rotateTowards(rightMidGrip().controlPointRect().center(), p); break;
     case BottomMidGrip:
-        rotateTowards(bottomMidGrip().boundingRect().center(), p); break;
+        rotateTowards(bottomMidGrip().controlPointRect().center(), p); break;
     case LeftMidGrip:
-        rotateTowards(leftMidGrip().boundingRect().center(), p); break;
+        rotateTowards(leftMidGrip().controlPointRect().center(), p); break;
     case NoGrip:
       break;
     }
@@ -1290,7 +1293,7 @@ bool ViewItem::maybeReparent() {
   foreach (QGraphicsItem *item, collisions) {
     ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
 
-    if (!viewItem) /*bah*/
+    if (!viewItem || !viewItem->acceptsChildItems()) /*bah*/
       continue;
 
     if (!viewItem->collidesWithItem(this, Qt::ContainsItemShape)) /*doesn't contain*/
@@ -1861,7 +1864,7 @@ void RaiseCommand::redo() {
 
 void LowerCommand::undo() {
   Q_ASSERT(_item);
-  _item->setZValue(_item->zValue() +1);
+  _item->setZValue(_item->zValue() + 1);
 }
 
 

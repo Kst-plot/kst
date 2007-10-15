@@ -10,9 +10,9 @@
  ***************************************************************************/
 
 #include "layoutboxitem.h"
-#include "viewgridlayout.h"
 
-#include <debug.h>
+#include "viewgridlayout.h"
+#include "viewitemzorder.h"
 
 #include <QDebug>
 #include <QMenu>
@@ -25,12 +25,13 @@ namespace Kst {
 LayoutBoxItem::LayoutBoxItem(View *parent)
     : ViewItem(parent) {
   setName("Layout Box");
+  setZValue(LAYOUTBOX_ZVALUE);
   setPen(Qt::NoPen);
   setBrush(Qt::NoBrush);
   setAllowedGripModes(Move);
 
   parentView()->scene()->addItem(this);
-  setZValue(1);
+  //setZValue(1);
   setPos(parentView()->sceneRect().topLeft());
   setViewRect(parentView()->sceneRect());
 

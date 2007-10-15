@@ -11,6 +11,12 @@
 
 #include "plotrenderitem.h"
 
+#include "plotitem.h"
+#include "plotaxisitem.h"
+#include "viewitemzorder.h"
+#include "plotitemmanager.h"
+#include "application.h"
+
 #include <QTime>
 #include <QMenu>
 #include <QStatusBar>
@@ -18,10 +24,6 @@
 #include <QGraphicsSceneHoverEvent>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneContextMenuEvent>
-
-#include "plotitem.h"
-#include "plotitemmanager.h"
-#include "application.h"
 
 // #define CURVE_DRAWING_TIME
 
@@ -37,12 +39,15 @@ PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
   _yLogBase(10.0) {
 
   setName(tr("Plot Render"));
+  setZValue(PLOTRENDER_ZVALUE);
   setParentItem(parentItem);
   setHasStaticGeometry(true);
   setAllowedGripModes(0);
   setAllowedGrips(0);
 
-  connect(parentItem, SIGNAL(geometryChanged()),
+  connect(parentItem->plotAxisItem(), SIGNAL(marginChanged()),
+          this, SLOT(updateGeometry()));
+  connect(parentItem->plotAxisItem(), SIGNAL(geometryChanged()),
           this, SLOT(updateGeometry()));
   connect(parentItem, SIGNAL(labelVisibilityChanged()),
           this, SLOT(updateGeometry()));
@@ -215,9 +220,9 @@ void PlotRenderItem::paint(QPainter *painter) {
   painter->setRenderHint(QPainter::Antialiasing, true);
   painter->fillPath(checkBox(), Qt::white);
   if (isHovering()) {
-    QRectF check = checkBox().boundingRect();
+    QRectF check = checkBox().controlPointRect();
     check.setSize(QSizeF(check.width() / 1.8, check.height() / 1.8));
-    check.moveCenter(checkBox().boundingRect().center());
+    check.moveCenter(checkBox().controlPointRect().center());
     QPainterPath p;
     p.addEllipse(check);
     painter->fillPath(p, Qt::black);
@@ -460,7 +465,7 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   updateCursor(event->pos());
 
   const QPointF p = mapToProjection(event->pos());
-  QString message = QString("(%1, %2)").arg(QString::number(p.x())).arg(QString::number(p.y()));
+  QString message = QString("(%1, %2)").arg(QString::number(p.x(), 'G')).arg(QString::number(p.y()));
   kstApp->mainWindow()->statusBar()->showMessage(message);
 }
 
@@ -488,7 +493,7 @@ void PlotRenderItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
 QTransform PlotRenderItem::projectionTransform() const {
   QTransform t;
 
-  QRectF v = QRectF(rect().bottomLeft(), viewRect().topRight());
+  QRectF v = QRectF(rect().bottomLeft(), rect().topRight());
 
   QPolygonF from_ = QPolygonF(v);
   from_.pop_back(); //get rid of last closed point
@@ -680,7 +685,7 @@ QPainterPath PlotRenderItem::checkBox() const {
 
 
 void PlotRenderItem::updateGeometry() {
-  setViewRect(plotItem()->plotRegion());
+  setViewRect(plotItem()->plotRect());
 }
 
 

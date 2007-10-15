@@ -11,6 +11,8 @@
 
 #include "plotitem.h"
 
+#include "viewitemzorder.h"
+#include "plotaxisitem.h"
 #include "plotitemmanager.h"
 #include "plotrenderitem.h"
 
@@ -42,7 +44,10 @@ PlotItem::PlotItem(View *parent)
   _calculatedMarginWidth(0.0),
   _calculatedMarginHeight(0.0) {
 
+  _axisItem = new PlotAxisItem(this);
+
   setName("Plot");
+  setZValue(PLOT_ZVALUE);
   setBrush(Qt::white);
 
   PlotItemManager::self()->addPlot(this);
@@ -118,7 +123,8 @@ void PlotItem::paint(QPainter *painter) {
 }
 
 
-QRectF PlotItem::plotRegion() const {
+QRectF PlotItem::plotAxisRect() const {
+  //the PlotAxisItem uses this to set its rect
   qreal left = isLeftLabelVisible() ? marginWidth() : 0.0;
   qreal bottom = isBottomLabelVisible() ? marginHeight() : 0.0;
   qreal right = isRightLabelVisible() ? marginWidth() : 0.0;
@@ -128,6 +134,15 @@ QRectF PlotItem::plotRegion() const {
   QPointF bottomRight(rect().bottomRight() - QPointF(right, bottom));
 
   return QRectF(topLeft, bottomRight);
+}
+
+
+QRectF PlotItem::plotRect() const {
+  //the PlotRenderItems use this to set their rects
+  QRectF plot = plotAxisRect();
+  plot.setLeft(plot.left() + _axisItem->marginWidth());
+  plot.setBottom(plot.bottom() - _axisItem->marginHeight());
+  return plot;
 }
 
 
@@ -479,7 +494,7 @@ void CreatePlotForCurve::createItem() {
   _item = new PlotItem(_view);
   _item->setPos(center);
   _item->setViewRect(0.0, 0.0, 200.0, 200.0);
-  _item->setZValue(1);
+  //_item->setZValue(1);
   _view->scene()->addItem(_item);
 
   if (_createLayout) {

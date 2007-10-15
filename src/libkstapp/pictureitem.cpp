@@ -11,6 +11,7 @@
 
 #include "pictureitem.h"
 
+#include "viewitemzorder.h"
 #include "debug.h"
 
 #include <QDebug>
@@ -27,6 +28,7 @@ PictureItem::PictureItem(View *parent, const QImage &image)
     _image = QPixmap::fromImage(image);
   }
   setName("Picture");
+  setZValue(PICTURE_ZVALUE);
   setLockAspectRatio(true);
 }
 

@@ -60,10 +60,12 @@ SOURCES += \
     matrixmodel.cpp \
     memorywidget.cpp \
     pictureitem.cpp \
+    plotaxisitem.cpp \
     plotitem.cpp \
     plotitemmanager.cpp \
     plotrenderitem.cpp \
     qgetoptions.cpp \
+    scene.cpp \
     selectionrect.cpp \
     sessionmodel.cpp \
     scalardialog.cpp \
@@ -123,10 +125,12 @@ HEADERS += \
     matrixmodel.h \
     memorywidget.h \
     pictureitem.h \
+    plotaxisitem.h \
     plotitem.h \
     plotitemmanager.h \
     plotrenderitem.h \
     qgetoptions.h \
+    scene.h \
     selectionrect.h \
     sessionmodel.h \
     scalardialog.h \
@@ -142,6 +146,7 @@ HEADERS += \
     viewgridlayout.h \
     viewitemdialog.h \
     viewitem.h \
+    viewitemzorder.h \
     viewmanager.h
 
 FORMS += \

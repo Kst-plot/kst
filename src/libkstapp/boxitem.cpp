@@ -11,6 +11,8 @@
 
 #include "boxitem.h"
 
+#include "viewitemzorder.h"
+
 #include <debug.h>
 
 #include <QDebug>
@@ -21,6 +23,7 @@ namespace Kst {
 BoxItem::BoxItem(View *parent)
     : ViewItem(parent) {
   setName("Box");
+  setZValue(BOX_ZVALUE);
   setBrush(Qt::white);
 }
 

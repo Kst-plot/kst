@@ -22,6 +22,8 @@
 
 namespace Kst {
 
+class PlotAxisItem;
+
 class PlotItem : public ViewItem, public PlotItemInterface
 {
   Q_OBJECT
@@ -36,7 +38,13 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     virtual void paint(QPainter *painter);
 
-    QRectF plotRegion() const;
+    /* This is the rectangle of the PlotAxisItem and includes the axis labels. */
+    QRectF plotAxisRect() const;
+
+    /* This is the rectangle of the PlotRenderItem's and includes the actual curves. */
+    QRectF plotRect() const;
+
+    /* This is the rectangle containing the union of all the PlotRenderItem's projections. */
     QRectF projectionRect() const;
 
     bool isTiedZoom() const;
@@ -64,6 +72,8 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     void setLabelsVisible(bool visible);
 
+    PlotAxisItem *plotAxisItem() const { return _axisItem; }
+
   Q_SIGNALS:
     void labelVisibilityChanged();
 
@@ -87,6 +97,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QSizeF calculateTopLabelBound(QPainter *painter);
 
   private:
+    PlotAxisItem *_axisItem;
     QHash<PlotRenderItem::RenderType, PlotRenderItem*> _renderers;
     bool _isTiedZoom;
     bool _isLeftLabelVisible;

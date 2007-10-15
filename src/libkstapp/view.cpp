@@ -10,6 +10,7 @@
  ***************************************************************************/
 
 #include "view.h"
+#include "scene.h"
 #include "viewitem.h"
 #include "layoutboxitem.h"
 #include "mainwindow.h"
@@ -40,7 +41,7 @@ View::View()
     _snapToGridVertical(false) {
 
   _undoStack = new QUndoStack(this);
-  setScene(new QGraphicsScene(this));
+  setScene(new Scene(this));
   scene()->installEventFilter(this);
   setInteractive(true);
   setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
@@ -188,10 +189,17 @@ bool View::event(QEvent *event) {
 
   if (event->type() == QEvent::Shortcut) {
     QShortcutEvent *e = static_cast<QShortcutEvent*>(event);
+
     QPointF mousePos = mapToScene(mapFromGlobal(QCursor::pos()));
-    ViewItem *item = qgraphicsitem_cast<ViewItem*>(scene()->itemAt(mousePos));
-    if (item && item->tryShortcut(e->key()))
-      return true;
+    QList<QGraphicsItem*> list = scene()->items(mousePos);
+    foreach (QGraphicsItem *item, list) {
+      ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+      if (!viewItem)
+        continue;
+
+      if (viewItem && viewItem->tryShortcut(e->key()))
+        return true;
+    }
   }
 
   return QGraphicsView::event(event);
@@ -333,7 +341,6 @@ void View::updateChildGeometry(const QRectF &oldSceneRect) {
     ViewItem::updateChildGeometry(viewItem, oldSceneRect, sceneRect());
   }
 }
-
 
 }
 
