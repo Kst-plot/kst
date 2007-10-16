@@ -16,6 +16,7 @@
 #include "equationdialog.h"
 #include "vectordialog.h"
 #include "scalardialog.h"
+#include "matrixdialog.h"
 
 namespace Kst {
 
@@ -34,7 +35,8 @@ void DialogLauncherGui::showVectorDialog(ObjectPtr objectPtr) {
 
 
 void DialogLauncherGui::showMatrixDialog(ObjectPtr objectPtr) {
-  Q_UNUSED(objectPtr);
+  MatrixDialog dialog(objectPtr, kstApp->mainWindow());
+  dialog.exec();
 }
 
 

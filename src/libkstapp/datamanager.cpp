@@ -59,10 +59,10 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showVectorDialog()));
   _primitives->addAction(action);
 
-//   action = new DataButtonAction(tr("Matrix"));
-//   connect(action, SIGNAL(triggered()), this, SLOT(showMatrixDialog()));
-//   _primitives->addAction(action);
-// 
+   action = new DataButtonAction(tr("Matrix"));
+   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showMatrixDialog()));
+   _primitives->addAction(action);
+ 
    action = new DataButtonAction(tr("Scalar"));
    connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showScalarDialog()));
    _primitives->addAction(action);

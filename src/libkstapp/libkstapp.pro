@@ -58,6 +58,7 @@ SOURCES += \
     lineitem.cpp \
     mainwindow.cpp \
     matrixmodel.cpp \
+    matrixdialog.cpp \
     memorywidget.cpp \
     pictureitem.cpp \
     plotaxisitem.cpp \
@@ -122,6 +123,7 @@ HEADERS += \
     layouttab.h \
     lineitem.h \
     mainwindow.h \
+    matrixdialog.h \
     matrixmodel.h \
     memorywidget.h \
     pictureitem.h \
@@ -162,6 +164,7 @@ FORMS += \
     generaltab.ui \
     gridtab.ui \
     layouttab.ui \
+    matrixtab.ui \
     scalartab.ui \
     stroketab.ui \
     vectoreditordialog.ui \
