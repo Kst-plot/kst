@@ -106,6 +106,10 @@ File Format for Kst 2
                 </pen>
                 <brush color="#ffffff" style="1"></brush>
                 <plotaxis xtickmode="5" ytickmode="5"></plotaxis>
+                <cartesianrender name="" type="0" xzoommode="0" yzoommode="1" xlog="false" ylog="false" xlogbase="10" ylogbase="10">
+                    <rect x="" y="" width=": height=""></rect>
+                    <relation name=""></relation>
+                </cartesianrender>
             </plot>
             <svg zvalue="">
                 <position x="" y=""></position>
