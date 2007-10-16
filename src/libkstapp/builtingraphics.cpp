@@ -14,6 +14,7 @@
 #include "lineitem.h"
 #include "ellipseitem.h"
 #include "labelitem.h"
+#include "layoutboxitem.h"
 #include "pictureitem.h"
 #include "plotitem.h"
 #include "svgitem.h"
@@ -25,6 +26,7 @@ namespace Kst {
       new LineItemFactory;
       new EllipseItemFactory;
       new LabelItemFactory;
+      new LayoutBoxItemFactory;
       new PictureItemFactory;
       new PlotItemFactory;
       new SvgItemFactory;
