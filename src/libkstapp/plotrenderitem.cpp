@@ -198,7 +198,103 @@ void PlotRenderItem::clearRelations() {
 
 
 void PlotRenderItem::save(QXmlStreamWriter &xml) {
-    Q_UNUSED(xml);
+  Q_UNUSED(xml);
+}
+
+
+void PlotRenderItem::saveInPlot(QXmlStreamWriter &xml) {
+  //TODO Update with proper Object Tag.
+  //xml.writeAttribute("name", name());
+  xml.writeAttribute("type", QVariant(_type).toString());
+  xml.writeAttribute("xzoommode", QVariant(_xAxisZoomMode).toString());
+  xml.writeAttribute("yzoommode", QVariant(_yAxisZoomMode).toString());
+  xml.writeAttribute("xlog", QVariant(_isXAxisLog).toString());
+  xml.writeAttribute("ylog", QVariant(_isYAxisLog).toString());
+  xml.writeAttribute("xlogbase", QVariant(_xLogBase).toString());
+  xml.writeAttribute("ylogbase", QVariant(_yLogBase).toString());
+  xml.writeStartElement("rect");
+  xml.writeAttribute("x", QVariant(projectionRect().x()).toString());
+  xml.writeAttribute("y", QVariant(projectionRect().y()).toString());
+  xml.writeAttribute("width", QVariant(projectionRect().width()).toString());
+  xml.writeAttribute("height", QVariant(projectionRect().height()).toString());
+  xml.writeEndElement();
+  foreach (RelationPtr relation, relationList()) {
+    xml.writeStartElement("relation");
+    //TODO replace with with a valid object tag to correctly identify the relations.
+    xml.writeAttribute("name", relation->name());
+    xml.writeEndElement();
+  }
+}
+
+
+bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml) {
+  bool validTag = true;
+  QString primaryTag = xml.name().toString();
+  QXmlStreamAttributes attrs = xml.attributes();
+  QStringRef av;
+  av = attrs.value("type");
+  if (!av.isNull()) {
+    setType((RenderType)av.toString().toInt());
+  }
+  av = attrs.value("xzoommode");
+  if (!av.isNull()) {
+    setXAxisZoomMode((ZoomMode)av.toString().toInt());
+  }
+  av = attrs.value("yzoommode");
+  if (!av.isNull()) {
+    setYAxisZoomMode((ZoomMode)av.toString().toInt());
+  }
+  av = attrs.value("xlog");
+  if (!av.isNull()) {
+    setXAxisLog(QVariant(av.toString()).toBool());
+  }
+  av = attrs.value("ylog");
+  if (!av.isNull()) {
+    setYAxisLog(QVariant(av.toString()).toBool());
+  }
+  av = attrs.value("xlogbase");
+  if (!av.isNull()) {
+    setXLogBase(av.toString().toDouble());
+  }
+  av = attrs.value("ylogbase");
+  if (!av.isNull()) {
+    setYLogBase(av.toString().toDouble());
+  }
+
+  QString expectedEnd;
+  while (!(xml.isEndElement() && (xml.name().toString() == primaryTag))) {
+    if (xml.isStartElement() && xml.name().toString() == "rect") {
+      expectedEnd = xml.name().toString();
+      double x = 0, y = 0, w = 10, h = 10;
+      av = attrs.value("width");
+      if (!av.isNull()) {
+        w = av.toString().toDouble();
+      }
+      av = attrs.value("height");
+      if (!av.isNull()) {
+        h = av.toString().toDouble();
+      }
+      av = attrs.value("x");
+      if (!av.isNull()) {
+        x = av.toString().toDouble();
+      }
+      av = attrs.value("y");
+      if (!av.isNull()) {
+        y = av.toString().toDouble();
+      }
+    setProjectionRect(QRectF(QPointF(x, y), QSizeF(w, h)));
+    } else if (xml.isStartElement() && xml.name().toString() == "relation") {
+      expectedEnd = xml.name().toString();
+      // TODO Process the relation.
+    } else if (xml.isEndElement()) {
+      if (xml.name().toString() != expectedEnd) {
+        validTag = false;
+        break;
+      }
+    }
+    xml.readNext();
+  }
+  return validTag;
 }
 
 

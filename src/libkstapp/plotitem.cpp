@@ -74,7 +74,9 @@ void PlotItem::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("toplabelvisible", QVariant(_isTopLabelVisible).toString());
   ViewItem::save(xml);
   _axisItem->saveInPlot(xml);
-//TODO Save PlotRenderItems.
+  foreach (PlotRenderItem *renderer, renderItems()) {
+    renderer->saveInPlot(xml);
+  }
   xml.writeEndElement();
 
 
@@ -573,6 +575,12 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, View *view, V
       } else if (xml.name().toString() == "plotaxis") {
         Q_ASSERT(rc);
         validTag = rc->plotAxisItem()->configureFromXml(xml);
+      } else if (xml.name().toString() == "cartesianrender") {
+        Q_ASSERT(rc);
+        PlotRenderItem * renderItem = rc->renderItem(PlotRenderItem::Cartesian);
+        if (renderItem) {
+          validTag = renderItem->configureFromXml(xml);
+        }
       } else {
         Q_ASSERT(rc);
         if (!rc->parse(xml, validTag) && validTag) {

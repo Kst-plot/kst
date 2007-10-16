@@ -83,8 +83,11 @@ class PlotRenderItem : public ViewItem
     void clearRelations();
 
     virtual void save(QXmlStreamWriter &xml);
+    virtual void saveInPlot(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
     virtual void paintRelations(QPainter *painter) = 0;
+
+    virtual bool configureFromXml(QXmlStreamReader &xml);
 
     QString leftLabel() const;
     QString bottomLabel() const;

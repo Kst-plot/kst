@@ -91,6 +91,25 @@ void CartesianRenderItem::paintRelations(QPainter *painter) {
   painter->restore();
 }
 
+
+void CartesianRenderItem::saveInPlot(QXmlStreamWriter &xml) {
+  xml.writeStartElement("cartesianrender");
+  PlotRenderItem::saveInPlot(xml);
+  xml.writeEndElement();
+}
+
+
+bool CartesianRenderItem::configureFromXml(QXmlStreamReader &xml) {
+  bool validTag = false;
+  if (xml.isStartElement() && xml.name().toString() == "cartesianrender") {
+    validTag = PlotRenderItem::configureFromXml(xml);
+    if (validTag && xml.isEndElement() && xml.name().toString() == "cartesianrender") {
+      validTag = true;
+    }
+  }
+  return validTag;
+}
+
 }
 
 // vim: ts=2 sw=2 et
