@@ -48,6 +48,33 @@ class KST_EXPORT MatrixTab : public DataTab, Ui::MatrixTab {
 
     void setFieldList(const QStringList &fieldList);
 
+    uint nX() const;
+    void setNX(uint nX);
+
+    uint nY() const;
+    void setNY(uint nY);
+
+    double minX() const;
+    void setMinX(double minX);
+
+    double minY() const;
+    void setMinY(double minY);
+
+    double stepX() const;
+    void setStepX(double stepX);
+
+    double stepY() const;
+    void setStepY(double stepY);
+
+    double gradientZAtMin() const;
+    void setGradientZAtMin(double gradientZAtMin);
+
+    double gradientZAtMax() const;
+    void setGradientZAtMax(double gradientZAtMax);
+
+    bool xDirection() const;
+    void setXDirection(bool xDirection);
+
   private Q_SLOTS:
     void readFromSourceChanged();
     void fileNameChanged(const QString &file);

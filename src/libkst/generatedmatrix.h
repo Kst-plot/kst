@@ -25,7 +25,7 @@ class KST_EXPORT GeneratedMatrix : public Matrix {
                double minX, double minY, double stepX, double stepY,
                double gradZMin, double gradZMax, bool xDirection);
 
-    virtual void save(QTextStream &ts, const QString& indent = QString::null);
+    virtual void save(QXmlStreamWriter &xml);
 
     void change(ObjectTag tag, uint nX, uint nY,
                 double minX, double minY, double stepX, double stepY,

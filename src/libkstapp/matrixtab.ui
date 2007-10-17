@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>516</width>
-    <height>591</height>
+    <height>623</height>
    </rect>
   </property>
   <layout class="QGridLayout" >
@@ -131,6 +131,9 @@
             <height>0</height>
            </size>
           </property>
+          <property name="text" >
+           <string>1</string>
+          </property>
          </widget>
         </item>
        </layout>
@@ -201,6 +204,9 @@
             <height>0</height>
            </size>
           </property>
+          <property name="text" >
+           <string>1</string>
+          </property>
          </widget>
         </item>
         <item>
@@ -216,6 +222,9 @@
             <width>60</width>
             <height>0</height>
            </size>
+          </property>
+          <property name="text" >
+           <string>1</string>
           </property>
          </widget>
         </item>
@@ -274,6 +283,9 @@
           <property name="text" >
            <string>X axis</string>
           </property>
+          <property name="checked" >
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="0" column="3" >
@@ -323,12 +335,18 @@
           <property name="maximum" >
            <number>999999999</number>
           </property>
+          <property name="value" >
+           <number>100</number>
+          </property>
          </widget>
         </item>
         <item row="1" column="3" >
          <widget class="QSpinBox" name="_nY" >
           <property name="maximum" >
            <number>999999999</number>
+          </property>
+          <property name="value" >
+           <number>100</number>
           </property>
          </widget>
         </item>
@@ -388,7 +406,11 @@
          </widget>
         </item>
         <item row="0" column="3" >
-         <widget class="QLineEdit" name="_gradientZAtMax" />
+         <widget class="QLineEdit" name="_gradientZAtMax" >
+          <property name="text" >
+           <string>100</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -445,6 +467,9 @@
         </item>
         <item row="2" column="1" >
          <widget class="QSpinBox" name="_xNumSteps" >
+          <property name="enabled" >
+           <bool>false</bool>
+          </property>
           <property name="minimum" >
            <number>1</number>
           </property>
@@ -522,6 +547,9 @@
         </item>
         <item row="3" column="1" >
          <widget class="QSpinBox" name="_yNumSteps" >
+          <property name="enabled" >
+           <bool>false</bool>
+          </property>
           <property name="minimum" >
            <number>1</number>
           </property>
@@ -553,6 +581,9 @@
           </property>
           <property name="text" >
            <string>Read to end</string>
+          </property>
+          <property name="checked" >
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -604,6 +635,9 @@
           </property>
           <property name="text" >
            <string>Read to end</string>
+          </property>
+          <property name="checked" >
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -683,6 +717,9 @@
         </property>
         <item row="0" column="1" >
          <widget class="QSpinBox" name="_skip" >
+          <property name="enabled" >
+           <bool>false</bool>
+          </property>
           <property name="suffix" >
            <string> frames</string>
           </property>
@@ -696,6 +733,9 @@
         </item>
         <item row="0" column="2" >
          <widget class="QCheckBox" name="_doAve" >
+          <property name="enabled" >
+           <bool>false</bool>
+          </property>
           <property name="text" >
            <string>Boxcar filter first</string>
           </property>

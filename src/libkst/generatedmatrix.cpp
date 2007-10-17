@@ -13,6 +13,8 @@
 #include "generatedmatrix.h"
 #include <qtextstream.h>
 #include <qtextdocument.h>
+#include <QXmlStreamWriter>
+#include <QVariant>
 
 namespace Kst {
 
@@ -70,22 +72,19 @@ GeneratedMatrix::GeneratedMatrix(ObjectTag tag,
   change(tag, nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
 }
 
-void GeneratedMatrix::save(QTextStream &ts, const QString& indent) {
-      
-  QString indent2 = "  ";
-  
-  ts << indent << "<smatrix>" << endl;
-  ts << indent << indent2 << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
-  ts << indent << indent2 << "<xmin>" << minX() << "</xmin>" << endl;
-  ts << indent << indent2 << "<ymin>" << minY() << "</ymin>" << endl;
-  ts << indent << indent2 << "<nx>" << xNumSteps() << "</nx>" << endl;
-  ts << indent << indent2 << "<ny>" << yNumSteps() << "</ny>" << endl;
-  ts << indent << indent2 << "<xstep>" << xStepSize() << "</xstep>" << endl;
-  ts << indent << indent2 << "<ystep>" << xStepSize() << "</ystep>" << endl;
-  ts << indent << indent2 << "<gradzmin>" << _gradZMin << "</gradzmin>" << endl;
-  ts << indent << indent2 << "<gradzmax>" << _gradZMax << "</gradzmax>" << endl;
-  ts << indent << indent2 << "<xdirection>" << _xDirection << "</xdirection>" << endl;
-  ts << indent << "</smatrix>" << endl;
+void GeneratedMatrix::save(QXmlStreamWriter &xml) {
+  xml.writeStartElement("generatedmatrix");
+  xml.writeAttribute("tag", tag().tagString());
+  xml.writeAttribute("xmin", QString::number(minX()));
+  xml.writeAttribute("ymin", QString::number(minY()));
+  xml.writeAttribute("nx", QString::number(xNumSteps()));
+  xml.writeAttribute("ny", QString::number(yNumSteps()));
+  xml.writeAttribute("xstep", QString::number(xStepSize()));
+  xml.writeAttribute("ystep", QString::number(yStepSize()));
+  xml.writeAttribute("gradzmin", QString::number(_gradZMin));
+  xml.writeAttribute("gradzmax", QString::number(_gradZMax));
+  xml.writeAttribute("xdirection", QVariant(_xDirection).toString());
+  xml.writeEndElement();
 }
 
 void GeneratedMatrix::change(ObjectTag tag, uint nX,

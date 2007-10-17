@@ -88,6 +88,97 @@ void MatrixTab::setFieldList(const QStringList &fieldList) {
 }
 
 
+uint MatrixTab::nX() const {
+  return _nX->text().toInt();
+}
+
+
+void MatrixTab::setNX(uint nX) {
+  _nX->setValue(nX);
+}
+
+
+uint MatrixTab::nY() const {
+  return _nY->text().toInt();
+}
+
+
+void MatrixTab::setNY(uint nY) {
+  _nY->setValue(nY);
+}
+
+
+double MatrixTab::minX() const {
+  return _minX->text().toDouble();
+}
+
+
+void MatrixTab::setMinX(double minX) {
+  _minX->setText(QString::number(minX));
+}
+
+
+double MatrixTab::minY() const {
+  return _minY->text().toDouble();
+}
+
+
+void MatrixTab::setMinY(double minY) {
+  _minY->setText(QString::number(minY));
+}
+
+
+double MatrixTab::stepX() const {
+  return _xStep->text().toDouble();
+}
+
+
+void MatrixTab::setStepX(double stepX) {
+  _xStep->setText(QString::number(stepX));
+}
+
+
+double MatrixTab::stepY() const {
+  return _yStep->text().toDouble();
+}
+
+
+void MatrixTab::setStepY(double stepY) {
+  _yStep->setText(QString::number(stepY));
+}
+
+
+double MatrixTab::gradientZAtMin() const {
+  return _gradientZAtMin->text().toDouble();
+}
+
+
+void MatrixTab::setGradientZAtMin(double gradientZAtMin) {
+  _gradientZAtMin->setText(QString::number(gradientZAtMin));
+}
+
+
+double MatrixTab::gradientZAtMax() const {
+  return _gradientZAtMax->text().toDouble();
+}
+
+
+void MatrixTab::setGradientZAtMax(double gradientZAtMax) {
+  _gradientZAtMax->setText(QString::number(gradientZAtMax));
+}
+
+
+bool MatrixTab::xDirection() const {
+  return _gradientX->isChecked();
+}
+
+
+void MatrixTab::setXDirection(bool xDirection) {
+  _gradientX->setChecked(xDirection);
+  _gradientY->setChecked(!xDirection);
+}
+
+
 void MatrixTab::readFromSourceChanged() {
 
   if (_readFromSource->isChecked())
@@ -166,8 +257,14 @@ QString MatrixDialog::tagName() const {
 
 
 ObjectPtr MatrixDialog::createNewDataObject() const {
-  qDebug() << "createNewDataObject" << endl;
-  return 0;
+  switch(_matrixTab->matrixMode()) {
+  case MatrixTab::DataMatrix:
+    return createNewDataMatrix();
+  case MatrixTab::GeneratedMatrix:
+    return createNewGeneratedMatrix();
+  default:
+    return 0;
+  }
 }
 
 
@@ -178,8 +275,32 @@ ObjectPtr MatrixDialog::createNewDataMatrix() const {
 
 
 ObjectPtr MatrixDialog::createNewGeneratedMatrix() const {
-  qDebug() << "createNewGeneratedMatrix" << endl;
-  return 0;
+  const uint nX = _matrixTab->nX();
+  const uint nY = _matrixTab->nY();
+  const double minX = _matrixTab->minX();
+  const double minY = _matrixTab->minY();
+  const double stepX = _matrixTab->stepX();
+  const double stepY = _matrixTab->stepY();
+  const double gradZMin = _matrixTab->gradientZAtMin();
+  const double gradZMax = _matrixTab->gradientZAtMax();
+  const bool xDirection =  _matrixTab->xDirection();
+  const ObjectTag tag = ObjectTag(tagName(), ObjectTag::globalTagContext);
+
+//    qDebug() << "Creating new generated matrix ===>"
+//             << "\n\ttag:" << tag.tag()
+//             << "\n\tnX:" << nX
+//             << "\n\tnY:" << nY
+//             << "\n\tminX:" << minX
+//             << "\n\tminY:" << minY
+//             << "\n\tstepX:" << stepX
+//             << "\n\tstepY:" << stepY
+//             << "\n\tgradZMin:" << gradZMin
+//             << "\n\tgradZMax:" << gradZMax
+//             << "\n\txDirection:" << xDirection
+//             << endl;
+
+  GeneratedMatrixPtr matrix = new GeneratedMatrix(tag, nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
+  return static_cast<ObjectPtr>(matrix);
 }
 
 
