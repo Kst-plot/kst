@@ -14,6 +14,7 @@
 #include "application.h"
 #include "curvedialog.h"
 #include "equationdialog.h"
+#include "histogramdialog.h"
 #include "vectordialog.h"
 #include "scalardialog.h"
 #include "matrixdialog.h"
@@ -68,7 +69,8 @@ void DialogLauncherGui::showEquationDialog(ObjectPtr objectPtr) {
 
 
 void DialogLauncherGui::showHistogramDialog(ObjectPtr objectPtr) {
-  Q_UNUSED(objectPtr);
+  HistogramDialog dialog(objectPtr, kstApp->mainWindow());
+  dialog.exec();
 }
 
 

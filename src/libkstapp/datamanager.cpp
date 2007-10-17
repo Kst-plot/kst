@@ -79,10 +79,10 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showEquationDialog()));
   _dataObjects->addAction(action);
 
-//   action = new DataButtonAction(tr("Histogram"));
-//   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showHistogramDialog()));
-//   _dataObjects->addAction(action);
-// 
+   action = new DataButtonAction(tr("Histogram"));
+   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showHistogramDialog()));
+   _dataObjects->addAction(action);
+ 
 //   action = new DataButtonAction(tr("Power Spectrum"));
 //   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showPowerSpectrumDialog()));
 //   _dataObjects->addAction(action);

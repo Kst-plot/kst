@@ -51,6 +51,7 @@ SOURCES += \
     graphicsfactory.cpp \
     gridlayouthelper.cpp \
     gridtab.cpp \
+    histogramdialog.cpp \
     labelitem.cpp \
     labelrenderer.cpp \
     layoutboxitem.cpp \
@@ -117,6 +118,7 @@ HEADERS += \
     graphicsfactory.h \
     gridlayouthelper.h \
     gridtab.h \
+    histogramdialog.h \
     labelitem.h \
     labelrenderer.h \
     layoutboxitem.h \
@@ -163,6 +165,7 @@ FORMS += \
     filltab.ui \
     generaltab.ui \
     gridtab.ui \
+    histogramtab.ui \
     layouttab.ui \
     matrixtab.ui \
     scalartab.ui \
