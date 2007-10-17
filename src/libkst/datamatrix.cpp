@@ -21,6 +21,7 @@
 #include "datacollection.h"
 #include "debug.h"
 #include "datamatrix.h"
+#include <QXmlStreamWriter>
 
 
 // xStart, yStart < 0             count from end
@@ -101,26 +102,25 @@ DataMatrix::DataMatrix(const QDomElement &e) : Matrix(ObjectTag::invalidTag, 0L,
 }
 
 
-void DataMatrix::save(QTextStream &ts, const QString& indent) {
+void DataMatrix::save(QXmlStreamWriter &xml) {
   if (_file) {
+    xml.writeStartElement("datamatrix");
+    xml.writeAttribute("tag", tag().tagString());
 
-    QString indent2 = "  ";
-
-    ts << indent << "<rmatrix>" << endl;
-    ts << indent << indent2 << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
     _file->readLock();
-    ts << indent << indent2 << "<provider>" << Qt::escape(_file->tag().tagString()) << "</provider>" << endl;
-    ts << indent << indent2 << "<file>" << Qt::escape(_file->fileName()) << "</file>" << endl;
+    xml.writeAttribute("provider", _file->tag().tagString());
+    xml.writeAttribute("file", _file->fileName());
     _file->unlock();
-    ts << indent << indent2 << "<field>" << _field << "</field>" << endl;
-    ts << indent << indent2 << "<reqxstart>" << _reqXStart << "</reqxstart>" << endl;
-    ts << indent << indent2 << "<reqystart>" << _reqYStart << "</reqystart>" << endl;
-    ts << indent << indent2 << "<reqnx>" << _reqNX << "</reqnx>" << endl;
-    ts << indent << indent2 << "<reqny>" << _reqNY << "</reqny>" << endl;
-    ts << indent << indent2 << "<doave>" << _doAve << "</doave>" << endl;
-    ts << indent << indent2 << "<doskip>" << _doSkip << "</doskip>" << endl;
-    ts << indent << indent2 << "<skip>" << _skip << "</skip>" << endl;
-    ts << indent << "</rmatrix>" << endl;
+
+    xml.writeAttribute("field", _field);
+    xml.writeAttribute("reqxstart", QString::number(_reqXStart));
+    xml.writeAttribute("reqystart", QString::number(_reqYStart));
+    xml.writeAttribute("reqnx", QString::number(_reqNX));
+    xml.writeAttribute("reqny", QString::number(_reqNY));
+    xml.writeAttribute("doave", QVariant(_doAve).toString());
+    xml.writeAttribute("doskip", QVariant(_doSkip).toString());
+    xml.writeAttribute("skip", QString::number(_skip));
+    xml.writeEndElement();
   }
 }
 

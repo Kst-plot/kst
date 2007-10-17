@@ -40,7 +40,16 @@ MatrixTab::MatrixTab(QWidget *parent)
   connect(_configure, SIGNAL(clicked()),
           this, SLOT(showConfigWidget()));
 
-  _fileName->setFile(QDir::currentPath());
+  connect(_xStartCountFromEnd, SIGNAL(clicked()), this, SLOT(xStartCountFromEndClicked()));
+  connect(_yStartCountFromEnd, SIGNAL(clicked()), this, SLOT(yStartCountFromEndClicked()));
+  connect(_xNumStepsReadToEnd, SIGNAL(clicked()), this, SLOT(xNumStepsReadToEndClicked()));
+  connect(_yNumStepsReadToEnd, SIGNAL(clicked()), this, SLOT(yNumStepsReadToEndClicked()));
+
+  connect(_readFromSource, SIGNAL(clicked()), this, SLOT(updateEnables()));
+  connect(_generateGradient, SIGNAL(clicked()), this, SLOT(updateEnables()));
+  connect(_doSkip, SIGNAL(clicked()), this, SLOT(updateEnables()));
+
+   _fileName->setFile(QDir::currentPath());
   _fileName->setFile(matrixDefaults.dataSource());
 
   //FIXME need a solution for replacing kio for this...
@@ -49,6 +58,50 @@ MatrixTab::MatrixTab(QWidget *parent)
 
 
 MatrixTab::~MatrixTab() {
+}
+
+void MatrixTab::xStartCountFromEndClicked() {
+  _xNumStepsReadToEnd->setChecked(_xNumStepsReadToEnd->isChecked() && !_xStartCountFromEnd->isChecked());
+  _xStart->setEnabled(!_xStartCountFromEnd->isChecked());
+  _xNumSteps->setEnabled(!_xNumStepsReadToEnd->isChecked());
+}
+
+
+void MatrixTab::xNumStepsReadToEndClicked() {
+  _xStartCountFromEnd->setChecked(_xStartCountFromEnd->isChecked() && !_xNumStepsReadToEnd->isChecked());
+  _xNumSteps->setEnabled(!_xNumStepsReadToEnd->isChecked());
+  _xStart->setEnabled(!_xStartCountFromEnd->isChecked());
+}
+
+
+void MatrixTab::yStartCountFromEndClicked() {
+  _yNumStepsReadToEnd->setChecked(_yNumStepsReadToEnd->isChecked() && !_yStartCountFromEnd->isChecked());
+  _yStart->setEnabled(!_yStartCountFromEnd->isChecked());
+  _yNumSteps->setEnabled(!_yNumStepsReadToEnd->isChecked());
+}
+
+
+void MatrixTab::yNumStepsReadToEndClicked() {
+  _yStartCountFromEnd->setChecked(_yStartCountFromEnd->isChecked() && !_yNumStepsReadToEnd->isChecked());
+  _yNumSteps->setEnabled(!_yNumStepsReadToEnd->isChecked());
+  _yStart->setEnabled(!_yStartCountFromEnd->isChecked());
+}
+
+
+void MatrixTab::updateEnables() {
+  _dataSourceGroup->setEnabled(_readFromSource->isChecked());
+  _dataRangeGroup->setEnabled(_readFromSource->isChecked());
+  _gradientGroup->setEnabled(_generateGradient->isChecked());
+  _scalingGroup->setEnabled(_generateGradient->isChecked());
+
+  if (_dataRangeGroup->isEnabled()) {
+    _skip->setEnabled(_doSkip->isChecked());
+    _doAve->setEnabled(_doSkip->isChecked());
+    xStartCountFromEndClicked();
+    xNumStepsReadToEndClicked();
+    yStartCountFromEndClicked();
+    yNumStepsReadToEndClicked();
+  }
 }
 
 
@@ -148,6 +201,56 @@ void MatrixTab::setStepY(double stepY) {
 }
 
 
+int MatrixTab::xStart() const {
+  return _xStart->text().toInt();
+}
+
+
+void MatrixTab::setXStart(int xStart) {
+  _xStart->setValue(xStart);
+}
+
+
+int MatrixTab::yStart() const {
+  return _yStart->text().toInt();
+}
+
+
+void MatrixTab::setYStart(int yStart) {
+  _yStart->setValue(yStart);
+}
+
+
+int MatrixTab::xNumSteps() const {
+  return _xNumSteps->text().toInt();
+}
+
+
+void MatrixTab::setXNumSteps(int xNumSteps) {
+  _xNumSteps->setValue(xNumSteps);
+}
+
+
+int MatrixTab::yNumSteps() const {
+  return _yNumSteps->text().toInt();
+}
+
+
+void MatrixTab::setYNumSteps(int yNumSteps) {
+  _yNumSteps->setValue(yNumSteps);
+}
+
+
+int MatrixTab::skip() const {
+  return _skip->text().toInt();
+}
+
+
+void MatrixTab::setSkip(int skip) {
+  _skip ->setValue(skip);
+}
+
+
 double MatrixTab::gradientZAtMin() const {
   return _gradientZAtMin->text().toDouble();
 }
@@ -178,6 +281,65 @@ void MatrixTab::setXDirection(bool xDirection) {
   _gradientY->setChecked(!xDirection);
 }
 
+
+bool MatrixTab::doAve() const {
+  return _doAve->isChecked();
+}
+
+
+void MatrixTab::setDoAve(bool doAve) {
+  _doAve->setChecked(doAve);
+}
+
+
+bool MatrixTab::doSkip() const {
+  return _doSkip->isChecked();
+}
+
+
+void MatrixTab::setDoSkip(bool doSkip) {
+  _doSkip->setChecked(doSkip);
+}
+
+
+bool MatrixTab::xStartCountFromEnd() const {
+  return _xStartCountFromEnd->isChecked();
+}
+
+
+void MatrixTab::setXStartCountFromEnd(bool xStartCountFromEnd) {
+  _xStartCountFromEnd->setChecked(xStartCountFromEnd);
+}
+
+
+bool MatrixTab::yStartCountFromEnd() const {
+  return _yStartCountFromEnd->isChecked();
+}
+
+
+void MatrixTab::setYStartCountFromEnd(bool yStartCountFromEnd) {
+  _yStartCountFromEnd->setChecked(yStartCountFromEnd);
+}
+
+
+bool MatrixTab::xReadToEnd() const {
+  return _xNumStepsReadToEnd->isChecked();
+}
+
+
+void MatrixTab::setXReadToEnd(bool xReadToEnd) {
+  _xNumStepsReadToEnd->setChecked(xReadToEnd);
+}
+
+
+bool MatrixTab::yReadToEnd() const {
+  return _yNumStepsReadToEnd->isChecked();
+}
+
+
+void MatrixTab::setYReadToEnd(bool yReadToEnd) {
+  _yNumStepsReadToEnd->setChecked(yReadToEnd);
+}
 
 void MatrixTab::readFromSourceChanged() {
 
@@ -269,8 +431,48 @@ ObjectPtr MatrixDialog::createNewDataObject() const {
 
 
 ObjectPtr MatrixDialog::createNewDataMatrix() const {
-  qDebug() << "createNewDataMatrix" << endl;
-  return 0;
+ const DataSourcePtr dataSource = _matrixTab->dataSource();
+
+  //FIXME better validation than this please...
+  if (!dataSource)
+    return 0;
+
+  const QString field = _matrixTab->field();
+  const ObjectTag tag = ObjectTag(tagName(), dataSource->tag(), false);
+  const int skip = _matrixTab->skip();
+  const bool doAve = _matrixTab->doAve();
+  const bool doSkip = _matrixTab->doSkip();
+  const int xStart = _matrixTab->xStartCountFromEnd() ? -1 : _matrixTab->xStart();
+  const int yStart = _matrixTab->yStartCountFromEnd() ? -1 : _matrixTab->yStart();
+  const int xNumSteps = _matrixTab->xReadToEnd() ? -1 : _matrixTab->xNumSteps();
+  const int yNumSteps = _matrixTab->yReadToEnd() ? -1 : _matrixTab->yNumSteps();
+
+//   qDebug() << "Creating new data matrix ===>"
+//            << "\n\tfileName:" << dataSource->fileName()
+//            << "\n\tfileType:" << dataSource->fileType()
+//            << "\n\tfield:" << field
+//            << "\n\ttag:" << tag.tag()
+//            << "\n\txStart:" << xStart
+//            << "\n\tyStart:" << yStart
+//            << "\n\txNumSteps:" << xNumSteps
+//            << "\n\tyNumSteps:" << yNumSteps
+//            << "\n\tskip:" << skip
+//            << "\n\tdoSkip:" << doSkip
+//            << "\n\tdoAve:" << doAve
+//            << endl;
+
+  DataMatrixPtr matrix = new DataMatrix(
+      dataSource, field, tag,
+      xStart, yStart,
+      xNumSteps, yNumSteps,
+      doAve,
+      doSkip, skip);
+
+  matrix->writeLock();
+  matrix->update(0);
+  matrix->unlock();
+
+  return static_cast<ObjectPtr>(matrix);
 }
 
 

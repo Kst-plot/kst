@@ -34,7 +34,7 @@ class KST_EXPORT DataMatrix : public Matrix {
     DataMatrix(const QDomElement &e);
     
     // save DataMatrix
-    virtual void save(QTextStream &ts, const QString& indent = QString::null);
+    virtual void save(QXmlStreamWriter &xml);
     
     virtual ~DataMatrix();
     

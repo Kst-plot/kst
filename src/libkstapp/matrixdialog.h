@@ -66,6 +66,18 @@ class KST_EXPORT MatrixTab : public DataTab, Ui::MatrixTab {
     double stepY() const;
     void setStepY(double stepY);
 
+    int xStart() const;
+    void setXStart(int xStart);
+
+    int yStart() const;
+    void setYStart(int yStart);
+
+    int xNumSteps() const;
+    void setXNumSteps(int xNumSteps);
+
+    int yNumSteps() const;
+    void setYNumSteps(int yNumSteps);
+
     double gradientZAtMin() const;
     void setGradientZAtMin(double gradientZAtMin);
 
@@ -75,10 +87,37 @@ class KST_EXPORT MatrixTab : public DataTab, Ui::MatrixTab {
     bool xDirection() const;
     void setXDirection(bool xDirection);
 
+    bool doAve() const;
+    void setDoAve(bool doAve);
+
+    bool doSkip() const;
+    void setDoSkip(bool doSkip);
+
+    int skip() const;
+    void setSkip(int skip);
+
+    bool xStartCountFromEnd() const;
+    void setXStartCountFromEnd(bool xStartCountFromEnd);
+
+    bool yStartCountFromEnd() const;
+    void setYStartCountFromEnd(bool yStartCountFromEnd);
+
+    bool xReadToEnd() const;
+    void setXReadToEnd(bool xReadToEnd);
+
+    bool yReadToEnd() const;
+    void setYReadToEnd(bool yReadToEnd);
+
   private Q_SLOTS:
     void readFromSourceChanged();
     void fileNameChanged(const QString &file);
     void showConfigWidget();
+
+    void updateEnables();
+    void xStartCountFromEndClicked();
+    void xNumStepsReadToEndClicked();
+    void yStartCountFromEndClicked();
+    void yNumStepsReadToEndClicked();
 
   private:
     MatrixMode _mode;
