@@ -26,12 +26,12 @@ void TestHistogram::cleanupTestCase() {
 
 void TestHistogram::testHistogram() {
   Kst::VectorPtr vp = Kst::Vector::generateVector(0, 10, 100, Kst::ObjectTag::fromString("V1"));
-  Kst::HistogramPtr h1 = new Kst::Histogram("H1", vp, 0, 10, 10, Kst::KST_HS_NUMBER);
+  Kst::HistogramPtr h1 = new Kst::Histogram("H1", vp, 0, 10, 10, Kst::Histogram::Number);
   Kst::dataObjectList.append(h1.data());
 
   QCOMPARE(h1->propertyString(), QLatin1String("Histogram: V1"));
   QVERIFY(!h1->realTimeAutoBin()); // should be false by default
-  QCOMPARE(h1->nBins(), 10);
+  QCOMPARE(h1->numberOfBins(), 10);
 
   h1->writeLock();
   h1->update(0);
@@ -48,9 +48,9 @@ void TestHistogram::testHistogram() {
   QVERIFY(h1->realTimeAutoBin());
   //dumpPoints(h1, 10);
   QCOMPARE(count, 100); // should account for the whole vector
-  h1->setNBins(11);
+  h1->setNumberOfBins(11);
   QVERIFY(!h1->realTimeAutoBin());
-  QCOMPARE(h1->nBins(), 11);
+  QCOMPARE(h1->numberOfBins(), 11);
   QCOMPARE(h1->vMin(), 0.0);
   QCOMPARE(h1->vMax(), 10.0);
   QCOMPARE(h1->vNumSamples(), 100);
@@ -65,8 +65,8 @@ void TestHistogram::testHistogram() {
   }
   //dumpPoints(h1, 11);
   QCOMPARE(count, 100); // should still account for the whole vector
-  h1->setNBins(9);
-  QCOMPARE(h1->nBins(), 9);
+  h1->setNumberOfBins(9);
+  QCOMPARE(h1->numberOfBins(), 9);
   QCOMPARE(h1->vMin(), 0.0);
   QCOMPARE(h1->vMax(), 10.0);
   QCOMPARE(h1->vNumSamples(), 100);
@@ -82,24 +82,24 @@ void TestHistogram::testHistogram() {
   //dumpPoints(h1, 9);
   QCOMPARE(count, 100); // should still account for the whole vector
   // min > max
-  h1 = new Kst::Histogram("H2", vp, 10, 0, 10, Kst::KST_HS_NUMBER);
-  QCOMPARE(h1->nBins(), 10);
+  h1 = new Kst::Histogram("H2", vp, 10, 0, 10, Kst::Histogram::Number);
+  QCOMPARE(h1->numberOfBins(), 10);
   QCOMPARE(h1->xMin(), 0.0);
   QCOMPARE(h1->xMax(), 10.0);
   QCOMPARE(h1->vMin(), 0.0);
   QCOMPARE(h1->vMax(), 10.0);
   QCOMPARE(h1->vNumSamples(), 100);
   // min == max
-  h1 = new Kst::Histogram("H3", vp, 10, 10, 2, Kst::KST_HS_NUMBER);
-  QCOMPARE(h1->nBins(), 2);
+  h1 = new Kst::Histogram("H3", vp, 10, 10, 2, Kst::Histogram::Number);
+  QCOMPARE(h1->numberOfBins(), 2);
   QCOMPARE(h1->xMin(), 9.0);
   QCOMPARE(h1->xMax(), 11.0);
   QCOMPARE(h1->vMin(), 0.0);
   QCOMPARE(h1->vMax(), 10.0);
   QCOMPARE(h1->vNumSamples(), 100);
   // max < min
-  h1 = new Kst::Histogram("H4", vp, 11, 9, 1, Kst::KST_HS_NUMBER);
-  QCOMPARE(h1->nBins(), 2);
+  h1 = new Kst::Histogram("H4", vp, 11, 9, 1, Kst::Histogram::Number);
+  QCOMPARE(h1->numberOfBins(), 2);
   QCOMPARE(h1->xMax(), 11.0);
   QCOMPARE(h1->xMin(), 9.0);
   QCOMPARE(h1->vMin(), 0.0);

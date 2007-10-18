@@ -38,7 +38,7 @@ class KST_EXPORT HistogramTab : public DataTab, Ui::HistogramTab {
     double min() const;
     double max() const;
     int bins() const;
-    HsNormType normalizationType() const;
+    Histogram::NormalizationType normalizationType() const;
 
   private Q_SLOTS:
     void generateAutoBin();

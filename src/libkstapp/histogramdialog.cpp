@@ -39,7 +39,15 @@ HistogramTab::HistogramTab(QWidget *parent)
   connect(_realTimeAutoBin, SIGNAL(clicked()), this, SLOT(updateButtons()));
 
   _curvePlacement->setExistingPlots(Data::self()->plotList());
-  _curveAppearance->setValue(false, false, true, _curveAppearance->color(), 0, 0, 0, 1, 0);
+  _curveAppearance->setShowLines(false);
+  _curveAppearance->setShowPoints(false);
+  _curveAppearance->setShowBars(true);
+  _curveAppearance->setColor(_curveAppearance->color());
+  _curveAppearance->setPointType(0);
+  _curveAppearance->setLineWidth(0);
+  _curveAppearance->setLineStyle(0);
+  _curveAppearance->setBarStyle(1);
+  _curveAppearance->setPointDensity(0);
 }
 
 
@@ -57,7 +65,7 @@ void HistogramTab::generateAutoBin() {
   Histogram::AutoBin(selectedVector, &n, &max, &min);
   selectedVector->unlock();
 
-  _numBins->setValue(n);
+  _numberOfBins->setValue(n);
   _min->setText(QString::number(min));
   _max->setText(QString::number(max));
 }
@@ -70,7 +78,7 @@ void HistogramTab::updateButtons() {
 
   _min->setEnabled(!_realTimeAutoBin->isChecked());
   _max->setEnabled(!_realTimeAutoBin->isChecked());
-  _numBins->setEnabled(!_realTimeAutoBin->isChecked());
+  _numberOfBins->setEnabled(!_realTimeAutoBin->isChecked());
   AutoBin->setEnabled(!_realTimeAutoBin->isChecked());
 }
 
@@ -91,19 +99,19 @@ double HistogramTab::max() const {
 
 
 int HistogramTab::bins() const {
-  return _numBins->text().toInt();
+  return _numberOfBins->text().toInt();
 }
 
 
-HsNormType HistogramTab::normalizationType() const {
-  HsNormType normalization = KST_HS_NUMBER;
+Histogram::NormalizationType HistogramTab::normalizationType() const {
+  Histogram::NormalizationType normalization = Histogram::Number;
 
-  if (_normIsFraction) {
-    normalization = KST_HS_FRACTION;
-  } else if (_normIsPercent) {
-    normalization = KST_HS_PERCENT;
-  } else if (_normPeakIs1) {
-    normalization = KST_HS_MAX_ONE;
+  if (_normalizationIsFraction->isChecked()) {
+    normalization = Histogram::Fraction;
+  } else if (_normalizationIsPercent->isChecked()) {
+    normalization = Histogram::Percent;
+  } else if (_normalizationMaximumOne->isChecked()) {
+    normalization = Histogram::MaximumOne;
   }
   return normalization;
 }

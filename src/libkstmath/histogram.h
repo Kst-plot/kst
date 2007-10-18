@@ -27,14 +27,15 @@
 
 namespace Kst {
 
-enum HsNormType { KST_HS_NUMBER, KST_HS_PERCENT, KST_HS_FRACTION, KST_HS_MAX_ONE};
-
 class KST_EXPORT Histogram : public DataObject {
+
 public:
+  enum NormalizationType { Number, Percent, Fraction, MaximumOne};
+
   Histogram(const QString &in_tag, VectorPtr in_V,
                double xmin_in, double xmax_in,
                int in_n_bins,
-               HsNormType new_norm_in);
+               NormalizationType new_norm_in);
   Histogram(const QDomElement &e);
   virtual ~Histogram();
 
@@ -42,8 +43,8 @@ public:
   virtual void save(QXmlStreamWriter &xml);
   virtual QString propertyString() const;
 
-  int nBins() const;
-  void setNBins(int in_n_bins);
+  int numberOfBins() const;
+  void setNumberOfBins(int in_n_bins);
 
   void setXRange(double xmin_in, double xmax_in);
 
@@ -54,14 +55,14 @@ public:
   virtual QString yLabel() const;
   virtual QString xLabel() const;
 
-  bool isNormNum()        const { return _NormMode == KST_HS_NUMBER; }
-  void setIsNormNum()           { _NormMode = KST_HS_NUMBER; }
-  bool isNormPercent()    const { return _NormMode == KST_HS_PERCENT; }
-  void setIsNormPercent()       { _NormMode = KST_HS_PERCENT; }
-  bool isNormFraction()   const { return _NormMode == KST_HS_FRACTION; }
-  void setIsNormFraction()      { _NormMode = KST_HS_FRACTION; }
-  bool isNormOne()        const { return _NormMode == KST_HS_MAX_ONE; }
-  void setIsNormOne()           { _NormMode = KST_HS_MAX_ONE; }
+  bool isNormalizationNumber()        const { return _NormalizationMode == Number; }
+  void setIsNormalizationNumber()           { _NormalizationMode = Number; }
+  bool isNormalizationPercent()    const { return _NormalizationMode == Percent; }
+  void setIsNormalizationPercent()       { _NormalizationMode = Percent; }
+  bool isNormalizationFraction()   const { return _NormalizationMode == Fraction; }
+  void setIsNormalizationFraction()      { _NormalizationMode = Fraction; }
+  bool isNormalizationMaximumOne()        const { return _NormalizationMode == MaximumOne; }
+  void setIsNormNormalizationMaximumOne()           { _NormalizationMode = MaximumOne; }
 
   static void AutoBin(const VectorPtr, int *n, double *max, double *min);
 
@@ -90,13 +91,13 @@ public:
   virtual DataObjectPtr makeDuplicate(DataObjectDataObjectMap& duplicatedMap);
 
 private:
-  HsNormType _NormMode;
+  NormalizationType _NormalizationMode;
   VectorMap::Iterator _bVector;
   VectorMap::Iterator _hVector;
   double _MaxX;
   double _MinX;
   int _NS;
-  int _NBins;
+  int _NumberOfBins;
   unsigned long *_Bins;
   double _Normalization;
   double _W;
@@ -105,8 +106,8 @@ private:
   void commonConstructor(const QString &in_tag, VectorPtr in_V,
                          double xmin_in, double xmax_in,
                          int in_n_bins,
-                         HsNormType in_norm);
-  void internalSetNBins(int in_n_bins);
+                         NormalizationType in_norm);
+  void internalSetNumberOfBins(int in_n_bins);
 };
 
 typedef SharedPtr<Histogram> HistogramPtr;

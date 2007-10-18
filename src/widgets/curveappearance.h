@@ -26,17 +26,23 @@ class KST_EXPORT CurveAppearance : public QWidget, public Ui::CurveAppearance {
     virtual ~CurveAppearance();
 
     bool showLines() const;
+    void setShowLines(const bool showLines);
     bool showPoints() const;
+    void setShowPoints(const bool showPoints);
     bool showBars() const;
+    void setShowBars(const bool showBars);
     QColor color() const;
+    void setColor(const QColor &c);
     int pointType() const;
+    void setPointType(const int pointType);
     int lineStyle() const;
+    void setLineStyle(int lineStyle);
     int lineWidth() const;
+    void setLineWidth(const int lineWidth);
     int barStyle() const;
+    void setBarStyle(const int barStyle);
     int pointDensity() const;
-
-  void setValue(bool hasLines, bool hasPoints, bool hasBars, const QColor &c, int pointType,
-                int lineWidth, int lineStyle, int barStyle, int pointDensity);
+    void setPointDensity(int pointDensity);
 
   private slots:
     void enableSettings();
