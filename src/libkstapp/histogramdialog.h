@@ -15,6 +15,8 @@
 #include "datadialog.h"
 #include "datatab.h"
 
+#include "histogram.h"
+
 #include "ui_histogramtab.h"
 
 #include <QPointer>
@@ -29,8 +31,14 @@ class KST_EXPORT HistogramTab : public DataTab, Ui::HistogramTab {
     HistogramTab(QWidget *parent = 0);
     virtual ~HistogramTab();
 
+    VectorPtr vector() const;
     CurveAppearance* curveAppearance() const;
     CurvePlacement* curvePlacement() const;
+
+    double min() const;
+    double max() const;
+    int bins() const;
+    HsNormType normalizationType() const;
 
   private Q_SLOTS:
     void generateAutoBin();

@@ -161,6 +161,30 @@ int CurveAppearance::lineWidth() const {
 }
 
 
+void CurveAppearance::setValue( bool hasLines, bool hasPoints, bool hasBars, const QColor & c, int pointType, int lineWidth, int lineStyle, int barStyle, int pointDensity ) {
+  populateLineStyleCombo();
+  populatePointSymbolCombo();
+
+  _showLines->setChecked(hasLines);
+  _showPoints->setChecked(hasPoints);
+  _showBars->setChecked(hasBars);
+  _color->setColor(c);
+  _spinBoxLineWidth->setValue(lineWidth);
+  _comboPointDensity->setCurrentIndex(pointType);
+  _barStyle->setCurrentIndex(barStyle);
+  if (lineStyle < 0 || lineStyle >= (int)LINESTYLE_MAXTYPE) {
+    lineStyle = 0;
+  }
+  _comboLineStyle->setCurrentIndex(lineStyle);
+  if (pointDensity < 0 || pointDensity >= POINTDENSITY_MAXTYPE) {
+    pointDensity = 0;
+  }
+  _comboPointDensity->setCurrentIndex(pointDensity);
+  enableSettings();
+  drawSampleLine();
+}
+
+
 void CurveAppearance::populateLineStyleCombo() {
 
   QStyleOptionComboBox option;

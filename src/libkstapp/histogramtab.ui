@@ -55,7 +55,7 @@
          <bool>false</bool>
         </property>
         <property name="buddy" >
-         <cstring>N</cstring>
+         <cstring>_numBins</cstring>
         </property>
        </widget>
       </item>
@@ -74,7 +74,7 @@
          <bool>false</bool>
         </property>
         <property name="buddy" >
-         <cstring>Max</cstring>
+         <cstring>_max</cstring>
         </property>
        </widget>
       </item>
@@ -119,12 +119,12 @@
          <bool>false</bool>
         </property>
         <property name="buddy" >
-         <cstring>Min</cstring>
+         <cstring>_min</cstring>
         </property>
        </widget>
       </item>
       <item row="1" column="1" colspan="3" >
-       <widget class="QLineEdit" name="Min" >
+       <widget class="QLineEdit" name="_min" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
           <horstretch>0</horstretch>
@@ -140,7 +140,7 @@
        </widget>
       </item>
       <item row="1" column="5" >
-       <widget class="QLineEdit" name="Max" >
+       <widget class="QLineEdit" name="_max" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
           <horstretch>0</horstretch>
@@ -156,7 +156,7 @@
        </widget>
       </item>
       <item row="2" column="1" colspan="2" >
-       <widget class="QSpinBox" name="N" >
+       <widget class="QSpinBox" name="_numBins" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
           <horstretch>0</horstretch>
@@ -250,7 +250,7 @@
        <number>6</number>
       </property>
       <item row="1" column="0" >
-       <widget class="QRadioButton" name="NormIsPercent" >
+       <widget class="QRadioButton" name="_normIsPercent" >
         <property name="whatsThis" >
          <string>The Y axis of the histogram reports the percent of the samples in the bin.</string>
         </property>
@@ -260,7 +260,7 @@
        </widget>
       </item>
       <item row="0" column="1" >
-       <widget class="QRadioButton" name="NormIsFraction" >
+       <widget class="QRadioButton" name="_normIsFraction" >
         <property name="whatsThis" >
          <string>The Y axis of the histogram reports the fraction of samples in the bin.</string>
         </property>
@@ -270,7 +270,7 @@
        </widget>
       </item>
       <item row="0" column="0" >
-       <widget class="QRadioButton" name="NormIsNumber" >
+       <widget class="QRadioButton" name="_normIsNumber" >
         <property name="whatsThis" >
          <string>The Y axis of the histogram reports the number of samples in the bin.</string>
         </property>
@@ -283,7 +283,7 @@
        </widget>
       </item>
       <item row="1" column="1" >
-       <widget class="QRadioButton" name="PeakIs1" >
+       <widget class="QRadioButton" name="_normPeakIs1" >
         <property name="whatsThis" >
          <string>The Y axis of the histogram is normalized so that the highest bin is 1.</string>
         </property>
@@ -298,11 +298,11 @@
      </layout>
     </widget>
    </item>
-   <item  row="2" column="0">
-    <widget class="Kst::CurveAppearance" name="_curveAppearance" />
+   <item row="2" column="0" >
+    <widget class="Kst::CurveAppearance" native="1" name="_curveAppearance" />
    </item>
-   <item  row="3" column="0">
-    <widget class="Kst::CurvePlacement" name="_curvePlacement" />
+   <item row="3" column="0" >
+    <widget class="Kst::CurvePlacement" native="1" name="_curvePlacement" />
    </item>
   </layout>
  </widget>
@@ -327,12 +327,12 @@
  </customwidgets>
  <tabstops>
   <tabstop>_vector</tabstop>
-  <tabstop>Min</tabstop>
-  <tabstop>Max</tabstop>
-  <tabstop>N</tabstop>
+  <tabstop>_min</tabstop>
+  <tabstop>_max</tabstop>
+  <tabstop>_numBins</tabstop>
   <tabstop>AutoBin</tabstop>
   <tabstop>_realTimeAutoBin</tabstop>
-  <tabstop>NormIsNumber</tabstop>
+  <tabstop>_normIsNumber</tabstop>
   <tabstop>_curveAppearance</tabstop>
   <tabstop>_curvePlacement</tabstop>
  </tabstops>

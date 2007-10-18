@@ -21,6 +21,7 @@
 #include "mainwindow.h"
 #include "application.h"
 #include "plotrenderitem.h"
+#include "curve.h"
 
 #include "defaultnames.h"
 #include "datacollection.h"
@@ -38,6 +39,7 @@ HistogramTab::HistogramTab(QWidget *parent)
   connect(_realTimeAutoBin, SIGNAL(clicked()), this, SLOT(updateButtons()));
 
   _curvePlacement->setExistingPlots(Data::self()->plotList());
+  _curveAppearance->setValue(false, false, true, _curveAppearance->color(), 0, 0, 0, 1, 0);
 }
 
 
@@ -46,24 +48,18 @@ HistogramTab::~HistogramTab() {
 
 
 void HistogramTab::generateAutoBin() {
-  vectorList.lock();
 
-  if (!vectorList.isEmpty()) {
-    VectorList::Iterator i = vectorList.findTag(_vector->selectedVector()->tag());
-    double max, min;
-    int n;
+  VectorPtr selectedVector = vector();
 
-    if (i == vectorList.end()) {
-      qFatal("Bug in kst: the Vector field in dialog refers to a non existant vector...");
-    }
-    (*i)->readLock(); // Hmm should we really lock here?  AutoBin should I think
-    Histogram::AutoBin(VectorPtr(*i), &n, &max, &min);
-    (*i)->unlock();
+  selectedVector->readLock(); // Hmm should we really lock here?  AutoBin should I think
+  int n;
+  double max, min;
+  Histogram::AutoBin(selectedVector, &n, &max, &min);
+  selectedVector->unlock();
 
-    N->setValue(n);
-    Min->setText(QString::number(min));
-    Max->setText(QString::number(max));
-  }
+  _numBins->setValue(n);
+  _min->setText(QString::number(min));
+  _max->setText(QString::number(max));
 }
 
 
@@ -72,12 +68,45 @@ void HistogramTab::updateButtons() {
     generateAutoBin();
   }
 
-  Min->setEnabled(!_realTimeAutoBin->isChecked());
-  Max->setEnabled(!_realTimeAutoBin->isChecked());
-  N->setEnabled(!_realTimeAutoBin->isChecked());
+  _min->setEnabled(!_realTimeAutoBin->isChecked());
+  _max->setEnabled(!_realTimeAutoBin->isChecked());
+  _numBins->setEnabled(!_realTimeAutoBin->isChecked());
   AutoBin->setEnabled(!_realTimeAutoBin->isChecked());
 }
 
+
+VectorPtr HistogramTab::vector() const {
+  return _vector->selectedVector();
+}
+
+
+double HistogramTab::min() const {
+  return _min->text().toDouble();
+}
+
+
+double HistogramTab::max() const {
+  return _max->text().toDouble();
+}
+
+
+int HistogramTab::bins() const {
+  return _numBins->text().toInt();
+}
+
+
+HsNormType HistogramTab::normalizationType() const {
+  HsNormType normalization = KST_HS_NUMBER;
+
+  if (_normIsFraction) {
+    normalization = KST_HS_FRACTION;
+  } else if (_normIsPercent) {
+    normalization = KST_HS_PERCENT;
+  } else if (_normPeakIs1) {
+    normalization = KST_HS_MAX_ONE;
+  }
+  return normalization;
+}
 
 CurveAppearance* HistogramTab::curveAppearance() const {
   return _curveAppearance;
@@ -114,8 +143,68 @@ QString HistogramDialog::tagName() const {
 
 
 ObjectPtr HistogramDialog::createNewDataObject() const {
-  qDebug() << "createNewDataObject" << endl;
-  return 0;
+  //FIXME Eli, how should I construct this tag??
+  HistogramPtr histogram = new Histogram(tagName(),
+                                     _histogramTab->vector(),
+                                     _histogramTab->min(),
+                                     _histogramTab->max(),
+                                     _histogramTab->bins(),
+                                     _histogramTab->normalizationType());
+
+  histogram->writeLock();
+  histogram->update(0);
+  histogram->unlock();
+
+  //FIXME this should be a command...
+  //FIXME need some smart placement...
+
+  CurvePtr curve = new Curve(suggestCurveName(histogram->tag(), true),
+                                     histogram->vX(),
+                                     histogram->vY(),
+                                     0L, 0L, 0L, 0L,
+                                     _histogramTab->curveAppearance()->color());
+
+  curve->setHasPoints(_histogramTab->curveAppearance()->showPoints());
+  curve->setHasLines(_histogramTab->curveAppearance()->showLines());
+  curve->setHasBars(_histogramTab->curveAppearance()->showBars());
+  curve->setLineWidth(_histogramTab->curveAppearance()->lineWidth());
+  curve->setLineStyle(_histogramTab->curveAppearance()->lineStyle());
+  curve->pointType = _histogramTab->curveAppearance()->pointType();
+  curve->setPointDensity(_histogramTab->curveAppearance()->pointDensity());
+  curve->setBarStyle(_histogramTab->curveAppearance()->barStyle());
+
+  curve->writeLock();
+  curve->update(0);
+  curve->unlock();
+
+  PlotItem *plotItem = 0;
+  switch (_histogramTab->curvePlacement()->place()) {
+  case CurvePlacement::NoPlot:
+    break;
+  case CurvePlacement::ExistingPlot:
+    {
+      plotItem = static_cast<PlotItem*>(_histogramTab->curvePlacement()->existingPlot());
+      break;
+    }
+  case CurvePlacement::NewPlot:
+    {
+      CreatePlotForCurve *cmd = new CreatePlotForCurve(
+        _histogramTab->curvePlacement()->createLayout(),
+        _histogramTab->curvePlacement()->appendToLayout());
+      cmd->createItem();
+
+      plotItem = static_cast<PlotItem*>(cmd->item());
+      break;
+    }
+  default:
+    break;
+  }
+
+  PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
+  renderItem->addRelation(kst_cast<Relation>(curve));
+  plotItem->update();
+
+  return ObjectPtr(histogram.data());
 }
 
 

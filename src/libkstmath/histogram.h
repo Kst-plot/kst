@@ -39,7 +39,7 @@ public:
   virtual ~Histogram();
 
   virtual UpdateType update(int update_counter = -1);
-  virtual void save(QTextStream &ts, const QString& indent = QString::null);
+  virtual void save(QXmlStreamWriter &xml);
   virtual QString propertyString() const;
 
   int nBins() const;

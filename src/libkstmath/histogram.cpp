@@ -20,6 +20,7 @@
 #include <stdlib.h>
 
 #include <QTextDocument>
+#include <QXmlStreamWriter>
 #include "kst_i18n.h"
 
 #include "dialoglauncher.h"
@@ -65,7 +66,7 @@ Histogram::Histogram(const QDomElement &e)
         in_tag = e.text();
       } else if (e.tagName() == "vectag") {
         rawName = e.text();
-      } else if (e.tagName() == "NormMode") {
+      } else if (e.tagName() == "normmode") {
         if (e.text()=="NUMBER") {
           in_norm_mode = KST_HS_NUMBER;
         } else if (e.text()=="PERCENT") {
@@ -75,11 +76,11 @@ Histogram::Histogram(const QDomElement &e)
         } else if (e.text()=="MAX_ONE") {
           in_norm_mode = KST_HS_MAX_ONE;
         }
-      } else if (e.tagName() == "minX") {
+      } else if (e.tagName() == "min") {
         xmin_in = e.text().toDouble();
-      } else if (e.tagName() == "maxX") {
+      } else if (e.tagName() == "max") {
         xmax_in = e.text().toDouble();
-      } else if (e.tagName() == "numBins") {
+      } else if (e.tagName() == "numbins") {
         in_n_bins = e.text().toInt();
       } else if (e.tagName() == "realtimeautobin") {
         _realTimeAutoBin = (e.text() != "0");
@@ -343,33 +344,32 @@ QString Histogram::xLabel() const {
   return _inputVectors[RAWVECTOR]->label();
 }
 
+void Histogram::save(QXmlStreamWriter &xml) {
+  xml.writeStartElement("histogram");
+  xml.writeAttribute("tag", tag().tagString());
+  xml.writeAttribute("vectag", _inputVectors[RAWVECTOR]->tag().tagString());
+  xml.writeAttribute("numbins", QString::number(_NBins));
+  xml.writeAttribute("realtimeautobin", QVariant(_realTimeAutoBin).toString());
+  xml.writeAttribute("min", QString::number(_MinX));
+  xml.writeAttribute("max", QString::number(_MaxX));
 
-void Histogram::save(QTextStream &ts, const QString& indent) {
-  // FIXME: clean this up - all lower case nodes, maybe save points in the
-  // point class itself, etc
-  QString l2 = indent + "  ";
-  ts << indent << "<histogram>" << endl;
-  ts << l2 << "<tag>" << Qt::escape(tagName()) << "</tag>" << endl;
-  ts << l2 << "<vectag>" << Qt::escape(_inputVectors[RAWVECTOR]->tag().tagString()) << "</vectag>" << endl;
-  ts << l2 << "<numBins>"  << _NBins << "</numBins>" << endl;
-  ts << l2 << "<realtimeautobin>" << _realTimeAutoBin << "</realtimeautobin>" << endl;
-  ts << l2 << "<minX>" << _MinX << "</minX>" << endl;
-  ts << l2 << "<maxX>" << _MaxX << "</maxX>" << endl;
+  QString normString;
   switch (_NormMode) {
     case KST_HS_NUMBER:
-      ts << l2 << "<NormMode>NUMBER</NormMode>" << endl;
+      normString = "NUMBER";
       break;
     case KST_HS_PERCENT:
-      ts << l2 << "<NormMode>PERCENT</NormMode>" << endl;
+      normString = "PERCENT";
       break;
     case KST_HS_FRACTION:
-      ts << l2 << "<NormMode>FRACTION</NormMode>" << endl;
+      normString = "FRACTION";
       break;
     case KST_HS_MAX_ONE:
-      ts << l2 << "<NormMode>MAX_ONE</NormMode>" << endl;
+      normString = "MAX_ONE";
       break;
   }
-  ts << indent << "</histogram>" << endl;
+  xml.writeAttribute("normmode", normString);
+  xml.writeEndElement();
 }
 
 
