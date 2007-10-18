@@ -42,7 +42,7 @@ class KST_EXPORT DialogLauncherGui : public DialogLauncher {
 
     virtual void showHistogramDialog(ObjectPtr objectPtr = 0);
 
-    virtual void showPSDDialog(ObjectPtr objectPtr = 0);
+    virtual void showPowerSpectrumDialog(ObjectPtr objectPtr = 0);
 
     virtual void showCSDDialog(ObjectPtr objectPtr = 0);
 

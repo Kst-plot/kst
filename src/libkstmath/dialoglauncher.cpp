@@ -92,7 +92,7 @@ void DialogLauncher::showHistogramDialog(ObjectPtr objectPtr) {
 }
 
 
-void DialogLauncher::showPSDDialog(ObjectPtr objectPtr) {
+void DialogLauncher::showPowerSpectrumDialog(ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }
 

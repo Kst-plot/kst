@@ -28,6 +28,7 @@ SOURCES += \
     curveappearance.cpp \
     curveplacement.cpp \
     datarange.cpp \
+    fftoptions.cpp \
     filerequester.cpp \
     gradienteditor.cpp \
     matrixselector.cpp \
@@ -42,6 +43,7 @@ HEADERS += \
     curveappearance.h \
     curveplacement.h \
     datarange.h \
+    fftoptions.h \
     filerequester.h \
     gradienteditor.h \
     matrixselector.h \
@@ -54,6 +56,7 @@ FORMS += \
     datarange.ui \
     curveappearance.ui \
     curveplacement.ui \
+    fftoptions.ui \
     matrixselector.ui \
     scalarselector.ui \
     stringselector.ui \

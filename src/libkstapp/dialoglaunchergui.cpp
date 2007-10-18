@@ -18,6 +18,7 @@
 #include "vectordialog.h"
 #include "scalardialog.h"
 #include "matrixdialog.h"
+#include "powerspectrumdialog.h"
 
 namespace Kst {
 
@@ -74,8 +75,9 @@ void DialogLauncherGui::showHistogramDialog(ObjectPtr objectPtr) {
 }
 
 
-void DialogLauncherGui::showPSDDialog(ObjectPtr objectPtr) {
-  Q_UNUSED(objectPtr);
+void DialogLauncherGui::showPowerSpectrumDialog(ObjectPtr objectPtr) {
+  PowerSpectrumDialog dialog(objectPtr, kstApp->mainWindow());
+  dialog.exec();
 }
 
 

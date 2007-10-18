@@ -397,12 +397,12 @@ QString PSD::propertyString() const {
 
 
 void PSD::showNewDialog() {
-  DialogLauncher::self()->showPSDDialog();
+  DialogLauncher::self()->showPowerSpectrumDialog();
 }
 
 
 void PSD::showEditDialog() {
-  DialogLauncher::self()->showPSDDialog(this);
+  DialogLauncher::self()->showPowerSpectrumDialog(this);
 }
 
 

@@ -66,6 +66,7 @@ SOURCES += \
     plotitem.cpp \
     plotitemmanager.cpp \
     plotrenderitem.cpp \
+    powerspectrumdialog.cpp \
     qgetoptions.cpp \
     scene.cpp \
     selectionrect.cpp \
@@ -133,6 +134,7 @@ HEADERS += \
     plotitem.h \
     plotitemmanager.h \
     plotrenderitem.h \
+    powerspectrumdialog.h \
     qgetoptions.h \
     scene.h \
     selectionrect.h \
@@ -168,6 +170,7 @@ FORMS += \
     histogramtab.ui \
     layouttab.ui \
     matrixtab.ui \
+    powerspectrumtab.ui \
     scalartab.ui \
     stroketab.ui \
     vectoreditordialog.ui \
