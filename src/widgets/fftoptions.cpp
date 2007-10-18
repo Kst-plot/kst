@@ -20,13 +20,13 @@ FFTOptions::FFTOptions(QWidget *parent)
     : QWidget(parent) {
   setupUi(this);
 
-  connect(Interleaved, SIGNAL(clicked()), this, SLOT(clickedInterleaved()));
+  connect(_interleavedAverage, SIGNAL(clicked()), this, SLOT(clickedInterleaved()));
 
-  connect(Apodize, SIGNAL(clicked()), this, SLOT(clickedApodize()));
+  connect(_apodize, SIGNAL(clicked()), this, SLOT(clickedApodize()));
 
-  connect(ApodizeFxn, SIGNAL(activated(int)), this, SLOT(changedApodizeFxn()));
+  connect(_apodizeFunction, SIGNAL(activated(int)), this, SLOT(changedApodizeFxn()));
 
-  connect(Apodize, SIGNAL(clicked()), this, SLOT(changedApodizeFxn()));
+  connect(_apodize, SIGNAL(clicked()), this, SLOT(changedApodizeFxn()));
 }
 
 
@@ -41,16 +41,16 @@ void FFTOptions::init() {
 void FFTOptions::update() {
   objectDefaults.sync();
 
-  FFTLen->setValue(objectDefaults.fftLen());
-  SampRate->setText(QString::number(objectDefaults.psdFreq()));
-  VectorUnits->setText(objectDefaults.vUnits());
-  RateUnits->setText(objectDefaults.rUnits());
-  Apodize->setChecked(objectDefaults.apodize());
-  RemoveMean->setChecked(objectDefaults.removeMean());
-  Interleaved->setChecked(objectDefaults.psdAverage());
-  ApodizeFxn->setCurrentIndex(objectDefaults.apodizeFxn());
-  Output->setCurrentIndex(objectDefaults.output());
-  InterpolateHoles->setChecked(objectDefaults.interpolateHoles());
+  _FFTLength->setValue(objectDefaults.fftLen());
+  _sampleRate->setText(QString::number(objectDefaults.psdFreq()));
+  _vectorUnits->setText(objectDefaults.vUnits());
+  _rateUnits->setText(objectDefaults.rUnits());
+  _apodize->setChecked(objectDefaults.apodize());
+  _removeMean->setChecked(objectDefaults.removeMean());
+  _interleavedAverage->setChecked(objectDefaults.psdAverage());
+  _apodizeFunction->setCurrentIndex(objectDefaults.apodizeFxn());
+  _output->setCurrentIndex(objectDefaults.output());
+  _interpolateOverHoles->setChecked(objectDefaults.interpolateHoles());
 
   clickedInterleaved();
   clickedApodize();
@@ -58,22 +58,75 @@ void FFTOptions::update() {
 }
 
 
+double FFTOptions::sampleRate() const {
+  return _sampleRate->text().toDouble();
+}
+
+
+double FFTOptions::sigma() const {
+  return _sigma->value();
+}
+
+bool FFTOptions::interleavedAverage() const {
+  return _interleavedAverage->isChecked();
+}
+
+
+bool FFTOptions::apodize() const {
+  return _apodize->isChecked();
+}
+
+
+bool FFTOptions::removeMean() const {
+  return _removeMean->isChecked();
+}
+
+
+bool FFTOptions::interpolateOverHoles() const {
+  return _interpolateOverHoles->isChecked();
+}
+
+int FFTOptions::FFTLength() const {
+  return _FFTLength->value();
+}
+
+
+QString FFTOptions::vectorUnits() const {
+  return _vectorUnits->text();
+}
+
+
+QString FFTOptions::rateUnits() const {
+  return _rateUnits->text();
+}
+
+
+ApodizeFunction FFTOptions::apodizeFunction() const {
+  return (ApodizeFunction)_apodizeFunction->currentIndex();
+}
+
+
+PSDType FFTOptions::output() const {
+  return (PSDType)_output->currentIndex();
+}
+
+
 void FFTOptions::changedApodizeFxn() {
   int gaussianIndex = 5;
-  if (ApodizeFxn->itemText(0).isEmpty()) {
+  if (_apodizeFunction->itemText(0).isEmpty()) {
     ++gaussianIndex;
   }
-  Sigma->setEnabled(ApodizeFxn->currentIndex() == gaussianIndex && Apodize->isChecked());
+  _sigma->setEnabled(_apodizeFunction->currentIndex() == gaussianIndex && _apodize->isChecked());
 }
 
 
 void FFTOptions::clickedInterleaved() {
-  FFTLen->setEnabled(Interleaved->isChecked());
+  _FFTLength->setEnabled(_interleavedAverage->isChecked());
 }
 
 
 void FFTOptions::clickedApodize() {
-  ApodizeFxn->setEnabled(Apodize->isChecked());
+  _apodizeFunction->setEnabled(_apodize->isChecked());
 }
 
 
@@ -84,17 +137,17 @@ void FFTOptions::synch() {
 
 
 bool FFTOptions::checkValues() {
-  double new_freq = SampRate->text().toDouble();
-  int new_len = FFTLen->text().toInt();
+  double new_freq = _sampleRate->text().toDouble();
+  int new_len = _FFTLength->text().toInt();
   return checkGivenValues(new_freq, new_len);
 }
 
 
-bool FFTOptions::checkGivenValues(double sampRate, int FFTLen) {
-  if (sampRate <= 0) {
+bool FFTOptions::checkGivenValues(double sampleRate, int FFTLength) {
+  if (sampleRate <= 0) {
     return false;
   }
-  if (FFTLen < 2) {
+  if (FFTLength < 2) {
     return false;
   }
   return true;

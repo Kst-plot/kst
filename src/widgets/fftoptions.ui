@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>488</width>
-    <height>162</height>
+    <height>188</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -76,7 +76,7 @@
          <number>0</number>
         </property>
         <item row="0" column="2" >
-         <widget class="QComboBox" name="ApodizeFxn" >
+         <widget class="QComboBox" name="_apodizeFunction" >
           <property name="sizePolicy" >
            <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
             <horstretch>0</horstretch>
@@ -139,12 +139,12 @@
            <bool>false</bool>
           </property>
           <property name="buddy" >
-           <cstring>Sigma</cstring>
+           <cstring>_sigma</cstring>
           </property>
          </widget>
         </item>
         <item row="0" column="4" >
-         <widget class="QDoubleSpinBox" name="Sigma" >
+         <widget class="QDoubleSpinBox" name="_sigma" >
           <property name="enabled" >
            <bool>false</bool>
           </property>
@@ -154,7 +154,7 @@
          </widget>
         </item>
         <item row="0" column="0" >
-         <widget class="QCheckBox" name="Apodize" >
+         <widget class="QCheckBox" name="_apodize" >
           <property name="sizePolicy" >
            <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
             <horstretch>0</horstretch>
@@ -181,7 +181,7 @@
            <bool>false</bool>
           </property>
           <property name="buddy" >
-           <cstring>ApodizeFxn</cstring>
+           <cstring>_apodizeFunction</cstring>
           </property>
          </widget>
         </item>
@@ -202,7 +202,7 @@
          <number>0</number>
         </property>
         <item row="0" column="1" >
-         <widget class="QCheckBox" name="Interleaved" >
+         <widget class="QCheckBox" name="_interleavedAverage" >
           <property name="text" >
            <string>&amp;Interleaved average</string>
           </property>
@@ -229,12 +229,12 @@
            <bool>false</bool>
           </property>
           <property name="buddy" >
-           <cstring>FFTLen</cstring>
+           <cstring>_FFTLength</cstring>
           </property>
          </widget>
         </item>
         <item row="0" column="3" >
-         <widget class="QSpinBox" name="FFTLen" >
+         <widget class="QSpinBox" name="_FFTLength" >
           <property name="sizePolicy" >
            <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
             <horstretch>0</horstretch>
@@ -256,7 +256,7 @@
          </widget>
         </item>
         <item row="0" column="0" >
-         <widget class="QCheckBox" name="RemoveMean" >
+         <widget class="QCheckBox" name="_removeMean" >
           <property name="text" >
            <string>Remo&amp;ve mean</string>
           </property>
@@ -266,7 +266,7 @@
          </widget>
         </item>
         <item row="1" column="0" >
-         <widget class="QCheckBox" name="InterpolateHoles" >
+         <widget class="QCheckBox" name="_interpolateOverHoles" >
           <property name="text" >
            <string>Interpolate Over &amp;Holes</string>
           </property>
@@ -309,12 +309,12 @@
            <bool>false</bool>
           </property>
           <property name="buddy" >
-           <cstring>SampRate</cstring>
+           <cstring>_sampleRate</cstring>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="SampRate" >
+         <widget class="QLineEdit" name="_sampleRate" >
           <property name="sizePolicy" >
            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
             <horstretch>0</horstretch>
@@ -350,12 +350,12 @@
            <bool>false</bool>
           </property>
           <property name="buddy" >
-           <cstring>VectorUnits</cstring>
+           <cstring>_vectorUnits</cstring>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="VectorUnits" >
+         <widget class="QLineEdit" name="_vectorUnits" >
           <property name="sizePolicy" >
            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
             <horstretch>0</horstretch>
@@ -388,12 +388,12 @@
            <bool>false</bool>
           </property>
           <property name="buddy" >
-           <cstring>RateUnits</cstring>
+           <cstring>_rateUnits</cstring>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="RateUnits" >
+         <widget class="QLineEdit" name="_rateUnits" >
           <property name="sizePolicy" >
            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
             <horstretch>0</horstretch>
@@ -435,7 +435,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="Output" >
+         <widget class="QComboBox" name="_output" >
           <property name="sizePolicy" >
            <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
             <horstretch>0</horstretch>
@@ -474,16 +474,16 @@
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <tabstops>
-  <tabstop>Apodize</tabstop>
-  <tabstop>ApodizeFxn</tabstop>
-  <tabstop>Sigma</tabstop>
-  <tabstop>RemoveMean</tabstop>
-  <tabstop>Interleaved</tabstop>
-  <tabstop>FFTLen</tabstop>
-  <tabstop>InterpolateHoles</tabstop>
-  <tabstop>SampRate</tabstop>
-  <tabstop>VectorUnits</tabstop>
-  <tabstop>RateUnits</tabstop>
+  <tabstop>_apodize</tabstop>
+  <tabstop>_apodizeFunction</tabstop>
+  <tabstop>_sigma</tabstop>
+  <tabstop>_removeMean</tabstop>
+  <tabstop>_interleavedAverage</tabstop>
+  <tabstop>_FFTLength</tabstop>
+  <tabstop>_interpolateOverHoles</tabstop>
+  <tabstop>_sampleRate</tabstop>
+  <tabstop>_vectorUnits</tabstop>
+  <tabstop>_rateUnits</tabstop>
  </tabstops>
  <resources/>
  <connections/>

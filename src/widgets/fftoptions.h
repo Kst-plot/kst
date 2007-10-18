@@ -15,6 +15,8 @@
 #include <QWidget>
 #include "ui_fftoptions.h"
 
+#include "psd.h"
+
 #include "kst_export.h"
 
 namespace Kst {
@@ -25,6 +27,18 @@ class FFTOptions : public QWidget, public Ui::FFTOptions {
 public:
   FFTOptions(QWidget *parent = 0);
   ~FFTOptions();
+
+  double sampleRate() const;
+  double sigma() const;
+  bool interleavedAverage() const;
+  int FFTLength() const;
+  bool apodize() const;
+  bool removeMean() const;
+  QString vectorUnits() const;
+  QString rateUnits() const;
+  ApodizeFunction apodizeFunction() const;
+  PSDType output() const;
+  bool interpolateOverHoles() const;
 
   void update();
 

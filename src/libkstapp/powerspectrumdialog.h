@@ -34,6 +34,8 @@ class KST_EXPORT PowerSpectrumTab : public DataTab, Ui::PowerSpectrumTab {
     VectorPtr vector() const;
     CurveAppearance* curveAppearance() const;
     CurvePlacement* curvePlacement() const;
+    FFTOptions* FFTOptionsWidget() const;
+
 
   private Q_SLOTS:
   private:
@@ -51,7 +53,7 @@ class KST_EXPORT PowerSpectrumDialog : public DataDialog {
     virtual ObjectPtr editExistingDataObject() const;
 
   private:
-    PowerSpectrumTab *_PowerSpectrumTab;
+    PowerSpectrumTab *_powerSpectrumTab;
 };
 
 }
