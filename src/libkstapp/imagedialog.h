@@ -9,40 +9,52 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef MATRIXSELECTOR_H
-#define MATRIXSELECTOR_H
+#ifndef IMAGEDIALOG_H
+#define IMAGEDIALOG_H
 
-#include <QWidget>
-#include "ui_matrixselector.h"
+#include "datadialog.h"
+#include "datatab.h"
 
-#include <matrix.h>
+#include "image.h"
+
+#include "ui_imagetab.h"
+
+#include <QPointer>
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class KST_EXPORT MatrixSelector : public QWidget, public Ui::MatrixSelector {
+class KST_EXPORT ImageTab : public DataTab, Ui::ImageTab {
   Q_OBJECT
   public:
-    MatrixSelector(QWidget *parent = 0);
-    virtual ~MatrixSelector();
+    ImageTab(QWidget *parent = 0);
+    virtual ~ImageTab();
 
-    MatrixPtr selectedMatrix() const;
-    void setSelectedMatrix(MatrixPtr selectedMatrix);
-
-  Q_SIGNALS:
-    void selectionChanged();
+    CurvePlacement* curvePlacement() const;
+    ColorPalette* colorPalette() const;
 
   private Q_SLOTS:
-    void newMatrix();
-    void editMatrix();
+    void realTimeAutoThresholdToggled(const bool checked);
+    void updateEnabled(const bool checked);
+  private:
+};
+
+class KST_EXPORT ImageDialog : public DataDialog {
+  Q_OBJECT
+  public:
+    ImageDialog(ObjectPtr dataObject, QWidget *parent = 0);
+    virtual ~ImageDialog();
+
+  protected:
+    virtual QString tagName() const;
+    virtual ObjectPtr createNewDataObject() const;
+    virtual ObjectPtr editExistingDataObject() const;
 
   private:
-    void fillMatrices();
+    ImageTab *_ImageTab;
 };
 
 }
 
 #endif
-
-// vim: ts=2 sw=2 et

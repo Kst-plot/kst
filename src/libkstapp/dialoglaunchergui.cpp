@@ -20,6 +20,7 @@
 #include "matrixdialog.h"
 #include "powerspectrumdialog.h"
 #include "csddialog.h"
+#include "imagedialog.h"
 
 namespace Kst {
 
@@ -61,7 +62,8 @@ void DialogLauncherGui::showCurveDialog(ObjectPtr objectPtr) {
 
 
 void DialogLauncherGui::showImageDialog(ObjectPtr objectPtr) {
-  Q_UNUSED(objectPtr);
+  ImageDialog dialog(objectPtr, kstApp->mainWindow());
+  dialog.exec();
 }
 
 

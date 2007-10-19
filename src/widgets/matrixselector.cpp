@@ -11,6 +11,9 @@
 
 #include "matrixselector.h"
 
+#include "dialoglauncher.h"
+#include "datacollection.h"
+
 namespace Kst {
 
 MatrixSelector::MatrixSelector(QWidget *parent)
@@ -25,6 +28,11 @@ MatrixSelector::MatrixSelector(QWidget *parent)
 
   _newMatrix->setFixedSize(size + 8, size + 8);
   _editMatrix->setFixedSize(size + 8, size + 8);
+
+  fillMatrices();
+
+  connect(_newMatrix, SIGNAL(pressed()), this, SLOT(newMatrix()));
+  connect(_editMatrix, SIGNAL(pressed()), this, SLOT(editMatrix()));
 }
 
 
@@ -33,13 +41,59 @@ MatrixSelector::~MatrixSelector() {
 
 
 MatrixPtr MatrixSelector::selectedMatrix() const {
-  return 0;
+  return qVariantValue<Matrix*>(_matrix->itemData(_matrix->currentIndex()));
 }
 
 
 void MatrixSelector::setSelectedMatrix(MatrixPtr selectedMatrix) {
-  Q_UNUSED(selectedMatrix);
+  int i = _matrix->findData(qVariantFromValue(selectedMatrix.data()));
+  Q_ASSERT(i != -1);
+  _matrix->setCurrentIndex(i);
 }
+
+
+void MatrixSelector::newMatrix() {
+  DialogLauncher::self()->showMatrixDialog();
+  fillMatrices();
+}
+
+
+void MatrixSelector::editMatrix() {
+  DialogLauncher::self()->showMatrixDialog(ObjectPtr(selectedMatrix()));
+}
+
+void MatrixSelector::fillMatrices() {
+  QHash<QString, MatrixPtr> matrices;
+
+  matrixList.lock().readLock();
+
+  MatrixList::ConstIterator it = matrixList.begin();
+  for (; it != matrixList.end(); ++it) {
+    MatrixPtr matrix = (*it);
+
+    matrix->readLock();
+    matrices.insert(matrix->tag().displayString(), matrix);
+    matrix->unlock();
+  }
+
+  matrixList.lock().unlock();
+
+  QStringList list = matrices.keys();
+
+  qSort(list);
+
+  MatrixPtr current = selectedMatrix();
+
+  _matrix->clear();
+  foreach (QString string, list) {
+    MatrixPtr m = matrices.value(string);
+    _matrix->addItem(string, qVariantFromValue(m.data()));
+  }
+
+  if (current)
+    setSelectedMatrix(current);
+}
+
 
 }
 

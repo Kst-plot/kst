@@ -53,6 +53,7 @@ SOURCES += \
     gridlayouthelper.cpp \
     gridtab.cpp \
     histogramdialog.cpp \
+    imagedialog.cpp \
     labelitem.cpp \
     labelrenderer.cpp \
     layoutboxitem.cpp \
@@ -122,6 +123,7 @@ HEADERS += \
     gridlayouthelper.h \
     gridtab.h \
     histogramdialog.h \
+    imagedialog.h \
     labelitem.h \
     labelrenderer.h \
     layoutboxitem.h \
@@ -171,6 +173,7 @@ FORMS += \
     generaltab.ui \
     gridtab.ui \
     histogramtab.ui \
+    imagetab.ui \
     layouttab.ui \
     matrixtab.ui \
     powerspectrumtab.ui \
