@@ -16,12 +16,11 @@
 #include "matrix.h"
 #include "relation.h"
 #include "kst_export.h"
+#include "palette.h"
 
 #include <QHash>
 
 namespace Kst {
-
-typedef QHash<int, QColor> Palette;
 
 /**A class for handling images for Kst
  *@author University of British Columbia
@@ -29,7 +28,7 @@ typedef QHash<int, QColor> Palette;
 class KST_EXPORT Image : public Relation {
   public:
     //constructor for colormap only
-    Image(const QString &in_tag, MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const Palette &pal);
+    Image(const QString &in_tag, MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const PaletteData &pal);
     //constructor for contour map only
     Image(const QString &in_tag, MatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight);
     //constructor for both colormap and contour map
@@ -38,7 +37,7 @@ class KST_EXPORT Image : public Relation {
         double lowerZ,
         double upperZ,
         bool autoThreshold,
-        const Palette &pal,
+        const PaletteData &pal,
         int numContours,
         const QColor& contourColor,
         int contourWeight);
@@ -56,7 +55,7 @@ class KST_EXPORT Image : public Relation {
 
     virtual bool getNearestZ(double x, double y, double& z);
     virtual QColor getMappedColor(double x, double y);
-    virtual void setPalette(const Palette &pal);
+    virtual void setPalette(const PaletteData &pal);
     virtual void setUpperThreshold(double z);
     virtual void setLowerThreshold(double z);
     virtual void setAutoThreshold(bool yes);
@@ -70,16 +69,16 @@ class KST_EXPORT Image : public Relation {
     virtual QString matrixTag() const;
     virtual MatrixPtr matrix() const;
     virtual QString paletteName() const;
-    virtual const Palette &palette() const { return _pal; }
+    virtual const PaletteData &palette() const { return _pal; }
 
     virtual void matrixDimensions(double &x, double &y, double &width, double &height);
 
     virtual void changeToColorOnly(const QString &in_tag, MatrixPtr in_matrix,
-        double lowerZ, double upperZ, bool autoThreshold, const Palette &pal);
+        double lowerZ, double upperZ, bool autoThreshold, const PaletteData &pal);
     virtual void changeToContourOnly(const QString &in_tag, MatrixPtr in_matrix,
         int numContours, const QColor& contourColor, int contourWeight);
     virtual void changeToColorAndContour(const QString &in_tag, MatrixPtr in_matrix,
-        double lowerZ, double upperZ, bool autoThreshold, const Palette &pal,
+        double lowerZ, double upperZ, bool autoThreshold, const PaletteData &pal,
         int numContours, const QColor& contourColor, int contourWeight);
 
     //contour lines
@@ -123,7 +122,7 @@ class KST_EXPORT Image : public Relation {
     //use these to set defaults when either is not used.
     void setColorDefaults();
     void setContourDefaults();
-    Palette _pal;
+    PaletteData _pal;
     //upper and lower thresholds
     double _zUpper;
     double _zLower;

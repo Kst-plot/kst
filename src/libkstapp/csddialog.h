@@ -34,6 +34,9 @@ class KST_EXPORT CSDTab : public DataTab, Ui::CSDTab {
     VectorPtr vector() const;
     CurvePlacement* curvePlacement() const;
     FFTOptions* FFTOptionsWidget() const;
+    ColorPalette* colorPalette() const;
+
+    int windowSize() const;
 
 
   private Q_SLOTS:

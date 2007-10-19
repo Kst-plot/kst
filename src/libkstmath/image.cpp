@@ -79,12 +79,12 @@ Image::Image(const QDomElement& e) : Relation(e) {
   _zUpper = in_zUpper;
 
   if (_hasColorMap) {
-    Palette in_pal;
+    PaletteData in_pal;
     //maybe the palette doesn't exist anymore.  Generate a grayscale palette then.
     for (int i = 0; i < 256; i++) {
       in_pal.insert(i, QColor(i,i,i));
     }
-    Debug::self()->log(i18n("Unable to find palette %1.  Using a 256 color grayscale palette instead.").arg(in_paletteName), Debug::Warning);
+    Debug::self()->log(i18n("Unable to find PaletteData %1.  Using a 256 color grayscale palette instead.").arg(in_paletteName), Debug::Warning);
     _pal = in_pal;
   }
 
@@ -98,7 +98,7 @@ Image::Image(const QDomElement& e) : Relation(e) {
 
 
 //constructor for colormap only
-Image::Image(const QString &in_tag, MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const Palette &pal) : Relation(){
+Image::Image(const QString &in_tag, MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const PaletteData &pal) : Relation(){
 
   _inputMatrices[THEMATRIX] = in_matrix;
   setTagName(ObjectTag(in_tag, ObjectTag::globalTagContext));  // FIXME: always top-level?
@@ -140,7 +140,7 @@ Image::Image(const QString &in_tag,
                    double lowerZ,
                    double upperZ,
                    bool autoThreshold,
-                   const Palette &pal,
+                   const PaletteData &pal,
                    int numContours,
                    const QColor& contourColor,
                    int contourWeight) {
@@ -288,7 +288,7 @@ QColor Image::getMappedColor(double x, double y) {
 }
 
 
-void Image::setPalette(const Palette &pal) {
+void Image::setPalette(const PaletteData &pal) {
   _pal = pal;
 }
 
@@ -329,7 +329,7 @@ void Image::setThresholdToSpikeInsensitive(double per) {
 
 
 void Image::changeToColorOnly(const QString &in_tag, MatrixPtr in_matrix,
-                                     double lowerZ, double upperZ, bool autoThreshold, const Palette &pal) {
+                                     double lowerZ, double upperZ, bool autoThreshold, const PaletteData &pal) {
   setTagName(ObjectTag(in_tag, ObjectTag::globalTagContext));  // FIXME: always top-level?
   if (_inputMatrices.contains(THEMATRIX)) {
     _inputMatrices[THEMATRIX] = in_matrix;
@@ -370,7 +370,7 @@ void Image::changeToContourOnly(const QString &in_tag, MatrixPtr in_matrix,
 
 
 void Image::changeToColorAndContour(const QString &in_tag, MatrixPtr in_matrix,
-                                               double lowerZ, double upperZ, bool autoThreshold, const Palette &pal,
+                                               double lowerZ, double upperZ, bool autoThreshold, const PaletteData &pal,
                                                int numContours, const QColor& contourColor, int contourWeight) {
   setTagName(ObjectTag(in_tag, ObjectTag::globalTagContext));  // FIXME: always top-level?
   if (_inputMatrices.contains(THEMATRIX)) {

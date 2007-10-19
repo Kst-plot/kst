@@ -18,6 +18,8 @@
 
 namespace Kst {
 
+typedef QHash<int, QColor> PaletteData;
+
 class Palette {
   public:
     static QStringList getPaletteList();
@@ -29,12 +31,13 @@ class Palette {
 
     QString paletteName() const;
     int colorCount() const;
-    QColor color(const int colorId) const ;
+    QColor color(const int colorId) const;
+    PaletteData paletteData() const;
 
   private:
     void createPalette();
 
-    QHash<int, QColor> _palette;
+    PaletteData _palette;
     QString _paletteName;
     int _count;
 };

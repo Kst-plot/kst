@@ -68,6 +68,9 @@ int Palette::colorCount() const {
   return _count;
 }
 
+PaletteData Palette::paletteData() const {
+  return _palette;
+}
 
 QColor Palette::color(const int colorId) const {
   return _palette[colorId];

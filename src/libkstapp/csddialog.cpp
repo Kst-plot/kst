@@ -22,6 +22,8 @@
 #include "application.h"
 #include "plotrenderitem.h"
 #include "curve.h"
+#include "palette.h"
+#include "image.h"
 
 #include "defaultnames.h"
 #include "datacollection.h"
@@ -57,6 +59,15 @@ FFTOptions* CSDTab::FFTOptionsWidget() const {
 }
 
 
+ColorPalette* CSDTab::colorPalette() const {
+  return _colorPalette;
+}
+
+
+int CSDTab::windowSize() const {
+  return _windowSize->value();
+}
+
 CSDDialog::CSDDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
@@ -82,8 +93,63 @@ QString CSDDialog::tagName() const {
 
 
 ObjectPtr CSDDialog::createNewDataObject() const {
-  qDebug() << "createNewDataObject" << endl;
-  return 0;
+
+  CSDPtr csd = new CSD(tagName(),
+                                     _CSDTab->vector(),
+                                     _CSDTab->FFTOptionsWidget()->sampleRate(),
+                                     _CSDTab->FFTOptionsWidget()->interleavedAverage(),
+                                     _CSDTab->FFTOptionsWidget()->removeMean(),
+                                     _CSDTab->FFTOptionsWidget()->apodize(),
+                                     _CSDTab->FFTOptionsWidget()->apodizeFunction(),
+                                     _CSDTab->windowSize(),
+                                     _CSDTab->FFTOptionsWidget()->FFTLength(),
+                                     _CSDTab->FFTOptionsWidget()->sigma(),
+                                     _CSDTab->FFTOptionsWidget()->output(),
+                                     _CSDTab->FFTOptionsWidget()->vectorUnits(),
+                                     _CSDTab->FFTOptionsWidget()->rateUnits());
+
+  csd->writeLock();
+  csd->update(0);
+  csd->unlock();
+
+  Palette* newPalette = new Palette(_CSDTab->colorPalette()->selectedPalette());
+  csd->readLock();
+  ImagePtr image = new Image(csd->tagName()+"-I", csd->outputMatrix(), 0, 1, true, newPalette->paletteData());
+  csd->unlock();
+
+  image->writeLock();
+  image->update(0);
+  image->unlock();
+
+  PlotItem *plotItem = 0;
+  switch (_CSDTab->curvePlacement()->place()) {
+  case CurvePlacement::NoPlot:
+    break;
+  case CurvePlacement::ExistingPlot:
+    {
+      plotItem = static_cast<PlotItem*>(_CSDTab->curvePlacement()->existingPlot());
+      break;
+    }
+  case CurvePlacement::NewPlot:
+    {
+      CreatePlotForCurve *cmd = new CreatePlotForCurve(
+        _CSDTab->curvePlacement()->createLayout(),
+        _CSDTab->curvePlacement()->appendToLayout());
+      cmd->createItem();
+
+      plotItem = static_cast<PlotItem*>(cmd->item());
+      break;
+    }
+  default:
+    break;
+  }
+
+  PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
+  //TODO  Adam, is this the correct way to draw an image?  It runs very slow.
+  renderItem->addRelation(kst_cast<Relation>(image));
+  plotItem->update();
+
+  return ObjectPtr(image.data());
 }
 
 
