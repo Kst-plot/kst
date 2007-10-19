@@ -19,6 +19,7 @@
 #include "scalardialog.h"
 #include "matrixdialog.h"
 #include "powerspectrumdialog.h"
+#include "csddialog.h"
 
 namespace Kst {
 
@@ -82,7 +83,8 @@ void DialogLauncherGui::showPowerSpectrumDialog(ObjectPtr objectPtr) {
 
 
 void DialogLauncherGui::showCSDDialog(ObjectPtr objectPtr) {
-  Q_UNUSED(objectPtr);
+  CSDDialog dialog(objectPtr, kstApp->mainWindow());
+  dialog.exec();
 }
 
 

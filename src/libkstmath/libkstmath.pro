@@ -47,6 +47,7 @@ SOURCES += \
     dialoglauncher.cpp \
     eparse-eh.cpp \
     eparse.c \
+    palette.cpp \
     psdcalculator.cpp \
     escan.c \
     objectfactory.cpp \
@@ -76,6 +77,7 @@ HEADERS += \
     linestyle.h \
     objectdefaults.h \
     painter.h \
+    palette.h \
     plotdefines.h \
     psd.h \
     settings.h \

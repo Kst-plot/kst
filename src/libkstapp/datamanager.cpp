@@ -95,9 +95,9 @@ DataManager::DataManager(QWidget *parent, Document *doc)
 //   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showImageDialog()));
 //   _dataObjects->addAction(action);
 // 
-//   action = new DataButtonAction(tr("CSD"));
-//   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showCSDDialog()));
-//   _dataObjects->addAction(action);
+   action = new DataButtonAction(tr("Spectrogram"));
+   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showCSDDialog()));
+   _dataObjects->addAction(action);
 }
 
 

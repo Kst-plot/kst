@@ -24,6 +24,7 @@ LIBS += -lkst -lkstmath
 
 SOURCES += \
     colorbutton.cpp \
+    colorpalette.cpp \
     combobox.cpp \
     curveappearance.cpp \
     curveplacement.cpp \
@@ -39,6 +40,7 @@ SOURCES += \
 
 HEADERS += \
     colorbutton.h \
+    colorpalette.h \
     combobox.h \
     curveappearance.h \
     curveplacement.h \
@@ -53,9 +55,10 @@ HEADERS += \
     widgets.h
 
 FORMS += \
-    datarange.ui \
+    colorpalette.ui \
     curveappearance.ui \
     curveplacement.ui \
+    datarange.ui \
     fftoptions.ui \
     matrixselector.ui \
     scalarselector.ui \

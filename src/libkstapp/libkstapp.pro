@@ -27,6 +27,7 @@ SOURCES += \
     boxitem.cpp \
     builtingraphics.cpp \
     cartesianrenderitem.cpp \
+    csddialog.cpp \
     curvedialog.cpp \
     databutton.cpp \
     databuttonaction.cpp \
@@ -94,6 +95,7 @@ HEADERS += \
     boxitem.h \
     builtingraphics.h \
     cartesianrenderitem.h \
+    csddialog.h \
     curvedialog.h \
     databutton.h \
     databuttonaction.h \
@@ -157,6 +159,7 @@ HEADERS += \
 
 FORMS += \
     aboutdialog.ui \
+    csdtab.ui \
     curvetab.ui \
     datamanager.ui \
     debugdialog.ui \
