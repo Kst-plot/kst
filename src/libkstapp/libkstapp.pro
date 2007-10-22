@@ -46,6 +46,7 @@ SOURCES += \
     editmultiplewidget.cpp \
     ellipseitem.cpp \
     equationdialog.cpp \
+    eventmonitordialog.cpp \
     exportgraphicsdialog.cpp \
     filltab.cpp \
     generaltab.cpp \
@@ -119,6 +120,7 @@ HEADERS += \
     editmultiplewidget.h \
     ellipseitem.h \
     equationdialog.h \
+    eventmonitordialog.h \
     exportgraphicsdialog.h \
     filltab.h \
     generaltab.h \
@@ -174,6 +176,7 @@ FORMS += \
     dialog.ui \
     editmultiplewidget.ui \
     equationtab.ui \
+    eventmonitortab.ui \
     exportgraphicsdialog.ui \
     filltab.ui \
     generaltab.ui \

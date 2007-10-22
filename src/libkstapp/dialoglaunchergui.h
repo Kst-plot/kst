@@ -46,6 +46,8 @@ class KST_EXPORT DialogLauncherGui : public DialogLauncher {
 
     virtual void showCSDDialog(ObjectPtr objectPtr = 0);
 
+    virtual void showEventMonitorDialog(ObjectPtr objectPtr = 0);
+
     //plugins
     virtual void showBasicPluginDialog(ObjectPtr objectPtr = 0);
 };

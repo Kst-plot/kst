@@ -87,6 +87,11 @@ void DialogLauncher::showEquationDialog(ObjectPtr objectPtr) {
 }
 
 
+void DialogLauncher::showEventMonitorDialog(ObjectPtr objectPtr) {
+  Q_UNUSED(objectPtr);
+}
+
+
 void DialogLauncher::showHistogramDialog(ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
 }

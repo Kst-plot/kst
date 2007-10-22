@@ -87,10 +87,10 @@ DataManager::DataManager(QWidget *parent, Document *doc)
    connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showPowerSpectrumDialog()));
    _dataObjects->addAction(action);
  
-//   action = new DataButtonAction(tr("Event Monitor")));
-//   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showEventMonitorDialog()));
-//   _dataObjects->addAction(action);
-// 
+   action = new DataButtonAction(tr("Event Monitor"));
+   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showEventMonitorDialog()));
+   _dataObjects->addAction(action);
+ 
    action = new DataButtonAction(tr("Image"));
    connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showImageDialog()));
    _dataObjects->addAction(action);

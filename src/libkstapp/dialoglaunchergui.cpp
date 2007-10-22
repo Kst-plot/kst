@@ -21,6 +21,7 @@
 #include "powerspectrumdialog.h"
 #include "csddialog.h"
 #include "imagedialog.h"
+#include "eventmonitordialog.h"
 
 namespace Kst {
 
@@ -86,6 +87,12 @@ void DialogLauncherGui::showPowerSpectrumDialog(ObjectPtr objectPtr) {
 
 void DialogLauncherGui::showCSDDialog(ObjectPtr objectPtr) {
   CSDDialog dialog(objectPtr, kstApp->mainWindow());
+  dialog.exec();
+}
+
+
+void DialogLauncherGui::showEventMonitorDialog(ObjectPtr objectPtr) {
+  EventMonitorDialog dialog(objectPtr, kstApp->mainWindow());
   dialog.exec();
 }
 
