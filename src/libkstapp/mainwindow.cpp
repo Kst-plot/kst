@@ -29,6 +29,7 @@
 #include "tabwidget.h"
 #include "ui_aboutdialog.h"
 #include "vectoreditordialog.h"
+#include "scalareditordialog.h"
 #include "view.h"
 #include "viewmanager.h"
 
@@ -48,6 +49,7 @@ MainWindow::MainWindow() {
   _dataManager = 0;
   _exportGraphics = 0;
   _vectorEditor = 0;
+  _scalarEditor = 0;
   _viewManager = 0;
   _doc = new Document(this);
   _tabWidget = new TabWidget(this);
@@ -506,6 +508,10 @@ void MainWindow::createActions() {
   _vectorEditorAct->setStatusTip(tr("Show all vectors in a spreadsheet"));
   connect(_vectorEditorAct, SIGNAL(triggered()), this, SLOT(showVectorEditor()));
 
+  _scalarEditorAct = new QAction(tr("Edit &Scalars..."), this);
+  _scalarEditorAct->setStatusTip(tr("Show all scalars in a spreadsheet"));
+  connect(_scalarEditorAct, SIGNAL(triggered()), this, SLOT(showScalarEditor()));
+
   _exportGraphicsAct = new QAction(tr("&Export..."), this);
   _exportGraphicsAct->setStatusTip(tr("Export graphics to disk"));
   connect(_exportGraphicsAct, SIGNAL(triggered()), this, SLOT(showExportGraphicsDialog()));
@@ -545,6 +551,7 @@ void MainWindow::createMenus() {
   _dataMenu->addAction(_dataManagerAct);
   _dataMenu->addSeparator();
   _dataMenu->addAction(_vectorEditorAct);
+  _dataMenu->addAction(_scalarEditorAct);
 
   _viewMenu = menuBar()->addMenu(tr("&View"));
   _viewMenu->addAction(_viewManagerAct);
@@ -589,6 +596,7 @@ void MainWindow::createToolBars() {
   _dataToolBar = addToolBar(tr("Data"));
   _dataToolBar->addAction(_dataManagerAct);
 //   _dataToolBar->addAction(_vectorEditorAct); //no icon
+//   _dataToolBar->addAction(_scalarEditorAct); //no icon
 
   _viewToolBar = addToolBar(tr("View"));
   _viewToolBar->addAction(_viewManagerAct);
@@ -655,6 +663,14 @@ void MainWindow::showVectorEditor() {
     _vectorEditor = new VectorEditorDialog(this, _doc);
   }
   _vectorEditor->show();
+}
+
+
+void MainWindow::showScalarEditor() {
+  if (!_scalarEditor) {
+    _scalarEditor = new ScalarEditorDialog(this, _doc);
+  }
+  _scalarEditor->show();
 }
 
 

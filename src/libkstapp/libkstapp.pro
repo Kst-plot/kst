@@ -70,10 +70,13 @@ SOURCES += \
     plotrenderitem.cpp \
     powerspectrumdialog.cpp \
     qgetoptions.cpp \
+    scalardialog.cpp \
+    scalareditordialog.cpp \
+    scalarmodel.cpp \
+    scalartablemodel.cpp \
     scene.cpp \
     selectionrect.cpp \
     sessionmodel.cpp \
-    scalardialog.cpp \
     stroketab.cpp \
     svgitem.cpp \
     tabwidget.cpp \
@@ -140,10 +143,13 @@ HEADERS += \
     plotrenderitem.h \
     powerspectrumdialog.h \
     qgetoptions.h \
+    scalardialog.h \
+    scalareditordialog.h \
+    scalarmodel.h \
+    scalartablemodel.h \
     scene.h \
     selectionrect.h \
     sessionmodel.h \
-    scalardialog.h \
     svgitem.h \
     stroketab.h \
     tabwidget.h \
@@ -177,6 +183,7 @@ FORMS += \
     layouttab.ui \
     matrixtab.ui \
     powerspectrumtab.ui \
+    scalareditordialog.ui \
     scalartab.ui \
     stroketab.ui \
     vectoreditordialog.ui \
