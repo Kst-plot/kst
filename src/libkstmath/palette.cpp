@@ -32,6 +32,7 @@ static const char *const KstColors[] = { "red",
 static const int KstColorsCount = sizeof(KstColors) / sizeof(char*);
 
 static const QString KstColorsName = "Kst Colors";
+static const QString KstGrayscaleName = "Kst Grayscale";
 
 
 QStringList Palette::getPaletteList() { 
@@ -39,6 +40,7 @@ QStringList Palette::getPaletteList() {
 
   //TODO Populate a shared list of colors to return here.
   paletteList.append(KstColorsName);
+  paletteList.append(KstGrayscaleName);
 
   return paletteList;
 }
@@ -49,9 +51,7 @@ Palette::Palette() {
 
 
 Palette::Palette(const QString &paletteName) {
-  Q_UNUSED(paletteName);
-  // Use PaletteName to construct a palette by name when palette list exists.
-  createPalette();
+  createPalette(paletteName);
 }
 
 
@@ -63,7 +63,7 @@ QString Palette::paletteName() const {
   return _paletteName;
 }
 
-
+  
 int Palette::colorCount() const {
   return _count;
 }
@@ -77,13 +77,24 @@ QColor Palette::color(const int colorId) const {
 }
 
 
-void Palette::createPalette() {
+void Palette::createPalette(const QString &paletteName) {
   //TODO Get Palette details from a palette name parameter when a shared list exists.
   _palette.clear();
-  _paletteName = KstColorsName;
+  if (paletteName.isEmpty()) {
+    _paletteName = KstColorsName;
+  } else {
+    //TODO when a proper shared list exists, validate that the palette exists.
+    _paletteName = paletteName;
+  }
 
-  for (int i = 0; i < KstColorsCount; i++) {
-    _palette.insert(i, QColor(KstColors[i]));
+  if (_paletteName == KstColorsName) {
+    for (int i = 0; i < KstColorsCount; i++) {
+      _palette.insert(i, QColor(KstColors[i]));
+    }
+  } else {
+    for (int i = 0; i < 255; i++) {
+      _palette.insert(i, QColor(i, i, i));
+    }
   }
   _count = _palette.count();
 }

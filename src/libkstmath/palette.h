@@ -35,7 +35,7 @@ class Palette {
     PaletteData paletteData() const;
 
   private:
-    void createPalette();
+    void createPalette(const QString &paletteName = QString());
 
     PaletteData _palette;
     QString _paletteName;

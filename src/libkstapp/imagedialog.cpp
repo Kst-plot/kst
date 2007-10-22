@@ -56,6 +56,55 @@ ColorPalette* ImageTab::colorPalette() const {
 }
 
 
+bool ImageTab::realTimeAutoThreshold() const {
+  return _realTimeAutoThreshold->isChecked();
+}
+
+
+bool ImageTab::colorOnly() const {
+  return _colorOnly->isChecked();
+}
+
+
+bool ImageTab::contourOnly() const {
+  return _contourOnly->isChecked();
+}
+
+
+bool ImageTab::colorAndContour() const {
+  return _colorAndContour->isChecked();
+}
+
+
+MatrixPtr ImageTab::matrix() const {
+  return _matrix->selectedMatrix();
+}
+
+
+double ImageTab::lowerZ() const {
+  return _lowerZ->text().toDouble();
+}
+
+
+double ImageTab::upperZ() const {
+  return _upperZ->text().toDouble();
+}
+
+
+int ImageTab::numberOfContourLines() const {
+  return _numContourLines->value();
+}
+
+
+int ImageTab::contourWeight() const {
+  return _contourWeight->value();
+}
+
+
+QColor ImageTab::contourColor() const {
+  return _contourColor->color();
+}
+
 void ImageTab::realTimeAutoThresholdToggled(const bool checked) {
   _lowerZ->setEnabled(!checked);
   _upperZ->setEnabled(!checked);
@@ -79,8 +128,8 @@ ImageDialog::ImageDialog(ObjectPtr dataObject, QWidget *parent)
   else
     setWindowTitle(tr("New Image"));
 
-  _ImageTab = new ImageTab(this);
-  addDataTab(_ImageTab);
+  _imageTab = new ImageTab(this);
+  addDataTab(_imageTab);
 
   //FIXME need to do validation to enable/disable ok button...
 }
@@ -96,8 +145,67 @@ QString ImageDialog::tagName() const {
 
 
 ObjectPtr ImageDialog::createNewDataObject() const {
-  qDebug() << "createNewDataObject" << endl;
-  return 0;
+
+  ImagePtr image;
+
+  if (_imageTab->colorOnly()) {
+    image = new Image(tagName(),
+                                    _imageTab->matrix(),
+                                    _imageTab->lowerZ(),
+                                    _imageTab->upperZ(),
+                                    _imageTab->realTimeAutoThreshold(),
+                                    Palette(_imageTab->colorPalette()->selectedPalette()).paletteData());
+  } else if (_imageTab->contourOnly()) {
+    image = new Image(tagName(),
+                                    _imageTab->matrix(),
+                                    _imageTab->numberOfContourLines(),
+                                    _imageTab->contourColor(),
+                                    _imageTab->contourWeight());
+  } else {
+    image = new Image(tagName(),
+                                    _imageTab->matrix(),
+                                    _imageTab->lowerZ(),
+                                    _imageTab->upperZ(),
+                                    _imageTab->realTimeAutoThreshold(),
+                                    Palette(_imageTab->colorPalette()->selectedPalette()).paletteData(),
+                                    _imageTab->numberOfContourLines(),
+                                    _imageTab->contourColor(),
+                                    _imageTab->contourWeight());
+  }
+
+  image->writeLock();
+  image->update(0);
+  image->unlock();
+
+  PlotItem *plotItem = 0;
+  switch (_imageTab->curvePlacement()->place()) {
+  case CurvePlacement::NoPlot:
+    break;
+  case CurvePlacement::ExistingPlot:
+    {
+      plotItem = static_cast<PlotItem*>(_imageTab->curvePlacement()->existingPlot());
+      break;
+    }
+  case CurvePlacement::NewPlot:
+    {
+      CreatePlotForCurve *cmd = new CreatePlotForCurve(
+        _imageTab->curvePlacement()->createLayout(),
+        _imageTab->curvePlacement()->appendToLayout());
+      cmd->createItem();
+
+      plotItem = static_cast<PlotItem*>(cmd->item());
+      break;
+    }
+  default:
+    break;
+  }
+
+  PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
+  //TODO  Adam, is this the correct way to draw an image?  It runs very slow.
+  renderItem->addRelation(kst_cast<Relation>(image));
+  plotItem->update();
+
+  return ObjectPtr(image.data());
 }
 
 

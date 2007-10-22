@@ -34,6 +34,18 @@ class KST_EXPORT ImageTab : public DataTab, Ui::ImageTab {
     CurvePlacement* curvePlacement() const;
     ColorPalette* colorPalette() const;
 
+    bool realTimeAutoThreshold() const;
+    bool colorOnly() const;
+    bool contourOnly() const;
+    bool colorAndContour() const;
+    double lowerZ() const;
+    double upperZ() const;
+    int numberOfContourLines() const;
+    int contourWeight() const;
+    QColor contourColor() const;
+
+    MatrixPtr matrix() const;
+
   private Q_SLOTS:
     void realTimeAutoThresholdToggled(const bool checked);
     void updateEnabled(const bool checked);
@@ -52,7 +64,7 @@ class KST_EXPORT ImageDialog : public DataDialog {
     virtual ObjectPtr editExistingDataObject() const;
 
   private:
-    ImageTab *_ImageTab;
+    ImageTab *_imageTab;
 };
 
 }
