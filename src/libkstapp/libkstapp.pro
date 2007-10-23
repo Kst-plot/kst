@@ -24,6 +24,7 @@ SOURCES += \
     applicationsettings.cpp \
     applicationsettingsdialog.cpp \
     axis.cpp \
+    basicplugindialog.cpp \
     boxitem.cpp \
     builtingraphics.cpp \
     cartesianrenderitem.cpp \
@@ -99,6 +100,7 @@ HEADERS += \
     applicationsettings.h \
     applicationsettingsdialog.h \
     axis.h \
+    basicplugindialog.h \
     boxitem.h \
     builtingraphics.h \
     cartesianrenderitem.h \
@@ -173,6 +175,7 @@ HEADERS += \
 
 FORMS += \
     aboutdialog.ui \
+    basicplugintab.ui \
     csdtab.ui \
     curvetab.ui \
     datamanager.ui \

@@ -22,6 +22,7 @@
 #include "csddialog.h"
 #include "imagedialog.h"
 #include "eventmonitordialog.h"
+#include "basicplugindialog.h"
 
 namespace Kst {
 
@@ -98,7 +99,8 @@ void DialogLauncherGui::showEventMonitorDialog(ObjectPtr objectPtr) {
 
 
 void DialogLauncherGui::showBasicPluginDialog(ObjectPtr objectPtr) {
-  Q_UNUSED(objectPtr);
+  BasicPluginDialog dialog(objectPtr, kstApp->mainWindow());
+  dialog.exec();
 }
 
 }
