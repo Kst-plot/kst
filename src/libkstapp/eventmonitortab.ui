@@ -363,7 +363,7 @@
        </widget>
       </item>
       <item>
-       <widget class="Q3TextEdit" name="_script" />
+       <widget class="QTextEdit" name="_script" />
       </item>
      </layout>
     </widget>
@@ -495,11 +495,6 @@
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
-  <customwidget>
-   <class>Q3TextEdit</class>
-   <extends>Q3Frame</extends>
-   <header>q3textedit.h</header>
-  </customwidget>
   <customwidget>
    <class>Kst::VectorSelector</class>
    <extends>QWidget</extends>

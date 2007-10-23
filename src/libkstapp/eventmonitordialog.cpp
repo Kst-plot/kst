@@ -17,6 +17,8 @@
 #include "dataobjectcollection.h"
 #include "defaultnames.h"
 
+#include "eventmonitorentry.h"
+
 namespace Kst {
 
 EventMonitorTab::EventMonitorTab(QWidget *parent)
@@ -28,6 +30,52 @@ EventMonitorTab::EventMonitorTab(QWidget *parent)
 
 
 EventMonitorTab::~EventMonitorTab() {
+}
+
+
+QString EventMonitorTab::script() const {
+  return _script->toPlainText();
+}
+
+
+QString EventMonitorTab::event() const {
+  return _equation->text();
+}
+
+
+QString EventMonitorTab::description() const {
+  return _description->text();
+}
+
+
+QString EventMonitorTab::emailRecipients() const {
+  return _emailRecipients->text();
+}
+
+
+Debug::LogLevel EventMonitorTab::logLevel() const {
+  if (_debugLogNotice->isChecked()) {
+    return Debug::Notice;
+  } else if (_debugLogWarning->isChecked()) {
+    return Debug::Warning;
+  } else {
+    return Debug::Error;
+  }
+}
+
+
+bool EventMonitorTab::logKstDebug() const {
+  return _debugLog->isChecked();
+}
+
+
+bool EventMonitorTab::logEMail() const {
+  return _emailNotify->isChecked();
+}
+
+
+bool EventMonitorTab::logELOG() const {
+  return _ELOGNotify->isChecked();
 }
 
 
@@ -56,8 +104,22 @@ QString EventMonitorDialog::tagName() const {
 
 
 ObjectPtr EventMonitorDialog::createNewDataObject() const {
-  qDebug() << "createNewDataObject" << endl;
-  return 0;
+  EventMonitorEntryPtr eventMonitor = new EventMonitorEntry(tagName(),
+                                                      _eventMonitorTab->script(),
+                                                      _eventMonitorTab->event(),
+                                                      _eventMonitorTab->description(),
+                                                      _eventMonitorTab->logLevel(),
+                                                      _eventMonitorTab->logKstDebug(),
+                                                      _eventMonitorTab->logEMail(),
+                                                      _eventMonitorTab->logELOG(),
+                                                      _eventMonitorTab->emailRecipients());
+  eventMonitor->reparse();
+
+  eventMonitor->writeLock();
+  eventMonitor->update(0);
+  eventMonitor->unlock();
+
+  return ObjectPtr(eventMonitor.data());
 }
 
 

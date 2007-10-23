@@ -15,6 +15,8 @@
 #include "datadialog.h"
 #include "datatab.h"
 
+#include "debug.h"
+
 #include "kst_export.h"
 
 #include "ui_eventmonitortab.h"
@@ -26,6 +28,15 @@ class KST_EXPORT EventMonitorTab : public DataTab, Ui::EventMonitorTab {
   public:
     EventMonitorTab(QWidget *parent = 0);
     virtual ~EventMonitorTab();
+
+    QString script() const;
+    QString event() const;
+    QString description() const;
+    Debug::LogLevel logLevel() const;
+    bool logKstDebug() const;
+    bool logEMail() const;
+    bool logELOG() const;
+    QString emailRecipients() const;
 
   private Q_SLOTS:
   private:

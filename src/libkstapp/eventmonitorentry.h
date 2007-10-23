@@ -30,6 +30,7 @@ class EventMonitorEntry : public DataObject {
   Q_OBJECT
   public:
     EventMonitorEntry(const QString &in_tag);
+    EventMonitorEntry(const QString &tag, const QString &script, const QString &event, const QString &description, const Debug::LogLevel level, const bool logKstDebug, const bool logEMail, const bool logELOG, const QString& emailRecipients);
     EventMonitorEntry(const QDomElement &e);
     ~EventMonitorEntry();
 

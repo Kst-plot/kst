@@ -24,6 +24,8 @@
 #include "datacollection.h"
 #include "eventmonitorentry.h"
 
+#include "debug.h"
+
 #include <assert.h>
 #include <unistd.h>
 
@@ -54,6 +56,21 @@ EventMonitorEntry::EventMonitorEntry(const QString &in_tag) : DataObject() {
   commonConstructor(in_tag);
 }
 
+
+EventMonitorEntry::EventMonitorEntry(const QString &tag, const QString &script, const QString &event, const QString &description, const Debug::LogLevel level, const bool logKstDebug, const bool logEMail, const bool logELOG, const QString& emailRecipients) {
+
+  _event = event;
+  _description = description;
+  _eMailRecipients = emailRecipients;
+  _logKstDebug = logKstDebug;
+  _logEMail = logEMail;
+  _logELOG = logELOG;
+  _level = level;
+  _script = script;
+
+  commonConstructor(tag);
+
+}
 
 EventMonitorEntry::EventMonitorEntry(const QDomElement &e) {
   QString strTag;
@@ -147,7 +164,18 @@ bool EventMonitorEntry::reparse() {
 }
 
 
-void EventMonitorEntry::save(QXmlStreamWriter &s) {
+void EventMonitorEntry::save(QXmlStreamWriter &xml) {
+  xml.writeStartElement("event");
+  xml.writeAttribute("tag", tag().tagString());
+  xml.writeAttribute("equation", _event);
+  xml.writeAttribute("description", _description);
+  xml.writeAttribute("logdebug", _logKstDebug);
+  xml.writeAttribute("loglevel", _level);
+  xml.writeAttribute("logemail", _logEMail);
+  xml.writeAttribute("logelog", _logELOG);
+  xml.writeAttribute("emailRecipients", _eMailRecipients);
+  xml.writeAttribute("script", _script);
+  xml.writeEndElement();
 }
 
 
