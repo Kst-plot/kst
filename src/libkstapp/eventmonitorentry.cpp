@@ -24,6 +24,8 @@
 #include "datacollection.h"
 #include "eventmonitorentry.h"
 
+#include <QXmlStreamWriter>
+
 #include "debug.h"
 
 #include <assert.h>
@@ -169,10 +171,10 @@ void EventMonitorEntry::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("tag", tag().tagString());
   xml.writeAttribute("equation", _event);
   xml.writeAttribute("description", _description);
-  xml.writeAttribute("logdebug", _logKstDebug);
-  xml.writeAttribute("loglevel", _level);
-  xml.writeAttribute("logemail", _logEMail);
-  xml.writeAttribute("logelog", _logELOG);
+  xml.writeAttribute("logdebug", QVariant(_logKstDebug).toString());
+  xml.writeAttribute("loglevel", QVariant(_level).toString());
+  xml.writeAttribute("logemail", QVariant(_logEMail).toString());
+  xml.writeAttribute("logelog", QVariant(_logELOG).toString());
   xml.writeAttribute("emailRecipients", _eMailRecipients);
   xml.writeAttribute("script", _script);
   xml.writeEndElement();
