@@ -35,6 +35,7 @@
 #include "viewmanager.h"
 
 #include "applicationsettingsdialog.h"
+#include "differentiatecurvesdialog.h"
 
 #include <QtGui>
 
@@ -532,6 +533,10 @@ void MainWindow::createActions() {
   _settingsDialogAct = new QAction(tr("&Configure Kst"), this);
   _settingsDialogAct->setStatusTip(tr("Show Kst's Configuration Dialog"));
   connect(_settingsDialogAct, SIGNAL(triggered()), this, SLOT(showSettingsDialog()));
+
+  _differentiateCurvesDialogAct = new QAction(tr("&Differentiate Curves"), this);
+  _differentiateCurvesDialogAct->setStatusTip(tr("Show Kst's Differentiate Curves Dialog"));
+  connect(_differentiateCurvesDialogAct, SIGNAL(triggered()), this, SLOT(showDifferentiateCurvesDialog()));
 }
 
 
@@ -577,6 +582,9 @@ void MainWindow::createMenus() {
   _layoutMenu->addAction(_createPictureAct);
   _layoutMenu->addAction(_createPlotAct);
   _layoutMenu->addAction(_createSvgAct);
+
+  _toolsMenu = menuBar()->addMenu(tr("&Tools"));
+  _toolsMenu->addAction(_differentiateCurvesDialogAct);
 
   _settingsMenu = menuBar()->addMenu(tr("&Settings"));
   _settingsMenu->addAction(_settingsDialogAct);
@@ -708,6 +716,12 @@ void MainWindow::showExportGraphicsDialog() {
 void MainWindow::showSettingsDialog() {
   ApplicationSettingsDialog settingsDialog(this);
   settingsDialog.exec();
+}
+
+
+void MainWindow::showDifferentiateCurvesDialog() {
+  DifferentiateCurvesDialog differentiateCurvesDialog(this);
+  differentiateCurvesDialog.exec();
 }
 
 

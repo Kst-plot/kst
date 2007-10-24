@@ -43,6 +43,7 @@ SOURCES += \
     dialoglaunchergui.cpp \
     dialogpage.cpp \
     dialogtab.cpp \
+    differentiatecurvesdialog.cpp \
     document.cpp \
     editmultiplewidget.cpp \
     emailthread.cpp \
@@ -121,6 +122,7 @@ HEADERS += \
     dialoglaunchergui.h \
     dialogpage.h \
     dialogtab.h \
+    differentiatecurvesdialog.h \
     document.h \
     editmultiplewidget.h \
     ellipseitem.h \
@@ -183,6 +185,7 @@ FORMS += \
     datamanager.ui \
     debugdialog.ui \
     dialog.ui \
+    differentiatecurvesdialog.ui \
     editmultiplewidget.ui \
     equationtab.ui \
     eventmonitortab.ui \

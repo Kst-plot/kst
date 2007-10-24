@@ -54,6 +54,7 @@ class MainWindow : public QMainWindow
     void showMatrixEditor();
     void showViewManager();
     void showSettingsDialog();
+    void showDifferentiateCurvesDialog();
 
     void save();
     void saveAs();
@@ -118,6 +119,7 @@ class MainWindow : public QMainWindow
     QMenu *_dataMenu;
     QMenu *_viewMenu;
     QMenu *_layoutMenu;
+    QMenu *_toolsMenu;
     QMenu *_settingsMenu;
     QMenu *_helpMenu;
 
@@ -159,6 +161,8 @@ class MainWindow : public QMainWindow
     QAction *_tiedZoomAct;
 
     QAction *_settingsDialogAct;
+
+    QAction *_differentiateCurvesDialogAct;
 };
 
 }
