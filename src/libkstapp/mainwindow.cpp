@@ -30,6 +30,7 @@
 #include "ui_aboutdialog.h"
 #include "vectoreditordialog.h"
 #include "scalareditordialog.h"
+#include "matrixeditordialog.h"
 #include "view.h"
 #include "viewmanager.h"
 
@@ -512,6 +513,10 @@ void MainWindow::createActions() {
   _scalarEditorAct->setStatusTip(tr("Show all scalars in a spreadsheet"));
   connect(_scalarEditorAct, SIGNAL(triggered()), this, SLOT(showScalarEditor()));
 
+  _matrixEditorAct = new QAction(tr("Edit &Matrix..."), this);
+  _matrixEditorAct->setStatusTip(tr("Show all matrix in a spreadsheet"));
+  connect(_matrixEditorAct, SIGNAL(triggered()), this, SLOT(showMatrixEditor()));
+
   _exportGraphicsAct = new QAction(tr("&Export..."), this);
   _exportGraphicsAct->setStatusTip(tr("Export graphics to disk"));
   connect(_exportGraphicsAct, SIGNAL(triggered()), this, SLOT(showExportGraphicsDialog()));
@@ -552,6 +557,7 @@ void MainWindow::createMenus() {
   _dataMenu->addSeparator();
   _dataMenu->addAction(_vectorEditorAct);
   _dataMenu->addAction(_scalarEditorAct);
+  _dataMenu->addAction(_matrixEditorAct);
 
   _viewMenu = menuBar()->addMenu(tr("&View"));
   _viewMenu->addAction(_viewManagerAct);
@@ -597,6 +603,7 @@ void MainWindow::createToolBars() {
   _dataToolBar->addAction(_dataManagerAct);
 //   _dataToolBar->addAction(_vectorEditorAct); //no icon
 //   _dataToolBar->addAction(_scalarEditorAct); //no icon
+//   _dataToolBar->addAction(_matrixEditorAct); //no icon
 
   _viewToolBar = addToolBar(tr("View"));
   _viewToolBar->addAction(_viewManagerAct);
@@ -671,6 +678,14 @@ void MainWindow::showScalarEditor() {
     _scalarEditor = new ScalarEditorDialog(this, _doc);
   }
   _scalarEditor->show();
+}
+
+
+void MainWindow::showMatrixEditor() {
+  if (!_matrixEditor) {
+    _matrixEditor = new MatrixEditorDialog(this, _doc);
+  }
+  _matrixEditor->show();
 }
 
 

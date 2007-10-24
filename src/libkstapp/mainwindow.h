@@ -26,6 +26,7 @@ class DataManager;
 class DebugDialog;
 class Document;
 class ExportGraphicsDialog;
+class MatrixEditorDialog;
 class ScalarEditorDialog;
 class TabWidget;
 class VectorEditorDialog;
@@ -50,6 +51,7 @@ class MainWindow : public QMainWindow
     void showExportGraphicsDialog();
     void showVectorEditor();
     void showScalarEditor();
+    void showMatrixEditor();
     void showViewManager();
     void showSettingsDialog();
 
@@ -105,6 +107,7 @@ class MainWindow : public QMainWindow
     ExportGraphicsDialog *_exportGraphics;
     VectorEditorDialog *_vectorEditor;
     ScalarEditorDialog *_scalarEditor;
+    MatrixEditorDialog *_matrixEditor;
     ViewManager *_viewManager;
 
     QPointer<QProgressBar> _progressBar;
@@ -149,6 +152,7 @@ class MainWindow : public QMainWindow
     QAction *_saveAsAct;
     QAction *_scalarEditorAct;
     QAction *_vectorEditorAct;
+    QAction *_matrixEditorAct;
 
     QAction *_viewManagerAct;
     QAction *_layoutModeAct;

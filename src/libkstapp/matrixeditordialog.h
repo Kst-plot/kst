@@ -9,40 +9,35 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef MATRIXSELECTOR_H
-#define MATRIXSELECTOR_H
+#ifndef MATRIXEDITORDIALOG_H
+#define MATRIXEDITORDIALOG_H
 
-#include <QWidget>
-#include "ui_matrixselector.h"
+#include <QDialog>
 
-#include <matrix.h>
+#include "ui_matrixeditordialog.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class KST_EXPORT MatrixSelector : public QWidget, public Ui::MatrixSelector {
+class Document;
+class MatrixModel;
+
+class KST_EXPORT MatrixEditorDialog : public QDialog, Ui::MatrixEditorDialog
+{
   Q_OBJECT
   public:
-    MatrixSelector(QWidget *parent = 0);
-    virtual ~MatrixSelector();
+    MatrixEditorDialog(QWidget *parent, Document *doc);
+    virtual ~MatrixEditorDialog();
 
-    MatrixPtr selectedMatrix() const;
-    void setSelectedMatrix(MatrixPtr selectedMatrix);
+    virtual void show();
 
-  Q_SIGNALS:
-    void selectionChanged();
-
-  public Q_SLOTS:
-    void updateMatrices();
-    void matrixSelected(int index);
-
-  private Q_SLOTS:
-    void newMatrix();
-    void editMatrix();
+private Q_SLOTS:
+    void matrixSelected();
 
   private:
-    void fillMatrices();
+    Document *_doc;
+    MatrixModel *_model;
 };
 
 }

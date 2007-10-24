@@ -33,6 +33,8 @@ MatrixSelector::MatrixSelector(QWidget *parent)
 
   connect(_newMatrix, SIGNAL(pressed()), this, SLOT(newMatrix()));
   connect(_editMatrix, SIGNAL(pressed()), this, SLOT(editMatrix()));
+
+  connect(_matrix, SIGNAL(currentIndexChanged(int)), this, SLOT(matrixSelected(int)));
 }
 
 
@@ -45,10 +47,18 @@ MatrixPtr MatrixSelector::selectedMatrix() const {
 }
 
 
+void MatrixSelector::matrixSelected(int index) {
+  Q_UNUSED(index)
+  if (index != -1)
+    emit selectionChanged();
+}
+
+
 void MatrixSelector::setSelectedMatrix(MatrixPtr selectedMatrix) {
   int i = _matrix->findData(qVariantFromValue(selectedMatrix.data()));
-  Q_ASSERT(i != -1);
-  _matrix->setCurrentIndex(i);
+  if (i != -1) {
+    _matrix->setCurrentIndex(i);
+  }
 }
 
 
@@ -61,6 +71,12 @@ void MatrixSelector::newMatrix() {
 void MatrixSelector::editMatrix() {
   DialogLauncher::self()->showMatrixDialog(ObjectPtr(selectedMatrix()));
 }
+
+
+void MatrixSelector::updateMatrices() {
+  fillMatrices();;
+}
+
 
 void MatrixSelector::fillMatrices() {
   QHash<QString, MatrixPtr> matrices;

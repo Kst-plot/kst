@@ -9,44 +9,51 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef MATRIXSELECTOR_H
-#define MATRIXSELECTOR_H
+#include "matrixeditordialog.h"
 
-#include <QWidget>
-#include "ui_matrixselector.h"
+#include "document.h"
+#include "matrixmodel.h"
 
-#include <matrix.h>
-
-#include "kst_export.h"
+#include <datacollection.h>
 
 namespace Kst {
 
-class KST_EXPORT MatrixSelector : public QWidget, public Ui::MatrixSelector {
-  Q_OBJECT
-  public:
-    MatrixSelector(QWidget *parent = 0);
-    virtual ~MatrixSelector();
+MatrixEditorDialog::MatrixEditorDialog(QWidget *parent, Document *doc)
+  : QDialog(parent), _doc(doc) {
+  _model = 0;
+  setupUi(this);
 
-    MatrixPtr selectedMatrix() const;
-    void setSelectedMatrix(MatrixPtr selectedMatrix);
-
-  Q_SIGNALS:
-    void selectionChanged();
-
-  public Q_SLOTS:
-    void updateMatrices();
-    void matrixSelected(int index);
-
-  private Q_SLOTS:
-    void newMatrix();
-    void editMatrix();
-
-  private:
-    void fillMatrices();
-};
-
+  connect(matrixSelector, SIGNAL(selectionChanged()), this, SLOT(matrixSelected()));
 }
 
-#endif
+
+MatrixEditorDialog::~MatrixEditorDialog() {
+  delete _model;
+  _model = 0;
+}
+
+
+void MatrixEditorDialog::show() {
+  matrixSelector->updateMatrices();
+  matrixSelected();
+  QDialog::show();
+}
+
+
+void MatrixEditorDialog::matrixSelected() {
+  if (_model) {
+    delete _model;
+  }
+
+  MatrixPtr m = matrixSelector->selectedMatrix();
+  if (m) {
+    _model = new MatrixModel(matrixSelector->selectedMatrix());
+    _matrices->setModel(_model);
+  }
+}
+
+
+
+}
 
 // vim: ts=2 sw=2 et
