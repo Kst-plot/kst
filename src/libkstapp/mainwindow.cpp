@@ -36,6 +36,7 @@
 
 #include "applicationsettingsdialog.h"
 #include "differentiatecurvesdialog.h"
+#include "choosecolordialog.h"
 
 #include <QtGui>
 
@@ -537,6 +538,10 @@ void MainWindow::createActions() {
   _differentiateCurvesDialogAct = new QAction(tr("&Differentiate Curves"), this);
   _differentiateCurvesDialogAct->setStatusTip(tr("Show Kst's Differentiate Curves Dialog"));
   connect(_differentiateCurvesDialogAct, SIGNAL(triggered()), this, SLOT(showDifferentiateCurvesDialog()));
+
+  _chooseColorDialogAct = new QAction(tr("Assign &Curve Color per File"), this);
+  _chooseColorDialogAct->setStatusTip(tr("Show Kst's Choose Color Dialog"));
+  connect(_chooseColorDialogAct, SIGNAL(triggered()), this, SLOT(showChooseColorDialog()));
 }
 
 
@@ -584,6 +589,7 @@ void MainWindow::createMenus() {
   _layoutMenu->addAction(_createSvgAct);
 
   _toolsMenu = menuBar()->addMenu(tr("&Tools"));
+  _toolsMenu->addAction(_chooseColorDialogAct);
   _toolsMenu->addAction(_differentiateCurvesDialogAct);
 
   _settingsMenu = menuBar()->addMenu(tr("&Settings"));
@@ -723,6 +729,13 @@ void MainWindow::showDifferentiateCurvesDialog() {
   DifferentiateCurvesDialog differentiateCurvesDialog(this);
   differentiateCurvesDialog.exec();
 }
+
+
+void MainWindow::showChooseColorDialog() {
+  ChooseColorDialog chooseColorDialog(this);
+  chooseColorDialog.exec();
+}
+
 
 
 void MainWindow::readSettings() {

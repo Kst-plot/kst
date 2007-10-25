@@ -55,6 +55,7 @@ class MainWindow : public QMainWindow
     void showViewManager();
     void showSettingsDialog();
     void showDifferentiateCurvesDialog();
+    void showChooseColorDialog();
 
     void save();
     void saveAs();
@@ -163,6 +164,7 @@ class MainWindow : public QMainWindow
     QAction *_settingsDialogAct;
 
     QAction *_differentiateCurvesDialogAct;
+    QAction *_chooseColorDialogAct;
 };
 
 }
