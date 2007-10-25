@@ -37,6 +37,7 @@
 #include "applicationsettingsdialog.h"
 #include "differentiatecurvesdialog.h"
 #include "choosecolordialog.h"
+#include "changedatasampledialog.h"
 
 #include <QtGui>
 
@@ -542,6 +543,11 @@ void MainWindow::createActions() {
   _chooseColorDialogAct = new QAction(tr("Assign &Curve Color per File"), this);
   _chooseColorDialogAct->setStatusTip(tr("Show Kst's Choose Color Dialog"));
   connect(_chooseColorDialogAct, SIGNAL(triggered()), this, SLOT(showChooseColorDialog()));
+
+  _changeDataSampleDialogAct = new QAction(tr("Change Data Sample Range"), this);
+  _changeDataSampleDialogAct->setStatusTip(tr("Show Kst's Change Data Sample Range Dialog"));
+  connect(_changeDataSampleDialogAct, SIGNAL(triggered()), this, SLOT(showChangeDataSampleDialog()));
+
 }
 
 
@@ -589,6 +595,7 @@ void MainWindow::createMenus() {
   _layoutMenu->addAction(_createSvgAct);
 
   _toolsMenu = menuBar()->addMenu(tr("&Tools"));
+  _toolsMenu->addAction(_changeDataSampleDialogAct);
   _toolsMenu->addAction(_chooseColorDialogAct);
   _toolsMenu->addAction(_differentiateCurvesDialogAct);
 
@@ -736,6 +743,11 @@ void MainWindow::showChooseColorDialog() {
   chooseColorDialog.exec();
 }
 
+
+void MainWindow::showChangeDataSampleDialog() {
+  ChangeDataSampleDialog changeDataSampleDialog(this);
+  changeDataSampleDialog.exec();
+}
 
 
 void MainWindow::readSettings() {

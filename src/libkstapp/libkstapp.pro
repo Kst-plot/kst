@@ -28,6 +28,7 @@ SOURCES += \
     boxitem.cpp \
     builtingraphics.cpp \
     cartesianrenderitem.cpp \
+    changedatasampledialog.cpp \
     choosecolordialog.cpp \
     csddialog.cpp \
     curvedialog.cpp \
@@ -107,6 +108,7 @@ HEADERS += \
     boxitem.h \
     builtingraphics.h \
     cartesianrenderitem.h \
+    changedatasampledialog.h \
     choosecolordialog.h \
     csddialog.h \
     curvedialog.h \
@@ -182,6 +184,7 @@ HEADERS += \
 FORMS += \
     aboutdialog.ui \
     basicplugintab.ui \
+    changedatasampledialog.ui \
     choosecolordialog.ui \
     csdtab.ui \
     curvetab.ui \

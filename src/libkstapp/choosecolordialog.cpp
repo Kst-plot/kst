@@ -20,7 +20,9 @@ namespace Kst {
 
 ChooseColorDialog::ChooseColorDialog(QWidget *parent)
   : QDialog(parent) {
-   setupUi(this);
+
+  setupUi(this);
+  grid = 0;
 
 }
 
@@ -29,9 +31,9 @@ ChooseColorDialog::~ChooseColorDialog() {
 }
 
 
-void ChooseColorDialog::show() {
+void ChooseColorDialog::exec() {
   updateColorGroup();
-  QDialog::show();
+  QDialog::exec();
 }
 
 
@@ -42,7 +44,6 @@ void ChooseColorDialog::updateColorGroup() {
   // are not used by any curves or vectors
   DataVectorList vcList = ObjectSubList<Vector, DataVector>(vectorList);
 
-  // buildup a list of filenames
   QStringList fileNameList;
   for (DataVectorList::Iterator vc_iter = vcList.begin();
         vc_iter != vcList.end();
@@ -52,10 +53,8 @@ void ChooseColorDialog::updateColorGroup() {
       fileNameList.push_back((*vc_iter)->filename());
   }
 
-  // cleanup the dialog
   cleanColorGroup();
 
-  // new grid
   grid = new QGridLayout(colorFrame, fileNameList.count(), 2, 0, 8);
   grid->setColumnStretch(1,0);
 

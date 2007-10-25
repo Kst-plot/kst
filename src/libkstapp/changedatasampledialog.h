@@ -9,37 +9,31 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef CHOOSECOLORDIALOG_H
-#define CHOOSECOLORDIALOG_H
+#ifndef CHANGEDATASAMPLEDIALOG_H
+#define CHANGEDATASAMPLEDIALOG_H
 
 #include <QDialog>
-#include <QLineEdit>
 
-#include "colorbutton.h"
-
-#include "ui_choosecolordialog.h"
+#include "ui_changedatasampledialog.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class KST_EXPORT ChooseColorDialog : public QDialog, Ui::ChooseColorDialog
+class KST_EXPORT ChangeDataSampleDialog : public QDialog, Ui::ChangeDataSampleDialog
 {
   Q_OBJECT
   public:
-    ChooseColorDialog(QWidget *parent);
-    virtual ~ChooseColorDialog();
+    ChangeDataSampleDialog(QWidget *parent);
+    virtual ~ChangeDataSampleDialog();
 
     void exec();
 
+  public slots:
+    void selectAll();
+
   private:
-    QGridLayout* grid;
-
-    void updateColorGroup();
-    void cleanColorGroup();
-
-    QList<QLineEdit*> lineEdits;
-    QList<ColorButton*> colorButtons;
+    void updateCurveListDialog();
 
 };
 
