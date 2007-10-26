@@ -130,7 +130,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
 
   /*FIXME these should be made private for only undo commands to access*/
   public Q_SLOTS:
-    void edit();
+    virtual void edit();
     void raise();
     void lower();
     void createLayout();

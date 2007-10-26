@@ -17,6 +17,8 @@
 #include "plotitemmanager.h"
 #include "application.h"
 
+#include "plotrenderitemdialog.h"
+
 #include <QTime>
 #include <QMenu>
 #include <QStatusBar>
@@ -803,6 +805,11 @@ void PlotRenderItem::updateViewMode() {
   }
 }
 
+
+void PlotRenderItem::edit() {
+  PlotRenderItemDialog editDialog(this);
+  editDialog.exec();
+}
 
 void PlotRenderItem::updateCursor(const QPointF &pos) {
   if (checkBox().contains(pos)) {

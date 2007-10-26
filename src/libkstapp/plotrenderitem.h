@@ -115,6 +115,7 @@ public Q_SLOTS:
     void zoomYIn();
     void zoomNormalizeYtoX();
     void zoomLogY();
+    virtual void edit();
 
   protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);

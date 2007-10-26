@@ -75,6 +75,7 @@ SOURCES += \
     pictureitem.cpp \
     plotaxisitem.cpp \
     plotitem.cpp \
+    plotrenderitemdialog.cpp \
     plotitemmanager.cpp \
     plotrenderitem.cpp \
     powerspectrumdialog.cpp \
@@ -157,6 +158,7 @@ HEADERS += \
     pictureitem.h \
     plotaxisitem.h \
     plotitem.h \
+    plotrenderitemdialog.h \
     plotitemmanager.h \
     plotrenderitem.h \
     powerspectrumdialog.h \
@@ -207,6 +209,7 @@ FORMS += \
     layouttab.ui \
     matrixeditordialog.ui \
     matrixtab.ui \
+    plotrenderitemdialog.ui \
     powerspectrumtab.ui \
     scalareditordialog.ui \
     scalartab.ui \
