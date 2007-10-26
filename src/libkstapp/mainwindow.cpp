@@ -38,6 +38,7 @@
 #include "differentiatecurvesdialog.h"
 #include "choosecolordialog.h"
 #include "changedatasampledialog.h"
+#include "changefiledialog.h"
 
 #include <QtGui>
 
@@ -548,6 +549,10 @@ void MainWindow::createActions() {
   _changeDataSampleDialogAct->setStatusTip(tr("Show Kst's Change Data Sample Range Dialog"));
   connect(_changeDataSampleDialogAct, SIGNAL(triggered()), this, SLOT(showChangeDataSampleDialog()));
 
+  _changeFileDialogAct = new QAction(tr("Change Data &File"), this);
+  _changeFileDialogAct->setStatusTip(tr("Show Kst's Change Data File Dialog"));
+  connect(_changeFileDialogAct, SIGNAL(triggered()), this, SLOT(showChangeFileDialog()));
+
 }
 
 
@@ -595,6 +600,7 @@ void MainWindow::createMenus() {
   _layoutMenu->addAction(_createSvgAct);
 
   _toolsMenu = menuBar()->addMenu(tr("&Tools"));
+  _toolsMenu->addAction(_changeFileDialogAct);
   _toolsMenu->addAction(_changeDataSampleDialogAct);
   _toolsMenu->addAction(_chooseColorDialogAct);
   _toolsMenu->addAction(_differentiateCurvesDialogAct);
@@ -747,6 +753,12 @@ void MainWindow::showChooseColorDialog() {
 void MainWindow::showChangeDataSampleDialog() {
   ChangeDataSampleDialog changeDataSampleDialog(this);
   changeDataSampleDialog.exec();
+}
+
+
+void MainWindow::showChangeFileDialog() {
+  ChangeFileDialog changeFileDialog(this);
+  changeFileDialog.exec();
 }
 
 
