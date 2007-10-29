@@ -33,6 +33,21 @@ class KST_EXPORT PlotRenderItemDialog : public QDialog, Ui::PlotRenderItemDialog
 
   private:
     QPointer<PlotRenderItem> _item;
+
+  private Q_SLOTS:
+    void xAxisInterpretToggled(bool checked);
+    void yAxisInterpretToggled(bool checked);
+    void xMinorTicksAutoToggled(bool checked);
+    void yMinorTicksAutoToggled(bool checked);
+    void xTransformTopToggled(bool checked);
+    void yTransformRightToggled(bool checked);
+    void xMeanCenteredToggled(bool checked);
+    void yMeanCenteredToggled(bool checked);
+    void xExpressionToggled(bool checked);
+    void yExpressionToggled(bool checked);
+    void useCurveToggled(bool checked);
+    void useVectorToggled(bool checked);
+
 };
 
 }

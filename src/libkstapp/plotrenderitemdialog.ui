@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>732</width>
-    <height>620</height>
+    <height>701</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" >
@@ -201,6 +201,9 @@
          </property>
          <item row="1" column="1" >
           <widget class="QPushButton" name="_up" >
+           <property name="enabled" >
+            <bool>false</bool>
+           </property>
            <property name="sizePolicy" >
             <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
              <horstretch>0</horstretch>
@@ -220,6 +223,9 @@
          </item>
          <item row="3" column="1" >
           <widget class="QPushButton" name="_down" >
+           <property name="enabled" >
+            <bool>false</bool>
+           </property>
            <property name="sizePolicy" >
             <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
              <horstretch>0</horstretch>
@@ -239,6 +245,9 @@
          </item>
          <item row="2" column="2" >
           <widget class="QPushButton" name="_add" >
+           <property name="enabled" >
+            <bool>false</bool>
+           </property>
            <property name="sizePolicy" >
             <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
              <horstretch>0</horstretch>
@@ -258,6 +267,9 @@
          </item>
          <item row="2" column="0" >
           <widget class="QPushButton" name="_remove" >
+           <property name="enabled" >
+            <bool>false</bool>
+           </property>
            <property name="sizePolicy" >
             <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
              <horstretch>0</horstretch>
@@ -1243,22 +1255,6 @@
          </layout>
         </widget>
        </item>
-       <item row="4" column="0" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType" >
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>21</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
        <item row="1" column="0" >
         <widget class="QGroupBox" name="ButtonGroup1_2" >
          <property name="sizePolicy" >
@@ -1304,7 +1300,10 @@
            </widget>
           </item>
           <item row="1" column="5" colspan="2" >
-           <widget class="QLabel" name="textLabelXDisplayAs" >
+           <widget class="QLabel" name="_textLabelXDisplayAs" >
+            <property name="enabled" >
+             <bool>false</bool>
+            </property>
             <property name="text" >
              <string>Display as:</string>
             </property>
@@ -1580,14 +1579,14 @@
           <item row="0" column="2" >
            <spacer>
             <property name="orientation" >
-             <enum>Qt::Vertical</enum>
+             <enum>Qt::Horizontal</enum>
             </property>
             <property name="sizeType" >
              <enum>QSizePolicy::Expanding</enum>
             </property>
             <property name="sizeHint" >
              <size>
-              <width>201</width>
+              <width>20</width>
               <height>20</height>
              </size>
             </property>
@@ -1621,6 +1620,22 @@
           </item>
          </layout>
         </widget>
+       </item>
+       <item row="4" column="0" >
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType" >
+          <enum>QSizePolicy::Expanding</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>21</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -1793,7 +1808,10 @@
            </widget>
           </item>
           <item row="1" column="4" colspan="2" >
-           <widget class="QLabel" name="textLabelYDisplayAs" >
+           <widget class="QLabel" name="_textLabelYDisplayAs" >
+            <property name="enabled" >
+             <bool>false</bool>
+            </property>
             <property name="text" >
              <string>Display as:</string>
             </property>
@@ -1933,7 +1951,7 @@
           <item row="0" column="2" >
            <spacer>
             <property name="orientation" >
-             <enum>Qt::Vertical</enum>
+             <enum>Qt::Horizontal</enum>
             </property>
             <property name="sizeType" >
              <enum>QSizePolicy::Expanding</enum>
@@ -2243,7 +2261,7 @@
            <number>0</number>
           </property>
           <item row="0" column="3" >
-           <widget class="QRadioButton" name="XNoSpikes" >
+           <widget class="QRadioButton" name="_xNoSpikes" >
             <property name="sizePolicy" >
              <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
               <horstretch>0</horstretch>
@@ -2262,7 +2280,7 @@
            </widget>
           </item>
           <item row="0" column="0" >
-           <widget class="QRadioButton" name="XAuto" >
+           <widget class="QRadioButton" name="_xAuto" >
             <property name="sizePolicy" >
              <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
               <horstretch>0</horstretch>
@@ -2287,7 +2305,7 @@
            </widget>
           </item>
           <item row="0" column="2" >
-           <widget class="QRadioButton" name="XAutoUp" >
+           <widget class="QRadioButton" name="_xAutoUp" >
             <property name="sizePolicy" >
              <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
               <horstretch>0</horstretch>
@@ -2306,7 +2324,7 @@
            </widget>
           </item>
           <item row="0" column="1" >
-           <widget class="QRadioButton" name="XAutoBorder" >
+           <widget class="QRadioButton" name="_xAutoBorder" >
             <property name="text" >
              <string>Auto &amp;Border</string>
             </property>
@@ -2329,7 +2347,7 @@
            </spacer>
           </item>
           <item row="2" column="0" colspan="3" >
-           <widget class="QRadioButton" name="XExpression" >
+           <widget class="QRadioButton" name="_xExpression" >
             <property name="text" >
              <string>Expression</string>
             </property>
@@ -2350,7 +2368,7 @@
              <number>0</number>
             </property>
             <item row="0" column="0" >
-             <widget class="QRadioButton" name="XAC" >
+             <widget class="QRadioButton" name="_xMeanCentered" >
               <property name="sizePolicy" >
                <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
                 <horstretch>0</horstretch>
@@ -2369,7 +2387,7 @@
              </widget>
             </item>
             <item row="0" column="1" >
-             <widget class="QLineEdit" name="XACRange" >
+             <widget class="QLineEdit" name="_xRange" >
               <property name="enabled" >
                <bool>false</bool>
               </property>
@@ -2419,7 +2437,7 @@
                <bool>false</bool>
               </property>
               <property name="buddy" >
-               <cstring>XExpressionMax</cstring>
+               <cstring>_xExpressionMax</cstring>
               </property>
              </widget>
             </item>
@@ -2432,19 +2450,19 @@
                <bool>false</bool>
               </property>
               <property name="buddy" >
-               <cstring>XExpressionMin</cstring>
+               <cstring>_xExpressionMin</cstring>
               </property>
              </widget>
             </item>
             <item row="1" column="1" >
-             <widget class="QLineEdit" name="XExpressionMax" >
+             <widget class="QLineEdit" name="_xExpressionMax" >
               <property name="enabled" >
                <bool>false</bool>
               </property>
              </widget>
             </item>
             <item row="1" column="2" >
-             <widget class="QComboBox" name="scalarSelectorX2" >
+             <widget class="QComboBox" name="_scalarSelectorX2" >
               <property name="enabled" >
                <bool>false</bool>
               </property>
@@ -2457,7 +2475,7 @@
              </widget>
             </item>
             <item row="0" column="2" >
-             <widget class="QComboBox" name="scalarSelectorX1" >
+             <widget class="QComboBox" name="_scalarSelectorX1" >
               <property name="enabled" >
                <bool>false</bool>
               </property>
@@ -2476,7 +2494,7 @@
              </widget>
             </item>
             <item row="0" column="1" >
-             <widget class="QLineEdit" name="XExpressionMin" >
+             <widget class="QLineEdit" name="_xExpressionMin" >
               <property name="enabled" >
                <bool>false</bool>
               </property>
@@ -2506,7 +2524,7 @@
            <number>0</number>
           </property>
           <item row="0" column="0" >
-           <widget class="QRadioButton" name="YAuto" >
+           <widget class="QRadioButton" name="_yAuto" >
             <property name="sizePolicy" >
              <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
               <horstretch>0</horstretch>
@@ -2544,7 +2562,7 @@
            </spacer>
           </item>
           <item row="2" column="0" colspan="2" >
-           <widget class="QRadioButton" name="YExpression" >
+           <widget class="QRadioButton" name="_yExpression" >
             <property name="text" >
              <string>Expression</string>
             </property>
@@ -2565,7 +2583,7 @@
              <number>0</number>
             </property>
             <item row="0" column="0" >
-             <widget class="QRadioButton" name="YAC" >
+             <widget class="QRadioButton" name="_yMeanCentered" >
               <property name="sizePolicy" >
                <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
                 <horstretch>0</horstretch>
@@ -2587,7 +2605,7 @@
              </widget>
             </item>
             <item row="0" column="1" >
-             <widget class="QLineEdit" name="YACRange" >
+             <widget class="QLineEdit" name="_yRange" >
               <property name="enabled" >
                <bool>false</bool>
               </property>
@@ -2599,14 +2617,14 @@
            </layout>
           </item>
           <item row="0" column="1" colspan="2" >
-           <widget class="QRadioButton" name="YAutoBorder" >
+           <widget class="QRadioButton" name="_yAutoBorder" >
             <property name="text" >
              <string>Auto &amp;Border</string>
             </property>
            </widget>
           </item>
           <item row="0" column="3" >
-           <widget class="QRadioButton" name="YAutoUp" >
+           <widget class="QRadioButton" name="_yAutoUp" >
             <property name="sizePolicy" >
              <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
               <horstretch>0</horstretch>
@@ -2625,7 +2643,7 @@
            </widget>
           </item>
           <item row="0" column="4" >
-           <widget class="QRadioButton" name="YNoSpikes" >
+           <widget class="QRadioButton" name="_yNoSpikes" >
             <property name="sizePolicy" >
              <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
               <horstretch>0</horstretch>
@@ -2682,7 +2700,7 @@
                <bool>false</bool>
               </property>
               <property name="buddy" >
-               <cstring>YExpressionMin</cstring>
+               <cstring>_yExpressionMin</cstring>
               </property>
              </widget>
             </item>
@@ -2695,12 +2713,12 @@
                <bool>false</bool>
               </property>
               <property name="buddy" >
-               <cstring>YExpressionMax</cstring>
+               <cstring>_yExpressionMax</cstring>
               </property>
              </widget>
             </item>
             <item row="1" column="2" >
-             <widget class="QComboBox" name="scalarSelectorY2" >
+             <widget class="QComboBox" name="_scalarSelectorY2" >
               <property name="enabled" >
                <bool>false</bool>
               </property>
@@ -2713,7 +2731,7 @@
              </widget>
             </item>
             <item row="0" column="2" >
-             <widget class="QComboBox" name="scalarSelectorY1" >
+             <widget class="QComboBox" name="_scalarSelectorY1" >
               <property name="enabled" >
                <bool>false</bool>
               </property>
@@ -2726,14 +2744,14 @@
              </widget>
             </item>
             <item row="0" column="1" >
-             <widget class="QLineEdit" name="YExpressionMin" >
+             <widget class="QLineEdit" name="_yExpressionMin" >
               <property name="enabled" >
                <bool>false</bool>
               </property>
              </widget>
             </item>
             <item row="1" column="1" >
-             <widget class="QLineEdit" name="YExpressionMax" >
+             <widget class="QLineEdit" name="_yExpressionMax" >
               <property name="enabled" >
                <bool>false</bool>
               </property>
@@ -3040,21 +3058,21 @@
            <number>0</number>
           </property>
           <item row="0" column="0" >
-           <widget class="QCheckBox" name="UseCurve" >
+           <widget class="QCheckBox" name="_useCurveCheckBox" >
             <property name="text" >
              <string>Use data object as marker source:</string>
             </property>
            </widget>
           </item>
           <item row="2" column="0" >
-           <widget class="QCheckBox" name="UseVector" >
+           <widget class="QCheckBox" name="_useVectorCheckBox" >
             <property name="text" >
              <string>Use vector as marker source:</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1" >
-           <widget class="QComboBox" name="CurveCombo" >
+           <widget class="QComboBox" name="_curveCombo" >
             <property name="enabled" >
              <bool>false</bool>
             </property>
@@ -3101,7 +3119,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="Rising" >
+             <widget class="QRadioButton" name="_markersRisingEdge" >
               <property name="enabled" >
                <bool>false</bool>
               </property>
@@ -3114,7 +3132,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="Falling" >
+             <widget class="QRadioButton" name="_markersFallingEdge" >
               <property name="enabled" >
                <bool>false</bool>
               </property>
@@ -3124,7 +3142,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="Both" >
+             <widget class="QRadioButton" name="_markersBoth" >
               <property name="enabled" >
                <bool>false</bool>
               </property>
@@ -3278,6 +3296,71 @@
      </widget>
     </widget>
    </item>
+   <item>
+    <layout class="QHBoxLayout" >
+     <property name="leftMargin" >
+      <number>0</number>
+     </property>
+     <property name="topMargin" >
+      <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>0</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>0</number>
+     </property>
+     <item>
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType" >
+        <enum>QSizePolicy::Expanding</enum>
+       </property>
+       <property name="sizeHint" >
+        <size>
+         <width>180</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="_apply" >
+       <property name="whatsThis" >
+        <string>Apply new source file to selected vectors.</string>
+       </property>
+       <property name="text" >
+        <string>&amp;Apply</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="_OK" >
+       <property name="whatsThis" >
+        <string>Apply new source file to selected vectors.</string>
+       </property>
+       <property name="text" >
+        <string>&amp;OK</string>
+       </property>
+       <property name="default" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="_cancel" >
+       <property name="whatsThis" >
+        <string>Close dialog without applying further changes.</string>
+       </property>
+       <property name="text" >
+        <string>&amp;Cancel</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11" />
@@ -3312,12 +3395,12 @@
   <tabstop>PlotMarkerList</tabstop>
   <tabstop>RemovePlotMarker</tabstop>
   <tabstop>RemoveAllPlotMarkers</tabstop>
-  <tabstop>UseCurve</tabstop>
-  <tabstop>CurveCombo</tabstop>
-  <tabstop>Rising</tabstop>
-  <tabstop>Falling</tabstop>
-  <tabstop>Both</tabstop>
-  <tabstop>UseVector</tabstop>
+  <tabstop>_useCurveCheckBox</tabstop>
+  <tabstop>_curveCombo</tabstop>
+  <tabstop>_markersRisingEdge</tabstop>
+  <tabstop>_markersFallingEdge</tabstop>
+  <tabstop>_markersBoth</tabstop>
+  <tabstop>_useVectorCheckBox</tabstop>
   <tabstop>_colorMarker</tabstop>
   <tabstop>_checkBoxDefaultMarkerColor</tabstop>
   <tabstop>_comboMarkerLineStyle</tabstop>
@@ -3325,20 +3408,20 @@
   <tabstop>markersThisPlot</tabstop>
   <tabstop>markersThisWindow</tabstop>
   <tabstop>markersAll</tabstop>
-  <tabstop>XAuto</tabstop>
-  <tabstop>XAC</tabstop>
-  <tabstop>XACRange</tabstop>
-  <tabstop>XExpressionMin</tabstop>
-  <tabstop>scalarSelectorX1</tabstop>
-  <tabstop>XExpressionMax</tabstop>
-  <tabstop>scalarSelectorX2</tabstop>
-  <tabstop>YAuto</tabstop>
-  <tabstop>YAC</tabstop>
-  <tabstop>YACRange</tabstop>
-  <tabstop>YExpressionMin</tabstop>
-  <tabstop>scalarSelectorY1</tabstop>
-  <tabstop>YExpressionMax</tabstop>
-  <tabstop>scalarSelectorY2</tabstop>
+  <tabstop>_xAuto</tabstop>
+  <tabstop>_xMeanCentered</tabstop>
+  <tabstop>_xRange</tabstop>
+  <tabstop>_xExpressionMin</tabstop>
+  <tabstop>_scalarSelectorX1</tabstop>
+  <tabstop>_xExpressionMax</tabstop>
+  <tabstop>_scalarSelectorX2</tabstop>
+  <tabstop>_yAuto</tabstop>
+  <tabstop>_yMeanCentered</tabstop>
+  <tabstop>_yRange</tabstop>
+  <tabstop>_yExpressionMin</tabstop>
+  <tabstop>_scalarSelectorY1</tabstop>
+  <tabstop>_yExpressionMax</tabstop>
+  <tabstop>_scalarSelectorY2</tabstop>
   <tabstop>rangeThisPlot</tabstop>
   <tabstop>rangeThisWindow</tabstop>
   <tabstop>rangeAll</tabstop>
