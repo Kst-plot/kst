@@ -3197,12 +3197,9 @@
           </widget>
          </item>
          <item>
-          <widget class="Q3ListBox" name="PlotMarkerList" >
+          <widget class="QListWidget" name="_plotMarkerList" >
            <property name="whatsThis" >
             <string>The list of defined plot markers.  Use the Add, Remove, and Remove All buttons to modify the list.  Changes to the list are not saved until the plot dialog settings are applied.</string>
-           </property>
-           <property name="selectionMode" >
-            <enum>Q3ListBox::Extended</enum>
            </property>
           </widget>
          </item>
@@ -3366,12 +3363,7 @@
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
-  <customwidget>
-   <class>Q3ListBox</class>
-   <extends>Q3Frame</extends>
-   <header>q3listbox.h</header>
-  </customwidget>
-  <customwidget>
+<customwidget>
    <class>Kst::VectorSelector</class>
    <extends>QWidget</extends>
    <header>vectorselector.h</header>
@@ -3392,7 +3384,7 @@
   <tabstop>TabWidget</tabstop>
   <tabstop>NewPlotMarker</tabstop>
   <tabstop>AddPlotMarker</tabstop>
-  <tabstop>PlotMarkerList</tabstop>
+  <tabstop>_plotMarkerList</tabstop>
   <tabstop>RemovePlotMarker</tabstop>
   <tabstop>RemoveAllPlotMarkers</tabstop>
   <tabstop>_useCurveCheckBox</tabstop>

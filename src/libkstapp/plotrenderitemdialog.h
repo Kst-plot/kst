@@ -34,6 +34,9 @@ class KST_EXPORT PlotRenderItemDialog : public QDialog, Ui::PlotRenderItemDialog
   private:
     QPointer<PlotRenderItem> _item;
 
+    void update();
+    void fillMarkerLineCombo();
+
   private Q_SLOTS:
     void xAxisInterpretToggled(bool checked);
     void yAxisInterpretToggled(bool checked);
@@ -47,7 +50,10 @@ class KST_EXPORT PlotRenderItemDialog : public QDialog, Ui::PlotRenderItemDialog
     void yExpressionToggled(bool checked);
     void useCurveToggled(bool checked);
     void useVectorToggled(bool checked);
+    void updateAxesButtons();
 
+    void updateScalarCombo();
+    void updatePlotMarkers();
 };
 
 }
