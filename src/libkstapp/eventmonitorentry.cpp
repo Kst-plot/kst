@@ -29,7 +29,9 @@
 #include "debug.h"
 
 #include <assert.h>
+#ifndef Q_WS_WIN32
 #include <unistd.h>
+#endif
 
 namespace Kst {
 
