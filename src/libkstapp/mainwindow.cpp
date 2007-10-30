@@ -31,6 +31,7 @@
 #include "vectoreditordialog.h"
 #include "scalareditordialog.h"
 #include "matrixeditordialog.h"
+#include "stringeditordialog.h"
 #include "view.h"
 #include "viewmanager.h"
 
@@ -55,6 +56,8 @@ MainWindow::MainWindow() {
   _exportGraphics = 0;
   _vectorEditor = 0;
   _scalarEditor = 0;
+  _stringEditor = 0;
+  _matrixEditor = 0;
   _viewManager = 0;
   _doc = new Document(this);
   _tabWidget = new TabWidget(this);
@@ -517,6 +520,10 @@ void MainWindow::createActions() {
   _scalarEditorAct->setStatusTip(tr("Show all scalars in a spreadsheet"));
   connect(_scalarEditorAct, SIGNAL(triggered()), this, SLOT(showScalarEditor()));
 
+  _stringEditorAct = new QAction(tr("Edit S&trings..."), this);
+  _stringEditorAct->setStatusTip(tr("Show all strings in a spreadsheet"));
+  connect(_stringEditorAct, SIGNAL(triggered()), this, SLOT(showStringEditor()));
+
   _matrixEditorAct = new QAction(tr("Edit &Matrix..."), this);
   _matrixEditorAct->setStatusTip(tr("Show all matrix in a spreadsheet"));
   connect(_matrixEditorAct, SIGNAL(triggered()), this, SLOT(showMatrixEditor()));
@@ -579,6 +586,7 @@ void MainWindow::createMenus() {
   _dataMenu->addAction(_vectorEditorAct);
   _dataMenu->addAction(_scalarEditorAct);
   _dataMenu->addAction(_matrixEditorAct);
+  _dataMenu->addAction(_stringEditorAct);
 
   _viewMenu = menuBar()->addMenu(tr("&View"));
   _viewMenu->addAction(_viewManagerAct);
@@ -707,6 +715,13 @@ void MainWindow::showScalarEditor() {
   _scalarEditor->show();
 }
 
+
+void MainWindow::showStringEditor() {
+  if (!_stringEditor) {
+    _stringEditor = new StringEditorDialog(this);
+  }
+  _stringEditor->show();
+}
 
 void MainWindow::showMatrixEditor() {
   if (!_matrixEditor) {

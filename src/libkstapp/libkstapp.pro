@@ -87,6 +87,9 @@ SOURCES += \
     scene.cpp \
     selectionrect.cpp \
     sessionmodel.cpp \
+    stringmodel.cpp \
+    stringtablemodel.cpp \
+    stringeditordialog.cpp \
     stroketab.cpp \
     svgitem.cpp \
     tabwidget.cpp \
@@ -170,6 +173,9 @@ HEADERS += \
     scene.h \
     selectionrect.h \
     sessionmodel.h \
+    stringmodel.h \
+    stringtablemodel.h \
+    stringeditordialog.h \
     svgitem.h \
     stroketab.h \
     tabwidget.h \
@@ -213,6 +219,7 @@ FORMS += \
     powerspectrumtab.ui \
     scalareditordialog.ui \
     scalartab.ui \
+    stringeditordialog.ui \
     stroketab.ui \
     vectoreditordialog.ui \
     vectortab.ui \

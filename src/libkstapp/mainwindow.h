@@ -28,6 +28,7 @@ class Document;
 class ExportGraphicsDialog;
 class MatrixEditorDialog;
 class ScalarEditorDialog;
+class StringEditorDialog;
 class TabWidget;
 class VectorEditorDialog;
 class View;
@@ -52,6 +53,7 @@ class MainWindow : public QMainWindow
     void showVectorEditor();
     void showScalarEditor();
     void showMatrixEditor();
+    void showStringEditor();
     void showViewManager();
     void showSettingsDialog();
     void showDifferentiateCurvesDialog();
@@ -111,6 +113,7 @@ class MainWindow : public QMainWindow
     ExportGraphicsDialog *_exportGraphics;
     VectorEditorDialog *_vectorEditor;
     ScalarEditorDialog *_scalarEditor;
+    StringEditorDialog * _stringEditor;
     MatrixEditorDialog *_matrixEditor;
     ViewManager *_viewManager;
 
@@ -158,6 +161,7 @@ class MainWindow : public QMainWindow
     QAction *_scalarEditorAct;
     QAction *_vectorEditorAct;
     QAction *_matrixEditorAct;
+    QAction *_stringEditorAct;
 
     QAction *_viewManagerAct;
     QAction *_layoutModeAct;
