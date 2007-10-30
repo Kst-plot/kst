@@ -24,7 +24,7 @@
      <property name="currentIndex" >
       <number>1</number>
      </property>
-     <widget class="QWidget" name="tab" >
+     <widget class="QWidget" name="_buildInfoTab" >
       <attribute name="title" >
        <string>Build Information</string>
       </attribute>

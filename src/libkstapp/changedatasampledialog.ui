@@ -168,8 +168,6 @@
  </customwidgets>
  <tabstops>
   <tabstop>_curveList</tabstop>
-  <tabstop>Clear</tabstop>
-  <tabstop>SelectAll</tabstop>
   <tabstop>_dataRange</tabstop>
   <tabstop>OK</tabstop>
   <tabstop>Cancel</tabstop>
