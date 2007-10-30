@@ -9,14 +9,19 @@
  *                                                                         *
  ***************************************************************************/
 
-
-#include "sharedptr.h"
-#include "datasource.h"
+#ifndef DATAPLUGIN_H
+#define DATAPLUGIN_H
 
 #include <QtPlugin>
 #include <QSettings>
 
+#include "sharedptr.h"
+#include "datasource.h"
+
 namespace Kst {
+
+class ObjectStore;
+
 
 class PluginInterface : public Shared {
   public:
@@ -34,7 +39,8 @@ class DataSourcePluginInterface : public PluginInterface {
   public:
     virtual ~DataSourcePluginInterface() {}
 
-    virtual DataSource *create(QSettings *cfg,
+    virtual DataSource *create(ObjectStore *store,
+			                      QSettings *cfg,
                                   const QString &filename,
                                   const QString &type,
                                   const QDomElement &element) const = 0;
@@ -88,11 +94,14 @@ class BasicPluginInterface : public DataObjectPluginInterface {
     virtual QStringList outputStringList() const = 0;
 };
 
-typedef QList<SharedPtr<PluginInterface> > PluginList;
+
+typedef ObjectList<PluginInterface> PluginList;
 
 }
 
-Q_DECLARE_INTERFACE(Kst::PluginInterface, "com.kst.KstPluginInterface/1.0")
-Q_DECLARE_INTERFACE(Kst::DataSourcePluginInterface, "com.kst.KstDataSourcePluginInterface/1.0")
-Q_DECLARE_INTERFACE(Kst::DataObjectPluginInterface, "com.kst.KstDataObjectPluginInterface/1.0")
-Q_DECLARE_INTERFACE(Kst::BasicPluginInterface, "com.kst.KstBasicPluginInterface/1.0")
+Q_DECLARE_INTERFACE(Kst::PluginInterface, "com.kst.PluginInterface/1.0")
+Q_DECLARE_INTERFACE(Kst::DataSourcePluginInterface, "com.kst.DataSourcePluginInterface/1.0")
+Q_DECLARE_INTERFACE(Kst::DataObjectPluginInterface, "com.kst.DataObjectPluginInterface/1.0")
+Q_DECLARE_INTERFACE(Kst::BasicPluginInterface, "com.kst.BasicPluginInterface/1.0")
+
+#endif

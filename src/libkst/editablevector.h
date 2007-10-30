@@ -1,7 +1,7 @@
 /***************************************************************************
  *                                                                         *
  *   copyright : (C) 2007 The University of Toronto                        *
- *   copyright : (C) 2005  University of British Columbia                        *
+ *   copyright : (C) 2005  University of British Columbia                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,17 +22,26 @@
 namespace Kst {
 
 class EditableVector : public Vector {
- public:
-  KST_EXPORT EditableVector(const QString &tag, const QByteArray &data);
-  KST_EXPORT EditableVector(int n, ObjectTag tag);
+  Q_OBJECT
 
-  Object::UpdateType update(int update_counter);
+  public:
+    virtual const QString& typeString() const;
+    static const QString staticTypeString;
 
-  void setSaveData(bool save);
+    Object::UpdateType update(int update_counter);
+
+    void setSaveData(bool save);
+
+  protected:
+    KST_EXPORT EditableVector(ObjectStore *store, const ObjectTag& tag, const QByteArray& data);
+    KST_EXPORT EditableVector(ObjectStore *store, const ObjectTag& tag, int n=0);
+
+    friend class EditableVectorFactory;
+    friend class ObjectStore; // FIXME: remove this when factory works
 };
 
 typedef SharedPtr<EditableVector> EditableVectorPtr;
-typedef ObjectList<EditableVectorPtr> EditableVectorList;
+typedef ObjectList<EditableVector> EditableVectorList;
 
 }
 

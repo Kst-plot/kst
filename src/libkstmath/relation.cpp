@@ -20,17 +20,20 @@
 #include "datacollection.h"
 #include "debug.h"
 #include "kst_i18n.h"
+#include "objectstore.h"
 
 #include <QXmlStreamWriter>
 
 namespace Kst {
 
-Relation::Relation(const QDomElement& e) {
+const QString Relation::staticTypeString = I18N_NOOP("Relation");
+
+Relation::Relation(ObjectStore *store, const QDomElement& e) : Object() {
   commonConstructor();
 }
 
 
-Relation::Relation() : Object() {
+Relation::Relation(ObjectStore *store, const ObjectTag& tag) : Object(tag) {
   commonConstructor();
 }
 
@@ -67,9 +70,9 @@ void Relation::setIgnoreAutoScale(bool ignoreAutoScale) {
 }
 
 void Relation::updateParsedLegendTag() {
-  delete _parsedLegendTag; 
+  delete _parsedLegendTag;
   if (_legendText.isEmpty()) {
-    _parsedLegendTag = Label::parse(tagName(), false, false);
+    _parsedLegendTag = Label::parse(tag().tagString(), false, false); // FIXME: should this be displayString?
   } else {
     _parsedLegendTag = Label::parse(legendText(), true, false);
   }
@@ -107,7 +110,7 @@ void Relation::writeLockInputsAndOutputs() const {
   for (QList<StringPtr>::Iterator i = sl.begin(); i != sl.end(); ++i) {
     outputs += (*i).data();
   }
-  
+
   QList<ScalarPtr> sc = _inputScalars.values();
   for (QList<ScalarPtr>::Iterator i = sc.begin(); i != sc.end(); ++i) {
     inputs += (*i).data();
@@ -116,7 +119,7 @@ void Relation::writeLockInputsAndOutputs() const {
   for (QList<ScalarPtr>::Iterator i = sc.begin(); i != sc.end(); ++i) {
     outputs += (*i).data();
   }
-  
+
   QList<VectorPtr> vl = _inputVectors.values();
   for (QList<VectorPtr>::Iterator i = vl.begin(); i != vl.end(); ++i) {
     inputs += (*i).data();
@@ -125,7 +128,7 @@ void Relation::writeLockInputsAndOutputs() const {
   for (QList<VectorPtr>::Iterator i = vl.begin(); i != vl.end(); ++i) {
     outputs += (*i).data();
   }
-  
+
   QList<MatrixPtr> ml = _inputMatrices.values();
   for (QList<MatrixPtr>::Iterator i = ml.begin(); i != ml.end(); ++i) {
     inputs += (*i).data();
@@ -161,7 +164,7 @@ void Relation::writeLockInputsAndOutputs() const {
       qDebug() << (void*)this << this->tag().tagString() << ") KstDataObject::writeLockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": write locking output \"" << (*outputIt)->tag().tagString() << "\" (" << (void*)((KstRWLock*)*outputIt) << ")" << endl;
 #endif
       if ((*outputIt)->provider() != this) {
-        Debug::self()->log(i18n("KstDataObject::writeLockInputsAndOutputs() by tid=%1: write locking output %2 (not provider) -- this is probably an error. Please email kst@kde.org with details.").arg(reinterpret_cast<qint64>(QThread::currentThread())).arg((*outputIt)->tagName()), Debug::Error);
+//        Debug::self()->log(i18n("KstDataObject::writeLockInputsAndOutputs() by tid=%1: write locking output %2 (not provider) -- this is probably an error. Please email kst@kde.org with details.").arg(reinterpret_cast<qint64>(QThread::currentThread())).arg((*outputIt)->tagName()), Debug::Error);
       }
       (*outputIt)->writeLock();
       ++outputIt;

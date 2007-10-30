@@ -33,6 +33,10 @@
 #include <unistd.h>
 #endif
 
+extern int yyparse(Kst::ObjectStore *store);
+extern void *ParsedEquation;
+extern struct yy_buffer_state *yy_scan_string(const char*);
+
 namespace Kst {
 
 namespace {
@@ -44,25 +48,24 @@ namespace {
   };
 }
 
-extern "C" int yyparse();
-extern "C" void *ParsedEquation;
-extern "C" struct yy_buffer_state *yy_scan_string(const char*);
+//extern "C" int yyparse();
+//extern "C" void *ParsedEquation;
+//extern "C" struct yy_buffer_state *yy_scan_string(const char*);
 
 const QString EventMonitorEntry::OUTXVECTOR = "X";
 const QString EventMonitorEntry::OUTYVECTOR = "Y";
 
-EventMonitorEntry::EventMonitorEntry(const QString &in_tag) : DataObject() {
+EventMonitorEntry::EventMonitorEntry(ObjectStore *store, const ObjectTag &in_tag) : DataObject(store, in_tag) {
   _level = Debug::Warning;
   _logKstDebug = true;
   _logEMail = false;
   _logELOG = false;
 
-  commonConstructor(in_tag);
+  commonConstructor();
 }
 
 
-EventMonitorEntry::EventMonitorEntry(const QString &tag, const QString &script, const QString &event, const QString &description, const Debug::LogLevel level, const bool logKstDebug, const bool logEMail, const bool logELOG, const QString& emailRecipients) {
-
+EventMonitorEntry::EventMonitorEntry(ObjectStore *store, const ObjectTag &tag, const QString &script, const QString &event, const QString &description, const Debug::LogLevel level, const bool logKstDebug, const bool logEMail, const bool logELOG, const QString& emailRecipients) : DataObject(store, tag) {
   _event = event;
   _description = description;
   _eMailRecipients = emailRecipients;
@@ -72,11 +75,10 @@ EventMonitorEntry::EventMonitorEntry(const QString &tag, const QString &script, 
   _level = level;
   _script = script;
 
-  commonConstructor(tag);
-
+  commonConstructor();
 }
 
-EventMonitorEntry::EventMonitorEntry(const QDomElement &e) {
+EventMonitorEntry::EventMonitorEntry(ObjectStore *store, const QDomElement &e) : DataObject(store, e) {
   QString strTag;
 
   _level = Debug::Warning;
@@ -89,7 +91,7 @@ EventMonitorEntry::EventMonitorEntry(const QDomElement &e) {
     QDomElement e = n.toElement(); // try to convert the node to an element.
     if (!e.isNull()) { // the node was really an element.
       if (e.tagName() == "tag") {
-        strTag = e.text();
+        setTagName(ObjectTag::fromString(e.text()));
       } else if (e.tagName() == "equation") {
         _event = e.text();
       } else if (e.tagName() == "description") {
@@ -111,7 +113,7 @@ EventMonitorEntry::EventMonitorEntry(const QDomElement &e) {
     n = n.nextSibling();
   }
 
-  commonConstructor(strTag);
+  commonConstructor();
 
   // wait for the initial update, as we don't want to trigger elog entries
   // until we are sure the document is open.
@@ -119,21 +121,26 @@ EventMonitorEntry::EventMonitorEntry(const QDomElement &e) {
 }
 
 
-void EventMonitorEntry::commonConstructor(const QString &in_tag) {
+void EventMonitorEntry::commonConstructor() {
   const int NS = 1;
 
   _numDone = 0;
   _isValid = false;
   _pExpression = 0L;
 
-  _typeString = "Event";
+  _typeString = staticTypeString;
   _type = "Event";
-  Object::setTagName(ObjectTag::fromString(in_tag));
 
-  VectorPtr xv = new Vector(ObjectTag("x", tag()), NS, this);
+  Q_ASSERT(store());
+
+  VectorPtr xv = store()->createObject<Vector>(ObjectTag("x", tag()));
+  xv->resize(NS);
+  xv->setProvider(this);
   _xVector = _outputVectors.insert(OUTXVECTOR, xv);
 
-  VectorPtr yv = new Vector(ObjectTag("y", tag()), NS, this);
+  VectorPtr yv = store()->createObject<Vector>(ObjectTag("x", tag()));
+  yv->resize(NS);
+  yv->setProvider(this);
   _yVector = _outputVectors.insert(OUTYVECTOR, yv);
 }
 
@@ -143,7 +150,7 @@ bool EventMonitorEntry::reparse() {
   if (!_event.isEmpty()) {
     Equations::mutex().lock();
     yy_scan_string(_event.toLatin1());
-    int rc = yyparse();
+    int rc = yyparse(store());
     if (rc == 0) {
       _pExpression = static_cast<Equations::Node*>(ParsedEquation);
       Equations::Context ctx;
@@ -472,7 +479,8 @@ void EventMonitorEntry::setEMailRecipients(const QString& str) {
 
 
 DataObjectPtr EventMonitorEntry::makeDuplicate(DataObjectDataObjectMap& duplicatedMap) {
-  QString name(tagName() + '\'');
+#if 0
+  QString name(tagString() + '\'');
   while (Data::self()->dataTagNameNotUnique(name, false)) {
     name += '\'';
   }
@@ -487,6 +495,9 @@ DataObjectPtr EventMonitorEntry::makeDuplicate(DataObjectDataObjectMap& duplicat
 
   duplicatedMap.insert(this, DataObjectPtr(event));
   return DataObjectPtr(event);
+#endif
+  // FIXME: implement this
+  return 0;
 }
 
 
@@ -495,14 +506,14 @@ void EventMonitorEntry::replaceDependency(DataObjectPtr oldObject, DataObjectPtr
 
   // replace all occurences of outputVectors, outputScalars from oldObject
   for (VectorMap::ConstIterator j = oldObject->outputVectors().begin(); j != oldObject->outputVectors().end(); ++j) {
-    const QString oldTag = j.value()->tagName();
-    const QString newTag = newObject->outputVectors()[j.key()]->tagName();
+    const QString oldTag = j.value()->tag().tagString();
+    const QString newTag = newObject->outputVectors()[j.key()]->tag().tagString();
     newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
   }
 
   for (ScalarMap::ConstIterator j = oldObject->outputScalars().begin(); j != oldObject->outputScalars().end(); ++j) {
-    const QString oldTag = j.value()->tagName();
-    const QString newTag = newObject->outputScalars()[j.key()]->tagName();
+    const QString oldTag = j.value()->tag().tagString();
+    const QString newTag = newObject->outputScalars()[j.key()]->tag().tagString();
     newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
   }
 
@@ -511,8 +522,8 @@ void EventMonitorEntry::replaceDependency(DataObjectPtr oldObject, DataObjectPtr
     const QHash<QString, Scalar*>& scalarMap(newObject->outputVectors()[j.key()]->scalars());
     QHashIterator<QString, Scalar*> scalarDictIter(j.value()->scalars());
     while (scalarDictIter.hasNext()) {
-      const QString oldTag = scalarDictIter.next().value()->tagName();
-      const QString newTag = scalarMap[scalarDictIter.key()]->tagName();
+      const QString oldTag = scalarDictIter.next().value()->tag().tagString();
+      const QString newTag = scalarMap[scalarDictIter.key()]->tag().tagString();
       newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
     }
   }
@@ -522,8 +533,8 @@ void EventMonitorEntry::replaceDependency(DataObjectPtr oldObject, DataObjectPtr
     const QHash<QString, Scalar*>& scalarMap(newObject->outputMatrices()[j.key()]->scalars());
     QHashIterator<QString, Scalar*> scalarDictIter(j.value()->scalars());
     while (scalarDictIter.hasNext()) {
-      const QString oldTag = scalarDictIter.next().value()->tagName();
-      const QString newTag = scalarMap[scalarDictIter.key()]->tagName();
+      const QString oldTag = scalarDictIter.next().value()->tag().tagString();
+      const QString newTag = scalarMap[scalarDictIter.key()]->tag().tagString();
       newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
     }
   }
@@ -537,13 +548,13 @@ void EventMonitorEntry::replaceDependency(DataObjectPtr oldObject, DataObjectPtr
 
 void EventMonitorEntry::replaceDependency(VectorPtr oldVector, VectorPtr newVector) {
   // replace all occurences of oldTag with newTag
-  QString newExp = _event.replace("[" + oldVector->tagName() + "]", "[" + newVector->tagName() + "]");
+  QString newExp = _event.replace("[" + oldVector->tag().tagString() + "]", "[" + newVector->tag().tagString() + "]");
 
   // also replace all occurences of vector stats for the oldVector
   QHashIterator<QString, Scalar*> scalarDictIter(oldVector->scalars());
   while (scalarDictIter.hasNext()) {
-    const QString oldTag = scalarDictIter.next().value()->tagName();
-    const QString newTag = newVector->scalars()[scalarDictIter.key()]->tagName();
+    const QString oldTag = scalarDictIter.next().value()->tag().tagString();
+    const QString newTag = newVector->scalars()[scalarDictIter.key()]->tag().tagString();
     newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
   }
 
@@ -560,8 +571,8 @@ void EventMonitorEntry::replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatr
   // also replace all occurences of scalar stats for the oldMatrix
   QHashIterator<QString, Scalar*> scalarDictIter(oldMatrix->scalars());
   while (scalarDictIter.hasNext()) {
-    const QString oldTag = scalarDictIter.next().value()->tagName();
-    const QString newTag = newMatrix->scalars()[scalarDictIter.key()]->tagName();
+    const QString oldTag = scalarDictIter.next().value()->tag().tagString();
+    const QString newTag = newMatrix->scalars()[scalarDictIter.key()]->tag().tagString();
     newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
   }
 

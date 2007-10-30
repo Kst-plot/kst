@@ -43,8 +43,9 @@ void ChangeDataSampleDialog::updateCurveListDialog() {
     }
   }
   _curveList->clear();
-  
-  DataVectorList rvl = ObjectSubList<Vector,DataVector>(vectorList);
+
+//  DataVectorList rvl = ObjectSubList<Vector,DataVector>(vectorList);
+  DataVectorList rvl; // FIXME
 
   _curveList->blockSignals(true);
   int inserted = 0;

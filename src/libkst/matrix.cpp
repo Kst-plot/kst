@@ -1,7 +1,15 @@
 /***************************************************************************
+                   matrix.cpp: 2D matrix type for kst
+                             -------------------
+    begin                : July 2004
+    copyright            : (C) 2004 University of British Columbia
+    email                :
+ ***************************************************************************/
+
+/***************************************************************************
  *                                                                         *
  *   copyright : (C) 2007 The University of Toronto                        *
- *   copyright : (C) 2004  University of British Columbia                        *
+ *   copyright : (C) 2004  University of British Columbia                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -10,34 +18,35 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <QDebug>
+#include <QXmlStreamWriter>
+
 #include "matrix.h"
 
-#include <stdlib.h>
-#include <math.h>
+//#include <stdlib.h>
+//#include <math.h>
 
-#include "defaultprimitivenames.h"
-#include "datacollection.h"
 #include "debug.h"
 #include "kst_i18n.h"
 #include "math_kst.h"
+#include "datacollection.h"
+#include "objectstore.h"
 
-#include <qdebug.h>
-#include <QXmlStreamWriter>
 
 // used for resizing; set to 1 for loop zeroing, 2 to use memset
 #define ZERO_MEMORY 2
 
 namespace Kst {
 
-static int anonymousMatrixCounter = 1;
+const QString Matrix::staticTypeString = I18N_NOOP("Matrix");
 
-Matrix::Matrix(ObjectTag in_tag, Object *provider, uint nX, uint nY, double minX, double minY, double stepX, double stepY)
-: Primitive(provider) {
- 
+Matrix::Matrix(ObjectStore *store, ObjectTag tag, Object *provider, uint nX, uint nY, double minX, double minY, double stepX, double stepY)
+    : Primitive(store, tag, provider) {
+
   _nX = nX;
   _nY = nY;
   _NS = _nX * _nY;
-  _NRealS = 0;    
+  _NRealS = 0;
   _minX = minX;
   _minY = minY;
   _stepX = stepX;
@@ -48,47 +57,40 @@ Matrix::Matrix(ObjectTag in_tag, Object *provider, uint nX, uint nY, double minX
   _editable = false;
   _saveable = false;
 
-  QString _tag = in_tag.tag();
-  if (!in_tag.isValid()) {
-    do {
-      _tag = i18n("Anonymous Matrix %1", anonymousMatrixCounter++);
-    } while (Data::self()->matrixTagNameNotUnique(_tag, false));
-    Object::setTagName(ObjectTag(_tag, in_tag.context()));
-  } else {
-    Object::setTagName(suggestUniqueMatrixTag(in_tag));
-  }
-
-  createScalars();
+  createScalars(store);
   setDirty();
-
-  matrixList.lock().writeLock();
-  matrixList.append(this);
-  matrixList.lock().unlock();
 }
 
 
 Matrix::~Matrix() {
-  // get rid of the stat scalars
+  // TODO: get rid of the stat scalars
+#if 0
   scalarList.lock().writeLock();
   scalarList.setUpdateDisplayTags(false);
   for (QHash<QString, Scalar*>::Iterator iter = _statScalars.begin(); iter != _statScalars.end(); ++iter) {
     scalarList.remove(iter.value());
-    iter.value()->_KShared_unref();  
+    iter.value()->_KShared_unref();
   }
   scalarList.setUpdateDisplayTags(true);
   scalarList.lock().unlock();
+#endif
 
   if (_z) {
     free(_z);
-    _z = 0L;  
-  }  
+    _z = 0L;
+  }
+}
+
+
+const QString& Matrix::typeString() const {
+  return staticTypeString;
 }
 
 
 int Matrix::sampleCount() const {
-  return _nX*_nY;  
+  return _nX*_nY;
 }
-    
+
 
 double Matrix::value(double x, double y, bool* ok) const {
   int x_index = (int)floor((x - _minX) / (double)_stepX);
@@ -96,7 +98,7 @@ double Matrix::value(double x, double y, bool* ok) const {
 
   return valueRaw(x_index, y_index, ok);
 }
-    
+
 
 double Matrix::valueRaw(int x, int y, bool* ok) const {
   int index = zIndex(x,y);
@@ -107,7 +109,7 @@ double Matrix::valueRaw(int x, int y, bool* ok) const {
     return 0.0;
   }
   if (ok) {
-    (*ok) = true;  
+    (*ok) = true;
   }
   return _z[index];
 }
@@ -135,26 +137,26 @@ bool Matrix::setValue(double x, double y, double z) {
 bool Matrix::setValueRaw(int x, int y, double z) {
   int index = zIndex(x,y);
   if (index < 0) {
-    return false;  
+    return false;
   }
   _z[index] = z;
   return true;
 }
 
 double Matrix::minValue() const {
-  return _statScalars["min"]->value();  
+  return _statScalars["min"]->value();
 }
 
 
 double Matrix::maxValue() const {
-  return _statScalars["max"]->value();  
+  return _statScalars["max"]->value();
 }
 
 double Matrix::minValueNoSpike() const {
   // FIXME: it is expensive to calcNoSpikeRange
   // so we have chosen here to only call it expicitly
   // and no attempt is made to check if it is still up to date...
-  // It would be better to have these calls call 
+  // It would be better to have these calls call
   // calcNoSpikeRange iff the values were obsolete.
   return _minNoSpike;
 }
@@ -163,7 +165,7 @@ double Matrix::maxValueNoSpike() const {
   // FIXME: it is expensive to calcNoSpikeRange
   // so we have chosen here to only call it expicitly
   // and no attempt is made to check if it is still up to date...
-  // It would be better to have these calls call 
+  // It would be better to have these calls call
   // calcNoSpikeRange iff the values were obsolete.
 
   return _maxNoSpike;
@@ -268,32 +270,32 @@ double Matrix::meanValue() const {
 }
 
 double Matrix::minValuePositive() const {
-  return _statScalars["minpos"]->value();  
+  return _statScalars["minpos"]->value();
 }
 
 int Matrix::numNew() const {
-  return _numNew;  
+  return _numNew;
 }
 
 
 void Matrix::resetNumNew() {
-  _numNew = 0;  
+  _numNew = 0;
 }
 
-    
+
 QString Matrix::label() const {
   return _label;
 }
 
-    
+
 void Matrix::zero() {
   for (int i = 0; i < _zSize; i++) {
-    _z[i] = 0.0;  
+    _z[i] = 0.0;
   }
   setDirty();
   updateScalars();
 }
-    
+
 
 void Matrix::blank() {
   for (int i = 0; i < _zSize; ++i) {
@@ -302,7 +304,7 @@ void Matrix::blank() {
   setDirty();
   updateScalars();
 }
-    
+
 
 int Matrix::getUsage() const {
   int scalarUsage = 0;
@@ -324,7 +326,7 @@ Object::UpdateType Matrix::internalUpdate(Object::UpdateType providerUpdateType)
     double sum = 0.0, sumsquared = 0.0;
     bool initialized = false;
 
-    _NRealS = 0;    
+    _NRealS = 0;
 
     for (int i = 0; i < _zSize; i++) {
       if (finite(_z[i]) && !KST_ISNAN(_z[i])) {
@@ -346,7 +348,7 @@ Object::UpdateType Matrix::internalUpdate(Object::UpdateType providerUpdateType)
           }
           sum += _z[i];
           sumsquared += _z[i] * _z[i];
-        
+
           _NRealS++;
         }
       }
@@ -356,40 +358,27 @@ Object::UpdateType Matrix::internalUpdate(Object::UpdateType providerUpdateType)
     _statScalars["max"]->setValue(max);
     _statScalars["min"]->setValue(min);
     _statScalars["minpos"]->setValue(minpos);
-    
+
     updateScalars();
-    
+
     return setLastUpdateResult(providerUpdateType);
-  } 
-  return setLastUpdateResult(NO_CHANGE);
-}
-    
-    
-void Matrix::setTagName(const ObjectTag& tag) {
-  if (tag == this->tag()) {
-    return;
   }
-
-  KstWriteLocker l(&matrixList.lock());
-
-  matrixList.doRename(this, tag);
-
-  renameScalars();
+  return setLastUpdateResult(NO_CHANGE);
 }
 
 
 const QHash<QString, Scalar*>& Matrix::scalars() const {
   return _statScalars;
 }
-    
-    
+
+
 void Matrix::setLabel(const QString& newLabel) {
   _label = newLabel;
 }
 
 
 void Matrix::setXLabel(const QString& newLabel) {
-  _xLabel = newLabel;  
+  _xLabel = newLabel;
 }
 
 
@@ -409,57 +398,44 @@ QString Matrix::yLabel() const {
 
 
 bool Matrix::editable() const {
-  return _editable;  
+  return _editable;
 }
 
 
 void Matrix::setEditable(bool editable) {
-  _editable = editable;  
+  _editable = editable;
 }
 
 
-void Matrix::createScalars() {
-  KstWriteLocker sl(&scalarList.lock());
-  scalarList.setUpdateDisplayTags(false);
-
-  _statScalars.insert("max", new Scalar(ObjectTag("Max", tag()), this));
+void Matrix::createScalars(ObjectStore *store) {
+  Q_ASSERT(store);
+  _statScalars.insert("max", store->createObject<Scalar>(ObjectTag("Max", tag())));
+  _statScalars["max"]->setProvider(this);
   _statScalars["max"]->_KShared_ref();
-  _statScalars.insert("min", new Scalar(ObjectTag("Min", tag()), this));
+  _statScalars.insert("min", store->createObject<Scalar>(ObjectTag("Min", tag())));
+  _statScalars["min"]->setProvider(this);
   _statScalars["min"]->_KShared_ref();
-  _statScalars.insert("mean", new Scalar(ObjectTag("Mean", tag()), this));
+  _statScalars.insert("mean", store->createObject<Scalar>(ObjectTag("Mean", tag())));
+  _statScalars["mean"]->setProvider(this);
   _statScalars["mean"]->_KShared_ref();
-  _statScalars.insert("sigma", new Scalar(ObjectTag("Sigma", tag()), this));
+  _statScalars.insert("sigma", store->createObject<Scalar>(ObjectTag("Sigma", tag())));
+  _statScalars["sigma"]->setProvider(this);
   _statScalars["sigma"]->_KShared_ref();
-  _statScalars.insert("rms", new Scalar(ObjectTag("Rms", tag()), this));
+  _statScalars.insert("rms", store->createObject<Scalar>(ObjectTag("Rms", tag())));
+  _statScalars["rms"]->setProvider(this);
   _statScalars["rms"]->_KShared_ref();
-  _statScalars.insert("ns", new Scalar(ObjectTag("NS", tag()), this));
+  _statScalars.insert("ns", store->createObject<Scalar>(ObjectTag("NS", tag())));
+  _statScalars["ns"]->setProvider(this);
   _statScalars["ns"]->_KShared_ref();
-  _statScalars.insert("sum", new Scalar(ObjectTag("Sum", tag()), this));
+  _statScalars.insert("sum", store->createObject<Scalar>(ObjectTag("Sum", tag())));
+  _statScalars["sum"]->setProvider(this);
   _statScalars["sum"]->_KShared_ref();
-  _statScalars.insert("sumsquared", new Scalar(ObjectTag("SumSquared", tag()), this));
+  _statScalars.insert("sumsquared", store->createObject<Scalar>(ObjectTag("SumSquared", tag())));
+  _statScalars["sumsquared"]->setProvider(this);
   _statScalars["sumsquared"]->_KShared_ref();
-  _statScalars.insert("minpos", new Scalar(ObjectTag("MinPos", tag()), this));
+  _statScalars.insert("minpos", store->createObject<Scalar>(ObjectTag("MinPos", tag())));
+  _statScalars["minpos"]->setProvider(this);
   _statScalars["minpos"]->_KShared_ref();
-
-  scalarList.setUpdateDisplayTags(true);
-}
-
-
-void Matrix::renameScalars() {
-  KstWriteLocker sl(&scalarList.lock());
-  scalarList.setUpdateDisplayTags(false);
-
-  _statScalars["max"]->setTagName(ObjectTag("Max", tag()));
-  _statScalars["min"]->setTagName(ObjectTag("Min", tag()));
-  _statScalars["mean"]->setTagName(ObjectTag("Mean", tag()));
-  _statScalars["sigma"]->setTagName(ObjectTag("Sigma", tag()));
-  _statScalars["rms"]->setTagName(ObjectTag("Rms", tag()));
-  _statScalars["ns"]->setTagName(ObjectTag("NS", tag()));
-  _statScalars["sum"]->setTagName(ObjectTag("Sum", tag()));
-  _statScalars["sumsquared"]->setTagName(ObjectTag("SumSquared", tag()));
-  _statScalars["minpos"]->setTagName(ObjectTag("MinPos", tag()));
-
-  scalarList.setUpdateDisplayTags(true);
 }
 
 
@@ -481,7 +457,7 @@ void Matrix::updateScalars() {
 bool Matrix::resizeZ(int sz, bool reinit) {
   //kdDebug() << "resizing to: " << sz << endl;
   if (sz >= 1) {
-    _z = static_cast<double*>(realloc(_z, sz*sizeof(double)));
+    _z = static_cast<double*>(Kst::realloc(_z, sz*sizeof(double)));
     if (!_z) {
       return false;
     }
@@ -489,7 +465,7 @@ bool Matrix::resizeZ(int sz, bool reinit) {
     if (reinit && _zSize < sz) {
 #if ZERO_MEMORY == 2
       memset(&_z[_zSize], 0, (sz - _zSize)*sizeof(double));
-      
+
 #else
       for (int i = _zSize; i < sz; i++) {
         _z[i] = 0.0;
@@ -508,18 +484,84 @@ bool Matrix::resizeZ(int sz, bool reinit) {
 }
 
 
+#if 0
 bool Matrix::resize(int xSize, int ySize, bool reinit) {
   int oldNX = _nX;
   int oldNY = _nY;
   _nX = xSize;
   _nY = ySize;
   if (resizeZ(xSize*ySize, reinit)) {
-    return true;  
+    return true;
   } else {
     _nX = oldNX;
     _nY = oldNY;
-    return false;  
+    return false;
   }
+}
+#endif
+
+
+// Resize the matrix to xSize x ySize, maintaining the values in the current
+// positions. If reinit is set, new entries will be initialized to 0.
+bool Matrix::resize(int xSize, int ySize, bool reinit) {
+  if (xSize <= 0 || ySize <= 0) {
+    return false;
+  }
+
+  // NOTE: _zSize is assumed to correctly represent the state of _z, while _nX
+  // and _nY are the desired (but not necessarily actual) current size of the
+  // matrix
+  bool valid = (_zSize == _nX * _nY); // is the current matrix properly initialized?
+
+  int sz = xSize * ySize;
+  if (sz > _zSize) {
+    // array is getting bigger, so resize before moving
+    _z = static_cast<double*>(Kst::realloc(_z, sz*sizeof(double)));
+    if (!_z) {
+      qCritical() << "Matrix resize failed";
+      return false;
+    }
+  }
+
+  if (valid && ySize != _nY && _nY > 0) {
+    // move old values to new spots
+    int source = 0;
+    int target = 0;
+    for (int row=1; row < qMin(xSize, _nX); ++row) {
+      source += _nY;
+      target += ySize;
+      memmove(_z + target, _z + source, qMin(ySize, _nY)*sizeof(double));
+      if (reinit && ySize > _nY) {
+        // initialize memory in new column(s) of previous row vacated by memmove
+        memset(_z + source, 0, (ySize - _nY)*sizeof(double));
+      }
+    }
+  }
+
+  if (sz < _zSize) {
+    // array is getting smaller, so resize after moving
+    _z = static_cast<double*>(Kst::realloc(_z, sz*sizeof(double)));
+    if (!_z) {
+      qCritical() << "Matrix resize failed";
+      return false;
+    }
+  }
+
+  if (reinit && _zSize < sz) {
+    // initialize new memory after old values
+    int newMemStart = ((_nX - 1) * ySize) + _nY;
+    memset(_z + newMemStart, 0, (sz - newMemStart)*sizeof(double));
+  }
+
+  _nX = xSize;
+  _nY = ySize;
+  _NS = _nX * _nY;
+  _zSize = sz;
+
+  updateScalars();
+  setDirty(true);
+
+  return true;
 }
 
 
@@ -530,14 +572,11 @@ void Matrix::save(QXmlStreamWriter &s) {
 
 
 bool Matrix::saveable() const {
-  return _saveable;  
+  return _saveable;
 }
 
 
-void Matrix::change(const ObjectTag& newTag, uint nX, uint nY, double minX, double minY, double stepX, double stepY) {
-  if (tag() != newTag) {
-    setTagName(newTag);
-  }
+void Matrix::change(uint nX, uint nY, double minX, double minY, double stepX, double stepY) {
   _nX = nX;
   _nY = nY;
   _stepX = stepX;

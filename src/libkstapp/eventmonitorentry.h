@@ -28,12 +28,8 @@ namespace Kst {
 
 class EventMonitorEntry : public DataObject {
   Q_OBJECT
-  public:
-    EventMonitorEntry(const QString &in_tag);
-    EventMonitorEntry(const QString &tag, const QString &script, const QString &event, const QString &description, const Debug::LogLevel level, const bool logKstDebug, const bool logEMail, const bool logELOG, const QString& emailRecipients);
-    EventMonitorEntry(const QDomElement &e);
-    ~EventMonitorEntry();
 
+  public:
     UpdateType update(int updateCounter = -1);
     void save(QXmlStreamWriter &s);
     QString propertyString() const;
@@ -65,9 +61,9 @@ class EventMonitorEntry : public DataObject {
     void setEMailRecipients(const QString& str);
 
     bool reparse();
-    
+
     DataObjectPtr makeDuplicate(DataObjectDataObjectMap& duplicatedMap);
-    
+
     void replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObject);
 
     void replaceDependency(VectorPtr oldVector, VectorPtr newVector);
@@ -76,6 +72,13 @@ class EventMonitorEntry : public DataObject {
     bool uses(ObjectPtr p) const;
 
   protected:
+    EventMonitorEntry(ObjectStore *store, const ObjectTag &in_tag);
+    EventMonitorEntry(ObjectStore *store, const ObjectTag &tag, const QString &script, const QString &event, const QString &description, const Debug::LogLevel level, const bool logKstDebug, const bool logEMail, const bool logELOG, const QString& emailRecipients);
+    EventMonitorEntry(ObjectStore *store, const QDomElement &e);
+    ~EventMonitorEntry();
+
+    friend class ObjectStore;
+
     bool event(QEvent *e);
 
   private slots:
@@ -84,7 +87,7 @@ class EventMonitorEntry : public DataObject {
 
   private:
     void logImmediately(bool sendEvent = true);
-    void commonConstructor(const QString &in_tag);
+    void commonConstructor();
 
     static const QString OUTXVECTOR;
     static const QString OUTYVECTOR;

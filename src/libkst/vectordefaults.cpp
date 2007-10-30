@@ -1,6 +1,12 @@
 /***************************************************************************
- *                                                                         *
- *   copyright : (C) 2004 The University of Toronto                        *
+                            kstvectordefaults.cpp
+                             -------------------
+    begin                : May 28, 2004
+    copyright            : (C) 2004 The University of Toronto
+    email                :
+ ***************************************************************************/
+
+/***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -9,12 +15,13 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <QSettings>
+
 #include "vectordefaults.h"
 #include "datavector.h"
 #include "datacollection.h"
 #include "stdinsource.h"
-
-#include <qsettings.h>
+#include "objectstore.h"
 
 namespace Kst {
 
@@ -76,9 +83,12 @@ int VectorDefaults::skip() const {
 
 
 void VectorDefaults::sync() {
-  vectorList.lock().readLock();
-  DataVectorList vl = ObjectSubList<Vector,DataVector>(vectorList);
-  vectorList.lock().unlock();
+  if (!_store) {
+    return;
+  }
+
+  const DataVectorList vl = _store->getObjects<DataVector>();
+//    DataVectorList vl = kstObjectSubList<Vector,DataVector>(vectorList);
   int j = vl.count() - 1;
 
   // Find a non-stdin source
@@ -136,4 +146,5 @@ void VectorDefaults::setWizardXVector(const QString& vector) {
 }
 
 }
+
 // vim: ts=2 sw=2 et

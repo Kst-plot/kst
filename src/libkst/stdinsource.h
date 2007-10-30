@@ -27,10 +27,15 @@ class QTemporaryFile;
 namespace Kst {
 
 class KST_EXPORT StdinSource : public DataSource {
+  Q_OBJECT
+
   public:
-    StdinSource(QSettings *cfg);
+    StdinSource(ObjectStore *store, QSettings *cfg);
 
     virtual ~StdinSource();
+
+    virtual const QString& typeString() const;
+    static const QString staticTypeString;
 
     virtual Object::UpdateType update(int = -1);
 

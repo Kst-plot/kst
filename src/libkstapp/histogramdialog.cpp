@@ -22,6 +22,8 @@
 #include "application.h"
 #include "plotrenderitem.h"
 #include "curve.h"
+#include "document.h"
+#include "objectstore.h"
 
 #include "defaultnames.h"
 #include "datacollection.h"
@@ -145,19 +147,20 @@ HistogramDialog::~HistogramDialog() {
 }
 
 
-QString HistogramDialog::tagName() const {
-  return DataDialog::tagName();
+QString HistogramDialog::tagString() const {
+  return DataDialog::tagString();
 }
 
 
 ObjectPtr HistogramDialog::createNewDataObject() const {
-  //FIXME Eli, how should I construct this tag??
-  HistogramPtr histogram = new Histogram(tagName(),
-                                     _histogramTab->vector(),
-                                     _histogramTab->min(),
-                                     _histogramTab->max(),
-                                     _histogramTab->bins(),
-                                     _histogramTab->normalizationType());
+  Q_ASSERT(_document && _document->objectStore());
+  ObjectTag tag = _document->objectStore()->suggestObjectTag<Histogram>(tagString(), ObjectTag::globalTagContext);
+  HistogramPtr histogram = _document->objectStore()->createObject<Histogram>(tag);
+
+  histogram->setVector(_histogramTab->vector());
+  histogram->setXRange(_histogramTab->min(), _histogramTab->max());
+  histogram->setNumberOfBins(_histogramTab->bins());
+  histogram->setNormalizationType(_histogramTab->normalizationType());
 
   histogram->writeLock();
   histogram->update(0);
@@ -166,12 +169,20 @@ ObjectPtr HistogramDialog::createNewDataObject() const {
   //FIXME this should be a command...
   //FIXME need some smart placement...
 
+  tag = _document->objectStore()->suggestObjectTag<Curve>(histogram->tag().displayString(), ObjectTag::globalTagContext);
+  CurvePtr curve = _document->objectStore()->createObject<Curve>(tag);
+
+#if 0
   CurvePtr curve = new Curve(suggestCurveName(histogram->tag(), true),
                                      histogram->vX(),
                                      histogram->vY(),
                                      0L, 0L, 0L, 0L,
                                      _histogramTab->curveAppearance()->color());
+#endif
 
+  curve->setXVector(histogram->vX());
+  curve->setYVector(histogram->vY());
+  curve->setColor(_histogramTab->curveAppearance()->color());
   curve->setHasPoints(_histogramTab->curveAppearance()->showPoints());
   curve->setHasLines(_histogramTab->curveAppearance()->showLines());
   curve->setHasBars(_histogramTab->curveAppearance()->showBars());

@@ -21,11 +21,15 @@
 
 namespace Kst {
 
+class ObjectStore;
+
 class KST_EXPORT ScalarSelector : public QWidget, public Ui::ScalarSelector {
   Q_OBJECT
   public:
-    ScalarSelector(QWidget *parent = 0);
+    ScalarSelector(QWidget *parent = 0, ObjectStore *store = 0);
     virtual ~ScalarSelector();
+
+    void setObjectStore(ObjectStore *store);
 
     ScalarPtr selectedScalar() const;
     void setSelectedScalar(ScalarPtr selectedScalar);
@@ -40,7 +44,7 @@ class KST_EXPORT ScalarSelector : public QWidget, public Ui::ScalarSelector {
   private:
     void fillScalars();
 
-
+    ObjectStore *_store;
 };
 
 }

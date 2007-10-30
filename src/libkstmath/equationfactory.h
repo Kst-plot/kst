@@ -20,7 +20,7 @@ class EquationFactory : public ObjectFactory {
   public:
     EquationFactory();
     ~EquationFactory();
-    DataObjectPtr generateObject(QXmlStreamReader& stream);
+    DataObjectPtr generateObject(ObjectStore *store, QXmlStreamReader& stream);
 };
 
 }

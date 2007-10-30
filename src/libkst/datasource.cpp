@@ -1,7 +1,13 @@
 /***************************************************************************
+                   datasource.cpp  -  abstract data source
+                             -------------------
+    begin                : Thu Oct 16 2003
+    copyright            : (C) 2003 The University of Toronto
+    email                :
+ ***************************************************************************/
+
+/***************************************************************************
  *                                                                         *
- *   copyright : (C) 2003 The University of Toronto                        *
-*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -9,31 +15,34 @@
  *                                                                         *
  ***************************************************************************/
 
-
 #include "datasource.h"
 
 #include <assert.h>
 
-#include <qapplication.h>
-#include <qdebug.h>
-#include <qdir.h>
-#include <qfile.h>
-#include <qfileinfo.h>
-#include <qlibraryinfo.h>
-#include <qpluginloader.h>
-#include <qtextdocument.h>
-#include <qurl.h>
+#include <QApplication>
+#include <QDebug>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QLibraryInfo>
+#include <QPluginLoader>
+#include <QTextDocument>
+#include <QUrl>
 #include <QXmlStreamWriter>
 
 #include "kst_i18n.h"
 #include "datacollection.h"
 #include "debug.h"
+#include "objectstore.h"
 #include "scalar.h"
+#include "string.h"
 #include "stdinsource.h"
 
 #include "dataplugin.h"
 
 namespace Kst {
+
+const QString DataSource::staticTypeString = I18N_NOOP("Data Source");
 
 static QSettings *settingsObject = 0L;
 static QMap<QString,QString> urlMap;
@@ -55,7 +64,7 @@ void DataSource::cleanupForExit() {
 
 static QString obtainFile(const QString& source) {
   QUrl url;
-  
+
   if (QFile::exists(source) && QFileInfo(source).isRelative()) {
     url.setPath(source);
   } else {
@@ -97,7 +106,7 @@ static void scanPlugins() {
 
   foreach (QObject *plugin, QPluginLoader::staticInstances()) {
     //try a cast
-    if (DataSourcePluginInterface *ds = qobject_cast<DataSourcePluginInterface*>(plugin)) {
+    if (DataSourcePluginInterface *ds = dynamic_cast<DataSourcePluginInterface*>(plugin)) {
       tmpList.append(ds);
     }
   }
@@ -112,7 +121,7 @@ static void scanPlugins() {
         QPluginLoader loader(d.absoluteFilePath(fileName));
         QObject *plugin = loader.instance();
         if (plugin) {
-          if (DataSourcePluginInterface *ds = qobject_cast<DataSourcePluginInterface*>(plugin)) {
+          if (DataSourcePluginInterface *ds = dynamic_cast<DataSourcePluginInterface*>(plugin)) {
             tmpList.append(ds);
           }
         }
@@ -165,8 +174,8 @@ static QList<PluginSortContainer> bestPluginsForSource(const QString& filename, 
   PluginList info = _pluginList;
 
   if (!type.isEmpty()) {
-    for (PluginList::ConstIterator it = info.begin(); it != info.end(); ++it) {
-      if (DataSourcePluginInterface *p = kst_cast<DataSourcePluginInterface>(*it)) {
+    for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
+      if (DataSourcePluginInterface *p = dynamic_cast<DataSourcePluginInterface*>((*it).data())) {
         if (p->provides(type)) {
           PluginSortContainer psc;
           psc.match = 100;
@@ -178,9 +187,9 @@ static QList<PluginSortContainer> bestPluginsForSource(const QString& filename, 
     }
   }
 
-  for (PluginList::ConstIterator it = info.begin(); it != info.end(); ++it) {
+  for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
     PluginSortContainer psc;
-    if (DataSourcePluginInterface *p = kst_cast<DataSourcePluginInterface>(*it)) {
+    if (DataSourcePluginInterface *p = dynamic_cast<DataSourcePluginInterface*>((*it).data())) {
       if ((psc.match = p->understands(settingsObject, filename)) > 0) {
         psc.plugin = p;
         bestPlugins.append(psc);
@@ -193,12 +202,12 @@ static QList<PluginSortContainer> bestPluginsForSource(const QString& filename, 
 }
 
 
-static DataSourcePtr findPluginFor(const QString& filename, const QString& type, const QDomElement& e = QDomElement()) {
+static DataSourcePtr findPluginFor(ObjectStore *store, const QString& filename, const QString& type, const QDomElement& e = QDomElement()) {
 
   QList<PluginSortContainer> bestPlugins = bestPluginsForSource(filename, type);
 
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
-    DataSourcePtr plugin = (*i).plugin->create(settingsObject, filename, QString::null, e);
+    DataSourcePtr plugin = (*i).plugin->create(store, settingsObject, filename, QString::null, e);
     if (plugin) {
       // restore tag if present
       QDomNodeList l = e.elementsByTagName("tag");
@@ -206,7 +215,8 @@ static DataSourcePtr findPluginFor(const QString& filename, const QString& type,
         QDomElement e2 = l.item(0).toElement();
         if (!e2.isNull()) {
           qDebug() << "Restoring tag " << e2.text() << " to DataSource" << endl;
-          plugin->setTagName(ObjectTag::fromString(e2.text()));
+          // FIXME
+          //plugin->setTagName(ObjectTag::fromString(e2.text()));
         }
       }
       return plugin;
@@ -217,10 +227,11 @@ static DataSourcePtr findPluginFor(const QString& filename, const QString& type,
 }
 
 
-DataSourcePtr DataSource::loadSource(const QString& filename, const QString& type) {
+DataSourcePtr DataSource::loadSource(ObjectStore *store, const QString& filename, const QString& type) {
 #ifndef Q_WS_WIN32
   if (filename == "stdin" || filename == "-") {
-    return new StdinSource(settingsObject);
+    // FIXME: what store do we put this in?
+    return new StdinSource(0, settingsObject);
   }
 #endif
 
@@ -229,7 +240,7 @@ DataSourcePtr DataSource::loadSource(const QString& filename, const QString& typ
     return 0L;
   }
 
-  return findPluginFor(fn, type);
+  return findPluginFor(store, fn, type);
 }
 
 
@@ -276,8 +287,8 @@ DataSourceConfigWidget* DataSource::configWidgetForPlugin(const QString& plugin)
 
   PluginList info = _pluginList;
 
-  for (PluginList::ConstIterator it = info.begin(); it != info.end(); ++it) {
-    if (DataSourcePluginInterface *p = kst_cast<DataSourcePluginInterface>(*it)) {
+  for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
+    if (DataSourcePluginInterface *p = dynamic_cast<DataSourcePluginInterface*>((*it).data())) {
       if (p->pluginName() == plugin) {
         return p->configWidget(settingsObject, QString::null);
       }
@@ -410,7 +421,7 @@ QStringList DataSource::matrixListForSource(const QString& filename, const QStri
 }
 
 
-DataSourcePtr DataSource::loadSource(QDomElement& e) {
+DataSourcePtr DataSource::loadSource(ObjectStore *store, QDomElement& e) {
   QString filename, type, tag;
 
   QDomNode n = e.firstChild();
@@ -432,16 +443,17 @@ DataSourcePtr DataSource::loadSource(QDomElement& e) {
 
 #ifndef Q_WS_WIN32
   if (filename == "stdin" || filename == "-") {
-    return new StdinSource(settingsObject);
+    // FIXME: what store do we put this in?
+    return new StdinSource(0, settingsObject);
   }
 #endif
 
-  return findPluginFor(filename, type, e);
+  return findPluginFor(store, filename, type, e);
 }
 
 
-DataSource::DataSource(QSettings *cfg, const QString& filename, const QString& type)
-: Object(), _filename(filename), _cfg(cfg) {
+DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type)
+    : Object(), _filename(filename), _cfg(cfg) {
   Q_UNUSED(type)
   _valid = false;
   _reusable = true;
@@ -453,23 +465,28 @@ DataSource::DataSource(QSettings *cfg, const QString& filename, const QString& t
   }
   shortFilename = shortFilename.section('/', -1);
   QString tn = i18n("DS-%1", shortFilename);
-  int count = 1;
+//  int count = 1;
 
   Object::setTagName(ObjectTag(tn, ObjectTag::globalTagContext));  // are DataSources always top-level?
-  while (Data::self()->dataSourceTagNameNotUnique(tagName(), false)) {
-    Object::setTagName(ObjectTag(tn + QString::number(-(count++)), ObjectTag::globalTagContext));  // are DataSources always top-level?
-  }
+// FIXME: put this back in
+//  while (Data::self()->dataSourceTagNameNotUnique(tagName(), false)) {
+//    Object::setTagName(ObjectTag(tn + QString::number(-(count++)), ObjectTag::globalTagContext));  // are DataSources always top-level?
+//  }
 
-  _numFramesScalar = new Scalar(ObjectTag("frames", tag()));
+  Q_ASSERT(store);
+  _numFramesScalar = store->createObject<Scalar>(ObjectTag("frames", tag()));
   // Don't set provider - this is always up-to-date
 }
 
 
 DataSource::~DataSource() {
-//  qDebug() << "DataSource destructor: " << tag().tagString() << endl;
+  //  qDebug() << "DataSource destructor: " << tag().tagString() << endl;
+
+  // FIXME: remove _numFramesScalar and metadata
+#if 0
   scalarList.lock().writeLock();
 //  qDebug() << "  removing numFrames scalar" << endl;
-  scalarList.remove(_numFramesScalar);
+  scalarList.removeObject(_numFramesScalar);
   scalarList.lock().unlock();
 
 //  qDebug() << "  removing metadata strings" << endl;
@@ -477,27 +494,18 @@ DataSource::~DataSource() {
   stringList.setUpdateDisplayTags(false);
   for (QHash<QString, String*>::Iterator it = _metaData.begin(); it != _metaData.end(); ++it) {
 //    qDebug() << "    removing " << it.current()->tag().tagString() << endl;
-    stringList.remove(it.value());
+    stringList.removeObject(it.value());
   }
   stringList.setUpdateDisplayTags(true);
   stringList.lock().unlock();
 
   _numFramesScalar = 0L;
+#endif
 }
 
 
-void DataSource::setTagName(const ObjectTag& in_tag) {
-  if (in_tag == tag()) {
-    return;
-  }
-
-  Object::setTagName(in_tag);
-  _numFramesScalar->setTagName(ObjectTag("frames", tag()));
-  for (QHash<QString, String*>::Iterator it = _metaData.begin(); it != _metaData.end(); ++it) {
-    ObjectTag stag = it.value()->tag();
-    stag.setContext(tag().fullTag());
-    it.value()->setTagName(stag);
-  }
+const QString& DataSource::typeString() const {
+  return staticTypeString;
 }
 
 
@@ -555,8 +563,8 @@ int DataSource::readMatrix(MatrixData* data, const QString& matrix, int xStart, 
   Q_UNUSED(skip)
   return -9999;
 }
- 
-  
+
+
 int DataSource::readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps) {
   Q_UNUSED(data)
   Q_UNUSED(matrix)
@@ -572,7 +580,7 @@ bool DataSource::matrixDimensions(const QString& matrix, int* xDim, int* yDim) {
   Q_UNUSED(matrix)
   Q_UNUSED(xDim)
   Q_UNUSED(yDim)
-  return false;  
+  return false;
 }
 
 
@@ -589,7 +597,7 @@ bool DataSource::isValidField(const QString& field) const {
 
 bool DataSource::isValidMatrix(const QString& field) const {
   Q_UNUSED(field)
-  return false;  
+  return false;
 }
 
 
@@ -622,7 +630,7 @@ QStringList DataSource::fieldList() const {
 
 
 QStringList DataSource::matrixList() const {
-  return _matrixList;  
+  return _matrixList;
 }
 
 
@@ -632,6 +640,7 @@ QString DataSource::fileType() const {
 
 
 void DataSource::save(QXmlStreamWriter &s) {
+  Q_UNUSED(s)
 }
 
 

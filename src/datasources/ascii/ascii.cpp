@@ -160,8 +160,8 @@ class AsciiSource::Config {
 };
 
 
-AsciiSource::AsciiSource(QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
-: Kst::DataSource(cfg, filename, type), _rowIndex(0L), _config(0L), _tmpBuf(0L), _tmpBufSize(0) {
+AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
+: Kst::DataSource(store, cfg, filename, type), _rowIndex(0L), _config(0L), _tmpBuf(0L), _tmpBufSize(0) {
   _valid = false;
   _haveHeader = false;
   _fieldListComplete = false;
@@ -911,12 +911,12 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
 QString AsciiPlugin::pluginName() const { return "ASCII File Reader"; }
 
 
-Kst::DataSource *AsciiPlugin::create(QSettings *cfg,
+Kst::DataSource *AsciiPlugin::create(Kst::ObjectStore *store, QSettings *cfg,
                                             const QString &filename,
                                             const QString &type,
                                             const QDomElement &element) const {
 
-  return new AsciiSource(cfg, filename, type, element);
+  return new AsciiSource(store, cfg, filename, type, element);
 }
 
 QStringList AsciiPlugin::matrixList(QSettings *cfg,

@@ -25,6 +25,8 @@
 
 namespace Kst {
 
+class ObjectStore;
+
 class KST_EXPORT MatrixTab : public DataTab, Ui::MatrixTab {
   Q_OBJECT
   public:
@@ -122,6 +124,7 @@ class KST_EXPORT MatrixTab : public DataTab, Ui::MatrixTab {
   private:
     MatrixMode _mode;
     DataSourcePtr _dataSource;
+    ObjectStore *_store;
 };
 
 class KST_EXPORT MatrixDialog : public DataDialog {
@@ -131,7 +134,7 @@ class KST_EXPORT MatrixDialog : public DataDialog {
     virtual ~MatrixDialog();
 
   protected:
-    virtual QString tagName() const;
+    virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
 

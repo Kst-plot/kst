@@ -25,12 +25,15 @@
 
 namespace Kst {
 
+class ObjectStore;
+
 class KST_EXPORT VectorTab : public DataTab, Ui::VectorTab {
   Q_OBJECT
+
   public:
     enum VectorMode { DataVector, GeneratedVector };
 
-    VectorTab(QWidget *parent = 0);
+    VectorTab(ObjectStore *store, QWidget *parent = 0);
     virtual ~VectorTab();
 
     VectorMode vectorMode() const { return _mode; }
@@ -67,6 +70,7 @@ class KST_EXPORT VectorTab : public DataTab, Ui::VectorTab {
 
   private:
     VectorMode _mode;
+    ObjectStore *_store;
     DataSourcePtr _dataSource;
 };
 
@@ -77,7 +81,7 @@ class KST_EXPORT VectorDialog : public DataDialog {
     virtual ~VectorDialog();
 
   protected:
-    virtual QString tagName() const;
+    virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
 

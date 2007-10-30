@@ -21,11 +21,15 @@
 
 namespace Kst {
 
+class ObjectStore;
+
 class KST_EXPORT VectorSelector : public QWidget, public Ui::VectorSelector {
   Q_OBJECT
   public:
-    VectorSelector(QWidget *parent = 0);
+    VectorSelector(QWidget *parent = 0, ObjectStore *store = 0);
     virtual ~VectorSelector();
+
+    void setObjectStore(ObjectStore *store);
 
     VectorPtr selectedVector() const;
     void setSelectedVector(VectorPtr selectedVector);
@@ -45,6 +49,8 @@ class KST_EXPORT VectorSelector : public QWidget, public Ui::VectorSelector {
 
   private:
     bool _allowEmptySelection;
+
+    ObjectStore *_store;
 };
 
 }

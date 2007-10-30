@@ -14,26 +14,36 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "generatedvector.h"
-#include <qdebug.h>
-#include <qtextstream.h>
+#include <QDebug>
+#include <QTextStream>
 #include <QXmlStreamWriter>
+
+#include "kst_i18n.h"
+
+#include "generatedvector.h"
 
 namespace Kst {
 
-GeneratedVector::GeneratedVector(const QString &tag, const QByteArray &data, double x0, double x1, int n)
-  : Vector(tag, data) {
+const QString GeneratedVector::staticTypeString = I18N_NOOP("Generated Vector");
+
+GeneratedVector::GeneratedVector(ObjectStore *store, const ObjectTag& tag, const QByteArray &data, double x0, double x1, int n)
+    : Vector(store, tag, data) {
   _saveable = true;
   _saveData = false;
-  changeRange( x0,  x1,  n );
+  changeRange(x0, x1, n);
 }
 
 
-GeneratedVector::GeneratedVector(double x0, double x1, int n, ObjectTag tag)
-  : Vector(tag, n) {
+GeneratedVector::GeneratedVector(ObjectStore *store, const ObjectTag& tag, double x0, double x1, int n)
+    : Vector(store, tag, n) {
   _saveable = true;
   _saveData = false;
-  changeRange( x0, x1, n );
+  changeRange(x0, x1, n);
+}
+
+
+const QString& GeneratedVector::typeString() const {
+  return staticTypeString;
 }
 
 
@@ -69,9 +79,9 @@ void GeneratedVector::changeRange(double x0, double x1, int n) {
 
   _scalars["min"]->setValue(x0);
   _scalars["max"]->setValue(x1);
-  
+
   internalUpdate(Object::UPDATE);
-  
+
   setDirty(false);
 }
 

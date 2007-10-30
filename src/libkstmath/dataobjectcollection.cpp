@@ -17,6 +17,7 @@
 
 #include "dataobjectcollection.h"
 
+#if 0
 namespace Kst {
 
 /** The list of data objects which are in use */
@@ -31,4 +32,5 @@ void addDataObjectToList(DataObjectPtr d) {
 }
 
 }
+#endif
 // vim: ts=2 sw=2 et

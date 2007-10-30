@@ -15,10 +15,11 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "kst_i18n.h"
 #include "config.h"
 #include "stdinsource.h"
 
-#include <qtemporaryfile.h>
+#include <QTemporaryFile>
 #include <QXmlStreamWriter>
 
 #include <stdlib.h>
@@ -37,13 +38,15 @@
 
 namespace Kst {
 
-StdinSource::StdinSource(QSettings *cfg)
-: DataSource(cfg, "stdin", "stdin") {
+const QString StdinSource::staticTypeString = I18N_NOOP("Stdin Data Source");
+
+StdinSource::StdinSource(ObjectStore *store, QSettings *cfg)
+: DataSource(store, cfg, "stdin", "stdin") {
   _file = new QTemporaryFile;
   _filename = _file->fileName();
   // Unfortunately we have to update here.  stdin is a special case.
   update();
-  _src = DataSource::loadSource(_filename, "ASCII");
+  _src = DataSource::loadSource(this->store(), _filename, "ASCII");
   if (_src && _src->isValid()) {
     _valid = true;
   }
@@ -57,13 +60,18 @@ StdinSource::~StdinSource() {
 }
 
 
+const QString& StdinSource::typeString() const {
+  return staticTypeString;
+}
+
+
 Object::UpdateType StdinSource::update(int u) {
   if (Object::checkUpdateCounter(u)) {
     return lastUpdateResult();
   }
 
   if (!_valid) {
-    _src = DataSource::loadSource(_filename, "ASCII");
+    _src = DataSource::loadSource(store(), _filename, "ASCII");
     if (_src && _src->isValid()) {
       _valid = true;
     } else {

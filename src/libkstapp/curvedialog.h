@@ -51,6 +51,8 @@ class KST_EXPORT CurveTab : public DataTab, Ui::CurveTab {
 
     CurvePlacement* curvePlacement() const;
 
+    void setObjectStore(ObjectStore *store);
+
   private Q_SLOTS:
   private:
 };
@@ -62,7 +64,7 @@ class KST_EXPORT CurveDialog : public DataDialog {
     virtual ~CurveDialog();
 
   protected:
-    virtual QString tagName() const;
+    virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
 

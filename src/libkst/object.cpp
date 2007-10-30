@@ -1,6 +1,12 @@
 /***************************************************************************
- *                                                                         *
- *   copyright : (C) 2007 The University of Toronto                        *
+              object.cpp: abstract base class for all Kst objects
+                             -------------------
+    begin                : May 25, 2003
+    copyright            : (C) 2003 The University of Toronto
+    email                :
+ ***************************************************************************/
+
+/***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -9,26 +15,22 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "kst_i18n.h"
+
 #include "object.h"
+#include "objectstore.h"
 
 namespace Kst {
 
-/** Tag globals */
-const QChar ObjectTag::tagSeparator = QChar('/');
-const QChar ObjectTag::tagSeparatorReplacement = QChar('_');
-
-const QStringList ObjectTag::globalTagContext = QStringList();
-const QStringList ObjectTag::constantTagContext = QStringList("CONSTANTS");
-const QStringList ObjectTag::orphanTagContext = QStringList();
-
-const ObjectTag ObjectTag::invalidTag = ObjectTag(QString::null, ObjectTag::globalTagContext);
-
-
+#if 0
 static int i = 0;
+#endif
 
-Object::Object() : Shared(), QObject(), KstRWLock(),
-                         _lastUpdateCounter(0),
-                         _tag(tr("Object %1").arg(++i), ObjectTag::globalTagContext)
+const QString Object::staticTypeString = I18N_NOOP("Object");
+
+Object::Object(const ObjectTag& tag) :
+  QObject(), Shared(), KstRWLock(),
+  _lastUpdateCounter(0), _store(0L), _tag(tag)
 {
   _dirty = false;
   _lastUpdate = Object::NO_CHANGE;
@@ -36,12 +38,27 @@ Object::Object() : Shared(), QObject(), KstRWLock(),
 
 
 Object::~Object() {
+  if (_store) {
+    _store->removeObject(this);
+  }
 }
 
 
+QString Object::type() {
+  return staticMetaObject.className();
+}
+
+
+const QString& Object::typeString() const {
+  return staticTypeString;
+}
+
+
+#if 0
 int Object::operator==(const QString& tag) const {
   return (tag == _tag.tagString() || tag == _tag.displayString()) ? 1 : 0;
 }
+#endif
 
 
 // Returns true if update has already been done
@@ -55,17 +72,19 @@ bool Object::checkUpdateCounter(int update_counter) {
 }
 
 
+#if 0
 inline QString Object::tagName() const {
   return _tag.tag();
 }
+#endif
 
 
-inline ObjectTag& Object::tag() {
+ObjectTag& Object::tag() {
   return _tag;
 }
 
 
-inline const ObjectTag& Object::tag() const {
+const ObjectTag& Object::tag() const {
   return _tag;
 }
 
@@ -77,12 +96,19 @@ void Object::setTagName(const ObjectTag& tag) {
 
   _tag = tag;
   setObjectName(_tag.tagString().toLocal8Bit().data());
+
+  if (_store) {
+    // handle rename through object store
+    _store->renameObject(this, tag);
+  }
 }
 
 
+#if 0
 QString Object::tagLabel() const {
   return QString("[%1]").arg(_tag.tagString());
 }
+#endif
 
 
 // Returns count - 2 to account for "this" and the list pointer, therefore
@@ -116,5 +142,11 @@ bool Object::dirty() const {
   return _dirty;
 }
 
+
+ObjectStore* Object::store() const {
+  return _store;
 }
+
+}
+
 // vim: ts=2 sw=2 et

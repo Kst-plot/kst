@@ -61,11 +61,17 @@ class CurveRenderContext {
 
 enum CurveType { VCURVE, HISTOGRAM, IMAGE };
 
+class ObjectStore;
+
 class KST_EXPORT Relation : public Object {
   Q_OBJECT
+
   public:
-    Relation();
-    Relation(const QDomElement& e);
+    static const QString staticTypeString;
+    const QString& typeString() const { return staticTypeString; }
+
+    Relation(ObjectStore *store, const ObjectTag& tag);
+    Relation(ObjectStore *store, const QDomElement& e);
     virtual ~Relation();
 
     virtual void showNewDialog() { }
@@ -88,7 +94,7 @@ class KST_EXPORT Relation : public Object {
     virtual int samplesPerFrame() const { return 1; }
 
     virtual bool deleteDependents();
-    
+
     virtual double maxX() const { return MaxX; }
     virtual double minX() const { return MinX; }
     virtual double maxY() const { return MaxY; }
@@ -102,23 +108,23 @@ class KST_EXPORT Relation : public Object {
     virtual double midX() const { return (MaxX+MinX)*0.5; }
     virtual double midY() const { return (MaxY+MinY)*0.5; }
     virtual void yRange(double xFrom, double xTo, double* yMin, double* yMax) = 0;
-    
-    // this returns the data object providing the data for this basecurve.  
+
+    // this returns the data object providing the data for this basecurve.
     // E.g. for VCurves, it returns the data object providing the y vector
     // E.g. for Images, it returns the data object providing the matrix
     // Null is returned if no provider exists
     virtual DataObjectPtr providerDataObject() const = 0;
-    
+
     // return closest distance to the given point
     // images always return a rating >= 5
     virtual double distanceToPoint(double xpos, double dx, double ypos) const = 0;
-    
-    // render this curve 
+
+    // render this curve
     virtual void paint(const CurveRenderContext& context) = 0;
-    
+
     // render the legend symbol for this curve
     virtual void paintLegendSymbol(Painter *p, const QRect& bound) = 0;
-    
+
 
     // just store the size of the legend tag here.  The viewLegend actually uses and calculates it.
     virtual QSize legendLabelSize() const {return _legendLabelSize;}
@@ -130,14 +136,14 @@ class KST_EXPORT Relation : public Object {
     // The label is parsed every time the legend text is changed.
     virtual Label::Parsed *parsedLegendTag();
     virtual void updateParsedLegendTag();
-    
+
     void setLegendText(const QString& theValue);
     QString legendText() const { return _legendText;}
 
   protected:
     virtual void writeLockInputsAndOutputs() const;
     virtual void unlockInputsAndOutputs() const;
- 
+
     bool _isInputLoaded;
     QList<QPair<QString,QString> > _inputVectorLoadQueue;
     QList<QPair<QString,QString> > _inputScalarLoadQueue;
@@ -165,7 +171,7 @@ class KST_EXPORT Relation : public Object {
     double MaxY;
     double MinY;
     double MinPosY;
-    
+
     int NS;
 
     bool _ignoreAutoScale;
@@ -177,13 +183,13 @@ class KST_EXPORT Relation : public Object {
     void commonConstructor();
     QString _legendText;
 
-  signals: 
+  signals:
     void modifiedLegendEntry();
 };
 
 
 typedef SharedPtr<Relation> RelationPtr;
-typedef ObjectList<RelationPtr> RelationList;
+typedef ObjectList<Relation> RelationList;
 
 }
 

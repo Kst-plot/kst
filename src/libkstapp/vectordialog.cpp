@@ -19,16 +19,17 @@
 
 #include "datacollection.h"
 #include "dataobjectcollection.h"
+#include "document.h"
+#include "objectstore.h"
 
 #include "vectordefaults.h"
-#include "defaultprimitivenames.h"
 
 #include <QDir>
 
 namespace Kst {
 
-VectorTab::VectorTab(QWidget *parent)
-  : DataTab(parent), _mode(DataVector) {
+VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
+  : DataTab(parent), _mode(DataVector), _store(store) {
 
   setupUi(this);
   setTabTitle(tr("Vector"));
@@ -138,12 +139,11 @@ void VectorTab::fileNameChanged(const QString &file) {
 
   _field->clear();
 
-  dataSourceList.lock().readLock();
-  _dataSource = dataSourceList.findReusableFileName(file);
-  dataSourceList.lock().unlock();
+  Q_ASSERT(_store);
+  _dataSource = _store->dataSourceList().findReusableFileName(file);
 
   if (!_dataSource) {
-    _dataSource = DataSource::loadSource(file, QString());
+    _dataSource = DataSource::loadSource(_store, file, QString());
   }
 
   if (!_dataSource) {
@@ -181,7 +181,8 @@ VectorDialog::VectorDialog(ObjectPtr dataObject, QWidget *parent)
   else
     setWindowTitle(tr("New Vector"));
 
-  _vectorTab = new VectorTab(this);
+  Q_ASSERT(_document);
+  _vectorTab = new VectorTab(_document->objectStore(), this);
   addDataTab(_vectorTab);
 
   //FIXME need to do validation to enable/disable ok button...
@@ -192,24 +193,24 @@ VectorDialog::~VectorDialog() {
 }
 
 
-QString VectorDialog::tagName() const {
+QString VectorDialog::tagString() const {
   switch(_vectorTab->vectorMode()) {
   case VectorTab::DataVector:
     {
-      QString tagName = DataDialog::tagName();
-      tagName.replace(defaultTag(), _vectorTab->field());
-      return suggestVectorName(tagName);
+      QString tagString = DataDialog::tagString();
+      tagString.replace(defaultTagString(), _vectorTab->field());
+      return tagString;
     }
   case VectorTab::GeneratedVector:
     {
-      if (DataDialog::tagName() == defaultTag()) {
+      if (DataDialog::tagString() == defaultTagString()) {
         const qreal from = _vectorTab->from();
         const qreal to = _vectorTab->to();
-        return suggestVectorName(QString("(%1..%2)").arg(from).arg(to));
+        return QString("(%1..%2)").arg(from).arg(to);
       }
     }
   default:
-    return DataDialog::tagName();
+    return DataDialog::tagString();
   }
 }
 
@@ -235,7 +236,9 @@ ObjectPtr VectorDialog::createNewDataVector() const {
 
   const QString field = _vectorTab->field();
   const DataRange *dataRange = _vectorTab->dataRange();
-  const ObjectTag tag = ObjectTag(tagName(), dataSource->tag(), false);
+
+  Q_ASSERT(_document && _document->objectStore());
+  const ObjectTag tag = _document->objectStore()->suggestObjectTag<DataVector>(tagString(), dataSource->tag());
 
 //   qDebug() << "Creating new data vector ===>"
 //            << "\n\tfileName:" << dataSource->fileName()
@@ -249,6 +252,16 @@ ObjectPtr VectorDialog::createNewDataVector() const {
 //            << "\n\tdoFilter:" << (dataRange->doFilter() ? "true" : "false")
 //            << endl;
 
+  DataVectorPtr vector = _document->objectStore()->createObject<DataVector>(tag);
+  vector->change(dataSource, field,
+      dataRange->countFromEnd() ? -1 : int(dataRange->start()),
+      dataRange->readToEnd() ? -1 : int(dataRange->range()),
+      dataRange->skip(),
+      dataRange->doSkip(),
+      dataRange->doFilter());
+
+
+#if 0
   DataVectorPtr vector = new DataVector(
       dataSource, field, tag,
       dataRange->countFromEnd() ? -1 : int(dataRange->start()),
@@ -256,12 +269,14 @@ ObjectPtr VectorDialog::createNewDataVector() const {
       dataRange->skip(),
       dataRange->doSkip(),
       dataRange->doFilter());
+#endif
 
   vector->writeLock();
   vector->update(0);
   vector->unlock();
 
-  return static_cast<ObjectPtr>(vector);
+//  return static_cast<ObjectPtr>(vector);
+  return vector;
 }
 
 
@@ -269,7 +284,8 @@ ObjectPtr VectorDialog::createNewGeneratedVector() const {
   const qreal from = _vectorTab->from();
   const qreal to = _vectorTab->to();
   const int numberOfSamples = _vectorTab->numberOfSamples();
-  const ObjectTag tag = ObjectTag(tagName(), ObjectTag::globalTagContext);
+  Q_ASSERT(_document && _document->objectStore());
+  const ObjectTag tag = _document->objectStore()->suggestObjectTag<GeneratedVector>(tagString(), ObjectTag::globalTagContext);
 
 //   qDebug() << "Creating new generated vector ===>"
 //            << "\n\tfrom:" << from
@@ -278,8 +294,11 @@ ObjectPtr VectorDialog::createNewGeneratedVector() const {
 //            << "\n\ttag:" << tag.tag()
 //            << endl;
 
-  GeneratedVectorPtr vector = new GeneratedVector(from, to, numberOfSamples, tag);
-  return static_cast<ObjectPtr>(vector);
+  Q_ASSERT(_document && _document->objectStore());
+  GeneratedVectorPtr vector = _document->objectStore()->createObject<GeneratedVector>(tag);
+  vector->changeRange(from, to, numberOfSamples);
+//  return static_cast<ObjectPtr>(vector);
+  return vector;
 }
 
 

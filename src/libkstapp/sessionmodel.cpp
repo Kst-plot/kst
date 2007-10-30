@@ -12,13 +12,13 @@
 #include "sessionmodel.h"
 
 #include <assert.h>
-#include <datacollection.h>
-#include <dataobjectcollection.h>
+#include <objectstore.h>
+#include <dataobject.h>
 
 namespace Kst {
 
-SessionModel::SessionModel()
-: QAbstractItemModel() {
+SessionModel::SessionModel(ObjectStore *store)
+: QAbstractItemModel(), _store(store) {
 }
 
 
@@ -33,11 +33,12 @@ int SessionModel::columnCount(const QModelIndex& parent) const {
 
 
 int SessionModel::rowCount(const QModelIndex& parent) const {
+  Q_ASSERT(_store);
+  DataObjectList dol = _store->getObjects<DataObject>();
+
   int rc = 0;
   if (!parent.isValid()) {
-    dataObjectList.lock().readLock();
-    rc = dataObjectList.count() /* + generated primitives */;
-    dataObjectList.lock().unlock();
+    rc = dol.count();  /* + generated primitives */
     return rc;
   }
 
@@ -45,9 +46,7 @@ int SessionModel::rowCount(const QModelIndex& parent) const {
     return rc;
   }
 
-  dataObjectList.lock().readLock();
-  DataObject *pdo = dataObjectList.at(parent.row());
-  dataObjectList.lock().unlock();
+  DataObject *pdo = dol.at(parent.row());
   Q_ASSERT(pdo);
   if (pdo) {
     pdo->readLock();
@@ -62,7 +61,7 @@ QVariant SessionModel::data(const QModelIndex& index, int role) const {
   if (!index.isValid()) {
     return QVariant();
   }
-  
+
   if (role == Qt::UserRole) {
     if (index.parent().isValid()) {
       Q_ASSERT(!index.parent().parent().isValid());
@@ -71,9 +70,8 @@ QVariant SessionModel::data(const QModelIndex& index, int role) const {
       VectorPtr v = parent->outputVectors().values()[index.row()];
       return qVariantFromValue(v.data());
     } else {
-      dataObjectList.lock().readLock();
-      DataObjectPtr p = dataObjectList[index.row()];
-      dataObjectList.lock().unlock();
+      Q_ASSERT(_store);
+      DataObjectPtr p = _store->getObjects<DataObject>().at(index.row());
       return qVariantFromValue(p.data());
     }
   }
@@ -108,12 +106,16 @@ QVariant SessionModel::vectorData(const QModelIndex& index, int role) const {
 
   switch (col) {
     case 0:
+      {
       v->readLock();
-      rc = v->tagName();
+      rc.setValue(v->tag().displayString());
       v->unlock();
       break;
+      }
     case 1:
-      return tr("Vector");
+      v->readLock();
+      rc = v->typeString();
+      v->unlock();
       break;
     case 2:
       break;
@@ -138,16 +140,15 @@ QVariant SessionModel::dataObjectData(const QModelIndex& index, int role) const 
   Q_UNUSED(role)
   QVariant rc;
   const int row = index.row(), col = index.column();
-  dataObjectList.lock().readLock();
-  DataObjectPtr p = dataObjectList[row];
-  dataObjectList.lock().unlock();
+  Q_ASSERT(_store);
+  DataObjectPtr p = _store->getObjects<DataObject>().at(row);
   if (!p) {
     return rc;
   }
   switch (col) {
     case 0:
       p->readLock();
-      rc = p->tagName();
+      rc.setValue(p->tag().displayString());
       p->unlock();
       break;
     case 1:
@@ -178,23 +179,23 @@ QModelIndex SessionModel::index(int row, int col, const QModelIndex& parent) con
   if (row < 0 || col < 0 || col > 4) {
     return QModelIndex();
   }
+
+  Q_ASSERT(_store);
+  DataObjectList dol = _store->getObjects<DataObject>();
+
   if (!parent.isValid()) {
-    dataObjectList.lock().readLock();
-    const int cnt = dataObjectList.count();
-    dataObjectList.lock().unlock();
+    const int cnt = dol.count();
     if (row >= cnt) {
       return QModelIndex();
     }
     return createIndex(row, col);
   }
 
-  dataObjectList.lock().readLock();
-  const int cnt = dataObjectList.count();
+  const int cnt = dol.count();
   DataObject *p = 0;
   if (row >= 0 && row < cnt) {
-    p = dataObjectList.at(row);
+    p = dol.at(row);
   }
-  dataObjectList.lock().unlock();
   if (!p) {
     return QModelIndex();
   }
@@ -215,9 +216,9 @@ QModelIndex SessionModel::parent(const QModelIndex& index) const {
   if (!dop) {
     return QModelIndex();
   }
-  dataObjectList.lock().readLock();
-  const int cnt = dataObjectList.indexOf(dop);
-  dataObjectList.lock().unlock();
+
+  Q_ASSERT(_store);
+  const int cnt = _store->getObjects<DataObject>().indexOf(dop);
   if (cnt < 0) {
     return QModelIndex();
   }

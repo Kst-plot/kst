@@ -15,10 +15,10 @@
 namespace Kst {
   namespace Builtins {
     void initPrimitives() {
-      new VectorFactory;
-      new SVectorFactory;
-      new AVectorFactory;
-      new RVectorFactory;
+      new VectorFactory();
+      new GeneratedVectorFactory();
+      new EditableVectorFactory();
+      new DataVectorFactory();
     }
   }
 }

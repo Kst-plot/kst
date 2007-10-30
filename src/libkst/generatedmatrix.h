@@ -19,23 +19,31 @@
 namespace Kst {
 
 class KST_EXPORT GeneratedMatrix : public Matrix {
+  Q_OBJECT
+
   public:
-    GeneratedMatrix(const QDomElement &e);
-    GeneratedMatrix(ObjectTag tag, uint nX, uint nY,
-               double minX, double minY, double stepX, double stepY,
-               double gradZMin, double gradZMax, bool xDirection);
+    virtual const QString& typeString() const;
+    static const QString staticTypeString;
 
     virtual void save(QXmlStreamWriter &xml);
 
-    void change(ObjectTag tag, uint nX, uint nY,
+    void change(uint nX, uint nY,
                 double minX, double minY, double stepX, double stepY,
                 double gradZMin, double gradZMax, bool xDirection);
-    
+
     // return gradient min and maxes in order
     double gradZMin() { return _gradZMin; }
     double gradZMax() { return _gradZMax; }
     bool xDirection() { return _xDirection; }
-    
+
+  protected:
+    GeneratedMatrix(ObjectStore *store, const QDomElement &e);
+    GeneratedMatrix(ObjectStore *store, const ObjectTag& tag, uint nX=1, uint nY=0,
+               double minX=0, double minY=0, double stepX=1, double stepY=1,
+               double gradZMin=0, double gradZMax=1, bool xDirection=true);
+
+    friend class ObjectStore;
+
   private:
     double _gradZMin;
     double _gradZMax;
@@ -43,7 +51,7 @@ class KST_EXPORT GeneratedMatrix : public Matrix {
 };
 
 typedef SharedPtr<GeneratedMatrix> GeneratedMatrixPtr;
-typedef ObjectList<GeneratedMatrixPtr> GeneratedMatrixList;
+typedef ObjectList<GeneratedMatrix> GeneratedMatrixList;
 
 }
 

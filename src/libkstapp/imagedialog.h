@@ -59,7 +59,7 @@ class KST_EXPORT ImageDialog : public DataDialog {
     virtual ~ImageDialog();
 
   protected:
-    virtual QString tagName() const;
+    virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
 

@@ -1,5 +1,5 @@
 /***************************************************************************
-                          kstvector.cpp  -  description
+                          vector.cpp  -  description
                              -------------------
     begin                : Fri Sep 22 2000
     copyright            : (C) 2000-2002 by cbn
@@ -20,19 +20,19 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include <qtextdocument.h>
+#include <QDebug>
+#include <QTextDocument>
 #include <QXmlStreamWriter>
 
 #include "kst_i18n.h"
 
-#include <qdebug.h>
 #include "datacollection.h"
-#include "defaultprimitivenames.h"
 #include "math_kst.h"
 #include "vector.h"
 #include "debug.h"
+#include "objectstore.h"
 
-static int anonymousVectorCounter = 1;
+namespace Kst {
 
 // "Zero" means set to NAN.
 // Use 1 for a simple for() loop
@@ -41,11 +41,11 @@ static int anonymousVectorCounter = 1;
 
 #define INITSIZE 1
 
-namespace Kst {
+const QString Vector::staticTypeString = I18N_NOOP("Vector");
 
 /** Create a vector */
-Vector::Vector(ObjectTag in_tag, int size, Object *provider, bool isScalarList)
-: Primitive(provider), _nsum(0) {
+Vector::Vector(ObjectStore *store, const ObjectTag& tag, int size, Object *provider, bool isScalarList)
+    : Primitive(store, tag, provider), _nsum(0) {
   // qDebug() << "+++ CREATING VECTOR: " << (void*) this;
   _editable = false;
   NumShifted = 0;
@@ -59,14 +59,6 @@ Vector::Vector(ObjectTag in_tag, int size, Object *provider, bool isScalarList)
     size = INITSIZE;
   }
 
-  if (!in_tag.isValid()) {
-    do {
-      Object::setTagName(ObjectTag(i18n("Anonymous Vector %1", anonymousVectorCounter++), in_tag.context()));
-    } while (Data::self()->vectorTagNameNotUnique(tagName(), false));
-  } else {
-    Object::setTagName(suggestUniqueVectorTag(in_tag));
-  }
-
   _v = static_cast<double*>(malloc(size * sizeof(double)));
   if (!_v) { // Malloc failed
     _v = static_cast<double*>(malloc(sizeof(double)));
@@ -76,22 +68,16 @@ Vector::Vector(ObjectTag in_tag, int size, Object *provider, bool isScalarList)
   }
   _is_rising = false;
 
-  CreateScalars();
+  CreateScalars(store);
   blank();
-
-  vectorList.lock().writeLock();
-  vectorList.append(this);
-  vectorList.lock().unlock();
 }
 
 
-Vector::Vector(const QString &tag, const QByteArray& data)
-: Primitive(), _nsum(0) {
-  QByteArray qba;
+Vector::Vector(ObjectStore *store, const ObjectTag& tag, const QByteArray& data)
+    : Primitive(store, tag), _nsum(0) {
   _v = 0L;
   _size = 0;
   int sz = INITSIZE;
-  ObjectTag in_tag = ObjectTag::invalidTag;
 
   _editable = false;
   NumShifted = 0;
@@ -100,40 +86,28 @@ Vector::Vector(const QString &tag, const QByteArray& data)
   _saveable = false;
   _saveData = false;
 
-  in_tag = ObjectTag::fromString(tag);
-  qba = data;
-  sz = qMax((size_t)(INITSIZE), qba.size()/sizeof(double));
+  sz = qMax((size_t)(INITSIZE), data.size()/sizeof(double));
 
-  if (!in_tag.isValid()) {
-    do {
-      Object::setTagName(ObjectTag(i18n("Anonymous Vector %1", anonymousVectorCounter++), in_tag.context()));
-    } while (Data::self()->vectorTagNameNotUnique(tagName(), false));
-  } else {
-    Object::setTagName(suggestUniqueVectorTag(in_tag));
-  }
-
-  CreateScalars();
+  CreateScalars(store);
   resize(sz, true);
 
-  if (!qba.isEmpty()) {
+  if (!data.isEmpty()) {
     _saveable = true;
     _saveData = true;
-    QDataStream qds(&qba, QIODevice::ReadOnly);
+    QDataStream qds(data);
     for (int i = 0; !qds.atEnd(); ++i) {
       qds >> _v[i];
     }
   }
 
   _is_rising = false;
-
-  vectorList.lock().writeLock();
-  vectorList.append(this);
-  vectorList.lock().unlock();
 }
 
 
 Vector::~Vector() {
   // qDebug() << "+++ DELETING VECTOR: " << (void*) this;
+  // FIXME: cleanup scalars
+#if 0
   scalarList.lock().writeLock();
   scalarList.setUpdateDisplayTags(false);
   for (QHash<QString, Scalar*>::Iterator it = _scalars.begin(); it != _scalars.end(); ++it) {
@@ -142,11 +116,17 @@ Vector::~Vector() {
   }
   scalarList.setUpdateDisplayTags(true);
   scalarList.lock().unlock();
+#endif
 
   if (_v) {
     free(_v);
     _v = 0;
   }
+}
+
+
+const QString& Vector::typeString() const {
+  return staticTypeString;
 }
 
 
@@ -292,61 +272,48 @@ double Vector::value(int i) const {
   return _v[i];
 }
 
-void Vector::CreateScalars() {
+void Vector::CreateScalars(ObjectStore *store) {
   if (!_isScalarList) {
     _min = _max = _mean = _minPos = 0.0;
 
-    KstWriteLocker sl(&scalarList.lock());
-    scalarList.setUpdateDisplayTags(false);
-
+    Q_ASSERT(store);
     ScalarPtr sp;
-    _scalars.insert("max", sp = new Scalar(ObjectTag("Max", tag()), this));
+    _scalars.insert("max", sp = store->createObject<Scalar>(ObjectTag("Max", tag())));
+    sp->setProvider(this);
     sp->_KShared_ref();
-    _scalars.insert("min", sp = new Scalar(ObjectTag("Min", tag()), this));
+    _scalars.insert("min", sp = store->createObject<Scalar>(ObjectTag("Min", tag())));
+    sp->setProvider(this);
     sp->_KShared_ref();
-    _scalars.insert("last", sp = new Scalar(ObjectTag("Last", tag()), this));
+    _scalars.insert("last", sp = store->createObject<Scalar>(ObjectTag("Last", tag())));
+    sp->setProvider(this);
     sp->_KShared_ref();
-    _scalars.insert("first", sp = new Scalar(ObjectTag("First", tag()), this));
+    _scalars.insert("first", sp = store->createObject<Scalar>(ObjectTag("First", tag())));
+    sp->setProvider(this);
     sp->_KShared_ref();
-    _scalars.insert("mean", sp = new Scalar(ObjectTag("Mean", tag()), this));
+    _scalars.insert("mean", sp = store->createObject<Scalar>(ObjectTag("Mean", tag())));
+    sp->setProvider(this);
     sp->_KShared_ref();
-    _scalars.insert("sigma", sp = new Scalar(ObjectTag("Sigma", tag()), this));
+    _scalars.insert("sigma", sp = store->createObject<Scalar>(ObjectTag("Sigma", tag())));
+    sp->setProvider(this);
     sp->_KShared_ref();
-    _scalars.insert("rms", sp = new Scalar(ObjectTag("Rms", tag()), this));
+    _scalars.insert("rms", sp = store->createObject<Scalar>(ObjectTag("Rms", tag())));
+    sp->setProvider(this);
     sp->_KShared_ref();
-    _scalars.insert("ns", sp = new Scalar(ObjectTag("NS", tag()), this));
+    _scalars.insert("ns", sp = store->createObject<Scalar>(ObjectTag("NS", tag())));
+    sp->setProvider(this);
     sp->_KShared_ref();
-    _scalars.insert("sum", sp = new Scalar(ObjectTag("Sum", tag()), this));
+    _scalars.insert("sum", sp = store->createObject<Scalar>(ObjectTag("Sum", tag())));
+    sp->setProvider(this);
     sp->_KShared_ref();
-    _scalars.insert("sumsquared", sp = new Scalar(ObjectTag("SumSquared", tag()), this));
+    _scalars.insert("sumsquared", sp = store->createObject<Scalar>(ObjectTag("SumSquared", tag())));
+    sp->setProvider(this);
     sp->_KShared_ref();
-    _scalars.insert("minpos", sp = new Scalar(ObjectTag("MinPos", tag()), this));
+    _scalars.insert("minpos", sp = store->createObject<Scalar>(ObjectTag("MinPos", tag())));
+    sp->setProvider(this);
     sp->_KShared_ref();
-
-    scalarList.setUpdateDisplayTags(true);
   }
 }
 
-void Vector::RenameScalars() {
-  if (!_isScalarList) {
-    KstWriteLocker sl(&scalarList.lock());
-    scalarList.setUpdateDisplayTags(false);
-
-    _scalars["max"]->setTagName(ObjectTag("Max", tag()));
-    _scalars["min"]->setTagName(ObjectTag("Min", tag()));
-    _scalars["last"]->setTagName(ObjectTag("Last", tag()));
-    _scalars["first"]->setTagName(ObjectTag("First", tag()));
-    _scalars["mean"]->setTagName(ObjectTag("Mean", tag()));
-    _scalars["sigma"]->setTagName(ObjectTag("Sigma", tag()));
-    _scalars["rms"]->setTagName(ObjectTag("Rms", tag()));
-    _scalars["ns"]->setTagName(ObjectTag("NS", tag()));
-    _scalars["sum"]->setTagName(ObjectTag("Sum", tag()));
-    _scalars["sumsquared"]->setTagName(ObjectTag("SumSquared", tag()));
-    _scalars["minpos"]->setTagName(ObjectTag("MinPos", tag()));
-
-    scalarList.setUpdateDisplayTags(true);
-  }
-}
 
 void Vector::updateScalars() {
   if (!_isScalarList) {
@@ -397,7 +364,7 @@ void Vector::zero() {
 void Vector::blank() {
   setDirty();
   _ns_min = _ns_max = 0.0;
-#if 0 
+#if 0
   // FIXME: make this set NANs across, portably
   memset(_v, 0, sizeof(double)*_size);
 #else
@@ -444,10 +411,10 @@ Object::UpdateType Vector::internalUpdate(Object::UpdateType providerRC) {
   double sum, sum2, last, first, v;
   double last_v;
   double dv2 = 0.0, dv, no_spike_max_dv;
-  
+
   _max = _min = sum = sum2 = _minPos = last = first = NOPOINT;
   _nsum = 0;
-  
+
   if (_size > 0) {
     _is_rising = true;
 
@@ -469,7 +436,7 @@ Object::UpdateType Vector::internalUpdate(Object::UpdateType providerRC) {
       _ns_max = _ns_min = 0;
 
       updateScalars();
-      
+
       return setLastUpdateResult(providerRC);
     }
 
@@ -489,7 +456,7 @@ Object::UpdateType Vector::internalUpdate(Object::UpdateType providerRC) {
     }
 
     last_v = _v[i0];
-    
+
     for (i = i0; i < _size; i++) {
       v = _v[i]; // get rid of redirections
 
@@ -591,19 +558,6 @@ void Vector::save(QXmlStreamWriter &s) {
 }
 
 
-void Vector::setTagName(const ObjectTag& newTag) {
-  if (newTag == tag()) {
-    return;
-  }
-
-  KstWriteLocker l(&vectorList.lock());
-
-  vectorList.doRename(this, newTag);
-
-  RenameScalars();
-}
-
-
 void Vector::setNewAndShift(int inNew, int inShift) {
   NumNew = inNew;
   NumShifted = inShift;
@@ -630,7 +584,8 @@ void Vector::newSync() {
 }
 
 
-VectorPtr Vector::generateVector(double x0, double x1, int n, const ObjectTag& tag) {
+#if 0
+VectorPtr Vector::generateVector(ObjectStore *store, double x0, double x1, int n, const ObjectTag& tag) {
   if (n < 2) {
     n = 2;
   }
@@ -646,12 +601,14 @@ VectorPtr Vector::generateVector(double x0, double x1, int n, const ObjectTag& t
     x1 = x0 + 0.1;
   }
 
-  QString t = tag.tag();
+  QString t = tag.name();
   if (t.isEmpty()) {
     t = suggestVectorName("X(" + QString::number(x0) + ".." + QString::number(x1) + ")");
   }
 
-  VectorPtr xv = new Vector(ObjectTag(t, tag.context()), n);
+  Q_ASSERT(store);
+  VectorPtr xv = kst_cast<Vector>(store->createObject<Vector>(ObjectTag(t, tag.context())));
+  xv->resize(n);
   xv->_saveable = false;
 
   for (int i = 0; i < n; i++) {
@@ -664,6 +621,7 @@ VectorPtr Vector::generateVector(double x0, double x1, int n, const ObjectTag& t
 
   return xv;
 }
+#endif
 
 
 void Vector::setLabel(const QString& label_in) {
@@ -704,9 +662,8 @@ void Vector::setSaveData(bool save) {
   _saveData = save;
 }
 
-}
-
 #undef ZERO_MEMORY
 #undef INITSIZE
 
+}
 // vim: et sw=2 ts=2

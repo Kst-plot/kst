@@ -25,6 +25,8 @@
 #include "defaultnames.h"
 #include "datacollection.h"
 #include "dataobjectcollection.h"
+#include "document.h"
+#include "objectstore.h"
 
 namespace Kst {
 
@@ -108,6 +110,16 @@ void CurveTab::setYMinusError(VectorPtr vector) {
 }
 
 
+void CurveTab::setObjectStore(ObjectStore *store) {
+  _xVector->setObjectStore(store);
+  _yVector->setObjectStore(store);
+  _xError->setObjectStore(store);
+  _yError->setObjectStore(store);
+  _xMinusError->setObjectStore(store);
+  _yMinusError->setObjectStore(store);
+}
+
+
 CurveAppearance* CurveTab::curveAppearance() const {
   return _curveAppearance;
 }
@@ -137,22 +149,33 @@ CurveDialog::~CurveDialog() {
 }
 
 
-QString CurveDialog::tagName() const {
-  return DataDialog::tagName();
+QString CurveDialog::tagString() const {
+  return DataDialog::tagString();
 }
 
 
 ObjectPtr CurveDialog::createNewDataObject() const {
-  //FIXME Eli, how should I construct this tag??
-  CurvePtr curve = new Curve(tagName(),
-                                     _curveTab->xVector(),
-                                     _curveTab->yVector(),
-                                     _curveTab->xError(),
-                                     _curveTab->yError(),
-                                     _curveTab->xMinusError(),
-                                     _curveTab->yMinusError(),
-                                     _curveTab->curveAppearance()->color());
+  Q_ASSERT(_document && _document->objectStore());
+  CurvePtr curve = _document->objectStore()->createObject<Curve>(ObjectTag::fromString(tagString()));
+#if 0
+  CurvePtr curve = new Curve(_document->objectStore(),
+                             ObjectTag::fromString(tagString()),
+                             _curveTab->xVector(),
+                             _curveTab->yVector(),
+                             _curveTab->xError(),
+                             _curveTab->yError(),
+                             _curveTab->xMinusError(),
+                             _curveTab->yMinusError(),
+                             _curveTab->curveAppearance()->color());
+#endif
 
+  curve->setXVector(_curveTab->xVector());
+  curve->setYVector(_curveTab->yVector());
+  curve->setXError(_curveTab->xError());
+  curve->setYError(_curveTab->yError());
+  curve->setXMinusError(_curveTab->xMinusError());
+  curve->setYMinusError(_curveTab->yMinusError());
+  curve->setColor(_curveTab->curveAppearance()->color());
   curve->setHasPoints(_curveTab->curveAppearance()->showPoints());
   curve->setHasLines(_curveTab->curveAppearance()->showLines());
   curve->setHasBars(_curveTab->curveAppearance()->showBars());

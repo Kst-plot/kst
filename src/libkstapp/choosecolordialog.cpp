@@ -42,7 +42,7 @@ void ChooseColorDialog::updateColorGroup() {
 
   // cannot use dataSourceList.fileNames() as it contains datasources that
   // are not used by any curves or vectors
-  DataVectorList vcList = ObjectSubList<Vector, DataVector>(vectorList);
+  DataVectorList vcList; //FIXME // = ObjectSubList<Vector, DataVector>(vectorList);
 
   QStringList fileNameList;
   for (DataVectorList::Iterator vc_iter = vcList.begin();

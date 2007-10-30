@@ -1,6 +1,12 @@
 /***************************************************************************
- *                                                                         *
- *   copyright : (C) 2003 The University of Toronto                        *
+                     string.h  -  the base string type
+                             -------------------
+    begin                : Sept 29, 2004
+    copyright            : (C) 2004 by The University of Toronto
+    email                :
+ ***************************************************************************/
+
+/***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -9,14 +15,12 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef STRING_KST_H
-#define STRING_KST_H
+#ifndef STRING_H
+#define STRING_H
 
-#include <qdom.h>
+#include <QDomElement>
+
 #include "primitive.h"
-#include "objectlist.h"
-#include "objectmap.h"
-#include "objectcollection.h"
 
 class QXmlStreamWriter;
 
@@ -25,15 +29,20 @@ namespace Kst {
 class KST_EXPORT String : public Primitive {
   Q_OBJECT
   Q_PROPERTY(bool orphan READ orphan WRITE setOrphan)
-  public:
-    String(ObjectTag in_tag = ObjectTag::invalidTag, Object *provider = 0L, const QString& val = QString::null, bool orphan = false);
-    String(QDomElement& e);
-
-    ~String();
 
   public:
-    void setTagName(const ObjectTag& tag);
+    virtual const QString& typeString() const;
+    static const QString staticTypeString;
 
+  protected:
+    String(ObjectStore *store, ObjectTag tag = ObjectTag::invalidTag, Object *provider = 0L, const QString& val = QString::null, bool orphan = false);
+    String(ObjectStore *store, QDomElement& e);
+
+    virtual ~String();
+
+    friend class ObjectStore;
+
+  public:
     /** Save information */
     void save(QXmlStreamWriter &s);
 
@@ -66,9 +75,8 @@ class KST_EXPORT String : public Primitive {
 };
 
 typedef SharedPtr<String> StringPtr;
-typedef ObjectList<StringPtr> StringList;
-typedef ObjectMap<StringPtr> StringMap;
-typedef ObjectCollection<String> StringCollection;
+typedef ObjectList<String> StringList;
+typedef ObjectMap<String> StringMap;
 
 }
 

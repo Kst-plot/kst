@@ -58,8 +58,8 @@ void ChangeFileDialog::exec() {
 
 
 void ChangeFileDialog::updateCurveList() {
-  DataVectorList dataVectorList = ObjectSubList<Vector, DataVector>(vectorList);
-  DataMatrixList dataMatrixList = ObjectSubList<Matrix, DataMatrix>(matrixList);
+  DataVectorList dataVectorList; //FIXME //= ObjectSubList<Vector, DataVector>(vectorList);
+  DataMatrixList dataMatrixList; //FIXME //= ObjectSubList<Matrix, DataMatrix>(matrixList);
   QMap<QString, QString> filesUsed;
   int i;
 
@@ -82,7 +82,8 @@ void ChangeFileDialog::updateCurveList() {
   QString currentFile = _files->currentText();
   _files->clear();
 
-  dataSourceList.lock();
+//  dataSourceList.lock();
+  DataSourceList dataSourceList;  // FIXME
   for (DataSourceList::Iterator it = dataSourceList.begin(); it != dataSourceList.end(); ++it) {
     if (filesUsed.contains((*it)->fileName())) {
       _files->addItem((*it)->fileName());

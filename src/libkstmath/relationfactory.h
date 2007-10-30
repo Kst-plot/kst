@@ -20,6 +20,8 @@
 
 namespace Kst {
 
+class ObjectStore;
+
 class RelationFactory {
   public:
     RelationFactory();
@@ -28,8 +30,8 @@ class RelationFactory {
     // This takes ownership
     static void registerFactory(const QString& node, RelationFactory *factory);
     static void registerFactory(const QStringList& nodes, RelationFactory *factory);
-    KST_EXPORT static RelationPtr parse(QXmlStreamReader& stream);
-    virtual RelationPtr generateRelation(QXmlStreamReader& stream) = 0;
+    KST_EXPORT static RelationPtr parse(ObjectStore *store, QXmlStreamReader& stream);
+    virtual RelationPtr generateRelation(ObjectStore *store, QXmlStreamReader& stream) = 0;
 };
 
 }

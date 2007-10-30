@@ -32,18 +32,15 @@
 namespace Kst {
 
 class KST_EXPORT Curve: public Relation {
+  Q_OBJECT
+
   public:
-    Curve(const QString &in_tag, VectorPtr in_X, VectorPtr in_Y,
-        VectorPtr in_EX, VectorPtr in_EY,
-        VectorPtr in_EXMinus, VectorPtr in_EYMinus,
-        const QColor &in_color);
-    
-    Curve(QDomElement &e);
-    virtual ~Curve();
+    static const QString staticTypeString;
+    const QString& typeString() const { return staticTypeString; }
 
     virtual UpdateType update(int update_counter = -1);
     virtual QString propertyString() const;
-    
+
     virtual int getIndexNearXY(double x, double dx, double y) const;
 
     virtual bool hasXError() const;
@@ -87,7 +84,7 @@ class KST_EXPORT Curve: public Relation {
 
     virtual double maxX() const;
     virtual double minX() const;
-    virtual double meanX() const { return MeanX; } 
+    virtual double meanX() const { return MeanX; }
     virtual double meanY() const { return MeanY; }
     virtual void yRange(double xFrom, double xTo, double* yMin, double* yMax);
 
@@ -102,7 +99,7 @@ class KST_EXPORT Curve: public Relation {
     VectorPtr yErrorVector() const;
     VectorPtr xMinusErrorVector() const;
     VectorPtr yMinusErrorVector() const;
-    
+
     virtual bool hasPoints()    const { return HasPoints; }
     virtual bool hasLines()     const { return HasLines; }
     virtual bool hasBars()      const { return HasBars; }
@@ -113,7 +110,7 @@ class KST_EXPORT Curve: public Relation {
     virtual void setLineStyle(int in_LineStyle);
     virtual void setBarStyle( int in_BarStyle);
     virtual void setPointDensity(int in_PointDensity);
-    
+
     virtual int lineWidth()     const { return LineWidth; }
     virtual int lineStyle()     const { return LineStyle; }
     virtual int barStyle()      const { return BarStyle; }
@@ -121,8 +118,8 @@ class KST_EXPORT Curve: public Relation {
 
     virtual QColor color() const { return Color; }
     virtual void setColor(const QColor& new_c);
-    
-    
+
+
     void pushColor(const QColor& c) { _colorStack.push(color()); setColor(c); }
     void popColor() { setColor(_colorStack.pop()); }
     void pushLineWidth(int w) { _widthStack.push(lineWidth()); setLineWidth(w); }
@@ -136,40 +133,53 @@ class KST_EXPORT Curve: public Relation {
     void pushHasLines(bool h) { _hasLinesStack.push(hasLines()); setHasLines(h); }
     void popHasLines() { setHasLines(_hasLinesStack.pop()); }
     void pushPointDensity(int d) { _pointDensityStack.push(pointDensity()); setPointDensity(d); }
-    void popPointDensity() { setPointDensity(_pointDensityStack.pop()); } 
-    
+    void popPointDensity() { setPointDensity(_pointDensityStack.pop()); }
+
     int pointType;
-    
+
 #if 0
     virtual KstRelationPtr makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap);
 #endif
-    
+
     // render this vcurve
     virtual void paint(const CurveRenderContext& context);
-    
+
     // render the legend symbol for this curve
     virtual void paintLegendSymbol(Painter *p, const QRect& bound);
-    
+
     // see KstRelation::distanceToPoint
     virtual double distanceToPoint(double xpos, double dx, double ypos) const;
-    
+
     // see KstRelation::providerDataObject
     virtual DataObjectPtr providerDataObject() const;
 
+  protected:
+    Curve(ObjectStore *store, const ObjectTag &in_tag,
+        VectorPtr in_X=0L, VectorPtr in_Y=0L,
+        VectorPtr in_EX=0L, VectorPtr in_EY=0L,
+        VectorPtr in_EXMinus=0L, VectorPtr in_EYMinus=0L,
+        const QColor &in_color=QColor());
+
+    Curve(ObjectStore *store, QDomElement &e);
+
+    virtual ~Curve();
+
+    friend class ObjectStore;
+
   private:
-    inline void commonConstructor(const QString& in_tag, const QColor& in_color);
+    inline void commonConstructor(const QColor& in_color);
 
     double MeanY;
-    
+
     int BarStyle;
     int LineWidth;
     int LineStyle;
     int PointDensity;
-    
+
     bool HasPoints;
     bool HasLines;
     bool HasBars;
-    
+
     QColor Color;
     QStack<int> _widthStack;
     QStack<QColor> _colorStack;
@@ -182,7 +192,7 @@ class KST_EXPORT Curve: public Relation {
 };
 
 typedef SharedPtr<Curve> CurvePtr;
-typedef ObjectList<CurvePtr> CurveList;
+typedef ObjectList<Curve> CurveList;
 
 }
 #endif

@@ -28,26 +28,26 @@
 
 namespace Kst {
 
+class ObjectStore;
+
 class KST_EXPORT PSD : public DataObject {
+  Q_OBJECT
+
   public:
-    PSD(const QString& in_tag, VectorPtr in_V, double freq,
-        bool average, int average_len,
-        bool in_apodize, bool in_removeMean,
-        const QString& VUnits, const QString& RUnits, ApodizeFunction in_apodizeFxn = WindowOriginal, double in_gaussianSigma = 3.0, PSDType in_output = PSDAmplitudeSpectralDensity);
-    PSD(const QDomElement& e);
-    virtual ~PSD();
+    static const QString staticTypeString;
+    const QString& typeString() const { return staticTypeString; }
 
     virtual UpdateType update(int update_counter = -1);
 
     virtual void save(QTextStream& ts, const QString& indent = QString::null);
     virtual QString propertyString() const;
-    
+
     bool apodize() const;
     void setApodize(bool in_apodize);
-    
+
     ApodizeFunction apodizeFxn() const;
     void setApodizeFxn(ApodizeFunction in_apodizeFxn);
-    
+
     double gaussianSigma() const;
     void setGaussianSigma(double in_gaussianSigma);
 
@@ -68,7 +68,7 @@ class KST_EXPORT PSD : public DataObject {
 
     const QString& vUnits() const;
     void setVUnits(const QString& units);
-    
+
     const QString& rUnits() const;
     void setRUnits(const QString& units);
 
@@ -83,20 +83,31 @@ class KST_EXPORT PSD : public DataObject {
     virtual void showNewDialog();
     virtual void showEditDialog();
 
-    virtual QString xVTag() const { return (*_fVector)->tagName(); }
-    virtual QString yVTag() const { return (*_sVector)->tagName(); }
+    virtual ObjectTag xVTag() const { return _fVector->tag(); }
+    virtual ObjectTag yVTag() const { return _sVector->tag(); }
 
-    VectorPtr vX() const { return *_fVector; }
-    VectorPtr vY() const { return *_sVector; }
+    VectorPtr vX() const { return _fVector; }
+    VectorPtr vY() const { return _sVector; }
 
     const CurveHintList *curveHints() const;
-    
+
     virtual DataObjectPtr makeDuplicate(DataObjectDataObjectMap& duplicatedMap);
 
+  protected:
+    PSD(ObjectStore *store, const ObjectTag& in_tag);
+    PSD(ObjectStore *store, const ObjectTag& in_tag, VectorPtr in_V, double freq,
+        bool average, int average_len,
+        bool in_apodize, bool in_removeMean,
+        const QString& VUnits, const QString& RUnits, ApodizeFunction in_apodizeFxn = WindowOriginal, double in_gaussianSigma = 3.0, PSDType in_output = PSDAmplitudeSpectralDensity);
+    PSD(ObjectStore *store, const QDomElement& e);
+    virtual ~PSD();
+
+    friend class ObjectStore;
+
   private:
-    void commonConstructor(const QString& in_tag, VectorPtr in_V,
+    void commonConstructor(ObjectStore *store, VectorPtr in_V,
         double freq, bool average, int average_len, bool apodize, bool removeMean,
-        const QString& VUnits, const QString& RUnits, ApodizeFunction in_apodizeFxn, 
+        const QString& VUnits, const QString& RUnits, ApodizeFunction in_apodizeFxn,
         double in_gaussianSigma, PSDType in_output, bool interpolateHoles);
     void updateVectorLabels();
 
@@ -121,11 +132,12 @@ class KST_EXPORT PSD : public DataObject {
     QString _vUnits;
     QString _rUnits;
 
-    VectorMap::Iterator _sVector, _fVector;
+    VectorPtr _sVector, _fVector;
 };
 
 typedef SharedPtr<PSD> PSDPtr;
-typedef ObjectList<PSDPtr> PSDList;
+typedef ObjectList<PSD> PSDList;
+
 
 }
 

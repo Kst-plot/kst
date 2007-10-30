@@ -20,6 +20,8 @@
 
 namespace Kst {
 
+class ObjectStore;
+
 class DataSourceFactory {
   public:
     DataSourceFactory();
@@ -28,8 +30,8 @@ class DataSourceFactory {
     // This takes ownership
     static void registerFactory(const QString& node, DataSourceFactory *factory);
     static void registerFactory(const QStringList& nodes, DataSourceFactory *factory);
-    KST_EXPORT static DataSourcePtr parse(QXmlStreamReader& stream);
-    virtual DataSourcePtr generateDataSource(QXmlStreamReader& stream) = 0;
+    KST_EXPORT static DataSourcePtr parse(ObjectStore *store, QXmlStreamReader& stream);
+    virtual DataSourcePtr generateDataSource(ObjectStore *store, QXmlStreamReader& stream) = 0;
 };
 
 }

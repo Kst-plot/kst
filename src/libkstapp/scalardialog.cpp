@@ -11,6 +11,8 @@
 
 #include "scalardialog.h"
 #include "enodes.h"
+#include "document.h"
+#include "objectstore.h"
 
 namespace Kst {
 
@@ -53,8 +55,8 @@ ScalarDialog::~ScalarDialog() {
 }
 
 
-QString ScalarDialog::tagName() const {
-  return DataDialog::tagName();
+QString ScalarDialog::tagString() const {
+  return DataDialog::tagString();
 }
 
 
@@ -62,11 +64,13 @@ ObjectPtr ScalarDialog::createNewDataObject() const {
   bool ok = false;
 
   //FIXME We don't have a 'suggestScalarName' like we do with vectors... eli?
-  QString tagName = DataDialog::tagName();
+  QString tagString = DataDialog::tagString();
+
+  Q_ASSERT(_document && _document->objectStore());
 
   double value = _scalarTab->value().toDouble(&ok);
   if (!ok) {
-    value = Equations::interpret(_scalarTab->value().toLatin1(), &ok);
+    value = Equations::interpret(_document->objectStore(), _scalarTab->value().toLatin1(), &ok);
   }
 
   if (!ok) {
@@ -74,13 +78,12 @@ ObjectPtr ScalarDialog::createNewDataObject() const {
   }
 
 //   qDebug() << "Creating new scalar  ===>"
-//            << "\n\ttag:" << DataDialog::tagName()
+//            << "\n\ttag:" << DataDialog::tagString()
 //            << "\n\tvalue:" << value
 //            << endl;
 
-  ScalarPtr scalar = new Scalar(ObjectTag(DataDialog::tagName(),
-                                ObjectTag::globalTagContext), 0L, value);
-
+  ScalarPtr scalar = _document->objectStore()->createObject<Scalar>(ObjectTag::fromString(tagString));
+  scalar->setValue(value);
   scalar->setOrphan(true);
   scalar->setEditable(true);
 

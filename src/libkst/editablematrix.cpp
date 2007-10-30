@@ -21,13 +21,15 @@
 
 namespace Kst {
 
-EditableMatrix::EditableMatrix(const QDomElement &e) : Matrix() {
+const QString EditableMatrix::staticTypeString = I18N_NOOP("Editable Matrix");
+
+EditableMatrix::EditableMatrix(ObjectStore *store, const QDomElement &e) : Matrix(store) {
   _editable = true;
 
   double in_xMin = 0, in_yMin = 0, in_xStep = 1, in_yStep = 1;
   int in_nX = 2, in_nY = 2;
-  QString in_tag = QString::null; 
-  
+  QString in_tag = QString::null;
+
   // must get the grid dimensions before the data
   QDomNode n = e.firstChild();
   while (!n.isNull()) {
@@ -47,7 +49,7 @@ EditableMatrix::EditableMatrix(const QDomElement &e) : Matrix() {
         in_xStep = e.text().toDouble();
       } else if (e.tagName() == "ystep") {
         in_yStep = e.text().toDouble();
-      } 
+      }
     }
     n = n.nextSibling();
   }
@@ -82,18 +84,23 @@ EditableMatrix::EditableMatrix(const QDomElement &e) : Matrix() {
 }
 
 
-EditableMatrix::EditableMatrix(ObjectTag in_tag, uint nX, uint nY, double minX, double minY, double stepX, double stepY)
-: Matrix(in_tag, 0L, nX, nY, minX, minY, stepX, stepY) {
+EditableMatrix::EditableMatrix(ObjectStore *store, const ObjectTag& in_tag, uint nX, uint nY, double minX, double minY, double stepX, double stepY)
+: Matrix(store, in_tag, 0L, nX, nY, minX, minY, stepX, stepY) {
   _editable = true;
   _saveable = true;
   resizeZ(nX*nY, true);
 }
 
 
+const QString& EditableMatrix::typeString() const {
+  return staticTypeString;
+}
+
+
 void EditableMatrix::save(QTextStream &ts, const QString& indent) {
 
   QString indent2 = "  ";
-  
+
   QByteArray qba(_zSize*sizeof(double), '\0');
   QDataStream qds(&qba, QIODevice::WriteOnly);
 

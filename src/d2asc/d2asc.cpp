@@ -18,12 +18,13 @@
 #include <stdlib.h> // atoi
 #include <qsettings.h>
 
-// hack to make main() a friend of kstdatasource
-#define protected public
 #include "datavector.h"
 #include "datacollection.h"
 #include "dataobjectcollection.h"
-#undef protected
+#include "coredocument.h"
+#include "objectstore.h"
+
+static Kst::CoreDocument _document;
 
 void Usage() {
   fprintf(stderr, "usage: d2asc filename [-f <first frame>]\n");
@@ -34,9 +35,7 @@ void Usage() {
 
 
 static void exitHelper() {
-  Kst::vectorList.clear();
-  Kst::scalarList.clear();
-  Kst::dataObjectList.clear();
+  _document.objectStore()->clear();
 }
 
 int main(int argc, char *argv[]) {
@@ -94,7 +93,7 @@ int main(int argc, char *argv[]) {
 
   if (!do_skip) do_ave = false;
 
-  file = Kst::DataSource::loadSource(filename);
+  file = Kst::DataSource::loadSource(_document.objectStore(), filename);
   if (!file || !file->isValid() || file->isEmpty()) {
     fprintf(stderr, "d2asc error: file %s has no data\n", filename);
     return -2;
@@ -108,7 +107,9 @@ int main(int argc, char *argv[]) {
               field_list[i], filename);
       return -3;
     }
-    Kst::DataVectorPtr v = new Kst::DataVector(file, field_list[i], Kst::ObjectTag("tag", Kst::ObjectTag::globalTagContext), start_frame, n_frames, n_skip, n_skip>0, do_ave);
+    Kst::DataVectorPtr v = _document.objectStore()->createObject<Kst::DataVector>(Kst::ObjectTag("tag", Kst::ObjectTag::globalTagContext));
+    Q_ASSERT(v);
+    v->change(file, field_list[i], start_frame, n_frames, n_skip, n_skip>0, do_ave);
     vlist.append(v);
   }
 
@@ -132,3 +133,5 @@ int main(int argc, char *argv[]) {
     printf("\n");
   }
 }
+
+// vim: ts=2 sw=2 et

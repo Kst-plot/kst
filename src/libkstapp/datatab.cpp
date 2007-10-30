@@ -24,6 +24,10 @@ DataTab::~DataTab() {
 }
 
 
+void DataTab::setObjectStore(ObjectStore *store) {
+}
+
+
 DataDialog *DataTab::dataDialog() const {
   return qobject_cast<DataDialog*>(dialog());
 }

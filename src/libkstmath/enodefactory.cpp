@@ -21,7 +21,7 @@
 using namespace Equations;
 
 
-extern "C" {
+//extern "C" {
 
 #define CreateFactory(x)                         \
         void *New##x(void *left, void *right) {  \
@@ -50,8 +50,8 @@ CreateFactory(NotEqualTo)
 
 #undef CreateFactory
 
-void *NewData(char *name) {
-  return new Data(name);
+void *NewData(Kst::ObjectStore *store, char *name) {
+  return new DataNode(store, name);
 }
 
 
@@ -102,7 +102,7 @@ void ParenthesizeNode(void *n) {
 }
 
 
-}
+//}
 
 
 // vim: ts=2 sw=2 et

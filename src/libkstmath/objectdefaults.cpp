@@ -9,11 +9,12 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <QSettings>
+
 #include "objectdefaults.h"
 #include "dataobjectcollection.h"
 #include "psd.h"
-
-#include <qsettings.h>
+#include "objectstore.h"
 
 namespace Kst {
 
@@ -34,7 +35,9 @@ ObjectDefaults::ObjectDefaults() {
 
 
 void ObjectDefaults::sync() {
-  PSDList pl = ObjectSubList<DataObject, PSD>(dataObjectList);
+  Q_ASSERT(_store);
+
+  PSDList pl = _store->getObjects<PSD>();
 
   const int j = pl.count() - 1;
   if (j >= 0) {
@@ -57,7 +60,7 @@ void ObjectDefaults::sync() {
 
 
 double ObjectDefaults::psdFreq() const {
-  return _psd_freq; 
+  return _psd_freq;
 }
 
 

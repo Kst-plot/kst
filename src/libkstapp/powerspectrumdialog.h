@@ -48,7 +48,7 @@ class KST_EXPORT PowerSpectrumDialog : public DataDialog {
     virtual ~PowerSpectrumDialog();
 
   protected:
-    virtual QString tagName() const;
+    virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
 

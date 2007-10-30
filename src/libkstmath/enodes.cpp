@@ -28,22 +28,24 @@
 
 #include "kst_i18n.h"
 
-#include <qmutex.h>
-#include <qregexp.h>
+#include <QMutex>
+#include <QRegExp>
 
 #include "enodes.h"
 #include "datacollection.h"
 #include "debug.h"
 #include "math_kst.h"
+#include "objectstore.h"
 
-extern "C" int yyparse();
-extern "C" void *ParsedEquation;
-extern "C" struct yy_buffer_state *yy_scan_string(const char*);
-extern "C" struct yy_buffer_state *yy_scan_bytes(const char*, int);
+extern /*"C"*/ int yyparse(Kst::ObjectStore *store);
+extern /*"C"*/ void *ParsedEquation;
+extern /*"C"*/ struct yy_buffer_state *yy_scan_string(const char*);
+extern /*"C"*/ struct yy_buffer_state *yy_scan_bytes(const char*, int);
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
-extern "C" void yy_delete_buffer(YY_BUFFER_STATE);
+extern /*"C"*/ void yy_delete_buffer(YY_BUFFER_STATE);
 
 using namespace Equations;
+using namespace Kst;
 
 static QMutex _mutex;
 
@@ -52,7 +54,7 @@ QMutex& Equations::mutex() {
 }
 
 
-double Equations::interpret(const char *txt, bool *ok, int len) {
+double Equations::interpret(ObjectStore *store, const char *txt, bool *ok, int len) {
   if (!txt || !*txt) {
     if (ok) {
       *ok = false;
@@ -67,7 +69,7 @@ double Equations::interpret(const char *txt, bool *ok, int len) {
   } else {
     b = yy_scan_string(txt);
   }
-  int rc = yyparse();
+  int rc = yyparse(store);
   yy_delete_buffer(b);
   if (rc == 0) {
     Equations::Node *eq = static_cast<Equations::Node*>(ParsedEquation);
@@ -636,9 +638,11 @@ QString Identifier::text() const {
 
 
 /////////////////////////////////////////////////////////////////
-Data::Data(char *name)
-: Node(), _isEquation(false), _equation(0L) {
+DataNode::DataNode(ObjectStore *store, char *name)
+: Node(), _store(store), _isEquation(false), _equation(0L) {
   //printf("%p: New Data Object: [%s]\n", (void*)this, name);
+//  ObjectStore *store = 0L; // FIXME: initialize this
+  Q_ASSERT(store);
   if (name[0] == '=') {
     _tagName = QString(&name[1]).trimmed();
     _isEquation = true;
@@ -647,16 +651,18 @@ Data::Data(char *name)
     QRegExp re("(.*)\\[(.*)\\]");
     int hit = re.indexIn(_tagName);
     if (hit > -1 && re.numCaptures() == 2) {
-      _vector = *Kst::vectorList.findTag(re.cap(1));
+      _vector = kst_cast<Vector>(store->retrieveObject(ObjectTag::fromString(re.cap(1))));
       if (_vector) {
         _vectorIndex = re.cap(2);
       }
     }
   } else {
     _tagName = QString(name).trimmed();
-    _vector = *Kst::vectorList.findTag(_tagName);
-    if (!_vector) {
-      _scalar = *Kst::scalarList.findTag(_tagName);
+    ObjectPtr o = store->retrieveObject(ObjectTag::fromString(_tagName));
+    if (kst_cast<Vector>(o)) {
+      _vector = kst_cast<Vector>(o);
+    } else if (kst_cast<Scalar>(o)) {
+      _scalar = kst_cast<Scalar>(o);
     }
   }
   free(name);
@@ -664,18 +670,18 @@ Data::Data(char *name)
 }
 
 
-Data::~Data() {
+DataNode::~DataNode() {
   delete _equation;
   _equation = 0L;
 }
 
 
-double Data::value(Context *ctx) {
+double DataNode::value(Context *ctx) {
   if (_isEquation) {
     if (!_equation) {
       mutex().lock();
       YY_BUFFER_STATE b = yy_scan_bytes(_tagName.toLatin1(), _tagName.length());
-      int rc = yyparse();
+      int rc = yyparse(_store);
       yy_delete_buffer(b);
       if (rc == 0 && ParsedEquation) {
         _equation = static_cast<Equations::Node*>(ParsedEquation);
@@ -699,7 +705,7 @@ double Data::value(Context *ctx) {
     if (!_equation && !_vectorIndex.isEmpty()) {
       mutex().lock();
       YY_BUFFER_STATE b = yy_scan_bytes(_vectorIndex.toLatin1(), _vectorIndex.length());
-      int rc = yyparse();
+      int rc = yyparse(_store);
       yy_delete_buffer(b);
       if (rc == 0 && ParsedEquation) {
         _equation = static_cast<Equations::Node*>(ParsedEquation);
@@ -732,12 +738,12 @@ double Data::value(Context *ctx) {
 }
 
 
-bool Data::isConst() {
+bool DataNode::isConst() {
   return (_isEquation && _equation) ? _equation->isConst() : false;
 }
 
 
-bool Data::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, Kst::StringMap& t) {
+bool DataNode::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, Kst::StringMap& t) {
   if (_isEquation) {
     if (_equation) {
       _equation->collectObjects(v, s, t);
@@ -754,7 +760,7 @@ bool Data::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, Kst::StringMap& 
 }
 
 
-bool Data::takeVectors(const Kst::VectorMap& c) {
+bool DataNode::takeVectors(const Kst::VectorMap& c) {
   if (_isEquation) {
     if (_equation) {
       return _equation->takeVectors(c);
@@ -772,7 +778,7 @@ bool Data::takeVectors(const Kst::VectorMap& c) {
 }
 
 
-Kst::Object::UpdateType Data::update(int counter, Context *ctx) {
+Kst::Object::UpdateType DataNode::update(int counter, Context *ctx) {
   Q_UNUSED(ctx)
   if (_isEquation) {
     if (_equation) {
@@ -789,13 +795,13 @@ Kst::Object::UpdateType Data::update(int counter, Context *ctx) {
 }
 
 
-QString Data::text() const {
+QString DataNode::text() const {
   if (_isEquation) {
     return QString("[=") + _tagName + "]";
   } else if (_vector) {
-    return _vector->tagLabel();
+    return _vector->tag().displayString();
   } else if (_scalar) {
-    return _scalar->tagLabel();
+    return _scalar->tag().displayString();
   } else {
     return QString::null;
   }

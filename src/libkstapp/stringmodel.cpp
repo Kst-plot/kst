@@ -44,7 +44,7 @@ QVariant StringModel::data(const QModelIndex& index, int role) const {
     switch (role) {
       case Qt::DisplayRole:
         if (index.column() == 0) {
-          rc = QVariant(_string->tagName());
+          rc = QVariant(_string->tag().displayString());
         } else {
           rc = QVariant(_string->value());
         }
@@ -86,7 +86,7 @@ QVariant StringModel::headerData(int section, Qt::Orientation orientation, int r
   if (!_string || role != Qt::DisplayRole || section != 0) {
     return QAbstractItemModel::headerData(section, orientation, role);
   }
-  return _string->tagName();
+  return _string->tag().displayString();
 }
 
 

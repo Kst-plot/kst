@@ -13,25 +13,36 @@
 
 namespace Kst {
 
+/** Tag globals */
+const QChar ObjectTag::tagSeparator = QChar('/');
+const QChar ObjectTag::tagSeparatorReplacement = QChar('_');
+
+const QStringList ObjectTag::globalTagContext = QStringList();
+const QStringList ObjectTag::constantTagContext = QStringList("CONSTANTS");
+const QStringList ObjectTag::orphanTagContext = QStringList();
+
+const ObjectTag ObjectTag::invalidTag = ObjectTag(QString::null, ObjectTag::globalTagContext);
+
+
 ObjectTag::ObjectTag()
   : _minDisplayComponents(0), _uniqueDisplayComponents(UINT_MAX) {
 }
 
 
-ObjectTag::ObjectTag(const QString& tag, const QStringList& context,
+ObjectTag::ObjectTag(const QString& name, const QStringList& context,
                            unsigned int minDisplayComponents)
-  : _tag(cleanTag(tag)),
+  : _name(cleanTagComponent(name)),
     _context(context),
     _minDisplayComponents(minDisplayComponents),
     _uniqueDisplayComponents(UINT_MAX) {
 }
 
 
-ObjectTag::ObjectTag(const QString& tag, const ObjectTag& contextTag,
+ObjectTag::ObjectTag(const QString& name, const ObjectTag& contextTag,
                            bool alwaysShowContext)
   : _uniqueDisplayComponents(UINT_MAX) {
 
-  _tag = cleanTag(tag);
+  _name = cleanTagComponent(name);
   _context = contextTag.fullTag();
   _minDisplayComponents = 1 + (alwaysShowContext ? qMax(contextTag._minDisplayComponents, (unsigned int)1) : 0);
 }
@@ -40,21 +51,27 @@ ObjectTag::ObjectTag(const QString& tag, const ObjectTag& contextTag,
 ObjectTag::ObjectTag(const QStringList &fullTag)
   : _minDisplayComponents(1), _uniqueDisplayComponents(UINT_MAX) {
 
-  QStringList context = fullTag;
-  _tag = cleanTag(context.last());
-  context.pop_back();
-  _context = context;
+  if (fullTag.isEmpty()) {
+    _minDisplayComponents = 0;
+  } else {
+    QStringList context = fullTag;
+    _name = cleanTagComponent(context.last());
+    context.pop_back();
+    _context = context;
+  }
 }
 
 
-QString ObjectTag::tag() const {
-  return _tag;
+QString ObjectTag::name() const {
+  return _name;
 }
 
 
 QStringList ObjectTag::fullTag() const {
   QStringList ft(_context);
-  ft << _tag;
+  if (!_name.isEmpty()) {
+    ft << _name;
+  }
   return ft;
 }
 
@@ -73,8 +90,8 @@ unsigned int ObjectTag::components() const {
 }
 
 
-void ObjectTag::setTag(const QString& tag) {
-  _tag = cleanTag(tag);
+void ObjectTag::setName(const QString& name) {
+  _name = cleanTagComponent(name);
   _uniqueDisplayComponents = UINT_MAX;
 }
 
@@ -85,14 +102,14 @@ void ObjectTag::setContext(const QStringList& context) {
 }
 
 
-void ObjectTag::setTag(const QString& tag, const QStringList& context) {
-  setTag(tag);
+void ObjectTag::setTag(const QString& name, const QStringList& context) {
+  setName(name);
   setContext(context);
 }
 
 
 bool ObjectTag::isValid() const {
-  return !_tag.isEmpty();
+  return !_name.isEmpty();
 }
 
 
@@ -117,7 +134,7 @@ void ObjectTag::setMinDisplayComponents(unsigned int n) {
 
 
 QStringList ObjectTag::displayFullTag() const {
-  QStringList out_tag = _context + QStringList(_tag);
+  QStringList out_tag = _context + QStringList(_name);
   int componentsToDisplay = qMin(qMax(_uniqueDisplayComponents, _minDisplayComponents), components());
   while (out_tag.count() > componentsToDisplay) {
     out_tag.pop_front();
@@ -144,25 +161,34 @@ ObjectTag ObjectTag::fromString(const QString& str) {
 
 
 bool ObjectTag::operator==(const ObjectTag& tag) const {
-  return (_tag == tag._tag && _context == tag._context);
+  return (_name == tag._name && _context == tag._context);
 }
 
 
 bool ObjectTag::operator!=(const ObjectTag& tag) const {
-  return (_tag != tag._tag || _context != tag._context);
+  return (_name != tag._name || _context != tag._context);
 }
 
 
-QString ObjectTag::cleanTag(const QString& in_tag) {
-  if (in_tag.contains(tagSeparator)) {
-    QString tag = in_tag;
-    tag.replace(tagSeparator, tagSeparatorReplacement);
-//        kstdWarning() << "cleaning tag name containing " << tagSeparator << ":\"" << in_tag << "\" -> \"" << tag << "\"" << endl;
-    return tag;
+QString ObjectTag::cleanTagComponent(const QString& component) {
+  if (component.contains(tagSeparator)) {
+    QString s = component;
+    s.replace(tagSeparator, tagSeparatorReplacement);
+//        kstdWarning() << "cleaning tag component containing " << tagSeparator << ":\"" << component << "\" -> \"" << s << "\"" << endl;
+    return s;
   } else {
-    return in_tag;
+    return component;
   }
 }
 
+
+uint qHash(const ObjectTag& tag) {
+  // FIXME: better hash function
+//  return qHash(tag._name) + qHash(tag._context);
+  return qHash(tag.name());
 }
+
+
+}
+
 // vim: ts=2 sw=2 et

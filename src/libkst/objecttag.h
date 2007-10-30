@@ -12,8 +12,10 @@
 #ifndef OBJECTTAG_H
 #define OBJECTTAG_H
 
-#include <qstring.h>
-#include <qstringlist.h>
+#include <QHash>
+#include <QMetaType>
+#include <QString>
+#include <QStringList>
 
 #include "kst_export.h"
 
@@ -39,20 +41,20 @@ class ObjectTag {
     // construct a tag from a fullTag representation
     ObjectTag(const QStringList &fullTag);
 
-    QString tag() const;
+    QString name() const;
     QStringList fullTag() const;
     QStringList context() const;
 
     unsigned int components() const;
 
     // change the tag, maintaining context
-    void setTag(const QString& tag);
+    void setName(const QString& name);
 
     // change the context
     void setContext(const QStringList& context);
 
     // change the tag and context
-    void setTag(const QString& tag, const QStringList& context);
+    void setTag(const QString& name, const QStringList& context);
 
     bool isValid() const;
 
@@ -72,20 +74,25 @@ class ObjectTag {
     // factory for String representation
     static ObjectTag fromString(const QString& str);
 
+    static QString cleanTagComponent(const QString& component);
+
     bool operator==(const ObjectTag& tag) const;
 
     bool operator!=(const ObjectTag& tag) const;
 
-    static QString cleanTag(const QString& in_tag);
-
   private:
-    QString _tag;
+    QString _name;
     QStringList _context;
     unsigned int _minDisplayComponents; // minimum number of components to use in display tag
     unsigned int _uniqueDisplayComponents;  // number of components necessary for unique display tag
 } KST_EXPORT;
 
+uint qHash(const ObjectTag& tag);
+
 }
+
+//Q_DECLARE_METATYPE(Kst::ObjectTag)
+
 #endif
 
 // vim: ts=2 sw=2 et

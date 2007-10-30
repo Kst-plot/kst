@@ -21,11 +21,15 @@
 
 namespace Kst {
 
+class ObjectStore;
+
 class KST_EXPORT MatrixSelector : public QWidget, public Ui::MatrixSelector {
   Q_OBJECT
   public:
-    MatrixSelector(QWidget *parent = 0);
+    MatrixSelector(QWidget *parent = 0, ObjectStore *store = 0);
     virtual ~MatrixSelector();
+
+    void setObjectStore(ObjectStore *store);
 
     MatrixPtr selectedMatrix() const;
     void setSelectedMatrix(MatrixPtr selectedMatrix);
@@ -42,6 +46,8 @@ class KST_EXPORT MatrixSelector : public QWidget, public Ui::MatrixSelector {
     void editMatrix();
 
   private:
+    ObjectStore *_store;
+
     void fillMatrices();
 };
 

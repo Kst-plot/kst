@@ -13,11 +13,12 @@
 
 #include "dialoglauncher.h"
 #include "datacollection.h"
+#include "objectstore.h"
 
 namespace Kst {
 
-VectorSelector::VectorSelector(QWidget *parent)
-  : QWidget(parent), _allowEmptySelection(false) {
+VectorSelector::VectorSelector(QWidget *parent, ObjectStore *store)
+  : QWidget(parent), _allowEmptySelection(false), _store(store) {
 
   setupUi(this);
 
@@ -39,6 +40,12 @@ VectorSelector::VectorSelector(QWidget *parent)
 
 
 VectorSelector::~VectorSelector() {
+}
+
+
+void VectorSelector::setObjectStore(ObjectStore *store) {
+  _store = store;
+  fillVectors();
 }
 
 
@@ -85,9 +92,13 @@ void VectorSelector::editVector() {
 
 
 void VectorSelector::fillVectors() {
+  if (!_store) {
+    return;
+  }
+
   QHash<QString, VectorPtr> vectors;
 
-  vectorList.lock().readLock();
+  VectorList vectorList = _store->getObjects<Vector>();
 
   VectorList::ConstIterator it = vectorList.begin();
   for (; it != vectorList.end(); ++it) {
@@ -100,8 +111,6 @@ void VectorSelector::fillVectors() {
     vector->unlock();
   }
 
-  vectorList.lock().unlock();
-
   QStringList list = vectors.keys();
 
   qSort(list);
@@ -113,6 +122,9 @@ void VectorSelector::fillVectors() {
     VectorPtr v = vectors.value(string);
     _vector->addItem(string, qVariantFromValue(v.data()));
   }
+
+  if (_allowEmptySelection) //reset the <None>
+    setAllowEmptySelection(true);
 
   if (current)
     setSelectedVector(current);

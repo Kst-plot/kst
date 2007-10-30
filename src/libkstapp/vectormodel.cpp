@@ -84,7 +84,9 @@ QVariant VectorModel::headerData(int section, Qt::Orientation orientation, int r
   if (!_v || role != Qt::DisplayRole || orientation == Qt::Vertical || section != 0) {
     return QAbstractItemModel::headerData(section, orientation, role);
   }
-  return _v->tagName();
+  QVariant var;
+  var.setValue(_v->tag().displayString());
+  return var;
 }
 
 

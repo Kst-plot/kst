@@ -23,6 +23,7 @@ class QLineEdit;
 namespace Kst {
 
 class DataTab;
+class Document;
 
 class KST_EXPORT DataDialog : public Dialog {
   Q_OBJECT
@@ -35,16 +36,17 @@ class KST_EXPORT DataDialog : public Dialog {
     void addDataTab(DataTab *tab);
 
   protected:
-    virtual QString tagName() const;
-    void setTagName(const QString &tagName);
-
-    QString defaultTag() const { return _defaultTag; }
+    virtual QString tagString() const;
+    void setTagString(const QString &tagString);
+    QString defaultTagString() const { return _defaultTagString; }
 
     ObjectPtr dataObject() const { return _dataObject; }
     void setDataObject(ObjectPtr dataObject) { _dataObject = dataObject; }
 
     virtual ObjectPtr createNewDataObject() const = 0;
     virtual ObjectPtr editExistingDataObject() const = 0;
+
+    Document *_document;
 
   private Q_SLOTS:
     void slotOk();
@@ -54,8 +56,8 @@ class KST_EXPORT DataDialog : public Dialog {
     void createGui();
 
   private:
-    QString _defaultTag;
-    QLineEdit *_tagName;
+    QString _defaultTagString;
+    QLineEdit *_tagString;
     ObjectPtr _dataObject;
     EditMode _mode;
 };

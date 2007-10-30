@@ -4,20 +4,25 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <objectstore.h>
+
 #include "enodefactory.h"
 
 #include "eparse-eh.h"
-extern int yylex();
+extern int yylex(Kst::ObjectStore *store);
 void *ParsedEquation = 0L;
 
 %}
 
+%parse-param { Kst::ObjectStore *store }
+%lex-param { Kst::ObjectStore *store }
+
 %union {
-        char *data;
-        double number;
-	void *n; /* tree node */
-        char character;
-       }
+		char *data;
+		double number;
+		void *n; /* tree node */
+		char character;
+	   }
 
 
 %token T_NUMBER T_IDENTIFIER T_DATA T_OPENPAR T_CLOSEPAR T_COMMA T_INVALID
@@ -52,7 +57,7 @@ WRAPPER		:	{ $<n>$ = 0L; yyClearErrors(); ParsedEquation = 0L; } PRESTART
 PRESTART	:	START
 			{ $<n>$ = $<n>1; }
 		|	/**/
-			{ $<n>$ = 0L; yyerror(EParseErrorEmpty); }
+			{ $<n>$ = 0L; yyerror(store, EParseErrorEmpty); }
 		;
 
 START		:	BOOLEAN_OR
@@ -62,7 +67,7 @@ START		:	BOOLEAN_OR
 BOOLEAN_OR	:	BOOLEAN_OR T_LOR BOOLEAN_AND
 			{ $<n>$ = NewLogicalOr($<n>1, $<n>3); }
 		|	T_LOR error
-			{ yyerror(EParseErrorTwoOperands); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorTwoOperands); $<n>$ = 0L; }
 		|	BOOLEAN_AND
 			{ $<n>$ = $<n>1; }
 		;
@@ -70,7 +75,7 @@ BOOLEAN_OR	:	BOOLEAN_OR T_LOR BOOLEAN_AND
 BOOLEAN_AND	:	BOOLEAN_AND T_LAND COMPARISON
 			{ $<n>$ = NewLogicalAnd($<n>1, $<n>3); }
 		|	T_LAND error
-			{ yyerror(EParseErrorTwoOperands); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorTwoOperands); $<n>$ = 0L; }
 		|	COMPARISON
 			{ $<n>$ = $<n>1; }
 		;
@@ -88,17 +93,17 @@ COMPARISON	:	COMPARISON T_LT EQUATION
 		|	COMPARISON T_NE EQUATION
 			{ $<n>$ = NewNotEqualTo($<n>1, $<n>3); }
 		|	T_LT error
-			{ yyerror(EParseErrorTwoOperands); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorTwoOperands); $<n>$ = 0L; }
 		|	T_GT error
-			{ yyerror(EParseErrorTwoOperands); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorTwoOperands); $<n>$ = 0L; }
 		|	T_LE error
-			{ yyerror(EParseErrorTwoOperands); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorTwoOperands); $<n>$ = 0L; }
 		|	T_GE error
-			{ yyerror(EParseErrorTwoOperands); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorTwoOperands); $<n>$ = 0L; }
 		|	T_EQ error
-			{ yyerror(EParseErrorTwoOperands); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorTwoOperands); $<n>$ = 0L; }
 		|	T_NE error
-			{ yyerror(EParseErrorTwoOperands); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorTwoOperands); $<n>$ = 0L; }
 		|	EQUATION
 			{ $<n>$ = $<n>1; }
 		;
@@ -114,9 +119,9 @@ EQUATION	:	EQUATION T_ADD TERM
 		|	TERM
 			{ $<n>$ = $<n>1; }
 		|	T_OR error
-			{ yyerror(EParseErrorTwoOperands); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorTwoOperands); $<n>$ = 0L; }
 		|	T_AND error
-			{ yyerror(EParseErrorTwoOperands); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorTwoOperands); $<n>$ = 0L; }
 		;
 
 TERM		:	TERM T_MULTIPLY NEG
@@ -126,11 +131,11 @@ TERM		:	TERM T_MULTIPLY NEG
 		|	TERM T_MOD NEG
 			{ $<n>$ = NewModulo($<n>1, $<n>3); }
 		|	T_MULTIPLY error
-			{ yyerror(EParseErrorTwoOperands); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorTwoOperands); $<n>$ = 0L; }
 		|	T_DIVIDE error
-			{ yyerror(EParseErrorTwoOperands); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorTwoOperands); $<n>$ = 0L; }
 		|	T_MOD error
-			{ yyerror(EParseErrorTwoOperands); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorTwoOperands); $<n>$ = 0L; }
 		|	NEG
 			{ $<n>$ = $<n>1; }
 		;
@@ -140,7 +145,7 @@ NEG		:	T_SUBTRACT NEG %prec U_SUBTRACT
 		|       T_NOT NEG
 			{ $<n>$ = NewNot($<n>2); }
 		|       T_NOT error
-			{ $<n>$ = 0L; yyerror(EParseErrorRequiresOperand); }
+			{ $<n>$ = 0L; yyerror(store, EParseErrorRequiresOperand); }
 		|	EXP
 			{ $<n>$ = $<n>1; }
 		;
@@ -148,11 +153,11 @@ NEG		:	T_SUBTRACT NEG %prec U_SUBTRACT
 EXP		:	EXP T_EXP EXP
 			{ $<n>$ = NewPower($<n>1, $<n>3); }
 		|	EXP T_EXP error
-			{ DeleteNode($<n>1); $<n>$ = 0L; yyerror(EParseErrorTwoOperands); }
+			{ DeleteNode($<n>1); $<n>$ = 0L; yyerror(store, EParseErrorTwoOperands); }
 		|	EXP T_EXP /**/
-			{ DeleteNode($<n>1); $<n>$ = 0L; yyerror(EParseErrorTwoOperands); }
+			{ DeleteNode($<n>1); $<n>$ = 0L; yyerror(store, EParseErrorTwoOperands); }
 		|	T_EXP error
-			{ $<n>$ = 0L; yyerror(EParseErrorTwoOperands); }
+			{ $<n>$ = 0L; yyerror(store, EParseErrorTwoOperands); }
 		|	ATOMIC
 			{ $<n>$ = $<n>1; }
 		;
@@ -160,32 +165,32 @@ EXP		:	EXP T_EXP EXP
 ATOMIC		:	T_OPENPAR BOOLEAN_OR T_CLOSEPAR
 			{ $<n>$ = $<n>2; ParenthesizeNode($<n>$); }
 		|	T_OPENPAR error
-			{ yyerror(EParseErrorMissingClosingParenthesis); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorMissingClosingParenthesis); $<n>$ = 0L; }
 		|	T_IDENTIFIER
 			{ $<n>$ = NewIdentifier($<data>1); }
 		|	T_DATA
-			{ $<n>$ = NewData($<data>1); }
+			{ $<n>$ = NewData(store, $<data>1); }
 		|	T_IDENTIFIER T_OPENPAR T_CLOSEPAR error
-			{ yyerror(EParseErrorNoImplicitMultiply); free($<data>1); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorNoImplicitMultiply); free($<data>1); $<n>$ = 0L; }
 		|	T_IDENTIFIER T_OPENPAR T_CLOSEPAR
 			{ $<n>$ = NewFunction($<data>1, NewArgumentList()); }
 /*		|	T_IDENTIFIER T_OPENPAR ARGUMENTS error
-			{ yyerror(EParseErrorMissingClosingParenthesis); DeleteNode($<n>3); free($<data>1); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorMissingClosingParenthesis); DeleteNode($<n>3); free($<data>1); $<n>$ = 0L; }
 */
 		|	T_IDENTIFIER T_OPENPAR ARGUMENTS T_CLOSEPAR error
-			{ yyerror(EParseErrorNoImplicitMultiply); DeleteNode($<n>3); free($<data>1); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorNoImplicitMultiply); DeleteNode($<n>3); free($<data>1); $<n>$ = 0L; }
 		|	T_IDENTIFIER T_OPENPAR ARGUMENTS T_CLOSEPAR
 			{ $<n>$ = NewFunction($<data>1, $<n>3); }
 		|	T_IDENTIFIER T_OPENPAR error
-			{ yyerror(EParseErrorMissingClosingParenthesis); free($<data>1); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorMissingClosingParenthesis); free($<data>1); $<n>$ = 0L; }
 		|	T_NUMBER
 			{ $<n>$ = NewNumber($<number>1); }
 		|	T_NUMBER error
-			{ yyerror(EParseErrorNoImplicitMultiply); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorNoImplicitMultiply); $<n>$ = 0L; }
 		|	T_INVALID
 			{ yyerrortoken($<character>1); $<n>$ = 0L; }
 		|	T_OPENPAR T_CLOSEPAR
-			{ yyerror(EParseErrorEmptyParentheses); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorEmptyParentheses); $<n>$ = 0L; }
 		;
 
 ARGUMENTS	:	ARGLIST
@@ -197,9 +202,9 @@ ARGLIST		:	ARGLIST T_COMMA ARGUMENT
 		|	ARGUMENT
 			{ if ($<n>1) { $<n>$ = NewArgumentList(); AppendArgument($<n>$, $<n>1); } else { $<n>$ = 0L; } }
 		|	ARGLIST T_COMMA error
-			{ $<n>$ = 0L; DeleteNode($<n>1); yyerror(EParseErrorEmptyArg); }
+			{ $<n>$ = 0L; DeleteNode($<n>1); yyerror(store, EParseErrorEmptyArg); }
 		|	{} /**/ T_COMMA ARGUMENT
-			{ yyerror(EParseErrorEmptyArg); DeleteNode($<n>3); $<n>$ = 0L; }
+			{ yyerror(store, EParseErrorEmptyArg); DeleteNode($<n>3); $<n>$ = 0L; }
 		;
 
 ARGUMENT	:	START

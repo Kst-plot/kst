@@ -49,7 +49,7 @@ class KST_EXPORT EventMonitorDialog : public DataDialog {
     virtual ~EventMonitorDialog();
 
   protected:
-    virtual QString tagName() const;
+    virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
 

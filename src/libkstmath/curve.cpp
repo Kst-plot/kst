@@ -51,6 +51,8 @@
 
 namespace Kst {
 
+const QString Curve::staticTypeString = I18N_NOOP("Curve");
+
 static const QLatin1String& COLOR_XVECTOR = QLatin1String("X");
 static const QLatin1String& COLOR_YVECTOR = QLatin1String("Y");
 static const QLatin1String& EXVECTOR = QLatin1String("EX");
@@ -58,11 +60,11 @@ static const QLatin1String& EYVECTOR = QLatin1String("EY");
 static const QLatin1String& EXMINUSVECTOR = QLatin1String("EXMinus");
 static const QLatin1String& EYMINUSVECTOR = QLatin1String("EYMinus");
 
-Curve::Curve(const QString &in_tag, VectorPtr in_X, VectorPtr in_Y,
+Curve::Curve(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_X, VectorPtr in_Y,
                       VectorPtr in_EX, VectorPtr in_EY,
                       VectorPtr in_EXMinus, VectorPtr in_EYMinus,
                       const QColor &in_color)
-: Relation() {
+: Relation(store, in_tag) {
   setHasPoints(false);
   setHasBars(false);
   setHasLines(true);
@@ -71,7 +73,7 @@ Curve::Curve(const QString &in_tag, VectorPtr in_X, VectorPtr in_Y,
   setBarStyle(0);
   setPointDensity(0);
 
-  commonConstructor(in_tag, in_color);
+  commonConstructor(in_color);
   if (in_X) {
     _inputVectors[COLOR_XVECTOR] = in_X;
   }
@@ -100,8 +102,8 @@ Curve::Curve(const QString &in_tag, VectorPtr in_X, VectorPtr in_Y,
 }
 
 
-Curve::Curve(QDomElement &e)
-: Relation(e) {
+Curve::Curve(ObjectStore *store, QDomElement &e)
+: Relation(store, e) {
   QString in_tag, xname, yname, exname, eyname, exminusname, eyminusname;
   // QColor in_color(KstColorSequence::next(-1));
   QColor in_color("red"); // the above line is invalid.
@@ -187,17 +189,19 @@ Curve::Curve(QDomElement &e)
   if (!eyminusname.isEmpty()) {
     _inputVectorLoadQueue.append(qMakePair(QString(EYMINUSVECTOR), eyminusname));
   }
-  commonConstructor(in_tag, in_color);
+
+  setTagName(ObjectTag::fromString(in_tag));
+
+  commonConstructor(in_color);
 }
 
 
-void Curve::commonConstructor(const QString &in_tag, const QColor &in_color) {
+void Curve::commonConstructor(const QColor &in_color) {
   MaxX = MinX = MeanX = MaxY = MinY = MeanY = MinPosX = MinPosY = 0;
   NS = 0;
   _typeString = i18n("Curve");
   _type = "Curve";
   Color = in_color;
-  setTagName(ObjectTag::fromString(in_tag));
   updateParsedLegendTag();
 }
 
@@ -471,7 +475,7 @@ bool Curve::hasYMinusError() const {
 void Curve::save(QTextStream &ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<curve>" << endl;
-  ts << l2 << "<tag>" << Qt::escape(tagName()) << "</tag>" << endl;
+  ts << l2 << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
   ts << l2 << "<xvectag>" << Qt::escape(_inputVectors[COLOR_XVECTOR]->tag().tagString()) << "</xvectag>" << endl;
   ts << l2 << "<yvectag>" << Qt::escape(_inputVectors[COLOR_YVECTOR]->tag().tagString()) << "</yvectag>" << endl;
   ts << l2 << "<legend>" << Qt::escape(legendText()) << "</legend>" << endl;
@@ -1743,15 +1747,18 @@ void Curve::yRange(double xFrom, double xTo, double* yMin, double* yMax) {
 
 
 DataObjectPtr Curve::providerDataObject() const {
+  DataObjectPtr provider = 0L;
+  // FIXME: fix this.. I don't know what's going on here
+#if 0
   vectorList.lock().readLock();
   VectorPtr vp = *vectorList.findTag(yVTag().tag());  // FIXME: should use full tag
   vectorList.lock().unlock();
-  DataObjectPtr provider = 0L;
   if (vp) {
     vp->readLock();
     provider = kst_cast<DataObject>(vp->provider());
     vp->unlock();
   }
+#endif
   return provider;
 }
 

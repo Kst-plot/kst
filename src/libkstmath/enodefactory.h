@@ -1,6 +1,6 @@
 /***************************************************************************
                                enodefactory.h
-                                 ----------      
+                                 ----------
     begin                : Feb 12 2004
     copyright            : (C) 2004 The University of Toronto
     email                :
@@ -18,11 +18,14 @@
 #ifndef ENODEFACTORY_H
 #define ENODEFACTORY_H
 
-
 #define CreateNodeBinary(x) void *New##x(void *left, void *right);
 
 #ifdef __cplusplus
-extern "C" {
+namespace Kst {
+  class ObjectStore;
+}
+
+//extern "C" {
 #endif
 
   CreateNodeBinary(Addition)
@@ -42,7 +45,7 @@ extern "C" {
   CreateNodeBinary(EqualTo)
   CreateNodeBinary(NotEqualTo)
 
-  void *NewData(char *name);
+  void *NewData(Kst::ObjectStore *store, char *name);
   void *NewIdentifier(char *name);
   void *NewFunction(char *name, void *args);
   void *NewArgumentList();
@@ -56,7 +59,7 @@ extern "C" {
   void ParenthesizeNode(void *n);
 
 #ifdef __cplusplus
-}
+//}
 #endif
 
 #undef CreateNode

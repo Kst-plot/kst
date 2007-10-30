@@ -220,7 +220,7 @@ void PlotRenderItemDialog::update() {
   _scalarSelectorX2->update();
   _scalarSelectorY2->update();
 
-  CurveList curves = ObjectSubList<DataObject, Curve>(dataObjectList);
+  CurveList curves; //FIXME // = ObjectSubList<DataObject, Curve>(dataObjectList);
 
   _displayedCurveList->clear();
   _availableCurveList->clear();
@@ -241,14 +241,12 @@ void PlotRenderItemDialog::updateScalarCombo() {
   _scalarSelectorY1->clear();
   _scalarSelectorY2->clear();
 
-  scalarList.lock().readLock();
-  ScalarList sl = scalarList.list();
-  scalarList.lock().unlock();
+  ScalarList sl; //FIXME = scalarList.list();
 
   qSort(sl);
   for (ScalarList::ConstIterator i = sl.begin(); i != sl.end(); ++i) {
     (*i)->readLock();
-    QString n = (*i)->tagLabel();
+    QString n = (*i)->tag().displayString();
     (*i)->unlock();
     _scalarList->addItem(n);
     _scalarSelectorX1->addItem(n);

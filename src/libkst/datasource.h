@@ -1,7 +1,13 @@
 /***************************************************************************
+                     datasource.h  -  abstract data source
+                             -------------------
+    begin                : Thu Oct 16 2003
+    copyright            : (C) 2003 The University of Toronto
+    email                :
+ ***************************************************************************/
+
+/***************************************************************************
  *                                                                         *
- *   copyright : (C) 2003 The University of Toronto                        *
-*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -46,10 +52,13 @@ struct MatrixData {
 
 class String;
 class Scalar;
+class String;
 class DataSourceConfigWidget;
 typedef SharedPtr<Scalar> ScalarPtr;
 
 class KST_EXPORT DataSource : public Object {
+  Q_OBJECT
+
   public:
     static void setupOnStartup(QSettings*);
     static void cleanupForExit();
@@ -57,8 +66,8 @@ class KST_EXPORT DataSource : public Object {
     /** Returns a list of plugins found on the system. */
     static QStringList pluginList();
 
-    static SharedPtr<DataSource> loadSource(const QString& filename, const QString& type = QString::null);
-    static SharedPtr<DataSource> loadSource(QDomElement& e);
+    static SharedPtr<DataSource> loadSource(ObjectStore *store, const QString& filename, const QString& type = QString::null);
+    static SharedPtr<DataSource> loadSource(ObjectStore *store, QDomElement& e);
     static QStringList fieldListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
     static QStringList matrixListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
 
@@ -70,10 +79,11 @@ class KST_EXPORT DataSource : public Object {
 
     static bool supportsTime(const QString& plugin, const QString& type = QString::null);
 
-    DataSource(QSettings *cfg, const QString& filename, const QString& type);
+    DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type);
     virtual ~DataSource();
 
-    void setTagName(const ObjectTag& tag);
+    virtual const QString& typeString() const;
+    static const QString staticTypeString;
 
     bool hasConfigWidget() const;
     DataSourceConfigWidget *configWidget();
@@ -115,7 +125,7 @@ class KST_EXPORT DataSource : public Object {
      * return the number of -samples- written or -1 if writing fails or is not supported.
      */
     virtual int writeField(const double *v, const QString& field, int s, int n);
-    
+
     /** Read the specified sub-range of the matrix, flat-packed in z in row-major order
         xStart - starting x *frame*
         yStart - starting y *frame*
@@ -126,7 +136,7 @@ class KST_EXPORT DataSource : public Object {
         The suggested scaling and translation is returned in xMin, yMin, xStepSize, and yStepSize
         Returns the number of *samples* read **/
     virtual int readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps, int skip);
-    
+
     /** Read the specified sub-range of the matrix, flat-packed in z in row-major order (non-skipping)
         xStart - starting x *frame*
         yStart - starting y *frame*
@@ -135,16 +145,16 @@ class KST_EXPORT DataSource : public Object {
         The suggested scaling and translation is returned in xMin, yMin, xStepSize, and yStepSize
         Returns the number of *samples* read **/
     virtual int readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps);
-    
+
     /** Return the current dimensions of the matrix: xDim*yDim <= total frames **/
     virtual bool matrixDimensions(const QString& matrix, int* xDim, int* yDim);
-    
+
     /** Returns the list of fields that support readMatrix **/
     virtual QStringList matrixList() const;
 
     /** Returns true if the field is valid, or false if it is not */
     virtual bool isValidField(const QString& field) const;
-    
+
     /** Returns true if the matrix is valid, or false if it is not */
     virtual bool isValidMatrix(const QString& field) const;
 
@@ -223,7 +233,7 @@ class KST_EXPORT DataSource : public Object {
 
     /** Place to store the list of fields.  Base implementation returns this. */
     QStringList _fieldList;
-    
+
     /** Place to store the list of matrices.  Base implementation returns this. */
     mutable QStringList _matrixList;
 
@@ -248,11 +258,20 @@ class KST_EXPORT DataSource : public Object {
 
 typedef SharedPtr<DataSource> DataSourcePtr;
 
-class DataSourceList : public ObjectList<DataSourcePtr> {
+class DataSourceList : public QList<DataSourcePtr> {
   public:
-    DataSourceList() : ObjectList<DataSourcePtr>() {}
-    DataSourceList(const DataSourceList& x) : ObjectList<DataSourcePtr>(x) {}
+    DataSourceList() : QList<DataSourcePtr>() {}
+    DataSourceList(const DataSourceList& x) : QList<DataSourcePtr>(x) {}
     virtual ~DataSourceList() {}
+
+    virtual DataSourcePtr findTag(const ObjectTag& tag) {
+      for (DataSourceList::Iterator it = begin(); it != end(); ++it) {
+        if ((*it)->tag() == tag) {
+          return *it;
+        }
+      }
+      return 0;
+    }
 
     virtual DataSourcePtr findFileName(const QString& x) {
       for (DataSourceList::Iterator it = begin(); it != end(); ++it) {

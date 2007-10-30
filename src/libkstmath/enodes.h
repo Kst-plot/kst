@@ -1,6 +1,6 @@
 /***************************************************************************
                                   enodes.h
-                                 ----------      
+                                 ----------
     begin                : Feb 12 2004
     copyright            : (C) 2004 The University of Toronto
     email                :
@@ -21,6 +21,7 @@
 #include "string_kst.h"
 #include "vector.h"
 #include "kst_export.h"
+#include "objectstore.h"
 
 #define EQ_FALSE 0.0
 #define EQ_TRUE  1.0
@@ -33,7 +34,7 @@ namespace Equations {
   /*    Evaluate the expression @p txt and returns the value as a double.
    *    Returns the value, or 0.0 and sets ok = false on error.
    */
-  KST_EXPORT double interpret(const char *txt, bool *ok = 0L, int len = -1);
+  KST_EXPORT double interpret(Kst::ObjectStore *store, const char *txt, bool *ok = 0L, int len = -1);
 
   class Context {
     public:
@@ -79,7 +80,7 @@ namespace Equations {
       virtual Kst::Object::UpdateType update(int counter, Context *ctx);
 
       Node *& left();
-      Node *& right(); 
+      Node *& right();
 
       virtual QString text() const = 0;
 
@@ -171,11 +172,11 @@ namespace Equations {
   };
 
 
-  class Data : public Node {
+  class DataNode : public Node {
     friend class Function;
     public:
-      Data(char *name);
-      ~Data();
+      DataNode(Kst::ObjectStore *store, char *name);
+      ~DataNode();
 
       bool isConst();
       double value(Context*);
@@ -185,6 +186,7 @@ namespace Equations {
       QString text() const;
 
     protected:
+      Kst::ObjectStore *_store;
       QString _tagName;
       Kst::VectorPtr _vector;
       Kst::ScalarPtr _scalar;

@@ -17,11 +17,14 @@
 
 namespace Kst {
 
+class ObjectStore;
+
 class KST_EXPORT BasicPlugin : public DataObject {
+  Q_OBJECT
+
   public:
-    BasicPlugin();
-    BasicPlugin(const QDomElement &e);
-    virtual ~BasicPlugin();
+    static const QString staticTypeString;
+    const QString& typeString() const { return staticTypeString; }
 
     //The implementation of the algorithm the plugin provides.
     //Operates on the inputVectors, inputScalars, and inputStrings
@@ -83,6 +86,10 @@ class KST_EXPORT BasicPlugin : public DataObject {
     QString label(int precision) const;
 
   protected:
+    BasicPlugin(ObjectStore *store, const ObjectTag& tag);
+    BasicPlugin(ObjectStore *store, const QDomElement &e);
+    virtual ~BasicPlugin();
+
     virtual QString parameterName(int index) const;
     bool _isFit;
 
@@ -93,7 +100,7 @@ class KST_EXPORT BasicPlugin : public DataObject {
 };
 
 typedef SharedPtr<BasicPlugin> BasicPluginPtr;
-typedef ObjectList<BasicPluginPtr> BasicPluginList;
+typedef ObjectList<BasicPlugin> BasicPluginList;
 
 }
 

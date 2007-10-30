@@ -23,6 +23,7 @@
 #include "testeditablematrix.h"
 #include "testlabelparser.h"
 #include "testeqparser.h"
+#include "testobjectstore.h"
 
 int main(int argc, char *argv[]) {
   QCoreApplication app(argc, argv);
@@ -57,6 +58,8 @@ int main(int argc, char *argv[]) {
   TestEqParser test10;
   QTest::qExec(&test10, argc, argv);
 
+  TestObjectStore test11;
+  QTest::qExec(&test11, argc, argv);
 
   return 0;
 }

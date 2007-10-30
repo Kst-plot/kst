@@ -19,6 +19,8 @@
 #include "plotitem.h"
 #include "tabwidget.h"
 #include "mainwindow.h"
+#include "document.h"
+#include "objectstore.h"
 #include "application.h"
 #include "plotrenderitem.h"
 #include "curve.h"
@@ -87,35 +89,37 @@ CSDDialog::~CSDDialog() {
 }
 
 
-QString CSDDialog::tagName() const {
-  return DataDialog::tagName();
+QString CSDDialog::tagString() const {
+  return DataDialog::tagString();
 }
 
 
 ObjectPtr CSDDialog::createNewDataObject() const {
-
-  CSDPtr csd = new CSD(tagName(),
-                                     _CSDTab->vector(),
-                                     _CSDTab->FFTOptionsWidget()->sampleRate(),
-                                     _CSDTab->FFTOptionsWidget()->interleavedAverage(),
-                                     _CSDTab->FFTOptionsWidget()->removeMean(),
-                                     _CSDTab->FFTOptionsWidget()->apodize(),
-                                     _CSDTab->FFTOptionsWidget()->apodizeFunction(),
-                                     _CSDTab->windowSize(),
-                                     _CSDTab->FFTOptionsWidget()->FFTLength(),
-                                     _CSDTab->FFTOptionsWidget()->sigma(),
-                                     _CSDTab->FFTOptionsWidget()->output(),
-                                     _CSDTab->FFTOptionsWidget()->vectorUnits(),
-                                     _CSDTab->FFTOptionsWidget()->rateUnits());
+  Q_ASSERT(_document && _document->objectStore());
+  ObjectTag tag = _document->objectStore()->suggestObjectTag<CSD>(tagString(), ObjectTag::globalTagContext);
+  CSDPtr csd = _document->objectStore()->createObject<CSD>(tag);
+  csd->setVector(_CSDTab->vector());
+  csd->setFreq(_CSDTab->FFTOptionsWidget()->sampleRate());
+  csd->setAverage(_CSDTab->FFTOptionsWidget()->interleavedAverage());
+  csd->setRemoveMean(_CSDTab->FFTOptionsWidget()->removeMean());
+  csd->setApodize(_CSDTab->FFTOptionsWidget()->apodize());
+  csd->setApodizeFxn(_CSDTab->FFTOptionsWidget()->apodizeFunction());
+  csd->setWindowSize(_CSDTab->windowSize());
+  csd->setLength(_CSDTab->FFTOptionsWidget()->FFTLength());
+  csd->setGaussianSigma(_CSDTab->FFTOptionsWidget()->sigma());
+  csd->setOutput(_CSDTab->FFTOptionsWidget()->output());
+  csd->setVectorUnits(_CSDTab->FFTOptionsWidget()->vectorUnits());
+  csd->setRateUnits(_CSDTab->FFTOptionsWidget()->rateUnits());
 
   csd->writeLock();
   csd->update(0);
   csd->unlock();
 
   Palette* newPalette = new Palette(_CSDTab->colorPalette()->selectedPalette());
-  csd->readLock();
-  ImagePtr image = new Image(csd->tagName()+"-I", csd->outputMatrix(), 0, 1, true, newPalette->paletteData());
-  csd->unlock();
+
+  tag = _document->objectStore()->suggestObjectTag<Image>(csd->tag().tagString(), ObjectTag::globalTagContext);
+  ImagePtr image = _document->objectStore()->createObject<Image>(tag);
+  image->changeToColorOnly(csd->outputMatrix(), 0, 1, true, newPalette->paletteData());
 
   image->writeLock();
   image->update(0);

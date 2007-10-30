@@ -15,7 +15,9 @@
 
 #include "datacollection.h"
 #include "dataobjectcollection.h"
+#include "document.h"
 #include "defaultnames.h"
+#include "objectstore.h"
 
 #include "eventmonitorentry.h"
 
@@ -98,21 +100,24 @@ EventMonitorDialog::~EventMonitorDialog() {
 }
 
 
-QString EventMonitorDialog::tagName() const {
-  return DataDialog::tagName();
+QString EventMonitorDialog::tagString() const {
+  return DataDialog::tagString();
 }
 
 
 ObjectPtr EventMonitorDialog::createNewDataObject() const {
-  EventMonitorEntryPtr eventMonitor = new EventMonitorEntry(tagName(),
-                                                      _eventMonitorTab->script(),
-                                                      _eventMonitorTab->event(),
-                                                      _eventMonitorTab->description(),
-                                                      _eventMonitorTab->logLevel(),
-                                                      _eventMonitorTab->logKstDebug(),
-                                                      _eventMonitorTab->logEMail(),
-                                                      _eventMonitorTab->logELOG(),
-                                                      _eventMonitorTab->emailRecipients());
+  Q_ASSERT(_document && _document->objectStore());
+  EventMonitorEntryPtr eventMonitor = _document->objectStore()->createObject<EventMonitorEntry>(ObjectTag::fromString(tagString()));
+
+  eventMonitor->setScriptCode(_eventMonitorTab->script());
+  eventMonitor->setEvent(_eventMonitorTab->event());
+  eventMonitor->setDescription(_eventMonitorTab->description());
+  eventMonitor->setLevel(_eventMonitorTab->logLevel());
+  eventMonitor->setLogKstDebug(_eventMonitorTab->logKstDebug());
+  eventMonitor->setLogEMail(_eventMonitorTab->logEMail());
+  eventMonitor->setLogELOG(_eventMonitorTab->logELOG());
+  eventMonitor->setEMailRecipients(_eventMonitorTab->emailRecipients());
+
   eventMonitor->reparse();
 
   eventMonitor->writeLock();

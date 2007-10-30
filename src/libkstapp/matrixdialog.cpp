@@ -21,7 +21,9 @@
 #include "dataobjectcollection.h"
 
 #include "matrixdefaults.h"
-#include "defaultprimitivenames.h"
+
+#include "document.h"
+#include "objectstore.h"
 
 #include <QDir>
 
@@ -49,8 +51,8 @@ MatrixTab::MatrixTab(QWidget *parent)
   connect(_generateGradient, SIGNAL(clicked()), this, SLOT(updateEnables()));
   connect(_doSkip, SIGNAL(clicked()), this, SLOT(updateEnables()));
 
-   _fileName->setFile(QDir::currentPath());
-  _fileName->setFile(matrixDefaults.dataSource());
+  _fileName->setFile(QDir::currentPath());
+//  _fileName->setFile(matrixDefaults.dataSource());  // huh?
 
   //FIXME need a solution for replacing kio for this...
   _connect->setVisible(false);
@@ -362,12 +364,11 @@ void MatrixTab::fileNameChanged(const QString &file) {
 
   _field->clear();
 
-  dataSourceList.lock().readLock();
-  _dataSource = dataSourceList.findReusableFileName(file);
-  dataSourceList.lock().unlock();
+  Q_ASSERT(_store);
+  _dataSource = _store->dataSourceList().findReusableFileName(file);
 
   if (!_dataSource) {
-    _dataSource = DataSource::loadSource(file, QString());
+    _dataSource = DataSource::loadSource(_store, file, QString());
   }
 
   if (!_dataSource) {
@@ -413,8 +414,8 @@ MatrixDialog::~MatrixDialog() {
 }
 
 
-QString MatrixDialog::tagName() const {
-  return DataDialog::tagName();
+QString MatrixDialog::tagString() const {
+  return DataDialog::tagString();
 }
 
 
@@ -438,7 +439,7 @@ ObjectPtr MatrixDialog::createNewDataMatrix() const {
     return 0;
 
   const QString field = _matrixTab->field();
-  const ObjectTag tag = ObjectTag(tagName(), dataSource->tag(), false);
+  const ObjectTag tag = ObjectTag(tagString(), dataSource->tag(), false);
   const int skip = _matrixTab->skip();
   const bool doAve = _matrixTab->doAve();
   const bool doSkip = _matrixTab->doSkip();
@@ -461,12 +462,22 @@ ObjectPtr MatrixDialog::createNewDataMatrix() const {
 //            << "\n\tdoAve:" << doAve
 //            << endl;
 
+  Q_ASSERT(_document && _document->objectStore());
+  DataMatrixPtr matrix = _document->objectStore()->createObject<DataMatrix>(tag);
+  matrix->change(dataSource, field,
+      xStart, yStart,
+      xNumSteps, yNumSteps,
+      doAve,
+      doSkip, skip);
+
+#if 0
   DataMatrixPtr matrix = new DataMatrix(
       dataSource, field, tag,
       xStart, yStart,
       xNumSteps, yNumSteps,
       doAve,
       doSkip, skip);
+#endif
 
   matrix->writeLock();
   matrix->update(0);
@@ -486,7 +497,7 @@ ObjectPtr MatrixDialog::createNewGeneratedMatrix() const {
   const double gradZMin = _matrixTab->gradientZAtMin();
   const double gradZMax = _matrixTab->gradientZAtMax();
   const bool xDirection =  _matrixTab->xDirection();
-  const ObjectTag tag = ObjectTag(tagName(), ObjectTag::globalTagContext);
+  const ObjectTag tag = ObjectTag(tagString(), ObjectTag::globalTagContext);
 
 //    qDebug() << "Creating new generated matrix ===>"
 //             << "\n\ttag:" << tag.tag()
@@ -501,7 +512,12 @@ ObjectPtr MatrixDialog::createNewGeneratedMatrix() const {
 //             << "\n\txDirection:" << xDirection
 //             << endl;
 
+  Q_ASSERT(_document && _document->objectStore());
+  GeneratedMatrixPtr matrix = _document->objectStore()->createObject<GeneratedMatrix>(tag);
+  matrix->change(nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
+#if 0
   GeneratedMatrixPtr matrix = new GeneratedMatrix(tag, nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
+#endif
   return static_cast<ObjectPtr>(matrix);
 }
 

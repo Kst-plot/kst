@@ -68,7 +68,6 @@ ViewItem::~ViewItem() {
 void ViewItem::save(QXmlStreamWriter &xml) {
 //  TODO Add proper writing of ObjectTag
 //   xml.writeAttribute("name", name());
-  xml.writeAttribute("zvalue", QVariant(zValue()).toString());
   xml.writeStartElement("position");
   xml.writeAttribute("x", QVariant(pos().x()).toString());
   xml.writeAttribute("y", QVariant(pos().y()).toString());
@@ -111,24 +110,18 @@ void ViewItem::save(QXmlStreamWriter &xml) {
 bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
   bool knownTag = false;
   QString expectedTag;
-  bool processParentAttributes = true;
   if (xml.isStartElement()) {
     expectedTag = xml.name().toString();
     QXmlStreamAttributes attrs = xml.attributes();
     QStringRef av;
-    if (processParentAttributes) {
-      processParentAttributes = false;
-      av = attrs.value("name");
-      if (!av.isNull()) {
-  //         setName(av.toString());
-      }
-      av = attrs.value("zvalue");
-      if (!av.isNull()) {
-        setZValue(av.toString().toDouble());
-      }
-    }
-
-    if (xml.name().toString() == "position") {
+    if (xml.name().toString() == "name") {
+      knownTag = true;
+//      TODO Add proper parsing of ObjectTag when format is set.
+//       av = attrs.value("name");
+//       if (!av.isNull()) {
+//         setName(av.toString());
+//      }
+    } else if (xml.name().toString() == "position") {
       knownTag = true;
       double x = 0, y = 0;
       av = attrs.value("x");

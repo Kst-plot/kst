@@ -12,6 +12,7 @@
 #include "scalareditordialog.h"
 
 #include "document.h"
+#include "objectstore.h"
 #include "scalartablemodel.h"
 
 #include <datacollection.h>
@@ -49,15 +50,14 @@ void ScalarEditorDialog::refreshScalars() {
   // TODO: Extract this model so the dialog can be reused, and make a new model
   // or modification to the model so that it tracks all the scalar creates and
   // destroys
-  scalarList.lock().readLock();
-  foreach (ScalarPtr v, scalarList.list()) {
+  Q_ASSERT(_doc && _doc->objectStore());
+  ScalarList scalarList = _doc->objectStore()->getObjects<Scalar>();
+  foreach (ScalarPtr v, scalarList) {
     ScalarModel *vm = new ScalarModel(v);
     _model->scalars().append(vm);
   }
-  scalarList.lock().unlock();
   _scalars->setModel(_model);
 }
-
 
 
 }

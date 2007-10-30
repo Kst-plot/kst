@@ -1,7 +1,7 @@
 /***************************************************************************
  *                                                                         *
  *   copyright : (C) 2007 The University of Toronto                        *
- *   copyright : (C) 2005 by University of British Columbia
+ *   copyright : (C) 2005 by University of British Columbia                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -27,30 +27,37 @@
 #include "debug.h"
 #include "psdcalculator.h"
 #include "objectdefaults.h"
+#include "objectstore.h"
 
 extern "C" void rdft(int n, int isgn, double *a);
 
 namespace Kst {
 
+const QString CSD::staticTypeString = I18N_NOOP("Cumulative Spectral Decay");
+
 static const QLatin1String INVECTOR = QLatin1String("I");
 static const QLatin1String& OUTMATRIX = QLatin1String("M");
 
 #define KSTCSDMAXLEN 27
-CSD::CSD(const QString &in_tag, VectorPtr in_V,
-               double in_freq, bool in_average, bool in_removeMean, bool in_apodize, 
-               ApodizeFunction in_apodizeFxn, int in_windowSize, int in_averageLength, double in_gaussianSigma, 
+CSD::CSD(ObjectStore *store, const ObjectTag &in_tag)
+  : DataObject(store, in_tag) {
+
+}
+
+CSD::CSD(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_V,
+               double in_freq, bool in_average, bool in_removeMean, bool in_apodize,
+               ApodizeFunction in_apodizeFxn, int in_windowSize, int in_averageLength, double in_gaussianSigma,
                PSDType in_outputType, const QString &in_vectorUnits, const QString &in_rateUnits)
-: DataObject() {
-  commonConstructor(in_tag, in_V, in_freq, in_average, in_removeMean,
-                    in_apodize, in_apodizeFxn, in_windowSize, in_averageLength, in_gaussianSigma, 
-                    in_vectorUnits, in_rateUnits, in_outputType, in_V->tagName());
+: DataObject(store, in_tag) {
+  commonConstructor(store, in_V, in_freq, in_average, in_removeMean,
+                    in_apodize, in_apodizeFxn, in_windowSize, in_averageLength, in_gaussianSigma,
+                    in_vectorUnits, in_rateUnits, in_outputType, in_V->tag().displayString());  // FIXME: is this right?
   setDirty();
 }
 
 
-CSD::CSD(const QDomElement &e)
-: DataObject(e) {
-  
+CSD::CSD(ObjectStore *store, const QDomElement &e)
+: DataObject(store, e) {
     QString in_tag;
     QString vecName;
     QString in_vectorUnits, in_rateUnits;
@@ -64,7 +71,7 @@ CSD::CSD(const QDomElement &e)
     int in_windowSize = 5000;
     double in_gaussianSigma = 3.0;
     PSDType in_outputType = PSDAmplitudeSpectralDensity;
-    
+
     QDomNode n = e.firstChild();
     while (!n.isNull()) {
       QDomElement e = n.toElement(); // try to convert the node to an element.
@@ -99,24 +106,61 @@ CSD::CSD(const QDomElement &e)
       }
       n = n.nextSibling();
     }
-    
+
     _inputVectorLoadQueue.append(qMakePair(QString(INVECTOR), vecName));
-    
-    commonConstructor(in_tag, in_V, in_freq, in_average, in_removeMean,
+
+    setTagName(ObjectTag::fromString(in_tag));
+
+    commonConstructor(store, in_V, in_freq, in_average, in_removeMean,
                       in_apodize, in_apodizeFxn, in_windowSize, in_averageLength, in_gaussianSigma,
                       in_vectorUnits, in_rateUnits, in_outputType, vecName);
 }
 
 
-void CSD::commonConstructor(const QString& in_tag, VectorPtr in_V,
-                               double in_freq, bool in_average, bool in_removeMean, bool in_apodize, 
-                               ApodizeFunction in_apodizeFxn, int in_windowSize, int in_averageLength, 
-                               double in_gaussianSigma, const QString& in_vectorUnits, 
-                               const QString& in_rateUnits, PSDType in_outputType, const QString& vecName) {
-  _typeString = i18n("Cumulative Spectral Decay");
+void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
+    bool in_removeMean, bool in_apodize, ApodizeFunction in_apodizeFxn,
+    int in_windowSize, int in_length, double in_gaussianSigma,
+    PSDType in_outputType, const QString& in_vectorUnits,
+    const QString& in_rateUnits) {
+  _inputVectors[INVECTOR] = in_V;
+  QString vecName = in_V ? in_V->tag().displayString() : QString::null;
+  _frequency = in_freq;
+  _average = in_average;
+  _apodize = in_apodize;
+  _windowSize = in_windowSize;
+  _apodizeFxn = in_apodizeFxn;
+  _gaussianSigma = in_gaussianSigma;
+  _removeMean = in_removeMean;
+  _averageLength = in_length;
+  _vectorUnits = in_vectorUnits;
+  _rateUnits = in_rateUnits;
+  _outputType = in_outputType;
+
+  if (_frequency <= 0.0) {
+    _frequency = 1.0;
+  }
+
+  Q_ASSERT(store());
+  MatrixPtr outMatrix = store()->createObject<Matrix>(ObjectTag("csd", tag()));
+  outMatrix->setProvider(this);
+  outMatrix->change(1, 1);
+  outMatrix->setLabel(i18n("Power [%1/%2^{1/2}]").arg(_vectorUnits).arg(_rateUnits));
+  outMatrix->setXLabel(i18n("%1 [%2]").arg(vecName).arg(_vectorUnits));
+  outMatrix->setYLabel(i18n("Frequency [%1]").arg(_rateUnits));
+  _outMatrix = _outputMatrices.insert(OUTMATRIX, outMatrix).value();
+
+  updateMatrixLabels();
+  _outMatrix->setDirty();
+}
+
+void CSD::commonConstructor(ObjectStore *store, VectorPtr in_V,
+                            double in_freq, bool in_average, bool in_removeMean, bool in_apodize,
+                            ApodizeFunction in_apodizeFxn, int in_windowSize, int in_averageLength,
+                            double in_gaussianSigma, const QString& in_vectorUnits,
+                            const QString& in_rateUnits, PSDType in_outputType, const QString& vecName) {
+  _typeString = staticTypeString;
   _type = "Cumulative Spectral Decay";
   _inputVectors[INVECTOR] = in_V;
-  setTagName(ObjectTag::fromString(in_tag));
   _frequency = in_freq;
   _average = in_average;
   _apodize = in_apodize;
@@ -132,27 +176,23 @@ void CSD::commonConstructor(const QString& in_tag, VectorPtr in_V,
   if (_frequency <= 0.0) {
     _frequency = 1.0;
   }
- 
-  {
-    KstWriteLocker blockMatrixUpdates(&matrixList.lock());
 
-    MatrixPtr outMatrix = new Matrix(ObjectTag("csd", tag()), this, 1, 1);
-    outMatrix->setLabel(i18n("Power [%1/%2^{1/2}]").arg(_vectorUnits).arg(_rateUnits));
-    outMatrix->setXLabel(i18n("%1 [%2]").arg(vecName).arg(_vectorUnits));
-    outMatrix->setYLabel(i18n("Frequency [%1]").arg(_rateUnits));
-    _outMatrix = _outputMatrices.insert(OUTMATRIX, outMatrix);
-  }
+  Q_ASSERT(store);
+  MatrixPtr outMatrix = store->createObject<Matrix>(ObjectTag("csd", tag()));
+  outMatrix->setProvider(this);
+  outMatrix->change(1, 1);
+  outMatrix->setLabel(i18n("Power [%1/%2^{1/2}]").arg(_vectorUnits).arg(_rateUnits));
+  outMatrix->setXLabel(i18n("%1 [%2]").arg(vecName).arg(_vectorUnits));
+  outMatrix->setYLabel(i18n("Frequency [%1]").arg(_rateUnits));
+  _outMatrix = _outputMatrices.insert(OUTMATRIX, outMatrix).value();
 
   updateMatrixLabels();
-  (*_outMatrix)->setDirty();
+  _outMatrix->setDirty();
 }
 
 
 CSD::~CSD() {
-  _outMatrix = _outputMatrices.end();
-  matrixList.lock().writeLock();
-  matrixList.remove(_outputMatrices[OUTMATRIX]);
-  matrixList.lock().unlock();
+  _outMatrix = 0L;
 }
 
 Object::UpdateType CSD::update(int update_counter) {
@@ -196,14 +236,14 @@ Object::UpdateType CSD::update(int update_counter) {
     }
 
     _psdCalculator.calculatePowerSpectrum(input + i, _windowSize, tempOutput, tempOutputLen, _removeMean,  false, _average, _averageLength, _apodize, _apodizeFxn, _gaussianSigma, _outputType, _frequency);
-    
-    // resize output matrix
-    (*_outMatrix)->resize(xSize+1, tempOutputLen);
 
-    if ((*_outMatrix)->sampleCount() == (xSize+1)*tempOutputLen) { // all is well.
+    // resize output matrix
+    _outMatrix->resize(xSize+1, tempOutputLen);
+
+    if (_outMatrix->sampleCount() == (xSize+1)*tempOutputLen) { // all is well.
       // copy elements to output matrix
       for (int j=0; j < tempOutputLen; j++) {
-        (*_outMatrix)->setValueRaw(xSize, j, tempOutput[j]);
+        _outMatrix->setValueRaw(xSize, j, tempOutput[j]);
       }
     } else {
       Debug::self()->log(i18n("Could not allocate sufficient memory for CSD."), Debug::Error);
@@ -217,8 +257,8 @@ Object::UpdateType CSD::update(int update_counter) {
 
   double frequencyStep = .5*_frequency/(double)(tempOutputLen-1);
 
-  (*_outMatrix)->change((*_outMatrix)->tag(), xSize, tempOutputLen, 0, 0, _windowSize, frequencyStep);
-  (*_outMatrix)->update(update_counter);
+  _outMatrix->change(xSize, tempOutputLen, 0, 0, _windowSize, frequencyStep);
+  _outMatrix->update(update_counter);
 
   unlockInputsAndOutputs();
 
@@ -228,7 +268,7 @@ Object::UpdateType CSD::update(int update_counter) {
 void CSD::save(QTextStream &ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<csdobject>" << endl;
-  ts << l2 << "<tag>" << Qt::escape(tagName()) << "</tag>" << endl;
+  ts << l2 << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
   ts << l2 << "<vectag>" << Qt::escape(_inputVectors[INVECTOR]->tag().tagString()) << "</vectag>" << endl;
   ts << l2 << "<sampRate>"  << _frequency << "</sampRate>" << endl;
   ts << l2 << "<average>" << _average << "</average>" << endl;
@@ -347,7 +387,7 @@ void CSD::setFreq(double in_freq) {
 
 ApodizeFunction CSD::apodizeFxn() const {
   return _apodizeFxn;
-} 
+}
 
 void CSD::setApodizeFxn(ApodizeFunction in_fxn) {
   setDirty();
@@ -370,7 +410,7 @@ int CSD::windowSize() const {
 
 void CSD::setWindowSize(int in_size) {
   setDirty();
-  _windowSize = in_size;  
+  _windowSize = in_size;
 }
 
 double CSD::gaussianSigma() const {
@@ -384,12 +424,12 @@ void CSD::setGaussianSigma(double in_sigma) {
 
 
 MatrixPtr CSD::outputMatrix() const {
-  return *_outMatrix;  
+  return _outMatrix;
 }
 
 
 const QString& CSD::vectorUnits() const {
-  return _vectorUnits;  
+  return _vectorUnits;
 }
 
 
@@ -407,36 +447,42 @@ void CSD::setRateUnits(const QString& units) {
   _rateUnits = units;
 }
 
- 
+
 DataObjectPtr CSD::makeDuplicate(DataObjectDataObjectMap& duplicatedMap) {
+#if 0
   QString name(tagName() + '\'');
   while (Data::self()->dataTagNameNotUnique(name, false)) {
     name += '\'';
   }
   CSDPtr csd = new CSD(name, _inputVectors[INVECTOR], _frequency, _average, _removeMean,
-                             _apodize, _apodizeFxn, _windowSize, _averageLength, _gaussianSigma, 
+                             _apodize, _apodizeFxn, _windowSize, _averageLength, _gaussianSigma,
                              _outputType, _vectorUnits, _rateUnits);
   duplicatedMap.insert(this, DataObjectPtr(csd));
   return DataObjectPtr(csd);
+#endif
+  // FIXME: implement this
+  return 0L;
 }
 
 void CSD::updateMatrixLabels(void) {
     switch (_outputType) {
     default:
     case 0: // amplitude spectral density (default) [V/Hz^1/2]
-      (*_outMatrix)->setLabel(i18n("ASD [%1/%2^{1/2}]").arg(_vectorUnits).arg(_rateUnits));
+      _outMatrix->setLabel(i18n("ASD [%1/%2^{1/2}]").arg(_vectorUnits).arg(_rateUnits));
       break;
     case 1: // power spectral density [V^2/Hz]
-      (*_outMatrix)->setLabel(i18n("PSD [%1^2/%2]").arg(_vectorUnits).arg(_rateUnits));    
+      _outMatrix->setLabel(i18n("PSD [%1^2/%2]").arg(_vectorUnits).arg(_rateUnits));
       break;
     case 2: // amplitude spectrum [V]
-      (*_outMatrix)->setLabel(i18n("Amplitude Spectrum [%1]").arg(_vectorUnits));
+      _outMatrix->setLabel(i18n("Amplitude Spectrum [%1]").arg(_vectorUnits));
       break;
     case 3: // power spectrum [V^2]
-      (*_outMatrix)->setLabel(i18n("Power Spectrum [%1^2]").arg(_vectorUnits));    
+      _outMatrix->setLabel(i18n("Power Spectrum [%1^2]").arg(_vectorUnits));
       break;
   }
 }
 
+
 }
+
 // vim: ts=2 sw=2 et

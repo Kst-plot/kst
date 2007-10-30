@@ -15,43 +15,43 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <qstring.h>
-#include <qstringlist.h>
+#include <QString>
+#include <QStringList>
 
 #include "kst_i18n.h"
 #include "kst_export.h"
+#include "objectstore.h"
 
 namespace Equations {
   KST_EXPORT QStringList errorStack;
 }
 
-
 static const char *EParseErrorUnknown = I18N_NOOP("parse error"); // from bison
-extern "C" const char *EParseErrorEmpty = I18N_NOOP("Equations is empty.");
-extern "C" const char *EParseErrorEmptyArg = I18N_NOOP("Function argument is empty.");
-extern "C" const char *EParseErrorTwoOperands = I18N_NOOP("Two operands are required.");
-extern "C" const char *EParseErrorEmptyParentheses = I18N_NOOP("Empty parentheses are forbidden except in function calls.");
-extern "C" const char *EParseErrorMissingClosingParenthesis = I18N_NOOP("Closing parenthesis is missing.");
-extern "C" const char *EParseErrorNoImplicitMultiply = I18N_NOOP("Term must be followed by an operator.  Implicit multiplication is not supported.");
-extern "C" const char *EParseErrorRequiresOperand = I18N_NOOP("This operator requires an operand.");
-extern "C" const char *EParseErrorToken = I18N_NOOP("Unknown character '%1'.");
+/*extern "C"*/ const char *EParseErrorEmpty = I18N_NOOP("Equations is empty.");
+/*extern "C"*/ const char *EParseErrorEmptyArg = I18N_NOOP("Function argument is empty.");
+/*extern "C"*/ const char *EParseErrorTwoOperands = I18N_NOOP("Two operands are required.");
+/*extern "C"*/ const char *EParseErrorEmptyParentheses = I18N_NOOP("Empty parentheses are forbidden except in function calls.");
+/*extern "C"*/ const char *EParseErrorMissingClosingParenthesis = I18N_NOOP("Closing parenthesis is missing.");
+/*extern "C"*/ const char *EParseErrorNoImplicitMultiply = I18N_NOOP("Term must be followed by an operator.  Implicit multiplication is not supported.");
+/*extern "C"*/ const char *EParseErrorRequiresOperand = I18N_NOOP("This operator requires an operand.");
+/*extern "C"*/ const char *EParseErrorToken = I18N_NOOP("Unknown character '%1'.");
 
 
-extern "C" void yyClearErrors() {
+/*extern "C"*/ void yyClearErrors() {
   Equations::errorStack.clear();
 }
 
 
-extern "C" int yyErrorCount() {
+/*extern "C"*/ int yyErrorCount() {
   return Equations::errorStack.count();
 }
 
 
-extern "C" void yyerror(const char *s) {
+/*extern "C"*/ void yyerror(Kst::ObjectStore *store, const char *s) {
   Equations::errorStack << i18n(s);
 }
 
-extern "C" void yyerrortoken(char c) {
+/*extern "C"*/ void yyerrortoken(char c) {
   Equations::errorStack << i18n(EParseErrorToken).arg(c);
 }
 

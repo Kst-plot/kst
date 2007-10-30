@@ -21,6 +21,7 @@
 #include <primitivefactory.h>
 #include <relationfactory.h>
 #include <viewitem.h>
+#include "objectstore.h"
 
 #include <QDebug>
 #include <QFile>
@@ -29,7 +30,8 @@
 namespace Kst {
 
 Document::Document(MainWindow *window)
-: _win(window), _session(new SessionModel), _dirty(false), _isOpen(false), _fileName(QString::null) {
+: CoreDocument(), _win(window), _dirty(false), _isOpen(false), _fileName(QString::null) {
+  _session = new SessionModel(objectStore());
 }
 
 
@@ -63,6 +65,8 @@ bool Document::save(const QString& to) {
     return false;
   }
 
+  Q_ASSERT(objectStore());
+
   _fileName = file;
 
   QXmlStreamWriter xml;
@@ -73,35 +77,35 @@ bool Document::save(const QString& to) {
   xml.writeAttribute("version", "2.0");
 
   xml.writeStartElement("data");
-  foreach (DataSourcePtr s, dataSourceList) {
+  foreach (DataSourcePtr s, objectStore()->getObjects<DataSource>()) {
     s->saveSource(xml);
   }
   xml.writeEndElement();
 
   xml.writeStartElement("variables");
 
-  foreach (VectorPtr s, vectorList.list()) {
+  foreach (VectorPtr s, objectStore()->getObjects<Vector>()) {
     s->save(xml);
   }
-  foreach (MatrixPtr s, matrixList.list()) {
+  foreach (MatrixPtr s, objectStore()->getObjects<Matrix>()) {
     s->save(xml);
   }
-  foreach (ScalarPtr s, scalarList.list()) {
+  foreach (ScalarPtr s, objectStore()->getObjects<Scalar>()) {
     s->save(xml);
   }
-  foreach (StringPtr s, stringList.list()) {
+  foreach (StringPtr s, objectStore()->getObjects<String>()) {
     s->save(xml);
   }
   xml.writeEndElement();
 
   xml.writeStartElement("objects");
-  foreach (DataObjectPtr s, dataObjectList) {
+  foreach (DataObjectPtr s, objectStore()->getObjects<DataObject>()) {
     s->save(xml);
   }
   xml.writeEndElement();
 
   xml.writeStartElement("relations");
-  foreach (RelationPtr s, relationList) {
+  foreach (RelationPtr s, objectStore()->getObjects<Relation>()) {
     s->save(xml);
   }
   xml.writeEndElement();
@@ -177,11 +181,12 @@ bool Document::open(const QString& file) {
         switch (state) {
           case Objects:
             {
-              DataObjectPtr object = ObjectFactory::parse(xml);
-              if (object)
-                addDataObjectToList(object);
-              else
+              DataObjectPtr object = ObjectFactory::parse(objectStore(), xml);
+              if (object) {
+//                addDataObjectToList(object);
+              } else {
                 malformed();
+              }
               break;
             }
           case Graphics:
@@ -209,13 +214,13 @@ bool Document::open(const QString& file) {
             }
             break;
           case Data:
-            DataSourceFactory::parse(xml);
+            DataSourceFactory::parse(objectStore(), xml);
             break;
           case Variables:
-            PrimitiveFactory::parse(xml);
+            PrimitiveFactory::parse(objectStore(), xml);
             break;
           case Relations:
-            RelationFactory::parse(xml);
+            RelationFactory::parse(objectStore(), xml);
             break;
           case Unknown:
             malformed();

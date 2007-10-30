@@ -1,5 +1,5 @@
 /***************************************************************************
-                          kstvector.h  -  description
+                          vector.h  -  description
                              -------------------
     begin                : Fri Sep 22 2000
     copyright            : (C) 2000 by cbn
@@ -19,53 +19,51 @@
 #define VECTOR_H
 
 #include <math.h>
-#include <qhash.h>
-#include <qpointer.h>
-#include "objectcollection.h"
+
+#include <QHash>
+#include <QPointer>
+
 #include "primitive.h"
 #include "scalar.h"
 #include "kst_export.h"
 
 class QXmlStreamWriter;
 
-#define IS_POINT(x) (!isnan(x))
-#define NOT_POINT(x) (isnan(x))
-
-namespace KST {
-  // Do not compare against this, only assign it and use the helpers above.
-  extern KST_EXPORT const double NOPOINT;
-}
-
 namespace Equation {
   class Node;
 }
-
 
 namespace Kst {
 
 class KstDataObject;
 
-class Vector;
-typedef SharedPtr<Vector> VectorPtr;
 // KST::interpolate is still too polluting
 extern double kstInterpolate(double *v, int _size, int in_i, int ns_i) KST_EXPORT;
 extern double kstInterpolateNoHoles(double *v, int _size, int in_i, int ns_i) KST_EXPORT;
+
+class Vector;
+typedef SharedPtr<Vector> VectorPtr;
 
 /**A class for handling data vectors for kst.
  *@author cbn
  */
 class Vector : public Primitive {
   Q_OBJECT
+
   public:
-    /**
-     * Vectors do not automatically add themselves to the global vector list
-     */
-    Vector(ObjectTag in_tag = ObjectTag::invalidTag, int size = 0,
-        Object *provider = 0L, bool bIsScalarList = false);
-    Vector(const QString &tag, const QByteArray &data);
+    virtual const QString& typeString() const;
+    static const QString staticTypeString;
 
   protected:
+    Vector(ObjectStore *store, const ObjectTag& tag = ObjectTag::invalidTag, int size = 0,
+        Object *provider = 0L, bool bIsScalarList = false);
+    // TODO: do we need this constructor?
+    Vector(ObjectStore *store, const ObjectTag& tag, const QByteArray& data);
+
     virtual ~Vector();
+
+    friend class VectorFactory;
+    friend class ObjectStore; // FIXME: remove this when VectorFactory is working
 
   public:
     inline int length() const { return _size; }
@@ -134,16 +132,14 @@ class Vector : public Primitive {
 
     /** Generate a new vector [x0..x1] with n total points */
     // #### Remove
-    static VectorPtr generateVector(double x0, double x1, int n, const ObjectTag& tag);
-
-    virtual void setTagName(const ObjectTag& newTag);
+//    static VectorPtr generateVector(ObjectStore *store, double x0, double x1, int n, const ObjectTag& tag);
 
     /** Return a pointer to the raw vector */
     double *const value() const;
 
     /** access functions for _isScalarList */
     bool isScalarList() const { return _isScalarList; }
-    
+
     const QHash<QString, Scalar*>& scalars() const;
 
     void setLabel(const QString& label_in);
@@ -199,22 +195,22 @@ class Vector : public Primitive {
     double _min, _max, _mean, _minPos;
 
     /** Scalar Maintenance methods */
-    void CreateScalars();
+    void CreateScalars(ObjectStore *store);
     void RenameScalars();
 
     QString _label;
-    
+
     friend class DataObject;
     virtual double* realloced(double *memptr, int newSize);
     Object::UpdateType internalUpdate(Object::UpdateType providerRC);
 } KST_EXPORT;
 
-typedef ObjectList<VectorPtr> VectorList;
-typedef ObjectMap<VectorPtr> VectorMap;
-typedef ObjectCollection<Vector> VectorCollection;
+typedef ObjectList<Vector> VectorList;
+typedef ObjectMap<Vector> VectorMap;
 
 }
 
 Q_DECLARE_METATYPE(Kst::Vector*)
+
 #endif
 // vim: ts=2 sw=2 et

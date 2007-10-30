@@ -15,12 +15,14 @@
 #include <QPointer>
 #include <QString>
 
+#include "coredocument.h"
+
 namespace Kst {
 
 class MainWindow;
 class SessionModel;
 
-class Document {
+class Document : public CoreDocument {
   public:
     Document(MainWindow *win);
     ~Document();

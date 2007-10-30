@@ -20,16 +20,17 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include <qtextdocument.h>
+#include <QDebug>
+#include <QTextDocument>
 #include <QXmlStreamWriter>
 
-#include <qdebug.h>
 #include "kst_i18n.h"
 
 #include "datacollection.h"
 #include "debug.h"
 #include "datavector.h"
 #include "math_kst.h"
+#include "objectstore.h"
 
 // ReqNF <=0 means read from ReqF0 to end of File
 // ReqF0 < means start at EndOfFile-ReqNF.
@@ -43,24 +44,26 @@
 
 namespace Kst {
 
+const QString DataVector::staticTypeString = I18N_NOOP("Data Vector");
+
 /** Create a DataVector: raw data from a file */
-DataVector::DataVector(DataSourcePtr in_file, const QString &in_field,
-                       ObjectTag in_tag,
+DataVector::DataVector(ObjectStore *store, const ObjectTag& in_tag,
+                       DataSourcePtr in_file, const QString &in_field,
                        int in_f0, int in_n, int skip, bool in_DoSkip,
                        bool in_DoAve)
-: Vector(in_tag) {
+: Vector(store, in_tag) {
   commonRVConstructor(in_file, in_field, in_f0, in_n, skip,
       in_DoSkip, in_DoAve);
 }
 
 
-DataVector::DataVector(const QString &tag, const QByteArray &data,
-                       const QString &provider, const QString &file,
-                       const QString &field, int start, int num,
+DataVector::DataVector(ObjectStore *store, const ObjectTag& tag, const QByteArray& data,
+                       const QString& providerName, const QString& file,
+                       const QString& field, int start, int num,
                        int skip, bool doAve,
                        const QString &o_file,
                        int o_n, int o_f, int o_s, bool o_ave)
-: Vector(tag, data) {
+: Vector(store, tag, data) {
   DataSourcePtr in_file, in_provider;
   QString in_field;
   int in_f0 = 0;
@@ -69,21 +72,22 @@ DataVector::DataVector(const QString &tag, const QByteArray &data,
   bool in_DoSkip = false;
   bool in_DoAve = false;
 
+  DataSourceList dsList;
+  if (this->store()) {
+    dsList = this->store()->dataSourceList();
+  }
+
   //FIXME THIS CTOR IS SO OBFUSCATED IT IS LAUGHABLE!
-  if (!provider.isEmpty()) {
-      dataSourceList.lock().readLock();
-      in_provider = *dataSourceList.findTag(provider);
-      dataSourceList.lock().unlock();
+  if (!providerName.isEmpty()) {
+      in_provider = dsList.findTag(ObjectTag::fromString(providerName));
   }
 
   if (!in_provider && !file.isEmpty()) {
-    dataSourceList.lock().readLock();
     if (o_file == "|") {
-      in_file = dataSourceList.findFileName(file);
+      in_file = dsList.findFileName(file);
     } else {
-      in_file = dataSourceList.findFileName(o_file);
+      in_file = dsList.findFileName(o_file);
     }
-    dataSourceList.lock().unlock();
   }
 
   if (!field.isEmpty()) {
@@ -119,7 +123,7 @@ DataVector::DataVector(const QString &tag, const QByteArray &data,
   if (in_file) {
     // use datasource as tag context for this RVector
     // allow unique vector names to be displayed at top-level
-    setTagName(ObjectTag(this->tag().tag(), in_file->tag(), false));
+    setTagName(ObjectTag(this->tag().name(), in_file->tag(), false));
   }
 
   if (o_n > -2) {
@@ -139,6 +143,11 @@ DataVector::DataVector(const QString &tag, const QByteArray &data,
   }
   /* Call the common constructor */
   commonRVConstructor(in_file, in_field, in_f0, in_n, in_skip, in_DoSkip, in_DoAve);
+}
+
+
+const QString& DataVector::typeString() const {
+  return staticTypeString;
 }
 
 
@@ -179,13 +188,12 @@ void DataVector::commonRVConstructor(DataSourcePtr in_file,
   _dirty = true;
 
   if (!in_file) {
-    Debug::self()->log(i18n("Data file for vector %1 was not opened.", tagName()), Debug::Warning);
+    Debug::self()->log(i18n("Data file for vector %1 was not opened.", tag().tagString()), Debug::Warning);
   }
 }
 
 
 void DataVector::change(DataSourcePtr in_file, const QString &in_field,
-                        ObjectTag in_tag,
                         int in_f0, int in_n,
                         int in_skip, bool in_DoSkip,
                         bool in_DoAve) {
@@ -203,9 +211,6 @@ void DataVector::change(DataSourcePtr in_file, const QString &in_field,
   ReqF0 = in_f0;
   ReqNF = in_n;
   _field = in_field;
-  if (in_tag != tag()) {
-    setTagName(in_tag);
-  }
 
   if (_file) {
     _file->writeLock();
@@ -226,13 +231,13 @@ void DataVector::changeFile(DataSourcePtr in_file) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (!in_file) {
-    Debug::self()->log(i18n("Data file for vector %1 was not opened.", tagName()), Debug::Warning);
+    Debug::self()->log(i18n("Data file for vector %1 was not opened.", tag().tagString()), Debug::Warning);
   }
   _file = in_file;
   if (_file) {
     _file->writeLock();
   }
-  setTagName(ObjectTag(tag().tag(), _file->tag(), false));
+  setTagName(ObjectTag(tag().name(), _file->tag(), false));
   reset();
   if (_file) {
     _file->unlock();
@@ -729,17 +734,20 @@ void DataVector::reload() {
     if (_file->reset()) { // try the efficient way first
       reset();
     } else { // the inefficient way
-      DataSourcePtr newsrc = DataSource::loadSource(_file->fileName(), _file->fileType());
+      DataSourcePtr newsrc = DataSource::loadSource(store(), _file->fileName(), _file->fileType());
       assert(newsrc != _file);
       if (newsrc) {
         _file->unlock();
-        dataSourceList.lock().writeLock();
-        dataSourceList.removeAll(_file);
+        // FIXME: need to writelock store?
+        if (store()) {
+          store()->removeObject(_file);
+        }
         _dontUseSkipAccel = false;
         _file = newsrc;
         _file->writeLock();
-        dataSourceList.append(_file);
-        dataSourceList.lock().unlock();
+        if (store()) {
+          store()->addObject<DataSource>(_file);
+        }
         reset();
       }
     }
@@ -754,8 +762,8 @@ DataSourcePtr DataVector::dataSource() const {
 
 
 DataVectorPtr DataVector::makeDuplicate() const {
-  QString newTag = tag().tag() + "'";
-  return new DataVector(_file, _field, ObjectTag(newTag, tag().context()), ReqF0, ReqNF, Skip, DoSkip, DoAve);
+  QString newTag = tag().name() + "'";
+  return new DataVector(store(), ObjectTag(newTag, tag().context()), _file, _field, ReqF0, ReqNF, Skip, DoSkip, DoAve);
 }
 
 

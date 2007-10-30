@@ -18,15 +18,23 @@
 namespace Kst {
 
 class KST_EXPORT EditableMatrix : public Matrix {
+  Q_OBJECT
+
   public:
-    EditableMatrix(const QDomElement &e);
-    EditableMatrix(ObjectTag in_tag, uint nX, uint nY, double minX, double minY, double stepX, double stepY);
+    virtual const QString& typeString() const;
+    static const QString staticTypeString;
 
     virtual void save(QTextStream &ts, const QString& indent = QString::null);
+
+  protected:
+    EditableMatrix(ObjectStore *store, const ObjectTag& in_tag, uint nX=1, uint nY=1, double minX=0, double minY=0, double stepX=1, double stepY=1);
+    EditableMatrix(ObjectStore *store, const QDomElement &e);
+
+    friend class ObjectStore;
 };
 
 typedef SharedPtr<EditableMatrix> EditableMatrixPtr;
-typedef ObjectList<EditableMatrixPtr> EditableMatrixList;
+typedef ObjectList<EditableMatrix> EditableMatrixList;
 
 }
 

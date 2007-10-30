@@ -16,13 +16,13 @@
 #include <math_kst.h>
 #include <datacollection.h>
 #include <dataobjectcollection.h>
+#include <objectstore.h>
 #include <editablematrix.h>
 
+static Kst::ObjectStore _store;
 
 void TestEditableMatrix::cleanupTestCase() {
-  Kst::matrixList.clear();
-  Kst::scalarList.clear();
-  Kst::dataObjectList.clear();
+	_store.clear();
 }
 
 
@@ -78,7 +78,7 @@ QDomDocument TestEditableMatrix::makeDOMElement(const QString& tag, const int nx
   for (int i = 0; i < dataSize; i++) {
     qds << 1.1;
   }
-  
+
   text = amDOM.createTextNode(QString(qCompress(qba).toBase64()));
 
   child.appendChild(text);
@@ -92,13 +92,13 @@ QDomDocument TestEditableMatrix::makeDOMElement(const QString& tag, const int nx
 void TestEditableMatrix::testEditableMatrix() {
 
   bool ok = true;
-  
+
   QDomNode n = makeDOMElement("amDOM", 0, 0, 0, 0, 1, 1, 9).firstChild();
   QDomElement e = n.toElement();
 
   //basic default constructor values
-  Kst::EditableMatrix* am1 = new Kst::EditableMatrix(e);
-  QVERIFY(am1->tagName().startsWith("amDOM"));
+  Kst::EditableMatrixPtr am1 = Kst::kst_cast<Kst::EditableMatrix>(_store.createObject<Kst::EditableMatrix>(e));
+  QVERIFY(am1->tag().tagString().startsWith("amDOM"));
   QCOMPARE(am1->sampleCount(), 0);
   QCOMPARE(am1->minValue(), 0.0);
   QCOMPARE(am1->maxValue(), 0.0);
@@ -109,14 +109,14 @@ void TestEditableMatrix::testEditableMatrix() {
   QCOMPARE(am1->sampleCount(), 0);
   QCOMPARE(am1->meanValue(), 0.0);
 
-  //basic symetrical matrix
-  n = makeDOMElement("Symetrical", 3, 3, 0, 0, 1, 1, 9).firstChild();
+  //basic symmetrical matrix
+  n = makeDOMElement("Symmetrical", 3, 3, 0, 0, 1, 1, 9).firstChild();
   e = n.toElement();
 
   //basic default constructor values
-  Kst::EditableMatrix* am2 = new Kst::EditableMatrix(e);
-  
-  QCOMPARE(am2->tagName(), QLatin1String("Symetrical"));
+  Kst::EditableMatrixPtr am2 = Kst::kst_cast<Kst::EditableMatrix>(_store.createObject<Kst::EditableMatrix>(e));
+
+  QCOMPARE(am2->tag().tagString(), QLatin1String("Symmetrical"));
   QVERIFY(am2->resize(3, 3, true));
 
   for(int i =0 ; i < 3; i++){
@@ -142,7 +142,7 @@ void TestEditableMatrix::testEditableMatrix() {
 
   am2->blank();
 
-  am2->change(Kst::ObjectTag::fromString(am2->tagName()), 3, 3, 0, 0, 0, 0); //should not be legal
+  am2->change(3, 3, 0, 0, 0, 0); //should not be legal
   QCOMPARE(am2->xNumSteps(), 3);
   QCOMPARE(am2->yNumSteps(), 3);
   QCOMPARE(am2->minX(), 0.0);
@@ -160,7 +160,9 @@ void TestEditableMatrix::testEditableMatrix() {
   QVERIFY(am2->value(1, 1) != 5.0);
   QVERIFY(am2->setValueRaw(2, 2, 6.0)); //fails
 
-  Kst::EditableMatrix* um1 = new Kst::EditableMatrix(Kst::ObjectTag::fromString("Unity"), 3, 3, 0.0, 0.0, 1.0, 1.0);
+  Kst::EditableMatrixPtr um1 = Kst::kst_cast<Kst::EditableMatrix>(_store.createObject<Kst::EditableMatrix>(Kst::ObjectTag::fromString("Unity")));
+  Q_ASSERT(um1);
+  um1->resize(3, 3, true);
   um1->setEditable(true);
   QVERIFY(um1->setValue(0, 0, 1));
   QVERIFY(um1->setValue(1, 1, 1));
@@ -205,7 +207,7 @@ void TestEditableMatrix::testEditableMatrix() {
   QVERIFY(ok);
   QCOMPARE(um1->value(2, 2, &ok), 0.0);
   QVERIFY(ok);
-  
+
   QVERIFY(um1->setValue(0, 0, 1));
   QVERIFY(um1->setValue(1, 1, 1));
   QVERIFY(um1->setValue(2, 2, 1));
@@ -226,7 +228,7 @@ void TestEditableMatrix::testEditableMatrix() {
   QCOMPARE(um1->value(1, 2, &ok), 0.0);
   QVERIFY(!ok);
 
-  QVERIFY(um1->resize(4, 4, false));
+  QVERIFY(um1->resize(4, 4, true));
   QCOMPARE(um1->value(0, 0, &ok), 1.0);
   QVERIFY(ok);
   QCOMPARE(um1->value(0, 1, &ok), 0.0);
@@ -286,8 +288,9 @@ void TestEditableMatrix::testEditableMatrix() {
   QCOMPARE(um1->minValue(), 0.0);
   QCOMPARE(um1->maxValue(), 0.0);
 
-  Kst::EditableMatrix* sm = new Kst::EditableMatrix(Kst::ObjectTag::fromString("Spike"), 2, 2, 0.0, 0.0, 1.0, 1.0);
-  
+  Kst::EditableMatrixPtr sm = Kst::kst_cast<Kst::EditableMatrix>(_store.createObject<Kst::EditableMatrix>(Kst::ObjectTag::fromString("Spike")));
+  Q_ASSERT(sm);
+  sm->change(2, 2, 0.0, 0.0, 1.0, 1.0);
   sm->setEditable(true);
   QVERIFY(sm->resize(2, 2, false));
   QCOMPARE(sm->xNumSteps(), 2);
@@ -305,7 +308,7 @@ void TestEditableMatrix::testEditableMatrix() {
   sm->calcNoSpikeRange(-100);
   QCOMPARE(sm->minValueNoSpike(), 0.0);
   QCOMPARE(sm->maxValueNoSpike(), 0.0);
-  
+
   sm->calcNoSpikeRange(0.9);
   QVERIFY(sm->minValueNoSpike() >= 1E+300 );
   QVERIFY(sm->maxValueNoSpike() <= -1E+300);

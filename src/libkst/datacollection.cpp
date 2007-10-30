@@ -1,7 +1,13 @@
 /***************************************************************************
+                            datacollection.cpp
+                             -------------------
+    begin                : June 12, 2003
+    copyright            : (C) 2003 The University of Toronto
+    email                :
+ ***************************************************************************/
+
+/***************************************************************************
  *                                                                         *
- *   copyright : (C) 2003 The University of Toronto                        *
-*                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -20,21 +26,6 @@
 #include "psversion.h"
 
 namespace Kst {
-
-/** The list of data sources (files) */
-DataSourceList dataSourceList;
-
-/** The list of vectors that are being read */
-VectorCollection vectorList;
-
-/** The list of matrices that are being read */
-MatrixCollection matrixList;
-
-/** The list of Scalars which have been generated */
-ScalarCollection scalarList;
-
-/** The list of Strings */
-StringCollection stringList;
 
 static QMutex bigLock;
 
@@ -98,122 +89,13 @@ Data::~Data() {
 }
 
 
-bool Data::vectorTagNameNotUniqueInternal(const QString& tag) {
-  /* verify that the tag name is not empty */
-  if (tag.trimmed().isEmpty()) {
-      return true;
-  }
-
-  /* verify that the tag name is not used by a data object */
-  vectorList.lock().readLock();
-  bool vc = vectorList.tagExists(tag);
-  vectorList.lock().unlock();
-  if (!vc) {
-    scalarList.lock().readLock();
-    vc = scalarList.tagExists(tag);
-    scalarList.lock().unlock();
-  }
-  return vc;
-}
-
-
-bool Data::matrixTagNameNotUniqueInternal(const QString& tag) {
-  /* verify that the tag name is not empty */
-  if (tag.trimmed().isEmpty()) {
-    return true;
-  }
-
-  /* verify that the tag name is not used by a data object */
-  KstReadLocker ml(&matrixList.lock());
-  KstReadLocker ml2(&scalarList.lock());
-  if (matrixList.tagExists(tag) || scalarList.tagExists(tag)) {
-    return true;
-  }
-  return false;  
-}
-
-
-bool Data::tagNameNotUnique(const QString& tag, bool warn, void *p) {
-  Q_UNUSED(p)
-  return dataTagNameNotUnique(tag, warn) || vectorTagNameNotUnique(tag, warn);
-}
-
-
-bool Data::dataTagNameNotUnique(const QString& tag, bool warn, void *parent) {
-  Q_UNUSED(tag)
-  Q_UNUSED(warn)
-  Q_UNUSED(parent)
-  return false;
-}
-
-
-bool Data::vectorTagNameNotUnique(const QString& tag, bool warn, void *p) {
-  Q_UNUSED(p)
-  Q_UNUSED(warn)
-  /* verify that the tag name is not empty */
-  if (tag.trimmed().isEmpty()) {
-      return true;
-  }
-
-  /* verify that the tag name is not used by a data object */
-  KstReadLocker ml(&vectorList.lock());
-  KstReadLocker ml2(&scalarList.lock());
-  if (vectorList.tagExists(tag) || scalarList.tagExists(tag)) {
-      return true;
-  }
-
-  return false;
-}
-
-
-bool Data::matrixTagNameNotUnique(const QString& tag, bool warn, void *p) {
-  Q_UNUSED(p)
-  Q_UNUSED(warn)
-  /* verify that the tag name is not empty */
-  if (tag.trimmed().isEmpty()) {
-    return true;
-  }
-
-  /* verify that the tag name is not used by a data object */
-  KstReadLocker ml(&matrixList.lock());
-  KstReadLocker ml2(&scalarList.lock());
-  if (matrixList.tagExists(tag) || scalarList.tagExists(tag)) {
-    return true;
-  }
-  return false;
-}
-
-
-bool Data::dataSourceTagNameNotUnique(const QString& tag, bool warn, void *p) {
-  Q_UNUSED(p)
-  Q_UNUSED(warn)
-  /* verify that the tag name is not empty */
-  if (tag.trimmed().isEmpty()) {
-    return true;
-  }
-
-  /* verify that the tag name is not used by a data source */
-  KstReadLocker l(&dataSourceList.lock());
-  if (dataSourceList.findTag(tag) != dataSourceList.end()) {
-    return true;
-  }
-  return false;
-}
-
-
 void Data::removeCurveFromPlots(Relation *c) {
   Q_UNUSED(c)
   // meaningless in no GUI: no plots!
 }
 
 
-bool Data::viewObjectNameNotUnique(const QString& tag) {
-  Q_UNUSED(tag)
-  // meaningless in no GUI: no view objects!
-  return false;
-}
-
-
+#if 0
 int Data::vectorToFile(VectorPtr v, QFile *f) {
   Q_UNUSED(v)
   Q_UNUSED(f)
@@ -229,6 +111,7 @@ int Data::vectorsToFile(const VectorList& l, QFile *f, bool interpolate) {
   // FIXME: implement me (non-gui)
   return 0;
 }
+#endif
 
 
 QList<PlotItemInterface*> Data::plotList() const {

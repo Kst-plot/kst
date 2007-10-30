@@ -5,7 +5,16 @@ cd `dirname $0`
 export SCRIPTDIR=$PWD
 export BUILDDIR=$PWD/build
 
+echo "Building Kst from $SCRIPTDIR into $BUILDDIR"
+
 mkdir -p $BUILDDIR
 cd $BUILDDIR
 qmake -r $SCRIPTDIR/kst.pro
-make
+
+if [ -d /opt/icecream/bin ]
+then
+	echo "Using Icecream"
+	PATH=/opt/icecream/bin:$PATH make -j4
+else
+	make
+fi

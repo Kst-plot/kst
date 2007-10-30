@@ -22,6 +22,7 @@
 #include "labelitem.h"
 #include "lineitem.h"
 #include "memorywidget.h"
+#include "objectstore.h"
 #include "pictureitem.h"
 #include "plotitem.h"
 #include "plotitemmanager.h"
@@ -45,6 +46,7 @@
 
 //FIXME Temporaries REMOVE!!
 #include "editablevector.h"
+#include "generatedvector.h"
 #include "datacollection.h"
 #include "dataobjectcollection.h"
 #include "equation.h"
@@ -98,27 +100,9 @@ void MainWindow::performHeavyStartupActions() {
 
 
 void MainWindow::cleanup() {
-  dataObjectList.lock().writeLock();
-  DataObjectList dol = dataObjectList; //FIXME What is going on here?
-  dataObjectList.clear();
-  dataObjectList.lock().unlock();
-  dol.clear(); //and here?
-
-  dataSourceList.lock().writeLock();
-  dataSourceList.clear();
-  dataSourceList.lock().unlock();
-  matrixList.lock().writeLock();
-  matrixList.clear();
-  matrixList.lock().unlock();
-  scalarList.lock().writeLock();
-  scalarList.clear();
-  scalarList.lock().unlock();
-  stringList.lock().writeLock();
-  stringList.clear();
-  stringList.lock().unlock();
-  vectorList.lock().writeLock();
-  vectorList.clear();
-  vectorList.lock().unlock();
+  if (document() && document()->objectStore()) {
+    document()->objectStore()->clear();
+  }
 }
 
 
@@ -377,11 +361,16 @@ void MainWindow::breakLayout() {
 
 
 void MainWindow::demoModel() {
-  VectorPtr v = new Vector;
+  Q_ASSERT(document() && document()->objectStore());
+  VectorPtr v = kst_cast<Vector>(document()->objectStore()->createObject<Vector>(ObjectTag::fromString("V1")));
+  Q_ASSERT(v);
   v->resize(999999);
-  VectorPtr v2 = new Vector;
+  VectorPtr v2 = kst_cast<Vector>(document()->objectStore()->createObject<Vector>(ObjectTag::fromString("V2")));
+  Q_ASSERT(v2);
   v2->resize(999999);
-  EditableVectorPtr v3 = new EditableVector(25, ObjectTag::fromString("Editable V"));
+  EditableVectorPtr v3 = kst_cast<EditableVector>(document()->objectStore()->createObject<EditableVector>(ObjectTag::fromString("Editable V")));
+  Q_ASSERT(v3);
+  v3->resize(25);
   double *d = const_cast<double *>(v->value()); // yay :)
   double *d2 = const_cast<double *>(v2->value()); // yay :)
   d[0] = 1;
@@ -390,11 +379,17 @@ void MainWindow::demoModel() {
     d[i] = d[i-1] + 0.002;
     d2[i] = d2[i-1] + 0.003;
   }
-  EquationPtr ep = new Equation("My Equation", "x^2", 0, 100, 1000);
+  GeneratedVectorPtr gv = kst_cast<GeneratedVector>(document()->objectStore()->createObject<GeneratedVector>(ObjectTag::fromString("Generated V")));
+  Q_ASSERT(gv);
+  gv->changeRange(0, 100, 1000);
+  EquationPtr ep = kst_cast<Equation>(document()->objectStore()->createObject<Equation>(ObjectTag::fromString("My Equation")));
+  Q_ASSERT(ep);
+  ep->setExistingXVector(VectorPtr(gv), false);
+  ep->setEquation("x^2");
   ep->writeLock();
   ep->update(0);
   ep->unlock();
-  addDataObjectToList(ep.data());
+//  addDataObjectToList(ep.data());
 }
 
 

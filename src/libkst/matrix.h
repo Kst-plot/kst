@@ -1,7 +1,15 @@
 /***************************************************************************
+                     matrix.h: 2D matrix type for kst
+                             -------------------
+    begin                : Mon July 19 2004
+    copyright            : (C) 2004 by University of British Columbia
+    email                :
+ ***************************************************************************/
+
+/***************************************************************************
  *                                                                         *
  *   copyright : (C) 2007 The University of Toronto                        *
- *   copyright : (C) 2004  University of British Columbia                        *
+ *   copyright : (C) 2004  University of British Columbia                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -13,35 +21,35 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
-#include <qhash.h>
+#include <QHash>
+
 #include "scalar.h"
 #include "primitive.h"
-
 
 class QXmlStreamWriter;
 
 namespace Kst {
 
-class DataObject;
-class Matrix;
-
-typedef SharedPtr<Matrix> MatrixPtr;
-
 class KST_EXPORT Matrix : public Primitive {
   Q_OBJECT
+
   public:
-    // Matrices do not automatically add themselves to the global matrix list
-    Matrix(ObjectTag in_tag = ObjectTag::invalidTag,
+    virtual const QString& typeString() const;
+    static const QString staticTypeString;
+
+  protected:
+    Matrix(ObjectStore *store, ObjectTag tag = ObjectTag::invalidTag,
               Object *provider = 0L, uint nX = 1, uint nY = 0,
               double minX = 0, double minY = 0,
               double stepX = 1, double stepY = 1);
 
-  protected:
-    ~Matrix();
-    
+    virtual ~Matrix();
+
+    friend class ObjectStore;
+
   public:
-    void change(const ObjectTag& tag, uint nX, uint nY, double minX, double minY,
-        double stepX, double stepY);
+    void change(uint nX, uint nY, double minX=0, double minY=0,
+        double stepX=1, double stepY=1);
 
     // Return the sample count (x times y) of the matrix
     virtual int sampleCount() const;
@@ -49,15 +57,15 @@ class KST_EXPORT Matrix : public Primitive {
     // return the z value of the rectangle in which the specified point lies
     // ok is false if the point is out of bounds
     double value(double x, double y, bool *ok = 0L) const;
-    
+
     // set the z value of the rectangle in which the specified point lies
     // return false if the point is out of bounds
     bool setValue(double x, double y, double z);
 
-    // return the value of the specified rectangle 
+    // return the value of the specified rectangle
     // ok is false if the rectangle does not exist
     double valueRaw(int x, int y, bool *ok = 0L) const;
-    
+
     // set the value of the specified rectangle
     // return false if the rectangle does not exist
     bool setValueRaw(int x, int y, double z);
@@ -66,7 +74,7 @@ class KST_EXPORT Matrix : public Primitive {
     double minValue() const;
     double maxValue() const;
 
-    // spike insensitive values 
+    // spike insensitive values
     void calcNoSpikeRange(double per = 0.005);
     double maxValueNoSpike() const;
     double minValueNoSpike() const;
@@ -99,9 +107,6 @@ class KST_EXPORT Matrix : public Primitive {
     // save the matrix
     virtual void save(QXmlStreamWriter &s);
 
-    // set tag name of the matrix
-    virtual void setTagName(const ObjectTag& tag);
-
     // the statistics scalars for this matrix
     const QHash<QString, Scalar*>& scalars() const;
 
@@ -125,7 +130,7 @@ class KST_EXPORT Matrix : public Primitive {
     double yStepSize() const { return _stepY; }
     double minX() const { return _minX; }
     double minY() const { return _minY; }
-    
+
     virtual bool resize(int xSize, int ySize, bool reinit = true);
 
   protected:
@@ -146,18 +151,18 @@ class KST_EXPORT Matrix : public Primitive {
     double _maxNoSpike;
 
     // labels for this matrix
-    QString _label; 
+    QString _label;
     QString _xLabel;
     QString _yLabel;
 
-    void createScalars();
+    void createScalars(ObjectStore *store);
     void renameScalars();
     void updateScalars();
 
     // the flat-packed array in row-major order
     double *_z;
     int _zSize; // internally keep track of real _z size
-    
+
     // for resizing the internal array _z only
     virtual bool resizeZ(int sz, bool reinit = true);
 
@@ -167,9 +172,9 @@ class KST_EXPORT Matrix : public Primitive {
     Object::UpdateType internalUpdate(Object::UpdateType providerUpdateType);
 };
 
-typedef ObjectList<MatrixPtr> MatrixList;
-typedef ObjectMap<MatrixPtr> MatrixMap;
-typedef ObjectCollection<Matrix> MatrixCollection;
+typedef SharedPtr<Matrix> MatrixPtr;
+typedef ObjectList<Matrix> MatrixList;
+typedef ObjectMap<Matrix> MatrixMap;
 
 }
 

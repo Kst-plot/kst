@@ -1,7 +1,7 @@
 /***************************************************************************
  *                                                                         *
  *   copyright : (C) 2007 The University of Toronto                        *
- *   copyright : (C) 2005  University of British Columbia                        *
+ *   copyright : (C) 2005 University of British Columbia                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -10,15 +10,20 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <QTextStream>
+#include <QTextDocument>
+
+#include "kst_i18n.h"
+
 #include "generatedmatrix.h"
-#include <qtextstream.h>
-#include <qtextdocument.h>
 #include <QXmlStreamWriter>
 #include <QVariant>
 
 namespace Kst {
 
-GeneratedMatrix::GeneratedMatrix(const QDomElement &e) : Matrix() {
+const QString GeneratedMatrix::staticTypeString = I18N_NOOP("Generated Matrix");
+
+GeneratedMatrix::GeneratedMatrix(ObjectStore *store, const QDomElement &e) : Matrix(store) {
   double in_xMin = 0, in_yMin = 0, in_xStep = 1, in_yStep = 1;
   double in_gradZMin = 0, in_gradZMax = 1;
   bool in_xDirection = true;
@@ -47,29 +52,35 @@ GeneratedMatrix::GeneratedMatrix(const QDomElement &e) : Matrix() {
       } else if (e.tagName() == "gradzmin") {
         in_gradZMin = e.text().toDouble();
       } else if (e.tagName() == "gradzmax") {
-        in_gradZMax = e.text().toDouble(); 
+        in_gradZMax = e.text().toDouble();
       } else if (e.tagName() == "xdirection") {
-        in_xDirection = (e.text() != "0");  
+        in_xDirection = (e.text() != "0");
       }
     }
     n = n.nextSibling();
   }
 
+  setTagName(ObjectTag::fromString(in_tag));
+
   _saveable = true;
   _editable = true;
   _zSize = 0;
-  change(ObjectTag::fromString(in_tag), in_nX, in_nY, in_xMin, in_yMin, in_xStep, in_yStep, in_gradZMin, in_gradZMax, in_xDirection);
+  change(in_nX, in_nY, in_xMin, in_yMin, in_xStep, in_yStep, in_gradZMin, in_gradZMax, in_xDirection);
 }
 
-GeneratedMatrix::GeneratedMatrix(ObjectTag tag,
+GeneratedMatrix::GeneratedMatrix(ObjectStore *store, const ObjectTag& tag,
                        uint nX, uint nY, double minX, double minY,
                        double stepX, double stepY,
                        double gradZMin, double gradZMax,
-                       bool xDirection) : Matrix() {
+                       bool xDirection) : Matrix(store, tag) {
   _saveable = true;
   _editable = true;
   _zSize = 0;
-  change(tag, nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
+  change(nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
+}
+
+const QString& GeneratedMatrix::typeString() const {
+  return staticTypeString;
 }
 
 void GeneratedMatrix::save(QXmlStreamWriter &xml) {
@@ -87,18 +98,16 @@ void GeneratedMatrix::save(QXmlStreamWriter &xml) {
   xml.writeEndElement();
 }
 
-void GeneratedMatrix::change(ObjectTag tag, uint nX,
-                        uint nY, double minX, double minY, double stepX,
-                        double stepY, double gradZMin, double gradZMax,
-                        bool xDirection) {
-  setTagName(tag);  
-  
+void GeneratedMatrix::change(uint nX, uint nY, double minX, double minY,
+                             double stepX, double stepY,
+                             double gradZMin, double gradZMax,
+                             bool xDirection) {
   // some checks on parameters
   if (nX < 1) {
-    nX = 1;  
+    nX = 1;
   }
   if (nY < 1) {
-    nY = 1;  
+    nY = 1;
   }
   if (stepX <= 0) {
     stepX = 0.1;
@@ -106,7 +115,7 @@ void GeneratedMatrix::change(ObjectTag tag, uint nX,
   if (stepY <= 0) {
     stepY = 0.1;
   }
-  
+
   _nX = nX;
   _nY = nY;
   _minX = minX;
@@ -116,7 +125,7 @@ void GeneratedMatrix::change(ObjectTag tag, uint nX,
   _gradZMin = gradZMin;
   _gradZMax = gradZMax;
   _xDirection = xDirection;
-  
+
   if (_nX*_nY != _zSize) {
     resizeZ(_nX*_nY, false);
   }
@@ -127,16 +136,16 @@ void GeneratedMatrix::change(ObjectTag tag, uint nX,
     if (_nX > 1) {
       zIncrement = (_gradZMax - _gradZMin) / (_nX - 1);
     } else {
-      zIncrement = 0; 
+      zIncrement = 0;
     }
   } else {
     if (_nY > 1) {
-      zIncrement = (_gradZMax - _gradZMin) / (_nY - 1);  
+      zIncrement = (_gradZMax - _gradZMin) / (_nY - 1);
     } else {
       zIncrement = 0;
-    }  
+    }
   }
-  
+
   // fill in the matrix with the gradient
   for (int i = 0; i < _nX; i++) {
     for (int j = 0; j < _nY; j++) {
@@ -145,7 +154,7 @@ void GeneratedMatrix::change(ObjectTag tag, uint nX,
       } else {
         _z[i*nY + j] = _gradZMin + j*zIncrement;
       }
-    }  
+    }
   }
   setDirty(true);
 }

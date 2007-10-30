@@ -13,11 +13,12 @@
 
 #include "dialoglauncher.h"
 #include "datacollection.h"
+#include "objectstore.h"
 
 namespace Kst {
 
-ScalarSelector::ScalarSelector(QWidget *parent)
-  : QWidget(parent) {
+ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
+  : QWidget(parent), _store(store) {
 
   setupUi(this);
 
@@ -39,6 +40,12 @@ ScalarSelector::ScalarSelector(QWidget *parent)
 
 
 ScalarSelector::~ScalarSelector() {
+}
+
+
+void ScalarSelector::setObjectStore(ObjectStore *store) {
+  _store = store;
+  fillScalars();
 }
 
 
@@ -64,9 +71,13 @@ void ScalarSelector::editScalar() {
 
 
 void ScalarSelector::fillScalars() {
+  if (!_store) {
+    return;
+  }
+
   QHash<QString, ScalarPtr> scalars;
 
-  scalarList.lock().readLock();
+  ScalarList scalarList = _store->getObjects<Scalar>();
 
   ScalarList::ConstIterator it = scalarList.begin();
   for (; it != scalarList.end(); ++it) {
@@ -76,8 +87,6 @@ void ScalarSelector::fillScalars() {
     scalars.insert(scalar->tag().displayString(), scalar);
     scalar->unlock();
   }
-
-  scalarList.lock().unlock();
 
   QStringList list = scalars.keys();
 

@@ -22,6 +22,8 @@
 #include "application.h"
 #include "plotrenderitem.h"
 #include "curve.h"
+#include "document.h"
+#include "objectstore.h"
 
 #include "defaultnames.h"
 #include "datacollection.h"
@@ -81,25 +83,28 @@ PowerSpectrumDialog::~PowerSpectrumDialog() {
 }
 
 
-QString PowerSpectrumDialog::tagName() const {
-  return DataDialog::tagName();
+QString PowerSpectrumDialog::tagString() const {
+  return DataDialog::tagString();
 }
 
 
 ObjectPtr PowerSpectrumDialog::createNewDataObject() const {
- //FIXME Eli, how should I construct this tag??
-  PSDPtr powerspectrum = new PSD(tagName(),
-                                     _powerSpectrumTab->vector(),
-                                     _powerSpectrumTab->FFTOptionsWidget()->sampleRate(),
-                                     _powerSpectrumTab->FFTOptionsWidget()->interleavedAverage(),
-                                     _powerSpectrumTab->FFTOptionsWidget()->FFTLength(),
-                                     _powerSpectrumTab->FFTOptionsWidget()->apodize(),
-                                     _powerSpectrumTab->FFTOptionsWidget()->removeMean(),
-                                     _powerSpectrumTab->FFTOptionsWidget()->vectorUnits(),
-                                     _powerSpectrumTab->FFTOptionsWidget()->rateUnits(),
-                                     _powerSpectrumTab->FFTOptionsWidget()->apodizeFunction(),
-                                     _powerSpectrumTab->FFTOptionsWidget()->sigma(),
-                                     _powerSpectrumTab->FFTOptionsWidget()->output());
+  Q_ASSERT(_document && _document->objectStore());
+  ObjectTag tag = _document->objectStore()->suggestObjectTag<PSD>(tagString(), ObjectTag::globalTagContext);
+  PSDPtr powerspectrum = _document->objectStore()->createObject<PSD>(tag);
+  Q_ASSERT(powerspectrum);
+
+  powerspectrum->setVector(_powerSpectrumTab->vector());
+  powerspectrum->setFreq(_powerSpectrumTab->FFTOptionsWidget()->sampleRate());
+  powerspectrum->setAverage(_powerSpectrumTab->FFTOptionsWidget()->interleavedAverage());
+  powerspectrum->setLen(_powerSpectrumTab->FFTOptionsWidget()->FFTLength());
+  powerspectrum->setApodize(_powerSpectrumTab->FFTOptionsWidget()->apodize());
+  powerspectrum->setRemoveMean(_powerSpectrumTab->FFTOptionsWidget()->removeMean());
+  powerspectrum->setVUnits(_powerSpectrumTab->FFTOptionsWidget()->vectorUnits());
+  powerspectrum->setRUnits(_powerSpectrumTab->FFTOptionsWidget()->rateUnits());
+  powerspectrum->setApodizeFxn(_powerSpectrumTab->FFTOptionsWidget()->apodizeFunction());
+  powerspectrum->setGaussianSigma(_powerSpectrumTab->FFTOptionsWidget()->sigma());
+  powerspectrum->setOutput(_powerSpectrumTab->FFTOptionsWidget()->output());
   powerspectrum->setInterpolateHoles(_powerSpectrumTab->FFTOptionsWidget()->interpolateOverHoles());
 
   powerspectrum->writeLock();
@@ -109,12 +114,13 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() const {
   //FIXME this should be a command...
   //FIXME need some smart placement...
 
-  CurvePtr curve = new Curve(suggestCurveName(powerspectrum->tag(), true),
-                                     powerspectrum->vX(),
-                                     powerspectrum->vY(),
-                                     0L, 0L, 0L, 0L,
-                                     _powerSpectrumTab->curveAppearance()->color());
+  tag = _document->objectStore()->suggestObjectTag<Curve>(powerspectrum->tag().tagString(), ObjectTag::globalTagContext);
+  CurvePtr curve = _document->objectStore()->createObject<Curve>(tag);
+  Q_ASSERT(curve);
 
+  curve->setXVector(powerspectrum->vX());
+  curve->setYVector(powerspectrum->vY());
+  curve->setColor(_powerSpectrumTab->curveAppearance()->color());
   curve->setHasPoints(_powerSpectrumTab->curveAppearance()->showPoints());
   curve->setHasLines(_powerSpectrumTab->curveAppearance()->showLines());
   curve->setHasBars(_powerSpectrumTab->curveAppearance()->showBars());

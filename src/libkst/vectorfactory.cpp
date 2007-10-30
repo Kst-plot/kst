@@ -22,7 +22,7 @@ namespace Kst {
 
 VectorFactory::VectorFactory()
 : PrimitiveFactory() {
-  registerFactory("vector", this);
+  registerFactory(Vector::type(), this);
 }
 
 
@@ -30,17 +30,18 @@ VectorFactory::~VectorFactory() {
 }
 
 
-PrimitivePtr VectorFactory::generatePrimitive(QXmlStreamReader& xml) {
-
-  QString tag;
+PrimitivePtr VectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
+  ObjectTag tag;
   QByteArray data;
+
+  Q_ASSERT(store);
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();
     if (xml.isStartElement()) {
       if (n == "vector") {
         QXmlStreamAttributes attrs = xml.attributes();
-        tag = attrs.value("tag").toString();
+        tag = ObjectTag::fromString(attrs.value("tag").toString());
       } else if (n == "data") {
 
         QString qcs(xml.readElementText().toLatin1());
@@ -65,24 +66,22 @@ PrimitivePtr VectorFactory::generatePrimitive(QXmlStreamReader& xml) {
     return 0;
   }
 
-  VectorPtr vector = new Vector(tag, data);
-  return vector.data();
+  return new Vector(store, tag, data);
 }
 
 
-SVectorFactory::SVectorFactory()
+GeneratedVectorFactory::GeneratedVectorFactory()
 : PrimitiveFactory() {
-  registerFactory("svector", this);
+  registerFactory(GeneratedVector::type(), this);
 }
 
 
-SVectorFactory::~SVectorFactory() {
+GeneratedVectorFactory::~GeneratedVectorFactory() {
 }
 
 
-PrimitivePtr SVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
-
-  QString tag;
+PrimitivePtr GeneratedVectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
+  ObjectTag tag;
   QByteArray data;
   double min, max;
   int count;
@@ -92,7 +91,7 @@ PrimitivePtr SVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
     if (xml.isStartElement()) {
       if (n == "svector") {
         QXmlStreamAttributes attrs = xml.attributes();
-        tag = attrs.value("tag").toString();
+        tag = ObjectTag::fromString(attrs.value("tag").toString());
         min = attrs.value("min").toString().toDouble();
         max = attrs.value("max").toString().toDouble();
         count = attrs.value("count").toString().toInt();
@@ -120,23 +119,21 @@ PrimitivePtr SVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
     return 0;
   }
 
-  VectorPtr vector = new GeneratedVector(tag, data, min, max, count);
-  return vector.data();
+  return new GeneratedVector(store, tag, data, min, max, count);
 }
 
-AVectorFactory::AVectorFactory()
+EditableVectorFactory::EditableVectorFactory()
 : PrimitiveFactory() {
-  registerFactory("avector", this);
+  registerFactory(EditableVector::type(), this);
 }
 
 
-AVectorFactory::~AVectorFactory() {
+EditableVectorFactory::~EditableVectorFactory() {
 }
 
 
-PrimitivePtr AVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
-
-  QString tag;
+PrimitivePtr EditableVectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
+  ObjectTag tag;
   QByteArray data;
 
   while (!xml.atEnd()) {
@@ -144,7 +141,7 @@ PrimitivePtr AVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
     if (xml.isStartElement()) {
       if (n == "avector") {
         QXmlStreamAttributes attrs = xml.attributes();
-        tag = attrs.value("tag").toString();
+        tag = ObjectTag::fromString(attrs.value("tag").toString());
       } else if (n == "data") {
 
         QString qcs(xml.readElementText().toLatin1());
@@ -169,24 +166,22 @@ PrimitivePtr AVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
     return 0;
   }
 
-  VectorPtr vector = new EditableVector(tag, data);
-  return vector.data();
+  return new EditableVector(store, tag, data);
 }
 
 
-RVectorFactory::RVectorFactory()
+DataVectorFactory::DataVectorFactory()
 : PrimitiveFactory() {
-  registerFactory("rvector", this);
+  registerFactory(DataVector::type(), this);
 }
 
 
-RVectorFactory::~RVectorFactory() {
+DataVectorFactory::~DataVectorFactory() {
 }
 
 
-PrimitivePtr RVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
-
-  QString tag;
+PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
+  ObjectTag tag;
   QByteArray data;
   QString provider, file, field;
   int start, count, skip;
@@ -197,7 +192,7 @@ PrimitivePtr RVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
     if (xml.isStartElement()) {
       if (n == "rvector") {
         QXmlStreamAttributes attrs = xml.attributes();
-        tag = attrs.value("tag").toString();
+        tag = ObjectTag::fromString(attrs.value("tag").toString());
 
         provider = attrs.value("provider").toString();
         file = attrs.value("file").toString();
@@ -231,8 +226,7 @@ PrimitivePtr RVectorFactory::generatePrimitive(QXmlStreamReader& xml) {
     return 0;
   }
 
-  VectorPtr vector = new DataVector(tag, data, provider, file, field, start, count, skip, doAve);
-  return vector.data();
+  return new DataVector(store, tag, data, provider, file, field, start, count, skip, doAve);
 }
 
 }

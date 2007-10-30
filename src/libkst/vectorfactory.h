@@ -20,28 +20,28 @@ class VectorFactory : public PrimitiveFactory {
   public:
     VectorFactory();
     ~VectorFactory();
-    PrimitivePtr generatePrimitive(QXmlStreamReader& stream);
+    PrimitivePtr generatePrimitive(ObjectStore *store, QXmlStreamReader& stream);
 };
 
-class SVectorFactory : public PrimitiveFactory {
+class GeneratedVectorFactory : public PrimitiveFactory {
   public:
-    SVectorFactory();
-    ~SVectorFactory();
-    PrimitivePtr generatePrimitive(QXmlStreamReader& stream);
+    GeneratedVectorFactory();
+    ~GeneratedVectorFactory();
+    PrimitivePtr generatePrimitive(ObjectStore *store, QXmlStreamReader& stream);
 };
 
-class AVectorFactory : public PrimitiveFactory {
+class EditableVectorFactory : public PrimitiveFactory {
   public:
-    AVectorFactory();
-    ~AVectorFactory();
-    PrimitivePtr generatePrimitive(QXmlStreamReader& stream);
+    EditableVectorFactory();
+    ~EditableVectorFactory();
+    PrimitivePtr generatePrimitive(ObjectStore *store, QXmlStreamReader& stream);
 };
 
-class RVectorFactory : public PrimitiveFactory {
+class DataVectorFactory : public PrimitiveFactory {
   public:
-    RVectorFactory();
-    ~RVectorFactory();
-    PrimitivePtr generatePrimitive(QXmlStreamReader& stream);
+    DataVectorFactory();
+    ~DataVectorFactory();
+    PrimitivePtr generatePrimitive(ObjectStore *store, QXmlStreamReader& stream);
 };
 
 }

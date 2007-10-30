@@ -23,161 +23,168 @@
 #include "datasource.h"
 #include "kst_export.h"
 
+namespace Kst {
+
 namespace Equation {
   class Node;
 }
 
-namespace Kst {
-
 /**A class for handling data vectors for kst.
  *@author cbn
  */
-   
+
 class KST_EXPORT DataVector : public Vector {
-public:
-  /** Create an RVECTOR */
-  DataVector(DataSourcePtr file, const QString &field,
-             ObjectTag tag,
-             int f0, int n,
-             int skip, bool in_doSkip,
-             bool in_doAve);
+  Q_OBJECT
 
-  DataVector(const QString &tag, const QByteArray &data,
-             const QString &provider = QString(), const QString &file = QString(),
-             const QString &field = QString(), int start = -1, int num = -1,
-             int skip = -1, bool doAve = false,
-             const QString &o_file = "|",
-             int o_n = -2, int o_f = -2,
-             int o_s = -1, bool o_ave = false);
+  public:
+    virtual const QString& typeString() const;
+    static const QString staticTypeString;
 
-  virtual ~DataVector();
+    /** change the properties of a DataVector */
+    void change(DataSourcePtr file, const QString &field,
+                int f0, int n, int skip,
+                bool in_doSkip, bool in_doAve);
 
-  /** change the properties of a DataVector */
-  void change(DataSourcePtr file, const QString &field,
-              ObjectTag tag,
-              int f0, int n, int skip,
-              bool in_doSkip, bool in_doAve);
+    void changeFile(DataSourcePtr file);
 
-  void changeFile(DataSourcePtr file);
+    void changeFrames(int f0, int n, int skip,
+                      bool in_doSkip, bool in_doAve);
 
-  void changeFrames(int f0, int n, int skip,
-                    bool in_doSkip, bool in_doAve);
+    /** Return frames held in Vector */
+    int numFrames() const;
 
-  /** Return frames held in Vector */
-  int numFrames() const;
+    /** Return the requested number of frames in the vector */
+    int reqNumFrames() const;
 
-  /** Return the requested number of frames in the vector */
-  int reqNumFrames() const;
+    /** Return Starting Frame of Vector */
+    int startFrame() const;
 
-  /** Return Starting Frame of Vector */
-  int startFrame() const;
+    /** Return the requested starting frame of the Vector */
+    int reqStartFrame() const;
 
-  /** Return the requested starting frame of the Vector */
-  int reqStartFrame() const;
+    /** Return frames to skip per read */
+    bool doSkip() const;
+    bool doAve() const;
+    int skip() const;
 
-  /** Return frames to skip per read */
-  bool doSkip() const;
-  bool doAve() const;
-  int skip() const;
+    /** Update the vector.  Return true if there was new data. */
+    virtual UpdateType update(int update_counter = -1);
 
-  /** Update the vector.  Return true if there was new data. */
-  virtual UpdateType update(int update_counter = -1);
+    /** Reload the contents of the vector */
+    void reload();
 
-  /** Reload the contents of the vector */
-  void reload();
+    /** Returns intrinsic samples per frame */
+    int samplesPerFrame() const;
 
-  /** Returns intrinsic samples per frame */
-  int samplesPerFrame() const;
+    /** Save vector information */
+    virtual void save(QXmlStreamWriter &s);
 
-  /** Save vector information */
-  virtual void save(QXmlStreamWriter &s);
+    /** return the name of the file if a RVector - otherwise return "" */
+    QString filename() const;
 
-  /** return the name of the file if a RVector - otherwise return "" */
-  QString filename() const;
+    /** return the field name if an RVector, other wise return "" */
+    const QString& field() const;
 
-  /** return the field name if an RVector, other wise return "" */
-  const QString& field() const;
+    /** return a sensible label for this vector */
+    virtual QString label() const;
+    virtual QString fileLabel() const { return filename(); }
 
-  /** return a sensible label for this vector */
-  virtual QString label() const;
-  virtual QString fileLabel() const { return filename(); }
+    /** return the length of the file */
+    int fileLength() const;
 
-  /** return the length of the file */
-  int fileLength() const;
+    /** return whether the vector is suppose to read to end of file */
+    bool readToEOF() const;
 
-  /** return whether the vector is suppose to read to end of file */
-  bool readToEOF() const;
+    /** read whether the vector is suppose to count back from end of file */
+    bool countFromEOF() const;
 
-  /** read whether the vector is suppose to count back from end of file */
-  bool countFromEOF() const;
+    /** return true if it has a valid file and field, or false otherwise */
+    bool isValid() const;
 
-  /** return true if it has a valid file and field, or false otherwise */
-  bool isValid() const;
+    /** Read from end */
+    void setFromEnd();
 
-  /** the data source */
-  DataSourcePtr dataSource() const;
+    // make a copy
+    SharedPtr<DataVector> makeDuplicate() const;
 
-  /** Read from end */
-  void setFromEnd();
-  
-  // make a copy
-  SharedPtr<DataVector> makeDuplicate() const;
+    /** the data source */
+    DataSourcePtr dataSource() const;
 
-private:
-  Object::UpdateType doUpdate(bool force = false);
+  protected:
+    /** Create an RVECTOR */
+    DataVector(ObjectStore *store, const ObjectTag& tag,
+               DataSourcePtr file=0L, const QString &field=QString::null,
+               int f0=-1, int n=-1,
+               int skip=-1, bool in_doSkip=false,
+               bool in_doAve=false);
 
-  bool _dirty; // different from the Object dirty flag
+    DataVector(ObjectStore *store, const ObjectTag& tag, const QByteArray& data,
+               const QString& providerName = QString(), const QString& file = QString(),
+               const QString& field = QString(), int start = -1, int num = -1,
+               int skip = -1, bool doAve = false,
+               const QString &o_file = "|",
+               int o_n = -2, int o_f = -2,
+               int o_s = -1, bool o_ave = false);
 
-  /** Common contructor for an RVector */
-  void commonRVConstructor(DataSourcePtr file,
-      const QString &field,
-      int f0, int n,
-      int skip, bool in_doSkip,
-      bool in_doAve);
+    virtual ~DataVector();
 
-  /** Samples Per Frame */
-  int SPF;
+    friend class DataVectorFactory;
+    friend class ObjectStore; // FIXME: remove this when factory is working
 
-  /** current number of frames */
-  int NF;
+  private:
+    Object::UpdateType doUpdate(bool force = false);
 
-  /** current starting frame */
-  int F0;
+    bool _dirty; // different from the Object dirty flag
 
-  /** frames to skip per read */
-  bool DoSkip;
-  bool DoAve;
-  int Skip;
+    /** Common contructor for an RVector */
+    void commonRVConstructor(DataSourcePtr file,
+        const QString &field,
+        int f0, int n,
+        int skip, bool in_doSkip,
+        bool in_doAve);
 
-  /** max number of frames */
-  int ReqNF;
+    /** Samples Per Frame */
+    int SPF;
 
-  /** Requested Starting Frame */
-  int ReqF0;
+    /** current number of frames */
+    int NF;
 
-  /** file to read for rvectors */
-  DataSourcePtr _file;
+    /** current starting frame */
+    int F0;
 
-  /** For rvector, the field.  For fvector, the equation. */
-  QString _field;
+    /** frames to skip per read */
+    bool DoSkip;
+    bool DoAve;
+    int Skip;
 
-  /** Number of Samples allocated to the vector */
-  int _numSamples;
+    /** max number of frames */
+    int ReqNF;
 
-  int N_AveReadBuf;
-  double *AveReadBuf;
+    /** Requested Starting Frame */
+    int ReqF0;
 
-  void reset(); // must be called with a lock
+    /** file to read for rvectors */
+    DataSourcePtr _file;
 
-  void checkIntegrity(); // must be called with a lock
+    /** For rvector, the field.  For fvector, the equation. */
+    QString _field;
 
-  bool _dontUseSkipAccel;
+    /** Number of Samples allocated to the vector */
+    int _numSamples;
+
+    int N_AveReadBuf;
+    double *AveReadBuf;
+
+    void reset(); // must be called with a lock
+
+    void checkIntegrity(); // must be called with a lock
+
+    bool _dontUseSkipAccel;
 };
 
 typedef SharedPtr<DataVector> DataVectorPtr;
-typedef ObjectList<DataVectorPtr> DataVectorList;
+typedef ObjectList<DataVector> DataVectorList;
 
 }
-
 #endif
 // vim: ts=2 sw=2 et

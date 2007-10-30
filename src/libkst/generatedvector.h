@@ -25,21 +25,29 @@ namespace Kst {
 /**A vector from x0 to x1 with n pts
  *@author cbn
  */
-
 class KST_EXPORT GeneratedVector : public Vector {
- public:
-  GeneratedVector(const QString &tag, const QByteArray &data, double x0, double x1, int n);
-  GeneratedVector(double x0, double x1, int n, ObjectTag tag);
+  Q_OBJECT
 
-  void save(QXmlStreamWriter &s);
+  public:
+    virtual const QString& typeString() const;
+    static const QString staticTypeString;
 
-  void changeRange(double x0, double x1, int n);
-  Object::UpdateType update(int update_counter);
-  void setSaveData(bool save);
+    void save(QXmlStreamWriter &s);
+
+    void changeRange(double x0, double x1, int n);
+    Object::UpdateType update(int update_counter);
+    void setSaveData(bool save);
+
+  protected:
+    GeneratedVector(ObjectStore *store, const ObjectTag& tag, double x0=0, double x1=0, int n=0);
+    GeneratedVector(ObjectStore *store, const ObjectTag& tag, const QByteArray &data, double x0, double x1, int n);
+
+    friend class GeneratedVectorFactory;
+    friend class ObjectStore; // FIXME: remove this when factory works
 };
 
 typedef SharedPtr<GeneratedVector> GeneratedVectorPtr;
-typedef ObjectList<GeneratedVectorPtr> GeneratedVectorList;
+typedef ObjectList<GeneratedVector> GeneratedVectorList;
 
 }
 

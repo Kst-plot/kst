@@ -13,14 +13,16 @@
 
 #include <QtTest>
 
+#include <matrix.h>
 #include <math_kst.h>
 #include <datacollection.h>
 #include <dataobjectcollection.h>
+#include <objectstore.h>
+
+static Kst::ObjectStore _store;
 
 void TestMatrix::cleanupTestCase() {
-  Kst::matrixList.clear();
-  Kst::scalarList.clear();
-  Kst::dataObjectList.clear();
+  _store.clear();
 }
 
 
@@ -28,8 +30,8 @@ void TestMatrix::testMatrix() {
   bool ok = true;
 
   //basic default constructor values
-  Kst::MatrixPtr m1 = new Kst::Matrix(Kst::ObjectTag::fromString(QString::null));
-  QVERIFY(m1->tagName().startsWith("Anonymous"));
+  Kst::MatrixPtr m1 = Kst::kst_cast<Kst::Matrix>(_store.createObject<Kst::Matrix>(Kst::ObjectTag::fromString(QString::null)));
+  QVERIFY(m1->tag().tagString().startsWith("Anonymous"));
   QCOMPARE(m1->sampleCount(), 0);
   QCOMPARE(m1->minValue(), 0.0);
   QCOMPARE(m1->maxValue(), 0.0);
@@ -41,8 +43,8 @@ void TestMatrix::testMatrix() {
   QCOMPARE(m1->meanValue(), 0.0);
 
   //basic symetrical matrix
-  Kst::MatrixPtr m2 = new Kst::Matrix(Kst::ObjectTag::fromString("Symetrical"), 0L, 3, 3);
-  QCOMPARE(m2->tagName(),  QLatin1String("Symetrical"));
+  Kst::MatrixPtr m2 = Kst::kst_cast<Kst::Matrix>(_store.createObject<Kst::Matrix>(Kst::ObjectTag::fromString("Symmetrical")));
+  QCOMPARE(m2->tag().tagString(), QLatin1String("Symmetrical"));
 
   QVERIFY(m2->resize(3, 3, true));
 
@@ -66,7 +68,7 @@ void TestMatrix::testMatrix() {
 
   m2->blank();
 
-  m2->change(Kst::ObjectTag::fromString(m2->tagName()), 3, 3, 0, 0, 0, 0); //should not be legal
+  m2->change(3, 3, 0, 0, 0, 0); //should not be legal
   QCOMPARE(m2->xNumSteps(), 3);
   QCOMPARE(m2->yNumSteps(), 3);
   QCOMPARE(m2->minX(), 0.0);
@@ -84,7 +86,8 @@ void TestMatrix::testMatrix() {
   QVERIFY(m2->value(1, 1) != 5.0);
   QVERIFY(m2->setValueRaw(2, 2, 6.0)); //fails
 
-  Kst::MatrixPtr um1 = new Kst::Matrix(Kst::ObjectTag::fromString("Unity"), 0L, 3, 3, 0, 0, 1, 1);
+  Kst::MatrixPtr um1 = Kst::kst_cast<Kst::Matrix>(_store.createObject<Kst::Matrix>(Kst::ObjectTag::fromString("Unity")));
+  um1->change(3, 3, 0, 0, 1, 1);
   um1->setEditable(true);
   um1->zero();
   QVERIFY(!um1->setValue(0, 0, 1.0));
@@ -113,7 +116,7 @@ void TestMatrix::testMatrix() {
   QCOMPARE(um1->value(1, 2, &ok), 0.0);
   QVERIFY(!ok);
 
-  QVERIFY(um1->resize(4, 4, false));
+  QVERIFY(um1->resize(4, 4, true));
   QCOMPARE(um1->value(0, 0, &ok), 1.0);
   QVERIFY(ok);
   QCOMPARE(um1->value(0, 1, &ok), 0.0);
@@ -151,7 +154,8 @@ void TestMatrix::testMatrix() {
   QCOMPARE(um1->minValue(), 0.0);
   QCOMPARE(um1->maxValue(), 0.0);
 
-  Kst::MatrixPtr sm = new Kst::Matrix(Kst::ObjectTag::fromString("Spike"), 0L, 2, 2, 0, 0, 1, 1);
+  Kst::MatrixPtr sm = Kst::kst_cast<Kst::Matrix>(_store.createObject<Kst::Matrix>(Kst::ObjectTag::fromString("Spike")));
+  sm->change(2, 2, 0, 0, 1, 1);
 
   sm->setEditable(true);
   QVERIFY(sm->resize(2, 2, false));

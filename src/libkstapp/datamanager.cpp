@@ -18,6 +18,7 @@
 #include "document.h"
 #include "sessionmodel.h"
 
+#include <QHeaderView>
 #include <QToolBar>
 
 namespace Kst {
@@ -26,6 +27,7 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   : QDialog(parent), _doc(doc) {
 
   setupUi(this);
+  _session->header()->setResizeMode(QHeaderView::ResizeToContents);
   _session->setModel(doc->session());
 
   _objects->setFrameStyle(QFrame::StyledPanel | QFrame::Plain);

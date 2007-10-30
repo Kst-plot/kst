@@ -28,24 +28,26 @@
 
 namespace Kst {
 
-QString suggestPlotName() {
+// FIXME: THESE ALL NEED FIXING
+
+ObjectTag suggestPlotName() {
   static int last = 0;
 
   QString tag;
 
-  do {
+//  do {
     tag = QString("P%1").arg(++last);
-  } while (Data::self()->viewObjectNameNotUnique(tag));
+//  } while (Data::self()->viewObjectNameNotUnique(tag));
 
-  return tag;
+  return ObjectTag::fromString(tag);
 }
 
 
-QString suggestDataObjectName(const QString& field, 
+ObjectTag suggestDataObjectName(const QString& field,
                               const QString &A, bool add_c) {
   QString name;
   int i=1;
-  QString cleanedField = ObjectTag::cleanTag(field);
+  QString cleanedField = ObjectTag::cleanTagComponent(field);
 
   if (add_c) {
     name = QString("%1-%2").arg(cleanedField).arg(A);
@@ -53,11 +55,11 @@ QString suggestDataObjectName(const QString& field,
     name = cleanedField;
   }
 
-  while (dataObjectList.findTag(name) != dataObjectList.end()) {
-    name = QString("%1-%2%3").arg(cleanedField).arg(A).arg(++i);
-  }
+//  while (dataObjectList.findTag(name) != dataObjectList.end()) {
+//    name = QString("%1-%2%3").arg(cleanedField).arg(A).arg(++i);
+//  }
 
-  return name;
+  return ObjectTag::fromString(name);
 }
 
 
@@ -67,57 +69,57 @@ QString suggestDataObjectName(const QString& field,
 /* adding it would appear unique.  This is important because in many */
 /* dialogs, a curve is created from an object before the object has */
 /* been put on the list */
-QString suggestCurveName( ObjectTag vector_name, bool add_c ) {
-  return suggestDataObjectName(vector_name.displayString(), 
-                      i18nc("Minimal abbreviation for 'Curve'", "C"), 
+ObjectTag suggestCurveName( ObjectTag vector_name, bool add_c ) {
+  return suggestDataObjectName(vector_name.displayString(),
+                      i18nc("Minimal abbreviation for 'Curve'", "C"),
                       add_c);
 }
 
 
-QString suggestPSDName( ObjectTag vector_name ) {
-  return suggestDataObjectName(vector_name.tag(), 
+ObjectTag suggestPSDName( ObjectTag vector_name ) {
+  return suggestDataObjectName(vector_name.name(),
                       i18nc("Minimal abbreviation for 'Power spectrum'", "P"),
                       true);
 }
 
 
-QString suggestCSDName( ObjectTag vector_name ) {
-  return suggestDataObjectName(vector_name.tag(),
+ObjectTag suggestCSDName( ObjectTag vector_name ) {
+  return suggestDataObjectName(vector_name.name(),
                                i18nc("Minimal abbreviation for 'Cumulative Spectral Decay'", "S"),
                                true);
 }
 
 
-QString suggestHistogramName( ObjectTag vector_name ) {
-  return suggestDataObjectName(vector_name.tag(), 
+ObjectTag suggestHistogramName( ObjectTag vector_name ) {
+  return suggestDataObjectName(vector_name.name(),
                       i18nc("Minimal abbreviation for 'Histogram'", "H"),
                       true);
 }
 
 
-QString suggestEQName(const QString& name_in) {
-  return suggestDataObjectName(name_in, 
+ObjectTag suggestEQName(const QString& name_in) {
+  return suggestDataObjectName(name_in,
                       i18nc("Minimal abbreviation for 'Equation'", "E"),
                       false);
 }
 
 
-QString suggestPluginName(const QString& pname, ObjectTag vname) {
+ObjectTag suggestPluginName(const QString& pname, ObjectTag vname) {
   QString tag;
-  
+
   if (!vname.isValid()) {
     tag = pname;
   } else {
-    tag = vname.tag() + "-" + pname;
+    tag = vname.name() + "-" + pname;
   }
-  return suggestDataObjectName(tag, 
+  return suggestDataObjectName(tag,
                       i18nc("Minimal abbreviation for 'pluGin'", "G"),
                       false);
 }
 
 
-QString suggestImageName(ObjectTag matrix_name) {
-  return suggestDataObjectName(matrix_name.tag(), 
+ObjectTag suggestImageName(ObjectTag matrix_name) {
+  return suggestDataObjectName(matrix_name.name(),
                       i18nc("Minimal abbreviation for 'Image'", "I"),
                       true);
 }

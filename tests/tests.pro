@@ -31,6 +31,7 @@ SOURCES += \
     testscalar.cpp \
     testmatrix.cpp \
     testpsd.cpp \
+    testobjectstore.cpp \
     testvector.cpp 
 
 HEADERS += \
@@ -43,4 +44,5 @@ HEADERS += \
     testscalar.h \
     testmatrix.h \
     testpsd.h \
+    testobjectstore.h \
     testvector.h

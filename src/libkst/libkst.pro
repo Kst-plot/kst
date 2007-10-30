@@ -16,9 +16,11 @@ INCLUDEPATH += \
 x11:!macx:PROCPS += sysinfo.c psversion.c
 SOURCES += \
     object.cpp \
+    coredocument.cpp \
+    datacollection.cpp \
     datasource.cpp \
     extension.cpp \
-    datacollection.cpp \
+    objectstore.cpp \
     debug.cpp \
     rwlock.cpp \
     math_kst.cpp \
@@ -41,10 +43,8 @@ SOURCES += \
     matrixdefaults.cpp \
     plotiteminterface.cpp \
     primitive.cpp \
-    defaultprimitivenames.cpp \
     primitivefactory.cpp \
     datasourcefactory.cpp \
-    objectcollection.cpp \
     objectlist.cpp \
     objectmap.cpp \
     objecttag.cpp \
@@ -55,10 +55,11 @@ SOURCES += \
 
 HEADERS += \
     datasourcefactory.h \
-    defaultprimitivenames.h \
+    coredocument.h \
+    datacollection.h \
     editablematrix.h \
     editablevector.h \
-    datacollection.h \
+    objectstore.h \
     dataplugin.h \
     datasource.h \
     dateparser.h \
@@ -71,7 +72,6 @@ HEADERS += \
     math_kst.h \
     matrixdefaults.h \
     matrix.h \
-    objectcollection.h \
     object.h \
     plotiteminterface.h \
     primitive.h \
@@ -94,7 +94,6 @@ HEADERS += \
     rwlock.h \
     stdinsource.h \
     sysinfo.h \
-    objectcollection.h \
     objectlist.h \
     objectmap.h \
     objecttag.h \

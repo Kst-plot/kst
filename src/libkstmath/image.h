@@ -22,28 +22,17 @@
 
 namespace Kst {
 
+class ObjectStore;
+
 /**A class for handling images for Kst
  *@author University of British Columbia
  */
 class KST_EXPORT Image : public Relation {
-  public:
-    //constructor for colormap only
-    Image(const QString &in_tag, MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const PaletteData &pal);
-    //constructor for contour map only
-    Image(const QString &in_tag, MatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight);
-    //constructor for both colormap and contour map
-    Image(const QString &in_tag,
-        MatrixPtr in_matrix,
-        double lowerZ,
-        double upperZ,
-        bool autoThreshold,
-        const PaletteData &pal,
-        int numContours,
-        const QColor& contourColor,
-        int contourWeight);
+  Q_OBJECT
 
-    Image(const QDomElement& e);
-    virtual ~Image();
+  public:
+    static const QString staticTypeString;
+    const QString& typeString() const { return staticTypeString; }
 
     virtual void showNewDialog();
     virtual void showEditDialog();
@@ -73,11 +62,11 @@ class KST_EXPORT Image : public Relation {
 
     virtual void matrixDimensions(double &x, double &y, double &width, double &height);
 
-    virtual void changeToColorOnly(const QString &in_tag, MatrixPtr in_matrix,
+    virtual void changeToColorOnly(MatrixPtr in_matrix,
         double lowerZ, double upperZ, bool autoThreshold, const PaletteData &pal);
-    virtual void changeToContourOnly(const QString &in_tag, MatrixPtr in_matrix,
+    virtual void changeToContourOnly(MatrixPtr in_matrix,
         int numContours, const QColor& contourColor, int contourWeight);
-    virtual void changeToColorAndContour(const QString &in_tag, MatrixPtr in_matrix,
+    virtual void changeToColorAndContour(MatrixPtr in_matrix,
         double lowerZ, double upperZ, bool autoThreshold, const PaletteData &pal,
         int numContours, const QColor& contourColor, int contourWeight);
 
@@ -93,30 +82,52 @@ class KST_EXPORT Image : public Relation {
     //other properties
     virtual bool hasContourMap() const { return _hasContourMap; }
     virtual bool hasColorMap() const { return _hasColorMap; }
-    
+
     // labels for plots
     virtual QString xLabel() const;
     virtual QString yLabel() const;
     virtual QString topLabel() const;
-    
+
 #if 0
     virtual KstDataObjectPtr makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap);
 #endif
 
     // see KstRelation::providerDataObject
     virtual DataObjectPtr providerDataObject() const;
-    
+
     // see KstRelation::distanceToPoint
     virtual double distanceToPoint(double xpos, double dx, double ypos) const;
-    
+
     // see KstRelation::paint
     virtual void paint(const CurveRenderContext& context);
-    
+
     // see KstRelation::yRange
     virtual void yRange(double xFrom, double xTo, double* yMin, double* yMax);
-    
+
     // see KstRelation::paintLegendSymbol
     virtual void paintLegendSymbol(Painter *p, const QRect& bound);
+
+  protected:
+    Image(ObjectStore *store, const ObjectTag &in_tag);
+    //constructor for colormap only
+    Image(ObjectStore *store, const ObjectTag &in_tag, MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const PaletteData &pal);
+    //constructor for contour map only
+    Image(ObjectStore *store, const ObjectTag &in_tag, MatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight);
+    //constructor for both colormap and contour map
+    Image(ObjectStore *store, const ObjectTag &in_tag,
+        MatrixPtr in_matrix,
+        double lowerZ,
+        double upperZ,
+        bool autoThreshold,
+        const PaletteData &pal,
+        int numContours,
+        const QColor& contourColor,
+        int contourWeight);
+
+    Image(ObjectStore *store, const QDomElement& e);
+    virtual ~Image();
+
+    friend class ObjectStore;
 
   private:
     //use these to set defaults when either is not used.
@@ -140,7 +151,7 @@ class KST_EXPORT Image : public Relation {
 
 
 typedef SharedPtr<Image> ImagePtr;
-typedef ObjectList<ImagePtr> ImageList;
+typedef ObjectList<Image> ImageList;
 
 }
 

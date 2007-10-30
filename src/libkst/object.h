@@ -1,6 +1,12 @@
 /***************************************************************************
- *                                                                         *
- *   copyright : (C) 2003 The University of Toronto                        *
+                 object.h: abstract base class for all Kst objects
+                             -------------------
+    begin                : May 22, 2003
+    copyright            : (C) 2003 The University of Toronto
+    email                :
+ ***************************************************************************/
+
+/***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -12,12 +18,12 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include <qpointer.h>
-#include <qmutex.h>
-#include <qobject.h>
-#include <qstring.h>
-#include <qdebug.h>
-#include <qstringlist.h>
+#include <QPointer>
+#include <QMutex>
+#include <QObject>
+#include <QString>
+#include <QDebug>
+#include <QStringList>
 #include <QMetaType>
 
 #include "kst_export.h"
@@ -27,20 +33,28 @@
 
 namespace Kst {
 
-class Object : public Shared, public QObject, public KstRWLock {
+class ObjectStore;
+
+class Object : public QObject, public Shared, public KstRWLock {
+  Q_OBJECT
+
   public:
-    Object();
+    static QString type();
 
     enum UpdateType { NO_CHANGE = 0, UPDATE };
 
     virtual UpdateType update(int updateCounter = -1) = 0;
 
-    virtual QString tagName() const;
+    virtual const QString& typeString() const;
+    static const QString staticTypeString;
+
+    ObjectStore *store() const;
+
+//    virtual QString tagName() const;
     virtual ObjectTag& tag();
     virtual const ObjectTag& tag() const;
-    virtual void setTagName(const ObjectTag& tag);
+//    virtual QString tagLabel() const;
 
-    virtual QString tagLabel() const;
     // Returns count - 2 to account for "this" and the list pointer, therefore
     // you MUST have a reference-counted pointer to call this function
     virtual int getUsage() const;
@@ -48,7 +62,8 @@ class Object : public Shared, public QObject, public KstRWLock {
     // Returns true if update has already been done
     virtual bool checkUpdateCounter(int update_counter);
 
-    int operator==(const QString&) const;
+    // TODO: do we need this?
+//    int operator==(const QString&) const;
 
     virtual bool deleteDependents();
 
@@ -58,6 +73,8 @@ class Object : public Shared, public QObject, public KstRWLock {
     bool dirty() const;
 
   protected:
+    Object(const ObjectTag& tag = ObjectTag::invalidTag);
+
     virtual ~Object();
 
     friend class UpdateThread;
@@ -67,6 +84,11 @@ class Object : public Shared, public QObject, public KstRWLock {
     UpdateType setLastUpdateResult(UpdateType result);
     // @since 1.1.0
     UpdateType lastUpdateResult() const;
+
+    void setTagName(const ObjectTag& tag);
+
+    friend class ObjectStore;
+    ObjectStore *_store;  // set by ObjectStore
 
   private:
     ObjectTag _tag;
@@ -78,9 +100,13 @@ typedef SharedPtr<Object> ObjectPtr;
 
 template <typename T, typename U>
 inline SharedPtr<T> kst_cast(SharedPtr<U> object) {
-  return dynamic_cast<T*>(object.data());
+  return qobject_cast<T*>(object.data());
 }
-
+// FIXME: make this safe
+template <typename T>
+inline SharedPtr<T> kst_cast(QObject *object) {
+  return qobject_cast<T*>(object);
+}
 
 }
 

@@ -22,6 +22,8 @@
 #include "curve.h"
 #include "palette.h"
 #include "image.h"
+#include "document.h"
+#include "objectstore.h"
 
 #include "defaultnames.h"
 #include "datacollection.h"
@@ -139,38 +141,37 @@ ImageDialog::~ImageDialog() {
 }
 
 
-QString ImageDialog::tagName() const {
-  return DataDialog::tagName();
+QString ImageDialog::tagString() const {
+  return DataDialog::tagString();
 }
 
 
 ObjectPtr ImageDialog::createNewDataObject() const {
 
-  ImagePtr image;
+  Q_ASSERT(_document && _document->objectStore());
+  ObjectTag tag = _document->objectStore()->suggestObjectTag<Image>(tagString(), ObjectTag::globalTagContext);
+  ImagePtr image = _document->objectStore()->createObject<Image>(tag);
 
   if (_imageTab->colorOnly()) {
-    image = new Image(tagName(),
-                                    _imageTab->matrix(),
-                                    _imageTab->lowerZ(),
-                                    _imageTab->upperZ(),
-                                    _imageTab->realTimeAutoThreshold(),
-                                    Palette(_imageTab->colorPalette()->selectedPalette()).paletteData());
+    image->changeToColorOnly(_imageTab->matrix(),
+        _imageTab->lowerZ(),
+        _imageTab->upperZ(),
+        _imageTab->realTimeAutoThreshold(),
+        Palette(_imageTab->colorPalette()->selectedPalette()).paletteData());
   } else if (_imageTab->contourOnly()) {
-    image = new Image(tagName(),
-                                    _imageTab->matrix(),
-                                    _imageTab->numberOfContourLines(),
-                                    _imageTab->contourColor(),
-                                    _imageTab->contourWeight());
+    image->changeToContourOnly(_imageTab->matrix(),
+        _imageTab->numberOfContourLines(),
+        _imageTab->contourColor(),
+        _imageTab->contourWeight());
   } else {
-    image = new Image(tagName(),
-                                    _imageTab->matrix(),
-                                    _imageTab->lowerZ(),
-                                    _imageTab->upperZ(),
-                                    _imageTab->realTimeAutoThreshold(),
-                                    Palette(_imageTab->colorPalette()->selectedPalette()).paletteData(),
-                                    _imageTab->numberOfContourLines(),
-                                    _imageTab->contourColor(),
-                                    _imageTab->contourWeight());
+    image->changeToColorAndContour(_imageTab->matrix(),
+        _imageTab->lowerZ(),
+        _imageTab->upperZ(),
+        _imageTab->realTimeAutoThreshold(),
+        Palette(_imageTab->colorPalette()->selectedPalette()).paletteData(),
+        _imageTab->numberOfContourLines(),
+        _imageTab->contourColor(),
+        _imageTab->contourWeight());
   }
 
   image->writeLock();

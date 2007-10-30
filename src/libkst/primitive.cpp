@@ -1,30 +1,44 @@
 /***************************************************************************
- *                                                                         *
- *   copyright : (C) 2006 The University of Toronto                        *
+                              primitive.cpp
+                             -------------------
+    begin                : Tue Jun 20, 2006
+    copyright            : Copyright (C) 2006, The University of Toronto
+    email                :
+ ***************************************************************************/
+
+/***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
+ *   Permission is granted to link with any opensource library             *
  *                                                                         *
  ***************************************************************************/
 
 //#define UPDATEDEBUG
+#include <QDebug>
 
+#include "kst_i18n.h"
 #include "primitive.h"
 
 #include <assert.h>
 
-#include <qdebug.h>
-
 namespace Kst {
 
-Primitive::Primitive(Object *provider)
-: Object(), _provider(provider) {
+const QString Primitive::staticTypeString = I18N_NOOP("Primitive");
+
+Primitive::Primitive(ObjectStore *store, const ObjectTag& tag, Object *provider)
+  : Object(tag), _provider(provider) {
 }
 
 
 Primitive::~Primitive() {
+}
+
+
+const QString& Primitive::typeString() const {
+  return staticTypeString;
 }
 
 
@@ -44,7 +58,7 @@ Object::UpdateType Primitive::update(int update_counter) {
   Object::UpdateType providerRC = NO_CHANGE;
 
   if (update_counter > 0) {
-    ObjectPtr prov = ObjectPtr(_provider);  // use a KstObjectPtr to prevent provider being deleted during update
+    ObjectPtr prov = ObjectPtr(_provider);  // use a ObjectPtr to prevent provider being deleted during update
     if (prov) {
       KstWriteLocker pl(prov);
 
@@ -65,6 +79,12 @@ Object::UpdateType Primitive::internalUpdate(Object::UpdateType providerRC) {
   Q_UNUSED(providerRC)
   return setLastUpdateResult(NO_CHANGE);
 }
+
+
+void Primitive::setProvider(Object* obj) {
+  _provider = obj;
+}
+
 
 }
 

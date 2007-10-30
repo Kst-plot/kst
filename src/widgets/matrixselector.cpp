@@ -11,13 +11,15 @@
 
 #include "matrixselector.h"
 
+#include "objectstore.h"
+
 #include "dialoglauncher.h"
 #include "datacollection.h"
 
 namespace Kst {
 
-MatrixSelector::MatrixSelector(QWidget *parent)
-  : QWidget(parent) {
+MatrixSelector::MatrixSelector(QWidget *parent, ObjectStore *store)
+  : QWidget(parent), _store(store) {
 
   setupUi(this);
 
@@ -39,6 +41,11 @@ MatrixSelector::MatrixSelector(QWidget *parent)
 
 
 MatrixSelector::~MatrixSelector() {
+}
+
+
+void MatrixSelector::setObjectStore(ObjectStore *store) {
+  _store = store;
 }
 
 
@@ -79,9 +86,13 @@ void MatrixSelector::updateMatrices() {
 
 
 void MatrixSelector::fillMatrices() {
+  if (!_store) {
+    return;
+  }
+
   QHash<QString, MatrixPtr> matrices;
 
-  matrixList.lock().readLock();
+  MatrixList matrixList = _store->getObjects<Matrix>();
 
   MatrixList::ConstIterator it = matrixList.begin();
   for (; it != matrixList.end(); ++it) {
@@ -91,8 +102,6 @@ void MatrixSelector::fillMatrices() {
     matrices.insert(matrix->tag().displayString(), matrix);
     matrix->unlock();
   }
-
-  matrixList.lock().unlock();
 
   QStringList list = matrices.keys();
 

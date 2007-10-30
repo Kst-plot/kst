@@ -18,9 +18,9 @@
 #ifndef SCALAR_H
 #define SCALAR_H
 
-#include <qdom.h>
+#include <QDomElement>
+
 #include "primitive.h"
-#include "objectcollection.h"
 
 class QXmlStreamWriter;
 
@@ -32,16 +32,20 @@ class KST_EXPORT Scalar : public Primitive {
   Q_PROPERTY(bool orphan READ orphan WRITE setOrphan)
   Q_PROPERTY(double value READ value WRITE setValue)
   Q_PROPERTY(bool displayable READ displayable WRITE setDisplayable)
-  public:
-    Scalar(ObjectTag tag = ObjectTag::invalidTag,
+
+  protected:
+    Scalar(ObjectStore *store, ObjectTag tag = ObjectTag::invalidTag,
               Object *provider = 0L, double val = 0.0, bool orphan = false,
               bool displayable = true, bool editable = false);
-    Scalar(const QDomElement& e);
+    Scalar(ObjectStore *store, const QDomElement& e);
 
     virtual ~Scalar();
 
+    friend class ObjectStore;
+
   public:
-    void setTagName(const ObjectTag& tag);
+    virtual const QString& typeString() const;
+    static const QString staticTypeString;
 
     /* return true if any scalars are dirty at the moment */
     static bool scalarsDirty();
@@ -73,7 +77,7 @@ class KST_EXPORT Scalar : public Primitive {
 
     bool editable() const;
     void setEditable(bool editable);
-  
+
   signals:
     void trigger();
 
@@ -84,11 +88,9 @@ class KST_EXPORT Scalar : public Primitive {
     bool _editable;
 };
 
-
 typedef SharedPtr<Scalar> ScalarPtr;
-typedef ObjectList<ScalarPtr> ScalarList;
-typedef ObjectMap<ScalarPtr> ScalarMap;
-typedef ObjectCollection<Scalar> ScalarCollection;
+typedef ObjectList<Scalar> ScalarList;
+typedef ObjectMap<Scalar> ScalarMap;
 
 }
 

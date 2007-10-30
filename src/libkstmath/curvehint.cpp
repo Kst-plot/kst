@@ -38,6 +38,7 @@ const QString& CurveHint::yVectorName() const {
 }
 
 
+#if 0
 VectorPtr CurveHint::xVector() const {
   return *vectorList.findTag(_xVectorName);
 }
@@ -58,6 +59,7 @@ RelationPtr CurveHint::makeCurve(const QString& tag, const QColor& color) const 
 
   return new Curve(tag, x, y, 0L, 0L, 0L, 0L, color);
 }
+#endif
 
 }
 

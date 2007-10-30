@@ -18,6 +18,7 @@
 #ifndef DATAOBJECTCOLLECTION_H
 #define DATAOBJECTCOLLECTION_H
 
+#if 0
 #include "dataobject.h"
 #include "relation.h"
 #include <kst_export.h>
@@ -28,6 +29,7 @@ namespace Kst {
     KST_EXPORT extern RelationList relationList;
     KST_EXPORT extern void addDataObjectToList(DataObjectPtr d);
 }
+#endif
 
 #endif
 // vim: ts=2 sw=2 et

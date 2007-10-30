@@ -15,20 +15,32 @@
 #include "debug.h"
 #include "image.h"
 #include "math_kst.h"
+#include "objectstore.h"
 
 #include "kst_i18n.h"
 
-#include <qimage.h>
-#include <qpainter.h>
+#include <QImage>
+#include <QPainter>
 #include <QTextDocument>
 
 #include <math.h>
 
 namespace Kst {
 
+const QString Image::staticTypeString = I18N_NOOP("Image");
+
 static const QLatin1String& THEMATRIX = QLatin1String("THEMATRIX");
 
-Image::Image(const QDomElement& e) : Relation(e) {
+Image::Image(ObjectStore *store, const ObjectTag& in_tag) : Relation(store, in_tag) {
+  _typeString = staticTypeString;
+  _type = "Image";
+  _hasContourMap = false;
+  _hasColorMap = false;
+  setColorDefaults();
+  setContourDefaults();
+}
+
+Image::Image(ObjectStore *store, const QDomElement& e) : Relation(store, e) {
   QString in_matrixName, in_paletteName;
   bool in_hasColorMap = false, in_hasContourMap = false;
   double in_zLower = 0, in_zUpper = 0;
@@ -71,7 +83,7 @@ Image::Image(const QDomElement& e) : Relation(e) {
 
   _inputMatrixLoadQueue.append(qMakePair(QString(THEMATRIX), in_matrixName));
 
-  _typeString = i18n("Image");
+  _typeString = staticTypeString;
   _type = "Image";
   _hasColorMap = in_hasColorMap;
   _hasContourMap = in_hasContourMap;
@@ -98,11 +110,9 @@ Image::Image(const QDomElement& e) : Relation(e) {
 
 
 //constructor for colormap only
-Image::Image(const QString &in_tag, MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const PaletteData &pal) : Relation(){
-
+Image::Image(ObjectStore *store, const ObjectTag &in_tag, MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const PaletteData &pal) : Relation(store, in_tag) {
   _inputMatrices[THEMATRIX] = in_matrix;
-  setTagName(ObjectTag(in_tag, ObjectTag::globalTagContext));  // FIXME: always top-level?
-  _typeString = i18n("Image");
+  _typeString = staticTypeString;
   _type = "Image";
   _zLower = lowerZ;
   _zUpper = upperZ;
@@ -117,10 +127,9 @@ Image::Image(const QString &in_tag, MatrixPtr in_matrix, double lowerZ, double u
 
 
 //constructor for contour map only
-Image::Image(const QString &in_tag, MatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight) : Relation(){
+Image::Image(ObjectStore *store, const ObjectTag &in_tag, MatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight) : Relation(store, in_tag) {
   _inputMatrices[THEMATRIX] = in_matrix;
-  setTagName(ObjectTag(in_tag, ObjectTag::globalTagContext));  // FIXME: always top-level?
-  _typeString = i18n("Image");
+  _typeString = staticTypeString;
   _type = "Image";
   _contourColor = contourColor;
   _numContourLines = numContours;
@@ -135,7 +144,7 @@ Image::Image(const QString &in_tag, MatrixPtr in_matrix, int numContours, const 
 
 
 //constructor for both colormap and contour map
-Image::Image(const QString &in_tag,
+Image::Image(ObjectStore *store, const ObjectTag &in_tag,
                    MatrixPtr in_matrix,
                    double lowerZ,
                    double upperZ,
@@ -143,9 +152,9 @@ Image::Image(const QString &in_tag,
                    const PaletteData &pal,
                    int numContours,
                    const QColor& contourColor,
-                   int contourWeight) {
+                   int contourWeight) :
+    Relation(store, in_tag) {
   _inputMatrices[THEMATRIX] = in_matrix;
-  setTagName(ObjectTag(in_tag, ObjectTag::globalTagContext));  // FIXME: always top-level?
   _typeString = i18n("Image");
   _type = "Image";
   _contourColor = contourColor;
@@ -168,7 +177,7 @@ Image::~Image() {
 void Image::save(QTextStream &ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<image>" << endl;
-  ts << l2 << "<tag>" << Qt::escape(tagName()) << "</tag>" << endl;
+  ts << l2 << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
   if (_inputMatrices.contains(THEMATRIX)) {
     ts << l2 << "<matrixtag>" << Qt::escape(_inputMatrices[THEMATRIX]->tag().tagString()) << "</matrixtag>" << endl;
   }
@@ -208,7 +217,7 @@ Object::UpdateType Image::update(int update_counter) {
   if (_inputMatrices.contains(THEMATRIX)) {
     MatrixPtr mp = _inputMatrices[THEMATRIX];
     bool updated = UPDATE == mp->update(update_counter);
-  
+
     if (updated || force) {
       // stats
       NS = mp->sampleCount();
@@ -226,14 +235,14 @@ Object::UpdateType Image::update(int update_counter) {
       _ns_miny = MinY;
       MinPosY = MinY > 0 ? MinY : 0;
       MinPosX = MinX > 0 ? MinX : 0;
-      
-      
+
+
       //recalculate the thresholds if necessary
       if (_autoThreshold) {
         _zLower = mp->minValue();
         _zUpper = mp->maxValue();
       }
-      
+
       //update the contour lines
       if (hasContourMap()) {
         double min = mp->minValue(), max = mp->maxValue();
@@ -267,7 +276,7 @@ QString Image::propertyString() const {
 
 QColor Image::getMappedColor(double x, double y) {
   bool ok;
-  
+
   double z = _inputMatrices[THEMATRIX]->value(x, y, &ok);
   if (ok) {
     int index;
@@ -328,9 +337,8 @@ void Image::setThresholdToSpikeInsensitive(double per) {
 }
 
 
-void Image::changeToColorOnly(const QString &in_tag, MatrixPtr in_matrix,
-                                     double lowerZ, double upperZ, bool autoThreshold, const PaletteData &pal) {
-  setTagName(ObjectTag(in_tag, ObjectTag::globalTagContext));  // FIXME: always top-level?
+void Image::changeToColorOnly(MatrixPtr in_matrix, double lowerZ,
+    double upperZ, bool autoThreshold, const PaletteData &pal) {
   if (_inputMatrices.contains(THEMATRIX)) {
     _inputMatrices[THEMATRIX] = in_matrix;
   }
@@ -346,9 +354,8 @@ void Image::changeToColorOnly(const QString &in_tag, MatrixPtr in_matrix,
 }
 
 
-void Image::changeToContourOnly(const QString &in_tag, MatrixPtr in_matrix,
-                                       int numContours, const QColor& contourColor, int contourWeight) {
-  setTagName(ObjectTag(in_tag, ObjectTag::globalTagContext));  // FIXME: always top-level?
+void Image::changeToContourOnly(MatrixPtr in_matrix, int numContours,
+    const QColor& contourColor, int contourWeight) {
   if (_inputMatrices.contains(THEMATRIX)) {
     _inputMatrices[THEMATRIX] = in_matrix;
   }
@@ -369,10 +376,9 @@ void Image::changeToContourOnly(const QString &in_tag, MatrixPtr in_matrix,
 }
 
 
-void Image::changeToColorAndContour(const QString &in_tag, MatrixPtr in_matrix,
-                                               double lowerZ, double upperZ, bool autoThreshold, const PaletteData &pal,
-                                               int numContours, const QColor& contourColor, int contourWeight) {
-  setTagName(ObjectTag(in_tag, ObjectTag::globalTagContext));  // FIXME: always top-level?
+void Image::changeToColorAndContour(MatrixPtr in_matrix,
+    double lowerZ, double upperZ, bool autoThreshold, const PaletteData &pal,
+    int numContours, const QColor& contourColor, int contourWeight) {
   if (_inputMatrices.contains(THEMATRIX)) {
     _inputMatrices[THEMATRIX] = in_matrix;
   }
@@ -475,8 +481,8 @@ KstDataObjectPtr Image::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap)
 
 
 QString Image::matrixTag() const {
-  if (_inputMatrices.contains(THEMATRIX)) { 
-    return _inputMatrices[THEMATRIX]->tag().displayString(); 
+  if (_inputMatrices.contains(THEMATRIX)) {
+    return _inputMatrices[THEMATRIX]->tag().displayString();
   } else {
     return QString();
   }
@@ -485,7 +491,7 @@ QString Image::matrixTag() const {
 
 MatrixPtr Image::matrix() const {
   if (_inputMatrices.contains(THEMATRIX)) {
-    return _inputMatrices[THEMATRIX]; 
+    return _inputMatrices[THEMATRIX];
   } else {
     return NULL;
   }
@@ -494,7 +500,7 @@ MatrixPtr Image::matrix() const {
 
 QString Image::xLabel() const {
   if (_inputMatrices.contains(THEMATRIX)) {
-    return _inputMatrices[THEMATRIX]->xLabel();  
+    return _inputMatrices[THEMATRIX]->xLabel();
   } else {
     return QString();
   }
@@ -503,7 +509,7 @@ QString Image::xLabel() const {
 
 QString Image::yLabel() const {
   if (_inputMatrices.contains(THEMATRIX)) {
-    return _inputMatrices[THEMATRIX]->yLabel();  
+    return _inputMatrices[THEMATRIX]->yLabel();
   } else {
     return QString();
   }
@@ -512,7 +518,7 @@ QString Image::yLabel() const {
 
 QString Image::topLabel() const {
   if (_inputMatrices.contains(THEMATRIX)) {
-    return _inputMatrices[THEMATRIX]->label();  
+    return _inputMatrices[THEMATRIX]->label();
   } else {
     return QString();
   }
@@ -525,6 +531,9 @@ CurveType Image::curveType() const {
 
 
 DataObjectPtr Image::providerDataObject() const {
+  DataObjectPtr provider = 0L;
+  // FIXME: fix this.. I don't know what's going on here
+#if 0
   matrixList.lock().readLock();
   MatrixPtr mp = *matrixList.findTag(matrixTag());
   matrixList.lock().unlock();
@@ -532,8 +541,9 @@ DataObjectPtr Image::providerDataObject() const {
   if (mp) {
     mp->readLock();
     provider = kst_cast<DataObject>(mp->provider());
-    mp->unlock();  
+    mp->unlock();
   }
+#endif
   return provider;
 }
 
@@ -557,12 +567,12 @@ void Image::paint(const CurveRenderContext& context) {
   double yLogBase = context.yLogBase;
   /*Kst*/QPainter* p = context.painter;
   QColor invalid = context.backgroundColor;
-  
+
   double x, y, width, height;
   double img_Lx_pix = 0, img_Ly_pix = 0, img_Hx_pix = 0, img_Hy_pix = 0;
 
   ImagePtr image = this;
-  
+
   if (_inputMatrices.contains(THEMATRIX)) { // don't paint if we have no matrix
     image->matrixDimensions(x, y, width, height);
 
@@ -614,7 +624,7 @@ void Image::paint(const CurveRenderContext& context) {
           img_Ly_pix = (y + height) * m_Y + b_Y;
         }
       }
-  
+
       // color map
       QColor thisPixel;
       if (image->hasColorMap()) {
@@ -678,7 +688,7 @@ void Image::paint(const CurveRenderContext& context) {
               double zTL, zTR, zBL, zBR;
               double new_x_small = (i - b_X) / m_X, new_y_small = (j + 1 - b_Y) / m_Y;
               double new_x_large = (i + CONTOUR_STEP - b_X) / m_X, new_y_large = (j+1+CONTOUR_STEP - b_Y) / m_Y;
-    
+
               if (xLog) {
                 new_x_small = pow(xLogBase, new_x_small);
                 new_x_large = pow(xLogBase, new_x_large);
@@ -687,17 +697,17 @@ void Image::paint(const CurveRenderContext& context) {
                 new_y_small = pow(yLogBase, new_y_small);
                 new_y_large = pow(yLogBase, new_y_large);
               }
-    
+
               zTL = mp->value(new_x_small, new_y_small, 0L);
               zTR = mp->value(new_x_large, new_y_small, 0L);
               zBL = mp->value(new_x_small, new_y_large, 0L);
               zBR = mp->value(new_x_large, new_y_large, 0L);
-    
+
               // determine the lines to draw
               int numPoints = 0;
               bool passTop = false, passBottom = false, passLeft = false, passRight = false;
               QPoint topPoint, bottomPoint, leftPoint, rightPoint;
-    
+
               // passes through the top
               if (hasPrevBottom) {
                 topPoint = lastPoint;
@@ -710,7 +720,7 @@ void Image::paint(const CurveRenderContext& context) {
                 topPoint.setY(j);
               }
               hasPrevBottom = false;
-    
+
               // passes through the bottom
               if ((lineK < zBR && lineK > zBL) || (lineK < zBL && lineK > zBR)) {
                 ++numPoints;
@@ -722,7 +732,7 @@ void Image::paint(const CurveRenderContext& context) {
                   hasPrevBottom = true;
                 }
               }
-    
+
               // passes through the left
               if ((lineK < zBL && lineK > zTL) || (lineK < zTL && lineK > zBL)) {
                 ++numPoints;
@@ -738,7 +748,7 @@ void Image::paint(const CurveRenderContext& context) {
                 rightPoint.setY(int(((lineK - zTR)*CONTOUR_STEP + (zBR - zTR)*j) / (zBR - zTR)));
                 rightPoint.setX(i + CONTOUR_STEP);
               }
-    
+
               if (numPoints == 4) {
                 // draw a cross
                 p->drawLine(topPoint, bottomPoint);
@@ -762,7 +772,7 @@ void Image::paint(const CurveRenderContext& context) {
                 // two points - connect them
                 QPoint point1, point2;
                 bool true1 = false;
-    
+
                 if (passTop) {
                   point1 = topPoint;
                   true1 = true;
@@ -798,7 +808,7 @@ void Image::paint(const CurveRenderContext& context) {
 
 void Image::yRange(double xFrom, double xTo, double* yMin, double* yMax) {
   if (!yMin || !yMax) {
-    return;  
+    return;
   }
   // if x range overlaps with image x range, just return image y range
   if ((xFrom <= MinX && xTo >= MinX) ||

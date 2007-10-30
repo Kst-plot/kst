@@ -102,7 +102,10 @@ public:
    * @param p the pointer to copy
    */
   SharedPtr( const SharedPtr& p )
-    : ptr(p.ptr) { if ( ptr ) ptr->_KShared_ref(); }
+	  : ptr(p.ptr) { if ( ptr ) ptr->_KShared_ref(); }
+
+  template<class Y> SharedPtr(SharedPtr<Y>& p)
+	  : ptr(p.data()) { if (ptr) ptr->_KShared_ref(); }
 
   /**
    * Unreferences the object that this pointer points to. If it was
@@ -117,6 +120,16 @@ public:
     if ( ptr ) ptr->_KShared_ref();
     return *this;
   }
+
+  template<class Y>
+  SharedPtr<T>& operator=(SharedPtr<Y>& p) {
+    if (ptr == p.data()) return *this;
+    if (ptr) ptr->_KShared_unref();
+    ptr = p.data();
+    if (ptr) ptr->_KShared_ref();
+    return *this;
+  }
+
   SharedPtr<T>& operator= ( T* p ) {
     if ( ptr == p ) return *this;
     if ( ptr ) ptr->_KShared_unref();

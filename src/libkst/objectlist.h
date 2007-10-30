@@ -8,18 +8,24 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
 #ifndef OBJECTLIST_H
 #define OBJECTLIST_H
 
-#include <qlist.h>
-#include <qstringlist.h>
+#include <QList>
+#include <QStringList>
 
 #include "rwlock.h"
 #include "sharedptr.h"
 
 namespace Kst {
 
+template<class T>
+class ObjectList : public QList<SharedPtr<T> > {
+};
+
+}
+
+#if 0
 template<class T>
 class ObjectList : public QList<T> {
   public:
@@ -94,7 +100,7 @@ class ObjectList : public QList<T> {
 
 /* Does locking for you automatically. */
 template<class T, class S>
-ObjectList<SharedPtr<S> > ObjectSubList(ObjectList<SharedPtr<T> >& list) {
+ObjectList<SharedPtr<S> > kstObjectSubList(ObjectList<SharedPtr<T> >& list) {
   list.lock().readLock();
   ObjectList<SharedPtr<S> > rc;
   typename ObjectList<SharedPtr<T> >::Iterator it;
@@ -113,7 +119,7 @@ ObjectList<SharedPtr<S> > ObjectSubList(ObjectList<SharedPtr<T> >& list) {
 
 /* Does locking for you automatically. */
 template<class T, class S>
-void ObjectSplitList(ObjectList<SharedPtr<T> >& list, ObjectList<SharedPtr<S> >& inclusive, ObjectList<SharedPtr<T> >& exclusive) {
+void kstObjectSplitList(ObjectList<SharedPtr<T> >& list, ObjectList<SharedPtr<S> >& inclusive, ObjectList<SharedPtr<T> >& exclusive) {
   list.lock().readLock();
   typename ObjectList<SharedPtr<T> >::Iterator it;
 
@@ -129,9 +135,7 @@ void ObjectSplitList(ObjectList<SharedPtr<T> >& list, ObjectList<SharedPtr<S> >&
   list.lock().unlock();
 }
 
-}
-
+#endif
 #endif
 
 // vim: ts=2 sw=2 et
-

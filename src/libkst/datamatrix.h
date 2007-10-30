@@ -19,32 +19,23 @@
 #include "kst_export.h"
 
 namespace Kst {
-   
+
 class KST_EXPORT DataMatrix : public Matrix {
+  Q_OBJECT
 
   public:
-    
-    // constructor
-    DataMatrix(DataSourcePtr file, const QString &field, ObjectTag tag,
-               int xStart, int yStart,
-               int xNumSteps, int yNumSteps,
-               bool doAve, bool doSkip, int skip);
-    
-    // constructor to create a saved DataMatrix
-    DataMatrix(const QDomElement &e);
-    
+    virtual const QString& typeString() const;
+    static const QString staticTypeString;
+
     // save DataMatrix
     virtual void save(QXmlStreamWriter &xml);
-    
-    virtual ~DataMatrix();
-    
+
     // change properties of DataMatrix
     void change(DataSourcePtr file, const QString &field,
-                ObjectTag tag,
                 int xStart, int yStart,
                 int xNumSteps, int yNumSteps,
                 bool doAve, bool doSkip, int skip);
-    
+
     // return properties of DataMatrix
     int reqXStart() const;
     int reqYStart() const;
@@ -59,54 +50,68 @@ class KST_EXPORT DataMatrix : public Matrix {
     bool doSkip() const;
     bool doAverage() const;
     int skip() const;
-    
+
     // labels for this matrix
     virtual QString label() const;
     virtual QString fileLabel() const;
-    
+
     // the data source this DataMatrix is using
     DataSourcePtr dataSource() const;
-    
-    // returns true if the file and field is valid; false otherwise 
+
+    // returns true if the file and field is valid; false otherwise
     bool isValid() const;
-    
+
     // update DataMatrix
     virtual UpdateType update(int update_counter = -1);
 
     // reload contents of DataMatrix from file
     void reload();
-    
+
     // change the datasource for this matrix
     void changeFile(DataSourcePtr file);
-    
-    // make a "copy" of this DataMatrix 
+
+    // make a "copy" of this DataMatrix
     SharedPtr<DataMatrix> makeDuplicate() const;
-    
+
+  protected:
+    DataMatrix(ObjectStore *store, const ObjectTag& tag);
+    // constructor
+    DataMatrix(ObjectStore *store, DataSourcePtr file, const QString &field,
+        const ObjectTag& tag, int xStart, int yStart,
+        int xNumSteps, int yNumSteps, bool doAve, bool doSkip, int skip);
+
+    // constructor to create a saved DataMatrix
+    DataMatrix(ObjectStore *store, const QDomElement &e);
+
+    virtual ~DataMatrix();
+
+    friend class ObjectStore;
+
   private:
     void commonConstructor(DataSourcePtr file, const QString &field,
-                           int reqXStart, int reqYStart, int reqNX, int reqNY, 
+                           int reqXStart, int reqYStart, int reqNX, int reqNY,
                            bool doAve, bool doSkip, int skip);
-    
+
     // internal update function, called by update()
     Object::UpdateType doUpdate(bool force = false);
-    
+
     bool doUpdateSkip(int realXStart, int realYStart, bool force);
     bool doUpdateNoSkip(int realXStart, int realYStart, bool force);
-    
+
     void reset();
-    
+
     // values requested; may be different from actual matrix range
-    int _reqXStart, _reqYStart, _reqNX, _reqNY; 
-    
+    int _reqXStart, _reqYStart, _reqNX, _reqNY;
+
     // matrix params since last update - used to determine if update is needed
     int _lastXStart, _lastYStart, _lastNX, _lastNY;
     bool _lastDoAve : 1;
     bool _lastDoSkip : 1;
     int _lastSkip;
-    
+
     double* _aveReadBuffer; // buffer used when performing boxcar filter
-    int _aveReadBufferSize; 
-    
+    int _aveReadBufferSize;
+
     DataSourcePtr _file;
     QString _field; // field to read from _file
     bool _doAve : 1;
@@ -116,7 +121,7 @@ class KST_EXPORT DataMatrix : public Matrix {
 };
 
 typedef SharedPtr<DataMatrix> DataMatrixPtr;
-typedef ObjectList<DataMatrixPtr> DataMatrixList;
+typedef ObjectList<DataMatrix> DataMatrixList;
 
 }
 #endif

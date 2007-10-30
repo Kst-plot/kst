@@ -35,11 +35,14 @@ namespace Equations {
 
 namespace Kst {
 
+class ObjectStore;
+
 class KST_EXPORT Equation : public DataObject {
+  Q_OBJECT
+
   public:
-    Equation(const QString& in_tag, const QString& equation, double x0, double x1, int nx);
-    Equation(const QString& in_tag, const QString& equation, VectorPtr xvector, bool do_interp);
-    ~Equation();
+    static const QString staticTypeString;
+    const QString& typeString() const { return staticTypeString; }
 
     void attach();
     UpdateType update(int update_counter = -1);
@@ -52,26 +55,24 @@ class KST_EXPORT Equation : public DataObject {
     void setExistingXVector(VectorPtr xvector, bool do_interp);
 
     const QString& equation() const { return _equation; }
-    VectorPtr vXIn() const { return *_xInVector; }
-    VectorPtr vX() const { return *_xOutVector; }
-    VectorPtr vY() const { return *_yOutVector; }
+    VectorPtr vXIn() const { return _xInVector; }
+    VectorPtr vX() const { return _xOutVector; }
+    VectorPtr vY() const { return _yOutVector; }
 
     bool doInterp() const { return _doInterp; }
 
     bool isValid() const;
 
-    void setTagName(const QString& tag);
-
     void showNewDialog();
     void showEditDialog();
 
-    QString xVTag() const { return (*_xOutVector)->tagName(); }
-    QString yVTag() const { return (*_yOutVector)->tagName(); }
+    ObjectTag xVTag() const { return _xOutVector->tag(); }
+    ObjectTag yVTag() const { return _yOutVector->tag(); }
 
     const CurveHintList *curveHints() const;
 
     DataObjectPtr makeDuplicate(DataObjectDataObjectMap& duplicatedMap);
-    
+
     void replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObject);
 
     void replaceDependency(VectorPtr oldVector, VectorPtr newVector);
@@ -79,13 +80,21 @@ class KST_EXPORT Equation : public DataObject {
 
     bool uses(ObjectPtr p) const;
 
+  protected:
+    Equation(ObjectStore *store, const ObjectTag& in_tag, const QString& equation, double x0, double x1, int nx);
+    Equation(ObjectStore *store, const ObjectTag& in_tag, const QString& equation = QString::null, VectorPtr xvector = 0L, bool do_interp = false);
+    ~Equation();
+
+    friend class EquationFactory;
+    friend class ObjectStore; // FIXME: remove this when factory is working
+
   private:
     QString _equation;
 
     VectorMap VectorsUsed;
     ScalarMap ScalarsUsed;
 
-    void commonConstructor(const QString& in_tag, const QString& equation);
+    void commonConstructor(ObjectStore *store, const QString& equation);
 
     bool FillY(bool force = false);
     bool _isValid : 1;
@@ -96,12 +105,12 @@ class KST_EXPORT Equation : public DataObject {
     static const QString XINVECTOR;
     static const QString XOUTVECTOR;
     static const QString YOUTVECTOR;
-    VectorMap::Iterator _xInVector, _xOutVector, _yOutVector;
+    VectorPtr _xInVector, _xOutVector, _yOutVector;
     Equations::Node *_pe;
 };
 
 typedef SharedPtr<Equation> EquationPtr;
-typedef ObjectList<EquationPtr> EquationList;
+typedef ObjectList<Equation> EquationList;
 
 }
 #endif

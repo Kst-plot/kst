@@ -50,7 +50,7 @@ class KST_EXPORT CSDDialog : public DataDialog {
     virtual ~CSDDialog();
 
   protected:
-    virtual QString tagName() const;
+    virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
 

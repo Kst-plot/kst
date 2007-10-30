@@ -35,13 +35,13 @@
 
 namespace Kst {
 
-DataObject::DataObject() : Object() {
+DataObject::DataObject(ObjectStore *store, const ObjectTag& tag) : Object(tag) {
   //qDebug() << "+++ CREATING DATA OBJECT: " << (void*)this << endl;
   _curveHints = new CurveHintList;
   _isInputLoaded = false;
 }
 
-DataObject::DataObject(const QDomElement& e) : Object() {
+DataObject::DataObject(ObjectStore *store, const QDomElement& e) : Object() {
   Q_UNUSED(e)
   //qDebug() << "+++ CREATING DATA OBJECT: " << (void*)this << endl;
   _curveHints = new CurveHintList;
@@ -50,7 +50,8 @@ DataObject::DataObject(const QDomElement& e) : Object() {
 
 
 DataObject::~DataObject() {
-  // Remove our slave vectors, scalars, and strings, and matrices
+  // TODO: Remove our slave vectors, scalars, and strings, and matrices
+#if 0
   stringList.lock().writeLock();
   for (StringMap::Iterator it = _outputStrings.begin();
                                it != _outputStrings.end();
@@ -74,7 +75,7 @@ DataObject::~DataObject() {
     vectorList.remove(it.value());
   }
   vectorList.lock().unlock();
-  
+
   matrixList.lock().writeLock();
   for (MatrixMap::Iterator it = _outputMatrices.begin();
        it != _outputMatrices.end();
@@ -82,6 +83,7 @@ DataObject::~DataObject() {
     matrixList.remove(it.value());
   }
   matrixList.lock().unlock();
+#endif
 //  qDebug() << "Destroying Data Object: " << tag().displayString() << endl;
   delete _curveHints;
 }
@@ -209,7 +211,9 @@ void DataObject::save(QXmlStreamWriter& ts) {
 bool DataObject::loadInputs() {
   bool rc = true;
   QList<QPair<QString,QString> >::Iterator i;
-  
+
+  // FIXME:
+#if 0
   vectorList.lock().readLock();
   for (i = _inputVectorLoadQueue.begin(); i != _inputVectorLoadQueue.end(); ++i) {
     VectorList::Iterator it = vectorList.findTag((*i).second);
@@ -246,7 +250,7 @@ bool DataObject::loadInputs() {
     }
   }
   stringList.lock().unlock();
-  
+
   matrixList.lock().readLock();
   for (i = _inputMatrixLoadQueue.begin(); i != _inputMatrixLoadQueue.end(); ++i) {
     MatrixList::Iterator it = matrixList.findTag((*i).second);
@@ -258,12 +262,13 @@ bool DataObject::loadInputs() {
     }
   }
   matrixList.lock().unlock();
+#endif
 
   _inputVectorLoadQueue.clear();
   _inputScalarLoadQueue.clear();
   _inputStringLoadQueue.clear();
   _inputMatrixLoadQueue.clear();
-  
+
   setDirty();
 
   _isInputLoaded = true;
@@ -291,11 +296,11 @@ int DataObject::getUsage() const {
       rc += i.value()->getUsage() - 1;
     }
   }
-  
+
   for (MatrixMap::ConstIterator i = _outputMatrices.begin(); i != _outputMatrices.end(); ++i) {
     if (i.value().data()) {
-      rc += i.value()->getUsage() - 1;  
-    }  
+      rc += i.value()->getUsage() - 1;
+    }
   }
 
   return Object::getUsage() + rc;
@@ -356,7 +361,7 @@ void DataObject::writeLockInputsAndOutputs() const {
   for (QList<StringPtr>::Iterator i = sl.begin(); i != sl.end(); ++i) {
     outputs += (*i).data();
   }
-  
+
   QList<ScalarPtr> sc = _inputScalars.values();
   for (QList<ScalarPtr>::Iterator i = sc.begin(); i != sc.end(); ++i) {
     inputs += (*i).data();
@@ -365,7 +370,7 @@ void DataObject::writeLockInputsAndOutputs() const {
   for (QList<ScalarPtr>::Iterator i = sc.begin(); i != sc.end(); ++i) {
     outputs += (*i).data();
   }
-  
+
   QList<VectorPtr> vl = _inputVectors.values();
   for (QList<VectorPtr>::Iterator i = vl.begin(); i != vl.end(); ++i) {
     inputs += (*i).data();
@@ -374,7 +379,7 @@ void DataObject::writeLockInputsAndOutputs() const {
   for (QList<VectorPtr>::Iterator i = vl.begin(); i != vl.end(); ++i) {
     outputs += (*i).data();
   }
-  
+
   QList<MatrixPtr> ml = _inputMatrices.values();
   for (QList<MatrixPtr>::Iterator i = ml.begin(); i != ml.end(); ++i) {
     inputs += (*i).data();
@@ -410,7 +415,7 @@ void DataObject::writeLockInputsAndOutputs() const {
       qDebug() << (void*)this << " (" << this->type() << ": " << this->tag().tagString() << ") DataObject::writeLockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": write locking output \"" << (*outputIt)->tag().tagString() << "\" (" << (void*)((KstRWLock*)*outputIt) << ")" << endl;
 #endif
       if ((*outputIt)->provider() != this) {
-        Debug::self()->log(i18n("(%1) DataObject::writeLockInputsAndOutputs() by tid=%2: write locking output %3 (not provider) -- this is probably an error. Please email kst@kde.org with details.").arg(this->type()).arg(reinterpret_cast<qint64>(QThread::currentThread())).arg((*outputIt)->tagName()), Debug::Error);
+        Debug::self()->log(i18n("(%1) DataObject::writeLockInputsAndOutputs() by tid=%2: write locking output %3 (not provider) -- this is probably an error. Please email kst@kde.org with details.").arg(this->type()).arg(reinterpret_cast<qint64>(QThread::currentThread())).arg((*outputIt)->tag().tagString()), Debug::Error);
       }
       (*outputIt)->writeLock();
       ++outputIt;
@@ -517,6 +522,8 @@ const CurveHintList* DataObject::curveHints() const {
 
 
 bool DataObject::deleteDependents() {
+  // FIXME: redo
+#if 0
   dataObjectList.lock().readLock();
   DataObjectList dol = dataObjectList;
   dataObjectList.lock().unlock();
@@ -540,18 +547,21 @@ bool DataObject::deleteDependents() {
       dataObjectList.lock().unlock();
       dop->deleteDependents();
     }
-  } 
+  }
+#endif
 
   return true;
 }
 
 
 bool DataObject::duplicateDependents(QMap<DataObjectPtr, DataObjectPtr> &duplicatedMap) {
+  // FIXME: redo
+#if 0
   // work with a copy of the data object list
   dataObjectList.lock().readLock();
   DataObjectList dol = dataObjectList;
   dataObjectList.lock().unlock();
-  
+
   for (DataObjectList::Iterator i = dol.begin(); i != dol.end(); ++i) {
     if ((*i)->uses(this)) {
       if (duplicatedMap.contains(*i)) {
@@ -566,20 +576,22 @@ bool DataObject::duplicateDependents(QMap<DataObjectPtr, DataObjectPtr> &duplica
       }
     }
   }
+#endif
+
   return true;
 }
 
 
 void DataObject::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObject) {
-  
+
   // find all connections from this object to old object
-  
+
   // vectors
   for (VectorMap::Iterator j = oldObject->outputVectors().begin(); j != oldObject->outputVectors().end(); ++j) {
     for (VectorMap::Iterator k = _inputVectors.begin(); k != _inputVectors.end(); ++k) {
       if (j.value().data() == k.value().data()) {
         // replace input with the output from newObject
-        _inputVectors[k.key()] = (newObject->outputVectors())[j.key()]; 
+        _inputVectors[k.key()] = (newObject->outputVectors())[j.key()];
       }
     }
     // also replace dependencies on vector stats
@@ -589,17 +601,17 @@ void DataObject::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObj
         scalarDictIter.next();
         if (scalarDictIter.value() == k.value()) {
           _inputScalars[k.key()] = (((newObject->outputVectors())[j.key()])->scalars())[scalarDictIter.key()];
-        }  
+        }
       }
     }
   }
-  
+
   // matrices
   for (MatrixMap::Iterator j = oldObject->outputMatrices().begin(); j != oldObject->outputMatrices().end(); ++j) {
     for (MatrixMap::Iterator k = _inputMatrices.begin(); k != _inputMatrices.end(); ++k) {
       if (j.value().data() == k.value().data()) {
         // replace input with the output from newObject
-        _inputMatrices[k.key()] = (newObject->outputMatrices())[j.key()]; 
+        _inputMatrices[k.key()] = (newObject->outputMatrices())[j.key()];
       }
     }
     // also replace dependencies on matrix stats
@@ -609,7 +621,7 @@ void DataObject::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObj
         scalarDictIter.next();
         if (scalarDictIter.value() == k.value()) {
           _inputScalars[k.key()] = (((newObject->outputMatrices())[j.key()])->scalars())[scalarDictIter.key()];
-        }  
+        }
       }
     }
   }
@@ -619,17 +631,17 @@ void DataObject::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObj
     for (ScalarMap::Iterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
       if (j.value().data() == k.value().data()) {
         // replace input with the output from newObject
-        _inputScalars[k.key()] = (newObject->outputScalars())[j.key()];  
+        _inputScalars[k.key()] = (newObject->outputScalars())[j.key()];
       }
-    } 
+    }
   }
-  
-  // strings 
+
+  // strings
   for (StringMap::Iterator j = oldObject->outputStrings().begin(); j != oldObject->outputStrings().end(); ++j) {
     for (StringMap::Iterator k = _inputStrings.begin(); k != _inputStrings.end(); ++k) {
       if (j.value().data() == k.value().data()) {
         // replace input with the output from newObject
-        _inputStrings[k.key()] = (newObject->outputStrings())[j.key()];  
+        _inputStrings[k.key()] = (newObject->outputStrings())[j.key()];
       }
     }
   }
@@ -639,17 +651,17 @@ void DataObject::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObj
 void DataObject::replaceDependency(VectorPtr oldVector, VectorPtr newVector) {
   for (VectorMap::Iterator j = _inputVectors.begin(); j != _inputVectors.end(); ++j) {
     if (j.value() == oldVector) {
-      _inputVectors[j.key()] = newVector;  
-    }      
+      _inputVectors[j.key()] = newVector;
+    }
   }
-  
+
   QHashIterator<QString, Scalar*> scalarDictIter(oldVector->scalars());
   for (ScalarMap::Iterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
     while (scalarDictIter.hasNext()) {
       scalarDictIter.next();
       if (scalarDictIter.value() == j.value()) {
         _inputScalars[j.key()] = (newVector->scalars())[scalarDictIter.key()];
-      }  
+      }
     }
   }
 }
@@ -658,17 +670,17 @@ void DataObject::replaceDependency(VectorPtr oldVector, VectorPtr newVector) {
 void DataObject::replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix) {
   for (MatrixMap::Iterator j = _inputMatrices.begin(); j != _inputMatrices.end(); ++j) {
     if (j.value() == oldMatrix) {
-      _inputMatrices[j.key()] = newMatrix;  
-    }      
+      _inputMatrices[j.key()] = newMatrix;
+    }
   }
-  
+
   QHashIterator<QString, Scalar*> scalarDictIter(oldMatrix->scalars());
   for (ScalarMap::Iterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
     while (scalarDictIter.hasNext()) {
       scalarDictIter.next();
       if (scalarDictIter.value() == j.value()) {
         _inputScalars[j.key()] = (newMatrix->scalars())[scalarDictIter.key()];
-      }  
+      }
     }
   }
 }
@@ -687,8 +699,8 @@ bool DataObject::uses(ObjectPtr p) const {
       while (scalarDictIter.hasNext()) {
         scalarDictIter.next();
         if (scalarDictIter.value() == j.value()) {
-          return true;  
-        }  
+          return true;
+        }
       }
     }
   } else if (MatrixPtr matrix = kst_cast<Matrix>(p)) {
@@ -702,8 +714,8 @@ bool DataObject::uses(ObjectPtr p) const {
       while (scalarDictIter.hasNext()) {
         scalarDictIter.next();
         if (scalarDictIter.value() == j.value()) {
-          return true;  
-        }  
+          return true;
+        }
       }
     }
   } else if (DataObjectPtr obj = kst_cast<DataObject>(p) ) {
@@ -721,11 +733,11 @@ bool DataObject::uses(ObjectPtr p) const {
           scalarDictIter.next();
           if (scalarDictIter.value() == k.value()) {
             return true;
-          }  
+          }
         }
       }
     }
-  
+
     for (MatrixMap::Iterator j = obj->outputMatrices().begin(); j != obj->outputMatrices().end(); ++j) {
       for (MatrixMap::ConstIterator k = _inputMatrices.begin(); k != _inputMatrices.end(); ++k) {
         if (j.value() == k.value()) {
@@ -739,19 +751,19 @@ bool DataObject::uses(ObjectPtr p) const {
           scalarDictIter.next();
           if (scalarDictIter.value() == k.value()) {
             return true;
-          }  
+          }
         }
       }
     }
-    
+
     for (ScalarMap::Iterator j = obj->outputScalars().begin(); j != obj->outputScalars().end(); ++j) {
       for (ScalarMap::ConstIterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
         if (j.value() == k.value()) {
           return true;
         }
-      } 
+      }
     }
-  
+
     for (StringMap::Iterator j = obj->outputStrings().begin(); j != obj->outputStrings().end(); ++j) {
       for (StringMap::ConstIterator k = _inputStrings.begin(); k != _inputStrings.end(); ++k) {
         if (j.value() == k.value()) {

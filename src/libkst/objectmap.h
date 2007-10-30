@@ -12,13 +12,16 @@
 #ifndef OBJECTMAP_H
 #define OBJECTMAP_H
 
-#include <qmap.h>
-#include <qstringlist.h>
+#include <QHash>
+#include <QStringList>
+
+#include "sharedptr.h"
 
 namespace Kst {
 
 template<class T>
-class ObjectMap : public QMap<QString,T> {
+class ObjectMap : public QHash<QString, SharedPtr<T> > {
+#if 0
   public:
     ObjectMap() : QMap<QString,T>() {}
     virtual ~ObjectMap() {}
@@ -70,9 +73,11 @@ These are wrong.  We should not assume that key(x) == x->tagName().
     }
 
 */
+#endif
 };
 
 }
+
 #endif
 
 // vim: ts=2 sw=2 et

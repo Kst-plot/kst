@@ -21,17 +21,24 @@
 
 namespace Kst {
 
+class ObjectStore;
+
 class KST_EXPORT StringSelector : public QWidget, public Ui::StringSelector {
   Q_OBJECT
   public:
-    StringSelector(QWidget *parent = 0);
+    StringSelector(QWidget *parent = 0, ObjectStore *store = 0);
     virtual ~StringSelector();
+
+    void setObjectStore(ObjectStore *store);
 
     StringPtr selectedString() const;
     void setSelectedString(StringPtr selectedString);
 
   Q_SIGNALS:
     void selectionChanged();
+
+  private:
+    ObjectStore *_store;
 };
 
 }

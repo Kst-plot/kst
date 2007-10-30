@@ -23,18 +23,21 @@
 #include "basicplugin.h"
 #include "dialoglauncher.h"
 #include "datacollection.h"
+#include "objectstore.h"
 
 namespace Kst {
 
-BasicPlugin::BasicPlugin()
-: DataObject(), _isFit(false) {
+const QString BasicPlugin::staticTypeString = I18N_NOOP("Plugin");
+
+BasicPlugin::BasicPlugin(ObjectStore *store, const ObjectTag& tag)
+: DataObject(store, tag), _isFit(false) {
   _typeString = i18n("Plugin");
   _type = "Plugin";
 }
 
 
-BasicPlugin::BasicPlugin(const QDomElement& e)
-: DataObject(e), _isFit(false) {
+BasicPlugin::BasicPlugin(ObjectStore *store, const QDomElement& e)
+: DataObject(store, e), _isFit(false) {
   _typeString = i18n("Plugin");
   _type = "Plugin";
 }
@@ -45,6 +48,7 @@ BasicPlugin::~BasicPlugin() {
 
 
 DataObjectPtr BasicPlugin::makeDuplicate(DataObjectDataObjectMap &map) {
+#if 0
   BasicPluginPtr plugin = kst_cast<BasicPlugin>(DataObject::createPlugin(propertyString()));
 
   // use same inputs
@@ -77,6 +81,9 @@ DataObjectPtr BasicPlugin::makeDuplicate(DataObjectDataObjectMap &map) {
   plugin->setTagName(ObjectTag(tag().tag() + "'", tag().context())); // FIXME: unique tag generation method
   map.insert(this, DataObjectPtr(plugin));
   return DataObjectPtr(plugin);
+#endif
+  // FIXME: implement this
+  return 0L;
 }
 
 void BasicPlugin::showNewDialog() {
@@ -178,21 +185,27 @@ void BasicPlugin::setInputString(const QString &type, StringPtr ptr) {
 
 void BasicPlugin::setOutputVector(const QString &type, const QString &name) {
   QString txt = !name.isEmpty() ? name : type;
-  VectorPtr v = new Vector(ObjectTag(txt, tag()), 0, this, false);
+  Q_ASSERT(store());
+  VectorPtr v = store()->createObject<Vector>(ObjectTag(txt, tag()));
+  v->setProvider(this);
   _outputVectors.insert(type, v);
 }
 
 
 void BasicPlugin::setOutputScalar(const QString &type, const QString &name) {
   QString txt = !name.isEmpty() ? name : type;
-  ScalarPtr s = new Scalar(ObjectTag(txt, tag()), this);
+  Q_ASSERT(store());
+  ScalarPtr s = store()->createObject<Scalar>(ObjectTag(txt, tag()));
+  s->setProvider(this);
   _outputScalars.insert(type, s);
 }
 
 
 void BasicPlugin::setOutputString(const QString &type, const QString &name) {
   QString txt = !name.isEmpty() ? name : type;
-  StringPtr s = new String(ObjectTag(txt, tag()), this);
+  Q_ASSERT(store());
+  StringPtr s = store()->createObject<String>(ObjectTag(txt, tag()));
+  s->setProvider(this);
   _outputStrings.insert(type, s);
 }
 
@@ -249,21 +262,23 @@ void BasicPlugin::load(const QDomElement &e) {
       } else if (e.tagName() == "istring") {
         _inputStringLoadQueue.append(qMakePair(e.attribute("name"), e.text()));
       } else if (e.tagName() == "ovector") {
-        KstWriteLocker blockVectorUpdates(&vectorList.lock());
-        VectorPtr v;
+        Q_ASSERT(store());
+        VectorPtr v = store()->createObject<Vector>(ObjectTag(e.text(), tag()));
+        v->setProvider(this);
         if (e.attribute("scalarList", "0").toInt()) {
-          v = new Vector(ObjectTag(e.text(), tag()), 0, this, true);
-        } else {
-          v = new Vector(ObjectTag(e.text(), tag()), 0, this, false);
+          // FIXME: handle scalar lists
+          //v = new Vector(ObjectTag(e.text(), tag()), 0, this, true);
         }
         _outputVectors.insert(e.attribute("name"), v);
       } else if (e.tagName() == "oscalar") {
-        KstWriteLocker blockScalarUpdates(&scalarList.lock());
-        ScalarPtr sp = new Scalar(ObjectTag(e.text(), tag()), this);
+        Q_ASSERT(store());
+        ScalarPtr sp = store()->createObject<Scalar>(ObjectTag(e.text(), tag()));
+        sp->setProvider(this);
         _outputScalars.insert(e.attribute("name"), sp);
       } else if (e.tagName() == "ostring") {
-        KstWriteLocker blockStringUpdates(&stringList.lock());
-        StringPtr sp = new String(ObjectTag(e.text(), tag()), this);
+        Q_ASSERT(store());
+        StringPtr sp = store()->createObject<String>(ObjectTag(e.text(), tag()));
+        sp->setProvider(this);
         _outputStrings.insert(e.attribute("name"), sp);
       }
     }
@@ -284,21 +299,20 @@ void BasicPlugin::createFitScalars() {
       int i = 0;
       int length = vectorParam->length();
 
-      KstWriteLocker blockScalarUpdates(&scalarList.lock());
-      scalarList.setUpdateDisplayTags(false);
+      Q_ASSERT(store());
       for (paramName = parameterName(i);
           !paramName.isEmpty() && i < length;
            paramName = parameterName(++i)) {
         double scalarValue = vectorParam->value(i);
         if (!_outputScalars.contains(paramName)) {
-          ScalarPtr s = new Scalar(ObjectTag(paramName, tag()), this, scalarValue);
-          s->Object::writeLock();  // must write lock, since fit scalars are created from update()
+          ScalarPtr s = store()->createObject<Scalar>(ObjectTag(paramName, tag()));
+          s->setProvider(this);
+          s->setValue(scalarValue);
           _outputScalars.insert(paramName, s);
         } else {
           _outputScalars[paramName]->setValue(scalarValue);
         }
       }
-      scalarList.setUpdateDisplayTags(true);
     }
   }
 }
@@ -312,7 +326,7 @@ QString BasicPlugin::parameterName(int /*index*/) const {
 QString BasicPlugin::label(int precision) const {
   QString label;
 
-  label = i18n("%1: %2").arg(name()).arg(tagName());
+  label = i18n("%1: %2").arg(name()).arg(tag().displayString());
   if ((outputVectors())["Parameters"]) {
     QString strParamName;
     QString strValue;
@@ -338,7 +352,7 @@ void BasicPlugin::save(QTextStream& ts, const QString& indent) {
   QString l2 = indent + "  ";
   //The plugin name _must_ be the same as the entry in the .desktop file
   ts << indent << "<plugin name=\"" << propertyString() << "\">" << endl;
-  ts << l2 << "<tag>" << Qt::escape(tagName()) << "</tag>" << endl;
+  ts << l2 << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
   for (VectorMap::Iterator i = _inputVectors.begin(); i != _inputVectors.end(); ++i) {
     ts << l2 << "<ivector name=\"" << Qt::escape(i.key()) << "\">"
         << Qt::escape(i.value()->tag().tagString())
@@ -359,17 +373,17 @@ void BasicPlugin::save(QTextStream& ts, const QString& indent) {
     if (i.value()->isScalarList()) {
       ts << "\" scalarList=\"1";
     }
-    ts << "\">" << Qt::escape(i.value()->tag().tag())
+    ts << "\">" << Qt::escape(i.value()->tag().name())  // FIXME: is this right?
         << "</ovector>" << endl;
   }
   for (ScalarMap::Iterator i = _outputScalars.begin(); i != _outputScalars.end(); ++i) {
     ts << l2 << "<oscalar name=\"" << Qt::escape(i.key()) << "\">"
-        << Qt::escape(i.value()->tag().tag())
+        << Qt::escape(i.value()->tag().name())  // FIXME: is this right?
         << "</oscalar>" << endl;
   }
   for (StringMap::Iterator i = _outputStrings.begin(); i != _outputStrings.end(); ++i) {
     ts << l2 << "<ostring name=\"" << Qt::escape(i.key()) << "\">"
-        << Qt::escape(i.value()->tag().tag())
+        << Qt::escape(i.value()->tag().name())  // FIXME: is this right?
         << "</ostring>" << endl;
   }
   ts << indent << "</plugin>" << endl;

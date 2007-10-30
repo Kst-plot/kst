@@ -27,6 +27,8 @@ class KST_EXPORT EquationTab : public DataTab, Ui::EquationTab {
     EquationTab(QWidget *parent = 0);
     virtual ~EquationTab();
 
+    void setObjectStore(ObjectStore *store);
+
     VectorPtr xVector() const;
     void setXVector(VectorPtr vector);
 
@@ -52,7 +54,7 @@ class KST_EXPORT EquationDialog : public DataDialog {
     virtual ~EquationDialog();
 
   protected:
-    virtual QString tagName() const;
+    virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
 

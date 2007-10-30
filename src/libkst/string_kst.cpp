@@ -1,6 +1,12 @@
 /***************************************************************************
- *                                                                         *
- *   copyright : (C) 2003 The University of Toronto                        *
+                    string.cpp  -  the base string type
+                             -------------------
+    begin                : Sept 29, 2004
+    copyright            : (C) 2004 by The University of Toronto
+    email                :
+ ***************************************************************************/
+
+/***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -9,40 +15,24 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "string_kst.h"
-
-#include "defaultprimitivenames.h"
-#include "datacollection.h"
-#include "kst_i18n.h"
-
-#include <qtextdocument.h>
+#include <QTextDocument>
 #include <QXmlStreamWriter>
+
+#include "kst_i18n.h"
+#include "string_kst.h"
 
 
 namespace Kst {
 
-static int anonymousStringCounter = 0;
+const QString String::staticTypeString = I18N_NOOP("String");
 
-String::String(ObjectTag in_tag, Object *provider, const QString& val, bool orphan)
-: Primitive(provider), _value(val), _orphan(orphan), _editable(false) {
-  QString _tag = in_tag.tag();
-  if (!in_tag.isValid()) {
-    do {
-      _tag = i18n("Anonymous String %1", anonymousStringCounter++);
-    } while (Data::self()->vectorTagNameNotUniqueInternal(_tag));  // FIXME: why vector?
-    Object::setTagName(ObjectTag(_tag, in_tag.context()));
-  } else {
-    Object::setTagName(suggestUniqueStringTag(in_tag));
-  }
-
-  stringList.lock().writeLock();
-  stringList.append(this);
-  stringList.lock().unlock();
+String::String(ObjectStore *store, ObjectTag tag, Object *provider, const QString& val, bool orphan)
+    : Primitive(store, tag, provider), _value(val), _orphan(orphan), _editable(false) {
 }
 
 
-String::String(QDomElement& e)
-: Primitive(), _orphan(false), _editable(false) {
+String::String(ObjectStore *store, QDomElement& e)
+    : Primitive(store), _orphan(false), _editable(false) {
   QDomNode n = e.firstChild();
 
   while (!n.isNull()) {
@@ -60,7 +50,6 @@ String::String(QDomElement& e)
     }
     n = n.nextSibling();
   }
-  stringList.append(this);
 }
 
 
@@ -68,14 +57,8 @@ String::~String() {
 }
 
 
-void String::setTagName(const ObjectTag& tag) {
-  if (tag == this->tag()) {
-    return;
-  }
-
-  KstWriteLocker l(&stringList.lock());
-
-  stringList.doRename(this, tag);
+const QString& String::typeString() const {
+  return staticTypeString;
 }
 
 
@@ -107,7 +90,7 @@ Object::UpdateType String::update(int updateCounter) {
   if (_provider) {
     _provider->update(updateCounter);
   }
-  
+
   return setLastUpdateResult(v == value() ? NO_CHANGE : UPDATE);
 }
 
@@ -131,4 +114,5 @@ void String::setValue(const QString& inV) {
 }
 
 }
+
 // vim: ts=2 sw=2 et

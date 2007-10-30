@@ -14,6 +14,7 @@
 #include "debug.h"
 #include "equation.h"
 #include "datacollection.h"
+#include "objectstore.h"
 
 namespace Kst {
 
@@ -27,7 +28,7 @@ EquationFactory::~EquationFactory() {
 }
 
 
-DataObjectPtr EquationFactory::generateObject(QXmlStreamReader& xml) {
+DataObjectPtr EquationFactory::generateObject(ObjectStore *store, QXmlStreamReader& xml) {
   QString tag, expression, xVector, output;
   bool interpolate = false;
 
@@ -63,8 +64,8 @@ DataObjectPtr EquationFactory::generateObject(QXmlStreamReader& xml) {
   }
 
   VectorPtr vector = 0;
-  if (!xVector.isEmpty()) {
-    vector = *vectorList.findTag(xVector);
+  if (store && !xVector.isEmpty()) {
+    vector = kst_cast<Vector>(store->retrieveObject(ObjectTag::fromString(xVector)));
   }
 
   if (!vector) {
@@ -72,7 +73,7 @@ DataObjectPtr EquationFactory::generateObject(QXmlStreamReader& xml) {
     return 0;
   }
 
-  EquationPtr ep = new Equation(tag, expression, vector, interpolate);
+  EquationPtr ep = new Equation(store, ObjectTag::fromString(tag), expression, vector, interpolate);
   return ep.data();
 }
 

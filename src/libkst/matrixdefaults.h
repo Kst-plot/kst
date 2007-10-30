@@ -1,7 +1,12 @@
 /***************************************************************************
- *                                                                         *
- *   copyright : (C) 2007 The University of Toronto                        *
- *   copyright : (C) 2005  University of British Columbia                        *
+                             kstmatrixdefaults.h
+                             -------------------
+    begin                : 2005
+    copyright            : (C) 2005 The University of British Columbia
+    email                :
+ ***************************************************************************/
+
+/***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -10,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef MATRIXDEFAULTS_H
-#define MATRIXDEFAULTS_H
+#ifndef KSTMATRIXDEFAULTS_H
+#define KSTMATRIXDEFAULTS_H
 
 #include <qstring.h>
 #include "kst_export.h"
@@ -19,6 +24,8 @@
 class QSettings;
 
 namespace Kst {
+
+class ObjectStore;
 
 class KST_EXPORT MatrixDefaults {
   public:
@@ -28,7 +35,7 @@ class KST_EXPORT MatrixDefaults {
     void sync();
     void readConfig(QSettings *config);
     void writeConfig(QSettings *config);
-    
+
     const QString& dataSource() const;
     int xStart() const;
     bool xCountFromEnd() const;
@@ -51,10 +58,13 @@ class KST_EXPORT MatrixDefaults {
     bool _doSkip;
     bool _doAve;
     int _skip;
+    ObjectStore *_store; // FIXME: this needs to be initialized
 };
 
-  extern KST_EXPORT MatrixDefaults matrixDefaults;
+}
 
+namespace KST {
+  extern KST_EXPORT Kst::MatrixDefaults matrixDefaults;
 }
 
 #endif

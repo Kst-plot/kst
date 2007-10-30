@@ -22,6 +22,9 @@
 #include "dataobjectcollection.h"
 #include "ksttimers.h"
 #include "labelparser.h"
+#include "document.h"
+#include "objectstore.h"
+#include "application.h"
 
 #include <QDebug>
 
@@ -32,6 +35,11 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
   int oldSize = rc.size;
   int oldY = rc.y;
   int oldX = rc.x;
+
+  Kst::Document *doc = kstApp->mainWindow()->document();
+  Q_ASSERT(doc);
+  Kst::ObjectStore *store = doc->objectStore();
+  Q_ASSERT(store);
 
   while (fi) {
     if (fi->vOffset != Label::Chunk::None) {
@@ -80,33 +88,28 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
         // Parse and evaluate as an equation
         bool ok = false;
         const QString s = fi->text.mid(1);
-        const double eqResult(Equations::interpret(s.toLatin1(), &ok, s.length()));
+        const double eqResult(Equations::interpret(store, s.toLatin1(), &ok, s.length()));
         txt = QString::number(eqResult, 'g', rc.precision);
         if (rc._cache) {
           rc._cache->append(DataRef(DataRef::DRExpression, fi->text, QString::null, 0.0, QVariant(eqResult)));
         }
       } else {
-        Kst::scalarList.lock().readLock();
-        Kst::ScalarPtr scp = Kst::scalarList.retrieveObject(Kst::ObjectTag::fromString(fi->text));
-       Kst:: scalarList.lock().unlock();
+        Kst::ObjectPtr op = store->retrieveObject(Kst::ObjectTag::fromString(fi->text));
+        Kst::ScalarPtr scp = Kst::kst_cast<Kst::Scalar>(op);
         if (scp) {
-          scp->readLock();
+          KstReadLocker l(scp);
           txt = QString::number(scp->value(), 'g', rc.precision);
           if (rc._cache) {
             rc._cache->append(DataRef(DataRef::DRScalar, fi->text, QString::null, 0.0, QVariant(scp->value())));
           }
-          scp->unlock();
         } else {
-          Kst::stringList.lock().readLock();
-          Kst::StringPtr stp = Kst::stringList.retrieveObject(Kst::ObjectTag::fromString(fi->text));
-          Kst::stringList.lock().unlock();
+          Kst::StringPtr stp = Kst::kst_cast<Kst::String>(op);
           if (stp) {
-            stp->readLock();
+            KstReadLocker l(stp);
             txt = stp->value();
             if (rc._cache) {
               rc._cache->append(DataRef(DataRef::DRString, fi->text, QString::null, 0.0, QVariant(stp->value())));
             }
-            stp->unlock();
           }
         }
       }
@@ -116,23 +119,20 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
       rc.x += rc.fontWidth(txt);
     } else if (fi->vector) {
       QString txt;
-      Kst::vectorList.lock().readLock();
-      Kst::VectorPtr vp = *Kst::vectorList.findTag(fi->text);
-      Kst::vectorList.lock().unlock();
+      Kst::VectorPtr vp = Kst::kst_cast<Kst::Vector>(store->retrieveObject(Kst::ObjectTag::fromString(fi->text)));
       if (vp) {
         if (!fi->expression.isEmpty()) {
           // Parse and evaluate as an equation
           bool ok = false;
           // FIXME: make more efficient: cache the parsed equation
-          const double idx = Equations::interpret(fi->expression.toLatin1(), &ok, fi->expression.length());
+          const double idx = Equations::interpret(store, fi->expression.toLatin1(), &ok, fi->expression.length());
           if (ok) {
-            vp->readLock();
+            KstReadLocker l(vp);
             const double vVal(vp->value()[int(idx)]);
             txt = QString::number(vVal, 'g', rc.precision);
             if (rc._cache) {
               rc._cache->append(DataRef(DataRef::DRVector, fi->text, fi->expression, idx, QVariant(vVal)));
             }
-            vp->unlock();
           } else {
             txt = "NAN";
           }

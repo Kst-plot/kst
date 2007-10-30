@@ -53,7 +53,7 @@ class KST_EXPORT HistogramDialog : public DataDialog {
     virtual ~HistogramDialog();
 
   protected:
-    virtual QString tagName() const;
+    virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
 

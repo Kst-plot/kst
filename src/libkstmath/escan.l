@@ -5,11 +5,13 @@
 #include <stdio.h>
 #include <string.h>
 #include "eparse.h"
+#include "eparse-eh.h"
 
 int bracketCount = 0;
 char dataSpec[1024];
 char *dataSpecPtr;
-void yyerror(const char *s);
+//void yyerror(Kst::ObjectStore *store, const char *s);
+#define YY_DECL int yylex(Kst::ObjectStore *store)
 
 %}
 
@@ -43,7 +45,7 @@ Id	[A-Za-z]+
 						*dataSpecPtr = 0;
 						yylval.data = strdup(dataSpec);
 						if (dataSpecPtr == dataSpec) {
-							yyerror("Empty data reference.");
+							yyerror(store, "Empty data reference.");
 							yy_flush_buffer(YY_CURRENT_BUFFER);
 							BEGIN(INITIAL);
 							return T_INVALID;
@@ -62,7 +64,7 @@ Id	[A-Za-z]+
 		}
 
 <DATA><<EOF>>	{
-			yyerror("Invalid data reference.");
+			yyerror(store, "Invalid data reference.");
 			yy_flush_buffer(YY_CURRENT_BUFFER);
 			BEGIN(INITIAL);
 			return T_INVALID;
@@ -76,7 +78,7 @@ Id	[A-Za-z]+
 		}
 
 "]"		{
-			yyerror("Unmatched ']'.");
+			yyerror(store, "Unmatched ']'.");
 			yy_flush_buffer(YY_CURRENT_BUFFER);
 			return T_INVALID;
 		}

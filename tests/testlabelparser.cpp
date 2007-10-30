@@ -15,12 +15,12 @@
 
 #include <datacollection.h>
 #include <dataobjectcollection.h>
+#include <objectstore.h>
 
+static Kst::ObjectStore _store;
 
 void TestLabelParser::cleanupTestCase() {
-  Kst::vectorList.clear();
-  Kst::scalarList.clear();
-  Kst::dataObjectList.clear();
+  _store.clear();
 }
 
 

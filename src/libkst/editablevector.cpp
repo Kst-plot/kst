@@ -12,26 +12,34 @@
 // use KCodecs::base64Encode() in kmdcodecs.h
 // Create QDataStream into a QByteArray
 // qCompress the bytearray
+#include <QTextStream>
 
 #include "editablevector.h"
 #include "debug.h"
-#include <qtextstream.h>
+#include "kst_i18n.h"
 
 namespace Kst {
 
-EditableVector::EditableVector(const QString &tag, const QByteArray &data)
-: Vector(tag, data) {
+const QString EditableVector::staticTypeString = I18N_NOOP("Editable Vector");
+
+EditableVector::EditableVector(ObjectStore *store, const ObjectTag& tag, const QByteArray &data)
+    : Vector(store, tag, data) {
   _editable = true;
   _saveable = true;
   _saveData = true;
 }
 
 
-EditableVector::EditableVector(int n, ObjectTag tag)
-: Vector(tag, n) {
+EditableVector::EditableVector(ObjectStore *store, const ObjectTag& tag, int n)
+    : Vector(store, tag, n) {
   _editable = true;
   _saveable = true;
   _saveData = true;
+}
+
+
+const QString& EditableVector::typeString() const {
+  return staticTypeString;
 }
 
 

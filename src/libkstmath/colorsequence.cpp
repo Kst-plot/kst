@@ -76,9 +76,9 @@ QColor ColorSequence::next(const CurveList& curves, const QColor& badColor) {
     qAddPostRoutine(ColorSequence::cleanup);
   }
   _self->createPalette();
-  
+
   QVector<int> usage(_self->_count*2);
-  
+
   for (int i = 0; i < _self->_count*2; i++) {
     usage[i] = 0;
   }

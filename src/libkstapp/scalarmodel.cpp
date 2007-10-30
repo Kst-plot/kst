@@ -47,7 +47,7 @@ QVariant ScalarModel::data(const QModelIndex& index, int role) const {
     switch (role) {
       case Qt::DisplayRole:
         if (index.column() == 0) {
-          rc = QVariant(_scalar->tagName());
+          rc = QVariant(_scalar->tag().displayString());
         } else {
           rc = QVariant(_scalar->value());
         }
@@ -89,7 +89,7 @@ QVariant ScalarModel::headerData(int section, Qt::Orientation orientation, int r
   if (!_scalar || role != Qt::DisplayRole || section != 0) {
     return QAbstractItemModel::headerData(section, orientation, role);
   }
-  return _scalar->tagName();
+  return _scalar->tag().displayString();
 }
 
 

@@ -50,8 +50,8 @@ BasicPluginDialog::~BasicPluginDialog() {
 }
 
 
-QString BasicPluginDialog::tagName() const {
-  return DataDialog::tagName();
+QString BasicPluginDialog::tagString() const {
+  return DataDialog::tagString();
 }
 
 

@@ -23,22 +23,29 @@
 #ifdef __cplusplus
 
 #include "kst_export.h"
+#include <QStringList>
 
 namespace Equations {
    KST_EXPORT extern QStringList errorStack;
 }
+
+namespace Kst {
+  class ObjectStore;
+}
+
 #endif
 
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
-  void yyerror(const char *s);
+  void yyerror(Kst::ObjectStore *store, const char *s);
   void yyerrortoken(char c);
 
   void yyClearErrors();
 
   int yyErrorCount();
 
+  extern const char *EParseErrorUnknown;
   extern const char *EParseErrorEmpty;
   extern const char *EParseErrorEmptyArg;
   extern const char *EParseErrorTwoOperands;
@@ -47,7 +54,7 @@ extern "C" {
   extern const char *EParseErrorNoImplicitMultiply;
   extern const char *EParseErrorRequiresOperand;
 #ifdef __cplusplus
-}
+//}
 #endif
 
 #endif

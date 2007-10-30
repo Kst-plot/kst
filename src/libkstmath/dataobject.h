@@ -21,6 +21,8 @@
 
 #include "curvehint.h"
 #include "string_kst.h"
+#include "object.h"
+#include "objectlist.h"
 #include "vector.h"
 #include "matrix.h"
 #include "kst_export.h"
@@ -33,7 +35,7 @@ namespace Kst {
 class DataObject;
 
 typedef SharedPtr<DataObject> DataObjectPtr;
-typedef ObjectList<DataObjectPtr> DataObjectList;
+typedef ObjectList<DataObject> DataObjectList;
 typedef QMap<DataObjectPtr, DataObjectPtr> DataObjectDataObjectMap;
 typedef QMap<QString, int> KstPluginInfoList;
 
@@ -42,11 +44,6 @@ class KST_EXPORT DataObject : public Object {
 
   public:
     enum Kind { Generic, Primitive, Fit, Filter };
-
-    DataObject();
-    DataObject(const QDomElement& e);
-    DataObject(const DataObject& object);
-    virtual ~DataObject();
 
     virtual void attach();
 
@@ -81,7 +78,7 @@ class KST_EXPORT DataObject : public Object {
     const StringMap& outputStrings() const { return _outputStrings; }
     StringMap& inputStrings() { return _inputStrings;  }
     StringMap& outputStrings() { return _outputStrings; }
-    
+
     const MatrixMap& inputMatrices() const { return _inputMatrices; }
     const MatrixMap& outputMatrices() const { return _outputMatrices; }
     MatrixMap& inputMatrices() { return _inputMatrices; }
@@ -101,13 +98,13 @@ class KST_EXPORT DataObject : public Object {
     virtual bool isValid() const;
 
     virtual const CurveHintList* curveHints() const;
-    
+
     virtual bool deleteDependents();
-    
+
     bool duplicateDependents(DataObjectDataObjectMap& duplicatedMap);
-    
+
     virtual DataObjectPtr makeDuplicate(DataObjectDataObjectMap& duplicatedMap) = 0;
-    
+
     virtual void replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObject);
     virtual void replaceDependency(VectorPtr oldVector, VectorPtr newVector);
     virtual void replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix);
@@ -128,7 +125,10 @@ class KST_EXPORT DataObject : public Object {
     virtual void showEditDialog() = 0;
 
   protected:
-    
+    DataObject(ObjectStore *store, const ObjectTag& tag);
+    DataObject(ObjectStore *store, const QDomElement& e);
+    virtual ~DataObject();
+
     double *vectorRealloced(VectorPtr v, double *memptr, int newSize) const;
 
     //The plugin infrastructure will read the desktop file and set these

@@ -1,6 +1,12 @@
 /***************************************************************************
- *                                                                         *
- *   copyright : (C) 2006 The University of Toronto                        *
+                               primitive.h
+                             -------------------
+    begin                : Tue Jun 20 2006
+    copyright            : Copyright (C) 2006, The University of Toronto
+    email                :
+ ***************************************************************************/
+
+/***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -12,29 +18,37 @@
 #ifndef PRIMITIVE_H
 #define PRIMITIVE_H
 
+#include <QPointer>
+
 #include "kst_export.h"
 #include "object.h"
-#include "objectmap.h"
 #include "objectlist.h"
-#include <qpointer.h>
+#include "objectmap.h"
 
 namespace Kst {
 
 class KST_EXPORT Primitive : public Object {
-  public:
-    Primitive(Object* provider = 0L);
-
-  protected:
-    ~Primitive();
+  Q_OBJECT
+  Q_PROPERTY(Object* provider READ provider WRITE setProvider)
 
   public:
+    virtual const QString& typeString() const;
+    static const QString staticTypeString;
+
     // Must not be a ObjectPtr!
-//    virtual void setProvider(Object* obj);
+    virtual void setProvider(Object* obj);
     inline ObjectPtr provider() const { return ObjectPtr(_provider); }
 
     /** Update the primitive via the provider and/or internalUpdate().
         Return true if there was new data. */
     UpdateType update(int update_counter = -1);
+
+  protected:
+    Primitive(ObjectStore *store, const ObjectTag &tag = ObjectTag::invalidTag, Object* provider = 0L);
+
+    virtual ~Primitive();
+
+    friend class ObjectStore;
 
   protected:
     virtual Object::UpdateType internalUpdate(Object::UpdateType providerRC);
@@ -50,5 +64,6 @@ typedef ObjectList<PrimitivePtr> PrimitiveList;
 typedef ObjectMap<PrimitivePtr> PrimitiveMap;
 
 }
+
 #endif
 // vim: ts=2 sw=2 et

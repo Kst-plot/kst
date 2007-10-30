@@ -1,7 +1,7 @@
 /***************************************************************************
  *                                                                         *
  *   copyright : (C) 2007 The University of Toronto                        *
- *   copyright : (C) 2005 by University of British Columbia
+ *   copyright : (C) 2005 by University of British Columbia                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,19 +23,17 @@
 namespace Kst {
 
 class KST_EXPORT CSD : public DataObject {
+  Q_OBJECT
+
   public:
-    CSD(const QString &in_tag, VectorPtr in_V, double in_freq, bool in_average, bool in_removeMean,
-           bool in_apodize, ApodizeFunction in_apodizeFxn, int in_windowSize, int in_length,
-           double in_gaussianSigma, PSDType in_outputType, const QString& in_vectorUnits = QString::null, 
-           const QString& in_rateUnits = QString::null);
-    CSD(const QDomElement& e);
-    virtual ~CSD();
+    static const QString staticTypeString;
+    const QString& typeString() const { return staticTypeString; }
 
     virtual UpdateType update(int update_counter = -1);
 
     virtual void save(QTextStream& ts, const QString& indent = QString::null);
     virtual QString propertyString() const;
-    
+
     QString vTag() const;
     void setVector(VectorPtr);
 
@@ -55,41 +53,57 @@ class KST_EXPORT CSD : public DataObject {
 
     double freq() const;
     void setFreq(double in_freq);
-    
+
     ApodizeFunction apodizeFxn() const;
     void setApodizeFxn(ApodizeFunction in_fxn);
-    
+
     double gaussianSigma() const;
     void setGaussianSigma(double in_sigma);
-    
+
     int windowSize() const;
-    void setWindowSize(int in_size); 
-    
+    void setWindowSize(int in_size);
+
     int length() const;
     void setLength(int in_length);
-    
+
     const QString& vectorUnits() const;
     void setVectorUnits(const QString& units);
-    
+
     const QString& rateUnits() const;
     void setRateUnits(const QString& units);
-    
+
     PSDType output() const;
     void setOutput(PSDType in_outputType);
-    
+
     MatrixPtr outputMatrix() const;
-    
+
     virtual DataObjectPtr makeDuplicate(DataObjectDataObjectMap& duplicatedMap);
 
+    void change(VectorPtr in_V, double in_freq, bool in_average,
+        bool in_removeMean, bool in_apodize, ApodizeFunction in_apodizeFxn,
+        int in_windowSize, int in_length, double in_gaussianSigma,
+        PSDType in_outputType, const QString& in_vectorUnits,
+        const QString& in_rateUnits);
+  protected:
+    CSD(ObjectStore *store, const ObjectTag &in_tag);
+    CSD(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_V, double in_freq, bool in_average, bool in_removeMean,
+           bool in_apodize, ApodizeFunction in_apodizeFxn, int in_windowSize, int in_length,
+           double in_gaussianSigma, PSDType in_outputType, const QString& in_vectorUnits = QString::null,
+           const QString& in_rateUnits = QString::null);
+    CSD(ObjectStore *store, const QDomElement& e);
+    virtual ~CSD();
+
+    friend class ObjectStore;
+
   private:
-    void commonConstructor(const QString &in_tag, VectorPtr in_V, double in_freq, bool in_average,
-                            bool in_removeMean, bool in_apodize, ApodizeFunction in_apodizeFxn, 
-                            int in_windowSize, int in_length, double in_gaussianSigma, 
-                            const QString& in_vectorUnits, const QString& in_rateUnits, 
+    void commonConstructor(ObjectStore *store, VectorPtr in_V, double in_freq, bool in_average,
+                            bool in_removeMean, bool in_apodize, ApodizeFunction in_apodizeFxn,
+                            int in_windowSize, int in_length, double in_gaussianSigma,
+                            const QString& in_vectorUnits, const QString& in_rateUnits,
                             PSDType in_outputType, const QString& vecName);
 
     void updateMatrixLabels();
-    
+
     double _frequency;
     bool _average;
     bool _removeMean;
@@ -106,11 +120,12 @@ class KST_EXPORT CSD : public DataObject {
     PSDCalculator _psdCalculator;
 
     // output matrix
-    MatrixMap::Iterator _outMatrix;
+    MatrixPtr _outMatrix;
 };
 
 typedef SharedPtr<CSD> CSDPtr;
-typedef ObjectList<CSDPtr> CSDList;
+typedef ObjectList<CSD> CSDList;
+
 
 }
 

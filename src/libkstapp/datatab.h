@@ -19,6 +19,7 @@
 namespace Kst {
 
 class DataDialog;
+class ObjectStore;
 
 class KST_EXPORT DataTab : public DialogTab
 {
@@ -26,6 +27,8 @@ class KST_EXPORT DataTab : public DialogTab
   public:
     DataTab(QWidget *parent);
     virtual ~DataTab();
+
+    virtual void setObjectStore(ObjectStore *store);
 
     DataDialog *dataDialog() const;
 };

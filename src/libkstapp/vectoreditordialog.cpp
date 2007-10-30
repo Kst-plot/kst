@@ -15,6 +15,8 @@
 #include "vectortablemodel.h"
 
 #include <datacollection.h>
+#include <objectstore.h>
+#include <QHeaderView>
 
 namespace Kst {
 
@@ -24,13 +26,13 @@ VectorEditorDialog::VectorEditorDialog(QWidget *parent, Document *doc)
   // TODO: Extract this model so the dialog can be reused, and make a new model
   // or modification to the model so that it tracks all the vector creates and
   // destroys
-  vectorList.lock().readLock();
-  foreach (VectorPtr v, vectorList.list()) {
+  Q_ASSERT(_doc && _doc->objectStore());
+  foreach (VectorPtr v, _doc->objectStore()->getObjects<Vector>()) {
     VectorModel *vm = new VectorModel(v);
     _model->vectors().append(vm);
   }
-  vectorList.lock().unlock();
   setupUi(this);
+  _vectors->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
   _vectors->setModel(_model);
 }
 

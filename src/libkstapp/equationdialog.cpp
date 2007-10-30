@@ -20,6 +20,8 @@
 #include "plotrenderitem.h"
 #include "curve.h"
 #include "defaultnames.h"
+#include "document.h"
+#include "objectstore.h"
 
 namespace Kst {
 
@@ -123,6 +125,13 @@ CurvePlacement* EquationTab::curvePlacement() const {
 }
 
 
+void EquationTab::setObjectStore(ObjectStore *store) {
+  _vectors->setObjectStore(store);
+  _scalars->setObjectStore(store);
+  _xVectors->setObjectStore(store);
+}
+
+
 EquationDialog::EquationDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
@@ -142,17 +151,19 @@ EquationDialog::~EquationDialog() {
 }
 
 
-QString EquationDialog::tagName() const {
-  return DataDialog::tagName();
+QString EquationDialog::tagString() const {
+  return DataDialog::tagString();
 }
 
 
 ObjectPtr EquationDialog::createNewDataObject() const {
-  //FIXME Eli, how should I construct this tag??
-  EquationPtr equation = new Equation(tagName(),
-                                     _equationTab->equation(),
-                                     _equationTab->xVector(),
-                                     _equationTab->doInterpolation());
+  Q_ASSERT(_document && _document->objectStore());
+
+  EquationPtr equation = _document->objectStore()->createObject<Equation>(ObjectTag::fromString(tagString()));
+  Q_ASSERT(equation);
+
+  equation->setEquation(_equationTab->equation());
+  equation->setExistingXVector(_equationTab->xVector(), _equationTab->doInterpolation());
 
   equation->writeLock();
   equation->update(0);
@@ -163,12 +174,12 @@ ObjectPtr EquationDialog::createNewDataObject() const {
   //FIXME need some smart placement...
   //FIXME need to hook up placement...
 
-  CurvePtr curve = new Curve(suggestCurveName(equation->tag(), true),
-                                     equation->vX(),
-                                     equation->vY(),
-                                     0L, 0L, 0L, 0L,
-                                     _equationTab->curveAppearance()->color());
+  CurvePtr curve = _document->objectStore()->createObject<Curve>(suggestCurveName(equation->tag(), true));
+  Q_ASSERT(curve);
 
+  curve->setXVector(equation->vX());
+  curve->setYVector(equation->vY());
+  curve->setColor(_equationTab->curveAppearance()->color());
   curve->setHasPoints(_equationTab->curveAppearance()->showPoints());
   curve->setHasLines(_equationTab->curveAppearance()->showLines());
   curve->setHasBars(_equationTab->curveAppearance()->showBars());

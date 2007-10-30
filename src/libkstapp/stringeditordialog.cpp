@@ -48,12 +48,11 @@ void StringEditorDialog::refreshStrings() {
   // TODO: Extract this model so the dialog can be reused, and make a new model
   // or modification to the model so that it tracks all the string creates and
   // destroys
-  stringList.lock().readLock();
-  foreach (StringPtr v, stringList.list()) {
+  StringList stringList;  // FIXME
+  foreach (StringPtr v, stringList) {
     StringModel *vm = new StringModel(v);
     _model->strings().append(vm);
   }
-  stringList.lock().unlock();
   _strings->setModel(_model);
 }
 

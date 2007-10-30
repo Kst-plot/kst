@@ -11,10 +11,12 @@
 
 #include "stringselector.h"
 
+#include "objectstore.h"
+
 namespace Kst {
 
-StringSelector::StringSelector(QWidget *parent)
-  : QWidget(parent) {
+StringSelector::StringSelector(QWidget *parent, ObjectStore *store)
+  : QWidget(parent), _store(store) {
 
   setupUi(this);
 
@@ -30,6 +32,11 @@ StringSelector::StringSelector(QWidget *parent)
 
 
 StringSelector::~StringSelector() {
+}
+
+
+void StringSelector::setObjectStore(ObjectStore *store) {
+  _store = store;
 }
 
 

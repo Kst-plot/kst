@@ -23,10 +23,9 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include <qtextdocument.h>
+#include <QTextDocument>
 #include <QXmlStreamWriter>
 
-#include "defaultprimitivenames.h"
 #include "dialoglauncher.h"
 #include "enodes.h"
 #include "eparse-eh.h"
@@ -35,40 +34,44 @@
 #include "equation.h"
 #include "kst_i18n.h"
 #include "generatedvector.h"
+#include "objectstore.h"
 
-extern "C" int yyparse();
-extern "C" void *ParsedEquation;
-extern "C" struct yy_buffer_state *yy_scan_string(const char*);
+/*extern "C"*/ int yyparse(Kst::ObjectStore *store);
+extern void *ParsedEquation;
+/*extern "C"*/ struct yy_buffer_state *yy_scan_string(const char*);
 
 namespace Kst {
+
+const QString Equation::staticTypeString = I18N_NOOP("Equation");
 
 const QString Equation::XINVECTOR = "X";
 const QString Equation::XOUTVECTOR = "XO"; // Output (slave) vector
 const QString Equation::YOUTVECTOR = "O"; // Output (slave) vector
 
 
-Equation::Equation(const QString& in_tag, const QString& equation, double x0, double x1, int nx)
-: DataObject() {
+Equation::Equation(ObjectStore *store, const ObjectTag& in_tag, const QString& equation, double x0, double x1, int nx)
+: DataObject(store, in_tag) {
+  Q_ASSERT(store);
+  ObjectTag vtag = store->suggestObjectTag<GeneratedVector>(QString("(%1..%2)").arg(x0).arg(x1), in_tag);
 
-  VectorPtr xvector;
-  QString vtag = suggestVectorName(QString( "(%1..%2)" ).arg( x0 ).arg( x1 ) );
-
-  xvector = new GeneratedVector(x0, x1, nx, ObjectTag(vtag, QStringList(in_tag)));
+  GeneratedVectorPtr v = store->createObject<GeneratedVector>(vtag);
+  v->changeRange(x0, x1, nx);
+  // FIXME: provider?
+  _xInVector = v;
 
   _doInterp = false;
-  _xInVector = _inputVectors.insert(XINVECTOR, xvector);
 
-  commonConstructor(in_tag, equation);
+  commonConstructor(store, equation);
   setDirty();
 }
 
 
-Equation::Equation(const QString& in_tag, const QString& equation, VectorPtr xvector, bool do_interp)
-: DataObject() {
+Equation::Equation(ObjectStore *store, const ObjectTag& in_tag, const QString& equation, VectorPtr xvector, bool do_interp)
+: DataObject(store, in_tag), _xInVector(xvector) {
   _doInterp = do_interp; //false;
-  _xInVector = _inputVectors.insert(XINVECTOR, xvector);
+  _inputVectors.insert(XINVECTOR, xvector);
 
-  commonConstructor(in_tag, equation);
+  commonConstructor(store, equation);
   setDirty();
 }
 
@@ -83,18 +86,24 @@ void Equation::attach() {
 }
 
 
-void Equation::commonConstructor(const QString& in_tag, const QString& in_equation) {
+void Equation::commonConstructor(ObjectStore *store, const QString& in_equation) {
   _ns = 2;
   _pe = 0L;
   _typeString = i18n("Equation");
   _type = "Equation";
-  Object::setTagName(ObjectTag::fromString(in_tag));
 
-  VectorPtr xv = new Vector(ObjectTag("xsv", tag()), 2, this);
-  _xOutVector = _outputVectors.insert(XOUTVECTOR, xv);
-    
-  VectorPtr yv = new Vector(ObjectTag("sv", tag()), 2, this);
-  _yOutVector = _outputVectors.insert(YOUTVECTOR, yv);
+  Q_ASSERT(store);
+  _xOutVector = store->createObject<Vector>(ObjectTag("xsv", tag()));
+  Q_ASSERT(_xOutVector);
+  _xOutVector->setProvider(this);
+  _xOutVector->resize(2);
+  _outputVectors.insert(XOUTVECTOR, _xOutVector);
+
+  _yOutVector = store->createObject<Vector>(ObjectTag("sv", tag()));
+  Q_ASSERT(_yOutVector);
+  _yOutVector->setProvider(this);
+  _yOutVector->resize(2);
+  _outputVectors.insert(YOUTVECTOR, _yOutVector);
 
   _isValid = false;
   _numNew = _numShifted = 0;
@@ -106,7 +115,7 @@ void Equation::commonConstructor(const QString& in_tag, const QString& in_equati
 const CurveHintList *Equation::curveHints() const {
   _curveHints->clear();
   _curveHints->append(new CurveHint(i18n("Equation Curve"),
-                      (*_xOutVector)->tagName(), (*_yOutVector)->tagName()));
+                      _xOutVector->tag().displayString(), _yOutVector->tag().displayString()));
   return _curveHints;
 }
 
@@ -135,16 +144,19 @@ Object::UpdateType Equation::update(int update_counter) {
 
   assert(update_counter >= 0);
 
+  // FIXME: this is broken
+#if 0
   if (_xInVector == _inputVectors.end()) {
     _xInVector = _inputVectors.find(XINVECTOR);
     if (!*_xInVector) { // This is technically sort of fatal
       return setLastUpdateResult(NO_CHANGE);
     }
   }
+#endif
 
   writeLockInputsAndOutputs();
 
-  VectorPtr v = *_xInVector;
+  VectorPtr v = _xInVector;
 
   xUpdated = Object::UPDATE == v->update(update_counter);
 
@@ -158,7 +170,7 @@ Object::UpdateType Equation::update(int update_counter) {
     _isValid = FillY(force);
     rc = UPDATE;
   }
-  v = *_yOutVector;
+  v = _yOutVector;
   if (rc == UPDATE) {
     v->setDirty();
   }
@@ -180,7 +192,7 @@ void Equation::save(QXmlStreamWriter &s) {
     QMutexLocker ml(&Equations::mutex());
     yy_scan_string(_equation.toLatin1());
     ParsedEquation = 0L;
-    int rc = yyparse();
+    int rc = yyparse(store());
     Equations::Node *en = static_cast<Equations::Node*>(ParsedEquation);
     if (rc == 0 && en) {
       if (!en->takeVectors(VectorsUsed)) {
@@ -193,7 +205,7 @@ void Equation::save(QXmlStreamWriter &s) {
     ParsedEquation = 0L;
   }
 
-  s.writeAttribute("xvector", (*_xInVector)->tag().tagString());
+  s.writeAttribute("xvector", _xInVector->tag().tagString());
   if (_doInterp) {
     s.writeAttribute("interpolate", "true");
   }
@@ -217,14 +229,14 @@ void Equation::setEquation(const QString& in_fn) {
   if (!_equation.isEmpty()) {
     Equations::mutex().lock();
     yy_scan_string(_equation.toLatin1());
-    int rc = yyparse();
+    int rc = yyparse(store());
     _pe = static_cast<Equations::Node*>(ParsedEquation);
     if (rc == 0 && _pe) {
       ParsedEquation = 0L;
       Equations::mutex().unlock();
       Equations::Context ctx;
       ctx.sampleCount = _ns;
-      ctx.xVector = *_xInVector;
+      ctx.xVector = _xInVector;
       Equations::FoldVisitor vis(&ctx, &_pe);
       StringMap sm;
 
@@ -262,23 +274,11 @@ void Equation::setExistingXVector(VectorPtr in_xv, bool do_interp) {
   setDirty();
 
   _inputVectors.remove(XINVECTOR);
-  _xInVector = _inputVectors.insert(XINVECTOR, in_xv);
+  _xInVector = in_xv;
+  _inputVectors.insert(XINVECTOR, in_xv);
 
   _ns = 2; // reset the updating
   _doInterp = do_interp;
-}
-
-
-void Equation::setTagName(const QString &in_tag) {
-  ObjectTag newTag(in_tag, tag().context());  // FIXME: always the same context?
-
-  if (newTag == tag()) {
-    return;
-  }
-
-  Object::setTagName(newTag);
-  (*_xOutVector)->setTagName(ObjectTag("xsv", tag()));
-  (*_yOutVector)->setTagName(ObjectTag("sv", tag()));
 }
 
 
@@ -296,26 +296,26 @@ bool Equation::FillY(bool force) {
 
   // determine value of Interp
   if (_doInterp) {
-    ns = (*_xInVector)->length();
+    ns = _xInVector->length();
     for (VectorMap::ConstIterator i = VectorsUsed.begin(); i != VectorsUsed.end(); ++i) {
       if (i.value()->length() > ns) {
         ns = i.value()->length();
       }
     }
   } else {
-    ns = (*_xInVector)->length();
+    ns = _xInVector->length();
   }
 
-  if (_ns != (*_xInVector)->length() || ns != (*_xInVector)->length() ||
-      (*_xInVector)->numShift() != (*_xInVector)->numNew()) {
+  if (_ns != _xInVector->length() || ns != _xInVector->length() ||
+      _xInVector->numShift() != _xInVector->numNew()) {
     _ns = ns;
 
-    VectorPtr xv = *_xOutVector;
-    VectorPtr yv = *_yOutVector;
+    VectorPtr xv = _xOutVector;
+    VectorPtr yv = _yOutVector;
     if (!xv->resize(_ns)) {
       // FIXME: handle error?
       unlockInputsAndOutputs();
-      return false;    
+      return false;
     }
     if (!yv->resize(_ns)) {
       // FIXME: handle error?
@@ -328,8 +328,8 @@ bool Equation::FillY(bool force) {
   } else {
     // calculate shift and new samples
     // only do shift optimization if all used vectors are same size and shift
-    v_shift = (*_xInVector)->numShift();
-    v_new = (*_xInVector)->numNew();
+    v_shift = _xInVector->numShift();
+    v_new = _xInVector->numNew();
 
     for (VectorMap::ConstIterator i = VectorsUsed.begin(); i != VectorsUsed.end(); ++i) {
       if (v_shift != i.value()->numShift()) {
@@ -347,8 +347,8 @@ bool Equation::FillY(bool force) {
       i0 = 0;
       v_shift = _ns;
     } else {
-      VectorPtr xv = *_xOutVector;
-      VectorPtr yv = *_yOutVector;
+      VectorPtr xv = _xOutVector;
+      VectorPtr yv = _yOutVector;
       for (int i = v_shift; i < _ns; i++) {
         yv->value()[i - v_shift] = yv->value()[i];
         xv->value()[i - v_shift] = xv->value()[i];
@@ -357,22 +357,22 @@ bool Equation::FillY(bool force) {
     }
   }
 
-  _numShifted = (*_yOutVector)->numShift() + v_shift;
+  _numShifted = _yOutVector->numShift() + v_shift;
   if (_numShifted > _ns) {
     _numShifted = _ns;
   }
 
-  _numNew = _ns - i0 + (*_yOutVector)->numNew();
+  _numNew = _ns - i0 + _yOutVector->numNew();
   if (_numNew > _ns) {
     _numNew = _ns;
   }
 
-  (*_xOutVector)->setNewAndShift(_numNew, _numShifted);
-  (*_yOutVector)->setNewAndShift(_numNew, _numShifted);
+  _xOutVector->setNewAndShift(_numNew, _numShifted);
+  _yOutVector->setNewAndShift(_numNew, _numShifted);
 
-  double *rawxv = (*_xOutVector)->value();
-  double *rawyv = (*_yOutVector)->value();
-  VectorPtr iv = (*_xInVector);
+  double *rawxv = _xOutVector->value();
+  double *rawyv = _yOutVector->value();
+  VectorPtr iv = _xInVector;
 
   Equations::Context ctx;
   ctx.sampleCount = _ns;
@@ -386,7 +386,7 @@ bool Equation::FillY(bool force) {
 
     QMutexLocker ml(&Equations::mutex());
     yy_scan_string(_equation.toLatin1());
-    int rc = yyparse();
+    int rc = yyparse(store());
     _pe = static_cast<Equations::Node*>(ParsedEquation);
     if (_pe && rc == 0) {
       Equations::FoldVisitor vis(&ctx, &_pe);
@@ -408,10 +408,10 @@ bool Equation::FillY(bool force) {
     rawyv[ctx.i] = _pe->value(&ctx);
   }
 
-  if (!(*_xOutVector)->resize(iv->length())) {
+  if (!_xOutVector->resize(iv->length())) {
     // FIXME: handle error?
     unlockInputsAndOutputs();
-    return false;    
+    return false;
   }
 
   unlockInputsAndOutputs();
@@ -435,6 +435,9 @@ void Equation::showEditDialog() {
 
 
 DataObjectPtr Equation::makeDuplicate(DataObjectDataObjectMap& duplicatedMap) {
+  // FIXME: implement this
+  return 0L;
+#if 0
   QString name(tagName() + '\'');
   while (Data::self()->dataTagNameNotUnique(name, false)) {
     name += '\'';
@@ -442,83 +445,84 @@ DataObjectPtr Equation::makeDuplicate(DataObjectDataObjectMap& duplicatedMap) {
   EquationPtr eq = new Equation(name, _equation, _inputVectors[XINVECTOR], _doInterp);
   duplicatedMap.insert(this, DataObjectPtr(eq));
   return DataObjectPtr(eq);
+#endif
 }
 
 
 void Equation::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObject) {
-  
+
   QString newExp = _equation;
-  
+
   // replace all occurences of outputVectors, outputScalars from oldObject
   for (VectorMap::Iterator j = oldObject->outputVectors().begin(); j != oldObject->outputVectors().end(); ++j) {
-    QString oldTag = j.value()->tagName();
-    QString newTag = ((newObject->outputVectors())[j.key()])->tagName();
+    QString oldTag = j.value()->tag().tagString();
+    QString newTag = ((newObject->outputVectors())[j.key()])->tag().tagString();
     newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
   }
-  
+
   for (ScalarMap::Iterator j = oldObject->outputScalars().begin(); j != oldObject->outputScalars().end(); ++j) {
-    QString oldTag = j.value()->tagName();
-    QString newTag = ((newObject->outputScalars())[j.key()])->tagName();
+    QString oldTag = j.value()->tag().tagString();
+    QString newTag = ((newObject->outputScalars())[j.key()])->tag().tagString();
     newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
   }
-  
+
   // and dependencies on matrix stats (there won't be matrices themselves in the expression)
   for (MatrixMap::Iterator j = oldObject->outputMatrices().begin(); j != oldObject->outputMatrices().end(); ++j) {
     QHashIterator<QString, Scalar*> scalarDictIter(j.value()->scalars());
     while (scalarDictIter.hasNext()) {
       scalarDictIter.next();
-      QString oldTag = scalarDictIter.value()->tagName();
-      QString newTag = ((((newObject->outputMatrices())[j.key()])->scalars())[scalarDictIter.key()])->tagName();
-      newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]"); 
+      QString oldTag = scalarDictIter.value()->tag().tagString();
+      QString newTag = ((((newObject->outputMatrices())[j.key()])->scalars())[scalarDictIter.key()])->tag().tagString();
+      newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
     }
   }
-  
+
   // only replace _inputVectors
   for (VectorMap::Iterator j = oldObject->outputVectors().begin(); j != oldObject->outputVectors().end(); ++j) {
     for (VectorMap::Iterator k = _inputVectors.begin(); k != _inputVectors.end(); ++k) {
       if (j.value().data() == k.value().data()) {
         // replace input with the output from newObject
-        _inputVectors[k.key()] = (newObject->outputVectors())[j.key()]; 
+        _inputVectors[k.key()] = (newObject->outputVectors())[j.key()];
       }
     }
     // and dependencies on vector stats
     QHashIterator<QString, Scalar*> scalarDictIter(j.value()->scalars());
     while (scalarDictIter.hasNext()) {
       scalarDictIter.next();
-      QString oldTag = scalarDictIter.value()->tagName();
-      QString newTag = ((((newObject->outputVectors())[j.key()])->scalars())[scalarDictIter.key()])->tagName();
-      newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]"); 
+      QString oldTag = scalarDictIter.value()->tag().tagString();
+      QString newTag = ((((newObject->outputVectors())[j.key()])->scalars())[scalarDictIter.key()])->tag().tagString();
+      newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
     }
   }
-  
+
   setEquation(newExp);
 }
 
 
 void Equation::replaceDependency(VectorPtr oldVector, VectorPtr newVector) {
-  QString oldTag = oldVector->tagName();
-  QString newTag = newVector->tagName();
-  
+  QString oldTag = oldVector->tag().tagString();
+  QString newTag = newVector->tag().tagString();
+
   // replace all occurences of oldTag with newTag
   QString newExp = _equation.replace("["+oldTag+"]", "["+newTag+"]");
-  
+
   // also replace all occurences of scalar stats for the oldVector
   QHashIterator<QString, Scalar*> scalarDictIter(oldVector->scalars());
   while (scalarDictIter.hasNext()) {
     scalarDictIter.next();
-    QString oldTag = scalarDictIter.value()->tagName();
-    QString newTag = ((newVector->scalars())[scalarDictIter.key()])->tagName();
-    newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]"); 
+    QString oldTag = scalarDictIter.value()->tag().tagString();
+    QString newTag = ((newVector->scalars())[scalarDictIter.key()])->tag().tagString();
+    newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
   }
-  
+
   setEquation(newExp);
 
   // do the dependency replacements for _inputVectors, but don't call parent function as it
-  // replaces _inputScalars 
+  // replaces _inputScalars
   for (VectorMap::Iterator j = _inputVectors.begin(); j != _inputVectors.end(); ++j) {
     if (j.value() == oldVector) {
-      _inputVectors[j.key()] = newVector;  
-    }      
+      _inputVectors[j.key()] = newVector;
+    }
   }
 }
 
@@ -526,22 +530,22 @@ void Equation::replaceDependency(VectorPtr oldVector, VectorPtr newVector) {
 void Equation::replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix) {
 
   QString newExp = _equation;
-  
+
   // also replace all occurences of scalar stats for the oldMatrix
   QHashIterator<QString, Scalar*> scalarDictIter(oldMatrix->scalars());
   while (scalarDictIter.hasNext()) {
     scalarDictIter.next();
-    QString oldTag = scalarDictIter.value()->tagName();
-    QString newTag = ((newMatrix->scalars())[scalarDictIter.key()])->tagName();
-    newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]"); 
+    QString oldTag = scalarDictIter.value()->tag().tagString();
+    QString newTag = ((newMatrix->scalars())[scalarDictIter.key()])->tag().tagString();
+    newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
   }
-  
+
   setEquation(newExp);
 }
 
 
 bool Equation::uses(ObjectPtr p) const {
-  
+
   // check VectorsUsed in addition to _input*'s
   if (VectorPtr vect = kst_cast<Vector>(p)) {
     for (VectorMap::ConstIterator j = VectorsUsed.begin(); j != VectorsUsed.end(); ++j) {

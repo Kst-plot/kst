@@ -22,8 +22,10 @@
 #include <dataplugin.h>
 
 class DirFileSource : public Kst::DataSource {
+  Q_OBJECT
+
   public:
-    DirFileSource(QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e);
+    DirFileSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e);
 
     ~DirFileSource();
 
@@ -76,7 +78,8 @@ class DirFilePlugin : public QObject, public Kst::DataSourcePluginInterface {
 
     virtual bool hasConfigWidget() const { return false; }
 
-    virtual Kst::DataSource *create(QSettings *cfg,
+    virtual Kst::DataSource *create(Kst::ObjectStore *store,
+                                  QSettings *cfg,
                                   const QString &filename,
                                   const QString &type,
                                   const QDomElement &element) const;

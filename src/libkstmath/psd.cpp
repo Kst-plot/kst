@@ -33,23 +33,33 @@
 #include "psd.h"
 #include "psdcalculator.h"
 #include "objectdefaults.h"
+#include "objectstore.h"
 
 extern "C" void rdft(int n, int isgn, double *a);
 
 namespace Kst {
+
+const QString PSD::staticTypeString = I18N_NOOP("Power Spectrum");
 
 const QLatin1String& INVECTOR = QLatin1String("I");
 const QLatin1String& SVECTOR = QLatin1String("S");
 const QLatin1String& FVECTOR = QLatin1String("F");
 
 #define KSTPSDMAXLEN 27
-PSD::PSD(const QString &in_tag, VectorPtr in_V,
+
+PSD::PSD(ObjectStore *store, const ObjectTag& in_tag)
+: DataObject(store, in_tag) {
+  commonConstructor(store, 0, 0, false, 0, false, false, QString::null, QString::null, WindowUndefined, 0, PSDUndefined, false);
+}
+
+
+PSD::PSD(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_V,
                          double in_freq, bool in_average, int in_averageLen,
                          bool in_apodize, bool in_removeMean,
-                         const QString &in_VUnits, const QString &in_RUnits, ApodizeFunction in_apodizeFxn, 
+                         const QString &in_VUnits, const QString &in_RUnits, ApodizeFunction in_apodizeFxn,
                          double in_gaussianSigma, PSDType in_output)
-: DataObject() {
-  commonConstructor(in_tag, in_V, in_freq, in_average, in_averageLen,
+: DataObject(store, in_tag) {
+  commonConstructor(store, in_V, in_freq, in_average, in_averageLen,
                     in_apodize, in_removeMean,
                     in_VUnits, in_RUnits, in_apodizeFxn, in_gaussianSigma,
                     in_output, false);
@@ -57,8 +67,8 @@ PSD::PSD(const QString &in_tag, VectorPtr in_V,
 }
 
 
-PSD::PSD(const QDomElement &e)
-: DataObject(e) {
+PSD::PSD(ObjectStore *store, const QDomElement &e)
+: DataObject(store, e) {
   QString in_VUnits;
   QString in_RUnits;
   QString in_tag;
@@ -73,7 +83,7 @@ PSD::PSD(const QDomElement &e)
   int in_averageLen = 12;
   PSDType in_output = PSDAmplitudeSpectralDensity;
   bool interpolateHoles = false;
-  
+
   QDomNode n = e.firstChild();
   while (!n.isNull()) {
     QDomElement e = n.toElement(); // try to convert the node to an element.
@@ -122,25 +132,27 @@ PSD::PSD(const QDomElement &e)
   }
 
   _inputVectorLoadQueue.append(qMakePair(QString(INVECTOR), vecName));
-  commonConstructor(in_tag, in_V, in_freq, in_average, in_averageLen,
+
+  setTagName(ObjectTag::fromString(in_tag));
+
+  commonConstructor(store, in_V, in_freq, in_average, in_averageLen,
                     in_apodize, in_removeMean,
                     in_VUnits, in_RUnits, in_apodizeFxn, in_gaussianSigma,
                     in_output, interpolateHoles);
 }
 
 
-void PSD::commonConstructor(const QString& in_tag, VectorPtr in_V,
-                               double in_freq, bool in_average, int in_averageLen, bool in_apodize, 
-                               bool in_removeMean, const QString& in_VUnits, const QString& in_RUnits, 
+void PSD::commonConstructor(ObjectStore *store, VectorPtr in_V,
+                               double in_freq, bool in_average, int in_averageLen, bool in_apodize,
+                               bool in_removeMean, const QString& in_VUnits, const QString& in_RUnits,
                                ApodizeFunction in_apodizeFxn, double in_gaussianSigma, PSDType in_output,
                                bool interpolateHoles) {
 
-  _typeString = i18n("Power Spectrum");
+  _typeString = staticTypeString;
   _type = "PowerSpectrum";
   if (in_V) {
     _inputVectors[INVECTOR] = in_V;
   }
-  setTagName(ObjectTag::fromString(in_tag));
   _Freq = in_freq;
   _Average = in_average;
   _Apodize = in_apodize;
@@ -158,29 +170,31 @@ void PSD::commonConstructor(const QString& in_tag, VectorPtr in_V,
   _last_n_new = 0;
 
   _PSDLen = 1;
-  VectorPtr ov = new Vector(ObjectTag("freq", tag()), _PSDLen, this);
-  _fVector = _outputVectors.insert(FVECTOR, ov);
 
-  ov = new Vector(ObjectTag("sv", tag()), _PSDLen, this);
-  _sVector = _outputVectors.insert(SVECTOR, ov);
+  Q_ASSERT(store);
+  VectorPtr ov = store->createObject<Vector>(ObjectTag("freq", tag()));
+  ov->setProvider(this);
+  ov->resize(_PSDLen);
+  _fVector = _outputVectors.insert(FVECTOR, ov).value();
+
+  ov = store->createObject<Vector>(ObjectTag("sv", tag()));
+  ov->setProvider(this);
+  ov->resize(_PSDLen);
+  _sVector = _outputVectors.insert(SVECTOR, ov).value();
 
   updateVectorLabels();
 }
 
 
 PSD::~PSD() {
-  _sVector = _outputVectors.end();
-  _fVector = _outputVectors.end();
-  vectorList.lock().writeLock();
-  vectorList.remove(_outputVectors[SVECTOR]);
-  vectorList.remove(_outputVectors[FVECTOR]);
-  vectorList.lock().unlock();
+  _sVector = 0L;
+  _fVector = 0L;
 }
 
 
 const CurveHintList *PSD::curveHints() const {
   _curveHints->clear();
-  _curveHints->append(new CurveHint(i18n("PSD Curve"), (*_fVector)->tagName(), (*_sVector)->tagName()));
+  _curveHints->append(new CurveHint(i18n("PSD Curve"), _fVector->tag().displayString(), _sVector->tag().displayString()));
   return _curveHints;
 }
 
@@ -227,8 +241,8 @@ Object::UpdateType PSD::update(int update_counter) {
 
   _adjustLengths();
 
-  double *psd = (*_sVector)->value();
-  double *f = (*_fVector)->value();
+  double *psd = _sVector->value();
+  double *f = _fVector->value();
 
   int i_samp;
   for (i_samp = 0; i_samp < _PSDLen; ++i_samp) {
@@ -241,10 +255,10 @@ Object::UpdateType PSD::update(int update_counter) {
   _last_n_new = 0;
 
   updateVectorLabels();
-  (*_sVector)->setDirty();
-  (*_sVector)->update(update_counter);
-  (*_fVector)->setDirty();
-  (*_fVector)->update(update_counter);
+  _sVector->setDirty();
+  _sVector->update(update_counter);
+  _fVector->setDirty();
+  _fVector->update(update_counter);
 
   unlockInputsAndOutputs();
 
@@ -256,10 +270,10 @@ void PSD::_adjustLengths() {
   int nPSDLen = PSDCalculator::calculateOutputVectorLength(_inputVectors[INVECTOR]->length(), _Average, _averageLen);
 
   if (_PSDLen != nPSDLen) {
-    (*_sVector)->resize(nPSDLen);
-    (*_fVector)->resize(nPSDLen);
+    _sVector->resize(nPSDLen);
+    _fVector->resize(nPSDLen);
 
-    if ( ((*_sVector)->length() == nPSDLen) && ((*_fVector)->length() == nPSDLen) ) {
+    if ( (_sVector->length() == nPSDLen) && (_fVector->length() == nPSDLen) ) {
       _PSDLen = nPSDLen;
     } else {
       Debug::self()->log(i18n("Attempted to create a PSD that used all memory."), Debug::Error);
@@ -272,7 +286,7 @@ void PSD::_adjustLengths() {
 void PSD::save(QTextStream &ts, const QString& indent) {
   QString l2 = indent + "  ";
   ts << indent << "<psdobject>" << endl;
-  ts << l2 << "<tag>" << Qt::escape(tagName()) << "</tag>" << endl;
+  ts << l2 << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
   ts << l2 << "<vectag>" << Qt::escape(_inputVectors[INVECTOR]->tag().tagString()) << "</vectag>" << endl;
   ts << l2 << "<sampRate>"  << _Freq << "</sampRate>" << endl;
   ts << l2 << "<average>" << _Average << "</average>" << endl;
@@ -451,17 +465,21 @@ void PSD::setGaussianSigma(double in_gaussianSigma) {
   }
 }
 
- 
+
 DataObjectPtr PSD::makeDuplicate(DataObjectDataObjectMap& duplicatedMap) {
+#if 0
   QString name(tagName() + '\'');
   while (Data::self()->dataTagNameNotUnique(name, false)) {
     name += '\'';
   }
   PSDPtr psd = new PSD(name, _inputVectors[INVECTOR], _Freq,
-                             _Average, _averageLen, _Apodize, _RemoveMean, _vUnits, _rUnits, 
+                             _Average, _averageLen, _Apodize, _RemoveMean, _vUnits, _rUnits,
                              _apodizeFxn, _gaussianSigma, _Output);
   duplicatedMap.insert(this, DataObjectPtr(psd));
   return DataObjectPtr(psd);
+#endif
+  // FIXME: implement this
+  return 0L;
 }
 
 
@@ -481,19 +499,19 @@ void PSD::updateVectorLabels() {
   switch (_Output) {
     default:
     case 0: // amplitude spectral density (default) [V/Hz^1/2]
-      (*_sVector)->setLabel(i18n("ASD \\[%1/%2^{1/2} \\]", _vUnits, _rUnits));
+      _sVector->setLabel(i18n("ASD \\[%1/%2^{1/2} \\]", _vUnits, _rUnits));
       break;
     case 1: // power spectral density [V^2/Hz]
-      (*_sVector)->setLabel(i18n("PSD \\[%1^2/%2\\]", _vUnits, _rUnits));
+      _sVector->setLabel(i18n("PSD \\[%1^2/%2\\]", _vUnits, _rUnits));
       break;
     case 2: // amplitude spectrum [V]
-      (*_sVector)->setLabel(i18n("Amplitude Spectrum\\[%1\\]", _vUnits));
+      _sVector->setLabel(i18n("Amplitude Spectrum\\[%1\\]", _vUnits));
       break;
     case 3: // power spectrum [V^2]
-      (*_sVector)->setLabel(i18n("Power Spectrum \\[%1^2\\]", _vUnits));
+      _sVector->setLabel(i18n("Power Spectrum \\[%1^2\\]", _vUnits));
       break;
   }
-  (*_fVector)->setLabel(i18n("Frequency \\[%1\\]", _rUnits));
+  _fVector->setLabel(i18n("Frequency \\[%1\\]", _rUnits));
 }
 
 }

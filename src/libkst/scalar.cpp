@@ -15,23 +15,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "scalar.h"
+#include <QDebug>
+#include <QTextDocument>
+#include <QXmlStreamWriter>
 
 #include "kst_i18n.h"
 
-#include "datacollection.h"
-#include "defaultprimitivenames.h"
-
-#include <qdebug.h>
-#include <qtextdocument.h>
-#include <QXmlStreamWriter>
-
+#include "scalar.h"
 
 namespace Kst {
 
-static int iAnonymousScalarCounter = 0;
-
 static bool dirtyScalars = false;
+
+const QString Scalar::staticTypeString = I18N_NOOP("Scalar");
 
 bool Scalar::scalarsDirty() {
   // Should use a mutex, but let's play with fire to be fast
@@ -45,27 +41,13 @@ void Scalar::clearScalarsDirty() {
 }
 
 /** Create the base scalar */
-Scalar::Scalar(ObjectTag in_tag, Object *provider, double val, bool orphan, bool displayable, bool editable)
-: Primitive(provider), _value(val), _orphan(orphan), _displayable(displayable), _editable(editable) {
-  QString _tag = in_tag.tag();
-  if (_tag.isEmpty()) {
-    do {
-      _tag = i18n("Anonymous Scalar %1", iAnonymousScalarCounter++);
-    } while (Data::self()->vectorTagNameNotUniqueInternal(_tag));  // FIXME: why vector?
-    Object::setTagName(ObjectTag(_tag, in_tag.context()));
-  } else {
-    Object::setTagName(suggestUniqueScalarTag(in_tag));
-  }
-
-
-  scalarList.lock().writeLock();
-  scalarList.append(this);
-  scalarList.lock().unlock();
+Scalar::Scalar(ObjectStore *store, ObjectTag tag, Object *provider, double val, bool orphan, bool displayable, bool editable)
+    : Primitive(store, tag, provider), _value(val), _orphan(orphan), _displayable(displayable), _editable(editable) {
 }
 
 
-Scalar::Scalar(const QDomElement& e)
-: Primitive(), _orphan(false), _displayable(true), _editable(false) {
+Scalar::Scalar(ObjectStore *store, const QDomElement& e)
+    : Primitive(store), _orphan(false), _displayable(true), _editable(false) {
   QDomNode n = e.firstChild();
   bool ok;
 
@@ -87,11 +69,9 @@ Scalar::Scalar(const QDomElement& e)
     n = n.nextSibling();
   }
 
-  if (tagName().toDouble(&ok) == value() && ok) {
+  if (tag().name().toDouble(&ok) == value() && ok) {
     _displayable = false;
   }
-
-  scalarList.append(this);
 }
 
 
@@ -99,8 +79,13 @@ Scalar::~Scalar() {
 }
 
 
+const QString& Scalar::typeString() const {
+  return staticTypeString;
+}
+
+
 Object::UpdateType Scalar::update(int updateCounter) {
-  Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
+//  Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
   setDirty(false);
@@ -193,16 +178,6 @@ void Scalar::setEditable(bool editable) {
   _editable = editable;
 }
 
-
-void Scalar::setTagName(const ObjectTag& newTag) {
-  if (newTag == tag()) {
-    return;
-  }
-
-  KstWriteLocker l(&scalarList.lock());
-
-  scalarList.doRename(this, newTag);
-}
 
 }
 // vim: et ts=2 sw=2

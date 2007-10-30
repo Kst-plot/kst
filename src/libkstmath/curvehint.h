@@ -26,17 +26,19 @@ class CurveHint : public Shared {
   friend class DataObject;
   public:
     CurveHint(const QString& name = QString::null, const QString& x = QString::null, const QString& y = QString::null);
-    
+
     virtual ~CurveHint();
 
     virtual const QString& curveName() const { return _curveName; }
     virtual const QString& xVectorName() const;
     virtual const QString& yVectorName() const;
 
+#if 0
     virtual VectorPtr xVector() const;
     virtual VectorPtr yVector() const;
 
     virtual SharedPtr<Relation> makeCurve(const QString& tag, const QColor& color) const;
+#endif
 
   protected:
     QString _curveName, _xVectorName, _yVectorName;

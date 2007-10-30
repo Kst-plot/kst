@@ -9,6 +9,13 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <QLabel>
+#include <QLineEdit>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QDialogButtonBox>
+#include <QDebug>
+
 #include "datadialog.h"
 
 #include "datatab.h"
@@ -17,22 +24,25 @@
 #include "editmultiplewidget.h"
 
 #include "dataobject.h"
-
-#include <QLabel>
-#include <QLineEdit>
-#include <QHBoxLayout>
-#include <QPushButton>
-#include <QDialogButtonBox>
+#include "document.h"
+#include "mainwindow.h"
 
 namespace Kst {
 
 DataDialog::DataDialog(Kst::ObjectPtr dataObject, QWidget *parent)
-  : Dialog(parent), _defaultTag("<Auto Name>"), _dataObject(dataObject) {
+  : Dialog(parent), _defaultTagString("<Auto Name>"), _dataObject(dataObject) {
 
   if (_dataObject)
     _mode = Edit;
   else
     _mode = New;
+
+  if (MainWindow *mw = qobject_cast<MainWindow*>(parent)) {
+    _document = mw->document();
+  } else {
+    // FIXME: we need a document
+    qFatal("ERROR: can't construct a Data Dialog without a document");
+  }
 
   createGui();
 }
@@ -64,38 +74,42 @@ void DataDialog::createGui() {
   layout->setContentsMargins(0, -1, 0, -1);
 
   QLabel *label = new QLabel(tr("Unique Name:"), box);
-  _tagName = new QLineEdit(box);
+  _tagString = new QLineEdit(box);
 
   QPushButton *button = new QPushButton(tr("Edit Multiple >>"));
   connect(button, SIGNAL(clicked()), this, SLOT(slotEditMultiple()));
 
   if (_dataObject) {
-    setTagName(_dataObject->tagName());
+    setTagString(_dataObject->tag().tagString()); // FIXME: should this be displayString()?
   } else {
-    setTagName(tagName());
+    setTagString(tagString());
     button->setVisible(false);
   }
 
   layout->addWidget(label);
-  layout->addWidget(_tagName);
+  layout->addWidget(_tagString);
   layout->addWidget(button);
 
   box->setLayout(layout);
 }
 
 
-QString DataDialog::tagName() const {
-  const QString tag = _tagName->text();
-  return tag.isEmpty() ? _defaultTag : tag;
+QString DataDialog::tagString() const {
+//  const QString tag = _tagString->text();
+//  return tag.isEmpty() ? _defaultTagString : tag;
+  return _tagString->text();
 }
 
 
-void DataDialog::setTagName(const QString &tagName) {
-  _tagName->setText(tagName);
+void DataDialog::setTagString(const QString &tagString) {
+  _tagString->setText(tagString);
 }
 
 
 void DataDialog::addDataTab(DataTab *tab) {
+  Q_ASSERT(tab);
+  Q_ASSERT(_document);
+  tab->setObjectStore(_document->objectStore());
   DialogPage *page = new DialogPage(this);
   page->setPageTitle(tab->tabTitle());
   page->addDialogTab(tab);

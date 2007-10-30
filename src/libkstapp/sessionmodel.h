@@ -17,10 +17,12 @@
 
 namespace Kst {
 
+class ObjectStore;
+
 class SessionModel : public QAbstractItemModel
 {
 public:
-  SessionModel();
+  SessionModel(ObjectStore *store);
   ~SessionModel();
 
   int columnCount(const QModelIndex& parent = QModelIndex()) const;
@@ -33,6 +35,8 @@ public:
 private:
   QVariant vectorData(const QModelIndex& index, int role) const;
   QVariant dataObjectData(const QModelIndex& index, int role) const;
+
+  ObjectStore *_store;
 };
 
 }

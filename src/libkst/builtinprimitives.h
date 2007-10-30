@@ -15,6 +15,8 @@
 #include "kst_export.h"
 
 namespace Kst {
+  class ObjectStore;
+
   namespace Builtins {
     KST_EXPORT void initPrimitives();
   }
