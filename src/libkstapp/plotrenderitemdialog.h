@@ -53,7 +53,6 @@ class KST_EXPORT PlotRenderItemDialog : public QDialog, Ui::PlotRenderItemDialog
     void updateAxesButtons();
 
     void updateScalarCombo();
-    void updatePlotMarkers();
 };
 
 }
