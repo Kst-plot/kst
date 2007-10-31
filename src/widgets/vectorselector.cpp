@@ -128,6 +128,8 @@ void VectorSelector::fillVectors() {
 
   if (current)
     setSelectedVector(current);
+
+  _editVector->setEnabled(_vector->count() > 0);
 }
 
 }

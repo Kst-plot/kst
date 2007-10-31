@@ -63,6 +63,13 @@ void VectorTab::setDataSource(DataSourcePtr dataSource) {
 }
 
 
+void VectorTab::setVectorMode(VectorMode mode) {
+  _mode = mode;
+  _readFromSource->setChecked(mode == DataVector);
+  _generateX->setChecked(mode == GeneratedVector);
+}
+
+
 QString VectorTab::file() const {
   return _fileName->file();
 }
@@ -118,6 +125,10 @@ int VectorTab::numberOfSamples() const {
   return _numberOfSamples->value();
 }
 
+void VectorTab::setNumberOfSamples(int numberOfSamples) {
+  _numberOfSamples->setValue(numberOfSamples);
+}
+
 
 void VectorTab::readFromSourceChanged() {
 
@@ -126,9 +137,24 @@ void VectorTab::readFromSourceChanged() {
   else
     setVectorMode(GeneratedVector);
 
-  _rvectorGroup->setEnabled(_readFromSource->isChecked());
+  _dataVectorGroup->setEnabled(_readFromSource->isChecked());
   _dataRange->setEnabled(_readFromSource->isChecked());
-  _svectorGroup->setEnabled(!_readFromSource->isChecked());
+  _generatedVectorGroup->setEnabled(!_readFromSource->isChecked());
+}
+
+
+void VectorTab::hideGeneratedOptions() {
+  _sourceGroup->setVisible(false);
+  _generatedVectorGroup->setVisible(false);
+  setMaximumHeight(300);
+}
+
+
+void VectorTab::hideDataOptions() {
+  _sourceGroup->setVisible(false);
+  _dataVectorGroup->setVisible(false);
+  _dataRange->setVisible(false);
+  setMaximumHeight(150);
 }
 
 
@@ -185,6 +211,9 @@ VectorDialog::VectorDialog(ObjectPtr dataObject, QWidget *parent)
   _vectorTab = new VectorTab(_document->objectStore(), this);
   addDataTab(_vectorTab);
 
+  if (editMode() == Edit) {
+    configureTab(dataObject);
+  }
   //FIXME need to do validation to enable/disable ok button...
 }
 
@@ -211,6 +240,28 @@ QString VectorDialog::tagString() const {
     }
   default:
     return DataDialog::tagString();
+  }
+}
+
+
+void VectorDialog::configureTab(ObjectPtr vector) {
+  if (DataVectorPtr dataVector = kst_cast<DataVector>(vector)) {
+    _vectorTab->setVectorMode(VectorTab::DataVector);
+    _vectorTab->setFile(dataVector->dataSource()->fileName());
+    _vectorTab->setDataSource(dataVector->dataSource());
+    _vectorTab->setField(dataVector->field());
+    _vectorTab->dataRange()->setCountFromEnd(dataVector->countFromEOF());
+    _vectorTab->dataRange()->setReadToEnd(dataVector->readToEOF());
+    _vectorTab->dataRange()->setSkip(dataVector->skip());
+    _vectorTab->dataRange()->setDoSkip(dataVector->doSkip());
+    _vectorTab->dataRange()->setDoFilter(dataVector->doAve());
+    _vectorTab->hideGeneratedOptions();
+  } else if (GeneratedVectorPtr generatedVector = kst_cast<GeneratedVector>(vector)) {
+    _vectorTab->setVectorMode(VectorTab::GeneratedVector);
+    _vectorTab->setFrom(generatedVector->min());
+    _vectorTab->setTo(generatedVector->max());
+    _vectorTab->setNumberOfSamples(generatedVector->length());
+    _vectorTab->hideDataOptions();
   }
 }
 

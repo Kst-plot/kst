@@ -37,7 +37,7 @@ class KST_EXPORT VectorTab : public DataTab, Ui::VectorTab {
     virtual ~VectorTab();
 
     VectorMode vectorMode() const { return _mode; }
-    void setVectorMode(VectorMode mode) { _mode = mode; }
+    void setVectorMode(VectorMode mode);
 
     //DataVector mode methods...
     DataSourcePtr dataSource() const;
@@ -62,6 +62,9 @@ class KST_EXPORT VectorTab : public DataTab, Ui::VectorTab {
 
     int numberOfSamples() const;
     void setNumberOfSamples(int numberOfSamples);
+
+    void hideGeneratedOptions();
+    void hideDataOptions();
 
   private Q_SLOTS:
     void readFromSourceChanged();
@@ -88,6 +91,7 @@ class KST_EXPORT VectorDialog : public DataDialog {
   private:
     ObjectPtr createNewDataVector() const;
     ObjectPtr createNewGeneratedVector() const;
+    void configureTab(ObjectPtr vector);
 
   private:
     VectorTab *_vectorTab;

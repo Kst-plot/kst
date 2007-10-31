@@ -127,7 +127,16 @@ void DataDialog::slotOk() {
 
 
 void DataDialog::slotEditMultiple() {
+  int currentWidth = width();
+  int extensionWidth = 400;
   extensionWidget()->setVisible(!extensionWidget()->isVisible());
+  if (!extensionWidget()->isVisible()) {
+    setMaximumWidth(currentWidth - extensionWidth);
+    setMinimumWidth(currentWidth - extensionWidth);
+  } else {
+    setMinimumWidth(currentWidth + extensionWidth);
+    setMaximumWidth(currentWidth + extensionWidth);
+  }
 }
 
 
