@@ -41,6 +41,7 @@
 #include "choosecolordialog.h"
 #include "changedatasampledialog.h"
 #include "changefiledialog.h"
+#include "datawizard.h"
 
 #include <QtGui>
 
@@ -555,6 +556,11 @@ void MainWindow::createActions() {
   _changeFileDialogAct->setStatusTip(tr("Show Kst's Change Data File Dialog"));
   connect(_changeFileDialogAct, SIGNAL(triggered()), this, SLOT(showChangeFileDialog()));
 
+  _dataWizardAct = new QAction(tr("&Data Wizard"), this);
+  _dataWizardAct->setStatusTip(tr("Show Kst's Data Wizard"));
+  connect(_dataWizardAct, SIGNAL(triggered()), this, SLOT(showDataWizard()));
+
+
 }
 
 
@@ -603,6 +609,7 @@ void MainWindow::createMenus() {
   _layoutMenu->addAction(_createSvgAct);
 
   _toolsMenu = menuBar()->addMenu(tr("&Tools"));
+  _toolsMenu->addAction(_dataWizardAct);
   _toolsMenu->addAction(_changeFileDialogAct);
   _toolsMenu->addAction(_changeDataSampleDialogAct);
   _toolsMenu->addAction(_chooseColorDialogAct);
@@ -763,6 +770,12 @@ void MainWindow::showChooseColorDialog() {
 void MainWindow::showChangeDataSampleDialog() {
   ChangeDataSampleDialog changeDataSampleDialog(this);
   changeDataSampleDialog.exec();
+}
+
+
+void MainWindow::showDataWizard() {
+  DataWizard dataWizard(this);
+  dataWizard.exec();
 }
 
 

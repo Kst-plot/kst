@@ -304,6 +304,8 @@ ObjectPtr VectorDialog::createNewDataVector() const {
 //            << endl;
 
   DataVectorPtr vector = _document->objectStore()->createObject<DataVector>(tag);
+
+  vector->writeLock();
   vector->change(dataSource, field,
       dataRange->countFromEnd() ? -1 : int(dataRange->start()),
       dataRange->readToEnd() ? -1 : int(dataRange->range()),
@@ -322,7 +324,6 @@ ObjectPtr VectorDialog::createNewDataVector() const {
       dataRange->doFilter());
 #endif
 
-  vector->writeLock();
   vector->update(0);
   vector->unlock();
 

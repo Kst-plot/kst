@@ -60,6 +60,7 @@ class MainWindow : public QMainWindow
     void showChooseColorDialog();
     void showChangeDataSampleDialog();
     void showChangeFileDialog();
+    void showDataWizard();
 
     void save();
     void saveAs();
@@ -173,6 +174,7 @@ class MainWindow : public QMainWindow
     QAction *_chooseColorDialogAct;
     QAction *_changeDataSampleDialogAct;
     QAction *_changeFileDialogAct;
+    QAction *_dataWizardAct;
 
 };
 

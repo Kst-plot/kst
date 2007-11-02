@@ -40,6 +40,7 @@ SOURCES += \
     datamanager.cpp \
     datasourcedialog.cpp \
     datatab.cpp \
+    datawizard.cpp \
     debugdialog.cpp \
     debugnotifier.cpp \
     dialog.cpp \
@@ -126,6 +127,7 @@ HEADERS += \
     dataref.h \
     datasourcedialog.h \
     datatab.h \
+    datawizard.h \
     debugdialog.h \
     debugnotifier.h \
     dialog.h \
@@ -200,6 +202,11 @@ FORMS += \
     csdtab.ui \
     curvetab.ui \
     datamanager.ui \
+    datawizardpagedatapresentation.ui \
+    datawizardpagedatasource.ui \
+    datawizardpagefilters.ui \
+    datawizardpageplot.ui \
+    datawizardpagevectors.ui \
     debugdialog.ui \
     dialog.ui \
     differentiatecurvesdialog.ui \
