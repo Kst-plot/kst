@@ -25,6 +25,7 @@
 namespace Kst {
 
 const QString String::staticTypeString = I18N_NOOP("String");
+const QString String::staticTypeTag = I18N_NOOP("string");
 
 String::String(ObjectStore *store, ObjectTag tag, Object *provider, const QString& val, bool orphan)
     : Primitive(store, tag, provider), _value(val), _orphan(orphan), _editable(false) {

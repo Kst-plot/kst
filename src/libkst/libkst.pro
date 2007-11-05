@@ -32,6 +32,7 @@ SOURCES += \
     # $(PROCPS_COPY) \
     $$PROCPS \
     string_kst.cpp \
+    stringfactory.cpp \
     matrix.cpp \
     datamatrix.cpp \
     generatedmatrix.cpp \
@@ -84,6 +85,7 @@ HEADERS += \
     sharedptr.h \
     generatedmatrix.h \
     string_kst.h \
+    stringfactory.h \
     generatedvector.h \
     ksttimers.h \
     timezones.h \

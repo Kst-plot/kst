@@ -33,6 +33,7 @@ class KST_EXPORT String : public Primitive {
   public:
     virtual const QString& typeString() const;
     static const QString staticTypeString;
+    static const QString staticTypeTag;
 
   protected:
     String(ObjectStore *store, ObjectTag tag = ObjectTag::invalidTag, Object *provider = 0L, const QString& val = QString::null, bool orphan = false);
