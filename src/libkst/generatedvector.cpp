@@ -15,7 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 #include <QDebug>
-#include <QTextStream>
 #include <QXmlStreamWriter>
 
 #include "kst_i18n.h"
@@ -25,6 +24,7 @@
 namespace Kst {
 
 const QString GeneratedVector::staticTypeString = I18N_NOOP("Generated Vector");
+const QString GeneratedVector::staticTypeTag = I18N_NOOP("generatedvector");
 
 GeneratedVector::GeneratedVector(ObjectStore *store, const ObjectTag& tag, const QByteArray &data, double x0, double x1, int n)
     : Vector(store, tag, data) {
@@ -48,7 +48,7 @@ const QString& GeneratedVector::typeString() const {
 
 
 void GeneratedVector::save(QXmlStreamWriter &s) {
-  s.writeStartElement("svector");
+  s.writeStartElement("generatedvector");
   s.writeAttribute("tag", tag().tagString());
   s.writeAttribute("min", QString::number(min()));
   s.writeAttribute("max", QString::number(max()));

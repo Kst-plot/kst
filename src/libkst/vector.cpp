@@ -21,7 +21,6 @@
 #include <stdlib.h>
 
 #include <QDebug>
-#include <QTextDocument>
 #include <QXmlStreamWriter>
 
 #include "kst_i18n.h"
@@ -42,6 +41,7 @@ namespace Kst {
 #define INITSIZE 1
 
 const QString Vector::staticTypeString = I18N_NOOP("Vector");
+const QString Vector::staticTypeTag = I18N_NOOP("vector");
 
 /** Create a vector */
 Vector::Vector(ObjectStore *store, const ObjectTag& tag, int size, Object *provider, bool isScalarList)
@@ -85,6 +85,9 @@ Vector::Vector(ObjectStore *store, const ObjectTag& tag, const QByteArray& data)
   _isScalarList = false;
   _saveable = false;
   _saveData = false;
+
+  // Contructor used for restore.  Must add Object to Store.
+  store->addObject(this);
 
   sz = qMax((size_t)(INITSIZE), data.size()/sizeof(double));
 

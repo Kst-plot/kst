@@ -21,7 +21,6 @@
 #include <stdlib.h>
 
 #include <QDebug>
-#include <QTextDocument>
 #include <QXmlStreamWriter>
 
 #include "kst_i18n.h"
@@ -45,6 +44,7 @@
 namespace Kst {
 
 const QString DataVector::staticTypeString = I18N_NOOP("Data Vector");
+const QString DataVector::staticTypeTag = I18N_NOOP("datavector");
 
 /** Create a DataVector: raw data from a file */
 DataVector::DataVector(ObjectStore *store, const ObjectTag& in_tag,
@@ -347,7 +347,7 @@ int DataVector::reqStartFrame() const {
 /** Save vector information */
 void DataVector::save(QXmlStreamWriter &s) {
   if (_file) {    
-    s.writeStartElement("rvector");
+    s.writeStartElement("datavector");
     _file->readLock();
     s.writeAttribute("provider", _file->tag().tagString());
     s.writeAttribute("file", _file->fileName());

@@ -39,6 +39,7 @@ class KST_EXPORT DataVector : public Vector {
   public:
     virtual const QString& typeString() const;
     static const QString staticTypeString;
+    static const QString staticTypeTag;
 
     /** change the properties of a DataVector */
     void change(DataSourcePtr file, const QString &field,

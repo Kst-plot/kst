@@ -27,6 +27,9 @@ class EditableVector : public Vector {
   public:
     virtual const QString& typeString() const;
     static const QString staticTypeString;
+    static const QString staticTypeTag;
+
+    void save(QXmlStreamWriter &s);
 
     Object::UpdateType update(int update_counter);
 

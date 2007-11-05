@@ -31,6 +31,7 @@ class KST_EXPORT GeneratedVector : public Vector {
   public:
     virtual const QString& typeString() const;
     static const QString staticTypeString;
+    static const QString staticTypeTag;
 
     void save(QXmlStreamWriter &s);
 

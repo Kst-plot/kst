@@ -53,6 +53,7 @@ class Vector : public Primitive {
   public:
     virtual const QString& typeString() const;
     static const QString staticTypeString;
+    static const QString staticTypeTag;
 
   protected:
     Vector(ObjectStore *store, const ObjectTag& tag = ObjectTag::invalidTag, int size = 0,
