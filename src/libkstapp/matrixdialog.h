@@ -32,7 +32,7 @@ class KST_EXPORT MatrixTab : public DataTab, Ui::MatrixTab {
   public:
     enum MatrixMode { DataMatrix, GeneratedMatrix };
 
-    MatrixTab(QWidget *parent = 0);
+    MatrixTab(ObjectStore *store, QWidget *parent = 0);
     virtual ~MatrixTab();
 
     MatrixMode matrixMode() const { return _mode; }

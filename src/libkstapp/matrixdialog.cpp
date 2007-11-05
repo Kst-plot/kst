@@ -29,8 +29,8 @@
 
 namespace Kst {
 
-MatrixTab::MatrixTab(QWidget *parent)
-  : DataTab(parent), _mode(DataMatrix) {
+MatrixTab::MatrixTab(ObjectStore *store, QWidget *parent)
+  : DataTab(parent), _mode(DataMatrix), _store(store) {
 
   setupUi(this);
   setTabTitle(tr("Matrix"));
@@ -403,7 +403,8 @@ MatrixDialog::MatrixDialog(ObjectPtr dataObject, QWidget *parent)
   else
     setWindowTitle(tr("New Matrix"));
 
-  _matrixTab = new MatrixTab(this);
+  Q_ASSERT(_document && _document->objectStore());
+  _matrixTab = new MatrixTab(_document->objectStore(), this);
   addDataTab(_matrixTab);
 
   //FIXME need to do validation to enable/disable ok button...
