@@ -28,6 +28,7 @@ namespace Kst {
 static bool dirtyScalars = false;
 
 const QString Scalar::staticTypeString = I18N_NOOP("Scalar");
+const QString Scalar::staticTypeTag = I18N_NOOP("scalar");
 
 bool Scalar::scalarsDirty() {
   // Should use a mutex, but let's play with fire to be fast

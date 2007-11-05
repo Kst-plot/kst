@@ -41,11 +41,13 @@ class KST_EXPORT Scalar : public Primitive {
 
     virtual ~Scalar();
 
+    friend class ScalarFactory;
     friend class ObjectStore;
 
   public:
     virtual const QString& typeString() const;
     static const QString staticTypeString;
+    static const QString staticTypeTag;
 
     /* return true if any scalars are dirty at the moment */
     static bool scalarsDirty();

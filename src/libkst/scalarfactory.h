@@ -9,20 +9,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "builtinprimitives.h"
-#include "vectorfactory.h"
-#include "scalarfactory.h"
+#ifndef SCALARFACTORY_H
+#define SCALARFACTORY_H
+
+#include "primitivefactory.h"
 
 namespace Kst {
-  namespace Builtins {
-    void initPrimitives() {
-      new VectorFactory();
-      new GeneratedVectorFactory();
-      new EditableVectorFactory();
-      new DataVectorFactory();
-      new ScalarFactory();
-    }
-  }
+
+class ScalarFactory : public PrimitiveFactory {
+  public:
+    ScalarFactory();
+    ~ScalarFactory();
+    PrimitivePtr generatePrimitive(ObjectStore *store, QXmlStreamReader& stream);
+};
+
 }
+
+#endif
 
 // vim: ts=2 sw=2 et

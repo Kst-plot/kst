@@ -28,6 +28,7 @@ SOURCES += \
     #  Needs porting, but is unused anyway
     #timezones.cpp \
     scalar.cpp \
+    scalarfactory.cpp \
     # $(PROCPS_COPY) \
     $$PROCPS \
     string_kst.cpp \
@@ -79,6 +80,7 @@ HEADERS += \
     datamatrix.h \
     datavector.h \
     scalar.h \
+    scalarfactory.h \
     sharedptr.h \
     generatedmatrix.h \
     string_kst.h \
