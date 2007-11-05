@@ -226,7 +226,7 @@ bool ObjectStore::removeObject(Object *o) {
     return false;
   }
 
-  KstWriteLocker(&this->_lock);
+  KstWriteLocker l(&this->_lock);
 
   if (!_list.contains(o)) {
 #if NAMEDEBUG > 1
@@ -281,7 +281,7 @@ bool ObjectStore::renameObject(Object *o, const ObjectTag& newTag) {
     return false;
   }
 
-  KstWriteLocker(&this->_lock);
+  KstWriteLocker l(&this->_lock);
 
   if (objectExists(newTag)) {
     // TODO: what to do if tag exists?
@@ -319,7 +319,7 @@ ObjectPtr ObjectStore::retrieveObject(const ObjectTag& tag) const {
     return NULL;
   }
 
-  KstReadLocker(&this->_lock);
+  KstReadLocker l(&this->_lock);
 
   QStringList fullTag = tag.fullTag();
 
@@ -368,7 +368,7 @@ ObjectPtr ObjectStore::retrieveObject(const ObjectTag& tag) const {
 
 
 bool ObjectStore::objectExists(const ObjectTag& tag) const {
-  KstReadLocker(&this->_lock);
+  KstReadLocker l(&this->_lock);
   ObjectTreeNode *n = _root->descendant(tag.fullTag());
   return n && n->object();
 }

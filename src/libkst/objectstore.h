@@ -145,7 +145,7 @@ class KST_EXPORT ObjectStore {
 // this is an inefficient implementation for now
 template<class T>
 const ObjectList<T> ObjectStore::getObjects() const {
-  KstReadLocker(&(this->_lock));
+  KstReadLocker l(&(this->_lock));
   ObjectList<T> rc;
 
   for (QList<ObjectPtr>::ConstIterator it = _list.begin(); it != _list.end(); ++it) {
@@ -161,7 +161,7 @@ const ObjectList<T> ObjectStore::getObjects() const {
 
 template<class T>
 SharedPtr<T> ObjectStore::createObject(const ObjectTag& tag) {
-  KstWriteLocker(&(this->_lock));
+  KstWriteLocker l(&(this->_lock));
   T *object = new T(this, tag);
   addObject(object);
 
@@ -171,7 +171,7 @@ SharedPtr<T> ObjectStore::createObject(const ObjectTag& tag) {
 
 template<class T>
 SharedPtr<T> ObjectStore::createObject(const QDomElement& e) {
-  KstWriteLocker(&(this->_lock));
+  KstWriteLocker l(&(this->_lock));
   T *object = new T(this, e);
   addObject(object);
 
@@ -181,6 +181,7 @@ SharedPtr<T> ObjectStore::createObject(const QDomElement& e) {
 
 template<class T>
 ObjectTag ObjectStore::suggestObjectTag(const QString& basedOn, const ObjectTag& contextTag) const {
+  KstReadLocker l(&(this->_lock));
   ObjectTag tag(QString::null, contextTag, false);
   if (basedOn.isEmpty()) {
     // anonymous object
@@ -204,7 +205,7 @@ bool ObjectStore::addObject(T *o) {
     return false;
   }
 
-  KstWriteLocker(&this->_lock);
+  KstWriteLocker l(&this->_lock);
 
   o->_store = 0L;
 
