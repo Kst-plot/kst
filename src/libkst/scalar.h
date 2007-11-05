@@ -41,7 +41,6 @@ class KST_EXPORT Scalar : public Primitive {
 
     virtual ~Scalar();
 
-    friend class ScalarFactory;
     friend class ObjectStore;
 
   public:
