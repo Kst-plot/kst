@@ -9,6 +9,14 @@ File Format for Kst 2
   <variables>
     <vector name="">
     </vector>
+    <datavector provider="" file="" field="" start="" count=""></datavector>
+    <generatedvector tag="" min="" max="" count=""></generatedvector>
+    <vector tag="">
+        <data></data>
+    </vector>
+    <editablevector tag="">
+      <data></data>
+    </editablevector>
     <scalar name="">
     </scalar>
     <matrix name="">
