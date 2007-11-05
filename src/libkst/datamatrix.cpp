@@ -147,7 +147,7 @@ void DataMatrix::change(DataSourcePtr file, const QString &field,
                         int xStart, int yStart,
                         int xNumSteps, int yNumSteps,
                         bool doAve, bool doSkip, int skip) {
-  Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
+  KstWriteLocker l(this);
 
   commonConstructor(file, field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip);
 
