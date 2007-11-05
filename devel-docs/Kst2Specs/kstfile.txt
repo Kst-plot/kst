@@ -18,6 +18,7 @@ File Format for Kst 2
       <data></data>
     </editablevector>
     <scalar tag="" orphan="true" editable="true" value=""></scalar>
+    <string tag="" orphan="true" editable="true" value=""></string>
     <matrix name="">
     </matrix>
   </variables>
