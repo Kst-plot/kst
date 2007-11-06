@@ -16,12 +16,13 @@
 #include "editablematrix.h"
 #include "debug.h"
 #include <qbytearray.h>
-#include <qtextdocument.h>
+#include <QXmlStreamWriter>
 #include "kst_i18n.h"
 
 namespace Kst {
 
 const QString EditableMatrix::staticTypeString = I18N_NOOP("Editable Matrix");
+const QString EditableMatrix::staticTypeTag = I18N_NOOP("editablematrix");
 
 EditableMatrix::EditableMatrix(ObjectStore *store, const QDomElement &e) : Matrix(store) {
   _editable = true;
@@ -97,9 +98,7 @@ const QString& EditableMatrix::typeString() const {
 }
 
 
-void EditableMatrix::save(QTextStream &ts, const QString& indent) {
-
-  QString indent2 = "  ";
+void EditableMatrix::save(QXmlStreamWriter &xml) {
 
   QByteArray qba(_zSize*sizeof(double), '\0');
   QDataStream qds(&qba, QIODevice::WriteOnly);
@@ -108,17 +107,18 @@ void EditableMatrix::save(QTextStream &ts, const QString& indent) {
     qds << _z[i];
   }
 
-  ts << indent << "<amatrix>" << endl;
-  ts << indent << indent2 << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
-  ts << indent << indent2 << "<xmin>" << minX() << "</xmin>" << endl;
-  ts << indent << indent2 << "<ymin>" << minY() << "</ymin>" << endl;
-  ts << indent << indent2 << "<nx>" << xNumSteps() << "</nx>" << endl;
-  ts << indent << indent2 << "<ny>" << yNumSteps() << "</ny>" << endl;
-  ts << indent << indent2 << "<xstep>" << xStepSize() << "</xstep>" << endl;
-  ts << indent << indent2 << "<ystep>" << xStepSize() << "</ystep>" << endl;
-  ts << indent << indent2 << "<data>" << qCompress(qba).toBase64() << "</data>" << endl;
-  ts << indent << "</amatrix>" << endl;
+  xml.writeStartElement(staticTypeTag);
+  xml.writeAttribute("tag", tag().tagString());
+  xml.writeAttribute("xmin", QString::number(minX()));
+  xml.writeAttribute("ymin", QString::number(minY()));
+  xml.writeAttribute("nx", QString::number(xNumSteps()));
+  xml.writeAttribute("ny", QString::number(yNumSteps()));
+  xml.writeAttribute("xstep", QString::number(xStepSize()));
+  xml.writeAttribute("ystep", QString::number(yStepSize()));
+  xml.writeTextElement("data", qCompress(qba).toBase64());
+  xml.writeEndElement();
 }
+
 
 }
 // vim: ts=2 sw=2 et

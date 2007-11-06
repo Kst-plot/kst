@@ -22,6 +22,7 @@
 namespace Kst {
 
 const QString GeneratedMatrix::staticTypeString = I18N_NOOP("Generated Matrix");
+const QString GeneratedMatrix::staticTypeTag = I18N_NOOP("generatedmatrix");
 
 GeneratedMatrix::GeneratedMatrix(ObjectStore *store, const QDomElement &e) : Matrix(store) {
   double in_xMin = 0, in_yMin = 0, in_xStep = 1, in_yStep = 1;
@@ -84,7 +85,7 @@ const QString& GeneratedMatrix::typeString() const {
 }
 
 void GeneratedMatrix::save(QXmlStreamWriter &xml) {
-  xml.writeStartElement("generatedmatrix");
+  xml.writeStartElement(staticTypeTag);
   xml.writeAttribute("tag", tag().tagString());
   xml.writeAttribute("xmin", QString::number(minX()));
   xml.writeAttribute("ymin", QString::number(minY()));
@@ -96,6 +97,7 @@ void GeneratedMatrix::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("gradzmax", QString::number(_gradZMax));
   xml.writeAttribute("xdirection", QVariant(_xDirection).toString());
   xml.writeEndElement();
+
 }
 
 void GeneratedMatrix::change(uint nX, uint nY, double minX, double minY,

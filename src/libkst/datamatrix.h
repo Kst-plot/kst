@@ -26,6 +26,7 @@ class KST_EXPORT DataMatrix : public Matrix {
   public:
     virtual const QString& typeString() const;
     static const QString staticTypeString;
+    static const QString staticTypeTag;
 
     // save DataMatrix
     virtual void save(QXmlStreamWriter &xml);

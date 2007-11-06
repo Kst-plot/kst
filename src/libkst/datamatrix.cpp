@@ -31,6 +31,7 @@
 namespace Kst {
 
 const QString DataMatrix::staticTypeString = I18N_NOOP("Data Matrix");
+const QString DataMatrix::staticTypeTag = I18N_NOOP("datamatrix");
 
 DataMatrix::DataMatrix(ObjectStore *store, const ObjectTag& tag)
   : Matrix(store, tag) {
@@ -118,7 +119,7 @@ const QString& DataMatrix::typeString() const {
 
 void DataMatrix::save(QXmlStreamWriter &xml) {
   if (_file) {
-    xml.writeStartElement("datamatrix");
+    xml.writeStartElement(staticTypeTag);
     xml.writeAttribute("tag", tag().tagString());
 
     _file->readLock();

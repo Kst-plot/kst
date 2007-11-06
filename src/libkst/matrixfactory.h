@@ -9,26 +9,35 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "builtinprimitives.h"
-#include "vectorfactory.h"
-#include "scalarfactory.h"
-#include "stringfactory.h"
-#include "matrixfactory.h"
+#ifndef MATRIXFACTORY_H
+#define MATRIXFACTORY_H
+
+#include "primitivefactory.h"
 
 namespace Kst {
-  namespace Builtins {
-    void initPrimitives() {
-      new VectorFactory();
-      new GeneratedVectorFactory();
-      new EditableVectorFactory();
-      new DataVectorFactory();
-      new ScalarFactory();
-      new StringFactory();
-      new GeneratedMatrixFactory();
-      new EditableMatrixFactory();
-      new DataMatrixFactory();
-    }
-  }
+
+class GeneratedMatrixFactory : public PrimitiveFactory {
+  public:
+    GeneratedMatrixFactory();
+    ~GeneratedMatrixFactory();
+    PrimitivePtr generatePrimitive(ObjectStore *store, QXmlStreamReader& stream);
+};
+
+class EditableMatrixFactory : public PrimitiveFactory {
+  public:
+    EditableMatrixFactory();
+    ~EditableMatrixFactory();
+    PrimitivePtr generatePrimitive(ObjectStore *store, QXmlStreamReader& stream);
+};
+
+class DataMatrixFactory : public PrimitiveFactory {
+  public:
+    DataMatrixFactory();
+    ~DataMatrixFactory();
+    PrimitivePtr generatePrimitive(ObjectStore *store, QXmlStreamReader& stream);
+};
 }
+
+#endif
 
 // vim: ts=2 sw=2 et

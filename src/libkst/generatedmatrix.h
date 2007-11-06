@@ -24,6 +24,7 @@ class KST_EXPORT GeneratedMatrix : public Matrix {
   public:
     virtual const QString& typeString() const;
     static const QString staticTypeString;
+    static const QString staticTypeTag;
 
     virtual void save(QXmlStreamWriter &xml);
 

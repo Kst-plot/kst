@@ -23,8 +23,9 @@ class KST_EXPORT EditableMatrix : public Matrix {
   public:
     virtual const QString& typeString() const;
     static const QString staticTypeString;
+    static const QString staticTypeTag;
 
-    virtual void save(QTextStream &ts, const QString& indent = QString::null);
+    virtual void save(QXmlStreamWriter &xml);
 
   protected:
     EditableMatrix(ObjectStore *store, const ObjectTag& in_tag, uint nX=1, uint nY=1, double minX=0, double minY=0, double stepX=1, double stepY=1);

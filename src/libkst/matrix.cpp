@@ -587,5 +587,30 @@ void Matrix::change(uint nX, uint nY, double minX, double minY, double stepX, do
   setDirty();
 }
 
+
+void Matrix::change(QByteArray &data, uint nX, uint nY, double minX, double minY, double stepX, double stepY) {
+  _nX = nX;
+  _nY = nY;
+  _stepX = stepX;
+  _stepY = stepY;
+  _minX = minX;
+  _minY = minY;
+
+  _saveable = true;
+  resizeZ(nX*nY, true);
+
+  QDataStream qds(&data, QIODevice::ReadOnly);
+  int i;
+  // fill in the raw array with the data
+  for (i = 0; i < nX*nY && !qds.atEnd(); i++) {
+    qds >> _z[i];  // stored in the same order as it was saved
+  }
+  if (i < nX*nY) {
+    Debug::self()->log(i18n("Saved matrix contains less data than it claims."), Debug::Warning);
+    resizeZ(i, false);
+  }
+  setDirty();
+}
+
 }
 // vim: ts=2 sw=2 et

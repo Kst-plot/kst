@@ -51,6 +51,9 @@ class KST_EXPORT Matrix : public Primitive {
     void change(uint nX, uint nY, double minX=0, double minY=0,
         double stepX=1, double stepY=1);
 
+    void change(QByteArray& data, uint nX, uint nY, double minX=0, double minY=0,
+        double stepX=1, double stepY=1);
+
     // Return the sample count (x times y) of the matrix
     virtual int sampleCount() const;
 
