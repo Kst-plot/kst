@@ -26,9 +26,7 @@ File Format for Kst 2
     </editablematrix>
   </variables>
   <objects>
-    <equation name="" xvector="" interpolate="true" output="">
-       equationtext
-    </equation>
+    <equation tag="" expression="" xvector="" interpolate=""></equation>
     <psd name="">
     </psd>
   </objects>

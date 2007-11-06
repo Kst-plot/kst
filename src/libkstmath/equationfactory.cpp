@@ -20,7 +20,7 @@ namespace Kst {
 
 EquationFactory::EquationFactory()
 : ObjectFactory() {
-  registerFactory("equation", this);
+  registerFactory(Equation::staticTypeTag, this);
 }
 
 
@@ -31,7 +31,6 @@ EquationFactory::~EquationFactory() {
 DataObjectPtr EquationFactory::generateObject(ObjectStore *store, QXmlStreamReader& xml) {
   QString tag, expression, xVector, output;
   bool interpolate = false;
-
   while (!xml.atEnd()) {
     const QString n = xml.name().toString();
     if (xml.isStartElement()) {
@@ -73,8 +72,17 @@ DataObjectPtr EquationFactory::generateObject(ObjectStore *store, QXmlStreamRead
     return 0;
   }
 
-  EquationPtr ep = new Equation(store, ObjectTag::fromString(tag), expression, vector, interpolate);
-  return ep.data();
+  EquationPtr equation = store->createObject<Equation>(ObjectTag::fromString(tag));
+  Q_ASSERT(equation);
+
+  equation->setEquation(expression);
+  equation->setExistingXVector(vector, interpolate);
+
+  equation->writeLock();
+  equation->update(0);
+  equation->unlock();
+
+  return equation;
 }
 
 }

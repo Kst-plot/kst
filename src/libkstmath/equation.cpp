@@ -43,6 +43,7 @@ extern void *ParsedEquation;
 namespace Kst {
 
 const QString Equation::staticTypeString = I18N_NOOP("Equation");
+const QString Equation::staticTypeTag = I18N_NOOP("equation");
 
 const QString Equation::XINVECTOR = "X";
 const QString Equation::XOUTVECTOR = "XO"; // Output (slave) vector
@@ -183,7 +184,7 @@ Object::UpdateType Equation::update(int update_counter) {
 
 
 void Equation::save(QXmlStreamWriter &s) {
-  s.writeStartElement("equation");
+  s.writeStartElement(staticTypeTag);
   s.writeAttribute("tag", tag().tagString());
   // Reparse the equation, then write it back out in text so that we can update
   // any vectors or scalars that had name changes, but we don't get affected by
