@@ -32,6 +32,7 @@
 namespace Kst {
 
 const QString Histogram::staticTypeString = I18N_NOOP("Histogram");
+const QString Histogram::staticTypeTag = I18N_NOOP("histogram");
 
 static const QLatin1String& RAWVECTOR  = QLatin1String("I");
 static const QLatin1String& BINS = QLatin1String("B");
@@ -356,30 +357,14 @@ QString Histogram::xLabel() const {
 }
 
 void Histogram::save(QXmlStreamWriter &xml) {
-  xml.writeStartElement("histogram");
+  xml.writeStartElement(staticTypeTag);
   xml.writeAttribute("tag", tag().tagString());
-  xml.writeAttribute("vectag", _inputVectors[RAWVECTOR]->tag().tagString());
-  xml.writeAttribute("numbins", QString::number(_NumberOfBins));
+  xml.writeAttribute("vector", _inputVectors[RAWVECTOR]->tag().tagString());
+  xml.writeAttribute("numberofbins", QString::number(_NumberOfBins));
   xml.writeAttribute("realtimeautobin", QVariant(_realTimeAutoBin).toString());
   xml.writeAttribute("min", QString::number(_MinX));
   xml.writeAttribute("max", QString::number(_MaxX));
-
-  QString normString;
-  switch (_NormalizationMode) {
-    case Number:
-      normString = "NUMBER";
-      break;
-    case Percent:
-      normString = "PERCENT";
-      break;
-    case Fraction:
-      normString = "FRACTION";
-      break;
-    case MaximumOne:
-      normString = "MAX_ONE";
-      break;
-  }
-  xml.writeAttribute("normmode", normString);
+  xml.writeAttribute("normalizationmode", QString::number(_NormalizationMode));
   xml.writeEndElement();
 }
 

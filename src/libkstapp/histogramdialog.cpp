@@ -128,6 +128,11 @@ CurvePlacement* HistogramTab::curvePlacement() const {
 }
 
 
+void HistogramTab::setObjectStore(ObjectStore *store) {
+  _vector->setObjectStore(store);
+}
+
+
 HistogramDialog::HistogramDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 

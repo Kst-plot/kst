@@ -31,6 +31,8 @@ class KST_EXPORT HistogramTab : public DataTab, Ui::HistogramTab {
     HistogramTab(QWidget *parent = 0);
     virtual ~HistogramTab();
 
+    void setObjectStore(ObjectStore *store);
+
     VectorPtr vector() const;
     CurveAppearance* curveAppearance() const;
     CurvePlacement* curvePlacement() const;

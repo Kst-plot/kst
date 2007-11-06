@@ -38,6 +38,7 @@ public:
   public:
     static const QString staticTypeString;
     const QString& typeString() const { return staticTypeString; }
+    static const QString staticTypeTag;
 
     virtual UpdateType update(int update_counter = -1);
     virtual void save(QXmlStreamWriter &xml);

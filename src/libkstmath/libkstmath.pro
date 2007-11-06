@@ -39,6 +39,7 @@ SOURCES += \
     image.cpp \
     defaultnames.cpp \
     histogram.cpp \
+    histogramfactory.cpp \
     equation.cpp \
     curvehint.cpp \
     basicplugin.cpp \
@@ -75,6 +76,7 @@ HEADERS += \
     defaultnames.h \
     equation.h \
     histogram.h \
+    histogramfactory.h \
     image.h \
     linestyle.h \
     objectdefaults.h \
