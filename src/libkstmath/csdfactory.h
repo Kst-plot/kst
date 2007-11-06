@@ -9,17 +9,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "builtinobjects.h"
-#include "equationfactory.h"
-#include "csdfactory.h"
+#ifndef CSDFACTORY_H
+#define CSDFACTORY_H
+
+#include "objectfactory.h"
 
 namespace Kst {
-  namespace Builtins {
-    void initObjects() {
-      new EquationFactory;
-      new CSDFactory;
-    }
-  }
+
+class CSDFactory : public ObjectFactory {
+  public:
+    CSDFactory();
+    ~CSDFactory();
+    DataObjectPtr generateObject(ObjectStore *store, QXmlStreamReader& stream);
+};
+
 }
+
+#endif
 
 // vim: ts=2 sw=2 et

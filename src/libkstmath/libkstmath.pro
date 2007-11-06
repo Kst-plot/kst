@@ -30,6 +30,7 @@ SOURCES += \
     dataobject.cpp \
     dataobjectcollection.cpp \
     csd.cpp \
+    csdfactory.cpp \
     psd.cpp \
     relation.cpp \
     curvepointsymbol.cpp \
@@ -66,6 +67,7 @@ HEADERS += \
     basicplugin.h \
     colorsequence.h \
     csd.h \
+    csdfactory.h \
     curvehint.h \
     curvepointsymbol.h \
     dataobjectcollection.h \

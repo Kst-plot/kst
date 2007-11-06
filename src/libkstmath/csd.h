@@ -28,10 +28,11 @@ class KST_EXPORT CSD : public DataObject {
   public:
     static const QString staticTypeString;
     const QString& typeString() const { return staticTypeString; }
+    static const QString staticTypeTag;
 
     virtual UpdateType update(int update_counter = -1);
 
-    virtual void save(QTextStream& ts, const QString& indent = QString::null);
+    virtual void save(QXmlStreamWriter &s);
     virtual QString propertyString() const;
 
     QString vTag() const;

@@ -31,6 +31,8 @@ class KST_EXPORT CSDTab : public DataTab, Ui::CSDTab {
     CSDTab(QWidget *parent = 0);
     virtual ~CSDTab();
 
+    void setObjectStore(ObjectStore *store);
+
     VectorPtr vector() const;
     CurvePlacement* curvePlacement() const;
     FFTOptions* FFTOptionsWidget() const;

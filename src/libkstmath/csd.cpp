@@ -16,7 +16,7 @@
 #include <assert.h>
 #include <math.h>
 
-#include <QTextDocument>
+#include <QXmlStreamWriter>
 #include <QLatin1String>
 
 #include "kst_i18n.h"
@@ -34,6 +34,7 @@ extern "C" void rdft(int n, int isgn, double *a);
 namespace Kst {
 
 const QString CSD::staticTypeString = I18N_NOOP("Cumulative Spectral Decay");
+const QString CSD::staticTypeTag = I18N_NOOP("csd");
 
 static const QLatin1String INVECTOR = QLatin1String("I");
 static const QLatin1String& OUTMATRIX = QLatin1String("M");
@@ -265,22 +266,23 @@ Object::UpdateType CSD::update(int update_counter) {
   return setLastUpdateResult(UPDATE);
 }
 
-void CSD::save(QTextStream &ts, const QString& indent) {
-  QString l2 = indent + "  ";
-  ts << indent << "<csdobject>" << endl;
-  ts << l2 << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
-  ts << l2 << "<vectag>" << Qt::escape(_inputVectors[INVECTOR]->tag().tagString()) << "</vectag>" << endl;
-  ts << l2 << "<sampRate>"  << _frequency << "</sampRate>" << endl;
-  ts << l2 << "<average>" << _average << "</average>" << endl;
-  ts << l2 << "<fftLen>" << int(ceil(log(double(_PSDLen*2)) / log(2.0))) << "</fftLen>" << endl;
-  ts << l2 << "<removeMean>" << _removeMean << "</removeMean>" << endl;
-  ts << l2 << "<apodize>" << _apodize << "</apodize>" << endl;
-  ts << l2 << "<apodizefxn>" << _apodizeFxn << "</apodizefxn>" << endl;
-  ts << l2 << "<windowsize>" << _windowSize << "</windowsize>" << endl;
-  ts << l2 << "<vectorunits>" << _vectorUnits << "</vectorunits>" << endl;
-  ts << l2 << "<rateunits>" << _rateUnits << "</rateunits>" << endl;
-  ts << l2 << "<output>" << _outputType << "</output>" << endl;
-  ts << indent << "</csdobject>" << endl;
+
+void CSD::save(QXmlStreamWriter &s) {
+  s.writeStartElement(staticTypeTag);
+  s.writeAttribute("tag", tag().tagString());
+  s.writeAttribute("vector", _inputVectors[INVECTOR]->tag().tagString());
+  s.writeAttribute("samplerate", QString::number(_frequency));
+  s.writeAttribute("gaussiansigma", QString::number(_gaussianSigma));
+  s.writeAttribute("average", QVariant(_average).toString());
+  s.writeAttribute("fftLen", QString::number(int(ceil(log(double(_PSDLen*2)) / log(2.0)))));
+  s.writeAttribute("removemean", QVariant(_removeMean).toString());
+  s.writeAttribute("apodize", QVariant(_apodize).toString());
+  s.writeAttribute("apodizefunction", QString::number(_apodizeFxn));
+  s.writeAttribute("windowsize", QString::number(_windowSize));
+  s.writeAttribute("vectorunits", _vectorUnits);
+  s.writeAttribute("rateunits", _rateUnits);
+  s.writeAttribute("outputtype", QString::number(_outputType));
+  s.writeEndElement();
 }
 
 

@@ -27,6 +27,7 @@ File Format for Kst 2
   </variables>
   <objects>
     <equation tag="" expression="" xvector="" interpolate=""></equation>
+    <csd tag="" vector="" samplerate="" gaussiansigma="" average="" fftLen="" removemean="" apodize="" apodizefunction="" windowsize="" vectorunits="" rateunits="" outputtype=""></csd>
     <psd name="">
     </psd>
   </objects>

@@ -70,6 +70,12 @@ int CSDTab::windowSize() const {
   return _windowSize->value();
 }
 
+
+void CSDTab::setObjectStore(ObjectStore *store) {
+  _vector->setObjectStore(store);
+}
+
+
 CSDDialog::CSDDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
@@ -98,18 +104,18 @@ ObjectPtr CSDDialog::createNewDataObject() const {
   Q_ASSERT(_document && _document->objectStore());
   ObjectTag tag = _document->objectStore()->suggestObjectTag<CSD>(tagString(), ObjectTag::globalTagContext);
   CSDPtr csd = _document->objectStore()->createObject<CSD>(tag);
-  csd->setVector(_CSDTab->vector());
-  csd->setFreq(_CSDTab->FFTOptionsWidget()->sampleRate());
-  csd->setAverage(_CSDTab->FFTOptionsWidget()->interleavedAverage());
-  csd->setRemoveMean(_CSDTab->FFTOptionsWidget()->removeMean());
-  csd->setApodize(_CSDTab->FFTOptionsWidget()->apodize());
-  csd->setApodizeFxn(_CSDTab->FFTOptionsWidget()->apodizeFunction());
-  csd->setWindowSize(_CSDTab->windowSize());
-  csd->setLength(_CSDTab->FFTOptionsWidget()->FFTLength());
-  csd->setGaussianSigma(_CSDTab->FFTOptionsWidget()->sigma());
-  csd->setOutput(_CSDTab->FFTOptionsWidget()->output());
-  csd->setVectorUnits(_CSDTab->FFTOptionsWidget()->vectorUnits());
-  csd->setRateUnits(_CSDTab->FFTOptionsWidget()->rateUnits());
+  csd->change(_CSDTab->vector(),
+              _CSDTab->FFTOptionsWidget()->sampleRate(), 
+              _CSDTab->FFTOptionsWidget()->interleavedAverage(),
+              _CSDTab->FFTOptionsWidget()->removeMean(),
+              _CSDTab->FFTOptionsWidget()->apodize(),
+              _CSDTab->FFTOptionsWidget()->apodizeFunction(),
+              _CSDTab->windowSize(), 
+              _CSDTab->FFTOptionsWidget()->FFTLength(), 
+              _CSDTab->FFTOptionsWidget()->sigma(),
+              _CSDTab->FFTOptionsWidget()->output(), 
+              _CSDTab->FFTOptionsWidget()->vectorUnits(),
+              _CSDTab->FFTOptionsWidget()->rateUnits());
 
   csd->writeLock();
   csd->update(0);
