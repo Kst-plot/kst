@@ -31,6 +31,8 @@ class KST_EXPORT PowerSpectrumTab : public DataTab, Ui::PowerSpectrumTab {
     PowerSpectrumTab(QWidget *parent = 0);
     virtual ~PowerSpectrumTab();
 
+    void setObjectStore(ObjectStore *store);
+
     VectorPtr vector() const;
     CurveAppearance* curveAppearance() const;
     CurvePlacement* curvePlacement() const;

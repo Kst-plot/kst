@@ -26,11 +26,10 @@ File Format for Kst 2
     </editablematrix>
   </variables>
   <objects>
-    <csd tag="" vector="" samplerate="" gaussiansigma="" average="" fftLen="" removemean="" apodize="" apodizefunction="" windowsize="" vectorunits="" rateunits="" outputtype=""></csd>
+    <csd tag="" vector="" samplerate="" gaussiansigma="" average="" fftlength="" removemean="" apodize="" apodizefunction="" windowsize="" vectorunits="" rateunits="" outputtype=""></csd>
     <equation tag="" expression="" xvector="" interpolate=""></equation>
     <histogram tag="" vector="" numberofbins="" realtimeautobin="" min="" max="" normalizationmode=""></histogram>
-    <psd name="">
-    </psd>
+    <powerspectrum tag="" vector="" samplerate="" gaussiansigma="" average="" fftlength="" removemean="" apodize="" apodizefunction="" interpolateholes="" vectorunits="" rateunits="" outputtype=""></powerspectrum>
   </objects>
   <relations>
     <xycurve name="" xvector="" yvector="">

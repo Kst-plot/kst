@@ -9,39 +9,39 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "csdfactory.h"
+#include "psdfactory.h"
 
 #include "debug.h"
-#include "csd.h"
+#include "psd.h"
 #include "datacollection.h"
 #include "objectstore.h"
 
 namespace Kst {
 
-CSDFactory::CSDFactory()
+PSDFactory::PSDFactory()
 : ObjectFactory() {
-  registerFactory(CSD::staticTypeTag, this);
+  registerFactory(PSD::staticTypeTag, this);
 }
 
 
-CSDFactory::~CSDFactory() {
+PSDFactory::~PSDFactory() {
 }
 
 
-DataObjectPtr CSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& xml) {
+DataObjectPtr PSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& xml) {
   ObjectTag tag;
 
   Q_ASSERT(store);
 
   double frequency, gaussianSigma;
-  int length, windowSize, apodizeFunction, outputType;
+  int length, apodizeFunction, outputType;
   QString vectorTag, vectorUnits, rateUnits;
-  bool average, removeMean, apodize;
+  bool average, removeMean, apodize, interpolateHoles;
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();
     if (xml.isStartElement()) {
-      if (n == CSD::staticTypeTag) {
+      if (n == PSD::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
         tag = ObjectTag::fromString(attrs.value("tag").toString());
         vectorTag = attrs.value("vector").toString();
@@ -52,21 +52,21 @@ DataObjectPtr CSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
         gaussianSigma = attrs.value("gaussiansigma").toString().toDouble();
 
         length = attrs.value("fftlength").toString().toInt();
-        windowSize = attrs.value("windowsize").toString().toInt();
         apodizeFunction = attrs.value("apodizefunction").toString().toInt();
         outputType = attrs.value("outputtype").toString().toInt();
 
         average = attrs.value("average").toString() == "true" ? true : false;
+        interpolateHoles = attrs.value("interpolateholes").toString() == "true" ? true : false;
         removeMean = attrs.value("removemean").toString() == "true" ? true : false;
         apodize = attrs.value("apodize").toString() == "true" ? true : false;
       } else {
         return 0;
       }
     } else if (xml.isEndElement()) {
-      if (n == CSD::staticTypeTag) {
+      if (n == PSD::staticTypeTag) {
         break;
       } else {
-        Debug::self()->log(QObject::tr("Error creating CSD from Kst file."), Debug::Warning);
+        Debug::self()->log(QObject::tr("Error creating PSD from Kst file."), Debug::Warning);
         return 0;
       }
     }
@@ -83,29 +83,31 @@ DataObjectPtr CSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
   }
 
   if (!vector) {
-    Debug::self()->log(QObject::tr("Error creating CSD from Kst file.  Could not find Vector."), Debug::Warning);
+    Debug::self()->log(QObject::tr("Error creating PSD from Kst file.  Could not find Vector."), Debug::Warning);
     return 0;
   }
 
-  CSDPtr csd = store->createObject<CSD>(tag);
-  csd->change(vector,
-              frequency,
-              average,
-              removeMean,
-              apodize,
-              (ApodizeFunction)apodizeFunction,
-              windowSize,
-              length,
-              gaussianSigma,
-              (PSDType)outputType,
-              vectorUnits,
-              rateUnits);
+  PSDPtr powerspectrum = store->createObject<PSD>(tag);
+  Q_ASSERT(powerspectrum);
 
-  csd->writeLock();
-  csd->update(0);
-  csd->unlock();
+  powerspectrum->writeLock();
+  powerspectrum->setVector(vector);
+  powerspectrum->setFreq(frequency);
+  powerspectrum->setAverage(average);
+  powerspectrum->setLen(length);
+  powerspectrum->setApodize(apodize);
+  powerspectrum->setRemoveMean(removeMean);
+  powerspectrum->setVUnits(vectorUnits);
+  powerspectrum->setRUnits(rateUnits);
+  powerspectrum->setApodizeFxn((ApodizeFunction)apodizeFunction);
+  powerspectrum->setGaussianSigma(gaussianSigma);
+  powerspectrum->setOutput((PSDType)outputType);
+  powerspectrum->setInterpolateHoles(interpolateHoles);
 
-  return csd;
+  powerspectrum->update(0);
+  powerspectrum->unlock();
+
+  return powerspectrum;
 }
 
 }

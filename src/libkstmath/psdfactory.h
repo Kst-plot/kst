@@ -9,21 +9,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "builtinobjects.h"
-#include "equationfactory.h"
-#include "csdfactory.h"
-#include "histogramfactory.h"
-#include "psdfactory.h"
+#ifndef PSDFACTORY_H
+#define PSDFACTORY_H
+
+#include "objectfactory.h"
 
 namespace Kst {
-  namespace Builtins {
-    void initObjects() {
-      new EquationFactory;
-      new CSDFactory;
-      new HistogramFactory;
-      new PSDFactory;
-    }
-  }
+
+class PSDFactory : public ObjectFactory {
+  public:
+    PSDFactory();
+    ~PSDFactory();
+    DataObjectPtr generateObject(ObjectStore *store, QXmlStreamReader& stream);
+};
+
 }
+
+#endif
 
 // vim: ts=2 sw=2 et

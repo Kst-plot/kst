@@ -35,11 +35,12 @@ class KST_EXPORT PSD : public DataObject {
 
   public:
     static const QString staticTypeString;
+    static const QString staticTypeTag;
     const QString& typeString() const { return staticTypeString; }
 
     virtual UpdateType update(int update_counter = -1);
 
-    virtual void save(QTextStream& ts, const QString& indent = QString::null);
+    virtual void save(QXmlStreamWriter &s);
     virtual QString propertyString() const;
 
     bool apodize() const;

@@ -44,12 +44,12 @@ QDomDocument TestCSD::makeDOMElement(const QString& tag, const QString& val) {
   child.appendChild(text);
   csdElement.appendChild(child);
 
-  child = csdDOM.createElement("vectag");
+  child = csdDOM.createElement("vector");
   text = csdDOM.createTextNode(val);
   child.appendChild(text);
   csdElement.appendChild(child);
 
-  child = csdDOM.createElement("sampRate");
+  child = csdDOM.createElement("samplerate");
   text = csdDOM.createTextNode("1");
   child.appendChild(text);
   csdElement.appendChild(child);
@@ -59,17 +59,17 @@ QDomDocument TestCSD::makeDOMElement(const QString& tag, const QString& val) {
   child.appendChild(text);
   csdElement.appendChild(child);
 
-  child = csdDOM.createElement("fiftLen");
+  child = csdDOM.createElement("fftlength");
   text = csdDOM.createTextNode("5");
   child.appendChild(text);
   csdElement.appendChild(child);
 
-  child = csdDOM.createElement("adopize");
+  child = csdDOM.createElement("apodize");
   text = csdDOM.createTextNode("0");
   child.appendChild(text);
   csdElement.appendChild(child);
 
-  child = csdDOM.createElement("apodizefxn");
+  child = csdDOM.createElement("apodizefunction");
   text = csdDOM.createTextNode("WindowOriginal");
   child.appendChild(text);
   csdElement.appendChild(child);
@@ -79,7 +79,7 @@ QDomDocument TestCSD::makeDOMElement(const QString& tag, const QString& val) {
   child.appendChild(text);
   csdElement.appendChild(child);
 
-  child = csdDOM.createElement("removeMean");
+  child = csdDOM.createElement("removemean");
   text = csdDOM.createTextNode("1");
   child.appendChild(text);
   csdElement.appendChild(child);
@@ -99,7 +99,7 @@ QDomDocument TestCSD::makeDOMElement(const QString& tag, const QString& val) {
   child.appendChild(text);
   csdElement.appendChild(child);
 
-  child = csdDOM.createElement("output");
+  child = csdDOM.createElement("outputtype");
   text = csdDOM.createTextNode("1");
   child.appendChild(text);
   csdElement.appendChild(child);

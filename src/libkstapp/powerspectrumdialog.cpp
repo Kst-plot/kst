@@ -64,6 +64,11 @@ FFTOptions* PowerSpectrumTab::FFTOptionsWidget() const {
 }
 
 
+void PowerSpectrumTab::setObjectStore(ObjectStore *store) {
+  _vector->setObjectStore(store);
+}
+
+
 PowerSpectrumDialog::PowerSpectrumDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
@@ -94,6 +99,7 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() const {
   PSDPtr powerspectrum = _document->objectStore()->createObject<PSD>(tag);
   Q_ASSERT(powerspectrum);
 
+  powerspectrum->writeLock();
   powerspectrum->setVector(_powerSpectrumTab->vector());
   powerspectrum->setFreq(_powerSpectrumTab->FFTOptionsWidget()->sampleRate());
   powerspectrum->setAverage(_powerSpectrumTab->FFTOptionsWidget()->interleavedAverage());
@@ -107,7 +113,6 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() const {
   powerspectrum->setOutput(_powerSpectrumTab->FFTOptionsWidget()->output());
   powerspectrum->setInterpolateHoles(_powerSpectrumTab->FFTOptionsWidget()->interpolateOverHoles());
 
-  powerspectrum->writeLock();
   powerspectrum->update(0);
   powerspectrum->unlock();
 

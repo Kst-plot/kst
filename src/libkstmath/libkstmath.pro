@@ -22,75 +22,76 @@ QMAKE_EXT_LEX = .lex
 QMAKE_EXT_YACC = .yacc
 
 SOURCES += \
-    painter.cpp \
+    basicplugin.cpp \
+    builtinobjects.cpp \
     colorsequence.cpp \
-    settings.cpp \
-    objectdefaults.cpp \
-    labelparser.cpp \
-    dataobject.cpp \
-    dataobjectcollection.cpp \
     csd.cpp \
     csdfactory.cpp \
-    psd.cpp \
-    relation.cpp \
-    curvepointsymbol.cpp \
-    linestyle.cpp \
     curve.cpp \
-    image.cpp \
-    defaultnames.cpp \
-    histogram.cpp \
-    histogramfactory.cpp \
-    equation.cpp \
     curvehint.cpp \
-    basicplugin.cpp \
-    fftsg_h.c \
+    curvepointsymbol.cpp \
+    dataobject.cpp \
+    dataobjectcollection.cpp \
+    defaultnames.cpp \
+    dialoglauncher.cpp \
+    eparse.cpp \
+    eparse-eh.cpp \
     enodes.cpp \
     enodefactory.cpp \
-    dialoglauncher.cpp \
-    eparse-eh.cpp \
-    eparse.cpp \
-    palette.cpp \
-    psdcalculator.cpp \
     escan.cpp \
+    equation.cpp \
+    equationfactory.cpp \
+    fftsg_h.c \
+    histogram.cpp \
+    histogramfactory.cpp \
+    image.cpp \
+    labelparser.cpp \
+    linestyle.cpp \
+    objectdefaults.cpp \
     objectfactory.cpp \
+    painter.cpp \
+    palette.cpp \
+    psd.cpp \
+    psdcalculator.cpp \
+    psdfactory.cpp \
+    relation.cpp \
     relationfactory.cpp \
-    builtinobjects.cpp \
-    equationfactory.cpp
+    settings.cpp
 
 HEADERS += \
+    basicplugin.h \
     builtinobjects.h \
+    colorsequence.h \
+    csd.h \
+    csdfactory.h \
+    curve.h \
+    curvehint.h \
+    curvepointsymbol.h \
     dialoglauncher.h \
     enodefactory.h \
     enodes.h \
     eparse-eh.h \
     eparse.h \
-    relation.h \
-    basicplugin.h \
-    colorsequence.h \
-    csd.h \
-    csdfactory.h \
-    curvehint.h \
-    curvepointsymbol.h \
     dataobjectcollection.h \
     dataobject.h \
     defaultnames.h \
     equation.h \
+    equationfactory.h \
     histogram.h \
     histogramfactory.h \
     image.h \
+    labelparser.h \
     linestyle.h \
     objectdefaults.h \
+    objectfactory.h \
     painter.h \
     palette.h \
     plotdefines.h \
     psd.h \
-    settings.h \
-    curve.h \
-    labelparser.h \
-    objectfactory.h \
     psdcalculator.h \
+    relation.h \
     relationfactory.h \
-    equationfactory.h
+    settings.h 
 
 #LEXSOURCES += escan.l
 #YACCSOURCES += eparse.y

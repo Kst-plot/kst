@@ -22,7 +22,7 @@
 #include <assert.h>
 #include <math.h>
 
-#include <QTextDocument>
+#include <QXmlStreamWriter>
 
 #include "kst_i18n.h"
 #include <qdebug.h>
@@ -40,6 +40,7 @@ extern "C" void rdft(int n, int isgn, double *a);
 namespace Kst {
 
 const QString PSD::staticTypeString = I18N_NOOP("Power Spectrum");
+const QString PSD::staticTypeTag = I18N_NOOP("powerspectrum");
 
 const QLatin1String& INVECTOR = QLatin1String("I");
 const QLatin1String& SVECTOR = QLatin1String("S");
@@ -90,9 +91,9 @@ PSD::PSD(ObjectStore *store, const QDomElement &e)
     if (!e.isNull()) { // the node was really an element.
       if (e.tagName() == "tag") {
         in_tag = e.text();
-      } else if (e.tagName() == "vectag") {
+      } else if (e.tagName() == "vector") {
         vecName = e.text();
-      } else if (e.tagName() == "sampRate") {
+      } else if (e.tagName() == "samplerate") {
         in_freq = e.text().toDouble();
       } else if (e.tagName() == "average") {
         if (e.text() == "0") {
@@ -100,7 +101,7 @@ PSD::PSD(ObjectStore *store, const QDomElement &e)
         } else {
           in_average = true;
         }
-      } else if (e.tagName() == "fftLen") {
+      } else if (e.tagName() == "fftlength") {
         in_averageLen = e.text().toInt();
       } else if (e.tagName() == "apodize") {
         if (e.text() == "0") {
@@ -108,7 +109,7 @@ PSD::PSD(ObjectStore *store, const QDomElement &e)
         } else {
           in_apodize = true;
         }
-      } else if (e.tagName() == "apodizefxn") {
+      } else if (e.tagName() == "apodizefunction") {
         in_apodizeFxn = ApodizeFunction(e.text().toInt());
       } else if (e.tagName() == "gaussiansigma") {
         in_gaussianSigma = e.text().toDouble();
@@ -118,11 +119,11 @@ PSD::PSD(ObjectStore *store, const QDomElement &e)
         } else {
           in_removeMean = true;
         }
-      } else if (e.tagName() == "VUnits") {
+      } else if (e.tagName() == "vectorunits") {
         in_VUnits = e.text();
-      } else if (e.tagName() == "RUnits") {
+      } else if (e.tagName() == "rateunits") {
         in_RUnits = e.text();
-      } else if (e.tagName() == "output") {
+      } else if (e.tagName() == "outputtype") {
         in_output = (PSDType)e.text().toInt();
       } else if (e.tagName() == "interpolateHoles") {
         interpolateHoles = e.text().toInt() != 0;
@@ -283,23 +284,23 @@ void PSD::_adjustLengths() {
   }
 }
 
-void PSD::save(QTextStream &ts, const QString& indent) {
-  QString l2 = indent + "  ";
-  ts << indent << "<psdobject>" << endl;
-  ts << l2 << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
-  ts << l2 << "<vectag>" << Qt::escape(_inputVectors[INVECTOR]->tag().tagString()) << "</vectag>" << endl;
-  ts << l2 << "<sampRate>"  << _Freq << "</sampRate>" << endl;
-  ts << l2 << "<average>" << _Average << "</average>" << endl;
-  ts << l2 << "<fftLen>" << int(ceil(log(double(_PSDLen*2)) / log(2.0))) << "</fftLen>" << endl;
-  ts << l2 << "<removeMean>" << _RemoveMean << "</removeMean>" << endl;
-  ts << l2 << "<interpolateHoles>" << _interpolateHoles << "</interpolateHoles>" << endl;
-  ts << l2 << "<apodize>" << _Apodize << "</apodize>" << endl;
-  ts << l2 << "<apodizefxn>" << _apodizeFxn << "</apodizefxn>" << endl;
-  ts << l2 << "<gaussiansigma>" << _gaussianSigma << "</gaussiansigma>" << endl;
-  ts << l2 << "<VUnits>" << _vUnits << "</VUnits>" << endl;
-  ts << l2 << "<RUnits>" << _rUnits << "</RUnits>" << endl;
-  ts << l2 << "<output>" << _Output << "</output>" << endl;
-  ts << indent << "</psdobject>" << endl;
+
+void PSD::save(QXmlStreamWriter &s) {
+  s.writeStartElement(staticTypeTag);
+  s.writeAttribute("tag", tag().tagString());
+  s.writeAttribute("vector", _inputVectors[INVECTOR]->tag().tagString());
+  s.writeAttribute("samplerate", QString::number(_Freq));
+  s.writeAttribute("gaussiansigma", QString::number(_gaussianSigma));
+  s.writeAttribute("average", QVariant(_Average).toString());
+  s.writeAttribute("fftlength", QString::number(int(ceil(log(double(_PSDLen*2)) / log(2.0)))));
+  s.writeAttribute("removemean", QVariant(_RemoveMean).toString());
+  s.writeAttribute("apodize", QVariant(_Apodize).toString());
+  s.writeAttribute("apodizefunction", QString::number(_apodizeFxn));
+  s.writeAttribute("interpolateholes", QVariant(_interpolateHoles).toString());
+  s.writeAttribute("vectorunits", _vUnits);
+  s.writeAttribute("rateunits", _rUnits);
+  s.writeAttribute("outputtype", QString::number(_Output));
+  s.writeEndElement();
 }
 
 

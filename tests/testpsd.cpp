@@ -16,6 +16,7 @@
 #include <QDir>
 #include <QFile>
 #include <QTemporaryFile>
+#include <QXmlStreamWriter>
 
 #define protected public
 #include <psd.h>
@@ -45,12 +46,12 @@ QDomDocument TestPSD::makeDOMElement(const QString& tag, const QString& val) {
   child.appendChild(text);
   psdElement.appendChild(child);
 
-  child = psdDOM.createElement("vectag");
+  child = psdDOM.createElement("vector");
   text = psdDOM.createTextNode(val);
   child.appendChild(text);
   psdElement.appendChild(child);
 
-  child = psdDOM.createElement("sampRate");
+  child = psdDOM.createElement("samplerate");
   text = psdDOM.createTextNode("128");
   child.appendChild(text);
   psdElement.appendChild(child);
@@ -60,17 +61,17 @@ QDomDocument TestPSD::makeDOMElement(const QString& tag, const QString& val) {
   child.appendChild(text);
   psdElement.appendChild(child);
 
-  child = psdDOM.createElement("fiftLen");
+  child = psdDOM.createElement("fftlength");
   text = psdDOM.createTextNode("5");
   child.appendChild(text);
   psdElement.appendChild(child);
 
-  child = psdDOM.createElement("adopize");
+  child = psdDOM.createElement("apodize");
   text = psdDOM.createTextNode("0");
   child.appendChild(text);
   psdElement.appendChild(child);
 
-  child = psdDOM.createElement("apodizefxn");
+  child = psdDOM.createElement("apodizefunction");
   text = psdDOM.createTextNode("WindowOriginal");
   child.appendChild(text);
   psdElement.appendChild(child);
@@ -80,27 +81,27 @@ QDomDocument TestPSD::makeDOMElement(const QString& tag, const QString& val) {
   child.appendChild(text);
   psdElement.appendChild(child);
 
-  child = psdDOM.createElement("removeMean");
+  child = psdDOM.createElement("removemean");
   text = psdDOM.createTextNode("1");
   child.appendChild(text);
   psdElement.appendChild(child);
 
-  child = psdDOM.createElement("VUnits");
+  child = psdDOM.createElement("vectorunits");
   text = psdDOM.createTextNode("vUnits");
   child.appendChild(text);
   psdElement.appendChild(child);
 
-  child = psdDOM.createElement("RUnits");
+  child = psdDOM.createElement("rateunits");
   text = psdDOM.createTextNode("rUnits");
   child.appendChild(text);
   psdElement.appendChild(child);
 
-  child = psdDOM.createElement("output");
+  child = psdDOM.createElement("outputtype");
   text = psdDOM.createTextNode("PSDAmplitudeSpectralDensity");
   child.appendChild(text);
   psdElement.appendChild(child);
 
-  child = psdDOM.createElement("interpolateHoles");
+  child = psdDOM.createElement("interpolateholes");
   text = psdDOM.createTextNode("1");
   child.appendChild(text);
   psdElement.appendChild(child);
@@ -173,8 +174,10 @@ void TestPSD::testPSD() {
 
   QTemporaryFile tf;
   tf.open();
-  QTextStream ts(&tf);
-  psd->save(ts, "");
+  QXmlStreamWriter xml;
+  xml.setDevice(&tf);
+  xml.setAutoFormatting(true);
+  psd->save(xml);
   QFile::remove(tf.fileName());
 
   QDomNode n = makeDOMElement("psdDOMPsd", "psdDOMVector").firstChild();

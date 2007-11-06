@@ -79,21 +79,21 @@ CSD::CSD(ObjectStore *store, const QDomElement &e)
       if (!e.isNull()) { // the node was really an element.
         if (e.tagName() == "tag") {
           in_tag = e.text();
-        } else if (e.tagName() == "vectag") {
+        } else if (e.tagName() == "vector") {
           vecName = e.text();
-        } else if (e.tagName() == "sampRate") {
+        } else if (e.tagName() == "samplerate") {
           in_freq = e.text().toDouble();
         } else if (e.tagName() == "average") {
           in_average = (e.text() != "0");
-        } else if (e.tagName() == "fftLen") {
+        } else if (e.tagName() == "fftlength") {
           in_averageLength = e.text().toInt();
         } else if (e.tagName() == "apodize") {
           in_apodize = (e.text() != "0");
-        } else if (e.tagName() == "apodizefxn") {
+        } else if (e.tagName() == "apodizefunction") {
           in_apodizeFxn = ApodizeFunction(e.text().toInt());
         } else if (e.tagName() == "gaussiansigma") {
           in_gaussianSigma = e.text().toDouble();
-        } else if (e.tagName() == "removeMean") {
+        } else if (e.tagName() == "removemean") {
           in_removeMean = (e.text() != "0");
         } else if (e.tagName() == "windowsize") {
           in_windowSize = e.text().toInt();
@@ -101,7 +101,7 @@ CSD::CSD(ObjectStore *store, const QDomElement &e)
           in_vectorUnits = e.text();
         } else if (e.tagName() == "rateunits") {
           in_rateUnits = e.text();
-        } else if (e.tagName() == "output") {
+        } else if (e.tagName() == "outputtype") {
           in_outputType = (PSDType)e.text().toInt();
         }
       }
@@ -274,7 +274,7 @@ void CSD::save(QXmlStreamWriter &s) {
   s.writeAttribute("samplerate", QString::number(_frequency));
   s.writeAttribute("gaussiansigma", QString::number(_gaussianSigma));
   s.writeAttribute("average", QVariant(_average).toString());
-  s.writeAttribute("fftLen", QString::number(int(ceil(log(double(_PSDLen*2)) / log(2.0)))));
+  s.writeAttribute("fftlength", QString::number(int(ceil(log(double(_PSDLen*2)) / log(2.0)))));
   s.writeAttribute("removemean", QVariant(_removeMean).toString());
   s.writeAttribute("apodize", QVariant(_apodize).toString());
   s.writeAttribute("apodizefunction", QString::number(_apodizeFxn));
