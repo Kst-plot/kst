@@ -19,8 +19,11 @@ File Format for Kst 2
     </editablevector>
     <scalar tag="" orphan="true" editable="true" value=""></scalar>
     <string tag="" orphan="true" editable="true" value=""></string>
-    <matrix name="">
-    </matrix>
+    <datamatrix tag="" provider="" file="" field="" reqxstart=""  reqystart="" reqnx="" reqny="" doave="" doskip="" skip=""></datamatrix>
+    <generatedmatrix tag="" xmin="" ymin="" nx="" ny="" xstep="" ystep="" gradzmin="" gradzmax="" xdirection=""></generatedmatrix>
+    <editablematrix tag="" xmin="" ymin="" nx="" ny="" xstep="" ystep="">
+        <data></data>
+    </editablematrix>
   </variables>
   <objects>
     <equation name="" xvector="" interpolate="true" output="">
