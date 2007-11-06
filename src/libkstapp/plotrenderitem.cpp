@@ -407,6 +407,16 @@ void PlotRenderItem::createActions() {
   registerShortcut(_zoomXMaximum);
   connect(_zoomXMaximum, SIGNAL(triggered()), this, SLOT(zoomXMaximum()));
 
+  _zoomXRight = new QAction(tr("X-Zoom Right"), this);
+  _zoomXRight->setShortcut(Qt::Key_Right);
+  registerShortcut(_zoomXRight);
+  connect(_zoomXRight, SIGNAL(triggered()), this, SLOT(zoomXRight()));
+
+  _zoomXLeft= new QAction(tr("X-Zoom Left"), this);
+  _zoomXLeft->setShortcut(Qt::Key_Left);
+  registerShortcut(_zoomXLeft);
+  connect(_zoomXLeft, SIGNAL(triggered()), this, SLOT(zoomXLeft()));
+
   _zoomXOut = new QAction(tr("X-Zoom Out"), this);
   _zoomXOut->setShortcut(Qt::SHIFT+Qt::Key_Right);
   registerShortcut(_zoomXOut);
@@ -479,6 +489,8 @@ void PlotRenderItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   zoom.addSeparator();
 
   zoom.addAction(_zoomXMaximum);
+  zoom.addAction(_zoomXRight);
+  zoom.addAction(_zoomXLeft);
   zoom.addAction(_zoomXOut);
   zoom.addAction(_zoomXIn);
   zoom.addAction(_zoomNormalizeXtoY);
@@ -660,6 +672,20 @@ void PlotRenderItem::zoomYMeanCentered() {
 void PlotRenderItem::zoomXMaximum() {
   qDebug() << "zoomXMaximum" << endl;
   ZoomCommand *cmd = new ZoomXMaximumCommand(this);
+  cmd->redo();
+}
+
+
+void PlotRenderItem::zoomXRight() {
+  qDebug() << "zoomXRight" << endl;
+  ZoomCommand *cmd = new ZoomXRightCommand(this);
+  cmd->redo();
+}
+
+
+void PlotRenderItem::zoomXLeft() {
+  qDebug() << "zoomXLeft" << endl;
+  ZoomCommand *cmd = new ZoomXLeftCommand(this);
   cmd->redo();
 }
 
@@ -1103,6 +1129,41 @@ void ZoomXMaximumCommand::applyZoomTo(PlotRenderItem *item) {
   item->update();
 }
 
+/*
+ * X axis zoom changed to fixed and shifted to right:
+ *       new_xmin = xmin + (xmax - xmin)*0.10;
+ *       new_xmax = xmax + (xmax – xmin)*0.10;
+ */
+void ZoomXRightCommand::applyZoomTo(PlotRenderItem *item) {
+  item->setXAxisZoomMode(PlotRenderItem::FixedExpression);
+
+  QRectF compute = item->projectionRect();
+
+  qreal dx = compute.width() * 0.1;
+  compute.setLeft(compute.left() + dx);
+  compute.setRight(compute.right() + dx);
+
+  item->setProjectionRect(compute);
+  item->update();
+}
+
+/*
+ * X axis zoom changed to fixed and shifted to :
+ *       new_xmin = xmin - (xmax - xmin)*0.10;
+ *       new_xmax = xmax - (xmax – xmin)*0.10;
+ */
+void ZoomXLeftCommand::applyZoomTo(PlotRenderItem *item) {
+  item->setXAxisZoomMode(PlotRenderItem::FixedExpression);
+
+  QRectF compute = item->projectionRect();
+
+  qreal dx = compute.width() * 0.1;
+  compute.setLeft(compute.left() - dx);
+  compute.setRight(compute.right() - dx);
+
+  item->setProjectionRect(compute);
+  item->update();
+}
 
 /*
  * X axis zoom changed to fixed and increased:
