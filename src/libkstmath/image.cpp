@@ -191,6 +191,7 @@ void Image::save(QXmlStreamWriter &s) {
   s.writeAttribute("contourcolor", _contourColor.name());
 
   s.writeAttribute("autothreshold", QVariant(_autoThreshold).toString());
+  s.writeEndElement();
 }
 
 

@@ -17,6 +17,7 @@
 namespace Kst {
 
 class PlotItem;
+class ObjectStore;
 
 class PlotAxisItem : public ViewItem
 {
@@ -48,7 +49,7 @@ class PlotAxisItem : public ViewItem
 
     virtual void save(QXmlStreamWriter &xml);
     void saveInPlot(QXmlStreamWriter &xml);
-    bool configureFromXml(QXmlStreamReader &xml);
+    bool configureFromXml(QXmlStreamReader &xml, ObjectStore *store);
     virtual void paint(QPainter *painter);
 
     virtual void paintMajorGridLines(QPainter *painter,

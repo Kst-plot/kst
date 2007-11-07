@@ -42,7 +42,7 @@ class LayoutBoxItemFactory : public GraphicsFactory {
   public:
     LayoutBoxItemFactory();
     ~LayoutBoxItemFactory();
-    ViewItem* generateGraphics(QXmlStreamReader& stream, View *view, ViewItem *parent = 0);
+    ViewItem* generateGraphics(QXmlStreamReader& stream, ObjectStore *store, View *view, ViewItem *parent = 0);
 };
 
 }

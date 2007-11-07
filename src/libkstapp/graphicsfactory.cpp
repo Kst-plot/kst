@@ -51,7 +51,7 @@ void GraphicsFactory::registerFactory(const QStringList& nodes, GraphicsFactory 
 }
 
 
-ViewItem *GraphicsFactory::parse(QXmlStreamReader& stream, View *view, ViewItem *parent) {
+ViewItem *GraphicsFactory::parse(QXmlStreamReader& stream, ObjectStore *store, View *view, ViewItem *parent) {
   if (!factories) {
     return 0;
   }
@@ -61,7 +61,7 @@ ViewItem *GraphicsFactory::parse(QXmlStreamReader& stream, View *view, ViewItem 
     return 0;
   }
 
-  return f->generateGraphics(stream, view, parent);
+  return f->generateGraphics(stream, store, view, parent);
 }
 
 

@@ -207,7 +207,7 @@ bool Document::open(const QString& file) {
             break;
           case View:
             {
-              ViewItem *i = GraphicsFactory::parse(xml, currentView);
+              ViewItem *i = GraphicsFactory::parse(xml, objectStore(), currentView);
               if (i) {
                 currentView->scene()->addItem(i);
               }

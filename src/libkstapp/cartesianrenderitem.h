@@ -26,7 +26,7 @@ class CartesianRenderItem : public PlotRenderItem
     virtual void saveInPlot(QXmlStreamWriter &xml);
     virtual void paintRelations(QPainter *painter);
 
-    bool configureFromXml(QXmlStreamReader &xml);
+    bool configureFromXml(QXmlStreamReader &xml, ObjectStore *store);
 };
 
 }

@@ -16,6 +16,7 @@
 #include "viewitemzorder.h"
 #include "plotitemmanager.h"
 #include "application.h"
+#include "objectstore.h"
 
 #include "plotrenderitemdialog.h"
 
@@ -205,8 +206,7 @@ void PlotRenderItem::save(QXmlStreamWriter &xml) {
 
 
 void PlotRenderItem::saveInPlot(QXmlStreamWriter &xml) {
-  //TODO Update with proper Object Tag.
-  //xml.writeAttribute("name", name());
+  xml.writeAttribute("name", name());
   xml.writeAttribute("type", QVariant(_type).toString());
   xml.writeAttribute("xzoommode", QVariant(_xAxisZoomMode).toString());
   xml.writeAttribute("yzoommode", QVariant(_yAxisZoomMode).toString());
@@ -222,14 +222,13 @@ void PlotRenderItem::saveInPlot(QXmlStreamWriter &xml) {
   xml.writeEndElement();
   foreach (RelationPtr relation, relationList()) {
     xml.writeStartElement("relation");
-    //TODO replace with with a valid object tag to correctly identify the relations.
-    xml.writeAttribute("name", relation->name());
+    xml.writeAttribute("tag", relation->tag().tagString());
     xml.writeEndElement();
   }
 }
 
 
-bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml) {
+bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
   bool validTag = true;
   QString primaryTag = xml.name().toString();
   QXmlStreamAttributes attrs = xml.attributes();
@@ -287,7 +286,13 @@ bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml) {
     setProjectionRect(QRectF(QPointF(x, y), QSizeF(w, h)));
     } else if (xml.isStartElement() && xml.name().toString() == "relation") {
       expectedEnd = xml.name().toString();
-      // TODO Process the relation.
+      attrs = xml.attributes();
+      ObjectTag tag = ObjectTag::fromString(attrs.value("tag").toString());
+      qDebug(tag.tagString());
+      RelationPtr relation = kst_cast<Relation>(store->retrieveObject(tag));
+      if (relation) {
+        addRelation(relation);
+      }
     } else if (xml.isEndElement()) {
       if (xml.name().toString() != expectedEnd) {
         validTag = false;

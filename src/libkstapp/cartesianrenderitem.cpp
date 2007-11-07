@@ -99,10 +99,10 @@ void CartesianRenderItem::saveInPlot(QXmlStreamWriter &xml) {
 }
 
 
-bool CartesianRenderItem::configureFromXml(QXmlStreamReader &xml) {
+bool CartesianRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
   bool validTag = false;
   if (xml.isStartElement() && xml.name().toString() == "cartesianrender") {
-    validTag = PlotRenderItem::configureFromXml(xml);
+    validTag = PlotRenderItem::configureFromXml(xml, store);
     if (validTag && xml.isEndElement() && xml.name().toString() == "cartesianrender") {
       validTag = true;
     }

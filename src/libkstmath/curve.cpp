@@ -504,6 +504,7 @@ void Curve::save(QXmlStreamWriter &s) {
   s.writeAttribute("hasbars", QVariant(HasBars).toString());
   s.writeAttribute("barstyle", QString::number(BarStyle));
   s.writeAttribute("ignoreautoscale", QVariant(_ignoreAutoScale).toString());
+  s.writeEndElement();
 }
 
 

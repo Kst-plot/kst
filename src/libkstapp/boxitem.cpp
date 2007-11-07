@@ -62,7 +62,7 @@ BoxItemFactory::~BoxItemFactory() {
 }
 
 
-ViewItem* BoxItemFactory::generateGraphics(QXmlStreamReader& xml, View *view, ViewItem *parent) {
+ViewItem* BoxItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *store, View *view, ViewItem *parent) {
   BoxItem *rc = 0;
   while (!xml.atEnd()) {
     bool validTag = true;
@@ -77,7 +77,7 @@ ViewItem* BoxItemFactory::generateGraphics(QXmlStreamReader& xml, View *view, Vi
       } else {
         Q_ASSERT(rc);
         if (!rc->parse(xml, validTag) && validTag) {
-          ViewItem *i = GraphicsFactory::parse(xml, view, rc);
+          ViewItem *i = GraphicsFactory::parse(xml, store, view, rc);
           if (!i) {
           }
         }

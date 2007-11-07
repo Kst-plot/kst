@@ -66,8 +66,7 @@ ViewItem::~ViewItem() {
 }
 
 void ViewItem::save(QXmlStreamWriter &xml) {
-//  TODO Add proper writing of ObjectTag
-//   xml.writeAttribute("name", name());
+  xml.writeAttribute("name", name());
   xml.writeStartElement("position");
   xml.writeAttribute("x", QVariant(pos().x()).toString());
   xml.writeAttribute("y", QVariant(pos().y()).toString());

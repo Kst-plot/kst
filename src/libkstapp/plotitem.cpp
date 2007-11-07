@@ -538,7 +538,7 @@ PlotItemFactory::~PlotItemFactory() {
 }
 
 
-ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, View *view, ViewItem *parent) {
+ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *store, View *view, ViewItem *parent) {
   PlotItem *rc = 0;
   while (!xml.atEnd()) {
     bool validTag = true;
@@ -574,17 +574,17 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, View *view, V
         // TODO add any specialized PlotItem Properties here.
       } else if (xml.name().toString() == "plotaxis") {
         Q_ASSERT(rc);
-        validTag = rc->plotAxisItem()->configureFromXml(xml);
+        validTag = rc->plotAxisItem()->configureFromXml(xml, store);
       } else if (xml.name().toString() == "cartesianrender") {
         Q_ASSERT(rc);
         PlotRenderItem * renderItem = rc->renderItem(PlotRenderItem::Cartesian);
         if (renderItem) {
-          validTag = renderItem->configureFromXml(xml);
+          validTag = renderItem->configureFromXml(xml, store);
         }
       } else {
         Q_ASSERT(rc);
         if (!rc->parse(xml, validTag) && validTag) {
-          ViewItem *i = GraphicsFactory::parse(xml, view, rc);
+          ViewItem *i = GraphicsFactory::parse(xml, store, view, rc);
           if (!i) {
           }
         }

@@ -148,7 +148,8 @@ void PlotAxisItem::saveInPlot(QXmlStreamWriter &xml) {
 }
 
 
-bool PlotAxisItem::configureFromXml(QXmlStreamReader &xml) {
+bool PlotAxisItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
+  Q_UNUSED(store);
   bool validTag = false;
   if (xml.isStartElement() && xml.name().toString() == "plotaxis") {
     QXmlStreamAttributes attrs = xml.attributes();

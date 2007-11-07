@@ -87,7 +87,7 @@ class PlotRenderItem : public ViewItem
     virtual void paint(QPainter *painter);
     virtual void paintRelations(QPainter *painter) = 0;
 
-    virtual bool configureFromXml(QXmlStreamReader &xml);
+    virtual bool configureFromXml(QXmlStreamReader &xml, ObjectStore *store);
 
     QString leftLabel() const;
     QString bottomLabel() const;
