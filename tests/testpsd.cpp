@@ -67,7 +67,7 @@ QDomDocument TestPSD::makeDOMElement(const QString& tag, const QString& val) {
   psdElement.appendChild(child);
 
   child = psdDOM.createElement("apodize");
-  text = psdDOM.createTextNode("0");
+  text = psdDOM.createTextNode("1");
   child.appendChild(text);
   psdElement.appendChild(child);
 

@@ -65,7 +65,7 @@ QDomDocument TestCSD::makeDOMElement(const QString& tag, const QString& val) {
   csdElement.appendChild(child);
 
   child = csdDOM.createElement("apodize");
-  text = csdDOM.createTextNode("0");
+  text = csdDOM.createTextNode("1");
   child.appendChild(text);
   csdElement.appendChild(child);
 
