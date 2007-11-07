@@ -15,6 +15,7 @@
 #include "builtinprimitives.h"
 #include "builtinobjects.h"
 #include "builtingraphics.h"
+#include "builtinrelations.h"
 
 #include "datagui.h"
 #include "datacollection.h"
@@ -30,6 +31,7 @@ Application::Application(int &argc, char **argv)
 
   Builtins::initPrimitives(); //libkst
   Builtins::initObjects();    //libkstmath
+  Builtins::initRelations();  //libkstmath
   Builtins::initGraphics();   //libkstapp
 
   //FIXME Set the datasource settings file...

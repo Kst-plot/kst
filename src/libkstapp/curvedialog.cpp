@@ -181,7 +181,7 @@ ObjectPtr CurveDialog::createNewDataObject() const {
   curve->setHasBars(_curveTab->curveAppearance()->showBars());
   curve->setLineWidth(_curveTab->curveAppearance()->lineWidth());
   curve->setLineStyle(_curveTab->curveAppearance()->lineStyle());
-  curve->pointType = _curveTab->curveAppearance()->pointType();
+  curve->setPointType(_curveTab->curveAppearance()->pointType());
   curve->setPointDensity(_curveTab->curveAppearance()->pointDensity());
   curve->setBarStyle(_curveTab->curveAppearance()->barStyle());
 

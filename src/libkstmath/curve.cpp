@@ -19,7 +19,7 @@
 #include "kst_i18n.h"
 #include <qdebug.h>
 #include <QPolygon>
-#include <QTextDocument>
+#include <QXmlStreamWriter>
 
 // application specific includes
 #include "dialoglauncher.h"
@@ -52,6 +52,7 @@
 namespace Kst {
 
 const QString Curve::staticTypeString = I18N_NOOP("Curve");
+const QString Curve::staticTypeTag = I18N_NOOP("curve");
 
 static const QLatin1String& COLOR_XVECTOR = QLatin1String("X");
 static const QLatin1String& COLOR_YVECTOR = QLatin1String("Y");
@@ -123,48 +124,48 @@ Curve::Curve(ObjectStore *store, QDomElement &e)
     if (!e.isNull()) { // the node was really an element.
       if (e.tagName() == "tag") {
         in_tag = e.text();
-      } else if (e.tagName() == "hasMinus") {
+      } else if (e.tagName() == "hasminus") {
         hasMinus = true;
-      } else if (e.tagName() == "xvectag") {
+      } else if (e.tagName() == "xvector") {
         xname = e.text();
-      } else if (e.tagName() == "yvectag") {
+      } else if (e.tagName() == "yvector") {
         yname = e.text();
-      } else if (e.tagName() == "exVectag") {
+      } else if (e.tagName() == "errorxvector") {
         exname = e.text();
         if (!hasMinus) {
           exminusname = e.text();
         }
-      } else if (e.tagName() == "eyVectag") {
+      } else if (e.tagName() == "erroryvector") {
         eyname = e.text();
         if (!hasMinus) {
           eyminusname = e.text();
         }
-      } else if (e.tagName() == "exMinusVectag") {
+      } else if (e.tagName() == "errorxminusvector") {
         exminusname = e.text();
-      } else if (e.tagName() == "eyMinusVectag") {
+      } else if (e.tagName() == "erroryminusvector") {
         eyminusname = e.text();
       } else if (e.tagName() == "color") {
         in_color.setNamedColor(e.text());
       } else if (e.tagName() == "legend") {
         setLegendText(e.text());
       // the following options are only needed to change from the default
-      } else if (e.tagName() == "hasLines") {
+      } else if (e.tagName() == "haslines") {
         HasLines = e.text() != "0";
-      } else if (e.tagName() == "hasPoints") {
+      } else if (e.tagName() == "haspoints") {
         HasPoints = e.text() != "0";
-      } else if (e.tagName() == "hasBars") {
+      } else if (e.tagName() == "hasbars") {
         HasBars = e.text() != "0";
-      } else if (e.tagName() == "pointType") {
+      } else if (e.tagName() == "pointtype") {
         pointType = e.text().toInt();
-      } else if (e.tagName() == "lineWidth") {
+      } else if (e.tagName() == "linewidth") {
         LineWidth = e.text().toInt();
-      } else if (e.tagName() == "lineStyle") {
+      } else if (e.tagName() == "linestyle") {
         LineStyle = e.text().toInt();
-      } else if (e.tagName() == "barStyle") {
+      } else if (e.tagName() == "barstyle") {
         BarStyle = e.text().toInt();
-      } else if (e.tagName() == "pointDensity") {
+      } else if (e.tagName() == "pointdensity") {
         PointDensity = e.text().toInt();
-      } else if (e.tagName() == "ignoreAutoScale") {
+      } else if (e.tagName() == "ignoreautoscale") {
         _ignoreAutoScale = true;
       }
     }
@@ -472,45 +473,37 @@ bool Curve::hasYMinusError() const {
 }
 
 
-void Curve::save(QTextStream &ts, const QString& indent) {
-  QString l2 = indent + "  ";
-  ts << indent << "<curve>" << endl;
-  ts << l2 << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
-  ts << l2 << "<xvectag>" << Qt::escape(_inputVectors[COLOR_XVECTOR]->tag().tagString()) << "</xvectag>" << endl;
-  ts << l2 << "<yvectag>" << Qt::escape(_inputVectors[COLOR_YVECTOR]->tag().tagString()) << "</yvectag>" << endl;
-  ts << l2 << "<legend>" << Qt::escape(legendText()) << "</legend>" << endl;
-  ts << l2 << "<hasMinus/>" << endl;
+void Curve::save(QXmlStreamWriter &s) {
+  s.writeStartElement(staticTypeTag);
+  s.writeAttribute("tag", tag().tagString());
+  s.writeAttribute("xvector", _inputVectors[COLOR_XVECTOR]->tag().tagString());
+  s.writeAttribute("yvector", _inputVectors[COLOR_YVECTOR]->tag().tagString());
+  s.writeAttribute("legend", legendText());
   if (_inputVectors.contains(EXVECTOR)) {
-    ts << l2 << "<exVectag>" << Qt::escape(_inputVectors[EXVECTOR]->tag().tagString()) << "</exVectag>" << endl;
+    s.writeAttribute("errorxvector", _inputVectors[EXVECTOR]->tag().tagString());
   }
   if (_inputVectors.contains(EYVECTOR)) {
-    ts << l2 << "<eyVectag>" << Qt::escape(_inputVectors[EYVECTOR]->tag().tagString()) << "</eyVectag>" << endl;
+    s.writeAttribute("erroryvector", _inputVectors[EYVECTOR]->tag().tagString());
   }
   if (_inputVectors.contains(EXMINUSVECTOR)) {
-    ts << l2 << "<exMinusVectag>" << Qt::escape(_inputVectors[EXMINUSVECTOR]->tag().tagString()) << "</exMinusVectag>" << endl;
+    s.writeAttribute("errorxminusvector", _inputVectors[EXMINUSVECTOR]->tag().tagString());
   }
   if (_inputVectors.contains(EYMINUSVECTOR)) {
-    ts << l2 << "<eyMinusVectag>" << Qt::escape(_inputVectors[EYMINUSVECTOR]->tag().tagString()) << "</eyMinusVectag>" << endl;
+    s.writeAttribute("erroryminusvector", _inputVectors[EYMINUSVECTOR]->tag().tagString());
   }
-  ts << l2 << "<color>" << Color.name() << "</color>" << endl;
-  if (HasLines) {
-    ts << l2 << "<hasLines/>" << endl;
-  }
-  ts << l2 << "<lineWidth>" << LineWidth << "</lineWidth>" << endl;
-  ts << l2 << "<lineStyle>" << LineStyle << "</lineStyle>" << endl;
-  if (HasPoints) {
-    ts << l2 << "<hasPoints/>" << endl;
-  }
-  ts << l2 << "<pointType>" << pointType << "</pointType>" << endl;
-  ts << l2 << "<pointDensity>" << PointDensity << "</pointDensity>" << endl;
-  if (HasBars) {
-    ts << l2 << "<hasBars/>" << endl;
-  }
-  ts << l2 << "<barStyle>" << BarStyle << "</barStyle>" << endl;
-  if (_ignoreAutoScale) {
-    ts << l2 << "<ignoreAutoScale/>" << endl;
-  }
-  ts << indent << "</curve>" << endl;
+  s.writeAttribute("color", Color.name());
+
+  s.writeAttribute("haslines", QVariant(HasLines).toString());
+  s.writeAttribute("linewidth", QString::number(LineWidth));
+  s.writeAttribute("linestyle", QString::number(LineStyle));
+
+  s.writeAttribute("haspoints", QVariant(HasPoints).toString());
+  s.writeAttribute("pointtype", QString::number(pointType));
+  s.writeAttribute("pointdensity", QString::number(PointDensity));
+
+  s.writeAttribute("hasbars", QVariant(HasBars).toString());
+  s.writeAttribute("barstyle", QString::number(BarStyle));
+  s.writeAttribute("ignoreautoscale", QVariant(_ignoreAutoScale).toString());
 }
 
 
@@ -800,6 +793,12 @@ void Curve::setPointDensity(int in_PointDensity) {
   PointDensity = in_PointDensity;
   setDirty();
   emit modifiedLegendEntry();
+}
+
+
+void Curve::setPointType(int in_PointType) {
+  pointType = in_PointType;
+  setDirty();
 }
 
 

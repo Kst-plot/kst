@@ -37,6 +37,7 @@ class KST_EXPORT Curve: public Relation {
   public:
     static const QString staticTypeString;
     const QString& typeString() const { return staticTypeString; }
+    static const QString staticTypeTag;
 
     virtual UpdateType update(int update_counter = -1);
     virtual QString propertyString() const;
@@ -72,7 +73,7 @@ class KST_EXPORT Curve: public Relation {
     void setYMinusError(VectorPtr new_ey);
 
     /** Save curve information */
-    void save(QTextStream &ts, const QString& indent = QString::null);
+    void save(QXmlStreamWriter &s);
 
     QString xLabel() const;
     QString yLabel() const;
@@ -110,6 +111,7 @@ class KST_EXPORT Curve: public Relation {
     virtual void setLineStyle(int in_LineStyle);
     virtual void setBarStyle( int in_BarStyle);
     virtual void setPointDensity(int in_PointDensity);
+    virtual void setPointType(int in_PointType);
 
     virtual int lineWidth()     const { return LineWidth; }
     virtual int lineStyle()     const { return LineStyle; }

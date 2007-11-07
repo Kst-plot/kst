@@ -24,10 +24,12 @@ QMAKE_EXT_YACC = .yacc
 SOURCES += \
     basicplugin.cpp \
     builtinobjects.cpp \
+    builtinrelations.cpp \
     colorsequence.cpp \
     csd.cpp \
     csdfactory.cpp \
     curve.cpp \
+    curvefactory.cpp \
     curvehint.cpp \
     curvepointsymbol.cpp \
     dataobject.cpp \
@@ -64,10 +66,12 @@ SOURCES += \
 HEADERS += \
     basicplugin.h \
     builtinobjects.h \
+    builtinrelations.h \
     colorsequence.h \
     csd.h \
     csdfactory.h \
     curve.h \
+    curvefactory.h \
     curvehint.h \
     curvepointsymbol.h \
     dialoglauncher.h \
