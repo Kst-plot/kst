@@ -81,6 +81,12 @@ bool EventMonitorTab::logELOG() const {
 }
 
 
+void EventMonitorTab::setObjectStore(ObjectStore *store) {
+  _vectorSelector->setObjectStore(store);
+  _scalarSelector->setObjectStore(store);
+}
+
+
 EventMonitorDialog::EventMonitorDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 

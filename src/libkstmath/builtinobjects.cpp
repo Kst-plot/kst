@@ -14,6 +14,7 @@
 #include "csdfactory.h"
 #include "histogramfactory.h"
 #include "psdfactory.h"
+#include "eventmonitorfactory.h"
 
 namespace Kst {
   namespace Builtins {
@@ -22,6 +23,7 @@ namespace Kst {
       new CSDFactory;
       new HistogramFactory;
       new PSDFactory;
+      new EventMonitorFactory;
     }
   }
 }

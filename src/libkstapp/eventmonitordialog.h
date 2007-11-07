@@ -29,6 +29,8 @@ class KST_EXPORT EventMonitorTab : public DataTab, Ui::EventMonitorTab {
     EventMonitorTab(QWidget *parent = 0);
     virtual ~EventMonitorTab();
 
+    void setObjectStore(ObjectStore *store);
+
     QString script() const;
     QString event() const;
     QString description() const;

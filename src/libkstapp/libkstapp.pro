@@ -50,11 +50,9 @@ SOURCES += \
     differentiatecurvesdialog.cpp \
     document.cpp \
     editmultiplewidget.cpp \
-    emailthread.cpp \
     ellipseitem.cpp \
     equationdialog.cpp \
     eventmonitordialog.cpp \
-    eventmonitorentry.cpp \
     exportgraphicsdialog.cpp \
     filltab.cpp \
     generaltab.cpp \
@@ -138,10 +136,8 @@ HEADERS += \
     document.h \
     editmultiplewidget.h \
     ellipseitem.h \
-    emailthread.h \
     equationdialog.h \
     eventmonitordialog.h \
-    eventmonitorentry.h \
     exportgraphicsdialog.h \
     filltab.h \
     generaltab.h \

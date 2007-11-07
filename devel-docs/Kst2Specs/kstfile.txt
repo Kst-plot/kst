@@ -30,6 +30,7 @@ File Format for Kst 2
     <equation tag="" expression="" xvector="" interpolate=""></equation>
     <histogram tag="" vector="" numberofbins="" realtimeautobin="" min="" max="" normalizationmode=""></histogram>
     <powerspectrum tag="" vector="" samplerate="" gaussiansigma="" average="" fftlength="" removemean="" apodize="" apodizefunction="" interpolateholes="" vectorunits="" rateunits="" outputtype=""></powerspectrum>
+    <eventmonitor tag="" equation="" description="" logdebug="" loglevel="" logemail="" logelog="" emailrecipients="" script=""></eventmonitor>
   </objects>
   <relations>
     <xycurve name="" xvector="" yvector="">

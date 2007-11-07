@@ -34,6 +34,7 @@ SOURCES += \
     dataobjectcollection.cpp \
     defaultnames.cpp \
     dialoglauncher.cpp \
+    emailthread.cpp \
     eparse.cpp \
     eparse-eh.cpp \
     enodes.cpp \
@@ -41,6 +42,8 @@ SOURCES += \
     escan.cpp \
     equation.cpp \
     equationfactory.cpp \
+    eventmonitorentry.cpp \
+    eventmonitorfactory.cpp \
     fftsg_h.c \
     histogram.cpp \
     histogramfactory.cpp \
@@ -75,8 +78,11 @@ HEADERS += \
     dataobjectcollection.h \
     dataobject.h \
     defaultnames.h \
+    emailthread.h \
     equation.h \
     equationfactory.h \
+    eventmonitorentry.h \
+    eventmonitorfactory.h \
     histogram.h \
     histogramfactory.h \
     image.h \

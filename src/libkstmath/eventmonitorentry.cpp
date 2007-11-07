@@ -39,6 +39,8 @@ extern struct yy_buffer_state *yy_scan_string(const char*);
 
 namespace Kst {
 
+const QString EventMonitorEntry::staticTypeTag = I18N_NOOP("eventmonitor");
+
 namespace {
   const int EventMonitorEventType = int(QEvent::User) + 2931;
   class EventMonitorEvent : public QEvent {
@@ -61,7 +63,7 @@ EventMonitorEntry::EventMonitorEntry(ObjectStore *store, const ObjectTag &in_tag
   _logEMail = false;
   _logELOG = false;
 
-  commonConstructor();
+  commonConstructor(store);
 }
 
 
@@ -75,7 +77,7 @@ EventMonitorEntry::EventMonitorEntry(ObjectStore *store, const ObjectTag &tag, c
   _level = level;
   _script = script;
 
-  commonConstructor();
+  commonConstructor(store);
 }
 
 EventMonitorEntry::EventMonitorEntry(ObjectStore *store, const QDomElement &e) : DataObject(store, e) {
@@ -104,7 +106,7 @@ EventMonitorEntry::EventMonitorEntry(ObjectStore *store, const QDomElement &e) :
         _logEMail = e.text().toInt();
       } else if (e.tagName() == "logelog") {
         _logELOG = e.text().toInt();
-      } else if (e.tagName() == "emailRecipients") {
+      } else if (e.tagName() == "emailrecipients") {
         _eMailRecipients = e.text();
       } else if (e.tagName() == "script") {
         _script = e.text();
@@ -113,7 +115,7 @@ EventMonitorEntry::EventMonitorEntry(ObjectStore *store, const QDomElement &e) :
     n = n.nextSibling();
   }
 
-  commonConstructor();
+  commonConstructor(store);
 
   // wait for the initial update, as we don't want to trigger elog entries
   // until we are sure the document is open.
@@ -121,7 +123,7 @@ EventMonitorEntry::EventMonitorEntry(ObjectStore *store, const QDomElement &e) :
 }
 
 
-void EventMonitorEntry::commonConstructor() {
+void EventMonitorEntry::commonConstructor(ObjectStore *store) {
   const int NS = 1;
 
   _numDone = 0;
@@ -131,14 +133,12 @@ void EventMonitorEntry::commonConstructor() {
   _typeString = staticTypeString;
   _type = "Event";
 
-  Q_ASSERT(store());
-
-  VectorPtr xv = store()->createObject<Vector>(ObjectTag("x", tag()));
+  VectorPtr xv = store->createObject<Vector>(ObjectTag("x", tag()));
   xv->resize(NS);
   xv->setProvider(this);
   _xVector = _outputVectors.insert(OUTXVECTOR, xv);
 
-  VectorPtr yv = store()->createObject<Vector>(ObjectTag("x", tag()));
+  VectorPtr yv = store->createObject<Vector>(ObjectTag("x", tag()));
   yv->resize(NS);
   yv->setProvider(this);
   _yVector = _outputVectors.insert(OUTYVECTOR, yv);
@@ -176,7 +176,7 @@ bool EventMonitorEntry::reparse() {
 
 
 void EventMonitorEntry::save(QXmlStreamWriter &xml) {
-  xml.writeStartElement("event");
+  xml.writeStartElement(staticTypeTag);
   xml.writeAttribute("tag", tag().tagString());
   xml.writeAttribute("equation", _event);
   xml.writeAttribute("description", _description);
@@ -184,7 +184,7 @@ void EventMonitorEntry::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("loglevel", QVariant(_level).toString());
   xml.writeAttribute("logemail", QVariant(_logEMail).toString());
   xml.writeAttribute("logelog", QVariant(_logELOG).toString());
-  xml.writeAttribute("emailRecipients", _eMailRecipients);
+  xml.writeAttribute("emailrecipients", _eMailRecipients);
   xml.writeAttribute("script", _script);
   xml.writeEndElement();
 }

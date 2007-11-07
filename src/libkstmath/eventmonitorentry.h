@@ -28,8 +28,9 @@ namespace Kst {
 
 class EventMonitorEntry : public DataObject {
   Q_OBJECT
-
   public:
+    static const QString staticTypeTag;
+
     UpdateType update(int updateCounter = -1);
     void save(QXmlStreamWriter &s);
     QString propertyString() const;
@@ -87,7 +88,7 @@ class EventMonitorEntry : public DataObject {
 
   private:
     void logImmediately(bool sendEvent = true);
-    void commonConstructor();
+    void commonConstructor(ObjectStore *store);
 
     static const QString OUTXVECTOR;
     static const QString OUTYVECTOR;

@@ -11,7 +11,7 @@
 
 #include <stdlib.h>
 
-#include <QTextDocument>
+#include <QXmlStreamWriter>
 
 #ifndef Q_WS_WIN32
 #include <unistd.h>
@@ -28,6 +28,7 @@
 namespace Kst {
 
 const QString BasicPlugin::staticTypeString = I18N_NOOP("Plugin");
+const QString BasicPlugin::staticTypeTag = I18N_NOOP("plugin");
 
 BasicPlugin::BasicPlugin(ObjectStore *store, const ObjectTag& tag)
 : DataObject(store, tag), _isFit(false) {
@@ -348,45 +349,51 @@ QString BasicPlugin::label(int precision) const {
 }
 
 
-void BasicPlugin::save(QTextStream& ts, const QString& indent) {
-  QString l2 = indent + "  ";
-  //The plugin name _must_ be the same as the entry in the .desktop file
-  ts << indent << "<plugin name=\"" << propertyString() << "\">" << endl;
-  ts << l2 << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
+
+void BasicPlugin::save(QXmlStreamWriter &s) {
+  s.writeStartElement(staticTypeTag);
+  s.writeAttribute("name", propertyString());
+  s.writeAttribute("tag", tag().tagString());
   for (VectorMap::Iterator i = _inputVectors.begin(); i != _inputVectors.end(); ++i) {
-    ts << l2 << "<ivector name=\"" << Qt::escape(i.key()) << "\">"
-        << Qt::escape(i.value()->tag().tagString())
-        << "</ivector>" << endl;
+    s.writeStartElement("ivector");
+    s.writeAttribute("name", i.key());
+    s.writeAttribute("tag", i.value()->tag().tagString());
+    s.writeEndElement();
   }
   for (ScalarMap::Iterator i = _inputScalars.begin(); i != _inputScalars.end(); ++i) {
-    ts << l2 << "<iscalar name=\"" << Qt::escape(i.key()) << "\">"
-        << Qt::escape(i.value()->tag().tagString())
-        << "</iscalar>" << endl;
+    s.writeStartElement("iscalar");
+    s.writeAttribute("name", i.key());
+    s.writeAttribute("tag", i.value()->tag().tagString());
+    s.writeEndElement();
   }
   for (StringMap::Iterator i = _inputStrings.begin(); i != _inputStrings.end(); ++i) {
-    ts << l2 << "<istring name=\"" << Qt::escape(i.key()) << "\">"
-        << Qt::escape(i.value()->tag().tagString())
-        << "</istring>" << endl;
+    s.writeStartElement("istring");
+    s.writeAttribute("name", i.key());
+    s.writeAttribute("tag", i.value()->tag().tagString());
+    s.writeEndElement();
   }
   for (VectorMap::Iterator i = _outputVectors.begin(); i != _outputVectors.end(); ++i) {
-    ts << l2 << "<ovector name=\"" << Qt::escape(i.key());
+    s.writeStartElement("ovector");
+    s.writeAttribute("name", i.key());
+    s.writeAttribute("tag", i.value()->tag().tagString());
     if (i.value()->isScalarList()) {
-      ts << "\" scalarList=\"1";
+      s.writeAttribute("scalarlist", "true");
     }
-    ts << "\">" << Qt::escape(i.value()->tag().name())  // FIXME: is this right?
-        << "</ovector>" << endl;
+    s.writeEndElement();
   }
   for (ScalarMap::Iterator i = _outputScalars.begin(); i != _outputScalars.end(); ++i) {
-    ts << l2 << "<oscalar name=\"" << Qt::escape(i.key()) << "\">"
-        << Qt::escape(i.value()->tag().name())  // FIXME: is this right?
-        << "</oscalar>" << endl;
+    s.writeStartElement("oscalar");
+    s.writeAttribute("name", i.key());
+    s.writeAttribute("tag", i.value()->tag().tagString());
+    s.writeEndElement();
   }
   for (StringMap::Iterator i = _outputStrings.begin(); i != _outputStrings.end(); ++i) {
-    ts << l2 << "<ostring name=\"" << Qt::escape(i.key()) << "\">"
-        << Qt::escape(i.value()->tag().name())  // FIXME: is this right?
-        << "</ostring>" << endl;
+    s.writeStartElement("ostring");
+    s.writeAttribute("name", i.key());
+    s.writeAttribute("tag", i.value()->tag().tagString());
+    s.writeEndElement();
   }
-  ts << indent << "</plugin>" << endl;
+  s.writeEndElement();
 }
 
 

@@ -25,6 +25,7 @@ class KST_EXPORT BasicPlugin : public DataObject {
   public:
     static const QString staticTypeString;
     const QString& typeString() const { return staticTypeString; }
+    static const QString staticTypeTag;
 
     //The implementation of the algorithm the plugin provides.
     //Operates on the inputVectors, inputScalars, and inputStrings
@@ -78,7 +79,7 @@ class KST_EXPORT BasicPlugin : public DataObject {
 
     //Regular virtual methods from DataObject
     void load(const QDomElement &e);
-    void save(QTextStream& ts, const QString& indent = QString::null);
+    virtual void save(QXmlStreamWriter &s);
 
     bool isFit() const { return _isFit; }
     // FIXME: remove this
