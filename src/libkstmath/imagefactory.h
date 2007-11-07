@@ -9,17 +9,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "builtinrelations.h"
-#include "curvefactory.h"
-#include "imagefactory.h"
+#ifndef IMAGEFACTORY_H
+#define IMAGEFACTORY_H
+
+#include "relationfactory.h"
 
 namespace Kst {
-  namespace Builtins {
-    void initRelations() {
-      new CurveFactory;
-      new ImageFactory;
-    }
-  }
+
+class ImageFactory : public RelationFactory {
+  public:
+    ImageFactory();
+    ~ImageFactory();
+    RelationPtr generateRelation(ObjectStore *store, QXmlStreamReader& stream);
+};
+
 }
+
+#endif
 
 // vim: ts=2 sw=2 et

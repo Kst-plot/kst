@@ -121,11 +121,9 @@ ObjectPtr CSDDialog::createNewDataObject() const {
   csd->update(0);
   csd->unlock();
 
-  Palette* newPalette = new Palette(_CSDTab->colorPalette()->selectedPalette());
-
   tag = _document->objectStore()->suggestObjectTag<Image>(csd->tag().tagString(), ObjectTag::globalTagContext);
   ImagePtr image = _document->objectStore()->createObject<Image>(tag);
-  image->changeToColorOnly(csd->outputMatrix(), 0, 1, true, newPalette->paletteData());
+  image->changeToColorOnly(csd->outputMatrix(), 0, 1, true, _CSDTab->colorPalette()->selectedPalette());
 
   image->writeLock();
   image->update(0);

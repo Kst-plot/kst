@@ -34,6 +34,7 @@ File Format for Kst 2
   </objects>
   <relations>
     <curve tag="" xvector="" yvector="" legend="" errorxvector="" erroryvector="" errorxminusvector="" erroryminusvector="" color="" haslines="" linewidth="" linestyle="" haspoints="" pointtype="" pointdensity="" hasbars="" barstyle="" ignoreautoscale=""></curve>
+    <image tag="" matrix="" legend="" palettename="" hascolormap="" lowerthreshold="" upperthreshold="" hascontourmap="" numcontourlines="" contourweight="" contourcolor="" autothreshold=""></image>
   </relations>
   <graphics>
     <view name="">

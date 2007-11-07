@@ -122,6 +122,11 @@ void ImageTab::updateEnabled(const bool checked) {
 }
 
 
+void ImageTab::setObjectStore(ObjectStore *store) {
+  _matrix->setObjectStore(store);
+}
+
+
 ImageDialog::ImageDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
@@ -157,7 +162,7 @@ ObjectPtr ImageDialog::createNewDataObject() const {
         _imageTab->lowerZ(),
         _imageTab->upperZ(),
         _imageTab->realTimeAutoThreshold(),
-        Palette(_imageTab->colorPalette()->selectedPalette()).paletteData());
+        _imageTab->colorPalette()->selectedPalette());
   } else if (_imageTab->contourOnly()) {
     image->changeToContourOnly(_imageTab->matrix(),
         _imageTab->numberOfContourLines(),
@@ -168,7 +173,7 @@ ObjectPtr ImageDialog::createNewDataObject() const {
         _imageTab->lowerZ(),
         _imageTab->upperZ(),
         _imageTab->realTimeAutoThreshold(),
-        Palette(_imageTab->colorPalette()->selectedPalette()).paletteData(),
+        _imageTab->colorPalette()->selectedPalette(),
         _imageTab->numberOfContourLines(),
         _imageTab->contourColor(),
         _imageTab->contourWeight());

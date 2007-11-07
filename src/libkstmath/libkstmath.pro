@@ -50,6 +50,7 @@ SOURCES += \
     histogram.cpp \
     histogramfactory.cpp \
     image.cpp \
+    imagefactory.cpp \
     labelparser.cpp \
     linestyle.cpp \
     objectdefaults.cpp \
@@ -90,6 +91,7 @@ HEADERS += \
     histogram.h \
     histogramfactory.h \
     image.h \
+    imagefactory.h \
     labelparser.h \
     linestyle.h \
     objectdefaults.h \

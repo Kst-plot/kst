@@ -21,13 +21,14 @@
 
 #include <QImage>
 #include <QPainter>
-#include <QTextDocument>
+#include <QXmlStreamWriter>
 
 #include <math.h>
 
 namespace Kst {
 
 const QString Image::staticTypeString = I18N_NOOP("Image");
+const QString Image::staticTypeTag = I18N_NOOP("image");
 
 static const QLatin1String& THEMATRIX = QLatin1String("THEMATRIX");
 
@@ -91,13 +92,7 @@ Image::Image(ObjectStore *store, const QDomElement& e) : Relation(store, e) {
   _zUpper = in_zUpper;
 
   if (_hasColorMap) {
-    PaletteData in_pal;
-    //maybe the palette doesn't exist anymore.  Generate a grayscale palette then.
-    for (int i = 0; i < 256; i++) {
-      in_pal.insert(i, QColor(i,i,i));
-    }
-    Debug::self()->log(i18n("Unable to find PaletteData %1.  Using a 256 color grayscale palette instead.").arg(in_paletteName), Debug::Warning);
-    _pal = in_pal;
+    _pal = Palette(in_paletteName);
   }
 
   if (!_hasColorMap) {
@@ -110,14 +105,14 @@ Image::Image(ObjectStore *store, const QDomElement& e) : Relation(store, e) {
 
 
 //constructor for colormap only
-Image::Image(ObjectStore *store, const ObjectTag &in_tag, MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const PaletteData &pal) : Relation(store, in_tag) {
+Image::Image(ObjectStore *store, const ObjectTag &in_tag, MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const QString &paletteName) : Relation(store, in_tag) {
   _inputMatrices[THEMATRIX] = in_matrix;
   _typeString = staticTypeString;
   _type = "Image";
   _zLower = lowerZ;
   _zUpper = upperZ;
   _autoThreshold = autoThreshold;
-  _pal = pal;
+  _pal = Palette(paletteName);
   _hasContourMap = false;
   _hasColorMap = true;
 
@@ -149,7 +144,7 @@ Image::Image(ObjectStore *store, const ObjectTag &in_tag,
                    double lowerZ,
                    double upperZ,
                    bool autoThreshold,
-                   const PaletteData &pal,
+                   const QString &paletteName,
                    int numContours,
                    const QColor& contourColor,
                    int contourWeight) :
@@ -165,7 +160,7 @@ Image::Image(ObjectStore *store, const ObjectTag &in_tag,
   _zLower = lowerZ;
   _zUpper = upperZ;
   _autoThreshold = autoThreshold;
-  _pal = pal;
+  _pal = Palette(paletteName);
   setDirty();
 }
 
@@ -174,31 +169,28 @@ Image::~Image() {
 }
 
 
-void Image::save(QTextStream &ts, const QString& indent) {
-  QString l2 = indent + "  ";
-  ts << indent << "<image>" << endl;
-  ts << l2 << "<tag>" << Qt::escape(tag().tagString()) << "</tag>" << endl;
+void Image::save(QXmlStreamWriter &s) {
+  s.writeStartElement(staticTypeTag);
+  s.writeAttribute("tag", tag().tagString());
   if (_inputMatrices.contains(THEMATRIX)) {
-    ts << l2 << "<matrixtag>" << Qt::escape(_inputMatrices[THEMATRIX]->tag().tagString()) << "</matrixtag>" << endl;
+    s.writeAttribute("matrix", _inputMatrices[THEMATRIX]->tag().tagString());
   }
-  ts << l2 << "<legend>" << Qt::escape(legendText()) << "</legend>" << endl;
-  ts << l2 << "<hascolormap>" << _hasColorMap << "</hascolormap>" <<endl;
+  s.writeAttribute("legend", legendText());
 
-//FIXME!!
-#if 0
-  if (!_pal.isEmpty()) {
-    ts << l2 << "<palettename>" << Qt::escape(_pal->name()) << "</palettename>" << endl;
+  if (!_pal.paletteData().isEmpty()) {
+    s.writeAttribute("palettename", _pal.paletteName());
   }
-#endif
 
-  ts << l2 << "<lowerthreshold>" << _zLower << "</lowerthreshold>" << endl;
-  ts << l2 << "<upperthreshold>" << _zUpper << "</upperthreshold>" << endl;
-  ts << l2 << "<hascontourmap>" << _hasContourMap << "</hascontourmap>" << endl;
-  ts << l2 << "<numcontourlines>" << _numContourLines << "</numcontourlines>" << endl;
-  ts << l2 << "<contourweight>" << _contourWeight << "</contourweight>" << endl;
-  ts << l2 << "<contourcolor>" << Qt::escape(_contourColor.name()) << "</contourcolor>" << endl;
-  ts << l2 << "<autothreshold>" << _autoThreshold << "</autothreshold>" << endl;
-  ts << indent << "</image>" << endl;
+  s.writeAttribute("hascolormap", QVariant(_hasColorMap).toString());
+  s.writeAttribute("lowerthreshold", QString::number(_zLower));
+  s.writeAttribute("upperthreshold", QString::number(_zUpper));
+
+  s.writeAttribute("hascontourmap", QVariant(_hasContourMap).toString());
+  s.writeAttribute("numcontourlines", QString::number(_numContourLines));
+  s.writeAttribute("contourweight", QString::number(_contourWeight));
+  s.writeAttribute("contourcolor", _contourColor.name());
+
+  s.writeAttribute("autothreshold", QVariant(_autoThreshold).toString());
 }
 
 
@@ -282,22 +274,22 @@ QColor Image::getMappedColor(double x, double y) {
     int index;
     if (_zUpper - _zLower != 0) {
       if (z > _zUpper) {
-        index = _pal.count() - 1;
+        index = _pal.paletteData().count() - 1;
       } else if (z < _zLower) {
         index = 0;
       } else {
-          index = (int)floor(((z - _zLower) * (_pal.count() - 1)) / (_zUpper - _zLower));
+          index = (int)floor(((z - _zLower) * (_pal.paletteData().count() - 1)) / (_zUpper - _zLower));
       }
     } else {
       index = 0;
     }
-    return _pal.value(index);
+    return _pal.paletteData().value(index);
   }
   return QColor();
 }
 
 
-void Image::setPalette(const PaletteData &pal) {
+void Image::setPalette(const Palette &pal) {
   _pal = pal;
 }
 
@@ -338,15 +330,15 @@ void Image::setThresholdToSpikeInsensitive(double per) {
 
 
 void Image::changeToColorOnly(MatrixPtr in_matrix, double lowerZ,
-    double upperZ, bool autoThreshold, const PaletteData &pal) {
-  if (_inputMatrices.contains(THEMATRIX)) {
-    _inputMatrices[THEMATRIX] = in_matrix;
-  }
+    double upperZ, bool autoThreshold, const QString &paletteName) {
+
+  _inputMatrices[THEMATRIX] = in_matrix;
+
   _zLower = lowerZ;
   _zUpper = upperZ;
   _autoThreshold = autoThreshold;
-  if (_pal != pal) {
-    _pal = pal;
+  if (_pal.paletteName() != paletteName) {
+    _pal = Palette(paletteName);
   }
   _hasColorMap = true;
   _hasContourMap = false;
@@ -356,37 +348,28 @@ void Image::changeToColorOnly(MatrixPtr in_matrix, double lowerZ,
 
 void Image::changeToContourOnly(MatrixPtr in_matrix, int numContours,
     const QColor& contourColor, int contourWeight) {
-  if (_inputMatrices.contains(THEMATRIX)) {
-    _inputMatrices[THEMATRIX] = in_matrix;
-  }
+  _inputMatrices[THEMATRIX] = in_matrix;
   _numContourLines = numContours;
   _contourWeight = contourWeight;
   _contourColor = contourColor;
   _hasColorMap = false;
   _hasContourMap = true;
 
-//FIXME
-#if 0
-  if (_pal) {
-    _lastPaletteName = _pal->name();
-  }
-#endif
-
   setDirty();
 }
 
 
 void Image::changeToColorAndContour(MatrixPtr in_matrix,
-    double lowerZ, double upperZ, bool autoThreshold, const PaletteData &pal,
+    double lowerZ, double upperZ, bool autoThreshold, const QString &paletteName,
     int numContours, const QColor& contourColor, int contourWeight) {
-  if (_inputMatrices.contains(THEMATRIX)) {
-    _inputMatrices[THEMATRIX] = in_matrix;
-  }
+
+  _inputMatrices[THEMATRIX] = in_matrix;
+
   _zLower = lowerZ;
   _zUpper = upperZ;
   _autoThreshold = autoThreshold;
-  if (_pal != pal) {
-    _pal = pal;
+  if (_pal.paletteName() != paletteName) {
+    _pal = Palette(paletteName);
   }
   _numContourLines = numContours;
   _contourWeight = contourWeight;
@@ -442,7 +425,7 @@ bool Image::getNearestZ(double x, double y, double& z) {
 
 
 QString Image::paletteName() const {
-  return _lastPaletteName;
+  return _pal.paletteName();
 }
 
 
@@ -826,12 +809,12 @@ void Image::yRange(double xFrom, double xTo, double* yMin, double* yMax) {
 
 
 void Image::paintLegendSymbol(Painter *p, const QRect& bound) {
-  if (hasColorMap() && !_pal.isEmpty()) {
+  if (hasColorMap() && !_pal.paletteData().isEmpty()) {
     int l = bound.left(), r = bound.right(), t = bound.top(), b = bound.bottom();
     // draw the color palette
     for (int i = l; i <= r; i++) {
-      int index = (int)floor(static_cast<double>(((i - l) * (_pal.count() - 1))) / (r - l));
-      QColor sliceColor = _pal.value(index).rgb();
+      int index = (int)floor(static_cast<double>(((i - l) * (_pal.paletteData().count() - 1))) / (r - l));
+      QColor sliceColor = _pal.paletteData().value(index).rgb();
       p->setPen(QPen(sliceColor, 0));
       p->drawLine(i, t, i, b);
     }

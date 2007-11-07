@@ -34,6 +34,8 @@ class KST_EXPORT ImageTab : public DataTab, Ui::ImageTab {
     CurvePlacement* curvePlacement() const;
     ColorPalette* colorPalette() const;
 
+    void setObjectStore(ObjectStore *store);
+
     bool realTimeAutoThreshold() const;
     bool colorOnly() const;
     bool contourOnly() const;
