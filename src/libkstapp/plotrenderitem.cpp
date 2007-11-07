@@ -448,6 +448,16 @@ void PlotRenderItem::createActions() {
   registerShortcut(_zoomYMaximum);
   connect(_zoomYMaximum, SIGNAL(triggered()), this, SLOT(zoomYMaximum()));
 
+  _zoomYUp= new QAction(tr("Y-Zoom Up"), this);
+  _zoomYUp->setShortcut(Qt::Key_Up);
+  registerShortcut(_zoomYUp);
+  connect(_zoomYUp, SIGNAL(triggered()), this, SLOT(zoomYUp()));
+
+  _zoomYDown= new QAction(tr("Y-Zoom Down"), this);
+  _zoomYDown->setShortcut(Qt::Key_Down);
+  registerShortcut(_zoomYDown);
+  connect(_zoomYDown, SIGNAL(triggered()), this, SLOT(zoomYDown()));
+
   _zoomYOut = new QAction(tr("Y-Zoom Out"), this);
   _zoomYOut->setShortcut(Qt::SHIFT+Qt::Key_Up);
   registerShortcut(_zoomYOut);
@@ -500,6 +510,8 @@ void PlotRenderItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 
   zoom.addAction(_zoomYLocalMaximum);
   zoom.addAction(_zoomYMaximum);
+  zoom.addAction(_zoomYUp);
+  zoom.addAction(_zoomYDown);
   zoom.addAction(_zoomYOut);
   zoom.addAction(_zoomYIn);
   zoom.addAction(_zoomNormalizeYtoX);
@@ -733,6 +745,20 @@ void PlotRenderItem::zoomYLocalMaximum() {
 void PlotRenderItem::zoomYMaximum() {
   qDebug() << "zoomYMaximum" << endl;
   ZoomCommand *cmd = new ZoomYMaximumCommand(this);
+  cmd->redo();
+}
+
+
+void PlotRenderItem::zoomYUp() {
+  qDebug() << "zoomYUp" << endl;
+  ZoomCommand *cmd = new ZoomYUpCommand(this);
+  cmd->redo();
+}
+
+
+void PlotRenderItem::zoomYDown() {
+  qDebug() << "zoomYDown" << endl;
+  ZoomCommand *cmd = new ZoomYDownCommand(this);
   cmd->redo();
 }
 
@@ -1274,6 +1300,48 @@ void ZoomYMaximumCommand::applyZoomTo(PlotRenderItem *item) {
                            item->projectionRect().width(),
                            compute.height()));
 
+  item->update();
+}
+
+
+/*
+ * Y axis zoom up. If the Y zoom mode is not
+ * Mean Centered, change to Fixed (expression).
+ *             new_ymin = ymin + (ymax - ymin)*0.1;
+ *             new_ymax = ymax + (ymax - ymin)*0.1;
+ */
+void ZoomYUpCommand::applyZoomTo(PlotRenderItem *item) {
+  if (item->yAxisZoomMode() != PlotRenderItem::MeanCentered)
+    item->setYAxisZoomMode(PlotRenderItem::FixedExpression);
+
+  QRectF compute = item->projectionRect();
+
+  qreal dy = compute.height() * 0.1;
+  compute.setTop(compute.top() + dy);
+  compute.setBottom(compute.bottom() + dy);
+
+  item->setProjectionRect(compute);
+  item->update();
+}
+
+
+/*
+ * Y axis zoom down. If the Y zoom mode is not
+ * Mean Centered, change to Fixed (expression).
+ *             new_ymin = ymin - (ymax - ymin)*0.10;
+ *             new_ymax = ymax - (ymax - ymin)*0.10;
+ */
+void ZoomYDownCommand::applyZoomTo(PlotRenderItem *item) {
+  if (item->yAxisZoomMode() != PlotRenderItem::MeanCentered)
+    item->setYAxisZoomMode(PlotRenderItem::FixedExpression);
+
+  QRectF compute = item->projectionRect();
+
+  qreal dy = compute.height() * 0.10;
+  compute.setTop(compute.top() - dy);
+  compute.setBottom(compute.bottom() - dy);
+
+  item->setProjectionRect(compute);
   item->update();
 }
 

@@ -113,6 +113,8 @@ public Q_SLOTS:
     void zoomLogX();
     void zoomYLocalMaximum();
     void zoomYMaximum();
+    void zoomYUp();
+    void zoomYDown();
     void zoomYOut();
     void zoomYIn();
     void zoomNormalizeYtoX();
@@ -182,6 +184,8 @@ public Q_SLOTS:
     QAction *_zoomLogX;
     QAction *_zoomYLocalMaximum;
     QAction *_zoomYMaximum;
+    QAction *_zoomYUp;
+    QAction *_zoomYDown;
     QAction *_zoomYOut;
     QAction *_zoomYIn;
     QAction *_zoomNormalizeYtoX;
@@ -330,6 +334,26 @@ class KST_EXPORT ZoomYMaximumCommand : public ZoomCommand
     ZoomYMaximumCommand(PlotRenderItem *item)
         : ZoomCommand(item, QObject::tr("Zoom Y Maximum")) {}
     virtual ~ZoomYMaximumCommand() {}
+
+    virtual void applyZoomTo(PlotRenderItem *item);
+};
+
+class KST_EXPORT ZoomYUpCommand : public ZoomCommand
+{
+  public:
+    ZoomYUpCommand(PlotRenderItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y Up")) {}
+    virtual ~ZoomYUpCommand() {}
+
+    virtual void applyZoomTo(PlotRenderItem *item);
+};
+
+class KST_EXPORT ZoomYDownCommand : public ZoomCommand
+{
+  public:
+    ZoomYDownCommand(PlotRenderItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y Down")) {}
+    virtual ~ZoomYDownCommand() {}
 
     virtual void applyZoomTo(PlotRenderItem *item);
 };
