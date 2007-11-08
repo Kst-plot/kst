@@ -34,6 +34,7 @@
 #include "scalar.h"
 
 class QXmlStreamWriter;
+class QXmlStreamAttributes;
 
 namespace KST {
   class DataSourcePlugin;
@@ -68,6 +69,7 @@ class KST_EXPORT DataSource : public Object {
 
     static SharedPtr<DataSource> loadSource(ObjectStore *store, const QString& filename, const QString& type = QString::null);
     static SharedPtr<DataSource> loadSource(ObjectStore *store, QDomElement& e);
+    static SharedPtr<DataSource> findOrLoadSource(ObjectStore *store, const QString& filename);
     static QStringList fieldListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
     static QStringList matrixListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
 
@@ -84,9 +86,11 @@ class KST_EXPORT DataSource : public Object {
 
     virtual const QString& typeString() const;
     static const QString staticTypeString;
+    static const QString staticTypeTag;
 
     bool hasConfigWidget() const;
     DataSourceConfigWidget *configWidget();
+    virtual void parseProperties(QXmlStreamAttributes &properties);
 
     // @since 1.1.0
     bool reusable() const;

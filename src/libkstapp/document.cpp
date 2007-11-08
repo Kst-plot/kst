@@ -77,7 +77,7 @@ bool Document::save(const QString& to) {
   xml.writeAttribute("version", "2.0");
 
   xml.writeStartElement("data");
-  foreach (DataSourcePtr s, objectStore()->getObjects<DataSource>()) {
+  foreach (DataSourcePtr s, objectStore()->dataSourceList()) {
     s->saveSource(xml);
   }
   xml.writeEndElement();

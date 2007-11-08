@@ -32,6 +32,7 @@
 #include <qspinbox.h>
 #include <qtextdocument.h>
 #include <QXmlStreamWriter>
+#include <QXmlStreamAttributes>
 
 #include <math_kst.h>
 #include "ascii.h"
@@ -94,29 +95,37 @@ class AsciiSource::Config {
     int _fieldsLine;
 
     void save(QXmlStreamWriter& s) {
+      s.writeStartElement("properties");
       if (_indexInterpretation != AsciiSource::Config::Unknown) {
-        s.writeStartElement("index");
         s.writeAttribute("vector", _indexVector);
         s.writeAttribute("interpretation", QString::number(int(_indexInterpretation)));
-        s.writeEndElement();
       }
-      s.writeStartElement("comment");
       s.writeAttribute("delimiters", _delimiters);
-      s.writeEndElement();
-      s.writeStartElement("columns");
-      s.writeAttribute("type", QString::number(int(_columnType)));
+
+      s.writeAttribute("columntype", QString::number(int(_columnType)));
       if (_columnType == Fixed) {
-        s.writeAttribute("width", QString::number(_columnWidth));
+        s.writeAttribute("columnwidth", QString::number(_columnWidth));
       } else if (_columnType == Custom) {
-        s.writeAttribute("delimiters", _columnDelimiter);
+        s.writeAttribute("columndelimiters", _columnDelimiter);
       }
-      s.writeEndElement();
-      s.writeStartElement("header");
-      s.writeAttribute("start", QString::number(_dataLine));
+
+      s.writeAttribute("headerstart", QString::number(_dataLine));
       if (_readFields) {
         s.writeAttribute("fields", QString::number(_fieldsLine));
       }
       s.writeEndElement();
+    }
+
+    void parseProperties(QXmlStreamAttributes &properties) {
+      _indexVector = properties.value("vector").toString();
+      _indexInterpretation = (Interpretation)properties.value("interpretation").toString().toInt();
+
+      _delimiters = properties.value("delimiters").toString();
+      _columnType = (ColumnType)properties.value("columntype").toString().toInt();
+      _columnDelimiter = properties.value("columndelimiters").toString().toInt();
+
+      _dataLine = properties.value("headerstart").toString().toInt();
+      _fieldsLine = properties.value("fields").toString().toInt();
     }
 
     void load(const QDomElement& e) {
@@ -168,7 +177,6 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   if (!type.isEmpty() && type != "ASCII") {
     return;
   }
-
   _config = new AsciiSource::Config;
   _config->read(cfg, filename);
   if (!e.isNull()) {
@@ -749,6 +757,11 @@ void AsciiSource::save(QXmlStreamWriter &s) {
 }
 
 
+void AsciiSource::parseProperties(QXmlStreamAttributes &properties) {
+  _config->parseProperties(properties);
+}
+
+
 bool AsciiSource::supportsTimeConversions() const {
   return false; //fieldList().contains(_config->_indexVector) && _config->_indexInterpretation != AsciiSource::Config::Unknown && _config->_indexInterpretation != AsciiSource::Config::INDEX;
 }
@@ -915,7 +928,6 @@ Kst::DataSource *AsciiPlugin::create(Kst::ObjectStore *store, QSettings *cfg,
                                             const QString &filename,
                                             const QString &type,
                                             const QDomElement &element) const {
-
   return new AsciiSource(store, cfg, filename, type, element);
 }
 

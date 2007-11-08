@@ -514,9 +514,6 @@ void DataMatrix::reload() {
         }
         _file = newsrc;
         _file->writeLock();
-        if (store()) {
-          store()->addObject<DataSource>(_file);
-        }
         reset();
       }
     }

@@ -166,11 +166,7 @@ void VectorTab::fileNameChanged(const QString &file) {
   _field->clear();
 
   Q_ASSERT(_store);
-  _dataSource = _store->dataSourceList().findReusableFileName(file);
-
-  if (!_dataSource) {
-    _dataSource = DataSource::loadSource(_store, file, QString());
-  }
+  _dataSource = DataSource::findOrLoadSource(_store, file);
 
   if (!_dataSource) {
     _field->setEnabled(false);

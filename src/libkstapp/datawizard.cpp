@@ -76,11 +76,7 @@ void DataWizardPageDataSource::sourceChanged(const QString& file) {
     return;
 
   Q_ASSERT(_store);
-  _dataSource = _store->dataSourceList().findReusableFileName(file);
-
-  if (!_dataSource) {
-    _dataSource = DataSource::loadSource(_store, file, QString());
-  }
+  _dataSource = DataSource::findOrLoadSource(_store, file);
 
   if (!_dataSource) {
     _pageValid = false;

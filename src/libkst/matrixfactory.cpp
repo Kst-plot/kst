@@ -204,11 +204,7 @@ PrimitivePtr DataMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStream
   }
 
   Q_ASSERT(store);
-  DataSourcePtr dataSource = store->dataSourceList().findReusableFileName(file);
-
-  if (!dataSource) {
-    dataSource = DataSource::loadSource(store, file, QString());
-  }
+  DataSourcePtr dataSource = DataSource::findOrLoadSource(store, file);
 
   if (!dataSource) {
     return 0; //Couldn't find a suitable datasource

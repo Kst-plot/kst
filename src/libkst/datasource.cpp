@@ -43,6 +43,7 @@
 namespace Kst {
 
 const QString DataSource::staticTypeString = I18N_NOOP("Data Source");
+const QString DataSource::staticTypeTag = I18N_NOOP("source");
 
 static QSettings *settingsObject = 0L;
 static QMap<QString,QString> urlMap;
@@ -234,14 +235,33 @@ DataSourcePtr DataSource::loadSource(ObjectStore *store, const QString& filename
     return new StdinSource(0, settingsObject);
   }
 #endif
-
   QString fn = obtainFile(filename);
   if (fn.isEmpty()) {
     return 0L;
   }
 
-  return findPluginFor(store, fn, type);
+  DataSourcePtr dataSource = findPluginFor(store, fn, type);
+  if (dataSource) {
+    store->addObject<DataSource>(dataSource);
+  }
+
+  return dataSource;
+
 }
+
+
+DataSourcePtr DataSource::findOrLoadSource(ObjectStore *store, const QString& filename) {
+  Q_ASSERT(store);
+  DataSourcePtr dataSource = store->dataSourceList().findReusableFileName(filename);
+
+  if (!dataSource) {
+    dataSource = DataSource::loadSource(store, filename);
+  }
+
+  return dataSource;
+}
+
+
 
 
 bool DataSource::hasConfigWidget() const {
@@ -659,6 +679,11 @@ void DataSource::saveSource(QXmlStreamWriter &s) {
   s.writeAttribute("file", name);
   save(s);
   s.writeEndElement();
+}
+
+
+void DataSource::parseProperties(QXmlStreamAttributes &properties) {
+  Q_UNUSED(properties);
 }
 
 

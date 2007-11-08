@@ -228,7 +228,15 @@ bool ObjectStore::removeObject(Object *o) {
 
   KstWriteLocker l(&this->_lock);
 
-  if (!_list.contains(o)) {
+  DataSourcePtr ds = kst_cast<DataSource>(o);
+  if (ds) {
+    if (!_dataSourceList.contains(ds)) {
+#if NAMEDEBUG > 1
+      qDebug() << "Trying to delete a non-existant data source from the store: " << ds->tag().tagString();
+#endif
+      return false;
+    }
+  } else if (!_list.contains(o)) {
 #if NAMEDEBUG > 1
     qDebug() << "Trying to delete a non-existant object from the store: " << o->tag().tagString();
 #endif
@@ -263,7 +271,11 @@ bool ObjectStore::removeObject(Object *o) {
 #if NAMEDEBUG > 2
     qDebug() << "  removing object from list";
 #endif
-    _list.removeAll(o);
+    if (ds) {
+      _dataSourceList.removeAll(ds);
+    } else {
+      _list.removeAll(o);
+    }
   }
 
   o->_store = 0;

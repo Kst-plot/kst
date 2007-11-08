@@ -57,6 +57,7 @@ class AsciiSource : public Kst::DataSource {
     QStringList matrixList() const;
 
     void save(QXmlStreamWriter &s);
+    void parseProperties(QXmlStreamAttributes &properties);
 
     bool isEmpty() const;
 

@@ -3,7 +3,8 @@ File Format for Kst 2
 
 <kst version="">
   <data>
-    <source name="" reader="">
+    <source tag="" reader="" file="">
+      <properties></properties>
     </source>
   </data>
   <variables>

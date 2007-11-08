@@ -13,6 +13,7 @@
 #include "qgetoptions.h"
 
 #include "builtinprimitives.h"
+#include "builtindatasources.h"
 #include "builtinobjects.h"
 #include "builtingraphics.h"
 #include "builtinrelations.h"
@@ -30,6 +31,7 @@ Application::Application(int &argc, char **argv)
   QCoreApplication::setApplicationName("Kst");
 
   Builtins::initPrimitives(); //libkst
+  Builtins::initDataSources(); //libkst
   Builtins::initObjects();    //libkstmath
   Builtins::initRelations();  //libkstmath
   Builtins::initGraphics();   //libkstapp

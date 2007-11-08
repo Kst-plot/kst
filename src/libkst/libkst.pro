@@ -15,12 +15,14 @@ INCLUDEPATH += \
 
 x11:!macx:PROCPS += sysinfo.c psversion.c
 SOURCES += \
+    builtindatasources.cpp \
     builtinprimitives.cpp \
     coredocument.cpp \
     datacollection.cpp \
     datamatrix.cpp \
     datasource.cpp \
     datasourcefactory.cpp \
+    datasourcepluginfactory.cpp \
     datavector.cpp \
     dateparser.cpp \
     debug.cpp \
@@ -57,6 +59,7 @@ SOURCES += \
 !win32:SOURCES += stdinsource.cpp
 
 HEADERS += \
+    builtindatasources.h \
     builtinprimitives.h \
     coredocument.h \
     datacollection.h \
@@ -64,6 +67,7 @@ HEADERS += \
     dataplugin.h \
     datasource.h \
     datasourcefactory.h \
+    datasourcepluginfactory.h \
     datavector.h \
     dateparser.h \
     debug.h \

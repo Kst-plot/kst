@@ -40,7 +40,7 @@ PrimitivePtr VectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();
     if (xml.isStartElement()) {
-      if (n == "vector") {
+      if (n == Vector::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
         tag = ObjectTag::fromString(attrs.value("tag").toString());
       } else if (n == "data") {
@@ -53,7 +53,7 @@ PrimitivePtr VectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
         return 0;
       }
     } else if (xml.isEndElement()) {
-      if (n == "vector") {
+      if (n == Vector::staticTypeTag) {
         break;
       } else {
         Debug::self()->log(QObject::tr("Error creating vector from Kst file."), Debug::Warning);
@@ -96,7 +96,7 @@ PrimitivePtr GeneratedVectorFactory::generatePrimitive(ObjectStore *store, QXmlS
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();
     if (xml.isStartElement()) {
-      if (n == "generatedvector") {
+      if (n == GeneratedVector::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
         tag = ObjectTag::fromString(attrs.value("tag").toString());
         min = attrs.value("min").toString().toDouble();
@@ -106,7 +106,7 @@ PrimitivePtr GeneratedVectorFactory::generatePrimitive(ObjectStore *store, QXmlS
         return 0;
       }
     } else if (xml.isEndElement()) {
-      if (n == "generatedvector") {
+      if (n == GeneratedVector::staticTypeTag) {
         break;
       } else {
         Debug::self()->log(QObject::tr("Error creating generated vector from Kst file."), Debug::Warning);
@@ -147,7 +147,7 @@ PrimitivePtr EditableVectorFactory::generatePrimitive(ObjectStore *store, QXmlSt
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();
     if (xml.isStartElement()) {
-      if (n == "editablevector") {
+      if (n == EditableVector::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
         tag = ObjectTag::fromString(attrs.value("tag").toString());
       } else if (n == "data") {
@@ -159,7 +159,7 @@ PrimitivePtr EditableVectorFactory::generatePrimitive(ObjectStore *store, QXmlSt
         return 0;
       }
     } else if (xml.isEndElement()) {
-      if (n == "editablevector") {
+      if (n == EditableVector::staticTypeTag) {
         break;
       } else {
         Debug::self()->log(QObject::tr("Error creating vector from Kst file."), Debug::Warning);
@@ -204,7 +204,7 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();
     if (xml.isStartElement()) {
-      if (n == "datavector") {
+      if (n == DataVector::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
         tag = ObjectTag::fromString(attrs.value("tag").toString());
 
@@ -226,7 +226,7 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
         return 0;
       }
     } else if (xml.isEndElement()) {
-      if (n == "datavector") {
+      if (n == DataVector::staticTypeTag) {
         break;
       } else {
         Debug::self()->log(QObject::tr("Error creating vector from Kst file."), Debug::Warning);
@@ -241,11 +241,7 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
   }
 
   Q_ASSERT(store);
-  DataSourcePtr dataSource = store->dataSourceList().findReusableFileName(file);
-
-  if (!dataSource) {
-    dataSource = DataSource::loadSource(store, file, QString());
-  }
+  DataSourcePtr dataSource = DataSource::findOrLoadSource(store, file);
 
   if (!dataSource) {
     return 0; //Couldn't find a suitable datasource
