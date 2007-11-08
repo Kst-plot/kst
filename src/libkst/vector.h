@@ -67,6 +67,8 @@ class Vector : public Primitive {
     friend class ObjectStore; // FIXME: remove this when VectorFactory is working
 
   public:
+    void change(QByteArray& data);
+
     inline int length() const { return _size; }
 
     /** Return V[i], interpolated/decimated to have ns_i total samples */

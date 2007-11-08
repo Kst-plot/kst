@@ -17,6 +17,7 @@
 #include "editablevector.h"
 #include "datavector.h"
 #include "datacollection.h"
+#include "objectstore.h"
 
 namespace Kst {
 
@@ -66,7 +67,14 @@ PrimitivePtr VectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
     return 0;
   }
 
-  return new Vector(store, tag, data);
+  VectorPtr vector = store->createObject<Vector>(tag);
+  vector->change(data);
+
+  vector->writeLock();
+  vector->update(0);
+  vector->unlock();
+
+  return vector;
 }
 
 
@@ -82,7 +90,6 @@ GeneratedVectorFactory::~GeneratedVectorFactory() {
 
 PrimitivePtr GeneratedVectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
   ObjectTag tag;
-  QByteArray data;
   double min, max;
   int count;
 
@@ -113,7 +120,14 @@ PrimitivePtr GeneratedVectorFactory::generatePrimitive(ObjectStore *store, QXmlS
     return 0;
   }
 
-  return new GeneratedVector(store, tag, data, min, max, count);
+  GeneratedVectorPtr vector = store->createObject<GeneratedVector>(tag);
+  vector->changeRange(min, max, count);
+
+  vector->writeLock();
+  vector->update(0);
+  vector->unlock();
+
+  return vector;
 }
 
 EditableVectorFactory::EditableVectorFactory()
@@ -159,7 +173,14 @@ PrimitivePtr EditableVectorFactory::generatePrimitive(ObjectStore *store, QXmlSt
     return 0;
   }
 
-  return new EditableVector(store, tag, data);
+  EditableVectorPtr vector = store->createObject<EditableVector>(tag);
+  vector->change(data);
+
+  vector->writeLock();
+  vector->update(0);
+  vector->unlock();
+
+  return vector;
 }
 
 
@@ -177,7 +198,7 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
   ObjectTag tag;
   QByteArray data;
   QString provider, file, field;
-  int start, count, skip;
+  int start, count, skip = -1;
   bool doAve;
 
   while (!xml.atEnd()) {
@@ -219,7 +240,33 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
     return 0;
   }
 
-  return new DataVector(store, tag, data, provider, file, field, start, count, skip, doAve);
+  Q_ASSERT(store);
+  DataSourcePtr dataSource = store->dataSourceList().findReusableFileName(file);
+
+  if (!dataSource) {
+    dataSource = DataSource::loadSource(store, file, QString());
+  }
+
+  if (!dataSource) {
+    return 0; //Couldn't find a suitable datasource
+  }
+
+  DataVectorPtr vector = store->createObject<DataVector>(tag);
+
+  vector->writeLock();
+  vector->change(dataSource, field,
+      start,
+      count,
+      skip,
+      (skip != -1),
+      doAve);
+
+  vector->update(0);
+  vector->unlock();
+
+  return vector;
+
+  return 0;
 }
 
 }

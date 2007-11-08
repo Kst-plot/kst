@@ -86,9 +86,6 @@ Vector::Vector(ObjectStore *store, const ObjectTag& tag, const QByteArray& data)
   _saveable = false;
   _saveData = false;
 
-  // Contructor used for restore.  Must add Object to Store.
-  store->addObject(this);
-
   sz = qMax((size_t)(INITSIZE), data.size()/sizeof(double));
 
   CreateScalars(store);
@@ -663,6 +660,22 @@ bool Vector::saveData() const {
 
 void Vector::setSaveData(bool save) {
   _saveData = save;
+}
+
+
+void Vector::change(QByteArray &data) {
+  if (!data.isEmpty()) {
+    _saveable = true;
+    _saveData = true;
+
+    int sz = qMax((size_t)(INITSIZE), data.size()/sizeof(double));
+    resize(sz, true);
+
+    QDataStream qds(data);
+    for (int i = 0; !qds.atEnd(); ++i) {
+      qds >> _v[i];
+    }
+  }
 }
 
 #undef ZERO_MEMORY
