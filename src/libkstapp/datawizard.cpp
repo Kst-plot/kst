@@ -599,7 +599,7 @@ void DataWizard::finished() {
     n_steps += _pageVectors->plotVectors()->count();
   }
 
-  VectorPtr xv;
+  DataVectorPtr xv;
 
   // only create x vector if needed
   if (_pageDataPresentation->createXAxisFromField()) {
@@ -610,23 +610,21 @@ void DataWizard::finished() {
     Q_ASSERT(_document && _document->objectStore());
     const ObjectTag tag = _document->objectStore()->suggestObjectTag<DataVector>(QString(), ds->tag());
 
-    DataVectorPtr vector = _document->objectStore()->createObject<DataVector>(tag);
+    xv = _document->objectStore()->createObject<DataVector>(tag);
 
-//FIXME All data looks good but this vector is being populated entirely with NAN.
-// Could be a problem with reloading of data.
-    vector->writeLock();
-    vector->change(ds, field,
+    xv->writeLock();
+    xv->change(ds, field,
         _pageDataPresentation->dataRange()->countFromEnd() ? -1 : startOffset,
         _pageDataPresentation->dataRange()->readToEnd() ? -1 : rangeCount,
         _pageDataPresentation->dataRange()->skip(),
         _pageDataPresentation->dataRange()->doSkip(),
         _pageDataPresentation->dataRange()->doFilter());
 
-    vector->update(0);
-    vector->unlock();
+    xv->update(0);
+    xv->unlock();
 
   } else {
-    xv = _pageDataPresentation->selectedVector();
+    xv = kst_cast<DataVector>(_pageDataPresentation->selectedVector());
   }
 
   // only create create the y-vectors
@@ -639,8 +637,6 @@ void DataWizard::finished() {
 
       DataVectorPtr vector = _document->objectStore()->createObject<DataVector>(tag);
 
-//FIXME All data looks good but this vector is being populated entirely with NAN.
-// Could be a problem with reloading of data.
       vector->writeLock();
       vector->change(ds, field,
           _pageDataPresentation->dataRange()->countFromEnd() ? -1 : startOffset,
@@ -683,7 +679,7 @@ void DataWizard::finished() {
           _pagePlot->createLayout(),
           _pagePlot->appendToLayout());
         cmd->createItem();
-  
+
         plotItem = static_cast<PlotItem*>(cmd->item());
         plotList.append(plotItem);
       }
@@ -751,49 +747,50 @@ void DataWizard::finished() {
   int ptype = 0;
   QList<PlotItem*>::iterator plotIterator = plotList.begin();
   for (DataVectorList::Iterator it = vectors.begin(); it != vectors.end(); ++it) {
-  if (_pageDataPresentation->plotData() || _pageDataPresentation->plotDataPSD()) {
-    color = ColorSequence::next();
-    colors.append(color);
+    if (_pageDataPresentation->plotData() || _pageDataPresentation->plotDataPSD()) {
+      color = ColorSequence::next();
+      colors.append(color);
 
-    DataVectorPtr vector = kst_cast<DataVector>(*it);
- 
-    Q_ASSERT(_document && _document->objectStore());
-    const ObjectTag tag = _document->objectStore()->suggestObjectTag<Curve>(QString(), ds->tag());
-    CurvePtr curve = _document->objectStore()->createObject<Curve>(tag);
+      DataVectorPtr vector = kst_cast<DataVector>(*it);
+      Q_ASSERT(vector);
 
-    curve->setXVector(xv);
-    curve->setYVector(vector);
-    curve->setXError(0);
-    curve->setYError(0);
-    curve->setXMinusError(0);
-    curve->setYMinusError(0);
-    curve->setColor(color);
-    curve->setHasPoints(_pagePlot->drawLinesAndPoints() || _pagePlot->drawPoints());
-    curve->setHasLines(_pagePlot->drawLinesAndPoints() || _pagePlot->drawLines());
-    curve->setLineWidth(Settings::globalSettings()->defaultLineWeight);
-    curve->pointType = ptype++ % KSTPOINT_MAXTYPE;
+      Q_ASSERT(_document && _document->objectStore());
+      const ObjectTag tag = _document->objectStore()->suggestObjectTag<Curve>(QString(), ds->tag());
+      CurvePtr curve = _document->objectStore()->createObject<Curve>(tag);
 
-    curve->writeLock();
-    curve->update(0);
-    curve->unlock();
+      curve->setXVector(xv);
+      curve->setYVector(vector);
+      curve->setXError(0);
+      curve->setYError(0);
+      curve->setXMinusError(0);
+      curve->setYMinusError(0);
+      curve->setColor(color);
+      curve->setHasPoints(_pagePlot->drawLinesAndPoints() || _pagePlot->drawPoints());
+      curve->setHasLines(_pagePlot->drawLinesAndPoints() || _pagePlot->drawLines());
+      curve->setLineWidth(Settings::globalSettings()->defaultLineWeight);
+      curve->pointType = ptype++ % KSTPOINT_MAXTYPE;
 
-    if (plotItem) {
-      PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
-      renderItem->addRelation(kst_cast<Relation>(curve));
-      plotItem->update();
-    }
+      curve->writeLock();
+      curve->update(0);
+      curve->unlock();
 
-    if (_pagePlot->curvePlacement() != DataWizardPagePlot::OnePlot) { 
-        // change plots if we are not onePlot
-        if (_pageDataPresentation->plotDataPSD()) { // if xy and psd
-          ++plotIterator;
-          if (plotList.indexOf(*plotIterator) >= (int)plotList.count()/2) {
+      if (*plotIterator) {
+        PlotRenderItem *renderItem = (*plotIterator)->renderItem(PlotRenderItem::Cartesian);
+        renderItem->addRelation(kst_cast<Relation>(curve));
+        (*plotIterator)->update();
+      }
+
+      if (_pagePlot->curvePlacement() != DataWizardPagePlot::OnePlot) { 
+          // change plots if we are not onePlot
+          if (_pageDataPresentation->plotDataPSD()) { // if xy and psd
+            ++plotIterator;
+            if (plotList.indexOf(*plotIterator) >= (int)plotList.count()/2) {
+              plotIterator = plotList.begin();
+            }
+          } else if (++plotIterator == plotList.end()) {
             plotIterator = plotList.begin();
           }
-        } else if (++plotIterator == plotList.end()) {
-          plotIterator = plotList.begin();
         }
-      }
       }
    }
 
@@ -813,20 +810,7 @@ void DataWizard::finished() {
 
     for (DataVectorList::Iterator it = vectors.begin(); it != vectors.end(); ++it) {
       if ((*it)->length() > 0) {
-        PlotItem *plotItem;
-        QList<PlotItem*>::iterator startPlot = plotIterator;
-        while (!plotItem) {
-          plotItem = static_cast<PlotItem*>(*plotIterator);
-          if (!plotItem) {
-            if (++plotIterator == plotList.end()) {
-              plotIterator = plotList.begin();
-            }
-            // If this is ever false, we have no valid 2D plots
-            // which means that someone wrote some incomplete code
-            // or something is really broken
-            Q_ASSERT(plotIterator != startPlot);
-          }
-        }
+
         Q_ASSERT(_document && _document->objectStore());
         const ObjectTag tag = _document->objectStore()->suggestObjectTag<Curve>(QString(), ds->tag());
         PSDPtr powerspectrum = _document->objectStore()->createObject<PSD>(tag);
@@ -871,12 +855,12 @@ void DataWizard::finished() {
         curve->update(0);
         curve->unlock();
 
-        if (plotItem) {
-          PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
+        if (*plotIterator) {
+          PlotRenderItem *renderItem = (*plotIterator)->renderItem(PlotRenderItem::Cartesian);
           renderItem->setXAxisLog(_pagePlot->PSDLogX());
           renderItem->setYAxisLog(_pagePlot->PSDLogY());
           renderItem->addRelation(kst_cast<Relation>(curve));
-          plotItem->update();
+          (*plotIterator)->update();
         }
 
         if (_pagePlot->curvePlacement() != DataWizardPagePlot::OnePlot) { 

@@ -412,5 +412,21 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+    <sender>_existingPlot</sender>
+    <signal>toggled(bool)</signal>
+    <receiver>_existingPlotName</receiver>
+    <slot>setEnabled(bool)</slot>
+    <hints>
+      <hint type="sourcelabel" >
+        <x>20</x>
+        <y>20</y>
+      </hint>
+      <hint type="destinationlabel" >
+        <x>20</x>
+        <y>20</y>
+      </hint>
+    </hints>
+  </connection>
  </connections>
 </ui>
