@@ -46,6 +46,7 @@ MatrixSelector::~MatrixSelector() {
 
 void MatrixSelector::setObjectStore(ObjectStore *store) {
   _store = store;
+  fillMatrices();;
 }
 
 

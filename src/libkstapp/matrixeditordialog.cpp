@@ -24,6 +24,7 @@ MatrixEditorDialog::MatrixEditorDialog(QWidget *parent, Document *doc)
   setupUi(this);
 
   connect(matrixSelector, SIGNAL(selectionChanged()), this, SLOT(matrixSelected()));
+  matrixSelector->setObjectStore(doc->objectStore());
 }
 
 

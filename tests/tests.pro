@@ -24,6 +24,7 @@ SOURCES += \
     main.cpp \
     testeditablematrix.cpp \
     testcsd.cpp \
+    testdatamatrix.cpp \
     testdatasource.cpp \
     testeqparser.cpp \
     testhistogram.cpp \
@@ -37,6 +38,7 @@ SOURCES += \
 HEADERS += \
     testeditablematrix.h \
     testcsd.h \
+    testdatamatrix.h \
     testdatasource.h \
     testhistogram.h \
     testeqparser.h \

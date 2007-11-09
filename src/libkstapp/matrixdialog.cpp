@@ -377,8 +377,8 @@ void MatrixTab::fileNameChanged(const QString &file) {
 
   _dataSource->readLock();
 
-  _field->addItems(_dataSource->fieldList());
-  _field->setEditable(!_dataSource->fieldListIsComplete());
+  _field->addItems(_dataSource->matrixList());
+  _field->setEditable(!_dataSource->fieldListIsComplete() && !_dataSource->matrixList().empty());
   _configure->setEnabled(_dataSource->hasConfigWidget());
 
   _dataSource->unlock();

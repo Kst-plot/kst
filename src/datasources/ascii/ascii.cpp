@@ -110,9 +110,8 @@ class AsciiSource::Config {
       }
 
       s.writeAttribute("headerstart", QString::number(_dataLine));
-      if (_readFields) {
-        s.writeAttribute("fields", QString::number(_fieldsLine));
-      }
+      s.writeAttribute("fields", QString::number(_fieldsLine));
+      s.writeAttribute("readfields", QVariant(_readFields).toString());
       s.writeEndElement();
     }
 
@@ -126,6 +125,7 @@ class AsciiSource::Config {
 
       _dataLine = properties.value("headerstart").toString().toInt();
       _fieldsLine = properties.value("fields").toString().toInt();
+      _readFields = QVariant(properties.value("readfields").toString()).toBool();
     }
 
     void load(const QDomElement& e) {
@@ -378,14 +378,14 @@ bool AsciiSource::fieldListIsComplete() const {
 
 
 bool AsciiSource::matrixDimensions(const QString& matrix, int* xDim, int* yDim) {
-  
+
   if (!isValidMatrix(matrix)) {
     return false;  
   }
 
   // total frames in the matrix
   int totalFrames = frameCount(matrix);
-  
+
   // y dimension is in the matrix name
   *yDim = matrix.section(',', 1,1).toInt();
   *xDim = totalFrames / (*yDim); // the last row doesn't count
@@ -738,7 +738,7 @@ QStringList AsciiSource::fieldList() const {
 
 QStringList AsciiSource::matrixList() const {
   if (_matrixList.isEmpty()) {
-    // for ascii data sources, matrix fields start with [MATRIXNAME,Y,x,y,w,l]  
+    // for ascii data sources, matrix fields start with [MATRIXNAME,Y,x,y,w,l]
     // where Y = size of y dimension
     //       x = x coordinate of minimum
     //       y = y coordinate of minimum
@@ -746,7 +746,7 @@ QStringList AsciiSource::matrixList() const {
     //       l = y step size
     _matrixList = fieldList().filter(QRegExp("^\\[\\w*,\\S*,\\S*,\\S*,\\S*,\\S*\\]$"));
   }
-  
+
   return _matrixList;
 }
 
