@@ -58,6 +58,10 @@ ScalarDialog::ScalarDialog(ObjectPtr dataObject, QWidget *parent)
   _scalarTab = new ScalarTab(this);
   addDataTab(_scalarTab);
 
+  if (editMode() == Edit) {
+    configureTab(dataObject);
+  }
+
   connect(_scalarTab, SIGNAL(valueChanged()), this, SLOT(updateButtons()));
   updateButtons();
 }
@@ -71,6 +75,12 @@ QString ScalarDialog::tagString() const {
   return DataDialog::tagString();
 }
 
+
+void ScalarDialog::configureTab(ObjectPtr object) {
+  if (ScalarPtr scalar = kst_cast<Scalar>(object)) {
+    _scalarTab->setValue(QString::number(scalar->value()));
+  }
+}
 
 void ScalarDialog::updateButtons() {
   _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(!_scalarTab->value().isEmpty());
@@ -113,8 +123,18 @@ ObjectPtr ScalarDialog::createNewDataObject() const {
 
 
 ObjectPtr ScalarDialog::editExistingDataObject() const {
-  qDebug() << "editExistingDataObject" << endl;
-  return 0;
+  if (ScalarPtr scalar = kst_cast<Scalar>(dataObject())) {
+    bool ok;
+    double value = _scalarTab->value().toDouble(&ok);
+    if (!ok) {
+      value = Equations::interpret(_document->objectStore(), _scalarTab->value().toLatin1(), &ok);
+    }
+
+    scalar->writeLock();
+    scalar->setValue(value);
+    scalar->unlock();
+  }
+  return dataObject();
 }
 
 }

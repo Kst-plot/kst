@@ -51,6 +51,9 @@ class KST_EXPORT ScalarDialog : public DataDialog {
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
 
+  private:
+    void configureTab(ObjectPtr object);
+
   private Q_SLOTS:
     void updateButtons();
 

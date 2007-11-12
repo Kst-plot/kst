@@ -102,6 +102,8 @@ void ScalarSelector::fillScalars() {
 
   if (current)
     setSelectedScalar(current);
+
+  _editScalar->setEnabled(_scalar->count() > 0);
 }
 
 }
