@@ -1,0 +1,18 @@
+in non-GL mode
+  -on a zoom, the axis labels are note fully redrawn until the mouse leaves the plot.
+Always:
+  -Tick labels are cut off at the top of the plot.  They should extend to their whole height.
+  
+In ctrl or shift zoom mode, the cursor should change, and the full horizontal or vertical dashed line should be shown immediately.  As it is now, the line isn't shown until a rect draw has begun. (not in spec - should be)
+
+If you zoom in far enough, the tick labels loose resolution, and don't automatically shift to base/offset mode.
+eg, range fro 99999.499 to 99999.5001 shows all ticks as 99999.5 
+
+Log mode does not change the axis into log axis.
+
+Vector Dialog:
+  autocompletion in file name selection widget
+
+Matrix: generate gradient is useless and can be removed from dialog.
+Scaling and translation should apply to any matrix.
+
