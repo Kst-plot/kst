@@ -361,8 +361,34 @@ ObjectPtr VectorDialog::createNewGeneratedVector() const {
 
 
 ObjectPtr VectorDialog::editExistingDataObject() const {
-  qDebug() << "editExistingDataObject" << endl;
-  return 0;
+  if (DataVectorPtr dataVector = kst_cast<DataVector>(dataObject())) {
+    const DataSourcePtr dataSource = _vectorTab->dataSource();
+
+    //FIXME better validation than this please...
+    if (!dataSource)
+      return 0;
+
+    const QString field = _vectorTab->field();
+    const DataRange *dataRange = _vectorTab->dataRange();
+
+    dataVector->writeLock();
+    dataVector->change(dataSource, field,
+      dataRange->countFromEnd() ? -1 : int(dataRange->start()),
+      dataRange->readToEnd() ? -1 : int(dataRange->range()),
+      dataRange->skip(),
+      dataRange->doSkip(),
+      dataRange->doFilter());
+    dataVector->update(0);
+    dataVector->unlock();
+  } else if (GeneratedVectorPtr generatedVector = kst_cast<GeneratedVector>(dataObject())) {
+    const qreal from = _vectorTab->from();
+    const qreal to = _vectorTab->to();
+    const int numberOfSamples = _vectorTab->numberOfSamples();
+    generatedVector->writeLock();
+    generatedVector->changeRange(from, to, numberOfSamples);
+    generatedVector->unlock();
+  }
+  return dataObject();
 }
 
 }
