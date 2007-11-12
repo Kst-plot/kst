@@ -118,6 +118,8 @@ void MatrixSelector::fillMatrices() {
 
   if (current)
     setSelectedMatrix(current);
+
+  _editMatrix->setEnabled(_matrix->count() > 0);
 }
 
 

@@ -36,7 +36,7 @@ class KST_EXPORT MatrixTab : public DataTab, Ui::MatrixTab {
     virtual ~MatrixTab();
 
     MatrixMode matrixMode() const { return _mode; }
-    void setMatrixMode(MatrixMode mode) { _mode = mode; }
+    void setMatrixMode(MatrixMode mode);
 
     //DataMatrix mode methods...
     DataSourcePtr dataSource() const;
@@ -110,6 +110,9 @@ class KST_EXPORT MatrixTab : public DataTab, Ui::MatrixTab {
     bool yReadToEnd() const;
     void setYReadToEnd(bool yReadToEnd);
 
+    void hideGeneratedOptions();
+    void hideDataOptions();
+
   Q_SIGNALS:
     void sourceChanged();
 
@@ -144,7 +147,7 @@ class KST_EXPORT MatrixDialog : public DataDialog {
   private:
     ObjectPtr createNewDataMatrix() const;
     ObjectPtr createNewGeneratedMatrix() const;
-
+    void configureTab(ObjectPtr vector);
 
   private Q_SLOTS:
     void updateButtons();

@@ -107,6 +107,22 @@ void MatrixTab::updateEnables() {
 }
 
 
+void MatrixTab::hideGeneratedOptions() {
+  _sourceGroup->setVisible(false);
+  _gradientGroup->setVisible(false);
+  _scalingGroup->setVisible(false);
+  setMaximumHeight(300);
+}
+
+
+void MatrixTab::hideDataOptions() {
+  _sourceGroup->setVisible(false);
+  _dataSourceGroup->setVisible(false);
+  _dataRangeGroup->setVisible(false);
+  setMaximumHeight(200);
+}
+
+
 DataSourcePtr MatrixTab::dataSource() const {
   return _dataSource;
 }
@@ -358,6 +374,13 @@ void MatrixTab::readFromSourceChanged() {
 }
 
 
+void MatrixTab::setMatrixMode(MatrixMode mode) {
+  _mode = mode;
+  _readFromSource->setChecked(mode == DataMatrix);
+  _generateGradient->setChecked(mode == GeneratedMatrix);
+}
+
+
 void MatrixTab::fileNameChanged(const QString &file) {
   QFileInfo info(file);
   if (!info.exists() || !info.isFile())
@@ -406,6 +429,10 @@ MatrixDialog::MatrixDialog(ObjectPtr dataObject, QWidget *parent)
   _matrixTab = new MatrixTab(_document->objectStore(), this);
   addDataTab(_matrixTab);
 
+  if (editMode() == Edit) {
+    configureTab(dataObject);
+  }
+
   connect(_matrixTab, SIGNAL(sourceChanged()), this, SLOT(updateButtons()));
   updateButtons();
 }
@@ -417,6 +444,41 @@ MatrixDialog::~MatrixDialog() {
 
 QString MatrixDialog::tagString() const {
   return DataDialog::tagString();
+}
+
+
+void MatrixDialog::configureTab(ObjectPtr matrix) {
+  if (DataMatrixPtr dataMatrix = kst_cast<DataMatrix>(matrix)) {
+    _matrixTab->setMatrixMode(MatrixTab::DataMatrix);
+    _matrixTab->setFile(dataMatrix->dataSource()->fileName());
+    _matrixTab->setDataSource(dataMatrix->dataSource());
+    _matrixTab->setField(dataMatrix->field());
+    _matrixTab->setXStartCountFromEnd(dataMatrix->xCountFromEnd());
+    _matrixTab->setYStartCountFromEnd(dataMatrix->yCountFromEnd());
+    _matrixTab->setXNumSteps(dataMatrix->xNumSteps());
+    _matrixTab->setYNumSteps(dataMatrix->yNumSteps());
+
+    _matrixTab->setXStart(dataMatrix->reqXStart());
+    _matrixTab->setYStart(dataMatrix->reqYStart());
+    _matrixTab->setXReadToEnd(dataMatrix->xReadToEnd());
+    _matrixTab->setYReadToEnd(dataMatrix->yReadToEnd());
+    _matrixTab->setSkip(dataMatrix->skip());
+    _matrixTab->setDoSkip(dataMatrix->doSkip());
+    _matrixTab->setDoAve(dataMatrix->doAverage());
+    _matrixTab->hideGeneratedOptions();
+  } else if (GeneratedMatrixPtr generatedMatrix = kst_cast<GeneratedMatrix>(matrix)) {
+    _matrixTab->setMatrixMode(MatrixTab::GeneratedMatrix);
+    _matrixTab->setNX(generatedMatrix->xNumSteps());
+    _matrixTab->setNY(generatedMatrix->yNumSteps());
+    _matrixTab->setMinX(generatedMatrix->minX());
+    _matrixTab->setMinY(generatedMatrix->minY());
+    _matrixTab->setStepX(generatedMatrix->xStepSize());
+    _matrixTab->setStepY(generatedMatrix->yStepSize());
+    _matrixTab->setGradientZAtMin(generatedMatrix->gradZMin());
+    _matrixTab->setGradientZAtMax(generatedMatrix->gradZMax());
+    _matrixTab->setXDirection(generatedMatrix->xDirection());
+    _matrixTab->hideDataOptions();
+  }
 }
 
 
@@ -529,8 +591,46 @@ ObjectPtr MatrixDialog::createNewGeneratedMatrix() const {
 
 
 ObjectPtr MatrixDialog::editExistingDataObject() const {
-  qDebug() << "editExistingDataObject" << endl;
-  return 0;
+  if (DataMatrixPtr dataMatrix = kst_cast<DataMatrix>(dataObject())) {
+    const DataSourcePtr dataSource = _matrixTab->dataSource();
+
+    //FIXME better validation than this please...
+    if (!dataSource)
+      return 0;
+
+    const QString field = _matrixTab->field();
+    const int skip = _matrixTab->skip();
+    const bool doAve = _matrixTab->doAve();
+    const bool doSkip = _matrixTab->doSkip();
+    const int xStart = _matrixTab->xStartCountFromEnd() ? -1 : _matrixTab->xStart();
+    const int yStart = _matrixTab->yStartCountFromEnd() ? -1 : _matrixTab->yStart();
+    const int xNumSteps = _matrixTab->xReadToEnd() ? -1 : _matrixTab->xNumSteps();
+    const int yNumSteps = _matrixTab->yReadToEnd() ? -1 : _matrixTab->yNumSteps();
+
+    dataMatrix->writeLock();
+    dataMatrix->change(dataSource, field,
+        xStart, yStart,
+        xNumSteps, yNumSteps,
+        doAve,
+        doSkip, skip);
+    dataMatrix->update(0);
+    dataMatrix->unlock();
+  } else if (GeneratedMatrixPtr generatedMatrix = kst_cast<GeneratedMatrix>(dataObject())) {
+    const uint nX = _matrixTab->nX();
+    const uint nY = _matrixTab->nY();
+    const double minX = _matrixTab->minX();
+    const double minY = _matrixTab->minY();
+    const double stepX = _matrixTab->stepX();
+    const double stepY = _matrixTab->stepY();
+    const double gradZMin = _matrixTab->gradientZAtMin();
+    const double gradZMax = _matrixTab->gradientZAtMax();
+    const bool xDirection =  _matrixTab->xDirection();
+
+    generatedMatrix->writeLock();
+    generatedMatrix->change(nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
+    generatedMatrix->unlock();
+  }
+  return dataObject();
 }
 
 }
