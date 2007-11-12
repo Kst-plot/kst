@@ -29,6 +29,8 @@
 #include "datacollection.h"
 #include "dataobjectcollection.h"
 
+#include <QPushButton>
+
 namespace Kst {
 
 PowerSpectrumTab::PowerSpectrumTab(QWidget *parent)
@@ -37,6 +39,7 @@ PowerSpectrumTab::PowerSpectrumTab(QWidget *parent)
   setupUi(this);
   setTabTitle(tr("Power Spectrum"));
 
+  connect(_vector, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
 }
 
 
@@ -46,6 +49,11 @@ PowerSpectrumTab::~PowerSpectrumTab() {
 
 VectorPtr PowerSpectrumTab::vector() const {
   return _vector->selectedVector();
+}
+
+
+void PowerSpectrumTab::selectionChanged() {
+  emit vectorChanged();
 }
 
 
@@ -80,7 +88,8 @@ PowerSpectrumDialog::PowerSpectrumDialog(ObjectPtr dataObject, QWidget *parent)
   _powerSpectrumTab = new PowerSpectrumTab(this);
   addDataTab(_powerSpectrumTab);
 
-  //FIXME need to do validation to enable/disable ok button...
+  connect(_powerSpectrumTab, SIGNAL(vectorChanged()), this, SLOT(updateButtons()));
+  updateButtons();
 }
 
 
@@ -90,6 +99,11 @@ PowerSpectrumDialog::~PowerSpectrumDialog() {
 
 QString PowerSpectrumDialog::tagString() const {
   return DataDialog::tagString();
+}
+
+
+void PowerSpectrumDialog::updateButtons() {
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_powerSpectrumTab->vector());
 }
 
 

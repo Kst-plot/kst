@@ -23,6 +23,8 @@
 #include "document.h"
 #include "objectstore.h"
 
+#include <QPushButton>
+
 namespace Kst {
 
 EquationTab::EquationTab(QWidget *parent)
@@ -34,10 +36,18 @@ EquationTab::EquationTab(QWidget *parent)
   populateFunctionList();
 
   _curvePlacement->setExistingPlots(Data::self()->plotList());
+
+  connect(_xVectors, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
+  connect(_equation, SIGNAL(textChanged(const QString &)), this, SLOT(selectionChanged()));
 }
 
 
 EquationTab::~EquationTab() {
+}
+
+
+void EquationTab::selectionChanged() {
+  emit optionsChanged();
 }
 
 
@@ -143,7 +153,8 @@ EquationDialog::EquationDialog(ObjectPtr dataObject, QWidget *parent)
   _equationTab = new EquationTab(this);
   addDataTab(_equationTab);
 
-  //FIXME need to do validation to enable/disable ok button...
+  connect(_equationTab, SIGNAL(optionsChanged()), this, SLOT(updateButtons()));
+  updateButtons();
 }
 
 
@@ -153,6 +164,11 @@ EquationDialog::~EquationDialog() {
 
 QString EquationDialog::tagString() const {
   return DataDialog::tagString();
+}
+
+
+void EquationDialog::updateButtons() {
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_equationTab->xVector() && !_equationTab->equation().isEmpty());
 }
 
 

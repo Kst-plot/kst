@@ -45,7 +45,10 @@ class KST_EXPORT HistogramTab : public DataTab, Ui::HistogramTab {
   private Q_SLOTS:
     void generateAutoBin();
     void updateButtons();
-  private:
+    void selectionChanged();
+
+  Q_SIGNALS:
+    void vectorChanged();
 };
 
 class KST_EXPORT HistogramDialog : public DataDialog {
@@ -58,6 +61,9 @@ class KST_EXPORT HistogramDialog : public DataDialog {
     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
+
+  private Q_SLOTS:
+    void updateButtons();
 
   private:
     HistogramTab *_histogramTab;

@@ -28,10 +28,16 @@ EventMonitorTab::EventMonitorTab(QWidget *parent)
 
   setupUi(this);
   setTabTitle(tr("Event Monitor"));
+  connect(_equation, SIGNAL(textChanged(const QString &)), this, SLOT(selectionChanged()));
 }
 
 
 EventMonitorTab::~EventMonitorTab() {
+}
+
+
+void EventMonitorTab::selectionChanged() {
+  emit optionsChanged();
 }
 
 
@@ -98,7 +104,8 @@ EventMonitorDialog::EventMonitorDialog(ObjectPtr dataObject, QWidget *parent)
   _eventMonitorTab = new EventMonitorTab(this);
   addDataTab(_eventMonitorTab);
 
-  //FIXME need to do validation to enable/disable ok button...
+  connect(_eventMonitorTab, SIGNAL(optionsChanged()), this, SLOT(updateButtons()));
+  updateButtons();
 }
 
 
@@ -108,6 +115,11 @@ EventMonitorDialog::~EventMonitorDialog() {
 
 QString EventMonitorDialog::tagString() const {
   return DataDialog::tagString();
+}
+
+
+void EventMonitorDialog::updateButtons() {
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(!_eventMonitorTab->event().isEmpty());
 }
 
 

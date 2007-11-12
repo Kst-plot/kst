@@ -39,6 +39,7 @@ HistogramTab::HistogramTab(QWidget *parent)
 
   connect(AutoBin, SIGNAL(clicked()), this, SLOT(generateAutoBin()));
   connect(_realTimeAutoBin, SIGNAL(clicked()), this, SLOT(updateButtons()));
+  connect(_vector, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
 
   _curvePlacement->setExistingPlots(Data::self()->plotList());
   _curveAppearance->setShowLines(false);
@@ -54,6 +55,11 @@ HistogramTab::HistogramTab(QWidget *parent)
 
 
 HistogramTab::~HistogramTab() {
+}
+
+
+void HistogramTab::selectionChanged() {
+  emit vectorChanged();
 }
 
 
@@ -144,7 +150,8 @@ HistogramDialog::HistogramDialog(ObjectPtr dataObject, QWidget *parent)
   _histogramTab = new HistogramTab(this);
   addDataTab(_histogramTab);
 
-  //FIXME need to do validation to enable/disable ok button...
+  connect(_histogramTab, SIGNAL(vectorChanged()), this, SLOT(updateButtons()));
+  updateButtons();
 }
 
 
@@ -154,6 +161,11 @@ HistogramDialog::~HistogramDialog() {
 
 QString HistogramDialog::tagString() const {
   return DataDialog::tagString();
+}
+
+
+void HistogramDialog::updateButtons() {
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_histogramTab->vector());
 }
 
 

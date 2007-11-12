@@ -41,7 +41,10 @@ class KST_EXPORT EventMonitorTab : public DataTab, Ui::EventMonitorTab {
     QString emailRecipients() const;
 
   private Q_SLOTS:
-  private:
+    void selectionChanged();
+
+  Q_SIGNALS:
+    void optionsChanged();
 };
 
 class KST_EXPORT EventMonitorDialog : public DataDialog {
@@ -54,6 +57,9 @@ class KST_EXPORT EventMonitorDialog : public DataDialog {
     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
+
+  private Q_SLOTS:
+    void updateButtons();
 
   private:
     EventMonitorTab *_eventMonitorTab;

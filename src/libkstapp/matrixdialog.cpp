@@ -350,10 +350,11 @@ void MatrixTab::readFromSourceChanged() {
   else
     setMatrixMode(GeneratedMatrix);
 
-   _dataSourceGroup->setEnabled(_readFromSource->isChecked());
-   _dataRangeGroup->setEnabled(_readFromSource->isChecked());
-   _gradientGroup->setEnabled(!_readFromSource->isChecked());
-   _scalingGroup->setEnabled(!_readFromSource->isChecked());
+  _dataSourceGroup->setEnabled(_readFromSource->isChecked());
+  _dataRangeGroup->setEnabled(_readFromSource->isChecked());
+  _gradientGroup->setEnabled(!_readFromSource->isChecked());
+  _scalingGroup->setEnabled(!_readFromSource->isChecked());
+  emit sourceChanged();
 }
 
 
@@ -382,6 +383,8 @@ void MatrixTab::fileNameChanged(const QString &file) {
   _configure->setEnabled(_dataSource->hasConfigWidget());
 
   _dataSource->unlock();
+
+  emit sourceChanged();
 }
 
 
@@ -403,7 +406,8 @@ MatrixDialog::MatrixDialog(ObjectPtr dataObject, QWidget *parent)
   _matrixTab = new MatrixTab(_document->objectStore(), this);
   addDataTab(_matrixTab);
 
-  //FIXME need to do validation to enable/disable ok button...
+  connect(_matrixTab, SIGNAL(sourceChanged()), this, SLOT(updateButtons()));
+  updateButtons();
 }
 
 
@@ -413,6 +417,11 @@ MatrixDialog::~MatrixDialog() {
 
 QString MatrixDialog::tagString() const {
   return DataDialog::tagString();
+}
+
+
+void MatrixDialog::updateButtons() {
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_matrixTab->matrixMode() == MatrixTab::GeneratedMatrix || !_matrixTab->field().isEmpty());
 }
 
 

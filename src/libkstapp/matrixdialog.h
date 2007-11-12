@@ -110,6 +110,9 @@ class KST_EXPORT MatrixTab : public DataTab, Ui::MatrixTab {
     bool yReadToEnd() const;
     void setYReadToEnd(bool yReadToEnd);
 
+  Q_SIGNALS:
+    void sourceChanged();
+
   private Q_SLOTS:
     void readFromSourceChanged();
     void fileNameChanged(const QString &file);
@@ -141,6 +144,10 @@ class KST_EXPORT MatrixDialog : public DataDialog {
   private:
     ObjectPtr createNewDataMatrix() const;
     ObjectPtr createNewGeneratedMatrix() const;
+
+
+  private Q_SLOTS:
+    void updateButtons();
 
   private:
     MatrixTab *_matrixTab;

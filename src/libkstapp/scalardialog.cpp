@@ -14,6 +14,8 @@
 #include "document.h"
 #include "objectstore.h"
 
+#include <QPushButton>
+
 namespace Kst {
 
 ScalarTab::ScalarTab(QWidget *parent)
@@ -21,6 +23,8 @@ ScalarTab::ScalarTab(QWidget *parent)
 
   setupUi(this);
   setTabTitle(tr("Scalar"));
+
+  connect(_scalarValue, SIGNAL(textChanged(const QString&)), this, SLOT(textChanged()));
 }
 
 
@@ -38,6 +42,11 @@ void ScalarTab::setValue(const QString &value) {
 }
 
 
+void ScalarTab::textChanged() {
+  emit valueChanged();
+}
+
+
 ScalarDialog::ScalarDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
@@ -48,6 +57,9 @@ ScalarDialog::ScalarDialog(ObjectPtr dataObject, QWidget *parent)
 
   _scalarTab = new ScalarTab(this);
   addDataTab(_scalarTab);
+
+  connect(_scalarTab, SIGNAL(valueChanged()), this, SLOT(updateButtons()));
+  updateButtons();
 }
 
 
@@ -57,6 +69,11 @@ ScalarDialog::~ScalarDialog() {
 
 QString ScalarDialog::tagString() const {
   return DataDialog::tagString();
+}
+
+
+void ScalarDialog::updateButtons() {
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(!_scalarTab->value().isEmpty());
 }
 
 

@@ -31,6 +31,8 @@
 #include "datacollection.h"
 #include "dataobjectcollection.h"
 
+#include <QPushButton>
+
 namespace Kst {
 
 CSDTab::CSDTab(QWidget *parent)
@@ -38,11 +40,16 @@ CSDTab::CSDTab(QWidget *parent)
 
   setupUi(this);
   setTabTitle(tr("Cumulative Spectral Decay"));
-
+  connect(_vector, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
 }
 
 
 CSDTab::~CSDTab() {
+}
+
+
+void CSDTab::selectionChanged() {
+  emit optionsChanged();
 }
 
 
@@ -87,7 +94,8 @@ CSDDialog::CSDDialog(ObjectPtr dataObject, QWidget *parent)
   _CSDTab = new CSDTab(this);
   addDataTab(_CSDTab);
 
-  //FIXME need to do validation to enable/disable ok button...
+  connect(_CSDTab, SIGNAL(optionsChanged()), this, SLOT(updateButtons()));
+  updateButtons();
 }
 
 
@@ -97,6 +105,11 @@ CSDDialog::~CSDDialog() {
 
 QString CSDDialog::tagString() const {
   return DataDialog::tagString();
+}
+
+
+void CSDDialog::updateButtons() {
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_CSDTab->vector());
 }
 
 

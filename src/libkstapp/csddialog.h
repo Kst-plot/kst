@@ -40,9 +40,11 @@ class KST_EXPORT CSDTab : public DataTab, Ui::CSDTab {
 
     int windowSize() const;
 
-
   private Q_SLOTS:
-  private:
+    void selectionChanged();
+
+  Q_SIGNALS:
+    void optionsChanged();
 };
 
 class KST_EXPORT CSDDialog : public DataDialog {
@@ -55,6 +57,9 @@ class KST_EXPORT CSDDialog : public DataDialog {
     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
+
+  private Q_SLOTS:
+    void updateButtons();
 
   private:
     CSDTab *_CSDTab;

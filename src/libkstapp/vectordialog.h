@@ -66,6 +66,9 @@ class KST_EXPORT VectorTab : public DataTab, Ui::VectorTab {
     void hideGeneratedOptions();
     void hideDataOptions();
 
+  Q_SIGNALS:
+    void sourceChanged();
+
   private Q_SLOTS:
     void readFromSourceChanged();
     void fileNameChanged(const QString &file);
@@ -92,6 +95,9 @@ class KST_EXPORT VectorDialog : public DataDialog {
     ObjectPtr createNewDataVector() const;
     ObjectPtr createNewGeneratedVector() const;
     void configureTab(ObjectPtr vector);
+
+  private Q_SLOTS:
+    void updateButtons();
 
   private:
     VectorTab *_vectorTab;

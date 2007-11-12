@@ -32,6 +32,12 @@ class KST_EXPORT ScalarTab : public DataTab, Ui::ScalarTab {
 
     QString value() const;
     void setValue(const QString &value);
+
+  Q_SIGNALS:
+    void valueChanged();
+
+  private Q_SLOTS:
+    void textChanged();
 };
 
 class KST_EXPORT ScalarDialog : public DataDialog {
@@ -44,6 +50,9 @@ class KST_EXPORT ScalarDialog : public DataDialog {
     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
+
+  private Q_SLOTS:
+    void updateButtons();
 
   private:
     ScalarTab *_scalarTab;

@@ -38,9 +38,11 @@ class KST_EXPORT PowerSpectrumTab : public DataTab, Ui::PowerSpectrumTab {
     CurvePlacement* curvePlacement() const;
     FFTOptions* FFTOptionsWidget() const;
 
+  private Q_SLOTS:    
+    void selectionChanged();
 
-  private Q_SLOTS:
-  private:
+  Q_SIGNALS:
+    void vectorChanged();
 };
 
 class KST_EXPORT PowerSpectrumDialog : public DataDialog {
@@ -53,6 +55,9 @@ class KST_EXPORT PowerSpectrumDialog : public DataDialog {
     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
+
+  private Q_SLOTS:
+    void updateButtons();
 
   private:
     PowerSpectrumTab *_powerSpectrumTab;

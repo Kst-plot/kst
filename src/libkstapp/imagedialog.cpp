@@ -41,10 +41,17 @@ ImageTab::ImageTab(QWidget *parent)
   connect(_colorOnly, SIGNAL(toggled(const bool&)), this, SLOT(updateEnabled(const bool&)));
   connect(_colorAndContour, SIGNAL(toggled(const bool&)), this, SLOT(updateEnabled(const bool&)));
   connect(_contourOnly, SIGNAL(toggled(const bool&)), this, SLOT(updateEnabled(const bool&)));
+
+  connect(_matrix, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
 }
 
 
 ImageTab::~ImageTab() {
+}
+
+
+void ImageTab::selectionChanged() {
+  emit optionsChanged();
 }
 
 
@@ -138,7 +145,8 @@ ImageDialog::ImageDialog(ObjectPtr dataObject, QWidget *parent)
   _imageTab = new ImageTab(this);
   addDataTab(_imageTab);
 
-  //FIXME need to do validation to enable/disable ok button...
+  connect(_imageTab, SIGNAL(optionsChanged()), this, SLOT(updateButtons()));
+  updateButtons();
 }
 
 
@@ -148,6 +156,11 @@ ImageDialog::~ImageDialog() {
 
 QString ImageDialog::tagString() const {
   return DataDialog::tagString();
+}
+
+
+void ImageDialog::updateButtons() {
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_imageTab->matrix());
 }
 
 

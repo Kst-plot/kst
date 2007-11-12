@@ -28,6 +28,8 @@
 #include "document.h"
 #include "objectstore.h"
 
+#include <QPushButton>
+
 namespace Kst {
 
 CurveTab::CurveTab(QWidget *parent)
@@ -43,12 +45,19 @@ CurveTab::CurveTab(QWidget *parent)
   _yMinusError->setAllowEmptySelection(true);
 
   _curvePlacement->setExistingPlots(Data::self()->plotList());
+
+  connect(_xVector, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
+  connect(_yVector, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
 }
 
 
 CurveTab::~CurveTab() {
 }
 
+
+void CurveTab::selectionChanged() {
+  emit vectorsChanged();
+}
 
 VectorPtr CurveTab::xVector() const {
   return _xVector->selectedVector();
@@ -141,7 +150,8 @@ CurveDialog::CurveDialog(ObjectPtr dataObject, QWidget *parent)
   _curveTab = new CurveTab(this);
   addDataTab(_curveTab);
 
-  //FIXME need to do validation to enable/disable ok button...
+  connect(_curveTab, SIGNAL(vectorsChanged()), this, SLOT(updateButtons()));
+  updateButtons();
 }
 
 
@@ -151,6 +161,11 @@ CurveDialog::~CurveDialog() {
 
 QString CurveDialog::tagString() const {
   return DataDialog::tagString();
+}
+
+
+void CurveDialog::updateButtons() {
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_curveTab->xVector() && _curveTab->yVector());
 }
 
 

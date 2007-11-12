@@ -51,7 +51,10 @@ class KST_EXPORT ImageTab : public DataTab, Ui::ImageTab {
   private Q_SLOTS:
     void realTimeAutoThresholdToggled(const bool checked);
     void updateEnabled(const bool checked);
-  private:
+    void selectionChanged();
+
+  Q_SIGNALS:
+    void optionsChanged();
 };
 
 class KST_EXPORT ImageDialog : public DataDialog {
@@ -64,6 +67,9 @@ class KST_EXPORT ImageDialog : public DataDialog {
     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
+
+  private Q_SLOTS:
+    void updateButtons();
 
   private:
     ImageTab *_imageTab;

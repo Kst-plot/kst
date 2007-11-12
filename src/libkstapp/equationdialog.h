@@ -42,7 +42,12 @@ class KST_EXPORT EquationTab : public DataTab, Ui::EquationTab {
 
     CurvePlacement *curvePlacement() const;
 
+  Q_SIGNALS:
+    void optionsChanged();
+
   private Q_SLOTS:
+    void selectionChanged();
+
   private:
     void populateFunctionList();
 };
@@ -57,6 +62,9 @@ class KST_EXPORT EquationDialog : public DataDialog {
     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
+
+  private Q_SLOTS:
+    void updateButtons();
 
   private:
     EquationTab *_equationTab;

@@ -140,6 +140,8 @@ void VectorTab::readFromSourceChanged() {
   _dataVectorGroup->setEnabled(_readFromSource->isChecked());
   _dataRange->setEnabled(_readFromSource->isChecked());
   _generatedVectorGroup->setEnabled(!_readFromSource->isChecked());
+
+  emit sourceChanged();
 }
 
 
@@ -186,6 +188,7 @@ void VectorTab::fileNameChanged(const QString &file) {
   //_dataRange->setAllowTime(ds->supportsTimeConversions());
 
   _dataSource->unlock();
+  emit sourceChanged();
 }
 
 
@@ -210,7 +213,9 @@ VectorDialog::VectorDialog(ObjectPtr dataObject, QWidget *parent)
   if (editMode() == Edit) {
     configureTab(dataObject);
   }
-  //FIXME need to do validation to enable/disable ok button...
+
+  connect(_vectorTab, SIGNAL(sourceChanged()), this, SLOT(updateButtons()));
+  updateButtons();
 }
 
 
@@ -237,6 +242,11 @@ QString VectorDialog::tagString() const {
   default:
     return DataDialog::tagString();
   }
+}
+
+
+void VectorDialog::updateButtons() {
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_vectorTab->vectorMode() == VectorTab::GeneratedVector || !_vectorTab->field().isEmpty());
 }
 
 

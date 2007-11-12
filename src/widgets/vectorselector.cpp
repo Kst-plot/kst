@@ -34,6 +34,7 @@ VectorSelector::VectorSelector(QWidget *parent, ObjectStore *store)
 
   connect(_newVector, SIGNAL(pressed()), this, SLOT(newVector()));
   connect(_editVector, SIGNAL(pressed()), this, SLOT(editVector()));
+  connect(_vector, SIGNAL(currentIndexChanged(int)), this, SLOT(emitSelectionChanged()));
 
   //FIXME need to find a way to call fillVectors when the vectorList changes
 }
@@ -48,6 +49,10 @@ void VectorSelector::setObjectStore(ObjectStore *store) {
   fillVectors();
 }
 
+
+void VectorSelector::emitSelectionChanged() {
+  emit selectionChanged();
+}
 
 VectorPtr VectorSelector::selectedVector() const {
   return qVariantValue<Vector*>(_vector->itemData(_vector->currentIndex()));
