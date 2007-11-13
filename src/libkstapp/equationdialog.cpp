@@ -37,8 +37,11 @@ EquationTab::EquationTab(QWidget *parent)
 
   _curvePlacement->setExistingPlots(Data::self()->plotList());
 
-  connect(_xVectors, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
+  connect(_xVectors, SIGNAL(selectionChanged(QString)), this, SLOT(selectionChanged()));
   connect(_equation, SIGNAL(textChanged(const QString &)), this, SLOT(selectionChanged()));
+  connect(Operators, SIGNAL(activated(QString)), this, SLOT(equationOperatorUpdate(const QString&)));
+  connect(_vectors, SIGNAL(selectionChanged(QString)), this, SLOT(equationUpdate(const QString&)));
+  connect(_scalars, SIGNAL(selectionChanged(QString)), this, SLOT(equationUpdate(const QString&)));
 }
 
 
@@ -48,6 +51,20 @@ EquationTab::~EquationTab() {
 
 void EquationTab::selectionChanged() {
   emit optionsChanged();
+}
+
+
+void EquationTab::equationUpdate(const QString& string) {
+  QString equation = _equation->text();
+  equation += "[" + string + "]";
+  _equation->setText(equation); 
+}
+
+
+void EquationTab::equationOperatorUpdate(const QString& string) {
+  QString equation = _equation->text();
+  equation += string;
+  _equation->setText(equation); 
 }
 
 
@@ -155,6 +172,8 @@ EquationDialog::EquationDialog(ObjectPtr dataObject, QWidget *parent)
 
   connect(_equationTab, SIGNAL(optionsChanged()), this, SLOT(updateButtons()));
   updateButtons();
+
+  _equationTab->setEquation("");
 }
 
 

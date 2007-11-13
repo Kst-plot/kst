@@ -39,7 +39,7 @@ PowerSpectrumTab::PowerSpectrumTab(QWidget *parent)
   setupUi(this);
   setTabTitle(tr("Power Spectrum"));
 
-  connect(_vector, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
+  connect(_vector, SIGNAL(selectionChanged(QString)), this, SLOT(selectionChanged()));
 }
 
 

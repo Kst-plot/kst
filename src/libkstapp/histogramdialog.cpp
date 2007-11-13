@@ -39,7 +39,7 @@ HistogramTab::HistogramTab(QWidget *parent)
 
   connect(AutoBin, SIGNAL(clicked()), this, SLOT(generateAutoBin()));
   connect(_realTimeAutoBin, SIGNAL(clicked()), this, SLOT(updateButtons()));
-  connect(_vector, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
+  connect(_vector, SIGNAL(selectionChanged(QString)), this, SLOT(selectionChanged()));
 
   _curvePlacement->setExistingPlots(Data::self()->plotList());
   _curveAppearance->setShowLines(false);

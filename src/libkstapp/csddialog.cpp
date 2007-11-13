@@ -40,7 +40,7 @@ CSDTab::CSDTab(QWidget *parent)
 
   setupUi(this);
   setTabTitle(tr("Cumulative Spectral Decay"));
-  connect(_vector, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
+  connect(_vector, SIGNAL(selectionChanged(QString)), this, SLOT(selectionChanged()));
 }
 
 

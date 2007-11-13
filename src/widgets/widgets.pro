@@ -33,6 +33,7 @@ SOURCES += \
     filerequester.cpp \
     gradienteditor.cpp \
     matrixselector.cpp \
+    scalarlistselector.cpp \
     scalarselector.cpp \
     stringselector.cpp \
     vectorselector.cpp \
@@ -50,6 +51,7 @@ HEADERS += \
     gradienteditor.h \
     matrixselector.h \
     scalarselector.h \
+    scalarlistselector.h \
     stringselector.h \
     vectorselector.h \
     widgets.h
@@ -61,6 +63,7 @@ FORMS += \
     datarange.ui \
     fftoptions.ui \
     matrixselector.ui \
+    scalarlistselector.ui \
     scalarselector.ui \
     stringselector.ui \
     vectorselector.ui

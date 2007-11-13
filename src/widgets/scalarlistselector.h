@@ -9,49 +9,29 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef VECTORSELECTOR_H
-#define VECTORSELECTOR_H
+#ifndef SCALARLISTSELECTOR_H
+#define SCALARLISTSELECTOR_H
 
 #include <QWidget>
-#include "ui_vectorselector.h"
-
-#include <vector.h>
+#include "ui_scalarlistselector.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class ObjectStore;
-
-class KST_EXPORT VectorSelector : public QWidget, public Ui::VectorSelector {
+class KST_EXPORT ScalarListSelector : public QDialog, public Ui::ScalarListSelector {
   Q_OBJECT
   public:
-    VectorSelector(QWidget *parent = 0, ObjectStore *store = 0);
-    virtual ~VectorSelector();
+    ScalarListSelector(QWidget *parent = 0);
+    virtual ~ScalarListSelector();
 
-    void setObjectStore(ObjectStore *store);
+    QString selectedScalar() const;
 
-    VectorPtr selectedVector() const;
-    void setSelectedVector(VectorPtr selectedVector);
+    void fillScalars(QStringList& scalars);
+    void clear();
 
-    bool allowEmptySelection() const;
-    void setAllowEmptySelection(bool allowEmptySelection);
-
-  Q_SIGNALS:
-    void selectionChanged(const QString&);
-
-  private Q_SLOTS:
-    void newVector();
-    void editVector();
-    void emitSelectionChanged();
-
-  private:
-    void fillVectors();
-
-  private:
-    bool _allowEmptySelection;
-
-    ObjectStore *_store;
+  public Q_SLOTS:
+    void filter(const QString& filter);
 };
 
 }

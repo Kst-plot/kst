@@ -51,7 +51,7 @@ void VectorSelector::setObjectStore(ObjectStore *store) {
 
 
 void VectorSelector::emitSelectionChanged() {
-  emit selectionChanged();
+  emit selectionChanged(_vector->currentText());
 }
 
 VectorPtr VectorSelector::selectedVector() const {

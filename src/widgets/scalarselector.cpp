@@ -31,11 +31,14 @@ ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
   _editScalar->setFixedSize(size + 8, size + 8);
   _selectScalar->setFixedSize(size + 8, size + 8);
 
+  _scalarListSelector = new ScalarListSelector(this);
+
   fillScalars();
 
   connect(_newScalar, SIGNAL(pressed()), this, SLOT(newScalar()));
   connect(_editScalar, SIGNAL(pressed()), this, SLOT(editScalar()));
-
+  connect(_selectScalar, SIGNAL(pressed()), this, SLOT(selectScalar()));
+  connect(_scalar, SIGNAL(currentIndexChanged(int)), this, SLOT(emitSelectionChanged()));
 }
 
 
@@ -46,6 +49,11 @@ ScalarSelector::~ScalarSelector() {
 void ScalarSelector::setObjectStore(ObjectStore *store) {
   _store = store;
   fillScalars();
+}
+
+
+void ScalarSelector::emitSelectionChanged() {
+  emit selectionChanged(_scalar->currentText());
 }
 
 
@@ -67,6 +75,13 @@ void ScalarSelector::newScalar() {
 
 void ScalarSelector::editScalar() {
   DialogLauncher::self()->showScalarDialog(ObjectPtr(selectedScalar()));
+}
+
+
+void ScalarSelector::selectScalar() {
+  if (_scalarListSelector->exec() == QDialog::Accepted) {
+    _scalar->setCurrentIndex(_scalar->findText(_scalarListSelector->selectedScalar()));
+  }
 }
 
 
@@ -100,10 +115,14 @@ void ScalarSelector::fillScalars() {
     _scalar->addItem(string, qVariantFromValue(v.data()));
   }
 
+  _scalarListSelector->clear();
+  _scalarListSelector->fillScalars(list);
+
   if (current)
     setSelectedScalar(current);
 
   _editScalar->setEnabled(_scalar->count() > 0);
+  _selectScalar->setEnabled(_scalar->count() > 0);
 }
 
 }

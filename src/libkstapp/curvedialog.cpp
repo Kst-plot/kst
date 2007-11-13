@@ -46,8 +46,8 @@ CurveTab::CurveTab(QWidget *parent)
 
   _curvePlacement->setExistingPlots(Data::self()->plotList());
 
-  connect(_xVector, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
-  connect(_yVector, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
+  connect(_xVector, SIGNAL(selectionChanged(QString)), this, SLOT(selectionChanged()));
+  connect(_yVector, SIGNAL(selectionChanged(QString)), this, SLOT(selectionChanged()));
 }
 
 

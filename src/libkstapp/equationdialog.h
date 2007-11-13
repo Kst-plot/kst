@@ -47,6 +47,8 @@ class KST_EXPORT EquationTab : public DataTab, Ui::EquationTab {
 
   private Q_SLOTS:
     void selectionChanged();
+    void equationUpdate(const QString& string);
+    void equationOperatorUpdate(const QString& string);
 
   private:
     void populateFunctionList();
