@@ -18,8 +18,12 @@
 #include "document.h"
 #include "sessionmodel.h"
 
+#include "objectstore.h"
+#include "dataobject.h"
+
 #include <QHeaderView>
 #include <QToolBar>
+#include <QMenu>
 
 namespace Kst {
 
@@ -29,6 +33,11 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   setupUi(this);
   _session->header()->setResizeMode(QHeaderView::ResizeToContents);
   _session->setModel(doc->session());
+  _session->setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(_session, SIGNAL(customContextMenuRequested(const QPoint &)),
+          this, SLOT(showContextMenu(const QPoint &)));
+
+  _contextMenu = new QMenu(this);
 
   _objects->setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
   _objects->setStyleSheet("background-color: white;");
@@ -104,6 +113,28 @@ DataManager::DataManager(QWidget *parent, Document *doc)
 
 
 DataManager::~DataManager() {
+}
+
+
+void DataManager::showContextMenu(const QPoint &position) {
+    QList<QAction *> actions;
+    if (_session->indexAt(position).isValid()) {
+      DataObjectPtr p = _doc->objectStore()->getObjects<DataObject>().at(_session->indexAt(position).row());
+      if (p) {
+        QAction *action = new QAction(p->tag().displayString(), this);
+        actions.append(action);
+
+        action = new DataButtonAction(tr("Edit"));
+        connect(action, SIGNAL(triggered()), this, SLOT(showEditDialog()));
+        actions.append(action);
+
+        action = new DataButtonAction(tr("Delete"));
+        connect(action, SIGNAL(triggered()), this, SLOT(deleteObject()));
+        actions.append(action);
+      }
+    }
+    if (actions.count() > 0)
+       QMenu::exec(actions, _session->mapToGlobal(position));
 }
 
 }

@@ -687,6 +687,10 @@ QProgressBar *MainWindow::progressBar() const {
 
 
 void MainWindow::showDataManager() {
+  //FIXME  Remove this force re-create of the DataManager when the session model is being reset.
+  delete _dataManager;
+  _dataManager = 0;
+
   if (!_dataManager) {
     _dataManager = new DataManager(this, _doc);
   }

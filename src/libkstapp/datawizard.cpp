@@ -372,7 +372,7 @@ DataWizardPageDataPresentation::DataWizardPageDataPresentation(ObjectStore *stor
   connect(_applyFilters, SIGNAL(toggled(bool)), this, SLOT(applyFilter(bool)));
   connect(_xAxisCreateFromField, SIGNAL(toggled(bool)), this, SLOT(optionsUpdated()));
   connect(_xVector, SIGNAL(currentIndexChanged(int)), this, SLOT(optionsUpdated()));
-  connect(_xVectorExisting, SIGNAL(selectionChanged()), this, SLOT(optionsUpdated()));
+  connect(_xVectorExisting, SIGNAL(selectionChanged(QString)), this, SLOT(optionsUpdated()));
 
 }
 

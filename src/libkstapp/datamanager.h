@@ -31,6 +31,9 @@ class KST_EXPORT DataManager : public QDialog, Ui::DataManager
     DataManager(QWidget *parent, Document *doc);
     virtual ~DataManager();
 
+  public Q_SLOTS:
+    void showContextMenu(const QPoint &);
+
   private:
     Document *_doc;
 
@@ -38,6 +41,8 @@ class KST_EXPORT DataManager : public QDialog, Ui::DataManager
     QToolBar *_dataObjects;
     QToolBar *_fits;
     QToolBar *_filters;
+
+    QMenu *_contextMenu;
 };
 
 }
