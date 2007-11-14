@@ -20,6 +20,7 @@
 
 #include "objectstore.h"
 #include "dataobject.h"
+#include "curve.h"
 
 #include <QHeaderView>
 #include <QToolBar>
@@ -28,7 +29,7 @@
 namespace Kst {
 
 DataManager::DataManager(QWidget *parent, Document *doc)
-  : QDialog(parent), _doc(doc) {
+  : QDialog(parent), _doc(doc), _currentObject(0) {
 
   setupUi(this);
   _session->header()->setResizeMode(QHeaderView::ResizeToContents);
@@ -117,24 +118,38 @@ DataManager::~DataManager() {
 
 
 void DataManager::showContextMenu(const QPoint &position) {
-    QList<QAction *> actions;
-    if (_session->indexAt(position).isValid()) {
-      DataObjectPtr p = _doc->objectStore()->getObjects<DataObject>().at(_session->indexAt(position).row());
-      if (p) {
-        QAction *action = new QAction(p->tag().displayString(), this);
-        actions.append(action);
+  QList<QAction *> actions;
+  if (_session->indexAt(position).isValid()) {
+    SessionModel *model = static_cast<SessionModel*>(_session->model());
+    _currentObject = model->generateObjectList().at(_session->indexAt(position).row());
+    if (_currentObject) {
+      QAction *action = new QAction(_currentObject->tag().displayString(), this);
+      actions.append(action);
 
-        action = new DataButtonAction(tr("Edit"));
-        connect(action, SIGNAL(triggered()), this, SLOT(showEditDialog()));
-        actions.append(action);
+      action = new DataButtonAction(tr("Edit"));
+      connect(action, SIGNAL(triggered()), this, SLOT(showEditDialog()));
+      actions.append(action);
 
-        action = new DataButtonAction(tr("Delete"));
-        connect(action, SIGNAL(triggered()), this, SLOT(deleteObject()));
-        actions.append(action);
-      }
+      action = new DataButtonAction(tr("Delete"));
+      connect(action, SIGNAL(triggered()), this, SLOT(deleteObject()));
+      actions.append(action);
     }
-    if (actions.count() > 0)
-       QMenu::exec(actions, _session->mapToGlobal(position));
+  }
+  if (actions.count() > 0)
+      QMenu::exec(actions, _session->mapToGlobal(position));
+}
+
+
+void DataManager::showEditDialog() {
+  if (_currentObject) {
+    if (CurvePtr curve = kst_cast<Curve>(_currentObject)) {
+      DialogLauncher::self()->showCurveDialog(curve);
+    }
+  }
+}
+
+
+void DataManager::deleteObject() {
 }
 
 }

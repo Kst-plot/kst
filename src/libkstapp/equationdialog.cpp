@@ -220,7 +220,7 @@ ObjectPtr EquationDialog::createNewDataObject() const {
   curve->setHasBars(_equationTab->curveAppearance()->showBars());
   curve->setLineWidth(_equationTab->curveAppearance()->lineWidth());
   curve->setLineStyle(_equationTab->curveAppearance()->lineStyle());
-  curve->pointType = _equationTab->curveAppearance()->pointType();
+  curve->setPointType(_equationTab->curveAppearance()->pointType());
   curve->setPointDensity(_equationTab->curveAppearance()->pointDensity());
   curve->setBarStyle(_equationTab->curveAppearance()->barStyle());
 

@@ -34,12 +34,12 @@ public:
   QModelIndex index(int row, int col, const QModelIndex& parent = QModelIndex()) const;
   QModelIndex parent(const QModelIndex& index) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+  const ObjectList<Object> generateObjectList() const;
 
 private:
   QVariant vectorData(DataObjectPtr parent, const QModelIndex& index) const;
   QVariant dataObjectData(DataObjectPtr dataObject, const QModelIndex& index) const;
   QVariant relationData(RelationPtr relation, const QModelIndex& index) const;
-  const ObjectList<Object> generateObjectList() const;
 
   ObjectStore *_store;
 };

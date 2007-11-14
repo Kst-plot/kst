@@ -156,7 +156,7 @@ Curve::Curve(ObjectStore *store, QDomElement &e)
       } else if (e.tagName() == "hasbars") {
         HasBars = e.text() != "0";
       } else if (e.tagName() == "pointtype") {
-        pointType = e.text().toInt();
+        PointType = e.text().toInt();
       } else if (e.tagName() == "linewidth") {
         LineWidth = e.text().toInt();
       } else if (e.tagName() == "linestyle") {
@@ -498,7 +498,7 @@ void Curve::save(QXmlStreamWriter &s) {
   s.writeAttribute("linestyle", QString::number(LineStyle));
 
   s.writeAttribute("haspoints", QVariant(HasPoints).toString());
-  s.writeAttribute("pointtype", QString::number(pointType));
+  s.writeAttribute("pointtype", QString::number(PointType));
   s.writeAttribute("pointdensity", QString::number(PointDensity));
 
   s.writeAttribute("hasbars", QVariant(HasBars).toString());
@@ -798,7 +798,7 @@ void Curve::setPointDensity(int in_PointDensity) {
 
 
 void Curve::setPointType(int in_PointType) {
-  pointType = in_PointType;
+  PointType = in_PointType;
   setDirty();
 }
 
@@ -1475,7 +1475,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
           pt.setX(d2i(m_X * rX + b_X));
           pt.setY(d2i(m_Y * rY + b_Y));
           if (rgn.contains(pt)) {
-            CurvePointSymbol::draw(pointType, p, pt.x(), pt.y(), width);
+            CurvePointSymbol::draw(PointType, p, pt.x(), pt.y(), width);
             rgn -= QRegion(pt.x()-(size/2), pt.y()-(size/2), size, size, QRegion::Ellipse);
           }
         }
@@ -1493,7 +1493,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
           X1 = m_X * rX + b_X;
           Y1 = m_Y * rY + b_Y;
           if (X1 >= Lx && X1 <= Hx && Y1 >= Ly && Y1 <= Hy) {
-            CurvePointSymbol::draw(pointType, p, d2i(X1), d2i(Y1), width);
+            CurvePointSymbol::draw(PointType, p, d2i(X1), d2i(Y1), width);
           }
         }
       }
@@ -1836,7 +1836,7 @@ void Curve::paintLegendSymbol(Painter *p, const QRect& bound) {
   if (hasPoints()) {
     // draw a point in the middle
     p->setPen(QPen(color(), width));
-    CurvePointSymbol::draw(pointType, p, bound.left() + bound.width()/2, bound.top() + bound.height()/2, width, 600);
+    CurvePointSymbol::draw(PointType, p, bound.left() + bound.width()/2, bound.top() + bound.height()/2, width, 600);
   }
   p->restore();
 }

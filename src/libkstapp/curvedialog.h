@@ -52,6 +52,7 @@ class KST_EXPORT CurveTab : public DataTab, Ui::CurveTab {
     CurvePlacement* curvePlacement() const;
 
     void setObjectStore(ObjectStore *store);
+    void hidePlacementOptions();
 
   Q_SIGNALS:
     void vectorsChanged();
@@ -75,6 +76,8 @@ class KST_EXPORT CurveDialog : public DataDialog {
     void updateButtons();
 
   private:
+    void configureTab(ObjectPtr curve);
+
     CurveTab *_curveTab;
 };
 

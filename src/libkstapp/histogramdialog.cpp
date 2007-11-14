@@ -205,7 +205,7 @@ ObjectPtr HistogramDialog::createNewDataObject() const {
   curve->setHasBars(_histogramTab->curveAppearance()->showBars());
   curve->setLineWidth(_histogramTab->curveAppearance()->lineWidth());
   curve->setLineStyle(_histogramTab->curveAppearance()->lineStyle());
-  curve->pointType = _histogramTab->curveAppearance()->pointType();
+  curve->setPointType(_histogramTab->curveAppearance()->pointType());
   curve->setPointDensity(_histogramTab->curveAppearance()->pointDensity());
   curve->setBarStyle(_histogramTab->curveAppearance()->barStyle());
 

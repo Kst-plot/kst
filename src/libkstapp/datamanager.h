@@ -13,6 +13,7 @@
 #define DATAMANAGER_H
 
 #include <QDialog>
+#include "object.h"
 
 #include "ui_datamanager.h"
 
@@ -33,6 +34,8 @@ class KST_EXPORT DataManager : public QDialog, Ui::DataManager
 
   public Q_SLOTS:
     void showContextMenu(const QPoint &);
+    void showEditDialog();
+    void deleteObject();
 
   private:
     Document *_doc;
@@ -41,6 +44,8 @@ class KST_EXPORT DataManager : public QDialog, Ui::DataManager
     QToolBar *_dataObjects;
     QToolBar *_fits;
     QToolBar *_filters;
+
+    ObjectPtr _currentObject;
 
     QMenu *_contextMenu;
 };

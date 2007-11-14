@@ -117,6 +117,7 @@ class KST_EXPORT Curve: public Relation {
     virtual int lineStyle()     const { return LineStyle; }
     virtual int barStyle()      const { return BarStyle; }
     virtual int pointDensity()  const { return PointDensity; }
+    virtual int pointType()  const { return PointType; }
 
     virtual QColor color() const { return Color; }
     virtual void setColor(const QColor& new_c);
@@ -128,16 +129,14 @@ class KST_EXPORT Curve: public Relation {
     void popLineWidth() { setLineWidth(_widthStack.pop()); }
     void pushLineStyle(int s) { _lineStyleStack.push(lineStyle()); setLineStyle(s); }
     void popLineStyle() { setLineStyle(_lineStyleStack.pop()); }
-    void pushPointStyle(int s) { _pointStyleStack.push(pointType); pointType = s; }
-    void popPointStyle() { pointType = _pointStyleStack.pop(); }
+    void pushPointStyle(int s) { _pointStyleStack.push(PointType); PointType = s; }
+    void popPointStyle() { PointType = _pointStyleStack.pop(); }
     void pushHasPoints(bool h) { _hasPointsStack.push(hasPoints()); setHasPoints(h); }
     void popHasPoints() { setHasPoints(_hasPointsStack.pop()); }
     void pushHasLines(bool h) { _hasLinesStack.push(hasLines()); setHasLines(h); }
     void popHasLines() { setHasLines(_hasLinesStack.pop()); }
     void pushPointDensity(int d) { _pointDensityStack.push(pointDensity()); setPointDensity(d); }
     void popPointDensity() { setPointDensity(_pointDensityStack.pop()); }
-
-    int pointType;
 
 #if 0
     virtual KstRelationPtr makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap);
@@ -177,6 +176,7 @@ class KST_EXPORT Curve: public Relation {
     int LineWidth;
     int LineStyle;
     int PointDensity;
+    int PointType;
 
     bool HasPoints;
     bool HasLines;

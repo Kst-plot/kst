@@ -768,7 +768,7 @@ void DataWizard::finished() {
       curve->setHasPoints(_pagePlot->drawLinesAndPoints() || _pagePlot->drawPoints());
       curve->setHasLines(_pagePlot->drawLinesAndPoints() || _pagePlot->drawLines());
       curve->setLineWidth(Settings::globalSettings()->defaultLineWeight);
-      curve->pointType = ptype++ % KSTPOINT_MAXTYPE;
+      curve->setPointType(ptype++ % KSTPOINT_MAXTYPE);
 
       curve->writeLock();
       curve->update(0);
@@ -841,7 +841,7 @@ void DataWizard::finished() {
         curve->setHasPoints(_pagePlot->drawLinesAndPoints() || _pagePlot->drawPoints());
         curve->setHasLines(_pagePlot->drawLinesAndPoints() || _pagePlot->drawLines());
         curve->setLineWidth(Settings::globalSettings()->defaultLineWeight);
-        curve->pointType = ptype++ % KSTPOINT_MAXTYPE;
+        curve->setPointType(ptype++ % KSTPOINT_MAXTYPE);
 
         if (_pageDataPresentation->plotPSD() || colors.count() <= indexColor) {
           color = ColorSequence::next();

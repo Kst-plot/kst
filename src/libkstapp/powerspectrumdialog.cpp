@@ -145,7 +145,7 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() const {
   curve->setHasBars(_powerSpectrumTab->curveAppearance()->showBars());
   curve->setLineWidth(_powerSpectrumTab->curveAppearance()->lineWidth());
   curve->setLineStyle(_powerSpectrumTab->curveAppearance()->lineStyle());
-  curve->pointType = _powerSpectrumTab->curveAppearance()->pointType();
+  curve->setPointType(_powerSpectrumTab->curveAppearance()->pointType());
   curve->setPointDensity(_powerSpectrumTab->curveAppearance()->pointDensity());
   curve->setBarStyle(_powerSpectrumTab->curveAppearance()->barStyle());
 

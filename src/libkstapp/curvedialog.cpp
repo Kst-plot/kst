@@ -129,6 +129,13 @@ void CurveTab::setObjectStore(ObjectStore *store) {
 }
 
 
+void CurveTab::hidePlacementOptions() {
+  _curvePlacement->setVisible(false);
+  setMaximumHeight(400);
+}
+
+
+
 CurveAppearance* CurveTab::curveAppearance() const {
   return _curveAppearance;
 }
@@ -150,6 +157,10 @@ CurveDialog::CurveDialog(ObjectPtr dataObject, QWidget *parent)
   _curveTab = new CurveTab(this);
   addDataTab(_curveTab);
 
+  if (editMode() == Edit) {
+    configureTab(dataObject);
+  }
+
   connect(_curveTab, SIGNAL(vectorsChanged()), this, SLOT(updateButtons()));
   updateButtons();
 }
@@ -161,6 +172,36 @@ CurveDialog::~CurveDialog() {
 
 QString CurveDialog::tagString() const {
   return DataDialog::tagString();
+}
+
+
+void CurveDialog::configureTab(ObjectPtr object) {
+  if (CurvePtr curve = kst_cast<Curve>(object)) {
+    _curveTab->setXVector(curve->xVector());
+    _curveTab->setYVector(curve->yVector());
+    if (curve->hasXError()) {
+      _curveTab->setXError(curve->xErrorVector());
+    }
+    if (curve->hasYError()) {
+    _curveTab->setYError(curve->yErrorVector());
+    }
+    if (curve->hasXMinusError()) {
+    _curveTab->setXMinusError(curve->xMinusErrorVector());
+    }
+    if (curve->hasYMinusError()) {
+      _curveTab->setYMinusError(curve->yMinusErrorVector());
+    }
+    _curveTab->curveAppearance()->setColor(curve->color());
+    _curveTab->curveAppearance()->setShowPoints(curve->hasPoints());
+    _curveTab->curveAppearance()->setShowLines(curve->hasLines());
+    _curveTab->curveAppearance()->setShowBars(curve->hasBars());
+    _curveTab->curveAppearance()->setLineWidth(curve->lineWidth());
+    _curveTab->curveAppearance()->setLineStyle(curve->lineStyle());
+    _curveTab->curveAppearance()->setPointType(curve->pointType());
+    _curveTab->curveAppearance()->setPointDensity(curve->pointDensity());
+    _curveTab->curveAppearance()->setBarStyle(curve->barStyle());
+    _curveTab->hidePlacementOptions();
+  }
 }
 
 
@@ -236,8 +277,28 @@ ObjectPtr CurveDialog::createNewDataObject() const {
 
 
 ObjectPtr CurveDialog::editExistingDataObject() const {
-  qDebug() << "editExistingDataObject" << endl;
-  return 0;
+  if (CurvePtr curve = kst_cast<Curve>(dataObject())) {
+    curve->writeLock();
+    curve->setXVector(_curveTab->xVector());
+    curve->setYVector(_curveTab->yVector());
+    curve->setXError(_curveTab->xError());
+    curve->setYError(_curveTab->yError());
+    curve->setXMinusError(_curveTab->xMinusError());
+    curve->setYMinusError(_curveTab->yMinusError());
+    curve->setColor(_curveTab->curveAppearance()->color());
+    curve->setHasPoints(_curveTab->curveAppearance()->showPoints());
+    curve->setHasLines(_curveTab->curveAppearance()->showLines());
+    curve->setHasBars(_curveTab->curveAppearance()->showBars());
+    curve->setLineWidth(_curveTab->curveAppearance()->lineWidth());
+    curve->setLineStyle(_curveTab->curveAppearance()->lineStyle());
+    curve->setPointType(_curveTab->curveAppearance()->pointType());
+    curve->setPointDensity(_curveTab->curveAppearance()->pointDensity());
+    curve->setBarStyle(_curveTab->curveAppearance()->barStyle());
+
+    curve->update(0);
+    curve->unlock();
+  }
+  return dataObject();
 }
 
 }
