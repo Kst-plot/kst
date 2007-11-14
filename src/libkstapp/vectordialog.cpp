@@ -213,6 +213,8 @@ VectorDialog::VectorDialog(ObjectPtr dataObject, QWidget *parent)
 
   if (editMode() == Edit) {
     configureTab(dataObject);
+  } else {
+    configureNewTab();
   }
 
   connect(_vectorTab, SIGNAL(sourceChanged()), this, SLOT(updateButtons()));
@@ -250,9 +252,11 @@ void VectorDialog::updateButtons() {
   _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_vectorTab->vectorMode() == VectorTab::GeneratedVector || !_vectorTab->field().isEmpty());
 }
 
+void VectorDialog::configureNewTab() {
+  _vectorTab->setFile(QString(Kst::dialogDefaults->value("vector/datasource",_vectorTab->file()).toString()));
+}
 
 void VectorDialog::configureTab(ObjectPtr vector) {
-  printf("in configureTab\n");
   if (DataVectorPtr dataVector = kst_cast<DataVector>(vector)) {
     _vectorTab->setVectorMode(VectorTab::DataVector);
     _vectorTab->setFile(dataVector->dataSource()->fileName());
@@ -323,6 +327,7 @@ ObjectPtr VectorDialog::createNewDataVector() const {
       dataRange->doSkip(),
       dataRange->doFilter());
 
+  Kst::dialogDefaults->setValue("vector/datasource", _vectorTab->file());
 
 #if 0
   DataVectorPtr vector = new DataVector(
@@ -384,6 +389,9 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
       dataRange->doFilter());
     dataVector->update(0);
     dataVector->unlock();
+
+    Kst::dialogDefaults->setValue("vector/datasource", _vectorTab->file());
+
   } else if (GeneratedVectorPtr generatedVector = kst_cast<GeneratedVector>(dataObject())) {
     const qreal from = _vectorTab->from();
     const qreal to = _vectorTab->to();

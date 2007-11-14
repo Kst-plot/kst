@@ -29,4 +29,4 @@ namespace Kst {
 // Dialog defaults are stored and retreived from the Kst::dialogDefaults.
 // As you add defaults, add them here!
 // Name                   Type    Where used
-// 
+// vector/datasource      QString vectordialog
