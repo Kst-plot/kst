@@ -39,8 +39,9 @@ class KST_EXPORT EquationTab : public DataTab, Ui::EquationTab {
     void setDoInterpolation(bool doInterpolation);
 
     CurveAppearance *curveAppearance() const;
-
     CurvePlacement *curvePlacement() const;
+
+    void hideCurveOptions();
 
   Q_SIGNALS:
     void optionsChanged();
@@ -69,6 +70,8 @@ class KST_EXPORT EquationDialog : public DataDialog {
     void updateButtons();
 
   private:
+    void configureTab(ObjectPtr curve);
+
     EquationTab *_equationTab;
 };
 

@@ -159,6 +159,13 @@ void EquationTab::setObjectStore(ObjectStore *store) {
 }
 
 
+void EquationTab::hideCurveOptions() {
+  _curvePlacement->setVisible(false);
+  _curveAppearance->setVisible(false);
+  setMaximumHeight(250);
+}
+
+
 EquationDialog::EquationDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
@@ -170,10 +177,15 @@ EquationDialog::EquationDialog(ObjectPtr dataObject, QWidget *parent)
   _equationTab = new EquationTab(this);
   addDataTab(_equationTab);
 
+  _equationTab->setEquation("");
+
+  if (editMode() == Edit) {
+    configureTab(dataObject);
+  }
+
   connect(_equationTab, SIGNAL(optionsChanged()), this, SLOT(updateButtons()));
   updateButtons();
 
-  _equationTab->setEquation("");
 }
 
 
@@ -188,6 +200,16 @@ QString EquationDialog::tagString() const {
 
 void EquationDialog::updateButtons() {
   _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_equationTab->xVector() && !_equationTab->equation().isEmpty());
+}
+
+
+void EquationDialog::configureTab(ObjectPtr object) {
+  if (EquationPtr equation = kst_cast<Equation>(object)) {
+    _equationTab->setXVector(equation->vXIn());
+    _equationTab->setEquation(equation->equation());
+    _equationTab->setDoInterpolation(equation->doInterp());
+    _equationTab->hideCurveOptions();
+  }
 }
 
 
@@ -260,8 +282,15 @@ ObjectPtr EquationDialog::createNewDataObject() const {
 
 
 ObjectPtr EquationDialog::editExistingDataObject() const {
-  qDebug() << "editExistingDataObject" << endl;
-  return 0;
+  if (EquationPtr equation = kst_cast<Equation>(dataObject())) {
+    equation->writeLock();
+    equation->setEquation(_equationTab->equation());
+    equation->setExistingXVector(_equationTab->xVector(), _equationTab->doInterpolation());
+
+    equation->update(0);
+    equation->unlock();
+  }
+  return dataObject();
 }
 
 }
