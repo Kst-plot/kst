@@ -22,6 +22,7 @@
 #include "datacollection.h"
 #include "dialoglaunchergui.h"
 #include "datasource.h"
+#include "dialogdefaults.h"
 
 namespace Kst {
 
@@ -41,6 +42,9 @@ Application::Application(int &argc, char **argv)
   //inside of libkst... no?
   QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
   DataSource::setupOnStartup(settingsObject);
+
+  // Initialize the dialogDefaults settings
+  Kst::dialogDefaults = new QSettings("kstdialogrc", QSettings::NativeFormat);
 
   _mainWindow = new MainWindow;
 

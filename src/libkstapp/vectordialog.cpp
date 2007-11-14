@@ -8,7 +8,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+#include <stdio.h>
 #include "vectordialog.h"
 
 #include "dialogpage.h"
@@ -22,7 +22,8 @@
 #include "document.h"
 #include "objectstore.h"
 
-#include "vectordefaults.h"
+#include "dialogdefaults.h"
+//#include "vectordefaults.h"
 
 #include <QDir>
 
@@ -251,11 +252,14 @@ void VectorDialog::updateButtons() {
 
 
 void VectorDialog::configureTab(ObjectPtr vector) {
+  printf("in configureTab\n");
   if (DataVectorPtr dataVector = kst_cast<DataVector>(vector)) {
     _vectorTab->setVectorMode(VectorTab::DataVector);
     _vectorTab->setFile(dataVector->dataSource()->fileName());
     _vectorTab->setDataSource(dataVector->dataSource());
     _vectorTab->setField(dataVector->field());
+    _vectorTab->dataRange()->setRange(dataVector->numFrames());
+    _vectorTab->dataRange()->setStart(dataVector->startFrame());
     _vectorTab->dataRange()->setCountFromEnd(dataVector->countFromEOF());
     _vectorTab->dataRange()->setReadToEnd(dataVector->readToEOF());
     _vectorTab->dataRange()->setSkip(dataVector->skip());
