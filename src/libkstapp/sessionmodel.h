@@ -14,6 +14,9 @@
 
 
 #include <QAbstractItemModel>
+#include "dataobject.h"
+#include "object.h"
+#include "relation.h"
 
 namespace Kst {
 
@@ -33,8 +36,10 @@ public:
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
 private:
-  QVariant vectorData(const QModelIndex& index, int role) const;
-  QVariant dataObjectData(const QModelIndex& index, int role) const;
+  QVariant vectorData(DataObjectPtr parent, const QModelIndex& index) const;
+  QVariant dataObjectData(DataObjectPtr dataObject, const QModelIndex& index) const;
+  QVariant relationData(RelationPtr relation, const QModelIndex& index) const;
+  const ObjectList<Object> generateObjectList() const;
 
   ObjectStore *_store;
 };

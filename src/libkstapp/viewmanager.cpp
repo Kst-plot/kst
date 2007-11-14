@@ -13,7 +13,6 @@
 
 #include "application.h"
 #include "mainwindow.h"
-#include "sessionmodel.h"
 #include "tabwidget.h"
 #include "view.h"
 
