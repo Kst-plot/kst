@@ -63,12 +63,28 @@ double FFTOptions::sampleRate() const {
 }
 
 
+void FFTOptions::setSampleRate(const double sampleRate) {
+  _sampleRate->setText(QString::number(sampleRate));
+}
+
+
 double FFTOptions::sigma() const {
   return _sigma->value();
 }
 
+
+void FFTOptions::setSigma(const double sigma) {
+  _sigma->setValue(sigma);
+}
+
+
 bool FFTOptions::interleavedAverage() const {
   return _interleavedAverage->isChecked();
+}
+
+
+void FFTOptions::setInterleavedAverage(const bool interleavedAverage) {
+  _interleavedAverage->setChecked(interleavedAverage);
 }
 
 
@@ -77,8 +93,18 @@ bool FFTOptions::apodize() const {
 }
 
 
+void FFTOptions::setApodize(const bool apodize) {
+  _apodize->setChecked(apodize);
+}
+
+
 bool FFTOptions::removeMean() const {
   return _removeMean->isChecked();
+}
+
+
+void FFTOptions::setRemoveMean(const bool removeMean) {
+  _removeMean->setChecked(removeMean);
 }
 
 
@@ -86,8 +112,19 @@ bool FFTOptions::interpolateOverHoles() const {
   return _interpolateOverHoles->isChecked();
 }
 
+
+void FFTOptions::setInterpolateOverHoles(const bool interpolateOverHoles) {
+  _interpolateOverHoles->setChecked(interpolateOverHoles);
+}
+
+
 int FFTOptions::FFTLength() const {
   return _FFTLength->value();
+}
+
+
+void FFTOptions::setFFTLength(const int FFTLength) {
+  _FFTLength->setValue(FFTLength);
 }
 
 
@@ -96,8 +133,18 @@ QString FFTOptions::vectorUnits() const {
 }
 
 
+void FFTOptions::setVectorUnits(const QString vectorUnits) {
+  _vectorUnits->setText(vectorUnits);
+}
+
+
 QString FFTOptions::rateUnits() const {
   return _rateUnits->text();
+}
+
+
+void FFTOptions::setRateUnits(const QString rateUnits) {
+  _rateUnits->setText(rateUnits);
 }
 
 
@@ -106,8 +153,18 @@ ApodizeFunction FFTOptions::apodizeFunction() const {
 }
 
 
+void FFTOptions::setApodizeFunction(const ApodizeFunction apodizeFunction) {
+  _apodizeFunction->setCurrentItem((ApodizeFunction)apodizeFunction);
+}
+
+
 PSDType FFTOptions::output() const {
   return (PSDType)_output->currentIndex();
+}
+
+
+void FFTOptions::setOutput(const PSDType output) {
+  _output->setCurrentItem((PSDType)output);
 }
 
 

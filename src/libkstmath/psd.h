@@ -66,6 +66,7 @@ class KST_EXPORT PSD : public DataObject {
 
     QString vTag() const;
     void setVector(VectorPtr);
+    VectorPtr vector() const;
 
     const QString& vUnits() const;
     void setVUnits(const QString& units);

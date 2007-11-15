@@ -29,16 +29,37 @@ public:
   ~FFTOptions();
 
   double sampleRate() const;
+  void setSampleRate(const double sampleRate);
+
   double sigma() const;
+  void setSigma(const double sigma);
+
   bool interleavedAverage() const;
+  void setInterleavedAverage(const bool interleavedAverage);
+
   int FFTLength() const;
+  void setFFTLength(const int FFTLength);
+
   bool apodize() const;
+  void setApodize(const bool apodize);
+
   bool removeMean() const;
+  void setRemoveMean(const bool removeMean);
+
   QString vectorUnits() const;
+  void setVectorUnits(const QString vectorUnits);
+
   QString rateUnits() const;
+  void setRateUnits(const QString rateUnits);
+
   ApodizeFunction apodizeFunction() const;
+  void setApodizeFunction(const ApodizeFunction apodizeFunction);
+
   PSDType output() const;
+  void setOutput(const PSDType output);
+
   bool interpolateOverHoles() const;
+  void setInterpolateOverHoles(const bool interpolateOverHoles);
 
   void update();
 

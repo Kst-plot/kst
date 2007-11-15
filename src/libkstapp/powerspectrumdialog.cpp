@@ -52,6 +52,11 @@ VectorPtr PowerSpectrumTab::vector() const {
 }
 
 
+void PowerSpectrumTab::setVector(const VectorPtr vector) {
+  _vector->setSelectedVector(vector);
+}
+
+
 void PowerSpectrumTab::selectionChanged() {
   emit vectorChanged();
 }
@@ -77,6 +82,13 @@ void PowerSpectrumTab::setObjectStore(ObjectStore *store) {
 }
 
 
+void PowerSpectrumTab::hideCurveOptions() {
+  _curvePlacement->setVisible(false);
+  _curveAppearance->setVisible(false);
+  setMaximumHeight(235);
+}
+
+
 PowerSpectrumDialog::PowerSpectrumDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
@@ -87,6 +99,10 @@ PowerSpectrumDialog::PowerSpectrumDialog(ObjectPtr dataObject, QWidget *parent)
 
   _powerSpectrumTab = new PowerSpectrumTab(this);
   addDataTab(_powerSpectrumTab);
+
+  if (editMode() == Edit) {
+    configureTab(dataObject);
+  }
 
   connect(_powerSpectrumTab, SIGNAL(vectorChanged()), this, SLOT(updateButtons()));
   updateButtons();
@@ -99,6 +115,26 @@ PowerSpectrumDialog::~PowerSpectrumDialog() {
 
 QString PowerSpectrumDialog::tagString() const {
   return DataDialog::tagString();
+}
+
+
+void PowerSpectrumDialog::configureTab(ObjectPtr object) {
+  if (PSDPtr psd = kst_cast<PSD>(object)) {
+    _powerSpectrumTab->setVector(psd->vector());
+
+    _powerSpectrumTab->FFTOptionsWidget()->setSampleRate(psd->freq());
+    _powerSpectrumTab->FFTOptionsWidget()->setInterleavedAverage(psd->average());
+    _powerSpectrumTab->FFTOptionsWidget()->setFFTLength(psd->len());
+    _powerSpectrumTab->FFTOptionsWidget()->setApodize(psd->apodize());
+    _powerSpectrumTab->FFTOptionsWidget()->setRemoveMean(psd->removeMean());
+    _powerSpectrumTab->FFTOptionsWidget()->setVectorUnits(psd->vUnits());
+    _powerSpectrumTab->FFTOptionsWidget()->setRateUnits(psd->rUnits());
+    _powerSpectrumTab->FFTOptionsWidget()->setApodizeFunction(psd->apodizeFxn());
+    _powerSpectrumTab->FFTOptionsWidget()->setSigma(psd->gaussianSigma());
+    _powerSpectrumTab->FFTOptionsWidget()->setOutput(psd->output());
+    _powerSpectrumTab->FFTOptionsWidget()->setInterpolateOverHoles(psd->interpolateHoles());
+    _powerSpectrumTab->hideCurveOptions();
+  }
 }
 
 
@@ -185,8 +221,25 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() const {
 
 
 ObjectPtr PowerSpectrumDialog::editExistingDataObject() const {
-  qDebug() << "editExistingDataObject" << endl;
-  return 0;
+  if (PSDPtr powerspectrum = kst_cast<PSD>(dataObject())) {
+    powerspectrum->writeLock();
+    powerspectrum->setVector(_powerSpectrumTab->vector());
+    powerspectrum->setFreq(_powerSpectrumTab->FFTOptionsWidget()->sampleRate());
+    powerspectrum->setAverage(_powerSpectrumTab->FFTOptionsWidget()->interleavedAverage());
+    powerspectrum->setLen(_powerSpectrumTab->FFTOptionsWidget()->FFTLength());
+    powerspectrum->setApodize(_powerSpectrumTab->FFTOptionsWidget()->apodize());
+    powerspectrum->setRemoveMean(_powerSpectrumTab->FFTOptionsWidget()->removeMean());
+    powerspectrum->setVUnits(_powerSpectrumTab->FFTOptionsWidget()->vectorUnits());
+    powerspectrum->setRUnits(_powerSpectrumTab->FFTOptionsWidget()->rateUnits());
+    powerspectrum->setApodizeFxn(_powerSpectrumTab->FFTOptionsWidget()->apodizeFunction());
+    powerspectrum->setGaussianSigma(_powerSpectrumTab->FFTOptionsWidget()->sigma());
+    powerspectrum->setOutput(_powerSpectrumTab->FFTOptionsWidget()->output());
+    powerspectrum->setInterpolateHoles(_powerSpectrumTab->FFTOptionsWidget()->interpolateOverHoles());
+
+    powerspectrum->update(0);
+    powerspectrum->unlock();
+  }
+  return dataObject();
 }
 
 }

@@ -24,6 +24,7 @@
 #include "equation.h"
 #include "vector.h"
 #include "histogram.h"
+#include "psd.h"
 
 
 #include <QHeaderView>
@@ -152,6 +153,8 @@ void DataManager::showEditDialog() {
       DialogLauncher::self()->showEquationDialog(equation);
     } else if (HistogramPtr histogram = kst_cast<Histogram>(_currentObject)) {
       DialogLauncher::self()->showHistogramDialog(histogram);
+    } else if (PSDPtr psd = kst_cast<PSD>(_currentObject)) {
+      DialogLauncher::self()->showPowerSpectrumDialog(psd);
     } else if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
       DialogLauncher::self()->showVectorDialog(vector);
     }
@@ -160,6 +163,7 @@ void DataManager::showEditDialog() {
 
 
 void DataManager::deleteObject() {
+  qDebug() << "deleteObject" << endl;
 }
 
 }

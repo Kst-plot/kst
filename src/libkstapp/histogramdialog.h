@@ -54,8 +54,6 @@ class KST_EXPORT HistogramTab : public DataTab, Ui::HistogramTab {
     CurveAppearance* curveAppearance() const;
     CurvePlacement* curvePlacement() const;
 
-
-
     void hideCurveOptions();
 
   private Q_SLOTS:
@@ -82,7 +80,7 @@ class KST_EXPORT HistogramDialog : public DataDialog {
     void updateButtons();
 
   private:
-    void configureTab(ObjectPtr curve);
+    void configureTab(ObjectPtr object);
 
     HistogramTab *_histogramTab;
 };

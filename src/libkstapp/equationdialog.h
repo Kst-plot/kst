@@ -70,7 +70,7 @@ class KST_EXPORT EquationDialog : public DataDialog {
     void updateButtons();
 
   private:
-    void configureTab(ObjectPtr curve);
+    void configureTab(ObjectPtr object);
 
     EquationTab *_equationTab;
 };

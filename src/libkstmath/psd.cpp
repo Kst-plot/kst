@@ -383,6 +383,11 @@ QString PSD::vTag() const {
 }
 
 
+VectorPtr PSD::vector() const {
+  return _inputVectors[INVECTOR];
+}
+
+
 void PSD::setVector(VectorPtr new_v) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
