@@ -34,13 +34,29 @@ class KST_EXPORT HistogramTab : public DataTab, Ui::HistogramTab {
     void setObjectStore(ObjectStore *store);
 
     VectorPtr vector() const;
+    void setVector(VectorPtr vector);
+
+    double min() const;
+    void setMin(const double min);
+
+    double max() const;
+    void setMax(const double max);
+
+    int bins() const;
+    void setBins(const int bins);
+
+    bool realTimeAutoBin() const;
+    void setRealTimeAutoBin(const bool autoBin);
+
+    Histogram::NormalizationType normalizationType() const;
+    void setNormalizationType(const Histogram::NormalizationType normalizationType);
+
     CurveAppearance* curveAppearance() const;
     CurvePlacement* curvePlacement() const;
 
-    double min() const;
-    double max() const;
-    int bins() const;
-    Histogram::NormalizationType normalizationType() const;
+
+
+    void hideCurveOptions();
 
   private Q_SLOTS:
     void generateAutoBin();
@@ -66,6 +82,8 @@ class KST_EXPORT HistogramDialog : public DataDialog {
     void updateButtons();
 
   private:
+    void configureTab(ObjectPtr curve);
+
     HistogramTab *_histogramTab;
 };
 

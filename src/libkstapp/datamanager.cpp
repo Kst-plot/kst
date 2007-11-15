@@ -23,6 +23,8 @@
 #include "curve.h"
 #include "equation.h"
 #include "vector.h"
+#include "histogram.h"
+
 
 #include <QHeaderView>
 #include <QToolBar>
@@ -146,11 +148,11 @@ void DataManager::showEditDialog() {
   if (_currentObject) {
     if (CurvePtr curve = kst_cast<Curve>(_currentObject)) {
       DialogLauncher::self()->showCurveDialog(curve);
-    }
-    if (EquationPtr equation = kst_cast<Equation>(_currentObject)) {
+    } else if (EquationPtr equation = kst_cast<Equation>(_currentObject)) {
       DialogLauncher::self()->showEquationDialog(equation);
-    }
-    if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
+    } else if (HistogramPtr histogram = kst_cast<Histogram>(_currentObject)) {
+      DialogLauncher::self()->showHistogramDialog(histogram);
+    } else if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
       DialogLauncher::self()->showVectorDialog(vector);
     }
   }

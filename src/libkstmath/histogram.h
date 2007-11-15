@@ -52,6 +52,7 @@ public:
     QString vTag() const;
 
     void setVector(VectorPtr);
+    VectorPtr vector() const;
 
     virtual QString yLabel() const;
     virtual QString xLabel() const;
@@ -65,6 +66,7 @@ public:
     bool isNormalizationMaximumOne() const { return _NormalizationMode == MaximumOne; }
     void setIsNormNormalizationMaximumOne() { _NormalizationMode = MaximumOne; }
     void setNormalizationType(NormalizationType normType) { _NormalizationMode = normType; }
+    NormalizationType normalizationType() const { return _NormalizationMode; }
 
     static void AutoBin(const VectorPtr, int *n, double *max, double *min);
 

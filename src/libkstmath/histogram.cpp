@@ -333,6 +333,11 @@ void Histogram::setVector(VectorPtr new_v) {
 }
 
 
+VectorPtr Histogram::vector() const {
+  return _inputVectors[RAWVECTOR];
+}
+
+
 QString Histogram::yLabel() const {
   switch (_NormalizationMode) {
     case Number:

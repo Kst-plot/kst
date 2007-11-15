@@ -96,8 +96,18 @@ VectorPtr HistogramTab::vector() const {
 }
 
 
+void HistogramTab::setVector(const VectorPtr vector) {
+  _vector->setSelectedVector(vector);
+}
+
+
 double HistogramTab::min() const {
   return _min->text().toDouble();
+}
+
+
+void HistogramTab::setMin(const double min) {
+  _min->setText(QString::number(min));
 }
 
 
@@ -106,8 +116,28 @@ double HistogramTab::max() const {
 }
 
 
+void HistogramTab::setMax(const double max) {
+  _max->setText(QString::number(max));
+}
+
+
 int HistogramTab::bins() const {
   return _numberOfBins->text().toInt();
+}
+
+
+void HistogramTab::setBins(const int bins) {
+  _numberOfBins->setValue(bins);
+}
+
+
+bool HistogramTab::realTimeAutoBin() const {
+  return _realTimeAutoBin->isChecked();
+}
+
+
+void HistogramTab::setRealTimeAutoBin(const bool autoBin) {
+  _realTimeAutoBin->setChecked(autoBin);
 }
 
 
@@ -124,6 +154,26 @@ Histogram::NormalizationType HistogramTab::normalizationType() const {
   return normalization;
 }
 
+
+void HistogramTab::setNormalizationType(const Histogram::NormalizationType normalizationType) {
+  switch (normalizationType) {
+    case Histogram::Fraction:
+      _normalizationIsFraction->setChecked(true);
+      break;
+    case Histogram::MaximumOne:
+      _normalizationMaximumOne->setChecked(true);
+      break;
+    case Histogram::Number:
+      _normalizationIsNumber->setChecked(true);
+      break;
+    case Histogram::Percent:
+      _normalizationIsPercent->setChecked(true);
+      break;
+  }
+}
+
+
+
 CurveAppearance* HistogramTab::curveAppearance() const {
   return _curveAppearance;
 }
@@ -139,6 +189,13 @@ void HistogramTab::setObjectStore(ObjectStore *store) {
 }
 
 
+void HistogramTab::hideCurveOptions() {
+  _curvePlacement->setVisible(false);
+  _curveAppearance->setVisible(false);
+  setMaximumHeight(235);
+}
+
+
 HistogramDialog::HistogramDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
@@ -149,6 +206,10 @@ HistogramDialog::HistogramDialog(ObjectPtr dataObject, QWidget *parent)
 
   _histogramTab = new HistogramTab(this);
   addDataTab(_histogramTab);
+
+  if (editMode() == Edit) {
+    configureTab(dataObject);
+  }
 
   connect(_histogramTab, SIGNAL(vectorChanged()), this, SLOT(updateButtons()));
   updateButtons();
@@ -161,6 +222,19 @@ HistogramDialog::~HistogramDialog() {
 
 QString HistogramDialog::tagString() const {
   return DataDialog::tagString();
+}
+
+
+void HistogramDialog::configureTab(ObjectPtr object) {
+  if (HistogramPtr histogram = kst_cast<Histogram>(object)) {
+    _histogramTab->setVector(histogram->vector());
+    _histogramTab->setMin(histogram->xMin());
+    _histogramTab->setMax(histogram->xMax());
+    _histogramTab->setBins(histogram->numberOfBins());
+    _histogramTab->setRealTimeAutoBin(histogram->realTimeAutoBin());
+    _histogramTab->setNormalizationType(histogram->normalizationType());
+    _histogramTab->hideCurveOptions();
+  }
 }
 
 
@@ -178,6 +252,7 @@ ObjectPtr HistogramDialog::createNewDataObject() const {
   histogram->setXRange(_histogramTab->min(), _histogramTab->max());
   histogram->setNumberOfBins(_histogramTab->bins());
   histogram->setNormalizationType(_histogramTab->normalizationType());
+  histogram->setRealTimeAutoBin(_histogramTab->realTimeAutoBin());
 
   histogram->writeLock();
   histogram->update(0);
@@ -245,8 +320,18 @@ ObjectPtr HistogramDialog::createNewDataObject() const {
 
 
 ObjectPtr HistogramDialog::editExistingDataObject() const {
-  qDebug() << "editExistingDataObject" << endl;
-  return 0;
+  if (HistogramPtr histogram = kst_cast<Histogram>(dataObject())) {
+    histogram->writeLock();
+    histogram->setVector(_histogramTab->vector());
+    histogram->setXRange(_histogramTab->min(), _histogramTab->max());
+    histogram->setNumberOfBins(_histogramTab->bins());
+    histogram->setNormalizationType(_histogramTab->normalizationType());
+    histogram->setRealTimeAutoBin(_histogramTab->realTimeAutoBin());
+
+    histogram->update(0);
+    histogram->unlock();
+  }
+  return dataObject();
 }
 
 }
