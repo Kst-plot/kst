@@ -214,7 +214,7 @@ VectorDialog::VectorDialog(ObjectPtr dataObject, QWidget *parent)
   if (editMode() == Edit) {
     configureTab(dataObject);
   } else {
-    configureNewTab();
+    configureTab(0);
   }
 
   connect(_vectorTab, SIGNAL(sourceChanged()), this, SLOT(updateButtons()));
@@ -252,12 +252,20 @@ void VectorDialog::updateButtons() {
   _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_vectorTab->vectorMode() == VectorTab::GeneratedVector || !_vectorTab->field().isEmpty());
 }
 
-void VectorDialog::configureNewTab() {
-  _vectorTab->setFile(QString(Kst::dialogDefaults->value("vector/datasource",_vectorTab->file()).toString()));
-}
-
 void VectorDialog::configureTab(ObjectPtr vector) {
-  if (DataVectorPtr dataVector = kst_cast<DataVector>(vector)) {
+  if (!vector) {
+    _vectorTab->setFile(Kst::dialogDefaults->value("vector/datasource",_vectorTab->file()).toString());
+    _vectorTab->dataRange()->setRange(Kst::dialogDefaults->value("vector/range", 1).toInt());
+    _vectorTab->dataRange()->setStart(Kst::dialogDefaults->value("vector/start", 0).toInt());
+    _vectorTab->dataRange()->setCountFromEnd(Kst::dialogDefaults->value("vector/countFromEnd",false).toBool());
+    _vectorTab->dataRange()->setReadToEnd(Kst::dialogDefaults->value("vector/readToEnd",true).toBool());
+    _vectorTab->dataRange()->setSkip(Kst::dialogDefaults->value("vector/skip", 0).toInt());
+    _vectorTab->dataRange()->setDoSkip(Kst::dialogDefaults->value("vector/doSkip", false).toBool());
+    _vectorTab->dataRange()->setDoFilter(Kst::dialogDefaults->value("vector/doAve",false).toBool());
+    _vectorTab->setFrom(Kst::dialogDefaults->value("genVector/min",-10).toInt());
+    _vectorTab->setTo(Kst::dialogDefaults->value("genVector/max",10).toInt());
+    _vectorTab->setNumberOfSamples(Kst::dialogDefaults->value("genVector/length",1000).toInt());
+  } else if (DataVectorPtr dataVector = kst_cast<DataVector>(vector)) {
     _vectorTab->setVectorMode(VectorTab::DataVector);
     _vectorTab->setFile(dataVector->dataSource()->fileName());
     _vectorTab->setDataSource(dataVector->dataSource());
@@ -327,7 +335,7 @@ ObjectPtr VectorDialog::createNewDataVector() const {
       dataRange->doSkip(),
       dataRange->doFilter());
 
-  Kst::dialogDefaults->setValue("vector/datasource", _vectorTab->file());
+  Kst::setDataVectorDefaults(vector);
 
 #if 0
   DataVectorPtr vector = new DataVector(
@@ -364,6 +372,9 @@ ObjectPtr VectorDialog::createNewGeneratedVector() const {
   Q_ASSERT(_document && _document->objectStore());
   GeneratedVectorPtr vector = _document->objectStore()->createObject<GeneratedVector>(tag);
   vector->changeRange(from, to, numberOfSamples);
+
+  Kst::setGenVectorDefaults(vector);
+
 //  return static_cast<ObjectPtr>(vector);
   return vector;
 }
@@ -390,7 +401,7 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
     dataVector->update(0);
     dataVector->unlock();
 
-    Kst::dialogDefaults->setValue("vector/datasource", _vectorTab->file());
+    Kst::setDataVectorDefaults(dataVector);
 
   } else if (GeneratedVectorPtr generatedVector = kst_cast<GeneratedVector>(dataObject())) {
     const qreal from = _vectorTab->from();
@@ -399,10 +410,34 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
     generatedVector->writeLock();
     generatedVector->changeRange(from, to, numberOfSamples);
     generatedVector->unlock();
+    Kst::setGenVectorDefaults(generatedVector);
   }
   return dataObject();
 }
 
 }
+//---------------------------------------------------------------------------
+// what follows belongs in dialogdefaults.cpp, but cbn hasn't figured out how
+// to add a file to the list of things to get built and linked...
+void Kst::setDataVectorDefaults(DataVectorPtr V) {
+  //FIXME Do we need a V->readLock() here?
+  Kst::dialogDefaults->setValue("vector/datasource", V->filename());
+  Kst::dialogDefaults->setValue("vector/range", V->reqNumFrames());
+  Kst::dialogDefaults->setValue("vector/start", V->reqStartFrame());
+  Kst::dialogDefaults->setValue("vector/countFromEnd", V->countFromEOF());
+  Kst::dialogDefaults->setValue("vector/readToEnd", V->readToEOF());
+  Kst::dialogDefaults->setValue("vector/skip", V->skip());
+  Kst::dialogDefaults->setValue("vector/doSkip", V->doSkip());
+  Kst::dialogDefaults->setValue("vector/doAve", V->doAve());
+}
+
+//FIXME: move to dialogdefaults.cpp... (How do you add a file to the build system??)
+void Kst::setGenVectorDefaults(GeneratedVectorPtr V) {
+  //FIXME Do we need a V->readLock() here?
+  Kst::dialogDefaults->setValue("genVector/min", V->min());
+  Kst::dialogDefaults->setValue("genVector/max", V->max()); 
+  Kst::dialogDefaults->setValue("genVector/length", V->length());
+}
+//---------------------------------------------------------------------------
 
 // vim: ts=2 sw=2 et

@@ -94,8 +94,7 @@ class KST_EXPORT VectorDialog : public DataDialog {
   private:
     ObjectPtr createNewDataVector() const;
     ObjectPtr createNewGeneratedVector() const;
-    void configureTab(ObjectPtr vector);
-    void configureNewTab();
+    void configureTab(ObjectPtr vector=0);
 
   private Q_SLOTS:
     void updateButtons();

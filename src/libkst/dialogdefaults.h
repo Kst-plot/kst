@@ -18,10 +18,15 @@
 #ifndef KSTDIALOGDEFAULTS
 #define KSTDIALOGDEFAULTS
 
+#include "datavector.h"
 class QSettings;
 
 namespace Kst {
   extern QSettings *dialogDefaults;
+
+  void setDataVectorDefaults(DataVectorPtr);
+  void setGenVectorDefaults(GeneratedVectorPtr V);
+
 }
 
 #endif
@@ -30,3 +35,15 @@ namespace Kst {
 // As you add defaults, add them here!
 // Name                   Type    Where used
 // vector/datasource      QString vectordialog
+// vector/range           int     vectordialog
+// vector/start           int     vectordialog
+// vector/countFromEnd    bool    vectordialog
+// vector/readToEnd       bool    vectordialog
+// vector/skip            int     vectordialog
+// vector/doSkip          bool    vectordialog
+// vector/doAve           bool    vectordialog
+//
+// genVector/min"         int     vectordialog
+// genVector/max"         int     vectordialog
+// genVector/length       int     vectordialog
+
