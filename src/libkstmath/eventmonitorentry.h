@@ -29,6 +29,8 @@ namespace Kst {
 class EventMonitorEntry : public DataObject {
   Q_OBJECT
   public:
+    static const QString staticTypeString;
+    const QString& typeString() const { return staticTypeString; }
     static const QString staticTypeTag;
 
     UpdateType update(int updateCounter = -1);

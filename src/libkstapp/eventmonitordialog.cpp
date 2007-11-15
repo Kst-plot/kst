@@ -46,8 +46,18 @@ QString EventMonitorTab::script() const {
 }
 
 
+void EventMonitorTab::setScript(const QString script) {
+  return _script->setText(script);
+}
+
+
 QString EventMonitorTab::event() const {
   return _equation->text();
+}
+
+
+void EventMonitorTab::setEvent(const QString event) {
+  return _equation->setText(event);
 }
 
 
@@ -56,8 +66,18 @@ QString EventMonitorTab::description() const {
 }
 
 
+void EventMonitorTab::setDescription(const QString description) {
+  return _description->setText(description);
+}
+
+
 QString EventMonitorTab::emailRecipients() const {
   return _emailRecipients->text();
+}
+
+
+void EventMonitorTab::setEmailRecipients(const QString emailRecipients) {
+  return _emailRecipients->setText(emailRecipients);
 }
 
 
@@ -72,8 +92,28 @@ Debug::LogLevel EventMonitorTab::logLevel() const {
 }
 
 
+void EventMonitorTab::setLogLevel(const Debug::LogLevel logLevel) {
+  switch (logLevel) {
+    case Debug::Notice:
+      _debugLogNotice->setChecked(true);
+      break;
+    case Debug::Warning:
+      _debugLogWarning->setChecked(true);
+      break;
+    case Debug::Error:
+      _debugLogError->setChecked(true);
+      break;
+  }
+}
+
+
 bool EventMonitorTab::logKstDebug() const {
   return _debugLog->isChecked();
+}
+
+
+void EventMonitorTab::setLogKstDebug(const bool logKstDebug) {
+  return _debugLog->setChecked(logKstDebug);
 }
 
 
@@ -82,8 +122,18 @@ bool EventMonitorTab::logEMail() const {
 }
 
 
+void EventMonitorTab::setLogEMail(const bool logEMail) {
+  return _emailNotify->setChecked(logEMail);
+}
+
+
 bool EventMonitorTab::logELOG() const {
   return _ELOGNotify->isChecked();
+}
+
+
+void EventMonitorTab::setLogELOG(const bool logELOG) {
+  return _ELOGNotify->setChecked(logELOG);
 }
 
 
@@ -104,6 +154,10 @@ EventMonitorDialog::EventMonitorDialog(ObjectPtr dataObject, QWidget *parent)
   _eventMonitorTab = new EventMonitorTab(this);
   addDataTab(_eventMonitorTab);
 
+  if (editMode() == Edit) {
+    configureTab(dataObject);
+  }
+
   connect(_eventMonitorTab, SIGNAL(optionsChanged()), this, SLOT(updateButtons()));
   updateButtons();
 }
@@ -115,6 +169,20 @@ EventMonitorDialog::~EventMonitorDialog() {
 
 QString EventMonitorDialog::tagString() const {
   return DataDialog::tagString();
+}
+
+
+void EventMonitorDialog::configureTab(ObjectPtr object) {
+  if (EventMonitorEntryPtr eventMonitorEntry = kst_cast<EventMonitorEntry>(object)) {
+    _eventMonitorTab->setScript(eventMonitorEntry->scriptCode());
+    _eventMonitorTab->setEvent(eventMonitorEntry->event());
+    _eventMonitorTab->setDescription(eventMonitorEntry->description());
+    _eventMonitorTab->setLogLevel(eventMonitorEntry->level());
+    _eventMonitorTab->setLogKstDebug(eventMonitorEntry->logKstDebug());
+    _eventMonitorTab->setLogEMail(eventMonitorEntry->logEMail());
+    _eventMonitorTab->setLogELOG(eventMonitorEntry->logELOG());
+    _eventMonitorTab->setEmailRecipients(eventMonitorEntry->eMailRecipients());
+  }
 }
 
 
@@ -147,9 +215,23 @@ ObjectPtr EventMonitorDialog::createNewDataObject() const {
 
 
 ObjectPtr EventMonitorDialog::editExistingDataObject() const {
-  qDebug() << "editExistingDataObject" << endl;
-  return 0;
-}
+  if (EventMonitorEntryPtr eventMonitor = kst_cast<EventMonitorEntry>(dataObject())) {
+    eventMonitor->writeLock();
+    eventMonitor->setScriptCode(_eventMonitorTab->script());
+    eventMonitor->setEvent(_eventMonitorTab->event());
+    eventMonitor->setDescription(_eventMonitorTab->description());
+    eventMonitor->setLevel(_eventMonitorTab->logLevel());
+    eventMonitor->setLogKstDebug(_eventMonitorTab->logKstDebug());
+    eventMonitor->setLogEMail(_eventMonitorTab->logEMail());
+    eventMonitor->setLogELOG(_eventMonitorTab->logELOG());
+    eventMonitor->setEMailRecipients(_eventMonitorTab->emailRecipients());
+
+    eventMonitor->reparse();
+
+    eventMonitor->update(0);
+    eventMonitor->unlock();
+  }
+  return dataObject();}
 
 }
 

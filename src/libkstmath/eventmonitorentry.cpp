@@ -39,6 +39,7 @@ extern struct yy_buffer_state *yy_scan_string(const char*);
 
 namespace Kst {
 
+const QString EventMonitorEntry::staticTypeString = I18N_NOOP("Event Monitor");
 const QString EventMonitorEntry::staticTypeTag = I18N_NOOP("eventmonitor");
 
 namespace {

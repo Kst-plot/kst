@@ -25,6 +25,7 @@
 #include "vector.h"
 #include "histogram.h"
 #include "psd.h"
+#include "eventmonitorentry.h"
 
 
 #include <QHeaderView>
@@ -155,6 +156,8 @@ void DataManager::showEditDialog() {
       DialogLauncher::self()->showHistogramDialog(histogram);
     } else if (PSDPtr psd = kst_cast<PSD>(_currentObject)) {
       DialogLauncher::self()->showPowerSpectrumDialog(psd);
+    } else if (EventMonitorEntryPtr eventMonitorEntry = kst_cast<EventMonitorEntry>(_currentObject)) {
+      DialogLauncher::self()->showEventMonitorDialog(eventMonitorEntry);
     } else if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
       DialogLauncher::self()->showVectorDialog(vector);
     }

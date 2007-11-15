@@ -32,13 +32,28 @@ class KST_EXPORT EventMonitorTab : public DataTab, Ui::EventMonitorTab {
     void setObjectStore(ObjectStore *store);
 
     QString script() const;
+    void setScript(const QString script);
+
     QString event() const;
+    void setEvent(const QString event);
+
     QString description() const;
+    void setDescription(const QString description);
+
     Debug::LogLevel logLevel() const;
+    void setLogLevel(const Debug::LogLevel level);
+
     bool logKstDebug() const;
+    void setLogKstDebug(const bool logKstDebug);
+
     bool logEMail() const;
+    void setLogEMail(const bool logEMail);
+
     bool logELOG() const;
+    void setLogELOG(const bool logELOG);
+
     QString emailRecipients() const;
+    void setEmailRecipients(const QString emailRecipients);
 
   private Q_SLOTS:
     void selectionChanged();
@@ -62,6 +77,8 @@ class KST_EXPORT EventMonitorDialog : public DataDialog {
     void updateButtons();
 
   private:
+    void configureTab(ObjectPtr object);
+
     EventMonitorTab *_eventMonitorTab;
 };
 
