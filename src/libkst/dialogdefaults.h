@@ -19,6 +19,8 @@
 #define KSTDIALOGDEFAULTS
 
 #include "datavector.h"
+#include "generatedvector.h"
+
 class QSettings;
 
 namespace Kst {
