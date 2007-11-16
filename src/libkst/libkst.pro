@@ -26,6 +26,7 @@ SOURCES += \
     datavector.cpp \
     dateparser.cpp \
     debug.cpp \
+    dialogdefaults.cpp\
     editablematrix.cpp \
     editablevector.cpp \
     extension.cpp \
@@ -71,6 +72,7 @@ HEADERS += \
     datavector.h \
     dateparser.h \
     debug.h \
+    dialogdefaults.h\
     editablematrix.h \
     editablevector.h \
     events.h \

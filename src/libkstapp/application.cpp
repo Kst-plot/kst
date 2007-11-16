@@ -26,8 +26,6 @@
 
 namespace Kst {
 
-  QSettings *dialogDefaults;
-  
 Application::Application(int &argc, char **argv)
     : QApplication(argc, argv) {
 
@@ -46,7 +44,7 @@ Application::Application(int &argc, char **argv)
   DataSource::setupOnStartup(settingsObject);
 
   // Initialize the dialogDefaults settings
-  dialogDefaults = new QSettings("kstdialogrc", QSettings::NativeFormat);
+  //dialogDefaults = new QSettings("kstdialogrc", QSettings::NativeFormat);
 
   _mainWindow = new MainWindow;
 

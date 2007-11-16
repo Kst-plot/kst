@@ -416,28 +416,5 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
 }
 
 }
-//---------------------------------------------------------------------------
-// what follows belongs in dialogdefaults.cpp, but cbn hasn't figured out how
-// to add a file to the list of things to get built and linked...
-void Kst::setDataVectorDefaults(DataVectorPtr V) {
-  //FIXME Do we need a V->readLock() here?
-  Kst::dialogDefaults->setValue("vector/datasource", V->filename());
-  Kst::dialogDefaults->setValue("vector/range", V->reqNumFrames());
-  Kst::dialogDefaults->setValue("vector/start", V->reqStartFrame());
-  Kst::dialogDefaults->setValue("vector/countFromEnd", V->countFromEOF());
-  Kst::dialogDefaults->setValue("vector/readToEnd", V->readToEOF());
-  Kst::dialogDefaults->setValue("vector/skip", V->skip());
-  Kst::dialogDefaults->setValue("vector/doSkip", V->doSkip());
-  Kst::dialogDefaults->setValue("vector/doAve", V->doAve());
-}
-
-//FIXME: move to dialogdefaults.cpp... (How do you add a file to the build system??)
-void Kst::setGenVectorDefaults(GeneratedVectorPtr V) {
-  //FIXME Do we need a V->readLock() here?
-  Kst::dialogDefaults->setValue("genVector/min", V->min());
-  Kst::dialogDefaults->setValue("genVector/max", V->max()); 
-  Kst::dialogDefaults->setValue("genVector/length", V->length());
-}
-//---------------------------------------------------------------------------
 
 // vim: ts=2 sw=2 et
