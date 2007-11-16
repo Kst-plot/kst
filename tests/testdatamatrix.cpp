@@ -92,7 +92,6 @@ void TestDataMatrix::testDataMatrix() {
   QVERIFY(!ok);
   QCOMPARE(m1->value(10, 10, &ok), 0.0); //should be outside the boundaries.
   QVERIFY(!ok);
-  QCOMPARE(m1->sampleCount(), 0);
   QCOMPARE(m1->meanValue(), 0.0);
 
   m1->change(dsp, "[MATRIX,3,0,0,1,1]", 0, 0, -1, -1, false, false, 1);

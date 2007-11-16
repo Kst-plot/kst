@@ -18,6 +18,7 @@
 #include "testscalar.h"
 #include "testmatrix.h"
 #include "testdatamatrix.h"
+#include "testgeneratedmatrix.h"
 #include "testcsd.h"
 #include "testpsd.h"
 #include "testhistogram.h"
@@ -55,6 +56,9 @@ int main(int argc, char *argv[]) {
 
   TestDataMatrix dataMatrixTest;
   QTest::qExec(&dataMatrixTest, argc, argv);
+
+  TestGeneratedMatrix generatedMatrixTest;
+  QTest::qExec(&generatedMatrixTest, argc, argv);
 
   TestLabelParser test9;
   QTest::qExec(&test9, argc, argv);

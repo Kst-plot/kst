@@ -586,6 +586,11 @@ ObjectPtr MatrixDialog::createNewGeneratedMatrix() const {
 #if 0
   GeneratedMatrixPtr matrix = new GeneratedMatrix(tag, nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
 #endif
+
+  matrix->writeLock();
+  matrix->update(0);
+  matrix->unlock();
+
   return static_cast<ObjectPtr>(matrix);
 }
 
@@ -628,6 +633,7 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
 
     generatedMatrix->writeLock();
     generatedMatrix->change(nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
+    generatedMatrix->update(0);
     generatedMatrix->unlock();
   }
   return dataObject();

@@ -27,6 +27,7 @@ SOURCES += \
     testdatamatrix.cpp \
     testdatasource.cpp \
     testeqparser.cpp \
+    testgeneratedmatrix.cpp \
     testhistogram.cpp \
     testlabelparser.cpp \
     testscalar.cpp \
@@ -42,6 +43,7 @@ HEADERS += \
     testdatasource.h \
     testhistogram.h \
     testeqparser.h \
+    testgeneratedmatrix.h \
     testlabelparser.h \
     testscalar.h \
     testmatrix.h \
