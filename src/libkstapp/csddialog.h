@@ -34,11 +34,16 @@ class KST_EXPORT CSDTab : public DataTab, Ui::CSDTab {
     void setObjectStore(ObjectStore *store);
 
     VectorPtr vector() const;
+    void setVector(const VectorPtr vector);
+
+    int windowSize() const;
+    void setWindowSize(const int windowSize);
+
     CurvePlacement* curvePlacement() const;
     FFTOptions* FFTOptionsWidget() const;
     ColorPalette* colorPalette() const;
 
-    int windowSize() const;
+    void hideImageOptions();
 
   private Q_SLOTS:
     void selectionChanged();
@@ -62,6 +67,8 @@ class KST_EXPORT CSDDialog : public DataDialog {
     void updateButtons();
 
   private:
+    void configureTab(ObjectPtr object);
+
     CSDTab *_CSDTab;
 };
 

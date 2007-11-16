@@ -37,6 +37,7 @@ class KST_EXPORT CSD : public DataObject {
 
     QString vTag() const;
     void setVector(VectorPtr);
+    VectorPtr vector() const;
 
     virtual bool slaveVectorsUsed() const;
 
@@ -52,8 +53,8 @@ class KST_EXPORT CSD : public DataObject {
     bool average() const;
     void setAverage(bool in_average);
 
-    double freq() const;
-    void setFreq(double in_freq);
+    double frequency() const;
+    void setFrequency(double in_frequency);
 
     ApodizeFunction apodizeFxn() const;
     void setApodizeFxn(ApodizeFunction in_fxn);
@@ -114,7 +115,7 @@ class KST_EXPORT CSD : public DataObject {
     double _gaussianSigma;
     int _windowSize;
     int _averageLength;
-    int _PSDLen;
+    int _length;
     QString _vectorUnits;
     QString _rateUnits;
 

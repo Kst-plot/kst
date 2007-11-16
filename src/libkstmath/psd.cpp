@@ -154,33 +154,33 @@ void PSD::commonConstructor(ObjectStore *store, VectorPtr in_V,
   if (in_V) {
     _inputVectors[INVECTOR] = in_V;
   }
-  _Freq = in_freq;
+  _Frequency = in_freq;
   _Average = in_average;
   _Apodize = in_apodize;
   _apodizeFxn = in_apodizeFxn;
   _gaussianSigma = in_gaussianSigma;
   _prevOutput = PSDUndefined;
   _RemoveMean = in_removeMean;
-  _vUnits = in_VUnits;
-  _rUnits = in_RUnits;
+  _vectorUnits = in_VUnits;
+  _rateUnits = in_RUnits;
   _Output = in_output;
   _interpolateHoles = interpolateHoles;
-  _averageLen = in_averageLen;
+  _averageLength = in_averageLen;
 
   _last_n_subsets = 0;
   _last_n_new = 0;
 
-  _PSDLen = 1;
+  _PSDLength = 1;
 
   Q_ASSERT(store);
   VectorPtr ov = store->createObject<Vector>(ObjectTag("freq", tag()));
   ov->setProvider(this);
-  ov->resize(_PSDLen);
+  ov->resize(_PSDLength);
   _fVector = _outputVectors.insert(FVECTOR, ov).value();
 
   ov = store->createObject<Vector>(ObjectTag("sv", tag()));
   ov->setProvider(this);
-  ov->resize(_PSDLen);
+  ov->resize(_PSDLength);
   _sVector = _outputVectors.insert(SVECTOR, ov).value();
 
   updateVectorLabels();
@@ -232,10 +232,10 @@ Object::UpdateType PSD::update(int update_counter) {
   _last_n_new += iv->numNew();
   assert(_last_n_new >= 0);
 
-  int n_subsets = v_len/_PSDLen;
+  int n_subsets = v_len/_PSDLength;
 
-  // determine if the PSD needs to be updated. if not using averaging, then we need at least _PSDLen/16 new data points. if averaging, then we want enough new data for a complete subset.
-  if ( ((_last_n_new < _PSDLen/16) || (_Average && (n_subsets - _last_n_subsets < 1))) &&  iv->length() != iv->numNew() && !force) {
+  // determine if the PSD needs to be updated. if not using averaging, then we need at least _PSDLength/16 new data points. if averaging, then we want enough new data for a complete subset.
+  if ( ((_last_n_new < _PSDLength/16) || (_Average && (n_subsets - _last_n_subsets < 1))) &&  iv->length() != iv->numNew() && !force) {
     unlockInputsAndOutputs();
     return setLastUpdateResult(NO_CHANGE);
   }
@@ -246,11 +246,11 @@ Object::UpdateType PSD::update(int update_counter) {
   double *f = _fVector->value();
 
   int i_samp;
-  for (i_samp = 0; i_samp < _PSDLen; ++i_samp) {
-    f[i_samp] = i_samp * 0.5 * _Freq / (_PSDLen - 1);
+  for (i_samp = 0; i_samp < _PSDLength; ++i_samp) {
+    f[i_samp] = i_samp * 0.5 * _Frequency / (_PSDLength - 1);
   }
 
-  _psdCalculator.calculatePowerSpectrum(iv->value(), v_len, psd, _PSDLen, _RemoveMean,  _interpolateHoles, _Average, _averageLen, _Apodize, _apodizeFxn, _gaussianSigma, _Output, _Freq);
+  _psdCalculator.calculatePowerSpectrum(iv->value(), v_len, psd, _PSDLength, _RemoveMean,  _interpolateHoles, _Average, _averageLength, _Apodize, _apodizeFxn, _gaussianSigma, _Output, _Frequency);
 
   _last_n_subsets = n_subsets;
   _last_n_new = 0;
@@ -268,14 +268,14 @@ Object::UpdateType PSD::update(int update_counter) {
 
 
 void PSD::_adjustLengths() {
-  int nPSDLen = PSDCalculator::calculateOutputVectorLength(_inputVectors[INVECTOR]->length(), _Average, _averageLen);
+  int nPSDLen = PSDCalculator::calculateOutputVectorLength(_inputVectors[INVECTOR]->length(), _Average, _averageLength);
 
-  if (_PSDLen != nPSDLen) {
+  if (_PSDLength != nPSDLen) {
     _sVector->resize(nPSDLen);
     _fVector->resize(nPSDLen);
 
     if ( (_sVector->length() == nPSDLen) && (_fVector->length() == nPSDLen) ) {
-      _PSDLen = nPSDLen;
+      _PSDLength = nPSDLen;
     } else {
       Debug::self()->log(i18n("Attempted to create a PSD that used all memory."), Debug::Error);
     }
@@ -289,16 +289,16 @@ void PSD::save(QXmlStreamWriter &s) {
   s.writeStartElement(staticTypeTag);
   s.writeAttribute("tag", tag().tagString());
   s.writeAttribute("vector", _inputVectors[INVECTOR]->tag().tagString());
-  s.writeAttribute("samplerate", QString::number(_Freq));
+  s.writeAttribute("samplerate", QString::number(_Frequency));
   s.writeAttribute("gaussiansigma", QString::number(_gaussianSigma));
   s.writeAttribute("average", QVariant(_Average).toString());
-  s.writeAttribute("fftlength", QString::number(int(ceil(log(double(_PSDLen*2)) / log(2.0)))));
+  s.writeAttribute("fftlength", QString::number(int(ceil(log(double(_PSDLength*2)) / log(2.0)))));
   s.writeAttribute("removemean", QVariant(_RemoveMean).toString());
   s.writeAttribute("apodize", QVariant(_Apodize).toString());
   s.writeAttribute("apodizefunction", QString::number(_apodizeFxn));
   s.writeAttribute("interpolateholes", QVariant(_interpolateHoles).toString());
-  s.writeAttribute("vectorunits", _vUnits);
-  s.writeAttribute("rateunits", _rUnits);
+  s.writeAttribute("vectorunits", _vectorUnits);
+  s.writeAttribute("rateunits", _rateUnits);
   s.writeAttribute("outputtype", QString::number(_Output));
   s.writeEndElement();
 }
@@ -337,29 +337,29 @@ void PSD::setAverage(bool in_average) {
 }
 
 
-double PSD::freq() const {
-  return _Freq;
+double PSD::frequency() const {
+  return _Frequency;
 }
 
 
-void PSD::setFreq(double in_freq) {
+void PSD::setFrequency(double in_frequency) {
   setDirty();
-  if (in_freq > 0.0) {
-    _Freq = in_freq;
+  if (in_frequency > 0.0) {
+    _Frequency = in_frequency;
   } else {
-    _Freq = objectDefaults.psdFreq();
+    _Frequency = objectDefaults.psdFreq();
   }
 }
 
 
-int PSD::len() const {
-  return _averageLen;
+int PSD::length() const {
+  return _averageLength;
 }
 
 
-void PSD::setLen(int in_len) {
-  if (in_len != _averageLen) {
-    _averageLen = in_len;
+void PSD::setLength(int in_length) {
+  if (in_length != _averageLength) {
+    _averageLength = in_length;
     setDirty();
   }
 }
@@ -426,23 +426,23 @@ void PSD::showEditDialog() {
 }
 
 
-const QString& PSD::vUnits() const {
-  return _vUnits;
+const QString& PSD::vectorUnits() const {
+  return _vectorUnits;
 }
 
 
-void PSD::setVUnits(const QString& units) {
-  _vUnits = units;
+void PSD::setVectorUnits(const QString& units) {
+  _vectorUnits = units;
 }
 
 
-const QString& PSD::rUnits() const {
-  return _rUnits;
+const QString& PSD::rateUnits() const {
+  return _rateUnits;
 }
 
 
-void PSD::setRUnits(const QString& units) {
-  _rUnits = units;
+void PSD::setRateUnits(const QString& units) {
+  _rateUnits = units;
 }
 
 
@@ -478,8 +478,8 @@ DataObjectPtr PSD::makeDuplicate(DataObjectDataObjectMap& duplicatedMap) {
   while (Data::self()->dataTagNameNotUnique(name, false)) {
     name += '\'';
   }
-  PSDPtr psd = new PSD(name, _inputVectors[INVECTOR], _Freq,
-                             _Average, _averageLen, _Apodize, _RemoveMean, _vUnits, _rUnits,
+  PSDPtr psd = new PSD(name, _inputVectors[INVECTOR], _Frequency,
+                             _Average, _averageLength, _Apodize, _RemoveMean, _vectorUnits, _rateUnits,
                              _apodizeFxn, _gaussianSigma, _Output);
   duplicatedMap.insert(this, DataObjectPtr(psd));
   return DataObjectPtr(psd);
@@ -505,19 +505,19 @@ void PSD::updateVectorLabels() {
   switch (_Output) {
     default:
     case 0: // amplitude spectral density (default) [V/Hz^1/2]
-      _sVector->setLabel(i18n("ASD \\[%1/%2^{1/2} \\]", _vUnits, _rUnits));
+      _sVector->setLabel(i18n("ASD \\[%1/%2^{1/2} \\]", _vectorUnits, _rateUnits));
       break;
     case 1: // power spectral density [V^2/Hz]
-      _sVector->setLabel(i18n("PSD \\[%1^2/%2\\]", _vUnits, _rUnits));
+      _sVector->setLabel(i18n("PSD \\[%1^2/%2\\]", _vectorUnits, _rateUnits));
       break;
     case 2: // amplitude spectrum [V]
-      _sVector->setLabel(i18n("Amplitude Spectrum\\[%1\\]", _vUnits));
+      _sVector->setLabel(i18n("Amplitude Spectrum\\[%1\\]", _vectorUnits));
       break;
     case 3: // power spectrum [V^2]
-      _sVector->setLabel(i18n("Power Spectrum \\[%1^2\\]", _vUnits));
+      _sVector->setLabel(i18n("Power Spectrum \\[%1^2\\]", _vectorUnits));
       break;
   }
-  _fVector->setLabel(i18n("Frequency \\[%1\\]", _rUnits));
+  _fVector->setLabel(i18n("Frequency \\[%1\\]", _rateUnits));
 }
 
 }

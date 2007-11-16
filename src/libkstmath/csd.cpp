@@ -224,7 +224,7 @@ Object::UpdateType CSD::update(int update_counter) {
 
   double *tempOutput, *input;
   int tempOutputLen = PSDCalculator::calculateOutputVectorLength(_windowSize, _average, _averageLength);
-  _PSDLen = tempOutputLen;
+  _length = tempOutputLen;
   tempOutput = new double[tempOutputLen];
 
   input = inVector->value();
@@ -274,7 +274,7 @@ void CSD::save(QXmlStreamWriter &s) {
   s.writeAttribute("samplerate", QString::number(_frequency));
   s.writeAttribute("gaussiansigma", QString::number(_gaussianSigma));
   s.writeAttribute("average", QVariant(_average).toString());
-  s.writeAttribute("fftlength", QString::number(int(ceil(log(double(_PSDLen*2)) / log(2.0)))));
+  s.writeAttribute("fftlength", QString::number(int(ceil(log(double(_length*2)) / log(2.0)))));
   s.writeAttribute("removemean", QVariant(_removeMean).toString());
   s.writeAttribute("apodize", QVariant(_apodize).toString());
   s.writeAttribute("apodizefunction", QString::number(_apodizeFxn));
@@ -304,6 +304,11 @@ void CSD::setVector(VectorPtr new_v) {
   new_v->writeLock();
   _inputVectors[INVECTOR] = new_v;
   setDirty();
+}
+
+
+VectorPtr CSD::vector() const {
+  return _inputVectors[INVECTOR];
 }
 
 
@@ -373,15 +378,15 @@ void CSD::setAverage(bool in_average) {
 }
 
 
-double CSD::freq() const {
+double CSD::frequency() const {
   return _frequency;
 }
 
 
-void CSD::setFreq(double in_freq) {
+void CSD::setFrequency(double in_frequency) {
   setDirty();
-  if (in_freq > 0.0) {
-    _frequency = in_freq;
+  if (in_frequency > 0.0) {
+    _frequency = in_frequency;
   } else {
     _frequency = objectDefaults.psdFreq();
   }

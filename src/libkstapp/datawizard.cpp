@@ -818,13 +818,13 @@ void DataWizard::finished() {
 
         powerspectrum->writeLock();
         powerspectrum->setVector(*it);
-        powerspectrum->setFreq(_pageDataPresentation->getFFTOptions()->sampleRate());
+        powerspectrum->setFrequency(_pageDataPresentation->getFFTOptions()->sampleRate());
         powerspectrum->setAverage(_pageDataPresentation->getFFTOptions()->interleavedAverage());
-        powerspectrum->setLen(_pageDataPresentation->getFFTOptions()->FFTLength());
+        powerspectrum->setLength(_pageDataPresentation->getFFTOptions()->FFTLength());
         powerspectrum->setApodize(_pageDataPresentation->getFFTOptions()->apodize());
         powerspectrum->setRemoveMean(_pageDataPresentation->getFFTOptions()->removeMean());
-        powerspectrum->setVUnits(_pageDataPresentation->getFFTOptions()->vectorUnits());
-        powerspectrum->setRUnits(_pageDataPresentation->getFFTOptions()->rateUnits());
+        powerspectrum->setVectorUnits(_pageDataPresentation->getFFTOptions()->vectorUnits());
+        powerspectrum->setRateUnits(_pageDataPresentation->getFFTOptions()->rateUnits());
         powerspectrum->setApodizeFxn(_pageDataPresentation->getFFTOptions()->apodizeFunction());
         powerspectrum->setGaussianSigma(_pageDataPresentation->getFFTOptions()->sigma());
         powerspectrum->setOutput(_pageDataPresentation->getFFTOptions()->output());

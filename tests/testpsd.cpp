@@ -127,7 +127,7 @@ void TestPSD::testPSD() {
   QVERIFY(!psd->apodize());
   QVERIFY(!psd->removeMean());
   QVERIFY(!psd->average());
-  QCOMPARE(psd->freq(), 0.0);
+  QCOMPARE(psd->frequency(), 0.0);
   QCOMPARE(psd->apodizeFxn(), WindowUndefined);
   QCOMPARE(psd->gaussianSigma(), 0.0);
   Kst::VectorPtr vpVX = psd->vX();
@@ -150,7 +150,7 @@ void TestPSD::testPSD() {
   psd->setApodize(true);
   psd->setRemoveMean(true);
   psd->setAverage(true);
-  psd->setFreq(0.1);
+  psd->setFrequency(0.1);
   psd->setApodizeFxn(WindowOriginal);
   psd->setGaussianSigma(0.2);
 
@@ -160,7 +160,7 @@ void TestPSD::testPSD() {
   QVERIFY(psd->apodize());
   QVERIFY(psd->removeMean());
   QVERIFY(psd->average());
-  QCOMPARE(psd->freq(), 0.1);
+  QCOMPARE(psd->frequency(), 0.1);
   QCOMPARE(psd->apodizeFxn(), WindowOriginal);
   QCOMPARE(psd->gaussianSigma(), 0.2);
 
@@ -189,7 +189,7 @@ void TestPSD::testPSD() {
   QVERIFY(psdDOM->apodize());
   QVERIFY(psdDOM->removeMean());
   QVERIFY(psdDOM->average());
-  QCOMPARE(psdDOM->freq(), 128.0);
+  QCOMPARE(psdDOM->frequency(), 128.0);
   QCOMPARE(psdDOM->apodizeFxn(), WindowOriginal);
   QCOMPARE(psdDOM->gaussianSigma(), 0.01);
 

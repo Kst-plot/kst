@@ -58,21 +58,21 @@ class KST_EXPORT PSD : public DataObject {
     bool average() const;
     void setAverage(bool in_average);
 
-    double freq() const;
-    void setFreq(double in_freq);
+    double frequency() const;
+    void setFrequency(double in_frequency);
 
-    int len() const;
-    void setLen(int in_len);
+    int length() const;
+    void setLength(int in_length);
 
     QString vTag() const;
     void setVector(VectorPtr);
     VectorPtr vector() const;
 
-    const QString& vUnits() const;
-    void setVUnits(const QString& units);
+    const QString& vectorUnits() const;
+    void setVectorUnits(const QString& units);
 
-    const QString& rUnits() const;
-    void setRUnits(const QString& units);
+    const QString& rateUnits() const;
+    void setRateUnits(const QString& units);
 
     PSDType output() const;
     void setOutput(PSDType in_output);
@@ -124,15 +124,15 @@ class KST_EXPORT PSD : public DataObject {
     PSDType _prevOutput;
     int _last_n_subsets;
     int _last_n_new;
-    double _Freq;
+    double _Frequency;
 
-    int _PSDLen;
-    int _averageLen;
+    int _PSDLength;
+    int _averageLength;
 
     PSDCalculator _psdCalculator;
 
-    QString _vUnits;
-    QString _rUnits;
+    QString _vectorUnits;
+    QString _rateUnits;
 
     VectorPtr _sVector, _fVector;
 };

@@ -122,13 +122,13 @@ void PowerSpectrumDialog::configureTab(ObjectPtr object) {
   if (PSDPtr psd = kst_cast<PSD>(object)) {
     _powerSpectrumTab->setVector(psd->vector());
 
-    _powerSpectrumTab->FFTOptionsWidget()->setSampleRate(psd->freq());
+    _powerSpectrumTab->FFTOptionsWidget()->setSampleRate(psd->frequency());
     _powerSpectrumTab->FFTOptionsWidget()->setInterleavedAverage(psd->average());
-    _powerSpectrumTab->FFTOptionsWidget()->setFFTLength(psd->len());
+    _powerSpectrumTab->FFTOptionsWidget()->setFFTLength(psd->length());
     _powerSpectrumTab->FFTOptionsWidget()->setApodize(psd->apodize());
     _powerSpectrumTab->FFTOptionsWidget()->setRemoveMean(psd->removeMean());
-    _powerSpectrumTab->FFTOptionsWidget()->setVectorUnits(psd->vUnits());
-    _powerSpectrumTab->FFTOptionsWidget()->setRateUnits(psd->rUnits());
+    _powerSpectrumTab->FFTOptionsWidget()->setVectorUnits(psd->vectorUnits());
+    _powerSpectrumTab->FFTOptionsWidget()->setRateUnits(psd->rateUnits());
     _powerSpectrumTab->FFTOptionsWidget()->setApodizeFunction(psd->apodizeFxn());
     _powerSpectrumTab->FFTOptionsWidget()->setSigma(psd->gaussianSigma());
     _powerSpectrumTab->FFTOptionsWidget()->setOutput(psd->output());
@@ -151,13 +151,13 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() const {
 
   powerspectrum->writeLock();
   powerspectrum->setVector(_powerSpectrumTab->vector());
-  powerspectrum->setFreq(_powerSpectrumTab->FFTOptionsWidget()->sampleRate());
+  powerspectrum->setFrequency(_powerSpectrumTab->FFTOptionsWidget()->sampleRate());
   powerspectrum->setAverage(_powerSpectrumTab->FFTOptionsWidget()->interleavedAverage());
-  powerspectrum->setLen(_powerSpectrumTab->FFTOptionsWidget()->FFTLength());
+  powerspectrum->setLength(_powerSpectrumTab->FFTOptionsWidget()->FFTLength());
   powerspectrum->setApodize(_powerSpectrumTab->FFTOptionsWidget()->apodize());
   powerspectrum->setRemoveMean(_powerSpectrumTab->FFTOptionsWidget()->removeMean());
-  powerspectrum->setVUnits(_powerSpectrumTab->FFTOptionsWidget()->vectorUnits());
-  powerspectrum->setRUnits(_powerSpectrumTab->FFTOptionsWidget()->rateUnits());
+  powerspectrum->setVectorUnits(_powerSpectrumTab->FFTOptionsWidget()->vectorUnits());
+  powerspectrum->setRateUnits(_powerSpectrumTab->FFTOptionsWidget()->rateUnits());
   powerspectrum->setApodizeFxn(_powerSpectrumTab->FFTOptionsWidget()->apodizeFunction());
   powerspectrum->setGaussianSigma(_powerSpectrumTab->FFTOptionsWidget()->sigma());
   powerspectrum->setOutput(_powerSpectrumTab->FFTOptionsWidget()->output());
@@ -224,13 +224,13 @@ ObjectPtr PowerSpectrumDialog::editExistingDataObject() const {
   if (PSDPtr powerspectrum = kst_cast<PSD>(dataObject())) {
     powerspectrum->writeLock();
     powerspectrum->setVector(_powerSpectrumTab->vector());
-    powerspectrum->setFreq(_powerSpectrumTab->FFTOptionsWidget()->sampleRate());
+    powerspectrum->setFrequency(_powerSpectrumTab->FFTOptionsWidget()->sampleRate());
     powerspectrum->setAverage(_powerSpectrumTab->FFTOptionsWidget()->interleavedAverage());
-    powerspectrum->setLen(_powerSpectrumTab->FFTOptionsWidget()->FFTLength());
+    powerspectrum->setLength(_powerSpectrumTab->FFTOptionsWidget()->FFTLength());
     powerspectrum->setApodize(_powerSpectrumTab->FFTOptionsWidget()->apodize());
     powerspectrum->setRemoveMean(_powerSpectrumTab->FFTOptionsWidget()->removeMean());
-    powerspectrum->setVUnits(_powerSpectrumTab->FFTOptionsWidget()->vectorUnits());
-    powerspectrum->setRUnits(_powerSpectrumTab->FFTOptionsWidget()->rateUnits());
+    powerspectrum->setVectorUnits(_powerSpectrumTab->FFTOptionsWidget()->vectorUnits());
+    powerspectrum->setRateUnits(_powerSpectrumTab->FFTOptionsWidget()->rateUnits());
     powerspectrum->setApodizeFxn(_powerSpectrumTab->FFTOptionsWidget()->apodizeFunction());
     powerspectrum->setGaussianSigma(_powerSpectrumTab->FFTOptionsWidget()->sigma());
     powerspectrum->setOutput(_powerSpectrumTab->FFTOptionsWidget()->output());

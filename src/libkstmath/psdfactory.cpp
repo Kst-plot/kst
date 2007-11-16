@@ -92,13 +92,13 @@ DataObjectPtr PSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
 
   powerspectrum->writeLock();
   powerspectrum->setVector(vector);
-  powerspectrum->setFreq(frequency);
+  powerspectrum->setFrequency(frequency);
   powerspectrum->setAverage(average);
-  powerspectrum->setLen(length);
+  powerspectrum->setLength(length);
   powerspectrum->setApodize(apodize);
   powerspectrum->setRemoveMean(removeMean);
-  powerspectrum->setVUnits(vectorUnits);
-  powerspectrum->setRUnits(rateUnits);
+  powerspectrum->setVectorUnits(vectorUnits);
+  powerspectrum->setRateUnits(rateUnits);
   powerspectrum->setApodizeFxn((ApodizeFunction)apodizeFunction);
   powerspectrum->setGaussianSigma(gaussianSigma);
   powerspectrum->setOutput((PSDType)outputType);

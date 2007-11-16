@@ -125,7 +125,7 @@ void TestCSD::testCSD() {
   QVERIFY(!csd->apodize());
   QVERIFY(!csd->removeMean());
   QVERIFY(!csd->average());
-  QCOMPARE(csd->freq(), 1.0);
+  QCOMPARE(csd->frequency(), 1.0);
   QCOMPARE(csd->apodizeFxn(), WindowUndefined);
   QCOMPARE(csd->length(), 0);
   QCOMPARE(csd->windowSize(), 0);
@@ -137,7 +137,7 @@ void TestCSD::testCSD() {
   csd->setApodize(true);
   csd->setRemoveMean(true);
   csd->setAverage(true);
-  csd->setFreq(0.1);
+  csd->setFrequency(0.1);
   csd->setApodizeFxn(WindowOriginal);
   csd->setLength(3);
   csd->setWindowSize(50);
@@ -149,7 +149,7 @@ void TestCSD::testCSD() {
   QVERIFY(csd->apodize());
   QVERIFY(csd->removeMean());
   QVERIFY(csd->average());
-  QCOMPARE(csd->freq(), 0.1);
+  QCOMPARE(csd->frequency(), 0.1);
   QCOMPARE(csd->windowSize(), 50);
   QCOMPARE(csd->apodizeFxn(), WindowOriginal);
   QCOMPARE(csd->gaussianSigma(), 0.2);
@@ -168,7 +168,7 @@ void TestCSD::testCSD() {
   QVERIFY(csdDOM->apodize());
   QVERIFY(csdDOM->removeMean());
   QVERIFY(csdDOM->average());
-  QCOMPARE(csdDOM->freq(), 1.0);
+  QCOMPARE(csdDOM->frequency(), 1.0);
   QCOMPARE(csdDOM->apodizeFxn(), WindowOriginal);
   QCOMPARE(csdDOM->gaussianSigma(), 0.01);
   QCOMPARE(csdDOM->windowSize(), 5000);

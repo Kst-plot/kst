@@ -58,6 +58,11 @@ VectorPtr CSDTab::vector() const {
 }
 
 
+void CSDTab::setVector(const VectorPtr vector) {
+  _vector->setSelectedVector(vector);
+}
+
+
 CurvePlacement* CSDTab::curvePlacement() const {
   return _curvePlacement;
 }
@@ -78,8 +83,20 @@ int CSDTab::windowSize() const {
 }
 
 
+void CSDTab::setWindowSize(const int windowSize) {
+  _windowSize->setValue(windowSize);
+}
+
+
 void CSDTab::setObjectStore(ObjectStore *store) {
   _vector->setObjectStore(store);
+}
+
+
+void CSDTab::hideImageOptions() {
+  _imageOptionsGroup->setVisible(false);
+  _curvePlacement->setVisible(false);
+  setMaximumHeight(250);
 }
 
 
@@ -93,6 +110,10 @@ CSDDialog::CSDDialog(ObjectPtr dataObject, QWidget *parent)
 
   _CSDTab = new CSDTab(this);
   addDataTab(_CSDTab);
+
+  if (editMode() == Edit) {
+    configureTab(dataObject);
+  }
 
   connect(_CSDTab, SIGNAL(optionsChanged()), this, SLOT(updateButtons()));
   updateButtons();
@@ -110,6 +131,25 @@ QString CSDDialog::tagString() const {
 
 void CSDDialog::updateButtons() {
   _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_CSDTab->vector());
+}
+
+
+void CSDDialog::configureTab(ObjectPtr object) {
+  if (CSDPtr csd = kst_cast<CSD>(object)) {
+    _CSDTab->setVector(csd->vector());
+    _CSDTab->setWindowSize(csd->windowSize());
+    _CSDTab->FFTOptionsWidget()->setSampleRate(csd->frequency());
+    _CSDTab->FFTOptionsWidget()->setInterleavedAverage(csd->average());
+    _CSDTab->FFTOptionsWidget()->setFFTLength(csd->length());
+    _CSDTab->FFTOptionsWidget()->setApodize(csd->apodize());
+    _CSDTab->FFTOptionsWidget()->setRemoveMean(csd->removeMean());
+    _CSDTab->FFTOptionsWidget()->setVectorUnits(csd->vectorUnits());
+    _CSDTab->FFTOptionsWidget()->setRateUnits(csd->rateUnits());
+    _CSDTab->FFTOptionsWidget()->setApodizeFunction(csd->apodizeFxn());
+    _CSDTab->FFTOptionsWidget()->setSigma(csd->gaussianSigma());
+    _CSDTab->FFTOptionsWidget()->setOutput(csd->output());
+    _CSDTab->hideImageOptions();
+  }
 }
 
 
@@ -175,8 +215,25 @@ ObjectPtr CSDDialog::createNewDataObject() const {
 
 
 ObjectPtr CSDDialog::editExistingDataObject() const {
-  qDebug() << "editExistingDataObject" << endl;
-  return 0;
+  if (CSDPtr csd = kst_cast<CSD>(dataObject())) {
+    csd->writeLock();
+    csd->change(_CSDTab->vector(),
+                _CSDTab->FFTOptionsWidget()->sampleRate(), 
+                _CSDTab->FFTOptionsWidget()->interleavedAverage(),
+                _CSDTab->FFTOptionsWidget()->removeMean(),
+                _CSDTab->FFTOptionsWidget()->apodize(),
+                _CSDTab->FFTOptionsWidget()->apodizeFunction(),
+                _CSDTab->windowSize(), 
+                _CSDTab->FFTOptionsWidget()->FFTLength(), 
+                _CSDTab->FFTOptionsWidget()->sigma(),
+                _CSDTab->FFTOptionsWidget()->output(), 
+                _CSDTab->FFTOptionsWidget()->vectorUnits(),
+                _CSDTab->FFTOptionsWidget()->rateUnits());
+
+    csd->update(0);
+    csd->unlock();
+  }
+  return dataObject();
 }
 
 }

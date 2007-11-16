@@ -42,11 +42,11 @@ void ObjectDefaults::sync() {
   const int j = pl.count() - 1;
   if (j >= 0) {
     pl[j]->readLock();
-    _psd_freq = pl[j]->freq();
-    _fft_len = pl[j]->len();
+    _psd_freq = pl[j]->frequency();
+    _fft_len = pl[j]->length();
 
-    _vUnits = pl[j]->vUnits();
-    _rUnits = pl[j]->rUnits();
+    _vUnits = pl[j]->vectorUnits();
+    _rUnits = pl[j]->rateUnits();
     _apodize = pl[j]->apodize();
     _removeMean = pl[j]->removeMean();
     _psd_average = pl[j]->average();

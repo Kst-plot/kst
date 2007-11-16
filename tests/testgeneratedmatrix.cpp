@@ -55,7 +55,7 @@ void TestGeneratedMatrix::testGeneratedMatrix() {
   QCOMPARE(m1->maxValue(), 100.0);
   QCOMPARE(m1->value(0, 0, &ok), 0.0);
   QVERIFY(ok);
-  QCOMPARE(m1->value(0, 10, &ok), 100.0);
+  QCOMPARE(m1->value(0, 9, &ok), 100.0);
   QVERIFY(ok);
 }
 

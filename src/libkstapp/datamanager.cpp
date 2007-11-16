@@ -27,6 +27,7 @@
 #include "psd.h"
 #include "eventmonitorentry.h"
 #include "image.h"
+#include "csd.h"
 
 #include <QHeaderView>
 #include <QToolBar>
@@ -160,6 +161,8 @@ void DataManager::showEditDialog() {
       DialogLauncher::self()->showEventMonitorDialog(eventMonitorEntry);
     } else if (ImagePtr image = kst_cast<Image>(_currentObject)) {
       DialogLauncher::self()->showImageDialog(image);
+    } else if (CSDPtr csd = kst_cast<CSD>(_currentObject)) {
+      DialogLauncher::self()->showCSDDialog(csd);
     } else if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
       DialogLauncher::self()->showVectorDialog(vector);
     }
