@@ -25,6 +25,8 @@
 
 namespace Kst {
 
+  class ObjectStore;
+
 class KST_EXPORT ImageTab : public DataTab, Ui::ImageTab {
   Q_OBJECT
   public:
@@ -37,24 +39,52 @@ class KST_EXPORT ImageTab : public DataTab, Ui::ImageTab {
     void setObjectStore(ObjectStore *store);
 
     bool realTimeAutoThreshold() const;
+    void setRealTimeAutoThreshold(const bool realTimeAutoThreshold);
+
     bool colorOnly() const;
+    void setColorOnly(const bool colorOnly);
+
     bool contourOnly() const;
+    void setContourOnly(const bool contourOnly);
+
     bool colorAndContour() const;
-    double lowerZ() const;
-    double upperZ() const;
+    void setColorAndContour(const bool colorAndContour);
+
+    double lowerThreshold() const;
+    void setLowerThreshold(const double lowerThreshold);
+
+    double upperThreshold() const;
+    void setUpperThreshold(const double upperThreshold);
+
     int numberOfContourLines() const;
+    void setNumberOfContourLines(const int numberOfContourLines);
+
     int contourWeight() const;
+    void setContourWeight(const int contourWeight);
+
     QColor contourColor() const;
+    void setContourColor(const QColor contourColor);
 
     MatrixPtr matrix() const;
+    void setMatrix(const MatrixPtr matrix);
+
+    bool useVariableLineWeight() const;
+    void setUseVariableLineWeight(const bool useVariableLineWeight);
+
+    void hidePlacementOptions();
 
   private Q_SLOTS:
     void realTimeAutoThresholdToggled(const bool checked);
     void updateEnabled(const bool checked);
     void selectionChanged();
+    void calculateAutoThreshold();
+    void calculateSmartThreshold();
 
   Q_SIGNALS:
     void optionsChanged();
+
+  private:
+    ObjectStore* _store;
 };
 
 class KST_EXPORT ImageDialog : public DataDialog {
@@ -72,6 +102,8 @@ class KST_EXPORT ImageDialog : public DataDialog {
     void updateButtons();
 
   private:
+    void configureTab(ObjectPtr object);
+
     ImageTab *_imageTab;
 };
 

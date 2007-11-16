@@ -26,7 +26,7 @@
 #include "histogram.h"
 #include "psd.h"
 #include "eventmonitorentry.h"
-
+#include "image.h"
 
 #include <QHeaderView>
 #include <QToolBar>
@@ -158,6 +158,8 @@ void DataManager::showEditDialog() {
       DialogLauncher::self()->showPowerSpectrumDialog(psd);
     } else if (EventMonitorEntryPtr eventMonitorEntry = kst_cast<EventMonitorEntry>(_currentObject)) {
       DialogLauncher::self()->showEventMonitorDialog(eventMonitorEntry);
+    } else if (ImagePtr image = kst_cast<Image>(_currentObject)) {
+      DialogLauncher::self()->showImageDialog(image);
     } else if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
       DialogLauncher::self()->showVectorDialog(vector);
     }

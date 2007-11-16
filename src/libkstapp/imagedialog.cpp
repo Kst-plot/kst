@@ -41,6 +41,8 @@ ImageTab::ImageTab(QWidget *parent)
   connect(_colorOnly, SIGNAL(toggled(const bool&)), this, SLOT(updateEnabled(const bool&)));
   connect(_colorAndContour, SIGNAL(toggled(const bool&)), this, SLOT(updateEnabled(const bool&)));
   connect(_contourOnly, SIGNAL(toggled(const bool&)), this, SLOT(updateEnabled(const bool&)));
+  connect(_autoThreshold, SIGNAL(clicked()), this, SLOT(calculateAutoThreshold()));
+  connect(_smartThreshold, SIGNAL(clicked()), this, SLOT(calculateSmartThreshold()));
 
   connect(_matrix, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
 }
@@ -51,6 +53,8 @@ ImageTab::~ImageTab() {
 
 
 void ImageTab::selectionChanged() {
+  _autoThreshold->setEnabled(_matrix->selectedMatrix() && !realTimeAutoThreshold());
+  _smartThreshold->setEnabled(_matrix->selectedMatrix() && !realTimeAutoThreshold());
   emit optionsChanged();
 }
 
@@ -70,8 +74,18 @@ bool ImageTab::realTimeAutoThreshold() const {
 }
 
 
+void ImageTab::setRealTimeAutoThreshold(const bool realTimeAutoThreshold) {
+  _realTimeAutoThreshold->setChecked(realTimeAutoThreshold);
+}
+
+
 bool ImageTab::colorOnly() const {
   return _colorOnly->isChecked();
+}
+
+
+void ImageTab::setColorOnly(const bool colorOnly) {
+  _colorOnly->setChecked(colorOnly);
 }
 
 
@@ -80,8 +94,28 @@ bool ImageTab::contourOnly() const {
 }
 
 
+void ImageTab::setContourOnly(const bool contourOnly) {
+  _contourOnly->setChecked(contourOnly);
+}
+
+
 bool ImageTab::colorAndContour() const {
   return _colorAndContour->isChecked();
+}
+
+
+void ImageTab::setColorAndContour(const bool colorAndContour) {
+  _colorAndContour->setChecked(colorAndContour);
+}
+
+
+bool ImageTab::useVariableLineWeight() const {
+  return _useVariableWeight->isChecked();
+}
+
+
+void ImageTab::setUseVariableLineWeight(const bool useVariableLineWeight) {
+  _useVariableWeight->setChecked(useVariableLineWeight);
 }
 
 
@@ -90,13 +124,28 @@ MatrixPtr ImageTab::matrix() const {
 }
 
 
-double ImageTab::lowerZ() const {
-  return _lowerZ->text().toDouble();
+void ImageTab::setMatrix(const MatrixPtr matrix) {
+  _matrix->setSelectedMatrix(matrix);
 }
 
 
-double ImageTab::upperZ() const {
-  return _upperZ->text().toDouble();
+double ImageTab::lowerThreshold() const {
+  return _lowerThreshold->text().toDouble();
+}
+
+
+void ImageTab::setLowerThreshold(const double lowerThreshold) {
+  _lowerThreshold->setText(QString::number(lowerThreshold));
+}
+
+
+double ImageTab::upperThreshold() const {
+  return _upperThreshold->text().toDouble();
+}
+
+
+void ImageTab::setUpperThreshold(const double upperThreshold) {
+  _upperThreshold->setText(QString::number(upperThreshold));
 }
 
 
@@ -105,8 +154,18 @@ int ImageTab::numberOfContourLines() const {
 }
 
 
+void ImageTab::setNumberOfContourLines(const int numberOfContourLines) {
+  _numContourLines->setValue(numberOfContourLines);
+}
+
+
 int ImageTab::contourWeight() const {
   return _contourWeight->value();
+}
+
+
+void ImageTab::setContourWeight(const int contourWeight) {
+  _contourWeight->setValue(contourWeight);
 }
 
 
@@ -114,13 +173,20 @@ QColor ImageTab::contourColor() const {
   return _contourColor->color();
 }
 
-void ImageTab::realTimeAutoThresholdToggled(const bool checked) {
-  _lowerZ->setEnabled(!checked);
-  _upperZ->setEnabled(!checked);
-  _autoThreshold->setEnabled(!checked);
-  _smartThreshold->setEnabled(!checked);
-  _smartThresholdValue->setEnabled(!checked);
+
+void ImageTab::setContourColor(const QColor contourColor) {
+  _contourColor->setColor(contourColor);
 }
+
+
+void ImageTab::realTimeAutoThresholdToggled(const bool checked) {
+  _lowerThreshold->setEnabled(!checked);
+  _upperThreshold->setEnabled(!checked);
+  _smartThresholdValue->setEnabled(!checked);
+  _autoThreshold->setEnabled(_matrix->selectedMatrix() && !checked);
+  _smartThreshold->setEnabled(_matrix->selectedMatrix() && !checked);
+}
+
 
 void ImageTab::updateEnabled(const bool checked) {
   Q_UNUSED(checked);
@@ -129,8 +195,40 @@ void ImageTab::updateEnabled(const bool checked) {
 }
 
 
+void ImageTab::calculateAutoThreshold() {
+  MatrixPtr matrix = _matrix->selectedMatrix();
+  if (matrix) {
+    matrix->readLock();
+    _lowerThreshold->setText(QString::number(matrix->minValue()));
+    _upperThreshold->setText(QString::number(matrix->maxValue()));
+    matrix->unlock();
+  }
+}
+
+
+void ImageTab::calculateSmartThreshold() {
+  MatrixPtr matrix = _matrix->selectedMatrix();
+  if (matrix) {
+    matrix->readLock();
+    double per = _smartThresholdValue->text().toDouble()/100.0;
+
+    matrix->calcNoSpikeRange(per);
+    _lowerThreshold->setText(QString::number(matrix->minValueNoSpike()));
+    _upperThreshold->setText(QString::number(matrix->maxValueNoSpike()));
+    matrix->unlock();
+  }
+}
+
+
 void ImageTab::setObjectStore(ObjectStore *store) {
   _matrix->setObjectStore(store);
+  _store = store;
+}
+
+
+void ImageTab::hidePlacementOptions() {
+  _curvePlacement->setVisible(false);
+  setMaximumHeight(335);
 }
 
 
@@ -144,6 +242,10 @@ ImageDialog::ImageDialog(ObjectPtr dataObject, QWidget *parent)
 
   _imageTab = new ImageTab(this);
   addDataTab(_imageTab);
+
+  if (editMode() == Edit) {
+    configureTab(dataObject);
+  }
 
   connect(_imageTab, SIGNAL(optionsChanged()), this, SLOT(updateButtons()));
   updateButtons();
@@ -164,6 +266,40 @@ void ImageDialog::updateButtons() {
 }
 
 
+void ImageDialog::configureTab(ObjectPtr object) {
+  if (ImagePtr image = kst_cast<Image>(object)) {
+    _imageTab->setMatrix(image->matrix());
+
+    if (image->hasContourMap() && image->hasColorMap()) {
+      _imageTab->setColorAndContour(true);
+      _imageTab->setNumberOfContourLines(image->numContourLines());
+      _imageTab->setContourColor(image->contourColor());
+      _imageTab->setContourWeight(image->contourWeight());
+      _imageTab->setLowerThreshold(image->lowerThreshold());
+      _imageTab->setUpperThreshold(image->upperThreshold());
+      _imageTab->setRealTimeAutoThreshold(image->autoThreshold());
+      _imageTab->colorPalette()->setPalette(image->paletteName());
+      _imageTab->setUseVariableLineWeight(image->contourWeight() == -1);
+
+    } else if (image->hasContourMap()) {
+      _imageTab->setContourOnly(true);
+      _imageTab->setNumberOfContourLines(image->numContourLines());
+      _imageTab->setContourColor(image->contourColor());
+      _imageTab->setContourWeight(image->contourWeight());
+      _imageTab->setUseVariableLineWeight(image->contourWeight() == -1);
+    } else {
+      _imageTab->setColorOnly(true);
+      _imageTab->setLowerThreshold(image->lowerThreshold());
+      _imageTab->setUpperThreshold(image->upperThreshold());
+      _imageTab->setRealTimeAutoThreshold(image->autoThreshold());
+      _imageTab->colorPalette()->setPalette(image->paletteName());
+    }
+
+    _imageTab->hidePlacementOptions();
+  }
+}
+
+
 ObjectPtr ImageDialog::createNewDataObject() const {
 
   Q_ASSERT(_document && _document->objectStore());
@@ -172,24 +308,24 @@ ObjectPtr ImageDialog::createNewDataObject() const {
 
   if (_imageTab->colorOnly()) {
     image->changeToColorOnly(_imageTab->matrix(),
-        _imageTab->lowerZ(),
-        _imageTab->upperZ(),
+        _imageTab->lowerThreshold(),
+        _imageTab->upperThreshold(),
         _imageTab->realTimeAutoThreshold(),
         _imageTab->colorPalette()->selectedPalette());
   } else if (_imageTab->contourOnly()) {
     image->changeToContourOnly(_imageTab->matrix(),
         _imageTab->numberOfContourLines(),
         _imageTab->contourColor(),
-        _imageTab->contourWeight());
+        _imageTab->useVariableLineWeight() ? -1 : _imageTab->contourWeight());
   } else {
     image->changeToColorAndContour(_imageTab->matrix(),
-        _imageTab->lowerZ(),
-        _imageTab->upperZ(),
+        _imageTab->lowerThreshold(),
+        _imageTab->upperThreshold(),
         _imageTab->realTimeAutoThreshold(),
         _imageTab->colorPalette()->selectedPalette(),
         _imageTab->numberOfContourLines(),
         _imageTab->contourColor(),
-        _imageTab->contourWeight());
+        _imageTab->useVariableLineWeight() ? -1 : _imageTab->contourWeight());
   }
 
   image->writeLock();
@@ -229,8 +365,34 @@ ObjectPtr ImageDialog::createNewDataObject() const {
 
 
 ObjectPtr ImageDialog::editExistingDataObject() const {
-  qDebug() << "editExistingDataObject" << endl;
-  return 0;
+  if (ImagePtr image = kst_cast<Image>(dataObject())) {
+    image->writeLock();
+    if (_imageTab->colorOnly()) {
+      image->changeToColorOnly(_imageTab->matrix(),
+          _imageTab->lowerThreshold(),
+          _imageTab->upperThreshold(),
+          _imageTab->realTimeAutoThreshold(),
+          _imageTab->colorPalette()->selectedPalette());
+    } else if (_imageTab->contourOnly()) {
+      image->changeToContourOnly(_imageTab->matrix(),
+          _imageTab->numberOfContourLines(),
+          _imageTab->contourColor(),
+          _imageTab->useVariableLineWeight() ? -1 : _imageTab->contourWeight());
+    } else {
+      image->changeToColorAndContour(_imageTab->matrix(),
+          _imageTab->lowerThreshold(),
+          _imageTab->upperThreshold(),
+          _imageTab->realTimeAutoThreshold(),
+          _imageTab->colorPalette()->selectedPalette(),
+          _imageTab->numberOfContourLines(),
+          _imageTab->contourColor(),
+          _imageTab->useVariableLineWeight() ? -1 : _imageTab->contourWeight());
+    }
+
+    image->update(0);
+    image->unlock();
+  }
+  return dataObject();
 }
 
 }

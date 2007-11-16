@@ -196,12 +196,12 @@
            <bool>false</bool>
           </property>
           <property name="buddy" >
-           <cstring>_upperZ</cstring>
+           <cstring>_upperThreshold</cstring>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="_upperZ" >
+         <widget class="QLineEdit" name="_upperThreshold" >
           <property name="enabled" >
            <bool>false</bool>
           </property>
@@ -238,12 +238,12 @@
            <bool>false</bool>
           </property>
           <property name="buddy" >
-           <cstring>_lowerZ</cstring>
+           <cstring>_lowerThreshold</cstring>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="_lowerZ" >
+         <widget class="QLineEdit" name="_lowerThreshold" >
           <property name="enabled" >
            <bool>false</bool>
           </property>
@@ -304,9 +304,18 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="_smartThresholdValue" >
+         <widget class="QDoubleSpinBox" name="_smartThresholdValue" >
           <property name="enabled" >
            <bool>false</bool>
+          </property>
+          <property name="decimals" >
+           <number>1</number>
+          </property>
+          <property name="maximum" >
+           <double>45.000000000000000</double>
+          </property>
+          <property name="value" >
+           <double>0.500000000000000</double>
           </property>
          </widget>
         </item>
@@ -587,8 +596,8 @@
  <tabstops>
   <tabstop>_matrix</tabstop>
   <tabstop>_colorOnly</tabstop>
-  <tabstop>_lowerZ</tabstop>
-  <tabstop>_upperZ</tabstop>
+  <tabstop>_lowerThreshold</tabstop>
+  <tabstop>_upperThreshold</tabstop>
   <tabstop>_autoThreshold</tabstop>
   <tabstop>_realTimeAutoThreshold</tabstop>
   <tabstop>_numContourLines</tabstop>

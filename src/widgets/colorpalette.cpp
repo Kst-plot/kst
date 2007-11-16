@@ -69,9 +69,13 @@ void ColorPalette::updatePalette(const QString &palette) {
 }
 
 
-
 QString ColorPalette::selectedPalette() {
    return _palette->currentText();
+}
+
+
+void ColorPalette::setPalette(const QString palette) {
+   _palette->setCurrentIndex(_palette->findText(palette));
 }
 
 

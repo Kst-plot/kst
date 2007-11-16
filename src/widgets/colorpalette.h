@@ -29,6 +29,7 @@ public:
   QString selectedPalette();
   void refresh(const QString &palette = QString());
   int currentPaletteIndex();
+  void setPalette(const QString palette);
 
 public slots:
   void updatePalette(const QString &palette = QString());
