@@ -23,6 +23,7 @@
 #include "curve.h"
 #include "equation.h"
 #include "vector.h"
+#include "matrix.h"
 #include "histogram.h"
 #include "psd.h"
 #include "eventmonitorentry.h"
@@ -128,18 +129,22 @@ void DataManager::showContextMenu(const QPoint &position) {
   QList<QAction *> actions;
   if (_session->indexAt(position).isValid()) {
     SessionModel *model = static_cast<SessionModel*>(_session->model());
-    _currentObject = model->generateObjectList().at(_session->indexAt(position).row());
-    if (_currentObject) {
-      QAction *action = new QAction(_currentObject->tag().displayString(), this);
-      actions.append(action);
+    if (!model->parent(_session->indexAt(position)).isValid()) {
+      _currentObject = model->generateObjectList().at(_session->indexAt(position).row());
+      if (_currentObject) {
+        QAction *action = new QAction(_currentObject->tag().displayString(), this);
+        actions.append(action);
 
-      action = new DataButtonAction(tr("Edit"));
-      connect(action, SIGNAL(triggered()), this, SLOT(showEditDialog()));
-      actions.append(action);
+        action = new DataButtonAction(tr("Edit"));
+        connect(action, SIGNAL(triggered()), this, SLOT(showEditDialog()));
+        actions.append(action);
 
-      action = new DataButtonAction(tr("Delete"));
-      connect(action, SIGNAL(triggered()), this, SLOT(deleteObject()));
-      actions.append(action);
+        action = new DataButtonAction(tr("Delete"));
+        connect(action, SIGNAL(triggered()), this, SLOT(deleteObject()));
+        actions.append(action);
+      }
+    } else {
+      // TODO what options do output vectors get?
     }
   }
   if (actions.count() > 0)
@@ -165,6 +170,8 @@ void DataManager::showEditDialog() {
       DialogLauncher::self()->showCSDDialog(csd);
     } else if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
       DialogLauncher::self()->showVectorDialog(vector);
+    } else if (MatrixPtr matrix = kst_cast<Matrix>(_currentObject)) {
+      DialogLauncher::self()->showMatrixDialog(matrix);
     }
   }
 }

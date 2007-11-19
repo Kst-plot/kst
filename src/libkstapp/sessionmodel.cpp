@@ -15,6 +15,10 @@
 #include <objectstore.h>
 #include <dataobject.h>
 #include <relation.h>
+#include <datavector.h>
+#include <generatedvector.h>
+#include <datamatrix.h>
+#include <generatedmatrix.h>
 
 namespace Kst {
 
@@ -35,8 +39,28 @@ int SessionModel::columnCount(const QModelIndex& parent) const {
 
 const ObjectList<Object> SessionModel::generateObjectList() const {
   ObjectList<Object> ol;
+  ObjectList<DataVector> dvol = _store->getObjects<DataVector>();
+  ObjectList<GeneratedVector> gvol = _store->getObjects<GeneratedVector>();
+  ObjectList<DataMatrix> dmol = _store->getObjects<DataMatrix>();
+  ObjectList<GeneratedMatrix> gmol = _store->getObjects<GeneratedMatrix>();
   ObjectList<Relation> rol = _store->getObjects<Relation>();
   ObjectList<DataObject> dol = _store->getObjects<DataObject>();
+
+  foreach(DataVector* vector, dvol) {
+    ol.append(vector);
+  }
+
+  foreach(GeneratedVector* vector, gvol) {
+    ol.append(vector);
+  }
+
+  foreach(DataMatrix* matrix, dmol) {
+    ol.append(matrix);
+  }
+
+  foreach(GeneratedMatrix* matrix, gmol) {
+    ol.append(matrix);
+  }
 
   foreach(Relation* relation, rol) {
     ol.append(relation);
@@ -66,6 +90,7 @@ int SessionModel::rowCount(const QModelIndex& parent) const {
   if (pdo) {
     pdo->readLock();
     rc = pdo->outputVectors().count();
+    rc += pdo->outputMatrices().count();
     pdo->unlock();
   }
   return rc;
@@ -82,8 +107,14 @@ QVariant SessionModel::data(const QModelIndex& index, int role) const {
       Q_ASSERT(!index.parent().parent().isValid());
       QVariant p = data(index.parent(), role);
       DataObjectPtr parent = qVariantValue<DataObject*>(p);
-      VectorPtr v = parent->outputVectors().values()[index.row()];
-      return qVariantFromValue(v.data());
+      const int vectorCount = parent->outputVectors().count();
+      if (index.row() < vectorCount) {
+        if (VectorPtr v = parent->outputVectors().values()[index.row()]) {
+          return qVariantFromValue(v.data());
+        }
+      } else if (MatrixPtr m = parent->outputMatrices().values()[index.row() - vectorCount]) {
+        return qVariantFromValue(m.data());
+      }
     } else {
       Q_ASSERT(_store);
       DataObjectPtr p = kst_cast<DataObject>(generateObjectList().at(index.row()));
@@ -98,36 +129,54 @@ QVariant SessionModel::data(const QModelIndex& index, int role) const {
   if (index.internalPointer()) { //parent().isValid()) {
     Q_ASSERT(!index.parent().parent().isValid());
     DataObject *parent = static_cast<DataObject*>(index.internalPointer());
-    return vectorData(parent, index);
+    return dataObjectOutputData(parent, index);
   }
 
   Q_ASSERT(_store);
-  ObjectList<Object> dol = generateObjectList();
-  const int row = index.row(), col = index.column();
-  if (DataObjectPtr p = kst_cast<DataObject>(dol.at(row))) {
+  ObjectList<Object> objectList = generateObjectList();
+  const int row = index.row();
+  if (DataObjectPtr p = kst_cast<DataObject>(objectList.at(row))) {
     return dataObjectData(p, index);
-  } else if (RelationPtr p = kst_cast<Relation>(dol.at(row))) {
+  } else if (RelationPtr p = kst_cast<Relation>(objectList.at(row))) {
     return relationData(p, index);
+  } else if (VectorPtr p = kst_cast<Vector>(objectList.at(row))) {
+    return vectorData(p, index);
+  } else if (MatrixPtr p = kst_cast<Matrix>(objectList.at(row))) {
+    return matrixData(p, index);  
   } else {
     return QVariant();
   }
 }
 
 
-QVariant SessionModel::vectorData(DataObjectPtr parent, const QModelIndex& index) const {
+QVariant SessionModel::dataObjectOutputData(DataObjectPtr parent, const QModelIndex& index) const {
   QVariant rc;
 
   if (!parent) {
     return rc;
   }
 
-  const int row = index.row(), col = index.column();
-  VectorPtr v = parent->outputVectors().values()[row];
+  const int row = index.row();
+  const int vectorCount = parent->outputVectors().count();
+  if (parent->outputVectors().count() > row) {
+    if (VectorPtr v = parent->outputVectors().values()[row]) {
+      return vectorData(v, index);
+    }
+  } else if (MatrixPtr m = parent->outputMatrices().values()[row - vectorCount]) {
+    return matrixData(m, index);
+  }
+  return rc;
+}
+
+
+QVariant SessionModel::vectorData(VectorPtr v, const QModelIndex& index) const {
+  QVariant rc;
+
   if (!v) {
     return rc;
   }
 
-  switch (col) {
+  switch (index.column()) {
     case 0:
       {
       v->readLock();
@@ -159,13 +208,52 @@ QVariant SessionModel::vectorData(DataObjectPtr parent, const QModelIndex& index
 }
 
 
+QVariant SessionModel::matrixData(MatrixPtr matrix, const QModelIndex& index) const {
+  QVariant rc;
+
+  if (!matrix) {
+    return rc;
+  }
+
+  switch (index.column()) {
+    case 0:
+      {
+      matrix->readLock();
+      rc.setValue(matrix->tag().displayString());
+      matrix->unlock();
+      break;
+      }
+    case 1:
+      matrix->readLock();
+      rc = matrix->typeString();
+      matrix->unlock();
+      break;
+    case 2:
+      break;
+    case 3:
+      matrix->readLock();
+      rc = tr("[%1x%2]").arg(matrix->xNumSteps()).arg(matrix->yNumSteps());
+      matrix->unlock();
+      break;
+    case 4:
+      matrix->readLock();
+      rc = tr("[%1..%2]").arg(matrix->minValue()).arg(matrix->maxValue());
+      matrix->unlock();
+      break;
+    default:
+      break;
+  }
+  return rc;
+}
+
+
 QVariant SessionModel::dataObjectData(DataObjectPtr p, const QModelIndex& index) const {
   QVariant rc;
-  const int row = index.row(), col = index.column();
   if (!p) {
     return rc;
   }
-  switch (col) {
+
+  switch (index.column()) {
     case 0:
       p->readLock();
       rc.setValue(p->tag().displayString());
@@ -197,11 +285,11 @@ QVariant SessionModel::dataObjectData(DataObjectPtr p, const QModelIndex& index)
 
 QVariant SessionModel::relationData(RelationPtr p, const QModelIndex& index) const {
   QVariant rc;
-  const int row = index.row(), col = index.column();
   if (!p) {
     return rc;
   }
-  switch (col) {
+
+  switch (index.column()) {
     case 0:
       p->readLock();
       rc.setValue(p->tag().displayString());
@@ -249,15 +337,15 @@ QModelIndex SessionModel::index(int row, int col, const QModelIndex& parent) con
 
   const int cnt = dol.count();
   DataObject *p = 0;
-  if (row >= 0 && row < cnt) {
-    p = kst_cast<DataObject>(dol.at(row));
+  if (parent.row() >= 0 && parent.row() < cnt) { 
+    p = kst_cast<DataObject>(dol.at(parent.row()));
   }
   if (!p) {
     return QModelIndex();
   }
 
   p->readLock();
-  if (row >= p->outputVectors().count()) {
+  if (row >= (p->outputVectors().count() + p->outputMatrices().count())) {
     p->unlock();
     return QModelIndex();
   }
