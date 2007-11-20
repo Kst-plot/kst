@@ -67,6 +67,8 @@ class KST_EXPORT CurveDialog : public DataDialog {
     CurveDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~CurveDialog();
 
+    void setVector(VectorPtr vector);
+
   protected:
     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;

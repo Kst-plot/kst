@@ -205,6 +205,11 @@ void CurveDialog::configureTab(ObjectPtr object) {
 }
 
 
+void CurveDialog::setVector(VectorPtr vector) {
+  _curveTab->setYVector(vector);
+}
+
+
 void CurveDialog::updateButtons() {
   _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_curveTab->xVector() && _curveTab->yVector());
 }

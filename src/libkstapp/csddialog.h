@@ -58,6 +58,8 @@ class KST_EXPORT CSDDialog : public DataDialog {
     CSDDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~CSDDialog();
 
+    void setVector(VectorPtr vector);
+
   protected:
     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;

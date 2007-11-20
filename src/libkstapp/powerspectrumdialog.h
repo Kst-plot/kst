@@ -55,6 +55,8 @@ class KST_EXPORT PowerSpectrumDialog : public DataDialog {
     PowerSpectrumDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~PowerSpectrumDialog();
 
+    void setVector(VectorPtr vector);
+
   protected:
     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;

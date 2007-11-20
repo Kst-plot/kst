@@ -93,6 +93,8 @@ class KST_EXPORT ImageDialog : public DataDialog {
     ImageDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~ImageDialog();
 
+    void setMatrix(MatrixPtr matrix);
+
   protected:
     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;

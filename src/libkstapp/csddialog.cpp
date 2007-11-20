@@ -134,6 +134,11 @@ void CSDDialog::updateButtons() {
 }
 
 
+void CSDDialog::setVector(VectorPtr vector) {
+  _CSDTab->setVector(vector);
+}
+
+
 void CSDDialog::configureTab(ObjectPtr object) {
   if (CSDPtr csd = kst_cast<CSD>(object)) {
     _CSDTab->setVector(csd->vector());

@@ -139,6 +139,31 @@ void DataManager::showContextMenu(const QPoint &position) {
         connect(action, SIGNAL(triggered()), this, SLOT(showEditDialog()));
         actions.append(action);
 
+        if (VectorPtr v = kst_cast<Vector>(_currentObject)) {
+
+          action = new DataButtonAction(tr("Make Curve"));
+          connect(action, SIGNAL(triggered()), this, SLOT(showCurveDialog()));
+          actions.append(action);
+
+          action = new DataButtonAction(tr("Make Power Spectrum"));
+          connect(action, SIGNAL(triggered()), this, SLOT(showPowerSpectrumDialog()));
+          actions.append(action);
+
+          action = new DataButtonAction(tr("Make Spectrogram"));
+          connect(action, SIGNAL(triggered()), this, SLOT(showCSDDialog()));
+          actions.append(action);
+
+          action = new DataButtonAction(tr("Make Histogram"));
+          connect(action, SIGNAL(triggered()), this, SLOT(showHistogramDialog()));
+          actions.append(action);
+
+        } else if (MatrixPtr m = kst_cast<Matrix>(_currentObject)) {
+          action = new DataButtonAction(tr("Make Image"));
+          connect(action, SIGNAL(triggered()), this, SLOT(showImageDialog()));
+          actions.append(action);
+        } else if (RelationPtr r = kst_cast<Relation>(_currentObject)) {
+        }
+
         action = new DataButtonAction(tr("Delete"));
         connect(action, SIGNAL(triggered()), this, SLOT(deleteObject()));
         actions.append(action);
@@ -172,6 +197,51 @@ void DataManager::showEditDialog() {
       DialogLauncher::self()->showVectorDialog(vector);
     } else if (MatrixPtr matrix = kst_cast<Matrix>(_currentObject)) {
       DialogLauncher::self()->showMatrixDialog(matrix);
+    }
+  }
+}
+
+
+void DataManager::showCurveDialog() {
+  if (_currentObject) {
+    if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
+      DialogLauncher::self()->showCurveDialog(0, vector);
+    }
+  }
+}
+
+
+void DataManager::showCSDDialog() {
+  if (_currentObject) {
+    if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
+      DialogLauncher::self()->showCSDDialog(0, vector);
+    }
+  }
+}
+
+
+void DataManager::showPowerSpectrumDialog() {
+  if (_currentObject) {
+    if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
+      DialogLauncher::self()->showPowerSpectrumDialog(0, vector);
+    }
+  }
+}
+
+
+void DataManager::showHistogramDialog() {
+  if (_currentObject) {
+    if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
+      DialogLauncher::self()->showHistogramDialog(0, vector);
+    }
+  }
+}
+
+
+void DataManager::showImageDialog() {
+  if (_currentObject) {
+    if (MatrixPtr matrix = kst_cast<Matrix>(_currentObject)) {
+      DialogLauncher::self()->showImageDialog(0, matrix);
     }
   }
 }

@@ -266,6 +266,11 @@ void ImageDialog::updateButtons() {
 }
 
 
+void ImageDialog::setMatrix(MatrixPtr matrix) {
+  _imageTab->setMatrix(matrix);
+}
+
+
 void ImageDialog::configureTab(ObjectPtr object) {
   if (ImagePtr image = kst_cast<Image>(object)) {
     _imageTab->setMatrix(image->matrix());

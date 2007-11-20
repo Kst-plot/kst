@@ -33,18 +33,18 @@ class KST_EXPORT DialogLauncherGui : public DialogLauncher {
     virtual void showStringDialog(ObjectPtr objectPtr = 0);
 
     //standard objects
-    virtual void showCurveDialog(ObjectPtr objectPtr = 0);
+    virtual void showCurveDialog(ObjectPtr objectPtr = 0, VectorPtr vector = 0);
 
-    virtual void showImageDialog(ObjectPtr objectPtr = 0);
+    virtual void showImageDialog(ObjectPtr objectPtr = 0, MatrixPtr matrix = 0);
 
     //standard data objects
     virtual void showEquationDialog(ObjectPtr objectPtr = 0);
 
-    virtual void showHistogramDialog(ObjectPtr objectPtr = 0);
+    virtual void showHistogramDialog(ObjectPtr objectPtr = 0, VectorPtr vector = 0);
 
-    virtual void showPowerSpectrumDialog(ObjectPtr objectPtr = 0);
+    virtual void showPowerSpectrumDialog(ObjectPtr objectPtr = 0, VectorPtr vector = 0);
 
-    virtual void showCSDDialog(ObjectPtr objectPtr = 0);
+    virtual void showCSDDialog(ObjectPtr objectPtr = 0, VectorPtr vector = 0);
 
     virtual void showEventMonitorDialog(ObjectPtr objectPtr = 0);
 

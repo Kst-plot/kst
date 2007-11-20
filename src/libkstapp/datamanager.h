@@ -36,6 +36,11 @@ class KST_EXPORT DataManager : public QDialog, Ui::DataManager
     void showContextMenu(const QPoint &);
     void showEditDialog();
     void deleteObject();
+    void showCurveDialog();
+    void showCSDDialog();
+    void showHistogramDialog();
+    void showPowerSpectrumDialog();
+    void showImageDialog();
 
   private:
     Document *_doc;

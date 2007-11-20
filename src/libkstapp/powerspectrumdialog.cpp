@@ -121,6 +121,11 @@ QString PowerSpectrumDialog::tagString() const {
 }
 
 
+void PowerSpectrumDialog::setVector(VectorPtr vector) {
+  _powerSpectrumTab->setVector(vector);
+}
+
+
 void PowerSpectrumDialog::configureTab(ObjectPtr object) {
   if (!object) {
     _powerSpectrumTab->FFTOptionsWidget()->setSampleRate(Kst::dialogDefaults->value("spectrum/freq",100.0).toDouble());

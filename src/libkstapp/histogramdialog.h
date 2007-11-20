@@ -71,6 +71,8 @@ class KST_EXPORT HistogramDialog : public DataDialog {
     HistogramDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~HistogramDialog();
 
+    void setVector(VectorPtr vector);
+
   protected:
     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;

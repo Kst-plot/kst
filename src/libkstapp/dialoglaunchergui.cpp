@@ -57,14 +57,20 @@ void DialogLauncherGui::showStringDialog(ObjectPtr objectPtr) {
 }
 
 
-void DialogLauncherGui::showCurveDialog(ObjectPtr objectPtr) {
+void DialogLauncherGui::showCurveDialog(ObjectPtr objectPtr, VectorPtr vector) {
   CurveDialog dialog(objectPtr, kstApp->mainWindow());
+  if (vector) {
+    dialog.setVector(vector);
+  }
   dialog.exec();
 }
 
 
-void DialogLauncherGui::showImageDialog(ObjectPtr objectPtr) {
+void DialogLauncherGui::showImageDialog(ObjectPtr objectPtr, MatrixPtr matrix) {
   ImageDialog dialog(objectPtr, kstApp->mainWindow());
+  if (matrix) {
+    dialog.setMatrix(matrix);
+  }
   dialog.exec();
 }
 
@@ -74,20 +80,29 @@ void DialogLauncherGui::showEquationDialog(ObjectPtr objectPtr) {
 }
 
 
-void DialogLauncherGui::showHistogramDialog(ObjectPtr objectPtr) {
+void DialogLauncherGui::showHistogramDialog(ObjectPtr objectPtr, VectorPtr vector) {
   HistogramDialog dialog(objectPtr, kstApp->mainWindow());
+  if (vector) {
+    dialog.setVector(vector);
+  }
   dialog.exec();
 }
 
 
-void DialogLauncherGui::showPowerSpectrumDialog(ObjectPtr objectPtr) {
+void DialogLauncherGui::showPowerSpectrumDialog(ObjectPtr objectPtr, VectorPtr vector) {
   PowerSpectrumDialog dialog(objectPtr, kstApp->mainWindow());
+  if (vector) {
+    dialog.setVector(vector);
+  }
   dialog.exec();
 }
 
 
-void DialogLauncherGui::showCSDDialog(ObjectPtr objectPtr) {
+void DialogLauncherGui::showCSDDialog(ObjectPtr objectPtr, VectorPtr vector) {
   CSDDialog dialog(objectPtr, kstApp->mainWindow());
+  if (vector) {
+    dialog.setVector(vector);
+  }
   dialog.exec();
 }
 

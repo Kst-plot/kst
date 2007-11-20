@@ -243,6 +243,11 @@ void HistogramDialog::updateButtons() {
 }
 
 
+void HistogramDialog::setVector(VectorPtr vector) {
+  _histogramTab->setVector(vector);
+}
+
+
 ObjectPtr HistogramDialog::createNewDataObject() const {
   Q_ASSERT(_document && _document->objectStore());
   ObjectTag tag = _document->objectStore()->suggestObjectTag<Histogram>(tagString(), ObjectTag::globalTagContext);

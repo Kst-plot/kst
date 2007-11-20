@@ -72,13 +72,15 @@ void DialogLauncher::showStringDialog(ObjectPtr objectPtr) {
 }
 
 
-void DialogLauncher::showCurveDialog(ObjectPtr objectPtr) {
+void DialogLauncher::showCurveDialog(ObjectPtr objectPtr, VectorPtr vector) {
   Q_UNUSED(objectPtr);
+  Q_UNUSED(vector);
 }
 
 
-void DialogLauncher::showImageDialog(ObjectPtr objectPtr) {
+void DialogLauncher::showImageDialog(ObjectPtr objectPtr, MatrixPtr matrix) {
   Q_UNUSED(objectPtr);
+  Q_UNUSED(matrix);
 }
 
 
@@ -92,18 +94,21 @@ void DialogLauncher::showEventMonitorDialog(ObjectPtr objectPtr) {
 }
 
 
-void DialogLauncher::showHistogramDialog(ObjectPtr objectPtr) {
+void DialogLauncher::showHistogramDialog(ObjectPtr objectPtr, VectorPtr vector) {
   Q_UNUSED(objectPtr);
+  Q_UNUSED(vector);
 }
 
 
-void DialogLauncher::showPowerSpectrumDialog(ObjectPtr objectPtr) {
+void DialogLauncher::showPowerSpectrumDialog(ObjectPtr objectPtr, VectorPtr vector) {
   Q_UNUSED(objectPtr);
+  Q_UNUSED(vector);
 }
 
 
-void DialogLauncher::showCSDDialog(ObjectPtr objectPtr) {
+void DialogLauncher::showCSDDialog(ObjectPtr objectPtr, VectorPtr vector) {
   Q_UNUSED(objectPtr);
+  Q_UNUSED(vector);
 }
 
 
