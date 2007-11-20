@@ -17,6 +17,8 @@
 
 #include "document.h"
 #include "sessionmodel.h"
+#include "datacollection.h"
+#include "plotitem.h"
 
 #include "objectstore.h"
 #include "dataobject.h"
@@ -132,38 +134,74 @@ void DataManager::showContextMenu(const QPoint &position) {
       _currentObject = model->generateObjectList().at(_session->indexAt(position).row());
       if (_currentObject) {
         QAction *action = new QAction(_currentObject->tag().displayString(), this);
+        action->setEnabled(false);
         actions.append(action);
 
-        action = new DataButtonAction(tr("Edit"));
+        action = new QAction(tr("Edit"), this);
         connect(action, SIGNAL(triggered()), this, SLOT(showEditDialog()));
         actions.append(action);
 
         if (VectorPtr v = kst_cast<Vector>(_currentObject)) {
 
-          action = new DataButtonAction(tr("Make Curve"));
+          action = new QAction(tr("Make Curve"), this);
           connect(action, SIGNAL(triggered()), this, SLOT(showCurveDialog()));
           actions.append(action);
 
-          action = new DataButtonAction(tr("Make Power Spectrum"));
+          action = new QAction(tr("Make Power Spectrum"), this);
           connect(action, SIGNAL(triggered()), this, SLOT(showPowerSpectrumDialog()));
           actions.append(action);
 
-          action = new DataButtonAction(tr("Make Spectrogram"));
+          action = new QAction(tr("Make Spectrogram"), this);
           connect(action, SIGNAL(triggered()), this, SLOT(showCSDDialog()));
           actions.append(action);
 
-          action = new DataButtonAction(tr("Make Histogram"));
+          action = new QAction(tr("Make Histogram"), this);
           connect(action, SIGNAL(triggered()), this, SLOT(showHistogramDialog()));
           actions.append(action);
 
         } else if (MatrixPtr m = kst_cast<Matrix>(_currentObject)) {
-          action = new DataButtonAction(tr("Make Image"));
+          action = new QAction(tr("Make Image"), this);
           connect(action, SIGNAL(triggered()), this, SLOT(showImageDialog()));
           actions.append(action);
         } else if (RelationPtr r = kst_cast<Relation>(_currentObject)) {
+
+          QMenu *addMenu = new QMenu(this);
+          QMenu *removeMenu = new QMenu(this);
+
+          foreach (PlotItemInterface *plot, Data::self()->plotList()) {
+            action = new QAction(plot->plotName(), this);
+            action->setData(qVariantFromValue(plot));
+            addMenu->addAction(action);
+
+            PlotItem* plotItem = static_cast<PlotItem*>(plot);
+            if (plotItem) {
+              foreach (PlotRenderItem* renderItem, plotItem->renderItems()) {
+                if (renderItem->relationList().contains(r)) {
+                  action = new QAction(plot->plotName(), this);
+                  action->setData(qVariantFromValue(plot));
+                  removeMenu->addAction(action);
+                  break;
+                }
+              }
+            }
+          }
+
+          connect(addMenu, SIGNAL(triggered(QAction*)), this, SLOT(addToPlot(QAction*)));
+          action = new QAction(tr("Add to Plot"), this);
+
+          action->setMenu(addMenu);
+          actions.append(action);
+
+
+          connect(removeMenu, SIGNAL(triggered(QAction*)), this, SLOT(removeFromPlot(QAction*)));
+          action = new QAction(tr("Remove From Plot"), this);
+          connect(action, SIGNAL(triggered()), this, SLOT(showImageDialog()));
+
+          action->setMenu(removeMenu);
+          actions.append(action);
         }
 
-        action = new DataButtonAction(tr("Delete"));
+        action = new QAction(tr("Delete"), this);
         connect(action, SIGNAL(triggered()), this, SLOT(deleteObject()));
         actions.append(action);
       }
@@ -235,7 +273,45 @@ void DataManager::showImageDialog() {
 
 
 void DataManager::deleteObject() {
-  qDebug() << "deleteObject" << endl;
+  if (RelationPtr relation = kst_cast<Relation>(_currentObject)) {
+    Data::self()->removeCurveFromPlots(relation);
+    _doc->objectStore()->removeObject(relation);
+  } else if (DataObjectPtr dataObject = kst_cast<DataObject>(_currentObject)) {
+    _doc->objectStore()->removeObject(dataObject);
+  } else if (PrimitivePtr primitive = kst_cast<Primitive>(_currentObject)) {
+    _doc->objectStore()->removeObject(primitive);
+  }
+  _currentObject = 0;
+}
+
+
+void DataManager::addToPlot(QAction* action) {
+  PlotItem* plotItem = static_cast<PlotItem*>(qVariantValue<PlotItemInterface*>(action->data()));
+  CurvePtr curve = kst_cast<Curve>(_currentObject);
+  if (plotItem && curve) {
+    PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
+    renderItem->addRelation(kst_cast<Relation>(curve));
+    plotItem->update();
+  }
+}
+
+
+void DataManager::removeFromPlot(QAction* action) {
+  bool plotUpdated = false;
+
+  PlotItem* plotItem = static_cast<PlotItem*>(qVariantValue<PlotItemInterface*>(action->data()));
+  RelationPtr relation = kst_cast<Relation>(_currentObject);
+  if (plotItem && relation) {
+    foreach (PlotRenderItem* renderItem, plotItem->renderItems()) {
+      if (renderItem->relationList().contains(relation)) {
+        renderItem->removeRelation(relation);
+        plotUpdated = true;
+      }
+    }
+    if (plotUpdated) {
+      plotItem->update();
+    }
+  }
 }
 
 }

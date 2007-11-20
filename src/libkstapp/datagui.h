@@ -23,6 +23,8 @@ class KST_EXPORT DataGui : public Data {
     DataGui();
     virtual ~DataGui();
 
+    virtual void removeCurveFromPlots(Relation *c);
+
     virtual QList<PlotItemInterface*> plotList() const;
 
     virtual int rows() const;

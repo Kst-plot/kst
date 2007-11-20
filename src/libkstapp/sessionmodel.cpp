@@ -134,7 +134,12 @@ QVariant SessionModel::data(const QModelIndex& index, int role) const {
 
   Q_ASSERT(_store);
   ObjectList<Object> objectList = generateObjectList();
+
   const int row = index.row();
+  if (row >= objectList.count()) {
+    return QVariant();
+  }
+
   if (DataObjectPtr p = kst_cast<DataObject>(objectList.at(row))) {
     return dataObjectData(p, index);
   } else if (RelationPtr p = kst_cast<Relation>(objectList.at(row))) {

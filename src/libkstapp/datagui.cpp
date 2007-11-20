@@ -50,9 +50,29 @@ int DataGui::rows() const {
 }
 
 
-
 int DataGui::columns() const {
   return -1;
+}
+
+
+void DataGui::removeCurveFromPlots(Relation *relation) {
+  View *view = kstApp->mainWindow()->tabWidget()->currentView();
+  if (view) {
+    QList<PlotItem*> list = PlotItemManager::plotsForView(view);
+    foreach (PlotItem *plotItem, list) {
+      bool plotUpdated = false;
+
+      foreach (PlotRenderItem* renderItem, plotItem->renderItems()) {
+        if (renderItem->relationList().contains(relation)) {
+          renderItem->removeRelation(relation);
+          plotUpdated = true;
+        }
+      }
+      if (plotUpdated) {
+        plotItem->update();
+      }
+    }
+  }
 }
 
 }

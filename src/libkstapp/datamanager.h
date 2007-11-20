@@ -42,6 +42,9 @@ class KST_EXPORT DataManager : public QDialog, Ui::DataManager
     void showPowerSpectrumDialog();
     void showImageDialog();
 
+    void addToPlot(QAction* action);
+    void removeFromPlot(QAction* action);
+
   private:
     Document *_doc;
 
