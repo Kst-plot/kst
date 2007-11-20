@@ -26,11 +26,27 @@ void Kst::setDataVectorDefaults(DataVectorPtr V) {
   Kst::dialogDefaults->setValue("vector/doAve", V->doAve());
 }
 
-//FIXME: move to dialogdefaults.cpp... (How do you add a file to the build system??)
 void Kst::setGenVectorDefaults(GeneratedVectorPtr V) {
-  //FIXME Do we need a V->readLock() here?
+  //FIXME Do we need a V->readLock() here? 
   Kst::dialogDefaults->setValue("genVector/min", V->min());
   Kst::dialogDefaults->setValue("genVector/max", V->max()); 
   Kst::dialogDefaults->setValue("genVector/length", V->length());
 }
-//---------------------------------------------------------------------------
+
+void Kst::setSpectrumDefaults(PSDPtr P) {
+  //FIXME Do we need a V->readLock() here?
+  //NOTE: we are storing enums as ints here... so there might be
+  //      odd behavior if the enums change betwee recompiles.
+  Kst::dialogDefaults->setValue("spectrum/freq", P->frequency());
+  Kst::dialogDefaults->setValue("spectrum/average", P->average());
+  Kst::dialogDefaults->setValue("spectrum/len", P->length());
+  Kst::dialogDefaults->setValue("spectrum/apodize", P->apodize());
+  Kst::dialogDefaults->setValue("spectrum/removeMean", P->removeMean());
+  Kst::dialogDefaults->setValue("spectrum/vUnits", P->vectorUnits());
+  Kst::dialogDefaults->setValue("spectrum/rUnits", P->rateUnits());
+  Kst::dialogDefaults->setValue("spectrum/apodizeFxn", P->apodizeFxn());
+  Kst::dialogDefaults->setValue("spectrum/gaussianSigma", P->gaussianSigma());
+  Kst::dialogDefaults->setValue("spectrum/output", P->output());
+  Kst::dialogDefaults->setValue("spectrum/interpolateHoles", P->interpolateHoles());
+}
+

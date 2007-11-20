@@ -43,9 +43,6 @@ Application::Application(int &argc, char **argv)
   QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
   DataSource::setupOnStartup(settingsObject);
 
-  // Initialize the dialogDefaults settings
-  //dialogDefaults = new QSettings("kstdialogrc", QSettings::NativeFormat);
-
   _mainWindow = new MainWindow;
 
   //Replace the data singleton with one that actually works

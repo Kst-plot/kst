@@ -28,6 +28,7 @@
 #include "defaultnames.h"
 #include "datacollection.h"
 #include "dataobjectcollection.h"
+#include "dialogdefaults.h"
 
 #include <QPushButton>
 
@@ -102,6 +103,8 @@ PowerSpectrumDialog::PowerSpectrumDialog(ObjectPtr dataObject, QWidget *parent)
 
   if (editMode() == Edit) {
     configureTab(dataObject);
+  } else {
+    configureTab(0);
   }
 
   connect(_powerSpectrumTab, SIGNAL(vectorChanged()), this, SLOT(updateButtons()));
@@ -119,7 +122,21 @@ QString PowerSpectrumDialog::tagString() const {
 
 
 void PowerSpectrumDialog::configureTab(ObjectPtr object) {
-  if (PSDPtr psd = kst_cast<PSD>(object)) {
+  if (!object) {
+    _powerSpectrumTab->FFTOptionsWidget()->setSampleRate(Kst::dialogDefaults->value("spectrum/freq",100.0).toDouble());
+    _powerSpectrumTab->FFTOptionsWidget()->setInterleavedAverage(Kst::dialogDefaults->value("spectrum/average",true).toBool());
+    _powerSpectrumTab->FFTOptionsWidget()->setFFTLength(Kst::dialogDefaults->value("spectrum/len",12).toInt());
+    _powerSpectrumTab->FFTOptionsWidget()->setApodize(Kst::dialogDefaults->value("spectrum/apodize",true).toBool());
+    _powerSpectrumTab->FFTOptionsWidget()->setRemoveMean(Kst::dialogDefaults->value("spectrum/removeMean",true).toBool());
+    _powerSpectrumTab->FFTOptionsWidget()->setVectorUnits(Kst::dialogDefaults->value("spectrum/vUnits","V").toString());
+    _powerSpectrumTab->FFTOptionsWidget()->setRateUnits(Kst::dialogDefaults->value("spectrum/rUnits","Hz").toString());
+    _powerSpectrumTab->FFTOptionsWidget()->setApodizeFunction(ApodizeFunction(Kst::dialogDefaults->value("spectrum/apodizeFxn",WindowOriginal).toInt()));
+    _powerSpectrumTab->FFTOptionsWidget()->setSigma(Kst::dialogDefaults->value("spectrum/gaussianSigma",1.0).toDouble());
+    _powerSpectrumTab->FFTOptionsWidget()->setOutput(PSDType(Kst::dialogDefaults->value("spectrum/output",PSDPowerSpectralDensity).toInt()));
+    _powerSpectrumTab->FFTOptionsWidget()->setInterpolateOverHoles(Kst::dialogDefaults->value("spectrum/interpolateHoles",true).toInt());
+
+//xxxxxxxxxx fill the dialog from the settings...
+  } else if (PSDPtr psd = kst_cast<PSD>(object)) {
     _powerSpectrumTab->setVector(psd->vector());
 
     _powerSpectrumTab->FFTOptionsWidget()->setSampleRate(psd->frequency());
@@ -165,6 +182,7 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() const {
 
   powerspectrum->update(0);
   powerspectrum->unlock();
+  setSpectrumDefaults(powerspectrum);
 
   //FIXME this should be a command...
   //FIXME need some smart placement...
@@ -238,6 +256,9 @@ ObjectPtr PowerSpectrumDialog::editExistingDataObject() const {
 
     powerspectrum->update(0);
     powerspectrum->unlock();
+
+    setSpectrumDefaults(powerspectrum);
+
   }
   return dataObject();
 }

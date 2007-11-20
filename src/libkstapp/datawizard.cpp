@@ -20,6 +20,7 @@
 #include "dataobjectcollection.h"
 #include "plotiteminterface.h"
 #include "plotitem.h"
+#include "dialogdefaults.h"
 
 #include <QMessageBox>
 
@@ -35,12 +36,14 @@ DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *
   : QWizardPage(parent), _pageValid(false), _store(store) {
    setupUi(this);
 
-  QString default_source = vectorDefaults.dataSource();
+   connect(_url, SIGNAL(changed(const QString&)), this, SLOT(sourceChanged(const QString&)));
+   connect(_configureSource, SIGNAL(clicked()), this, SLOT(configureSource()));
+
+   QString default_source = Kst::dialogDefaults->value("vector/datasource",".").toString();
   _url->setFile(default_source);
   _url->setFocus();
+  //sourceChanged(default_source);
 
-  connect(_url, SIGNAL(changed(const QString&)), this, SLOT(sourceChanged(const QString&)));
-  connect(_configureSource, SIGNAL(clicked()), this, SLOT(configureSource()));
 }
 
 
@@ -366,6 +369,27 @@ DataWizardPageDataPresentation::DataWizardPageDataPresentation(ObjectStore *stor
 
   _xVectorExisting->setObjectStore(store);
 
+  dataRange()->setRange(Kst::dialogDefaults->value("vector/range", 1).toInt());
+  dataRange()->setStart(Kst::dialogDefaults->value("vector/start", 0).toInt());
+  dataRange()->setCountFromEnd(Kst::dialogDefaults->value("vector/countFromEnd",false).toBool());
+  dataRange()->setReadToEnd(Kst::dialogDefaults->value("vector/readToEnd",true).toBool());
+  dataRange()->setSkip(Kst::dialogDefaults->value("vector/skip", 0).toInt());
+  dataRange()->setDoSkip(Kst::dialogDefaults->value("vector/doSkip", false).toBool());
+  dataRange()->setDoFilter(Kst::dialogDefaults->value("vector/doAve",false).toBool());
+
+  getFFTOptions()->setSampleRate(Kst::dialogDefaults->value("spectrum/freq",100.0).toDouble());
+  getFFTOptions()->setInterleavedAverage(Kst::dialogDefaults->value("spectrum/average",true).toBool());
+  getFFTOptions()->setFFTLength(Kst::dialogDefaults->value("spectrum/len",12).toInt());
+  getFFTOptions()->setApodize(Kst::dialogDefaults->value("spectrum/apodize",true).toBool());
+  getFFTOptions()->setRemoveMean(Kst::dialogDefaults->value("spectrum/removeMean",true).toBool());
+  getFFTOptions()->setVectorUnits(Kst::dialogDefaults->value("spectrum/vUnits","V").toString());
+  getFFTOptions()->setRateUnits(Kst::dialogDefaults->value("spectrum/rUnits","Hz").toString());
+  getFFTOptions()->setApodizeFunction(ApodizeFunction(Kst::dialogDefaults->value("spectrum/apodizeFxn",WindowOriginal).toInt()));
+  getFFTOptions()->setSigma(Kst::dialogDefaults->value("spectrum/gaussianSigma",1.0).toDouble());
+  getFFTOptions()->setOutput(PSDType(Kst::dialogDefaults->value("spectrum/output",PSDPowerSpectralDensity).toInt()));
+  getFFTOptions()->setInterpolateOverHoles(Kst::dialogDefaults->value("spectrum/interpolateHoles",true).toInt());
+
+
   connect(_radioButtonPlotData, SIGNAL(clicked()), this, SLOT(updatePlotTypeOptions()));
   connect(_radioButtonPlotPSD, SIGNAL(clicked()), this, SLOT(updatePlotTypeOptions()));
   connect(_radioButtonPlotDataPSD, SIGNAL(clicked()), this, SLOT(updatePlotTypeOptions()));
@@ -511,6 +535,10 @@ DataWizard::DataWizard(QWidget *parent)
   connect(_pageDataSource, SIGNAL(dataSourceChanged()), _pageDataPresentation, SLOT(updateVectors()));
   disconnect(button(QWizard::FinishButton), SIGNAL(clicked()), (QDialog*)this, SLOT(accept()));
   connect(button(QWizard::FinishButton), SIGNAL(clicked()), this, SLOT(finished()));
+
+  // the dialog needs to know that the default has been set....
+  _pageDataSource->sourceChanged(Kst::dialogDefaults->value("vector/datasource",".").toString());
+
 }
 
 
@@ -629,13 +657,14 @@ void DataWizard::finished() {
 
   // only create create the y-vectors
   {
+    DataVectorPtr vector;
     for (int i = 0; i < _pageVectors->plotVectors()->count(); i++) {
       QString field = _pageVectors->plotVectors()->item(i)->text();
 
       Q_ASSERT(_document && _document->objectStore());
       const ObjectTag tag = _document->objectStore()->suggestObjectTag<DataVector>(QString(), ds->tag());
 
-      DataVectorPtr vector = _document->objectStore()->createObject<DataVector>(tag);
+      vector = _document->objectStore()->createObject<DataVector>(tag);
 
       vector->writeLock();
       vector->change(ds, field,
@@ -651,7 +680,11 @@ void DataWizard::finished() {
       vectors.append(vector);
       ++n_curves;
     }
+    if (n_curves>0) {
+      Kst::setDataVectorDefaults(vector);
+    }
   }
+
 
   // create the necessary plots
   QList<PlotItem*> plotList;
@@ -808,12 +841,16 @@ void DataWizard::finished() {
     int indexColor = 0;
     ptype = 0; 
 
+    PSDPtr powerspectrum;
+    int n_psd=0;
+
     for (DataVectorList::Iterator it = vectors.begin(); it != vectors.end(); ++it) {
       if ((*it)->length() > 0) {
 
         Q_ASSERT(_document && _document->objectStore());
         const ObjectTag tag = _document->objectStore()->suggestObjectTag<Curve>(QString(), ds->tag());
-        PSDPtr powerspectrum = _document->objectStore()->createObject<PSD>(tag);
+        powerspectrum = _document->objectStore()->createObject<PSD>(tag);
+	n_psd++;
         Q_ASSERT(powerspectrum);
 
         powerspectrum->writeLock();
@@ -874,6 +911,10 @@ void DataWizard::finished() {
           }
         }
       }
+    }
+
+    if (n_psd>0) {
+      setSpectrumDefaults(powerspectrum);
     }
   }
 

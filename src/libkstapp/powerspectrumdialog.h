@@ -64,7 +64,7 @@ class KST_EXPORT PowerSpectrumDialog : public DataDialog {
     void updateButtons();
 
   private:
-    void configureTab(ObjectPtr object);
+    void configureTab(ObjectPtr object=0);
 
     PowerSpectrumTab *_powerSpectrumTab;
 };
