@@ -12,24 +12,24 @@
 #include "dialogdefaults.h"
 namespace Kst {
   QSettings *dialogDefaults = new QSettings("kstdialogrc", QSettings::NativeFormat);
-}
 
-void Kst::setDataVectorDefaults(DataVectorPtr V) {
+void setDataVectorDefaults(DataVectorPtr V) {
   //FIXME Do we need a V->readLock() here?
-  Kst::dialogDefaults->setValue("vector/datasource", V->filename());
-  Kst::dialogDefaults->setValue("vector/range", V->reqNumFrames());
-  Kst::dialogDefaults->setValue("vector/start", V->reqStartFrame());
-  Kst::dialogDefaults->setValue("vector/countFromEnd", V->countFromEOF());
-  Kst::dialogDefaults->setValue("vector/readToEnd", V->readToEOF());
-  Kst::dialogDefaults->setValue("vector/skip", V->skip());
-  Kst::dialogDefaults->setValue("vector/doSkip", V->doSkip());
-  Kst::dialogDefaults->setValue("vector/doAve", V->doAve());
+  dialogDefaults->setValue("vector/datasource", V->filename());
+  dialogDefaults->setValue("vector/range", V->reqNumFrames());
+  dialogDefaults->setValue("vector/start", V->reqStartFrame());
+  dialogDefaults->setValue("vector/countFromEnd", V->countFromEOF());
+  dialogDefaults->setValue("vector/readToEnd", V->readToEOF());
+  dialogDefaults->setValue("vector/skip", V->skip());
+  dialogDefaults->setValue("vector/doSkip", V->doSkip());
+  dialogDefaults->setValue("vector/doAve", V->doAve());
 }
 
-void Kst::setGenVectorDefaults(GeneratedVectorPtr V) {
+void setGenVectorDefaults(GeneratedVectorPtr V) {
   //FIXME Do we need a V->readLock() here? 
-  Kst::dialogDefaults->setValue("genVector/min", V->min());
-  Kst::dialogDefaults->setValue("genVector/max", V->max()); 
-  Kst::dialogDefaults->setValue("genVector/length", V->length());
+  dialogDefaults->setValue("genVector/min", V->min());
+  dialogDefaults->setValue("genVector/max", V->max()); 
+  dialogDefaults->setValue("genVector/length", V->length());
 }
 
+}

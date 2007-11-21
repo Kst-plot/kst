@@ -254,17 +254,17 @@ void VectorDialog::updateButtons() {
 
 void VectorDialog::configureTab(ObjectPtr vector) {
   if (!vector) {
-    _vectorTab->setFile(Kst::dialogDefaults->value("vector/datasource",_vectorTab->file()).toString());
-    _vectorTab->dataRange()->setRange(Kst::dialogDefaults->value("vector/range", 1).toInt());
-    _vectorTab->dataRange()->setStart(Kst::dialogDefaults->value("vector/start", 0).toInt());
-    _vectorTab->dataRange()->setCountFromEnd(Kst::dialogDefaults->value("vector/countFromEnd",false).toBool());
-    _vectorTab->dataRange()->setReadToEnd(Kst::dialogDefaults->value("vector/readToEnd",true).toBool());
-    _vectorTab->dataRange()->setSkip(Kst::dialogDefaults->value("vector/skip", 0).toInt());
-    _vectorTab->dataRange()->setDoSkip(Kst::dialogDefaults->value("vector/doSkip", false).toBool());
-    _vectorTab->dataRange()->setDoFilter(Kst::dialogDefaults->value("vector/doAve",false).toBool());
-    _vectorTab->setFrom(Kst::dialogDefaults->value("genVector/min",-10).toInt());
-    _vectorTab->setTo(Kst::dialogDefaults->value("genVector/max",10).toInt());
-    _vectorTab->setNumberOfSamples(Kst::dialogDefaults->value("genVector/length",1000).toInt());
+    _vectorTab->setFile(dialogDefaults->value("vector/datasource",_vectorTab->file()).toString());
+    _vectorTab->dataRange()->setRange(dialogDefaults->value("vector/range", 1).toInt());
+    _vectorTab->dataRange()->setStart(dialogDefaults->value("vector/start", 0).toInt());
+    _vectorTab->dataRange()->setCountFromEnd(dialogDefaults->value("vector/countFromEnd",false).toBool());
+    _vectorTab->dataRange()->setReadToEnd(dialogDefaults->value("vector/readToEnd",true).toBool());
+    _vectorTab->dataRange()->setSkip(dialogDefaults->value("vector/skip", 0).toInt());
+    _vectorTab->dataRange()->setDoSkip(dialogDefaults->value("vector/doSkip", false).toBool());
+    _vectorTab->dataRange()->setDoFilter(dialogDefaults->value("vector/doAve",false).toBool());
+    _vectorTab->setFrom(dialogDefaults->value("genVector/min",-10).toInt());
+    _vectorTab->setTo(dialogDefaults->value("genVector/max",10).toInt());
+    _vectorTab->setNumberOfSamples(dialogDefaults->value("genVector/length",1000).toInt());
   } else if (DataVectorPtr dataVector = kst_cast<DataVector>(vector)) {
     _vectorTab->setVectorMode(VectorTab::DataVector);
     _vectorTab->setFile(dataVector->dataSource()->fileName());
@@ -335,7 +335,7 @@ ObjectPtr VectorDialog::createNewDataVector() const {
       dataRange->doSkip(),
       dataRange->doFilter());
 
-  Kst::setDataVectorDefaults(vector);
+  setDataVectorDefaults(vector);
 
 #if 0
   DataVectorPtr vector = new DataVector(
@@ -373,7 +373,7 @@ ObjectPtr VectorDialog::createNewGeneratedVector() const {
   GeneratedVectorPtr vector = _document->objectStore()->createObject<GeneratedVector>(tag);
   vector->changeRange(from, to, numberOfSamples);
 
-  Kst::setGenVectorDefaults(vector);
+  setGenVectorDefaults(vector);
 
 //  return static_cast<ObjectPtr>(vector);
   return vector;
@@ -401,7 +401,7 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
     dataVector->update(0);
     dataVector->unlock();
 
-    Kst::setDataVectorDefaults(dataVector);
+    setDataVectorDefaults(dataVector);
 
   } else if (GeneratedVectorPtr generatedVector = kst_cast<GeneratedVector>(dataObject())) {
     const qreal from = _vectorTab->from();
@@ -410,7 +410,7 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
     generatedVector->writeLock();
     generatedVector->changeRange(from, to, numberOfSamples);
     generatedVector->unlock();
-    Kst::setGenVectorDefaults(generatedVector);
+    setGenVectorDefaults(generatedVector);
   }
   return dataObject();
 }
