@@ -13,6 +13,9 @@
 
 #include "datavector.h"
 #include "datacollection.h"
+#include "objectstore.h"
+#include "mainwindow.h"
+#include "document.h"
 
 #include "colorsequence.h"
 
@@ -24,10 +27,19 @@ ChooseColorDialog::ChooseColorDialog(QWidget *parent)
   setupUi(this);
   grid = 0;
 
+  if (MainWindow *mw = qobject_cast<MainWindow*>(parent)) {
+    _store = mw->document()->objectStore();
+  } else {
+    // FIXME: we need the object store
+    qFatal("ERROR: can't construct a ChangeDataSampleDialog without the object store");
+  }
+
+  connect(OK, SIGNAL(clicked()), this, SLOT(OKClicked()));
 }
 
 
 ChooseColorDialog::~ChooseColorDialog() {
+  delete grid;
 }
 
 
@@ -42,7 +54,7 @@ void ChooseColorDialog::updateColorGroup() {
 
   // cannot use dataSourceList.fileNames() as it contains datasources that
   // are not used by any curves or vectors
-  DataVectorList vcList; //FIXME // = ObjectSubList<Vector, DataVector>(vectorList);
+  DataVectorList vcList = _store->getObjects<DataVector>();
 
   QStringList fileNameList;
   for (DataVectorList::Iterator vc_iter = vcList.begin();
@@ -100,6 +112,46 @@ void ChooseColorDialog::cleanColorGroup()
     delete tempColorButton;
   }
   delete grid;
+}
+
+
+void ChooseColorDialog::OKClicked() {
+  applyChange();
+  accept();
+}
+
+
+void ChooseColorDialog::applyChange() {
+  CurveList curveList = _store->getObjects<Curve>();
+  for (CurveList::iterator curve_iter = curveList.begin(); curve_iter != curveList.end(); ++curve_iter)
+  {
+    VectorPtr vector;
+    CurvePtr curve = kst_cast<Curve>(*curve_iter);
+    if (_xVector->isChecked()) {
+      vector = curve->xVector();
+    } else {
+      vector = curve->yVector();
+    }
+    if (DataVectorPtr dataVector = kst_cast<DataVector>(vector))
+    {
+      curve->writeLock();
+      curve->setColor(getColorForFile(dataVector->filename()));
+      curve->update(0);
+      curve->unlock();
+    }
+  }
+}
+
+
+QColor ChooseColorDialog::getColorForFile(const QString &fileName) {
+  QList<ColorButton*>::Iterator kc_iter = colorButtons.begin();
+  for (QList<QLineEdit*>::Iterator fn_iter = lineEdits.begin(); fn_iter != lineEdits.end(); ++fn_iter) {
+    if (fileName == (*fn_iter)->text()) {
+      return (*kc_iter)->color();
+    }
+    ++kc_iter;
+  }
+  return QColor();   
 }
 
 }

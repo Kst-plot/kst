@@ -23,6 +23,8 @@
 
 namespace Kst {
 
+class ObjectStore;
+
 class KST_EXPORT ChooseColorDialog : public QDialog, Ui::ChooseColorDialog
 {
   Q_OBJECT
@@ -32,7 +34,13 @@ class KST_EXPORT ChooseColorDialog : public QDialog, Ui::ChooseColorDialog
 
     void exec();
 
+  private slots:
+    void OKClicked();
+    void applyChange();
+
   private:
+    QColor getColorForFile(const QString &fileName);
+
     QGridLayout* grid;
 
     void updateColorGroup();
@@ -40,6 +48,8 @@ class KST_EXPORT ChooseColorDialog : public QDialog, Ui::ChooseColorDialog
 
     QList<QLineEdit*> lineEdits;
     QList<ColorButton*> colorButtons;
+
+    ObjectStore *_store;
 
 };
 
