@@ -20,6 +20,8 @@
 
 namespace Kst {
 
+class ObjectStore;
+
 class KST_EXPORT ChangeDataSampleDialog : public QDialog, Ui::ChangeDataSampleDialog
 {
   Q_OBJECT
@@ -29,11 +31,16 @@ class KST_EXPORT ChangeDataSampleDialog : public QDialog, Ui::ChangeDataSampleDi
 
     void exec();
 
-  public slots:
+  private slots:
+    void updateDefaults(QListWidgetItem* item);
     void selectAll();
+    void OKClicked();
+    void applyChange();
 
   private:
     void updateCurveListDialog();
+
+    ObjectStore *_store;
 
 };
 
