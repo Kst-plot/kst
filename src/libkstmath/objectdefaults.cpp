@@ -16,6 +16,8 @@
 #include "psd.h"
 #include "objectstore.h"
 
+#include <dialogdefaults.h>
+
 namespace Kst {
 
 ObjectDefaults objectDefaults;
@@ -94,6 +96,23 @@ void ObjectDefaults::readConfig(QSettings *config) {
   _apodizeFxn = config->value("defaultApodizeFxn", 0).toInt();
   _output = config->value("defaultOutput", 0).toInt();
   _interpolateHoles = config->value("defaultInterpolateHoles", false).toBool();
+}
+
+void ObjectDefaults::setSpectrumDefaults(PSDPtr P) {
+  //FIXME Do we need a V->readLock() here?
+  //NOTE: we are storing enums as ints here... so there might be
+  //      odd behavior if the enums change between recompiles.
+  Kst::dialogDefaults->setValue("spectrum/freq", P->frequency());
+  Kst::dialogDefaults->setValue("spectrum/average", P->average());
+  Kst::dialogDefaults->setValue("spectrum/len", P->length());
+  Kst::dialogDefaults->setValue("spectrum/apodize", P->apodize());
+  Kst::dialogDefaults->setValue("spectrum/removeMean", P->removeMean());
+  Kst::dialogDefaults->setValue("spectrum/vUnits", P->vectorUnits());
+  Kst::dialogDefaults->setValue("spectrum/rUnits", P->rateUnits());
+  Kst::dialogDefaults->setValue("spectrum/apodizeFxn", P->apodizeFxn());
+  Kst::dialogDefaults->setValue("spectrum/gaussianSigma", P->gaussianSigma());
+  Kst::dialogDefaults->setValue("spectrum/output", P->output());
+  Kst::dialogDefaults->setValue("spectrum/interpolateHoles", P->interpolateHoles());
 }
 
 }

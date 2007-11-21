@@ -11,24 +11,22 @@
 
 #include "powerspectrumdialog.h"
 
-#include "dialogpage.h"
-
-#include "psd.h"
-
-#include "view.h"
-#include "plotitem.h"
-#include "tabwidget.h"
-#include "mainwindow.h"
 #include "application.h"
-#include "plotrenderitem.h"
 #include "curve.h"
-#include "document.h"
-#include "objectstore.h"
-
-#include "defaultnames.h"
 #include "datacollection.h"
 #include "dataobjectcollection.h"
+#include "defaultnames.h"
 #include "dialogdefaults.h"
+#include "dialogpage.h"
+#include "document.h"
+#include "mainwindow.h"
+#include "objectdefaults.h"
+#include "objectstore.h"
+#include "plotitem.h"
+#include "plotrenderitem.h"
+#include "psd.h"
+#include "tabwidget.h"
+#include "view.h"
 
 #include <QPushButton>
 
@@ -187,7 +185,7 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() const {
 
   powerspectrum->update(0);
   powerspectrum->unlock();
-  setSpectrumDefaults(powerspectrum);
+  Kst::objectDefaults.setSpectrumDefaults(powerspectrum);
 
   //FIXME this should be a command...
   //FIXME need some smart placement...
@@ -262,7 +260,7 @@ ObjectPtr PowerSpectrumDialog::editExistingDataObject() const {
     powerspectrum->update(0);
     powerspectrum->unlock();
 
-    setSpectrumDefaults(powerspectrum);
+    Kst::objectDefaults.setSpectrumDefaults(powerspectrum);
 
   }
   return dataObject();

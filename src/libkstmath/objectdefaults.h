@@ -15,6 +15,7 @@
 #include <QString>
 
 #include "kst_export.h"
+#include "psd.h"
 
 class QSettings;
 
@@ -37,6 +38,7 @@ class KST_EXPORT ObjectDefaults {
     int apodizeFxn() const { return _apodizeFxn; }
     int output() const { return _output; }
     int interpolateHoles() const { return _interpolateHoles; }
+    void setSpectrumDefaults(PSDPtr P);
 
     void readConfig(QSettings *config);
     void writeConfig(QSettings *config);

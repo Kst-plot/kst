@@ -19,7 +19,6 @@
 #define KSTDIALOGDEFAULTS
 
 #include "datavector.h"
-#include "../libkstmath/psd.h"
 #include "generatedvector.h"
 
 class QSettings;
@@ -29,7 +28,6 @@ namespace Kst {
 
   void setDataVectorDefaults(DataVectorPtr);
   void setGenVectorDefaults(GeneratedVectorPtr V);
-  void setSpectrumDefaults(PSDPtr P);
 }
 
 #endif

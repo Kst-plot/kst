@@ -12,23 +12,23 @@
 #include "datawizard.h"
 
 #include <QFileInfo>
-#include "objectstore.h"
-#include "document.h"
-#include "mainwindow.h"
-#include "datasourcedialog.h"
-#include "datacollection.h"
-#include "dataobjectcollection.h"
-#include "plotiteminterface.h"
-#include "plotitem.h"
-#include "dialogdefaults.h"
-
 #include <QMessageBox>
 
-#include "vectordefaults.h"
-#include "datavector.h"
-#include "curve.h"
 #include "colorsequence.h"
+#include "curve.h"
+#include "datacollection.h"
+#include "dataobjectcollection.h"
+#include "datasourcedialog.h"
+#include "datavector.h"
+#include "dialogdefaults.h"
+#include "document.h"
+#include "mainwindow.h"
+#include "objectdefaults.h"
+#include "objectstore.h"
+#include "plotitem.h"
+#include "plotiteminterface.h"
 #include "settings.h"
+#include "vectordefaults.h"
 
 namespace Kst {
 
@@ -914,7 +914,7 @@ void DataWizard::finished() {
     }
 
     if (n_psd>0) {
-      setSpectrumDefaults(powerspectrum);
+      objectDefaults.setSpectrumDefaults(powerspectrum);
     }
   }
 
