@@ -20,6 +20,8 @@
 
 namespace Kst {
 
+class ObjectStore;
+
 class KST_EXPORT DifferentiateCurvesDialog : public QDialog, Ui::DifferentiateCurvesDialog
 {
   Q_OBJECT
@@ -27,12 +29,19 @@ class KST_EXPORT DifferentiateCurvesDialog : public QDialog, Ui::DifferentiateCu
     DifferentiateCurvesDialog(QWidget *parent);
     virtual ~DifferentiateCurvesDialog();
 
+    void exec();
+
   private slots:
     void updateButtons();
     void addButtonClicked();
     void removeButtonClicked();
     void upButtonClicked();
     void downButtonClicked();
+    void OKClicked();
+
+  private:
+    ObjectStore *_store;
+
 };
 
 }

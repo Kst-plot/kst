@@ -11,12 +11,25 @@
 
 #include "differentiatecurvesdialog.h"
 #include "linestyle.h"
+#include "curve.h"
+#include "colorsequence.h"
+
+#include "objectstore.h"
+#include "mainwindow.h"
+#include "document.h"
 
 namespace Kst {
 
 DifferentiateCurvesDialog::DifferentiateCurvesDialog(QWidget *parent)
   : QDialog(parent) {
    setupUi(this);
+
+  if (MainWindow *mw = qobject_cast<MainWindow*>(parent)) {
+    _store = mw->document()->objectStore();
+  } else {
+    // FIXME: we need the object store
+    qFatal("ERROR: can't construct a ChangeDataSampleDialog without the object store");
+  }
 
   _availableListBox->clear();
   _selectedListBox->clear();
@@ -26,28 +39,24 @@ DifferentiateCurvesDialog::DifferentiateCurvesDialog(QWidget *parent)
   _availableListBox->addItem(tr("Line Width"));
 
   connect(Cancel, SIGNAL(clicked()), this, SLOT(close()));
-  connect(OK, SIGNAL(clicked()), this, SLOT(close()));
+  connect(OK, SIGNAL(clicked()), this, SLOT(OKClicked()));
 
   connect(_add, SIGNAL(clicked()), this, SLOT(addButtonClicked()));
   connect(_remove, SIGNAL(clicked()), this, SLOT(removeButtonClicked()));
   connect(_up, SIGNAL(clicked()), this, SLOT(upButtonClicked()));
   connect(_down, SIGNAL(clicked()), this, SLOT(downButtonClicked()));
-  connect(_availableListBox, SIGNAL(currentRowChanged(int)), this, SLOT(updateButtons()));
-  connect(_selectedListBox, SIGNAL(currentRowChanged(int)), this, SLOT(updateButtons()));
+  connect(_availableListBox, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
+  connect(_selectedListBox, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
 
 // TODO Icons required.
 //  _up->setIcon(QPixmap(":kst_uparrow.png"));
   _up->setText("Up");
-  _up->setEnabled(false);
 //  _down->setIcon(QPixmap(":kst_downarrow.png"));
   _down->setText("Down");
-  _down->setEnabled(false);
 //  _add->setIcon(QPixmap(":kst_rightarrow.png"));
   _add->setText("Add");
-  _add->setEnabled(false);
 //  _remove->setIcon(QPixmap(":kst_leftarrow.png"));
   _remove->setText("Remove");
-  _remove->setEnabled(false);
 
   _maxLineWidth->setMaximum(LINEWIDTH_MAX);
 
@@ -55,6 +64,12 @@ DifferentiateCurvesDialog::DifferentiateCurvesDialog(QWidget *parent)
 
 
 DifferentiateCurvesDialog::~DifferentiateCurvesDialog() {
+}
+
+
+void DifferentiateCurvesDialog::exec() {
+  updateButtons();
+  QDialog::exec();
 }
 
 
@@ -66,29 +81,12 @@ void DifferentiateCurvesDialog::updateButtons() {
   if (selectedItems.count() > 0)
     selectedItem = selectedItems.first();
 
-  if (selectedItem) {
-    _remove->setEnabled(true); 
-  } else {
-    _remove->setEnabled(false);
-  }
+  _remove->setEnabled(selectedItems.count() > 0);
 
   _up->setEnabled(_selectedListBox->row(selectedItem) > 0);
   _down->setEnabled(_selectedListBox->row(selectedItem) >= 0 && _selectedListBox->row(selectedItem) < (int)_selectedListBox->count() - 1);
 
-
-  selectedItems = _availableListBox->selectedItems();
-  selectedItem = 0;
-
-  if (selectedItems.count() > 0) {
-    selectedItem = selectedItems.first();
-  }
-
-   if (selectedItem) {
-    _add->setEnabled(true); 
-  } else {
-   _add->setEnabled(false);
-  }
-
+  _add->setEnabled(_availableListBox->selectedItems().count() > 0);
 }
 
 
@@ -138,6 +136,44 @@ void DifferentiateCurvesDialog::downButtonClicked() {
     item->setSelected(true);
     updateButtons();
   }
+}
+
+
+void DifferentiateCurvesDialog::OKClicked() {
+  bool lineColorOrder  = !_selectedListBox->findItems(tr("Line Color"), Qt::MatchExactly).empty();
+  bool pointStyleOrder = !_selectedListBox->findItems(tr("Point Style"), Qt::MatchExactly).empty();
+  bool lineStyleOrder  = !_selectedListBox->findItems(tr("Line Style"), Qt::MatchExactly).empty();
+  bool lineWidthOrder  = !_selectedListBox->findItems(tr("Line Width"), Qt::MatchExactly).empty();
+
+  int maxLineWidth = _maxLineWidth->value();
+  int pointDensity = _pointDensity->currentItem();
+
+  int sequenceNum = 0;
+  CurveList curveList = _store->getObjects<Curve>();
+  for (CurveList::iterator curve_iter = curveList.begin(); curve_iter != curveList.end(); ++curve_iter)
+  {
+    CurvePtr curve = kst_cast<Curve>(*curve_iter);
+    curve->writeLock();
+    if (lineColorOrder) {
+      curve->setColor(ColorSequence::entry(sequenceNum));
+    }
+    if (pointStyleOrder) {
+      curve->setPointType(sequenceNum % KSTPOINT_MAXTYPE);
+      curve->setHasPoints(true);
+      curve->setPointDensity(pointDensity);
+    }
+    if (lineStyleOrder) {
+      curve->setLineStyle(sequenceNum % LINESTYLE_MAXTYPE);
+    }
+    if (lineWidthOrder) {
+      curve->setLineWidth((sequenceNum + 1) % maxLineWidth);
+    }
+
+    curve->update(0);
+    curve->unlock();
+    ++sequenceNum;
+  }
+  accept();
 }
 
 }

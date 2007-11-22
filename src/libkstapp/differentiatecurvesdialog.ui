@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>527</width>
-    <height>524</height>
+    <width>507</width>
+    <height>401</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -302,7 +302,7 @@
          </widget>
         </item>
         <item row="0" column="1" >
-         <widget class="QComboBox" name="pointDensity" >
+         <widget class="QComboBox" name="_pointDensity" >
           <item>
            <property name="text" >
             <string>All</string>
@@ -342,89 +342,6 @@
          </size>
         </property>
        </spacer>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="_buttonGroupRepeat" >
-     <property name="title" >
-      <string>Repeat Across</string>
-     </property>
-     <layout class="QHBoxLayout" >
-      <property name="leftMargin" >
-       <number>0</number>
-      </property>
-      <property name="topMargin" >
-       <number>0</number>
-      </property>
-      <property name="rightMargin" >
-       <number>0</number>
-      </property>
-      <property name="bottomMargin" >
-       <number>0</number>
-      </property>
-      <item>
-       <widget class="QRadioButton" name="_radioButtonRepeatPlot" >
-        <property name="text" >
-         <string>S&amp;ingle Plot</string>
-        </property>
-        <property name="checked" >
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="_radioButtonRepeatWindow" >
-        <property name="text" >
-         <string>Single &amp;Window</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="_radioButtonRepeatApplication" >
-        <property name="text" >
-         <string>&amp;All Windows</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="_buttonGroupApplyTo" >
-     <property name="title" >
-      <string>Apply To</string>
-     </property>
-     <layout class="QGridLayout" >
-      <property name="leftMargin" >
-       <number>0</number>
-      </property>
-      <property name="topMargin" >
-       <number>0</number>
-      </property>
-      <property name="rightMargin" >
-       <number>0</number>
-      </property>
-      <property name="bottomMargin" >
-       <number>0</number>
-      </property>
-      <item row="0" column="0" >
-       <widget class="QRadioButton" name="_radioButtonApplyWindow" >
-        <property name="text" >
-         <string>Current Window</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1" >
-       <widget class="QRadioButton" name="_radioButtonApplyAllWindows" >
-        <property name="text" >
-         <string>All Windows</string>
-        </property>
-        <property name="checked" >
-         <bool>true</bool>
-        </property>
-       </widget>
       </item>
      </layout>
     </widget>
@@ -480,11 +397,6 @@
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <tabstops>
-  <tabstop>_radioButtonRepeatPlot</tabstop>
-  <tabstop>_radioButtonRepeatWindow</tabstop>
-  <tabstop>_radioButtonRepeatApplication</tabstop>
-  <tabstop>_radioButtonApplyWindow</tabstop>
-  <tabstop>_radioButtonApplyAllWindows</tabstop>
   <tabstop>OK</tabstop>
   <tabstop>Cancel</tabstop>
  </tabstops>
