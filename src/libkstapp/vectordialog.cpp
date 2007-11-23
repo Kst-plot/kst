@@ -254,17 +254,17 @@ void VectorDialog::updateButtons() {
 
 void VectorDialog::configureTab(ObjectPtr vector) {
   if (!vector) {
-    _vectorTab->setFile(dialogDefaults->value("vector/datasource",_vectorTab->file()).toString());
-    _vectorTab->dataRange()->setRange(dialogDefaults->value("vector/range", 1).toInt());
-    _vectorTab->dataRange()->setStart(dialogDefaults->value("vector/start", 0).toInt());
-    _vectorTab->dataRange()->setCountFromEnd(dialogDefaults->value("vector/countFromEnd",false).toBool());
-    _vectorTab->dataRange()->setReadToEnd(dialogDefaults->value("vector/readToEnd",true).toBool());
-    _vectorTab->dataRange()->setSkip(dialogDefaults->value("vector/skip", 0).toInt());
-    _vectorTab->dataRange()->setDoSkip(dialogDefaults->value("vector/doSkip", false).toBool());
-    _vectorTab->dataRange()->setDoFilter(dialogDefaults->value("vector/doAve",false).toBool());
-    _vectorTab->setFrom(dialogDefaults->value("genVector/min",-10).toInt());
-    _vectorTab->setTo(dialogDefaults->value("genVector/max",10).toInt());
-    _vectorTab->setNumberOfSamples(dialogDefaults->value("genVector/length",1000).toInt());
+    _vectorTab->setFile(_dialogDefaults->value("vector/datasource",_vectorTab->file()).toString());
+    _vectorTab->dataRange()->setRange(_dialogDefaults->value("vector/range", 1).toInt());
+    _vectorTab->dataRange()->setStart(_dialogDefaults->value("vector/start", 0).toInt());
+    _vectorTab->dataRange()->setCountFromEnd(_dialogDefaults->value("vector/countFromEnd",false).toBool());
+    _vectorTab->dataRange()->setReadToEnd(_dialogDefaults->value("vector/readToEnd",true).toBool());
+    _vectorTab->dataRange()->setSkip(_dialogDefaults->value("vector/skip", 0).toInt());
+    _vectorTab->dataRange()->setDoSkip(_dialogDefaults->value("vector/doSkip", false).toBool());
+    _vectorTab->dataRange()->setDoFilter(_dialogDefaults->value("vector/doAve",false).toBool());
+    _vectorTab->setFrom(_dialogDefaults->value("genVector/min",-10).toInt());
+    _vectorTab->setTo(_dialogDefaults->value("genVector/max",10).toInt());
+    _vectorTab->setNumberOfSamples(_dialogDefaults->value("genVector/length",1000).toInt());
   } else if (DataVectorPtr dataVector = kst_cast<DataVector>(vector)) {
     _vectorTab->setVectorMode(VectorTab::DataVector);
     _vectorTab->setFile(dataVector->dataSource()->fileName());

@@ -32,7 +32,6 @@
 #include "debug.h"
 #include "psd.h"
 #include "psdcalculator.h"
-#include "objectdefaults.h"
 #include "objectstore.h"
 
 extern "C" void rdft(int n, int isgn, double *a);
@@ -347,7 +346,7 @@ void PSD::setFrequency(double in_frequency) {
   if (in_frequency > 0.0) {
     _Frequency = in_frequency;
   } else {
-    _Frequency = objectDefaults.psdFreq();
+    _Frequency = 1.0;
   }
 }
 

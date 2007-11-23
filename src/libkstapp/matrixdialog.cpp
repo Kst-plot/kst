@@ -20,8 +20,6 @@
 #include "datacollection.h"
 #include "dataobjectcollection.h"
 
-#include "matrixdefaults.h"
-
 #include "document.h"
 #include "objectstore.h"
 

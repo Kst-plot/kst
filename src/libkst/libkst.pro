@@ -26,7 +26,6 @@ SOURCES += \
     datavector.cpp \
     dateparser.cpp \
     debug.cpp \
-    dialogdefaults.cpp\
     editablematrix.cpp \
     editablevector.cpp \
     extension.cpp \
@@ -34,7 +33,6 @@ SOURCES += \
     generatedvector.cpp \
     math_kst.cpp \
     matrix.cpp \
-    matrixdefaults.cpp \
     matrixfactory.cpp \
     object.cpp \
     objectlist.cpp \
@@ -50,7 +48,6 @@ SOURCES += \
     string_kst.cpp \
     stringfactory.cpp \
     vector.cpp \
-    vectordefaults.cpp \
     vectorfactory.cpp \
     #  Needs porting, but is unused anyway
     #timezones.cpp \
@@ -72,7 +69,6 @@ HEADERS += \
     datavector.h \
     dateparser.h \
     debug.h \
-    dialogdefaults.h\
     editablematrix.h \
     editablevector.h \
     events.h \
@@ -87,7 +83,6 @@ HEADERS += \
     logevents.h \
     math_kst.h \
     matrix.h \
-    matrixdefaults.h \
     matrixfactory.h \
     object.h \
     objectlist.h \
@@ -109,5 +104,4 @@ HEADERS += \
     sysinfo.h \
     timezones.h \
     vector.h \
-    vectordefaults.h \
     vectorfactory.h

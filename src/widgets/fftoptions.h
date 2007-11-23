@@ -61,7 +61,7 @@ public:
   bool interpolateOverHoles() const;
   void setInterpolateOverHoles(const bool interpolateOverHoles);
 
-  void update();
+  //void update();
 
 public slots:
   void changedApodizeFxn();

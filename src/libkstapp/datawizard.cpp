@@ -23,12 +23,10 @@
 #include "dialogdefaults.h"
 #include "document.h"
 #include "mainwindow.h"
-#include "objectdefaults.h"
 #include "objectstore.h"
 #include "plotitem.h"
 #include "plotiteminterface.h"
 #include "settings.h"
-#include "vectordefaults.h"
 
 namespace Kst {
 
@@ -39,7 +37,7 @@ DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *
    connect(_url, SIGNAL(changed(const QString&)), this, SLOT(sourceChanged(const QString&)));
    connect(_configureSource, SIGNAL(clicked()), this, SLOT(configureSource()));
 
-   QString default_source = dialogDefaults->value("vector/datasource",".").toString();
+   QString default_source = _dialogDefaults->value("vector/datasource",".").toString();
   _url->setFile(default_source);
   _url->setFocus();
   //sourceChanged(default_source);
@@ -369,25 +367,25 @@ DataWizardPageDataPresentation::DataWizardPageDataPresentation(ObjectStore *stor
 
   _xVectorExisting->setObjectStore(store);
 
-  dataRange()->setRange(dialogDefaults->value("vector/range", 1).toInt());
-  dataRange()->setStart(dialogDefaults->value("vector/start", 0).toInt());
-  dataRange()->setCountFromEnd(dialogDefaults->value("vector/countFromEnd",false).toBool());
-  dataRange()->setReadToEnd(dialogDefaults->value("vector/readToEnd",true).toBool());
-  dataRange()->setSkip(dialogDefaults->value("vector/skip", 0).toInt());
-  dataRange()->setDoSkip(dialogDefaults->value("vector/doSkip", false).toBool());
-  dataRange()->setDoFilter(dialogDefaults->value("vector/doAve",false).toBool());
+  dataRange()->setRange(_dialogDefaults->value("vector/range", 1).toInt());
+  dataRange()->setStart(_dialogDefaults->value("vector/start", 0).toInt());
+  dataRange()->setCountFromEnd(_dialogDefaults->value("vector/countFromEnd",false).toBool());
+  dataRange()->setReadToEnd(_dialogDefaults->value("vector/readToEnd",true).toBool());
+  dataRange()->setSkip(_dialogDefaults->value("vector/skip", 0).toInt());
+  dataRange()->setDoSkip(_dialogDefaults->value("vector/doSkip", false).toBool());
+  dataRange()->setDoFilter(_dialogDefaults->value("vector/doAve",false).toBool());
 
-  getFFTOptions()->setSampleRate(dialogDefaults->value("spectrum/freq",100.0).toDouble());
-  getFFTOptions()->setInterleavedAverage(dialogDefaults->value("spectrum/average",true).toBool());
-  getFFTOptions()->setFFTLength(dialogDefaults->value("spectrum/len",12).toInt());
-  getFFTOptions()->setApodize(dialogDefaults->value("spectrum/apodize",true).toBool());
-  getFFTOptions()->setRemoveMean(dialogDefaults->value("spectrum/removeMean",true).toBool());
-  getFFTOptions()->setVectorUnits(dialogDefaults->value("spectrum/vUnits","V").toString());
-  getFFTOptions()->setRateUnits(dialogDefaults->value("spectrum/rUnits","Hz").toString());
-  getFFTOptions()->setApodizeFunction(ApodizeFunction(dialogDefaults->value("spectrum/apodizeFxn",WindowOriginal).toInt()));
-  getFFTOptions()->setSigma(dialogDefaults->value("spectrum/gaussianSigma",1.0).toDouble());
-  getFFTOptions()->setOutput(PSDType(dialogDefaults->value("spectrum/output",PSDPowerSpectralDensity).toInt()));
-  getFFTOptions()->setInterpolateOverHoles(dialogDefaults->value("spectrum/interpolateHoles",true).toInt());
+  getFFTOptions()->setSampleRate(_dialogDefaults->value("spectrum/freq",100.0).toDouble());
+  getFFTOptions()->setInterleavedAverage(_dialogDefaults->value("spectrum/average",true).toBool());
+  getFFTOptions()->setFFTLength(_dialogDefaults->value("spectrum/len",12).toInt());
+  getFFTOptions()->setApodize(_dialogDefaults->value("spectrum/apodize",true).toBool());
+  getFFTOptions()->setRemoveMean(_dialogDefaults->value("spectrum/removeMean",true).toBool());
+  getFFTOptions()->setVectorUnits(_dialogDefaults->value("spectrum/vUnits","V").toString());
+  getFFTOptions()->setRateUnits(_dialogDefaults->value("spectrum/rUnits","Hz").toString());
+  getFFTOptions()->setApodizeFunction(ApodizeFunction(_dialogDefaults->value("spectrum/apodizeFxn",WindowOriginal).toInt()));
+  getFFTOptions()->setSigma(_dialogDefaults->value("spectrum/gaussianSigma",1.0).toDouble());
+  getFFTOptions()->setOutput(PSDType(_dialogDefaults->value("spectrum/output",PSDPowerSpectralDensity).toInt()));
+  getFFTOptions()->setInterpolateOverHoles(_dialogDefaults->value("spectrum/interpolateHoles",true).toInt());
 
 
   connect(_radioButtonPlotData, SIGNAL(clicked()), this, SLOT(updatePlotTypeOptions()));
@@ -537,7 +535,7 @@ DataWizard::DataWizard(QWidget *parent)
   connect(button(QWizard::FinishButton), SIGNAL(clicked()), this, SLOT(finished()));
 
   // the dialog needs to know that the default has been set....
-  _pageDataSource->sourceChanged(dialogDefaults->value("vector/datasource",".").toString());
+  _pageDataSource->sourceChanged(_dialogDefaults->value("vector/datasource",".").toString());
 
 }
 
@@ -914,7 +912,7 @@ void DataWizard::finished() {
     }
 
     if (n_psd>0) {
-      objectDefaults.setSpectrumDefaults(powerspectrum);
+      setSpectrumDefaults(powerspectrum);
     }
   }
 

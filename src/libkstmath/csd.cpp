@@ -26,7 +26,6 @@
 #include "datacollection.h"
 #include "debug.h"
 #include "psdcalculator.h"
-#include "objectdefaults.h"
 #include "objectstore.h"
 
 extern "C" void rdft(int n, int isgn, double *a);
@@ -388,7 +387,7 @@ void CSD::setFrequency(double in_frequency) {
   if (in_frequency > 0.0) {
     _frequency = in_frequency;
   } else {
-    _frequency = objectDefaults.psdFreq();
+    _frequency = 1.0;
   }
 }
 

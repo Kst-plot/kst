@@ -12,8 +12,6 @@
 
 #include "fftoptions.h"
 
-#include <objectdefaults.h>
-
 namespace Kst {
 
 FFTOptions::FFTOptions(QWidget *parent)
@@ -38,24 +36,23 @@ void FFTOptions::init() {
 }
 
 
-void FFTOptions::update() {
-  objectDefaults.sync();
-
-  _FFTLength->setValue(objectDefaults.fftLen());
-  _sampleRate->setText(QString::number(objectDefaults.psdFreq()));
-  _vectorUnits->setText(objectDefaults.vUnits());
-  _rateUnits->setText(objectDefaults.rUnits());
-  _apodize->setChecked(objectDefaults.apodize());
-  _removeMean->setChecked(objectDefaults.removeMean());
-  _interleavedAverage->setChecked(objectDefaults.psdAverage());
-  _apodizeFunction->setCurrentIndex(objectDefaults.apodizeFxn());
-  _output->setCurrentIndex(objectDefaults.output());
-  _interpolateOverHoles->setChecked(objectDefaults.interpolateHoles());
-
-  clickedInterleaved();
-  clickedApodize();
-  changedApodizeFxn();
-}
+// void FFTOptions::update() {
+// 
+//   _FFTLength->setValue(Kst::dialogDefaults->value("spectrum/len",12).toInt());
+//   _sampleRate->setText(QString::number(Kst::dialogDefaults->value("spectrum/freq",100.0).toDouble()));
+//   _vectorUnits->setText(Kst::dialogDefaults->value("spectrum/vUnits","V").toString());
+//   _rateUnits->setText(Kst::dialogDefaults->value("spectrum/rUnits","Hz").toString());
+//   _apodize->setChecked(Kst::dialogDefaults->value("spectrum/apodize",true).toBool());
+//   _removeMean->setChecked(Kst::dialogDefaults->value("spectrum/removeMean",true).toBool());
+//   _interleavedAverage->setChecked(Kst::dialogDefaults->value("spectrum/average",true).toBool());
+//   _apodizeFunction->setCurrentIndex(Kst::dialogDefaults->value("spectrum/apodizeFxn",WindowOriginal).toInt()));
+//   _output->setCurrentIndex(Kst::dialogDefaults->value("spectrum/output",PSDPowerSpectralDensity).toInt());
+//   _interpolateOverHoles->setChecked(Kst::dialogDefaults->value("spectrum/interpolateHoles",true).toInt());
+// 
+//   clickedInterleaved();
+//   clickedApodize();
+//   changedApodizeFxn();
+// }
 
 
 double FFTOptions::sampleRate() const {

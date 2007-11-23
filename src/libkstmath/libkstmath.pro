@@ -53,7 +53,6 @@ SOURCES += \
     imagefactory.cpp \
     labelparser.cpp \
     linestyle.cpp \
-    objectdefaults.cpp \
     objectfactory.cpp \
     painter.cpp \
     palette.cpp \
@@ -94,7 +93,6 @@ HEADERS += \
     imagefactory.h \
     labelparser.h \
     linestyle.h \
-    objectdefaults.h \
     objectfactory.h \
     painter.h \
     palette.h \

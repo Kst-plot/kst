@@ -19,15 +19,17 @@
 #define KSTDIALOGDEFAULTS
 
 #include "datavector.h"
+#include "psd.h"
 #include "generatedvector.h"
 
 class QSettings;
 
 namespace Kst {
-  extern QSettings *dialogDefaults;
+  extern QSettings *_dialogDefaults;
 
   void setDataVectorDefaults(DataVectorPtr);
   void setGenVectorDefaults(GeneratedVectorPtr V);
+  void setSpectrumDefaults(PSDPtr P);
 }
 
 #endif
