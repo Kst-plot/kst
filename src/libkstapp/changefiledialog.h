@@ -20,6 +20,8 @@
 
 namespace Kst {
 
+class ObjectStore;
+
 class KST_EXPORT ChangeFileDialog : public QDialog, Ui::ChangeFileDialog
 {
   Q_OBJECT
@@ -32,9 +34,13 @@ class KST_EXPORT ChangeFileDialog : public QDialog, Ui::ChangeFileDialog
   private Q_SLOTS:
     void selectAll();
     void updateSelection(const QString&);
+    void selectAllFromFile();
+    void OKClicked();
 
   private:
-    void updateCurveList();
+    void updatePrimitiveList();
+
+    ObjectStore *_store;
 };
 
 }

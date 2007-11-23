@@ -100,7 +100,7 @@
          <number>0</number>
         </property>
         <item rowspan="5" row="0" column="0" >
-         <widget class="QListWidget" name="_changeFileCurveList" >
+         <widget class="QListWidget" name="_changeFilePrimitiveList" >
           <property name="sizePolicy" >
            <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
             <horstretch>1</horstretch>
@@ -383,16 +383,6 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="_changeFileApply" >
-       <property name="whatsThis" >
-        <string>Apply new source file to selected vectors.</string>
-       </property>
-       <property name="text" >
-        <string>&amp;Apply</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QPushButton" name="_changeFileOK" >
        <property name="whatsThis" >
         <string>Apply new source file to selected vectors.</string>
@@ -438,14 +428,13 @@
   <tabstop>_files</tabstop>
   <tabstop>_clearFilter</tabstop>
   <tabstop>_filter</tabstop>
-  <tabstop>_changeFileCurveList</tabstop>
+  <tabstop>_changeFilePrimitiveList</tabstop>
   <tabstop>_changeFileClear</tabstop>
   <tabstop>_changeFileSelectAll</tabstop>
   <tabstop>_dataFile</tabstop>
   <tabstop>_changeSelected</tabstop>
   <tabstop>_duplicateSelected</tabstop>
   <tabstop>_duplicateDependents</tabstop>
-  <tabstop>_changeFileApply</tabstop>
   <tabstop>_changeFileCancel</tabstop>
  </tabstops>
  <resources/>
