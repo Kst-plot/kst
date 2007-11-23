@@ -11,42 +11,42 @@
 
 #include "dialogdefaults.h"
 namespace Kst {
-  QSettings *dialogDefaults = new QSettings("kstdialogrc", QSettings::NativeFormat);
+  QSettings *_dialogDefaults = new QSettings("kstdialogrc", QSettings::NativeFormat);
 
 void setDataVectorDefaults(DataVectorPtr V) {
   //FIXME Do we need a V->readLock() here?
-  dialogDefaults->setValue("vector/datasource", V->filename());
-  dialogDefaults->setValue("vector/range", V->reqNumFrames());
-  dialogDefaults->setValue("vector/start", V->reqStartFrame());
-  dialogDefaults->setValue("vector/countFromEnd", V->countFromEOF());
-  dialogDefaults->setValue("vector/readToEnd", V->readToEOF());
-  dialogDefaults->setValue("vector/skip", V->skip());
-  dialogDefaults->setValue("vector/doSkip", V->doSkip());
-  dialogDefaults->setValue("vector/doAve", V->doAve());
+  _dialogDefaults->setValue("vector/datasource", V->filename());
+  _dialogDefaults->setValue("vector/range", V->reqNumFrames());
+  _dialogDefaults->setValue("vector/start", V->reqStartFrame());
+  _dialogDefaults->setValue("vector/countFromEnd", V->countFromEOF());
+  _dialogDefaults->setValue("vector/readToEnd", V->readToEOF());
+  _dialogDefaults->setValue("vector/skip", V->skip());
+  _dialogDefaults->setValue("vector/doSkip", V->doSkip());
+  _dialogDefaults->setValue("vector/doAve", V->doAve());
 }
 
 void setGenVectorDefaults(GeneratedVectorPtr V) {
   //FIXME Do we need a V->readLock() here? 
-  dialogDefaults->setValue("genVector/min", V->min());
-  dialogDefaults->setValue("genVector/max", V->max()); 
-  dialogDefaults->setValue("genVector/length", V->length());
+  _dialogDefaults->setValue("genVector/min", V->min());
+  _dialogDefaults->setValue("genVector/max", V->max()); 
+  _dialogDefaults->setValue("genVector/length", V->length());
 }
 
 void setSpectrumDefaults(PSDPtr P) {
   //FIXME Do we need a P->readLock() here?
   //NOTE: we are storing enums as ints here... so there might be
   //      odd behavior if the enums change between recompiles.
-  Kst::dialogDefaults->setValue("spectrum/freq", P->frequency());
-  Kst::dialogDefaults->setValue("spectrum/average", P->average());
-  Kst::dialogDefaults->setValue("spectrum/len", P->length());
-  Kst::dialogDefaults->setValue("spectrum/apodize", P->apodize());
-  Kst::dialogDefaults->setValue("spectrum/removeMean", P->removeMean());
-  Kst::dialogDefaults->setValue("spectrum/vUnits", P->vectorUnits());
-  Kst::dialogDefaults->setValue("spectrum/rUnits", P->rateUnits());
-  Kst::dialogDefaults->setValue("spectrum/apodizeFxn", P->apodizeFxn());
-  Kst::dialogDefaults->setValue("spectrum/gaussianSigma", P->gaussianSigma());
-  Kst::dialogDefaults->setValue("spectrum/output", P->output());
-  Kst::dialogDefaults->setValue("spectrum/interpolateHoles", P->interpolateHoles());
+  _dialogDefaults->setValue("spectrum/freq", P->frequency());
+  _dialogDefaults->setValue("spectrum/average", P->average());
+  _dialogDefaults->setValue("spectrum/len", P->length());
+  _dialogDefaults->setValue("spectrum/apodize", P->apodize());
+  _dialogDefaults->setValue("spectrum/removeMean", P->removeMean());
+  _dialogDefaults->setValue("spectrum/vUnits", P->vectorUnits());
+  _dialogDefaults->setValue("spectrum/rUnits", P->rateUnits());
+  _dialogDefaults->setValue("spectrum/apodizeFxn", P->apodizeFxn());
+  _dialogDefaults->setValue("spectrum/gaussianSigma", P->gaussianSigma());
+  _dialogDefaults->setValue("spectrum/output", P->output());
+  _dialogDefaults->setValue("spectrum/interpolateHoles", P->interpolateHoles());
 }
 
 }
