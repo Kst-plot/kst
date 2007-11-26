@@ -46,18 +46,22 @@ CurveTab::CurveTab(QWidget *parent)
 
   _curvePlacement->setExistingPlots(Data::self()->plotList());
 
-  connect(_xVector, SIGNAL(selectionChanged(QString)), this, SLOT(selectionChanged()));
-  connect(_yVector, SIGNAL(selectionChanged(QString)), this, SLOT(selectionChanged()));
+  connect(_xVector, SIGNAL(selectionChanged(QString)), this, SIGNAL(vectorsChanged()));
+  connect(_yVector, SIGNAL(selectionChanged(QString)), this, SIGNAL(vectorsChanged()));
+
+  connect(_xVector, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
+  connect(_yVector, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
+  connect(_xError, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
+  connect(_yError, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
+  connect(_xMinusError, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
+  connect(_yMinusError, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
+  connect(_curveAppearance, SIGNAL(modified()), this, SIGNAL(modified()));
 }
 
 
 CurveTab::~CurveTab() {
 }
 
-
-void CurveTab::selectionChanged() {
-  emit vectorsChanged();
-}
 
 VectorPtr CurveTab::xVector() const {
   return _xVector->selectedVector();

@@ -57,8 +57,6 @@ class KST_EXPORT CurveTab : public DataTab, Ui::CurveTab {
   Q_SIGNALS:
     void vectorsChanged();
 
-  private Q_SLOTS:
-    void selectionChanged();
 };
 
 class KST_EXPORT CurveDialog : public DataDialog {

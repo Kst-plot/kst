@@ -39,6 +39,15 @@ CurveAppearance::CurveAppearance(QWidget *parent)
   connect(_spinBoxLineWidth, SIGNAL(valueChanged(int)), this, SLOT(drawSampleLine()));
   connect(_barStyle, SIGNAL(activated(int)), this, SLOT(drawSampleLine()));
   connect(_showBars, SIGNAL(clicked()), this, SLOT(drawSampleLine()));
+
+  connect(_color, SIGNAL(changed(const QColor&)), this, SIGNAL(modified()));
+  connect(_showLines, SIGNAL(clicked()), this, SIGNAL(modified()));
+  connect(_showPoints, SIGNAL(clicked()), this, SIGNAL(modified()));
+  connect(_comboPointSymbol, SIGNAL(activated(int)), this, SIGNAL(modified()));
+  connect(_comboLineStyle, SIGNAL(activated(int)), this, SIGNAL(modified()));
+  connect(_spinBoxLineWidth, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_barStyle, SIGNAL(activated(int)), this, SIGNAL(modified()));
+  connect(_showBars, SIGNAL(clicked()), this, SIGNAL(modified()));
 }
 
 

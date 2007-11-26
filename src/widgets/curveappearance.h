@@ -49,6 +49,9 @@ class KST_EXPORT CurveAppearance : public QWidget, public Ui::CurveAppearance {
     void drawSampleLine();
     void populatePointSymbolCombo();
     void populateLineStyleCombo();
+
+  Q_SIGNALS:
+    void modified();
 };
 
 }

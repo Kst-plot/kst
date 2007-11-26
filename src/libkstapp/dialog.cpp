@@ -50,6 +50,18 @@ void Dialog::addDialogPage(DialogPage *page) {
 }
 
 
+void Dialog::removeDialogPage(DialogPage *page) {
+  disconnect(page, SIGNAL(modified()), this, SLOT(modified()));
+  disconnect(this, SIGNAL(apply()), page, SIGNAL(apply()));
+  QList<QListWidgetItem*> items = _listWidget->findItems(page->pageTitle(), Qt::MatchExactly);
+  foreach (QListWidgetItem* item, items) {
+    _itemHash.remove(item);
+    _listWidget->takeItem(_listWidget->row(item));
+    _stackedWidget->removeWidget(page);
+  }
+}
+
+
 void Dialog::setVisible(bool visible) {
 
   _listWidget->setVisible(_itemHash.count() > 1);
