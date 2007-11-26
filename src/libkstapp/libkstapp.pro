@@ -31,6 +31,7 @@ SOURCES += \
     changedatasampledialog.cpp \
     changefiledialog.cpp \
     choosecolordialog.cpp \
+    contenttab.cpp \
     csddialog.cpp \
     curvedialog.cpp \
     databutton.cpp \
@@ -116,6 +117,7 @@ HEADERS += \
     changedatasampledialog.h \
     changefiledialog.h \
     choosecolordialog.h \
+    contenttab.h \
     csddialog.h \
     curvedialog.h \
     databutton.h \
@@ -197,6 +199,7 @@ FORMS += \
     changedatasampledialog.ui \
     changefiledialog.ui \
     choosecolordialog.ui \
+    contenttab.ui \
     csdtab.ui \
     curvetab.ui \
     datamanager.ui \
@@ -220,7 +223,6 @@ FORMS += \
     layouttab.ui \
     matrixeditordialog.ui \
     matrixtab.ui \
-    plotrenderitemdialog.ui \
     powerspectrumtab.ui \
     scalareditordialog.ui \
     scalartab.ui \

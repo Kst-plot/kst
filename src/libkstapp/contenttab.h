@@ -9,37 +9,33 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef PLOTRENDERITEMDIALOG_H
-#define PLOTRENDERITEMDIALOG_H
+#ifndef CONTENTTAB_H
+#define CONTENTTAB_H
 
-#include "viewitemdialog.h"
+#include "dialogtab.h"
+#include "ui_contenttab.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class ContentTab;
-class ObjectStore;
-class PlotRenderItem;
-
-class KST_EXPORT PlotRenderItemDialog : public ViewItemDialog
-{
+class KST_EXPORT ContentTab : public DialogTab, Ui::ContentTab {
   Q_OBJECT
   public:
-    PlotRenderItemDialog(PlotRenderItem *item, QWidget *parent = 0);
-    virtual ~PlotRenderItemDialog();
+    ContentTab(QWidget *parent = 0);
+    virtual ~ContentTab();
+
+    void setDisplayedCurves(QStringList displayedCurves);
+    void setAvailableCurves(QStringList availableCurves);
+
+    QStringList displayedCurves();
 
   private Q_SLOTS:
-    void contentChanged();
-
-  private:
-    void setupContent();
-
-  private:
-    ContentTab *_contentTab;
-    PlotRenderItem* _plotItem;
-
-    ObjectStore* _store;
+    void updateButtons();
+    void addButtonClicked();
+    void removeButtonClicked();
+    void upButtonClicked();
+    void downButtonClicked();
 };
 
 }
