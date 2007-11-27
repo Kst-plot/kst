@@ -206,7 +206,33 @@ void DataManager::showContextMenu(const QPoint &position) {
         actions.append(action);
       }
     } else {
-      // TODO what options do output vectors get?
+      DataObjectPtr dataObject = kst_cast<DataObject>(model->generateObjectList().at(_session->indexAt(position).parent().row()));
+      if (dataObject) {
+        _currentObject = dataObject->outputVectors().values()[_session->indexAt(position).row()];
+        if (_currentObject) {
+          QAction *action = new QAction(_currentObject->tag().displayString(), this);
+          action->setEnabled(false);
+          actions.append(action);
+
+          if (VectorPtr v = kst_cast<Vector>(_currentObject)) {
+            action = new QAction(tr("Make Curve"), this);
+            connect(action, SIGNAL(triggered()), this, SLOT(showCurveDialog()));
+            actions.append(action);
+
+            action = new QAction(tr("Make Power Spectrum"), this);
+            connect(action, SIGNAL(triggered()), this, SLOT(showPowerSpectrumDialog()));
+            actions.append(action);
+
+            action = new QAction(tr("Make Spectrogram"), this);
+            connect(action, SIGNAL(triggered()), this, SLOT(showCSDDialog()));
+            actions.append(action);
+
+            action = new QAction(tr("Make Histogram"), this);
+            connect(action, SIGNAL(triggered()), this, SLOT(showHistogramDialog()));
+            actions.append(action);
+          }
+        }
+      }
     }
   }
   if (actions.count() > 0)
