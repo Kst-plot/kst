@@ -90,8 +90,7 @@ void ScalarDialog::updateButtons() {
 ObjectPtr ScalarDialog::createNewDataObject() const {
   bool ok = false;
 
-  //FIXME We don't have a 'suggestScalarName' like we do with vectors... eli?
-  QString tagString = DataDialog::tagString();
+  const ObjectTag tag = _document->objectStore()->suggestObjectTag<Scalar>(tagString());
 
   Q_ASSERT(_document && _document->objectStore());
 
@@ -109,7 +108,7 @@ ObjectPtr ScalarDialog::createNewDataObject() const {
 //            << "\n\tvalue:" << value
 //            << endl;
 
-  ScalarPtr scalar = _document->objectStore()->createObject<Scalar>(ObjectTag::fromString(tagString));
+  ScalarPtr scalar = _document->objectStore()->createObject<Scalar>(tag);
   scalar->setValue(value);
   scalar->setOrphan(true);
   scalar->setEditable(true);
