@@ -25,10 +25,10 @@ class KST_EXPORT ContentTab : public DialogTab, Ui::ContentTab {
     ContentTab(QWidget *parent = 0);
     virtual ~ContentTab();
 
-    void setDisplayedCurves(QStringList displayedCurves);
-    void setAvailableCurves(QStringList availableCurves);
+    void setDisplayedRelations(QStringList displayedRelations);
+    void setAvailableRelations(QStringList availableRelations);
 
-    QStringList displayedCurves();
+    QStringList displayedRelations();
 
   private Q_SLOTS:
     void updateButtons();

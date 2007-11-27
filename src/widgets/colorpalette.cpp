@@ -24,6 +24,7 @@ ColorPalette::ColorPalette(QWidget *parent)
 
   connect(_palette, SIGNAL(highlighted(const QString&)), this, SLOT(updatePalette(const QString&)));
   connect(_palette, SIGNAL(activated(const QString&)), this, SLOT(updatePalette(const QString&)));
+  connect(_palette, SIGNAL(currentIndexChanged(int)), this, SIGNAL(selectionChanged()));
 
   refresh();
   updatePalette();
@@ -76,6 +77,7 @@ QString ColorPalette::selectedPalette() {
 
 void ColorPalette::setPalette(const QString palette) {
    _palette->setCurrentIndex(_palette->findText(palette));
+  updatePalette(palette);
 }
 
 

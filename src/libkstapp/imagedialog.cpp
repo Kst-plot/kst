@@ -45,6 +45,21 @@ ImageTab::ImageTab(QWidget *parent)
   connect(_smartThreshold, SIGNAL(clicked()), this, SLOT(calculateSmartThreshold()));
 
   connect(_matrix, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
+
+  connect(_matrix, SIGNAL(selectionChanged()), this, SIGNAL(modified()));
+  connect(_colorOnly, SIGNAL(toggled(const bool&)), this, SIGNAL(modified()));
+  connect(_colorAndContour, SIGNAL(toggled(const bool&)), this, SIGNAL(modified()));
+  connect(_contourOnly, SIGNAL(toggled(const bool&)), this, SIGNAL(modified()));
+  connect(_lowerThreshold, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_upperThreshold, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_realTimeAutoThreshold, SIGNAL(toggled(const bool&)), this, SIGNAL(modified()));
+
+  connect(_contourColor, SIGNAL(changed(const QColor&)), this, SIGNAL(modified()));
+  connect(_numContourLines, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_contourWeight, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_useVariableWeight, SIGNAL(clicked()), this, SIGNAL(modified()));
+
+  connect(_colorPalette, SIGNAL(selectionChanged()), this, SIGNAL(modified()));
 }
 
 

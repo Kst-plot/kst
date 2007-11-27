@@ -31,17 +31,17 @@ class KST_EXPORT PlotRenderItemDialog : public ViewItemDialog
 
   private Q_SLOTS:
     void contentChanged();
-    void curveChanged();
+    void relationChanged();
 
   private:
     void setupContent();
-    void addCurves();
-    void updateCurves();
+    void addRelations();
+    void updateRelations();
 
   private:
     ContentTab *_contentTab;
     PlotRenderItem* _plotItem;
-    QList<DialogPage*> _curvePages;
+    QList<DialogPage*> _relationPages;
 
     ObjectStore* _store;
 };

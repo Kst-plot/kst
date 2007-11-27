@@ -287,10 +287,10 @@ void DataManager::deleteObject() {
 
 void DataManager::addToPlot(QAction* action) {
   PlotItem* plotItem = static_cast<PlotItem*>(qVariantValue<PlotItemInterface*>(action->data()));
-  CurvePtr curve = kst_cast<Curve>(_currentObject);
-  if (plotItem && curve) {
+  RelationPtr relation = kst_cast<Relation>(_currentObject);
+  if (plotItem && relation) {
     PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
-    renderItem->addRelation(kst_cast<Relation>(curve));
+    renderItem->addRelation(kst_cast<Relation>(relation));
     plotItem->update();
   }
 }

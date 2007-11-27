@@ -85,7 +85,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QListWidget" name="_availableCurveList" />
+      <widget class="QListWidget" name="_availableRelationList" />
      </item>
     </layout>
    </item>
@@ -120,7 +120,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QListWidget" name="_displayedCurveList" />
+      <widget class="QListWidget" name="_displayedRelationList" />
      </item>
     </layout>
    </item>

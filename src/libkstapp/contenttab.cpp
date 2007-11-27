@@ -34,8 +34,8 @@ ContentTab::ContentTab(QWidget *parent)
   connect(_up, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_down, SIGNAL(clicked()), this, SIGNAL(modified()));
 
-  connect(_availableCurveList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
-  connect(_displayedCurveList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
+  connect(_availableRelationList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
+  connect(_displayedRelationList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
 }
 
 
@@ -45,7 +45,7 @@ ContentTab::~ContentTab() {
 
 void ContentTab::updateButtons() {
 
-  QList<QListWidgetItem *> displayedItems = _displayedCurveList->selectedItems();
+  QList<QListWidgetItem *> displayedItems = _displayedRelationList->selectedItems();
   QListWidgetItem *displayedItem = 0;
 
   if (displayedItems.count() > 0)
@@ -53,19 +53,19 @@ void ContentTab::updateButtons() {
 
   _remove->setEnabled(displayedItems.count() > 0);
 
-  _up->setEnabled(_displayedCurveList->row(displayedItem) > 0);
-  _down->setEnabled(_displayedCurveList->row(displayedItem) >= 0 && _displayedCurveList->row(displayedItem) < (int)_displayedCurveList->count() - 1);
+  _up->setEnabled(_displayedRelationList->row(displayedItem) > 0);
+  _down->setEnabled(_displayedRelationList->row(displayedItem) >= 0 && _displayedRelationList->row(displayedItem) < (int)_displayedRelationList->count() - 1);
 
-  _add->setEnabled(_availableCurveList->selectedItems().count() > 0);
+  _add->setEnabled(_availableRelationList->selectedItems().count() > 0);
 }
 
 
 void ContentTab::removeButtonClicked() {
-  for (int i = 0; i < _displayedCurveList->count(); i++) {
-    if (_displayedCurveList->item(i) && _displayedCurveList->item(i)->isSelected()) {
-      _availableCurveList->addItem(_displayedCurveList->takeItem(i));
-      _availableCurveList->clearSelection();
-      _availableCurveList->item(_availableCurveList->count() - 1)->setSelected(true);
+  for (int i = 0; i < _displayedRelationList->count(); i++) {
+    if (_displayedRelationList->item(i) && _displayedRelationList->item(i)->isSelected()) {
+      _availableRelationList->addItem(_displayedRelationList->takeItem(i));
+      _availableRelationList->clearSelection();
+      _availableRelationList->item(_availableRelationList->count() - 1)->setSelected(true);
     }
   }
   updateButtons();
@@ -73,11 +73,11 @@ void ContentTab::removeButtonClicked() {
 
 
 void ContentTab::addButtonClicked() {
-  for (int i = 0; i < _availableCurveList->count(); i++) {
-    if (_availableCurveList->item(i) && _availableCurveList->item(i)->isSelected()) {
-      _displayedCurveList->addItem(_availableCurveList->takeItem(i));
-      _displayedCurveList->clearSelection();
-      _displayedCurveList->item(_displayedCurveList->count() - 1)->setSelected(true);
+  for (int i = 0; i < _availableRelationList->count(); i++) {
+    if (_availableRelationList->item(i) && _availableRelationList->item(i)->isSelected()) {
+      _displayedRelationList->addItem(_availableRelationList->takeItem(i));
+      _displayedRelationList->clearSelection();
+      _displayedRelationList->item(_displayedRelationList->count() - 1)->setSelected(true);
     }
   }
   updateButtons();
@@ -85,11 +85,11 @@ void ContentTab::addButtonClicked() {
 
 
 void ContentTab::upButtonClicked() {
-  int i = _displayedCurveList->currentRow();
+  int i = _displayedRelationList->currentRow();
   if (i != -1) {
-    QListWidgetItem *item = _displayedCurveList->takeItem(i);
-    _displayedCurveList->insertItem(i-1, item);
-    _displayedCurveList->clearSelection();
+    QListWidgetItem *item = _displayedRelationList->takeItem(i);
+    _displayedRelationList->insertItem(i-1, item);
+    _displayedRelationList->clearSelection();
     item->setSelected(true);
     updateButtons();
   }
@@ -98,35 +98,35 @@ void ContentTab::upButtonClicked() {
 
 void ContentTab::downButtonClicked() {
   // move item down
-  int i = _displayedCurveList->currentRow();
+  int i = _displayedRelationList->currentRow();
   if (i != -1) {
-    QListWidgetItem *item = _displayedCurveList->takeItem(i);
-    _displayedCurveList->insertItem(i+1, item);
-    _displayedCurveList->clearSelection();
+    QListWidgetItem *item = _displayedRelationList->takeItem(i);
+    _displayedRelationList->insertItem(i+1, item);
+    _displayedRelationList->clearSelection();
     item->setSelected(true);
     updateButtons();
   }
 }
 
 
-void ContentTab::setDisplayedCurves(QStringList displayedCurves) {
-  _displayedCurveList->clear();
-  _displayedCurveList->addItems(displayedCurves);
+void ContentTab::setDisplayedRelations(QStringList displayedRelations) {
+  _displayedRelationList->clear();
+  _displayedRelationList->addItems(displayedRelations);
 }
 
 
-void ContentTab::setAvailableCurves(QStringList availableCurves) {
-  _availableCurveList->clear();
-  _availableCurveList->addItems(availableCurves);
+void ContentTab::setAvailableRelations(QStringList availableRelations) {
+  _availableRelationList->clear();
+  _availableRelationList->addItems(availableRelations);
 }
 
 
-QStringList ContentTab::displayedCurves() {
-  QStringList curves;
-  for (int i = 0; i < _displayedCurveList->count(); i++) {
-    curves.append(_displayedCurveList->item(i)->text());
+QStringList ContentTab::displayedRelations() {
+  QStringList relations;
+  for (int i = 0; i < _displayedRelationList->count(); i++) {
+    relations.append(_displayedRelationList->item(i)->text());
   }
-  return curves;
+  return relations;
 }
 
 

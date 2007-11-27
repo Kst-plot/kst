@@ -22,17 +22,20 @@ namespace Kst {
 class ColorPalette : public QWidget, public Ui::ColorPalette {
   Q_OBJECT
 
-public:
-  ColorPalette(QWidget *parent = 0);
-  ~ColorPalette();
+  public:
+    ColorPalette(QWidget *parent = 0);
+    ~ColorPalette();
 
-  QString selectedPalette();
-  void refresh(const QString &palette = QString());
-  int currentPaletteIndex();
-  void setPalette(const QString palette);
+    QString selectedPalette();
+    void refresh(const QString &palette = QString());
+    int currentPaletteIndex();
+    void setPalette(const QString palette);
 
-public slots:
-  void updatePalette(const QString &palette = QString());
+  public slots:
+    void updatePalette(const QString &palette = QString());
+
+  Q_SIGNALS:
+    void selectionChanged();
 
 } KST_EXPORT;
 
