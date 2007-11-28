@@ -136,6 +136,8 @@ class KST_EXPORT Matrix : public Primitive {
 
     virtual bool resize(int xSize, int ySize, bool reinit = true);
 
+    virtual void deleteDependents();
+
   protected:
     int _NS;
     int _NRealS; // number of samples with real values

@@ -58,9 +58,8 @@ void Relation::save(QXmlStreamWriter &s) {
 }
 
 
-bool Relation::deleteDependents() {
+void Relation::deleteDependents() {
   Data::self()->removeCurveFromPlots(this);
-  return true;
 }
 
 
@@ -257,6 +256,96 @@ void Relation::unlockInputsAndOutputs() const {
     #endif
     (*i)->unlock();
   }
+}
+
+
+bool Relation::uses(ObjectPtr p) const {
+  VectorPtr v = kst_cast<Vector>(p);
+  if (v) {
+    for (VectorMap::ConstIterator j = _inputVectors.begin(); j != _inputVectors.end(); ++j) {
+      if (j.value() == v) {
+        return true;
+      }
+    }
+    QHashIterator<QString, Scalar*> scalarDictIter(v->scalars());
+    for (ScalarMap::ConstIterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
+      while (scalarDictIter.hasNext()) {
+        scalarDictIter.next();
+        if (scalarDictIter.value() == j.value()) {
+          return true;
+        }
+      }
+    }
+  } else if (MatrixPtr matrix = kst_cast<Matrix>(p)) {
+    for (MatrixMap::ConstIterator j = _inputMatrices.begin(); j != _inputMatrices.end(); ++j) {
+      if (j.value() == matrix) {
+        return true;
+      }
+    }
+    QHashIterator<QString, Scalar*> scalarDictIter(matrix->scalars());
+    for (ScalarMap::ConstIterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
+      while (scalarDictIter.hasNext()) {
+        scalarDictIter.next();
+        if (scalarDictIter.value() == j.value()) {
+          return true;
+        }
+      }
+    }
+  } else if (DataObjectPtr obj = kst_cast<DataObject>(p) ) {
+    // check all connections from this object to p
+    for (VectorMap::Iterator j = obj->outputVectors().begin(); j != obj->outputVectors().end(); ++j) {
+      for (VectorMap::ConstIterator k = _inputVectors.begin(); k != _inputVectors.end(); ++k) {
+        if (j.value() == k.value()) {
+          return true;
+        }
+      }
+      // also check dependencies on vector stats
+      QHashIterator<QString, Scalar*> scalarDictIter(j.value()->scalars());
+      for (ScalarMap::ConstIterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
+        while (scalarDictIter.hasNext()) {
+          scalarDictIter.next();
+          if (scalarDictIter.value() == k.value()) {
+            return true;
+          }
+        }
+      }
+    }
+
+    for (MatrixMap::Iterator j = obj->outputMatrices().begin(); j != obj->outputMatrices().end(); ++j) {
+      for (MatrixMap::ConstIterator k = _inputMatrices.begin(); k != _inputMatrices.end(); ++k) {
+        if (j.value() == k.value()) {
+          return true;
+        }
+      }
+      // also check dependencies on vector stats
+      QHashIterator<QString, Scalar*> scalarDictIter(j.value()->scalars());
+      for (ScalarMap::ConstIterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
+        while (scalarDictIter.hasNext()) {
+          scalarDictIter.next();
+          if (scalarDictIter.value() == k.value()) {
+            return true;
+          }
+        }
+      }
+    }
+
+    for (ScalarMap::Iterator j = obj->outputScalars().begin(); j != obj->outputScalars().end(); ++j) {
+      for (ScalarMap::ConstIterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
+        if (j.value() == k.value()) {
+          return true;
+        }
+      }
+    }
+
+    for (StringMap::Iterator j = obj->outputStrings().begin(); j != obj->outputStrings().end(); ++j) {
+      for (StringMap::ConstIterator k = _inputStrings.begin(); k != _inputStrings.end(); ++k) {
+        if (j.value() == k.value()) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
 }
 
 }

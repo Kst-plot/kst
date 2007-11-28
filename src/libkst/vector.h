@@ -201,6 +201,8 @@ class Vector : public Primitive {
     void CreateScalars(ObjectStore *store);
     void RenameScalars();
 
+    virtual void deleteDependents();
+
     QString _label;
 
     friend class DataObject;

@@ -106,21 +106,16 @@ Vector::Vector(ObjectStore *store, const ObjectTag& tag, const QByteArray& data)
 
 Vector::~Vector() {
   // qDebug() << "+++ DELETING VECTOR: " << (void*) this;
-  // FIXME: cleanup scalars
-#if 0
-  scalarList.lock().writeLock();
-  scalarList.setUpdateDisplayTags(false);
-  for (QHash<QString, Scalar*>::Iterator it = _scalars.begin(); it != _scalars.end(); ++it) {
-    scalarList.remove(it.value());
-    it.value()->_KShared_unref();
-  }
-  scalarList.setUpdateDisplayTags(true);
-  scalarList.lock().unlock();
-#endif
-
   if (_v) {
     free(_v);
     _v = 0;
+  }
+}
+
+
+void Vector::deleteDependents() {
+  for (QHash<QString, Scalar*>::Iterator it = _scalars.begin(); it != _scalars.end(); ++it) {
+    _store->removeObject(it.value());
   }
 }
 

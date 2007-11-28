@@ -23,6 +23,8 @@
 #include "dataplugin.h"
 #include "debug.h"
 #include "kst_i18n.h"
+#include "objectstore.h"
+#include "relation.h"
 
 #include <qdebug.h>
 #include <qtimer.h>
@@ -50,43 +52,10 @@ DataObject::DataObject(ObjectStore *store, const QDomElement& e) : Object() {
 
 
 DataObject::~DataObject() {
-  // TODO: Remove our slave vectors, scalars, and strings, and matrices
-#if 0
-  stringList.lock().writeLock();
-  for (StringMap::Iterator it = _outputStrings.begin();
-                               it != _outputStrings.end();
-                                                      ++it) {
-    stringList.remove(it.value());
-  }
-  stringList.lock().unlock();
-
-  scalarList.lock().writeLock();
-  for (ScalarMap::Iterator it = _outputScalars.begin();
-                               it != _outputScalars.end();
-                                                      ++it) {
-    scalarList.remove(it.value());
-  }
-  scalarList.lock().unlock();
-
-  vectorList.lock().writeLock();
-  for (VectorMap::Iterator it = _outputVectors.begin();
-                               it != _outputVectors.end();
-                                                      ++it) {
-    vectorList.remove(it.value());
-  }
-  vectorList.lock().unlock();
-
-  matrixList.lock().writeLock();
-  for (MatrixMap::Iterator it = _outputMatrices.begin();
-       it != _outputMatrices.end();
-       ++it) {
-    matrixList.remove(it.value());
-  }
-  matrixList.lock().unlock();
-#endif
 //  qDebug() << "Destroying Data Object: " << tag().displayString() << endl;
   delete _curveHints;
 }
+
 
 static QMap<QString, DataObjectPtr> pluginInfo;
 void DataObject::cleanupForExit() {
@@ -521,36 +490,63 @@ const CurveHintList* DataObject::curveHints() const {
 }
 
 
-bool DataObject::deleteDependents() {
-  // FIXME: redo
-#if 0
-  dataObjectList.lock().readLock();
-  DataObjectList dol = dataObjectList;
-  dataObjectList.lock().unlock();
-  for (DataObjectList::Iterator i = dol.begin(); i != dol.end(); ++i) {
-    bool user = (*i)->uses(this);
-    if (!user) {
-      for (VectorMap::Iterator j = _outputVectors.begin(); !user && j != _outputVectors.end(); ++j) {
-        user = (*i)->uses(j.value().data());
+void DataObject::deleteDependents() {
+  DataObjectList dataObjects = _store->getObjects<DataObject>();
+  foreach (DataObjectPtr object, dataObjects) {
+    bool usesObject = object->uses(this);
+    if (!usesObject) {
+      for (VectorMap::Iterator j = _outputVectors.begin(); !usesObject && j != _outputVectors.end(); ++j) {
+        usesObject = object->uses(j.value().data());
       }
-      for (ScalarMap::Iterator j = _outputScalars.begin(); !user && j != _outputScalars.end(); ++j) {
-        user = (*i)->uses(j.value().data());
+      for (ScalarMap::Iterator j = _outputScalars.begin(); !usesObject && j != _outputScalars.end(); ++j) {
+        usesObject = object->uses(j.value().data());
       }
-      for (StringMap::Iterator j = _outputStrings.begin(); !user && j != _outputStrings.end(); ++j) {
-        user = (*i)->uses(j.value().data());
+      for (StringMap::Iterator j = _outputStrings.begin(); !usesObject && j != _outputStrings.end(); ++j) {
+        usesObject = object->uses(j.value().data());
+      }
+      for (MatrixMap::Iterator j = _outputMatrices.begin(); !usesObject && j != _outputMatrices.end(); ++j) {
+        usesObject = object->uses(j.value().data());
       }
     }
-    if (user) {
-      DataObjectPtr dop = *i;
-      dataObjectList.lock().writeLock();
-      dataObjectList.removeAll(dop);
-      dataObjectList.lock().unlock();
-      dop->deleteDependents();
+    if (usesObject) {
+      _store->removeObject(object);
     }
   }
-#endif
 
-  return true;
+  RelationList relations = _store->getObjects<Relation>();
+  foreach (RelationPtr relation, relations) {
+    bool usesRelation = relation->uses(this);
+    if (!usesRelation) {
+      for (VectorMap::Iterator j = _outputVectors.begin(); !usesRelation && j != _outputVectors.end(); ++j) {
+        usesRelation = relation->uses(j.value().data());
+      }
+      for (ScalarMap::Iterator j = _outputScalars.begin(); !usesRelation && j != _outputScalars.end(); ++j) {
+        usesRelation = relation->uses(j.value().data());
+      }
+      for (StringMap::Iterator j = _outputStrings.begin(); !usesRelation && j != _outputStrings.end(); ++j) {
+        usesRelation = relation->uses(j.value().data());
+      }
+      for (MatrixMap::Iterator j = _outputMatrices.begin(); !usesRelation && j != _outputMatrices.end(); ++j) {
+        usesRelation = relation->uses(j.value().data());
+      }
+    }
+    if (usesRelation) {
+      _store->removeObject(relation);
+    }
+  }
+
+  foreach (VectorPtr vector, _outputVectors) {
+    _store->removeObject(vector);
+  }
+  foreach (MatrixPtr matrix, _outputMatrices) {
+    _store->removeObject(matrix);
+  }
+  foreach (ScalarPtr scalar, _outputScalars) {
+    _store->removeObject(scalar);
+  }
+  foreach (StringPtr string, _outputStrings) {
+    _store->removeObject(string);
+  }
 }
 
 

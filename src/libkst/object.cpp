@@ -118,8 +118,7 @@ int Object::getUsage() const {
 }
 
 
-bool Object::deleteDependents() {
-  return false;
+void Object::deleteDependents() {
 }
 
 

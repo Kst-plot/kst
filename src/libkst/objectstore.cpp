@@ -274,6 +274,7 @@ bool ObjectStore::removeObject(Object *o) {
     if (ds) {
       _dataSourceList.removeAll(ds);
     } else {
+      o->deleteDependents();
       _list.removeAll(o);
     }
   }

@@ -63,21 +63,16 @@ Matrix::Matrix(ObjectStore *store, ObjectTag tag, Object *provider, uint nX, uin
 
 
 Matrix::~Matrix() {
-  // TODO: get rid of the stat scalars
-#if 0
-  scalarList.lock().writeLock();
-  scalarList.setUpdateDisplayTags(false);
-  for (QHash<QString, Scalar*>::Iterator iter = _statScalars.begin(); iter != _statScalars.end(); ++iter) {
-    scalarList.remove(iter.value());
-    iter.value()->_KShared_unref();
-  }
-  scalarList.setUpdateDisplayTags(true);
-  scalarList.lock().unlock();
-#endif
-
   if (_z) {
     free(_z);
     _z = 0L;
+  }
+}
+
+
+void Matrix::deleteDependents() {
+  for (QHash<QString, Scalar*>::Iterator it = _statScalars.begin(); it != _statScalars.end(); ++it) {
+    _store->removeObject(it.value());
   }
 }
 

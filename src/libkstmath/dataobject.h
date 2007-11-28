@@ -99,7 +99,7 @@ class KST_EXPORT DataObject : public Object {
 
     virtual const CurveHintList* curveHints() const;
 
-    virtual bool deleteDependents();
+    virtual void deleteDependents();
 
     bool duplicateDependents(DataObjectDataObjectMap& duplicatedMap);
 

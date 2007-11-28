@@ -93,7 +93,7 @@ class KST_EXPORT Relation : public Object {
 
     virtual int samplesPerFrame() const { return 1; }
 
-    virtual bool deleteDependents();
+    virtual void deleteDependents();
 
     virtual double maxX() const { return MaxX; }
     virtual double minX() const { return MinX; }
@@ -108,6 +108,8 @@ class KST_EXPORT Relation : public Object {
     virtual double midX() const { return (MaxX+MinX)*0.5; }
     virtual double midY() const { return (MaxY+MinY)*0.5; }
     virtual void yRange(double xFrom, double xTo, double* yMin, double* yMax) = 0;
+
+    virtual bool uses(ObjectPtr p) const;
 
     // this returns the data object providing the data for this basecurve.
     // E.g. for VCurves, it returns the data object providing the y vector

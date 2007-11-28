@@ -65,7 +65,7 @@ class Object : public QObject, public Shared, public KstRWLock {
     // TODO: do we need this?
 //    int operator==(const QString&) const;
 
-    virtual bool deleteDependents();
+    virtual void deleteDependents();
 
     // @since 1.1.0
     virtual void setDirty(bool dirty = true);
