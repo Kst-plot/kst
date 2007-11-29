@@ -28,6 +28,7 @@
 #include "defaultnames.h"
 #include "datacollection.h"
 #include "dataobjectcollection.h"
+#include "dialogdefaults.h"
 
 namespace Kst {
 
@@ -209,6 +210,8 @@ HistogramDialog::HistogramDialog(ObjectPtr dataObject, QWidget *parent)
 
   if (editMode() == Edit) {
     configureTab(dataObject);
+  } else {
+    configureTab(0);
   }
 
   connect(_histogramTab, SIGNAL(vectorChanged()), this, SLOT(updateButtons()));
@@ -226,7 +229,10 @@ QString HistogramDialog::tagString() const {
 
 
 void HistogramDialog::configureTab(ObjectPtr object) {
-  if (HistogramPtr histogram = kst_cast<Histogram>(object)) {
+  if (!object) {
+    _histogramTab->setRealTimeAutoBin(_dialogDefaults->value("histogram/realTimeAutoBin", false).toBool());
+    _histogramTab->setNormalizationType(Histogram::NormalizationType(_dialogDefaults->value("histogram/normalizationType",Histogram::Number).toInt()));
+  } else if (HistogramPtr histogram = kst_cast<Histogram>(object)) {
     _histogramTab->setVector(histogram->vector());
     _histogramTab->setMin(histogram->xMin());
     _histogramTab->setMax(histogram->xMax());
@@ -262,6 +268,8 @@ ObjectPtr HistogramDialog::createNewDataObject() const {
   histogram->writeLock();
   histogram->update(0);
   histogram->unlock();
+
+  setHistogramDefaults(histogram);
 
   //FIXME this should be a command...
   //FIXME need some smart placement...
@@ -335,6 +343,9 @@ ObjectPtr HistogramDialog::editExistingDataObject() const {
 
     histogram->update(0);
     histogram->unlock();
+
+    setHistogramDefaults(histogram);
+
   }
   return dataObject();
 }

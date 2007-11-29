@@ -29,6 +29,7 @@ SOURCES += \
     curveappearance.cpp \
     curveplacement.cpp \
     datarange.cpp \
+    dialogdefaults.cpp \
     fftoptions.cpp \
     filerequester.cpp \
     gradienteditor.cpp \
@@ -46,6 +47,7 @@ HEADERS += \
     curveappearance.h \
     curveplacement.h \
     datarange.h \
+    dialogdefaults.h \
     fftoptions.h \
     filerequester.h \
     gradienteditor.h \

@@ -181,6 +181,8 @@ EquationDialog::EquationDialog(ObjectPtr dataObject, QWidget *parent)
 
   if (editMode() == Edit) {
     configureTab(dataObject);
+  } else {
+    configureTab(0);
   }
 
   connect(_equationTab, SIGNAL(optionsChanged()), this, SLOT(updateButtons()));
@@ -204,7 +206,9 @@ void EquationDialog::updateButtons() {
 
 
 void EquationDialog::configureTab(ObjectPtr object) {
-  if (EquationPtr equation = kst_cast<Equation>(object)) {
+  if (!object) {
+    _equationTab->curveAppearance()->loadWidgetDefaults();
+  } else if (EquationPtr equation = kst_cast<Equation>(object)) {
     _equationTab->setXVector(equation->vXIn());
     _equationTab->setEquation(equation->equation());
     _equationTab->setDoInterpolation(equation->doInterp());
@@ -247,6 +251,8 @@ ObjectPtr EquationDialog::createNewDataObject() const {
   curve->writeLock();
   curve->update(0);
   curve->unlock();
+
+  _equationTab->curveAppearance()->setWidgetDefaults();
 
   PlotItem *plotItem = 0;
   switch (_equationTab->curvePlacement()->place()) {

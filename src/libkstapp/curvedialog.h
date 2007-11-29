@@ -76,7 +76,7 @@ class KST_EXPORT CurveDialog : public DataDialog {
     void updateButtons();
 
   private:
-    void configureTab(ObjectPtr curve);
+    void configureTab(ObjectPtr curve=0);
 
     CurveTab *_curveTab;
 };

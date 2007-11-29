@@ -163,6 +163,8 @@ CurveDialog::CurveDialog(ObjectPtr dataObject, QWidget *parent)
 
   if (editMode() == Edit) {
     configureTab(dataObject);
+  } else {
+    configureTab(0);
   }
 
   connect(_curveTab, SIGNAL(vectorsChanged()), this, SLOT(updateButtons()));
@@ -180,7 +182,9 @@ QString CurveDialog::tagString() const {
 
 
 void CurveDialog::configureTab(ObjectPtr object) {
-  if (CurvePtr curve = kst_cast<Curve>(object)) {
+  if (!object) {
+    _curveTab->curveAppearance()->loadWidgetDefaults();
+  } else if (CurvePtr curve = kst_cast<Curve>(object)) {
     _curveTab->setXVector(curve->xVector());
     _curveTab->setYVector(curve->yVector());
     if (curve->hasXError()) {
@@ -254,6 +258,8 @@ ObjectPtr CurveDialog::createNewDataObject() const {
   curve->update(0);
   curve->unlock();
 
+  _curveTab->curveAppearance()->setWidgetDefaults();
+
   PlotItem *plotItem = 0;
   switch (_curveTab->curvePlacement()->place()) {
   case CurvePlacement::NoPlot:
@@ -306,6 +312,9 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
 
     curve->update(0);
     curve->unlock();
+
+    _curveTab->curveAppearance()->setWidgetDefaults();
+
   }
   return dataObject();
 }

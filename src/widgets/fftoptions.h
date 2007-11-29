@@ -61,6 +61,9 @@ public:
   bool interpolateOverHoles() const;
   void setInterpolateOverHoles(const bool interpolateOverHoles);
 
+  void setWidgetDefaults();
+  void loadWidgetDefaults();
+
   //void update();
 
 public slots:

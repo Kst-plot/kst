@@ -56,6 +56,9 @@ class  KST_EXPORT DataRange : public QWidget, public Ui::DataRange {
     bool doFilter() const;
     void setDoFilter(bool doFilter);
 
+    void setWidgetDefaults();
+    void loadWidgetDefaults();
+
   private Q_SLOTS:
     void countFromEndChanged();
     void readToEndChanged();

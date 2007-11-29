@@ -43,7 +43,8 @@ class KST_EXPORT CurveAppearance : public QWidget, public Ui::CurveAppearance {
     void setBarStyle(const int barStyle);
     int pointDensity() const;
     void setPointDensity(int pointDensity);
-
+    void setWidgetDefaults();
+    void loadWidgetDefaults();
   private slots:
     void enableSettings();
     void drawSampleLine();

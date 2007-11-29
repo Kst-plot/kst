@@ -23,6 +23,8 @@
 #include "document.h"
 #include "objectstore.h"
 
+#include "dialogdefaults.h"
+
 #include <QDir>
 
 namespace Kst {
@@ -429,6 +431,8 @@ MatrixDialog::MatrixDialog(ObjectPtr dataObject, QWidget *parent)
 
   if (editMode() == Edit) {
     configureTab(dataObject);
+  } else {
+    configureTab(0);
   }
 
   connect(_matrixTab, SIGNAL(sourceChanged()), this, SLOT(updateButtons()));
@@ -446,7 +450,21 @@ QString MatrixDialog::tagString() const {
 
 
 void MatrixDialog::configureTab(ObjectPtr matrix) {
-  if (DataMatrixPtr dataMatrix = kst_cast<DataMatrix>(matrix)) {
+  if (!matrix) {
+    _matrixTab->setMatrixMode(MatrixTab::DataMatrix);
+    _matrixTab->setFile(_dialogDefaults->value("matrix/datasource",_matrixTab->file()).toString());
+
+    _matrixTab->setXStartCountFromEnd(_dialogDefaults->value("matrix/xCountFromEnd",false).toBool());
+    _matrixTab->setYStartCountFromEnd(_dialogDefaults->value("matrix/yCountFromEnd",false).toBool());
+    _matrixTab->setXReadToEnd(_dialogDefaults->value("matrix/xReadToEnd",false).toBool());
+    _matrixTab->setYReadToEnd(_dialogDefaults->value("matrix/yReadToEnd",false).toBool());
+
+    _matrixTab->setXNumSteps(_dialogDefaults->value("matrix/xNumSteps",1000).toInt());
+    _matrixTab->setYNumSteps(_dialogDefaults->value("matrix/yNumSteps",1000).toInt());
+    _matrixTab->setXStart(_dialogDefaults->value("matrix/reqXStart",1000).toInt());
+    _matrixTab->setYStart(_dialogDefaults->value("matrix/reqYStart",1000).toInt());
+
+  } else if (DataMatrixPtr dataMatrix = kst_cast<DataMatrix>(matrix)) {
     _matrixTab->setMatrixMode(MatrixTab::DataMatrix);
     _matrixTab->setFile(dataMatrix->dataSource()->fileName());
     _matrixTab->setDataSource(dataMatrix->dataSource());
@@ -549,6 +567,8 @@ ObjectPtr MatrixDialog::createNewDataMatrix() const {
   matrix->update(0);
   matrix->unlock();
 
+  setDataMatrixDefaults(matrix);
+
   return static_cast<ObjectPtr>(matrix);
 }
 
@@ -618,6 +638,8 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
         doSkip, skip);
     dataMatrix->update(0);
     dataMatrix->unlock();
+    setDataMatrixDefaults(dataMatrix);
+
   } else if (GeneratedMatrixPtr generatedMatrix = kst_cast<GeneratedMatrix>(dataObject())) {
     const uint nX = _matrixTab->nX();
     const uint nY = _matrixTab->nY();

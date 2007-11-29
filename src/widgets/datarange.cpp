@@ -10,6 +10,7 @@
  ***************************************************************************/
 
 #include "datarange.h"
+#include "dialogdefaults.h"
 
 namespace Kst {
 
@@ -140,6 +141,27 @@ void DataRange::readToEndChanged() {
 void DataRange::doSkipChanged() {
   _skip->setEnabled(doSkip());
   _doFilter->setEnabled(doSkip());
+}
+
+void DataRange::setWidgetDefaults() {
+  //FIXME Do we need a V->readLock() here?
+  _dialogDefaults->setValue("vector/range", range());
+  _dialogDefaults->setValue("vector/start", start());
+  _dialogDefaults->setValue("vector/countFromEnd", countFromEnd());
+  _dialogDefaults->setValue("vector/readToEnd", readToEnd());
+  _dialogDefaults->setValue("vector/skip", skip());
+  _dialogDefaults->setValue("vector/doSkip", doSkip());
+  _dialogDefaults->setValue("vector/doAve", doFilter());
+}
+
+void DataRange::loadWidgetDefaults() {
+  setRange(_dialogDefaults->value("vector/range", 1).toInt());
+  setStart(_dialogDefaults->value("vector/start", 0).toInt());
+  setCountFromEnd(_dialogDefaults->value("vector/countFromEnd",false).toBool());
+  setReadToEnd(_dialogDefaults->value("vector/readToEnd",true).toBool());
+  setSkip(_dialogDefaults->value("vector/skip", 0).toInt());
+  setDoSkip(_dialogDefaults->value("vector/doSkip", false).toBool());
+  setDoFilter(_dialogDefaults->value("vector/doAve",false).toBool());
 }
 
 }

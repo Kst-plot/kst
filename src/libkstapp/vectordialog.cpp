@@ -254,14 +254,8 @@ void VectorDialog::updateButtons() {
 
 void VectorDialog::configureTab(ObjectPtr vector) {
   if (!vector) {
+    _vectorTab->dataRange()->loadWidgetDefaults();
     _vectorTab->setFile(_dialogDefaults->value("vector/datasource",_vectorTab->file()).toString());
-    _vectorTab->dataRange()->setRange(_dialogDefaults->value("vector/range", 1).toInt());
-    _vectorTab->dataRange()->setStart(_dialogDefaults->value("vector/start", 0).toInt());
-    _vectorTab->dataRange()->setCountFromEnd(_dialogDefaults->value("vector/countFromEnd",false).toBool());
-    _vectorTab->dataRange()->setReadToEnd(_dialogDefaults->value("vector/readToEnd",true).toBool());
-    _vectorTab->dataRange()->setSkip(_dialogDefaults->value("vector/skip", 0).toInt());
-    _vectorTab->dataRange()->setDoSkip(_dialogDefaults->value("vector/doSkip", false).toBool());
-    _vectorTab->dataRange()->setDoFilter(_dialogDefaults->value("vector/doAve",false).toBool());
     _vectorTab->setFrom(_dialogDefaults->value("genVector/min",-10).toInt());
     _vectorTab->setTo(_dialogDefaults->value("genVector/max",10).toInt());
     _vectorTab->setNumberOfSamples(_dialogDefaults->value("genVector/length",1000).toInt());
@@ -336,6 +330,7 @@ ObjectPtr VectorDialog::createNewDataVector() const {
       dataRange->doFilter());
 
   setDataVectorDefaults(vector);
+  _vectorTab->dataRange()->setWidgetDefaults();
 
 #if 0
   DataVectorPtr vector = new DataVector(
@@ -402,6 +397,7 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
     dataVector->unlock();
 
     setDataVectorDefaults(dataVector);
+    _vectorTab->dataRange()->setWidgetDefaults();
 
   } else if (GeneratedVectorPtr generatedVector = kst_cast<GeneratedVector>(dataObject())) {
     const qreal from = _vectorTab->from();

@@ -367,26 +367,8 @@ DataWizardPageDataPresentation::DataWizardPageDataPresentation(ObjectStore *stor
 
   _xVectorExisting->setObjectStore(store);
 
-  dataRange()->setRange(_dialogDefaults->value("vector/range", 1).toInt());
-  dataRange()->setStart(_dialogDefaults->value("vector/start", 0).toInt());
-  dataRange()->setCountFromEnd(_dialogDefaults->value("vector/countFromEnd",false).toBool());
-  dataRange()->setReadToEnd(_dialogDefaults->value("vector/readToEnd",true).toBool());
-  dataRange()->setSkip(_dialogDefaults->value("vector/skip", 0).toInt());
-  dataRange()->setDoSkip(_dialogDefaults->value("vector/doSkip", false).toBool());
-  dataRange()->setDoFilter(_dialogDefaults->value("vector/doAve",false).toBool());
-
-  getFFTOptions()->setSampleRate(_dialogDefaults->value("spectrum/freq",100.0).toDouble());
-  getFFTOptions()->setInterleavedAverage(_dialogDefaults->value("spectrum/average",true).toBool());
-  getFFTOptions()->setFFTLength(_dialogDefaults->value("spectrum/len",12).toInt());
-  getFFTOptions()->setApodize(_dialogDefaults->value("spectrum/apodize",true).toBool());
-  getFFTOptions()->setRemoveMean(_dialogDefaults->value("spectrum/removeMean",true).toBool());
-  getFFTOptions()->setVectorUnits(_dialogDefaults->value("spectrum/vUnits","V").toString());
-  getFFTOptions()->setRateUnits(_dialogDefaults->value("spectrum/rUnits","Hz").toString());
-  getFFTOptions()->setApodizeFunction(ApodizeFunction(_dialogDefaults->value("spectrum/apodizeFxn",WindowOriginal).toInt()));
-  getFFTOptions()->setSigma(_dialogDefaults->value("spectrum/gaussianSigma",1.0).toDouble());
-  getFFTOptions()->setOutput(PSDType(_dialogDefaults->value("spectrum/output",PSDPowerSpectralDensity).toInt()));
-  getFFTOptions()->setInterpolateOverHoles(_dialogDefaults->value("spectrum/interpolateHoles",true).toInt());
-
+  dataRange()->loadWidgetDefaults();
+  getFFTOptions()->loadWidgetDefaults();
 
   connect(_radioButtonPlotData, SIGNAL(clicked()), this, SLOT(updatePlotTypeOptions()));
   connect(_radioButtonPlotPSD, SIGNAL(clicked()), this, SLOT(updatePlotTypeOptions()));
@@ -679,6 +661,7 @@ void DataWizard::finished() {
       ++n_curves;
     }
     if (n_curves>0) {
+      _pageDataPresentation->dataRange()->setWidgetDefaults();
       setDataVectorDefaults(vector);
     }
   }
@@ -912,7 +895,7 @@ void DataWizard::finished() {
     }
 
     if (n_psd>0) {
-      setSpectrumDefaults(powerspectrum);
+      _pageDataPresentation->getFFTOptions()->setWidgetDefaults();
     }
   }
 

@@ -14,6 +14,7 @@
 #include "curvepointsymbol.h"
 #include "linestyle.h"
 #include <QPainter>
+#include "dialogdefaults.h"
 
 namespace Kst {
 
@@ -319,6 +320,30 @@ void CurveAppearance::drawSampleLine() {
   _label->setPixmap(pix);
 }
 
+// store the current state of the widget as the default
+void CurveAppearance::setWidgetDefaults() {
+  //color();
+  _dialogDefaults->setValue("curves/showPoints",showPoints());
+  _dialogDefaults->setValue("curves/showLines", showLines());
+  _dialogDefaults->setValue("curves/showBars",showBars());
+  _dialogDefaults->setValue("curves/lineWidth",lineWidth());
+  _dialogDefaults->setValue("curves/lineStyle",lineStyle());
+  _dialogDefaults->setValue("curves/pointType", pointType());
+  _dialogDefaults->setValue("curves/pointDensity", pointDensity());
+  _dialogDefaults->setValue("curves/barStyle", barStyle());
+}
+
+// set the widget to the stored default values
+void CurveAppearance::loadWidgetDefaults() {
+  setShowPoints(_dialogDefaults->value("curves/showPoints",false).toBool());
+  setShowLines(_dialogDefaults->value("curves/showLines",true).toBool());
+  setShowBars(_dialogDefaults->value("curves/showBars",false).toBool());
+  setLineWidth(_dialogDefaults->value("curves/lineWidth",0).toInt());
+  setLineStyle(_dialogDefaults->value("curves/lineStyle",0).toInt());
+  setPointType(_dialogDefaults->value("curves/pointType",0).toInt());
+  setPointDensity(_dialogDefaults->value("curves/pointDensity",0).toInt());
+  setBarStyle(_dialogDefaults->value("curves/barStyle",0).toInt());
+}
 
 }
 // vim: ts=2 sw=2 et

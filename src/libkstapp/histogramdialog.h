@@ -82,7 +82,7 @@ class KST_EXPORT HistogramDialog : public DataDialog {
     void updateButtons();
 
   private:
-    void configureTab(ObjectPtr object);
+    void configureTab(ObjectPtr object=0);
 
     HistogramTab *_histogramTab;
 };

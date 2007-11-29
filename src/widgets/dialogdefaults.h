@@ -21,6 +21,8 @@
 #include "datavector.h"
 #include "psd.h"
 #include "generatedvector.h"
+#include "datamatrix.h"
+#include "histogram.h"
 
 class QSettings;
 
@@ -29,7 +31,8 @@ namespace Kst {
 
   void setDataVectorDefaults(DataVectorPtr);
   void setGenVectorDefaults(GeneratedVectorPtr V);
-  void setSpectrumDefaults(PSDPtr P);
+  void setDataMatrixDefaults(DataMatrixPtr M);
+  void setHistogramDefaults(HistogramPtr H);
 }
 
 #endif
@@ -38,26 +41,26 @@ namespace Kst {
 // As you add defaults, add them here!
 // Name                   Type    Where used
 // vector/datasource      QString vectordialog datawizard
-// vector/range           int     vectordialog datawizard
-// vector/start           int     vectordialog datawizard
-// vector/countFromEnd    bool    vectordialog datawizard
-// vector/readToEnd       bool    vectordialog datawizard
-// vector/skip            int     vectordialog datawizard
-// vector/doSkip          bool    vectordialog datawizard
-// vector/doAve           bool    vectordialog datawizard
+// vector/range           int     datarange 
+// vector/start           int     datarange  
+// vector/countFromEnd    bool    datarange 
+// vector/readToEnd       bool    datarange 
+// vector/skip            int     datarange 
+// vector/doSkip          bool    datarange 
+// vector/doAve           bool    datarange 
 //
 // genVector/min"         int     vectordialog
 // genVector/max"         int     vectordialog
 // genVector/length       int     vectordialog
-// spectrum/freq          double  powerspectrumdailog datawizard
-// spectrum/average       bool    powerspectrumdailog datawizard
-// spectrum/len           int     powerspectrumdailog datawizard
-// spectrum/apodize       bool    powerspectrumdailog datawizard
-// spectrum/removeMean    bool    powerspectrumdailog datawizard
-// spectrum/vUnits       QString  powerspectrumdailog datawizard
-// spectrum/rUnits       QString  powerspectrumdailog datawizard
-// spectrum/apodizeFxn   int      powerspectrumdailog datawizard
-// spectrum/gaussianSigma double  powerspectrumdailog datawizard
-// spectrum/output       int      powerspectrumdailog datawizard
-// spectrum/interpolateHoles bool powerspectrumdailog datawizard
+// spectrum/freq          double  FFToptions 
+// spectrum/average       bool    FFToptions 
+// spectrum/len           int     FFToptions 
+// spectrum/apodize       bool    FFToptions 
+// spectrum/removeMean    bool    FFToptions 
+// spectrum/vUnits       QString  FFToptions 
+// spectrum/rUnits       QString  FFToptions 
+// spectrum/apodizeFxn   int      FFToptions 
+// spectrum/gaussianSigma double  FFToptions 
+// spectrum/output       int      FFToptions 
+// spectrum/interpolateHoles bool FFToptions 
 

@@ -11,6 +11,7 @@
 
 
 #include "fftoptions.h"
+#include "dialogdefaults.h"
 
 namespace Kst {
 
@@ -34,26 +35,6 @@ FFTOptions::~FFTOptions() {}
 void FFTOptions::init() {
   update();
 }
-
-
-// void FFTOptions::update() {
-// 
-//   _FFTLength->setValue(Kst::dialogDefaults->value("spectrum/len",12).toInt());
-//   _sampleRate->setText(QString::number(Kst::dialogDefaults->value("spectrum/freq",100.0).toDouble()));
-//   _vectorUnits->setText(Kst::dialogDefaults->value("spectrum/vUnits","V").toString());
-//   _rateUnits->setText(Kst::dialogDefaults->value("spectrum/rUnits","Hz").toString());
-//   _apodize->setChecked(Kst::dialogDefaults->value("spectrum/apodize",true).toBool());
-//   _removeMean->setChecked(Kst::dialogDefaults->value("spectrum/removeMean",true).toBool());
-//   _interleavedAverage->setChecked(Kst::dialogDefaults->value("spectrum/average",true).toBool());
-//   _apodizeFunction->setCurrentIndex(Kst::dialogDefaults->value("spectrum/apodizeFxn",WindowOriginal).toInt()));
-//   _output->setCurrentIndex(Kst::dialogDefaults->value("spectrum/output",PSDPowerSpectralDensity).toInt());
-//   _interpolateOverHoles->setChecked(Kst::dialogDefaults->value("spectrum/interpolateHoles",true).toInt());
-// 
-//   clickedInterleaved();
-//   clickedApodize();
-//   changedApodizeFxn();
-// }
-
 
 double FFTOptions::sampleRate() const {
   return _sampleRate->text().toDouble();
@@ -205,6 +186,36 @@ bool FFTOptions::checkGivenValues(double sampleRate, int FFTLength) {
     return false;
   }
   return true;
+}
+
+// store the current state of the widget as the default
+void FFTOptions::setWidgetDefaults() {
+  _dialogDefaults->setValue("spectrum/freq", sampleRate());
+  _dialogDefaults->setValue("spectrum/average", interleavedAverage());
+  _dialogDefaults->setValue("spectrum/len", FFTLength());
+  _dialogDefaults->setValue("spectrum/apodize", apodize());
+  _dialogDefaults->setValue("spectrum/removeMean", removeMean());
+  _dialogDefaults->setValue("spectrum/vUnits", vectorUnits());
+  _dialogDefaults->setValue("spectrum/rUnits", rateUnits());
+  _dialogDefaults->setValue("spectrum/apodizeFxn", apodizeFunction());
+  _dialogDefaults->setValue("spectrum/gaussianSigma", sigma());
+  _dialogDefaults->setValue("spectrum/output", output());
+  _dialogDefaults->setValue("spectrum/interpolateHoles", interpolateOverHoles());
+}
+
+// set the widget to the stored default values
+void FFTOptions::loadWidgetDefaults() {
+  setSampleRate(_dialogDefaults->value("spectrum/freq",100.0).toDouble());
+  setInterleavedAverage(_dialogDefaults->value("spectrum/average",true).toBool());
+  setFFTLength(_dialogDefaults->value("spectrum/len",12).toInt());
+  setApodize(_dialogDefaults->value("spectrum/apodize",true).toBool());
+  setRemoveMean(_dialogDefaults->value("spectrum/removeMean",true).toBool());
+  setVectorUnits(_dialogDefaults->value("spectrum/vUnits","V").toString());
+  setRateUnits(_dialogDefaults->value("spectrum/rUnits","Hz").toString());
+  setApodizeFunction(ApodizeFunction(_dialogDefaults->value("spectrum/apodizeFxn",WindowOriginal).toInt()));
+  setSigma(_dialogDefaults->value("spectrum/gaussianSigma",1.0).toDouble());
+  setOutput(PSDType(_dialogDefaults->value("spectrum/output",PSDPowerSpectralDensity).toInt()));
+  setInterpolateOverHoles(_dialogDefaults->value("spectrum/interpolateHoles",true).toInt());
 }
 
 }

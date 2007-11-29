@@ -125,19 +125,9 @@ void PowerSpectrumDialog::setVector(VectorPtr vector) {
 
 void PowerSpectrumDialog::configureTab(ObjectPtr object) {
   if (!object) {
-    _powerSpectrumTab->FFTOptionsWidget()->setSampleRate(Kst::_dialogDefaults->value("spectrum/freq",100.0).toDouble());
-    _powerSpectrumTab->FFTOptionsWidget()->setInterleavedAverage(Kst::_dialogDefaults->value("spectrum/average",true).toBool());
-    _powerSpectrumTab->FFTOptionsWidget()->setFFTLength(Kst::_dialogDefaults->value("spectrum/len",12).toInt());
-    _powerSpectrumTab->FFTOptionsWidget()->setApodize(Kst::_dialogDefaults->value("spectrum/apodize",true).toBool());
-    _powerSpectrumTab->FFTOptionsWidget()->setRemoveMean(Kst::_dialogDefaults->value("spectrum/removeMean",true).toBool());
-    _powerSpectrumTab->FFTOptionsWidget()->setVectorUnits(Kst::_dialogDefaults->value("spectrum/vUnits","V").toString());
-    _powerSpectrumTab->FFTOptionsWidget()->setRateUnits(Kst::_dialogDefaults->value("spectrum/rUnits","Hz").toString());
-    _powerSpectrumTab->FFTOptionsWidget()->setApodizeFunction(ApodizeFunction(Kst::_dialogDefaults->value("spectrum/apodizeFxn",WindowOriginal).toInt()));
-    _powerSpectrumTab->FFTOptionsWidget()->setSigma(Kst::_dialogDefaults->value("spectrum/gaussianSigma",1.0).toDouble());
-    _powerSpectrumTab->FFTOptionsWidget()->setOutput(PSDType(Kst::_dialogDefaults->value("spectrum/output",PSDPowerSpectralDensity).toInt()));
-    _powerSpectrumTab->FFTOptionsWidget()->setInterpolateOverHoles(Kst::_dialogDefaults->value("spectrum/interpolateHoles",true).toInt());
+    _powerSpectrumTab->FFTOptionsWidget()->loadWidgetDefaults();
+    _powerSpectrumTab->curveAppearance()->loadWidgetDefaults();
 
-//xxxxxxxxxx fill the dialog from the settings...
   } else if (PSDPtr psd = kst_cast<PSD>(object)) {
     _powerSpectrumTab->setVector(psd->vector());
 
@@ -184,7 +174,8 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() const {
 
   powerspectrum->update(0);
   powerspectrum->unlock();
-  Kst::setSpectrumDefaults(powerspectrum);
+
+  _powerSpectrumTab->FFTOptionsWidget()->setWidgetDefaults();
 
   //FIXME this should be a command...
   //FIXME need some smart placement...
@@ -208,6 +199,8 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() const {
   curve->writeLock();
   curve->update(0);
   curve->unlock();
+
+  _powerSpectrumTab->curveAppearance()->setWidgetDefaults();
 
   PlotItem *plotItem = 0;
   switch (_powerSpectrumTab->curvePlacement()->place()) {
@@ -259,7 +252,7 @@ ObjectPtr PowerSpectrumDialog::editExistingDataObject() const {
     powerspectrum->update(0);
     powerspectrum->unlock();
 
-    Kst::setSpectrumDefaults(powerspectrum);
+    _powerSpectrumTab->FFTOptionsWidget()->setWidgetDefaults();
 
   }
   return dataObject();
