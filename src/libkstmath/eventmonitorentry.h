@@ -65,7 +65,7 @@ class EventMonitorEntry : public DataObject {
 
     bool reparse();
 
-    DataObjectPtr makeDuplicate(DataObjectDataObjectMap& duplicatedMap);
+    DataObjectPtr makeDuplicate();
 
     void replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObject);
 

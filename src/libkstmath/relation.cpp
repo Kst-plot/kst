@@ -348,5 +348,108 @@ bool Relation::uses(ObjectPtr p) const {
   return false;
 }
 
+
+void Relation::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObject) {
+
+  // find all connections from this object to old object
+
+  // vectors
+  for (VectorMap::Iterator j = oldObject->outputVectors().begin(); j != oldObject->outputVectors().end(); ++j) {
+    for (VectorMap::Iterator k = _inputVectors.begin(); k != _inputVectors.end(); ++k) {
+      if (j.value().data() == k.value().data()) {
+        // replace input with the output from newObject
+        _inputVectors[k.key()] = (newObject->outputVectors())[j.key()];
+      }
+    }
+    // also replace dependencies on vector stats
+    QHashIterator<QString, Scalar*> scalarDictIter(j.value()->scalars());
+    for (ScalarMap::Iterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
+      while (scalarDictIter.hasNext()) {
+        scalarDictIter.next();
+        if (scalarDictIter.value() == k.value()) {
+          _inputScalars[k.key()] = (((newObject->outputVectors())[j.key()])->scalars())[scalarDictIter.key()];
+        }
+      }
+    }
+  }
+
+  // matrices
+  for (MatrixMap::Iterator j = oldObject->outputMatrices().begin(); j != oldObject->outputMatrices().end(); ++j) {
+    for (MatrixMap::Iterator k = _inputMatrices.begin(); k != _inputMatrices.end(); ++k) {
+      if (j.value().data() == k.value().data()) {
+        // replace input with the output from newObject
+        _inputMatrices[k.key()] = (newObject->outputMatrices())[j.key()];
+      }
+    }
+    // also replace dependencies on matrix stats
+    QHashIterator<QString, Scalar*> scalarDictIter(j.value()->scalars());
+    for (ScalarMap::Iterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
+      while (scalarDictIter.hasNext()) {
+        scalarDictIter.next();
+        if (scalarDictIter.value() == k.value()) {
+          _inputScalars[k.key()] = (((newObject->outputMatrices())[j.key()])->scalars())[scalarDictIter.key()];
+        }
+      }
+    }
+  }
+
+  // scalars
+  for (ScalarMap::Iterator j = oldObject->outputScalars().begin(); j != oldObject->outputScalars().end(); ++j) {
+    for (ScalarMap::Iterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
+      if (j.value().data() == k.value().data()) {
+        // replace input with the output from newObject
+        _inputScalars[k.key()] = (newObject->outputScalars())[j.key()];
+      }
+    }
+  }
+
+  // strings
+  for (StringMap::Iterator j = oldObject->outputStrings().begin(); j != oldObject->outputStrings().end(); ++j) {
+    for (StringMap::Iterator k = _inputStrings.begin(); k != _inputStrings.end(); ++k) {
+      if (j.value().data() == k.value().data()) {
+        // replace input with the output from newObject
+        _inputStrings[k.key()] = (newObject->outputStrings())[j.key()];
+      }
+    }
+  }
+}
+
+
+void Relation::replaceDependency(VectorPtr oldVector, VectorPtr newVector) {
+  for (VectorMap::Iterator j = _inputVectors.begin(); j != _inputVectors.end(); ++j) {
+    if (j.value() == oldVector) {
+      _inputVectors[j.key()] = newVector;
+    }
+  }
+
+  QHashIterator<QString, Scalar*> scalarDictIter(oldVector->scalars());
+  for (ScalarMap::Iterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
+    while (scalarDictIter.hasNext()) {
+      scalarDictIter.next();
+      if (scalarDictIter.value() == j.value()) {
+        _inputScalars[j.key()] = (newVector->scalars())[scalarDictIter.key()];
+      }
+    }
+  }
+}
+
+
+void Relation::replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix) {
+  for (MatrixMap::Iterator j = _inputMatrices.begin(); j != _inputMatrices.end(); ++j) {
+    if (j.value() == oldMatrix) {
+      _inputMatrices[j.key()] = newMatrix;
+    }
+  }
+
+  QHashIterator<QString, Scalar*> scalarDictIter(oldMatrix->scalars());
+  for (ScalarMap::Iterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
+    while (scalarDictIter.hasNext()) {
+      scalarDictIter.next();
+      if (scalarDictIter.value() == j.value()) {
+        _inputScalars[j.key()] = (newMatrix->scalars())[scalarDictIter.key()];
+      }
+    }
+  }
+}
 }
 // vim: ts=2 sw=2 et

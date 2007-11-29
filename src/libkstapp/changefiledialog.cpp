@@ -15,6 +15,8 @@
 #include "datavector.h"
 #include "datamatrix.h"
 
+#include "plotitem.h"
+
 #include "objectstore.h"
 #include "document.h"
 #include "mainwindow.h"
@@ -144,6 +146,7 @@ void ChangeFileDialog::OKClicked() {
     reject();
   }
 
+  QMap<RelationPtr, RelationPtr> duplicatedRelations;
   DataSourceList oldSources;
   QString invalidSources;
   int invalid = 0;
@@ -166,29 +169,24 @@ void ChangeFileDialog::OKClicked() {
         ++invalid;
       } else {
         if (_duplicateSelected->isChecked()) {
-          DataVectorPtr newVector = _store->createObject<DataVector>(vector->tag());
+          DataVectorPtr newVector = vector->makeDuplicate();
 
           newVector->writeLock();
-          newVector->change(dataSource, vector->field(),
-              vector->startFrame(),
-              vector->numFrames(),
-              vector->skip(),
-              vector->doSkip(),
-              vector->doAve());
-
+          newVector->changeFile(dataSource);
           newVector->update(0);
           newVector->unlock();
 
           if (_duplicateDependents->isChecked()) {
-//            FIXME:  Associated code required not currently implemented.
-//             duplicatedVectors.insert(vector, newVector);
-//             KST::duplicateDependents(KstVectorPtr(vector), duplicatedMap, duplicatedVectors);
+             duplicateDependents(VectorPtr(vector), VectorPtr(newVector), duplicatedRelations);
           }
         } else {
           if (!oldSources.contains(vector->dataSource())) {
             oldSources << vector->dataSource();
           }
+          vector->writeLock();
           vector->changeFile(dataSource);
+          vector->update(0);
+          vector->unlock();
         }
       }
       vector->unlock();
@@ -205,34 +203,39 @@ void ChangeFileDialog::OKClicked() {
         ++invalid;
       } else {
         if (_duplicateSelected->isChecked()) {
-          DataMatrixPtr newMatrix = _store->createObject<DataMatrix>(matrix->tag());
+          DataMatrixPtr newMatrix = matrix->makeDuplicate();
 
           newMatrix->writeLock();
-          newMatrix->change(dataSource, matrix->field(),
-              matrix->reqXStart(),
-              matrix->reqYStart(),
-              matrix->reqXNumSteps(),
-              matrix->reqYNumSteps(),
-              matrix->doSkip(),
-              matrix->skip(),
-              matrix->doAverage());
-
+          newMatrix->changeFile(dataSource);
           newMatrix->update(0);
           newMatrix->unlock();
 
           if (_duplicateDependents->isChecked()) {
-//          FIXME:  Associated code required not currently implemented.
-//             duplicatedMatrices.insert(KstMatrixPtr(matrix), KstMatrixPtr(newMatrix));
-//             KST::duplicateDependents(KstMatrixPtr(matrix), duplicatedMap, duplicatedMatrices);
+            duplicateDependents(MatrixPtr(matrix), MatrixPtr(newMatrix), duplicatedRelations);
           }
         } else {
           if (!oldSources.contains(matrix->dataSource())) {
             oldSources << matrix->dataSource();
           }
+          matrix->writeLock();
           matrix->changeFile(dataSource);
+          matrix->update(0);
+          matrix->unlock();
         }
       }
       matrix->unlock();
+    }
+  }
+
+  // Plot the items.
+  foreach (PlotItemInterface *plot, Data::self()->plotList()) {
+    PlotItem* plotItem = static_cast<PlotItem*>(plot);
+    foreach (PlotRenderItem* renderItem, plotItem->renderItems()) {
+      for (QMap<RelationPtr, RelationPtr>::ConstIterator iter = duplicatedRelations.begin(); iter != duplicatedRelations.end(); ++iter) {
+        if (renderItem->relationList().contains(kst_cast<Relation>(iter.key())) && !renderItem->relationList().contains(kst_cast<Relation>(iter.value()))) {
+          renderItem->addRelation(kst_cast<Relation>(iter.value()));
+        }
+      }
     }
   }
 
@@ -253,6 +256,53 @@ void ChangeFileDialog::OKClicked() {
   accept();
 }
 
+
+void ChangeFileDialog::duplicateDependents(VectorPtr oldVector, VectorPtr newVector, QMap<RelationPtr, RelationPtr> &duplicatedRelations) {
+  RelationList relations = _store->getObjects<Relation>();
+  foreach(RelationPtr relation, relations) {
+    if (relation->uses(oldVector)){
+      RelationPtr newRelation = relation->makeDuplicate(duplicatedRelations);
+      if (newRelation) {
+        newRelation->replaceDependency(oldVector, newVector);
+      }
+    }
+  }
+
+  DataObjectList dataObjects = _store->getObjects<DataObject>();
+  foreach(DataObjectPtr dataObject, dataObjects) {
+    if (dataObject->uses(oldVector)){
+      DataObjectPtr newObject = dataObject->makeDuplicate();
+      if (newObject) {
+        newObject->replaceDependency(oldVector, newVector);
+        dataObject->duplicateDependents(newObject, duplicatedRelations);
+      }
+    }
+  }
 }
 
+
+void ChangeFileDialog::duplicateDependents(MatrixPtr oldMatrix, MatrixPtr newMatrix, QMap<RelationPtr, RelationPtr> &duplicatedRelations) {
+  RelationList relations = _store->getObjects<Relation>();
+  foreach(RelationPtr relation, relations) {
+    if (relation->uses(oldMatrix)){
+      RelationPtr newRelation = relation->makeDuplicate(duplicatedRelations);
+      if (newRelation) {
+        newRelation->replaceDependency(oldMatrix, newMatrix);
+      }
+    }
+  }
+
+  DataObjectList dataObjects = _store->getObjects<DataObject>();
+  foreach(DataObjectPtr dataObject, dataObjects) {
+    if (dataObject->uses(oldMatrix)){
+      DataObjectPtr newObject = dataObject->makeDuplicate();
+      if (newObject) {
+        newObject->replaceDependency(oldMatrix, newMatrix);
+        dataObject->duplicateDependents(newObject, duplicatedRelations);
+      }
+    }
+  }
+}
+
+}
 // vim: ts=2 sw=2 et

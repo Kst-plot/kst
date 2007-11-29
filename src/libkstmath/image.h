@@ -89,9 +89,7 @@ class KST_EXPORT Image : public Relation {
     virtual QString yLabel() const;
     virtual QString topLabel() const;
 
-#if 0
-    virtual KstDataObjectPtr makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap);
-#endif
+    virtual RelationPtr makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelations);
 
     // see KstRelation::providerDataObject
     virtual DataObjectPtr providerDataObject() const;

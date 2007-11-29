@@ -72,7 +72,7 @@ class KST_EXPORT Equation : public DataObject {
 
     const CurveHintList *curveHints() const;
 
-    DataObjectPtr makeDuplicate(DataObjectDataObjectMap& duplicatedMap);
+    DataObjectPtr makeDuplicate();
 
     void replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObject);
 

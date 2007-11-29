@@ -550,30 +550,23 @@ void DataObject::deleteDependents() {
 }
 
 
-bool DataObject::duplicateDependents(QMap<DataObjectPtr, DataObjectPtr> &duplicatedMap) {
-  // FIXME: redo
-#if 0
-  // work with a copy of the data object list
-  dataObjectList.lock().readLock();
-  DataObjectList dol = dataObjectList;
-  dataObjectList.lock().unlock();
-
-  for (DataObjectList::Iterator i = dol.begin(); i != dol.end(); ++i) {
-    if ((*i)->uses(this)) {
-      if (duplicatedMap.contains(*i)) {
-        (duplicatedMap[*i])->replaceDependency(this, duplicatedMap[this]);
-      } else {
-        DataObjectPtr newObject = (*i)->makeDuplicate(duplicatedMap);
-        dataObjectList.lock().writeLock();
-        dataObjectList.append(newObject.data());
-        dataObjectList.lock().unlock();
-        (duplicatedMap[*i])->replaceDependency(this, duplicatedMap[this]);
-        (*i)->duplicateDependents(duplicatedMap);
-      }
+bool DataObject::duplicateDependents(DataObjectPtr newObject, QMap< SharedPtr<Relation>, SharedPtr<Relation> > &duplicatedRelations) {
+  RelationList relations = _store->getObjects<Relation>();
+  foreach (RelationPtr relation, relations) {
+    if (relation->uses(this)) {
+      RelationPtr newRelation = relation->makeDuplicate(duplicatedRelations);
+      newRelation->replaceDependency(this, newObject);
     }
   }
-#endif
 
+  DataObjectList dataObjects = _store->getObjects<DataObject>();
+  foreach (DataObjectPtr object, dataObjects) {
+    if (object->uses(this)) {
+      DataObjectPtr newDataObject = object->makeDuplicate();
+      newDataObject->replaceDependency(this, newObject);
+      object->duplicateDependents(newDataObject, duplicatedRelations);
+    }
+  }
   return true;
 }
 

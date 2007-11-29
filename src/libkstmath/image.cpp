@@ -451,17 +451,41 @@ void Image::setAutoThreshold(bool yes) {
 }
 
 
-#if 0
-KstDataObjectPtr Image::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap) {
-  QString name(tagName() + '\'');
-  while (KstData::self()->dataTagNameNotUnique(name, false)) {
-    name += '\'';
+RelationPtr Image::makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelations) {
+  QString newTag = tag().name() + "'";
+
+  ImagePtr image = store()->createObject<Image>(ObjectTag::fromString(newTag));
+
+  if (!_hasContourMap) {
+    image->changeToColorOnly(_inputMatrices[THEMATRIX],
+        _zLower,
+        _zUpper,
+        _autoThreshold,
+        _pal.paletteName());
+  } else if (!_hasColorMap) {
+    image->changeToContourOnly(_inputMatrices[THEMATRIX],
+        _numContourLines,
+        _contourColor,
+        _contourWeight);
+  } else {
+    image->changeToColorAndContour(_inputMatrices[THEMATRIX],
+        _zLower,
+        _zUpper,
+        _autoThreshold,
+        _pal.paletteName(),
+        _numContourLines,
+        _contourColor,
+        _contourWeight);
   }
-  ImagePtr image = new Image(name, _inputMatrices[THEMATRIX], _zLower, _zUpper, _autoThreshold, _pal);
-  duplicatedMap.insert(this, KstDataObjectPtr(image));
-  return KstDataObjectPtr(image);
+
+  image->writeLock();
+  image->update(0);
+  image->unlock();
+
+  duplicatedRelations.insert(this, RelationPtr(image));
+  return RelationPtr(image);
+
 }
-#endif
 
 
 QString Image::matrixTag() const {

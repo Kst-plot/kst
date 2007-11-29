@@ -32,6 +32,8 @@
 #include "curve.h"
 #include "ksttimers.h"
 
+#include "objectstore.h"
+
 #include <time.h>
 
 // #define DEBUG_VECTOR_CURVE
@@ -826,33 +828,42 @@ double Curve::minX() const {
 }
 
 
-#if 0
-RelationPtr Curve::makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap) {
-  VectorPtr VX = *_inputVectors.find(COLOR_XVECTOR);
-  VectorPtr VY = *_inputVectors.find(COLOR_YVECTOR);
-  VectorPtr EX = *_inputVectors.find(EXVECTOR);
-  VectorPtr EY = *_inputVectors.find(EYVECTOR);
-  VectorPtr EXMinus = *_inputVectors.find(EXMINUSVECTOR);
-  VectorPtr EYMinus = *_inputVectors.find(EYMINUSVECTOR);
+RelationPtr Curve::makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelations) {
+  QString newTag = tag().name() + "'";
+  CurvePtr curve = store()->createObject<Curve>(ObjectTag::fromString(newTag));
 
-  QString name(tagName() + '\'');
-  while (KstData::self()->dataTagNameNotUnique(name, false)) {
-    name += '\'';
+  curve->setXVector(xVector());
+  curve->setYVector(yVector());
+  if (hasXError()) {
+    curve->setXError(xErrorVector());
   }
-  CurvePtr vcurve = new Curve(name, VX, VY, EX, EY, EXMinus, EYMinus, Color);
-  // copy some other properties as well
-  vcurve->setHasPoints(HasPoints);
-  vcurve->setHasLines(HasLines);
-  vcurve->setHasBars(HasBars);
-  vcurve->setBarStyle(BarStyle);
-  vcurve->setLineWidth(LineWidth);
-  vcurve->setLineStyle(LineStyle);
-  vcurve->setPointDensity(PointDensity);
+  if (hasYError()) {
+    curve->setYError(yErrorVector());
+  }
+  if (hasXMinusError()) {
+    curve->setXMinusError(xMinusErrorVector());
+  }
+  if (hasYMinusError()) {
+    curve->setYMinusError(yMinusErrorVector());
+  }
 
-  duplicatedMap.insert(this, RelationPtr(vcurve));
-  return RelationPtr(vcurve);
+  curve->setColor(Color);
+  curve->setHasPoints(HasPoints);
+  curve->setHasLines(HasLines);
+  curve->setHasBars(HasBars);
+  curve->setLineWidth(LineWidth);
+  curve->setLineStyle(LineStyle);
+  curve->setPointType(PointDensity);
+  curve->setPointDensity(PointDensity);
+  curve->setBarStyle(BarStyle);
+
+  curve->writeLock();
+  curve->update(0);
+  curve->unlock();
+
+  duplicatedRelations.insert(this, RelationPtr(curve));
+  return RelationPtr(curve);
 }
-#endif
 
 
 void Curve::paint(const CurveRenderContext& context) {

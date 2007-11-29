@@ -33,6 +33,7 @@ class QXmlStreamWriter;
 namespace Kst {
 
 class DataObject;
+class Relation;
 
 typedef SharedPtr<DataObject> DataObjectPtr;
 typedef ObjectList<DataObject> DataObjectList;
@@ -101,9 +102,9 @@ class KST_EXPORT DataObject : public Object {
 
     virtual void deleteDependents();
 
-    bool duplicateDependents(DataObjectDataObjectMap& duplicatedMap);
+    bool duplicateDependents(DataObjectPtr newObject, QMap< SharedPtr<Relation>, SharedPtr<Relation> > &duplicatedRelations);
 
-    virtual DataObjectPtr makeDuplicate(DataObjectDataObjectMap& duplicatedMap) = 0;
+    virtual DataObjectPtr makeDuplicate() = 0;
 
     virtual void replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObject);
     virtual void replaceDependency(VectorPtr oldVector, VectorPtr newVector);

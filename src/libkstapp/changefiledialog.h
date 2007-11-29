@@ -13,6 +13,9 @@
 #define CHANGEFILEDIALOG_H
 
 #include <QDialog>
+#include "vector.h"
+#include "matrix.h"
+#include "relation.h"
 
 #include "ui_changefiledialog.h"
 
@@ -39,6 +42,8 @@ class KST_EXPORT ChangeFileDialog : public QDialog, Ui::ChangeFileDialog
 
   private:
     void updatePrimitiveList();
+    void duplicateDependents(VectorPtr oldVector, VectorPtr newVector, QMap<RelationPtr, RelationPtr> &duplicatedRelations);
+    void duplicateDependents(MatrixPtr oldMatrix, MatrixPtr newMatrix, QMap<RelationPtr, RelationPtr> &duplicatedRelations);
 
     ObjectStore *_store;
 };

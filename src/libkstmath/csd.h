@@ -79,7 +79,7 @@ class KST_EXPORT CSD : public DataObject {
 
     MatrixPtr outputMatrix() const;
 
-    virtual DataObjectPtr makeDuplicate(DataObjectDataObjectMap& duplicatedMap);
+    virtual DataObjectPtr makeDuplicate();
 
     void change(VectorPtr in_V, double in_freq, bool in_average,
         bool in_removeMean, bool in_apodize, ApodizeFunction in_apodizeFxn,

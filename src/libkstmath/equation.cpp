@@ -435,18 +435,20 @@ void Equation::showEditDialog() {
 }
 
 
-DataObjectPtr Equation::makeDuplicate(DataObjectDataObjectMap& duplicatedMap) {
-  // FIXME: implement this
-  return 0L;
-#if 0
-  QString name(tagName() + '\'');
-  while (Data::self()->dataTagNameNotUnique(name, false)) {
-    name += '\'';
-  }
-  EquationPtr eq = new Equation(name, _equation, _inputVectors[XINVECTOR], _doInterp);
-  duplicatedMap.insert(this, DataObjectPtr(eq));
-  return DataObjectPtr(eq);
-#endif
+DataObjectPtr Equation::makeDuplicate() {
+  QString newTag = tag().name() + "'";
+
+  EquationPtr equation = store()->createObject<Equation>(ObjectTag::fromString(newTag));
+  Q_ASSERT(equation);
+
+  equation->setEquation(_equation);
+  equation->setExistingXVector(_inputVectors[XINVECTOR], _doInterp);
+
+  equation->writeLock();
+  equation->update(0);
+  equation->unlock();
+
+  return DataObjectPtr(equation);
 }
 
 

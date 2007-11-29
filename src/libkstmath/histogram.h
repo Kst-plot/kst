@@ -92,7 +92,7 @@ public:
     double vMin() const;
     int vNumSamples() const;
 
-    virtual DataObjectPtr makeDuplicate(DataObjectDataObjectMap& duplicatedMap);
+    virtual DataObjectPtr makeDuplicate();
 
   protected:
     Histogram(ObjectStore *store, const ObjectTag &in_tag);

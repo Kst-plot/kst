@@ -138,9 +138,7 @@ class KST_EXPORT Curve: public Relation {
     void pushPointDensity(int d) { _pointDensityStack.push(pointDensity()); setPointDensity(d); }
     void popPointDensity() { setPointDensity(_pointDensityStack.pop()); }
 
-#if 0
-    virtual KstRelationPtr makeDuplicate(KstDataObjectDataObjectMap& duplicatedMap);
-#endif
+    virtual RelationPtr makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelations);
 
     // render this vcurve
     virtual void paint(const CurveRenderContext& context);

@@ -523,10 +523,16 @@ void DataMatrix::reload() {
 
 
 DataMatrixPtr DataMatrix::makeDuplicate() const {
+  Q_ASSERT(store());
   QString newTag = tag().name() + "'";
-  return new DataMatrix(store(), _file, _field, ObjectTag(newTag, tag().context()),
-                        _reqXStart, _reqYStart, _reqNX, _reqNY,
-                        _doAve, _doSkip, _skip);
+  DataMatrixPtr matrix = store()->createObject<DataMatrix>(ObjectTag::fromString(newTag));
+
+  matrix->writeLock();
+  matrix->change(_file, _field, _reqXStart, _reqYStart, _reqNX, _reqNY, _doAve, _doSkip, _skip);
+  matrix->update(0);
+  matrix->unlock();
+
+  return matrix;
 }
 
 

@@ -759,8 +759,16 @@ DataSourcePtr DataVector::dataSource() const {
 
 
 DataVectorPtr DataVector::makeDuplicate() const {
+  Q_ASSERT(store());
   QString newTag = tag().name() + "'";
-  return new DataVector(store(), ObjectTag(newTag, tag().context()), _file, _field, ReqF0, ReqNF, Skip, DoSkip, DoAve);
+  DataVectorPtr vector = store()->createObject<DataVector>(ObjectTag::fromString(newTag));
+
+  vector->writeLock();
+  vector->change(_file, _field, ReqF0, ReqNF, Skip, DoSkip, DoAve);
+  vector->update(0);
+  vector->unlock();
+
+  return vector;
 }
 
 

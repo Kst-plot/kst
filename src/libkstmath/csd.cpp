@@ -454,20 +454,28 @@ void CSD::setRateUnits(const QString& units) {
 }
 
 
-DataObjectPtr CSD::makeDuplicate(DataObjectDataObjectMap& duplicatedMap) {
-#if 0
-  QString name(tagName() + '\'');
-  while (Data::self()->dataTagNameNotUnique(name, false)) {
-    name += '\'';
-  }
-  CSDPtr csd = new CSD(name, _inputVectors[INVECTOR], _frequency, _average, _removeMean,
-                             _apodize, _apodizeFxn, _windowSize, _averageLength, _gaussianSigma,
-                             _outputType, _vectorUnits, _rateUnits);
-  duplicatedMap.insert(this, DataObjectPtr(csd));
+DataObjectPtr CSD::makeDuplicate() {
+  QString newTag = tag().name() + "'";
+
+  CSDPtr csd = store()->createObject<CSD>(ObjectTag::fromString(newTag));
+  csd->change(_inputVectors[INVECTOR],
+              _frequency,
+              _average,
+              _removeMean,
+              _apodize,
+              _apodizeFxn,
+              _windowSize,
+              _averageLength,
+              _gaussianSigma,
+              _outputType,
+              _vectorUnits,
+              _rateUnits);
+
+  csd->writeLock();
+  csd->update(0);
+  csd->unlock();
+
   return DataObjectPtr(csd);
-#endif
-  // FIXME: implement this
-  return 0L;
 }
 
 void CSD::updateMatrixLabels(void) {

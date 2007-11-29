@@ -93,7 +93,7 @@ class KST_EXPORT PSD : public DataObject {
 
     const CurveHintList *curveHints() const;
 
-    virtual DataObjectPtr makeDuplicate(DataObjectDataObjectMap& duplicatedMap);
+    virtual DataObjectPtr makeDuplicate();
 
   protected:
     PSD(ObjectStore *store, const ObjectTag& in_tag);

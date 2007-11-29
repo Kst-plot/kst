@@ -479,26 +479,27 @@ void EventMonitorEntry::setEMailRecipients(const QString& str) {
 }
 
 
-DataObjectPtr EventMonitorEntry::makeDuplicate(DataObjectDataObjectMap& duplicatedMap) {
-#if 0
-  QString name(tagString() + '\'');
-  while (Data::self()->dataTagNameNotUnique(name, false)) {
-    name += '\'';
-  }
-  EventMonitorEntryPtr event = new EventMonitorEntry(name);
-  event->setEvent(_event);
-  event->setDescription(_description);
-  event->setLevel(_level);
-  event->setLogKstDebug(_logKstDebug);
-  event->setLogEMail(_logEMail);
-  event->setLogELOG(_logELOG);
-  event->setEMailRecipients(_eMailRecipients);
+DataObjectPtr EventMonitorEntry::makeDuplicate() {
+  QString newTag = tag().name() + "'";
 
-  duplicatedMap.insert(this, DataObjectPtr(event));
-  return DataObjectPtr(event);
-#endif
-  // FIXME: implement this
-  return 0;
+  EventMonitorEntryPtr eventMonitor = store()->createObject<EventMonitorEntry>(ObjectTag::fromString(newTag));
+
+  eventMonitor->setScriptCode(_script);
+  eventMonitor->setEvent(_event);
+  eventMonitor->setDescription(_description);
+  eventMonitor->setLevel(_level);
+  eventMonitor->setLogKstDebug(_logKstDebug);
+  eventMonitor->setLogEMail(_logEMail);
+  eventMonitor->setLogELOG(_logELOG);
+  eventMonitor->setEMailRecipients(_eMailRecipients);
+
+  eventMonitor->reparse();
+
+  eventMonitor->writeLock();
+  eventMonitor->update(0);
+  eventMonitor->unlock();
+
+  return DataObjectPtr(eventMonitor);
 }
 
 

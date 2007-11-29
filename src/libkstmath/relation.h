@@ -62,6 +62,7 @@ class CurveRenderContext {
 enum CurveType { VCURVE, HISTOGRAM, IMAGE };
 
 class ObjectStore;
+class Relation;
 
 class KST_EXPORT Relation : public Object {
   Q_OBJECT
@@ -141,6 +142,12 @@ class KST_EXPORT Relation : public Object {
 
     void setLegendText(const QString& theValue);
     QString legendText() const { return _legendText;}
+
+    virtual SharedPtr<Relation> makeDuplicate(QMap< SharedPtr<Relation>, SharedPtr<Relation> > &duplicatedRelations) = 0;
+
+    virtual void replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObject);
+    virtual void replaceDependency(VectorPtr oldVector, VectorPtr newVector);
+    virtual void replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix);
 
   protected:
     virtual void writeLockInputsAndOutputs() const;

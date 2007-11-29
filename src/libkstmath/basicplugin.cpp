@@ -48,7 +48,7 @@ BasicPlugin::~BasicPlugin() {
 }
 
 
-DataObjectPtr BasicPlugin::makeDuplicate(DataObjectDataObjectMap &map) {
+DataObjectPtr BasicPlugin::makeDuplicate() {
 #if 0
   BasicPluginPtr plugin = kst_cast<BasicPlugin>(DataObject::createPlugin(propertyString()));
 

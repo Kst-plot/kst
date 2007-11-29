@@ -47,7 +47,7 @@ class KST_EXPORT BasicPlugin : public DataObject {
     QString propertyString() const { return name(); } //no longer virtual
 
     //Provide an impl...
-    virtual DataObjectPtr makeDuplicate(DataObjectDataObjectMap&);
+    virtual DataObjectPtr makeDuplicate();
 
   public slots:
     //Pure virtual slots from DataObject

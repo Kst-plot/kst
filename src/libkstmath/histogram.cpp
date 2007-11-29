@@ -453,19 +453,22 @@ int Histogram::vNumSamples() const {
 }
 
 
-DataObjectPtr Histogram::makeDuplicate(DataObjectDataObjectMap& duplicatedMap) {
-#if 0
-  QString name(tagName() + '\'');
-  while (Data::self()->dataTagNameNotUnique(name, false)) {
-    name += '\'';
-  }
-  HistogramPtr histogram = new Histogram(name, _inputVectors[RAWVECTOR],
-                                               _MinX, _MaxX, _NumberOfBins, _NormalizationMode);
-  duplicatedMap.insert(this, DataObjectPtr(histogram));
+DataObjectPtr Histogram::makeDuplicate() {
+  QString newTag = tag().name() + "'";
+
+  HistogramPtr histogram = store()->createObject<Histogram>(ObjectTag::fromString(newTag));
+
+  histogram->setVector(_inputVectors[RAWVECTOR]);
+  histogram->setXRange(_MinX, _MaxX);
+  histogram->setNumberOfBins(_NumberOfBins);
+  histogram->setNormalizationType(_NormalizationMode);
+  histogram->setRealTimeAutoBin(_realTimeAutoBin);
+
+  histogram->writeLock();
+  histogram->update(0);
+  histogram->unlock();
+
   return DataObjectPtr(histogram);
-#endif
-  // FIXME: implement this
-  return 0L;
 }
 
 }

@@ -471,20 +471,30 @@ void PSD::setGaussianSigma(double in_gaussianSigma) {
 }
 
 
-DataObjectPtr PSD::makeDuplicate(DataObjectDataObjectMap& duplicatedMap) {
-#if 0
-  QString name(tagName() + '\'');
-  while (Data::self()->dataTagNameNotUnique(name, false)) {
-    name += '\'';
-  }
-  PSDPtr psd = new PSD(name, _inputVectors[INVECTOR], _Frequency,
-                             _Average, _averageLength, _Apodize, _RemoveMean, _vectorUnits, _rateUnits,
-                             _apodizeFxn, _gaussianSigma, _Output);
-  duplicatedMap.insert(this, DataObjectPtr(psd));
-  return DataObjectPtr(psd);
-#endif
-  // FIXME: implement this
-  return 0L;
+DataObjectPtr PSD::makeDuplicate() {
+  QString newTag = tag().name() + "'";
+
+  PSDPtr powerspectrum = store()->createObject<PSD>(ObjectTag::fromString(newTag));
+  Q_ASSERT(powerspectrum);
+
+  powerspectrum->writeLock();
+  powerspectrum->setVector(_inputVectors[INVECTOR]);
+  powerspectrum->setFrequency(_Frequency);
+  powerspectrum->setAverage(_Average);
+  powerspectrum->setLength(_averageLength);
+  powerspectrum->setApodize(_Apodize);
+  powerspectrum->setRemoveMean(_RemoveMean);
+  powerspectrum->setVectorUnits(_vectorUnits);
+  powerspectrum->setRateUnits(_rateUnits);
+  powerspectrum->setApodizeFxn(_apodizeFxn);
+  powerspectrum->setGaussianSigma(_gaussianSigma);
+  powerspectrum->setOutput(_Output);
+  powerspectrum->setInterpolateHoles(_interpolateHoles);
+
+  powerspectrum->update(0);
+  powerspectrum->unlock();
+
+  return DataObjectPtr(powerspectrum);
 }
 
 
