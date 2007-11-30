@@ -272,6 +272,7 @@ bool ObjectStore::removeObject(Object *o) {
     qDebug() << "  removing object from list";
 #endif
     if (ds) {
+      ds->deleteDependents();
       _dataSourceList.removeAll(ds);
     } else {
       o->deleteDependents();

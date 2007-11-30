@@ -501,26 +501,16 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
 
 DataSource::~DataSource() {
   //  qDebug() << "DataSource destructor: " << tag().tagString() << endl;
+}
 
-  // FIXME: remove _numFramesScalar and metadata
-#if 0
-  scalarList.lock().writeLock();
-//  qDebug() << "  removing numFrames scalar" << endl;
-  scalarList.removeObject(_numFramesScalar);
-  scalarList.lock().unlock();
 
-//  qDebug() << "  removing metadata strings" << endl;
-  stringList.lock().writeLock();
-  stringList.setUpdateDisplayTags(false);
-  for (QHash<QString, String*>::Iterator it = _metaData.begin(); it != _metaData.end(); ++it) {
-//    qDebug() << "    removing " << it.current()->tag().tagString() << endl;
-    stringList.removeObject(it.value());
-  }
-  stringList.setUpdateDisplayTags(true);
-  stringList.lock().unlock();
-
+void DataSource::deleteDependents() {
+  _store->removeObject(_numFramesScalar);
   _numFramesScalar = 0L;
-#endif
+
+  for (QHash<QString, String*>::Iterator it = _metaData.begin(); it != _metaData.end(); ++it) {
+    _store->removeObject(it.value());
+  }
 }
 
 

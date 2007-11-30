@@ -225,6 +225,8 @@ class KST_EXPORT DataSource : public Object {
     // in (ms)
     virtual double relativeTimeForSample(int sample, bool *ok = 0L);
 
+    virtual void deleteDependents();
+
   protected:
     void updateNumFramesScalar();
 
