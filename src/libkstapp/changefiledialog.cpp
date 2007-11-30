@@ -40,8 +40,9 @@ ChangeFileDialog::ChangeFileDialog(QWidget *parent)
   // TODO Need Icon.
   _clearFilter->setText("Clear Filter");
 
-  connect(_changeFileCancel, SIGNAL(clicked()), this, SLOT(reject()));
-  connect(_changeFileOK, SIGNAL(clicked()), this, SLOT(OKClicked()));
+  connect(_buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
+  connect(_buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(OKClicked()));
+  connect(_buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(apply()));
 
   connect(_changeFileClear, SIGNAL(clicked()), _filter, SLOT(clear()));
   connect(_changeFileClear, SIGNAL(clicked()), _changeFilePrimitiveList, SLOT(clearSelection()));
@@ -56,10 +57,10 @@ ChangeFileDialog::ChangeFileDialog(QWidget *parent)
   connect(_duplicateSelected, SIGNAL(toggled(bool)), _duplicateDependents, SLOT(setEnabled(bool)));
 
   connect(_filter, SIGNAL(textChanged(const QString&)), this, SLOT(updateSelection(const QString&)));
-
+  connect(_changeFilePrimitiveList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
 
   _dataFile->setFile(QDir::currentPath());
-
+  updateButtons();
 }
 
 
@@ -107,6 +108,12 @@ void ChangeFileDialog::updatePrimitiveList() {
 }
 
 
+void ChangeFileDialog::updateButtons() {
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_changeFilePrimitiveList->selectedItems().count() > 0);
+  _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(_changeFilePrimitiveList->selectedItems().count() > 0);
+}
+
+
 void ChangeFileDialog::selectAll() {
   _changeFilePrimitiveList->selectAll();
 }
@@ -139,11 +146,17 @@ void ChangeFileDialog::selectAllFromFile() {
 
 
 void ChangeFileDialog::OKClicked() {
+  apply();
+  accept();
+}
+
+
+void ChangeFileDialog::apply() {
   Q_ASSERT(_store);
   DataSourcePtr dataSource = DataSource::findOrLoadSource(_store, _dataFile->file());
   if (!dataSource || !dataSource->isValid() || dataSource->isEmpty()) {
     QMessageBox::critical(this, tr("Kst"), tr("The file could not be loaded or contains no data."), QMessageBox::Ok);
-    reject();
+    return;
   }
 
   QMap<RelationPtr, RelationPtr> duplicatedRelations;
@@ -253,7 +266,7 @@ void ChangeFileDialog::OKClicked() {
       QMessageBox::warning(this, tr("Kst"), tr("The following fields are not defined for the requested file:\n%1").arg(invalidSources), QMessageBox::Ok);
     }
   }
-  accept();
+  updatePrimitiveList();
 }
 
 

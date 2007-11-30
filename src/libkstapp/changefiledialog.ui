@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>534</width>
-    <height>489</height>
+    <width>522</width>
+    <height>434</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -353,59 +353,14 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" >
-     <property name="leftMargin" >
-      <number>0</number>
+    <widget class="QDialogButtonBox" name="_buttonBox" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
      </property>
-     <property name="topMargin" >
-      <number>0</number>
+     <property name="standardButtons" >
+      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::NoButton|QDialogButtonBox::Ok</set>
      </property>
-     <property name="rightMargin" >
-      <number>0</number>
-     </property>
-     <property name="bottomMargin" >
-      <number>0</number>
-     </property>
-     <item>
-      <spacer>
-       <property name="orientation" >
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeType" >
-        <enum>QSizePolicy::Expanding</enum>
-       </property>
-       <property name="sizeHint" >
-        <size>
-         <width>180</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="_changeFileOK" >
-       <property name="whatsThis" >
-        <string>Apply new source file to selected vectors.</string>
-       </property>
-       <property name="text" >
-        <string>&amp;OK</string>
-       </property>
-       <property name="default" >
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="_changeFileCancel" >
-       <property name="whatsThis" >
-        <string>Close dialog without applying further changes.</string>
-       </property>
-       <property name="text" >
-        <string>&amp;Cancel</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    </widget>
    </item>
   </layout>
  </widget>
@@ -435,7 +390,6 @@
   <tabstop>_changeSelected</tabstop>
   <tabstop>_duplicateSelected</tabstop>
   <tabstop>_duplicateDependents</tabstop>
-  <tabstop>_changeFileCancel</tabstop>
  </tabstops>
  <resources/>
  <connections/>

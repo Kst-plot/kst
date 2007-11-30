@@ -39,6 +39,8 @@ class KST_EXPORT ChangeFileDialog : public QDialog, Ui::ChangeFileDialog
     void updateSelection(const QString&);
     void selectAllFromFile();
     void OKClicked();
+    void apply();
+    void updateButtons();
 
   private:
     void updatePrimitiveList();
