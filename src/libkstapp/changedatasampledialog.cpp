@@ -20,7 +20,7 @@
 namespace Kst {
 
 ChangeDataSampleDialog::ChangeDataSampleDialog(QWidget *parent)
-  : QDialog(parent) {
+  : QDialog(parent), _modified(false) {
    setupUi(this);
 
   if (MainWindow *mw = qobject_cast<MainWindow*>(parent)) {
@@ -33,8 +33,15 @@ ChangeDataSampleDialog::ChangeDataSampleDialog(QWidget *parent)
   connect(_clear, SIGNAL(clicked()), _curveList, SLOT(clearSelection()));
   connect(_selectAll, SIGNAL(clicked()), this, SLOT(selectAll()));
   connect(_curveList, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(updateDefaults(QListWidgetItem*)));
-  connect(Apply, SIGNAL(clicked()), this, SLOT(applyChange()));
-  connect(OK, SIGNAL(clicked()), this, SLOT(OKClicked()));
+  connect(_curveList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
+
+  connect(_dataRange, SIGNAL(modified()), this, SLOT(modified()));
+
+  connect(_buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(apply()));
+  connect(_buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(OKClicked()));
+  connect(_buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
+
+  updateButtons();
 }
 
 
@@ -45,6 +52,17 @@ ChangeDataSampleDialog::~ChangeDataSampleDialog() {
 void ChangeDataSampleDialog::exec() {
   updateCurveListDialog();
   QDialog::exec();
+}
+
+
+void ChangeDataSampleDialog::updateButtons() {
+  _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(_curveList->selectedItems().count() > 0 && (_modified || _curveList->selectedItems().count() > 1));
+}
+
+
+void ChangeDataSampleDialog::modified() {
+  _modified = true;
+  updateButtons();
 }
 
 
@@ -88,16 +106,20 @@ void ChangeDataSampleDialog::updateDefaults(QListWidgetItem* item) {
 
     vector->unlock();
   }
+
+  _modified = false;
 }
 
 
 void ChangeDataSampleDialog::OKClicked() {
-  applyChange();
+  if (_buttonBox->button(QDialogButtonBox::Apply)->isEnabled()) {
+    apply();
+  }
   accept();
 }
 
 
-void ChangeDataSampleDialog::applyChange() {
+void ChangeDataSampleDialog::apply() {
   QList<QListWidgetItem*> selectedItems = _curveList->selectedItems();
   for (int i = 0; i < selectedItems.size(); ++i) {
     if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(Kst::ObjectTag::fromString(selectedItems.at(i)->text())))) {
@@ -110,6 +132,7 @@ void ChangeDataSampleDialog::applyChange() {
       vector->unlock();
     }
   }
+  updateCurveListDialog();
 }
 
 

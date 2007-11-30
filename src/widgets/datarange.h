@@ -59,6 +59,9 @@ class  KST_EXPORT DataRange : public QWidget, public Ui::DataRange {
     void setWidgetDefaults();
     void loadWidgetDefaults();
 
+  Q_SIGNALS:
+    void modified();
+
   private Q_SLOTS:
     void countFromEndChanged();
     void readToEndChanged();

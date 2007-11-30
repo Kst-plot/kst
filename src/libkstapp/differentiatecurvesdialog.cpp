@@ -31,15 +31,11 @@ DifferentiateCurvesDialog::DifferentiateCurvesDialog(QWidget *parent)
     qFatal("ERROR: can't construct a ChangeDataSampleDialog without the object store");
   }
 
-  _availableListBox->clear();
-  _selectedListBox->clear();
-  _availableListBox->addItem(tr("Line Color"));
-  _availableListBox->addItem(tr("Point Style"));
-  _availableListBox->addItem(tr("Line Style"));
-  _availableListBox->addItem(tr("Line Width"));
+  resetLists();
 
-  connect(Cancel, SIGNAL(clicked()), this, SLOT(close()));
-  connect(OK, SIGNAL(clicked()), this, SLOT(OKClicked()));
+  connect(_buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
+  connect(_buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(OKClicked()));
+  connect(_buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(apply()));
 
   connect(_add, SIGNAL(clicked()), this, SLOT(addButtonClicked()));
   connect(_remove, SIGNAL(clicked()), this, SLOT(removeButtonClicked()));
@@ -59,7 +55,6 @@ DifferentiateCurvesDialog::DifferentiateCurvesDialog(QWidget *parent)
   _remove->setText("Remove");
 
   _maxLineWidth->setMaximum(LINEWIDTH_MAX);
-
 }
 
 
@@ -70,6 +65,19 @@ DifferentiateCurvesDialog::~DifferentiateCurvesDialog() {
 void DifferentiateCurvesDialog::exec() {
   updateButtons();
   QDialog::exec();
+}
+
+
+void DifferentiateCurvesDialog::resetLists() {
+  _availableListBox->clear();
+  _selectedListBox->clear();
+  _availableListBox->addItem(tr("Line Color"));
+  _availableListBox->addItem(tr("Point Style"));
+  _availableListBox->addItem(tr("Line Style"));
+  _availableListBox->addItem(tr("Line Width"));
+
+  _maxLineWidth->setValue(1);
+  _pointDensity->setCurrentIndex(0);
 }
 
 
@@ -87,6 +95,8 @@ void DifferentiateCurvesDialog::updateButtons() {
   _down->setEnabled(_selectedListBox->row(selectedItem) >= 0 && _selectedListBox->row(selectedItem) < (int)_selectedListBox->count() - 1);
 
   _add->setEnabled(_availableListBox->selectedItems().count() > 0);
+
+  _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(_selectedListBox->selectedItems().count() > 0);
 }
 
 
@@ -140,6 +150,14 @@ void DifferentiateCurvesDialog::downButtonClicked() {
 
 
 void DifferentiateCurvesDialog::OKClicked() {
+  if (_buttonBox->button(QDialogButtonBox::Apply)->isEnabled()) {
+    apply();
+  }
+  accept();
+}
+
+
+void DifferentiateCurvesDialog::apply() {
   bool lineColorOrder  = !_selectedListBox->findItems(tr("Line Color"), Qt::MatchExactly).empty();
   bool pointStyleOrder = !_selectedListBox->findItems(tr("Point Style"), Qt::MatchExactly).empty();
   bool lineStyleOrder  = !_selectedListBox->findItems(tr("Line Style"), Qt::MatchExactly).empty();
@@ -173,7 +191,7 @@ void DifferentiateCurvesDialog::OKClicked() {
     curve->unlock();
     ++sequenceNum;
   }
-  accept();
+  resetLists();
 }
 
 }

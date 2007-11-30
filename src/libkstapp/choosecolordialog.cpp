@@ -18,6 +18,7 @@
 #include "document.h"
 
 #include "colorsequence.h"
+#include <QPushButton>
 
 namespace Kst {
 
@@ -34,7 +35,9 @@ ChooseColorDialog::ChooseColorDialog(QWidget *parent)
     qFatal("ERROR: can't construct a ChangeDataSampleDialog without the object store");
   }
 
-  connect(OK, SIGNAL(clicked()), this, SLOT(OKClicked()));
+  connect(_buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
+  connect(_buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(OKClicked()));
+  connect(_buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(apply()));
 }
 
 
@@ -47,7 +50,6 @@ void ChooseColorDialog::exec() {
   updateColorGroup();
   QDialog::exec();
 }
-
 
 
 void ChooseColorDialog::updateColorGroup() {
@@ -96,8 +98,8 @@ void ChooseColorDialog::updateColorGroup() {
   setFixedHeight(height());
 }
 
-void ChooseColorDialog::cleanColorGroup()
-{
+
+void ChooseColorDialog::cleanColorGroup() {
   while (!lineEdits.isEmpty())
   {
     QLineEdit* tempLineEdit = lineEdits.back();
@@ -116,12 +118,14 @@ void ChooseColorDialog::cleanColorGroup()
 
 
 void ChooseColorDialog::OKClicked() {
-  applyChange();
+  if (_buttonBox->button(QDialogButtonBox::Apply)->isEnabled()) {
+    apply();
+  }
   accept();
 }
 
 
-void ChooseColorDialog::applyChange() {
+void ChooseColorDialog::apply() {
   CurveList curveList = _store->getObjects<Curve>();
   for (CurveList::iterator curve_iter = curveList.begin(); curve_iter != curveList.end(); ++curve_iter)
   {
@@ -140,6 +144,7 @@ void ChooseColorDialog::applyChange() {
       curve->unlock();
     }
   }
+  updateColorGroup();
 }
 
 

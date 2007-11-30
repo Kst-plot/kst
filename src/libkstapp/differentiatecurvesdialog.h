@@ -38,8 +38,11 @@ class KST_EXPORT DifferentiateCurvesDialog : public QDialog, Ui::DifferentiateCu
     void upButtonClicked();
     void downButtonClicked();
     void OKClicked();
+    void apply();
 
   private:
+    void resetLists();
+
     ObjectStore *_store;
 
 };

@@ -36,7 +36,7 @@ class KST_EXPORT ChooseColorDialog : public QDialog, Ui::ChooseColorDialog
 
   private slots:
     void OKClicked();
-    void applyChange();
+    void apply();
 
   private:
     QColor getColorForFile(const QString &fileName);
