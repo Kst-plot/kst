@@ -63,8 +63,8 @@ void DataDialog::createGui() {
   QVBoxLayout *extensionLayout = new QVBoxLayout(extension);
   extensionLayout->setContentsMargins(0, -1, 0, -1);
 
-  EditMultipleWidget *editMultipleWidget = new EditMultipleWidget();
-  extensionLayout->addWidget(editMultipleWidget);
+  _editMultipleWidget = new EditMultipleWidget();
+  extensionLayout->addWidget(_editMultipleWidget);
 
   extension->setLayout(extensionLayout);
 
@@ -130,12 +130,15 @@ void DataDialog::slotEditMultiple() {
   int currentWidth = width();
   int extensionWidth = 400;
   extensionWidget()->setVisible(!extensionWidget()->isVisible());
+ _tagString->setEnabled(!extensionWidget()->isVisible());
   if (!extensionWidget()->isVisible()) {
     setMaximumWidth(currentWidth - extensionWidth);
     setMinimumWidth(currentWidth - extensionWidth);
+    emit editSingleMode();
   } else {
     setMinimumWidth(currentWidth + extensionWidth);
     setMaximumWidth(currentWidth + extensionWidth);
+    emit editMultipleMode();
   }
 }
 

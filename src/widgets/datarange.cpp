@@ -22,15 +22,6 @@ DataRange::DataRange(QWidget *parent)
   connect(_readToEnd, SIGNAL(toggled(bool)), this, SLOT(readToEndChanged()));
   connect(_doSkip, SIGNAL(toggled(bool)), this, SLOT(doSkipChanged()));
 
-
-  connect(_countFromEnd, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
-  connect(_countFromEnd, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
-  connect(_countFromEnd, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
-  connect(_countFromEnd, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
-  connect(_countFromEnd, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
-  connect(_countFromEnd, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
-  connect(_countFromEnd, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
-
   connect(_start, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
   connect(_range, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
   connect(_skip, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
@@ -46,8 +37,23 @@ DataRange::~DataRange() {
 }
 
 
+void DataRange::clearValues() {
+  _start->clear();
+  _range->clear();
+  _skip->clear();
+  _doFilter->setCheckState(Qt::PartiallyChecked);
+  _readToEnd->setCheckState(Qt::PartiallyChecked);
+  _doSkip->setCheckState(Qt::PartiallyChecked);
+}
+
+
 qreal DataRange::start() const {
   return _start->text().toDouble();
+}
+
+
+bool DataRange::startDirty() const {
+  return (!_start->text().isEmpty());
 }
 
 
@@ -71,6 +77,11 @@ qreal DataRange::range() const {
 }
 
 
+bool DataRange::rangeDirty() const {
+  return (!_range->text().isEmpty());
+}
+
+
 void DataRange::setRange(qreal range) {
   _range->setText(QString::number(range));
 }
@@ -91,6 +102,11 @@ int DataRange::skip() const {
 }
 
 
+bool DataRange::skipDirty() const {
+  return (!_skip->text().isEmpty());
+}
+
+
 void DataRange::setSkip(int skip) {
   _skip->setValue(skip);
 }
@@ -106,8 +122,18 @@ void DataRange::setCountFromEnd(bool countFromEnd) {
 }
 
 
+bool DataRange::countFromEndDirty() const {
+  return (_readToEnd->state() == Qt::PartiallyChecked);
+}
+
+
 bool DataRange::readToEnd() const {
   return _readToEnd->isChecked();
+}
+
+
+bool DataRange::readToEndDirty() const {
+  return (_readToEnd->state() == Qt::PartiallyChecked);
 }
 
 
@@ -121,6 +147,11 @@ bool DataRange::doSkip() const {
 }
 
 
+bool DataRange::doSkipDirty() const {
+  return (_doSkip->state() == Qt::PartiallyChecked);
+}
+
+
 void DataRange::setDoSkip(bool doSkip) {
   _doSkip->setChecked(doSkip);
 }
@@ -128,6 +159,11 @@ void DataRange::setDoSkip(bool doSkip) {
 
 bool DataRange::doFilter() const {
   return _doFilter->isChecked();
+}
+
+
+bool DataRange::doFilterDirty() const {
+  return (_doFilter->state() == Qt::PartiallyChecked);
 }
 
 

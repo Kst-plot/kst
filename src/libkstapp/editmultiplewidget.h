@@ -25,6 +25,9 @@ class KST_EXPORT EditMultipleWidget : public QWidget, public Ui::EditMultipleWid
     EditMultipleWidget(QWidget *parent = 0);
     virtual ~EditMultipleWidget();
 
+    void addObjects(QStringList &objects);
+    QStringList selectedObjects();
+
   private Q_SLOTS:
     void selectAllObjects();
     void applyFilter(const QString &filter);

@@ -12,6 +12,7 @@
 #include "editmultiplewidget.h"
 
 #include <QRegExp>
+#include <QDebug>
 
 namespace Kst {
 
@@ -47,6 +48,22 @@ void EditMultipleWidget::applyFilter(const QString& filter) {
       _objectList->item(i)->setSelected(true);
     }
   }
+}
+
+
+void EditMultipleWidget::addObjects(QStringList &objects) {
+  _objectList->clear();
+  _objectList->addItems(objects);
+}
+
+
+QStringList EditMultipleWidget::selectedObjects() {
+  QStringList objects;
+  QList<QListWidgetItem *> selectedItems = _objectList->selectedItems();
+  foreach (QListWidgetItem *item, selectedItems) {
+    objects.append(item->text());
+  }
+  return objects;
 }
 
 }

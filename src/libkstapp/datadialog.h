@@ -24,6 +24,7 @@ namespace Kst {
 
 class DataTab;
 class Document;
+class EditMultipleWidget;
 
 class KST_EXPORT DataDialog : public Dialog {
   Q_OBJECT
@@ -47,10 +48,15 @@ class KST_EXPORT DataDialog : public Dialog {
     virtual ObjectPtr editExistingDataObject() const = 0;
 
     Document *_document;
+    EditMultipleWidget *_editMultipleWidget;
 
   private Q_SLOTS:
     void slotOk();
     void slotEditMultiple();
+
+  Q_SIGNALS:
+    void editMultipleMode();
+    void editSingleMode();
 
   private:
     void createGui();

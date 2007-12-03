@@ -56,15 +56,20 @@ class KST_EXPORT VectorTab : public DataTab, Ui::VectorTab {
     //GeneratedVector methods...
     qreal from() const;
     void setFrom(qreal from);
+    bool fromDirty() const;
 
     qreal to() const;
     void setTo(qreal to);
+    bool toDirty() const;
 
     int numberOfSamples() const;
     void setNumberOfSamples(int numberOfSamples);
+    bool numberOfSamplesDirty() const;
 
     void hideGeneratedOptions();
     void hideDataOptions();
+    void enableSingleEditOptions(bool enabled);
+    void clearTabValues();
 
   Q_SIGNALS:
     void sourceChanged();
@@ -98,9 +103,13 @@ class KST_EXPORT VectorDialog : public DataDialog {
 
   private Q_SLOTS:
     void updateButtons();
+    void editMultipleMode();
+    void editSingleMode();
 
   private:
     VectorTab *_vectorTab;
+    bool _editMultipleMode;
+
 };
 
 }

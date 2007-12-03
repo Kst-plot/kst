@@ -13,6 +13,7 @@
 
 #include "dialogpage.h"
 #include "datasourcedialog.h"
+#include "editmultiplewidget.h"
 
 #include "datavector.h"
 #include "generatedvector.h"
@@ -107,6 +108,11 @@ qreal VectorTab::from() const {
 }
 
 
+bool VectorTab::fromDirty() const {
+  return (!_from->text().isEmpty());
+}
+
+
 void VectorTab::setFrom(qreal from) {
   _from->setText(QString::number(from));
 }
@@ -114,6 +120,11 @@ void VectorTab::setFrom(qreal from) {
 
 qreal VectorTab::to() const {
   return _to->text().toDouble();
+}
+
+
+bool VectorTab::toDirty() const {
+  return (!_to->text().isEmpty());
 }
 
 
@@ -125,6 +136,12 @@ void VectorTab::setTo(qreal to) {
 int VectorTab::numberOfSamples() const {
   return _numberOfSamples->value();
 }
+
+
+bool VectorTab::numberOfSamplesDirty() const {
+  return (!_numberOfSamples->text().isEmpty());
+}
+
 
 void VectorTab::setNumberOfSamples(int numberOfSamples) {
   _numberOfSamples->setValue(numberOfSamples);
@@ -158,6 +175,19 @@ void VectorTab::hideDataOptions() {
   _dataVectorGroup->setVisible(false);
   _dataRange->setVisible(false);
   setMaximumHeight(150);
+}
+
+
+void VectorTab::clearTabValues() {
+  _numberOfSamples->clear();
+  _from->clear();
+  _to->clear();
+  _dataRange->clearValues();
+}
+
+
+void VectorTab::enableSingleEditOptions(bool enabled) {
+  _dataVectorGroup->setEnabled(enabled);
 }
 
 
@@ -200,7 +230,7 @@ void VectorTab::showConfigWidget() {
 
 
 VectorDialog::VectorDialog(ObjectPtr dataObject, QWidget *parent)
-  : DataDialog(dataObject, parent) {
+  : DataDialog(dataObject, parent), _editMultipleMode(false) {
 
   if (editMode() == Edit)
     setWindowTitle(tr("Edit Vector"));
@@ -218,6 +248,8 @@ VectorDialog::VectorDialog(ObjectPtr dataObject, QWidget *parent)
   }
 
   connect(_vectorTab, SIGNAL(sourceChanged()), this, SLOT(updateButtons()));
+  connect(this, SIGNAL(editMultipleMode()), this, SLOT(editMultipleMode()));
+  connect(this, SIGNAL(editSingleMode()), this, SLOT(editSingleMode()));
   updateButtons();
 }
 
@@ -248,9 +280,24 @@ QString VectorDialog::tagString() const {
 }
 
 
+void VectorDialog::editMultipleMode() {
+  _vectorTab->enableSingleEditOptions(false);
+  _vectorTab->clearTabValues();
+  _editMultipleMode = true;
+}
+
+
+void VectorDialog::editSingleMode() {
+  _vectorTab->enableSingleEditOptions(true);
+   configureTab(dataObject());
+  _editMultipleMode = false;
+}
+
+
 void VectorDialog::updateButtons() {
   _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_vectorTab->vectorMode() == VectorTab::GeneratedVector || !_vectorTab->field().isEmpty());
 }
+
 
 void VectorDialog::configureTab(ObjectPtr vector) {
   if (!vector) {
@@ -272,12 +319,28 @@ void VectorDialog::configureTab(ObjectPtr vector) {
     _vectorTab->dataRange()->setDoSkip(dataVector->doSkip());
     _vectorTab->dataRange()->setDoFilter(dataVector->doAve());
     _vectorTab->hideGeneratedOptions();
+    if (_editMultipleWidget) {
+      QStringList objectList;
+      DataVectorList objects = _document->objectStore()->getObjects<DataVector>();
+      foreach(DataVectorPtr object, objects) {
+        objectList.append(object->tag().displayString());
+      }
+      _editMultipleWidget->addObjects(objectList);
+    }
   } else if (GeneratedVectorPtr generatedVector = kst_cast<GeneratedVector>(vector)) {
     _vectorTab->setVectorMode(VectorTab::GeneratedVector);
     _vectorTab->setFrom(generatedVector->min());
     _vectorTab->setTo(generatedVector->max());
     _vectorTab->setNumberOfSamples(generatedVector->length());
     _vectorTab->hideDataOptions();
+    if (_editMultipleWidget) {
+      QStringList objectList;
+      GeneratedVectorList objects = _document->objectStore()->getObjects<GeneratedVector>();
+      foreach(GeneratedVectorPtr object, objects) {
+        objectList.append(object->tag().displayString());
+      }
+      _editMultipleWidget->addObjects(objectList);
+    }
   }
 }
 
@@ -377,36 +440,76 @@ ObjectPtr VectorDialog::createNewGeneratedVector() const {
 
 ObjectPtr VectorDialog::editExistingDataObject() const {
   if (DataVectorPtr dataVector = kst_cast<DataVector>(dataObject())) {
-    const DataSourcePtr dataSource = _vectorTab->dataSource();
+    if (_editMultipleMode) {
+      const DataRange *dataRange = _vectorTab->dataRange();
+      QStringList objects = _editMultipleWidget->selectedObjects();
+      foreach (QString objectTag, objects) {
+        DataVectorPtr vector = kst_cast<DataVector>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));
+        if (vector) {
+          int start = dataRange->startDirty() ? dataRange->start() : vector->startFrame();
+          int range = dataRange->rangeDirty() ?  dataRange->range() : vector->numFrames();
+          int skip = dataRange->skipDirty() ?  dataRange->skip() : vector->skip();
 
-    //FIXME better validation than this please...
-    if (!dataSource)
-      return 0;
+          if (dataRange->countFromEndDirty()) {
+              start = dataRange->countFromEnd() ? -1 : dataRange->start();
+              range = dataRange->readToEnd() ? -1 : dataRange->range();
+          }
 
-    const QString field = _vectorTab->field();
-    const DataRange *dataRange = _vectorTab->dataRange();
+          bool doSkip = dataRange->doSkipDirty() ?  dataRange->doSkip() : vector->doSkip();
+          bool doAve = dataRange->doFilterDirty() ?  dataRange->doFilter() : vector->doAve();
+          vector->writeLock();
+          vector->changeFrames(start, range, skip, doSkip, doAve);
+          vector->update(0);
+          vector->unlock();
+        }
+      }
+    } else {
+      const DataSourcePtr dataSource = _vectorTab->dataSource();
 
-    dataVector->writeLock();
-    dataVector->change(dataSource, field,
-      dataRange->countFromEnd() ? -1 : int(dataRange->start()),
-      dataRange->readToEnd() ? -1 : int(dataRange->range()),
-      dataRange->skip(),
-      dataRange->doSkip(),
-      dataRange->doFilter());
-    dataVector->update(0);
-    dataVector->unlock();
+      //FIXME better validation than this please...
+      if (!dataSource)
+        return 0;
 
-    setDataVectorDefaults(dataVector);
-    _vectorTab->dataRange()->setWidgetDefaults();
+      const QString field = _vectorTab->field();
+      const DataRange *dataRange = _vectorTab->dataRange();
 
+      dataVector->writeLock();
+      dataVector->change(dataSource, field,
+        dataRange->countFromEnd() ? -1 : int(dataRange->start()),
+        dataRange->readToEnd() ? -1 : int(dataRange->range()),
+        dataRange->skip(),
+        dataRange->doSkip(),
+        dataRange->doFilter());
+      dataVector->update(0);
+      dataVector->unlock();
+
+      setDataVectorDefaults(dataVector);
+      _vectorTab->dataRange()->setWidgetDefaults();
+    }
   } else if (GeneratedVectorPtr generatedVector = kst_cast<GeneratedVector>(dataObject())) {
-    const qreal from = _vectorTab->from();
-    const qreal to = _vectorTab->to();
-    const int numberOfSamples = _vectorTab->numberOfSamples();
-    generatedVector->writeLock();
-    generatedVector->changeRange(from, to, numberOfSamples);
-    generatedVector->unlock();
-    setGenVectorDefaults(generatedVector);
+    if (_editMultipleMode) {
+      QStringList objects = _editMultipleWidget->selectedObjects();
+      foreach (QString objectTag, objects) {
+        GeneratedVectorPtr vector = kst_cast<GeneratedVector>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));
+        if (vector) {
+          double min = _vectorTab->fromDirty() ? _vectorTab->from() : vector->min();
+          double max = _vectorTab->toDirty() ?  _vectorTab->to() : vector->max();
+          double length = _vectorTab->numberOfSamplesDirty() ?  _vectorTab->numberOfSamples() : vector->length();
+          vector->writeLock();
+          vector->changeRange(min, max, length);
+          vector->update(0);
+          vector->unlock();
+        }
+      }
+    } else {
+      const qreal from = _vectorTab->from();
+      const qreal to = _vectorTab->to();
+      const int numberOfSamples = _vectorTab->numberOfSamples();
+      generatedVector->writeLock();
+      generatedVector->changeRange(from, to, numberOfSamples);
+      generatedVector->unlock();
+      setGenVectorDefaults(generatedVector);
+    }
   }
   return dataObject();
 }

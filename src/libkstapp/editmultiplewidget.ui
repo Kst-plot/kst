@@ -138,6 +138,9 @@
         <height>191</height>
        </rect>
       </property>
+      <property name="selectionMode" >
+       <enum>QAbstractItemView::ExtendedSelection</enum>
+      </property>
      </widget>
     </widget>
    </item>
