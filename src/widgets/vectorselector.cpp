@@ -60,7 +60,16 @@ VectorPtr VectorSelector::selectedVector() const {
 
 
 void VectorSelector::setSelectedVector(VectorPtr selectedVector) {
-  int i = _vector->findData(qVariantFromValue(selectedVector.data()));
+  //FIXME: findData doesn't work, but the loop here - which is supposed
+  // to do exactly the same thing - does.  WHY???
+  //int i = _vector->findData(qVariantFromValue(selectedVector.data()));
+  int i=-1,j;
+  for (j=0; j<_vector->count() ; j++) {
+    if (selectedVector.data() == (qVariantValue<Vector*>(_vector->itemData(j)))) {
+      i=j;
+      break;
+    }
+  }
   Q_ASSERT(i != -1);
   _vector->setCurrentIndex(i);
 }

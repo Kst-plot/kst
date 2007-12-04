@@ -461,8 +461,8 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
 
     _matrixTab->setXNumSteps(_dialogDefaults->value("matrix/xNumSteps",1000).toInt());
     _matrixTab->setYNumSteps(_dialogDefaults->value("matrix/yNumSteps",1000).toInt());
-    _matrixTab->setXStart(_dialogDefaults->value("matrix/reqXStart",1000).toInt());
-    _matrixTab->setYStart(_dialogDefaults->value("matrix/reqYStart",1000).toInt());
+    _matrixTab->setXStart(_dialogDefaults->value("matrix/reqXStart",0).toInt());
+    _matrixTab->setYStart(_dialogDefaults->value("matrix/reqYStart",0).toInt());
 
   } else if (DataMatrixPtr dataMatrix = kst_cast<DataMatrix>(matrix)) {
     _matrixTab->setMatrixMode(MatrixTab::DataMatrix);
