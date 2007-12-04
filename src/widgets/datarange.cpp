@@ -53,7 +53,7 @@ qreal DataRange::start() const {
 
 
 bool DataRange::startDirty() const {
-  return (!_start->text().isEmpty());
+  return !_start->text().isEmpty();
 }
 
 
@@ -78,7 +78,7 @@ qreal DataRange::range() const {
 
 
 bool DataRange::rangeDirty() const {
-  return (!_range->text().isEmpty());
+  return !_range->text().isEmpty();
 }
 
 
@@ -103,7 +103,7 @@ int DataRange::skip() const {
 
 
 bool DataRange::skipDirty() const {
-  return (!_skip->text().isEmpty());
+  return !_skip->text().isEmpty();
 }
 
 
@@ -123,7 +123,7 @@ void DataRange::setCountFromEnd(bool countFromEnd) {
 
 
 bool DataRange::countFromEndDirty() const {
-  return (_readToEnd->state() == Qt::PartiallyChecked);
+  return _readToEnd->state() == QCheckBox::NoChange;
 }
 
 
@@ -133,7 +133,7 @@ bool DataRange::readToEnd() const {
 
 
 bool DataRange::readToEndDirty() const {
-  return (_readToEnd->state() == Qt::PartiallyChecked);
+  return _readToEnd->state() == QCheckBox::NoChange;
 }
 
 
@@ -148,7 +148,7 @@ bool DataRange::doSkip() const {
 
 
 bool DataRange::doSkipDirty() const {
-  return (_doSkip->state() == Qt::PartiallyChecked);
+  return _doSkip->state() == QCheckBox::NoChange;
 }
 
 
@@ -163,7 +163,7 @@ bool DataRange::doFilter() const {
 
 
 bool DataRange::doFilterDirty() const {
-  return (_doFilter->state() == Qt::PartiallyChecked);
+  return _doFilter->state() == QCheckBox::NoChange;
 }
 
 

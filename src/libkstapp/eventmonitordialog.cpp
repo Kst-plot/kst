@@ -103,6 +103,8 @@ void EventMonitorTab::setLogLevel(const Debug::LogLevel logLevel) {
     case Debug::Error:
       _debugLogError->setChecked(true);
       break;
+    default:
+      break;
   }
 }
 
