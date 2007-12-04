@@ -36,6 +36,9 @@ class KST_EXPORT DataMatrix : public Matrix {
                 int xStart, int yStart,
                 int xNumSteps, int yNumSteps,
                 bool doAve, bool doSkip, int skip);
+    void changeFrames(int xStart, int yStart,
+                int xNumSteps, int yNumSteps,
+                bool doAve, bool doSkip, int skip);
 
     // return properties of DataMatrix
     int reqXStart() const;

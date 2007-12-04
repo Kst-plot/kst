@@ -13,6 +13,7 @@
 
 #include "dialogpage.h"
 #include "datasourcedialog.h"
+#include "editmultiplewidget.h"
 
 #include "datamatrix.h"
 #include "generatedmatrix.h"
@@ -164,6 +165,11 @@ uint MatrixTab::nX() const {
 }
 
 
+bool MatrixTab::nXDirty() const {
+  return (!_nX->text().isEmpty());
+}
+
+
 void MatrixTab::setNX(uint nX) {
   _nX->setValue(nX);
 }
@@ -171,6 +177,11 @@ void MatrixTab::setNX(uint nX) {
 
 uint MatrixTab::nY() const {
   return _nY->text().toInt();
+}
+
+
+bool MatrixTab::nYDirty() const {
+  return (!_nY->text().isEmpty());
 }
 
 
@@ -184,6 +195,11 @@ double MatrixTab::minX() const {
 }
 
 
+bool MatrixTab::minXDirty() const {
+  return (!_minX->text().isEmpty());
+}
+
+
 void MatrixTab::setMinX(double minX) {
   _minX->setText(QString::number(minX));
 }
@@ -191,6 +207,11 @@ void MatrixTab::setMinX(double minX) {
 
 double MatrixTab::minY() const {
   return _minY->text().toDouble();
+}
+
+
+bool MatrixTab::minYDirty() const {
+  return (!_minY->text().isEmpty());
 }
 
 
@@ -204,6 +225,11 @@ double MatrixTab::stepX() const {
 }
 
 
+bool MatrixTab::stepXDirty() const {
+  return (!_xStep->text().isEmpty());
+}
+
+
 void MatrixTab::setStepX(double stepX) {
   _xStep->setText(QString::number(stepX));
 }
@@ -211,6 +237,11 @@ void MatrixTab::setStepX(double stepX) {
 
 double MatrixTab::stepY() const {
   return _yStep->text().toDouble();
+}
+
+
+bool MatrixTab::stepYDirty() const {
+  return (!_yStep->text().isEmpty());
 }
 
 
@@ -224,6 +255,11 @@ int MatrixTab::xStart() const {
 }
 
 
+bool MatrixTab::xStartDirty() const {
+  return (!_xStart->text().isEmpty());
+}
+
+
 void MatrixTab::setXStart(int xStart) {
   _xStart->setValue(xStart);
 }
@@ -231,6 +267,11 @@ void MatrixTab::setXStart(int xStart) {
 
 int MatrixTab::yStart() const {
   return _yStart->text().toInt();
+}
+
+
+bool MatrixTab::yStartDirty() const {
+  return (!_yStart->text().isEmpty());
 }
 
 
@@ -244,6 +285,11 @@ int MatrixTab::xNumSteps() const {
 }
 
 
+bool MatrixTab::xNumStepsDirty() const {
+  return (!_xNumSteps->text().isEmpty());
+}
+
+
 void MatrixTab::setXNumSteps(int xNumSteps) {
   _xNumSteps->setValue(xNumSteps);
 }
@@ -251,6 +297,11 @@ void MatrixTab::setXNumSteps(int xNumSteps) {
 
 int MatrixTab::yNumSteps() const {
   return _yNumSteps->text().toInt();
+}
+
+
+bool MatrixTab::yNumStepsDirty() const {
+  return (!_yNumSteps->text().isEmpty());
 }
 
 
@@ -264,6 +315,11 @@ int MatrixTab::skip() const {
 }
 
 
+bool MatrixTab::skipDirty() const {
+  return (!_skip->text().isEmpty());
+}
+
+
 void MatrixTab::setSkip(int skip) {
   _skip ->setValue(skip);
 }
@@ -274,6 +330,11 @@ double MatrixTab::gradientZAtMin() const {
 }
 
 
+bool MatrixTab::gradientZAtMinDirty() const {
+  return (!_gradientZAtMin->text().isEmpty());
+}
+
+
 void MatrixTab::setGradientZAtMin(double gradientZAtMin) {
   _gradientZAtMin->setText(QString::number(gradientZAtMin));
 }
@@ -281,6 +342,11 @@ void MatrixTab::setGradientZAtMin(double gradientZAtMin) {
 
 double MatrixTab::gradientZAtMax() const {
   return _gradientZAtMax->text().toDouble();
+}
+
+
+bool MatrixTab::gradientZAtMaxDirty() const {
+  return (!_gradientZAtMax->text().isEmpty());
 }
 
 
@@ -300,18 +366,28 @@ void MatrixTab::setXDirection(bool xDirection) {
 }
 
 
-bool MatrixTab::doAve() const {
+bool MatrixTab::doAverage() const {
   return _doAve->isChecked();
 }
 
 
-void MatrixTab::setDoAve(bool doAve) {
-  _doAve->setChecked(doAve);
+bool MatrixTab::doAverageDirty() const {
+  return _doAve->checkState() == Qt::PartiallyChecked;
+}
+
+
+void MatrixTab::setDoAverage(bool doAverage) {
+  _doAve->setChecked(doAverage);
 }
 
 
 bool MatrixTab::doSkip() const {
   return _doSkip->isChecked();
+}
+
+
+bool MatrixTab::doSkipDirty() const {
+  return _doSkip->checkState() == Qt::PartiallyChecked;
 }
 
 
@@ -325,6 +401,11 @@ bool MatrixTab::xStartCountFromEnd() const {
 }
 
 
+bool MatrixTab::xStartCountFromEndDirty() const {
+  return _xNumStepsReadToEnd->checkState() == Qt::PartiallyChecked;
+}
+
+
 void MatrixTab::setXStartCountFromEnd(bool xStartCountFromEnd) {
   _xStartCountFromEnd->setChecked(xStartCountFromEnd);
 }
@@ -332,6 +413,11 @@ void MatrixTab::setXStartCountFromEnd(bool xStartCountFromEnd) {
 
 bool MatrixTab::yStartCountFromEnd() const {
   return _yStartCountFromEnd->isChecked();
+}
+
+
+bool MatrixTab::yStartCountFromEndDirty() const {
+  return _yNumStepsReadToEnd->checkState() == Qt::PartiallyChecked;
 }
 
 
@@ -345,6 +431,11 @@ bool MatrixTab::xReadToEnd() const {
 }
 
 
+bool MatrixTab::xReadToEndDirty() const {
+  return _xNumStepsReadToEnd->checkState() == Qt::PartiallyChecked;
+}
+
+
 void MatrixTab::setXReadToEnd(bool xReadToEnd) {
   _xNumStepsReadToEnd->setChecked(xReadToEnd);
 }
@@ -352,6 +443,11 @@ void MatrixTab::setXReadToEnd(bool xReadToEnd) {
 
 bool MatrixTab::yReadToEnd() const {
   return _yNumStepsReadToEnd->isChecked();
+}
+
+
+bool MatrixTab::yReadToEndDirty() const {
+  return _yNumStepsReadToEnd->checkState() == Qt::PartiallyChecked;
 }
 
 
@@ -417,8 +513,34 @@ void MatrixTab::showConfigWidget() {
 }
 
 
+void MatrixTab::clearTabValues() {
+  _xStart->clear();
+  _yStart->clear();
+  _xNumSteps->clear();
+  _yNumSteps->clear();
+  _xNumStepsReadToEnd->setCheckState(Qt::PartiallyChecked);
+  _yNumStepsReadToEnd->setCheckState(Qt::PartiallyChecked);
+  _doSkip->setCheckState(Qt::PartiallyChecked);
+  _doAve->setCheckState(Qt::PartiallyChecked);
+  _gradientZAtMin->clear();
+  _gradientZAtMax->clear();
+  _nX->clear();
+  _nY->clear();
+  _minX->clear();
+  _minY->clear();
+  _xStep->clear();
+  _yStep->clear();
+  setXDirection(true);
+}
+
+
+void MatrixTab::enableSingleEditOptions(bool enabled) {
+  _dataSourceGroup->setEnabled(enabled);
+}
+
+
 MatrixDialog::MatrixDialog(ObjectPtr dataObject, QWidget *parent)
-  : DataDialog(dataObject, parent) {
+  : DataDialog(dataObject, parent), _editMultipleMode(false) {
 
   if (editMode() == Edit)
     setWindowTitle(tr("Edit Matrix"));
@@ -436,6 +558,8 @@ MatrixDialog::MatrixDialog(ObjectPtr dataObject, QWidget *parent)
   }
 
   connect(_matrixTab, SIGNAL(sourceChanged()), this, SLOT(updateButtons()));
+  connect(this, SIGNAL(editMultipleMode()), this, SLOT(editMultipleMode()));
+  connect(this, SIGNAL(editSingleMode()), this, SLOT(editSingleMode()));
   updateButtons();
 }
 
@@ -463,7 +587,6 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
     _matrixTab->setYNumSteps(_dialogDefaults->value("matrix/yNumSteps",1000).toInt());
     _matrixTab->setXStart(_dialogDefaults->value("matrix/reqXStart",0).toInt());
     _matrixTab->setYStart(_dialogDefaults->value("matrix/reqYStart",0).toInt());
-
   } else if (DataMatrixPtr dataMatrix = kst_cast<DataMatrix>(matrix)) {
     _matrixTab->setMatrixMode(MatrixTab::DataMatrix);
     _matrixTab->setFile(dataMatrix->dataSource()->fileName());
@@ -480,8 +603,16 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
     _matrixTab->setYReadToEnd(dataMatrix->yReadToEnd());
     _matrixTab->setSkip(dataMatrix->skip());
     _matrixTab->setDoSkip(dataMatrix->doSkip());
-    _matrixTab->setDoAve(dataMatrix->doAverage());
+    _matrixTab->setDoAverage(dataMatrix->doAverage());
     _matrixTab->hideGeneratedOptions();
+    if (_editMultipleWidget) {
+      QStringList objectList;
+      DataMatrixList objects = _document->objectStore()->getObjects<DataMatrix>();
+      foreach(DataMatrixPtr object, objects) {
+        objectList.append(object->tag().displayString());
+      }
+      _editMultipleWidget->addObjects(objectList);
+    }
   } else if (GeneratedMatrixPtr generatedMatrix = kst_cast<GeneratedMatrix>(matrix)) {
     _matrixTab->setMatrixMode(MatrixTab::GeneratedMatrix);
     _matrixTab->setNX(generatedMatrix->xNumSteps());
@@ -494,7 +625,29 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
     _matrixTab->setGradientZAtMax(generatedMatrix->gradZMax());
     _matrixTab->setXDirection(generatedMatrix->xDirection());
     _matrixTab->hideDataOptions();
+    if (_editMultipleWidget) {
+      QStringList objectList;
+      GeneratedMatrixList objects = _document->objectStore()->getObjects<GeneratedMatrix>();
+      foreach(GeneratedMatrixPtr object, objects) {
+        objectList.append(object->tag().displayString());
+      }
+      _editMultipleWidget->addObjects(objectList);
+    }
   }
+}
+
+
+void MatrixDialog::editMultipleMode() {
+  _matrixTab->enableSingleEditOptions(false);
+  _matrixTab->clearTabValues();
+  _editMultipleMode = true;
+}
+
+
+void MatrixDialog::editSingleMode() {
+  _matrixTab->enableSingleEditOptions(true);
+   configureTab(dataObject());
+  _editMultipleMode = false;
 }
 
 
@@ -525,7 +678,7 @@ ObjectPtr MatrixDialog::createNewDataMatrix() const {
   const QString field = _matrixTab->field();
   const ObjectTag tag = ObjectTag(tagString(), dataSource->tag(), false);
   const int skip = _matrixTab->skip();
-  const bool doAve = _matrixTab->doAve();
+  const bool doAverage = _matrixTab->doAverage();
   const bool doSkip = _matrixTab->doSkip();
   const int xStart = _matrixTab->xStartCountFromEnd() ? -1 : _matrixTab->xStart();
   const int yStart = _matrixTab->yStartCountFromEnd() ? -1 : _matrixTab->yStart();
@@ -551,7 +704,7 @@ ObjectPtr MatrixDialog::createNewDataMatrix() const {
   matrix->change(dataSource, field,
       xStart, yStart,
       xNumSteps, yNumSteps,
-      doAve,
+      doAverage,
       doSkip, skip);
 
 #if 0
@@ -615,46 +768,96 @@ ObjectPtr MatrixDialog::createNewGeneratedMatrix() const {
 
 ObjectPtr MatrixDialog::editExistingDataObject() const {
   if (DataMatrixPtr dataMatrix = kst_cast<DataMatrix>(dataObject())) {
-    const DataSourcePtr dataSource = _matrixTab->dataSource();
+    if (_editMultipleMode) {
+      QStringList objects = _editMultipleWidget->selectedObjects();
+      foreach (QString objectTag, objects) {
+        DataMatrixPtr matrix = kst_cast<DataMatrix>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));
+        if (matrix) {
+          const int skip = _matrixTab->skipDirty() ? _matrixTab->skip() : matrix->skip();
+          int xStart = _matrixTab->xStartDirty() ? _matrixTab->xStart() : matrix->reqXStart();
+          int yStart = _matrixTab->yStartDirty() ? _matrixTab->yStart() : matrix->reqYStart();
+          int xNumSteps = _matrixTab->xNumStepsDirty() ? _matrixTab->xNumSteps() : matrix->xNumSteps();
+          int yNumSteps = _matrixTab->yNumStepsDirty() ? _matrixTab->yNumSteps() : matrix->yNumSteps();
 
-    //FIXME better validation than this please...
-    if (!dataSource)
-      return 0;
+          if (_matrixTab->xStartCountFromEndDirty()) {
+              xStart = _matrixTab->xStartCountFromEnd() ? -1 : _matrixTab->xStart();
+              xNumSteps = _matrixTab->xReadToEnd() ? -1 : _matrixTab->xNumSteps();
+          }
 
-    const QString field = _matrixTab->field();
-    const int skip = _matrixTab->skip();
-    const bool doAve = _matrixTab->doAve();
-    const bool doSkip = _matrixTab->doSkip();
-    const int xStart = _matrixTab->xStartCountFromEnd() ? -1 : _matrixTab->xStart();
-    const int yStart = _matrixTab->yStartCountFromEnd() ? -1 : _matrixTab->yStart();
-    const int xNumSteps = _matrixTab->xReadToEnd() ? -1 : _matrixTab->xNumSteps();
-    const int yNumSteps = _matrixTab->yReadToEnd() ? -1 : _matrixTab->yNumSteps();
+          if (_matrixTab->yStartCountFromEndDirty()) {
+              yStart = _matrixTab->yStartCountFromEnd() ? -1 : _matrixTab->yStart();
+              yNumSteps = _matrixTab->yReadToEnd() ? -1 : _matrixTab->yNumSteps();
+          }
 
-    dataMatrix->writeLock();
-    dataMatrix->change(dataSource, field,
-        xStart, yStart,
-        xNumSteps, yNumSteps,
-        doAve,
-        doSkip, skip);
-    dataMatrix->update(0);
-    dataMatrix->unlock();
-    setDataMatrixDefaults(dataMatrix);
+          bool doSkip = _matrixTab->doSkipDirty() ?  _matrixTab->doSkip() : matrix->doSkip();
+          bool doAve = _matrixTab->doAverageDirty() ?  _matrixTab->doAverage() : matrix->doAverage();
 
+          matrix->writeLock();
+          matrix->changeFrames(xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip);
+          matrix->update(0);
+          matrix->unlock();
+        }
+      }
+    } else {
+      const DataSourcePtr dataSource = _matrixTab->dataSource();
+
+      //FIXME better validation than this please...
+      if (!dataSource)
+        return 0;
+
+      const QString field = _matrixTab->field();
+      const int skip = _matrixTab->skip();
+      const bool doAverage = _matrixTab->doAverage();
+      const bool doSkip = _matrixTab->doSkip();
+      const int xStart = _matrixTab->xStartCountFromEnd() ? -1 : _matrixTab->xStart();
+      const int yStart = _matrixTab->yStartCountFromEnd() ? -1 : _matrixTab->yStart();
+      const int xNumSteps = _matrixTab->xReadToEnd() ? -1 : _matrixTab->xNumSteps();
+      const int yNumSteps = _matrixTab->yReadToEnd() ? -1 : _matrixTab->yNumSteps();
+
+      dataMatrix->writeLock();
+      dataMatrix->change(dataSource, field, xStart, yStart, xNumSteps, yNumSteps, doAverage, doSkip, skip);
+      dataMatrix->update(0);
+      dataMatrix->unlock();
+      setDataMatrixDefaults(dataMatrix);
+    }
   } else if (GeneratedMatrixPtr generatedMatrix = kst_cast<GeneratedMatrix>(dataObject())) {
-    const uint nX = _matrixTab->nX();
-    const uint nY = _matrixTab->nY();
-    const double minX = _matrixTab->minX();
-    const double minY = _matrixTab->minY();
-    const double stepX = _matrixTab->stepX();
-    const double stepY = _matrixTab->stepY();
-    const double gradZMin = _matrixTab->gradientZAtMin();
-    const double gradZMax = _matrixTab->gradientZAtMax();
-    const bool xDirection =  _matrixTab->xDirection();
+    if (_editMultipleMode) {
+      QStringList objects = _editMultipleWidget->selectedObjects();
+      foreach (QString objectTag, objects) {
+        GeneratedMatrixPtr matrix = kst_cast<GeneratedMatrix>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));
+        if (matrix) {
+          const uint nX = _matrixTab->nXDirty() ? _matrixTab->nX() : matrix->xNumSteps();
+          const uint nY = _matrixTab->nYDirty() ? _matrixTab->nY() : matrix->yNumSteps();
+          const double minX = _matrixTab->minXDirty() ? _matrixTab->minX() : matrix->minX();
+          const double minY = _matrixTab->minYDirty() ? _matrixTab->minY() : matrix->minY();
+          const double stepX = _matrixTab->stepXDirty() ? _matrixTab->stepX() : matrix->xStepSize();
+          const double stepY = _matrixTab->stepYDirty() ? _matrixTab->stepY() : matrix->yStepSize();
+          const double gradientZAtMin = _matrixTab->gradientZAtMinDirty() ? _matrixTab->gradientZAtMin() : matrix->gradZMin();
+          const double gradientZAtMax = _matrixTab->gradientZAtMaxDirty() ? _matrixTab->gradientZAtMax() : matrix->gradZMax();
+          const bool xDirection = _matrixTab->gradientZAtMaxDirty() || _matrixTab->gradientZAtMinDirty() ? _matrixTab->xDirection() : matrix->xDirection();
 
-    generatedMatrix->writeLock();
-    generatedMatrix->change(nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
-    generatedMatrix->update(0);
-    generatedMatrix->unlock();
+          matrix->writeLock();
+          matrix->change(nX, nY, minX, minY, stepX, stepY, gradientZAtMin, gradientZAtMax, xDirection);
+          matrix->update(0);
+          matrix->unlock();
+        }
+      }
+    } else {
+      const uint nX = _matrixTab->nX();
+      const uint nY = _matrixTab->nY();
+      const double minX = _matrixTab->minX();
+      const double minY = _matrixTab->minY();
+      const double stepX = _matrixTab->stepX();
+      const double stepY = _matrixTab->stepY();
+      const double gradZMin = _matrixTab->gradientZAtMin();
+      const double gradZMax = _matrixTab->gradientZAtMax();
+      const bool xDirection =  _matrixTab->xDirection();
+
+      generatedMatrix->writeLock();
+      generatedMatrix->change(nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
+      generatedMatrix->update(0);
+      generatedMatrix->unlock();
+    }
   }
   return dataObject();
 }

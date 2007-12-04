@@ -156,6 +156,17 @@ void DataMatrix::change(DataSourcePtr file, const QString &field,
 }
 
 
+void DataMatrix::changeFrames(int xStart, int yStart,
+                        int xNumSteps, int yNumSteps,
+                        bool doAve, bool doSkip, int skip) {
+  KstWriteLocker l(this);
+
+  commonConstructor(_file, _field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip);
+
+  setDirty(true);
+}
+
+
 int DataMatrix::reqXStart() const {
   return _reqXStart;
 }
