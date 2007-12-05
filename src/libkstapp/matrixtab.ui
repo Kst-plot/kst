@@ -732,7 +732,7 @@
          </widget>
         </item>
         <item row="0" column="2" >
-         <widget class="QCheckBox" name="_doAve" >
+         <widget class="QCheckBox" name="_doAverage" >
           <property name="enabled" >
            <bool>false</bool>
           </property>
@@ -937,14 +937,14 @@
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
   <customwidget>
-   <class>Kst::ComboBox</class>
-   <extends>QComboBox</extends>
-   <header>combobox.h</header>
-  </customwidget>
-  <customwidget>
    <class>Kst::FileRequester</class>
    <extends>QWidget</extends>
    <header>filerequester.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Kst::ComboBox</class>
+   <extends>QComboBox</extends>
+   <header>combobox.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
@@ -963,7 +963,7 @@
   <tabstop>_yNumStepsReadToEnd</tabstop>
   <tabstop>_doSkip</tabstop>
   <tabstop>_skip</tabstop>
-  <tabstop>_doAve</tabstop>
+  <tabstop>_doAverage</tabstop>
   <tabstop>_gradientX</tabstop>
   <tabstop>_gradientY</tabstop>
   <tabstop>_gradientZAtMin</tabstop>

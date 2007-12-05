@@ -36,17 +36,16 @@ VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
   setupUi(this);
   setTabTitle(tr("Vector"));
 
-  connect(_readFromSource, SIGNAL(toggled(bool)),
-          this, SLOT(readFromSourceChanged()));
-  connect(_fileName, SIGNAL(changed(const QString &)),
-          this, SLOT(fileNameChanged(const QString &)));
-  connect(_configure, SIGNAL(clicked()),
-          this, SLOT(showConfigWidget()));
+  connect(_readFromSource, SIGNAL(toggled(bool)), this, SLOT(readFromSourceChanged()));
+  connect(_fileName, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
+  connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
 
+  connect(_dataRange, SIGNAL(modified()), this, SIGNAL(modified()));
+  connect(_numberOfSamples, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_from, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_to, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
   _fileName->setFile(QDir::currentPath());
-  //_fileName->setFile(vectorDefaults.dataSource());
 
-  //FIXME need a solution for replacing kio for this...
   _connect->setVisible(false);
 }
 
@@ -250,6 +249,8 @@ VectorDialog::VectorDialog(ObjectPtr dataObject, QWidget *parent)
   connect(_vectorTab, SIGNAL(sourceChanged()), this, SLOT(updateButtons()));
   connect(this, SIGNAL(editMultipleMode()), this, SLOT(editMultipleMode()));
   connect(this, SIGNAL(editSingleMode()), this, SLOT(editSingleMode()));
+
+  connect(_vectorTab, SIGNAL(modified()), this, SLOT(modified()));
   updateButtons();
 }
 

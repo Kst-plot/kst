@@ -62,6 +62,9 @@ CurveTab::CurveTab(QWidget *parent)
   connect(_xMinusError, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
   connect(_yMinusError, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
   connect(_curveAppearance, SIGNAL(modified()), this, SIGNAL(modified()));
+  connect(_ignoreAutoScale, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_xMinusSameAsPlus, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_yMinusSameAsPlus, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
 }
 
 
@@ -259,6 +262,7 @@ CurveDialog::CurveDialog(ObjectPtr dataObject, QWidget *parent)
   connect(_curveTab, SIGNAL(vectorsChanged()), this, SLOT(updateButtons()));
   connect(this, SIGNAL(editMultipleMode()), this, SLOT(editMultipleMode()));
   connect(this, SIGNAL(editSingleMode()), this, SLOT(editSingleMode()));
+  connect(_curveTab, SIGNAL(modified()), this, SLOT(modified()));
   updateButtons();
 }
 

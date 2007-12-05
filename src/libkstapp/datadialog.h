@@ -51,8 +51,10 @@ class KST_EXPORT DataDialog : public Dialog {
     EditMultipleWidget *_editMultipleWidget;
 
   private Q_SLOTS:
-    void slotOk();
+    void slotApply();
     void slotEditMultiple();
+    void modified();
+    void clearModified();
 
   Q_SIGNALS:
     void editMultipleMode();
@@ -60,12 +62,14 @@ class KST_EXPORT DataDialog : public Dialog {
 
   private:
     void createGui();
+    void updateApplyButton();
 
   private:
     QString _defaultTagString;
     QLineEdit *_tagString;
     ObjectPtr _dataObject;
     EditMode _mode;
+    bool _modified;
 };
 
 }

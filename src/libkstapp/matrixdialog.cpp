@@ -36,12 +36,9 @@ MatrixTab::MatrixTab(ObjectStore *store, QWidget *parent)
   setupUi(this);
   setTabTitle(tr("Matrix"));
 
-  connect(_readFromSource, SIGNAL(toggled(bool)),
-          this, SLOT(readFromSourceChanged()));
-  connect(_fileName, SIGNAL(changed(const QString &)),
-          this, SLOT(fileNameChanged(const QString &)));
-  connect(_configure, SIGNAL(clicked()),
-          this, SLOT(showConfigWidget()));
+  connect(_readFromSource, SIGNAL(toggled(bool)), this, SLOT(readFromSourceChanged()));
+  connect(_fileName, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
+  connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
 
   connect(_xStartCountFromEnd, SIGNAL(clicked()), this, SLOT(xStartCountFromEndClicked()));
   connect(_yStartCountFromEnd, SIGNAL(clicked()), this, SLOT(yStartCountFromEndClicked()));
@@ -52,10 +49,30 @@ MatrixTab::MatrixTab(ObjectStore *store, QWidget *parent)
   connect(_generateGradient, SIGNAL(clicked()), this, SLOT(updateEnables()));
   connect(_doSkip, SIGNAL(clicked()), this, SLOT(updateEnables()));
 
-  _fileName->setFile(QDir::currentPath());
-//  _fileName->setFile(matrixDefaults.dataSource());  // huh?
+  connect(_xStart, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_yStart, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_xNumSteps, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_yNumSteps, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_skip, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_nX, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_nY, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_gradientZAtMin, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_gradientZAtMax, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_minX, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_minX, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_xStep, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_yStep, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_xStartCountFromEnd, SIGNAL(clicked()), this, SIGNAL(modified()));
+  connect(_yStartCountFromEnd, SIGNAL(clicked()), this, SIGNAL(modified()));
+  connect(_xNumStepsReadToEnd, SIGNAL(clicked()), this, SIGNAL(modified()));
+  connect(_yNumStepsReadToEnd, SIGNAL(clicked()), this, SIGNAL(modified()));
+  connect(_doSkip, SIGNAL(clicked()), this, SIGNAL(modified()));
+  connect(_doAverage, SIGNAL(clicked()), this, SIGNAL(modified()));
+  connect(_gradientX, SIGNAL(clicked()), this, SIGNAL(modified()));
+  connect(_gradientY, SIGNAL(clicked()), this, SIGNAL(modified()));
 
-  //FIXME need a solution for replacing kio for this...
+  _fileName->setFile(QDir::currentPath());
+
   _connect->setVisible(false);
 }
 
@@ -99,7 +116,7 @@ void MatrixTab::updateEnables() {
 
   if (_dataRangeGroup->isEnabled()) {
     _skip->setEnabled(_doSkip->isChecked());
-    _doAve->setEnabled(_doSkip->isChecked());
+    _doAverage->setEnabled(_doSkip->isChecked());
     xStartCountFromEndClicked();
     xNumStepsReadToEndClicked();
     yStartCountFromEndClicked();
@@ -367,17 +384,17 @@ void MatrixTab::setXDirection(bool xDirection) {
 
 
 bool MatrixTab::doAverage() const {
-  return _doAve->isChecked();
+  return _doAverage->isChecked();
 }
 
 
 bool MatrixTab::doAverageDirty() const {
-  return _doAve->checkState() == Qt::PartiallyChecked;
+  return _doAverage->checkState() == Qt::PartiallyChecked;
 }
 
 
 void MatrixTab::setDoAverage(bool doAverage) {
-  _doAve->setChecked(doAverage);
+  _doAverage->setChecked(doAverage);
 }
 
 
@@ -521,7 +538,7 @@ void MatrixTab::clearTabValues() {
   _xNumStepsReadToEnd->setCheckState(Qt::PartiallyChecked);
   _yNumStepsReadToEnd->setCheckState(Qt::PartiallyChecked);
   _doSkip->setCheckState(Qt::PartiallyChecked);
-  _doAve->setCheckState(Qt::PartiallyChecked);
+  _doAverage->setCheckState(Qt::PartiallyChecked);
   _gradientZAtMin->clear();
   _gradientZAtMax->clear();
   _nX->clear();
@@ -560,6 +577,7 @@ MatrixDialog::MatrixDialog(ObjectPtr dataObject, QWidget *parent)
   connect(_matrixTab, SIGNAL(sourceChanged()), this, SLOT(updateButtons()));
   connect(this, SIGNAL(editMultipleMode()), this, SLOT(editMultipleMode()));
   connect(this, SIGNAL(editSingleMode()), this, SLOT(editSingleMode()));
+  connect(_matrixTab, SIGNAL(modified()), this, SLOT(modified()));
   updateButtons();
 }
 

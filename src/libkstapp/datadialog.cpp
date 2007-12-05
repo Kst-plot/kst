@@ -30,7 +30,7 @@
 namespace Kst {
 
 DataDialog::DataDialog(Kst::ObjectPtr dataObject, QWidget *parent)
-  : Dialog(parent), _defaultTagString("<Auto Name>"), _dataObject(dataObject) {
+  : Dialog(parent), _defaultTagString("<Auto Name>"), _dataObject(dataObject), _modified(false) {
 
   if (_dataObject)
     _mode = Edit;
@@ -54,9 +54,12 @@ DataDialog::~DataDialog() {
 
 void DataDialog::createGui() {
 
-  buttonBox()->button(QDialogButtonBox::Apply)->setVisible(false);
+  if (_mode == New) {
+    buttonBox()->button(QDialogButtonBox::Apply)->setVisible(false);
+  }
 
-  connect(this, SIGNAL(ok()), this, SLOT(slotOk()));
+  connect(this, SIGNAL(ok()), this, SLOT(slotApply()));
+  connect(this, SIGNAL(apply()), this, SLOT(slotApply()));
 
   QWidget *extension = extensionWidget();
 
@@ -116,13 +119,32 @@ void DataDialog::addDataTab(DataTab *tab) {
   addDialogPage(page);
 }
 
-void DataDialog::slotOk() {
+
+void DataDialog::slotApply() {
   Kst::ObjectPtr ptr;
   if (!dataObject())
     ptr = createNewDataObject();
   else
     ptr = editExistingDataObject();
   setDataObject(ptr);
+  clearModified();
+}
+
+
+void DataDialog::modified() {
+  _modified = true;
+  updateApplyButton();
+}
+
+
+void DataDialog::clearModified() {
+  _modified = false;
+  updateApplyButton();
+}
+
+
+void DataDialog::updateApplyButton() {
+  _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(_modified);
 }
 
 
@@ -142,6 +164,7 @@ void DataDialog::slotEditMultiple() {
     _mode = EditMultiple;
     emit editMultipleMode();
   }
+  clearModified();
 }
 
 
