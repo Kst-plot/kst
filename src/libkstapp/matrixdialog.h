@@ -177,7 +177,6 @@ class KST_EXPORT MatrixDialog : public DataDialog {
 
   private:
     MatrixTab *_matrixTab;
-    bool _editMultipleMode;
 };
 
 }

@@ -540,7 +540,7 @@ void MatrixTab::enableSingleEditOptions(bool enabled) {
 
 
 MatrixDialog::MatrixDialog(ObjectPtr dataObject, QWidget *parent)
-  : DataDialog(dataObject, parent), _editMultipleMode(false) {
+  : DataDialog(dataObject, parent) {
 
   if (editMode() == Edit)
     setWindowTitle(tr("Edit Matrix"));
@@ -640,14 +640,12 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
 void MatrixDialog::editMultipleMode() {
   _matrixTab->enableSingleEditOptions(false);
   _matrixTab->clearTabValues();
-  _editMultipleMode = true;
 }
 
 
 void MatrixDialog::editSingleMode() {
   _matrixTab->enableSingleEditOptions(true);
    configureTab(dataObject());
-  _editMultipleMode = false;
 }
 
 
@@ -768,7 +766,7 @@ ObjectPtr MatrixDialog::createNewGeneratedMatrix() const {
 
 ObjectPtr MatrixDialog::editExistingDataObject() const {
   if (DataMatrixPtr dataMatrix = kst_cast<DataMatrix>(dataObject())) {
-    if (_editMultipleMode) {
+    if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
       foreach (QString objectTag, objects) {
         DataMatrixPtr matrix = kst_cast<DataMatrix>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));
@@ -821,7 +819,7 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
       setDataMatrixDefaults(dataMatrix);
     }
   } else if (GeneratedMatrixPtr generatedMatrix = kst_cast<GeneratedMatrix>(dataObject())) {
-    if (_editMultipleMode) {
+    if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
       foreach (QString objectTag, objects) {
         GeneratedMatrixPtr matrix = kst_cast<GeneratedMatrix>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));

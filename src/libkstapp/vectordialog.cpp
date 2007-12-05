@@ -230,7 +230,7 @@ void VectorTab::showConfigWidget() {
 
 
 VectorDialog::VectorDialog(ObjectPtr dataObject, QWidget *parent)
-  : DataDialog(dataObject, parent), _editMultipleMode(false) {
+  : DataDialog(dataObject, parent) {
 
   if (editMode() == Edit)
     setWindowTitle(tr("Edit Vector"));
@@ -283,14 +283,12 @@ QString VectorDialog::tagString() const {
 void VectorDialog::editMultipleMode() {
   _vectorTab->enableSingleEditOptions(false);
   _vectorTab->clearTabValues();
-  _editMultipleMode = true;
 }
 
 
 void VectorDialog::editSingleMode() {
   _vectorTab->enableSingleEditOptions(true);
    configureTab(dataObject());
-  _editMultipleMode = false;
 }
 
 
@@ -440,7 +438,7 @@ ObjectPtr VectorDialog::createNewGeneratedVector() const {
 
 ObjectPtr VectorDialog::editExistingDataObject() const {
   if (DataVectorPtr dataVector = kst_cast<DataVector>(dataObject())) {
-    if (_editMultipleMode) {
+    if (editMode() == EditMultiple) {
       const DataRange *dataRange = _vectorTab->dataRange();
       QStringList objects = _editMultipleWidget->selectedObjects();
       foreach (QString objectTag, objects) {
@@ -487,7 +485,7 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
       _vectorTab->dataRange()->setWidgetDefaults();
     }
   } else if (GeneratedVectorPtr generatedVector = kst_cast<GeneratedVector>(dataObject())) {
-    if (_editMultipleMode) {
+    if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
       foreach (QString objectTag, objects) {
         GeneratedVectorPtr vector = kst_cast<GeneratedVector>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));

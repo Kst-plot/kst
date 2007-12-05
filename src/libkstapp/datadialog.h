@@ -29,7 +29,7 @@ class EditMultipleWidget;
 class KST_EXPORT DataDialog : public Dialog {
   Q_OBJECT
   public:
-    enum EditMode { New, Edit };
+    enum EditMode { New, Edit, EditMultiple };
     DataDialog(ObjectPtr dataObject = 0, QWidget *parent = 0);
     virtual ~DataDialog();
 

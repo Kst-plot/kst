@@ -134,10 +134,12 @@ void DataDialog::slotEditMultiple() {
   if (!extensionWidget()->isVisible()) {
     setMaximumWidth(currentWidth - extensionWidth);
     setMinimumWidth(currentWidth - extensionWidth);
+    _mode = Edit;
     emit editSingleMode();
   } else {
     setMinimumWidth(currentWidth + extensionWidth);
     setMaximumWidth(currentWidth + extensionWidth);
+    _mode = EditMultiple;
     emit editMultipleMode();
   }
 }

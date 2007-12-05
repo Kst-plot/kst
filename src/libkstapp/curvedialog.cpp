@@ -240,7 +240,7 @@ void CurveTab::clearTabValues() {
 
 
 CurveDialog::CurveDialog(ObjectPtr dataObject, QWidget *parent)
-  : DataDialog(dataObject, parent), _editMultipleMode(false) {
+  : DataDialog(dataObject, parent) {
 
   if (editMode() == Edit)
     setWindowTitle(tr("Edit Curve"));
@@ -273,13 +273,11 @@ QString CurveDialog::tagString() const {
 
 
 void CurveDialog::editMultipleMode() {
-  _editMultipleMode = true;
   _curveTab->clearTabValues();
 }
 
 
 void CurveDialog::editSingleMode() {
-  _editMultipleMode = false;
    configureTab(dataObject());
 }
 
@@ -331,7 +329,7 @@ void CurveDialog::setVector(VectorPtr vector) {
 
 
 void CurveDialog::updateButtons() {
-  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled((_curveTab->xVector() && _curveTab->yVector()) || _editMultipleMode);
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled((_curveTab->xVector() && _curveTab->yVector()) || (editMode() == EditMultiple));
 }
 
 
@@ -406,7 +404,7 @@ ObjectPtr CurveDialog::createNewDataObject() const {
 
 ObjectPtr CurveDialog::editExistingDataObject() const {
   if (CurvePtr curve = kst_cast<Curve>(dataObject())) {
-    if (_editMultipleMode) {
+    if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
       foreach (QString objectTag, objects) {
         CurvePtr curve = kst_cast<Curve>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));

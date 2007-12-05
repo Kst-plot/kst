@@ -108,7 +108,6 @@ class KST_EXPORT VectorDialog : public DataDialog {
 
   private:
     VectorTab *_vectorTab;
-    bool _editMultipleMode;
 
 };
 

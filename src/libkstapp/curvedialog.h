@@ -98,7 +98,6 @@ class KST_EXPORT CurveDialog : public DataDialog {
     void configureTab(ObjectPtr curve=0);
 
     CurveTab *_curveTab;
-    bool _editMultipleMode;
 };
 
 }
