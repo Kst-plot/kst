@@ -27,6 +27,9 @@ class KST_EXPORT ColorButton : public QToolButton {
     virtual ~ColorButton();
 
     QColor color() const;
+    bool colorDirty() const;
+
+    void clearSelection();
 
   public Q_SLOTS:
     void setColor(const QColor &color);

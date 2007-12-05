@@ -54,8 +54,14 @@ void VectorSelector::emitSelectionChanged() {
   emit selectionChanged(_vector->currentText());
 }
 
+
 VectorPtr VectorSelector::selectedVector() const {
   return qVariantValue<Vector*>(_vector->itemData(_vector->currentIndex()));
+}
+
+
+bool VectorSelector::selectedVectorDirty() const {
+  return _vector->currentIndex() != -1;
 }
 
 
@@ -72,6 +78,11 @@ void VectorSelector::setSelectedVector(VectorPtr selectedVector) {
   }
   Q_ASSERT(i != -1);
   _vector->setCurrentIndex(i);
+}
+
+
+void VectorSelector::clearSelection() {
+  _vector->setCurrentIndex(-1);
 }
 
 

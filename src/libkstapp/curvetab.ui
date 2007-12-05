@@ -39,7 +39,7 @@
        </widget>
       </item>
       <item row="0" column="1" >
-       <widget class="Kst::VectorSelector" name="_xVector" >
+       <widget class="Kst::VectorSelector" native="1" name="_xVector" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
           <horstretch>0</horstretch>
@@ -65,7 +65,7 @@
        </widget>
       </item>
       <item row="0" column="3" >
-       <widget class="Kst::VectorSelector" name="_yVector" >
+       <widget class="Kst::VectorSelector" native="1" name="_yVector" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
           <horstretch>0</horstretch>
@@ -101,7 +101,7 @@
        </widget>
       </item>
       <item row="2" column="1" >
-       <widget class="Kst::VectorSelector" name="_xError" >
+       <widget class="Kst::VectorSelector" native="1" name="_xError" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
           <horstretch>0</horstretch>
@@ -121,7 +121,7 @@
        </widget>
       </item>
       <item row="2" column="3" >
-       <widget class="Kst::VectorSelector" name="_yError" >
+       <widget class="Kst::VectorSelector" native="1" name="_yError" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
           <horstretch>0</horstretch>
@@ -157,7 +157,7 @@
        </widget>
       </item>
       <item row="4" column="1" >
-       <widget class="Kst::VectorSelector" name="_xMinusError" >
+       <widget class="Kst::VectorSelector" native="1" name="_xMinusError" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
           <horstretch>0</horstretch>
@@ -177,7 +177,7 @@
        </widget>
       </item>
       <item row="4" column="3" >
-       <widget class="Kst::VectorSelector" name="_yMinusError" >
+       <widget class="Kst::VectorSelector" native="1" name="_yMinusError" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
           <horstretch>0</horstretch>
@@ -236,13 +236,13 @@
     </widget>
    </item>
    <item>
-    <widget class="Kst::CurveAppearance" name="_curveAppearance" />
+    <widget class="Kst::CurveAppearance" native="1" name="_curveAppearance" />
    </item>
    <item>
-    <widget class="Kst::CurvePlacement" name="_curvePlacement" />
+    <widget class="Kst::CurvePlacement" native="1" name="_curvePlacement" />
    </item>
    <item>
-    <widget class="QCheckBox" name="_ignoreAutoscale" >
+    <widget class="QCheckBox" name="_ignoreAutoScale" >
      <property name="text" >
       <string>Ignore in automatic axes range calculations</string>
      </property>
@@ -279,7 +279,7 @@
   <tabstop>_yMinusSameAsPlus</tabstop>
   <tabstop>_curveAppearance</tabstop>
   <tabstop>_curvePlacement</tabstop>
-  <tabstop>_ignoreAutoscale</tabstop>
+  <tabstop>_ignoreAutoScale</tabstop>
   <tabstop>_curveAppearance</tabstop>
   <tabstop>_curvePlacement</tabstop>
  </tabstops>

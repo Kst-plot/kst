@@ -30,32 +30,49 @@ class KST_EXPORT CurveTab : public DataTab, Ui::CurveTab {
     virtual ~CurveTab();
 
     VectorPtr xVector() const;
+    bool xVectorDirty() const;
     void setXVector(VectorPtr vector);
 
     VectorPtr yVector() const;
+    bool yVectorDirty() const;
     void setYVector(VectorPtr vector);
 
     VectorPtr xError() const;
+    bool xErrorDirty() const;
     void setXError(VectorPtr vector);
 
     VectorPtr yError() const;
+    bool yErrorDirty() const;
     void setYError(VectorPtr vector);
 
     VectorPtr xMinusError() const;
+    bool xMinusErrorDirty() const;
     void setXMinusError(VectorPtr vector);
 
     VectorPtr yMinusError() const;
+    bool yMinusErrorDirty() const;
     void setYMinusError(VectorPtr vector);
 
     CurveAppearance* curveAppearance() const;
-
     CurvePlacement* curvePlacement() const;
+
+    bool ignoreAutoScale() const;
+    bool ignoreAutoScaleDirty() const;
+    void setIgnoreAutoScale(bool ignoreAutoScale);
+
 
     void setObjectStore(ObjectStore *store);
     void hidePlacementOptions();
+    void clearTabValues();
 
   Q_SIGNALS:
     void vectorsChanged();
+
+  public Q_SLOTS:
+    void xCheckboxClicked();
+    void yCheckboxClicked();
+    void xErrorChanged();
+    void yErrorChanged();
 
 };
 
@@ -74,11 +91,14 @@ class KST_EXPORT CurveDialog : public DataDialog {
 
   private Q_SLOTS:
     void updateButtons();
+    void editMultipleMode();
+    void editSingleMode();
 
   private:
     void configureTab(ObjectPtr curve=0);
 
     CurveTab *_curveTab;
+    bool _editMultipleMode;
 };
 
 }

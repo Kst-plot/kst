@@ -13,6 +13,7 @@
 
 #include <QPainter>
 #include <QColorDialog>
+#include <QDebug>
 
 namespace Kst {
 
@@ -39,6 +40,16 @@ QColor ColorButton::color() const {
 }
 
 
+void ColorButton::clearSelection() {
+  setColor(QColor(Qt::transparent));
+}
+
+
+bool ColorButton::colorDirty() const {
+  return _color != QColor(Qt::transparent);
+}
+
+
 void ColorButton::setColor(const QColor &color) {
   _color = color;
   update();
@@ -62,6 +73,9 @@ void ColorButton::paintEvent(QPaintEvent *event)
 void ColorButton::chooseColor() {
 
   bool ok;
+  if (_color == Qt::transparent) {
+    _color = Qt::black;
+  }
   QRgb rgba = QColorDialog::getRgba(_color.rgba(), &ok, parentWidget());
   if (ok) {
     QColor color;

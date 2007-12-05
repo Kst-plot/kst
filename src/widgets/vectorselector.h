@@ -32,10 +32,13 @@ class KST_EXPORT VectorSelector : public QWidget, public Ui::VectorSelector {
     void setObjectStore(ObjectStore *store);
 
     VectorPtr selectedVector() const;
+    bool selectedVectorDirty() const;
     void setSelectedVector(VectorPtr selectedVector);
 
     bool allowEmptySelection() const;
     void setAllowEmptySelection(bool allowEmptySelection);
+
+    void clearSelection();
 
   Q_SIGNALS:
     void selectionChanged(const QString&);

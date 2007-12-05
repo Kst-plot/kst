@@ -197,6 +197,7 @@ void DataRange::doSkipChanged() {
   _doFilter->setEnabled(doSkip());
 }
 
+
 void DataRange::setWidgetDefaults() {
   //FIXME Do we need a V->readLock() here?
   _dialogDefaults->setValue("vector/range", range());

@@ -12,6 +12,7 @@
 #include "curvedialog.h"
 
 #include "dialogpage.h"
+#include "editmultiplewidget.h"
 
 #include "curve.h"
 
@@ -48,6 +49,11 @@ CurveTab::CurveTab(QWidget *parent)
 
   connect(_xVector, SIGNAL(selectionChanged(QString)), this, SIGNAL(vectorsChanged()));
   connect(_yVector, SIGNAL(selectionChanged(QString)), this, SIGNAL(vectorsChanged()));
+  connect(_xMinusSameAsPlus, SIGNAL(toggled(bool)), this, SLOT(xCheckboxClicked()));
+  connect(_yMinusSameAsPlus, SIGNAL(toggled(bool)), this, SLOT(yCheckboxClicked()));
+
+  connect(_xError, SIGNAL(selectionChanged(QString)), this, SLOT(xErrorChanged()));
+  connect(_yError, SIGNAL(selectionChanged(QString)), this, SLOT(xErrorChanged()));
 
   connect(_xVector, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
   connect(_yVector, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
@@ -68,6 +74,11 @@ VectorPtr CurveTab::xVector() const {
 }
 
 
+bool CurveTab::xVectorDirty() const {
+  return _xVector->selectedVectorDirty();
+}
+
+
 void CurveTab::setXVector(VectorPtr vector) {
   _xVector->setSelectedVector(vector);
 }
@@ -75,6 +86,11 @@ void CurveTab::setXVector(VectorPtr vector) {
 
 VectorPtr CurveTab::yVector() const {
   return _yVector->selectedVector();
+}
+
+
+bool CurveTab::yVectorDirty() const {
+  return _yVector->selectedVectorDirty();
 }
 
 
@@ -88,6 +104,11 @@ VectorPtr CurveTab::xError() const {
 }
 
 
+bool CurveTab::xErrorDirty() const {
+  return _xError->selectedVectorDirty();
+}
+
+
 void CurveTab::setXError(VectorPtr vector) {
   _xError->setSelectedVector(vector);
 }
@@ -95,6 +116,11 @@ void CurveTab::setXError(VectorPtr vector) {
 
 VectorPtr CurveTab::yError() const {
   return _yError->selectedVector();
+}
+
+
+bool CurveTab::yErrorDirty() const {
+  return _yError->selectedVectorDirty();
 }
 
 
@@ -108,6 +134,11 @@ VectorPtr CurveTab::xMinusError() const {
 }
 
 
+bool CurveTab::xMinusErrorDirty() const {
+  return _xMinusError->selectedVectorDirty();
+}
+
+
 void CurveTab::setXMinusError(VectorPtr vector) {
   _xMinusError->setSelectedVector(vector);
 }
@@ -118,8 +149,39 @@ VectorPtr CurveTab::yMinusError() const {
 }
 
 
+bool CurveTab::yMinusErrorDirty() const {
+  return _yMinusError->selectedVectorDirty();
+}
+
+
 void CurveTab::setYMinusError(VectorPtr vector) {
   _yMinusError->setSelectedVector(vector);
+}
+
+
+void CurveTab::xCheckboxClicked() {
+  _xMinusError->setEnabled(!_xMinusSameAsPlus->isChecked());
+  xErrorChanged();
+}
+
+
+void CurveTab::yCheckboxClicked() {
+  _yMinusError->setEnabled(!_yMinusSameAsPlus->isChecked());
+  yErrorChanged();
+}
+
+
+void CurveTab::xErrorChanged() {
+  if (_xMinusSameAsPlus->isChecked()) {
+    _xMinusError->setSelectedVector(_xError->selectedVector());
+  }
+}
+
+
+void CurveTab::yErrorChanged() {
+  if (_yMinusSameAsPlus->isChecked()) {
+    _yMinusError->setSelectedVector(_yError->selectedVector());
+  }
 }
 
 
@@ -150,8 +212,35 @@ CurvePlacement* CurveTab::curvePlacement() const {
 }
 
 
+bool CurveTab::ignoreAutoScale() const {
+  return _ignoreAutoScale->isChecked();
+}
+
+
+bool CurveTab::ignoreAutoScaleDirty() const {
+  return _ignoreAutoScale->checkState() == Qt::PartiallyChecked;
+}
+
+
+void CurveTab::setIgnoreAutoScale(bool ignoreAutoScale) {
+  _ignoreAutoScale->setChecked(ignoreAutoScale);
+}
+
+
+void CurveTab::clearTabValues() {
+  _xVector->clearSelection();
+  _yVector->clearSelection();
+  _xError->clearSelection();
+  _yError->clearSelection();
+  _xMinusError->clearSelection();
+  _yMinusError->clearSelection();
+  _ignoreAutoScale->setCheckState(Qt::PartiallyChecked);
+  _curveAppearance->clearValues();
+}
+
+
 CurveDialog::CurveDialog(ObjectPtr dataObject, QWidget *parent)
-  : DataDialog(dataObject, parent) {
+  : DataDialog(dataObject, parent), _editMultipleMode(false) {
 
   if (editMode() == Edit)
     setWindowTitle(tr("Edit Curve"));
@@ -168,6 +257,8 @@ CurveDialog::CurveDialog(ObjectPtr dataObject, QWidget *parent)
   }
 
   connect(_curveTab, SIGNAL(vectorsChanged()), this, SLOT(updateButtons()));
+  connect(this, SIGNAL(editMultipleMode()), this, SLOT(editMultipleMode()));
+  connect(this, SIGNAL(editSingleMode()), this, SLOT(editSingleMode()));
   updateButtons();
 }
 
@@ -178,6 +269,18 @@ CurveDialog::~CurveDialog() {
 
 QString CurveDialog::tagString() const {
   return DataDialog::tagString();
+}
+
+
+void CurveDialog::editMultipleMode() {
+  _editMultipleMode = true;
+  _curveTab->clearTabValues();
+}
+
+
+void CurveDialog::editSingleMode() {
+  _editMultipleMode = false;
+   configureTab(dataObject());
 }
 
 
@@ -199,6 +302,7 @@ void CurveDialog::configureTab(ObjectPtr object) {
     if (curve->hasYMinusError()) {
       _curveTab->setYMinusError(curve->yMinusErrorVector());
     }
+    _curveTab->setIgnoreAutoScale(curve->ignoreAutoScale());
     _curveTab->curveAppearance()->setColor(curve->color());
     _curveTab->curveAppearance()->setShowPoints(curve->hasPoints());
     _curveTab->curveAppearance()->setShowLines(curve->hasLines());
@@ -209,6 +313,14 @@ void CurveDialog::configureTab(ObjectPtr object) {
     _curveTab->curveAppearance()->setPointDensity(curve->pointDensity());
     _curveTab->curveAppearance()->setBarStyle(curve->barStyle());
     _curveTab->hidePlacementOptions();
+    if (_editMultipleWidget) {
+      QStringList objectList;
+      CurveList objects = _document->objectStore()->getObjects<Curve>();
+      foreach(CurvePtr object, objects) {
+        objectList.append(object->tag().displayString());
+      }
+      _editMultipleWidget->addObjects(objectList);
+    }
   }
 }
 
@@ -219,7 +331,7 @@ void CurveDialog::setVector(VectorPtr vector) {
 
 
 void CurveDialog::updateButtons() {
-  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_curveTab->xVector() && _curveTab->yVector());
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled((_curveTab->xVector() && _curveTab->yVector()) || _editMultipleMode);
 }
 
 
@@ -253,6 +365,7 @@ ObjectPtr CurveDialog::createNewDataObject() const {
   curve->setPointType(_curveTab->curveAppearance()->pointType());
   curve->setPointDensity(_curveTab->curveAppearance()->pointDensity());
   curve->setBarStyle(_curveTab->curveAppearance()->barStyle());
+  curve->setIgnoreAutoScale(_curveTab->ignoreAutoScale());
 
   curve->writeLock();
   curve->update(0);
@@ -293,28 +406,98 @@ ObjectPtr CurveDialog::createNewDataObject() const {
 
 ObjectPtr CurveDialog::editExistingDataObject() const {
   if (CurvePtr curve = kst_cast<Curve>(dataObject())) {
-    curve->writeLock();
-    curve->setXVector(_curveTab->xVector());
-    curve->setYVector(_curveTab->yVector());
-    curve->setXError(_curveTab->xError());
-    curve->setYError(_curveTab->yError());
-    curve->setXMinusError(_curveTab->xMinusError());
-    curve->setYMinusError(_curveTab->yMinusError());
-    curve->setColor(_curveTab->curveAppearance()->color());
-    curve->setHasPoints(_curveTab->curveAppearance()->showPoints());
-    curve->setHasLines(_curveTab->curveAppearance()->showLines());
-    curve->setHasBars(_curveTab->curveAppearance()->showBars());
-    curve->setLineWidth(_curveTab->curveAppearance()->lineWidth());
-    curve->setLineStyle(_curveTab->curveAppearance()->lineStyle());
-    curve->setPointType(_curveTab->curveAppearance()->pointType());
-    curve->setPointDensity(_curveTab->curveAppearance()->pointDensity());
-    curve->setBarStyle(_curveTab->curveAppearance()->barStyle());
+    if (_editMultipleMode) {
+      QStringList objects = _editMultipleWidget->selectedObjects();
+      foreach (QString objectTag, objects) {
+        CurvePtr curve = kst_cast<Curve>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));
+        if (curve) {
+          VectorPtr xVector = _curveTab->xVectorDirty() ? _curveTab->xVector() : curve->xVector();
+          VectorPtr yVector = _curveTab->yVectorDirty() ? _curveTab->yVector() : curve->yVector();
 
-    curve->update(0);
-    curve->unlock();
+          VectorPtr xError = 0;
+          if (_curveTab->xErrorDirty()) {
+            xError = _curveTab->xError();
+          } else if (curve->hasXError()) {
+            xError = curve->xErrorVector();
+          }
+          VectorPtr yError = 0;
+          if (_curveTab->yErrorDirty()) {
+            yError = _curveTab->yError();
+          } else if (curve->hasYError()) {
+            yError = curve->yErrorVector();
+          }
+          VectorPtr xMinusError = 0;
+          if (_curveTab->xMinusErrorDirty()) {
+            xMinusError = _curveTab->xMinusError();
+          } else if (curve->hasXMinusError()) {
+            xMinusError = curve->xMinusErrorVector();
+          }
+          VectorPtr yMinusError = 0;
+          if (_curveTab->yMinusErrorDirty()) {
+            yMinusError = _curveTab->yMinusError();
+          } else if (curve->hasYMinusError()) {
+            yMinusError = curve->yMinusErrorVector();
+          }
 
-    _curveTab->curveAppearance()->setWidgetDefaults();
+          QColor color = _curveTab->curveAppearance()->colorDirty() ? _curveTab->curveAppearance()->color() : curve->color();
 
+          int lineWidth = _curveTab->curveAppearance()->lineWidthDirty() ?  _curveTab->curveAppearance()->lineWidth() : curve->lineWidth();
+          int lineStyle = _curveTab->curveAppearance()->lineStyleDirty() ?  _curveTab->curveAppearance()->lineStyle() : curve->lineStyle();
+          int pointType = _curveTab->curveAppearance()->pointTypeDirty() ?  _curveTab->curveAppearance()->pointType() : curve->pointType();
+          int pointDensity = _curveTab->curveAppearance()->pointDensityDirty() ?  _curveTab->curveAppearance()->pointDensity() : curve->pointDensity();
+          int barStyle = _curveTab->curveAppearance()->barStyleDirty() ?  _curveTab->curveAppearance()->barStyle() : curve->barStyle();
+
+          bool showPoints = _curveTab->curveAppearance()->showPointsDirty() ?  _curveTab->curveAppearance()->showPoints() : curve->hasPoints();
+          bool showLines = _curveTab->curveAppearance()->showLinesDirty() ?  _curveTab->curveAppearance()->showLines() : curve->hasLines();
+          bool showBars = _curveTab->curveAppearance()->showBarsDirty() ?  _curveTab->curveAppearance()->showBars() : curve->hasBars();
+          bool ignoreAutoScale = _curveTab->ignoreAutoScaleDirty() ?  _curveTab->ignoreAutoScale() : curve->ignoreAutoScale();
+
+          curve->writeLock();
+          curve->setXVector(xVector);
+          curve->setYVector(yVector);
+          curve->setXError(xError);
+          curve->setYError(yError);
+          curve->setXMinusError(xMinusError);
+          curve->setYMinusError(yMinusError);
+          curve->setColor(color);
+          curve->setHasPoints(showPoints);
+          curve->setHasLines(showLines);
+          curve->setHasBars(showBars);
+          curve->setLineWidth(lineWidth);
+          curve->setLineStyle(lineStyle);
+          curve->setPointType(pointType);
+          curve->setPointDensity(pointDensity);
+          curve->setBarStyle(barStyle);
+          curve->setIgnoreAutoScale(ignoreAutoScale);
+
+          curve->update(0);
+          curve->unlock();
+        }
+      }
+    } else {
+      curve->writeLock();
+      curve->setXVector(_curveTab->xVector());
+      curve->setYVector(_curveTab->yVector());
+      curve->setXError(_curveTab->xError());
+      curve->setYError(_curveTab->yError());
+      curve->setXMinusError(_curveTab->xMinusError());
+      curve->setYMinusError(_curveTab->yMinusError());
+      curve->setColor(_curveTab->curveAppearance()->color());
+      curve->setHasPoints(_curveTab->curveAppearance()->showPoints());
+      curve->setHasLines(_curveTab->curveAppearance()->showLines());
+      curve->setHasBars(_curveTab->curveAppearance()->showBars());
+      curve->setLineWidth(_curveTab->curveAppearance()->lineWidth());
+      curve->setLineStyle(_curveTab->curveAppearance()->lineStyle());
+      curve->setPointType(_curveTab->curveAppearance()->pointType());
+      curve->setPointDensity(_curveTab->curveAppearance()->pointDensity());
+      curve->setBarStyle(_curveTab->curveAppearance()->barStyle());
+      curve->setIgnoreAutoScale(_curveTab->ignoreAutoScale());
+
+      curve->update(0);
+      curve->unlock();
+
+      _curveTab->curveAppearance()->setWidgetDefaults();
+    }
   }
   return dataObject();
 }

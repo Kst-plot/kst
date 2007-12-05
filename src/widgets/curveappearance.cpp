@@ -25,9 +25,9 @@ CurveAppearance::CurveAppearance(QWidget *parent)
   populatePointSymbolCombo();
   populateLineStyleCombo();
 
-  connect(_showPoints, SIGNAL(toggled(bool)), this, SLOT(enableSettings()));
-  connect(_showLines, SIGNAL(toggled(bool)), this, SLOT(enableSettings()));
-  connect(_showBars, SIGNAL(toggled(bool)), this, SLOT(enableSettings()));
+  connect(_showPoints, SIGNAL(stateChanged(int)), this, SLOT(enableSettings()));
+  connect(_showLines, SIGNAL(stateChanged(int)), this, SLOT(enableSettings()));
+  connect(_showBars, SIGNAL(stateChanged(int)), this, SLOT(enableSettings()));
 
   connect(_color, SIGNAL(changed(const QColor&)), this, SLOT(populatePointSymbolCombo()));
   connect(_color, SIGNAL(changed(const QColor&)), this, SLOT(populateLineStyleCombo()));
@@ -123,8 +123,13 @@ void CurveAppearance::enableSettings() {
 
 
 bool CurveAppearance::showLines() const {
-  return _showLines->isChecked();
+  return _showLines->checkState() == Qt::Checked;
 
+}
+
+
+bool CurveAppearance::showLinesDirty() const {
+  return _showLines->checkState() != Qt::PartiallyChecked;
 }
 
 
@@ -136,7 +141,12 @@ void CurveAppearance::setShowLines(const bool showLines) {
 
 
 bool CurveAppearance::showPoints() const {
-  return _showPoints->isChecked();
+  return _showPoints->checkState() == Qt::Checked;
+}
+
+
+bool CurveAppearance::showPointsDirty() const {
+  return _showPoints->checkState() != Qt::PartiallyChecked;
 }
 
 
@@ -148,7 +158,12 @@ void CurveAppearance::setShowPoints(const bool showPoints) {
 
 
 bool CurveAppearance::showBars() const {
-  return _showBars->isChecked();
+  return _showBars->checkState() == Qt::Checked;
+}
+
+
+bool CurveAppearance::showBarsDirty() const {
+  return _showBars->checkState() != Qt::PartiallyChecked;
 }
 
 
@@ -158,8 +173,14 @@ void CurveAppearance::setShowBars(const bool showBars) {
   drawSampleLine();
 }
 
+
 QColor CurveAppearance::color() const {
   return _color->color();
+}
+
+
+bool CurveAppearance::colorDirty() const {
+  return _color->colorDirty();
 }
 
 
@@ -175,6 +196,11 @@ int CurveAppearance::pointType() const {
 }
 
 
+bool CurveAppearance::pointTypeDirty() const {
+  return _comboPointSymbol->currentIndex() != -1;
+}
+
+
 void CurveAppearance::setPointType(const int pointType) {
   _comboPointSymbol->setCurrentIndex(pointType);
   enableSettings();
@@ -184,6 +210,11 @@ void CurveAppearance::setPointType(const int pointType) {
 
 int CurveAppearance::lineStyle() const {
   return _comboLineStyle->currentIndex();
+}
+
+
+bool CurveAppearance::lineStyleDirty() const {
+  return _comboLineStyle->currentIndex() != -1;
 }
 
 
@@ -202,6 +233,11 @@ int CurveAppearance::barStyle() const {
 }
 
 
+bool CurveAppearance::barStyleDirty() const {
+  return _barStyle->currentIndex() != -1;
+}
+
+
 void CurveAppearance::setBarStyle(const int barStyle) {
   _barStyle->setCurrentIndex(barStyle);
   enableSettings();
@@ -211,6 +247,11 @@ void CurveAppearance::setBarStyle(const int barStyle) {
 
 int CurveAppearance::pointDensity() const {
   return _comboPointDensity->currentIndex();
+}
+
+
+bool CurveAppearance::pointDensityDirty() const {
+  return _comboPointDensity->currentIndex() != -1;
 }
 
 
@@ -233,9 +274,28 @@ int CurveAppearance::lineWidth() const {
 }
 
 
+bool CurveAppearance::lineWidthDirty() const {
+  return !_spinBoxLineWidth->text().isEmpty();
+}
+
+
 void CurveAppearance::setLineWidth(const int lineWidth) {
   _spinBoxLineWidth->setValue(lineWidth);
   enableSettings();
+  drawSampleLine();
+}
+
+
+void CurveAppearance::clearValues() {
+  _color->clearSelection();
+  _spinBoxLineWidth->clear();
+  _comboPointSymbol->setCurrentIndex(-1);
+  _comboPointDensity->setCurrentIndex(-1);
+  _comboLineStyle->setCurrentIndex(-1);
+  _barStyle->setCurrentIndex(-1);
+  _showPoints->setCheckState(Qt::PartiallyChecked);
+  _showLines->setCheckState(Qt::PartiallyChecked);
+  _showBars->setCheckState(Qt::PartiallyChecked);
   drawSampleLine();
 }
 
@@ -260,12 +320,16 @@ void CurveAppearance::populateLineStyleCombo() {
   rect.setTop(rect.top() + 2);
   rect.setBottom(rect.bottom() - 2);
 
-_comboLineStyle->setIconSize(QSize(rect.width(), rect.height()));
+  _comboLineStyle->setIconSize(QSize(rect.width(), rect.height()));
 
   // fill the point type dialog with point types
   QPixmap ppix(rect.width(), rect.height());
   QPainter pp(&ppix);
-  QPen pen(color(), 0);
+  QColor lineColor(color());
+  if (lineColor == Qt::transparent) {
+    lineColor = Qt::black;
+  }
+  QPen pen(lineColor, 0);
 
   int currentItem = _comboLineStyle->currentIndex();
   _comboLineStyle->clear();
@@ -307,11 +371,11 @@ void CurveAppearance::drawSampleLine() {
   }
 
   p.setPen(pen);
-  if (_showLines->isChecked()) {
+  if (showLines()) {
     p.drawLine(1, pix.height()/2, pix.width()-1, pix.height()/2);
   }
 
-  if (_showPoints->isChecked()) {
+  if (showPoints()) {
     pen.setStyle(Qt::SolidLine);
     p.setPen(pen);
     CurvePointSymbol::draw(pointType(), &p, pix.width()/2, pix.height()/2, lineWidth(), 600);
