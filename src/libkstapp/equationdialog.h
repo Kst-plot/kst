@@ -30,18 +30,22 @@ class KST_EXPORT EquationTab : public DataTab, Ui::EquationTab {
     void setObjectStore(ObjectStore *store);
 
     VectorPtr xVector() const;
+    bool xVectorDirty() const;
     void setXVector(VectorPtr vector);
 
     QString equation() const;
+    bool equationDirty() const;
     void setEquation(const QString &equation);
 
     bool doInterpolation() const;
+    bool doInterpolationDirty() const;
     void setDoInterpolation(bool doInterpolation);
 
     CurveAppearance *curveAppearance() const;
     CurvePlacement *curvePlacement() const;
 
     void hideCurveOptions();
+    void clearTabValues();
 
   Q_SIGNALS:
     void optionsChanged();
@@ -68,6 +72,8 @@ class KST_EXPORT EquationDialog : public DataDialog {
 
   private Q_SLOTS:
     void updateButtons();
+    void editMultipleMode();
+    void editSingleMode();
 
   private:
     void configureTab(ObjectPtr object);

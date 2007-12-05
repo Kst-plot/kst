@@ -12,6 +12,7 @@
 #include "equationdialog.h"
 
 #include "dialogpage.h"
+#include "editmultiplewidget.h"
 
 #include "datacollection.h"
 #include "dataobjectcollection.h"
@@ -42,6 +43,10 @@ EquationTab::EquationTab(QWidget *parent)
   connect(Operators, SIGNAL(activated(QString)), this, SLOT(equationOperatorUpdate(const QString&)));
   connect(_vectors, SIGNAL(selectionChanged(QString)), this, SLOT(equationUpdate(const QString&)));
   connect(_scalars, SIGNAL(selectionChanged(QString)), this, SLOT(equationUpdate(const QString&)));
+
+  connect(_xVectors, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
+  connect(_equation, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
+  connect(_doInterpolation, SIGNAL(clicked()), this, SIGNAL(modified()));
 }
 
 
@@ -117,6 +122,11 @@ VectorPtr EquationTab::xVector() const {
 }
 
 
+bool EquationTab::xVectorDirty() const {
+  return _xVectors->selectedVectorDirty();
+}
+
+
 void EquationTab::setXVector(VectorPtr vector) {
   _xVectors->setSelectedVector(vector);
 }
@@ -127,6 +137,11 @@ QString EquationTab::equation() const {
 }
 
 
+bool EquationTab::equationDirty() const {
+  return (!_equation->text().isEmpty());
+}
+
+
 void EquationTab::setEquation(const QString &equation) {
   _equation->setText(equation);
 }
@@ -134,6 +149,11 @@ void EquationTab::setEquation(const QString &equation) {
 
 bool EquationTab::doInterpolation() const {
   return _doInterpolation->isChecked();
+}
+
+
+bool EquationTab::doInterpolationDirty() const {
+  return _doInterpolation->checkState() == Qt::PartiallyChecked;
 }
 
 
@@ -166,6 +186,14 @@ void EquationTab::hideCurveOptions() {
 }
 
 
+void EquationTab::clearTabValues() {
+  _xVectors->clearSelection();
+  _equation->clear();
+  _doInterpolation->setCheckState(Qt::PartiallyChecked);
+  _curveAppearance->clearValues();
+}
+
+
 EquationDialog::EquationDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
@@ -186,6 +214,10 @@ EquationDialog::EquationDialog(ObjectPtr dataObject, QWidget *parent)
   }
 
   connect(_equationTab, SIGNAL(optionsChanged()), this, SLOT(updateButtons()));
+  connect(this, SIGNAL(editMultipleMode()), this, SLOT(editMultipleMode()));
+  connect(this, SIGNAL(editSingleMode()), this, SLOT(editSingleMode()));
+
+  connect(_equationTab, SIGNAL(modified()), this, SLOT(modified()));
   updateButtons();
 
 }
@@ -200,8 +232,18 @@ QString EquationDialog::tagString() const {
 }
 
 
+void EquationDialog::editMultipleMode() {
+  _equationTab->clearTabValues();
+}
+
+
+void EquationDialog::editSingleMode() {
+   configureTab(dataObject());
+}
+
+
 void EquationDialog::updateButtons() {
-  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_equationTab->xVector() && !_equationTab->equation().isEmpty());
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled((_equationTab->xVector() && !_equationTab->equation().isEmpty()) || (editMode() == EditMultiple));
 }
 
 
@@ -213,6 +255,14 @@ void EquationDialog::configureTab(ObjectPtr object) {
     _equationTab->setEquation(equation->equation());
     _equationTab->setDoInterpolation(equation->doInterp());
     _equationTab->hideCurveOptions();
+    if (_editMultipleWidget) {
+      QStringList objectList;
+      EquationList objects = _document->objectStore()->getObjects<Equation>();
+      foreach(EquationPtr object, objects) {
+        objectList.append(object->tag().displayString());
+      }
+      _editMultipleWidget->addObjects(objectList);
+    }
   }
 }
 
@@ -287,12 +337,31 @@ ObjectPtr EquationDialog::createNewDataObject() const {
 
 ObjectPtr EquationDialog::editExistingDataObject() const {
   if (EquationPtr equation = kst_cast<Equation>(dataObject())) {
-    equation->writeLock();
-    equation->setEquation(_equationTab->equation());
-    equation->setExistingXVector(_equationTab->xVector(), _equationTab->doInterpolation());
+    if (editMode() == EditMultiple) {
+      QStringList objects = _editMultipleWidget->selectedObjects();
+      foreach (QString objectTag, objects) {
+        EquationPtr equation = kst_cast<Equation>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));
+        if (equation) {
+          VectorPtr xVector = _equationTab->xVectorDirty() ? _equationTab->xVector() : equation->vXIn();
+          const QString equationString = _equationTab->equationDirty() ? _equationTab->equation() : equation->equation();
+          const bool doInterpolation = _equationTab->doInterpolationDirty() ?  _equationTab->doInterpolation() : equation->doInterp();
 
-    equation->update(0);
-    equation->unlock();
+          equation->writeLock();
+          equation->setEquation(equationString);
+          equation->setExistingXVector(xVector, doInterpolation);
+
+          equation->update(0);
+          equation->unlock();
+        }
+      }
+    } else {
+      equation->writeLock();
+      equation->setEquation(_equationTab->equation());
+      equation->setExistingXVector(_equationTab->xVector(), _equationTab->doInterpolation());
+
+      equation->update(0);
+      equation->unlock();
+    }
   }
   return dataObject();
 }
