@@ -193,6 +193,7 @@ ObjectTag ObjectStore::suggestObjectTag(const QString& basedOn, const ObjectTag&
     return tag;
   } else {
     QString name = QString("%1-%2").arg(abbreviate(T::staticTypeString)).arg(basedOn);
+    tag.setName(name);
     return getUniqueTag(tag);
   }
 }

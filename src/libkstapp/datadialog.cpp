@@ -82,7 +82,7 @@ void DataDialog::createGui() {
   if (_dataObject) {
     setTagString(_dataObject->tag().tagString()); // FIXME: should this be displayString()?
   } else {
-    setTagString(tagString());
+    setTagString(_defaultTagString);
     button->setVisible(false);
   }
 

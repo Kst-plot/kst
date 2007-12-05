@@ -268,7 +268,12 @@ CurveDialog::~CurveDialog() {
 
 
 QString CurveDialog::tagString() const {
-  return DataDialog::tagString();
+  QString tagString = DataDialog::tagString();
+  if (_curveTab->yVector()) {
+    // FIXME: not sure I like this name...
+    tagString.replace(defaultTagString(), _curveTab->yVector()->tag().name());
+  }
+  return tagString;
 }
 
 

@@ -372,7 +372,8 @@ ObjectPtr VectorDialog::createNewDataVector() const {
 //            << "\n\tfileName:" << dataSource->fileName()
 //            << "\n\tfileType:" << dataSource->fileType()
 //            << "\n\tfield:" << field
-//            << "\n\ttag:" << tag.tag()
+//            << "\n\ttag:" << tag.displayString()
+// 	   << "\n\ttagString:" << tagString()
 //            << "\n\tstart:" << (dataRange->countFromEnd() ? -1 : int(dataRange->start()))
 //            << "\n\trange:" << (dataRange->readToEnd() ? -1 : int(dataRange->range()))
 //            << "\n\tskip:" << dataRange->skip()
@@ -478,6 +479,9 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
         dataRange->skip(),
         dataRange->doSkip(),
         dataRange->doFilter());
+      
+      // FIXME update the data vector tag, if it changed!
+
       dataVector->update(0);
       dataVector->unlock();
 
