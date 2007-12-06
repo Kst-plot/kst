@@ -20,12 +20,21 @@ FFTOptions::FFTOptions(QWidget *parent)
   setupUi(this);
 
   connect(_interleavedAverage, SIGNAL(clicked()), this, SLOT(clickedInterleaved()));
-
   connect(_apodize, SIGNAL(clicked()), this, SLOT(clickedApodize()));
-
   connect(_apodizeFunction, SIGNAL(activated(int)), this, SLOT(changedApodizeFxn()));
-
   connect(_apodize, SIGNAL(clicked()), this, SLOT(changedApodizeFxn()));
+
+  connect(_apodizeFunction, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
+  connect(_output, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
+  connect(_apodize, SIGNAL(clicked()), this, SIGNAL(modified()));
+  connect(_removeMean, SIGNAL(clicked()), this, SIGNAL(modified()));
+  connect(_interleavedAverage, SIGNAL(clicked()), this, SIGNAL(modified()));
+  connect(_interpolateOverHoles, SIGNAL(clicked()), this, SIGNAL(modified()));
+  connect(_sampleRate, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_vectorUnits, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_rateUnits, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_sigma, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
+  connect(_FFTLength, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
 }
 
 
@@ -41,6 +50,11 @@ double FFTOptions::sampleRate() const {
 }
 
 
+bool FFTOptions::sampleRateDirty() const {
+  return !_sampleRate->text().isEmpty();
+}
+
+
 void FFTOptions::setSampleRate(const double sampleRate) {
   _sampleRate->setText(QString::number(sampleRate));
 }
@@ -48,6 +62,11 @@ void FFTOptions::setSampleRate(const double sampleRate) {
 
 double FFTOptions::sigma() const {
   return _sigma->value();
+}
+
+
+bool FFTOptions::sigmaDirty() const {
+  return !_sigma->text().isEmpty();
 }
 
 
@@ -61,6 +80,11 @@ bool FFTOptions::interleavedAverage() const {
 }
 
 
+bool FFTOptions::interleavedAverageDirty() const {
+  return _interleavedAverage->checkState() == Qt::PartiallyChecked;
+}
+
+
 void FFTOptions::setInterleavedAverage(const bool interleavedAverage) {
   _interleavedAverage->setChecked(interleavedAverage);
 }
@@ -68,6 +92,11 @@ void FFTOptions::setInterleavedAverage(const bool interleavedAverage) {
 
 bool FFTOptions::apodize() const {
   return _apodize->isChecked();
+}
+
+
+bool FFTOptions::apodizeDirty() const {
+  return _apodize->checkState() == Qt::PartiallyChecked;
 }
 
 
@@ -81,6 +110,11 @@ bool FFTOptions::removeMean() const {
 }
 
 
+bool FFTOptions::removeMeanDirty() const {
+  return _removeMean->checkState() == Qt::PartiallyChecked;
+}
+
+
 void FFTOptions::setRemoveMean(const bool removeMean) {
   _removeMean->setChecked(removeMean);
 }
@@ -88,6 +122,11 @@ void FFTOptions::setRemoveMean(const bool removeMean) {
 
 bool FFTOptions::interpolateOverHoles() const {
   return _interpolateOverHoles->isChecked();
+}
+
+
+bool FFTOptions::interpolateOverHolesDirty() const {
+  return _interpolateOverHoles->checkState() == Qt::PartiallyChecked;
 }
 
 
@@ -101,6 +140,11 @@ int FFTOptions::FFTLength() const {
 }
 
 
+bool FFTOptions::FFTLengthDirty() const {
+  return !_FFTLength->text().isEmpty();
+}
+
+
 void FFTOptions::setFFTLength(const int FFTLength) {
   _FFTLength->setValue(FFTLength);
 }
@@ -108,6 +152,11 @@ void FFTOptions::setFFTLength(const int FFTLength) {
 
 QString FFTOptions::vectorUnits() const {
   return _vectorUnits->text();
+}
+
+
+bool FFTOptions::vectorUnitsDirty() const {
+  return !_vectorUnits->text().isEmpty();
 }
 
 
@@ -121,6 +170,11 @@ QString FFTOptions::rateUnits() const {
 }
 
 
+bool FFTOptions::rateUnitsDirty() const {
+  return !_rateUnits->text().isEmpty();
+}
+
+
 void FFTOptions::setRateUnits(const QString rateUnits) {
   _rateUnits->setText(rateUnits);
 }
@@ -128,6 +182,11 @@ void FFTOptions::setRateUnits(const QString rateUnits) {
 
 ApodizeFunction FFTOptions::apodizeFunction() const {
   return (ApodizeFunction)_apodizeFunction->currentIndex();
+}
+
+
+bool FFTOptions::apodizeFunctionDirty() const {
+  return _apodizeFunction->currentIndex() != -1;
 }
 
 
@@ -141,8 +200,28 @@ PSDType FFTOptions::output() const {
 }
 
 
+bool FFTOptions::outputDirty() const {
+  return _output->currentIndex() != -1;
+}
+
+
 void FFTOptions::setOutput(const PSDType output) {
   _output->setCurrentItem((PSDType)output);
+}
+
+
+void FFTOptions::clearValues() {
+  _sigma->clear();
+  _FFTLength->clear();
+  _sampleRate->clear();
+  _vectorUnits->clear();
+  _rateUnits->clear();
+  _apodize->setCheckState(Qt::PartiallyChecked);
+  _interleavedAverage->setCheckState(Qt::PartiallyChecked);
+  _removeMean->setCheckState(Qt::PartiallyChecked);
+  _interpolateOverHoles->setCheckState(Qt::PartiallyChecked);
+  _apodizeFunction->setCurrentIndex(-1);
+  _output->setCurrentIndex(-1);
 }
 
 

@@ -24,58 +24,72 @@ namespace Kst {
 class FFTOptions : public QWidget, public Ui::FFTOptions {
   Q_OBJECT
 
-public:
-  FFTOptions(QWidget *parent = 0);
-  ~FFTOptions();
+  public:
+    FFTOptions(QWidget *parent = 0);
+    ~FFTOptions();
 
-  double sampleRate() const;
-  void setSampleRate(const double sampleRate);
+    double sampleRate() const;
+    bool sampleRateDirty() const;
+    void setSampleRate(const double sampleRate);
 
-  double sigma() const;
-  void setSigma(const double sigma);
+    double sigma() const;
+    bool sigmaDirty() const;
+    void setSigma(const double sigma);
 
-  bool interleavedAverage() const;
-  void setInterleavedAverage(const bool interleavedAverage);
+    bool interleavedAverage() const;
+    bool interleavedAverageDirty() const;
+    void setInterleavedAverage(const bool interleavedAverage);
 
-  int FFTLength() const;
-  void setFFTLength(const int FFTLength);
+    int FFTLength() const;
+    bool FFTLengthDirty() const;
+    void setFFTLength(const int FFTLength);
 
-  bool apodize() const;
-  void setApodize(const bool apodize);
+    bool apodize() const;
+    bool apodizeDirty() const;
+    void setApodize(const bool apodize);
 
-  bool removeMean() const;
-  void setRemoveMean(const bool removeMean);
+    bool removeMean() const;
+    bool removeMeanDirty() const;
+    void setRemoveMean(const bool removeMean);
 
-  QString vectorUnits() const;
-  void setVectorUnits(const QString vectorUnits);
+    QString vectorUnits() const;
+    bool vectorUnitsDirty() const;
+    void setVectorUnits(const QString vectorUnits);
 
-  QString rateUnits() const;
-  void setRateUnits(const QString rateUnits);
+    QString rateUnits() const;
+    bool rateUnitsDirty() const;
+    void setRateUnits(const QString rateUnits);
 
-  ApodizeFunction apodizeFunction() const;
-  void setApodizeFunction(const ApodizeFunction apodizeFunction);
+    ApodizeFunction apodizeFunction() const;
+    bool apodizeFunctionDirty() const;
+    void setApodizeFunction(const ApodizeFunction apodizeFunction);
 
-  PSDType output() const;
-  void setOutput(const PSDType output);
+    PSDType output() const;
+    bool outputDirty() const;
+    void setOutput(const PSDType output);
 
-  bool interpolateOverHoles() const;
-  void setInterpolateOverHoles(const bool interpolateOverHoles);
+    bool interpolateOverHoles() const;
+    bool interpolateOverHolesDirty() const;
+    void setInterpolateOverHoles(const bool interpolateOverHoles);
 
-  void setWidgetDefaults();
-  void loadWidgetDefaults();
+    void clearValues();
 
-  //void update();
+    void setWidgetDefaults();
+    void loadWidgetDefaults();
 
-public slots:
-  void changedApodizeFxn();
-  void clickedInterleaved();
-  void clickedApodize();
-  void synch();
-  bool checkValues();
-  bool checkGivenValues(double sampRate, int FFTLen);
+  Q_SIGNALS:
+    void modified();
 
-private:
-  void init();
+  public slots:
+    void changedApodizeFxn();
+    void clickedInterleaved();
+    void clickedApodize();
+    void synch();
+    bool checkValues();
+    bool checkGivenValues(double sampRate, int FFTLen);
+
+  private:
+    void init();
 } KST_EXPORT;
 
 }

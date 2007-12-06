@@ -34,6 +34,7 @@ class KST_EXPORT PowerSpectrumTab : public DataTab, Ui::PowerSpectrumTab {
     void setObjectStore(ObjectStore *store);
 
     VectorPtr vector() const;
+    bool vectorDirty() const;
     void setVector(const VectorPtr vector);
 
     CurveAppearance* curveAppearance() const;
@@ -41,6 +42,7 @@ class KST_EXPORT PowerSpectrumTab : public DataTab, Ui::PowerSpectrumTab {
     FFTOptions* FFTOptionsWidget() const;
 
     void hideCurveOptions();
+    void clearTabValues();
 
   private Q_SLOTS:    
     void selectionChanged();
@@ -64,6 +66,8 @@ class KST_EXPORT PowerSpectrumDialog : public DataDialog {
 
   private Q_SLOTS:
     void updateButtons();
+    void editMultipleMode();
+    void editSingleMode();
 
   private:
     void configureTab(ObjectPtr object=0);
