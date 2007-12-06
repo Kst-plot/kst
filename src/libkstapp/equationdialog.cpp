@@ -153,7 +153,7 @@ bool EquationTab::doInterpolation() const {
 
 
 bool EquationTab::doInterpolationDirty() const {
-  return _doInterpolation->checkState() == Qt::PartiallyChecked;
+  return _doInterpolation->checkState() != Qt::PartiallyChecked;
 }
 
 
@@ -190,7 +190,6 @@ void EquationTab::clearTabValues() {
   _xVectors->clearSelection();
   _equation->clear();
   _doInterpolation->setCheckState(Qt::PartiallyChecked);
-  _curveAppearance->clearValues();
 }
 
 
