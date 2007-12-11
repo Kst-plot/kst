@@ -60,7 +60,7 @@ const QString EventMonitorEntry::OUTYVECTOR = "Y";
 
 EventMonitorEntry::EventMonitorEntry(ObjectStore *store, const ObjectTag &in_tag) : DataObject(store, in_tag) {
   _level = Debug::Warning;
-  _logKstDebug = true;
+  _logDebug = true;
   _logEMail = false;
   _logELOG = false;
 
@@ -68,11 +68,11 @@ EventMonitorEntry::EventMonitorEntry(ObjectStore *store, const ObjectTag &in_tag
 }
 
 
-EventMonitorEntry::EventMonitorEntry(ObjectStore *store, const ObjectTag &tag, const QString &script, const QString &event, const QString &description, const Debug::LogLevel level, const bool logKstDebug, const bool logEMail, const bool logELOG, const QString& emailRecipients) : DataObject(store, tag) {
+EventMonitorEntry::EventMonitorEntry(ObjectStore *store, const ObjectTag &tag, const QString &script, const QString &event, const QString &description, const Debug::LogLevel level, const bool logDebug, const bool logEMail, const bool logELOG, const QString& emailRecipients) : DataObject(store, tag) {
   _event = event;
   _description = description;
   _eMailRecipients = emailRecipients;
-  _logKstDebug = logKstDebug;
+  _logDebug = logDebug;
   _logEMail = logEMail;
   _logELOG = logELOG;
   _level = level;
@@ -85,7 +85,7 @@ EventMonitorEntry::EventMonitorEntry(ObjectStore *store, const QDomElement &e) :
   QString strTag;
 
   _level = Debug::Warning;
-  _logKstDebug = true;
+  _logDebug = true;
   _logEMail = false;
   _logELOG = false;
 
@@ -100,7 +100,7 @@ EventMonitorEntry::EventMonitorEntry(ObjectStore *store, const QDomElement &e) :
       } else if (e.tagName() == "description") {
         _description = e.text();
       } else if (e.tagName() == "logdebug") {
-        _logKstDebug = e.text().toInt();
+        _logDebug = e.text().toInt();
       } else if (e.tagName() == "loglevel") {
         _level = (Debug::LogLevel)e.text().toInt();
       } else if (e.tagName() == "logemail") {
@@ -181,7 +181,7 @@ void EventMonitorEntry::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("tag", tag().tagString());
   xml.writeAttribute("equation", _event);
   xml.writeAttribute("description", _description);
-  xml.writeAttribute("logdebug", QVariant(_logKstDebug).toString());
+  xml.writeAttribute("logdebug", QVariant(_logDebug).toString());
   xml.writeAttribute("loglevel", QVariant(_level).toString());
   xml.writeAttribute("logemail", QVariant(_logEMail).toString());
   xml.writeAttribute("logelog", QVariant(_logELOG).toString());
@@ -300,7 +300,7 @@ void EventMonitorEntry::setEvent(const QString& strEvent) {
 
 
 bool EventMonitorEntry::needToEvaluate() {
-  return _logKstDebug || _logEMail || _logELOG || !_script.isEmpty();
+  return _logDebug || _logEMail || _logELOG || !_script.isEmpty();
 }
 
 
@@ -365,7 +365,7 @@ bool EventMonitorEntry::event(QEvent *e) {
 
 
 void EventMonitorEntry::doLog(const QString& logMessage) const {
-  if (_logKstDebug) {
+  if (_logDebug) {
     Debug::self()->log(logMessage, _level);
   }
 
@@ -447,10 +447,10 @@ void EventMonitorEntry::setExpression(Equations::Node* pExpression) {
 }
 
 
-void EventMonitorEntry::setLogKstDebug(bool logKstDebug) {
-  if (_logKstDebug != logKstDebug) {
+void EventMonitorEntry::setLogDebug(bool logDebug) {
+  if (_logDebug != logDebug) {
     setDirty();
-    _logKstDebug = logKstDebug;
+    _logDebug = logDebug;
   }
 }
 
@@ -488,7 +488,7 @@ DataObjectPtr EventMonitorEntry::makeDuplicate() {
   eventMonitor->setEvent(_event);
   eventMonitor->setDescription(_description);
   eventMonitor->setLevel(_level);
-  eventMonitor->setLogKstDebug(_logKstDebug);
+  eventMonitor->setLogDebug(_logDebug);
   eventMonitor->setLogEMail(_logEMail);
   eventMonitor->setLogELOG(_logELOG);
   eventMonitor->setEMailRecipients(_eMailRecipients);

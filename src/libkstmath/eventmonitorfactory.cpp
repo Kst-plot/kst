@@ -77,7 +77,7 @@ DataObjectPtr EventMonitorFactory::generateObject(ObjectStore *store, QXmlStream
   eventMonitor->setEvent(equation);
   eventMonitor->setDescription(description);
   eventMonitor->setLevel((Debug::LogLevel)logLevel);
-  eventMonitor->setLogKstDebug(logDebug);
+  eventMonitor->setLogDebug(logDebug);
   eventMonitor->setLogEMail(logEmail);
   eventMonitor->setLogELOG(logELOG);
   eventMonitor->setEMailRecipients(emailRecipients);

@@ -32,34 +32,49 @@ class KST_EXPORT EventMonitorTab : public DataTab, Ui::EventMonitorTab {
     void setObjectStore(ObjectStore *store);
 
     QString script() const;
+    bool scriptDirty() const;
     void setScript(const QString script);
 
     QString event() const;
+    bool eventDirty() const;
     void setEvent(const QString event);
 
     QString description() const;
+    bool descriptionDirty() const;
     void setDescription(const QString description);
 
     Debug::LogLevel logLevel() const;
+    bool logLevelDirty() const;
     void setLogLevel(const Debug::LogLevel level);
 
-    bool logKstDebug() const;
-    void setLogKstDebug(const bool logKstDebug);
+    bool logDebug() const;
+    bool logDebugDirty() const;
+    void setLogDebug(const bool logDebug);
 
     bool logEMail() const;
+    bool logEMailDirty() const;
     void setLogEMail(const bool logEMail);
 
     bool logELOG() const;
+    bool logELOGDirty() const;
     void setLogELOG(const bool logELOG);
 
     QString emailRecipients() const;
+    bool emailRecipientsDirty() const;
     void setEmailRecipients(const QString emailRecipients);
+
+    void clearTabValues();
+    void resetLogLevelDirty();
 
   private Q_SLOTS:
     void selectionChanged();
+    void logLevelChanged();
 
   Q_SIGNALS:
     void optionsChanged();
+
+  private:
+    bool _logLevelDirty;
 };
 
 class KST_EXPORT EventMonitorDialog : public DataDialog {
@@ -75,6 +90,8 @@ class KST_EXPORT EventMonitorDialog : public DataDialog {
 
   private Q_SLOTS:
     void updateButtons();
+    void editMultipleMode();
+    void editSingleMode();
 
   private:
     void configureTab(ObjectPtr object);

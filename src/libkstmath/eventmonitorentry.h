@@ -47,7 +47,7 @@ class EventMonitorEntry : public DataObject {
     const QString& description() const { return _description; }
     Debug::LogLevel level() const { return _level; }
     Equations::Node* expression() const { return _pExpression; }
-    bool logKstDebug() const { return _logKstDebug; }
+    bool logDebug() const { return _logDebug; }
     bool logEMail() const { return _logEMail; }
     bool logELOG() const { return _logELOG; }
     const QString& eMailRecipients() const { return _eMailRecipients; }
@@ -58,7 +58,7 @@ class EventMonitorEntry : public DataObject {
     void setDescription(const QString& str);
     void setLevel(Debug::LogLevel level);
     void setExpression(Equations::Node* pExpression);
-    void setLogKstDebug(bool logKstDebug);
+    void setLogDebug(bool logDebug);
     void setLogEMail(bool logEMail);
     void setLogELOG(bool logELOG);
     void setEMailRecipients(const QString& str);
@@ -76,7 +76,7 @@ class EventMonitorEntry : public DataObject {
 
   protected:
     EventMonitorEntry(ObjectStore *store, const ObjectTag &in_tag);
-    EventMonitorEntry(ObjectStore *store, const ObjectTag &tag, const QString &script, const QString &event, const QString &description, const Debug::LogLevel level, const bool logKstDebug, const bool logEMail, const bool logELOG, const QString& emailRecipients);
+    EventMonitorEntry(ObjectStore *store, const ObjectTag &tag, const QString &script, const QString &event, const QString &description, const Debug::LogLevel level, const bool logDebug, const bool logEMail, const bool logELOG, const QString& emailRecipients);
     EventMonitorEntry(ObjectStore *store, const QDomElement &e);
     ~EventMonitorEntry();
 
@@ -104,7 +104,7 @@ class EventMonitorEntry : public DataObject {
     Equations::Node* _pExpression;
     VectorMap::Iterator _xVector;
     VectorMap::Iterator _yVector;
-    bool _logKstDebug;
+    bool _logDebug;
     bool _logEMail;
     bool _logELOG;
     bool _isValid;
@@ -113,7 +113,7 @@ class EventMonitorEntry : public DataObject {
 };
 
 typedef SharedPtr<EventMonitorEntry> EventMonitorEntryPtr;
-typedef ObjectList<EventMonitorEntryPtr> EventMonitorEntryList;
+typedef ObjectList<EventMonitorEntry> EventMonitorEntryList;
 
 }
 
