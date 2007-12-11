@@ -81,6 +81,21 @@ void ColorPalette::setPalette(const QString palette) {
 }
 
 
+bool ColorPalette::selectedPaletteDirty() const {
+  return _palette->currentIndex() != -1;
+}
+
+
+void ColorPalette::clearSelection() {
+  _palette->setCurrentIndex(-1);
+
+  QPixmap pix(7 *_palette->height(), _palette->height());
+  QPainter p(&pix);
+  p.fillRect(p.window(), QColor("white"));
+  _paletteDisplay->setPixmap(pix);
+}
+
+
 void ColorPalette::refresh( const QString & palette ) {
   _palette->clear();
 

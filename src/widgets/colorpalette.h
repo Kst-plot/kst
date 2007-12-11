@@ -27,9 +27,12 @@ class ColorPalette : public QWidget, public Ui::ColorPalette {
     ~ColorPalette();
 
     QString selectedPalette();
+    bool selectedPaletteDirty() const;
     void refresh(const QString &palette = QString());
     int currentPaletteIndex();
     void setPalette(const QString palette);
+
+    void clearSelection();
 
   public slots:
     void updatePalette(const QString &palette = QString());

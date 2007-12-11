@@ -32,7 +32,10 @@ class KST_EXPORT MatrixSelector : public QWidget, public Ui::MatrixSelector {
     void setObjectStore(ObjectStore *store);
 
     MatrixPtr selectedMatrix() const;
+    bool selectedMatrixDirty() const;
     void setSelectedMatrix(MatrixPtr selectedMatrix);
+
+    void clearSelection();
 
   Q_SIGNALS:
     void selectionChanged();

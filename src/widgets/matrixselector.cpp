@@ -55,6 +55,11 @@ MatrixPtr MatrixSelector::selectedMatrix() const {
 }
 
 
+bool MatrixSelector::selectedMatrixDirty() const {
+  return _matrix->currentIndex() != -1;
+}
+
+
 void MatrixSelector::matrixSelected(int index) {
   Q_UNUSED(index)
   if (index != -1)
@@ -78,6 +83,11 @@ void MatrixSelector::newMatrix() {
 
 void MatrixSelector::editMatrix() {
   DialogLauncher::self()->showMatrixDialog(ObjectPtr(selectedMatrix()));
+}
+
+
+void MatrixSelector::clearSelection() {
+  _matrix->setCurrentIndex(-1);
 }
 
 

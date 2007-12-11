@@ -39,6 +39,7 @@ class KST_EXPORT ImageTab : public DataTab, Ui::ImageTab {
     void setObjectStore(ObjectStore *store);
 
     bool realTimeAutoThreshold() const;
+    bool realTimeAutoThresholdDirty() const;
     void setRealTimeAutoThreshold(const bool realTimeAutoThreshold);
 
     bool colorOnly() const;
@@ -50,28 +51,40 @@ class KST_EXPORT ImageTab : public DataTab, Ui::ImageTab {
     bool colorAndContour() const;
     void setColorAndContour(const bool colorAndContour);
 
+    bool modeDirty() const;
+
     double lowerThreshold() const;
+    bool lowerThresholdDirty() const;
     void setLowerThreshold(const double lowerThreshold);
 
     double upperThreshold() const;
+    bool upperThresholdDirty() const;
     void setUpperThreshold(const double upperThreshold);
 
     int numberOfContourLines() const;
+    bool numberOfContourLinesDirty() const;
     void setNumberOfContourLines(const int numberOfContourLines);
 
     int contourWeight() const;
+    bool contourWeightDirty() const;
     void setContourWeight(const int contourWeight);
 
     QColor contourColor() const;
+    bool contourColorDirty() const;
     void setContourColor(const QColor contourColor);
 
     MatrixPtr matrix() const;
+    bool matrixDirty() const;
     void setMatrix(const MatrixPtr matrix);
 
     bool useVariableLineWeight() const;
+    bool useVariableLineWeightDirty() const;
     void setUseVariableLineWeight(const bool useVariableLineWeight);
 
     void hidePlacementOptions();
+    void clearTabValues();
+
+    void resetModeDirty();
 
   private Q_SLOTS:
     void realTimeAutoThresholdToggled(const bool checked);
@@ -79,12 +92,15 @@ class KST_EXPORT ImageTab : public DataTab, Ui::ImageTab {
     void selectionChanged();
     void calculateAutoThreshold();
     void calculateSmartThreshold();
+    void modeChanged();
 
   Q_SIGNALS:
     void optionsChanged();
 
   private:
     ObjectStore* _store;
+
+    bool _modeDirty;
 };
 
 class KST_EXPORT ImageDialog : public DataDialog {
@@ -102,6 +118,8 @@ class KST_EXPORT ImageDialog : public DataDialog {
 
   private Q_SLOTS:
     void updateButtons();
+    void editMultipleMode();
+    void editSingleMode();
 
   private:
     void configureTab(ObjectPtr object);
