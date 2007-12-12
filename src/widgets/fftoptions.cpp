@@ -225,6 +225,12 @@ void FFTOptions::clearValues() {
 }
 
 
+void FFTOptions::disableInterpolateOverHoles() {
+  _interpolateOverHoles->setChecked(false);
+  _interpolateOverHoles->setEnabled(false);
+}
+
+
 void FFTOptions::changedApodizeFxn() {
   int gaussianIndex = 5;
   if (_apodizeFunction->itemText(0).isEmpty()) {

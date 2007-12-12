@@ -72,6 +72,7 @@ class FFTOptions : public QWidget, public Ui::FFTOptions {
     bool interpolateOverHolesDirty() const;
     void setInterpolateOverHoles(const bool interpolateOverHoles);
 
+    void disableInterpolateOverHoles();
     void clearValues();
 
     void setWidgetDefaults();
