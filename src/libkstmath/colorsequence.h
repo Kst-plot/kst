@@ -25,6 +25,7 @@ class ColorSequence {
     enum ColorMode { MonoChrome, GrayScale, Color };
     KST_EXPORT void createPalette();
     static KST_EXPORT QColor next();
+    static KST_EXPORT QColor current();
     static KST_EXPORT QColor next(const QColor& badColor);
     static KST_EXPORT QColor next(const CurveList& Curves, const QColor& badColor);
     static KST_EXPORT bool colorsTooClose(const QColor& color, const QColor& badColor);

@@ -503,7 +503,7 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
       curve->update(0);
       curve->unlock();
 
-      _curveTab->curveAppearance()->setWidgetDefaults();
+      _curveTab->curveAppearance()->setWidgetDefaults(false);
     }
   }
   return dataObject();

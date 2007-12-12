@@ -480,8 +480,11 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
         dataRange->skip(),
         dataRange->doSkip(),
         dataRange->doFilter());
-      
-      // FIXME update the data vector tag, if it changed!
+
+      if (dataVector->tag().name()!=tagString()) {
+	//FIXME: needs a gaurd against being not unique
+	dataVector->tag().setName(tagString()); 
+      }
 
       dataVector->update(0);
       dataVector->unlock();

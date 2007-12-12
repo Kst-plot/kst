@@ -15,6 +15,7 @@
 #include "linestyle.h"
 #include <QPainter>
 #include "dialogdefaults.h"
+#include "colorsequence.h"
 
 namespace Kst {
 
@@ -384,9 +385,11 @@ void CurveAppearance::drawSampleLine() {
   _label->setPixmap(pix);
 }
 
-// store the current state of the widget as the default
-void CurveAppearance::setWidgetDefaults() {
-  //color();
+// store the current state of the widget as the default 
+void CurveAppearance::setWidgetDefaults(bool nextColor) {
+  if (nextColor) {
+    ColorSequence::next();
+  }
   _dialogDefaults->setValue("curves/showPoints",showPoints());
   _dialogDefaults->setValue("curves/showLines", showLines());
   _dialogDefaults->setValue("curves/showBars",showBars());
@@ -399,6 +402,7 @@ void CurveAppearance::setWidgetDefaults() {
 
 // set the widget to the stored default values
 void CurveAppearance::loadWidgetDefaults() {
+  setColor(ColorSequence::current());
   setShowPoints(_dialogDefaults->value("curves/showPoints",false).toBool());
   setShowLines(_dialogDefaults->value("curves/showLines",true).toBool());
   setShowBars(_dialogDefaults->value("curves/showBars",false).toBool());

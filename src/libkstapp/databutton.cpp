@@ -24,7 +24,6 @@ DataButton::DataButton(const QString &text, QWidget *parent)
   setStyleSheet("QPushButton {"
                   "border: 0px solid;"
                   "background-color: white;"
-                  "text-align: left;"
                   "margin: 5;"
                 "}"
 

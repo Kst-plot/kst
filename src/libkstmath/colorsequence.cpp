@@ -159,6 +159,21 @@ QColor ColorSequence::next() {
   return _self->_pal.value( _self->_ptr++ % _self->_count).dark(dark_factor);
 }
 
+QColor ColorSequence::current() {
+  if (!_self) {
+    _self = new ColorSequence;
+    qAddPostRoutine(ColorSequence::cleanup);
+  }
+  _self->createPalette();
+
+  if (_self->_ptr >= _self->_count * 2) {
+    _self->_ptr = 0;
+  }
+
+  int dark_factor = 100 + ( 50 * ( _self->_ptr / _self->_count ) );
+  return _self->_pal.value( _self->_ptr % _self->_count).dark(dark_factor);
+}
+
 
 QColor ColorSequence::next(const QColor& badColor) {
   QColor color;
