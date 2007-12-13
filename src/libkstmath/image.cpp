@@ -634,29 +634,29 @@ void Image::paint(const CurveRenderContext& context) {
       }
 
       // color map
+
       QColor thisPixel;
       if (image->hasColorMap()) {
         int hXlXDiff = d2i(img_Hx_pix - img_Lx_pix);
         int hYlYDiff = d2i(img_Hy_pix - img_Ly_pix - 1);
         QImage tempImage(hXlXDiff, hYlYDiff, QImage::Format_RGB32);
-        for (int i = 0; i < hXlXDiff; ++i) {
-          for (int j = 0; j < hYlYDiff; ++j) {
+        for (int y = 0; y < tempImage.height(); ++y) {
+          QRgb *scanLine = (QRgb *)tempImage.scanLine(y);
+          for (int x = 0; x < tempImage.width(); ++x) {
             double new_x, new_y;
             if (xLog) {
-              new_x = pow(xLogBase, (i + img_Lx_pix - b_X) / m_X);
+              new_x = pow(xLogBase, (x + img_Lx_pix - b_X) / m_X);
             } else {
-              new_x = (i + img_Lx_pix - b_X) / m_X;
+              new_x = (x + img_Lx_pix - b_X) / m_X;
             }
             if (yLog) {
-              new_y = pow(yLogBase, (j + 1 + img_Ly_pix - b_Y) / m_Y);
+              new_y = pow(yLogBase, (y + 1 + img_Ly_pix - b_Y) / m_Y);
             } else {
-              new_y = (j + 1 + img_Ly_pix - b_Y) / m_Y;
+              new_y = (y + 1 + img_Ly_pix - b_Y) / m_Y;
             }
             thisPixel = image->getMappedColor(new_x, new_y);
             if (thisPixel.isValid()) {
-              tempImage.setPixel(i, j, thisPixel.rgb());
-            } else {
-              tempImage.setPixel(i, j, invalid.rgb());
+              scanLine[x] = thisPixel.rgb();
             }
           }
         }

@@ -151,6 +151,7 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
 
   updateMatrixLabels();
   _outMatrix->setDirty();
+  setDirty();
 }
 
 void CSD::commonConstructor(ObjectStore *store, VectorPtr in_V,
