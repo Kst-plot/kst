@@ -13,7 +13,6 @@ INCLUDEPATH += \
     tmp \
     $$OUTPUT_DIR/src/libkst/tmp
 
-x11:!macx:PROCPS += sysinfo.c psversion.c
 SOURCES += \
     builtindatasources.cpp \
     builtinprimitives.cpp \
@@ -48,13 +47,10 @@ SOURCES += \
     string_kst.cpp \
     stringfactory.cpp \
     vector.cpp \
-    vectorfactory.cpp \
-    #  Needs porting, but is unused anyway
-    #timezones.cpp \
-    # $(PROCPS_COPY) \
-    $$PROCPS 
+    vectorfactory.cpp
 
 !win32:SOURCES += stdinsource.cpp
+!macx:!win32:SOURCES += sysinfo.c psversion.c
 
 HEADERS += \
     builtindatasources.h \

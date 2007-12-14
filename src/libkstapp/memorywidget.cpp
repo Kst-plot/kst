@@ -30,7 +30,7 @@ MemoryWidget::~MemoryWidget() {
 
 
 void MemoryWidget::updateFreeMemory() {
-#ifdef HAVE_LINUX
+#ifdef __linux__
   meminfo();
   unsigned long mi = S(kb_main_free + kb_main_buffers + kb_main_cached);
   setText(tr("%1 MB available").arg(mi / (1024 * 1024)));

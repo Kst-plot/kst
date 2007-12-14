@@ -13,6 +13,8 @@
 
 #include <QFileInfo>
 #include <QMessageBox>
+#include <psversion.h>
+#include <sysinfo.h>
 
 #include "colorsequence.h"
 #include "curve.h"
@@ -546,7 +548,7 @@ void DataWizard::finished() {
   // check for sufficient memory
   unsigned long memoryRequested = 0, memoryAvailable = 1024*1024*1024; // 1GB
   unsigned long frames;
-#ifdef HAVE_LINUX
+#ifdef __linux__
   meminfo();
   memoryAvailable = S(kb_main_free + kb_main_buffers + kb_main_cached);
 #endif

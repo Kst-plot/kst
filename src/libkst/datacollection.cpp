@@ -30,7 +30,7 @@ namespace Kst {
 static QMutex bigLock;
 
 void *realloc(void *ptr, size_t size) {
-#ifdef HAVE_LINUX
+#ifdef __linux__
   QMutexLocker ml(&bigLock);
   meminfo();
   unsigned long bFree = S(kb_main_free + kb_main_buffers + kb_main_cached);
@@ -44,7 +44,7 @@ void *realloc(void *ptr, size_t size) {
 }
 
 void *malloc(size_t size) {
-#ifdef HAVE_LINUX
+#ifdef __linux__
   QMutexLocker ml(&bigLock);
   meminfo();
   unsigned long bFree = S(kb_main_free + kb_main_buffers + kb_main_cached);
