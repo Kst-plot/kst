@@ -14,7 +14,7 @@
 #include "document.h"
 #include "objectstore.h"
 #include "scalarmodel.h"
-#include "stringtablemodel.h"
+#include "stringmodel.h"
 
 #include <datacollection.h>
 #include <QHeaderView>
@@ -45,18 +45,9 @@ void ViewPrimitiveDialog::refresh() {
     _tree->header()->setResizeMode(QHeaderView::ResizeToContents);
     _tree->setModel(_model);
   } else if (_type == String) {
-    StringTableModel *stringModel = new StringTableModel;
-    // TODO: Extract this model so the dialog can be reused, and make a new model
-    // or modification to the model so that it tracks all the string creates and
-    // destroys
-    StringList stringList;  // FIXME
-    foreach (StringPtr v, stringList) {
-      StringModel *vm = new StringModel(v);
-      stringModel->strings().append(vm);
-    }
+    _model = (QAbstractItemModel*)new StringModel(_doc->objectStore());
     _tree->header()->setResizeMode(QHeaderView::ResizeToContents);
-    _tree->setModel(stringModel);
-    _model = stringModel;
+    _tree->setModel(_model);
   }
 }
 

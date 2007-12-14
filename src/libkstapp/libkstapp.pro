@@ -86,7 +86,6 @@ SOURCES += \
     selectionrect.cpp \
     sessionmodel.cpp \
     stringmodel.cpp \
-    stringtablemodel.cpp \
     stroketab.cpp \
     svgitem.cpp \
     tabwidget.cpp \
@@ -170,7 +169,6 @@ HEADERS += \
     selectionrect.h \
     sessionmodel.h \
     stringmodel.h \
-    stringtablemodel.h \
     svgitem.h \
     stroketab.h \
     tabwidget.h \

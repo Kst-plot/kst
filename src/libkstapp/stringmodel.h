@@ -13,15 +13,20 @@
 #define STRINGMODEL_H
 
 #include <QAbstractItemModel>
-#include <QPointer>
-#include <string_kst.h>
+#include "dataobject.h"
+#include "object.h"
 
 namespace Kst {
 
+class ObjectStore;
+
 class StringModel : public QAbstractItemModel
 {
+
+  enum ColumnID { Name, Value };
+
 public:
-  StringModel(String *string);
+  StringModel(ObjectStore *store);
   ~StringModel();
 
   int columnCount(const QModelIndex& parent = QModelIndex()) const;
@@ -30,11 +35,13 @@ public:
   QModelIndex index(int row, int col, const QModelIndex& parent = QModelIndex()) const;
   QModelIndex parent(const QModelIndex& index) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-  Qt::ItemFlags flags(const QModelIndex& index) const;
-  bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
+  void generateObjectList();
 
 private:
-  QPointer<String> _string;
+  QVariant stringData(StringPtr string, const QModelIndex& index) const;
+
+  ObjectStore *_store;
+  ObjectList<Object> _objectList;
 };
 
 }

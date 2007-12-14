@@ -12,13 +12,19 @@
 #include "stringmodel.h"
 
 #include <assert.h>
-#include <QFont>
+#include <objectstore.h>
+#include <dataobject.h>
+#include <datavector.h>
+#include <generatedvector.h>
+#include <datamatrix.h>
+#include <generatedmatrix.h>
+#include <string_kst.h>
 
 namespace Kst {
 
-StringModel::StringModel(String *string)
-: QAbstractItemModel(), _string(string) {
-  assert(string);
+StringModel::StringModel(ObjectStore *store)
+: QAbstractItemModel(), _store(store) {
+  generateObjectList();
 }
 
 
@@ -28,97 +34,112 @@ StringModel::~StringModel() {
 
 int StringModel::columnCount(const QModelIndex& parent) const {
   Q_UNUSED(parent)
-  return 1;
+  return 2;
 }
 
+
+void StringModel::generateObjectList() {
+  ObjectList<DataObject> dol = _store->getObjects<DataObject>();
+  ObjectList<String> sol = _store->getObjects<String>();
+
+  foreach(DataObject* dataObject, dol) {
+    foreach(StringPtr string, dataObject->outputStrings()) {
+      _objectList.append(string);
+    }
+  }
+
+  foreach(String* string, sol) {
+    if (string->orphan()) {
+      _objectList.append(string);
+    }
+  }
+}
 
 int StringModel::rowCount(const QModelIndex& parent) const {
-  Q_UNUSED(parent)
-  return 1;
-}
-
-
-QVariant StringModel::data(const QModelIndex& index, int role) const {
-  QVariant rc;
-  if (index.isValid() && _string) {
-    switch (role) {
-      case Qt::DisplayRole:
-        if (index.column() == 0) {
-          rc = QVariant(_string->tag().displayString());
-        } else {
-          rc = QVariant(_string->value());
-        }
-        break;
-      case Qt::FontRole:
-        {
-          if (_string->editable()) {
-            QFont f;
-            f.setBold(true);
-            rc = f;
-          }
-        }
-        break;
-      default:
-        break;
-    }
+  int rc = 0;
+  if (!parent.isValid()) {
+    rc = _objectList.count();
   }
   return rc;
 }
 
 
-QModelIndex StringModel::index(int row, int col, const QModelIndex& parent) const {
-  Q_UNUSED(parent)
-  Q_UNUSED(col)
-  if (_string) {
-    return createIndex(row, 1);
+QVariant StringModel::data(const QModelIndex& index, int role) const {
+  if (!index.isValid()) {
+    return QVariant();
   }
+
+  if (role != Qt::DisplayRole) {
+    return QVariant();
+  }
+
+  const int row = index.row();
+  if (row < _objectList.count()) {
+    if (StringPtr p = kst_cast<String>(_objectList.at(row))) {
+      return stringData(p, index);
+    }
+  }
+
+  return QVariant();
+}
+
+
+QVariant StringModel::stringData(StringPtr string, const QModelIndex& index) const {
+  QVariant rc;
+
+  if (string) {
+    if (index.column() == Name) {
+      string->readLock();
+      rc.setValue(string->tag().name());
+      string->unlock();
+    } else if (index.column() == Value) {
+      string->readLock();
+      rc = QVariant(string->value());
+      string->unlock();
+    }
+  }
+
+  return rc;
+}
+
+
+QModelIndex StringModel::index(int row, int col, const QModelIndex& parent) const {
+  if (row < 0 || col < 0 || col > 1) {
+    return QModelIndex();
+  }
+
+  const int count = _objectList.count();
+  ObjectPtr object = 0;
+  if (!parent.isValid()) {
+    if (row < count) {
+      return createIndex(row, col);
+    }
+  }
+
   return QModelIndex();
 }
 
 
 QModelIndex StringModel::parent(const QModelIndex& index) const {
-  Q_UNUSED(index)
+  Q_UNUSED(index);
   return QModelIndex();
 }
 
 
 QVariant StringModel::headerData(int section, Qt::Orientation orientation, int role) const {
-  if (!_string || role != Qt::DisplayRole || section != 0) {
+  if (role != Qt::DisplayRole) {
     return QAbstractItemModel::headerData(section, orientation, role);
   }
-  return _string->tag().displayString();
+  switch (section) {
+    case Name:
+      return tr("Name");
+    case Value:
+      return tr("Value");
+    default:
+      break;
+  }
+  return QVariant();
 }
-
-
-Qt::ItemFlags StringModel::flags(const QModelIndex& index) const {
-  Qt::ItemFlags f = QAbstractItemModel::flags(index);
-  if (!_string || !index.isValid()) {
-    return f;
-  }
-
-  if (_string->editable() && index.row() >= 0) {
-    f |= Qt::ItemIsEditable;
-  }
-
-  return f;
-}
-
-
-bool StringModel::setData(const QModelIndex& index, const QVariant& value, int role) {
-  if (role != Qt::EditRole) {
-    return QAbstractItemModel::setData(index, value, role);
-  }
-
-  if (!_string || !index.isValid() || !_string->editable() || index.row() < 0) {
-    return false;
-  }
-
-  QString stringValue = value.toString();
-  qDebug() << "UGLY!! Add setData API to String!";
-  _string->setValue(stringValue);
-  return true;
-}
-
 
 }
 
