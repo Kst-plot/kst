@@ -9,34 +9,35 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef SCALAREDITORDIALOG_H
-#define SCALAREDITORDIALOG_H
+#ifndef VIEWPRIMITIVEDIALOG_H
+#define VIEWPRIMITIVEDIALOG_H
 
 #include <QDialog>
 
-#include "ui_scalareditordialog.h"
+#include "ui_viewprimitivedialog.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
 class Document;
-class ScalarTableModel;
 
-class KST_EXPORT ScalarEditorDialog : public QDialog, Ui::ScalarEditorDialog
+class KST_EXPORT ViewPrimitiveDialog : public QDialog, Ui::ViewPrimitiveDialog
 {
   Q_OBJECT
-  public:
-    ScalarEditorDialog(QWidget *parent, Document *doc);
-    virtual ~ScalarEditorDialog();
 
-    virtual void show();
+  public:
+    enum PrimitiveType { Scalar, String };
+
+    ViewPrimitiveDialog(QWidget *parent, Document *doc, PrimitiveType type);
+    virtual ~ViewPrimitiveDialog();
 
   private:
-    void refreshScalars();
+    void refresh();
 
     Document *_doc;
-    ScalarTableModel *_model;
+    QAbstractItemModel *_model;
+    PrimitiveType _type;
 };
 
 }

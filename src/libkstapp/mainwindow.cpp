@@ -30,9 +30,8 @@
 #include "tabwidget.h"
 #include "ui_aboutdialog.h"
 #include "vectoreditordialog.h"
-#include "scalareditordialog.h"
 #include "matrixeditordialog.h"
-#include "stringeditordialog.h"
+#include "viewprimitivedialog.h"
 #include "view.h"
 #include "viewmanager.h"
 
@@ -508,20 +507,20 @@ void MainWindow::createActions() {
   _viewManagerAct->setIcon(QPixmap(":kst_viewmanager.png"));
   connect(_viewManagerAct, SIGNAL(triggered()), this, SLOT(showViewManager()));
 
-  _vectorEditorAct = new QAction(tr("&Edit Vectors..."), this);
+  _vectorEditorAct = new QAction(tr("&View Vectors..."), this);
   _vectorEditorAct->setStatusTip(tr("Show all vectors in a spreadsheet"));
   connect(_vectorEditorAct, SIGNAL(triggered()), this, SLOT(showVectorEditor()));
 
-  _scalarEditorAct = new QAction(tr("Edit &Scalars..."), this);
+  _scalarEditorAct = new QAction(tr("View &Scalars..."), this);
   _scalarEditorAct->setStatusTip(tr("Show all scalars in a spreadsheet"));
   connect(_scalarEditorAct, SIGNAL(triggered()), this, SLOT(showScalarEditor()));
 
-  _stringEditorAct = new QAction(tr("Edit S&trings..."), this);
+  _stringEditorAct = new QAction(tr("View S&trings..."), this);
   _stringEditorAct->setStatusTip(tr("Show all strings in a spreadsheet"));
   connect(_stringEditorAct, SIGNAL(triggered()), this, SLOT(showStringEditor()));
 
-  _matrixEditorAct = new QAction(tr("Edit &Matrix..."), this);
-  _matrixEditorAct->setStatusTip(tr("Show all matrix in a spreadsheet"));
+  _matrixEditorAct = new QAction(tr("View &Matrix..."), this);
+  _matrixEditorAct->setStatusTip(tr("Show all matrices in a spreadsheet"));
   connect(_matrixEditorAct, SIGNAL(triggered()), this, SLOT(showMatrixEditor()));
 
   _exportGraphicsAct = new QAction(tr("&Export..."), this);
@@ -715,18 +714,14 @@ void MainWindow::showVectorEditor() {
 
 
 void MainWindow::showScalarEditor() {
-  if (!_scalarEditor) {
-    _scalarEditor = new ScalarEditorDialog(this, _doc);
-  }
-  _scalarEditor->show();
+  ViewPrimitiveDialog scalarDialog(this, _doc, ViewPrimitiveDialog::Scalar);
+  scalarDialog.exec();
 }
 
 
 void MainWindow::showStringEditor() {
-  if (!_stringEditor) {
-    _stringEditor = new StringEditorDialog(this);
-  }
-  _stringEditor->show();
+  ViewPrimitiveDialog stringDialog(this, _doc, ViewPrimitiveDialog::String);
+  stringDialog.exec();
 }
 
 void MainWindow::showMatrixEditor() {

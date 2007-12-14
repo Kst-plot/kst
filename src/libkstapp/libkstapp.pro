@@ -81,15 +81,12 @@ SOURCES += \
     powerspectrumdialog.cpp \
     qgetoptions.cpp \
     scalardialog.cpp \
-    scalareditordialog.cpp \
     scalarmodel.cpp \
-    scalartablemodel.cpp \
     scene.cpp \
     selectionrect.cpp \
     sessionmodel.cpp \
     stringmodel.cpp \
     stringtablemodel.cpp \
-    stringeditordialog.cpp \
     stroketab.cpp \
     svgitem.cpp \
     tabwidget.cpp \
@@ -102,7 +99,8 @@ SOURCES += \
     viewgridlayout.cpp \
     viewitem.cpp \
     viewitemdialog.cpp \
-    viewmanager.cpp
+    viewmanager.cpp \
+    viewprimitivedialog.cpp
 
 HEADERS += \
     application.h \
@@ -167,15 +165,12 @@ HEADERS += \
     powerspectrumdialog.h \
     qgetoptions.h \
     scalardialog.h \
-    scalareditordialog.h \
     scalarmodel.h \
-    scalartablemodel.h \
     scene.h \
     selectionrect.h \
     sessionmodel.h \
     stringmodel.h \
     stringtablemodel.h \
-    stringeditordialog.h \
     svgitem.h \
     stroketab.h \
     tabwidget.h \
@@ -189,7 +184,8 @@ HEADERS += \
     viewitemdialog.h \
     viewitem.h \
     viewitemzorder.h \
-    viewmanager.h
+    viewmanager.h \
+    viewprimitivedialog.h
 
 FORMS += \
     aboutdialog.ui \
@@ -222,13 +218,12 @@ FORMS += \
     matrixeditordialog.ui \
     matrixtab.ui \
     powerspectrumtab.ui \
-    scalareditordialog.ui \
     scalartab.ui \
-    stringeditordialog.ui \
     stroketab.ui \
     vectoreditordialog.ui \
     vectortab.ui \
-    viewmanager.ui
+    viewmanager.ui \
+    viewprimitivedialog.ui
 
 RESOURCES += \
     $$TOPLEVELDIR/src/images/images.qrc

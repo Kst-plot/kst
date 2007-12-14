@@ -12,14 +12,18 @@
 #include "scalarmodel.h"
 
 #include <assert.h>
-
-#include <QFont>
+#include <objectstore.h>
+#include <dataobject.h>
+#include <datavector.h>
+#include <generatedvector.h>
+#include <datamatrix.h>
+#include <generatedmatrix.h>
 
 namespace Kst {
 
-ScalarModel::ScalarModel(Scalar *scalar)
-: QAbstractItemModel(), _scalar(scalar) {
-  assert(scalar);
+ScalarModel::ScalarModel(ObjectStore *store)
+: QAbstractItemModel(), _store(store) {
+  generateObjectList();
 }
 
 
@@ -29,104 +33,236 @@ ScalarModel::~ScalarModel() {
 
 int ScalarModel::columnCount(const QModelIndex& parent) const {
   Q_UNUSED(parent)
-  return 1;
+  return 2;
 }
 
+
+void ScalarModel::generateObjectList() {
+  ObjectList<DataVector> dvol = _store->getObjects<DataVector>();
+  ObjectList<GeneratedVector> gvol = _store->getObjects<GeneratedVector>();
+  ObjectList<DataMatrix> dmol = _store->getObjects<DataMatrix>();
+  ObjectList<GeneratedMatrix> gmol = _store->getObjects<GeneratedMatrix>();
+  ObjectList<DataObject> dol = _store->getObjects<DataObject>();
+  ObjectList<Scalar> sol = _store->getObjects<Scalar>();
+
+  foreach(DataVector* vector, dvol) {
+    _objectList.append(vector);
+  }
+
+  foreach(GeneratedVector* vector, gvol) {
+    _objectList.append(vector);
+  }
+
+  foreach(DataMatrix* matrix, dmol) {
+    _objectList.append(matrix);
+  }
+
+  foreach(GeneratedMatrix* matrix, gmol) {
+    _objectList.append(matrix);
+  }
+
+  foreach(DataObject* dataObject, dol) {
+    foreach(VectorPtr vector, dataObject->outputVectors()) {
+      _objectList.append(vector);
+    }
+    foreach(MatrixPtr matrix, dataObject->outputMatrices()) {
+      _objectList.append(matrix);
+    }
+  }
+
+  foreach(Scalar* scalar, sol) {
+    if (scalar->orphan()) {
+      _objectList.append(scalar);
+    }
+  }
+}
 
 int ScalarModel::rowCount(const QModelIndex& parent) const {
-  Q_UNUSED(parent)
-  return 1;
-}
-
-
-QVariant ScalarModel::data(const QModelIndex& index, int role) const {
-  Q_UNUSED(role)
-  Q_UNUSED(index)
-  QVariant rc;
-  if (index.isValid() && _scalar) {
-    switch (role) {
-      case Qt::DisplayRole:
-        if (index.column() == 0) {
-          rc = QVariant(_scalar->tag().displayString());
-        } else {
-          rc = QVariant(_scalar->value());
-        }
-        break;
-      case Qt::FontRole:
-        {
-          if (_scalar->editable()) {
-            QFont f;
-            f.setBold(true);
-            rc = f;
-          }
-        }
-        break;
-      default:
-        break;
+  int rc = 0;
+  if (!parent.isValid()) {
+    rc = _objectList.count();
+  } else if (!parent.parent().isValid()) {
+    if (VectorPtr vector = kst_cast<Vector>(_objectList.at(parent.row()))) {
+      vector->readLock();
+      rc = vector->scalars().count();
+      vector->unlock();
+    } else if (MatrixPtr matrix = kst_cast<Matrix>(_objectList.at(parent.row()))) {
+      matrix->readLock();
+      rc = matrix->scalars().count();
+      matrix->unlock();
     }
   }
   return rc;
 }
 
 
-QModelIndex ScalarModel::index(int row, int col, const QModelIndex& parent) const {
-  Q_UNUSED(parent)
-  Q_UNUSED(col)
-  if (_scalar) {
-    return createIndex(row, 1);
+QVariant ScalarModel::data(const QModelIndex& index, int role) const {
+  if (!index.isValid()) {
+    return QVariant();
   }
-  return QModelIndex();
+
+  if (role != Qt::DisplayRole) {
+    return QVariant();
+  }
+
+  if (index.internalPointer()) {
+    Object* object = static_cast<Object*>(index.internalPointer());
+    if (!object) {
+      return QVariant();
+    }
+
+    if (VectorPtr parent = kst_cast<Vector>(object)) {
+      return vectorOutputData(parent, index);
+    } else if (MatrixPtr parent = kst_cast<Matrix>(object)) {
+      return matrixOutputData(parent, index);
+    }
+  }
+
+  const int row = index.row();
+  if (row < _objectList.count()) {
+    if (ScalarPtr p = kst_cast<Scalar>(_objectList.at(row))) {
+      return scalarData(p, index);
+    } else if (ObjectPtr p = kst_cast<Object>(_objectList.at(row))) {
+      return objectData(p, index);
+    }
+  }
+
+  return QVariant();
+}
+
+
+QVariant ScalarModel::vectorOutputData(VectorPtr parent, const QModelIndex& index) const {
+  QVariant rc;
+
+  if (parent) {
+    if (parent->scalars().count() > index.row()) {
+      if (ScalarPtr scalar = parent->scalars().values()[index.row()]) {
+        return scalarData(scalar, index);
+      }
+    }
+  }
+
+  return rc;
+}
+
+
+QVariant ScalarModel::matrixOutputData(MatrixPtr parent, const QModelIndex& index) const {
+  QVariant rc;
+
+  if (parent) {
+    if (parent->scalars().count() > index.row()) {
+      if (ScalarPtr scalar = parent->scalars().values()[index.row()]) {
+        return scalarData(scalar, index);
+      }
+    }
+  }
+
+  return rc;
+}
+
+
+QVariant ScalarModel::objectData(ObjectPtr object, const QModelIndex& index) const {
+  QVariant rc;
+
+  if (object) {
+    if (index.column() == Name) {
+      object->readLock();
+      rc.setValue(object->tag().displayString());
+      object->unlock();
+    }
+  }
+
+  return rc;
+}
+
+
+QVariant ScalarModel::scalarData(ScalarPtr scalar, const QModelIndex& index) const {
+  QVariant rc;
+
+  if (scalar) {
+    if (index.column() == Name) {
+      scalar->readLock();
+      rc.setValue(scalar->tag().name());
+      scalar->unlock();
+    } else if (index.column() == Value) {
+      scalar->readLock();
+      rc = QVariant(scalar->value());
+      scalar->unlock();
+    }
+  }
+
+  return rc;
+}
+
+
+QModelIndex ScalarModel::index(int row, int col, const QModelIndex& parent) const {
+  if (row < 0 || col < 0 || col > 1) {
+    return QModelIndex();
+  }
+
+  const int count = _objectList.count();
+  ObjectPtr object = 0;
+  if (!parent.isValid()) {
+    if (row < count) {
+      return createIndex(row, col);
+    }
+  } else if (!parent.parent().isValid()) {
+    if (parent.row() >= 0 && parent.row() < count) { 
+      if (VectorPtr vector = kst_cast<Vector>(_objectList.at(parent.row()))) {
+        vector->readLock();
+        if (row < vector->scalars().count()) {
+          object = vector;
+        }
+        vector->unlock();
+      } else if (MatrixPtr matrix = kst_cast<Matrix>(_objectList.at(parent.row()))) {
+        matrix->readLock();
+        if (row < matrix->scalars().count()) {
+          object = matrix;
+        }
+        matrix->unlock();
+      }
+    }
+  }
+
+  if (object) {
+    return createIndex(row, col, object);
+  } else {
+    return QModelIndex();
+  }
 }
 
 
 QModelIndex ScalarModel::parent(const QModelIndex& index) const {
-  Q_UNUSED(index)
-  return QModelIndex();
+  Q_ASSERT(_store);
+  int row = -1;
+
+  if (Vector *vector = static_cast<Vector*>(index.internalPointer())) {
+    row = _objectList.indexOf(vector);
+  } else if (Matrix *matrix = static_cast<Matrix*>(index.internalPointer())) {
+    row = _objectList.indexOf(matrix);
+  }
+
+  if (row < 0) {
+    return QModelIndex();
+  }
+  return createIndex(row, index.column());
 }
 
 
 QVariant ScalarModel::headerData(int section, Qt::Orientation orientation, int role) const {
-  if (!_scalar || role != Qt::DisplayRole || section != 0) {
+  if (role != Qt::DisplayRole) {
     return QAbstractItemModel::headerData(section, orientation, role);
   }
-  return _scalar->tag().displayString();
+  switch (section) {
+    case Name:
+      return tr("Name");
+    case Value:
+      return tr("Value");
+    default:
+      break;
+  }
+  return QVariant();
 }
-
-
-Qt::ItemFlags ScalarModel::flags(const QModelIndex& index) const {
-  Qt::ItemFlags f = QAbstractItemModel::flags(index);
-  if (!_scalar || !index.isValid()) {
-    return f;
-  }
-
-  if (_scalar->editable() && index.row() >= 0) {
-    f |= Qt::ItemIsEditable;
-  }
-
-  return f;
-}
-
-
-bool ScalarModel::setData(const QModelIndex& index, const QVariant& value, int role) {
-  if (role != Qt::EditRole) {
-    return QAbstractItemModel::setData(index, value, role);
-  }
-
-  if (!_scalar || !index.isValid() || !_scalar->editable() || index.row() < 0) {
-    return false;
-  }
-
-  bool ok = false;
-  double scalarValue = value.toDouble(&ok);
-  if (!ok) {
-    return false;
-  }
-
-  qDebug() << "UGLY!! Add setData API to Scalar!";
-  _scalar->setValue(scalarValue);
-  return true;
-}
-
 
 }
 

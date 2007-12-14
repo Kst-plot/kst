@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>ScalarEditorDialog</class>
- <widget class="QDialog" name="ScalarEditorDialog" >
+ <class>ViewPrimitiveDialog</class>
+ <widget class="QDialog" name="ViewPrimitiveDialog" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -10,7 +10,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Scalar View</string>
+   <string>Primitive View</string>
   </property>
   <layout class="QGridLayout" >
    <property name="margin" >
@@ -20,7 +20,7 @@
     <number>6</number>
    </property>
    <item row="0" column="0" >
-    <widget class="QTableView" name="_scalars" />
+    <widget class="QTreeView" name="_tree" />
    </item>
    <item row="1" column="0" >
     <widget class="QDialogButtonBox" name="buttonBox" >
@@ -39,7 +39,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>ScalarEditorDialog</receiver>
+   <receiver>ViewPrimitiveDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -55,7 +55,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>ScalarEditorDialog</receiver>
+   <receiver>ViewPrimitiveDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >

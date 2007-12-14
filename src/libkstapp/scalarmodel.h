@@ -13,15 +13,20 @@
 #define SCALARMODEL_H
 
 #include <QAbstractItemModel>
-#include <QPointer>
-#include <scalar.h>
+#include "dataobject.h"
+#include "object.h"
 
 namespace Kst {
 
+class ObjectStore;
+
 class ScalarModel : public QAbstractItemModel
 {
+
+  enum ColumnID { Name, Value };
+
 public:
-  ScalarModel(Scalar *scalar);
+  ScalarModel(ObjectStore *store);
   ~ScalarModel();
 
   int columnCount(const QModelIndex& parent = QModelIndex()) const;
@@ -30,11 +35,17 @@ public:
   QModelIndex index(int row, int col, const QModelIndex& parent = QModelIndex()) const;
   QModelIndex parent(const QModelIndex& index) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-  Qt::ItemFlags flags(const QModelIndex& index) const;
-  bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
+  void generateObjectList();
 
 private:
-  QPointer<Scalar> _scalar;
+  QVariant dataObjectOutputData(DataObjectPtr parent, const QModelIndex& index) const;
+  QVariant vectorOutputData(VectorPtr parent, const QModelIndex& index) const;
+  QVariant matrixOutputData(MatrixPtr parent, const QModelIndex& index) const;
+  QVariant objectData(ObjectPtr parent, const QModelIndex& index) const;
+  QVariant scalarData(ScalarPtr parent, const QModelIndex& index) const;
+
+  ObjectStore *_store;
+  ObjectList<Object> _objectList;
 };
 
 }
