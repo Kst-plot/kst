@@ -67,6 +67,7 @@ class MainWindow : public QMainWindow
     void open();
     void openFile(const QString &file);
     void print();
+    void exportGraphicsFile(const QString &filename, const QString &format, int w, int h, int display);
 
   private Q_SLOTS:
     void aboutToQuit();

@@ -6,25 +6,35 @@
     <x>0</x>
     <y>0</y>
     <width>402</width>
-    <height>303</height>
+    <height>271</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Export to Graphics File</string>
   </property>
   <layout class="QGridLayout" >
-   <property name="margin" >
+   <property name="leftMargin" >
     <number>11</number>
    </property>
-   <property name="spacing" >
+   <property name="topMargin" >
+    <number>11</number>
+   </property>
+   <property name="rightMargin" >
+    <number>11</number>
+   </property>
+   <property name="bottomMargin" >
+    <number>11</number>
+   </property>
+   <property name="horizontalSpacing" >
+    <number>6</number>
+   </property>
+   <property name="verticalSpacing" >
     <number>6</number>
    </property>
    <item row="0" column="0" >
     <widget class="QLabel" name="TextLabel2" >
      <property name="sizePolicy" >
-      <sizepolicy>
-       <hsizetype>0</hsizetype>
-       <vsizetype>0</vsizetype>
+      <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -40,9 +50,7 @@
    <item row="1" column="0" >
     <widget class="QLabel" name="textLabel1" >
      <property name="sizePolicy" >
-      <sizepolicy>
-       <hsizetype>0</hsizetype>
-       <vsizetype>0</vsizetype>
+      <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -56,24 +64,15 @@
     </widget>
    </item>
    <item row="0" column="1" colspan="4" >
-    <widget class="QLabel" native="1" name="_saveLocation" />
+    <widget class="Kst::FileRequester" native="1" name="_saveLocation" />
    </item>
    <item row="1" column="1" colspan="4" >
-    <widget class="QComboBox" name="_comboBoxFormats" >
+    <widget class="Kst::ComboBox" name="_comboBoxFormats" >
      <property name="sizePolicy" >
-      <sizepolicy>
-       <hsizetype>1</hsizetype>
-       <vsizetype>0</vsizetype>
+      <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="5" >
-    <widget class="QCheckBox" name="_saveEPSVector" >
-     <property name="text" >
-      <string>Save EPS in vector format</string>
      </property>
     </widget>
    </item>
@@ -83,11 +82,20 @@
       <string>Save Options</string>
      </property>
      <layout class="QHBoxLayout" >
-      <property name="margin" >
-       <number>0</number>
-      </property>
       <property name="spacing" >
        <number>6</number>
+      </property>
+      <property name="leftMargin" >
+       <number>0</number>
+      </property>
+      <property name="topMargin" >
+       <number>0</number>
+      </property>
+      <property name="rightMargin" >
+       <number>0</number>
+      </property>
+      <property name="bottomMargin" >
+       <number>0</number>
       </property>
       <item>
        <widget class="QRadioButton" name="_saveOnce" >
@@ -126,11 +134,11 @@
         <property name="suffix" >
          <string>s</string>
         </property>
-        <property name="maximum" >
-         <number>100000</number>
-        </property>
         <property name="minimum" >
          <number>1</number>
+        </property>
+        <property name="maximum" >
+         <number>100000</number>
         </property>
         <property name="value" >
          <number>15</number>
@@ -156,53 +164,15 @@
      </layout>
     </widget>
    </item>
-   <item row="7" column="4" >
-    <widget class="QPushButton" name="_cancel" >
-     <property name="sizePolicy" >
-      <sizepolicy>
-       <hsizetype>0</hsizetype>
-       <vsizetype>0</vsizetype>
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text" >
-      <string>&amp;Cancel</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="3" >
-    <widget class="QPushButton" name="_Apply" >
-     <property name="sizePolicy" >
-      <sizepolicy>
-       <hsizetype>0</hsizetype>
-       <vsizetype>0</vsizetype>
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text" >
-      <string>&amp;Apply</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="2" >
-    <widget class="QPushButton" name="_ok" >
-     <property name="sizePolicy" >
-      <sizepolicy>
-       <hsizetype>0</hsizetype>
-       <vsizetype>0</vsizetype>
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text" >
-      <string>&amp;Ok</string>
-     </property>
-     <property name="default" >
-      <bool>true</bool>
-     </property>
-    </widget>
+   <item row="7" colspan="5">
+      <widget class="QDialogButtonBox" name="_buttonBox" >
+        <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="standardButtons" >
+          <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::NoButton|QDialogButtonBox::Ok</set>
+        </property>
+      </widget>
    </item>
    <item row="3" column="0" colspan="5" >
     <widget class="QGroupBox" name="groupBox1" >
@@ -210,26 +180,45 @@
       <string>Size</string>
      </property>
      <layout class="QGridLayout" >
-      <property name="margin" >
+      <property name="leftMargin" >
        <number>0</number>
       </property>
-      <property name="spacing" >
+      <property name="topMargin" >
+       <number>0</number>
+      </property>
+      <property name="rightMargin" >
+       <number>0</number>
+      </property>
+      <property name="bottomMargin" >
+       <number>0</number>
+      </property>
+      <property name="horizontalSpacing" >
+       <number>6</number>
+      </property>
+      <property name="verticalSpacing" >
        <number>6</number>
       </property>
       <item row="1" column="0" >
        <layout class="QHBoxLayout" >
-        <property name="margin" >
-         <number>0</number>
-        </property>
         <property name="spacing" >
          <number>6</number>
+        </property>
+        <property name="leftMargin" >
+         <number>0</number>
+        </property>
+        <property name="topMargin" >
+         <number>0</number>
+        </property>
+        <property name="rightMargin" >
+         <number>0</number>
+        </property>
+        <property name="bottomMargin" >
+         <number>0</number>
         </property>
         <item>
          <widget class="QLabel" name="TextLabel3" >
           <property name="sizePolicy" >
-           <sizepolicy>
-            <hsizetype>0</hsizetype>
-            <vsizetype>0</vsizetype>
+           <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -250,11 +239,11 @@
           <property name="whatsThis" >
            <string>Width (in Pixels) of the image.</string>
           </property>
-          <property name="maximum" >
-           <number>10000</number>
-          </property>
           <property name="minimum" >
            <number>5</number>
+          </property>
+          <property name="maximum" >
+           <number>10000</number>
           </property>
           <property name="singleStep" >
            <number>20</number>
@@ -267,9 +256,7 @@
         <item>
          <widget class="QLabel" name="TextLabel4" >
           <property name="sizePolicy" >
-           <sizepolicy>
-            <hsizetype>0</hsizetype>
-            <vsizetype>0</vsizetype>
+           <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -290,11 +277,11 @@
           <property name="whatsThis" >
            <string>Height of the image (in pixels).</string>
           </property>
-          <property name="maximum" >
-           <number>10000</number>
-          </property>
           <property name="minimum" >
            <number>5</number>
+          </property>
+          <property name="maximum" >
+           <number>10000</number>
           </property>
           <property name="singleStep" >
            <number>20</number>
@@ -324,11 +311,20 @@
       </item>
       <item row="0" column="0" >
        <layout class="QHBoxLayout" >
-        <property name="margin" >
-         <number>0</number>
-        </property>
         <property name="spacing" >
          <number>6</number>
+        </property>
+        <property name="leftMargin" >
+         <number>0</number>
+        </property>
+        <property name="topMargin" >
+         <number>0</number>
+        </property>
+        <property name="rightMargin" >
+         <number>0</number>
+        </property>
+        <property name="bottomMargin" >
+         <number>0</number>
         </property>
         <item>
          <widget class="QLabel" name="textLabel1_2" >
@@ -388,109 +384,33 @@
      </layout>
     </widget>
    </item>
-   <item row="6" column="0" colspan="5" >
-    <spacer>
-     <property name="orientation" >
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeType" >
-      <enum>QSizePolicy::Expanding</enum>
-     </property>
-     <property name="sizeHint" >
-      <size>
-       <width>380</width>
-       <height>21</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="4" column="0" colspan="5" >
-    <widget class="QGroupBox" name="buttonGroup1" >
-     <property name="title" >
-      <string>Windows</string>
-     </property>
-     <layout class="QHBoxLayout" >
-      <property name="margin" >
-       <number>0</number>
-      </property>
-      <property name="spacing" >
-       <number>6</number>
-      </property>
-      <item>
-       <widget class="QRadioButton" name="_radioButtonAll" >
-        <property name="whatsThis" >
-         <string>Plot all windows in separate files.  The window number  will be appended to the file names.</string>
-        </property>
-        <property name="text" >
-         <string>&amp;All</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="_radioButtonActive" >
-        <property name="whatsThis" >
-         <string>Only plot the active window.</string>
-        </property>
-        <property name="text" >
-         <string>Acti&amp;ve only</string>
-        </property>
-        <property name="checked" >
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer>
-        <property name="orientation" >
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType" >
-         <enum>QSizePolicy::Expanding</enum>
-        </property>
-        <property name="sizeHint" >
-         <size>
-          <width>160</width>
-          <height>31</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="7" column="0" colspan="2" >
-    <spacer>
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeType" >
-      <enum>QSizePolicy::Expanding</enum>
-     </property>
-     <property name="sizeHint" >
-      <size>
-       <width>60</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+ <customwidgets>
+  <customwidget>
+   <class>Kst::ComboBox</class>
+   <extends>QComboBox</extends>
+   <header>combobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Kst::FileRequester</class>
+   <extends>QWidget</extends>
+   <header>filerequester.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>_saveLocation</tabstop>
   <tabstop>_comboBoxFormats</tabstop>
   <tabstop>_comboBoxSizeOption</tabstop>
   <tabstop>_xSize</tabstop>
   <tabstop>_ySize</tabstop>
-  <tabstop>_radioButtonActive</tabstop>
   <tabstop>_saveOnce</tabstop>
   <tabstop>_period</tabstop>
   <tabstop>_ok</tabstop>
   <tabstop>_Apply</tabstop>
   <tabstop>_cancel</tabstop>
-  <tabstop>_radioButtonAll</tabstop>
   <tabstop>_autosave</tabstop>
  </tabstops>
  <resources/>

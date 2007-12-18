@@ -28,6 +28,20 @@ class KST_EXPORT ExportGraphicsDialog : public QDialog, Ui::ExportGraphicsDialog
   public:
     ExportGraphicsDialog(MainWindow *win);
     virtual ~ExportGraphicsDialog();
+
+  public slots:
+    void createFile();
+    void enableWidthHeight();
+    void OKClicked();
+    void apply();
+    void applyAutosave();
+    void updateButtons();
+
+  Q_SIGNALS:
+    void exportGraphics(const QString &filename, const QString &format, int w, int h, int display);
+
+  private:
+    QTimer *_autoSaveTimer;
 };
 
 }

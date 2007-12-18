@@ -217,6 +217,50 @@ void MainWindow::openFile(const QString &file) {
 }
 
 
+void MainWindow::exportGraphicsFile(const QString &filename, const QString &format, int width, int height, int display) {
+  if (!_doc->isOpen()) {
+    return;
+  }
+
+  int viewCount = 0;
+  foreach (QGraphicsView *view, _tabWidget->views()) {
+    QSize size;
+    if (display == 0) {
+      size.setWidth(width);
+      size.setHeight(height);
+    } else if (display == 1) {
+      size.setWidth(width);
+      size.setHeight(width);
+    } else if (display == 2) {
+      QSize sizeWindow(view->geometry().size());
+
+      size.setWidth(width);
+      size.setHeight((int)((double)width * (double)sizeWindow.height() / (double)sizeWindow.width()));
+    } else {
+      QSize sizeWindow(view->geometry().size());
+
+      size.setHeight(height);
+      size.setWidth((int)((double)height * (double)sizeWindow.width() / (double)sizeWindow.height()));
+    }
+
+    QImage image(size, QImage::Format_ARGB32);
+
+    QPainter painter(&image);
+    view->render(&painter, QRectF(0, 0, size.width(), size.height()), QRect(), Qt::KeepAspectRatio);
+
+    QString file = filename;
+    if (viewCount != 0) {
+      file += "_";
+      file += QString::number(viewCount);
+    }
+
+    QImageWriter imageWriter(file, format.toLatin1());
+    imageWriter.write(image);
+    viewCount++;
+  }
+}
+
+
 void MainWindow::print() {
   if (!_doc->isOpen()) {
     return;
@@ -743,6 +787,7 @@ void MainWindow::showDebugDialog() {
 void MainWindow::showExportGraphicsDialog() {
   if (!_exportGraphics) {
     _exportGraphics = new ExportGraphicsDialog(this);
+    connect(_exportGraphics, SIGNAL(exportGraphics(const QString &, const QString &, int, int, int)), this, SLOT(exportGraphicsFile(const QString &, const QString &, int, int, int)));
   }
   _exportGraphics->show();
 }
