@@ -10,9 +10,3 @@ eg, range fro 99999.499 to 99999.5001 shows all ticks as 99999.5
 
 Log mode does not change the axis into log axis.
 
-Vector Dialog:
-  autocompletion in file name selection widget
-
-Matrix: generate gradient is useless and can be removed from dialog.
-Scaling and translation should apply to any matrix.
-
