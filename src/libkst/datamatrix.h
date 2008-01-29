@@ -35,10 +35,12 @@ class KST_EXPORT DataMatrix : public Matrix {
     void change(DataSourcePtr file, const QString &field,
                 int xStart, int yStart,
                 int xNumSteps, int yNumSteps,
-                bool doAve, bool doSkip, int skip);
+                bool doAve, bool doSkip, int skip,
+                double minX, double minY, double stepX, double stepY);
     void changeFrames(int xStart, int yStart,
                 int xNumSteps, int yNumSteps,
-                bool doAve, bool doSkip, int skip);
+                bool doAve, bool doSkip, int skip,
+                double minX, double minY, double stepX, double stepY);
 
     // return properties of DataMatrix
     int reqXStart() const;
@@ -82,7 +84,8 @@ class KST_EXPORT DataMatrix : public Matrix {
     // constructor
     DataMatrix(ObjectStore *store, DataSourcePtr file, const QString &field,
         const ObjectTag& tag, int xStart, int yStart,
-        int xNumSteps, int yNumSteps, bool doAve, bool doSkip, int skip);
+        int xNumSteps, int yNumSteps, bool doAve, bool doSkip, int skip,
+        double minX = 0, double minY = 0, double stepX = 1, double stepY = 1);
 
     // constructor to create a saved DataMatrix
     DataMatrix(ObjectStore *store, const QDomElement &e);
@@ -94,7 +97,8 @@ class KST_EXPORT DataMatrix : public Matrix {
   private:
     void commonConstructor(DataSourcePtr file, const QString &field,
                            int reqXStart, int reqYStart, int reqNX, int reqNY,
-                           bool doAve, bool doSkip, int skip);
+                           bool doAve, bool doSkip, int skip,
+                           double minX, double minY, double stepX, double stepY);
 
     // internal update function, called by update()
     Object::UpdateType doUpdate(bool force = false);

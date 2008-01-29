@@ -167,6 +167,7 @@ PrimitivePtr DataMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStream
 
   bool doAve, doSkip;
   int requestedXStart, requestedYStart, requestedXCount, requestedYCount, skip;
+  double minX, minY, stepX, stepY;
   QString provider, file, field;
 
   while (!xml.atEnd()) {
@@ -185,6 +186,10 @@ PrimitivePtr DataMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStream
         doAve = attrs.value("doave").toString() == "true" ? true : false;
         doSkip = attrs.value("doskip").toString() == "true" ? true : false;
         skip = attrs.value("skip").toString().toInt();
+        minX = attrs.value("xmin").toString().toDouble();
+        minY = attrs.value("ymin").toString().toDouble();
+        stepX = attrs.value("xstep").toString().toDouble();
+        stepY = attrs.value("ystep").toString().toDouble();
       } else {
         return 0;
       }
@@ -211,7 +216,7 @@ PrimitivePtr DataMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStream
   }
 
   DataMatrixPtr matrix = store->createObject<DataMatrix>(tag);
-  matrix->change(dataSource, field, requestedXStart, requestedYStart, requestedXCount, requestedYCount, doAve, doSkip, skip);
+  matrix->change(dataSource, field, requestedXStart, requestedYStart, requestedXCount, requestedYCount, doAve, doSkip, skip, minX, minY, stepX, stepY);
 
   matrix->writeLock();
   matrix->update(0);

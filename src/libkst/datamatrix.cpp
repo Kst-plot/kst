@@ -40,9 +40,10 @@ DataMatrix::DataMatrix(ObjectStore *store, const ObjectTag& tag)
 DataMatrix::DataMatrix(ObjectStore *store, DataSourcePtr file, const QString& field, const ObjectTag& tag,
                        int xStart, int yStart,
                        int xNumSteps, int yNumSteps,
-                       bool doAve, bool doSkip, int skip)
+                       bool doAve, bool doSkip, int skip,
+                       double minX, double minY, double stepX, double stepY)
     : Matrix(store, tag, 0L, 1, 1, 0,0,1,1) {
-  commonConstructor(file, field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip);
+  commonConstructor(file, field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, minX, minY, stepX, stepY);
 }
 
 
@@ -58,6 +59,10 @@ DataMatrix::DataMatrix(ObjectStore *store, const QDomElement &e)
   bool in_doAve = false;
   bool in_doSkip = false;
   int in_skip = 1;
+  double in_xMin = 0;
+  double in_yMin = 0;
+  double in_xStep = 1;
+  double in_yStep = 1;
 
   DataSourceList dsList;
   if (this->store()) {
@@ -91,6 +96,14 @@ DataMatrix::DataMatrix(ObjectStore *store, const QDomElement &e)
         in_doSkip = (e.text() != "0");
       } else if (e.tagName() == "skip") {
         in_skip = e.text().toInt();
+      } else if (e.tagName() == "xmin") {
+        in_xMin = e.text().toDouble();
+      } else if (e.tagName() == "ymin") {
+        in_yMin = e.text().toDouble();
+      } else if (e.tagName() == "xstep") {
+        in_xStep = e.text().toDouble();
+      } else if (e.tagName() == "ystep") {
+        in_yStep = e.text().toDouble();
       }
     }
     n = n.nextSibling();
@@ -108,7 +121,7 @@ DataMatrix::DataMatrix(ObjectStore *store, const QDomElement &e)
   setTagName(tag);
 
   // call common constructor
-  commonConstructor(in_file, in_field, in_xStart, in_yStart, in_xNumSteps, in_yNumSteps, in_doAve, in_doSkip, in_skip);
+  commonConstructor(in_file, in_field, in_xStart, in_yStart, in_xNumSteps, in_yNumSteps, in_doAve, in_doSkip, in_skip, in_xMin, in_yMin, in_xStep, in_yStep);
 }
 
 
@@ -135,6 +148,10 @@ void DataMatrix::save(QXmlStreamWriter &xml) {
     xml.writeAttribute("doave", QVariant(_doAve).toString());
     xml.writeAttribute("doskip", QVariant(_doSkip).toString());
     xml.writeAttribute("skip", QString::number(_skip));
+    xml.writeAttribute("xmin", QString::number(minX()));
+    xml.writeAttribute("ymin", QString::number(minY()));
+    xml.writeAttribute("xstep", QString::number(xStepSize()));
+    xml.writeAttribute("ystep", QString::number(yStepSize()));
     xml.writeEndElement();
   }
 }
@@ -147,10 +164,11 @@ DataMatrix::~DataMatrix() {
 void DataMatrix::change(DataSourcePtr file, const QString &field,
                         int xStart, int yStart,
                         int xNumSteps, int yNumSteps,
-                        bool doAve, bool doSkip, int skip) {
+                        bool doAve, bool doSkip, int skip, double minX, double minY,
+                        double stepX, double stepY) {
   KstWriteLocker l(this);
 
-  commonConstructor(file, field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip);
+  commonConstructor(file, field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, minX, minY, stepX, stepY);
 
   setDirty(true);
 }
@@ -158,10 +176,11 @@ void DataMatrix::change(DataSourcePtr file, const QString &field,
 
 void DataMatrix::changeFrames(int xStart, int yStart,
                         int xNumSteps, int yNumSteps,
-                        bool doAve, bool doSkip, int skip) {
+                        bool doAve, bool doSkip, int skip, double minX, double minY,
+                        double stepX, double stepY) {
   KstWriteLocker l(this);
 
-  commonConstructor(_file, _field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip);
+  commonConstructor(_file, _field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, minX, minY, stepX, stepY);
 
   setDirty(true);
 }
@@ -539,7 +558,7 @@ DataMatrixPtr DataMatrix::makeDuplicate() const {
   DataMatrixPtr matrix = store()->createObject<DataMatrix>(ObjectTag::fromString(newTag));
 
   matrix->writeLock();
-  matrix->change(_file, _field, _reqXStart, _reqYStart, _reqNX, _reqNY, _doAve, _doSkip, _skip);
+  matrix->change(_file, _field, _reqXStart, _reqYStart, _reqNX, _reqNY, _doAve, _doSkip, _skip, _minX, _minY, _stepX, _stepY);
   matrix->update(0);
   matrix->unlock();
 
@@ -549,7 +568,8 @@ DataMatrixPtr DataMatrix::makeDuplicate() const {
 
 void DataMatrix::commonConstructor(DataSourcePtr file, const QString &field,
                                    int reqXStart, int reqYStart, int reqNX, int reqNY,
-                                   bool doAve, bool doSkip, int skip) {
+                                   bool doAve, bool doSkip, int skip, double minX, double minY,
+                                   double stepX, double stepY) {
 //  qDebug() << "constructing DataMatrix " << tag().displayString() << " from file " << file->tag().displayString() << " (" << (void*)(&(*file)) << ")" << endl;
   _reqXStart = reqXStart;
   _reqYStart = reqYStart;
@@ -560,6 +580,10 @@ void DataMatrix::commonConstructor(DataSourcePtr file, const QString &field,
   _doAve = doAve;
   _doSkip = doSkip;
   _skip = skip;
+  _minX = minX;
+  _minY = minY;
+  _stepX = stepX;
+  _stepY = stepY;
 
   _saveable = true;
   _editable = true;
