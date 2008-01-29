@@ -9,6 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#define NO_GENERATED_OPTIONS
+
 #include "matrixdialog.h"
 
 #include "dialogpage.h"
@@ -112,7 +114,6 @@ void MatrixTab::updateEnables() {
   _dataSourceGroup->setEnabled(_readFromSource->isChecked());
   _dataRangeGroup->setEnabled(_readFromSource->isChecked());
   _gradientGroup->setEnabled(_generateGradient->isChecked());
-  _scalingGroup->setEnabled(_generateGradient->isChecked());
 
   if (_dataRangeGroup->isEnabled()) {
     _skip->setEnabled(_doSkip->isChecked());
@@ -128,8 +129,7 @@ void MatrixTab::updateEnables() {
 void MatrixTab::hideGeneratedOptions() {
   _sourceGroup->setVisible(false);
   _gradientGroup->setVisible(false);
-  _scalingGroup->setVisible(false);
-  setMaximumHeight(300);
+  setMaximumHeight(380);
 }
 
 
@@ -482,7 +482,6 @@ void MatrixTab::readFromSourceChanged() {
   _dataSourceGroup->setEnabled(_readFromSource->isChecked());
   _dataRangeGroup->setEnabled(_readFromSource->isChecked());
   _gradientGroup->setEnabled(!_readFromSource->isChecked());
-  _scalingGroup->setEnabled(!_readFromSource->isChecked());
   emit sourceChanged();
 }
 
@@ -605,6 +604,11 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
     _matrixTab->setYNumSteps(_dialogDefaults->value("matrix/yNumSteps",1000).toInt());
     _matrixTab->setXStart(_dialogDefaults->value("matrix/reqXStart",0).toInt());
     _matrixTab->setYStart(_dialogDefaults->value("matrix/reqYStart",0).toInt());
+
+#ifdef NO_GENERATED_OPTIONS
+    _matrixTab->hideGeneratedOptions();
+#endif
+
   } else if (DataMatrixPtr dataMatrix = kst_cast<DataMatrix>(matrix)) {
     _matrixTab->setMatrixMode(MatrixTab::DataMatrix);
     _matrixTab->setFile(dataMatrix->dataSource()->fileName());
@@ -614,6 +618,10 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
     _matrixTab->setYStartCountFromEnd(dataMatrix->yCountFromEnd());
     _matrixTab->setXNumSteps(dataMatrix->xNumSteps());
     _matrixTab->setYNumSteps(dataMatrix->yNumSteps());
+    _matrixTab->setMinX(dataMatrix->minX());
+    _matrixTab->setMinY(dataMatrix->minY());
+    _matrixTab->setStepX(dataMatrix->xStepSize());
+    _matrixTab->setStepY(dataMatrix->yStepSize());
 
     _matrixTab->setXStart(dataMatrix->reqXStart());
     _matrixTab->setYStart(dataMatrix->reqYStart());
@@ -700,6 +708,10 @@ ObjectPtr MatrixDialog::createNewDataMatrix() const {
   const int yStart = _matrixTab->yStartCountFromEnd() ? -1 : _matrixTab->yStart();
   const int xNumSteps = _matrixTab->xReadToEnd() ? -1 : _matrixTab->xNumSteps();
   const int yNumSteps = _matrixTab->yReadToEnd() ? -1 : _matrixTab->yNumSteps();
+  const double minX = _matrixTab->minX();
+  const double minY = _matrixTab->minY();
+  const double stepX = _matrixTab->stepX();
+  const double stepY = _matrixTab->stepY();
 
 //   qDebug() << "Creating new data matrix ===>"
 //            << "\n\tfileName:" << dataSource->fileName()
@@ -719,9 +731,8 @@ ObjectPtr MatrixDialog::createNewDataMatrix() const {
   DataMatrixPtr matrix = _document->objectStore()->createObject<DataMatrix>(tag);
   matrix->change(dataSource, field,
       xStart, yStart,
-      xNumSteps, yNumSteps,
-      doAverage,
-      doSkip, skip);
+      xNumSteps, yNumSteps, doAverage,
+      doSkip, skip, minX, minY, stepX, stepY);
 
 #if 0
   DataMatrixPtr matrix = new DataMatrix(
@@ -794,6 +805,10 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
           int yStart = _matrixTab->yStartDirty() ? _matrixTab->yStart() : matrix->reqYStart();
           int xNumSteps = _matrixTab->xNumStepsDirty() ? _matrixTab->xNumSteps() : matrix->xNumSteps();
           int yNumSteps = _matrixTab->yNumStepsDirty() ? _matrixTab->yNumSteps() : matrix->yNumSteps();
+          const double minX = _matrixTab->minXDirty() ? _matrixTab->minX() : matrix->minX();
+          const double minY = _matrixTab->minYDirty() ? _matrixTab->minY() : matrix->minY();
+          const double stepX = _matrixTab->stepXDirty() ? _matrixTab->stepX() : matrix->xStepSize();
+          const double stepY = _matrixTab->stepYDirty() ? _matrixTab->stepY() : matrix->yStepSize();
 
           if (_matrixTab->xStartCountFromEndDirty()) {
               xStart = _matrixTab->xStartCountFromEnd() ? -1 : _matrixTab->xStart();
@@ -809,7 +824,7 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
           bool doAve = _matrixTab->doAverageDirty() ?  _matrixTab->doAverage() : matrix->doAverage();
 
           matrix->writeLock();
-          matrix->changeFrames(xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip);
+          matrix->changeFrames(xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, minX, minY, stepX, stepY);
           matrix->update(0);
           matrix->unlock();
         }
@@ -829,9 +844,13 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
       const int yStart = _matrixTab->yStartCountFromEnd() ? -1 : _matrixTab->yStart();
       const int xNumSteps = _matrixTab->xReadToEnd() ? -1 : _matrixTab->xNumSteps();
       const int yNumSteps = _matrixTab->yReadToEnd() ? -1 : _matrixTab->yNumSteps();
+      const double minX = _matrixTab->minX();
+      const double minY = _matrixTab->minY();
+      const double stepX = _matrixTab->stepX();
+      const double stepY = _matrixTab->stepY();
 
       dataMatrix->writeLock();
-      dataMatrix->change(dataSource, field, xStart, yStart, xNumSteps, yNumSteps, doAverage, doSkip, skip);
+      dataMatrix->change(dataSource, field, xStart, yStart, xNumSteps, yNumSteps, doAverage, doSkip, skip, minX, minY, stepX, stepY);
       dataMatrix->update(0);
       dataMatrix->unlock();
       setDataMatrixDefaults(dataMatrix);
