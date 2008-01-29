@@ -16,6 +16,8 @@
 #include <QToolButton>
 #include <QHBoxLayout>
 #include <QFileDialog>
+#include <QDirModel>
+#include <QCompleter>
 
 #include <QDebug>
 
@@ -23,31 +25,27 @@ namespace Kst {
 
 FileRequester::FileRequester(QWidget *parent)
   : QWidget(parent) {
+  setup();
+}
+
+
+FileRequester::FileRequester(const QString &file, QWidget *parent)
+  : QWidget(parent), _file(file) {
+  setup();
+}
+
+
+FileRequester::~FileRequester() {
+}
+
+
+void FileRequester::setup() {
 
   _fileEdit = new QLineEdit(this);
   _fileButton = new QToolButton(this);
 
   QHBoxLayout * layout = new QHBoxLayout(this);
   layout->setMargin(0);
-  layout->addWidget(_fileEdit);
-  layout->addWidget(_fileButton);
-  setLayout(layout);
-
-  _fileButton->setIcon(QPixmap(":kst_changefile.png"));
-
-  setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-  connect (_fileEdit, SIGNAL(textChanged(const QString &)), this, SLOT(setFile(const QString &)));
-  connect (_fileButton, SIGNAL(clicked()), this, SLOT(chooseFile()));
-}
-
-
-FileRequester::FileRequester(const QString &file, QWidget *parent)
-  : QWidget(parent), _file(file) {
-
-  _fileEdit = new QLineEdit(this);
-  _fileButton = new QToolButton(this);
-
-  QHBoxLayout * layout = new QHBoxLayout(this);
   layout->addWidget(_fileEdit);
   layout->addWidget(_fileButton);
   setLayout(layout);
@@ -59,10 +57,14 @@ FileRequester::FileRequester(const QString &file, QWidget *parent)
   setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
   connect (_fileEdit, SIGNAL(textEdited(const QString &)), this, SLOT(setFile(const QString &)));
   connect (_fileButton, SIGNAL(clicked()), this, SLOT(chooseFile()));
-}
 
+  QDirModel *dirModel = new QDirModel(this);
+  dirModel->setFilter(QDir::AllEntries);
 
-FileRequester::~FileRequester() {
+  QCompleter *completer = new QCompleter(this);
+  completer->setModel(dirModel); 
+
+  _fileEdit->setCompleter(completer);
 }
 
 

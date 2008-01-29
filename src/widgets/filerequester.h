@@ -41,6 +41,8 @@ class KST_EXPORT FileRequester : public QWidget {
     void chooseFile();
 
   private:
+    void setup();
+
     QLineEdit *_fileEdit;
     QToolButton *_fileButton;
     QString _file;
