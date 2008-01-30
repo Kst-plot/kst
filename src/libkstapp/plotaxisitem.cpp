@@ -246,6 +246,10 @@ void PlotAxisItem::paintMajorTickLabels(QPainter *painter,
     p.setX(p.x() - bound.width() / 2.0);
     bound.moveCenter(p);
 
+    if (bound.top() < rect().top()) {
+      bound.moveBottom(bound.bottom() + (rect().top() - bound.top()));
+    }
+
     if (yLabelRect.isValid()) {
       yLabelRect = yLabelRect.united(bound);
     } else {
@@ -264,6 +268,10 @@ void PlotAxisItem::paintMajorTickLabels(QPainter *painter,
     QPointF p = mapToPlotFromProjection(QPointF(x, projectionRect().top()));
     p.setY(p.y() + bound.height() / 2.0);
     bound.moveCenter(p);
+
+    if (bound.right() > rect().right()) {
+      bound.moveLeft(bound.left() - (bound.right() - rect().right()));
+    }
 
     if (xLabelRect.isValid()) {
       xLabelRect = xLabelRect.united(bound);
