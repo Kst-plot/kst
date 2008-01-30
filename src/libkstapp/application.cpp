@@ -10,7 +10,6 @@
  ***************************************************************************/
 
 #include "application.h"
-#include "qgetoptions.h"
 
 #include "builtinprimitives.h"
 #include "builtindatasources.h"
@@ -52,7 +51,7 @@ Application::Application(int &argc, char **argv)
   DialogLauncher::replaceSelf(new DialogLauncherGui);
 
   connect(this, SIGNAL(aboutToQuit()), _mainWindow, SLOT(aboutToQuit()));
-
+/*
   QGetOptions options;
 
   QVariant file;
@@ -61,7 +60,9 @@ Application::Application(int &argc, char **argv)
   options.getValues();
 
   if (!file.toString().isEmpty())
-    _mainWindow->openFile(file.toString());
+    _mainWindow->openFile(file.toString());*/
+
+  _mainWindow->initFromCommandLine();
 
   _mainWindow->show();
 }

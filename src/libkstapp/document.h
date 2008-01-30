@@ -31,6 +31,8 @@ class Document : public CoreDocument {
 
     QString fileName() const;
 
+    bool initFromCommandLine();
+
     bool open(const QString& file);
     bool save(const QString& to = QString::null);
 

@@ -21,6 +21,7 @@
 #include <primitivefactory.h>
 #include <relationfactory.h>
 #include <viewitem.h>
+#include <commandlineparser.h>
 #include "objectstore.h"
 
 #include <QDebug>
@@ -127,6 +128,11 @@ bool Document::save(const QString& to) {
   return true;
 }
 
+bool Document::initFromCommandLine() {
+  CommandLineParser P;
+
+  return(P.processCommandLine());
+}
 
 bool Document::open(const QString& file) {
   _isOpen = false;

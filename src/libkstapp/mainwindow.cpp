@@ -204,6 +204,15 @@ void MainWindow::open() {
   openFile(fn);
 }
 
+void MainWindow::initFromCommandLine() {
+  delete _doc;
+  _doc = new Document(this);
+  bool ok = _doc->initFromCommandLine();
+  if (!ok) {
+    //FIXME: should now exit cleanly
+    exit(0);
+  }
+}
 
 void MainWindow::openFile(const QString &file) {
   delete _doc;

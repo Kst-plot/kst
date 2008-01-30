@@ -31,6 +31,7 @@ SOURCES += \
     changedatasampledialog.cpp \
     changefiledialog.cpp \
     choosecolordialog.cpp \
+    commandlineparser.cpp \
     contenttab.cpp \
     csddialog.cpp \
     curvedialog.cpp \
@@ -79,7 +80,6 @@ SOURCES += \
     plotitemmanager.cpp \
     plotrenderitem.cpp \
     powerspectrumdialog.cpp \
-    qgetoptions.cpp \
     scalardialog.cpp \
     scalarmodel.cpp \
     scene.cpp \
@@ -113,6 +113,7 @@ HEADERS += \
     changedatasampledialog.h \
     changefiledialog.h \
     choosecolordialog.h \
+    commandlineparser.h\
     contenttab.h \
     csddialog.h \
     curvedialog.h \
@@ -162,7 +163,6 @@ HEADERS += \
     plotitemmanager.h \
     plotrenderitem.h \
     powerspectrumdialog.h \
-    qgetoptions.h \
     scalardialog.h \
     scalarmodel.h \
     scene.h \
