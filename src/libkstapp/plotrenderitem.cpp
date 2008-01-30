@@ -1384,7 +1384,7 @@ void ZoomYInCommand::applyZoomTo(PlotRenderItem *item) {
 
   QRectF compute = item->projectionRect();
 
-  qreal dy = compute.width() * 0.1666666;
+  qreal dy = compute.height() * 0.1666666;
   compute.setTop(compute.top() + dy);
   compute.setBottom(compute.bottom() - dy);
 
