@@ -22,7 +22,7 @@
 #include <QGraphicsSceneHoverEvent>
 #include <QGraphicsSceneContextMenuEvent>
 
-// #define MAJOR_TICK_DEBUG
+//#define MAJOR_TICK_DEBUG
 
 namespace Kst {
 
@@ -239,7 +239,7 @@ void PlotAxisItem::paintMajorTickLabels(QPainter *painter,
   QRectF yLabelRect;
   foreach (qreal y, yMajorTicks) {
     int flags = Qt::TextSingleLine | Qt::AlignVCenter;
-    QString label = QString::number(y);
+    QString label = QString::number(y, 'g', 15);
 
     QRectF bound = painter->boundingRect(QRectF(), flags, label);
     QPointF p = mapToPlotFromProjection(QPointF(projectionRect().left(), y));
@@ -262,7 +262,7 @@ void PlotAxisItem::paintMajorTickLabels(QPainter *painter,
   QRectF xLabelRect;
   foreach (qreal x, xMajorTicks) {
     int flags = Qt::TextSingleLine | Qt::AlignVCenter;
-    QString label = QString::number(x);
+    QString label = QString::number(x, 'g', 15);
 
     QRectF bound = painter->boundingRect(QRectF(), flags, label);
     QPointF p = mapToPlotFromProjection(QPointF(x, projectionRect().top()));
