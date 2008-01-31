@@ -12,6 +12,9 @@
 #ifndef KSTCOMMANDLINEPARSER_H
 #define KSTCOMMANDLINEPARSER_H
 
+#include "document.h"
+#include "datavector.h"
+
 #include <QStringList>
 namespace Kst {
 
@@ -20,7 +23,7 @@ namespace Kst {
 */
 class CommandLineParser{
 public:
-  CommandLineParser();
+  CommandLineParser(Document *doc);
   ~CommandLineParser();
 
   bool processCommandLine();
@@ -43,10 +46,13 @@ private:
   QStringList _fileNames;
   QStringList _arguments;
 
+  Document *_document;
+
   void _setIntArg(int *arg, QString Message);
   void _setDoubleArg(double *arg, QString Message);
   void _setStringArg(QString &arg, QString Message);
   void usage(QString Message = "");
+  DataVectorPtr createOrFindDataVector(QString field, DataSourcePtr ds);
 };
 
 }

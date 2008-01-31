@@ -129,7 +129,7 @@ bool Document::save(const QString& to) {
 }
 
 bool Document::initFromCommandLine() {
-  CommandLineParser P;
+  CommandLineParser P(this);
 
   return(P.processCommandLine());
 }

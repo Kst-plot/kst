@@ -11,21 +11,26 @@
 //
 #include "commandlineparser.h"
 #include "plotitem.h"
+#include "datasource.h"
+#include "objectstore.h"
 
 #include <iostream>
 #include <QCoreApplication>
+#include <QFileInfo>
 #include "kst_i18n.h"
 
 namespace Kst {
 
-CommandLineParser::CommandLineParser():
+CommandLineParser::CommandLineParser(Document *doc):
       _doAve(false), _doSkip(false), _doConsecutivePlots(true), _useBargraph(false), 
       _useLines(true), _usePoints(false), _sampleRate(1.0), _numFrames(-1), _startFrame(0),
-      _skip(0), _plotName(), _errorField(), _fileName(), _xField() {
-  
+      _skip(0), _plotName(), _errorField(), _fileName(), _xField(QString("INDEX")) {
+
   Q_ASSERT(QCoreApplication::instance());
   _arguments = QCoreApplication::instance()->arguments();
   _arguments.takeFirst(); //appname
+
+  _document = doc;
 
   _fileNames.clear();
 }
@@ -36,8 +41,6 @@ CommandLineParser::~CommandLineParser() {
 
 void CommandLineParser::usage(QString Message) {
   //FIXME: proper printing and exiting!
-  std::cerr << Message.latin1();
-exit(0);
   std::cerr <<
   i18n("KST Command Line Usage\n"
 "Load a kst file:\n"
@@ -100,6 +103,9 @@ exit(0);
 "Plot column 2 and column 3 in plot P1 and column 4 in plot P2\n"
 "       kst data.dat -P P1 -y 2 -y 3 -P P2 -y 4\n"
       ).latin1();
+
+  std::cerr << Message.latin1();
+
   exit(0);
 }
 
@@ -142,10 +148,31 @@ void CommandLineParser::_setStringArg(QString &arg, QString Message) {
 
 }
 
+DataVectorPtr CommandLineParser::createOrFindDataVector(QString field, DataSourcePtr ds) {
+    DataVectorPtr xv;
+
+    //FIXME: currently, this just makes the vector, without first checking if there is already
+    //a vector with the same properties....
+    Q_ASSERT(_document && _document->objectStore());
+    const ObjectTag tag = _document->objectStore()->suggestObjectTag<DataVector>(field, ds->tag());
+
+    xv = _document->objectStore()->createObject<DataVector>(tag);
+
+    xv->writeLock();
+    xv->change(ds, field, _startFrame, _numFrames, _skip, _skip>0, _doAve);
+
+    xv->update(0);
+    xv->unlock();
+
+    return xv;
+}
+
+
 bool CommandLineParser::processCommandLine() {
   QString arg, param;
   bool ok=true;
   bool first_plot = true;
+  bool new_fileList=true;
   PlotItem *plotItem = 0;
 
   while (1) {
@@ -192,28 +219,55 @@ bool CommandLineParser::processCommandLine() {
       _usePoints = false;
     } else if (arg == "-x") {
       _setStringArg(_xField,i18n("Usage: -x <xfieldname>\n"));
-      //FIXME: now create the XVector
     } else if (arg == "-e") {
       _setStringArg(_errorField,i18n("Usage: -P <errorfieldname>\n"));
-      //FIXME: now create the error field!
     } else if (arg == "-r") {
       _setDoubleArg(&_sampleRate,i18n("Usage: -r <samplerate>\n"));
     } else if (arg == "-y") {
       QString field;
       _setStringArg(field,i18n("Usage: -y <fieldname>\n"));
       //FIXME: Create the YVector, and the curve
+      if (_fileNames.size()<1) {
+        usage(i18n("No data files specified\n"));
+      }
+      for (int i_file=0; i_file<_fileNames.size(); i_file++) { 
+        QString file = _fileNames.at(i_file);
+        QFileInfo info(file);
+        if (!info.exists() || !info.isFile())
+          usage(i18n("file %1 does not exist\n").arg(file));
+
+        DataSourcePtr ds = DataSource::findOrLoadSource(_document->objectStore(), file);
+
+        DataVectorPtr xv = createOrFindDataVector(_xField, ds);
+        DataVectorPtr yv = createOrFindDataVector(field, ds);
+
+        //FIXME create curve
+        //FIXME create or find evector
+        //FIXME place curve in plot
+      }
+
+      new_fileList = true;
     } else if (arg == "-p") {
       QString field;
       _setStringArg(field,i18n("Usage: -p <fieldname>\n"));
       //FIXME: Create the Vector, and the psd
+      new_fileList = true;
     } else if (arg == "-h") {
       QString field;
       _setStringArg(field,i18n("Usage: -h <fieldname>\n"));
       //FIXME: Create the Vector, and the histogram
+      new_fileList = true;
     } else if (arg == "-z") {
       QString field;
       _setStringArg(field,i18n("Usage: -z <fieldname>\n"));
       //FIXME: Create the matrix, and the image
+      new_fileList = true;
+    } else { // arg is not an option... must be a file
+      if (new_fileList) { // if the file list has been used, clear it.
+        _fileNames.clear();
+        new_fileList = false;
+      }
+      _fileNames.append(arg);
     }
   }
   return (true);
