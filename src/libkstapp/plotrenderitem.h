@@ -99,6 +99,9 @@ class PlotRenderItem : public ViewItem
     QRectF mapToProjection(const QRectF &rect) const;
     QRectF mapFromProjection(const QRectF &rect) const;
 
+Q_SIGNALS:
+    void projectionRectChanged();
+
 public Q_SLOTS:
     void zoomFixedExpression(const QRectF &projection);
     void zoomMaximum();

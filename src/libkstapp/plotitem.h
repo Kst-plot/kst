@@ -23,12 +23,17 @@
 
 namespace Kst {
 
-class PlotAxisItem;
-
 class PlotItem : public ViewItem, public PlotItemInterface
 {
   Q_OBJECT
   public:
+    enum MajorTickMode {
+      Coarse = 2,
+      Normal = 5,
+      Fine = 10,
+      VeryFine = 15
+    };
+
     PlotItem(View *parent);
     virtual ~PlotItem();
 
@@ -38,9 +43,22 @@ class PlotItem : public ViewItem, public PlotItemInterface
     PlotRenderItem *renderItem(PlotRenderItem::RenderType type);
 
     virtual void save(QXmlStreamWriter &xml);
+
     virtual void paint(QPainter *painter);
 
-    /* This is the rectangle of the PlotAxisItem and includes the axis labels. */
+    virtual void paintMajorGridLines(QPainter *painter,
+                                     const QList<qreal> &xMajorTicks,
+                                     const QList<qreal> &yMajorTicks);
+
+    virtual void paintMajorTicks(QPainter *painter,
+                                 const QList<qreal> &xMajorTicks,
+                                 const QList<qreal> &yMajorTicks);
+
+    virtual void paintMajorTickLabels(QPainter *painter,
+                                      const QList<qreal> &xMajorTicks,
+                                      const QList<qreal> &yMajorTicks);
+
+    /* This is the rectangle of the PlotAxis and includes the axis labels. */
     QRectF plotAxisRect() const;
 
     /* This is the rectangle of the PlotRenderItem's and includes the actual curves. */
@@ -54,6 +72,9 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     qreal marginWidth() const;
     qreal marginHeight() const;
+
+    qreal labelMarginWidth() const;
+    qreal labelMarginHeight() const;
 
     QString leftLabel() const;
     QString bottomLabel() const;
@@ -74,17 +95,42 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     void setLabelsVisible(bool visible);
 
-    PlotAxisItem *plotAxisItem() const { return _axisItem; }
+    qreal axisMarginWidth() const;
+    qreal axisMarginHeight() const;
+
+    MajorTickMode xAxisMajorTickMode() const;
+    void setXAxisMajorTickMode(MajorTickMode mode);
+
+    MajorTickMode yAxisMajorTickMode() const;
+    void setYAxisMajorTickMode(MajorTickMode mode);
+
+    QPointF mapFromAxisToProjection(const QPointF &point) const;
+    QPointF mapToAxisFromProjection(const QPointF &point) const;
+    QRectF mapFromAxisToProjection(const QRectF &rect) const;
+    QRectF mapToAxisFromProjection(const QRectF &rect) const;
+
+    QPointF mapFromPlotToProjection(const QPointF &point) const;
+    QPointF mapToPlotFromProjection(const QPointF &point) const;
+    QRectF mapFromPlotToProjection(const QRectF &rect) const;
+    QRectF mapToPlotFromProjection(const QRectF &rect) const;
+
+    void triggerUpdate() { emit geometryChanged(); update(rect()); }
 
   Q_SIGNALS:
-    void labelVisibilityChanged();
+    void projectionRectChanged();
+    void marginsChanged();
+    void updatePlotRect();
+
+  protected:
+    virtual QTransform projectionAxisTransform() const;
+    virtual QTransform projectionPlotTransform() const;
 
   private:
-    qreal calculatedMarginWidth() const;
-    void setCalculatedMarginWidth(qreal marginWidth);
+    qreal calculatedLabelMarginWidth() const;
+    void setCalculatedLabelMarginWidth(qreal marginWidth);
 
-    qreal calculatedMarginHeight() const;
-    void setCalculatedMarginHeight(qreal marginHeight);
+    qreal calculatedLabelMarginHeight() const;
+    void setCalculatedLabelMarginHeight(qreal marginHeight);
 
     QRectF horizontalLabelRect(bool calc) const;
     QRectF verticalLabelRect(bool calc) const;
@@ -98,16 +144,40 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void paintTopLabel(QPainter *painter);
     QSizeF calculateTopLabelBound(QPainter *painter);
 
+    qreal calculatedAxisMarginWidth() const;
+    void setCalculatedAxisMarginWidth(qreal marginWidth);
+
+    qreal calculatedAxisMarginHeight() const;
+    void setCalculatedAxisMarginHeight(qreal marginHeight);
+
+    void computeMajorTicks(QList<qreal> *xMajorTicks, QList<qreal> *yMajorTicks) const;
+    qreal computedMajorTickSpacing(Qt::Orientation orientation) const;
+
+    QSizeF calculateXTickLabelBound(QPainter *painter, const QList<qreal> &xMajorTicks);
+    QSizeF calculateYTickLabelBound(QPainter *painter, const QList<qreal> &yMajorTicks);
+
+  private Q_SLOTS:
+    void calculateProjectionRect();
+
   private:
-    PlotAxisItem *_axisItem;
     QHash<PlotRenderItem::RenderType, PlotRenderItem*> _renderers;
     bool _isTiedZoom;
     bool _isLeftLabelVisible;
     bool _isBottomLabelVisible;
     bool _isRightLabelVisible;
     bool _isTopLabelVisible;
-    qreal _calculatedMarginWidth;
-    qreal _calculatedMarginHeight;
+    qreal _calculatedLabelMarginWidth;
+    qreal _calculatedLabelMarginHeight;
+    qreal _calculatedAxisMarginWidth;
+    qreal _calculatedAxisMarginHeight;
+
+    QRectF _projectionRect;
+
+    QRectF _yLabelRect;
+    QRectF _xLabelRect;
+
+    MajorTickMode _xAxisMajorTickMode;
+    MajorTickMode _yAxisMajorTickMode;
 
     friend class ViewGridLayout;
 };

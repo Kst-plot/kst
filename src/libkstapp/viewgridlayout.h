@@ -45,8 +45,11 @@ class ViewGridLayout : public QObject
     QSizeF margin() const { return _margin; }
     void setMargin(const QSizeF &margin) { _margin = margin; }
 
-    qreal plotMarginWidth(const PlotItem *plotItem) const;
-    qreal plotMarginHeight(const PlotItem *plotItem) const;
+    qreal plotLabelMarginWidth(const PlotItem *plotItem) const;
+    qreal plotLabelMarginHeight(const PlotItem *plotItem) const;
+
+    qreal plotAxisMarginWidth(const PlotItem *plotItem) const;
+    qreal plotAxisMarginHeight(const PlotItem *plotItem) const;
 
     bool isEnabled() const;
     void setEnabled(bool enabled);
@@ -74,6 +77,11 @@ class ViewGridLayout : public QObject
       QRectF rect;
     };
 
+    struct PlotMargins {
+      qreal labelMargin;
+      qreal axisMargin;
+    };
+
   private:
     void updateSharedAxis();
     void shareAxisWithPlotToLeft(LayoutItem item);
@@ -90,8 +98,8 @@ class ViewGridLayout : public QObject
     QSizeF _margin;
 
     QList<LayoutItem> _items;
-    QHash<int, qreal> _plotMarginWidth;
-    QHash<int, qreal> _plotMarginHeight;
+    QHash<int, PlotMargins> _plotMarginWidth;
+    QHash<int, PlotMargins> _plotMarginHeight;
     QHash<const ViewItem*, LayoutItem> _itemInfos;
     QHash< QPair<int, int>, LayoutItem> _itemLayouts;
 };

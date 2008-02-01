@@ -66,6 +66,10 @@ void ViewGridLayout::addViewItem(ViewItem *viewItem, int row, int column, int ro
   _rowCount = maxRow > _rowCount ? maxRow : _rowCount;
   _columnCount = maxColumn > _columnCount ? maxColumn : _columnCount;
 
+  //Watch for margin changes
+  if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem))
+    connect(plotItem, SIGNAL(marginsChanged()), this, SLOT(update()));
+
   //FIXME these could be consolidated
   _items.append(item);
   _itemInfos.insert(viewItem, item);
@@ -83,22 +87,44 @@ int ViewGridLayout::columnCount() const {
 }
 
 
-qreal ViewGridLayout::plotMarginWidth(const PlotItem *plotItem) const {
+qreal ViewGridLayout::plotLabelMarginWidth(const PlotItem *plotItem) const {
   if (_itemInfos.contains(plotItem)) {
     LayoutItem item = _itemInfos.value(plotItem);
     if (_plotMarginWidth.contains(item.columnSpan))
-      return _plotMarginWidth.value(item.columnSpan);
+      return _plotMarginWidth.value(item.columnSpan).labelMargin;
   }
 
   return 0.0;
 }
 
 
-qreal ViewGridLayout::plotMarginHeight(const PlotItem *plotItem) const {
+qreal ViewGridLayout::plotLabelMarginHeight(const PlotItem *plotItem) const {
   if (_itemInfos.contains(plotItem)) {
     LayoutItem item = _itemInfos.value(plotItem);
     if (_plotMarginHeight.contains(item.rowSpan))
-      return _plotMarginHeight.value(item.rowSpan);
+      return _plotMarginHeight.value(item.rowSpan).labelMargin;
+  }
+
+  return 0.0;
+}
+
+
+qreal ViewGridLayout::plotAxisMarginWidth(const PlotItem *plotItem) const {
+  if (_itemInfos.contains(plotItem)) {
+    LayoutItem item = _itemInfos.value(plotItem);
+    if (_plotMarginWidth.contains(item.columnSpan))
+      return _plotMarginWidth.value(item.columnSpan).axisMargin;
+  }
+
+  return 0.0;
+}
+
+
+qreal ViewGridLayout::plotAxisMarginHeight(const PlotItem *plotItem) const {
+  if (_itemInfos.contains(plotItem)) {
+    LayoutItem item = _itemInfos.value(plotItem);
+    if (_plotMarginHeight.contains(item.rowSpan))
+      return _plotMarginHeight.value(item.rowSpan).axisMargin;
   }
 
   return 0.0;
@@ -180,6 +206,9 @@ void ViewGridLayout::update() {
     item.viewItem->setPos(itemRect.topLeft());
     item.viewItem->setViewRect(QRectF(QPoint(0,0), itemRect.size()));
 
+    if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem))
+      emit plotItem->updatePlotRect();
+
 #ifdef DEBUG_LAYOUT
     qDebug() << "layout"
              << "row:" << item.row
@@ -202,15 +231,35 @@ void ViewGridLayout::updatePlotMargins() {
     if (!plotItem)
       continue;
 
-    qreal marginForColumnSpan = plotItem->calculatedMarginWidth();
-    if (_plotMarginWidth.contains(item.columnSpan))
-      marginForColumnSpan = qMax(marginForColumnSpan, _plotMarginWidth.value(item.columnSpan));
-    _plotMarginWidth.insert(item.columnSpan, marginForColumnSpan);
+    {
+      qreal labelMargin = plotItem->calculatedLabelMarginWidth();
+      qreal axisMargin = plotItem->calculatedAxisMarginWidth();
 
-    qreal marginForRowSpan = plotItem->calculatedMarginHeight();
-    if (_plotMarginHeight.contains(item.rowSpan))
-      marginForRowSpan = qMax(marginForRowSpan, _plotMarginHeight.value(item.rowSpan));
-    _plotMarginHeight.insert(item.rowSpan, marginForRowSpan);
+      if (_plotMarginWidth.contains(item.columnSpan)) {
+        labelMargin = qMax(labelMargin, _plotMarginWidth.value(item.columnSpan).labelMargin);
+        axisMargin = qMax(axisMargin, _plotMarginWidth.value(item.columnSpan).axisMargin);
+      }
+
+      PlotMargins marginsForColumnSpan;
+      marginsForColumnSpan.labelMargin = labelMargin;
+      marginsForColumnSpan.axisMargin = axisMargin;
+      _plotMarginWidth.insert(item.columnSpan, marginsForColumnSpan);
+    }
+
+    {
+      qreal labelMargin = plotItem->calculatedLabelMarginHeight();
+      qreal axisMargin = plotItem->calculatedAxisMarginHeight();
+
+      if (_plotMarginHeight.contains(item.rowSpan)) {
+        labelMargin = qMax(labelMargin, _plotMarginHeight.value(item.rowSpan).labelMargin);
+        axisMargin = qMax(axisMargin, _plotMarginHeight.value(item.rowSpan).axisMargin);
+      }
+
+      PlotMargins marginsForRowSpan;
+      marginsForRowSpan.labelMargin = labelMargin;
+      marginsForRowSpan.axisMargin = axisMargin;
+      _plotMarginHeight.insert(item.rowSpan, marginsForRowSpan);
+    }
   }
 }
 

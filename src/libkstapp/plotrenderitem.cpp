@@ -12,7 +12,6 @@
 #include "plotrenderitem.h"
 
 #include "plotitem.h"
-#include "plotaxisitem.h"
 #include "viewitemzorder.h"
 #include "plotitemmanager.h"
 #include "application.h"
@@ -48,14 +47,17 @@ PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
   setAllowedGripModes(0);
   setAllowedGrips(0);
 
-  connect(parentItem->plotAxisItem(), SIGNAL(marginChanged()),
+  connect(parentItem, SIGNAL(geometryChanged()),
           this, SLOT(updateGeometry()));
-  connect(parentItem->plotAxisItem(), SIGNAL(geometryChanged()),
+  connect(parentItem, SIGNAL(marginsChanged()),
           this, SLOT(updateGeometry()));
-  connect(parentItem, SIGNAL(labelVisibilityChanged()),
+  connect(parentItem, SIGNAL(updatePlotRect()),
           this, SLOT(updateGeometry()));
   connect(parentItem->parentView(), SIGNAL(viewModeChanged(View::ViewMode)),
           this, SLOT(updateViewMode()));
+
+  connect(this, SIGNAL(projectionRectChanged()),
+          parentItem, SLOT(calculateProjectionRect()));
 
   updateGeometry(); //the initial rect
   updateViewMode(); //the initial view
@@ -173,7 +175,9 @@ void PlotRenderItem::setProjectionRect(const QRectF &rect) {
             << "computedProjectionRect" << computedProjectionRect() << "\n"
             << "before:" << _projectionRect << "\n"
             << "after:" << rect << endl;
+
   _projectionRect = rect;
+  emit projectionRectChanged();
 }
 
 
@@ -736,7 +740,7 @@ void PlotRenderItem::zoomLogX() {
   qDebug() << "zoomLogX" << endl;
   setXAxisLog(_zoomLogX->isChecked());
   setProjectionRect(computedProjectionRect()); //need to recompute
-  update();
+  plotItem()->update();
 }
 
 
@@ -797,7 +801,6 @@ void PlotRenderItem::zoomLogY() {
   qDebug() << "zoomLogY" << endl;
   setYAxisLog(_zoomLogY->isChecked());
   setProjectionRect(computedProjectionRect()); //need to recompute
-  update();
 }
 
 
@@ -892,14 +895,13 @@ ZoomState PlotRenderItem::currentZoomState() {
 
 
 void PlotRenderItem::setCurrentZoomState(ZoomState zoomState) {
-  setProjectionRect(zoomState.projectionRect);
   setXAxisZoomMode(ZoomMode(zoomState.xAxisZoomMode));
   setYAxisZoomMode(ZoomMode(zoomState.yAxisZoomMode));
   setXAxisLog(zoomState.isXAxisLog);
   setYAxisLog(zoomState.isYAxisLog);
   setXLogBase(zoomState.xLogBase);
   setYLogBase(zoomState.yLogBase);
-  update();
+  setProjectionRect(zoomState.projectionRect);
 }
 
 
@@ -1109,7 +1111,6 @@ void ZoomFixedExpressionCommand::applyZoomTo(PlotRenderItem *item) {
   item->setXAxisZoomMode(PlotRenderItem::FixedExpression);
   item->setYAxisZoomMode(PlotRenderItem::FixedExpression);
   item->setProjectionRect(_fixed);
-  item->update();
 }
 
 
@@ -1120,7 +1121,6 @@ void ZoomMaximumCommand::applyZoomTo(PlotRenderItem *item) {
   item->setXAxisZoomMode(PlotRenderItem::Auto);
   item->setYAxisZoomMode(PlotRenderItem::AutoBorder);
   item->setProjectionRect(item->computedProjectionRect());
-  item->update();
 }
 
 
@@ -1131,7 +1131,6 @@ void ZoomMaxSpikeInsensitiveCommand::applyZoomTo(PlotRenderItem *item) {
   item->setXAxisZoomMode(PlotRenderItem::Auto);
   item->setYAxisZoomMode(PlotRenderItem::SpikeInsensitive);
   item->setProjectionRect(item->computedProjectionRect());
-  item->update();
 }
 
 
@@ -1142,7 +1141,6 @@ void ZoomYMeanCenteredCommand::applyZoomTo(PlotRenderItem *item) {
   item->setXAxisZoomMode(PlotRenderItem::Auto);
   item->setYAxisZoomMode(PlotRenderItem::MeanCentered);
   item->setProjectionRect(item->computedProjectionRect());
-  item->update();
 }
 
 
@@ -1156,8 +1154,6 @@ void ZoomXMaximumCommand::applyZoomTo(PlotRenderItem *item) {
                            item->projectionRect().y(),
                            compute.width(),
                            item->projectionRect().height()));
-
-  item->update();
 }
 
 /*
@@ -1211,7 +1207,6 @@ void ZoomXOutCommand::applyZoomTo(PlotRenderItem *item) {
   compute.setRight(compute.right() + dx);
 
   item->setProjectionRect(compute);
-  item->update();
 }
 
 
@@ -1230,7 +1225,6 @@ void ZoomXInCommand::applyZoomTo(PlotRenderItem *item) {
   compute.setRight(compute.right() - dx);
 
   item->setProjectionRect(compute);
-  item->update();
 }
 
 
@@ -1249,7 +1243,6 @@ void ZoomNormalizeXToYCommand::applyZoomTo(PlotRenderItem *item) {
 
   item->setXAxisZoomMode(PlotRenderItem::FixedExpression);
   item->setProjectionRect(compute);
-  item->update();
 }
 
 
@@ -1290,7 +1283,6 @@ void ZoomYLocalMaximumCommand::applyZoomTo(PlotRenderItem *item) {
   compute.setBottom(maximum);
 
   item->setProjectionRect(compute);
-  item->update();
 }
 
 
@@ -1304,8 +1296,6 @@ void ZoomYMaximumCommand::applyZoomTo(PlotRenderItem *item) {
                            compute.y(),
                            item->projectionRect().width(),
                            compute.height()));
-
-  item->update();
 }
 
 
@@ -1326,7 +1316,6 @@ void ZoomYUpCommand::applyZoomTo(PlotRenderItem *item) {
   compute.setBottom(compute.bottom() + dy);
 
   item->setProjectionRect(compute);
-  item->update();
 }
 
 
@@ -1347,7 +1336,6 @@ void ZoomYDownCommand::applyZoomTo(PlotRenderItem *item) {
   compute.setBottom(compute.bottom() - dy);
 
   item->setProjectionRect(compute);
-  item->update();
 }
 
 
@@ -1408,7 +1396,6 @@ void ZoomNormalizeYToXCommand::applyZoomTo(PlotRenderItem *item) {
 
   item->setYAxisZoomMode(PlotRenderItem::FixedExpression);
   item->setProjectionRect(compute);
-  item->update();
 }
 
 }
