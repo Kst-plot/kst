@@ -88,6 +88,7 @@ SOURCES += \
     stroketab.cpp \
     svgitem.cpp \
     tabwidget.cpp \
+    plotmarkerstab.cpp \
     vectordialog.cpp \
     vectoreditordialog.cpp \
     vectormodel.cpp \
@@ -170,6 +171,7 @@ HEADERS += \
     svgitem.h \
     stroketab.h \
     tabwidget.h \
+    plotmarkerstab.h \
     vectordialog.h \
     vectoreditordialog.h \
     vectormodel.h \
@@ -216,6 +218,7 @@ FORMS += \
     powerspectrumtab.ui \
     scalartab.ui \
     stroketab.ui \
+    plotmarkerstab.ui \
     vectoreditordialog.ui \
     vectortab.ui \
     viewmanager.ui \

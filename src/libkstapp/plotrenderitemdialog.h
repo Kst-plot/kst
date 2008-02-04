@@ -19,6 +19,7 @@
 namespace Kst {
 
 class ContentTab;
+class PlotMarkersTab;
 class ObjectStore;
 class PlotRenderItem;
 
@@ -40,6 +41,7 @@ class KST_EXPORT PlotRenderItemDialog : public ViewItemDialog
 
   private:
     ContentTab *_contentTab;
+    PlotMarkersTab* _plotMarkersTab;
     PlotRenderItem* _plotItem;
     QList<DialogPage*> _relationPages;
 

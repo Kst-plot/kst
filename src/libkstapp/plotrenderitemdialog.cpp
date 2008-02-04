@@ -17,6 +17,7 @@
 #include "objectstore.h"
 #include "mainwindow.h"
 #include "document.h"
+#include "plotmarkerstab.h"
 
 #include "curve.h"
 #include "curvedialog.h"
@@ -43,6 +44,12 @@ PlotRenderItemDialog::PlotRenderItemDialog(PlotRenderItem *item, QWidget *parent
   addRelations();
 
   setupContent();
+
+  DialogPage* appearancePage = getDialogPage(tr("Appearance"));
+  if (appearancePage) {
+      _plotMarkersTab = new PlotMarkersTab(this);
+      appearancePage->addDialogTab(_plotMarkersTab);
+  }
 }
 
 

@@ -62,6 +62,15 @@ void Dialog::removeDialogPage(DialogPage *page) {
 }
 
 
+DialogPage* Dialog::getDialogPage(const QString& pageName) {
+  QList<QListWidgetItem*> items = _listWidget->findItems(pageName, Qt::MatchExactly);
+  if (!items.empty()) {
+    return _itemHash.value(items[0]);
+  }
+  return 0;
+}
+
+
 void Dialog::setVisible(bool visible) {
 
   _listWidget->setVisible(_itemHash.count() > 1);
