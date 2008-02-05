@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>137</width>
+    <width>318</width>
     <height>25</height>
    </rect>
   </property>
@@ -26,7 +26,20 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="Kst::ComboBox" name="_vector" />
+    <widget class="Kst::ComboBox" name="_vector" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize" >
+      <size>
+       <width>300</width>
+       <height>72</height>
+      </size>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QToolButton" name="_newVector" >

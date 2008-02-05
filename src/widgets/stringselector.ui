@@ -5,9 +5,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>168</width>
+    <width>300</width>
     <height>25</height>
    </rect>
+  </property>
+  <property name="maximumSize" >
+   <size>
+    <width>300</width>
+    <height>16777215</height>
+   </size>
   </property>
   <property name="whatsThis" >
    <string>Select a string to utilize.  If you wish to create a new string, select the icon to the right.</string>
