@@ -204,11 +204,15 @@ void PlotRenderItemDialog::contentChanged() {
   relationChanged();
 
   QStringList currentRelations;
+  QStringList displayedRelations = _contentTab->displayedRelations();
+
   foreach (RelationPtr relation, _plotItem->relationList()) {
     currentRelations.append(relation->tag().displayString());
+    if (!displayedRelations.contains(relation->tag().displayString())) {
+      _plotItem->removeRelation(relation);
+      _plotItem->plotItem()->update();
+    }
   }
-
-  QStringList displayedRelations = _contentTab->displayedRelations();
 
   foreach (QString relationTag, displayedRelations) {
     if (!currentRelations.contains(relationTag)) {
@@ -218,6 +222,7 @@ void PlotRenderItemDialog::contentChanged() {
       }
     }
   }
+
   updateRelations();
 }
 
