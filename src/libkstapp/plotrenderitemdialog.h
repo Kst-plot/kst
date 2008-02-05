@@ -33,9 +33,11 @@ class KST_EXPORT PlotRenderItemDialog : public ViewItemDialog
   private Q_SLOTS:
     void contentChanged();
     void relationChanged();
+    void plotMarkersChanged();
 
   private:
     void setupContent();
+    void setupPlotMarkers();
     void addRelations();
     void updateRelations();
 

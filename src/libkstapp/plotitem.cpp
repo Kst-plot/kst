@@ -46,7 +46,26 @@ PlotItem::PlotItem(View *parent)
   _calculatedAxisMarginWidth(0.0),
   _calculatedAxisMarginHeight(0.0),
   _xAxisMajorTickMode(Normal),
-  _yAxisMajorTickMode(Normal) {
+  _yAxisMajorTickMode(Normal),
+  _xAxisMinorTickCount(4),
+  _yAxisMinorTickCount(4),
+  _drawXAxisMajorTicks(true),
+  _drawXAxisMinorTicks(true),
+  _drawYAxisMajorTicks(true),
+  _drawYAxisMinorTicks(true),
+  _drawXAxisMajorGridLines(true),
+  _drawXAxisMinorGridLines(false),
+  _drawYAxisMajorGridLines(true),
+  _drawYAxisMinorGridLines(false),
+  _xAxisMajorGridLineColor(Qt::gray),
+  _xAxisMinorGridLineColor(Qt::gray),
+  _yAxisMajorGridLineColor(Qt::gray),
+  _yAxisMinorGridLineColor(Qt::gray),
+  _xAxisMajorGridLineStyle(Qt::DashLine),
+  _xAxisMinorGridLineStyle(Qt::DashLine),
+  _yAxisMajorGridLineStyle(Qt::DashLine),
+  _yAxisMinorGridLineStyle(Qt::DashLine)
+ {
 
   setName("Plot");
   setZValue(PLOT_ZVALUE);
@@ -78,8 +97,6 @@ void PlotItem::save(QXmlStreamWriter &xml) {
     renderer->saveInPlot(xml);
   }
   xml.writeEndElement();
-
-
 }
 
 
@@ -117,8 +134,10 @@ void PlotItem::paint(QPainter *painter) {
   painter->translate(QPointF(rect().x(), rect().y()));
 
   QList<qreal> xMajorTicks;
+  QList<qreal> xMinorTicks;
   QList<qreal> yMajorTicks;
-  computeMajorTicks(&xMajorTicks, &yMajorTicks);
+  QList<qreal> yMinorTicks;
+  computeTicks(&xMajorTicks, &xMinorTicks, &yMajorTicks, &yMinorTicks);
   setCalculatedAxisMarginWidth(calculateYTickLabelBound(painter, yMajorTicks).width());
   setCalculatedAxisMarginHeight(calculateXTickLabelBound(painter, xMajorTicks).height());
 
@@ -147,11 +166,21 @@ void PlotItem::paint(QPainter *painter) {
 //  qDebug() << "=============> topLabel:" << topLabel() << endl;
   paintTopLabel(painter);
 
-  paintMajorGridLines(painter, xMajorTicks, yMajorTicks);
-  paintMajorTicks(painter, xMajorTicks, yMajorTicks);
+  paintPlotMarkers(painter, xMajorTicks, xMinorTicks, yMajorTicks, yMinorTicks);
   paintMajorTickLabels(painter, xMajorTicks, yMajorTicks);
 
   painter->restore();
+}
+
+void PlotItem::paintPlotMarkers(QPainter *painter,
+                                       const QList<qreal> &xMajorTicks,
+                                       const QList<qreal> &xMinorTicks,
+                                       const QList<qreal> &yMajorTicks,
+                                       const QList<qreal> &yMinorTicks) {
+  paintMajorGridLines(painter, xMajorTicks, yMajorTicks);
+  paintMinorGridLines(painter, xMinorTicks, yMinorTicks);
+  paintMajorTicks(painter, xMajorTicks, yMajorTicks);
+  paintMinorTicks(painter, xMinorTicks, yMinorTicks);
 }
 
 
@@ -161,25 +190,68 @@ void PlotItem::paintMajorGridLines(QPainter *painter,
 
   QRectF rect = plotRect();
 
-  QVector<QLineF> xMajorTickLines;
-  foreach (qreal x, xMajorTicks) {
-    QPointF p1 = mapToPlotFromProjection(QPointF(x, projectionRect().top()));
-    QPointF p2 = p1 - QPointF(0, rect.height());
-    xMajorTickLines << QLineF(p1, p2);
+  if (_drawXAxisMajorGridLines) {
+    QVector<QLineF> xMajorTickLines;
+    foreach (qreal x, xMajorTicks) {
+      QPointF p1 = mapToPlotFromProjection(QPointF(x, projectionRect().top()));
+      QPointF p2 = p1 - QPointF(0, rect.height());
+      xMajorTickLines << QLineF(p1, p2);
+    }
+
+    painter->save();
+    painter->setPen(QPen(QBrush(_xAxisMajorGridLineColor), 1.0, _xAxisMajorGridLineStyle));
+    painter->drawLines(xMajorTickLines);
+    painter->restore();
   }
 
-  QVector<QLineF> yMajorTickLines;
-  foreach (qreal y, yMajorTicks) {
-    QPointF p1 = mapToPlotFromProjection(QPointF(projectionRect().left(), y));
-    QPointF p2 = p1 + QPointF(rect.width(), 0);
-    yMajorTickLines << QLineF(p1, p2);
+  if (_drawYAxisMajorGridLines) {
+    QVector<QLineF> yMajorTickLines;
+    foreach (qreal y, yMajorTicks) {
+      QPointF p1 = mapToPlotFromProjection(QPointF(projectionRect().left(), y));
+      QPointF p2 = p1 + QPointF(rect.width(), 0);
+      yMajorTickLines << QLineF(p1, p2);
+    }
+
+    painter->save();
+    painter->setPen(QPen(QBrush(_yAxisMajorGridLineColor), 1.0, _yAxisMajorGridLineStyle));
+    painter->drawLines(yMajorTickLines);
+    painter->restore();
+  }
+}
+
+
+void PlotItem::paintMinorGridLines(QPainter *painter,
+                                       const QList<qreal> &xMinorTicks,
+                                       const QList<qreal> &yMinorTicks) {
+
+  QRectF rect = plotRect();
+
+  if (_drawXAxisMinorGridLines) {
+    QVector<QLineF> xMinorTickLines;
+    foreach (qreal x, xMinorTicks) {
+      QPointF p1 = mapToPlotFromProjection(QPointF(x, projectionRect().top()));
+      QPointF p2 = p1 - QPointF(0, rect.height());
+      xMinorTickLines << QLineF(p1, p2);
+    }
+    painter->save();
+    painter->setPen(QPen(QBrush(_xAxisMinorGridLineColor), 1.0, _xAxisMinorGridLineStyle));
+    painter->drawLines(xMinorTickLines);
+    painter->restore();
   }
 
-  painter->save();
-  painter->setPen(QPen(QBrush(Qt::gray), 1.0, Qt::DashLine));
-  painter->drawLines(xMajorTickLines);
-  painter->drawLines(yMajorTickLines);
-  painter->restore();
+  if (_drawYAxisMinorGridLines) {
+    QVector<QLineF> yMinorTickLines;
+    foreach (qreal y, yMinorTicks) {
+      QPointF p1 = mapToPlotFromProjection(QPointF(projectionRect().left(), y));
+      QPointF p2 = p1 + QPointF(rect.width(), 0);
+      yMinorTickLines << QLineF(p1, p2);
+    }
+
+    painter->save();
+    painter->setPen(QPen(QBrush(_yAxisMinorGridLineColor), 1.0, _yAxisMinorGridLineStyle));
+    painter->drawLines(yMinorTickLines);
+    painter->restore();
+  }
 }
 
 
@@ -187,32 +259,75 @@ void PlotItem::paintMajorTicks(QPainter *painter,
                                    const QList<qreal> &xMajorTicks,
                                    const QList<qreal> &yMajorTicks) {
 
-  qreal majorTickLength = qMin(rect().width(), rect().height()) * 0.02; //two percent
+  qreal majorTickLength = qMin(rect().width(), rect().height()) * .02; //two percent
 
-  QVector<QLineF> xMajorTickLines;
-  foreach (qreal x, xMajorTicks) {
-    QPointF p1 = mapToPlotFromProjection(QPointF(x, projectionRect().top()));
-    QPointF p2 = p1 - QPointF(0, majorTickLength);
-    xMajorTickLines << QLineF(p1, p2);
+  if (_drawXAxisMajorTicks) {
+    QVector<QLineF> xMajorTickLines;
+    foreach (qreal x, xMajorTicks) {
+      QPointF p1 = mapToPlotFromProjection(QPointF(x, projectionRect().top()));
+      QPointF p2 = p1 - QPointF(0, majorTickLength);
+      xMajorTickLines << QLineF(p1, p2);
 
-    p1 = mapToPlotFromProjection(QPointF(x, projectionRect().bottom()));
-    p2 = p1 + QPointF(0, majorTickLength);
-    xMajorTickLines << QLineF(p1, p2);
+      p1 = mapToPlotFromProjection(QPointF(x, projectionRect().bottom()));
+      p2 = p1 + QPointF(0, majorTickLength);
+      xMajorTickLines << QLineF(p1, p2);
+    }
+
+    painter->drawLines(xMajorTickLines);
   }
 
-  QVector<QLineF> yMajorTickLines;
-  foreach (qreal y, yMajorTicks) {
-    QPointF p1 = mapToPlotFromProjection(QPointF(projectionRect().left(), y));
-    QPointF p2 = p1 + QPointF(majorTickLength, 0);
-    yMajorTickLines << QLineF(p1, p2);
+  if (_drawYAxisMajorTicks) {
+    QVector<QLineF> yMajorTickLines;
+    foreach (qreal y, yMajorTicks) {
+      QPointF p1 = mapToPlotFromProjection(QPointF(projectionRect().left(), y));
+      QPointF p2 = p1 + QPointF(majorTickLength, 0);
+      yMajorTickLines << QLineF(p1, p2);
 
-    p1 = mapToPlotFromProjection(QPointF(projectionRect().right(), y));
-    p2 = p1 - QPointF(majorTickLength, 0);
-    yMajorTickLines << QLineF(p1, p2);
+      p1 = mapToPlotFromProjection(QPointF(projectionRect().right(), y));
+      p2 = p1 - QPointF(majorTickLength, 0);
+      yMajorTickLines << QLineF(p1, p2);
+    }
+
+    painter->drawLines(yMajorTickLines);
+  }
+}
+
+
+void PlotItem::paintMinorTicks(QPainter *painter,
+                                   const QList<qreal> &xMinorTicks,
+                                   const QList<qreal> &yMinorTicks) {
+
+  qreal minorTickLength = qMin(rect().width(), rect().height()) * 0.01; //two percent
+
+  if (_drawXAxisMinorTicks) {
+    QVector<QLineF> xMinorTickLines;
+    foreach (qreal x, xMinorTicks) {
+      QPointF p1 = mapToPlotFromProjection(QPointF(x, projectionRect().top()));
+      QPointF p2 = p1 - QPointF(0, minorTickLength);
+      xMinorTickLines << QLineF(p1, p2);
+
+      p1 = mapToPlotFromProjection(QPointF(x, projectionRect().bottom()));
+      p2 = p1 + QPointF(0, minorTickLength);
+      xMinorTickLines << QLineF(p1, p2);
+    }
+
+    painter->drawLines(xMinorTickLines);
   }
 
-  painter->drawLines(xMajorTickLines);
-  painter->drawLines(yMajorTickLines);
+  if (_drawYAxisMinorTicks) {
+    QVector<QLineF> yMinorTickLines;
+    foreach (qreal y, yMinorTicks) {
+      QPointF p1 = mapToPlotFromProjection(QPointF(projectionRect().left(), y));
+      QPointF p2 = p1 + QPointF(minorTickLength, 0);
+      yMinorTickLines << QLineF(p1, p2);
+
+      p1 = mapToPlotFromProjection(QPointF(projectionRect().right(), y));
+      p2 = p1 - QPointF(minorTickLength, 0);
+      yMinorTickLines << QLineF(p1, p2);
+    }
+
+    painter->drawLines(yMinorTickLines);
+  }
 }
 
 
@@ -387,6 +502,186 @@ PlotItem::MajorTickMode PlotItem::yAxisMajorTickMode() const {
 
 void PlotItem::setYAxisMajorTickMode(PlotItem::MajorTickMode mode) {
   _yAxisMajorTickMode = mode;
+}
+
+
+int PlotItem::xAxisMinorTickCount() const {
+  return _xAxisMinorTickCount;
+}
+
+
+void PlotItem::setXAxisMinorTickCount(const int count) {
+  _xAxisMinorTickCount = count;
+}
+
+
+int PlotItem::yAxisMinorTickCount() const {
+  return _yAxisMinorTickCount;
+}
+
+
+void PlotItem::setYAxisMinorTickCount(const int count) {
+  _yAxisMinorTickCount = count;
+}
+
+
+bool PlotItem::drawXAxisMajorTicks() const {
+  return _drawXAxisMajorTicks;
+}
+
+
+void PlotItem::setDrawXAxisMajorTicks(bool draw) {
+  _drawXAxisMajorTicks = draw;
+}
+
+
+bool PlotItem::drawYAxisMajorTicks() const {
+  return _drawYAxisMajorTicks;
+}
+
+
+void PlotItem::setDrawYAxisMajorTicks(bool draw) {
+  _drawYAxisMajorTicks = draw;
+}
+
+
+bool PlotItem::drawXAxisMinorTicks() const {
+  return _drawXAxisMinorTicks;
+}
+
+
+void PlotItem::setDrawXAxisMinorTicks(bool draw) {
+  _drawXAxisMinorTicks = draw;
+}
+
+
+bool PlotItem::drawYAxisMinorTicks() const {
+  return _drawYAxisMinorTicks;
+}
+
+
+void PlotItem::setDrawYAxisMinorTicks(bool draw) {
+  _drawYAxisMinorTicks = draw;
+}
+
+
+bool PlotItem::drawXAxisMajorGridLines() const {
+  return _drawXAxisMajorGridLines;
+}
+
+
+void PlotItem::setDrawXAxisMajorGridLines(bool draw) {
+  _drawXAxisMajorGridLines = draw;
+}
+
+
+bool PlotItem::drawYAxisMajorGridLines() const {
+  return _drawYAxisMajorGridLines;
+}
+
+
+void PlotItem::setDrawYAxisMajorGridLines(bool draw) {
+  _drawYAxisMajorGridLines = draw;
+}
+
+
+bool PlotItem::drawXAxisMinorGridLines() const {
+  return _drawXAxisMinorGridLines;
+}
+
+
+void PlotItem::setDrawXAxisMinorGridLines(bool draw) {
+  _drawXAxisMinorGridLines = draw;
+}
+
+
+bool PlotItem::drawYAxisMinorGridLines() const {
+  return _drawYAxisMinorGridLines;
+}
+
+
+void PlotItem::setDrawYAxisMinorGridLines(bool draw) {
+  _drawYAxisMinorGridLines = draw;
+}
+
+
+QColor PlotItem::xAxisMajorGridLineColor() const {
+  return _xAxisMajorGridLineColor;
+}
+
+
+void PlotItem::setXAxisMajorGridLineColor(const QColor &color) {
+  _xAxisMajorGridLineColor = color;
+}
+
+
+QColor PlotItem::xAxisMinorGridLineColor() const {
+  return _xAxisMinorGridLineColor;
+}
+
+
+void PlotItem::setXAxisMinorGridLineColor(const QColor &color) {
+  _xAxisMinorGridLineColor = color;
+}
+
+
+QColor PlotItem::yAxisMajorGridLineColor() const {
+  return _yAxisMajorGridLineColor;
+}
+
+
+void PlotItem::setYAxisMajorGridLineColor(const QColor &color) {
+  _yAxisMajorGridLineColor = color;
+}
+
+
+QColor PlotItem::yAxisMinorGridLineColor() const {
+  return _yAxisMinorGridLineColor;
+}
+
+
+void PlotItem::setYAxisMinorGridLineColor(const QColor &color) {
+  _yAxisMinorGridLineColor = color;
+}
+
+
+Qt::PenStyle PlotItem::xAxisMajorGridLineStyle() const {
+  return _xAxisMajorGridLineStyle;
+}
+
+
+void PlotItem::setXAxisMajorGridLineStyle(const Qt::PenStyle style) {
+  _xAxisMajorGridLineStyle = style;
+}
+
+
+Qt::PenStyle PlotItem::xAxisMinorGridLineStyle() const {
+  return _xAxisMinorGridLineStyle;
+}
+
+
+void PlotItem::setXAxisMinorGridLineStyle(const Qt::PenStyle style) {
+  _xAxisMinorGridLineStyle = style;
+}
+
+
+Qt::PenStyle PlotItem::yAxisMajorGridLineStyle() const {
+  return _yAxisMajorGridLineStyle;
+}
+
+
+void PlotItem::setYAxisMajorGridLineStyle(const Qt::PenStyle style) {
+  _yAxisMajorGridLineStyle = style;
+}
+
+
+Qt::PenStyle PlotItem::yAxisMinorGridLineStyle() const {
+  return _yAxisMinorGridLineStyle;
+}
+
+
+void PlotItem::setYAxisMinorGridLineStyle(const Qt::PenStyle style) {
+  _yAxisMinorGridLineStyle = style;
 }
 
 
@@ -772,7 +1067,7 @@ void PlotItem::setCalculatedAxisMarginHeight(qreal marginHeight) {
 }
 
 
-void PlotItem::computeMajorTicks(QList<qreal> *xMajorTicks, QList<qreal> *yMajorTicks) const {
+void PlotItem::computeTicks(QList<qreal> *xMajorTicks, QList<qreal> *xMinorTicks, QList<qreal> *yMajorTicks, QList<qreal> *yMinorTicks) const {
   qreal xMajorTickSpacing = computedMajorTickSpacing(Qt::Horizontal);
   qreal yMajorTickSpacing = computedMajorTickSpacing(Qt::Vertical);
 
@@ -788,6 +1083,27 @@ void PlotItem::computeMajorTicks(QList<qreal> *xMajorTicks, QList<qreal> *yMajor
     xTicks << nextXTick;
   }
 
+  QList<qreal> xMinTicks;
+  qreal xMinorTickSpacing = 0;
+  if (_xAxisMinorTickCount > 0) {
+    xMinorTickSpacing = xMajorTickSpacing / _xAxisMinorTickCount;
+  }
+
+  if (xMinorTickSpacing != 0) {
+    qreal firstXMinorTick = firstXTick + xMinorTickSpacing;
+
+    ix = 0;
+    qreal nextXMinorTick = firstXMinorTick;
+    while (1) {
+      nextXMinorTick = firstXMinorTick + (ix++ * xMinorTickSpacing);
+      if (!projectionRect().contains(nextXMinorTick, projectionRect().y()))
+        break;
+      if (!xTicks.contains(nextXMinorTick)) {
+        xMinTicks << nextXMinorTick;
+      }
+    }
+  }
+
   QList<qreal> yTicks;
   qreal firstYTick = ceil(projectionRect().top() / yMajorTickSpacing) * yMajorTickSpacing;
 
@@ -800,8 +1116,30 @@ void PlotItem::computeMajorTicks(QList<qreal> *xMajorTicks, QList<qreal> *yMajor
     yTicks << nextYTick;
   }
 
+  QList<qreal> yMinTicks;
+  qreal yMinorTickSpacing = 0;
+  if (_yAxisMinorTickCount > 0) {
+    yMinorTickSpacing = yMajorTickSpacing / _yAxisMinorTickCount;
+  }
+  qreal firstYMinorTick = firstYTick + yMinorTickSpacing;
+
+  if (xMinorTickSpacing != 0) {
+    iy = 0;
+    qreal nextYMinorTick = firstYMinorTick;
+    while (1) {
+      nextYMinorTick = firstYMinorTick + (iy++ * yMinorTickSpacing);
+      if (!projectionRect().contains(projectionRect().x(), nextYMinorTick))
+        break;
+      if (!yTicks.contains(nextYMinorTick)) {
+        yMinTicks << nextYMinorTick;
+      }
+    }
+  }
+
   *xMajorTicks = xTicks;
+  *xMinorTicks = xMinTicks;
   *yMajorTicks = yTicks;
+  *yMinorTicks = yMinTicks;
 }
 
 

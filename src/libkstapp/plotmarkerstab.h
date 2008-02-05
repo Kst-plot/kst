@@ -59,17 +59,11 @@ class KST_EXPORT PlotMarkersTab : public DialogTab, Ui::PlotMarkersTab {
     Qt::PenStyle xAxisMajorGridLineStyle() const;
     void setXAxisMajorGridLineStyle(Qt::PenStyle style);
 
-    qreal xAxisMajorGridLineWidth() const;
-    void setXAxisMajorGridLineWidth(qreal width);
-
     QColor xAxisMajorGridLineColor() const;
     void setXAxisMajorGridLineColor(const QColor &color);
 
     Qt::PenStyle xAxisMinorGridLineStyle() const;
     void setXAxisMinorGridLineStyle(Qt::PenStyle style);
-
-    qreal xAxisMinorGridLineWidth() const;
-    void setXAxisMinorGridLineWidth(qreal width);
 
     QColor xAxisMinorGridLineColor() const;
     void setXAxisMinorGridLineColor(const QColor &color);
@@ -77,20 +71,20 @@ class KST_EXPORT PlotMarkersTab : public DialogTab, Ui::PlotMarkersTab {
     Qt::PenStyle yAxisMajorGridLineStyle() const;
     void setYAxisMajorGridLineStyle(Qt::PenStyle style);
 
-    qreal yAxisMajorGridLineWidth() const;
-    void setYAxisMajorGridLineWidth(qreal width);
-
     QColor yAxisMajorGridLineColor() const;
     void setYAxisMajorGridLineColor(const QColor &color);
 
     Qt::PenStyle yAxisMinorGridLineStyle() const;
     void setYAxisMinorGridLineStyle(Qt::PenStyle style);
 
-    qreal yAxisMinorGridLineWidth() const;
-    void setYAxisMinorGridLineWidth(qreal width);
-
     QColor yAxisMinorGridLineColor() const;
     void setYAxisMinorGridLineColor(const QColor &color);
+
+    int xAxisMinorTickCount() const;
+    void setXAxisMinorTickCount(const int count);
+
+    int yAxisMinorTickCount() const;
+    void setYAxisMinorTickCount(const int count);
 
   public Q_SLOTS:
     void update();

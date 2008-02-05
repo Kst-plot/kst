@@ -84,8 +84,6 @@ PlotMarkersTab::PlotMarkersTab(QWidget *parent)
   connect(_xAxisMinorLineStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_xAxisMajorLineColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
   connect(_xAxisMinorLineColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
-  connect(_xAxisMajorLineWidth, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
-  connect(_xAxisMinorLineWidth, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
 
   connect(_drawYAxisMajorTicks, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_drawYAxisMajorGridLines, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
@@ -96,8 +94,10 @@ PlotMarkersTab::PlotMarkersTab(QWidget *parent)
   connect(_yAxisMinorLineStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_yAxisMajorLineColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
   connect(_yAxisMinorLineColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
-  connect(_yAxisMajorLineWidth, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
-  connect(_yAxisMinorLineWidth, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));}
+
+  connect(_xAxisMinorTickCount, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_yAxisMinorTickCount, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+}
 
 
 PlotMarkersTab::~PlotMarkersTab() {
@@ -107,6 +107,8 @@ PlotMarkersTab::~PlotMarkersTab() {
 void PlotMarkersTab::update() {
   bool xOptionsEnabled = drawXAxisMajorTicks() || drawXAxisMajorGridLines();
   bool yOptionsEnabled = drawYAxisMajorTicks() || drawYAxisMajorGridLines();
+  bool xMinorOptionsEnabled = drawXAxisMinorTicks() || drawXAxisMinorGridLines();
+  bool yMinorOptionsEnabled = drawYAxisMinorTicks() || drawYAxisMinorGridLines();
 
   _drawXAxisMinorGridLines->setEnabled(xOptionsEnabled);
   _drawXAxisMinorTicks->setEnabled(xOptionsEnabled);
@@ -115,6 +117,9 @@ void PlotMarkersTab::update() {
   _drawYAxisMinorGridLines->setEnabled(yOptionsEnabled);
   _drawYAxisMinorTicks->setEnabled(yOptionsEnabled);
   _yAxisMajorTickSpacing->setEnabled(yOptionsEnabled);
+
+  _xAxisMinorTickCount->setEnabled(xMinorOptionsEnabled);
+  _yAxisMinorTickCount->setEnabled(yMinorOptionsEnabled);
 
   _xAxisMajorGridGroup->setEnabled(_drawXAxisMajorGridLines->isChecked() && _drawXAxisMajorGridLines->isEnabled());
   _xAxisMinorGridGroup->setEnabled(_drawXAxisMinorGridLines->isChecked() && _drawXAxisMinorGridLines->isEnabled());
@@ -233,16 +238,6 @@ void PlotMarkersTab::setXAxisMajorGridLineStyle(Qt::PenStyle style) {
 }
 
 
-qreal PlotMarkersTab::xAxisMajorGridLineWidth() const {
-  return _xAxisMajorLineWidth->value();
-}
-
-
-void PlotMarkersTab::setXAxisMajorGridLineWidth(qreal width) {
-  _xAxisMajorLineWidth->setValue(width);
-}
-
-
 QColor PlotMarkersTab::xAxisMajorGridLineColor() const {
   return _xAxisMajorLineColor->color();
 }
@@ -260,16 +255,6 @@ Qt::PenStyle PlotMarkersTab::xAxisMinorGridLineStyle() const {
 
 void PlotMarkersTab::setXAxisMinorGridLineStyle(Qt::PenStyle style) {
   _xAxisMinorLineStyle->setCurrentIndex(_xAxisMinorLineStyle->findData(QVariant(style)));
-}
-
-
-qreal PlotMarkersTab::xAxisMinorGridLineWidth() const {
-  return _xAxisMinorLineWidth->value();
-}
-
-
-void PlotMarkersTab::setXAxisMinorGridLineWidth(qreal width) {
-  _xAxisMinorLineWidth->setValue(width);
 }
 
 
@@ -293,16 +278,6 @@ void PlotMarkersTab::setYAxisMajorGridLineStyle(Qt::PenStyle style) {
 }
 
 
-qreal PlotMarkersTab::yAxisMajorGridLineWidth() const {
-  return _yAxisMajorLineWidth->value();
-}
-
-
-void PlotMarkersTab::setYAxisMajorGridLineWidth(qreal width) {
-  _yAxisMajorLineWidth->setValue(width);
-}
-
-
 QColor PlotMarkersTab::yAxisMajorGridLineColor() const {
   return _yAxisMajorLineColor->color();
 }
@@ -323,16 +298,6 @@ void PlotMarkersTab::setYAxisMinorGridLineStyle(Qt::PenStyle style) {
 }
 
 
-qreal PlotMarkersTab::yAxisMinorGridLineWidth() const {
-  return _yAxisMinorLineWidth->value();
-}
-
-
-void PlotMarkersTab::setYAxisMinorGridLineWidth(qreal width) {
-  _yAxisMinorLineWidth->setValue(width);
-}
-
-
 QColor PlotMarkersTab::yAxisMinorGridLineColor() const {
   return _yAxisMinorLineColor->color();
 }
@@ -340,6 +305,26 @@ QColor PlotMarkersTab::yAxisMinorGridLineColor() const {
 
 void PlotMarkersTab::setYAxisMinorGridLineColor(const QColor &color) {
   _yAxisMinorLineColor->setColor(color);
+}
+
+
+int PlotMarkersTab::xAxisMinorTickCount() const {
+  return _xAxisMinorTickCount->value();
+}
+
+
+void PlotMarkersTab::setXAxisMinorTickCount(const int count) {
+  _xAxisMinorTickCount->setValue(count);
+}
+
+
+int PlotMarkersTab::yAxisMinorTickCount() const {
+  return _yAxisMinorTickCount->value();
+}
+
+
+void PlotMarkersTab::setYAxisMinorTickCount(const int count) {
+  _yAxisMinorTickCount->setValue(count);
 }
 
 }

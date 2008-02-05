@@ -46,18 +46,6 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     virtual void paint(QPainter *painter);
 
-    virtual void paintMajorGridLines(QPainter *painter,
-                                     const QList<qreal> &xMajorTicks,
-                                     const QList<qreal> &yMajorTicks);
-
-    virtual void paintMajorTicks(QPainter *painter,
-                                 const QList<qreal> &xMajorTicks,
-                                 const QList<qreal> &yMajorTicks);
-
-    virtual void paintMajorTickLabels(QPainter *painter,
-                                      const QList<qreal> &xMajorTicks,
-                                      const QList<qreal> &yMajorTicks);
-
     /* This is the rectangle of the PlotAxis and includes the axis labels. */
     QRectF plotAxisRect() const;
 
@@ -104,6 +92,60 @@ class PlotItem : public ViewItem, public PlotItemInterface
     MajorTickMode yAxisMajorTickMode() const;
     void setYAxisMajorTickMode(MajorTickMode mode);
 
+    int xAxisMinorTickCount() const;
+    void setXAxisMinorTickCount(const int count);
+
+    int yAxisMinorTickCount() const;
+    void setYAxisMinorTickCount(const int count);
+
+    bool drawXAxisMajorTicks() const;
+    void setDrawXAxisMajorTicks(const bool draw);
+
+    bool drawXAxisMinorTicks() const;
+    void setDrawXAxisMinorTicks(const bool draw);
+
+    bool drawYAxisMajorTicks() const;
+    void setDrawYAxisMajorTicks(const bool draw);
+
+    bool drawYAxisMinorTicks() const;
+    void setDrawYAxisMinorTicks(const bool draw);
+
+    bool drawXAxisMajorGridLines() const;
+    void setDrawXAxisMajorGridLines(const bool draw);
+
+    bool drawXAxisMinorGridLines() const;
+    void setDrawXAxisMinorGridLines(const bool draw);
+
+    bool drawYAxisMajorGridLines() const;
+    void setDrawYAxisMajorGridLines(const bool draw);
+
+    bool drawYAxisMinorGridLines() const;
+    void setDrawYAxisMinorGridLines(const bool draw);
+
+    QColor xAxisMajorGridLineColor() const;
+    void setXAxisMajorGridLineColor(const QColor &color);
+
+    QColor xAxisMinorGridLineColor() const;
+    void setXAxisMinorGridLineColor(const QColor &color);
+
+    QColor yAxisMajorGridLineColor() const;
+    void setYAxisMajorGridLineColor(const QColor &color);
+
+    QColor yAxisMinorGridLineColor() const;
+    void setYAxisMinorGridLineColor(const QColor &color);
+
+    Qt::PenStyle xAxisMajorGridLineStyle() const;
+    void setXAxisMajorGridLineStyle(const Qt::PenStyle style);
+
+    Qt::PenStyle xAxisMinorGridLineStyle() const;
+    void setXAxisMinorGridLineStyle(const Qt::PenStyle style);
+
+    Qt::PenStyle yAxisMajorGridLineStyle() const;
+    void setYAxisMajorGridLineStyle(const Qt::PenStyle style);
+
+    Qt::PenStyle yAxisMinorGridLineStyle() const;
+    void setYAxisMinorGridLineStyle(const Qt::PenStyle style);
+
     QPointF mapFromAxisToProjection(const QPointF &point) const;
     QPointF mapToAxisFromProjection(const QPointF &point) const;
     QRectF mapFromAxisToProjection(const QRectF &rect) const;
@@ -126,6 +168,33 @@ class PlotItem : public ViewItem, public PlotItemInterface
     virtual QTransform projectionPlotTransform() const;
 
   private:
+
+    virtual void paintPlotMarkers(QPainter *painter,
+                                     const QList<qreal> &xMajorTicks,
+                                     const QList<qreal> &xMinorTicks,
+                                     const QList<qreal> &yMajorTicks,
+                                     const QList<qreal> &yMinorTicks);
+
+    virtual void paintMajorGridLines(QPainter *painter,
+                                     const QList<qreal> &xMajorTicks,
+                                     const QList<qreal> &yMajorTicks);
+
+     virtual void paintMinorGridLines(QPainter *painter,
+                                     const QList<qreal> &xMinorTicks,
+                                     const QList<qreal> &yMinorTicks);
+
+    virtual void paintMajorTicks(QPainter *painter,
+                                 const QList<qreal> &xMajorTicks,
+                                 const QList<qreal> &yMajorTicks);
+
+    virtual void paintMinorTicks(QPainter *painter,
+                                 const QList<qreal> &xMinorTicks,
+                                 const QList<qreal> &yMinorTicks);
+
+    virtual void paintMajorTickLabels(QPainter *painter,
+                                      const QList<qreal> &xMajorTicks,
+                                      const QList<qreal> &yMajorTicks);
+
     qreal calculatedLabelMarginWidth() const;
     void setCalculatedLabelMarginWidth(qreal marginWidth);
 
@@ -150,7 +219,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     qreal calculatedAxisMarginHeight() const;
     void setCalculatedAxisMarginHeight(qreal marginHeight);
 
-    void computeMajorTicks(QList<qreal> *xMajorTicks, QList<qreal> *yMajorTicks) const;
+    void computeTicks(QList<qreal> *xMajorTicks, QList<qreal> *xMinorTicks, QList<qreal> *yMajorTicks, QList<qreal> *yMinorTicks) const;
     qreal computedMajorTickSpacing(Qt::Orientation orientation) const;
 
     QSizeF calculateXTickLabelBound(QPainter *painter, const QList<qreal> &xMajorTicks);
@@ -178,6 +247,27 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     MajorTickMode _xAxisMajorTickMode;
     MajorTickMode _yAxisMajorTickMode;
+    int _xAxisMinorTickCount;
+    int _yAxisMinorTickCount;
+
+    bool _drawXAxisMajorTicks;
+    bool _drawXAxisMinorTicks;
+    bool _drawYAxisMajorTicks;
+    bool _drawYAxisMinorTicks;
+    bool _drawXAxisMajorGridLines;
+    bool _drawXAxisMinorGridLines;
+    bool _drawYAxisMajorGridLines;
+    bool _drawYAxisMinorGridLines;
+
+    QColor _xAxisMajorGridLineColor;
+    QColor _xAxisMinorGridLineColor;
+    QColor _yAxisMajorGridLineColor;
+    QColor _yAxisMinorGridLineColor;
+
+    Qt::PenStyle _xAxisMajorGridLineStyle;
+    Qt::PenStyle _xAxisMinorGridLineStyle;
+    Qt::PenStyle _yAxisMajorGridLineStyle;
+    Qt::PenStyle _yAxisMinorGridLineStyle;
 
     friend class ViewGridLayout;
 };

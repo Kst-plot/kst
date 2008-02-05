@@ -49,6 +49,8 @@ PlotRenderItemDialog::PlotRenderItemDialog(PlotRenderItem *item, QWidget *parent
   if (appearancePage) {
       _plotMarkersTab = new PlotMarkersTab(this);
       appearancePage->addDialogTab(_plotMarkersTab);
+      setupPlotMarkers();
+      connect(_plotMarkersTab, SIGNAL(apply()), this, SLOT(plotMarkersChanged()));
   }
 }
 
@@ -56,6 +58,31 @@ PlotRenderItemDialog::PlotRenderItemDialog(PlotRenderItem *item, QWidget *parent
 PlotRenderItemDialog::~PlotRenderItemDialog() {
 }
 
+
+void PlotRenderItemDialog::setupPlotMarkers() {
+  Q_ASSERT(_plotItem);
+  _plotMarkersTab->setXAxisMajorTickSpacing(_plotItem->plotItem()->xAxisMajorTickMode());
+  _plotMarkersTab->setYAxisMajorTickSpacing(_plotItem->plotItem()->yAxisMajorTickMode());
+  _plotMarkersTab->setDrawXAxisMajorTicks(_plotItem->plotItem()->drawXAxisMajorTicks());
+  _plotMarkersTab->setDrawXAxisMajorGridLines(_plotItem->plotItem()->drawXAxisMajorGridLines());
+  _plotMarkersTab->setDrawXAxisMinorTicks(_plotItem->plotItem()->drawXAxisMinorTicks());
+  _plotMarkersTab->setDrawXAxisMinorGridLines(_plotItem->plotItem()->drawXAxisMinorGridLines());
+  _plotMarkersTab->setDrawYAxisMajorTicks(_plotItem->plotItem()->drawYAxisMajorTicks());
+  _plotMarkersTab->setDrawYAxisMajorGridLines(_plotItem->plotItem()->drawYAxisMajorGridLines());
+  _plotMarkersTab->setDrawYAxisMinorTicks(_plotItem->plotItem()->drawYAxisMinorTicks());
+  _plotMarkersTab->setDrawYAxisMinorGridLines(_plotItem->plotItem()->drawYAxisMinorGridLines());
+
+  _plotMarkersTab->setXAxisMajorGridLineColor(_plotItem->plotItem()->xAxisMajorGridLineColor());
+  _plotMarkersTab->setXAxisMinorGridLineColor(_plotItem->plotItem()->xAxisMinorGridLineColor());
+  _plotMarkersTab->setYAxisMajorGridLineColor(_plotItem->plotItem()->yAxisMajorGridLineColor());
+  _plotMarkersTab->setYAxisMinorGridLineColor(_plotItem->plotItem()->yAxisMinorGridLineColor());
+
+  _plotMarkersTab->setXAxisMajorGridLineStyle(_plotItem->plotItem()->xAxisMajorGridLineStyle());
+  _plotMarkersTab->setXAxisMinorGridLineStyle(_plotItem->plotItem()->xAxisMinorGridLineStyle());
+  _plotMarkersTab->setYAxisMajorGridLineStyle(_plotItem->plotItem()->yAxisMajorGridLineStyle());
+  _plotMarkersTab->setYAxisMinorGridLineStyle(_plotItem->plotItem()->yAxisMinorGridLineStyle());
+
+}
 
 void PlotRenderItemDialog::setupContent() {
   QStringList displayedRelations;
@@ -252,6 +279,30 @@ void PlotRenderItemDialog::relationChanged() {
     }
   }
 }
+
+
+void PlotRenderItemDialog::plotMarkersChanged() {
+  Q_ASSERT(_plotItem);
+  _plotItem->plotItem()->setXAxisMajorTickMode(_plotMarkersTab->xAxisMajorTickSpacing());
+  _plotItem->plotItem()->setYAxisMajorTickMode(_plotMarkersTab->yAxisMajorTickSpacing());
+  _plotItem->plotItem()->setDrawXAxisMajorTicks(_plotMarkersTab->drawXAxisMajorTicks());
+  _plotItem->plotItem()->setDrawXAxisMajorGridLines(_plotMarkersTab->drawXAxisMajorGridLines());
+  _plotItem->plotItem()->setDrawXAxisMinorTicks(_plotMarkersTab->drawXAxisMinorTicks());
+  _plotItem->plotItem()->setDrawXAxisMinorGridLines(_plotMarkersTab->drawXAxisMinorGridLines());
+  _plotItem->plotItem()->setDrawYAxisMajorTicks(_plotMarkersTab->drawYAxisMajorTicks());
+  _plotItem->plotItem()->setDrawYAxisMajorGridLines(_plotMarkersTab->drawYAxisMajorGridLines());
+  _plotItem->plotItem()->setDrawYAxisMinorTicks(_plotMarkersTab->drawYAxisMinorTicks());
+  _plotItem->plotItem()->setDrawYAxisMinorGridLines(_plotMarkersTab->drawYAxisMinorGridLines());
+
+  _plotItem->plotItem()->setXAxisMajorGridLineColor(_plotMarkersTab->xAxisMajorGridLineColor());
+  _plotItem->plotItem()->setXAxisMinorGridLineColor(_plotMarkersTab->xAxisMinorGridLineColor());
+  _plotItem->plotItem()->setYAxisMajorGridLineColor(_plotMarkersTab->yAxisMajorGridLineColor());
+  _plotItem->plotItem()->setYAxisMinorGridLineColor(_plotMarkersTab->yAxisMinorGridLineColor());
+
+  _plotItem->plotItem()->setXAxisMajorGridLineStyle(_plotMarkersTab->xAxisMajorGridLineStyle());
+  _plotItem->plotItem()->setXAxisMinorGridLineStyle(_plotMarkersTab->xAxisMinorGridLineStyle());
+  _plotItem->plotItem()->setYAxisMajorGridLineStyle(_plotMarkersTab->yAxisMajorGridLineStyle());
+  _plotItem->plotItem()->setYAxisMinorGridLineStyle(_plotMarkersTab->yAxisMinorGridLineStyle());}
 
 }
 
