@@ -24,6 +24,7 @@ SOURCES += \
     applicationsettings.cpp \
     applicationsettingsdialog.cpp \
     axis.cpp \
+    axistab.cpp \
     basicplugindialog.cpp \
     boxitem.cpp \
     builtingraphics.cpp \
@@ -65,6 +66,7 @@ SOURCES += \
     imagedialog.cpp \
     labelitem.cpp \
     labelrenderer.cpp \
+    labeltab.cpp \
     layoutboxitem.cpp \
     layouttab.cpp \
     lineitem.cpp \
@@ -88,7 +90,6 @@ SOURCES += \
     stroketab.cpp \
     svgitem.cpp \
     tabwidget.cpp \
-    plotmarkerstab.cpp \
     vectordialog.cpp \
     vectoreditordialog.cpp \
     vectormodel.cpp \
@@ -106,6 +107,7 @@ HEADERS += \
     applicationsettings.h \
     applicationsettingsdialog.h \
     axis.h \
+    axistab.h \
     basicplugindialog.h \
     boxitem.h \
     builtingraphics.h \
@@ -148,6 +150,7 @@ HEADERS += \
     imagedialog.h \
     labelitem.h \
     labelrenderer.h \
+    labeltab.h \
     layoutboxitem.h \
     layouttab.h \
     lineitem.h \
@@ -171,7 +174,6 @@ HEADERS += \
     svgitem.h \
     stroketab.h \
     tabwidget.h \
-    plotmarkerstab.h \
     vectordialog.h \
     vectoreditordialog.h \
     vectormodel.h \
@@ -187,6 +189,7 @@ HEADERS += \
 
 FORMS += \
     aboutdialog.ui \
+    axistab.ui \
     basicplugintab.ui \
     changedatasampledialog.ui \
     changefiledialog.ui \
@@ -212,13 +215,13 @@ FORMS += \
     gridtab.ui \
     histogramtab.ui \
     imagetab.ui \
+    labeltab.ui \
     layouttab.ui \
     matrixeditordialog.ui \
     matrixtab.ui \
     powerspectrumtab.ui \
     scalartab.ui \
     stroketab.ui \
-    plotmarkerstab.ui \
     vectoreditordialog.ui \
     vectortab.ui \
     viewmanager.ui \

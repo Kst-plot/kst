@@ -71,6 +71,12 @@ PlotItem::PlotItem(View *parent)
   setZValue(PLOT_ZVALUE);
   setBrush(Qt::white);
 
+  QFont defaultFont;
+  _leftLabelFont = defaultFont;
+  _bottomLabelFont = defaultFont;
+  _topLabelFont = defaultFont;
+  _rightLabelFont = defaultFont;
+
   PlotItemManager::self()->addPlot(this);
 }
 
@@ -759,6 +765,118 @@ QTransform PlotItem::projectionPlotTransform() const {
 }
 
 
+QFont PlotItem::rightLabelFont() const {
+  return _rightLabelFont;
+}
+
+
+void PlotItem::setRightLabelFont(const QFont &font) {
+  _rightLabelFont = font;
+}
+
+
+QFont PlotItem::topLabelFont() const {
+  return _topLabelFont;
+}
+
+
+void PlotItem::setTopLabelFont(const QFont &font) {
+  _topLabelFont = font;
+}
+
+
+QFont PlotItem::leftLabelFont() const {
+  return _leftLabelFont;
+}
+
+
+void PlotItem::setLeftLabelFont(const QFont &font) {
+  _leftLabelFont = font;
+}
+
+
+QFont PlotItem::bottomLabelFont() const {
+  return _bottomLabelFont;
+}
+
+
+void PlotItem::setBottomLabelFont(const QFont &font) {
+  _bottomLabelFont = font;
+}
+
+
+QString PlotItem::leftLabelOverride() const {
+  if (_leftLabelOverride.isEmpty()) {
+    return leftLabel();
+  } else {
+    return _leftLabelOverride;
+  }
+}
+
+
+void PlotItem::setLeftLabelOverride(const QString &label) {
+  if (label == leftLabel()) {
+    _leftLabelOverride.clear();
+  } else {
+    _leftLabelOverride = label;
+  }
+}
+
+
+QString PlotItem::bottomLabelOverride() const {
+  if (_bottomLabelOverride.isEmpty()) {
+    return bottomLabel();
+  } else {
+    return _bottomLabelOverride;
+  }
+}
+
+
+void PlotItem::setBottomLabelOverride(const QString &label) {
+  if (label == bottomLabel()) {
+    _bottomLabelOverride.clear();
+  } else {
+    _bottomLabelOverride = label;
+  }
+}
+
+
+QString PlotItem::topLabelOverride() const {
+  if (_topLabelOverride.isEmpty()) {
+    return topLabel();
+  } else {
+    return _topLabelOverride;
+  }
+}
+
+
+void PlotItem::setTopLabelOverride(const QString &label) {
+  if (label == topLabel()) {
+    _topLabelOverride.clear();
+  } else {
+    _topLabelOverride = label;
+  }
+}
+
+
+QString PlotItem::rightLabelOverride() const {
+  if (_rightLabelOverride.isEmpty()) {
+    return rightLabel();
+  } else {
+    return _rightLabelOverride;
+  }
+}
+
+
+void PlotItem::setRightLabelOverride(const QString &label) {
+  if (label == rightLabel()) {
+    _rightLabelOverride.clear();
+  } else {
+    _rightLabelOverride = label;
+  }
+}
+
+
 QString PlotItem::leftLabel() const {
   foreach (PlotRenderItem *renderer, renderItems()) {
     if (!renderer->leftLabel().isEmpty())
@@ -922,9 +1040,11 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
   t.rotate(90.0);
   painter->rotate(-90.0);
 
+  painter->setFont(_leftLabelFont);
+
   QRectF leftLabelRect = verticalLabelRect(false);
   leftLabelRect.moveTopLeft(QPointF(0.0, labelMarginHeight()));
-  painter->drawText(t.mapRect(leftLabelRect), Qt::TextWordWrap | Qt::AlignCenter, leftLabel());
+  painter->drawText(t.mapRect(leftLabelRect), Qt::TextWordWrap | Qt::AlignCenter, leftLabelOverride());
 
 //   painter->save();
 //   painter->setOpacity(0.3);
@@ -945,8 +1065,10 @@ QSizeF PlotItem::calculateLeftLabelBound(QPainter *painter) {
   t.rotate(90.0);
   painter->rotate(-90.0);
 
+  painter->setFont(_leftLabelFont);
+
   QRectF leftLabelBound = painter->boundingRect(t.mapRect(verticalLabelRect(true)),
-                                                Qt::TextWordWrap | Qt::AlignCenter, leftLabel());
+                                                Qt::TextWordWrap | Qt::AlignCenter, leftLabelOverride());
   painter->restore();
 
   QSizeF margins;
@@ -960,9 +1082,11 @@ void PlotItem::paintBottomLabel(QPainter *painter) {
     return;
 
   painter->save();
+  painter->setFont(_bottomLabelFont);
+
   QRectF bottomLabelRect = horizontalLabelRect(false);
   bottomLabelRect.moveTopLeft(QPointF(labelMarginWidth(), height() - labelMarginHeight()));
-  painter->drawText(bottomLabelRect, Qt::TextWordWrap | Qt::AlignCenter, bottomLabel());
+  painter->drawText(bottomLabelRect, Qt::TextWordWrap | Qt::AlignCenter, bottomLabelOverride());
   painter->restore();
 }
 
@@ -971,9 +1095,12 @@ QSizeF PlotItem::calculateBottomLabelBound(QPainter *painter) {
   if (!isBottomLabelVisible())
     return QSizeF();
 
-  QRectF bottomLabelBound = painter->boundingRect(horizontalLabelRect(true),
-                                                  Qt::TextWordWrap | Qt::AlignCenter, bottomLabel());
+  painter->save();
+  painter->setFont(_bottomLabelFont);
 
+  QRectF bottomLabelBound = painter->boundingRect(horizontalLabelRect(true),
+                                                  Qt::TextWordWrap | Qt::AlignCenter, bottomLabelOverride());
+  painter->restore();
   QSizeF margins;
   margins.setHeight(bottomLabelBound.height());
   return margins;
@@ -990,10 +1117,12 @@ void PlotItem::paintRightLabel(QPainter *painter) {
   t.rotate(-90.0);
   painter->rotate(90.0);
 
+  painter->setFont(_rightLabelFont);
+
   //same as left but painter is translated
   QRectF rightLabelRect = verticalLabelRect(false);
   rightLabelRect.moveTopLeft(QPointF(0.0, labelMarginHeight()));
-  painter->drawText(t.mapRect(rightLabelRect), Qt::TextWordWrap | Qt::AlignCenter, rightLabel());
+  painter->drawText(t.mapRect(rightLabelRect), Qt::TextWordWrap | Qt::AlignCenter, rightLabelOverride());
   painter->restore();
 }
 
@@ -1006,8 +1135,10 @@ QSizeF PlotItem::calculateRightLabelBound(QPainter *painter) {
   QTransform t;
   t.rotate(-90.0);
   painter->rotate(90.0);
+  painter->setFont(_rightLabelFont);
+
   QRectF rightLabelBound = painter->boundingRect(t.mapRect(verticalLabelRect(true)),
-                                                 Qt::TextWordWrap | Qt::AlignCenter, rightLabel());
+                                                 Qt::TextWordWrap | Qt::AlignCenter, rightLabelOverride());
   painter->restore();
 
   QSizeF margins;
@@ -1021,9 +1152,10 @@ void PlotItem::paintTopLabel(QPainter *painter) {
     return;
 
   painter->save();
+  painter->setFont(_topLabelFont);
   QRectF topLabelRect = horizontalLabelRect(false);
   topLabelRect.moveTopLeft(QPointF(labelMarginWidth(), 0.0));
-  painter->drawText(topLabelRect, Qt::TextWordWrap | Qt::AlignCenter, topLabel());
+  painter->drawText(topLabelRect, Qt::TextWordWrap | Qt::AlignCenter, topLabelOverride());
   painter->restore();
 }
 
@@ -1032,8 +1164,13 @@ QSizeF PlotItem::calculateTopLabelBound(QPainter *painter) {
   if (!isTopLabelVisible())
     return QSizeF();
 
+  painter->save();
+
+  painter->setFont(_topLabelFont);
   QRectF topLabelBound = painter->boundingRect(horizontalLabelRect(true),
-                                               Qt::TextWordWrap | Qt::AlignCenter, topLabel());
+                                               Qt::TextWordWrap | Qt::AlignCenter, topLabelOverride());
+
+  painter->restore();
 
   QSizeF margins;
   margins.setHeight(topLabelBound.height());

@@ -146,6 +146,33 @@ class PlotItem : public ViewItem, public PlotItemInterface
     Qt::PenStyle yAxisMinorGridLineStyle() const;
     void setYAxisMinorGridLineStyle(const Qt::PenStyle style);
 
+    QString bottomLabelOverride() const;
+    void setBottomLabelOverride(const QString &label);
+
+    QString leftLabelOverride() const;
+    void setLeftLabelOverride(const QString &label);
+
+    QString topLabelOverride() const;
+    void setTopLabelOverride(const QString &label);
+
+    QString rightLabelOverride() const;
+    void setRightLabelOverride(const QString &label);
+
+    QString titleOverride() const;
+    void setTitleOverride(const QString &label);
+
+    QFont topLabelFont() const;
+    void setTopLabelFont(const QFont &font);
+
+    QFont leftLabelFont() const;
+    void setLeftLabelFont(const QFont &font);
+
+    QFont rightLabelFont() const;
+    void setRightLabelFont(const QFont &font);
+
+    QFont bottomLabelFont() const;
+    void setBottomLabelFont(const QFont &font);
+
     QPointF mapFromAxisToProjection(const QPointF &point) const;
     QPointF mapToAxisFromProjection(const QPointF &point) const;
     QRectF mapFromAxisToProjection(const QRectF &rect) const;
@@ -244,6 +271,15 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     QRectF _yLabelRect;
     QRectF _xLabelRect;
+    QString _leftLabelOverride;
+    QString _bottomLabelOverride;
+    QString _topLabelOverride;
+    QString _rightLabelOverride;
+
+    QFont _leftLabelFont;
+    QFont _bottomLabelFont;
+    QFont _topLabelFont;
+    QFont _rightLabelFont;
 
     MajorTickMode _xAxisMajorTickMode;
     MajorTickMode _yAxisMajorTickMode;

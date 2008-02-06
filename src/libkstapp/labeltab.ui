@@ -1,0 +1,369 @@
+<ui version="4.0" >
+ <class>LabelTab</class>
+ <widget class="QWidget" name="LabelTab" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>697</width>
+    <height>508</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" >
+   <item row="0" column="0" colspan="2" >
+    <widget class="QGroupBox" name="_globalLabelBox" >
+     <property name="title" >
+      <string>Global Label Settings</string>
+     </property>
+     <layout class="QGridLayout" >
+      <item row="0" column="0" >
+       <widget class="QLabel" name="_Label_4" >
+        <property name="text" >
+         <string>Font Size</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" >
+       <widget class="QSpinBox" name="_globalLabelFontSize" >
+        <property name="minimum" >
+         <number>-99</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" >
+       <widget class="QCheckBox" name="_globalLabelBold" >
+        <property name="text" >
+         <string>Bold</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3" >
+       <widget class="QCheckBox" name="_globalLabelItalic" >
+        <property name="text" >
+         <string>Italics</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4" >
+       <widget class="QCheckBox" name="_globalLabelUnderline" >
+        <property name="text" >
+         <string>Underline</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" >
+       <widget class="QLabel" name="_Label_7" >
+        <property name="text" >
+         <string>Font Family</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="3" >
+       <widget class="QFontComboBox" name="_globalLabelFontFamily" />
+      </item>
+      <item row="1" column="4" >
+       <widget class="QPushButton" name="_applyGlobalsButton" >
+        <property name="text" >
+         <string>Apply Globals</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="5" >
+       <widget class="QPushButton" name="_autoLabel" >
+        <property name="text" >
+         <string>Auto Label</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0" >
+    <widget class="QGroupBox" name="_topLabelGroup" >
+     <property name="title" >
+      <string>Top Label</string>
+     </property>
+     <layout class="QGridLayout" >
+      <item row="0" column="0" >
+       <widget class="QLabel" name="_Label_10" >
+        <property name="text" >
+         <string>Label</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="4" >
+       <widget class="QLineEdit" name="_topLabel" />
+      </item>
+      <item row="1" column="0" >
+       <widget class="QLabel" name="_Label_11" >
+        <property name="text" >
+         <string>Font Size</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" >
+       <widget class="QSpinBox" name="_topFontSize" >
+        <property name="minimum" >
+         <number>-99</number>
+        </property>
+        <property name="value" >
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2" >
+       <widget class="QCheckBox" name="_topBold" >
+        <property name="text" >
+         <string>Bold</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3" >
+       <widget class="QCheckBox" name="_topUnderline" >
+        <property name="text" >
+         <string>Underline</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4" >
+       <widget class="QCheckBox" name="_topItalic" >
+        <property name="text" >
+         <string>Italics</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" >
+       <widget class="QLabel" name="_Label_12" >
+        <property name="text" >
+         <string>Font Family</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="4" >
+       <widget class="QFontComboBox" name="_topFamily" />
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="1" >
+    <widget class="QGroupBox" name="_bottomLabelGroup" >
+     <property name="title" >
+      <string>Bottom Label</string>
+     </property>
+     <layout class="QGridLayout" >
+      <item row="0" column="0" >
+       <widget class="QLabel" name="_Label_19" >
+        <property name="text" >
+         <string>Label</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="4" >
+       <widget class="QLineEdit" name="_bottomLabel" />
+      </item>
+      <item row="1" column="0" >
+       <widget class="QLabel" name="_Label_20" >
+        <property name="text" >
+         <string>Font Size</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" >
+       <widget class="QSpinBox" name="_bottomFontSize" >
+        <property name="minimum" >
+         <number>-99</number>
+        </property>
+        <property name="value" >
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2" >
+       <widget class="QCheckBox" name="_bottomBold" >
+        <property name="text" >
+         <string>Bold</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3" >
+       <widget class="QCheckBox" name="_bottomUnderline" >
+        <property name="text" >
+         <string>Underline</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4" >
+       <widget class="QCheckBox" name="_bottomItalic" >
+        <property name="text" >
+         <string>Italics</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" >
+       <widget class="QLabel" name="_Label_21" >
+        <property name="text" >
+         <string>Font Family</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="4" >
+       <widget class="QFontComboBox" name="_bottomFamily" />
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0" >
+    <widget class="QGroupBox" name="_leftLabelGroup" >
+     <property name="title" >
+      <string>Left Label</string>
+     </property>
+     <layout class="QGridLayout" >
+      <item row="0" column="0" >
+       <widget class="QLabel" name="_Label_13" >
+        <property name="text" >
+         <string>Label</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="4" >
+       <widget class="QLineEdit" name="_leftLabel" />
+      </item>
+      <item row="1" column="0" >
+       <widget class="QLabel" name="_Label_14" >
+        <property name="text" >
+         <string>Font Size</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" >
+       <widget class="QSpinBox" name="_leftFontSize" >
+        <property name="minimum" >
+         <number>-99</number>
+        </property>
+        <property name="value" >
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2" >
+       <widget class="QCheckBox" name="_leftBold" >
+        <property name="text" >
+         <string>Bold</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3" >
+       <widget class="QCheckBox" name="_leftUnderline" >
+        <property name="text" >
+         <string>Underline</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4" >
+       <widget class="QCheckBox" name="_leftItalic" >
+        <property name="text" >
+         <string>Italics</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" >
+       <widget class="QLabel" name="_Label_15" >
+        <property name="text" >
+         <string>Font Family</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="4" >
+       <widget class="QFontComboBox" name="_leftFamily" />
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="1" >
+    <widget class="QGroupBox" name="_rightLabelGroup" >
+     <property name="title" >
+      <string>Right Label</string>
+     </property>
+     <layout class="QGridLayout" >
+      <item row="0" column="0" >
+       <widget class="QLabel" name="_Label_16" >
+        <property name="text" >
+         <string>Label</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="4" >
+       <widget class="QLineEdit" name="_rightLabel" />
+      </item>
+      <item row="1" column="0" >
+       <widget class="QLabel" name="_Label_17" >
+        <property name="text" >
+         <string>Font Size</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" >
+       <widget class="QSpinBox" name="_rightFontSize" >
+        <property name="minimum" >
+         <number>-99</number>
+        </property>
+        <property name="value" >
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2" >
+       <widget class="QCheckBox" name="_rightBold" >
+        <property name="text" >
+         <string>Bold</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3" >
+       <widget class="QCheckBox" name="_rightUnderline" >
+        <property name="text" >
+         <string>Underline</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4" >
+       <widget class="QCheckBox" name="_rightItalic" >
+        <property name="text" >
+         <string>Italics</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" >
+       <widget class="QLabel" name="_Label_18" >
+        <property name="text" >
+         <string>Font Family</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="4" >
+       <widget class="QFontComboBox" name="_rightFamily" />
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="0" >
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>20</width>
+       <height>41</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

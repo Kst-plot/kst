@@ -1,0 +1,227 @@
+<ui version="4.0" >
+ <class>AxisTab</class>
+ <widget class="QWidget" name="AxisTab" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>496</width>
+    <height>486</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" >
+   <item row="0" column="0" >
+    <widget class="QGroupBox" name="_scaleGroup" >
+     <property name="title" >
+      <string>Scale</string>
+     </property>
+     <layout class="QGridLayout" >
+      <item row="0" column="0" >
+       <widget class="QCheckBox" name="_scaleLog" >
+        <property name="text" >
+         <string>Logarithmic</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" >
+       <widget class="QCheckBox" name="_scaleBaseOffset" >
+        <property name="text" >
+         <string>Base and Offset Mode</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" >
+       <widget class="QCheckBox" name="_scaleReverse" >
+        <property name="text" >
+         <string>Reverse</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" >
+       <widget class="QCheckBox" name="_scaleInterpret" >
+        <property name="text" >
+         <string>Interpret As:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" >
+       <widget class="QComboBox" name="_scaleInterpretType" />
+      </item>
+      <item row="1" column="2" >
+       <widget class="QLabel" name="_Label_6" >
+        <property name="text" >
+         <string>Display As:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3" >
+       <widget class="QComboBox" name="_scaleDisplayType" />
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0" >
+    <widget class="QGroupBox" name="_plotMarkerGroup" >
+     <property name="title" >
+      <string>Axis Plot Markers</string>
+     </property>
+     <layout class="QGridLayout" >
+      <item row="0" column="0" >
+       <widget class="QCheckBox" name="_drawAxisMajorTicks" >
+        <property name="text" >
+         <string>Draw Major Ticks</string>
+        </property>
+        <property name="checked" >
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" >
+       <widget class="QLabel" name="label" >
+        <property name="text" >
+         <string>Major Tick Spacing</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" >
+       <widget class="QCheckBox" name="_drawAxisMinorTicks" >
+        <property name="text" >
+         <string>Draw Minor Ticks</string>
+        </property>
+        <property name="checked" >
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3" >
+       <widget class="QLabel" name="label_3" >
+        <property name="text" >
+         <string>Minor Tick Count</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" >
+       <widget class="QCheckBox" name="_drawAxisMajorGridLines" >
+        <property name="text" >
+         <string>Draw Major Grid Lines</string>
+        </property>
+        <property name="checked" >
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" >
+       <widget class="QComboBox" name="_axisMajorTickSpacing" />
+      </item>
+      <item row="1" column="2" >
+       <widget class="QCheckBox" name="_drawAxisMinorGridLines" >
+        <property name="text" >
+         <string>Draw Minor Grid Lines</string>
+        </property>
+        <property name="checked" >
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3" >
+       <widget class="QSpinBox" name="_axisMinorTickCount" >
+        <property name="minimum" >
+         <number>1</number>
+        </property>
+        <property name="maximum" >
+         <number>10</number>
+        </property>
+        <property name="value" >
+         <number>4</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2" >
+       <widget class="QGroupBox" name="_axisMajorGridGroup" >
+        <property name="title" >
+         <string>Major Grid Appearance</string>
+        </property>
+        <layout class="QGridLayout" >
+         <item row="0" column="0" >
+          <widget class="QLabel" name="_Label_3" >
+           <property name="text" >
+            <string>Line Style</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1" >
+          <widget class="QComboBox" name="_axisMajorLineStyle" />
+         </item>
+         <item row="1" column="0" >
+          <widget class="QLabel" name="label_10" >
+           <property name="text" >
+            <string>Line Color</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1" >
+          <widget class="Kst::ColorButton" name="_axisMajorLineColor" />
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="2" column="2" colspan="2" >
+       <widget class="QGroupBox" name="_axisMinorGridGroup" >
+        <property name="title" >
+         <string>Minor Grid Appearance</string>
+        </property>
+        <layout class="QGridLayout" >
+         <item row="0" column="0" >
+          <widget class="QLabel" name="_axisMinorLineStyleLabel" >
+           <property name="text" >
+            <string>Line Style</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1" >
+          <widget class="QComboBox" name="_axisMinorLineStyle" />
+         </item>
+         <item row="1" column="0" >
+          <widget class="QLabel" name="label_12" >
+           <property name="text" >
+            <string>Line Color</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1" >
+          <widget class="Kst::ColorButton" name="_axisMinorLineColor" />
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0" >
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>20</width>
+       <height>41</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Kst::ColorButton</class>
+   <extends>QToolButton</extends>
+   <header>colorbutton.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

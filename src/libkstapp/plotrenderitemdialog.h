@@ -20,6 +20,8 @@ namespace Kst {
 
 class ContentTab;
 class PlotMarkersTab;
+class AxisTab;
+class LabelTab;
 class ObjectStore;
 class PlotRenderItem;
 
@@ -33,16 +35,22 @@ class KST_EXPORT PlotRenderItemDialog : public ViewItemDialog
   private Q_SLOTS:
     void contentChanged();
     void relationChanged();
-    void plotMarkersChanged();
+    void xAxisChanged();
+    void yAxisChanged();
+    void labelsChanged();
 
   private:
     void setupContent();
-    void setupPlotMarkers();
+    void setupAxis();
+    void setupLabels();
     void addRelations();
     void updateRelations();
 
   private:
     ContentTab *_contentTab;
+    AxisTab *_xAxisTab;
+    AxisTab *_yAxisTab;
+    LabelTab *_labelTab;
     PlotMarkersTab* _plotMarkersTab;
     PlotRenderItem* _plotItem;
     QList<DialogPage*> _relationPages;
