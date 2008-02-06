@@ -10,20 +10,24 @@
 //
 //
 #include "commandlineparser.h"
-#include "plotitem.h"
 #include "datasource.h"
 #include "objectstore.h"
+#include "colorsequence.h"
 
 #include <iostream>
 #include <QCoreApplication>
 #include <QFileInfo>
+#include "curve.h"
+#include "psd.h"
+#include "histogram.h"
 #include "kst_i18n.h"
 
 namespace Kst {
 
 CommandLineParser::CommandLineParser(Document *doc):
       _doAve(false), _doSkip(false), _doConsecutivePlots(true), _useBargraph(false), 
-      _useLines(true), _usePoints(false), _sampleRate(1.0), _numFrames(-1), _startFrame(0),
+      _useLines(true), _usePoints(false), _overrideStyle(false), _sampleRate(1.0), 
+      _numFrames(-1), _startFrame(0),
       _skip(0), _plotName(), _errorField(), _fileName(), _xField(QString("INDEX")) {
 
   Q_ASSERT(QCoreApplication::instance());
@@ -65,12 +69,12 @@ void CommandLineParser::usage(QString Message) {
 "      -P <plot name>:          Place curves in one plot.\n"
 "      -A                       Place future curves in individual plots.\n"
 "Appearance\n"
-"      -d:                      use points\n"
-"      -l:                      use lines (default)\n"
-"      -b:                      use bargraph\n"
+"      -d:                      use points for the next curve\n"
+"      -l:                      use lines for the next curve\n"
+"      -b:                      use bargraph for the next curve\n"
 "Data Object Modifiers\n"
 "      -x <field>:              Create vector and use as X vector for curves.\n"
-"      -e <field>:              Create vector and use as Y-error vector for curves.\n"
+"      -e <field>:              Create vector and use as Y-error vector for next -y.\n"
 "      -r <rate>:               sample rate (spectra & spectograms).\n"
 "Data Objects:\n"
 "      -y <field>               plot an XY curve of field.\n"
@@ -167,20 +171,53 @@ DataVectorPtr CommandLineParser::createOrFindDataVector(QString field, DataSourc
     return xv;
 }
 
+void CommandLineParser::createCurveInPlot(const ObjectTag &tag, VectorPtr xv, VectorPtr yv, VectorPtr ev) {
+    CurvePtr curve = _document->objectStore()->createObject<Curve>(tag);
+
+    curve->setXVector(xv);
+    curve->setYVector(yv);
+    curve->setXError(0);
+    curve->setXMinusError(0);
+    curve->setYMinusError(0);
+    curve->setColor(ColorSequence::next());
+    curve->setHasPoints(_usePoints);
+    curve->setHasLines(_useLines);
+    curve->setHasBars(_useBargraph);
+    curve->setLineWidth(1); //FIXME: use defaults
+    //curve->setPointType(ptype++ % KSTPOINT_MAXTYPE);
+
+    if (ev) {
+      curve->setYError(ev);
+    } else {
+      curve->setYError(0);
+    }
+
+    curve->writeLock();
+    curve->update(0);
+    curve->unlock();
+
+    if (_doConsecutivePlots) {
+      CreatePlotForCurve *cmd = new CreatePlotForCurve(true,true);
+      cmd->createItem();
+      _plotItem = static_cast<PlotItem*>(cmd->item());
+      _plotItem->setName(QString("P-")+tag.name());
+    }
+    PlotRenderItem *renderItem = _plotItem->renderItem(PlotRenderItem::Cartesian);
+    renderItem->addRelation(kst_cast<Relation>(curve));
+    _plotItem->update();
+}
 
 bool CommandLineParser::processCommandLine() {
   QString arg, param;
   bool ok=true;
-  bool first_plot = true;
   bool new_fileList=true;
-  PlotItem *plotItem = 0;
 
   while (1) {
     if (_arguments.count()<1) break;
 
     arg = _arguments.takeFirst();
     ok = true;
-    if ((arg == "--help")||(arg == "-help") || (arg=="-h")) {
+    if ((arg == "--help")||(arg == "-help")) {
       usage();
     } else if (arg == "-f") {
       _setIntArg(&_startFrame, i18n("Usage: -f <startframe>\n"));
@@ -193,30 +230,29 @@ bool CommandLineParser::processCommandLine() {
     } else if (arg == "-P") {
       QString plot_name;
       _setStringArg(plot_name,i18n("Usage: -P <plotname>\n"));
+      _doConsecutivePlots=false;
 
       CreatePlotForCurve *cmd = new CreatePlotForCurve(true,true);
       cmd->createItem();
-      if (!first_plot) {
-        plotItem->update();
-      }
-      plotItem = static_cast<PlotItem*>(cmd->item());
-      plotItem->setName(plot_name);
-      first_plot=false;
-      _doConsecutivePlots=false;
+      _plotItem = static_cast<PlotItem*>(cmd->item());
+      _plotItem->setName(plot_name);
     } else if (arg == "-A") {
       _doConsecutivePlots = true;
     } else if (arg == "-d") {
       _useBargraph=false;
       _useLines = false;
       _usePoints = true;
+      _overrideStyle = true;
     } else if (arg == "-l") {
       _useBargraph=false;
       _useLines = true;
       _usePoints = false;
+      _overrideStyle = true;
     } else if (arg == "-b") {
       _useBargraph=true;
       _useLines = false;
       _usePoints = false;
+      _overrideStyle = true;
     } else if (arg == "-x") {
       _setStringArg(_xField,i18n("Usage: -x <xfieldname>\n"));
     } else if (arg == "-e") {
@@ -226,7 +262,7 @@ bool CommandLineParser::processCommandLine() {
     } else if (arg == "-y") {
       QString field;
       _setStringArg(field,i18n("Usage: -y <fieldname>\n"));
-      //FIXME: Create the YVector, and the curve
+
       if (_fileNames.size()<1) {
         usage(i18n("No data files specified\n"));
       }
@@ -241,22 +277,126 @@ bool CommandLineParser::processCommandLine() {
         DataVectorPtr xv = createOrFindDataVector(_xField, ds);
         DataVectorPtr yv = createOrFindDataVector(field, ds);
 
-        //FIXME create curve
-        //FIXME create or find evector
-        //FIXME place curve in plot
+        const ObjectTag tag = _document->objectStore()->suggestObjectTag<Curve>(QString(field), ds->tag());
+
+        DataVectorPtr ev;
+        if (!_errorField.isEmpty()) {
+          DataVectorPtr ev = createOrFindDataVector(_errorField, ds);
+          if (!_overrideStyle) {
+            _useBargraph=false;
+            _useLines = false;
+            _usePoints = true;
+          }
+        } else {
+          ev = 0;
+          if (!_overrideStyle) {
+            _useBargraph=false;
+            _useLines = true;
+            _usePoints = false;
+          }
+
+        }
+
+        createCurveInPlot(tag, xv, yv, ev);
       }
 
+      _errorField = QString();
       new_fileList = true;
+      _overrideStyle = false;
     } else if (arg == "-p") {
       QString field;
       _setStringArg(field,i18n("Usage: -p <fieldname>\n"));
-      //FIXME: Create the Vector, and the psd
+
+      for (int i_file=0; i_file<_fileNames.size(); i_file++) { 
+        QString file = _fileNames.at(i_file);
+        QFileInfo info(file);
+        if (!info.exists() || !info.isFile())
+          usage(i18n("file %1 does not exist\n").arg(file));
+
+        DataSourcePtr ds = DataSource::findOrLoadSource(_document->objectStore(), file);
+
+        DataVectorPtr pv = createOrFindDataVector(field, ds);
+
+        Q_ASSERT(_document && _document->objectStore());
+        ObjectTag tag = _document->objectStore()->suggestObjectTag<PSD>(field, ObjectTag::globalTagContext);
+        PSDPtr powerspectrum = _document->objectStore()->createObject<PSD>(tag);
+        Q_ASSERT(powerspectrum);
+
+        powerspectrum->writeLock();
+        powerspectrum->setVector(pv);
+        powerspectrum->setFrequency(_sampleRate);
+        powerspectrum->setAverage(true);
+        powerspectrum->setLength(14);
+        powerspectrum->setApodize(true);
+        powerspectrum->setRemoveMean(true);
+        //powerspectrum->setVectorUnits();
+        //powerspectrum->setRateUnits(_powerSpectrumTab->FFTOptionsWidget()->rateUnits());
+        powerspectrum->setApodizeFxn(WindowOriginal);
+        //powerspectrum->setGaussianSigma(_powerSpectrumTab->FFTOptionsWidget()->sigma());
+        powerspectrum->setOutput(PSDAmplitudeSpectralDensity);
+        powerspectrum->setInterpolateHoles(false);
+
+        powerspectrum->update(0);
+        powerspectrum->unlock();
+
+        tag = _document->objectStore()->suggestObjectTag<Curve>(powerspectrum->tag().tagString(), ObjectTag::globalTagContext);
+
+        VectorPtr ev=0;
+
+        if ( !_overrideStyle ) {
+            _useBargraph=false;
+            _useLines = true;
+            _usePoints = false;
+        }
+
+        createCurveInPlot(tag, powerspectrum->vX(), powerspectrum->vY(), ev);
+      }
       new_fileList = true;
+      _overrideStyle = false;
+
     } else if (arg == "-h") {
       QString field;
       _setStringArg(field,i18n("Usage: -h <fieldname>\n"));
-      //FIXME: Create the Vector, and the histogram
+
+      for ( int i_file=0; i_file<_fileNames.size(); i_file++ ) {
+        QString file = _fileNames.at ( i_file );
+        QFileInfo info ( file );
+        if ( !info.exists() || !info.isFile() )
+            usage ( i18n ( "file %1 does not exist\n" ).arg ( file ) );
+
+        DataSourcePtr ds = DataSource::findOrLoadSource ( _document->objectStore(), file );
+
+        DataVectorPtr hv = createOrFindDataVector ( field, ds );
+
+        Q_ASSERT ( _document && _document->objectStore() );
+        ObjectTag tag = _document->objectStore()->suggestObjectTag<Histogram> ( field, ObjectTag::globalTagContext );
+        HistogramPtr histogram = _document->objectStore()->createObject<Histogram> ( tag );
+
+        histogram->setVector ( hv );
+        histogram->setXRange ( -1.0, 1.0 );
+        histogram->setNumberOfBins ( 60 );
+        histogram->setNormalizationType ( Histogram::Number );
+        histogram->setRealTimeAutoBin ( true );
+
+        histogram->writeLock();
+        histogram->update ( 0 );
+        histogram->unlock();
+
+        tag = _document->objectStore()->suggestObjectTag<Curve>(histogram->tag().tagString(), ObjectTag::globalTagContext);
+
+        VectorPtr ev=0;
+
+        if ( !_overrideStyle ) {
+            _useBargraph=true;
+            _useLines = false;
+            _usePoints = false;
+        }
+
+        createCurveInPlot(tag, histogram->vX(), histogram->vY(), ev);
+      }
+
       new_fileList = true;
+      _overrideStyle = false;
     } else if (arg == "-z") {
       QString field;
       _setStringArg(field,i18n("Usage: -z <fieldname>\n"));

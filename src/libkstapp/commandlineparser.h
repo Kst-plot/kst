@@ -14,6 +14,7 @@
 
 #include "document.h"
 #include "datavector.h"
+#include "plotitem.h"
 
 #include <QStringList>
 namespace Kst {
@@ -35,6 +36,7 @@ private:
   bool _useBargraph;
   bool _useLines;
   bool _usePoints;
+  bool _overrideStyle;
   double _sampleRate;
   int _numFrames;
   int _startFrame;
@@ -45,6 +47,7 @@ private:
   QString _xField;
   QStringList _fileNames;
   QStringList _arguments;
+  PlotItem *_plotItem;
 
   Document *_document;
 
@@ -53,6 +56,7 @@ private:
   void _setStringArg(QString &arg, QString Message);
   void usage(QString Message = "");
   DataVectorPtr createOrFindDataVector(QString field, DataSourcePtr ds);
+  void createCurveInPlot(const ObjectTag &tag, VectorPtr xv, VectorPtr yv, VectorPtr ev=0);
 };
 
 }
