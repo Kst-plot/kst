@@ -20,6 +20,7 @@
 #include "relation.h"
 #include "plotrenderitem.h"
 #include "plotiteminterface.h"
+#include "plotdefines.h"
 
 namespace Kst {
 
@@ -173,6 +174,36 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QFont bottomLabelFont() const;
     void setBottomLabelFont(const QFont &font);
 
+    bool xAxisReversed() const;
+    void setXAxisReversed(const bool enabled);
+
+    bool yAxisReversed() const;
+    void setYAxisReversed(const bool enabled);
+
+    bool xAxisBaseOffset() const;
+    void setXAxisBaseOffset(const bool enabled);
+
+    bool yAxisBaseOffset() const;
+    void setYAxisBaseOffset(const bool enabled);
+
+    bool xAxisInterpret() const;
+    void setXAxisInterpret(const bool enabled);
+
+    bool yAxisInterpret() const;
+    void setYAxisInterpret(const bool enabled);
+
+    KstAxisDisplay xAxisDisplay() const;
+    void setXAxisDisplay(const KstAxisDisplay display);
+
+    KstAxisDisplay yAxisDisplay() const;
+    void setYAxisDisplay(const KstAxisDisplay display);
+
+    KstAxisInterpretation xAxisInterpretation() const;
+    void setXAxisInterpretation(const KstAxisInterpretation interpret);
+
+    KstAxisInterpretation yAxisInterpretation() const;
+    void setYAxisInterpretation(const KstAxisInterpretation interpret);
+
     QPointF mapFromAxisToProjection(const QPointF &point) const;
     QPointF mapToAxisFromProjection(const QPointF &point) const;
     QRectF mapFromAxisToProjection(const QRectF &rect) const;
@@ -280,6 +311,17 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QFont _bottomLabelFont;
     QFont _topLabelFont;
     QFont _rightLabelFont;
+
+    bool _xAxisReversed;
+    bool _yAxisReversed;
+    bool _xAxisBaseOffset;
+    bool _yAxisBaseOffset;
+    bool _xAxisInterpret;
+    bool _yAxisInterpret;
+    KstAxisDisplay _xAxisDisplay;
+    KstAxisDisplay _yAxisDisplay;
+    KstAxisInterpretation _xAxisInterpretation;
+    KstAxisInterpretation _yAxisInterpretation;
 
     MajorTickMode _xAxisMajorTickMode;
     MajorTickMode _yAxisMajorTickMode;

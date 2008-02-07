@@ -14,6 +14,7 @@
 
 #include "dialogtab.h"
 #include "plotitem.h"
+#include "plotdefines.h"
 #include "ui_axistab.h"
 
 #include "kst_export.h"
@@ -55,6 +56,24 @@ class KST_EXPORT AxisTab : public DialogTab, Ui::AxisTab {
 
     int axisMinorTickCount() const;
     void setAxisMinorTickCount(const int count);
+
+    bool isLog() const;
+    void setLog(const bool enabled);
+
+    bool isBaseOffset() const;
+    void setBaseOffset(const bool enabled);
+
+    bool isReversed() const;
+    void setReversed(const bool enabled);
+
+    bool isInterpret() const;
+    void setInterpret(const bool enabled);
+
+    KstAxisDisplay axisDisplay() const;
+    void setAxisDisplay(KstAxisDisplay display);
+
+    KstAxisInterpretation axisInterpretation() const;
+    void setAxisInterpretation(KstAxisInterpretation interpretation);
 
   public Q_SLOTS:
     void update();

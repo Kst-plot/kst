@@ -45,6 +45,16 @@ PlotItem::PlotItem(View *parent)
   _calculatedLabelMarginHeight(0.0),
   _calculatedAxisMarginWidth(0.0),
   _calculatedAxisMarginHeight(0.0),
+  _xAxisReversed(false),
+  _yAxisReversed(false),
+  _xAxisBaseOffset(false),
+  _yAxisBaseOffset(false),
+  _xAxisInterpret(false),
+  _yAxisInterpret(false),
+  _xAxisDisplay(AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS),
+  _yAxisDisplay(AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS),
+  _xAxisInterpretation(AXIS_INTERP_CTIME),
+  _yAxisInterpretation(AXIS_INTERP_CTIME),
   _xAxisMajorTickMode(Normal),
   _yAxisMajorTickMode(Normal),
   _xAxisMinorTickCount(4),
@@ -342,9 +352,15 @@ void PlotItem::paintMajorTickLabels(QPainter *painter,
                                     const QList<qreal> &yMajorTicks) {
 
   QRectF yLabelRect;
-  foreach (qreal y, yMajorTicks) {
+  for (int i = 0; i < yMajorTicks.count(); i++) {
+    qreal y = yMajorTicks[i];
     int flags = Qt::TextSingleLine | Qt::AlignVCenter;
-    QString label = QString::number(y);
+    QString label;
+    if (_yAxisReversed) {
+      label = QString::number(yMajorTicks[(yMajorTicks.count() - 1) - i]);
+    } else {
+      label = QString::number(y);
+    }
 
     QRectF bound = painter->boundingRect(QRectF(), flags, label);
     QPointF p = mapToPlotFromProjection(QPointF(projectionRect().left(), y));
@@ -361,9 +377,15 @@ void PlotItem::paintMajorTickLabels(QPainter *painter,
   }
 
   QRectF xLabelRect;
-  foreach (qreal x, xMajorTicks) {
+  for (int i = 0; i < xMajorTicks.count(); i++) {
+    qreal x = xMajorTicks[i];
     int flags = Qt::TextSingleLine | Qt::AlignVCenter;
-    QString label = QString::number(x);
+    QString label;
+    if (_xAxisReversed) {
+      label = QString::number(xMajorTicks[(xMajorTicks.count() - 1) - i]);
+    } else {
+      label = QString::number(x);
+    }
 
     QRectF bound = painter->boundingRect(QRectF(), flags, label);
     QPointF p = mapToPlotFromProjection(QPointF(x, projectionRect().top()));
@@ -977,6 +999,106 @@ void PlotItem::setLabelsVisible(bool visible) {
 }
 
 
+bool PlotItem::xAxisReversed() const {
+  return _xAxisReversed;
+}
+
+
+void PlotItem::setXAxisReversed(const bool enabled) {
+  _xAxisReversed = enabled;
+}
+
+
+bool PlotItem::yAxisReversed() const {
+  return _yAxisReversed;
+}
+
+
+void PlotItem::setYAxisReversed(const bool enabled) {
+  _yAxisReversed = enabled;
+}
+
+
+bool PlotItem::xAxisBaseOffset() const {
+  return _xAxisBaseOffset;
+}
+
+
+void PlotItem::setXAxisBaseOffset(const bool enabled) {
+  _xAxisBaseOffset = enabled;
+}
+
+
+bool PlotItem::yAxisBaseOffset() const {
+  return _yAxisBaseOffset;
+}
+
+
+void PlotItem::setYAxisBaseOffset(const bool enabled) {
+  _yAxisBaseOffset = enabled;
+}
+
+
+bool PlotItem::xAxisInterpret() const {
+  return _xAxisInterpret;
+}
+
+
+void PlotItem::setXAxisInterpret(const bool enabled) {
+  _xAxisInterpret = enabled;
+}
+
+
+bool PlotItem::yAxisInterpret() const {
+  return _yAxisInterpret;
+}
+
+
+void PlotItem::setYAxisInterpret(const bool enabled) {
+  _yAxisInterpret = enabled;
+}
+
+
+KstAxisDisplay PlotItem::xAxisDisplay() const {
+  return _xAxisDisplay;
+}
+
+
+void PlotItem::setXAxisDisplay(const KstAxisDisplay display) {
+  _xAxisDisplay = display;
+}
+
+
+KstAxisDisplay PlotItem::yAxisDisplay() const {
+  return _yAxisDisplay;
+}
+
+
+void PlotItem::setYAxisDisplay(const KstAxisDisplay display) {
+  _yAxisDisplay = display;
+}
+
+
+KstAxisInterpretation PlotItem::xAxisInterpretation() const {
+  return _xAxisInterpretation;
+}
+
+
+void PlotItem::setXAxisInterpretation(const KstAxisInterpretation display) {
+  _xAxisInterpretation = display;
+}
+
+
+KstAxisInterpretation PlotItem::yAxisInterpretation() const {
+  return _yAxisInterpretation;
+}
+
+
+void PlotItem::setYAxisInterpretation(const KstAxisInterpretation display) {
+  _yAxisInterpretation = display;
+}
+
+
 qreal PlotItem::calculatedLabelMarginWidth() const {
   qreal m = qMax(MARGIN_WIDTH, _calculatedLabelMarginWidth);
 
@@ -1209,6 +1331,7 @@ void PlotItem::computeTicks(QList<qreal> *xMajorTicks, QList<qreal> *xMinorTicks
   qreal yMajorTickSpacing = computedMajorTickSpacing(Qt::Vertical);
 
   QList<qreal> xTicks;
+
   qreal firstXTick = ceil(projectionRect().left() / xMajorTickSpacing) * xMajorTickSpacing;
 
   int ix = 0;

@@ -45,11 +45,11 @@ AxisTab::AxisTab(QWidget *parent)
   setAxisMajorGridLineColor(Qt::gray);
   setAxisMinorGridLineColor(Qt::gray);
 
-  for (int i = 0; i < numAxisDisplays; i++) {
+  for (uint i = 0; i < numAxisDisplays; i++) {
     _scaleDisplayType->addItem(AxisDisplays[i].label, QVariant(AxisDisplays[i].type));
   }
 
-  for (int i = 0; i < numAxisInterpretations; i++) {
+  for (uint i = 0; i < numAxisInterpretations; i++) {
     _scaleInterpretType->addItem(AxisInterpretations[i].label, QVariant(AxisInterpretations[i].type));
   }
 
@@ -67,6 +67,13 @@ AxisTab::AxisTab(QWidget *parent)
   connect(_axisMinorLineStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_axisMajorLineColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
   connect(_axisMinorLineColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
+
+  connect(_scaleInterpret, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_scaleLog, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_scaleBaseOffset, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_scaleReverse, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_scaleDisplayType, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
+  connect(_scaleInterpretType, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
 
   connect(_axisMinorTickCount, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
 
@@ -191,6 +198,66 @@ int AxisTab::axisMinorTickCount() const {
 
 void AxisTab::setAxisMinorTickCount(const int count) {
   _axisMinorTickCount->setValue(count);
+}
+
+
+bool AxisTab::isLog() const {
+  return _scaleLog->isChecked();
+}
+
+
+void AxisTab::setLog(const bool enabled) {
+  _scaleLog->setChecked(enabled);
+}
+
+
+bool AxisTab::isBaseOffset() const {
+  return _scaleBaseOffset->isChecked();
+}
+
+
+void AxisTab::setBaseOffset(const bool enabled) {
+  _scaleBaseOffset->setChecked(enabled);
+}
+
+
+bool AxisTab::isReversed() const {
+  return _scaleReverse->isChecked();
+}
+
+
+void AxisTab::setReversed(const bool enabled) {
+  _scaleReverse->setChecked(enabled);
+}
+
+
+bool AxisTab::isInterpret() const {
+  return _scaleInterpret->isChecked();
+}
+
+
+void AxisTab::setInterpret(const bool enabled) {
+  _scaleInterpret->setChecked(enabled);
+}
+
+
+KstAxisDisplay AxisTab::axisDisplay() const {
+  return KstAxisDisplay(_scaleDisplayType->itemData(_scaleDisplayType->currentIndex()).toInt());
+}
+
+
+void AxisTab::setAxisDisplay(KstAxisDisplay display) {
+  _scaleDisplayType->setCurrentIndex(_scaleDisplayType->findData(QVariant(display)));
+}
+
+
+KstAxisInterpretation AxisTab::axisInterpretation() const {
+  return KstAxisInterpretation(_scaleInterpretType->itemData(_scaleInterpretType->currentIndex()).toInt());
+}
+
+
+void AxisTab::setAxisInterpretation(KstAxisInterpretation interpret) {
+  _scaleInterpretType->setCurrentIndex(_scaleInterpretType->findData(QVariant(interpret)));
 }
 
 }

@@ -102,6 +102,12 @@ void PlotRenderItemDialog::setupAxis() {
   _xAxisTab->setAxisMinorGridLineColor(_plotItem->plotItem()->xAxisMinorGridLineColor());
   _xAxisTab->setAxisMajorGridLineStyle(_plotItem->plotItem()->xAxisMajorGridLineStyle());
   _xAxisTab->setAxisMinorGridLineStyle(_plotItem->plotItem()->xAxisMinorGridLineStyle());
+  _xAxisTab->setLog(_plotItem->isXAxisLog());
+  _xAxisTab->setReversed(_plotItem->plotItem()->xAxisReversed());
+  _xAxisTab->setBaseOffset(_plotItem->plotItem()->xAxisBaseOffset());
+  _xAxisTab->setInterpret(_plotItem->plotItem()->xAxisInterpret());
+  _xAxisTab->setAxisDisplay(_plotItem->plotItem()->xAxisDisplay());
+  _xAxisTab->setAxisInterpretation(_plotItem->plotItem()->xAxisInterpretation());
 
   _yAxisTab->setAxisMajorTickSpacing(_plotItem->plotItem()->yAxisMajorTickMode());
   _yAxisTab->setDrawAxisMajorTicks(_plotItem->plotItem()->drawYAxisMajorTicks());
@@ -112,6 +118,13 @@ void PlotRenderItemDialog::setupAxis() {
   _yAxisTab->setAxisMinorGridLineColor(_plotItem->plotItem()->yAxisMinorGridLineColor());
   _yAxisTab->setAxisMajorGridLineStyle(_plotItem->plotItem()->yAxisMajorGridLineStyle());
   _yAxisTab->setAxisMinorGridLineStyle(_plotItem->plotItem()->yAxisMinorGridLineStyle());
+  _yAxisTab->setLog(_plotItem->isYAxisLog());
+  _yAxisTab->setReversed(_plotItem->plotItem()->yAxisReversed());
+  _yAxisTab->setBaseOffset(_plotItem->plotItem()->yAxisBaseOffset());
+  _yAxisTab->setInterpret(_plotItem->plotItem()->yAxisInterpret());
+  _yAxisTab->setAxisDisplay(_plotItem->plotItem()->yAxisDisplay());
+  _yAxisTab->setAxisInterpretation(_plotItem->plotItem()->yAxisInterpretation());
+
 }
 
 void PlotRenderItemDialog::setupContent() {
@@ -328,6 +341,13 @@ void PlotRenderItemDialog::xAxisChanged() {
   _plotItem->plotItem()->setXAxisMinorGridLineColor(_xAxisTab->axisMinorGridLineColor());
   _plotItem->plotItem()->setXAxisMajorGridLineStyle(_xAxisTab->axisMajorGridLineStyle());
   _plotItem->plotItem()->setXAxisMinorGridLineStyle(_xAxisTab->axisMinorGridLineStyle());
+  _plotItem->setXAxisLog(_xAxisTab->isLog());
+  _plotItem->plotItem()->setXAxisReversed(_xAxisTab->isReversed());
+  _plotItem->plotItem()->setXAxisInterpret(_xAxisTab->isInterpret());
+  _plotItem->plotItem()->setXAxisDisplay(_xAxisTab->axisDisplay());
+  _plotItem->plotItem()->setXAxisInterpretation(_xAxisTab->axisInterpretation());
+  _plotItem->plotItem()->setXAxisBaseOffset(_xAxisTab->isBaseOffset());
+
 }
 
 
@@ -343,6 +363,12 @@ void PlotRenderItemDialog::yAxisChanged() {
   _plotItem->plotItem()->setYAxisMinorGridLineColor(_yAxisTab->axisMinorGridLineColor());
   _plotItem->plotItem()->setYAxisMajorGridLineStyle(_yAxisTab->axisMajorGridLineStyle());
   _plotItem->plotItem()->setYAxisMinorGridLineStyle(_yAxisTab->axisMinorGridLineStyle());
+  _plotItem->setYAxisLog(_yAxisTab->isLog());
+  _plotItem->plotItem()->setYAxisReversed(_yAxisTab->isReversed());
+  _plotItem->plotItem()->setYAxisInterpret(_yAxisTab->isInterpret());
+  _plotItem->plotItem()->setYAxisDisplay(_yAxisTab->axisDisplay());
+  _plotItem->plotItem()->setYAxisInterpretation(_yAxisTab->axisInterpretation());
+  _plotItem->plotItem()->setYAxisBaseOffset(_yAxisTab->isBaseOffset());
 }
 
 
