@@ -351,15 +351,78 @@ void PlotItem::paintMajorTickLabels(QPainter *painter,
                                     const QList<qreal> &xMajorTicks,
                                     const QList<qreal> &yMajorTicks) {
 
-  QRectF yLabelRect;
+  QRectF yLabelRect, xLabelRect;
+  int flags = Qt::TextSingleLine | Qt::AlignVCenter;
+
+  QList<QString> xLabels, yLabels;
+  foreach (qreal x, xMajorTicks) {
+    xLabels.append(QString::number(x));
+  }
+  foreach (qreal y, yMajorTicks) {
+    yLabels.append(QString::number(y));
+  }
+
+  QString xOffsetLabel, yOffsetLabel;
+  if (_xAxisBaseOffset) {
+    qreal offset;
+    int shortest = 1000;
+    for (int i = 0; i < xMajorTicks.count(); i++) {
+      if (xLabels[i].length() < shortest) {
+        shortest = xLabels[i].length();
+        offset = xMajorTicks[i];
+      }
+    }
+    xLabels.clear();
+    xOffsetLabel = QString::number(offset);
+    for (int i = 0; i < xMajorTicks.count(); i++) {
+      qreal value = xMajorTicks[i] - offset;
+      QString label;
+      if (value < 0) {
+        label += "-";
+        value = value * -1;
+      } else if (value > 0) {
+        label += "+";
+      }
+      label += "[";
+      label += QString::number(value);
+      label += "]";
+      xLabels.append(label);
+    }
+  }
+  if (_yAxisBaseOffset) {
+    qreal offset;
+    int shortest = 1000;
+    for (int i = 0; i < yMajorTicks.count(); i++) {
+      if (yLabels[i].length() < shortest) {
+        shortest = yLabels[i].length();
+        offset = yMajorTicks[i];
+      }
+    }
+    yLabels.clear();
+    yOffsetLabel = QString::number(offset);
+    for (int i = 0; i < yMajorTicks.count(); i++) {
+      qreal value = yMajorTicks[i] - offset;
+      QString label;
+      if (value < 0) {
+        label += "-";
+        value = value * -1;
+      } else if (value > 0) {
+        label += "+";
+      }
+      label += "[";
+      label += QString::number(value);
+      label += "]";
+      yLabels.append(label);
+    }
+  }
+
   for (int i = 0; i < yMajorTicks.count(); i++) {
     qreal y = yMajorTicks[i];
-    int flags = Qt::TextSingleLine | Qt::AlignVCenter;
     QString label;
     if (_yAxisReversed) {
-      label = QString::number(yMajorTicks[(yMajorTicks.count() - 1) - i]);
+      label = yLabels[(yLabels.count() - 1) - i];
     } else {
-      label = QString::number(y);
+      label = yLabels[i];
     }
 
     QRectF bound = painter->boundingRect(QRectF(), flags, label);
@@ -376,19 +439,40 @@ void PlotItem::paintMajorTickLabels(QPainter *painter,
     painter->drawText(bound, flags, label);
   }
 
-  QRectF xLabelRect;
+  if (_yAxisBaseOffset) {
+    painter->save();
+    QTransform t;
+    t.rotate(90.0);
+    painter->rotate(-90.0);
+
+    QRectF bound = painter->boundingRect(QRectF(), flags, yOffsetLabel);
+    bound = QRectF(bound.x(), bound.bottomRight().y() - bound.width(), bound.height(), bound.width());
+    QPointF p = mapToPlotFromProjection(QPointF(projectionRect().left(), projectionRect().top()));
+    p.setX(p.x() - bound.width() * 2.0);
+    bound.moveBottomLeft(p);
+
+    if (xLabelRect.isValid()) {
+      xLabelRect = xLabelRect.united(bound);
+    } else {
+      xLabelRect = bound;
+    }
+
+    painter->drawText(t.mapRect(bound), flags, yOffsetLabel);
+    painter->restore();
+  }
+
   for (int i = 0; i < xMajorTicks.count(); i++) {
     qreal x = xMajorTicks[i];
-    int flags = Qt::TextSingleLine | Qt::AlignVCenter;
     QString label;
     if (_xAxisReversed) {
-      label = QString::number(xMajorTicks[(xMajorTicks.count() - 1) - i]);
+      label = xLabels[(xLabels.count() - 1) - i];
     } else {
-      label = QString::number(x);
+      label = xLabels[i];
     }
 
     QRectF bound = painter->boundingRect(QRectF(), flags, label);
     QPointF p = mapToPlotFromProjection(QPointF(x, projectionRect().top()));
+
     p.setY(p.y() + bound.height() / 2.0);
     bound.moveCenter(p);
 
@@ -399,6 +483,21 @@ void PlotItem::paintMajorTickLabels(QPainter *painter,
     }
 
     painter->drawText(bound, flags, label);
+  }
+
+  if (_xAxisBaseOffset) {
+    QRectF bound = painter->boundingRect(QRectF(), flags, xOffsetLabel);
+    QPointF p = mapToPlotFromProjection(QPointF(projectionRect().left(), projectionRect().top()));
+    p.setY(p.y() + bound.height() * 2.0);
+    bound.moveBottomLeft(p);
+
+    if (xLabelRect.isValid()) {
+      xLabelRect = xLabelRect.united(bound);
+    } else {
+      xLabelRect = bound;
+    }
+
+    painter->drawText(bound, flags, xOffsetLabel);
   }
 
   _xLabelRect = xLabelRect;
