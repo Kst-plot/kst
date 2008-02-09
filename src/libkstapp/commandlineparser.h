@@ -49,6 +49,8 @@ private:
   QStringList _arguments;
   PlotItem *_plotItem;
 
+  DataVectorList _vectors;
+
   Document *_document;
 
   void _setIntArg(int *arg, QString Message);

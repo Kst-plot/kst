@@ -37,6 +37,7 @@ CommandLineParser::CommandLineParser(Document *doc):
   _document = doc;
 
   _fileNames.clear();
+  _vectors.clear();
 }
 
 
@@ -154,19 +155,40 @@ void CommandLineParser::_setStringArg(QString &arg, QString Message) {
 
 DataVectorPtr CommandLineParser::createOrFindDataVector(QString field, DataSourcePtr ds) {
     DataVectorPtr xv;
+    bool found = false;
 
-    //FIXME: currently, this just makes the vector, without first checking if there is already
-    //a vector with the same properties....
-    Q_ASSERT(_document && _document->objectStore());
-    const ObjectTag tag = _document->objectStore()->suggestObjectTag<DataVector>(field, ds->tag());
+    // check to see if an identicle vector already exists.  If so, use it.
+    for (int i=0; i<_vectors.count(); i++) {
+      xv = _vectors.at(i);
+      if (field == xv->field()) {
+        if ((xv->startFrame() == _startFrame) &&
+            (xv->reqNumFrames() == _numFrames) &&
+            (xv->skip() == _skip) &&
+            (xv->doSkip() == (_skip>0)) &&
+            (xv->doAve() == _doAve) ){
+          if (xv->filename()==ds->fileName()) {
+            found = true;
+            break;
+          }
+        }
+      }
+    }
 
-    xv = _document->objectStore()->createObject<DataVector>(tag);
+    if (!found) {
+      Q_ASSERT(_document && _document->objectStore());
+      const ObjectTag tag = _document->objectStore()->suggestObjectTag<DataVector>(field, ds->tag());
 
-    xv->writeLock();
-    xv->change(ds, field, _startFrame, _numFrames, _skip, _skip>0, _doAve);
+      xv = _document->objectStore()->createObject<DataVector>(tag);
 
-    xv->update(0);
-    xv->unlock();
+      xv->writeLock();
+      xv->change(ds, field, _startFrame, _numFrames, _skip, _skip>0, _doAve);
+
+      xv->update(0);
+      xv->unlock();
+
+      _vectors.append(xv);
+
+    }
 
     return xv;
 }
