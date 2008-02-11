@@ -34,9 +34,7 @@ enum KstAxisDisplay {
   AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS,
   AXIS_DISPLAY_JD,
   AXIS_DISPLAY_MJD,
-  AXIS_DISPLAY_RJD,
-  AXIS_DISPLAY_KDE_SHORTDATE,
-  AXIS_DISPLAY_KDE_LONGDATE };
+  AXIS_DISPLAY_RJD };
 
 struct AxisInterpretation {
   const char *label;
@@ -65,9 +63,7 @@ const AxisDisplay AxisDisplays[] = {
   { I18N_NOOP("<Qt Local Date> HH:MM:SS.SS"), AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS },
   { I18N_NOOP2("Julian Date", "JD"), AXIS_DISPLAY_JD },
   { I18N_NOOP2("Modified Julian Date", "MJD"), AXIS_DISPLAY_MJD },
-  { I18N_NOOP2("Reduced Julian Date", "RJD"), AXIS_DISPLAY_RJD },
-  { I18N_NOOP("<KDE Short Date and Time>"), AXIS_DISPLAY_KDE_SHORTDATE },
-  { I18N_NOOP("<KDE Long Date and Time>"), AXIS_DISPLAY_KDE_LONGDATE }
+  { I18N_NOOP2("Reduced Julian Date", "RJD"), AXIS_DISPLAY_RJD }
 };
 
 class TickParameters {

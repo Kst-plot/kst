@@ -27,10 +27,17 @@
 #include "dataobjectcollection.h"
 #include "cartesianrenderitem.h"
 
+#include "settings.h"
+
 #include <QDebug>
 
 static qreal MARGIN_WIDTH = 20.0;
 static qreal MARGIN_HEIGHT = 20.0;
+static int FULL_PRECISION = 15;
+static qreal JD1900 = 2415020.5;
+static qreal JD1970 = 2440587.5;
+static qreal JD_RJD = 2400000.0;
+static qreal JD_MJD = 2400000.5;
 
 namespace Kst {
 
@@ -362,55 +369,73 @@ void PlotItem::paintMajorTickLabels(QPainter *painter,
     yLabels.append(QString::number(y));
   }
 
-  QString xOffsetLabel, yOffsetLabel;
-  if (_xAxisBaseOffset) {
-    qreal offset;
+  QString xBaseLabel, yBaseLabel;
+  if (_xAxisBaseOffset || _xAxisInterpret) {
+    qreal base;
     int shortest = 1000;
     for (int i = 0; i < xMajorTicks.count(); i++) {
       if (xLabels[i].length() < shortest) {
         shortest = xLabels[i].length();
-        offset = xMajorTicks[i];
+        base = xMajorTicks[i];
       }
     }
     xLabels.clear();
-    xOffsetLabel = QString::number(offset);
+    if (_xAxisInterpret) {
+      xBaseLabel = interpretLabel(_xAxisInterpretation, _xAxisDisplay, base, xMajorTicks[xMajorTicks.count() -1]);
+    } else {
+      xBaseLabel = QString::number(base);
+    }
     for (int i = 0; i < xMajorTicks.count(); i++) {
-      qreal value = xMajorTicks[i] - offset;
+      qreal offset;
+      if (_xAxisInterpret) {
+        offset = interpretOffset(_xAxisInterpretation, _xAxisDisplay, base, xMajorTicks[i]);
+      } else {
+        offset = xMajorTicks[i] - base;
+      }
       QString label;
-      if (value < 0) {
+      if (offset < 0) {
         label += "-";
-        value = value * -1;
-      } else if (value > 0) {
+        offset = offset * -1;
+      } else if (offset > 0) {
         label += "+";
       }
       label += "[";
-      label += QString::number(value);
+      label += QString::number(offset, 'g', FULL_PRECISION);
       label += "]";
       xLabels.append(label);
     }
   }
-  if (_yAxisBaseOffset) {
-    qreal offset;
+  if (_yAxisBaseOffset || _yAxisInterpret) {
+    qreal base;
     int shortest = 1000;
     for (int i = 0; i < yMajorTicks.count(); i++) {
       if (yLabels[i].length() < shortest) {
         shortest = yLabels[i].length();
-        offset = yMajorTicks[i];
+        base = yMajorTicks[i];
       }
     }
     yLabels.clear();
-    yOffsetLabel = QString::number(offset);
+    if (_yAxisInterpret) {
+      yBaseLabel = interpretLabel(_yAxisInterpretation, _yAxisDisplay, base, yMajorTicks[xMajorTicks.count() -1]);
+    } else {
+      yBaseLabel = QString::number(base);
+    }
     for (int i = 0; i < yMajorTicks.count(); i++) {
-      qreal value = yMajorTicks[i] - offset;
+      qreal offset;
+      if (_yAxisInterpret) {
+        offset = interpretOffset(_yAxisInterpretation, _yAxisDisplay, base, yMajorTicks[i]);
+      } else {
+        offset = yMajorTicks[i] - base;
+      }
       QString label;
-      if (value < 0) {
+      if (offset < 0) {
         label += "-";
-        value = value * -1;
-      } else if (value > 0) {
+        offset = offset * -1;
+      } else if (offset > 0) {
         label += "+";
       }
       label += "[";
-      label += QString::number(value);
+      label += QString::number(offset);
       label += "]";
       yLabels.append(label);
     }
@@ -439,25 +464,25 @@ void PlotItem::paintMajorTickLabels(QPainter *painter,
     painter->drawText(bound, flags, label);
   }
 
-  if (_yAxisBaseOffset) {
+  if (!yBaseLabel.isEmpty()) {
     painter->save();
     QTransform t;
     t.rotate(90.0);
     painter->rotate(-90.0);
 
-    QRectF bound = painter->boundingRect(QRectF(), flags, yOffsetLabel);
+    QRectF bound = painter->boundingRect(QRectF(), flags, yBaseLabel);
     bound = QRectF(bound.x(), bound.bottomRight().y() - bound.width(), bound.height(), bound.width());
     QPointF p = mapToPlotFromProjection(QPointF(projectionRect().left(), projectionRect().top()));
     p.setX(p.x() - bound.width() * 2.0);
     bound.moveBottomLeft(p);
 
-    if (xLabelRect.isValid()) {
-      xLabelRect = xLabelRect.united(bound);
+    if (yLabelRect.isValid()) {
+      yLabelRect = yLabelRect.united(bound);
     } else {
-      xLabelRect = bound;
+      yLabelRect = bound;
     }
 
-    painter->drawText(t.mapRect(bound), flags, yOffsetLabel);
+    painter->drawText(t.mapRect(bound), flags, yBaseLabel);
     painter->restore();
   }
 
@@ -485,8 +510,8 @@ void PlotItem::paintMajorTickLabels(QPainter *painter,
     painter->drawText(bound, flags, label);
   }
 
-  if (_xAxisBaseOffset) {
-    QRectF bound = painter->boundingRect(QRectF(), flags, xOffsetLabel);
+  if (!xBaseLabel.isEmpty()) {
+    QRectF bound = painter->boundingRect(QRectF(), flags, xBaseLabel);
     QPointF p = mapToPlotFromProjection(QPointF(projectionRect().left(), projectionRect().top()));
     p.setY(p.y() + bound.height() * 2.0);
     bound.moveBottomLeft(p);
@@ -497,7 +522,7 @@ void PlotItem::paintMajorTickLabels(QPainter *painter,
       xLabelRect = bound;
     }
 
-    painter->drawText(bound, flags, xOffsetLabel);
+    painter->drawText(bound, flags, xBaseLabel);
   }
 
   _xLabelRect = xLabelRect;
@@ -511,6 +536,290 @@ void PlotItem::paintMajorTickLabels(QPainter *painter,
 // //  qDebug() << "yLabelRect:" << yLabelRect << endl;
 //   painter->fillRect(yLabelRect, Qt::green);
 //   painter->restore();
+}
+
+
+QString PlotItem::interpretLabel(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double base, double lastValue) {
+  double value = convertTimeValueToJD(axisInterpretation, base);
+  double scaleValue = convertTimeValueToJD(axisInterpretation, lastValue) - value;
+
+  switch (axisInterpretation) {
+    case AXIS_INTERP_YEAR:
+      scaleValue *= 365.25 * 24.0 * 60.0 * 60.0;
+      break;
+    case AXIS_INTERP_CTIME:
+      break;
+    case AXIS_INTERP_JD:
+    case AXIS_INTERP_MJD:
+    case AXIS_INTERP_RJD:
+      scaleValue *= 24.0 * 60.0 * 60.0;
+      break;
+    case AXIS_INTERP_AIT:
+      break;
+  }
+
+  QString label;
+
+  // print value in appropriate format
+  switch (axisDisplay) {
+    case AXIS_DISPLAY_YEAR:
+      value -= JD1900 + 0.5;
+      value /= 365.25;
+      value += 1900.0;
+      label = i18n("J");
+      label += QString::number(value, 'g', FULL_PRECISION);
+      label += " [years]";
+      break;
+    case AXIS_DISPLAY_YYMMDDHHMMSS_SS:
+    case AXIS_DISPLAY_DDMMYYHHMMSS_SS:
+    case AXIS_DISPLAY_QTTEXTDATEHHMMSS_SS:
+    case AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS:
+      label = convertJDToDateString(axisInterpretation, axisDisplay, value);
+      if( scaleValue > 10.0 * 24.0 * 60.0 * 60.0 ) {
+        label += i18n(" [days]");
+      } else if( scaleValue > 10.0 * 24.0 * 60.0 ) {
+        label += i18n(" [hours]");
+      } else if( scaleValue > 10.0 * 60.0 ) {
+        label += i18n(" [minutes]");
+      } else {
+        label += i18n(" [seconds]");
+      }
+      break;
+    case AXIS_DISPLAY_JD:
+      label = i18n("JD");
+      label += QString::number(value, 'g', FULL_PRECISION);
+      label += " [days]";
+      break;
+    case AXIS_DISPLAY_MJD:
+      value -= JD_MJD;
+      label = i18n("MJD");
+      label += QString::number(value, 'g', FULL_PRECISION);
+      label += " [days]";
+      break;
+    case AXIS_DISPLAY_RJD:
+      value -= JD_RJD;
+      label = i18n("RJD");
+      label += QString::number(value, 'g', FULL_PRECISION);
+      label += " [days]";
+      break;
+  }
+
+  return label;
+}
+
+
+double PlotItem::interpretOffset(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double base, double value) {
+  double offset;
+  offset = value - base;
+
+  offset = convertTimeDiffValueToDays(axisInterpretation, offset);
+
+  // convert difference to desired format
+  switch (axisDisplay) {
+    case AXIS_DISPLAY_YEAR:
+      offset /= 365.25;
+      break;
+    case AXIS_DISPLAY_YYMMDDHHMMSS_SS:
+    case AXIS_DISPLAY_DDMMYYHHMMSS_SS:
+    case AXIS_DISPLAY_QTTEXTDATEHHMMSS_SS:
+    case AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS:
+      offset *= 24.0 * 60.0 * 60.0;
+      break;
+    case AXIS_DISPLAY_JD:
+    case AXIS_DISPLAY_MJD:
+    case AXIS_DISPLAY_RJD:
+      break;
+  }
+  return offset;
+}
+
+
+double PlotItem::convertTimeValueToJD(KstAxisInterpretation axisInterpretation, double valueIn) {
+  double value = valueIn;
+
+  switch (axisInterpretation) {
+    case AXIS_INTERP_YEAR:
+      value -= 1900.0;
+      value *= 365.25;
+      value += JD1900 + 0.5;
+      break;
+    case AXIS_INTERP_CTIME:
+      value /= 24.0 * 60.0 * 60.0;
+      value += JD1970;
+      break;
+    case AXIS_INTERP_JD:
+      break;
+    case AXIS_INTERP_MJD:
+      value += JD_MJD;
+      break;
+    case AXIS_INTERP_RJD:
+      value += JD_RJD;
+      break;
+    case AXIS_INTERP_AIT:
+      value -= 86400.0 * (365.0 * 12.0 + 3.0);
+      // current difference (seconds) between UTC and AIT
+      // refer to the following for more information:
+      // http://hpiers.obspm.fr/eop-pc/earthor/utc/TAI-UTC_tab.html
+      value -= 32.0;
+      value /= 24.0 * 60.0 * 60.0;
+      value += JD1970;
+    default:
+      break;
+  }
+
+  return value;
+}
+
+
+double PlotItem::convertTimeDiffValueToDays(KstAxisInterpretation axisInterpretation, double offsetIn) {
+  double offset = offsetIn;
+
+  switch (axisInterpretation) {
+    case AXIS_INTERP_YEAR:
+      offset *= 365.25;
+      break;
+    case AXIS_INTERP_CTIME:
+      offset /= 24.0 * 60.0 * 60.0;
+      break;
+    case AXIS_INTERP_JD:
+    case AXIS_INTERP_MJD:
+    case AXIS_INTERP_RJD:
+      break;
+    case AXIS_INTERP_AIT:
+      offset /= 24.0 * 60.0 * 60.0;
+      break;
+    default:
+      break;
+  }
+
+  return offset;
+}
+
+
+QString PlotItem::convertJDToDateString(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double dJD) {
+  QString label;
+  QDate date;
+
+  int accuracy;
+  double xdelta = (projectionRect().right()-projectionRect().left())/double(projectionRect().width());
+  xdelta = convertTimeDiffValueToDays(axisInterpretation, xdelta);
+  xdelta *= 24.0 * 60.0 * 60.0;
+
+  if (xdelta == 0.0) {
+    accuracy = FULL_PRECISION;
+  } else {
+    accuracy = 1 - int(log10(xdelta));
+    if (accuracy < 0) {
+      accuracy = 0;
+    }
+  }
+
+  // utcOffset() is returned in seconds... as it must be since
+  //  some time zones are not an integer number of hours offset
+  //  from UTC...
+  dJD += double(Settings::globalSettings()->utcOffset()) / 86400.0;
+
+  // get the date from the Julian day number
+  double dJDDay = floor(dJD);
+  double dJDFraction = dJD - dJDDay;
+
+  // gregorian calendar correction
+  if (dJD >= 2299160.5) {
+    double tmp = int( ( (dJDDay - 1867216.0) - 0.25 ) / 36524.25 );
+    dJDDay += 1.0 + tmp - floor(0.25*tmp);
+  }
+
+  // correction for half day offset
+  double dDayFraction = dJDFraction + 0.5;
+  if (dDayFraction >= 1.0) {
+    dDayFraction -= 1.0;
+    dJDDay += 1.0;
+  }
+
+  // get time of day from day fraction
+  int hour   = int(dDayFraction*24.0);
+  int minute = int((dDayFraction*24.0 - double(hour))*60.0);
+  double second = ((dDayFraction*24.0 - double(hour))*60.0 - double(minute))*60.0;
+
+  if (accuracy >= 0) {
+    second *= pow(10.0, accuracy);
+    second  = floor(second+0.5);
+    second /= pow(10.0,accuracy);
+    if (second >= 60.0) {
+      second -= 60.0;
+      minute++;
+      if (minute == 60) {
+        minute = 0;
+        hour++;
+        if (hour == 24) {
+          hour = 0;
+        }
+      }
+    }
+  }
+
+  double j2 = dJDDay + 1524.0;
+  double j3 = floor(6680.0 + ( (j2 - 2439870.0) - 122.1 )/365.25);
+  double j4 = floor(j3 * 365.25);
+  double j5 = floor((j2 - j4)/30.6001);
+
+  int day = int(j2 - j4 - floor(j5*30.6001));
+  int month = int(j5 - 1.0);
+  if (month > 12) {
+    month -= 12;
+  }
+  int year = int(j3 - 4715.0);
+  if (month > 2) {
+    --year;
+  }
+  if (year <= 0) {
+    --year;
+  }
+  // check how many decimal places for the seconds we actually need to show
+  if (accuracy > 0) {
+    QString strSecond;
+
+    strSecond.sprintf("%02.*f", accuracy, second);
+    for (int i=strSecond.length()-1; i>0; i--) {
+      if (strSecond.at(i) == '0') {
+        accuracy--;
+      } else if (!strSecond.at(i).isDigit()) {
+        break;
+      }
+    }
+  }
+
+  if (accuracy < 0) {
+    accuracy = 0;
+  }
+
+  QString seconds;
+  QString hourminute;
+  hourminute.sprintf(" %02d:%02d:", hour, minute);
+  seconds.sprintf(" %02.*f", accuracy, second);
+  switch (axisDisplay) {
+    case AXIS_DISPLAY_YYMMDDHHMMSS_SS:
+      label.sprintf("%d/%02d/%02d", year, month, day);
+      label += hourminute + seconds;
+      break;
+    case AXIS_DISPLAY_DDMMYYHHMMSS_SS:
+      label.sprintf("%02d/%02d/%d", day, month, year);
+      label += hourminute + seconds;
+      break;
+    case AXIS_DISPLAY_QTTEXTDATEHHMMSS_SS:
+      date.setYMD(year, month, day);
+      label = date.toString(Qt::TextDate).toAscii();
+      label += hourminute + seconds;
+      break;
+    case AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS:
+      date.setYMD(year, month, day);
+      label = date.toString(Qt::LocalDate).toAscii();
+      label += hourminute + seconds;
+      break;
+    default:
+      break;
+  }
+  return label;
 }
 
 

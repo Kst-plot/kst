@@ -259,6 +259,12 @@ class PlotItem : public ViewItem, public PlotItemInterface
     qreal calculatedLabelMarginHeight() const;
     void setCalculatedLabelMarginHeight(qreal marginHeight);
 
+    QString interpretLabel(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double base, double lastValue);
+    double convertTimeValueToJD(KstAxisInterpretation axisInterpretation, double valueIn);
+    QString convertJDToDateString(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double dJD);
+    double convertTimeDiffValueToDays(KstAxisInterpretation axisInterpretation, double offsetIn);
+    double interpretOffset(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double base, double value);
+
     QRectF horizontalLabelRect(bool calc) const;
     QRectF verticalLabelRect(bool calc) const;
 
