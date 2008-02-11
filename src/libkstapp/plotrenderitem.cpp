@@ -319,6 +319,15 @@ void PlotRenderItem::paint(QPainter *painter) {
 #endif
 
   painter->save();
+
+  if (plotItem()->xAxisReversed()) {
+    painter->scale(-1, 1);
+    painter->translate(-1.0 * rect().right() - rect().left(), 0);
+  }
+  if (plotItem()->yAxisReversed()) {
+    painter->scale(1, -1);
+    painter->translate(0, -1.0 * rect().bottom() - rect().top());
+  }
   painter->setClipRect(rect());
   paintRelations(painter);
 
