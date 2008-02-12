@@ -52,6 +52,8 @@ PlotItem::PlotItem(View *parent)
   _calculatedLabelMarginHeight(0.0),
   _calculatedAxisMarginWidth(0.0),
   _calculatedAxisMarginHeight(0.0),
+  _xAxisLog(false),
+  _yAxisLog(false),
   _xAxisReversed(false),
   _yAxisReversed(false),
   _xAxisBaseOffset(false),
@@ -918,6 +920,26 @@ qreal PlotItem::axisMarginHeight() const {
   } else {
     return calculatedAxisMarginHeight();
   }
+}
+
+
+bool PlotItem::xAxisLog() const {
+  return _xAxisLog;
+}
+
+
+void PlotItem::setXAxisLog(bool log) {
+  _xAxisLog = log;
+}
+
+
+bool PlotItem::yAxisLog() const {
+  return _yAxisLog;
+}
+
+
+void PlotItem::setYAxisLog(bool log) {
+  _yAxisLog = log;
 }
 
 

@@ -174,6 +174,12 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QFont bottomLabelFont() const;
     void setBottomLabelFont(const QFont &font);
 
+    bool xAxisLog() const;
+    void setXAxisLog(bool log);
+
+    bool yAxisLog() const;
+    void setYAxisLog(bool log);
+
     bool xAxisReversed() const;
     void setXAxisReversed(const bool enabled);
 
@@ -318,6 +324,8 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QFont _topLabelFont;
     QFont _rightLabelFont;
 
+    bool _xAxisLog;
+    bool _yAxisLog;
     bool _xAxisReversed;
     bool _yAxisReversed;
     bool _xAxisBaseOffset;
