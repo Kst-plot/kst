@@ -348,6 +348,7 @@ int DataVector::reqStartFrame() const {
 void DataVector::save(QXmlStreamWriter &s) {
   if (_file) {    
     s.writeStartElement("datavector");
+    s.writeAttribute("tag", tag().tagString());
     _file->readLock();
     s.writeAttribute("provider", _file->tag().tagString());
     s.writeAttribute("file", _file->fileName());

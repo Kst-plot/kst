@@ -261,8 +261,6 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
   vector->unlock();
 
   return vector;
-
-  return 0;
 }
 
 }
