@@ -121,6 +121,7 @@ bool PlotRenderItem::isXAxisLog() const {
 
 void PlotRenderItem::setXAxisLog(bool log) {
   _isXAxisLog = log;
+  plotItem()->setXAxisLog(log);
 }
 
 
@@ -141,6 +142,7 @@ bool PlotRenderItem::isYAxisLog() const {
 
 void PlotRenderItem::setYAxisLog(bool log) {
   _isYAxisLog = log;
+  plotItem()->setYAxisLog(log);
 }
 
 
