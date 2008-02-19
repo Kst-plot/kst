@@ -1865,9 +1865,9 @@ void PlotItem::computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTick
       }
     }
   }
-  if (minorLabels) {
+  if (minorLabels && !MinorTicks->isEmpty()) {
     qreal lastMinorTick = MinorTicks->last();
-    if (MajorTicks->last() < lastMinorTick) {
+    if (MajorTicks->isEmpty() || MajorTicks->last() < lastMinorTick) {
       if (!Labels->contains(lastMinorTick)) {
         qreal adjustedMinorPoint = lastMinorTick;
         if (_xAxisReversed && xAxis) {
