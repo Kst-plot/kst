@@ -258,8 +258,8 @@ class PlotItem : public ViewItem, public PlotItemInterface
     virtual void paintMajorTickLabels(QPainter *painter,
                                       const QList<qreal> &xMajorTicks,
                                       const QList<qreal> &yMajorTicks,
-                                      const QList<QString> &xLabels,
-                                      const QList<QString> &yLabels);
+                                      const QMap<qreal, QString> &xLabels,
+                                      const QMap<qreal, QString> &yLabels);
 
     qreal calculatedLabelMarginWidth() const;
     void setCalculatedLabelMarginWidth(qreal marginWidth);
@@ -291,9 +291,9 @@ class PlotItem : public ViewItem, public PlotItemInterface
     qreal calculatedAxisMarginHeight() const;
     void setCalculatedAxisMarginHeight(qreal marginHeight);
 
-    void computeTicks(QList<qreal> *xMajorTicks, QList<qreal> *xMinorTicks, QList<qreal> *yMajorTicks, QList<qreal> *yMinorTicks, QList<QString> *xLabels, QList<QString> *yLabels) const;
+    void computeTicks(QList<qreal> *xMajorTicks, QList<qreal> *xMinorTicks, QList<qreal> *yMajorTicks, QList<qreal> *yMinorTicks, QMap<qreal, QString> *xLabels, QMap<qreal, QString> *yLabels) const;
     qreal computedMajorTickSpacing(Qt::Orientation orientation) const;
-    void computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTicks, QList<QString> *Labels, qreal min, qreal max, qreal size, MajorTickMode tickMode) const;
+    void computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTicks, QMap<qreal, QString> *Labels, qreal min, qreal max, qreal size, MajorTickMode tickMode, bool xAxis) const;
 
     QSizeF calculateXTickLabelBound(QPainter *painter, const QList<qreal> &xMajorTicks);
     QSizeF calculateYTickLabelBound(QPainter *painter, const QList<qreal> &yMajorTicks);
