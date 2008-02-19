@@ -18,7 +18,6 @@
 
 #include <QStringList>
 namespace Kst {
-
 /**
 	@author Barth Netterfield <netterfield@physics.utoronto.ca>
 */
@@ -28,7 +27,7 @@ public:
   ~CommandLineParser();
 
   bool processCommandLine();
-
+  QString kstFileName();
 private:
   bool _doAve;
   bool _doSkip;
@@ -48,6 +47,10 @@ private:
   QStringList _fileNames;
   QStringList _arguments;
   PlotItem *_plotItem;
+  
+  // lists of command line named plot items (and their names).
+  QList<PlotItem*> _plotItems;
+  QStringList _plotNames;
 
   DataVectorList _vectors;
 
@@ -58,6 +61,7 @@ private:
   void _setStringArg(QString &arg, QString Message);
   void usage(QString Message = "");
   DataVectorPtr createOrFindDataVector(QString field, DataSourcePtr ds);
+  void createOrFindPlot(const QString tagname);
   void createCurveInPlot(const ObjectTag &tag, VectorPtr xv, VectorPtr yv, VectorPtr ev=0);
 };
 

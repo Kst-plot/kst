@@ -38,6 +38,8 @@ CommandLineParser::CommandLineParser(Document *doc):
 
   _fileNames.clear();
   _vectors.clear();
+  _plotNames.clear();
+  _plotItems.clear();
 }
 
 
@@ -157,7 +159,7 @@ DataVectorPtr CommandLineParser::createOrFindDataVector(QString field, DataSourc
     DataVectorPtr xv;
     bool found = false;
 
-    // check to see if an identicle vector already exists.  If so, use it.
+    // check to see if an identical vector already exists.  If so, use it.
     for (int i=0; i<_vectors.count(); i++) {
       xv = _vectors.at(i);
       if (field == xv->field()) {
@@ -229,10 +231,43 @@ void CommandLineParser::createCurveInPlot(const ObjectTag &tag, VectorPtr xv, Ve
     _plotItem->update();
 }
 
+void CommandLineParser::createOrFindPlot( const QString plot_name ) {
+    bool found = false;
+    PlotItem *pi;
+
+    // check to see if a plot with this name exists.  If so, use it.
+    for (int i=0; i<_plotItems.count(); i++) {
+      pi = _plotItems.at(i);
+      if (plot_name == pi->name()) {
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      CreatePlotForCurve *cmd = new CreatePlotForCurve ( true,true );
+      cmd->createItem();
+      pi = static_cast<PlotItem*> ( cmd->item() );
+      pi->setName ( plot_name );
+      _plotNames.append(plot_name);
+      _plotItems.append(pi);
+    }
+    _plotItem = pi;
+}
+
+QString CommandLineParser::kstFileName() {
+  if (_fileNames.size()>0) {
+    return (_fileNames.at(0));
+  } else {
+    return QString();
+  }
+}
+
 bool CommandLineParser::processCommandLine() {
   QString arg, param;
   bool ok=true;
   bool new_fileList=true;
+  bool dataPlotted = false;
 
   while (1) {
     if (_arguments.count()<1) break;
@@ -254,10 +289,7 @@ bool CommandLineParser::processCommandLine() {
       _setStringArg(plot_name,i18n("Usage: -P <plotname>\n"));
       _doConsecutivePlots=false;
 
-      CreatePlotForCurve *cmd = new CreatePlotForCurve(true,true);
-      cmd->createItem();
-      _plotItem = static_cast<PlotItem*>(cmd->item());
-      _plotItem->setName(plot_name);
+      createOrFindPlot(plot_name);
     } else if (arg == "-A") {
       _doConsecutivePlots = true;
     } else if (arg == "-d") {
@@ -278,7 +310,7 @@ bool CommandLineParser::processCommandLine() {
     } else if (arg == "-x") {
       _setStringArg(_xField,i18n("Usage: -x <xfieldname>\n"));
     } else if (arg == "-e") {
-      _setStringArg(_errorField,i18n("Usage: -P <errorfieldname>\n"));
+      _setStringArg(_errorField,i18n("Usage: -e <errorfieldname>\n"));
     } else if (arg == "-r") {
       _setDoubleArg(&_sampleRate,i18n("Usage: -r <samplerate>\n"));
     } else if (arg == "-y") {
@@ -320,6 +352,7 @@ bool CommandLineParser::processCommandLine() {
         }
 
         createCurveInPlot(tag, xv, yv, ev);
+        dataPlotted = true;
       }
 
       _errorField = QString();
@@ -372,6 +405,7 @@ bool CommandLineParser::processCommandLine() {
         }
 
         createCurveInPlot(tag, powerspectrum->vX(), powerspectrum->vY(), ev);
+        dataPlotted = true;
       }
       new_fileList = true;
       _overrideStyle = false;
@@ -415,6 +449,7 @@ bool CommandLineParser::processCommandLine() {
         }
 
         createCurveInPlot(tag, histogram->vX(), histogram->vY(), ev);
+        dataPlotted = true;
       }
 
       new_fileList = true;
@@ -424,6 +459,7 @@ bool CommandLineParser::processCommandLine() {
       _setStringArg(field,i18n("Usage: -z <fieldname>\n"));
       //FIXME: Create the matrix, and the image
       new_fileList = true;
+      dataPlotted = true;
     } else { // arg is not an option... must be a file
       if (new_fileList) { // if the file list has been used, clear it.
         _fileNames.clear();
@@ -432,7 +468,7 @@ bool CommandLineParser::processCommandLine() {
       _fileNames.append(arg);
     }
   }
-  return (true);
+  return (dataPlotted);
 }
 
 }
