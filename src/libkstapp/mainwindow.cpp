@@ -21,6 +21,7 @@
 #include "debug.h"
 #include "labelitem.h"
 #include "lineitem.h"
+#include "arrowitem.h"
 #include "memorywidget.h"
 #include "objectstore.h"
 #include "pictureitem.h"
@@ -120,6 +121,7 @@ void MainWindow::setLayoutMode(bool layoutMode) {
   _createBoxAct->setEnabled(layoutMode);
   _createEllipseAct->setEnabled(layoutMode);
   _createLineAct->setEnabled(layoutMode);
+  _createArrowAct->setEnabled(layoutMode);
   _createPictureAct->setEnabled(layoutMode);
   _createPlotAct->setEnabled(layoutMode);
   _createSvgAct->setEnabled(layoutMode);
@@ -371,6 +373,12 @@ void MainWindow::createLine() {
 }
 
 
+void MainWindow::createArrow() {
+  CreateArrowCommand *cmd = new CreateArrowCommand;
+  cmd->createItem();
+}
+
+
 void MainWindow::createPicture() {
   CreatePictureCommand *cmd = new CreatePictureCommand;
   cmd->createItem();
@@ -475,6 +483,12 @@ void MainWindow::createActions() {
   _createLineAct->setIcon(QPixmap(":kst_gfx_line.png"));
   _createLineAct->setEnabled(false);
   connect(_createLineAct, SIGNAL(triggered()), this, SLOT(createLine()));
+
+  _createArrowAct = new QAction(tr("&Create arrow"), this);
+  _createArrowAct->setStatusTip(tr("Create a arrow for the current view"));
+  _createArrowAct->setIcon(QPixmap(":kst_gfx_arrow.png"));
+  _createArrowAct->setEnabled(false);
+  connect(_createArrowAct, SIGNAL(triggered()), this, SLOT(createArrow()));
 
   _createPictureAct = new QAction(tr("&Create picture"), this);
   _createPictureAct->setStatusTip(tr("Create a picture for the current view"));
@@ -656,6 +670,7 @@ void MainWindow::createMenus() {
   _layoutMenu->addAction(_createBoxAct);
   _layoutMenu->addAction(_createEllipseAct);
   _layoutMenu->addAction(_createLineAct);
+  _layoutMenu->addAction(_createArrowAct);
   _layoutMenu->addAction(_createPictureAct);
   _layoutMenu->addAction(_createPlotAct);
   _layoutMenu->addAction(_createSvgAct);
@@ -704,6 +719,7 @@ void MainWindow::createToolBars() {
   _layoutToolBar->addAction(_createBoxAct);
   _layoutToolBar->addAction(_createEllipseAct);
   _layoutToolBar->addAction(_createLineAct);
+  _layoutToolBar->addAction(_createArrowAct);
   _layoutToolBar->addAction(_createPictureAct);
   _layoutToolBar->addAction(_createPlotAct);
 //  _layoutToolBar->addAction(_createSvgAct); //no icon

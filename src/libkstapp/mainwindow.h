@@ -79,6 +79,7 @@ class MainWindow : public QMainWindow
     void createEllipse();
     void createLabel();
     void createLine();
+    void createArrow();
     void createPicture();
     void createPlot();
     void createSvg();
@@ -144,6 +145,7 @@ class MainWindow : public QMainWindow
     QAction *_createBoxAct;
     QAction *_createEllipseAct;
     QAction *_createLineAct;
+    QAction *_createArrowAct;
     QAction *_createPictureAct;
     QAction *_createPlotAct;
     QAction *_createSvgAct;

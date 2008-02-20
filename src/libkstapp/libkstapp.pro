@@ -23,6 +23,7 @@ SOURCES += \
     application.cpp \
     applicationsettings.cpp \
     applicationsettingsdialog.cpp \
+    arrowitem.cpp \
     axis.cpp \
     axistab.cpp \
     basicplugindialog.cpp \
@@ -106,6 +107,7 @@ HEADERS += \
     application.h \
     applicationsettings.h \
     applicationsettingsdialog.h \
+    arrowitem.h \
     axis.h \
     axistab.h \
     basicplugindialog.h \
