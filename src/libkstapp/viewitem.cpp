@@ -1586,6 +1586,38 @@ void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
 void ViewItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   QGraphicsRectItem::hoverMoveEvent(event);
+  if (isSelected()) {
+    QPointF p = event->pos();
+    if (isAllowed(TopLeftGrip) && topLeftGrip().contains(p) || isAllowed(BottomRightGrip) && bottomRightGrip().contains(p)) {
+      if (gripMode() == ViewItem::Rotate) {
+        parentView()->setCursor(Qt::CrossCursor);
+      } else if (gripMode() == ViewItem::Resize) {
+        parentView()->setCursor(Qt::SizeFDiagCursor);
+      }
+    } else if (isAllowed(TopRightGrip) && topRightGrip().contains(p) || isAllowed(BottomLeftGrip) && bottomLeftGrip().contains(p)) {
+      if (gripMode() == ViewItem::Rotate) {
+        parentView()->setCursor(Qt::CrossCursor);
+      } else if (gripMode() == ViewItem::Resize) {
+        parentView()->setCursor(Qt::SizeBDiagCursor);
+      }
+    } else if (isAllowed(TopMidGrip) && topMidGrip().contains(p) || isAllowed(BottomMidGrip) && bottomMidGrip().contains(p)) {
+      if (gripMode() == ViewItem::Rotate) {
+        parentView()->setCursor(Qt::CrossCursor);
+      } else if (gripMode() == ViewItem::Resize) {
+        parentView()->setCursor(Qt::SizeVerCursor);
+      }
+    } else if (isAllowed(RightMidGrip) && rightMidGrip().contains(p) || isAllowed(LeftMidGrip) && leftMidGrip().contains(p)) {
+      if (gripMode() == ViewItem::Rotate) {
+        parentView()->setCursor(Qt::CrossCursor);
+      } else if (gripMode() == ViewItem::Resize) {
+        parentView()->setCursor(Qt::SizeHorCursor);
+      }
+    } else {
+      parentView()->setCursor(Qt::SizeAllCursor);
+    }
+  } else {
+    parentView()->setCursor(Qt::SizeAllCursor);
+  }
 }
 
 
@@ -1598,6 +1630,8 @@ void ViewItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
 
 void ViewItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
   QGraphicsRectItem::hoverMoveEvent(event);
+  parentView()->setCursor(Qt::ArrowCursor);
+
   _hovering = false;
   update();
 }
