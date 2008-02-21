@@ -1,0 +1,77 @@
+1) Problems with lines and arrows:
+Start kst
+Create a box in the right hand side of the tlv, that does not fill the tlv.
+Create a line or arrow which points to the bottom left corner of the box.
+Shrink the kst window.
+  What Happens:
+  The box changes size, keeping the corners fixed relative to the TLV.  The arrow shrinks as well, keeping
+  the angle fixed so that it no longer points to the bottom left corner of the TLV. The size of the arrow head
+  stays fixed.
+  What should happen:
+  The box behaves correctly.
+  The end points of the arrow or line should stay fixed relative to the tlv.
+  The size of the arrow head should scale with the TLV size (L+H) (but should keep a fixed aspect ratio).
+
+Grow the kst window:
+  What happens.
+  The box grows keeping its corners fixed relative to the TLV.
+  The arrow does not grow.
+  What should happen:
+  The box behaves correctly
+  The arrow end points should stay fixed relative to the TLV.
+  The arrow hea size should scale with the tlv (l+h) but should keep a fixed aspect ratio.
+
+2) Problem with rotated boxes:
+Start kst
+Create two boxes.  Rotate one.
+Shrink the kst window.
+  What happens:
+  The un-rotated box changes size, keeping the corners fixed relative to the TLV.
+  The rotated box shrinks, keeping its aspect ratio fixed, but drifts in position relative to the TLV.
+  What should happen
+  The un-rotated box behaves correctly for un-rotated boxes.
+  The rotated box scales correctly (it should keep a fixed aspect ratio) but should keep its
+  position (center) fixed relative to the tlv.
+Now grow the kst window
+  What happens:
+  The unrotated box grows, keeping its corners fixed relative to the TLV.
+  The rotated box does not grow.
+  What should happen:
+  The un-rotated box behaves correctly for un-rotated boxes.
+  The rotated box should scale with the tlv (l+h), with a fixed aspect ratio, and the center
+  should stay fixed relative to the TLV.
+ 
+Returning to an original window size should always return to the same state.
+
+3) Problems with elipses:
+Repeat (2) with "ellipse" replacing "rotated box".
+
+4) Problem with plots
+Start kst.
+From layout mode, create a plot.
+From the data manager add a curve to the plot.
+From layout mode, grow the plot.  
+What happens:
+  the axis and tick marks end up outside the plot
+What should happen:
+  They should stay where they belong!
+
+5) Layout mode grips are left after leavind layout mode.
+Start kst
+create a view object (box)
+select it, so the pretty blue boxes appear.
+Leave layout mode.
+What happens:
+  the pretty blue boxes stay
+What should happen:
+  when you leave layout mode, the boxes should go away.
+
+6) Font sizes in plot
+Start Kst
+Create a plot
+Resize the kst window.
+What happens:
+  The fonts for the labels stay the same size.
+What should happen:
+  The fonts should scale with the window size.
+
