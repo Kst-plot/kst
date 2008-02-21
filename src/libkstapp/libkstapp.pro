@@ -33,6 +33,7 @@ SOURCES += \
     changedatasampledialog.cpp \
     changefiledialog.cpp \
     choosecolordialog.cpp \
+    circleitem.cpp \
     commandlineparser.cpp \
     contenttab.cpp \
     csddialog.cpp \
@@ -117,6 +118,7 @@ HEADERS += \
     changedatasampledialog.h \
     changefiledialog.h \
     choosecolordialog.h \
+    circleitem.h \
     commandlineparser.h\
     contenttab.h \
     csddialog.h \

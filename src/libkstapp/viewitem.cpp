@@ -1209,25 +1209,30 @@ void ViewItem::rotateTowards(const QPointF &corner, const QPointF &point) {
 QPointF ViewItem::lockOffset(const QPointF &offset, qreal ratio, bool oddCorner) const {
   qreal x;
   qreal y;
+  bool xKey;
 
   if (offset.x() < 0 && offset.y() > 0) {
+    xKey = true;
     x = offset.x();
     y = x == 0 ? 0 : (1 / ratio) * x;
   } else if (offset.y() < 0 && offset.x() > 0) {
+    xKey = false;
     y = offset.y();
     x = y == 0 ? 0 : ratio * y;
   } else if (qAbs(offset.x()) < qAbs(offset.y())) {
+    xKey = true;
     x = offset.x();
     y = x == 0 ? 0 : (1 / ratio) * x;
   } else {
+    xKey = false;
     y = offset.y();
     x = y == 0 ? 0 : ratio * y;
   }
 
   QPointF o = offset;
   if (oddCorner) {
-    o = QPointF(y == offset.y() ? -x : x,
-                x == offset.x() ? -y : y);
+    o = QPointF(!xKey ? -x : x,
+                xKey ? -y : y);
   } else {
     o = QPointF(x, y);
   }

@@ -14,10 +14,12 @@
 #define PLOTRENDER_ZVALUE   3
 #define PLOTAXIS_ZVALUE     4
 #define BOX_ZVALUE          5
+#define CIRCLE_ZVALUE       7
 #define ELLIPSE_ZVALUE      7
 #define PICTURE_ZVALUE      7
 #define SVG_ZVALUE          7
 #define LABEL_ZVALUE        8
 #define LINE_ZVALUE         9
+#define ARROW_ZVALUE        9
 
 // vim: ts=2 sw=2 et

@@ -21,6 +21,7 @@
 #include "debug.h"
 #include "labelitem.h"
 #include "lineitem.h"
+#include "circleitem.h"
 #include "arrowitem.h"
 #include "memorywidget.h"
 #include "objectstore.h"
@@ -119,6 +120,7 @@ void MainWindow::setLayoutMode(bool layoutMode) {
   //disable all layout actions
   _createLabelAct->setEnabled(layoutMode);
   _createBoxAct->setEnabled(layoutMode);
+  _createCircleAct->setEnabled(layoutMode);
   _createEllipseAct->setEnabled(layoutMode);
   _createLineAct->setEnabled(layoutMode);
   _createArrowAct->setEnabled(layoutMode);
@@ -355,6 +357,12 @@ void MainWindow::createBox() {
 }
 
 
+void MainWindow::createCircle() {
+  CreateCircleCommand *cmd = new CreateCircleCommand;
+  cmd->createItem();
+}
+
+
 void MainWindow::createEllipse() {
   CreateEllipseCommand *cmd = new CreateEllipseCommand;
   cmd->createItem();
@@ -471,6 +479,12 @@ void MainWindow::createActions() {
   _createBoxAct->setIcon(QPixmap(":kst_gfx_rectangle.png"));
   _createBoxAct->setEnabled(false);
   connect(_createBoxAct, SIGNAL(triggered()), this, SLOT(createBox()));
+
+  _createCircleAct = new QAction(tr("&Create circle"), this);
+  _createCircleAct->setStatusTip(tr("Create a circle for the current view"));
+  _createCircleAct->setIcon(QPixmap(":kst_gfx_ellipse.png"));
+  _createCircleAct->setEnabled(false);
+  connect(_createCircleAct, SIGNAL(triggered()), this, SLOT(createCircle()));
 
   _createEllipseAct = new QAction(tr("&Create ellipse"), this);
   _createEllipseAct->setStatusTip(tr("Create an ellipse for the current view"));
@@ -668,6 +682,7 @@ void MainWindow::createMenus() {
   _layoutMenu->addSeparator();
   _layoutMenu->addAction(_createLabelAct);
   _layoutMenu->addAction(_createBoxAct);
+  _layoutMenu->addAction(_createCircleAct);
   _layoutMenu->addAction(_createEllipseAct);
   _layoutMenu->addAction(_createLineAct);
   _layoutMenu->addAction(_createArrowAct);
@@ -717,6 +732,7 @@ void MainWindow::createToolBars() {
   _layoutToolBar = new QToolBar(tr("Layout"), this);
 //  _layoutToolBar->addAction(_createLabelAct); //no icon
   _layoutToolBar->addAction(_createBoxAct);
+  _layoutToolBar->addAction(_createCircleAct);
   _layoutToolBar->addAction(_createEllipseAct);
   _layoutToolBar->addAction(_createLineAct);
   _layoutToolBar->addAction(_createArrowAct);

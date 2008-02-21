@@ -78,6 +78,7 @@ class MainWindow : public QMainWindow
     void createBox();
     void createEllipse();
     void createLabel();
+    void createCircle();
     void createLine();
     void createArrow();
     void createPicture();
@@ -143,6 +144,7 @@ class MainWindow : public QMainWindow
     // FIXME: move these into each object, along with the creation slot?
     QAction *_createLabelAct;
     QAction *_createBoxAct;
+    QAction *_createCircleAct;
     QAction *_createEllipseAct;
     QAction *_createLineAct;
     QAction *_createArrowAct;

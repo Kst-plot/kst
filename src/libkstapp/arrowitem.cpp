@@ -25,7 +25,7 @@ namespace Kst {
 ArrowItem::ArrowItem(View *parent)
   : ViewItem(parent) {
   setName("Arrow");
-  setZValue(LINE_ZVALUE);
+  setZValue(ARROW_ZVALUE);
   setAllowedGrips(RightMidGrip | LeftMidGrip);
   QBrush b = brush();
   b.setStyle(Qt::SolidPattern);
