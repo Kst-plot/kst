@@ -595,7 +595,7 @@ void Matrix::change(QByteArray &data, uint nX, uint nY, double minX, double minY
   resizeZ(nX*nY, true);
 
   QDataStream qds(&data, QIODevice::ReadOnly);
-  int i;
+  uint i;
   // fill in the raw array with the data
   for (i = 0; i < nX*nY && !qds.atEnd(); i++) {
     qds >> _z[i];  // stored in the same order as it was saved

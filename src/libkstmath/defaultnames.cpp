@@ -46,7 +46,6 @@ ObjectTag suggestPlotName() {
 ObjectTag suggestDataObjectName(const QString& field,
                               const QString &A, bool add_c) {
   QString name;
-  int i=1;
   QString cleanedField = ObjectTag::cleanTagComponent(field);
 
   if (add_c) {

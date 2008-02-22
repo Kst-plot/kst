@@ -73,7 +73,7 @@ PrimitivePtr GeneratedMatrixFactory::generatePrimitive(ObjectStore *store, QXmlS
   }
 
   GeneratedMatrixPtr matrix = store->createObject<GeneratedMatrix>(tag);
-  matrix->change(nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
+  matrix->change(uint(nX), uint(nY), minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
 
   matrix->writeLock();
   matrix->update(0);
@@ -138,7 +138,7 @@ PrimitivePtr EditableMatrixFactory::generatePrimitive(ObjectStore *store, QXmlSt
   }
 
   EditableMatrixPtr matrix = store->createObject<EditableMatrix>(tag);
-  matrix->change(data, nX, nY, minX, minY, stepX, stepY);
+  matrix->change(data, uint(nX), uint(nY), minX, minY, stepX, stepY);
 
   matrix->writeLock();
   matrix->update(0);
