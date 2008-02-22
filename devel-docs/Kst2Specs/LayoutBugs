@@ -75,3 +75,11 @@ What happens:
 What should happen:
   The fonts should scale with the window size.
 
+7) Circles don't stay circles on parent resize
+Create a circle.
+Change the aspect ratio of the kst window. (resize it).
+What happens:
+  The circle becomes an ellipse.
+What should happen:
+  The circle should stay a circle, and just be resized.
+ 
