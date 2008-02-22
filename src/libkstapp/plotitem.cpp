@@ -262,7 +262,7 @@ void PlotItem::paintMajorGridLines(QPainter *painter,
   if (_drawXAxisMajorGridLines) {
     QVector<QLineF> xMajorTickLines;
     foreach (qreal x, xMajorTicks) {
-      QPointF p1 = mapToPlotFromProjection(QPointF(x, projectionRect().top()));
+      QPointF p1 = QPointF(mapXToPlot(x), plotRect().bottom());
       QPointF p2 = p1 - QPointF(0, rect.height());
       xMajorTickLines << QLineF(p1, p2);
     }
@@ -276,7 +276,7 @@ void PlotItem::paintMajorGridLines(QPainter *painter,
   if (_drawYAxisMajorGridLines) {
     QVector<QLineF> yMajorTickLines;
     foreach (qreal y, yMajorTicks) {
-      QPointF p1 = mapToPlotFromProjection(QPointF(projectionRect().left(), y));
+      QPointF p1 = QPointF(plotRect().left(), mapYToPlot(y));
       QPointF p2 = p1 + QPointF(rect.width(), 0);
       yMajorTickLines << QLineF(p1, p2);
     }
@@ -298,7 +298,7 @@ void PlotItem::paintMinorGridLines(QPainter *painter,
   if (_drawXAxisMinorGridLines) {
     QVector<QLineF> xMinorTickLines;
     foreach (qreal x, xMinorTicks) {
-      QPointF p1 = mapToPlotFromProjection(QPointF(x, projectionRect().top()));
+      QPointF p1 = QPointF(mapXToPlot(x), plotRect().bottom());
       QPointF p2 = p1 - QPointF(0, rect.height());
       xMinorTickLines << QLineF(p1, p2);
     }
@@ -311,7 +311,7 @@ void PlotItem::paintMinorGridLines(QPainter *painter,
   if (_drawYAxisMinorGridLines) {
     QVector<QLineF> yMinorTickLines;
     foreach (qreal y, yMinorTicks) {
-      QPointF p1 = mapToPlotFromProjection(QPointF(projectionRect().left(), y));
+      QPointF p1 = QPointF(plotRect().left(), mapYToPlot(y));
       QPointF p2 = p1 + QPointF(rect.width(), 0);
       yMinorTickLines << QLineF(p1, p2);
     }
@@ -333,11 +333,11 @@ void PlotItem::paintMajorTicks(QPainter *painter,
   if (_drawXAxisMajorTicks) {
     QVector<QLineF> xMajorTickLines;
     foreach (qreal x, xMajorTicks) {
-      QPointF p1 = mapToPlotFromProjection(QPointF(x, projectionRect().top()));
+      QPointF p1 = QPointF(mapXToPlot(x), plotRect().bottom());
       QPointF p2 = p1 - QPointF(0, majorTickLength);
       xMajorTickLines << QLineF(p1, p2);
 
-      p1 = mapToPlotFromProjection(QPointF(x, projectionRect().bottom()));
+      p1.setY(plotRect().top());
       p2 = p1 + QPointF(0, majorTickLength);
       xMajorTickLines << QLineF(p1, p2);
     }
@@ -348,11 +348,11 @@ void PlotItem::paintMajorTicks(QPainter *painter,
   if (_drawYAxisMajorTicks) {
     QVector<QLineF> yMajorTickLines;
     foreach (qreal y, yMajorTicks) {
-      QPointF p1 = mapToPlotFromProjection(QPointF(projectionRect().left(), y));
+      QPointF p1 = QPointF(plotRect().left(), mapYToPlot(y));
       QPointF p2 = p1 + QPointF(majorTickLength, 0);
       yMajorTickLines << QLineF(p1, p2);
 
-      p1 = mapToPlotFromProjection(QPointF(projectionRect().right(), y));
+      p1.setX(plotRect().right());
       p2 = p1 - QPointF(majorTickLength, 0);
       yMajorTickLines << QLineF(p1, p2);
     }
@@ -371,11 +371,11 @@ void PlotItem::paintMinorTicks(QPainter *painter,
   if (_drawXAxisMinorTicks) {
     QVector<QLineF> xMinorTickLines;
     foreach (qreal x, xMinorTicks) {
-      QPointF p1 = mapToPlotFromProjection(QPointF(x, projectionRect().top()));
+      QPointF p1 = QPointF(mapXToPlot(x), plotRect().bottom());
       QPointF p2 = p1 - QPointF(0, minorTickLength);
       xMinorTickLines << QLineF(p1, p2);
 
-      p1 = mapToPlotFromProjection(QPointF(x, projectionRect().bottom()));
+      p1.setY(plotRect().top());
       p2 = p1 + QPointF(0, minorTickLength);
       xMinorTickLines << QLineF(p1, p2);
     }
@@ -386,11 +386,11 @@ void PlotItem::paintMinorTicks(QPainter *painter,
   if (_drawYAxisMinorTicks) {
     QVector<QLineF> yMinorTickLines;
     foreach (qreal y, yMinorTicks) {
-      QPointF p1 = mapToPlotFromProjection(QPointF(projectionRect().left(), y));
+      QPointF p1 = QPointF(plotRect().left(), mapYToPlot(y));
       QPointF p2 = p1 + QPointF(minorTickLength, 0);
       yMinorTickLines << QLineF(p1, p2);
 
-      p1 = mapToPlotFromProjection(QPointF(projectionRect().right(), y));
+      p1.setX(plotRect().right());
       p2 = p1 - QPointF(minorTickLength, 0);
       yMinorTickLines << QLineF(p1, p2);
     }
@@ -458,8 +458,7 @@ void PlotItem::paintMajorTickLabels(QPainter *painter,
     xLabelIt.next();
 
     QRectF bound = painter->boundingRect(QRectF(), flags, xLabelIt.value());
-    QPointF p = mapToPlotFromProjection(QPointF(xLabelIt.key(), projectionRect().top()));
-    p.setY(p.y() + bound.height() / 2.0);
+    QPointF p = QPointF(mapXToPlot(xLabelIt.key()), plotRect().bottom() + bound.height() / 2.0);
     bound.moveCenter(p);
 
     if (xLabelRect.isValid()) {
@@ -519,8 +518,7 @@ void PlotItem::paintMajorTickLabels(QPainter *painter,
     yLabelIt.next();
 
     QRectF bound = painter->boundingRect(QRectF(), flags, yLabelIt.value());
-    QPointF p = mapToPlotFromProjection(QPointF(projectionRect().left(), yLabelIt.key()));
-    p.setX(p.x() - bound.width() / 2.0);
+    QPointF p = QPointF(plotRect().left() - bound.width() / 2.0, mapYToPlot(yLabelIt.key()));
     bound.moveCenter(p);
 
     if (yLabelRect.isValid()) {
@@ -540,8 +538,7 @@ void PlotItem::paintMajorTickLabels(QPainter *painter,
 
     QRectF bound = painter->boundingRect(QRectF(), flags, yBaseLabel);
     bound = QRectF(bound.x(), bound.bottomRight().y() - bound.width(), bound.height(), bound.width());
-    QPointF p = mapToPlotFromProjection(QPointF(projectionRect().left(), projectionRect().top()));
-    p.setX(p.x() - bound.width() * 2.0);
+    QPointF p = QPointF(plotRect().left() - bound.width() * 2.0, plotRect().top());
     bound.moveBottomLeft(p);
 
     if (yLabelRect.isValid()) {
@@ -556,8 +553,7 @@ void PlotItem::paintMajorTickLabels(QPainter *painter,
 
   if (!xBaseLabel.isEmpty()) {
     QRectF bound = painter->boundingRect(QRectF(), flags, xBaseLabel);
-    QPointF p = mapToPlotFromProjection(QPointF(projectionRect().left(), projectionRect().top()));
-    p.setY(p.y() + bound.height() * 2.0);
+    QPointF p = QPointF(plotRect().left(), plotRect().bottom() + bound.height() * 2.0);
     bound.moveBottomLeft(p);
 
     if (xLabelRect.isValid()) {
@@ -1184,78 +1180,111 @@ void PlotItem::setYAxisMinorGridLineStyle(const Qt::PenStyle style) {
   _yAxisMinorGridLineStyle = style;
 }
 
+void PlotItem::updateScale() {
+  if (_xAxisLog) {
+    _xMax = logXHi(projectionRect().right());
+    _xMin = logXLo(projectionRect().left());
+  } else {
+    _xMax = projectionRect().right();
+    _xMin = projectionRect().left();
+  }
 
-QPointF PlotItem::mapFromAxisToProjection(const QPointF &point) const {
-  return projectionAxisTransform().map(point);
+  if (_yAxisLog) {
+    _yMax = logYHi(projectionRect().bottom());
+    _yMin = logYLo(projectionRect().top());
+  } else {
+    _yMax = projectionRect().bottom();
+    _yMin = projectionRect().top();
+  }
 }
 
 
-QPointF PlotItem::mapToAxisFromProjection(const QPointF &point) const {
-  return projectionAxisTransform().inverted().map(point);
+QPointF PlotItem::mapPointToProjection(const QPointF &point) {
+  QRectF pr = plotRect();
+  double xpos, ypos;
+
+  updateScale();
+
+  if (_xAxisReversed) {
+    xpos = (double)(pr.right() - point.x())/(double)pr.width();
+  } else {
+    xpos = (double)(point.x() - pr.left())/(double)pr.width();
+  }
+  xpos = xpos * (_xMax - _xMin) + _xMin;
+
+  if (_xAxisLog) {
+    xpos = pow(10, xpos);
+  }
+
+  if (_yAxisReversed) {
+    ypos = (double)(point.y() - pr.top())/(double)pr.height();
+  } else {
+    ypos = (double)(pr.bottom() - point.y())/(double)pr.height();
+  }
+  ypos = ypos * (_yMax - _yMin) + _yMin;
+
+  if (_yAxisLog) {
+    ypos = pow(10, ypos);
+  }
+
+  return QPointF(xpos, ypos);
 }
 
 
-QRectF PlotItem::mapFromAxisToProjection(const QRectF &rect) const {
-  return projectionAxisTransform().mapRect(rect);
+QPointF PlotItem::mapPointToPlot(const QPointF &point) const {
+  return QPointF(mapXToPlot(point.x()), mapYToPlot(point.y()));
 }
 
 
-QRectF PlotItem::mapToAxisFromProjection(const QRectF &rect) const {
-  return projectionAxisTransform().inverted().mapRect(rect);
+qreal PlotItem::mapXToPlot(const qreal &x) const {
+  QRectF pr = plotRect();
+  double newX = x;
+
+  if (_xAxisLog) {
+    newX = logXLo(x);
+  }
+
+  newX -= _xMin;
+  newX = newX / (_xMax - _xMin);
+
+  newX = newX * pr.width();
+
+  if (_xAxisLog && x == -350) {
+    newX = 0;
+  }
+
+  if (_xAxisReversed) {
+    newX = pr.right() - newX;
+  } else {
+    newX = newX + pr.left();
+  }
+  return newX;
 }
 
 
-QTransform PlotItem::projectionAxisTransform() const {
-  QTransform t;
+qreal PlotItem::mapYToPlot(const qreal &y) const {
+  QRectF pr = plotRect();
+  double newY = y;
 
-  QRectF rect = plotAxisRect();
-  QRectF v = QRectF(rect.bottomLeft(), rect.topRight());
+  if (_yAxisLog) {
+    newY = logYLo(y);
+  }
 
-  QPolygonF from_ = QPolygonF(v);
-  from_.pop_back(); //get rid of last closed point
+  newY -= _yMin;
+  newY = newY / (_yMax - _yMin);
 
-  QPolygonF to_ = QPolygonF(projectionRect());
-  to_.pop_back(); //get rid of last closed point
+  newY = newY * pr.height();
 
-  QTransform::quadToQuad(from_, to_, t);
-  return t;
-}
+  if (_yAxisLog && y == -350) {
+    newY = 0;
+  }
 
-
-QPointF PlotItem::mapFromPlotToProjection(const QPointF &point) const {
-  return projectionPlotTransform().map(point);
-}
-
-
-QPointF PlotItem::mapToPlotFromProjection(const QPointF &point) const {
-  return projectionPlotTransform().inverted().map(point);
-}
-
-
-QRectF PlotItem::mapFromPlotToProjection(const QRectF &rect) const {
-  return projectionPlotTransform().mapRect(rect);
-}
-
-
-QRectF PlotItem::mapToPlotFromProjection(const QRectF &rect) const {
-  return projectionPlotTransform().inverted().mapRect(rect);
-}
-
-
-QTransform PlotItem::projectionPlotTransform() const {
-  QTransform t;
-
-  QRectF rect = plotRect();
-  QRectF v = QRectF(rect.bottomLeft(), rect.topRight());
-
-  QPolygonF from_ = QPolygonF(v);
-  from_.pop_back(); //get rid of last closed point
-
-  QPolygonF to_ = QPolygonF(projectionRect());
-  to_.pop_back(); //get rid of last closed point
-
-  QTransform::quadToQuad(from_, to_, t);
-  return t;
+  if (_yAxisReversed) {
+    newY = newY + pr.top();
+  } else {
+    newY = pr.bottom() - newY;
+  }
+  return newY;
 }
 
 
@@ -1798,67 +1827,39 @@ void PlotItem::setCalculatedAxisMarginHeight(qreal marginHeight) {
 }
 
 
-void PlotItem::computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTicks, QMap<qreal, QString> *Labels, qreal min, qreal max, qreal size, MajorTickMode tickMode, bool xAxis) const {
-  qreal logMax = logXHi(max);
-  qreal logMin = logXLo(min);
-  qreal m_Log = (size - 1) / (logMax - logMin);
-  qreal b_Log = min - m_Log * logMin;
+void PlotItem::computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTicks, QMap<qreal, QString> *Labels, qreal min, qreal max, MajorTickMode tickMode) {
 
   qreal tick;
-  if (logMax - logMin <= (double)tickMode*1.5) {
+  if (max - min <= (double)tickMode*1.5) {
     // show in logarithmic mode with major ticks nicely labelled and the
     // specified number of minor ticks between each major label
     tick = 1.0;
   } else {
     // show in logarithmic mode with major ticks nicely labelled and no minor ticks
-    tick = floor((logMax - logMin) / (double)tickMode);
+    tick = floor((max - min) / (double)tickMode);
   }
 
-  qreal origin;
-  // determine location of the origin
-  if (logMin > 0.0) {
-    origin = ceil(logMin / tick) * tick;
-  } else if (logMax < 0.0) {
-    origin = floor(logMax / tick) * tick;
-  } else {
-    origin = 0.0;
-  }
-
-  int Low = int((logMin-origin)/tick);
-  int High = int((logMax-origin)/tick)+1;
-  qreal gap = ((Low+1) * tick * m_Log + b_Log) - ((Low) * tick * m_Log + b_Log);
-
+  int Low = ceil(min);
+  int High = floor(max)+1;
   bool minorLabels = ((High - Low) == 1);
-  for (int i = Low; i <= High; i++) {
-    double value = i * tick;
-    qreal majorPoint = m_Log * value + b_Log + min;
-    if (majorPoint < max && majorPoint > min) {
-      qreal adjustedPoint = majorPoint;
-      if (_xAxisReversed && xAxis) {
-        adjustedPoint = (projectionRect().right() - majorPoint) + projectionRect().left();
-      } else if (_yAxisReversed && !xAxis) {
-        adjustedPoint = (projectionRect().top() - majorPoint) + projectionRect().bottom();
-      }
-      *MajorTicks << adjustedPoint;
-      *Labels->insert(adjustedPoint, QString::number(pow(10, i), 'g', FULL_PRECISION));
+  for (int i = Low - 1; i <= High; i+=tick) {
+    qreal majorPoint = pow(10, i);
+    if (majorPoint == 0) majorPoint = -350;
+    if (i >= min && i <= max) {
+      *MajorTicks << majorPoint;
+      *Labels->insert(majorPoint, QString::number(majorPoint, 'g', FULL_PRECISION));
     }
 
     if (tick == 1.0) {
       // draw minor lines
       bool first = true;
-      for (int j = 1; j < 9; j++) {
-        qreal minorPoint = log10((double)j/((double)9)*(pow(10,tick)-1.0)+1.0)/log10(10)/tick *(double)gap + majorPoint;
-        if (minorPoint < max && minorPoint > min) {
-          qreal adjustedMinorPoint = minorPoint;
-          if (_xAxisReversed && xAxis) {
-            adjustedMinorPoint = (projectionRect().right() - minorPoint) + projectionRect().left();
-          } else if (_yAxisReversed && !xAxis) {
-            adjustedMinorPoint = (projectionRect().top() - minorPoint) + projectionRect().bottom();
-          }
-          *MinorTicks << adjustedMinorPoint;
+      qreal powMin = pow(10, min), powMax = pow(10, max);
+      for (int j = 2; j < 10; j++) {
+        qreal minorPoint = majorPoint * j;
+        if (minorPoint >= powMin && minorPoint <= powMax) {
+          *MinorTicks << minorPoint;
           if (minorLabels && first) {
-            qreal minorLabelValue = (minorPoint - min - b_Log) / m_Log;
-            *Labels->insert(adjustedMinorPoint, QString::number(pow(10, minorLabelValue), 'g', FULL_PRECISION));
+            *Labels->insert(minorPoint, QString::number(minorPoint, 'g', FULL_PRECISION));
             first = false;
           }
         }
@@ -1869,25 +1870,20 @@ void PlotItem::computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTick
     qreal lastMinorTick = MinorTicks->last();
     if (MajorTicks->isEmpty() || MajorTicks->last() < lastMinorTick) {
       if (!Labels->contains(lastMinorTick)) {
-        qreal adjustedMinorPoint = lastMinorTick;
-        if (_xAxisReversed && xAxis) {
-          adjustedMinorPoint = projectionRect().left() - (lastMinorTick - projectionRect().left());
-        } else if (_yAxisReversed && !xAxis) {
-          adjustedMinorPoint = projectionRect().top() - (lastMinorTick - projectionRect().bottom());
-        }
-        qreal minorLabelValue = (adjustedMinorPoint - min - b_Log) / m_Log;
-        *Labels->insert(lastMinorTick, QString::number(pow(10, minorLabelValue), 'g', FULL_PRECISION));
+        *Labels->insert(lastMinorTick, QString::number(lastMinorTick, 'g', FULL_PRECISION));
       }
     }
   }
 }
 
-void PlotItem::computeTicks(QList<qreal> *xMajorTicks, QList<qreal> *xMinorTicks, QList<qreal> *yMajorTicks, QList<qreal> *yMinorTicks, QMap<qreal, QString> *xLabelsIn, QMap<qreal, QString> *yLabelsIn) const {
+
+void PlotItem::computeTicks(QList<qreal> *xMajorTicks, QList<qreal> *xMinorTicks, QList<qreal> *yMajorTicks, QList<qreal> *yMinorTicks, QMap<qreal, QString> *xLabelsIn, QMap<qreal, QString> *yLabelsIn) {
 
   QList<qreal> xTicks;
   QList<qreal> xMinTicks;
+  updateScale();
   if (_xAxisLog) {
-    computeLogTicks(&xTicks, &xMinTicks, xLabelsIn, projectionRect().left(), projectionRect().right(), projectionRect().width(), _xAxisMajorTickMode, true);
+    computeLogTicks(&xTicks, &xMinTicks, xLabelsIn, _xMin, _xMax, _xAxisMajorTickMode);
   } else {
     qreal xMajorTickSpacing = computedMajorTickSpacing(Qt::Horizontal);
     qreal firstXTick = ceil(projectionRect().left() / xMajorTickSpacing) * xMajorTickSpacing;
@@ -1898,12 +1894,8 @@ void PlotItem::computeTicks(QList<qreal> *xMajorTicks, QList<qreal> *xMinorTicks
       nextXTick = firstXTick + (ix++ * xMajorTickSpacing);
       if (!projectionRect().contains(nextXTick, projectionRect().y()))
         break;
-      qreal adjustedPoint = nextXTick;
-      if (_xAxisReversed) {
-        adjustedPoint = (projectionRect().right() - nextXTick) + projectionRect().left();
-      }
-      xTicks << adjustedPoint;
-      xLabelsIn->insert(adjustedPoint, QString::number(nextXTick, 'g', FULL_PRECISION));
+      xTicks << nextXTick;
+      xLabelsIn->insert(nextXTick, QString::number(nextXTick, 'g', FULL_PRECISION));
     }
 
     qreal xMinorTickSpacing = 0;
@@ -1921,11 +1913,7 @@ void PlotItem::computeTicks(QList<qreal> *xMajorTicks, QList<qreal> *xMinorTicks
         if (projectionRect().right() < nextXMinorTick)
           break;
         if (!xTicks.contains(nextXMinorTick) && projectionRect().contains(nextXMinorTick, projectionRect().y())) {
-          if (_xAxisReversed) {
-            xMinTicks << (projectionRect().right() - nextXMinorTick) + projectionRect().left();
-          } else {
-            xMinTicks << nextXMinorTick;
-          }
+          xMinTicks << nextXMinorTick;
         }
       }
     }
@@ -1934,7 +1922,7 @@ void PlotItem::computeTicks(QList<qreal> *xMajorTicks, QList<qreal> *xMinorTicks
   QList<qreal> yTicks;
   QList<qreal> yMinTicks;
   if (_yAxisLog) {
-    computeLogTicks(&yTicks, &yMinTicks, yLabelsIn, projectionRect().top(), projectionRect().bottom(), projectionRect().height(), _yAxisMajorTickMode, false);
+    computeLogTicks(&yTicks, &yMinTicks, yLabelsIn, _yMin, _yMax, _yAxisMajorTickMode);
   } else {
     qreal yMajorTickSpacing = computedMajorTickSpacing(Qt::Vertical);
     qreal firstYTick = ceil(projectionRect().top() / yMajorTickSpacing) * yMajorTickSpacing;
@@ -1945,12 +1933,8 @@ void PlotItem::computeTicks(QList<qreal> *xMajorTicks, QList<qreal> *xMinorTicks
       nextYTick = firstYTick + (iy++ * yMajorTickSpacing);
       if (!projectionRect().contains(projectionRect().x(), nextYTick))
         break;
-      qreal adjustedPoint = nextYTick;
-      if (_yAxisReversed) {
-        adjustedPoint = (projectionRect().top() - nextYTick) + projectionRect().bottom();
-      }
-      yTicks << adjustedPoint;
-      yLabelsIn->insert(adjustedPoint, QString::number(nextYTick, 'g', FULL_PRECISION));
+      yTicks << nextYTick;
+      yLabelsIn->insert(nextYTick, QString::number(nextYTick, 'g', FULL_PRECISION));
     }
 
     qreal yMinorTickSpacing = 0;
@@ -1967,11 +1951,7 @@ void PlotItem::computeTicks(QList<qreal> *xMajorTicks, QList<qreal> *xMinorTicks
         if (projectionRect().bottom() < nextYMinorTick)
           break;
         if (!yTicks.contains(nextYMinorTick) && projectionRect().contains(projectionRect().x(), nextYMinorTick)) {
-          if (_yAxisReversed) {
-            yMinTicks << (projectionRect().top() - nextYMinorTick) + projectionRect().bottom();
-          } else {
-            yMinTicks << nextYMinorTick;
-          }
+          yMinTicks << nextYMinorTick;
         }
       }
     }
@@ -2034,8 +2014,7 @@ QSizeF PlotItem::calculateXTickLabelBound(QPainter *painter,
     QString label = QString::number(x);
 
     QRectF bound = painter->boundingRect(QRectF(), flags, label);
-    QPointF p = mapToPlotFromProjection(QPointF(x, projectionRect().top()));
-    p.setY(p.y() + bound.height() / 2.0);
+    QPointF p(mapXToPlot(x), plotRect().bottom() + bound.height() / 2.0);
     bound.moveCenter(p);
 
     if (xLabelRect.isValid()) {
@@ -2057,8 +2036,7 @@ QSizeF PlotItem::calculateYTickLabelBound(QPainter *painter,
     QString label = QString::number(y);
 
     QRectF bound = painter->boundingRect(QRectF(), flags, label);
-    QPointF p = mapToPlotFromProjection(QPointF(projectionRect().left(), y));
-    p.setX(p.x() - bound.width() / 2.0);
+    QPointF p(plotRect().left() - bound.width() / 2.0, mapYToPlot(y));
     bound.moveCenter(p);
 
     if (yLabelRect.isValid()) {

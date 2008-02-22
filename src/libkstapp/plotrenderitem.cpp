@@ -610,8 +610,7 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   ViewItem::hoverMoveEvent(event);
 
   updateCursor(event->pos());
-
-  const QPointF p = mapToProjection(event->pos());
+  const QPointF p = plotItem()->mapPointToProjection(event->pos());
   QString message = QString("(%1, %2)").arg(QString::number(p.x(), 'G')).arg(QString::number(p.y()));
   kstApp->mainWindow()->statusBar()->showMessage(message);
 }
@@ -622,7 +621,7 @@ void PlotRenderItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
 
   updateCursor(event->pos());
 
-  const QPointF p = mapToProjection(event->pos());
+  const QPointF p = plotItem()->mapPointToProjection(event->pos());
   QString message = QString("(%1, %2)").arg(QString::number(p.x())).arg(QString::number(p.y()));
   kstApp->mainWindow()->statusBar()->showMessage(message);
 }
