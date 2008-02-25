@@ -121,6 +121,7 @@ bool PlotRenderItem::isXAxisLog() const {
 
 void PlotRenderItem::setXAxisLog(bool log) {
   _isXAxisLog = log;
+  _zoomLogX->setChecked(log);
   plotItem()->setXAxisLog(log);
 }
 
@@ -142,6 +143,7 @@ bool PlotRenderItem::isYAxisLog() const {
 
 void PlotRenderItem::setYAxisLog(bool log) {
   _isYAxisLog = log;
+  _zoomLogY->setChecked(log);
   plotItem()->setYAxisLog(log);
 }
 
@@ -811,6 +813,7 @@ void PlotRenderItem::zoomLogY() {
   qDebug() << "zoomLogY" << endl;
   setYAxisLog(_zoomLogY->isChecked());
   setProjectionRect(computedProjectionRect()); //need to recompute
+  plotItem()->update();
 }
 
 
@@ -1176,9 +1179,14 @@ void ZoomXRightCommand::applyZoomTo(PlotRenderItem *item) {
 
   QRectF compute = item->projectionRect();
 
-  qreal dx = compute.width() * 0.1;
-  compute.setLeft(compute.left() + dx);
-  compute.setRight(compute.right() + dx);
+  qreal dx = (item->plotItem()->xMax() - item->plotItem()->xMin())*0.10;
+  if (item->isXAxisLog()) { 
+    compute.setLeft(pow(10, item->plotItem()->xMin() + dx));
+    compute.setRight(pow(10, item->plotItem()->xMax() + dx));
+  } else {
+    compute.setLeft(compute.left() + dx);
+    compute.setRight(compute.right() + dx);
+  }
 
   item->setProjectionRect(compute);
   item->update();
@@ -1194,9 +1202,14 @@ void ZoomXLeftCommand::applyZoomTo(PlotRenderItem *item) {
 
   QRectF compute = item->projectionRect();
 
-  qreal dx = compute.width() * 0.1;
-  compute.setLeft(compute.left() - dx);
-  compute.setRight(compute.right() - dx);
+  qreal dx = (item->plotItem()->xMax() - item->plotItem()->xMin())*0.10;
+  if (item->isXAxisLog()) { 
+    compute.setLeft(pow(10, item->plotItem()->xMin() - dx));
+    compute.setRight(pow(10, item->plotItem()->xMax() - dx));
+  } else {
+    compute.setLeft(compute.left() - dx);
+    compute.setRight(compute.right() - dx);
+  }
 
   item->setProjectionRect(compute);
   item->update();
@@ -1212,11 +1225,17 @@ void ZoomXOutCommand::applyZoomTo(PlotRenderItem *item) {
 
   QRectF compute = item->projectionRect();
 
-  qreal dx = compute.width() * 0.25;
-  compute.setLeft(compute.left() - dx);
-  compute.setRight(compute.right() + dx);
+  qreal dx = (item->plotItem()->xMax() - item->plotItem()->xMin())*0.25;
+  if (item->isXAxisLog()) { 
+    compute.setLeft(pow(10, item->plotItem()->xMin() - dx));
+    compute.setRight(pow(10, item->plotItem()->xMax() + dx));
+  } else {
+    compute.setLeft(compute.left() - dx);
+    compute.setRight(compute.right() + dx);
+  }
 
   item->setProjectionRect(compute);
+  item->update();
 }
 
 
@@ -1230,9 +1249,14 @@ void ZoomXInCommand::applyZoomTo(PlotRenderItem *item) {
 
   QRectF compute = item->projectionRect();
 
-  qreal dx = compute.width() * 0.1666666;
-  compute.setLeft(compute.left() + dx);
-  compute.setRight(compute.right() - dx);
+  qreal dx = (item->plotItem()->xMax() - item->plotItem()->xMin())*0.1666666;
+  if (item->isXAxisLog()) { 
+    compute.setLeft(pow(10, item->plotItem()->xMin() + dx));
+    compute.setRight(pow(10, item->plotItem()->xMax() - dx));
+  } else {
+    compute.setLeft(compute.left() + dx);
+    compute.setRight(compute.right() - dx);
+  }
 
   item->setProjectionRect(compute);
 }
@@ -1321,9 +1345,14 @@ void ZoomYUpCommand::applyZoomTo(PlotRenderItem *item) {
 
   QRectF compute = item->projectionRect();
 
-  qreal dy = compute.height() * 0.1;
-  compute.setTop(compute.top() + dy);
-  compute.setBottom(compute.bottom() + dy);
+  qreal dy = (item->plotItem()->yMax() - item->plotItem()->yMin())*0.1;
+  if (item->isYAxisLog()) { 
+    compute.setTop(pow(10, item->plotItem()->yMin() + dy));
+    compute.setBottom(pow(10, item->plotItem()->yMax() + dy));
+  } else {
+    compute.setTop(compute.top() + dy);
+    compute.setBottom(compute.bottom() + dy);
+  }
 
   item->setProjectionRect(compute);
 }
@@ -1341,9 +1370,14 @@ void ZoomYDownCommand::applyZoomTo(PlotRenderItem *item) {
 
   QRectF compute = item->projectionRect();
 
-  qreal dy = compute.height() * 0.10;
-  compute.setTop(compute.top() - dy);
-  compute.setBottom(compute.bottom() - dy);
+  qreal dy = (item->plotItem()->yMax() - item->plotItem()->yMin())*0.1;
+  if (item->isYAxisLog()) { 
+    compute.setTop(pow(10, item->plotItem()->yMin() - dy));
+    compute.setBottom(pow(10, item->plotItem()->yMax() - dy));
+  } else {
+    compute.setTop(compute.top() - dy);
+    compute.setBottom(compute.bottom() - dy);
+  }
 
   item->setProjectionRect(compute);
 }
@@ -1361,9 +1395,14 @@ void ZoomYOutCommand::applyZoomTo(PlotRenderItem *item) {
 
   QRectF compute = item->projectionRect();
 
-  qreal dy = compute.height() * 0.25;
-  compute.setTop(compute.top() - dy);
-  compute.setBottom(compute.bottom() + dy);
+  qreal dy = (item->plotItem()->yMax() - item->plotItem()->yMin())*0.25;
+  if (item->isYAxisLog()) { 
+    compute.setTop(pow(10, item->plotItem()->yMin() - dy));
+    compute.setBottom(pow(10, item->plotItem()->yMax() + dy));
+  } else {
+    compute.setTop(compute.top() - dy);
+    compute.setBottom(compute.bottom() + dy);
+  }
 
   item->setProjectionRect(compute);
   item->update();
@@ -1382,9 +1421,14 @@ void ZoomYInCommand::applyZoomTo(PlotRenderItem *item) {
 
   QRectF compute = item->projectionRect();
 
-  qreal dy = compute.height() * 0.1666666;
-  compute.setTop(compute.top() + dy);
-  compute.setBottom(compute.bottom() - dy);
+  qreal dy = (item->plotItem()->yMax() - item->plotItem()->yMin())*0.1666666;
+  if (item->isYAxisLog()) { 
+    compute.setTop(pow(10, item->plotItem()->yMin() + dy));
+    compute.setBottom(pow(10, item->plotItem()->yMax() - dy));
+  } else {
+    compute.setTop(compute.top() + dy);
+    compute.setBottom(compute.bottom() - dy);
+  }
 
   item->setProjectionRect(compute);
   item->update();

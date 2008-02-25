@@ -217,6 +217,11 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     void updateScale();
 
+    qreal xMin() { return _xMin; }
+    qreal xMax() { return _xMax; }
+    qreal yMin() { return _yMin; }
+    qreal yMax() { return _yMax; }
+
     void triggerUpdate() { emit geometryChanged(); update(rect()); }
 
   Q_SIGNALS:
