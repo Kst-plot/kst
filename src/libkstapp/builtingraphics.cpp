@@ -18,15 +18,19 @@
 #include "pictureitem.h"
 #include "plotitem.h"
 #include "svgitem.h"
+#include "arrowitem.h"
+#include "circleitem.h"
 
 namespace Kst {
   namespace Builtins {
     void initGraphics() {
+      new ArrowItemFactory;
       new BoxItemFactory;
-      new LineItemFactory;
+      new CircleItemFactory;
       new EllipseItemFactory;
       new LabelItemFactory;
       new LayoutBoxItemFactory;
+      new LineItemFactory;
       new PictureItemFactory;
       new PlotItemFactory;
       new SvgItemFactory;

@@ -59,6 +59,8 @@ ViewItem::ViewItem(View *parent)
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
   connect(parent, SIGNAL(mouseModeChanged(View::MouseMode)),
           this, SLOT(viewMouseModeChanged(View::MouseMode)));
+  connect(parent, SIGNAL(viewModeChanged(View::ViewMode)),
+          this, SLOT(updateView()));
 }
 
 
@@ -377,13 +379,10 @@ QSizeF ViewItem::sizeOfGrip() const {
 
 
 QPainterPath ViewItem::topLeftGrip() const {
-  if (_gripMode == Move)
-    return QPainterPath();
-
   QRectF bound = gripBoundingRect();
   QRectF grip = QRectF(bound.topLeft(), sizeOfGrip());
   QPainterPath path;
-  if (_gripMode == Resize || _gripMode == Scale)
+  if (_gripMode == Resize || _gripMode == Scale || _gripMode == Move)
     path.addRect(grip);
   else
     path.addEllipse(grip);
@@ -397,13 +396,10 @@ QPainterPath ViewItem::topLeftGrip() const {
 
 
 QPainterPath ViewItem::topRightGrip() const {
-  if (_gripMode == Move)
-    return QPainterPath();
-
   QRectF bound = gripBoundingRect();
   QRectF grip = QRectF(bound.topRight() - QPointF(sizeOfGrip().width(), 0), sizeOfGrip());
   QPainterPath path;
-  if (_gripMode == Resize || _gripMode == Scale)
+  if (_gripMode == Resize || _gripMode == Scale || _gripMode == Move)
     path.addRect(grip);
   else
     path.addEllipse(grip);
@@ -417,13 +413,10 @@ QPainterPath ViewItem::topRightGrip() const {
 
 
 QPainterPath ViewItem::bottomRightGrip() const {
-  if (_gripMode == Move)
-    return QPainterPath();
-
   QRectF bound = gripBoundingRect();
   QRectF grip = QRectF(bound.bottomRight() - QPointF(sizeOfGrip().width(), sizeOfGrip().height()), sizeOfGrip());
   QPainterPath path;
-  if (_gripMode == Resize || _gripMode == Scale)
+  if (_gripMode == Resize || _gripMode == Scale || _gripMode == Move)
     path.addRect(grip);
   else
     path.addEllipse(grip);
@@ -437,13 +430,10 @@ QPainterPath ViewItem::bottomRightGrip() const {
 
 
 QPainterPath ViewItem::bottomLeftGrip() const {
-  if (_gripMode == Move)
-    return QPainterPath();
-
   QRectF bound = gripBoundingRect();
   QRectF grip = QRectF(bound.bottomLeft() - QPointF(0, sizeOfGrip().height()), sizeOfGrip());
   QPainterPath path;
-  if (_gripMode == Resize || _gripMode == Scale)
+  if (_gripMode == Resize || _gripMode == Scale || _gripMode == Move)
     path.addRect(grip);
   else
     path.addEllipse(grip);
@@ -533,10 +523,6 @@ QPainterPath ViewItem::leftMidGrip() const {
 
 
 QPainterPath ViewItem::grips() const {
-
-  if (_gripMode == Move)
-    return QPainterPath();
-
   QPainterPath grips;
   grips.addPath(topLeftGrip());
   grips.addPath(topRightGrip());
@@ -628,7 +614,6 @@ QPainterPath ViewItem::shape() const {
 
 
 void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-
   Q_UNUSED(option);
   Q_UNUSED(widget);
 
@@ -639,7 +624,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   painter->save();
   painter->setPen(Qt::DotLine);
   painter->setBrush(Qt::NoBrush);
-  if (isSelected() || isHovering()
+  if ((isSelected() || isHovering())
       && parentView()->mouseMode() != View::Create
       && parentView()->viewMode() != View::Data) {
     painter->drawPath(shape());
@@ -649,6 +634,8 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
       painter->fillPath(grips(), Qt::black);
     else if (_gripMode == Rotate)
       painter->fillPath(grips(), Qt::red);
+    else if (_gripMode == Move)
+      painter->fillPath(grips(), Qt::transparent);
   }
 
 #ifdef DEBUG_GEOMETRY
@@ -1702,6 +1689,11 @@ bool ViewItem::tryShortcut(const QString &shortcut) {
 
   action->trigger();
   return true;
+}
+
+
+void ViewItem::updateView() {
+  update();
 }
 
 

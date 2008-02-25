@@ -66,14 +66,11 @@ void LineItem::setLine(const QLineF &line_) {
 
 
 QPainterPath LineItem::leftMidGrip() const {
-  if (gripMode() == Move)
-    return QPainterPath();
-
   QRectF bound = gripBoundingRect();
   QRectF grip = QRectF(bound.topLeft(), sizeOfGrip());
   grip.moveCenter(QPointF(grip.center().x(), bound.center().y()));
   QPainterPath path;
-  if (gripMode() == Resize || gripMode() == Scale)
+  if (gripMode() == Resize || gripMode() == Scale || gripMode() == Move)
     path.addRect(grip);
   else
     path.addEllipse(grip);
@@ -83,14 +80,11 @@ QPainterPath LineItem::leftMidGrip() const {
 
 
 QPainterPath LineItem::rightMidGrip() const {
-  if (gripMode() == Move)
-    return QPainterPath();
-
   QRectF bound = gripBoundingRect();
   QRectF grip = QRectF(bound.topRight() - QPointF(sizeOfGrip().width(), 0), sizeOfGrip());
   grip.moveCenter(QPointF(grip.center().x(), bound.center().y()));
   QPainterPath path;
-  if (gripMode() == Resize || gripMode() == Scale)
+  if (gripMode() == Resize || gripMode() == Scale || gripMode() == Move)
     path.addRect(grip);
   else
     path.addEllipse(grip);
@@ -100,9 +94,6 @@ QPainterPath LineItem::rightMidGrip() const {
 
 
 QPainterPath LineItem::grips() const {
-  if (gripMode() == Move)
-    return QPainterPath();
-
   QPainterPath grips;
   grips.addPath(leftMidGrip());
   grips.addPath(rightMidGrip());

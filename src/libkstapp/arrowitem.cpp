@@ -39,7 +39,7 @@ ArrowItem::~ArrowItem() {
 
 void ArrowItem::paint(QPainter *painter) {
   painter->drawLine(line());
-  double deltax = 4.0;
+  double deltax = 2.0 * painter->pen().widthF();
   double theta = atan2(double(line().y1() - line().y2()), double(line().x1() - line().x2())) - M_PI / 2.0;
   double sina = sin(theta);
   double cosa = cos(theta);
@@ -86,14 +86,11 @@ void ArrowItem::setLine(const QLineF &line_) {
 
 
 QPainterPath ArrowItem::leftMidGrip() const {
-  if (gripMode() == Move)
-    return QPainterPath();
-
   QRectF bound = gripBoundingRect();
   QRectF grip = QRectF(bound.topLeft(), sizeOfGrip());
   grip.moveCenter(QPointF(grip.center().x(), bound.center().y()));
   QPainterPath path;
-  if (gripMode() == Resize || gripMode() == Scale)
+  if (gripMode() == Resize || gripMode() == Scale || gripMode() == Move)
     path.addRect(grip);
   else
     path.addEllipse(grip);
@@ -103,14 +100,11 @@ QPainterPath ArrowItem::leftMidGrip() const {
 
 
 QPainterPath ArrowItem::rightMidGrip() const {
-  if (gripMode() == Move)
-    return QPainterPath();
-
   QRectF bound = gripBoundingRect();
   QRectF grip = QRectF(bound.topRight() - QPointF(sizeOfGrip().width(), 0), sizeOfGrip());
   grip.moveCenter(QPointF(grip.center().x(), bound.center().y()));
   QPainterPath path;
-  if (gripMode() == Resize || gripMode() == Scale)
+  if (gripMode() == Resize || gripMode() == Scale || gripMode() == Move)
     path.addRect(grip);
   else
     path.addEllipse(grip);
@@ -120,9 +114,6 @@ QPainterPath ArrowItem::rightMidGrip() const {
 
 
 QPainterPath ArrowItem::grips() const {
-  if (gripMode() == Move)
-    return QPainterPath();
-
   QPainterPath grips;
   grips.addPath(leftMidGrip());
   grips.addPath(rightMidGrip());

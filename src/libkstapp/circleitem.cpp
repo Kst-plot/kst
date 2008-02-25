@@ -83,9 +83,6 @@ void CircleItem::creationPolygonChanged(View::CreationEvent event) {
 
 
 QPainterPath CircleItem::grips() const {
-  if (gripMode() == Move)
-    return QPainterPath();
-
   QPainterPath grips;
   grips.addPath(topLeftGrip());
   grips.addPath(topRightGrip());

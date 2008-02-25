@@ -188,6 +188,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
 
   private Q_SLOTS:
     void viewMouseModeChanged(View::MouseMode oldMode);
+    void updateView();
 
   private:
     bool tryShortcut(const QString &keySequence);
