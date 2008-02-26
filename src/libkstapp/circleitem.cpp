@@ -48,7 +48,6 @@ void CircleItem::save(QXmlStreamWriter &xml) {
 
 void CircleItem::creationPolygonChanged(View::CreationEvent event) {
   if (event == View::MousePress) {
-    qDebug() << "Change here";
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MousePress));
     setPos(poly.first().x(), poly.first().y());
     setViewRect(QRectF(0.0, 0.0, 0.0, sizeOfGrip().height()));

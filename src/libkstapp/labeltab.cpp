@@ -22,10 +22,10 @@ LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
   QFont font;
   setGlobalFont(font);
 
-  connect(_topFamily, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_leftFamily, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_bottomFamily, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_rightFamily, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_topLabel, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_leftLabel, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_bottomLabel, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_rightLabel, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
 
   connect(_topFontSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_leftFontSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
