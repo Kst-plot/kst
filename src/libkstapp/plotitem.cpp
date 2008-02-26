@@ -99,6 +99,8 @@ PlotItem::PlotItem(View *parent)
   _rightLabelFont = defaultFont;
 
   PlotItemManager::self()->addPlot(this);
+
+  calculateProjectionRect(); //the initial projection
 }
 
 
@@ -199,7 +201,6 @@ void PlotItem::paint(QPainter *painter) {
   painter->restore();
 
   painter->save();
-  painter->translate(QPointF(rect().x(), rect().y()));
 
   QList<qreal> xMajorTicks;
   QList<qreal> xMinorTicks;
@@ -235,19 +236,25 @@ void PlotItem::paint(QPainter *painter) {
 //  qDebug() << "=============> topLabel:" << topLabel() << endl;
   paintTopLabel(painter);
 
-  paintPlotMarkers(painter, xMajorTicks, xMinorTicks, yMajorTicks, yMinorTicks);
+  paintPlot(painter, xMajorTicks, xMinorTicks, yMajorTicks, yMinorTicks);
   paintMajorTickLabels(painter, xMajorTicks, yMajorTicks, xLabels, yLabels);
 
   painter->restore();
 }
 
-void PlotItem::paintPlotMarkers(QPainter *painter,
+void PlotItem::paintPlot(QPainter *painter,
                                        const QList<qreal> &xMajorTicks,
                                        const QList<qreal> &xMinorTicks,
                                        const QList<qreal> &yMajorTicks,
                                        const QList<qreal> &yMinorTicks) {
   paintMajorGridLines(painter, xMajorTicks, yMajorTicks);
   paintMinorGridLines(painter, xMinorTicks, yMinorTicks);
+
+  painter->save();
+  painter->setBrush(Qt::NoBrush);
+  painter->drawRect(plotRect());
+  painter->restore();
+
   paintMajorTicks(painter, xMajorTicks, yMajorTicks);
   paintMinorTicks(painter, xMinorTicks, yMinorTicks);
 }
@@ -568,14 +575,14 @@ void PlotItem::paintMajorTickLabels(QPainter *painter,
   _xLabelRect = xLabelRect;
   _yLabelRect = yLabelRect;
 
-//   painter->save();
-//   painter->setOpacity(0.3);
-// //  qDebug() << "xLabelRect:" << xLabelRect << endl;
-//   painter->fillRect(xLabelRect, Qt::blue);
-// 
-// //  qDebug() << "yLabelRect:" << yLabelRect << endl;
-//   painter->fillRect(yLabelRect, Qt::green);
-//   painter->restore();
+/*  painter->save();
+  painter->setOpacity(0.3);
+//  qDebug() << "xLabelRect:" << xLabelRect << endl;
+  painter->fillRect(xLabelRect, Qt::blue);
+
+//  qDebug() << "yLabelRect:" << yLabelRect << endl;
+  painter->fillRect(yLabelRect, Qt::green);
+  painter->restore();*/
 }
 
 
@@ -1180,6 +1187,7 @@ void PlotItem::setYAxisMinorGridLineStyle(const Qt::PenStyle style) {
   _yAxisMinorGridLineStyle = style;
 }
 
+
 void PlotItem::updateScale() {
   if (_xAxisLog) {
     _xMax = logXHi(projectionRect().right());
@@ -1287,6 +1295,79 @@ qreal PlotItem::mapYToPlot(const qreal &y) const {
   return newY;
 }
 
+
+QPointF PlotItem::mapFromAxisToProjection(const QPointF &point) const {
+  return projectionAxisTransform().map(point);
+}
+
+
+QPointF PlotItem::mapToAxisFromProjection(const QPointF &point) const {
+  return projectionAxisTransform().inverted().map(point);
+}
+
+
+QRectF PlotItem::mapFromAxisToProjection(const QRectF &rect) const {
+  return projectionAxisTransform().mapRect(rect);
+}
+
+
+QRectF PlotItem::mapToAxisFromProjection(const QRectF &rect) const {
+  return projectionAxisTransform().inverted().mapRect(rect);
+}
+
+
+QTransform PlotItem::projectionAxisTransform() const {
+  QTransform t;
+
+  QRectF rect = plotAxisRect();
+  QRectF v = QRectF(rect.bottomLeft(), rect.topRight());
+
+  QPolygonF from_ = QPolygonF(v);
+  from_.pop_back(); //get rid of last closed point
+
+  QPolygonF to_ = QPolygonF(projectionRect());
+  to_.pop_back(); //get rid of last closed point
+
+  QTransform::quadToQuad(from_, to_, t);
+  return t;
+}
+
+
+QPointF PlotItem::mapFromPlotToProjection(const QPointF &point) const {
+  return projectionPlotTransform().map(point);
+}
+
+
+QPointF PlotItem::mapToPlotFromProjection(const QPointF &point) const {
+  return projectionPlotTransform().inverted().map(point);
+}
+
+
+QRectF PlotItem::mapFromPlotToProjection(const QRectF &rect) const {
+  return projectionPlotTransform().mapRect(rect);
+}
+
+
+QRectF PlotItem::mapToPlotFromProjection(const QRectF &rect) const {
+  return projectionPlotTransform().inverted().mapRect(rect);
+}
+
+
+QTransform PlotItem::projectionPlotTransform() const {
+  QTransform t;
+
+  QRectF rect = plotRect();
+  QRectF v = QRectF(rect.bottomLeft(), rect.topRight());
+
+  QPolygonF from_ = QPolygonF(v);
+  from_.pop_back(); //get rid of last closed point
+
+  QPolygonF to_ = QPolygonF(projectionRect());
+  to_.pop_back(); //get rid of last closed point
+
+  QTransform::quadToQuad(from_, to_, t);
+  return t;
+}
 
 QFont PlotItem::rightLabelFont() const {
   return _rightLabelFont;
@@ -1666,12 +1747,12 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
   painter->setFont(_leftLabelFont);
 
   QRectF leftLabelRect = verticalLabelRect(false);
-  leftLabelRect.moveTopLeft(QPointF(0.0, labelMarginHeight()));
+  leftLabelRect.moveTopRight(plotAxisRect().topLeft());
   painter->drawText(t.mapRect(leftLabelRect), Qt::TextWordWrap | Qt::AlignCenter, leftLabelOverride());
 
 //   painter->save();
 //   painter->setOpacity(0.3);
-// //  qDebug() << "leftLabelRect:" << t.mapRect(leftLabelRect) << endl;
+// //   qDebug() << "leftLabelRect:" << t.mapRect(leftLabelRect) << endl;
 //   painter->fillRect(t.mapRect(leftLabelRect), Qt::red);
 //   painter->restore();
 
@@ -1708,8 +1789,15 @@ void PlotItem::paintBottomLabel(QPainter *painter) {
   painter->setFont(_bottomLabelFont);
 
   QRectF bottomLabelRect = horizontalLabelRect(false);
-  bottomLabelRect.moveTopLeft(QPointF(labelMarginWidth(), height() - labelMarginHeight()));
+  bottomLabelRect.moveTopLeft(plotAxisRect().bottomLeft());
   painter->drawText(bottomLabelRect, Qt::TextWordWrap | Qt::AlignCenter, bottomLabelOverride());
+
+//   painter->save();
+//   painter->setOpacity(0.3);
+// //   qDebug() << "bottomLabelRect:" << bottomLabelRect;
+//   painter->fillRect(bottomLabelRect, Qt::red);
+//   painter->restore();
+
   painter->restore();
 }
 
@@ -1735,7 +1823,6 @@ void PlotItem::paintRightLabel(QPainter *painter) {
     return;
 
   painter->save();
-  painter->translate(width() - labelMarginWidth(), 0.0);
   QTransform t;
   t.rotate(-90.0);
   painter->rotate(90.0);
@@ -1744,8 +1831,15 @@ void PlotItem::paintRightLabel(QPainter *painter) {
 
   //same as left but painter is translated
   QRectF rightLabelRect = verticalLabelRect(false);
-  rightLabelRect.moveTopLeft(QPointF(0.0, labelMarginHeight()));
+  rightLabelRect.moveTopLeft(plotAxisRect().topRight());
   painter->drawText(t.mapRect(rightLabelRect), Qt::TextWordWrap | Qt::AlignCenter, rightLabelOverride());
+
+//   painter->save();
+//   painter->setOpacity(0.3);
+// //   qDebug() << "rightLabelRect:" << t.mapRect(rightLabelRect) << endl;
+//   painter->fillRect(t.mapRect(rightLabelRect), Qt::red);
+//   painter->restore();
+
   painter->restore();
 }
 
@@ -1777,8 +1871,15 @@ void PlotItem::paintTopLabel(QPainter *painter) {
   painter->save();
   painter->setFont(_topLabelFont);
   QRectF topLabelRect = horizontalLabelRect(false);
-  topLabelRect.moveTopLeft(QPointF(labelMarginWidth(), 0.0));
+  topLabelRect.moveBottomLeft(plotAxisRect().topLeft());
   painter->drawText(topLabelRect, Qt::TextWordWrap | Qt::AlignCenter, topLabelOverride());
+
+//   painter->save();
+//   painter->setOpacity(0.3);
+// //   qDebug() << "topLabelRect:" << topLabelRect;
+//   painter->fillRect(topLabelRect, Qt::red);
+//   painter->restore();
+
   painter->restore();
 }
 

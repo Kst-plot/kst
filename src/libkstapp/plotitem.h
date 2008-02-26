@@ -215,6 +215,16 @@ class PlotItem : public ViewItem, public PlotItemInterface
     qreal mapYToPlot(const qreal &y) const;
     QPointF mapPointToProjection(const QPointF &point);
 
+    QPointF mapFromAxisToProjection(const QPointF &point) const;
+    QPointF mapToAxisFromProjection(const QPointF &point) const;
+    QRectF mapFromAxisToProjection(const QRectF &rect) const;
+    QRectF mapToAxisFromProjection(const QRectF &rect) const;
+
+    QPointF mapFromPlotToProjection(const QPointF &point) const;
+    QPointF mapToPlotFromProjection(const QPointF &point) const;
+    QRectF mapFromPlotToProjection(const QRectF &rect) const;
+    QRectF mapToPlotFromProjection(const QRectF &rect) const;
+
     void updateScale();
 
     qreal xMin() { return _xMin; }
@@ -231,7 +241,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
   private:
 
-    virtual void paintPlotMarkers(QPainter *painter,
+    virtual void paintPlot(QPainter *painter,
                                      const QList<qreal> &xMajorTicks,
                                      const QList<qreal> &xMinorTicks,
                                      const QList<qreal> &yMajorTicks,
@@ -298,6 +308,10 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
   private Q_SLOTS:
     void calculateProjectionRect();
+
+  protected:
+    virtual QTransform projectionAxisTransform() const;
+    virtual QTransform projectionPlotTransform() const;
 
   private:
     QHash<PlotRenderItem::RenderType, PlotRenderItem*> _renderers;
