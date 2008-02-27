@@ -73,6 +73,7 @@ SOURCES += \
     layouttab.cpp \
     lineitem.cpp \
     mainwindow.cpp \
+    markerstab.cpp \
     matrixdialog.cpp \
     matrixeditordialog.cpp \
     matrixmodel.cpp \
@@ -159,6 +160,7 @@ HEADERS += \
     layouttab.h \
     lineitem.h \
     mainwindow.h \
+    markerstab.h \
     matrixdialog.h \
     matrixeditordialog.h \
     matrixmodel.h \
@@ -221,6 +223,7 @@ FORMS += \
     imagetab.ui \
     labeltab.ui \
     layouttab.ui \
+    markerstab.ui \
     matrixeditordialog.ui \
     matrixtab.ui \
     powerspectrumtab.ui \

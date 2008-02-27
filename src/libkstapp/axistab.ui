@@ -64,9 +64,9 @@
     </widget>
    </item>
    <item row="1" column="0" >
-    <widget class="QGroupBox" name="_plotMarkerGroup" >
+    <widget class="QGroupBox" name="_axisDetailsGroup" >
      <property name="title" >
-      <string>Axis Plot Markers</string>
+      <string>Axis Details</string>
      </property>
      <layout class="QGridLayout" >
       <item row="0" column="0" >

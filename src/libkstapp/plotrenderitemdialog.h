@@ -21,6 +21,7 @@ namespace Kst {
 class ContentTab;
 class PlotMarkersTab;
 class AxisTab;
+class MarkersTab;
 class LabelTab;
 class ObjectStore;
 class PlotRenderItem;
@@ -50,6 +51,8 @@ class KST_EXPORT PlotRenderItemDialog : public ViewItemDialog
     ContentTab *_contentTab;
     AxisTab *_xAxisTab;
     AxisTab *_yAxisTab;
+    MarkersTab *_xMarkersTab;
+    MarkersTab *_yMarkersTab;
     LabelTab *_labelTab;
     PlotMarkersTab* _plotMarkersTab;
     PlotRenderItem* _plotItem;

@@ -13,6 +13,7 @@
 
 #include "contenttab.h"
 #include "axistab.h"
+#include "markerstab.h"
 #include "labeltab.h"
 #include "dialogpage.h"
 #include "application.h"
@@ -54,6 +55,22 @@ PlotRenderItemDialog::PlotRenderItemDialog(PlotRenderItem *item, QWidget *parent
   yAxisPage->addDialogTab(_yAxisTab);
   addDialogPage(yAxisPage);
   connect(_yAxisTab, SIGNAL(apply()), this, SLOT(yAxisChanged()));
+
+  _xMarkersTab = new MarkersTab(this);
+  DialogPage *xMarkersPage = new DialogPage(this);
+  xMarkersPage->setPageTitle(tr("x-Axis markers"));
+  xMarkersPage->addDialogTab(_xMarkersTab);
+  addDialogPage(xMarkersPage);
+  _xMarkersTab->setObjectStore(_store);
+  connect(_xMarkersTab, SIGNAL(apply()), this, SLOT(xMarkersChanged()));
+
+  _yMarkersTab = new MarkersTab(this);
+  DialogPage *yMarkersPage = new DialogPage(this);
+  yMarkersPage->setPageTitle(tr("y-Axis markers"));
+  yMarkersPage->addDialogTab(_yMarkersTab);
+  addDialogPage(yMarkersPage);
+  _yMarkersTab->setObjectStore(_store);
+  connect(yMarkersPage, SIGNAL(apply()), this, SLOT(yMarkersChanged()));
 
   _contentTab = new ContentTab(this);
   connect(_contentTab, SIGNAL(apply()), this, SLOT(contentChanged()));
@@ -130,6 +147,7 @@ void PlotRenderItemDialog::setupAxis() {
 void PlotRenderItemDialog::setupContent() {
   QStringList displayedRelations;
   QStringList availableRelations;
+  QStringList allRelations;
 
   CurveList curves = _store->getObjects<Curve>();
   ImageList images = _store->getObjects<Image>();
@@ -139,12 +157,14 @@ void PlotRenderItemDialog::setupContent() {
   }
 
   foreach (CurvePtr curve, curves) {
+    allRelations.append(curve->tag().displayString());
     if (!displayedRelations.contains(curve->tag().displayString())) {
       availableRelations.append(curve->tag().displayString());
     }
   }
 
   foreach (ImagePtr image, images) {
+    allRelations.append(image->tag().displayString());
     if (!displayedRelations.contains(image->tag().displayString())) {
       availableRelations.append(image->tag().displayString());
     }
@@ -152,6 +172,8 @@ void PlotRenderItemDialog::setupContent() {
 
   _contentTab->setDisplayedRelations(displayedRelations);
   _contentTab->setAvailableRelations(availableRelations);
+  _xMarkersTab->setObjects(allRelations);
+  _yMarkersTab->setObjects(allRelations);
 }
 
 
