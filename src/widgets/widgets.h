@@ -22,6 +22,7 @@
 #include "filerequester.h"
 #include "combobox.h"
 #include "datarange.h"
+#include "curveselector.h"
 #include "vectorselector.h"
 #include "matrixselector.h"
 #include "scalarselector.h"
@@ -129,6 +130,19 @@ class DataRangePlugin : public WidgetPlugin {
     } //do not translate
     QWidget *createWidget(QWidget *parent) {
       return new DataRange(parent);
+    }
+};
+
+class CurveSelectorPlugin : public WidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+  public:
+    CurveSelectorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    QString name() const {
+      return QLatin1String("CurveSelector");
+    } //do not translate
+    QWidget *createWidget(QWidget *parent) {
+      return new CurveSelector(parent);
     }
 };
 

@@ -85,7 +85,9 @@ PlotItem::PlotItem(View *parent)
   _xAxisMajorGridLineStyle(Qt::DashLine),
   _xAxisMinorGridLineStyle(Qt::DashLine),
   _yAxisMajorGridLineStyle(Qt::DashLine),
-  _yAxisMinorGridLineStyle(Qt::DashLine)
+  _yAxisMinorGridLineStyle(Qt::DashLine),
+  _xAxisPlotMarkers(true),
+  _yAxisPlotMarkers(false)
  {
 
   setName("Plot");
@@ -238,6 +240,7 @@ void PlotItem::paint(QPainter *painter) {
 
   paintPlot(painter, xMajorTicks, xMinorTicks, yMajorTicks, yMinorTicks);
   paintMajorTickLabels(painter, xMajorTicks, yMajorTicks, xLabels, yLabels);
+  paintPlotMarkers(painter);
 
   painter->restore();
 }
@@ -583,6 +586,47 @@ void PlotItem::paintMajorTickLabels(QPainter *painter,
 //  qDebug() << "yLabelRect:" << yLabelRect << endl;
   painter->fillRect(yLabelRect, Qt::green);
   painter->restore();*/
+}
+
+
+void PlotItem::paintPlotMarkers(QPainter *painter) {
+
+  QRectF rect = plotRect();
+
+  QVector<QLineF> xPlotMarkers;
+  _xAxisPlotMarkers.updateMarkers();
+  foreach (double x, _xAxisPlotMarkers.markers()) {
+    if (x > _xMin && x < _xMax) {
+      QPointF p1 = QPointF(mapXToPlot(x), plotRect().bottom());
+      QPointF p2 = p1 - QPointF(0, rect.height());
+      xPlotMarkers << QLineF(p1, p2);
+    }
+  }
+
+  if (!xPlotMarkers.isEmpty()) {
+    painter->save();
+    painter->setPen(QPen(QBrush(_xAxisPlotMarkers.lineColor()), _xAxisPlotMarkers.lineWidth(), _xAxisPlotMarkers.lineStyle()));
+    painter->drawLines(xPlotMarkers);
+    painter->restore();
+  }
+
+  QVector<QLineF> yPlotMarkers;
+  _yAxisPlotMarkers.updateMarkers();
+  foreach (double y, _yAxisPlotMarkers.markers()) {
+    if (y > _yMin && y < _yMax) {
+      QPointF p1 = QPointF(plotRect().left(), mapYToPlot(y));
+      QPointF p2 = p1 + QPointF(rect.width(), 0);
+      yPlotMarkers << QLineF(p1, p2);
+    }
+  }
+
+  if (!yPlotMarkers.isEmpty()) {
+    painter->save();
+    painter->setPen(QPen(QBrush(_yAxisPlotMarkers.lineColor()), _yAxisPlotMarkers.lineWidth(), _yAxisPlotMarkers.lineStyle()));
+    painter->drawLines(yPlotMarkers);
+    painter->restore();
+  }
+
 }
 
 

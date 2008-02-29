@@ -195,5 +195,8 @@ typedef SharedPtr<Curve> CurvePtr;
 typedef ObjectList<Curve> CurveList;
 
 }
+
+Q_DECLARE_METATYPE(Kst::Curve*)
+
 #endif
 // vim: ts=2 sw=2 et

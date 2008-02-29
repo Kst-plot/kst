@@ -28,10 +28,45 @@ class KST_EXPORT MarkersTab : public DialogTab, Ui::MarkersTab {
 
     void setObjectStore(ObjectStore *store);
 
-    void setObjects(QStringList allObjects);
+    QList<double> markers() const;
+    void setMarkers(const QList<double> &markers);
+
+    Qt::PenStyle lineStyle() const;
+    void setLineStyle(Qt::PenStyle style);
+
+    QColor lineColor() const;
+    void setLineColor(const QColor &color);
+
+    double lineWidth() const;
+    void setLineWidth(const double width);
+
+    bool isCurveSource() const;
+    void setCurveSource(const bool enabled);
+
+    bool isVectorSource() const;
+    void setVectorSource(const bool enabled);
+
+    VectorPtr vector() const;
+    void setVector(VectorPtr vector);
+    void setVector(const QString &vector);
+
+    CurvePtr curve() const;
+    void setCurve(CurvePtr curve);
+
+    PlotMarkers::CurveMarkerMode curveMarkerMode() const;
+    void setCurveMarkerMode(const PlotMarkers::CurveMarkerMode mode);
+
+    PlotMarkers plotMarkers() const;
+    void setPlotMarkers(const PlotMarkers &plotMarkers);
 
   public Q_SLOTS:
+    void add();
+    void remove();
+    void clear();
     void update();
+
+  private:
+    PlotMarkers _plotMarkers;
 };
 
 }

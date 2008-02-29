@@ -80,9 +80,10 @@ SOURCES += \
     memorywidget.cpp \
     pictureitem.cpp \
     plotitem.cpp \
-    plotrenderitemdialog.cpp \
     plotitemmanager.cpp \
+    plotmarkers.cpp \
     plotrenderitem.cpp \
+    plotrenderitemdialog.cpp \
     powerspectrumdialog.cpp \
     scalardialog.cpp \
     scalarmodel.cpp \
@@ -167,6 +168,7 @@ HEADERS += \
     memorywidget.h \
     pictureitem.h \
     plotitem.h \
+    plotmarkers.h \
     plotrenderitemdialog.h \
     plotitemmanager.h \
     plotrenderitem.h \

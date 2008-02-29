@@ -39,11 +39,14 @@ class KST_EXPORT PlotRenderItemDialog : public ViewItemDialog
     void xAxisChanged();
     void yAxisChanged();
     void labelsChanged();
+    void xAxisPlotMarkersChanged();
+    void yAxisPlotMarkersChanged();
 
   private:
     void setupContent();
     void setupAxis();
     void setupLabels();
+    void setupMarkers();
     void addRelations();
     void updateRelations();
 

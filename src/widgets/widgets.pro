@@ -28,6 +28,7 @@ SOURCES += \
     combobox.cpp \
     curveappearance.cpp \
     curveplacement.cpp \
+    curveselector.cpp \
     datarange.cpp \
     dialogdefaults.cpp \
     fftoptions.cpp \
@@ -46,6 +47,7 @@ HEADERS += \
     combobox.h \
     curveappearance.h \
     curveplacement.h \
+    curveselector.h \
     datarange.h \
     dialogdefaults.h \
     fftoptions.h \
@@ -62,6 +64,7 @@ FORMS += \
     colorpalette.ui \
     curveappearance.ui \
     curveplacement.ui \
+    curveselector.ui \
     datarange.ui \
     fftoptions.ui \
     matrixselector.ui \

@@ -62,7 +62,7 @@ PlotRenderItemDialog::PlotRenderItemDialog(PlotRenderItem *item, QWidget *parent
   xMarkersPage->addDialogTab(_xMarkersTab);
   addDialogPage(xMarkersPage);
   _xMarkersTab->setObjectStore(_store);
-  connect(_xMarkersTab, SIGNAL(apply()), this, SLOT(xMarkersChanged()));
+  connect(_xMarkersTab, SIGNAL(apply()), this, SLOT(xAxisPlotMarkersChanged()));
 
   _yMarkersTab = new MarkersTab(this);
   DialogPage *yMarkersPage = new DialogPage(this);
@@ -70,7 +70,7 @@ PlotRenderItemDialog::PlotRenderItemDialog(PlotRenderItem *item, QWidget *parent
   yMarkersPage->addDialogTab(_yMarkersTab);
   addDialogPage(yMarkersPage);
   _yMarkersTab->setObjectStore(_store);
-  connect(yMarkersPage, SIGNAL(apply()), this, SLOT(yMarkersChanged()));
+  connect(yMarkersPage, SIGNAL(apply()), this, SLOT(yAxisPlotMarkersChanged()));
 
   _contentTab = new ContentTab(this);
   connect(_contentTab, SIGNAL(apply()), this, SLOT(contentChanged()));
@@ -85,6 +85,7 @@ PlotRenderItemDialog::PlotRenderItemDialog(PlotRenderItem *item, QWidget *parent
   setupContent();
   setupAxis();
   setupLabels();
+  setupMarkers();
 }
 
 
@@ -141,8 +142,16 @@ void PlotRenderItemDialog::setupAxis() {
   _yAxisTab->setInterpret(_plotItem->plotItem()->yAxisInterpret());
   _yAxisTab->setAxisDisplay(_plotItem->plotItem()->yAxisDisplay());
   _yAxisTab->setAxisInterpretation(_plotItem->plotItem()->yAxisInterpretation());
-
 }
+
+
+void PlotRenderItemDialog::setupMarkers() {
+  Q_ASSERT(_plotItem);
+
+  _xMarkersTab->setPlotMarkers(_plotItem->plotItem()->xAxisPlotMarkers());
+  _yMarkersTab->setPlotMarkers(_plotItem->plotItem()->yAxisPlotMarkers());
+}
+
 
 void PlotRenderItemDialog::setupContent() {
   QStringList displayedRelations;
@@ -172,8 +181,6 @@ void PlotRenderItemDialog::setupContent() {
 
   _contentTab->setDisplayedRelations(displayedRelations);
   _contentTab->setAvailableRelations(availableRelations);
-  _xMarkersTab->setObjects(allRelations);
-  _yMarkersTab->setObjects(allRelations);
 }
 
 
@@ -410,6 +417,19 @@ void PlotRenderItemDialog::labelsChanged() {
   _plotItem->plotItem()->setBottomLabelFont(_labelTab->bottomLabelFont());
 
 }
+
+
+void PlotRenderItemDialog::xAxisPlotMarkersChanged() {
+  Q_ASSERT(_plotItem);
+  _plotItem->plotItem()->setXAxisPlotMarkers(_xMarkersTab->plotMarkers());
+}
+
+
+void PlotRenderItemDialog::yAxisPlotMarkersChanged() {
+  Q_ASSERT(_plotItem);
+  _plotItem->plotItem()->setYAxisPlotMarkers(_yMarkersTab->plotMarkers());
+}
+
 
 }
 

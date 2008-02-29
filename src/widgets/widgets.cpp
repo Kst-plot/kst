@@ -20,6 +20,7 @@ Widgets::Widgets(QObject *parent)
   _plugins.append(new FileRequesterPlugin(this));
   _plugins.append(new ComboBoxPlugin(this));
   _plugins.append(new DataRangePlugin(this));
+  _plugins.append(new CurveSelectorPlugin(this));
   _plugins.append(new VectorSelectorPlugin(this));
   _plugins.append(new MatrixSelectorPlugin(this));
   _plugins.append(new ScalarSelectorPlugin(this));

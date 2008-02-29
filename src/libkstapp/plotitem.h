@@ -21,6 +21,7 @@
 #include "plotrenderitem.h"
 #include "plotiteminterface.h"
 #include "plotdefines.h"
+#include "plotmarkers.h"
 
 namespace Kst {
 
@@ -210,6 +211,12 @@ class PlotItem : public ViewItem, public PlotItemInterface
     KstAxisInterpretation yAxisInterpretation() const;
     void setYAxisInterpretation(const KstAxisInterpretation interpret);
 
+    PlotMarkers xAxisPlotMarkers() { return _xAxisPlotMarkers; }
+    void setXAxisPlotMarkers(const PlotMarkers &plotMarkers) { _xAxisPlotMarkers = plotMarkers; }
+
+    PlotMarkers yAxisPlotMarkers() { return _yAxisPlotMarkers; }
+    void setYAxisPlotMarkers(const PlotMarkers &plotMarkers) { _yAxisPlotMarkers = plotMarkers; }
+
     QPointF mapPointToPlot(const QPointF &point) const;
     qreal mapXToPlot(const qreal &x) const;
     qreal mapYToPlot(const qreal &y) const;
@@ -268,6 +275,8 @@ class PlotItem : public ViewItem, public PlotItemInterface
                                       const QList<qreal> &yMajorTicks,
                                       const QMap<qreal, QString> &xLabels,
                                       const QMap<qreal, QString> &yLabels);
+
+    virtual void paintPlotMarkers(QPainter *painter);
 
     qreal calculatedLabelMarginWidth() const;
     void setCalculatedLabelMarginWidth(qreal marginWidth);
@@ -380,6 +389,9 @@ class PlotItem : public ViewItem, public PlotItemInterface
     Qt::PenStyle _xAxisMinorGridLineStyle;
     Qt::PenStyle _yAxisMajorGridLineStyle;
     Qt::PenStyle _yAxisMinorGridLineStyle;
+
+    PlotMarkers _xAxisPlotMarkers;
+    PlotMarkers _yAxisPlotMarkers;
 
     friend class ViewGridLayout;
 };

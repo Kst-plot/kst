@@ -33,7 +33,7 @@
           <item>
            <layout class="QHBoxLayout" >
             <item>
-             <widget class="QDoubleSpinBox" name="_newMarker" >
+             <widget class="QLineEdit" name="_newMarker" >
               <property name="sizePolicy" >
                <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
                 <horstretch>0</horstretch>
@@ -76,7 +76,11 @@
            </widget>
           </item>
           <item>
-           <widget class="QListWidget" name="_currentMarkersList" />
+           <widget class="QListWidget" name="_currentMarkersList" >
+            <property name="selectionMode" >
+             <enum>QAbstractItemView::ExtendedSelection</enum>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -175,14 +179,14 @@
      </property>
      <layout class="QGridLayout" >
       <item row="0" column="0" colspan="2" >
-       <widget class="QCheckBox" name="_dataObjectMarkers" >
+       <widget class="QCheckBox" name="_curveMarkers" >
         <property name="text" >
-         <string>Use Data Object as marker source:</string>
+         <string>Use Curve as marker source:</string>
         </property>
        </widget>
       </item>
       <item row="0" column="2" colspan="2" >
-       <widget class="Kst::ComboBox" name="_relation" />
+       <widget class="Kst::CurveSelector" native="1" name="_curve" />
       </item>
       <item row="1" column="0" >
        <widget class="QLabel" name="label_3" >
@@ -247,14 +251,14 @@
    <header>colorbutton.h</header>
   </customwidget>
   <customwidget>
-   <class>Kst::ComboBox</class>
-   <extends>QComboBox</extends>
-   <header>combobox.h</header>
-  </customwidget>
-  <customwidget>
    <class>Kst::VectorSelector</class>
    <extends>QWidget</extends>
    <header>vectorselector.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Kst::CurveSelector</class>
+   <extends>QWidget</extends>
+   <header>curveselector.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
