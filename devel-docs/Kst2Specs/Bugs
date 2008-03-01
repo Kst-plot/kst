@@ -1,11 +1,13 @@
 Zoom Mode Plot Bugs:
 
+1)
 In ctrl or shift zoom mode, the cursor should change, and the full horizontal or vertical
 dashed line should be shown immediately.  As it is now, the line isn't shown until a rect
 draw has begun. (See Zoom Modes spec or kst 1.x)
 
+2)
 If you zoom in far enough, the tick labels loose resolution, and don't automatically shift to base/offset mode.
 eg, range fro 99999.499 to 99999.5001 shows all ticks as 99999.5 
 
-Log mode does not change the axis into log axis.
-
+3)
+In Log mode, a mouse zoom does not zoom over the correct region.

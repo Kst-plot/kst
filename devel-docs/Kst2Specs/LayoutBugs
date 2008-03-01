@@ -21,6 +21,9 @@ Grow the kst window:
   The arrow end points should stay fixed relative to the TLV.
   The arrow hea size should scale with the tlv (l+h) but should keep a fixed aspect ratio.
 
+Comments: lines and arrows go from A to B, where A and B are defined relative to the parent.
+The UI should just have two handles, at A and B.  There should be no 'rotation mode'.
+
 2) Problem with rotated boxes:
 Start kst
 Create two boxes.  Rotate one.
@@ -46,26 +49,6 @@ Returning to an original window size should always return to the same state.
 3) Problems with elipses:
 Repeat (2) with "ellipse" replacing "rotated box".
 
-4) Problem with plots
-Start kst.
-From layout mode, create a plot.
-From the data manager add a curve to the plot.
-From layout mode, grow the plot.  
-What happens:
-  the axis and tick marks end up outside the plot
-What should happen:
-  They should stay where they belong!
-
-5) Layout mode grips are left after leavind layout mode.
-Start kst
-create a view object (box)
-select it, so the pretty blue boxes appear.
-Leave layout mode.
-What happens:
-  the pretty blue boxes stay
-What should happen:
-  when you leave layout mode, the boxes should go away.
-
 6) Font sizes in plot
 Start Kst
 Create a plot
@@ -81,5 +64,21 @@ Change the aspect ratio of the kst window. (resize it).
 What happens:
   The circle becomes an ellipse.
 What should happen:
-  The circle should stay a circle, and just be resized.
+  The circle should stay a circle, and just be resized: circles *always* maintain
+  aspect ratio.
  
+8) "Edit" from the plot RMB doesn't always bring up the plot dialog.
+Create a plot in kst from layout mode
+Select Right Click->edit 
+What happens:
+  a generic view object dialog appears.
+What should happen:
+  The plot dialog should appear. This is the dialog which appears if you
+  do the same thing from a plot with a curve in it
+  ("cartesian render menu->edit")
+
+8b) "Edit" from the plot RMB doesn't always bring up the plot dialog.
+Create a plot with a curve in it.  Right click outside the plot region, in
+the label region.  Again you get the wrong dialog if you select edit.
+
+
