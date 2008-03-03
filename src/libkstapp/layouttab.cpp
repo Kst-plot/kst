@@ -23,6 +23,7 @@ LayoutTab::LayoutTab(QWidget *parent)
   connect(_verMargin, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_horSpacing, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_verSpacing, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
+  connect(_lockAspectRatio, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
 }
 
 
@@ -75,6 +76,21 @@ double LayoutTab::verticalSpacing() const {
 
 void LayoutTab::setVerticalSpacing(double verticalSpacing) {
   _verSpacing->setValue(verticalSpacing);
+}
+
+
+bool LayoutTab::lockAspectRatio() const {
+  return _lockAspectRatio->isChecked();
+}
+
+
+void LayoutTab::setLockAspectRatio(const bool lock) {
+  _lockAspectRatio->setChecked(lock);
+}
+
+
+void LayoutTab::enableLockAspectRatio(const bool enable) {
+  _lockAspectRatio->setEnabled(enable);
 }
 
 }

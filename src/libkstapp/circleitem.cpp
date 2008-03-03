@@ -26,6 +26,7 @@ CircleItem::CircleItem(View *parent)
   setZValue(CIRCLE_ZVALUE);
   setBrush(Qt::white);
   setLockAspectRatio(true);
+  setLockAspectRatioFixed(true);
 }
 
 
@@ -81,17 +82,6 @@ void CircleItem::creationPolygonChanged(View::CreationEvent event) {
 }
 
 
-QPainterPath CircleItem::grips() const {
-  QPainterPath grips;
-  grips.addPath(topLeftGrip());
-  grips.addPath(topRightGrip());
-  grips.addPath(bottomRightGrip());
-  grips.addPath(bottomLeftGrip());
-
-  return grips;
-}
-
-
 void CreateCircleCommand::createItem() {
   _item = new CircleItem(_view);
   _view->setCursor(Qt::CrossCursor);
@@ -119,7 +109,7 @@ ViewItem* CircleItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore
         Q_ASSERT(!rc);
         rc = new CircleItem(view);
         if (parent) {
-          rc->setParentItem(parent);
+          rc->setParent(parent);
         }
         // TODO add any specialized CircleItem Properties here.
       } else {

@@ -44,6 +44,7 @@ ViewItem::ViewItem(View *parent)
     _gripMode(Move),
     _allowedGripModes(Move | Resize | Rotate /*| Scale*/),
     _lockAspectRatio(false),
+    _lockAspectRatioFixed(false),
     _hasStaticGeometry(false),
     _hovering(false),
     _acceptsChildItems(true),
@@ -51,7 +52,10 @@ ViewItem::ViewItem(View *parent)
     _layout(0),
     _activeGrip(NoGrip),
     _allowedGrips(TopLeftGrip | TopRightGrip | BottomRightGrip | BottomLeftGrip |
-                  TopMidGrip | RightMidGrip | BottomMidGrip | LeftMidGrip) {
+                  TopMidGrip | RightMidGrip | BottomMidGrip | LeftMidGrip),
+    _parentRelativeHeight(0),
+    _parentRelativeWidth(0)
+ {
 
   setZValue(1);
   setName("View Item");
@@ -66,6 +70,7 @@ ViewItem::ViewItem(View *parent)
 
 ViewItem::~ViewItem() {
 }
+
 
 void ViewItem::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("name", name());
@@ -331,7 +336,7 @@ QRectF ViewItem::viewRect() const {
 }
 
 
-void ViewItem::setViewRect(const QRectF &viewRect) {
+void ViewItem::setViewRect(const QRectF &viewRect, bool automaticChange) {
   QRectF oldViewRect = rect();
 
   if (oldViewRect == viewRect)
@@ -339,6 +344,10 @@ void ViewItem::setViewRect(const QRectF &viewRect) {
 
   setRect(viewRect);
   emit geometryChanged();
+
+  if (!automaticChange) {
+    updateRelativeSize();
+  }
 
   if (layout())
     return;
@@ -360,8 +369,8 @@ void ViewItem::setViewRect(const QRectF &viewRect) {
 }
 
 
-void ViewItem::setViewRect(qreal x, qreal y, qreal width, qreal height) {
-  setViewRect(QRectF(x, y, width, height));
+void ViewItem::setViewRect(qreal x, qreal y, qreal width, qreal height, bool automaticChange) {
+  setViewRect(QRectF(x, y, width, height), automaticChange);
 }
 
 
@@ -447,7 +456,7 @@ QPainterPath ViewItem::bottomLeftGrip() const {
 
 
 QPainterPath ViewItem::topMidGrip() const {
-  if (_gripMode == Move || _gripMode == Rotate)
+  if (_gripMode == Move || _gripMode == Rotate || _lockAspectRatio)
     return QPainterPath();
 
   QRectF bound = gripBoundingRect();
@@ -466,7 +475,7 @@ QPainterPath ViewItem::topMidGrip() const {
 
 
 QPainterPath ViewItem::rightMidGrip() const {
-  if (_gripMode == Move || _gripMode == Rotate)
+  if (_gripMode == Move || _gripMode == Rotate || _lockAspectRatio)
     return QPainterPath();
 
   QRectF bound = gripBoundingRect();
@@ -485,7 +494,7 @@ QPainterPath ViewItem::rightMidGrip() const {
 
 
 QPainterPath ViewItem::bottomMidGrip() const {
-  if (_gripMode == Move || _gripMode == Rotate)
+  if (_gripMode == Move || _gripMode == Rotate || _lockAspectRatio)
     return QPainterPath();
 
   QRectF bound = gripBoundingRect();
@@ -504,7 +513,7 @@ QPainterPath ViewItem::bottomMidGrip() const {
 
 
 QPainterPath ViewItem::leftMidGrip() const {
-  if (_gripMode == Move || _gripMode == Rotate)
+  if (_gripMode == Move || _gripMode == Rotate || _lockAspectRatio)
     return QPainterPath();
 
   QRectF bound = gripBoundingRect();
@@ -1268,7 +1277,7 @@ bool ViewItem::maybeReparent() {
              << endl;
 #endif
 
-    setParentItem(0);
+    setParent(0);
     setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
 
 #ifdef DEBUG_REPARENT
@@ -1320,7 +1329,7 @@ bool ViewItem::maybeReparent() {
              << endl;
 #endif
 
-    setParentItem(viewItem);
+    setParent(viewItem);
     setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
 
 #ifdef DEBUG_REPARENT
@@ -1351,7 +1360,7 @@ bool ViewItem::maybeReparent() {
              << endl;
 #endif
 
-    setParentItem(0);
+    setParent(0);
     setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
 
 #ifdef DEBUG_REPARENT
@@ -1367,105 +1376,142 @@ bool ViewItem::maybeReparent() {
 }
 
 
+void ViewItem::setParent(ViewItem* parent) {
+  setParentItem(parent);
+  updateRelativeSize();
+}
+
+
+void ViewItem::updateRelativeSize() {
+  if (parentViewItem()) {
+    _parentRelativeHeight = (height() / parentViewItem()->height());
+    _parentRelativeWidth = (width() / parentViewItem()->width());
+  } else {
+    _parentRelativeHeight = 0;
+    _parentRelativeWidth = 0;
+  }
+}
+
+
 void ViewItem::updateChildGeometry(ViewItem *child, const QRectF &oldParentRect,
                                                     const QRectF &newParentRect) {
-//  qDebug() << "ViewItem::updateChildGeometry" << oldParentRect << newParentRect << endl;
-
-  qreal dx = oldParentRect.width() ? newParentRect.width() / oldParentRect.width() : 0.0;
-  qreal dy = oldParentRect.height() ? newParentRect.height() / oldParentRect.height() : 0.0;
-
-  bool topChanged = oldParentRect.top() != newParentRect.top();
-  bool leftChanged = oldParentRect.left() != newParentRect.left();
-  bool bottomChanged = oldParentRect.bottom() != newParentRect.bottom();
-  bool rightChanged = oldParentRect.right() != newParentRect.right();
-
-  //Lock aspect ratio for rotating objects.
-  //Always pick the smaller resize factor so the bounds of the rotated object
-  //do not extend outside of parent.
-
-  //FIXME is the child rotated with respect to the parent is the real question...
-  if (child->transform().isRotating() /*|| child->lockAspectRatio()*/) {
-    dx = qMin(dx, dy);
-    dy = dx;
-  }
-
-//   if (child->lockAspectRatio()) {
-//     dx = qMax(dx, dy);
-//     dy = dx;
-//   }
+//   qDebug() << "ViewItem::updateChildGeometry" << oldParentRect << newParentRect << endl;
 
   QRectF rect = child->rect();
 
-  qreal width = rect.width() * dx;
-  qreal height = rect.height() * dy;
+  //Lock aspect ratio for rotating objects or children with a lockedAspectRatio
+  //FIXME is the child rotated with respect to the parent is the real question...
+  if (child->transform().isRotating() || child->lockAspectRatio()) {
 
-  rect.setBottom(rect.top() + height);
-  rect.setRight(rect.left() + width);
+    QPointF offset = child->mapToParent(child->rect().center()) - oldParentRect.topLeft();
+    QPointF oldCenter = child->mapToParent(child->rect().center());
 
-  if (topChanged) {
-    QPointF offset = oldParentRect.bottomRight() - child->mapToParent(child->rect().bottomRight());
+    qreal xCenterRelation = offset.x() / oldParentRect.width();
+    qreal yCenterRelation = offset.y() / oldParentRect.height();
+//     qDebug() << "ViewItem::updateChildGeometry" << offset << xCenterRelation << yCenterRelation << child->mapToParent(child->rect().center());
 
-    qreal xOff = offset.x() * dx;
-    qreal yOff = offset.y() * dy;
+    qreal newHeight = child->relativeHeight() * newParentRect.height();
+    qreal newWidth = child->relativeWidth() * newParentRect.width();
 
-    QPointF newBottomRight = oldParentRect.bottomRight() - QPointF(xOff, yOff);
+    qreal aspectRatio = child->rect().width() / child->rect().height();
+    if ((newWidth / newHeight) > aspectRatio) {
+      // newWidth is too large.  Use newHeight as key.
+      newWidth = newHeight * aspectRatio;
+    } else {
+      // newHeight is either too large, or perfect.  use newWidth as key.
+      newHeight = newWidth / aspectRatio;
+    }
+    rect.setBottom(rect.top() + newHeight);
+    rect.setRight(rect.left() + newWidth);
 
-    QPointF o = child->pos() - child->mapToParent(rect.topLeft());
-
-    QRectF r = rect;
-    r.moveBottom(child->mapFromParent(newBottomRight).y());
-
-    child->setPos(child->mapToParent(r.topLeft()) + o);
-  }
-
-  if (leftChanged) {
-    QPointF offset = oldParentRect.bottomRight() - child->mapToParent(child->rect().bottomRight());
-
-    qreal xOff = offset.x() * dx;
-    qreal yOff = offset.y() * dy;
-
-    QPointF newBottomRight = oldParentRect.bottomRight() - QPointF(xOff, yOff);
-
-    QPointF o = child->pos() - child->mapToParent(rect.topLeft());
+    QPointF newCenter = newParentRect.topLeft() + QPointF(newParentRect.width() * xCenterRelation, newParentRect.height() * yCenterRelation);
 
     QRectF r = rect;
-    r.moveRight(child->mapFromParent(newBottomRight).x());
+    r.moveCenter(child->mapFromParent(newCenter));
 
-    child->setPos(child->mapToParent(r.topLeft()) + o);
-  }
+    QPointF centerOffset = child->mapToParent(r.topLeft()) - child->mapToParent(rect.topLeft());
+    child->setPos(child->pos() + centerOffset);
+  } else {
 
-  if (bottomChanged) {
+    qreal dx = oldParentRect.width() ? newParentRect.width() / oldParentRect.width() : 0.0;
+    qreal dy = oldParentRect.height() ? newParentRect.height() / oldParentRect.height() : 0.0;
 
-    QPointF offset = child->mapToParent(child->rect().topLeft()) - oldParentRect.topLeft();
+    bool topChanged = oldParentRect.top() != newParentRect.top();
+    bool leftChanged = oldParentRect.left() != newParentRect.left();
+    bool bottomChanged = oldParentRect.bottom() != newParentRect.bottom();
+    bool rightChanged = oldParentRect.right() != newParentRect.right();
 
-    qreal xOff = offset.x() * dx;
-    qreal yOff = offset.y() * dy;
+    qreal width = rect.width() * dx;
+    qreal height = rect.height() * dy;
 
-    QPointF newTopLeft = oldParentRect.topLeft() + QPointF(xOff, yOff);
+    rect.setBottom(rect.top() + height);
+    rect.setRight(rect.left() + width);
 
-    QPointF o = child->pos() - child->mapToParent(rect.topLeft());
+    if (topChanged) {
+      QPointF offset = oldParentRect.bottomRight() - child->mapToParent(child->rect().bottomRight());
 
-    QRectF r = rect;
-    r.moveTop(child->mapFromParent(newTopLeft).y());
+      qreal xOff = offset.x() * dx;
+      qreal yOff = offset.y() * dy;
 
-    child->setPos(child->mapToParent(r.topLeft()) + o);
-  }
+      QPointF newBottomRight = oldParentRect.bottomRight() - QPointF(xOff, yOff);
 
-  if (rightChanged) {
+      QPointF o = child->pos() - child->mapToParent(rect.topLeft());
 
-    QPointF offset = child->mapToParent(child->rect().topLeft()) - oldParentRect.topLeft();
+      QRectF r = rect;
+      r.moveBottom(child->mapFromParent(newBottomRight).y());
 
-    qreal xOff = offset.x() * dx;
-    qreal yOff = offset.y() * dy;
+      child->setPos(child->mapToParent(r.topLeft()) + o);
+    }
 
-    QPointF newTopLeft = oldParentRect.topLeft() + QPointF(xOff, yOff);
+    if (leftChanged) {
+      QPointF offset = oldParentRect.bottomRight() - child->mapToParent(child->rect().bottomRight());
 
-    QPointF o = child->pos() - child->mapToParent(rect.topLeft());
+      qreal xOff = offset.x() * dx;
+      qreal yOff = offset.y() * dy;
 
-    QRectF r = rect;
-    r.moveLeft(child->mapFromParent(newTopLeft).x());
+      QPointF newBottomRight = oldParentRect.bottomRight() - QPointF(xOff, yOff);
 
-    child->setPos(child->mapToParent(r.topLeft()) + o);
+      QPointF o = child->pos() - child->mapToParent(rect.topLeft());
+
+      QRectF r = rect;
+      r.moveRight(child->mapFromParent(newBottomRight).x());
+
+      child->setPos(child->mapToParent(r.topLeft()) + o);
+    }
+
+    if (bottomChanged) {
+
+      QPointF offset = child->mapToParent(child->rect().topLeft()) - oldParentRect.topLeft();
+
+      qreal xOff = offset.x() * dx;
+      qreal yOff = offset.y() * dy;
+
+      QPointF newTopLeft = oldParentRect.topLeft() + QPointF(xOff, yOff);
+
+      QPointF o = child->pos() - child->mapToParent(rect.topLeft());
+
+      QRectF r = rect;
+      r.moveTop(child->mapFromParent(newTopLeft).y());
+
+      child->setPos(child->mapToParent(r.topLeft()) + o);
+    }
+
+    if (rightChanged) {
+
+      QPointF offset = child->mapToParent(child->rect().topLeft()) - oldParentRect.topLeft();
+
+      qreal xOff = offset.x() * dx;
+      qreal yOff = offset.y() * dy;
+
+      QPointF newTopLeft = oldParentRect.topLeft() + QPointF(xOff, yOff);
+
+      QPointF o = child->pos() - child->mapToParent(rect.topLeft());
+
+      QRectF r = rect;
+      r.moveLeft(child->mapFromParent(newTopLeft).x());
+
+      child->setPos(child->mapToParent(r.topLeft()) + o);
+    }
   }
 
 //   qDebug() << "resize"
@@ -1475,7 +1521,7 @@ void ViewItem::updateChildGeometry(ViewItem *child, const QRectF &oldParentRect,
 //             << "\nheight:" << height
 //             << endl;
 
-  child->setViewRect(rect);
+  child->setViewRect(rect, true);
 }
 
 

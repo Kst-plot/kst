@@ -40,6 +40,7 @@ SvgItem::SvgItem(View *parent, const QString &file)
   setName("Svg");
   setZValue(SVG_ZVALUE);
   setLockAspectRatio(true);
+  setLockAspectRatioFixed(true);
 }
 
 
@@ -101,7 +102,7 @@ ViewItem* SvgItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *s
         Q_ASSERT(!rc);
         rc = new SvgItem(view);
         if (parent) {
-          rc->setParentItem(parent);
+          rc->setParent(parent);
         }
         // TODO add any specialized SvgItem Properties here.
       } else if (xml.name().toString() == "data") {

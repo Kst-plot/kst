@@ -42,7 +42,7 @@ PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
 
   setName(tr("Plot Render"));
   setZValue(PLOTRENDER_ZVALUE);
-  setParentItem(parentItem);
+  setParent(parentItem);
   setHasStaticGeometry(true);
   setAllowedGripModes(0);
   setAllowedGrips(0);

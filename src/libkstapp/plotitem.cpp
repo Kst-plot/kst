@@ -2266,7 +2266,7 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         Q_ASSERT(!rc);
         rc = new PlotItem(view);
         if (parent) {
-          rc->setParentItem(parent);
+          rc->setParent(parent);
         }
         QXmlStreamAttributes attrs = xml.attributes();
         QStringRef av;

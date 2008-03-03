@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>188</width>
-    <height>147</height>
+    <width>419</width>
+    <height>327</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -55,6 +55,13 @@
      <item row="3" column="1" >
       <widget class="QDoubleSpinBox" name="_verSpacing" />
      </item>
+     <item row="4" column="0" colspan="2" >
+      <widget class="QCheckBox" name="_lockAspectRatio" >
+       <property name="text" >
+        <string>Lock Aspect Ratio</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -64,8 +71,8 @@
      </property>
      <property name="sizeHint" >
       <size>
-       <width>20</width>
-       <height>59</height>
+       <width>401</width>
+       <height>121</height>
       </size>
      </property>
     </spacer>

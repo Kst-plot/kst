@@ -93,6 +93,9 @@ void ViewItemDialog::setupLayout() {
   Q_ASSERT(_item);
   ViewGridLayout *layout = _item->layout();
 
+  _layoutTab->setLockAspectRatio(_item->lockAspectRatio());
+  _layoutTab->enableLockAspectRatio(!_item->lockAspectRatioFixed());
+
   if (!layout) {
     _layoutTab->setLayoutEnabled(false);
     return;
@@ -146,6 +149,7 @@ void ViewItemDialog::layoutChanged() {
   Q_ASSERT(_item);
   ViewGridLayout *layout = _item->layout();
 
+  _item->setLockAspectRatio(_layoutTab->lockAspectRatio());
   if (!layout) {
     _layoutTab->setLayoutEnabled(false);
     return;

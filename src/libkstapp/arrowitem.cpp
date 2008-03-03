@@ -210,7 +210,7 @@ ViewItem* ArrowItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore 
         Q_ASSERT(!rc);
         rc = new ArrowItem(view);
         if (parent) {
-          rc->setParentItem(parent);
+          rc->setParent(parent);
         }
         // TODO add any specialized ArrowItem Properties here.
       } else {

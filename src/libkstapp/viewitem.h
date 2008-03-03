@@ -62,7 +62,11 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
 
     View *parentView() const;
     ViewItem *parentViewItem() const;
+    void setParent(ViewItem *parent);
     bool itemInLayout() const;
+    void updateRelativeSize();
+    qreal relativeHeight() const { return _parentRelativeHeight; }
+    qreal relativeWidth() const { return _parentRelativeWidth; }
 
     GripMode gripMode() const;
     void setGripMode(GripMode mode);
@@ -74,6 +78,9 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     bool lockAspectRatio() const { return _lockAspectRatio; }
     void setLockAspectRatio(bool lockAspectRatio) { _lockAspectRatio = lockAspectRatio; }
 
+    bool lockAspectRatioFixed() const { return _lockAspectRatioFixed; }
+    void setLockAspectRatioFixed(bool enable) { _lockAspectRatioFixed = enable; }
+
     bool hasStaticGeometry() { return _hasStaticGeometry; }
     void setHasStaticGeometry(bool hasStaticGeometry ) { _hasStaticGeometry = hasStaticGeometry; }
 
@@ -84,8 +91,8 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
 
     //NOTE This should be used in place of QGraphicsRectItem::setRect()...
     QRectF viewRect() const;
-    void setViewRect(const QRectF &viewRect);
-    void setViewRect(qreal x, qreal y, qreal width, qreal height);
+    void setViewRect(const QRectF &viewRect, bool automaticChange = false);
+    void setViewRect(qreal x, qreal y, qreal width, qreal height, bool automaticChange = false);
 
     qreal width() const { return viewRect().normalized().width(); }
     qreal height() const { return viewRect().normalized().height(); }
@@ -199,6 +206,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     GripMode _gripMode;
     GripModes _allowedGripModes;
     bool _lockAspectRatio;
+    bool _lockAspectRatioFixed;
     bool _hasStaticGeometry;
     bool _hovering;
     bool _acceptsChildItems;
@@ -213,6 +221,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     ActiveGrips _allowedGrips;
     QTransform _rotationTransform;
     QHash<QString, QAction*> _shortcutMap;
+    qreal _parentRelativeHeight, _parentRelativeWidth;
 
     friend class View;
     friend class Scene;

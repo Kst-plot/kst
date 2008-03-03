@@ -27,7 +27,6 @@ class CircleItem : public ViewItem
     virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
     virtual void creationPolygonChanged(View::CreationEvent event);
-    virtual QPainterPath grips() const;
 };
 
 class KST_EXPORT CreateCircleCommand : public CreateCommand

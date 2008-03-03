@@ -109,7 +109,7 @@ ViewItem* LabelItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore 
         Q_ASSERT(!rc);
         rc = new LabelItem(view, av.toString());
         if (parent) {
-          rc->setParentItem(parent);
+          rc->setParent(parent);
          // TODO add any specialized LabelItem Properties here.
           }
         }
