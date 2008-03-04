@@ -71,6 +71,17 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QString rightLabel() const;
     QString topLabel() const;
 
+    void setTopSuppressed(bool visible);
+    void setBottomSuppressed(bool visible);
+    void setLeftSuppressed(bool visible);
+    void setRightSuppressed(bool visible);
+
+    bool isBottomAxisVisible() const;
+    void setBottomAxisVisible(bool visible);
+
+    bool isLeftAxisVisible() const;
+    void setLeftAxisVisible(bool visible);
+
     bool isLeftLabelVisible() const;
     void setLeftLabelVisible(bool visible);
 
@@ -270,10 +281,18 @@ class PlotItem : public ViewItem, public PlotItemInterface
                                  const QList<qreal> &xMinorTicks,
                                  const QList<qreal> &yMinorTicks);
 
-    virtual void paintMajorTickLabels(QPainter *painter,
+    virtual void paintTickLabels(QPainter *painter,
                                       const QList<qreal> &xMajorTicks,
                                       const QList<qreal> &yMajorTicks,
                                       const QMap<qreal, QString> &xLabels,
+                                      const QMap<qreal, QString> &yLabels);
+
+    virtual void paintBottomTickLabels(QPainter *painter,
+                                      const QList<qreal> &xMajorTicks,
+                                      const QMap<qreal, QString> &xLabels);
+
+    virtual void paintLeftTickLabels(QPainter *painter,
+                                      const QList<qreal> &yMajorTicks,
                                       const QMap<qreal, QString> &yLabels);
 
     virtual void paintPlotMarkers(QPainter *painter);
@@ -329,6 +348,8 @@ class PlotItem : public ViewItem, public PlotItemInterface
     bool _isBottomLabelVisible;
     bool _isRightLabelVisible;
     bool _isTopLabelVisible;
+    bool _isBottomAxisVisible;
+    bool _isLeftAxisVisible;
     qreal _calculatedLabelMarginWidth;
     qreal _calculatedLabelMarginHeight;
     qreal _calculatedAxisMarginWidth;

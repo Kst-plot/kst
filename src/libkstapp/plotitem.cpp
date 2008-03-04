@@ -50,6 +50,8 @@ PlotItem::PlotItem(View *parent)
   _isBottomLabelVisible(true),
   _isRightLabelVisible(true),
   _isTopLabelVisible(true),
+  _isBottomAxisVisible(true),
+  _isLeftAxisVisible(true),
   _calculatedLabelMarginWidth(0.0),
   _calculatedLabelMarginHeight(0.0),
   _calculatedAxisMarginWidth(0.0),
@@ -119,6 +121,8 @@ QString PlotItem::plotName() const {
 void PlotItem::save(QXmlStreamWriter &xml) {
   xml.writeStartElement("plot");
   xml.writeAttribute("tiedzoom", QVariant(_isTiedZoom).toString());
+  xml.writeAttribute("bottomaxisvisible", QVariant(_isBottomAxisVisible).toString());
+  xml.writeAttribute("leftaxisvisible", QVariant(_isLeftAxisVisible).toString());
   xml.writeAttribute("leftlabelvisible", QVariant(_isLeftLabelVisible).toString());
   xml.writeAttribute("bottomlabelvisible", QVariant(_isBottomLabelVisible).toString());
   xml.writeAttribute("rightlabelvisible", QVariant(_isRightLabelVisible).toString());
@@ -239,7 +243,7 @@ void PlotItem::paint(QPainter *painter) {
   paintTopLabel(painter);
 
   paintPlot(painter, xMajorTicks, xMinorTicks, yMajorTicks, yMinorTicks);
-  paintMajorTickLabels(painter, xMajorTicks, yMajorTicks, xLabels, yLabels);
+  paintTickLabels(painter, xMajorTicks, yMajorTicks, xLabels, yLabels);
   paintPlotMarkers(painter);
 
   painter->restore();
@@ -410,17 +414,15 @@ void PlotItem::paintMinorTicks(QPainter *painter,
 }
 
 
-void PlotItem::paintMajorTickLabels(QPainter *painter,
+void PlotItem::paintBottomTickLabels(QPainter *painter,
                                     const QList<qreal> &xMajorTicks,
-                                    const QList<qreal> &yMajorTicks,
-                                    const QMap<qreal, QString> &xLabelsIn,
-                                    const QMap<qreal, QString> &yLabelsIn) {
+                                    const QMap<qreal, QString> &xLabelsIn) {
 
-  QRectF yLabelRect, xLabelRect;
+  QRectF xLabelRect;
   int flags = Qt::TextSingleLine | Qt::AlignVCenter;
-
   QMap<qreal, QString> xLabels;
-  QString xBaseLabel, yBaseLabel;
+  QString xBaseLabel;
+
   if (_xAxisBaseOffset || _xAxisInterpret) {
     qreal base;
     int shortest = 1000;
@@ -479,6 +481,31 @@ void PlotItem::paintMajorTickLabels(QPainter *painter,
 
     painter->drawText(bound, flags, xLabelIt.value());
   }
+
+  if (!xBaseLabel.isEmpty()) {
+    QRectF bound = painter->boundingRect(QRectF(), flags, xBaseLabel);
+    QPointF p = QPointF(plotRect().left(), plotRect().bottom() + bound.height() * 2.0);
+    bound.moveBottomLeft(p);
+
+    if (xLabelRect.isValid()) {
+      xLabelRect = xLabelRect.united(bound);
+    } else {
+      xLabelRect = bound;
+    }
+
+    painter->drawText(bound, flags, xBaseLabel);
+  }
+  _xLabelRect = xLabelRect;
+}
+
+
+void PlotItem::paintLeftTickLabels(QPainter *painter,
+                                    const QList<qreal> &yMajorTicks,
+                                    const QMap<qreal, QString> &yLabelsIn) {
+
+  QRectF yLabelRect;
+  int flags = Qt::TextSingleLine | Qt::AlignVCenter;
+  QString yBaseLabel;
 
   QMap<qreal, QString> yLabels;
   if (_yAxisBaseOffset || _yAxisInterpret) {
@@ -560,32 +587,23 @@ void PlotItem::paintMajorTickLabels(QPainter *painter,
     painter->drawText(t.mapRect(bound), flags, yBaseLabel);
     painter->restore();
   }
+  _yLabelRect = yLabelRect;
+}
 
-  if (!xBaseLabel.isEmpty()) {
-    QRectF bound = painter->boundingRect(QRectF(), flags, xBaseLabel);
-    QPointF p = QPointF(plotRect().left(), plotRect().bottom() + bound.height() * 2.0);
-    bound.moveBottomLeft(p);
 
-    if (xLabelRect.isValid()) {
-      xLabelRect = xLabelRect.united(bound);
-    } else {
-      xLabelRect = bound;
-    }
+void PlotItem::paintTickLabels(QPainter *painter,
+                                    const QList<qreal> &xMajorTicks,
+                                    const QList<qreal> &yMajorTicks,
+                                    const QMap<qreal, QString> &xLabelsIn,
+                                    const QMap<qreal, QString> &yLabelsIn) {
 
-    painter->drawText(bound, flags, xBaseLabel);
+  if (isBottomAxisVisible()) {
+    paintBottomTickLabels(painter, xMajorTicks, xLabelsIn);
   }
 
-  _xLabelRect = xLabelRect;
-  _yLabelRect = yLabelRect;
-
-/*  painter->save();
-  painter->setOpacity(0.3);
-//  qDebug() << "xLabelRect:" << xLabelRect << endl;
-  painter->fillRect(xLabelRect, Qt::blue);
-
-//  qDebug() << "yLabelRect:" << yLabelRect << endl;
-  painter->fillRect(yLabelRect, Qt::green);
-  painter->restore();*/
+  if (isLeftAxisVisible()) {
+    paintLeftTickLabels(painter, yMajorTicks, yLabelsIn);
+  }
 }
 
 
@@ -930,8 +948,11 @@ QRectF PlotItem::plotAxisRect() const {
 QRectF PlotItem::plotRect() const {
   //the PlotRenderItems use this to set their rects
   QRectF plot = plotAxisRect();
-  plot.setLeft(plot.left() + axisMarginWidth());
-  plot.setBottom(plot.bottom() - axisMarginHeight());
+  qreal xOffset = isBottomAxisVisible() ? axisMarginHeight() : 0.0;
+  qreal yOffset = isLeftAxisVisible() ? axisMarginHeight() : 0.0;
+
+  plot.setLeft(plot.left() + yOffset);
+  plot.setBottom(plot.bottom() - xOffset);
   return plot;
 }
 
@@ -1561,6 +1582,56 @@ QString PlotItem::topLabel() const {
 }
 
 
+void PlotItem::setTopSuppressed(bool visible) {
+  setTopLabelVisible(visible);
+}
+
+
+void PlotItem::setRightSuppressed(bool visible) {
+  setRightLabelVisible(visible);
+}
+
+
+void PlotItem::setLeftSuppressed(bool visible) {
+  setLeftLabelVisible(visible);
+  setLeftAxisVisible(visible);
+}
+
+
+void PlotItem::setBottomSuppressed(bool visible) {
+  setBottomLabelVisible(visible);
+  setBottomAxisVisible(visible);
+}
+
+
+bool PlotItem::isBottomAxisVisible() const {
+  return _isBottomAxisVisible;
+}
+
+
+void PlotItem::setBottomAxisVisible(bool visible) {
+  if (_isBottomAxisVisible == visible)
+    return;
+
+  _isBottomAxisVisible = visible;
+  emit marginsChanged();
+}
+
+
+bool PlotItem::isLeftAxisVisible() const {
+  return _isLeftAxisVisible;
+}
+
+
+void PlotItem::setLeftAxisVisible(bool visible) {
+  if (_isLeftAxisVisible == visible)
+    return;
+
+  _isLeftAxisVisible = visible;
+  emit marginsChanged();
+}
+
+
 bool PlotItem::isLeftLabelVisible() const {
   return _isLeftLabelVisible;
 }
@@ -1622,6 +1693,8 @@ void PlotItem::setLabelsVisible(bool visible) {
   setRightLabelVisible(visible);
   setBottomLabelVisible(visible);
   setTopLabelVisible(visible);
+  setBottomAxisVisible(visible);
+  setLeftAxisVisible(visible);
 }
 
 
@@ -2154,21 +2227,22 @@ qreal PlotItem::computedMajorTickSpacing(Qt::Orientation orientation) const {
 QSizeF PlotItem::calculateXTickLabelBound(QPainter *painter,
                                               const QList<qreal> &xMajorTicks) {
   QRectF xLabelRect;
-  foreach (qreal x, xMajorTicks) {
-    int flags = Qt::TextSingleLine | Qt::AlignVCenter;
-    QString label = QString::number(x);
+  if (isBottomAxisVisible()) {
+    foreach (qreal x, xMajorTicks) {
+      int flags = Qt::TextSingleLine | Qt::AlignVCenter;
+      QString label = QString::number(x);
 
-    QRectF bound = painter->boundingRect(QRectF(), flags, label);
-    QPointF p(mapXToPlot(x), plotRect().bottom() + bound.height() / 2.0);
-    bound.moveCenter(p);
+      QRectF bound = painter->boundingRect(QRectF(), flags, label);
+      QPointF p(mapXToPlot(x), plotRect().bottom() + bound.height() / 2.0);
+      bound.moveCenter(p);
 
-    if (xLabelRect.isValid()) {
-      xLabelRect = xLabelRect.united(bound);
-    } else {
-      xLabelRect = bound;
+      if (xLabelRect.isValid()) {
+        xLabelRect = xLabelRect.united(bound);
+      } else {
+        xLabelRect = bound;
+      }
     }
   }
-
   return xLabelRect.size();
 }
 
@@ -2176,21 +2250,22 @@ QSizeF PlotItem::calculateXTickLabelBound(QPainter *painter,
 QSizeF PlotItem::calculateYTickLabelBound(QPainter *painter,
                                               const QList<qreal> &yMajorTicks) {
   QRectF yLabelRect;
-  foreach (qreal y, yMajorTicks) {
-    int flags = Qt::TextSingleLine | Qt::AlignVCenter;
-    QString label = QString::number(y);
+  if (isLeftAxisVisible()) {
+    foreach (qreal y, yMajorTicks) {
+      int flags = Qt::TextSingleLine | Qt::AlignVCenter;
+      QString label = QString::number(y);
 
-    QRectF bound = painter->boundingRect(QRectF(), flags, label);
-    QPointF p(plotRect().left() - bound.width() / 2.0, mapYToPlot(y));
-    bound.moveCenter(p);
+      QRectF bound = painter->boundingRect(QRectF(), flags, label);
+      QPointF p(plotRect().left() - bound.width() / 2.0, mapYToPlot(y));
+      bound.moveCenter(p);
 
-    if (yLabelRect.isValid()) {
-      yLabelRect = yLabelRect.united(bound);
-    } else {
-      yLabelRect = bound;
+      if (yLabelRect.isValid()) {
+        yLabelRect = yLabelRect.united(bound);
+      } else {
+        yLabelRect = bound;
+      }
     }
   }
-
   return yLabelRect.size();
 }
 
@@ -2289,6 +2364,14 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         av = attrs.value("toplabelvisible");
         if (!av.isNull()) {
           rc->setTopLabelVisible(QVariant(av.toString()).toBool());
+        }
+        av = attrs.value("bottomaxisvisible");
+        if (!av.isNull()) {
+          rc->setBottomAxisVisible(QVariant(av.toString()).toBool());
+        }
+        av = attrs.value("leftaxisvisible");
+        if (!av.isNull()) {
+          rc->setLeftAxisVisible(QVariant(av.toString()).toBool());
         }
         av = attrs.value("xaxislog");
         if (!av.isNull()) {

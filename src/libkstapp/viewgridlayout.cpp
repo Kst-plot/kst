@@ -16,7 +16,7 @@
 
 #include <QDebug>
 
-// #define DEBUG_LAYOUT
+//#define DEBUG_LAYOUT
 
 static qreal DEFAULT_STRUT = 20.0;
 
@@ -300,8 +300,8 @@ void ViewGridLayout::shareAxisWithPlotToLeft(LayoutItem item) {
     return;
 
   if (item.rowSpan == left.rowSpan && item.columnSpan == left.columnSpan) {
-    plotItem->setLeftLabelVisible(false);
-    leftItem->setRightLabelVisible(false);
+    plotItem->setLeftSuppressed(false);
+    leftItem->setRightSuppressed(false);
     setSpacing(QSizeF(0.0, spacing().height()));
   }
 }
@@ -325,8 +325,8 @@ void ViewGridLayout::shareAxisWithPlotToRight(LayoutItem item) {
     return;
 
   if (item.rowSpan == right.rowSpan && item.columnSpan == right.columnSpan) {
-    plotItem->setRightLabelVisible(false);
-    rightItem->setLeftLabelVisible(false);
+    plotItem->setRightSuppressed(false);
+    rightItem->setLeftSuppressed(false);
     setSpacing(QSizeF(0.0, spacing().height()));
   }
 }
@@ -350,8 +350,8 @@ void ViewGridLayout::shareAxisWithPlotAbove(LayoutItem item) {
     return;
 
   if (item.rowSpan == top.rowSpan && item.columnSpan == top.columnSpan) {
-    plotItem->setTopLabelVisible(false);
-    topItem->setBottomLabelVisible(false);
+    plotItem->setTopSuppressed(false);
+    topItem->setBottomSuppressed(false);
     setSpacing(QSizeF(spacing().width(), 0.0));
   }
 }
@@ -375,8 +375,8 @@ void ViewGridLayout::shareAxisWithPlotBelow(LayoutItem item) {
     return;
 
   if (item.rowSpan == bottom.rowSpan && item.columnSpan == bottom.columnSpan) {
-    plotItem->setBottomLabelVisible(false);
-    bottomItem->setTopLabelVisible(false);
+    plotItem->setBottomSuppressed(false);
+    bottomItem->setTopSuppressed(false);
     setSpacing(QSizeF(spacing().width(), 0.0));
   }
 }
