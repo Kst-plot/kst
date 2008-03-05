@@ -71,6 +71,15 @@ DialogPage* Dialog::getDialogPage(const QString& pageName) {
 }
 
 
+void Dialog::selectDialogPage(DialogPage *page) {
+  QList<QListWidgetItem*> items = _listWidget->findItems(page->pageTitle(), Qt::MatchExactly);
+  foreach (QListWidgetItem* item, items) {
+    _listWidget->setCurrentItem(item);
+    selectPageForItem(item);
+  }
+}
+
+
 void Dialog::setVisible(bool visible) {
 
   _listWidget->setVisible(_itemHash.count() > 1);

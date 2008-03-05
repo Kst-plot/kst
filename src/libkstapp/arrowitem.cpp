@@ -13,6 +13,7 @@
 
 #include "view.h"
 #include "viewitemzorder.h"
+#include "arrowitemdialog.h"
 
 #include <debug.h>
 
@@ -23,10 +24,13 @@
 namespace Kst {
 
 ArrowItem::ArrowItem(View *parent)
-  : ViewItem(parent) {
+  : LineItem(parent),
+  _startArrowHead(false),
+  _endArrowHead(true),
+  _startArrowScale(1.0),
+  _endArrowScale(1.0) {
   setName("Arrow");
   setZValue(ARROW_ZVALUE);
-  setAllowedGrips(RightMidGrip | LeftMidGrip);
   QBrush b = brush();
   b.setStyle(Qt::SolidPattern);
   setBrush(b);
@@ -39,23 +43,44 @@ ArrowItem::~ArrowItem() {
 
 void ArrowItem::paint(QPainter *painter) {
   painter->drawLine(line());
-  double deltax = 2.0 * painter->pen().widthF();
-  double theta = atan2(double(line().y1() - line().y2()), double(line().x1() - line().x2())) - M_PI / 2.0;
-  double sina = sin(theta);
-  double cosa = cos(theta);
-  double yin = sqrt(3.0) * deltax;
-  double x1, y1, x2, y2;
-  QMatrix m(cosa, sina, -sina, cosa, 0.0, 0.0);
 
-  m.map( deltax, yin, &x1, &y1);
-  m.map(-deltax, yin, &x2, &y2);
+  if (_startArrowHead) {
+    double deltax = 2.0 * painter->pen().widthF() * _startArrowScale;
+    double theta = atan2(double(line().y2() - line().y1()), double(line().x2() - line().x1())) - M_PI / 2.0;
+    double sina = sin(theta);
+    double cosa = cos(theta);
+    double yin = sqrt(3.0) * deltax;
+    double x1, y1, x2, y2;
+    QMatrix m(cosa, sina, -sina, cosa, 0.0, 0.0);
 
-  QPolygonF pts;
-  pts.append(line().p2());
-  pts.append(line().p2() + QPointF(x1, y1));
-  pts.append(line().p2() + QPointF(x2, y2));
+    m.map( deltax, yin, &x1, &y1);
+    m.map(-deltax, yin, &x2, &y2);
 
-  painter->drawPolygon(pts);
+    QPolygonF pts;
+    pts.append(line().p1());
+    pts.append(line().p1() + QPointF(x1, y1));
+    pts.append(line().p1() + QPointF(x2, y2));
+    painter->drawPolygon(pts);
+  }
+
+  if (_endArrowHead) {
+    double deltax = 2.0 * painter->pen().widthF() * _endArrowScale;
+    double theta = atan2(double(line().y1() - line().y2()), double(line().x1() - line().x2())) - M_PI / 2.0;
+    double sina = sin(theta);
+    double cosa = cos(theta);
+    double yin = sqrt(3.0) * deltax;
+    double x1, y1, x2, y2;
+    QMatrix m(cosa, sina, -sina, cosa, 0.0, 0.0);
+
+    m.map( deltax, yin, &x1, &y1);
+    m.map(-deltax, yin, &x2, &y2);
+
+    QPolygonF pts;
+    pts.append(line().p2());
+    pts.append(line().p2() + QPointF(x1, y1));
+    pts.append(line().p2() + QPointF(x2, y2));
+    painter->drawPolygon(pts);
+  }
 }
 
 
@@ -66,121 +91,9 @@ void ArrowItem::save(QXmlStreamWriter &xml) {
 }
 
 
-QLineF ArrowItem::line() const {
-  return QLineF(rect().left(), rect().center().y(), rect().right(), rect().center().y());
-}
-
-
-void ArrowItem::setLine(const QLineF &line_) {
-  setPos(line_.p1());
-  setViewRect(QRectF(0.0, 0.0, 0.0, sizeOfGrip().height()));
-
-  if (!rect().isEmpty()) {
-    rotateTowards(line().p2(), line_.p2());
-  }
-
-  QRectF r = rect();
-  r.setSize(QSizeF(QLineF(line().p1(), line_.p2()).length(), r.height()));
-  setViewRect(r);
-}
-
-
-QPainterPath ArrowItem::leftMidGrip() const {
-  QRectF bound = gripBoundingRect();
-  QRectF grip = QRectF(bound.topLeft(), sizeOfGrip());
-  grip.moveCenter(QPointF(grip.center().x(), bound.center().y()));
-  QPainterPath path;
-  if (gripMode() == Resize || gripMode() == Scale || gripMode() == Move)
-    path.addRect(grip);
-  else
-    path.addEllipse(grip);
-
-  return path;
-}
-
-
-QPainterPath ArrowItem::rightMidGrip() const {
-  QRectF bound = gripBoundingRect();
-  QRectF grip = QRectF(bound.topRight() - QPointF(sizeOfGrip().width(), 0), sizeOfGrip());
-  grip.moveCenter(QPointF(grip.center().x(), bound.center().y()));
-  QPainterPath path;
-  if (gripMode() == Resize || gripMode() == Scale || gripMode() == Move)
-    path.addRect(grip);
-  else
-    path.addEllipse(grip);
-
-  return path;
-}
-
-
-QPainterPath ArrowItem::grips() const {
-  QPainterPath grips;
-  grips.addPath(leftMidGrip());
-  grips.addPath(rightMidGrip());
-  return grips;
-}
-
-
-QPointF ArrowItem::centerOfRotation() const {
-  if (activeGrip() == RightMidGrip)
-    return line().p1();
-  else if (activeGrip() == LeftMidGrip)
-    return line().p2();
-
-  return line().p1();
-}
-
-
-void ArrowItem::creationPolygonChanged(View::CreationEvent event) {
-  if (event == View::MousePress) {
-    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MousePress));
-    setPos(poly.first().x(), poly.first().y());
-    setViewRect(QRectF(0.0, 0.0, 0.0, sizeOfGrip().height()));
-    parentView()->scene()->addItem(this);
-    //setZValue(1);
-    return;
-  }
-
-  if (event == View::MouseMove) {
-    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseMove));
-    if (!rect().isEmpty()) {
-      rotateTowards(line().p2(), poly.last());
-    }
-    QRectF r = rect();
-    r.setSize(QSizeF(QLineF(line().p1(), poly.last()).length(), r.height()));
-    setViewRect(r);
-    return;
-  }
-
-  if (event == View::MouseRelease) {
-    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseRelease));
-    parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
-    parentView()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
-    parentView()->setMouseMode(View::Default);
-    maybeReparent();
-    emit creationComplete();
-    return;
-  }
-}
-
-
-void ArrowItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-  ViewItem::mouseMoveEvent(event);
-}
-
-
-void ArrowItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-  ViewItem::mousePressEvent(event);
-}
-
-
-void ArrowItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-  ViewItem::mouseReleaseEvent(event);
-}
-
-
-void ArrowItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
-  ViewItem::mouseDoubleClickEvent(event);
+void ArrowItem::edit() {
+  ArrowItemDialog editDialog(this);
+  editDialog.exec();
 }
 
 

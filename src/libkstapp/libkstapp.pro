@@ -24,6 +24,8 @@ SOURCES += \
     applicationsettings.cpp \
     applicationsettingsdialog.cpp \
     arrowitem.cpp \
+    arrowitemdialog.cpp \
+    arrowpropertiestab.cpp \
     axis.cpp \
     axistab.cpp \
     basicplugindialog.cpp \
@@ -111,6 +113,8 @@ HEADERS += \
     applicationsettings.h \
     applicationsettingsdialog.h \
     arrowitem.h \
+    arrowitemdialog.h \
+    arrowpropertiestab.h \
     axis.h \
     axistab.h \
     basicplugindialog.h \
@@ -197,6 +201,7 @@ HEADERS += \
 
 FORMS += \
     aboutdialog.ui \
+    arrowpropertiestab.ui \
     axistab.ui \
     basicplugintab.ui \
     changedatasampledialog.ui \

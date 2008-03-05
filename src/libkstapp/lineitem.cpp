@@ -27,7 +27,10 @@ LineItem::LineItem(View *parent)
   setName("Line");
   setZValue(LINE_ZVALUE);
   setAllowedGrips(RightMidGrip | LeftMidGrip);
-}
+  setAllowedGripModes(Resize);
+  QPen p = pen();
+  p.setWidthF(1);
+  setPen(p);}
 
 
 LineItem::~LineItem() {
@@ -70,10 +73,7 @@ QPainterPath LineItem::leftMidGrip() const {
   QRectF grip = QRectF(bound.topLeft(), sizeOfGrip());
   grip.moveCenter(QPointF(grip.center().x(), bound.center().y()));
   QPainterPath path;
-  if (gripMode() == Resize || gripMode() == Scale || gripMode() == Move)
-    path.addRect(grip);
-  else
-    path.addEllipse(grip);
+  path.addEllipse(grip);
 
   return path;
 }
@@ -84,10 +84,7 @@ QPainterPath LineItem::rightMidGrip() const {
   QRectF grip = QRectF(bound.topRight() - QPointF(sizeOfGrip().width(), 0), sizeOfGrip());
   grip.moveCenter(QPointF(grip.center().x(), bound.center().y()));
   QPainterPath path;
-  if (gripMode() == Resize || gripMode() == Scale || gripMode() == Move)
-    path.addRect(grip);
-  else
-    path.addEllipse(grip);
+  path.addEllipse(grip);
 
   return path;
 }
@@ -106,7 +103,6 @@ QPointF LineItem::centerOfRotation() const {
     return line().p1();
   else if (activeGrip() == LeftMidGrip)
     return line().p2();
-
   return line().p1();
 }
 
@@ -145,26 +141,44 @@ void LineItem::creationPolygonChanged(View::CreationEvent event) {
 
 
 void LineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-  ViewItem::mouseMoveEvent(event);
+
+  if (parentView()->viewMode() == View::Data || itemInLayout()) {
+    event->ignore();
+    return;
+  }
+
+  if (parentView()->mouseMode() == View::Default) {
+    if (gripMode() == ViewItem::Resize) {
+      parentView()->setMouseMode(View::Resize);
+      parentView()->undoStack()->beginMacro(tr("Resize"));
+    }
+  }
+
+  if (activeGrip() == NoGrip)
+    return QGraphicsRectItem::mouseMoveEvent(event);
+
+  QPointF p = event->pos();
+  QPointF l = event->lastPos();
+  QPointF s = event->scenePos();
+
+  if (gripMode() == ViewItem::Resize) {
+    switch(activeGrip()) {
+    case RightMidGrip:
+      resizeRight(p.x() - l.x());
+      rotateTowards(rightMidGrip().controlPointRect().center(), p);
+      break;
+    case LeftMidGrip:
+      resizeLeft(p.x() - l.x());
+      rotateTowards(leftMidGrip().controlPointRect().center(), p);
+      break;
+    default:
+      break;
+    }
+  }
 }
 
 
 void LineItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-
-//   if (parentView()->viewMode() == View::Data) {
-//     event->ignore();
-//     return;
-//   }
-// 
-//   QPointF p = event->pos();
-//   if (leftMidGrip().contains(p)) {
-//     setActiveGrip(LeftMidGrip);
-//   } else if (rightMidGrip().contains(p)) {
-//     setActiveGrip(RightMidGrip);
-//   } else {
-//     setActiveGrip(NoGrip);
-//   }
-
   ViewItem::mousePressEvent(event);
 }
 
@@ -176,6 +190,21 @@ void LineItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
 void LineItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
   ViewItem::mouseDoubleClickEvent(event);
+}
+
+
+void LineItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
+  QGraphicsRectItem::hoverMoveEvent(event);
+  if (isSelected()) {
+    QPointF p = event->pos();
+    if (isAllowed(RightMidGrip) && rightMidGrip().contains(p) || isAllowed(LeftMidGrip) && leftMidGrip().contains(p)) {
+      parentView()->setCursor(Qt::CrossCursor);
+    } else {
+      parentView()->setCursor(Qt::SizeAllCursor);
+    }
+  } else {
+    parentView()->setCursor(Qt::SizeAllCursor);
+  }
 }
 
 

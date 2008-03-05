@@ -42,12 +42,11 @@ class LineItem : public ViewItem
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
 
     virtual QPainterPath leftMidGrip() const;
     virtual QPainterPath rightMidGrip() const;
 
-  private:
-    QLineF _line;
 };
 
 class KST_EXPORT CreateLineCommand : public CreateCommand

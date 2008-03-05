@@ -12,42 +12,41 @@
 #ifndef ARROWITEM_H
 #define ARROWITEM_H
 
-#include "viewitem.h"
+#include "lineitem.h"
 #include "graphicsfactory.h"
 
 namespace Kst {
 
-class ArrowItem : public ViewItem
+class ArrowItem : public LineItem
 {
   Q_OBJECT
   public:
     ArrowItem(View *parent);
     virtual ~ArrowItem();
 
-    QLineF line() const;
-    void setLine(const QLineF &line);
-
     virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
 
-    virtual QPainterPath grips() const;
+    bool startArrowHead() { return _startArrowHead; }
+    void setStartArrowHead(const bool enabled) { _startArrowHead = enabled; }
 
-    virtual QPointF centerOfRotation() const;
+    bool endArrowHead() { return _endArrowHead; }
+    void setEndArrowHead(const bool enabled) { _endArrowHead = enabled; }
 
-  protected Q_SLOTS:
-    virtual void creationPolygonChanged(View::CreationEvent event);
+    qreal startArrowScale() { return _startArrowScale; }
+    void setStartArrowScale(const qreal scale) { _startArrowScale = scale; }
 
-  protected:
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    qreal endArrowScale() { return _endArrowScale; }
+    void setEndArrowScale(const qreal scale) { _endArrowScale = scale; }
 
-    virtual QPainterPath leftMidGrip() const;
-    virtual QPainterPath rightMidGrip() const;
+  public Q_SLOTS:
+    virtual void edit();
 
   private:
-    QLineF _line;
+    bool _startArrowHead;
+    bool _endArrowHead;
+    qreal _startArrowScale;
+    qreal _endArrowScale;
 };
 
 class KST_EXPORT CreateArrowCommand : public CreateCommand

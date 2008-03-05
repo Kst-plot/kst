@@ -35,6 +35,7 @@ class KST_EXPORT Dialog : public QDialog, public Ui::Dialog
     void addDialogPage(DialogPage *page);
     void removeDialogPage(DialogPage *page);
     DialogPage* getDialogPage(const QString &pageName);
+    void selectDialogPage(DialogPage *page);
 
   Q_SIGNALS:
     void ok();
