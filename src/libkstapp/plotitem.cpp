@@ -27,6 +27,8 @@
 #include "dataobjectcollection.h"
 #include "cartesianrenderitem.h"
 
+#include "plotitemdialog.h"
+
 #include "math_kst.h"
 
 #include "settings.h"
@@ -173,6 +175,12 @@ void PlotItem::save(QXmlStreamWriter &xml) {
     renderer->saveInPlot(xml);
   }
   xml.writeEndElement();
+}
+
+
+void PlotItem::edit() {
+  PlotItemDialog editDialog(this);
+  editDialog.exec();
 }
 
 

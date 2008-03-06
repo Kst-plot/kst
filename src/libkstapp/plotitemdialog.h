@@ -9,8 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef PLOTRENDERITEMDIALOG_H
-#define PLOTRENDERITEMDIALOG_H
+#ifndef PLOTITEMDIALOG_H
+#define PLOTITEMDIALOG_H
 
 #include "viewitemdialog.h"
 
@@ -24,14 +24,14 @@ class AxisTab;
 class MarkersTab;
 class LabelTab;
 class ObjectStore;
-class PlotRenderItem;
+class PlotItem;
 
-class KST_EXPORT PlotRenderItemDialog : public ViewItemDialog
+class KST_EXPORT PlotItemDialog : public ViewItemDialog
 {
   Q_OBJECT
   public:
-    PlotRenderItemDialog(PlotRenderItem *item, QWidget *parent = 0);
-    virtual ~PlotRenderItemDialog();
+    PlotItemDialog(PlotItem *item, QWidget *parent = 0);
+    virtual ~PlotItemDialog();
 
   private Q_SLOTS:
     void contentChanged();
@@ -51,6 +51,8 @@ class KST_EXPORT PlotRenderItemDialog : public ViewItemDialog
     void updateRelations();
 
   private:
+    PlotItem* _plotItem;
+
     ContentTab *_contentTab;
     AxisTab *_xAxisTab;
     AxisTab *_yAxisTab;
@@ -58,7 +60,7 @@ class KST_EXPORT PlotRenderItemDialog : public ViewItemDialog
     MarkersTab *_yMarkersTab;
     LabelTab *_labelTab;
     PlotMarkersTab* _plotMarkersTab;
-    PlotRenderItem* _plotItem;
+
     QList<DialogPage*> _relationPages;
 
     ObjectStore* _store;

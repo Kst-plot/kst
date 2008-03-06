@@ -9,7 +9,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "plotrenderitemdialog.h"
+#include "plotitemdialog.h"
 
 #include "contenttab.h"
 #include "axistab.h"
@@ -30,12 +30,12 @@
 
 namespace Kst {
 
-PlotRenderItemDialog::PlotRenderItemDialog(PlotRenderItem *item, QWidget *parent)
+PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
     : ViewItemDialog(item, parent), _plotItem(item) {
 
   _store = kstApp->mainWindow()->document()->objectStore();
 
-  _labelTab = new LabelTab(_plotItem->plotItem(), this);
+  _labelTab = new LabelTab(_plotItem, this);
   DialogPage *labelPage = new DialogPage(this);
   labelPage->setPageTitle(tr("Labels"));
   labelPage->addDialogTab(_labelTab);
@@ -89,71 +89,71 @@ PlotRenderItemDialog::PlotRenderItemDialog(PlotRenderItem *item, QWidget *parent
 }
 
 
-PlotRenderItemDialog::~PlotRenderItemDialog() {
+PlotItemDialog::~PlotItemDialog() {
 }
 
 
-void PlotRenderItemDialog::setupLabels() {
+void PlotItemDialog::setupLabels() {
   Q_ASSERT(_plotItem);
 
-  _labelTab->setLeftLabel(_plotItem->plotItem()->leftLabelOverride());
-  _labelTab->setBottomLabel(_plotItem->plotItem()->bottomLabelOverride());
-  _labelTab->setTopLabel(_plotItem->plotItem()->topLabelOverride());
-  _labelTab->setRightLabel(_plotItem->plotItem()->rightLabelOverride());
+  _labelTab->setLeftLabel(_plotItem->leftLabelOverride());
+  _labelTab->setBottomLabel(_plotItem->bottomLabelOverride());
+  _labelTab->setTopLabel(_plotItem->topLabelOverride());
+  _labelTab->setRightLabel(_plotItem->rightLabelOverride());
 
-  _labelTab->setLeftLabelFont(_plotItem->plotItem()->leftLabelFont());
-  _labelTab->setBottomLabelFont(_plotItem->plotItem()->bottomLabelFont());
-  _labelTab->setTopLabelFont(_plotItem->plotItem()->topLabelFont());
-  _labelTab->setRightLabelFont(_plotItem->plotItem()->rightLabelFont());
+  _labelTab->setLeftLabelFont(_plotItem->leftLabelFont());
+  _labelTab->setBottomLabelFont(_plotItem->bottomLabelFont());
+  _labelTab->setTopLabelFont(_plotItem->topLabelFont());
+  _labelTab->setRightLabelFont(_plotItem->rightLabelFont());
 }
 
 
-void PlotRenderItemDialog::setupAxis() {
+void PlotItemDialog::setupAxis() {
   Q_ASSERT(_plotItem);
 
-  _xAxisTab->setAxisMajorTickSpacing(_plotItem->plotItem()->xAxisMajorTickMode());
-  _xAxisTab->setDrawAxisMajorTicks(_plotItem->plotItem()->drawXAxisMajorTicks());
-  _xAxisTab->setDrawAxisMajorGridLines(_plotItem->plotItem()->drawXAxisMajorGridLines());
-  _xAxisTab->setDrawAxisMinorTicks(_plotItem->plotItem()->drawXAxisMinorTicks());
-  _xAxisTab->setDrawAxisMinorGridLines(_plotItem->plotItem()->drawXAxisMinorGridLines());
-  _xAxisTab->setAxisMajorGridLineColor(_plotItem->plotItem()->xAxisMajorGridLineColor());
-  _xAxisTab->setAxisMinorGridLineColor(_plotItem->plotItem()->xAxisMinorGridLineColor());
-  _xAxisTab->setAxisMajorGridLineStyle(_plotItem->plotItem()->xAxisMajorGridLineStyle());
-  _xAxisTab->setAxisMinorGridLineStyle(_plotItem->plotItem()->xAxisMinorGridLineStyle());
-  _xAxisTab->setLog(_plotItem->isXAxisLog());
-  _xAxisTab->setReversed(_plotItem->plotItem()->xAxisReversed());
-  _xAxisTab->setBaseOffset(_plotItem->plotItem()->xAxisBaseOffset());
-  _xAxisTab->setInterpret(_plotItem->plotItem()->xAxisInterpret());
-  _xAxisTab->setAxisDisplay(_plotItem->plotItem()->xAxisDisplay());
-  _xAxisTab->setAxisInterpretation(_plotItem->plotItem()->xAxisInterpretation());
+  _xAxisTab->setAxisMajorTickSpacing(_plotItem->xAxisMajorTickMode());
+  _xAxisTab->setDrawAxisMajorTicks(_plotItem->drawXAxisMajorTicks());
+  _xAxisTab->setDrawAxisMajorGridLines(_plotItem->drawXAxisMajorGridLines());
+  _xAxisTab->setDrawAxisMinorTicks(_plotItem->drawXAxisMinorTicks());
+  _xAxisTab->setDrawAxisMinorGridLines(_plotItem->drawXAxisMinorGridLines());
+  _xAxisTab->setAxisMajorGridLineColor(_plotItem->xAxisMajorGridLineColor());
+  _xAxisTab->setAxisMinorGridLineColor(_plotItem->xAxisMinorGridLineColor());
+  _xAxisTab->setAxisMajorGridLineStyle(_plotItem->xAxisMajorGridLineStyle());
+  _xAxisTab->setAxisMinorGridLineStyle(_plotItem->xAxisMinorGridLineStyle());
+  _xAxisTab->setLog(_plotItem->xAxisLog());
+  _xAxisTab->setReversed(_plotItem->xAxisReversed());
+  _xAxisTab->setBaseOffset(_plotItem->xAxisBaseOffset());
+  _xAxisTab->setInterpret(_plotItem->xAxisInterpret());
+  _xAxisTab->setAxisDisplay(_plotItem->xAxisDisplay());
+  _xAxisTab->setAxisInterpretation(_plotItem->xAxisInterpretation());
 
-  _yAxisTab->setAxisMajorTickSpacing(_plotItem->plotItem()->yAxisMajorTickMode());
-  _yAxisTab->setDrawAxisMajorTicks(_plotItem->plotItem()->drawYAxisMajorTicks());
-  _yAxisTab->setDrawAxisMajorGridLines(_plotItem->plotItem()->drawYAxisMajorGridLines());
-  _yAxisTab->setDrawAxisMinorTicks(_plotItem->plotItem()->drawYAxisMinorTicks());
-  _yAxisTab->setDrawAxisMinorGridLines(_plotItem->plotItem()->drawYAxisMinorGridLines());
-  _yAxisTab->setAxisMajorGridLineColor(_plotItem->plotItem()->yAxisMajorGridLineColor());
-  _yAxisTab->setAxisMinorGridLineColor(_plotItem->plotItem()->yAxisMinorGridLineColor());
-  _yAxisTab->setAxisMajorGridLineStyle(_plotItem->plotItem()->yAxisMajorGridLineStyle());
-  _yAxisTab->setAxisMinorGridLineStyle(_plotItem->plotItem()->yAxisMinorGridLineStyle());
-  _yAxisTab->setLog(_plotItem->isYAxisLog());
-  _yAxisTab->setReversed(_plotItem->plotItem()->yAxisReversed());
-  _yAxisTab->setBaseOffset(_plotItem->plotItem()->yAxisBaseOffset());
-  _yAxisTab->setInterpret(_plotItem->plotItem()->yAxisInterpret());
-  _yAxisTab->setAxisDisplay(_plotItem->plotItem()->yAxisDisplay());
-  _yAxisTab->setAxisInterpretation(_plotItem->plotItem()->yAxisInterpretation());
+  _yAxisTab->setAxisMajorTickSpacing(_plotItem->yAxisMajorTickMode());
+  _yAxisTab->setDrawAxisMajorTicks(_plotItem->drawYAxisMajorTicks());
+  _yAxisTab->setDrawAxisMajorGridLines(_plotItem->drawYAxisMajorGridLines());
+  _yAxisTab->setDrawAxisMinorTicks(_plotItem->drawYAxisMinorTicks());
+  _yAxisTab->setDrawAxisMinorGridLines(_plotItem->drawYAxisMinorGridLines());
+  _yAxisTab->setAxisMajorGridLineColor(_plotItem->yAxisMajorGridLineColor());
+  _yAxisTab->setAxisMinorGridLineColor(_plotItem->yAxisMinorGridLineColor());
+  _yAxisTab->setAxisMajorGridLineStyle(_plotItem->yAxisMajorGridLineStyle());
+  _yAxisTab->setAxisMinorGridLineStyle(_plotItem->yAxisMinorGridLineStyle());
+  _yAxisTab->setLog(_plotItem->yAxisLog());
+  _yAxisTab->setReversed(_plotItem->yAxisReversed());
+  _yAxisTab->setBaseOffset(_plotItem->yAxisBaseOffset());
+  _yAxisTab->setInterpret(_plotItem->yAxisInterpret());
+  _yAxisTab->setAxisDisplay(_plotItem->yAxisDisplay());
+  _yAxisTab->setAxisInterpretation(_plotItem->yAxisInterpretation());
 }
 
 
-void PlotRenderItemDialog::setupMarkers() {
+void PlotItemDialog::setupMarkers() {
   Q_ASSERT(_plotItem);
 
-  _xMarkersTab->setPlotMarkers(_plotItem->plotItem()->xAxisPlotMarkers());
-  _yMarkersTab->setPlotMarkers(_plotItem->plotItem()->yAxisPlotMarkers());
+  _xMarkersTab->setPlotMarkers(_plotItem->xAxisPlotMarkers());
+  _yMarkersTab->setPlotMarkers(_plotItem->yAxisPlotMarkers());
 }
 
 
-void PlotRenderItemDialog::setupContent() {
+void PlotItemDialog::setupContent() {
   QStringList displayedRelations;
   QStringList availableRelations;
   QStringList allRelations;
@@ -161,7 +161,7 @@ void PlotRenderItemDialog::setupContent() {
   CurveList curves = _store->getObjects<Curve>();
   ImageList images = _store->getObjects<Image>();
 
-  foreach (RelationPtr relation, _plotItem->relationList()) {
+  foreach (RelationPtr relation, _plotItem->renderItem(PlotRenderItem::Cartesian)->relationList()) {
     displayedRelations.append(relation->tag().displayString());
   }
 
@@ -184,8 +184,8 @@ void PlotRenderItemDialog::setupContent() {
 }
 
 
-void PlotRenderItemDialog::addRelations() {
-  foreach (RelationPtr relation, _plotItem->relationList()) {
+void PlotItemDialog::addRelations() {
+  foreach (RelationPtr relation, _plotItem->renderItem(PlotRenderItem::Cartesian)->relationList()) {
     if (CurvePtr curve = kst_cast<Curve>(relation)) {
       CurveTab* curveTab = new CurveTab(this);
 
@@ -262,7 +262,7 @@ void PlotRenderItemDialog::addRelations() {
 }
 
 
-void PlotRenderItemDialog::updateRelations() {
+void PlotItemDialog::updateRelations() {
   foreach(DialogPage* page, _relationPages) {
     removeDialogPage(page);
   }
@@ -272,25 +272,25 @@ void PlotRenderItemDialog::updateRelations() {
 }
 
 
-void PlotRenderItemDialog::contentChanged() {
+void PlotItemDialog::contentChanged() {
   relationChanged();
 
   QStringList currentRelations;
   QStringList displayedRelations = _contentTab->displayedRelations();
 
-  foreach (RelationPtr relation, _plotItem->relationList()) {
+  foreach (RelationPtr relation, _plotItem->renderItem(PlotRenderItem::Cartesian)->relationList()) {
     currentRelations.append(relation->tag().displayString());
     if (!displayedRelations.contains(relation->tag().displayString())) {
-      _plotItem->removeRelation(relation);
-      _plotItem->plotItem()->update();
+      _plotItem->renderItem(PlotRenderItem::Cartesian)->removeRelation(relation);
+      _plotItem->update();
     }
   }
 
   foreach (QString relationTag, displayedRelations) {
     if (!currentRelations.contains(relationTag)) {
       if (RelationPtr relation = kst_cast<Relation>(_store->retrieveObject(ObjectTag::fromString(relationTag)))) {
-        _plotItem->addRelation(relation);
-        _plotItem->plotItem()->update();
+        _plotItem->renderItem(PlotRenderItem::Cartesian)->addRelation(relation);
+        _plotItem->update();
       }
     }
   }
@@ -299,7 +299,7 @@ void PlotRenderItemDialog::contentChanged() {
 }
 
 
-void PlotRenderItemDialog::relationChanged() {
+void PlotItemDialog::relationChanged() {
   foreach(DialogPage* page, _relationPages) {
     if (CurvePtr curve = kst_cast<Curve>(_store->retrieveObject(ObjectTag::fromString(page->pageTitle())))) {
       CurveTab* curveTab = static_cast<CurveTab*>(page->currentWidget());
@@ -358,76 +358,76 @@ void PlotRenderItemDialog::relationChanged() {
 }
 
 
-void PlotRenderItemDialog::xAxisChanged() {
+void PlotItemDialog::xAxisChanged() {
   Q_ASSERT(_plotItem);
 
-  _plotItem->plotItem()->setXAxisMajorTickMode(_xAxisTab->axisMajorTickSpacing());
-  _plotItem->plotItem()->setDrawXAxisMajorTicks(_xAxisTab->drawAxisMajorTicks());
-  _plotItem->plotItem()->setDrawXAxisMajorGridLines(_xAxisTab->drawAxisMajorGridLines());
-  _plotItem->plotItem()->setDrawXAxisMinorTicks(_xAxisTab->drawAxisMinorTicks());
-  _plotItem->plotItem()->setDrawXAxisMinorGridLines(_xAxisTab->drawAxisMinorGridLines());
-  _plotItem->plotItem()->setXAxisMajorGridLineColor(_xAxisTab->axisMajorGridLineColor());
-  _plotItem->plotItem()->setXAxisMinorGridLineColor(_xAxisTab->axisMinorGridLineColor());
-  _plotItem->plotItem()->setXAxisMajorGridLineStyle(_xAxisTab->axisMajorGridLineStyle());
-  _plotItem->plotItem()->setXAxisMinorGridLineStyle(_xAxisTab->axisMinorGridLineStyle());
-  _plotItem->plotItem()->setXAxisLog(_xAxisTab->isLog());
+  _plotItem->setXAxisMajorTickMode(_xAxisTab->axisMajorTickSpacing());
+  _plotItem->setDrawXAxisMajorTicks(_xAxisTab->drawAxisMajorTicks());
+  _plotItem->setDrawXAxisMajorGridLines(_xAxisTab->drawAxisMajorGridLines());
+  _plotItem->setDrawXAxisMinorTicks(_xAxisTab->drawAxisMinorTicks());
+  _plotItem->setDrawXAxisMinorGridLines(_xAxisTab->drawAxisMinorGridLines());
+  _plotItem->setXAxisMajorGridLineColor(_xAxisTab->axisMajorGridLineColor());
+  _plotItem->setXAxisMinorGridLineColor(_xAxisTab->axisMinorGridLineColor());
+  _plotItem->setXAxisMajorGridLineStyle(_xAxisTab->axisMajorGridLineStyle());
+  _plotItem->setXAxisMinorGridLineStyle(_xAxisTab->axisMinorGridLineStyle());
   _plotItem->setXAxisLog(_xAxisTab->isLog());
-  _plotItem->plotItem()->setXAxisReversed(_xAxisTab->isReversed());
-  _plotItem->plotItem()->setXAxisInterpret(_xAxisTab->isInterpret());
-  _plotItem->plotItem()->setXAxisDisplay(_xAxisTab->axisDisplay());
-  _plotItem->plotItem()->setXAxisInterpretation(_xAxisTab->axisInterpretation());
-  _plotItem->plotItem()->setXAxisBaseOffset(_xAxisTab->isBaseOffset());
+  _plotItem->setXAxisLog(_xAxisTab->isLog());
+  _plotItem->setXAxisReversed(_xAxisTab->isReversed());
+  _plotItem->setXAxisInterpret(_xAxisTab->isInterpret());
+  _plotItem->setXAxisDisplay(_xAxisTab->axisDisplay());
+  _plotItem->setXAxisInterpretation(_xAxisTab->axisInterpretation());
+  _plotItem->setXAxisBaseOffset(_xAxisTab->isBaseOffset());
 
 }
 
 
-void PlotRenderItemDialog::yAxisChanged() {
+void PlotItemDialog::yAxisChanged() {
   Q_ASSERT(_plotItem);
 
-  _plotItem->plotItem()->setYAxisMajorTickMode(_yAxisTab->axisMajorTickSpacing());
-  _plotItem->plotItem()->setDrawYAxisMajorTicks(_yAxisTab->drawAxisMajorTicks());
-  _plotItem->plotItem()->setDrawYAxisMajorGridLines(_yAxisTab->drawAxisMajorGridLines());
-  _plotItem->plotItem()->setDrawYAxisMinorTicks(_yAxisTab->drawAxisMinorTicks());
-  _plotItem->plotItem()->setDrawYAxisMinorGridLines(_yAxisTab->drawAxisMinorGridLines());
-  _plotItem->plotItem()->setYAxisMajorGridLineColor(_yAxisTab->axisMajorGridLineColor());
-  _plotItem->plotItem()->setYAxisMinorGridLineColor(_yAxisTab->axisMinorGridLineColor());
-  _plotItem->plotItem()->setYAxisMajorGridLineStyle(_yAxisTab->axisMajorGridLineStyle());
-  _plotItem->plotItem()->setYAxisMinorGridLineStyle(_yAxisTab->axisMinorGridLineStyle());
-  _plotItem->plotItem()->setYAxisLog(_yAxisTab->isLog());
+  _plotItem->setYAxisMajorTickMode(_yAxisTab->axisMajorTickSpacing());
+  _plotItem->setDrawYAxisMajorTicks(_yAxisTab->drawAxisMajorTicks());
+  _plotItem->setDrawYAxisMajorGridLines(_yAxisTab->drawAxisMajorGridLines());
+  _plotItem->setDrawYAxisMinorTicks(_yAxisTab->drawAxisMinorTicks());
+  _plotItem->setDrawYAxisMinorGridLines(_yAxisTab->drawAxisMinorGridLines());
+  _plotItem->setYAxisMajorGridLineColor(_yAxisTab->axisMajorGridLineColor());
+  _plotItem->setYAxisMinorGridLineColor(_yAxisTab->axisMinorGridLineColor());
+  _plotItem->setYAxisMajorGridLineStyle(_yAxisTab->axisMajorGridLineStyle());
+  _plotItem->setYAxisMinorGridLineStyle(_yAxisTab->axisMinorGridLineStyle());
   _plotItem->setYAxisLog(_yAxisTab->isLog());
-  _plotItem->plotItem()->setYAxisReversed(_yAxisTab->isReversed());
-  _plotItem->plotItem()->setYAxisInterpret(_yAxisTab->isInterpret());
-  _plotItem->plotItem()->setYAxisDisplay(_yAxisTab->axisDisplay());
-  _plotItem->plotItem()->setYAxisInterpretation(_yAxisTab->axisInterpretation());
-  _plotItem->plotItem()->setYAxisBaseOffset(_yAxisTab->isBaseOffset());
+  _plotItem->setYAxisLog(_yAxisTab->isLog());
+  _plotItem->setYAxisReversed(_yAxisTab->isReversed());
+  _plotItem->setYAxisInterpret(_yAxisTab->isInterpret());
+  _plotItem->setYAxisDisplay(_yAxisTab->axisDisplay());
+  _plotItem->setYAxisInterpretation(_yAxisTab->axisInterpretation());
+  _plotItem->setYAxisBaseOffset(_yAxisTab->isBaseOffset());
 }
 
 
-void PlotRenderItemDialog::labelsChanged() {
+void PlotItemDialog::labelsChanged() {
   Q_ASSERT(_plotItem);
 
-  _plotItem->plotItem()->setLeftLabelOverride(_labelTab->leftLabel());
-  _plotItem->plotItem()->setBottomLabelOverride(_labelTab->bottomLabel());
-  _plotItem->plotItem()->setRightLabelOverride(_labelTab->rightLabel());
-  _plotItem->plotItem()->setTopLabelOverride(_labelTab->topLabel());
+  _plotItem->setLeftLabelOverride(_labelTab->leftLabel());
+  _plotItem->setBottomLabelOverride(_labelTab->bottomLabel());
+  _plotItem->setRightLabelOverride(_labelTab->rightLabel());
+  _plotItem->setTopLabelOverride(_labelTab->topLabel());
 
-  _plotItem->plotItem()->setLeftLabelFont(_labelTab->leftLabelFont());
-  _plotItem->plotItem()->setRightLabelFont(_labelTab->rightLabelFont());
-  _plotItem->plotItem()->setTopLabelFont(_labelTab->topLabelFont());
-  _plotItem->plotItem()->setBottomLabelFont(_labelTab->bottomLabelFont());
+  _plotItem->setLeftLabelFont(_labelTab->leftLabelFont());
+  _plotItem->setRightLabelFont(_labelTab->rightLabelFont());
+  _plotItem->setTopLabelFont(_labelTab->topLabelFont());
+  _plotItem->setBottomLabelFont(_labelTab->bottomLabelFont());
 
 }
 
 
-void PlotRenderItemDialog::xAxisPlotMarkersChanged() {
+void PlotItemDialog::xAxisPlotMarkersChanged() {
   Q_ASSERT(_plotItem);
-  _plotItem->plotItem()->setXAxisPlotMarkers(_xMarkersTab->plotMarkers());
+  _plotItem->setXAxisPlotMarkers(_xMarkersTab->plotMarkers());
 }
 
 
-void PlotRenderItemDialog::yAxisPlotMarkersChanged() {
+void PlotItemDialog::yAxisPlotMarkersChanged() {
   Q_ASSERT(_plotItem);
-  _plotItem->plotItem()->setYAxisPlotMarkers(_yMarkersTab->plotMarkers());
+  _plotItem->setYAxisPlotMarkers(_yMarkersTab->plotMarkers());
 }
 
 

@@ -60,18 +60,6 @@ class PlotRenderItem : public ViewItem
     ZoomMode yAxisZoomMode() const;
     void setYAxisZoomMode(ZoomMode mode);
 
-    bool isXAxisLog() const;
-    void setXAxisLog(bool log);
-
-    qreal xLogBase() const;
-    void setXLogBase(qreal xLogBase);
-
-    bool isYAxisLog() const;
-    void setYAxisLog(bool log);
-
-    qreal yLogBase() const;
-    void setYLogBase(qreal yLogBase);
-
     QRectF plotRect() const;
 
     QRectF projectionRect() const;

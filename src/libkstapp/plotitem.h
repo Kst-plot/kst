@@ -257,6 +257,9 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void marginsChanged();
     void updatePlotRect();
 
+  public Q_SLOTS:
+    virtual void edit();
+
   private:
 
     virtual void paintPlot(QPainter *painter,

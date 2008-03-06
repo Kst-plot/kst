@@ -17,8 +17,6 @@
 #include "application.h"
 #include "objectstore.h"
 
-#include "plotrenderitemdialog.h"
-
 #include <QTime>
 #include <QMenu>
 #include <QStatusBar>
@@ -34,11 +32,7 @@ namespace Kst {
 PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
   : ViewItem(parentItem->parentView()),
   _xAxisZoomMode(Auto),
-  _yAxisZoomMode(AutoBorder),
-  _isXAxisLog(false),
-  _isYAxisLog(false),
-  _xLogBase(10.0),
-  _yLogBase(10.0) {
+  _yAxisZoomMode(AutoBorder) {
 
   setName(tr("Plot Render"));
   setZValue(PLOTRENDER_ZVALUE);
@@ -114,50 +108,6 @@ void PlotRenderItem::setYAxisZoomMode(ZoomMode mode) {
 }
 
 
-bool PlotRenderItem::isXAxisLog() const {
-  return _isXAxisLog;
-}
-
-
-void PlotRenderItem::setXAxisLog(bool log) {
-  _isXAxisLog = log;
-  _zoomLogX->setChecked(log);
-  plotItem()->setXAxisLog(log);
-}
-
-
-qreal PlotRenderItem::xLogBase() const {
-  return _xLogBase;
-}
-
-
-void PlotRenderItem::setXLogBase(qreal xLogBase) {
-  _xLogBase = xLogBase;
-}
-
-
-bool PlotRenderItem::isYAxisLog() const {
-  return _isYAxisLog;
-}
-
-
-void PlotRenderItem::setYAxisLog(bool log) {
-  _isYAxisLog = log;
-  _zoomLogY->setChecked(log);
-  plotItem()->setYAxisLog(log);
-}
-
-
-qreal PlotRenderItem::yLogBase() const {
-  return _yLogBase;
-}
-
-
-void PlotRenderItem::setYLogBase(qreal yLogBase) {
-  _yLogBase = yLogBase;
-}
-
-
 QRectF PlotRenderItem::plotRect() const {
   QRectF plotRect = rect();
   plotRect = plotRect.normalized();
@@ -218,10 +168,6 @@ void PlotRenderItem::saveInPlot(QXmlStreamWriter &xml) {
   xml.writeAttribute("type", QVariant(_type).toString());
   xml.writeAttribute("xzoommode", QVariant(_xAxisZoomMode).toString());
   xml.writeAttribute("yzoommode", QVariant(_yAxisZoomMode).toString());
-  xml.writeAttribute("xlog", QVariant(_isXAxisLog).toString());
-  xml.writeAttribute("ylog", QVariant(_isYAxisLog).toString());
-  xml.writeAttribute("xlogbase", QVariant(_xLogBase).toString());
-  xml.writeAttribute("ylogbase", QVariant(_yLogBase).toString());
   xml.writeStartElement("rect");
   xml.writeAttribute("x", QVariant(projectionRect().x()).toString());
   xml.writeAttribute("y", QVariant(projectionRect().y()).toString());
@@ -252,22 +198,6 @@ bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store)
   av = attrs.value("yzoommode");
   if (!av.isNull()) {
     setYAxisZoomMode((ZoomMode)av.toString().toInt());
-  }
-  av = attrs.value("xlog");
-  if (!av.isNull()) {
-    setXAxisLog(QVariant(av.toString()).toBool());
-  }
-  av = attrs.value("ylog");
-  if (!av.isNull()) {
-    setYAxisLog(QVariant(av.toString()).toBool());
-  }
-  av = attrs.value("xlogbase");
-  if (!av.isNull()) {
-    setXLogBase(av.toString().toDouble());
-  }
-  av = attrs.value("ylogbase");
-  if (!av.isNull()) {
-    setYLogBase(av.toString().toDouble());
   }
 
   QString expectedEnd;
@@ -315,7 +245,6 @@ bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store)
 
 void PlotRenderItem::paint(QPainter *painter) {
   painter->setRenderHint(QPainter::Antialiasing, false);
-  painter->drawRect(rect());
 
 #ifdef CURVE_DRAWING_TIME
   QTime time;
@@ -740,7 +669,7 @@ void PlotRenderItem::zoomXIn() {
 void PlotRenderItem::zoomNormalizeXtoY() {
   qDebug() << "zoomNormalizeXtoY" << endl;
 
-  if (isXAxisLog() || isYAxisLog())
+  if (plotItem()->xAxisLog() || plotItem()->yAxisLog())
     return; //apparently we don't want to do anything here according to kst2dplot...
 
   ZoomCommand *cmd = new ZoomNormalizeXToYCommand(this);
@@ -750,7 +679,7 @@ void PlotRenderItem::zoomNormalizeXtoY() {
 
 void PlotRenderItem::zoomLogX() {
   qDebug() << "zoomLogX" << endl;
-  setXAxisLog(_zoomLogX->isChecked());
+  plotItem()->setXAxisLog(_zoomLogX->isChecked());
   setProjectionRect(computedProjectionRect()); //need to recompute
   plotItem()->update();
 }
@@ -801,7 +730,7 @@ void PlotRenderItem::zoomYIn() {
 void PlotRenderItem::zoomNormalizeYtoX() {
   qDebug() << "zoomNormalizeYtoX" << endl;
 
-  if (isXAxisLog() || isYAxisLog())
+  if (plotItem()->xAxisLog() || plotItem()->yAxisLog())
     return; //apparently we don't want to do anything here according to kst2dplot...
 
   ZoomCommand *cmd = new ZoomNormalizeYToXCommand(this);
@@ -811,7 +740,7 @@ void PlotRenderItem::zoomNormalizeYtoX() {
 
 void PlotRenderItem::zoomLogY() {
   qDebug() << "zoomLogY" << endl;
-  setYAxisLog(_zoomLogY->isChecked());
+  plotItem()->setYAxisLog(_zoomLogY->isChecked());
   setProjectionRect(computedProjectionRect()); //need to recompute
   plotItem()->update();
 }
@@ -880,9 +809,9 @@ void PlotRenderItem::updateViewMode() {
 
 
 void PlotRenderItem::edit() {
-  PlotRenderItemDialog editDialog(this);
-  editDialog.exec();
+  plotItem()->edit();
 }
+
 
 void PlotRenderItem::updateCursor(const QPointF &pos) {
   if (checkBox().contains(pos)) {
@@ -899,10 +828,10 @@ ZoomState PlotRenderItem::currentZoomState() {
   zoomState.projectionRect = projectionRect();
   zoomState.xAxisZoomMode = xAxisZoomMode();
   zoomState.yAxisZoomMode = yAxisZoomMode();
-  zoomState.isXAxisLog = isXAxisLog();
-  zoomState.isYAxisLog = isYAxisLog();
-  zoomState.xLogBase = xLogBase();
-  zoomState.yLogBase = yLogBase();
+  zoomState.isXAxisLog = plotItem()->xAxisLog();
+  zoomState.isYAxisLog = plotItem()->yAxisLog();
+  zoomState.xLogBase = 10.0;
+  zoomState.yLogBase = 10.0;
   return zoomState;
 }
 
@@ -910,10 +839,8 @@ ZoomState PlotRenderItem::currentZoomState() {
 void PlotRenderItem::setCurrentZoomState(ZoomState zoomState) {
   setXAxisZoomMode(ZoomMode(zoomState.xAxisZoomMode));
   setYAxisZoomMode(ZoomMode(zoomState.yAxisZoomMode));
-  setXAxisLog(zoomState.isXAxisLog);
-  setYAxisLog(zoomState.isYAxisLog);
-  setXLogBase(zoomState.xLogBase);
-  setYLogBase(zoomState.yLogBase);
+  plotItem()->setXAxisLog(zoomState.isXAxisLog);
+  plotItem()->setYAxisLog(zoomState.isYAxisLog);
   setProjectionRect(zoomState.projectionRect);
 }
 
@@ -999,7 +926,7 @@ void PlotRenderItem::computeAuto(Qt::Orientation orientation, qreal *min, qreal 
   qreal maximum;
   bool unInitialized = true;
 
-  bool axisLog = orientation == Qt::Horizontal ? isXAxisLog() : isYAxisLog();
+  bool axisLog = orientation == Qt::Horizontal ? plotItem()->xAxisLog() : plotItem()->yAxisLog();
 
   foreach (RelationPtr relation, relationList()) {
       if (relation->ignoreAutoScale())
@@ -1035,8 +962,8 @@ void PlotRenderItem::computeBorder(Qt::Orientation orientation, qreal *min, qrea
   qreal minimum = *min;
   qreal maximum = *max;
 
-  bool axisLog = orientation == Qt::Horizontal ? isXAxisLog() : isYAxisLog();
-  qreal logBase = orientation == Qt::Horizontal ? xLogBase() : yLogBase();
+  bool axisLog = orientation == Qt::Horizontal ? plotItem()->xAxisLog() : plotItem()->yAxisLog();
+  qreal logBase = 10.0/*orientation == Qt::Horizontal ? xLogBase() : yLogBase()*/;
 
   if (axisLog) {
     minimum = log10(minimum)/log10(logBase);
@@ -1180,7 +1107,7 @@ void ZoomXRightCommand::applyZoomTo(PlotRenderItem *item) {
   QRectF compute = item->projectionRect();
 
   qreal dx = (item->plotItem()->xMax() - item->plotItem()->xMin())*0.10;
-  if (item->isXAxisLog()) { 
+  if (item->plotItem()->xAxisLog()) { 
     compute.setLeft(pow(10, item->plotItem()->xMin() + dx));
     compute.setRight(pow(10, item->plotItem()->xMax() + dx));
   } else {
@@ -1203,7 +1130,7 @@ void ZoomXLeftCommand::applyZoomTo(PlotRenderItem *item) {
   QRectF compute = item->projectionRect();
 
   qreal dx = (item->plotItem()->xMax() - item->plotItem()->xMin())*0.10;
-  if (item->isXAxisLog()) { 
+  if (item->plotItem()->xAxisLog()) { 
     compute.setLeft(pow(10, item->plotItem()->xMin() - dx));
     compute.setRight(pow(10, item->plotItem()->xMax() - dx));
   } else {
@@ -1226,7 +1153,7 @@ void ZoomXOutCommand::applyZoomTo(PlotRenderItem *item) {
   QRectF compute = item->projectionRect();
 
   qreal dx = (item->plotItem()->xMax() - item->plotItem()->xMin())*0.25;
-  if (item->isXAxisLog()) { 
+  if (item->plotItem()->xAxisLog()) { 
     compute.setLeft(pow(10, item->plotItem()->xMin() - dx));
     compute.setRight(pow(10, item->plotItem()->xMax() + dx));
   } else {
@@ -1250,7 +1177,7 @@ void ZoomXInCommand::applyZoomTo(PlotRenderItem *item) {
   QRectF compute = item->projectionRect();
 
   qreal dx = (item->plotItem()->xMax() - item->plotItem()->xMin())*0.1666666;
-  if (item->isXAxisLog()) { 
+  if (item->plotItem()->xAxisLog()) { 
     compute.setLeft(pow(10, item->plotItem()->xMin() + dx));
     compute.setRight(pow(10, item->plotItem()->xMax() - dx));
   } else {
@@ -1287,7 +1214,7 @@ void ZoomNormalizeXToYCommand::applyZoomTo(PlotRenderItem *item) {
  * values between 30 and 40.
  */
 void ZoomYLocalMaximumCommand::applyZoomTo(PlotRenderItem *item) {
-  qreal minimum = item->isYAxisLog() ? 0.0 : -0.1;
+  qreal minimum = item->plotItem()->yAxisLog() ? 0.0 : -0.1;
   qreal maximum = 0.1;
   foreach (RelationPtr relation, item->relationList()) {
       if (relation->ignoreAutoScale())
@@ -1300,7 +1227,7 @@ void ZoomYLocalMaximumCommand::applyZoomTo(PlotRenderItem *item) {
 
       //If the axis is in log mode, the lower extent will be the
       //minimum value larger than zero.
-      if (item->isYAxisLog())
+      if (item->plotItem()->yAxisLog())
         minimum = minimum <= 0.0 ? min : qMin(min, minimum);
       else
         minimum = qMin(min, minimum);
@@ -1346,7 +1273,7 @@ void ZoomYUpCommand::applyZoomTo(PlotRenderItem *item) {
   QRectF compute = item->projectionRect();
 
   qreal dy = (item->plotItem()->yMax() - item->plotItem()->yMin())*0.1;
-  if (item->isYAxisLog()) { 
+  if (item->plotItem()->yAxisLog()) { 
     compute.setTop(pow(10, item->plotItem()->yMin() + dy));
     compute.setBottom(pow(10, item->plotItem()->yMax() + dy));
   } else {
@@ -1371,7 +1298,7 @@ void ZoomYDownCommand::applyZoomTo(PlotRenderItem *item) {
   QRectF compute = item->projectionRect();
 
   qreal dy = (item->plotItem()->yMax() - item->plotItem()->yMin())*0.1;
-  if (item->isYAxisLog()) { 
+  if (item->plotItem()->yAxisLog()) { 
     compute.setTop(pow(10, item->plotItem()->yMin() - dy));
     compute.setBottom(pow(10, item->plotItem()->yMax() - dy));
   } else {
@@ -1396,7 +1323,7 @@ void ZoomYOutCommand::applyZoomTo(PlotRenderItem *item) {
   QRectF compute = item->projectionRect();
 
   qreal dy = (item->plotItem()->yMax() - item->plotItem()->yMin())*0.25;
-  if (item->isYAxisLog()) { 
+  if (item->plotItem()->yAxisLog()) { 
     compute.setTop(pow(10, item->plotItem()->yMin() - dy));
     compute.setBottom(pow(10, item->plotItem()->yMax() + dy));
   } else {
@@ -1422,7 +1349,7 @@ void ZoomYInCommand::applyZoomTo(PlotRenderItem *item) {
   QRectF compute = item->projectionRect();
 
   qreal dy = (item->plotItem()->yMax() - item->plotItem()->yMin())*0.1666666;
-  if (item->isYAxisLog()) { 
+  if (item->plotItem()->yAxisLog()) { 
     compute.setTop(pow(10, item->plotItem()->yMin() + dy));
     compute.setBottom(pow(10, item->plotItem()->yMax() - dy));
   } else {

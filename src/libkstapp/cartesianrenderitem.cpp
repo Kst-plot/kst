@@ -46,10 +46,10 @@ void CartesianRenderItem::paintRelations(QPainter *painter) {
     context.painter = painter;
     context.window = QRect(); //no idea if this should be floating point
     context.penWidth = painter->pen().width(); //floating point??
-    context.xLog = isXAxisLog();
-    context.yLog = isYAxisLog();
-    context.xLogBase = xLogBase();
-    context.yLogBase = yLogBase();
+    context.xLog = plotItem()->xAxisLog();
+    context.yLog = plotItem()->yAxisLog();
+    context.xLogBase = 10.0/*plotItem()->xLogBase()*/;
+    context.yLogBase = 10.0/*plotItem()->yLogBase()*/;
     context.foregroundColor = painter->pen().color();
     context.backgroundColor = painter->brush().color();
 
@@ -63,10 +63,10 @@ void CartesianRenderItem::paintRelations(QPainter *painter) {
     context.YMax = projectionRect().bottom();
 
     //Set the log box...
-    context.x_max = isXAxisLog() ? logXHi(context.XMax, context.xLogBase) : context.XMax;
-    context.y_max = isYAxisLog() ? logXHi(context.YMax, context.yLogBase) : context.YMax;
-    context.x_min = isXAxisLog() ? logXLo(context.XMin, context.xLogBase) : context.XMin;
-    context.y_min = isYAxisLog() ? logXLo(context.YMin, context.yLogBase) : context.YMin;
+    context.x_max = plotItem()->xAxisLog() ? logXHi(context.XMax, context.xLogBase) : context.XMax;
+    context.y_max = plotItem()->yAxisLog() ? logXHi(context.YMax, context.yLogBase) : context.YMax;
+    context.x_min = plotItem()->xAxisLog() ? logXLo(context.XMin, context.xLogBase) : context.XMin;
+    context.y_min = plotItem()->yAxisLog() ? logXLo(context.YMin, context.yLogBase) : context.YMin;
 
     //These are the bounding box in regular QGV coord
     context.Lx = plotRect().left();
