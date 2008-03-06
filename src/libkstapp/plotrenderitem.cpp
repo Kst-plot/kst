@@ -530,7 +530,7 @@ void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   }
 
   updateCursor(event->pos());
-  const QRectF projection = mapToProjection(_selectionRect.rect());
+  const QRectF projection = plotItem()->mapToProjection(_selectionRect.rect());
   _selectionRect.reset();
 
   zoomFixedExpression(projection);
@@ -541,7 +541,7 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   ViewItem::hoverMoveEvent(event);
 
   updateCursor(event->pos());
-  const QPointF p = plotItem()->mapPointToProjection(event->pos());
+  const QPointF p = plotItem()->mapToProjection(event->pos());
   QString message = QString("(%1, %2)").arg(QString::number(p.x(), 'G')).arg(QString::number(p.y()));
   kstApp->mainWindow()->statusBar()->showMessage(message);
 }
@@ -552,7 +552,7 @@ void PlotRenderItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
 
   updateCursor(event->pos());
 
-  const QPointF p = plotItem()->mapPointToProjection(event->pos());
+  const QPointF p = plotItem()->mapToProjection(event->pos());
   QString message = QString("(%1, %2)").arg(QString::number(p.x())).arg(QString::number(p.y()));
   kstApp->mainWindow()->statusBar()->showMessage(message);
 }
@@ -564,42 +564,6 @@ void PlotRenderItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
   updateCursor(event->pos());
 
   kstApp->mainWindow()->statusBar()->showMessage(QString());
-}
-
-
-QTransform PlotRenderItem::projectionTransform() const {
-  QTransform t;
-
-  QRectF v = QRectF(rect().bottomLeft(), rect().topRight());
-
-  QPolygonF from_ = QPolygonF(v);
-  from_.pop_back(); //get rid of last closed point
-
-  QPolygonF to_ = QPolygonF(projectionRect());
-  to_.pop_back(); //get rid of last closed point
-
-  QTransform::quadToQuad(from_, to_, t);
-  return t;
-}
-
-
-QPointF PlotRenderItem::mapToProjection(const QPointF &point) const {
-  return projectionTransform().map(point);
-}
-
-
-QPointF PlotRenderItem::mapFromProjection(const QPointF &point) const {
-  return projectionTransform().inverted().map(point);
-}
-
-
-QRectF PlotRenderItem::mapToProjection(const QRectF &rect) const {
-  return projectionTransform().mapRect(rect);
-}
-
-
-QRectF PlotRenderItem::mapFromProjection(const QRectF &rect) const {
-  return projectionTransform().inverted().mapRect(rect);
 }
 
 

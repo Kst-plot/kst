@@ -82,11 +82,6 @@ class PlotRenderItem : public ViewItem
     QString rightLabel() const;
     QString topLabel() const;
 
-    QPointF mapToProjection(const QPointF &point) const;
-    QPointF mapFromProjection(const QPointF &point) const;
-    QRectF mapToProjection(const QRectF &rect) const;
-    QRectF mapFromProjection(const QRectF &rect) const;
-
 Q_SIGNALS:
     void projectionRectChanged();
 
@@ -121,8 +116,6 @@ public Q_SLOTS:
     virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-
-    virtual QTransform projectionTransform() const;
 
     virtual QPainterPath shape() const;
     virtual QRectF boundingRect() const;

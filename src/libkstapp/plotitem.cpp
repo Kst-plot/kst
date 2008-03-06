@@ -1280,7 +1280,23 @@ void PlotItem::updateScale() {
 }
 
 
-QPointF PlotItem::mapPointToProjection(const QPointF &point) {
+QRectF PlotItem::mapToProjection(const QRectF &rect) {
+  QRectF projRect;
+
+  // Invert and convert points.
+  QPointF topLeft = mapToProjection(rect.bottomLeft());
+  QPointF bottomRight = mapToProjection(rect.topRight());
+
+  projRect.setTopLeft(topLeft);
+
+  projRect.setWidth(bottomRight.x() - topLeft.x());
+  projRect.setHeight(bottomRight.y() - topLeft.y());
+
+  return projRect;
+}
+
+
+QPointF PlotItem::mapToProjection(const QPointF &point) {
   QRectF pr = plotRect();
   double xpos, ypos;
 
@@ -1312,7 +1328,7 @@ QPointF PlotItem::mapPointToProjection(const QPointF &point) {
 }
 
 
-QPointF PlotItem::mapPointToPlot(const QPointF &point) const {
+QPointF PlotItem::mapToPlot(const QPointF &point) const {
   return QPointF(mapXToPlot(point.x()), mapYToPlot(point.y()));
 }
 
@@ -1368,79 +1384,6 @@ qreal PlotItem::mapYToPlot(const qreal &y) const {
   return newY;
 }
 
-
-QPointF PlotItem::mapFromAxisToProjection(const QPointF &point) const {
-  return projectionAxisTransform().map(point);
-}
-
-
-QPointF PlotItem::mapToAxisFromProjection(const QPointF &point) const {
-  return projectionAxisTransform().inverted().map(point);
-}
-
-
-QRectF PlotItem::mapFromAxisToProjection(const QRectF &rect) const {
-  return projectionAxisTransform().mapRect(rect);
-}
-
-
-QRectF PlotItem::mapToAxisFromProjection(const QRectF &rect) const {
-  return projectionAxisTransform().inverted().mapRect(rect);
-}
-
-
-QTransform PlotItem::projectionAxisTransform() const {
-  QTransform t;
-
-  QRectF rect = plotAxisRect();
-  QRectF v = QRectF(rect.bottomLeft(), rect.topRight());
-
-  QPolygonF from_ = QPolygonF(v);
-  from_.pop_back(); //get rid of last closed point
-
-  QPolygonF to_ = QPolygonF(projectionRect());
-  to_.pop_back(); //get rid of last closed point
-
-  QTransform::quadToQuad(from_, to_, t);
-  return t;
-}
-
-
-QPointF PlotItem::mapFromPlotToProjection(const QPointF &point) const {
-  return projectionPlotTransform().map(point);
-}
-
-
-QPointF PlotItem::mapToPlotFromProjection(const QPointF &point) const {
-  return projectionPlotTransform().inverted().map(point);
-}
-
-
-QRectF PlotItem::mapFromPlotToProjection(const QRectF &rect) const {
-  return projectionPlotTransform().mapRect(rect);
-}
-
-
-QRectF PlotItem::mapToPlotFromProjection(const QRectF &rect) const {
-  return projectionPlotTransform().inverted().mapRect(rect);
-}
-
-
-QTransform PlotItem::projectionPlotTransform() const {
-  QTransform t;
-
-  QRectF rect = plotRect();
-  QRectF v = QRectF(rect.bottomLeft(), rect.topRight());
-
-  QPolygonF from_ = QPolygonF(v);
-  from_.pop_back(); //get rid of last closed point
-
-  QPolygonF to_ = QPolygonF(projectionRect());
-  to_.pop_back(); //get rid of last closed point
-
-  QTransform::quadToQuad(from_, to_, t);
-  return t;
-}
 
 QFont PlotItem::rightLabelFont() const {
   return _rightLabelFont;
