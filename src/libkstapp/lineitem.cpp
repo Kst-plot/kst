@@ -30,7 +30,8 @@ LineItem::LineItem(View *parent)
   setAllowedGripModes(Resize);
   QPen p = pen();
   p.setWidthF(1);
-  setPen(p);}
+  setPen(p);
+}
 
 
 LineItem::~LineItem() {
@@ -208,12 +209,56 @@ void LineItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 }
 
 
+void LineItem::updateRelativeSize() {
+    QPointF topLeft = mapToParent(rect().topLeft());
+    QPointF bottomRight = mapToParent(rect().bottomRight());
+
+  if (parentViewItem()) {
+    QPointF topLeftOffset = topLeft - parentViewItem()->rect().topLeft();
+    QPointF bottomRightOffset = bottomRight - parentViewItem()->rect().topLeft();
+
+    _xTopLeftRelation = topLeftOffset.x() / parentViewItem()->width();
+    _yTopLeftRelation = topLeftOffset.y() / parentViewItem()->height();
+    _xBottomRightRelation = bottomRightOffset.x() / parentViewItem()->width();
+    _yBottomRightRelation = bottomRightOffset.y() / parentViewItem()->height();
+  } else if (parentView()) {
+    QPointF topLeftOffset = topLeft - parentView()->rect().topLeft();
+    QPointF bottomRightOffset = bottomRight - parentView()->rect().topLeft();
+
+    _xTopLeftRelation = topLeftOffset.x() / parentView()->width();
+    _yTopLeftRelation = topLeftOffset.y() / parentView()->height();
+    _xBottomRightRelation = bottomRightOffset.x() / parentView()->width();
+    _yBottomRightRelation = bottomRightOffset.y() / parentView()->height();
+  }
+  ViewItem::updateRelativeSize();
+}
+
+
+void LineItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect) {
+//   qDebug() << "LineItem::updateChildGeometry" << oldParentRect << newParentRect << endl;
+
+  QRectF itemRect = rect();
+
+  QPointF newTopLeft = newParentRect.topLeft() + QPointF(newParentRect.width() * _xTopLeftRelation, newParentRect.height() * _yTopLeftRelation);
+  QPointF newBottomRight = newParentRect.topLeft() + QPointF(newParentRect.width() * _xBottomRightRelation, newParentRect.height() * _yBottomRightRelation);
+
+  QPointF posOffset = newTopLeft - mapToParent(rect().topLeft());
+
+  itemRect.setRight(itemRect.left() + mapFromParent(newBottomRight).x() - mapFromParent(newTopLeft).x());
+  setViewRect(itemRect, true);
+
+  rotateTowards(rightMidGrip().controlPointRect().center(), mapFromParent(pos() + (newBottomRight - newTopLeft)));
+  setPos(pos() + posOffset);
+}
+
+
 void CreateLineCommand::createItem() {
   _item = new LineItem(_view);
   _view->setCursor(Qt::CrossCursor);
 
   CreateCommand::createItem();
 }
+
 
 LineItemFactory::LineItemFactory()
 : GraphicsFactory() {

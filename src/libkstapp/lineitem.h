@@ -34,6 +34,8 @@ class LineItem : public ViewItem
 
     virtual QPointF centerOfRotation() const;
 
+    virtual void updateRelativeSize();
+
   protected Q_SLOTS:
     virtual void creationPolygonChanged(View::CreationEvent event);
 
@@ -47,6 +49,14 @@ class LineItem : public ViewItem
     virtual QPainterPath leftMidGrip() const;
     virtual QPainterPath rightMidGrip() const;
 
+  private:
+    virtual void updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect);
+
+  private:
+    qreal _xTopLeftRelation;
+    qreal _yTopLeftRelation;
+    qreal _xBottomRightRelation;
+    qreal _yBottomRightRelation;
 };
 
 class KST_EXPORT CreateLineCommand : public CreateCommand

@@ -64,7 +64,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     ViewItem *parentViewItem() const;
     void setParent(ViewItem *parent);
     bool itemInLayout() const;
-    void updateRelativeSize();
+    virtual void updateRelativeSize();
     qreal relativeHeight() const { return _parentRelativeHeight; }
     qreal relativeWidth() const { return _parentRelativeWidth; }
 
@@ -199,8 +199,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
 
   private:
     bool tryShortcut(const QString &keySequence);
-    static void updateChildGeometry(ViewItem *child, const QRectF &oldParentRect,
-                                                    const QRectF &newParentRect);
+    virtual void updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect);
 
   private:
     GripMode _gripMode;

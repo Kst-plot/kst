@@ -272,7 +272,7 @@ void View::resizeEvent(QResizeEvent *event) {
       ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
       Q_ASSERT(viewItem);
 
-      ViewItem::updateChildGeometry(viewItem, oldSceneRect, sceneRect());
+      viewItem->updateChildGeometry(oldSceneRect, sceneRect());
     }
   }
 }
@@ -338,7 +338,7 @@ void View::updateChildGeometry(const QRectF &oldSceneRect) {
     ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
     Q_ASSERT(viewItem);
 
-    ViewItem::updateChildGeometry(viewItem, oldSceneRect, sceneRect());
+    viewItem->updateChildGeometry(oldSceneRect, sceneRect());
   }
 }
 
