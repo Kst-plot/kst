@@ -209,46 +209,29 @@ void LineItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 }
 
 
-void LineItem::updateRelativeSize() {
-    QPointF topLeft = mapToParent(rect().topLeft());
-    QPointF bottomRight = mapToParent(rect().bottomRight());
-
-  if (parentViewItem()) {
-    QPointF topLeftOffset = topLeft - parentViewItem()->rect().topLeft();
-    QPointF bottomRightOffset = bottomRight - parentViewItem()->rect().topLeft();
-
-    _xTopLeftRelation = topLeftOffset.x() / parentViewItem()->width();
-    _yTopLeftRelation = topLeftOffset.y() / parentViewItem()->height();
-    _xBottomRightRelation = bottomRightOffset.x() / parentViewItem()->width();
-    _yBottomRightRelation = bottomRightOffset.y() / parentViewItem()->height();
-  } else if (parentView()) {
-    QPointF topLeftOffset = topLeft - parentView()->rect().topLeft();
-    QPointF bottomRightOffset = bottomRight - parentView()->rect().topLeft();
-
-    _xTopLeftRelation = topLeftOffset.x() / parentView()->width();
-    _yTopLeftRelation = topLeftOffset.y() / parentView()->height();
-    _xBottomRightRelation = bottomRightOffset.x() / parentView()->width();
-    _yBottomRightRelation = bottomRightOffset.y() / parentView()->height();
-  }
-  ViewItem::updateRelativeSize();
-}
-
-
 void LineItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect) {
 //   qDebug() << "LineItem::updateChildGeometry" << oldParentRect << newParentRect << endl;
 
   QRectF itemRect = rect();
 
-  QPointF newTopLeft = newParentRect.topLeft() + QPointF(newParentRect.width() * _xTopLeftRelation, newParentRect.height() * _yTopLeftRelation);
-  QPointF newBottomRight = newParentRect.topLeft() + QPointF(newParentRect.width() * _xBottomRightRelation, newParentRect.height() * _yBottomRightRelation);
+//   qDebug() << "Relative Top Left x" << QPointF(mapToParent(leftMidGrip().controlPointRect().center()) - oldParentRect.topLeft()).x() / oldParentRect.width();
+//   qDebug() << "Relative Top Left y" << QPointF(mapToParent(leftMidGrip().controlPointRect().center()) - oldParentRect.topLeft()).y() / oldParentRect.height();
+//   qDebug() << "Relative Bottom Right x" << QPointF(mapToParent(rightMidGrip().controlPointRect().center()) - oldParentRect.topLeft()).x() / oldParentRect.width();
+//   qDebug() << "Relative Bottom Right y" << QPointF(mapToParent(rightMidGrip().controlPointRect().center()) - oldParentRect.topLeft()).y() / oldParentRect.height();
 
-  QPointF posOffset = newTopLeft - mapToParent(rect().topLeft());
+  qreal dx = oldParentRect.width() ? newParentRect.width() / oldParentRect.width() : 0.0;
+  qreal dy = oldParentRect.height() ? newParentRect.height() / oldParentRect.height() : 0.0;
 
-  itemRect.setRight(itemRect.left() + mapFromParent(newBottomRight).x() - mapFromParent(newTopLeft).x());
+  QPointF oldRightPos = pos() + mapToParent(rect().topRight()) - mapToParent(rect().topLeft());
+  setPos(QPointF(pos().x() * dx, pos().y() * dy));
+
+  QPointF newRightPos = QPointF(oldRightPos.x() * dx, (oldRightPos.y() * dy));
+
+  itemRect.setRight(itemRect.left() + QLineF(pos(), newRightPos).length());
+  rotateTowards(rightMidGrip().controlPointRect().center(), mapFromParent(QPointF(newRightPos.x(), newRightPos.y() + (itemRect.height() / 2))));
+
   setViewRect(itemRect, true);
 
-  rotateTowards(rightMidGrip().controlPointRect().center(), mapFromParent(pos() + (newBottomRight - newTopLeft)));
-  setPos(pos() + posOffset);
 }
 
 
