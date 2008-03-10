@@ -24,6 +24,7 @@
 #include <QGraphicsSceneHoverEvent>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneContextMenuEvent>
+#include <QKeyEvent>
 
 // #define CURVE_DRAWING_TIME
 
@@ -474,6 +475,40 @@ void PlotRenderItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 }
 
 
+void PlotRenderItem::keyPressEvent(QKeyEvent *event) {
+  const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
+  if (modifiers & Qt::ShiftModifier) {
+    setCursor(Qt::SizeVerCursor);
+  _selectionRect.setFrom(QPointF(rect().left(), _lastPos.y()));
+  _selectionRect.setTo(QPointF(rect().right(), _lastPos.y()));
+  } else if (modifiers & Qt::ControlModifier) {
+    setCursor(Qt::SizeHorCursor);
+  _selectionRect.setFrom(QPointF(_lastPos.x(), rect().top()));
+  _selectionRect.setTo(QPointF(_lastPos.x(), rect().bottom()));
+  }
+  ViewItem::keyPressEvent(event);
+
+  if (_selectionRect.isValid()) {
+    update(); //FIXME should optimize instead of redrawing entire curve?
+  }
+}
+
+
+void PlotRenderItem::keyReleaseEvent(QKeyEvent *event) {
+  const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
+  if (modifiers & Qt::ShiftModifier) {
+   setCursor(Qt::SizeVerCursor);
+  } else if (modifiers & Qt::ControlModifier) {
+    setCursor(Qt::SizeHorCursor);
+  } else {
+    _selectionRect.reset();
+    updateCursor(_lastPos);
+    update(); //FIXME should optimize instead of redrawing entire curve?
+  }
+  ViewItem::keyReleaseEvent(event);
+}
+
+
 void PlotRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   if (parentView()->viewMode() != View::Data) {
     event->ignore();
@@ -540,9 +575,25 @@ void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   ViewItem::hoverMoveEvent(event);
 
-  updateCursor(event->pos());
-  const QPointF p = plotItem()->mapToProjection(event->pos());
-  QString message = QString("(%1, %2)").arg(QString::number(p.x(), 'G')).arg(QString::number(p.y()));
+  const QPointF p = event->pos();
+  const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
+  if (modifiers & Qt::ShiftModifier) {
+    _lastPos = p;
+    setCursor(Qt::SizeVerCursor);
+    _selectionRect.setFrom(QPointF(rect().left(), p.y()));
+    _selectionRect.setTo(QPointF(rect().right(), p.y()));
+    update(); //FIXME should optimize instead of redrawing entire curve!
+  } else if (modifiers & Qt::ControlModifier) {
+    _lastPos = p;
+    setCursor(Qt::SizeHorCursor);
+    _selectionRect.setFrom(QPointF(p.x(), rect().top()));
+    _selectionRect.setTo(QPointF(p.x(), rect().bottom()));
+    update(); //FIXME should optimize instead of redrawing entire curve!
+  } else {
+     updateCursor(event->pos());
+  }
+  const QPointF point = plotItem()->mapToProjection(event->pos());
+  QString message = QString("(%1, %2)").arg(QString::number(point.x(), 'G')).arg(QString::number(point.y()));
   kstApp->mainWindow()->statusBar()->showMessage(message);
 }
 
@@ -778,6 +829,7 @@ void PlotRenderItem::edit() {
 
 
 void PlotRenderItem::updateCursor(const QPointF &pos) {
+  _lastPos = pos;
   if (checkBox().contains(pos)) {
     setCursor(Qt::ArrowCursor);
   } else {

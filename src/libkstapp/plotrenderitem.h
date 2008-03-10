@@ -113,6 +113,9 @@ public Q_SLOTS:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
+    virtual void keyPressEvent(QKeyEvent *event);
+    virtual void keyReleaseEvent(QKeyEvent *event);
+
     virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
@@ -150,6 +153,7 @@ public Q_SLOTS:
     bool _isYAxisLog;
     qreal _xLogBase;
     qreal _yLogBase;
+    QPointF _lastPos;
 
     RelationList _relationList;
     QRectF _projectionRect;
