@@ -159,6 +159,12 @@ class PlotItem : public ViewItem, public PlotItemInterface
     Qt::PenStyle yAxisMinorGridLineStyle() const;
     void setYAxisMinorGridLineStyle(const Qt::PenStyle style);
 
+    int xAxisSignificantDigits() const;
+    void setXAxisSignificantDigits(const int digits);
+
+    int yAxisSignificantDigits() const;
+    void setYAxisSignificantDigits(const int digits);
+
     QString bottomLabelOverride() const;
     void setBottomLabelOverride(const QString &label);
 
@@ -382,6 +388,9 @@ class PlotItem : public ViewItem, public PlotItemInterface
     MajorTickMode _yAxisMajorTickMode;
     int _xAxisMinorTickCount;
     int _yAxisMinorTickCount;
+
+    int _xAxisSignificantDigits;
+    int _yAxisSignificantDigits;
 
     bool _drawXAxisMajorTicks;
     bool _drawXAxisMinorTicks;

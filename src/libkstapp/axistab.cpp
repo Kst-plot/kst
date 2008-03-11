@@ -76,6 +76,7 @@ AxisTab::AxisTab(QWidget *parent)
   connect(_scaleInterpretType, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
 
   connect(_axisMinorTickCount, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_significantDigits, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
 
 }
 
@@ -198,6 +199,16 @@ int AxisTab::axisMinorTickCount() const {
 
 void AxisTab::setAxisMinorTickCount(const int count) {
   _axisMinorTickCount->setValue(count);
+}
+
+
+int AxisTab::significantDigits() const {
+  return _significantDigits->value();
+}
+
+
+void AxisTab::setSignificantDigits(const int digits) {
+  _significantDigits->setValue(digits);
 }
 
 

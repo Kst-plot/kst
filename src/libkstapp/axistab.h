@@ -57,6 +57,9 @@ class KST_EXPORT AxisTab : public DialogTab, Ui::AxisTab {
     int axisMinorTickCount() const;
     void setAxisMinorTickCount(const int count);
 
+    int significantDigits() const;
+    void setSignificantDigits(const int digits);
+
     bool isLog() const;
     void setLog(const bool enabled);
 

@@ -60,6 +60,26 @@
       <item row="1" column="3" >
        <widget class="QComboBox" name="_scaleDisplayType" />
       </item>
+      <item row="2" column="0" colspan="2" >
+       <widget class="QLabel" name="label_2" >
+        <property name="text" >
+         <string>Significant Digits before automatic Base/Offset Mode</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2" colspan="2" >
+       <widget class="QSpinBox" name="_significantDigits" >
+        <property name="minimum" >
+         <number>2</number>
+        </property>
+        <property name="maximum" >
+         <number>15</number>
+        </property>
+        <property name="value" >
+         <number>9</number>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>

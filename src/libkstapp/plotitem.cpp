@@ -74,6 +74,8 @@ PlotItem::PlotItem(View *parent)
   _yAxisMajorTickMode(Normal),
   _xAxisMinorTickCount(4),
   _yAxisMinorTickCount(4),
+  _xAxisSignificantDigits(9),
+  _yAxisSignificantDigits(9),
   _drawXAxisMajorTicks(true),
   _drawXAxisMinorTicks(true),
   _drawYAxisMajorTicks(true),
@@ -169,6 +171,8 @@ void PlotItem::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("xaxisdrawminorgridlinestyle", QVariant(_xAxisMinorGridLineStyle).toString());
   xml.writeAttribute("yaxisdrawmajorgridlinestyle", QVariant(_yAxisMajorGridLineStyle).toString());
   xml.writeAttribute("yaxisdrawminorgridlinestyle", QVariant(_yAxisMinorGridLineStyle).toString());
+  xml.writeAttribute("xaxissignificantdigits", QVariant(_xAxisSignificantDigits).toString());
+  xml.writeAttribute("yaxissignificantdigits", QVariant(_yAxisSignificantDigits).toString());
 
   ViewItem::save(xml);
   foreach (PlotRenderItem *renderer, renderItems()) {
@@ -233,7 +237,7 @@ void PlotItem::paint(QPainter *painter) {
   margins = margins.expandedTo(calculateTopLabelBound(painter));
 
   margins.setHeight(margins.height() + _calculatedAxisMarginHeight);
-  margins.setHeight(margins.width() + _calculatedAxisMarginWidth);
+  margins.setWidth(margins.width() + _calculatedAxisMarginWidth);
 
 //  qDebug() << "setting margin width" << margins.width() << endl;
   setCalculatedLabelMarginWidth(margins.width());
@@ -431,31 +435,34 @@ void PlotItem::paintBottomTickLabels(QPainter *painter,
   QMap<qreal, QString> xLabels;
   QString xBaseLabel;
 
-  if (_xAxisBaseOffset || _xAxisInterpret) {
-    qreal base;
-    int shortest = 1000;
-    QMapIterator<qreal, QString> iShort(xLabelsIn);
-    while (iShort.hasNext()) {
-      iShort.next();
-      if (iShort.value().length() < shortest) {
-        shortest = iShort.value().length();
-        base = iShort.key();
-      }
+  int longest = 0, shortest = 1000;
+  qreal xBase;
+  QMapIterator<qreal, QString> iLabel(xLabelsIn);
+  while (iLabel.hasNext()) {
+    iLabel.next();
+    if (iLabel.value().length() < shortest) {
+      shortest = iLabel.value().length();
+      xBase = iLabel.key();
     }
+    if (iLabel.value().length() > longest) {
+      longest = iLabel.value().length();
+    }
+  }
 
+  if (_xAxisBaseOffset || _xAxisInterpret || (longest > _xAxisSignificantDigits) ) {
     if (_xAxisInterpret) {
-      xBaseLabel = interpretLabel(_xAxisInterpretation, _xAxisDisplay, base, xMajorTicks.last());
+      xBaseLabel = interpretLabel(_xAxisInterpretation, _xAxisDisplay, xBase, xMajorTicks.last());
     } else {
-      xBaseLabel = QString::number(base);
+      xBaseLabel = QString::number(xBase);
     }
     QMapIterator<qreal, QString> i(xLabelsIn);
     while (i.hasNext()) {
       i.next();
       qreal offset;
       if (_xAxisInterpret) {
-        offset = interpretOffset(_xAxisInterpretation, _xAxisDisplay, base, i.key());
+        offset = interpretOffset(_xAxisInterpretation, _xAxisDisplay, xBase, i.key());
       } else {
-        offset = i.key() - base;
+        offset = i.key() - xBase;
       }
       QString label;
       if (offset < 0) {
@@ -465,7 +472,7 @@ void PlotItem::paintBottomTickLabels(QPainter *painter,
         label += "+";
       }
       label += "[";
-      label += QString::number(offset, 'g', FULL_PRECISION);
+      label += QString::number(offset, 'g', _xAxisSignificantDigits);
       label += "]";
       xLabels.insert(i.key(), label);
     }
@@ -515,32 +522,35 @@ void PlotItem::paintLeftTickLabels(QPainter *painter,
   int flags = Qt::TextSingleLine | Qt::AlignVCenter;
   QString yBaseLabel;
 
-  QMap<qreal, QString> yLabels;
-  if (_yAxisBaseOffset || _yAxisInterpret) {
-    qreal base;
-    int shortest = 1000;
-    QMapIterator<qreal, QString> iShort(yLabelsIn);
-    while (iShort.hasNext()) {
-      iShort.next();
-      if (iShort.value().length() < shortest) {
-        shortest = iShort.value().length();
-        base = iShort.key();
-      }
+  int longest = 0, shortest = 1000;
+  qreal yBase;
+  QMapIterator<qreal, QString> iLabel(yLabelsIn);
+  while (iLabel.hasNext()) {
+    iLabel.next();
+    if (iLabel.value().length() < shortest) {
+      shortest = iLabel.value().length();
+      yBase = iLabel.key();
     }
+    if (iLabel.value().length() > longest) {
+      longest = iLabel.value().length();
+    }
+  }
 
+  QMap<qreal, QString> yLabels;
+  if (_yAxisBaseOffset || _yAxisInterpret || (longest > _yAxisSignificantDigits) ) {
     if (_yAxisInterpret) {
-      yBaseLabel = interpretLabel(_yAxisInterpretation, _yAxisDisplay, base, yMajorTicks.last());
+      yBaseLabel = interpretLabel(_yAxisInterpretation, _yAxisDisplay, yBase, yMajorTicks.last());
     } else {
-      yBaseLabel = QString::number(base);
+      yBaseLabel = QString::number(yBase);
     }
     QMapIterator<qreal, QString> i(yLabelsIn);
     while (i.hasNext()) {
       i.next();
       qreal offset;
       if (_yAxisInterpret) {
-        offset = interpretOffset(_yAxisInterpretation, _yAxisDisplay, base, i.key());
+        offset = interpretOffset(_yAxisInterpretation, _yAxisDisplay, yBase, i.key());
       } else {
-        offset = i.key() - base;
+        offset = i.key() - yBase;
       }
       QString label;
       if (offset < 0) {
@@ -550,7 +560,7 @@ void PlotItem::paintLeftTickLabels(QPainter *painter,
         label += "+";
       }
       label += "[";
-      label += QString::number(offset, 'g', FULL_PRECISION);
+      label += QString::number(offset, 'g', _yAxisSignificantDigits);
       label += "]";
       yLabels.insert(i.key(), label);
     }
@@ -1058,6 +1068,26 @@ bool PlotItem::yAxisLog() const {
 
 void PlotItem::setYAxisLog(bool log) {
   _yAxisLog = log;
+}
+
+
+int PlotItem::xAxisSignificantDigits() const {
+  return _xAxisSignificantDigits;
+}
+
+
+void PlotItem::setXAxisSignificantDigits(const int digits) {
+  _xAxisSignificantDigits = digits;
+}
+
+
+int PlotItem::yAxisSignificantDigits() const {
+  return _yAxisSignificantDigits;
+}
+
+
+void PlotItem::setYAxisSignificantDigits(const int digits) {
+  _yAxisSignificantDigits = digits;
 }
 
 
@@ -1816,7 +1846,7 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
 
   QRectF leftLabelRect = verticalLabelRect(false);
   leftLabelRect.moveTopRight(plotAxisRect().topLeft());
-  painter->drawText(t.mapRect(leftLabelRect), Qt::TextWordWrap | Qt::AlignCenter, leftLabelOverride());
+  painter->drawText(t.mapRect(leftLabelRect), Qt::TextWordWrap | Qt::AlignHCenter | Qt::AlignTop, leftLabelOverride());
 
 //   painter->save();
 //   painter->setOpacity(0.3);
@@ -2491,6 +2521,14 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         av = attrs.value("yaxisdrawminorgridlinestyle");
         if (!av.isNull()) {
           rc->setYAxisMinorGridLineStyle((Qt::PenStyle)QVariant(av.toString()).toInt());
+        }
+        av = attrs.value("xaxissignificantdigits");
+        if (!av.isNull()) {
+          rc->setXAxisSignificantDigits(QVariant(av.toString()).toInt());
+        }
+        av = attrs.value("yaxissignificantdigits");
+        if (!av.isNull()) {
+          rc->setYAxisSignificantDigits(QVariant(av.toString()).toInt());
         }
 
       // TODO add any specialized PlotItem Properties here.

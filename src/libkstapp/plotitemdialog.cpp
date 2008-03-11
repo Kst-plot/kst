@@ -126,6 +126,8 @@ void PlotItemDialog::setupAxis() {
   _xAxisTab->setInterpret(_plotItem->xAxisInterpret());
   _xAxisTab->setAxisDisplay(_plotItem->xAxisDisplay());
   _xAxisTab->setAxisInterpretation(_plotItem->xAxisInterpretation());
+  _xAxisTab->setAxisMinorTickCount(_plotItem->xAxisMinorTickCount());
+  _xAxisTab->setSignificantDigits(_plotItem->xAxisSignificantDigits());
 
   _yAxisTab->setAxisMajorTickSpacing(_plotItem->yAxisMajorTickMode());
   _yAxisTab->setDrawAxisMajorTicks(_plotItem->drawYAxisMajorTicks());
@@ -142,6 +144,8 @@ void PlotItemDialog::setupAxis() {
   _yAxisTab->setInterpret(_plotItem->yAxisInterpret());
   _yAxisTab->setAxisDisplay(_plotItem->yAxisDisplay());
   _yAxisTab->setAxisInterpretation(_plotItem->yAxisInterpretation());
+  _yAxisTab->setAxisMinorTickCount(_plotItem->yAxisMinorTickCount());
+  _yAxisTab->setSignificantDigits(_plotItem->yAxisSignificantDigits());
 }
 
 
@@ -377,7 +381,8 @@ void PlotItemDialog::xAxisChanged() {
   _plotItem->setXAxisDisplay(_xAxisTab->axisDisplay());
   _plotItem->setXAxisInterpretation(_xAxisTab->axisInterpretation());
   _plotItem->setXAxisBaseOffset(_xAxisTab->isBaseOffset());
-
+  _plotItem->setXAxisMinorTickCount(_xAxisTab->axisMinorTickCount());
+  _plotItem->setXAxisSignificantDigits(_xAxisTab->significantDigits());
 }
 
 
@@ -400,6 +405,9 @@ void PlotItemDialog::yAxisChanged() {
   _plotItem->setYAxisDisplay(_yAxisTab->axisDisplay());
   _plotItem->setYAxisInterpretation(_yAxisTab->axisInterpretation());
   _plotItem->setYAxisBaseOffset(_yAxisTab->isBaseOffset());
+  _plotItem->setYAxisMinorTickCount(_yAxisTab->axisMinorTickCount());
+  _plotItem->setYAxisSignificantDigits(_yAxisTab->significantDigits());
+
 }
 
 
