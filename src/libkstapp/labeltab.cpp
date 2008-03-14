@@ -27,10 +27,10 @@ LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
   connect(_bottomLabel, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
   connect(_rightLabel, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
 
-  connect(_topFontSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
-  connect(_leftFontSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
-  connect(_bottomFontSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
-  connect(_rightFontSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_topFontSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
+  connect(_leftFontSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
+  connect(_bottomFontSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
+  connect(_rightFontSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
 
   connect(_topBold, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_leftBold, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
@@ -107,7 +107,6 @@ void LabelTab::setTopLabel(const QString &label) {
 
 void LabelTab::setGlobalFont(const QFont &font) {
   _globalLabelFontFamily->setCurrentFont(font);
-  _globalLabelFontSize->setValue(font.pointSize());
   _globalLabelBold->setChecked(font.bold());
   _globalLabelUnderline->setChecked(font.underline());
   _globalLabelItalic->setChecked(font.italic());
@@ -116,7 +115,6 @@ void LabelTab::setGlobalFont(const QFont &font) {
 
 QFont LabelTab::leftLabelFont() const {
   QFont font(_leftFamily->currentFont());
-  font.setPointSize(_leftFontSize->value());
   font.setItalic(_leftItalic->isChecked());
   font.setBold(_leftBold->isChecked());
   font.setUnderline(_leftUnderline->isChecked());
@@ -126,7 +124,6 @@ QFont LabelTab::leftLabelFont() const {
 
 void LabelTab::setLeftLabelFont(const QFont &font) {
   _leftFamily->setCurrentFont(font);
-  _leftFontSize->setValue(font.pointSize());
   _leftBold->setChecked(font.bold());
   _leftUnderline->setChecked(font.underline());
   _leftItalic->setChecked(font.italic());
@@ -135,7 +132,6 @@ void LabelTab::setLeftLabelFont(const QFont &font) {
 
 QFont LabelTab::rightLabelFont() const {
   QFont font(_rightFamily->currentFont());
-  font.setPointSize(_rightFontSize->value());
   font.setItalic(_rightItalic->isChecked());
   font.setBold(_rightBold->isChecked());
   font.setUnderline(_rightUnderline->isChecked());
@@ -145,7 +141,6 @@ QFont LabelTab::rightLabelFont() const {
 
 void LabelTab::setRightLabelFont(const QFont &font) {
   _rightFamily->setCurrentFont(font);
-  _rightFontSize->setValue(font.pointSize());
   _rightBold->setChecked(font.bold());
   _rightUnderline->setChecked(font.underline());
   _rightItalic->setChecked(font.italic());
@@ -154,7 +149,6 @@ void LabelTab::setRightLabelFont(const QFont &font) {
 
 QFont LabelTab::topLabelFont() const {
   QFont font(_topFamily->currentFont());
-  font.setPointSize(_topFontSize->value());
   font.setItalic(_topItalic->isChecked());
   font.setBold(_topBold->isChecked());
   font.setUnderline(_topUnderline->isChecked());
@@ -164,7 +158,6 @@ QFont LabelTab::topLabelFont() const {
 
 void LabelTab::setTopLabelFont(const QFont &font) {
   _topFamily->setCurrentFont(font);
-  _topFontSize->setValue(font.pointSize());
   _topBold->setChecked(font.bold());
   _topUnderline->setChecked(font.underline());
   _topItalic->setChecked(font.italic());
@@ -173,7 +166,6 @@ void LabelTab::setTopLabelFont(const QFont &font) {
 
 QFont LabelTab::bottomLabelFont() const {
   QFont font(_bottomFamily->currentFont());
-  font.setPointSize(_bottomFontSize->value());
   font.setItalic(_bottomItalic->isChecked());
   font.setBold(_bottomBold->isChecked());
   font.setUnderline(_bottomUnderline->isChecked());
@@ -183,7 +175,6 @@ QFont LabelTab::bottomLabelFont() const {
 
 void LabelTab::setBottomLabelFont(const QFont &font) {
   _bottomFamily->setCurrentFont(font);
-  _bottomFontSize->setValue(font.pointSize());
   _bottomBold->setChecked(font.bold());
   _bottomUnderline->setChecked(font.underline());
   _bottomItalic->setChecked(font.italic());
@@ -192,7 +183,6 @@ void LabelTab::setBottomLabelFont(const QFont &font) {
 
 void LabelTab::applyGlobals() {
   QFont font(_globalLabelFontFamily->currentFont());
-  font.setPointSize(_globalLabelFontSize->value());
   font.setItalic(_globalLabelItalic->isChecked());
   font.setBold(_globalLabelBold->isChecked());
   font.setUnderline(_globalLabelUnderline->isChecked());
@@ -201,6 +191,12 @@ void LabelTab::applyGlobals() {
   setRightLabelFont(font);
   setTopLabelFont(font);
   setBottomLabelFont(font);
+
+  setLeftLabelFontScale(_globalLabelFontSize->value());
+  setRightLabelFontScale(_globalLabelFontSize->value());
+  setTopLabelFontScale(_globalLabelFontSize->value());
+  setBottomLabelFontScale(_globalLabelFontSize->value());
+
 }
 
 
@@ -212,6 +208,45 @@ void LabelTab::autoLabel() {
   emit modified();
 }
 
+
+qreal LabelTab::rightLabelFontScale() const {
+  return _rightFontSize->value();
+}
+
+
+void LabelTab::setRightLabelFontScale(const qreal scale) {
+  _rightFontSize->setValue(scale);
+}
+
+
+qreal LabelTab::leftLabelFontScale() const {
+  return _leftFontSize->value();
+}
+
+
+void LabelTab::setLeftLabelFontScale(const qreal scale) {
+  _leftFontSize->setValue(scale);
+}
+
+
+qreal LabelTab::topLabelFontScale() const {
+  return _topFontSize->value();
+}
+
+
+void LabelTab::setTopLabelFontScale(const qreal scale) {
+  _topFontSize->setValue(scale);
+}
+
+
+qreal LabelTab::bottomLabelFontScale() const {
+  return _bottomFontSize->value();
+}
+
+
+void LabelTab::setBottomLabelFontScale(const qreal scale) {
+  _bottomFontSize->setValue(scale);
+}
 
 }
 

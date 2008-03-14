@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>697</width>
-    <height>508</height>
+    <width>762</width>
+    <height>499</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -27,9 +27,12 @@
        </widget>
       </item>
       <item row="0" column="1" >
-       <widget class="QSpinBox" name="_globalLabelFontSize" >
+       <widget class="QDoubleSpinBox" name="_globalLabelFontSize" >
+        <property name="decimals" >
+         <number>1</number>
+        </property>
         <property name="minimum" >
-         <number>-99</number>
+         <double>-25.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -100,17 +103,20 @@
       <item row="1" column="0" >
        <widget class="QLabel" name="_Label_11" >
         <property name="text" >
-         <string>Font Size</string>
+         <string>Font Size Offset</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1" >
-       <widget class="QSpinBox" name="_topFontSize" >
-        <property name="minimum" >
-         <number>-99</number>
-        </property>
-        <property name="value" >
+       <widget class="QDoubleSpinBox" name="_topFontSize" >
+        <property name="decimals" >
          <number>1</number>
+        </property>
+        <property name="minimum" >
+         <double>-25.000000000000000</double>
+        </property>
+        <property name="singleStep" >
+         <double>1.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -167,17 +173,20 @@
       <item row="1" column="0" >
        <widget class="QLabel" name="_Label_20" >
         <property name="text" >
-         <string>Font Size</string>
+         <string>Font Size Offset</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1" >
-       <widget class="QSpinBox" name="_bottomFontSize" >
-        <property name="minimum" >
-         <number>-99</number>
-        </property>
-        <property name="value" >
+       <widget class="QDoubleSpinBox" name="_bottomFontSize" >
+        <property name="decimals" >
          <number>1</number>
+        </property>
+        <property name="minimum" >
+         <double>-25.000000000000000</double>
+        </property>
+        <property name="singleStep" >
+         <double>1.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -234,17 +243,20 @@
       <item row="1" column="0" >
        <widget class="QLabel" name="_Label_14" >
         <property name="text" >
-         <string>Font Size</string>
+         <string>Font Size Offset</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1" >
-       <widget class="QSpinBox" name="_leftFontSize" >
-        <property name="minimum" >
-         <number>-99</number>
-        </property>
-        <property name="value" >
+       <widget class="QDoubleSpinBox" name="_leftFontSize" >
+        <property name="decimals" >
          <number>1</number>
+        </property>
+        <property name="minimum" >
+         <double>-25.000000000000000</double>
+        </property>
+        <property name="singleStep" >
+         <double>1.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -301,17 +313,20 @@
       <item row="1" column="0" >
        <widget class="QLabel" name="_Label_17" >
         <property name="text" >
-         <string>Font Size</string>
+         <string>Font Size Offset</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1" >
-       <widget class="QSpinBox" name="_rightFontSize" >
-        <property name="minimum" >
-         <number>-99</number>
-        </property>
-        <property name="value" >
+       <widget class="QDoubleSpinBox" name="_rightFontSize" >
+        <property name="decimals" >
          <number>1</number>
+        </property>
+        <property name="minimum" >
+         <double>-25.000000000000000</double>
+        </property>
+        <property name="singleStep" >
+         <double>1.000000000000000</double>
         </property>
        </widget>
       </item>

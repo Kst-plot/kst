@@ -14,6 +14,8 @@
 
 #include <QObject>
 
+class QSettings;
+
 namespace Kst {
 
 class ApplicationSettingsDialog;
@@ -27,17 +29,20 @@ class ApplicationSettings : public QObject
     bool useOpenGL() const;
     void setUseOpenGL(bool useOpenGL);
 
-    qreal referenceViewWidth() const;
-    void setReferenceViewWidth(qreal width);
+    int referenceViewWidth() const;
+    void setReferenceViewWidth(const int width);
 
-    qreal referenceViewHeight() const;
-    void setReferenceViewHeight(qreal height);
+    int referenceViewHeight() const;
+    void setReferenceViewHeight(const int height);
 
     int referenceFontSize() const;
-    void setReferenceFontSize(int points);
+    void setReferenceFontSize(const int points);
 
     int minimumFontSize() const;
-    void setMinimumFontSize(int points);
+    void setMinimumFontSize(const int points);
+
+    QString defaultFontFamily() const;
+    void setDefaultFontFamily(const QString &fontFamily);
 
     bool showGrid() const;
     void setShowGrid(bool showGrid);
@@ -58,11 +63,15 @@ class ApplicationSettings : public QObject
     ApplicationSettings();
     ~ApplicationSettings();
     static void cleanup();
+
+  private:
+    QSettings *_settings;
     bool _useOpenGL;
-    qreal _refViewWidth;
-    qreal _refViewHeight;
+    int _refViewWidth;
+    int _refViewHeight;
     int _refFontSize;
     int _minFontSize;
+    QString _defaultFontFamily;
     bool _showGrid;
     bool _snapToGrid;
     qreal _gridHorSpacing;

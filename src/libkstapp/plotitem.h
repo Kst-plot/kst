@@ -192,6 +192,18 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QFont bottomLabelFont() const;
     void setBottomLabelFont(const QFont &font);
 
+    qreal bottomLabelFontScale() const;
+    void setBottomLabelFontScale(const qreal scale);
+
+    qreal leftLabelFontScale() const;
+    void setLeftLabelFontScale(const qreal scale);
+
+    qreal topLabelFontScale() const;
+    void setTopLabelFontScale(const qreal scale);
+
+    qreal rightLabelFontScale() const;
+    void setRightLabelFontScale(const qreal scale);
+
     bool xAxisLog() const;
     void setXAxisLog(bool log);
 
@@ -322,6 +334,11 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void paintTopLabel(QPainter *painter);
     QSizeF calculateTopLabelBound(QPainter *painter);
 
+    QFont calculatedTopLabelFont();
+    QFont calculatedBottomLabelFont();
+    QFont calculatedLeftLabelFont();
+    QFont calculatedRightLabelFont();
+
     qreal calculatedAxisMarginWidth() const;
     void setCalculatedAxisMarginWidth(qreal marginWidth);
 
@@ -370,6 +387,11 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QFont _bottomLabelFont;
     QFont _topLabelFont;
     QFont _rightLabelFont;
+
+    qreal _leftLabelFontScale;
+    qreal _bottomLabelFontScale;
+    qreal _topLabelFontScale;
+    qreal _rightLabelFontScale;
 
     bool _xAxisLog;
     bool _yAxisLog;

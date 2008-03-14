@@ -58,6 +58,10 @@ PlotItem::PlotItem(View *parent)
   _calculatedLabelMarginHeight(0.0),
   _calculatedAxisMarginWidth(0.0),
   _calculatedAxisMarginHeight(0.0),
+  _leftLabelFontScale(0.0),
+  _bottomLabelFontScale(0.0),
+  _topLabelFontScale(0.0),
+  _rightLabelFontScale(0.0),
   _xAxisLog(false),
   _yAxisLog(false),
   _xAxisReversed(false),
@@ -100,11 +104,10 @@ PlotItem::PlotItem(View *parent)
   setZValue(PLOT_ZVALUE);
   setBrush(Qt::white);
 
-  QFont defaultFont;
-  _leftLabelFont = defaultFont;
-  _bottomLabelFont = defaultFont;
-  _topLabelFont = defaultFont;
-  _rightLabelFont = defaultFont;
+  _leftLabelFont = parentView()->defaultFont();
+  _bottomLabelFont = parentView()->defaultFont();
+  _topLabelFont = parentView()->defaultFont();
+  _rightLabelFont = parentView()->defaultFont();
 
   PlotItemManager::self()->addPlot(this);
 
@@ -133,12 +136,16 @@ void PlotItem::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("toplabelvisible", QVariant(_isTopLabelVisible).toString());
   xml.writeAttribute("leftlabeloverride", _leftLabelOverride);
   xml.writeAttribute("leftlabelfont", QVariant(_leftLabelFont).toString());
+  xml.writeAttribute("leftlabelfontscale", QVariant(_leftLabelFontScale).toString());
   xml.writeAttribute("bottomlabeloverride", _bottomLabelOverride);
   xml.writeAttribute("bottomlabelfont", QVariant(_bottomLabelFont).toString());
+  xml.writeAttribute("bottomlabelfontscale", QVariant(_bottomLabelFontScale).toString());
   xml.writeAttribute("toplabeloverride", _topLabelOverride);
   xml.writeAttribute("toplabelfont", QVariant(_topLabelFont).toString());
+  xml.writeAttribute("toplabelfontscale", QVariant(_topLabelFontScale).toString());
   xml.writeAttribute("rightlabeloverride", _rightLabelOverride);
   xml.writeAttribute("rightlabelfont", QVariant(_rightLabelFont).toString());
+  xml.writeAttribute("rightlabelfontscale", QVariant(_rightLabelFontScale).toString());
   xml.writeAttribute("xaxislog", QVariant(_xAxisLog).toString());
   xml.writeAttribute("yaxislog", QVariant(_yAxisLog).toString());
   xml.writeAttribute("xaxisreversed", QVariant(_xAxisReversed).toString());
@@ -219,6 +226,7 @@ void PlotItem::paint(QPainter *painter) {
   painter->restore();
 
   painter->save();
+  painter->setFont(parentView()->defaultFont());
 
   QList<qreal> xMajorTicks;
   QList<qreal> xMinorTicks;
@@ -1455,6 +1463,46 @@ void PlotItem::setBottomLabelFont(const QFont &font) {
 }
 
 
+qreal PlotItem::rightLabelFontScale() const {
+  return _rightLabelFontScale;
+}
+
+
+void PlotItem::setRightLabelFontScale(const qreal scale) {
+  _rightLabelFontScale = scale;
+}
+
+
+qreal PlotItem::leftLabelFontScale() const {
+  return _leftLabelFontScale;
+}
+
+
+void PlotItem::setLeftLabelFontScale(const qreal scale) {
+  _leftLabelFontScale = scale;
+}
+
+
+qreal PlotItem::topLabelFontScale() const {
+  return _topLabelFontScale;
+}
+
+
+void PlotItem::setTopLabelFontScale(const qreal scale) {
+  _topLabelFontScale = scale;
+}
+
+
+qreal PlotItem::bottomLabelFontScale() const {
+  return _bottomLabelFontScale;
+}
+
+
+void PlotItem::setBottomLabelFontScale(const qreal scale) {
+  _bottomLabelFontScale = scale;
+}
+
+
 QString PlotItem::leftLabelOverride() const {
   if (_leftLabelOverride.isEmpty()) {
     return leftLabel();
@@ -1833,6 +1881,38 @@ QRectF PlotItem::verticalLabelRect(bool calc) const {
 }
 
 
+QFont PlotItem::calculatedLeftLabelFont() {
+  QFont font(_leftLabelFont);
+  font.setPointSizeF(parentView()->defaultFont(_leftLabelFontScale).pointSizeF());
+
+  return font;
+}
+
+
+QFont PlotItem::calculatedRightLabelFont() {
+  QFont font(_rightLabelFont);
+  font.setPointSizeF(parentView()->defaultFont(_rightLabelFontScale).pointSizeF());
+
+  return font;
+}
+
+
+QFont PlotItem::calculatedTopLabelFont() {
+  QFont font(_topLabelFont);
+  font.setPointSizeF(parentView()->defaultFont(_topLabelFontScale).pointSizeF());
+
+  return font;
+}
+
+
+QFont PlotItem::calculatedBottomLabelFont() {
+  QFont font(_bottomLabelFont);
+  font.setPointSizeF(parentView()->defaultFont(_bottomLabelFontScale).pointSizeF());
+
+  return font;
+}
+
+
 void PlotItem::paintLeftLabel(QPainter *painter) {
   if (!isLeftLabelVisible())
     return;
@@ -1842,7 +1922,7 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
   t.rotate(90.0);
   painter->rotate(-90.0);
 
-  painter->setFont(_leftLabelFont);
+  painter->setFont(calculatedLeftLabelFont());
 
   QRectF leftLabelRect = verticalLabelRect(false);
   leftLabelRect.moveTopRight(plotAxisRect().topLeft());
@@ -1867,7 +1947,7 @@ QSizeF PlotItem::calculateLeftLabelBound(QPainter *painter) {
   t.rotate(90.0);
   painter->rotate(-90.0);
 
-  painter->setFont(_leftLabelFont);
+  painter->setFont(calculatedLeftLabelFont());
 
   QRectF leftLabelBound = painter->boundingRect(t.mapRect(verticalLabelRect(true)),
                                                 Qt::TextWordWrap | Qt::AlignCenter, leftLabelOverride());
@@ -1884,7 +1964,8 @@ void PlotItem::paintBottomLabel(QPainter *painter) {
     return;
 
   painter->save();
-  painter->setFont(_bottomLabelFont);
+
+  painter->setFont(calculatedBottomLabelFont());
 
   QRectF bottomLabelRect = horizontalLabelRect(false);
   bottomLabelRect.moveTopLeft(plotAxisRect().bottomLeft());
@@ -1905,7 +1986,8 @@ QSizeF PlotItem::calculateBottomLabelBound(QPainter *painter) {
     return QSizeF();
 
   painter->save();
-  painter->setFont(_bottomLabelFont);
+
+  painter->setFont(calculatedBottomLabelFont());
 
   QRectF bottomLabelBound = painter->boundingRect(horizontalLabelRect(true),
                                                   Qt::TextWordWrap | Qt::AlignCenter, bottomLabelOverride());
@@ -1925,7 +2007,7 @@ void PlotItem::paintRightLabel(QPainter *painter) {
   t.rotate(-90.0);
   painter->rotate(90.0);
 
-  painter->setFont(_rightLabelFont);
+  painter->setFont(calculatedRightLabelFont());
 
   //same as left but painter is translated
   QRectF rightLabelRect = verticalLabelRect(false);
@@ -1950,7 +2032,8 @@ QSizeF PlotItem::calculateRightLabelBound(QPainter *painter) {
   QTransform t;
   t.rotate(-90.0);
   painter->rotate(90.0);
-  painter->setFont(_rightLabelFont);
+
+  painter->setFont(calculatedRightLabelFont());
 
   QRectF rightLabelBound = painter->boundingRect(t.mapRect(verticalLabelRect(true)),
                                                  Qt::TextWordWrap | Qt::AlignCenter, rightLabelOverride());
@@ -1967,7 +2050,9 @@ void PlotItem::paintTopLabel(QPainter *painter) {
     return;
 
   painter->save();
-  painter->setFont(_topLabelFont);
+
+  painter->setFont(calculatedTopLabelFont());
+
   QRectF topLabelRect = horizontalLabelRect(false);
   topLabelRect.moveBottomLeft(plotAxisRect().topLeft());
   painter->drawText(topLabelRect, Qt::TextWordWrap | Qt::AlignCenter, topLabelOverride());
@@ -1988,7 +2073,8 @@ QSizeF PlotItem::calculateTopLabelBound(QPainter *painter) {
 
   painter->save();
 
-  painter->setFont(_topLabelFont);
+  painter->setFont(calculatedTopLabelFont());
+
   QRectF topLabelBound = painter->boundingRect(horizontalLabelRect(true),
                                                Qt::TextWordWrap | Qt::AlignCenter, topLabelOverride());
 

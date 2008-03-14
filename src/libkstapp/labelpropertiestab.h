@@ -1,6 +1,6 @@
 /***************************************************************************
  *                                                                         *
- *   copyright : (C) 2007 The University of Toronto                        *
+ *   copyright : (C) 2008 The University of Toronto                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -9,39 +9,30 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef GENERALTAB_H
-#define GENERALTAB_H
+#ifndef LABELPROPERTIESTAB_H
+#define LABELPROPERTIESTAB_H
 
 #include "dialogtab.h"
-#include "ui_generaltab.h"
+#include "ui_labelpropertiestab.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class KST_EXPORT GeneralTab : public DialogTab, Ui::GeneralTab {
+class KST_EXPORT LabelPropertiesTab : public DialogTab, Ui::LabelPropertiesTab {
   Q_OBJECT
   public:
-    GeneralTab(QWidget *parent = 0);
-    virtual ~GeneralTab();
+    LabelPropertiesTab(QWidget *parent = 0);
+    virtual ~LabelPropertiesTab();
 
-    bool useOpenGL() const;
-    void setUseOpenGL(const bool useOpenGL);
+    QString labelText() const;
+    void setLabelText(const QString &text);
 
-    int referenceViewWidth() const;
-    void setReferenceViewWidth(const int width);
+    qreal labelScale() const;
+    void setLabelScale(const qreal scale);
 
-    int referenceViewHeight() const;
-    void setReferenceViewHeight(const int height);
-
-    int referenceFontSize() const;
-    void setReferenceFontSize(const int points);
-
-    int minimumFontSize() const;
-    void setMinimumFontSize(const int points);
-
-    QString defaultFontFamily() const;
-    void setDefaultFontFamily(const QString &fontFamily);
+    QColor labelColor() const;
+    void setLabelColor(const QColor &color);
 };
 
 }

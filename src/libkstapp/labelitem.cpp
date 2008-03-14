@@ -14,6 +14,7 @@
 #include <labelparser.h>
 #include "labelrenderer.h"
 #include "viewitemzorder.h"
+#include "labelitemdialog.h"
 
 #include "debug.h"
 
@@ -25,7 +26,7 @@
 namespace Kst {
 
 LabelItem::LabelItem(View *parent, const QString& txt)
-  : ViewItem(parent), _parsed(0), _text(txt) {
+  : ViewItem(parent), _parsed(0), _text(txt), _scale(0) {
   setName("Label");
   setZValue(LABEL_ZVALUE);
 
@@ -42,15 +43,14 @@ LabelItem::~LabelItem() {
 void LabelItem::paint(QPainter *painter) {
   if (!_parsed) {
     _parsed = Label::parse(_text);
+    _parsed->chunk->attributes.color = _color;
   }
 
   // We can do better here. - caching
   if (_parsed) {
-    const qreal w = pen().widthF();
     painter->save();
-    QRectF box = rect().adjusted(w, w, -w, -w);
-    QFont font;
-    font.setPointSize(16);
+    QRectF box = rect();
+    QFont font(parentView()->defaultFont(_scale));
     QFontMetrics fm(font);
     painter->translate(QPointF(box.x(), box.y() + fm.ascent()));
     Label::RenderContext rc(font.family(), font.pointSize(), painter);
@@ -67,8 +67,48 @@ void LabelItem::paint(QPainter *painter) {
 void LabelItem::save(QXmlStreamWriter &xml) {
   xml.writeStartElement("label");
   xml.writeAttribute("text", _text);
+  xml.writeAttribute("scale", QVariant(_scale).toString());
+  xml.writeAttribute("color", QVariant(_color).toString());
   ViewItem::save(xml);
   xml.writeEndElement();
+}
+
+
+QString LabelItem::labelText() {
+  return _text;
+}
+
+
+void LabelItem::setLabelText(const QString &text) {
+  _text = text;
+  delete _parsed;
+  _parsed = 0;
+}
+
+
+qreal LabelItem::labelScale() {
+  return _scale;
+}
+
+
+void LabelItem::setLabelScale(const qreal scale) {
+  _scale = scale;
+}
+
+
+QColor LabelItem::labelColor() const { 
+  return _color;
+}
+
+
+void LabelItem::setLabelColor(const QColor &color) {
+  _color = color;
+}
+
+
+void LabelItem::edit() {
+  LabelItemDialog editDialog(this);
+  editDialog.exec();
 }
 
 
@@ -112,6 +152,14 @@ ViewItem* LabelItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore 
           rc->setParent(parent);
          // TODO add any specialized LabelItem Properties here.
           }
+        }
+        av = attrs.value("scale");
+        if (!av.isNull()) {
+          rc->setLabelScale(QVariant(av.toString()).toInt());
+        }
+        av = attrs.value("color");
+        if (!av.isNull()) {
+            rc->setLabelColor(QColor(av.toString()));
         }
       } else {
         Q_ASSERT(rc);

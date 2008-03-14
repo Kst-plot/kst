@@ -275,6 +275,7 @@ void View::resizeEvent(QResizeEvent *event) {
       viewItem->updateChildGeometry(oldSceneRect, sceneRect());
     }
   }
+  updateFont();
 }
 
 
@@ -327,6 +328,8 @@ void View::updateSettings() {
   setGridSpacing(QSizeF(ApplicationSettings::self()->gridHorizontalSpacing(),
                         ApplicationSettings::self()->gridVerticalSpacing()));
 
+  updateFont();
+
 }
 
 
@@ -340,6 +343,36 @@ void View::updateChildGeometry(const QRectF &oldSceneRect) {
 
     viewItem->updateChildGeometry(oldSceneRect, sceneRect());
   }
+}
+
+
+void View::updateFont() {
+  qreal fontSize = (height() + width()) / (ApplicationSettings::self()->referenceViewHeight() + ApplicationSettings::self()->referenceViewWidth());
+  fontSize *= ApplicationSettings::self()->referenceFontSize();
+
+  if (fontSize < ApplicationSettings::self()->minimumFontSize()) {
+    fontSize = ApplicationSettings::self()->minimumFontSize();
+  }
+
+  _defaultFont.setPointSizeF(fontSize);
+  _defaultFont.setFamily(ApplicationSettings::self()->defaultFontFamily());
+}
+
+
+QFont View::defaultFont(double scale) const {
+  QFont font(_defaultFont);
+
+  qreal fontSize = (height() + width()) / (ApplicationSettings::self()->referenceViewHeight() + ApplicationSettings::self()->referenceViewWidth());
+  fontSize *= scale;
+  fontSize += font.pointSizeF();
+
+  if (fontSize < ApplicationSettings::self()->minimumFontSize()) {
+    fontSize = ApplicationSettings::self()->minimumFontSize();
+  }
+
+  font.setPointSizeF(fontSize);
+
+  return font;
 }
 
 }

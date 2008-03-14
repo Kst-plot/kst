@@ -63,6 +63,8 @@ class KST_EXPORT View : public QGraphicsView
     bool showGrid() const { return _showGrid; }
     void setShowGrid(bool showGrid);
 
+    QFont defaultFont(double scale = 1.0) const;
+
     QSizeF gridSpacing() const { return _gridSpacing; }
     void setGridSpacing(const QSizeF &gridSpacing);
 
@@ -99,6 +101,7 @@ class KST_EXPORT View : public QGraphicsView
 
   private Q_SLOTS:
     void updateSettings();
+    void updateFont();
 
   private:
     void updateChildGeometry(const QRectF &oldSceneRect);
@@ -111,6 +114,7 @@ class KST_EXPORT View : public QGraphicsView
     QPolygonF _creationPolygonPress;
     QPolygonF _creationPolygonMove;
     QPolygonF _creationPolygonRelease;
+    QFont _defaultFont;
     bool _useOpenGL;
     QSizeF _gridSpacing;
     bool _showGrid;

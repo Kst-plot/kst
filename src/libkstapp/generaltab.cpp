@@ -20,15 +20,11 @@ GeneralTab::GeneralTab(QWidget *parent)
   setTabTitle(tr("General"));
 
   connect(_useOpenGL, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_refViewWidth, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
-  connect(_refViewHeight, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
+  connect(_refViewWidth, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_refViewHeight, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_refFontSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_minFontSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
-
-  _refViewWidth->setEnabled(false);
-  _refViewHeight->setEnabled(false);
-  _refFontSize->setEnabled(false);
-  _minFontSize->setEnabled(false);
+  connect(_defaultFontFamily, SIGNAL(currentFontChanged(const QFont &)), this, SIGNAL(modified()));
 }
 
 
@@ -41,27 +37,27 @@ bool GeneralTab::useOpenGL() const {
 }
 
 
-void GeneralTab::setUseOpenGL(bool useOpenGL) {
+void GeneralTab::setUseOpenGL(const bool useOpenGL) {
   _useOpenGL->setChecked(useOpenGL);
 }
 
 
-qreal GeneralTab::referenceViewWidth() const {
+int GeneralTab::referenceViewWidth() const {
   return _refViewWidth->value();
 }
 
 
-void GeneralTab::setReferenceViewWidth(qreal width) {
+void GeneralTab::setReferenceViewWidth(const int width) {
   _refViewWidth->setValue(width);
 }
 
 
-qreal GeneralTab::referenceViewHeight() const {
+int GeneralTab::referenceViewHeight() const {
   return _refViewHeight->value();
 }
 
 
-void GeneralTab::setReferenceViewHeight(qreal height) {
+void GeneralTab::setReferenceViewHeight(const int height) {
   _refViewHeight->setValue(height);
 }
 
@@ -71,7 +67,7 @@ int GeneralTab::referenceFontSize() const {
 }
 
 
-void GeneralTab::setReferenceFontSize(int points) {
+void GeneralTab::setReferenceFontSize(const int points) {
   _refFontSize->setValue(points);
 }
 
@@ -81,8 +77,18 @@ int GeneralTab::minimumFontSize() const {
 }
 
 
-void GeneralTab::setMinimumFontSize(int points) {
+void GeneralTab::setMinimumFontSize(const int points) {
   _minFontSize->setValue(points);
+}
+
+
+QString GeneralTab::defaultFontFamily() const {
+  return _defaultFontFamily->currentFont().family();
+}
+
+
+void GeneralTab::setDefaultFontFamily(const QString &fontFamily) {
+  _defaultFontFamily->setCurrentFont(QFont(fontFamily));
 }
 
 }

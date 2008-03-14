@@ -69,6 +69,8 @@ SOURCES += \
     histogramdialog.cpp \
     imagedialog.cpp \
     labelitem.cpp \
+    labelitemdialog.cpp \
+    labelpropertiestab.cpp \
     labelrenderer.cpp \
     labeltab.cpp \
     layoutboxitem.cpp \
@@ -159,6 +161,8 @@ HEADERS += \
     histogramdialog.h \
     imagedialog.h \
     labelitem.h \
+    labelitemdialog.h \
+    labelpropertiestab.h \
     labelrenderer.h \
     labeltab.h \
     layoutboxitem.h \
@@ -229,6 +233,7 @@ FORMS += \
     histogramtab.ui \
     imagetab.ui \
     labeltab.ui \
+    labelpropertiestab.ui \
     layouttab.ui \
     markerstab.ui \
     matrixeditordialog.ui \

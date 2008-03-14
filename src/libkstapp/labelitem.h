@@ -30,9 +30,23 @@ class LabelItem : public ViewItem {
     virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
 
+    QString labelText();
+    void setLabelText(const QString &text);
+
+    qreal labelScale();
+    void setLabelScale(const qreal scale);
+
+    QColor labelColor() const;
+    void setLabelColor(const QColor &color);
+
+  public Q_SLOTS:
+    virtual void edit();
+
   private:
     Label::Parsed *_parsed;
     QString _text;
+    qreal _scale;
+    QColor _color;
 };
 
 

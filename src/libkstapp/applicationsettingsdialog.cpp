@@ -55,6 +55,7 @@ void ApplicationSettingsDialog::setupGeneral() {
   _generalTab->setReferenceViewHeight(ApplicationSettings::self()->referenceViewHeight());
   _generalTab->setReferenceFontSize(ApplicationSettings::self()->referenceFontSize());
   _generalTab->setMinimumFontSize(ApplicationSettings::self()->minimumFontSize());
+  _generalTab->setDefaultFontFamily(ApplicationSettings::self()->defaultFontFamily());
 }
 
 
@@ -74,6 +75,7 @@ void ApplicationSettingsDialog::generalChanged() {
   ApplicationSettings::self()->setReferenceViewHeight(_generalTab->referenceViewHeight());
   ApplicationSettings::self()->setReferenceFontSize(_generalTab->referenceFontSize());
   ApplicationSettings::self()->setMinimumFontSize(_generalTab->minimumFontSize());
+  ApplicationSettings::self()->setDefaultFontFamily(_generalTab->defaultFontFamily());
   ApplicationSettings::self()->blockSignals(false);
 
   emit ApplicationSettings::self()->modified();

@@ -45,7 +45,7 @@ void ArrowItem::paint(QPainter *painter) {
   painter->drawLine(line());
 
   if (_startArrowHead) {
-    double deltax = 2.0 * painter->pen().widthF() * _startArrowScale;
+    double deltax = (parentView()->defaultFont().pointSizeF() / 2) * _startArrowScale;
     double theta = atan2(double(line().y2() - line().y1()), double(line().x2() - line().x1())) - M_PI / 2.0;
     double sina = sin(theta);
     double cosa = cos(theta);
@@ -64,7 +64,7 @@ void ArrowItem::paint(QPainter *painter) {
   }
 
   if (_endArrowHead) {
-    double deltax = 2.0 * painter->pen().widthF() * _endArrowScale;
+    double deltax = (parentView()->defaultFont().pointSizeF() / 2) * _endArrowScale;
     double theta = atan2(double(line().y1() - line().y2()), double(line().x1() - line().x2())) - M_PI / 2.0;
     double sina = sin(theta);
     double cosa = cos(theta);
@@ -86,6 +86,10 @@ void ArrowItem::paint(QPainter *painter) {
 
 void ArrowItem::save(QXmlStreamWriter &xml) {
   xml.writeStartElement("arrow");
+  xml.writeAttribute("startarrowhead", QVariant(_startArrowHead).toString());
+  xml.writeAttribute("endarrowhead", QVariant(_startArrowHead).toString());
+  xml.writeAttribute("startarrowheadscale", QVariant(_startArrowScale).toString());
+  xml.writeAttribute("endarrowheadscale", QVariant(_endArrowScale).toString());
   ViewItem::save(xml);
   xml.writeEndElement();
 }
@@ -124,6 +128,24 @@ ViewItem* ArrowItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore 
         rc = new ArrowItem(view);
         if (parent) {
           rc->setParent(parent);
+        }
+        QXmlStreamAttributes attrs = xml.attributes();
+        QStringRef av;
+        av = attrs.value("startarrowhead");
+        if (!av.isNull()) {
+          rc->setStartArrowHead(QVariant(av.toString()).toBool());
+        }
+        av = attrs.value("endarrowhead");
+        if (!av.isNull()) {
+          rc->setEndArrowHead(QVariant(av.toString()).toBool());
+        }
+        av = attrs.value("startarrowheadscale");
+        if (!av.isNull()) {
+          rc->setStartArrowScale(QVariant(av.toString()).toDouble());
+        }
+        av = attrs.value("endarrowheadscale");
+        if (!av.isNull()) {
+          rc->setEndArrowScale(QVariant(av.toString()).toDouble());
         }
         // TODO add any specialized ArrowItem Properties here.
       } else {

@@ -5,62 +5,80 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>238</width>
-    <height>194</height>
+    <width>304</width>
+    <height>247</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Form</string>
   </property>
   <layout class="QGridLayout" >
-   <item row="0" column="0" >
+   <item row="0" column="0" colspan="3" >
     <widget class="QCheckBox" name="_useOpenGL" >
      <property name="text" >
       <string>Use OpenGL</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" >
+   <item row="1" column="0" colspan="3" >
     <widget class="QLabel" name="label" >
      <property name="text" >
-      <string>Reference View Width (cm):</string>
+      <string>Reference View Width (points):</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="1" >
-    <widget class="QDoubleSpinBox" name="_refViewWidth" />
+   <item row="1" column="3" >
+    <widget class="QSpinBox" name="_refViewWidth" >
+     <property name="maximum" >
+      <number>2000</number>
+     </property>
+    </widget>
    </item>
-   <item row="2" column="0" >
+   <item row="2" column="0" colspan="3" >
     <widget class="QLabel" name="label_2" >
      <property name="text" >
-      <string>Reference View Height (cm):</string>
+      <string>Reference View Height (points):</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="1" >
-    <widget class="QDoubleSpinBox" name="_refViewHeight" />
+   <item row="2" column="3" >
+    <widget class="QSpinBox" name="_refViewHeight" >
+     <property name="maximum" >
+      <number>2000</number>
+     </property>
+    </widget>
    </item>
-   <item row="3" column="0" >
+   <item row="3" column="0" colspan="3" >
     <widget class="QLabel" name="label_4" >
      <property name="text" >
       <string>Reference Font Size (points):</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="1" >
+   <item row="3" column="3" >
     <widget class="QSpinBox" name="_refFontSize" />
    </item>
-   <item row="4" column="0" >
+   <item row="4" column="0" colspan="3" >
     <widget class="QLabel" name="label_3" >
      <property name="text" >
       <string>Minimum Font Size (points):</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="1" >
+   <item row="4" column="3" >
     <widget class="QSpinBox" name="_minFontSize" />
    </item>
-   <item row="5" column="0" >
+   <item row="5" column="0" colspan="2" >
+    <widget class="QLabel" name="_Label_12" >
+     <property name="text" >
+      <string>Default Font Family</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="2" colspan="2" >
+    <widget class="QFontComboBox" name="_defaultFontFamily" />
+   </item>
+   <item row="6" column="1" >
     <spacer>
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
@@ -68,7 +86,7 @@
      <property name="sizeHint" >
       <size>
        <width>20</width>
-       <height>40</height>
+       <height>41</height>
       </size>
      </property>
     </spacer>

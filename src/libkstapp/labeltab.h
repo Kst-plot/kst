@@ -50,6 +50,18 @@ class KST_EXPORT LabelTab : public DialogTab, Ui::LabelTab {
     QFont bottomLabelFont() const;
     void setBottomLabelFont(const QFont &font);
 
+    qreal bottomLabelFontScale() const;
+    void setBottomLabelFontScale(const qreal scale);
+
+    qreal leftLabelFontScale() const;
+    void setLeftLabelFontScale(const qreal scale);
+
+    qreal topLabelFontScale() const;
+    void setTopLabelFontScale(const qreal scale);
+
+    qreal rightLabelFontScale() const;
+    void setRightLabelFontScale(const qreal scale);
+
   public Q_SLOTS:
     void update();
     void autoLabel();

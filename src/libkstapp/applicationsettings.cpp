@@ -13,6 +13,7 @@
 
 #include <QCoreApplication>
 #include <QGLPixelBuffer>
+#include <QSettings>
 
 namespace Kst {
 
@@ -33,24 +34,29 @@ ApplicationSettings *ApplicationSettings::self() {
 
 
 ApplicationSettings::ApplicationSettings() {
+
+  _settings = new QSettings("kstapplicationrc", QSettings::NativeFormat);
+
   //FIXME Not sure if this is the best test for hardware acceleration
   // but right now opening with QGV with QGLWidget as viewport takes
   // several seconds delay when opening application on my system.
-  _useOpenGL = QGLPixelBuffer::hasOpenGLPbuffers();
+  _useOpenGL = _settings->value("general/opengl", QVariant(QGLPixelBuffer::hasOpenGLPbuffers())).toBool();
 
-  _refViewWidth = 10.0; //cm
-  _refViewHeight = 7.0; //cm
-  _refFontSize = 16; //points
-  _minFontSize = 10; //points
+  _refViewWidth = _settings->value("general/referenceviewwidth", QVariant(800)).toInt();
+  _refViewHeight = _settings->value("general/referenceviewheight", QVariant(600)).toInt();
+  _refFontSize = _settings->value("general/referencefontsize", QVariant(12)).toInt();
+  _minFontSize = _settings->value("general/minimumfontsize", QVariant(5)).toInt();
+  _defaultFontFamily = _settings->value("general/defaultfontfamily", "Albany AMT").toString();
 
-  _showGrid = true;
-  _snapToGrid = false;
-  _gridHorSpacing = 20.0;
-  _gridVerSpacing = 20.0;
+  _showGrid = _settings->value("grid/showgrid", QVariant(true)).toBool();
+  _snapToGrid = _settings->value("grid/snaptogrid", QVariant(false)).toBool();
+  _gridHorSpacing = _settings->value("grid/horizontalspacing", 20.0).toDouble();
+  _gridVerSpacing = _settings->value("grid/verticalspacing", 20.0).toDouble();
 }
 
 
 ApplicationSettings::~ApplicationSettings() {
+  delete _settings;
 }
 
 
@@ -61,28 +67,31 @@ bool ApplicationSettings::useOpenGL() const {
 
 void ApplicationSettings::setUseOpenGL(bool useOpenGL) {
   _useOpenGL = useOpenGL;
+  _settings->setValue("general/opengl", useOpenGL);
   emit modified();
 }
 
 
-qreal ApplicationSettings::referenceViewWidth() const {
+int ApplicationSettings::referenceViewWidth() const {
   return _refViewWidth;
 }
 
 
-void ApplicationSettings::setReferenceViewWidth(qreal width) {
+void ApplicationSettings::setReferenceViewWidth(const int width) {
   _refViewWidth = width;
+  _settings->setValue("general/referenceviewwidth", width);
   emit modified();
 }
 
 
-qreal ApplicationSettings::referenceViewHeight() const {
+int ApplicationSettings::referenceViewHeight() const {
   return _refViewHeight;
 }
 
 
-void ApplicationSettings::setReferenceViewHeight(qreal height) {
+void ApplicationSettings::setReferenceViewHeight(const int height) {
   _refViewHeight = height;
+  _settings->setValue("general/referenceviewheight", height);
   emit modified();
 }
 
@@ -94,6 +103,7 @@ int ApplicationSettings::referenceFontSize() const {
 
 void ApplicationSettings::setReferenceFontSize(int points) {
   _refFontSize = points;
+  _settings->setValue("general/referencefontsize", points);
   emit modified();
 }
 
@@ -105,8 +115,22 @@ int ApplicationSettings::minimumFontSize() const {
 
 void ApplicationSettings::setMinimumFontSize(int points) {
   _minFontSize = points;
+  _settings->setValue("general/minimumfontsize", points);
   emit modified();
 }
+
+
+QString ApplicationSettings::defaultFontFamily() const {
+  return _defaultFontFamily;
+}
+
+
+void ApplicationSettings::setDefaultFontFamily(const QString &fontFamily) {
+  _defaultFontFamily = fontFamily;
+  _settings->setValue("general/defaultfontfamily", fontFamily);
+  emit modified();
+}
+
 
 bool ApplicationSettings::showGrid() const {
   return _showGrid;
@@ -115,6 +139,7 @@ bool ApplicationSettings::showGrid() const {
 
 void ApplicationSettings::setShowGrid(bool showGrid) {
   _showGrid = showGrid;
+  _settings->setValue("grid/showgrid", showGrid);
   emit modified();
 }
 
@@ -126,6 +151,7 @@ bool ApplicationSettings::snapToGrid() const {
 
 void ApplicationSettings::setSnapToGrid(bool snapToGrid) {
   _snapToGrid = snapToGrid;
+  _settings->setValue("grid/snaptogrid", snapToGrid);
   emit modified();
 }
 
@@ -137,6 +163,7 @@ qreal ApplicationSettings::gridHorizontalSpacing() const {
 
 void ApplicationSettings::setGridHorizontalSpacing(qreal spacing) {
   _gridHorSpacing = spacing;
+  _settings->setValue("grid/horizontalspacing", spacing);
   emit modified();
 }
 
@@ -148,6 +175,7 @@ qreal ApplicationSettings::gridVerticalSpacing() const {
 
 void ApplicationSettings::setGridVerticalSpacing(qreal spacing) {
   _gridVerSpacing = spacing;
+  _settings->setValue("grid/verticalspacing", spacing);
   emit modified();
 }
 
