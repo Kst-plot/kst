@@ -36,6 +36,8 @@ public:
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
   const ObjectList<Object> generateObjectList() const;
 
+  void triggerReset();
+
 private:
   QVariant dataObjectOutputData(DataObjectPtr parent, const QModelIndex& index) const;
   QVariant vectorData(VectorPtr parent, const QModelIndex& index) const;

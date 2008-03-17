@@ -37,6 +37,11 @@ int SessionModel::columnCount(const QModelIndex& parent) const {
 }
 
 
+void SessionModel::triggerReset() {
+  reset();
+}
+
+
 const ObjectList<Object> SessionModel::generateObjectList() const {
   ObjectList<Object> ol;
   ObjectList<DataVector> dvol = _store->getObjects<DataVector>();
@@ -71,6 +76,7 @@ const ObjectList<Object> SessionModel::generateObjectList() const {
   }
   return ol;
 }
+
 
 int SessionModel::rowCount(const QModelIndex& parent) const {
   Q_ASSERT(_store);

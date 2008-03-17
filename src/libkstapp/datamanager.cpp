@@ -77,15 +77,15 @@ DataManager::DataManager(QWidget *parent, Document *doc)
 //   Create canonical items...
 
   QAction *action = new DataButtonAction(tr("Vector"));
-  connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showVectorDialog()));
+  connect(action, SIGNAL(triggered()), this, SLOT(showVectorDialog()));
   _primitives->addAction(action);
 
    action = new DataButtonAction(tr("Matrix"));
-   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showMatrixDialog()));
+   connect(action, SIGNAL(triggered()), this, SLOT(showMatrixDialog()));
    _primitives->addAction(action);
  
    action = new DataButtonAction(tr("Scalar"));
-   connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showScalarDialog()));
+   connect(action, SIGNAL(triggered()), this, SLOT(showScalarDialog()));
    _primitives->addAction(action);
 // 
 //   action = new DataButtonAction(tr("String"));
@@ -93,31 +93,31 @@ DataManager::DataManager(QWidget *parent, Document *doc)
 //   _primitives->addAction(action);
 
   action = new DataButtonAction(tr("Curve"));
-  connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showCurveDialog()));
+  connect(action, SIGNAL(triggered()), this, SLOT(showCurveDialog()));
   _dataObjects->addAction(action);
 
   action = new DataButtonAction(tr("Equation"));
-  connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showEquationDialog()));
+  connect(action, SIGNAL(triggered()), this, SLOT(showEquationDialog()));
   _dataObjects->addAction(action);
 
   action = new DataButtonAction(tr("Histogram"));
-  connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showHistogramDialog()));
+  connect(action, SIGNAL(triggered()), this, SLOT(showHistogramDialog()));
   _dataObjects->addAction(action);
 
   action = new DataButtonAction(tr("Power Spectrum"));
-  connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showPowerSpectrumDialog()));
+  connect(action, SIGNAL(triggered()), this, SLOT(showPowerSpectrumDialog()));
   _dataObjects->addAction(action);
 
   action = new DataButtonAction(tr("Event Monitor"));
-  connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showEventMonitorDialog()));
+  connect(action, SIGNAL(triggered()), this, SLOT(showEventMonitorDialog()));
   _dataObjects->addAction(action);
 
   action = new DataButtonAction(tr("Image"));
-  connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showImageDialog()));
+  connect(action, SIGNAL(triggered()), this, SLOT(showImageDialog()));
   _dataObjects->addAction(action);
 
   action = new DataButtonAction(tr("Spectrogram"));
-  connect(action, SIGNAL(triggered()), DialogLauncher::self(), SLOT(showCSDDialog()));
+  connect(action, SIGNAL(triggered()), this, SLOT(showCSDDialog()));
   _dataObjects->addAction(action);
 }
 
@@ -260,41 +260,93 @@ void DataManager::showEditDialog() {
   } else if (MatrixPtr matrix = kst_cast<Matrix>(_currentObject)) {
     DialogLauncher::self()->showMatrixDialog(matrix);
   }
+  _doc->session()->triggerReset();
+}
+
+
+void DataManager::show() {
+  _doc->session()->triggerReset();
+  QDialog::show();
+}
+
+
+void DataManager::showVectorDialog() {
+  DialogLauncher::self()->showVectorDialog();
+  _doc->session()->triggerReset();
+}
+
+
+void DataManager::showMatrixDialog() {
+  DialogLauncher::self()->showMatrixDialog();
+  _doc->session()->triggerReset();
+}
+
+
+void DataManager::showScalarDialog() {
+  DialogLauncher::self()->showScalarDialog();
+  _doc->session()->triggerReset();
+}
+
+
+void DataManager::showEventMonitorDialog() {
+  DialogLauncher::self()->showEventMonitorDialog();
+  _doc->session()->triggerReset();
+}
+
+
+void DataManager::showEquationDialog() {
+  DialogLauncher::self()->showEquationDialog();
+  _doc->session()->triggerReset();
 }
 
 
 void DataManager::showCurveDialog() {
   if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
     DialogLauncher::self()->showCurveDialog(0, vector);
+  } else {
+    DialogLauncher::self()->showCurveDialog();
   }
+  _doc->session()->triggerReset();
 }
 
 
 void DataManager::showCSDDialog() {
   if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
     DialogLauncher::self()->showCSDDialog(0, vector);
+  } else {
+    DialogLauncher::self()->showCSDDialog();
   }
+  _doc->session()->triggerReset();
 }
 
 
 void DataManager::showPowerSpectrumDialog() {
   if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
     DialogLauncher::self()->showPowerSpectrumDialog(0, vector);
+  } else {
+    DialogLauncher::self()->showPowerSpectrumDialog();
   }
+  _doc->session()->triggerReset();
 }
 
 
 void DataManager::showHistogramDialog() {
   if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
     DialogLauncher::self()->showHistogramDialog(0, vector);
+  } else {
+    DialogLauncher::self()->showHistogramDialog();
   }
+  _doc->session()->triggerReset();
 }
 
 
 void DataManager::showImageDialog() {
   if (MatrixPtr matrix = kst_cast<Matrix>(_currentObject)) {
     DialogLauncher::self()->showImageDialog(0, matrix);
+  } else {
+    DialogLauncher::self()->showImageDialog();
   }
+  _doc->session()->triggerReset();
 }
 
 
@@ -308,6 +360,7 @@ void DataManager::deleteObject() {
     _doc->objectStore()->removeObject(primitive);
   }
   _currentObject = 0;
+  _doc->session()->triggerReset();
 }
 
 
