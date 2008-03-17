@@ -51,8 +51,8 @@ ApplicationSettingsDialog::~ApplicationSettingsDialog() {
 
 void ApplicationSettingsDialog::setupGeneral() {
   _generalTab->setUseOpenGL(ApplicationSettings::self()->useOpenGL());
-  _generalTab->setReferenceViewWidth(ApplicationSettings::self()->referenceViewWidth());
-  _generalTab->setReferenceViewHeight(ApplicationSettings::self()->referenceViewHeight());
+  _generalTab->setReferenceViewWidth(ApplicationSettings::self()->referenceViewWidthCM());
+  _generalTab->setReferenceViewHeight(ApplicationSettings::self()->referenceViewHeightCM());
   _generalTab->setReferenceFontSize(ApplicationSettings::self()->referenceFontSize());
   _generalTab->setMinimumFontSize(ApplicationSettings::self()->minimumFontSize());
   _generalTab->setDefaultFontFamily(ApplicationSettings::self()->defaultFontFamily());
@@ -71,8 +71,8 @@ void ApplicationSettingsDialog::generalChanged() {
   //Need to block the signals so that the modified signal only goes out once...
   ApplicationSettings::self()->blockSignals(true);
   ApplicationSettings::self()->setUseOpenGL(_generalTab->useOpenGL());
-  ApplicationSettings::self()->setReferenceViewWidth(_generalTab->referenceViewWidth());
-  ApplicationSettings::self()->setReferenceViewHeight(_generalTab->referenceViewHeight());
+  ApplicationSettings::self()->setReferenceViewWidthCM(_generalTab->referenceViewWidth());
+  ApplicationSettings::self()->setReferenceViewHeightCM(_generalTab->referenceViewHeight());
   ApplicationSettings::self()->setReferenceFontSize(_generalTab->referenceFontSize());
   ApplicationSettings::self()->setMinimumFontSize(_generalTab->minimumFontSize());
   ApplicationSettings::self()->setDefaultFontFamily(_generalTab->defaultFontFamily());

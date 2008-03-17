@@ -28,11 +28,11 @@ class KST_EXPORT GeneralTab : public DialogTab, Ui::GeneralTab {
     bool useOpenGL() const;
     void setUseOpenGL(const bool useOpenGL);
 
-    int referenceViewWidth() const;
-    void setReferenceViewWidth(const int width);
+    double referenceViewWidth() const;
+    void setReferenceViewWidth(const double width);
 
-    int referenceViewHeight() const;
-    void setReferenceViewHeight(const int height);
+    double referenceViewHeight() const;
+    void setReferenceViewHeight(const double height);
 
     int referenceFontSize() const;
     void setReferenceFontSize(const int points);

@@ -129,6 +129,7 @@ void Dialog::buttonClicked(QAbstractButton *button) {
   QDialogButtonBox::StandardButton std = _buttonBox->standardButton(button);
   switch(std) {
   case QDialogButtonBox::Ok:
+    emit apply();
     emit ok();
     break;
   case QDialogButtonBox::Apply:

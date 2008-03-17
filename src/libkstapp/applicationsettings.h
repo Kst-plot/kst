@@ -30,10 +30,13 @@ class ApplicationSettings : public QObject
     void setUseOpenGL(bool useOpenGL);
 
     int referenceViewWidth() const;
-    void setReferenceViewWidth(const int width);
-
     int referenceViewHeight() const;
-    void setReferenceViewHeight(const int height);
+
+    double referenceViewWidthCM() const;
+    void setReferenceViewWidthCM(const double width);
+
+    double referenceViewHeightCM() const;
+    void setReferenceViewHeightCM(const double height);
 
     int referenceFontSize() const;
     void setReferenceFontSize(const int points);
@@ -67,8 +70,8 @@ class ApplicationSettings : public QObject
   private:
     QSettings *_settings;
     bool _useOpenGL;
-    int _refViewWidth;
-    int _refViewHeight;
+    double _refViewWidth;
+    double _refViewHeight;
     int _refFontSize;
     int _minFontSize;
     QString _defaultFontFamily;

@@ -20,8 +20,8 @@ GeneralTab::GeneralTab(QWidget *parent)
   setTabTitle(tr("General"));
 
   connect(_useOpenGL, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_refViewWidth, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
-  connect(_refViewHeight, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_refViewWidth, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
+  connect(_refViewHeight, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_refFontSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_minFontSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_defaultFontFamily, SIGNAL(currentFontChanged(const QFont &)), this, SIGNAL(modified()));
@@ -42,22 +42,22 @@ void GeneralTab::setUseOpenGL(const bool useOpenGL) {
 }
 
 
-int GeneralTab::referenceViewWidth() const {
-  return _refViewWidth->value();
+double GeneralTab::referenceViewWidth() const {
+  return (_refViewWidth->value());
 }
 
 
-void GeneralTab::setReferenceViewWidth(const int width) {
+void GeneralTab::setReferenceViewWidth(const double width) {
   _refViewWidth->setValue(width);
 }
 
 
-int GeneralTab::referenceViewHeight() const {
-  return _refViewHeight->value();
+double GeneralTab::referenceViewHeight() const {
+  return (_refViewHeight->value());
 }
 
 
-void GeneralTab::setReferenceViewHeight(const int height) {
+void GeneralTab::setReferenceViewHeight(const double height) {
   _refViewHeight->setValue(height);
 }
 

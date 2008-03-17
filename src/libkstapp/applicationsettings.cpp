@@ -42,8 +42,8 @@ ApplicationSettings::ApplicationSettings() {
   // several seconds delay when opening application on my system.
   _useOpenGL = _settings->value("general/opengl", QVariant(QGLPixelBuffer::hasOpenGLPbuffers())).toBool();
 
-  _refViewWidth = _settings->value("general/referenceviewwidth", QVariant(800)).toInt();
-  _refViewHeight = _settings->value("general/referenceviewheight", QVariant(600)).toInt();
+  _refViewWidth = _settings->value("general/referenceviewwidth", QVariant(16)).toDouble();
+  _refViewHeight = _settings->value("general/referenceviewheight", QVariant(12)).toDouble();
   _refFontSize = _settings->value("general/referencefontsize", QVariant(12)).toInt();
   _minFontSize = _settings->value("general/minimumfontsize", QVariant(5)).toInt();
   _defaultFontFamily = _settings->value("general/defaultfontfamily", "Albany AMT").toString();
@@ -73,11 +73,16 @@ void ApplicationSettings::setUseOpenGL(bool useOpenGL) {
 
 
 int ApplicationSettings::referenceViewWidth() const {
+  return (_refViewWidth * 72.0 * 0.3937008);
+}
+
+
+double ApplicationSettings::referenceViewWidthCM() const {
   return _refViewWidth;
 }
 
 
-void ApplicationSettings::setReferenceViewWidth(const int width) {
+void ApplicationSettings::setReferenceViewWidthCM(const double width) {
   _refViewWidth = width;
   _settings->setValue("general/referenceviewwidth", width);
   emit modified();
@@ -85,11 +90,16 @@ void ApplicationSettings::setReferenceViewWidth(const int width) {
 
 
 int ApplicationSettings::referenceViewHeight() const {
+  return (_refViewHeight * 72.0 * 0.3937008);
+}
+
+
+double ApplicationSettings::referenceViewHeightCM() const {
   return _refViewHeight;
 }
 
 
-void ApplicationSettings::setReferenceViewHeight(const int height) {
+void ApplicationSettings::setReferenceViewHeightCM(const double height) {
   _refViewHeight = height;
   _settings->setValue("general/referenceviewheight", height);
   emit modified();
