@@ -10,6 +10,7 @@
  ***************************************************************************/
 
 #include "objecttag.h"
+#include "math_kst.h"
 
 namespace Kst {
 
