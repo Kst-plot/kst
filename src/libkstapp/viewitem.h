@@ -81,8 +81,11 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     bool lockAspectRatioFixed() const { return _lockAspectRatioFixed; }
     void setLockAspectRatioFixed(bool enable) { _lockAspectRatioFixed = enable; }
 
-    bool hasStaticGeometry() { return _hasStaticGeometry; }
+    bool hasStaticGeometry() const { return _hasStaticGeometry; }
     void setHasStaticGeometry(bool hasStaticGeometry ) { _hasStaticGeometry = hasStaticGeometry; }
+
+    bool allowsLayout() const { return _allowsLayout; }
+    void setAllowsLayout(bool allowsLayout ) { _allowsLayout = allowsLayout; }
 
     //NOTE We can change this to a generic abstract class once we have
     //more layouts besides grid layout...
@@ -207,6 +210,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     bool _lockAspectRatio;
     bool _lockAspectRatioFixed;
     bool _hasStaticGeometry;
+    bool _allowsLayout;
     bool _hovering;
     bool _acceptsChildItems;
     bool _acceptsContextMenuEvents;

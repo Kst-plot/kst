@@ -28,6 +28,7 @@ LineItem::LineItem(View *parent)
   setZValue(LINE_ZVALUE);
   setAllowedGrips(RightMidGrip | LeftMidGrip);
   setAllowedGripModes(Resize);
+  setAllowsLayout(false);
   QPen p = pen();
   p.setWidthF(1);
   setPen(p);
@@ -143,7 +144,7 @@ void LineItem::creationPolygonChanged(View::CreationEvent event) {
 
 void LineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
-  if (parentView()->viewMode() == View::Data || itemInLayout()) {
+  if (parentView()->viewMode() == View::Data) {
     event->ignore();
     return;
   }

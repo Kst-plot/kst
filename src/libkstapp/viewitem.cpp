@@ -46,6 +46,7 @@ ViewItem::ViewItem(View *parent)
     _lockAspectRatio(false),
     _lockAspectRatioFixed(false),
     _hasStaticGeometry(false),
+    _allowsLayout(true),
     _hovering(false),
     _acceptsChildItems(true),
     _acceptsContextMenuEvents(true),
@@ -277,7 +278,7 @@ ViewItem *ViewItem::parentViewItem() const {
 
 
 bool ViewItem::itemInLayout() const {
-  return parentViewItem() && parentViewItem()->layout();
+  return parentViewItem() && parentViewItem()->layout() && allowsLayout();
 }
 
 
@@ -349,9 +350,6 @@ void ViewItem::setViewRect(const QRectF &viewRect, bool automaticChange) {
     updateRelativeSize();
   }
 
-  if (layout())
-    return;
-
   foreach (QGraphicsItem *item, QGraphicsItem::children()) {
     if (item->parentItem() != this)
       continue;
@@ -364,7 +362,10 @@ void ViewItem::setViewRect(const QRectF &viewRect, bool automaticChange) {
     if (viewItem->hasStaticGeometry())
       continue;
 
-    viewItem->updateChildGeometry(oldViewRect, viewRect);
+
+    if (!layout() || !viewItem->allowsLayout()) {
+      viewItem->updateChildGeometry(oldViewRect, viewRect);
+    }
   }
 }
 
@@ -1837,7 +1838,7 @@ void LayoutCommand::createLayout() {
 
   foreach (QGraphicsItem *item, list) {
     ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
-    if (!viewItem || viewItem->hasStaticGeometry() || viewItem->parentItem() != _item)
+    if (!viewItem || viewItem->hasStaticGeometry() || !viewItem->allowsLayout() || viewItem->parentItem() != _item)
       continue;
     viewItems.append(viewItem);
   }

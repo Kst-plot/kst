@@ -129,6 +129,13 @@ Grid *Grid::buildGrid(const QList<ViewItem*> &itemList)
                 c.setBottom(ch);
         }
 
+        // Make sure the sizes are all positive.
+        if (c.width() < 0)
+          c.setRight(c.left());
+
+        if (c.height() < 0)
+          c.setBottom(c.top());
+
         grid->setCells(c, v); // Mark cellblock
     }
 
