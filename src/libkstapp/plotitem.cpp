@@ -2354,7 +2354,7 @@ void PlotItem::calculateProjectionRect() {
 
   if (rect != _projectionRect) {
     _projectionRect = rect;
-    emit projectionRectChanged();
+//    emit projectionRectChanged();
     update(); //slow, but need to update everything...
   }
 }

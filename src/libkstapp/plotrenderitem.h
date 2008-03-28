@@ -134,6 +134,8 @@ public Q_SLOTS:
   private:
     void createActions();
     void updateCursor(const QPointF &pos);
+    void resetSelectionRect();
+    void updateSelectionRect();
 
     ZoomState currentZoomState();
     void setCurrentZoomState(ZoomState zoomState);

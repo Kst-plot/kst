@@ -488,9 +488,7 @@ void PlotRenderItem::keyPressEvent(QKeyEvent *event) {
   }
   ViewItem::keyPressEvent(event);
 
-  if (_selectionRect.isValid()) {
-    update(); //FIXME should optimize instead of redrawing entire curve?
-  }
+  updateSelectionRect();
 }
 
 
@@ -501,11 +499,25 @@ void PlotRenderItem::keyReleaseEvent(QKeyEvent *event) {
   } else if (modifiers & Qt::ControlModifier) {
     setCursor(Qt::SizeHorCursor);
   } else {
-    _selectionRect.reset();
-    updateCursor(_lastPos);
-    update(); //FIXME should optimize instead of redrawing entire curve?
+    resetSelectionRect();
   }
   ViewItem::keyReleaseEvent(event);
+}
+
+
+void PlotRenderItem::resetSelectionRect() {
+  if (_selectionRect.isValid()) {
+    _selectionRect.reset();
+    updateCursor(_lastPos);
+    updateSelectionRect();
+  }
+}
+
+
+void PlotRenderItem::updateSelectionRect() {
+  if (_selectionRect.isValid()) {
+    update(); //FIXME should optimize instead of redrawing entire curve?
+  }
 }
 
 
@@ -525,9 +537,7 @@ void PlotRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     _selectionRect.setTo(p);
   }
 
-  if (_selectionRect.isValid()) {
-    update(); //FIXME should optimize instead of redrawing entire curve?
-  }
+  updateSelectionRect();
 }
 
 
@@ -669,6 +679,7 @@ void PlotRenderItem::zoomXLeft() {
 
 void PlotRenderItem::zoomXOut() {
   qDebug() << "zoomXOut" << endl;
+  resetSelectionRect();
   ZoomCommand *cmd = new ZoomXOutCommand(this);
   cmd->redo();
 }
@@ -676,6 +687,7 @@ void PlotRenderItem::zoomXOut() {
 
 void PlotRenderItem::zoomXIn() {
   qDebug() << "zoomXIn" << endl;
+  resetSelectionRect();
   ZoomCommand *cmd = new ZoomXInCommand(this);
   cmd->redo();
 }
@@ -730,6 +742,7 @@ void PlotRenderItem::zoomYDown() {
 
 void PlotRenderItem::zoomYOut() {
   qDebug() << "zoomYOut" << endl;
+  resetSelectionRect();
   ZoomCommand *cmd = new ZoomYOutCommand(this);
   cmd->redo();
 }
@@ -737,6 +750,7 @@ void PlotRenderItem::zoomYOut() {
 
 void PlotRenderItem::zoomYIn() {
   qDebug() << "zoomYIn" << endl;
+  resetSelectionRect();
   ZoomCommand *cmd = new ZoomYInCommand(this);
   cmd->redo();
 }
