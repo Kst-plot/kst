@@ -1,13 +1,11 @@
 Zoom Mode Plot Bugs:
 
-1)
-In ctrl or shift zoom mode, the cursor should change, and the full horizontal or vertical
-dashed line should be shown immediately.  As it is now, the line isn't shown until a rect
-draw has begun. (See Zoom Modes spec or kst 1.x)
+In base offset mode, sometimes the tick rounding is strange: for example, around 99999.5, you may have ticks
+at 0.0004999999995 and 0.000500000009 (instead of +-0.0005).
 
-2)
-If you zoom in far enough, the tick labels loose resolution, and don't automatically shift to base/offset mode.
-eg, range fro 99999.499 to 99999.5001 shows all ticks as 99999.5 
+General bugs:
 
-3)
-In Log mode, a mouse zoom does not zoom over the correct region.
+-Startup is very slow.
+
+-The drag box is very slow, uses 100% cpu, and lags behind the mouse.
+
