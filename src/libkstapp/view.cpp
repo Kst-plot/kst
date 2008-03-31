@@ -35,7 +35,6 @@ View::View()
     _viewMode(Data),
     _mouseMode(Default),
     _layoutBoxItem(0),
-    _useOpenGL(false),
     _gridSpacing(QSizeF(20,20)),
     _snapToGridHorizontal(false),
     _snapToGridVertical(false) {
@@ -45,6 +44,16 @@ View::View()
   scene()->installEventFilter(this);
   setInteractive(true);
   setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
+
+  _useOpenGL = ApplicationSettings::self()->useOpenGL();
+  if (_useOpenGL) {
+    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+    setViewport(new QGLWidget);
+  } else {
+    setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
+    setViewport(0);
+  }
+
   connect(ApplicationSettings::self(), SIGNAL(modified()), this, SLOT(updateSettings()));
   updateSettings();
 }
@@ -64,6 +73,7 @@ void View::setUseOpenGL(bool useOpenGL) {
   if (_useOpenGL == useOpenGL)
     return;
 
+  _useOpenGL = useOpenGL;
   if (useOpenGL) {
     setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
     setViewport(new QGLWidget);
@@ -318,7 +328,6 @@ void View::drawBackground(QPainter *painter, const QRectF &rect) {
 
 
 void View::updateSettings() {
-
   setUseOpenGL(ApplicationSettings::self()->useOpenGL());
 
   setShowGrid(ApplicationSettings::self()->showGrid());
