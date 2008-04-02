@@ -71,10 +71,10 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QString rightLabel() const;
     QString topLabel() const;
 
-    void setTopSuppressed(bool visible);
-    void setBottomSuppressed(bool visible);
-    void setLeftSuppressed(bool visible);
-    void setRightSuppressed(bool visible);
+    void setTopSuppressed(bool suppressed);
+    void setBottomSuppressed(bool suppressed);
+    void setLeftSuppressed(bool suppressed);
+    void setRightSuppressed(bool suppressed);
 
     bool isBottomAxisVisible() const;
     void setBottomAxisVisible(bool visible);

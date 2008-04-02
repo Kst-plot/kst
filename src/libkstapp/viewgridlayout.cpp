@@ -287,21 +287,28 @@ void ViewGridLayout::shareAxisWithPlotToLeft(LayoutItem item) {
   if (!_itemLayouts.contains(key))
     return;
 
-  LayoutItem left = _itemLayouts.value(key);
-  PlotItem *leftItem = qobject_cast<PlotItem*>(left.viewItem);
-  if (!leftItem)
-    return;
-
   PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
 
-  //horizontal range check...
-  if (plotItem->projectionRect().left() != leftItem->projectionRect().left() ||
-      plotItem->projectionRect().right() != leftItem->projectionRect().right())
+  LayoutItem left = _itemLayouts.value(key);
+  PlotItem *leftItem = qobject_cast<PlotItem*>(left.viewItem);
+  if (!leftItem) {
+    plotItem->setLeftSuppressed(false);
+    setSpacing(QSizeF(spacing().width(), spacing().height()));
     return;
+  }
 
-  if (item.rowSpan == left.rowSpan && item.columnSpan == left.columnSpan) {
+  //vertical range check...
+  if (plotItem->projectionRect().top() != leftItem->projectionRect().top() ||
+      plotItem->projectionRect().bottom() != leftItem->projectionRect().bottom()) {
     plotItem->setLeftSuppressed(false);
     leftItem->setRightSuppressed(false);
+    setSpacing(QSizeF(spacing().width(), spacing().height()));
+    return;
+  }
+
+  if (item.rowSpan == left.rowSpan && item.columnSpan == left.columnSpan) {
+    plotItem->setLeftSuppressed(true);
+    leftItem->setRightSuppressed(true);
     setSpacing(QSizeF(0.0, spacing().height()));
   }
 }
@@ -312,21 +319,28 @@ void ViewGridLayout::shareAxisWithPlotToRight(LayoutItem item) {
   if (!_itemLayouts.contains(key))
     return;
 
-  LayoutItem right = _itemLayouts.value(key);
-  PlotItem *rightItem = qobject_cast<PlotItem*>(right.viewItem);
-  if (!rightItem)
-    return;
-
   PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
 
-  //horizontal range check...
-  if (plotItem->projectionRect().left() != rightItem->projectionRect().left() ||
-      plotItem->projectionRect().right() != rightItem->projectionRect().right())
+  LayoutItem right = _itemLayouts.value(key);
+  PlotItem *rightItem = qobject_cast<PlotItem*>(right.viewItem);
+  if (!rightItem) {
+    plotItem->setRightSuppressed(false);
+    setSpacing(QSizeF(spacing().width(), spacing().height()));
     return;
+  }
 
-  if (item.rowSpan == right.rowSpan && item.columnSpan == right.columnSpan) {
+  //vertical range check...
+  if (plotItem->projectionRect().top() != rightItem->projectionRect().top() ||
+      plotItem->projectionRect().bottom() != rightItem->projectionRect().bottom()) {
     plotItem->setRightSuppressed(false);
     rightItem->setLeftSuppressed(false);
+    setSpacing(QSizeF(spacing().width(), spacing().height()));
+    return;
+  }
+
+  if (item.rowSpan == right.rowSpan && item.columnSpan == right.columnSpan) {
+    plotItem->setRightSuppressed(true);
+    rightItem->setLeftSuppressed(true);
     setSpacing(QSizeF(0.0, spacing().height()));
   }
 }
@@ -337,21 +351,28 @@ void ViewGridLayout::shareAxisWithPlotAbove(LayoutItem item) {
   if (!_itemLayouts.contains(key))
     return;
 
-  LayoutItem top = _itemLayouts.value(key);
-  PlotItem *topItem = qobject_cast<PlotItem*>(top.viewItem);
-  if (!topItem)
-    return;
-
   PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
 
-  //vertical range check...
-  if (plotItem->projectionRect().top() != topItem->projectionRect().top() ||
-      plotItem->projectionRect().bottom() != topItem->projectionRect().bottom())
+  LayoutItem top = _itemLayouts.value(key);
+  PlotItem *topItem = qobject_cast<PlotItem*>(top.viewItem);
+  if (!topItem) {
+    plotItem->setTopSuppressed(false);
+    setSpacing(QSizeF(spacing().width(), spacing().height()));
     return;
+  }
 
-  if (item.rowSpan == top.rowSpan && item.columnSpan == top.columnSpan) {
+  //horizontal range check...
+  if (plotItem->projectionRect().left() != topItem->projectionRect().left() ||
+      plotItem->projectionRect().right() != topItem->projectionRect().right()) {
     plotItem->setTopSuppressed(false);
     topItem->setBottomSuppressed(false);
+    setSpacing(QSizeF(spacing().width(), spacing().height()));
+    return;
+  }
+
+  if (item.rowSpan == top.rowSpan && item.columnSpan == top.columnSpan) {
+    plotItem->setTopSuppressed(true);
+    topItem->setBottomSuppressed(true);
     setSpacing(QSizeF(spacing().width(), 0.0));
   }
 }
@@ -362,21 +383,28 @@ void ViewGridLayout::shareAxisWithPlotBelow(LayoutItem item) {
   if (!_itemLayouts.contains(key))
     return;
 
-  LayoutItem bottom = _itemLayouts.value(key);
-  PlotItem *bottomItem = qobject_cast<PlotItem*>(bottom.viewItem);
-  if (!bottomItem)
-    return;
-
   PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
 
-  //vertical range check...
-  if (plotItem->projectionRect().top() != bottomItem->projectionRect().top() ||
-      plotItem->projectionRect().bottom() != bottomItem->projectionRect().bottom())
+  LayoutItem bottom = _itemLayouts.value(key);
+  PlotItem *bottomItem = qobject_cast<PlotItem*>(bottom.viewItem);
+  if (!bottomItem) {
+    plotItem->setBottomSuppressed(false);
+    setSpacing(QSizeF(spacing().width(), spacing().height()));
     return;
+  }
 
-  if (item.rowSpan == bottom.rowSpan && item.columnSpan == bottom.columnSpan) {
+  //horizontal range check...
+  if (plotItem->projectionRect().left() != bottomItem->projectionRect().left() ||
+      plotItem->projectionRect().right() != bottomItem->projectionRect().right()) {
     plotItem->setBottomSuppressed(false);
     bottomItem->setTopSuppressed(false);
+    setSpacing(QSizeF(spacing().width(), spacing().height()));
+    return;
+  }
+
+  if (item.rowSpan == bottom.rowSpan && item.columnSpan == bottom.columnSpan) {
+    plotItem->setBottomSuppressed(true);
+    bottomItem->setTopSuppressed(true);
     setSpacing(QSizeF(spacing().width(), 0.0));
   }
 }

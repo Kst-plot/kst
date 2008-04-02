@@ -1611,25 +1611,25 @@ QString PlotItem::topLabel() const {
 }
 
 
-void PlotItem::setTopSuppressed(bool visible) {
-  setTopLabelVisible(visible);
+void PlotItem::setTopSuppressed(bool suppressed) {
+  setTopLabelVisible(!suppressed);
 }
 
 
-void PlotItem::setRightSuppressed(bool visible) {
-  setRightLabelVisible(visible);
+void PlotItem::setRightSuppressed(bool suppressed) {
+  setRightLabelVisible(!suppressed);
 }
 
 
-void PlotItem::setLeftSuppressed(bool visible) {
-  setLeftLabelVisible(visible);
-  setLeftAxisVisible(visible);
+void PlotItem::setLeftSuppressed(bool suppressed) {
+  setLeftLabelVisible(!suppressed);
+  setLeftAxisVisible(!suppressed);
 }
 
 
-void PlotItem::setBottomSuppressed(bool visible) {
-  setBottomLabelVisible(visible);
-  setBottomAxisVisible(visible);
+void PlotItem::setBottomSuppressed(bool suppressed) {
+  setBottomLabelVisible(!suppressed);
+  setBottomAxisVisible(!suppressed);
 }
 
 
@@ -2354,7 +2354,7 @@ void PlotItem::calculateProjectionRect() {
 
   if (rect != _projectionRect) {
     _projectionRect = rect;
-//    emit projectionRectChanged();
+    emit marginsChanged();
     update(); //slow, but need to update everything...
   }
 }
