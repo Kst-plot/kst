@@ -356,7 +356,7 @@ void View::updateChildGeometry(const QRectF &oldSceneRect) {
 
 
 void View::updateFont() {
-  qreal fontSize = (height() + width()) / (ApplicationSettings::self()->referenceViewHeight() + ApplicationSettings::self()->referenceViewWidth());
+  qreal fontSize = (qreal)(height() + width()) / (ApplicationSettings::self()->referenceViewHeight() + ApplicationSettings::self()->referenceViewWidth());
   fontSize *= ApplicationSettings::self()->referenceFontSize();
 
   if (fontSize < ApplicationSettings::self()->minimumFontSize()) {
@@ -371,7 +371,7 @@ void View::updateFont() {
 QFont View::defaultFont(double scale) const {
   QFont font(_defaultFont);
 
-  qreal fontSize = (height() + width()) / (ApplicationSettings::self()->referenceViewHeight() + ApplicationSettings::self()->referenceViewWidth());
+  qreal fontSize = (qreal)(height() + width()) / (ApplicationSettings::self()->referenceViewHeight() + ApplicationSettings::self()->referenceViewWidth());
   fontSize *= scale;
   fontSize += font.pointSizeF();
 
