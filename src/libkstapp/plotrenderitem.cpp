@@ -185,6 +185,8 @@ void PlotRenderItem::saveInPlot(QXmlStreamWriter &xml) {
 
 bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
   bool validTag = true;
+  double x = 0, y = 0, w = 10, h = 10;
+
   QString primaryTag = xml.name().toString();
   QXmlStreamAttributes attrs = xml.attributes();
   QStringRef av;
@@ -205,7 +207,7 @@ bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store)
   while (!(xml.isEndElement() && (xml.name().toString() == primaryTag))) {
     if (xml.isStartElement() && xml.name().toString() == "rect") {
       expectedEnd = xml.name().toString();
-      double x = 0, y = 0, w = 10, h = 10;
+      attrs = xml.attributes();
       av = attrs.value("width");
       if (!av.isNull()) {
         w = av.toString().toDouble();
@@ -222,7 +224,6 @@ bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store)
       if (!av.isNull()) {
         y = av.toString().toDouble();
       }
-    setProjectionRect(QRectF(QPointF(x, y), QSizeF(w, h)));
     } else if (xml.isStartElement() && xml.name().toString() == "relation") {
       expectedEnd = xml.name().toString();
       attrs = xml.attributes();
@@ -240,6 +241,8 @@ bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store)
     }
     xml.readNext();
   }
+  setProjectionRect(QRectF(QPointF(x, y), QSizeF(w, h)));
+
   return validTag;
 }
 

@@ -480,7 +480,7 @@ void PlotItem::paintBottomTickLabels(QPainter *painter,
         label += "+";
       }
       label += "[";
-      label += QString::number(offset, 'g', _xAxisSignificantDigits);
+      label += QString::number(offset);
       label += "]";
       xLabels.insert(i.key(), label);
     }
