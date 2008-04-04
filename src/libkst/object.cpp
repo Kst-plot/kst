@@ -30,7 +30,7 @@ const QString Object::staticTypeString = I18N_NOOP("Object");
 
 Object::Object(const ObjectTag& tag) :
   QObject(), Shared(), KstRWLock(),
-  _lastUpdateCounter(0), _store(0L), _tag(tag)
+  _lastUpdateCounter(0), _store(0L), _shortName(QString("FIXME - set _shortName")), _manualDescriptiveName(QString()), _tag(tag)
 {
   _dirty = false;
   _lastUpdate = Object::NO_CHANGE;
@@ -144,6 +144,27 @@ bool Object::dirty() const {
 
 ObjectStore* Object::store() const {
   return _store;
+}
+
+// new Name system
+QString Object::Name() {
+  return descriptiveName()+":"+shortName();
+}
+
+QString Object::descriptiveName() {
+  if (_manualDescriptiveName.isEmpty()) {
+    return _automaticDescriptiveName();
+  } else {
+    return _manualDescriptiveName;
+  }
+}
+
+QString Object::shortName() {
+  return _shortName;
+}
+
+void Object::setDescriptiveName(QString new_name) {
+  _manualDescriptiveName = new_name;
 }
 
 }

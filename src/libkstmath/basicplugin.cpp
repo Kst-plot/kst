@@ -30,10 +30,15 @@ namespace Kst {
 const QString BasicPlugin::staticTypeString = I18N_NOOP("Plugin");
 const QString BasicPlugin::staticTypeTag = I18N_NOOP("plugin");
 
+static int _pnum = 1;
+
 BasicPlugin::BasicPlugin(ObjectStore *store, const ObjectTag& tag)
 : DataObject(store, tag), _isFit(false) {
   _typeString = i18n("Plugin");
   _type = "Plugin";
+
+  _shortName = "P"+QString::number(_pnum++);
+
 }
 
 
@@ -41,6 +46,7 @@ BasicPlugin::BasicPlugin(ObjectStore *store, const QDomElement& e)
 : DataObject(store, e), _isFit(false) {
   _typeString = i18n("Plugin");
   _type = "Plugin";
+  _shortName = "P"+QString::number(_pnum++);
 }
 
 
@@ -189,6 +195,7 @@ void BasicPlugin::setOutputVector(const QString &type, const QString &name) {
   Q_ASSERT(store());
   VectorPtr v = store()->createObject<Vector>(ObjectTag(txt, tag()));
   v->setProvider(this);
+  v->setSlaveName(txt);
   _outputVectors.insert(type, v);
 }
 
@@ -198,6 +205,7 @@ void BasicPlugin::setOutputScalar(const QString &type, const QString &name) {
   Q_ASSERT(store());
   ScalarPtr s = store()->createObject<Scalar>(ObjectTag(txt, tag()));
   s->setProvider(this);
+  s->setSlaveName(txt);
   _outputScalars.insert(type, s);
 }
 
@@ -207,6 +215,7 @@ void BasicPlugin::setOutputString(const QString &type, const QString &name) {
   Q_ASSERT(store());
   StringPtr s = store()->createObject<String>(ObjectTag(txt, tag()));
   s->setProvider(this);
+  s->setSlaveName(txt);
   _outputStrings.insert(type, s);
 }
 
@@ -266,6 +275,7 @@ void BasicPlugin::load(const QDomElement &e) {
         Q_ASSERT(store());
         VectorPtr v = store()->createObject<Vector>(ObjectTag(e.text(), tag()));
         v->setProvider(this);
+        //FIXME: set slaveName
         if (e.attribute("scalarList", "0").toInt()) {
           // FIXME: handle scalar lists
           //v = new Vector(ObjectTag(e.text(), tag()), 0, this, true);
@@ -275,11 +285,13 @@ void BasicPlugin::load(const QDomElement &e) {
         Q_ASSERT(store());
         ScalarPtr sp = store()->createObject<Scalar>(ObjectTag(e.text(), tag()));
         sp->setProvider(this);
+        //FIXME: set slaveName
         _outputScalars.insert(e.attribute("name"), sp);
       } else if (e.tagName() == "ostring") {
         Q_ASSERT(store());
         StringPtr sp = store()->createObject<String>(ObjectTag(e.text(), tag()));
         sp->setProvider(this);
+        //FIXME: set slaveName
         _outputStrings.insert(e.attribute("name"), sp);
       }
     }
@@ -308,6 +320,7 @@ void BasicPlugin::createFitScalars() {
         if (!_outputScalars.contains(paramName)) {
           ScalarPtr s = store()->createObject<Scalar>(ObjectTag(paramName, tag()));
           s->setProvider(this);
+          //FIXME: set slaveName
           s->setValue(scalarValue);
           _outputScalars.insert(paramName, s);
         } else {

@@ -404,33 +404,44 @@ void Matrix::setEditable(bool editable) {
 
 void Matrix::createScalars(ObjectStore *store) {
   Q_ASSERT(store);
-  _statScalars.insert("max", store->createObject<Scalar>(ObjectTag("Max", tag())));
-  _statScalars["max"]->setProvider(this);
-  _statScalars["max"]->_KShared_ref();
-  _statScalars.insert("min", store->createObject<Scalar>(ObjectTag("Min", tag())));
-  _statScalars["min"]->setProvider(this);
-  _statScalars["min"]->_KShared_ref();
-  _statScalars.insert("mean", store->createObject<Scalar>(ObjectTag("Mean", tag())));
-  _statScalars["mean"]->setProvider(this);
-  _statScalars["mean"]->_KShared_ref();
-  _statScalars.insert("sigma", store->createObject<Scalar>(ObjectTag("Sigma", tag())));
-  _statScalars["sigma"]->setProvider(this);
-  _statScalars["sigma"]->_KShared_ref();
-  _statScalars.insert("rms", store->createObject<Scalar>(ObjectTag("Rms", tag())));
-  _statScalars["rms"]->setProvider(this);
-  _statScalars["rms"]->_KShared_ref();
-  _statScalars.insert("ns", store->createObject<Scalar>(ObjectTag("NS", tag())));
-  _statScalars["ns"]->setProvider(this);
-  _statScalars["ns"]->_KShared_ref();
-  _statScalars.insert("sum", store->createObject<Scalar>(ObjectTag("Sum", tag())));
-  _statScalars["sum"]->setProvider(this);
-  _statScalars["sum"]->_KShared_ref();
-  _statScalars.insert("sumsquared", store->createObject<Scalar>(ObjectTag("SumSquared", tag())));
-  _statScalars["sumsquared"]->setProvider(this);
-  _statScalars["sumsquared"]->_KShared_ref();
-  _statScalars.insert("minpos", store->createObject<Scalar>(ObjectTag("MinPos", tag())));
-  _statScalars["minpos"]->setProvider(this);
-  _statScalars["minpos"]->_KShared_ref();
+  ScalarPtr sp;
+
+  _statScalars.insert("max", sp=store->createObject<Scalar>(ObjectTag("Max", tag())));
+  sp->setProvider(this);
+  sp->setSlaveName("Max");
+  sp->_KShared_ref();
+  _statScalars.insert("min", sp=store->createObject<Scalar>(ObjectTag("Min", tag())));
+  sp->setProvider(this);
+  sp->setSlaveName("Min");
+  sp->_KShared_ref();
+  _statScalars.insert("mean", sp=store->createObject<Scalar>(ObjectTag("Mean", tag())));
+  sp->setProvider(this);
+  sp->setSlaveName("Mean");
+  sp->_KShared_ref();
+  _statScalars.insert("sigma", sp=store->createObject<Scalar>(ObjectTag("Sigma", tag())));
+  sp->setProvider(this);
+  sp->setSlaveName("Sigma");
+  sp->_KShared_ref();
+  _statScalars.insert("rms", sp=store->createObject<Scalar>(ObjectTag("Rms", tag())));
+  sp->setProvider(this);
+  sp->setSlaveName("Rms");
+  sp->_KShared_ref();
+  _statScalars.insert("ns", sp=store->createObject<Scalar>(ObjectTag("NS", tag())));
+  sp->setProvider(this);
+  sp->setSlaveName("NS");
+  sp->_KShared_ref();
+  _statScalars.insert("sum", sp=store->createObject<Scalar>(ObjectTag("Sum", tag())));
+  sp->setProvider(this);
+  sp->setSlaveName("Sum");
+  sp->_KShared_ref();
+  _statScalars.insert("sumsquared", sp=store->createObject<Scalar>(ObjectTag("SumSquared", tag())));
+  sp->setProvider(this);
+  sp->setSlaveName("SumSquared");
+  sp->_KShared_ref();
+  _statScalars.insert("minpos", sp=store->createObject<Scalar>(ObjectTag("MinPos", tag())));
+  sp->setProvider(this);
+  sp->setSlaveName("MinPos");
+  sp->_KShared_ref();
 }
 
 

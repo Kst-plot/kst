@@ -49,6 +49,7 @@ const QString Equation::XINVECTOR = "X";
 const QString Equation::XOUTVECTOR = "XO"; // Output (slave) vector
 const QString Equation::YOUTVECTOR = "O"; // Output (slave) vector
 
+static int _enum = 1;
 
 Equation::Equation(ObjectStore *store, const ObjectTag& in_tag, const QString& equation, double x0, double x1, int nx)
 : DataObject(store, in_tag) {
@@ -97,12 +98,14 @@ void Equation::commonConstructor(ObjectStore *store, const QString& in_equation)
   _xOutVector = store->createObject<Vector>(ObjectTag("xsv", tag()));
   Q_ASSERT(_xOutVector);
   _xOutVector->setProvider(this);
+  _xOutVector->setSlaveName("x");
   _xOutVector->resize(2);
   _outputVectors.insert(XOUTVECTOR, _xOutVector);
 
   _yOutVector = store->createObject<Vector>(ObjectTag("sv", tag()));
   Q_ASSERT(_yOutVector);
   _yOutVector->setProvider(this);
+  _yOutVector->setSlaveName("y");
   _yOutVector->resize(2);
   _outputVectors.insert(YOUTVECTOR, _yOutVector);
 
@@ -110,6 +113,9 @@ void Equation::commonConstructor(ObjectStore *store, const QString& in_equation)
   _numNew = _numShifted = 0;
 
   setEquation(in_equation);
+
+  _shortName = "E"+QString::number(_enum++);
+
 }
 
 
@@ -567,6 +573,10 @@ bool Equation::uses(ObjectPtr p) const {
     }
   }
   return DataObject::uses(p);
+}
+
+QString Equation::_automaticDescriptiveName() {
+  return equation();
 }
 
 }

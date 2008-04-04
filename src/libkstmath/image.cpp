@@ -32,6 +32,8 @@ const QString Image::staticTypeTag = I18N_NOOP("image");
 
 static const QLatin1String& THEMATRIX = QLatin1String("THEMATRIX");
 
+static int _inum = 1;
+
 Image::Image(ObjectStore *store, const ObjectTag& in_tag) : Relation(store, in_tag) {
   _typeString = staticTypeString;
   _type = "Image";
@@ -39,6 +41,7 @@ Image::Image(ObjectStore *store, const ObjectTag& in_tag) : Relation(store, in_t
   _hasColorMap = false;
   setColorDefaults();
   setContourDefaults();
+  _shortName = "I"+QString::number(_inum++);
 }
 
 Image::Image(ObjectStore *store, const QDomElement& e) : Relation(store, e) {
@@ -101,6 +104,7 @@ Image::Image(ObjectStore *store, const QDomElement& e) : Relation(store, e) {
   if (!_hasContourMap) {
     setContourDefaults();
   }
+  _shortName = "I"+QString::number(_inum++);
 }
 
 
@@ -118,6 +122,7 @@ Image::Image(ObjectStore *store, const ObjectTag &in_tag, MatrixPtr in_matrix, d
 
   setContourDefaults();
   setDirty();
+  _shortName = "I"+QString::number(_inum++);
 }
 
 
@@ -135,6 +140,7 @@ Image::Image(ObjectStore *store, const ObjectTag &in_tag, MatrixPtr in_matrix, i
   setColorDefaults();
   setDirty();
 
+  _shortName = "I"+QString::number(_inum++);
 }
 
 
@@ -162,6 +168,7 @@ Image::Image(ObjectStore *store, const ObjectTag &in_tag,
   _autoThreshold = autoThreshold;
   _pal = Palette(paletteName);
   setDirty();
+  _shortName = "I"+QString::number(_inum++);
 }
 
 
@@ -849,6 +856,10 @@ void Image::paintLegendSymbol(Painter *p, const QRect& bound) {
     p->setPen(QPen(_contourColor, 0));
     p->drawRect(bound.left(), bound.top(), bound.width(), bound.height());
   }
+}
+
+QString Image::_automaticDescriptiveName() {
+  return matrix()->descriptiveName();
 }
 
 }

@@ -30,6 +30,8 @@ static bool dirtyScalars = false;
 const QString Scalar::staticTypeString = I18N_NOOP("Scalar");
 const QString Scalar::staticTypeTag = I18N_NOOP("scalar");
 
+static int _xnum = 1;
+
 bool Scalar::scalarsDirty() {
   // Should use a mutex, but let's play with fire to be fast
   return dirtyScalars;
@@ -44,6 +46,8 @@ void Scalar::clearScalarsDirty() {
 /** Create the base scalar */
 Scalar::Scalar(ObjectStore *store, ObjectTag tag, Object *provider, double val, bool orphan, bool displayable, bool editable)
     : Primitive(store, tag, provider), _value(val), _orphan(orphan), _displayable(displayable), _editable(editable) {
+
+  _shortName = "X"+QString::number(_xnum++);
 }
 
 
@@ -73,6 +77,8 @@ Scalar::Scalar(ObjectStore *store, const QDomElement& e)
   if (tag().name().toDouble(&ok) == value() && ok) {
     _displayable = false;
   }
+
+  _shortName = "X"+QString::number(_xnum++);
 }
 
 

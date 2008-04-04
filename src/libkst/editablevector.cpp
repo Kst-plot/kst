@@ -83,7 +83,22 @@ void EditableVector::save(QXmlStreamWriter &s) {
   s.writeEndElement();
 }
 
+QString EditableVector::_automaticDescriptiveName() {
+  QString name("(");
+  if (length()>=1) {
+    name += QString::number(_v[0]);
+  }
+  if (length()>=2) {
+    name += ", " + QString::number(_v[1]);
+  }
 
+  if (length()>=3) {
+    name += ", ...";
+  }
 
+  name += ")";
+
+  return name;
+}
 }
 // vim: ts=2 sw=2 et

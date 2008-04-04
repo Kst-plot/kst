@@ -45,6 +45,8 @@ const QLatin1String& INVECTOR = QLatin1String("I");
 const QLatin1String& SVECTOR = QLatin1String("S");
 const QLatin1String& FVECTOR = QLatin1String("F");
 
+static int _psdnum = 1;
+
 #define KSTPSDMAXLEN 27
 
 PSD::PSD(ObjectStore *store, const ObjectTag& in_tag)
@@ -174,15 +176,20 @@ void PSD::commonConstructor(ObjectStore *store, VectorPtr in_V,
   Q_ASSERT(store);
   VectorPtr ov = store->createObject<Vector>(ObjectTag("freq", tag()));
   ov->setProvider(this);
+  ov->setSlaveName("f");
   ov->resize(_PSDLength);
   _fVector = _outputVectors.insert(FVECTOR, ov).value();
 
   ov = store->createObject<Vector>(ObjectTag("sv", tag()));
   ov->setProvider(this);
+  ov->setSlaveName("psd");
   ov->resize(_PSDLength);
   _sVector = _outputVectors.insert(SVECTOR, ov).value();
 
   updateVectorLabels();
+
+  _shortName = "S"+QString::number(_psdnum++);
+
 }
 
 
@@ -527,6 +534,10 @@ void PSD::updateVectorLabels() {
       break;
   }
   _fVector->setLabel(i18n("Frequency \\[%1\\]", _rateUnits));
+}
+
+QString PSD::_automaticDescriptiveName() {
+  return vector()->descriptiveName();
 }
 
 }

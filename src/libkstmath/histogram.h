@@ -105,6 +105,8 @@ public:
 
     friend class ObjectStore;
 
+    virtual QString _automaticDescriptiveName();
+
   private:
     NormalizationType _NormalizationMode;
     VectorPtr _bVector, _hVector;

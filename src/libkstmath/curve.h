@@ -165,6 +165,8 @@ class KST_EXPORT Curve: public Relation {
 
     friend class ObjectStore;
 
+    virtual QString _automaticDescriptiveName();
+
   private:
     inline void commonConstructor(const QColor& in_color);
 

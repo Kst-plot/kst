@@ -63,6 +63,8 @@ static const QLatin1String& EYVECTOR = QLatin1String("EY");
 static const QLatin1String& EXMINUSVECTOR = QLatin1String("EXMinus");
 static const QLatin1String& EYMINUSVECTOR = QLatin1String("EYMinus");
 
+static int _cnum = 0;
+
 Curve::Curve(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_X, VectorPtr in_Y,
                       VectorPtr in_EX, VectorPtr in_EY,
                       VectorPtr in_EXMinus, VectorPtr in_EYMinus,
@@ -100,6 +102,8 @@ Curve::Curve(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_X, Vector
   if (in_EYMinus) {
     _inputVectors[EYMINUSVECTOR] = in_EYMinus;
   }
+
+  _shortName = "C"+QString::number(_cnum++);
 
   setDirty();
 }
@@ -1850,6 +1854,10 @@ void Curve::paintLegendSymbol(Painter *p, const QRect& bound) {
     CurvePointSymbol::draw(PointType, p, bound.left() + bound.width()/2, bound.top() + bound.height()/2, width, 600);
   }
   p->restore();
+}
+
+QString Curve::_automaticDescriptiveName() {
+  return yVector()->descriptiveName() + " vs " + xVector()->descriptiveName();
 }
 
 }

@@ -30,6 +30,7 @@ const QString Primitive::staticTypeString = I18N_NOOP("Primitive");
 
 Primitive::Primitive(ObjectStore *store, const ObjectTag& tag, Object *provider)
   : Object(tag), _provider(provider) {
+  _slaveName = "fixme: set _slaveName";
 }
 
 
@@ -80,11 +81,23 @@ Object::UpdateType Primitive::internalUpdate(Object::UpdateType providerRC) {
   return setLastUpdateResult(NO_CHANGE);
 }
 
-
 void Primitive::setProvider(Object* obj) {
   _provider = obj;
 }
 
+void Primitive::setSlaveName(QString slaveName) {
+  _slaveName=slaveName;
+}
+
+QString Primitive::_automaticDescriptiveName() {
+  QString name;
+  if (_provider) {
+    name = _provider->descriptiveName() + "/";
+  }
+  name += _slaveName;
+
+  return name;
+}
 
 }
 

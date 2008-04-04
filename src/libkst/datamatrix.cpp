@@ -652,5 +652,9 @@ void DataMatrix::changeFile(DataSourcePtr file) {
   }
 }
 
+QString DataMatrix::_automaticDescriptiveName() {
+  return field();
+}
+
 }
 // vim: ts=2 sw=2 et

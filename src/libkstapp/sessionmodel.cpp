@@ -191,7 +191,7 @@ QVariant SessionModel::vectorData(VectorPtr v, const QModelIndex& index) const {
     case 0:
       {
       v->readLock();
-      rc.setValue(v->tag().displayString());
+      rc.setValue(v->Name());
       v->unlock();
       break;
       }
@@ -230,7 +230,7 @@ QVariant SessionModel::matrixData(MatrixPtr matrix, const QModelIndex& index) co
     case 0:
       {
       matrix->readLock();
-      rc.setValue(matrix->tag().displayString());
+      rc.setValue(matrix->Name());
       matrix->unlock();
       break;
       }
@@ -267,7 +267,7 @@ QVariant SessionModel::dataObjectData(DataObjectPtr p, const QModelIndex& index)
   switch (index.column()) {
     case 0:
       p->readLock();
-      rc.setValue(p->tag().displayString());
+      rc.setValue(p->Name());
       p->unlock();
       break;
     case 1:
@@ -303,7 +303,7 @@ QVariant SessionModel::relationData(RelationPtr p, const QModelIndex& index) con
   switch (index.column()) {
     case 0:
       p->readLock();
-      rc.setValue(p->tag().displayString());
+      rc.setValue(p->Name());
       p->unlock();
       break;
     case 1:

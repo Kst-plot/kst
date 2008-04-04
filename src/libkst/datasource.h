@@ -257,6 +257,8 @@ class KST_EXPORT DataSource : public Object {
 
     ScalarPtr _numFramesScalar;
 
+    virtual QString _automaticDescriptiveName();
+
     // NOTE: You must bump the version key if you add new member variables
     //       or change or add virtual functions.
 };

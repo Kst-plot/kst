@@ -37,18 +37,24 @@ class KST_EXPORT Primitive : public Object {
 
     // Must not be a ObjectPtr!
     virtual void setProvider(Object* obj);
+
     inline ObjectPtr provider() const { return ObjectPtr(_provider); }
 
     /** Update the primitive via the provider and/or internalUpdate().
         Return true if there was new data. */
     UpdateType update(int update_counter = -1);
 
+    void setSlaveName(QString slaveName);
   protected:
     Primitive(ObjectStore *store, const ObjectTag &tag = ObjectTag::invalidTag, Object* provider = 0L);
 
     virtual ~Primitive();
 
     friend class ObjectStore;
+
+    virtual QString _automaticDescriptiveName();
+
+    QString _slaveName;
 
   protected:
     virtual Object::UpdateType internalUpdate(Object::UpdateType providerRC);

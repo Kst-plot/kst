@@ -106,6 +106,8 @@ class KST_EXPORT PSD : public DataObject {
 
     friend class ObjectStore;
 
+    virtual QString _automaticDescriptiveName();
+
   private:
     void commonConstructor(ObjectStore *store, VectorPtr in_V,
         double freq, bool average, int average_len, bool apodize, bool removeMean,

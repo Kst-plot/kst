@@ -103,6 +103,10 @@ void GeneratedVector::setSaveData(bool save) {
   Q_UNUSED(save)
 }
 
+QString GeneratedVector::_automaticDescriptiveName() {
+  return QString::number(_v[0])+".."+QString::number(_v[length()-1]);
+}
+
 }
 
 // vim: ts=2 sw=2 et

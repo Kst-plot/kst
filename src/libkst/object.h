@@ -50,10 +50,15 @@ class Object : public QObject, public Shared, public KstRWLock {
 
     ObjectStore *store() const;
 
-//    virtual QString tagName() const;
+    // old tag name system to be deleted.
     virtual ObjectTag& tag();
     virtual const ObjectTag& tag() const;
-//    virtual QString tagLabel() const;
+
+    //new tag name system: see object names devel doc
+    QString Name(); // eg GYRO1:V1
+    QString descriptiveName(); // eg GYRO1: automatic or manual
+    QString shortName(); // eg V1: always automatically generated
+    void setDescriptiveName(QString new_name); // auto if new_name.isEmpty()
 
     // Returns count - 2 to account for "this" and the list pointer, therefore
     // you MUST have a reference-counted pointer to call this function
@@ -89,6 +94,11 @@ class Object : public QObject, public Shared, public KstRWLock {
 
     friend class ObjectStore;
     ObjectStore *_store;  // set by ObjectStore
+
+    //new tag name system: see object names devel doc
+    virtual QString _automaticDescriptiveName() = 0;
+    QString _manualDescriptiveName;
+    QString _shortName;
 
   private:
     ObjectTag _tag;

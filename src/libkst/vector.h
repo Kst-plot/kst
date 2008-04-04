@@ -208,7 +208,9 @@ class Vector : public Primitive {
     friend class DataObject;
     virtual double* realloced(double *memptr, int newSize);
     Object::UpdateType internalUpdate(Object::UpdateType providerRC);
+
 } KST_EXPORT;
+
 
 typedef ObjectList<Vector> VectorList;
 typedef ObjectMap<Vector> VectorMap;

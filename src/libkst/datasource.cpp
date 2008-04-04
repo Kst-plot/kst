@@ -784,6 +784,9 @@ void DataSource::disableReuse() {
   _reusable = false;
 }
 
+QString DataSource::_automaticDescriptiveName() {
+  return fileName();
+}
 
 /////////////////////////////////////////////////////////////////////////////
 DataSourceConfigWidget::DataSourceConfigWidget()

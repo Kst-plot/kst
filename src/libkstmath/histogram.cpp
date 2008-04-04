@@ -38,12 +38,13 @@ static const QLatin1String& RAWVECTOR  = QLatin1String("I");
 static const QLatin1String& BINS = QLatin1String("B");
 static const QLatin1String& HIST = QLatin1String("H");
 
+static int _hnum = 1;
+
 Histogram::Histogram(ObjectStore *store, const ObjectTag &in_tag)
   : DataObject(store, in_tag) {
   setRealTimeAutoBin(false);
   commonConstructor(store, 0L, 0, 0, 0, Number);
 }
-
 
 Histogram::Histogram(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_V,
                            double xmin_in, double xmax_in,
@@ -53,6 +54,7 @@ Histogram::Histogram(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_V
   setRealTimeAutoBin(false);
 
   commonConstructor(store, in_V, xmin_in, xmax_in, in_n_bins, in_norm_mode);
+
 }
 
 Histogram::Histogram(ObjectStore *store, const QDomElement &e)
@@ -141,13 +143,17 @@ void Histogram::commonConstructor(ObjectStore *store,
   Q_ASSERT(store);
   VectorPtr v = store->createObject<Vector>(ObjectTag("bins", tag()));
   v->setProvider(this);
+  v->setSlaveName("bin");
   v->resize(_NumberOfBins);
   _bVector = _outputVectors.insert(BINS, v).value();
 
   v = store->createObject<Vector>(ObjectTag("sv", tag()));
   v->setProvider(this);
+  v->setSlaveName("num");
   v->resize(_NumberOfBins);
   _hVector = _outputVectors.insert(HIST, v).value();
+
+  _shortName = "H"+QString::number(_hnum++);
 
   setDirty();
 }
@@ -469,6 +475,10 @@ DataObjectPtr Histogram::makeDuplicate() {
   histogram->unlock();
 
   return DataObjectPtr(histogram);
+}
+
+QString Histogram::_automaticDescriptiveName() {
+  return (_inputVectors[RAWVECTOR]->descriptiveName());
 }
 
 }

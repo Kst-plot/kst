@@ -128,6 +128,8 @@ class KST_EXPORT Image : public Relation {
 
     friend class ObjectStore;
 
+    QString _automaticDescriptiveName();
+
   private:
     //use these to set defaults when either is not used.
     void setColorDefaults();

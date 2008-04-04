@@ -38,6 +38,9 @@ const QString CSD::staticTypeTag = I18N_NOOP("csd");
 static const QLatin1String INVECTOR = QLatin1String("I");
 static const QLatin1String& OUTMATRIX = QLatin1String("M");
 
+static int _csdnum = 1;
+
+
 #define KSTCSDMAXLEN 27
 CSD::CSD(ObjectStore *store, const ObjectTag &in_tag)
   : DataObject(store, in_tag) {
@@ -143,6 +146,7 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
   Q_ASSERT(store());
   MatrixPtr outMatrix = store()->createObject<Matrix>(ObjectTag("csd", tag()));
   outMatrix->setProvider(this);
+  outMatrix->setSlaveName("SG");
   outMatrix->change(1, 1);
   outMatrix->setLabel(i18n("Power [%1/%2^{1/2}]").arg(_vectorUnits).arg(_rateUnits));
   outMatrix->setXLabel(i18n("%1 [%2]").arg(vecName).arg(_vectorUnits));
@@ -152,6 +156,8 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
   updateMatrixLabels();
   _outMatrix->setDirty();
   setDirty();
+  _shortName = "G"+QString::number(_csdnum++);
+
 }
 
 void CSD::commonConstructor(ObjectStore *store, VectorPtr in_V,
@@ -181,6 +187,7 @@ void CSD::commonConstructor(ObjectStore *store, VectorPtr in_V,
   Q_ASSERT(store);
   MatrixPtr outMatrix = store->createObject<Matrix>(ObjectTag("csd", tag()));
   outMatrix->setProvider(this);
+  outMatrix->setSlaveName("SG");
   outMatrix->change(1, 1);
   outMatrix->setLabel(i18n("Power [%1/%2^{1/2}]").arg(_vectorUnits).arg(_rateUnits));
   outMatrix->setXLabel(i18n("%1 [%2]").arg(vecName).arg(_vectorUnits));
@@ -497,6 +504,9 @@ void CSD::updateMatrixLabels(void) {
   }
 }
 
+QString CSD::_automaticDescriptiveName() {
+  return vector()->descriptiveName();
+}
 
 }
 

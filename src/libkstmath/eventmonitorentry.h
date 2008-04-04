@@ -82,6 +82,8 @@ class EventMonitorEntry : public DataObject {
 
     friend class ObjectStore;
 
+    QString _automaticDescriptiveName();
+
     bool event(QEvent *e);
 
   private slots:
