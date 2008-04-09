@@ -3,3 +3,14 @@ Zoom Mode Plot Bugs:
 
   -Zooming gets slower the more points there are in the curves. It should
   always be fast.
+
+
+Zoom lines are left:
+what happens:
+  Put the mouse in a plot and depress <ctrl>.  A vertical line appears
+  where the mouse is.  Move the mouse around.  The line follows the mouse.
+  Now release <ctrl>.  The line stays.
+What should happen:
+  The line should disappear when <ctrl> is released.
+  
+
