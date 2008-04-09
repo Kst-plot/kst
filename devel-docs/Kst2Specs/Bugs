@@ -1,11 +1,5 @@
 Zoom Mode Plot Bugs:
+  -Zooming does not work if there are no curves in the plots.  It should.
 
-In base offset mode, sometimes the tick rounding is strange: for example, around 99999.5, you may have ticks
-at 0.0004999999995 and 0.000500000009 (instead of +-0.0005).
-
-General bugs:
-
--Startup is very slow.
-
--The drag box is very slow, uses 100% cpu, and lags behind the mouse.
-
+  -Zooming gets slower the more points there are in the curves. It should
+  always be fast.
