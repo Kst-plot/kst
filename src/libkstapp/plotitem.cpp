@@ -35,8 +35,6 @@
 
 #include <QDebug>
 
-static qreal MARGIN_WIDTH = 20.0;
-static qreal MARGIN_HEIGHT = 20.0;
 static int FULL_PRECISION = 15;
 static qreal JD1900 = 2415020.5;
 static qreal JD1970 = 2440587.5;
@@ -244,10 +242,6 @@ void PlotItem::paint(QPainter *painter) {
   margins = margins.expandedTo(calculateRightLabelBound(painter));
   margins = margins.expandedTo(calculateTopLabelBound(painter));
 
-  margins.setHeight(margins.height() + _calculatedAxisMarginHeight);
-  margins.setWidth(margins.width() + _calculatedAxisMarginWidth);
-
-//  qDebug() << "setting margin width" << margins.width() << endl;
   setCalculatedLabelMarginWidth(margins.width());
 
 //  qDebug() << "setting margin height" << margins.height() << endl;
@@ -400,7 +394,7 @@ void PlotItem::paintMinorTicks(QPainter *painter,
                                    const QList<qreal> &xMinorTicks,
                                    const QList<qreal> &yMinorTicks) {
 
-  qreal minorTickLength = qMin(rect().width(), rect().height()) * 0.01; //two percent
+  qreal minorTickLength = qMin(rect().width(), rect().height()) * 0.01; //one percent
 
   if (_drawXAxisMinorTicks) {
     QVector<QLineF> xMinorTickLines;
@@ -439,7 +433,7 @@ void PlotItem::paintBottomTickLabels(QPainter *painter,
                                     const QMap<qreal, QString> &xLabelsIn) {
 
   QRectF xLabelRect;
-  int flags = Qt::TextSingleLine | Qt::AlignVCenter;
+  int flags = Qt::TextSingleLine | Qt::AlignCenter;
   QMap<qreal, QString> xLabels;
   QString xBaseLabel;
 
@@ -502,7 +496,9 @@ void PlotItem::paintBottomTickLabels(QPainter *painter,
       xLabelRect = bound;
     }
 
-    painter->drawText(bound, flags, xLabelIt.value());
+    if ((rect().left() < bound.left()) && (rect().right() > bound.right())) {
+      painter->drawText(bound, flags, xLabelIt.value());
+    }
   }
 
   if (!xBaseLabel.isEmpty()) {
@@ -519,6 +515,12 @@ void PlotItem::paintBottomTickLabels(QPainter *painter,
     painter->drawText(bound, flags, xBaseLabel);
   }
   _xLabelRect = xLabelRect;
+
+//   painter->save();
+//   painter->setOpacity(0.3);
+// //   qDebug() << "xLabelRect:" << xLabelRect;
+//   painter->fillRect(xLabelRect, Qt::green);
+//   painter->restore();
 }
 
 
@@ -527,7 +529,7 @@ void PlotItem::paintLeftTickLabels(QPainter *painter,
                                     const QMap<qreal, QString> &yLabelsIn) {
 
   QRectF yLabelRect;
-  int flags = Qt::TextSingleLine | Qt::AlignVCenter;
+  int flags = Qt::TextSingleLine | Qt::AlignCenter;
   QString yBaseLabel;
 
   int longest = 0, shortest = 1000;
@@ -581,7 +583,8 @@ void PlotItem::paintLeftTickLabels(QPainter *painter,
     yLabelIt.next();
 
     QRectF bound = painter->boundingRect(QRectF(), flags, yLabelIt.value());
-    QPointF p = QPointF(plotRect().left() - bound.width() / 2.0, mapYToPlot(yLabelIt.key()));
+    bound.setWidth(bound.width() * 1.25);
+    QPointF p = QPointF(plotRect().left() - (bound.width() / 2.0), mapYToPlot(yLabelIt.key()));
     bound.moveCenter(p);
 
     if (yLabelRect.isValid()) {
@@ -590,7 +593,9 @@ void PlotItem::paintLeftTickLabels(QPainter *painter,
       yLabelRect = bound;
     }
 
-    painter->drawText(bound, flags, yLabelIt.value());
+    if ((rect().top() < bound.top()) && (rect().bottom() > bound.bottom())) {
+      painter->drawText(bound, flags, yLabelIt.value());
+    }
   }
 
   if (!yBaseLabel.isEmpty()) {
@@ -614,6 +619,12 @@ void PlotItem::paintLeftTickLabels(QPainter *painter,
     painter->restore();
   }
   _yLabelRect = yLabelRect;
+
+//   painter->save();
+//   painter->setOpacity(0.3);
+// //   qDebug() << "yLabelRect:" << yLabelRect;
+//   painter->fillRect(yLabelRect, Qt::green);
+//   painter->restore();
 }
 
 
@@ -975,7 +986,7 @@ QRectF PlotItem::plotRect() const {
   //the PlotRenderItems use this to set their rects
   QRectF plot = plotAxisRect();
   qreal xOffset = isBottomAxisVisible() ? axisMarginHeight() : 0.0;
-  qreal yOffset = isLeftAxisVisible() ? axisMarginHeight() : 0.0;
+  qreal yOffset = isLeftAxisVisible() ? axisMarginWidth() : 0.0;
 
   plot.setLeft(plot.left() + yOffset);
   plot.setBottom(plot.bottom() - xOffset);
@@ -1828,13 +1839,11 @@ void PlotItem::setYAxisInterpretation(const KstAxisInterpretation display) {
 
 
 qreal PlotItem::calculatedLabelMarginWidth() const {
-  qreal m = qMax(MARGIN_WIDTH, _calculatedLabelMarginWidth);
-
   //No more than 1/4 the width of the plot
-  if (width() < m * 4)
+  if (width() < _calculatedLabelMarginWidth * 4)
     return width() / 4;
 
-  return m;
+  return _calculatedLabelMarginWidth;
 }
 
 
@@ -1847,13 +1856,11 @@ void PlotItem::setCalculatedLabelMarginWidth(qreal marginWidth) {
 
 
 qreal PlotItem::calculatedLabelMarginHeight() const {
-  qreal m = qMax(MARGIN_HEIGHT, _calculatedLabelMarginHeight);
-
   //No more than 1/4 the height of the plot
-  if (height() < m * 4)
+  if (height() < _calculatedLabelMarginHeight * 4)
     return height() / 4;
 
-  return m;
+  return _calculatedLabelMarginHeight;
 }
 
 
@@ -1926,7 +1933,7 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
 
   QRectF leftLabelRect = verticalLabelRect(false);
   leftLabelRect.moveTopRight(plotAxisRect().topLeft());
-  painter->drawText(t.mapRect(leftLabelRect), Qt::TextWordWrap | Qt::AlignHCenter | Qt::AlignTop, leftLabelOverride());
+  painter->drawText(t.mapRect(leftLabelRect), Qt::TextWordWrap | Qt::AlignCenter, leftLabelOverride());
 
 //   painter->save();
 //   painter->setOpacity(0.3);
@@ -1992,6 +1999,7 @@ QSizeF PlotItem::calculateBottomLabelBound(QPainter *painter) {
   QRectF bottomLabelBound = painter->boundingRect(horizontalLabelRect(true),
                                                   Qt::TextWordWrap | Qt::AlignCenter, bottomLabelOverride());
   painter->restore();
+
   QSizeF margins;
   margins.setHeight(bottomLabelBound.height());
   return margins;
@@ -2296,7 +2304,7 @@ QSizeF PlotItem::calculateXTickLabelBound(QPainter *painter,
   QRectF xLabelRect;
   if (isBottomAxisVisible()) {
     foreach (qreal x, xMajorTicks) {
-      int flags = Qt::TextSingleLine | Qt::AlignVCenter;
+      int flags = Qt::TextSingleLine | Qt::AlignCenter;
       QString label = QString::number(x);
 
       QRectF bound = painter->boundingRect(QRectF(), flags, label);
@@ -2319,10 +2327,11 @@ QSizeF PlotItem::calculateYTickLabelBound(QPainter *painter,
   QRectF yLabelRect;
   if (isLeftAxisVisible()) {
     foreach (qreal y, yMajorTicks) {
-      int flags = Qt::TextSingleLine | Qt::AlignVCenter;
+      int flags = Qt::TextSingleLine | Qt::AlignCenter;
       QString label = QString::number(y);
 
       QRectF bound = painter->boundingRect(QRectF(), flags, label);
+      bound.setWidth(bound.width() * 1.25);
       QPointF p(plotRect().left() - bound.width() / 2.0, mapYToPlot(y));
       bound.moveCenter(p);
 

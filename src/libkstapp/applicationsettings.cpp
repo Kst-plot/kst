@@ -15,6 +15,11 @@
 #include <QGLPixelBuffer>
 #include <QSettings>
 
+#include <QDebug>
+#ifndef Q_WS_WIN32
+#include <QX11Info>
+#endif
+
 namespace Kst {
 
 static ApplicationSettings *_self = 0;
@@ -73,7 +78,11 @@ void ApplicationSettings::setUseOpenGL(bool useOpenGL) {
 
 
 int ApplicationSettings::referenceViewWidth() const {
-  return (_refViewWidth * 72.0 * 0.3937008);
+  double dpiScale = 72.0;
+#ifndef Q_WS_WIN32
+    dpiScale = QX11Info::appDpiX();
+#endif
+  return (_refViewWidth * dpiScale * 0.3937008);
 }
 
 
@@ -90,7 +99,11 @@ void ApplicationSettings::setReferenceViewWidthCM(const double width) {
 
 
 int ApplicationSettings::referenceViewHeight() const {
-  return (_refViewHeight * 72.0 * 0.3937008);
+  double dpiScale = 72.0;
+#ifndef Q_WS_WIN32
+    dpiScale = QX11Info::appDpiY();
+#endif
+  return (_refViewHeight * dpiScale * 0.3937008);
 }
 
 
