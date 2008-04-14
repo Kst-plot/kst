@@ -512,7 +512,7 @@ void PlotRenderItem::resetSelectionRect() {
   if (_selectionRect.isValid()) {
     _selectionRect.reset();
     updateCursor(_lastPos);
-    updateSelectionRect();
+    update();
   }
 }
 
@@ -603,7 +603,7 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
     _selectionRect.setTo(QPointF(p.x(), rect().bottom()));
     update(); //FIXME should optimize instead of redrawing entire curve!
   } else {
-     updateCursor(event->pos());
+    resetSelectionRect();
   }
   const QPointF point = plotItem()->mapToProjection(event->pos());
   QString message = QString("(%1, %2)").arg(QString::number(point.x(), 'G')).arg(QString::number(point.y()));
