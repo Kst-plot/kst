@@ -795,7 +795,15 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   QAction *removeAction = menu.addAction(tr("Remove"));
   connect(removeAction, SIGNAL(triggered()), this, SLOT(remove()));
 
+  addToMenuForContextEvent(menu);
+
   menu.exec(event->screenPos());
+}
+
+
+void ViewItem::addToMenuForContextEvent(QMenu &menu) {
+  QAction *editAction = menu.addAction(tr("Edit"));
+  connect(editAction, SIGNAL(triggered()), this, SLOT(edit()));
 }
 
 

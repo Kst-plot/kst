@@ -187,6 +187,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
 
   protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
+    virtual void addToMenuForContextEvent(QMenu &menu);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);

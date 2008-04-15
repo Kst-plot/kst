@@ -60,11 +60,10 @@ class PlotItem : public ViewItem, public PlotItemInterface
     bool isTiedZoom() const;
     void setTiedZoom(bool tiedZoom);
 
-    qreal marginWidth() const;
-    qreal marginHeight() const;
-
-    qreal labelMarginWidth() const;
-    qreal labelMarginHeight() const;
+    qreal leftLabelMargin() const;
+    qreal rightLabelMargin() const;
+    qreal topLabelMargin() const;
+    qreal bottomLabelMargin() const;
 
     QString leftLabel() const;
     QString bottomLabel() const;
@@ -271,7 +270,6 @@ class PlotItem : public ViewItem, public PlotItemInterface
     virtual void edit();
 
   private:
-
     virtual void paintPlot(QPainter *painter,
                                      const QList<qreal> &xMajorTicks,
                                      const QList<qreal> &xMinorTicks,
@@ -311,10 +309,19 @@ class PlotItem : public ViewItem, public PlotItemInterface
     virtual void paintPlotMarkers(QPainter *painter);
 
     qreal calculatedLabelMarginWidth() const;
-    void setCalculatedLabelMarginWidth(qreal marginWidth);
-
     qreal calculatedLabelMarginHeight() const;
-    void setCalculatedLabelMarginHeight(qreal marginHeight);
+
+    qreal calculatedLeftLabelMargin() const;
+    void setCalculatedLeftLabelMargin(qreal margin);
+
+    qreal calculatedRightLabelMargin() const;
+    void setCalculatedRightLabelMargin(qreal margin);
+
+    qreal calculatedTopLabelMargin() const;
+    void setCalculatedTopLabelMargin(qreal margin);
+
+    qreal calculatedBottomLabelMargin() const;
+    void setCalculatedBottomLabelMargin(qreal margin);
 
     QString interpretLabel(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double base, double lastValue);
     double convertTimeValueToJD(KstAxisInterpretation axisInterpretation, double valueIn);
@@ -322,8 +329,10 @@ class PlotItem : public ViewItem, public PlotItemInterface
     double convertTimeDiffValueToDays(KstAxisInterpretation axisInterpretation, double offsetIn);
     double interpretOffset(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double base, double value);
 
-    QRectF horizontalLabelRect(bool calc) const;
-    QRectF verticalLabelRect(bool calc) const;
+    QRectF topLabelRect(bool calc) const;
+    QRectF bottomLabelRect(bool calc) const;
+    QRectF leftLabelRect(bool calc) const;
+    QRectF rightLabelRect(bool calc) const;
 
     void paintLeftLabel(QPainter *painter);
     QSizeF calculateLeftLabelBound(QPainter *painter);
@@ -364,6 +373,10 @@ class PlotItem : public ViewItem, public PlotItemInterface
     bool _isTopLabelVisible;
     bool _isBottomAxisVisible;
     bool _isLeftAxisVisible;
+    qreal _calculatedLeftLabelMargin;
+    qreal _calculatedRightLabelMargin;
+    qreal _calculatedTopLabelMargin;
+    qreal _calculatedBottomLabelMargin;
     qreal _calculatedLabelMarginWidth;
     qreal _calculatedLabelMarginHeight;
     qreal _calculatedAxisMarginWidth;

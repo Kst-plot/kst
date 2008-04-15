@@ -108,7 +108,7 @@ public Q_SLOTS:
     virtual void edit();
 
   protected:
-    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
+    virtual void addToMenuForContextEvent(QMenu &menu);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
@@ -133,6 +133,7 @@ public Q_SLOTS:
 
   private:
     void createActions();
+    void createZoomMenu();
     void updateCursor(const QPointF &pos);
     void resetSelectionRect();
     void updateSelectionRect();
@@ -161,6 +162,7 @@ public Q_SLOTS:
     QRectF _projectionRect;
     SelectionRect _selectionRect;
 
+    QMenu *_zoomMenu;
     QAction *_zoomMaximum;
     QAction *_zoomMaxSpikeInsensitive;
     QAction *_zoomPrevious;

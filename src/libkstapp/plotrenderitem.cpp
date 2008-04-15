@@ -33,7 +33,8 @@ namespace Kst {
 PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
   : ViewItem(parentItem->parentView()),
   _xAxisZoomMode(Auto),
-  _yAxisZoomMode(AutoBorder) {
+  _yAxisZoomMode(AutoBorder),
+  _zoomMenu(0) {
 
   setName(tr("Plot Render"));
   setZValue(PLOTRENDER_ZVALUE);
@@ -433,48 +434,48 @@ void PlotRenderItem::createActions() {
   _zoomLogY->setCheckable(true);
   registerShortcut(_zoomLogY);
   connect(_zoomLogY, SIGNAL(triggered()), this, SLOT(zoomLogY()));
+
+  createZoomMenu();
 }
 
 
-void PlotRenderItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
-  QMenu menu;
+void PlotRenderItem::createZoomMenu() {
+  if (_zoomMenu) {
+    delete _zoomMenu;
+  }
 
-  addTitle(&menu);
+  _zoomMenu = new QMenu;
+  _zoomMenu->setTitle(tr("Zoom"));
 
-  QAction *editAction = menu.addAction(tr("Edit"));
-  connect(editAction, SIGNAL(triggered()), this, SLOT(edit()));
+  _zoomMenu->addAction(_zoomMaximum);
+  _zoomMenu->addAction(_zoomMaxSpikeInsensitive);
+  _zoomMenu->addAction(_zoomYMeanCentered);
 
-  QMenu zoom;
-  zoom.setTitle(tr("Zoom"));
+  _zoomMenu->addSeparator();
 
-  zoom.addAction(_zoomMaximum);
-  zoom.addAction(_zoomMaxSpikeInsensitive);
-  zoom.addAction(_zoomYMeanCentered);
+  _zoomMenu->addAction(_zoomXMaximum);
+  _zoomMenu->addAction(_zoomXRight);
+  _zoomMenu->addAction(_zoomXLeft);
+  _zoomMenu->addAction(_zoomXOut);
+  _zoomMenu->addAction(_zoomXIn);
+  _zoomMenu->addAction(_zoomNormalizeXtoY);
+  _zoomMenu->addAction(_zoomLogX);
 
-  zoom.addSeparator();
+  _zoomMenu->addSeparator();
 
-  zoom.addAction(_zoomXMaximum);
-  zoom.addAction(_zoomXRight);
-  zoom.addAction(_zoomXLeft);
-  zoom.addAction(_zoomXOut);
-  zoom.addAction(_zoomXIn);
-  zoom.addAction(_zoomNormalizeXtoY);
-  zoom.addAction(_zoomLogX);
+  _zoomMenu->addAction(_zoomYLocalMaximum);
+  _zoomMenu->addAction(_zoomYMaximum);
+  _zoomMenu->addAction(_zoomYUp);
+  _zoomMenu->addAction(_zoomYDown);
+  _zoomMenu->addAction(_zoomYOut);
+  _zoomMenu->addAction(_zoomYIn);
+  _zoomMenu->addAction(_zoomNormalizeYtoX);
+  _zoomMenu->addAction(_zoomLogY);
+}
 
-  zoom.addSeparator();
 
-  zoom.addAction(_zoomYLocalMaximum);
-  zoom.addAction(_zoomYMaximum);
-  zoom.addAction(_zoomYUp);
-  zoom.addAction(_zoomYDown);
-  zoom.addAction(_zoomYOut);
-  zoom.addAction(_zoomYIn);
-  zoom.addAction(_zoomNormalizeYtoX);
-  zoom.addAction(_zoomLogY);
-
-  menu.addMenu(&zoom);
-
-  menu.exec(event->screenPos());
+void PlotRenderItem::addToMenuForContextEvent(QMenu &menu) {
+  menu.addMenu(_zoomMenu);
 }
 
 
