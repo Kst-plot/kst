@@ -475,7 +475,6 @@ ObjectPtr ImageDialog::createNewDataObject() const {
   }
 
   PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
-  //TODO  Adam, is this the correct way to draw an image?  It runs very slow.
   renderItem->addRelation(kst_cast<Relation>(image));
   plotItem->update();
 
