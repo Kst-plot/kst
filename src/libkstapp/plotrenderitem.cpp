@@ -31,10 +31,7 @@
 namespace Kst {
 
 PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
-  : ViewItem(parentItem->parentView()),
-  _xAxisZoomMode(Auto),
-  _yAxisZoomMode(AutoBorder),
-  _zoomMenu(0) {
+  : ViewItem(parentItem->parentView()) {
 
   setName(tr("Plot Render"));
   setZValue(PLOTRENDER_ZVALUE);
@@ -52,12 +49,8 @@ PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
   connect(parentItem->parentView(), SIGNAL(viewModeChanged(View::ViewMode)),
           this, SLOT(updateViewMode()));
 
-  connect(this, SIGNAL(projectionRectChanged()),
-          parentItem, SLOT(calculateProjectionRect()));
-
   updateGeometry(); //the initial rect
   updateViewMode(); //the initial view
-  createActions();
 }
 
 
@@ -80,36 +73,6 @@ void PlotRenderItem::setType(PlotRenderItem::RenderType type) {
 }
 
 
-bool PlotRenderItem::isTiedZoom() const {
-  return plotItem()->isTiedZoom();
-}
-
-
-void PlotRenderItem::setTiedZoom(bool tiedZoom) {
-  return plotItem()->setTiedZoom(tiedZoom);
-}
-
-
-PlotRenderItem::ZoomMode PlotRenderItem::xAxisZoomMode() const {
-  return _xAxisZoomMode;
-}
-
-
-void PlotRenderItem::setXAxisZoomMode(ZoomMode mode) {
-  _xAxisZoomMode = mode;
-}
-
-
-PlotRenderItem::ZoomMode PlotRenderItem::yAxisZoomMode() const {
-  return _yAxisZoomMode;
-}
-
-
-void PlotRenderItem::setYAxisZoomMode(ZoomMode mode) {
-  _yAxisZoomMode = mode;
-}
-
-
 QRectF PlotRenderItem::plotRect() const {
   QRectF plotRect = rect();
   plotRect = plotRect.normalized();
@@ -119,21 +82,7 @@ QRectF PlotRenderItem::plotRect() const {
 
 
 QRectF PlotRenderItem::projectionRect() const {
-    return _projectionRect;
-}
-
-
-void PlotRenderItem::setProjectionRect(const QRectF &rect) {
-  if (_projectionRect == rect || rect.isEmpty() || !rect.isValid())
-    return;
-
-  qDebug() << "=== setProjectionRect() ======================>\n"
-            << "computedProjectionRect" << computedProjectionRect() << "\n"
-            << "before:" << _projectionRect << "\n"
-            << "after:" << rect << endl;
-
-  _projectionRect = rect;
-  emit projectionRectChanged();
+    return plotItem()->projectionRect();
 }
 
 
@@ -144,19 +93,19 @@ RelationList PlotRenderItem::relationList() const {
 
 void PlotRenderItem::addRelation(RelationPtr relation) {
   _relationList.append(relation);
-  zoomMaximum();
+  plotItem()->zoomMaximum();
 }
 
 
 void PlotRenderItem::removeRelation(RelationPtr relation) {
   _relationList.removeAll(relation);
-  zoomMaximum();
+  plotItem()->zoomMaximum();
 }
 
 
 void PlotRenderItem::clearRelations() {
   _relationList.clear();
-  zoomMaximum();
+  plotItem()->zoomMaximum();
 }
 
 
@@ -168,14 +117,6 @@ void PlotRenderItem::save(QXmlStreamWriter &xml) {
 void PlotRenderItem::saveInPlot(QXmlStreamWriter &xml) {
   xml.writeAttribute("name", name());
   xml.writeAttribute("type", QVariant(_type).toString());
-  xml.writeAttribute("xzoommode", QVariant(_xAxisZoomMode).toString());
-  xml.writeAttribute("yzoommode", QVariant(_yAxisZoomMode).toString());
-  xml.writeStartElement("rect");
-  xml.writeAttribute("x", QVariant(projectionRect().x()).toString());
-  xml.writeAttribute("y", QVariant(projectionRect().y()).toString());
-  xml.writeAttribute("width", QVariant(projectionRect().width()).toString());
-  xml.writeAttribute("height", QVariant(projectionRect().height()).toString());
-  xml.writeEndElement();
   foreach (RelationPtr relation, relationList()) {
     xml.writeStartElement("relation");
     xml.writeAttribute("tag", relation->tag().tagString());
@@ -186,7 +127,6 @@ void PlotRenderItem::saveInPlot(QXmlStreamWriter &xml) {
 
 bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
   bool validTag = true;
-  double x = 0, y = 0, w = 10, h = 10;
 
   QString primaryTag = xml.name().toString();
   QXmlStreamAttributes attrs = xml.attributes();
@@ -195,37 +135,10 @@ bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store)
   if (!av.isNull()) {
     setType((RenderType)av.toString().toInt());
   }
-  av = attrs.value("xzoommode");
-  if (!av.isNull()) {
-    setXAxisZoomMode((ZoomMode)av.toString().toInt());
-  }
-  av = attrs.value("yzoommode");
-  if (!av.isNull()) {
-    setYAxisZoomMode((ZoomMode)av.toString().toInt());
-  }
 
   QString expectedEnd;
   while (!(xml.isEndElement() && (xml.name().toString() == primaryTag))) {
-    if (xml.isStartElement() && xml.name().toString() == "rect") {
-      expectedEnd = xml.name().toString();
-      attrs = xml.attributes();
-      av = attrs.value("width");
-      if (!av.isNull()) {
-        w = av.toString().toDouble();
-      }
-      av = attrs.value("height");
-      if (!av.isNull()) {
-        h = av.toString().toDouble();
-      }
-      av = attrs.value("x");
-      if (!av.isNull()) {
-        x = av.toString().toDouble();
-      }
-      av = attrs.value("y");
-      if (!av.isNull()) {
-        y = av.toString().toDouble();
-      }
-    } else if (xml.isStartElement() && xml.name().toString() == "relation") {
+   if (xml.isStartElement() && xml.name().toString() == "relation") {
       expectedEnd = xml.name().toString();
       attrs = xml.attributes();
       ObjectTag tag = ObjectTag::fromString(attrs.value("tag").toString());
@@ -242,9 +155,13 @@ bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store)
     }
     xml.readNext();
   }
-  setProjectionRect(QRectF(QPointF(x, y), QSizeF(w, h)));
 
   return validTag;
+}
+
+
+void PlotRenderItem::addToMenuForContextEvent(QMenu &menu) {
+  plotItem()->addToMenuForContextEvent(menu);
 }
 
 
@@ -286,7 +203,7 @@ void PlotRenderItem::paint(QPainter *painter) {
     p.addEllipse(check);
     painter->fillPath(p, Qt::black);
   }
-  if (isTiedZoom()) {
+  if (plotItem()->isTiedZoom()) {
     painter->save();
     painter->setOpacity(0.5);
     painter->fillPath(checkBox(), Qt::black);
@@ -339,143 +256,6 @@ QString PlotRenderItem::topLabel() const {
       return relation->xLabel();
   }
   return QString();
-}
-
-
-void PlotRenderItem::createActions() {
-  _zoomMaximum = new QAction(tr("Zoom Maximum"), this);
-  _zoomMaximum->setShortcut(Qt::Key_M);
-  registerShortcut(_zoomMaximum);
-  connect(_zoomMaximum, SIGNAL(triggered()), this, SLOT(zoomMaximum()));
-
-  _zoomMaxSpikeInsensitive = new QAction(tr("Zoom Max Spike Insensitive"), this);
-  _zoomMaxSpikeInsensitive->setShortcut(Qt::Key_S);
-  registerShortcut(_zoomMaxSpikeInsensitive);
-  connect(_zoomMaxSpikeInsensitive, SIGNAL(triggered()), this, SLOT(zoomMaxSpikeInsensitive()));
-
-  _zoomYMeanCentered = new QAction(tr("Y-Zoom Mean-centered"), this);
-  _zoomYMeanCentered->setShortcut(Qt::Key_A);
-  registerShortcut(_zoomYMeanCentered);
-  connect(_zoomYMeanCentered, SIGNAL(triggered()), this, SLOT(zoomYMeanCentered()));
-
-  _zoomXMaximum = new QAction(tr("X-Zoom Maximum"), this);
-  _zoomXMaximum->setShortcut(Qt::CTRL+Qt::Key_M);
-  registerShortcut(_zoomXMaximum);
-  connect(_zoomXMaximum, SIGNAL(triggered()), this, SLOT(zoomXMaximum()));
-
-  _zoomXRight = new QAction(tr("X-Zoom Right"), this);
-  _zoomXRight->setShortcut(Qt::Key_Right);
-  registerShortcut(_zoomXRight);
-  connect(_zoomXRight, SIGNAL(triggered()), this, SLOT(zoomXRight()));
-
-  _zoomXLeft= new QAction(tr("X-Zoom Left"), this);
-  _zoomXLeft->setShortcut(Qt::Key_Left);
-  registerShortcut(_zoomXLeft);
-  connect(_zoomXLeft, SIGNAL(triggered()), this, SLOT(zoomXLeft()));
-
-  _zoomXOut = new QAction(tr("X-Zoom Out"), this);
-  _zoomXOut->setShortcut(Qt::SHIFT+Qt::Key_Right);
-  registerShortcut(_zoomXOut);
-  connect(_zoomXOut, SIGNAL(triggered()), this, SLOT(zoomXOut()));
-
-  _zoomXIn = new QAction(tr("X-Zoom In"), this);
-  _zoomXIn->setShortcut(Qt::SHIFT+Qt::Key_Left);
-  registerShortcut(_zoomXIn);
-  connect(_zoomXIn, SIGNAL(triggered()), this, SLOT(zoomXIn()));
-
-  _zoomNormalizeXtoY = new QAction(tr("Normalize X Axis to Y Axis"), this);
-  _zoomNormalizeXtoY->setShortcut(Qt::Key_N);
-  registerShortcut(_zoomNormalizeXtoY);
-  connect(_zoomNormalizeXtoY, SIGNAL(triggered()), this, SLOT(zoomNormalizeXtoY()));
-
-  _zoomLogX = new QAction(tr("Log X Axis"), this);
-  _zoomLogX->setShortcut(Qt::Key_G);
-  _zoomLogX->setCheckable(true);
-  registerShortcut(_zoomLogX);
-  connect(_zoomLogX, SIGNAL(triggered()), this, SLOT(zoomLogX()));
-
-  _zoomYLocalMaximum = new QAction(tr("Y-Zoom Local Maximum"), this);
-  _zoomYLocalMaximum->setShortcut(Qt::SHIFT+Qt::Key_L);
-  registerShortcut(_zoomYLocalMaximum);
-  connect(_zoomYLocalMaximum, SIGNAL(triggered()), this, SLOT(zoomYLocalMaximum()));
-
-  _zoomYMaximum = new QAction(tr("Y-Zoom Maximum"), this);
-  _zoomYMaximum->setShortcut(Qt::SHIFT+Qt::Key_M);
-  registerShortcut(_zoomYMaximum);
-  connect(_zoomYMaximum, SIGNAL(triggered()), this, SLOT(zoomYMaximum()));
-
-  _zoomYUp= new QAction(tr("Y-Zoom Up"), this);
-  _zoomYUp->setShortcut(Qt::Key_Up);
-  registerShortcut(_zoomYUp);
-  connect(_zoomYUp, SIGNAL(triggered()), this, SLOT(zoomYUp()));
-
-  _zoomYDown= new QAction(tr("Y-Zoom Down"), this);
-  _zoomYDown->setShortcut(Qt::Key_Down);
-  registerShortcut(_zoomYDown);
-  connect(_zoomYDown, SIGNAL(triggered()), this, SLOT(zoomYDown()));
-
-  _zoomYOut = new QAction(tr("Y-Zoom Out"), this);
-  _zoomYOut->setShortcut(Qt::SHIFT+Qt::Key_Up);
-  registerShortcut(_zoomYOut);
-  connect(_zoomYOut, SIGNAL(triggered()), this, SLOT(zoomYOut()));
-
-  _zoomYIn = new QAction(tr("Y-Zoom In"), this);
-  _zoomYIn->setShortcut(Qt::SHIFT+Qt::Key_Down);
-  registerShortcut(_zoomYIn);
-  connect(_zoomYIn, SIGNAL(triggered()), this, SLOT(zoomYIn()));
-
-  _zoomNormalizeYtoX = new QAction(tr("Normalize Y Axis to X Axis"), this);
-  _zoomNormalizeYtoX->setShortcut(Qt::SHIFT+Qt::Key_N);
-  registerShortcut(_zoomNormalizeYtoX);
-  connect(_zoomNormalizeYtoX, SIGNAL(triggered()), this, SLOT(zoomNormalizeYtoX()));
-
-  _zoomLogY = new QAction(tr("Log Y Axis"), this);
-  _zoomLogY->setShortcut(Qt::Key_L);
-  _zoomLogY->setCheckable(true);
-  registerShortcut(_zoomLogY);
-  connect(_zoomLogY, SIGNAL(triggered()), this, SLOT(zoomLogY()));
-
-  createZoomMenu();
-}
-
-
-void PlotRenderItem::createZoomMenu() {
-  if (_zoomMenu) {
-    delete _zoomMenu;
-  }
-
-  _zoomMenu = new QMenu;
-  _zoomMenu->setTitle(tr("Zoom"));
-
-  _zoomMenu->addAction(_zoomMaximum);
-  _zoomMenu->addAction(_zoomMaxSpikeInsensitive);
-  _zoomMenu->addAction(_zoomYMeanCentered);
-
-  _zoomMenu->addSeparator();
-
-  _zoomMenu->addAction(_zoomXMaximum);
-  _zoomMenu->addAction(_zoomXRight);
-  _zoomMenu->addAction(_zoomXLeft);
-  _zoomMenu->addAction(_zoomXOut);
-  _zoomMenu->addAction(_zoomXIn);
-  _zoomMenu->addAction(_zoomNormalizeXtoY);
-  _zoomMenu->addAction(_zoomLogX);
-
-  _zoomMenu->addSeparator();
-
-  _zoomMenu->addAction(_zoomYLocalMaximum);
-  _zoomMenu->addAction(_zoomYMaximum);
-  _zoomMenu->addAction(_zoomYUp);
-  _zoomMenu->addAction(_zoomYDown);
-  _zoomMenu->addAction(_zoomYOut);
-  _zoomMenu->addAction(_zoomYIn);
-  _zoomMenu->addAction(_zoomNormalizeYtoX);
-  _zoomMenu->addAction(_zoomLogY);
-}
-
-
-void PlotRenderItem::addToMenuForContextEvent(QMenu &menu) {
-  menu.addMenu(_zoomMenu);
 }
 
 
@@ -552,7 +332,7 @@ void PlotRenderItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   }
 
   if (checkBox().contains(event->pos())) {
-    setTiedZoom(!isTiedZoom());
+    plotItem()->setTiedZoom(!plotItem()->isTiedZoom());
     update(); //FIXME should optimize instead of redrawing entire curve!
   }
 
@@ -582,7 +362,7 @@ void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   const QRectF projection = plotItem()->mapToProjection(_selectionRect.rect());
   _selectionRect.reset();
 
-  zoomFixedExpression(projection);
+  plotItem()->zoomFixedExpression(projection);
 }
 
 
@@ -629,153 +409,6 @@ void PlotRenderItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
   updateCursor(event->pos());
 
   kstApp->mainWindow()->statusBar()->showMessage(QString());
-}
-
-
-void PlotRenderItem::zoomFixedExpression(const QRectF &projection) {
-  qDebug() << "zoomFixedExpression" << endl;
-  ZoomCommand *cmd = new ZoomFixedExpressionCommand(this, projection);
-  cmd->redo();
-}
-
-
-void PlotRenderItem::zoomMaximum() {
-  qDebug() << "zoomMaximum" << endl;
-  ZoomCommand *cmd = new ZoomMaximumCommand(this);
-  cmd->redo();
-}
-
-
-void PlotRenderItem::zoomMaxSpikeInsensitive() {
-  qDebug() << "zoomMaxSpikeInsensitive" << endl;
-  ZoomCommand *cmd = new ZoomMaxSpikeInsensitiveCommand(this);
-  cmd->redo();
-}
-
-
-void PlotRenderItem::zoomYMeanCentered() {
-  qDebug() << "zoomYMeanCentered" << endl;
-  ZoomCommand *cmd = new ZoomYMeanCenteredCommand(this);
-  cmd->redo();
-}
-
-
-void PlotRenderItem::zoomXMaximum() {
-  qDebug() << "zoomXMaximum" << endl;
-  ZoomCommand *cmd = new ZoomXMaximumCommand(this);
-  cmd->redo();
-}
-
-
-void PlotRenderItem::zoomXRight() {
-  qDebug() << "zoomXRight" << endl;
-  ZoomCommand *cmd = new ZoomXRightCommand(this);
-  cmd->redo();
-}
-
-
-void PlotRenderItem::zoomXLeft() {
-  qDebug() << "zoomXLeft" << endl;
-  ZoomCommand *cmd = new ZoomXLeftCommand(this);
-  cmd->redo();
-}
-
-
-void PlotRenderItem::zoomXOut() {
-  qDebug() << "zoomXOut" << endl;
-  resetSelectionRect();
-  ZoomCommand *cmd = new ZoomXOutCommand(this);
-  cmd->redo();
-}
-
-
-void PlotRenderItem::zoomXIn() {
-  qDebug() << "zoomXIn" << endl;
-  resetSelectionRect();
-  ZoomCommand *cmd = new ZoomXInCommand(this);
-  cmd->redo();
-}
-
-
-void PlotRenderItem::zoomNormalizeXtoY() {
-  qDebug() << "zoomNormalizeXtoY" << endl;
-
-  if (plotItem()->xAxisLog() || plotItem()->yAxisLog())
-    return; //apparently we don't want to do anything here according to kst2dplot...
-
-  ZoomCommand *cmd = new ZoomNormalizeXToYCommand(this);
-  cmd->redo();
-}
-
-
-void PlotRenderItem::zoomLogX() {
-  qDebug() << "zoomLogX" << endl;
-  plotItem()->setXAxisLog(_zoomLogX->isChecked());
-  setProjectionRect(computedProjectionRect()); //need to recompute
-  plotItem()->update();
-}
-
-
-void PlotRenderItem::zoomYLocalMaximum() {
-  qDebug() << "zoomYLocalMaximum" << endl;
-  ZoomCommand *cmd = new ZoomYLocalMaximumCommand(this);
-  cmd->redo();
-}
-
-
-void PlotRenderItem::zoomYMaximum() {
-  qDebug() << "zoomYMaximum" << endl;
-  ZoomCommand *cmd = new ZoomYMaximumCommand(this);
-  cmd->redo();
-}
-
-
-void PlotRenderItem::zoomYUp() {
-  qDebug() << "zoomYUp" << endl;
-  ZoomCommand *cmd = new ZoomYUpCommand(this);
-  cmd->redo();
-}
-
-
-void PlotRenderItem::zoomYDown() {
-  qDebug() << "zoomYDown" << endl;
-  ZoomCommand *cmd = new ZoomYDownCommand(this);
-  cmd->redo();
-}
-
-
-void PlotRenderItem::zoomYOut() {
-  qDebug() << "zoomYOut" << endl;
-  resetSelectionRect();
-  ZoomCommand *cmd = new ZoomYOutCommand(this);
-  cmd->redo();
-}
-
-
-void PlotRenderItem::zoomYIn() {
-  qDebug() << "zoomYIn" << endl;
-  resetSelectionRect();
-  ZoomCommand *cmd = new ZoomYInCommand(this);
-  cmd->redo();
-}
-
-
-void PlotRenderItem::zoomNormalizeYtoX() {
-  qDebug() << "zoomNormalizeYtoX" << endl;
-
-  if (plotItem()->xAxisLog() || plotItem()->yAxisLog())
-    return; //apparently we don't want to do anything here according to kst2dplot...
-
-  ZoomCommand *cmd = new ZoomNormalizeYToXCommand(this);
-  cmd->redo();
-}
-
-
-void PlotRenderItem::zoomLogY() {
-  qDebug() << "zoomLogY" << endl;
-  plotItem()->setYAxisLog(_zoomLogY->isChecked());
-  setProjectionRect(computedProjectionRect()); //need to recompute
-  plotItem()->update();
 }
 
 
@@ -846,6 +479,31 @@ void PlotRenderItem::edit() {
 }
 
 
+void PlotRenderItem::raise() {
+  plotItem()->raise();
+}
+
+
+void PlotRenderItem::lower() {
+  plotItem()->lower();
+}
+
+
+void PlotRenderItem::createLayout() {
+  plotItem()->createLayout();
+}
+
+
+void PlotRenderItem::breakLayout() {
+  plotItem()->breakLayout();
+}
+
+
+void PlotRenderItem::remove() {
+  plotItem()->remove();
+}
+
+
 void PlotRenderItem::updateCursor(const QPointF &pos) {
   _lastPos = pos;
   if (checkBox().contains(pos)) {
@@ -853,29 +511,6 @@ void PlotRenderItem::updateCursor(const QPointF &pos) {
   } else {
     updateViewMode();
   }
-}
-
-
-ZoomState PlotRenderItem::currentZoomState() {
-  ZoomState zoomState;
-  zoomState.item = this; //the origin of this ZoomState
-  zoomState.projectionRect = projectionRect();
-  zoomState.xAxisZoomMode = xAxisZoomMode();
-  zoomState.yAxisZoomMode = yAxisZoomMode();
-  zoomState.isXAxisLog = plotItem()->xAxisLog();
-  zoomState.isYAxisLog = plotItem()->yAxisLog();
-  zoomState.xLogBase = 10.0;
-  zoomState.yLogBase = 10.0;
-  return zoomState;
-}
-
-
-void PlotRenderItem::setCurrentZoomState(ZoomState zoomState) {
-  setXAxisZoomMode(ZoomMode(zoomState.xAxisZoomMode));
-  setYAxisZoomMode(ZoomMode(zoomState.yAxisZoomMode));
-  plotItem()->setXAxisLog(zoomState.isXAxisLog);
-  plotItem()->setYAxisLog(zoomState.isYAxisLog);
-  setProjectionRect(zoomState.projectionRect);
 }
 
 
@@ -897,21 +532,21 @@ void PlotRenderItem::computeXAxisRange(qreal *min, qreal *max) const {
   qreal minimum = *min;
   qreal maximum = *max;
 
-  switch (_xAxisZoomMode) {
-  case Auto:
+  switch (plotItem()->xAxisZoomMode()) {
+  case PlotItem::Auto:
     computeAuto(Qt::Horizontal, &minimum, &maximum);
     break;
-  case AutoBorder: //auto mode, plus a 2.5% border on top and bottom.
+  case PlotItem::AutoBorder: //auto mode, plus a 2.5% border on top and bottom.
     computeAuto(Qt::Horizontal, &minimum, &maximum);
     computeBorder(Qt::Horizontal, &minimum, &maximum);
     break;
-  case FixedExpression: //limits are given by scalar equations, or mouse
+  case PlotItem::FixedExpression: //limits are given by scalar equations, or mouse
     qDebug() << "FIXME! Need a GUI for entering scalar equations..." << endl;
     break;
-  case SpikeInsensitive: //auto with algorithm to detect spikes TBD
+  case PlotItem::SpikeInsensitive: //auto with algorithm to detect spikes TBD
     qDebug() << "FIXME! Need a spike insensitive algorithm..." << endl;
     break;
-  case MeanCentered: //the mean of all active curves
+  case PlotItem::MeanCentered: //the mean of all active curves
     computeMeanCentered(Qt::Horizontal, &minimum, &maximum);
     break;
   default:
@@ -927,21 +562,21 @@ void PlotRenderItem::computeYAxisRange(qreal *min, qreal *max) const {
   qreal minimum = *min;
   qreal maximum = *max;
 
-  switch (_yAxisZoomMode) {
-  case Auto:
+  switch (plotItem()->yAxisZoomMode()) {
+  case PlotItem::Auto:
     computeAuto(Qt::Vertical, &minimum, &maximum);
     break;
-  case AutoBorder: //auto mode, plus a 2.5% border on top and bottom.
+  case PlotItem::AutoBorder: //auto mode, plus a 2.5% border on top and bottom.
     computeAuto(Qt::Vertical, &minimum, &maximum);
     computeBorder(Qt::Vertical, &minimum, &maximum);
     break;
-  case FixedExpression: //limits are given by scalar equations, or mouse
+  case PlotItem::FixedExpression: //limits are given by scalar equations, or mouse
     qDebug() << "FIXME! Need a GUI for entering scalar equations..." << endl;
     break;
-  case SpikeInsensitive: //auto with algorithm to detect spikes TBD
+  case PlotItem::SpikeInsensitive: //auto with algorithm to detect spikes TBD
     qDebug() << "FIXME! Need a spike insensitive algorithm..." << endl;
     break;
-  case MeanCentered: //the mean of all active curves
+  case PlotItem::MeanCentered: //the mean of all active curves
     computeMeanCentered(Qt::Vertical, &minimum, &maximum);
     break;
   default:
@@ -1040,377 +675,6 @@ void PlotRenderItem::computeMeanCentered(Qt::Orientation orientation, qreal *min
 
   *min = minimum;
   *max = maximum;
-}
-
-
-ZoomCommand::ZoomCommand(PlotRenderItem *item, const QString &text)
-    : ViewItemCommand(item, text) {
-
-  if (!item->isTiedZoom()) {
-    _originalStates << item->currentZoomState();
-  } else {
-    QList<PlotItem*> plots = PlotItemManager::tiedZoomPlotsForView(item->parentView());
-    foreach (PlotItem *plotItem, plots) {
-      QList<PlotRenderItem *> renderers = plotItem->renderItems();
-      foreach (PlotRenderItem *renderItem, renderers) {
-        _originalStates << renderItem->currentZoomState();
-      }
-    }
-  }
-}
-
-
-ZoomCommand::~ZoomCommand() {
-}
-
-
-void ZoomCommand::undo() {
-  foreach (ZoomState state, _originalStates) {
-    state.item->setCurrentZoomState(state);
-  }
-}
-
-
-void ZoomCommand::redo() {
-  foreach (ZoomState state, _originalStates) {
-    applyZoomTo(state.item);
-  }
-}
-
-
-/*
- * X axis zoom to FixedExpression, Y axis zoom to FixedExpression.
- */
-void ZoomFixedExpressionCommand::applyZoomTo(PlotRenderItem *item) {
-  item->setXAxisZoomMode(PlotRenderItem::FixedExpression);
-  item->setYAxisZoomMode(PlotRenderItem::FixedExpression);
-  item->setProjectionRect(_fixed);
-}
-
-
-/*
- * X axis zoom to Auto, Y axis zoom to AutoBorder.
- */
-void ZoomMaximumCommand::applyZoomTo(PlotRenderItem *item) {
-  item->setXAxisZoomMode(PlotRenderItem::Auto);
-  item->setYAxisZoomMode(PlotRenderItem::AutoBorder);
-  item->setProjectionRect(item->computedProjectionRect());
-}
-
-
-/*
- * X axis zoom to Auto, Y axis zoom to SpikeInsensitive.
- */
-void ZoomMaxSpikeInsensitiveCommand::applyZoomTo(PlotRenderItem *item) {
-  item->setXAxisZoomMode(PlotRenderItem::Auto);
-  item->setYAxisZoomMode(PlotRenderItem::SpikeInsensitive);
-  item->setProjectionRect(item->computedProjectionRect());
-}
-
-
-/*
- * X axis zoom to Auto, Y axis zoom to Mean Centered.
- */
-void ZoomYMeanCenteredCommand::applyZoomTo(PlotRenderItem *item) {
-  item->setXAxisZoomMode(PlotRenderItem::Auto);
-  item->setYAxisZoomMode(PlotRenderItem::MeanCentered);
-  item->setProjectionRect(item->computedProjectionRect());
-}
-
-
-/*
- * X axis zoom to auto, Y zoom not changed.
- */
-void ZoomXMaximumCommand::applyZoomTo(PlotRenderItem *item) {
-  item->setXAxisZoomMode(PlotRenderItem::Auto);
-  QRectF compute = item->computedProjectionRect();
-  item->setProjectionRect(QRectF(compute.x(),
-                           item->projectionRect().y(),
-                           compute.width(),
-                           item->projectionRect().height()));
-}
-
-/*
- * X axis zoom changed to fixed and shifted to right:
- *       new_xmin = xmin + (xmax - xmin)*0.10;
- *       new_xmax = xmax + (xmax – xmin)*0.10;
- */
-void ZoomXRightCommand::applyZoomTo(PlotRenderItem *item) {
-  item->setXAxisZoomMode(PlotRenderItem::FixedExpression);
-
-  QRectF compute = item->projectionRect();
-
-  qreal dx = (item->plotItem()->xMax() - item->plotItem()->xMin())*0.10;
-  if (item->plotItem()->xAxisLog()) { 
-    compute.setLeft(pow(10, item->plotItem()->xMin() + dx));
-    compute.setRight(pow(10, item->plotItem()->xMax() + dx));
-  } else {
-    compute.setLeft(compute.left() + dx);
-    compute.setRight(compute.right() + dx);
-  }
-
-  item->setProjectionRect(compute);
-  item->update();
-}
-
-/*
- * X axis zoom changed to fixed and shifted to :
- *       new_xmin = xmin - (xmax - xmin)*0.10;
- *       new_xmax = xmax - (xmax – xmin)*0.10;
- */
-void ZoomXLeftCommand::applyZoomTo(PlotRenderItem *item) {
-  item->setXAxisZoomMode(PlotRenderItem::FixedExpression);
-
-  QRectF compute = item->projectionRect();
-
-  qreal dx = (item->plotItem()->xMax() - item->plotItem()->xMin())*0.10;
-  if (item->plotItem()->xAxisLog()) { 
-    compute.setLeft(pow(10, item->plotItem()->xMin() - dx));
-    compute.setRight(pow(10, item->plotItem()->xMax() - dx));
-  } else {
-    compute.setLeft(compute.left() - dx);
-    compute.setRight(compute.right() - dx);
-  }
-
-  item->setProjectionRect(compute);
-  item->update();
-}
-
-/*
- * X axis zoom changed to fixed and increased:
- *       new_xmin = xmin - (xmax - xmin)*0.25;
- *       new_xmax = xmax + (xmax – xmin)*0.25;
- */
-void ZoomXOutCommand::applyZoomTo(PlotRenderItem *item) {
-  item->setXAxisZoomMode(PlotRenderItem::FixedExpression);
-
-  QRectF compute = item->projectionRect();
-
-  qreal dx = (item->plotItem()->xMax() - item->plotItem()->xMin())*0.25;
-  if (item->plotItem()->xAxisLog()) { 
-    compute.setLeft(pow(10, item->plotItem()->xMin() - dx));
-    compute.setRight(pow(10, item->plotItem()->xMax() + dx));
-  } else {
-    compute.setLeft(compute.left() - dx);
-    compute.setRight(compute.right() + dx);
-  }
-
-  item->setProjectionRect(compute);
-  item->update();
-}
-
-
-/*
- * X axis zoom changed to fixed and decreased:
- *       new_xmin = xmin + (xmax - xmin)*0.1666666;
- *       new_xmax = xmax - (xmax – xmin)*0.1666666;
- */
-void ZoomXInCommand::applyZoomTo(PlotRenderItem *item) {
-  item->setXAxisZoomMode(PlotRenderItem::FixedExpression);
-
-  QRectF compute = item->projectionRect();
-
-  qreal dx = (item->plotItem()->xMax() - item->plotItem()->xMin())*0.1666666;
-  if (item->plotItem()->xAxisLog()) { 
-    compute.setLeft(pow(10, item->plotItem()->xMin() + dx));
-    compute.setRight(pow(10, item->plotItem()->xMax() - dx));
-  } else {
-    compute.setLeft(compute.left() + dx);
-    compute.setRight(compute.right() - dx);
-  }
-
-  item->setProjectionRect(compute);
-}
-
-
-/*
- * Normalize X axis to Y axis: Given the current plot aspect ratio, change
- * the X axis range to have the same units per mm as the Y axis range. Particularly
- * useful for images.
- */
-void ZoomNormalizeXToYCommand::applyZoomTo(PlotRenderItem *item) {
-  QRectF compute = item->projectionRect();
-  qreal mean = compute.center().x();
-  qreal range = item->plotRect().width() * compute.height() / item->plotRect().height();
-
-  compute.setLeft(mean - (range / 2.0));
-  compute.setRight(mean + (range / 2.0));
-
-  item->setXAxisZoomMode(PlotRenderItem::FixedExpression);
-  item->setProjectionRect(compute);
-}
-
-
-/*
- * When zoomed in in X, auto zoom Y, only
- * counting points within the current X range. (eg, curve goes from x=0 to 100, but
- * we are zoomed in to x = 30 to 40. Adjust Y zoom to include all points with x
- * values between 30 and 40.
- */
-void ZoomYLocalMaximumCommand::applyZoomTo(PlotRenderItem *item) {
-  qreal minimum = item->plotItem()->yAxisLog() ? 0.0 : -0.1;
-  qreal maximum = 0.1;
-  foreach (RelationPtr relation, item->relationList()) {
-      if (relation->ignoreAutoScale())
-        continue;
-
-      qreal min, max;
-      relation->yRange(item->projectionRect().left(),
-                       item->projectionRect().right(),
-                       &min, &max);
-
-      //If the axis is in log mode, the lower extent will be the
-      //minimum value larger than zero.
-      if (item->plotItem()->yAxisLog())
-        minimum = minimum <= 0.0 ? min : qMin(min, minimum);
-      else
-        minimum = qMin(min, minimum);
-
-      maximum = qMax(max, maximum);
-  }
-
-  item->computeBorder(Qt::Vertical, &minimum, &maximum);
-
-  item->setYAxisZoomMode(PlotRenderItem::FixedExpression);
-
-  QRectF compute = item->projectionRect();
-  compute.setTop(minimum);
-  compute.setBottom(maximum);
-
-  item->setProjectionRect(compute);
-}
-
-
-/*
- * Y axis zoom to auto, X zoom not changed.
- */
-void ZoomYMaximumCommand::applyZoomTo(PlotRenderItem *item) {
-  item->setYAxisZoomMode(PlotRenderItem::Auto);
-  QRectF compute = item->computedProjectionRect();
-  item->setProjectionRect(QRectF(item->projectionRect().x(),
-                           compute.y(),
-                           item->projectionRect().width(),
-                           compute.height()));
-}
-
-
-/*
- * Y axis zoom up. If the Y zoom mode is not
- * Mean Centered, change to Fixed (expression).
- *             new_ymin = ymin + (ymax - ymin)*0.1;
- *             new_ymax = ymax + (ymax - ymin)*0.1;
- */
-void ZoomYUpCommand::applyZoomTo(PlotRenderItem *item) {
-  if (item->yAxisZoomMode() != PlotRenderItem::MeanCentered)
-    item->setYAxisZoomMode(PlotRenderItem::FixedExpression);
-
-  QRectF compute = item->projectionRect();
-
-  qreal dy = (item->plotItem()->yMax() - item->plotItem()->yMin())*0.1;
-  if (item->plotItem()->yAxisLog()) { 
-    compute.setTop(pow(10, item->plotItem()->yMin() + dy));
-    compute.setBottom(pow(10, item->plotItem()->yMax() + dy));
-  } else {
-    compute.setTop(compute.top() + dy);
-    compute.setBottom(compute.bottom() + dy);
-  }
-
-  item->setProjectionRect(compute);
-}
-
-
-/*
- * Y axis zoom down. If the Y zoom mode is not
- * Mean Centered, change to Fixed (expression).
- *             new_ymin = ymin - (ymax - ymin)*0.10;
- *             new_ymax = ymax - (ymax - ymin)*0.10;
- */
-void ZoomYDownCommand::applyZoomTo(PlotRenderItem *item) {
-  if (item->yAxisZoomMode() != PlotRenderItem::MeanCentered)
-    item->setYAxisZoomMode(PlotRenderItem::FixedExpression);
-
-  QRectF compute = item->projectionRect();
-
-  qreal dy = (item->plotItem()->yMax() - item->plotItem()->yMin())*0.1;
-  if (item->plotItem()->yAxisLog()) { 
-    compute.setTop(pow(10, item->plotItem()->yMin() - dy));
-    compute.setBottom(pow(10, item->plotItem()->yMax() - dy));
-  } else {
-    compute.setTop(compute.top() - dy);
-    compute.setBottom(compute.bottom() - dy);
-  }
-
-  item->setProjectionRect(compute);
-}
-
-
-/*
- * Y axis zoom increased. If the Y zoom mode is not
- * Mean Centered, change to Fixed (expression).
- *             new_ymin = ymin - (ymax - ymin)*0.25;
- *             new_ymax = ymax + (ymax - ymin)*0.25;
- */
-void ZoomYOutCommand::applyZoomTo(PlotRenderItem *item) {
-  if (item->yAxisZoomMode() != PlotRenderItem::MeanCentered)
-    item->setYAxisZoomMode(PlotRenderItem::FixedExpression);
-
-  QRectF compute = item->projectionRect();
-
-  qreal dy = (item->plotItem()->yMax() - item->plotItem()->yMin())*0.25;
-  if (item->plotItem()->yAxisLog()) { 
-    compute.setTop(pow(10, item->plotItem()->yMin() - dy));
-    compute.setBottom(pow(10, item->plotItem()->yMax() + dy));
-  } else {
-    compute.setTop(compute.top() - dy);
-    compute.setBottom(compute.bottom() + dy);
-  }
-
-  item->setProjectionRect(compute);
-  item->update();
-}
-
-
-/*
- * Y axis zoom decreased. If the Y zoom mode is not
- * Mean Centered, change to Fixed (expression).
- *             new_ymin = ymin + (ymax - ymin)*0.1666666;
- *             new_ymax = ymax - (ymax – ymin)*0.1666666;
- */
-void ZoomYInCommand::applyZoomTo(PlotRenderItem *item) {
-  if (item->yAxisZoomMode() != PlotRenderItem::MeanCentered)
-    item->setYAxisZoomMode(PlotRenderItem::FixedExpression);
-
-  QRectF compute = item->projectionRect();
-
-  qreal dy = (item->plotItem()->yMax() - item->plotItem()->yMin())*0.1666666;
-  if (item->plotItem()->yAxisLog()) { 
-    compute.setTop(pow(10, item->plotItem()->yMin() + dy));
-    compute.setBottom(pow(10, item->plotItem()->yMax() - dy));
-  } else {
-    compute.setTop(compute.top() + dy);
-    compute.setBottom(compute.bottom() - dy);
-  }
-
-  item->setProjectionRect(compute);
-  item->update();
-}
-
-
-/*
- * Normalize Y axis to X axis: Given the current plot aspect ratio,
- * change the Y axis range to have the same units per mm as the X axis range.
- * Particularly useful for images.
- */
-void ZoomNormalizeYToXCommand::applyZoomTo(PlotRenderItem *item) {
-  QRectF compute = item->projectionRect();
-  qreal mean = compute.center().y();
-  qreal range = item->plotRect().height() * compute.width() / item->plotRect().width();
-
-  compute.setTop(mean - (range / 2.0));
-  compute.setBottom(mean + (range / 2.0));
-
-  item->setYAxisZoomMode(PlotRenderItem::FixedExpression);
-  item->setProjectionRect(compute);
 }
 
 }

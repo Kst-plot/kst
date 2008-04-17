@@ -25,6 +25,20 @@
 
 namespace Kst {
 
+class PlotItem;
+
+struct ZoomState {
+  QPointer<PlotItem> item;
+  QRectF projectionRect;
+  int xAxisZoomMode;
+  int yAxisZoomMode;
+  bool isXAxisLog;
+  bool isYAxisLog;
+  qreal xLogBase;
+  qreal yLogBase;
+};
+
+
 class PlotItem : public ViewItem, public PlotItemInterface
 {
   Q_OBJECT
@@ -35,6 +49,8 @@ class PlotItem : public ViewItem, public PlotItemInterface
       Fine = 10,
       VeryFine = 15
     };
+
+    enum ZoomMode { Auto, AutoBorder, FixedExpression, SpikeInsensitive, MeanCentered };
 
     PlotItem(View *parent);
     virtual ~PlotItem();
@@ -54,8 +70,11 @@ class PlotItem : public ViewItem, public PlotItemInterface
     /* This is the rectangle of the PlotRenderItem's and includes the actual curves. */
     QRectF plotRect() const;
 
-    /* This is the rectangle containing the union of all the PlotRenderItem's projections. */
     QRectF projectionRect() const;
+    void setProjectionRect(const QRectF &rect);
+    QRectF computedProjectionRect();
+    void computedRelationalMax(qreal &minimum, qreal &maximum);
+    void computeBorder(Qt::Orientation orientation, qreal &minimum, qreal &maximum) const;
 
     bool isTiedZoom() const;
     void setTiedZoom(bool tiedZoom);
@@ -203,6 +222,12 @@ class PlotItem : public ViewItem, public PlotItemInterface
     qreal rightLabelFontScale() const;
     void setRightLabelFontScale(const qreal scale);
 
+    ZoomMode xAxisZoomMode() const;
+    void setXAxisZoomMode(ZoomMode mode);
+
+    ZoomMode yAxisZoomMode() const;
+    void setYAxisZoomMode(ZoomMode mode);
+
     bool xAxisLog() const;
     void setXAxisLog(bool log);
 
@@ -260,16 +285,40 @@ class PlotItem : public ViewItem, public PlotItemInterface
     qreal yMax() { return _yMax; }
 
     void triggerUpdate() { emit geometryChanged(); update(rect()); }
+    virtual void addToMenuForContextEvent(QMenu &menu);
 
   Q_SIGNALS:
-    void projectionRectChanged();
     void marginsChanged();
     void updatePlotRect();
 
   public Q_SLOTS:
+    void zoomFixedExpression(const QRectF &projection);
+    void zoomMaximum();
+    void zoomMaxSpikeInsensitive();
+    void zoomYMeanCentered();
+    void zoomXMaximum();
+    void zoomXRight();
+    void zoomXLeft();
+    void zoomXOut();
+    void zoomXIn();
+    void zoomNormalizeXtoY();
+    void zoomLogX();
+    void zoomYLocalMaximum();
+    void zoomYMaximum();
+    void zoomYUp();
+    void zoomYDown();
+    void zoomYOut();
+    void zoomYIn();
+    void zoomNormalizeYtoX();
+    void zoomLogY();
     virtual void edit();
 
   private:
+    void createActions();
+    void createZoomMenu();
+
+    void resetSelectionRect();
+
     virtual void paintPlot(QPainter *painter,
                                      const QList<qreal> &xMajorTicks,
                                      const QList<qreal> &xMinorTicks,
@@ -361,12 +410,14 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QSizeF calculateXTickLabelBound(QPainter *painter, const QList<qreal> &xMajorTicks);
     QSizeF calculateYTickLabelBound(QPainter *painter, const QList<qreal> &yMajorTicks);
 
-  private Q_SLOTS:
-    void calculateProjectionRect();
+    ZoomState currentZoomState();
+    void setCurrentZoomState(ZoomState zoomState);
 
   private:
     QHash<PlotRenderItem::RenderType, PlotRenderItem*> _renderers;
     bool _isTiedZoom;
+    ZoomMode _xAxisZoomMode;
+    ZoomMode _yAxisZoomMode;
     bool _isLeftLabelVisible;
     bool _isBottomLabelVisible;
     bool _isRightLabelVisible;
@@ -449,6 +500,34 @@ class PlotItem : public ViewItem, public PlotItemInterface
     PlotMarkers _xAxisPlotMarkers;
     PlotMarkers _yAxisPlotMarkers;
 
+    QMenu *_zoomMenu;
+    QAction *_zoomMaximum;
+    QAction *_zoomMaxSpikeInsensitive;
+    QAction *_zoomPrevious;
+    QAction *_zoomYMeanCentered;
+    QAction *_zoomXMaximum;
+    QAction *_zoomXRight;
+    QAction *_zoomXLeft;
+    QAction *_zoomXOut;
+    QAction *_zoomXIn;
+    QAction *_zoomNormalizeXtoY;
+    QAction *_zoomLogX;
+    QAction *_zoomYLocalMaximum;
+    QAction *_zoomYMaximum;
+    QAction *_zoomYUp;
+    QAction *_zoomYDown;
+    QAction *_zoomYOut;
+    QAction *_zoomYIn;
+    QAction *_zoomNormalizeYtoX;
+    QAction *_zoomLogY;
+
+    friend class ZoomCommand;
+    friend class ZoomMaximumCommand;
+    friend class ZoomMaxSpikeInsensitiveCommand;
+    friend class ZoomYMeanCenteredCommand;
+    friend class ZoomXMaximumCommand;
+    friend class ZoomYLocalMaximumCommand;
+    friend class ZoomYMaximumCommand;
     friend class ViewGridLayout;
 };
 
@@ -485,6 +564,195 @@ class PlotItemFactory : public GraphicsFactory {
     PlotItemFactory();
     ~PlotItemFactory();
     ViewItem* generateGraphics(QXmlStreamReader& stream, ObjectStore *store, View *view, ViewItem *parent = 0);
+};
+
+
+class KST_EXPORT ZoomCommand : public ViewItemCommand
+{
+  public:
+    ZoomCommand(PlotItem *item, const QString &text);
+    virtual ~ZoomCommand();
+
+    virtual void undo();
+    virtual void redo();
+
+    virtual void applyZoomTo(PlotItem *item) = 0;
+
+  private:
+    QList<ZoomState> _originalStates;
+};
+
+class KST_EXPORT ZoomFixedExpressionCommand : public ZoomCommand
+{
+  public:
+    ZoomFixedExpressionCommand(PlotItem *item, const QRectF &fixed)
+        : ZoomCommand(item, QObject::tr("Zoom Fixed Expression")), _fixed(fixed) {}
+    virtual ~ZoomFixedExpressionCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
+
+  private:
+    QRectF _fixed;
+};
+
+class KST_EXPORT ZoomMaximumCommand : public ZoomCommand
+{
+  public:
+    ZoomMaximumCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Maximum")) {}
+    virtual ~ZoomMaximumCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
+};
+
+class KST_EXPORT ZoomMaxSpikeInsensitiveCommand : public ZoomCommand
+{
+  public:
+    ZoomMaxSpikeInsensitiveCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Max Spike Insensitive")) {}
+    virtual ~ZoomMaxSpikeInsensitiveCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
+};
+
+class KST_EXPORT ZoomYMeanCenteredCommand : public ZoomCommand
+{
+  public:
+    ZoomYMeanCenteredCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y Mean Centered")) {}
+    virtual ~ZoomYMeanCenteredCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
+};
+
+class KST_EXPORT ZoomXMaximumCommand : public ZoomCommand
+{
+  public:
+    ZoomXMaximumCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom X Maximum")) {}
+    virtual ~ZoomXMaximumCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
+};
+
+class KST_EXPORT ZoomXRightCommand : public ZoomCommand
+{
+  public:
+    ZoomXRightCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Scroll X Right")) {}
+    virtual ~ZoomXRightCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
+};
+
+class KST_EXPORT ZoomXLeftCommand : public ZoomCommand
+{
+  public:
+    ZoomXLeftCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Scroll X Left")) {}
+    virtual ~ZoomXLeftCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
+};
+
+class KST_EXPORT ZoomXOutCommand : public ZoomCommand
+{
+  public:
+    ZoomXOutCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom X Out")) {}
+    virtual ~ZoomXOutCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
+};
+
+class KST_EXPORT ZoomXInCommand : public ZoomCommand
+{
+  public:
+    ZoomXInCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom X In")) {}
+    virtual ~ZoomXInCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
+};
+
+class KST_EXPORT ZoomNormalizeXToYCommand : public ZoomCommand
+{
+  public:
+    ZoomNormalizeXToYCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Normalize X to Y")) {}
+    virtual ~ZoomNormalizeXToYCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
+};
+
+class KST_EXPORT ZoomYLocalMaximumCommand : public ZoomCommand
+{
+  public:
+    ZoomYLocalMaximumCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y Local Maximum")) {}
+    virtual ~ZoomYLocalMaximumCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
+};
+
+class KST_EXPORT ZoomYMaximumCommand : public ZoomCommand
+{
+  public:
+    ZoomYMaximumCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y Maximum")) {}
+    virtual ~ZoomYMaximumCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
+};
+
+class KST_EXPORT ZoomYUpCommand : public ZoomCommand
+{
+  public:
+    ZoomYUpCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y Up")) {}
+    virtual ~ZoomYUpCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
+};
+
+class KST_EXPORT ZoomYDownCommand : public ZoomCommand
+{
+  public:
+    ZoomYDownCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y Down")) {}
+    virtual ~ZoomYDownCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
+};
+
+class KST_EXPORT ZoomYOutCommand : public ZoomCommand
+{
+  public:
+    ZoomYOutCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y Out")) {}
+    virtual ~ZoomYOutCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
+};
+
+class KST_EXPORT ZoomYInCommand : public ZoomCommand
+{
+  public:
+    ZoomYInCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y In")) {}
+    virtual ~ZoomYInCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
+};
+
+class KST_EXPORT ZoomNormalizeYToXCommand : public ZoomCommand
+{
+  public:
+    ZoomNormalizeYToXCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Normalize Y to X")) {}
+    virtual ~ZoomNormalizeYToXCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
 };
 
 }
