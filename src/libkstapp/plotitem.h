@@ -319,41 +319,21 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     void resetSelectionRect();
 
-    virtual void paintPlot(QPainter *painter,
-                                     const QList<qreal> &xMajorTicks,
-                                     const QList<qreal> &xMinorTicks,
-                                     const QList<qreal> &yMajorTicks,
-                                     const QList<qreal> &yMinorTicks);
+    virtual void paintPlot(QPainter *painter);
 
-    virtual void paintMajorGridLines(QPainter *painter,
-                                     const QList<qreal> &xMajorTicks,
-                                     const QList<qreal> &yMajorTicks);
+    virtual void paintMajorGridLines(QPainter *painter);
 
-     virtual void paintMinorGridLines(QPainter *painter,
-                                     const QList<qreal> &xMinorTicks,
-                                     const QList<qreal> &yMinorTicks);
+     virtual void paintMinorGridLines(QPainter *painter);
 
-    virtual void paintMajorTicks(QPainter *painter,
-                                 const QList<qreal> &xMajorTicks,
-                                 const QList<qreal> &yMajorTicks);
+    virtual void paintMajorTicks(QPainter *painter);
 
-    virtual void paintMinorTicks(QPainter *painter,
-                                 const QList<qreal> &xMinorTicks,
-                                 const QList<qreal> &yMinorTicks);
+    virtual void paintMinorTicks(QPainter *painter);
 
-    virtual void paintTickLabels(QPainter *painter,
-                                      const QList<qreal> &xMajorTicks,
-                                      const QList<qreal> &yMajorTicks,
-                                      const QMap<qreal, QString> &xLabels,
-                                      const QMap<qreal, QString> &yLabels);
+    virtual void paintTickLabels(QPainter *painter);
 
-    virtual void paintBottomTickLabels(QPainter *painter,
-                                      const QList<qreal> &xMajorTicks,
-                                      const QMap<qreal, QString> &xLabels);
+    virtual void paintBottomTickLabels(QPainter *painter);
 
-    virtual void paintLeftTickLabels(QPainter *painter,
-                                      const QList<qreal> &yMajorTicks,
-                                      const QMap<qreal, QString> &yLabels);
+    virtual void paintLeftTickLabels(QPainter *painter);
 
     virtual void paintPlotMarkers(QPainter *painter);
 
@@ -403,12 +383,12 @@ class PlotItem : public ViewItem, public PlotItemInterface
     qreal calculatedAxisMarginHeight() const;
     void setCalculatedAxisMarginHeight(qreal marginHeight);
 
-    void computeTicks(QList<qreal> *xMajorTicks, QList<qreal> *xMinorTicks, QList<qreal> *yMajorTicks, QList<qreal> *yMinorTicks, QMap<qreal, QString> *xLabels, QMap<qreal, QString> *yLabels);
+    void generateAxes();
     qreal computedMajorTickSpacing(Qt::Orientation orientation) const;
     void computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTicks, QMap<qreal, QString> *Labels, qreal min, qreal max, MajorTickMode tickMode);
 
-    QSizeF calculateXTickLabelBound(QPainter *painter, const QList<qreal> &xMajorTicks);
-    QSizeF calculateYTickLabelBound(QPainter *painter, const QList<qreal> &yMajorTicks);
+    QSizeF calculateBottomTickLabelBound(QPainter *painter);
+    QSizeF calculateLeftTickLabelBound(QPainter *painter);
 
     ZoomState currentZoomState();
     void setCurrentZoomState(ZoomState zoomState);
@@ -442,6 +422,16 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     QRectF _yLabelRect;
     QRectF _xLabelRect;
+    QMap<qreal, QString> _leftAxisLabels;
+    QMap<qreal, QString> _bottomAxisLabels;
+    QList<qreal> _bottomAxisMajorTicks;
+    QList<qreal> _bottomAxisMinorTicks;
+    QList<qreal> _leftAxisMajorTicks;
+    QList<qreal> _leftAxisMinorTicks;
+
+    QString _leftBaseLabel;
+    QString _bottomBaseLabel;
+
     QString _leftLabelOverride;
     QString _bottomLabelOverride;
     QString _topLabelOverride;

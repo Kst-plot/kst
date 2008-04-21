@@ -388,6 +388,7 @@ void PlotItemDialog::xAxisChanged() {
   _plotItem->setXAxisBaseOffset(_xAxisTab->isBaseOffset());
   _plotItem->setXAxisMinorTickCount(_xAxisTab->axisMinorTickCount());
   _plotItem->setXAxisSignificantDigits(_xAxisTab->significantDigits());
+  _plotItem->setProjectionRect(_plotItem->projectionRect());
 }
 
 
@@ -412,7 +413,7 @@ void PlotItemDialog::yAxisChanged() {
   _plotItem->setYAxisBaseOffset(_yAxisTab->isBaseOffset());
   _plotItem->setYAxisMinorTickCount(_yAxisTab->axisMinorTickCount());
   _plotItem->setYAxisSignificantDigits(_yAxisTab->significantDigits());
-
+  _plotItem->setProjectionRect(_plotItem->projectionRect());
 }
 
 
