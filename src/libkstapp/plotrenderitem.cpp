@@ -175,11 +175,11 @@ void PlotRenderItem::paint(QPainter *painter) {
 
   painter->save();
 
-  if (plotItem()->xAxisReversed()) {
+  if (plotItem()->xAxis()->axisReversed()) {
     painter->scale(-1, 1);
     painter->translate(-1.0 * rect().right() - rect().left(), 0);
   }
-  if (plotItem()->yAxisReversed()) {
+  if (plotItem()->yAxis()->axisReversed()) {
     painter->scale(1, -1);
     painter->translate(0, -1.0 * rect().bottom() - rect().top());
   }
@@ -532,21 +532,21 @@ void PlotRenderItem::computeXAxisRange(qreal *min, qreal *max) const {
   qreal minimum = *min;
   qreal maximum = *max;
 
-  switch (plotItem()->xAxisZoomMode()) {
-  case PlotItem::Auto:
+  switch (plotItem()->xAxis()->axisZoomMode()) {
+  case PlotAxis::Auto:
     computeAuto(Qt::Horizontal, &minimum, &maximum);
     break;
-  case PlotItem::AutoBorder: //auto mode, plus a 2.5% border on top and bottom.
+  case PlotAxis::AutoBorder: //auto mode, plus a 2.5% border on top and bottom.
     computeAuto(Qt::Horizontal, &minimum, &maximum);
     computeBorder(Qt::Horizontal, &minimum, &maximum);
     break;
-  case PlotItem::FixedExpression: //limits are given by scalar equations, or mouse
+  case PlotAxis::FixedExpression: //limits are given by scalar equations, or mouse
     qDebug() << "FIXME! Need a GUI for entering scalar equations..." << endl;
     break;
-  case PlotItem::SpikeInsensitive: //auto with algorithm to detect spikes TBD
+  case PlotAxis::SpikeInsensitive: //auto with algorithm to detect spikes TBD
     qDebug() << "FIXME! Need a spike insensitive algorithm..." << endl;
     break;
-  case PlotItem::MeanCentered: //the mean of all active curves
+  case PlotAxis::MeanCentered: //the mean of all active curves
     computeMeanCentered(Qt::Horizontal, &minimum, &maximum);
     break;
   default:
@@ -562,21 +562,21 @@ void PlotRenderItem::computeYAxisRange(qreal *min, qreal *max) const {
   qreal minimum = *min;
   qreal maximum = *max;
 
-  switch (plotItem()->yAxisZoomMode()) {
-  case PlotItem::Auto:
+  switch (plotItem()->yAxis()->axisZoomMode()) {
+  case PlotAxis::Auto:
     computeAuto(Qt::Vertical, &minimum, &maximum);
     break;
-  case PlotItem::AutoBorder: //auto mode, plus a 2.5% border on top and bottom.
+  case PlotAxis::AutoBorder: //auto mode, plus a 2.5% border on top and bottom.
     computeAuto(Qt::Vertical, &minimum, &maximum);
     computeBorder(Qt::Vertical, &minimum, &maximum);
     break;
-  case PlotItem::FixedExpression: //limits are given by scalar equations, or mouse
+  case PlotAxis::FixedExpression: //limits are given by scalar equations, or mouse
     qDebug() << "FIXME! Need a GUI for entering scalar equations..." << endl;
     break;
-  case PlotItem::SpikeInsensitive: //auto with algorithm to detect spikes TBD
+  case PlotAxis::SpikeInsensitive: //auto with algorithm to detect spikes TBD
     qDebug() << "FIXME! Need a spike insensitive algorithm..." << endl;
     break;
-  case PlotItem::MeanCentered: //the mean of all active curves
+  case PlotAxis::MeanCentered: //the mean of all active curves
     computeMeanCentered(Qt::Vertical, &minimum, &maximum);
     break;
   default:
@@ -595,7 +595,7 @@ void PlotRenderItem::computeAuto(Qt::Orientation orientation, qreal *min, qreal 
   qreal maximum;
   bool unInitialized = true;
 
-  bool axisLog = orientation == Qt::Horizontal ? plotItem()->xAxisLog() : plotItem()->yAxisLog();
+  bool axisLog = orientation == Qt::Horizontal ? plotItem()->xAxis()->axisLog() : plotItem()->yAxis()->axisLog();
 
   foreach (RelationPtr relation, relationList()) {
       if (relation->ignoreAutoScale())
@@ -631,7 +631,7 @@ void PlotRenderItem::computeBorder(Qt::Orientation orientation, qreal *min, qrea
   qreal minimum = *min;
   qreal maximum = *max;
 
-  bool axisLog = orientation == Qt::Horizontal ? plotItem()->xAxisLog() : plotItem()->yAxisLog();
+  bool axisLog = orientation == Qt::Horizontal ? plotItem()->xAxis()->axisLog() : plotItem()->yAxis()->axisLog();
   qreal logBase = 10.0/*orientation == Qt::Horizontal ? xLogBase() : yLogBase()*/;
 
   if (axisLog) {

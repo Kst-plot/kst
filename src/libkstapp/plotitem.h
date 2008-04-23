@@ -23,9 +23,12 @@
 #include "plotdefines.h"
 #include "plotmarkers.h"
 
+#include "plotaxis.h"
+
 namespace Kst {
 
 class PlotItem;
+class PlotAxis;
 
 struct ZoomState {
   QPointer<PlotItem> item;
@@ -43,14 +46,6 @@ class PlotItem : public ViewItem, public PlotItemInterface
 {
   Q_OBJECT
   public:
-    enum MajorTickMode {
-      Coarse = 2,
-      Normal = 5,
-      Fine = 10,
-      VeryFine = 15
-    };
-
-    enum ZoomMode { Auto, AutoBorder, FixedExpression, SpikeInsensitive, MeanCentered };
 
     PlotItem(View *parent);
     virtual ~PlotItem();
@@ -76,6 +71,9 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void computedRelationalMax(qreal &minimum, qreal &maximum);
     void computeBorder(Qt::Orientation orientation, qreal &minimum, qreal &maximum) const;
 
+    PlotAxis* xAxis() { return _xAxis; }
+    PlotAxis* yAxis() { return _yAxis; }
+
     bool isTiedZoom() const;
     void setTiedZoom(bool tiedZoom);
 
@@ -94,12 +92,6 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void setLeftSuppressed(bool suppressed);
     void setRightSuppressed(bool suppressed);
 
-    bool isBottomAxisVisible() const;
-    void setBottomAxisVisible(bool visible);
-
-    bool isLeftAxisVisible() const;
-    void setLeftAxisVisible(bool visible);
-
     bool isLeftLabelVisible() const;
     void setLeftLabelVisible(bool visible);
 
@@ -116,72 +108,6 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     qreal axisMarginWidth() const;
     qreal axisMarginHeight() const;
-
-    MajorTickMode xAxisMajorTickMode() const;
-    void setXAxisMajorTickMode(MajorTickMode mode);
-
-    MajorTickMode yAxisMajorTickMode() const;
-    void setYAxisMajorTickMode(MajorTickMode mode);
-
-    int xAxisMinorTickCount() const;
-    void setXAxisMinorTickCount(const int count);
-
-    int yAxisMinorTickCount() const;
-    void setYAxisMinorTickCount(const int count);
-
-    bool drawXAxisMajorTicks() const;
-    void setDrawXAxisMajorTicks(const bool draw);
-
-    bool drawXAxisMinorTicks() const;
-    void setDrawXAxisMinorTicks(const bool draw);
-
-    bool drawYAxisMajorTicks() const;
-    void setDrawYAxisMajorTicks(const bool draw);
-
-    bool drawYAxisMinorTicks() const;
-    void setDrawYAxisMinorTicks(const bool draw);
-
-    bool drawXAxisMajorGridLines() const;
-    void setDrawXAxisMajorGridLines(const bool draw);
-
-    bool drawXAxisMinorGridLines() const;
-    void setDrawXAxisMinorGridLines(const bool draw);
-
-    bool drawYAxisMajorGridLines() const;
-    void setDrawYAxisMajorGridLines(const bool draw);
-
-    bool drawYAxisMinorGridLines() const;
-    void setDrawYAxisMinorGridLines(const bool draw);
-
-    QColor xAxisMajorGridLineColor() const;
-    void setXAxisMajorGridLineColor(const QColor &color);
-
-    QColor xAxisMinorGridLineColor() const;
-    void setXAxisMinorGridLineColor(const QColor &color);
-
-    QColor yAxisMajorGridLineColor() const;
-    void setYAxisMajorGridLineColor(const QColor &color);
-
-    QColor yAxisMinorGridLineColor() const;
-    void setYAxisMinorGridLineColor(const QColor &color);
-
-    Qt::PenStyle xAxisMajorGridLineStyle() const;
-    void setXAxisMajorGridLineStyle(const Qt::PenStyle style);
-
-    Qt::PenStyle xAxisMinorGridLineStyle() const;
-    void setXAxisMinorGridLineStyle(const Qt::PenStyle style);
-
-    Qt::PenStyle yAxisMajorGridLineStyle() const;
-    void setYAxisMajorGridLineStyle(const Qt::PenStyle style);
-
-    Qt::PenStyle yAxisMinorGridLineStyle() const;
-    void setYAxisMinorGridLineStyle(const Qt::PenStyle style);
-
-    int xAxisSignificantDigits() const;
-    void setXAxisSignificantDigits(const int digits);
-
-    int yAxisSignificantDigits() const;
-    void setYAxisSignificantDigits(const int digits);
 
     QString bottomLabelOverride() const;
     void setBottomLabelOverride(const QString &label);
@@ -222,54 +148,6 @@ class PlotItem : public ViewItem, public PlotItemInterface
     qreal rightLabelFontScale() const;
     void setRightLabelFontScale(const qreal scale);
 
-    ZoomMode xAxisZoomMode() const;
-    void setXAxisZoomMode(ZoomMode mode);
-
-    ZoomMode yAxisZoomMode() const;
-    void setYAxisZoomMode(ZoomMode mode);
-
-    bool xAxisLog() const;
-    void setXAxisLog(bool log);
-
-    bool yAxisLog() const;
-    void setYAxisLog(bool log);
-
-    bool xAxisReversed() const;
-    void setXAxisReversed(const bool enabled);
-
-    bool yAxisReversed() const;
-    void setYAxisReversed(const bool enabled);
-
-    bool xAxisBaseOffset() const;
-    void setXAxisBaseOffset(const bool enabled);
-
-    bool yAxisBaseOffset() const;
-    void setYAxisBaseOffset(const bool enabled);
-
-    bool xAxisInterpret() const;
-    void setXAxisInterpret(const bool enabled);
-
-    bool yAxisInterpret() const;
-    void setYAxisInterpret(const bool enabled);
-
-    KstAxisDisplay xAxisDisplay() const;
-    void setXAxisDisplay(const KstAxisDisplay display);
-
-    KstAxisDisplay yAxisDisplay() const;
-    void setYAxisDisplay(const KstAxisDisplay display);
-
-    KstAxisInterpretation xAxisInterpretation() const;
-    void setXAxisInterpretation(const KstAxisInterpretation interpret);
-
-    KstAxisInterpretation yAxisInterpretation() const;
-    void setYAxisInterpretation(const KstAxisInterpretation interpret);
-
-    PlotMarkers xAxisPlotMarkers() { return _xAxisPlotMarkers; }
-    void setXAxisPlotMarkers(const PlotMarkers &plotMarkers) { _xAxisPlotMarkers = plotMarkers; }
-
-    PlotMarkers yAxisPlotMarkers() { return _yAxisPlotMarkers; }
-    void setYAxisPlotMarkers(const PlotMarkers &plotMarkers) { _yAxisPlotMarkers = plotMarkers; }
-
     qreal mapXToPlot(const qreal &x) const;
     qreal mapYToPlot(const qreal &y) const;
     QPointF mapToPlot(const QPointF &point) const;
@@ -290,6 +168,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
   Q_SIGNALS:
     void marginsChanged();
     void updatePlotRect();
+    void updateAxes();
 
   public Q_SLOTS:
     void zoomFixedExpression(const QRectF &projection);
@@ -322,17 +201,12 @@ class PlotItem : public ViewItem, public PlotItemInterface
     virtual void paintPlot(QPainter *painter);
 
     virtual void paintMajorGridLines(QPainter *painter);
-
-     virtual void paintMinorGridLines(QPainter *painter);
-
+    virtual void paintMinorGridLines(QPainter *painter);
     virtual void paintMajorTicks(QPainter *painter);
-
     virtual void paintMinorTicks(QPainter *painter);
 
     virtual void paintTickLabels(QPainter *painter);
-
     virtual void paintBottomTickLabels(QPainter *painter);
-
     virtual void paintLeftTickLabels(QPainter *painter);
 
     virtual void paintPlotMarkers(QPainter *painter);
@@ -351,12 +225,6 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     qreal calculatedBottomLabelMargin() const;
     void setCalculatedBottomLabelMargin(qreal margin);
-
-    QString interpretLabel(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double base, double lastValue);
-    double convertTimeValueToJD(KstAxisInterpretation axisInterpretation, double valueIn);
-    QString convertJDToDateString(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double dJD);
-    double convertTimeDiffValueToDays(KstAxisInterpretation axisInterpretation, double offsetIn);
-    double interpretOffset(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double base, double value);
 
     QRectF topLabelRect(bool calc) const;
     QRectF bottomLabelRect(bool calc) const;
@@ -383,10 +251,6 @@ class PlotItem : public ViewItem, public PlotItemInterface
     qreal calculatedAxisMarginHeight() const;
     void setCalculatedAxisMarginHeight(qreal marginHeight);
 
-    void generateAxes();
-    qreal computedMajorTickSpacing(Qt::Orientation orientation) const;
-    void computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTicks, QMap<qreal, QString> *Labels, qreal min, qreal max, MajorTickMode tickMode);
-
     QSizeF calculateBottomTickLabelBound(QPainter *painter);
     QSizeF calculateLeftTickLabelBound(QPainter *painter);
 
@@ -396,14 +260,11 @@ class PlotItem : public ViewItem, public PlotItemInterface
   private:
     QHash<PlotRenderItem::RenderType, PlotRenderItem*> _renderers;
     bool _isTiedZoom;
-    ZoomMode _xAxisZoomMode;
-    ZoomMode _yAxisZoomMode;
     bool _isLeftLabelVisible;
     bool _isBottomLabelVisible;
     bool _isRightLabelVisible;
     bool _isTopLabelVisible;
-    bool _isBottomAxisVisible;
-    bool _isLeftAxisVisible;
+
     qreal _calculatedLeftLabelMargin;
     qreal _calculatedRightLabelMargin;
     qreal _calculatedTopLabelMargin;
@@ -412,6 +273,9 @@ class PlotItem : public ViewItem, public PlotItemInterface
     qreal _calculatedLabelMarginHeight;
     qreal _calculatedAxisMarginWidth;
     qreal _calculatedAxisMarginHeight;
+
+    PlotAxis *_xAxis;
+    PlotAxis *_yAxis;
 
     QRectF _projectionRect;
 
@@ -422,15 +286,6 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     QRectF _yLabelRect;
     QRectF _xLabelRect;
-    QMap<qreal, QString> _leftAxisLabels;
-    QMap<qreal, QString> _bottomAxisLabels;
-    QList<qreal> _bottomAxisMajorTicks;
-    QList<qreal> _bottomAxisMinorTicks;
-    QList<qreal> _leftAxisMajorTicks;
-    QList<qreal> _leftAxisMinorTicks;
-
-    QString _leftBaseLabel;
-    QString _bottomBaseLabel;
 
     QString _leftLabelOverride;
     QString _bottomLabelOverride;
@@ -446,49 +301,6 @@ class PlotItem : public ViewItem, public PlotItemInterface
     qreal _bottomLabelFontScale;
     qreal _topLabelFontScale;
     qreal _rightLabelFontScale;
-
-    bool _xAxisLog;
-    bool _yAxisLog;
-    bool _xAxisReversed;
-    bool _yAxisReversed;
-    bool _xAxisBaseOffset;
-    bool _yAxisBaseOffset;
-    bool _xAxisInterpret;
-    bool _yAxisInterpret;
-    KstAxisDisplay _xAxisDisplay;
-    KstAxisDisplay _yAxisDisplay;
-    KstAxisInterpretation _xAxisInterpretation;
-    KstAxisInterpretation _yAxisInterpretation;
-
-    MajorTickMode _xAxisMajorTickMode;
-    MajorTickMode _yAxisMajorTickMode;
-    int _xAxisMinorTickCount;
-    int _yAxisMinorTickCount;
-
-    int _xAxisSignificantDigits;
-    int _yAxisSignificantDigits;
-
-    bool _drawXAxisMajorTicks;
-    bool _drawXAxisMinorTicks;
-    bool _drawYAxisMajorTicks;
-    bool _drawYAxisMinorTicks;
-    bool _drawXAxisMajorGridLines;
-    bool _drawXAxisMinorGridLines;
-    bool _drawYAxisMajorGridLines;
-    bool _drawYAxisMinorGridLines;
-
-    QColor _xAxisMajorGridLineColor;
-    QColor _xAxisMinorGridLineColor;
-    QColor _yAxisMajorGridLineColor;
-    QColor _yAxisMinorGridLineColor;
-
-    Qt::PenStyle _xAxisMajorGridLineStyle;
-    Qt::PenStyle _xAxisMinorGridLineStyle;
-    Qt::PenStyle _yAxisMajorGridLineStyle;
-    Qt::PenStyle _yAxisMinorGridLineStyle;
-
-    PlotMarkers _xAxisPlotMarkers;
-    PlotMarkers _yAxisPlotMarkers;
 
     QMenu *_zoomMenu;
     QAction *_zoomMaximum;

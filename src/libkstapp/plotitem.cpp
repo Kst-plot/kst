@@ -40,25 +40,16 @@ static qreal TOP_MARGIN = 20.0;
 static qreal BOTTOM_MARGIN = 0.0;
 static qreal LEFT_MARGIN = 0.0;
 static qreal RIGHT_MARGIN = 20.0;
-static int FULL_PRECISION = 15;
-static qreal JD1900 = 2415020.5;
-static qreal JD1970 = 2440587.5;
-static qreal JD_RJD = 2400000.0;
-static qreal JD_MJD = 2400000.5;
 
 namespace Kst {
 
 PlotItem::PlotItem(View *parent)
   : ViewItem(parent),
   _isTiedZoom(false),
-  _xAxisZoomMode(Auto),
-  _yAxisZoomMode(AutoBorder),
   _isLeftLabelVisible(true),
   _isBottomLabelVisible(true),
   _isRightLabelVisible(true),
   _isTopLabelVisible(true),
-  _isBottomAxisVisible(true),
-  _isLeftAxisVisible(true),
   _calculatedLeftLabelMargin(0.0),
   _calculatedRightLabelMargin(0.0),
   _calculatedTopLabelMargin(0.0),
@@ -71,48 +62,15 @@ PlotItem::PlotItem(View *parent)
   _bottomLabelFontScale(0.0),
   _topLabelFontScale(0.0),
   _rightLabelFontScale(0.0),
-  _xAxisLog(false),
-  _yAxisLog(false),
-  _xAxisReversed(false),
-  _yAxisReversed(false),
-  _xAxisBaseOffset(false),
-  _yAxisBaseOffset(false),
-  _xAxisInterpret(false),
-  _yAxisInterpret(false),
-  _xAxisDisplay(AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS),
-  _yAxisDisplay(AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS),
-  _xAxisInterpretation(AXIS_INTERP_CTIME),
-  _yAxisInterpretation(AXIS_INTERP_CTIME),
-  _xAxisMajorTickMode(Normal),
-  _yAxisMajorTickMode(Normal),
-  _xAxisMinorTickCount(4),
-  _yAxisMinorTickCount(4),
-  _xAxisSignificantDigits(9),
-  _yAxisSignificantDigits(9),
-  _drawXAxisMajorTicks(true),
-  _drawXAxisMinorTicks(true),
-  _drawYAxisMajorTicks(true),
-  _drawYAxisMinorTicks(true),
-  _drawXAxisMajorGridLines(true),
-  _drawXAxisMinorGridLines(false),
-  _drawYAxisMajorGridLines(true),
-  _drawYAxisMinorGridLines(false),
-  _xAxisMajorGridLineColor(Qt::gray),
-  _xAxisMinorGridLineColor(Qt::gray),
-  _yAxisMajorGridLineColor(Qt::gray),
-  _yAxisMinorGridLineColor(Qt::gray),
-  _xAxisMajorGridLineStyle(Qt::DashLine),
-  _xAxisMinorGridLineStyle(Qt::DashLine),
-  _yAxisMajorGridLineStyle(Qt::DashLine),
-  _yAxisMinorGridLineStyle(Qt::DashLine),
-  _xAxisPlotMarkers(true),
-  _yAxisPlotMarkers(false),
   _zoomMenu(0)
  {
 
   setName("Plot");
   setZValue(PLOT_ZVALUE);
   setBrush(Qt::white);
+
+  _xAxis = new PlotAxis(this, Qt::Horizontal);
+  _yAxis = new PlotAxis(this, Qt::Vertical);
 
   _leftLabelFont = parentView()->defaultFont();
   _bottomLabelFont = parentView()->defaultFont();
@@ -130,6 +88,8 @@ PlotItem::PlotItem(View *parent)
 
 
 PlotItem::~PlotItem() {
+  delete _xAxis;
+  delete _yAxis;
   PlotItemManager::self()->removePlot(this);
 }
 
@@ -142,8 +102,6 @@ QString PlotItem::plotName() const {
 void PlotItem::save(QXmlStreamWriter &xml) {
   xml.writeStartElement("plot");
   xml.writeAttribute("tiedzoom", QVariant(_isTiedZoom).toString());
-  xml.writeAttribute("bottomaxisvisible", QVariant(_isBottomAxisVisible).toString());
-  xml.writeAttribute("leftaxisvisible", QVariant(_isLeftAxisVisible).toString());
   xml.writeAttribute("leftlabelvisible", QVariant(_isLeftLabelVisible).toString());
   xml.writeAttribute("bottomlabelvisible", QVariant(_isBottomLabelVisible).toString());
   xml.writeAttribute("rightlabelvisible", QVariant(_isRightLabelVisible).toString());
@@ -160,42 +118,46 @@ void PlotItem::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("rightlabeloverride", _rightLabelOverride);
   xml.writeAttribute("rightlabelfont", QVariant(_rightLabelFont).toString());
   xml.writeAttribute("rightlabelfontscale", QVariant(_rightLabelFontScale).toString());
-  xml.writeAttribute("xaxislog", QVariant(_xAxisLog).toString());
-  xml.writeAttribute("yaxislog", QVariant(_yAxisLog).toString());
-  xml.writeAttribute("xaxisreversed", QVariant(_xAxisReversed).toString());
-  xml.writeAttribute("yaxisreversed", QVariant(_yAxisReversed).toString());
-  xml.writeAttribute("xaxisbaseoffset", QVariant(_xAxisBaseOffset).toString());
-  xml.writeAttribute("yaxisbaseoffset", QVariant(_yAxisBaseOffset).toString());
-  xml.writeAttribute("xaxisinterpret", QVariant(_xAxisInterpret).toString());
-  xml.writeAttribute("yaxisinterpret", QVariant(_yAxisInterpret).toString());
-  xml.writeAttribute("xaxisinterpretation", QVariant(_xAxisInterpretation).toString());
-  xml.writeAttribute("yaxisinterpretation", QVariant(_yAxisInterpretation).toString());
-  xml.writeAttribute("xaxisdisplay", QVariant(_xAxisDisplay).toString());
-  xml.writeAttribute("yaxisdisplay", QVariant(_yAxisDisplay).toString());
-  xml.writeAttribute("xaxismajortickmode", QVariant(_xAxisMajorTickMode).toString());
-  xml.writeAttribute("yaxismajortickmode", QVariant(_yAxisMajorTickMode).toString());
-  xml.writeAttribute("xaxisminortickcount", QVariant(_xAxisMinorTickCount).toString());
-  xml.writeAttribute("yaxisminortickcount", QVariant(_yAxisMinorTickCount).toString());
-  xml.writeAttribute("xaxisdrawmajorticks", QVariant(_drawXAxisMajorTicks).toString());
-  xml.writeAttribute("xaxisdrawminorticks", QVariant(_drawXAxisMinorTicks).toString());
-  xml.writeAttribute("yaxisdrawmajorticks", QVariant(_drawYAxisMajorTicks).toString());
-  xml.writeAttribute("yaxisdrawminorticks", QVariant(_drawYAxisMinorTicks).toString());
-  xml.writeAttribute("xaxisdrawmajorgridlines", QVariant(_drawXAxisMajorGridLines).toString());
-  xml.writeAttribute("xaxisdrawminorgridlines", QVariant(_drawXAxisMinorGridLines).toString());
-  xml.writeAttribute("yaxisdrawmajorgridlines", QVariant(_drawYAxisMajorGridLines).toString());
-  xml.writeAttribute("yaxisdrawminorgridlines", QVariant(_drawYAxisMinorGridLines).toString());
-  xml.writeAttribute("xaxisdrawmajorgridlinecolor", QVariant(_xAxisMajorGridLineColor).toString());
-  xml.writeAttribute("xaxisdrawminorgridlinecolor", QVariant(_xAxisMinorGridLineColor).toString());
-  xml.writeAttribute("yaxisdrawmajorgridlinecolor", QVariant(_yAxisMajorGridLineColor).toString());
-  xml.writeAttribute("yaxisdrawminorgridlinecolor", QVariant(_yAxisMinorGridLineColor).toString());
-  xml.writeAttribute("xaxisdrawmajorgridlinestyle", QVariant(_xAxisMajorGridLineStyle).toString());
-  xml.writeAttribute("xaxisdrawminorgridlinestyle", QVariant(_xAxisMinorGridLineStyle).toString());
-  xml.writeAttribute("yaxisdrawmajorgridlinestyle", QVariant(_yAxisMajorGridLineStyle).toString());
-  xml.writeAttribute("yaxisdrawminorgridlinestyle", QVariant(_yAxisMinorGridLineStyle).toString());
-  xml.writeAttribute("xaxissignificantdigits", QVariant(_xAxisSignificantDigits).toString());
-  xml.writeAttribute("yaxissignificantdigits", QVariant(_yAxisSignificantDigits).toString());
-  xml.writeAttribute("xzoommode", QVariant(_xAxisZoomMode).toString());
-  xml.writeAttribute("yzoommode", QVariant(_yAxisZoomMode).toString());
+
+  xml.writeAttribute("bottomaxisvisible", QVariant(_xAxis->isAxisVisible()).toString());
+  xml.writeAttribute("xaxislog", QVariant(_xAxis->axisLog()).toString());
+  xml.writeAttribute("xaxisreversed", QVariant(_xAxis->axisReversed()).toString());
+  xml.writeAttribute("xaxisbaseoffset", QVariant(_xAxis->axisBaseOffset()).toString());
+  xml.writeAttribute("xaxisinterpret", QVariant(_xAxis->axisInterpret()).toString());
+  xml.writeAttribute("xaxisinterpretation", QVariant(_xAxis->axisInterpretation()).toString());
+  xml.writeAttribute("xaxisdisplay", QVariant(_xAxis->axisDisplay()).toString());
+  xml.writeAttribute("xaxismajortickmode", QVariant(_xAxis->axisMajorTickMode()).toString());
+  xml.writeAttribute("xaxisminortickcount", QVariant(_xAxis->axisMinorTickCount()).toString());
+  xml.writeAttribute("xaxisdrawmajorticks", QVariant(_xAxis->drawAxisMajorTicks()).toString());
+  xml.writeAttribute("xaxisdrawminorticks", QVariant(_xAxis->drawAxisMinorTicks()).toString());
+  xml.writeAttribute("xaxisdrawmajorgridlines", QVariant(_xAxis->drawAxisMajorGridLines()).toString());
+  xml.writeAttribute("xaxisdrawminorgridlines", QVariant(_xAxis->drawAxisMinorGridLines()).toString());
+  xml.writeAttribute("xaxisdrawmajorgridlinecolor", QVariant(_xAxis->axisMajorGridLineColor()).toString());
+  xml.writeAttribute("xaxisdrawminorgridlinecolor", QVariant(_xAxis->axisMinorGridLineColor()).toString());
+  xml.writeAttribute("xaxisdrawmajorgridlinestyle", QVariant(_xAxis->axisMajorGridLineStyle()).toString());
+  xml.writeAttribute("xaxisdrawminorgridlinestyle", QVariant(_xAxis->axisMinorGridLineStyle()).toString());
+  xml.writeAttribute("xaxissignificantdigits", QVariant(_xAxis->axisSignificantDigits()).toString());
+  xml.writeAttribute("xzoommode", QVariant(_xAxis->axisZoomMode()).toString());
+
+  xml.writeAttribute("leftaxisvisible", QVariant(_yAxis->isAxisVisible()).toString());
+  xml.writeAttribute("yaxislog", QVariant(_yAxis->axisLog()).toString());
+  xml.writeAttribute("yaxisreversed", QVariant(_yAxis->axisReversed()).toString());
+  xml.writeAttribute("yaxisbaseoffset", QVariant(_yAxis->axisBaseOffset()).toString());
+  xml.writeAttribute("yaxisinterpret", QVariant(_yAxis->axisInterpret()).toString());
+  xml.writeAttribute("yaxisinterpretation", QVariant(_yAxis->axisInterpretation()).toString());
+  xml.writeAttribute("yaxisdisplay", QVariant(_yAxis->axisDisplay()).toString());
+  xml.writeAttribute("yaxismajortickmode", QVariant(_yAxis->axisMajorTickMode()).toString());
+  xml.writeAttribute("yaxisminortickcount", QVariant(_yAxis->axisMinorTickCount()).toString());
+  xml.writeAttribute("yaxisdrawmajorticks", QVariant(_yAxis->drawAxisMajorTicks()).toString());
+  xml.writeAttribute("yaxisdrawminorticks", QVariant(_yAxis->drawAxisMinorTicks()).toString());
+  xml.writeAttribute("yaxisdrawmajorgridlines", QVariant(_yAxis->drawAxisMajorGridLines()).toString());
+  xml.writeAttribute("yaxisdrawminorgridlines", QVariant(_yAxis->drawAxisMinorGridLines()).toString());
+  xml.writeAttribute("yaxisdrawmajorgridlinecolor", QVariant(_yAxis->axisMajorGridLineColor()).toString());
+  xml.writeAttribute("yaxisdrawminorgridlinecolor", QVariant(_yAxis->axisMinorGridLineColor()).toString());
+  xml.writeAttribute("yaxisdrawmajorgridlinestyle", QVariant(_yAxis->axisMajorGridLineStyle()).toString());
+  xml.writeAttribute("yaxisdrawminorgridlinestyle", QVariant(_yAxis->axisMinorGridLineStyle()).toString());
+  xml.writeAttribute("yaxissignificantdigits", QVariant(_yAxis->axisSignificantDigits()).toString());
+  xml.writeAttribute("yzoommode", QVariant(_yAxis->axisZoomMode()).toString());
 
   ViewItem::save(xml);
   foreach (PlotRenderItem *renderer, renderItems()) {
@@ -430,30 +392,30 @@ void PlotItem::paintMajorGridLines(QPainter *painter) {
 
   QRectF rect = plotRect();
 
-  if (_drawXAxisMajorGridLines) {
+  if (xAxis()->drawAxisMajorGridLines()) {
     QVector<QLineF> xMajorTickLines;
-    foreach (qreal x, _bottomAxisMajorTicks) {
+    foreach (qreal x, _xAxis->axisMajorTicks()) {
       QPointF p1 = QPointF(mapXToPlot(x), plotRect().bottom());
       QPointF p2 = p1 - QPointF(0, rect.height());
       xMajorTickLines << QLineF(p1, p2);
     }
 
     painter->save();
-    painter->setPen(QPen(QBrush(_xAxisMajorGridLineColor), 1.0, _xAxisMajorGridLineStyle));
+    painter->setPen(QPen(QBrush(_xAxis->axisMajorGridLineColor()), 1.0, _xAxis->axisMajorGridLineStyle()));
     painter->drawLines(xMajorTickLines);
     painter->restore();
   }
 
-  if (_drawYAxisMajorGridLines) {
+  if (yAxis()->drawAxisMajorGridLines()) {
     QVector<QLineF> yMajorTickLines;
-    foreach (qreal y, _leftAxisMajorTicks) {
+    foreach (qreal y, _yAxis->axisMajorTicks()) {
       QPointF p1 = QPointF(plotRect().left(), mapYToPlot(y));
       QPointF p2 = p1 + QPointF(rect.width(), 0);
       yMajorTickLines << QLineF(p1, p2);
     }
 
     painter->save();
-    painter->setPen(QPen(QBrush(_yAxisMajorGridLineColor), 1.0, _yAxisMajorGridLineStyle));
+    painter->setPen(QPen(QBrush(_yAxis->axisMajorGridLineColor()), 1.0, _yAxis->axisMajorGridLineStyle()));
     painter->drawLines(yMajorTickLines);
     painter->restore();
   }
@@ -464,29 +426,29 @@ void PlotItem::paintMinorGridLines(QPainter *painter) {
 
   QRectF rect = plotRect();
 
-  if (_drawXAxisMinorGridLines) {
+  if (xAxis()->drawAxisMinorGridLines()) {
     QVector<QLineF> xMinorTickLines;
-    foreach (qreal x, _bottomAxisMinorTicks) {
+    foreach (qreal x, _xAxis->axisMinorTicks()) {
       QPointF p1 = QPointF(mapXToPlot(x), plotRect().bottom());
       QPointF p2 = p1 - QPointF(0, rect.height());
       xMinorTickLines << QLineF(p1, p2);
     }
     painter->save();
-    painter->setPen(QPen(QBrush(_xAxisMinorGridLineColor), 1.0, _xAxisMinorGridLineStyle));
+    painter->setPen(QPen(QBrush(_xAxis->axisMinorGridLineColor()), 1.0, _xAxis->axisMinorGridLineStyle()));
     painter->drawLines(xMinorTickLines);
     painter->restore();
   }
 
-  if (_drawYAxisMinorGridLines) {
+  if (yAxis()->drawAxisMinorGridLines()) {
     QVector<QLineF> yMinorTickLines;
-    foreach (qreal y, _leftAxisMinorTicks) {
+    foreach (qreal y, _yAxis->axisMinorTicks()) {
       QPointF p1 = QPointF(plotRect().left(), mapYToPlot(y));
       QPointF p2 = p1 + QPointF(rect.width(), 0);
       yMinorTickLines << QLineF(p1, p2);
     }
 
     painter->save();
-    painter->setPen(QPen(QBrush(_yAxisMinorGridLineColor), 1.0, _yAxisMinorGridLineStyle));
+    painter->setPen(QPen(QBrush(_yAxis->axisMinorGridLineColor()), 1.0, _yAxis->axisMinorGridLineStyle()));
     painter->drawLines(yMinorTickLines);
     painter->restore();
   }
@@ -497,9 +459,9 @@ void PlotItem::paintMajorTicks(QPainter *painter) {
 
   qreal majorTickLength = qMin(rect().width(), rect().height()) * .02; //two percent
 
-  if (_drawXAxisMajorTicks) {
+  if (xAxis()->drawAxisMajorTicks()) {
     QVector<QLineF> xMajorTickLines;
-    foreach (qreal x, _bottomAxisMajorTicks) {
+    foreach (qreal x, _xAxis->axisMajorTicks()) {
       QPointF p1 = QPointF(mapXToPlot(x), plotRect().bottom());
       QPointF p2 = p1 - QPointF(0, majorTickLength);
       xMajorTickLines << QLineF(p1, p2);
@@ -512,9 +474,9 @@ void PlotItem::paintMajorTicks(QPainter *painter) {
     painter->drawLines(xMajorTickLines);
   }
 
-  if (_drawYAxisMajorTicks) {
+  if (yAxis()->drawAxisMajorTicks()) {
     QVector<QLineF> yMajorTickLines;
-    foreach (qreal y, _leftAxisMajorTicks) {
+    foreach (qreal y, _yAxis->axisMajorTicks()) {
       QPointF p1 = QPointF(plotRect().left(), mapYToPlot(y));
       QPointF p2 = p1 + QPointF(majorTickLength, 0);
       yMajorTickLines << QLineF(p1, p2);
@@ -533,9 +495,9 @@ void PlotItem::paintMinorTicks(QPainter *painter) {
 
   qreal minorTickLength = qMin(rect().width(), rect().height()) * 0.01; //one percent
 
-  if (_drawXAxisMinorTicks) {
+  if (xAxis()->drawAxisMinorTicks()) {
     QVector<QLineF> xMinorTickLines;
-    foreach (qreal x, _bottomAxisMinorTicks) {
+    foreach (qreal x, _xAxis->axisMinorTicks()) {
       QPointF p1 = QPointF(mapXToPlot(x), plotRect().bottom());
       QPointF p2 = p1 - QPointF(0, minorTickLength);
       xMinorTickLines << QLineF(p1, p2);
@@ -548,9 +510,9 @@ void PlotItem::paintMinorTicks(QPainter *painter) {
     painter->drawLines(xMinorTickLines);
   }
 
-  if (_drawYAxisMinorTicks) {
+  if (yAxis()->drawAxisMinorTicks()) {
     QVector<QLineF> yMinorTickLines;
-    foreach (qreal y, _leftAxisMinorTicks) {
+    foreach (qreal y, _yAxis->axisMinorTicks()) {
       QPointF p1 = QPointF(plotRect().left(), mapYToPlot(y));
       QPointF p2 = p1 + QPointF(minorTickLength, 0);
       yMinorTickLines << QLineF(p1, p2);
@@ -570,7 +532,7 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
   QRectF xLabelRect;
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
 
-  QMapIterator<qreal, QString> xLabelIt(_bottomAxisLabels);
+  QMapIterator<qreal, QString> xLabelIt(_xAxis->axisLabels());
   while (xLabelIt.hasNext()) {
     xLabelIt.next();
 
@@ -589,8 +551,8 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
     }
   }
 
-  if (!_bottomBaseLabel.isEmpty()) {
-    QRectF bound = painter->boundingRect(QRectF(), flags, _bottomBaseLabel);
+  if (!_xAxis->baseLabel().isEmpty()) {
+    QRectF bound = painter->boundingRect(QRectF(), flags, _xAxis->baseLabel());
     QPointF p = QPointF(plotRect().left(), plotRect().bottom() + bound.height() * 2.0);
     bound.moveBottomLeft(p);
 
@@ -600,7 +562,7 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
       xLabelRect = bound;
     }
 
-    painter->drawText(bound, flags, _bottomBaseLabel);
+    painter->drawText(bound, flags, _xAxis->baseLabel());
   }
   _xLabelRect = xLabelRect;
 
@@ -617,7 +579,7 @@ void PlotItem::paintLeftTickLabels(QPainter *painter) {
   QRectF yLabelRect;
   int flags = Qt::TextSingleLine | Qt::AlignVCenter;
 
-  QMapIterator<qreal, QString> yLabelIt(_leftAxisLabels);
+  QMapIterator<qreal, QString> yLabelIt(_yAxis->axisLabels());
   while (yLabelIt.hasNext()) {
     yLabelIt.next();
 
@@ -637,13 +599,13 @@ void PlotItem::paintLeftTickLabels(QPainter *painter) {
     }
   }
 
-  if (!_leftBaseLabel.isEmpty()) {
+  if (!_yAxis->baseLabel().isEmpty()) {
     painter->save();
     QTransform t;
     t.rotate(90.0);
     painter->rotate(-90.0);
 
-    QRectF bound = painter->boundingRect(QRectF(), flags, _leftBaseLabel);
+    QRectF bound = painter->boundingRect(QRectF(), flags, _yAxis->baseLabel());
     bound = QRectF(bound.x(), bound.bottomRight().y() - bound.width(), bound.height(), bound.width());
     QPointF p = QPointF(rect().left(), plotRect().bottom());
     bound.moveBottomLeft(p);
@@ -654,7 +616,7 @@ void PlotItem::paintLeftTickLabels(QPainter *painter) {
       yLabelRect = bound;
     }
 
-    painter->drawText(t.mapRect(bound), flags, _leftBaseLabel);
+    painter->drawText(t.mapRect(bound), flags, _yAxis->baseLabel());
     painter->restore();
   }
   _yLabelRect = yLabelRect;
@@ -669,11 +631,11 @@ void PlotItem::paintLeftTickLabels(QPainter *painter) {
 
 void PlotItem::paintTickLabels(QPainter *painter) {
 
-  if (isBottomAxisVisible()) {
+  if (_xAxis->isAxisVisible()) {
     paintBottomTickLabels(painter);
   }
 
-  if (isLeftAxisVisible()) {
+  if (_yAxis->isAxisVisible()) {
     paintLeftTickLabels(painter);
   }
 }
@@ -684,8 +646,8 @@ void PlotItem::paintPlotMarkers(QPainter *painter) {
   QRectF rect = plotRect();
 
   QVector<QLineF> xPlotMarkers;
-  _xAxisPlotMarkers.updateMarkers();
-  foreach (double x, _xAxisPlotMarkers.markers()) {
+  _xAxis->axisPlotMarkers().updateMarkers();
+  foreach (double x, _xAxis->axisPlotMarkers().markers()) {
     if (x > _xMin && x < _xMax) {
       QPointF p1 = QPointF(mapXToPlot(x), plotRect().bottom());
       QPointF p2 = p1 - QPointF(0, rect.height());
@@ -695,14 +657,14 @@ void PlotItem::paintPlotMarkers(QPainter *painter) {
 
   if (!xPlotMarkers.isEmpty()) {
     painter->save();
-    painter->setPen(QPen(QBrush(_xAxisPlotMarkers.lineColor()), _xAxisPlotMarkers.lineWidth(), _xAxisPlotMarkers.lineStyle()));
+    painter->setPen(QPen(QBrush(_xAxis->axisPlotMarkers().lineColor()), _xAxis->axisPlotMarkers().lineWidth(), _xAxis->axisPlotMarkers().lineStyle()));
     painter->drawLines(xPlotMarkers);
     painter->restore();
   }
 
   QVector<QLineF> yPlotMarkers;
-  _yAxisPlotMarkers.updateMarkers();
-  foreach (double y, _yAxisPlotMarkers.markers()) {
+  _yAxis->axisPlotMarkers().updateMarkers();
+  foreach (double y, _yAxis->axisPlotMarkers().markers()) {
     if (y > _yMin && y < _yMax) {
       QPointF p1 = QPointF(plotRect().left(), mapYToPlot(y));
       QPointF p2 = p1 + QPointF(rect.width(), 0);
@@ -712,295 +674,11 @@ void PlotItem::paintPlotMarkers(QPainter *painter) {
 
   if (!yPlotMarkers.isEmpty()) {
     painter->save();
-    painter->setPen(QPen(QBrush(_yAxisPlotMarkers.lineColor()), _yAxisPlotMarkers.lineWidth(), _yAxisPlotMarkers.lineStyle()));
+    painter->setPen(QPen(QBrush(_yAxis->axisPlotMarkers().lineColor()), _yAxis->axisPlotMarkers().lineWidth(), _yAxis->axisPlotMarkers().lineStyle()));
     painter->drawLines(yPlotMarkers);
     painter->restore();
   }
 
-}
-
-
-QString PlotItem::interpretLabel(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double base, double lastValue) {
-  double value = convertTimeValueToJD(axisInterpretation, base);
-  double scaleValue = convertTimeValueToJD(axisInterpretation, lastValue) - value;
-
-  switch (axisInterpretation) {
-    case AXIS_INTERP_YEAR:
-      scaleValue *= 365.25 * 24.0 * 60.0 * 60.0;
-      break;
-    case AXIS_INTERP_CTIME:
-      break;
-    case AXIS_INTERP_JD:
-    case AXIS_INTERP_MJD:
-    case AXIS_INTERP_RJD:
-      scaleValue *= 24.0 * 60.0 * 60.0;
-      break;
-    case AXIS_INTERP_AIT:
-      break;
-  }
-
-  QString label;
-
-  // print value in appropriate format
-  switch (axisDisplay) {
-    case AXIS_DISPLAY_YEAR:
-      value -= JD1900 + 0.5;
-      value /= 365.25;
-      value += 1900.0;
-      label = i18n("J");
-      label += QString::number(value, 'g', FULL_PRECISION);
-      label += " [years]";
-      break;
-    case AXIS_DISPLAY_YYMMDDHHMMSS_SS:
-    case AXIS_DISPLAY_DDMMYYHHMMSS_SS:
-    case AXIS_DISPLAY_QTTEXTDATEHHMMSS_SS:
-    case AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS:
-      label = convertJDToDateString(axisInterpretation, axisDisplay, value);
-      if( scaleValue > 10.0 * 24.0 * 60.0 * 60.0 ) {
-        label += i18n(" [days]");
-      } else if( scaleValue > 10.0 * 24.0 * 60.0 ) {
-        label += i18n(" [hours]");
-      } else if( scaleValue > 10.0 * 60.0 ) {
-        label += i18n(" [minutes]");
-      } else {
-        label += i18n(" [seconds]");
-      }
-      break;
-    case AXIS_DISPLAY_JD:
-      label = i18n("JD");
-      label += QString::number(value, 'g', FULL_PRECISION);
-      label += " [days]";
-      break;
-    case AXIS_DISPLAY_MJD:
-      value -= JD_MJD;
-      label = i18n("MJD");
-      label += QString::number(value, 'g', FULL_PRECISION);
-      label += " [days]";
-      break;
-    case AXIS_DISPLAY_RJD:
-      value -= JD_RJD;
-      label = i18n("RJD");
-      label += QString::number(value, 'g', FULL_PRECISION);
-      label += " [days]";
-      break;
-  }
-
-  return label;
-}
-
-
-double PlotItem::interpretOffset(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double base, double value) {
-  double offset;
-  offset = value - base;
-
-  offset = convertTimeDiffValueToDays(axisInterpretation, offset);
-
-  // convert difference to desired format
-  switch (axisDisplay) {
-    case AXIS_DISPLAY_YEAR:
-      offset /= 365.25;
-      break;
-    case AXIS_DISPLAY_YYMMDDHHMMSS_SS:
-    case AXIS_DISPLAY_DDMMYYHHMMSS_SS:
-    case AXIS_DISPLAY_QTTEXTDATEHHMMSS_SS:
-    case AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS:
-      offset *= 24.0 * 60.0 * 60.0;
-      break;
-    case AXIS_DISPLAY_JD:
-    case AXIS_DISPLAY_MJD:
-    case AXIS_DISPLAY_RJD:
-      break;
-  }
-  return offset;
-}
-
-
-double PlotItem::convertTimeValueToJD(KstAxisInterpretation axisInterpretation, double valueIn) {
-  double value = valueIn;
-
-  switch (axisInterpretation) {
-    case AXIS_INTERP_YEAR:
-      value -= 1900.0;
-      value *= 365.25;
-      value += JD1900 + 0.5;
-      break;
-    case AXIS_INTERP_CTIME:
-      value /= 24.0 * 60.0 * 60.0;
-      value += JD1970;
-      break;
-    case AXIS_INTERP_JD:
-      break;
-    case AXIS_INTERP_MJD:
-      value += JD_MJD;
-      break;
-    case AXIS_INTERP_RJD:
-      value += JD_RJD;
-      break;
-    case AXIS_INTERP_AIT:
-      value -= 86400.0 * (365.0 * 12.0 + 3.0);
-      // current difference (seconds) between UTC and AIT
-      // refer to the following for more information:
-      // http://hpiers.obspm.fr/eop-pc/earthor/utc/TAI-UTC_tab.html
-      value -= 32.0;
-      value /= 24.0 * 60.0 * 60.0;
-      value += JD1970;
-    default:
-      break;
-  }
-
-  return value;
-}
-
-
-double PlotItem::convertTimeDiffValueToDays(KstAxisInterpretation axisInterpretation, double offsetIn) {
-  double offset = offsetIn;
-
-  switch (axisInterpretation) {
-    case AXIS_INTERP_YEAR:
-      offset *= 365.25;
-      break;
-    case AXIS_INTERP_CTIME:
-      offset /= 24.0 * 60.0 * 60.0;
-      break;
-    case AXIS_INTERP_JD:
-    case AXIS_INTERP_MJD:
-    case AXIS_INTERP_RJD:
-      break;
-    case AXIS_INTERP_AIT:
-      offset /= 24.0 * 60.0 * 60.0;
-      break;
-    default:
-      break;
-  }
-
-  return offset;
-}
-
-
-QString PlotItem::convertJDToDateString(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double dJD) {
-  QString label;
-  QDate date;
-
-  int accuracy;
-  double xdelta = (projectionRect().right()-projectionRect().left())/double(projectionRect().width());
-  xdelta = convertTimeDiffValueToDays(axisInterpretation, xdelta);
-  xdelta *= 24.0 * 60.0 * 60.0;
-
-  if (xdelta == 0.0) {
-    accuracy = FULL_PRECISION;
-  } else {
-    accuracy = 1 - int(log10(xdelta));
-    if (accuracy < 0) {
-      accuracy = 0;
-    }
-  }
-
-  // utcOffset() is returned in seconds... as it must be since
-  //  some time zones are not an integer number of hours offset
-  //  from UTC...
-  dJD += double(Settings::globalSettings()->utcOffset()) / 86400.0;
-
-  // get the date from the Julian day number
-  double dJDDay = floor(dJD);
-  double dJDFraction = dJD - dJDDay;
-
-  // gregorian calendar correction
-  if (dJD >= 2299160.5) {
-    double tmp = int( ( (dJDDay - 1867216.0) - 0.25 ) / 36524.25 );
-    dJDDay += 1.0 + tmp - floor(0.25*tmp);
-  }
-
-  // correction for half day offset
-  double dDayFraction = dJDFraction + 0.5;
-  if (dDayFraction >= 1.0) {
-    dDayFraction -= 1.0;
-    dJDDay += 1.0;
-  }
-
-  // get time of day from day fraction
-  int hour   = int(dDayFraction*24.0);
-  int minute = int((dDayFraction*24.0 - double(hour))*60.0);
-  double second = ((dDayFraction*24.0 - double(hour))*60.0 - double(minute))*60.0;
-
-  if (accuracy >= 0) {
-    second *= pow(10.0, accuracy);
-    second  = floor(second+0.5);
-    second /= pow(10.0,accuracy);
-    if (second >= 60.0) {
-      second -= 60.0;
-      minute++;
-      if (minute == 60) {
-        minute = 0;
-        hour++;
-        if (hour == 24) {
-          hour = 0;
-        }
-      }
-    }
-  }
-
-  double j2 = dJDDay + 1524.0;
-  double j3 = floor(6680.0 + ( (j2 - 2439870.0) - 122.1 )/365.25);
-  double j4 = floor(j3 * 365.25);
-  double j5 = floor((j2 - j4)/30.6001);
-
-  int day = int(j2 - j4 - floor(j5*30.6001));
-  int month = int(j5 - 1.0);
-  if (month > 12) {
-    month -= 12;
-  }
-  int year = int(j3 - 4715.0);
-  if (month > 2) {
-    --year;
-  }
-  if (year <= 0) {
-    --year;
-  }
-  // check how many decimal places for the seconds we actually need to show
-  if (accuracy > 0) {
-    QString strSecond;
-
-    strSecond.sprintf("%02.*f", accuracy, second);
-    for (int i=strSecond.length()-1; i>0; i--) {
-      if (strSecond.at(i) == '0') {
-        accuracy--;
-      } else if (!strSecond.at(i).isDigit()) {
-        break;
-      }
-    }
-  }
-
-  if (accuracy < 0) {
-    accuracy = 0;
-  }
-
-  QString seconds;
-  QString hourminute;
-  hourminute.sprintf(" %02d:%02d:", hour, minute);
-  seconds.sprintf(" %02.*f", accuracy, second);
-  switch (axisDisplay) {
-    case AXIS_DISPLAY_YYMMDDHHMMSS_SS:
-      label.sprintf("%d/%02d/%02d", year, month, day);
-      label += hourminute + seconds;
-      break;
-    case AXIS_DISPLAY_DDMMYYHHMMSS_SS:
-      label.sprintf("%02d/%02d/%d", day, month, year);
-      label += hourminute + seconds;
-      break;
-    case AXIS_DISPLAY_QTTEXTDATEHHMMSS_SS:
-      date.setYMD(year, month, day);
-      label = date.toString(Qt::TextDate).toAscii();
-      label += hourminute + seconds;
-      break;
-    case AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS:
-      date.setYMD(year, month, day);
-      label = date.toString(Qt::LocalDate).toAscii();
-      label += hourminute + seconds;
-      break;
-    default:
-      break;
-  }
-  return label;
 }
 
 
@@ -1020,8 +698,8 @@ QRectF PlotItem::plotAxisRect() const {
 QRectF PlotItem::plotRect() const {
   //the PlotRenderItems use this to set their rects
   QRectF plot = plotAxisRect();
-  qreal xOffset = isBottomAxisVisible() ? axisMarginHeight() : 0.0;
-  qreal yOffset = isLeftAxisVisible() ? axisMarginWidth() : 0.0;
+  qreal xOffset = _xAxis->isAxisVisible() ? axisMarginHeight() : 0.0;
+  qreal yOffset = _yAxis->isAxisVisible() ? axisMarginWidth() : 0.0;
 
   plot.setLeft(plot.left() + yOffset);
   plot.setBottom(plot.bottom() - xOffset);
@@ -1052,26 +730,6 @@ void PlotItem::setTiedZoom(bool tiedZoom) {
 
   //FIXME ugh, this is expensive, but need to redraw the renderitems checkboxes...
   update();
-}
-
-
-PlotItem::ZoomMode PlotItem::xAxisZoomMode() const {
-  return _xAxisZoomMode;
-}
-
-
-void PlotItem::setXAxisZoomMode(ZoomMode mode) {
-  _xAxisZoomMode = mode;
-}
-
-
-PlotItem::ZoomMode PlotItem::yAxisZoomMode() const {
-  return _yAxisZoomMode;
-}
-
-
-void PlotItem::setYAxisZoomMode(ZoomMode mode) {
-  _yAxisZoomMode = mode;
 }
 
 
@@ -1135,248 +793,8 @@ qreal PlotItem::axisMarginHeight() const {
 }
 
 
-bool PlotItem::xAxisLog() const {
-  return _xAxisLog;
-}
-
-
-void PlotItem::setXAxisLog(bool log) {
-  _xAxisLog = log;
-}
-
-
-bool PlotItem::yAxisLog() const {
-  return _yAxisLog;
-}
-
-
-void PlotItem::setYAxisLog(bool log) {
-  _yAxisLog = log;
-}
-
-
-int PlotItem::xAxisSignificantDigits() const {
-  return _xAxisSignificantDigits;
-}
-
-
-void PlotItem::setXAxisSignificantDigits(const int digits) {
-  _xAxisSignificantDigits = digits;
-}
-
-
-int PlotItem::yAxisSignificantDigits() const {
-  return _yAxisSignificantDigits;
-}
-
-
-void PlotItem::setYAxisSignificantDigits(const int digits) {
-  _yAxisSignificantDigits = digits;
-}
-
-
-PlotItem::MajorTickMode PlotItem::xAxisMajorTickMode() const {
-  return _xAxisMajorTickMode;
-}
-
-
-void PlotItem::setXAxisMajorTickMode(PlotItem::MajorTickMode mode) {
-  _xAxisMajorTickMode = mode;
-}
-
-
-PlotItem::MajorTickMode PlotItem::yAxisMajorTickMode() const {
-  return _yAxisMajorTickMode;
-}
-
-
-void PlotItem::setYAxisMajorTickMode(PlotItem::MajorTickMode mode) {
-  _yAxisMajorTickMode = mode;
-}
-
-
-int PlotItem::xAxisMinorTickCount() const {
-  return _xAxisMinorTickCount;
-}
-
-
-void PlotItem::setXAxisMinorTickCount(const int count) {
-  _xAxisMinorTickCount = count;
-}
-
-
-int PlotItem::yAxisMinorTickCount() const {
-  return _yAxisMinorTickCount;
-}
-
-
-void PlotItem::setYAxisMinorTickCount(const int count) {
-  _yAxisMinorTickCount = count;
-}
-
-
-bool PlotItem::drawXAxisMajorTicks() const {
-  return _drawXAxisMajorTicks;
-}
-
-
-void PlotItem::setDrawXAxisMajorTicks(bool draw) {
-  _drawXAxisMajorTicks = draw;
-}
-
-
-bool PlotItem::drawYAxisMajorTicks() const {
-  return _drawYAxisMajorTicks;
-}
-
-
-void PlotItem::setDrawYAxisMajorTicks(bool draw) {
-  _drawYAxisMajorTicks = draw;
-}
-
-
-bool PlotItem::drawXAxisMinorTicks() const {
-  return _drawXAxisMinorTicks;
-}
-
-
-void PlotItem::setDrawXAxisMinorTicks(bool draw) {
-  _drawXAxisMinorTicks = draw;
-}
-
-
-bool PlotItem::drawYAxisMinorTicks() const {
-  return _drawYAxisMinorTicks;
-}
-
-
-void PlotItem::setDrawYAxisMinorTicks(bool draw) {
-  _drawYAxisMinorTicks = draw;
-}
-
-
-bool PlotItem::drawXAxisMajorGridLines() const {
-  return _drawXAxisMajorGridLines;
-}
-
-
-void PlotItem::setDrawXAxisMajorGridLines(bool draw) {
-  _drawXAxisMajorGridLines = draw;
-}
-
-
-bool PlotItem::drawYAxisMajorGridLines() const {
-  return _drawYAxisMajorGridLines;
-}
-
-
-void PlotItem::setDrawYAxisMajorGridLines(bool draw) {
-  _drawYAxisMajorGridLines = draw;
-}
-
-
-bool PlotItem::drawXAxisMinorGridLines() const {
-  return _drawXAxisMinorGridLines;
-}
-
-
-void PlotItem::setDrawXAxisMinorGridLines(bool draw) {
-  _drawXAxisMinorGridLines = draw;
-}
-
-
-bool PlotItem::drawYAxisMinorGridLines() const {
-  return _drawYAxisMinorGridLines;
-}
-
-
-void PlotItem::setDrawYAxisMinorGridLines(bool draw) {
-  _drawYAxisMinorGridLines = draw;
-}
-
-
-QColor PlotItem::xAxisMajorGridLineColor() const {
-  return _xAxisMajorGridLineColor;
-}
-
-
-void PlotItem::setXAxisMajorGridLineColor(const QColor &color) {
-  _xAxisMajorGridLineColor = color;
-}
-
-
-QColor PlotItem::xAxisMinorGridLineColor() const {
-  return _xAxisMinorGridLineColor;
-}
-
-
-void PlotItem::setXAxisMinorGridLineColor(const QColor &color) {
-  _xAxisMinorGridLineColor = color;
-}
-
-
-QColor PlotItem::yAxisMajorGridLineColor() const {
-  return _yAxisMajorGridLineColor;
-}
-
-
-void PlotItem::setYAxisMajorGridLineColor(const QColor &color) {
-  _yAxisMajorGridLineColor = color;
-}
-
-
-QColor PlotItem::yAxisMinorGridLineColor() const {
-  return _yAxisMinorGridLineColor;
-}
-
-
-void PlotItem::setYAxisMinorGridLineColor(const QColor &color) {
-  _yAxisMinorGridLineColor = color;
-}
-
-
-Qt::PenStyle PlotItem::xAxisMajorGridLineStyle() const {
-  return _xAxisMajorGridLineStyle;
-}
-
-
-void PlotItem::setXAxisMajorGridLineStyle(const Qt::PenStyle style) {
-  _xAxisMajorGridLineStyle = style;
-}
-
-
-Qt::PenStyle PlotItem::xAxisMinorGridLineStyle() const {
-  return _xAxisMinorGridLineStyle;
-}
-
-
-void PlotItem::setXAxisMinorGridLineStyle(const Qt::PenStyle style) {
-  _xAxisMinorGridLineStyle = style;
-}
-
-
-Qt::PenStyle PlotItem::yAxisMajorGridLineStyle() const {
-  return _yAxisMajorGridLineStyle;
-}
-
-
-void PlotItem::setYAxisMajorGridLineStyle(const Qt::PenStyle style) {
-  _yAxisMajorGridLineStyle = style;
-}
-
-
-Qt::PenStyle PlotItem::yAxisMinorGridLineStyle() const {
-  return _yAxisMinorGridLineStyle;
-}
-
-
-void PlotItem::setYAxisMinorGridLineStyle(const Qt::PenStyle style) {
-  _yAxisMinorGridLineStyle = style;
-}
-
-
 void PlotItem::updateScale() {
-  if (_xAxisLog) {
+  if (_xAxis->axisLog()) {
     _xMax = logXHi(projectionRect().right());
     _xMin = logXLo(projectionRect().left());
   } else {
@@ -1384,7 +802,7 @@ void PlotItem::updateScale() {
     _xMin = projectionRect().left();
   }
 
-  if (_yAxisLog) {
+  if (_yAxis->axisLog()) {
     _yMax = logYHi(projectionRect().bottom());
     _yMin = logYLo(projectionRect().top());
   } else {
@@ -1416,25 +834,25 @@ QPointF PlotItem::mapToProjection(const QPointF &point) {
 
   updateScale();
 
-  if (_xAxisReversed) {
+  if (_xAxis->axisReversed()) {
     xpos = (double)(pr.right() - point.x())/(double)pr.width();
   } else {
     xpos = (double)(point.x() - pr.left())/(double)pr.width();
   }
   xpos = xpos * (_xMax - _xMin) + _xMin;
 
-  if (_xAxisLog) {
+  if (_xAxis->axisLog()) {
     xpos = pow(10, xpos);
   }
 
-  if (_yAxisReversed) {
+  if (_yAxis->axisReversed()) {
     ypos = (double)(point.y() - pr.top())/(double)pr.height();
   } else {
     ypos = (double)(pr.bottom() - point.y())/(double)pr.height();
   }
   ypos = ypos * (_yMax - _yMin) + _yMin;
 
-  if (_yAxisLog) {
+  if (_yAxis->axisLog()) {
     ypos = pow(10, ypos);
   }
 
@@ -1451,7 +869,7 @@ qreal PlotItem::mapXToPlot(const qreal &x) const {
   QRectF pr = plotRect();
   double newX = x;
 
-  if (_xAxisLog) {
+  if (_xAxis->axisLog()) {
     newX = logXLo(x);
   }
 
@@ -1460,11 +878,11 @@ qreal PlotItem::mapXToPlot(const qreal &x) const {
 
   newX = newX * pr.width();
 
-  if (_xAxisLog && x == -350) {
+  if (_xAxis->axisLog() && x == -350) {
     newX = 0;
   }
 
-  if (_xAxisReversed) {
+  if (_xAxis->axisReversed()) {
     newX = pr.right() - newX;
   } else {
     newX = newX + pr.left();
@@ -1477,7 +895,7 @@ qreal PlotItem::mapYToPlot(const qreal &y) const {
   QRectF pr = plotRect();
   double newY = y;
 
-  if (_yAxisLog) {
+  if (_yAxis->axisLog()) {
     newY = logYLo(y);
   }
 
@@ -1486,11 +904,11 @@ qreal PlotItem::mapYToPlot(const qreal &y) const {
 
   newY = newY * pr.height();
 
-  if (_yAxisLog && y == -350) {
+  if (_yAxis->axisLog() && y == -350) {
     newY = 0;
   }
 
-  if (_yAxisReversed) {
+  if (_yAxis->axisReversed()) {
     newY = newY + pr.top();
   } else {
     newY = pr.bottom() - newY;
@@ -1699,41 +1117,13 @@ void PlotItem::setRightSuppressed(bool suppressed) {
 
 void PlotItem::setLeftSuppressed(bool suppressed) {
   setLeftLabelVisible(!suppressed);
-  setLeftAxisVisible(!suppressed);
+  _yAxis->setAxisVisible(!suppressed);
 }
 
 
 void PlotItem::setBottomSuppressed(bool suppressed) {
   setBottomLabelVisible(!suppressed);
-  setBottomAxisVisible(!suppressed);
-}
-
-
-bool PlotItem::isBottomAxisVisible() const {
-  return _isBottomAxisVisible;
-}
-
-
-void PlotItem::setBottomAxisVisible(bool visible) {
-  if (_isBottomAxisVisible == visible)
-    return;
-
-  _isBottomAxisVisible = visible;
-  emit marginsChanged();
-}
-
-
-bool PlotItem::isLeftAxisVisible() const {
-  return _isLeftAxisVisible;
-}
-
-
-void PlotItem::setLeftAxisVisible(bool visible) {
-  if (_isLeftAxisVisible == visible)
-    return;
-
-  _isLeftAxisVisible = visible;
-  emit marginsChanged();
+  _xAxis->setAxisVisible(!suppressed);
 }
 
 
@@ -1798,108 +1188,8 @@ void PlotItem::setLabelsVisible(bool visible) {
   setRightLabelVisible(visible);
   setBottomLabelVisible(visible);
   setTopLabelVisible(visible);
-  setBottomAxisVisible(visible);
-  setLeftAxisVisible(visible);
-}
-
-
-bool PlotItem::xAxisReversed() const {
-  return _xAxisReversed;
-}
-
-
-void PlotItem::setXAxisReversed(const bool enabled) {
-  _xAxisReversed = enabled;
-}
-
-
-bool PlotItem::yAxisReversed() const {
-  return _yAxisReversed;
-}
-
-
-void PlotItem::setYAxisReversed(const bool enabled) {
-  _yAxisReversed = enabled;
-}
-
-
-bool PlotItem::xAxisBaseOffset() const {
-  return _xAxisBaseOffset;
-}
-
-
-void PlotItem::setXAxisBaseOffset(const bool enabled) {
-  _xAxisBaseOffset = enabled;
-}
-
-
-bool PlotItem::yAxisBaseOffset() const {
-  return _yAxisBaseOffset;
-}
-
-
-void PlotItem::setYAxisBaseOffset(const bool enabled) {
-  _yAxisBaseOffset = enabled;
-}
-
-
-bool PlotItem::xAxisInterpret() const {
-  return _xAxisInterpret;
-}
-
-
-void PlotItem::setXAxisInterpret(const bool enabled) {
-  _xAxisInterpret = enabled;
-}
-
-
-bool PlotItem::yAxisInterpret() const {
-  return _yAxisInterpret;
-}
-
-
-void PlotItem::setYAxisInterpret(const bool enabled) {
-  _yAxisInterpret = enabled;
-}
-
-
-KstAxisDisplay PlotItem::xAxisDisplay() const {
-  return _xAxisDisplay;
-}
-
-
-void PlotItem::setXAxisDisplay(const KstAxisDisplay display) {
-  _xAxisDisplay = display;
-}
-
-
-KstAxisDisplay PlotItem::yAxisDisplay() const {
-  return _yAxisDisplay;
-}
-
-
-void PlotItem::setYAxisDisplay(const KstAxisDisplay display) {
-  _yAxisDisplay = display;
-}
-
-
-KstAxisInterpretation PlotItem::xAxisInterpretation() const {
-  return _xAxisInterpretation;
-}
-
-
-void PlotItem::setXAxisInterpretation(const KstAxisInterpretation display) {
-  _xAxisInterpretation = display;
-}
-
-
-KstAxisInterpretation PlotItem::yAxisInterpretation() const {
-  return _yAxisInterpretation;
-}
-
-
-void PlotItem::setYAxisInterpretation(const KstAxisInterpretation display) {
-  _yAxisInterpretation = display;
+  _xAxis->setAxisVisible(visible);
+  _yAxis->setAxisVisible(visible);
 }
 
 
@@ -2273,290 +1563,12 @@ void PlotItem::setCalculatedAxisMarginHeight(qreal marginHeight) {
 }
 
 
-void PlotItem::computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTicks, QMap<qreal, QString> *Labels, qreal min, qreal max, MajorTickMode tickMode) {
-
-  qreal tick;
-  if (max - min <= (double)tickMode*1.5) {
-    // show in logarithmic mode with major ticks nicely labelled and the
-    // specified number of minor ticks between each major label
-    tick = 1.0;
-  } else {
-    // show in logarithmic mode with major ticks nicely labelled and no minor ticks
-    tick = floor((max - min) / (double)tickMode);
-  }
-
-  int Low = ceil(min);
-  int High = floor(max)+1;
-  bool minorLabels = ((High - Low) <= 1);
-  for (int i = Low - 1; i <= High; i+=tick) {
-    qreal majorPoint = pow(10, i);
-    if (majorPoint == 0) majorPoint = -350;
-    if (i >= min && i <= max) {
-      *MajorTicks << majorPoint;
-      *Labels->insert(majorPoint, QString::number(majorPoint, 'g', FULL_PRECISION));
-    }
-
-    if (tick == 1.0) {
-      // draw minor lines
-      bool first = true;
-      qreal powMin = pow(10, min), powMax = pow(10, max);
-      for (int j = 2; j < 10; j++) {
-        qreal minorPoint = majorPoint * j;
-        if (minorPoint >= powMin && minorPoint <= powMax) {
-          *MinorTicks << minorPoint;
-          if (minorLabels && first) {
-            *Labels->insert(minorPoint, QString::number(minorPoint, 'g', FULL_PRECISION));
-            first = false;
-          }
-        }
-      }
-    }
-  }
-  if (minorLabels && !MinorTicks->isEmpty()) {
-    qreal lastMinorTick = MinorTicks->last();
-    if (MajorTicks->isEmpty() || MajorTicks->last() < lastMinorTick) {
-      if (!Labels->contains(lastMinorTick)) {
-        *Labels->insert(lastMinorTick, QString::number(lastMinorTick, 'g', FULL_PRECISION));
-      }
-    }
-  }
-}
-
-
-void PlotItem::generateAxes() {
-
-  QMap<qreal, QString> leftLabels;
-  QMap<qreal, QString> bottomLabels;
-  QList<qreal> xTicks;
-  QList<qreal> xMinTicks;
-  updateScale();
-  if (_xAxisLog) {
-    computeLogTicks(&xTicks, &xMinTicks, &bottomLabels, _xMin, _xMax, _xAxisMajorTickMode);
-  } else {
-    qreal xMajorTickSpacing = computedMajorTickSpacing(Qt::Horizontal);
-    qreal firstXTick = ceil(projectionRect().left() / xMajorTickSpacing) * xMajorTickSpacing;
-
-    int ix = 0;
-    qreal nextXTick = firstXTick;
-    while (1) {
-      nextXTick = firstXTick + (ix++ * xMajorTickSpacing);
-      if (!projectionRect().contains(nextXTick, projectionRect().y()))
-        break;
-      xTicks << nextXTick;
-      bottomLabels.insert(nextXTick, QString::number(nextXTick, 'g', FULL_PRECISION));
-    }
-
-    qreal xMinorTickSpacing = 0;
-    if (_xAxisMinorTickCount > 0) {
-      xMinorTickSpacing = xMajorTickSpacing / _xAxisMinorTickCount;
-    }
-
-    if (xMinorTickSpacing != 0) {
-      qreal firstXMinorTick = (firstXTick - xMajorTickSpacing) + xMinorTickSpacing;
-
-      ix = 0;
-      qreal nextXMinorTick = firstXMinorTick;
-      while (1) {
-        nextXMinorTick = firstXMinorTick + (ix++ * xMinorTickSpacing);
-        if (projectionRect().right() < nextXMinorTick)
-          break;
-        if (!xTicks.contains(nextXMinorTick) && projectionRect().contains(nextXMinorTick, projectionRect().y())) {
-          xMinTicks << nextXMinorTick;
-        }
-      }
-    }
-  }
-
-  QList<qreal> yTicks;
-  QList<qreal> yMinTicks;
-  if (_yAxisLog) {
-    computeLogTicks(&yTicks, &yMinTicks, &leftLabels, _yMin, _yMax, _yAxisMajorTickMode);
-  } else {
-    qreal yMajorTickSpacing = computedMajorTickSpacing(Qt::Vertical);
-    qreal firstYTick = ceil(projectionRect().top() / yMajorTickSpacing) * yMajorTickSpacing;
-
-    int iy = 0;
-    qreal nextYTick = firstYTick;
-    while (1) {
-      nextYTick = firstYTick + (iy++ * yMajorTickSpacing);
-      if (!projectionRect().contains(projectionRect().x(), nextYTick))
-        break;
-      yTicks << nextYTick;
-      leftLabels.insert(nextYTick, QString::number(nextYTick, 'g', FULL_PRECISION));
-    }
-
-    qreal yMinorTickSpacing = 0;
-    if (_yAxisMinorTickCount > 0) {
-      yMinorTickSpacing = yMajorTickSpacing / _yAxisMinorTickCount;
-    }
-    qreal firstYMinorTick = (firstYTick - yMajorTickSpacing) + yMinorTickSpacing;
-
-    if (yMinorTickSpacing != 0) {
-      iy = 0;
-      qreal nextYMinorTick = firstYMinorTick;
-      while (1) {
-        nextYMinorTick = firstYMinorTick + (iy++ * yMinorTickSpacing);
-        if (projectionRect().bottom() < nextYMinorTick)
-          break;
-        if (!yTicks.contains(nextYMinorTick) && projectionRect().contains(projectionRect().x(), nextYMinorTick)) {
-          yMinTicks << nextYMinorTick;
-        }
-      }
-    }
-  }
-
-  _bottomAxisMajorTicks = xTicks;
-  _bottomAxisMinorTicks = xMinTicks;
-  _leftAxisMajorTicks = yTicks;
-  _leftAxisMinorTicks = yMinTicks;
-
-  _leftAxisLabels.clear();
-  _leftBaseLabel.clear();
-
-  int longest = 0, shortest = 1000;
-  qreal yBase;
-  QMapIterator<qreal, QString> iLabel(leftLabels);
-  while (iLabel.hasNext()) {
-    iLabel.next();
-    if (iLabel.value().length() < shortest) {
-      shortest = iLabel.value().length();
-      yBase = iLabel.key();
-    }
-    if (iLabel.value().length() > longest) {
-      longest = iLabel.value().length();
-    }
-  }
-
-  if (_yAxisBaseOffset || _yAxisInterpret || (longest > _yAxisSignificantDigits) ) {
-    if (_yAxisInterpret) {
-      _leftBaseLabel = interpretLabel(_yAxisInterpretation, _yAxisDisplay, yBase, (_leftAxisMajorTicks).last());
-    } else {
-      _leftBaseLabel = QString::number(yBase);
-    }
-    QMapIterator<qreal, QString> i(leftLabels);
-    while (i.hasNext()) {
-      i.next();
-      qreal offset;
-      if (_yAxisInterpret) {
-        offset = interpretOffset(_yAxisInterpretation, _yAxisDisplay, yBase, i.key());
-      } else {
-        offset = i.key() - yBase;
-      }
-      QString label;
-      if (offset < 0) {
-        label += "-";
-        offset = offset * -1;
-      } else if (offset > 0) {
-        label += "+";
-      }
-      label += "[";
-      label += QString::number(offset, 'g', _yAxisSignificantDigits);
-      label += "]";
-      _leftAxisLabels.insert(i.key(), label);
-    }
-  } else {
-    _leftAxisLabels = leftLabels;
-  }
-
-  _bottomAxisLabels.clear();
-  _bottomAxisLabels.clear();
-
-  longest = 0;
-  shortest = 1000;
-  qreal xBase;
-  QMapIterator<qreal, QString> iBottomLabel(bottomLabels);
-  while (iBottomLabel.hasNext()) {
-    iBottomLabel.next();
-    if (iBottomLabel.value().length() < shortest) {
-      shortest = iBottomLabel.value().length();
-      xBase = iBottomLabel.key();
-    }
-    if (iBottomLabel.value().length() > longest) {
-      longest = iBottomLabel.value().length();
-    }
-  }
-
-  if (_xAxisBaseOffset || _xAxisInterpret || (longest > _xAxisSignificantDigits) ) {
-    if (_xAxisInterpret) {
-      _bottomBaseLabel = interpretLabel(_xAxisInterpretation, _xAxisDisplay, xBase, (_bottomAxisMajorTicks).last());
-    } else {
-      _bottomBaseLabel = QString::number(xBase);
-    }
-    QMapIterator<qreal, QString> i(bottomLabels);
-    while (i.hasNext()) {
-      i.next();
-      qreal offset;
-      if (_xAxisInterpret) {
-        offset = interpretOffset(_xAxisInterpretation, _xAxisDisplay, xBase, i.key());
-      } else {
-        offset = i.key() - xBase;
-      }
-      QString label;
-      if (offset < 0) {
-        label += "-";
-        offset = offset * -1;
-      } else if (offset > 0) {
-        label += "+";
-      }
-      label += "[";
-      label += QString::number(offset);
-      label += "]";
-      _bottomAxisLabels.insert(i.key(), label);
-    }
-  } else {
-    _bottomAxisLabels = bottomLabels;
-  }
-}
-
-
-/*
- * Major ticks are always spaced by D = A*10B where B is an integer,
- * and A is 1, 2 or 5. So: 1, 0.02, 50, 2000 are all possible major tick
- * spacings, but 30 is not.
- *
- * A and B are chosen so that there are as close as possible to M major ticks
- * on the axis (but at least 2). The value of M is set by the requested
- * MajorTickMode.
- */
-qreal PlotItem::computedMajorTickSpacing(Qt::Orientation orientation) const {
-  qreal R = orientation == Qt::Horizontal ? projectionRect().width() : projectionRect().height();
-  qreal M = orientation == Qt::Horizontal ? xAxisMajorTickMode() : yAxisMajorTickMode();
-  qreal B = floor(log10(R/M));
-
-  qreal d1 = 1 * pow(10, B);
-  qreal d2 = 2 * pow(10, B);
-  qreal d5 = 5 * pow(10, B);
-
-  qreal r1 = d1 * M - 1;
-  qreal r2 = d2 * M - 1;
-  qreal r5 = d5 * M - 1;
-
-#ifdef MAJOR_TICK_DEBUG
-  qDebug() << "MajorTickMode:" << M << "Range:" << R
-           << "\n\tranges:" << r1 << r2 << r5
-           << "\n\tspaces:" << d1 << d2 << d5
-           << endl;
-#endif
-
-  qreal s1 = qAbs(r1 - R);
-  qreal s2 = qAbs(r2 - R);
-  qreal s5 = qAbs(r5 - R);
-
-  if (s1 < s2 && s1 < s5)
-    return d1;
-  else if (s2 < s5)
-    return d2;
-  else
-    return d5;
-}
-
-
 QSizeF PlotItem::calculateBottomTickLabelBound(QPainter *painter) {
   QRectF xLabelRect;
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
 
-  if (isBottomAxisVisible()) {
-    QMapIterator<qreal, QString> xLabelIt(_bottomAxisLabels);
+  if (_xAxis->isAxisVisible()) {
+    QMapIterator<qreal, QString> xLabelIt(_xAxis->axisLabels());
     while (xLabelIt.hasNext()) {
       xLabelIt.next();
 
@@ -2572,8 +1584,8 @@ QSizeF PlotItem::calculateBottomTickLabelBound(QPainter *painter) {
     }
   }
 
-  if (!_bottomBaseLabel.isEmpty()) {
-    qreal height = painter->boundingRect(QRectF(), flags, _bottomBaseLabel).height();
+  if (!_xAxis->baseLabel().isEmpty()) {
+    qreal height = painter->boundingRect(QRectF(), flags, _xAxis->baseLabel()).height();
     if (calculatedBottomLabelMargin() < height) {
       xLabelRect.setHeight(xLabelRect.height() + (height - calculatedBottomLabelMargin()));
     }
@@ -2585,9 +1597,9 @@ QSizeF PlotItem::calculateBottomTickLabelBound(QPainter *painter) {
 QSizeF PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
   QRectF yLabelRect;
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
-  if (isLeftAxisVisible()) {
+  if (_yAxis->isAxisVisible()) {
 
-    QMapIterator<qreal, QString> yLabelIt(_leftAxisLabels);
+    QMapIterator<qreal, QString> yLabelIt(_yAxis->axisLabels());
     while (yLabelIt.hasNext()) {
       yLabelIt.next();
 
@@ -2603,8 +1615,8 @@ QSizeF PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
       }
     }
   }
-  if (!_leftBaseLabel.isEmpty()) {
-    qreal height = painter->boundingRect(QRectF(), flags, _leftBaseLabel).height();
+  if (!_yAxis->baseLabel().isEmpty()) {
+    qreal height = painter->boundingRect(QRectF(), flags, _yAxis->baseLabel()).height();
     if (calculatedLeftLabelMargin() < height) {
       yLabelRect.setWidth(yLabelRect.width() + (height - calculatedLeftLabelMargin()));
     }
@@ -2622,7 +1634,7 @@ void PlotItem::setProjectionRect(const QRectF &rect) {
     _projectionRect = rect;
     emit marginsChanged();
   }
-  generateAxes();
+  emit updateAxes();
   update(); //slow, but need to update everything...
 }
 
@@ -2660,7 +1672,7 @@ void PlotItem::computedRelationalMax(qreal &minimum, qreal &maximum) {
 
         //If the axis is in log mode, the lower extent will be the
         //minimum value larger than zero.
-        if (yAxisLog())
+        if (yAxis()->axisLog())
           minimum = minimum <= 0.0 ? min : qMin(min, minimum);
         else
           minimum = qMin(min, minimum);
@@ -2684,7 +1696,7 @@ void PlotItem::computeBorder(Qt::Orientation orientation, qreal &minimum, qreal 
 
 void PlotItem::resetSelectionRect() {
   foreach (PlotRenderItem *renderer, renderItems()) {
-    resetSelectionRect();
+    renderer->resetSelectionRect();
   }
 }
 
@@ -2757,7 +1769,7 @@ void PlotItem::zoomXIn() {
 void PlotItem::zoomNormalizeXtoY() {
   qDebug() << "zoomNormalizeXtoY" << endl;
 
-  if (xAxisLog() || yAxisLog())
+  if (xAxis()->axisLog() || yAxis()->axisLog())
     return; //apparently we don't want to do anything here according to kst2dplot...
 
   ZoomCommand *cmd = new ZoomNormalizeXToYCommand(this);
@@ -2767,7 +1779,7 @@ void PlotItem::zoomNormalizeXtoY() {
 
 void PlotItem::zoomLogX() {
   qDebug() << "zoomLogX" << endl;
-  setXAxisLog(_zoomLogX->isChecked());
+  xAxis()->setAxisLog(_zoomLogX->isChecked());
   setProjectionRect(computedProjectionRect()); //need to recompute
   update();
 }
@@ -2820,7 +1832,7 @@ void PlotItem::zoomYIn() {
 void PlotItem::zoomNormalizeYtoX() {
   qDebug() << "zoomNormalizeYtoX" << endl;
 
-  if (xAxisLog() || yAxisLog())
+  if (xAxis()->axisLog() || yAxis()->axisLog())
     return; //apparently we don't want to do anything here according to kst2dplot...
 
   ZoomCommand *cmd = new ZoomNormalizeYToXCommand(this);
@@ -2830,7 +1842,7 @@ void PlotItem::zoomNormalizeYtoX() {
 
 void PlotItem::zoomLogY() {
   qDebug() << "zoomLogY" << endl;
-  setYAxisLog(_zoomLogY->isChecked());
+  yAxis()->setAxisLog(_zoomLogY->isChecked());
   setProjectionRect(computedProjectionRect()); //need to recompute
   update();
 }
@@ -2840,10 +1852,10 @@ ZoomState PlotItem::currentZoomState() {
   ZoomState zoomState;
   zoomState.item = this; //the origin of this ZoomState
   zoomState.projectionRect = projectionRect();
-  zoomState.xAxisZoomMode = xAxisZoomMode();
-  zoomState.yAxisZoomMode = yAxisZoomMode();
-  zoomState.isXAxisLog = xAxisLog();
-  zoomState.isYAxisLog = yAxisLog();
+  zoomState.xAxisZoomMode = xAxis()->axisZoomMode();
+  zoomState.yAxisZoomMode = yAxis()->axisZoomMode();
+  zoomState.isXAxisLog = xAxis()->axisLog();
+  zoomState.isYAxisLog = yAxis()->axisLog();
   zoomState.xLogBase = 10.0;
   zoomState.yLogBase = 10.0;
   return zoomState;
@@ -2851,10 +1863,10 @@ ZoomState PlotItem::currentZoomState() {
 
 
 void PlotItem::setCurrentZoomState(ZoomState zoomState) {
-  setXAxisZoomMode(ZoomMode(zoomState.xAxisZoomMode));
-  setYAxisZoomMode(ZoomMode(zoomState.yAxisZoomMode));
-  setXAxisLog(zoomState.isXAxisLog);
-  setYAxisLog(zoomState.isYAxisLog);
+  _xAxis->setAxisZoomMode(PlotAxis::ZoomMode(zoomState.xAxisZoomMode));
+  _yAxis->setAxisZoomMode(PlotAxis::ZoomMode(zoomState.yAxisZoomMode));
+  _xAxis->setAxisLog(zoomState.isXAxisLog);
+  _yAxis->setAxisLog(zoomState.isYAxisLog);
   setProjectionRect(zoomState.projectionRect);
 }
 
@@ -2934,43 +1946,43 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         }
         av = attrs.value("bottomaxisvisible");
         if (!av.isNull()) {
-          rc->setBottomAxisVisible(QVariant(av.toString()).toBool());
+          rc->xAxis()->setAxisVisible(QVariant(av.toString()).toBool());
         }
         av = attrs.value("leftaxisvisible");
         if (!av.isNull()) {
-          rc->setLeftAxisVisible(QVariant(av.toString()).toBool());
+          rc->yAxis()->setAxisVisible(QVariant(av.toString()).toBool());
         }
         av = attrs.value("xaxislog");
         if (!av.isNull()) {
-          rc->setXAxisLog(QVariant(av.toString()).toBool());
+          rc->xAxis()->setAxisLog(QVariant(av.toString()).toBool());
         }
         av = attrs.value("yaxislog");
         if (!av.isNull()) {
-          rc->setYAxisLog(QVariant(av.toString()).toBool());
+          rc->yAxis()->setAxisLog(QVariant(av.toString()).toBool());
         }
         av = attrs.value("xaxisreversed");
         if (!av.isNull()) {
-          rc->setXAxisReversed(QVariant(av.toString()).toBool());
+          rc->xAxis()->setAxisReversed(QVariant(av.toString()).toBool());
         }
         av = attrs.value("yaxisreversed");
         if (!av.isNull()) {
-          rc->setYAxisReversed(QVariant(av.toString()).toBool());
+          rc->yAxis()->setAxisReversed(QVariant(av.toString()).toBool());
         }
         av = attrs.value("xaxisbaseoffset");
         if (!av.isNull()) {
-          rc->setXAxisBaseOffset(QVariant(av.toString()).toBool());
+          rc->xAxis()->setAxisBaseOffset(QVariant(av.toString()).toBool());
         }
         av = attrs.value("yaxisbaseoffset");
         if (!av.isNull()) {
-          rc->setYAxisBaseOffset(QVariant(av.toString()).toBool());
+          rc->yAxis()->setAxisBaseOffset(QVariant(av.toString()).toBool());
         }
         av = attrs.value("xaxisinterpret");
         if (!av.isNull()) {
-          rc->setXAxisInterpret(QVariant(av.toString()).toBool());
+          rc->xAxis()->setAxisInterpret(QVariant(av.toString()).toBool());
         }
         av = attrs.value("yaxisinterpret");
         if (!av.isNull()) {
-          rc->setYAxisInterpret(QVariant(av.toString()).toBool());
+          rc->yAxis()->setAxisInterpret(QVariant(av.toString()).toBool());
         }
         av = attrs.value("leftlabeloverride");
         if (!av.isNull()) {
@@ -3014,115 +2026,115 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         }
         av = attrs.value("xaxisinterpretation");
         if (!av.isNull()) {
-          rc->setXAxisInterpretation((KstAxisInterpretation)QVariant(av.toString()).toInt());
+          rc->xAxis()->setAxisInterpretation((KstAxisInterpretation)QVariant(av.toString()).toInt());
         }
         av = attrs.value("yaxisinterpretation");
         if (!av.isNull()) {
-          rc->setYAxisInterpretation((KstAxisInterpretation)QVariant(av.toString()).toInt());
+          rc->yAxis()->setAxisInterpretation((KstAxisInterpretation)QVariant(av.toString()).toInt());
         }
         av = attrs.value("xaxisdisplay");
         if (!av.isNull()) {
-          rc->setXAxisDisplay((KstAxisDisplay)QVariant(av.toString()).toInt());
+          rc->xAxis()->setAxisDisplay((KstAxisDisplay)QVariant(av.toString()).toInt());
         }
         av = attrs.value("yaxisdisplay");
         if (!av.isNull()) {
-          rc->setYAxisDisplay((KstAxisDisplay)QVariant(av.toString()).toInt());
+          rc->yAxis()->setAxisDisplay((KstAxisDisplay)QVariant(av.toString()).toInt());
         }
         av = attrs.value("xaxismajortickmode");
         if (!av.isNull()) {
-          rc->setXAxisMajorTickMode((PlotItem::MajorTickMode)QVariant(av.toString()).toInt());
+          rc->xAxis()->setAxisMajorTickMode((PlotAxis::MajorTickMode)QVariant(av.toString()).toInt());
         }
         av = attrs.value("yaxismajortickmode");
         if (!av.isNull()) {
-          rc->setYAxisMajorTickMode((PlotItem::MajorTickMode)QVariant(av.toString()).toInt());
+          rc->xAxis()->setAxisMajorTickMode((PlotAxis::MajorTickMode)QVariant(av.toString()).toInt());
         }
         av = attrs.value("xaxisminortickcount");
         if (!av.isNull()) {
-          rc->setXAxisMinorTickCount(QVariant(av.toString()).toInt());
+          rc->xAxis()->setAxisMinorTickCount(QVariant(av.toString()).toInt());
         }
         av = attrs.value("yaxisminortickcount");
         if (!av.isNull()) {
-          rc->setYAxisMinorTickCount(QVariant(av.toString()).toInt());
+          rc->yAxis()->setAxisMinorTickCount(QVariant(av.toString()).toInt());
         }
         av = attrs.value("xaxisdrawmajorticks");
         if (!av.isNull()) {
-          rc->setDrawXAxisMajorTicks(QVariant(av.toString()).toBool());
+          rc->xAxis()->setDrawAxisMajorTicks(QVariant(av.toString()).toBool());
         }
         av = attrs.value("xaxisdrawminorticks");
         if (!av.isNull()) {
-          rc->setDrawXAxisMinorTicks(QVariant(av.toString()).toBool());
+          rc->xAxis()->setDrawAxisMinorTicks(QVariant(av.toString()).toBool());
         }
         av = attrs.value("yaxisdrawmajorticks");
         if (!av.isNull()) {
-          rc->setDrawYAxisMajorTicks(QVariant(av.toString()).toBool());
+          rc->yAxis()->setDrawAxisMajorTicks(QVariant(av.toString()).toBool());
         }
         av = attrs.value("yaxisdrawminorticks");
         if (!av.isNull()) {
-          rc->setDrawYAxisMinorTicks(QVariant(av.toString()).toBool());
+          rc->yAxis()->setDrawAxisMinorTicks(QVariant(av.toString()).toBool());
         }
         av = attrs.value("xaxisdrawmajorgridlines");
         if (!av.isNull()) {
-          rc->setDrawXAxisMajorGridLines(QVariant(av.toString()).toBool());
+          rc->xAxis()->setDrawAxisMajorGridLines(QVariant(av.toString()).toBool());
         }
         av = attrs.value("xaxisdrawminorgridlines");
         if (!av.isNull()) {
-          rc->setDrawXAxisMinorGridLines(QVariant(av.toString()).toBool());
+          rc->xAxis()->setDrawAxisMinorGridLines(QVariant(av.toString()).toBool());
         }
         av = attrs.value("yaxisdrawmajorgridlines");
         if (!av.isNull()) {
-          rc->setDrawYAxisMajorGridLines(QVariant(av.toString()).toBool());
+          rc->yAxis()->setDrawAxisMajorGridLines(QVariant(av.toString()).toBool());
         }
         av = attrs.value("yaxisdrawminorgridlines");
         if (!av.isNull()) {
-          rc->setDrawYAxisMinorGridLines(QVariant(av.toString()).toBool());
+          rc->yAxis()->setDrawAxisMinorGridLines(QVariant(av.toString()).toBool());
         }
         av = attrs.value("xaxisdrawmajorgridlinecolor");
         if (!av.isNull()) {
-          rc->setXAxisMajorGridLineColor(QColor(av.toString()));
+          rc->xAxis()->setAxisMajorGridLineColor(QColor(av.toString()));
         }
         av = attrs.value("xaxisdrawminorgridlinecolor");
         if (!av.isNull()) {
-          rc->setXAxisMinorGridLineColor(QColor(av.toString()));
+          rc->xAxis()->setAxisMinorGridLineColor(QColor(av.toString()));
         }
         av = attrs.value("yaxisdrawmajorgridlinecolor");
         if (!av.isNull()) {
-          rc->setYAxisMajorGridLineColor(QColor(av.toString()));
+          rc->yAxis()->setAxisMajorGridLineColor(QColor(av.toString()));
         }
         av = attrs.value("yaxisdrawminorgridlinecolor");
         if (!av.isNull()) {
-          rc->setYAxisMinorGridLineColor(QColor(av.toString()));
+          rc->yAxis()->setAxisMinorGridLineColor(QColor(av.toString()));
         }
         av = attrs.value("xaxisdrawmajorgridlinestyle");
         if (!av.isNull()) {
-          rc->setXAxisMajorGridLineStyle((Qt::PenStyle)QVariant(av.toString()).toInt());
+          rc->xAxis()->setAxisMajorGridLineStyle((Qt::PenStyle)QVariant(av.toString()).toInt());
         }
         av = attrs.value("xaxisdrawminorgridlinestyle");
         if (!av.isNull()) {
-          rc->setXAxisMinorGridLineStyle((Qt::PenStyle)QVariant(av.toString()).toInt());
+          rc->xAxis()->setAxisMinorGridLineStyle((Qt::PenStyle)QVariant(av.toString()).toInt());
         }
         av = attrs.value("yaxisdrawmajorgridlinestyle");
         if (!av.isNull()) {
-          rc->setYAxisMajorGridLineStyle((Qt::PenStyle)QVariant(av.toString()).toInt());
+          rc->yAxis()->setAxisMajorGridLineStyle((Qt::PenStyle)QVariant(av.toString()).toInt());
         }
         av = attrs.value("yaxisdrawminorgridlinestyle");
         if (!av.isNull()) {
-          rc->setYAxisMinorGridLineStyle((Qt::PenStyle)QVariant(av.toString()).toInt());
+          rc->yAxis()->setAxisMinorGridLineStyle((Qt::PenStyle)QVariant(av.toString()).toInt());
         }
         av = attrs.value("xaxissignificantdigits");
         if (!av.isNull()) {
-          rc->setXAxisSignificantDigits(QVariant(av.toString()).toInt());
+          rc->xAxis()->setAxisSignificantDigits(QVariant(av.toString()).toInt());
         }
         av = attrs.value("yaxissignificantdigits");
         if (!av.isNull()) {
-          rc->setYAxisSignificantDigits(QVariant(av.toString()).toInt());
+          rc->yAxis()->setAxisSignificantDigits(QVariant(av.toString()).toInt());
         }
         av = attrs.value("xzoommode");
         if (!av.isNull()) {
-          rc->setXAxisZoomMode((PlotItem::ZoomMode)av.toString().toInt());
+          rc->xAxis()->setAxisZoomMode((PlotAxis::ZoomMode)av.toString().toInt());
         }
         av = attrs.value("yzoommode");
         if (!av.isNull()) {
-          rc->setYAxisZoomMode((PlotItem::ZoomMode)av.toString().toInt());
+          rc->yAxis()->setAxisZoomMode((PlotAxis::ZoomMode)av.toString().toInt());
         }
 
       // TODO add any specialized PlotItem Properties here.
@@ -3216,8 +2228,8 @@ void ZoomCommand::redo() {
  * X axis zoom to FixedExpression, Y axis zoom to FixedExpression.
  */
 void ZoomFixedExpressionCommand::applyZoomTo(PlotItem *item) {
-  item->setXAxisZoomMode(PlotItem::FixedExpression);
-  item->setYAxisZoomMode(PlotItem::FixedExpression);
+  item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+  item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
   item->setProjectionRect(_fixed);
 }
 
@@ -3226,8 +2238,8 @@ void ZoomFixedExpressionCommand::applyZoomTo(PlotItem *item) {
  * X axis zoom to Auto, Y axis zoom to AutoBorder.
  */
 void ZoomMaximumCommand::applyZoomTo(PlotItem *item) {
-  item->setXAxisZoomMode(PlotItem::Auto);
-  item->setYAxisZoomMode(PlotItem::AutoBorder);
+  item->xAxis()->setAxisZoomMode(PlotAxis::Auto);
+  item->yAxis()->setAxisZoomMode(PlotAxis::AutoBorder);
   item->setProjectionRect(item->computedProjectionRect());
 }
 
@@ -3236,8 +2248,8 @@ void ZoomMaximumCommand::applyZoomTo(PlotItem *item) {
  * X axis zoom to Auto, Y axis zoom to SpikeInsensitive.
  */
 void ZoomMaxSpikeInsensitiveCommand::applyZoomTo(PlotItem *item) {
-  item->setXAxisZoomMode(PlotItem::Auto);
-  item->setYAxisZoomMode(PlotItem::SpikeInsensitive);
+  item->xAxis()->setAxisZoomMode(PlotAxis::Auto);
+  item->yAxis()->setAxisZoomMode(PlotAxis::SpikeInsensitive);
   item->setProjectionRect(item->computedProjectionRect());
 }
 
@@ -3246,8 +2258,8 @@ void ZoomMaxSpikeInsensitiveCommand::applyZoomTo(PlotItem *item) {
  * X axis zoom to Auto, Y axis zoom to Mean Centered.
  */
 void ZoomYMeanCenteredCommand::applyZoomTo(PlotItem *item) {
-  item->setXAxisZoomMode(PlotItem::Auto);
-  item->setYAxisZoomMode(PlotItem::MeanCentered);
+  item->xAxis()->setAxisZoomMode(PlotAxis::Auto);
+  item->yAxis()->setAxisZoomMode(PlotAxis::MeanCentered);
   item->setProjectionRect(item->computedProjectionRect());
 }
 
@@ -3256,7 +2268,7 @@ void ZoomYMeanCenteredCommand::applyZoomTo(PlotItem *item) {
  * X axis zoom to auto, Y zoom not changed.
  */
 void ZoomXMaximumCommand::applyZoomTo(PlotItem *item) {
-  item->setXAxisZoomMode(PlotItem::Auto);
+  item->xAxis()->setAxisZoomMode(PlotAxis::Auto);
   QRectF compute = item->computedProjectionRect();
   item->setProjectionRect(QRectF(compute.x(),
                            item->projectionRect().y(),
@@ -3270,12 +2282,12 @@ void ZoomXMaximumCommand::applyZoomTo(PlotItem *item) {
  *       new_xmax = xmax + (xmax – xmin)*0.10;
  */
 void ZoomXRightCommand::applyZoomTo(PlotItem *item) {
-  item->setXAxisZoomMode(PlotItem::FixedExpression);
+  item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
 
   QRectF compute = item->projectionRect();
 
   qreal dx = (item->xMax() - item->xMin())*0.10;
-  if (item->xAxisLog()) { 
+  if (item->xAxis()->axisLog()) { 
     compute.setLeft(pow(10, item->xMin() + dx));
     compute.setRight(pow(10, item->xMax() + dx));
   } else {
@@ -3292,12 +2304,12 @@ void ZoomXRightCommand::applyZoomTo(PlotItem *item) {
  *       new_xmax = xmax - (xmax – xmin)*0.10;
  */
 void ZoomXLeftCommand::applyZoomTo(PlotItem *item) {
-  item->setXAxisZoomMode(PlotItem::FixedExpression);
+  item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
 
   QRectF compute = item->projectionRect();
 
   qreal dx = (item->xMax() - item->xMin())*0.10;
-  if (item->xAxisLog()) { 
+  if (item->xAxis()->axisLog()) { 
     compute.setLeft(pow(10, item->xMin() - dx));
     compute.setRight(pow(10, item->xMax() - dx));
   } else {
@@ -3314,12 +2326,12 @@ void ZoomXLeftCommand::applyZoomTo(PlotItem *item) {
  *       new_xmax = xmax + (xmax – xmin)*0.25;
  */
 void ZoomXOutCommand::applyZoomTo(PlotItem *item) {
-  item->setXAxisZoomMode(PlotItem::FixedExpression);
+  item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
 
   QRectF compute = item->projectionRect();
 
   qreal dx = (item->xMax() - item->xMin())*0.25;
-  if (item->xAxisLog()) { 
+  if (item->xAxis()->axisLog()) { 
     compute.setLeft(pow(10, item->xMin() - dx));
     compute.setRight(pow(10, item->xMax() + dx));
   } else {
@@ -3338,12 +2350,12 @@ void ZoomXOutCommand::applyZoomTo(PlotItem *item) {
  *       new_xmax = xmax - (xmax – xmin)*0.1666666;
  */
 void ZoomXInCommand::applyZoomTo(PlotItem *item) {
-  item->setXAxisZoomMode(PlotItem::FixedExpression);
+  item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
 
   QRectF compute = item->projectionRect();
 
   qreal dx = (item->xMax() - item->xMin())*0.1666666;
-  if (item->xAxisLog()) { 
+  if (item->xAxis()->axisLog()) { 
     compute.setLeft(pow(10, item->xMin() + dx));
     compute.setRight(pow(10, item->xMax() - dx));
   } else {
@@ -3368,7 +2380,7 @@ void ZoomNormalizeXToYCommand::applyZoomTo(PlotItem *item) {
   compute.setLeft(mean - (range / 2.0));
   compute.setRight(mean + (range / 2.0));
 
-  item->setXAxisZoomMode(PlotItem::FixedExpression);
+  item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
   item->setProjectionRect(compute);
 }
 
@@ -3380,13 +2392,13 @@ void ZoomNormalizeXToYCommand::applyZoomTo(PlotItem *item) {
  * values between 30 and 40.
  */
 void ZoomYLocalMaximumCommand::applyZoomTo(PlotItem *item) {
-  qreal minimum = item->yAxisLog() ? 0.0 : -0.1;
+  qreal minimum = item->yAxis()->axisLog() ? 0.0 : -0.1;
   qreal maximum = 0.1;
   item->computedRelationalMax(minimum, maximum);
 
   item->computeBorder(Qt::Vertical, minimum, maximum);
 
-  item->setYAxisZoomMode(PlotItem::FixedExpression);
+  item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
 
   QRectF compute = item->projectionRect();
   compute.setTop(minimum);
@@ -3400,7 +2412,7 @@ void ZoomYLocalMaximumCommand::applyZoomTo(PlotItem *item) {
  * Y axis zoom to auto, X zoom not changed.
  */
 void ZoomYMaximumCommand::applyZoomTo(PlotItem *item) {
-  item->setYAxisZoomMode(PlotItem::Auto);
+  item->yAxis()->setAxisZoomMode(PlotAxis::Auto);
   QRectF compute = item->computedProjectionRect();
   item->setProjectionRect(QRectF(item->projectionRect().x(),
                            compute.y(),
@@ -3416,13 +2428,13 @@ void ZoomYMaximumCommand::applyZoomTo(PlotItem *item) {
  *             new_ymax = ymax + (ymax - ymin)*0.1;
  */
 void ZoomYUpCommand::applyZoomTo(PlotItem *item) {
-  if (item->yAxisZoomMode() != PlotItem::MeanCentered)
-    item->setYAxisZoomMode(PlotItem::FixedExpression);
+  if (item->yAxis()->axisZoomMode() != PlotAxis::MeanCentered)
+    item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
 
   QRectF compute = item->projectionRect();
 
   qreal dy = (item->yMax() - item->yMin())*0.1;
-  if (item->yAxisLog()) { 
+  if (item->yAxis()->axisLog()) { 
     compute.setTop(pow(10, item->yMin() + dy));
     compute.setBottom(pow(10, item->yMax() + dy));
   } else {
@@ -3441,13 +2453,13 @@ void ZoomYUpCommand::applyZoomTo(PlotItem *item) {
  *             new_ymax = ymax - (ymax - ymin)*0.10;
  */
 void ZoomYDownCommand::applyZoomTo(PlotItem *item) {
-  if (item->yAxisZoomMode() != PlotItem::MeanCentered)
-    item->setYAxisZoomMode(PlotItem::FixedExpression);
+  if (item->yAxis()->axisZoomMode() != PlotAxis::MeanCentered)
+    item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
 
   QRectF compute = item->projectionRect();
 
   qreal dy = (item->yMax() - item->yMin())*0.1;
-  if (item->yAxisLog()) { 
+  if (item->yAxis()->axisLog()) { 
     compute.setTop(pow(10, item->yMin() - dy));
     compute.setBottom(pow(10, item->yMax() - dy));
   } else {
@@ -3466,13 +2478,13 @@ void ZoomYDownCommand::applyZoomTo(PlotItem *item) {
  *             new_ymax = ymax + (ymax - ymin)*0.25;
  */
 void ZoomYOutCommand::applyZoomTo(PlotItem *item) {
-  if (item->yAxisZoomMode() != PlotItem::MeanCentered)
-    item->setYAxisZoomMode(PlotItem::FixedExpression);
+  if (item->yAxis()->axisZoomMode() != PlotAxis::MeanCentered)
+    item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
 
   QRectF compute = item->projectionRect();
 
   qreal dy = (item->yMax() - item->yMin())*0.25;
-  if (item->yAxisLog()) { 
+  if (item->yAxis()->axisLog()) { 
     compute.setTop(pow(10, item->yMin() - dy));
     compute.setBottom(pow(10, item->yMax() + dy));
   } else {
@@ -3492,13 +2504,13 @@ void ZoomYOutCommand::applyZoomTo(PlotItem *item) {
  *             new_ymax = ymax - (ymax – ymin)*0.1666666;
  */
 void ZoomYInCommand::applyZoomTo(PlotItem *item) {
-  if (item->yAxisZoomMode() != PlotItem::MeanCentered)
-    item->setYAxisZoomMode(PlotItem::FixedExpression);
+  if (item->yAxis()->axisZoomMode() != PlotAxis::MeanCentered)
+    item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
 
   QRectF compute = item->projectionRect();
 
   qreal dy = (item->yMax() - item->yMin())*0.1666666;
-  if (item->yAxisLog()) { 
+  if (item->yAxis()->axisLog()) { 
     compute.setTop(pow(10, item->yMin() + dy));
     compute.setBottom(pow(10, item->yMax() - dy));
   } else {
@@ -3524,7 +2536,7 @@ void ZoomNormalizeYToXCommand::applyZoomTo(PlotItem *item) {
   compute.setTop(mean - (range / 2.0));
   compute.setBottom(mean + (range / 2.0));
 
-  item->setYAxisZoomMode(PlotItem::FixedExpression);
+  item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
   item->setProjectionRect(compute);
 }
 

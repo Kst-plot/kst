@@ -116,49 +116,49 @@ void PlotItemDialog::setupLabels() {
 void PlotItemDialog::setupAxis() {
   Q_ASSERT(_plotItem);
 
-  _xAxisTab->setAxisMajorTickSpacing(_plotItem->xAxisMajorTickMode());
-  _xAxisTab->setDrawAxisMajorTicks(_plotItem->drawXAxisMajorTicks());
-  _xAxisTab->setDrawAxisMajorGridLines(_plotItem->drawXAxisMajorGridLines());
-  _xAxisTab->setDrawAxisMinorTicks(_plotItem->drawXAxisMinorTicks());
-  _xAxisTab->setDrawAxisMinorGridLines(_plotItem->drawXAxisMinorGridLines());
-  _xAxisTab->setAxisMajorGridLineColor(_plotItem->xAxisMajorGridLineColor());
-  _xAxisTab->setAxisMinorGridLineColor(_plotItem->xAxisMinorGridLineColor());
-  _xAxisTab->setAxisMajorGridLineStyle(_plotItem->xAxisMajorGridLineStyle());
-  _xAxisTab->setAxisMinorGridLineStyle(_plotItem->xAxisMinorGridLineStyle());
-  _xAxisTab->setLog(_plotItem->xAxisLog());
-  _xAxisTab->setReversed(_plotItem->xAxisReversed());
-  _xAxisTab->setBaseOffset(_plotItem->xAxisBaseOffset());
-  _xAxisTab->setInterpret(_plotItem->xAxisInterpret());
-  _xAxisTab->setAxisDisplay(_plotItem->xAxisDisplay());
-  _xAxisTab->setAxisInterpretation(_plotItem->xAxisInterpretation());
-  _xAxisTab->setAxisMinorTickCount(_plotItem->xAxisMinorTickCount());
-  _xAxisTab->setSignificantDigits(_plotItem->xAxisSignificantDigits());
+  _xAxisTab->setAxisMajorTickSpacing(_plotItem->xAxis()->axisMajorTickMode());
+  _xAxisTab->setDrawAxisMajorTicks(_plotItem->xAxis()->drawAxisMajorTicks());
+  _xAxisTab->setDrawAxisMajorGridLines(_plotItem->xAxis()->drawAxisMajorGridLines());
+  _xAxisTab->setDrawAxisMinorTicks(_plotItem->xAxis()->drawAxisMinorTicks());
+  _xAxisTab->setDrawAxisMinorGridLines(_plotItem->xAxis()->drawAxisMinorGridLines());
+  _xAxisTab->setAxisMajorGridLineColor(_plotItem->xAxis()->axisMajorGridLineColor());
+  _xAxisTab->setAxisMinorGridLineColor(_plotItem->xAxis()->axisMinorGridLineColor());
+  _xAxisTab->setAxisMajorGridLineStyle(_plotItem->xAxis()->axisMajorGridLineStyle());
+  _xAxisTab->setAxisMinorGridLineStyle(_plotItem->xAxis()->axisMinorGridLineStyle());
+  _xAxisTab->setLog(_plotItem->xAxis()->axisLog());
+  _xAxisTab->setReversed(_plotItem->xAxis()->axisReversed());
+  _xAxisTab->setBaseOffset(_plotItem->xAxis()->axisBaseOffset());
+  _xAxisTab->setInterpret(_plotItem->xAxis()->axisInterpret());
+  _xAxisTab->setAxisDisplay(_plotItem->xAxis()->axisDisplay());
+  _xAxisTab->setAxisInterpretation(_plotItem->xAxis()->axisInterpretation());
+  _xAxisTab->setAxisMinorTickCount(_plotItem->xAxis()->axisMinorTickCount());
+  _xAxisTab->setSignificantDigits(_plotItem->xAxis()->axisSignificantDigits());
 
-  _yAxisTab->setAxisMajorTickSpacing(_plotItem->yAxisMajorTickMode());
-  _yAxisTab->setDrawAxisMajorTicks(_plotItem->drawYAxisMajorTicks());
-  _yAxisTab->setDrawAxisMajorGridLines(_plotItem->drawYAxisMajorGridLines());
-  _yAxisTab->setDrawAxisMinorTicks(_plotItem->drawYAxisMinorTicks());
-  _yAxisTab->setDrawAxisMinorGridLines(_plotItem->drawYAxisMinorGridLines());
-  _yAxisTab->setAxisMajorGridLineColor(_plotItem->yAxisMajorGridLineColor());
-  _yAxisTab->setAxisMinorGridLineColor(_plotItem->yAxisMinorGridLineColor());
-  _yAxisTab->setAxisMajorGridLineStyle(_plotItem->yAxisMajorGridLineStyle());
-  _yAxisTab->setAxisMinorGridLineStyle(_plotItem->yAxisMinorGridLineStyle());
-  _yAxisTab->setLog(_plotItem->yAxisLog());
-  _yAxisTab->setReversed(_plotItem->yAxisReversed());
-  _yAxisTab->setBaseOffset(_plotItem->yAxisBaseOffset());
-  _yAxisTab->setInterpret(_plotItem->yAxisInterpret());
-  _yAxisTab->setAxisDisplay(_plotItem->yAxisDisplay());
-  _yAxisTab->setAxisInterpretation(_plotItem->yAxisInterpretation());
-  _yAxisTab->setAxisMinorTickCount(_plotItem->yAxisMinorTickCount());
-  _yAxisTab->setSignificantDigits(_plotItem->yAxisSignificantDigits());
+  _yAxisTab->setAxisMajorTickSpacing(_plotItem->yAxis()->axisMajorTickMode());
+  _yAxisTab->setDrawAxisMajorTicks(_plotItem->yAxis()->drawAxisMajorTicks());
+  _yAxisTab->setDrawAxisMajorGridLines(_plotItem->yAxis()->drawAxisMajorGridLines());
+  _yAxisTab->setDrawAxisMinorTicks(_plotItem->yAxis()->drawAxisMinorTicks());
+  _yAxisTab->setDrawAxisMinorGridLines(_plotItem->yAxis()->drawAxisMinorGridLines());
+  _yAxisTab->setAxisMajorGridLineColor(_plotItem->yAxis()->axisMajorGridLineColor());
+  _yAxisTab->setAxisMinorGridLineColor(_plotItem->yAxis()->axisMinorGridLineColor());
+  _yAxisTab->setAxisMajorGridLineStyle(_plotItem->yAxis()->axisMajorGridLineStyle());
+  _yAxisTab->setAxisMinorGridLineStyle(_plotItem->yAxis()->axisMinorGridLineStyle());
+  _yAxisTab->setLog(_plotItem->yAxis()->axisLog());
+  _yAxisTab->setReversed(_plotItem->yAxis()->axisReversed());
+  _yAxisTab->setBaseOffset(_plotItem->yAxis()->axisBaseOffset());
+  _yAxisTab->setInterpret(_plotItem->yAxis()->axisInterpret());
+  _yAxisTab->setAxisDisplay(_plotItem->yAxis()->axisDisplay());
+  _yAxisTab->setAxisInterpretation(_plotItem->yAxis()->axisInterpretation());
+  _yAxisTab->setAxisMinorTickCount(_plotItem->yAxis()->axisMinorTickCount());
+  _yAxisTab->setSignificantDigits(_plotItem->yAxis()->axisSignificantDigits());
 }
 
 
 void PlotItemDialog::setupMarkers() {
   Q_ASSERT(_plotItem);
 
-  _xMarkersTab->setPlotMarkers(_plotItem->xAxisPlotMarkers());
-  _yMarkersTab->setPlotMarkers(_plotItem->yAxisPlotMarkers());
+  _xMarkersTab->setPlotMarkers(_plotItem->xAxis()->axisPlotMarkers());
+  _yMarkersTab->setPlotMarkers(_plotItem->yAxis()->axisPlotMarkers());
 }
 
 
@@ -370,24 +370,23 @@ void PlotItemDialog::relationChanged() {
 void PlotItemDialog::xAxisChanged() {
   Q_ASSERT(_plotItem);
 
-  _plotItem->setXAxisMajorTickMode(_xAxisTab->axisMajorTickSpacing());
-  _plotItem->setDrawXAxisMajorTicks(_xAxisTab->drawAxisMajorTicks());
-  _plotItem->setDrawXAxisMajorGridLines(_xAxisTab->drawAxisMajorGridLines());
-  _plotItem->setDrawXAxisMinorTicks(_xAxisTab->drawAxisMinorTicks());
-  _plotItem->setDrawXAxisMinorGridLines(_xAxisTab->drawAxisMinorGridLines());
-  _plotItem->setXAxisMajorGridLineColor(_xAxisTab->axisMajorGridLineColor());
-  _plotItem->setXAxisMinorGridLineColor(_xAxisTab->axisMinorGridLineColor());
-  _plotItem->setXAxisMajorGridLineStyle(_xAxisTab->axisMajorGridLineStyle());
-  _plotItem->setXAxisMinorGridLineStyle(_xAxisTab->axisMinorGridLineStyle());
-  _plotItem->setXAxisLog(_xAxisTab->isLog());
-  _plotItem->setXAxisLog(_xAxisTab->isLog());
-  _plotItem->setXAxisReversed(_xAxisTab->isReversed());
-  _plotItem->setXAxisInterpret(_xAxisTab->isInterpret());
-  _plotItem->setXAxisDisplay(_xAxisTab->axisDisplay());
-  _plotItem->setXAxisInterpretation(_xAxisTab->axisInterpretation());
-  _plotItem->setXAxisBaseOffset(_xAxisTab->isBaseOffset());
-  _plotItem->setXAxisMinorTickCount(_xAxisTab->axisMinorTickCount());
-  _plotItem->setXAxisSignificantDigits(_xAxisTab->significantDigits());
+  _plotItem->xAxis()->setAxisMajorTickMode(_xAxisTab->axisMajorTickSpacing());
+  _plotItem->xAxis()->setDrawAxisMajorTicks(_xAxisTab->drawAxisMajorTicks());
+  _plotItem->xAxis()->setDrawAxisMajorGridLines(_xAxisTab->drawAxisMajorGridLines());
+  _plotItem->xAxis()->setDrawAxisMinorTicks(_xAxisTab->drawAxisMinorTicks());
+  _plotItem->xAxis()->setDrawAxisMinorGridLines(_xAxisTab->drawAxisMinorGridLines());
+  _plotItem->xAxis()->setAxisMajorGridLineColor(_xAxisTab->axisMajorGridLineColor());
+  _plotItem->xAxis()->setAxisMinorGridLineColor(_xAxisTab->axisMinorGridLineColor());
+  _plotItem->xAxis()->setAxisMajorGridLineStyle(_xAxisTab->axisMajorGridLineStyle());
+  _plotItem->xAxis()->setAxisMinorGridLineStyle(_xAxisTab->axisMinorGridLineStyle());
+  _plotItem->xAxis()->setAxisLog(_xAxisTab->isLog());
+  _plotItem->xAxis()->setAxisReversed(_xAxisTab->isReversed());
+  _plotItem->xAxis()->setAxisInterpret(_xAxisTab->isInterpret());
+  _plotItem->xAxis()->setAxisDisplay(_xAxisTab->axisDisplay());
+  _plotItem->xAxis()->setAxisInterpretation(_xAxisTab->axisInterpretation());
+  _plotItem->xAxis()->setAxisBaseOffset(_xAxisTab->isBaseOffset());
+  _plotItem->xAxis()->setAxisMinorTickCount(_xAxisTab->axisMinorTickCount());
+  _plotItem->xAxis()->setAxisSignificantDigits(_xAxisTab->significantDigits());
   _plotItem->setProjectionRect(_plotItem->projectionRect());
 }
 
@@ -395,24 +394,23 @@ void PlotItemDialog::xAxisChanged() {
 void PlotItemDialog::yAxisChanged() {
   Q_ASSERT(_plotItem);
 
-  _plotItem->setYAxisMajorTickMode(_yAxisTab->axisMajorTickSpacing());
-  _plotItem->setDrawYAxisMajorTicks(_yAxisTab->drawAxisMajorTicks());
-  _plotItem->setDrawYAxisMajorGridLines(_yAxisTab->drawAxisMajorGridLines());
-  _plotItem->setDrawYAxisMinorTicks(_yAxisTab->drawAxisMinorTicks());
-  _plotItem->setDrawYAxisMinorGridLines(_yAxisTab->drawAxisMinorGridLines());
-  _plotItem->setYAxisMajorGridLineColor(_yAxisTab->axisMajorGridLineColor());
-  _plotItem->setYAxisMinorGridLineColor(_yAxisTab->axisMinorGridLineColor());
-  _plotItem->setYAxisMajorGridLineStyle(_yAxisTab->axisMajorGridLineStyle());
-  _plotItem->setYAxisMinorGridLineStyle(_yAxisTab->axisMinorGridLineStyle());
-  _plotItem->setYAxisLog(_yAxisTab->isLog());
-  _plotItem->setYAxisLog(_yAxisTab->isLog());
-  _plotItem->setYAxisReversed(_yAxisTab->isReversed());
-  _plotItem->setYAxisInterpret(_yAxisTab->isInterpret());
-  _plotItem->setYAxisDisplay(_yAxisTab->axisDisplay());
-  _plotItem->setYAxisInterpretation(_yAxisTab->axisInterpretation());
-  _plotItem->setYAxisBaseOffset(_yAxisTab->isBaseOffset());
-  _plotItem->setYAxisMinorTickCount(_yAxisTab->axisMinorTickCount());
-  _plotItem->setYAxisSignificantDigits(_yAxisTab->significantDigits());
+  _plotItem->yAxis()->setAxisMajorTickMode(_yAxisTab->axisMajorTickSpacing());
+  _plotItem->yAxis()->setDrawAxisMajorTicks(_yAxisTab->drawAxisMajorTicks());
+  _plotItem->yAxis()->setDrawAxisMajorGridLines(_yAxisTab->drawAxisMajorGridLines());
+  _plotItem->yAxis()->setDrawAxisMinorTicks(_yAxisTab->drawAxisMinorTicks());
+  _plotItem->yAxis()->setDrawAxisMinorGridLines(_yAxisTab->drawAxisMinorGridLines());
+  _plotItem->yAxis()->setAxisMajorGridLineColor(_yAxisTab->axisMajorGridLineColor());
+  _plotItem->yAxis()->setAxisMinorGridLineColor(_yAxisTab->axisMinorGridLineColor());
+  _plotItem->yAxis()->setAxisMajorGridLineStyle(_yAxisTab->axisMajorGridLineStyle());
+  _plotItem->yAxis()->setAxisMinorGridLineStyle(_yAxisTab->axisMinorGridLineStyle());
+  _plotItem->yAxis()->setAxisLog(_yAxisTab->isLog());
+  _plotItem->yAxis()->setAxisReversed(_yAxisTab->isReversed());
+  _plotItem->yAxis()->setAxisInterpret(_yAxisTab->isInterpret());
+  _plotItem->yAxis()->setAxisDisplay(_yAxisTab->axisDisplay());
+  _plotItem->yAxis()->setAxisInterpretation(_yAxisTab->axisInterpretation());
+  _plotItem->yAxis()->setAxisBaseOffset(_yAxisTab->isBaseOffset());
+  _plotItem->yAxis()->setAxisMinorTickCount(_yAxisTab->axisMinorTickCount());
+  _plotItem->yAxis()->setAxisSignificantDigits(_yAxisTab->significantDigits());
   _plotItem->setProjectionRect(_plotItem->projectionRect());
 }
 
@@ -440,13 +438,13 @@ void PlotItemDialog::labelsChanged() {
 
 void PlotItemDialog::xAxisPlotMarkersChanged() {
   Q_ASSERT(_plotItem);
-  _plotItem->setXAxisPlotMarkers(_xMarkersTab->plotMarkers());
+  _plotItem->xAxis()->setAxisPlotMarkers(_xMarkersTab->plotMarkers());
 }
 
 
 void PlotItemDialog::yAxisPlotMarkersChanged() {
   Q_ASSERT(_plotItem);
-  _plotItem->setYAxisPlotMarkers(_yMarkersTab->plotMarkers());
+  _plotItem->yAxis()->setAxisPlotMarkers(_yMarkersTab->plotMarkers());
 }
 
 

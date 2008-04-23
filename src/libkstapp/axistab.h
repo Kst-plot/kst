@@ -39,8 +39,8 @@ class KST_EXPORT AxisTab : public DialogTab, Ui::AxisTab {
     bool drawAxisMinorGridLines() const;
     void setDrawAxisMinorGridLines(const bool enabled);
 
-    PlotItem::MajorTickMode axisMajorTickSpacing() const;
-    void setAxisMajorTickSpacing(PlotItem::MajorTickMode spacing);
+    PlotAxis::MajorTickMode axisMajorTickSpacing() const;
+    void setAxisMajorTickSpacing(PlotAxis::MajorTickMode spacing);
 
     Qt::PenStyle axisMajorGridLineStyle() const;
     void setAxisMajorGridLineStyle(Qt::PenStyle style);

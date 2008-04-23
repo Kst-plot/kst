@@ -83,6 +83,7 @@ SOURCES += \
     matrixmodel.cpp \
     memorywidget.cpp \
     pictureitem.cpp \
+    plotaxis.cpp \
     plotitem.cpp \
     plotitemdialog.cpp \
     plotitemmanager.cpp \
@@ -175,6 +176,7 @@ HEADERS += \
     matrixmodel.h \
     memorywidget.h \
     pictureitem.h \
+    plotaxis.h \
     plotitem.h \
     plotitemdialog.h \
     plotmarkers.h \

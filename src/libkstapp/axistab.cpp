@@ -24,7 +24,7 @@ AxisTab::AxisTab(QWidget *parent)
   _axisMajorTickSpacing->addItem(tr("Normal"), 5);
   _axisMajorTickSpacing->addItem(tr("Fine"), 10);
   _axisMajorTickSpacing->addItem(tr("VeryFine"), 15);
-  setAxisMajorTickSpacing(PlotItem::Normal);
+  setAxisMajorTickSpacing(PlotAxis::Normal);
 
   _axisMajorLineStyle->addItem("SolidLine", Qt::SolidLine);
   _axisMajorLineStyle->addItem("DashLine", Qt::DashLine);
@@ -102,12 +102,12 @@ void AxisTab::update() {
 }
 
 
-PlotItem::MajorTickMode AxisTab::axisMajorTickSpacing() const {
-  return PlotItem::MajorTickMode(_axisMajorTickSpacing->itemData(_axisMajorTickSpacing->currentIndex()).toInt());
+PlotAxis::MajorTickMode AxisTab::axisMajorTickSpacing() const {
+  return PlotAxis::MajorTickMode(_axisMajorTickSpacing->itemData(_axisMajorTickSpacing->currentIndex()).toInt());
 }
 
 
-void AxisTab::setAxisMajorTickSpacing(PlotItem::MajorTickMode spacing) {
+void AxisTab::setAxisMajorTickSpacing(PlotAxis::MajorTickMode spacing) {
   _axisMajorTickSpacing->setCurrentIndex(_axisMajorTickSpacing->findData(QVariant(spacing)));
 }
 

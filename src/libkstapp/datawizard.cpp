@@ -877,8 +877,8 @@ void DataWizard::finished() {
 
         if (*plotIterator) {
           PlotRenderItem *renderItem = (*plotIterator)->renderItem(PlotRenderItem::Cartesian);
-          (*plotIterator)->setXAxisLog(_pagePlot->PSDLogX());
-          (*plotIterator)->setYAxisLog(_pagePlot->PSDLogY());
+          (*plotIterator)->xAxis()->setAxisLog(_pagePlot->PSDLogX());
+          (*plotIterator)->yAxis()->setAxisLog(_pagePlot->PSDLogY());
           renderItem->addRelation(kst_cast<Relation>(curve));
           (*plotIterator)->update();
         }
