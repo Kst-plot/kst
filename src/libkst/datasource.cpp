@@ -29,6 +29,7 @@
 #include <QTextDocument>
 #include <QUrl>
 #include <QXmlStreamWriter>
+#include <QTimer>
 
 #include "kst_i18n.h"
 #include "datacollection.h"
@@ -473,7 +474,7 @@ DataSourcePtr DataSource::loadSource(ObjectStore *store, QDomElement& e) {
 
 
 DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type)
-    : Object(), _filename(filename), _cfg(cfg) {
+    : Object(), _filename(filename), _cfg(cfg), _dataSourceVersion(0) {
   Q_UNUSED(type)
   _valid = false;
   _reusable = true;
@@ -496,11 +497,25 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
   Q_ASSERT(store);
   _numFramesScalar = store->createObject<Scalar>(ObjectTag("frames", tag()));
   // Don't set provider - this is always up-to-date
+
+  QTimer::singleShot(1000, this, SLOT(checkUpdate()));
 }
 
 
 DataSource::~DataSource() {
   //  qDebug() << "DataSource destructor: " << tag().tagString() << endl;
+}
+
+
+void DataSource::checkUpdate() {
+  if (update()) {
+#if DEBUG_UPDATE_CYCLE
+    qDebug() << "DataSource" << shortName() << "updated to verison " << _dataSourceVersion;
+#endif
+    emit dataSourceUpdated(shortName(), _dataSourceVersion);
+  }
+
+  QTimer::singleShot(1000, this, SLOT(checkUpdate()));
 }
 
 
@@ -528,6 +543,9 @@ Object::UpdateType DataSource::update(int u) {
 
 
 void DataSource::updateNumFramesScalar() {
+  if (_numFramesScalar->value() != frameCount()) {
+    _dataSourceVersion++;
+  }
   _numFramesScalar->setValue(frameCount());
 }
 

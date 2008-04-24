@@ -41,6 +41,7 @@ DataObject::DataObject(ObjectStore *store, const ObjectTag& tag) : Object(tag) {
   //qDebug() << "+++ CREATING DATA OBJECT: " << (void*)this << endl;
   _curveHints = new CurveHintList;
   _isInputLoaded = false;
+  _updateVersion = 0;
 }
 
 DataObject::DataObject(ObjectStore *store, const QDomElement& e) : Object() {
@@ -48,6 +49,7 @@ DataObject::DataObject(ObjectStore *store, const QDomElement& e) : Object() {
   //qDebug() << "+++ CREATING DATA OBJECT: " << (void*)this << endl;
   _curveHints = new CurveHintList;
   _isInputLoaded = false;
+  _updateVersion = 0;
 }
 
 
@@ -162,6 +164,20 @@ double *DataObject::vectorRealloced(VectorPtr v, double *memptr, int newSize) co
   // you call vectorRealloced() and v is not locked by you already, you'd
   // better lock it!
   return v->realloced(memptr, newSize);
+}
+
+
+void DataObject::vectorUpdated(QString sourceName, int version) {
+#if DEBUG_UPDATE_CYCLE
+  qDebug() << "Vector update required by DataObject " << shortName() << "for" << sourceName << version;
+#endif
+  writeLock();
+  if (update(version)) {
+#if DEBUG_UPDATE_CYCLE
+  qDebug() << "Update complete of DataObject" << shortName() << "Vector updates triggered for outputs";
+#endif
+  }
+  unlock();
 }
 
 

@@ -111,6 +111,9 @@ class KST_EXPORT DataVector : public Vector {
     /** the data source */
     DataSourcePtr dataSource() const;
 
+  public Q_SLOTS:
+    void dataSourceUpdated(QString sourceName, int);
+
   protected:
     /** Create an RVECTOR */
     DataVector(ObjectStore *store, const ObjectTag& tag,

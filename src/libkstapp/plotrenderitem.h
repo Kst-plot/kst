@@ -71,6 +71,7 @@ class PlotRenderItem : public ViewItem
     virtual void createLayout();
     virtual void breakLayout();
     virtual void remove();
+    virtual void relationUpdated(QString sourceName, int version);
 
   protected:
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);

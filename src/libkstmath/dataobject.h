@@ -121,6 +121,9 @@ class KST_EXPORT DataObject : public Object {
 
     void showDialog(bool isNew = true);
 
+  public Q_SLOTS:
+    void vectorUpdated(QString sourceName, int version);
+
   protected slots:
     virtual void showNewDialog() = 0;
     virtual void showEditDialog() = 0;
@@ -142,6 +145,8 @@ class KST_EXPORT DataObject : public Object {
 
     virtual void writeLockInputsAndOutputs() const;
     virtual void unlockInputsAndOutputs() const;
+
+    int _updateVersion;
 
     VectorMap _inputVectors;
     VectorMap _outputVectors;

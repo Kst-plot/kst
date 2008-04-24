@@ -31,6 +31,9 @@
 #include "rwlock.h"
 #include "objecttag.h"
 
+// Provides additional output during update cycle.
+#define DEBUG_UPDATE_CYCLE 1
+
 namespace Kst {
 
 class ObjectStore;

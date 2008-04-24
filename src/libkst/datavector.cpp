@@ -189,7 +189,24 @@ void DataVector::commonRVConstructor(DataSourcePtr in_file,
 
   if (!in_file) {
     Debug::self()->log(i18n("Data file for vector %1 was not opened.", tag().tagString()), Debug::Warning);
+  } else {
+    connect(in_file, SIGNAL(dataSourceUpdated(QString, int)), this, SLOT(dataSourceUpdated(QString, int)));
   }
+}
+
+
+void DataVector::dataSourceUpdated(QString sourceName, int version) {
+#if DEBUG_UPDATE_CYCLE
+  qDebug() << "Data Source update required by Vector" << shortName() << "for" << sourceName << version;
+#endif
+  writeLock();
+  if (update(version)) {
+#if DEBUG_UPDATE_CYCLE
+  qDebug() << "triggering vector of " << shortName() << "for" << sourceName << version;
+#endif
+    emit vectorUpdated(sourceName, version);
+  }
+  unlock();
 }
 
 
@@ -222,6 +239,10 @@ void DataVector::change(DataSourcePtr in_file, const QString &in_field,
 
   if (ReqNF <= 0 && ReqF0 < 0) {
     ReqF0 = 0;
+  }
+
+  if (in_file) {
+    connect(in_file, SIGNAL(dataSourceUpdated(QString, int)), this, SLOT(dataSourceUpdated(QString, int)));
   }
 
 }

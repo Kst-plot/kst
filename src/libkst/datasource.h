@@ -227,6 +227,12 @@ class KST_EXPORT DataSource : public Object {
 
     virtual void deleteDependents();
 
+  Q_SIGNALS:
+    void dataSourceUpdated(QString sourceName, int version);
+
+  public Q_SLOTS:
+    virtual void checkUpdate();
+
   protected:
     void updateNumFramesScalar();
 
@@ -256,6 +262,8 @@ class KST_EXPORT DataSource : public Object {
     QSettings *_cfg;
 
     ScalarPtr _numFramesScalar;
+
+    int _dataSourceVersion;
 
     virtual QString _automaticDescriptiveName();
 

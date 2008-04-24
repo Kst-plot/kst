@@ -81,26 +81,32 @@ Curve::Curve(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_X, Vector
   commonConstructor(in_color);
   if (in_X) {
     _inputVectors[COLOR_XVECTOR] = in_X;
+    connect(in_X, SIGNAL(vectorUpdated(QString, int)), this, SLOT(vectorUpdated(QString, int)));
   }
 
   if (in_Y) {
     _inputVectors[COLOR_YVECTOR] = in_Y;
+    connect(in_Y, SIGNAL(vectorUpdated(QString, int)), this, SLOT(vectorUpdated(QString, int)));
   }
 
   if (in_EX) {
     _inputVectors[EXVECTOR] = in_EX;
+    connect(in_EX, SIGNAL(vectorUpdated(QString, int)), this, SLOT(vectorUpdated(QString, int)));
   }
 
   if (in_EY) {
     _inputVectors[EYVECTOR] = in_EY;
+    connect(in_EY, SIGNAL(vectorUpdated(QString, int)), this, SLOT(vectorUpdated(QString, int)));
   }
 
   if (in_EXMinus) {
     _inputVectors[EXMINUSVECTOR] = in_EXMinus;
+    connect(in_EXMinus, SIGNAL(vectorUpdated(QString, int)), this, SLOT(vectorUpdated(QString, int)));
   }
 
   if (in_EYMinus) {
     _inputVectors[EYMINUSVECTOR] = in_EYMinus;
+    connect(in_EYMinus, SIGNAL(vectorUpdated(QString, int)), this, SLOT(vectorUpdated(QString, int)));
   }
 
   _shortName = "C"+QString::number(_cnum++);
@@ -217,6 +223,21 @@ Curve::~Curve() {
 }
 
 
+void Curve::vectorUpdated(QString sourceName, int version) {
+#if DEBUG_UPDATE_CYCLE
+  qDebug() << "Vector update required by Curve" << shortName() << "for" << sourceName << version;
+#endif
+  writeLock();
+  if (update(version)) {
+#if DEBUG_UPDATE_CYCLE
+  qDebug() << "triggering relation update of curve" << shortName() << "for" << sourceName << version;
+#endif
+    emit relationUpdated(sourceName, version);
+  }
+  unlock();
+}
+
+
 Object::UpdateType Curve::update(int update_counter) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
@@ -235,7 +256,7 @@ Object::UpdateType Curve::update(int update_counter) {
 
   writeLockInputsAndOutputs();
 
-  bool depUpdated = force;
+  bool depUpdated = true;
 
   depUpdated = UPDATE == cxV->update(update_counter) || depUpdated;
   depUpdated = UPDATE == cyV->update(update_counter) || depUpdated;
@@ -517,7 +538,9 @@ void Curve::save(QXmlStreamWriter &s) {
 void Curve::setXVector(VectorPtr new_vx) {
   if (new_vx) {
     _inputVectors[COLOR_XVECTOR] = new_vx;
+    connect(new_vx, SIGNAL(vectorUpdated(QString, int)), this, SLOT(vectorUpdated(QString, int)));
   } else {
+    disconnect(_inputVectors[COLOR_XVECTOR], SIGNAL(vectorUpdated(QString, int)));
     _inputVectors.remove(COLOR_XVECTOR);
   }
   setDirty();
@@ -527,7 +550,9 @@ void Curve::setXVector(VectorPtr new_vx) {
 void Curve::setYVector(VectorPtr new_vy) {
   if (new_vy) {
     _inputVectors[COLOR_YVECTOR] = new_vy;
+    connect(new_vy, SIGNAL(vectorUpdated(QString, int)), this, SLOT(vectorUpdated(QString, int)));
   } else {
+    disconnect(_inputVectors[COLOR_YVECTOR], SIGNAL(vectorUpdated(QString, int)));
     _inputVectors.remove(COLOR_YVECTOR);
   }
   setDirty();
@@ -537,7 +562,9 @@ void Curve::setYVector(VectorPtr new_vy) {
 void Curve::setXError(VectorPtr new_ex) {
   if (new_ex) {
     _inputVectors[EXVECTOR] = new_ex;
+    connect(new_ex, SIGNAL(vectorUpdated(QString, int)), this, SLOT(vectorUpdated(QString, int)));
   } else {
+    disconnect(_inputVectors[EXVECTOR], SIGNAL(vectorUpdated(QString, int)));
     _inputVectors.remove(EXVECTOR);
   }
   setDirty();
@@ -547,7 +574,9 @@ void Curve::setXError(VectorPtr new_ex) {
 void Curve::setYError(VectorPtr new_ey) {
   if (new_ey) {
     _inputVectors[EYVECTOR] = new_ey;
+    connect(new_ey, SIGNAL(vectorUpdated(QString, int)), this, SLOT(vectorUpdated(QString, int)));
   } else {
+    disconnect(_inputVectors[EYVECTOR], SIGNAL(vectorUpdated(QString, int)));
     _inputVectors.remove(EYVECTOR);
   }
   setDirty();
@@ -557,7 +586,9 @@ void Curve::setYError(VectorPtr new_ey) {
 void Curve::setXMinusError(VectorPtr new_ex) {
   if (new_ex) {
     _inputVectors[EXMINUSVECTOR] = new_ex;
+    connect(new_ex, SIGNAL(vectorUpdated(QString, int)), this, SLOT(vectorUpdated(QString, int)));
   } else {
+    disconnect(_inputVectors[EXMINUSVECTOR], SIGNAL(vectorUpdated(QString, int)));
     _inputVectors.remove(EXMINUSVECTOR);
   }
   setDirty();
@@ -567,7 +598,9 @@ void Curve::setXMinusError(VectorPtr new_ex) {
 void Curve::setYMinusError(VectorPtr new_ey) {
   if (new_ey) {
     _inputVectors[EYMINUSVECTOR] = new_ey;
+    connect(new_ey, SIGNAL(vectorUpdated(QString, int)), this, SLOT(vectorUpdated(QString, int)));
   } else {
+    disconnect(_inputVectors[EYMINUSVECTOR], SIGNAL(vectorUpdated(QString, int)));
     _inputVectors.remove(EYMINUSVECTOR);
   }
   setDirty();

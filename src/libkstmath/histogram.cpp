@@ -279,6 +279,10 @@ Object::UpdateType Histogram::update(int update_counter) {
   _hVector->setDirty();
   _hVector->update(update_counter);
 
+  _updateVersion++;
+  _bVector->triggerUpdateSignal(shortName(), _updateVersion);
+  _hVector->triggerUpdateSignal(shortName(), _updateVersion);
+
   unlockInputsAndOutputs();
 
   return setLastUpdateResult(UPDATE);
@@ -335,7 +339,10 @@ QString Histogram::vTag() const {
 
 
 void Histogram::setVector(VectorPtr new_v) {
-  _inputVectors[RAWVECTOR] = new_v;
+  if (new_v) {
+    connect(new_v, SIGNAL(vectorUpdated(QString, int)), this, SLOT(vectorUpdated(QString, int)));
+    _inputVectors[RAWVECTOR] = new_v;
+  }
 }
 
 

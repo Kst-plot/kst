@@ -548,6 +548,13 @@ Object::UpdateType Vector::internalUpdate(Object::UpdateType providerRC) {
 }
 
 
+void Vector::triggerUpdateSignal(QString sourceName, int version) {
+#if DEBUG_UPDATE_CYCLE
+  qDebug() << "triggering vector update of" << shortName() << "for" << sourceName << version;
+#endif
+  emit vectorUpdated(sourceName, version);
+}
+
 
 void Vector::save(QXmlStreamWriter &s) {
   if (provider()) {

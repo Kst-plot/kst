@@ -155,6 +155,11 @@ class Vector : public Primitive {
     bool saveData() const;
     virtual void setSaveData(bool save);
 
+    void triggerUpdateSignal(QString sourceName, int version);
+
+  Q_SIGNALS:
+    void vectorUpdated(QString sourceName, int version);
+
   protected:
     /** current number of samples */
     int _size;
