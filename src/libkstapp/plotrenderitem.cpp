@@ -275,15 +275,20 @@ QString PlotRenderItem::topLabel() const {
 
 
 void PlotRenderItem::keyPressEvent(QKeyEvent *event) {
+  if (parentView()->viewMode() != View::Data) {
+    event->ignore();
+    return;
+  }
+
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::ShiftModifier) {
-    setCursor(Qt::SizeVerCursor);
-  _selectionRect.setFrom(QPointF(rect().left(), _lastPos.y()));
-  _selectionRect.setTo(QPointF(rect().right(), _lastPos.y()));
+    parentView()->setCursor(Qt::SizeVerCursor);
+    _selectionRect.setFrom(QPointF(rect().left(), _lastPos.y()));
+    _selectionRect.setTo(QPointF(rect().right(), _lastPos.y()));
   } else if (modifiers & Qt::ControlModifier) {
-    setCursor(Qt::SizeHorCursor);
-  _selectionRect.setFrom(QPointF(_lastPos.x(), rect().top()));
-  _selectionRect.setTo(QPointF(_lastPos.x(), rect().bottom()));
+    parentView()->setCursor(Qt::SizeHorCursor);
+    _selectionRect.setFrom(QPointF(_lastPos.x(), rect().top()));
+    _selectionRect.setTo(QPointF(_lastPos.x(), rect().bottom()));
   }
   ViewItem::keyPressEvent(event);
 
@@ -292,11 +297,15 @@ void PlotRenderItem::keyPressEvent(QKeyEvent *event) {
 
 
 void PlotRenderItem::keyReleaseEvent(QKeyEvent *event) {
+  if (parentView()->viewMode() != View::Data) {
+    event->ignore();
+    return;
+  }
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::ShiftModifier) {
-   setCursor(Qt::SizeVerCursor);
+    parentView()->setCursor(Qt::SizeVerCursor);
   } else if (modifiers & Qt::ControlModifier) {
-    setCursor(Qt::SizeHorCursor);
+    parentView()->setCursor(Qt::SizeHorCursor);
   } else {
     resetSelectionRect();
   }
@@ -354,11 +363,11 @@ void PlotRenderItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   const QPointF p = event->pos();
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::ShiftModifier) {
-    setCursor(Qt::SizeVerCursor);
+    parentView()->setCursor(Qt::SizeVerCursor);
     _selectionRect.setFrom(QPointF(rect().left(), p.y()));
     _selectionRect.setTo(QPointF(rect().right(), p.y()));
   } else if (modifiers & Qt::ControlModifier) {
-    setCursor(Qt::SizeHorCursor);
+    parentView()->setCursor(Qt::SizeHorCursor);
     _selectionRect.setFrom(QPointF(p.x(), rect().top()));
     _selectionRect.setTo(QPointF(p.x(), rect().bottom()));
   } else {
@@ -384,22 +393,28 @@ void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   ViewItem::hoverMoveEvent(event);
 
+  if (parentView()->viewMode() != View::Data) {
+    event->ignore();
+    return;
+  }
+
   const QPointF p = event->pos();
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::ShiftModifier) {
     _lastPos = p;
-    setCursor(Qt::SizeVerCursor);
+    parentView()->setCursor(Qt::SizeVerCursor);
     _selectionRect.setFrom(QPointF(rect().left(), p.y()));
     _selectionRect.setTo(QPointF(rect().right(), p.y()));
     update(); //FIXME should optimize instead of redrawing entire curve!
   } else if (modifiers & Qt::ControlModifier) {
     _lastPos = p;
-    setCursor(Qt::SizeHorCursor);
+    parentView()->setCursor(Qt::SizeHorCursor);
     _selectionRect.setFrom(QPointF(p.x(), rect().top()));
     _selectionRect.setTo(QPointF(p.x(), rect().bottom()));
     update(); //FIXME should optimize instead of redrawing entire curve!
   } else {
     resetSelectionRect();
+    updateCursor(event->pos());
   }
   const QPointF point = plotItem()->mapToProjection(event->pos());
   QString message = QString("(%1, %2)").arg(QString::number(point.x(), 'G')).arg(QString::number(point.y()));
@@ -409,6 +424,11 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 
 void PlotRenderItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
   ViewItem::hoverEnterEvent(event);
+
+  if (parentView()->viewMode() != View::Data) {
+    event->ignore();
+    return;
+  }
 
   updateCursor(event->pos());
 
@@ -420,6 +440,11 @@ void PlotRenderItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
 
 void PlotRenderItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
   ViewItem::hoverLeaveEvent(event);
+
+  if (parentView()->viewMode() != View::Data) {
+    event->ignore();
+    return;
+  }
 
   updateCursor(event->pos());
 
@@ -478,10 +503,10 @@ void PlotRenderItem::updateGeometry() {
 void PlotRenderItem::updateViewMode() {
   switch (parentView()->viewMode()) {
   case View::Data:
-    setCursor(Qt::CrossCursor);
+    parentView()->setCursor(Qt::CrossCursor);
     break;
   case View::Layout:
-    setCursor(Qt::ArrowCursor);
+    parentView()->setCursor(Qt::ArrowCursor);
     break;
   default:
     break;
@@ -522,7 +547,7 @@ void PlotRenderItem::remove() {
 void PlotRenderItem::updateCursor(const QPointF &pos) {
   _lastPos = pos;
   if (checkBox().contains(pos)) {
-    setCursor(Qt::ArrowCursor);
+    parentView()->setCursor(Qt::ArrowCursor);
   } else {
     updateViewMode();
   }
