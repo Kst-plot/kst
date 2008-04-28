@@ -56,10 +56,11 @@ void DataDialog::createGui() {
 
   if (_mode == New) {
     buttonBox()->button(QDialogButtonBox::Apply)->setVisible(false);
+  } else {
+    connect(this, SIGNAL(apply()), this, SLOT(slotApply()));
   }
 
   connect(this, SIGNAL(ok()), this, SLOT(slotApply()));
-  connect(this, SIGNAL(apply()), this, SLOT(slotApply()));
 
   QWidget *extension = extensionWidget();
 

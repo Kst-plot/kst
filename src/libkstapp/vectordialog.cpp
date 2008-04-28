@@ -481,10 +481,12 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
         dataRange->doSkip(),
         dataRange->doFilter());
 
-      if (dataVector->tag().name()!=tagString()) {
-	//FIXME: needs a gaurd against being not unique
-	dataVector->tag().setName(tagString()); 
-      }
+//  Disable until new tag system is fully implemented.
+//
+//       if (dataVector->tag().name()!=tagString()) {
+// 	//FIXME: needs a gaurd against being not unique
+// 	dataVector->tag().setName(tagString()); 
+//       }
 
       dataVector->update(0);
       dataVector->unlock();
