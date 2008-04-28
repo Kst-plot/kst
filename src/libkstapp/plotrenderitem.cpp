@@ -201,11 +201,12 @@ void PlotRenderItem::paint(QPainter *painter) {
   painter->setClipRect(rect());
   paintRelations(painter);
 
+  painter->restore();
+
   if (_selectionRect.isValid()) {
     painter->setPen(QPen(QBrush(Qt::black), 1.0, Qt::DotLine));
     painter->drawRect(_selectionRect.rect());
   }
-  painter->restore();
 
   painter->save();
   painter->setRenderHint(QPainter::Antialiasing, true);

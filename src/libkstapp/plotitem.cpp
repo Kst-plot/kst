@@ -816,8 +816,21 @@ QRectF PlotItem::mapToProjection(const QRectF &rect) {
   QRectF projRect;
 
   // Invert and convert points.
-  QPointF topLeft = mapToProjection(rect.bottomLeft());
-  QPointF bottomRight = mapToProjection(rect.topRight());
+  QPointF topLeft;
+  QPointF bottomRight;
+  if (!(_xAxis->axisReversed() || _yAxis->axisReversed())) {
+    topLeft = mapToProjection(rect.bottomLeft());
+    bottomRight = mapToProjection(rect.topRight());
+  } else if (_xAxis->axisReversed() && _yAxis->axisReversed()) {
+    topLeft = mapToProjection(rect.topRight());
+    bottomRight = mapToProjection(rect.bottomLeft());
+  } else if (_yAxis->axisReversed()) {
+    topLeft = mapToProjection(rect.topLeft());
+    bottomRight = mapToProjection(rect.bottomRight());
+  } else {
+    topLeft = mapToProjection(rect.bottomRight());
+    bottomRight = mapToProjection(rect.topLeft());
+  }
 
   projRect.setTopLeft(topLeft);
 
