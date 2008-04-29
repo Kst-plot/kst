@@ -103,6 +103,9 @@ class PlotAxis : public QObject
     QList<qreal> axisMinorTicks() { return _axisMinorTicks; }
     QString baseLabel() { return _baseLabel; }
 
+    void saveInPlot(QXmlStreamWriter &xml, QString axisId);
+    bool configureFromXml(QXmlStreamReader &xml, ObjectStore *store);
+
   Q_SIGNALS:
     void marginsChanged();
 

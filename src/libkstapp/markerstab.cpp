@@ -259,7 +259,7 @@ PlotMarkers MarkersTab::plotMarkers() const {
 
 void MarkersTab::setPlotMarkers(const PlotMarkers &plotMarkers) {
   _plotMarkers = plotMarkers;
-  setMarkers(plotMarkers.markers());
+  setMarkers(plotMarkers.manualMarkers());
   setLineStyle(plotMarkers.lineStyle());
   setLineColor(plotMarkers.lineColor());
   setLineWidth(plotMarkers.lineWidth());

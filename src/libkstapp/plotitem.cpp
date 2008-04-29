@@ -119,50 +119,13 @@ void PlotItem::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("rightlabelfont", QVariant(_rightLabelFont).toString());
   xml.writeAttribute("rightlabelfontscale", QVariant(_rightLabelFontScale).toString());
 
-  xml.writeAttribute("bottomaxisvisible", QVariant(_xAxis->isAxisVisible()).toString());
-  xml.writeAttribute("xaxislog", QVariant(_xAxis->axisLog()).toString());
-  xml.writeAttribute("xaxisreversed", QVariant(_xAxis->axisReversed()).toString());
-  xml.writeAttribute("xaxisbaseoffset", QVariant(_xAxis->axisBaseOffset()).toString());
-  xml.writeAttribute("xaxisinterpret", QVariant(_xAxis->axisInterpret()).toString());
-  xml.writeAttribute("xaxisinterpretation", QVariant(_xAxis->axisInterpretation()).toString());
-  xml.writeAttribute("xaxisdisplay", QVariant(_xAxis->axisDisplay()).toString());
-  xml.writeAttribute("xaxismajortickmode", QVariant(_xAxis->axisMajorTickMode()).toString());
-  xml.writeAttribute("xaxisminortickcount", QVariant(_xAxis->axisMinorTickCount()).toString());
-  xml.writeAttribute("xaxisdrawmajorticks", QVariant(_xAxis->drawAxisMajorTicks()).toString());
-  xml.writeAttribute("xaxisdrawminorticks", QVariant(_xAxis->drawAxisMinorTicks()).toString());
-  xml.writeAttribute("xaxisdrawmajorgridlines", QVariant(_xAxis->drawAxisMajorGridLines()).toString());
-  xml.writeAttribute("xaxisdrawminorgridlines", QVariant(_xAxis->drawAxisMinorGridLines()).toString());
-  xml.writeAttribute("xaxisdrawmajorgridlinecolor", QVariant(_xAxis->axisMajorGridLineColor()).toString());
-  xml.writeAttribute("xaxisdrawminorgridlinecolor", QVariant(_xAxis->axisMinorGridLineColor()).toString());
-  xml.writeAttribute("xaxisdrawmajorgridlinestyle", QVariant(_xAxis->axisMajorGridLineStyle()).toString());
-  xml.writeAttribute("xaxisdrawminorgridlinestyle", QVariant(_xAxis->axisMinorGridLineStyle()).toString());
-  xml.writeAttribute("xaxissignificantdigits", QVariant(_xAxis->axisSignificantDigits()).toString());
-  xml.writeAttribute("xzoommode", QVariant(_xAxis->axisZoomMode()).toString());
-
-  xml.writeAttribute("leftaxisvisible", QVariant(_yAxis->isAxisVisible()).toString());
-  xml.writeAttribute("yaxislog", QVariant(_yAxis->axisLog()).toString());
-  xml.writeAttribute("yaxisreversed", QVariant(_yAxis->axisReversed()).toString());
-  xml.writeAttribute("yaxisbaseoffset", QVariant(_yAxis->axisBaseOffset()).toString());
-  xml.writeAttribute("yaxisinterpret", QVariant(_yAxis->axisInterpret()).toString());
-  xml.writeAttribute("yaxisinterpretation", QVariant(_yAxis->axisInterpretation()).toString());
-  xml.writeAttribute("yaxisdisplay", QVariant(_yAxis->axisDisplay()).toString());
-  xml.writeAttribute("yaxismajortickmode", QVariant(_yAxis->axisMajorTickMode()).toString());
-  xml.writeAttribute("yaxisminortickcount", QVariant(_yAxis->axisMinorTickCount()).toString());
-  xml.writeAttribute("yaxisdrawmajorticks", QVariant(_yAxis->drawAxisMajorTicks()).toString());
-  xml.writeAttribute("yaxisdrawminorticks", QVariant(_yAxis->drawAxisMinorTicks()).toString());
-  xml.writeAttribute("yaxisdrawmajorgridlines", QVariant(_yAxis->drawAxisMajorGridLines()).toString());
-  xml.writeAttribute("yaxisdrawminorgridlines", QVariant(_yAxis->drawAxisMinorGridLines()).toString());
-  xml.writeAttribute("yaxisdrawmajorgridlinecolor", QVariant(_yAxis->axisMajorGridLineColor()).toString());
-  xml.writeAttribute("yaxisdrawminorgridlinecolor", QVariant(_yAxis->axisMinorGridLineColor()).toString());
-  xml.writeAttribute("yaxisdrawmajorgridlinestyle", QVariant(_yAxis->axisMajorGridLineStyle()).toString());
-  xml.writeAttribute("yaxisdrawminorgridlinestyle", QVariant(_yAxis->axisMinorGridLineStyle()).toString());
-  xml.writeAttribute("yaxissignificantdigits", QVariant(_yAxis->axisSignificantDigits()).toString());
-  xml.writeAttribute("yzoommode", QVariant(_yAxis->axisZoomMode()).toString());
-
   ViewItem::save(xml);
   foreach (PlotRenderItem *renderer, renderItems()) {
     renderer->saveInPlot(xml);
   }
+  _xAxis->saveInPlot(xml, QString("xaxis"));
+  _yAxis->saveInPlot(xml, QString("yaxis"));
+
   xml.writeStartElement("projectionrect");
   xml.writeAttribute("x", QVariant(projectionRect().x()).toString());
   xml.writeAttribute("y", QVariant(projectionRect().y()).toString());
@@ -646,7 +609,6 @@ void PlotItem::paintPlotMarkers(QPainter *painter) {
   QRectF rect = plotRect();
 
   QVector<QLineF> xPlotMarkers;
-  _xAxis->axisPlotMarkers().updateMarkers();
   foreach (double x, _xAxis->axisPlotMarkers().markers()) {
     if (x > _xMin && x < _xMax) {
       QPointF p1 = QPointF(mapXToPlot(x), plotRect().bottom());
@@ -663,7 +625,6 @@ void PlotItem::paintPlotMarkers(QPainter *painter) {
   }
 
   QVector<QLineF> yPlotMarkers;
-  _yAxis->axisPlotMarkers().updateMarkers();
   foreach (double y, _yAxis->axisPlotMarkers().markers()) {
     if (y > _yMin && y < _yMax) {
       QPointF p1 = QPointF(plotRect().left(), mapYToPlot(y));
@@ -1957,46 +1918,6 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         if (!av.isNull()) {
           rc->setTopLabelVisible(QVariant(av.toString()).toBool());
         }
-        av = attrs.value("bottomaxisvisible");
-        if (!av.isNull()) {
-          rc->xAxis()->setAxisVisible(QVariant(av.toString()).toBool());
-        }
-        av = attrs.value("leftaxisvisible");
-        if (!av.isNull()) {
-          rc->yAxis()->setAxisVisible(QVariant(av.toString()).toBool());
-        }
-        av = attrs.value("xaxislog");
-        if (!av.isNull()) {
-          rc->xAxis()->setAxisLog(QVariant(av.toString()).toBool());
-        }
-        av = attrs.value("yaxislog");
-        if (!av.isNull()) {
-          rc->yAxis()->setAxisLog(QVariant(av.toString()).toBool());
-        }
-        av = attrs.value("xaxisreversed");
-        if (!av.isNull()) {
-          rc->xAxis()->setAxisReversed(QVariant(av.toString()).toBool());
-        }
-        av = attrs.value("yaxisreversed");
-        if (!av.isNull()) {
-          rc->yAxis()->setAxisReversed(QVariant(av.toString()).toBool());
-        }
-        av = attrs.value("xaxisbaseoffset");
-        if (!av.isNull()) {
-          rc->xAxis()->setAxisBaseOffset(QVariant(av.toString()).toBool());
-        }
-        av = attrs.value("yaxisbaseoffset");
-        if (!av.isNull()) {
-          rc->yAxis()->setAxisBaseOffset(QVariant(av.toString()).toBool());
-        }
-        av = attrs.value("xaxisinterpret");
-        if (!av.isNull()) {
-          rc->xAxis()->setAxisInterpret(QVariant(av.toString()).toBool());
-        }
-        av = attrs.value("yaxisinterpret");
-        if (!av.isNull()) {
-          rc->yAxis()->setAxisInterpret(QVariant(av.toString()).toBool());
-        }
         av = attrs.value("leftlabeloverride");
         if (!av.isNull()) {
           rc->setLeftLabelOverride(av.toString());
@@ -2037,118 +1958,6 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
           font.fromString(av.toString());
           rc->setRightLabelFont(font);
         }
-        av = attrs.value("xaxisinterpretation");
-        if (!av.isNull()) {
-          rc->xAxis()->setAxisInterpretation((KstAxisInterpretation)QVariant(av.toString()).toInt());
-        }
-        av = attrs.value("yaxisinterpretation");
-        if (!av.isNull()) {
-          rc->yAxis()->setAxisInterpretation((KstAxisInterpretation)QVariant(av.toString()).toInt());
-        }
-        av = attrs.value("xaxisdisplay");
-        if (!av.isNull()) {
-          rc->xAxis()->setAxisDisplay((KstAxisDisplay)QVariant(av.toString()).toInt());
-        }
-        av = attrs.value("yaxisdisplay");
-        if (!av.isNull()) {
-          rc->yAxis()->setAxisDisplay((KstAxisDisplay)QVariant(av.toString()).toInt());
-        }
-        av = attrs.value("xaxismajortickmode");
-        if (!av.isNull()) {
-          rc->xAxis()->setAxisMajorTickMode((PlotAxis::MajorTickMode)QVariant(av.toString()).toInt());
-        }
-        av = attrs.value("yaxismajortickmode");
-        if (!av.isNull()) {
-          rc->xAxis()->setAxisMajorTickMode((PlotAxis::MajorTickMode)QVariant(av.toString()).toInt());
-        }
-        av = attrs.value("xaxisminortickcount");
-        if (!av.isNull()) {
-          rc->xAxis()->setAxisMinorTickCount(QVariant(av.toString()).toInt());
-        }
-        av = attrs.value("yaxisminortickcount");
-        if (!av.isNull()) {
-          rc->yAxis()->setAxisMinorTickCount(QVariant(av.toString()).toInt());
-        }
-        av = attrs.value("xaxisdrawmajorticks");
-        if (!av.isNull()) {
-          rc->xAxis()->setDrawAxisMajorTicks(QVariant(av.toString()).toBool());
-        }
-        av = attrs.value("xaxisdrawminorticks");
-        if (!av.isNull()) {
-          rc->xAxis()->setDrawAxisMinorTicks(QVariant(av.toString()).toBool());
-        }
-        av = attrs.value("yaxisdrawmajorticks");
-        if (!av.isNull()) {
-          rc->yAxis()->setDrawAxisMajorTicks(QVariant(av.toString()).toBool());
-        }
-        av = attrs.value("yaxisdrawminorticks");
-        if (!av.isNull()) {
-          rc->yAxis()->setDrawAxisMinorTicks(QVariant(av.toString()).toBool());
-        }
-        av = attrs.value("xaxisdrawmajorgridlines");
-        if (!av.isNull()) {
-          rc->xAxis()->setDrawAxisMajorGridLines(QVariant(av.toString()).toBool());
-        }
-        av = attrs.value("xaxisdrawminorgridlines");
-        if (!av.isNull()) {
-          rc->xAxis()->setDrawAxisMinorGridLines(QVariant(av.toString()).toBool());
-        }
-        av = attrs.value("yaxisdrawmajorgridlines");
-        if (!av.isNull()) {
-          rc->yAxis()->setDrawAxisMajorGridLines(QVariant(av.toString()).toBool());
-        }
-        av = attrs.value("yaxisdrawminorgridlines");
-        if (!av.isNull()) {
-          rc->yAxis()->setDrawAxisMinorGridLines(QVariant(av.toString()).toBool());
-        }
-        av = attrs.value("xaxisdrawmajorgridlinecolor");
-        if (!av.isNull()) {
-          rc->xAxis()->setAxisMajorGridLineColor(QColor(av.toString()));
-        }
-        av = attrs.value("xaxisdrawminorgridlinecolor");
-        if (!av.isNull()) {
-          rc->xAxis()->setAxisMinorGridLineColor(QColor(av.toString()));
-        }
-        av = attrs.value("yaxisdrawmajorgridlinecolor");
-        if (!av.isNull()) {
-          rc->yAxis()->setAxisMajorGridLineColor(QColor(av.toString()));
-        }
-        av = attrs.value("yaxisdrawminorgridlinecolor");
-        if (!av.isNull()) {
-          rc->yAxis()->setAxisMinorGridLineColor(QColor(av.toString()));
-        }
-        av = attrs.value("xaxisdrawmajorgridlinestyle");
-        if (!av.isNull()) {
-          rc->xAxis()->setAxisMajorGridLineStyle((Qt::PenStyle)QVariant(av.toString()).toInt());
-        }
-        av = attrs.value("xaxisdrawminorgridlinestyle");
-        if (!av.isNull()) {
-          rc->xAxis()->setAxisMinorGridLineStyle((Qt::PenStyle)QVariant(av.toString()).toInt());
-        }
-        av = attrs.value("yaxisdrawmajorgridlinestyle");
-        if (!av.isNull()) {
-          rc->yAxis()->setAxisMajorGridLineStyle((Qt::PenStyle)QVariant(av.toString()).toInt());
-        }
-        av = attrs.value("yaxisdrawminorgridlinestyle");
-        if (!av.isNull()) {
-          rc->yAxis()->setAxisMinorGridLineStyle((Qt::PenStyle)QVariant(av.toString()).toInt());
-        }
-        av = attrs.value("xaxissignificantdigits");
-        if (!av.isNull()) {
-          rc->xAxis()->setAxisSignificantDigits(QVariant(av.toString()).toInt());
-        }
-        av = attrs.value("yaxissignificantdigits");
-        if (!av.isNull()) {
-          rc->yAxis()->setAxisSignificantDigits(QVariant(av.toString()).toInt());
-        }
-        av = attrs.value("xzoommode");
-        if (!av.isNull()) {
-          rc->xAxis()->setAxisZoomMode((PlotAxis::ZoomMode)av.toString().toInt());
-        }
-        av = attrs.value("yzoommode");
-        if (!av.isNull()) {
-          rc->yAxis()->setAxisZoomMode((PlotAxis::ZoomMode)av.toString().toInt());
-        }
 
       // TODO add any specialized PlotItem Properties here.
       } else if (xml.name().toString() == "projectionrect") {
@@ -2169,6 +1978,18 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         av = attrs.value("y");
         if (!av.isNull()) {
           y = av.toString().toDouble();
+        }
+        xml.readNext();
+      } else if (xml.name().toString() == "plotaxis") {
+        Q_ASSERT(rc);
+        QXmlStreamAttributes subattrs = xml.attributes();
+        QStringRef av = subattrs.value("id");
+        if (!av.isNull()) {
+          if (av == "xaxis") {
+            rc->xAxis()->configureFromXml(xml, store);
+          } else if (av == "yaxis") {
+            rc->yAxis()->configureFromXml(xml, store);
+          }
         }
         xml.readNext();
       } else if (xml.name().toString() == "cartesianrender") {

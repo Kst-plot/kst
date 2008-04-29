@@ -45,7 +45,7 @@ PlotAxis::PlotAxis(PlotItem *plotItem, Qt::Orientation orientation) :
   _axisMinorGridLineColor(Qt::gray),
   _axisMajorGridLineStyle(Qt::DashLine),
   _axisMinorGridLineStyle(Qt::DashLine),
-  _axisPlotMarkers(true)
+  _axisPlotMarkers(orientation == Qt::Horizontal)
  {
   connect(_plotItem, SIGNAL(updateAxes()), this, SLOT(update()));
 }
@@ -722,6 +722,132 @@ qreal PlotAxis::computedMajorTickSpacing(Qt::Orientation orientation) {
     return d2;
   else
     return d5;
+}
+
+
+void PlotAxis::saveInPlot(QXmlStreamWriter &xml, QString axisId) {
+  xml.writeStartElement("plotaxis");
+  xml.writeAttribute("id", axisId);
+  xml.writeAttribute("visible", QVariant(isAxisVisible()).toString());
+  xml.writeAttribute("log", QVariant(axisLog()).toString());
+  xml.writeAttribute("reversed", QVariant(axisReversed()).toString());
+  xml.writeAttribute("baseoffset", QVariant(axisBaseOffset()).toString());
+  xml.writeAttribute("interpret", QVariant(axisInterpret()).toString());
+  xml.writeAttribute("interpretation", QVariant(axisInterpretation()).toString());
+  xml.writeAttribute("display", QVariant(axisDisplay()).toString());
+  xml.writeAttribute("majortickmode", QVariant(axisMajorTickMode()).toString());
+  xml.writeAttribute("minortickcount", QVariant(axisMinorTickCount()).toString());
+  xml.writeAttribute("drawmajorticks", QVariant(drawAxisMajorTicks()).toString());
+  xml.writeAttribute("drawminorticks", QVariant(drawAxisMinorTicks()).toString());
+  xml.writeAttribute("drawmajorgridlines", QVariant(drawAxisMajorGridLines()).toString());
+  xml.writeAttribute("drawminorgridlines", QVariant(drawAxisMinorGridLines()).toString());
+  xml.writeAttribute("drawmajorgridlinecolor", QVariant(axisMajorGridLineColor()).toString());
+  xml.writeAttribute("drawminorgridlinecolor", QVariant(axisMinorGridLineColor()).toString());
+  xml.writeAttribute("drawmajorgridlinestyle", QVariant(axisMajorGridLineStyle()).toString());
+  xml.writeAttribute("drawminorgridlinestyle", QVariant(axisMinorGridLineStyle()).toString());
+  xml.writeAttribute("significantdigits", QVariant(axisSignificantDigits()).toString());
+  xml.writeAttribute("zoommode", QVariant(axisZoomMode()).toString());
+  _axisPlotMarkers.saveInPlot(xml);
+  xml.writeEndElement();
+}
+
+
+bool PlotAxis::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
+  bool validTag = true;
+
+  QString primaryTag = xml.name().toString();
+  QXmlStreamAttributes attrs = xml.attributes();
+  QStringRef av = attrs.value("visible");
+  if (!av.isNull()) {
+    setAxisVisible(QVariant(av.toString()).toBool());
+  }
+  av = attrs.value("log");
+  if (!av.isNull()) {
+    setAxisLog(QVariant(av.toString()).toBool());
+  }
+  av = attrs.value("reversed");
+  if (!av.isNull()) {
+    setAxisReversed(QVariant(av.toString()).toBool());
+  }
+  av = attrs.value("baseoffset");
+  if (!av.isNull()) {
+    setAxisBaseOffset(QVariant(av.toString()).toBool());
+  }
+  av = attrs.value("interpret");
+  if (!av.isNull()) {
+    setAxisInterpret(QVariant(av.toString()).toBool());
+  }
+  av = attrs.value("interpretation");
+  if (!av.isNull()) {
+    setAxisInterpretation((KstAxisInterpretation)QVariant(av.toString()).toInt());
+  }
+  av = attrs.value("display");
+  if (!av.isNull()) {
+    setAxisDisplay((KstAxisDisplay)QVariant(av.toString()).toInt());
+  }
+  av = attrs.value("majortickmode");
+  if (!av.isNull()) {
+    setAxisMajorTickMode((PlotAxis::MajorTickMode)QVariant(av.toString()).toInt());
+  }
+  av = attrs.value("minortickcount");
+  if (!av.isNull()) {
+    setAxisMinorTickCount(QVariant(av.toString()).toInt());
+  }
+  av = attrs.value("drawmajorticks");
+  if (!av.isNull()) {
+    setDrawAxisMajorTicks(QVariant(av.toString()).toBool());
+  }
+  av = attrs.value("drawminorticks");
+  if (!av.isNull()) {
+    setDrawAxisMinorTicks(QVariant(av.toString()).toBool());
+  }
+  av = attrs.value("drawmajorgridlines");
+  if (!av.isNull()) {
+    setDrawAxisMajorGridLines(QVariant(av.toString()).toBool());
+  }
+  av = attrs.value("drawminorgridlines");
+  if (!av.isNull()) {
+    setDrawAxisMinorGridLines(QVariant(av.toString()).toBool());
+  }
+  av = attrs.value("drawmajorgridlinecolor");
+  if (!av.isNull()) {
+    setAxisMajorGridLineColor(QColor(av.toString()));
+  }
+  av = attrs.value("drawminorgridlinecolor");
+  if (!av.isNull()) {
+    setAxisMinorGridLineColor(QColor(av.toString()));
+  }
+  av = attrs.value("drawmajorgridlinestyle");
+  if (!av.isNull()) {
+    setAxisMajorGridLineStyle((Qt::PenStyle)QVariant(av.toString()).toInt());
+  }
+  av = attrs.value("drawminorgridlinestyle");
+  if (!av.isNull()) {
+    setAxisMinorGridLineStyle((Qt::PenStyle)QVariant(av.toString()).toInt());
+  }
+  av = attrs.value("significantdigits");
+  if (!av.isNull()) {
+    setAxisSignificantDigits(QVariant(av.toString()).toInt());
+  }
+  av = attrs.value("zoommode");
+  if (!av.isNull()) {
+    setAxisZoomMode((PlotAxis::ZoomMode)av.toString().toInt());
+  }
+
+  QString expectedEnd;
+  while (!(xml.isEndElement() && (xml.name().toString() == primaryTag))) {
+   if (xml.isStartElement() && xml.name().toString() == "plotmarkers") {
+      validTag = _axisPlotMarkers.configureFromXml(xml, store);
+    } else if (xml.isEndElement()) {
+      if (xml.name().toString() != expectedEnd) {
+        validTag = false;
+        break;
+      }
+    }
+    xml.readNext();
+  }
+
+  return validTag;
 }
 
 }

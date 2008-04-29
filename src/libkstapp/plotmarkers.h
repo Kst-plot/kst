@@ -34,7 +34,8 @@ class PlotMarkers {
     PlotMarkers(bool xAxis = true);
     virtual ~PlotMarkers();
 
-    QList<double> markers() const { return _markers; }
+    QList<double> markers();
+
     QList<double> manualMarkers() const { return _manualMarkers; }
     void setManualMarkers(const QList<double> &markers) { _manualMarkers = markers; }
 
@@ -58,7 +59,8 @@ class PlotMarkers {
     CurveMarkerMode curveMarkerMode() const { return _curveMode; }
     void setCurveMarkerMode(const CurveMarkerMode mode) { _curveMode = mode; }
 
-    void updateMarkers();
+    void saveInPlot(QXmlStreamWriter &xml);
+    bool configureFromXml(QXmlStreamReader &xml, ObjectStore *store);
 
   private:
     bool _xAxis;
@@ -68,7 +70,6 @@ class PlotMarkers {
     CurveMarkerMode _curveMode;
     VectorPtr _vector;
     CurvePtr _curve;
-    QList<double> _markers;
     QList<double> _manualMarkers;
 };
 
