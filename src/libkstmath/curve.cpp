@@ -564,7 +564,9 @@ void Curve::setXError(VectorPtr new_ex) {
     _inputVectors[EXVECTOR] = new_ex;
     connect(new_ex, SIGNAL(vectorUpdated(QString, int)), this, SLOT(vectorUpdated(QString, int)));
   } else {
-    disconnect(_inputVectors[EXVECTOR], SIGNAL(vectorUpdated(QString, int)));
+    if (_inputVectors[EXVECTOR]) {
+      disconnect(_inputVectors[EXVECTOR], SIGNAL(vectorUpdated(QString, int)));
+    }
     _inputVectors.remove(EXVECTOR);
   }
   setDirty();
@@ -576,7 +578,9 @@ void Curve::setYError(VectorPtr new_ey) {
     _inputVectors[EYVECTOR] = new_ey;
     connect(new_ey, SIGNAL(vectorUpdated(QString, int)), this, SLOT(vectorUpdated(QString, int)));
   } else {
-    disconnect(_inputVectors[EYVECTOR], SIGNAL(vectorUpdated(QString, int)));
+    if (_inputVectors[EYVECTOR]) {
+      disconnect(_inputVectors[EYVECTOR], SIGNAL(vectorUpdated(QString, int)));
+    }
     _inputVectors.remove(EYVECTOR);
   }
   setDirty();
@@ -588,7 +592,9 @@ void Curve::setXMinusError(VectorPtr new_ex) {
     _inputVectors[EXMINUSVECTOR] = new_ex;
     connect(new_ex, SIGNAL(vectorUpdated(QString, int)), this, SLOT(vectorUpdated(QString, int)));
   } else {
-    disconnect(_inputVectors[EXMINUSVECTOR], SIGNAL(vectorUpdated(QString, int)));
+    if (_inputVectors[EXMINUSVECTOR]) {
+      disconnect(_inputVectors[EXMINUSVECTOR], SIGNAL(vectorUpdated(QString, int)));
+    }
     _inputVectors.remove(EXMINUSVECTOR);
   }
   setDirty();
@@ -600,7 +606,9 @@ void Curve::setYMinusError(VectorPtr new_ey) {
     _inputVectors[EYMINUSVECTOR] = new_ey;
     connect(new_ey, SIGNAL(vectorUpdated(QString, int)), this, SLOT(vectorUpdated(QString, int)));
   } else {
-    disconnect(_inputVectors[EYMINUSVECTOR], SIGNAL(vectorUpdated(QString, int)));
+    if (_inputVectors[EYMINUSVECTOR]) {
+      disconnect(_inputVectors[EYMINUSVECTOR], SIGNAL(vectorUpdated(QString, int)));
+    }
     _inputVectors.remove(EYMINUSVECTOR);
   }
   setDirty();
