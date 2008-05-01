@@ -495,6 +495,8 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
   QRectF xLabelRect;
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
 
+  _xAxis->validateDrawingRegion(flags, painter);
+
   QMapIterator<qreal, QString> xLabelIt(_xAxis->axisLabels());
   while (xLabelIt.hasNext()) {
     xLabelIt.next();

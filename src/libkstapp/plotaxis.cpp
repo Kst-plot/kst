@@ -31,10 +31,12 @@ PlotAxis::PlotAxis(PlotItem *plotItem, Qt::Orientation orientation) :
   _axisLog(false),
   _axisReversed(false),
   _axisBaseOffset(false),
+  _axisBaseOffsetOverride(false),
   _axisInterpret(false),
   _axisDisplay(AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS),
   _axisInterpretation(AXIS_INTERP_CTIME),
   _axisMajorTickMode(Normal),
+  _axisOverrideMajorTicks(Normal),
   _axisMinorTickCount(4),
   _axisSignificantDigits(9),
   _drawAxisMajorTicks(true),
@@ -583,7 +585,76 @@ void PlotAxis::computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTick
 }
 
 
-void PlotAxis::update() {
+// Function validates that the labels will not overlap.  Only functions for x Axis.
+void PlotAxis::validateDrawingRegion(int flags, QPainter *painter) {
+  if (_orientation != Qt::Horizontal) {
+    return;
+  }
+
+  // Always try to use the settings requested.
+  if (_axisOverrideMajorTicks != _axisMajorTickMode) {
+    _axisBaseOffsetOverride = false;
+    update();
+  }
+
+  int longest = 0;
+  QMapIterator<qreal, QString> iLongestLabelCheck(_axisLabels);
+  while (iLongestLabelCheck.hasNext()) {
+    iLongestLabelCheck.next();
+    QRectF bound = painter->boundingRect(QRectF(), flags, iLongestLabelCheck.value());
+    if (bound.width() > longest) {
+      longest = bound.width();
+    }
+  }
+
+// Make local... Use begin.
+  qreal firstTick = 0, secondTick = 0;
+  QMapIterator<qreal, QString> iLabelCheck(_axisLabels);
+  if (iLabelCheck.hasNext()) {
+    iLabelCheck.next();
+    firstTick = iLabelCheck.key();
+    if (iLabelCheck.hasNext()) {
+      iLabelCheck.next();
+      secondTick = iLabelCheck.key();
+    }
+  }
+
+  qreal labelSpace = plotItem()->mapXToPlot(secondTick) - plotItem()->mapXToPlot(firstTick);
+  if (labelSpace < (longest + 2)) {
+    _axisOverrideMajorTicks = convertToMajorTickMode((plotItem()->plotRect().width() / (longest + 2)) - 1);
+    if (_axisOverrideMajorTicks == None) {
+      _axisBaseOffsetOverride = true;
+      _axisOverrideMajorTicks = Coarse;
+    }
+    update(true);
+  }
+}
+
+
+PlotAxis::MajorTickMode PlotAxis::convertToMajorTickMode(int tickCount) {
+  MajorTickMode mode = None;
+  if (tickCount >= VeryFine) {
+    mode = VeryFine;
+  } else if (tickCount >= Fine) {
+    mode = Fine;
+  } else if (tickCount >= Normal) {
+    mode = Normal;
+  } else if (tickCount >= Coarse) {
+    mode = Coarse;
+  }
+  return mode;
+}
+
+
+void PlotAxis::update(bool useOverrideTicks) {
+  MajorTickMode majorTickCount;
+  if (useOverrideTicks) {
+    majorTickCount = _axisOverrideMajorTicks;
+  } else {
+    _axisOverrideMajorTicks = _axisMajorTickMode;
+    majorTickCount = _axisMajorTickMode;
+    _axisBaseOffsetOverride = false;
+  }
 
   QMap<qreal, QString> labels;
   QList<qreal> ticks;
@@ -592,11 +663,11 @@ void PlotAxis::update() {
   if (_axisLog) {
     qreal min = _orientation == Qt::Horizontal ? plotItem()->xMin() : plotItem()->yMin();
     qreal max = _orientation == Qt::Horizontal ? plotItem()->xMax() : plotItem()->yMax();
-    computeLogTicks(&ticks, &minTicks, &labels, min, max, _axisMajorTickMode);
+    computeLogTicks(&ticks, &minTicks, &labels, min, max, majorTickCount);
   } else {
     qreal min = _orientation == Qt::Horizontal ? plotItem()->projectionRect().left() : plotItem()->projectionRect().top();
     qreal max = _orientation == Qt::Horizontal ? plotItem()->projectionRect().right() : plotItem()->projectionRect().bottom();
-    qreal majorTickSpacing = computedMajorTickSpacing(_orientation);
+    qreal majorTickSpacing = computedMajorTickSpacing(majorTickCount, _orientation);
     qreal firstTick = ceil(min / majorTickSpacing) * majorTickSpacing;
 
     int i = 0;
@@ -650,7 +721,7 @@ void PlotAxis::update() {
     }
   }
 
-  if (_axisBaseOffset || _axisInterpret || (longest > _axisSignificantDigits) ) {
+  if (_axisBaseOffset || _axisInterpret || (longest > _axisSignificantDigits) || _axisBaseOffsetOverride ) {
     if (_axisInterpret) {
       _baseLabel = interpretLabel(_axisInterpretation, _axisDisplay, base, (_axisMajorTicks).last());
     } else {
@@ -692,9 +763,9 @@ void PlotAxis::update() {
  * on the axis (but at least 2). The value of M is set by the requested
  * MajorTickMode.
  */
-qreal PlotAxis::computedMajorTickSpacing(Qt::Orientation orientation) {
+qreal PlotAxis::computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orientation orientation) {
   qreal R = orientation == Qt::Horizontal ? plotItem()->projectionRect().width() : plotItem()->projectionRect().height();
-  qreal M = axisMajorTickMode();
+  qreal M = majorTickCount;
   qreal B = floor(log10(R/M));
 
   qreal d1 = 1 * pow(10, B);

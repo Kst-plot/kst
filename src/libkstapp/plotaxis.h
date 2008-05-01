@@ -25,6 +25,7 @@ class PlotAxis : public QObject
   public:
 
     enum MajorTickMode {
+      None = 0,
       Coarse = 2,
       Normal = 5,
       Fine = 10,
@@ -106,11 +107,13 @@ class PlotAxis : public QObject
     void saveInPlot(QXmlStreamWriter &xml, QString axisId);
     bool configureFromXml(QXmlStreamReader &xml, ObjectStore *store);
 
+    void validateDrawingRegion(int flags, QPainter *painter);
+
   Q_SIGNALS:
     void marginsChanged();
 
   public Q_SLOTS:
-    void update();
+    void update(bool useOverrideTicks = false);
 
   private:
 
@@ -120,11 +123,10 @@ class PlotAxis : public QObject
     double convertTimeDiffValueToDays(KstAxisInterpretation axisInterpretation, double offsetIn);
     double interpretOffset(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double base, double value);
 
-    qreal computedMajorTickSpacing(Qt::Orientation orientation);
+    qreal computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orientation orientation);
     void computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTicks, QMap<qreal, QString> *Labels, qreal min, qreal max, MajorTickMode tickMode);
 
-    QSizeF calculateBottomTickLabelBound(QPainter *painter);
-    QSizeF calculateLeftTickLabelBound(QPainter *painter);
+    MajorTickMode convertToMajorTickMode(int tickCount);
 
   private:
 
@@ -144,11 +146,15 @@ class PlotAxis : public QObject
     bool _axisLog;
     bool _axisReversed;
     bool _axisBaseOffset;
+    bool _axisBaseOffsetOverride;
+
     bool _axisInterpret;
     KstAxisDisplay _axisDisplay;
     KstAxisInterpretation _axisInterpretation;
 
     MajorTickMode _axisMajorTickMode;
+    MajorTickMode _axisOverrideMajorTicks;
+
     int _axisMinorTickCount;
 
     int _axisSignificantDigits;
