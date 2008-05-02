@@ -284,7 +284,7 @@ void Equation::setExistingXVector(VectorPtr in_xv, bool do_interp) {
   _xInVector = in_xv;
   _inputVectors.insert(XINVECTOR, in_xv);
 
-  connect(in_xv, SIGNAL(vectorUpdated(QString, int)), this, SLOT(vectorUpdated(QString, int)));
+  connect(in_xv, SIGNAL(vectorUpdated(ObjectPtr, int)), this, SLOT(vectorUpdated(ObjectPtr, int)));
 
   _ns = 2; // reset the updating
   _doInterp = do_interp;

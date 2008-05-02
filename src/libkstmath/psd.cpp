@@ -267,10 +267,6 @@ Object::UpdateType PSD::update(int update_counter) {
   _fVector->setDirty();
   _fVector->update(update_counter);
 
-  _updateVersion++;
-  _sVector->triggerUpdateSignal(shortName(), _updateVersion);
-  _fVector->triggerUpdateSignal(shortName(), _updateVersion);
-
   unlockInputsAndOutputs();
 
   return setLastUpdateResult(UPDATE);
@@ -412,7 +408,7 @@ void PSD::setVector(VectorPtr new_v) {
   _inputVectors.remove(INVECTOR);
   new_v->writeLock();
   _inputVectors[INVECTOR] = new_v;
-  connect(new_v, SIGNAL(vectorUpdated(QString, int)), this, SLOT(vectorUpdated(QString, int)));
+  connect(new_v, SIGNAL(vectorUpdated(ObjectPtr, int)), this, SLOT(vectorUpdated(ObjectPtr, int)));
   setDirty();
 }
 

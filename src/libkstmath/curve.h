@@ -152,11 +152,11 @@ class KST_EXPORT Curve: public Relation {
     // see KstRelation::providerDataObject
     virtual DataObjectPtr providerDataObject() const;
 
-  Q_SIGNALS:
-    void relationUpdated(QString relationName, int version);
-
   public Q_SLOTS:
-    void vectorUpdated(QString sourceName, int version);
+    void vectorUpdated(ObjectPtr object, int version);
+
+  Q_SIGNALS:
+    void relationUpdated(ObjectPtr object, int version);
 
   protected:
     Curve(ObjectStore *store, const ObjectTag &in_tag,

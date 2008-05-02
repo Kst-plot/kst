@@ -548,11 +548,11 @@ Object::UpdateType Vector::internalUpdate(Object::UpdateType providerRC) {
 }
 
 
-void Vector::triggerUpdateSignal(QString sourceName, int version) {
+void Vector::triggerUpdateSignal(ObjectPtr object, int version) {
 #if DEBUG_UPDATE_CYCLE
-  qDebug() << "triggering vector update of" << shortName() << "for" << sourceName << version;
+  qDebug() << "Vector" << shortName() << "has been updated as part of update of" << object->shortName() << version << "informing dependents";
 #endif
-  emit vectorUpdated(sourceName, version);
+  emit vectorUpdated(object, version);
 }
 
 

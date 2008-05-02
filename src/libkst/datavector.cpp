@@ -30,6 +30,7 @@
 #include "datavector.h"
 #include "math_kst.h"
 #include "objectstore.h"
+#include "updatemanager.h"
 
 // ReqNF <=0 means read from ReqF0 to end of File
 // ReqF0 < means start at EndOfFile-ReqNF.
@@ -190,22 +191,24 @@ void DataVector::commonRVConstructor(DataSourcePtr in_file,
   if (!in_file) {
     Debug::self()->log(i18n("Data file for vector %1 was not opened.", tag().tagString()), Debug::Warning);
   } else {
-    connect(in_file, SIGNAL(dataSourceUpdated(QString, int)), this, SLOT(dataSourceUpdated(QString, int)));
+    connect(in_file, SIGNAL(sourceUpdated(ObjectPtr, int)), this, SLOT(sourceUpdated(ObjectPtr, int)));
   }
 }
 
 
-void DataVector::dataSourceUpdated(QString sourceName, int version) {
+void DataVector::sourceUpdated(ObjectPtr object, int version) {
 #if DEBUG_UPDATE_CYCLE
-  qDebug() << "Data Source update required by Vector" << shortName() << "for" << sourceName << version;
+  qDebug() << "Data Source update required by Vector" << shortName() << "for update of" << object->shortName() << version;
 #endif
   writeLock();
+//   UpdateManager::self()->updateStarted(object, this);
   if (update(version)) {
 #if DEBUG_UPDATE_CYCLE
-  qDebug() << "triggering vector of " << shortName() << "for" << sourceName << version;
+  qDebug() << "Vector" << shortName() << "has been updated as part of update of" << object->shortName() << version << "informing dependents";
 #endif
-    emit vectorUpdated(sourceName, version);
+    emit vectorUpdated(object, version);
   }
+//   UpdateManager::self()->updateFinished(object, this);
   unlock();
 }
 
@@ -242,7 +245,7 @@ void DataVector::change(DataSourcePtr in_file, const QString &in_field,
   }
 
   if (in_file) {
-    connect(in_file, SIGNAL(dataSourceUpdated(QString, int)), this, SLOT(dataSourceUpdated(QString, int)));
+    connect(in_file, SIGNAL(sourceUpdated(ObjectPtr, int)), this, SLOT(sourceUpdated(ObjectPtr, int)));
   }
 
 }

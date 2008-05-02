@@ -91,15 +91,17 @@ RelationList PlotRenderItem::relationList() const {
 }
 
 
-void PlotRenderItem::relationUpdated(QString sourceName, int version) {
-  qDebug() << "Relation Updated" << sourceName << version;
+void PlotRenderItem::relationUpdated(ObjectPtr object, int version) {
+#if DEBUG_UPDATE_CYCLE
+  qDebug() << "Curve update required by Plot" << "for update of" << object->shortName() << version;
+#endif
   update();
 }
 
 
 void PlotRenderItem::addRelation(RelationPtr relation) {
   if (relation) {
-    connect(relation, SIGNAL(relationUpdated(QString, int)), this, SLOT(relationUpdated(QString, int)));
+    connect(relation, SIGNAL(relationUpdated(ObjectPtr, int)), this, SLOT(relationUpdated(ObjectPtr, int)));
     _relationList.append(relation);
     plotItem()->zoomMaximum();
   }
@@ -108,7 +110,7 @@ void PlotRenderItem::addRelation(RelationPtr relation) {
 
 void PlotRenderItem::removeRelation(RelationPtr relation) {
   if (relation) {
-    disconnect(relation, SIGNAL(relationUpdated(QString, int)));
+    disconnect(relation, SIGNAL(relationUpdated(ObjectPtr, int)));
     _relationList.removeAll(relation);
     plotItem()->zoomMaximum();
   }
@@ -117,7 +119,7 @@ void PlotRenderItem::removeRelation(RelationPtr relation) {
 
 void PlotRenderItem::clearRelations() {
   foreach (RelationPtr relation, _relationList) {
-    disconnect(relation, SIGNAL(relationUpdated(QString, int)));
+    disconnect(relation, SIGNAL(relationUpdated(ObjectPtr, int)));
   }
   _relationList.clear();
   plotItem()->zoomMaximum();

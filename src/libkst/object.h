@@ -37,6 +37,9 @@
 namespace Kst {
 
 class ObjectStore;
+class Object;
+
+typedef SharedPtr<Object> ObjectPtr;
 
 class Object : public QObject, public Shared, public KstRWLock {
   Q_OBJECT
@@ -80,6 +83,9 @@ class Object : public QObject, public Shared, public KstRWLock {
     // @since 1.1.0
     bool dirty() const;
 
+    virtual void beginUpdate();
+    virtual void emitUpdateSignal();
+
   protected:
     Object(const ObjectTag& tag = ObjectTag::invalidTag);
 
@@ -103,13 +109,16 @@ class Object : public QObject, public Shared, public KstRWLock {
     QString _manualDescriptiveName;
     QString _shortName;
 
+    int _updateVersion;
+
   private:
     ObjectTag _tag;
     bool _dirty;
     Object::UpdateType _lastUpdate;
+
 } KST_EXPORT;
 
-typedef SharedPtr<Object> ObjectPtr;
+
 
 template <typename T, typename U>
 inline SharedPtr<T> kst_cast(SharedPtr<U> object) {

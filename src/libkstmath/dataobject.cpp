@@ -41,7 +41,6 @@ DataObject::DataObject(ObjectStore *store, const ObjectTag& tag) : Object(tag) {
   //qDebug() << "+++ CREATING DATA OBJECT: " << (void*)this << endl;
   _curveHints = new CurveHintList;
   _isInputLoaded = false;
-  _updateVersion = 0;
 }
 
 DataObject::DataObject(ObjectStore *store, const QDomElement& e) : Object() {
@@ -49,7 +48,6 @@ DataObject::DataObject(ObjectStore *store, const QDomElement& e) : Object() {
   //qDebug() << "+++ CREATING DATA OBJECT: " << (void*)this << endl;
   _curveHints = new CurveHintList;
   _isInputLoaded = false;
-  _updateVersion = 0;
 }
 
 
@@ -167,15 +165,18 @@ double *DataObject::vectorRealloced(VectorPtr v, double *memptr, int newSize) co
 }
 
 
-void DataObject::vectorUpdated(QString sourceName, int version) {
+void DataObject::vectorUpdated(ObjectPtr object, int version) {
 #if DEBUG_UPDATE_CYCLE
-  qDebug() << "Vector update required by DataObject " << shortName() << "for" << sourceName << version;
+  qDebug() << "Vector update required by DataObject " << shortName() << "for update of" << object->shortName() << version;
 #endif
   writeLock();
   if (update(version)) {
 #if DEBUG_UPDATE_CYCLE
-  qDebug() << "Update complete of DataObject" << shortName() << "Vector updates triggered for outputs";
+    qDebug() << "DataObject" << shortName() << "has been updated as part of update of" << object->shortName() << version << "informing dependents";
 #endif
+    foreach (VectorPtr vector, _outputVectors) {
+      vector->triggerUpdateSignal(object, version);
+    }
   }
   unlock();
 }

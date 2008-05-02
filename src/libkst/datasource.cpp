@@ -38,6 +38,7 @@
 #include "scalar.h"
 #include "string.h"
 #include "stdinsource.h"
+#include "updatemanager.h"
 
 #include "dataplugin.h"
 
@@ -474,7 +475,7 @@ DataSourcePtr DataSource::loadSource(ObjectStore *store, QDomElement& e) {
 
 
 DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type)
-    : Object(), _filename(filename), _cfg(cfg), _dataSourceVersion(0) {
+    : Object(), _filename(filename), _cfg(cfg) {
   Q_UNUSED(type)
   _valid = false;
   _reusable = true;
@@ -510,12 +511,17 @@ DataSource::~DataSource() {
 void DataSource::checkUpdate() {
   if (update()) {
 #if DEBUG_UPDATE_CYCLE
-    qDebug() << "DataSource" << shortName() << "updated to verison " << _dataSourceVersion;
+    qDebug() << "DataSource update ready for" << shortName();
 #endif
-    emit dataSourceUpdated(shortName(), _dataSourceVersion);
+    UpdateManager::self()->requestUpdate(this);
   }
 
   QTimer::singleShot(1000, this, SLOT(checkUpdate()));
+}
+
+
+void DataSource::emitUpdateSignal() {
+  emit sourceUpdated(this, _updateVersion);
 }
 
 
@@ -543,9 +549,6 @@ Object::UpdateType DataSource::update(int u) {
 
 
 void DataSource::updateNumFramesScalar() {
-  if (_numFramesScalar->value() != frameCount()) {
-    _dataSourceVersion++;
-  }
   _numFramesScalar->setValue(frameCount());
 }
 

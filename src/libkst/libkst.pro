@@ -46,6 +46,7 @@ SOURCES += \
     scalarfactory.cpp \
     string_kst.cpp \
     stringfactory.cpp \
+    updatemanager.cpp \
     vector.cpp \
     vectorfactory.cpp
 
@@ -99,5 +100,6 @@ HEADERS += \
     stringfactory.h \
     sysinfo.h \
     timezones.h \
+    updatemanager.h \
     vector.h \
     vectorfactory.h
