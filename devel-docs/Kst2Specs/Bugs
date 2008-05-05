@@ -1,16 +1,25 @@
 Zoom Mode Plot Bugs:
-  -Zooming does not work if there are no curves in the plots.  It should.
-
   -Zooming gets slower the more points there are in the curves. It should
   always be fast.
 
 
-Zoom lines are left:
+Zoom lines not updated on <ctrl> or <shift>
 what happens:
-  Put the mouse in a plot and depress <ctrl>.  A vertical line appears
-  where the mouse is.  Move the mouse around.  The line follows the mouse.
-  Now release <ctrl>.  The line stays.
+  Put the mouse in a plot and depress <ctrl>.  Nothing Happens.
+  Now move the mouse.  A vertical line appears where the mouse is.
+  Move the mouse around.  The line follows the mouse.
+  Now release <ctrl>.  The line stays until the mouse is moved again.
 What should happen:
-  The line should disappear when <ctrl> is released.
+  The line should appear when <ctrl> is pressed, and disappear when
+  <ctrl> is released, independent of mouse moves.
   
+Tied X-Only (<ctrl>) zooms adjust X and Y.
+What happens:
+  create two plots (eg, 1 of gyrodata.dat col 1 and one from gyrodata.dat 
+  col 2).  Make sure they have different Y ranges.  Tie their zooms.  Now
+  adjust the X-range only from one plot with <ctrl>+mouse.  Both plots end up
+  with the same X and Y range.
+
+What should happen:
+  Only the X range should change.
 
