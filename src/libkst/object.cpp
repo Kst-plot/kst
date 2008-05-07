@@ -172,13 +172,13 @@ void Object::setDescriptiveName(QString new_name) {
 }
 
 
-void Object::beginUpdate() {
+void Object::beginUpdate(ObjectPtr object) {
   _updateVersion++;
-  emitUpdateSignal();
+  processUpdate(object);
 }
 
 
-void Object::emitUpdateSignal() {
+void Object::processUpdate(ObjectPtr object) {
   // Do nothing by default.
 }
 

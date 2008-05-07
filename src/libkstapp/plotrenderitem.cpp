@@ -16,6 +16,7 @@
 #include "plotitemmanager.h"
 #include "application.h"
 #include "objectstore.h"
+#include "updatemanager.h"
 
 #include <QTime>
 #include <QMenu>
@@ -91,17 +92,17 @@ RelationList PlotRenderItem::relationList() const {
 }
 
 
-void PlotRenderItem::relationUpdated(ObjectPtr object, int version) {
-#if DEBUG_UPDATE_CYCLE
-  qDebug() << "Curve update required by Plot" << "for update of" << object->shortName() << version;
+void PlotRenderItem::relationUpdated(ObjectPtr object) {
+#if DEBUG_UPDATE_CYCLE > 1
+  qDebug() << "UP - Curve update required by Plot for update of" << object->shortName();
 #endif
-  update();
+  UpdateManager::self()->requestUpdate(object, this);
 }
 
 
 void PlotRenderItem::addRelation(RelationPtr relation) {
   if (relation) {
-    connect(relation, SIGNAL(relationUpdated(ObjectPtr, int)), this, SLOT(relationUpdated(ObjectPtr, int)));
+    connect(relation, SIGNAL(relationUpdated(ObjectPtr)), this, SLOT(relationUpdated(ObjectPtr)));
     _relationList.append(relation);
     plotItem()->zoomMaximum();
   }
@@ -110,7 +111,7 @@ void PlotRenderItem::addRelation(RelationPtr relation) {
 
 void PlotRenderItem::removeRelation(RelationPtr relation) {
   if (relation) {
-    disconnect(relation, SIGNAL(relationUpdated(ObjectPtr, int)));
+    disconnect(relation, SIGNAL(relationUpdated(ObjectPtr)));
     _relationList.removeAll(relation);
     plotItem()->zoomMaximum();
   }
@@ -119,7 +120,7 @@ void PlotRenderItem::removeRelation(RelationPtr relation) {
 
 void PlotRenderItem::clearRelations() {
   foreach (RelationPtr relation, _relationList) {
-    disconnect(relation, SIGNAL(relationUpdated(ObjectPtr, int)));
+    disconnect(relation, SIGNAL(relationUpdated(ObjectPtr)));
   }
   _relationList.clear();
   plotItem()->zoomMaximum();

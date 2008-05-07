@@ -14,7 +14,13 @@
 
 #include "object.h"
 
-#include <QObject>
+#include <QGraphicsRectItem>
+
+// Provides additional output during update cycle.
+// Level 0 No Debug
+// Level 1 Simple Debugging - UpdateManager Only
+// Level 2 Full Debugging
+#define DEBUG_UPDATE_CYCLE 0
 
 namespace Kst {
 
@@ -25,6 +31,8 @@ class UpdateManager : public QObject
     static UpdateManager *self();
 
     void requestUpdate(ObjectPtr object);
+    void requestUpdate(ObjectPtr updateObject, ObjectPtr object);
+    void requestUpdate(ObjectPtr updateObject, QGraphicsRectItem* displayObject);
     void objectDeleted(ObjectPtr object);
 
     void updateStarted(ObjectPtr updateObject, ObjectPtr reportingObject);
@@ -41,6 +49,8 @@ class UpdateManager : public QObject
   private:
     QList<ObjectPtr> _updateRequests;
     QMap<ObjectPtr, int> _activeUpdates;
+    QMap<ObjectPtr, QList<ObjectPtr> > _dependentUpdateRequests;
+    QMap<ObjectPtr, QList<QGraphicsRectItem*> > _displayUpdateRequests;
 
     bool _delayedUpdate;
 };

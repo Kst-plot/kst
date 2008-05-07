@@ -33,6 +33,7 @@
 #include "ksttimers.h"
 
 #include "objectstore.h"
+#include "updatemanager.h"
 
 #include <time.h>
 
@@ -224,17 +225,10 @@ Curve::~Curve() {
 
 
 void Curve::vectorUpdated(ObjectPtr object, int version) {
-#if DEBUG_UPDATE_CYCLE
-  qDebug() << "Vector update required by Curve" << shortName() << "for update of" << object->shortName() << version;
+#if DEBUG_UPDATE_CYCLE > 1
+    qDebug() << "UP - Curve update ready for" << object->shortName();
 #endif
-  writeLock();
-  if (update(version)) {
-#if DEBUG_UPDATE_CYCLE
-    qDebug() << "Curve" << shortName() << "has been updated as part of update of" << object->shortName() << version << "informing dependents";
-#endif
-    emit relationUpdated(object, version);
-  }
-  unlock();
+    UpdateManager::self()->requestUpdate(object, this);
 }
 
 

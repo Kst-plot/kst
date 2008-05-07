@@ -227,7 +227,7 @@ class KST_EXPORT DataSource : public Object {
 
     virtual void deleteDependents();
 
-    virtual void emitUpdateSignal();
+    virtual void processUpdate(ObjectPtr object);
 
   public Q_SLOTS:
     virtual void checkUpdate();

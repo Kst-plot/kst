@@ -510,8 +510,8 @@ DataSource::~DataSource() {
 
 void DataSource::checkUpdate() {
   if (update()) {
-#if DEBUG_UPDATE_CYCLE
-    qDebug() << "DataSource update ready for" << shortName();
+#if DEBUG_UPDATE_CYCLE > 1
+    qDebug() << "UP - DataSource update ready for" << shortName();
 #endif
     UpdateManager::self()->requestUpdate(this);
   }
@@ -520,8 +520,10 @@ void DataSource::checkUpdate() {
 }
 
 
-void DataSource::emitUpdateSignal() {
+void DataSource::processUpdate(ObjectPtr object) {
+  UpdateManager::self()->updateStarted(this, this);
   emit sourceUpdated(this, _updateVersion);
+  UpdateManager::self()->updateFinished(this, this);
 }
 
 

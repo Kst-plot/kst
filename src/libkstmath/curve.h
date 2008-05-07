@@ -155,9 +155,6 @@ class KST_EXPORT Curve: public Relation {
   public Q_SLOTS:
     void vectorUpdated(ObjectPtr object, int version);
 
-  Q_SIGNALS:
-    void relationUpdated(ObjectPtr object, int version);
-
   protected:
     Curve(ObjectStore *store, const ObjectTag &in_tag,
         VectorPtr in_X=0L, VectorPtr in_Y=0L,

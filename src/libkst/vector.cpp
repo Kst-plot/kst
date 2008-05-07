@@ -30,6 +30,7 @@
 #include "vector.h"
 #include "debug.h"
 #include "objectstore.h"
+#include "updatemanager.h"
 
 namespace Kst {
 
@@ -549,8 +550,8 @@ Object::UpdateType Vector::internalUpdate(Object::UpdateType providerRC) {
 
 
 void Vector::triggerUpdateSignal(ObjectPtr object, int version) {
-#if DEBUG_UPDATE_CYCLE
-  qDebug() << "Vector" << shortName() << "has been updated as part of update of" << object->shortName() << version << "informing dependents";
+#if DEBUG_UPDATE_CYCLE > 1
+  qDebug() << "UP - Vector" << shortName() << "has been updated as part of update of" << object->shortName() << version << "informing dependents";
 #endif
   emit vectorUpdated(object, version);
 }

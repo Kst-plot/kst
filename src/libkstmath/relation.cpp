@@ -20,7 +20,9 @@
 #include "datacollection.h"
 #include "debug.h"
 #include "kst_i18n.h"
+
 #include "objectstore.h"
+#include "updatemanager.h"
 
 #include <QXmlStreamWriter>
 
@@ -68,6 +70,24 @@ void Relation::setIgnoreAutoScale(bool ignoreAutoScale) {
   _ignoreAutoScale = ignoreAutoScale;
 }
 
+
+void Relation::processUpdate(ObjectPtr object) {
+#if DEBUG_UPDATE_CYCLE > 1
+  qDebug() << "UP - Relation" << shortName() << "is processing update of" << object->shortName();
+#endif
+  UpdateManager::self()->updateStarted(object, this);
+  writeLock();
+  if (update(_updateVersion++)) {
+#if DEBUG_UPDATE_CYCLE > 1
+    qDebug() << "UP - Relation" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
+#endif
+    emit relationUpdated(object);
+  }
+  unlock();
+  UpdateManager::self()->updateFinished(object, this);
+}
+
+
 void Relation::updateParsedLegendTag() {
   delete _parsedLegendTag;
   if (_legendText.isEmpty()) {
@@ -76,6 +96,7 @@ void Relation::updateParsedLegendTag() {
     _parsedLegendTag = Label::parse(legendText(), true, false);
   }
 }
+
 
 Label::Parsed *Relation::parsedLegendTag() {
   if (!_parsedLegendTag) {

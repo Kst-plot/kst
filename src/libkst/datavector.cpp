@@ -197,18 +197,18 @@ void DataVector::commonRVConstructor(DataSourcePtr in_file,
 
 
 void DataVector::sourceUpdated(ObjectPtr object, int version) {
-#if DEBUG_UPDATE_CYCLE
-  qDebug() << "Data Source update required by Vector" << shortName() << "for update of" << object->shortName() << version;
+#if DEBUG_UPDATE_CYCLE > 1
+  qDebug() << "UP - Data Source update required by Vector" << shortName() << "for update of" << object->shortName() << version;
 #endif
   writeLock();
-//   UpdateManager::self()->updateStarted(object, this);
+  UpdateManager::self()->updateStarted(object, this);
   if (update(version)) {
-#if DEBUG_UPDATE_CYCLE
-  qDebug() << "Vector" << shortName() << "has been updated as part of update of" << object->shortName() << version << "informing dependents";
+#if DEBUG_UPDATE_CYCLE > 1
+  qDebug() << "UP - Vector" << shortName() << "has been updated as part of update of" << object->shortName() << version << "informing dependents";
 #endif
     emit vectorUpdated(object, version);
   }
-//   UpdateManager::self()->updateFinished(object, this);
+  UpdateManager::self()->updateFinished(object, this);
   unlock();
 }
 

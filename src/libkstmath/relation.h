@@ -149,6 +149,11 @@ class KST_EXPORT Relation : public Object {
     virtual void replaceDependency(VectorPtr oldVector, VectorPtr newVector);
     virtual void replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix);
 
+    virtual void processUpdate(ObjectPtr object);
+
+  Q_SIGNALS:
+    void relationUpdated(ObjectPtr object);
+
   protected:
     virtual void writeLockInputsAndOutputs() const;
     virtual void unlockInputsAndOutputs() const;

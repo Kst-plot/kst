@@ -25,6 +25,7 @@
 #include "kst_i18n.h"
 #include "objectstore.h"
 #include "relation.h"
+#include "updatemanager.h"
 
 #include <qdebug.h>
 #include <qtimer.h>
@@ -166,18 +167,20 @@ double *DataObject::vectorRealloced(VectorPtr v, double *memptr, int newSize) co
 
 
 void DataObject::vectorUpdated(ObjectPtr object, int version) {
-#if DEBUG_UPDATE_CYCLE
-  qDebug() << "Vector update required by DataObject " << shortName() << "for update of" << object->shortName() << version;
+#if DEBUG_UPDATE_CYCLE > 1
+  qDebug() << "UP - Vector update required by DataObject " << shortName() << "for update of" << object->shortName() << version;
 #endif
   writeLock();
+  UpdateManager::self()->updateStarted(object, this);
   if (update(version)) {
-#if DEBUG_UPDATE_CYCLE
-    qDebug() << "DataObject" << shortName() << "has been updated as part of update of" << object->shortName() << version << "informing dependents";
+#if DEBUG_UPDATE_CYCLE > 1
+    qDebug() << "UP - DataObject" << shortName() << "has been updated as part of update of" << object->shortName() << version << "informing dependents";
 #endif
     foreach (VectorPtr vector, _outputVectors) {
       vector->triggerUpdateSignal(object, version);
     }
   }
+  UpdateManager::self()->updateFinished(object, this);
   unlock();
 }
 

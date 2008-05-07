@@ -31,9 +31,6 @@
 #include "rwlock.h"
 #include "objecttag.h"
 
-// Provides additional output during update cycle.
-#define DEBUG_UPDATE_CYCLE 1
-
 namespace Kst {
 
 class ObjectStore;
@@ -83,8 +80,8 @@ class Object : public QObject, public Shared, public KstRWLock {
     // @since 1.1.0
     bool dirty() const;
 
-    virtual void beginUpdate();
-    virtual void emitUpdateSignal();
+    virtual void beginUpdate(ObjectPtr object);
+    virtual void processUpdate(ObjectPtr object);
 
   protected:
     Object(const ObjectTag& tag = ObjectTag::invalidTag);
