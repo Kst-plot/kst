@@ -19,7 +19,11 @@ What happens:
   col 2).  Make sure they have different Y ranges.  Tie their zooms.  Now
   adjust the X-range only from one plot with <ctrl>+mouse.  Both plots end up
   with the same X and Y range.
-
 What should happen:
   Only the X range should change.
+
+Line type not reloaded correctly
+Create a plot with a continuous line type curve.  Save it.  Reload it.
+What happens:
+  The curve is reloaded, but is not longer continuous line type.
 
