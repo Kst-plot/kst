@@ -42,6 +42,9 @@ class KST_EXPORT GeneralTab : public DialogTab, Ui::GeneralTab {
 
     QString defaultFontFamily() const;
     void setDefaultFontFamily(const QString &fontFamily);
+
+    int maximumUpdateFrequency() const;
+    void setMaximumUpdateFrequency(const int frequency);
 };
 
 }

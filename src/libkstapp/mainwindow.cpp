@@ -36,6 +36,8 @@
 #include "viewprimitivedialog.h"
 #include "view.h"
 #include "viewmanager.h"
+#include "updatemanager.h"
+#include "applicationsettings.h"
 
 #include "applicationsettingsdialog.h"
 #include "differentiatecurvesdialog.h"
@@ -98,6 +100,8 @@ MainWindow::~MainWindow() {
 
 
 void MainWindow::performHeavyStartupActions() {
+  // Set the timer for the UpdateManager.
+  UpdateManager::self()->setMaximumUpdateFrequency(ApplicationSettings::self()->maximumUpdateFrequency());
 }
 
 

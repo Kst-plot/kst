@@ -36,7 +36,8 @@ UpdateManager *UpdateManager::self() {
 
 
 UpdateManager::UpdateManager() {
-  QTimer::singleShot(MAX_UPDATES, this, SLOT(allowUpdates()));
+  _maxUpdate = MAX_UPDATES;
+  QTimer::singleShot(_maxUpdate, this, SLOT(allowUpdates()));
 }
 
 
@@ -107,7 +108,10 @@ void UpdateManager::allowUpdates() {
       }
     }
   }
-  QTimer::singleShot(MAX_UPDATES, this, SLOT(allowUpdates()));
+#if DEBUG_UPDATE_CYCLE > 0
+  qDebug() << "UM - Delaying for " << _maxUpdate << "ms before allowing next update";
+#endif
+  QTimer::singleShot(_maxUpdate, this, SLOT(allowUpdates()));
 }
 
 

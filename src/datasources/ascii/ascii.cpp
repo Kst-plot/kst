@@ -33,6 +33,7 @@
 #include <qtextdocument.h>
 #include <QXmlStreamWriter>
 #include <QXmlStreamAttributes>
+#include <QFileSystemWatcher>
 
 #include <math_kst.h>
 #include "ascii.h"

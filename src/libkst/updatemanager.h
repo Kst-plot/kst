@@ -38,6 +38,8 @@ class UpdateManager : public QObject
     void updateStarted(ObjectPtr updateObject, ObjectPtr reportingObject);
     void updateFinished(ObjectPtr updateObject, ObjectPtr reportingObject);
 
+    void setMaximumUpdateFrequency(const int frequency) { _maxUpdate = frequency; }
+
   private Q_SLOTS:
     void allowUpdates();
 
@@ -53,6 +55,7 @@ class UpdateManager : public QObject
     QMap<ObjectPtr, QList<QGraphicsRectItem*> > _displayUpdateRequests;
 
     bool _delayedUpdate;
+    int _maxUpdate;
 };
 
 }

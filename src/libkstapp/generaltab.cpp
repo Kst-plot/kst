@@ -25,6 +25,7 @@ GeneralTab::GeneralTab(QWidget *parent)
   connect(_refFontSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_minFontSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_defaultFontFamily, SIGNAL(currentFontChanged(const QFont &)), this, SIGNAL(modified()));
+  connect(_maxUpdate, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
 }
 
 
@@ -89,6 +90,16 @@ QString GeneralTab::defaultFontFamily() const {
 
 void GeneralTab::setDefaultFontFamily(const QString &fontFamily) {
   _defaultFontFamily->setCurrentFont(QFont(fontFamily));
+}
+
+
+int GeneralTab::maximumUpdateFrequency() const {
+  return _maxUpdate->value();
+}
+
+
+void GeneralTab::setMaximumUpdateFrequency(const int frequency) {
+  _maxUpdate->setValue(frequency);
 }
 
 }

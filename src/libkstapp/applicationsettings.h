@@ -47,6 +47,9 @@ class ApplicationSettings : public QObject
     QString defaultFontFamily() const;
     void setDefaultFontFamily(const QString &fontFamily);
 
+    int maximumUpdateFrequency() const;
+    void setMaximumUpdateFrequency(const int frequency);
+
     bool showGrid() const;
     void setShowGrid(bool showGrid);
 
@@ -75,6 +78,7 @@ class ApplicationSettings : public QObject
     int _refFontSize;
     int _minFontSize;
     QString _defaultFontFamily;
+    int _maxUpdate;
     bool _showGrid;
     bool _snapToGrid;
     qreal _gridHorSpacing;

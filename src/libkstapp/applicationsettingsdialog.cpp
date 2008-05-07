@@ -56,6 +56,7 @@ void ApplicationSettingsDialog::setupGeneral() {
   _generalTab->setReferenceFontSize(ApplicationSettings::self()->referenceFontSize());
   _generalTab->setMinimumFontSize(ApplicationSettings::self()->minimumFontSize());
   _generalTab->setDefaultFontFamily(ApplicationSettings::self()->defaultFontFamily());
+  _generalTab->setMaximumUpdateFrequency(ApplicationSettings::self()->maximumUpdateFrequency());
 }
 
 
@@ -76,6 +77,7 @@ void ApplicationSettingsDialog::generalChanged() {
   ApplicationSettings::self()->setReferenceFontSize(_generalTab->referenceFontSize());
   ApplicationSettings::self()->setMinimumFontSize(_generalTab->minimumFontSize());
   ApplicationSettings::self()->setDefaultFontFamily(_generalTab->defaultFontFamily());
+  ApplicationSettings::self()->setMaximumUpdateFrequency(_generalTab->maximumUpdateFrequency());
   ApplicationSettings::self()->blockSignals(false);
 
   emit ApplicationSettings::self()->modified();
