@@ -33,7 +33,6 @@
 #include <qtextdocument.h>
 #include <QXmlStreamWriter>
 #include <QXmlStreamAttributes>
-#include <QFileSystemWatcher>
 
 #include <math_kst.h>
 #include "ascii.h"
@@ -171,7 +170,7 @@ class AsciiSource::Config {
 
 
 AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
-: Kst::DataSource(store, cfg, filename, type), _rowIndex(0L), _config(0L), _tmpBuf(0L), _tmpBufSize(0) {
+: Kst::DataSource(store, cfg, filename, type, File), _rowIndex(0L), _config(0L), _tmpBuf(0L), _tmpBufSize(0) {
   _valid = false;
   _haveHeader = false;
   _fieldListComplete = false;

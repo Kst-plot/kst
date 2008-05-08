@@ -61,6 +61,8 @@ class KST_EXPORT DataSource : public Object {
   Q_OBJECT
 
   public:
+    enum UpdateCheckType { Timer, File };
+
     static void setupOnStartup(QSettings*);
     static void cleanupForExit();
 
@@ -81,7 +83,7 @@ class KST_EXPORT DataSource : public Object {
 
     static bool supportsTime(const QString& plugin, const QString& type = QString::null);
 
-    DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type);
+    DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const UpdateCheckType updateType = File);
     virtual ~DataSource();
 
     virtual const QString& typeString() const;
@@ -264,6 +266,8 @@ class KST_EXPORT DataSource : public Object {
     QSettings *_cfg;
 
     ScalarPtr _numFramesScalar;
+
+    UpdateCheckType _updateCheckType;
 
     virtual QString _automaticDescriptiveName();
 

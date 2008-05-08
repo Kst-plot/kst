@@ -30,6 +30,7 @@
 #include <QUrl>
 #include <QXmlStreamWriter>
 #include <QTimer>
+#include <QFileSystemWatcher>
 
 #include "kst_i18n.h"
 #include "datacollection.h"
@@ -41,6 +42,8 @@
 #include "updatemanager.h"
 
 #include "dataplugin.h"
+
+#define DATASOURCE_UPDATE_TIMER_LENGTH 1000
 
 namespace Kst {
 
@@ -474,8 +477,8 @@ DataSourcePtr DataSource::loadSource(ObjectStore *store, QDomElement& e) {
 }
 
 
-DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type)
-    : Object(), _filename(filename), _cfg(cfg) {
+DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const UpdateCheckType updateType)
+    : Object(), _filename(filename), _cfg(cfg), _updateCheckType(updateType) {
   Q_UNUSED(type)
   _valid = false;
   _reusable = true;
@@ -499,7 +502,14 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
   _numFramesScalar = store->createObject<Scalar>(ObjectTag("frames", tag()));
   // Don't set provider - this is always up-to-date
 
-  QTimer::singleShot(1000, this, SLOT(checkUpdate()));
+  if (_updateCheckType == Timer) {
+    QTimer::singleShot(DATASOURCE_UPDATE_TIMER_LENGTH, this, SLOT(checkUpdate()));
+  } else {
+    QFileSystemWatcher *watcher = new QFileSystemWatcher();
+    watcher->addPath(_filename);
+    connect(watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
+    connect(watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
+  }
 }
 
 
@@ -516,7 +526,9 @@ void DataSource::checkUpdate() {
     UpdateManager::self()->requestUpdate(this);
   }
 
-  QTimer::singleShot(1000, this, SLOT(checkUpdate()));
+  if (_updateCheckType == Timer) {
+    QTimer::singleShot(DATASOURCE_UPDATE_TIMER_LENGTH, this, SLOT(checkUpdate()));
+  }
 }
 
 
