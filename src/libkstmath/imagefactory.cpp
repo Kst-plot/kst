@@ -35,7 +35,7 @@ RelationPtr ImageFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
 
   double lowerThreshold, upperThreshold;
   int numberOfContourLines, contourWeight;
-  QString matrixTag, paletteName, legend, contourColor;
+  QString matrixTag, paletteName, legend, contourColor, descriptiveName;
   bool hasColorMap, hasContourMap, autoThreshold;
 
   while (!xml.atEnd()) {
@@ -60,6 +60,11 @@ RelationPtr ImageFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
         contourColor = attrs.value("contourcolor").toString();
 
         autoThreshold = attrs.value("autothreshold").toString() == "true" ? true : false;
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          descriptiveName = attrs.value("descriptiveName").toString();
+        }
+        Object::processShortNameIndexAttributes(attrs);
+
       } else {
         return 0;
       }
@@ -113,6 +118,7 @@ RelationPtr ImageFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
   }
 
   image->setLegendText(legend);
+  image->setDescriptiveName(descriptiveName);
 
   image->writeLock();
   image->update(0);

@@ -35,7 +35,7 @@ DataObjectPtr CSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
 
   double frequency, gaussianSigma;
   int length, windowSize, apodizeFunction, outputType;
-  QString vectorTag, vectorUnits, rateUnits;
+  QString vectorTag, vectorUnits, rateUnits, descriptiveName;
   bool average, removeMean, apodize;
 
   while (!xml.atEnd()) {
@@ -59,6 +59,10 @@ DataObjectPtr CSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
         average = attrs.value("average").toString() == "true" ? true : false;
         removeMean = attrs.value("removemean").toString() == "true" ? true : false;
         apodize = attrs.value("apodize").toString() == "true" ? true : false;
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          descriptiveName = attrs.value("descriptiveName").toString();
+        }
+        Object::processShortNameIndexAttributes(attrs);
       } else {
         return 0;
       }
@@ -101,6 +105,7 @@ DataObjectPtr CSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
               vectorUnits,
               rateUnits);
 
+  csd->setDescriptiveName(descriptiveName);
   csd->writeLock();
   csd->update(0);
   csd->unlock();

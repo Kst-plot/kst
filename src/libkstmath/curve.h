@@ -162,7 +162,7 @@ class KST_EXPORT Curve: public Relation {
         VectorPtr in_EXMinus=0L, VectorPtr in_EYMinus=0L,
         const QColor &in_color=QColor());
 
-    Curve(ObjectStore *store, QDomElement &e);
+    //Curve(ObjectStore *store, QDomElement &e);
 
     virtual ~Curve();
 

@@ -353,6 +353,7 @@ ObjectPtr HistogramDialog::createNewDataObject() const {
   histogram->setNumberOfBins(_histogramTab->bins());
   histogram->setNormalizationType(_histogramTab->normalizationType());
   histogram->setRealTimeAutoBin(_histogramTab->realTimeAutoBin());
+  histogram->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
   histogram->writeLock();
   histogram->update(0);
@@ -453,6 +454,7 @@ ObjectPtr HistogramDialog::editExistingDataObject() const {
       histogram->setNumberOfBins(_histogramTab->bins());
       histogram->setNormalizationType(_histogramTab->normalizationType());
       histogram->setRealTimeAutoBin(_histogramTab->realTimeAutoBin());
+      histogram->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
       histogram->update(0);
       histogram->unlock();

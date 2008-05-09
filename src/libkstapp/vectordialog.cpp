@@ -392,6 +392,8 @@ ObjectPtr VectorDialog::createNewDataVector() const {
       dataRange->doSkip(),
       dataRange->doFilter());
 
+  vector->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+
   setDataVectorDefaults(vector);
   _vectorTab->dataRange()->setWidgetDefaults();
 
@@ -432,6 +434,8 @@ ObjectPtr VectorDialog::createNewGeneratedVector() const {
   vector->changeRange(from, to, numberOfSamples);
 
   setGenVectorDefaults(vector);
+
+  vector->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
 //  return static_cast<ObjectPtr>(vector);
   return vector;
@@ -480,6 +484,8 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
         dataRange->skip(),
         dataRange->doSkip(),
         dataRange->doFilter());
+
+      dataVector->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
 //  Disable until new tag system is fully implemented.
 //

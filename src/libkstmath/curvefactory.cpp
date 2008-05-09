@@ -35,6 +35,7 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
 
   int lineStyle, lineWidth, pointType, pointDensity, barStyle;
   QString xVectorTag, yVectorTag, legend, errorXVectorTag, errorYVectorTag, errorXMinusVectorTag, errorYMinusVectorTag, color;
+  QString descriptiveName;
   bool hasLines, hasPoints, hasBars, ignoreAutoScale;
 
   while (!xml.atEnd()) {
@@ -66,6 +67,12 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
         barStyle = attrs.value("barstyle").toString().toInt();
 
         ignoreAutoScale = attrs.value("ignoreautoscale").toString() == "true" ? true : false;
+
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          descriptiveName = attrs.value("descriptiveName").toString();
+        }
+        Object::processShortNameIndexAttributes(attrs);
+
       } else {
         return 0;
       }
@@ -141,6 +148,8 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
   curve->setPointType(pointType);
   curve->setPointDensity(pointDensity);
   curve->setBarStyle(barStyle);
+
+  curve->setDescriptiveName(descriptiveName);
 
   curve->writeLock();
   curve->update(0);

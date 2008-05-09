@@ -32,8 +32,6 @@ const QString Image::staticTypeTag = I18N_NOOP("image");
 
 static const QLatin1String& THEMATRIX = QLatin1String("THEMATRIX");
 
-static int _inum = 1;
-
 Image::Image(ObjectStore *store, const ObjectTag& in_tag) : Relation(store, in_tag) {
   _typeString = staticTypeString;
   _type = "Image";
@@ -198,6 +196,7 @@ void Image::save(QXmlStreamWriter &s) {
   s.writeAttribute("contourcolor", _contourColor.name());
 
   s.writeAttribute("autothreshold", QVariant(_autoThreshold).toString());
+  saveNameInfo(s);
   s.writeEndElement();
 }
 

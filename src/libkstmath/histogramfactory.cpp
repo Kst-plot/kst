@@ -35,7 +35,7 @@ DataObjectPtr HistogramFactory::generateObject(ObjectStore *store, QXmlStreamRea
 
   double min, max;
   int numberOfBins, normalizationMode;
-  QString vectorTag;
+  QString vectorTag, descriptiveName;
   bool realTimeAutoBin;
 
   while (!xml.atEnd()) {
@@ -51,6 +51,11 @@ DataObjectPtr HistogramFactory::generateObject(ObjectStore *store, QXmlStreamRea
         numberOfBins = attrs.value("numberofbins").toString().toInt();
         normalizationMode = attrs.value("normalizationmode").toString().toInt();
         realTimeAutoBin = attrs.value("realtimeautobin").toString() == "true" ? true : false;
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          descriptiveName = attrs.value("descriptiveName").toString();
+        }
+        Object::processShortNameIndexAttributes(attrs);
+
       } else {
         return 0;
       }
@@ -85,6 +90,7 @@ DataObjectPtr HistogramFactory::generateObject(ObjectStore *store, QXmlStreamRea
   histogram->setXRange(min, max);
   histogram->setNumberOfBins(numberOfBins);
   histogram->setNormalizationType((Histogram::NormalizationType)normalizationMode);
+  histogram->setDescriptiveName(descriptiveName);
 
   histogram->writeLock();
   histogram->update(0);

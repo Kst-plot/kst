@@ -38,9 +38,6 @@ const QString CSD::staticTypeTag = I18N_NOOP("csd");
 static const QLatin1String INVECTOR = QLatin1String("I");
 static const QLatin1String& OUTMATRIX = QLatin1String("M");
 
-static int _csdnum = 1;
-
-
 #define KSTCSDMAXLEN 27
 CSD::CSD(ObjectStore *store, const ObjectTag &in_tag)
   : DataObject(store, in_tag) {
@@ -289,6 +286,8 @@ void CSD::save(QXmlStreamWriter &s) {
   s.writeAttribute("vectorunits", _vectorUnits);
   s.writeAttribute("rateunits", _rateUnits);
   s.writeAttribute("outputtype", QString::number(_outputType));
+  saveNameInfo(s);
+
   s.writeEndElement();
 }
 

@@ -61,7 +61,7 @@ SOURCES += \
     psdfactory.cpp \
     relation.cpp \
     relationfactory.cpp \
-    settings.cpp
+    settings.cpp 
 
 HEADERS += \
     basicplugin.h \

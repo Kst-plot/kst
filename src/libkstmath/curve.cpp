@@ -64,8 +64,6 @@ static const QLatin1String& EYVECTOR = QLatin1String("EY");
 static const QLatin1String& EXMINUSVECTOR = QLatin1String("EXMinus");
 static const QLatin1String& EYMINUSVECTOR = QLatin1String("EYMinus");
 
-static int _cnum = 0;
-
 Curve::Curve(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_X, VectorPtr in_Y,
                       VectorPtr in_EX, VectorPtr in_EY,
                       VectorPtr in_EXMinus, VectorPtr in_EYMinus,
@@ -115,99 +113,99 @@ Curve::Curve(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_X, Vector
   setDirty();
 }
 
-
-Curve::Curve(ObjectStore *store, QDomElement &e)
-: Relation(store, e) {
-  QString in_tag, xname, yname, exname, eyname, exminusname, eyminusname;
-  // QColor in_color(KstColorSequence::next(-1));
-  QColor in_color("red"); // the above line is invalid.
-  bool hasMinus = false;
-
-  setHasPoints(false);
-  setHasLines(false);
-  setHasBars(false);
-  setLineWidth(1);
-  setLineStyle(0);
-  setBarStyle(0);
-  setPointDensity(0);
-
-  QDomNode n = e.firstChild();
-  while (!n.isNull()) {
-    QDomElement e = n.toElement(); // try to convert the node to an element.
-    if (!e.isNull()) { // the node was really an element.
-      if (e.tagName() == "tag") {
-        in_tag = e.text();
-      } else if (e.tagName() == "hasminus") {
-        hasMinus = true;
-      } else if (e.tagName() == "xvector") {
-        xname = e.text();
-      } else if (e.tagName() == "yvector") {
-        yname = e.text();
-      } else if (e.tagName() == "errorxvector") {
-        exname = e.text();
-        if (!hasMinus) {
-          exminusname = e.text();
-        }
-      } else if (e.tagName() == "erroryvector") {
-        eyname = e.text();
-        if (!hasMinus) {
-          eyminusname = e.text();
-        }
-      } else if (e.tagName() == "errorxminusvector") {
-        exminusname = e.text();
-      } else if (e.tagName() == "erroryminusvector") {
-        eyminusname = e.text();
-      } else if (e.tagName() == "color") {
-        in_color.setNamedColor(e.text());
-      } else if (e.tagName() == "legend") {
-        setLegendText(e.text());
-      // the following options are only needed to change from the default
-      } else if (e.tagName() == "haslines") {
-        HasLines = e.text() != "0";
-      } else if (e.tagName() == "haspoints") {
-        HasPoints = e.text() != "0";
-      } else if (e.tagName() == "hasbars") {
-        HasBars = e.text() != "0";
-      } else if (e.tagName() == "pointtype") {
-        PointType = e.text().toInt();
-      } else if (e.tagName() == "linewidth") {
-        LineWidth = e.text().toInt();
-      } else if (e.tagName() == "linestyle") {
-        LineStyle = e.text().toInt();
-      } else if (e.tagName() == "barstyle") {
-        BarStyle = e.text().toInt();
-      } else if (e.tagName() == "pointdensity") {
-        PointDensity = e.text().toInt();
-      } else if (e.tagName() == "ignoreautoscale") {
-        _ignoreAutoScale = true;
-      }
-    }
-    n = n.nextSibling();
-  }
-
-  if (!xname.isEmpty()) {
-    _inputVectorLoadQueue.append(qMakePair(QString(COLOR_XVECTOR), xname));
-  }
-  if (!yname.isEmpty()) {
-    _inputVectorLoadQueue.append(qMakePair(QString(COLOR_YVECTOR), yname));
-  }
-  if (!exname.isEmpty()) {
-    _inputVectorLoadQueue.append(qMakePair(QString(EXVECTOR), exname));
-  }
-  if (!eyname.isEmpty()) {
-    _inputVectorLoadQueue.append(qMakePair(QString(EYVECTOR), eyname));
-  }
-  if (!exminusname.isEmpty()) {
-    _inputVectorLoadQueue.append(qMakePair(QString(EXMINUSVECTOR), exminusname));
-  }
-  if (!eyminusname.isEmpty()) {
-    _inputVectorLoadQueue.append(qMakePair(QString(EYMINUSVECTOR), eyminusname));
-  }
-
-  setTagName(ObjectTag::fromString(in_tag));
-
-  commonConstructor(in_color);
-}
+// this constructor appears to be unused anywhere in kst2!  So, I've commented it out.
+// Curve::Curve(ObjectStore *store, QDomElement &e)
+// : Relation(store, e) {
+//   QString in_tag, xname, yname, exname, eyname, exminusname, eyminusname;
+//   // QColor in_color(KstColorSequence::next(-1));
+//   QColor in_color("red"); // the above line is invalid.
+//   bool hasMinus = false;
+// 
+//   setHasPoints(false);
+//   setHasLines(false);
+//   setHasBars(false);
+//   setLineWidth(1);
+//   setLineStyle(0);
+//   setBarStyle(0);
+//   setPointDensity(0);
+// 
+//   QDomNode n = e.firstChild();
+//   while (!n.isNull()) {
+//     QDomElement e = n.toElement(); // try to convert the node to an element.
+//     if (!e.isNull()) { // the node was really an element.
+//       if (e.tagName() == "tag") {
+//         in_tag = e.text();
+//       } else if (e.tagName() == "hasminus") {
+//         hasMinus = true;
+//       } else if (e.tagName() == "xvector") {
+//         xname = e.text();
+//       } else if (e.tagName() == "yvector") {
+//         yname = e.text();
+//       } else if (e.tagName() == "errorxvector") {
+//         exname = e.text();
+//         if (!hasMinus) {
+//           exminusname = e.text();
+//         }
+//       } else if (e.tagName() == "erroryvector") {
+//         eyname = e.text();
+//         if (!hasMinus) {
+//           eyminusname = e.text();
+//         }
+//       } else if (e.tagName() == "errorxminusvector") {
+//         exminusname = e.text();
+//       } else if (e.tagName() == "erroryminusvector") {
+//         eyminusname = e.text();
+//       } else if (e.tagName() == "color") {
+//         in_color.setNamedColor(e.text());
+//       } else if (e.tagName() == "legend") {
+//         setLegendText(e.text());
+//       // the following options are only needed to change from the default
+//       } else if (e.tagName() == "haslines") {
+//         HasLines = e.text() != "0";
+//       } else if (e.tagName() == "haspoints") {
+//         HasPoints = e.text() != "0";
+//       } else if (e.tagName() == "hasbars") {
+//         HasBars = e.text() != "0";
+//       } else if (e.tagName() == "pointtype") {
+//         PointType = e.text().toInt();
+//       } else if (e.tagName() == "linewidth") {
+//         LineWidth = e.text().toInt();
+//       } else if (e.tagName() == "linestyle") {
+//         LineStyle = e.text().toInt();
+//       } else if (e.tagName() == "barstyle") {
+//         BarStyle = e.text().toInt();
+//       } else if (e.tagName() == "pointdensity") {
+//         PointDensity = e.text().toInt();
+//       } else if (e.tagName() == "ignoreautoscale") {
+//         _ignoreAutoScale = true;
+//       }
+//     }
+//     n = n.nextSibling();
+//   }
+// 
+//   if (!xname.isEmpty()) {
+//     _inputVectorLoadQueue.append(qMakePair(QString(COLOR_XVECTOR), xname));
+//   }
+//   if (!yname.isEmpty()) {
+//     _inputVectorLoadQueue.append(qMakePair(QString(COLOR_YVECTOR), yname));
+//   }
+//   if (!exname.isEmpty()) {
+//     _inputVectorLoadQueue.append(qMakePair(QString(EXVECTOR), exname));
+//   }
+//   if (!eyname.isEmpty()) {
+//     _inputVectorLoadQueue.append(qMakePair(QString(EYVECTOR), eyname));
+//   }
+//   if (!exminusname.isEmpty()) {
+//     _inputVectorLoadQueue.append(qMakePair(QString(EXMINUSVECTOR), exminusname));
+//   }
+//   if (!eyminusname.isEmpty()) {
+//     _inputVectorLoadQueue.append(qMakePair(QString(EYMINUSVECTOR), eyminusname));
+//   }
+// 
+//   setTagName(ObjectTag::fromString(in_tag));
+// 
+//   commonConstructor(in_color);
+// }
 
 
 void Curve::commonConstructor(const QColor &in_color) {
@@ -525,6 +523,9 @@ void Curve::save(QXmlStreamWriter &s) {
   s.writeAttribute("hasbars", QVariant(HasBars).toString());
   s.writeAttribute("barstyle", QString::number(BarStyle));
   s.writeAttribute("ignoreautoscale", QVariant(_ignoreAutoScale).toString());
+  
+  saveNameInfo(s);
+
   s.writeEndElement();
 }
 

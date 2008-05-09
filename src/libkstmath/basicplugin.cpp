@@ -30,8 +30,6 @@ namespace Kst {
 const QString BasicPlugin::staticTypeString = I18N_NOOP("Plugin");
 const QString BasicPlugin::staticTypeTag = I18N_NOOP("plugin");
 
-static int _pnum = 1;
-
 BasicPlugin::BasicPlugin(ObjectStore *store, const ObjectTag& tag)
 : DataObject(store, tag), _isFit(false) {
   _typeString = i18n("Plugin");

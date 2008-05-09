@@ -112,6 +112,7 @@ ObjectPtr ScalarDialog::createNewDataObject() const {
   scalar->setValue(value);
   scalar->setOrphan(true);
   scalar->setEditable(true);
+  scalar->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
   scalar->writeLock();
   scalar->update(0);
@@ -128,7 +129,7 @@ ObjectPtr ScalarDialog::editExistingDataObject() const {
     if (!ok) {
       value = Equations::interpret(_document->objectStore(), _scalarTab->value().toLatin1(), &ok);
     }
-
+    scalar->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
     scalar->writeLock();
     scalar->setValue(value);
     scalar->unlock();

@@ -207,6 +207,7 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() const {
   powerspectrum->setGaussianSigma(_powerSpectrumTab->FFTOptionsWidget()->sigma());
   powerspectrum->setOutput(_powerSpectrumTab->FFTOptionsWidget()->output());
   powerspectrum->setInterpolateHoles(_powerSpectrumTab->FFTOptionsWidget()->interpolateOverHoles());
+  powerspectrum->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
   powerspectrum->update(0);
   powerspectrum->unlock();
@@ -323,6 +324,7 @@ ObjectPtr PowerSpectrumDialog::editExistingDataObject() const {
       powerspectrum->setGaussianSigma(_powerSpectrumTab->FFTOptionsWidget()->sigma());
       powerspectrum->setOutput(_powerSpectrumTab->FFTOptionsWidget()->output());
       powerspectrum->setInterpolateHoles(_powerSpectrumTab->FFTOptionsWidget()->interpolateOverHoles());
+      powerspectrum->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
       powerspectrum->update(0);
       powerspectrum->unlock();

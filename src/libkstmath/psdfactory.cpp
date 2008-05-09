@@ -35,7 +35,7 @@ DataObjectPtr PSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
 
   double frequency, gaussianSigma;
   int length, apodizeFunction, outputType;
-  QString vectorTag, vectorUnits, rateUnits;
+  QString vectorTag, vectorUnits, rateUnits, descriptiveName;
   bool average, removeMean, apodize, interpolateHoles;
 
   while (!xml.atEnd()) {
@@ -59,6 +59,11 @@ DataObjectPtr PSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
         interpolateHoles = attrs.value("interpolateholes").toString() == "true" ? true : false;
         removeMean = attrs.value("removemean").toString() == "true" ? true : false;
         apodize = attrs.value("apodize").toString() == "true" ? true : false;
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          descriptiveName = attrs.value("descriptiveName").toString();
+        }
+        Object::processShortNameIndexAttributes(attrs);
+
       } else {
         return 0;
       }
@@ -103,6 +108,7 @@ DataObjectPtr PSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
   powerspectrum->setGaussianSigma(gaussianSigma);
   powerspectrum->setOutput((PSDType)outputType);
   powerspectrum->setInterpolateHoles(interpolateHoles);
+  powerspectrum->setDescriptiveName(descriptiveName);
 
   powerspectrum->update(0);
   powerspectrum->unlock();

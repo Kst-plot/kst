@@ -29,7 +29,7 @@ EquationFactory::~EquationFactory() {
 
 
 DataObjectPtr EquationFactory::generateObject(ObjectStore *store, QXmlStreamReader& xml) {
-  QString tag, expression, xVector, output;
+  QString tag, expression, xVector, output, descriptiveName;
   bool interpolate = false;
   while (!xml.atEnd()) {
     const QString n = xml.name().toString();
@@ -41,6 +41,11 @@ DataObjectPtr EquationFactory::generateObject(ObjectStore *store, QXmlStreamRead
         interpolate = attrs.value("interpolate").toString().toLower() == "true";
         xVector = attrs.value("xvector").toString();
         output = attrs.value("output").toString();
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          descriptiveName = attrs.value("descriptiveName").toString();
+        }
+        Object::processShortNameIndexAttributes(attrs);
+
         //FIXME Don't know if this is a bug in QXmlStreamReader or what, but readElementNext takes us
         //past the </equation> node to the </objects> node...
         //eq = xml.readElementText();
@@ -77,6 +82,7 @@ DataObjectPtr EquationFactory::generateObject(ObjectStore *store, QXmlStreamRead
 
   equation->setEquation(expression);
   equation->setExistingXVector(vector, interpolate);
+  equation->setDescriptiveName(descriptiveName);
 
   equation->writeLock();
   equation->update(0);

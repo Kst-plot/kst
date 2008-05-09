@@ -49,8 +49,6 @@ const QString Equation::XINVECTOR = "X";
 const QString Equation::XOUTVECTOR = "XO"; // Output (slave) vector
 const QString Equation::YOUTVECTOR = "O"; // Output (slave) vector
 
-static int _enum = 1;
-
 Equation::Equation(ObjectStore *store, const ObjectTag& in_tag, const QString& equation, double x0, double x1, int nx)
 : DataObject(store, in_tag) {
   Q_ASSERT(store);
@@ -216,7 +214,7 @@ void Equation::save(QXmlStreamWriter &s) {
   if (_doInterp) {
     s.writeAttribute("interpolate", "true");
   }
-
+  saveNameInfo(s);
   s.writeEndElement();
 }
 

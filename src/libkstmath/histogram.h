@@ -100,7 +100,7 @@ public:
         double xmin_in, double xmax_in,
         int in_n_bins,
         NormalizationType new_norm_in);
-    Histogram(ObjectStore *store, const QDomElement &e);
+/*    Histogram(ObjectStore *store, const QDomElement &e);*/
     virtual ~Histogram();
 
     friend class ObjectStore;

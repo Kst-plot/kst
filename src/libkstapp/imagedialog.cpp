@@ -446,6 +446,7 @@ ObjectPtr ImageDialog::createNewDataObject() const {
         _imageTab->contourColor(),
         _imageTab->useVariableLineWeight() ? -1 : _imageTab->contourWeight());
   }
+  image->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
   image->writeLock();
   image->update(0);
@@ -563,6 +564,7 @@ ObjectPtr ImageDialog::editExistingDataObject() const {
             _imageTab->contourColor(),
             _imageTab->useVariableLineWeight() ? -1 : _imageTab->contourWeight());
       }
+      image->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
       image->update(0);
       image->unlock();
