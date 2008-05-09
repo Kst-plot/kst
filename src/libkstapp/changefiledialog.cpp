@@ -186,7 +186,7 @@ void ChangeFileDialog::apply() {
 
           newVector->writeLock();
           newVector->changeFile(dataSource);
-          newVector->update(0);
+          newVector->update();
           newVector->unlock();
 
           if (_duplicateDependents->isChecked()) {
@@ -198,7 +198,7 @@ void ChangeFileDialog::apply() {
           }
           vector->writeLock();
           vector->changeFile(dataSource);
-          vector->update(0);
+          vector->update();
           vector->unlock();
         }
       }
@@ -220,7 +220,7 @@ void ChangeFileDialog::apply() {
 
           newMatrix->writeLock();
           newMatrix->changeFile(dataSource);
-          newMatrix->update(0);
+          newMatrix->update();
           newMatrix->unlock();
 
           if (_duplicateDependents->isChecked()) {
@@ -232,7 +232,7 @@ void ChangeFileDialog::apply() {
           }
           matrix->writeLock();
           matrix->changeFile(dataSource);
-          matrix->update(0);
+          matrix->update();
           matrix->unlock();
         }
       }

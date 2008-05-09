@@ -42,7 +42,7 @@ class KST_EXPORT Primitive : public Object {
 
     /** Update the primitive via the provider and/or internalUpdate().
         Return true if there was new data. */
-    UpdateType update(int update_counter = -1);
+    UpdateType update();
 
     void setSlaveName(QString slaveName);
   protected:

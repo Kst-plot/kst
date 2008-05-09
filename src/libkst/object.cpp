@@ -30,10 +30,9 @@ const QString Object::staticTypeString = I18N_NOOP("Object");
 
 Object::Object(const ObjectTag& tag) :
   QObject(), Shared(), KstRWLock(),
-  _lastUpdateCounter(0), _store(0L), _shortName(QString("FIXME - set _shortName")), _manualDescriptiveName(QString()), _tag(tag), _updateVersion(0)
+  _store(0L), _manualDescriptiveName(QString()), _shortName(QString("FIXME - set _shortName")), _tag(tag)
 {
   _dirty = false;
-  _lastUpdate = Object::NO_CHANGE;
 
   _initial_vnum = _vnum; // vectors
   _initial_pnum = _pnum; // plugins
@@ -71,17 +70,6 @@ int Object::operator==(const QString& tag) const {
   return (tag == _tag.tagString() || tag == _tag.displayString()) ? 1 : 0;
 }
 #endif
-
-
-// Returns true if update has already been done
-bool Object::checkUpdateCounter(int update_counter) {
-  if (update_counter == _lastUpdateCounter) {
-    return true;
-  } else if (update_counter > 0) {
-    _lastUpdateCounter = update_counter;
-  }
-  return false;
-}
 
 
 #if 0
@@ -134,16 +122,6 @@ void Object::deleteDependents() {
 }
 
 
-Object::UpdateType Object::setLastUpdateResult(UpdateType result) {
-  return _lastUpdate = result;
-}
-
-
-Object::UpdateType Object::lastUpdateResult() const {
-  return _lastUpdate;
-}
-
-
 void Object::setDirty(bool dirty) {
   _dirty = dirty;
 }
@@ -188,7 +166,6 @@ bool Object::descriptiveNameIsManual() {
 }
 
 void Object::beginUpdate(ObjectPtr object) {
-  _updateVersion++;
   processUpdate(object);
 }
 

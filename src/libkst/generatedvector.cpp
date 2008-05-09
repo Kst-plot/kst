@@ -88,11 +88,11 @@ void GeneratedVector::changeRange(double x0, double x1, int n) {
 }
 
 
-Object::UpdateType GeneratedVector::update(int update_counter) {
+Object::UpdateType GeneratedVector::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
-  Object::UpdateType baseRC = Vector::update(update_counter);
+  Object::UpdateType baseRC = Vector::update();
   if (force) {
     baseRC = UPDATE;
   }

@@ -166,27 +166,18 @@ Histogram::~Histogram() {
 }
 
 
-Object::UpdateType Histogram::update(int update_counter) {
+Object::UpdateType Histogram::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
   setDirty(false);
 
-  if (Object::checkUpdateCounter(update_counter) && !force) {
-    return lastUpdateResult();
-  }
-
   writeLockInputsAndOutputs();
 
-  if (update_counter <= 0) {
-    assert(update_counter == 0);
-    force = true;
-  }
-
-  bool xUpdated = Object::UPDATE == _inputVectors[RAWVECTOR]->update(update_counter);
+  bool xUpdated = Object::UPDATE == _inputVectors[RAWVECTOR]->update();
   if (!xUpdated && !force) {
     unlockInputsAndOutputs();
-    return setLastUpdateResult(Object::NO_CHANGE);
+    return Object::NO_CHANGE;
   }
 
   int i_bin, i_pt, ns;
@@ -273,13 +264,13 @@ Object::UpdateType Histogram::update(int update_counter) {
   }
 
   _bVector->setDirty();
-  _bVector->update(update_counter);
+  _bVector->update();
   _hVector->setDirty();
-  _hVector->update(update_counter);
+  _hVector->update();
 
   unlockInputsAndOutputs();
 
-  return setLastUpdateResult(UPDATE);
+  return UPDATE;
 }
 
 
@@ -334,7 +325,7 @@ QString Histogram::vTag() const {
 
 void Histogram::setVector(VectorPtr new_v) {
   if (new_v) {
-    connect(new_v, SIGNAL(vectorUpdated(ObjectPtr, int)), this, SLOT(vectorUpdated(ObjectPtr, int)));
+    connect(new_v, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
     _inputVectors[RAWVECTOR] = new_v;
   }
 }
@@ -474,7 +465,7 @@ DataObjectPtr Histogram::makeDuplicate() {
   histogram->setRealTimeAutoBin(_realTimeAutoBin);
 
   histogram->writeLock();
-  histogram->update(0);
+  histogram->update();
   histogram->unlock();
 
   return DataObjectPtr(histogram);

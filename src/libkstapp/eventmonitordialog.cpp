@@ -315,7 +315,7 @@ ObjectPtr EventMonitorDialog::createNewDataObject() const {
   eventMonitor->reparse();
 
   eventMonitor->writeLock();
-  eventMonitor->update(0);
+  eventMonitor->update();
   eventMonitor->unlock();
 
   return ObjectPtr(eventMonitor.data());
@@ -349,7 +349,7 @@ ObjectPtr EventMonitorDialog::editExistingDataObject() const {
           eventMonitor->setEMailRecipients(emailRecipients);
 
           eventMonitor->reparse();
-          eventMonitor->update(0);
+          eventMonitor->update();
           eventMonitor->unlock();
         }
       }
@@ -366,7 +366,7 @@ ObjectPtr EventMonitorDialog::editExistingDataObject() const {
 
       eventMonitor->reparse();
 
-      eventMonitor->update(0);
+      eventMonitor->update();
       eventMonitor->unlock();
     }
   }

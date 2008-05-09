@@ -43,30 +43,21 @@ const QString& Primitive::typeString() const {
 }
 
 
-Object::UpdateType Primitive::update(int update_counter) {
-#ifdef UPDATEDEBUG
-  qDebug() << "Updating Primitive " << tag().displayString() << endl;
-#endif
+Object::UpdateType Primitive::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
   setDirty(false);
 
-  if (Object::checkUpdateCounter(update_counter) && !force) {
-    return lastUpdateResult();
-  }
-
   Object::UpdateType providerRC = NO_CHANGE;
 
-  if (update_counter > 0) {
-    ObjectPtr prov = ObjectPtr(_provider);  // use a ObjectPtr to prevent provider being deleted during update
-    if (prov) {
-      KstWriteLocker pl(prov);
+  ObjectPtr prov = ObjectPtr(_provider);  // use a ObjectPtr to prevent provider being deleted during update
+  if (prov) {
+    KstWriteLocker pl(prov);
 
-      providerRC = prov->update(update_counter);
-      if (!force && providerRC == Object::NO_CHANGE) {
-        return setLastUpdateResult(providerRC);
-      }
+    providerRC = prov->update();
+    if (!force && providerRC == Object::NO_CHANGE) {
+      return providerRC;
     }
   }
 
@@ -78,7 +69,7 @@ Object::UpdateType Primitive::update(int update_counter) {
 
 Object::UpdateType Primitive::internalUpdate(Object::UpdateType providerRC) {
   Q_UNUSED(providerRC)
-  return setLastUpdateResult(NO_CHANGE);
+  return NO_CHANGE;
 }
 
 void Primitive::setProvider(Object* obj) {

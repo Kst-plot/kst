@@ -31,7 +31,7 @@ class EditableVector : public Vector {
 
     void save(QXmlStreamWriter &s);
 
-    Object::UpdateType update(int update_counter);
+    Object::UpdateType update();
 
     void setSaveData(bool save);
 

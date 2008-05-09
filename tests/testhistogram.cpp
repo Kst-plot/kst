@@ -40,7 +40,7 @@ void TestHistogram::testHistogram() {
   QCOMPARE(h1->numberOfBins(), 10);
 
   h1->writeLock();
-  h1->update(0);
+  h1->update();
   h1->unlock();
 
   QCOMPARE(h1->vMin(), 0.0);
@@ -62,7 +62,7 @@ void TestHistogram::testHistogram() {
   QCOMPARE(h1->vNumSamples(), 100);
 
   h1->writeLock();
-  h1->update(0);
+  h1->update();
   h1->unlock();
 
   count = 0;
@@ -78,7 +78,7 @@ void TestHistogram::testHistogram() {
   QCOMPARE(h1->vNumSamples(), 100);
 
   h1->writeLock();
-  h1->update(0);
+  h1->update();
   h1->unlock();
 
   count = 0;

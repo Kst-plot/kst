@@ -77,7 +77,7 @@ void Relation::processUpdate(ObjectPtr object) {
 #endif
   UpdateManager::self()->updateStarted(object, this);
   writeLock();
-  if (update(_updateVersion++)) {
+  if (update()) {
 #if DEBUG_UPDATE_CYCLE > 1
     qDebug() << "UP - Relation" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
 #endif

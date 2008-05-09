@@ -282,14 +282,11 @@ bool DataMatrix::isValid() const {
 }
 
 
-Object::UpdateType DataMatrix::update(int update_counter) {
+Object::UpdateType DataMatrix::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
   setDirty(false);
-  if (Object::checkUpdateCounter(update_counter) && !force) {
-    return lastUpdateResult();
-  }
 
   if (_file) {
     _file->writeLock();
@@ -300,7 +297,7 @@ Object::UpdateType DataMatrix::update(int update_counter) {
   }
 
   setDirty(false);
-  return setLastUpdateResult(rc);
+  return rc;
 }
 
 
@@ -561,7 +558,7 @@ DataMatrixPtr DataMatrix::makeDuplicate() const {
 
   matrix->writeLock();
   matrix->change(_file, _field, _reqXStart, _reqYStart, _reqNX, _reqNY, _doAve, _doSkip, _skip, _minX, _minY, _stepX, _stepY);
-  matrix->update(0);
+  matrix->update();
   matrix->unlock();
 
   return matrix;

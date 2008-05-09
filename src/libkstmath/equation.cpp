@@ -130,7 +130,7 @@ bool Equation::isValid() const {
 }
 
 
-Object::UpdateType Equation::update(int update_counter) {
+Object::UpdateType Equation::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
@@ -139,15 +139,9 @@ Object::UpdateType Equation::update(int update_counter) {
   bool xUpdated = false;
   bool usedUpdated = false;
 
-  if (Object::checkUpdateCounter(update_counter) && !force) {
-    return lastUpdateResult();
-  }
-
   if (!_pe) {
-    return setLastUpdateResult(NO_CHANGE);
+    return NO_CHANGE;
   }
-
-  assert(update_counter >= 0);
 
   // FIXME: this is broken
 #if 0
@@ -163,12 +157,12 @@ Object::UpdateType Equation::update(int update_counter) {
 
   VectorPtr v = _xInVector;
 
-  xUpdated = Object::UPDATE == v->update(update_counter);
+  xUpdated = Object::UPDATE == v->update();
 
   Equations::Context ctx;
   ctx.sampleCount = _ns;
   ctx.xVector = v;
-  usedUpdated = _pe && Object::UPDATE == _pe->update(update_counter, &ctx);
+  usedUpdated = _pe && Object::UPDATE == _pe->update(&ctx);
 
   Object::UpdateType rc = NO_CHANGE; // if force, rc = UPDATE anyway.
   if (force || xUpdated || usedUpdated) {
@@ -179,11 +173,11 @@ Object::UpdateType Equation::update(int update_counter) {
   if (rc == UPDATE) {
     v->setDirty();
   }
-  v->update(update_counter);
+  v->update();
 
   unlockInputsAndOutputs();
 
-  return setLastUpdateResult(rc);
+  return rc;
 }
 
 
@@ -246,7 +240,7 @@ void Equation::setEquation(const QString& in_fn) {
       StringMap sm;
 
       if (_pe->collectObjects(VectorsUsed, ScalarsUsed, sm)) {
-        _pe->update(-1, &ctx);
+        _pe->update(&ctx);
       } else {
         //we have bad objects...
         Debug::self()->log(i18n("Equation [%1] references non-existent objects.").arg(_equation), Debug::Error);
@@ -282,7 +276,7 @@ void Equation::setExistingXVector(VectorPtr in_xv, bool do_interp) {
   _xInVector = in_xv;
   _inputVectors.insert(XINVECTOR, in_xv);
 
-  connect(in_xv, SIGNAL(vectorUpdated(ObjectPtr, int)), this, SLOT(vectorUpdated(ObjectPtr, int)));
+  connect(in_xv, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
 
   _ns = 2; // reset the updating
   _doInterp = do_interp;
@@ -451,7 +445,7 @@ DataObjectPtr Equation::makeDuplicate() {
   equation->setExistingXVector(_inputVectors[XINVECTOR], _doInterp);
 
   equation->writeLock();
-  equation->update(0);
+  equation->update();
   equation->unlock();
 
   return DataObjectPtr(equation);

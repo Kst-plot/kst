@@ -281,15 +281,11 @@ bool AsciiSource::initRowIndex() {
 
 
 #define MAXBUFREADLEN 32768
-Kst::Object::UpdateType AsciiSource::update(int u) {
-  if (Kst::Object::checkUpdateCounter(u)) {
-    return lastUpdateResult();
-  }
-
+Kst::Object::UpdateType AsciiSource::update() {
   if (!_haveHeader) {
     _haveHeader = initRowIndex();
     if (!_haveHeader) {
-      return setLastUpdateResult(Kst::Object::NO_CHANGE);
+      return Kst::Object::NO_CHANGE;
     }
     // Re-update the field list since we have one now
     _fields = fieldListFor(_filename, _config);
@@ -308,13 +304,13 @@ Kst::Object::UpdateType AsciiSource::update(int u) {
     _byteLength = file.size();
   } else {
     _valid = false;
-    return setLastUpdateResult(Kst::Object::NO_CHANGE);
+    return Kst::Object::NO_CHANGE;
   }
 
   if (!file.open(QIODevice::ReadOnly)) {
     // quietly fail - no data to be had here
     _valid = false;
-    return setLastUpdateResult(Kst::Object::NO_CHANGE);
+    return Kst::Object::NO_CHANGE;
   }
 
   _valid = true;
@@ -368,7 +364,7 @@ Kst::Object::UpdateType AsciiSource::update(int u) {
   file.close();
 
   updateNumFramesScalar();
-  return setLastUpdateResult(forceUpdate ? Kst::Object::UPDATE : (new_data ? Kst::Object::UPDATE : Kst::Object::NO_CHANGE));
+  return (forceUpdate ? Kst::Object::UPDATE : (new_data ? Kst::Object::UPDATE : Kst::Object::NO_CHANGE));
 }
 
 

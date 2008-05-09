@@ -166,18 +166,18 @@ double *DataObject::vectorRealloced(VectorPtr v, double *memptr, int newSize) co
 }
 
 
-void DataObject::vectorUpdated(ObjectPtr object, int version) {
+void DataObject::vectorUpdated(ObjectPtr object) {
 #if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "UP - Vector update required by DataObject " << shortName() << "for update of" << object->shortName() << version;
+  qDebug() << "UP - Vector update required by DataObject " << shortName() << "for update of" << object->shortName();
 #endif
   writeLock();
   UpdateManager::self()->updateStarted(object, this);
-  if (update(version)) {
+  if (update()) {
 #if DEBUG_UPDATE_CYCLE > 1
-    qDebug() << "UP - DataObject" << shortName() << "has been updated as part of update of" << object->shortName() << version << "informing dependents";
+    qDebug() << "UP - DataObject" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
 #endif
     foreach (VectorPtr vector, _outputVectors) {
-      vector->triggerUpdateSignal(object, version);
+      vector->triggerUpdateSignal(object);
     }
   }
   UpdateManager::self()->updateFinished(object, this);

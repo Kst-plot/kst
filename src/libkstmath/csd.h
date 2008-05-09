@@ -30,7 +30,7 @@ class KST_EXPORT CSD : public DataObject {
     const QString& typeString() const { return staticTypeString; }
     static const QString staticTypeTag;
 
-    virtual UpdateType update(int update_counter = -1);
+    virtual UpdateType update();
 
     virtual void save(QXmlStreamWriter &s);
     virtual QString propertyString() const;

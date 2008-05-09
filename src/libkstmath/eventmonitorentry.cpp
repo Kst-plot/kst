@@ -204,15 +204,10 @@ void EventMonitorEntry::slotUpdate() {
 }
 
 
-Object::UpdateType EventMonitorEntry::update(int updateCounter) {
+Object::UpdateType EventMonitorEntry::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  bool force = dirty();
   setDirty(false);
-
-  if (Object::checkUpdateCounter(updateCounter) && !force) {
-    return lastUpdateResult();
-  }
 
   writeLockInputsAndOutputs();
 
@@ -270,17 +265,17 @@ Object::UpdateType EventMonitorEntry::update(int updateCounter) {
 
   if (xv) {
     xv->setDirty();
-    xv->update(updateCounter);
+    xv->update();
   }
 
   if (yv) {
     yv->setDirty();
-    yv->update(updateCounter);
+    yv->update();
   }
 
   unlockInputsAndOutputs();
 
-  return setLastUpdateResult(NO_CHANGE);
+  return NO_CHANGE;
 }
 
 
@@ -496,7 +491,7 @@ DataObjectPtr EventMonitorEntry::makeDuplicate() {
   eventMonitor->reparse();
 
   eventMonitor->writeLock();
-  eventMonitor->update(0);
+  eventMonitor->update();
   eventMonitor->unlock();
 
   return DataObjectPtr(eventMonitor);

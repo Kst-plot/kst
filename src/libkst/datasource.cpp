@@ -535,7 +535,7 @@ void DataSource::checkUpdate() {
 
 void DataSource::processUpdate(ObjectPtr object) {
   UpdateManager::self()->updateStarted(this, this);
-  emit sourceUpdated(this, _updateVersion);
+  emit sourceUpdated(this);
   UpdateManager::self()->updateFinished(this, this);
 }
 
@@ -555,10 +555,9 @@ const QString& DataSource::typeString() const {
 }
 
 
-Object::UpdateType DataSource::update(int u) {
+Object::UpdateType DataSource::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  Q_UNUSED(u)
   return Object::NO_CHANGE;
 }
 

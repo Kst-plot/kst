@@ -105,7 +105,7 @@ class KST_EXPORT DataSource : public Object {
     /** Updates number of samples.
       For ascii files, it also reads and writes to a temporary binary file.
       It returns 1 if there was new data. */
-    virtual Object::UpdateType update(int = -1);
+    virtual Object::UpdateType update();
 
     /** Reads a field from the file.  Data is returned in the
       double Array v[]
@@ -235,7 +235,7 @@ class KST_EXPORT DataSource : public Object {
     virtual void checkUpdate();
 
   Q_SIGNALS:
-    void sourceUpdated(ObjectPtr sourceObject, int version);
+    void sourceUpdated(ObjectPtr sourceObject);
 
   protected:
     void updateNumFramesScalar();

@@ -47,7 +47,7 @@ void TestGeneratedMatrix::testGeneratedMatrix() {
   m1->change(10, 10, 0, 0, 1, 1, 0, 100, 0);
 
   m1->writeLock();
-  m1->update(0);
+  m1->update();
   m1->unlock();
 
   QCOMPARE(m1->sampleCount(), 100);

@@ -93,7 +93,7 @@ DataObjectPtr HistogramFactory::generateObject(ObjectStore *store, QXmlStreamRea
   histogram->setDescriptiveName(descriptiveName);
 
   histogram->writeLock();
-  histogram->update(0);
+  histogram->update();
   histogram->unlock();
 
   return histogram;

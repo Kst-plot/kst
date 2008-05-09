@@ -59,7 +59,7 @@ class Object : public QObject, public Shared, public KstRWLock {
 
     enum UpdateType { NO_CHANGE = 0, UPDATE };
 
-    virtual UpdateType update(int updateCounter = -1) = 0;
+    virtual UpdateType update() = 0;
 
     virtual const QString& typeString() const;
     static const QString staticTypeString;
@@ -81,9 +81,6 @@ class Object : public QObject, public Shared, public KstRWLock {
     // you MUST have a reference-counted pointer to call this function
     virtual int getUsage() const;
 
-    // Returns true if update has already been done
-    virtual bool checkUpdateCounter(int update_counter);
-
     // TODO: do we need this?
 //    int operator==(const QString&) const;
 
@@ -103,14 +100,6 @@ class Object : public QObject, public Shared, public KstRWLock {
 
     virtual ~Object();
 
-    friend class UpdateThread;
-    int _lastUpdateCounter;
-
-    // @since 1.1.0
-    UpdateType setLastUpdateResult(UpdateType result);
-    // @since 1.1.0
-    UpdateType lastUpdateResult() const;
-
     void setTagName(const ObjectTag& tag);
 
     friend class ObjectStore;
@@ -121,8 +110,6 @@ class Object : public QObject, public Shared, public KstRWLock {
     QString _shortName;
     QString _manualDescriptiveName;
     virtual void saveNameInfo(QXmlStreamWriter &s);
-
-    int _updateVersion;
 
     // object indices used for saving/resorting shortnames
     int _initial_vnum; // vectors
@@ -139,7 +126,6 @@ class Object : public QObject, public Shared, public KstRWLock {
   private:
     ObjectTag _tag;
     bool _dirty;
-    Object::UpdateType _lastUpdate;
 
 } KST_EXPORT;
 

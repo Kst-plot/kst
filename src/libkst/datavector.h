@@ -69,7 +69,7 @@ class KST_EXPORT DataVector : public Vector {
     int skip() const;
 
     /** Update the vector.  Return true if there was new data. */
-    virtual UpdateType update(int update_counter = -1);
+    virtual UpdateType update();
 
     /** Reload the contents of the vector */
     void reload();
@@ -112,7 +112,7 @@ class KST_EXPORT DataVector : public Vector {
     DataSourcePtr dataSource() const;
 
   public Q_SLOTS:
-    void sourceUpdated(ObjectPtr object, int version);
+    void sourceUpdated(ObjectPtr object);
 
   protected:
     /** Create an RVECTOR */

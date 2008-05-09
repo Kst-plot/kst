@@ -110,7 +110,7 @@ bool TestEqParser::validateEquation(const char *equation, double x, double resul
     Kst::ScalarMap scm;
     Kst::StringMap stm;
     eq->collectObjects(vectorsUsed, scm, stm);
-    eq->update(-1, &ctx);
+    eq->update(&ctx);
     double v = eq->value(&ctx);
     delete eq;
     if (fabs(v - result) < tol || (result != result && v != v) || (result == INF && v == INF) || (result == -INF && v == -INF)) {

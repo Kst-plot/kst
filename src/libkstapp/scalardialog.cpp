@@ -115,7 +115,7 @@ ObjectPtr ScalarDialog::createNewDataObject() const {
   scalar->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
   scalar->writeLock();
-  scalar->update(0);
+  scalar->update();
   scalar->unlock();
 
   return static_cast<ObjectPtr>(scalar);

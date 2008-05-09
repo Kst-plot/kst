@@ -139,7 +139,7 @@ void TestPSD::testPSD() {
   QVERIFY(vpVY->value()[0] != vpVY->value()[0]);
 
   psd->writeLock();
-  QCOMPARE(psd->update(0), Kst::Object::UPDATE);
+  QCOMPARE(psd->update(), Kst::Object::UPDATE);
   psd->unlock();
 
   for(int j = 0; j < vpVX->length(); j++){

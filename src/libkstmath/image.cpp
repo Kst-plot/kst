@@ -201,21 +201,17 @@ void Image::save(QXmlStreamWriter &s) {
 }
 
 
-Object::UpdateType Image::update(int update_counter) {
+Object::UpdateType Image::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
   setDirty(false);
 
-  if (Object::checkUpdateCounter(update_counter) && !force) {
-    return lastUpdateResult();
-  }
-
   writeLockInputsAndOutputs();
 
   if (_inputMatrices.contains(THEMATRIX)) {
     MatrixPtr mp = _inputMatrices[THEMATRIX];
-    bool updated = UPDATE == mp->update(update_counter);
+    bool updated = UPDATE == mp->update();
 
     if (updated || force) {
       // stats
@@ -255,12 +251,12 @@ Object::UpdateType Image::update(int update_counter) {
       }
 
       unlockInputsAndOutputs();
-      return setLastUpdateResult(UPDATE);
+      return UPDATE;
     }
   }
 
   unlockInputsAndOutputs();
-  return setLastUpdateResult(NO_CHANGE);
+  return NO_CHANGE;
 }
 
 
@@ -485,7 +481,7 @@ RelationPtr Image::makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelat
   }
 
   image->writeLock();
-  image->update(0);
+  image->update();
   image->unlock();
 
   duplicatedRelations.insert(this, RelationPtr(image));

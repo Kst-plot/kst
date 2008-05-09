@@ -191,22 +191,22 @@ void DataVector::commonRVConstructor(DataSourcePtr in_file,
   if (!in_file) {
     Debug::self()->log(i18n("Data file for vector %1 was not opened.", tag().tagString()), Debug::Warning);
   } else {
-    connect(in_file, SIGNAL(sourceUpdated(ObjectPtr, int)), this, SLOT(sourceUpdated(ObjectPtr, int)));
+    connect(in_file, SIGNAL(sourceUpdated(ObjectPtr)), this, SLOT(sourceUpdated(ObjectPtr)));
   }
 }
 
 
-void DataVector::sourceUpdated(ObjectPtr object, int version) {
+void DataVector::sourceUpdated(ObjectPtr object) {
 #if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "UP - Data Source update required by Vector" << shortName() << "for update of" << object->shortName() << version;
+  qDebug() << "UP - Data Source update required by Vector" << shortName() << "for update of" << object->shortName();
 #endif
   writeLock();
   UpdateManager::self()->updateStarted(object, this);
-  if (update(version)) {
+  if (update()) {
 #if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "UP - Vector" << shortName() << "has been updated as part of update of" << object->shortName() << version << "informing dependents";
+  qDebug() << "UP - Vector" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
 #endif
-    emit vectorUpdated(object, version);
+    emit vectorUpdated(object);
   }
   UpdateManager::self()->updateFinished(object, this);
   unlock();
@@ -245,7 +245,7 @@ void DataVector::change(DataSourcePtr in_file, const QString &in_field,
   }
 
   if (in_file) {
-    connect(in_file, SIGNAL(sourceUpdated(ObjectPtr, int)), this, SLOT(sourceUpdated(ObjectPtr, int)));
+    connect(in_file, SIGNAL(sourceUpdated(ObjectPtr)), this, SLOT(sourceUpdated(ObjectPtr)));
   }
 
 }
@@ -477,14 +477,11 @@ void DataVector::checkIntegrity() {
 
 
 /** Update an RVECTOR */
-Object::UpdateType DataVector::update(int update_counter) {
+Object::UpdateType DataVector::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
   setDirty(false);
-  if (Object::checkUpdateCounter(update_counter) && !force) {
-    return lastUpdateResult();
-  }
 
   if (_file) {
     _file->writeLock();
@@ -495,7 +492,7 @@ Object::UpdateType DataVector::update(int update_counter) {
   }
 
   setDirty(false);
-  return setLastUpdateResult(rc);
+  return rc;
 }
 
 // Some things to consider about the following routine...
@@ -791,7 +788,7 @@ DataVectorPtr DataVector::makeDuplicate() const {
 
   vector->writeLock();
   vector->change(_file, _field, ReqF0, ReqNF, Skip, DoSkip, DoAve);
-  vector->update(0);
+  vector->update();
   vector->unlock();
 
   return vector;

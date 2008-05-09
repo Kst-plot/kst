@@ -451,7 +451,7 @@ Object::UpdateType Vector::internalUpdate(Object::UpdateType providerRC) {
 
       updateScalars();
 
-      return setLastUpdateResult(providerRC);
+      return providerRC;
     }
 
     i0 = i;
@@ -544,18 +544,18 @@ Object::UpdateType Vector::internalUpdate(Object::UpdateType providerRC) {
 
     updateScalars();
 
-    return setLastUpdateResult(providerRC);
+    return providerRC;
   }
 
-  return setLastUpdateResult(NO_CHANGE);
+  return NO_CHANGE;
 }
 
 
-void Vector::triggerUpdateSignal(ObjectPtr object, int version) {
+void Vector::triggerUpdateSignal(ObjectPtr object) {
 #if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "UP - Vector" << shortName() << "has been updated as part of update of" << object->shortName() << version << "informing dependents";
+  qDebug() << "UP - Vector" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
 #endif
-  emit vectorUpdated(object, version);
+  emit vectorUpdated(object);
 }
 
 

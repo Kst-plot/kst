@@ -65,17 +65,13 @@ const QString& StdinSource::typeString() const {
 }
 
 
-Object::UpdateType StdinSource::update(int u) {
-  if (Object::checkUpdateCounter(u)) {
-    return lastUpdateResult();
-  }
-
+Object::UpdateType StdinSource::update() {
   if (!_valid) {
     _src = DataSource::loadSource(store(), _filename, "ASCII");
     if (_src && _src->isValid()) {
       _valid = true;
     } else {
-      return setLastUpdateResult(Object::NO_CHANGE);
+      return Object::NO_CHANGE;
     }
   }
 
@@ -91,7 +87,7 @@ Object::UpdateType StdinSource::update(int u) {
   FILE *fp = fdopen(handle, "w+");
 
   if (!fp) {
-    return setLastUpdateResult(Object::NO_CHANGE);
+    return Object::NO_CHANGE;
   }
 
   do {
@@ -118,9 +114,9 @@ Object::UpdateType StdinSource::update(int u) {
   fclose(fp);
 
   if (got_some && _src) {
-    return setLastUpdateResult(_src->update(u));
+    return _src->update();
   }
-  return setLastUpdateResult(Object::NO_CHANGE);
+  return Object::NO_CHANGE;
 }
 
 

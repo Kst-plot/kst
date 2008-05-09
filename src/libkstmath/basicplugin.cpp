@@ -218,41 +218,37 @@ void BasicPlugin::setOutputString(const QString &type, const QString &name) {
 }
 
 
-Object::UpdateType BasicPlugin::update(int updateCounter) {
+Object::UpdateType BasicPlugin::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
   setDirty(false);
 
-  if (Object::checkUpdateCounter(updateCounter) && !force) {
-    return lastUpdateResult();
-  }
-
   //Make sure we have all the necessary inputs
   if (!inputsExist())
-    return setLastUpdateResult(NO_CHANGE);
+    return NO_CHANGE;
 
   writeLockInputsAndOutputs();
 
   //Update the dependent inputs
-  bool depUpdated = updateInput(updateCounter, force);
+  bool depUpdated = updateInput(force);
 
   //Call the plugins algorithm to operate on the inputs
   //and produce the outputs
   if ( !algorithm() ) {
     Debug::self()->log(i18n("There is an error in the %1 algorithm.").arg(propertyString()), Debug::Error);
     unlockInputsAndOutputs();
-    return lastUpdateResult();
+    return NO_CHANGE;
   }
 
   //Perform update on the outputs
-  updateOutput(updateCounter);
+  updateOutput();
 
   createFitScalars();
 
   unlockInputsAndOutputs();
 
-  return setLastUpdateResult(depUpdated ? UPDATE : NO_CHANGE);
+  return (depUpdated ? UPDATE : NO_CHANGE);
 }
 
 void BasicPlugin::load(const QDomElement &e) {
@@ -437,7 +433,7 @@ bool BasicPlugin::inputsExist() const {
 }
 
 
-bool BasicPlugin::updateInput(int updateCounter, bool force) const {
+bool BasicPlugin::updateInput(bool force) const {
   bool depUpdated = force;
 
   //First, update the inputVectors...
@@ -446,7 +442,7 @@ bool BasicPlugin::updateInput(int updateCounter, bool force) const {
   for (; ivI != iv.end(); ++ivI) {
     Q_ASSERT(inputVector(*ivI)->myLockStatus() == KstRWLock::WRITELOCKED);
     depUpdated =
-        UPDATE == inputVector(*ivI)->update(updateCounter) || depUpdated;
+        UPDATE == inputVector(*ivI)->update() || depUpdated;
   }
 
   //Now, update the inputScalars...
@@ -455,7 +451,7 @@ bool BasicPlugin::updateInput(int updateCounter, bool force) const {
   for (; isI != is.end(); ++isI) {
     Q_ASSERT(inputScalar(*isI)->myLockStatus() == KstRWLock::WRITELOCKED);
     depUpdated =
-        UPDATE == inputScalar(*isI)->update(updateCounter) || depUpdated;
+        UPDATE == inputScalar(*isI)->update() || depUpdated;
   }
 
   //Finally, update the inputStrings...
@@ -464,13 +460,13 @@ bool BasicPlugin::updateInput(int updateCounter, bool force) const {
   for (; istrI != istr.end(); ++istrI) {
     Q_ASSERT(inputString(*istrI)->myLockStatus() == KstRWLock::WRITELOCKED);
     depUpdated =
-        UPDATE == inputString(*istrI)->update(updateCounter) || depUpdated;
+        UPDATE == inputString(*istrI)->update() || depUpdated;
   }
   return depUpdated;
 }
 
 
-void BasicPlugin::updateOutput(int updateCounter) const {
+void BasicPlugin::updateOutput() const {
   //output vectors...
   QStringList ov = outputVectorList();
   QStringList::ConstIterator ovI = ov.begin();
@@ -480,7 +476,7 @@ void BasicPlugin::updateOutput(int updateCounter) const {
       vectorRealloced(o, o->value(), o->length());
       o->setDirty();
       o->setNewAndShift(o->length(), o->numShift());
-      o->update(updateCounter);
+      o->update();
     }
   }
 
@@ -490,7 +486,7 @@ void BasicPlugin::updateOutput(int updateCounter) const {
   for (; osI != os.end(); ++osI) {
     if (ScalarPtr o = outputScalar(*osI)) {
       Q_ASSERT(o->myLockStatus() == KstRWLock::WRITELOCKED);
-      o->update(updateCounter);
+      o->update();
     }
   }
 
@@ -500,7 +496,7 @@ void BasicPlugin::updateOutput(int updateCounter) const {
   for (; ostrI != ostr.end(); ++ostrI) {
     if (StringPtr o = outputString(*ostrI)) {
       Q_ASSERT(o->myLockStatus() == KstRWLock::WRITELOCKED);
-      o->update(updateCounter);
+      o->update();
     }
   }
 }

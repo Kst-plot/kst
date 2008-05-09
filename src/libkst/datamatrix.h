@@ -68,7 +68,7 @@ class KST_EXPORT DataMatrix : public Matrix {
     bool isValid() const;
 
     // update DataMatrix
-    virtual UpdateType update(int update_counter = -1);
+    virtual UpdateType update();
 
     // reload contents of DataMatrix from file
     void reload();

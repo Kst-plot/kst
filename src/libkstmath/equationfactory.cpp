@@ -85,7 +85,7 @@ DataObjectPtr EquationFactory::generateObject(ObjectStore *store, QXmlStreamRead
   equation->setDescriptiveName(descriptiveName);
 
   equation->writeLock();
-  equation->update(0);
+  equation->update();
   equation->unlock();
 
   return equation;

@@ -200,7 +200,7 @@ CSD::~CSD() {
   _outMatrix = 0L;
 }
 
-Object::UpdateType CSD::update(int update_counter) {
+Object::UpdateType CSD::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   VectorPtr inVector = _inputVectors[INVECTOR];
@@ -208,22 +208,13 @@ Object::UpdateType CSD::update(int update_counter) {
   bool force = dirty();
   setDirty(false);
 
-  if (Object::checkUpdateCounter(update_counter) && !force) {
-    return lastUpdateResult();
-  }
-
   writeLockInputsAndOutputs();
 
-  if (update_counter <= 0) {
-    assert(update_counter == 0);
-    force = true;
-  }
-
-  bool xUpdated = Object::UPDATE == inVector->update(update_counter);
+  bool xUpdated = Object::UPDATE == inVector->update();
   // if vector was not changed, don't update the CSD
   if (!xUpdated && !force) {
     unlockInputsAndOutputs();
-    return setLastUpdateResult(NO_CHANGE);
+    return NO_CHANGE;
   }
 
   double *tempOutput, *input;
@@ -263,11 +254,11 @@ Object::UpdateType CSD::update(int update_counter) {
   double frequencyStep = .5*_frequency/(double)(tempOutputLen-1);
 
   _outMatrix->change(xSize, tempOutputLen, 0, 0, _windowSize, frequencyStep);
-  _outMatrix->update(update_counter);
+  _outMatrix->update();
 
   unlockInputsAndOutputs();
 
-  return setLastUpdateResult(UPDATE);
+  return UPDATE;
 }
 
 
@@ -479,7 +470,7 @@ DataObjectPtr CSD::makeDuplicate() {
               _rateUnits);
 
   csd->writeLock();
-  csd->update(0);
+  csd->update();
   csd->unlock();
 
   return DataObjectPtr(csd);

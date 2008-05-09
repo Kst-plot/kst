@@ -110,7 +110,7 @@ DataObjectPtr PSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
   powerspectrum->setInterpolateHoles(interpolateHoles);
   powerspectrum->setDescriptiveName(descriptiveName);
 
-  powerspectrum->update(0);
+  powerspectrum->update();
   powerspectrum->unlock();
 
   return powerspectrum;

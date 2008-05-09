@@ -449,7 +449,7 @@ ObjectPtr ImageDialog::createNewDataObject() const {
   image->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
   image->writeLock();
-  image->update(0);
+  image->update();
   image->unlock();
 
   PlotItem *plotItem = 0;
@@ -537,7 +537,7 @@ ObjectPtr ImageDialog::editExistingDataObject() const {
                 useVariableLineWeight ? -1 : contourWeight);
           }
 
-          image->update(0);
+          image->update();
           image->unlock();
         }
       }
@@ -566,7 +566,7 @@ ObjectPtr ImageDialog::editExistingDataObject() const {
       }
       image->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
-      image->update(0);
+      image->update();
       image->unlock();
     }
   }

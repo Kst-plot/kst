@@ -356,9 +356,9 @@ Object::UpdateType Matrix::internalUpdate(Object::UpdateType providerUpdateType)
 
     updateScalars();
 
-    return setLastUpdateResult(providerUpdateType);
+    return providerUpdateType;
   }
-  return setLastUpdateResult(NO_CHANGE);
+  return NO_CHANGE;
 }
 
 

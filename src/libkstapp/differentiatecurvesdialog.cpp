@@ -187,7 +187,7 @@ void DifferentiateCurvesDialog::apply() {
       curve->setLineWidth((sequenceNum + 1) % maxLineWidth);
     }
 
-    curve->update(0);
+    curve->update();
     curve->unlock();
     ++sequenceNum;
   }

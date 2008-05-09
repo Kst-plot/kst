@@ -48,7 +48,7 @@ class KST_EXPORT String : public Primitive {
     void save(QXmlStreamWriter &s);
 
     /** Update the vector.  Return true if there was new data. */
-    UpdateType update(int updateCounter = -1);
+    UpdateType update();
 
     String& operator=(const QString& v);
     String& operator=(const char *v);

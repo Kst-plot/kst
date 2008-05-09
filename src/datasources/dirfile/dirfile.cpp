@@ -112,11 +112,7 @@ bool DirFileSource::init() {
 }
 
 
-Kst::Object::UpdateType DirFileSource::update(int u) {
-  if (Kst::Object::checkUpdateCounter(u)) {
-    return lastUpdateResult();
-  }
-
+Kst::Object::UpdateType DirFileSource::update() {
   int err = 0;
   int newNF = GetNFrames(_filename.toLatin1(), &err, 0L);
   bool isnew = newNF != _frameCount;
@@ -124,7 +120,7 @@ Kst::Object::UpdateType DirFileSource::update(int u) {
   _frameCount = newNF;
 
   updateNumFramesScalar();
-  return setLastUpdateResult(isnew ? Kst::Object::UPDATE : Kst::Object::NO_CHANGE);
+  return (isnew ? Kst::Object::UPDATE : Kst::Object::NO_CHANGE);
 }
 
 

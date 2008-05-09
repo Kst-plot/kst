@@ -745,7 +745,7 @@ ObjectPtr MatrixDialog::createNewDataMatrix() const {
   matrix->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
   matrix->writeLock();
-  matrix->update(0);
+  matrix->update();
   matrix->unlock();
 
   setDataMatrixDefaults(matrix);
@@ -789,7 +789,7 @@ ObjectPtr MatrixDialog::createNewGeneratedMatrix() const {
 #endif
 
   matrix->writeLock();
-  matrix->update(0);
+  matrix->update();
   matrix->unlock();
 
   return static_cast<ObjectPtr>(matrix);
@@ -828,7 +828,7 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
 
           matrix->writeLock();
           matrix->changeFrames(xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, minX, minY, stepX, stepY);
-          matrix->update(0);
+          matrix->update();
           matrix->unlock();
         }
       }
@@ -854,7 +854,7 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
 
       dataMatrix->writeLock();
       dataMatrix->change(dataSource, field, xStart, yStart, xNumSteps, yNumSteps, doAverage, doSkip, skip, minX, minY, stepX, stepY);
-      dataMatrix->update(0);
+      dataMatrix->update();
       dataMatrix->unlock();
       setDataMatrixDefaults(dataMatrix);
     }
@@ -876,7 +876,7 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
 
           matrix->writeLock();
           matrix->change(nX, nY, minX, minY, stepX, stepY, gradientZAtMin, gradientZAtMax, xDirection);
-          matrix->update(0);
+          matrix->update();
           matrix->unlock();
         }
       }
@@ -893,7 +893,7 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
 
       generatedMatrix->writeLock();
       generatedMatrix->change(nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
-      generatedMatrix->update(0);
+      generatedMatrix->update();
       generatedMatrix->unlock();
     }
   }

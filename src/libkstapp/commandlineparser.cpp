@@ -185,7 +185,7 @@ DataVectorPtr CommandLineParser::createOrFindDataVector(QString field, DataSourc
       xv->writeLock();
       xv->change(ds, field, _startFrame, _numFrames, _skip, _skip>0, _doAve);
 
-      xv->update(0);
+      xv->update();
       xv->unlock();
 
       _vectors.append(xv);
@@ -217,7 +217,7 @@ void CommandLineParser::createCurveInPlot(const ObjectTag &tag, VectorPtr xv, Ve
     }
 
     curve->writeLock();
-    curve->update(0);
+    curve->update();
     curve->unlock();
 
     if (_doConsecutivePlots) {
@@ -391,7 +391,7 @@ bool CommandLineParser::processCommandLine() {
         powerspectrum->setOutput(PSDAmplitudeSpectralDensity);
         powerspectrum->setInterpolateHoles(false);
 
-        powerspectrum->update(0);
+        powerspectrum->update();
         powerspectrum->unlock();
 
         tag = _document->objectStore()->suggestObjectTag<Curve>(powerspectrum->tag().tagString(), ObjectTag::globalTagContext);
@@ -435,7 +435,7 @@ bool CommandLineParser::processCommandLine() {
         histogram->setRealTimeAutoBin ( true );
 
         histogram->writeLock();
-        histogram->update ( 0 );
+        histogram->update ();
         histogram->unlock();
 
         tag = _document->objectStore()->suggestObjectTag<Curve>(histogram->tag().tagString(), ObjectTag::globalTagContext);

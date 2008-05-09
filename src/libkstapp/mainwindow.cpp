@@ -460,7 +460,7 @@ void MainWindow::demoModel() {
   ep->setExistingXVector(VectorPtr(gv), false);
   ep->setEquation("x^2");
   ep->writeLock();
-  ep->update(0);
+  ep->update();
   ep->unlock();
 //  addDataObjectToList(ep.data());
 }

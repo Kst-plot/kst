@@ -155,10 +155,10 @@ class Vector : public Primitive {
     bool saveData() const;
     virtual void setSaveData(bool save);
 
-    void triggerUpdateSignal(ObjectPtr object, int version);
+    void triggerUpdateSignal(ObjectPtr object);
 
   Q_SIGNALS:
-    void vectorUpdated(ObjectPtr object, int version);
+    void vectorUpdated(ObjectPtr object);
 
   protected:
     /** current number of samples */

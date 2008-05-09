@@ -80,32 +80,32 @@ Curve::Curve(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_X, Vector
   commonConstructor(in_color);
   if (in_X) {
     _inputVectors[COLOR_XVECTOR] = in_X;
-    connect(in_X, SIGNAL(vectorUpdated(ObjectPtr, int)), this, SLOT(vectorUpdated(ObjectPtr, int)));
+    connect(in_X, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   }
 
   if (in_Y) {
     _inputVectors[COLOR_YVECTOR] = in_Y;
-    connect(in_Y, SIGNAL(vectorUpdated(ObjectPtr, int)), this, SLOT(vectorUpdated(ObjectPtr, int)));
+    connect(in_Y, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   }
 
   if (in_EX) {
     _inputVectors[EXVECTOR] = in_EX;
-    connect(in_EX, SIGNAL(vectorUpdated(ObjectPtr, int)), this, SLOT(vectorUpdated(ObjectPtr, int)));
+    connect(in_EX, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   }
 
   if (in_EY) {
     _inputVectors[EYVECTOR] = in_EY;
-    connect(in_EY, SIGNAL(vectorUpdated(ObjectPtr, int)), this, SLOT(vectorUpdated(ObjectPtr, int)));
+    connect(in_EY, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   }
 
   if (in_EXMinus) {
     _inputVectors[EXMINUSVECTOR] = in_EXMinus;
-    connect(in_EXMinus, SIGNAL(vectorUpdated(ObjectPtr, int)), this, SLOT(vectorUpdated(ObjectPtr, int)));
+    connect(in_EXMinus, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   }
 
   if (in_EYMinus) {
     _inputVectors[EYMINUSVECTOR] = in_EYMinus;
-    connect(in_EYMinus, SIGNAL(vectorUpdated(ObjectPtr, int)), this, SLOT(vectorUpdated(ObjectPtr, int)));
+    connect(in_EYMinus, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   }
 
   _shortName = "C"+QString::number(_cnum++);
@@ -222,7 +222,7 @@ Curve::~Curve() {
 }
 
 
-void Curve::vectorUpdated(ObjectPtr object, int version) {
+void Curve::vectorUpdated(ObjectPtr object) {
 #if DEBUG_UPDATE_CYCLE > 1
     qDebug() << "UP - Curve update ready for" << object->shortName();
 #endif
@@ -230,47 +230,42 @@ void Curve::vectorUpdated(ObjectPtr object, int version) {
 }
 
 
-Object::UpdateType Curve::update(int update_counter) {
+Object::UpdateType Curve::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  bool force = dirty();
   setDirty(false);
-
-  if (Object::checkUpdateCounter(update_counter) && !force) {
-    return lastUpdateResult();
-  }
 
   VectorPtr cxV = *_inputVectors.find(COLOR_XVECTOR);
   VectorPtr cyV = *_inputVectors.find(COLOR_YVECTOR);
   if (!cxV || !cyV) {
-    return setLastUpdateResult(NO_CHANGE);
+    return NO_CHANGE;
   }
 
   writeLockInputsAndOutputs();
 
   bool depUpdated = true;
 
-  depUpdated = UPDATE == cxV->update(update_counter) || depUpdated;
-  depUpdated = UPDATE == cyV->update(update_counter) || depUpdated;
+  depUpdated = UPDATE == cxV->update() || depUpdated;
+  depUpdated = UPDATE == cyV->update() || depUpdated;
 
   VectorPtr exV = _inputVectors.contains(EXVECTOR) ? *_inputVectors.find(EXVECTOR) : 0;
   if (exV) {
-    depUpdated = UPDATE == exV->update(update_counter) || depUpdated;
+    depUpdated = UPDATE == exV->update() || depUpdated;
   }
 
   VectorPtr eyV = _inputVectors.contains(EYVECTOR) ? *_inputVectors.find(EYVECTOR) : 0;
   if (eyV) {
-    depUpdated = UPDATE == eyV->update(update_counter) || depUpdated;
+    depUpdated = UPDATE == eyV->update() || depUpdated;
   }
 
   VectorPtr exmV = _inputVectors.contains(EXMINUSVECTOR) ? *_inputVectors.find(EXMINUSVECTOR) : 0;
   if (exmV) {
-    depUpdated = UPDATE == exmV->update(update_counter) || depUpdated;
+    depUpdated = UPDATE == exmV->update() || depUpdated;
   }
 
   VectorPtr eymV = _inputVectors.contains(EYMINUSVECTOR) ? *_inputVectors.find(EYMINUSVECTOR) : 0;
   if (eymV) {
-    depUpdated = UPDATE == eymV->update(update_counter) || depUpdated;
+    depUpdated = UPDATE == eymV->update() || depUpdated;
   }
 
   MaxX = cxV->max();
@@ -298,7 +293,7 @@ Object::UpdateType Curve::update(int update_counter) {
 
   unlockInputsAndOutputs();
 
-  return setLastUpdateResult(depUpdated ? UPDATE : NO_CHANGE);
+  return (depUpdated ? UPDATE : NO_CHANGE);
 }
 
 
@@ -533,9 +528,9 @@ void Curve::save(QXmlStreamWriter &s) {
 void Curve::setXVector(VectorPtr new_vx) {
   if (new_vx) {
     _inputVectors[COLOR_XVECTOR] = new_vx;
-    connect(new_vx, SIGNAL(vectorUpdated(ObjectPtr, int)), this, SLOT(vectorUpdated(ObjectPtr, int)));
+    connect(new_vx, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
-    disconnect(_inputVectors[COLOR_XVECTOR], SIGNAL(vectorUpdated(ObjectPtr, int)));
+    disconnect(_inputVectors[COLOR_XVECTOR], SIGNAL(vectorUpdated(ObjectPtr)));
     _inputVectors.remove(COLOR_XVECTOR);
   }
   setDirty();
@@ -545,9 +540,9 @@ void Curve::setXVector(VectorPtr new_vx) {
 void Curve::setYVector(VectorPtr new_vy) {
   if (new_vy) {
     _inputVectors[COLOR_YVECTOR] = new_vy;
-    connect(new_vy, SIGNAL(vectorUpdated(ObjectPtr, int)), this, SLOT(vectorUpdated(ObjectPtr, int)));
+    connect(new_vy, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
-    disconnect(_inputVectors[COLOR_YVECTOR], SIGNAL(vectorUpdated(ObjectPtr, int)));
+    disconnect(_inputVectors[COLOR_YVECTOR], SIGNAL(vectorUpdated(ObjectPtr)));
     _inputVectors.remove(COLOR_YVECTOR);
   }
   setDirty();
@@ -557,10 +552,10 @@ void Curve::setYVector(VectorPtr new_vy) {
 void Curve::setXError(VectorPtr new_ex) {
   if (new_ex) {
     _inputVectors[EXVECTOR] = new_ex;
-    connect(new_ex, SIGNAL(vectorUpdated(ObjectPtr, int)), this, SLOT(vectorUpdated(ObjectPtr, int)));
+    connect(new_ex, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
     if (_inputVectors[EXVECTOR]) {
-      disconnect(_inputVectors[EXVECTOR], SIGNAL(vectorUpdated(ObjectPtr, int)));
+      disconnect(_inputVectors[EXVECTOR], SIGNAL(vectorUpdated(ObjectPtr)));
     }
     _inputVectors.remove(EXVECTOR);
   }
@@ -571,10 +566,10 @@ void Curve::setXError(VectorPtr new_ex) {
 void Curve::setYError(VectorPtr new_ey) {
   if (new_ey) {
     _inputVectors[EYVECTOR] = new_ey;
-    connect(new_ey, SIGNAL(vectorUpdated(ObjectPtr, int)), this, SLOT(vectorUpdated(ObjectPtr, int)));
+    connect(new_ey, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
     if (_inputVectors[EYVECTOR]) {
-      disconnect(_inputVectors[EYVECTOR], SIGNAL(vectorUpdated(ObjectPtr, int)));
+      disconnect(_inputVectors[EYVECTOR], SIGNAL(vectorUpdated(ObjectPtr)));
     }
     _inputVectors.remove(EYVECTOR);
   }
@@ -585,10 +580,10 @@ void Curve::setYError(VectorPtr new_ey) {
 void Curve::setXMinusError(VectorPtr new_ex) {
   if (new_ex) {
     _inputVectors[EXMINUSVECTOR] = new_ex;
-    connect(new_ex, SIGNAL(vectorUpdated(ObjectPtr, int)), this, SLOT(vectorUpdated(ObjectPtr, int)));
+    connect(new_ex, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
     if (_inputVectors[EXMINUSVECTOR]) {
-      disconnect(_inputVectors[EXMINUSVECTOR], SIGNAL(vectorUpdated(ObjectPtr, int)));
+      disconnect(_inputVectors[EXMINUSVECTOR], SIGNAL(vectorUpdated(ObjectPtr)));
     }
     _inputVectors.remove(EXMINUSVECTOR);
   }
@@ -599,10 +594,10 @@ void Curve::setXMinusError(VectorPtr new_ex) {
 void Curve::setYMinusError(VectorPtr new_ey) {
   if (new_ey) {
     _inputVectors[EYMINUSVECTOR] = new_ey;
-    connect(new_ey, SIGNAL(vectorUpdated(ObjectPtr, int)), this, SLOT(vectorUpdated(ObjectPtr, int)));
+    connect(new_ey, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
     if (_inputVectors[EYMINUSVECTOR]) {
-      disconnect(_inputVectors[EYMINUSVECTOR], SIGNAL(vectorUpdated(ObjectPtr, int)));
+      disconnect(_inputVectors[EYMINUSVECTOR], SIGNAL(vectorUpdated(ObjectPtr)));
     }
     _inputVectors.remove(EYMINUSVECTOR);
   }
@@ -898,7 +893,7 @@ RelationPtr Curve::makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelat
   curve->setBarStyle(BarStyle);
 
   curve->writeLock();
-  curve->update(0);
+  curve->update();
   curve->unlock();
 
   duplicatedRelations.insert(this, RelationPtr(curve));

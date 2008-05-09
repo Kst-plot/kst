@@ -46,7 +46,7 @@ class KST_EXPORT Equation : public DataObject {
     static const QString staticTypeTag;
 
     void attach();
-    UpdateType update(int update_counter = -1);
+    UpdateType update();
 
     void save(QXmlStreamWriter &s);
     QString propertyString() const;

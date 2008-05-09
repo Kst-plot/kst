@@ -89,25 +89,21 @@ const QString& Scalar::typeString() const {
 }
 
 
-Object::UpdateType Scalar::update(int updateCounter) {
+Object::UpdateType Scalar::update() {
 //  Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
   setDirty(false);
 
-  if (Object::checkUpdateCounter(updateCounter) && !force) {
-    return lastUpdateResult();
-  }
-
   double v = value();
   if (_provider) {
     KstWriteLocker pl(_provider);
-    _provider->update(updateCounter);
+    _provider->update();
   } else if (force) {
-    return setLastUpdateResult(UPDATE);
+    return UPDATE;
   }
 
-  return setLastUpdateResult(v == value() ? NO_CHANGE : UPDATE);
+  return (v == value() ? NO_CHANGE : UPDATE);
 }
 
 

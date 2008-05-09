@@ -76,7 +76,7 @@ PrimitivePtr VectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
   vector->setDescriptiveName(descriptiveName);
 
   vector->writeLock();
-  vector->update(0);
+  vector->update();
   vector->unlock();
 
   return vector;
@@ -135,7 +135,7 @@ PrimitivePtr GeneratedVectorFactory::generatePrimitive(ObjectStore *store, QXmlS
   vector->setDescriptiveName(descriptiveName);
 
   vector->writeLock();
-  vector->update(0);
+  vector->update();
   vector->unlock();
 
   return vector;
@@ -194,7 +194,7 @@ PrimitivePtr EditableVectorFactory::generatePrimitive(ObjectStore *store, QXmlSt
   vector->setDescriptiveName(descriptiveName);
 
   vector->writeLock();
-  vector->update(0);
+  vector->update();
   vector->unlock();
 
   return vector;
@@ -280,7 +280,7 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
       doAve);
 
   vector->setDescriptiveName(descriptiveName);
-  vector->update(0);
+  vector->update();
   vector->unlock();
 
   return vector;

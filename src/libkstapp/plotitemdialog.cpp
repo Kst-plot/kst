@@ -330,7 +330,7 @@ void PlotItemDialog::relationChanged() {
         curve->setPointDensity(curveTab->curveAppearance()->pointDensity());
         curve->setBarStyle(curveTab->curveAppearance()->barStyle());
 
-        curve->update(0);
+        curve->update();
         curve->unlock();
       }
     } else if (ImagePtr image = kst_cast<Image>(_store->retrieveObject(ObjectTag::fromString(page->pageTitle())))) {
@@ -359,7 +359,7 @@ void PlotItemDialog::relationChanged() {
               imageTab->useVariableLineWeight() ? -1 : imageTab->contourWeight());
         }
 
-        image->update(0);
+        image->update();
         image->unlock();
       }
     }

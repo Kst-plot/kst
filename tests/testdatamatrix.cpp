@@ -97,7 +97,7 @@ void TestDataMatrix::testDataMatrix() {
   m1->change(dsp, "[MATRIX,3,0,0,1,1]", 0, 0, -1, -1, false, false, 1, 0, 0, 1, 1);
 
   m1->writeLock();
-  m1->update(0);
+  m1->update();
   m1->unlock();
 
   QCOMPARE(m1->sampleCount(), 9);

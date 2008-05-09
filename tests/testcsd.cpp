@@ -207,7 +207,7 @@ void TestCSD::testCSD() {
   QCOMPARE(outMatrix->value(2, 2), -0.293267);
 
   csdDOM->writeLock();
-  QCOMPARE(csdDOM->update(0), Kst::Object::UPDATE);
+  QCOMPARE(csdDOM->update(), Kst::Object::UPDATE);
   csdDOM->unlock();
 
   outMatrix = csdDOM->outputMatrix();

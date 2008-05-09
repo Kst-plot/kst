@@ -75,7 +75,7 @@ class KST_EXPORT BasicPlugin : public DataObject {
 
     //Pure virtual methods inherited from DataObject
     //We do this one ourselves for benefit of all plugins...
-    Object::UpdateType update(int updateCounter = -1);
+    Object::UpdateType update();
 
     //Regular virtual methods from DataObject
     void load(const QDomElement &e);
@@ -96,8 +96,8 @@ class KST_EXPORT BasicPlugin : public DataObject {
 
   private:
     bool inputsExist() const;
-    bool updateInput(int updateCounter, bool force) const;
-    void updateOutput(int updateCounter) const;
+    bool updateInput(bool force) const;
+    void updateOutput() const;
 };
 
 typedef SharedPtr<BasicPlugin> BasicPluginPtr;

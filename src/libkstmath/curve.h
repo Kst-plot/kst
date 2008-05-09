@@ -39,7 +39,7 @@ class KST_EXPORT Curve: public Relation {
     const QString& typeString() const { return staticTypeString; }
     static const QString staticTypeTag;
 
-    virtual UpdateType update(int update_counter = -1);
+    virtual UpdateType update();
     virtual QString propertyString() const;
 
     virtual int getIndexNearXY(double x, double dx, double y) const;
@@ -153,7 +153,7 @@ class KST_EXPORT Curve: public Relation {
     virtual DataObjectPtr providerDataObject() const;
 
   public Q_SLOTS:
-    void vectorUpdated(ObjectPtr object, int version);
+    void vectorUpdated(ObjectPtr object);
 
   protected:
     Curve(ObjectStore *store, const ObjectTag &in_tag,

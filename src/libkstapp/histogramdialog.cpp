@@ -356,7 +356,7 @@ ObjectPtr HistogramDialog::createNewDataObject() const {
   histogram->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
   histogram->writeLock();
-  histogram->update(0);
+  histogram->update();
   histogram->unlock();
 
   setHistogramDefaults(histogram);
@@ -388,7 +388,7 @@ ObjectPtr HistogramDialog::createNewDataObject() const {
   curve->setBarStyle(_histogramTab->curveAppearance()->barStyle());
 
   curve->writeLock();
-  curve->update(0);
+  curve->update();
   curve->unlock();
 
   PlotItem *plotItem = 0;
@@ -443,7 +443,7 @@ ObjectPtr HistogramDialog::editExistingDataObject() const {
           histogram->setNormalizationType(normalizationType);
           histogram->setRealTimeAutoBin(realTimeAutoBin);
 
-          histogram->update(0);
+          histogram->update();
           histogram->unlock();
         }
       }
@@ -456,7 +456,7 @@ ObjectPtr HistogramDialog::editExistingDataObject() const {
       histogram->setRealTimeAutoBin(_histogramTab->realTimeAutoBin());
       histogram->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
-      histogram->update(0);
+      histogram->update();
       histogram->unlock();
 
       setHistogramDefaults(histogram);

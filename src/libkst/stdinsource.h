@@ -37,7 +37,7 @@ class KST_EXPORT StdinSource : public DataSource {
     virtual const QString& typeString() const;
     static const QString staticTypeString;
 
-    virtual Object::UpdateType update(int = -1);
+    virtual Object::UpdateType update();
 
     virtual int readField(double *v, const QString &field, int s, int n);
 

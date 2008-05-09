@@ -38,7 +38,7 @@ class KST_EXPORT Image : public Relation {
     virtual void showNewDialog();
     virtual void showEditDialog();
     virtual void save(QXmlStreamWriter &s);
-    virtual UpdateType update(int update_counter = -1);
+    virtual UpdateType update();
     virtual QString propertyString() const;
 
     virtual CurveType curveType() const;

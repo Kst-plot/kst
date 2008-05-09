@@ -44,16 +44,12 @@ const QString& EditableVector::typeString() const {
 }
 
 
-Object::UpdateType EditableVector::update(int update_counter) {
+Object::UpdateType EditableVector::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
 
-  if (Object::checkUpdateCounter(update_counter) && !force) {
-    return lastUpdateResult();
-  }
-
-  Object::UpdateType baseRC = Vector::update(update_counter);
+  Object::UpdateType baseRC = Vector::update();
   if (force) {
     baseRC = UPDATE;
   }

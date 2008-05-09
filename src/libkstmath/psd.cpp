@@ -67,79 +67,79 @@ PSD::PSD(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_V,
 }
 
 
-// PSD::PSD(ObjectStore *store, const QDomElement &e)
-// : DataObject(store, e) {
-//   QString in_VUnits;
-//   QString in_RUnits;
-//   QString in_tag;
-//   QString vecName;
-//   VectorPtr in_V;
-//   double in_freq = 60.0;
-//   bool in_average = true;
-//   bool in_removeMean = true;
-//   bool in_apodize = true;
-//   ApodizeFunction in_apodizeFxn = WindowOriginal;
-//   double in_gaussianSigma = 3.0;
-//   int in_averageLen = 12;
-//   PSDType in_output = PSDAmplitudeSpectralDensity;
-//   bool interpolateHoles = false;
-// 
-//   QDomNode n = e.firstChild();
-//   while (!n.isNull()) {
-//     QDomElement e = n.toElement(); // try to convert the node to an element.
-//     if (!e.isNull()) { // the node was really an element.
-//       if (e.tagName() == "tag") {
-//         in_tag = e.text();
-//       } else if (e.tagName() == "vector") {
-//         vecName = e.text();
-//       } else if (e.tagName() == "samplerate") {
-//         in_freq = e.text().toDouble();
-//       } else if (e.tagName() == "average") {
-//         if (e.text() == "0") {
-//           in_average = false;
-//         } else {
-//           in_average = true;
-//         }
-//       } else if (e.tagName() == "fftlength") {
-//         in_averageLen = e.text().toInt();
-//       } else if (e.tagName() == "apodize") {
-//         if (e.text() == "0") {
-//           in_apodize = false;
-//         } else {
-//           in_apodize = true;
-//         }
-//       } else if (e.tagName() == "apodizefunction") {
-//         in_apodizeFxn = ApodizeFunction(e.text().toInt());
-//       } else if (e.tagName() == "gaussiansigma") {
-//         in_gaussianSigma = e.text().toDouble();
-//       } else if (e.tagName() == "removeMean") {
-//         if (e.text() == "0") {
-//           in_removeMean = false;
-//         } else {
-//           in_removeMean = true;
-//         }
-//       } else if (e.tagName() == "vectorunits") {
-//         in_VUnits = e.text();
-//       } else if (e.tagName() == "rateunits") {
-//         in_RUnits = e.text();
-//       } else if (e.tagName() == "outputtype") {
-//         in_output = (PSDType)e.text().toInt();
-//       } else if (e.tagName() == "interpolateHoles") {
-//         interpolateHoles = e.text().toInt() != 0;
-//       }
-//     }
-//     n = n.nextSibling();
-//   }
-// 
-//   _inputVectorLoadQueue.append(qMakePair(QString(INVECTOR), vecName));
-// 
-//   setTagName(ObjectTag::fromString(in_tag));
-// 
-//   commonConstructor(store, in_V, in_freq, in_average, in_averageLen,
-//                     in_apodize, in_removeMean,
-//                     in_VUnits, in_RUnits, in_apodizeFxn, in_gaussianSigma,
-//                     in_output, interpolateHoles);
-// }
+PSD::PSD(ObjectStore *store, const QDomElement &e)
+: DataObject(store, e) {
+  QString in_VUnits;
+  QString in_RUnits;
+  QString in_tag;
+  QString vecName;
+  VectorPtr in_V;
+  double in_freq = 60.0;
+  bool in_average = true;
+  bool in_removeMean = true;
+  bool in_apodize = true;
+  ApodizeFunction in_apodizeFxn = WindowOriginal;
+  double in_gaussianSigma = 3.0;
+  int in_averageLen = 12;
+  PSDType in_output = PSDAmplitudeSpectralDensity;
+  bool interpolateHoles = false;
+
+  QDomNode n = e.firstChild();
+  while (!n.isNull()) {
+    QDomElement e = n.toElement(); // try to convert the node to an element.
+    if (!e.isNull()) { // the node was really an element.
+      if (e.tagName() == "tag") {
+        in_tag = e.text();
+      } else if (e.tagName() == "vector") {
+        vecName = e.text();
+      } else if (e.tagName() == "samplerate") {
+        in_freq = e.text().toDouble();
+      } else if (e.tagName() == "average") {
+        if (e.text() == "0") {
+          in_average = false;
+        } else {
+          in_average = true;
+        }
+      } else if (e.tagName() == "fftlength") {
+        in_averageLen = e.text().toInt();
+      } else if (e.tagName() == "apodize") {
+        if (e.text() == "0") {
+          in_apodize = false;
+        } else {
+          in_apodize = true;
+        }
+      } else if (e.tagName() == "apodizefunction") {
+        in_apodizeFxn = ApodizeFunction(e.text().toInt());
+      } else if (e.tagName() == "gaussiansigma") {
+        in_gaussianSigma = e.text().toDouble();
+      } else if (e.tagName() == "removeMean") {
+        if (e.text() == "0") {
+          in_removeMean = false;
+        } else {
+          in_removeMean = true;
+        }
+      } else if (e.tagName() == "vectorunits") {
+        in_VUnits = e.text();
+      } else if (e.tagName() == "rateunits") {
+        in_RUnits = e.text();
+      } else if (e.tagName() == "outputtype") {
+        in_output = (PSDType)e.text().toInt();
+      } else if (e.tagName() == "interpolateHoles") {
+        interpolateHoles = e.text().toInt() != 0;
+      }
+    }
+    n = n.nextSibling();
+  }
+
+  _inputVectorLoadQueue.append(qMakePair(QString(INVECTOR), vecName));
+
+  setTagName(ObjectTag::fromString(in_tag));
+
+  commonConstructor(store, in_V, in_freq, in_average, in_averageLen,
+                    in_apodize, in_removeMean,
+                    in_VUnits, in_RUnits, in_apodizeFxn, in_gaussianSigma,
+                    in_output, interpolateHoles);
+}
 
 
 void PSD::commonConstructor(ObjectStore *store, VectorPtr in_V,
@@ -204,33 +204,24 @@ const CurveHintList *PSD::curveHints() const {
 }
 
 
-Object::UpdateType PSD::update(int update_counter) {
+Object::UpdateType PSD::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   bool force = dirty();
   setDirty(false);
 
-  if (Object::checkUpdateCounter(update_counter) && !force) {
-    return lastUpdateResult();
-  }
-
   writeLockInputsAndOutputs();
 
   VectorPtr iv = _inputVectors[INVECTOR];
 
-  if (update_counter <= 0) {
-    assert(update_counter == 0);
-    force = true;
-  }
-
-  bool xUpdated = Object::UPDATE == iv->update(update_counter);
+  bool xUpdated = Object::UPDATE == iv->update();
 
   const int v_len = iv->length();
 
   // Don't touch _last_n_new if !xUpdated since it will certainly be wrong.
   if (!xUpdated && !force) {
     unlockInputsAndOutputs();
-    return setLastUpdateResult(NO_CHANGE);
+    return NO_CHANGE;
   }
 
   _last_n_new += iv->numNew();
@@ -241,7 +232,7 @@ Object::UpdateType PSD::update(int update_counter) {
   // determine if the PSD needs to be updated. if not using averaging, then we need at least _PSDLength/16 new data points. if averaging, then we want enough new data for a complete subset.
   if ( ((_last_n_new < _PSDLength/16) || (_Average && (n_subsets - _last_n_subsets < 1))) &&  iv->length() != iv->numNew() && !force) {
     unlockInputsAndOutputs();
-    return setLastUpdateResult(NO_CHANGE);
+    return NO_CHANGE;
   }
 
   _adjustLengths();
@@ -261,13 +252,13 @@ Object::UpdateType PSD::update(int update_counter) {
 
   updateVectorLabels();
   _sVector->setDirty();
-  _sVector->update(update_counter);
+  _sVector->update();
   _fVector->setDirty();
-  _fVector->update(update_counter);
+  _fVector->update();
 
   unlockInputsAndOutputs();
 
-  return setLastUpdateResult(UPDATE);
+  return UPDATE;
 }
 
 
@@ -408,7 +399,7 @@ void PSD::setVector(VectorPtr new_v) {
   _inputVectors.remove(INVECTOR);
   new_v->writeLock();
   _inputVectors[INVECTOR] = new_v;
-  connect(new_v, SIGNAL(vectorUpdated(ObjectPtr, int)), this, SLOT(vectorUpdated(ObjectPtr, int)));
+  connect(new_v, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   setDirty();
 }
 
@@ -499,7 +490,7 @@ DataObjectPtr PSD::makeDuplicate() {
   powerspectrum->setOutput(_Output);
   powerspectrum->setInterpolateHoles(_interpolateHoles);
 
-  powerspectrum->update(0);
+  powerspectrum->update();
   powerspectrum->unlock();
 
   return DataObjectPtr(powerspectrum);

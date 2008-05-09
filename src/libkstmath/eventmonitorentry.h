@@ -33,7 +33,7 @@ class EventMonitorEntry : public DataObject {
     const QString& typeString() const { return staticTypeString; }
     static const QString staticTypeTag;
 
-    UpdateType update(int updateCounter = -1);
+    UpdateType update();
     void save(QXmlStreamWriter &s);
     QString propertyString() const;
     void showNewDialog();

@@ -223,7 +223,7 @@ ObjectPtr CSDDialog::createNewDataObject() const {
   csd->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
   csd->writeLock();
-  csd->update(0);
+  csd->update();
   csd->unlock();
 
   tag = _document->objectStore()->suggestObjectTag<Image>(csd->tag().tagString(), ObjectTag::globalTagContext);
@@ -231,7 +231,7 @@ ObjectPtr CSDDialog::createNewDataObject() const {
   image->changeToColorOnly(csd->outputMatrix(), 0, 1, true, _CSDTab->colorPalette()->selectedPalette());
 
   image->writeLock();
-  image->update(0);
+  image->update();
   image->unlock();
 
   PlotItem *plotItem = 0;
@@ -300,7 +300,7 @@ ObjectPtr CSDDialog::editExistingDataObject() const {
                       vectorUnits,
                       rateUnits);
 
-          csd->update(0);
+          csd->update();
           csd->unlock();
         }
       }
@@ -320,7 +320,7 @@ ObjectPtr CSDDialog::editExistingDataObject() const {
                   _CSDTab->FFTOptionsWidget()->rateUnits());
       csd->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
-      csd->update(0);
+      csd->update();
       csd->unlock();
     }
   }

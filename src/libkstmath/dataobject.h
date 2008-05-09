@@ -55,7 +55,7 @@ class KST_EXPORT DataObject : public Object {
     static DataObjectPtr plugin(const QString& name);
     static DataObjectPtr createPlugin(const QString& name);
 
-    virtual UpdateType update(int updateCounter = -1) = 0;
+    virtual UpdateType update() = 0;
     virtual const QString& typeString() const { return _typeString; }
     virtual QString propertyString() const = 0;
     virtual const QString& type() const { return _type; }
@@ -122,7 +122,7 @@ class KST_EXPORT DataObject : public Object {
     void showDialog(bool isNew = true);
 
   public Q_SLOTS:
-    void vectorUpdated(ObjectPtr object, int version);
+    void vectorUpdated(ObjectPtr object);
 
   protected slots:
     virtual void showNewDialog() = 0;

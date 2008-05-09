@@ -630,7 +630,7 @@ void DataWizard::finished() {
         _pageDataPresentation->dataRange()->doSkip(),
         _pageDataPresentation->dataRange()->doFilter());
 
-    xv->update(0);
+    xv->update();
     xv->unlock();
 
   } else {
@@ -656,7 +656,7 @@ void DataWizard::finished() {
           _pageDataPresentation->dataRange()->doSkip(),
           _pageDataPresentation->dataRange()->doFilter());
 
-      vector->update(0);
+      vector->update();
       vector->unlock();
 
       vectors.append(vector);
@@ -787,7 +787,7 @@ void DataWizard::finished() {
       curve->setPointType(ptype++ % KSTPOINT_MAXTYPE);
 
       curve->writeLock();
-      curve->update(0);
+      curve->update();
       curve->unlock();
 
       if (*plotIterator) {
@@ -850,7 +850,7 @@ void DataWizard::finished() {
         powerspectrum->setOutput(_pageDataPresentation->getFFTOptions()->output());
         powerspectrum->setInterpolateHoles(_pageDataPresentation->getFFTOptions()->interpolateOverHoles());
 
-        powerspectrum->update(0);
+        powerspectrum->update();
         powerspectrum->unlock();
 
         CurvePtr curve = _document->objectStore()->createObject<Curve>(powerspectrum->tag());
@@ -872,7 +872,7 @@ void DataWizard::finished() {
         curve->setColor(color);
 
         curve->writeLock();
-        curve->update(0);
+        curve->update();
         curve->unlock();
 
         if (*plotIterator) {

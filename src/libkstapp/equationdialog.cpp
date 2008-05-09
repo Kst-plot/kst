@@ -277,7 +277,7 @@ ObjectPtr EquationDialog::createNewDataObject() const {
   equation->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
   equation->writeLock();
-  equation->update(0);
+  equation->update();
   equation->unlock();
 
   //FIXME this should be a command...
@@ -299,7 +299,7 @@ ObjectPtr EquationDialog::createNewDataObject() const {
   curve->setBarStyle(_equationTab->curveAppearance()->barStyle());
 
   curve->writeLock();
-  curve->update(0);
+  curve->update();
   curve->unlock();
 
   _equationTab->curveAppearance()->setWidgetDefaults();
@@ -350,7 +350,7 @@ ObjectPtr EquationDialog::editExistingDataObject() const {
           equation->setEquation(equationString);
           equation->setExistingXVector(xVector, doInterpolation);
 
-          equation->update(0);
+          equation->update();
           equation->unlock();
         }
       }
@@ -360,7 +360,7 @@ ObjectPtr EquationDialog::editExistingDataObject() const {
       equation->setExistingXVector(_equationTab->xVector(), _equationTab->doInterpolation());
       equation->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
-      equation->update(0);
+      equation->update();
       equation->unlock();
     }
   }
