@@ -30,8 +30,6 @@ static bool dirtyScalars = false;
 const QString Scalar::staticTypeString = I18N_NOOP("Scalar");
 const QString Scalar::staticTypeTag = I18N_NOOP("scalar");
 
-static int _xnum = 1;
-
 bool Scalar::scalarsDirty() {
   // Should use a mutex, but let's play with fire to be fast
   return dirtyScalars;
@@ -126,6 +124,7 @@ void Scalar::save(QXmlStreamWriter &s) {
     s.writeAttribute("editable", "true");
   }
   s.writeAttribute("value", QString::number(value()));
+  saveNameInfo(s);
   s.writeEndElement();
 }
 

@@ -370,7 +370,7 @@ int DataVector::reqStartFrame() const {
 
 /** Save vector information */
 void DataVector::save(QXmlStreamWriter &s) {
-  if (_file) {    
+  if (_file) {
     s.writeStartElement("datavector");
     s.writeAttribute("tag", tag().tagString());
     _file->readLock();
@@ -392,6 +392,7 @@ void DataVector::save(QXmlStreamWriter &s) {
         s.writeAttribute("doAve", "true");
       }
     }
+    saveNameInfo(s);
     s.writeEndElement();
   }
 }

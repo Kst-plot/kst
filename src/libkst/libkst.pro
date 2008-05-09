@@ -44,6 +44,7 @@ SOURCES += \
     rwlock.cpp \
     scalar.cpp \
     scalarfactory.cpp \
+    shortnameindex.cpp\
     string_kst.cpp \
     stringfactory.cpp \
     updatemanager.cpp \

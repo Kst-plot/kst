@@ -53,6 +53,8 @@ void GeneratedVector::save(QXmlStreamWriter &s) {
   s.writeAttribute("min", QString::number(min()));
   s.writeAttribute("max", QString::number(max()));
   s.writeAttribute("count", QString::number(length()));
+  saveNameInfo(s);
+
   s.writeEndElement();
 }
 

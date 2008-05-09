@@ -30,6 +30,7 @@ ScalarFactory::~ScalarFactory() {
 PrimitivePtr ScalarFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
   ObjectTag tag;
   QByteArray data;
+  QString descriptiveName;
 
   Q_ASSERT(store);
 
@@ -45,6 +46,10 @@ PrimitivePtr ScalarFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
         value = attrs.value("value").toString().toDouble();
         orphan = attrs.value("orphan").toString() == "true" ? true : false;
         editable = attrs.value("editable").toString() == "true" ? true : false;
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          descriptiveName = attrs.value("descriptiveName").toString();
+        }
+        Object::processShortNameIndexAttributes(attrs);
       } else {
         return 0;
       }
@@ -67,6 +72,7 @@ PrimitivePtr ScalarFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
   scalar->setValue(value);
   scalar->setOrphan(true);
   scalar->setEditable(true);
+  scalar->setDescriptiveName(descriptiveName);
 
   return scalar;
 }

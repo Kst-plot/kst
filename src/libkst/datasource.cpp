@@ -500,6 +500,7 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
 
   Q_ASSERT(store);
   _numFramesScalar = store->createObject<Scalar>(ObjectTag("frames", tag()));
+  _numFramesScalar->setSlaveName(QString("frames"));
   // Don't set provider - this is always up-to-date
 
   if (_updateCheckType == Timer) {

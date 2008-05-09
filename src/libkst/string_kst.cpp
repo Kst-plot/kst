@@ -27,8 +27,6 @@ namespace Kst {
 const QString String::staticTypeString = I18N_NOOP("String");
 const QString String::staticTypeTag = I18N_NOOP("string");
 
-static int _tnum = 1;
-
 String::String(ObjectStore *store, ObjectTag tag, Object *provider, const QString& val, bool orphan)
     : Primitive(store, tag, provider), _value(val), _orphan(orphan), _editable(false) {
   _shortName = "T"+QString::number(_tnum++);
@@ -80,6 +78,7 @@ void String::save(QXmlStreamWriter &s) {
     s.writeAttribute("editable", "true");
   }
   s.writeAttribute("value", value());
+  saveNameInfo(s);
   s.writeEndElement();
 }
 

@@ -34,7 +34,7 @@ VectorFactory::~VectorFactory() {
 PrimitivePtr VectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
   ObjectTag tag;
   QByteArray data;
-
+  QString descriptiveName;
   Q_ASSERT(store);
 
   while (!xml.atEnd()) {
@@ -43,6 +43,10 @@ PrimitivePtr VectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
       if (n == Vector::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
         tag = ObjectTag::fromString(attrs.value("tag").toString());
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          descriptiveName = attrs.value("descriptiveName").toString();
+        }
+        Object::processShortNameIndexAttributes(attrs);
       } else if (n == "data") {
 
         QString qcs(xml.readElementText().toLatin1());
@@ -69,6 +73,7 @@ PrimitivePtr VectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
 
   VectorPtr vector = store->createObject<Vector>(tag);
   vector->change(data);
+  vector->setDescriptiveName(descriptiveName);
 
   vector->writeLock();
   vector->update(0);
@@ -92,6 +97,7 @@ PrimitivePtr GeneratedVectorFactory::generatePrimitive(ObjectStore *store, QXmlS
   ObjectTag tag;
   double min, max;
   int count;
+  QString descriptiveName;
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();
@@ -102,6 +108,10 @@ PrimitivePtr GeneratedVectorFactory::generatePrimitive(ObjectStore *store, QXmlS
         min = attrs.value("min").toString().toDouble();
         max = attrs.value("max").toString().toDouble();
         count = attrs.value("count").toString().toInt();
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          descriptiveName = attrs.value("descriptiveName").toString();
+        }
+        Object::processShortNameIndexAttributes(attrs);
       } else {
         return 0;
       }
@@ -122,6 +132,7 @@ PrimitivePtr GeneratedVectorFactory::generatePrimitive(ObjectStore *store, QXmlS
 
   GeneratedVectorPtr vector = store->createObject<GeneratedVector>(tag);
   vector->changeRange(min, max, count);
+  vector->setDescriptiveName(descriptiveName);
 
   vector->writeLock();
   vector->update(0);
@@ -143,6 +154,7 @@ EditableVectorFactory::~EditableVectorFactory() {
 PrimitivePtr EditableVectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
   ObjectTag tag;
   QByteArray data;
+  QString descriptiveName;
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();
@@ -150,6 +162,10 @@ PrimitivePtr EditableVectorFactory::generatePrimitive(ObjectStore *store, QXmlSt
       if (n == EditableVector::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
         tag = ObjectTag::fromString(attrs.value("tag").toString());
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          descriptiveName = attrs.value("descriptiveName").toString();
+        }
+        Object::processShortNameIndexAttributes(attrs);
       } else if (n == "data") {
         QString qcs(xml.readElementText().toLatin1());
         QByteArray qbca = QByteArray::fromBase64(qcs.toLatin1());
@@ -175,6 +191,7 @@ PrimitivePtr EditableVectorFactory::generatePrimitive(ObjectStore *store, QXmlSt
 
   EditableVectorPtr vector = store->createObject<EditableVector>(tag);
   vector->change(data);
+  vector->setDescriptiveName(descriptiveName);
 
   vector->writeLock();
   vector->update(0);
@@ -198,6 +215,7 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
   ObjectTag tag;
   QByteArray data;
   QString provider, file, field;
+  QString descriptiveName;
   int start, count, skip = -1;
   bool doAve;
 
@@ -215,6 +233,10 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
         count = attrs.value("count").toString().toInt();
         skip = attrs.value("skip").toString().toInt();
         doAve = attrs.value("doAve").toString() == "true" ? true : false;
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          descriptiveName = attrs.value("descriptiveName").toString();
+        }
+        Object::processShortNameIndexAttributes(attrs);
 
       } else if (n == "data") {
 
@@ -257,6 +279,7 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
       (skip != -1),
       doAve);
 
+  vector->setDescriptiveName(descriptiveName);
   vector->update(0);
   vector->unlock();
 

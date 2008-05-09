@@ -33,6 +33,7 @@ GeneratedMatrixFactory::~GeneratedMatrixFactory() {
 PrimitivePtr GeneratedMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
   ObjectTag tag;
   QByteArray data;
+  QString descriptiveName;
 
   Q_ASSERT(store);
 
@@ -54,6 +55,11 @@ PrimitivePtr GeneratedMatrixFactory::generatePrimitive(ObjectStore *store, QXmlS
         stepX = attrs.value("xstep").toString().toDouble();
         stepY = attrs.value("ystep").toString().toDouble();
         xDirection = attrs.value("xdirection").toString() == "true" ? true : false;
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          descriptiveName = attrs.value("descriptiveName").toString();
+        }
+        Object::processShortNameIndexAttributes(attrs);
+
       } else {
         return 0;
       }
@@ -74,6 +80,7 @@ PrimitivePtr GeneratedMatrixFactory::generatePrimitive(ObjectStore *store, QXmlS
 
   GeneratedMatrixPtr matrix = store->createObject<GeneratedMatrix>(tag);
   matrix->change(uint(nX), uint(nY), minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
+  matrix->setDescriptiveName(descriptiveName);
 
   matrix->writeLock();
   matrix->update(0);
@@ -96,6 +103,7 @@ EditableMatrixFactory::~EditableMatrixFactory() {
 PrimitivePtr EditableMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
   ObjectTag tag;
   QByteArray data;
+  QString descriptiveName;
 
   Q_ASSERT(store);
 
@@ -113,6 +121,10 @@ PrimitivePtr EditableMatrixFactory::generatePrimitive(ObjectStore *store, QXmlSt
         nY = attrs.value("ny").toString().toDouble();
         stepX = attrs.value("xstep").toString().toDouble();
         stepY = attrs.value("ystep").toString().toDouble();
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          descriptiveName = attrs.value("descriptiveName").toString();
+        }
+        Object::processShortNameIndexAttributes(attrs);
       } else if (n == "data") {
 
         QString qcs(xml.readElementText().toLatin1());
@@ -139,6 +151,7 @@ PrimitivePtr EditableMatrixFactory::generatePrimitive(ObjectStore *store, QXmlSt
 
   EditableMatrixPtr matrix = store->createObject<EditableMatrix>(tag);
   matrix->change(data, uint(nX), uint(nY), minX, minY, stepX, stepY);
+  matrix->setDescriptiveName(descriptiveName);
 
   matrix->writeLock();
   matrix->update(0);
@@ -162,6 +175,7 @@ DataMatrixFactory::~DataMatrixFactory() {
 PrimitivePtr DataMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
   ObjectTag tag;
   QByteArray data;
+  QString descriptiveName;
 
   Q_ASSERT(store);
 
@@ -190,6 +204,10 @@ PrimitivePtr DataMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStream
         minY = attrs.value("ymin").toString().toDouble();
         stepX = attrs.value("xstep").toString().toDouble();
         stepY = attrs.value("ystep").toString().toDouble();
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          descriptiveName = attrs.value("descriptiveName").toString();
+        }
+        Object::processShortNameIndexAttributes(attrs);
       } else {
         return 0;
       }
@@ -217,6 +235,7 @@ PrimitivePtr DataMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStream
 
   DataMatrixPtr matrix = store->createObject<DataMatrix>(tag);
   matrix->change(dataSource, field, requestedXStart, requestedYStart, requestedXCount, requestedYCount, doAve, doSkip, skip, minX, minY, stepX, stepY);
+  matrix->setDescriptiveName(descriptiveName);
 
   matrix->writeLock();
   matrix->update(0);

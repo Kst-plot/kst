@@ -70,6 +70,8 @@ void EditableVector::setSaveData(bool save) {
 void EditableVector::save(QXmlStreamWriter &s) {
   s.writeStartElement("editablevector");
   s.writeAttribute("tag", tag().tagString());
+  saveNameInfo(s);
+
   if (_saveData) {
     QByteArray qba(length()*sizeof(double), '\0');
     QDataStream qds(&qba, QIODevice::WriteOnly);

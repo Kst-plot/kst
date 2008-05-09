@@ -28,6 +28,7 @@
 #include "datacollection.h"
 #include "math_kst.h"
 #include "vector.h"
+//#include "scalar.h"
 #include "debug.h"
 #include "objectstore.h"
 #include "updatemanager.h"
@@ -41,15 +42,14 @@ namespace Kst {
 
 #define INITSIZE 1
 
-static int _vnum=1;
-
 const QString Vector::staticTypeString = I18N_NOOP("Vector");
 const QString Vector::staticTypeTag = I18N_NOOP("vector");
 
 /** Create a vector */
 Vector::Vector(ObjectStore *store, const ObjectTag& tag, int size, Object *provider, bool isScalarList)
     : Primitive(store, tag, provider), _nsum(0) {
-  // qDebug() << "+++ CREATING VECTOR: " << (void*) this;
+  //qDebug() << "+++ CREATING VECTOR: " << (void*) this;
+
   _editable = false;
   NumShifted = 0;
   NumNew = 0;
@@ -107,6 +107,8 @@ Vector::Vector(ObjectStore *store, const ObjectTag& tag, const QByteArray& data)
   }
 
   _is_rising = false;
+  _shortName = "V"+QString::number(_vnum);
+  _vnum++;
 }
 
 
@@ -573,9 +575,9 @@ void Vector::save(QXmlStreamWriter &s) {
 
     s.writeTextElement("data", qCompress(qba).toBase64());
   }
+  saveNameInfo(s);
   s.writeEndElement();
 }
-
 
 void Vector::setNewAndShift(int inNew, int inShift) {
   NumNew = inNew;

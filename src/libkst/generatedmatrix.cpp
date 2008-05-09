@@ -96,6 +96,8 @@ void GeneratedMatrix::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("gradzmin", QString::number(_gradZMin));
   xml.writeAttribute("gradzmax", QString::number(_gradZMax));
   xml.writeAttribute("xdirection", QVariant(_xDirection).toString());
+  saveNameInfo(xml);
+
   xml.writeEndElement();
 
 }

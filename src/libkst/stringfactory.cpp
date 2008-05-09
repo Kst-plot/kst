@@ -34,7 +34,7 @@ PrimitivePtr StringFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
   Q_ASSERT(store);
 
   bool orphan, editable;
-  QString value;
+  QString value, descriptiveName;
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();
@@ -45,6 +45,10 @@ PrimitivePtr StringFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
         value = attrs.value("value").toString();
         orphan = attrs.value("orphan").toString() == "true" ? true : false;
         editable = attrs.value("editable").toString() == "true" ? true : false;
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          descriptiveName = attrs.value("descriptiveName").toString();
+        }
+        Object::processShortNameIndexAttributes(attrs);
       } else {
         return 0;
       }
@@ -67,6 +71,7 @@ PrimitivePtr StringFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
   string->setValue(value);
   string->setOrphan(true);
   string->setEditable(true);
+  string->setDescriptiveName(descriptiveName);
 
   return string;
 }
