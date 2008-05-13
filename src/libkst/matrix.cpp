@@ -31,6 +31,7 @@
 #include "math_kst.h"
 #include "datacollection.h"
 #include "objectstore.h"
+#include "updatemanager.h"
 
 
 // used for resizing; set to 1 for loop zeroing, 2 to use memset
@@ -616,6 +617,14 @@ void Matrix::change(QByteArray &data, uint nX, uint nY, double minX, double minY
     resizeZ(i, false);
   }
   setDirty();
+}
+
+
+void Matrix::triggerUpdateSignal(ObjectPtr object) {
+#if DEBUG_UPDATE_CYCLE > 1
+  qDebug() << "UP - Matrix" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
+#endif
+  emit matrixUpdated(object);
 }
 
 }

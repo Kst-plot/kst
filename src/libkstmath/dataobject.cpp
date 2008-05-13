@@ -166,7 +166,7 @@ double *DataObject::vectorRealloced(VectorPtr v, double *memptr, int newSize) co
 }
 
 
-void DataObject::vectorUpdated(ObjectPtr object) {
+void DataObject::inputObjectUpdated(ObjectPtr object) {
 #if DEBUG_UPDATE_CYCLE > 1
   qDebug() << "UP - Vector update required by DataObject " << shortName() << "for update of" << object->shortName();
 #endif
@@ -178,6 +178,13 @@ void DataObject::vectorUpdated(ObjectPtr object) {
 #endif
     foreach (VectorPtr vector, _outputVectors) {
       vector->triggerUpdateSignal(object);
+    }
+    foreach (MatrixPtr matrix, _outputMatrices) {
+      qDebug() << "loop updating matrix" << matrix->shortName();
+      matrix->triggerUpdateSignal(object);
+    }
+    foreach (ScalarPtr scalar, _outputScalars) {
+      scalar->triggerUpdateSignal(object);
     }
   }
   UpdateManager::self()->updateFinished(object, this);

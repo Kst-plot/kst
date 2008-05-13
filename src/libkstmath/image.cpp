@@ -16,6 +16,7 @@
 #include "image.h"
 #include "math_kst.h"
 #include "objectstore.h"
+#include "updatemanager.h"
 
 #include "kst_i18n.h"
 
@@ -121,6 +122,7 @@ Image::Image(ObjectStore *store, const ObjectTag &in_tag, MatrixPtr in_matrix, d
   setContourDefaults();
   setDirty();
   _shortName = "I"+QString::number(_inum++);
+  connect(in_matrix, SIGNAL(matrixUpdated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
 }
 
 
@@ -139,6 +141,7 @@ Image::Image(ObjectStore *store, const ObjectTag &in_tag, MatrixPtr in_matrix, i
   setDirty();
 
   _shortName = "I"+QString::number(_inum++);
+  connect(in_matrix, SIGNAL(matrixUpdated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
 }
 
 
@@ -167,6 +170,7 @@ Image::Image(ObjectStore *store, const ObjectTag &in_tag,
   _pal = Palette(paletteName);
   setDirty();
   _shortName = "I"+QString::number(_inum++);
+  connect(in_matrix, SIGNAL(matrixUpdated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
 }
 
 
@@ -201,58 +205,63 @@ void Image::save(QXmlStreamWriter &s) {
 }
 
 
+void Image::matrixUpdated(ObjectPtr object) {
+#if DEBUG_UPDATE_CYCLE > 1
+    qDebug() << "UP - Image update ready for" << object->shortName();
+#endif
+    UpdateManager::self()->requestUpdate(object, this);
+}
+
+
 Object::UpdateType Image::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  bool force = dirty();
   setDirty(false);
 
   writeLockInputsAndOutputs();
 
   if (_inputMatrices.contains(THEMATRIX)) {
+
     MatrixPtr mp = _inputMatrices[THEMATRIX];
-    bool updated = UPDATE == mp->update();
 
-    if (updated || force) {
-      // stats
-      NS = mp->sampleCount();
-      MinX = mp->minX();
-      int xNumSteps = mp->xNumSteps();
-      double xStepSize = mp->xStepSize();
-      MaxX = xNumSteps*xStepSize + MinX;
-      MinY = mp->minY();
-      int yNumSteps = mp->yNumSteps();
-      double yStepSize = mp->yStepSize();
-      MaxY = yNumSteps*yStepSize + MinY;
-      _ns_maxx = MaxX;
-      _ns_minx = MinX;
-      _ns_maxy = MaxY;
-      _ns_miny = MinY;
-      MinPosY = MinY > 0 ? MinY : 0;
-      MinPosX = MinX > 0 ? MinX : 0;
+    // stats
+    NS = mp->sampleCount();
+    MinX = mp->minX();
+    int xNumSteps = mp->xNumSteps();
+    double xStepSize = mp->xStepSize();
+    MaxX = xNumSteps*xStepSize + MinX;
+    MinY = mp->minY();
+    int yNumSteps = mp->yNumSteps();
+    double yStepSize = mp->yStepSize();
+    MaxY = yNumSteps*yStepSize + MinY;
+    _ns_maxx = MaxX;
+    _ns_minx = MinX;
+    _ns_maxy = MaxY;
+    _ns_miny = MinY;
+    MinPosY = MinY > 0 ? MinY : 0;
+    MinPosX = MinX > 0 ? MinX : 0;
 
 
-      //recalculate the thresholds if necessary
-      if (_autoThreshold) {
-        _zLower = mp->minValue();
-        _zUpper = mp->maxValue();
-      }
+    //recalculate the thresholds if necessary
+    if (_autoThreshold) {
+      _zLower = mp->minValue();
+      _zUpper = mp->maxValue();
+    }
 
-      //update the contour lines
-      if (hasContourMap()) {
-        double min = mp->minValue(), max = mp->maxValue();
-          double contourStep  = (max - min) / (double)(_numContourLines + 1);
-        if (contourStep > 0) {
-          _contourLines.clear();
-          for (int i = 0; i < _numContourLines; i++) {
-            _contourLines.append(min + (i+1) * contourStep);
-          }
+    //update the contour lines
+    if (hasContourMap()) {
+      double min = mp->minValue(), max = mp->maxValue();
+        double contourStep  = (max - min) / (double)(_numContourLines + 1);
+      if (contourStep > 0) {
+        _contourLines.clear();
+        for (int i = 0; i < _numContourLines; i++) {
+          _contourLines.append(min + (i+1) * contourStep);
         }
       }
-
-      unlockInputsAndOutputs();
-      return UPDATE;
     }
+
+    unlockInputsAndOutputs();
+    return UPDATE;
   }
 
   unlockInputsAndOutputs();
@@ -335,6 +344,10 @@ void Image::setThresholdToSpikeInsensitive(double per) {
 void Image::changeToColorOnly(MatrixPtr in_matrix, double lowerZ,
     double upperZ, bool autoThreshold, const QString &paletteName) {
 
+  if (_inputMatrices[THEMATRIX]) {
+    disconnect(_inputMatrices[THEMATRIX], SIGNAL(matrixUpdated(ObjectPtr)));
+  }
+
   _inputMatrices[THEMATRIX] = in_matrix;
 
   _zLower = lowerZ;
@@ -345,18 +358,28 @@ void Image::changeToColorOnly(MatrixPtr in_matrix, double lowerZ,
   }
   _hasColorMap = true;
   _hasContourMap = false;
+
+  connect(in_matrix, SIGNAL(matrixUpdated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
+
   setDirty();
 }
 
 
 void Image::changeToContourOnly(MatrixPtr in_matrix, int numContours,
     const QColor& contourColor, int contourWeight) {
+
+  if (_inputMatrices[THEMATRIX]) {
+    disconnect(_inputMatrices[THEMATRIX], SIGNAL(matrixUpdated(ObjectPtr)));
+  }
+
   _inputMatrices[THEMATRIX] = in_matrix;
   _numContourLines = numContours;
   _contourWeight = contourWeight;
   _contourColor = contourColor;
   _hasColorMap = false;
   _hasContourMap = true;
+
+  connect(in_matrix, SIGNAL(matrixUpdated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
 
   setDirty();
 }
@@ -365,6 +388,10 @@ void Image::changeToContourOnly(MatrixPtr in_matrix, int numContours,
 void Image::changeToColorAndContour(MatrixPtr in_matrix,
     double lowerZ, double upperZ, bool autoThreshold, const QString &paletteName,
     int numContours, const QColor& contourColor, int contourWeight) {
+
+  if (_inputMatrices[THEMATRIX]) {
+    disconnect(_inputMatrices[THEMATRIX], SIGNAL(matrixUpdated(ObjectPtr)));
+  }
 
   _inputMatrices[THEMATRIX] = in_matrix;
 
@@ -379,6 +406,9 @@ void Image::changeToColorAndContour(MatrixPtr in_matrix,
   _contourColor = contourColor;
   _hasColorMap = true;
   _hasContourMap = true;
+
+  connect(in_matrix, SIGNAL(matrixUpdated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
+
   setDirty();
 }
 

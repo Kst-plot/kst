@@ -64,6 +64,8 @@ class KST_EXPORT Scalar : public Primitive {
 
     Scalar& operator=(double v);
 
+    void triggerUpdateSignal(ObjectPtr object);
+
   public slots:
     double value() const;
 
@@ -81,6 +83,7 @@ class KST_EXPORT Scalar : public Primitive {
 
   signals:
     void trigger();
+    void scalarUpdated(ObjectPtr object);
 
   private:
     double _value;

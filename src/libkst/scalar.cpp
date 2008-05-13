@@ -181,5 +181,13 @@ void Scalar::setEditable(bool editable) {
 }
 
 
+void Scalar::triggerUpdateSignal(ObjectPtr object) {
+#if DEBUG_UPDATE_CYCLE > 1
+  qDebug() << "UP - Scalar" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
+#endif
+  emit scalarUpdated(object);
+}
+
+
 }
 // vim: et ts=2 sw=2

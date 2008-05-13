@@ -106,6 +106,9 @@ class KST_EXPORT Image : public Relation {
     // see KstRelation::paintLegendSymbol
     virtual void paintLegendSymbol(Painter *p, const QRect& bound);
 
+  public Q_SLOTS:
+    void matrixUpdated(ObjectPtr object);
+
   protected:
     Image(ObjectStore *store, const ObjectTag &in_tag);
     //constructor for colormap only

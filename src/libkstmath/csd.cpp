@@ -122,6 +122,11 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
     int in_windowSize, int in_length, double in_gaussianSigma,
     PSDType in_outputType, const QString& in_vectorUnits,
     const QString& in_rateUnits) {
+
+  if (_inputVectors[INVECTOR]) {
+    disconnect(_inputVectors[INVECTOR], SIGNAL(vectorUpdated(ObjectPtr)));
+  }
+
   _inputVectors[INVECTOR] = in_V;
   QString vecName = in_V ? in_V->tag().displayString() : QString::null;
   _frequency = in_freq;
@@ -154,6 +159,8 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
   _outMatrix->setDirty();
   setDirty();
   _shortName = "G"+QString::number(_csdnum++);
+
+  connect(_inputVectors[INVECTOR], SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
 
 }
 
@@ -193,6 +200,8 @@ void CSD::commonConstructor(ObjectStore *store, VectorPtr in_V,
 
   updateMatrixLabels();
   _outMatrix->setDirty();
+
+  connect(_inputVectors[INVECTOR], SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
 }
 
 

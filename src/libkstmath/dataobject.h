@@ -122,7 +122,7 @@ class KST_EXPORT DataObject : public Object {
     void showDialog(bool isNew = true);
 
   public Q_SLOTS:
-    void vectorUpdated(ObjectPtr object);
+    void inputObjectUpdated(ObjectPtr object);
 
   protected slots:
     virtual void showNewDialog() = 0;

@@ -252,9 +252,7 @@ Object::UpdateType PSD::update() {
 
   updateVectorLabels();
   _sVector->setDirty();
-  _sVector->update();
   _fVector->setDirty();
-  _fVector->update();
 
   unlockInputsAndOutputs();
 
@@ -399,7 +397,7 @@ void PSD::setVector(VectorPtr new_v) {
   _inputVectors.remove(INVECTOR);
   new_v->writeLock();
   _inputVectors[INVECTOR] = new_v;
-  connect(new_v, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
+  connect(new_v, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
   setDirty();
 }
 
