@@ -208,7 +208,11 @@ void DataManager::showContextMenu(const QPoint &position) {
     } else {
       DataObjectPtr dataObject = kst_cast<DataObject>(model->generateObjectList().at(_session->indexAt(position).parent().row()));
       if (dataObject) {
-        _currentObject = dataObject->outputVectors().values()[_session->indexAt(position).row()];
+        if (dataObject->outputVectors().count() > _session->indexAt(position).row()) {
+          _currentObject = dataObject->outputVectors().values()[_session->indexAt(position).row()];
+        } else {
+          _currentObject = dataObject->outputMatrices().values()[_session->indexAt(position).row() - dataObject->outputVectors().count()];
+        }
         if (_currentObject) {
           QAction *action = new QAction(_currentObject->tag().displayString(), this);
           action->setEnabled(false);
@@ -229,6 +233,10 @@ void DataManager::showContextMenu(const QPoint &position) {
 
             action = new QAction(tr("Make Histogram"), this);
             connect(action, SIGNAL(triggered()), this, SLOT(showHistogramDialog()));
+            actions.append(action);
+          } else if (MatrixPtr m = kst_cast<Matrix>(_currentObject)) {
+            action = new QAction(tr("Make Image"), this);
+            connect(action, SIGNAL(triggered()), this, SLOT(showImageDialog()));
             actions.append(action);
           }
         }
