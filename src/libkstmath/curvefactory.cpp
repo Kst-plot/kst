@@ -56,8 +56,8 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
         errorYMinusVectorTag = attrs.value("erroryminusvector").toString();
 
         hasLines = attrs.value("haslines").toString() == "true" ? true : false;
-        lineStyle = attrs.value("linewidth").toString().toInt();
-        lineWidth = attrs.value("linestyle").toString().toInt();
+        lineWidth = attrs.value("linewidth").toString().toInt();
+        lineStyle = attrs.value("linestyle").toString().toInt();
 
         hasPoints = attrs.value("haspoints").toString() == "true" ? true : false;
         pointType = attrs.value("pointtype").toString().toInt();

@@ -180,7 +180,6 @@ void DataObject::inputObjectUpdated(ObjectPtr object) {
       vector->triggerUpdateSignal(object);
     }
     foreach (MatrixPtr matrix, _outputMatrices) {
-      qDebug() << "loop updating matrix" << matrix->shortName();
       matrix->triggerUpdateSignal(object);
     }
     foreach (ScalarPtr scalar, _outputScalars) {

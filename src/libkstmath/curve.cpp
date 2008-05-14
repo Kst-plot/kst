@@ -939,13 +939,15 @@ void Curve::paint(const CurveRenderContext& context) {
     Qt::PenStyle style = Kst::LineStyle[lineStyle()];
     int i0, iN;
     int width;
-    
+
     if (lineWidth() == 0) {
       width = penWidth;
-    } else {
+    } else if (penWidth > 0) {
       width = lineWidth() * penWidth;
+    } else {
+      width = lineWidth();
     }
-    
+
     if (xv->isRising()) {
       i0 = indexNearX(XMin, xv, NS);
       if (i0 > 0) {
