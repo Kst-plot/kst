@@ -390,7 +390,14 @@ void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   const QRectF projection = plotItem()->mapToProjection(_selectionRect.rect());
   _selectionRect.reset();
 
-  plotItem()->zoomFixedExpression(projection);
+  const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
+  if (modifiers & Qt::ShiftModifier) {
+    plotItem()->zoomYRange(projection);
+  } else if (modifiers & Qt::ControlModifier) {
+    plotItem()->zoomXRange(projection);
+  } else {
+    plotItem()->zoomFixedExpression(projection);
+  }
 }
 
 

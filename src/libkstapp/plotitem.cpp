@@ -1684,6 +1684,20 @@ void PlotItem::zoomFixedExpression(const QRectF &projection) {
 }
 
 
+void PlotItem::zoomXRange(const QRectF &projection) {
+  qDebug() << "zoomXRange" << endl;
+  ZoomCommand *cmd = new ZoomXRangeCommand(this, projection);
+  cmd->redo();
+}
+
+
+void PlotItem::zoomYRange(const QRectF &projection) {
+  qDebug() << "zoomYRange" << endl;
+  ZoomCommand *cmd = new ZoomYRangeCommand(this, projection);
+  cmd->redo();
+}
+
+
 void PlotItem::zoomMaximum() {
   qDebug() << "zoomMaximum" << endl;
   ZoomCommand *cmd = new ZoomMaximumCommand(this);
@@ -2067,6 +2081,24 @@ void ZoomFixedExpressionCommand::applyZoomTo(PlotItem *item) {
   item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
   item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
   item->setProjectionRect(_fixed);
+}
+
+
+/*
+ * X axis zoom to Range.
+ */
+void ZoomXRangeCommand::applyZoomTo(PlotItem *item) {
+  item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+  item->setProjectionRect(QRect(_fixed.x(), item->projectionRect().y(), _fixed.width(), item->projectionRect().height()));
+}
+
+
+/*
+ * Y axis zoom to Range.
+ */
+void ZoomYRangeCommand::applyZoomTo(PlotItem *item) {
+  item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+  item->setProjectionRect(QRect(item->projectionRect().x(), _fixed.y(), item->projectionRect().width(), _fixed.height()));
 }
 
 

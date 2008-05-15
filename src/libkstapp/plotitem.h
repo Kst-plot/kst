@@ -172,6 +172,8 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
   public Q_SLOTS:
     void zoomFixedExpression(const QRectF &projection);
+    void zoomXRange(const QRectF &projection);
+    void zoomYRange(const QRectF &projection);
     void zoomMaximum();
     void zoomMaxSpikeInsensitive();
     void zoomYMeanCentered();
@@ -384,6 +386,7 @@ class KST_EXPORT ZoomCommand : public ViewItemCommand
     QList<ZoomState> _originalStates;
 };
 
+
 class KST_EXPORT ZoomFixedExpressionCommand : public ZoomCommand
 {
   public:
@@ -396,6 +399,35 @@ class KST_EXPORT ZoomFixedExpressionCommand : public ZoomCommand
   private:
     QRectF _fixed;
 };
+
+
+class KST_EXPORT ZoomXRangeCommand : public ZoomCommand
+{
+  public:
+    ZoomXRangeCommand(PlotItem *item, const QRectF &fixed)
+        : ZoomCommand(item, QObject::tr("Zoom X Range Expression")), _fixed(fixed) {}
+    virtual ~ZoomXRangeCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
+
+  private:
+    QRectF _fixed;
+};
+
+
+class KST_EXPORT ZoomYRangeCommand : public ZoomCommand
+{
+  public:
+    ZoomYRangeCommand(PlotItem *item, const QRectF &fixed)
+        : ZoomCommand(item, QObject::tr("Zoom X Range Expression")), _fixed(fixed) {}
+    virtual ~ZoomYRangeCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
+
+  private:
+    QRectF _fixed;
+};
+
 
 class KST_EXPORT ZoomMaximumCommand : public ZoomCommand
 {
