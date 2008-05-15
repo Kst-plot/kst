@@ -295,11 +295,6 @@ void CSD::save(QXmlStreamWriter &s) {
 }
 
 
-QString CSD::vTag() const {
-  return _inputVectors[INVECTOR]->tag().displayString();
-}
-
-
 void CSD::setVector(VectorPtr new_v) {
   VectorPtr v = _inputVectors[INVECTOR];
   if (v) {
@@ -327,7 +322,7 @@ bool CSD::slaveVectorsUsed() const {
 
 
 QString CSD::propertyString() const {
-  return i18n("CSD: %1").arg(_inputVectors[INVECTOR]->tag().displayString());
+  return i18n("CSD: %1").arg(_inputVectors[INVECTOR]->Name());
 }
 
 

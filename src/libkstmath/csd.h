@@ -35,7 +35,6 @@ class KST_EXPORT CSD : public DataObject {
     virtual void save(QXmlStreamWriter &s);
     virtual QString propertyString() const;
 
-    QString vTag() const;
     void setVector(VectorPtr);
     VectorPtr vector() const;
 

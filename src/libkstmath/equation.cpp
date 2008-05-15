@@ -122,7 +122,7 @@ void Equation::commonConstructor(ObjectStore *store, const QString& in_equation)
 const CurveHintList *Equation::curveHints() const {
   _curveHints->clear();
   _curveHints->append(new CurveHint(i18n("Equation Curve"),
-                      _xOutVector->tag().displayString(), _yOutVector->tag().displayString()));
+                      _xOutVector->shortName(), _yOutVector->shortName()));
   return _curveHints;
 }
 

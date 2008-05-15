@@ -64,7 +64,6 @@ class KST_EXPORT PSD : public DataObject {
     int length() const;
     void setLength(int in_length);
 
-    QString vTag() const;
     void setVector(VectorPtr);
     VectorPtr vector() const;
 
@@ -84,9 +83,6 @@ class KST_EXPORT PSD : public DataObject {
 
     virtual void showNewDialog();
     virtual void showEditDialog();
-
-    virtual ObjectTag xVTag() const { return _fVector->tag(); }
-    virtual ObjectTag yVTag() const { return _sVector->tag(); }
 
     VectorPtr vX() const { return _fVector; }
     VectorPtr vY() const { return _sVector; }

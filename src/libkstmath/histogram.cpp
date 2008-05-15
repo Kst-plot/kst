@@ -256,7 +256,7 @@ Object::UpdateType Histogram::update() {
       break;
   }
 
-  _bVector->setLabel(_inputVectors[RAWVECTOR]->tag().displayString());
+  _bVector->setLabel(_inputVectors[RAWVECTOR]->descriptiveName());
 
   double *bins = _bVector->value();
   double *hist = _hVector->value();
@@ -318,12 +318,6 @@ void Histogram::setNumberOfBins(int in_n_bins) {
   setDirty();
 }
 
-
-QString Histogram::vTag() const {
-  return _inputVectors[RAWVECTOR]->tag().displayString();
-}
-
-
 void Histogram::setVector(VectorPtr new_v) {
   if (new_v) {
     connect(new_v, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
@@ -376,7 +370,7 @@ void Histogram::save(QXmlStreamWriter &xml) {
 
 
 QString Histogram::propertyString() const {
-  return i18n("Histogram: %1").arg(vTag());
+  return i18n("Histogram: %1").arg(_inputVectors[RAWVECTOR]->Name());
 }
 
 

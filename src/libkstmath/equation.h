@@ -67,9 +67,6 @@ class KST_EXPORT Equation : public DataObject {
     void showNewDialog();
     void showEditDialog();
 
-    ObjectTag xVTag() const { return _xOutVector->tag(); }
-    ObjectTag yVTag() const { return _yOutVector->tag(); }
-
     const CurveHintList *curveHints() const;
 
     DataObjectPtr makeDuplicate();

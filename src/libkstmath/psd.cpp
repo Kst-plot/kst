@@ -202,7 +202,8 @@ PSD::~PSD() {
 
 const CurveHintList *PSD::curveHints() const {
   _curveHints->clear();
-  _curveHints->append(new CurveHint(i18n("PSD Curve"), _fVector->tag().displayString(), _sVector->tag().displayString()));
+  _curveHints->append(new CurveHint(i18n("PSD Curve"), _fVector->shortName(),
+                      _sVector->shortName()));
   return _curveHints;
 }
 
@@ -376,11 +377,6 @@ void PSD::setOutput(PSDType in_output)  {
 }
 
 
-QString PSD::vTag() const {
-  return _inputVectors[INVECTOR]->tag().displayString();
-}
-
-
 VectorPtr PSD::vector() const {
   return _inputVectors[INVECTOR];
 }
@@ -411,7 +407,7 @@ bool PSD::slaveVectorsUsed() const {
 
 
 QString PSD::propertyString() const {
-  return i18n("PSD: %1", vTag());
+  return i18n("PSD: %1", _inputVectors[INVECTOR]->shortName());
 }
 
 

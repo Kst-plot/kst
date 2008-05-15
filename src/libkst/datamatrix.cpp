@@ -569,7 +569,6 @@ void DataMatrix::commonConstructor(DataSourcePtr file, const QString &field,
                                    int reqXStart, int reqYStart, int reqNX, int reqNY,
                                    bool doAve, bool doSkip, int skip, double minX, double minY,
                                    double stepX, double stepY) {
-//  qDebug() << "constructing DataMatrix " << tag().displayString() << " from file " << file->tag().displayString() << " (" << (void*)(&(*file)) << ")" << endl;
   _reqXStart = reqXStart;
   _reqYStart = reqYStart;
   _reqNX = reqNX;
@@ -588,7 +587,7 @@ void DataMatrix::commonConstructor(DataSourcePtr file, const QString &field,
   _editable = true;
 
   if (!_file) {
-    Debug::self()->log(i18n("Data file for matrix %1 was not opened.", tag().tagString()), Debug::Warning);
+    Debug::self()->log(i18n("Data file for matrix %1 was not opened.", Name()), Debug::Warning);
   } else {
     _samplesPerFrameCache = _file->samplesPerFrame(_field);
   }
@@ -638,7 +637,7 @@ void DataMatrix::changeFile(DataSourcePtr file) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (!file) {
-    Debug::self()->log(i18n("Data file for vector %1 was not opened.", tag().tagString()), Debug::Warning);
+    Debug::self()->log(i18n("Data file for vector %1 was not opened.", Name()), Debug::Warning);
   }
   _file = file;
   if (_file) {

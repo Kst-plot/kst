@@ -49,7 +49,7 @@ public:
 
     void setXRange(double xmin_in, double xmax_in);
 
-    QString vTag() const;
+//     QString vTag() const;
 
     void setVector(VectorPtr);
     VectorPtr vector() const;
