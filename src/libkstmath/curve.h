@@ -58,13 +58,6 @@ class KST_EXPORT Curve: public Relation {
     virtual void getEXPoints(int i, double &x, double &y, double &ex, double &exminus);
     virtual void getEYPoints(int i, double &x, double &y, double &ey, double &eyminus);
 
-    ObjectTag xVTag() const;
-    ObjectTag yVTag() const;
-    ObjectTag xETag() const;
-    ObjectTag yETag() const;
-    ObjectTag xEMinusTag() const;
-    ObjectTag yEMinusTag() const;
-
     void setXVector(VectorPtr new_vx);
     void setYVector(VectorPtr new_vy);
     void setXError(VectorPtr new_ex);
@@ -168,7 +161,7 @@ class KST_EXPORT Curve: public Relation {
 
     friend class ObjectStore;
 
-    virtual QString _automaticDescriptiveName();
+    virtual QString _automaticDescriptiveName() const;
 
   private:
     inline void commonConstructor(const QColor& in_color);

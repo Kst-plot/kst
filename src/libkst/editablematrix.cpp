@@ -116,7 +116,7 @@ void EditableMatrix::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("xstep", QString::number(xStepSize()));
   xml.writeAttribute("ystep", QString::number(yStepSize()));
   xml.writeTextElement("data", qCompress(qba).toBase64());
-  saveNameInfo(xml);
+  saveNameInfo(xml, VNUM|MNUM|XNUM);
   xml.writeEndElement();
 }
 

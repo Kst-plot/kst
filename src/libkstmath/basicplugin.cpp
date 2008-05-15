@@ -35,7 +35,10 @@ BasicPlugin::BasicPlugin(ObjectStore *store, const ObjectTag& tag)
   _typeString = i18n("Plugin");
   _type = "Plugin";
 
-  _shortName = "P"+QString::number(_pnum++);
+  _shortName = "P"+QString::number(_pnum);
+  if (_pnum>max_pnum) 
+    max_pnum = _pnum;
+  _pnum++;
 
 }
 
@@ -44,7 +47,10 @@ BasicPlugin::BasicPlugin(ObjectStore *store, const QDomElement& e)
 : DataObject(store, e), _isFit(false) {
   _typeString = i18n("Plugin");
   _type = "Plugin";
-  _shortName = "P"+QString::number(_pnum++);
+  _shortName = "P"+QString::number(_pnum);
+  if (_pnum>max_pnum) 
+    max_pnum = _pnum;
+  _pnum++;
 }
 
 

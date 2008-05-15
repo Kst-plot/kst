@@ -53,7 +53,7 @@ void GeneratedVector::save(QXmlStreamWriter &s) {
   s.writeAttribute("min", QString::number(min()));
   s.writeAttribute("max", QString::number(max()));
   s.writeAttribute("count", QString::number(length()));
-  saveNameInfo(s);
+  saveNameInfo(s, VNUM|XNUM);
 
   s.writeEndElement();
 }
@@ -105,7 +105,7 @@ void GeneratedVector::setSaveData(bool save) {
   Q_UNUSED(save)
 }
 
-QString GeneratedVector::_automaticDescriptiveName() {
+QString GeneratedVector::_automaticDescriptiveName() const {
   return QString::number(_v[0])+".."+QString::number(_v[length()-1]);
 }
 

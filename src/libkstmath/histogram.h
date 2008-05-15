@@ -105,7 +105,7 @@ public:
 
     friend class ObjectStore;
 
-    virtual QString _automaticDescriptiveName();
+    virtual QString _automaticDescriptiveName() const;
 
   private:
     NormalizationType _NormalizationMode;

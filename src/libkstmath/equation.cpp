@@ -112,8 +112,10 @@ void Equation::commonConstructor(ObjectStore *store, const QString& in_equation)
 
   setEquation(in_equation);
 
-  _shortName = "E"+QString::number(_enum++);
-
+  _shortName = "E"+QString::number(_enum);
+  if (_enum>max_enum) 
+    max_enum = _enum;
+  _enum++;
 }
 
 
@@ -207,7 +209,7 @@ void Equation::save(QXmlStreamWriter &s) {
   if (_doInterp) {
     s.writeAttribute("interpolate", "true");
   }
-  saveNameInfo(s);
+  saveNameInfo(s, VNUM|ENUM|XNUM);
   s.writeEndElement();
 }
 
@@ -577,7 +579,7 @@ bool Equation::uses(ObjectPtr p) const {
   return DataObject::uses(p);
 }
 
-QString Equation::_automaticDescriptiveName() {
+QString Equation::_automaticDescriptiveName() const {
   return equation();
 }
 

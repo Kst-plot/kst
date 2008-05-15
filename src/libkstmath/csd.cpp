@@ -158,7 +158,10 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
   updateMatrixLabels();
   _outMatrix->setDirty();
   setDirty();
-  _shortName = "G"+QString::number(_csdnum++);
+  _shortName = "G"+QString::number(_csdnum);
+  if (_csdnum>max_csdnum) 
+    max_csdnum = _csdnum;
+  _csdnum++;
 
   connect(_inputVectors[INVECTOR], SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
 
@@ -286,7 +289,7 @@ void CSD::save(QXmlStreamWriter &s) {
   s.writeAttribute("vectorunits", _vectorUnits);
   s.writeAttribute("rateunits", _rateUnits);
   s.writeAttribute("outputtype", QString::number(_outputType));
-  saveNameInfo(s);
+  saveNameInfo(s,VNUM|XNUM|MNUM|CSDNUM);
 
   s.writeEndElement();
 }
@@ -503,7 +506,7 @@ void CSD::updateMatrixLabels(void) {
   }
 }
 
-QString CSD::_automaticDescriptiveName() {
+QString CSD::_automaticDescriptiveName() const {
   return vector()->descriptiveName();
 }
 

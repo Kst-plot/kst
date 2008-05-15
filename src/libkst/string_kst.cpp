@@ -29,7 +29,10 @@ const QString String::staticTypeTag = I18N_NOOP("string");
 
 String::String(ObjectStore *store, ObjectTag tag, Object *provider, const QString& val, bool orphan)
     : Primitive(store, tag, provider), _value(val), _orphan(orphan), _editable(false) {
-  _shortName = "T"+QString::number(_tnum++);
+  _shortName = "T"+QString::number(_tnum);
+  if (_tnum>max_tnum) 
+    max_tnum = _tnum;
+  _tnum++;
 
 }
 
@@ -54,7 +57,10 @@ String::String(ObjectStore *store, QDomElement& e)
     n = n.nextSibling();
   }
 
-  _shortName = "T"+QString::number(_tnum++);
+  _shortName = "T"+QString::number(_tnum);
+  if (_tnum>max_tnum) 
+    max_tnum = _tnum;
+  _tnum++;
 
 }
 
@@ -78,7 +84,7 @@ void String::save(QXmlStreamWriter &s) {
     s.writeAttribute("editable", "true");
   }
   s.writeAttribute("value", value());
-  saveNameInfo(s);
+  saveNameInfo(s, TNUM);
   s.writeEndElement();
 }
 

@@ -819,7 +819,7 @@ void DataSource::disableReuse() {
   _reusable = false;
 }
 
-QString DataSource::_automaticDescriptiveName() {
+QString DataSource::_automaticDescriptiveName() const {
   return fileName();
 }
 

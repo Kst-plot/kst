@@ -97,7 +97,7 @@ class KST_EXPORT CSD : public DataObject {
 
     friend class ObjectStore;
 
-    virtual QString _automaticDescriptiveName();
+    virtual QString _automaticDescriptiveName() const;
 
   private:
     void commonConstructor(ObjectStore *store, VectorPtr in_V, double in_freq, bool in_average,

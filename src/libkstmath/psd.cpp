@@ -186,7 +186,10 @@ void PSD::commonConstructor(ObjectStore *store, VectorPtr in_V,
 
   updateVectorLabels();
 
-  _shortName = "S"+QString::number(_psdnum++);
+  _shortName = "S"+QString::number(_psdnum);
+  if (_psdnum>max_psdnum) 
+    max_psdnum = _psdnum;
+  _psdnum++;
 
 }
 
@@ -293,7 +296,7 @@ void PSD::save(QXmlStreamWriter &s) {
   s.writeAttribute("vectorunits", _vectorUnits);
   s.writeAttribute("rateunits", _rateUnits);
   s.writeAttribute("outputtype", QString::number(_Output));
-  saveNameInfo(s);
+  saveNameInfo(s, VNUM|PSDNUM|XNUM);
 
   s.writeEndElement();
 }
@@ -526,7 +529,7 @@ void PSD::updateVectorLabels() {
   _fVector->setLabel(i18n("Frequency \\[%1\\]", _rateUnits));
 }
 
-QString PSD::_automaticDescriptiveName() {
+QString PSD::_automaticDescriptiveName() const {
   return vector()->descriptiveName();
 }
 

@@ -80,7 +80,7 @@ void Primitive::setSlaveName(QString slaveName) {
   _slaveName=slaveName;
 }
 
-QString Primitive::_automaticDescriptiveName() {
+QString Primitive::_automaticDescriptiveName() const {
   QString name;
   if (_provider) {
     name = _provider->descriptiveName() + "/";

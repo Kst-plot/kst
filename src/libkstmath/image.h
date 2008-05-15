@@ -56,7 +56,6 @@ class KST_EXPORT Image : public Relation {
     virtual double lowerThreshold() const { return _zLower; }
     virtual bool autoThreshold() const { return _autoThreshold; }
 
-    virtual QString matrixTag() const;
     virtual MatrixPtr matrix() const;
     virtual QString paletteName() const;
     virtual const Palette &palette() const { return _pal; }
@@ -131,7 +130,7 @@ class KST_EXPORT Image : public Relation {
 
     friend class ObjectStore;
 
-    QString _automaticDescriptiveName();
+    QString _automaticDescriptiveName() const;
 
   private:
     //use these to set defaults when either is not used.

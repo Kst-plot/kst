@@ -60,6 +60,12 @@ Matrix::Matrix(ObjectStore *store, ObjectTag tag, Object *provider, uint nX, uin
 
   createScalars(store);
   setDirty();
+
+  _shortName = "M"+QString::number(_mnum);
+  if (_mnum>max_mnum) 
+    max_mnum = _mnum;
+  _mnum++;
+
 }
 
 

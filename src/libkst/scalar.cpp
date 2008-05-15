@@ -45,7 +45,10 @@ void Scalar::clearScalarsDirty() {
 Scalar::Scalar(ObjectStore *store, ObjectTag tag, Object *provider, double val, bool orphan, bool displayable, bool editable)
     : Primitive(store, tag, provider), _value(val), _orphan(orphan), _displayable(displayable), _editable(editable) {
 
-  _shortName = "X"+QString::number(_xnum++);
+  _shortName = "X"+QString::number(_xnum);
+  if (_xnum>max_xnum) 
+    max_xnum = _xnum;
+  _xnum++;
 }
 
 
@@ -76,7 +79,10 @@ Scalar::Scalar(ObjectStore *store, const QDomElement& e)
     _displayable = false;
   }
 
-  _shortName = "X"+QString::number(_xnum++);
+  _shortName = "X"+QString::number(_xnum);
+  if (_xnum>max_xnum) 
+    max_xnum = _xnum;
+  _xnum++;
 }
 
 
@@ -120,7 +126,7 @@ void Scalar::save(QXmlStreamWriter &s) {
     s.writeAttribute("editable", "true");
   }
   s.writeAttribute("value", QString::number(value()));
-  saveNameInfo(s);
+  saveNameInfo(s, XNUM);
   s.writeEndElement();
 }
 

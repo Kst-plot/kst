@@ -41,7 +41,7 @@ class EditableVector : public Vector {
 
     friend class EditableVectorFactory;
     friend class ObjectStore; // FIXME: remove this when factory works
-    virtual QString _automaticDescriptiveName();
+    virtual QString _automaticDescriptiveName() const;
 };
 
 typedef SharedPtr<EditableVector> EditableVectorPtr;

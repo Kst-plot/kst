@@ -152,7 +152,7 @@ void DataMatrix::save(QXmlStreamWriter &xml) {
     xml.writeAttribute("ymin", QString::number(minY()));
     xml.writeAttribute("xstep", QString::number(xStepSize()));
     xml.writeAttribute("ystep", QString::number(yStepSize()));
-    saveNameInfo(xml);
+    saveNameInfo(xml, VNUM|MNUM|XNUM);
 
     xml.writeEndElement();
   }
@@ -651,7 +651,7 @@ void DataMatrix::changeFile(DataSourcePtr file) {
   }
 }
 
-QString DataMatrix::_automaticDescriptiveName() {
+QString DataMatrix::_automaticDescriptiveName() const{
   return field();
 }
 

@@ -75,6 +75,8 @@ Vector::Vector(ObjectStore *store, const ObjectTag& tag, int size, Object *provi
   blank();
 
   _shortName = "V"+QString::number(_vnum);
+  if (_vnum>max_vnum) 
+    max_vnum = _vnum;
   _vnum++;
 }
 
@@ -108,6 +110,8 @@ Vector::Vector(ObjectStore *store, const ObjectTag& tag, const QByteArray& data)
 
   _is_rising = false;
   _shortName = "V"+QString::number(_vnum);
+  if (_vnum>max_vnum) 
+    max_vnum = _vnum;
   _vnum++;
 }
 
@@ -575,7 +579,7 @@ void Vector::save(QXmlStreamWriter &s) {
 
     s.writeTextElement("data", qCompress(qba).toBase64());
   }
-  saveNameInfo(s);
+  saveNameInfo(s, VNUM|XNUM);
   s.writeEndElement();
 }
 

@@ -82,7 +82,7 @@ class EventMonitorEntry : public DataObject {
 
     friend class ObjectStore;
 
-    QString _automaticDescriptiveName();
+    QString _automaticDescriptiveName() const;
 
     bool event(QEvent *e);
 

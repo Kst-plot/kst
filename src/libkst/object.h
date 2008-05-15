@@ -39,6 +39,7 @@ class Object;
 
 typedef SharedPtr<Object> ObjectPtr;
 
+
 // short name index variables
 extern int _vnum; // vectors
 extern int _pnum; // plugins
@@ -50,6 +51,19 @@ extern int _inum; // images
 extern int _psdnum; // psd
 extern int _xnum; // scalars
 extern int _tnum; // text string
+extern int _mnum; // matrix
+
+extern int max_vnum; // vectors
+extern int max_pnum; // plugins
+extern int max_csdnum; // csd
+extern int max_cnum; // curves
+extern int max_enum; // equations
+extern int max_hnum; // histograms
+extern int max_inum; // images
+extern int max_psdnum; // psd
+extern int max_xnum; // scalars
+extern int max_tnum; // string
+extern int max_mnum; // matrix
 
 class Object : public QObject, public Shared, public KstRWLock {
   Q_OBJECT
@@ -58,6 +72,20 @@ class Object : public QObject, public Shared, public KstRWLock {
     static QString type();
 
     enum UpdateType { NO_CHANGE = 0, UPDATE };
+
+    enum ShortNameIndex {
+      VNUM = 0x0001,
+      PNUM = 0x0002,
+      CSDNUM = 0x0004,
+      CNUM = 0x0008,
+      ENUM = 0x0010,
+      HNUM = 0x0020,
+      INUM = 0x0040,
+      PSDNUM = 0x0080,
+      XNUM = 0x0100,
+      TNUM = 0x0200,
+      MNUM = 0x0400
+    };
 
     virtual UpdateType update() = 0;
 
@@ -71,11 +99,11 @@ class Object : public QObject, public Shared, public KstRWLock {
     virtual const ObjectTag& tag() const;
 
     //new tag name system: see object names devel doc
-    QString Name(); // eg GYRO1:V1
-    QString descriptiveName(); // eg GYRO1: automatic or manual
-    QString shortName(); // eg V1: always automatically generated
+    QString Name() const; // eg GYRO1:V1
+    QString descriptiveName() const; // eg GYRO1: automatic or manual
+    QString shortName() const; // eg V1: always automatically generated
     void setDescriptiveName(QString new_name); // auto if new_name.isEmpty()
-    bool descriptiveNameIsManual();
+    bool descriptiveNameIsManual() const;
 
     // Returns count - 2 to account for "this" and the list pointer, therefore
     // you MUST have a reference-counted pointer to call this function
@@ -94,7 +122,6 @@ class Object : public QObject, public Shared, public KstRWLock {
     virtual void beginUpdate(ObjectPtr object);
     virtual void processUpdate(ObjectPtr object);
     static void processShortNameIndexAttributes(QXmlStreamAttributes &attrs);
-
   protected:
     Object(const ObjectTag& tag = ObjectTag::invalidTag);
 
@@ -106,10 +133,10 @@ class Object : public QObject, public Shared, public KstRWLock {
     ObjectStore *_store;  // set by ObjectStore
 
     //new tag name system: see object names devel doc
-    virtual QString _automaticDescriptiveName() = 0;
+    virtual QString _automaticDescriptiveName() const= 0;
     QString _shortName;
     QString _manualDescriptiveName;
-    virtual void saveNameInfo(QXmlStreamWriter &s);
+    virtual void saveNameInfo(QXmlStreamWriter &s, unsigned I = 0xffff);
 
     // object indices used for saving/resorting shortnames
     int _initial_vnum; // vectors
@@ -122,6 +149,7 @@ class Object : public QObject, public Shared, public KstRWLock {
     int _initial_psdnum; // psd
     int _initial_xnum; // scalars
     int _initial_tnum; // text string
+    int _initial_mnum; // matrix
 
   private:
     ObjectTag _tag;

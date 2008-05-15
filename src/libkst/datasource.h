@@ -269,7 +269,7 @@ class KST_EXPORT DataSource : public Object {
 
     UpdateCheckType _updateCheckType;
 
-    virtual QString _automaticDescriptiveName();
+    virtual QString _automaticDescriptiveName() const;
 
     // NOTE: You must bump the version key if you add new member variables
     //       or change or add virtual functions.

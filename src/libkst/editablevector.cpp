@@ -66,7 +66,7 @@ void EditableVector::setSaveData(bool save) {
 void EditableVector::save(QXmlStreamWriter &s) {
   s.writeStartElement("editablevector");
   s.writeAttribute("tag", tag().tagString());
-  saveNameInfo(s);
+  saveNameInfo(s, VNUM|XNUM);
 
   if (_saveData) {
     QByteArray qba(length()*sizeof(double), '\0');
@@ -81,7 +81,7 @@ void EditableVector::save(QXmlStreamWriter &s) {
   s.writeEndElement();
 }
 
-QString EditableVector::_automaticDescriptiveName() {
+QString EditableVector::_automaticDescriptiveName() const {
   QString name("(");
   if (length()>=1) {
     name += QString::number(_v[0]);

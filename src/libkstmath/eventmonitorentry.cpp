@@ -599,7 +599,7 @@ bool EventMonitorEntry::uses(ObjectPtr p) const {
   return DataObject::uses(p);
 }
 
-  QString EventMonitorEntry::_automaticDescriptiveName() {
+  QString EventMonitorEntry::_automaticDescriptiveName() const {
     return i18n("event");
   }
 }

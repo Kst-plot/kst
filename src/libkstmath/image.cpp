@@ -40,7 +40,11 @@ Image::Image(ObjectStore *store, const ObjectTag& in_tag) : Relation(store, in_t
   _hasColorMap = false;
   setColorDefaults();
   setContourDefaults();
-  _shortName = "I"+QString::number(_inum++);
+  _shortName = "I"+QString::number(_inum);
+  if (_inum>max_inum) 
+    max_inum = _inum;
+  _inum++;
+
 }
 
 Image::Image(ObjectStore *store, const QDomElement& e) : Relation(store, e) {
@@ -103,7 +107,11 @@ Image::Image(ObjectStore *store, const QDomElement& e) : Relation(store, e) {
   if (!_hasContourMap) {
     setContourDefaults();
   }
-  _shortName = "I"+QString::number(_inum++);
+  _shortName = "I"+QString::number(_inum);
+  if (_inum>max_inum) 
+    max_inum = _inum;
+  _inum++;
+
 }
 
 
@@ -121,7 +129,10 @@ Image::Image(ObjectStore *store, const ObjectTag &in_tag, MatrixPtr in_matrix, d
 
   setContourDefaults();
   setDirty();
-  _shortName = "I"+QString::number(_inum++);
+  _shortName = "I"+QString::number(_inum);
+  if (_inum>max_inum) 
+    max_inum = _inum;
+  _inum++;
   connect(in_matrix, SIGNAL(matrixUpdated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
 }
 
@@ -140,7 +151,10 @@ Image::Image(ObjectStore *store, const ObjectTag &in_tag, MatrixPtr in_matrix, i
   setColorDefaults();
   setDirty();
 
-  _shortName = "I"+QString::number(_inum++);
+  _shortName = "I"+QString::number(_inum);
+  if (_inum>max_inum) 
+    max_inum = _inum;
+  _inum++;
   connect(in_matrix, SIGNAL(matrixUpdated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
 }
 
@@ -169,7 +183,10 @@ Image::Image(ObjectStore *store, const ObjectTag &in_tag,
   _autoThreshold = autoThreshold;
   _pal = Palette(paletteName);
   setDirty();
-  _shortName = "I"+QString::number(_inum++);
+  _shortName = "I"+QString::number(_inum);
+  if (_inum>max_inum) 
+    max_inum = _inum;
+  _inum++;
   connect(in_matrix, SIGNAL(matrixUpdated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
 }
 
@@ -200,7 +217,7 @@ void Image::save(QXmlStreamWriter &s) {
   s.writeAttribute("contourcolor", _contourColor.name());
 
   s.writeAttribute("autothreshold", QVariant(_autoThreshold).toString());
-  saveNameInfo(s);
+  saveNameInfo(s, INUM);
   s.writeEndElement();
 }
 
@@ -271,7 +288,7 @@ Object::UpdateType Image::update() {
 
 QString Image::propertyString() const {
   if (_inputMatrices.contains(THEMATRIX)) {
-    return i18n("Using matrix %1" ).arg(_inputMatrices[THEMATRIX]->tag().displayString());
+    return i18n("Using matrix %1" ).arg(_inputMatrices[THEMATRIX]->descriptiveName());
   } else {
     return QString();
   }
@@ -518,16 +535,6 @@ RelationPtr Image::makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelat
   return RelationPtr(image);
 
 }
-
-
-QString Image::matrixTag() const {
-  if (_inputMatrices.contains(THEMATRIX)) {
-    return _inputMatrices[THEMATRIX]->tag().displayString();
-  } else {
-    return QString();
-  }
-}
-
 
 MatrixPtr Image::matrix() const {
   if (_inputMatrices.contains(THEMATRIX)) {
@@ -883,7 +890,7 @@ void Image::paintLegendSymbol(Painter *p, const QRect& bound) {
   }
 }
 
-QString Image::_automaticDescriptiveName() {
+QString Image::_automaticDescriptiveName() const {
   return matrix()->descriptiveName();
 }
 

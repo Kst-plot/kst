@@ -392,7 +392,7 @@ void DataVector::save(QXmlStreamWriter &s) {
         s.writeAttribute("doAve", "true");
       }
     }
-    saveNameInfo(s);
+    saveNameInfo(s, VNUM|XNUM);
     s.writeEndElement();
   }
 }
@@ -794,7 +794,7 @@ DataVectorPtr DataVector::makeDuplicate() const {
   return vector;
 }
 
-QString DataVector::_automaticDescriptiveName() {
+QString DataVector::_automaticDescriptiveName() const {
   return field();
 }
 

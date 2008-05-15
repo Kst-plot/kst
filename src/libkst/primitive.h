@@ -52,7 +52,7 @@ class KST_EXPORT Primitive : public Object {
 
     friend class ObjectStore;
 
-    virtual QString _automaticDescriptiveName();
+    virtual QString _automaticDescriptiveName() const;
 
     QString _slaveName;
 

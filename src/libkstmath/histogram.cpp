@@ -151,7 +151,10 @@ void Histogram::commonConstructor(ObjectStore *store,
   v->resize(_NumberOfBins);
   _hVector = _outputVectors.insert(HIST, v).value();
 
-  _shortName = "H"+QString::number(_hnum++);
+  _shortName = "H"+QString::number(_hnum);
+  if (_hnum>max_hnum) 
+    max_hnum = _hnum;
+  _hnum++;
 
   setDirty();
 }
@@ -366,7 +369,7 @@ void Histogram::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("min", QString::number(_MinX));
   xml.writeAttribute("max", QString::number(_MaxX));
   xml.writeAttribute("normalizationmode", QString::number(_NormalizationMode));
-  saveNameInfo(xml);
+  saveNameInfo(xml, VNUM|HNUM|XNUM);
 
   xml.writeEndElement();
 }
@@ -469,7 +472,7 @@ DataObjectPtr Histogram::makeDuplicate() {
   return DataObjectPtr(histogram);
 }
 
-QString Histogram::_automaticDescriptiveName() {
+QString Histogram::_automaticDescriptiveName() const {
   return (_inputVectors[RAWVECTOR]->descriptiveName());
 }
 

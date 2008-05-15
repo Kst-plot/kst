@@ -270,6 +270,18 @@ bool Document::open(const QString& file) {
     return false;
   }
 
+  _vnum = max_vnum+1;
+  _xnum = max_xnum+1;
+  _pnum = max_pnum+1;
+  _csdnum = max_csdnum+1;
+  _cnum = max_cnum+1;
+  _enum = max_enum+1;
+  _hnum = max_hnum+1;
+  _inum = max_inum+1;
+  _psdnum = max_psdnum+1;
+  _tnum = max_tnum+1;
+  _mnum = max_mnum+1;
+
   return _isOpen = true;
 }
 

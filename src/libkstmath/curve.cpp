@@ -108,7 +108,10 @@ Curve::Curve(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_X, Vector
     connect(in_EYMinus, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   }
 
-  _shortName = "C"+QString::number(_cnum++);
+  _shortName = "C"+QString::number(_cnum);
+  if (_cnum>max_cnum) 
+    max_cnum = _cnum;
+  _cnum++;
 
   setDirty();
 }
@@ -413,60 +416,6 @@ void Curve::getEYPoints(int i, double &x, double &y, double &eyminus, double &ey
 }
 
 
-ObjectTag Curve::xVTag() const {
-  VectorPtr xv = xVector();
-  if (xv) {
-    return xv->tag();
-  }
-  return ObjectTag::invalidTag;
-}
-
-
-ObjectTag Curve::yVTag() const {
-  VectorPtr yv = yVector();
-  if (yv) {
-    return yv->tag();
-  }
-  return ObjectTag::invalidTag;
-}
-
-
-ObjectTag Curve::xETag() const {
-  VectorPtr v = xErrorVector();
-  if (v) {
-    return v->tag();
-  }
-  return ObjectTag::invalidTag;
-}
-
-
-ObjectTag Curve::yETag() const {
-  VectorPtr v = yErrorVector();
-  if (v) {
-    return v->tag();
-  }
-  return ObjectTag::invalidTag;
-}
-
-
-ObjectTag Curve::xEMinusTag() const {
-  VectorPtr v = xMinusErrorVector();
-  if (v) {
-    return v->tag();
-  }
-  return ObjectTag::invalidTag;
-}
-
-
-ObjectTag Curve::yEMinusTag() const {
-  VectorPtr v = yMinusErrorVector();
-  if (v) {
-    return v->tag();
-  }
-  return ObjectTag::invalidTag;
-}
-
-
 bool Curve::hasXError() const {
   return _inputVectors.contains(EXVECTOR);
 }
@@ -518,8 +467,8 @@ void Curve::save(QXmlStreamWriter &s) {
   s.writeAttribute("hasbars", QVariant(HasBars).toString());
   s.writeAttribute("barstyle", QString::number(BarStyle));
   s.writeAttribute("ignoreautoscale", QVariant(_ignoreAutoScale).toString());
-  
-  saveNameInfo(s);
+
+  saveNameInfo(s, CNUM);
 
   s.writeEndElement();
 }
@@ -627,7 +576,8 @@ CurveType Curve::curveType() const {
 
 
 QString Curve::propertyString() const {
-  return i18n("%1 vs %2").arg(yVTag().displayString()).arg(xVTag().displayString());
+  
+  return i18n("%1 vs %2").arg(yVector()->descriptiveName()).arg(xVector()->descriptiveName());
 }
 
 
@@ -1559,8 +1509,10 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
       bool do_high_flag = true;
       bool errorSame = false;
 
-      if (exv && exmv && xETag() == xEMinusTag()) {
-        errorSame = true;
+      if (exv && exmv) {
+        if (exv->shortName() == exmv->shortName()) {
+          errorSame = true;
+        }
       }
 
       for (i_pt = i0; i_pt <= iN; i_pt++) {
@@ -1650,8 +1602,10 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
       bool do_high_flag = true;
       bool errorSame = false;
 
-      if (eyv && eymv && yETag() == yEMinusTag()) {
-        errorSame = true;
+      if (eyv && eymv) {
+        if (eyv->shortName() == eymv->shortName()) {
+          errorSame = true;
+        }
       }
 
       for (i_pt = i0; i_pt <= iN; i_pt++) {
@@ -1889,8 +1843,8 @@ void Curve::paintLegendSymbol(Painter *p, const QRect& bound) {
   p->restore();
 }
 
-QString Curve::_automaticDescriptiveName() {
-  return yVector()->descriptiveName() + " vs " + xVector()->descriptiveName();
+QString Curve::_automaticDescriptiveName() const {
+  return i18n("%1 vs %2").arg(yVector()->descriptiveName()).arg(xVector()->descriptiveName());
 }
 
 }

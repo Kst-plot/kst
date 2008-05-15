@@ -45,7 +45,7 @@ class KST_EXPORT GeneratedVector : public Vector {
 
     friend class GeneratedVectorFactory;
     friend class ObjectStore; // FIXME: remove this when factory works
-    virtual QString _automaticDescriptiveName();
+    virtual QString _automaticDescriptiveName() const;
 };
 
 typedef SharedPtr<GeneratedVector> GeneratedVectorPtr;

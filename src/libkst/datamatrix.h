@@ -94,7 +94,7 @@ class KST_EXPORT DataMatrix : public Matrix {
 
     friend class ObjectStore;
 
-    virtual QString _automaticDescriptiveName();
+    virtual QString _automaticDescriptiveName() const;
 
   private:
     void commonConstructor(DataSourcePtr file, const QString &field,

@@ -106,7 +106,7 @@ class KST_EXPORT PSD : public DataObject {
 
     friend class ObjectStore;
 
-    virtual QString _automaticDescriptiveName();
+    virtual QString _automaticDescriptiveName() const;
 
   private:
     void commonConstructor(ObjectStore *store, VectorPtr in_V,
