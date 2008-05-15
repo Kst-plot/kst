@@ -22,8 +22,3 @@ What happens:
 What should happen:
   Only the X range should change.
 
-Line type not reloaded correctly
-Create a plot with a continuous line type curve.  Save it.  Reload it.
-What happens:
-  The curve is reloaded, but is not longer continuous line type.
-
