@@ -119,8 +119,9 @@ void TestCSD::testCSD() {
   }
 
   Kst::CSDPtr csd = new Kst::CSD(&_store, Kst::ObjectTag::fromString("csdTest"), vp, 0.0, false, false, false, WindowUndefined, 0, 0, 0.0, PSDUndefined, QString::null, QString::null);
+
   QCOMPARE(csd->tag().tagString(), QLatin1String("csdTest"));
-  QCOMPARE(csd->vTag(), QLatin1String("tempVector"));
+  QCOMPARE(csd->vector()->tag().tagString(), QLatin1String("tempVector"));
   QCOMPARE(csd->output(), PSDUndefined);
   QVERIFY(!csd->apodize());
   QVERIFY(!csd->removeMean());
@@ -144,7 +145,7 @@ void TestCSD::testCSD() {
   csd->setGaussianSigma(0.2);
 
   QCOMPARE(csd->tag().tagString(), QLatin1String("csdTest"));
-  QCOMPARE(csd->vTag(), QLatin1String("tempVector"));
+  QCOMPARE(csd->vector()->tag().tagString(), QLatin1String("tempVector"));
   QCOMPARE(csd->output(), PSDAmplitudeSpectralDensity);
   QVERIFY(csd->apodize());
   QVERIFY(csd->removeMean());
@@ -180,7 +181,8 @@ void TestCSD::testCSD() {
     vp2->value()[i] = i;
   }
   csdDOM->setVector(vp2);
-  QCOMPARE(csdDOM->vTag(), QLatin1String("tempVector2"));
+
+  QCOMPARE(csdDOM->vector()->tag().tagString(), QLatin1String("tempVector2"));
   csdDOM->setWindowSize(9);
   Kst::MatrixPtr outMatrix = csdDOM->outputMatrix();
 

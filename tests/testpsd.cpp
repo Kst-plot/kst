@@ -122,7 +122,7 @@ void TestPSD::testPSD() {
 
   Kst::PSDPtr psd = new Kst::PSD(&_store, Kst::ObjectTag::fromString("psdTest"), vp, 0.0, false, 10, false, false, QString("vUnits"), QString("rUnits"), WindowUndefined, 0.0, PSDUndefined);
   QCOMPARE(psd->tag().tagString(), QLatin1String("psdTest"));
-  QCOMPARE(psd->vTag(), QLatin1String("tempVector"));
+  QCOMPARE(psd->vector()->tag().tagString(), QLatin1String("tempVector"));
   QCOMPARE(psd->output(), PSDUndefined);
   QVERIFY(!psd->apodize());
   QVERIFY(!psd->removeMean());
@@ -155,7 +155,7 @@ void TestPSD::testPSD() {
   psd->setGaussianSigma(0.2);
 
   QCOMPARE(psd->tag().tagString(), QLatin1String("psdTest"));
-  QCOMPARE(psd->vTag(), QLatin1String("tempVector"));
+  QCOMPARE(psd->vector()->tag().tagString(), QLatin1String("tempVector"));
   QCOMPARE(psd->output(), PSDAmplitudeSpectralDensity);
   QVERIFY(psd->apodize());
   QVERIFY(psd->removeMean());

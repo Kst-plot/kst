@@ -204,7 +204,9 @@ void CSD::commonConstructor(ObjectStore *store, VectorPtr in_V,
   updateMatrixLabels();
   _outMatrix->setDirty();
 
-  connect(_inputVectors[INVECTOR], SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
+  if (in_V) {
+    connect(in_V, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
+  }
 }
 
 
