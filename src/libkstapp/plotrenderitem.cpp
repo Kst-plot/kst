@@ -441,6 +441,8 @@ void PlotRenderItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
     return;
   }
 
+  setFocus();
+
   updateCursor(event->pos());
 
   const QPointF p = plotItem()->mapToProjection(event->pos());
@@ -456,6 +458,9 @@ void PlotRenderItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
     event->ignore();
     return;
   }
+
+  clearFocus();
+  resetSelectionRect();
 
   updateCursor(event->pos());
 
