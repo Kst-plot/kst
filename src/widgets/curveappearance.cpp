@@ -45,6 +45,7 @@ CurveAppearance::CurveAppearance(QWidget *parent)
   connect(_color, SIGNAL(changed(const QColor&)), this, SIGNAL(modified()));
   connect(_showLines, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_showPoints, SIGNAL(clicked()), this, SIGNAL(modified()));
+  connect(_comboPointDensity, SIGNAL(activated(int)), this, SIGNAL(modified()));
   connect(_comboPointSymbol, SIGNAL(activated(int)), this, SIGNAL(modified()));
   connect(_comboLineStyle, SIGNAL(activated(int)), this, SIGNAL(modified()));
   connect(_spinBoxLineWidth, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));

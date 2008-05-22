@@ -38,7 +38,7 @@ void draw(int Type, QPainter *p, int x, int y, int lineSize, int size) {
   } else {
     s = ( 3 * lineSize ) / 2;
   }
-  
+
   switch (Type) {
     case 0:
       p->drawLine(x-s, y-s, x+s, y+s);

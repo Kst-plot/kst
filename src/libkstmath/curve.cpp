@@ -38,6 +38,7 @@
 #include <time.h>
 
 // #define DEBUG_VECTOR_CURVE
+// #define BENCHMARK
 
 #ifndef KDE_IS_LIKELY
 #if __GNUC__ - 0 >= 3
@@ -882,6 +883,7 @@ void Curve::paint(const CurveRenderContext& context) {
   bench_time.start();
   benchtmp.start();
   int numberOfLinesDrawn = 0;
+  int numberOfPointsDrawn = 0;
 #endif
 
   int pointDim = CurvePointSymbol::dim(context.window);
@@ -1454,45 +1456,34 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
 
     // draw the points, if any...
     if (hasPoints()) {
+      const double w = Hx - Lx;
+      const double h = Hy - Ly;
+      int size = 0;
       if (hasLines() && pointDensity() != 0) {
-        const double w = Hx - Lx;
-        const double h = Hy - Ly;
-        QRegion rgn((int)Lx, (int)Ly, (int)w, (int)h);
-        const int size = int(qMax(w, h)) / int(pow(3.0, POINTDENSITY_MAXTYPE - pointDensity()));
-        QPoint pt;
-        for (i_pt = i0; i_pt <= iN; ++i_pt) {
-          rX = xv->interpolate(i_pt, NS);
-          rY = yv->interpolate(i_pt, NS);
-          if (xLog) {
-            rX = logXLo(rX, xLogBase);
-          }
-          if (yLog) {
-            rY = logYLo(rY, yLogBase);
-          }
+        size = int(qMax(w, h)) / int(pow(3.0, POINTDENSITY_MAXTYPE - pointDensity()));
+      }
 
-          pt.setX(d2i(m_X * rX + b_X));
-          pt.setY(d2i(m_Y * rY + b_Y));
-          if (rgn.contains(pt)) {
-            CurvePointSymbol::draw(PointType, p, pt.x(), pt.y(), width);
-            rgn -= QRegion(pt.x()-(size/2), pt.y()-(size/2), size, size, QRegion::Ellipse);
-          }
+      QRect rect((int)Lx, (int)Ly, (int)w, (int)h);
+      QPoint pt, lastPt;
+
+      for (i_pt = i0; i_pt <= iN; ++i_pt) {
+        rX = xv->interpolate(i_pt, NS);
+        rY = yv->interpolate(i_pt, NS);
+        if (xLog) {
+          rX = logXLo(rX, xLogBase);
         }
-      } else {
-        for (i_pt = i0; i_pt <= iN; ++i_pt) {
-          rX = xv->interpolate(i_pt, NS);
-          rY = yv->interpolate(i_pt, NS);
-          if (xLog) {
-            rX = logXLo(rX, xLogBase);
-          }
-          if (yLog) {
-            rY = logYLo(rY, yLogBase);
-          }
+        if (yLog) {
+          rY = logYLo(rY, yLogBase);
+        }
 
-          X1 = m_X * rX + b_X;
-          Y1 = m_Y * rY + b_Y;
-          if (X1 >= Lx && X1 <= Hx && Y1 >= Ly && Y1 <= Hy) {
-            CurvePointSymbol::draw(PointType, p, d2i(X1), d2i(Y1), width);
-          }
+        pt.setX(d2i(m_X * rX + b_X));
+        pt.setY(d2i(m_Y * rY + b_Y));
+        if (rect.contains(pt) && pt != lastPt && (lastPt.isNull() || !((abs(pt.x() - lastPt.x()) < size) || (abs(pt.y() - lastPt.y()) < size)))) {
+#ifdef BENCHMARK
+  ++numberOfPointsDrawn;
+#endif
+            lastPt = pt;
+            CurvePointSymbol::draw(PointType, p, pt.x(), pt.y(), width);
         }
       }
     }
@@ -1696,6 +1687,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
   qDebug() << "Plotting curve " << (void *)this << ": " << i << "ms" << endl;
   qDebug() << "    Without locks: " << b_4 << "ms" << endl;
   qDebug() << "    Nnumber of lines drawn:" << numberOfLinesDrawn << endl;
+  qDebug() << "    Nnumber of points drawn:" << numberOfPointsDrawn << endl;
   if (b_1 > 0)       qDebug() << "            Lines: " << b_1 << "ms" << endl;
   if (b_2 - b_1 > 0) qDebug() << "             Bars: " << (b_2 - b_1) << "ms" << endl;
   if (b_3 - b_2 > 0) qDebug() << "           Points: " << (b_3 - b_2) << "ms" << endl;
