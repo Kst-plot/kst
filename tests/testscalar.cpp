@@ -96,40 +96,42 @@ void TestScalar::testScalar() {
   QVERIFY(sp->displayable());
   QVERIFY(sp2->displayable());
 
-  QDomNode n;
-  QDomElement e;
-  n = makeDOMDocument("load1", "2.14159265").firstChild();
-  e = n.toElement();
-  Kst::ScalarPtr sp3 = new Kst::Scalar(&_store, e);
-  QCOMPARE(sp3->orphan(), false);
-  QCOMPARE(sp3->value(), 2.14159265);
-  QCOMPARE(sp3->tag().tagString(), QLatin1String("load1"));
-  QVERIFY(sp3->displayable());
-
-  n = makeDOMDocument("55.4232", "55.4232", true).firstChild();
-  e = n.toElement();
-  Kst::ScalarPtr sp4 = new Kst::Scalar(&_store, e);
-  QVERIFY(sp4->orphan());
-  QCOMPARE(sp4->value(), 55.4232);
-  QCOMPARE(sp4->tag().tagString(), QLatin1String("55.4232"));
-  QVERIFY(!sp4->displayable());
-
-  n = makeDOMDocument("load2", "NAN").firstChild();
-  e = n.toElement();
-  sp4 = new Kst::Scalar(&_store, e);
-  QVERIFY(sp4->value() != sp4->value());
-
-  n = makeDOMDocument("load3", "INF").firstChild();
-  e = n.toElement();
-  sp4 = new Kst::Scalar(&_store, e);
-
-  QVERIFY(sp4->value() == INF);
-
-  n = makeDOMDocument("load4", "-INF").firstChild();
-  e = n.toElement();
-  sp4 = new Kst::Scalar(&_store, e);
-
-  QVERIFY(sp4->value() == -INF);
+  // FIXME: This constructor is no longer used - test using the factory
+//   QDomNode n;
+//   QDomElement e;
+//   n = makeDOMDocument("load1", "2.14159265").firstChild();
+//   e = n.toElement();
+// 
+//   Kst::ScalarPtr sp3 = new Kst::Scalar(&_store, e);
+//   QCOMPARE(sp3->orphan(), false);
+//   QCOMPARE(sp3->value(), 2.14159265);
+//   QCOMPARE(sp3->tag().tagString(), QLatin1String("load1"));
+//   QVERIFY(sp3->displayable());
+// 
+//   n = makeDOMDocument("55.4232", "55.4232", true).firstChild();
+//   e = n.toElement();
+//   Kst::ScalarPtr sp4 = new Kst::Scalar(&_store, e);
+//   QVERIFY(sp4->orphan());
+//   QCOMPARE(sp4->value(), 55.4232);
+//   QCOMPARE(sp4->tag().tagString(), QLatin1String("55.4232"));
+//   QVERIFY(!sp4->displayable());
+// 
+//   n = makeDOMDocument("load2", "NAN").firstChild();
+//   e = n.toElement();
+//   sp4 = new Kst::Scalar(&_store, e);
+//   QVERIFY(sp4->value() != sp4->value());
+// 
+//   n = makeDOMDocument("load3", "INF").firstChild();
+//   e = n.toElement();
+//   sp4 = new Kst::Scalar(&_store, e);
+// 
+//   QVERIFY(sp4->value() == INF);
+// 
+//   n = makeDOMDocument("load4", "-INF").firstChild();
+//   e = n.toElement();
+//   sp4 = new Kst::Scalar(&_store, e);
+// 
+//   QVERIFY(sp4->value() == -INF);
 
   delete listener;
 }
