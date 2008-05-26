@@ -24,6 +24,12 @@ class DataButtonAction : public QWidgetAction
   public:
     DataButtonAction(const QString &text, QWidget *parent = 0);
 
+  Q_SIGNALS:
+    void triggered(QString &name);
+
+  public Q_SLOTS:
+    void triggerWithName();
+
   protected:
     QWidget* createWidget(QWidget* parent = 0);
 

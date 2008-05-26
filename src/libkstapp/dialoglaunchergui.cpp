@@ -113,8 +113,8 @@ void DialogLauncherGui::showEventMonitorDialog(ObjectPtr objectPtr) {
 }
 
 
-void DialogLauncherGui::showBasicPluginDialog(ObjectPtr objectPtr) {
-  BasicPluginDialog dialog(objectPtr, kstApp->mainWindow());
+void DialogLauncherGui::showBasicPluginDialog(QString &pluginName, ObjectPtr objectPtr, VectorPtr vector) {
+  BasicPluginDialog dialog(pluginName, objectPtr, vector, kstApp->mainWindow());
   dialog.exec();
 }
 

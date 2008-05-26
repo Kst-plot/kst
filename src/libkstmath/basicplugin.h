@@ -73,6 +73,8 @@ class KST_EXPORT BasicPlugin : public DataObject {
     void setOutputScalar(const QString &type, const QString &name);
     void setOutputString(const QString &type, const QString &name);
 
+    void setPluginName(const QString &pluginName);
+
     //Pure virtual methods inherited from DataObject
     //We do this one ourselves for benefit of all plugins...
     Object::UpdateType update();
@@ -98,6 +100,8 @@ class KST_EXPORT BasicPlugin : public DataObject {
     bool inputsExist() const;
     bool updateInput(bool force) const;
     void updateOutput() const;
+
+    QString _pluginName;
 };
 
 typedef SharedPtr<BasicPlugin> BasicPluginPtr;

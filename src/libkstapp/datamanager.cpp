@@ -119,6 +119,12 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   action = new DataButtonAction(tr("Spectrogram"));
   connect(action, SIGNAL(triggered()), this, SLOT(showCSDDialog()));
   _dataObjects->addAction(action);
+
+  foreach (QString pluginName, DataObject::pluginList()) {
+    action = new DataButtonAction(tr(pluginName));
+    connect(action, SIGNAL(triggered(QString&)), this, SLOT(showPluginDialog(QString&)));
+    _dataObjects->addAction(action);
+  }
 }
 
 
@@ -354,6 +360,17 @@ void DataManager::showImageDialog() {
   } else {
     DialogLauncher::self()->showImageDialog();
   }
+  _doc->session()->triggerReset();
+}
+
+
+void DataManager::showPluginDialog(QString &pluginName) {
+  if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
+    DialogLauncher::self()->showBasicPluginDialog(pluginName, vector);
+  } else {
+    DialogLauncher::self()->showBasicPluginDialog(pluginName);
+  }
+
   _doc->session()->triggerReset();
 }
 

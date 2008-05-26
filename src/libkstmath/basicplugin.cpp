@@ -58,6 +58,11 @@ BasicPlugin::~BasicPlugin() {
 }
 
 
+void BasicPlugin::setPluginName(const QString &pluginName) {
+  _pluginName = pluginName;
+}
+
+
 DataObjectPtr BasicPlugin::makeDuplicate() {
 #if 0
   BasicPluginPtr plugin = kst_cast<BasicPlugin>(DataObject::createPlugin(propertyString()));
@@ -98,12 +103,14 @@ DataObjectPtr BasicPlugin::makeDuplicate() {
 }
 
 void BasicPlugin::showNewDialog() {
-  DialogLauncher::self()->showBasicPluginDialog();
+  //TODO Fix me
+//   DialogLauncher::self()->showBasicPluginDialog();
 }
 
 
 void BasicPlugin::showEditDialog() {
-  DialogLauncher::self()->showBasicPluginDialog(this);
+  // TODO add finding of proper dialog and providing of configWidget.
+//   DialogLauncher::self()->showBasicPluginDialog(0, this);
 }
 
 

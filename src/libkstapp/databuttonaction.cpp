@@ -22,7 +22,12 @@ DataButtonAction::DataButtonAction(const QString &text, QWidget *parent)
 QWidget * DataButtonAction::createWidget ( QWidget * parent ) {
   DataButton *button = new DataButton(m_text, parent);
   connect(button, SIGNAL(clicked()), this, SLOT(trigger()));
+  connect(button, SIGNAL(clicked()), this, SLOT(triggerWithName()));
   return button;
+}
+
+void DataButtonAction::triggerWithName() {
+  emit triggered(m_text);
 }
 
 }

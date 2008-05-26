@@ -48,6 +48,7 @@ class KST_EXPORT DataManager : public QDialog, Ui::DataManager
     void showImageDialog();
     void showEventMonitorDialog();
     void showEquationDialog();
+    void showPluginDialog(QString &pluginName);
 
     void addToPlot(QAction* action);
     void removeFromPlot(QAction* action);

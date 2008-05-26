@@ -27,12 +27,18 @@ class KST_EXPORT BasicPluginTab : public DataTab, Ui::BasicPluginTab {
     BasicPluginTab(QWidget *parent = 0);
     virtual ~BasicPluginTab();
 
+    void setObjectStore(ObjectStore *store);
+
+    VectorPtr vector() const;
+    bool vectorDirty() const;
+    void setVector(const VectorPtr vector);
+
 };
 
 class KST_EXPORT BasicPluginDialog : public DataDialog {
   Q_OBJECT
   public:
-    BasicPluginDialog(ObjectPtr dataObject, QWidget *parent = 0);
+    BasicPluginDialog(QString& pluginName, ObjectPtr dataObject, VectorPtr vector, QWidget *parent = 0);
     virtual ~BasicPluginDialog();
 
   protected:
@@ -42,6 +48,7 @@ class KST_EXPORT BasicPluginDialog : public DataDialog {
 
   private:
     BasicPluginTab *_basicPluginTab;
+    QString _pluginName;
 };
 
 }

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=sampleplugin
+X-Kst-Plugin-Author=The University of Toronto
+Name=Sample Data Object Plugin
+Comment=Implements a sample Data Object Plugin for Kst.

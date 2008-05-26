@@ -38,7 +38,6 @@ class Relation;
 typedef SharedPtr<DataObject> DataObjectPtr;
 typedef ObjectList<DataObject> DataObjectList;
 typedef QMap<DataObjectPtr, DataObjectPtr> DataObjectDataObjectMap;
-typedef QMap<QString, int> KstPluginInfoList;
 
 class KST_EXPORT DataObject : public Object {
   Q_OBJECT
@@ -51,9 +50,9 @@ class KST_EXPORT DataObject : public Object {
     // These static methods are not for plugins to use
     static void cleanupForExit();
     /** Returns a list of object plugins found on the system. */
-    static KstPluginInfoList pluginInfoList();
-    static DataObjectPtr plugin(const QString& name);
-    static DataObjectPtr createPlugin(const QString& name);
+    static QStringList pluginList();
+//     static QWidget* pluginWidget(const QString& name, ObjectPtr objectPtr = 0, VectorPtr vector = 0);
+    static DataObjectPtr createPlugin(const QString& name, ObjectStore *store, ObjectTag &tag, VectorPtr vector);
 
     virtual UpdateType update() = 0;
     virtual const QString& typeString() const { return _typeString; }
@@ -173,7 +172,6 @@ class KST_EXPORT DataObject : public Object {
 
   private:
     static void scanPlugins();
-    static DataObjectPtr createPlugin();
 };
 
 }

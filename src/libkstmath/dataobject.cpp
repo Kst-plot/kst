@@ -20,15 +20,19 @@
 
 #include "datacollection.h"
 #include "dataobjectcollection.h"
-#include "dataplugin.h"
+#include "dataobjectplugin.h"
 #include "debug.h"
 #include "kst_i18n.h"
 #include "objectstore.h"
 #include "relation.h"
 #include "updatemanager.h"
 
+#include <QApplication>
+#include <QDir>
 #include <qdebug.h>
 #include <qtimer.h>
+#include <QPluginLoader>
+#include <QLibraryInfo>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
@@ -57,9 +61,9 @@ DataObject::~DataObject() {
 }
 
 
-static QMap<QString, DataObjectPtr> pluginInfo;
+static DataObjectPluginList _pluginList;
 void DataObject::cleanupForExit() {
-  pluginInfo.clear(); //FIXME?
+  _pluginList.clear(); //FIXME?
 }
 
 
@@ -67,77 +71,85 @@ void DataObject::attach() {
 }
 
 
-DataObjectPtr DataObject::createPlugin() {
-#if 0
-  int err = 0;
-  DataObject *object = KService::createInstance<DataObject>(service, 0, QStringList(), &err);
-
-  KstSharedPtr<Plugin> p = new DataObjectPlugin(service);
-
-  if (object && p->key()) {
-    const QString name = service->property("Name").toString();
-    const QString description = service->property("Comment").toString();
-    const QString author = service->property("X-Kst-Plugin-Author").toString();
-    const QString version = service->property("X-Kst-Plugin-Version").toString();
-    const QString library = service->library();
-    Q_ASSERT( !name.isEmpty() );
-    Q_ASSERT( !library.isEmpty() );
-    object->setName(name);
-    object->setAuthor(author);
-    object->setDescription(description);
-    object->setVersion(version);
-    object->setLibrary(library);
-
-    Debug::self()->log(i18n("Loaded data-object plugin %1.").arg(service->name()));
-    return object;
-  }
-
-  Debug::self()->log(i18n("Could not load data-object plugin %1.").arg(service->name()), Debug::Error);
-#endif
-  return 0L;
-}
-
-
 // Scans for plugins and stores the information for them
 void DataObject::scanPlugins() {
   Debug::self()->log(i18n("Scanning for data-object plugins."));
 
-  pluginInfo.clear(); //FIXME?
+  _pluginList.clear(); //FIXME?
 
-#if 0
-  KService::List sl = KServiceTypeTrader::self()->query("Kst Data Object");
-  for (KService::List::ConstIterator it = sl.begin(); it != sl.end(); ++it) {
-    if (DataObjectPtr object = createPlugin(*it)) {
-      pluginInfo.insert((*it)->name(), DataObjectPtr(object));
+  DataObjectPluginList tmpList;
+
+  Debug::self()->log(i18n("Scanning for data-object plugins."));
+
+  foreach (QObject *plugin, QPluginLoader::staticInstances()) {
+    //try a cast
+    if (DataObjectPluginInterface *basicPlugin = dynamic_cast<DataObjectPluginInterface*>(plugin)) {
+      tmpList.append(basicPlugin);
     }
   }
-#endif
+
+  QStringList pluginPaths;
+  pluginPaths << QLibraryInfo::location(QLibraryInfo::PluginsPath);
+  pluginPaths << QString(qApp->applicationDirPath()).replace("bin", "plugin");
+
+  foreach (QString pluginPath, pluginPaths) {
+    QDir d(pluginPath);
+    foreach (QString fileName, d.entryList(QDir::Files)) {
+        QPluginLoader loader(d.absoluteFilePath(fileName));
+        QObject *plugin = loader.instance();
+        if (plugin) {
+          if (DataObjectPluginInterface *dataObjectPlugin = dynamic_cast<DataObjectPluginInterface*>(plugin)) {
+            tmpList.append(dataObjectPlugin);
+          }
+        }
+    }
+  }
+
+  // This cleans up plugins that have been uninstalled and adds in new ones.
+  // Since it is a shared pointer it can't dangle anywhere.
+  _pluginList.clear();
+  _pluginList = tmpList;
 }
 
 
-KstPluginInfoList DataObject::pluginInfoList() {
-  if (pluginInfo.isEmpty()) {
+QStringList DataObject::pluginList() {
+  if (_pluginList.isEmpty()) {
     scanPlugins();
   }
 
-  KstPluginInfoList list;
-  QMap<QString, DataObjectPtr>::ConstIterator it = pluginInfo.begin();
-  for (; it != pluginInfo.end(); ++it) {
-    list.insert(it.key(), it.value()->kind());
+  QStringList plugins;
+
+  for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+    plugins += (*it)->pluginName();
   }
-  return list;
+
+  return plugins;
 }
 
 
-DataObjectPtr DataObject::plugin(const QString& name) {
-    if (pluginInfo.contains(name)) {
-        return pluginInfo[name];
+
+// QWidget* DataObject::pluginWidget(const QString& name, ObjectPtr objectPtr, VectorPtr vector) {
+//   for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+//     if ((*it)->pluginName() == name) {
+//       if ((*it)->hasConfigWidget()) {
+//         return (*it)->configWidget(objectPtr, vector);
+//       }
+//       break;
+//     }
+//   }
+//   return 0L;
+// }
+
+
+DataObjectPtr DataObject::createPlugin(const QString& name, ObjectStore *store, ObjectTag &tag, VectorPtr vector) {
+  for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+    if ((*it)->pluginName() == name) {
+      if (DataObjectPtr object = (*it)->create(store, tag, vector)) {
+        return object;
+      }
     }
-    return 0L;
-}
+  }
 
-
-DataObjectPtr DataObject::createPlugin(const QString& name) {
 #if 0
   KService::List sl = KServiceTypeTrader::self()->query("Kst Data Object");
   for (KService::List::ConstIterator it = sl.begin(); it != sl.end(); ++it) {

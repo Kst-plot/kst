@@ -112,8 +112,10 @@ void DialogLauncher::showCSDDialog(ObjectPtr objectPtr, VectorPtr vector) {
 }
 
 
-void DialogLauncher::showBasicPluginDialog(ObjectPtr objectPtr) {
+void DialogLauncher::showBasicPluginDialog(QString &pluginName, ObjectPtr objectPtr, VectorPtr vector) {
+  Q_UNUSED(pluginName);
   Q_UNUSED(objectPtr);
+  Q_UNUSED(vector);
 }
 
 }

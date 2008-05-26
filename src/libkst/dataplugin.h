@@ -69,39 +69,11 @@ class DataSourcePluginInterface : public PluginInterface {
 };
 
 
-class DataObjectPluginInterface : public PluginInterface {
-  public:
-    virtual ~DataObjectPluginInterface() {}
-
-    virtual QWidget *configWidget(const QString& name) const = 0;
-};
-
-
-class BasicPluginInterface : public DataObjectPluginInterface {
-  public:
-    virtual ~BasicPluginInterface() {}
-
-    virtual QStringList inputVectorList() const = 0;
-
-    virtual QStringList inputScalarList() const = 0;
-
-    virtual QStringList inputStringList() const = 0;
-
-    virtual QStringList outputVectorList() const = 0;
-
-    virtual QStringList outputScalarList() const = 0;
-
-    virtual QStringList outputStringList() const = 0;
-};
-
-
 typedef ObjectList<PluginInterface> PluginList;
 
 }
 
 Q_DECLARE_INTERFACE(Kst::PluginInterface, "com.kst.PluginInterface/1.0")
 Q_DECLARE_INTERFACE(Kst::DataSourcePluginInterface, "com.kst.DataSourcePluginInterface/1.0")
-Q_DECLARE_INTERFACE(Kst::DataObjectPluginInterface, "com.kst.DataObjectPluginInterface/1.0")
-Q_DECLARE_INTERFACE(Kst::BasicPluginInterface, "com.kst.BasicPluginInterface/1.0")
 
 #endif

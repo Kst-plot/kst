@@ -81,6 +81,7 @@ HEADERS += \
     eparse.h \
     dataobjectcollection.h \
     dataobject.h \
+    dataobjectplugin.h \
     defaultnames.h \
     emailthread.h \
     equation.h \

@@ -15,6 +15,7 @@
 
 #include "datacollection.h"
 #include "dataobjectcollection.h"
+#include "document.h"
 
 namespace Kst {
 
@@ -31,8 +32,28 @@ BasicPluginTab::~BasicPluginTab() {
 }
 
 
-BasicPluginDialog::BasicPluginDialog(ObjectPtr dataObject, QWidget *parent)
-  : DataDialog(dataObject, parent) {
+void BasicPluginTab::setObjectStore(ObjectStore *store) {
+  _vector->setObjectStore(store);
+}
+
+
+VectorPtr BasicPluginTab::vector() const {
+  return _vector->selectedVector();
+}
+
+
+bool BasicPluginTab::vectorDirty() const {
+  return _vector->selectedVectorDirty();
+}
+
+
+void BasicPluginTab::setVector(const VectorPtr vector) {
+  _vector->setSelectedVector(vector);
+}
+
+
+BasicPluginDialog::BasicPluginDialog(QString& pluginName, ObjectPtr dataObject, VectorPtr vector, QWidget *parent)
+  : DataDialog(dataObject, parent), _pluginName(pluginName) {
 
   if (editMode() == Edit)
     setWindowTitle(tr("Edit Basic Plugin"));
@@ -41,6 +62,8 @@ BasicPluginDialog::BasicPluginDialog(ObjectPtr dataObject, QWidget *parent)
 
   _basicPluginTab = new BasicPluginTab(this);
   addDataTab(_basicPluginTab);
+
+  //TODO add configWidget to this widget for meaningful display;
 
   //FIXME need to do validation to enable/disable ok button...
 }
@@ -56,7 +79,8 @@ QString BasicPluginDialog::tagString() const {
 
 
 ObjectPtr BasicPluginDialog::createNewDataObject() const {
-  qDebug() << "createNewDataObject" << endl;
+  ObjectTag tag = ObjectTag::fromString(tagString());
+  DataObject::createPlugin(_pluginName, _document->objectStore(), tag, _basicPluginTab->vector());
   return 0;
 }
 
