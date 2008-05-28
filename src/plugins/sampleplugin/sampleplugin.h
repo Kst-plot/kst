@@ -27,6 +27,11 @@ class SamplePluginSource : public Kst::BasicPlugin {
 
     virtual QString _automaticDescriptiveName() const;
 
+    Kst::VectorPtr vector() const;
+
+    virtual void change(Kst::DataObjectConfigWidget *configWidget);
+
+    void setupOutputs();
     virtual bool algorithm();
 
     virtual QStringList inputVectorList() const;
@@ -49,9 +54,9 @@ class SamplePlugin : public QObject, public Kst::DataObjectPluginInterface {
     virtual bool hasConfigWidget() const { return true; }
 
     virtual Kst::DataObject *create(Kst::ObjectStore *store,
-                               Kst::ObjectTag &tag, Kst::VectorPtr vector) const;
+                               Kst::ObjectTag &tag, Kst::DataObjectConfigWidget *configWidget) const;
 
-    virtual QWidget *configWidget(Kst::ObjectPtr objectPtr = 0, Kst::VectorPtr vector = 0) const;
+    virtual Kst::DataObjectConfigWidget *configWidget() const;
 };
 
 #endif

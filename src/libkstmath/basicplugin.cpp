@@ -103,14 +103,12 @@ DataObjectPtr BasicPlugin::makeDuplicate() {
 }
 
 void BasicPlugin::showNewDialog() {
-  //TODO Fix me
-//   DialogLauncher::self()->showBasicPluginDialog();
+  DialogLauncher::self()->showBasicPluginDialog(_pluginName);
 }
 
 
 void BasicPlugin::showEditDialog() {
-  // TODO add finding of proper dialog and providing of configWidget.
-//   DialogLauncher::self()->showBasicPluginDialog(0, this);
+  DialogLauncher::self()->showBasicPluginDialog(_pluginName, this);
 }
 
 
@@ -233,7 +231,6 @@ void BasicPlugin::setOutputString(const QString &type, const QString &name) {
 
 Object::UpdateType BasicPlugin::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
-
   bool force = dirty();
   setDirty(false);
 
@@ -489,7 +486,7 @@ void BasicPlugin::updateOutput() const {
       vectorRealloced(o, o->value(), o->length());
       o->setDirty();
       o->setNewAndShift(o->length(), o->numShift());
-      o->update();
+//       o->update();
     }
   }
 
@@ -499,7 +496,7 @@ void BasicPlugin::updateOutput() const {
   for (; osI != os.end(); ++osI) {
     if (ScalarPtr o = outputScalar(*osI)) {
       Q_ASSERT(o->myLockStatus() == KstRWLock::WRITELOCKED);
-      o->update();
+//       o->update();
     }
   }
 
@@ -509,7 +506,7 @@ void BasicPlugin::updateOutput() const {
   for (; ostrI != ostr.end(); ++ostrI) {
     if (StringPtr o = outputString(*ostrI)) {
       Q_ASSERT(o->myLockStatus() == KstRWLock::WRITELOCKED);
-      o->update();
+//       o->update();
     }
   }
 }

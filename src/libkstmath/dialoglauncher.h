@@ -67,7 +67,7 @@ class KST_EXPORT DialogLauncher : public QObject {
     virtual void showEventMonitorDialog(ObjectPtr objectPtr = 0);
 
     //plugins
-    virtual void showBasicPluginDialog(QString &pluginName, ObjectPtr objectPtr = 0, VectorPtr vector = 0);
+    virtual void showBasicPluginDialog(QString pluginName, ObjectPtr objectPtr = 0);
 };
 
 }

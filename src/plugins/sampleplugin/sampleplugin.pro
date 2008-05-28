@@ -13,6 +13,8 @@ INCLUDEPATH += \
     tmp \
     $$TOPLEVELDIR/src/libkst \
     $$TOPLEVELDIR/src/libkstmath \
+    $$TOPLEVELDIR/src/widgets \
+    $$OUTPUT_DIR/src/widgets \
     $$OUTPUT_DIR/src/datasources/ascii/tmp
 
 LIBS += -lkst

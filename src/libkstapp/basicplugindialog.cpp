@@ -16,15 +16,21 @@
 #include "datacollection.h"
 #include "dataobjectcollection.h"
 #include "document.h"
+#include "basicplugin.h"
 
 namespace Kst {
 
-BasicPluginTab::BasicPluginTab(QWidget *parent)
+BasicPluginTab::BasicPluginTab(QString& pluginName, QWidget *parent)
   : DataTab(parent) {
 
   setupUi(this);
   setTabTitle(tr("Basic Plugin"));
 
+  QGridLayout *layout = new QGridLayout(_inputOutputBox);
+  _configWidget = DataObject::pluginWidget(pluginName);
+  _configWidget->setupSlots(this);
+  layout->addWidget(_configWidget, 0, 0);
+  layout->activate();
 }
 
 
@@ -33,26 +39,11 @@ BasicPluginTab::~BasicPluginTab() {
 
 
 void BasicPluginTab::setObjectStore(ObjectStore *store) {
-  _vector->setObjectStore(store);
+   _configWidget->setObjectStore(store);
 }
 
 
-VectorPtr BasicPluginTab::vector() const {
-  return _vector->selectedVector();
-}
-
-
-bool BasicPluginTab::vectorDirty() const {
-  return _vector->selectedVectorDirty();
-}
-
-
-void BasicPluginTab::setVector(const VectorPtr vector) {
-  _vector->setSelectedVector(vector);
-}
-
-
-BasicPluginDialog::BasicPluginDialog(QString& pluginName, ObjectPtr dataObject, VectorPtr vector, QWidget *parent)
+BasicPluginDialog::BasicPluginDialog(QString& pluginName, ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent), _pluginName(pluginName) {
 
   if (editMode() == Edit)
@@ -60,12 +51,12 @@ BasicPluginDialog::BasicPluginDialog(QString& pluginName, ObjectPtr dataObject, 
   else
     setWindowTitle(tr("New Basic Plugin"));
 
-  _basicPluginTab = new BasicPluginTab(this);
+  _basicPluginTab = new BasicPluginTab(pluginName, this);
   addDataTab(_basicPluginTab);
 
-  //TODO add configWidget to this widget for meaningful display;
-
-  //FIXME need to do validation to enable/disable ok button...
+  if (dataObject) {
+    _basicPluginTab->configWidget()->setupFromObject(dataObject);
+  }
 }
 
 
@@ -80,14 +71,19 @@ QString BasicPluginDialog::tagString() const {
 
 ObjectPtr BasicPluginDialog::createNewDataObject() const {
   ObjectTag tag = ObjectTag::fromString(tagString());
-  DataObject::createPlugin(_pluginName, _document->objectStore(), tag, _basicPluginTab->vector());
-  return 0;
+  DataObjectPtr dataObject = DataObject::createPlugin(_pluginName, _document->objectStore(), tag, _basicPluginTab->configWidget());
+  return dataObject;
 }
 
 
 ObjectPtr BasicPluginDialog::editExistingDataObject() const {
-  qDebug() << "editExistingDataObject" << endl;
-  return 0;
+  if (BasicPlugin* plugin = kst_cast<BasicPlugin>(dataObject())) {
+    plugin->writeLock();
+    plugin->change(_basicPluginTab->configWidget());
+    plugin->update();
+    plugin->unlock();
+  }
+  return dataObject();
 }
 
 }

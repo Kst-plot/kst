@@ -27,6 +27,9 @@
 #include "matrix.h"
 #include "kst_export.h"
 
+#include <QWidget>
+#include <QSettings>
+
 class QXmlStreamReader;
 class QXmlStreamWriter;
 
@@ -34,6 +37,7 @@ namespace Kst {
 
 class DataObject;
 class Relation;
+class DataObjectConfigWidget;
 
 typedef SharedPtr<DataObject> DataObjectPtr;
 typedef ObjectList<DataObject> DataObjectList;
@@ -51,8 +55,8 @@ class KST_EXPORT DataObject : public Object {
     static void cleanupForExit();
     /** Returns a list of object plugins found on the system. */
     static QStringList pluginList();
-//     static QWidget* pluginWidget(const QString& name, ObjectPtr objectPtr = 0, VectorPtr vector = 0);
-    static DataObjectPtr createPlugin(const QString& name, ObjectStore *store, ObjectTag &tag, VectorPtr vector);
+    static DataObjectConfigWidget* pluginWidget(const QString& name);
+    static DataObjectPtr createPlugin(const QString& name, ObjectStore *store, ObjectTag &tag, DataObjectConfigWidget *configWidget);
 
     virtual UpdateType update() = 0;
     virtual const QString& typeString() const { return _typeString; }
@@ -173,6 +177,34 @@ class KST_EXPORT DataObject : public Object {
   private:
     static void scanPlugins();
 };
+
+
+class DataObjectConfigWidget : public QWidget {
+  Q_OBJECT
+  friend class DataObject;
+  public:
+    DataObjectConfigWidget(); // will be reparented later
+    virtual ~DataObjectConfigWidget();
+
+    virtual void setConfig(QSettings*);
+    virtual void setupFromObject(Object* dataObject);
+    virtual void setupSlots(QWidget* dialog);
+
+    KST_EXPORT void setInstance(DataObjectPtr inst);
+    KST_EXPORT DataObjectPtr instance() const;
+
+    virtual void setObjectStore(ObjectStore* store);
+
+  public slots:
+    virtual void load();
+    virtual void save();
+
+  protected:
+    QSettings *_cfg;
+    // If _instance is nonzero, then your settings are to be saved for this
+    // particular instance of the source, as opposed to globally.
+    DataObjectPtr _instance;
+} KST_EXPORT;
 
 }
 

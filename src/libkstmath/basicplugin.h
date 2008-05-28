@@ -56,6 +56,8 @@ class KST_EXPORT BasicPlugin : public DataObject {
     virtual void showEditDialog();
 
   public:
+    virtual void change(DataObjectConfigWidget *configWidget) = 0;
+
     //Returns the respective input object for name
     VectorPtr inputVector(const QString& name) const;
     ScalarPtr inputScalar(const QString& name) const;
@@ -74,6 +76,7 @@ class KST_EXPORT BasicPlugin : public DataObject {
     void setOutputString(const QString &type, const QString &name);
 
     void setPluginName(const QString &pluginName);
+    QString pluginName() { return _pluginName; }
 
     //Pure virtual methods inherited from DataObject
     //We do this one ourselves for benefit of all plugins...

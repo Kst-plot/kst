@@ -22,26 +22,30 @@ static const QString& SCALAR_OUT = "Scalar Out";
 static const QString& STRING_OUT = "String Out";
 
 
-class ConfigWidgetSamplePluginInternal : public QWidget, public Ui_SamplePluginConfig {
+class ConfigWidgetSamplePlugin : public Kst::DataObjectConfigWidget, public Ui_SamplePluginConfig {
   public:
-    ConfigWidgetSamplePluginInternal(QWidget *parent) : QWidget(parent), Ui_SamplePluginConfig() { 
-      setupUi(this); 
-    }
-};
-
-
-class ConfigWidgetSamplePlugin : public QWidget {
-  public:
-    ConfigWidgetSamplePlugin() : QWidget(0L) {
-      QGridLayout *layout = new QGridLayout(this);
-      _widget = new ConfigWidgetSamplePluginInternal(this);
-      layout->addWidget(_widget, 0, 0);
-      layout->activate();
+    ConfigWidgetSamplePlugin() : DataObjectConfigWidget(), Ui_SamplePluginConfig() {
+      setupUi(this);
     }
 
     ~ConfigWidgetSamplePlugin() {}
 
-    ConfigWidgetSamplePluginInternal *_widget;
+    void setObjectStore(Kst::ObjectStore* store) { _vector->setObjectStore(store); }
+
+    void setupSlots(QWidget* dialog) {
+      if (dialog) {
+        connect(_vector, SIGNAL(selectionChanged(QString)), dialog, SIGNAL(modified()));
+      }
+    }
+
+    Kst::VectorPtr selectedVector() { return _vector->selectedVector(); };
+    void setSelectedVector(Kst::VectorPtr vector) { return _vector->setSelectedVector(vector); };
+
+    virtual void setupFromObject(Kst::Object* dataObject) {
+      if (SamplePluginSource* source = static_cast<SamplePluginSource*>(dataObject)) {
+        setSelectedVector(source->vector());
+      }
+    }
 };
 
 
@@ -59,9 +63,34 @@ QString SamplePluginSource::_automaticDescriptiveName() const {
 }
 
 
+void SamplePluginSource::change(Kst::DataObjectConfigWidget *configWidget) {
+  if (ConfigWidgetSamplePlugin* config = static_cast<ConfigWidgetSamplePlugin*>(configWidget)) {
+    setInputVector(VECTOR_IN, config->selectedVector());
+  }
+}
+
+
+void SamplePluginSource::setupOutputs() {
+  setOutputVector(VECTOR_OUT, "");
+}
+
+
 bool SamplePluginSource::algorithm() {
    //Do nothing
+  Kst::VectorPtr inputVector = _inputVectors[VECTOR_IN];
+  Kst::VectorPtr outputVector = _outputVectors[VECTOR_OUT];
+
+  outputVector->resize(inputVector->length(), false);
+
+  for (int i = 0; i < inputVector->length(); i++) {
+    outputVector->value()[i] = inputVector->value(i);
+  }
   return true;
+}
+
+
+Kst::VectorPtr SamplePluginSource::vector() const {
+  return _inputVectors[VECTOR_IN];
 }
 
 
@@ -71,12 +100,12 @@ QStringList SamplePluginSource::inputVectorList() const {
 
 
 QStringList SamplePluginSource::inputScalarList() const {
-  return QStringList( SCALAR_IN );
+  return QStringList( /*SCALAR_IN*/ );
 }
 
 
 QStringList SamplePluginSource::inputStringList() const {
-  return QStringList( STRING_IN );
+  return QStringList( /*STRING_IN*/ );
 }
 
 
@@ -86,38 +115,41 @@ QStringList SamplePluginSource::outputVectorList() const {
 
 
 QStringList SamplePluginSource::outputScalarList() const {
-  return QStringList( SCALAR_OUT );
+  return QStringList( /*SCALAR_OUT*/ );
 }
 
 
 QStringList SamplePluginSource::outputStringList() const {
-  return QStringList( STRING_OUT );
+  return QStringList( /*STRING_OUT*/ );
 }
 
 
 QString SamplePlugin::pluginName() const { return "Sample DataObject Plugin"; }
 
 Kst::DataObject *SamplePlugin::create(Kst::ObjectStore *store,
-                               Kst::ObjectTag &tag, Kst::VectorPtr vector) const {
+                               Kst::ObjectTag &tag, Kst::DataObjectConfigWidget *configWidget) const {
 
-  SamplePluginSource* object = store->createObject<SamplePluginSource>(tag);
+  if (ConfigWidgetSamplePlugin* config = static_cast<ConfigWidgetSamplePlugin*>(configWidget)) {
 
-  object->setInputVector(VECTOR_IN, vector);
-  object->setPluginName(pluginName());
+    SamplePluginSource* object = store->createObject<SamplePluginSource>(tag);
 
-  object->writeLock();
-  object->update();
-  object->unlock();
+    object->setInputVector(VECTOR_IN, config->selectedVector());
+    object->setupOutputs();
 
-  return object;
+    object->setPluginName(pluginName());
 
-  return new SamplePluginSource(store, tag);
+    object->writeLock();
+    object->update();
+    object->unlock();
+
+    return object;
+  }
+  return 0;
 }
 
-QWidget *SamplePlugin::configWidget(Kst::ObjectPtr objectPtr, Kst::VectorPtr vector) const {
-  Q_UNUSED(objectPtr);
-  ConfigWidgetSamplePlugin *config = new ConfigWidgetSamplePlugin();
-  return config;
+
+Kst::DataObjectConfigWidget *SamplePlugin::configWidget() const {
+  return new ConfigWidgetSamplePlugin();
 }
 
 Q_EXPORT_PLUGIN2(kstplugin_sampleplugin, SamplePlugin)

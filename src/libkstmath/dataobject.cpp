@@ -128,23 +128,23 @@ QStringList DataObject::pluginList() {
 
 
 
-// QWidget* DataObject::pluginWidget(const QString& name, ObjectPtr objectPtr, VectorPtr vector) {
-//   for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
-//     if ((*it)->pluginName() == name) {
-//       if ((*it)->hasConfigWidget()) {
-//         return (*it)->configWidget(objectPtr, vector);
-//       }
-//       break;
-//     }
-//   }
-//   return 0L;
-// }
-
-
-DataObjectPtr DataObject::createPlugin(const QString& name, ObjectStore *store, ObjectTag &tag, VectorPtr vector) {
+DataObjectConfigWidget* DataObject::pluginWidget(const QString& name) {
   for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
     if ((*it)->pluginName() == name) {
-      if (DataObjectPtr object = (*it)->create(store, tag, vector)) {
+      if ((*it)->hasConfigWidget()) {
+        return (*it)->configWidget();
+      }
+      break;
+    }
+  }
+  return 0L;
+}
+
+
+DataObjectPtr DataObject::createPlugin(const QString& name, ObjectStore *store, ObjectTag &tag, DataObjectConfigWidget *configWidget) {
+  for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+    if ((*it)->pluginName() == name) {
+      if (DataObjectPtr object = (*it)->create(store, tag, configWidget)) {
         return object;
       }
     }
@@ -423,6 +423,7 @@ void DataObject::writeLockInputsAndOutputs() const {
       if ((*outputIt)->provider() != this) {
         Debug::self()->log(i18n("(%1) DataObject::writeLockInputsAndOutputs() by tid=%2: write locking output %3 (not provider) -- this is probably an error. Please email kst@kde.org with details.").arg(this->type()).arg(reinterpret_cast<qint64>(QThread::currentThread())).arg((*outputIt)->Name()), Debug::Error);
       }
+
       (*outputIt)->writeLock();
       ++outputIt;
     }
@@ -800,6 +801,55 @@ bool DataObject::uses(ObjectPtr p) const {
   }
   return false;
 }
+
+
+/////////////////////////////////////////////////////////////////////////////
+DataObjectConfigWidget::DataObjectConfigWidget()
+: QWidget(0L), _cfg(0L) {
+}
+
+
+DataObjectConfigWidget::~DataObjectConfigWidget() {
+}
+
+
+void DataObjectConfigWidget::save() {
+}
+
+
+void DataObjectConfigWidget::load() {
+}
+
+
+void DataObjectConfigWidget::setConfig(QSettings *cfg) {
+  _cfg = cfg;
+}
+
+
+void DataObjectConfigWidget::setInstance(DataObjectPtr inst) {
+  _instance = inst;
+}
+
+
+DataObjectPtr DataObjectConfigWidget::instance() const {
+  return _instance;
+}
+
+
+void DataObjectConfigWidget::setObjectStore(ObjectStore* store) {
+  Q_UNUSED(store);
+}
+
+
+void DataObjectConfigWidget::setupFromObject(Object* dataObject) {
+  Q_UNUSED(dataObject);
+}
+
+
+void DataObjectConfigWidget::setupSlots(QWidget* dialog) {
+  Q_UNUSED(dialog);
+}
+
 
 }
 // vim: ts=2 sw=2 et

@@ -31,6 +31,7 @@
 #include "eventmonitorentry.h"
 #include "image.h"
 #include "csd.h"
+#include "basicplugin.h"
 
 #include <QHeaderView>
 #include <QToolBar>
@@ -273,6 +274,8 @@ void DataManager::showEditDialog() {
     DialogLauncher::self()->showVectorDialog(vector);
   } else if (MatrixPtr matrix = kst_cast<Matrix>(_currentObject)) {
     DialogLauncher::self()->showMatrixDialog(matrix);
+  } else if (BasicPluginPtr plugin = kst_cast<BasicPlugin>(_currentObject)) {
+    DialogLauncher::self()->showBasicPluginDialog(plugin->pluginName(), plugin);
   }
   _doc->session()->triggerReset();
 }
@@ -365,11 +368,7 @@ void DataManager::showImageDialog() {
 
 
 void DataManager::showPluginDialog(QString &pluginName) {
-  if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
-    DialogLauncher::self()->showBasicPluginDialog(pluginName, vector);
-  } else {
-    DialogLauncher::self()->showBasicPluginDialog(pluginName);
-  }
+  DialogLauncher::self()->showBasicPluginDialog(pluginName);
 
   _doc->session()->triggerReset();
 }
