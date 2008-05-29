@@ -27,8 +27,8 @@ namespace Kst {
 const QString String::staticTypeString = I18N_NOOP("String");
 const QString String::staticTypeTag = I18N_NOOP("string");
 
-String::String(ObjectStore *store, ObjectTag tag, Object *provider, const QString& val, bool orphan)
-    : Primitive(store, tag, provider), _value(val), _orphan(orphan), _editable(false) {
+String::String(ObjectStore *store, Object *provider, const QString& val, bool orphan)
+    : Primitive(store, provider), _value(val), _orphan(orphan), _editable(false) {
   _shortName = "T"+QString::number(_tnum);
   if (_tnum>max_tnum) 
     max_tnum = _tnum;
@@ -37,32 +37,32 @@ String::String(ObjectStore *store, ObjectTag tag, Object *provider, const QStrin
 }
 
 
-String::String(ObjectStore *store, QDomElement& e)
-    : Primitive(store), _orphan(false), _editable(false) {
-  QDomNode n = e.firstChild();
-
-  while (!n.isNull()) {
-    QDomElement e = n.toElement();
-    if (!e.isNull()) {
-      if (e.tagName() == "tag") {
-        setTagName(ObjectTag::fromString(e.text()));
-      } else if (e.tagName() == "orphan") {
-        _orphan = true;
-      } else if (e.tagName() == "value") {
-        setValue(e.text());
-      } else if (e.tagName() == "editable") {
-        _editable = true;
-      }
-    }
-    n = n.nextSibling();
-  }
-
-  _shortName = "T"+QString::number(_tnum);
-  if (_tnum>max_tnum) 
-    max_tnum = _tnum;
-  _tnum++;
-
-}
+// String::String(ObjectStore *store, QDomElement& e)
+//     : Primitive(store), _orphan(false), _editable(false) {
+//   QDomNode n = e.firstChild();
+// 
+//   while (!n.isNull()) {
+//     QDomElement e = n.toElement();
+//     if (!e.isNull()) {
+//       if (e.tagName() == "tag") {
+//         setTagName(ObjectTag::fromString(e.text()));
+//       } else if (e.tagName() == "orphan") {
+//         _orphan = true;
+//       } else if (e.tagName() == "value") {
+//         setValue(e.text());
+//       } else if (e.tagName() == "editable") {
+//         _editable = true;
+//       }
+//     }
+//     n = n.nextSibling();
+//   }
+// 
+//   _shortName = "T"+QString::number(_tnum);
+//   if (_tnum>max_tnum) 
+//     max_tnum = _tnum;
+//   _tnum++;
+// 
+// }
 
 
 String::~String() {
@@ -76,7 +76,6 @@ const QString& String::typeString() const {
 
 void String::save(QXmlStreamWriter &s) {
   s.writeStartElement("string");
-  s.writeAttribute("tag", tag().tagString());
   if (_orphan) {
     s.writeAttribute("orphan", "true");
   }

@@ -84,8 +84,11 @@ void DataDialog::createGui() {
   connect(button, SIGNAL(clicked()), this, SLOT(slotEditMultiple()));
 
   if (_dataObject) {
-    //setTagString(_dataObject->tag().tagString()); // FIXME: should this be displayString()?
-    setTagString(_dataObject->tag().name());
+    if (_dataObject->descriptiveNameIsManual()) {
+      setTagString(_dataObject->descriptiveName());
+    } else {
+      setTagString(_defaultTagString);
+    }
   } else {
     setTagString(_defaultTagString);
     button->setVisible(false);

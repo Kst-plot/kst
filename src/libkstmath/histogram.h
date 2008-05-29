@@ -49,8 +49,6 @@ public:
 
     void setXRange(double xmin_in, double xmax_in);
 
-//     QString vTag() const;
-
     void setVector(VectorPtr);
     VectorPtr vector() const;
 
@@ -75,9 +73,6 @@ public:
 
     virtual bool slaveVectorsUsed() const;
 
-    virtual ObjectTag xVTag() const { return _bVector->tag(); }
-    virtual ObjectTag yVTag() const { return _hVector->tag(); }
-
     void setRealTimeAutoBin(bool autobin);
     bool realTimeAutoBin() const;
 
@@ -95,8 +90,8 @@ public:
     virtual DataObjectPtr makeDuplicate();
 
   protected:
-    Histogram(ObjectStore *store, const ObjectTag &in_tag);
-    Histogram(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_V,
+    Histogram(ObjectStore *store);
+    Histogram(ObjectStore *store, VectorPtr in_V,
         double xmin_in, double xmax_in,
         int in_n_bins,
         NormalizationType new_norm_in);

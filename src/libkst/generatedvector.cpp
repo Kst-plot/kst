@@ -26,16 +26,16 @@ namespace Kst {
 const QString GeneratedVector::staticTypeString = I18N_NOOP("Generated Vector");
 const QString GeneratedVector::staticTypeTag = I18N_NOOP("generatedvector");
 
-GeneratedVector::GeneratedVector(ObjectStore *store, const ObjectTag& tag, const QByteArray &data, double x0, double x1, int n)
-    : Vector(store, tag, data) {
+GeneratedVector::GeneratedVector(ObjectStore *store, const QByteArray &data, double x0, double x1, int n)
+    : Vector(store, data) {
   _saveable = true;
   _saveData = false;
   changeRange(x0, x1, n);
 }
 
 
-GeneratedVector::GeneratedVector(ObjectStore *store, const ObjectTag& tag, double x0, double x1, int n)
-    : Vector(store, tag, n) {
+GeneratedVector::GeneratedVector(ObjectStore *store, double x0, double x1, int n)
+    : Vector(store, n) {
   _saveable = true;
   _saveData = false;
   changeRange(x0, x1, n);
@@ -49,7 +49,6 @@ const QString& GeneratedVector::typeString() const {
 
 void GeneratedVector::save(QXmlStreamWriter &s) {
   s.writeStartElement("generatedvector");
-  s.writeAttribute("tag", tag().tagString());
   s.writeAttribute("min", QString::number(min()));
   s.writeAttribute("max", QString::number(max()));
   s.writeAttribute("count", QString::number(length()));

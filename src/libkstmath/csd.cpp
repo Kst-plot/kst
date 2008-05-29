@@ -39,82 +39,82 @@ static const QLatin1String INVECTOR = QLatin1String("I");
 static const QLatin1String& OUTMATRIX = QLatin1String("M");
 
 #define KSTCSDMAXLEN 27
-CSD::CSD(ObjectStore *store, const ObjectTag &in_tag)
-  : DataObject(store, in_tag) {
+CSD::CSD(ObjectStore *store)
+  : DataObject(store) {
 
 }
 
-CSD::CSD(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_V,
+CSD::CSD(ObjectStore *store, VectorPtr in_V,
                double in_freq, bool in_average, bool in_removeMean, bool in_apodize,
                ApodizeFunction in_apodizeFxn, int in_windowSize, int in_averageLength, double in_gaussianSigma,
                PSDType in_outputType, const QString &in_vectorUnits, const QString &in_rateUnits)
-: DataObject(store, in_tag) {
+: DataObject(store) {
   commonConstructor(store, in_V, in_freq, in_average, in_removeMean,
                     in_apodize, in_apodizeFxn, in_windowSize, in_averageLength, in_gaussianSigma,
-                    in_vectorUnits, in_rateUnits, in_outputType, in_V->tag().displayString());  // FIXME: is this right?
+                    in_vectorUnits, in_rateUnits, in_outputType, in_V->Name());  // FIXME: is this right?
   setDirty();
 }
 
 
-CSD::CSD(ObjectStore *store, const QDomElement &e)
-: DataObject(store, e) {
-    QString in_tag;
-    QString vecName;
-    QString in_vectorUnits, in_rateUnits;
-    VectorPtr in_V;
-    double in_freq = 60.0;
-    bool in_average = true;
-    int in_averageLength = 8;
-    bool in_removeMean = true;
-    bool in_apodize = true;
-    ApodizeFunction in_apodizeFxn = WindowOriginal;
-    int in_windowSize = 5000;
-    double in_gaussianSigma = 3.0;
-    PSDType in_outputType = PSDAmplitudeSpectralDensity;
-
-    QDomNode n = e.firstChild();
-    while (!n.isNull()) {
-      QDomElement e = n.toElement(); // try to convert the node to an element.
-      if (!e.isNull()) { // the node was really an element.
-        if (e.tagName() == "tag") {
-          in_tag = e.text();
-        } else if (e.tagName() == "vector") {
-          vecName = e.text();
-        } else if (e.tagName() == "samplerate") {
-          in_freq = e.text().toDouble();
-        } else if (e.tagName() == "average") {
-          in_average = (e.text() != "0");
-        } else if (e.tagName() == "fftlength") {
-          in_averageLength = e.text().toInt();
-        } else if (e.tagName() == "apodize") {
-          in_apodize = (e.text() != "0");
-        } else if (e.tagName() == "apodizefunction") {
-          in_apodizeFxn = ApodizeFunction(e.text().toInt());
-        } else if (e.tagName() == "gaussiansigma") {
-          in_gaussianSigma = e.text().toDouble();
-        } else if (e.tagName() == "removemean") {
-          in_removeMean = (e.text() != "0");
-        } else if (e.tagName() == "windowsize") {
-          in_windowSize = e.text().toInt();
-        } else if (e.tagName() == "vectorunits") {
-          in_vectorUnits = e.text();
-        } else if (e.tagName() == "rateunits") {
-          in_rateUnits = e.text();
-        } else if (e.tagName() == "outputtype") {
-          in_outputType = (PSDType)e.text().toInt();
-        }
-      }
-      n = n.nextSibling();
-    }
-
-    _inputVectorLoadQueue.append(qMakePair(QString(INVECTOR), vecName));
-
-    setTagName(ObjectTag::fromString(in_tag));
-
-    commonConstructor(store, in_V, in_freq, in_average, in_removeMean,
-                      in_apodize, in_apodizeFxn, in_windowSize, in_averageLength, in_gaussianSigma,
-                      in_vectorUnits, in_rateUnits, in_outputType, vecName);
-}
+// CSD::CSD(ObjectStore *store, const QDomElement &e)
+// : DataObject(store, e) {
+//     QString in_tag;
+//     QString vecName;
+//     QString in_vectorUnits, in_rateUnits;
+//     VectorPtr in_V;
+//     double in_freq = 60.0;
+//     bool in_average = true;
+//     int in_averageLength = 8;
+//     bool in_removeMean = true;
+//     bool in_apodize = true;
+//     ApodizeFunction in_apodizeFxn = WindowOriginal;
+//     int in_windowSize = 5000;
+//     double in_gaussianSigma = 3.0;
+//     PSDType in_outputType = PSDAmplitudeSpectralDensity;
+// 
+//     QDomNode n = e.firstChild();
+//     while (!n.isNull()) {
+//       QDomElement e = n.toElement(); // try to convert the node to an element.
+//       if (!e.isNull()) { // the node was really an element.
+//         if (e.tagName() == "tag") {
+//           in_tag = e.text();
+//         } else if (e.tagName() == "vector") {
+//           vecName = e.text();
+//         } else if (e.tagName() == "samplerate") {
+//           in_freq = e.text().toDouble();
+//         } else if (e.tagName() == "average") {
+//           in_average = (e.text() != "0");
+//         } else if (e.tagName() == "fftlength") {
+//           in_averageLength = e.text().toInt();
+//         } else if (e.tagName() == "apodize") {
+//           in_apodize = (e.text() != "0");
+//         } else if (e.tagName() == "apodizefunction") {
+//           in_apodizeFxn = ApodizeFunction(e.text().toInt());
+//         } else if (e.tagName() == "gaussiansigma") {
+//           in_gaussianSigma = e.text().toDouble();
+//         } else if (e.tagName() == "removemean") {
+//           in_removeMean = (e.text() != "0");
+//         } else if (e.tagName() == "windowsize") {
+//           in_windowSize = e.text().toInt();
+//         } else if (e.tagName() == "vectorunits") {
+//           in_vectorUnits = e.text();
+//         } else if (e.tagName() == "rateunits") {
+//           in_rateUnits = e.text();
+//         } else if (e.tagName() == "outputtype") {
+//           in_outputType = (PSDType)e.text().toInt();
+//         }
+//       }
+//       n = n.nextSibling();
+//     }
+// 
+//     _inputVectorLoadQueue.append(qMakePair(QString(INVECTOR), vecName));
+// 
+//     setTagName(ObjectTag::fromString(in_tag));
+// 
+//     commonConstructor(store, in_V, in_freq, in_average, in_removeMean,
+//                       in_apodize, in_apodizeFxn, in_windowSize, in_averageLength, in_gaussianSigma,
+//                       in_vectorUnits, in_rateUnits, in_outputType, vecName);
+// }
 
 
 void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
@@ -128,7 +128,7 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
   }
 
   _inputVectors[INVECTOR] = in_V;
-  QString vecName = in_V ? in_V->tag().displayString() : QString::null;
+  QString vecName = in_V ? in_V->Name() : QString::null;
   _frequency = in_freq;
   _average = in_average;
   _apodize = in_apodize;
@@ -146,7 +146,7 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
   }
 
   Q_ASSERT(store());
-  MatrixPtr outMatrix = store()->createObject<Matrix>(ObjectTag("csd", tag()));
+  MatrixPtr outMatrix = store()->createObject<Matrix>();
   outMatrix->setProvider(this);
   outMatrix->setSlaveName("SG");
   outMatrix->change(1, 1);
@@ -192,7 +192,7 @@ void CSD::commonConstructor(ObjectStore *store, VectorPtr in_V,
   }
 
   Q_ASSERT(store);
-  MatrixPtr outMatrix = store->createObject<Matrix>(ObjectTag("csd", tag()));
+  MatrixPtr outMatrix = store->createObject<Matrix>();
   outMatrix->setProvider(this);
   outMatrix->setSlaveName("SG");
   outMatrix->change(1, 1);
@@ -278,8 +278,7 @@ Object::UpdateType CSD::update() {
 
 void CSD::save(QXmlStreamWriter &s) {
   s.writeStartElement(staticTypeTag);
-  s.writeAttribute("tag", tag().tagString());
-  s.writeAttribute("vector", _inputVectors[INVECTOR]->tag().tagString());
+  s.writeAttribute("vector", _inputVectors[INVECTOR]->Name());
   s.writeAttribute("samplerate", QString::number(_frequency));
   s.writeAttribute("gaussiansigma", QString::number(_gaussianSigma));
   s.writeAttribute("average", QVariant(_average).toString());
@@ -462,9 +461,8 @@ void CSD::setRateUnits(const QString& units) {
 
 
 DataObjectPtr CSD::makeDuplicate() {
-  QString newTag = tag().name() + "'";
 
-  CSDPtr csd = store()->createObject<CSD>(ObjectTag::fromString(newTag));
+  CSDPtr csd = store()->createObject<CSD>();
   csd->change(_inputVectors[INVECTOR],
               _frequency,
               _average,
@@ -477,7 +475,9 @@ DataObjectPtr CSD::makeDuplicate() {
               _outputType,
               _vectorUnits,
               _rateUnits);
-
+  if (descriptiveNameIsManual()) {
+    csd->setDescriptiveName(descriptiveName());
+  }
   csd->writeLock();
   csd->update();
   csd->unlock();

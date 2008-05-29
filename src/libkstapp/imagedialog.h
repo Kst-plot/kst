@@ -112,7 +112,7 @@ class KST_EXPORT ImageDialog : public DataDialog {
     void setMatrix(MatrixPtr matrix);
 
   protected:
-    virtual QString tagString() const;
+//     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
 

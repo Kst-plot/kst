@@ -29,13 +29,11 @@ PSDFactory::~PSDFactory() {
 
 
 DataObjectPtr PSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& xml) {
-  ObjectTag tag;
-
   Q_ASSERT(store);
 
   double frequency, gaussianSigma;
   int length, apodizeFunction, outputType;
-  QString vectorTag, vectorUnits, rateUnits, descriptiveName;
+  QString vectorName, vectorUnits, rateUnits, descriptiveName;
   bool average, removeMean, apodize, interpolateHoles;
 
   while (!xml.atEnd()) {
@@ -43,8 +41,7 @@ DataObjectPtr PSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
     if (xml.isStartElement()) {
       if (n == PSD::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
-        tag = ObjectTag::fromString(attrs.value("tag").toString());
-        vectorTag = attrs.value("vector").toString();
+        vectorName = attrs.value("vector").toString();
         vectorUnits = attrs.value("vectorunits").toString();
         rateUnits = attrs.value("rateunits").toString();
 
@@ -83,8 +80,8 @@ DataObjectPtr PSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
   }
 
   VectorPtr vector = 0;
-  if (store && !vectorTag.isEmpty()) {
-    vector = kst_cast<Vector>(store->retrieveObject(ObjectTag::fromString(vectorTag)));
+  if (store && !vectorName.isEmpty()) {
+    vector = kst_cast<Vector>(store->retrieveObject(vectorName));
   }
 
   if (!vector) {
@@ -92,7 +89,7 @@ DataObjectPtr PSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
     return 0;
   }
 
-  PSDPtr powerspectrum = store->createObject<PSD>(tag);
+  PSDPtr powerspectrum = store->createObject<PSD>();
   Q_ASSERT(powerspectrum);
 
   powerspectrum->writeLock();

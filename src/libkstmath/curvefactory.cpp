@@ -29,12 +29,11 @@ CurveFactory::~CurveFactory() {
 
 
 RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader& xml) {
-  ObjectTag tag;
 
   Q_ASSERT(store);
 
   int lineStyle, lineWidth, pointType, pointDensity, barStyle;
-  QString xVectorTag, yVectorTag, legend, errorXVectorTag, errorYVectorTag, errorXMinusVectorTag, errorYMinusVectorTag, color;
+  QString xVectorName, yVectorName, legend, errorXVectorName, errorYVectorName, errorXMinusVectorName, errorYMinusVectorName, color;
   QString descriptiveName;
   bool hasLines, hasPoints, hasBars, ignoreAutoScale;
 
@@ -43,17 +42,15 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
     if (xml.isStartElement()) {
       if (n == Curve::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
-        tag = ObjectTag::fromString(attrs.value("tag").toString());
-
-        xVectorTag = attrs.value("xvector").toString();
-        yVectorTag = attrs.value("yvector").toString();
+        xVectorName = attrs.value("xvector").toString();
+        yVectorName = attrs.value("yvector").toString();
         legend = attrs.value("legend").toString();
         color = attrs.value("color").toString();
 
-        errorXVectorTag = attrs.value("errorxvector").toString();
-        errorYVectorTag = attrs.value("erroryvector").toString();
-        errorXMinusVectorTag = attrs.value("errorxminusvector").toString();
-        errorYMinusVectorTag = attrs.value("erroryminusvector").toString();
+        errorXVectorName = attrs.value("errorxvector").toString();
+        errorYVectorName = attrs.value("erroryvector").toString();
+        errorXMinusVectorName = attrs.value("errorxminusvector").toString();
+        errorYMinusVectorName = attrs.value("erroryminusvector").toString();
 
         hasLines = attrs.value("haslines").toString() == "true" ? true : false;
         lineWidth = attrs.value("linewidth").toString().toInt();
@@ -92,8 +89,8 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
   }
 
   VectorPtr xVector = 0;
-  if (store && !xVectorTag.isEmpty()) {
-    xVector = kst_cast<Vector>(store->retrieveObject(ObjectTag::fromString(xVectorTag)));
+  if (store && !xVectorName.isEmpty()) {
+    xVector = kst_cast<Vector>(store->retrieveObject(xVectorName));
   }
 
   if (!xVector) {
@@ -102,8 +99,8 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
   }
 
   VectorPtr yVector = 0;
-  if (store && !yVectorTag.isEmpty()) {
-    yVector = kst_cast<Vector>(store->retrieveObject(ObjectTag::fromString(yVectorTag)));
+  if (store && !yVectorName.isEmpty()) {
+    yVector = kst_cast<Vector>(store->retrieveObject(yVectorName));
   }
 
   if (!yVector) {
@@ -112,26 +109,26 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
   }
 
   VectorPtr errorXVector = 0;
-  if (store && !errorXVectorTag.isEmpty()) {
-    errorXVector = kst_cast<Vector>(store->retrieveObject(ObjectTag::fromString(errorXVectorTag)));
+  if (store && !errorXVectorName.isEmpty()) {
+    errorXVector = kst_cast<Vector>(store->retrieveObject(errorXVectorName));
   }
 
   VectorPtr errorYVector = 0;
-  if (store && !errorYVectorTag.isEmpty()) {
-    errorYVector = kst_cast<Vector>(store->retrieveObject(ObjectTag::fromString(errorYVectorTag)));
+  if (store && !errorYVectorName.isEmpty()) {
+    errorYVector = kst_cast<Vector>(store->retrieveObject(errorYVectorName));
   }
 
   VectorPtr errorXMinusVector = 0;
-  if (store && !errorXMinusVectorTag.isEmpty()) {
-    errorXMinusVector = kst_cast<Vector>(store->retrieveObject(ObjectTag::fromString(errorXMinusVectorTag)));
+  if (store && !errorXMinusVectorName.isEmpty()) {
+    errorXMinusVector = kst_cast<Vector>(store->retrieveObject(errorXMinusVectorName));
   }
 
   VectorPtr errorYMinusVector = 0;
-  if (store && !errorYMinusVectorTag.isEmpty()) {
-    errorYMinusVector = kst_cast<Vector>(store->retrieveObject(ObjectTag::fromString(errorYMinusVectorTag)));
+  if (store && !errorYMinusVectorName.isEmpty()) {
+    errorYMinusVector = kst_cast<Vector>(store->retrieveObject(errorYMinusVectorName));
   }
 
-  CurvePtr curve = store->createObject<Curve>(tag);
+  CurvePtr curve = store->createObject<Curve>();
 
   curve->setXVector(xVector);
   curve->setYVector(yVector);

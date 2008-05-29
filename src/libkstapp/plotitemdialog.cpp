@@ -171,20 +171,20 @@ void PlotItemDialog::setupContent() {
   ImageList images = _store->getObjects<Image>();
 
   foreach (RelationPtr relation, _plotItem->renderItem(PlotRenderItem::Cartesian)->relationList()) {
-    displayedRelations.append(relation->tag().displayString());
+    displayedRelations.append(relation->Name());
   }
 
   foreach (CurvePtr curve, curves) {
-    allRelations.append(curve->tag().displayString());
-    if (!displayedRelations.contains(curve->tag().displayString())) {
-      availableRelations.append(curve->tag().displayString());
+    allRelations.append(curve->Name());
+    if (!displayedRelations.contains(curve->Name())) {
+      availableRelations.append(curve->Name());
     }
   }
 
   foreach (ImagePtr image, images) {
-    allRelations.append(image->tag().displayString());
-    if (!displayedRelations.contains(image->tag().displayString())) {
-      availableRelations.append(image->tag().displayString());
+    allRelations.append(image->Name());
+    if (!displayedRelations.contains(image->Name())) {
+      availableRelations.append(image->Name());
     }
   }
 
@@ -225,7 +225,7 @@ void PlotItemDialog::addRelations() {
       curveTab->hidePlacementOptions();
 
       DialogPage *curvePage = new DialogPage(this);
-      curvePage->setPageTitle(curve->tag().displayString());
+      curvePage->setPageTitle(curve->Name());
       curvePage->addDialogTab(curveTab);
       addDialogPage(curvePage);
       _relationPages.append(curvePage);
@@ -262,7 +262,7 @@ void PlotItemDialog::addRelations() {
       imageTab->hidePlacementOptions();
 
       DialogPage *imagePage = new DialogPage(this);
-      imagePage->setPageTitle(image->tag().displayString());
+      imagePage->setPageTitle(image->Name());
       imagePage->addDialogTab(imageTab);
       addDialogPage(imagePage);
       _relationPages.append(imagePage);
@@ -288,16 +288,16 @@ void PlotItemDialog::contentChanged() {
   QStringList displayedRelations = _contentTab->displayedRelations();
 
   foreach (RelationPtr relation, _plotItem->renderItem(PlotRenderItem::Cartesian)->relationList()) {
-    currentRelations.append(relation->tag().displayString());
-    if (!displayedRelations.contains(relation->tag().displayString())) {
+    currentRelations.append(relation->Name());
+    if (!displayedRelations.contains(relation->Name())) {
       _plotItem->renderItem(PlotRenderItem::Cartesian)->removeRelation(relation);
       _plotItem->update();
     }
   }
 
-  foreach (QString relationTag, displayedRelations) {
-    if (!currentRelations.contains(relationTag)) {
-      if (RelationPtr relation = kst_cast<Relation>(_store->retrieveObject(ObjectTag::fromString(relationTag)))) {
+  foreach (QString relationName, displayedRelations) {
+    if (!currentRelations.contains(relationName)) {
+      if (RelationPtr relation = kst_cast<Relation>(_store->retrieveObject(relationName))) {
         _plotItem->renderItem(PlotRenderItem::Cartesian)->addRelation(relation);
         _plotItem->update();
       }
@@ -310,7 +310,7 @@ void PlotItemDialog::contentChanged() {
 
 void PlotItemDialog::relationChanged() {
   foreach(DialogPage* page, _relationPages) {
-    if (CurvePtr curve = kst_cast<Curve>(_store->retrieveObject(ObjectTag::fromString(page->pageTitle())))) {
+    if (CurvePtr curve = kst_cast<Curve>(_store->retrieveObject(page->pageTitle()))) {
       CurveTab* curveTab = static_cast<CurveTab*>(page->currentWidget());
       if (curveTab) {
         curve->writeLock();
@@ -333,7 +333,7 @@ void PlotItemDialog::relationChanged() {
         curve->update();
         curve->unlock();
       }
-    } else if (ImagePtr image = kst_cast<Image>(_store->retrieveObject(ObjectTag::fromString(page->pageTitle())))) {
+    } else if (ImagePtr image = kst_cast<Image>(_store->retrieveObject(page->pageTitle()))) {
       ImageTab* imageTab = static_cast<ImageTab*>(page->currentWidget());
       if (imageTab) {
         image->writeLock();

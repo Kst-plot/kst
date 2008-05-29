@@ -161,7 +161,7 @@ class KST_EXPORT MatrixDialog : public DataDialog {
     virtual ~MatrixDialog();
 
   protected:
-    virtual QString tagString() const;
+//     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
 

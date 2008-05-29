@@ -46,7 +46,7 @@ class KST_EXPORT Primitive : public Object {
 
     void setSlaveName(QString slaveName);
   protected:
-    Primitive(ObjectStore *store, const ObjectTag &tag = ObjectTag::invalidTag, Object* provider = 0L);
+    Primitive(ObjectStore *store, Object* provider = 0L);
 
     virtual ~Primitive();
 

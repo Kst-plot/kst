@@ -55,8 +55,11 @@ class KST_EXPORT DataObject : public Object {
     static void cleanupForExit();
     /** Returns a list of object plugins found on the system. */
     static QStringList pluginList();
+
+    //     static QWidget* pluginWidget(const QString& name, ObjectPtr objectPtr = 0, VectorPtr vector = 0);
+    static DataObjectPtr createPlugin(const QString& name, ObjectStore *store, VectorPtr vector);
     static DataObjectConfigWidget* pluginWidget(const QString& name);
-    static DataObjectPtr createPlugin(const QString& name, ObjectStore *store, ObjectTag &tag, DataObjectConfigWidget *configWidget);
+    static DataObjectPtr createPlugin(const QString& name, ObjectStore *store, DataObjectConfigWidget *configWidget);
 
     virtual UpdateType update() = 0;
     virtual const QString& typeString() const { return _typeString; }
@@ -132,8 +135,8 @@ class KST_EXPORT DataObject : public Object {
     virtual void showEditDialog() = 0;
 
   protected:
-    DataObject(ObjectStore *store, const ObjectTag& tag);
-    DataObject(ObjectStore *store, const QDomElement& e);
+    DataObject(ObjectStore *store);
+//     DataObject(ObjectStore *store, const QDomElement& e);
     virtual ~DataObject();
 
     double *vectorRealloced(VectorPtr v, double *memptr, int newSize) const;

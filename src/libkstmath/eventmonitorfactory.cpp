@@ -29,8 +29,6 @@ EventMonitorFactory::~EventMonitorFactory() {
 
 
 DataObjectPtr EventMonitorFactory::generateObject(ObjectStore *store, QXmlStreamReader& xml) {
-  ObjectTag tag;
-
   Q_ASSERT(store);
 
   QString equation, description, emailRecipients, script;
@@ -42,7 +40,6 @@ DataObjectPtr EventMonitorFactory::generateObject(ObjectStore *store, QXmlStream
     if (xml.isStartElement()) {
       if (n == EventMonitorEntry::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
-        tag = ObjectTag::fromString(attrs.value("tag").toString());
         equation = attrs.value("equation").toString();
         description = attrs.value("description").toString();
         emailRecipients = attrs.value("emailrecipients").toString();
@@ -70,7 +67,7 @@ DataObjectPtr EventMonitorFactory::generateObject(ObjectStore *store, QXmlStream
     return 0;
   }
 
-  EventMonitorEntryPtr eventMonitor = store->createObject<EventMonitorEntry>(tag);
+  EventMonitorEntryPtr eventMonitor = store->createObject<EventMonitorEntry>();
   Q_ASSERT(eventMonitor);
 
   eventMonitor->setScriptCode(script);

@@ -42,19 +42,18 @@
 
 namespace Kst {
 
-DataObject::DataObject(ObjectStore *store, const ObjectTag& tag) : Object(tag) {
-  //qDebug() << "+++ CREATING DATA OBJECT: " << (void*)this << endl;
+DataObject::DataObject(ObjectStore *store) : Object() {
   _curveHints = new CurveHintList;
   _isInputLoaded = false;
 }
 
-DataObject::DataObject(ObjectStore *store, const QDomElement& e) : Object() {
-  Q_UNUSED(e)
-  //qDebug() << "+++ CREATING DATA OBJECT: " << (void*)this << endl;
-  _curveHints = new CurveHintList;
-  _isInputLoaded = false;
-}
-
+// DataObject::DataObject(ObjectStore *store, const QDomElement& e) : Object() {
+//   Q_UNUSED(e)
+//   //qDebug() << "+++ CREATING DATA OBJECT: " << (void*)this << endl;
+//   _curveHints = new CurveHintList;
+//   _isInputLoaded = false;
+// }
+// 
 
 DataObject::~DataObject() {
   delete _curveHints;
@@ -141,10 +140,10 @@ DataObjectConfigWidget* DataObject::pluginWidget(const QString& name) {
 }
 
 
-DataObjectPtr DataObject::createPlugin(const QString& name, ObjectStore *store, ObjectTag &tag, DataObjectConfigWidget *configWidget) {
+DataObjectPtr DataObject::createPlugin(const QString& name, ObjectStore *store, DataObjectConfigWidget *configWidget) {
   for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
     if ((*it)->pluginName() == name) {
-      if (DataObjectPtr object = (*it)->create(store, tag, configWidget)) {
+      if (DataObjectPtr object = (*it)->create(store, configWidget)) {
         return object;
       }
     }

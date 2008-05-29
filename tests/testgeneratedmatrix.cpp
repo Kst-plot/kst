@@ -33,8 +33,7 @@ void TestGeneratedMatrix::testGeneratedMatrix() {
   bool ok = true;
 
   //basic default constructor values
-  Kst::GeneratedMatrixPtr m1 = Kst::kst_cast<Kst::GeneratedMatrix>(_store.createObject<Kst::GeneratedMatrix>(Kst::ObjectTag::fromString(QString::null)));
-  QVERIFY(m1->tag().tagString().startsWith("Anonymous"));
+  Kst::GeneratedMatrixPtr m1 = Kst::kst_cast<Kst::GeneratedMatrix>(_store.createObject<Kst::GeneratedMatrix>());
   QCOMPARE(m1->sampleCount(), 1);
   QCOMPARE(m1->minValue(), 0.0);
   QCOMPARE(m1->maxValue(), 0.0);

@@ -41,8 +41,8 @@ namespace Kst {
 
 const QString Matrix::staticTypeString = I18N_NOOP("Matrix");
 
-Matrix::Matrix(ObjectStore *store, ObjectTag tag, Object *provider, uint nX, uint nY, double minX, double minY, double stepX, double stepY)
-    : Primitive(store, tag, provider) {
+Matrix::Matrix(ObjectStore *store, Object *provider, uint nX, uint nY, double minX, double minY, double stepX, double stepY)
+    : Primitive(store, provider) {
 
   _nX = nX;
   _nY = nY;
@@ -413,39 +413,39 @@ void Matrix::createScalars(ObjectStore *store) {
   Q_ASSERT(store);
   ScalarPtr sp;
 
-  _statScalars.insert("max", sp=store->createObject<Scalar>(ObjectTag("Max", tag())));
+  _statScalars.insert("max", sp=store->createObject<Scalar>());
   sp->setProvider(this);
   sp->setSlaveName("Max");
   sp->_KShared_ref();
-  _statScalars.insert("min", sp=store->createObject<Scalar>(ObjectTag("Min", tag())));
+  _statScalars.insert("min", sp=store->createObject<Scalar>());
   sp->setProvider(this);
   sp->setSlaveName("Min");
   sp->_KShared_ref();
-  _statScalars.insert("mean", sp=store->createObject<Scalar>(ObjectTag("Mean", tag())));
+  _statScalars.insert("mean", sp=store->createObject<Scalar>());
   sp->setProvider(this);
   sp->setSlaveName("Mean");
   sp->_KShared_ref();
-  _statScalars.insert("sigma", sp=store->createObject<Scalar>(ObjectTag("Sigma", tag())));
+  _statScalars.insert("sigma", sp=store->createObject<Scalar>());
   sp->setProvider(this);
   sp->setSlaveName("Sigma");
   sp->_KShared_ref();
-  _statScalars.insert("rms", sp=store->createObject<Scalar>(ObjectTag("Rms", tag())));
+  _statScalars.insert("rms", sp=store->createObject<Scalar>());
   sp->setProvider(this);
   sp->setSlaveName("Rms");
   sp->_KShared_ref();
-  _statScalars.insert("ns", sp=store->createObject<Scalar>(ObjectTag("NS", tag())));
+  _statScalars.insert("ns", sp=store->createObject<Scalar>());
   sp->setProvider(this);
   sp->setSlaveName("NS");
   sp->_KShared_ref();
-  _statScalars.insert("sum", sp=store->createObject<Scalar>(ObjectTag("Sum", tag())));
+  _statScalars.insert("sum", sp=store->createObject<Scalar>());
   sp->setProvider(this);
   sp->setSlaveName("Sum");
   sp->_KShared_ref();
-  _statScalars.insert("sumsquared", sp=store->createObject<Scalar>(ObjectTag("SumSquared", tag())));
+  _statScalars.insert("sumsquared", sp=store->createObject<Scalar>());
   sp->setProvider(this);
   sp->setSlaveName("SumSquared");
   sp->_KShared_ref();
-  _statScalars.insert("minpos", sp=store->createObject<Scalar>(ObjectTag("MinPos", tag())));
+  _statScalars.insert("minpos", sp=store->createObject<Scalar>());
   sp->setProvider(this);
   sp->setSlaveName("MinPos");
   sp->_KShared_ref();

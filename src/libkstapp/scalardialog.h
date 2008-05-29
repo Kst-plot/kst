@@ -47,7 +47,7 @@ class KST_EXPORT ScalarDialog : public DataDialog {
     virtual ~ScalarDialog();
 
   protected:
-    virtual QString tagString() const;
+//     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
 

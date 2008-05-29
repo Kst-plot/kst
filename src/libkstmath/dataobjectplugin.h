@@ -28,7 +28,7 @@ class DataObjectPluginInterface : public PluginInterface {
     virtual ~DataObjectPluginInterface() {}
 
     virtual DataObject *create(ObjectStore *store,
-                               ObjectTag &tag, DataObjectConfigWidget *configWidget) const = 0;
+                               DataObjectConfigWidget *configWidget) const = 0;
 
     virtual DataObjectConfigWidget *configWidget() const = 0;
 };

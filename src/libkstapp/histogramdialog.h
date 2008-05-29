@@ -87,7 +87,7 @@ class KST_EXPORT HistogramDialog : public DataDialog {
     void setVector(VectorPtr vector);
 
   protected:
-    virtual QString tagString() const;
+//     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
 

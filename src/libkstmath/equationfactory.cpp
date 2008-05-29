@@ -69,7 +69,7 @@ DataObjectPtr EquationFactory::generateObject(ObjectStore *store, QXmlStreamRead
 
   VectorPtr vector = 0;
   if (store && !xVector.isEmpty()) {
-    vector = kst_cast<Vector>(store->retrieveObject(ObjectTag::fromString(xVector)));
+    vector = kst_cast<Vector>(store->retrieveObject(xVector));
   }
 
   if (!vector) {
@@ -77,7 +77,7 @@ DataObjectPtr EquationFactory::generateObject(ObjectStore *store, QXmlStreamRead
     return 0;
   }
 
-  EquationPtr equation = store->createObject<Equation>(ObjectTag::fromString(tag));
+  EquationPtr equation = store->createObject<Equation>();
   Q_ASSERT(equation);
 
   equation->setEquation(expression);

@@ -257,9 +257,9 @@ EventMonitorDialog::~EventMonitorDialog() {
 }
 
 
-QString EventMonitorDialog::tagString() const {
-  return DataDialog::tagString();
-}
+// QString EventMonitorDialog::tagString() const {
+//   return DataDialog::tagString();
+// }
 
 
 void EventMonitorDialog::editMultipleMode() {
@@ -286,7 +286,7 @@ void EventMonitorDialog::configureTab(ObjectPtr object) {
       QStringList objectList;
       EventMonitorEntryList objects = _document->objectStore()->getObjects<EventMonitorEntry>();
       foreach(EventMonitorEntryPtr object, objects) {
-        objectList.append(object->tag().displayString());
+        objectList.append(object->Name());
       }
       _editMultipleWidget->addObjects(objectList);
     }
@@ -301,7 +301,7 @@ void EventMonitorDialog::updateButtons() {
 
 ObjectPtr EventMonitorDialog::createNewDataObject() const {
   Q_ASSERT(_document && _document->objectStore());
-  EventMonitorEntryPtr eventMonitor = _document->objectStore()->createObject<EventMonitorEntry>(ObjectTag::fromString(tagString()));
+  EventMonitorEntryPtr eventMonitor = _document->objectStore()->createObject<EventMonitorEntry>();
 
   eventMonitor->setScriptCode(_eventMonitorTab->script());
   eventMonitor->setEvent(_eventMonitorTab->event());
@@ -326,8 +326,8 @@ ObjectPtr EventMonitorDialog::editExistingDataObject() const {
   if (EventMonitorEntryPtr eventMonitor = kst_cast<EventMonitorEntry>(dataObject())) {
     if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectTag, objects) {
-        EventMonitorEntryPtr eventMonitor = kst_cast<EventMonitorEntry>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));
+      foreach (QString objectName, objects) {
+        EventMonitorEntryPtr eventMonitor = kst_cast<EventMonitorEntry>(_document->objectStore()->retrieveObject(objectName));
         if (eventMonitor) {
           const QString script = _eventMonitorTab->scriptDirty() ? _eventMonitorTab->script() : eventMonitor->scriptCode();
           const QString event = _eventMonitorTab->eventDirty() ? _eventMonitorTab->event() : eventMonitor->event();

@@ -38,17 +38,17 @@ static const QLatin1String& RAWVECTOR  = QLatin1String("I");
 static const QLatin1String& BINS = QLatin1String("B");
 static const QLatin1String& HIST = QLatin1String("H");
 
-Histogram::Histogram(ObjectStore *store, const ObjectTag &in_tag)
-  : DataObject(store, in_tag) {
+Histogram::Histogram(ObjectStore *store)
+  : DataObject(store) {
   setRealTimeAutoBin(false);
   commonConstructor(store, 0L, 0, 0, 0, Number);
 }
 
-Histogram::Histogram(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_V,
+Histogram::Histogram(ObjectStore *store, VectorPtr in_V,
                            double xmin_in, double xmax_in,
                            int in_n_bins,
                            NormalizationType in_norm_mode)
-: DataObject(store, in_tag) {
+: DataObject(store) {
   setRealTimeAutoBin(false);
 
   commonConstructor(store, in_V, xmin_in, xmax_in, in_n_bins, in_norm_mode);
@@ -139,13 +139,13 @@ void Histogram::commonConstructor(ObjectStore *store,
   _NS = 3 * _NumberOfBins + 1;
 
   Q_ASSERT(store);
-  VectorPtr v = store->createObject<Vector>(ObjectTag("bins", tag()));
+  VectorPtr v = store->createObject<Vector>();
   v->setProvider(this);
   v->setSlaveName("bin");
   v->resize(_NumberOfBins);
   _bVector = _outputVectors.insert(BINS, v).value();
 
-  v = store->createObject<Vector>(ObjectTag("sv", tag()));
+  v = store->createObject<Vector>();
   v->setProvider(this);
   v->setSlaveName("num");
   v->resize(_NumberOfBins);
@@ -356,8 +356,7 @@ QString Histogram::xLabel() const {
 
 void Histogram::save(QXmlStreamWriter &xml) {
   xml.writeStartElement(staticTypeTag);
-  xml.writeAttribute("tag", tag().tagString());
-  xml.writeAttribute("vector", _inputVectors[RAWVECTOR]->tag().tagString());
+  xml.writeAttribute("vector", _inputVectors[RAWVECTOR]->Name());
   xml.writeAttribute("numberofbins", QString::number(_NumberOfBins));
   xml.writeAttribute("realtimeautobin", QVariant(_realTimeAutoBin).toString());
   xml.writeAttribute("min", QString::number(_MinX));
@@ -449,15 +448,18 @@ int Histogram::vNumSamples() const {
 
 
 DataObjectPtr Histogram::makeDuplicate() {
-  QString newTag = tag().name() + "'";
 
-  HistogramPtr histogram = store()->createObject<Histogram>(ObjectTag::fromString(newTag));
+  HistogramPtr histogram = store()->createObject<Histogram>();
 
   histogram->setVector(_inputVectors[RAWVECTOR]);
   histogram->setXRange(_MinX, _MaxX);
   histogram->setNumberOfBins(_NumberOfBins);
   histogram->setNormalizationType(_NormalizationMode);
   histogram->setRealTimeAutoBin(_realTimeAutoBin);
+
+  if (descriptiveNameIsManual()) {
+    histogram->setDescriptiveName(descriptiveName());
+  }
 
   histogram->writeLock();
   histogram->update();

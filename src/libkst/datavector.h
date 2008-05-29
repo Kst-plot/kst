@@ -116,13 +116,13 @@ class KST_EXPORT DataVector : public Vector {
 
   protected:
     /** Create an RVECTOR */
-    DataVector(ObjectStore *store, const ObjectTag& tag,
+    DataVector(ObjectStore *store,
                DataSourcePtr file=0L, const QString &field=QString::null,
                int f0=-1, int n=-1,
                int skip=-1, bool in_doSkip=false,
                bool in_doAve=false);
 
-    DataVector(ObjectStore *store, const ObjectTag& tag, const QByteArray& data,
+    DataVector(ObjectStore *store, const QByteArray& data,
                const QString& providerName = QString(), const QString& file = QString(),
                const QString& field = QString(), int start = -1, int num = -1,
                int skip = -1, bool doAve = false,

@@ -33,7 +33,7 @@ const QString Image::staticTypeTag = I18N_NOOP("image");
 
 static const QLatin1String& THEMATRIX = QLatin1String("THEMATRIX");
 
-Image::Image(ObjectStore *store, const ObjectTag& in_tag) : Relation(store, in_tag) {
+Image::Image(ObjectStore *store) : Relation(store) {
   _typeString = staticTypeString;
   _type = "Image";
   _hasContourMap = false;
@@ -47,76 +47,76 @@ Image::Image(ObjectStore *store, const ObjectTag& in_tag) : Relation(store, in_t
 
 }
 
-Image::Image(ObjectStore *store, const QDomElement& e) : Relation(store, e) {
-  QString in_matrixName, in_paletteName;
-  bool in_hasColorMap = false, in_hasContourMap = false;
-  double in_zLower = 0, in_zUpper = 0;
-  _autoThreshold = false;
-
-  /* parse the DOM tree */
-  QDomNode n = e.firstChild();
-  while( !n.isNull() ) {
-    QDomElement e = n.toElement(); // try to convert the node to an element.
-    if( !e.isNull() ) { // the node was really an element.
-      if (e.tagName() == "tag") {
-        setTagName(ObjectTag::fromString(e.text()));
-      } else if (e.tagName() == "matrixtag") {
-        in_matrixName = e.text();
-      } else if (e.tagName() == "legend") {
-        setLegendText(e.text());
-      } else if (e.tagName() == "palettename") {
-        in_paletteName = e.text();
-      } else if (e.tagName() == "lowerthreshold") {
-        in_zLower = e.text().toDouble();
-      } else if (e.tagName() == "upperthreshold") {
-        in_zUpper = e.text().toDouble();
-      } else if (e.tagName() == "hascolormap") {
-        in_hasColorMap = (e.text() != "0");
-      } else if (e.tagName() == "hascontourmap") {
-        in_hasContourMap = (e.text() != "0");
-      } else if (e.tagName() == "numcontourlines") {
-        _numContourLines = e.text().toInt();
-      } else if (e.tagName() == "contourcolor") {
-        _contourColor.setNamedColor(e.text());
-      } else if (e.tagName() == "contourweight") {
-        _contourWeight = e.text().toInt();
-      } else if (e.tagName() == "autothreshold") {
-        _autoThreshold = (e.text() != "0");
-      }
-
-    }
-    n = n.nextSibling();
-  }
-
-  _inputMatrixLoadQueue.append(qMakePair(QString(THEMATRIX), in_matrixName));
-
-  _typeString = staticTypeString;
-  _type = "Image";
-  _hasColorMap = in_hasColorMap;
-  _hasContourMap = in_hasContourMap;
-  _zLower = in_zLower;
-  _zUpper = in_zUpper;
-
-  if (_hasColorMap) {
-    _pal = Palette(in_paletteName);
-  }
-
-  if (!_hasColorMap) {
-    setColorDefaults();
-  }
-  if (!_hasContourMap) {
-    setContourDefaults();
-  }
-  _shortName = "I"+QString::number(_inum);
-  if (_inum>max_inum) 
-    max_inum = _inum;
-  _inum++;
-
-}
+// Image::Image(ObjectStore *store, const QDomElement& e) : Relation(store, e) {
+//   QString in_matrixName, in_paletteName;
+//   bool in_hasColorMap = false, in_hasContourMap = false;
+//   double in_zLower = 0, in_zUpper = 0;
+//   _autoThreshold = false;
+// 
+//   /* parse the DOM tree */
+//   QDomNode n = e.firstChild();
+//   while( !n.isNull() ) {
+//     QDomElement e = n.toElement(); // try to convert the node to an element.
+//     if( !e.isNull() ) { // the node was really an element.
+//       if (e.tagName() == "tag") {
+//         setTagName(ObjectTag::fromString(e.text()));
+//       } else if (e.tagName() == "matrixtag") {
+//         in_matrixName = e.text();
+//       } else if (e.tagName() == "legend") {
+//         setLegendText(e.text());
+//       } else if (e.tagName() == "palettename") {
+//         in_paletteName = e.text();
+//       } else if (e.tagName() == "lowerthreshold") {
+//         in_zLower = e.text().toDouble();
+//       } else if (e.tagName() == "upperthreshold") {
+//         in_zUpper = e.text().toDouble();
+//       } else if (e.tagName() == "hascolormap") {
+//         in_hasColorMap = (e.text() != "0");
+//       } else if (e.tagName() == "hascontourmap") {
+//         in_hasContourMap = (e.text() != "0");
+//       } else if (e.tagName() == "numcontourlines") {
+//         _numContourLines = e.text().toInt();
+//       } else if (e.tagName() == "contourcolor") {
+//         _contourColor.setNamedColor(e.text());
+//       } else if (e.tagName() == "contourweight") {
+//         _contourWeight = e.text().toInt();
+//       } else if (e.tagName() == "autothreshold") {
+//         _autoThreshold = (e.text() != "0");
+//       }
+// 
+//     }
+//     n = n.nextSibling();
+//   }
+// 
+//   _inputMatrixLoadQueue.append(qMakePair(QString(THEMATRIX), in_matrixName));
+// 
+//   _typeString = staticTypeString;
+//   _type = "Image";
+//   _hasColorMap = in_hasColorMap;
+//   _hasContourMap = in_hasContourMap;
+//   _zLower = in_zLower;
+//   _zUpper = in_zUpper;
+// 
+//   if (_hasColorMap) {
+//     _pal = Palette(in_paletteName);
+//   }
+// 
+//   if (!_hasColorMap) {
+//     setColorDefaults();
+//   }
+//   if (!_hasContourMap) {
+//     setContourDefaults();
+//   }
+//   _shortName = "I"+QString::number(_inum);
+//   if (_inum>max_inum) 
+//     max_inum = _inum;
+//   _inum++;
+// 
+// }
 
 
 //constructor for colormap only
-Image::Image(ObjectStore *store, const ObjectTag &in_tag, MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const QString &paletteName) : Relation(store, in_tag) {
+Image::Image(ObjectStore *store, MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const QString &paletteName) : Relation(store) {
   _inputMatrices[THEMATRIX] = in_matrix;
   _typeString = staticTypeString;
   _type = "Image";
@@ -138,7 +138,7 @@ Image::Image(ObjectStore *store, const ObjectTag &in_tag, MatrixPtr in_matrix, d
 
 
 //constructor for contour map only
-Image::Image(ObjectStore *store, const ObjectTag &in_tag, MatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight) : Relation(store, in_tag) {
+Image::Image(ObjectStore *store, MatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight) : Relation(store) {
   _inputMatrices[THEMATRIX] = in_matrix;
   _typeString = staticTypeString;
   _type = "Image";
@@ -160,7 +160,7 @@ Image::Image(ObjectStore *store, const ObjectTag &in_tag, MatrixPtr in_matrix, i
 
 
 //constructor for both colormap and contour map
-Image::Image(ObjectStore *store, const ObjectTag &in_tag,
+Image::Image(ObjectStore *store,
                    MatrixPtr in_matrix,
                    double lowerZ,
                    double upperZ,
@@ -169,7 +169,7 @@ Image::Image(ObjectStore *store, const ObjectTag &in_tag,
                    int numContours,
                    const QColor& contourColor,
                    int contourWeight) :
-    Relation(store, in_tag) {
+    Relation(store) {
   _inputMatrices[THEMATRIX] = in_matrix;
   _typeString = i18n("Image");
   _type = "Image";
@@ -197,9 +197,8 @@ Image::~Image() {
 
 void Image::save(QXmlStreamWriter &s) {
   s.writeStartElement(staticTypeTag);
-  s.writeAttribute("tag", tag().tagString());
   if (_inputMatrices.contains(THEMATRIX)) {
-    s.writeAttribute("matrix", _inputMatrices[THEMATRIX]->tag().tagString());
+    s.writeAttribute("matrix", _inputMatrices[THEMATRIX]->Name());
   }
   s.writeAttribute("legend", legendText());
 
@@ -288,7 +287,7 @@ Object::UpdateType Image::update() {
 
 QString Image::propertyString() const {
   if (_inputMatrices.contains(THEMATRIX)) {
-    return i18n("Using matrix %1" ).arg(_inputMatrices[THEMATRIX]->descriptiveName());
+    return i18n("Image of %1" ).arg(_inputMatrices[THEMATRIX]->Name());
   } else {
     return QString();
   }
@@ -501,9 +500,7 @@ void Image::setAutoThreshold(bool yes) {
 
 
 RelationPtr Image::makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelations) {
-  QString newTag = tag().name() + "'";
-
-  ImagePtr image = store()->createObject<Image>(ObjectTag::fromString(newTag));
+  ImagePtr image = store()->createObject<Image>();
 
   if (!_hasContourMap) {
     image->changeToColorOnly(_inputMatrices[THEMATRIX],
@@ -527,6 +524,9 @@ RelationPtr Image::makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelat
         _contourWeight);
   }
 
+  if (descriptiveNameIsManual()) {
+    image->setDescriptiveName(descriptiveName());
+  }
   image->writeLock();
   image->update();
   image->unlock();

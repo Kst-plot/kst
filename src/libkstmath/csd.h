@@ -86,12 +86,12 @@ class KST_EXPORT CSD : public DataObject {
         PSDType in_outputType, const QString& in_vectorUnits,
         const QString& in_rateUnits);
   protected:
-    CSD(ObjectStore *store, const ObjectTag &in_tag);
-    CSD(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_V, double in_freq, bool in_average, bool in_removeMean,
+    CSD(ObjectStore *store);
+    CSD(ObjectStore *store, VectorPtr in_V, double in_freq, bool in_average, bool in_removeMean,
            bool in_apodize, ApodizeFunction in_apodizeFxn, int in_windowSize, int in_length,
            double in_gaussianSigma, PSDType in_outputType, const QString& in_vectorUnits = QString::null,
            const QString& in_rateUnits = QString::null);
-    CSD(ObjectStore *store, const QDomElement& e);
+//     CSD(ObjectStore *store, const QDomElement& e);
     virtual ~CSD();
 
     friend class ObjectStore;

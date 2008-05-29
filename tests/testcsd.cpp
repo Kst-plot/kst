@@ -111,7 +111,7 @@ QDomDocument TestCSD::makeDOMElement(const QString& tag, const QString& val) {
 
 void TestCSD::testCSD() {
 
-  Kst::VectorPtr vp = Kst::kst_cast<Kst::Vector>(_store.createObject<Kst::Vector>(Kst::ObjectTag::fromString("tempVector")));
+  Kst::VectorPtr vp = Kst::kst_cast<Kst::Vector>(_store.createObject<Kst::Vector>());
   Q_ASSERT(vp);
   vp->resize(10);
   vp->setDescriptiveName("tempVector");
@@ -119,9 +119,8 @@ void TestCSD::testCSD() {
     vp->value()[i] = i;
   }
 
-  Kst::CSDPtr csd = new Kst::CSD(&_store, Kst::ObjectTag::fromString("csdTest"), vp, 0.0, false, false, false, WindowUndefined, 0, 0, 0.0, PSDUndefined, QString::null, QString::null);
+  Kst::CSDPtr csd = new Kst::CSD(&_store, vp, 0.0, false, false, false, WindowUndefined, 0, 0, 0.0, PSDUndefined, QString::null, QString::null);
 
-  QCOMPARE(csd->tag().tagString(), QLatin1String("csdTest"));
   QCOMPARE(csd->vector()->descriptiveName(), QLatin1String("tempVector"));
   QCOMPARE(csd->output(), PSDUndefined);
   QVERIFY(!csd->apodize());
@@ -145,7 +144,6 @@ void TestCSD::testCSD() {
   csd->setWindowSize(50);
   csd->setGaussianSigma(0.2);
 
-  QCOMPARE(csd->tag().tagString(), QLatin1String("csdTest"));
   QCOMPARE(csd->vector()->descriptiveName(), QLatin1String("tempVector"));
   QCOMPARE(csd->output(), PSDAmplitudeSpectralDensity);
   QVERIFY(csd->apodize());
@@ -161,81 +159,81 @@ void TestCSD::testCSD() {
 //   QTextStream ts(qf);
 //   csd->save(ts, "");
 
-  QDomNode n = makeDOMElement("csdDOMCsd", "csdDOMVector").firstChild();
-  QDomElement e = n.toElement();
-  Kst::CSDPtr csdDOM = new Kst::CSD(&_store, e);
+// the constructor used here is no longer used in kst: use the factory instead
+//   QDomNode n = makeDOMElement("csdDOMCsd", "csdDOMVector").firstChild();
+//   QDomElement e = n.toElement();
+//   Kst::CSDPtr csdDOM = new Kst::CSD(&_store, e);
+// 
+//   QCOMPARE(csdDOM->output(), PSDPowerSpectralDensity);
+//   QVERIFY(csdDOM->apodize());
+//   QVERIFY(csdDOM->removeMean());
+//   QVERIFY(csdDOM->average());
+//   QCOMPARE(csdDOM->frequency(), 1.0);
+//   QCOMPARE(csdDOM->apodizeFxn(), WindowOriginal);
+//   QCOMPARE(csdDOM->gaussianSigma(), 0.01);
+//   QCOMPARE(csdDOM->windowSize(), 5000);
 
-  QCOMPARE(csdDOM->tag().tagString(), QLatin1String("csdDOMCsd"));
-  QCOMPARE(csdDOM->output(), PSDPowerSpectralDensity);
-  QVERIFY(csdDOM->apodize());
-  QVERIFY(csdDOM->removeMean());
-  QVERIFY(csdDOM->average());
-  QCOMPARE(csdDOM->frequency(), 1.0);
-  QCOMPARE(csdDOM->apodizeFxn(), WindowOriginal);
-  QCOMPARE(csdDOM->gaussianSigma(), 0.01);
-  QCOMPARE(csdDOM->windowSize(), 5000);
-
-  Kst::VectorPtr vp2 = Kst::kst_cast<Kst::Vector>(_store.createObject<Kst::Vector>(Kst::ObjectTag::fromString("tempVector2")));
-  Q_ASSERT(vp2);
-  vp2->resize(10);
-  for (int i = 0; i < 10; i++){
-    vp2->value()[i] = i;
-  }
-  csdDOM->setVector(vp2);
-  QCOMPARE(csdDOM->vector()->descriptiveName(), QLatin1String("tempVector2"));
-  csdDOM->setWindowSize(9);
-  Kst::MatrixPtr outMatrix = csdDOM->outputMatrix();
-
-  QVERIFY(outMatrix->resize(3, 3, false)); // very odd thing to do?
-  QVERIFY(outMatrix->setValue(0, 0, 1.716299));
-  QVERIFY(outMatrix->setValue(0, 1, -0.485527));
-  QVERIFY(outMatrix->setValue(0, 2, -0.288690));
-  QVERIFY(outMatrix->setValue(1, 0, 1.716299));
-  QVERIFY(outMatrix->setValue(1, 1, NAN));
-  QVERIFY(outMatrix->setValue(1, 2, -0.274957));
-  QVERIFY(outMatrix->setValue(2, 0, 1.711721));
-  QVERIFY(outMatrix->setValue(2, 1, -0.485527));
-  QVERIFY(outMatrix->setValue(2, 2, -0.293267));
-
-  QCOMPARE(outMatrix->sampleCount(), 9);
-  QCOMPARE(outMatrix->value(0, 0), 1.716299);
-  QCOMPARE(outMatrix->value(0, 1),  -0.485527);
-  QCOMPARE(outMatrix->value(0, 2), -0.288690);
-  QCOMPARE(outMatrix->value(1, 0), 1.716299);
-  QCOMPARE(outMatrix->value(1, 1), 0.0);
-  QCOMPARE(outMatrix->value(1, 2), -0.274957);
-  QCOMPARE(outMatrix->value(2, 0), 1.711721);
-  QCOMPARE(outMatrix->value(2, 1), -0.485527);
-  QCOMPARE(outMatrix->value(2, 2), -0.293267);
-
-  csdDOM->writeLock();
-  QCOMPARE(csdDOM->update(), Kst::Object::UPDATE);
-  csdDOM->unlock();
-
-  outMatrix = csdDOM->outputMatrix();
-  QEXPECT_FAIL("", "This has always failed", Continue);
-  QCOMPARE(outMatrix->sampleCount(), 128);
-
-  csdDOM->setWindowSize(11);
-  QEXPECT_FAIL("", "This has always failed", Continue);
-  QCOMPARE(outMatrix->sampleCount(), 128);
-
-  QEXPECT_FAIL("", "This has always failed", Continue);
-  QCOMPARE(outMatrix->value(0, 0), 1.716299);
-  QEXPECT_FAIL("", "This has always failed", Continue);
-  QCOMPARE(outMatrix->value(0, 1),  -0.485527);
-  QEXPECT_FAIL("", "This has always failed", Continue);
-  QCOMPARE(outMatrix->value(0, 2), -0.288690);
-  QEXPECT_FAIL("", "This has always failed", Continue);
-  QCOMPARE(outMatrix->value(1, 0), 1.716299);
-  QCOMPARE(outMatrix->value(1, 1), 0.0);
-  QEXPECT_FAIL("", "This has always failed", Continue);
-  QCOMPARE(outMatrix->value(1, 2), -0.274957);
-  QEXPECT_FAIL("", "This has always failed", Continue);
-  QCOMPARE(outMatrix->value(2, 0), 1.711721);
-  QEXPECT_FAIL("", "This has always failed", Continue);
-  QCOMPARE(outMatrix->value(2, 1), -0.485527);
-  QEXPECT_FAIL("", "This has always failed", Continue);
-  QCOMPARE(outMatrix->value(2, 2), -0.293267);
+//   Kst::VectorPtr vp2 = Kst::kst_cast<Kst::Vector>(_store.createObject<Kst::Vector>());
+//   Q_ASSERT(vp2);
+//   vp2->resize(10);
+//   for (int i = 0; i < 10; i++){
+//     vp2->value()[i] = i;
+//   }
+//   csdDOM->setVector(vp2);
+//   QCOMPARE(csdDOM->vector()->descriptiveName(), QLatin1String("tempVector2"));
+//   csdDOM->setWindowSize(9);
+//   Kst::MatrixPtr outMatrix = csdDOM->outputMatrix();
+// 
+//   QVERIFY(outMatrix->resize(3, 3, false)); // very odd thing to do?
+//   QVERIFY(outMatrix->setValue(0, 0, 1.716299));
+//   QVERIFY(outMatrix->setValue(0, 1, -0.485527));
+//   QVERIFY(outMatrix->setValue(0, 2, -0.288690));
+//   QVERIFY(outMatrix->setValue(1, 0, 1.716299));
+//   QVERIFY(outMatrix->setValue(1, 1, NAN));
+//   QVERIFY(outMatrix->setValue(1, 2, -0.274957));
+//   QVERIFY(outMatrix->setValue(2, 0, 1.711721));
+//   QVERIFY(outMatrix->setValue(2, 1, -0.485527));
+//   QVERIFY(outMatrix->setValue(2, 2, -0.293267));
+// 
+//   QCOMPARE(outMatrix->sampleCount(), 9);
+//   QCOMPARE(outMatrix->value(0, 0), 1.716299);
+//   QCOMPARE(outMatrix->value(0, 1),  -0.485527);
+//   QCOMPARE(outMatrix->value(0, 2), -0.288690);
+//   QCOMPARE(outMatrix->value(1, 0), 1.716299);
+//   QCOMPARE(outMatrix->value(1, 1), 0.0);
+//   QCOMPARE(outMatrix->value(1, 2), -0.274957);
+//   QCOMPARE(outMatrix->value(2, 0), 1.711721);
+//   QCOMPARE(outMatrix->value(2, 1), -0.485527);
+//   QCOMPARE(outMatrix->value(2, 2), -0.293267);
+// 
+//   csdDOM->writeLock();
+//   QCOMPARE(csdDOM->update(), Kst::Object::UPDATE);
+//   csdDOM->unlock();
+// 
+//   outMatrix = csdDOM->outputMatrix();
+//   QEXPECT_FAIL("", "This has always failed", Continue);
+//   QCOMPARE(outMatrix->sampleCount(), 128);
+// 
+//   csdDOM->setWindowSize(11);
+//   QEXPECT_FAIL("", "This has always failed", Continue);
+//   QCOMPARE(outMatrix->sampleCount(), 128);
+// 
+//   QEXPECT_FAIL("", "This has always failed", Continue);
+//   QCOMPARE(outMatrix->value(0, 0), 1.716299);
+//   QEXPECT_FAIL("", "This has always failed", Continue);
+//   QCOMPARE(outMatrix->value(0, 1),  -0.485527);
+//   QEXPECT_FAIL("", "This has always failed", Continue);
+//   QCOMPARE(outMatrix->value(0, 2), -0.288690);
+//   QEXPECT_FAIL("", "This has always failed", Continue);
+//   QCOMPARE(outMatrix->value(1, 0), 1.716299);
+//   QCOMPARE(outMatrix->value(1, 1), 0.0);
+//   QEXPECT_FAIL("", "This has always failed", Continue);
+//   QCOMPARE(outMatrix->value(1, 2), -0.274957);
+//   QEXPECT_FAIL("", "This has always failed", Continue);
+//   QCOMPARE(outMatrix->value(2, 0), 1.711721);
+//   QEXPECT_FAIL("", "This has always failed", Continue);
+//   QCOMPARE(outMatrix->value(2, 1), -0.485527);
+//   QEXPECT_FAIL("", "This has always failed", Continue);
+//   QCOMPARE(outMatrix->value(2, 2), -0.293267);
 
 }

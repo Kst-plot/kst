@@ -618,9 +618,8 @@ void DataWizard::finished() {
     const QString field = _pageDataPresentation->vectorField();
 
     Q_ASSERT(_document && _document->objectStore());
-    const ObjectTag tag = _document->objectStore()->suggestObjectTag<DataVector>(QString(), ds->tag());
 
-    xv = _document->objectStore()->createObject<DataVector>(tag);
+    xv = _document->objectStore()->createObject<DataVector>();
 
     xv->writeLock();
     xv->change(ds, field,
@@ -644,9 +643,8 @@ void DataWizard::finished() {
       QString field = _pageVectors->plotVectors()->item(i)->text();
 
       Q_ASSERT(_document && _document->objectStore());
-      const ObjectTag tag = _document->objectStore()->suggestObjectTag<DataVector>(QString(), ds->tag());
 
-      vector = _document->objectStore()->createObject<DataVector>(tag);
+      vector = _document->objectStore()->createObject<DataVector>();
 
       vector->writeLock();
       vector->change(ds, field,
@@ -771,8 +769,7 @@ void DataWizard::finished() {
       Q_ASSERT(vector);
 
       Q_ASSERT(_document && _document->objectStore());
-      const ObjectTag tag = _document->objectStore()->suggestObjectTag<Curve>(QString(), ds->tag());
-      CurvePtr curve = _document->objectStore()->createObject<Curve>(tag);
+      CurvePtr curve = _document->objectStore()->createObject<Curve>();
 
       curve->setXVector(xv);
       curve->setYVector(vector);
@@ -831,8 +828,7 @@ void DataWizard::finished() {
       if ((*it)->length() > 0) {
 
         Q_ASSERT(_document && _document->objectStore());
-        const ObjectTag tag = _document->objectStore()->suggestObjectTag<Curve>(QString(), ds->tag());
-        powerspectrum = _document->objectStore()->createObject<PSD>(tag);
+        powerspectrum = _document->objectStore()->createObject<PSD>();
 	n_psd++;
         Q_ASSERT(powerspectrum);
 
@@ -853,7 +849,7 @@ void DataWizard::finished() {
         powerspectrum->update();
         powerspectrum->unlock();
 
-        CurvePtr curve = _document->objectStore()->createObject<Curve>(powerspectrum->tag());
+        CurvePtr curve = _document->objectStore()->createObject<Curve>();
         Q_ASSERT(curve);
 
         curve->setXVector(powerspectrum->vX());

@@ -25,10 +25,9 @@ void TestVector::cleanupTestCase() {
 }
 
 void TestVector::testVector() {
-  Kst::VectorPtr v1 = Kst::kst_cast<Kst::Vector>(_store.createObject<Kst::Vector>(Kst::ObjectTag::fromString("V1")));
+  Kst::VectorPtr v1 = Kst::kst_cast<Kst::Vector>(_store.createObject<Kst::Vector>());
   Q_ASSERT(v1);
   v1->resize(15);
-  QCOMPARE(v1->tag().tagString(), QLatin1String("V1"));
   QCOMPARE(v1->length(), 15);
   v1->zero();
   for (int i = 0; i < 15; ++i) {
@@ -40,14 +39,13 @@ void TestVector::testVector() {
   QCOMPARE(v1->length(), 3);
   QCOMPARE(v1->value()[0], -42.0);
 
-  Kst::VectorPtr v2 = Kst::kst_cast<Kst::Vector>(_store.createObject<Kst::Vector>(Kst::ObjectTag::fromString(QString::null)));
+  Kst::VectorPtr v2 = Kst::kst_cast<Kst::Vector>(_store.createObject<Kst::Vector>());
   Q_ASSERT(v2);
   QCOMPARE(v2->length(), 1);
-  QVERIFY(v2->tag().tagString().startsWith("Anonymous")); // valid only in en_*
-  v2 = Kst::kst_cast<Kst::Vector>(_store.createObject<Kst::Vector>(Kst::ObjectTag::fromString("V2")));
+  v2 = Kst::kst_cast<Kst::Vector>(_store.createObject<Kst::Vector>());
   v2->resize(1);
   QCOMPARE(v2->length(), 1);
-  v2 = Kst::kst_cast<Kst::Vector>(_store.createObject<Kst::Vector>(Kst::ObjectTag::fromString("V2")));
+  v2 = Kst::kst_cast<Kst::Vector>(_store.createObject<Kst::Vector>());
   v2->resize(2);
   QCOMPARE(v2->length(), 2);
 

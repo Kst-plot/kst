@@ -94,7 +94,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
           rc._cache->append(DataRef(DataRef::DRExpression, fi->text, QString::null, 0.0, QVariant(eqResult)));
         }
       } else {
-        Kst::ObjectPtr op = store->retrieveObject(Kst::ObjectTag::fromString(fi->text));
+        Kst::ObjectPtr op = store->retrieveObject(fi->text);
         Kst::ScalarPtr scp = Kst::kst_cast<Kst::Scalar>(op);
         if (scp) {
           KstReadLocker l(scp);
@@ -119,7 +119,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
       rc.x += rc.fontWidth(txt);
     } else if (fi->vector) {
       QString txt;
-      Kst::VectorPtr vp = Kst::kst_cast<Kst::Vector>(store->retrieveObject(Kst::ObjectTag::fromString(fi->text)));
+      Kst::VectorPtr vp = Kst::kst_cast<Kst::Vector>(store->retrieveObject(fi->text));
       if (vp) {
         if (!fi->expression.isEmpty()) {
           // Parse and evaluate as an equation

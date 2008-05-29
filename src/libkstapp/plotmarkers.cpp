@@ -87,12 +87,12 @@ void PlotMarkers::saveInPlot(QXmlStreamWriter &xml) {
   xml.writeAttribute("curvemode", QVariant(_curveMode).toString());
   if (_vector != 0) {
     xml.writeStartElement("vector");
-    xml.writeAttribute("tag", _vector->tag().tagString());
+    xml.writeAttribute("tag", _vector->Name());
     xml.writeEndElement();
   }
   if (_curve != 0) {
     xml.writeStartElement("curve");
-    xml.writeAttribute("tag", _curve->tag().tagString());
+    xml.writeAttribute("tag", _curve->Name());
     xml.writeEndElement();
   }
   foreach (double marker, _manualMarkers) {
@@ -136,16 +136,16 @@ bool PlotMarkers::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
    if (xml.isStartElement() && xml.name().toString() == "vector") {
       expectedEnd = xml.name().toString();
       attrs = xml.attributes();
-      ObjectTag tag = ObjectTag::fromString(attrs.value("tag").toString());
-      VectorPtr vector = kst_cast<Vector>(store->retrieveObject(tag));
+      QString tagName = attrs.value("tag").toString();
+      VectorPtr vector = kst_cast<Vector>(store->retrieveObject(tagName));
       if (vector) {
         setVector(vector);
       }
    } else if (xml.isStartElement() && xml.name().toString() == "curve") {
       expectedEnd = xml.name().toString();
       attrs = xml.attributes();
-      ObjectTag tag = ObjectTag::fromString(attrs.value("tag").toString());
-      CurvePtr curve = kst_cast<Curve>(store->retrieveObject(tag));
+      QString tagName = attrs.value("tag").toString();
+      CurvePtr curve = kst_cast<Curve>(store->retrieveObject(tagName));
       if (curve) {
         setCurve(curve);
       }

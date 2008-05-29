@@ -42,8 +42,8 @@ void Scalar::clearScalarsDirty() {
 }
 
 /** Create the base scalar */
-Scalar::Scalar(ObjectStore *store, ObjectTag tag, Object *provider, double val, bool orphan, bool displayable, bool editable)
-    : Primitive(store, tag, provider), _value(val), _orphan(orphan), _displayable(displayable), _editable(editable) {
+Scalar::Scalar(ObjectStore *store, Object *provider, double val, bool orphan, bool displayable, bool editable)
+    : Primitive(store, provider), _value(val), _orphan(orphan), _displayable(displayable), _editable(editable) {
 
   _shortName = "X"+QString::number(_xnum);
   if (_xnum>max_xnum) 
@@ -52,38 +52,38 @@ Scalar::Scalar(ObjectStore *store, ObjectTag tag, Object *provider, double val, 
 }
 
 
-Scalar::Scalar(ObjectStore *store, const QDomElement& e)
-    : Primitive(store), _orphan(false), _displayable(true), _editable(false) {
-  QDomNode n = e.firstChild();
-  bool ok;
-
-  _value = 0.0;  // must init this first
-
-  while (!n.isNull()) {
-    QDomElement e = n.toElement();
-    if(!e.isNull()) {
-      if (e.tagName() == "tag") {
-        setTagName(ObjectTag::fromString(e.text()));
-      } else if (e.tagName() == "orphan") {
-        _orphan = true;
-      } else if (e.tagName() == "value") {
-        setValue(e.text().toDouble());
-      } else if (e.tagName() == "editable") {
-        _editable = true;
-      }
-    }
-    n = n.nextSibling();
-  }
-
-  if (tag().name().toDouble(&ok) == value() && ok) {
-    _displayable = false;
-  }
-
-  _shortName = "X"+QString::number(_xnum);
-  if (_xnum>max_xnum) 
-    max_xnum = _xnum;
-  _xnum++;
-}
+// Scalar::Scalar(ObjectStore *store, const QDomElement& e)
+//     : Primitive(store), _orphan(false), _displayable(true), _editable(false) {
+//   QDomNode n = e.firstChild();
+//   bool ok;
+// 
+//   _value = 0.0;  // must init this first
+// 
+//   while (!n.isNull()) {
+//     QDomElement e = n.toElement();
+//     if(!e.isNull()) {
+//       if (e.tagName() == "tag") {
+//         setTagName(ObjectTag::fromString(e.text()));
+//       } else if (e.tagName() == "orphan") {
+//         _orphan = true;
+//       } else if (e.tagName() == "value") {
+//         setValue(e.text().toDouble());
+//       } else if (e.tagName() == "editable") {
+//         _editable = true;
+//       }
+//     }
+//     n = n.nextSibling();
+//   }
+// 
+//   if (tag().name().toDouble(&ok) == value() && ok) {
+//     _displayable = false;
+//   }
+// 
+//   _shortName = "X"+QString::number(_xnum);
+//   if (_xnum>max_xnum) 
+//     max_xnum = _xnum;
+//   _xnum++;
+// }
 
 
 Scalar::~Scalar() {
@@ -118,7 +118,6 @@ void Scalar::save(QXmlStreamWriter &s) {
     return;
   }
   s.writeStartElement("scalar");
-  s.writeAttribute("tag", tag().tagString());
   if (_orphan) {
     s.writeAttribute("orphan", "true");
   }

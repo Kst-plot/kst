@@ -30,12 +30,12 @@ namespace Kst {
 
 const QString Relation::staticTypeString = I18N_NOOP("Relation");
 
-Relation::Relation(ObjectStore *store, const QDomElement& e) : Object() {
-  commonConstructor();
-}
+// Relation::Relation(ObjectStore *store, const QDomElement& e) : Object() {
+//   commonConstructor();
+// }
 
 
-Relation::Relation(ObjectStore *store, const ObjectTag& tag) : Object(tag) {
+Relation::Relation(ObjectStore *store) : Object() {
   commonConstructor();
 }
 
@@ -91,7 +91,7 @@ void Relation::processUpdate(ObjectPtr object) {
 void Relation::updateParsedLegendTag() {
   delete _parsedLegendTag;
   if (_legendText.isEmpty()) {
-    _parsedLegendTag = Label::parse(tag().tagString(), false, false); // FIXME: should this be displayString?
+    _parsedLegendTag = Label::parse(Name(), false, false);
   } else {
     _parsedLegendTag = Label::parse(legendText(), true, false);
   }

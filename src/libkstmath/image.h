@@ -109,13 +109,13 @@ class KST_EXPORT Image : public Relation {
     void matrixUpdated(ObjectPtr object);
 
   protected:
-    Image(ObjectStore *store, const ObjectTag &in_tag);
+    Image(ObjectStore *store);
     //constructor for colormap only
-    Image(ObjectStore *store, const ObjectTag &in_tag, MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const QString &paletteName);
+    Image(ObjectStore *store, MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const QString &paletteName);
     //constructor for contour map only
-    Image(ObjectStore *store, const ObjectTag &in_tag, MatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight);
+    Image(ObjectStore *store, MatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight);
     //constructor for both colormap and contour map
-    Image(ObjectStore *store, const ObjectTag &in_tag,
+    Image(ObjectStore *store, 
         MatrixPtr in_matrix,
         double lowerZ,
         double upperZ,
@@ -125,7 +125,7 @@ class KST_EXPORT Image : public Relation {
         const QColor& contourColor,
         int contourWeight);
 
-    Image(ObjectStore *store, const QDomElement& e);
+//     Image(ObjectStore *store, const QDomElement& e);
     virtual ~Image();
 
     friend class ObjectStore;

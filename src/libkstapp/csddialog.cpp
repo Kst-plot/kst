@@ -152,9 +152,9 @@ CSDDialog::~CSDDialog() {
 }
 
 
-QString CSDDialog::tagString() const {
-  return DataDialog::tagString();
-}
+// QString CSDDialog::tagString() const {
+//   return DataDialog::tagString();
+// }
 
 
 void CSDDialog::editMultipleMode() {
@@ -196,7 +196,7 @@ void CSDDialog::configureTab(ObjectPtr object) {
       QStringList objectList;
       CSDList objects = _document->objectStore()->getObjects<CSD>();
       foreach(CSDPtr object, objects) {
-        objectList.append(object->tag().displayString());
+        objectList.append(object->Name());
       }
       _editMultipleWidget->addObjects(objectList);
     }
@@ -206,8 +206,7 @@ void CSDDialog::configureTab(ObjectPtr object) {
 
 ObjectPtr CSDDialog::createNewDataObject() const {
   Q_ASSERT(_document && _document->objectStore());
-  ObjectTag tag = _document->objectStore()->suggestObjectTag<CSD>(tagString(), ObjectTag::globalTagContext);
-  CSDPtr csd = _document->objectStore()->createObject<CSD>(tag);
+  CSDPtr csd = _document->objectStore()->createObject<CSD>();
   csd->change(_CSDTab->vector(),
               _CSDTab->FFTOptionsWidget()->sampleRate(), 
               _CSDTab->FFTOptionsWidget()->interleavedAverage(),
@@ -226,8 +225,7 @@ ObjectPtr CSDDialog::createNewDataObject() const {
   csd->update();
   csd->unlock();
 
-  tag = _document->objectStore()->suggestObjectTag<Image>(csd->tag().tagString(), ObjectTag::globalTagContext);
-  ImagePtr image = _document->objectStore()->createObject<Image>(tag);
+  ImagePtr image = _document->objectStore()->createObject<Image>();
   image->changeToColorOnly(csd->outputMatrix(), 0, 1, true, _CSDTab->colorPalette()->selectedPalette());
 
   image->writeLock();
@@ -270,8 +268,8 @@ ObjectPtr CSDDialog::editExistingDataObject() const {
     if (editMode() == EditMultiple) {
       const FFTOptions *options = _CSDTab->FFTOptionsWidget();
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectTag, objects) {
-        CSDPtr csd = kst_cast<CSD>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));
+      foreach (QString objectName, objects) {
+        CSDPtr csd = kst_cast<CSD>(_document->objectStore()->retrieveObject(objectName));
         if (csd) {
           VectorPtr vector = _CSDTab->vectorDirty() ? _CSDTab->vector() : csd->vector();
           const double frequency = options->sampleRateDirty() ? options->sampleRate() : csd->frequency();

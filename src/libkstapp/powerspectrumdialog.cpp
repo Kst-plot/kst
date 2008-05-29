@@ -131,9 +131,9 @@ PowerSpectrumDialog::~PowerSpectrumDialog() {
 }
 
 
-QString PowerSpectrumDialog::tagString() const {
-  return DataDialog::tagString();
-}
+// QString PowerSpectrumDialog::tagString() const {
+//   return DataDialog::tagString();
+// }
 
 
 void PowerSpectrumDialog::editMultipleMode() {
@@ -175,7 +175,7 @@ void PowerSpectrumDialog::configureTab(ObjectPtr object) {
       QStringList objectList;
       PSDList objects = _document->objectStore()->getObjects<PSD>();
       foreach(PSDPtr object, objects) {
-        objectList.append(object->tag().displayString());
+        objectList.append(object->Name());
       }
       _editMultipleWidget->addObjects(objectList);
     }
@@ -190,8 +190,7 @@ void PowerSpectrumDialog::updateButtons() {
 
 ObjectPtr PowerSpectrumDialog::createNewDataObject() const {
   Q_ASSERT(_document && _document->objectStore());
-  ObjectTag tag = _document->objectStore()->suggestObjectTag<PSD>(tagString(), ObjectTag::globalTagContext);
-  PSDPtr powerspectrum = _document->objectStore()->createObject<PSD>(tag);
+  PSDPtr powerspectrum = _document->objectStore()->createObject<PSD>();
   Q_ASSERT(powerspectrum);
 
   powerspectrum->writeLock();
@@ -217,8 +216,7 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() const {
   //FIXME this should be a command...
   //FIXME need some smart placement...
 
-  tag = _document->objectStore()->suggestObjectTag<Curve>(powerspectrum->tag().tagString(), ObjectTag::globalTagContext);
-  CurvePtr curve = _document->objectStore()->createObject<Curve>(tag);
+  CurvePtr curve = _document->objectStore()->createObject<Curve>();
   Q_ASSERT(curve);
 
   curve->setXVector(powerspectrum->vX());
@@ -275,8 +273,8 @@ ObjectPtr PowerSpectrumDialog::editExistingDataObject() const {
     if (editMode() == EditMultiple) {
       const FFTOptions *options = _powerSpectrumTab->FFTOptionsWidget();
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectTag, objects) {
-        PSDPtr powerspectrum = kst_cast<PSD>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));
+      foreach (QString objectName, objects) {
+        PSDPtr powerspectrum = kst_cast<PSD>(_document->objectStore()->retrieveObject(objectName));
         if (powerspectrum) {
           VectorPtr vector = _powerSpectrumTab->vectorDirty() ? _powerSpectrumTab->vector() : powerspectrum->vector();
           const double frequency = options->sampleRateDirty() ? options->sampleRate() : powerspectrum->frequency();

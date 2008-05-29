@@ -75,9 +75,9 @@ class EventMonitorEntry : public DataObject {
     bool uses(ObjectPtr p) const;
 
   protected:
-    EventMonitorEntry(ObjectStore *store, const ObjectTag &in_tag);
-    EventMonitorEntry(ObjectStore *store, const ObjectTag &tag, const QString &script, const QString &event, const QString &description, const Debug::LogLevel level, const bool logDebug, const bool logEMail, const bool logELOG, const QString& emailRecipients);
-    EventMonitorEntry(ObjectStore *store, const QDomElement &e);
+    EventMonitorEntry(ObjectStore *store);
+    EventMonitorEntry(ObjectStore *store, const QString &script, const QString &event, const QString &description, const Debug::LogLevel level, const bool logDebug, const bool logEMail, const bool logELOG, const QString& emailRecipients);
+//     EventMonitorEntry(ObjectStore *store, const QDomElement &e);
     ~EventMonitorEntry();
 
     friend class ObjectStore;

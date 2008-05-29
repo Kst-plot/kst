@@ -70,8 +70,7 @@ QString BasicPluginDialog::tagString() const {
 
 
 ObjectPtr BasicPluginDialog::createNewDataObject() const {
-  ObjectTag tag = ObjectTag::fromString(tagString());
-  DataObjectPtr dataObject = DataObject::createPlugin(_pluginName, _document->objectStore(), tag, _basicPluginTab->configWidget());
+  DataObjectPtr dataObject = DataObject::createPlugin(_pluginName, _document->objectStore(), _basicPluginTab->configWidget());
   return dataObject;
 }
 

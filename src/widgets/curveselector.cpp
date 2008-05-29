@@ -107,7 +107,7 @@ void CurveSelector::fillCurves() {
     CurvePtr curve = (*it);
 
     curve->readLock();
-    curves.insert(curve->tag().displayString(), curve);
+    curves.insert(curve->Name(), curve);
     curve->unlock();
   }
 

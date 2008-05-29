@@ -647,14 +647,14 @@ DataNode::DataNode(ObjectStore *store, char *name)
     QRegExp re("(.*)\\[(.*)\\]");
     int hit = re.indexIn(_tagName);
     if (hit > -1 && re.numCaptures() == 2) {
-      _vector = kst_cast<Vector>(store->retrieveObject(ObjectTag::fromString(re.cap(1))));
+      _vector = kst_cast<Vector>(store->retrieveObject(re.cap(1)));
       if (_vector) {
         _vectorIndex = re.cap(2);
       }
     }
   } else {
     _tagName = QString(name).trimmed();
-    ObjectPtr o = store->retrieveObject(ObjectTag::fromString(_tagName));
+    ObjectPtr o = store->retrieveObject(_tagName);
     if (kst_cast<Vector>(o)) {
       _vector = kst_cast<Vector>(o);
     } else if (kst_cast<Scalar>(o)) {
@@ -795,9 +795,9 @@ QString DataNode::text() const {
   if (_isEquation) {
     return QString("[=") + _tagName + "]";
   } else if (_vector) {
-    return _vector->tag().displayString();
+    return _vector->Name();
   } else if (_scalar) {
-    return _scalar->tag().displayString();
+    return _scalar->Name();
   } else {
     return QString::null;
   }

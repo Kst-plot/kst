@@ -60,7 +60,7 @@ class KST_EXPORT PowerSpectrumDialog : public DataDialog {
     void setVector(VectorPtr vector);
 
   protected:
-    virtual QString tagString() const;
+//     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
 

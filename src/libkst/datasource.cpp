@@ -215,16 +215,6 @@ static DataSourcePtr findPluginFor(ObjectStore *store, const QString& filename, 
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
     DataSourcePtr plugin = (*i).plugin->create(store, settingsObject, filename, QString::null, e);
     if (plugin) {
-      // restore tag if present
-      QDomNodeList l = e.elementsByTagName("tag");
-      if (l.count() > 0) {
-        QDomElement e2 = l.item(0).toElement();
-        if (!e2.isNull()) {
-          qDebug() << "Restoring tag " << e2.text() << " to DataSource" << endl;
-          // FIXME
-          //plugin->setTagName(ObjectTag::fromString(e2.text()));
-        }
-      }
       return plugin;
     }
   }
@@ -492,14 +482,10 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
   QString tn = i18n("DS-%1", shortFilename);
 //  int count = 1;
 
-  Object::setTagName(ObjectTag(tn, ObjectTag::globalTagContext));  // are DataSources always top-level?
-// FIXME: put this back in
-//  while (Data::self()->dataSourceTagNameNotUnique(tagName(), false)) {
-//    Object::setTagName(ObjectTag(tn + QString::number(-(count++)), ObjectTag::globalTagContext));  // are DataSources always top-level?
-//  }
+//   Object::setTagName(ObjectTag(tn, ObjectTag::globalTagContext));  // are DataSources always top-level?
 
   Q_ASSERT(store);
-  _numFramesScalar = store->createObject<Scalar>(ObjectTag("frames", tag()));
+  _numFramesScalar = store->createObject<Scalar>();
   _numFramesScalar->setSlaveName(QString("frames"));
   // Don't set provider - this is always up-to-date
 
@@ -515,7 +501,7 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
 
 
 DataSource::~DataSource() {
-  //  qDebug() << "DataSource destructor: " << tag().tagString() << endl;
+  //  qDebug() << "DataSource destructor: " << Name() << endl;
 }
 
 
@@ -699,7 +685,6 @@ void DataSource::saveSource(QXmlStreamWriter &s) {
     }
   }
   s.writeStartElement("source");
-  s.writeAttribute("tag", tag().tagString());
   s.writeAttribute("reader", fileType());
   s.writeAttribute("file", name);
   save(s);

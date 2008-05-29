@@ -29,11 +29,11 @@ void TestHistogram::cleanupTestCase() {
 }
 
 void TestHistogram::testHistogram() {
-  Kst::GeneratedVectorPtr gvp = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>(Kst::ObjectTag::fromString("V1")));
+  Kst::GeneratedVectorPtr gvp = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>());
   Q_ASSERT(gvp);
   gvp->changeRange(0, 10, 100);
   Kst::VectorPtr vp(gvp);
-  Kst::HistogramPtr h1 = new Kst::Histogram(&_store, Kst::ObjectTag::fromString("H1"), vp, 0, 10, 10, Kst::Histogram::Number);
+  Kst::HistogramPtr h1 = new Kst::Histogram(&_store, vp, 0, 10, 10, Kst::Histogram::Number);
 
   QCOMPARE(h1->propertyString(), QLatin1String("Histogram: V1"));
   QVERIFY(!h1->realTimeAutoBin()); // should be false by default
@@ -88,7 +88,7 @@ void TestHistogram::testHistogram() {
   //dumpPoints(h1, 9);
   QCOMPARE(count, 100); // should still account for the whole vector
   // min > max
-  h1 = new Kst::Histogram(&_store, Kst::ObjectTag::fromString("H2"), vp, 10, 0, 10, Kst::Histogram::Number);
+  h1 = new Kst::Histogram(&_store, vp, 10, 0, 10, Kst::Histogram::Number);
   QCOMPARE(h1->numberOfBins(), 10);
   QCOMPARE(h1->xMin(), 0.0);
   QCOMPARE(h1->xMax(), 10.0);
@@ -96,7 +96,7 @@ void TestHistogram::testHistogram() {
   QCOMPARE(h1->vMax(), 10.0);
   QCOMPARE(h1->vNumSamples(), 100);
   // min == max
-  h1 = new Kst::Histogram(&_store, Kst::ObjectTag::fromString("H3"), vp, 10, 10, 2, Kst::Histogram::Number);
+  h1 = new Kst::Histogram(&_store, vp, 10, 10, 2, Kst::Histogram::Number);
   QCOMPARE(h1->numberOfBins(), 2);
   QCOMPARE(h1->xMin(), 9.0);
   QCOMPARE(h1->xMax(), 11.0);
@@ -104,7 +104,7 @@ void TestHistogram::testHistogram() {
   QCOMPARE(h1->vMax(), 10.0);
   QCOMPARE(h1->vNumSamples(), 100);
   // max < min
-  h1 = new Kst::Histogram(&_store, Kst::ObjectTag::fromString("H4"), vp, 11, 9, 1, Kst::Histogram::Number);
+  h1 = new Kst::Histogram(&_store, vp, 11, 9, 1, Kst::Histogram::Number);
   QCOMPARE(h1->numberOfBins(), 2);
   QCOMPARE(h1->xMax(), 11.0);
   QCOMPARE(h1->xMin(), 9.0);

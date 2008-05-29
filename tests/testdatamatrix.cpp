@@ -83,8 +83,7 @@ void TestDataMatrix::testDataMatrix() {
   dsp->unlock();
 
   //basic default constructor values
-  Kst::DataMatrixPtr m1 = Kst::kst_cast<Kst::DataMatrix>(_store.createObject<Kst::DataMatrix>(Kst::ObjectTag::fromString(QString::null)));
-  QVERIFY(m1->tag().tagString().startsWith("Anonymous"));
+  Kst::DataMatrixPtr m1 = Kst::kst_cast<Kst::DataMatrix>(_store.createObject<Kst::DataMatrix>());
   QCOMPARE(m1->sampleCount(), 0);
   QCOMPARE(m1->minValue(), 0.0);
   QCOMPARE(m1->maxValue(), 0.0);

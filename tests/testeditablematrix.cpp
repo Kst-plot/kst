@@ -93,74 +93,75 @@ void TestEditableMatrix::testEditableMatrix() {
 
   bool ok = true;
 
-  QDomNode n = makeDOMElement("amDOM", 0, 0, 0, 0, 1, 1, 9).firstChild();
-  QDomElement e = n.toElement();
-
-  //basic default constructor values
-  Kst::EditableMatrixPtr am1 = Kst::kst_cast<Kst::EditableMatrix>(_store.createObject<Kst::EditableMatrix>(e));
-  QVERIFY(am1->tag().tagString().startsWith("amDOM"));
-  QCOMPARE(am1->sampleCount(), 0);
-  QCOMPARE(am1->minValue(), 0.0);
-  QCOMPARE(am1->maxValue(), 0.0);
-  QCOMPARE(am1->value(0, 0, &ok), 0.0);
-  QVERIFY(!ok);
-  QCOMPARE(am1->value(10, 10, &ok), 0.0); //should be outside the boundaries.
-  QVERIFY(!ok);
-  QCOMPARE(am1->sampleCount(), 0);
-  QCOMPARE(am1->meanValue(), 0.0);
+  //FIXME: dom based constructor no longer used in kst.  Use a factory instead
+//   QDomNode n = makeDOMElement("amDOM", 0, 0, 0, 0, 1, 1, 9).firstChild();
+//   QDomElement e = n.toElement();
+// 
+//   //basic default constructor values
+//   Kst::EditableMatrixPtr am1 = Kst::kst_cast<Kst::EditableMatrix>(_store.createObject<Kst::EditableMatrix>(e));
+//   QVERIFY(am1->tag().tagString().startsWith("amDOM"));
+//   QCOMPARE(am1->sampleCount(), 0);
+//   QCOMPARE(am1->minValue(), 0.0);
+//   QCOMPARE(am1->maxValue(), 0.0);
+//   QCOMPARE(am1->value(0, 0, &ok), 0.0);
+//   QVERIFY(!ok);
+//   QCOMPARE(am1->value(10, 10, &ok), 0.0); //should be outside the boundaries.
+//   QVERIFY(!ok);
+//   QCOMPARE(am1->sampleCount(), 0);
+//   QCOMPARE(am1->meanValue(), 0.0);
 
   //basic symmetrical matrix
-  n = makeDOMElement("Symmetrical", 3, 3, 0, 0, 1, 1, 9).firstChild();
-  e = n.toElement();
+//   n = makeDOMElement("Symmetrical", 3, 3, 0, 0, 1, 1, 9).firstChild();
+//   e = n.toElement();
+// 
+//   //basic default constructor values
+//   Kst::EditableMatrixPtr am2 = Kst::kst_cast<Kst::EditableMatrix>(_store.createObject<Kst::EditableMatrix>(e));
+// 
+//   QCOMPARE(am2->tag().tagString(), QLatin1String("Symmetrical"));
+//   QVERIFY(am2->resize(3, 3, true));
+// 
+//   for(int i =0 ; i < 3; i++){
+//     for(int j = 0; j < 3; j++){
+//       QCOMPARE(am2->value(i, j, &ok), 1.1);
+//       QVERIFY(ok);
+//     }
+//   }
+// 
+//   QVERIFY(am2->editable());
+//   QCOMPARE(am2->xNumSteps(), 3);
+//   QCOMPARE(am2->yNumSteps(), 3);
+//   QCOMPARE(am2->minX(), 0.0);
+//   QCOMPARE(am2->minY(), 0.0);
+//   QCOMPARE(am2->xStepSize(), 1.0);
+//   QCOMPARE(am2->yStepSize(), 1.0);
+//   QCOMPARE(am2->sampleCount(), 9);
+// 
+//   QVERIFY(am2->setValueRaw(1, 1, 5));
+//   ok = true;
+//   QCOMPARE(am2->value(1, 1, &ok), 5.0);
+//   QVERIFY(ok);
+// 
+//   am2->blank();
+// 
+//   am2->change(3, 3, 0, 0, 0, 0); //should not be legal
+//   QCOMPARE(am2->xNumSteps(), 3);
+//   QCOMPARE(am2->yNumSteps(), 3);
+//   QCOMPARE(am2->minX(), 0.0);
+//   QCOMPARE(am2->minY(), 0.0);
+//   QCOMPARE(am2->xStepSize(), 0.0);
+//   QCOMPARE(am2->yStepSize(), 0.0);
+//   QCOMPARE(am2->sampleCount(), 9);
+// 
+//   QVERIFY(!am2->setValue(0, 0, 1));
+//   ok = true;
+//   QCOMPARE(am2->value(0, 0, &ok), 0.0);
+//   QVERIFY(!ok);
+// 
+//   QVERIFY(!am2->setValue(1, 1, 5.0));
+//   QVERIFY(am2->value(1, 1) != 5.0);
+//   QVERIFY(am2->setValueRaw(2, 2, 6.0)); //fails
 
-  //basic default constructor values
-  Kst::EditableMatrixPtr am2 = Kst::kst_cast<Kst::EditableMatrix>(_store.createObject<Kst::EditableMatrix>(e));
-
-  QCOMPARE(am2->tag().tagString(), QLatin1String("Symmetrical"));
-  QVERIFY(am2->resize(3, 3, true));
-
-  for(int i =0 ; i < 3; i++){
-    for(int j = 0; j < 3; j++){
-      QCOMPARE(am2->value(i, j, &ok), 1.1);
-      QVERIFY(ok);
-    }
-  }
-
-  QVERIFY(am2->editable());
-  QCOMPARE(am2->xNumSteps(), 3);
-  QCOMPARE(am2->yNumSteps(), 3);
-  QCOMPARE(am2->minX(), 0.0);
-  QCOMPARE(am2->minY(), 0.0);
-  QCOMPARE(am2->xStepSize(), 1.0);
-  QCOMPARE(am2->yStepSize(), 1.0);
-  QCOMPARE(am2->sampleCount(), 9);
-
-  QVERIFY(am2->setValueRaw(1, 1, 5));
-  ok = true;
-  QCOMPARE(am2->value(1, 1, &ok), 5.0);
-  QVERIFY(ok);
-
-  am2->blank();
-
-  am2->change(3, 3, 0, 0, 0, 0); //should not be legal
-  QCOMPARE(am2->xNumSteps(), 3);
-  QCOMPARE(am2->yNumSteps(), 3);
-  QCOMPARE(am2->minX(), 0.0);
-  QCOMPARE(am2->minY(), 0.0);
-  QCOMPARE(am2->xStepSize(), 0.0);
-  QCOMPARE(am2->yStepSize(), 0.0);
-  QCOMPARE(am2->sampleCount(), 9);
-
-  QVERIFY(!am2->setValue(0, 0, 1));
-  ok = true;
-  QCOMPARE(am2->value(0, 0, &ok), 0.0);
-  QVERIFY(!ok);
-
-  QVERIFY(!am2->setValue(1, 1, 5.0));
-  QVERIFY(am2->value(1, 1) != 5.0);
-  QVERIFY(am2->setValueRaw(2, 2, 6.0)); //fails
-
-  Kst::EditableMatrixPtr um1 = Kst::kst_cast<Kst::EditableMatrix>(_store.createObject<Kst::EditableMatrix>(Kst::ObjectTag::fromString("Unity")));
+  Kst::EditableMatrixPtr um1 = Kst::kst_cast<Kst::EditableMatrix>(_store.createObject<Kst::EditableMatrix>());
   Q_ASSERT(um1);
   um1->resize(3, 3, true);
   um1->setEditable(true);
@@ -288,7 +289,7 @@ void TestEditableMatrix::testEditableMatrix() {
   QCOMPARE(um1->minValue(), 0.0);
   QCOMPARE(um1->maxValue(), 0.0);
 
-  Kst::EditableMatrixPtr sm = Kst::kst_cast<Kst::EditableMatrix>(_store.createObject<Kst::EditableMatrix>(Kst::ObjectTag::fromString("Spike")));
+  Kst::EditableMatrixPtr sm = Kst::kst_cast<Kst::EditableMatrix>(_store.createObject<Kst::EditableMatrix>());
   Q_ASSERT(sm);
   sm->change(2, 2, 0.0, 0.0, 1.0, 1.0);
   sm->setEditable(true);

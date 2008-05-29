@@ -66,7 +66,7 @@ class KST_EXPORT EquationDialog : public DataDialog {
     virtual ~EquationDialog();
 
   protected:
-    virtual QString tagString() const;
+//     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
 

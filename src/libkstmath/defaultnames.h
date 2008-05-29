@@ -23,14 +23,6 @@
 #include "kst_export.h"
 
 namespace Kst {
-  extern KST_EXPORT ObjectTag suggestPlotName();
-  extern KST_EXPORT ObjectTag suggestCurveName(ObjectTag vector_name, bool add_c=false);
-  extern KST_EXPORT ObjectTag suggestPSDName(ObjectTag vector_name);
-  extern KST_EXPORT ObjectTag suggestCSDName(ObjectTag vector_name);
-  extern KST_EXPORT ObjectTag suggestEQName(const QString& name_in);
-  extern KST_EXPORT ObjectTag suggestHistogramName(ObjectTag vector_name);
-  extern KST_EXPORT ObjectTag suggestPluginName(const QString& pname, ObjectTag vname = ObjectTag::invalidTag);
-  extern KST_EXPORT ObjectTag suggestImageName(ObjectTag matrix_name);
 }
 
 #endif

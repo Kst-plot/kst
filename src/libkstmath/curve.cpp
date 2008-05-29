@@ -65,11 +65,11 @@ static const QLatin1String& EYVECTOR = QLatin1String("EY");
 static const QLatin1String& EXMINUSVECTOR = QLatin1String("EXMinus");
 static const QLatin1String& EYMINUSVECTOR = QLatin1String("EYMinus");
 
-Curve::Curve(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_X, VectorPtr in_Y,
+Curve::Curve(ObjectStore *store, VectorPtr in_X, VectorPtr in_Y,
                       VectorPtr in_EX, VectorPtr in_EY,
                       VectorPtr in_EXMinus, VectorPtr in_EYMinus,
                       const QColor &in_color)
-: Relation(store, in_tag) {
+: Relation(store) {
   setHasPoints(false);
   setHasBars(false);
   setHasLines(true);
@@ -78,7 +78,6 @@ Curve::Curve(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_X, Vector
   setBarStyle(0);
   setPointDensity(0);
 
-  commonConstructor(in_color);
   if (in_X) {
     _inputVectors[COLOR_XVECTOR] = in_X;
     connect(in_X, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
@@ -113,6 +112,8 @@ Curve::Curve(ObjectStore *store, const ObjectTag &in_tag, VectorPtr in_X, Vector
   if (_cnum>max_cnum) 
     max_cnum = _cnum;
   _cnum++;
+
+  commonConstructor(in_color);
 
   setDirty();
 }
@@ -218,7 +219,8 @@ void Curve::commonConstructor(const QColor &in_color) {
   _typeString = i18n("Curve");
   _type = "Curve";
   Color = in_color;
-  updateParsedLegendTag();
+  //updateParsedLegendTag();
+
 }
 
 
@@ -439,21 +441,20 @@ bool Curve::hasYMinusError() const {
 
 void Curve::save(QXmlStreamWriter &s) {
   s.writeStartElement(staticTypeTag);
-  s.writeAttribute("tag", tag().tagString());
-  s.writeAttribute("xvector", _inputVectors[COLOR_XVECTOR]->tag().tagString());
-  s.writeAttribute("yvector", _inputVectors[COLOR_YVECTOR]->tag().tagString());
+  s.writeAttribute("xvector", _inputVectors[COLOR_XVECTOR]->Name());
+  s.writeAttribute("yvector", _inputVectors[COLOR_YVECTOR]->Name());
   s.writeAttribute("legend", legendText());
   if (_inputVectors.contains(EXVECTOR)) {
-    s.writeAttribute("errorxvector", _inputVectors[EXVECTOR]->tag().tagString());
+    s.writeAttribute("errorxvector", _inputVectors[EXVECTOR]->Name());
   }
   if (_inputVectors.contains(EYVECTOR)) {
-    s.writeAttribute("erroryvector", _inputVectors[EYVECTOR]->tag().tagString());
+    s.writeAttribute("erroryvector", _inputVectors[EYVECTOR]->Name());
   }
   if (_inputVectors.contains(EXMINUSVECTOR)) {
-    s.writeAttribute("errorxminusvector", _inputVectors[EXMINUSVECTOR]->tag().tagString());
+    s.writeAttribute("errorxminusvector", _inputVectors[EXMINUSVECTOR]->Name());
   }
   if (_inputVectors.contains(EYMINUSVECTOR)) {
-    s.writeAttribute("erroryminusvector", _inputVectors[EYMINUSVECTOR]->tag().tagString());
+    s.writeAttribute("erroryminusvector", _inputVectors[EYMINUSVECTOR]->Name());
   }
   s.writeAttribute("color", Color.name());
 
@@ -577,8 +578,7 @@ CurveType Curve::curveType() const {
 
 
 QString Curve::propertyString() const {
-  
-  return i18n("%1 vs %2").arg(yVector()->descriptiveName()).arg(xVector()->descriptiveName());
+  return i18n("%1 vs %2").arg(yVector()->Name()).arg(xVector()->Name());
 }
 
 
@@ -815,9 +815,11 @@ double Curve::minX() const {
 
 
 RelationPtr Curve::makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelations) {
-  QString newTag = tag().name() + "'";
-  CurvePtr curve = store()->createObject<Curve>(ObjectTag::fromString(newTag));
+  CurvePtr curve = store()->createObject<Curve>();
 
+  if (descriptiveNameIsManual()) {
+    curve->setDescriptiveName(descriptiveName());
+  }
   curve->setXVector(xVector());
   curve->setYVector(yVector());
   if (hasXError()) {

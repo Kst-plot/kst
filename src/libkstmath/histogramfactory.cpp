@@ -29,13 +29,11 @@ HistogramFactory::~HistogramFactory() {
 
 
 DataObjectPtr HistogramFactory::generateObject(ObjectStore *store, QXmlStreamReader& xml) {
-  ObjectTag tag;
-
   Q_ASSERT(store);
 
   double min, max;
   int numberOfBins, normalizationMode;
-  QString vectorTag, descriptiveName;
+  QString VectorName, descriptiveName;
   bool realTimeAutoBin;
 
   while (!xml.atEnd()) {
@@ -43,8 +41,7 @@ DataObjectPtr HistogramFactory::generateObject(ObjectStore *store, QXmlStreamRea
     if (xml.isStartElement()) {
       if (n == Histogram::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
-        tag = ObjectTag::fromString(attrs.value("tag").toString());
-        vectorTag = attrs.value("vector").toString();
+        VectorName = attrs.value("vector").toString();
 
         min = attrs.value("min").toString().toDouble();
         max = attrs.value("max").toString().toDouble();
@@ -75,8 +72,8 @@ DataObjectPtr HistogramFactory::generateObject(ObjectStore *store, QXmlStreamRea
   }
 
   VectorPtr vector = 0;
-  if (store && !vectorTag.isEmpty()) {
-    vector = kst_cast<Vector>(store->retrieveObject(ObjectTag::fromString(vectorTag)));
+  if (store && !VectorName.isEmpty()) {
+    vector = kst_cast<Vector>(store->retrieveObject(VectorName));
   }
 
   if (!vector) {
@@ -84,7 +81,7 @@ DataObjectPtr HistogramFactory::generateObject(ObjectStore *store, QXmlStreamRea
     return 0;
   }
 
-  HistogramPtr histogram = store->createObject<Histogram>(tag);
+  HistogramPtr histogram = store->createObject<Histogram>();
 
   histogram->setVector(vector);
   histogram->setXRange(min, max);

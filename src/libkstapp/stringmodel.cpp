@@ -90,7 +90,7 @@ QVariant StringModel::stringData(StringPtr string, const QModelIndex& index) con
   if (string) {
     if (index.column() == Name) {
       string->readLock();
-      rc.setValue(string->tag().name());
+      rc.setValue(string->Name());
       string->unlock();
     } else if (index.column() == Value) {
       string->readLock();

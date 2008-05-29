@@ -31,7 +31,6 @@ GeneratedMatrixFactory::~GeneratedMatrixFactory() {
 
 
 PrimitivePtr GeneratedMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
-  ObjectTag tag;
   QByteArray data;
   QString descriptiveName;
 
@@ -45,7 +44,6 @@ PrimitivePtr GeneratedMatrixFactory::generatePrimitive(ObjectStore *store, QXmlS
     if (xml.isStartElement()) {
       if (n == GeneratedMatrix::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
-        tag = ObjectTag::fromString(attrs.value("tag").toString());
         gradZMin = attrs.value("gradzmin").toString().toDouble();
         gradZMax = attrs.value("gradzmax").toString().toDouble();
         minX = attrs.value("xmin").toString().toDouble();
@@ -78,7 +76,7 @@ PrimitivePtr GeneratedMatrixFactory::generatePrimitive(ObjectStore *store, QXmlS
     return 0;
   }
 
-  GeneratedMatrixPtr matrix = store->createObject<GeneratedMatrix>(tag);
+  GeneratedMatrixPtr matrix = store->createObject<GeneratedMatrix>();
   matrix->change(uint(nX), uint(nY), minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
   matrix->setDescriptiveName(descriptiveName);
 
@@ -101,7 +99,6 @@ EditableMatrixFactory::~EditableMatrixFactory() {
 
 
 PrimitivePtr EditableMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
-  ObjectTag tag;
   QByteArray data;
   QString descriptiveName;
 
@@ -114,7 +111,6 @@ PrimitivePtr EditableMatrixFactory::generatePrimitive(ObjectStore *store, QXmlSt
     if (xml.isStartElement()) {
       if (n == EditableMatrix::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
-        tag = ObjectTag::fromString(attrs.value("tag").toString());
         minX = attrs.value("xmin").toString().toDouble();
         minY = attrs.value("ymin").toString().toDouble();
         nX = attrs.value("nx").toString().toDouble();
@@ -149,7 +145,7 @@ PrimitivePtr EditableMatrixFactory::generatePrimitive(ObjectStore *store, QXmlSt
     return 0;
   }
 
-  EditableMatrixPtr matrix = store->createObject<EditableMatrix>(tag);
+  EditableMatrixPtr matrix = store->createObject<EditableMatrix>();
   matrix->change(data, uint(nX), uint(nY), minX, minY, stepX, stepY);
   matrix->setDescriptiveName(descriptiveName);
 
@@ -173,7 +169,6 @@ DataMatrixFactory::~DataMatrixFactory() {
 
 
 PrimitivePtr DataMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
-  ObjectTag tag;
   QByteArray data;
   QString descriptiveName;
 
@@ -189,7 +184,6 @@ PrimitivePtr DataMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStream
     if (xml.isStartElement()) {
       if (n == DataMatrix::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
-        tag = ObjectTag::fromString(attrs.value("tag").toString());
         provider = attrs.value("provider").toString();
         file = attrs.value("file").toString();
         field = attrs.value("field").toString();
@@ -233,7 +227,7 @@ PrimitivePtr DataMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStream
     return 0; //Couldn't find a suitable datasource
   }
 
-  DataMatrixPtr matrix = store->createObject<DataMatrix>(tag);
+  DataMatrixPtr matrix = store->createObject<DataMatrix>();
   matrix->change(dataSource, field, requestedXStart, requestedYStart, requestedXCount, requestedYCount, doAve, doSkip, skip, minX, minY, stepX, stepY);
   matrix->setDescriptiveName(descriptiveName);
 

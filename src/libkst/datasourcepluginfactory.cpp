@@ -29,7 +29,6 @@ DataSourcePluginFactory::~DataSourcePluginFactory() {
 
 
 DataSourcePtr DataSourcePluginFactory::generateDataSource(ObjectStore *store, QXmlStreamReader& xml) {
-  ObjectTag tag;
 
   Q_ASSERT(store);
 
@@ -41,7 +40,6 @@ DataSourcePtr DataSourcePluginFactory::generateDataSource(ObjectStore *store, QX
     if (xml.isStartElement()) {
       if (n == DataSource::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
-        tag = ObjectTag::fromString(attrs.value("tag").toString());
         fileType = attrs.value("reader").toString();
         fileName = attrs.value("file").toString();
       } else if (n == "properties") {

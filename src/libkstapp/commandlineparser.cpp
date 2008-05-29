@@ -178,9 +178,8 @@ DataVectorPtr CommandLineParser::createOrFindDataVector(QString field, DataSourc
 
     if (!found) {
       Q_ASSERT(_document && _document->objectStore());
-      const ObjectTag tag = _document->objectStore()->suggestObjectTag<DataVector>(field, ds->tag());
 
-      xv = _document->objectStore()->createObject<DataVector>(tag);
+      xv = _document->objectStore()->createObject<DataVector>();
 
       xv->writeLock();
       xv->change(ds, field, _startFrame, _numFrames, _skip, _skip>0, _doAve);
@@ -195,8 +194,8 @@ DataVectorPtr CommandLineParser::createOrFindDataVector(QString field, DataSourc
     return xv;
 }
 
-void CommandLineParser::createCurveInPlot(const ObjectTag &tag, VectorPtr xv, VectorPtr yv, VectorPtr ev) {
-    CurvePtr curve = _document->objectStore()->createObject<Curve>(tag);
+void CommandLineParser::createCurveInPlot(VectorPtr xv, VectorPtr yv, VectorPtr ev) {
+    CurvePtr curve = _document->objectStore()->createObject<Curve>();
 
     curve->setXVector(xv);
     curve->setYVector(yv);
@@ -224,7 +223,7 @@ void CommandLineParser::createCurveInPlot(const ObjectTag &tag, VectorPtr xv, Ve
       CreatePlotForCurve *cmd = new CreatePlotForCurve(true,true);
       cmd->createItem();
       _plotItem = static_cast<PlotItem*>(cmd->item());
-      _plotItem->setName(QString("P-")+tag.name());
+      _plotItem->setName(QString("P-")+curve->Name());
     }
     PlotRenderItem *renderItem = _plotItem->renderItem(PlotRenderItem::Cartesian);
     renderItem->addRelation(kst_cast<Relation>(curve));
@@ -331,8 +330,6 @@ bool CommandLineParser::processCommandLine() {
         DataVectorPtr xv = createOrFindDataVector(_xField, ds);
         DataVectorPtr yv = createOrFindDataVector(field, ds);
 
-        const ObjectTag tag = _document->objectStore()->suggestObjectTag<Curve>(QString(field), ds->tag());
-
         DataVectorPtr ev;
         if (!_errorField.isEmpty()) {
           DataVectorPtr ev = createOrFindDataVector(_errorField, ds);
@@ -351,7 +348,7 @@ bool CommandLineParser::processCommandLine() {
 
         }
 
-        createCurveInPlot(tag, xv, yv, ev);
+        createCurveInPlot(xv, yv, ev);
         dataPlotted = true;
       }
 
@@ -373,8 +370,7 @@ bool CommandLineParser::processCommandLine() {
         DataVectorPtr pv = createOrFindDataVector(field, ds);
 
         Q_ASSERT(_document && _document->objectStore());
-        ObjectTag tag = _document->objectStore()->suggestObjectTag<PSD>(field, ObjectTag::globalTagContext);
-        PSDPtr powerspectrum = _document->objectStore()->createObject<PSD>(tag);
+        PSDPtr powerspectrum = _document->objectStore()->createObject<PSD>();
         Q_ASSERT(powerspectrum);
 
         powerspectrum->writeLock();
@@ -394,8 +390,6 @@ bool CommandLineParser::processCommandLine() {
         powerspectrum->update();
         powerspectrum->unlock();
 
-        tag = _document->objectStore()->suggestObjectTag<Curve>(powerspectrum->tag().tagString(), ObjectTag::globalTagContext);
-
         VectorPtr ev=0;
 
         if ( !_overrideStyle ) {
@@ -404,7 +398,7 @@ bool CommandLineParser::processCommandLine() {
             _usePoints = false;
         }
 
-        createCurveInPlot(tag, powerspectrum->vX(), powerspectrum->vY(), ev);
+        createCurveInPlot(powerspectrum->vX(), powerspectrum->vY(), ev);
         dataPlotted = true;
       }
       new_fileList = true;
@@ -425,8 +419,7 @@ bool CommandLineParser::processCommandLine() {
         DataVectorPtr hv = createOrFindDataVector ( field, ds );
 
         Q_ASSERT ( _document && _document->objectStore() );
-        ObjectTag tag = _document->objectStore()->suggestObjectTag<Histogram> ( field, ObjectTag::globalTagContext );
-        HistogramPtr histogram = _document->objectStore()->createObject<Histogram> ( tag );
+        HistogramPtr histogram = _document->objectStore()->createObject<Histogram> ();
 
         histogram->setVector ( hv );
         histogram->setXRange ( -1.0, 1.0 );
@@ -438,8 +431,6 @@ bool CommandLineParser::processCommandLine() {
         histogram->update ();
         histogram->unlock();
 
-        tag = _document->objectStore()->suggestObjectTag<Curve>(histogram->tag().tagString(), ObjectTag::globalTagContext);
-
         VectorPtr ev=0;
 
         if ( !_overrideStyle ) {
@@ -448,7 +439,7 @@ bool CommandLineParser::processCommandLine() {
             _usePoints = false;
         }
 
-        createCurveInPlot(tag, histogram->vX(), histogram->vY(), ev);
+        createCurveInPlot(histogram->vX(), histogram->vY(), ev);
         dataPlotted = true;
       }
 

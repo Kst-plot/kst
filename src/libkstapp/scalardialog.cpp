@@ -71,9 +71,9 @@ ScalarDialog::~ScalarDialog() {
 }
 
 
-QString ScalarDialog::tagString() const {
-  return DataDialog::tagString();
-}
+// QString ScalarDialog::tagString() const {
+//   return DataDialog::tagString();
+// }
 
 
 void ScalarDialog::configureTab(ObjectPtr object) {
@@ -89,8 +89,6 @@ void ScalarDialog::updateButtons() {
 
 ObjectPtr ScalarDialog::createNewDataObject() const {
   bool ok = false;
-
-  const ObjectTag tag = _document->objectStore()->suggestObjectTag<Scalar>(tagString());
 
   Q_ASSERT(_document && _document->objectStore());
 
@@ -108,7 +106,7 @@ ObjectPtr ScalarDialog::createNewDataObject() const {
 //            << "\n\tvalue:" << value
 //            << endl;
 
-  ScalarPtr scalar = _document->objectStore()->createObject<Scalar>(tag);
+  ScalarPtr scalar = _document->objectStore()->createObject<Scalar>();
   scalar->setValue(value);
   scalar->setOrphan(true);
   scalar->setEditable(true);

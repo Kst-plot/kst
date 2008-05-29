@@ -23,16 +23,16 @@ namespace Kst {
 const QString EditableVector::staticTypeString = I18N_NOOP("Editable Vector");
 const QString EditableVector::staticTypeTag = I18N_NOOP("editablevector");
 
-EditableVector::EditableVector(ObjectStore *store, const ObjectTag& tag, const QByteArray &data)
-    : Vector(store, tag, data) {
+EditableVector::EditableVector(ObjectStore *store, const QByteArray &data)
+    : Vector(store, data) {
   _editable = true;
   _saveable = true;
   _saveData = true;
 }
 
 
-EditableVector::EditableVector(ObjectStore *store, const ObjectTag& tag, int n)
-    : Vector(store, tag, n) {
+EditableVector::EditableVector(ObjectStore *store, int n)
+    : Vector(store, n) {
   _editable = true;
   _saveable = true;
   _saveData = true;
@@ -65,7 +65,6 @@ void EditableVector::setSaveData(bool save) {
 /** Save vector information */
 void EditableVector::save(QXmlStreamWriter &s) {
   s.writeStartElement("editablevector");
-  s.writeAttribute("tag", tag().tagString());
   saveNameInfo(s, VNUM|XNUM);
 
   if (_saveData) {

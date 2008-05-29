@@ -29,13 +29,11 @@ ImageFactory::~ImageFactory() {
 
 
 RelationPtr ImageFactory::generateRelation(ObjectStore *store, QXmlStreamReader& xml) {
-  ObjectTag tag;
-
   Q_ASSERT(store);
 
   double lowerThreshold, upperThreshold;
   int numberOfContourLines, contourWeight;
-  QString matrixTag, paletteName, legend, contourColor, descriptiveName;
+  QString matrixName, paletteName, legend, contourColor, descriptiveName;
   bool hasColorMap, hasContourMap, autoThreshold;
 
   while (!xml.atEnd()) {
@@ -43,9 +41,8 @@ RelationPtr ImageFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
     if (xml.isStartElement()) {
       if (n == Image::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
-        tag = ObjectTag::fromString(attrs.value("tag").toString());
 
-        matrixTag = attrs.value("matrix").toString();
+        matrixName = attrs.value("matrix").toString();
         legend = attrs.value("legend").toString();
 
         paletteName = attrs.value("palettename").toString();
@@ -84,8 +81,8 @@ RelationPtr ImageFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
   }
 
   MatrixPtr matrix = 0;
-  if (store && !matrixTag.isEmpty()) {
-    matrix = kst_cast<Matrix>(store->retrieveObject(ObjectTag::fromString(matrixTag)));
+  if (store && !matrixName.isEmpty()) {
+    matrix = kst_cast<Matrix>(store->retrieveObject(matrixName));
   }
 
   if (!matrix) {
@@ -93,7 +90,7 @@ RelationPtr ImageFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
     return 0;
   }
 
-  ImagePtr image = store->createObject<Image>(tag);
+  ImagePtr image = store->createObject<Image>();
 
   if (hasColorMap && hasContourMap) {
     image->changeToColorAndContour(matrix,

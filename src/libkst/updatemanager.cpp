@@ -50,7 +50,7 @@ void UpdateManager::requestUpdate(ObjectPtr object) {
     _updateRequests.append(object);
   }
 #if DEBUG_UPDATE_CYCLE > 0
-  qDebug() << "UM - Update requested for" << object->tag().displayString() << "Update Count" << _updateRequests;
+  qDebug() << "UM - Update requested for" << object->Name() << "Update Count" << _updateRequests;
 #endif
 }
 
@@ -66,7 +66,7 @@ void UpdateManager::requestUpdate(ObjectPtr updateObject, ObjectPtr object) {
     }
   }
 #if DEBUG_UPDATE_CYCLE > 0
-  qDebug() << "UM - Curve" << object->shortName() << "requested update requested for" << updateObject->tag().displayString() << "Current dependent update list" <<  _dependentUpdateRequests;
+  qDebug() << "UM - Curve" << object->shortName() << "requested update requested for" << updateObject->Name() << "Current dependent update list" <<  _dependentUpdateRequests;
 #endif
 }
 
@@ -82,7 +82,7 @@ void UpdateManager::requestUpdate(ObjectPtr updateObject, QGraphicsRectItem* dis
     }
   }
 #if DEBUG_UPDATE_CYCLE > 0
-  qDebug() << "UM - Plot update requested for" << updateObject->tag().displayString() << "Current display update list" <<  _displayUpdateRequests;
+  qDebug() << "UM - Plot update requested for" << updateObject->Name() << "Current display update list" <<  _displayUpdateRequests;
 #endif
 }
 
@@ -101,7 +101,7 @@ void UpdateManager::allowUpdates() {
       _delayedUpdate = false;
       foreach(ObjectPtr object, _updateRequests) {
 #if DEBUG_UPDATE_CYCLE > 0
-        qDebug() << "UM - Beginning update for" << object->tag().displayString();
+        qDebug() << "UM - Beginning update for" << object->Name();
 #endif
         object->beginUpdate(object);
         _updateRequests.removeAll(object);

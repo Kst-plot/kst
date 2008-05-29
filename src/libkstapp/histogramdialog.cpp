@@ -294,9 +294,9 @@ HistogramDialog::~HistogramDialog() {
 }
 
 
-QString HistogramDialog::tagString() const {
-  return DataDialog::tagString();
-}
+// QString HistogramDialog::tagString() const {
+//   return DataDialog::tagString();
+// }
 
 
 void HistogramDialog::editMultipleMode() {
@@ -325,7 +325,7 @@ void HistogramDialog::configureTab(ObjectPtr object) {
       QStringList objectList;
       HistogramList objects = _document->objectStore()->getObjects<Histogram>();
       foreach(HistogramPtr object, objects) {
-        objectList.append(object->tag().displayString());
+        objectList.append(object->Name());
       }
       _editMultipleWidget->addObjects(objectList);
     }
@@ -345,8 +345,7 @@ void HistogramDialog::setVector(VectorPtr vector) {
 
 ObjectPtr HistogramDialog::createNewDataObject() const {
   Q_ASSERT(_document && _document->objectStore());
-  ObjectTag tag = _document->objectStore()->suggestObjectTag<Histogram>(tagString(), ObjectTag::globalTagContext);
-  HistogramPtr histogram = _document->objectStore()->createObject<Histogram>(tag);
+  HistogramPtr histogram = _document->objectStore()->createObject<Histogram>();
 
   histogram->setVector(_histogramTab->vector());
   histogram->setXRange(_histogramTab->min(), _histogramTab->max());
@@ -364,16 +363,7 @@ ObjectPtr HistogramDialog::createNewDataObject() const {
   //FIXME this should be a command...
   //FIXME need some smart placement...
 
-  tag = _document->objectStore()->suggestObjectTag<Curve>(histogram->tag().displayString(), ObjectTag::globalTagContext);
-  CurvePtr curve = _document->objectStore()->createObject<Curve>(tag);
-
-#if 0
-  CurvePtr curve = new Curve(suggestCurveName(histogram->tag(), true),
-                                     histogram->vX(),
-                                     histogram->vY(),
-                                     0L, 0L, 0L, 0L,
-                                     _histogramTab->curveAppearance()->color());
-#endif
+  CurvePtr curve = _document->objectStore()->createObject<Curve>();
 
   curve->setXVector(histogram->vX());
   curve->setYVector(histogram->vY());
@@ -426,8 +416,8 @@ ObjectPtr HistogramDialog::editExistingDataObject() const {
   if (HistogramPtr histogram = kst_cast<Histogram>(dataObject())) {
     if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectTag, objects) {
-        HistogramPtr histogram = kst_cast<Histogram>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));
+      foreach (QString objectName, objects) {
+        HistogramPtr histogram = kst_cast<Histogram>(_document->objectStore()->retrieveObject(objectName));
         if (histogram) {
           VectorPtr vector = _histogramTab->vectorDirty() ? _histogramTab->vector() : histogram->vector();
           const double min = _histogramTab->minDirty() ? _histogramTab->min() : histogram->xMin();

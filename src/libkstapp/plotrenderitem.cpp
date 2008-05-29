@@ -137,7 +137,7 @@ void PlotRenderItem::saveInPlot(QXmlStreamWriter &xml) {
   xml.writeAttribute("type", QVariant(_type).toString());
   foreach (RelationPtr relation, relationList()) {
     xml.writeStartElement("relation");
-    xml.writeAttribute("tag", relation->tag().tagString());
+    xml.writeAttribute("tag", relation->Name());
     xml.writeEndElement();
   }
 }
@@ -159,9 +159,9 @@ bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store)
    if (xml.isStartElement() && xml.name().toString() == "relation") {
       expectedEnd = xml.name().toString();
       attrs = xml.attributes();
-      ObjectTag tag = ObjectTag::fromString(attrs.value("tag").toString());
-      qDebug(tag.tagString());
-      RelationPtr relation = kst_cast<Relation>(store->retrieveObject(tag));
+      QString tagName = attrs.value("tag").toString();
+      qDebug(tagName);
+      RelationPtr relation = kst_cast<Relation>(store->retrieveObject(tagName));
       if (relation) {
         addRelation(relation);
       }

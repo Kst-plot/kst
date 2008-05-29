@@ -61,8 +61,8 @@ private:
   void _setStringArg(QString &arg, QString Message);
   void usage(QString Message = "");
   DataVectorPtr createOrFindDataVector(QString field, DataSourcePtr ds);
-  void createOrFindPlot(const QString tagname);
-  void createCurveInPlot(const ObjectTag &tag, VectorPtr xv, VectorPtr yv, VectorPtr ev=0);
+  void createOrFindPlot(const QString name);
+  void createCurveInPlot(VectorPtr xv, VectorPtr yv, VectorPtr ev=0);
 };
 
 }

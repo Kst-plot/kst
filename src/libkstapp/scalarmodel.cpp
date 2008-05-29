@@ -167,7 +167,7 @@ QVariant ScalarModel::objectData(ObjectPtr object, const QModelIndex& index) con
   if (object) {
     if (index.column() == Name) {
       object->readLock();
-      rc.setValue(object->tag().displayString());
+      rc.setValue(object->Name());
       object->unlock();
     }
   }
@@ -182,7 +182,7 @@ QVariant ScalarModel::scalarData(ScalarPtr scalar, const QModelIndex& index) con
   if (scalar) {
     if (index.column() == Name) {
       scalar->readLock();
-      rc.setValue(scalar->tag().name());
+      rc.setValue(scalar->Name());
       scalar->unlock();
     } else if (index.column() == Value) {
       scalar->readLock();

@@ -28,9 +28,9 @@ static int i = 0;
 
 const QString Object::staticTypeString = I18N_NOOP("Object");
 
-Object::Object(const ObjectTag& tag) :
-  QObject(), Shared(), KstRWLock(),
-  _store(0L), _manualDescriptiveName(QString()), _shortName(QString("FIXME - set _shortName")), _tag(tag)
+Object::Object() :
+  Shared(), KstRWLock(),
+  _store(0L), _manualDescriptiveName(QString()), _shortName(QString("FIXME - set _shortName"))
 {
   _dirty = false;
 
@@ -64,52 +64,6 @@ QString Object::type() {
 const QString& Object::typeString() const {
   return staticTypeString;
 }
-
-
-#if 0
-int Object::operator==(const QString& tag) const {
-  return (tag == _tag.tagString() || tag == _tag.displayString()) ? 1 : 0;
-}
-#endif
-
-
-#if 0
-inline QString Object::tagName() const {
-  return _tag.tag();
-}
-#endif
-
-
-ObjectTag& Object::tag() {
-  return _tag;
-}
-
-
-const ObjectTag& Object::tag() const {
-  return _tag;
-}
-
-
-void Object::setTagName(const ObjectTag& tag) {
-  if (tag == _tag) {
-    return;
-  }
-
-  _tag = tag;
-  setObjectName(_tag.tagString().toLocal8Bit().data());
-
-  if (_store) {
-    // handle rename through object store
-    _store->renameObject(this, tag);
-  }
-}
-
-
-#if 0
-QString Object::tagLabel() const {
-  return QString("[%1]").arg(_tag.tagString());
-}
-#endif
 
 
 // Returns count - 2 to account for "this" and the list pointer, therefore
@@ -146,7 +100,7 @@ QString Object::Name() const {
 
 QString Object::descriptiveName() const {
   if (_manualDescriptiveName.isEmpty()) {
-    return _automaticDescriptiveName();
+      return _automaticDescriptiveName();
   } else {
     return _manualDescriptiveName;
   }

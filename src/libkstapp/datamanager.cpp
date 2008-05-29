@@ -140,7 +140,7 @@ void DataManager::showContextMenu(const QPoint &position) {
     if (!model->parent(_session->indexAt(position)).isValid()) {
       _currentObject = model->generateObjectList().at(_session->indexAt(position).row());
       if (_currentObject) {
-        QAction *action = new QAction(_currentObject->tag().displayString(), this);
+        QAction *action = new QAction(_currentObject->Name(), this);
         action->setEnabled(false);
         actions.append(action);
 
@@ -221,7 +221,7 @@ void DataManager::showContextMenu(const QPoint &position) {
           _currentObject = dataObject->outputMatrices().values()[_session->indexAt(position).row() - dataObject->outputVectors().count()];
         }
         if (_currentObject) {
-          QAction *action = new QAction(_currentObject->tag().displayString(), this);
+          QAction *action = new QAction(_currentObject->Name(), this);
           action->setEnabled(false);
           actions.append(action);
 

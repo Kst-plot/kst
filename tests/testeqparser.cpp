@@ -326,22 +326,22 @@ void TestEqParser::testEqParser() {
   QVERIFY(validateEquation("257|-1", 0.0, -1));
 
   // Scalars
-  Kst::ScalarPtr s = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>(Kst::ObjectTag::fromString("test1")));
+  Kst::ScalarPtr s = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>());
   s->setValue(1.0);
   s->setOrphan(true);
-  s = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>(Kst::ObjectTag::fromString("test2")));
+  s = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>());
   s->setValue(0.0);
   s->setOrphan(true);
-  s = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>(Kst::ObjectTag::fromString("test3")));
+  s = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>());
   s->setValue(-1.0);
   s->setOrphan(true);
-  s = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>(Kst::ObjectTag::fromString("test4")));
+  s = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>());
   s->setValue(_NOPOINT);
   s->setOrphan(true);
-  s = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>(Kst::ObjectTag::fromString("test5")));
+  s = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>());
   s->setValue(INF);
   s->setOrphan(true);
-  s = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>(Kst::ObjectTag::fromString("test6")));
+  s = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>());
   s->setValue(-INF);
   s->setOrphan(true);
 
@@ -355,22 +355,22 @@ void TestEqParser::testEqParser() {
   QVERIFY(validateEquation("[=10+10]", 0.0, 20.0));
 
   // Vectors
-  Kst::GeneratedVectorPtr gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>(Kst::ObjectTag::fromString("1")));
+  Kst::GeneratedVectorPtr gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>());
   Q_ASSERT(gv);
   gv->changeRange(0, 1.0, 10);
-  gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>(Kst::ObjectTag::fromString("V1")));
+  gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>());
   Q_ASSERT(gv);
   gv->changeRange(0, 1.0, 10);
-  gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>(Kst::ObjectTag::fromString("V2")));
+  gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>());
   Q_ASSERT(gv);
   gv->changeRange(1.0, 2.0, 10);
-  gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>(Kst::ObjectTag::fromString("V3")));
+  gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>());
   Q_ASSERT(gv);
   gv->changeRange(0, 1.0, 2);
-  gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>(Kst::ObjectTag::fromString("V4")));
+  gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>());
   Q_ASSERT(gv);
   gv->changeRange(-1.0, 1.0, 1000);
-  gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>(Kst::ObjectTag::fromString("V5-%+-_!")));
+  gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>());
   Q_ASSERT(gv);
   gv->changeRange(-1.0, 1.0, 1000);
   QVERIFY(validateEquation("[V2] - [V1]", 0.0, 1.0));
@@ -386,7 +386,7 @@ void TestEqParser::testEqParser() {
   QEXPECT_FAIL("", "Plugins in equations are not implemented yet", Continue);
   QVERIFY(validateEquation("4*plugin(bin, [V4], x)", 5.0, -3.9839839839839839));
   QVERIFY(validateEquation("-3*plugin(bin, x, 12)", 2.0, _NOPOINT));
-  gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>(Kst::ObjectTag::fromString("XVector")));
+  gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>());
   Q_ASSERT(gv);
   gv->changeRange(0, 100, 2000);
   xVector = gv;

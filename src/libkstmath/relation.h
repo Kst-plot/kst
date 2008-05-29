@@ -71,8 +71,8 @@ class KST_EXPORT Relation : public Object {
     static const QString staticTypeString;
     const QString& typeString() const { return staticTypeString; }
 
-    Relation(ObjectStore *store, const ObjectTag& tag);
-    Relation(ObjectStore *store, const QDomElement& e);
+    Relation(ObjectStore *store);
+//     Relation(ObjectStore *store, const QDomElement& e);
     virtual ~Relation();
 
     virtual void showNewDialog() { }
@@ -129,7 +129,7 @@ class KST_EXPORT Relation : public Object {
     virtual void paintLegendSymbol(Painter *p, const QRect& bound) = 0;
 
 
-    // just store the size of the legend tag here.  The viewLegend actually uses and calculates it.
+    // just store the size of the legend here.  The viewLegend actually uses and calculates it.
     virtual QSize legendLabelSize() const {return _legendLabelSize;}
     virtual void setLegendLabelSize(QSize ls) {_legendLabelSize = ls;}
 

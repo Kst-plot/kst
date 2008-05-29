@@ -132,7 +132,7 @@ void VectorSelector::fillVectors() {
       continue;
 
     vector->readLock();
-    vectors.insert(vector->tag().displayString(), vector);
+    vectors.insert(vector->Name(), vector);
     vector->unlock();
   }
 

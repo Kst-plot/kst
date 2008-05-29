@@ -48,23 +48,23 @@ const QString DataVector::staticTypeString = I18N_NOOP("Data Vector");
 const QString DataVector::staticTypeTag = I18N_NOOP("datavector");
 
 /** Create a DataVector: raw data from a file */
-DataVector::DataVector(ObjectStore *store, const ObjectTag& in_tag,
+DataVector::DataVector(ObjectStore *store, 
                        DataSourcePtr in_file, const QString &in_field,
                        int in_f0, int in_n, int skip, bool in_DoSkip,
                        bool in_DoAve)
-: Vector(store, in_tag) {
+: Vector(store) {
   commonRVConstructor(in_file, in_field, in_f0, in_n, skip,
       in_DoSkip, in_DoAve);
 }
 
 
-DataVector::DataVector(ObjectStore *store, const ObjectTag& tag, const QByteArray& data,
+DataVector::DataVector(ObjectStore *store, const QByteArray& data,
                        const QString& providerName, const QString& file,
                        const QString& field, int start, int num,
                        int skip, bool doAve,
                        const QString &o_file,
                        int o_n, int o_f, int o_s, bool o_ave)
-: Vector(store, tag, data) {
+: Vector(store, data) {
   DataSourcePtr in_file, in_provider;
   QString in_field;
   int in_f0 = 0;
@@ -80,7 +80,7 @@ DataVector::DataVector(ObjectStore *store, const ObjectTag& tag, const QByteArra
 
   //FIXME THIS CTOR IS SO OBFUSCATED IT IS LAUGHABLE!
   if (!providerName.isEmpty()) {
-      in_provider = dsList.findTag(ObjectTag::fromString(providerName));
+      in_provider = dsList.findName(providerName);
   }
 
   if (!in_provider && !file.isEmpty()) {
@@ -119,12 +119,6 @@ DataVector::DataVector(ObjectStore *store, const ObjectTag& tag, const QByteArra
   if (in_provider) {
     // provider overrides filename
     in_file = in_provider;
-  }
-
-  if (in_file) {
-    // use datasource as tag context for this RVector
-    // allow unique vector names to be displayed at top-level
-    setTagName(ObjectTag(this->tag().name(), in_file->tag(), false));
   }
 
   if (o_n > -2) {
@@ -189,7 +183,7 @@ void DataVector::commonRVConstructor(DataSourcePtr in_file,
   _dirty = true;
 
   if (!in_file) {
-    Debug::self()->log(i18n("Data file for vector %1 was not opened.", tag().tagString()), Debug::Warning);
+    Debug::self()->log(i18n("Data file for vector %1 was not opened.", Name()), Debug::Warning);
   } else {
     connect(in_file, SIGNAL(sourceUpdated(ObjectPtr)), this, SLOT(sourceUpdated(ObjectPtr)));
   }
@@ -255,13 +249,12 @@ void DataVector::changeFile(DataSourcePtr in_file) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (!in_file) {
-    Debug::self()->log(i18n("Data file for vector %1 was not opened.", tag().tagString()), Debug::Warning);
+    Debug::self()->log(i18n("Data file for vector %1 was not opened.", Name()), Debug::Warning);
   }
   _file = in_file;
   if (_file) {
     _file->writeLock();
   }
-  setTagName(ObjectTag(tag().name(), _file->tag(), false));
   reset();
   if (_file) {
     _file->unlock();
@@ -372,9 +365,8 @@ int DataVector::reqStartFrame() const {
 void DataVector::save(QXmlStreamWriter &s) {
   if (_file) {
     s.writeStartElement("datavector");
-    s.writeAttribute("tag", tag().tagString());
     _file->readLock();
-    s.writeAttribute("provider", _file->tag().tagString());
+    s.writeAttribute("provider", _file->Name());
     s.writeAttribute("file", _file->fileName());
     _file->unlock();
     s.writeAttribute("field", _field);
@@ -780,14 +772,16 @@ DataSourcePtr DataVector::dataSource() const {
   return _file;
 }
 
-
 DataVectorPtr DataVector::makeDuplicate() const {
   Q_ASSERT(store());
-  QString newTag = tag().name() + "'";
-  DataVectorPtr vector = store()->createObject<DataVector>(ObjectTag::fromString(newTag));
+  DataVectorPtr vector = store()->createObject<DataVector>();
 
   vector->writeLock();
   vector->change(_file, _field, ReqF0, ReqNF, Skip, DoSkip, DoAve);
+  if (descriptiveNameIsManual()) {
+    vector->setDescriptiveName(descriptiveName());
+  }
+
   vector->update();
   vector->unlock();
 

@@ -226,9 +226,9 @@ EquationDialog::~EquationDialog() {
 }
 
 
-QString EquationDialog::tagString() const {
-  return DataDialog::tagString();
-}
+// QString EquationDialog::tagString() const {
+//   return DataDialog::tagString();
+// }
 
 
 void EquationDialog::editMultipleMode() {
@@ -258,7 +258,7 @@ void EquationDialog::configureTab(ObjectPtr object) {
       QStringList objectList;
       EquationList objects = _document->objectStore()->getObjects<Equation>();
       foreach(EquationPtr object, objects) {
-        objectList.append(object->tag().displayString());
+        objectList.append(object->Name());
       }
       _editMultipleWidget->addObjects(objectList);
     }
@@ -269,7 +269,7 @@ void EquationDialog::configureTab(ObjectPtr object) {
 ObjectPtr EquationDialog::createNewDataObject() const {
   Q_ASSERT(_document && _document->objectStore());
 
-  EquationPtr equation = _document->objectStore()->createObject<Equation>(ObjectTag::fromString(tagString()));
+  EquationPtr equation = _document->objectStore()->createObject<Equation>();
   Q_ASSERT(equation);
 
   equation->setEquation(_equationTab->equation());
@@ -283,7 +283,7 @@ ObjectPtr EquationDialog::createNewDataObject() const {
   //FIXME this should be a command...
   //FIXME need some smart placement...
 
-  CurvePtr curve = _document->objectStore()->createObject<Curve>(suggestCurveName(equation->tag(), true));
+  CurvePtr curve = _document->objectStore()->createObject<Curve>();
   Q_ASSERT(curve);
 
   curve->setXVector(equation->vX());
@@ -339,8 +339,8 @@ ObjectPtr EquationDialog::editExistingDataObject() const {
   if (EquationPtr equation = kst_cast<Equation>(dataObject())) {
     if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectTag, objects) {
-        EquationPtr equation = kst_cast<Equation>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));
+      foreach (QString objectName, objects) {
+        EquationPtr equation = kst_cast<Equation>(_document->objectStore()->retrieveObject(objectName));
         if (equation) {
           VectorPtr xVector = _equationTab->xVectorDirty() ? _equationTab->xVector() : equation->vXIn();
           const QString equationString = _equationTab->equationDirty() ? _equationTab->equation() : equation->equation();

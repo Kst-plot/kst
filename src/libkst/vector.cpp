@@ -46,8 +46,8 @@ const QString Vector::staticTypeString = I18N_NOOP("Vector");
 const QString Vector::staticTypeTag = I18N_NOOP("vector");
 
 /** Create a vector */
-Vector::Vector(ObjectStore *store, const ObjectTag& tag, int size, Object *provider, bool isScalarList)
-    : Primitive(store, tag, provider), _nsum(0) {
+Vector::Vector(ObjectStore *store, int size, Object *provider, bool isScalarList)
+    : Primitive(store, provider), _nsum(0) {
   //qDebug() << "+++ CREATING VECTOR: " << (void*) this;
 
   _editable = false;
@@ -81,8 +81,8 @@ Vector::Vector(ObjectStore *store, const ObjectTag& tag, int size, Object *provi
 }
 
 
-Vector::Vector(ObjectStore *store, const ObjectTag& tag, const QByteArray& data)
-    : Primitive(store, tag), _nsum(0) {
+Vector::Vector(ObjectStore *store, const QByteArray& data)
+    : Primitive(store), _nsum(0) {
   _v = 0L;
   _size = 0;
   int sz = INITSIZE;
@@ -285,47 +285,47 @@ void Vector::CreateScalars(ObjectStore *store) {
 
     Q_ASSERT(store);
     ScalarPtr sp;
-    _scalars.insert("max", sp = store->createObject<Scalar>(ObjectTag("Max", tag())));
+    _scalars.insert("max", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("Max");
     sp->_KShared_ref();
-    _scalars.insert("min", sp = store->createObject<Scalar>(ObjectTag("Min", tag())));
+    _scalars.insert("min", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("Min");
     sp->_KShared_ref();
-    _scalars.insert("last", sp = store->createObject<Scalar>(ObjectTag("Last", tag())));
+    _scalars.insert("last", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("Last");
     sp->_KShared_ref();
-    _scalars.insert("first", sp = store->createObject<Scalar>(ObjectTag("First", tag())));
+    _scalars.insert("first", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("First");
     sp->_KShared_ref();
-    _scalars.insert("mean", sp = store->createObject<Scalar>(ObjectTag("Mean", tag())));
+    _scalars.insert("mean", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("Mean");
     sp->_KShared_ref();
-    _scalars.insert("sigma", sp = store->createObject<Scalar>(ObjectTag("Sigma", tag())));
+    _scalars.insert("sigma", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("Sigma");
     sp->_KShared_ref();
-    _scalars.insert("rms", sp = store->createObject<Scalar>(ObjectTag("Rms", tag())));
+    _scalars.insert("rms", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("Rms");
     sp->_KShared_ref();
-    _scalars.insert("ns", sp = store->createObject<Scalar>(ObjectTag("NS", tag())));
+    _scalars.insert("ns", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("NS");
     sp->_KShared_ref();
-    _scalars.insert("sum", sp = store->createObject<Scalar>(ObjectTag("Sum", tag())));
+    _scalars.insert("sum", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("Sum");
     sp->_KShared_ref();
-    _scalars.insert("sumsquared", sp = store->createObject<Scalar>(ObjectTag("SumSquared", tag())));
+    _scalars.insert("sumsquared", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("SumSquared");
     sp->_KShared_ref();
-    _scalars.insert("minpos", sp = store->createObject<Scalar>(ObjectTag("MinPos", tag())));
+    _scalars.insert("minpos", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("MinPos");
     sp->_KShared_ref();
@@ -568,7 +568,6 @@ void Vector::save(QXmlStreamWriter &s) {
     return;
   }
   s.writeStartElement("vector");
-  s.writeAttribute("tag", tag().tagString());
   if (_saveData) {
     QByteArray qba(length()*sizeof(double), '\0');
     QDataStream qds(&qba, QIODevice::WriteOnly);
@@ -607,47 +606,6 @@ double *const Vector::value() const {
 void Vector::newSync() {
   NumNew = NumShifted = 0;
 }
-
-
-#if 0
-VectorPtr Vector::generateVector(ObjectStore *store, double x0, double x1, int n, const ObjectTag& tag) {
-  if (n < 2) {
-    n = 2;
-  }
-
-  if (x0 > x1) {
-    double tx;
-    tx = x0;
-    x0 = x1;
-    x1 = tx;
-  }
-
-  if (x0 == x1) {
-    x1 = x0 + 0.1;
-  }
-
-  QString t = tag.name();
-  if (t.isEmpty()) {
-    t = suggestVectorName("X(" + QString::number(x0) + ".." + QString::number(x1) + ")");
-  }
-
-  Q_ASSERT(store);
-  VectorPtr xv = kst_cast<Vector>(store->createObject<Vector>(ObjectTag(t, tag.context())));
-  xv->resize(n);
-  xv->_saveable = false;
-
-  for (int i = 0; i < n; i++) {
-    xv->value()[i] = x0 + double(i) * (x1 - x0) / (n - 1);
-  }
-
-  xv->_scalars["min"]->setValue(x0);
-  xv->_scalars["max"]->setValue(x1);
-  xv->updateScalars();
-
-  return xv;
-}
-#endif
-
 
 void Vector::setLabel(const QString& label_in) {
   _label = label_in;

@@ -99,7 +99,7 @@ void ScalarSelector::fillScalars() {
     ScalarPtr scalar = (*it);
 
     scalar->readLock();
-    scalars.insert(scalar->tag().displayString(), scalar);
+    scalars.insert(scalar->Name(), scalar);
     scalar->unlock();
   }
 

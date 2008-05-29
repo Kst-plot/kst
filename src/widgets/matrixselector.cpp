@@ -110,7 +110,7 @@ void MatrixSelector::fillMatrices() {
     MatrixPtr matrix = (*it);
 
     matrix->readLock();
-    matrices.insert(matrix->tag().displayString(), matrix);
+    matrices.insert(matrix->Name(), matrix);
     matrix->unlock();
   }
 

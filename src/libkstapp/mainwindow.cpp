@@ -435,13 +435,13 @@ void MainWindow::breakLayout() {
 
 void MainWindow::demoModel() {
   Q_ASSERT(document() && document()->objectStore());
-  VectorPtr v = kst_cast<Vector>(document()->objectStore()->createObject<Vector>(ObjectTag::fromString("V1")));
+  VectorPtr v = kst_cast<Vector>(document()->objectStore()->createObject<Vector>());
   Q_ASSERT(v);
   v->resize(999999);
-  VectorPtr v2 = kst_cast<Vector>(document()->objectStore()->createObject<Vector>(ObjectTag::fromString("V2")));
+  VectorPtr v2 = kst_cast<Vector>(document()->objectStore()->createObject<Vector>());
   Q_ASSERT(v2);
   v2->resize(999999);
-  EditableVectorPtr v3 = kst_cast<EditableVector>(document()->objectStore()->createObject<EditableVector>(ObjectTag::fromString("Editable V")));
+  EditableVectorPtr v3 = kst_cast<EditableVector>(document()->objectStore()->createObject<EditableVector>());
   Q_ASSERT(v3);
   v3->resize(25);
   double *d = const_cast<double *>(v->value()); // yay :)
@@ -452,10 +452,10 @@ void MainWindow::demoModel() {
     d[i] = d[i-1] + 0.002;
     d2[i] = d2[i-1] + 0.003;
   }
-  GeneratedVectorPtr gv = kst_cast<GeneratedVector>(document()->objectStore()->createObject<GeneratedVector>(ObjectTag::fromString("Generated V")));
+  GeneratedVectorPtr gv = kst_cast<GeneratedVector>(document()->objectStore()->createObject<GeneratedVector>());
   Q_ASSERT(gv);
   gv->changeRange(0, 100, 1000);
-  EquationPtr ep = kst_cast<Equation>(document()->objectStore()->createObject<Equation>(ObjectTag::fromString("My Equation")));
+  EquationPtr ep = kst_cast<Equation>(document()->objectStore()->createObject<Equation>());
   Q_ASSERT(ep);
   ep->setExistingXVector(VectorPtr(gv), false);
   ep->setEquation("x^2");

@@ -80,7 +80,7 @@ void TestDataSource::testAscii() {
     QVERIFY(dsp->fieldListIsComplete());
     QVERIFY(!dsp->isEmpty());
 
-    Kst::DataVectorPtr rvp = new Kst::DataVector(&_store, Kst::ObjectTag::fromString("RVTestAscii1"), dsp, "1", 0, -1, 0, false, false);
+    Kst::DataVectorPtr rvp = new Kst::DataVector(&_store, dsp, "1", 0, -1, 0, false, false);
     rvp->writeLock();
     rvp->update();
     rvp->unlock();
@@ -89,7 +89,7 @@ void TestDataSource::testAscii() {
     QCOMPARE(rvp->value()[0], 2.0);
     QCOMPARE(rvp->value()[1], 1.0);
     QCOMPARE(rvp->value()[2], 0.2);
-    rvp = new Kst::DataVector(&_store, Kst::ObjectTag::fromString("RVTestAscii2"), dsp, "INDEX", 0, -1, 0, false, false);
+    rvp = new Kst::DataVector(&_store, dsp, "INDEX", 0, -1, 0, false, false);
     rvp->writeLock();
     rvp->update();
     rvp->unlock();
@@ -133,7 +133,7 @@ void TestDataSource::testAscii() {
     QCOMPARE(dsp->fieldList().count(), 3);
     QVERIFY(!dsp->isEmpty());
 
-    Kst::DataVectorPtr rvp = new Kst::DataVector(&_store, Kst::ObjectTag::fromString("RVTestAscii1"), dsp, "1", 0, -1, 0, false, false);
+    Kst::DataVectorPtr rvp = new Kst::DataVector(&_store, dsp, "1", 0, -1, 0, false, false);
     rvp->writeLock();
     rvp->update();
     rvp->unlock();
@@ -145,7 +145,7 @@ void TestDataSource::testAscii() {
     QVERIFY(rvp->value()[2] == INF);
 
     QCOMPARE(rvp->value()[3], 0.0);
-    rvp = new Kst::DataVector(&_store, Kst::ObjectTag::fromString("RVTestAscii2"), dsp, "2", 0, -1, 0, false, false);
+    rvp = new Kst::DataVector(&_store, dsp, "2", 0, -1, 0, false, false);
     rvp->writeLock();
     rvp->update();
     rvp->unlock();
@@ -187,14 +187,14 @@ void TestDataSource::testAscii() {
     QCOMPARE(dsp->fieldList().count(), 3);
     QVERIFY(!dsp->isEmpty());
 
-    Kst::DataVectorPtr rvp = new Kst::DataVector(&_store, Kst::ObjectTag::fromString("RVTestAscii1"), dsp, "1", 0, -1, 0, false, false);
+    Kst::DataVectorPtr rvp = new Kst::DataVector(&_store, dsp, "1", 0, -1, 0, false, false);
     rvp->writeLock();
     rvp->update();
     rvp->unlock();
     QVERIFY(rvp->isValid());
     QCOMPARE(rvp->length(), 1); // Are we allowed to have vectors of 1?
     QCOMPARE(rvp->value()[0], 2.0);
-    rvp = new Kst::DataVector(&_store, Kst::ObjectTag::fromString("RVTestAscii2"), dsp, "2", 0, -1, 0, false, false);
+    rvp = new Kst::DataVector(&_store, dsp, "2", 0, -1, 0, false, false);
     rvp->writeLock();
     rvp->update();
     rvp->unlock();
@@ -242,13 +242,13 @@ void TestDataSource::testAscii() {
     QCOMPARE(dsp->fieldList().count(), 4);
     QVERIFY(!dsp->isEmpty());
 
-    Kst::DataVectorPtr rvp = new Kst::DataVector(&_store, Kst::ObjectTag::fromString("RVTestAscii1"), dsp, "1", 0, -1, 0, false, false);
+    Kst::DataVectorPtr rvp = new Kst::DataVector(&_store, dsp, "1", 0, -1, 0, false, false);
     rvp->writeLock();
     rvp->update();
     rvp->unlock();
     QVERIFY(rvp->isValid());
     QCOMPARE(rvp->length(), 39000);
-    rvp = new Kst::DataVector(&_store, Kst::ObjectTag::fromString("RVTestAscii2"), dsp, "2", 0, -1, 10, true, false);
+    rvp = new Kst::DataVector(&_store, dsp, "2", 0, -1, 10, true, false);
     rvp->writeLock();
     rvp->update();
     rvp->unlock();
@@ -259,7 +259,7 @@ void TestDataSource::testAscii() {
     QCOMPARE(rvp->value()[2], 120.0);
     QCOMPARE(rvp->value()[3898], 39080.0);
 
-    rvp = new Kst::DataVector(&_store, Kst::ObjectTag::fromString("RVTestAscii3"), dsp, "3", 0, -1, 10, true, true);
+    rvp = new Kst::DataVector(&_store, dsp, "3", 0, -1, 10, true, true);
     rvp->writeLock();
     rvp->update();
     rvp->unlock();
@@ -324,7 +324,7 @@ void TestDataSource::testDirfile() {
 
   {
     //Skip FIVE frames...
-    Kst::DataVectorPtr rvp = new Kst::DataVector(&_store, Kst::ObjectTag::fromString("RVTestDirfile"), dsp, "INDEX", 0, -1, 5, true, false);
+    Kst::DataVectorPtr rvp = new Kst::DataVector(&_store, dsp, "INDEX", 0, -1, 5, true, false);
     rvp->writeLock();
     rvp->update();
     rvp->unlock();
@@ -352,7 +352,7 @@ void TestDataSource::testDirfile() {
   }
   {
     //Skip FIVE frames...
-    Kst::DataVectorPtr rvp = new Kst::DataVector(&_store, Kst::ObjectTag::fromString("RVTestDirfile"), dsp, "INDEX", 3, -1, 5, true, false);
+    Kst::DataVectorPtr rvp = new Kst::DataVector(&_store, dsp, "INDEX", 3, -1, 5, true, false);
     rvp->writeLock();
     rvp->update();
     rvp->unlock();
@@ -379,7 +379,7 @@ void TestDataSource::testDirfile() {
   }
   {
     //Skip FIVE frames...
-    Kst::DataVectorPtr rvp = new Kst::DataVector(&_store, Kst::ObjectTag::fromString("RVTestDirfile"), dsp, "INDEX", 0, 11, 5, true, false);
+    Kst::DataVectorPtr rvp = new Kst::DataVector(&_store, dsp, "INDEX", 0, 11, 5, true, false);
     rvp->writeLock();
     rvp->update();
     rvp->unlock();
@@ -406,7 +406,7 @@ void TestDataSource::testDirfile() {
   }
   {
     //Skip FIVE frames and countFromEOF()...
-    Kst::DataVectorPtr rvp = new Kst::DataVector(&_store, Kst::ObjectTag::fromString("RVTestDirfile"), dsp, "INDEX", -1, 10, 5, true, false);
+    Kst::DataVectorPtr rvp = new Kst::DataVector(&_store, dsp, "INDEX", -1, 10, 5, true, false);
     rvp->writeLock();
     rvp->update();
     rvp->unlock();

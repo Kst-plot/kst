@@ -284,9 +284,9 @@ class DataSourceList : public QList<DataSourcePtr> {
     DataSourceList(const DataSourceList& x) : QList<DataSourcePtr>(x) {}
     virtual ~DataSourceList() {}
 
-    virtual DataSourcePtr findTag(const ObjectTag& tag) {
+    virtual DataSourcePtr findName(const QString name) {
       for (DataSourceList::Iterator it = begin(); it != end(); ++it) {
-        if ((*it)->tag() == tag) {
+        if ((*it)->Name() == name) {
           return *it;
         }
       }

@@ -68,7 +68,6 @@ void TestScalar::cleanupTestCase() {
 
 void TestScalar::testScalar() {
   Kst::ScalarPtr sp = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>());
-  QVERIFY(sp->tag().isValid());
   QCOMPARE(sp->value(), 0.0);
   *sp = 3.1415;
   QVERIFY(sp->displayable());
@@ -91,7 +90,7 @@ void TestScalar::testScalar() {
   *sp = 1.1415;
   QCOMPARE(listener->_trigger, 2);
 
-  Kst::ScalarPtr sp2 = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>(sp->tag()));
+  Kst::ScalarPtr sp2 = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>());
 
   QVERIFY(sp->displayable());
   QVERIFY(sp2->displayable());

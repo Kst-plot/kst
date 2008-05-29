@@ -92,7 +92,7 @@ class KST_EXPORT VectorDialog : public DataDialog {
     virtual ~VectorDialog();
 
   protected:
-    virtual QString tagString() const;
+//     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject() const;
     virtual ObjectPtr editExistingDataObject() const;
 

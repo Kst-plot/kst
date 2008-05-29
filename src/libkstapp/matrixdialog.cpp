@@ -585,9 +585,9 @@ MatrixDialog::~MatrixDialog() {
 }
 
 
-QString MatrixDialog::tagString() const {
-  return DataDialog::tagString();
-}
+// QString MatrixDialog::tagString() const {
+//   return DataDialog::tagString();
+// }
 
 
 void MatrixDialog::configureTab(ObjectPtr matrix) {
@@ -635,7 +635,7 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
       QStringList objectList;
       DataMatrixList objects = _document->objectStore()->getObjects<DataMatrix>();
       foreach(DataMatrixPtr object, objects) {
-        objectList.append(object->tag().displayString());
+        objectList.append(object->Name());
       }
       _editMultipleWidget->addObjects(objectList);
     }
@@ -655,7 +655,7 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
       QStringList objectList;
       GeneratedMatrixList objects = _document->objectStore()->getObjects<GeneratedMatrix>();
       foreach(GeneratedMatrixPtr object, objects) {
-        objectList.append(object->tag().displayString());
+        objectList.append(object->Name());
       }
       _editMultipleWidget->addObjects(objectList);
     }
@@ -700,7 +700,6 @@ ObjectPtr MatrixDialog::createNewDataMatrix() const {
     return 0;
 
   const QString field = _matrixTab->field();
-  const ObjectTag tag = ObjectTag(tagString(), dataSource->tag(), false);
   const int skip = _matrixTab->skip();
   const bool doAverage = _matrixTab->doAverage();
   const bool doSkip = _matrixTab->doSkip();
@@ -728,7 +727,7 @@ ObjectPtr MatrixDialog::createNewDataMatrix() const {
 //            << endl;
 
   Q_ASSERT(_document && _document->objectStore());
-  DataMatrixPtr matrix = _document->objectStore()->createObject<DataMatrix>(tag);
+  DataMatrixPtr matrix = _document->objectStore()->createObject<DataMatrix>();
   matrix->change(dataSource, field,
       xStart, yStart,
       xNumSteps, yNumSteps, doAverage,
@@ -764,7 +763,6 @@ ObjectPtr MatrixDialog::createNewGeneratedMatrix() const {
   const double gradZMin = _matrixTab->gradientZAtMin();
   const double gradZMax = _matrixTab->gradientZAtMax();
   const bool xDirection =  _matrixTab->xDirection();
-  const ObjectTag tag = ObjectTag(tagString(), ObjectTag::globalTagContext);
 
 //    qDebug() << "Creating new generated matrix ===>"
 //             << "\n\ttag:" << tag.tag()
@@ -780,13 +778,9 @@ ObjectPtr MatrixDialog::createNewGeneratedMatrix() const {
 //             << endl;
 
   Q_ASSERT(_document && _document->objectStore());
-  GeneratedMatrixPtr matrix = _document->objectStore()->createObject<GeneratedMatrix>(tag);
+  GeneratedMatrixPtr matrix = _document->objectStore()->createObject<GeneratedMatrix>();
   matrix->change(nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
   matrix->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
-
-#if 0
-  GeneratedMatrixPtr matrix = new GeneratedMatrix(tag, nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
-#endif
 
   matrix->writeLock();
   matrix->update();
@@ -800,8 +794,8 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
   if (DataMatrixPtr dataMatrix = kst_cast<DataMatrix>(dataObject())) {
     if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectTag, objects) {
-        DataMatrixPtr matrix = kst_cast<DataMatrix>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));
+      foreach (QString objectName, objects) {
+        DataMatrixPtr matrix = kst_cast<DataMatrix>(_document->objectStore()->retrieveObject(objectName));
         if (matrix) {
           const int skip = _matrixTab->skipDirty() ? _matrixTab->skip() : matrix->skip();
           int xStart = _matrixTab->xStartDirty() ? _matrixTab->xStart() : matrix->reqXStart();
@@ -861,8 +855,8 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
   } else if (GeneratedMatrixPtr generatedMatrix = kst_cast<GeneratedMatrix>(dataObject())) {
     if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectTag, objects) {
-        GeneratedMatrixPtr matrix = kst_cast<GeneratedMatrix>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));
+      foreach (QString objectName, objects) {
+        GeneratedMatrixPtr matrix = kst_cast<GeneratedMatrix>(_document->objectStore()->retrieveObject(objectName));
         if (matrix) {
           const uint nX = _matrixTab->nXDirty() ? _matrixTab->nX() : matrix->xNumSteps();
           const uint nY = _matrixTab->nYDirty() ? _matrixTab->nY() : matrix->yNumSteps();

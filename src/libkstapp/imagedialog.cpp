@@ -352,9 +352,9 @@ ImageDialog::~ImageDialog() {
 }
 
 
-QString ImageDialog::tagString() const {
-  return DataDialog::tagString();
-}
+// QString ImageDialog::tagString() const {
+//   return DataDialog::tagString();
+// }
 
 
 void ImageDialog::editMultipleMode() {
@@ -411,7 +411,7 @@ void ImageDialog::configureTab(ObjectPtr object) {
       QStringList objectList;
       ImageList objects = _document->objectStore()->getObjects<Image>();
       foreach(ImagePtr object, objects) {
-        objectList.append(object->tag().displayString());
+        objectList.append(object->Name());
       }
       _editMultipleWidget->addObjects(objectList);
     }
@@ -422,8 +422,7 @@ void ImageDialog::configureTab(ObjectPtr object) {
 ObjectPtr ImageDialog::createNewDataObject() const {
 
   Q_ASSERT(_document && _document->objectStore());
-  ObjectTag tag = _document->objectStore()->suggestObjectTag<Image>(tagString(), ObjectTag::globalTagContext);
-  ImagePtr image = _document->objectStore()->createObject<Image>(tag);
+  ImagePtr image = _document->objectStore()->createObject<Image>();
 
   if (_imageTab->colorOnly()) {
     image->changeToColorOnly(_imageTab->matrix(),
@@ -487,8 +486,8 @@ ObjectPtr ImageDialog::editExistingDataObject() const {
   if (ImagePtr image = kst_cast<Image>(dataObject())) {
     if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectTag, objects) {
-        ImagePtr image = kst_cast<Image>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));
+      foreach (QString objectName, objects) {
+        ImagePtr image = kst_cast<Image>(_document->objectStore()->retrieveObject(objectName));
         if (image) {
           MatrixPtr matrix = _imageTab->matrixDirty() ? _imageTab->matrix() : image->matrix();
           const double lowerThreshold = _imageTab->lowerThresholdDirty() ? _imageTab->lowerThreshold() : image->lowerThreshold();

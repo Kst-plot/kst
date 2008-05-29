@@ -33,96 +33,96 @@ namespace Kst {
 const QString DataMatrix::staticTypeString = I18N_NOOP("Data Matrix");
 const QString DataMatrix::staticTypeTag = I18N_NOOP("datamatrix");
 
-DataMatrix::DataMatrix(ObjectStore *store, const ObjectTag& tag)
-  : Matrix(store, tag) {
+DataMatrix::DataMatrix(ObjectStore *store)
+  : Matrix(store) {
 }
 
-DataMatrix::DataMatrix(ObjectStore *store, DataSourcePtr file, const QString& field, const ObjectTag& tag,
+DataMatrix::DataMatrix(ObjectStore *store, DataSourcePtr file, const QString& field,
                        int xStart, int yStart,
                        int xNumSteps, int yNumSteps,
                        bool doAve, bool doSkip, int skip,
                        double minX, double minY, double stepX, double stepY)
-    : Matrix(store, tag, 0L, 1, 1, 0,0,1,1) {
+    : Matrix(store, 0L, 1, 1, 0,0,1,1) {
   commonConstructor(file, field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, minX, minY, stepX, stepY);
 }
 
 
-DataMatrix::DataMatrix(ObjectStore *store, const QDomElement &e)
-    : Matrix(store, ObjectTag::invalidTag, 0L, 1,1,0,0,1,1) {
-  DataSourcePtr in_file = 0L, in_provider = 0L;
-  QString in_field;
-  QString in_tag;
-  int in_xStart = 0;
-  int in_yStart = 0;
-  int in_xNumSteps = 0;
-  int in_yNumSteps = 1;
-  bool in_doAve = false;
-  bool in_doSkip = false;
-  int in_skip = 1;
-  double in_xMin = 0;
-  double in_yMin = 0;
-  double in_xStep = 1;
-  double in_yStep = 1;
-
-  DataSourceList dsList;
-  if (this->store()) {
-    dsList = this->store()->dataSourceList();
-  }
-
-  /* parse the DOM tree */
-  QDomNode n = e.firstChild();
-  while (!n.isNull()) {
-    QDomElement e = n.toElement();
-    if (!e.isNull()) {
-      if (e.tagName() == "tag") {
-        in_tag = e.text();
-      } else if (e.tagName() == "file") {
-        in_file = dsList.findFileName(e.text());
-      } else if (e.tagName() == "provider") {
-        in_provider = dsList.findTag(ObjectTag::fromString(e.text()));
-      } else if (e.tagName() == "field") {
-        in_field = e.text();
-      } else if (e.tagName() == "reqxstart") {
-        in_xStart = e.text().toInt();
-      } else if (e.tagName() == "reqystart") {
-        in_yStart = e.text().toInt();
-      } else if (e.tagName() == "reqnx") {
-        in_xNumSteps = e.text().toInt();
-      } else if (e.tagName() == "reqny") {
-        in_yNumSteps = e.text().toInt();
-      } else if (e.tagName() == "doave") {
-        in_doAve = (e.text() != "0");
-      } else if (e.tagName() == "doskip") {
-        in_doSkip = (e.text() != "0");
-      } else if (e.tagName() == "skip") {
-        in_skip = e.text().toInt();
-      } else if (e.tagName() == "xmin") {
-        in_xMin = e.text().toDouble();
-      } else if (e.tagName() == "ymin") {
-        in_yMin = e.text().toDouble();
-      } else if (e.tagName() == "xstep") {
-        in_xStep = e.text().toDouble();
-      } else if (e.tagName() == "ystep") {
-        in_yStep = e.text().toDouble();
-      }
-    }
-    n = n.nextSibling();
-  }
-
-  if (in_provider) {
-    // provider overrides filename
-    in_file = in_provider;
-  }
-
-  ObjectTag tag = ObjectTag::fromString(in_tag);
-  if (in_file) {
-    tag.setContext(in_file->tag().fullTag());
-  }
-  setTagName(tag);
-
-  // call common constructor
-  commonConstructor(in_file, in_field, in_xStart, in_yStart, in_xNumSteps, in_yNumSteps, in_doAve, in_doSkip, in_skip, in_xMin, in_yMin, in_xStep, in_yStep);
-}
+// DataMatrix::DataMatrix(ObjectStore *store, const QDomElement &e)
+//     : Matrix(store, ObjectTag::invalidTag, 0L, 1,1,0,0,1,1) {
+//   DataSourcePtr in_file = 0L, in_provider = 0L;
+//   QString in_field;
+//   QString in_tag;
+//   int in_xStart = 0;
+//   int in_yStart = 0;
+//   int in_xNumSteps = 0;
+//   int in_yNumSteps = 1;
+//   bool in_doAve = false;
+//   bool in_doSkip = false;
+//   int in_skip = 1;
+//   double in_xMin = 0;
+//   double in_yMin = 0;
+//   double in_xStep = 1;
+//   double in_yStep = 1;
+// 
+//   DataSourceList dsList;
+//   if (this->store()) {
+//     dsList = this->store()->dataSourceList();
+//   }
+// 
+//   /* parse the DOM tree */
+//   QDomNode n = e.firstChild();
+//   while (!n.isNull()) {
+//     QDomElement e = n.toElement();
+//     if (!e.isNull()) {
+//       if (e.tagName() == "tag") {
+//         in_tag = e.text();
+//       } else if (e.tagName() == "file") {
+//         in_file = dsList.findFileName(e.text());
+//       } else if (e.tagName() == "provider") {
+//         in_provider = dsList.findName(e.text());
+//       } else if (e.tagName() == "field") {
+//         in_field = e.text();
+//       } else if (e.tagName() == "reqxstart") {
+//         in_xStart = e.text().toInt();
+//       } else if (e.tagName() == "reqystart") {
+//         in_yStart = e.text().toInt();
+//       } else if (e.tagName() == "reqnx") {
+//         in_xNumSteps = e.text().toInt();
+//       } else if (e.tagName() == "reqny") {
+//         in_yNumSteps = e.text().toInt();
+//       } else if (e.tagName() == "doave") {
+//         in_doAve = (e.text() != "0");
+//       } else if (e.tagName() == "doskip") {
+//         in_doSkip = (e.text() != "0");
+//       } else if (e.tagName() == "skip") {
+//         in_skip = e.text().toInt();
+//       } else if (e.tagName() == "xmin") {
+//         in_xMin = e.text().toDouble();
+//       } else if (e.tagName() == "ymin") {
+//         in_yMin = e.text().toDouble();
+//       } else if (e.tagName() == "xstep") {
+//         in_xStep = e.text().toDouble();
+//       } else if (e.tagName() == "ystep") {
+//         in_yStep = e.text().toDouble();
+//       }
+//     }
+//     n = n.nextSibling();
+//   }
+// 
+//   if (in_provider) {
+//     // provider overrides filename
+//     in_file = in_provider;
+//   }
+// 
+//   ObjectTag tag = ObjectTag::fromString(in_tag);
+//   if (in_file) {
+//     tag.setContext(in_file->tag().fullTag());
+//   }
+//   setTagName(tag);
+// 
+//   // call common constructor
+//   commonConstructor(in_file, in_field, in_xStart, in_yStart, in_xNumSteps, in_yNumSteps, in_doAve, in_doSkip, in_skip, in_xMin, in_yMin, in_xStep, in_yStep);
+// }
 
 
 const QString& DataMatrix::typeString() const {
@@ -133,10 +133,9 @@ const QString& DataMatrix::typeString() const {
 void DataMatrix::save(QXmlStreamWriter &xml) {
   if (_file) {
     xml.writeStartElement(staticTypeTag);
-    xml.writeAttribute("tag", tag().tagString());
 
     _file->readLock();
-    xml.writeAttribute("provider", _file->tag().tagString());
+    xml.writeAttribute("provider", _file->Name());
     xml.writeAttribute("file", _file->fileName());
     _file->unlock();
 
@@ -553,11 +552,13 @@ void DataMatrix::reload() {
 
 DataMatrixPtr DataMatrix::makeDuplicate() const {
   Q_ASSERT(store());
-  QString newTag = tag().name() + "'";
-  DataMatrixPtr matrix = store()->createObject<DataMatrix>(ObjectTag::fromString(newTag));
+  DataMatrixPtr matrix = store()->createObject<DataMatrix>();
 
   matrix->writeLock();
   matrix->change(_file, _field, _reqXStart, _reqYStart, _reqNX, _reqNY, _doAve, _doSkip, _skip, _minX, _minY, _stepX, _stepY);
+  if (descriptiveNameIsManual()) {
+    matrix->setDescriptiveName(descriptiveName());
+  }
   matrix->update();
   matrix->unlock();
 
@@ -643,7 +644,7 @@ void DataMatrix::changeFile(DataSourcePtr file) {
   if (_file) {
     _file->writeLock();
   }
-  setTagName(ObjectTag(tag().name(), _file->tag(), false));
+//   setTagName(ObjectTag(tag().name(), _file->tag(), false));
   reset();
   if (_file) {
     _file->unlock();

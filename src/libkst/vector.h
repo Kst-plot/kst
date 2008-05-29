@@ -56,10 +56,10 @@ class Vector : public Primitive {
     static const QString staticTypeTag;
 
   protected:
-    Vector(ObjectStore *store, const ObjectTag& tag = ObjectTag::invalidTag, int size = 0,
+    Vector(ObjectStore *store, int size = 0,
         Object *provider = 0L, bool bIsScalarList = false);
     // TODO: do we need this constructor?
-    Vector(ObjectStore *store, const ObjectTag& tag, const QByteArray& data);
+    Vector(ObjectStore *store, const QByteArray& data);
 
     virtual ~Vector();
 
@@ -132,10 +132,6 @@ class Vector : public Primitive {
 
     /** Save vector information */
     virtual void save(QXmlStreamWriter &s);
-
-    /** Generate a new vector [x0..x1] with n total points */
-    // #### Remove
-//    static VectorPtr generateVector(ObjectStore *store, double x0, double x1, int n, const ObjectTag& tag);
 
     /** Return a pointer to the raw vector */
     double *const value() const;

@@ -36,8 +36,8 @@ class EditableVector : public Vector {
     void setSaveData(bool save);
 
   protected:
-    KST_EXPORT EditableVector(ObjectStore *store, const ObjectTag& tag, const QByteArray& data);
-    KST_EXPORT EditableVector(ObjectStore *store, const ObjectTag& tag, int n=0);
+    KST_EXPORT EditableVector(ObjectStore *store, const QByteArray& data);
+    KST_EXPORT EditableVector(ObjectStore *store, int n=0);
 
     friend class EditableVectorFactory;
     friend class ObjectStore; // FIXME: remove this when factory works

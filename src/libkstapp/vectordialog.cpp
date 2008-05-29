@@ -259,26 +259,26 @@ VectorDialog::~VectorDialog() {
 }
 
 
-QString VectorDialog::tagString() const {
-  switch(_vectorTab->vectorMode()) {
-  case VectorTab::DataVector:
-    {
-      QString tagString = DataDialog::tagString();
-      tagString.replace(defaultTagString(), _vectorTab->field());
-      return tagString;
-    }
-  case VectorTab::GeneratedVector:
-    {
-      if (DataDialog::tagString() == defaultTagString()) {
-        const qreal from = _vectorTab->from();
-        const qreal to = _vectorTab->to();
-        return QString("(%1..%2)").arg(from).arg(to);
-      }
-    }
-  default:
-    return DataDialog::tagString();
-  }
-}
+// QString VectorDialog::tagString() const {
+//   switch(_vectorTab->vectorMode()) {
+//   case VectorTab::DataVector:
+//     {
+//       QString tagString = DataDialog::tagString();
+//       tagString.replace(defaultTagString(), _vectorTab->field());
+//       return tagString;
+//     }
+//   case VectorTab::GeneratedVector:
+//     {
+//       if (DataDialog::tagString() == defaultTagString()) {
+//         const qreal from = _vectorTab->from();
+//         const qreal to = _vectorTab->to();
+//         return QString("(%1..%2)").arg(from).arg(to);
+//       }
+//     }
+//   default:
+//     return DataDialog::tagString();
+//   }
+// }
 
 
 void VectorDialog::editMultipleMode() {
@@ -322,7 +322,7 @@ void VectorDialog::configureTab(ObjectPtr vector) {
       QStringList objectList;
       DataVectorList objects = _document->objectStore()->getObjects<DataVector>();
       foreach(DataVectorPtr object, objects) {
-        objectList.append(object->tag().displayString());
+        objectList.append(object->Name());
       }
       _editMultipleWidget->addObjects(objectList);
     }
@@ -336,7 +336,7 @@ void VectorDialog::configureTab(ObjectPtr vector) {
       QStringList objectList;
       GeneratedVectorList objects = _document->objectStore()->getObjects<GeneratedVector>();
       foreach(GeneratedVectorPtr object, objects) {
-        objectList.append(object->tag().displayString());
+        objectList.append(object->Name());
       }
       _editMultipleWidget->addObjects(objectList);
     }
@@ -367,13 +367,12 @@ ObjectPtr VectorDialog::createNewDataVector() const {
   const DataRange *dataRange = _vectorTab->dataRange();
 
   Q_ASSERT(_document && _document->objectStore());
-  const ObjectTag tag = _document->objectStore()->suggestObjectTag<DataVector>(tagString(), dataSource->tag());
 
 //   qDebug() << "Creating new data vector ===>"
 //            << "\n\tfileName:" << dataSource->fileName()
 //            << "\n\tfileType:" << dataSource->fileType()
 //            << "\n\tfield:" << field
-//            << "\n\ttag:" << tag.displayString()
+//            << "\n\tName:" << Name()
 // 	   << "\n\ttagString:" << tagString()
 //            << "\n\tstart:" << (dataRange->countFromEnd() ? -1 : int(dataRange->start()))
 //            << "\n\trange:" << (dataRange->readToEnd() ? -1 : int(dataRange->range()))
@@ -382,7 +381,7 @@ ObjectPtr VectorDialog::createNewDataVector() const {
 //            << "\n\tdoFilter:" << (dataRange->doFilter() ? "true" : "false")
 //            << endl;
 
-  DataVectorPtr vector = _document->objectStore()->createObject<DataVector>(tag);
+  DataVectorPtr vector = _document->objectStore()->createObject<DataVector>();
 
   vector->writeLock();
   vector->change(dataSource, field,
@@ -397,20 +396,9 @@ ObjectPtr VectorDialog::createNewDataVector() const {
   setDataVectorDefaults(vector);
   _vectorTab->dataRange()->setWidgetDefaults();
 
-#if 0
-  DataVectorPtr vector = new DataVector(
-      dataSource, field, tag,
-      dataRange->countFromEnd() ? -1 : int(dataRange->start()),
-      dataRange->readToEnd() ? -1 : int(dataRange->range()),
-      dataRange->skip(),
-      dataRange->doSkip(),
-      dataRange->doFilter());
-#endif
-
   vector->update();
   vector->unlock();
 
-//  return static_cast<ObjectPtr>(vector);
   return vector;
 }
 
@@ -420,7 +408,6 @@ ObjectPtr VectorDialog::createNewGeneratedVector() const {
   const qreal to = _vectorTab->to();
   const int numberOfSamples = _vectorTab->numberOfSamples();
   Q_ASSERT(_document && _document->objectStore());
-  const ObjectTag tag = _document->objectStore()->suggestObjectTag<GeneratedVector>(tagString(), ObjectTag::globalTagContext);
 
 //   qDebug() << "Creating new generated vector ===>"
 //            << "\n\tfrom:" << from
@@ -430,7 +417,7 @@ ObjectPtr VectorDialog::createNewGeneratedVector() const {
 //            << endl;
 
   Q_ASSERT(_document && _document->objectStore());
-  GeneratedVectorPtr vector = _document->objectStore()->createObject<GeneratedVector>(tag);
+  GeneratedVectorPtr vector = _document->objectStore()->createObject<GeneratedVector>();
   vector->changeRange(from, to, numberOfSamples);
 
   setGenVectorDefaults(vector);
@@ -447,8 +434,8 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
     if (editMode() == EditMultiple) {
       const DataRange *dataRange = _vectorTab->dataRange();
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectTag, objects) {
-        DataVectorPtr vector = kst_cast<DataVector>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));
+      foreach (QString objectName, objects) {
+        DataVectorPtr vector = kst_cast<DataVector>(_document->objectStore()->retrieveObject(objectName));
         if (vector) {
           int start = dataRange->startDirty() ? dataRange->start() : vector->startFrame();
           int range = dataRange->rangeDirty() ?  dataRange->range() : vector->numFrames();
@@ -487,13 +474,6 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
 
       dataVector->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
-//  Disable until new tag system is fully implemented.
-//
-//       if (dataVector->tag().name()!=tagString()) {
-// 	//FIXME: needs a gaurd against being not unique
-// 	dataVector->tag().setName(tagString()); 
-//       }
-
       dataVector->update();
       dataVector->unlock();
 
@@ -503,8 +483,8 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
   } else if (GeneratedVectorPtr generatedVector = kst_cast<GeneratedVector>(dataObject())) {
     if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectTag, objects) {
-        GeneratedVectorPtr vector = kst_cast<GeneratedVector>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));
+      foreach (QString objectName, objects) {
+        GeneratedVectorPtr vector = kst_cast<GeneratedVector>(_document->objectStore()->retrieveObject(objectName));
         if (vector) {
           double min = _vectorTab->fromDirty() ? _vectorTab->from() : vector->min();
           double max = _vectorTab->toDirty() ?  _vectorTab->to() : vector->max();

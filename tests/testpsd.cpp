@@ -113,7 +113,7 @@ QDomDocument TestPSD::makeDOMElement(const QString& tag, const QString& val) {
 
 void TestPSD::testPSD() {
 
-  Kst::VectorPtr vp = Kst::kst_cast<Kst::Vector>(_store.createObject<Kst::Vector>(Kst::ObjectTag::fromString("tempVector")));
+  Kst::VectorPtr vp = Kst::kst_cast<Kst::Vector>(_store.createObject<Kst::Vector>());
   Q_ASSERT(vp);
   vp->resize(10);
   vp->setDescriptiveName("tempVector");
@@ -121,8 +121,7 @@ void TestPSD::testPSD() {
     vp->value()[i] = i;
   }
 
-  Kst::PSDPtr psd = new Kst::PSD(&_store, Kst::ObjectTag::fromString("psdTest"), vp, 0.0, false, 10, false, false, QString("vUnits"), QString("rUnits"), WindowUndefined, 0.0, PSDUndefined);
-  QCOMPARE(psd->tag().tagString(), QLatin1String("psdTest"));
+  Kst::PSDPtr psd = new Kst::PSD(&_store, vp, 0.0, false, 10, false, false, QString("vUnits"), QString("rUnits"), WindowUndefined, 0.0, PSDUndefined);
   QCOMPARE(psd->vector()->descriptiveName(), QLatin1String("tempVector"));
   QCOMPARE(psd->output(), PSDUndefined);
   QVERIFY(!psd->apodize());
@@ -155,7 +154,6 @@ void TestPSD::testPSD() {
   psd->setApodizeFxn(WindowOriginal);
   psd->setGaussianSigma(0.2);
 
-  QCOMPARE(psd->tag().tagString(), QLatin1String("psdTest"));
   QCOMPARE(psd->vector()->descriptiveName(), QLatin1String("tempVector"));
   QCOMPARE(psd->output(), PSDAmplitudeSpectralDensity);
   QVERIFY(psd->apodize());
@@ -166,7 +164,6 @@ void TestPSD::testPSD() {
   QCOMPARE(psd->gaussianSigma(), 0.2);
 
 //   doTest(psd->update(0) == Kst::Object::UPDATE);
-//   QString ps = "PSD: " + psd->vTag();
 //   doTest(psd->propertyString() == ps);
 //    doTest(!psd->curveHints().curveName() == "");
 //   printf("Curve name [%s]", kstCHL[0].curveName());

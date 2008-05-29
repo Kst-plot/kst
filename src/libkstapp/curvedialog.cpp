@@ -271,15 +271,10 @@ CurveDialog::~CurveDialog() {
 }
 
 
-QString CurveDialog::tagString() const {
-  QString tagString = DataDialog::tagString();
-  if (_curveTab->yVector()) {
-    // FIXME: not sure I like this name...
-    tagString.replace(defaultTagString(), _curveTab->yVector()->tag().name());
-  }
-  return tagString;
-}
-
+// QString CurveDialog::tagString() const {
+//   return DataDialog::tagString();
+// }
+// 
 
 void CurveDialog::editMultipleMode() {
   _curveTab->clearTabValues();
@@ -324,7 +319,7 @@ void CurveDialog::configureTab(ObjectPtr object) {
       QStringList objectList;
       CurveList objects = _document->objectStore()->getObjects<Curve>();
       foreach(CurvePtr object, objects) {
-        objectList.append(object->tag().displayString());
+        objectList.append(object->Name());
       }
       _editMultipleWidget->addObjects(objectList);
     }
@@ -344,7 +339,9 @@ void CurveDialog::updateButtons() {
 
 ObjectPtr CurveDialog::createNewDataObject() const {
   Q_ASSERT(_document && _document->objectStore());
-  CurvePtr curve = _document->objectStore()->createObject<Curve>(ObjectTag::fromString(tagString()));
+
+  ObjectStore *os = _document->objectStore();
+CurvePtr curve = os->createObject<Curve>();
 #if 0
   CurvePtr curve = new Curve(_document->objectStore(),
                              ObjectTag::fromString(tagString()),
@@ -374,7 +371,6 @@ ObjectPtr CurveDialog::createNewDataObject() const {
   curve->setBarStyle(_curveTab->curveAppearance()->barStyle());
   curve->setIgnoreAutoScale(_curveTab->ignoreAutoScale());
   curve->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
-
   curve->writeLock();
   curve->update();
   curve->unlock();
@@ -416,8 +412,8 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
   if (CurvePtr curve = kst_cast<Curve>(dataObject())) {
     if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectTag, objects) {
-        CurvePtr curve = kst_cast<Curve>(_document->objectStore()->retrieveObject(ObjectTag::fromString(objectTag)));
+      foreach (QString objectName, objects) {
+        CurvePtr curve = kst_cast<Curve>(_document->objectStore()->retrieveObject(objectName));
         if (curve) {
           VectorPtr xVector = _curveTab->xVectorDirty() ? _curveTab->xVector() : curve->xVector();
           VectorPtr yVector = _curveTab->yVectorDirty() ? _curveTab->yVector() : curve->yVector();

@@ -30,7 +30,6 @@
 #include "kst_export.h"
 #include "sharedptr.h"
 #include "rwlock.h"
-#include "objecttag.h"
 
 namespace Kst {
 
@@ -94,11 +93,7 @@ class Object : public QObject, public Shared, public KstRWLock {
 
     ObjectStore *store() const;
 
-    // old tag name system to be deleted.
-    virtual ObjectTag& tag();
-    virtual const ObjectTag& tag() const;
-
-    //new tag name system: see object names devel doc
+    // name system: see object names devel doc
     QString Name() const; // eg GYRO1:V1
     QString descriptiveName() const; // eg GYRO1: automatic or manual
     QString shortName() const; // eg V1: always automatically generated
@@ -123,19 +118,16 @@ class Object : public QObject, public Shared, public KstRWLock {
     virtual void processUpdate(ObjectPtr object);
     static void processShortNameIndexAttributes(QXmlStreamAttributes &attrs);
   protected:
-    Object(const ObjectTag& tag = ObjectTag::invalidTag);
-
+    Object();
     virtual ~Object();
-
-    void setTagName(const ObjectTag& tag);
 
     friend class ObjectStore;
     ObjectStore *_store;  // set by ObjectStore
 
-    //new tag name system: see object names devel doc
+    // name system: see object names devel doc
     virtual QString _automaticDescriptiveName() const= 0;
-    QString _shortName;
     QString _manualDescriptiveName;
+    QString _shortName;
     virtual void saveNameInfo(QXmlStreamWriter &s, unsigned I = 0xffff);
 
     // object indices used for saving/resorting shortnames
@@ -152,7 +144,6 @@ class Object : public QObject, public Shared, public KstRWLock {
     int _initial_mnum; // matrix
 
   private:
-    ObjectTag _tag;
     bool _dirty;
 
 } KST_EXPORT;

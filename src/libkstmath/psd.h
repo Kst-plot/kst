@@ -92,12 +92,12 @@ class KST_EXPORT PSD : public DataObject {
     virtual DataObjectPtr makeDuplicate();
 
   protected:
-    PSD(ObjectStore *store, const ObjectTag& in_tag);
-    PSD(ObjectStore *store, const ObjectTag& in_tag, VectorPtr in_V, double freq,
+    PSD(ObjectStore *store);
+    PSD(ObjectStore *store, VectorPtr in_V, double freq,
         bool average, int average_len,
         bool in_apodize, bool in_removeMean,
         const QString& VUnits, const QString& RUnits, ApodizeFunction in_apodizeFxn = WindowOriginal, double in_gaussianSigma = 3.0, PSDType in_output = PSDAmplitudeSpectralDensity);
-    PSD(ObjectStore *store, const QDomElement& e);
+//     PSD(ObjectStore *store, const QDomElement& e);
     virtual ~PSD();
 
     friend class ObjectStore;

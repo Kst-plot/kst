@@ -30,8 +30,7 @@ void TestMatrix::testMatrix() {
   bool ok = true;
 
   //basic default constructor values
-  Kst::MatrixPtr m1 = Kst::kst_cast<Kst::Matrix>(_store.createObject<Kst::Matrix>(Kst::ObjectTag::fromString(QString::null)));
-  QVERIFY(m1->tag().tagString().startsWith("Anonymous"));
+  Kst::MatrixPtr m1 = Kst::kst_cast<Kst::Matrix>(_store.createObject<Kst::Matrix>());
   QCOMPARE(m1->sampleCount(), 0);
   QCOMPARE(m1->minValue(), 0.0);
   QCOMPARE(m1->maxValue(), 0.0);
@@ -43,8 +42,7 @@ void TestMatrix::testMatrix() {
   QCOMPARE(m1->meanValue(), 0.0);
 
   //basic symetrical matrix
-  Kst::MatrixPtr m2 = Kst::kst_cast<Kst::Matrix>(_store.createObject<Kst::Matrix>(Kst::ObjectTag::fromString("Symmetrical")));
-  QCOMPARE(m2->tag().tagString(), QLatin1String("Symmetrical"));
+  Kst::MatrixPtr m2 = Kst::kst_cast<Kst::Matrix>(_store.createObject<Kst::Matrix>());
 
   QVERIFY(m2->resize(3, 3, true));
 
@@ -86,7 +84,7 @@ void TestMatrix::testMatrix() {
   QVERIFY(m2->value(1, 1) != 5.0);
   QVERIFY(m2->setValueRaw(2, 2, 6.0)); //fails
 
-  Kst::MatrixPtr um1 = Kst::kst_cast<Kst::Matrix>(_store.createObject<Kst::Matrix>(Kst::ObjectTag::fromString("Unity")));
+  Kst::MatrixPtr um1 = Kst::kst_cast<Kst::Matrix>(_store.createObject<Kst::Matrix>());
   um1->change(3, 3, 0, 0, 1, 1);
   um1->setEditable(true);
   um1->zero();
@@ -154,7 +152,7 @@ void TestMatrix::testMatrix() {
   QCOMPARE(um1->minValue(), 0.0);
   QCOMPARE(um1->maxValue(), 0.0);
 
-  Kst::MatrixPtr sm = Kst::kst_cast<Kst::Matrix>(_store.createObject<Kst::Matrix>(Kst::ObjectTag::fromString("Spike")));
+  Kst::MatrixPtr sm = Kst::kst_cast<Kst::Matrix>(_store.createObject<Kst::Matrix>());
   sm->change(2, 2, 0, 0, 1, 1);
 
   sm->setEditable(true);

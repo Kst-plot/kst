@@ -74,7 +74,7 @@ void ChangeDataSampleDialog::updateCurveListDialog() {
   for (DataVectorList::ConstIterator i = dataVectors.begin(); i != dataVectors.end(); ++i) {
     DataVectorPtr vector = *i;
     vector->readLock();
-    _curveList->addItem(vector->tag().displayString());
+    _curveList->addItem(vector->Name());
     vector->unlock();
   }
 
@@ -93,7 +93,7 @@ void ChangeDataSampleDialog::updateDefaults(QListWidgetItem* item) {
     return;
   }
 
-  if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(Kst::ObjectTag::fromString(item->text())))) {
+  if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(item->text()))) {
     vector->readLock();
 
     _dataRange->setCountFromEnd(vector->countFromEOF());
@@ -122,7 +122,7 @@ void ChangeDataSampleDialog::OKClicked() {
 void ChangeDataSampleDialog::apply() {
   QList<QListWidgetItem*> selectedItems = _curveList->selectedItems();
   for (int i = 0; i < selectedItems.size(); ++i) {
-    if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(Kst::ObjectTag::fromString(selectedItems.at(i)->text())))) {
+    if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(selectedItems.at(i)->text()))) {
       vector->writeLock();
       vector->changeFrames( (_dataRange->countFromEnd() ? -1 : _dataRange->start()),
                             (_dataRange->readToEnd() ? -1 : _dataRange->range()),

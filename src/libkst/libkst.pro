@@ -37,7 +37,6 @@ SOURCES += \
     objectlist.cpp \
     objectmap.cpp \
     objectstore.cpp \
-    objecttag.cpp \
     plotiteminterface.cpp \
     primitive.cpp \
     primitivefactory.cpp \
@@ -86,7 +85,6 @@ HEADERS += \
     objectlist.h \
     objectmap.h \
     objectstore.h \
-    objecttag.h \
     plotiteminterface.h \
     primitive.h \
     primitivefactory.h \

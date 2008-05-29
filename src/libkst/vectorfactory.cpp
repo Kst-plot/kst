@@ -32,7 +32,6 @@ VectorFactory::~VectorFactory() {
 
 
 PrimitivePtr VectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
-  ObjectTag tag;
   QByteArray data;
   QString descriptiveName;
   Q_ASSERT(store);
@@ -42,7 +41,6 @@ PrimitivePtr VectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
     if (xml.isStartElement()) {
       if (n == Vector::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
-        tag = ObjectTag::fromString(attrs.value("tag").toString());
         if (attrs.value("descriptiveNameIsManual").toString() == "true") {
           descriptiveName = attrs.value("descriptiveName").toString();
         }
@@ -71,7 +69,7 @@ PrimitivePtr VectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
     return 0;
   }
 
-  VectorPtr vector = store->createObject<Vector>(tag);
+  VectorPtr vector = store->createObject<Vector>();
   vector->change(data);
   vector->setDescriptiveName(descriptiveName);
 
@@ -94,7 +92,6 @@ GeneratedVectorFactory::~GeneratedVectorFactory() {
 
 
 PrimitivePtr GeneratedVectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
-  ObjectTag tag;
   double min, max;
   int count;
   QString descriptiveName;
@@ -104,7 +101,6 @@ PrimitivePtr GeneratedVectorFactory::generatePrimitive(ObjectStore *store, QXmlS
     if (xml.isStartElement()) {
       if (n == GeneratedVector::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
-        tag = ObjectTag::fromString(attrs.value("tag").toString());
         min = attrs.value("min").toString().toDouble();
         max = attrs.value("max").toString().toDouble();
         count = attrs.value("count").toString().toInt();
@@ -130,7 +126,7 @@ PrimitivePtr GeneratedVectorFactory::generatePrimitive(ObjectStore *store, QXmlS
     return 0;
   }
 
-  GeneratedVectorPtr vector = store->createObject<GeneratedVector>(tag);
+  GeneratedVectorPtr vector = store->createObject<GeneratedVector>();
   vector->changeRange(min, max, count);
   vector->setDescriptiveName(descriptiveName);
 
@@ -152,7 +148,6 @@ EditableVectorFactory::~EditableVectorFactory() {
 
 
 PrimitivePtr EditableVectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
-  ObjectTag tag;
   QByteArray data;
   QString descriptiveName;
 
@@ -161,7 +156,6 @@ PrimitivePtr EditableVectorFactory::generatePrimitive(ObjectStore *store, QXmlSt
     if (xml.isStartElement()) {
       if (n == EditableVector::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
-        tag = ObjectTag::fromString(attrs.value("tag").toString());
         if (attrs.value("descriptiveNameIsManual").toString() == "true") {
           descriptiveName = attrs.value("descriptiveName").toString();
         }
@@ -189,7 +183,7 @@ PrimitivePtr EditableVectorFactory::generatePrimitive(ObjectStore *store, QXmlSt
     return 0;
   }
 
-  EditableVectorPtr vector = store->createObject<EditableVector>(tag);
+  EditableVectorPtr vector = store->createObject<EditableVector>();
   vector->change(data);
   vector->setDescriptiveName(descriptiveName);
 
@@ -212,7 +206,6 @@ DataVectorFactory::~DataVectorFactory() {
 
 
 PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
-  ObjectTag tag;
   QByteArray data;
   QString provider, file, field;
   QString descriptiveName;
@@ -224,7 +217,6 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
     if (xml.isStartElement()) {
       if (n == DataVector::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
-        tag = ObjectTag::fromString(attrs.value("tag").toString());
 
         provider = attrs.value("provider").toString();
         file = attrs.value("file").toString();
@@ -269,7 +261,7 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
     return 0; //Couldn't find a suitable datasource
   }
 
-  DataVectorPtr vector = store->createObject<DataVector>(tag);
+  DataVectorPtr vector = store->createObject<DataVector>();
 
   vector->writeLock();
   vector->change(dataSource, field,

@@ -83,7 +83,7 @@ class KST_EXPORT BasicPlugin : public DataObject {
     Object::UpdateType update();
 
     //Regular virtual methods from DataObject
-    void load(const QDomElement &e);
+//     void load(const QDomElement &e);
     virtual void save(QXmlStreamWriter &s);
 
     bool isFit() const { return _isFit; }
@@ -92,8 +92,8 @@ class KST_EXPORT BasicPlugin : public DataObject {
     QString label(int precision) const;
 
   protected:
-    BasicPlugin(ObjectStore *store, const ObjectTag& tag);
-    BasicPlugin(ObjectStore *store, const QDomElement &e);
+    BasicPlugin(ObjectStore *store);
+//     BasicPlugin(ObjectStore *store, const QDomElement &e);
     virtual ~BasicPlugin();
 
     virtual QString parameterName(int index) const;

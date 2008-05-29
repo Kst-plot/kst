@@ -28,8 +28,8 @@ namespace Kst {
 
 const QString Primitive::staticTypeString = I18N_NOOP("Primitive");
 
-Primitive::Primitive(ObjectStore *store, const ObjectTag& tag, Object *provider)
-  : Object(tag), _provider(provider) {
+Primitive::Primitive(ObjectStore *store, Object *provider)
+  : _provider(provider) {
   _slaveName = "fixme: set _slaveName";
 }
 

@@ -84,14 +84,14 @@ void ChangeFileDialog::updatePrimitiveList() {
 
   for (i = 0; i < (int)dataVectorList.count(); i++) {
     dataVectorList[i]->readLock();
-    _changeFilePrimitiveList->addItem(dataVectorList[i]->tag().displayString());
+    _changeFilePrimitiveList->addItem(dataVectorList[i]->Name());
     fileNameList.push_back(dataVectorList[i]->filename());
     dataVectorList[i]->unlock();
   }
 
   for (i = 0; i < (int)dataMatrixList.count(); i++) {
     dataMatrixList[i]->readLock();
-    _changeFilePrimitiveList->addItem(dataMatrixList[i]->tag().displayString());
+    _changeFilePrimitiveList->addItem(dataMatrixList[i]->Name());
     fileNameList.push_back(dataMatrixList[i]->filename());
     dataMatrixList[i]->unlock();
   }
@@ -136,9 +136,9 @@ void ChangeFileDialog::selectAllFromFile() {
   _changeFilePrimitiveList->clearSelection();
 
   for (int i = 0; i < _changeFilePrimitiveList->count(); i++) {
-    if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(ObjectTag::fromString(_changeFilePrimitiveList->item(i)->text())))) {
+    if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(_changeFilePrimitiveList->item(i)->text()))) {
       _changeFilePrimitiveList->item(i)->setSelected(vector->filename() == _files->currentText());
-    } else if (DataMatrixPtr matrix = kst_cast<DataMatrix>(_store->retrieveObject(ObjectTag::fromString(_changeFilePrimitiveList->item(i)->text())))) {
+    } else if (DataMatrixPtr matrix = kst_cast<DataMatrix>(_store->retrieveObject(_changeFilePrimitiveList->item(i)->text()))) {
       _changeFilePrimitiveList->item(i)->setSelected(matrix->filename() == _files->currentText());
     }
   }
@@ -169,7 +169,7 @@ void ChangeFileDialog::apply() {
 
   QList<QListWidgetItem*> selectedItems = _changeFilePrimitiveList->selectedItems();
   for (int i = 0; i < selectedItems.size(); ++i) {
-    if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(ObjectTag::fromString(selectedItems[i]->text())))) {
+    if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(selectedItems[i]->text()))) {
       vector->writeLock();
       dataSource->readLock();
       bool valid = dataSource->isValidField(vector->field());
@@ -203,7 +203,7 @@ void ChangeFileDialog::apply() {
         }
       }
       vector->unlock();
-    } else if (DataMatrixPtr matrix = kst_cast<DataMatrix>(_store->retrieveObject(ObjectTag::fromString(selectedItems[i]->text())))) {
+    } else if (DataMatrixPtr matrix = kst_cast<DataMatrix>(_store->retrieveObject(selectedItems[i]->text()))) {
       matrix->writeLock();
       dataSource->readLock();
       bool valid = dataSource->isValidMatrix(matrix->field());

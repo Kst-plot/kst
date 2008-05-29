@@ -30,17 +30,12 @@ void TestObjectStore::testObjectStore() {
 
   ScalarPtr sc = kst_cast<Scalar>(store.createObject<Scalar>());
   QVERIFY(sc);  // scalar was created
-  QVERIFY(sc->tag().isValid()); // scalar was assigned a tag
   ScalarPtr sc2 = kst_cast<Scalar>(store.createObject<Scalar>());
   QVERIFY(sc2);
-  QVERIFY(sc2->tag().isValid());
-  QVERIFY(sc2->tag() != sc->tag());
   QCOMPARE(store.getObjects<Scalar>().count(), 2);
   QCOMPARE(store.getObjects<Vector>().count(), 0);
 
-  ObjectTag scTag = sc->tag();
-  QVERIFY(store.objectExists(scTag));
-  QVERIFY(sc == store.retrieveObject(scTag)); // can retrieve the object from the store
+  QVERIFY(sc == store.retrieveObject(sc->Name())); // can retrieve the object from the store
 
   VectorPtr vec = kst_cast<Vector>(store.createObject<Vector>());
   QVERIFY(vec);

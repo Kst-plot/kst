@@ -49,12 +49,11 @@ const QString Equation::XINVECTOR = "X";
 const QString Equation::XOUTVECTOR = "XO"; // Output (slave) vector
 const QString Equation::YOUTVECTOR = "O"; // Output (slave) vector
 
-Equation::Equation(ObjectStore *store, const ObjectTag& in_tag, const QString& equation, double x0, double x1, int nx)
-: DataObject(store, in_tag) {
+Equation::Equation(ObjectStore *store, const QString& equation, double x0, double x1, int nx)
+: DataObject(store) {
   Q_ASSERT(store);
-  ObjectTag vtag = store->suggestObjectTag<GeneratedVector>(QString("(%1..%2)").arg(x0).arg(x1), in_tag);
 
-  GeneratedVectorPtr v = store->createObject<GeneratedVector>(vtag);
+  GeneratedVectorPtr v = store->createObject<GeneratedVector>();
   v->changeRange(x0, x1, nx);
   // FIXME: provider?
   _xInVector = v;
@@ -66,8 +65,8 @@ Equation::Equation(ObjectStore *store, const ObjectTag& in_tag, const QString& e
 }
 
 
-Equation::Equation(ObjectStore *store, const ObjectTag& in_tag, const QString& equation, VectorPtr xvector, bool do_interp)
-: DataObject(store, in_tag), _xInVector(xvector) {
+Equation::Equation(ObjectStore *store, const QString& equation, VectorPtr xvector, bool do_interp)
+: DataObject(store), _xInVector(xvector) {
   _doInterp = do_interp; //false;
   _inputVectors.insert(XINVECTOR, xvector);
 
@@ -93,14 +92,14 @@ void Equation::commonConstructor(ObjectStore *store, const QString& in_equation)
   _type = "Equation";
 
   Q_ASSERT(store);
-  _xOutVector = store->createObject<Vector>(ObjectTag("xsv", tag()));
+  _xOutVector = store->createObject<Vector>();
   Q_ASSERT(_xOutVector);
   _xOutVector->setProvider(this);
   _xOutVector->setSlaveName("x");
   _xOutVector->resize(2);
   _outputVectors.insert(XOUTVECTOR, _xOutVector);
 
-  _yOutVector = store->createObject<Vector>(ObjectTag("sv", tag()));
+  _yOutVector = store->createObject<Vector>();
   Q_ASSERT(_yOutVector);
   _yOutVector->setProvider(this);
   _yOutVector->setSlaveName("y");
@@ -184,7 +183,6 @@ Object::UpdateType Equation::update() {
 
 void Equation::save(QXmlStreamWriter &s) {
   s.writeStartElement(staticTypeTag);
-  s.writeAttribute("tag", tag().tagString());
   // Reparse the equation, then write it back out in text so that we can update
   // any vectors or scalars that had name changes, but we don't get affected by
   // the optimizer
@@ -205,7 +203,7 @@ void Equation::save(QXmlStreamWriter &s) {
     ParsedEquation = 0L;
   }
 
-  s.writeAttribute("xvector", _xInVector->tag().tagString());
+  s.writeAttribute("xvector", _xInVector->Name());
   if (_doInterp) {
     s.writeAttribute("interpolate", "true");
   }
@@ -446,14 +444,16 @@ void Equation::showEditDialog() {
 
 
 DataObjectPtr Equation::makeDuplicate() {
-  QString newTag = tag().name() + "'";
 
-  EquationPtr equation = store()->createObject<Equation>(ObjectTag::fromString(newTag));
+  EquationPtr equation = store()->createObject<Equation>();
   Q_ASSERT(equation);
 
   equation->setEquation(_equation);
   equation->setExistingXVector(_inputVectors[XINVECTOR], _doInterp);
 
+  if (descriptiveNameIsManual()) {
+    equation->setDescriptiveName(descriptiveName());
+  }
   equation->writeLock();
   equation->update();
   equation->unlock();
@@ -468,15 +468,15 @@ void Equation::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObjec
 
   // replace all occurences of outputVectors, outputScalars from oldObject
   for (VectorMap::Iterator j = oldObject->outputVectors().begin(); j != oldObject->outputVectors().end(); ++j) {
-    QString oldTag = j.value()->tag().tagString();
-    QString newTag = ((newObject->outputVectors())[j.key()])->tag().tagString();
-    newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
+    QString oldName = j.value()->Name();
+    QString newName = ((newObject->outputVectors())[j.key()])->Name();
+    newExp = newExp.replace("[" + oldName + "]", "[" + newName + "]");
   }
 
   for (ScalarMap::Iterator j = oldObject->outputScalars().begin(); j != oldObject->outputScalars().end(); ++j) {
-    QString oldTag = j.value()->tag().tagString();
-    QString newTag = ((newObject->outputScalars())[j.key()])->tag().tagString();
-    newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
+    QString oldName = j.value()->Name();
+    QString newName = ((newObject->outputScalars())[j.key()])->Name();
+    newExp = newExp.replace("[" + oldName + "]", "[" + newName + "]");
   }
 
   // and dependencies on matrix stats (there won't be matrices themselves in the expression)
@@ -484,9 +484,9 @@ void Equation::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObjec
     QHashIterator<QString, Scalar*> scalarDictIter(j.value()->scalars());
     while (scalarDictIter.hasNext()) {
       scalarDictIter.next();
-      QString oldTag = scalarDictIter.value()->tag().tagString();
-      QString newTag = ((((newObject->outputMatrices())[j.key()])->scalars())[scalarDictIter.key()])->tag().tagString();
-      newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
+      QString oldName = scalarDictIter.value()->Name();
+      QString newName = ((((newObject->outputMatrices())[j.key()])->scalars())[scalarDictIter.key()])->Name();
+      newExp = newExp.replace("[" + oldName + "]", "[" + newName + "]");
     }
   }
 
@@ -502,9 +502,9 @@ void Equation::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObjec
     QHashIterator<QString, Scalar*> scalarDictIter(j.value()->scalars());
     while (scalarDictIter.hasNext()) {
       scalarDictIter.next();
-      QString oldTag = scalarDictIter.value()->tag().tagString();
-      QString newTag = ((((newObject->outputVectors())[j.key()])->scalars())[scalarDictIter.key()])->tag().tagString();
-      newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
+      QString oldName = scalarDictIter.value()->Name();
+      QString newName = ((((newObject->outputVectors())[j.key()])->scalars())[scalarDictIter.key()])->Name();
+      newExp = newExp.replace("[" + oldName + "]", "[" + newName + "]");
     }
   }
 
@@ -513,19 +513,19 @@ void Equation::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObjec
 
 
 void Equation::replaceDependency(VectorPtr oldVector, VectorPtr newVector) {
-  QString oldTag = oldVector->tag().tagString();
-  QString newTag = newVector->tag().tagString();
+  QString oldName = oldVector->Name();
+  QString newName = newVector->Name();
 
-  // replace all occurences of oldTag with newTag
-  QString newExp = _equation.replace("["+oldTag+"]", "["+newTag+"]");
+  // replace all occurences of oldName with newName
+  QString newExp = _equation.replace("["+oldName+"]", "["+newName+"]");
 
   // also replace all occurences of scalar stats for the oldVector
   QHashIterator<QString, Scalar*> scalarDictIter(oldVector->scalars());
   while (scalarDictIter.hasNext()) {
     scalarDictIter.next();
-    QString oldTag = scalarDictIter.value()->tag().tagString();
-    QString newTag = ((newVector->scalars())[scalarDictIter.key()])->tag().tagString();
-    newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
+    QString oldName = scalarDictIter.value()->Name();
+    QString newName = ((newVector->scalars())[scalarDictIter.key()])->Name();
+    newExp = newExp.replace("[" + oldName + "]", "[" + newName + "]");
   }
 
   setEquation(newExp);
@@ -548,9 +548,9 @@ void Equation::replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix) {
   QHashIterator<QString, Scalar*> scalarDictIter(oldMatrix->scalars());
   while (scalarDictIter.hasNext()) {
     scalarDictIter.next();
-    QString oldTag = scalarDictIter.value()->tag().tagString();
-    QString newTag = ((newMatrix->scalars())[scalarDictIter.key()])->tag().tagString();
-    newExp = newExp.replace("[" + oldTag + "]", "[" + newTag + "]");
+    QString oldName = scalarDictIter.value()->Name();
+    QString newName = ((newMatrix->scalars())[scalarDictIter.key()])->Name();
+    newExp = newExp.replace("[" + oldName + "]", "[" + newName + "]");
   }
 
   setEquation(newExp);

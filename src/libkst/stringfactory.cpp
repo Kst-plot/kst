@@ -28,7 +28,6 @@ StringFactory::~StringFactory() {
 
 
 PrimitivePtr StringFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
-  ObjectTag tag;
   QByteArray data;
 
   Q_ASSERT(store);
@@ -41,7 +40,6 @@ PrimitivePtr StringFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
     if (xml.isStartElement()) {
       if (n == "string") {
         QXmlStreamAttributes attrs = xml.attributes();
-        tag = ObjectTag::fromString(attrs.value("tag").toString());
         value = attrs.value("value").toString();
         orphan = attrs.value("orphan").toString() == "true" ? true : false;
         editable = attrs.value("editable").toString() == "true" ? true : false;
@@ -67,7 +65,7 @@ PrimitivePtr StringFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
     return 0;
   }
 
-  StringPtr string = store->createObject<String>(tag);
+  StringPtr string = store->createObject<String>();
   string->setValue(value);
   string->setOrphan(true);
   string->setEditable(true);

@@ -34,10 +34,9 @@ class KST_EXPORT Scalar : public Primitive {
   Q_PROPERTY(bool displayable READ displayable WRITE setDisplayable)
 
   protected:
-    Scalar(ObjectStore *store, ObjectTag tag = ObjectTag::invalidTag,
+    Scalar(ObjectStore *store, 
               Object *provider = 0L, double val = 0.0, bool orphan = false,
               bool displayable = true, bool editable = false);
-    Scalar(ObjectStore *store, const QDomElement& e);
 
     virtual ~Scalar();
 

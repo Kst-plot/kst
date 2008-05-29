@@ -80,15 +80,15 @@ class KST_EXPORT DataMatrix : public Matrix {
     SharedPtr<DataMatrix> makeDuplicate() const;
 
   protected:
-    DataMatrix(ObjectStore *store, const ObjectTag& tag);
+    DataMatrix(ObjectStore *store);
     // constructor
     DataMatrix(ObjectStore *store, DataSourcePtr file, const QString &field,
-        const ObjectTag& tag, int xStart, int yStart,
+        int xStart, int yStart,
         int xNumSteps, int yNumSteps, bool doAve, bool doSkip, int skip,
         double minX = 0, double minY = 0, double stepX = 1, double stepY = 1);
 
     // constructor to create a saved DataMatrix
-    DataMatrix(ObjectStore *store, const QDomElement &e);
+//     DataMatrix(ObjectStore *store, const QDomElement &e);
 
     virtual ~DataMatrix();
 
