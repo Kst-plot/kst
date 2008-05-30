@@ -128,6 +128,10 @@ QStringList DataObject::pluginList() {
 
 
 DataObjectConfigWidget* DataObject::pluginWidget(const QString& name) {
+  if (_pluginList.isEmpty()) {
+    scanPlugins();
+  }
+
   for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
     if ((*it)->pluginName() == name) {
       if ((*it)->hasConfigWidget()) {
@@ -140,10 +144,10 @@ DataObjectConfigWidget* DataObject::pluginWidget(const QString& name) {
 }
 
 
-DataObjectPtr DataObject::createPlugin(const QString& name, ObjectStore *store, DataObjectConfigWidget *configWidget) {
+DataObjectPtr DataObject::createPlugin(const QString& name, ObjectStore *store, DataObjectConfigWidget *configWidget, bool setupInputsOutputs) {
   for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
     if ((*it)->pluginName() == name) {
-      if (DataObjectPtr object = (*it)->create(store, configWidget)) {
+      if (DataObjectPtr object = (*it)->create(store, configWidget, setupInputsOutputs)) {
         return object;
       }
     }
@@ -847,6 +851,13 @@ void DataObjectConfigWidget::setupFromObject(Object* dataObject) {
 
 void DataObjectConfigWidget::setupSlots(QWidget* dialog) {
   Q_UNUSED(dialog);
+}
+
+
+bool DataObjectConfigWidget::configurePropertiesFromXml(ObjectStore *store, QXmlStreamAttributes& attrs) {
+  Q_UNUSED(store);
+  Q_UNUSED(attrs);
+  return true;
 }
 
 

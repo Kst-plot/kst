@@ -85,6 +85,7 @@ class KST_EXPORT BasicPlugin : public DataObject {
     //Regular virtual methods from DataObject
 //     void load(const QDomElement &e);
     virtual void save(QXmlStreamWriter &s);
+    virtual void saveProperties(QXmlStreamWriter &s);
 
     bool isFit() const { return _isFit; }
     // FIXME: remove this

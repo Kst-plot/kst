@@ -23,6 +23,7 @@ QMAKE_EXT_YACC = .yacc
 
 SOURCES += \
     basicplugin.cpp \
+    basicpluginfactory.cpp \
     builtinobjects.cpp \
     builtinrelations.cpp \
     colorsequence.cpp \
@@ -65,6 +66,7 @@ SOURCES += \
 
 HEADERS += \
     basicplugin.h \
+    basicpluginfactory.h \
     builtinobjects.h \
     builtinrelations.h \
     colorsequence.h \

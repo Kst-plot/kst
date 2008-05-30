@@ -59,7 +59,7 @@ class KST_EXPORT DataObject : public Object {
     //     static QWidget* pluginWidget(const QString& name, ObjectPtr objectPtr = 0, VectorPtr vector = 0);
     static DataObjectPtr createPlugin(const QString& name, ObjectStore *store, VectorPtr vector);
     static DataObjectConfigWidget* pluginWidget(const QString& name);
-    static DataObjectPtr createPlugin(const QString& name, ObjectStore *store, DataObjectConfigWidget *configWidget);
+    static DataObjectPtr createPlugin(const QString& name, ObjectStore *store, DataObjectConfigWidget *configWidget, bool setupInputsOutputs = true);
 
     virtual UpdateType update() = 0;
     virtual const QString& typeString() const { return _typeString; }
@@ -192,6 +192,8 @@ class DataObjectConfigWidget : public QWidget {
     virtual void setConfig(QSettings*);
     virtual void setupFromObject(Object* dataObject);
     virtual void setupSlots(QWidget* dialog);
+
+    virtual bool configurePropertiesFromXml(ObjectStore *store, QXmlStreamAttributes& attrs);
 
     KST_EXPORT void setInstance(DataObjectPtr inst);
     KST_EXPORT DataObjectPtr instance() const;

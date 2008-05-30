@@ -366,44 +366,52 @@ QString BasicPlugin::label(int precision) const {
 }
 
 
-
 void BasicPlugin::save(QXmlStreamWriter &s) {
   s.writeStartElement(staticTypeTag);
-  s.writeAttribute("name", propertyString());
+  s.writeAttribute("type", _pluginName);
+  saveNameInfo(s, VNUM|HNUM|XNUM);
   for (VectorMap::Iterator i = _inputVectors.begin(); i != _inputVectors.end(); ++i) {
-    s.writeStartElement("ivector");
-    s.writeAttribute("name", i.key());
+    s.writeStartElement("inputvector");
+    s.writeAttribute("type", i.key());
+    s.writeAttribute("tag", i.value()->Name());
     s.writeEndElement();
   }
   for (ScalarMap::Iterator i = _inputScalars.begin(); i != _inputScalars.end(); ++i) {
-    s.writeStartElement("iscalar");
-    s.writeAttribute("name", i.key());
+    s.writeStartElement("inputscalar");
+    s.writeAttribute("type", i.key());
+    s.writeAttribute("tag", i.value()->Name());
     s.writeEndElement();
   }
   for (StringMap::Iterator i = _inputStrings.begin(); i != _inputStrings.end(); ++i) {
-    s.writeStartElement("istring");
-    s.writeAttribute("name", i.key());
+    s.writeStartElement("inputstring");
+    s.writeAttribute("type", i.key());
+    s.writeAttribute("tag", i.value()->Name());
     s.writeEndElement();
   }
   for (VectorMap::Iterator i = _outputVectors.begin(); i != _outputVectors.end(); ++i) {
-    s.writeStartElement("ovector");
-    s.writeAttribute("name", i.key());
-    if (i.value()->isScalarList()) {
-      s.writeAttribute("scalarlist", "true");
-    }
+    s.writeStartElement("outputvector");
+    s.writeAttribute("type", i.key());
+    s.writeAttribute("tag", i.value()->slaveName());
     s.writeEndElement();
   }
   for (ScalarMap::Iterator i = _outputScalars.begin(); i != _outputScalars.end(); ++i) {
-    s.writeStartElement("oscalar");
-    s.writeAttribute("name", i.key());
+    s.writeStartElement("outputscalar");
+    s.writeAttribute("type", i.key());
+    s.writeAttribute("tag", i.value()->slaveName());
     s.writeEndElement();
   }
   for (StringMap::Iterator i = _outputStrings.begin(); i != _outputStrings.end(); ++i) {
-    s.writeStartElement("ostring");
-    s.writeAttribute("name", i.key());
+    s.writeStartElement("outputstring");
+    s.writeAttribute("type", i.key());
+    s.writeAttribute("tag", i.value()->slaveName());
     s.writeEndElement();
   }
   s.writeEndElement();
+}
+
+
+void BasicPlugin::saveProperties(QXmlStreamWriter &s) {
+  Q_UNUSED(s);
 }
 
 

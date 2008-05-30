@@ -21,7 +21,7 @@ class SamplePluginSource : public Kst::BasicPlugin {
   Q_OBJECT
 
   public:
-    SamplePluginSource(Kst::ObjectStore *store, const Kst::ObjectTag& tag);
+    SamplePluginSource(Kst::ObjectStore *store);
 
     ~SamplePluginSource();
 
@@ -40,6 +40,8 @@ class SamplePluginSource : public Kst::BasicPlugin {
     virtual QStringList outputVectorList() const;
     virtual QStringList outputScalarList() const;
     virtual QStringList outputStringList() const;
+
+    virtual void saveProperties(QXmlStreamWriter &s);
 };
 
 
@@ -53,8 +55,7 @@ class SamplePlugin : public QObject, public Kst::DataObjectPluginInterface {
 
     virtual bool hasConfigWidget() const { return true; }
 
-    virtual Kst::DataObject *create(Kst::ObjectStore *store,
-                               Kst::ObjectTag &tag, Kst::DataObjectConfigWidget *configWidget) const;
+    virtual Kst::DataObject *create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs = true) const;
 
     virtual Kst::DataObjectConfigWidget *configWidget() const;
 };

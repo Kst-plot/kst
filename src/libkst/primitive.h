@@ -45,6 +45,8 @@ class KST_EXPORT Primitive : public Object {
     UpdateType update();
 
     void setSlaveName(QString slaveName);
+    QString slaveName() { return _slaveName; }
+
   protected:
     Primitive(ObjectStore *store, Object* provider = 0L);
 

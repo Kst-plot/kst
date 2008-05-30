@@ -46,11 +46,23 @@ class ConfigWidgetSamplePlugin : public Kst::DataObjectConfigWidget, public Ui_S
         setSelectedVector(source->vector());
       }
     }
+
+    virtual bool configurePropertiesFromXml(Kst::ObjectStore *store, QXmlStreamAttributes& attrs) {
+      bool validTag = true;
+
+//       QStringRef av;
+//       av = attrs.value("value");
+//       if (!av.isNull()) {
+//         _configValue = QVariant(av.toString()).toBool();
+//       }
+
+      return validTag;
+    }
 };
 
 
-SamplePluginSource::SamplePluginSource(Kst::ObjectStore *store, const Kst::ObjectTag& tag)
-: Kst::BasicPlugin(store, tag) {
+SamplePluginSource::SamplePluginSource(Kst::ObjectStore *store)
+: Kst::BasicPlugin(store) {
 }
 
 
@@ -76,7 +88,6 @@ void SamplePluginSource::setupOutputs() {
 
 
 bool SamplePluginSource::algorithm() {
-   //Do nothing
   Kst::VectorPtr inputVector = _inputVectors[VECTOR_IN];
   Kst::VectorPtr outputVector = _outputVectors[VECTOR_OUT];
 
@@ -124,17 +135,23 @@ QStringList SamplePluginSource::outputStringList() const {
 }
 
 
+void SamplePluginSource::saveProperties(QXmlStreamWriter &s) {
+//   s.writeAttribute("tag", tag().tagString());
+}
+
+
 QString SamplePlugin::pluginName() const { return "Sample DataObject Plugin"; }
 
-Kst::DataObject *SamplePlugin::create(Kst::ObjectStore *store,
-                               Kst::ObjectTag &tag, Kst::DataObjectConfigWidget *configWidget) const {
+Kst::DataObject *SamplePlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {
 
   if (ConfigWidgetSamplePlugin* config = static_cast<ConfigWidgetSamplePlugin*>(configWidget)) {
 
-    SamplePluginSource* object = store->createObject<SamplePluginSource>(tag);
+    SamplePluginSource* object = store->createObject<SamplePluginSource>();
 
-    object->setInputVector(VECTOR_IN, config->selectedVector());
-    object->setupOutputs();
+    if (setupInputsOutputs) {
+      object->setInputVector(VECTOR_IN, config->selectedVector());
+      object->setupOutputs();
+    }
 
     object->setPluginName(pluginName());
 

@@ -9,25 +9,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "builtinobjects.h"
-#include "equationfactory.h"
-#include "csdfactory.h"
-#include "histogramfactory.h"
-#include "psdfactory.h"
-#include "eventmonitorfactory.h"
-#include "basicpluginfactory.h"
+#ifndef BASICPLUGINFACTORY_H
+#define BASICPLUGINFACTORY_H
+
+#include "objectfactory.h"
 
 namespace Kst {
-  namespace Builtins {
-    void initObjects() {
-      new EquationFactory;
-      new CSDFactory;
-      new HistogramFactory;
-      new PSDFactory;
-      new EventMonitorFactory;
-      new BasicPluginFactory;
-    }
-  }
+
+class BasicPluginFactory : public ObjectFactory {
+  public:
+    BasicPluginFactory();
+    ~BasicPluginFactory();
+    DataObjectPtr generateObject(ObjectStore *store, QXmlStreamReader& stream);
+};
+
 }
+
+#endif
 
 // vim: ts=2 sw=2 et
