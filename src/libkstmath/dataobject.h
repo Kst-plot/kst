@@ -52,6 +52,7 @@ class KST_EXPORT DataObject : public Object {
     virtual void attach();
 
     // These static methods are not for plugins to use
+    static void setupOnStartup(QSettings*);
     static void cleanupForExit();
     /** Returns a list of object plugins found on the system. */
     static QStringList pluginList();
@@ -186,10 +187,9 @@ class DataObjectConfigWidget : public QWidget {
   Q_OBJECT
   friend class DataObject;
   public:
-    DataObjectConfigWidget(); // will be reparented later
+    DataObjectConfigWidget(QSettings*); // will be reparented later
     virtual ~DataObjectConfigWidget();
 
-    virtual void setConfig(QSettings*);
     virtual void setupFromObject(Object* dataObject);
     virtual void setupSlots(QWidget* dialog);
 
@@ -206,9 +206,6 @@ class DataObjectConfigWidget : public QWidget {
 
   protected:
     QSettings *_cfg;
-    // If _instance is nonzero, then your settings are to be saved for this
-    // particular instance of the source, as opposed to globally.
-    DataObjectPtr _instance;
 } KST_EXPORT;
 
 }

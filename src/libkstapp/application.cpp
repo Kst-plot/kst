@@ -41,6 +41,7 @@ Application::Application(int &argc, char **argv)
   //inside of libkst... no?
   QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
   DataSource::setupOnStartup(settingsObject);
+  DataObject::setupOnStartup(settingsObject);
 
   _mainWindow = new MainWindow;
 

@@ -57,7 +57,7 @@ class SamplePlugin : public QObject, public Kst::DataObjectPluginInterface {
 
     virtual Kst::DataObject *create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs = true) const;
 
-    virtual Kst::DataObjectConfigWidget *configWidget() const;
+    virtual Kst::DataObjectConfigWidget *configWidget(QSettings *settingsObject) const;
 };
 
 #endif

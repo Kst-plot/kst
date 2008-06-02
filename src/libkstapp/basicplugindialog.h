@@ -31,6 +31,9 @@ class KST_EXPORT BasicPluginTab : public DataTab, Ui::BasicPluginTab {
 
     DataObjectConfigWidget* configWidget() { return _configWidget; }
 
+    void loadSettings();
+    void saveSettings();
+
   private:
     DataObjectConfigWidget* _configWidget;
 

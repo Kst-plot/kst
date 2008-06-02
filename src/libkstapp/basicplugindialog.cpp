@@ -56,6 +56,8 @@ BasicPluginDialog::BasicPluginDialog(QString& pluginName, ObjectPtr dataObject, 
 
   if (dataObject) {
     _basicPluginTab->configWidget()->setupFromObject(dataObject);
+  } else {
+    _basicPluginTab->configWidget()->load();
   }
 }
 
@@ -71,6 +73,7 @@ QString BasicPluginDialog::tagString() const {
 
 ObjectPtr BasicPluginDialog::createNewDataObject() const {
   DataObjectPtr dataObject = DataObject::createPlugin(_pluginName, _document->objectStore(), _basicPluginTab->configWidget());
+  _basicPluginTab->configWidget()->save();
   return dataObject;
 }
 

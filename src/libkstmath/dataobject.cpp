@@ -42,6 +42,13 @@
 
 namespace Kst {
 
+static QSettings *settingsObject = 0L;
+static QMap<QString,QString> urlMap;
+void DataObject::setupOnStartup(QSettings *cfg) {
+  settingsObject = cfg;
+}
+
+
 DataObject::DataObject(ObjectStore *store) : Object() {
   _curveHints = new CurveHintList;
   _isInputLoaded = false;
@@ -135,7 +142,7 @@ DataObjectConfigWidget* DataObject::pluginWidget(const QString& name) {
   for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
     if ((*it)->pluginName() == name) {
       if ((*it)->hasConfigWidget()) {
-        return (*it)->configWidget();
+        return (*it)->configWidget(settingsObject);
       }
       break;
     }
@@ -807,8 +814,8 @@ bool DataObject::uses(ObjectPtr p) const {
 
 
 /////////////////////////////////////////////////////////////////////////////
-DataObjectConfigWidget::DataObjectConfigWidget()
-: QWidget(0L), _cfg(0L) {
+DataObjectConfigWidget::DataObjectConfigWidget(QSettings *cfg)
+: QWidget(0L), _cfg(_cfg) {
 }
 
 
@@ -821,21 +828,6 @@ void DataObjectConfigWidget::save() {
 
 
 void DataObjectConfigWidget::load() {
-}
-
-
-void DataObjectConfigWidget::setConfig(QSettings *cfg) {
-  _cfg = cfg;
-}
-
-
-void DataObjectConfigWidget::setInstance(DataObjectPtr inst) {
-  _instance = inst;
-}
-
-
-DataObjectPtr DataObjectConfigWidget::instance() const {
-  return _instance;
 }
 
 
