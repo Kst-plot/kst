@@ -39,6 +39,7 @@ class KST_EXPORT GeneratedVector : public Vector {
     Object::UpdateType update();
     void setSaveData(bool save);
 
+    QString description();
   protected:
     GeneratedVector(ObjectStore *store, double x0=0, double x1=0, int n=0);
     GeneratedVector(ObjectStore *store, const QByteArray &data, double x0, double x1, int n);

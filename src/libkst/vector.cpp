@@ -661,6 +661,10 @@ void Vector::change(QByteArray &data) {
   }
 }
 
+QString Vector::description() {
+  return i18n("Vector: %1\n  %2 samples\n%3").arg(Name()).arg(length()).arg(_provider->description());
+}
+
 #undef ZERO_MEMORY
 #undef INITSIZE
 

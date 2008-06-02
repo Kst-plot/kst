@@ -108,6 +108,11 @@ QString GeneratedVector::_automaticDescriptiveName() const {
   return QString::number(_v[0])+".."+QString::number(_v[length()-1]);
 }
 
+QString GeneratedVector::description() {
+  return i18n("Generated Vector: %1\n"
+      "  %2 values from %3 to %4").arg(Name()).arg(length()).arg(_v[0]).arg(_v[length()-1]);
+}
+
 }
 
 // vim: ts=2 sw=2 et

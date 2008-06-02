@@ -51,6 +51,11 @@ void VectorSelector::setObjectStore(ObjectStore *store) {
 
 
 void VectorSelector::emitSelectionChanged() {
+  if (selectedVector()) {
+    setToolTip(selectedVector()->description());
+  } else {
+    setToolTip(QString());
+  }
   emit selectionChanged(_vector->currentText());
 }
 

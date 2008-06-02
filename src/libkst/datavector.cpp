@@ -792,5 +792,31 @@ QString DataVector::_automaticDescriptiveName() const {
   return field();
 }
 
+QString DataVector::description() {
+  QString IDstring;
+  QString range_string;
+
+  IDstring = i18n(
+      "Data Vector: %1\n"
+      "  %2\n"
+      "  Field: %3"
+      ).arg(Name()).arg(dataSource()->fileName()).arg(field());
+
+  if (countFromEOF()) {
+    IDstring += i18n("\n  Last %1 frames.").arg(numFrames());
+  } else if (readToEOF()) {
+    IDstring += i18n("\n  Frame %1 to end.").arg(startFrame());
+  } else {
+    IDstring += i18n("\n  %1 Frames starting at %2.").arg(numFrames()).arg(startFrame());
+  }
+  if (skip()) {
+    if (!doAve()) {
+      IDstring+=i18n("\n  Read 1 sample per %1 frames.").arg(skip());
+    } else {
+      IDstring+=i18n("\n  Average each %1 frames.").arg(skip());
+    }
+  }
+  return IDstring;
+}
 }
 // vim: ts=2 sw=2 et

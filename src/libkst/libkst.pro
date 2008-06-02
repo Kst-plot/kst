@@ -33,6 +33,7 @@ SOURCES += \
     math_kst.cpp \
     matrix.cpp \
     matrixfactory.cpp \
+    namedobject.cpp \
     object.cpp \
     objectlist.cpp \
     objectmap.cpp \
@@ -81,6 +82,7 @@ HEADERS += \
     math_kst.h \
     matrix.h \
     matrixfactory.h \
+    namedobject.h \
     object.h \
     objectlist.h \
     objectmap.h \

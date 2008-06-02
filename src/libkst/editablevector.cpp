@@ -97,5 +97,12 @@ QString EditableVector::_automaticDescriptiveName() const {
 
   return name;
 }
+
+QString EditableVector::description() {
+    return i18n("Editable Vector: %1\n"
+      "  %2 values").arg(Name()).arg(length());
+
+}
+
 }
 // vim: ts=2 sw=2 et
