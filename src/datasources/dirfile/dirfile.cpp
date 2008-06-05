@@ -20,6 +20,8 @@
 #include "getdata_struct.h"
 
 #include <QXmlStreamWriter>
+#include <QFileSystemWatcher>
+#include <QDir>
 
 class DirFileSource::Config {
   public:
@@ -43,7 +45,7 @@ class DirFileSource::Config {
 
 
 DirFileSource::DirFileSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
-: Kst::DataSource(store, cfg, filename, type), _rowIndex(0L), _config(0L), _tmpBuf(0L), _tmpBufSize(0) {
+: Kst::DataSource(store, cfg, filename, type, None), _rowIndex(0L), _config(0L), _tmpBuf(0L), _tmpBufSize(0) {
   _valid = false;
   _haveHeader = false;
   _fieldListComplete = false;
@@ -58,7 +60,27 @@ DirFileSource::DirFileSource(Kst::ObjectStore *store, QSettings *cfg, const QStr
   }
 
   _valid = true;
+  _directoryName = DirFilePlugin::getDirectory(_filename);
+
+  init();
   update();
+
+  // In testing using the automatic creator provided by Barth, the FileSystemWatcher is not properly picking up 
+  // modifications to files in the directory.  Temporarily, it's going to check one of the files for updates.
+  QFileSystemWatcher *watcher = new QFileSystemWatcher();
+  // Proper way.  See above
+  // watcher->addPath(_directoryName);
+
+  // Alternate method.
+  if (_fieldList.count() > 1) {
+    QString filePath = _directoryName + "/" + _fieldList[1];
+    watcher->addPath(filePath);
+    qDebug() << filePath << watcher->files() << watcher->directories();
+  }
+
+  connect(watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
+  connect(watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
+
 }
 
 
@@ -78,7 +100,7 @@ bool DirFileSource::init() {
   int err = 0;
 
   _frameCount = 0;
-  FormatType *ft = GetFormat(_filename.toLatin1(), &err);
+  FormatType *ft = GetFormat(_directoryName.toLatin1(), &err);
 
   if (err == GD_E_OK) {
     _fieldList.append("INDEX");
@@ -114,7 +136,7 @@ bool DirFileSource::init() {
 
 Kst::Object::UpdateType DirFileSource::update() {
   int err = 0;
-  int newNF = GetNFrames(_filename.toLatin1(), &err, 0L);
+  int newNF = GetNFrames(_directoryName.toLatin1(), &err, 0L);
   bool isnew = newNF != _frameCount;
 
   _frameCount = newNF;
@@ -128,13 +150,13 @@ int DirFileSource::readField(double *v, const QString& field, int s, int n) {
   int err = 0;
 
   if (n < 0) {
-    return GetData(_filename.toLatin1(), field.left(FIELD_LENGTH).toLatin1(),
+    return GetData(_directoryName.toLatin1(), field.left(FIELD_LENGTH).toLatin1(),
                    s, 0, /* 1st sframe, 1st samp */
                    0, 1, /* num sframes, num samps */
                    'd', (void*)v,
                    &err);
   } else {
-    return GetData(_filename.toLatin1(), field.left(FIELD_LENGTH).toLatin1(),
+    return GetData(_directoryName.toLatin1(), field.left(FIELD_LENGTH).toLatin1(),
                    s, 0, /* 1st sframe, 1st samp */
                    n, 0, /* num sframes, num samps */
                    'd', (void*)v,
@@ -146,7 +168,7 @@ int DirFileSource::readField(double *v, const QString& field, int s, int n) {
 int DirFileSource::writeField(const double *v, const QString& field, int s, int n) {
   int err = 0;
 
-  return PutData(_filename.toLatin1(), field.left(FIELD_LENGTH).toLatin1(),
+  return PutData(_directoryName.toLatin1(), field.left(FIELD_LENGTH).toLatin1(),
       s, 0, /* 1st sframe, 1st samp */
       n, 0, /* num sframes, num samps */
       'd', (void*)v,
@@ -156,14 +178,14 @@ int DirFileSource::writeField(const double *v, const QString& field, int s, int 
 
 bool DirFileSource::isValidField(const QString& field) const {
   int err = 0;
-  GetSamplesPerFrame(_filename.toLatin1(), field.left(FIELD_LENGTH).toLatin1(), &err);
+  GetSamplesPerFrame(_directoryName.toLatin1(), field.left(FIELD_LENGTH).toLatin1(), &err);
   return err == 0;
 }
 
 
 int DirFileSource::samplesPerFrame(const QString &field) {
   int err = 0;
-  return GetSamplesPerFrame(_filename.toLatin1(), field.left(FIELD_LENGTH).toLatin1(), &err);
+  return GetSamplesPerFrame(_directoryName.toLatin1(), field.left(FIELD_LENGTH).toLatin1(), &err);
 }
 
 
@@ -232,7 +254,7 @@ QStringList DirFilePlugin::fieldList(QSettings *cfg,
   Q_UNUSED(cfg);
   Q_UNUSED(type)
   int err = 0;
-  struct FormatType *ft = GetFormat(filename.toLatin1(), &err);
+  struct FormatType *ft = GetFormat(getDirectory(filename).toLatin1(), &err);
   QStringList fieldList;
 
   if (complete) {
@@ -274,18 +296,31 @@ QStringList DirFilePlugin::fieldList(QSettings *cfg,
 }
 
 
+QString DirFilePlugin::getDirectory(QString filepath) {
+  QString properDirPath = QFileInfo(filepath).path();
+  QFile file(filepath);
+  if (file.open(QFile::ReadOnly)) {
+    QTextStream stream(&file);
+    QString directoryName = stream.readLine();
+    properDirPath += "/";
+    properDirPath += directoryName;
+  }
+  return properDirPath;
+}
+
 
 int DirFilePlugin::understands(QSettings *cfg, const QString& filename) const {
   // FIXME: GetNFrames causes a memory error here.  I think it is due to
   // the lfilename parameter.
   Q_UNUSED(cfg);
   int err = 0;
-  int frameCount = GetNFrames(filename.toLatin1(), &err, 0L);
+
+  int frameCount = GetNFrames(getDirectory(filename).toLatin1(), &err, 0L);
   if (frameCount > 0 && err == GD_E_OK) {
     return 98;
   }
 
-  //kdDebug() << "Don't understand.  filename = [" << filename << "] FrameCount=" << frameCount << " err=" << err << endl;
+  // qDebug() << "Don't understand.  filename = [" << filename << "] FrameCount=" << frameCount << " err=" << err << endl;
   return 0;
 }
 

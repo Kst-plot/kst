@@ -61,7 +61,7 @@ class KST_EXPORT DataSource : public Object {
   Q_OBJECT
 
   public:
-    enum UpdateCheckType { Timer, File };
+    enum UpdateCheckType { Timer, File, None };
 
     static void setupOnStartup(QSettings*);
     static void cleanupForExit();

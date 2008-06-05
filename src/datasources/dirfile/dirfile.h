@@ -54,6 +54,8 @@ class DirFileSource : public Kst::DataSource {
     class Config;
 
   private:
+    QString _directoryName;
+
     int _frameCount;
     int *_rowIndex;
     int _numLinesAlloc;
@@ -97,6 +99,8 @@ class DirFilePlugin : public QObject, public Kst::DataSourcePluginInterface {
                                   bool *complete) const;
 
     virtual int understands(QSettings *cfg, const QString& filename) const;
+
+    static QString getDirectory(QString filepath);
 
     virtual bool supportsTime(QSettings *cfg, const QString& filename) const;
 

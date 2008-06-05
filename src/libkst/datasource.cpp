@@ -491,7 +491,7 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
 
   if (_updateCheckType == Timer) {
     QTimer::singleShot(DATASOURCE_UPDATE_TIMER_LENGTH, this, SLOT(checkUpdate()));
-  } else {
+  } else if (_updateCheckType == File) {
     QFileSystemWatcher *watcher = new QFileSystemWatcher();
     watcher->addPath(_filename);
     connect(watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
