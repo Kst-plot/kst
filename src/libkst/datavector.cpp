@@ -371,13 +371,9 @@ void DataVector::save(QXmlStreamWriter &s) {
     _file->unlock();
     s.writeAttribute("field", _field);
 
-    if (/*saveAbsolutePosition*/ true) { // FIXME
-      s.writeAttribute("start", QString::number(F0));
-      s.writeAttribute("count", QString::number(NF));
-    } else {
-      s.writeAttribute("start", QString::number(ReqF0));
-      s.writeAttribute("count", QString::number(ReqNF));
-    }
+    s.writeAttribute("start", QString::number(ReqF0));
+    s.writeAttribute("count", QString::number(ReqNF));
+
     if (doSkip()) {
       s.writeAttribute("skip", QString::number(Skip));
       if (doAve()) {
@@ -705,7 +701,6 @@ Object::UpdateType DataVector::doUpdate(bool force) {
   if (NumShifted > _size) {
     NumShifted = _size;
   }
-
   return Vector::internalUpdate(UPDATE);
 }
 
