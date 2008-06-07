@@ -1335,26 +1335,26 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         p->setPen(QPen(color(), width, style));
       }
 
-      if (!exv) {        
+      if (!exv) {
         // determine the bar position width. NOTE: This is done
         //  only if xv->isRising() as in this case the calculation
         //  is simple...
         drX = (maxX() - minX())/double(sampleCount());
-        if (xv->isRising()) {       
+        if (xv->isRising()) {
           double oldX = 0.0;
 
           for (i_pt = i0; i_pt <= iN; i_pt++) {
             rX = xv->interpolate(i_pt, NS);
-            if (i_pt > i0) {                      
+            if (i_pt > i0) {
               if (rX - oldX < drX) {
-                drX = rX - oldX;                      
+                drX = rX - oldX;
               }
             }
             oldX = rX; 
           }
         }
       }
-      
+
       for (i_pt = i0; i_pt <= iN; i_pt++) {
         visible = has_bot = has_top = has_left = has_right = true;
 
@@ -1839,6 +1839,46 @@ void Curve::paintLegendSymbol(Painter *p, const QRect& bound) {
 
 QString Curve::_automaticDescriptiveName() const {
   return i18n("%1 vs %2").arg(yVector()->descriptiveName()).arg(xVector()->descriptiveName());
+}
+
+QString Curve::descriptionTip() const {
+  QString tip;
+
+  tip = i18n("Curve: %1\nX: %2\nY: %3").arg(Name()).arg(xVector()->descriptionTip()).arg(yVector()->descriptionTip());
+
+  VectorPtr ev = xErrorVector();
+  if (ev) {
+    tip += i18n("\nX+ Error: %1").arg(ev->Name());
+  }
+
+  ev = xMinusErrorVector();
+  if (ev) {
+    tip += i18n("\nX- Error: %1").arg(ev->Name());
+  }
+
+  ev = yErrorVector();
+  if (ev) {
+    tip += i18n("\nY+ Error: %1").arg(ev->Name());
+  }
+
+  ev = yMinusErrorVector();
+  if (ev) {
+    tip += i18n("\nY- Error: %1").arg(ev->Name());
+  }
+
+  if (hasLines()) {
+    tip += i18n("\nLines: Width %1 and Style %2").arg(lineWidth()).arg(lineStyle());
+  }
+
+  if (hasPoints()) {
+    tip += i18n("\nPoints: Style %1").arg(pointType());
+  }
+
+  if (hasBars()) {
+    tip += i18n("\nBars");
+  }
+
+  return tip;
 }
 
 }

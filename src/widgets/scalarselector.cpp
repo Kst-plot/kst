@@ -39,6 +39,7 @@ ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
   connect(_editScalar, SIGNAL(pressed()), this, SLOT(editScalar()));
   connect(_selectScalar, SIGNAL(pressed()), this, SLOT(selectScalar()));
   connect(_scalar, SIGNAL(currentIndexChanged(int)), this, SLOT(emitSelectionChanged()));
+  connect(_scalar, SIGNAL(currentIndexChanged(int)), this, SLOT(updateDescriptionTip()));
 }
 
 
@@ -49,6 +50,14 @@ ScalarSelector::~ScalarSelector() {
 void ScalarSelector::setObjectStore(ObjectStore *store) {
   _store = store;
   fillScalars();
+}
+
+void ScalarSelector::updateDescriptionTip() {
+  if (selectedScalar()) {
+    setToolTip(selectedScalar()->descriptionTip());
+  } else {
+    setToolTip(QString());
+  }
 }
 
 

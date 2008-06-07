@@ -153,7 +153,7 @@ class Vector : public Primitive {
 
     void triggerUpdateSignal(ObjectPtr object);
 
-    QString description();
+    virtual QString descriptionTip() const;
   Q_SIGNALS:
     void vectorUpdated(ObjectPtr object);
 

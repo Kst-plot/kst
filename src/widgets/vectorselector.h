@@ -47,6 +47,7 @@ class KST_EXPORT VectorSelector : public QWidget, public Ui::VectorSelector {
     void newVector();
     void editVector();
     void emitSelectionChanged();
+    void updateDescriptionTip();
 
   private:
     void fillVectors();

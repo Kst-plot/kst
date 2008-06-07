@@ -89,6 +89,7 @@ public:
 
     virtual DataObjectPtr makeDuplicate();
 
+    virtual QString descriptionTip() const;
   protected:
     Histogram(ObjectStore *store);
     Histogram(ObjectStore *store, VectorPtr in_V,

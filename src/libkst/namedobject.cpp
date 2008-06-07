@@ -40,7 +40,7 @@ NamedObject::~NamedObject() {
 
 // new Name system
 QString NamedObject::Name() const {
-  return descriptiveName()+":"+shortName();
+  return descriptiveName()+" ("+shortName()+")";
 }
 
 
@@ -152,8 +152,8 @@ void NamedObject::processShortNameIndexAttributes(QXmlStreamAttributes &attrs) {
     _mnum = R.toString().toInt();
 }
 
-QString NamedObject::description() {
-  return descriptiveName();
+QString NamedObject::descriptionTip() const {
+  return Name();
 }
 
 }

@@ -78,6 +78,8 @@ class KST_EXPORT Equation : public DataObject {
 
     bool uses(ObjectPtr p) const;
 
+    virtual QString descriptionTip() const;
+
   protected:
     Equation(ObjectStore *store, const QString& equation, double x0, double x1, int nx);
     Equation(ObjectStore *store, const QString& equation = QString::null, VectorPtr xvector = 0L, bool do_interp = false);

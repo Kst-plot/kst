@@ -74,7 +74,7 @@ public:
     QString Name() const; // eg GYRO1:V1
     QString descriptiveName() const; // eg GYRO1: automatic or manual
     QString shortName() const; // eg V1: always automatically generated
-    virtual QString description(); // description for tooltips
+    virtual QString descriptionTip() const; // description for tooltips
     void setDescriptiveName(QString new_name); // auto if new_name.isEmpty()
     bool descriptiveNameIsManual() const;
     static void processShortNameIndexAttributes(QXmlStreamAttributes &attrs);

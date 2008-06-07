@@ -111,7 +111,7 @@ class KST_EXPORT DataVector : public Vector {
     /** the data source */
     DataSourcePtr dataSource() const;
 
-    virtual QString description();
+    virtual QString descriptionTip() const;
 
   public Q_SLOTS:
     void sourceUpdated(ObjectPtr object);

@@ -98,7 +98,7 @@ QString EditableVector::_automaticDescriptiveName() const {
   return name;
 }
 
-QString EditableVector::description() {
+QString EditableVector::descriptionTip() const {
     return i18n("Editable Vector: %1\n"
       "  %2 values").arg(Name()).arg(length());
 

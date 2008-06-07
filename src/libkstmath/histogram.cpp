@@ -472,5 +472,19 @@ QString Histogram::_automaticDescriptiveName() const {
   return (_inputVectors[RAWVECTOR]->descriptiveName());
 }
 
+QString Histogram::descriptionTip() const {
+  QString tip;
+
+  tip = i18n("Histogram: %1").arg(Name());
+  if (realTimeAutoBin()) {
+    tip+= i18n("\n  Auto-bin");
+  } else {
+    tip += i18n("\n  %1 bins from %2 to %3").arg(numberOfBins()).arg(xMin()).arg(xMax());
+  }
+  tip += i18n("\nInput: %1").arg(_inputVectors[RAWVECTOR]->descriptionTip());
+
+  return tip;
+}
+
 }
 // vim: ts=2 sw=2 et

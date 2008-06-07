@@ -91,6 +91,8 @@ class KST_EXPORT PSD : public DataObject {
 
     virtual DataObjectPtr makeDuplicate();
 
+    virtual QString descriptionTip() const;
+
   protected:
     PSD(ObjectStore *store);
     PSD(ObjectStore *store, VectorPtr in_V, double freq,

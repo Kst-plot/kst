@@ -145,6 +145,7 @@ class KST_EXPORT Curve: public Relation {
     // see KstRelation::providerDataObject
     virtual DataObjectPtr providerDataObject() const;
 
+    virtual QString descriptionTip() const;
   public Q_SLOTS:
     void vectorUpdated(ObjectPtr object);
 

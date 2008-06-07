@@ -787,7 +787,7 @@ QString DataVector::_automaticDescriptiveName() const {
   return field();
 }
 
-QString DataVector::description() {
+QString DataVector::descriptionTip() const {
   QString IDstring;
   QString range_string;
 

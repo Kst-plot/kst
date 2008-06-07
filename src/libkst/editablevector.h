@@ -35,7 +35,7 @@ class EditableVector : public Vector {
 
     void setSaveData(bool save);
 
-    virtual QString description();
+    virtual QString descriptionTip() const;
 
   protected:
     KST_EXPORT EditableVector(ObjectStore *store, const QByteArray& data);
