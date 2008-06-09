@@ -75,7 +75,6 @@ DirFileSource::DirFileSource(Kst::ObjectStore *store, QSettings *cfg, const QStr
   if (_fieldList.count() > 1) {
     QString filePath = _directoryName + "/" + _fieldList[1];
     watcher->addPath(filePath);
-    qDebug() << filePath << watcher->files() << watcher->directories();
   }
 
   connect(watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
