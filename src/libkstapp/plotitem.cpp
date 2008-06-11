@@ -77,6 +77,8 @@ PlotItem::PlotItem(View *parent)
   _topLabelFont = parentView()->defaultFont();
   _rightLabelFont = parentView()->defaultFont();
 
+  _undoStack = new QUndoStack(this);
+
   createActions();
 
   PlotItemManager::self()->addPlot(this);
@@ -152,6 +154,10 @@ void PlotItem::createActions() {
   _zoomMaxSpikeInsensitive->setShortcut(Qt::Key_S);
   registerShortcut(_zoomMaxSpikeInsensitive);
   connect(_zoomMaxSpikeInsensitive, SIGNAL(triggered()), this, SLOT(zoomMaxSpikeInsensitive()));
+
+  _zoomPrevious = _undoStack->createUndoAction(this, tr("Zoom Previous"));
+  _zoomPrevious->setShortcut(Qt::Key_R);
+  registerShortcut(_zoomPrevious);
 
   _zoomYMeanCentered = new QAction(tr("Y-Zoom Mean-centered"), this);
   _zoomYMeanCentered->setShortcut(Qt::Key_A);
@@ -249,6 +255,7 @@ void PlotItem::createZoomMenu() {
 
   _zoomMenu->addAction(_zoomMaximum);
   _zoomMenu->addAction(_zoomMaxSpikeInsensitive);
+  _zoomMenu->addAction(_zoomPrevious);
   _zoomMenu->addAction(_zoomYMeanCentered);
 
   _zoomMenu->addSeparator();
@@ -275,6 +282,8 @@ void PlotItem::createZoomMenu() {
 
 
 void PlotItem::addToMenuForContextEvent(QMenu &menu) {
+  _zoomLogX->setChecked(xAxis()->axisLog());
+  _zoomLogY->setChecked(yAxis()->axisLog());
   menu.addMenu(_zoomMenu);
 }
 
@@ -1680,6 +1689,8 @@ void PlotItem::resetSelectionRect() {
 void PlotItem::zoomFixedExpression(const QRectF &projection) {
   qDebug() << "zoomFixedExpression" << endl;
   ZoomCommand *cmd = new ZoomFixedExpressionCommand(this, projection);
+  ZoomCommand *cmdLocal = new ZoomFixedExpressionCommand(this, projection, false);
+  _undoStack->push(cmdLocal);
   cmd->redo();
 }
 
@@ -1687,6 +1698,8 @@ void PlotItem::zoomFixedExpression(const QRectF &projection) {
 void PlotItem::zoomXRange(const QRectF &projection) {
   qDebug() << "zoomXRange" << endl;
   ZoomCommand *cmd = new ZoomXRangeCommand(this, projection);
+  ZoomCommand *cmdLocal = new ZoomXRangeCommand(this, projection, false);
+  _undoStack->push(cmdLocal);
   cmd->redo();
 }
 
@@ -1694,6 +1707,8 @@ void PlotItem::zoomXRange(const QRectF &projection) {
 void PlotItem::zoomYRange(const QRectF &projection) {
   qDebug() << "zoomYRange" << endl;
   ZoomCommand *cmd = new ZoomYRangeCommand(this, projection);
+  ZoomCommand *cmdLocal = new ZoomYRangeCommand(this, projection, false);
+  _undoStack->push(cmdLocal);
   cmd->redo();
 }
 
@@ -1701,6 +1716,8 @@ void PlotItem::zoomYRange(const QRectF &projection) {
 void PlotItem::zoomMaximum() {
   qDebug() << "zoomMaximum" << endl;
   ZoomCommand *cmd = new ZoomMaximumCommand(this);
+  ZoomCommand *cmdLocal = new ZoomMaximumCommand(this, false);
+  _undoStack->push(cmdLocal);
   cmd->redo();
 }
 
@@ -1708,6 +1725,8 @@ void PlotItem::zoomMaximum() {
 void PlotItem::zoomMaxSpikeInsensitive() {
   qDebug() << "zoomMaxSpikeInsensitive" << endl;
   ZoomCommand *cmd = new ZoomMaxSpikeInsensitiveCommand(this);
+  ZoomCommand *cmdLocal = new ZoomMaxSpikeInsensitiveCommand(this, false);
+  _undoStack->push(cmdLocal);
   cmd->redo();
 }
 
@@ -1715,6 +1734,8 @@ void PlotItem::zoomMaxSpikeInsensitive() {
 void PlotItem::zoomYMeanCentered() {
   qDebug() << "zoomYMeanCentered" << endl;
   ZoomCommand *cmd = new ZoomYMeanCenteredCommand(this);
+  ZoomCommand *cmdLocal = new ZoomYMeanCenteredCommand(this, false);
+  _undoStack->push(cmdLocal);
   cmd->redo();
 }
 
@@ -1722,6 +1743,8 @@ void PlotItem::zoomYMeanCentered() {
 void PlotItem::zoomXMaximum() {
   qDebug() << "zoomXMaximum" << endl;
   ZoomCommand *cmd = new ZoomXMaximumCommand(this);
+  ZoomCommand *cmdLocal = new ZoomXMaximumCommand(this, false);
+  _undoStack->push(cmdLocal);
   cmd->redo();
 }
 
@@ -1729,6 +1752,8 @@ void PlotItem::zoomXMaximum() {
 void PlotItem::zoomXRight() {
   qDebug() << "zoomXRight" << endl;
   ZoomCommand *cmd = new ZoomXRightCommand(this);
+  ZoomCommand *cmdLocal = new ZoomXRightCommand(this, false);
+  _undoStack->push(cmdLocal);
   cmd->redo();
 }
 
@@ -1736,6 +1761,8 @@ void PlotItem::zoomXRight() {
 void PlotItem::zoomXLeft() {
   qDebug() << "zoomXLeft" << endl;
   ZoomCommand *cmd = new ZoomXLeftCommand(this);
+  ZoomCommand *cmdLocal = new ZoomXLeftCommand(this, false);
+  _undoStack->push(cmdLocal);
   cmd->redo();
 }
 
@@ -1744,6 +1771,8 @@ void PlotItem::zoomXOut() {
   qDebug() << "zoomXOut" << endl;
   resetSelectionRect();
   ZoomCommand *cmd = new ZoomXOutCommand(this);
+  ZoomCommand *cmdLocal = new ZoomXOutCommand(this, false);
+  _undoStack->push(cmdLocal);
   cmd->redo();
 }
 
@@ -1752,6 +1781,8 @@ void PlotItem::zoomXIn() {
   qDebug() << "zoomXIn" << endl;
   resetSelectionRect();
   ZoomCommand *cmd = new ZoomXInCommand(this);
+  ZoomCommand *cmdLocal = new ZoomXInCommand(this, false);
+  _undoStack->push(cmdLocal);
   cmd->redo();
 }
 
@@ -1763,21 +1794,26 @@ void PlotItem::zoomNormalizeXtoY() {
     return; //apparently we don't want to do anything here according to kst2dplot...
 
   ZoomCommand *cmd = new ZoomNormalizeXToYCommand(this);
+  ZoomCommand *cmdLocal = new ZoomNormalizeXToYCommand(this, false);
+  _undoStack->push(cmdLocal);
   cmd->redo();
 }
 
 
 void PlotItem::zoomLogX() {
   qDebug() << "zoomLogX" << endl;
-  xAxis()->setAxisLog(_zoomLogX->isChecked());
-  setProjectionRect(computedProjectionRect()); //need to recompute
-  update();
+  ZoomCommand *cmd = new ZoomXLogCommand(this, !xAxis()->axisLog());
+  ZoomCommand *cmdLocal = new ZoomXLogCommand(this, !xAxis()->axisLog(), false);
+  _undoStack->push(cmdLocal);
+  cmd->redo();
 }
 
 
 void PlotItem::zoomYLocalMaximum() {
   qDebug() << "zoomYLocalMaximum" << endl;
   ZoomCommand *cmd = new ZoomYLocalMaximumCommand(this);
+  ZoomCommand *cmdLocal = new ZoomYLocalMaximumCommand(this, false);
+  _undoStack->push(cmdLocal);
   cmd->redo();
 }
 
@@ -1785,6 +1821,8 @@ void PlotItem::zoomYLocalMaximum() {
 void PlotItem::zoomYMaximum() {
   qDebug() << "zoomYMaximum" << endl;
   ZoomCommand *cmd = new ZoomYMaximumCommand(this);
+  ZoomCommand *cmdLocal = new ZoomYMaximumCommand(this, false);
+  _undoStack->push(cmdLocal);
   cmd->redo();
 }
 
@@ -1792,6 +1830,8 @@ void PlotItem::zoomYMaximum() {
 void PlotItem::zoomYUp() {
   qDebug() << "zoomYUp" << endl;
   ZoomCommand *cmd = new ZoomYUpCommand(this);
+  ZoomCommand *cmdLocal = new ZoomYUpCommand(this, false);
+  _undoStack->push(cmdLocal);
   cmd->redo();
 }
 
@@ -1799,6 +1839,8 @@ void PlotItem::zoomYUp() {
 void PlotItem::zoomYDown() {
   qDebug() << "zoomYDown" << endl;
   ZoomCommand *cmd = new ZoomYDownCommand(this);
+  ZoomCommand *cmdLocal = new ZoomYDownCommand(this, false);
+  _undoStack->push(cmdLocal);
   cmd->redo();
 }
 
@@ -1807,6 +1849,8 @@ void PlotItem::zoomYOut() {
   qDebug() << "zoomYOut" << endl;
   resetSelectionRect();
   ZoomCommand *cmd = new ZoomYOutCommand(this);
+  ZoomCommand *cmdLocal = new ZoomYOutCommand(this, false);
+  _undoStack->push(cmdLocal);
   cmd->redo();
 }
 
@@ -1815,6 +1859,8 @@ void PlotItem::zoomYIn() {
   qDebug() << "zoomYIn" << endl;
   resetSelectionRect();
   ZoomCommand *cmd = new ZoomYInCommand(this);
+  ZoomCommand *cmdLocal = new ZoomYInCommand(this, false);
+  _undoStack->push(cmdLocal);
   cmd->redo();
 }
 
@@ -1826,15 +1872,18 @@ void PlotItem::zoomNormalizeYtoX() {
     return; //apparently we don't want to do anything here according to kst2dplot...
 
   ZoomCommand *cmd = new ZoomNormalizeYToXCommand(this);
+  ZoomCommand *cmdLocal = new ZoomNormalizeYToXCommand(this, false);
+  _undoStack->push(cmdLocal);
   cmd->redo();
 }
 
 
 void PlotItem::zoomLogY() {
   qDebug() << "zoomLogY" << endl;
-  yAxis()->setAxisLog(_zoomLogY->isChecked());
-  setProjectionRect(computedProjectionRect()); //need to recompute
-  update();
+  ZoomCommand *cmd = new ZoomYLogCommand(this, !yAxis()->axisLog());
+  ZoomCommand *cmdLocal = new ZoomYLogCommand(this, !yAxis()->axisLog(), false);
+  _undoStack->push(cmdLocal);
+  cmd->redo();
 }
 
 
@@ -1867,6 +1916,7 @@ void CreatePlotCommand::createItem() {
 
   CreateCommand::createItem();
 }
+
 
 void CreatePlotForCurve::createItem() {
   QPointF center = _view->sceneRect().center();
@@ -2042,8 +2092,8 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
 }
 
 
-ZoomCommand::ZoomCommand(PlotItem *item, const QString &text)
-    : ViewItemCommand(item, text) {
+ZoomCommand::ZoomCommand(PlotItem *item, const QString &text, bool addToStack)
+    : ViewItemCommand(item, text, addToStack) {
 
   if (!item->isTiedZoom()) {
     _originalStates << item->currentZoomState();
@@ -2406,6 +2456,24 @@ void ZoomNormalizeYToXCommand::applyZoomTo(PlotItem *item) {
 
   item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
   item->setProjectionRect(compute);
+}
+
+
+/*
+ * Switch the X Axis to a Log Scale.
+ */
+void ZoomXLogCommand::applyZoomTo(PlotItem *item) {
+  item->xAxis()->setAxisLog(_enableLog);
+  item->setProjectionRect(item->computedProjectionRect()); //need to recompute
+}
+
+
+/*
+ * Switch the Y Axis to a Log Scale.
+ */
+void ZoomYLogCommand::applyZoomTo(PlotItem *item) {
+  item->yAxis()->setAxisLog(_enableLog);
+  item->setProjectionRect(item->computedProjectionRect()); //need to recompute
 }
 
 
