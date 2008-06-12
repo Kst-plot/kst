@@ -207,8 +207,9 @@ bool View::event(QEvent *event) {
       if (!viewItem)
         continue;
 
-      if (viewItem && viewItem->tryShortcut(e->key()))
+      if (viewItem && viewItem->hasFocus() && viewItem->tryShortcut(e->key())) {
         return true;
+      }
     }
   }
 

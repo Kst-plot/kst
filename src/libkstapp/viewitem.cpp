@@ -1730,7 +1730,7 @@ void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
 
 void ViewItem::registerShortcut(QAction *action) {
   Q_ASSERT(action->parent() == this);
-  parentView()->grabShortcut(action->shortcut(), Qt::ApplicationShortcut);
+  parentView()->grabShortcut(action->shortcut());
   _shortcutMap.insert(action->shortcut(), action);
 }
 

@@ -164,6 +164,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     void triggerUpdate() { emit geometryChanged(); update(rect()); }
     virtual void addToMenuForContextEvent(QMenu &menu);
+    virtual bool tryShortcut(const QString &keySequence);
 
   Q_SIGNALS:
     void marginsChanged();

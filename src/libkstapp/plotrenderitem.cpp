@@ -738,6 +738,11 @@ void PlotRenderItem::computeMeanCentered(Qt::Orientation orientation, qreal *min
   *max = maximum;
 }
 
+
+bool PlotRenderItem::tryShortcut(const QString &keySequence) {
+  return plotItem()->tryShortcut(keySequence);
+}
+
 }
 
 // vim: ts=2 sw=2 et

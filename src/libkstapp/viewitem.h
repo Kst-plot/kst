@@ -134,6 +134,8 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     void setAcceptsContextMenuEvents(bool acceptsContextMenuEvents)
     { _acceptsContextMenuEvents = acceptsContextMenuEvents; }
 
+    virtual bool tryShortcut(const QString &keySequence);
+
   Q_SIGNALS:
     void geometryChanged();
     void creationComplete();
@@ -202,7 +204,6 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     void updateView();
 
   private:
-    bool tryShortcut(const QString &keySequence);
     virtual void updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect);
 
   private:

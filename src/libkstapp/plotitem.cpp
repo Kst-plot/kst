@@ -1613,6 +1613,11 @@ QSizeF PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
 }
 
 
+bool PlotItem::tryShortcut(const QString &keySequence) {
+  return ViewItem::tryShortcut(keySequence);
+}
+
+
 void PlotItem::setProjectionRect(const QRectF &rect) {
   if (!(_projectionRect == rect || rect.isEmpty() || !rect.isValid())) {
 #if DEBUG_ZOOM

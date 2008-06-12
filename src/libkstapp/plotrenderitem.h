@@ -64,6 +64,8 @@ class PlotRenderItem : public ViewItem
     void computeBorder(Qt::Orientation orientation, qreal *min, qreal *max) const;
     void resetSelectionRect();
 
+    virtual bool tryShortcut(const QString &keySequence);
+
   public Q_SLOTS:
     virtual void edit();
     virtual void raise();
