@@ -359,6 +359,11 @@ void PlotRenderItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     return;
   }
 
+  if (event->button() == Qt::MidButton) {
+    plotItem()->zoomPrevious();
+    event->ignore();
+  }
+
   if (checkBox().contains(event->pos())) {
     plotItem()->setTiedZoom(!plotItem()->isTiedZoom());
     update(); //FIXME should optimize instead of redrawing entire curve!

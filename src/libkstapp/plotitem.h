@@ -176,6 +176,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void zoomYRange(const QRectF &projection);
     void zoomMaximum();
     void zoomMaxSpikeInsensitive();
+    void zoomPrevious();
     void zoomYMeanCentered();
     void zoomXMaximum();
     void zoomXRight();
@@ -376,7 +377,7 @@ class PlotItemFactory : public GraphicsFactory {
 class KST_EXPORT ZoomCommand : public ViewItemCommand
 {
   public:
-    ZoomCommand(PlotItem *item, const QString &text, bool addToStack = true);
+    ZoomCommand(PlotItem *item, const QString &text);
     virtual ~ZoomCommand();
 
     virtual void undo();
@@ -392,8 +393,8 @@ class KST_EXPORT ZoomCommand : public ViewItemCommand
 class KST_EXPORT ZoomFixedExpressionCommand : public ZoomCommand
 {
   public:
-    ZoomFixedExpressionCommand(PlotItem *item, const QRectF &fixed, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Zoom Fixed Expression"), addToStack), _fixed(fixed) {}
+    ZoomFixedExpressionCommand(PlotItem *item, const QRectF &fixed)
+        : ZoomCommand(item, QObject::tr("Zoom Fixed Expression")), _fixed(fixed) {}
     virtual ~ZoomFixedExpressionCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -406,8 +407,8 @@ class KST_EXPORT ZoomFixedExpressionCommand : public ZoomCommand
 class KST_EXPORT ZoomXRangeCommand : public ZoomCommand
 {
   public:
-    ZoomXRangeCommand(PlotItem *item, const QRectF &fixed, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Zoom X Range Expression"), addToStack), _fixed(fixed) {}
+    ZoomXRangeCommand(PlotItem *item, const QRectF &fixed)
+        : ZoomCommand(item, QObject::tr("Zoom X Range Expression")), _fixed(fixed) {}
     virtual ~ZoomXRangeCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -420,8 +421,8 @@ class KST_EXPORT ZoomXRangeCommand : public ZoomCommand
 class KST_EXPORT ZoomYRangeCommand : public ZoomCommand
 {
   public:
-    ZoomYRangeCommand(PlotItem *item, const QRectF &fixed, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Zoom X Range Expression"), addToStack), _fixed(fixed) {}
+    ZoomYRangeCommand(PlotItem *item, const QRectF &fixed)
+        : ZoomCommand(item, QObject::tr("Zoom X Range Expression")), _fixed(fixed) {}
     virtual ~ZoomYRangeCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -434,8 +435,8 @@ class KST_EXPORT ZoomYRangeCommand : public ZoomCommand
 class KST_EXPORT ZoomMaximumCommand : public ZoomCommand
 {
   public:
-    ZoomMaximumCommand(PlotItem *item, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Zoom Maximum"), addToStack) {}
+    ZoomMaximumCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Maximum")) {}
     virtual ~ZoomMaximumCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -444,8 +445,8 @@ class KST_EXPORT ZoomMaximumCommand : public ZoomCommand
 class KST_EXPORT ZoomMaxSpikeInsensitiveCommand : public ZoomCommand
 {
   public:
-    ZoomMaxSpikeInsensitiveCommand(PlotItem *item, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Zoom Max Spike Insensitive"), addToStack) {}
+    ZoomMaxSpikeInsensitiveCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Max Spike Insensitive")) {}
     virtual ~ZoomMaxSpikeInsensitiveCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -454,8 +455,8 @@ class KST_EXPORT ZoomMaxSpikeInsensitiveCommand : public ZoomCommand
 class KST_EXPORT ZoomYMeanCenteredCommand : public ZoomCommand
 {
   public:
-    ZoomYMeanCenteredCommand(PlotItem *item, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Zoom Y Mean Centered"), addToStack) {}
+    ZoomYMeanCenteredCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y Mean Centered")) {}
     virtual ~ZoomYMeanCenteredCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -464,8 +465,8 @@ class KST_EXPORT ZoomYMeanCenteredCommand : public ZoomCommand
 class KST_EXPORT ZoomXMaximumCommand : public ZoomCommand
 {
   public:
-    ZoomXMaximumCommand(PlotItem *item, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Zoom X Maximum"), addToStack) {}
+    ZoomXMaximumCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom X Maximum")) {}
     virtual ~ZoomXMaximumCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -474,8 +475,8 @@ class KST_EXPORT ZoomXMaximumCommand : public ZoomCommand
 class KST_EXPORT ZoomXRightCommand : public ZoomCommand
 {
   public:
-    ZoomXRightCommand(PlotItem *item, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Scroll X Right"), addToStack) {}
+    ZoomXRightCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Scroll X Right")) {}
     virtual ~ZoomXRightCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -484,8 +485,8 @@ class KST_EXPORT ZoomXRightCommand : public ZoomCommand
 class KST_EXPORT ZoomXLeftCommand : public ZoomCommand
 {
   public:
-    ZoomXLeftCommand(PlotItem *item, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Scroll X Left"), addToStack) {}
+    ZoomXLeftCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Scroll X Left")) {}
     virtual ~ZoomXLeftCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -494,8 +495,8 @@ class KST_EXPORT ZoomXLeftCommand : public ZoomCommand
 class KST_EXPORT ZoomXOutCommand : public ZoomCommand
 {
   public:
-    ZoomXOutCommand(PlotItem *item, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Zoom X Out"), addToStack) {}
+    ZoomXOutCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom X Out")) {}
     virtual ~ZoomXOutCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -504,8 +505,8 @@ class KST_EXPORT ZoomXOutCommand : public ZoomCommand
 class KST_EXPORT ZoomXInCommand : public ZoomCommand
 {
   public:
-    ZoomXInCommand(PlotItem *item, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Zoom X In"), addToStack) {}
+    ZoomXInCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom X In")) {}
     virtual ~ZoomXInCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -514,8 +515,8 @@ class KST_EXPORT ZoomXInCommand : public ZoomCommand
 class KST_EXPORT ZoomNormalizeXToYCommand : public ZoomCommand
 {
   public:
-    ZoomNormalizeXToYCommand(PlotItem *item, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Zoom Normalize X to Y"), addToStack) {}
+    ZoomNormalizeXToYCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Normalize X to Y")) {}
     virtual ~ZoomNormalizeXToYCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -524,8 +525,8 @@ class KST_EXPORT ZoomNormalizeXToYCommand : public ZoomCommand
 class KST_EXPORT ZoomYLocalMaximumCommand : public ZoomCommand
 {
   public:
-    ZoomYLocalMaximumCommand(PlotItem *item, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Zoom Y Local Maximum"), addToStack) {}
+    ZoomYLocalMaximumCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y Local Maximum")) {}
     virtual ~ZoomYLocalMaximumCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -534,8 +535,8 @@ class KST_EXPORT ZoomYLocalMaximumCommand : public ZoomCommand
 class KST_EXPORT ZoomYMaximumCommand : public ZoomCommand
 {
   public:
-    ZoomYMaximumCommand(PlotItem *item, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Zoom Y Maximum"), addToStack) {}
+    ZoomYMaximumCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y Maximum")) {}
     virtual ~ZoomYMaximumCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -544,8 +545,8 @@ class KST_EXPORT ZoomYMaximumCommand : public ZoomCommand
 class KST_EXPORT ZoomYUpCommand : public ZoomCommand
 {
   public:
-    ZoomYUpCommand(PlotItem *item, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Zoom Y Up"), addToStack) {}
+    ZoomYUpCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y Up")) {}
     virtual ~ZoomYUpCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -554,8 +555,8 @@ class KST_EXPORT ZoomYUpCommand : public ZoomCommand
 class KST_EXPORT ZoomYDownCommand : public ZoomCommand
 {
   public:
-    ZoomYDownCommand(PlotItem *item, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Zoom Y Down"), addToStack) {}
+    ZoomYDownCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y Down")) {}
     virtual ~ZoomYDownCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -564,8 +565,8 @@ class KST_EXPORT ZoomYDownCommand : public ZoomCommand
 class KST_EXPORT ZoomYOutCommand : public ZoomCommand
 {
   public:
-    ZoomYOutCommand(PlotItem *item, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Zoom Y Out"), addToStack) {}
+    ZoomYOutCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y Out")) {}
     virtual ~ZoomYOutCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -574,8 +575,8 @@ class KST_EXPORT ZoomYOutCommand : public ZoomCommand
 class KST_EXPORT ZoomYInCommand : public ZoomCommand
 {
   public:
-    ZoomYInCommand(PlotItem *item, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Zoom Y In"), addToStack) {}
+    ZoomYInCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Y In")) {}
     virtual ~ZoomYInCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -584,8 +585,8 @@ class KST_EXPORT ZoomYInCommand : public ZoomCommand
 class KST_EXPORT ZoomNormalizeYToXCommand : public ZoomCommand
 {
   public:
-    ZoomNormalizeYToXCommand(PlotItem *item, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Zoom Normalize Y to X"), addToStack) {}
+    ZoomNormalizeYToXCommand(PlotItem *item)
+        : ZoomCommand(item, QObject::tr("Zoom Normalize Y to X")) {}
     virtual ~ZoomNormalizeYToXCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -594,8 +595,8 @@ class KST_EXPORT ZoomNormalizeYToXCommand : public ZoomCommand
 class KST_EXPORT ZoomXLogCommand : public ZoomCommand
 {
   public:
-    ZoomXLogCommand(PlotItem *item, bool enableLog, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Zoom X Log"), addToStack), _enableLog(enableLog) {}
+    ZoomXLogCommand(PlotItem *item, bool enableLog)
+        : ZoomCommand(item, QObject::tr("Zoom X Log")), _enableLog(enableLog) {}
     virtual ~ZoomXLogCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);
@@ -607,8 +608,8 @@ class KST_EXPORT ZoomXLogCommand : public ZoomCommand
 class KST_EXPORT ZoomYLogCommand : public ZoomCommand
 {
   public:
-    ZoomYLogCommand(PlotItem *item, bool enableLog, bool addToStack = true)
-        : ZoomCommand(item, QObject::tr("Zoom Y Log"), addToStack), _enableLog(enableLog) {}
+    ZoomYLogCommand(PlotItem *item, bool enableLog)
+        : ZoomCommand(item, QObject::tr("Zoom Y Log")), _enableLog(enableLog) {}
     virtual ~ZoomYLogCommand() {}
 
     virtual void applyZoomTo(PlotItem *item);

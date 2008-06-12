@@ -36,6 +36,9 @@
 #include <QMenu>
 #include <QDebug>
 
+// Zoom Debugging.  0 Off, 1 On.
+#define DEBUG_ZOOM 0
+
 static qreal TOP_MARGIN = 20.0;
 static qreal BOTTOM_MARGIN = 0.0;
 static qreal LEFT_MARGIN = 0.0;
@@ -1612,9 +1615,11 @@ QSizeF PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
 
 void PlotItem::setProjectionRect(const QRectF &rect) {
   if (!(_projectionRect == rect || rect.isEmpty() || !rect.isValid())) {
+#if DEBUG_ZOOM
     qDebug() << "=== setProjectionRect() ======================>\n"
               << "before:" << _projectionRect << "\n"
               << "after:" << rect << endl;
+#endif
 
     _projectionRect = rect;
     emit marginsChanged();
@@ -1687,202 +1692,236 @@ void PlotItem::resetSelectionRect() {
 
 
 void PlotItem::zoomFixedExpression(const QRectF &projection) {
+#if DEBUG_ZOOM
   qDebug() << "zoomFixedExpression" << endl;
+#endif
   ZoomCommand *cmd = new ZoomFixedExpressionCommand(this, projection);
-  ZoomCommand *cmdLocal = new ZoomFixedExpressionCommand(this, projection, false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
 void PlotItem::zoomXRange(const QRectF &projection) {
+#if DEBUG_ZOOM
   qDebug() << "zoomXRange" << endl;
+#endif
   ZoomCommand *cmd = new ZoomXRangeCommand(this, projection);
-  ZoomCommand *cmdLocal = new ZoomXRangeCommand(this, projection, false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
 void PlotItem::zoomYRange(const QRectF &projection) {
+#if DEBUG_ZOOM
   qDebug() << "zoomYRange" << endl;
+#endif
   ZoomCommand *cmd = new ZoomYRangeCommand(this, projection);
-  ZoomCommand *cmdLocal = new ZoomYRangeCommand(this, projection, false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
 void PlotItem::zoomMaximum() {
+#if DEBUG_ZOOM
   qDebug() << "zoomMaximum" << endl;
+#endif
   ZoomCommand *cmd = new ZoomMaximumCommand(this);
-  ZoomCommand *cmdLocal = new ZoomMaximumCommand(this, false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
 void PlotItem::zoomMaxSpikeInsensitive() {
+#if DEBUG_ZOOM
   qDebug() << "zoomMaxSpikeInsensitive" << endl;
+#endif
   ZoomCommand *cmd = new ZoomMaxSpikeInsensitiveCommand(this);
-  ZoomCommand *cmdLocal = new ZoomMaxSpikeInsensitiveCommand(this, false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
+void PlotItem::zoomPrevious() {
+#if DEBUG_ZOOM
+  qDebug() << "zoomPrevious" << endl;
+#endif
+  if (_undoStack->canUndo()) {
+    QAction *undoAction = _undoStack->createUndoAction(this);
+    if (undoAction) {
+      undoAction->activate(QAction::Trigger);
+    }
+  }
+}
+
+
 void PlotItem::zoomYMeanCentered() {
+#if DEBUG_ZOOM
   qDebug() << "zoomYMeanCentered" << endl;
+#endif
   ZoomCommand *cmd = new ZoomYMeanCenteredCommand(this);
-  ZoomCommand *cmdLocal = new ZoomYMeanCenteredCommand(this, false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
 void PlotItem::zoomXMaximum() {
+#if DEBUG_ZOOM
   qDebug() << "zoomXMaximum" << endl;
+#endif
   ZoomCommand *cmd = new ZoomXMaximumCommand(this);
-  ZoomCommand *cmdLocal = new ZoomXMaximumCommand(this, false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
 void PlotItem::zoomXRight() {
+#if DEBUG_ZOOM
   qDebug() << "zoomXRight" << endl;
+#endif
   ZoomCommand *cmd = new ZoomXRightCommand(this);
-  ZoomCommand *cmdLocal = new ZoomXRightCommand(this, false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
 void PlotItem::zoomXLeft() {
+#if DEBUG_ZOOM
   qDebug() << "zoomXLeft" << endl;
+#endif
   ZoomCommand *cmd = new ZoomXLeftCommand(this);
-  ZoomCommand *cmdLocal = new ZoomXLeftCommand(this, false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
 void PlotItem::zoomXOut() {
+#if DEBUG_ZOOM
   qDebug() << "zoomXOut" << endl;
+#endif
   resetSelectionRect();
   ZoomCommand *cmd = new ZoomXOutCommand(this);
-  ZoomCommand *cmdLocal = new ZoomXOutCommand(this, false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
 void PlotItem::zoomXIn() {
+#if DEBUG_ZOOM
   qDebug() << "zoomXIn" << endl;
+#endif
   resetSelectionRect();
   ZoomCommand *cmd = new ZoomXInCommand(this);
-  ZoomCommand *cmdLocal = new ZoomXInCommand(this, false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
 void PlotItem::zoomNormalizeXtoY() {
+#if DEBUG_ZOOM
   qDebug() << "zoomNormalizeXtoY" << endl;
+#endif
 
   if (xAxis()->axisLog() || yAxis()->axisLog())
     return; //apparently we don't want to do anything here according to kst2dplot...
 
   ZoomCommand *cmd = new ZoomNormalizeXToYCommand(this);
-  ZoomCommand *cmdLocal = new ZoomNormalizeXToYCommand(this, false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
 void PlotItem::zoomLogX() {
+#if DEBUG_ZOOM
   qDebug() << "zoomLogX" << endl;
+#endif
   ZoomCommand *cmd = new ZoomXLogCommand(this, !xAxis()->axisLog());
-  ZoomCommand *cmdLocal = new ZoomXLogCommand(this, !xAxis()->axisLog(), false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
 void PlotItem::zoomYLocalMaximum() {
+#if DEBUG_ZOOM
   qDebug() << "zoomYLocalMaximum" << endl;
+#endif
   ZoomCommand *cmd = new ZoomYLocalMaximumCommand(this);
-  ZoomCommand *cmdLocal = new ZoomYLocalMaximumCommand(this, false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
 void PlotItem::zoomYMaximum() {
+#if DEBUG_ZOOM
   qDebug() << "zoomYMaximum" << endl;
+#endif
   ZoomCommand *cmd = new ZoomYMaximumCommand(this);
-  ZoomCommand *cmdLocal = new ZoomYMaximumCommand(this, false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
 void PlotItem::zoomYUp() {
+#if DEBUG_ZOOM
   qDebug() << "zoomYUp" << endl;
+#endif
   ZoomCommand *cmd = new ZoomYUpCommand(this);
-  ZoomCommand *cmdLocal = new ZoomYUpCommand(this, false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
 void PlotItem::zoomYDown() {
+#if DEBUG_ZOOM
   qDebug() << "zoomYDown" << endl;
+#endif
   ZoomCommand *cmd = new ZoomYDownCommand(this);
-  ZoomCommand *cmdLocal = new ZoomYDownCommand(this, false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
 void PlotItem::zoomYOut() {
+#if DEBUG_ZOOM
   qDebug() << "zoomYOut" << endl;
+#endif
   resetSelectionRect();
   ZoomCommand *cmd = new ZoomYOutCommand(this);
-  ZoomCommand *cmdLocal = new ZoomYOutCommand(this, false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
 void PlotItem::zoomYIn() {
+#if DEBUG_ZOOM
   qDebug() << "zoomYIn" << endl;
+#endif
   resetSelectionRect();
   ZoomCommand *cmd = new ZoomYInCommand(this);
-  ZoomCommand *cmdLocal = new ZoomYInCommand(this, false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
 void PlotItem::zoomNormalizeYtoX() {
+#if DEBUG_ZOOM
   qDebug() << "zoomNormalizeYtoX" << endl;
+#endif
 
   if (xAxis()->axisLog() || yAxis()->axisLog())
     return; //apparently we don't want to do anything here according to kst2dplot...
 
   ZoomCommand *cmd = new ZoomNormalizeYToXCommand(this);
-  ZoomCommand *cmdLocal = new ZoomNormalizeYToXCommand(this, false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
 
 void PlotItem::zoomLogY() {
+#if DEBUG_ZOOM
   qDebug() << "zoomLogY" << endl;
+#endif
   ZoomCommand *cmd = new ZoomYLogCommand(this, !yAxis()->axisLog());
-  ZoomCommand *cmdLocal = new ZoomYLogCommand(this, !yAxis()->axisLog(), false);
-  _undoStack->push(cmdLocal);
+  _undoStack->push(cmd);
   cmd->redo();
 }
 
@@ -2092,8 +2131,8 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
 }
 
 
-ZoomCommand::ZoomCommand(PlotItem *item, const QString &text, bool addToStack)
-    : ViewItemCommand(item, text, addToStack) {
+ZoomCommand::ZoomCommand(PlotItem *item, const QString &text)
+    : ViewItemCommand(item, text, false) {
 
   if (!item->isTiedZoom()) {
     _originalStates << item->currentZoomState();
