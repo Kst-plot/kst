@@ -244,14 +244,14 @@ void Settings::reload() {
 
   cfg.beginGroup("X Axis");
   xAxisInterpret = cfg.value("Interpret", false).toBool();
-  xAxisInterpretation = (KstAxisInterpretation)cfg.value("Interpretation", (int)AXIS_INTERP_CTIME).toInt();
-  xAxisDisplay = (KstAxisDisplay)cfg.value("Display", static_cast<int>(AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS)).toInt();
+  xAxisInterpretation = (AxisInterpretationType)cfg.value("Interpretation", (int)AXIS_INTERP_CTIME).toInt();
+  xAxisDisplay = (AxisDisplayType)cfg.value("Display", static_cast<int>(AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS)).toInt();
   cfg.endGroup();
 
   cfg.beginGroup("Y Axis");
   yAxisInterpret = cfg.value("Interpret", false).toBool();
-  yAxisInterpretation = (KstAxisInterpretation)cfg.value("Interpretation", (int)AXIS_INTERP_CTIME).toInt();
-  yAxisDisplay = (KstAxisDisplay)cfg.value("Display", static_cast<int>(AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS)).toInt();
+  yAxisInterpretation = (AxisInterpretationType)cfg.value("Interpretation", (int)AXIS_INTERP_CTIME).toInt();
+  yAxisDisplay = (AxisDisplayType)cfg.value("Display", static_cast<int>(AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS)).toInt();
   cfg.endGroup();
 
   cfg.beginGroup("Curve");

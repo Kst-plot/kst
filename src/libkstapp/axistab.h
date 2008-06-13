@@ -72,11 +72,11 @@ class KST_EXPORT AxisTab : public DialogTab, Ui::AxisTab {
     bool isInterpret() const;
     void setInterpret(const bool enabled);
 
-    KstAxisDisplay axisDisplay() const;
-    void setAxisDisplay(KstAxisDisplay display);
+    AxisDisplayType axisDisplay() const;
+    void setAxisDisplay(AxisDisplayType display);
 
-    KstAxisInterpretation axisInterpretation() const;
-    void setAxisInterpretation(KstAxisInterpretation interpretation);
+    AxisInterpretationType axisInterpretation() const;
+    void setAxisInterpretation(AxisInterpretationType interpretation);
 
   public Q_SLOTS:
     void update();

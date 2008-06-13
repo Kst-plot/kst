@@ -15,10 +15,9 @@
 
 #define MARKER_LABEL_PRECISION        15
 
-#include <qstringlist.h>
 #include "kst_i18n.h"
 
-enum KstAxisInterpretation {
+enum AxisInterpretationType {
   AXIS_INTERP_YEAR,
   AXIS_INTERP_CTIME,
   AXIS_INTERP_JD,
@@ -26,7 +25,7 @@ enum KstAxisInterpretation {
   AXIS_INTERP_RJD,
   AXIS_INTERP_AIT };
 
-enum KstAxisDisplay { 
+enum AxisDisplayType { 
   AXIS_DISPLAY_YEAR,
   AXIS_DISPLAY_YYMMDDHHMMSS_SS,
   AXIS_DISPLAY_DDMMYYHHMMSS_SS,
@@ -38,12 +37,12 @@ enum KstAxisDisplay {
 
 struct AxisInterpretation {
   const char *label;
-  KstAxisInterpretation type;
+  AxisInterpretationType type;
 };
 
 struct AxisDisplay {
   const char *label;
-  KstAxisDisplay type;
+  AxisDisplayType type;
 };
 
 const AxisInterpretation AxisInterpretations[] = {
@@ -53,7 +52,7 @@ const AxisInterpretation AxisInterpretations[] = {
   { I18N_NOOP2("Modified Julian Date", "MJD"), AXIS_INTERP_MJD },
   { I18N_NOOP2("Reduced Julian Date", "RJD"), AXIS_INTERP_RJD },
   { I18N_NOOP2("Temps Atomique International", "TAI"), AXIS_INTERP_AIT }
-};          
+};
 
 const AxisDisplay AxisDisplays[] = {
   { I18N_NOOP("Julian Year"), AXIS_DISPLAY_YEAR },
@@ -64,27 +63,6 @@ const AxisDisplay AxisDisplays[] = {
   { I18N_NOOP2("Julian Date", "JD"), AXIS_DISPLAY_JD },
   { I18N_NOOP2("Modified Julian Date", "MJD"), AXIS_DISPLAY_MJD },
   { I18N_NOOP2("Reduced Julian Date", "RJD"), AXIS_DISPLAY_RJD }
-};
-
-class TickParameters {
-  public:
-    // FIXME: use reasonable defaults
-    TickParameters() : org(0.0), tick(0.0), delta(false), maxWidth(0.0),
-                       maxHeight(0.0), iHi(0), iLo(0), oppMaxWidth(0.0),
-                       oppMaxHeight(0.0)
-    {}
-
-    double org;
-    double tick;
-    bool delta;
-    double maxWidth;
-    double maxHeight;
-    QStringList labels;
-    int iHi;
-    int iLo;
-    QStringList oppLabels; // labels for the opposite axis
-    double oppMaxWidth;
-    double oppMaxHeight;
 };
 
 const unsigned int numAxisInterpretations = sizeof( AxisInterpretations ) / sizeof( AxisInterpretation );

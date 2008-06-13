@@ -90,11 +90,11 @@ class PlotAxis : public QObject
     bool axisInterpret() const;
     void setAxisInterpret(const bool enabled);
 
-    KstAxisDisplay axisDisplay() const;
-    void setAxisDisplay(const KstAxisDisplay display);
+    AxisDisplayType axisDisplay() const;
+    void setAxisDisplay(const AxisDisplayType display);
 
-    KstAxisInterpretation axisInterpretation() const;
-    void setAxisInterpretation(const KstAxisInterpretation interpret);
+    AxisInterpretationType axisInterpretation() const;
+    void setAxisInterpretation(const AxisInterpretationType interpret);
 
     PlotMarkers axisPlotMarkers() { return _axisPlotMarkers; }
     void setAxisPlotMarkers(const PlotMarkers &plotMarkers) { _axisPlotMarkers = plotMarkers; }
@@ -117,11 +117,11 @@ class PlotAxis : public QObject
 
   private:
 
-    QString interpretLabel(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double base, double lastValue);
-    double convertTimeValueToJD(KstAxisInterpretation axisInterpretation, double valueIn);
-    QString convertJDToDateString(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double dJD);
-    double convertTimeDiffValueToDays(KstAxisInterpretation axisInterpretation, double offsetIn);
-    double interpretOffset(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double base, double value);
+    QString interpretLabel(AxisInterpretationType axisInterpretation, AxisDisplayType axisDisplay, double base, double lastValue);
+    double convertTimeValueToJD(AxisInterpretationType axisInterpretation, double valueIn);
+    QString convertJDToDateString(AxisInterpretationType axisInterpretation, AxisDisplayType axisDisplay, double dJD);
+    double convertTimeDiffValueToDays(AxisInterpretationType axisInterpretation, double offsetIn);
+    double interpretOffset(AxisInterpretationType axisInterpretation, AxisDisplayType axisDisplay, double base, double value);
 
     qreal computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orientation orientation);
     void computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTicks, QMap<qreal, QString> *Labels, qreal min, qreal max, MajorTickMode tickMode);
@@ -149,8 +149,8 @@ class PlotAxis : public QObject
     bool _axisBaseOffsetOverride;
 
     bool _axisInterpret;
-    KstAxisDisplay _axisDisplay;
-    KstAxisInterpretation _axisInterpretation;
+    AxisDisplayType _axisDisplay;
+    AxisInterpretationType _axisInterpretation;
 
     MajorTickMode _axisMajorTickMode;
     MajorTickMode _axisOverrideMajorTicks;

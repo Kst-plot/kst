@@ -57,7 +57,7 @@ PlotAxis::~PlotAxis() {
 }
 
 
-QString PlotAxis::interpretLabel(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double base, double lastValue) {
+QString PlotAxis::interpretLabel(AxisInterpretationType axisInterpretation, AxisDisplayType axisDisplay, double base, double lastValue) {
   double value = convertTimeValueToJD(axisInterpretation, base);
   double scaleValue = convertTimeValueToJD(axisInterpretation, lastValue) - value;
 
@@ -126,7 +126,7 @@ QString PlotAxis::interpretLabel(KstAxisInterpretation axisInterpretation, KstAx
 }
 
 
-double PlotAxis::interpretOffset(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double base, double value) {
+double PlotAxis::interpretOffset(AxisInterpretationType axisInterpretation, AxisDisplayType axisDisplay, double base, double value) {
   double offset;
   offset = value - base;
 
@@ -152,7 +152,7 @@ double PlotAxis::interpretOffset(KstAxisInterpretation axisInterpretation, KstAx
 }
 
 
-double PlotAxis::convertTimeValueToJD(KstAxisInterpretation axisInterpretation, double valueIn) {
+double PlotAxis::convertTimeValueToJD(AxisInterpretationType axisInterpretation, double valueIn) {
   double value = valueIn;
 
   switch (axisInterpretation) {
@@ -189,7 +189,7 @@ double PlotAxis::convertTimeValueToJD(KstAxisInterpretation axisInterpretation, 
 }
 
 
-double PlotAxis::convertTimeDiffValueToDays(KstAxisInterpretation axisInterpretation, double offsetIn) {
+double PlotAxis::convertTimeDiffValueToDays(AxisInterpretationType axisInterpretation, double offsetIn) {
   double offset = offsetIn;
 
   switch (axisInterpretation) {
@@ -214,7 +214,7 @@ double PlotAxis::convertTimeDiffValueToDays(KstAxisInterpretation axisInterpreta
 }
 
 
-QString PlotAxis::convertJDToDateString(KstAxisInterpretation axisInterpretation, KstAxisDisplay axisDisplay, double dJD) {
+QString PlotAxis::convertJDToDateString(AxisInterpretationType axisInterpretation, AxisDisplayType axisDisplay, double dJD) {
   QString label;
   QDate date;
 
@@ -515,22 +515,22 @@ void PlotAxis::setAxisInterpret(const bool enabled) {
 }
 
 
-KstAxisDisplay PlotAxis::axisDisplay() const {
+AxisDisplayType PlotAxis::axisDisplay() const {
   return _axisDisplay;
 }
 
 
-void PlotAxis::setAxisDisplay(const KstAxisDisplay display) {
+void PlotAxis::setAxisDisplay(const AxisDisplayType display) {
   _axisDisplay = display;
 }
 
 
-KstAxisInterpretation PlotAxis::axisInterpretation() const {
+AxisInterpretationType PlotAxis::axisInterpretation() const {
   return _axisInterpretation;
 }
 
 
-void PlotAxis::setAxisInterpretation(const KstAxisInterpretation display) {
+void PlotAxis::setAxisInterpretation(const AxisInterpretationType display) {
   _axisInterpretation = display;
 }
 
@@ -850,11 +850,11 @@ bool PlotAxis::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
   }
   av = attrs.value("interpretation");
   if (!av.isNull()) {
-    setAxisInterpretation((KstAxisInterpretation)QVariant(av.toString()).toInt());
+    setAxisInterpretation((AxisInterpretationType)QVariant(av.toString()).toInt());
   }
   av = attrs.value("display");
   if (!av.isNull()) {
-    setAxisDisplay((KstAxisDisplay)QVariant(av.toString()).toInt());
+    setAxisDisplay((AxisDisplayType)QVariant(av.toString()).toInt());
   }
   av = attrs.value("majortickmode");
   if (!av.isNull()) {

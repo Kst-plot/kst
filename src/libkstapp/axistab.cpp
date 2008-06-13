@@ -252,22 +252,22 @@ void AxisTab::setInterpret(const bool enabled) {
 }
 
 
-KstAxisDisplay AxisTab::axisDisplay() const {
-  return KstAxisDisplay(_scaleDisplayType->itemData(_scaleDisplayType->currentIndex()).toInt());
+AxisDisplayType AxisTab::axisDisplay() const {
+  return AxisDisplayType(_scaleDisplayType->itemData(_scaleDisplayType->currentIndex()).toInt());
 }
 
 
-void AxisTab::setAxisDisplay(KstAxisDisplay display) {
+void AxisTab::setAxisDisplay(AxisDisplayType display) {
   _scaleDisplayType->setCurrentIndex(_scaleDisplayType->findData(QVariant(display)));
 }
 
 
-KstAxisInterpretation AxisTab::axisInterpretation() const {
-  return KstAxisInterpretation(_scaleInterpretType->itemData(_scaleInterpretType->currentIndex()).toInt());
+AxisInterpretationType AxisTab::axisInterpretation() const {
+  return AxisInterpretationType(_scaleInterpretType->itemData(_scaleInterpretType->currentIndex()).toInt());
 }
 
 
-void AxisTab::setAxisInterpretation(KstAxisInterpretation interpret) {
+void AxisTab::setAxisInterpretation(AxisInterpretationType interpret) {
   _scaleInterpretType->setCurrentIndex(_scaleInterpretType->findData(QVariant(interpret)));
 }
 

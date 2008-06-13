@@ -71,10 +71,10 @@ class Settings {
 
     QColor majorColor;
     QColor minorColor;
-    KstAxisInterpretation xAxisInterpretation;
-    KstAxisDisplay xAxisDisplay;
-    KstAxisInterpretation yAxisInterpretation;
-    KstAxisDisplay yAxisDisplay;
+    AxisInterpretationType xAxisInterpretation;
+    AxisDisplayType xAxisDisplay;
+    AxisInterpretationType yAxisInterpretation;
+    AxisDisplayType yAxisDisplay;
 
     int defaultLineWeight;
     
