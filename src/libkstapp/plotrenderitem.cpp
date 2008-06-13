@@ -601,15 +601,13 @@ void PlotRenderItem::computeXAxisRange(qreal *min, qreal *max) const {
     computeAuto(Qt::Horizontal, &minimum, &maximum);
     computeBorder(Qt::Horizontal, &minimum, &maximum);
     break;
-  case PlotAxis::FixedExpression: //limits are given by scalar equations, or mouse
-    qDebug() << "FIXME! Need a GUI for entering scalar equations..." << endl;
-    break;
   case PlotAxis::SpikeInsensitive: //auto with algorithm to detect spikes TBD
-    qDebug() << "FIXME! Need a spike insensitive algorithm..." << endl;
+    computeNoSpike(Qt::Horizontal, &minimum, &maximum);
     break;
   case PlotAxis::MeanCentered: //the mean of all active curves
     computeMeanCentered(Qt::Horizontal, &minimum, &maximum);
     break;
+  case PlotAxis::FixedExpression: // limits are set by user interaction
   default:
     break;
   }
@@ -631,15 +629,13 @@ void PlotRenderItem::computeYAxisRange(qreal *min, qreal *max) const {
     computeAuto(Qt::Vertical, &minimum, &maximum);
     computeBorder(Qt::Vertical, &minimum, &maximum);
     break;
-  case PlotAxis::FixedExpression: //limits are given by scalar equations, or mouse
-    qDebug() << "FIXME! Need a GUI for entering scalar equations..." << endl;
-    break;
   case PlotAxis::SpikeInsensitive: //auto with algorithm to detect spikes TBD
-    qDebug() << "FIXME! Need a spike insensitive algorithm..." << endl;
+    computeNoSpike(Qt::Vertical, &minimum, &maximum);
     break;
   case PlotAxis::MeanCentered: //the mean of all active curves
     computeMeanCentered(Qt::Vertical, &minimum, &maximum);
     break;
+  case PlotAxis::FixedExpression: // limits are set by user interaction
   default:
     break;
   }
@@ -732,6 +728,49 @@ void PlotRenderItem::computeMeanCentered(Qt::Orientation orientation, qreal *min
     qreal delta = maximum - minimum;
     minimum = mid - delta / 2.0;
     maximum = mid + delta / 2.0;
+  }
+
+  *min = minimum;
+  *max = maximum;
+}
+
+
+void PlotRenderItem::computeNoSpike(Qt::Orientation orientation, qreal *min, qreal *max) const {
+  //The previous values are of no consequence as this algorithm does not depend
+  //on the previous values.  So start over so that first active relation initializes.
+  qreal minimum;
+  qreal maximum;
+  bool unInitialized = true;
+
+  bool axisLog = orientation == Qt::Horizontal ? plotItem()->xAxis()->axisLog() : plotItem()->yAxis()->axisLog();
+
+  foreach (RelationPtr relation, relationList()) {
+      if (relation->ignoreAutoScale())
+        continue;
+
+      qreal minPos_ = orientation == Qt::Horizontal ? relation->minPosX() : relation->minPosY();
+      qreal min_ = orientation == Qt::Horizontal ? relation->ns_minX() : relation->ns_minY();
+      qreal max_ = orientation == Qt::Horizontal ? relation->ns_maxX() : relation->ns_maxY();
+
+      //If the axis is in log mode, the lower extent will be the
+      //minimum value larger than zero.
+      if (axisLog)
+        minimum = unInitialized ? minPos_ : qMin(minPos_, minimum);
+      else
+        minimum = unInitialized ? min_ : qMin(min_, minimum);
+
+      maximum = unInitialized ? max_ : qMax(max_, maximum);
+
+      unInitialized = false;
+  }
+
+  if (unInitialized || maximum <= minimum) {
+    minimum = axisLog ? 0.0 : -0.1;
+    minimum = 0.2;
+  }
+
+  if (axisLog && minimum < 0.0) {
+    minimum = pow(10, -350.0);
   }
 
   *min = minimum;

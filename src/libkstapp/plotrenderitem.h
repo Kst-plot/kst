@@ -108,6 +108,7 @@ class PlotRenderItem : public ViewItem
     void computeYAxisRange(qreal *min, qreal *max) const;
     void computeAuto(Qt::Orientation orientation, qreal *min, qreal *max) const;
     void computeMeanCentered(Qt::Orientation orientation, qreal *min, qreal *max) const;
+    void computeNoSpike(Qt::Orientation orientation, qreal *min, qreal *max) const;
 
   private:
     RenderType _type;
