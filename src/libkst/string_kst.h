@@ -18,8 +18,6 @@
 #ifndef STRING_H
 #define STRING_H
 
-#include <QDomElement>
-
 #include "primitive.h"
 
 class QXmlStreamWriter;
@@ -37,8 +35,6 @@ class KST_EXPORT String : public Primitive {
 
   protected:
     String(ObjectStore *store, Object *provider = 0L, const QString& val = QString::null, bool orphan = false);
-//     String(ObjectStore *store, QDomElement& e);
-
     virtual ~String();
 
     friend class ObjectStore;

@@ -87,9 +87,6 @@ class KST_EXPORT DataMatrix : public Matrix {
         int xNumSteps, int yNumSteps, bool doAve, bool doSkip, int skip,
         double minX = 0, double minY = 0, double stepX = 1, double stepY = 1);
 
-    // constructor to create a saved DataMatrix
-//     DataMatrix(ObjectStore *store, const QDomElement &e);
-
     virtual ~DataMatrix();
 
     friend class ObjectStore;

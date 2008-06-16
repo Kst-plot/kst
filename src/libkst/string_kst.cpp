@@ -37,34 +37,6 @@ String::String(ObjectStore *store, Object *provider, const QString& val, bool or
 }
 
 
-// String::String(ObjectStore *store, QDomElement& e)
-//     : Primitive(store), _orphan(false), _editable(false) {
-//   QDomNode n = e.firstChild();
-// 
-//   while (!n.isNull()) {
-//     QDomElement e = n.toElement();
-//     if (!e.isNull()) {
-//       if (e.tagName() == "tag") {
-//         setTagName(ObjectTag::fromString(e.text()));
-//       } else if (e.tagName() == "orphan") {
-//         _orphan = true;
-//       } else if (e.tagName() == "value") {
-//         setValue(e.text());
-//       } else if (e.tagName() == "editable") {
-//         _editable = true;
-//       }
-//     }
-//     n = n.nextSibling();
-//   }
-// 
-//   _shortName = "T"+QString::number(_tnum);
-//   if (_tnum>max_tnum) 
-//     max_tnum = _tnum;
-//   _tnum++;
-// 
-// }
-
-
 String::~String() {
 }
 

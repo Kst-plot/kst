@@ -55,55 +55,6 @@ Histogram::Histogram(ObjectStore *store, VectorPtr in_V,
 
 }
 
-// Histogram::Histogram(ObjectStore *store, const QDomElement &e)
-// : DataObject(store, e) {
-//   NormalizationType in_norm_mode;
-//   VectorPtr in_V;
-//   QString rawName;
-//   QString in_tag;
-//   double xmax_in =  1.0;
-//   double xmin_in = -1.0;
-//   int in_n_bins = 10;
-// 
-//   setRealTimeAutoBin(false);
-// 
-//   in_norm_mode = Number;
-// 
-//   QDomNode n = e.firstChild();
-//   while( !n.isNull() ) {
-//     QDomElement e = n.toElement(); // try to convert the node to an element.
-//     if( !e.isNull() ) { // the node was really an element.
-//       if (e.tagName() == "tag") {
-//         in_tag = e.text();
-//       } else if (e.tagName() == "vectag") {
-//         rawName = e.text();
-//       } else if (e.tagName() == "normmode") {
-//         if (e.text()=="NUMBER") {
-//           in_norm_mode = Number;
-//         } else if (e.text()=="PERCENT") {
-//           in_norm_mode = Percent;
-//         } else if (e.text()=="FRACTION") {
-//           in_norm_mode = Fraction;
-//         } else if (e.text()=="MAX_ONE") {
-//           in_norm_mode = MaximumOne;
-//         }
-//       } else if (e.tagName() == "min") {
-//         xmin_in = e.text().toDouble();
-//       } else if (e.tagName() == "max") {
-//         xmax_in = e.text().toDouble();
-//       } else if (e.tagName() == "numbins") {
-//         in_n_bins = e.text().toInt();
-//       } else if (e.tagName() == "realtimeautobin") {
-//         _realTimeAutoBin = (e.text() != "0");
-//       }
-//     }
-//     n = n.nextSibling();
-//   }
-// 
-//   _inputVectorLoadQueue.append(qMakePair(QString(RAWVECTOR), rawName));
-//   commonConstructor(store, in_V, xmin_in, xmax_in, in_n_bins, in_norm_mode);
-// }
-
 
 void Histogram::commonConstructor(ObjectStore *store,
                                   VectorPtr in_V,

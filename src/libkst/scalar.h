@@ -18,8 +18,6 @@
 #ifndef SCALAR_H
 #define SCALAR_H
 
-#include <QDomElement>
-
 #include "primitive.h"
 
 class QXmlStreamWriter;

@@ -24,51 +24,6 @@ namespace Kst {
 const QString GeneratedMatrix::staticTypeString = I18N_NOOP("Generated Matrix");
 const QString GeneratedMatrix::staticTypeTag = I18N_NOOP("generatedmatrix");
 
-// GeneratedMatrix::GeneratedMatrix(ObjectStore *store, const QDomElement &e) : Matrix(store) {
-//   double in_xMin = 0, in_yMin = 0, in_xStep = 1, in_yStep = 1;
-//   double in_gradZMin = 0, in_gradZMax = 1;
-//   bool in_xDirection = true;
-//   int in_nX = 2, in_nY = 2;
-//   QString in_tag = QString::null;
-// 
-//   /* parse the DOM tree */
-//   QDomNode n = e.firstChild();
-//   while (!n.isNull()) {
-//     QDomElement e = n.toElement();
-//     if (!e.isNull()) {
-//       if (e.tagName() == "tag") {
-//         in_tag = e.text();
-//       } else if (e.tagName() == "nx") {
-//         in_nX = e.text().toInt();
-//       } else if (e.tagName() == "ny") {
-//         in_nY = e.text().toInt();
-//       } else if (e.tagName() == "xmin") {
-//         in_xMin = e.text().toDouble();
-//       } else if (e.tagName() == "ymin") {
-//         in_yMin = e.text().toDouble();
-//       } else if (e.tagName() == "xstep") {
-//         in_xStep = e.text().toDouble();
-//       } else if (e.tagName() == "ystep") {
-//         in_yStep = e.text().toDouble();
-//       } else if (e.tagName() == "gradzmin") {
-//         in_gradZMin = e.text().toDouble();
-//       } else if (e.tagName() == "gradzmax") {
-//         in_gradZMax = e.text().toDouble();
-//       } else if (e.tagName() == "xdirection") {
-//         in_xDirection = (e.text() != "0");
-//       }
-//     }
-//     n = n.nextSibling();
-//   }
-// 
-//   setTagName(ObjectTag::fromString(in_tag));
-// 
-//   _saveable = true;
-//   _editable = true;
-//   _zSize = 0;
-//   change(in_nX, in_nY, in_xMin, in_yMin, in_xStep, in_yStep, in_gradZMin, in_gradZMax, in_xDirection);
-// }
-
 GeneratedMatrix::GeneratedMatrix(ObjectStore *store,
                        uint nX, uint nY, double minX, double minY,
                        double stepX, double stepY,

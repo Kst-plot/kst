@@ -250,48 +250,6 @@ Object::UpdateType BasicPlugin::update() {
   return (depUpdated ? UPDATE : NO_CHANGE);
 }
 
-// void BasicPlugin::load(const QDomElement &e) {
-//   QDomNode n = e.firstChild();
-// 
-//   while (!n.isNull()) {
-//     QDomElement e = n.toElement();
-//     if (!e.isNull()) {
-//       if (e.tagName() == "tag") {
-//         setTagName(ObjectTag::fromString(e.text()));
-//       } else if (e.tagName() == "ivector") {
-//         _inputVectorLoadQueue.append(qMakePair(e.attribute("name"), e.text()));
-//       } else if (e.tagName() == "iscalar") {
-//         _inputScalarLoadQueue.append(qMakePair(e.attribute("name"), e.text()));
-//       } else if (e.tagName() == "istring") {
-//         _inputStringLoadQueue.append(qMakePair(e.attribute("name"), e.text()));
-//       } else if (e.tagName() == "ovector") {
-//         Q_ASSERT(store());
-//         VectorPtr v = store()->createObject<Vector>(ObjectTag(e.text(), tag()));
-//         v->setProvider(this);
-//         //FIXME: set slaveName
-//         if (e.attribute("scalarList", "0").toInt()) {
-//           // FIXME: handle scalar lists
-//           //v = new Vector(ObjectTag(e.text(), tag()), 0, this, true);
-//         }
-//         _outputVectors.insert(e.attribute("name"), v);
-//       } else if (e.tagName() == "oscalar") {
-//         Q_ASSERT(store());
-//         ScalarPtr sp = store()->createObject<Scalar>(ObjectTag(e.text(), tag()));
-//         sp->setProvider(this);
-//         //FIXME: set slaveName
-//         _outputScalars.insert(e.attribute("name"), sp);
-//       } else if (e.tagName() == "ostring") {
-//         Q_ASSERT(store());
-//         StringPtr sp = store()->createObject<String>(ObjectTag(e.text(), tag()));
-//         sp->setProvider(this);
-//         //FIXME: set slaveName
-//         _outputStrings.insert(e.attribute("name"), sp);
-//       }
-//     }
-//     n = n.nextSibling();
-//   }
-// }
-
 
 // FIXME: BasicPlugin should not know about fit scalars!!
 void BasicPlugin::createFitScalars() {

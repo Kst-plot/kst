@@ -81,48 +81,6 @@ EventMonitorEntry::EventMonitorEntry(ObjectStore *store, const QString &script, 
   commonConstructor(store);
 }
 
-// EventMonitorEntry::EventMonitorEntry(ObjectStore *store, const QDomElement &e) : DataObject(store, e) {
-//   QString strTag;
-// 
-//   _level = Debug::Warning;
-//   _logDebug = true;
-//   _logEMail = false;
-//   _logELOG = false;
-// 
-//   QDomNode n = e.firstChild();
-//   while (!n.isNull()) {
-//     QDomElement e = n.toElement(); // try to convert the node to an element.
-//     if (!e.isNull()) { // the node was really an element.
-//       if (e.tagName() == "tag") {
-//         setTagName(ObjectTag::fromString(e.text()));
-//       } else if (e.tagName() == "equation") {
-//         _event = e.text();
-//       } else if (e.tagName() == "description") {
-//         _description = e.text();
-//       } else if (e.tagName() == "logdebug") {
-//         _logDebug = e.text().toInt();
-//       } else if (e.tagName() == "loglevel") {
-//         _level = (Debug::LogLevel)e.text().toInt();
-//       } else if (e.tagName() == "logemail") {
-//         _logEMail = e.text().toInt();
-//       } else if (e.tagName() == "logelog") {
-//         _logELOG = e.text().toInt();
-//       } else if (e.tagName() == "emailrecipients") {
-//         _eMailRecipients = e.text();
-//       } else if (e.tagName() == "script") {
-//         _script = e.text();
-//       }
-//     }
-//     n = n.nextSibling();
-//   }
-// 
-//   commonConstructor(store);
-// 
-//   // wait for the initial update, as we don't want to trigger elog entries
-//   // until we are sure the document is open.
-//   //QTimer::singleShot(500, this, SLOT(slotUpdate()));
-// }
-
 
 void EventMonitorEntry::commonConstructor(ObjectStore *store) {
   const int NS = 1;
@@ -260,16 +218,6 @@ Object::UpdateType EventMonitorEntry::update() {
     }
   } else {
     _numDone = ns;
-  }
-
-  if (xv) {
-    xv->setDirty();
-    xv->update();
-  }
-
-  if (yv) {
-    yv->setDirty();
-    yv->update();
   }
 
   unlockInputsAndOutputs();

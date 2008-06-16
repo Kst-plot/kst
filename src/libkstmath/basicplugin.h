@@ -83,7 +83,6 @@ class KST_EXPORT BasicPlugin : public DataObject {
     Object::UpdateType update();
 
     //Regular virtual methods from DataObject
-//     void load(const QDomElement &e);
     virtual void save(QXmlStreamWriter &s);
     virtual void saveProperties(QXmlStreamWriter &s);
 
