@@ -54,13 +54,6 @@ DataObject::DataObject(ObjectStore *store) : Object() {
   _isInputLoaded = false;
 }
 
-// DataObject::DataObject(ObjectStore *store, const QDomElement& e) : Object() {
-//   Q_UNUSED(e)
-//   //qDebug() << "+++ CREATING DATA OBJECT: " << (void*)this << endl;
-//   _curveHints = new CurveHintList;
-//   _isInputLoaded = false;
-// }
-// 
 
 DataObject::~DataObject() {
   delete _curveHints;

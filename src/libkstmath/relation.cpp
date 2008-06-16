@@ -30,11 +30,6 @@ namespace Kst {
 
 const QString Relation::staticTypeString = I18N_NOOP("Relation");
 
-// Relation::Relation(ObjectStore *store, const QDomElement& e) : Object() {
-//   commonConstructor();
-// }
-
-
 Relation::Relation(ObjectStore *store) : Object() {
   commonConstructor();
 }

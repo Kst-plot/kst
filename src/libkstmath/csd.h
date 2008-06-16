@@ -91,7 +91,6 @@ class KST_EXPORT CSD : public DataObject {
            bool in_apodize, ApodizeFunction in_apodizeFxn, int in_windowSize, int in_length,
            double in_gaussianSigma, PSDType in_outputType, const QString& in_vectorUnits = QString::null,
            const QString& in_rateUnits = QString::null);
-//     CSD(ObjectStore *store, const QDomElement& e);
     virtual ~CSD();
 
     friend class ObjectStore;

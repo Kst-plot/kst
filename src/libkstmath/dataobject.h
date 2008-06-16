@@ -137,7 +137,6 @@ class KST_EXPORT DataObject : public Object {
 
   protected:
     DataObject(ObjectStore *store);
-//     DataObject(ObjectStore *store, const QDomElement& e);
     virtual ~DataObject();
 
     double *vectorRealloced(VectorPtr v, double *memptr, int newSize) const;

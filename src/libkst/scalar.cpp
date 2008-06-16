@@ -52,40 +52,6 @@ Scalar::Scalar(ObjectStore *store, Object *provider, double val, bool orphan, bo
 }
 
 
-// Scalar::Scalar(ObjectStore *store, const QDomElement& e)
-//     : Primitive(store), _orphan(false), _displayable(true), _editable(false) {
-//   QDomNode n = e.firstChild();
-//   bool ok;
-// 
-//   _value = 0.0;  // must init this first
-// 
-//   while (!n.isNull()) {
-//     QDomElement e = n.toElement();
-//     if(!e.isNull()) {
-//       if (e.tagName() == "tag") {
-//         setTagName(ObjectTag::fromString(e.text()));
-//       } else if (e.tagName() == "orphan") {
-//         _orphan = true;
-//       } else if (e.tagName() == "value") {
-//         setValue(e.text().toDouble());
-//       } else if (e.tagName() == "editable") {
-//         _editable = true;
-//       }
-//     }
-//     n = n.nextSibling();
-//   }
-// 
-//   if (tag().name().toDouble(&ok) == value() && ok) {
-//     _displayable = false;
-//   }
-// 
-//   _shortName = "X"+QString::number(_xnum);
-//   if (_xnum>max_xnum) 
-//     max_xnum = _xnum;
-//   _xnum++;
-// }
-
-
 Scalar::~Scalar() {
 }
 

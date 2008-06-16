@@ -94,7 +94,6 @@ class KST_EXPORT BasicPlugin : public DataObject {
 
   protected:
     BasicPlugin(ObjectStore *store);
-//     BasicPlugin(ObjectStore *store, const QDomElement &e);
     virtual ~BasicPlugin();
 
     virtual QString parameterName(int index) const;

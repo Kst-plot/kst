@@ -85,8 +85,7 @@ class KST_EXPORT Equation : public DataObject {
     Equation(ObjectStore *store, const QString& equation = QString::null, VectorPtr xvector = 0L, bool do_interp = false);
     ~Equation();
 
-    friend class EquationFactory;
-    friend class ObjectStore; // FIXME: remove this when factory is working
+    friend class ObjectStore; 
 
     QString _automaticDescriptiveName() const;
 

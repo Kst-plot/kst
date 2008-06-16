@@ -29,8 +29,8 @@ static int i = 0;
 const QString Object::staticTypeString = I18N_NOOP("Object");
 
 Object::Object() :
-  Shared(), KstRWLock(),
-  _store(0L), NamedObject()
+  Shared(), KstRWLock(), NamedObject(),
+  _store(0L)
 {
   _dirty = false;
 

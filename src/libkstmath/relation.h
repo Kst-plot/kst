@@ -72,7 +72,6 @@ class KST_EXPORT Relation : public Object {
     const QString& typeString() const { return staticTypeString; }
 
     Relation(ObjectStore *store);
-//     Relation(ObjectStore *store, const QDomElement& e);
     virtual ~Relation();
 
     virtual void showNewDialog() { }

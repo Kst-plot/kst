@@ -44,8 +44,7 @@ class KST_EXPORT GeneratedVector : public Vector {
     GeneratedVector(ObjectStore *store, double x0=0, double x1=0, int n=0);
     GeneratedVector(ObjectStore *store, const QByteArray &data, double x0, double x1, int n);
 
-    friend class GeneratedVectorFactory;
-    friend class ObjectStore; // FIXME: remove this when factory works
+    friend class ObjectStore;
     virtual QString _automaticDescriptiveName() const;
 };
 

@@ -125,7 +125,6 @@ class KST_EXPORT Image : public Relation {
         const QColor& contourColor,
         int contourWeight);
 
-//     Image(ObjectStore *store, const QDomElement& e);
     virtual ~Image();
 
     friend class ObjectStore;

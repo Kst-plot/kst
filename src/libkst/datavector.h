@@ -134,8 +134,7 @@ class KST_EXPORT DataVector : public Vector {
 
     virtual ~DataVector();
 
-    friend class DataVectorFactory;
-    friend class ObjectStore; // FIXME: remove this when factory is working
+    friend class ObjectStore;
 
     virtual QString _automaticDescriptiveName() const;
 

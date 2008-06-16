@@ -47,7 +47,6 @@ class KST_EXPORT ObjectStore {
     ~ObjectStore();
 
     template<class T> SharedPtr<T> createObject();
-    template<class T> SharedPtr<T> createObject(const QDomElement& e);
 
     template<class T> bool addObject(T *o);
     bool removeObject(Object *o);

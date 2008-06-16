@@ -63,8 +63,7 @@ class Vector : public Primitive {
 
     virtual ~Vector();
 
-    friend class VectorFactory;
-    friend class ObjectStore; // FIXME: remove this when VectorFactory is working
+    friend class ObjectStore; 
 
   public:
     void change(QByteArray& data);

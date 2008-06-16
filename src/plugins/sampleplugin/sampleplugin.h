@@ -21,12 +21,6 @@ class SamplePluginSource : public Kst::BasicPlugin {
   Q_OBJECT
 
   public:
-    SamplePluginSource(Kst::ObjectStore *store);
-
-    ~SamplePluginSource();
-
-    virtual QString _automaticDescriptiveName() const;
-
     Kst::VectorPtr vector() const;
 
     virtual void change(Kst::DataObjectConfigWidget *configWidget);
@@ -42,6 +36,15 @@ class SamplePluginSource : public Kst::BasicPlugin {
     virtual QStringList outputStringList() const;
 
     virtual void saveProperties(QXmlStreamWriter &s);
+
+  protected:
+    SamplePluginSource(Kst::ObjectStore *store);
+    ~SamplePluginSource();
+
+    virtual QString _automaticDescriptiveName() const;
+
+    friend class Kst::ObjectStore;
+
 };
 
 
