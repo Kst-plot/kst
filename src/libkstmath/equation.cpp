@@ -180,6 +180,33 @@ Object::UpdateType Equation::update() {
   return rc;
 }
 
+const QString Equation::reparsedEquation() const {
+  QString etext;
+
+  qDebug() << "Equation: " << _equation << "\n";
+  if (!_equation.isEmpty()) {
+    if (!Equations::mutex().tryLock()) {
+      qDebug() << "Don't reparse equation while it is being reparsed...";
+      return (_equation);
+    }
+
+    yy_scan_string(_equation.toLatin1());
+    ParsedEquation = 0L;
+    int rc = yyparse(store());
+    Equations::Node *en = static_cast<Equations::Node*>(ParsedEquation);
+    if (rc == 0 && en) {
+      if (!en->takeVectors(VectorsUsed)) {
+        Debug::self()->log(i18n("Equation [%1] failed to find its vectors when reparsing.").arg(_equation), Debug::Warning);
+      }
+      etext = en->text();
+    }
+    delete en;
+    ParsedEquation = 0L;
+    Equations::mutex().unlock();
+  }
+  qDebug() << "reparsed Equation: " << etext << "\n";
+  return (etext);
+}
 
 void Equation::save(QXmlStreamWriter &s) {
   s.writeStartElement(staticTypeTag);
@@ -213,6 +240,7 @@ void Equation::save(QXmlStreamWriter &s) {
 
 
 void Equation::setEquation(const QString& in_fn) {
+  qDebug() << "Enter setEquation\n";
   // assert(*_xVector); - ugly, we have to allow this here due to
   // document loading with vector lazy-loading
   setDirty();
@@ -227,7 +255,7 @@ void Equation::setEquation(const QString& in_fn) {
   if (!_equation.isEmpty()) {
     Equations::mutex().lock();
     yy_scan_string(_equation.toLatin1());
-    int rc = yyparse(store());
+    int rc = yyparse(store()); 
     _pe = static_cast<Equations::Node*>(ParsedEquation);
     if (rc == 0 && _pe) {
       ParsedEquation = 0L;
@@ -245,7 +273,7 @@ void Equation::setEquation(const QString& in_fn) {
         Debug::self()->log(i18n("Equation [%1] references non-existent objects.").arg(_equation), Debug::Error);
         delete (Equations::Node*)ParsedEquation;
         ParsedEquation = 0L;
-        Equations::mutex().unlock();
+        //Equations::mutex().unlock();
       }
     } else {
       // Parse error
@@ -262,6 +290,7 @@ void Equation::setEquation(const QString& in_fn) {
   _isValid = _pe != 0L;
 
   if (_isValid) {
+    _equation = reparsedEquation(); // update the string
     foreach (VectorPtr vector, VectorsUsed) {
       connect(vector, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
     }
@@ -269,6 +298,8 @@ void Equation::setEquation(const QString& in_fn) {
       connect(scalar, SIGNAL(scalarUpdated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
     }
   }
+    qDebug() << "leave setEquation\n";
+
 }
 
 
@@ -580,7 +611,7 @@ bool Equation::uses(ObjectPtr p) const {
 }
 
 QString Equation::_automaticDescriptiveName() const {
-  return equation();
+  return reparsedEquation();
 }
 
 QString Equation::descriptionTip() const {

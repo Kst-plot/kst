@@ -56,6 +56,8 @@ class KST_EXPORT Equation : public DataObject {
     void setExistingXVector(VectorPtr xvector, bool do_interp);
 
     const QString& equation() const { return _equation; }
+    const QString reparsedEquation() const;
+
     VectorPtr vXIn() const { return _xInVector; }
     VectorPtr vX() const { return _xOutVector; }
     VectorPtr vY() const { return _yOutVector; }

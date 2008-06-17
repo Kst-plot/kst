@@ -85,14 +85,22 @@ ObjectPtr ObjectStore::retrieveObject(const QString name) const {
     return NULL;
   }
 
+  QString shortName;
+  QRegExp rx("(\\(|^)([A-Z]\\d+)(\\)$|$)");
+  //QRegExp rx("\\(([A-Z]\\d+)\\)$|^(\\d+)$");
+  rx.indexIn(name);
+  shortName = rx.cap(2);
+
+qDebug() << "---- short name retrieved: " << shortName << "from" << name;
+
   // 1) search for exact names
-  for (int i = 0; i < _list.size(); ++i) {
+/*  for (int i = 0; i < _list.size(); ++i) {
     if (_list.at(i)->Name()==name)
       return _list.at(i);
-  }
+  }*/
   // 2) search for short names
   for (int i = 0; i < _list.size(); ++i) {
-    if (_list.at(i)->shortName()==name) 
+    if (_list.at(i)->shortName()==shortName) 
       return _list.at(i);
   }
   // 3) search for descriptive names: must be unique

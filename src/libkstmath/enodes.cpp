@@ -795,7 +795,7 @@ QString DataNode::text() const {
   if (_isEquation) {
     return QString("[=") + _tagName + "]";
   } else if (_vector) {
-    return _vector->Name();
+    return QString("[") + _vector->Name() + QString("]");
   } else if (_scalar) {
     return _scalar->Name();
   } else {
