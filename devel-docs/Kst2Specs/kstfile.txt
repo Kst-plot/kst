@@ -10,32 +10,35 @@ File Format for Kst 2
   <variables>
     <vector name="">
     </vector>
-    <datavector provider="" file="" field="" start="" count=""></datavector>
-    <generatedvector tag="" min="" max="" count=""></generatedvector>
-    <vector tag="">
+    <datavector provider="" file="" field="" start="" count="" initialVNum="" initialXNum=""></datavector>
+    <generatedvector tag="" min="" max="" count="" initialVNum="" initialXNum=""></generatedvector>
+    <vector tag="" initialVNum="" initialXNum="">
         <data></data>
     </vector>
-    <editablevector tag="">
+    <editablevector tag="" initialVNum="" initialXNum="">
       <data></data>
     </editablevector>
-    <scalar tag="" orphan="true" editable="true" value=""></scalar>
-    <string tag="" orphan="true" editable="true" value=""></string>
-    <datamatrix tag="" provider="" file="" field="" reqxstart=""  reqystart="" reqnx="" reqny="" doave="" doskip="" skip=""></datamatrix>
-    <generatedmatrix tag="" xmin="" ymin="" nx="" ny="" xstep="" ystep="" gradzmin="" gradzmax="" xdirection=""></generatedmatrix>
-    <editablematrix tag="" xmin="" ymin="" nx="" ny="" xstep="" ystep="">
+    <scalar tag="" orphan="true" editable="true" value="" initialXNum=""></scalar>
+    <string tag="" orphan="true" editable="true" value="" initialTNum=""></string>
+    <datamatrix tag="" provider="" file="" field="" reqxstart=""  reqystart="" reqnx="" reqny="" doave="" doskip="" skip="" initialVNum="" initialXNum="" initialMNum=""></datamatrix>
+    <editablematrix tag="" xmin="" ymin="" nx="" ny="" xstep="" ystep="" initialVNum="" initialXNum="" initialMNum="">
         <data></data>
     </editablematrix>
   </variables>
   <objects>
     <csd tag="" vector="" samplerate="" gaussiansigma="" average="" fftlength="" removemean="" apodize="" apodizefunction="" windowsize="" vectorunits="" rateunits="" outputtype=""></csd>
-    <equation tag="" expression="" xvector="" interpolate=""></equation>
-    <histogram tag="" vector="" numberofbins="" realtimeautobin="" min="" max="" normalizationmode=""></histogram>
-    <powerspectrum tag="" vector="" samplerate="" gaussiansigma="" average="" fftlength="" removemean="" apodize="" apodizefunction="" interpolateholes="" vectorunits="" rateunits="" outputtype=""></powerspectrum>
+    <equation tag="" expression="" xvector="" interpolate="" initialVNum="" initialXNum="" initialENum=""></equation>
+    <histogram tag="" vector="" numberofbins="" realtimeautobin="" min="" max="" normalizationmode="" initialVNum="" initialXNum="" initialHNum=""></histogram>
+    <powerspectrum tag="" vector="" samplerate="" gaussiansigma="" average="" fftlength="" removemean="" apodize="" apodizefunction="" interpolateholes="" vectorunits="" rateunits="" outputtype="" initialVNum="" initialXNum="" initialPSDNum=""></powerspectrum>
     <eventmonitor tag="" equation="" description="" logdebug="" loglevel="" logemail="" logelog="" emailrecipients="" script=""></eventmonitor>
+    <plugin type="" initialVNum="" initialXNum="" initialHNum="">
+        <inputvector type="" tag=""></inputvector>
+        <outputvector type="" tag=""></outputvector>
+    </plugin>
   </objects>
   <relations>
-    <curve tag="" xvector="" yvector="" legend="" errorxvector="" erroryvector="" errorxminusvector="" erroryminusvector="" color="" haslines="" linewidth="" linestyle="" haspoints="" pointtype="" pointdensity="" hasbars="" barstyle="" ignoreautoscale=""></curve>
-    <image tag="" matrix="" legend="" palettename="" hascolormap="" lowerthreshold="" upperthreshold="" hascontourmap="" numcontourlines="" contourweight="" contourcolor="" autothreshold=""></image>
+    <curve tag="" xvector="" yvector="" legend="" errorxvector="" erroryvector="" errorxminusvector="" erroryminusvector="" color="" haslines="" linewidth="" linestyle="" haspoints="" pointtype="" pointdensity="" hasbars="" barstyle="" ignoreautoscale="" initialCNum=""></curve>
+    <image tag="" matrix="" legend="" palettename="" hascolormap="" lowerthreshold="" upperthreshold="" hascontourmap="" numcontourlines="" contourweight="" contourcolor="" autothreshold="" initialINum=""></image>
   </relations>
   <graphics>
     <view name="">
@@ -115,9 +118,15 @@ File Format for Kst 2
                 <brush color="#ffffff" style="1"></brush>
                 <plotaxis xtickmode="5" ytickmode="5"></plotaxis>
                 <cartesianrender name="" type="0" xzoommode="0" yzoommode="1" xlog="false" ylog="false" xlogbase="10" ylogbase="10">
-                    <rect x="" y="" width=": height=""></rect>
                     <relation name=""></relation>
                 </cartesianrender>
+                <plotaxis id="xaxis" visible="false" log="false" reversed="false" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="4" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" significantdigits="9" zoommode="0">
+                    <plotmarkers xaxis="true" linecolor="#000000" linestyle="1" linewidth="1" curvemode="1"></plotmarkers>
+                </plotaxis>
+                <plotaxis id="yaxis" visible="true" log="false" reversed="false" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="4" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" significantdigits="9" zoommode="1">
+                    <plotmarkers xaxis="false" linecolor="#000000" linestyle="1" linewidth="1" curvemode="1"></plotmarkers>
+                </plotaxis>
+                <projectionrect x="-10" y="-10.5" width="20" height="21"></projectionrect>
             </plot>
             <svg zvalue="">
                 <position x="" y=""></position>

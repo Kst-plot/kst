@@ -316,7 +316,7 @@ QString BasicPlugin::label(int precision) const {
 void BasicPlugin::save(QXmlStreamWriter &s) {
   s.writeStartElement(staticTypeTag);
   s.writeAttribute("type", _pluginName);
-  saveNameInfo(s, VNUM|HNUM|XNUM);
+  saveNameInfo(s, VNUM|PNUM|XNUM);
   for (VectorMap::Iterator i = _inputVectors.begin(); i != _inputVectors.end(); ++i) {
     s.writeStartElement("inputvector");
     s.writeAttribute("type", i.key());
