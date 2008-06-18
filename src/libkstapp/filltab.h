@@ -33,6 +33,9 @@ class KST_EXPORT FillTab : public DialogTab, Ui::FillTab {
 
     QGradient gradient() const;
     void setGradient(const QGradient &gradient);
+
+  public Q_SLOTS:
+    void updateButtons();
 };
 
 }

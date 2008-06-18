@@ -47,7 +47,15 @@ QGradient GradientEditor::gradient() const {
 
 
 void GradientEditor::setGradient(const QGradient &gradient) {
-  _gradient->setStops(gradient.stops());
+  setGradientStops(gradient.stops());
+  update();
+}
+
+
+void GradientEditor::resetGradient() {
+  QLinearGradient defaultGradient(1,0,0,0);
+  clearGradientStops();
+  update();
 }
 
 
@@ -108,32 +116,31 @@ void GradientEditor::paintEvent(QPaintEvent *event)
 {
   Q_UNUSED(event);
 
-  if (!isEnabled()) {
-    return;
-  }
-
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing, true);
 
   painter.fillRect(rect(), QBrush(gradient()));
 
-  QPoint cursor = QWidget::mapFromGlobal(QCursor::pos());
-  if (rect().contains(cursor)) {
-    painter.setPen(Qt::black);
-    QLine line(QPoint(cursor.x(), rect().y()), QPoint(cursor.x(), rect().bottom()));
-    painter.drawLine(line);
-  }
+  if (isEnabled()) {
 
-  QList<Stop> stops = _stopHash.values();
-  foreach (Stop stop, stops) {
-    if (stop.path.contains(cursor)) {
-      painter.setPen(Qt::white);
-      painter.setBrush(Qt::black);
-      painter.drawPath(stop.path);
-    } else {
+    QPoint cursor = QWidget::mapFromGlobal(QCursor::pos());
+    if (rect().contains(cursor)) {
       painter.setPen(Qt::black);
-      painter.setBrush(Qt::white);
-      painter.drawPath(stop.path);
+      QLine line(QPoint(cursor.x(), rect().y()), QPoint(cursor.x(), rect().bottom()));
+      painter.drawLine(line);
+    }
+
+    QList<Stop> stops = _stopHash.values();
+    foreach (Stop stop, stops) {
+      if (stop.path.contains(cursor)) {
+        painter.setPen(Qt::white);
+        painter.setBrush(Qt::black);
+        painter.drawPath(stop.path);
+      } else {
+        painter.setPen(Qt::black);
+        painter.setBrush(Qt::white);
+        painter.drawPath(stop.path);
+      }
     }
   }
 }
@@ -190,13 +197,18 @@ void GradientEditor::setGradientStops(const QGradientStops &stops) {
   _stopHash.clear();
 
   foreach (QGradientStop gradientStop, stops) {
-    int position = int(-(gradientStop.first - 1.0 / qreal(rect().width())));
+    int position = int(-((gradientStop.first - 1.0) * qreal(rect().width())));
     Stop stop;
     stop.pos = position;
     stop.color = gradientStop.second;
     stop.path = marker(position);
     _stopHash.insert(position, stop);
   }
+}
+
+
+void GradientEditor::clearGradientStops() {
+  _stopHash.clear();
 }
 
 }

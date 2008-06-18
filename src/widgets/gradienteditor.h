@@ -32,6 +32,7 @@ public:
 
 public Q_SLOTS:
   void setGradient(const QGradient &gradient);
+  void resetGradient();
 
 Q_SIGNALS:
   void changed(const QGradient &gradient);
@@ -48,6 +49,7 @@ private:
 
   QGradientStops gradientStops() const;
   void setGradientStops(const QGradientStops &stops);
+  void clearGradientStops();
 
   struct Stop {
     int pos;

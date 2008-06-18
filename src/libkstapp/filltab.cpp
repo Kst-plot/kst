@@ -11,6 +11,8 @@
 
 #include "filltab.h"
 
+#include <QDebug>
+
 namespace Kst {
 
 FillTab::FillTab(QWidget *parent)
@@ -38,13 +40,22 @@ FillTab::FillTab(QWidget *parent)
   connect(_color, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
   connect(_style, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_gradientEditor, SIGNAL(changed(const QGradient &)), this, SIGNAL(modified()));
+  connect(_gradientReset, SIGNAL(pressed()), _gradientEditor, SLOT(resetGradient()));
+  connect(_useGradient, SIGNAL(stateChanged(int)), this, SLOT(updateButtons()));
 
-  //FIXME gradient editor is disabled for now as it is not ready
-  _gradientEditor->setEnabled(false);
+  updateButtons();
 }
 
 
 FillTab::~FillTab() {
+}
+
+
+void FillTab::updateButtons() {
+  _color->setEnabled(!_useGradient->isChecked());
+  _style->setEnabled(!_useGradient->isChecked());
+  _gradientReset->setEnabled(_useGradient->isChecked());
+  _gradientEditor->setEnabled(_useGradient->isChecked());
 }
 
 
@@ -54,7 +65,11 @@ QColor FillTab::color() const {
 
 
 void FillTab::setColor(const QColor &color) {
-  _color->setColor(color);
+  if (color.isValid()) {
+    _color->setColor(color);
+  } else {
+    _color->setColor(Qt::white);
+  }
 }
 
 
@@ -64,17 +79,27 @@ Qt::BrushStyle FillTab::style() const {
 
 
 void FillTab::setStyle(Qt::BrushStyle style) {
-  _style->setCurrentIndex(_style->findData(QVariant(style)));
+  if (style == Qt::LinearGradientPattern) {
+    _style->setCurrentIndex(Qt::SolidPattern);
+  } else {
+    _style->setCurrentIndex(_style->findData(QVariant(style)));
+  }
 }
 
 
 QGradient FillTab::gradient() const {
-  return _gradientEditor->gradient();
+  if (_useGradient->isChecked()) {
+    return _gradientEditor->gradient();
+  } else {
+    return QGradient();
+  }
 }
 
 
 void FillTab::setGradient(const QGradient &gradient) {
+  _useGradient->setChecked(!gradient.stops().empty());
   _gradientEditor->setGradient(gradient);
+  updateButtons();
 }
 
 }

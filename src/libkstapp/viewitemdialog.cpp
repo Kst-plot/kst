@@ -64,12 +64,9 @@ void ViewItemDialog::setupFill() {
   _fillTab->setColor(b.color());
   _fillTab->setStyle(b.style());
 
-  //FIXME gradient editor is disabled for now as it is not ready
-#if 0
   if (const QGradient *gradient = b.gradient()) {
     _fillTab->setGradient(*gradient);
   }
-#endif
 }
 
 
@@ -109,19 +106,18 @@ void ViewItemDialog::setupLayout() {
 
 
 void ViewItemDialog::fillChanged() {
+  Q_ASSERT(_item);
+
   QBrush b = _item->brush();
 
   b.setColor(_fillTab->color());
   b.setStyle(_fillTab->style());
 
-  //FIXME gradient editor is disabled for now as it is not ready
-#if 0
   QGradient gradient = _fillTab->gradient();
-  if (gradient.type() != QGradient::NoGradient)
+  if (gradient.type() != QGradient::NoGradient) {
     b = QBrush(gradient);
-#endif
+  }
 
-  Q_ASSERT(_item);
   _item->setBrush(b);
 }
 
