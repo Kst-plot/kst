@@ -111,7 +111,7 @@ ViewItem* CircleItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore
         if (parent) {
           rc->setParent(parent);
         }
-        // TODO add any specialized CircleItem Properties here.
+        // Add any new specialized CircleItem Properties here.
       } else {
         Q_ASSERT(rc);
         if (!rc->parse(xml, validTag) && validTag) {

@@ -156,7 +156,6 @@ StringPtr BasicPlugin::outputString(const QString& string) const {
 
 
 void BasicPlugin::setInputVector(const QString &type, VectorPtr ptr) {
-  // TODO: deal with tags
   if (ptr) {
     _inputVectors[type] = ptr;
   } else {
@@ -167,7 +166,6 @@ void BasicPlugin::setInputVector(const QString &type, VectorPtr ptr) {
 
 
 void BasicPlugin::setInputScalar(const QString &type, ScalarPtr ptr) {
-  // TODO: deal with tags
   if (ptr) {
     _inputScalars[type] = ptr;
   } else {
@@ -178,7 +176,6 @@ void BasicPlugin::setInputScalar(const QString &type, ScalarPtr ptr) {
 
 
 void BasicPlugin::setInputString(const QString &type, StringPtr ptr) {
-  // TODO: deal with tags
   if (ptr) {
     _inputStrings[type] = ptr;
   } else {

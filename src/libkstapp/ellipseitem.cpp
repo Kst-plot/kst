@@ -81,7 +81,7 @@ ViewItem* EllipseItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStor
         rc = new EllipseItem(view);
         if (parent) {
           rc->setParent(parent);
-        // TODO add any specialized BoxItem Properties here.
+        // Add any new specialized BoxItem Properties here.
         }
       } else {
         Q_ASSERT(rc);

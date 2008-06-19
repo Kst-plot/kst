@@ -150,7 +150,7 @@ ViewItem* LabelItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore 
         rc = new LabelItem(view, av.toString());
         if (parent) {
           rc->setParent(parent);
-         // TODO add any specialized LabelItem Properties here.
+         // Add any new specialized LabelItem Properties here.
           }
         }
         av = attrs.value("scale");

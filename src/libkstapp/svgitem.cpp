@@ -104,7 +104,7 @@ ViewItem* SvgItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *s
         if (parent) {
           rc->setParent(parent);
         }
-        // TODO add any specialized SvgItem Properties here.
+        // Add any new specialized SvgItem Properties here.
       } else if (xml.name().toString() == "data") {
         Q_ASSERT(rc);
         xml.readNext();

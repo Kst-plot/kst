@@ -73,7 +73,7 @@ ViewItem* BoxItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *s
         if (parent) {
           rc->setParent(parent);
         }
-        // TODO add any specialized BoxItem Properties here.
+        // Add any new specialized BoxItem Properties here.
       } else {
         Q_ASSERT(rc);
         if (!rc->parse(xml, validTag) && validTag) {

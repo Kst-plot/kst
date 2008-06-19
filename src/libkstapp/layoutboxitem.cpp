@@ -64,7 +64,6 @@ void LayoutBoxItem::save(QXmlStreamWriter &xml) {
       continue;
 
     xml.writeStartElement("layoutitem");
-    //TODO Update this with proper Object Tag's.
     xml.writeAttribute("name", viewItem->name());
     xml.writeEndElement();
   }
@@ -180,7 +179,7 @@ ViewItem* LayoutBoxItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectSt
         if (parent) {
           rc->setParent(parent);
         }
-        // TODO add any specialized BoxItem Properties here.
+        // Add any specialized BoxItem Properties here.
       } else if (xml.name().toString() == "layoutitem") {
         Q_ASSERT(rc);
         validTag = rc->appendItemFromXml(xml);
@@ -207,7 +206,7 @@ ViewItem* LayoutBoxItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectSt
     }
     xml.readNext();
   }
-  //TODO LayoutBoxItem automatically adds itself to the parent. Don't return the item here as it
+  // LayoutBoxItem automatically adds itself to the parent. Don't return the item here as it
   // has already been added to the scene.  
   return 0;
 }

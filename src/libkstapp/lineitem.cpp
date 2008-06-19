@@ -265,7 +265,7 @@ ViewItem* LineItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         if (parent) {
           rc->setParent(parent);
         }
-        // TODO add any specialized LineItem Properties here.
+        // Add any new specialized LineItem Properties here.
       } else {
         Q_ASSERT(rc);
         if (!rc->parse(xml, validTag) && validTag) {

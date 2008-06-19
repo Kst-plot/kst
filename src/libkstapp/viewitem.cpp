@@ -123,11 +123,10 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
     QStringRef av;
     if (xml.name().toString() == "name") {
       knownTag = true;
-//      TODO Add proper parsing of ObjectTag when format is set.
-//       av = attrs.value("name");
-//       if (!av.isNull()) {
-//         setName(av.toString());
-//      }
+      av = attrs.value("name");
+      if (!av.isNull()) {
+        setName(av.toString());
+     }
     } else if (xml.name().toString() == "position") {
       knownTag = true;
       double x = 0, y = 0;

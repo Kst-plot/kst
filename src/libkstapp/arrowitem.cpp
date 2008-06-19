@@ -147,7 +147,7 @@ ViewItem* ArrowItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore 
         if (!av.isNull()) {
           rc->setEndArrowScale(QVariant(av.toString()).toDouble());
         }
-        // TODO add any specialized ArrowItem Properties here.
+        // Add any new specialized ArrowItem Properties here.
       } else {
         Q_ASSERT(rc);
         if (!rc->parse(xml, validTag) && validTag) {

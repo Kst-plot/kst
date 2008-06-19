@@ -2069,7 +2069,7 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
           rc->setRightLabelFont(font);
         }
 
-      // TODO add any specialized PlotItem Properties here.
+      // Add any new specialized PlotItem Properties here.
       } else if (xml.name().toString() == "projectionrect") {
         QXmlStreamAttributes attrs = xml.attributes();
         QStringRef av;
