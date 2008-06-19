@@ -159,6 +159,9 @@ void Scalar::triggerUpdateSignal(ObjectPtr object) {
   emit scalarUpdated(object);
 }
 
+QString Scalar::descriptionTip() const {
+  return i18n("Scalar: %1 = %2\n%3").arg(Name()).arg(value()).arg(_provider->descriptionTip());
+}
 
 }
 // vim: et ts=2 sw=2

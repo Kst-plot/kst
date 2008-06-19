@@ -166,30 +166,38 @@ void PlotItemDialog::setupContent() {
   QStringList displayedRelations;
   QStringList availableRelations;
   QStringList allRelations;
+  QStringList displayedRelationTips;
+  QStringList availableRelationTips;
+  QStringList allRelationTips;
 
   CurveList curves = _store->getObjects<Curve>();
   ImageList images = _store->getObjects<Image>();
 
   foreach (RelationPtr relation, _plotItem->renderItem(PlotRenderItem::Cartesian)->relationList()) {
     displayedRelations.append(relation->Name());
+    displayedRelationTips.append(relation->descriptionTip());
   }
 
   foreach (CurvePtr curve, curves) {
     allRelations.append(curve->Name());
+    allRelationTips.append(curve->descriptionTip());
     if (!displayedRelations.contains(curve->Name())) {
       availableRelations.append(curve->Name());
+      availableRelationTips.append(curve->descriptionTip());
     }
   }
 
   foreach (ImagePtr image, images) {
     allRelations.append(image->Name());
+    allRelationTips.append(image->descriptionTip());
     if (!displayedRelations.contains(image->Name())) {
       availableRelations.append(image->Name());
+      availableRelationTips.append(image->descriptionTip());
     }
   }
 
-  _contentTab->setDisplayedRelations(displayedRelations);
-  _contentTab->setAvailableRelations(availableRelations);
+  _contentTab->setDisplayedRelations(displayedRelations, displayedRelationTips);
+  _contentTab->setAvailableRelations(availableRelations, availableRelationTips);
 }
 
 

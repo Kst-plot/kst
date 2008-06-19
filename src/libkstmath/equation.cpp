@@ -183,7 +183,6 @@ Object::UpdateType Equation::update() {
 const QString Equation::reparsedEquation() const {
   QString etext;
 
-  qDebug() << "Equation: " << _equation << "\n";
   if (!_equation.isEmpty()) {
     if (!Equations::mutex().tryLock()) {
       qDebug() << "Don't reparse equation while it is being reparsed...";
@@ -204,7 +203,6 @@ const QString Equation::reparsedEquation() const {
     ParsedEquation = 0L;
     Equations::mutex().unlock();
   }
-  qDebug() << "reparsed Equation: " << etext << "\n";
   return (etext);
 }
 
@@ -240,7 +238,6 @@ void Equation::save(QXmlStreamWriter &s) {
 
 
 void Equation::setEquation(const QString& in_fn) {
-  qDebug() << "Enter setEquation\n";
   // assert(*_xVector); - ugly, we have to allow this here due to
   // document loading with vector lazy-loading
   setDirty();
@@ -298,8 +295,6 @@ void Equation::setEquation(const QString& in_fn) {
       connect(scalar, SIGNAL(scalarUpdated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
     }
   }
-    qDebug() << "leave setEquation\n";
-
 }
 
 

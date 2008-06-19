@@ -10,6 +10,9 @@
  ***************************************************************************/
 
 #include "contenttab.h"
+#include "objectstore.h"
+
+#include <qdebug.h>
 
 namespace Kst {
 
@@ -109,15 +112,21 @@ void ContentTab::downButtonClicked() {
 }
 
 
-void ContentTab::setDisplayedRelations(QStringList displayedRelations) {
+void ContentTab::setDisplayedRelations(QStringList displayedRelations, QStringList displayedRelationTips) {
   _displayedRelationList->clear();
   _displayedRelationList->addItems(displayedRelations);
+  for (int i=0; i<_displayedRelationList->count(); i++) {
+    _displayedRelationList->item(i)->setToolTip(displayedRelationTips.at(i));
+  }
 }
 
 
-void ContentTab::setAvailableRelations(QStringList availableRelations) {
+void ContentTab::setAvailableRelations(QStringList availableRelations, QStringList availableRelationTips) {
   _availableRelationList->clear();
   _availableRelationList->addItems(availableRelations);
+  for (int i=0; i<_availableRelationList->count(); i++) {
+    _availableRelationList->item(i)->setToolTip(availableRelationTips.at(i));
+  }
 }
 
 
@@ -128,8 +137,6 @@ QStringList ContentTab::displayedRelations() {
   }
   return relations;
 }
-
-
 
 }
 

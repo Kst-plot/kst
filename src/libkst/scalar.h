@@ -63,6 +63,8 @@ class KST_EXPORT Scalar : public Primitive {
 
     void triggerUpdateSignal(ObjectPtr object);
 
+    virtual QString descriptionTip() const;
+
   public slots:
     double value() const;
 

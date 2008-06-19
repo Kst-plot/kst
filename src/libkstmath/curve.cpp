@@ -1752,24 +1752,20 @@ QString Curve::descriptionTip() const {
 
   tip = i18n("Curve: %1\nX: %2\nY: %3").arg(Name()).arg(xVector()->descriptionTip()).arg(yVector()->descriptionTip());
 
-  VectorPtr ev = xErrorVector();
-  if (ev) {
-    tip += i18n("\nX+ Error: %1").arg(ev->Name());
+  if (hasXError()) {
+    tip += i18n("\nX+ Error: %1").arg(xErrorVector()->Name());
   }
 
-  ev = xMinusErrorVector();
-  if (ev) {
-    tip += i18n("\nX- Error: %1").arg(ev->Name());
+  if (hasXMinusError()) {
+    tip += i18n("\nX- Error: %1").arg(xMinusErrorVector()->Name());
   }
 
-  ev = yErrorVector();
-  if (ev) {
-    tip += i18n("\nY+ Error: %1").arg(ev->Name());
+  if (hasYError()) {
+    tip += i18n("\nY+ Error: %1").arg(yErrorVector()->Name());
   }
 
-  ev = yMinusErrorVector();
-  if (ev) {
-    tip += i18n("\nY- Error: %1").arg(ev->Name());
+  if (hasYMinusError()) {
+    tip += i18n("\nY- Error: %1").arg(yMinusErrorVector()->Name());
   }
 
   if (hasLines()) {

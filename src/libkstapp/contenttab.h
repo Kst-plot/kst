@@ -19,16 +19,21 @@
 
 namespace Kst {
 
+class ObjectStore;
+
 class KST_EXPORT ContentTab : public DialogTab, Ui::ContentTab {
   Q_OBJECT
   public:
     ContentTab(QWidget *parent = 0);
     virtual ~ContentTab();
 
-    void setDisplayedRelations(QStringList displayedRelations);
-    void setAvailableRelations(QStringList availableRelations);
+    void setDisplayedRelations(QStringList displayedRelations, QStringList displayedRelationTips);
+    void setAvailableRelations(QStringList availableRelations, QStringList availableRelationTips);
 
     QStringList displayedRelations();
+
+  private:
+    ObjectStore* _store;
 
   private Q_SLOTS:
     void updateButtons();
