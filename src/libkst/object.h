@@ -59,9 +59,6 @@ class Object : public QObject, public Shared, public KstRWLock, public NamedObje
     // you MUST have a reference-counted pointer to call this function
     virtual int getUsage() const;
 
-    // TODO: do we need this?
-//    int operator==(const QString&) const;
-
     virtual void deleteDependents();
 
     // @since 1.1.0

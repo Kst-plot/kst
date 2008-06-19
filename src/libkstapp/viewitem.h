@@ -249,7 +249,6 @@ class KST_EXPORT ViewItemCommand : public QUndoCommand
     QPointer<ViewItem> _item;
 };
 
-// TODO: inherit from ViewItemCommand?
 class KST_EXPORT CreateCommand : public QObject, public ViewCommand
 {
   Q_OBJECT
