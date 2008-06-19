@@ -58,7 +58,6 @@ class Vector : public Primitive {
   protected:
     Vector(ObjectStore *store, int size = 0,
         Object *provider = 0L, bool bIsScalarList = false);
-    // TODO: do we need this constructor?
     Vector(ObjectStore *store, const QByteArray& data);
 
     virtual ~Vector();
