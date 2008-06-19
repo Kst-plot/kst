@@ -296,13 +296,18 @@ QStringList DirFilePlugin::fieldList(QSettings *cfg,
 
 
 QString DirFilePlugin::getDirectory(QString filepath) {
-  QString properDirPath = QFileInfo(filepath).path();
-  QFile file(filepath);
-  if (file.open(QFile::ReadOnly)) {
-    QTextStream stream(&file);
-    QString directoryName = stream.readLine();
-    properDirPath += "/";
-    properDirPath += directoryName;
+  QFileInfo info(filepath);
+  QString properDirPath = info.path();
+  if (info.fileName() == "format") {
+    //do nothing... allows for format file to be selected.
+  } else {
+    QFile file(filepath);
+    if (file.open(QFile::ReadOnly)) {
+      QTextStream stream(&file);
+      QString directoryName = stream.readLine();
+      properDirPath += "/";
+      properDirPath += directoryName;
+    }
   }
   return properDirPath;
 }

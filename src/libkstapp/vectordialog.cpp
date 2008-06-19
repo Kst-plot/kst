@@ -38,13 +38,21 @@ VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
 
   connect(_readFromSource, SIGNAL(toggled(bool)), this, SLOT(readFromSourceChanged()));
   connect(_fileName, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
+  connect(_directoryName, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
   connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
+  connect(_useDirectory, SIGNAL(stateChanged(int)), this, SLOT(directorySourceChanged()));
 
   connect(_dataRange, SIGNAL(modified()), this, SIGNAL(modified()));
   connect(_numberOfSamples, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_from, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
   connect(_to, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
   _fileName->setFile(QDir::currentPath());
+  _directoryName->setFile(QDir::currentPath());
+  _directoryName->setMode(QFileDialog::DirectoryOnly);
+
+  //Disable alternate Directory selector.
+  _useDirectory->setVisible(false);
+  _directoryName->setVisible(false);
 
   _connect->setVisible(false);
 }
@@ -77,7 +85,14 @@ QString VectorTab::file() const {
 
 
 void VectorTab::setFile(const QString &file) {
-  _fileName->setFile(file);
+  QFileInfo info(file);
+  if (info.isDir()) {
+    _directoryName->setFile(file);
+    _useDirectory->setChecked(true);
+  } else {
+    _fileName->setFile(file);
+    _useDirectory->setChecked(false);
+  }
 }
 
 
@@ -162,6 +177,13 @@ void VectorTab::readFromSourceChanged() {
 }
 
 
+void VectorTab::directorySourceChanged() {
+  _fileName->setEnabled(!_useDirectory->isChecked());
+  _directoryName->setEnabled(_useDirectory->isChecked());
+  updateDataSource();
+}
+
+
 void VectorTab::hideGeneratedOptions() {
   _sourceGroup->setVisible(false);
   _generatedVectorGroup->setVisible(false);
@@ -190,9 +212,18 @@ void VectorTab::enableSingleEditOptions(bool enabled) {
 }
 
 
+void VectorTab::updateDataSource() {
+  if (_useDirectory->isChecked()) {
+    fileNameChanged(_directoryName->file());
+  } else {
+    fileNameChanged(_fileName->file());
+  }
+}
+
+
 void VectorTab::fileNameChanged(const QString &file) {
   QFileInfo info(file);
-  if (!info.exists() || !info.isFile())
+  if (!info.exists())
     return;
 
   _field->clear();

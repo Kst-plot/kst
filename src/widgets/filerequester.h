@@ -13,6 +13,7 @@
 #define FILEREQUESTER_H
 
 #include <QWidget>
+#include <QFileDialog>
 
 #include "kst_export.h"
 
@@ -30,6 +31,7 @@ class KST_EXPORT FileRequester : public QWidget {
     virtual ~FileRequester();
 
     QString file() const;
+    void setMode(QFileDialog::FileMode mode) { _mode = mode; }
 
   public Q_SLOTS:
     void setFile(const QString &file);
@@ -46,6 +48,7 @@ class KST_EXPORT FileRequester : public QWidget {
     QLineEdit *_fileEdit;
     QToolButton *_fileButton;
     QString _file;
+    QFileDialog::FileMode _mode;
 };
 
 }

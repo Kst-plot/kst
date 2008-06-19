@@ -24,7 +24,7 @@
 namespace Kst {
 
 FileRequester::FileRequester(QWidget *parent)
-  : QWidget(parent) {
+  : QWidget(parent), _mode(QFileDialog::ExistingFile) {
   setup();
 }
 
@@ -84,8 +84,12 @@ void FileRequester::setFile(const QString &file) {
 
 
 void FileRequester::chooseFile() {
-
-  QString file = QFileDialog::getOpenFileName(this, QString(), _file);
+  QString file;
+  if (_mode == QFileDialog::ExistingFile) {
+    file = QFileDialog::getOpenFileName(this, QString(), _file);
+  } else {
+    file = QFileDialog::getExistingDirectory(this, QString(), _file);
+  }
   if (!file.isEmpty()) {
     setFile(file);
   }
