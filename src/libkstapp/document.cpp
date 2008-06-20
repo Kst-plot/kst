@@ -53,11 +53,6 @@ QString Document::fileName() const {
 
 
 bool Document::save(const QString& to) {
-  // TODO:
-  // - KSaveFile-ish behavior
-  // - only save if changed
-  // - only setChanged(false) if save was successful
-  setChanged(false);
 
   QString file = !to.isEmpty() ? to : _fileName;
   QFile f(file);
@@ -124,6 +119,8 @@ bool Document::save(const QString& to) {
   xml.writeEndElement();
 
   xml.writeEndDocument();
+
+  setChanged(false);
 
   return true;
 }
