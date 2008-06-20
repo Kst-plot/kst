@@ -360,9 +360,6 @@ ObjectPtr HistogramDialog::createNewDataObject() const {
 
   setHistogramDefaults(histogram);
 
-  //FIXME this should be a command...
-  //FIXME need some smart placement...
-
   CurvePtr curve = _document->objectStore()->createObject<Curve>();
 
   curve->setXVector(histogram->vX());

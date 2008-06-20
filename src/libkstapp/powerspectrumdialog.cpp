@@ -213,9 +213,6 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() const {
 
   _powerSpectrumTab->FFTOptionsWidget()->setWidgetDefaults();
 
-  //FIXME this should be a command...
-  //FIXME need some smart placement...
-
   CurvePtr curve = _document->objectStore()->createObject<Curve>();
   Q_ASSERT(curve);
 

@@ -280,9 +280,6 @@ ObjectPtr EquationDialog::createNewDataObject() const {
   equation->update();
   equation->unlock();
 
-  //FIXME this should be a command...
-  //FIXME need some smart placement...
-
   CurvePtr curve = _document->objectStore()->createObject<Curve>();
   Q_ASSERT(curve);
 
