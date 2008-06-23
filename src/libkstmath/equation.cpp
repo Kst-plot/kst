@@ -51,7 +51,7 @@ const QString Equation::YOUTVECTOR = "O"; // Output (slave) vector
 
 
 Equation::Equation(ObjectStore *store)
-: DataObject(store), _xInVector(0), _doInterp(false) {
+: DataObject(store), _doInterp(false), _xInVector(0) {
 
   _ns = 2;
   _pe = 0L;
