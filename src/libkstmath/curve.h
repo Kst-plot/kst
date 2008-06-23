@@ -150,11 +150,7 @@ class KST_EXPORT Curve: public Relation {
     void vectorUpdated(ObjectPtr object);
 
   protected:
-    Curve(ObjectStore *store,
-        VectorPtr in_X=0L, VectorPtr in_Y=0L,
-        VectorPtr in_EX=0L, VectorPtr in_EY=0L,
-        VectorPtr in_EXMinus=0L, VectorPtr in_EYMinus=0L,
-        const QColor &in_color=QColor());
+    Curve(ObjectStore *store);
 
     virtual ~Curve();
 
@@ -163,8 +159,6 @@ class KST_EXPORT Curve: public Relation {
     virtual QString _automaticDescriptiveName() const;
 
   private:
-    inline void commonConstructor(const QColor& in_color);
-
     double MeanY;
 
     int BarStyle;

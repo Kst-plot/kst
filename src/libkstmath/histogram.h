@@ -90,12 +90,15 @@ public:
     virtual DataObjectPtr makeDuplicate();
 
     virtual QString descriptionTip() const;
-  protected:
-    Histogram(ObjectStore *store);
-    Histogram(ObjectStore *store, VectorPtr in_V,
+
+    void change(VectorPtr in_V,
         double xmin_in, double xmax_in,
         int in_n_bins,
-        NormalizationType new_norm_in);
+        NormalizationType new_norm_in,
+        bool realTimeAutoBin = false);
+
+  protected:
+    Histogram(ObjectStore *store);
     virtual ~Histogram();
 
     friend class ObjectStore;
@@ -114,11 +117,6 @@ public:
     double _W;
     bool _realTimeAutoBin;
 
-    void commonConstructor(ObjectStore *store,
-        VectorPtr in_V,
-        double xmin_in, double xmax_in,
-        int in_n_bins,
-        NormalizationType in_norm);
     void internalSetNumberOfBins(int in_n_bins);
 };
 

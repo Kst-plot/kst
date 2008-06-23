@@ -64,25 +64,6 @@ EventMonitorEntry::EventMonitorEntry(ObjectStore *store) : DataObject(store) {
   _logEMail = false;
   _logELOG = false;
 
-  commonConstructor(store);
-}
-
-
-EventMonitorEntry::EventMonitorEntry(ObjectStore *store, const QString &script, const QString &event, const QString &description, const Debug::LogLevel level, const bool logDebug, const bool logEMail, const bool logELOG, const QString& emailRecipients) : DataObject(store) {
-  _event = event;
-  _description = description;
-  _eMailRecipients = emailRecipients;
-  _logDebug = logDebug;
-  _logEMail = logEMail;
-  _logELOG = logELOG;
-  _level = level;
-  _script = script;
-
-  commonConstructor(store);
-}
-
-
-void EventMonitorEntry::commonConstructor(ObjectStore *store) {
   const int NS = 1;
 
   _numDone = 0;

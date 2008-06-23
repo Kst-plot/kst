@@ -121,7 +121,8 @@ void TestPSD::testPSD() {
     vp->value()[i] = i;
   }
 
-  Kst::PSDPtr psd = new Kst::PSD(&_store, vp, 0.0, false, 10, false, false, QString("vUnits"), QString("rUnits"), WindowUndefined, 0.0, PSDUndefined);
+  Kst::PSDPtr psd = Kst::kst_cast<Kst::PSD>(_store.createObject<Kst::PSD>());
+  psd->change(vp, 0.0, false, 10, false, false, QString("vUnits"), QString("rUnits"), WindowUndefined, 0.0, PSDUndefined);
   QCOMPARE(psd->vector()->descriptiveName(), QLatin1String("tempVector"));
   QCOMPARE(psd->output(), PSDUndefined);
   QVERIFY(!psd->apodize());

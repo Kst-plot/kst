@@ -345,13 +345,12 @@ void HistogramDialog::setVector(VectorPtr vector) {
 
 ObjectPtr HistogramDialog::createNewDataObject() const {
   Q_ASSERT(_document && _document->objectStore());
+
   HistogramPtr histogram = _document->objectStore()->createObject<Histogram>();
 
-  histogram->setVector(_histogramTab->vector());
-  histogram->setXRange(_histogramTab->min(), _histogramTab->max());
-  histogram->setNumberOfBins(_histogramTab->bins());
-  histogram->setNormalizationType(_histogramTab->normalizationType());
-  histogram->setRealTimeAutoBin(_histogramTab->realTimeAutoBin());
+  histogram->change(_histogramTab->vector(), _histogramTab->min(), _histogramTab->max(),
+                  _histogramTab->bins(), _histogramTab->normalizationType(),
+                  _histogramTab->realTimeAutoBin());
   histogram->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
   histogram->writeLock();

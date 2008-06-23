@@ -76,7 +76,6 @@ class EventMonitorEntry : public DataObject {
 
   protected:
     EventMonitorEntry(ObjectStore *store);
-    EventMonitorEntry(ObjectStore *store, const QString &script, const QString &event, const QString &description, const Debug::LogLevel level, const bool logDebug, const bool logEMail, const bool logELOG, const QString& emailRecipients);
     ~EventMonitorEntry();
 
     friend class ObjectStore;
@@ -91,7 +90,6 @@ class EventMonitorEntry : public DataObject {
 
   private:
     void logImmediately(bool sendEvent = true);
-    void commonConstructor(ObjectStore *store);
 
     static const QString OUTXVECTOR;
     static const QString OUTYVECTOR;

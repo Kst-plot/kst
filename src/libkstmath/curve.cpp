@@ -65,10 +65,7 @@ static const QLatin1String& EYVECTOR = QLatin1String("EY");
 static const QLatin1String& EXMINUSVECTOR = QLatin1String("EXMinus");
 static const QLatin1String& EYMINUSVECTOR = QLatin1String("EYMinus");
 
-Curve::Curve(ObjectStore *store, VectorPtr in_X, VectorPtr in_Y,
-                      VectorPtr in_EX, VectorPtr in_EY,
-                      VectorPtr in_EXMinus, VectorPtr in_EYMinus,
-                      const QColor &in_color)
+Curve::Curve(ObjectStore *store)
 : Relation(store) {
   setHasPoints(false);
   setHasBars(false);
@@ -78,55 +75,18 @@ Curve::Curve(ObjectStore *store, VectorPtr in_X, VectorPtr in_Y,
   setBarStyle(0);
   setPointDensity(0);
 
-  if (in_X) {
-    _inputVectors[COLOR_XVECTOR] = in_X;
-    connect(in_X, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
-  }
-
-  if (in_Y) {
-    _inputVectors[COLOR_YVECTOR] = in_Y;
-    connect(in_Y, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
-  }
-
-  if (in_EX) {
-    _inputVectors[EXVECTOR] = in_EX;
-    connect(in_EX, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
-  }
-
-  if (in_EY) {
-    _inputVectors[EYVECTOR] = in_EY;
-    connect(in_EY, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
-  }
-
-  if (in_EXMinus) {
-    _inputVectors[EXMINUSVECTOR] = in_EXMinus;
-    connect(in_EXMinus, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
-  }
-
-  if (in_EYMinus) {
-    _inputVectors[EYMINUSVECTOR] = in_EYMinus;
-    connect(in_EYMinus, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
-  }
-
   _shortName = "C"+QString::number(_cnum);
   if (_cnum>max_cnum) 
     max_cnum = _cnum;
   _cnum++;
 
-  commonConstructor(in_color);
-
-  setDirty();
-}
-
-
-void Curve::commonConstructor(const QColor &in_color) {
   MaxX = MinX = MeanX = MaxY = MinY = MeanY = MinPosX = MinPosY = 0;
   NS = 0;
   _typeString = i18n("Curve");
   _type = "Curve";
-  Color = in_color;
-  //updateParsedLegendTag();
+  Color = QColor();
 
+  setDirty();
 }
 
 

@@ -93,12 +93,13 @@ class KST_EXPORT PSD : public DataObject {
 
     virtual QString descriptionTip() const;
 
+    void change(VectorPtr in_V,
+        double freq, bool average, int average_len, bool apodize, bool removeMean,
+        const QString& VUnits, const QString& RUnits, ApodizeFunction in_apodizeFxn = WindowOriginal, 
+        double in_gaussianSigma = 3.0, PSDType in_output = PSDAmplitudeSpectralDensity, bool interpolateHoles = false);
+
   protected:
     PSD(ObjectStore *store);
-    PSD(ObjectStore *store, VectorPtr in_V, double freq,
-        bool average, int average_len,
-        bool in_apodize, bool in_removeMean,
-        const QString& VUnits, const QString& RUnits, ApodizeFunction in_apodizeFxn = WindowOriginal, double in_gaussianSigma = 3.0, PSDType in_output = PSDAmplitudeSpectralDensity);
     virtual ~PSD();
 
     friend class ObjectStore;
@@ -106,10 +107,6 @@ class KST_EXPORT PSD : public DataObject {
     virtual QString _automaticDescriptiveName() const;
 
   private:
-    void commonConstructor(ObjectStore *store, VectorPtr in_V,
-        double freq, bool average, int average_len, bool apodize, bool removeMean,
-        const QString& VUnits, const QString& RUnits, ApodizeFunction in_apodizeFxn,
-        double in_gaussianSigma, PSDType in_output, bool interpolateHoles);
     void updateVectorLabels();
 
     void _adjustLengths();

@@ -808,7 +808,7 @@ bool DataObject::uses(ObjectPtr p) const {
 
 /////////////////////////////////////////////////////////////////////////////
 DataObjectConfigWidget::DataObjectConfigWidget(QSettings *cfg)
-: QWidget(0L), _cfg(_cfg) {
+: QWidget(0L), _cfg(cfg) {
 }
 
 

@@ -49,32 +49,17 @@ const QLatin1String& FVECTOR = QLatin1String("F");
 
 PSD::PSD(ObjectStore *store)
 : DataObject(store) {
-  commonConstructor(store, 0, 0, false, 0, false, false, QString::null, QString::null, WindowUndefined, 0, PSDUndefined, false);
+  _typeString = staticTypeString;
+  _type = "PowerSpectrum";
 }
 
 
-PSD::PSD(ObjectStore *store, VectorPtr in_V,
-                         double in_freq, bool in_average, int in_averageLen,
-                         bool in_apodize, bool in_removeMean,
-                         const QString &in_VUnits, const QString &in_RUnits, ApodizeFunction in_apodizeFxn,
-                         double in_gaussianSigma, PSDType in_output)
-: DataObject(store) {
-  commonConstructor(store, in_V, in_freq, in_average, in_averageLen,
-                    in_apodize, in_removeMean,
-                    in_VUnits, in_RUnits, in_apodizeFxn, in_gaussianSigma,
-                    in_output, false);
-  setDirty();
-}
-
-
-void PSD::commonConstructor(ObjectStore *store, VectorPtr in_V,
+void PSD::change(VectorPtr in_V,
                                double in_freq, bool in_average, int in_averageLen, bool in_apodize,
                                bool in_removeMean, const QString& in_VUnits, const QString& in_RUnits,
                                ApodizeFunction in_apodizeFxn, double in_gaussianSigma, PSDType in_output,
                                bool interpolateHoles) {
 
-  _typeString = staticTypeString;
-  _type = "PowerSpectrum";
   if (in_V) {
     _inputVectors[INVECTOR] = in_V;
   }
@@ -96,14 +81,14 @@ void PSD::commonConstructor(ObjectStore *store, VectorPtr in_V,
 
   _PSDLength = 1;
 
-  Q_ASSERT(store);
-  VectorPtr ov = store->createObject<Vector>();
+  Q_ASSERT(store());
+  VectorPtr ov = store()->createObject<Vector>();
   ov->setProvider(this);
   ov->setSlaveName("f");
   ov->resize(_PSDLength);
   _fVector = _outputVectors.insert(FVECTOR, ov).value();
 
-  ov = store->createObject<Vector>();
+  ov = store()->createObject<Vector>();
   ov->setProvider(this);
   ov->setSlaveName("psd");
   ov->resize(_PSDLength);
@@ -116,6 +101,7 @@ void PSD::commonConstructor(ObjectStore *store, VectorPtr in_V,
     max_psdnum = _psdnum;
   _psdnum++;
 
+  setDirty();
 }
 
 
@@ -161,6 +147,7 @@ Object::UpdateType PSD::update() {
   // determine if the PSD needs to be updated. if not using averaging, then we need at least _PSDLength/16 new data points. if averaging, then we want enough new data for a complete subset.
   if ( ((_last_n_new < _PSDLength/16) || (_Average && (n_subsets - _last_n_subsets < 1))) &&  iv->length() != iv->numNew() && !force) {
     unlockInputsAndOutputs();
+
     return NO_CHANGE;
   }
 

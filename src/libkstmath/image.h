@@ -110,21 +110,6 @@ class KST_EXPORT Image : public Relation {
 
   protected:
     Image(ObjectStore *store);
-    //constructor for colormap only
-    Image(ObjectStore *store, MatrixPtr in_matrix, double lowerZ, double upperZ, bool autoThreshold, const QString &paletteName);
-    //constructor for contour map only
-    Image(ObjectStore *store, MatrixPtr in_matrix, int numContours, const QColor& contourColor, int contourWeight);
-    //constructor for both colormap and contour map
-    Image(ObjectStore *store, 
-        MatrixPtr in_matrix,
-        double lowerZ,
-        double upperZ,
-        bool autoThreshold,
-        const QString &paletteName,
-        int numContours,
-        const QColor& contourColor,
-        int contourWeight);
-
     virtual ~Image();
 
     friend class ObjectStore;

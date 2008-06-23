@@ -41,18 +41,8 @@ static const QLatin1String& OUTMATRIX = QLatin1String("M");
 #define KSTCSDMAXLEN 27
 CSD::CSD(ObjectStore *store)
   : DataObject(store) {
-
-}
-
-CSD::CSD(ObjectStore *store, VectorPtr in_V,
-               double in_freq, bool in_average, bool in_removeMean, bool in_apodize,
-               ApodizeFunction in_apodizeFxn, int in_windowSize, int in_averageLength, double in_gaussianSigma,
-               PSDType in_outputType, const QString &in_vectorUnits, const QString &in_rateUnits)
-: DataObject(store) {
-  commonConstructor(store, in_V, in_freq, in_average, in_removeMean,
-                    in_apodize, in_apodizeFxn, in_windowSize, in_averageLength, in_gaussianSigma,
-                    in_vectorUnits, in_rateUnits, in_outputType, in_V->Name());  // FIXME: is this right?
-  setDirty();
+  _typeString = staticTypeString;
+  _type = "Cumulative Spectral Decay";
 }
 
 
@@ -104,48 +94,7 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
 
   connect(_inputVectors[INVECTOR], SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
 
-}
-
-void CSD::commonConstructor(ObjectStore *store, VectorPtr in_V,
-                            double in_freq, bool in_average, bool in_removeMean, bool in_apodize,
-                            ApodizeFunction in_apodizeFxn, int in_windowSize, int in_averageLength,
-                            double in_gaussianSigma, const QString& in_vectorUnits,
-                            const QString& in_rateUnits, PSDType in_outputType, const QString& vecName) {
-  _typeString = staticTypeString;
-  _type = "Cumulative Spectral Decay";
-  _inputVectors[INVECTOR] = in_V;
-  _frequency = in_freq;
-  _average = in_average;
-  _apodize = in_apodize;
-  _windowSize = in_windowSize;
-  _apodizeFxn = in_apodizeFxn;
-  _gaussianSigma = in_gaussianSigma;
-  _removeMean = in_removeMean;
-  _averageLength = in_averageLength;
-  _vectorUnits = in_vectorUnits;
-  _rateUnits = in_rateUnits;
-  _outputType = in_outputType;
-
-  if (_frequency <= 0.0) {
-    _frequency = 1.0;
-  }
-
-  Q_ASSERT(store);
-  MatrixPtr outMatrix = store->createObject<Matrix>();
-  outMatrix->setProvider(this);
-  outMatrix->setSlaveName("SG");
-  outMatrix->change(1, 1);
-  outMatrix->setLabel(i18n("Power [%1/%2^{1/2}]").arg(_vectorUnits).arg(_rateUnits));
-  outMatrix->setXLabel(i18n("%1 [%2]").arg(vecName).arg(_vectorUnits));
-  outMatrix->setYLabel(i18n("Frequency [%1]").arg(_rateUnits));
-  _outMatrix = _outputMatrices.insert(OUTMATRIX, outMatrix).value();
-
-  updateMatrixLabels();
-  _outMatrix->setDirty();
-
-  if (in_V) {
-    connect(in_V, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
-  }
+  setDirty();
 }
 
 

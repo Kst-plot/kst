@@ -41,30 +41,20 @@ static const QLatin1String& HIST = QLatin1String("H");
 Histogram::Histogram(ObjectStore *store)
   : DataObject(store) {
   setRealTimeAutoBin(false);
-  commonConstructor(store, 0L, 0, 0, 0, Number);
-}
-
-Histogram::Histogram(ObjectStore *store, VectorPtr in_V,
-                           double xmin_in, double xmax_in,
-                           int in_n_bins,
-                           NormalizationType in_norm_mode)
-: DataObject(store) {
-  setRealTimeAutoBin(false);
-
-  commonConstructor(store, in_V, xmin_in, xmax_in, in_n_bins, in_norm_mode);
-
-}
-
-
-void Histogram::commonConstructor(ObjectStore *store,
-                                  VectorPtr in_V,
-                                  double xmin_in,
-                                  double xmax_in,
-                                  int in_n_bins,
-                                  NormalizationType in_norm_mode) {
   _typeString = staticTypeString;
   _type = "Histogram";
+}
+
+
+void Histogram::change(VectorPtr in_V,
+                          double xmin_in,
+                          double xmax_in,
+                          int in_n_bins,
+                          NormalizationType in_norm_mode,
+                          bool realTimeAutoBin) {
+
   _NormalizationMode = in_norm_mode;
+  _realTimeAutoBin = realTimeAutoBin;
   _Bins = 0L;
   _NumberOfBins = 0;
 
@@ -89,14 +79,16 @@ void Histogram::commonConstructor(ObjectStore *store,
   _Bins = new unsigned long[_NumberOfBins];
   _NS = 3 * _NumberOfBins + 1;
 
-  Q_ASSERT(store);
-  VectorPtr v = store->createObject<Vector>();
+  Q_ASSERT(store());
+  VectorPtr v = store()->createObject<Vector>();
+
   v->setProvider(this);
   v->setSlaveName("bin");
   v->resize(_NumberOfBins);
   _bVector = _outputVectors.insert(BINS, v).value();
 
-  v = store->createObject<Vector>();
+  v = store()->createObject<Vector>();
+
   v->setProvider(this);
   v->setSlaveName("num");
   v->resize(_NumberOfBins);

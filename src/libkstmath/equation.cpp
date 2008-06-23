@@ -49,43 +49,10 @@ const QString Equation::XINVECTOR = "X";
 const QString Equation::XOUTVECTOR = "XO"; // Output (slave) vector
 const QString Equation::YOUTVECTOR = "O"; // Output (slave) vector
 
-Equation::Equation(ObjectStore *store, const QString& equation, double x0, double x1, int nx)
-: DataObject(store) {
-  Q_ASSERT(store);
 
-  GeneratedVectorPtr v = store->createObject<GeneratedVector>();
-  v->changeRange(x0, x1, nx);
-  // FIXME: provider?
-  _xInVector = v;
+Equation::Equation(ObjectStore *store)
+: DataObject(store), _xInVector(0), _doInterp(false) {
 
-  _doInterp = false;
-
-  commonConstructor(store, equation);
-  setDirty();
-}
-
-
-Equation::Equation(ObjectStore *store, const QString& equation, VectorPtr xvector, bool do_interp)
-: DataObject(store), _xInVector(xvector) {
-  _doInterp = do_interp; //false;
-  _inputVectors.insert(XINVECTOR, xvector);
-
-  commonConstructor(store, equation);
-  setDirty();
-}
-
-
-Equation::~Equation() {
-  delete _pe;
-  _pe = 0L;
-}
-
-
-void Equation::attach() {
-}
-
-
-void Equation::commonConstructor(ObjectStore *store, const QString& in_equation) {
   _ns = 2;
   _pe = 0L;
   _typeString = i18n("Equation");
@@ -109,12 +76,22 @@ void Equation::commonConstructor(ObjectStore *store, const QString& in_equation)
   _isValid = false;
   _numNew = _numShifted = 0;
 
-  setEquation(in_equation);
-
   _shortName = "E"+QString::number(_enum);
   if (_enum>max_enum) 
     max_enum = _enum;
   _enum++;
+
+  setDirty();
+}
+
+
+Equation::~Equation() {
+  delete _pe;
+  _pe = 0L;
+}
+
+
+void Equation::attach() {
 }
 
 

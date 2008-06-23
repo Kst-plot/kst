@@ -83,8 +83,7 @@ class KST_EXPORT Equation : public DataObject {
     virtual QString descriptionTip() const;
 
   protected:
-    Equation(ObjectStore *store, const QString& equation, double x0, double x1, int nx);
-    Equation(ObjectStore *store, const QString& equation = QString::null, VectorPtr xvector = 0L, bool do_interp = false);
+    Equation(ObjectStore *store);
     ~Equation();
 
     friend class ObjectStore; 
@@ -96,8 +95,6 @@ class KST_EXPORT Equation : public DataObject {
 
     VectorMap VectorsUsed;
     ScalarMap ScalarsUsed;
-
-    void commonConstructor(ObjectStore *store, const QString& equation);
 
     bool FillY(bool force = false);
     bool _isValid : 1;

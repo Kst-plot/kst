@@ -194,18 +194,19 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() const {
   Q_ASSERT(powerspectrum);
 
   powerspectrum->writeLock();
-  powerspectrum->setVector(_powerSpectrumTab->vector());
-  powerspectrum->setFrequency(_powerSpectrumTab->FFTOptionsWidget()->sampleRate());
-  powerspectrum->setAverage(_powerSpectrumTab->FFTOptionsWidget()->interleavedAverage());
-  powerspectrum->setLength(_powerSpectrumTab->FFTOptionsWidget()->FFTLength());
-  powerspectrum->setApodize(_powerSpectrumTab->FFTOptionsWidget()->apodize());
-  powerspectrum->setRemoveMean(_powerSpectrumTab->FFTOptionsWidget()->removeMean());
-  powerspectrum->setVectorUnits(_powerSpectrumTab->FFTOptionsWidget()->vectorUnits());
-  powerspectrum->setRateUnits(_powerSpectrumTab->FFTOptionsWidget()->rateUnits());
-  powerspectrum->setApodizeFxn(_powerSpectrumTab->FFTOptionsWidget()->apodizeFunction());
-  powerspectrum->setGaussianSigma(_powerSpectrumTab->FFTOptionsWidget()->sigma());
-  powerspectrum->setOutput(_powerSpectrumTab->FFTOptionsWidget()->output());
-  powerspectrum->setInterpolateHoles(_powerSpectrumTab->FFTOptionsWidget()->interpolateOverHoles());
+  powerspectrum->change(_powerSpectrumTab->vector(),
+                        _powerSpectrumTab->FFTOptionsWidget()->sampleRate(), 
+                        _powerSpectrumTab->FFTOptionsWidget()->interleavedAverage(),
+                        _powerSpectrumTab->FFTOptionsWidget()->FFTLength(),
+                        _powerSpectrumTab->FFTOptionsWidget()->apodize(),
+                        _powerSpectrumTab->FFTOptionsWidget()->removeMean(),
+                        _powerSpectrumTab->FFTOptionsWidget()->vectorUnits(),
+                        _powerSpectrumTab->FFTOptionsWidget()->rateUnits(),
+                        _powerSpectrumTab->FFTOptionsWidget()->apodizeFunction(),
+                        _powerSpectrumTab->FFTOptionsWidget()->sigma(),
+                        _powerSpectrumTab->FFTOptionsWidget()->output(),
+                        _powerSpectrumTab->FFTOptionsWidget()->interpolateOverHoles());
+
   powerspectrum->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
   powerspectrum->update();
