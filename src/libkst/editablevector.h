@@ -38,8 +38,7 @@ class EditableVector : public Vector {
     virtual QString descriptionTip() const;
 
   protected:
-    KST_EXPORT EditableVector(ObjectStore *store, const QByteArray& data);
-    KST_EXPORT EditableVector(ObjectStore *store, int n=0);
+    KST_EXPORT EditableVector(ObjectStore *store);
 
     friend class ObjectStore; 
 

@@ -37,15 +37,6 @@ DataMatrix::DataMatrix(ObjectStore *store)
   : Matrix(store) {
 }
 
-DataMatrix::DataMatrix(ObjectStore *store, DataSourcePtr file, const QString& field,
-                       int xStart, int yStart,
-                       int xNumSteps, int yNumSteps,
-                       bool doAve, bool doSkip, int skip,
-                       double minX, double minY, double stepX, double stepY)
-    : Matrix(store, 0L, 1, 1, 0,0,1,1) {
-  commonConstructor(file, field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, minX, minY, stepX, stepY);
-}
-
 
 const QString& DataMatrix::typeString() const {
   return staticTypeString;

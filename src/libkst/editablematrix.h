@@ -28,7 +28,7 @@ class KST_EXPORT EditableMatrix : public Matrix {
     virtual void save(QXmlStreamWriter &xml);
 
   protected:
-    EditableMatrix(ObjectStore *store, uint nX=1, uint nY=1, double minX=0, double minY=0, double stepX=1, double stepY=1);
+    EditableMatrix(ObjectStore *store);
 
     friend class ObjectStore;
 };

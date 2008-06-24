@@ -56,10 +56,7 @@ class Vector : public Primitive {
     static const QString staticTypeTag;
 
   protected:
-    Vector(ObjectStore *store, int size = 0,
-        Object *provider = 0L, bool bIsScalarList = false);
-    Vector(ObjectStore *store, const QByteArray& data);
-
+    Vector(ObjectStore *store);
     virtual ~Vector();
 
     friend class ObjectStore; 

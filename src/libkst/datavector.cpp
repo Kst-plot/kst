@@ -48,108 +48,9 @@ const QString DataVector::staticTypeString = I18N_NOOP("Data Vector");
 const QString DataVector::staticTypeTag = I18N_NOOP("datavector");
 
 /** Create a DataVector: raw data from a file */
-DataVector::DataVector(ObjectStore *store, 
-                       DataSourcePtr in_file, const QString &in_field,
-                       int in_f0, int in_n, int skip, bool in_DoSkip,
-                       bool in_DoAve)
+DataVector::DataVector(ObjectStore *store)
 : Vector(store) {
-  commonRVConstructor(in_file, in_field, in_f0, in_n, skip,
-      in_DoSkip, in_DoAve);
-}
 
-
-DataVector::DataVector(ObjectStore *store, const QByteArray& data,
-                       const QString& providerName, const QString& file,
-                       const QString& field, int start, int num,
-                       int skip, bool doAve,
-                       const QString &o_file,
-                       int o_n, int o_f, int o_s, bool o_ave)
-: Vector(store, data) {
-  DataSourcePtr in_file, in_provider;
-  QString in_field;
-  int in_f0 = 0;
-  int in_n = -1;
-  int in_skip = 0;
-  bool in_DoSkip = false;
-  bool in_DoAve = false;
-
-  DataSourceList dsList;
-  if (this->store()) {
-    dsList = this->store()->dataSourceList();
-  }
-
-  //FIXME THIS CTOR IS SO OBFUSCATED IT IS LAUGHABLE!
-  if (!providerName.isEmpty()) {
-      in_provider = dsList.findName(providerName);
-  }
-
-  if (!in_provider && !file.isEmpty()) {
-    if (o_file == "|") {
-      in_file = dsList.findFileName(file);
-    } else {
-      in_file = dsList.findFileName(o_file);
-    }
-  }
-
-  if (!field.isEmpty()) {
-    in_field = field;
-  }
-
-  if (start > 0) {
-    in_f0 = start;
-  }
-
-  if (num > 0) {
-    in_n = num;
-  }
-
-  if (skip > 0) {
-    in_skip = skip;
-    in_DoSkip = in_skip > 0;
-  }
-
-  if (doAve) {
-    in_DoAve = true;
-    in_DoSkip = true;
-    if (in_skip < 1) {
-      in_skip = 1;
-    }
-  }
-
-  if (in_provider) {
-    // provider overrides filename
-    in_file = in_provider;
-  }
-
-  if (o_n > -2) {
-    in_n = o_n;
-  }
-  if (o_f > -2) {
-    in_f0 = o_f;
-  }
-  if (o_s > -1) {
-    in_DoSkip = true;
-    if (o_s > 0) {
-      in_skip = o_s;
-      in_DoAve |= o_ave;
-    } else {
-      in_skip = 0;
-    }
-  }
-  /* Call the common constructor */
-  commonRVConstructor(in_file, in_field, in_f0, in_n, in_skip, in_DoSkip, in_DoAve);
-}
-
-
-const QString& DataVector::typeString() const {
-  return staticTypeString;
-}
-
-
-void DataVector::commonRVConstructor(DataSourcePtr in_file,
-                                     const QString &in_field, int in_f0,
-                                     int in_n, int in_skip, bool in_DoSkip,
-                                     bool in_DoAve) {
   _saveable = true;
   _dontUseSkipAccel = false;
   _numSamples = 0;
@@ -160,33 +61,20 @@ void DataVector::commonRVConstructor(DataSourcePtr in_file,
   N_AveReadBuf = 0;
   AveReadBuf = 0L;
 
-  _file = in_file;
-  ReqF0 = in_f0;
-  ReqNF = in_n;
-  Skip = in_skip;
-  DoSkip = in_DoSkip;
-  DoAve = in_DoAve;
-  _field = in_field;
+  _file = 0L;
+  ReqF0 = 0;
+  ReqNF = -1;
+  Skip = 1;
+  DoSkip = false;
+  DoAve = false;
+  _field = QString::null;
 
-  if (DoSkip && Skip < 1) {
-    Skip = 1;
-  }
+  setDirty();
+}
 
-  if (ReqNF <= 0 && ReqF0 < 0) {
-    ReqF0 = 0;
-  }
 
-  if (_file) {
-    SPF = _file->samplesPerFrame(_field);
-  }
-
-  _dirty = true;
-
-  if (!in_file) {
-    Debug::self()->log(i18n("Data file for vector %1 was not opened.", Name()), Debug::Warning);
-  } else {
-    connect(in_file, SIGNAL(sourceUpdated(ObjectPtr)), this, SLOT(sourceUpdated(ObjectPtr)));
-  }
+const QString& DataVector::typeString() const {
+  return staticTypeString;
 }
 
 

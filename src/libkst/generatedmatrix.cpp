@@ -24,20 +24,18 @@ namespace Kst {
 const QString GeneratedMatrix::staticTypeString = I18N_NOOP("Generated Matrix");
 const QString GeneratedMatrix::staticTypeTag = I18N_NOOP("generatedmatrix");
 
-GeneratedMatrix::GeneratedMatrix(ObjectStore *store,
-                       uint nX, uint nY, double minX, double minY,
-                       double stepX, double stepY,
-                       double gradZMin, double gradZMax,
-                       bool xDirection) : Matrix(store) {
+GeneratedMatrix::GeneratedMatrix(ObjectStore *store) : Matrix(store) {
   _saveable = true;
   _editable = true;
   _zSize = 0;
-  change(nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
+  change(1, 0, 0, 0, 1, 1, 0, 1, true);
 }
+
 
 const QString& GeneratedMatrix::typeString() const {
   return staticTypeString;
 }
+
 
 void GeneratedMatrix::save(QXmlStreamWriter &xml) {
   xml.writeStartElement(staticTypeTag);

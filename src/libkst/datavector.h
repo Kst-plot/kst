@@ -117,21 +117,7 @@ class KST_EXPORT DataVector : public Vector {
     void sourceUpdated(ObjectPtr object);
 
   protected:
-    /** Create an RVECTOR */
-    DataVector(ObjectStore *store,
-               DataSourcePtr file=0L, const QString &field=QString::null,
-               int f0=-1, int n=-1,
-               int skip=-1, bool in_doSkip=false,
-               bool in_doAve=false);
-
-    DataVector(ObjectStore *store, const QByteArray& data,
-               const QString& providerName = QString(), const QString& file = QString(),
-               const QString& field = QString(), int start = -1, int num = -1,
-               int skip = -1, bool doAve = false,
-               const QString &o_file = "|",
-               int o_n = -2, int o_f = -2,
-               int o_s = -1, bool o_ave = false);
-
+    DataVector(ObjectStore *store);
     virtual ~DataVector();
 
     friend class ObjectStore;
@@ -142,13 +128,6 @@ class KST_EXPORT DataVector : public Vector {
     Object::UpdateType doUpdate(bool force = false);
 
     bool _dirty; // different from the Object dirty flag
-
-    /** Common contructor for an RVector */
-    void commonRVConstructor(DataSourcePtr file,
-        const QString &field,
-        int f0, int n,
-        int skip, bool in_doSkip,
-        bool in_doAve);
 
     /** Samples Per Frame */
     int SPF;

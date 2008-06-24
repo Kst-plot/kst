@@ -32,10 +32,7 @@ class KST_EXPORT Scalar : public Primitive {
   Q_PROPERTY(bool displayable READ displayable WRITE setDisplayable)
 
   protected:
-    Scalar(ObjectStore *store, 
-              Object *provider = 0L, double val = 0.0, bool orphan = false,
-              bool displayable = true, bool editable = false);
-
+    Scalar(ObjectStore *store);
     virtual ~Scalar();
 
     friend class ObjectStore;

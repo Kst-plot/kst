@@ -38,11 +38,7 @@ class KST_EXPORT Matrix : public Primitive {
     static const QString staticTypeString;
 
   protected:
-    Matrix(ObjectStore *store,
-              Object *provider = 0L, uint nX = 1, uint nY = 0,
-              double minX = 0, double minY = 0,
-              double stepX = 1, double stepY = 1);
-
+    Matrix(ObjectStore *store);
     virtual ~Matrix();
 
     friend class ObjectStore;

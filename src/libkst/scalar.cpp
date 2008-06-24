@@ -41,9 +41,10 @@ void Scalar::clearScalarsDirty() {
   dirtyScalars = false;
 }
 
+
 /** Create the base scalar */
-Scalar::Scalar(ObjectStore *store, Object *provider, double val, bool orphan, bool displayable, bool editable)
-    : Primitive(store, provider), _value(val), _orphan(orphan), _displayable(displayable), _editable(editable) {
+Scalar::Scalar(ObjectStore *store)
+    : Primitive(store, 0L), _value(0.0), _orphan(false), _displayable(true), _editable(false) {
 
   _shortName = "X"+QString::number(_xnum);
   if (_xnum>max_xnum) 

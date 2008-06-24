@@ -41,22 +41,9 @@ namespace Kst {
 
 const QString Matrix::staticTypeString = I18N_NOOP("Matrix");
 
-Matrix::Matrix(ObjectStore *store, Object *provider, uint nX, uint nY, double minX, double minY, double stepX, double stepY)
-    : Primitive(store, provider) {
-
-  _nX = nX;
-  _nY = nY;
-  _NS = _nX * _nY;
-  _NRealS = 0;
-  _minX = minX;
-  _minY = minY;
-  _stepX = stepX;
-  _stepY = stepY;
-  _z = 0L;
-  _zSize = 0;
-
-  _editable = false;
-  _saveable = false;
+Matrix::Matrix(ObjectStore *store)
+    : Primitive(store, 0L), _NS(0), _NRealS(0), _nX(1), _nY(0), _minX(0), _minY(0), _stepX(1), _stepY(1),
+      _editable(false), _saveable(false), _z(0L), _zSize(0) {
 
   createScalars(store);
   setDirty();
@@ -197,6 +184,9 @@ void Matrix::calcNoSpikeRange(double per) {
     return;
   }
 
+  if (per < 0) {
+    per = 0;
+  }
   per *= (double)n_notnan/(double)_NS;
   max_n *= int((double)_NS/(double)n_notnan);
 
@@ -468,7 +458,7 @@ void Matrix::updateScalars() {
 
 
 bool Matrix::resizeZ(int sz, bool reinit) {
-  //kdDebug() << "resizing to: " << sz << endl;
+//   qDebug() << "resizing to: " << sz << endl;
   if (sz >= 1) {
     _z = static_cast<double*>(Kst::realloc(_z, sz*sizeof(double)));
     if (!_z) {

@@ -34,7 +34,7 @@ class KST_EXPORT String : public Primitive {
     static const QString staticTypeTag;
 
   protected:
-    String(ObjectStore *store, Object *provider = 0L, const QString& val = QString::null, bool orphan = false);
+    String(ObjectStore *store);
     virtual ~String();
 
     friend class ObjectStore;

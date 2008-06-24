@@ -27,8 +27,8 @@ namespace Kst {
 const QString String::staticTypeString = I18N_NOOP("String");
 const QString String::staticTypeTag = I18N_NOOP("string");
 
-String::String(ObjectStore *store, Object *provider, const QString& val, bool orphan)
-    : Primitive(store, provider), _value(val), _orphan(orphan), _editable(false) {
+String::String(ObjectStore *store)
+    : Primitive(store, 0L), _value(QString::null), _orphan(false), _editable(false) {
   _shortName = "T"+QString::number(_tnum);
   if (_tnum>max_tnum) 
     max_tnum = _tnum;
@@ -63,7 +63,6 @@ void String::save(QXmlStreamWriter &s) {
 Object::UpdateType String::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  bool force = dirty();
   setDirty(false);
 
   QString v = value();

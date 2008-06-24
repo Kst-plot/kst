@@ -26,19 +26,10 @@ namespace Kst {
 const QString GeneratedVector::staticTypeString = I18N_NOOP("Generated Vector");
 const QString GeneratedVector::staticTypeTag = I18N_NOOP("generatedvector");
 
-GeneratedVector::GeneratedVector(ObjectStore *store, const QByteArray &data, double x0, double x1, int n)
-    : Vector(store, data) {
+GeneratedVector::GeneratedVector(ObjectStore *store)
+    : Vector(store) {
   _saveable = true;
   _saveData = false;
-  changeRange(x0, x1, n);
-}
-
-
-GeneratedVector::GeneratedVector(ObjectStore *store, double x0, double x1, int n)
-    : Vector(store, n) {
-  _saveable = true;
-  _saveData = false;
-  changeRange(x0, x1, n);
 }
 
 

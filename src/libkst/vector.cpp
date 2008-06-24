@@ -46,21 +46,19 @@ const QString Vector::staticTypeString = I18N_NOOP("Vector");
 const QString Vector::staticTypeTag = I18N_NOOP("vector");
 
 /** Create a vector */
-Vector::Vector(ObjectStore *store, int size, Object *provider, bool isScalarList)
-    : Primitive(store, provider), _nsum(0) {
+Vector::Vector(ObjectStore *store)
+    : Primitive(store, 0L), _nsum(0) {
   //qDebug() << "+++ CREATING VECTOR: " << (void*) this;
 
   _editable = false;
   NumShifted = 0;
   NumNew = 0;
   _saveData = false;
-  _isScalarList = isScalarList;
+  _isScalarList = false;
 
   _saveable = false;
 
-  if (size <= 0) {
-    size = INITSIZE;
-  }
+  int size = INITSIZE;
 
   _v = static_cast<double*>(malloc(size * sizeof(double)));
   if (!_v) { // Malloc failed
@@ -74,41 +72,6 @@ Vector::Vector(ObjectStore *store, int size, Object *provider, bool isScalarList
   CreateScalars(store);
   blank();
 
-  _shortName = "V"+QString::number(_vnum);
-  if (_vnum>max_vnum) 
-    max_vnum = _vnum;
-  _vnum++;
-}
-
-
-Vector::Vector(ObjectStore *store, const QByteArray& data)
-    : Primitive(store), _nsum(0) {
-  _v = 0L;
-  _size = 0;
-  int sz = INITSIZE;
-
-  _editable = false;
-  NumShifted = 0;
-  NumNew = 0;
-  _isScalarList = false;
-  _saveable = false;
-  _saveData = false;
-
-  sz = qMax((size_t)(INITSIZE), data.size()/sizeof(double));
-
-  CreateScalars(store);
-  resize(sz, true);
-
-  if (!data.isEmpty()) {
-    _saveable = true;
-    _saveData = true;
-    QDataStream qds(data);
-    for (int i = 0; !qds.atEnd(); ++i) {
-      qds >> _v[i];
-    }
-  }
-
-  _is_rising = false;
   _shortName = "V"+QString::number(_vnum);
   if (_vnum>max_vnum) 
     max_vnum = _vnum;

@@ -24,11 +24,11 @@ namespace Kst {
 const QString EditableMatrix::staticTypeString = I18N_NOOP("Editable Matrix");
 const QString EditableMatrix::staticTypeTag = I18N_NOOP("editablematrix");
 
-EditableMatrix::EditableMatrix(ObjectStore *store, uint nX, uint nY, double minX, double minY, double stepX, double stepY)
-: Matrix(store, 0L, nX, nY, minX, minY, stepX, stepY) {
+EditableMatrix::EditableMatrix(ObjectStore *store)
+: Matrix(store) {
   _editable = true;
   _saveable = true;
-  resizeZ(nX*nY, true);
+  resizeZ(1, true);
 }
 
 

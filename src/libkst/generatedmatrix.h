@@ -38,9 +38,7 @@ class KST_EXPORT GeneratedMatrix : public Matrix {
     bool xDirection() { return _xDirection; }
 
   protected:
-    GeneratedMatrix(ObjectStore *store, uint nX=1, uint nY=0,
-               double minX=0, double minY=0, double stepX=1, double stepY=1,
-               double gradZMin=0, double gradZMax=1, bool xDirection=true);
+    GeneratedMatrix(ObjectStore *store);
 
     friend class ObjectStore;
 
