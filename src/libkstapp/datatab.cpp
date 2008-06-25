@@ -25,6 +25,7 @@ DataTab::~DataTab() {
 
 
 void DataTab::setObjectStore(ObjectStore *store) {
+  Q_UNUSED(store);
 }
 
 

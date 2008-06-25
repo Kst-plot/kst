@@ -84,6 +84,7 @@ void Object::beginUpdate(ObjectPtr object) {
 }
 
 void Object::processUpdate(ObjectPtr object) {
+  Q_UNUSED(object);
   // Do nothing by default.
 }
 

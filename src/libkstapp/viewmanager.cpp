@@ -25,7 +25,7 @@ ViewManager::ViewManager(MainWindow *parent)
   setupUi(this);
   View *v = kstApp->mainWindow()->tabWidget()->currentView();
   if (v) {
-    QGraphicsScene *scene = v->scene();
+//     QGraphicsScene *scene = v->scene();
     // Setup a model for the scene
     //_view->setModel(scene);
   }

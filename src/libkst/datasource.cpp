@@ -520,6 +520,7 @@ void DataSource::checkUpdate() {
 
 
 void DataSource::processUpdate(ObjectPtr object) {
+  Q_UNUSED(object);
   UpdateManager::self()->updateStarted(this, this);
   emit sourceUpdated(this);
   UpdateManager::self()->updateFinished(this, this);

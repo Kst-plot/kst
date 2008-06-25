@@ -30,6 +30,7 @@ const QString Primitive::staticTypeString = I18N_NOOP("Primitive");
 
 Primitive::Primitive(ObjectStore *store, Object *provider)
   : _provider(provider) {
+  Q_UNUSED(store);
   _slaveName = "fixme: set _slaveName";
 }
 

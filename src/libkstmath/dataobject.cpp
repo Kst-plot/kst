@@ -50,6 +50,7 @@ void DataObject::setupOnStartup(QSettings *cfg) {
 
 
 DataObject::DataObject(ObjectStore *store) : Object() {
+  Q_UNUSED(store);
   _curveHints = new CurveHintList;
   _isInputLoaded = false;
 }

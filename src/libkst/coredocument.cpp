@@ -47,6 +47,7 @@ ObjectStore* CoreDocument::objectStore() const {
 
 
 bool CoreDocument::save(const QString& to) {
+  Q_UNUSED(to);
 #if 0
   // TODO:
   // - KSaveFile-ish behavior
@@ -121,6 +122,7 @@ bool CoreDocument::save(const QString& to) {
 
 
 bool CoreDocument::open(const QString& file) {
+  Q_UNUSED(file);
   _isOpen = false;
 #if 0
   QFile f(file);
