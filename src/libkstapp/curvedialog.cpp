@@ -61,6 +61,15 @@ CurveTab::CurveTab(QWidget *parent)
   connect(_yError, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
   connect(_xMinusError, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
   connect(_yMinusError, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
+
+  // if the content of any of the vector combos is changed (new or edit), update them all.
+  connect(_xVector, SIGNAL(contentChanged()), this, SLOT(updateVectorCombos()));
+  connect(_yVector, SIGNAL(contentChanged()), this, SLOT(updateVectorCombos()));
+  connect(_xError, SIGNAL(contentChanged()), this, SLOT(updateVectorCombos()));
+  connect(_yError, SIGNAL(contentChanged()), this, SLOT(updateVectorCombos()));
+  connect(_xMinusError, SIGNAL(contentChanged()), this, SLOT(updateVectorCombos()));
+  connect(_yMinusError, SIGNAL(contentChanged()), this, SLOT(updateVectorCombos()));
+
   connect(_curveAppearance, SIGNAL(modified()), this, SIGNAL(modified()));
   connect(_ignoreAutoScale, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_xMinusSameAsPlus, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
@@ -239,6 +248,15 @@ void CurveTab::clearTabValues() {
   _yMinusError->clearSelection();
   _ignoreAutoScale->setCheckState(Qt::PartiallyChecked);
   _curveAppearance->clearValues();
+}
+
+void CurveTab::updateVectorCombos() {
+  _xVector->fillVectors();
+  _yVector->fillVectors();
+  _xError->fillVectors();
+  _yError->fillVectors();
+  _xMinusError->fillVectors();
+  _yMinusError->fillVectors();
 }
 
 

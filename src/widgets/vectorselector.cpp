@@ -123,12 +123,15 @@ void VectorSelector::newVector() {
     setSelectedVector(vector);
   }
 
+  emit contentChanged();
 }
 
 
 void VectorSelector::editVector() {
   QString vectorname;
   DialogLauncher::self()->showVectorDialog(vectorname, ObjectPtr(selectedVector()));
+
+  emit contentChanged();
 }
 
 

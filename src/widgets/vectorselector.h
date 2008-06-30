@@ -40,17 +40,17 @@ class KST_EXPORT VectorSelector : public QWidget, public Ui::VectorSelector {
 
     void clearSelection();
 
+    void fillVectors();
+
   Q_SIGNALS:
     void selectionChanged(const QString&);
+    void contentChanged(); // something in the combo changed (new or edit)
 
   private Q_SLOTS:
     void newVector();
     void editVector();
     void emitSelectionChanged();
     void updateDescriptionTip();
-
-  private:
-    void fillVectors();
 
   private:
     bool _allowEmptySelection;

@@ -73,7 +73,7 @@ class KST_EXPORT CurveTab : public DataTab, Ui::CurveTab {
     void yCheckboxClicked();
     void xErrorChanged();
     void yErrorChanged();
-
+    void updateVectorCombos();
 };
 
 class KST_EXPORT CurveDialog : public DataDialog {
