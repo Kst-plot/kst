@@ -86,7 +86,7 @@ class KST_EXPORT CurveDialog : public DataDialog {
 
   protected:
 //     virtual QString tagString() const;
-    virtual ObjectPtr createNewDataObject() const;
+    virtual ObjectPtr createNewDataObject();
     virtual ObjectPtr editExistingDataObject() const;
 
   private Q_SLOTS:

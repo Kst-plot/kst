@@ -33,6 +33,7 @@ class KST_EXPORT String : public Primitive {
     static const QString staticTypeString;
     static const QString staticTypeTag;
 
+    virtual QString descriptionTip() const;
   protected:
     String(ObjectStore *store);
     virtual ~String();

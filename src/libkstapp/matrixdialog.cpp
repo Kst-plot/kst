@@ -632,12 +632,11 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
     _matrixTab->setDoAverage(dataMatrix->doAverage());
     _matrixTab->hideGeneratedOptions();
     if (_editMultipleWidget) {
-      QStringList objectList;
       DataMatrixList objects = _document->objectStore()->getObjects<DataMatrix>();
+      _editMultipleWidget->clearObjects();
       foreach(DataMatrixPtr object, objects) {
-        objectList.append(object->Name());
+        _editMultipleWidget->addObject(object->Name(), object->descriptionTip());
       }
-      _editMultipleWidget->addObjects(objectList);
     }
   } else if (GeneratedMatrixPtr generatedMatrix = kst_cast<GeneratedMatrix>(matrix)) {
     _matrixTab->setMatrixMode(MatrixTab::GeneratedMatrix);
@@ -652,12 +651,11 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
     _matrixTab->setXDirection(generatedMatrix->xDirection());
     _matrixTab->hideDataOptions();
     if (_editMultipleWidget) {
-      QStringList objectList;
-      GeneratedMatrixList objects = _document->objectStore()->getObjects<GeneratedMatrix>();
-      foreach(GeneratedMatrixPtr object, objects) {
-        objectList.append(object->Name());
+      DataMatrixList objects = _document->objectStore()->getObjects<DataMatrix>();
+      _editMultipleWidget->clearObjects();
+      foreach(DataMatrixPtr object, objects) {
+        _editMultipleWidget->addObject(object->Name(), object->descriptionTip());
       }
-      _editMultipleWidget->addObjects(objectList);
     }
   }
 }
@@ -680,7 +678,7 @@ void MatrixDialog::updateButtons() {
 }
 
 
-ObjectPtr MatrixDialog::createNewDataObject() const {
+ObjectPtr MatrixDialog::createNewDataObject() {
   switch(_matrixTab->matrixMode()) {
   case MatrixTab::DataMatrix:
     return createNewDataMatrix();

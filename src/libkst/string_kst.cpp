@@ -92,6 +92,9 @@ void String::setValue(const QString& inV) {
   emit trigger();
 }
 
+QString String::descriptionTip() const {
+  return i18n("String: %1").arg(Name());
+}
 }
 
 // vim: ts=2 sw=2 et

@@ -255,18 +255,17 @@ void EquationDialog::configureTab(ObjectPtr object) {
     _equationTab->setDoInterpolation(equation->doInterp());
     _equationTab->hideCurveOptions();
     if (_editMultipleWidget) {
-      QStringList objectList;
       EquationList objects = _document->objectStore()->getObjects<Equation>();
+      _editMultipleWidget->clearObjects();
       foreach(EquationPtr object, objects) {
-        objectList.append(object->Name());
+        _editMultipleWidget->addObject(object->Name(), object->descriptionTip());
       }
-      _editMultipleWidget->addObjects(objectList);
     }
   }
 }
 
 
-ObjectPtr EquationDialog::createNewDataObject() const {
+ObjectPtr EquationDialog::createNewDataObject() {
   Q_ASSERT(_document && _document->objectStore());
 
   EquationPtr equation = _document->objectStore()->createObject<Equation>();

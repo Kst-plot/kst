@@ -751,5 +751,18 @@ QString Image::_automaticDescriptiveName() const {
   return matrix()->descriptiveName();
 }
 
+QString Image::descriptionTip() const {
+  QString tip;
+
+  tip = i18n("Image: %1\n" ).arg(Name());
+  if (_hasContourMap) {
+    tip += i18n("  Contour Map");
+  }
+  if (_hasColorMap) {
+    tip += i18n("  Color Map");
+  }
+  tip+= matrix()->descriptionTip();
+}
+
 }
 // vim: ts=2 sw=2 et

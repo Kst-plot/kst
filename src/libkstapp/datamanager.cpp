@@ -271,7 +271,8 @@ void DataManager::showEditDialog() {
   } else if (CSDPtr csd = kst_cast<CSD>(_currentObject)) {
     DialogLauncher::self()->showCSDDialog(csd);
   } else if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
-    DialogLauncher::self()->showVectorDialog(vector);
+    QString tmp;
+    DialogLauncher::self()->showVectorDialog(tmp, vector);
   } else if (MatrixPtr matrix = kst_cast<Matrix>(_currentObject)) {
     DialogLauncher::self()->showMatrixDialog(matrix);
   } else if (BasicPluginPtr plugin = kst_cast<BasicPlugin>(_currentObject)) {
@@ -288,7 +289,8 @@ void DataManager::show() {
 
 
 void DataManager::showVectorDialog() {
-  DialogLauncher::self()->showVectorDialog();
+  QString tmp;
+  DialogLauncher::self()->showVectorDialog(tmp);
   _doc->session()->triggerReset();
 }
 

@@ -677,7 +677,7 @@ QString DataVector::_automaticDescriptiveName() const {
 
 QString DataVector::descriptionTip() const {
   QString IDstring;
-  QString range_string;
+  //QString range_string;
 
   IDstring = i18n(
       "Data Vector: %1\n"

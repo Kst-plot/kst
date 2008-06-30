@@ -395,6 +395,21 @@ QString CSD::_automaticDescriptiveName() const {
   return vector()->descriptiveName();
 }
 
+QString CSD::descriptionTip() const {
+  QString tip;
+
+  tip = i18n("Spectrogram: %1\n  FFT Length: 2^%2").arg(Name()).arg(length());
+
+  if (average() || apodize() || removeMean()) {
+    tip += "\n  ";
+    if (average()) tip += i18n("Average; ");
+    if (apodize()) tip += i18n("Apodize; ");
+    if (removeMean()) tip += i18n("Remove Mean;");
+  }
+  tip += i18n("\nInput: %1").arg(_inputVectors[INVECTOR]->descriptionTip());
+  return tip;
+ 
+}
 }
 
 // vim: ts=2 sw=2 et

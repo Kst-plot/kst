@@ -42,7 +42,7 @@ class KST_EXPORT DialogLauncher : public QObject {
 
   public Q_SLOTS:
     //primitives
-    virtual void showVectorDialog(ObjectPtr objectPtr = 0);
+    virtual void showVectorDialog(QString &vectorname, ObjectPtr objectPtr = 0);
 
     virtual void showMatrixDialog(ObjectPtr objectPtr = 0);
 

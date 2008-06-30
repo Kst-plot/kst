@@ -262,6 +262,8 @@ void VectorTab::showConfigWidget() {
 VectorDialog::VectorDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
+  _vectorName = QString();
+
   if (editMode() == Edit)
     setWindowTitle(tr("Edit Vector"));
   else
@@ -288,28 +290,6 @@ VectorDialog::VectorDialog(ObjectPtr dataObject, QWidget *parent)
 
 VectorDialog::~VectorDialog() {
 }
-
-
-// QString VectorDialog::tagString() const {
-//   switch(_vectorTab->vectorMode()) {
-//   case VectorTab::DataVector:
-//     {
-//       QString tagString = DataDialog::tagString();
-//       tagString.replace(defaultTagString(), _vectorTab->field());
-//       return tagString;
-//     }
-//   case VectorTab::GeneratedVector:
-//     {
-//       if (DataDialog::tagString() == defaultTagString()) {
-//         const qreal from = _vectorTab->from();
-//         const qreal to = _vectorTab->to();
-//         return QString("(%1..%2)").arg(from).arg(to);
-//       }
-//     }
-//   default:
-//     return DataDialog::tagString();
-//   }
-// }
 
 
 void VectorDialog::editMultipleMode() {
@@ -350,12 +330,11 @@ void VectorDialog::configureTab(ObjectPtr vector) {
     _vectorTab->dataRange()->setDoFilter(dataVector->doAve());
     _vectorTab->hideGeneratedOptions();
     if (_editMultipleWidget) {
-      QStringList objectList;
       DataVectorList objects = _document->objectStore()->getObjects<DataVector>();
+      _editMultipleWidget->clearObjects();
       foreach(DataVectorPtr object, objects) {
-        objectList.append(object->Name());
+        _editMultipleWidget->addObject(object->Name(), object->descriptionTip());
       }
-      _editMultipleWidget->addObjects(objectList);
     }
   } else if (GeneratedVectorPtr generatedVector = kst_cast<GeneratedVector>(vector)) {
     _vectorTab->setVectorMode(VectorTab::GeneratedVector);
@@ -364,18 +343,17 @@ void VectorDialog::configureTab(ObjectPtr vector) {
     _vectorTab->setNumberOfSamples(generatedVector->length());
     _vectorTab->hideDataOptions();
     if (_editMultipleWidget) {
-      QStringList objectList;
-      GeneratedVectorList objects = _document->objectStore()->getObjects<GeneratedVector>();
-      foreach(GeneratedVectorPtr object, objects) {
-        objectList.append(object->Name());
+      DataVectorList objects = _document->objectStore()->getObjects<DataVector>();
+      _editMultipleWidget->clearObjects();
+      foreach(DataVectorPtr object, objects) {
+        _editMultipleWidget->addObject(object->Name(), object->descriptionTip());
       }
-      _editMultipleWidget->addObjects(objectList);
     }
   }
 }
 
 
-ObjectPtr VectorDialog::createNewDataObject() const {
+ObjectPtr VectorDialog::createNewDataObject() {
   switch(_vectorTab->vectorMode()) {
   case VectorTab::DataVector:
     return createNewDataVector();
@@ -387,7 +365,7 @@ ObjectPtr VectorDialog::createNewDataObject() const {
 }
 
 
-ObjectPtr VectorDialog::createNewDataVector() const {
+ObjectPtr VectorDialog::createNewDataVector() {
   const DataSourcePtr dataSource = _vectorTab->dataSource();
 
   //FIXME better validation than this please...
@@ -430,11 +408,13 @@ ObjectPtr VectorDialog::createNewDataVector() const {
   vector->update();
   vector->unlock();
 
+  _vectorName = vector->Name();
+
   return vector;
 }
 
 
-ObjectPtr VectorDialog::createNewGeneratedVector() const {
+ObjectPtr VectorDialog::createNewGeneratedVector() {
   const qreal from = _vectorTab->from();
   const qreal to = _vectorTab->to();
   const int numberOfSamples = _vectorTab->numberOfSamples();
@@ -454,6 +434,8 @@ ObjectPtr VectorDialog::createNewGeneratedVector() const {
   setGenVectorDefaults(vector);
 
   vector->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+
+  _vectorName = vector->Name();
 
 //  return static_cast<ObjectPtr>(vector);
   return vector;
@@ -537,6 +519,10 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
     }
   }
   return dataObject();
+}
+
+QString VectorDialog::vectorName() const {
+  return _vectorName;
 }
 
 }

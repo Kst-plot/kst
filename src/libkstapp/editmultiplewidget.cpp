@@ -51,11 +51,21 @@ void EditMultipleWidget::applyFilter(const QString& filter) {
 }
 
 
-void EditMultipleWidget::addObjects(QStringList &objects) {
+// void EditMultipleWidget::addObjects(QStringList &objects) {
+//   _objectList->clear();
+//   _objectList->addItems(objects);
+// }
+
+
+void EditMultipleWidget::clearObjects() {
   _objectList->clear();
-  _objectList->addItems(objects);
 }
 
+void EditMultipleWidget::addObject(QString name, QString descriptionTip) {
+  QListWidgetItem *wi = new QListWidgetItem(name);
+  wi->setToolTip(descriptionTip);
+  _objectList->addItem(wi);
+}
 
 QStringList EditMultipleWidget::selectedObjects() {
   QStringList objects;

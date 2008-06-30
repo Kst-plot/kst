@@ -74,8 +74,10 @@ void ChangeDataSampleDialog::updateCurveListDialog() {
   for (DataVectorList::ConstIterator i = dataVectors.begin(); i != dataVectors.end(); ++i) {
     DataVectorPtr vector = *i;
     vector->readLock();
-    _curveList->addItem(vector->Name());
+    QListWidgetItem *wi = new QListWidgetItem(vector->Name());
+    wi->setToolTip(vector->descriptionTip());
     vector->unlock();
+    _curveList->addItem(wi);
   }
 
   _curveList->selectAll();

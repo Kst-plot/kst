@@ -809,6 +809,10 @@ QString DataSource::_automaticDescriptiveName() const {
   return fileName();
 }
 
+QString DataSource::descriptionTip() const {
+  return fileName();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 DataSourceConfigWidget::DataSourceConfigWidget()
 : QWidget(0L), _cfg(0L) {

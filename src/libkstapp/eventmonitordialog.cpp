@@ -283,12 +283,11 @@ void EventMonitorDialog::configureTab(ObjectPtr object) {
     _eventMonitorTab->setLogELOG(eventMonitorEntry->logELOG());
     _eventMonitorTab->setEmailRecipients(eventMonitorEntry->eMailRecipients());
     if (_editMultipleWidget) {
-      QStringList objectList;
       EventMonitorEntryList objects = _document->objectStore()->getObjects<EventMonitorEntry>();
+      _editMultipleWidget->clearObjects();
       foreach(EventMonitorEntryPtr object, objects) {
-        objectList.append(object->Name());
+        _editMultipleWidget->addObject(object->Name(), object->descriptionTip());
       }
-      _editMultipleWidget->addObjects(objectList);
     }
   }
 }
@@ -299,7 +298,7 @@ void EventMonitorDialog::updateButtons() {
 }
 
 
-ObjectPtr EventMonitorDialog::createNewDataObject() const {
+ObjectPtr EventMonitorDialog::createNewDataObject() {
   Q_ASSERT(_document && _document->objectStore());
   EventMonitorEntryPtr eventMonitor = _document->objectStore()->createObject<EventMonitorEntry>();
 

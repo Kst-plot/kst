@@ -47,7 +47,7 @@ class KST_EXPORT BasicPluginDialog : public DataDialog {
 
   protected:
     virtual QString tagString() const;
-    virtual ObjectPtr createNewDataObject() const;
+    virtual ObjectPtr createNewDataObject();
     virtual ObjectPtr editExistingDataObject() const;
 
   private:

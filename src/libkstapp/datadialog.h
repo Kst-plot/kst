@@ -44,7 +44,7 @@ class KST_EXPORT DataDialog : public Dialog {
     ObjectPtr dataObject() const { return _dataObject; }
     void setDataObject(ObjectPtr dataObject) { _dataObject = dataObject; }
 
-    virtual ObjectPtr createNewDataObject() const = 0;
+    virtual ObjectPtr createNewDataObject() = 0;
     virtual ObjectPtr editExistingDataObject() const = 0;
 
     Document *_document;

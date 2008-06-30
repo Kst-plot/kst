@@ -528,9 +528,14 @@ bool EventMonitorEntry::uses(ObjectPtr p) const {
   return DataObject::uses(p);
 }
 
-  QString EventMonitorEntry::_automaticDescriptiveName() const {
-    return i18n("event");
-  }
+QString EventMonitorEntry::_automaticDescriptiveName() const {
+  return i18n("event");
+}
+
+QString EventMonitorEntry::descriptionTip() const {
+  return i18n("Event: %1").arg(Name());
+}
+
 }
 
 // vim: ts=2 sw=2 et

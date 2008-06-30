@@ -52,8 +52,9 @@ DialogLauncher::~DialogLauncher() {
 }
 
 
-void DialogLauncher::showVectorDialog(ObjectPtr objectPtr) {
+void DialogLauncher::showVectorDialog(QString &vectorname, ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
+  Q_UNUSED(vectorname);
 }
 
 

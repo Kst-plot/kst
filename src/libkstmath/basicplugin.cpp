@@ -456,5 +456,9 @@ void BasicPlugin::updateOutput() const {
   }
 }
 
+QString BasicPlugin::descriptionTip() const {
+  return i18n("Plugin: %1").arg(Name());
+}
+
 }
 // vim: ts=2 sw=2 et

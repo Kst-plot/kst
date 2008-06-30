@@ -49,6 +49,8 @@ class KST_EXPORT BasicPlugin : public DataObject {
     //Provide an impl...
     virtual DataObjectPtr makeDuplicate();
 
+    virtual QString descriptionTip() const;
+
   public slots:
     //Pure virtual slots from DataObject
     //Each plugin can provide an implementation or use the default

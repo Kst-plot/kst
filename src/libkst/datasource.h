@@ -231,6 +231,7 @@ class KST_EXPORT DataSource : public Object {
 
     virtual void processUpdate(ObjectPtr object);
 
+    virtual QString descriptionTip() const;
   public Q_SLOTS:
     virtual void checkUpdate();
 

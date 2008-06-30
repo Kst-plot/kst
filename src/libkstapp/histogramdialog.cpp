@@ -322,12 +322,11 @@ void HistogramDialog::configureTab(ObjectPtr object) {
     _histogramTab->setNormalizationType(histogram->normalizationType());
     _histogramTab->hideCurveOptions();
     if (_editMultipleWidget) {
-      QStringList objectList;
       HistogramList objects = _document->objectStore()->getObjects<Histogram>();
+      _editMultipleWidget->clearObjects();
       foreach(HistogramPtr object, objects) {
-        objectList.append(object->Name());
+        _editMultipleWidget->addObject(object->Name(), object->descriptionTip());
       }
-      _editMultipleWidget->addObjects(objectList);
     }
   }
 }
@@ -343,7 +342,7 @@ void HistogramDialog::setVector(VectorPtr vector) {
 }
 
 
-ObjectPtr HistogramDialog::createNewDataObject() const {
+ObjectPtr HistogramDialog::createNewDataObject() {
   Q_ASSERT(_document && _document->objectStore());
 
   HistogramPtr histogram = _document->objectStore()->createObject<Histogram>();

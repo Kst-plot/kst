@@ -172,12 +172,11 @@ void PowerSpectrumDialog::configureTab(ObjectPtr object) {
     _powerSpectrumTab->FFTOptionsWidget()->setInterpolateOverHoles(psd->interpolateHoles());
     _powerSpectrumTab->hideCurveOptions();
     if (_editMultipleWidget) {
-      QStringList objectList;
       PSDList objects = _document->objectStore()->getObjects<PSD>();
+      _editMultipleWidget->clearObjects();
       foreach(PSDPtr object, objects) {
-        objectList.append(object->Name());
+        _editMultipleWidget->addObject(object->Name(), object->descriptionTip());
       }
-      _editMultipleWidget->addObjects(objectList);
     }
   }
 }
@@ -188,7 +187,7 @@ void PowerSpectrumDialog::updateButtons() {
 }
 
 
-ObjectPtr PowerSpectrumDialog::createNewDataObject() const {
+ObjectPtr PowerSpectrumDialog::createNewDataObject() {
   Q_ASSERT(_document && _document->objectStore());
   PSDPtr powerspectrum = _document->objectStore()->createObject<PSD>();
   Q_ASSERT(powerspectrum);

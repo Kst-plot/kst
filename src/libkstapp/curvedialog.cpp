@@ -316,12 +316,11 @@ void CurveDialog::configureTab(ObjectPtr object) {
     _curveTab->curveAppearance()->setBarStyle(curve->barStyle());
     _curveTab->hidePlacementOptions();
     if (_editMultipleWidget) {
-      QStringList objectList;
       CurveList objects = _document->objectStore()->getObjects<Curve>();
+      _editMultipleWidget->clearObjects();
       foreach(CurvePtr object, objects) {
-        objectList.append(object->Name());
+        _editMultipleWidget->addObject(object->Name(), object->descriptionTip());
       }
-      _editMultipleWidget->addObjects(objectList);
     }
   }
 }
@@ -337,22 +336,11 @@ void CurveDialog::updateButtons() {
 }
 
 
-ObjectPtr CurveDialog::createNewDataObject() const {
+ObjectPtr CurveDialog::createNewDataObject() {
   Q_ASSERT(_document && _document->objectStore());
 
   ObjectStore *os = _document->objectStore();
-CurvePtr curve = os->createObject<Curve>();
-#if 0
-  CurvePtr curve = new Curve(_document->objectStore(),
-                             ObjectTag::fromString(tagString()),
-                             _curveTab->xVector(),
-                             _curveTab->yVector(),
-                             _curveTab->xError(),
-                             _curveTab->yError(),
-                             _curveTab->xMinusError(),
-                             _curveTab->yMinusError(),
-                             _curveTab->curveAppearance()->color());
-#endif
+  CurvePtr curve = os->createObject<Curve>();
 
   curve->setXVector(_curveTab->xVector());
   curve->setYVector(_curveTab->yVector());

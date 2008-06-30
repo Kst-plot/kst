@@ -37,6 +37,8 @@ class KST_EXPORT Matrix : public Primitive {
     virtual const QString& typeString() const;
     static const QString staticTypeString;
 
+    virtual QString descriptionTip() const;
+
   protected:
     Matrix(ObjectStore *store);
     virtual ~Matrix();

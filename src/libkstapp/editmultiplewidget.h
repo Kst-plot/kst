@@ -25,7 +25,9 @@ class KST_EXPORT EditMultipleWidget : public QWidget, public Ui::EditMultipleWid
     EditMultipleWidget(QWidget *parent = 0);
     virtual ~EditMultipleWidget();
 
-    void addObjects(QStringList &objects);
+//     void addObjects(QStringList &objects);
+    void clearObjects();
+    void addObject(QString name, QString descriptionTip);
     QStringList selectedObjects();
 
   private Q_SLOTS:

@@ -79,6 +79,8 @@ class KST_EXPORT DataMatrix : public Matrix {
     // make a "copy" of this DataMatrix
     SharedPtr<DataMatrix> makeDuplicate() const;
 
+    virtual QString descriptionTip() const;
+
   protected:
     DataMatrix(ObjectStore *store);
     virtual ~DataMatrix();

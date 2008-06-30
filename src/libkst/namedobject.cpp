@@ -152,8 +152,8 @@ void NamedObject::processShortNameIndexAttributes(QXmlStreamAttributes &attrs) {
     _mnum = R.toString().toInt();
 }
 
-QString NamedObject::descriptionTip() const {
-  return Name();
-}
+// QString NamedObject::descriptionTip() const {
+//   return Name();
+// }
 
 }

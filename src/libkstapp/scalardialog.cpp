@@ -87,7 +87,7 @@ void ScalarDialog::updateButtons() {
 }
 
 
-ObjectPtr ScalarDialog::createNewDataObject() const {
+ObjectPtr ScalarDialog::createNewDataObject(){
   bool ok = false;
 
   Q_ASSERT(_document && _document->objectStore());

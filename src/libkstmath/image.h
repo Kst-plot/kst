@@ -105,6 +105,7 @@ class KST_EXPORT Image : public Relation {
     // see KstRelation::paintLegendSymbol
     virtual void paintLegendSymbol(Painter *p, const QRect& bound);
 
+    virtual QString descriptionTip() const;
   public Q_SLOTS:
     void matrixUpdated(ObjectPtr object);
 

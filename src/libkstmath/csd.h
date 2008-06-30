@@ -85,7 +85,7 @@ class KST_EXPORT CSD : public DataObject {
         int in_windowSize, int in_length, double in_gaussianSigma,
         PSDType in_outputType, const QString& in_vectorUnits,
         const QString& in_rateUnits);
-
+    virtual QString descriptionTip() const;
   protected:
     CSD(ObjectStore *store);
     virtual ~CSD();

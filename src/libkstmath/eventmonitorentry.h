@@ -74,6 +74,7 @@ class EventMonitorEntry : public DataObject {
 
     bool uses(ObjectPtr p) const;
 
+    virtual QString descriptionTip() const;
   protected:
     EventMonitorEntry(ObjectStore *store);
     ~EventMonitorEntry();

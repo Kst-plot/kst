@@ -75,8 +75,7 @@ bool VectorSelector::selectedVectorDirty() const {
 
 
 void VectorSelector::setSelectedVector(VectorPtr selectedVector) {
-  //FIXME: findData doesn't work, but the loop here - which is supposed
-  // to do exactly the same thing - does.  WHY???
+  // "findData can't work here" says the trolls... so we do it 'manually'.
   //int i = _vector->findData(qVariantFromValue(selectedVector.data()));
   int i=-1,j;
   for (j=0; j<_vector->count() ; j++) {
@@ -115,13 +114,21 @@ void VectorSelector::setAllowEmptySelection(bool allowEmptySelection) {
 
 
 void VectorSelector::newVector() {
-  DialogLauncher::self()->showVectorDialog();
+  QString newName;
+  DialogLauncher::self()->showVectorDialog(newName);
   fillVectors();
+  VectorPtr vector = kst_cast<Vector>(_store->retrieveObject(newName));
+
+  if (vector) {
+    setSelectedVector(vector);
+  }
+
 }
 
 
 void VectorSelector::editVector() {
-  DialogLauncher::self()->showVectorDialog(ObjectPtr(selectedVector()));
+  QString vectorname;
+  DialogLauncher::self()->showVectorDialog(vectorname, ObjectPtr(selectedVector()));
 }
 
 

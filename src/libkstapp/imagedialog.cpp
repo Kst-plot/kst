@@ -408,18 +408,17 @@ void ImageDialog::configureTab(ObjectPtr object) {
 
     _imageTab->hidePlacementOptions();
     if (_editMultipleWidget) {
-      QStringList objectList;
       ImageList objects = _document->objectStore()->getObjects<Image>();
+      _editMultipleWidget->clearObjects();
       foreach(ImagePtr object, objects) {
-        objectList.append(object->Name());
+        _editMultipleWidget->addObject(object->Name(), object->descriptionTip());
       }
-      _editMultipleWidget->addObjects(objectList);
     }
   }
 }
 
 
-ObjectPtr ImageDialog::createNewDataObject() const {
+ObjectPtr ImageDialog::createNewDataObject() {
 
   Q_ASSERT(_document && _document->objectStore());
   ImagePtr image = _document->objectStore()->createObject<Image>();

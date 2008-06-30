@@ -193,18 +193,17 @@ void CSDDialog::configureTab(ObjectPtr object) {
     _CSDTab->FFTOptionsWidget()->setOutput(csd->output());
     _CSDTab->hideImageOptions();
     if (_editMultipleWidget) {
-      QStringList objectList;
       CSDList objects = _document->objectStore()->getObjects<CSD>();
+      _editMultipleWidget->clearObjects();
       foreach(CSDPtr object, objects) {
-        objectList.append(object->Name());
+        _editMultipleWidget->addObject(object->Name(), object->descriptionTip());
       }
-      _editMultipleWidget->addObjects(objectList);
     }
   }
 }
 
 
-ObjectPtr CSDDialog::createNewDataObject() const {
+ObjectPtr CSDDialog::createNewDataObject() {
   Q_ASSERT(_document && _document->objectStore());
   CSDPtr csd = _document->objectStore()->createObject<CSD>();
   csd->change(_CSDTab->vector(),
