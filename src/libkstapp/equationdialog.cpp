@@ -199,6 +199,7 @@ void EquationTab::clearTabValues() {
 void EquationTab::updateVectorCombos() {
   _xVectors->fillVectors();
   _vectors->fillVectors();
+  _scalars->fillScalars();
 }
 
 EquationDialog::EquationDialog(ObjectPtr dataObject, QWidget *parent)

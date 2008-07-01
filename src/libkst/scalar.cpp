@@ -161,7 +161,19 @@ void Scalar::triggerUpdateSignal(ObjectPtr object) {
 }
 
 QString Scalar::descriptionTip() const {
-  return i18n("Scalar: %1 = %2\n%3").arg(Name()).arg(value()).arg(_provider->descriptionTip());
+  if (_provider) {
+    return i18n("Scalar: %1 = %2\n%3").arg(Name()).arg(value()).arg(_provider->descriptionTip());
+  } else {
+    return i18n("Scalar: %1 = %2").arg(Name()).arg(value());
+  }
+}
+
+QString Scalar::_automaticDescriptiveName() const {
+  if (_orphan) {
+    return QString::number(value());
+  } else {
+    return Primitive::_automaticDescriptiveName();
+  }
 }
 
 }

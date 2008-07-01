@@ -46,7 +46,7 @@ class KST_EXPORT DialogLauncher : public QObject {
 
     virtual void showMatrixDialog(ObjectPtr objectPtr = 0);
 
-    virtual void showScalarDialog(ObjectPtr objectPtr = 0);
+    virtual void showScalarDialog(QString &scalarname, ObjectPtr objectPtr = 0);
 
     virtual void showStringDialog(ObjectPtr objectPtr = 0);
 

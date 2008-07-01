@@ -37,6 +37,8 @@ class KST_EXPORT Scalar : public Primitive {
 
     friend class ObjectStore;
 
+    virtual QString _automaticDescriptiveName() const;
+
   public:
     virtual const QString& typeString() const;
     static const QString staticTypeString;

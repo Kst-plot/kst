@@ -797,7 +797,7 @@ QString DataNode::text() const {
   } else if (_vector) {
     return QString("[") + _vector->Name() + QString("]");
   } else if (_scalar) {
-    return _scalar->Name();
+    return QString("[") + _scalar->Name() + QString("]");
   } else {
     return QString::null;
   }

@@ -47,9 +47,10 @@ void DialogLauncherGui::showMatrixDialog(ObjectPtr objectPtr) {
 }
 
 
-void DialogLauncherGui::showScalarDialog(ObjectPtr objectPtr) {
+void DialogLauncherGui::showScalarDialog(QString &scalarname, ObjectPtr objectPtr) {
   ScalarDialog dialog(objectPtr, kstApp->mainWindow());
   dialog.exec();
+  scalarname = dialog.scalarName();
 }
 
 

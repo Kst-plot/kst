@@ -302,7 +302,8 @@ void DataManager::showMatrixDialog() {
 
 
 void DataManager::showScalarDialog() {
-  DialogLauncher::self()->showScalarDialog();
+  QString scalarName;
+  DialogLauncher::self()->showScalarDialog(scalarName);
   _doc->session()->triggerReset();
 }
 

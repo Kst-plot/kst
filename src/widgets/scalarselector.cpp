@@ -38,7 +38,7 @@ ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
   connect(_newScalar, SIGNAL(pressed()), this, SLOT(newScalar()));
   connect(_editScalar, SIGNAL(pressed()), this, SLOT(editScalar()));
   connect(_selectScalar, SIGNAL(pressed()), this, SLOT(selectScalar()));
-  connect(_scalar, SIGNAL(currentIndexChanged(int)), this, SLOT(emitSelectionChanged()));
+  connect(_scalar, SIGNAL(activated(int)), this, SLOT(emitSelectionChanged()));
   connect(_scalar, SIGNAL(currentIndexChanged(int)), this, SLOT(updateDescriptionTip()));
 }
 
@@ -72,18 +72,40 @@ ScalarPtr ScalarSelector::selectedScalar() const {
 
 
 void ScalarSelector::setSelectedScalar(ScalarPtr selectedScalar) {
-  Q_UNUSED(selectedScalar);
+  int i=-1,j;
+  for (j=0; j<_scalar->count() ; j++) {
+    if (selectedScalar.data() == (qVariantValue<Scalar*>(_scalar->itemData(j)))) {
+      i=j;
+      break;
+    }
+  }
+  Q_ASSERT(i != -1);
+
+  _scalar->setCurrentIndex(i);
+
 }
 
 
 void ScalarSelector::newScalar() {
-  DialogLauncher::self()->showScalarDialog();
+  QString scalarName;
+
+  DialogLauncher::self()->showScalarDialog(scalarName);
   fillScalars();
+
+  ScalarPtr scalar = kst_cast<Scalar>(_store->retrieveObject(scalarName));
+
+
+  if (scalar) {
+    setSelectedScalar(scalar);
+    emitSelectionChanged();
+  }
 }
 
 
 void ScalarSelector::editScalar() {
-  DialogLauncher::self()->showScalarDialog(ObjectPtr(selectedScalar()));
+  QString scalarName;
+  DialogLauncher::self()->showScalarDialog(scalarName, ObjectPtr(selectedScalar()));
+  fillScalars();
 }
 
 

@@ -45,6 +45,7 @@ class KST_EXPORT ScalarDialog : public DataDialog {
   public:
     ScalarDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~ScalarDialog();
+    QString scalarName() const;
 
   protected:
 //     virtual QString tagString() const;
@@ -59,6 +60,7 @@ class KST_EXPORT ScalarDialog : public DataDialog {
 
   private:
     ScalarTab *_scalarTab;
+    QString _scalarName;
 };
 
 }

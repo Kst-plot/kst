@@ -34,10 +34,9 @@ VectorSelector::VectorSelector(QWidget *parent, ObjectStore *store)
 
   connect(_newVector, SIGNAL(pressed()), this, SLOT(newVector()));
   connect(_editVector, SIGNAL(pressed()), this, SLOT(editVector()));
-  connect(_vector, SIGNAL(currentIndexChanged(int)), this, SLOT(emitSelectionChanged()));
+  connect(_vector, SIGNAL(activated(int)), this, SLOT(emitSelectionChanged()));
   connect(_vector, SIGNAL(currentIndexChanged(int)), this, SLOT(updateDescriptionTip()));
 
-  //FIXME need to find a way to call fillVectors when the vectorList changes
 }
 
 
@@ -121,9 +120,9 @@ void VectorSelector::newVector() {
 
   if (vector) {
     setSelectedVector(vector);
+    emitSelectionChanged();
+    emit contentChanged();
   }
-
-  emit contentChanged();
 }
 
 
