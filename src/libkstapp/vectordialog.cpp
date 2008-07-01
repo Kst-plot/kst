@@ -514,6 +514,7 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
       const int numberOfSamples = _vectorTab->numberOfSamples();
       generatedVector->writeLock();
       generatedVector->changeRange(from, to, numberOfSamples);
+      generatedVector->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
       generatedVector->unlock();
       setGenVectorDefaults(generatedVector);
     }
