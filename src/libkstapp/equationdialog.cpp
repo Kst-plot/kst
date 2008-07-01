@@ -44,6 +44,9 @@ EquationTab::EquationTab(QWidget *parent)
   connect(_vectors, SIGNAL(selectionChanged(QString)), this, SLOT(equationUpdate(const QString&)));
   connect(_scalars, SIGNAL(selectionChanged(QString)), this, SLOT(equationUpdate(const QString&)));
 
+  connect(_xVectors, SIGNAL(contentChanged()), this, SLOT(updateVectorCombos()));
+  connect(_vectors, SIGNAL(contentChanged()), this, SLOT(updateVectorCombos()));
+
   connect(_xVectors, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
   connect(_equation, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
   connect(_doInterpolation, SIGNAL(clicked()), this, SIGNAL(modified()));
@@ -192,6 +195,11 @@ void EquationTab::clearTabValues() {
   _doInterpolation->setCheckState(Qt::PartiallyChecked);
 }
 
+
+void EquationTab::updateVectorCombos() {
+  _xVectors->fillVectors();
+  _vectors->fillVectors();
+}
 
 EquationDialog::EquationDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {

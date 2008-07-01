@@ -47,6 +47,9 @@ class KST_EXPORT EquationTab : public DataTab, Ui::EquationTab {
     void hideCurveOptions();
     void clearTabValues();
 
+  public Q_SLOTS:
+    void updateVectorCombos();
+
   Q_SIGNALS:
     void optionsChanged();
 
