@@ -1,7 +1,8 @@
 Label Parsing
-Create a label with special characters in it (eg, \omega).
-The special character is not interpreted.
-  This may be a new bug introduced with the new names.
+place a special characters in a plot label (eg, \omega in the X axis label).
+The special character is not interpreted.  It should be.
+Note: it is interpreted properly in floating labels.
+
 
 ------------
 
