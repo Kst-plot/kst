@@ -17,7 +17,6 @@
 #include "datacollection.h"
 #include "dataobjectcollection.h"
 #include "document.h"
-#include "defaultnames.h"
 #include "objectstore.h"
 
 #include "eventmonitorentry.h"

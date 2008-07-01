@@ -188,6 +188,7 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
   *skip = 1;
   short x = 0;
 
+  qDebug() << "----- parsing " << txt;
   switch (c.unicode()) {
     EXPAND_GREEK('B', 'b', "eta",  4, 0x392)
     EXPAND_GREEK('D', 'd', "elta", 5, 0x394)

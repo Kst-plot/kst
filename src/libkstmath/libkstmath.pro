@@ -35,7 +35,6 @@ SOURCES += \
     curvepointsymbol.cpp \
     dataobject.cpp \
     dataobjectcollection.cpp \
-    defaultnames.cpp \
     dialoglauncher.cpp \
     emailthread.cpp \
     eparse.cpp \
@@ -84,7 +83,6 @@ HEADERS += \
     dataobjectcollection.h \
     dataobject.h \
     dataobjectplugin.h \
-    defaultnames.h \
     emailthread.h \
     equation.h \
     equationfactory.h \

@@ -26,7 +26,6 @@
 #include "document.h"
 #include "objectstore.h"
 
-#include "defaultnames.h"
 #include "datacollection.h"
 #include "dataobjectcollection.h"
 #include "dialogdefaults.h"

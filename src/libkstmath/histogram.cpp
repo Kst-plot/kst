@@ -25,7 +25,6 @@
 
 #include "dialoglauncher.h"
 #include "datacollection.h"
-#include "defaultnames.h"
 #include "histogram.h"
 #include "objectstore.h"
 

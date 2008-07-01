@@ -23,7 +23,6 @@
 #include "application.h"
 #include "plotrenderitem.h"
 
-#include "defaultnames.h"
 #include "datacollection.h"
 #include "dataobjectcollection.h"
 #include "document.h"

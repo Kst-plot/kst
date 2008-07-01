@@ -28,7 +28,6 @@
 #include "palette.h"
 #include "image.h"
 
-#include "defaultnames.h"
 #include "datacollection.h"
 #include "dataobjectcollection.h"
 

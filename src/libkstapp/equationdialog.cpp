@@ -20,7 +20,6 @@
 #include "plotitem.h"
 #include "plotrenderitem.h"
 #include "curve.h"
-#include "defaultnames.h"
 #include "document.h"
 #include "objectstore.h"
 
