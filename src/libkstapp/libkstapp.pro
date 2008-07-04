@@ -75,6 +75,7 @@ SOURCES += \
     labeltab.cpp \
     layoutboxitem.cpp \
     layouttab.cpp \
+    legenditem.cpp \
     lineitem.cpp \
     mainwindow.cpp \
     markerstab.cpp \
@@ -168,6 +169,7 @@ HEADERS += \
     labeltab.h \
     layoutboxitem.h \
     layouttab.h \
+    legenditem.h \
     lineitem.h \
     mainwindow.h \
     markerstab.h \

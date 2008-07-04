@@ -62,6 +62,12 @@ class KST_EXPORT LabelTab : public DialogTab, Ui::LabelTab {
     qreal rightLabelFontScale() const;
     void setRightLabelFontScale(const qreal scale);
 
+    bool showLegend() const;
+    void setShowLegend(const bool show);
+
+    bool matchLegend() const;
+    void setMatchLegend(const bool match);
+
   public Q_SLOTS:
     void update();
     void autoLabel();

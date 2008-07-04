@@ -24,6 +24,7 @@
 #include "plotmarkers.h"
 
 #include "plotaxis.h"
+#include "legenditem.h"
 
 namespace Kst {
 
@@ -147,6 +148,12 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     qreal rightLabelFontScale() const;
     void setRightLabelFontScale(const qreal scale);
+
+    bool showLegend() const;
+    void setShowLegend(const bool show);
+
+    bool matchLegend() const;
+    void setMatchLegend(const bool match);
 
     qreal mapXToPlot(const qreal &x) const;
     qreal mapYToPlot(const qreal &y) const;
@@ -305,6 +312,11 @@ class PlotItem : public ViewItem, public PlotItemInterface
     qreal _bottomLabelFontScale;
     qreal _topLabelFontScale;
     qreal _rightLabelFontScale;
+
+    bool _showLegend;
+    bool _autoLegend;
+
+    LegendItem* _legend;
 
     QMenu *_zoomMenu;
     QAction *_zoomMaximum;

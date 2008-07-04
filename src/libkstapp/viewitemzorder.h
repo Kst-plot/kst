@@ -19,6 +19,7 @@
 #define PICTURE_ZVALUE      7
 #define SVG_ZVALUE          7
 #define LABEL_ZVALUE        8
+#define LEGEND_ZVALUE       8
 #define LINE_ZVALUE         9
 #define ARROW_ZVALUE        9
 

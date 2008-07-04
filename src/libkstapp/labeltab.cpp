@@ -52,6 +52,9 @@ LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
   connect(_bottomFamily, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_rightFamily, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
 
+  connect(_showLegend, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_matchLegendContents, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+
   connect(_applyGlobalsButton, SIGNAL(pressed()), this, SLOT(applyGlobals()));
   connect(_autoLabel, SIGNAL(pressed()), this, SLOT(autoLabel()));
 }
@@ -246,6 +249,26 @@ qreal LabelTab::bottomLabelFontScale() const {
 
 void LabelTab::setBottomLabelFontScale(const qreal scale) {
   _bottomFontSize->setValue(scale);
+}
+
+
+bool LabelTab::showLegend() const {
+  return _showLegend->isChecked();
+}
+
+
+void LabelTab::setShowLegend(const bool show) {
+  _showLegend->setChecked(show);
+}
+
+
+bool LabelTab::matchLegend() const {
+  return _matchLegendContents->isChecked();
+}
+
+
+void LabelTab::setMatchLegend(const bool match) {
+  _matchLegendContents->setChecked(match);
 }
 
 }

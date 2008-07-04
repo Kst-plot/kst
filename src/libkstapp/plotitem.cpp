@@ -65,6 +65,9 @@ PlotItem::PlotItem(View *parent)
   _bottomLabelFontScale(0.0),
   _topLabelFontScale(0.0),
   _rightLabelFontScale(0.0),
+  _showLegend(false),
+  _autoLegend(true),
+  _legend(0),
   _zoomMenu(0)
  {
 
@@ -1610,6 +1613,35 @@ QSizeF PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
     }
   }
   return yLabelRect.size();
+}
+
+
+bool PlotItem::showLegend() const {
+  return _showLegend;
+}
+
+
+void PlotItem::setShowLegend(const bool show) {
+  qDebug() << "setShowLegend";
+  _showLegend = show;
+  if (show) {
+    if (!_legend) {
+      _legend = new LegendItem(this);
+    }
+    _legend->setVisible(true);
+  } else {
+    _legend->setVisible(false);
+  }
+}
+
+
+bool PlotItem::matchLegend() const {
+  return _showLegend;
+}
+
+
+void PlotItem::setMatchLegend(const bool match) {
+  _autoLegend = match;
 }
 
 
