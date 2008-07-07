@@ -235,10 +235,6 @@ void MainWindow::openFile(const QString &file) {
 
 
 void MainWindow::exportGraphicsFile(const QString &filename, const QString &format, int width, int height, int display) {
-  if (!_doc->isOpen()) {
-    return;
-  }
-
   int viewCount = 0;
   foreach (QGraphicsView *view, _tabWidget->views()) {
     QSize size;
@@ -279,10 +275,6 @@ void MainWindow::exportGraphicsFile(const QString &filename, const QString &form
 
 
 void MainWindow::print() {
-  if (!_doc->isOpen()) {
-    return;
-  }
-
   QPrinter printer(QPrinter::HighResolution);
 
   QPrintDialog pd(&printer, this);
