@@ -262,8 +262,6 @@ void VectorTab::showConfigWidget() {
 VectorDialog::VectorDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
-  _vectorName = QString();
-
   if (editMode() == Edit)
     setWindowTitle(tr("Edit Vector"));
   else
@@ -408,7 +406,7 @@ ObjectPtr VectorDialog::createNewDataVector() {
   vector->update();
   vector->unlock();
 
-  _vectorName = vector->Name();
+  _dataObjectName = vector->Name();
 
   return vector;
 }
@@ -435,7 +433,7 @@ ObjectPtr VectorDialog::createNewGeneratedVector() {
 
   vector->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
-  _vectorName = vector->Name();
+  _dataObjectName = vector->Name();
 
 //  return static_cast<ObjectPtr>(vector);
   return vector;
@@ -519,11 +517,8 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
       setGenVectorDefaults(generatedVector);
     }
   }
-  return dataObject();
-}
 
-QString VectorDialog::vectorName() const {
-  return _vectorName;
+  return dataObject();
 }
 
 }

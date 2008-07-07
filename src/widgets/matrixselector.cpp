@@ -76,13 +76,20 @@ void MatrixSelector::setSelectedMatrix(MatrixPtr selectedMatrix) {
 
 
 void MatrixSelector::newMatrix() {
-  DialogLauncher::self()->showMatrixDialog();
+  QString matrixName;
+  DialogLauncher::self()->showMatrixDialog(matrixName);
   fillMatrices();
+  MatrixPtr matrix = kst_cast<Matrix>(_store->retrieveObject(matrixName));
+
+  if (matrix) {
+    setSelectedMatrix(matrix);
+  }
 }
 
 
 void MatrixSelector::editMatrix() {
-  DialogLauncher::self()->showMatrixDialog(ObjectPtr(selectedMatrix()));
+  QString matrixName;
+  DialogLauncher::self()->showMatrixDialog(matrixName, ObjectPtr(selectedMatrix()));
 }
 
 

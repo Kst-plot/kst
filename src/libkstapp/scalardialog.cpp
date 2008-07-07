@@ -50,8 +50,6 @@ void ScalarTab::textChanged() {
 ScalarDialog::ScalarDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
-  _scalarName = QString();
-
   if (editMode() == Edit)
     setWindowTitle(tr("Edit Scalar"));
   else
@@ -118,7 +116,7 @@ ObjectPtr ScalarDialog::createNewDataObject(){
   scalar->update();
   scalar->unlock();
 
-  _scalarName = scalar->Name();
+  _dataObjectName = scalar->Name();
 
   return static_cast<ObjectPtr>(scalar);
 }
@@ -137,10 +135,6 @@ ObjectPtr ScalarDialog::editExistingDataObject() const {
     scalar->unlock();
   }
   return dataObject();
-}
-
-QString ScalarDialog::scalarName() const {
-  return _scalarName;
 }
 
 }

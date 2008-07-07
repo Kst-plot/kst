@@ -37,20 +37,21 @@ DialogLauncherGui::~DialogLauncherGui() {
 void DialogLauncherGui::showVectorDialog(QString &vectorname, ObjectPtr objectPtr) {
   VectorDialog dialog(objectPtr, kstApp->mainWindow());
   dialog.exec();
-  vectorname = dialog.vectorName();
+  vectorname = dialog.dataObjectName();
 }
 
 
-void DialogLauncherGui::showMatrixDialog(ObjectPtr objectPtr) {
+void DialogLauncherGui::showMatrixDialog(QString &matrixName, ObjectPtr objectPtr) {
   MatrixDialog dialog(objectPtr, kstApp->mainWindow());
   dialog.exec();
+  matrixName = dialog.dataObjectName();
 }
 
 
 void DialogLauncherGui::showScalarDialog(QString &scalarname, ObjectPtr objectPtr) {
   ScalarDialog dialog(objectPtr, kstApp->mainWindow());
   dialog.exec();
-  scalarname = dialog.scalarName();
+  scalarname = dialog.dataObjectName();
 }
 
 

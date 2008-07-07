@@ -166,8 +166,8 @@ class KST_EXPORT MatrixDialog : public DataDialog {
     virtual ObjectPtr editExistingDataObject() const;
 
   private:
-    ObjectPtr createNewDataMatrix() const;
-    ObjectPtr createNewGeneratedMatrix() const;
+    ObjectPtr createNewDataMatrix();
+    ObjectPtr createNewGeneratedMatrix();
     void configureTab(ObjectPtr vector);
 
   private Q_SLOTS:

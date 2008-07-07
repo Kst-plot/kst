@@ -95,8 +95,6 @@ class KST_EXPORT VectorDialog : public DataDialog {
     VectorDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~VectorDialog();
 
-    QString vectorName() const;
-
   protected:
 //     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject();
@@ -106,7 +104,6 @@ class KST_EXPORT VectorDialog : public DataDialog {
     ObjectPtr createNewDataVector();
     ObjectPtr createNewGeneratedVector();
     void configureTab(ObjectPtr vector=0);
-    QString _vectorName;
 
   private Q_SLOTS:
     void updateButtons();

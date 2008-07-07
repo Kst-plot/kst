@@ -26,7 +26,7 @@ class KST_EXPORT DialogLauncherGui : public DialogLauncher {
     //primitives
     virtual void showVectorDialog(QString &vectorname, ObjectPtr objectPtr = 0);
 
-    virtual void showMatrixDialog(ObjectPtr objectPtr = 0);
+    virtual void showMatrixDialog(QString &matrixName, ObjectPtr objectPtr = 0);
 
     virtual void showScalarDialog(QString &scalarname, ObjectPtr objectPtr = 0);
 

@@ -35,6 +35,7 @@ class KST_EXPORT DataDialog : public Dialog {
 
     EditMode editMode() const { return _mode; }
     void addDataTab(DataTab *tab);
+    QString dataObjectName() const;
 
   protected:
     virtual QString tagString() const;
@@ -49,6 +50,7 @@ class KST_EXPORT DataDialog : public Dialog {
 
     Document *_document;
     EditMultipleWidget *_editMultipleWidget;
+    QString _dataObjectName;
 
   private Q_SLOTS:
     void slotApply();

@@ -88,12 +88,9 @@ void ScalarSelector::setSelectedScalar(ScalarPtr selectedScalar) {
 
 void ScalarSelector::newScalar() {
   QString scalarName;
-
   DialogLauncher::self()->showScalarDialog(scalarName);
   fillScalars();
-
   ScalarPtr scalar = kst_cast<Scalar>(_store->retrieveObject(scalarName));
-
 
   if (scalar) {
     setSelectedScalar(scalar);

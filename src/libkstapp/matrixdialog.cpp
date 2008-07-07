@@ -690,7 +690,7 @@ ObjectPtr MatrixDialog::createNewDataObject() {
 }
 
 
-ObjectPtr MatrixDialog::createNewDataMatrix() const {
+ObjectPtr MatrixDialog::createNewDataMatrix() {
  const DataSourcePtr dataSource = _matrixTab->dataSource();
 
   //FIXME better validation than this please...
@@ -747,11 +747,13 @@ ObjectPtr MatrixDialog::createNewDataMatrix() const {
 
   setDataMatrixDefaults(matrix);
 
+  _dataObjectName = matrix->Name();
+
   return static_cast<ObjectPtr>(matrix);
 }
 
 
-ObjectPtr MatrixDialog::createNewGeneratedMatrix() const {
+ObjectPtr MatrixDialog::createNewGeneratedMatrix() {
   const uint nX = _matrixTab->nX();
   const uint nY = _matrixTab->nY();
   const double minX = _matrixTab->minX();
@@ -783,6 +785,8 @@ ObjectPtr MatrixDialog::createNewGeneratedMatrix() const {
   matrix->writeLock();
   matrix->update();
   matrix->unlock();
+
+  _dataObjectName = matrix->Name();
 
   return static_cast<ObjectPtr>(matrix);
 }

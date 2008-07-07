@@ -32,6 +32,8 @@ namespace Kst {
 DataDialog::DataDialog(Kst::ObjectPtr dataObject, QWidget *parent)
   : Dialog(parent), _defaultTagString("<Auto Name>"), _dataObject(dataObject), _modified(false) {
 
+  _dataObjectName = QString();
+
   if (_dataObject)
     _mode = Edit;
   else
@@ -171,6 +173,11 @@ void DataDialog::slotEditMultiple() {
   }
   clearModified();
 }
+
+QString DataDialog::dataObjectName() const {
+  return _dataObjectName;
+}
+
 
 
 }

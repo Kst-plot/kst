@@ -466,7 +466,7 @@ void MainWindow::createActions() {
 
   _createLabelAct = new QAction(tr("&Create label"), this);
   _createLabelAct->setStatusTip(tr("Create a label for the current view"));
-  _createLabelAct->setIcon(QPixmap(":kst_gfx_label.png"));
+   _createLabelAct->setIcon(QPixmap(":kst_gfx_label.png"));
   _createLabelAct->setEnabled(false);
   connect(_createLabelAct, SIGNAL(triggered()), this, SLOT(createLabel()));
 
@@ -712,7 +712,7 @@ void MainWindow::createMenus() {
 
 
 void MainWindow::createToolBars() {
-  setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+  setToolButtonStyle(Qt::ToolButtonIconOnly);
 
   _dataToolBar = addToolBar(tr("Data"));
   _dataToolBar->addAction(_dataManagerAct);
@@ -726,7 +726,7 @@ void MainWindow::createToolBars() {
   _viewToolBar->addAction(_layoutModeAct);
 
   _layoutToolBar = new QToolBar(tr("Layout"), this);
-//  _layoutToolBar->addAction(_createLabelAct); //no icon
+  _layoutToolBar->addAction(_createLabelAct); //no icon
   _layoutToolBar->addAction(_createBoxAct);
   _layoutToolBar->addAction(_createCircleAct);
   _layoutToolBar->addAction(_createEllipseAct);

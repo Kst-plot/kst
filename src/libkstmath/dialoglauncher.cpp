@@ -58,8 +58,9 @@ void DialogLauncher::showVectorDialog(QString &vectorname, ObjectPtr objectPtr) 
 }
 
 
-void DialogLauncher::showMatrixDialog(ObjectPtr objectPtr) {
+void DialogLauncher::showMatrixDialog(QString &matrixName, ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
+  Q_UNUSED(matrixName);
 }
 
 
