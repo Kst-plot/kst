@@ -17,6 +17,7 @@
 
 #include "debug.h"
 #include "plotitem.h"
+#include "legenditemdialog.h"
 
 #include <QDebug>
 #include <QGraphicsItem>
@@ -25,7 +26,7 @@
 namespace Kst {
 
 LegendItem::LegendItem(PlotItem *parent)
-  : ViewItem(parent->parentView()), _plotItem(parent) {
+  : ViewItem(parent->parentView()), _plotItem(parent), _auto(true), _verticalDisplay(true) {
   setName("Legend");
   setZValue(LEGEND_ZVALUE);
 
@@ -47,9 +48,6 @@ LegendItem::~LegendItem() {
 void LegendItem::paint(QPainter *painter) {
   painter->save();
   QRectF box = rect();
-  QPen pen = painter->pen();
-  pen.setWidth(2);
-  painter->setPen(pen);
   painter->drawRect(rect());
   painter->restore();
 }
@@ -64,19 +62,58 @@ void LegendItem::save(QXmlStreamWriter &xml) {
 
 
 void LegendItem::edit() {
-  // TODO create edit Dialog.
-//   LegendItemDialog editDialog(this);
-//   editDialog.exec();
+  LegendItemDialog editDialog(this);
+  editDialog.exec();
 }
 
 
-void LegendItem::setAutoLegend(const bool autoLegend) {
-  _auto = autoLegend;
+void LegendItem::setAutoContents(const bool autoContents) {
+  _auto = autoContents;
 }
 
 
-bool LegendItem::autoLegend() const {
+bool LegendItem::autoContents() const {
   return _auto;
+}
+
+
+void LegendItem::setVerticalDisplay(const bool vertical) {
+  _verticalDisplay = vertical;
+}
+
+
+bool LegendItem::verticalDisplay() const {
+  return _verticalDisplay;
+}
+
+
+void LegendItem::setTitle(const QString &title) {
+  _title = title;
+}
+
+
+QString LegendItem::title() const {
+  return _title;
+}
+
+
+QFont LegendItem::font() const {
+  return _font;
+}
+
+
+void LegendItem::setFont(const QFont &font) {
+  _font = font;
+}
+
+
+qreal LegendItem::fontScale() const {
+  return _fontScale;
+}
+
+
+void LegendItem::setFontScale(const qreal scale) {
+  _fontScale = scale;
 }
 
 

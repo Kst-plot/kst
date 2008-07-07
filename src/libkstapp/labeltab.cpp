@@ -53,10 +53,11 @@ LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
   connect(_rightFamily, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
 
   connect(_showLegend, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_matchLegendContents, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
 
   connect(_applyGlobalsButton, SIGNAL(pressed()), this, SLOT(applyGlobals()));
   connect(_autoLabel, SIGNAL(pressed()), this, SLOT(autoLabel()));
+
+  connect(_editLegendContents, SIGNAL(pressed()), _plotItem->legend(), SLOT(edit()));
 }
 
 
@@ -259,16 +260,6 @@ bool LabelTab::showLegend() const {
 
 void LabelTab::setShowLegend(const bool show) {
   _showLegend->setChecked(show);
-}
-
-
-bool LabelTab::matchLegend() const {
-  return _matchLegendContents->isChecked();
-}
-
-
-void LabelTab::setMatchLegend(const bool match) {
-  _matchLegendContents->setChecked(match);
 }
 
 }

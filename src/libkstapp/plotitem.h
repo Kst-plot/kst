@@ -152,9 +152,6 @@ class PlotItem : public ViewItem, public PlotItemInterface
     bool showLegend() const;
     void setShowLegend(const bool show);
 
-    bool matchLegend() const;
-    void setMatchLegend(const bool match);
-
     qreal mapXToPlot(const qreal &x) const;
     qreal mapYToPlot(const qreal &y) const;
     QPointF mapToPlot(const QPointF &point) const;
@@ -172,6 +169,8 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void triggerUpdate() { emit geometryChanged(); update(rect()); }
     virtual void addToMenuForContextEvent(QMenu &menu);
     virtual bool tryShortcut(const QString &keySequence);
+
+    LegendItem* legend();
 
   Q_SIGNALS:
     void marginsChanged();
@@ -314,7 +313,6 @@ class PlotItem : public ViewItem, public PlotItemInterface
     qreal _rightLabelFontScale;
 
     bool _showLegend;
-    bool _autoLegend;
 
     LegendItem* _legend;
 

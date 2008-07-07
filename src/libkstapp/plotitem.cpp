@@ -66,7 +66,6 @@ PlotItem::PlotItem(View *parent)
   _topLabelFontScale(0.0),
   _rightLabelFontScale(0.0),
   _showLegend(false),
-  _autoLegend(true),
   _legend(0),
   _zoomMenu(0)
  {
@@ -1621,27 +1620,21 @@ bool PlotItem::showLegend() const {
 }
 
 
+LegendItem* PlotItem::legend() {
+  if (!_legend) {
+    _legend = new LegendItem(this);
+  }
+  return _legend;
+}
+
+
 void PlotItem::setShowLegend(const bool show) {
-  qDebug() << "setShowLegend";
   _showLegend = show;
   if (show) {
-    if (!_legend) {
-      _legend = new LegendItem(this);
-    }
-    _legend->setVisible(true);
+    legend()->setVisible(true);
   } else {
-    _legend->setVisible(false);
+    legend()->setVisible(false);
   }
-}
-
-
-bool PlotItem::matchLegend() const {
-  return _showLegend;
-}
-
-
-void PlotItem::setMatchLegend(const bool match) {
-  _autoLegend = match;
 }
 
 

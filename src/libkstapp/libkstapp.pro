@@ -76,6 +76,8 @@ SOURCES += \
     layoutboxitem.cpp \
     layouttab.cpp \
     legenditem.cpp \
+    legenditemdialog.cpp \
+    legendtab.cpp \
     lineitem.cpp \
     mainwindow.cpp \
     markerstab.cpp \
@@ -170,6 +172,8 @@ HEADERS += \
     layoutboxitem.h \
     layouttab.h \
     legenditem.h \
+    legenditemdialog.h \
+    legendtab.h \
     lineitem.h \
     mainwindow.h \
     markerstab.h \
@@ -239,6 +243,7 @@ FORMS += \
     labeltab.ui \
     labelpropertiestab.ui \
     layouttab.ui \
+    legendtab.ui \
     markerstab.ui \
     matrixeditordialog.ui \
     matrixtab.ui \

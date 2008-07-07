@@ -112,8 +112,6 @@ void PlotItemDialog::setupLabels() {
   _labelTab->setRightLabelFontScale(_plotItem->rightLabelFontScale());
 
   _labelTab->setShowLegend(_plotItem->showLegend());
-  _labelTab->setMatchLegend(_plotItem->matchLegend());
-
 }
 
 
@@ -445,8 +443,6 @@ void PlotItemDialog::labelsChanged() {
   _plotItem->setTopLabelFontScale(_labelTab->topLabelFontScale());
   _plotItem->setBottomLabelFontScale(_labelTab->bottomLabelFontScale());
   _plotItem->setShowLegend(_labelTab->showLegend());
-  _plotItem->setMatchLegend(_labelTab->matchLegend());
-
 }
 
 

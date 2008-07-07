@@ -32,8 +32,22 @@ class LegendItem : public ViewItem {
     virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
 
-    void setAutoLegend(const bool autoLegend);
-    bool autoLegend() const;
+    void setAutoContents(const bool autoContent);
+    bool autoContents() const;
+
+    void setVerticalDisplay(const bool vertical);
+    bool verticalDisplay() const;
+
+    QFont font() const;
+    void setFont(const QFont &font);
+
+    qreal fontScale() const;
+    void setFontScale(const qreal scale);
+
+    QString title() const;
+    void setTitle(const QString &title);
+
+    PlotItem* plot() { return _plotItem; }
 
   public Q_SLOTS:
     virtual void edit();
@@ -41,6 +55,10 @@ class LegendItem : public ViewItem {
   private:
     PlotItem *_plotItem;
     bool _auto;
+    QString _title;
+    QFont _font;
+    qreal _fontScale;
+    bool _verticalDisplay;
 };
 
 
