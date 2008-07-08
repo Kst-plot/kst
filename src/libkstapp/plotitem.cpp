@@ -22,6 +22,7 @@
 #include "application.h"
 #include "mainwindow.h"
 #include "tabwidget.h"
+#include "labelrenderer.h"
 
 #include "datacollection.h"
 #include "dataobjectcollection.h"
@@ -1357,24 +1358,47 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
   if (!isLeftLabelVisible())
     return;
 
-  painter->save();
-  QTransform t;
-  t.rotate(90.0);
-  painter->rotate(-90.0);
+  Label::Parsed *parsed = Label::parse(leftLabelOverride());
 
-  painter->setFont(calculatedLeftLabelFont());
+  if (parsed) {
+    QRectF leftLabel = leftLabelRect(false);
+    QPixmap pixmap(leftLabel.height(), leftLabel.width());
+    pixmap.fill(Qt::white);
+    QPainter pixmapPainter(&pixmap);
 
-  QRectF leftLabel = leftLabelRect(false);
-  leftLabel.moveTopRight(plotAxisRect().topLeft());
-  painter->drawText(t.mapRect(leftLabel), Qt::TextWordWrap | Qt::AlignCenter, leftLabelOverride());
+    Label::RenderContext rc(calculatedLeftLabelFont().family(), calculatedLeftLabelFont().pointSize(), &pixmapPainter);
+    QFontMetrics fm(calculatedLeftLabelFont());
+    rc.y = fm.ascent();
+    Label::renderLabel(rc, parsed->chunk);
+
+    leftLabel.moveTopRight(plotAxisRect().topLeft());
+    leftLabel.moveBottomLeft(QPointF(leftLabel.bottomLeft().x(), leftLabel.bottomLeft().y() - ((leftLabel.height() / 2) - (rc.x / 2))));
+
+    painter->save();
+    QTransform t;
+    t.rotate(90.0);
+    painter->rotate(-90.0);
+
+    painter->drawPixmap(t.mapRect(leftLabel).topLeft(), pixmap);
+
+    painter->restore();
+  }
 
 //   painter->save();
+//   QTransform t;
+//   t.rotate(90.0);
+//   painter->rotate(-90.0);
+// 
+//   QRectF leftLabel = leftLabelRect(false);
+//   leftLabel.moveTopRight(plotAxisRect().topLeft());
+// 
+//   painter->save();
 //   painter->setOpacity(0.3);
-// //   qDebug() << "leftLabel:" << t.mapRect(leftLabel) << endl;
+//   qDebug() << "leftLabel:" << t.mapRect(leftLabel) << endl;
 //   painter->fillRect(t.mapRect(leftLabel), Qt::red);
 //   painter->restore();
-
-  painter->restore();
+// 
+//   painter->restore();
 }
 
 
@@ -1403,21 +1427,41 @@ void PlotItem::paintBottomLabel(QPainter *painter) {
   if (!isBottomLabelVisible())
     return;
 
-  painter->save();
+  Label::Parsed *parsed = Label::parse(bottomLabelOverride());
 
-  painter->setFont(calculatedBottomLabelFont());
+  if (parsed) {
+    painter->save();
 
-  QRectF bottomLabel = bottomLabelRect(false);
-  bottomLabel.moveTopLeft(plotAxisRect().bottomLeft());
-  painter->drawText(bottomLabel, Qt::TextWordWrap | Qt::AlignCenter, bottomLabelOverride());
+    QRectF bottomLabel = bottomLabelRect(false);
+    QPixmap pixmap(bottomLabel.width(), bottomLabel.height());
+    pixmap.fill(Qt::white);
+    QPainter pixmapPainter(&pixmap);
 
+    Label::RenderContext rc(calculatedBottomLabelFont().family(), calculatedBottomLabelFont().pointSize(), &pixmapPainter);
+    QFontMetrics fm(calculatedBottomLabelFont());
+    rc.y = fm.ascent();
+    Label::renderLabel(rc, parsed->chunk);
+
+    bottomLabel.moveTopLeft(plotAxisRect().bottomLeft());
+    bottomLabel.moveTopLeft(QPointF(bottomLabel.topLeft().x() + ((bottomLabel.width() / 2) - (rc.x / 2)), bottomLabel.topLeft().y()));
+
+    painter->drawPixmap(bottomLabel.topLeft(), pixmap);
+
+    painter->restore();
+  }
+
+//   painter->save();
+// 
+//   QRectF bottomLabel = bottomLabelRect(false);
+//   bottomLabel.moveTopLeft(plotAxisRect().bottomLeft());
+// 
 //   painter->save();
 //   painter->setOpacity(0.3);
 // //   qDebug() << "bottomLabel:" << bottomLabel;
 //   painter->fillRect(bottomLabel, Qt::red);
 //   painter->restore();
-
-  painter->restore();
+// 
+//   painter->restore();
 }
 
 
@@ -1443,25 +1487,47 @@ void PlotItem::paintRightLabel(QPainter *painter) {
   if (!isRightLabelVisible())
     return;
 
-  painter->save();
-  QTransform t;
-  t.rotate(-90.0);
-  painter->rotate(90.0);
+  Label::Parsed *parsed = Label::parse(rightLabelOverride());
 
-  painter->setFont(calculatedRightLabelFont());
+  if (parsed) {
+    QRectF rightLabel = rightLabelRect(false);
+    QPixmap pixmap(rightLabel.height(), rightLabel.width());
+    pixmap.fill(Qt::white);
+    QPainter pixmapPainter(&pixmap);
 
-  //same as left but painter is translated
-  QRectF rightLabel = rightLabelRect(false);
-  rightLabel.moveTopLeft(plotAxisRect().topRight());
-  painter->drawText(t.mapRect(rightLabel), Qt::TextWordWrap | Qt::AlignCenter, rightLabelOverride());
+    Label::RenderContext rc(calculatedLeftLabelFont().family(), calculatedLeftLabelFont().pointSize(), &pixmapPainter);
+    QFontMetrics fm(calculatedLeftLabelFont());
+    rc.y = fm.ascent();
+    Label::renderLabel(rc, parsed->chunk);
 
+    rightLabel.moveTopLeft(plotAxisRect().topRight());
+    rightLabel.moveTopLeft(QPointF(rightLabel.topLeft().x(), rightLabel.topLeft().y() + ((rightLabel.height() / 2) - (rc.x) / 2)));
+
+    painter->save();
+    QTransform t;
+    t.rotate(-90.0);
+    painter->rotate(90.0);
+
+    painter->drawPixmap(t.mapRect(rightLabel).topLeft(), pixmap);
+
+    painter->restore();
+  }
+
+//   painter->save();
+//   QTransform t;
+//   t.rotate(-90.0);
+//   painter->rotate(90.0);
+// 
+//   QRectF rightLabel = rightLabelRect(false);
+//   rightLabel.moveTopLeft(plotAxisRect().topRight());
+// 
 //   painter->save();
 //   painter->setOpacity(0.3);
 // //   qDebug() << "rightLabel:" << t.mapRect(rightLabel) << endl;
 //   painter->fillRect(t.mapRect(rightLabel), Qt::red);
 //   painter->restore();
-
-  painter->restore();
+// 
+//   painter->restore();
 }
 
 
@@ -1490,21 +1556,40 @@ void PlotItem::paintTopLabel(QPainter *painter) {
   if (!isTopLabelVisible())
     return;
 
-  painter->save();
+  Label::Parsed *parsed = Label::parse(topLabelOverride());
 
-  painter->setFont(calculatedTopLabelFont());
+  if (parsed) {
+    painter->save();
 
-  QRectF topLabel = topLabelRect(false);
-  topLabel.moveBottomLeft(plotAxisRect().topLeft());
-  painter->drawText(topLabel, Qt::TextWordWrap | Qt::AlignCenter, topLabelOverride());
+    QRectF topLabel = topLabelRect(false);
+    QPixmap pixmap(topLabel.width(), topLabel.height());
+    pixmap.fill(Qt::white);
+    QPainter pixmapPainter(&pixmap);
 
+    Label::RenderContext rc(calculatedTopLabelFont().family(), calculatedTopLabelFont().pointSize(), &pixmapPainter);
+    QFontMetrics fm(calculatedTopLabelFont());
+    rc.y = fm.ascent();
+    Label::renderLabel(rc, parsed->chunk);
+
+    topLabel.moveBottomLeft(plotAxisRect().topLeft());
+    topLabel.moveTopLeft(QPointF(topLabel.topLeft().x() + ((topLabel.width() / 2) - (rc.x / 2)), topLabel.topLeft().y()));
+
+    painter->drawPixmap(topLabel.topLeft(), pixmap);
+    painter->restore();
+  }
+
+//   painter->save();
+// 
+//   QRectF topLabel = topLabelRect(false);
+//   topLabel.moveBottomLeft(plotAxisRect().topLeft());
+// 
 //   painter->save();
 //   painter->setOpacity(0.3);
 // //   qDebug() << "topLabel:" << topLabel;
 //   painter->fillRect(topLabel, Qt::red);
 //   painter->restore();
-
-  painter->restore();
+// 
+//   painter->restore();
 }
 
 

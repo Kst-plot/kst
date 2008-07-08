@@ -58,9 +58,10 @@ struct RenderContext {
     // point size (which cares about DPI). 
     // BUT: QFont constructs with point size, so here we convert the font to being specified 
     // according to pixel size, not point size...
-    if (_fontSize>0) {
-      f.setPixelSize(_fontSize); // device independence has been handled elsewhere - use pixels
-    }
+  // TODO REVIEW THIS!  Either everything needs to do it this way or no one.
+//     if (_fontSize>0) {
+//       f.setPixelSize(_fontSize); // device independence has been handled elsewhere - use pixels
+//     }
     if (p) {
       p->setFont(f);
       _ascent = p->fontMetrics().ascent();
