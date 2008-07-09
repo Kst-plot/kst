@@ -59,9 +59,16 @@ void LegendItemDialog::setupLegend() {
   CurveList curves = _store->getObjects<Curve>();
   ImageList images = _store->getObjects<Image>();
 
-  foreach (RelationPtr relation, _legendItem->plot()->renderItem(PlotRenderItem::Cartesian)->relationList()) {
-    displayedRelations.append(relation->Name());
-    displayedRelationTips.append(relation->descriptionTip());
+  if (_legendItem->relations().isEmpty()) {
+    foreach (RelationPtr relation, _legendItem->plot()->renderItem(PlotRenderItem::Cartesian)->relationList()) {
+      displayedRelations.append(relation->Name());
+      displayedRelationTips.append(relation->descriptionTip());
+    }
+  } else {
+    foreach (RelationPtr relation, _legendItem->relations()) {
+      displayedRelations.append(relation->Name());
+      displayedRelationTips.append(relation->descriptionTip());
+    }
   }
 
   foreach (CurvePtr curve, curves) {
@@ -101,25 +108,16 @@ void LegendItemDialog::legendChanged() {
   _legendItem->setAutoContents(_legendTab->autoContents());
   _legendItem->setVerticalDisplay(_legendTab->verticalDisplay());
 
-  QStringList currentRelations;
   QStringList displayedRelations = _legendTab->displayedRelations();
 
-  foreach (RelationPtr relation, _legendItem->plot()->renderItem(PlotRenderItem::Cartesian)->relationList()) {
-    currentRelations.append(relation->Name());
-    if (!displayedRelations.contains(relation->Name())) {
-      _legendItem->plot()->renderItem(PlotRenderItem::Cartesian)->removeRelation(relation);
-      _legendItem->plot()->update();
-    }
-  }
-
+  RelationList newRelations;
   foreach (QString relationName, displayedRelations) {
-    if (!currentRelations.contains(relationName)) {
-      if (RelationPtr relation = kst_cast<Relation>(_store->retrieveObject(relationName))) {
-        _legendItem->plot()->renderItem(PlotRenderItem::Cartesian)->addRelation(relation);
-        _legendItem->plot()->update();
-      }
+    qDebug() << "adding" << relationName;
+    if (RelationPtr relation = kst_cast<Relation>(_store->retrieveObject(relationName))) {
+      newRelations.append(relation);
     }
   }
+  _legendItem->setRelations(newRelations);
 }
 
 }

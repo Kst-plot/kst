@@ -14,6 +14,7 @@
 
 #include "viewitem.h"
 #include "graphicsfactory.h"
+#include "relation.h"
 
 namespace Label {
   struct Parsed;
@@ -49,6 +50,9 @@ class LegendItem : public ViewItem {
 
     PlotItem* plot() { return _plotItem; }
 
+    RelationList relations() { return _relations; }
+    void setRelations(RelationList relations) { _relations = relations; }
+
   public Q_SLOTS:
     virtual void edit();
 
@@ -59,6 +63,7 @@ class LegendItem : public ViewItem {
     QFont _font;
     qreal _fontScale;
     bool _verticalDisplay;
+    RelationList _relations;
 };
 
 
