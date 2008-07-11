@@ -137,7 +137,7 @@ class KST_EXPORT Curve: public Relation {
     virtual void paint(const CurveRenderContext& context);
 
     // render the legend symbol for this curve
-    virtual void paintLegendSymbol(Painter *p, const QRect& bound);
+    virtual void paintLegendSymbol(QPainter *p, const QRect& bound);
 
     // see KstRelation::distanceToPoint
     virtual double distanceToPoint(double xpos, double dx, double ypos) const;

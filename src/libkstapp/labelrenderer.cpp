@@ -32,7 +32,7 @@ namespace Label {
 
 void renderLabel(RenderContext& rc, Label::Chunk *fi) {
   // FIXME: RTL support
-  int oldSize = rc.size;
+  int oldSize = rc.size = rc.fontSize();
   int oldY = rc.y;
   int oldX = rc.x;
 
@@ -58,9 +58,16 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
       f.setPointSize(rc.size);
     }
 
-    f.setBold(fi->attributes.bold);
-    f.setItalic(fi->attributes.italic);
-    f.setUnderline(fi->attributes.underline);
+    if (fi->attributes.bold) {
+      f.setBold(fi->attributes.bold);
+    }
+    if (fi->attributes.italic) {
+      f.setItalic(fi->attributes.italic);
+    }
+    if (fi->attributes.underline) {
+      f.setItalic(fi->attributes.underline);
+    }
+
     if (rc.p && fi->attributes.color.isValid()) {
       rc.p->setPen(fi->attributes.color);
     } else if (rc.p) {

@@ -112,7 +112,6 @@ void LegendItemDialog::legendChanged() {
 
   RelationList newRelations;
   foreach (QString relationName, displayedRelations) {
-    qDebug() << "adding" << relationName;
     if (RelationPtr relation = kst_cast<Relation>(_store->retrieveObject(relationName))) {
       newRelations.append(relation);
     }

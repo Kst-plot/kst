@@ -223,12 +223,22 @@
          <number>1</number>
         </property>
         <property name="minimum" >
-         <double>-25.000000000000000</double>
+         <double>0.000000000000000</double>
         </property>
         <property name="singleStep" >
          <double>1.000000000000000</double>
         </property>
        </widget>
+      </item>
+      <item row="1" column="0" >
+       <widget class="QLabel" name="_Label_12" >
+        <property name="text" >
+         <string>Font Family</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="4" >
+       <widget class="QFontComboBox" name="_family" />
       </item>
       <item row="0" column="2" >
        <widget class="QCheckBox" name="_bold" >
@@ -251,16 +261,6 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0" >
-       <widget class="QLabel" name="_Label_12" >
-        <property name="text" >
-         <string>Font Family</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" colspan="4" >
-       <widget class="QFontComboBox" name="_family" />
-      </item>
      </layout>
     </widget>
    </item>
@@ -282,6 +282,22 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>_title</tabstop>
+  <tabstop>_autoContents</tabstop>
+  <tabstop>_availableRelationList</tabstop>
+  <tabstop>_displayedRelationList</tabstop>
+  <tabstop>_up</tabstop>
+  <tabstop>_remove</tabstop>
+  <tabstop>_add</tabstop>
+  <tabstop>_down</tabstop>
+  <tabstop>_fontSize</tabstop>
+  <tabstop>_bold</tabstop>
+  <tabstop>_underline</tabstop>
+  <tabstop>_italic</tabstop>
+  <tabstop>_family</tabstop>
+  <tabstop>_displayVertically</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -114,7 +114,6 @@ RelationPtr ImageFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
         paletteName);
   }
 
-  image->setLegendText(legend);
   image->setDescriptiveName(descriptiveName);
 
   image->writeLock();

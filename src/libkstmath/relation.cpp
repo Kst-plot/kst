@@ -41,13 +41,10 @@ void Relation::commonConstructor() {
   NS = 0;
 
   _ignoreAutoScale = false;
-  _parsedLegendTag = 0L;
 }
 
 
 Relation::~Relation() {
-  delete _parsedLegendTag;
-  _parsedLegendTag = 0L;
 }
 
 
@@ -81,30 +78,6 @@ void Relation::processUpdate(ObjectPtr object) {
   }
   unlock();
   UpdateManager::self()->updateFinished(object, this);
-}
-
-
-void Relation::updateParsedLegendTag() {
-  delete _parsedLegendTag;
-  if (_legendText.isEmpty()) {
-    _parsedLegendTag = Label::parse(Name(), false, false);
-  } else {
-    _parsedLegendTag = Label::parse(legendText(), true, false);
-  }
-}
-
-
-Label::Parsed *Relation::parsedLegendTag() {
-  if (!_parsedLegendTag) {
-    updateParsedLegendTag();
-  }
-  return _parsedLegendTag;
-}
-
-void Relation::setLegendText(const QString& theValue) {
-  _legendText = theValue; 
-  updateParsedLegendTag(); 
-  emit modifiedLegendEntry();
 }
 
 

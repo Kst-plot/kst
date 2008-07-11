@@ -30,14 +30,14 @@
 namespace Label {
 // inline for speed.
 struct RenderContext {
-  RenderContext(const QString& fontName, int fontSize, QPainter *p)
-  : fontName(fontName), size(fontSize), p(p), _fm(_font) {
+  RenderContext(const QFont& font, QPainter *p)
+  : p(p), _fm(_font) {
     x = y = xMax = xStart = 0;
     ascent = descent = 0;
     precision = 8;
     _cache = 0L;
     substitute = true;
-    setFont(QFont(fontName, fontSize));
+    setFont(font);
   }
 
   inline const QFont& font() const {

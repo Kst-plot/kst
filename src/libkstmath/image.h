@@ -103,7 +103,7 @@ class KST_EXPORT Image : public Relation {
     virtual void yRange(double xFrom, double xTo, double* yMin, double* yMax);
 
     // see KstRelation::paintLegendSymbol
-    virtual void paintLegendSymbol(Painter *p, const QRect& bound);
+    virtual void paintLegendSymbol(QPainter *p, const QRect& bound);
 
     virtual QString descriptionTip() const;
   public Q_SLOTS:

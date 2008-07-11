@@ -125,22 +125,7 @@ class KST_EXPORT Relation : public Object {
     virtual void paint(const CurveRenderContext& context) = 0;
 
     // render the legend symbol for this curve
-    virtual void paintLegendSymbol(Painter *p, const QRect& bound) = 0;
-
-
-    // just store the size of the legend here.  The viewLegend actually uses and calculates it.
-    virtual QSize legendLabelSize() const {return _legendLabelSize;}
-    virtual void setLegendLabelSize(QSize ls) {_legendLabelSize = ls;}
-
-    // Deal with the legend tag.
-    // The actual text is always stored in the base class.
-    // If _legendText == QString("") then the tagname should be used as the legend text.
-    // The label is parsed every time the legend text is changed.
-    virtual Label::Parsed *parsedLegendTag();
-    virtual void updateParsedLegendTag();
-
-    void setLegendText(const QString& theValue);
-    QString legendText() const { return _legendText;}
+    virtual void paintLegendSymbol(QPainter *p, const QRect& bound) = 0;
 
     virtual SharedPtr<Relation> makeDuplicate(QMap< SharedPtr<Relation>, SharedPtr<Relation> > &duplicatedRelations) = 0;
 
@@ -189,15 +174,8 @@ class KST_EXPORT Relation : public Object {
 
     bool _ignoreAutoScale;
 
-    Label::Parsed *_parsedLegendTag;
-    QSize _legendLabelSize;
-
   private:
     void commonConstructor();
-    QString _legendText;
-
-  signals:
-    void modifiedLegendEntry();
 };
 
 

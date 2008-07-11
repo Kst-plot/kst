@@ -126,8 +126,11 @@ void PlotItem::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("rightlabeloverride", _rightLabelOverride);
   xml.writeAttribute("rightlabelfont", QVariant(_rightLabelFont).toString());
   xml.writeAttribute("rightlabelfontscale", QVariant(_rightLabelFontScale).toString());
+  xml.writeAttribute("showlegend", QVariant(_showLegend).toString());
 
   ViewItem::save(xml);
+  legend()->saveInPlot(xml);
+
   foreach (PlotRenderItem *renderer, renderItems()) {
     renderer->saveInPlot(xml);
   }
@@ -1359,14 +1362,13 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
     return;
 
   Label::Parsed *parsed = Label::parse(leftLabelOverride());
-
   if (parsed) {
     QRectF leftLabel = leftLabelRect(false);
     QPixmap pixmap(leftLabel.height(), leftLabel.width());
     pixmap.fill(Qt::white);
     QPainter pixmapPainter(&pixmap);
 
-    Label::RenderContext rc(calculatedLeftLabelFont().family(), calculatedLeftLabelFont().pointSize(), &pixmapPainter);
+    Label::RenderContext rc(calculatedLeftLabelFont(), &pixmapPainter);
     QFontMetrics fm(calculatedLeftLabelFont());
     rc.y = fm.ascent();
     Label::renderLabel(rc, parsed->chunk);
@@ -1382,6 +1384,8 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
     painter->drawPixmap(t.mapRect(leftLabel).topLeft(), pixmap);
 
     painter->restore();
+    delete parsed;
+    parsed = 0;
   }
 
 //   painter->save();
@@ -1437,7 +1441,7 @@ void PlotItem::paintBottomLabel(QPainter *painter) {
     pixmap.fill(Qt::white);
     QPainter pixmapPainter(&pixmap);
 
-    Label::RenderContext rc(calculatedBottomLabelFont().family(), calculatedBottomLabelFont().pointSize(), &pixmapPainter);
+    Label::RenderContext rc(calculatedBottomLabelFont(), &pixmapPainter);
     QFontMetrics fm(calculatedBottomLabelFont());
     rc.y = fm.ascent();
     Label::renderLabel(rc, parsed->chunk);
@@ -1448,6 +1452,8 @@ void PlotItem::paintBottomLabel(QPainter *painter) {
     painter->drawPixmap(bottomLabel.topLeft(), pixmap);
 
     painter->restore();
+    delete parsed;
+    parsed = 0;
   }
 
 //   painter->save();
@@ -1491,26 +1497,30 @@ void PlotItem::paintRightLabel(QPainter *painter) {
 
   if (parsed) {
     QRectF rightLabel = rightLabelRect(false);
-    QPixmap pixmap(rightLabel.height(), rightLabel.width());
-    pixmap.fill(Qt::white);
-    QPainter pixmapPainter(&pixmap);
+    if (rightLabel.isValid()) {
+      QPixmap pixmap(rightLabel.height(), rightLabel.width());
+      pixmap.fill(Qt::white);
+      QPainter pixmapPainter(&pixmap);
 
-    Label::RenderContext rc(calculatedLeftLabelFont().family(), calculatedLeftLabelFont().pointSize(), &pixmapPainter);
-    QFontMetrics fm(calculatedLeftLabelFont());
-    rc.y = fm.ascent();
-    Label::renderLabel(rc, parsed->chunk);
+      Label::RenderContext rc(calculatedRightLabelFont(), &pixmapPainter);
+      QFontMetrics fm(calculatedRightLabelFont());
+      rc.y = fm.ascent();
+      Label::renderLabel(rc, parsed->chunk);
 
-    rightLabel.moveTopLeft(plotAxisRect().topRight());
-    rightLabel.moveTopLeft(QPointF(rightLabel.topLeft().x(), rightLabel.topLeft().y() + ((rightLabel.height() / 2) - (rc.x) / 2)));
+      rightLabel.moveTopLeft(plotAxisRect().topRight());
+      rightLabel.moveTopLeft(QPointF(rightLabel.topLeft().x(), rightLabel.topLeft().y() + ((rightLabel.height() / 2) - (rc.x) / 2)));
 
-    painter->save();
-    QTransform t;
-    t.rotate(-90.0);
-    painter->rotate(90.0);
+      painter->save();
+      QTransform t;
+      t.rotate(-90.0);
+      painter->rotate(90.0);
 
-    painter->drawPixmap(t.mapRect(rightLabel).topLeft(), pixmap);
-
+      painter->drawPixmap(t.mapRect(rightLabel).topLeft(), pixmap);
+    }
     painter->restore();
+
+    delete parsed;
+    parsed = 0;
   }
 
 //   painter->save();
@@ -1562,20 +1572,25 @@ void PlotItem::paintTopLabel(QPainter *painter) {
     painter->save();
 
     QRectF topLabel = topLabelRect(false);
-    QPixmap pixmap(topLabel.width(), topLabel.height());
-    pixmap.fill(Qt::white);
-    QPainter pixmapPainter(&pixmap);
+    if (topLabel.isValid()) {
+      QPixmap pixmap(topLabel.width(), topLabel.height());
+      pixmap.fill(Qt::white);
+      QPainter pixmapPainter(&pixmap);
 
-    Label::RenderContext rc(calculatedTopLabelFont().family(), calculatedTopLabelFont().pointSize(), &pixmapPainter);
-    QFontMetrics fm(calculatedTopLabelFont());
-    rc.y = fm.ascent();
-    Label::renderLabel(rc, parsed->chunk);
+      Label::RenderContext rc(calculatedTopLabelFont(), &pixmapPainter);
+      QFontMetrics fm(calculatedTopLabelFont());
+      rc.y = fm.ascent();
+      Label::renderLabel(rc, parsed->chunk);
 
-    topLabel.moveBottomLeft(plotAxisRect().topLeft());
-    topLabel.moveTopLeft(QPointF(topLabel.topLeft().x() + ((topLabel.width() / 2) - (rc.x / 2)), topLabel.topLeft().y()));
+      topLabel.moveBottomLeft(plotAxisRect().topLeft());
+      topLabel.moveTopLeft(QPointF(topLabel.topLeft().x() + ((topLabel.width() / 2) - (rc.x / 2)), topLabel.topLeft().y()));
 
-    painter->drawPixmap(topLabel.topLeft(), pixmap);
+      painter->drawPixmap(topLabel.topLeft(), pixmap);
+    }
     painter->restore();
+
+    delete parsed;
+    parsed = 0;
   }
 
 //   painter->save();
@@ -2148,6 +2163,11 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
           font.fromString(av.toString());
           rc->setLeftLabelFont(font);
         }
+        av = attrs.value("leftlabelfontscale");
+        if (!av.isNull()) {
+          rc->setLeftLabelFontScale(QVariant(av.toString()).toDouble());
+        }
+
         av = attrs.value("bottomlabeloverride");
         if (!av.isNull()) {
           rc->setBottomLabelOverride(av.toString());
@@ -2158,6 +2178,11 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
           font.fromString(av.toString());
           rc->setBottomLabelFont(font);
         }
+        av = attrs.value("bottomlabelfontscale");
+        if (!av.isNull()) {
+          rc->setBottomLabelFontScale(QVariant(av.toString()).toDouble());
+        }
+
         av = attrs.value("toplabeloverride");
         if (!av.isNull()) {
           rc->setTopLabelOverride(av.toString());
@@ -2168,6 +2193,11 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
           font.fromString(av.toString());
           rc->setTopLabelFont(font);
         }
+        av = attrs.value("toplabelfontscale");
+        if (!av.isNull()) {
+          rc->setTopLabelFontScale(QVariant(av.toString()).toDouble());
+        }
+
         av = attrs.value("rightlabeloverride");
         if (!av.isNull()) {
           rc->setRightLabelOverride(av.toString());
@@ -2177,6 +2207,14 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
           QFont font;
           font.fromString(av.toString());
           rc->setRightLabelFont(font);
+        }
+        av = attrs.value("rightlabelfontscale");
+        if (!av.isNull()) {
+          rc->setRightLabelFontScale(QVariant(av.toString()).toDouble());
+        }
+        av = attrs.value("showlegend");
+        if (!av.isNull()) {
+          rc->setShowLegend(QVariant(av.toString()).toBool());
         }
 
       // Add any new specialized PlotItem Properties here.
@@ -2218,6 +2256,9 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         if (renderItem) {
           validTag = renderItem->configureFromXml(xml, store);
         }
+      } else if (xml.name().toString() == "legend") {
+        Q_ASSERT(rc);
+        validTag = rc->legend()->configureFromXml(xml, store);
       } else {
         Q_ASSERT(rc);
         if (!rc->parse(xml, validTag) && validTag) {

@@ -30,7 +30,6 @@ class LegendItem : public ViewItem {
     LegendItem(PlotItem *parent);
     virtual ~LegendItem();
 
-    virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
 
     void setAutoContents(const bool autoContent);
@@ -53,10 +52,16 @@ class LegendItem : public ViewItem {
     RelationList relations() { return _relations; }
     void setRelations(RelationList relations) { _relations = relations; }
 
+    virtual void save(QXmlStreamWriter &xml);
+    virtual void saveInPlot(QXmlStreamWriter &xml);
+    virtual bool configureFromXml(QXmlStreamReader &xml, ObjectStore *store);
+
   public Q_SLOTS:
     virtual void edit();
 
   private:
+    QSize paintRelation(RelationPtr relation, QPixmap *pixmap, const QFont &font);
+
     PlotItem *_plotItem;
     bool _auto;
     QString _title;
@@ -64,14 +69,6 @@ class LegendItem : public ViewItem {
     qreal _fontScale;
     bool _verticalDisplay;
     RelationList _relations;
-};
-
-
-class LegendItemFactory : public GraphicsFactory {
-  public:
-    LegendItemFactory();
-    ~LegendItemFactory();
-    ViewItem* generateGraphics(QXmlStreamReader& stream, ObjectStore *store, View *view, ViewItem *parent = 0);
 };
 
 }

@@ -53,7 +53,7 @@ void LabelItem::paint(QPainter *painter) {
     QFont font(parentView()->defaultFont(_scale));
     QFontMetrics fm(font);
     painter->translate(QPointF(box.x(), box.y() + fm.ascent()));
-    Label::RenderContext rc(font.family(), font.pointSize(), painter);
+    Label::RenderContext rc(font, painter);
     Label::renderLabel(rc, _parsed->chunk);
 
     // Make sure we have a rect for selection, movement, etc

@@ -309,7 +309,6 @@ void Curve::save(QXmlStreamWriter &s) {
   s.writeStartElement(staticTypeTag);
   s.writeAttribute("xvector", _inputVectors[COLOR_XVECTOR]->Name());
   s.writeAttribute("yvector", _inputVectors[COLOR_YVECTOR]->Name());
-  s.writeAttribute("legend", legendText());
   if (_inputVectors.contains(EXVECTOR)) {
     s.writeAttribute("errorxvector", _inputVectors[EXVECTOR]->Name());
   }
@@ -605,49 +604,42 @@ int Curve::getIndexNearXY(double x, double dx_per_pix, double y) const {
 void Curve::setHasPoints(bool in_HasPoints) {
   HasPoints = in_HasPoints;
   setDirty();
-  emit modifiedLegendEntry();
 }
 
 
 void Curve::setHasLines(bool in_HasLines) {
   HasLines = in_HasLines;
   setDirty();
-  emit modifiedLegendEntry();
 }
 
 
 void Curve::setHasBars(bool in_HasBars) {
   HasBars = in_HasBars;
   setDirty();
-  emit modifiedLegendEntry();
 }
 
 
 void Curve::setLineWidth(int in_LineWidth) {
   LineWidth = in_LineWidth;
   setDirty();
-  emit modifiedLegendEntry();
 }
 
 
 void Curve::setLineStyle(int in_LineStyle) {
   LineStyle = in_LineStyle;
   setDirty();
-  emit modifiedLegendEntry();
 }
 
 
 void Curve::setBarStyle(int in_BarStyle) {
   BarStyle = in_BarStyle;
   setDirty();
-  emit modifiedLegendEntry();
 }
 
 
 void Curve::setPointDensity(int in_PointDensity) {
   PointDensity = in_PointDensity;
   setDirty();
-  emit modifiedLegendEntry();
 }
 
 
@@ -660,7 +652,6 @@ void Curve::setPointType(int in_PointType) {
 void Curve::setColor(const QColor& new_c) {
   setDirty();
   Color = new_c;
-  emit modifiedLegendEntry();
 }
 
 
@@ -1679,13 +1670,13 @@ double Curve::distanceToPoint(double xpos, double dx, double ypos) const {
 }
 
 
-void Curve::paintLegendSymbol(Painter *p, const QRect& bound) {
+void Curve::paintLegendSymbol(QPainter *p, const QRect& bound) {
   int width;
   
   if (lineWidth() == 0) {
-    width = p->lineWidthAdjustmentFactor();
+    width = 1;
   } else {  
-    width = lineWidth() * p->lineWidthAdjustmentFactor();
+    width = lineWidth();
   }
   
   p->save();

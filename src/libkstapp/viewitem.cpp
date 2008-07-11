@@ -801,8 +801,7 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 
 
 void ViewItem::addToMenuForContextEvent(QMenu &menu) {
-  QAction *editAction = menu.addAction(tr("Edit"));
-  connect(editAction, SIGNAL(triggered()), this, SLOT(edit()));
+  Q_UNUSED(menu);
 }
 
 
