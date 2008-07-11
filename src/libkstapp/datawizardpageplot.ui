@@ -143,24 +143,24 @@
        </layout>
       </item>
       <item row="5" column="0" >
-        <widget class="QCheckBox" name="_createLayout" >
-          <property name="text" >
-            <string>Create Layout if Necessary</string>
-          </property>
-          <property name="checked" >
-            <bool>true</bool>
-          </property>
-        </widget>
+       <widget class="QCheckBox" name="_createLayout" >
+        <property name="text" >
+         <string>Create Layout if Necessary</string>
+        </property>
+        <property name="checked" >
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
       <item row="6" column="0" >
-        <widget class="QCheckBox" name="_appendToLayout" >
-          <property name="text" >
-            <string>Append if existing Layout</string>
-          </property>
-          <property name="checked" >
-            <bool>true</bool>
-          </property>
-        </widget>
+       <widget class="QCheckBox" name="_appendToLayout" >
+        <property name="text" >
+         <string>Append if existing Layout</string>
+        </property>
+        <property name="checked" >
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -245,16 +245,6 @@
        <widget class="QCheckBox" name="_yAxisLabels" >
         <property name="text" >
          <string>&amp;Y-axis labels</string>
-        </property>
-        <property name="checked" >
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="_plotTitles" >
-        <property name="text" >
-         <string>&amp;Title labels</string>
         </property>
         <property name="checked" >
          <bool>true</bool>
@@ -384,14 +374,14 @@
  <layoutdefault spacing="6" margin="11" />
  <customwidgets>
   <customwidget>
-   <class>QWizardPage</class>
-   <extends>QWidget</extends>
-   <header>qwizardpage.h</header>
-  </customwidget>
-  <customwidget>
    <class>Kst::ComboBox</class>
    <extends>QComboBox</extends>
    <header>combobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QWizardPage</class>
+   <extends>QWidget</extends>
+   <header>qwizardpage.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
@@ -413,20 +403,20 @@
    </hints>
   </connection>
   <connection>
-    <sender>_existingPlot</sender>
-    <signal>toggled(bool)</signal>
-    <receiver>_existingPlotName</receiver>
-    <slot>setEnabled(bool)</slot>
-    <hints>
-      <hint type="sourcelabel" >
-        <x>20</x>
-        <y>20</y>
-      </hint>
-      <hint type="destinationlabel" >
-        <x>20</x>
-        <y>20</y>
-      </hint>
-    </hints>
+   <sender>_existingPlot</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_existingPlotName</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
   </connection>
  </connections>
 </ui>

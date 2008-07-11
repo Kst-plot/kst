@@ -109,7 +109,6 @@ class KST_EXPORT DataWizardPagePlot : public QWizardPage, Ui::DataWizardPagePlot
 
     bool xAxisLabels() const;
     bool yAxisLabels() const;
-    bool plotTitles() const;
 
     bool legendsOn() const;
     bool legendsAuto() const;

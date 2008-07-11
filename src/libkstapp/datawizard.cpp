@@ -327,11 +327,6 @@ bool DataWizardPagePlot::yAxisLabels() const {
 }
 
 
-bool DataWizardPagePlot::plotTitles() const {
-  return _plotTitles->isChecked();
-}
-
-
 bool DataWizardPagePlot::legendsOn() const {
   return _legendsOn->isChecked();
 }
@@ -829,22 +824,23 @@ void DataWizard::finished() {
 
         Q_ASSERT(_document && _document->objectStore());
         powerspectrum = _document->objectStore()->createObject<PSD>();
-	n_psd++;
+        n_psd++;
         Q_ASSERT(powerspectrum);
 
         powerspectrum->writeLock();
-        powerspectrum->setVector(*it);
-        powerspectrum->setFrequency(_pageDataPresentation->getFFTOptions()->sampleRate());
-        powerspectrum->setAverage(_pageDataPresentation->getFFTOptions()->interleavedAverage());
-        powerspectrum->setLength(_pageDataPresentation->getFFTOptions()->FFTLength());
-        powerspectrum->setApodize(_pageDataPresentation->getFFTOptions()->apodize());
-        powerspectrum->setRemoveMean(_pageDataPresentation->getFFTOptions()->removeMean());
-        powerspectrum->setVectorUnits(_pageDataPresentation->getFFTOptions()->vectorUnits());
-        powerspectrum->setRateUnits(_pageDataPresentation->getFFTOptions()->rateUnits());
-        powerspectrum->setApodizeFxn(_pageDataPresentation->getFFTOptions()->apodizeFunction());
-        powerspectrum->setGaussianSigma(_pageDataPresentation->getFFTOptions()->sigma());
-        powerspectrum->setOutput(_pageDataPresentation->getFFTOptions()->output());
-        powerspectrum->setInterpolateHoles(_pageDataPresentation->getFFTOptions()->interpolateOverHoles());
+
+        powerspectrum->change(*it,
+                              _pageDataPresentation->getFFTOptions()->sampleRate(), 
+                              _pageDataPresentation->getFFTOptions()->interleavedAverage(),
+                              _pageDataPresentation->getFFTOptions()->FFTLength(),
+                              _pageDataPresentation->getFFTOptions()->apodize(),
+                              _pageDataPresentation->getFFTOptions()->removeMean(),
+                              _pageDataPresentation->getFFTOptions()->vectorUnits(),
+                              _pageDataPresentation->getFFTOptions()->rateUnits(),
+                              _pageDataPresentation->getFFTOptions()->apodizeFunction(),
+                              _pageDataPresentation->getFFTOptions()->sigma(),
+                              _pageDataPresentation->getFFTOptions()->output(),
+                              _pageDataPresentation->getFFTOptions()->interpolateOverHoles());
 
         powerspectrum->update();
         powerspectrum->unlock();
@@ -898,9 +894,8 @@ void DataWizard::finished() {
   }
 
   // legends and labels
-  bool xl = _pagePlot->xAxisLabels();
-  bool yl = _pagePlot->yAxisLabels();
-  bool tl = _pagePlot->plotTitles();
+  bool xLabels = _pagePlot->xAxisLabels();
+  bool yLabels = _pagePlot->yAxisLabels();
 
   plotIterator = plotList.begin();
   while (plotIterator != plotList.end()) {
@@ -910,16 +905,20 @@ void DataWizard::finished() {
       continue;
     }
 
-//    FIXME  How do we turn on labels?
-//    plotItem->generateDefaultLabels(xl, yl, tl);
+    if (!xLabels) {
+      plotItem->setLeftLabelOverride(QString(" "));
+      plotItem->setRightLabelOverride(QString(" "));
+    }
+    if (!yLabels) {
+      plotItem->setBottomLabelOverride(QString(" "));
+      plotItem->setTopLabelOverride(QString(" "));
+    }
 
     if (_pagePlot->legendsOn()) {
-//      FIXME
-//      pp->getOrCreateLegend();
+      plotItem->setShowLegend(true);
     } else if (_pagePlot->legendsAuto()) {
-      if (plotItem->renderItems().count() > 1) {
-//        FIXME
-//        pp->getOrCreateLegend();
+      if (plotItem->renderItem(PlotRenderItem::Cartesian)->relationList().count() > 1) {
+        plotItem->setShowLegend(true);
       }
     }
     ++plotIterator;
