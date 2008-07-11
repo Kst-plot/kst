@@ -63,6 +63,11 @@ class MainWindow : public QMainWindow
     void showChangeFileDialog();
     void showDataWizard();
 
+    void readFromEnd();
+    void pause(bool pause);
+    void back();
+    void forward();
+
     void save();
     void saveAs();
     void open();
@@ -182,6 +187,10 @@ class MainWindow : public QMainWindow
     QAction *_changeFileDialogAct;
     QAction *_dataWizardAct;
 
+    QAction *_readFromEndAct;
+    QAction *_pauseAct;
+    QAction *_backAct;
+    QAction *_forwardAct;
 };
 
 }

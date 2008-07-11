@@ -63,5 +63,9 @@
         <file>kst_zoomy.png</file>
         <file>no.png</file>
         <file>yes.png</file>
+        <file>kst_readFromEnd.png</file>
+        <file>kst_pause.png</file>
+        <file>kst_back.png</file>
+        <file>kst_forward.png</file>
     </qresource>
 </RCC>

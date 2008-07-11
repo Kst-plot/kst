@@ -54,6 +54,7 @@
 #include "datacollection.h"
 #include "dataobjectcollection.h"
 #include "equation.h"
+#include "datavector.h"
 
 namespace Kst {
 
@@ -426,7 +427,7 @@ void MainWindow::breakLayout() {
 
 
 void MainWindow::demoModel() {
-  Q_ASSERT(document() && document()->objectStore());
+/*  Q_ASSERT(document() && document()->objectStore());
   VectorPtr v = kst_cast<Vector>(document()->objectStore()->createObject<Vector>());
   Q_ASSERT(v);
   v->resize(999999);
@@ -454,7 +455,7 @@ void MainWindow::demoModel() {
   ep->writeLock();
   ep->update();
   ep->unlock();
-//  addDataObjectToList(ep.data());
+//  addDataObjectToList(ep.data());*/
 }
 
 
@@ -464,9 +465,10 @@ void MainWindow::createActions() {
   _redoAct = _undoGroup->createRedoAction(this);
   _redoAct->setShortcut(tr("Ctrl+Shift+Z"));
 
+  // ************************** Layout Mode Actions ******************************* //
   _createLabelAct = new QAction(tr("&Create label"), this);
   _createLabelAct->setStatusTip(tr("Create a label for the current view"));
-   _createLabelAct->setIcon(QPixmap(":kst_gfx_label.png"));
+  _createLabelAct->setIcon(QPixmap(":kst_gfx_label.png"));
   _createLabelAct->setEnabled(false);
   connect(_createLabelAct, SIGNAL(triggered()), this, SLOT(createLabel()));
 
@@ -529,51 +531,9 @@ void MainWindow::createActions() {
   _breakLayoutAct->setEnabled(false);
   connect(_breakLayoutAct, SIGNAL(triggered()), this, SLOT(breakLayout()));
 
-  _layoutModeAct = new QAction(tr("&Layout Mode"), this);
-  _layoutModeAct->setStatusTip(tr("Toggle the current view's layout mode"));
-  _layoutModeAct->setIcon(QPixmap(":kst_layoutmode.png"));
-  _layoutModeAct->setCheckable(true);
-  connect(_layoutModeAct, SIGNAL(toggled(bool)), this, SLOT(setLayoutMode(bool)));
+  // ****************************************************************************** //
 
-  _tiedZoomAct = new QAction(tr("&Tied Zoom"), this);
-  _tiedZoomAct->setStatusTip(tr("Toggle the current view's tied zoom"));
-  _tiedZoomAct->setIcon(QPixmap(":kst_zoomtie.png"));
-  _tiedZoomAct->setCheckable(true);
-  connect(_tiedZoomAct, SIGNAL(toggled(bool)), this, SLOT(setTiedZoom(bool)));
-
-  _newTabAct = new QAction(tr("&New tab"), this);
-  _newTabAct->setStatusTip(tr("Create a new tab"));
-  _newTabAct->setIcon(QPixmap(":kst_newtab.png"));
-  connect(_newTabAct, SIGNAL(triggered()), tabWidget(), SLOT(createView()));
-
-  _closeTabAct = new QAction(tr("&Close tab"), this);
-  _closeTabAct->setStatusTip(tr("Close the current tab"));
-  _closeTabAct->setIcon(QPixmap(":kst_closetab.png"));
-  connect(_closeTabAct, SIGNAL(triggered()), tabWidget(), SLOT(closeCurrentView()));
-
-  _saveAct = new QAction(tr("&Save"), this);
-  _saveAct->setStatusTip(tr("Save the current session"));
-  _saveAct->setShortcut(tr("Ctrl+S"));
-  connect(_saveAct, SIGNAL(triggered()), this, SLOT(save()));
-
-  _saveAsAct = new QAction(tr("Save &as..."), this);
-  _saveAsAct->setStatusTip(tr("Save the current session"));
-  connect(_saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
-
-  _openAct = new QAction(tr("&Open..."), this);
-  _openAct->setStatusTip(tr("Open a new session"));
-  _openAct->setShortcut(tr("Ctrl+O"));
-  connect(_openAct, SIGNAL(triggered()), this, SLOT(open()));
-
-  _printAct = new QAction(tr("&Print..."), this);
-  _printAct->setStatusTip(tr("Print the current view"));
-  connect(_printAct, SIGNAL(triggered()), this, SLOT(print()));
-
-  _exitAct = new QAction(tr("E&xit"), this);
-  _exitAct->setShortcut(tr("Ctrl+Q"));
-  _exitAct->setStatusTip(tr("Exit the application"));
-  connect(_exitAct, SIGNAL(triggered()), this, SLOT(close()));
-
+  // ********************* Object Dialog Actions ********************************** //
   _dataManagerAct = new QAction(tr("Data &Manager..."), this);
   _dataManagerAct->setStatusTip(tr("Show Kst's data manager window"));
   _dataManagerAct->setIcon(QPixmap(":kst_datamanager.png"));
@@ -600,22 +560,6 @@ void MainWindow::createActions() {
   _matrixEditorAct->setStatusTip(tr("Show all matrices in a spreadsheet"));
   connect(_matrixEditorAct, SIGNAL(triggered()), this, SLOT(showMatrixEditor()));
 
-  _exportGraphicsAct = new QAction(tr("&Export..."), this);
-  _exportGraphicsAct->setStatusTip(tr("Export graphics to disk"));
-  connect(_exportGraphicsAct, SIGNAL(triggered()), this, SLOT(showExportGraphicsDialog()));
-
-  _debugDialogAct = new QAction(tr("&Debug Dialog..."), this);
-  _debugDialogAct->setStatusTip(tr("Show the Kst debugging dialog"));
-  connect(_debugDialogAct, SIGNAL(triggered()), this, SLOT(showDebugDialog()));
-
-  _aboutAct = new QAction(tr("&About"), this);
-  _aboutAct->setStatusTip(tr("Show Kst's About box"));
-  connect(_aboutAct, SIGNAL(triggered()), this, SLOT(about()));
-
-  _settingsDialogAct = new QAction(tr("&Configure Kst"), this);
-  _settingsDialogAct->setStatusTip(tr("Show Kst's Configuration Dialog"));
-  connect(_settingsDialogAct, SIGNAL(triggered()), this, SLOT(showSettingsDialog()));
-
   _differentiateCurvesDialogAct = new QAction(tr("&Differentiate Curves"), this);
   _differentiateCurvesDialogAct->setStatusTip(tr("Show Kst's Differentiate Curves Dialog"));
   connect(_differentiateCurvesDialogAct, SIGNAL(triggered()), this, SLOT(showDifferentiateCurvesDialog()));
@@ -636,6 +580,96 @@ void MainWindow::createActions() {
   _dataWizardAct->setStatusTip(tr("Show Kst's Data Wizard"));
   connect(_dataWizardAct, SIGNAL(triggered()), this, SLOT(showDataWizard()));
 
+  // ****************************************************************************** //
+
+  // ***************************** -> File actions ******************************** //
+  _saveAct = new QAction(tr("&Save"), this);
+  _saveAct->setStatusTip(tr("Save the current session"));
+  _saveAct->setShortcut(tr("Ctrl+S"));
+  connect(_saveAct, SIGNAL(triggered()), this, SLOT(save()));
+
+  _saveAsAct = new QAction(tr("Save &as..."), this);
+  _saveAsAct->setStatusTip(tr("Save the current session"));
+  connect(_saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
+
+  _openAct = new QAction(tr("&Open..."), this);
+  _openAct->setStatusTip(tr("Open a new session"));
+  _openAct->setShortcut(tr("Ctrl+O"));
+  connect(_openAct, SIGNAL(triggered()), this, SLOT(open()));
+
+  _printAct = new QAction(tr("&Print..."), this);
+  _printAct->setStatusTip(tr("Print the current view"));
+  connect(_printAct, SIGNAL(triggered()), this, SLOT(print()));
+
+  _exitAct = new QAction(tr("E&xit"), this);
+  _exitAct->setShortcut(tr("Ctrl+Q"));
+  _exitAct->setStatusTip(tr("Exit the application"));
+  connect(_exitAct, SIGNAL(triggered()), this, SLOT(close()));
+
+  _exportGraphicsAct = new QAction(tr("&Export..."), this);
+  _exportGraphicsAct->setStatusTip(tr("Export graphics to disk"));
+  connect(_exportGraphicsAct, SIGNAL(triggered()), this, SLOT(showExportGraphicsDialog()));
+  // ****************************************************************************** //
+
+  // *********************** -> Help actions ************************************** //
+  _debugDialogAct = new QAction(tr("&Debug Dialog..."), this);
+  _debugDialogAct->setStatusTip(tr("Show the Kst debugging dialog"));
+  connect(_debugDialogAct, SIGNAL(triggered()), this, SLOT(showDebugDialog()));
+
+  _aboutAct = new QAction(tr("&About"), this);
+  _aboutAct->setStatusTip(tr("Show Kst's About box"));
+  connect(_aboutAct, SIGNAL(triggered()), this, SLOT(about()));
+
+  _settingsDialogAct = new QAction(tr("&Configure Kst"), this);
+  _settingsDialogAct->setStatusTip(tr("Show Kst's Configuration Dialog"));
+  connect(_settingsDialogAct, SIGNAL(triggered()), this, SLOT(showSettingsDialog()));
+
+  // ****************************************************************************** //
+
+  // ************************ Data Range 1 click Actions ************************** //
+  _readFromEndAct = new QAction(tr("Read From End..."), this);
+  _readFromEndAct->setStatusTip(tr("Set all data vectors to count from end mode"));
+  _readFromEndAct->setIcon(QPixmap(":kst_readFromEnd.png"));
+  connect(_readFromEndAct, SIGNAL(triggered()), this, SLOT(readFromEnd()));
+
+  _pauseAct = new QAction(tr("Pause..."), this);
+  _pauseAct->setStatusTip(tr("Toggle pause updates of data sources"));
+  _pauseAct->setIcon(QPixmap(":kst_pause.png"));
+  _pauseAct->setCheckable(true);
+  connect(_pauseAct, SIGNAL(toggled(bool)), this, SLOT(pause(bool)));
+
+  _backAct = new QAction(tr("Back One Screen..."), this);
+  _backAct->setStatusTip(tr("Back one screen"));
+  _backAct->setIcon(QPixmap(":kst_back.png"));
+  connect(_backAct, SIGNAL(triggered()), this, SLOT(back()));
+
+  _forwardAct = new QAction(tr("Forward One Screen..."), this);
+  _forwardAct->setStatusTip(tr("Forward one screen"));
+  _forwardAct->setIcon(QPixmap(":kst_forward.png"));
+  connect(_forwardAct, SIGNAL(triggered()), this, SLOT(forward()));
+  // ****************************************************************************** //
+
+  _layoutModeAct = new QAction(tr("&Layout Mode"), this);
+  _layoutModeAct->setStatusTip(tr("Toggle the current view's layout mode"));
+  _layoutModeAct->setIcon(QPixmap(":kst_layoutmode.png"));
+  _layoutModeAct->setCheckable(true);
+  connect(_layoutModeAct, SIGNAL(toggled(bool)), this, SLOT(setLayoutMode(bool)));
+
+  _tiedZoomAct = new QAction(tr("&Tied Zoom"), this);
+  _tiedZoomAct->setStatusTip(tr("Toggle the current view's tied zoom"));
+  _tiedZoomAct->setIcon(QPixmap(":kst_zoomtie.png"));
+  _tiedZoomAct->setCheckable(true);
+  connect(_tiedZoomAct, SIGNAL(toggled(bool)), this, SLOT(setTiedZoom(bool)));
+
+  _newTabAct = new QAction(tr("&New tab"), this);
+  _newTabAct->setStatusTip(tr("Create a new tab"));
+  _newTabAct->setIcon(QPixmap(":kst_newtab.png"));
+  connect(_newTabAct, SIGNAL(triggered()), tabWidget(), SLOT(createView()));
+
+  _closeTabAct = new QAction(tr("&Close tab"), this);
+  _closeTabAct->setStatusTip(tr("Close the current tab"));
+  _closeTabAct->setIcon(QPixmap(":kst_closetab.png"));
+  connect(_closeTabAct, SIGNAL(triggered()), tabWidget(), SLOT(closeCurrentView()));
 
 }
 
@@ -719,6 +753,10 @@ void MainWindow::createToolBars() {
 //   _dataToolBar->addAction(_vectorEditorAct); //no icon
 //   _dataToolBar->addAction(_scalarEditorAct); //no icon
 //   _dataToolBar->addAction(_matrixEditorAct); //no icon
+  _dataToolBar->addAction(_backAct);
+  _dataToolBar->addAction(_forwardAct);
+  _dataToolBar->addAction(_pauseAct);
+  _dataToolBar->addAction(_readFromEndAct);
 
   _viewToolBar = addToolBar(tr("View"));
   _viewToolBar->addAction(_viewManagerAct);
@@ -765,6 +803,116 @@ QProgressBar *MainWindow::progressBar() const {
   return _progressBar;
 }
 
+void MainWindow::readFromEnd() {
+  int nf; 
+  int skip;
+  bool do_skip;
+  bool do_filter;
+
+  DataVectorList dataVectors = document()->objectStore()->getObjects<DataVector>();
+
+  foreach (DataVectorPtr v, dataVectors) {
+    v->readLock();
+    nf = v->reqNumFrames();
+    skip = v->skip();
+    do_skip = v->doSkip();
+    do_filter = v->doAve();
+    v->unlock();
+
+    v->writeLock();
+    v->changeFrames(-1, nf, skip, do_skip, do_filter);
+    v->update();
+    v->unlock();
+  }
+} 
+
+void MainWindow::pause(bool pause) {
+}
+
+void MainWindow::forward() {
+  int f0;
+  int nf;
+  int skip;
+  int filelength;
+  bool count_from_end;
+  bool read_to_end;
+  bool do_skip;
+  bool do_filter;
+
+  DataVectorList dataVectors = document()->objectStore()->getObjects<DataVector>();
+
+  foreach (DataVectorPtr v, dataVectors) {
+    v->readLock();
+    f0 = v->startFrame();
+    nf = v->numFrames();
+    count_from_end = v->countFromEOF();
+    read_to_end = v->readToEOF();
+    filelength = v->fileLength();
+
+    skip = v->skip();
+    do_skip = v->doSkip();
+    do_filter = v->doAve();
+    v->unlock(); 
+
+    if ((!count_from_end) && (!read_to_end)) {
+      f0 += nf;
+      if (f0+nf>=filelength) {
+        f0 = filelength - nf;
+      }
+
+      v->writeLock(); 
+      v->changeFrames(f0, nf, skip, do_skip, do_filter);
+      v->update();
+      v->unlock();
+    }
+  }
+}
+
+void MainWindow::back() {
+  int f0;
+  int nf;
+  int skip;
+  int filelength;
+  bool count_from_end;
+  bool read_to_end;
+  bool do_skip;
+  bool do_filter;
+
+  DataVectorList dataVectors = document()->objectStore()->getObjects<DataVector>();
+
+  foreach (DataVectorPtr v, dataVectors) {
+    v->readLock();
+    f0 = v->startFrame();
+    nf = v->numFrames();
+    count_from_end = v->countFromEOF();
+    read_to_end = v->readToEOF();
+    filelength = v->fileLength();
+
+    skip = v->skip();
+    do_skip = v->doSkip();
+    do_filter = v->doAve();
+    v->unlock(); 
+
+    if (f0 != 0) {
+      if (count_from_end) {
+        f0 = filelength - nf;
+      }
+      if (read_to_end) {
+        nf = filelength - f0;
+      }
+
+      f0 -= nf;
+      if (f0<0) {
+        f0 = 0;
+      }
+
+      v->writeLock(); 
+      v->changeFrames(f0, nf, skip, do_skip, do_filter);
+      v->update();
+      v->unlock();
+    }
+  }
+}
 
 void MainWindow::showDataManager() {
   if (!_dataManager) {

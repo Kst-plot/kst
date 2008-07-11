@@ -51,8 +51,8 @@ VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
   _directoryName->setMode(QFileDialog::DirectoryOnly);
 
   //Disable alternate Directory selector.
-  _useDirectory->setVisible(false);
-  _directoryName->setVisible(false);
+  _useDirectory->setVisible(true);
+  _directoryName->setVisible(true);
 
   _connect->setVisible(false);
 }
