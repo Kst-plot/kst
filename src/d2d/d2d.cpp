@@ -22,7 +22,6 @@
 #define protected public
 #include "datavector.h"
 #include "datacollection.h"
-#include "dataobjectcollection.h"
 #undef protected
 
 #include "dataplugin.h"

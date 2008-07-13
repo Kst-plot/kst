@@ -19,12 +19,10 @@
 #include "generatedvector.h"
 
 #include "datacollection.h"
-#include "dataobjectcollection.h"
 #include "document.h"
 #include "objectstore.h"
 
 #include "dialogdefaults.h"
-//#include "vectordefaults.h"
 
 #include <QDir>
 
@@ -375,19 +373,6 @@ ObjectPtr VectorDialog::createNewDataVector() {
 
   Q_ASSERT(_document && _document->objectStore());
 
-//   qDebug() << "Creating new data vector ===>"
-//            << "\n\tfileName:" << dataSource->fileName()
-//            << "\n\tfileType:" << dataSource->fileType()
-//            << "\n\tfield:" << field
-//            << "\n\tName:" << Name()
-// 	   << "\n\ttagString:" << tagString()
-//            << "\n\tstart:" << (dataRange->countFromEnd() ? -1 : int(dataRange->start()))
-//            << "\n\trange:" << (dataRange->readToEnd() ? -1 : int(dataRange->range()))
-//            << "\n\tskip:" << dataRange->skip()
-//            << "\n\tdoSkip:" << (dataRange->doSkip() ? "true" : "false")
-//            << "\n\tdoFilter:" << (dataRange->doFilter() ? "true" : "false")
-//            << endl;
-
   DataVectorPtr vector = _document->objectStore()->createObject<DataVector>();
 
   vector->writeLock();
@@ -418,13 +403,6 @@ ObjectPtr VectorDialog::createNewGeneratedVector() {
   const int numberOfSamples = _vectorTab->numberOfSamples();
   Q_ASSERT(_document && _document->objectStore());
 
-//   qDebug() << "Creating new generated vector ===>"
-//            << "\n\tfrom:" << from
-//            << "\n\tto:" << to
-//            << "\n\tnumberOfSamples:" << numberOfSamples
-//            << "\n\ttag:" << tag.tag()
-//            << endl;
-
   Q_ASSERT(_document && _document->objectStore());
   GeneratedVectorPtr vector = _document->objectStore()->createObject<GeneratedVector>();
   vector->changeRange(from, to, numberOfSamples);
@@ -435,7 +413,6 @@ ObjectPtr VectorDialog::createNewGeneratedVector() {
 
   _dataObjectName = vector->Name();
 
-//  return static_cast<ObjectPtr>(vector);
   return vector;
 }
 

@@ -25,7 +25,6 @@
 #include "labelrenderer.h"
 
 #include "datacollection.h"
-#include "dataobjectcollection.h"
 #include "cartesianrenderitem.h"
 
 #include "plotitemdialog.h"

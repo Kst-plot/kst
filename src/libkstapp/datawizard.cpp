@@ -19,7 +19,6 @@
 #include "colorsequence.h"
 #include "curve.h"
 #include "datacollection.h"
-#include "dataobjectcollection.h"
 #include "datasourcedialog.h"
 #include "datavector.h"
 #include "dialogdefaults.h"

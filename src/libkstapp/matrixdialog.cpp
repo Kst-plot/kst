@@ -21,7 +21,6 @@
 #include "generatedmatrix.h"
 
 #include "datacollection.h"
-#include "dataobjectcollection.h"
 
 #include "document.h"
 #include "objectstore.h"

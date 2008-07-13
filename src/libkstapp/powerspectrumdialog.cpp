@@ -14,7 +14,6 @@
 #include "application.h"
 #include "curve.h"
 #include "datacollection.h"
-#include "dataobjectcollection.h"
 #include "dialogdefaults.h"
 #include "dialogpage.h"
 #include "document.h"

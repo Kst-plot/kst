@@ -29,7 +29,6 @@
 #include "image.h"
 
 #include "datacollection.h"
-#include "dataobjectcollection.h"
 
 #include <QPushButton>
 

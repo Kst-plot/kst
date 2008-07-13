@@ -15,7 +15,6 @@
 #include "editmultiplewidget.h"
 
 #include "datacollection.h"
-#include "dataobjectcollection.h"
 #include "equation.h"
 #include "plotitem.h"
 #include "plotrenderitem.h"

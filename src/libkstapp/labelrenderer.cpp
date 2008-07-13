@@ -19,7 +19,6 @@
 
 #include "enodes.h"
 #include "datacollection.h"
-#include "dataobjectcollection.h"
 #include "ksttimers.h"
 #include "labelparser.h"
 #include "document.h"

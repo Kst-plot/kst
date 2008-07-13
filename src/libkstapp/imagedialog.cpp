@@ -27,7 +27,6 @@
 #include "objectstore.h"
 
 #include "datacollection.h"
-#include "dataobjectcollection.h"
 
 namespace Kst {
 

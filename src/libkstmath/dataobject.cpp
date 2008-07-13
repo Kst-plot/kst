@@ -19,7 +19,6 @@
 #include "dataobject.h"
 
 #include "datacollection.h"
-#include "dataobjectcollection.h"
 #include "dataobjectplugin.h"
 #include "debug.h"
 #include "kst_i18n.h"

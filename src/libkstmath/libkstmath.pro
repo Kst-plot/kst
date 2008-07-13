@@ -34,7 +34,6 @@ SOURCES += \
     curvehint.cpp \
     curvepointsymbol.cpp \
     dataobject.cpp \
-    dataobjectcollection.cpp \
     dialoglauncher.cpp \
     emailthread.cpp \
     eparse.cpp \
@@ -80,7 +79,6 @@ HEADERS += \
     enodes.h \
     eparse-eh.h \
     eparse.h \
-    dataobjectcollection.h \
     dataobject.h \
     dataobjectplugin.h \
     emailthread.h \

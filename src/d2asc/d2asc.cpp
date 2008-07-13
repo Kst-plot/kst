@@ -20,7 +20,6 @@
 
 #include "datavector.h"
 #include "datacollection.h"
-#include "dataobjectcollection.h"
 #include "coredocument.h"
 #include "objectstore.h"
 

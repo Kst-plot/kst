@@ -140,7 +140,8 @@ class MainWindow : public QMainWindow
     QMenu *_helpMenu;
 
     QToolBar *_dataToolBar;
-    QToolBar *_viewToolBar;
+    QToolBar *_layoutToggleToolBar;
+    QToolBar *_zoomToolBar;
     QToolBar *_layoutToolBar;
 
     QAction *_undoAct;

@@ -16,7 +16,6 @@
 #include <datasourcefactory.h>
 #include <graphicsfactory.h>
 #include <datacollection.h>
-#include <dataobjectcollection.h>
 #include <objectfactory.h>
 #include <primitivefactory.h>
 #include <relationfactory.h>

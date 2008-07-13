@@ -52,7 +52,6 @@
 #include "editablevector.h"
 #include "generatedvector.h"
 #include "datacollection.h"
-#include "dataobjectcollection.h"
 #include "equation.h"
 #include "datavector.h"
 
@@ -136,6 +135,7 @@ void MainWindow::setLayoutMode(bool layoutMode) {
   _breakLayoutAct->setEnabled(layoutMode);
 
   _layoutToolBar->setVisible(layoutMode);
+  _zoomToolBar->setVisible(!layoutMode);
 }
 
 
@@ -570,14 +570,17 @@ void MainWindow::createActions() {
 
   _changeDataSampleDialogAct = new QAction(tr("Change Data Sample Range"), this);
   _changeDataSampleDialogAct->setStatusTip(tr("Show Kst's Change Data Sample Range Dialog"));
+  _changeDataSampleDialogAct->setIcon(QPixmap(":kst_changenpts.png"));
   connect(_changeDataSampleDialogAct, SIGNAL(triggered()), this, SLOT(showChangeDataSampleDialog()));
 
   _changeFileDialogAct = new QAction(tr("Change Data &File"), this);
   _changeFileDialogAct->setStatusTip(tr("Show Kst's Change Data File Dialog"));
+  _changeFileDialogAct->setIcon(QPixmap(":kst_changefile.png"));
   connect(_changeFileDialogAct, SIGNAL(triggered()), this, SLOT(showChangeFileDialog()));
 
   _dataWizardAct = new QAction(tr("&Data Wizard"), this);
   _dataWizardAct->setStatusTip(tr("Show Kst's Data Wizard"));
+  _dataWizardAct->setIcon(QPixmap(":kst_datawizard.png"));
   connect(_dataWizardAct, SIGNAL(triggered()), this, SLOT(showDataWizard()));
 
   // ****************************************************************************** //
@@ -750,6 +753,7 @@ void MainWindow::createToolBars() {
 
   _dataToolBar = addToolBar(tr("Data"));
   _dataToolBar->addAction(_dataManagerAct);
+  _dataToolBar->addAction(_dataWizardAct);
 //   _dataToolBar->addAction(_vectorEditorAct); //no icon
 //   _dataToolBar->addAction(_scalarEditorAct); //no icon
 //   _dataToolBar->addAction(_matrixEditorAct); //no icon
@@ -758,10 +762,12 @@ void MainWindow::createToolBars() {
   _dataToolBar->addAction(_pauseAct);
   _dataToolBar->addAction(_readFromEndAct);
 
-  _viewToolBar = addToolBar(tr("View"));
-  _viewToolBar->addAction(_viewManagerAct);
-  _viewToolBar->addAction(_tiedZoomAct);
-  _viewToolBar->addAction(_layoutModeAct);
+  _layoutToggleToolBar = addToolBar(tr("Mode"));
+  _layoutToggleToolBar->addAction(_layoutModeAct);
+
+  _zoomToolBar = addToolBar(tr("Zoom"));
+  //_viewToolBar->addAction(_viewManagerAct);  // doesn't do anything yet
+  _zoomToolBar->addAction(_tiedZoomAct);
 
   _layoutToolBar = new QToolBar(tr("Layout"), this);
   _layoutToolBar->addAction(_createLabelAct); //no icon
@@ -779,6 +785,7 @@ void MainWindow::createToolBars() {
   _layoutToolBar->addAction(_createLayoutAct);
   _layoutToolBar->addAction(_breakLayoutAct);
   _layoutToolBar->setVisible(false);
+  _zoomToolBar->setVisible(true);
 
   addToolBar(Qt::TopToolBarArea, _layoutToolBar);
 }
