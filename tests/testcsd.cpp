@@ -18,7 +18,6 @@
 #include <qdir.h>
 #include <qfile.h>
 #include <datacollection.h>
-#include <dataobjectcollection.h>
 #include <objectstore.h>
 
 #define protected public

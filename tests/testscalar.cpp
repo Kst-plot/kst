@@ -21,7 +21,6 @@
 
 #include <math_kst.h>
 #include <datacollection.h>
-#include <dataobjectcollection.h>
 #include <objectstore.h>
 
 static Kst::ObjectStore _store;

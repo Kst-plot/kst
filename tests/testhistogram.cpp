@@ -15,7 +15,6 @@
 
 #include <generatedvector.h>
 #include <datacollection.h>
-#include <dataobjectcollection.h>
 #include <objectstore.h>
 
 #define protected public
