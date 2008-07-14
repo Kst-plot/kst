@@ -30,6 +30,7 @@ LabelItem::LabelItem(View *parent, const QString& txt)
   setName("Label");
   setZValue(LABEL_ZVALUE);
 
+  setFixedSize(true);
   setAllowedGripModes(Move /*| Resize*/ | Rotate /*| Scale*/);
 }
 

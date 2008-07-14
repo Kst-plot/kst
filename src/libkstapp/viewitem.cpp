@@ -43,6 +43,7 @@ ViewItem::ViewItem(View *parent)
   : QObject(parent),
     _gripMode(Move),
     _allowedGripModes(Move | Resize | Rotate /*| Scale*/),
+    _fixedSize(false),
     _lockAspectRatio(false),
     _lockAspectRatioFixed(false),
     _hasStaticGeometry(false),
@@ -740,6 +741,12 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
     QRectF newRect(rect().x(), rect().y(),
                    poly.last().x() - rect().x(),
                    poly.last().y() - rect().y());
+
+    if (!newRect.isValid()) {
+      // Special case for labels that don't need to have a size for creation to ensure proper parenting.
+      newRect.setSize(QSize(1, 1));
+    }
+
     setViewRect(newRect.normalized());
 
     parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
@@ -907,8 +914,8 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     case NoGrip:
       break;
     }
-
   }
+  updateRelativeSize();
 }
 
 
@@ -1261,7 +1268,8 @@ bool ViewItem::maybeReparent() {
   qDebug() << "maybeReparent" << this
            << "topLevel:" << (topLevel ? "true" : "false")
            << "origin:" << origin
-
+           << "rect:" << rect()
+           << "collision count:" << collisions.count()
            << endl;
 #endif
 
@@ -1378,7 +1386,6 @@ bool ViewItem::maybeReparent() {
 
     return true;
   }
-
   return false;
 }
 
@@ -1393,12 +1400,17 @@ void ViewItem::updateRelativeSize() {
   if (parentViewItem()) {
     _parentRelativeHeight = (height() / parentViewItem()->height());
     _parentRelativeWidth = (width() / parentViewItem()->width());
+    _parentRelativeCenter =  mapToParent(rect().center()) - parentViewItem()->rect().topLeft();
+    _parentRelativeCenter =  QPointF(_parentRelativeCenter.x() / parentViewItem()->width(), _parentRelativeCenter.y() / parentViewItem()->height());
   } else if (parentView()) {
     _parentRelativeHeight = (height() / parentView()->height());
     _parentRelativeWidth = (width() / parentView()->width());
+    _parentRelativeCenter =  mapToParent(rect().center()) - parentView()->rect().topLeft();
+    _parentRelativeCenter =  QPointF(_parentRelativeCenter.x() / parentView()->width(), _parentRelativeCenter.y() / parentView()->height());
   } else {
     _parentRelativeHeight = 0;
     _parentRelativeWidth = 0;
+    _parentRelativeCenter = QPointF(0, 0);
   }
 }
 
@@ -1412,27 +1424,24 @@ void ViewItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &ne
   //FIXME is the child rotated with respect to the parent is the real question...
   if (transform().isRotating() || lockAspectRatio()) {
 
-    QPointF offset = mapToParent(rect().center()) - oldParentRect.topLeft();
+//     qDebug() << "ViewItem::updateChildGeometry" << mapToParent(rect().center()) << _parentRelativeCenter;
 
-    qreal xCenterRelation = offset.x() / oldParentRect.width();
-    qreal yCenterRelation = offset.y() / oldParentRect.height();
-//     qDebug() << "ViewItem::updateChildGeometry" << offset << xCenterRelation << yCenterRelation << mapToParent(rect().center());
+    if (!_fixedSize) {
+      qreal newHeight = relativeHeight() * newParentRect.height();
+      qreal newWidth = relativeWidth() * newParentRect.width();
 
-    qreal newHeight = relativeHeight() * newParentRect.height();
-    qreal newWidth = relativeWidth() * newParentRect.width();
-
-    qreal aspectRatio = rect().width() / rect().height();
-    if ((newWidth / newHeight) > aspectRatio) {
-      // newWidth is too large.  Use newHeight as key.
-      newWidth = newHeight * aspectRatio;
-    } else {
-      // newHeight is either too large, or perfect.  use newWidth as key.
-      newHeight = newWidth / aspectRatio;
+      qreal aspectRatio = rect().width() / rect().height();
+      if ((newWidth / newHeight) > aspectRatio) {
+        // newWidth is too large.  Use newHeight as key.
+        newWidth = newHeight * aspectRatio;
+      } else {
+        // newHeight is either too large, or perfect.  use newWidth as key.
+        newHeight = newWidth / aspectRatio;
+      }
+      itemRect.setBottom(itemRect.top() + newHeight);
+      itemRect.setRight(itemRect.left() + newWidth);
     }
-    itemRect.setBottom(itemRect.top() + newHeight);
-    itemRect.setRight(itemRect.left() + newWidth);
-
-    QPointF newCenter = newParentRect.topLeft() + QPointF(newParentRect.width() * xCenterRelation, newParentRect.height() * yCenterRelation);
+    QPointF newCenter = newParentRect.topLeft() + QPointF(newParentRect.width() * _parentRelativeCenter.x(), newParentRect.height() * _parentRelativeCenter.y());
 
     QRectF r = itemRect;
     r.moveCenter(mapFromParent(newCenter));
@@ -1528,7 +1537,6 @@ void ViewItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &ne
 //             << "\nwidth:" << width
 //             << "\nheight:" << height
 //             << endl;
-
   setViewRect(itemRect, true);
 }
 

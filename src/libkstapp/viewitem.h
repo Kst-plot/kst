@@ -67,6 +67,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     virtual void updateRelativeSize();
     qreal relativeHeight() const { return _parentRelativeHeight; }
     qreal relativeWidth() const { return _parentRelativeWidth; }
+    QPointF relativeCenter() const { return _parentRelativeCenter; }
 
     GripMode gripMode() const;
     void setGripMode(GripMode mode);
@@ -74,6 +75,9 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     GripModes allowedGripModes() const;
     void setAllowedGripModes(GripModes modes);
     bool isAllowed(GripMode mode) const;
+
+    bool fixedSize() const { return _fixedSize; }
+    void setFixedSize(bool fixedSize) { _fixedSize = fixedSize; }
 
     bool lockAspectRatio() const { return _lockAspectRatio; }
     void setLockAspectRatio(bool lockAspectRatio) { _lockAspectRatio = lockAspectRatio; }
@@ -209,6 +213,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
   private:
     GripMode _gripMode;
     GripModes _allowedGripModes;
+    bool _fixedSize;
     bool _lockAspectRatio;
     bool _lockAspectRatioFixed;
     bool _hasStaticGeometry;
@@ -227,6 +232,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     QTransform _rotationTransform;
     QHash<QString, QAction*> _shortcutMap;
     qreal _parentRelativeHeight, _parentRelativeWidth;
+    QPointF _parentRelativeCenter;
 
     friend class View;
     friend class Scene;
