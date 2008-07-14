@@ -22,3 +22,21 @@ What happens:
 What should happen:
   Only the X range should change.
 
+
+Rotated labels in boxes drift on resize...
+Create a box in kst.  Put a label in the box.  Rotate the label.
+Repeatedly resize the box.
+What Happens:
+  The location of the label in the box drifts (so when the box is set back to
+  its original position, the label is not in its original position).
+What Should happen:
+  location of the label should stay fixed relative to the size of the box,
+  so that when the box is returned to its original size, the label returns
+  to its original position.
+Note: if the text label is not rotated, it doesn't seem to drift.
+
+Label Parsing
+place a special characters in a plot label (eg, \omega in the X axis label).
+The special character is not interpreted.  It should be.
+Note: it is interpreted properly in floating labels.
+
