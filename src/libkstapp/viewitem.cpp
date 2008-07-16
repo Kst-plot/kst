@@ -1257,6 +1257,7 @@ bool ViewItem::maybeReparent() {
 
     setParent(0);
     setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
+    updateRelativeSize();
 
 #ifdef DEBUG_REPARENT
     qDebug() << "after new parent"
@@ -1306,6 +1307,7 @@ bool ViewItem::maybeReparent() {
 
     setParent(viewItem);
     setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
+    updateRelativeSize();
 
 #ifdef DEBUG_REPARENT
     qDebug() << "after new parent"
@@ -1337,6 +1339,7 @@ bool ViewItem::maybeReparent() {
 
     setParent(0);
     setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
+    updateRelativeSize();
 
 #ifdef DEBUG_REPARENT
     qDebug() << "after new parent"
@@ -1352,7 +1355,6 @@ bool ViewItem::maybeReparent() {
 
 void ViewItem::setParent(ViewItem* parent) {
   setParentItem(parent);
-  updateRelativeSize();
 }
 
 

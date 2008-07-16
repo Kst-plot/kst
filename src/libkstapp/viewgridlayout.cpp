@@ -202,6 +202,25 @@ void ViewGridLayout::update() {
 
     item.viewItem->resetTransform();
     item.viewItem->setPos(itemRect.topLeft());
+
+    if (item.viewItem->fixedSize()) {
+      itemRect.setBottom(itemRect.top() + item.viewItem->rect().height());
+      itemRect.setRight(itemRect.left() + item.viewItem->rect().width());
+    } else if (item.viewItem->lockAspectRatio()) {
+      qreal newHeight = itemRect.height();
+      qreal newWidth = itemRect.width();
+
+      qreal aspectRatio = item.viewItem->rect().width() / item.viewItem->rect().height();
+      if ((newWidth / newHeight) > aspectRatio) {
+        // newWidth is too large.  Use newHeight as key.
+        newWidth = newHeight * aspectRatio;
+      } else {
+        // newHeight is either too large, or perfect.  use newWidth as key.
+        newHeight = newWidth / aspectRatio;
+      }
+      itemRect.setBottom(itemRect.top() + newHeight);
+      itemRect.setRight(itemRect.left() + newWidth);
+    }
     item.viewItem->setViewRect(QRectF(QPoint(0,0), itemRect.size()));
 
     if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem))
