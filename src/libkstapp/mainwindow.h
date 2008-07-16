@@ -90,7 +90,6 @@ class MainWindow : public QMainWindow
     void createPlot();
     void createSvg();
     void createLayout();
-    void breakLayout();
 
     void demoModel();
 
@@ -158,7 +157,6 @@ class MainWindow : public QMainWindow
     QAction *_createPlotAct;
     QAction *_createSvgAct;
     QAction *_createLayoutAct;
-    QAction *_breakLayoutAct;
 
     QAction *_aboutAct;
     QAction *_closeTabAct;

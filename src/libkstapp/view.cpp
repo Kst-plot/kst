@@ -254,11 +254,14 @@ bool View::eventFilter(QObject *obj, QEvent *event) {
 
 
 void View::createLayout() {
-  if (_layoutBoxItem && _layoutBoxItem->isVisible() && _layoutBoxItem->layout() )
-    return;
-
   LayoutCommand *layout = new LayoutCommand(new LayoutBoxItem(this));
   layout->createLayout();
+
+  if (_layoutBoxItem) {
+    _layoutBoxItem->setEnabled(false);
+    delete _layoutBoxItem;
+    _layoutBoxItem = 0;
+  }
 }
 
 

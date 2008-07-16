@@ -555,11 +555,6 @@ void PlotRenderItem::createLayout() {
 }
 
 
-void PlotRenderItem::breakLayout() {
-  plotItem()->breakLayout();
-}
-
-
 void PlotRenderItem::remove() {
   plotItem()->remove();
 }

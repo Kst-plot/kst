@@ -714,62 +714,32 @@ void PlotItem::setTiedZoom(bool tiedZoom) {
 
 
 qreal PlotItem::leftLabelMargin() const {
-  ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(parentItem());
-  if (viewItem && viewItem->layout()) {
-    return viewItem->layout()->plotLabelMarginWidth(this);
-  } else {
-    return calculatedLeftLabelMargin();
-  }
+  return calculatedLeftLabelMargin();
 }
 
 
 qreal PlotItem::rightLabelMargin() const {
-  ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(parentItem());
-  if (viewItem && viewItem->layout()) {
-    return viewItem->layout()->plotLabelMarginWidth(this);
-  } else {
-    return calculatedRightLabelMargin();
-  }
+  return calculatedRightLabelMargin();
 }
 
 
 qreal PlotItem::topLabelMargin() const {
-  ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(parentItem());
-  if (viewItem && viewItem->layout()) {
-    return viewItem->layout()->plotLabelMarginHeight(this);
-  } else {
-    return calculatedTopLabelMargin();
-  }
+  return calculatedTopLabelMargin();
 }
 
 
 qreal PlotItem::bottomLabelMargin() const {
-  ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(parentItem());
-  if (viewItem && viewItem->layout()) {
-    return viewItem->layout()->plotLabelMarginHeight(this);
-  } else {
-    return calculatedBottomLabelMargin();
-  }
+  return calculatedBottomLabelMargin();
 }
 
 
 qreal PlotItem::axisMarginWidth() const {
-  ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(parentItem());
-  if (viewItem && viewItem->layout()) {
-    return viewItem->layout()->plotAxisMarginWidth(this);
-  } else {
-    return calculatedAxisMarginWidth();
-  }
+  return calculatedAxisMarginWidth();
 }
 
 
 qreal PlotItem::axisMarginHeight() const {
-  ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(parentItem());
-  if (viewItem && viewItem->layout()) {
-    return viewItem->layout()->plotAxisMarginHeight(this);
-  } else {
-    return calculatedAxisMarginHeight();
-  }
+  return calculatedAxisMarginHeight();
 }
 
 
@@ -1380,7 +1350,7 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
     t.rotate(90.0);
     painter->rotate(-90.0);
 
-    painter->drawPixmap(t.mapRect(leftLabel).topLeft(), pixmap);
+    painter->drawPixmap(t.mapRect(leftLabel).topLeft(), pixmap, QRectF(0, 0, rc.x, leftLabel.height()));
 
     painter->restore();
     delete parsed;
@@ -1448,7 +1418,7 @@ void PlotItem::paintBottomLabel(QPainter *painter) {
     bottomLabel.moveTopLeft(plotAxisRect().bottomLeft());
     bottomLabel.moveTopLeft(QPointF(bottomLabel.topLeft().x() + ((bottomLabel.width() / 2) - (rc.x / 2)), bottomLabel.topLeft().y()));
 
-    painter->drawPixmap(bottomLabel.topLeft(), pixmap);
+    painter->drawPixmap(bottomLabel.topLeft(), pixmap, QRectF(0, 0, rc.x, bottomLabel.height()));
 
     painter->restore();
     delete parsed;
@@ -1514,7 +1484,7 @@ void PlotItem::paintRightLabel(QPainter *painter) {
       t.rotate(-90.0);
       painter->rotate(90.0);
 
-      painter->drawPixmap(t.mapRect(rightLabel).topLeft(), pixmap);
+      painter->drawPixmap(t.mapRect(rightLabel).topLeft(), pixmap, QRectF(0, 0, rc.x, rightLabel.height()));
     }
     painter->restore();
 
@@ -1584,7 +1554,7 @@ void PlotItem::paintTopLabel(QPainter *painter) {
       topLabel.moveBottomLeft(plotAxisRect().topLeft());
       topLabel.moveTopLeft(QPointF(topLabel.topLeft().x() + ((topLabel.width() / 2) - (rc.x / 2)), topLabel.topLeft().y()));
 
-      painter->drawPixmap(topLabel.topLeft(), pixmap);
+      painter->drawPixmap(topLabel.topLeft(), pixmap, QRectF(0, 0, rc.x, topLabel.height()));
     }
     painter->restore();
 

@@ -51,7 +51,6 @@ ViewItem::ViewItem(View *parent)
     _hovering(false),
     _acceptsChildItems(true),
     _acceptsContextMenuEvents(true),
-    _layout(0),
     _activeGrip(NoGrip),
     _allowedGrips(TopLeftGrip | TopRightGrip | BottomRightGrip | BottomLeftGrip |
                   TopMidGrip | RightMidGrip | BottomMidGrip | LeftMidGrip),
@@ -277,11 +276,6 @@ ViewItem *ViewItem::parentViewItem() const {
 }
 
 
-bool ViewItem::itemInLayout() const {
-  return parentViewItem() && parentViewItem()->layout() && allowsLayout();
-}
-
-
 ViewItem::GripMode ViewItem::gripMode() const {
   return _gripMode;
 }
@@ -305,30 +299,6 @@ void ViewItem::setAllowedGripModes(GripModes modes) {
 
 bool ViewItem::isAllowed(GripMode mode) const {
   return _allowedGripModes & mode;
-}
-
-
-ViewGridLayout *ViewItem::layout() const {
-  return _layout;
-}
-
-
-void ViewItem::setLayout(ViewGridLayout *layout) {
-  if (_layout == layout)
-    return;
-
-  //disconnect previous layout...
-  if (_layout) {
-    _layout->setEnabled(false);
-    disconnect(this, SIGNAL(geometryChanged()), _layout, SLOT(update()));
-  }
-
-  _layout = layout;
-
-  if (_layout) {
-    _layout->setEnabled(true);
-    connect(this, SIGNAL(geometryChanged()), _layout, SLOT(update()));
-  }
 }
 
 
@@ -363,9 +333,7 @@ void ViewItem::setViewRect(const QRectF &viewRect, bool automaticChange) {
       continue;
 
 
-    if (!layout() || !viewItem->allowsLayout()) {
-      viewItem->updateChildGeometry(oldViewRect, viewRect);
-    }
+    viewItem->updateChildGeometry(oldViewRect, viewRect);
   }
 }
 
@@ -685,17 +653,12 @@ void ViewItem::edit() {
 
 
 void ViewItem::createLayout() {
-  LayoutCommand *layout = new LayoutCommand(this);
-  layout->createLayout();
-}
-
-
-void ViewItem::breakLayout() {
-  if (!layout())
-    return;
-
-  BreakLayoutCommand *layout = new BreakLayoutCommand(this);
-  layout->redo();
+  if (parentViewItem()) {
+    LayoutCommand *layout = new LayoutCommand(parentViewItem());
+    layout->createLayout();
+  } else if (parentView()) {
+    parentView()->createLayout();
+  }
 }
 
 
@@ -790,13 +753,13 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   QAction *lowerAction = menu.addAction(tr("Lower"));
   connect(lowerAction, SIGNAL(triggered()), this, SLOT(lower()));
 
-  QAction *layoutAction = menu.addAction(tr("Create layout"));
-  connect(layoutAction, SIGNAL(triggered()), this, SLOT(createLayout()));
-  layoutAction->setEnabled(!layout());
+  QMenu layoutMenu;
+  layoutMenu.setTitle(tr("Cleanup Layout"));
 
-  QAction *breakLayoutAction = menu.addAction(tr("Break layout"));
-  connect(breakLayoutAction, SIGNAL(triggered()), this, SLOT(breakLayout()));
-  breakLayoutAction->setEnabled(layout());
+  QAction *layoutAction = layoutMenu.addAction(tr("Automatic Cleanup"));
+  connect(layoutAction, SIGNAL(triggered()), this, SLOT(createLayout()));
+
+  menu.addMenu(&layoutMenu);
 
   QAction *removeAction = menu.addAction(tr("Remove"));
   connect(removeAction, SIGNAL(triggered()), this, SLOT(remove()));
@@ -814,7 +777,7 @@ void ViewItem::addToMenuForContextEvent(QMenu &menu) {
 
 void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
-  if (parentView()->viewMode() == View::Data || itemInLayout()) {
+  if (parentView()->viewMode() == View::Data) {
     event->ignore();
     return;
   }
@@ -1321,9 +1284,6 @@ bool ViewItem::maybeReparent() {
       return false;
     }
 
-    if (viewItem->layout()) /*don't crash existing layout*/
-      continue;
-
 #ifdef DEBUG_REPARENT
     qDebug() << "reparent to" << viewItem << endl;
 
@@ -1542,7 +1502,7 @@ void ViewItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &ne
 
 
 void ViewItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
-  if (parentView()->viewMode() == View::Data || itemInLayout()) {
+  if (parentView()->viewMode() == View::Data) {
     event->ignore();
     return;
   }
@@ -1551,7 +1511,7 @@ void ViewItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
 
 void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
-  if (parentView()->viewMode() == View::Data || itemInLayout()) {
+  if (parentView()->viewMode() == View::Data) {
     event->ignore();
     return;
   }
@@ -1624,7 +1584,7 @@ ViewItem::GripMode ViewItem::nextGripMode(GripMode currentMode) const {
 
 void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
-  if (parentView()->viewMode() == View::Data || itemInLayout()) {
+  if (parentView()->viewMode() == View::Data) {
     event->ignore();
     return;
   }
@@ -1830,13 +1790,11 @@ void CreateCommand::creationComplete() {
 void LayoutCommand::undo() {
   Q_ASSERT(_layout);
   _layout->reset();
-  _item->setLayout(0);
 }
 
 
 void LayoutCommand::redo() {
   Q_ASSERT(_layout);
-  _item->setLayout(_layout);
   _layout->update();
 }
 
@@ -1892,17 +1850,13 @@ void LayoutCommand::createLayout() {
 
 void BreakLayoutCommand::undo() {
   Q_ASSERT(_layout);
-  _item->setLayout(_layout);
   _layout->update();
 }
 
 
 void BreakLayoutCommand::redo() {
-  _layout = _item->layout();
   Q_ASSERT(_layout);
   _layout->resetSharedAxis();
-  _item->setLayout(0);
-
 }
 
 

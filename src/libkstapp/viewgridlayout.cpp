@@ -16,7 +16,7 @@
 
 #include <QDebug>
 
-//#define DEBUG_LAYOUT
+// #define DEBUG_LAYOUT
 
 static qreal DEFAULT_STRUT = 20.0;
 
@@ -29,8 +29,6 @@ ViewGridLayout::ViewGridLayout(ViewItem *parent)
     _columnCount(0),
     _spacing(QSizeF(DEFAULT_STRUT,DEFAULT_STRUT)),
     _margin(QSizeF(DEFAULT_STRUT,DEFAULT_STRUT)) {
-
-  parent->setLayout(this);
 }
 
 

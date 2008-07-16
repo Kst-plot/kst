@@ -132,7 +132,6 @@ void MainWindow::setLayoutMode(bool layoutMode) {
   _createPlotAct->setEnabled(layoutMode);
   _createSvgAct->setEnabled(layoutMode);
   _createLayoutAct->setEnabled(layoutMode);
-  _breakLayoutAct->setEnabled(layoutMode);
 
   _layoutToolBar->setVisible(layoutMode);
   _zoomToolBar->setVisible(!layoutMode);
@@ -415,17 +414,6 @@ void MainWindow::createLayout() {
 }
 
 
-void MainWindow::breakLayout() {
-  View *view = tabWidget()->currentView();
-  QList<QGraphicsItem*> selectedItems = view->scene()->selectedItems();
-  if (!selectedItems.isEmpty()) {
-    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(selectedItems.first());
-    Q_ASSERT(viewItem);
-    viewItem->breakLayout();
-  }
-}
-
-
 void MainWindow::demoModel() {
 /*  Q_ASSERT(document() && document()->objectStore());
   VectorPtr v = kst_cast<Vector>(document()->objectStore()->createObject<Vector>());
@@ -524,12 +512,6 @@ void MainWindow::createActions() {
   _createLayoutAct->setIcon(QPixmap(":kst_gfx_layout.png"));
   _createLayoutAct->setEnabled(false);
   connect(_createLayoutAct, SIGNAL(triggered()), this, SLOT(createLayout()));
-
-  _breakLayoutAct = new QAction(tr("&Break layout"), this);
-  _breakLayoutAct->setStatusTip(tr("Break the layout for the current item"));
-  _breakLayoutAct->setIcon(QPixmap(":kst_gfx_breaklayout.png"));
-  _breakLayoutAct->setEnabled(false);
-  connect(_breakLayoutAct, SIGNAL(triggered()), this, SLOT(breakLayout()));
 
   // ****************************************************************************** //
 
@@ -783,7 +765,6 @@ void MainWindow::createToolBars() {
   _layoutToolBar->addSeparator();
 
   _layoutToolBar->addAction(_createLayoutAct);
-  _layoutToolBar->addAction(_breakLayoutAct);
   _layoutToolBar->setVisible(false);
   _zoomToolBar->setVisible(true);
 

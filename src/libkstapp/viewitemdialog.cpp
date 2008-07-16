@@ -88,7 +88,7 @@ void ViewItemDialog::setupStroke() {
 
 void ViewItemDialog::setupLayout() {
   Q_ASSERT(_item);
-  ViewGridLayout *layout = _item->layout();
+/*  ViewGridLayout *layout = _item->layout();
 
   _layoutTab->setLockAspectRatio(_item->lockAspectRatio());
   _layoutTab->enableLockAspectRatio(!_item->lockAspectRatioFixed());
@@ -101,7 +101,7 @@ void ViewItemDialog::setupLayout() {
   _layoutTab->setHorizontalMargin(layout->margin().width());
   _layoutTab->setVerticalMargin(layout->margin().height());
   _layoutTab->setHorizontalSpacing(layout->spacing().width());
-  _layoutTab->setVerticalSpacing(layout->spacing().height());
+  _layoutTab->setVerticalSpacing(layout->spacing().height());*/
 }
 
 
@@ -143,7 +143,7 @@ void ViewItemDialog::strokeChanged() {
 
 void ViewItemDialog::layoutChanged() {
   Q_ASSERT(_item);
-  ViewGridLayout *layout = _item->layout();
+/*  ViewGridLayout *layout = _item->layout();
 
   _item->setLockAspectRatio(_layoutTab->lockAspectRatio());
   if (!layout) {
@@ -155,7 +155,7 @@ void ViewItemDialog::layoutChanged() {
                            _layoutTab->verticalMargin()));
   layout->setSpacing(QSizeF(_layoutTab->horizontalSpacing(),
                             _layoutTab->verticalSpacing()));
-  layout->update();
+  layout->update();*/
 }
 
 

@@ -45,11 +45,11 @@ void LayoutBoxItem::appendItem(ViewItem *item) {
     return;
 
   item->setParent(this);
-  layout()->addViewItem(item, layout()->rowCount(), 0, 1, layout()->columnCount());
+//   layout()->addViewItem(item, layout()->rowCount(), 0, 1, layout()->columnCount());
   setPos(parentView()->sceneRect().topLeft());
   setViewRect(parentView()->sceneRect());
   //singleshot to give plots a chance to set a projection rect
-  QTimer::singleShot(0, layout(), SLOT(update()));
+//   QTimer::singleShot(0, layout(), SLOT(update()));
 }
 
 
@@ -121,17 +121,7 @@ void LayoutBoxItem::setEnabled(bool enabled) {
 
 
 void LayoutBoxItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
-  QMenu menu;
-
-  addTitle(&menu);
-
-  QAction *editAction = menu.addAction(tr("Edit"));
-  connect(editAction, SIGNAL(triggered()), this, SLOT(edit()));
-
-  QAction *breakLayoutAction = menu.addAction(tr("Break layout"));
-  connect(breakLayoutAction, SIGNAL(triggered()), this, SLOT(breakLayout()));
-
-  menu.exec(event->screenPos());
+  event->ignore();
 }
 
 

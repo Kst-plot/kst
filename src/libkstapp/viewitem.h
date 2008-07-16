@@ -63,7 +63,6 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     View *parentView() const;
     ViewItem *parentViewItem() const;
     void setParent(ViewItem *parent);
-    bool itemInLayout() const;
     virtual void updateRelativeSize();
     qreal relativeHeight() const { return _parentRelativeHeight; }
     qreal relativeWidth() const { return _parentRelativeWidth; }
@@ -90,11 +89,6 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
 
     bool allowsLayout() const { return _allowsLayout; }
     void setAllowsLayout(bool allowsLayout ) { _allowsLayout = allowsLayout; }
-
-    //NOTE We can change this to a generic abstract class once we have
-    //more layouts besides grid layout...
-    ViewGridLayout *layout() const;
-    void setLayout(ViewGridLayout *layout);
 
     //NOTE This should be used in place of QGraphicsRectItem::setRect()...
     QRectF viewRect() const;
@@ -150,7 +144,6 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     virtual void raise();
     virtual void lower();
     virtual void createLayout();
-    virtual void breakLayout();
     virtual void remove();
     void resizeTopLeft(const QPointF &offset);
     void resizeTopRight(const QPointF &offset);
@@ -221,7 +214,6 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     bool _hovering;
     bool _acceptsChildItems;
     bool _acceptsContextMenuEvents;
-    ViewGridLayout *_layout;
     QPointF _originalPosition;
     QRectF _originalRect;
     QTransform _originalTransform;
