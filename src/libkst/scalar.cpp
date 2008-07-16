@@ -152,14 +152,6 @@ void Scalar::setEditable(bool editable) {
   _editable = editable;
 }
 
-
-void Scalar::triggerUpdateSignal(ObjectPtr object) {
-#if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "UP - Scalar" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
-#endif
-  emit scalarUpdated(object);
-}
-
 QString Scalar::descriptionTip() const {
   if (_provider) {
     return i18n("Scalar: %1 = %2\n%3").arg(Name()).arg(value()).arg(_provider->descriptionTip());

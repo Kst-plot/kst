@@ -60,8 +60,6 @@ class KST_EXPORT Scalar : public Primitive {
 
     Scalar& operator=(double v);
 
-    void triggerUpdateSignal(ObjectPtr object);
-
     virtual QString descriptionTip() const;
 
   public slots:
@@ -81,7 +79,6 @@ class KST_EXPORT Scalar : public Primitive {
 
   signals:
     void trigger();
-    void scalarUpdated(ObjectPtr object);
 
   private:
     double _value;

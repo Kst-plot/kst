@@ -266,10 +266,10 @@ void Equation::setEquation(const QString& in_fn) {
   if (_isValid) {
     _equation = reparsedEquation(); // update the string
     foreach (VectorPtr vector, VectorsUsed) {
-      connect(vector, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
+      connect(vector, SIGNAL(updated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
     }
     foreach (ScalarPtr scalar, ScalarsUsed) {
-      connect(scalar, SIGNAL(scalarUpdated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
+      connect(scalar, SIGNAL(updated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
     }
   }
 }
@@ -287,7 +287,7 @@ void Equation::setExistingXVector(VectorPtr in_xv, bool do_interp) {
   _xInVector = in_xv;
   _inputVectors.insert(XINVECTOR, in_xv);
 
-  connect(in_xv, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
+  connect(in_xv, SIGNAL(updated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
 
   _ns = 2; // reset the updating
   _doInterp = do_interp;

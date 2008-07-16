@@ -88,7 +88,7 @@ void DataVector::sourceUpdated(ObjectPtr object) {
 #if DEBUG_UPDATE_CYCLE > 1
   qDebug() << "UP - Vector" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
 #endif
-    emit vectorUpdated(object);
+    emit updated(object);
   }
   UpdateManager::self()->updateFinished(object, this);
   unlock();

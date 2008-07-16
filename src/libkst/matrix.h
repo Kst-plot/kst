@@ -136,11 +136,6 @@ class KST_EXPORT Matrix : public Primitive {
 
     virtual void deleteDependents();
 
-    void triggerUpdateSignal(ObjectPtr object);
-
-  Q_SIGNALS:
-    void matrixUpdated(ObjectPtr object);
-
   protected:
     int _NS;
     int _NRealS; // number of samples with real values

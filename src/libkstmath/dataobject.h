@@ -63,6 +63,7 @@ class KST_EXPORT DataObject : public Object {
     static DataObjectPtr createPlugin(const QString& name, ObjectStore *store, DataObjectConfigWidget *configWidget, bool setupInputsOutputs = true);
 
     virtual UpdateType update() = 0;
+
     virtual const QString& typeString() const { return _typeString; }
     virtual QString propertyString() const = 0;
     virtual const QString& type() const { return _type; }

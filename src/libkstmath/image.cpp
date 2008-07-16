@@ -217,7 +217,7 @@ void Image::changeToColorOnly(MatrixPtr in_matrix, double lowerZ,
     double upperZ, bool autoThreshold, const QString &paletteName) {
 
   if (_inputMatrices[THEMATRIX]) {
-    disconnect(_inputMatrices[THEMATRIX], SIGNAL(matrixUpdated(ObjectPtr)));
+    disconnect(_inputMatrices[THEMATRIX], SIGNAL(updated(ObjectPtr)));
   }
 
   _inputMatrices[THEMATRIX] = in_matrix;
@@ -231,7 +231,7 @@ void Image::changeToColorOnly(MatrixPtr in_matrix, double lowerZ,
   _hasColorMap = true;
   _hasContourMap = false;
 
-  connect(in_matrix, SIGNAL(matrixUpdated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
+  connect(in_matrix, SIGNAL(updated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
 
   setDirty();
 }
@@ -241,7 +241,7 @@ void Image::changeToContourOnly(MatrixPtr in_matrix, int numContours,
     const QColor& contourColor, int contourWeight) {
 
   if (_inputMatrices[THEMATRIX]) {
-    disconnect(_inputMatrices[THEMATRIX], SIGNAL(matrixUpdated(ObjectPtr)));
+    disconnect(_inputMatrices[THEMATRIX], SIGNAL(updated(ObjectPtr)));
   }
 
   _inputMatrices[THEMATRIX] = in_matrix;
@@ -251,7 +251,7 @@ void Image::changeToContourOnly(MatrixPtr in_matrix, int numContours,
   _hasColorMap = false;
   _hasContourMap = true;
 
-  connect(in_matrix, SIGNAL(matrixUpdated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
+  connect(in_matrix, SIGNAL(updated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
 
   setDirty();
 }
@@ -262,7 +262,7 @@ void Image::changeToColorAndContour(MatrixPtr in_matrix,
     int numContours, const QColor& contourColor, int contourWeight) {
 
   if (_inputMatrices[THEMATRIX]) {
-    disconnect(_inputMatrices[THEMATRIX], SIGNAL(matrixUpdated(ObjectPtr)));
+    disconnect(_inputMatrices[THEMATRIX], SIGNAL(updated(ObjectPtr)));
   }
 
   _inputMatrices[THEMATRIX] = in_matrix;
@@ -279,7 +279,7 @@ void Image::changeToColorAndContour(MatrixPtr in_matrix,
   _hasColorMap = true;
   _hasContourMap = true;
 
-  connect(in_matrix, SIGNAL(matrixUpdated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
+  connect(in_matrix, SIGNAL(updated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
 
   setDirty();
 }

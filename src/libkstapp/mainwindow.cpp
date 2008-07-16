@@ -45,15 +45,15 @@
 #include "changedatasampledialog.h"
 #include "changefiledialog.h"
 #include "datawizard.h"
+#include "datavector.h"
 
 #include <QtGui>
 
 //FIXME Temporaries REMOVE!!
-#include "editablevector.h"
-#include "generatedvector.h"
-#include "datacollection.h"
-#include "equation.h"
-#include "datavector.h"
+//#include "editablevector.h"
+//#include "generatedvector.h"
+//#include "datacollection.h"
+//#include "equation.h"
 
 namespace Kst {
 
@@ -809,7 +809,7 @@ void MainWindow::readFromEnd() {
 
     v->writeLock();
     v->changeFrames(-1, nf, skip, do_skip, do_filter);
-    v->update();
+    v->immediateUpdate();
     v->unlock();
   }
 } 
@@ -850,7 +850,7 @@ void MainWindow::forward() {
 
       v->writeLock(); 
       v->changeFrames(f0, nf, skip, do_skip, do_filter);
-      v->update();
+      v->immediateUpdate();
       v->unlock();
     }
   }
@@ -896,7 +896,7 @@ void MainWindow::back() {
 
       v->writeLock(); 
       v->changeFrames(f0, nf, skip, do_skip, do_filter);
-      v->update();
+      v->immediateUpdate();
       v->unlock();
     }
   }

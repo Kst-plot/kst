@@ -21,6 +21,7 @@
 
 #include "kst_i18n.h"
 #include "primitive.h"
+#include "updatemanager.h"
 
 #include <assert.h>
 
@@ -89,6 +90,21 @@ QString Primitive::_automaticDescriptiveName() const {
   name += _slaveName;
 
   return name;
+}
+
+void Primitive::triggerUpdateSignal(ObjectPtr object) {
+#if DEBUG_UPDATE_CYCLE > 1
+  qDebug() << "UP - Primitive" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
+#endif
+  emit updated(object);
+}
+
+
+void Primitive::immediateUpdate() {
+  UpdateManager::self()->updateStarted(this,this);
+  update();
+  triggerUpdateSignal(this);
+  UpdateManager::self()->updateFinished(this,this);
 }
 
 }

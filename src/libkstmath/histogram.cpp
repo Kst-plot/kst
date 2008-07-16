@@ -262,7 +262,7 @@ void Histogram::setNumberOfBins(int in_n_bins) {
 
 void Histogram::setVector(VectorPtr new_v) {
   if (new_v) {
-    connect(new_v, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
+    connect(new_v, SIGNAL(updated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
     _inputVectors[RAWVECTOR] = new_v;
   }
 }

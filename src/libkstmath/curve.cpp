@@ -344,9 +344,9 @@ void Curve::save(QXmlStreamWriter &s) {
 void Curve::setXVector(VectorPtr new_vx) {
   if (new_vx) {
     _inputVectors[COLOR_XVECTOR] = new_vx;
-    connect(new_vx, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
+    connect(new_vx, SIGNAL(updated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
-    disconnect(_inputVectors[COLOR_XVECTOR], SIGNAL(vectorUpdated(ObjectPtr)));
+    disconnect(_inputVectors[COLOR_XVECTOR], SIGNAL(updated(ObjectPtr)));
     _inputVectors.remove(COLOR_XVECTOR);
   }
   setDirty();
@@ -356,9 +356,9 @@ void Curve::setXVector(VectorPtr new_vx) {
 void Curve::setYVector(VectorPtr new_vy) {
   if (new_vy) {
     _inputVectors[COLOR_YVECTOR] = new_vy;
-    connect(new_vy, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
+    connect(new_vy, SIGNAL(updated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
-    disconnect(_inputVectors[COLOR_YVECTOR], SIGNAL(vectorUpdated(ObjectPtr)));
+    disconnect(_inputVectors[COLOR_YVECTOR], SIGNAL(updated(ObjectPtr)));
     _inputVectors.remove(COLOR_YVECTOR);
   }
   setDirty();
@@ -368,10 +368,10 @@ void Curve::setYVector(VectorPtr new_vy) {
 void Curve::setXError(VectorPtr new_ex) {
   if (new_ex) {
     _inputVectors[EXVECTOR] = new_ex;
-    connect(new_ex, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
+    connect(new_ex, SIGNAL(updated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
     if (_inputVectors[EXVECTOR]) {
-      disconnect(_inputVectors[EXVECTOR], SIGNAL(vectorUpdated(ObjectPtr)));
+      disconnect(_inputVectors[EXVECTOR], SIGNAL(updated(ObjectPtr)));
     }
     _inputVectors.remove(EXVECTOR);
   }
@@ -382,10 +382,10 @@ void Curve::setXError(VectorPtr new_ex) {
 void Curve::setYError(VectorPtr new_ey) {
   if (new_ey) {
     _inputVectors[EYVECTOR] = new_ey;
-    connect(new_ey, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
+    connect(new_ey, SIGNAL(updated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
     if (_inputVectors[EYVECTOR]) {
-      disconnect(_inputVectors[EYVECTOR], SIGNAL(vectorUpdated(ObjectPtr)));
+      disconnect(_inputVectors[EYVECTOR], SIGNAL(updated(ObjectPtr)));
     }
     _inputVectors.remove(EYVECTOR);
   }
@@ -396,10 +396,10 @@ void Curve::setYError(VectorPtr new_ey) {
 void Curve::setXMinusError(VectorPtr new_ex) {
   if (new_ex) {
     _inputVectors[EXMINUSVECTOR] = new_ex;
-    connect(new_ex, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
+    connect(new_ex, SIGNAL(updated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
     if (_inputVectors[EXMINUSVECTOR]) {
-      disconnect(_inputVectors[EXMINUSVECTOR], SIGNAL(vectorUpdated(ObjectPtr)));
+      disconnect(_inputVectors[EXMINUSVECTOR], SIGNAL(updated(ObjectPtr)));
     }
     _inputVectors.remove(EXMINUSVECTOR);
   }
@@ -410,10 +410,10 @@ void Curve::setXMinusError(VectorPtr new_ex) {
 void Curve::setYMinusError(VectorPtr new_ey) {
   if (new_ey) {
     _inputVectors[EYMINUSVECTOR] = new_ey;
-    connect(new_ey, SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
+    connect(new_ey, SIGNAL(updated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
     if (_inputVectors[EYMINUSVECTOR]) {
-      disconnect(_inputVectors[EYMINUSVECTOR], SIGNAL(vectorUpdated(ObjectPtr)));
+      disconnect(_inputVectors[EYMINUSVECTOR], SIGNAL(updated(ObjectPtr)));
     }
     _inputVectors.remove(EYMINUSVECTOR);
   }

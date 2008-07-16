@@ -517,15 +517,6 @@ Object::UpdateType Vector::internalUpdate(Object::UpdateType providerRC) {
   return NO_CHANGE;
 }
 
-
-void Vector::triggerUpdateSignal(ObjectPtr object) {
-#if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "UP - Vector" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
-#endif
-  emit vectorUpdated(object);
-}
-
-
 void Vector::save(QXmlStreamWriter &s) {
   if (provider()) {
     return;

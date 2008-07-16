@@ -615,14 +615,6 @@ void Matrix::change(QByteArray &data, uint nX, uint nY, double minX, double minY
   setDirty();
 }
 
-
-void Matrix::triggerUpdateSignal(ObjectPtr object) {
-#if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "UP - Matrix" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
-#endif
-  emit matrixUpdated(object);
-}
-
 QString Matrix::descriptionTip() const {
     QString tip;
   //QString range_string;

@@ -146,11 +146,7 @@ class Vector : public Primitive {
     bool saveData() const;
     virtual void setSaveData(bool save);
 
-    void triggerUpdateSignal(ObjectPtr object);
-
     virtual QString descriptionTip() const;
-  Q_SIGNALS:
-    void vectorUpdated(ObjectPtr object);
 
   protected:
     /** current number of samples */

@@ -53,7 +53,7 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
     const QString& in_rateUnits) {
 
   if (_inputVectors[INVECTOR]) {
-    disconnect(_inputVectors[INVECTOR], SIGNAL(vectorUpdated(ObjectPtr)));
+    disconnect(_inputVectors[INVECTOR], SIGNAL(updated(ObjectPtr)));
   }
 
   _inputVectors[INVECTOR] = in_V;
@@ -92,7 +92,7 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
     max_csdnum = _csdnum;
   _csdnum++;
 
-  connect(_inputVectors[INVECTOR], SIGNAL(vectorUpdated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
+  connect(_inputVectors[INVECTOR], SIGNAL(updated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
 
   setDirty();
 }

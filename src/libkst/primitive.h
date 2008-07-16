@@ -43,9 +43,14 @@ class KST_EXPORT Primitive : public Object {
     /** Update the primitive via the provider and/or internalUpdate().
         Return true if there was new data. */
     UpdateType update();
+    void immediateUpdate();
 
     void setSlaveName(QString slaveName);
     QString slaveName() { return _slaveName; }
+    void triggerUpdateSignal(ObjectPtr object);
+
+  Q_SIGNALS:
+    void updated(ObjectPtr object);
 
   protected:
     Primitive(ObjectStore *store, Object* provider = 0L);
