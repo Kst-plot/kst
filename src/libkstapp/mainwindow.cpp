@@ -407,7 +407,7 @@ void MainWindow::createLayout() {
   if (!selectedItems.isEmpty()) {
     ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(selectedItems.first());
     Q_ASSERT(viewItem);
-    viewItem->createLayout();
+    viewItem->createAutoLayout();
   } else {
     view->createLayout();
   }

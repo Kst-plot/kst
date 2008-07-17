@@ -143,7 +143,8 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     virtual void edit();
     virtual void raise();
     virtual void lower();
-    virtual void createLayout();
+    virtual void createAutoLayout();
+    virtual void createCustomLayout();
     virtual void remove();
     void resizeTopLeft(const QPointF &offset);
     void resizeTopRight(const QPointF &offset);
@@ -278,7 +279,7 @@ class KST_EXPORT LayoutCommand : public ViewItemCommand
 
     virtual void undo();
     virtual void redo();
-    void createLayout();
+    void createLayout(int columns = 0);
 
   private:
     QPointer<ViewGridLayout> _layout;

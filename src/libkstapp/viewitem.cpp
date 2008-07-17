@@ -28,6 +28,7 @@
 #include <QWidgetAction>
 #include <QGraphicsScene>
 #include <QGraphicsSceneContextMenuEvent>
+#include <QInputDialog>
 
 static const double ONE_PI = 3.14159265358979323846264338327950288419717;
 static double TWO_PI = 2.0 * ONE_PI;
@@ -652,12 +653,28 @@ void ViewItem::edit() {
 }
 
 
-void ViewItem::createLayout() {
+void ViewItem::createAutoLayout() {
   if (parentViewItem()) {
     LayoutCommand *layout = new LayoutCommand(parentViewItem());
     layout->createLayout();
   } else if (parentView()) {
     parentView()->createLayout();
+  }
+}
+
+
+void ViewItem::createCustomLayout() {
+  bool ok;
+  int columns = QInputDialog::getInteger(tr("Kst"),
+                                      tr("Select Number of Columns"),1, 0,
+                                      10, 1, &ok);
+  if (ok) {
+    if (parentViewItem()) {
+      LayoutCommand *layout = new LayoutCommand(parentViewItem());
+      layout->createLayout(columns);
+    } else if (parentView()) {
+      parentView()->createLayout(columns);
+    }
   }
 }
 
@@ -756,8 +773,11 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   QMenu layoutMenu;
   layoutMenu.setTitle(tr("Cleanup Layout"));
 
-  QAction *layoutAction = layoutMenu.addAction(tr("Automatic Cleanup"));
-  connect(layoutAction, SIGNAL(triggered()), this, SLOT(createLayout()));
+  QAction *autoLayoutAction = layoutMenu.addAction(tr("Automatic"));
+  connect(autoLayoutAction, SIGNAL(triggered()), this, SLOT(createAutoLayout()));
+
+  QAction *customLayoutAction = layoutMenu.addAction(tr("Custom"));
+  connect(customLayoutAction, SIGNAL(triggered()), this, SLOT(createCustomLayout()));
 
   menu.addMenu(&layoutMenu);
 
@@ -1801,7 +1821,7 @@ void LayoutCommand::redo() {
 }
 
 
-void LayoutCommand::createLayout() {
+void LayoutCommand::createLayout(int columns) {
   Q_ASSERT(_item);
   Q_ASSERT(_item->parentView());
 
@@ -1820,7 +1840,7 @@ void LayoutCommand::createLayout() {
   if (viewItems.isEmpty())
     return; //not added to undostack
 
-  Grid *grid = Grid::buildGrid(viewItems);
+  Grid *grid = Grid::buildGrid(viewItems, columns);
   Q_ASSERT(grid);
 
   _layout = new ViewGridLayout(_item);

@@ -52,6 +52,9 @@ with our layouts and items.*/
 
 #include "gridlayouthelper.h"
 
+#include <math.h>
+#include <QDebug>
+
 namespace Kst {
 
 Grid *Grid::buildGrid(const QList<ViewItem*> &itemList)
@@ -141,6 +144,40 @@ Grid *Grid::buildGrid(const QList<ViewItem*> &itemList)
 
     grid->simplify();
 
+    return grid;
+}
+
+Grid *Grid::buildGrid(const QList<ViewItem*> &itemList, int columns)
+{
+    if (!itemList.count())
+        return 0;
+
+    if (columns == 0) {
+      return buildGrid(itemList);
+    }
+
+    int rows = ceil((qreal)itemList.count() / columns);
+
+    QMap<int, ViewItem*> sortedItems;
+    foreach(ViewItem* item, itemList) {
+      int sortId = item->pos().x() + item->pos().y() * 10;
+      sortedItems.insert(sortId, item);
+    }
+
+    Grid *grid = new Grid(rows, columns);
+
+    // Mark the cells in the grid that contains a widget
+    int row = 0, col = 0;
+    foreach (ViewItem *v, sortedItems) {
+        grid->setCell(row, col, v);
+        col++;
+        if (col == columns) {
+          row++;
+          col = 0;
+        }
+    }
+
+    grid->simplify();
     return grid;
 }
 

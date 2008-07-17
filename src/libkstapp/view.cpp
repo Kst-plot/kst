@@ -253,9 +253,9 @@ bool View::eventFilter(QObject *obj, QEvent *event) {
 }
 
 
-void View::createLayout() {
+void View::createLayout(int columns) {
   LayoutCommand *layout = new LayoutCommand(new LayoutBoxItem(this));
-  layout->createLayout();
+  layout->createLayout(columns);
 
   if (_layoutBoxItem) {
     _layoutBoxItem->setEnabled(false);

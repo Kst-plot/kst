@@ -91,7 +91,7 @@ class KST_EXPORT View : public QGraphicsView
     void creationPolygonChanged(View::CreationEvent event);
 
   public Q_SLOTS:
-    void createLayout();
+    void createLayout(int columns = 0);
 
   protected:
     bool event(QEvent *event);

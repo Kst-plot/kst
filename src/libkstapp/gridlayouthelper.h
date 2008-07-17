@@ -61,6 +61,7 @@ class Grid
 {
 public:
     static Grid *buildGrid(const QList<ViewItem*> &itemList);
+    static Grid *buildGrid(const QList<ViewItem*> &itemList, int columns);
 
     Grid(int rows, int cols);
     ~Grid();
