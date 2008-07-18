@@ -101,7 +101,7 @@ MainWindow::~MainWindow() {
 
 void MainWindow::performHeavyStartupActions() {
   // Set the timer for the UpdateManager.
-  UpdateManager::self()->setMaximumUpdateFrequency(ApplicationSettings::self()->maximumUpdateFrequency());
+  UpdateManager::self()->setMinimumUpdatePeriod(ApplicationSettings::self()->minimumUpdatePeriod());
 }
 
 
@@ -815,6 +815,13 @@ void MainWindow::readFromEnd() {
 } 
 
 void MainWindow::pause(bool pause) {
+  UpdateManager::self()->setPaused(pause);
+
+  if (!pause) {
+     foreach (DataSourcePtr s, document()->objectStore()->dataSourceList()) {
+       s->checkUpdate();
+     }
+  }
 }
 
 void MainWindow::forward() {

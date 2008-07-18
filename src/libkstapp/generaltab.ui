@@ -81,7 +81,7 @@
    <item row="6" column="0" colspan="2" >
     <widget class="QLabel" name="label_5" >
      <property name="text" >
-      <string>Maximum Update Frequency (ms)</string>
+      <string>Period Between Updates (ms)</string>
      </property>
     </widget>
    </item>

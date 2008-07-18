@@ -490,7 +490,7 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
   // Don't set provider - this is always up-to-date
 
   if (_updateCheckType == Timer) {
-    QTimer::singleShot(DATASOURCE_UPDATE_TIMER_LENGTH, this, SLOT(checkUpdate()));
+    QTimer::singleShot(UpdateManager::self()->minimumUpdatePeriod()-1, this, SLOT(checkUpdate()));
   } else if (_updateCheckType == File) {
     QFileSystemWatcher *watcher = new QFileSystemWatcher();
     watcher->addPath(_filename);
@@ -506,15 +506,17 @@ DataSource::~DataSource() {
 
 
 void DataSource::checkUpdate() {
-  if (update()) {
+  if (!UpdateManager::self()->paused()) {
+    if (update()) {
 #if DEBUG_UPDATE_CYCLE > 1
-    qDebug() << "UP - DataSource update ready for" << shortName();
+      qDebug() << "UP - DataSource update ready for" << shortName();
 #endif
-    UpdateManager::self()->requestUpdate(this);
-  }
+      UpdateManager::self()->requestUpdate(this);
+    }
 
-  if (_updateCheckType == Timer) {
-    QTimer::singleShot(DATASOURCE_UPDATE_TIMER_LENGTH, this, SLOT(checkUpdate()));
+    if (_updateCheckType == Timer) {
+      QTimer::singleShot(UpdateManager::self()->minimumUpdatePeriod()-1, this, SLOT(checkUpdate()));
+    }
   }
 }
 

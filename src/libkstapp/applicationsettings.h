@@ -47,8 +47,8 @@ class ApplicationSettings : public QObject
     QString defaultFontFamily() const;
     void setDefaultFontFamily(const QString &fontFamily);
 
-    int maximumUpdateFrequency() const;
-    void setMaximumUpdateFrequency(const int frequency);
+    int minimumUpdatePeriod() const;
+    void setMinimumUpdatePeriod(const int period);
 
     bool showGrid() const;
     void setShowGrid(bool showGrid);

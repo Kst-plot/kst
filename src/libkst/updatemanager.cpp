@@ -37,6 +37,7 @@ UpdateManager *UpdateManager::self() {
 
 UpdateManager::UpdateManager() {
   _maxUpdate = MAX_UPDATES;
+  _paused = false;
   QTimer::singleShot(_maxUpdate, this, SLOT(allowUpdates()));
 }
 

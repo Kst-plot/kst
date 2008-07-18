@@ -132,6 +132,7 @@ ObjectPtr ScalarDialog::editExistingDataObject() const {
     scalar->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
     scalar->writeLock();
     scalar->setValue(value);
+    scalar->immediateUpdate();
     scalar->unlock();
   }
   return dataObject();

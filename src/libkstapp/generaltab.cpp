@@ -93,13 +93,13 @@ void GeneralTab::setDefaultFontFamily(const QString &fontFamily) {
 }
 
 
-int GeneralTab::maximumUpdateFrequency() const {
+int GeneralTab::minimumUpdatePeriod() const {
   return _maxUpdate->value();
 }
 
 
-void GeneralTab::setMaximumUpdateFrequency(const int frequency) {
-  _maxUpdate->setValue(frequency);
+void GeneralTab::setMinimumUpdatePeriod(const int period) {
+  _maxUpdate->setValue(period);
 }
 
 }

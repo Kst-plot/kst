@@ -38,8 +38,11 @@ class UpdateManager : public QObject
     void updateStarted(ObjectPtr updateObject, ObjectPtr reportingObject);
     void updateFinished(ObjectPtr updateObject, ObjectPtr reportingObject);
 
-    void setMaximumUpdateFrequency(const int frequency) { _maxUpdate = frequency; }
+    void setMinimumUpdatePeriod(const int period) { _maxUpdate = period; }
+    int minimumUpdatePeriod() { return _maxUpdate; }
 
+    void setPaused(bool paused) { _paused = paused;}
+    bool paused() { return _paused; }
   private Q_SLOTS:
     void allowUpdates();
 
@@ -56,6 +59,7 @@ class UpdateManager : public QObject
 
     bool _delayedUpdate;
     int _maxUpdate;
+    bool _paused;
 };
 
 }

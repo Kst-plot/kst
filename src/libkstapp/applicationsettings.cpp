@@ -54,7 +54,7 @@ ApplicationSettings::ApplicationSettings() {
   _refFontSize = _settings->value("general/referencefontsize", QVariant(12)).toInt();
   _minFontSize = _settings->value("general/minimumfontsize", QVariant(5)).toInt();
   _defaultFontFamily = _settings->value("general/defaultfontfamily", "Albany AMT").toString();
-  _maxUpdate = _settings->value("general/maximumupdatefrequency", QVariant(2000)).toInt();
+  _maxUpdate = _settings->value("general/minimumupdateperiod", QVariant(2000)).toInt();
 
   _showGrid = _settings->value("grid/showgrid", QVariant(true)).toBool();
   _snapToGrid = _settings->value("grid/snaptogrid", QVariant(false)).toBool();
@@ -158,16 +158,16 @@ void ApplicationSettings::setDefaultFontFamily(const QString &fontFamily) {
 }
 
 
-int ApplicationSettings::maximumUpdateFrequency() const {
+int ApplicationSettings::minimumUpdatePeriod() const {
   return _maxUpdate;
 }
 
 
-void ApplicationSettings::setMaximumUpdateFrequency(const int frequency) {
-  _maxUpdate = frequency;
-  _settings->setValue("general/maximumupdatefrequency", frequency);
+void ApplicationSettings::setMinimumUpdatePeriod(const int period) {
+  _maxUpdate = period;
+  _settings->setValue("general/minimumupdateperiod", period);
 
-  UpdateManager::self()->setMaximumUpdateFrequency(frequency);
+  UpdateManager::self()->setMinimumUpdatePeriod(period);
 }
 
 

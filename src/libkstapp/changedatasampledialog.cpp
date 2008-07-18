@@ -131,6 +131,7 @@ void ChangeDataSampleDialog::apply() {
                             _dataRange->skip(),
                             _dataRange->doSkip(),
                             _dataRange->doFilter());
+      vector->immediateUpdate(); // FIXME: cache all dependent updates until all vectors have been updated
       vector->unlock();
     }
   }

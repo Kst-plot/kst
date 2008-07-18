@@ -38,7 +38,7 @@
 #include <time.h>
 
 // #define DEBUG_VECTOR_CURVE
-// #define BENCHMARK
+#define BENCHMARK
 
 #ifndef KDE_IS_LIKELY
 #if __GNUC__ - 0 >= 3
@@ -712,6 +712,7 @@ RelationPtr Curve::makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelat
 
 
 void Curve::paint(const CurveRenderContext& context) {
+
   VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
   VectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
   if (!xv || !yv) {
