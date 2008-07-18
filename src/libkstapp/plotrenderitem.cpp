@@ -550,8 +550,13 @@ void PlotRenderItem::lower() {
 }
 
 
-void PlotRenderItem::createLayout() {
+void PlotRenderItem::createAutoLayout() {
   plotItem()->createAutoLayout();
+}
+
+
+void PlotRenderItem::createCustomLayout() {
+  plotItem()->createCustomLayout();
 }
 
 

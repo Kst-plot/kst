@@ -16,6 +16,8 @@
 
 #include "kst_export.h"
 
+#include "curveplacement.h"
+
 class QUndoStack;
 class QXmlStreamWriter;
 
@@ -92,6 +94,7 @@ class KST_EXPORT View : public QGraphicsView
 
   public Q_SLOTS:
     void createLayout(int columns = 0);
+    void appendToLayout(CurvePlacement::Layout layout, ViewItem* item, int columns = 0);
 
   protected:
     bool event(QEvent *event);

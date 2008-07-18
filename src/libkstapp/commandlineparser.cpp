@@ -220,7 +220,7 @@ void CommandLineParser::createCurveInPlot(VectorPtr xv, VectorPtr yv, VectorPtr 
     curve->unlock();
 
     if (_doConsecutivePlots) {
-      CreatePlotForCurve *cmd = new CreatePlotForCurve(true,true);
+      CreatePlotForCurve *cmd = new CreatePlotForCurve(CurvePlacement::Auto);
       cmd->createItem();
       _plotItem = static_cast<PlotItem*>(cmd->item());
       _plotItem->setName(QString("P-")+curve->Name());
@@ -244,7 +244,7 @@ void CommandLineParser::createOrFindPlot( const QString plot_name ) {
     }
 
     if (!found) {
-      CreatePlotForCurve *cmd = new CreatePlotForCurve ( true,true );
+      CreatePlotForCurve *cmd = new CreatePlotForCurve(CurvePlacement::Auto);
       cmd->createItem();
       pi = static_cast<PlotItem*> ( cmd->item() );
       pi->setName ( plot_name );

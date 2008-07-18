@@ -21,6 +21,7 @@
 #include "kst_export.h"
 #include "viewcommand.h"
 #include "view.h" //forward declare, but enums??
+#include "curveplacement.h"
 
 namespace Kst {
 
@@ -280,6 +281,22 @@ class KST_EXPORT LayoutCommand : public ViewItemCommand
     virtual void undo();
     virtual void redo();
     void createLayout(int columns = 0);
+
+  private:
+    QPointer<ViewGridLayout> _layout;
+};
+
+class KST_EXPORT AppendLayoutCommand : public ViewItemCommand
+{
+  public:
+    AppendLayoutCommand(ViewItem *item)
+        : ViewItemCommand(item, QObject::tr("Append Item to Layout"), false) {}
+
+    virtual ~AppendLayoutCommand() {}
+
+    virtual void undo();
+    virtual void redo();
+    void appendLayout(CurvePlacement::Layout layout, ViewItem* item, int columns = 0);
 
   private:
     QPointer<ViewGridLayout> _layout;

@@ -386,8 +386,8 @@ ObjectPtr HistogramDialog::createNewDataObject() {
   case CurvePlacement::NewPlot:
     {
       CreatePlotForCurve *cmd = new CreatePlotForCurve(
-        _histogramTab->curvePlacement()->createLayout(),
-        _histogramTab->curvePlacement()->appendToLayout());
+        _histogramTab->curvePlacement()->layout(),
+        _histogramTab->curvePlacement()->gridColumns());
       cmd->createItem();
 
       plotItem = static_cast<PlotItem*>(cmd->item());

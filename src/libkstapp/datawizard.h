@@ -23,6 +23,7 @@
 #include "ui_datawizardpagedatapresentation.h"
 
 #include "datasource.h"
+#include "curveplacement.h"
 
 namespace Kst {
 
@@ -92,13 +93,13 @@ class KST_EXPORT DataWizardPagePlot : public QWizardPage, Ui::DataWizardPagePlot
 {
   Q_OBJECT
   public:
-    enum CurvePlacement { OnePlot, MultiplePlots, CyclePlotCount, CycleExisting, ExistingPlot };
+    enum CurvePlotPlacement { OnePlot, MultiplePlots, CyclePlotCount, CycleExisting, ExistingPlot };
 
     DataWizardPagePlot(QWidget *parent);
     virtual ~DataWizardPagePlot();
 
-    bool createLayout() const;
-    bool appendToLayout() const;
+    CurvePlacement::Layout layout() const;
+    int gridColumns() const;
 
     bool drawLines() const;
     bool drawPoints() const;
@@ -113,13 +114,14 @@ class KST_EXPORT DataWizardPagePlot : public QWizardPage, Ui::DataWizardPagePlot
     bool legendsOn() const;
     bool legendsAuto() const;
 
-    CurvePlacement curvePlacement() const;
+    CurvePlotPlacement curvePlacement() const;
     PlotItemInterface *existingPlot() const;
 
     int plotCount() const;
 
   public Q_SLOTS:
     void updatePlotBox();
+    void updateButtons();
 };
 
 class KST_EXPORT DataWizardPageDataPresentation : public QWizardPage, Ui::DataWizardPageDataPresentation

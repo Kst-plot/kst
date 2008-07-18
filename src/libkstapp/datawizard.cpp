@@ -257,7 +257,10 @@ DataWizardPagePlot::DataWizardPagePlot(QWidget *parent)
   : QWizardPage(parent) {
    setupUi(this);
 
+  connect(_customGrid, SIGNAL(toggled(bool)), this, SLOT(updateButtons()));
+
   updatePlotBox();
+  updateButtons();
 }
 
 
@@ -266,8 +269,13 @@ DataWizardPagePlot::~DataWizardPagePlot() {
 }
 
 
-DataWizardPagePlot::CurvePlacement DataWizardPagePlot::curvePlacement() const {
-  CurvePlacement placement = OnePlot;
+void DataWizardPagePlot::updateButtons() {
+  _gridColumns->setEnabled(_customGrid->isChecked());
+}
+
+
+DataWizardPagePlot::CurvePlotPlacement DataWizardPagePlot::curvePlacement() const {
+  CurvePlotPlacement placement = OnePlot;
   if (_multiplePlots->isChecked()) {
     placement = MultiplePlots;
   } else if (_cycleThrough->isChecked()) {
@@ -281,13 +289,18 @@ DataWizardPagePlot::CurvePlacement DataWizardPagePlot::curvePlacement() const {
 }
 
 
-bool DataWizardPagePlot::createLayout() const {
-  return _createLayout->isChecked();
+CurvePlacement::Layout DataWizardPagePlot::layout() const {
+  if (_autoLayout->isChecked())
+    return CurvePlacement::Auto;
+  else if (_customGrid->isChecked())
+    return CurvePlacement::Custom;
+  else
+    return CurvePlacement::Protect;
 }
 
 
-bool DataWizardPagePlot::appendToLayout() const {
-  return _appendToLayout->isChecked();
+int DataWizardPagePlot::gridColumns() const {
+  return _gridColumns->value();
 }
 
 
@@ -676,16 +689,16 @@ void DataWizard::finished() {
     case DataWizardPagePlot::OnePlot:
     {
       CreatePlotForCurve *cmd = new CreatePlotForCurve(
-        _pagePlot->createLayout(),
-        _pagePlot->appendToLayout());
+        _pagePlot->layout(),
+        _pagePlot->gridColumns());
       cmd->createItem();
 
       plotItem = static_cast<PlotItem*>(cmd->item());
       plotList.append(plotItem);
       if (_pageDataPresentation->plotDataPSD()) {
         CreatePlotForCurve *cmd = new CreatePlotForCurve(
-          _pagePlot->createLayout(),
-          _pagePlot->appendToLayout());
+          _pagePlot->layout(),
+          _pagePlot->gridColumns());
         cmd->createItem();
 
         plotItem = static_cast<PlotItem*>(cmd->item());
@@ -697,16 +710,16 @@ void DataWizard::finished() {
     {
       for (int i = 0; i < vectors.count(); ++i) {
         CreatePlotForCurve *cmd = new CreatePlotForCurve(
-          _pagePlot->createLayout(),
-          _pagePlot->appendToLayout());
+          _pagePlot->layout(),
+          _pagePlot->gridColumns());
         cmd->createItem();
 
         plotItem = static_cast<PlotItem*>(cmd->item());
         plotList.append(plotItem);
         if (_pageDataPresentation->plotDataPSD()) {
           CreatePlotForCurve *cmd = new CreatePlotForCurve(
-            _pagePlot->createLayout(),
-            _pagePlot->appendToLayout());
+            _pagePlot->layout(),
+            _pagePlot->gridColumns());
           cmd->createItem();
 
           plotItem = static_cast<PlotItem*>(cmd->item());
@@ -728,16 +741,16 @@ void DataWizard::finished() {
     {
       for (int i = 0; i < _pagePlot->plotCount(); ++i) {
         CreatePlotForCurve *cmd = new CreatePlotForCurve(
-          _pagePlot->createLayout(),
-          _pagePlot->appendToLayout());
+          _pagePlot->layout(),
+          _pagePlot->gridColumns());
         cmd->createItem();
 
         plotItem = static_cast<PlotItem*>(cmd->item());
         plotList.append(plotItem);
         if (_pageDataPresentation->plotDataPSD()) {
           CreatePlotForCurve *cmd = new CreatePlotForCurve(
-            _pagePlot->createLayout(),
-            _pagePlot->appendToLayout());
+            _pagePlot->layout(),
+            _pagePlot->gridColumns());
           cmd->createItem();
 
           plotItem = static_cast<PlotItem*>(cmd->item());

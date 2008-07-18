@@ -70,7 +70,8 @@ class PlotRenderItem : public ViewItem
     virtual void edit();
     virtual void raise();
     virtual void lower();
-    virtual void createLayout();
+    virtual void createAutoLayout();
+    virtual void createCustomLayout();
     virtual void remove();
     virtual void relationUpdated(ObjectPtr object);
 

@@ -1870,6 +1870,49 @@ void LayoutCommand::createLayout(int columns) {
 }
 
 
+void AppendLayoutCommand::undo() {
+  Q_ASSERT(_layout);
+  _layout->reset();
+}
+
+
+void AppendLayoutCommand::redo() {
+  Q_ASSERT(_layout);
+  _layout->update();
+}
+
+
+void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* item, int columns) {
+  Q_ASSERT(_item);
+  Q_ASSERT(_item->parentView());
+  Q_ASSERT(item);
+
+  _layout = new ViewGridLayout(_item);
+
+  QPointF center = _item->parentView()->sceneRect().center();
+  center -= QPointF(100.0, 100.0);
+
+  item->setPos(center);
+  item->setViewRect(0.0, 0.0, 200.0, 200.0);
+  //_item->setZValue(1);
+  _item->parentView()->scene()->addItem(item);
+
+  switch (layout) {
+    case CurvePlacement::Auto:
+      qDebug() << "Auto Layout requested";
+      break;
+    case CurvePlacement::Custom:
+      qDebug() << "Custom Grid requested";
+      break;
+    default:
+      qDebug() << "Protecting current Layout";
+      break;
+  }
+
+  _item->parentView()->undoStack()->push(this);
+}
+
+
 void BreakLayoutCommand::undo() {
   Q_ASSERT(_layout);
   _layout->update();

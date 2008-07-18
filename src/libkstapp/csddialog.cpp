@@ -241,8 +241,8 @@ ObjectPtr CSDDialog::createNewDataObject() {
   case CurvePlacement::NewPlot:
     {
       CreatePlotForCurve *cmd = new CreatePlotForCurve(
-        _CSDTab->curvePlacement()->createLayout(),
-        _CSDTab->curvePlacement()->appendToLayout());
+        _CSDTab->curvePlacement()->layout(),
+        _CSDTab->curvePlacement()->gridColumns());
       cmd->createItem();
 
       plotItem = static_cast<PlotItem*>(cmd->item());

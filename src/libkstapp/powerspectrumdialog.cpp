@@ -244,8 +244,8 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
   case CurvePlacement::NewPlot:
     {
       CreatePlotForCurve *cmd = new CreatePlotForCurve(
-        _powerSpectrumTab->curvePlacement()->createLayout(),
-        _powerSpectrumTab->curvePlacement()->appendToLayout());
+        _powerSpectrumTab->curvePlacement()->layout(),
+        _powerSpectrumTab->curvePlacement()->gridColumns());
       cmd->createItem();
 
       plotItem = static_cast<PlotItem*>(cmd->item());

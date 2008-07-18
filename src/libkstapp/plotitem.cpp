@@ -1327,7 +1327,7 @@ QFont PlotItem::calculatedBottomLabelFont() {
 
 
 void PlotItem::paintLeftLabel(QPainter *painter) {
-  if (!isLeftLabelVisible())
+  if (!isLeftLabelVisible() || leftLabelOverride().isEmpty())
     return;
 
   Label::Parsed *parsed = Label::parse(leftLabelOverride());
@@ -1350,7 +1350,8 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
     t.rotate(90.0);
     painter->rotate(-90.0);
 
-    painter->drawPixmap(t.mapRect(leftLabel).topLeft(), pixmap, QRectF(0, 0, rc.x, leftLabel.height()));
+    if (rc.x > 0)
+      painter->drawPixmap(t.mapRect(leftLabel).topLeft(), pixmap, QRectF(0, 0, rc.x, leftLabel.height()));
 
     painter->restore();
     delete parsed;
@@ -1397,7 +1398,7 @@ QSizeF PlotItem::calculateLeftLabelBound(QPainter *painter) {
 
 
 void PlotItem::paintBottomLabel(QPainter *painter) {
-  if (!isBottomLabelVisible())
+  if (!isBottomLabelVisible() || bottomLabelOverride().isEmpty())
     return;
 
   Label::Parsed *parsed = Label::parse(bottomLabelOverride());
@@ -1418,7 +1419,8 @@ void PlotItem::paintBottomLabel(QPainter *painter) {
     bottomLabel.moveTopLeft(plotAxisRect().bottomLeft());
     bottomLabel.moveTopLeft(QPointF(bottomLabel.topLeft().x() + ((bottomLabel.width() / 2) - (rc.x / 2)), bottomLabel.topLeft().y()));
 
-    painter->drawPixmap(bottomLabel.topLeft(), pixmap, QRectF(0, 0, rc.x, bottomLabel.height()));
+    if (rc.x > 0)
+      painter->drawPixmap(bottomLabel.topLeft(), pixmap, QRectF(0, 0, rc.x, bottomLabel.height()));
 
     painter->restore();
     delete parsed;
@@ -1459,7 +1461,7 @@ QSizeF PlotItem::calculateBottomLabelBound(QPainter *painter) {
 
 
 void PlotItem::paintRightLabel(QPainter *painter) {
-  if (!isRightLabelVisible())
+  if (!isRightLabelVisible() || rightLabelOverride().isEmpty())
     return;
 
   Label::Parsed *parsed = Label::parse(rightLabelOverride());
@@ -1484,7 +1486,8 @@ void PlotItem::paintRightLabel(QPainter *painter) {
       t.rotate(-90.0);
       painter->rotate(90.0);
 
-      painter->drawPixmap(t.mapRect(rightLabel).topLeft(), pixmap, QRectF(0, 0, rc.x, rightLabel.height()));
+      if (rc.x > 0)
+        painter->drawPixmap(t.mapRect(rightLabel).topLeft(), pixmap, QRectF(0, 0, rc.x, rightLabel.height()));
     }
     painter->restore();
 
@@ -1532,7 +1535,7 @@ QSizeF PlotItem::calculateRightLabelBound(QPainter *painter) {
 
 
 void PlotItem::paintTopLabel(QPainter *painter) {
-  if (!isTopLabelVisible())
+  if (!isTopLabelVisible() || topLabelOverride().isEmpty())
     return;
 
   Label::Parsed *parsed = Label::parse(topLabelOverride());
@@ -1554,7 +1557,8 @@ void PlotItem::paintTopLabel(QPainter *painter) {
       topLabel.moveBottomLeft(plotAxisRect().topLeft());
       topLabel.moveTopLeft(QPointF(topLabel.topLeft().x() + ((topLabel.width() / 2) - (rc.x / 2)), topLabel.topLeft().y()));
 
-      painter->drawPixmap(topLabel.topLeft(), pixmap, QRectF(0, 0, rc.x, topLabel.height()));
+      if (rc.x > 0) 
+        painter->drawPixmap(topLabel.topLeft(), pixmap, QRectF(0, 0, rc.x, topLabel.height()));
     }
     painter->restore();
 
@@ -2057,23 +2061,8 @@ void CreatePlotCommand::createItem() {
 
 
 void CreatePlotForCurve::createItem() {
-  QPointF center = _view->sceneRect().center();
-  center -= QPointF(100.0, 100.0);
-
   _item = new PlotItem(_view);
-  _item->setPos(center);
-  _item->setViewRect(0.0, 0.0, 200.0, 200.0);
-  //_item->setZValue(1);
-  _view->scene()->addItem(_item);
-
-  if (_createLayout) {
-    _view->createLayout();
-  }
-
-  if (_appendToLayout && _view->layoutBoxItem()) {
-    _view->layoutBoxItem()->appendItem(_item);
-  }
-
+  _view->appendToLayout(_layout, _item, _gridColumns);
   creationComplete(); //add to undo stack
 }
 

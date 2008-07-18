@@ -25,6 +25,7 @@ class KST_EXPORT CurvePlacement : public QWidget, public Ui::CurvePlacement {
   Q_OBJECT
   public:
     enum Place { NewPlot, ExistingPlot, NoPlot };
+    enum Layout { Auto, Custom, Protect };
     CurvePlacement(QWidget *parent = 0);
     virtual ~CurvePlacement();
 
@@ -34,11 +35,14 @@ class KST_EXPORT CurvePlacement : public QWidget, public Ui::CurvePlacement {
     PlotItemInterface *existingPlot() const;
     void setExistingPlots(const QList<PlotItemInterface*> &existingPlots);
 
-    bool createLayout() const;
-    void setCreateLayout(bool createLayout);
+    Layout layout() const;
+    void setLayout(Layout layout);
 
-    bool appendToLayout() const;
-    void setAppendToLayout(bool appendToLayout);
+    int gridColumns() const;
+    void setGridColumns(int gridColumns);
+
+  public Q_SLOTS:
+    void updateButtons();
 };
 
 }

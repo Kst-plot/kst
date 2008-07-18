@@ -20,10 +20,18 @@ CurvePlacement::CurvePlacement(QWidget *parent)
   setupUi(this);
 
   connect(_existingPlot, SIGNAL(toggled(bool)), _plotList, SLOT(setEnabled(bool)));
+  connect(_newPlot, SIGNAL(toggled(bool)), this, SLOT(updateButtons()));
+  connect(_customGrid, SIGNAL(toggled(bool)), this, SLOT(updateButtons()));
 }
 
 
 CurvePlacement::~CurvePlacement() {
+}
+
+
+void CurvePlacement::updateButtons() {
+  _layoutGroup->setEnabled(_newPlot->isChecked());
+  _gridColumns->setEnabled(_customGrid->isChecked());
 }
 
 
@@ -54,6 +62,32 @@ void CurvePlacement::setPlace(CurvePlacement::Place place) {
 }
 
 
+CurvePlacement::Layout CurvePlacement::layout() const {
+  if (_autoLayout->isChecked())
+    return Auto;
+  else if (_customGrid->isChecked())
+    return Custom;
+  else
+    return Protect;
+}
+
+
+void CurvePlacement::setLayout(CurvePlacement::Layout layout) {
+  switch (layout) {
+  case Auto:
+    _autoLayout->setChecked(true);
+    break;
+  case Custom:
+    _customGrid->setChecked(true);
+    break;
+  case Protect:
+    _protectLayout->setChecked(true);
+    break;
+  default:
+    break;
+  }
+}
+
 PlotItemInterface *CurvePlacement::existingPlot() const {
   return qVariantValue<PlotItemInterface*>(_plotList->itemData(_plotList->currentIndex()));
 }
@@ -66,23 +100,13 @@ void CurvePlacement::setExistingPlots(const QList<PlotItemInterface*> &existingP
 }
 
 
-bool CurvePlacement::createLayout() const {
-  return _createLayout->isChecked();
+int CurvePlacement::gridColumns() const {
+  return _gridColumns->value();
 }
 
 
-void CurvePlacement::setCreateLayout(bool createLayout) {
-  _createLayout->setChecked(createLayout);
-}
-
-
-bool CurvePlacement::appendToLayout() const {
-  return _appendToLayout->isChecked();
-}
-
-
-void CurvePlacement::setAppendToLayout(bool appendToLayout) {
-  _appendToLayout->setChecked(appendToLayout);
+void CurvePlacement::setGridColumns(int columns) {
+  _gridColumns->setValue(columns);
 }
 
 }

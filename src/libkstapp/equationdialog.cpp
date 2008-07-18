@@ -319,8 +319,8 @@ ObjectPtr EquationDialog::createNewDataObject() {
   case CurvePlacement::NewPlot:
     {
       CreatePlotForCurve *cmd = new CreatePlotForCurve(
-        _equationTab->curvePlacement()->createLayout(),
-        _equationTab->curvePlacement()->appendToLayout());
+        _equationTab->curvePlacement()->layout(),
+        _equationTab->curvePlacement()->gridColumns());
       cmd->createItem();
 
       plotItem = static_cast<PlotItem*>(cmd->item());

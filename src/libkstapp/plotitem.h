@@ -25,6 +25,7 @@
 
 #include "plotaxis.h"
 #include "legenditem.h"
+#include "curveplacement.h"
 
 namespace Kst {
 
@@ -361,20 +362,20 @@ class KST_EXPORT CreatePlotCommand : public CreateCommand
 class KST_EXPORT CreatePlotForCurve : public CreateCommand
 {
   public:
-    CreatePlotForCurve(bool createLayout, bool appendToLayout)
+    CreatePlotForCurve(CurvePlacement::Layout layout, int gridColumns = 1)
       : CreateCommand(QObject::tr("Create Plot For Curve")),
-        _createLayout(createLayout),
-        _appendToLayout(appendToLayout) {}
-    CreatePlotForCurve(bool createLayout, bool appendToLayout, View *view)
+        _layout(layout),
+        _gridColumns(gridColumns) {}
+    CreatePlotForCurve(CurvePlacement::Layout layout, int gridColumns, View *view)
       : CreateCommand(view, QObject::tr("Create Plot For Curve")),
-        _createLayout(createLayout),
-        _appendToLayout(appendToLayout) {}
+        _layout(layout),
+        _gridColumns(gridColumns) {}
     virtual ~CreatePlotForCurve() {}
     virtual void createItem();
 
   private:
-    bool _createLayout;
-    bool _appendToLayout;
+    CurvePlacement::Layout _layout;
+    int _gridColumns;
 };
 
 class PlotItemFactory : public GraphicsFactory {

@@ -393,8 +393,8 @@ ObjectPtr CurveDialog::createNewDataObject() {
   case CurvePlacement::NewPlot:
     {
       CreatePlotForCurve *cmd = new CreatePlotForCurve(
-        _curveTab->curvePlacement()->createLayout(),
-        _curveTab->curvePlacement()->appendToLayout());
+        _curveTab->curvePlacement()->layout(),
+        _curveTab->curvePlacement()->gridColumns());
       cmd->createItem();
 
       plotItem = static_cast<PlotItem*>(cmd->item());
