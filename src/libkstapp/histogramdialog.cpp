@@ -385,9 +385,7 @@ ObjectPtr HistogramDialog::createNewDataObject() {
     }
   case CurvePlacement::NewPlot:
     {
-      CreatePlotForCurve *cmd = new CreatePlotForCurve(
-        _histogramTab->curvePlacement()->layout(),
-        _histogramTab->curvePlacement()->gridColumns());
+      CreatePlotForCurve *cmd = new CreatePlotForCurve();
       cmd->createItem();
 
       plotItem = static_cast<PlotItem*>(cmd->item());
@@ -400,6 +398,8 @@ ObjectPtr HistogramDialog::createNewDataObject() {
   PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
   renderItem->addRelation(kst_cast<Relation>(curve));
   plotItem->update();
+
+  plotItem->parentView()->appendToLayout(_histogramTab->curvePlacement()->layout(), plotItem, _histogramTab->curvePlacement()->gridColumns());
 
   return ObjectPtr(histogram.data());
 }

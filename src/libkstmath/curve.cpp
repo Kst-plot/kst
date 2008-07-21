@@ -38,7 +38,7 @@
 #include <time.h>
 
 // #define DEBUG_VECTOR_CURVE
-#define BENCHMARK
+// #define BENCHMARK
 
 #ifndef KDE_IS_LIKELY
 #if __GNUC__ - 0 >= 3

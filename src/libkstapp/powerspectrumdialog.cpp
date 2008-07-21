@@ -243,9 +243,7 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
     }
   case CurvePlacement::NewPlot:
     {
-      CreatePlotForCurve *cmd = new CreatePlotForCurve(
-        _powerSpectrumTab->curvePlacement()->layout(),
-        _powerSpectrumTab->curvePlacement()->gridColumns());
+      CreatePlotForCurve *cmd = new CreatePlotForCurve();
       cmd->createItem();
 
       plotItem = static_cast<PlotItem*>(cmd->item());
@@ -258,6 +256,8 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
   PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
   renderItem->addRelation(kst_cast<Relation>(curve));
   plotItem->update();
+
+  plotItem->parentView()->appendToLayout(_powerSpectrumTab->curvePlacement()->layout(), plotItem, _powerSpectrumTab->curvePlacement()->gridColumns());
 
   return ObjectPtr(powerspectrum.data());
 }

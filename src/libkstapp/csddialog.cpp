@@ -240,9 +240,7 @@ ObjectPtr CSDDialog::createNewDataObject() {
     }
   case CurvePlacement::NewPlot:
     {
-      CreatePlotForCurve *cmd = new CreatePlotForCurve(
-        _CSDTab->curvePlacement()->layout(),
-        _CSDTab->curvePlacement()->gridColumns());
+      CreatePlotForCurve *cmd = new CreatePlotForCurve();
       cmd->createItem();
 
       plotItem = static_cast<PlotItem*>(cmd->item());
@@ -255,6 +253,8 @@ ObjectPtr CSDDialog::createNewDataObject() {
   PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
   renderItem->addRelation(kst_cast<Relation>(image));
   plotItem->update();
+
+  plotItem->parentView()->appendToLayout(_CSDTab->curvePlacement()->layout(), plotItem, _CSDTab->curvePlacement()->gridColumns());
 
   return ObjectPtr(image.data());
 }

@@ -54,14 +54,15 @@ with our layouts and items.*/
 #define GRIDLAYOUTHELPER_H
 
 #include "viewitem.h"
+#include <QDebug>
 
 namespace Kst {
 
 class Grid
 {
 public:
-    static Grid *buildGrid(const QList<ViewItem*> &itemList);
-    static Grid *buildGrid(const QList<ViewItem*> &itemList, int columns);
+    static Grid *buildGrid(const QList<ViewItem*> &itemList, bool pad = false);
+    static Grid *buildGrid(const QList<ViewItem*> &itemList, int columns, bool pad = false);
 
     Grid(int rows, int cols);
     ~Grid();
@@ -79,6 +80,7 @@ public:
 
     void simplify();
     bool locateWidget(ViewItem* w, int& row, int& col, int& rowspan, int& colspan);
+    void appendItem(ViewItem *w);
 
 private:
     void merge();

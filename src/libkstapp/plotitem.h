@@ -362,20 +362,12 @@ class KST_EXPORT CreatePlotCommand : public CreateCommand
 class KST_EXPORT CreatePlotForCurve : public CreateCommand
 {
   public:
-    CreatePlotForCurve(CurvePlacement::Layout layout, int gridColumns = 1)
-      : CreateCommand(QObject::tr("Create Plot For Curve")),
-        _layout(layout),
-        _gridColumns(gridColumns) {}
-    CreatePlotForCurve(CurvePlacement::Layout layout, int gridColumns, View *view)
-      : CreateCommand(view, QObject::tr("Create Plot For Curve")),
-        _layout(layout),
-        _gridColumns(gridColumns) {}
+    CreatePlotForCurve()
+      : CreateCommand(QObject::tr("Create Plot For Curve")) {}
+    CreatePlotForCurve(View *view)
+      : CreateCommand(view, QObject::tr("Create Plot For Curve")) {}
     virtual ~CreatePlotForCurve() {}
     virtual void createItem();
-
-  private:
-    CurvePlacement::Layout _layout;
-    int _gridColumns;
 };
 
 class PlotItemFactory : public GraphicsFactory {

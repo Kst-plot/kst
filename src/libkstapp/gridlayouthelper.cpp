@@ -57,11 +57,12 @@ with our layouts and items.*/
 
 namespace Kst {
 
-Grid *Grid::buildGrid(const QList<ViewItem*> &itemList)
+Grid *Grid::buildGrid(const QList<ViewItem*> &itemList, bool pad)
 {
     if (!itemList.count())
         return 0;
 
+//     qDebug() << "building Automatic grid" << itemList.count();
     // Pixel to cell conversion:
     // By keeping a list of start'n'stop values (x & y) for each viewitem,
     // it is possible to create a very small grid of cells to represent
@@ -108,7 +109,15 @@ Grid *Grid::buildGrid(const QList<ViewItem*> &itemList)
                 current++;
     }
 
-    Grid *grid = new Grid(y.size() - 1, x.size() - 1);
+    int rows = y.size() - 1;
+    int cols = x.size() - 1;
+    if (pad) {
+      rows++;
+    }
+
+//     qDebug() << "Building grid with" << rows << cols;
+
+    Grid *grid = new Grid(rows, cols);
 
     // Mark the cells in the grid that contains a widget
     foreach (ViewItem *v, itemList) {
@@ -147,16 +156,22 @@ Grid *Grid::buildGrid(const QList<ViewItem*> &itemList)
     return grid;
 }
 
-Grid *Grid::buildGrid(const QList<ViewItem*> &itemList, int columns)
+Grid *Grid::buildGrid(const QList<ViewItem*> &itemList, int columns, bool pad)
 {
     if (!itemList.count())
         return 0;
 
     if (columns == 0) {
-      return buildGrid(itemList);
+      return buildGrid(itemList, pad);
     }
 
     int rows = ceil((qreal)itemList.count() / columns);
+    if (pad) {
+      if (rows * columns == itemList.count()) {
+        rows++;
+//         qDebug() << "Padded" << rows;
+      }
+    }
 
     QMap<int, ViewItem*> sortedItems;
     foreach(ViewItem* item, itemList) {
@@ -463,6 +478,28 @@ bool Grid::locateWidget(ViewItem *w, int &row, int &col, int &rowspan, int &cols
         }
     }
     return false;
+}
+
+void Grid::appendItem(ViewItem *w) {
+//   qDebug() << "Appending Item to grid";
+
+  for (int c = 0; c < m_ncols; c++) {
+      for (int r = 0; r < m_nrows; r++) {
+          if ((cell(r, c) == 0) && m_rows[r] && m_cols[c]) {
+//             qDebug() << "Found empty cell" << r << c;
+            setCell(r, c, w);
+
+            simplify();
+            return;
+          }
+      }
+  }
+  if (cell(m_nrows - 1, 0) == 0) {
+      setCell(m_nrows - 1, 0, w);
+
+      simplify();
+  }
+//   qDebug() << "Append to end case not handled";
 }
 
 }

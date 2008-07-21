@@ -688,17 +688,13 @@ void DataWizard::finished() {
     }
     case DataWizardPagePlot::OnePlot:
     {
-      CreatePlotForCurve *cmd = new CreatePlotForCurve(
-        _pagePlot->layout(),
-        _pagePlot->gridColumns());
+      CreatePlotForCurve *cmd = new CreatePlotForCurve();
       cmd->createItem();
 
       plotItem = static_cast<PlotItem*>(cmd->item());
       plotList.append(plotItem);
       if (_pageDataPresentation->plotDataPSD()) {
-        CreatePlotForCurve *cmd = new CreatePlotForCurve(
-          _pagePlot->layout(),
-          _pagePlot->gridColumns());
+        CreatePlotForCurve *cmd = new CreatePlotForCurve();
         cmd->createItem();
 
         plotItem = static_cast<PlotItem*>(cmd->item());
@@ -709,17 +705,13 @@ void DataWizard::finished() {
     case DataWizardPagePlot::MultiplePlots:
     {
       for (int i = 0; i < vectors.count(); ++i) {
-        CreatePlotForCurve *cmd = new CreatePlotForCurve(
-          _pagePlot->layout(),
-          _pagePlot->gridColumns());
+        CreatePlotForCurve *cmd = new CreatePlotForCurve();
         cmd->createItem();
 
         plotItem = static_cast<PlotItem*>(cmd->item());
         plotList.append(plotItem);
         if (_pageDataPresentation->plotDataPSD()) {
-          CreatePlotForCurve *cmd = new CreatePlotForCurve(
-            _pagePlot->layout(),
-            _pagePlot->gridColumns());
+          CreatePlotForCurve *cmd = new CreatePlotForCurve();
           cmd->createItem();
 
           plotItem = static_cast<PlotItem*>(cmd->item());
@@ -740,17 +732,13 @@ void DataWizard::finished() {
     case DataWizardPagePlot::CyclePlotCount:
     {
       for (int i = 0; i < _pagePlot->plotCount(); ++i) {
-        CreatePlotForCurve *cmd = new CreatePlotForCurve(
-          _pagePlot->layout(),
-          _pagePlot->gridColumns());
+        CreatePlotForCurve *cmd = new CreatePlotForCurve();
         cmd->createItem();
 
         plotItem = static_cast<PlotItem*>(cmd->item());
         plotList.append(plotItem);
         if (_pageDataPresentation->plotDataPSD()) {
-          CreatePlotForCurve *cmd = new CreatePlotForCurve(
-            _pagePlot->layout(),
-            _pagePlot->gridColumns());
+          CreatePlotForCurve *cmd = new CreatePlotForCurve();
           cmd->createItem();
 
           plotItem = static_cast<PlotItem*>(cmd->item());
@@ -885,6 +873,7 @@ void DataWizard::finished() {
           (*plotIterator)->yAxis()->setAxisLog(_pagePlot->PSDLogY());
           renderItem->addRelation(kst_cast<Relation>(curve));
           (*plotIterator)->update();
+          (*plotIterator)->parentView()->appendToLayout(_pagePlot->layout(), (*plotIterator), _pagePlot->gridColumns());
         }
 
         if (_pagePlot->curvePlacement() != DataWizardPagePlot::OnePlot) { 

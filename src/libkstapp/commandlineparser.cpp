@@ -220,7 +220,7 @@ void CommandLineParser::createCurveInPlot(VectorPtr xv, VectorPtr yv, VectorPtr 
     curve->unlock();
 
     if (_doConsecutivePlots) {
-      CreatePlotForCurve *cmd = new CreatePlotForCurve(CurvePlacement::Auto);
+      CreatePlotForCurve *cmd = new CreatePlotForCurve();
       cmd->createItem();
       _plotItem = static_cast<PlotItem*>(cmd->item());
       _plotItem->setName(QString("P-")+curve->Name());
@@ -228,6 +228,8 @@ void CommandLineParser::createCurveInPlot(VectorPtr xv, VectorPtr yv, VectorPtr 
     PlotRenderItem *renderItem = _plotItem->renderItem(PlotRenderItem::Cartesian);
     renderItem->addRelation(kst_cast<Relation>(curve));
     _plotItem->update();
+
+    _plotItem->parentView()->appendToLayout(CurvePlacement::Auto, _plotItem);
 }
 
 void CommandLineParser::createOrFindPlot( const QString plot_name ) {
@@ -244,7 +246,7 @@ void CommandLineParser::createOrFindPlot( const QString plot_name ) {
     }
 
     if (!found) {
-      CreatePlotForCurve *cmd = new CreatePlotForCurve(CurvePlacement::Auto);
+      CreatePlotForCurve *cmd = new CreatePlotForCurve();
       cmd->createItem();
       pi = static_cast<PlotItem*> ( cmd->item() );
       pi->setName ( plot_name );

@@ -64,10 +64,6 @@ void ViewGridLayout::addViewItem(ViewItem *viewItem, int row, int column, int ro
   _rowCount = maxRow > _rowCount ? maxRow : _rowCount;
   _columnCount = maxColumn > _columnCount ? maxColumn : _columnCount;
 
-  //Watch for margin changes
-  if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem))
-    connect(plotItem, SIGNAL(marginsChanged()), this, SLOT(update()));
-
   //FIXME these could be consolidated
   _items.append(item);
   _itemInfos.insert(viewItem, item);
@@ -159,7 +155,7 @@ void ViewGridLayout::resetSharedAxis() {
 }
 
 
-void ViewGridLayout::update() {
+void ViewGridLayout::apply() {
 
   updatePlotMargins();
   updateSharedAxis();
@@ -236,6 +232,7 @@ void ViewGridLayout::update() {
              << endl;
 #endif
   }
+  updateSharedAxis();
 }
 
 
@@ -282,7 +279,6 @@ void ViewGridLayout::updatePlotMargins() {
 
 
 void ViewGridLayout::updateSharedAxis() {
-
   foreach (LayoutItem item, _items) {
     PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
 
@@ -300,11 +296,14 @@ void ViewGridLayout::updateSharedAxis() {
 
 
 void ViewGridLayout::shareAxisWithPlotToLeft(LayoutItem item) {
-  QPair<int, int> key = qMakePair(item.row, item.column - 1);
-  if (!_itemLayouts.contains(key))
-    return;
-
   PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
+
+  QPair<int, int> key = qMakePair(item.row, item.column - 1);
+  if (!_itemLayouts.contains(key)) {
+    plotItem->setLeftSuppressed(false);
+    setSpacing(QSizeF(spacing().width(), spacing().height()));
+    return;
+  }
 
   LayoutItem left = _itemLayouts.value(key);
   PlotItem *leftItem = qobject_cast<PlotItem*>(left.viewItem);
@@ -332,11 +331,15 @@ void ViewGridLayout::shareAxisWithPlotToLeft(LayoutItem item) {
 
 
 void ViewGridLayout::shareAxisWithPlotToRight(LayoutItem item) {
-  QPair<int, int> key = qMakePair(item.row, item.column + 1);
-  if (!_itemLayouts.contains(key))
-    return;
-
   PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
+
+  QPair<int, int> key = qMakePair(item.row, item.column + 1);
+  if (!_itemLayouts.contains(key)) {
+    plotItem->setRightSuppressed(false);
+    setSpacing(QSizeF(spacing().width(), spacing().height()));
+    return;
+  }
+
 
   LayoutItem right = _itemLayouts.value(key);
   PlotItem *rightItem = qobject_cast<PlotItem*>(right.viewItem);
@@ -364,11 +367,14 @@ void ViewGridLayout::shareAxisWithPlotToRight(LayoutItem item) {
 
 
 void ViewGridLayout::shareAxisWithPlotAbove(LayoutItem item) {
-  QPair<int, int> key = qMakePair(item.row - 1, item.column);
-  if (!_itemLayouts.contains(key))
-    return;
-
   PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
+
+  QPair<int, int> key = qMakePair(item.row - 1, item.column);
+  if (!_itemLayouts.contains(key)) {
+    plotItem->setTopSuppressed(false);
+    setSpacing(QSizeF(spacing().width(), spacing().height()));
+    return;
+  }
 
   LayoutItem top = _itemLayouts.value(key);
   PlotItem *topItem = qobject_cast<PlotItem*>(top.viewItem);
@@ -396,11 +402,14 @@ void ViewGridLayout::shareAxisWithPlotAbove(LayoutItem item) {
 
 
 void ViewGridLayout::shareAxisWithPlotBelow(LayoutItem item) {
-  QPair<int, int> key = qMakePair(item.row + 1, item.column);
-  if (!_itemLayouts.contains(key))
-    return;
-
   PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
+
+  QPair<int, int> key = qMakePair(item.row + 1, item.column);
+  if (!_itemLayouts.contains(key)) {
+    plotItem->setBottomSuppressed(false);
+    setSpacing(QSizeF(spacing().width(), spacing().height()));
+    return;
+  }
 
   LayoutItem bottom = _itemLayouts.value(key);
   PlotItem *bottomItem = qobject_cast<PlotItem*>(bottom.viewItem);

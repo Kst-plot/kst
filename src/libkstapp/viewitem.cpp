@@ -1817,7 +1817,7 @@ void LayoutCommand::undo() {
 
 void LayoutCommand::redo() {
   Q_ASSERT(_layout);
-  _layout->update();
+  _layout->apply();
 }
 
 
@@ -1865,7 +1865,7 @@ void LayoutCommand::createLayout(int columns) {
                      _item, SLOT(setEnabled(bool)));
   }
 
-  _layout->update();
+  _layout->apply();
   _item->parentView()->undoStack()->push(this);
 }
 
@@ -1878,7 +1878,7 @@ void AppendLayoutCommand::undo() {
 
 void AppendLayoutCommand::redo() {
   Q_ASSERT(_layout);
-  _layout->update();
+  _layout->apply();
 }
 
 
@@ -1897,25 +1897,65 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
   //_item->setZValue(1);
   _item->parentView()->scene()->addItem(item);
 
-  switch (layout) {
-    case CurvePlacement::Auto:
-      qDebug() << "Auto Layout requested";
-      break;
-    case CurvePlacement::Custom:
-      qDebug() << "Custom Grid requested";
-      break;
-    default:
-      qDebug() << "Protecting current Layout";
-      break;
+  if (layout == CurvePlacement::Auto) {
+    columns = 0;
   }
 
+  if (layout != CurvePlacement::Protect) {
+    QList<ViewItem*> viewItems;
+    QList<QGraphicsItem*> list = _item->QGraphicsItem::children();
+
+    foreach (QGraphicsItem *graphicsItem, list) {
+      ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(graphicsItem);
+      if (!viewItem || viewItem->hasStaticGeometry() || !viewItem->allowsLayout() || viewItem->parentItem() != _item || viewItem == item)
+        continue;
+      viewItems.append(viewItem);
+    }
+
+    bool appendRequired = true;
+    if (viewItems.isEmpty()) {
+      viewItems.append(item);
+    }
+
+    Grid *grid = Grid::buildGrid(viewItems, columns, appendRequired);
+    Q_ASSERT(grid);
+    grid->appendItem(item);
+
+    if (appendRequired) {
+      viewItems.append(item);
+    }
+
+    _layout = new ViewGridLayout(_item);
+
+    foreach (ViewItem *v, viewItems) {
+      int r = 0, c = 0, rs = 0, cs = 0;
+      if (grid->locateWidget(v, r, c, rs, cs)) {
+        if (rs * cs == 1) {
+          _layout->addViewItem(v, r, c, 1, 1);
+        } else {
+          _layout->addViewItem(v, r, c, rs, cs);
+        }
+      } else {
+        qDebug() << "ooops, viewItem does not fit in layout" << endl;
+      }
+    }
+
+    if (qobject_cast<LayoutBoxItem*>(_item)) {
+      _layout->setMargin((_item->sizeOfGrip() / 2.0));
+      _layout->setSpacing((_item->sizeOfGrip() / 2.0));
+      QObject::connect(_layout, SIGNAL(enabledChanged(bool)),
+                      _item, SLOT(setEnabled(bool)));
+    }
+
+    _layout->apply();
+  }
   _item->parentView()->undoStack()->push(this);
 }
 
 
 void BreakLayoutCommand::undo() {
   Q_ASSERT(_layout);
-  _layout->update();
+  _layout->apply();
 }
 
 
