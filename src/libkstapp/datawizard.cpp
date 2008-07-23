@@ -786,6 +786,7 @@ void DataWizard::finished() {
         PlotRenderItem *renderItem = (*plotIterator)->renderItem(PlotRenderItem::Cartesian);
         renderItem->addRelation(kst_cast<Relation>(curve));
         (*plotIterator)->update();
+        (*plotIterator)->parentView()->appendToLayout(_pagePlot->layout(), (*plotIterator), _pagePlot->gridColumns());
       }
 
       if (_pagePlot->curvePlacement() != DataWizardPagePlot::OnePlot) { 

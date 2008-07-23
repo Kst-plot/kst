@@ -1848,13 +1848,14 @@ void LayoutCommand::createLayout(int columns) {
   foreach (ViewItem *v, viewItems) {
     int r = 0, c = 0, rs = 0, cs = 0;
     if (grid->locateWidget(v, r, c, rs, cs)) {
-      if (rs * cs == 1) {
-        _layout->addViewItem(v, r, c, 1, 1);
-      } else {
-        _layout->addViewItem(v, r, c, rs, cs);
-      }
+      _layout->addViewItem(v, r, c, rs, cs);
     } else {
-      qDebug() << "ooops, viewItem does not fit in layout" << endl;
+      grid->appendItem(v);
+      if (grid->locateWidget(v, r, c, rs, cs)) {
+        _layout->addViewItem(v, r, c, rs, cs);
+      } else {
+        qDebug() << "ooops, viewItem does not fit in layout" << endl;
+      }
     }
   }
 
@@ -1915,9 +1916,10 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
     bool appendRequired = true;
     if (viewItems.isEmpty()) {
       viewItems.append(item);
+      appendRequired = false;
     }
 
-    Grid *grid = Grid::buildGrid(viewItems, columns, appendRequired);
+    Grid *grid = Grid::buildGrid(viewItems, columns);
     Q_ASSERT(grid);
     grid->appendItem(item);
 

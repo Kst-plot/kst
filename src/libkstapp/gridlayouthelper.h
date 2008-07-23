@@ -61,20 +61,15 @@ namespace Kst {
 class Grid
 {
 public:
-    static Grid *buildGrid(const QList<ViewItem*> &itemList, bool pad = false);
-    static Grid *buildGrid(const QList<ViewItem*> &itemList, int columns, bool pad = false);
+    static Grid *buildGrid(const QList<ViewItem*> &itemList);
+    static Grid *buildGrid(const QList<ViewItem*> &itemList, int columns);
 
     Grid(int rows, int cols);
     ~Grid();
 
     ViewItem* cell(int row, int col) const { return m_cells[ row * m_ncols + col]; }
-    void setCell(int row, int col, ViewItem* w) { m_cells[ row * m_ncols + col] = w; }
-    void setCells(QRect c, ViewItem* w) {
-        for (int rows = c.bottom()-c.top(); rows >= 0; rows--)
-            for (int cols = c.right()-c.left(); cols >= 0; cols--) {
-                setCell(c.top()+rows, c.left()+cols, w);
-            }
-    }
+    bool setCell(int row, int col, ViewItem* w);
+    void setCells(QRect c, ViewItem* w);
     int numRows() const { return m_nrows; }
     int numCols() const { return m_ncols; }
 

@@ -55,9 +55,11 @@ with our layouts and items.*/
 #include <math.h>
 #include <QDebug>
 
+// #define DEBUG_GRID_BUILDING 1
+
 namespace Kst {
 
-Grid *Grid::buildGrid(const QList<ViewItem*> &itemList, bool pad)
+Grid *Grid::buildGrid(const QList<ViewItem*> &itemList)
 {
     if (!itemList.count())
         return 0;
@@ -111,11 +113,11 @@ Grid *Grid::buildGrid(const QList<ViewItem*> &itemList, bool pad)
 
     int rows = y.size() - 1;
     int cols = x.size() - 1;
-    if (pad) {
-      rows++;
-    }
+    rows++;
 
-//     qDebug() << "Building grid with" << rows << cols;
+#if DEBUG_GRID_BUILDING
+    qDebug() << "Building automatic grid with" << rows << "rows and" << cols << "columns";
+#endif
 
     Grid *grid = new Grid(rows, cols);
 
@@ -156,22 +158,61 @@ Grid *Grid::buildGrid(const QList<ViewItem*> &itemList, bool pad)
     return grid;
 }
 
-Grid *Grid::buildGrid(const QList<ViewItem*> &itemList, int columns, bool pad)
+void Grid::setCells(QRect c, ViewItem* w) {
+#if DEBUG_GRID_BUILDING
+    qDebug() << "setCells requested for rect" << c;
+#endif
+    QVector<int> skippedRows;
+    QVector<int> skippedColumns;
+    for (int rows = c.bottom()-c.top(); rows >= 0; rows--)
+        for (int cols = c.right()-c.left(); cols >= 0; cols--) {
+            if (!(skippedRows.contains(c.top()+rows) || skippedColumns.contains(c.left()+cols))) {
+              if (!setCell(c.top()+rows, c.left()+cols, w)) {
+                skippedRows.append(c.top()+rows);
+                skippedColumns.append(c.left()+cols);
+#if DEBUG_GRID_BUILDING
+                qDebug() << "skipping rows" << skippedRows << "skipping columns" << skippedColumns;
+#endif
+              }
+        }
+    }
+}
+
+bool Grid::setCell(int row, int col, ViewItem* w) {
+#if DEBUG_GRID_BUILDING
+    qDebug() << "Setting cell" << row << col; 
+#endif
+    if (cell(row, col)) {
+#if DEBUG_GRID_BUILDING
+      qDebug() << "Cell has already been added";
+#endif
+      return false;
+    } else {
+      m_cells[ row * m_ncols + col] = w;
+      return true;
+    }
+}
+
+Grid *Grid::buildGrid(const QList<ViewItem*> &itemList, int columns)
 {
     if (!itemList.count())
         return 0;
 
     if (columns == 0) {
-      return buildGrid(itemList, pad);
+      return buildGrid(itemList);
     }
 
     int rows = ceil((qreal)itemList.count() / columns);
-    if (pad) {
-      if (rows * columns == itemList.count()) {
-        rows++;
-//         qDebug() << "Padded" << rows;
-      }
+    if (rows * columns == itemList.count()) {
+      rows++;
+#if DEBUG_GRID_BUILDING
+      qDebug() << "Padding required, row count is now" << rows;
+#endif
     }
+
+#if DEBUG_GRID_BUILDING
+    qDebug() << "Building custom grid with" << rows << "rows and" << columns << "columns";
+#endif
 
     QMap<int, ViewItem*> sortedItems;
     foreach(ViewItem* item, itemList) {
@@ -426,7 +467,6 @@ void Grid::simplify()
     merge();
 }
 
-
 void Grid::merge()
 {
     int r,c;
@@ -486,7 +526,9 @@ void Grid::appendItem(ViewItem *w) {
   for (int c = 0; c < m_ncols; c++) {
       for (int r = 0; r < m_nrows; r++) {
           if ((cell(r, c) == 0) && m_rows[r] && m_cols[c]) {
-//             qDebug() << "Found empty cell" << r << c;
+#if DEBUG_GRID_BUILDING
+            qDebug() << "Found empty cell" << r << c;
+#endif
             setCell(r, c, w);
 
             simplify();
@@ -494,12 +536,15 @@ void Grid::appendItem(ViewItem *w) {
           }
       }
   }
+
+#if DEBUG_GRID_BUILDING
+  qDebug() << "No empty cell located.  Appending to end.";
+#endif
   if (cell(m_nrows - 1, 0) == 0) {
       setCell(m_nrows - 1, 0, w);
 
       simplify();
   }
-//   qDebug() << "Append to end case not handled";
 }
 
 }
