@@ -1796,11 +1796,13 @@ void PlotItem::resetSelectionRect() {
 
 void PlotItem::zoomFixedExpression(const QRectF &projection) {
 #if DEBUG_ZOOM
-  qDebug() << "zoomFixedExpression" << endl;
+  qDebug() << "zoomFixedExpression" << projection << "current" << projectionRect();
 #endif
-  ZoomCommand *cmd = new ZoomFixedExpressionCommand(this, projection);
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (projection.isValid()) {
+    ZoomCommand *cmd = new ZoomFixedExpressionCommand(this, projection);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
@@ -1808,9 +1810,11 @@ void PlotItem::zoomXRange(const QRectF &projection) {
 #if DEBUG_ZOOM
   qDebug() << "zoomXRange" << endl;
 #endif
-  ZoomCommand *cmd = new ZoomXRangeCommand(this, projection);
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (projection.isValid()) {
+    ZoomCommand *cmd = new ZoomXRangeCommand(this, projection);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
@@ -1818,9 +1822,11 @@ void PlotItem::zoomYRange(const QRectF &projection) {
 #if DEBUG_ZOOM
   qDebug() << "zoomYRange" << endl;
 #endif
-  ZoomCommand *cmd = new ZoomYRangeCommand(this, projection);
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (projection.isValid()) {
+    ZoomCommand *cmd = new ZoomYRangeCommand(this, projection);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
@@ -2273,6 +2279,12 @@ void ZoomCommand::undo() {
 void ZoomCommand::redo() {
   foreach (ZoomState state, _originalStates) {
     applyZoomTo(state.item);
+  }
+
+  if (PlotItem *plotItem = qobject_cast<PlotItem*>(_item)) {
+    if (!plotItem->isTiedZoom()) {
+      ViewGridLayout::resetSharedPlots(plotItem);
+    }
   }
 }
 

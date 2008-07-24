@@ -147,10 +147,42 @@ void ViewGridLayout::reset() {
 }
 
 
+void ViewGridLayout::resetSharedPlots(ViewItem *item) {
+  if (PlotItem *plotItem = qobject_cast<PlotItem*>(item)) {
+  } else {
+    return;
+  }
+
+  QList<QGraphicsItem*> list;
+  if (item->parentItem()) {
+    list = item->parentItem()->QGraphicsItem::children();
+    foreach (QGraphicsItem *graphicsItem, list) {
+      if (PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(graphicsItem)) {
+        plotItem->setLabelsVisible(true);
+        plotItem->update();
+      }
+    }
+  } else {
+    if (item->parentView()) {
+      QList<QGraphicsItem*> list = item->parentView()->items();
+      foreach (QGraphicsItem *item, list) {
+        ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+        if (!viewItem || viewItem->parentItem() || !viewItem->isVisible())
+          continue;
+        if (PlotItem *plotItem = qobject_cast<PlotItem*>(viewItem)) {
+          plotItem->setLabelsVisible(true);
+        }
+      }
+    }
+  }
+}
+
+
 void ViewGridLayout::resetSharedAxis() {
   foreach (LayoutItem item, _items) {
-    if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem))
+    if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem)) {
       plotItem->setLabelsVisible(true);
+    }
   }
 }
 

@@ -1700,18 +1700,22 @@ void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
     new MoveCommand(this, _originalPosition, pos());
 
     maybeReparent();
+    ViewGridLayout::resetSharedPlots(this);
   } else if (oldMode == View::Resize && _originalRect != rect()) {
     new ResizeCommand(this, _originalRect, rect());
 
     maybeReparent();
+    ViewGridLayout::resetSharedPlots(this);
   } else if (oldMode == View::Scale && _originalTransform != transform()) {
     new ScaleCommand(this, _originalTransform, transform());
 
     maybeReparent();
+    ViewGridLayout::resetSharedPlots(this);
   } else if (oldMode == View::Rotate && _originalTransform != transform()) {
     new RotateCommand(this, _originalTransform, transform());
 
     maybeReparent();
+    ViewGridLayout::resetSharedPlots(this);
   }
 }
 
