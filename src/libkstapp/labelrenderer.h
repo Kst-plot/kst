@@ -50,18 +50,8 @@ struct RenderContext {
 
   inline void setFont(const QFont& f_in) {
     QFont f = f_in;
-    _fontSize = f.pointSize();
-    // Here is the 'interesting' bit:  elsewhere, the label size has been adjusted according to the 
-    // size of the view window it is being drawn into.  This is what we want to do, so that, ignoring 
-    // aspect ratios being different, a plot (and its children) will be WYSIWYG.  
-    // So we really should have been specifying the font sizes by their pixel size, rather than by
-    // point size (which cares about DPI). 
-    // BUT: QFont constructs with point size, so here we convert the font to being specified 
-    // according to pixel size, not point size...
-  // TODO REVIEW THIS!  Either everything needs to do it this way or no one.
-//     if (_fontSize>0) {
-//       f.setPixelSize(_fontSize); // device independence has been handled elsewhere - use pixels
-//     }
+    _fontSize = f.pixelSize();
+
     if (p) {
       p->setFont(f);
       _ascent = p->fontMetrics().ascent();

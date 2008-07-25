@@ -45,7 +45,7 @@ void ArrowItem::paint(QPainter *painter) {
   painter->drawLine(line());
 
   if (_startArrowHead) {
-    double deltax = (parentView()->defaultFont().pointSizeF() / 2) * _startArrowScale;
+    double deltax = (parentView()->defaultFont().pixelSize() / 2) * _startArrowScale;
     double theta = atan2(double(line().y2() - line().y1()), double(line().x2() - line().x1())) - M_PI / 2.0;
     double sina = sin(theta);
     double cosa = cos(theta);
@@ -64,7 +64,7 @@ void ArrowItem::paint(QPainter *painter) {
   }
 
   if (_endArrowHead) {
-    double deltax = (parentView()->defaultFont().pointSizeF() / 2) * _endArrowScale;
+    double deltax = (parentView()->defaultFont().pixelSize() / 2) * _endArrowScale;
     double theta = atan2(double(line().y1() - line().y2()), double(line().x1() - line().x2())) - M_PI / 2.0;
     double sina = sin(theta);
     double cosa = cos(theta);

@@ -300,7 +300,7 @@ void MainWindow::print() {
 
     for (int i = 0; i < printer.numCopies(); ++i) {
       foreach (QGraphicsView *view, pages) {
-        view->render(&painter, QRectF(), QRect(), Qt::KeepAspectRatio /* IgnoreAspectRatio */);
+        view->render(&painter);
         printer.newPage();
       }
     }

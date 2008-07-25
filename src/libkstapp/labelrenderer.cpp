@@ -54,7 +54,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
 
     QFont f = rc.font();
     if (rc.fontSize() != rc.size) {
-      f.setPointSize(rc.size);
+      f.setPixelSize(rc.size);
     }
 
     if (fi->attributes.bold) {

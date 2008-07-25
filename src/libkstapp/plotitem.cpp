@@ -1296,7 +1296,7 @@ QRectF PlotItem::rightLabelRect(bool calc) const {
 
 QFont PlotItem::calculatedLeftLabelFont() {
   QFont font(_leftLabelFont);
-  font.setPointSizeF(parentView()->defaultFont(_leftLabelFontScale).pointSizeF());
+  font.setPixelSize(parentView()->defaultFont(_leftLabelFontScale).pixelSize());
 
   return font;
 }
@@ -1304,7 +1304,7 @@ QFont PlotItem::calculatedLeftLabelFont() {
 
 QFont PlotItem::calculatedRightLabelFont() {
   QFont font(_rightLabelFont);
-  font.setPointSizeF(parentView()->defaultFont(_rightLabelFontScale).pointSizeF());
+  font.setPixelSize(parentView()->defaultFont(_rightLabelFontScale).pixelSize());
 
   return font;
 }
@@ -1312,7 +1312,7 @@ QFont PlotItem::calculatedRightLabelFont() {
 
 QFont PlotItem::calculatedTopLabelFont() {
   QFont font(_topLabelFont);
-  font.setPointSizeF(parentView()->defaultFont(_topLabelFontScale).pointSizeF());
+  font.setPixelSize(parentView()->defaultFont(_topLabelFontScale).pixelSize());
 
   return font;
 }
@@ -1320,7 +1320,7 @@ QFont PlotItem::calculatedTopLabelFont() {
 
 QFont PlotItem::calculatedBottomLabelFont() {
   QFont font(_bottomLabelFont);
-  font.setPointSizeF(parentView()->defaultFont(_bottomLabelFontScale).pointSizeF());
+  font.setPixelSize(parentView()->defaultFont(_bottomLabelFontScale).pixelSize());
 
   return font;
 }

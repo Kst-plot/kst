@@ -380,7 +380,7 @@ void View::updateFont() {
     fontSize = ApplicationSettings::self()->minimumFontSize();
   }
 
-  _defaultFont.setPointSizeF(fontSize);
+  _defaultFont.setPixelSize(fontSize);
   _defaultFont.setFamily(ApplicationSettings::self()->defaultFontFamily());
 }
 
@@ -390,13 +390,15 @@ QFont View::defaultFont(double scale) const {
 
   qreal fontSize = (qreal)(height() + width()) / (ApplicationSettings::self()->referenceViewHeight() + ApplicationSettings::self()->referenceViewWidth());
   fontSize *= scale;
-  fontSize += font.pointSizeF();
+  fontSize += font.pixelSize();
 
   if (fontSize < ApplicationSettings::self()->minimumFontSize()) {
     fontSize = ApplicationSettings::self()->minimumFontSize();
   }
 
-  font.setPointSizeF(fontSize);
+  if (fontSize > 0) {
+    font.setPixelSize(fontSize);
+  }
 
   return font;
 }
