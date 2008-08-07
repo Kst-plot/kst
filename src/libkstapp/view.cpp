@@ -286,10 +286,8 @@ void View::resizeEvent(QResizeEvent *event) {
 
     setSceneRect(QRectF(0.0, 0.0, width() - 4.0, height() - 4.0));
 
-    QLinearGradient l(0.0, 0.0, 0.0, height() - 4.0);
-    l.setColorAt(0.0, Qt::white);
-    l.setColorAt(1.0, Qt::lightGray);
-    setBackgroundBrush(l);
+    updateBrush();
+
     setCacheMode(QGraphicsView::CacheBackground);
 
     foreach (QGraphicsItem *item, items()) {
@@ -306,8 +304,18 @@ void View::resizeEvent(QResizeEvent *event) {
 }
 
 
-void View::drawBackground(QPainter *painter, const QRectF &rect) {
+void View::updateBrush() {
+  if (!ApplicationSettings::self()->gradientStops().empty()) {
+    QLinearGradient l(0.0, height() - 4.0, 0.0, 0.0);
+    l.setStops(ApplicationSettings::self()->gradientStops());
+    setBackgroundBrush(l);
+  } else {
+    setBackgroundBrush(ApplicationSettings::self()->backgroundBrush());
+  }
+}
 
+
+void View::drawBackground(QPainter *painter, const QRectF &rect) {
   QGraphicsView::drawBackground(painter, rect);
 
   if (!showGrid())
@@ -355,6 +363,7 @@ void View::updateSettings() {
                         ApplicationSettings::self()->gridVerticalSpacing()));
 
   updateFont();
+  updateBrush();
 
 }
 

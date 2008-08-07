@@ -21,7 +21,7 @@
 namespace Kst {
 
 GradientEditor::GradientEditor(QWidget *parent)
-  : QWidget(parent), _gradient(0), _movingStop(-1) {
+  : QWidget(parent), _gradient(0), _movingStop(-1), _fullResetMode(true) {
   setMouseTracking(true);
   setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
@@ -52,9 +52,20 @@ void GradientEditor::setGradient(const QGradient &gradient) {
 }
 
 
+void GradientEditor::setResetMode(bool full) {
+  _fullResetMode = full;
+}
+
+
 void GradientEditor::resetGradient() {
   QLinearGradient defaultGradient(1,0,0,0);
   clearGradientStops();
+  if (!_fullResetMode) {
+    QGradientStops stops;
+    stops.append(qMakePair(1.0, QColor(Qt::white)));
+    stops.append(qMakePair(0.0, QColor(Qt::lightGray)));
+    setGradientStops(stops);
+  }
   update();
 }
 

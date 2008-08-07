@@ -22,7 +22,7 @@ namespace Kst {
 class KST_EXPORT FillTab : public DialogTab, Ui::FillTab {
   Q_OBJECT
   public:
-    FillTab(QWidget *parent = 0);
+    FillTab(bool resetFullMono = true, QWidget *parent = 0);
     virtual ~FillTab();
 
     QColor color() const;

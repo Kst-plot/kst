@@ -22,6 +22,7 @@ namespace Kst {
 
 class GeneralTab;
 class GridTab;
+class FillTab;
 
 class KST_EXPORT ApplicationSettingsDialog : public Dialog
 {
@@ -33,14 +34,17 @@ class KST_EXPORT ApplicationSettingsDialog : public Dialog
   private Q_SLOTS:
     void generalChanged();
     void gridChanged();
+    void fillChanged();
 
   private:
     void setupGeneral();
     void setupGrid();
+    void setupFill();
 
   private:
     GeneralTab *_generalTab;
     GridTab *_gridTab;
+    FillTab *_fillTab;
 };
 
 }

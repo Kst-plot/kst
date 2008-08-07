@@ -104,6 +104,7 @@ class KST_EXPORT View : public QGraphicsView
 
   private Q_SLOTS:
     void updateSettings();
+    void updateBrush();
     void updateFont();
 
   private:

@@ -13,6 +13,7 @@
 #define APPLICATIONSETTINGS_H
 
 #include <QObject>
+#include <QBrush>
 
 class QSettings;
 
@@ -62,6 +63,11 @@ class ApplicationSettings : public QObject
     qreal gridVerticalSpacing() const;
     void setGridVerticalSpacing(qreal spacing);
 
+    QBrush backgroundBrush() const;
+    void setBackgroundBrush(const QBrush brush);
+
+    QGradientStops gradientStops() const;
+
   Q_SIGNALS:
     void modified();
 
@@ -83,6 +89,8 @@ class ApplicationSettings : public QObject
     bool _snapToGrid;
     qreal _gridHorSpacing;
     qreal _gridVerSpacing;
+    QBrush _backgroundBrush;
+    QGradientStops _gradientStops;
 
     friend class ApplicationSettingsDialog;
 };

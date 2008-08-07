@@ -22,6 +22,7 @@
 #include <QX11Info>
 #endif
 
+
 namespace Kst {
 
 static ApplicationSettings *_self = 0;
@@ -60,6 +61,23 @@ ApplicationSettings::ApplicationSettings() {
   _snapToGrid = _settings->value("grid/snaptogrid", QVariant(false)).toBool();
   _gridHorSpacing = _settings->value("grid/horizontalspacing", 20.0).toDouble();
   _gridVerSpacing = _settings->value("grid/verticalspacing", 20.0).toDouble();
+
+  Qt::BrushStyle style = (Qt::BrushStyle)_settings->value("fill/style", "0").toInt();
+  if (style < Qt::LinearGradientPattern) {
+    _backgroundBrush.setColor(QColor(_settings->value("fill/color", "white").toString()));
+    _backgroundBrush.setStyle(style);
+  }
+
+  QString stopList = _settings->value("fill/gradient", "0,#cccccc,1,#ffffff").toString();
+  if (!stopList.isEmpty()) {
+    QStringList stopInfo = stopList.split(',', QString::SkipEmptyParts);
+    QLinearGradient gradient(0.0, 0.0, 0.0, 1.0);
+    for (int i = 0; i < stopInfo.size(); i+=2) {
+      gradient.setColorAt(stopInfo.at(i).toDouble(), QColor(stopInfo.at(i+1)));
+    }
+   _gradientStops = gradient.stops();
+    _backgroundBrush = QBrush(gradient);
+  }
 }
 
 
@@ -217,6 +235,42 @@ void ApplicationSettings::setGridVerticalSpacing(qreal spacing) {
   _settings->setValue("grid/verticalspacing", spacing);
   emit modified();
 }
+
+QBrush ApplicationSettings::backgroundBrush() const {
+  return _backgroundBrush;
+}
+
+
+void ApplicationSettings::setBackgroundBrush(const QBrush brush) {
+  _backgroundBrush = brush;
+  _gradientStops.clear();
+  _settings->setValue("fill/color", brush.color().name());
+  _settings->setValue("fill/style", QVariant(brush.style()).toString());
+
+  QString stopList;
+  if (brush.gradient()) {
+    foreach(QGradientStop stop, brush.gradient()->stops()) {
+      qreal point = (qreal)stop.first;
+      QColor color = (QColor)stop.second;
+
+      _gradientStops.append(qMakePair(point, color));
+
+      stopList += QString::number(point);
+      stopList += ",";
+      stopList += color.name();
+      stopList += ",";
+    }
+  }
+  _settings->setValue("fill/gradient", stopList);
+
+  emit modified();
+}
+
+
+QGradientStops ApplicationSettings::gradientStops() const {
+  return _gradientStops;
+}
+
 
 }
 
