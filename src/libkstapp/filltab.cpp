@@ -15,7 +15,7 @@
 
 namespace Kst {
 
-FillTab::FillTab(bool resetFullMono, QWidget *parent)
+FillTab::FillTab(QWidget *parent)
   : DialogTab(parent) {
 
   setupUi(this);
@@ -36,8 +36,6 @@ FillTab::FillTab(bool resetFullMono, QWidget *parent)
   _style->addItem("BDiagPattern", Qt::BDiagPattern);
   _style->addItem("FDiagPattern", Qt::FDiagPattern);
   _style->addItem("DiagCrossPattern", Qt::DiagCrossPattern);
-
-  _gradientEditor->setResetMode(resetFullMono);
 
   connect(_color, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
   connect(_style, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));

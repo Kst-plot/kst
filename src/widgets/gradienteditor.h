@@ -30,7 +30,7 @@ public:
 
   QGradient gradient() const;
 
-  void setResetMode(bool full);
+  void setDefaultGradientStops(QGradientStops stops);
 
 public Q_SLOTS:
   void setGradient(const QGradient &gradient);
@@ -63,7 +63,7 @@ private:
   QGradient *_gradient;
   QHash<int, Stop> _stopHash;
   int _movingStop;
-  bool _fullResetMode;
+  QGradientStops _defaultGradientStops;
 };
 
 }

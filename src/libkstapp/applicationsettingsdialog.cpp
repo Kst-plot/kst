@@ -28,7 +28,7 @@ ApplicationSettingsDialog::ApplicationSettingsDialog(QWidget *parent)
 
   _generalTab = new GeneralTab(this);
   _gridTab = new GridTab(this);
-  _fillTab = new FillTab(false, this);
+  _fillTab = new FillTab(this);
 
   connect(_generalTab, SIGNAL(apply()), this, SLOT(generalChanged()));
   connect(_gridTab, SIGNAL(apply()), this, SLOT(gridChanged()));
@@ -79,6 +79,11 @@ void ApplicationSettingsDialog::setupGrid() {
 
 
 void ApplicationSettingsDialog::setupFill() {
+  QGradientStops stops;
+  stops.append(qMakePair(1.0, QColor(Qt::white)));
+  stops.append(qMakePair(0.0, QColor(Qt::lightGray)));
+  _fillTab->gradientEditor()->setDefaultGradientStops(stops);
+
   QBrush b = ApplicationSettings::self()->backgroundBrush();
 
   _fillTab->setColor(b.color());
