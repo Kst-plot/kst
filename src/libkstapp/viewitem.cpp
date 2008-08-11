@@ -111,6 +111,19 @@ void ViewItem::save(QXmlStreamWriter &xml) {
   xml.writeStartElement("brush");
   xml.writeAttribute("color", brush().color().name());
   xml.writeAttribute("style", QVariant(brush().style()).toString());
+  if (brush().gradient()) {
+    QString stopList;
+    foreach(QGradientStop stop, brush().gradient()->stops()) {
+      qreal point = (qreal)stop.first;
+      QColor color = (QColor)stop.second;
+
+      stopList += QString::number(point);
+      stopList += ",";
+      stopList += color.name();
+      stopList += ",";
+    }
+    xml.writeAttribute("gradient", stopList);
+  }
   xml.writeEndElement();
 }
 
@@ -143,13 +156,24 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
     } else if (xml.name().toString() == "brush") {
       knownTag = true;
       QBrush brush;
-      av = attrs.value("color");
+      av = attrs.value("gradient");
       if (!av.isNull()) {
-          brush.setColor(QColor(av.toString()));
-      }
-      av = attrs.value("style");
-      if (!av.isNull()) {
-        brush.setStyle((Qt::BrushStyle)av.toString().toInt());
+        QStringList stopInfo = av.toString().split(',', QString::SkipEmptyParts);
+        QLinearGradient gradient(1,0,0,0);
+        gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
+        for (int i = 0; i < stopInfo.size(); i+=2) {
+          gradient.setColorAt(stopInfo.at(i).toDouble(), QColor(stopInfo.at(i+1)));
+        }
+        brush = QBrush(gradient);
+      } else {
+        av = attrs.value("color");
+        if (!av.isNull()) {
+            brush.setColor(QColor(av.toString()));
+        }
+        av = attrs.value("style");
+        if (!av.isNull()) {
+          brush.setStyle((Qt::BrushStyle)av.toString().toInt());
+        }
       }
       setBrush(brush);
     } else if (xml.name().toString() == "pen") {
