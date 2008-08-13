@@ -50,7 +50,7 @@ void UpdateManager::requestUpdate(ObjectPtr object) {
   if (!_updateRequests.contains(object)) {
     _updateRequests.append(object);
   }
-#if DEBUG_UPDATE_CYCLE > 0
+#if DEBUG_UPDATE_CYCLE > 1
   qDebug() << "UM - Update requested for" << object->Name() << "Update Count" << _updateRequests;
 #endif
 }
