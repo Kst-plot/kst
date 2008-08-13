@@ -31,6 +31,16 @@
 
 namespace Kst {
 
+  struct CurveContextDetails {
+    double Lx, Hx, Ly, Hy;
+    double m_X, m_Y;
+    double b_X, b_Y;
+    double XMin, XMax;
+    bool xLog, yLog;
+    double xLogBase, yLogBase;
+    int penWidth;
+  };
+
 class KST_EXPORT Curve: public Relation {
   Q_OBJECT
 
@@ -136,6 +146,12 @@ class KST_EXPORT Curve: public Relation {
     // render this vcurve
     virtual void paint(const CurveRenderContext& context);
 
+    // Update the curve details.
+    void curveUpdate(const CurveRenderContext& context);
+
+    // Compare the cached the context to the provided one.
+    bool redrawRequired(const CurveRenderContext& context); 
+
     // render the legend symbol for this curve
     virtual void paintLegendSymbol(QPainter *p, const QRect& bound);
 
@@ -179,6 +195,15 @@ class KST_EXPORT Curve: public Relation {
     QStack<bool> _hasPointsStack;
     QStack<bool> _hasLinesStack;
     QStack<int> _pointDensityStack;
+
+    QVector<QPolygon> _polygons;
+    QVector<QLine> _lines;
+    QVector<QPoint> _points;
+    QVector<QRect> _rects;
+    int _width;
+
+    CurveContextDetails _contextDetails;
+    bool _redrawRequired;
 
 };
 

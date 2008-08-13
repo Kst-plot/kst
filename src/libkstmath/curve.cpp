@@ -75,6 +75,8 @@ Curve::Curve(ObjectStore *store)
   setBarStyle(0);
   setPointDensity(0);
 
+  _redrawRequired = true;
+
   _shortName = "C"+QString::number(_cnum);
   if (_cnum>max_cnum) 
     max_cnum = _cnum;
@@ -164,6 +166,10 @@ Object::UpdateType Curve::update() {
   NS = qMax(cxV->length(), cyV->length());
 
   unlockInputsAndOutputs();
+
+  if (depUpdated) {
+    _redrawRequired = true;
+  }
 
   return (depUpdated ? UPDATE : NO_CHANGE);
 }
@@ -711,7 +717,84 @@ RelationPtr Curve::makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelat
 }
 
 
+bool Curve::redrawRequired(const CurveRenderContext& context) {
+  if ((_contextDetails.Lx == context.Lx) &&
+      (_contextDetails.Hx == context.Hx) &&  
+      (_contextDetails.Ly == context.Ly) &&  
+      (_contextDetails.Hy == context.Hy) &&  
+      (_contextDetails.m_X == context.m_X) &&  
+      (_contextDetails.m_Y == context.m_Y) &&  
+      (_contextDetails.b_X == context.b_X) &&  
+      (_contextDetails.b_Y == context.b_Y) &&  
+      (_contextDetails.XMin == context.XMin) &&  
+      (_contextDetails.XMax == context.XMax) &&  
+      (_contextDetails.xLog == context.xLog) &&  
+      (_contextDetails.yLog == context.yLog) &&  
+      (_contextDetails.xLogBase == context.xLogBase) &&  
+      (_contextDetails.yLogBase == context.yLogBase) &&  
+      (_contextDetails.penWidth == context.penWidth) ) {
+    return false;
+  } else {
+    _contextDetails.Lx = context.Lx;
+    _contextDetails.Hx = context.Hx;
+    _contextDetails.Ly = context.Ly;
+    _contextDetails.Hy = context.Hy;
+    _contextDetails.m_X = context.m_X;
+    _contextDetails.m_Y = context.m_Y;
+    _contextDetails.b_X = context.b_X;
+    _contextDetails.b_Y = context.b_Y;
+    _contextDetails.XMin = context.XMin;
+    _contextDetails.XMax = context.XMax;
+    _contextDetails.xLog = context.xLog;
+    _contextDetails.yLog = context.yLog;
+    _contextDetails.xLogBase = context.xLogBase;
+    _contextDetails.yLogBase = context.yLogBase;
+    _contextDetails.penWidth = context.penWidth;
+    return true;
+  }
+}
+
+
 void Curve::paint(const CurveRenderContext& context) {
+  if (redrawRequired(context) || _redrawRequired) {
+    curveUpdate(context);
+  }
+
+  QPainter *p = context.painter;
+  Qt::PenStyle style = Kst::LineStyle[lineStyle()];
+
+  if (hasBars()) {
+    if (barStyle() == 1) { // filled
+      p->setPen(QPen(context.foregroundColor, _width, style));
+    } else {
+      p->setPen(QPen(color(), _width, style));
+    }
+
+    foreach(QRect rect, _rects) {
+        p->fillRect(rect, color());
+    }
+  }
+
+  p->setPen(QPen(color(), _width, style));
+
+  foreach(QPolygon poly, _polygons) {
+    p->drawPolyline(poly);
+  }
+  foreach(QLine line, _lines) {
+    p->drawLine(line);
+  }
+  foreach(QPoint point, _points) {
+    CurvePointSymbol::draw(PointType, p, point.x(), point.y(), _width);
+  }
+}
+
+
+void Curve::curveUpdate(const CurveRenderContext& context) {
+  _polygons.clear();
+  _lines.clear();
+  _points.clear();
+  _rects.clear();
+  _redrawRequired = false;
 
   VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
   VectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
@@ -719,8 +802,6 @@ void Curve::paint(const CurveRenderContext& context) {
     return;
   }
 
-  /*Kst*/QPainter *p = context.painter;
-  QColor foregroundColor = context.foregroundColor;
   double Lx = context.Lx, Hx = context.Hx, Ly = context.Ly, Hy = context.Hy;
   double m_X = context.m_X, m_Y = context.m_Y;
   double b_X = context.b_X, b_Y = context.b_Y;
@@ -728,7 +809,6 @@ void Curve::paint(const CurveRenderContext& context) {
   bool xLog = context.xLog, yLog = context.yLog;
   double xLogBase = context.xLogBase;
   double yLogBase = context.yLogBase;
-  int penWidth = context.penWidth;
   double maxY = 0.0, minY = 0.0;
   double rX = 0.0, rY, rEX, rEY;
   double X1 = 0.0, Y1 = 0.0;
@@ -744,21 +824,20 @@ void Curve::paint(const CurveRenderContext& context) {
   benchtmp.start();
   int numberOfLinesDrawn = 0;
   int numberOfPointsDrawn = 0;
+  int numberOfBarsDrawn = 0;
 #endif
+
+  if (lineWidth() == 0) {
+    _width = context.penWidth;
+  } else if (context.penWidth > 0) {
+    _width = lineWidth() * context.penWidth;
+  } else {
+    _width = lineWidth();
+  }
 
   int pointDim = CurvePointSymbol::dim(context.window);
   if (sampleCount() > 0) {
-    Qt::PenStyle style = Kst::LineStyle[lineStyle()];
     int i0, iN;
-    int width;
-
-    if (lineWidth() == 0) {
-      width = penWidth;
-    } else if (penWidth > 0) {
-      width = lineWidth() * penWidth;
-    } else {
-      width = lineWidth();
-    }
 
     if (xv->isRising()) {
       i0 = indexNearX(XMin, xv, NS);
@@ -783,8 +862,6 @@ void Curve::paint(const CurveRenderContext& context) {
       int lastPlottedY = 0;
       int index = 0;
       int i0Start = i0;
-
-      p->setPen(QPen(color(), width, style));
 
 // optimize - isnan seems expensive, at least in gcc debug mode
 //            cachegrind backs this up.
@@ -848,7 +925,7 @@ qDebug() << __LINE__ << "drawPolyline" << poly << endl;
 #ifdef BENCHMARK
   ++numberOfLinesDrawn;
 #endif
-            p->drawPolyline(poly);
+            _polygons.append(poly);
           }
           index = 0;
           if (overlap) {
@@ -864,7 +941,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
 #ifdef BENCHMARK
   ++numberOfLinesDrawn;
 #endif
-                p->drawLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY));
+                _lines.append(QLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY)));
               }
             }
             overlap = false;
@@ -920,7 +997,7 @@ qDebug() << __LINE__ << "drawPolyline" << poly << endl;
 #ifdef BENCHMARK
   ++numberOfLinesDrawn;
 #endif
-                    p->drawPolyline(poly);
+                    _polygons.append(poly);
                     index = 0;
                   }
                   if (KDE_ISUNLIKELY(minYi == maxYi)) {
@@ -972,7 +1049,7 @@ qDebug() << __LINE__ << "drawPolyline" << poly << endl;
 #ifdef BENCHMARK
   ++numberOfLinesDrawn;
 #endif
-                      p->drawPolyline(poly);
+                      _polygons.append(poly);
                       index = 0;
                     }
 #ifdef DEBUG_VECTOR_CURVE
@@ -981,7 +1058,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(X2i, d2i(minY), X2i, d2i(maxY)) << e
 #ifdef BENCHMARK
   ++numberOfLinesDrawn;
 #endif
-                    p->drawLine(X2i, d2i(minY), X2i, d2i(maxY));
+                    _lines.append(QLine(X2i, d2i(minY), X2i, d2i(maxY)));
                   }
                 }
               }
@@ -1114,7 +1191,7 @@ qDebug() << __LINE__ << "drawPolyline" << poly << endl;
 #ifdef BENCHMARK
   ++numberOfLinesDrawn;
 #endif
-                    p->drawPolyline(poly);
+                    _polygons.append(poly);
                   }
                   index = 0;
 #ifdef DEBUG_VECTOR_CURVE
@@ -1141,7 +1218,7 @@ qDebug() << __LINE__ << "drawPolyline" << poly << endl;
 #ifdef BENCHMARK
   ++numberOfLinesDrawn;
 #endif
-        p->drawPolyline(poly);
+        _polygons.append(poly);
         index = 0;
       }
 
@@ -1161,7 +1238,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
 #ifdef BENCHMARK
   ++numberOfLinesDrawn;
 #endif
-            p->drawLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY));
+           _lines.append(QLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY)));
           }
         }
         overlap = false;
@@ -1186,12 +1263,6 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
       bool visible = true;
       double rX2 = 0.0;
       double drX = 0.0;
-
-      if (barStyle() == 1) { // filled
-        p->setPen(QPen(foregroundColor, width, style));
-      } else {
-        p->setPen(QPen(color(), width, style));
-      }
 
       if (!exv) {
         // determine the bar position width. NOTE: This is done
@@ -1286,24 +1357,27 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
           if (barStyle() == 1) { // filled
             int X1i = d2i(X1);
             int Y1i = d2i(Y1);
-            p->fillRect(X1i, Y1i, d2i(X2) - X1i, d2i(Y2) - Y1i, color());
+            _rects.append(QRect(X1i, Y1i, d2i(X2) - X1i, d2i(Y2) - Y1i));
           }
           if (has_top) {
             int Y1i = d2i(Y1);
-            p->drawLine(d2i(X1-(width/2)), Y1i, d2i(X2+(width/2)), Y1i);
+            _lines.append(QLine(d2i(X1-(_width/2)), Y1i, d2i(X2+(_width/2)), Y1i));
           }
           if (has_bot) {
             int Y2i = d2i(Y2);
-            p->drawLine(d2i(X1-(width/2)), Y2i, d2i(X2-(width/2)), Y2i);
+            _lines.append(QLine(d2i(X1-(_width/2)), Y2i, d2i(X2-(_width/2)), Y2i));
           }
           if (has_left) {
             int X1i = d2i(X1);
-            p->drawLine(X1i, d2i(Y1-(width/2)), X1i, d2i(Y2+(width/2)));
+            _lines.append(QLine(X1i, d2i(Y1-(_width/2)), X1i, d2i(Y2+(_width/2))));
           }
           if (has_right) {
             int X2i = d2i(X2);
-            p->drawLine(X2i, d2i(Y1-(width/2)), X2i, d2i(Y2+(width/2)));
+            _lines.append(QLine(X2i, d2i(Y1-(_width/2)), X2i, d2i(Y2+(_width/2))));
           }
+#ifdef BENCHMARK
+  ++numberOfBarsDrawn;
+#endif
         }
       }
     }
@@ -1311,8 +1385,6 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
 #ifdef BENCHMARK
     b_2 = benchtmp.elapsed();
 #endif
-
-    p->setPen(QPen(color(), width));
 
     // draw the points, if any...
     if (hasPoints()) {
@@ -1343,7 +1415,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
   ++numberOfPointsDrawn;
 #endif
             lastPt = pt;
-            CurvePointSymbol::draw(PointType, p, pt.x(), pt.y(), width);
+            _points.append(pt);
         }
       }
     }
@@ -1434,12 +1506,12 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
           int X1i = d2i(X1);
           int X2i = d2i(X2);
           int Y1i = d2i(Y1);
-          p->drawLine(X1i, Y1i, X2i, Y1i);
+          _lines.append(QLine(X1i, Y1i, X2i, Y1i));
           if (do_low_flag) {
-            p->drawLine(X1i, Y1i + pointDim, X1i, Y1i - pointDim);
+            _lines.append(QLine(X1i, Y1i + pointDim, X1i, Y1i - pointDim));
           }
           if (do_high_flag) {
-            p->drawLine(X2i, Y1i + pointDim, X2i, Y1i - pointDim);
+            _lines.append(QLine(X2i, Y1i + pointDim, X2i, Y1i - pointDim));
           }
         }
       }
@@ -1527,12 +1599,12 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
           int X1i = d2i(X1);
           int Y1i = d2i(Y1);
           int Y2i = d2i(Y2);
-          p->drawLine(X1i, Y1i, X1i, Y2i);
+          _lines.append(QLine(X1i, Y1i, X1i, Y2i));
           if (do_low_flag) {
-            p->drawLine(X1i + pointDim, Y1i, X1i - pointDim, Y1i);
+          _lines.append(QLine(X1i + pointDim, Y1i, X1i - pointDim, Y1i));
           }
           if (do_high_flag) {
-            p->drawLine(X1i + pointDim, Y2i, X1i - pointDim, Y2i);
+          _lines.append(QLine(X1i + pointDim, Y2i, X1i - pointDim, Y2i));
           }
         }
       }
@@ -1542,12 +1614,14 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
 #ifdef BENCHMARK
   b_4 = benchtmp.elapsed();
 #endif
+
 #ifdef BENCHMARK
   int i = bench_time.elapsed();
   qDebug() << "Plotting curve " << (void *)this << ": " << i << "ms" << endl;
   qDebug() << "    Without locks: " << b_4 << "ms" << endl;
-  qDebug() << "    Nnumber of lines drawn:" << numberOfLinesDrawn << endl;
-  qDebug() << "    Nnumber of points drawn:" << numberOfPointsDrawn << endl;
+  qDebug() << "    Number of lines drawn:" << numberOfLinesDrawn << endl;
+  qDebug() << "    Number of points drawn:" << numberOfPointsDrawn << endl;
+  qDebug() << "    Number of bars drawn:" << numberOfBarsDrawn << endl;
   if (b_1 > 0)       qDebug() << "            Lines: " << b_1 << "ms" << endl;
   if (b_2 - b_1 > 0) qDebug() << "             Bars: " << (b_2 - b_1) << "ms" << endl;
   if (b_3 - b_2 > 0) qDebug() << "           Points: " << (b_3 - b_2) << "ms" << endl;
