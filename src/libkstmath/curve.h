@@ -199,6 +199,7 @@ class KST_EXPORT Curve: public Relation {
     QVector<QPolygon> _polygons;
     QVector<QLine> _lines;
     QVector<QPoint> _points;
+    QVector<QRect> _filledRects;
     QVector<QRect> _rects;
     int _width;
 

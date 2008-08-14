@@ -770,7 +770,7 @@ void Curve::paint(const CurveRenderContext& context) {
       p->setPen(QPen(color(), _width, style));
     }
 
-    foreach(QRect rect, _rects) {
+    foreach(QRect rect, _filledRects) {
         p->fillRect(rect, color());
     }
   }
@@ -783,6 +783,9 @@ void Curve::paint(const CurveRenderContext& context) {
   foreach(QLine line, _lines) {
     p->drawLine(line);
   }
+  foreach(QRect rect, _rects) {
+    p->drawRect(rect);
+  }
   foreach(QPoint point, _points) {
     CurvePointSymbol::draw(PointType, p, point.x(), point.y(), _width);
   }
@@ -793,6 +796,7 @@ void Curve::curveUpdate(const CurveRenderContext& context) {
   _polygons.clear();
   _lines.clear();
   _points.clear();
+  _filledRects.clear();
   _rects.clear();
   _redrawRequired = false;
 
@@ -1256,13 +1260,10 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
     VectorPtr eymv = _inputVectors.contains(EYMINUSVECTOR) ? *_inputVectors.find(EYMINUSVECTOR) : 0;
     // draw the bargraph bars, if any...
     if (hasBars()) {
-      bool has_top = true;
-      bool has_bot = true;
-      bool has_left = true;
-      bool has_right = true;
       bool visible = true;
       double rX2 = 0.0;
       double drX = 0.0;
+      QRect lastRect;
 
       if (!exv) {
         // determine the bar position width. NOTE: This is done
@@ -1285,7 +1286,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
       }
 
       for (i_pt = i0; i_pt <= iN; i_pt++) {
-        visible = has_bot = has_top = has_left = has_right = true;
+        visible = true;
 
         if (exv) {
           drX = exv->interpolate(i_pt, NS);
@@ -1300,84 +1301,32 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         }
         if (yLog) {
           rY = logYLo(rY, yLogBase);
+          Y2 = Hy;
+        } else {
+          Y2 = b_Y;
         }
 
         X1 = m_X * rX + b_X;
         X2 = m_X * rX2 + b_X;
-        if (X1 > Hx || X2 < Lx) {
-          visible = false;
-        } else {
-          if (X1 < Lx) {
-            has_left = false;
-            X1 = Lx;
-          }
-          if (X2 > Hx) {
-            has_right = false;
-            X2 = Hx;
-          }
-        }
-
-        // determine where the top of the bar is and whether
-        // to draw the top line
         Y1 = m_Y * rY + b_Y;
-        if (Y1 < Ly) {
-          Y1 = Ly;
-          has_top = false;
-        }
-        if (Y1 > Hy) {
-          Y1 = Hy;
-          has_top = false;
-        }
 
-        // determine where the bottom of the bar is and whether
-        // to draw the bottom line
-        if (yLog) {
-          Y2 = Hy;
-          has_bot = false;
-        } else {
-          Y2 = b_Y;
-          if (Y2 < Ly) {
-            Y2 = Ly;
-            has_bot = false;
-          }
-          if (Y2 > Hy) {
-            Y2 = Hy;
-            has_bot = false;
-          }
-        }
-
-        if (Y1 == Ly && Y2 == Ly) {
-          visible = false;
-        }
-        else if (Y1 == Hy && Y2 == Hy) {
+        if ((X1 > Hx) || (X2 < Lx) || (Y1 == Ly && Y2 == Ly) || (Y1 == Hy && Y2 == Hy)) {
           visible = false;
         }
 
         if (visible) {
-          if (barStyle() == 1) { // filled
-            int X1i = d2i(X1);
-            int Y1i = d2i(Y1);
-            _rects.append(QRect(X1i, Y1i, d2i(X2) - X1i, d2i(Y2) - Y1i));
-          }
-          if (has_top) {
-            int Y1i = d2i(Y1);
-            _lines.append(QLine(d2i(X1-(_width/2)), Y1i, d2i(X2+(_width/2)), Y1i));
-          }
-          if (has_bot) {
-            int Y2i = d2i(Y2);
-            _lines.append(QLine(d2i(X1-(_width/2)), Y2i, d2i(X2-(_width/2)), Y2i));
-          }
-          if (has_left) {
-            int X1i = d2i(X1);
-            _lines.append(QLine(X1i, d2i(Y1-(_width/2)), X1i, d2i(Y2+(_width/2))));
-          }
-          if (has_right) {
-            int X2i = d2i(X2);
-            _lines.append(QLine(X2i, d2i(Y1-(_width/2)), X2i, d2i(Y2+(_width/2))));
-          }
+          QRect rect(d2i(X1), d2i(Y1), d2i(X2) - d2i(X1), d2i(Y2) - d2i(Y1));
+          if (!lastRect.contains(rect)) {
+            if (barStyle() == 1) { // filled
+              _filledRects.append(rect);
+            } else {
+              _rects.append(rect);
+            }
+            lastRect = rect;
 #ifdef BENCHMARK
   ++numberOfBarsDrawn;
 #endif
+          }
         }
       }
     }
