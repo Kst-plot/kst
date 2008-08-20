@@ -75,8 +75,6 @@ Curve::Curve(ObjectStore *store)
   setBarStyle(0);
   setPointDensity(0);
 
-  _redrawRequired = true;
-
   _shortName = "C"+QString::number(_cnum);
   if (_cnum>max_cnum) 
     max_cnum = _cnum;
@@ -717,49 +715,7 @@ RelationPtr Curve::makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelat
 }
 
 
-bool Curve::redrawRequired(const CurveRenderContext& context) {
-  if ((_contextDetails.Lx == context.Lx) &&
-      (_contextDetails.Hx == context.Hx) &&  
-      (_contextDetails.Ly == context.Ly) &&  
-      (_contextDetails.Hy == context.Hy) &&  
-      (_contextDetails.m_X == context.m_X) &&  
-      (_contextDetails.m_Y == context.m_Y) &&  
-      (_contextDetails.b_X == context.b_X) &&  
-      (_contextDetails.b_Y == context.b_Y) &&  
-      (_contextDetails.XMin == context.XMin) &&  
-      (_contextDetails.XMax == context.XMax) &&  
-      (_contextDetails.xLog == context.xLog) &&  
-      (_contextDetails.yLog == context.yLog) &&  
-      (_contextDetails.xLogBase == context.xLogBase) &&  
-      (_contextDetails.yLogBase == context.yLogBase) &&  
-      (_contextDetails.penWidth == context.penWidth) ) {
-    return false;
-  } else {
-    _contextDetails.Lx = context.Lx;
-    _contextDetails.Hx = context.Hx;
-    _contextDetails.Ly = context.Ly;
-    _contextDetails.Hy = context.Hy;
-    _contextDetails.m_X = context.m_X;
-    _contextDetails.m_Y = context.m_Y;
-    _contextDetails.b_X = context.b_X;
-    _contextDetails.b_Y = context.b_Y;
-    _contextDetails.XMin = context.XMin;
-    _contextDetails.XMax = context.XMax;
-    _contextDetails.xLog = context.xLog;
-    _contextDetails.yLog = context.yLog;
-    _contextDetails.xLogBase = context.xLogBase;
-    _contextDetails.yLogBase = context.yLogBase;
-    _contextDetails.penWidth = context.penWidth;
-    return true;
-  }
-}
-
-
-void Curve::paint(const CurveRenderContext& context) {
-  if (redrawRequired(context) || _redrawRequired) {
-    curveUpdate(context);
-  }
-
+void Curve::paintObects(const CurveRenderContext& context) {
   QPainter *p = context.painter;
   Qt::PenStyle style = Kst::LineStyle[lineStyle()];
 
@@ -792,13 +748,12 @@ void Curve::paint(const CurveRenderContext& context) {
 }
 
 
-void Curve::curveUpdate(const CurveRenderContext& context) {
+void Curve::updatePaintObjects(const CurveRenderContext& context) {
   _polygons.clear();
   _lines.clear();
   _points.clear();
   _filledRects.clear();
   _rects.clear();
-  _redrawRequired = false;
 
   VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
   VectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
@@ -1566,15 +1521,15 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
 
 #ifdef BENCHMARK
   int i = bench_time.elapsed();
-  qDebug() << "Plotting curve " << (void *)this << ": " << i << "ms" << endl;
-  qDebug() << "    Without locks: " << b_4 << "ms" << endl;
-  qDebug() << "    Number of lines drawn:" << numberOfLinesDrawn << endl;
-  qDebug() << "    Number of points drawn:" << numberOfPointsDrawn << endl;
-  qDebug() << "    Number of bars drawn:" << numberOfBarsDrawn << endl;
-  if (b_1 > 0)       qDebug() << "            Lines: " << b_1 << "ms" << endl;
-  if (b_2 - b_1 > 0) qDebug() << "             Bars: " << (b_2 - b_1) << "ms" << endl;
-  if (b_3 - b_2 > 0) qDebug() << "           Points: " << (b_3 - b_2) << "ms" << endl;
-  if (b_4 - b_3 > 0) qDebug() << "           Errors: " << (b_4 - b_3) << "ms" << endl;
+  qDebug() << endl << "Plotting curve " << (void *)this << ": " << i << "ms";
+  qDebug() << "    Without locks: " << b_4 << "ms";
+  qDebug() << "    Number of lines drawn:" << numberOfLinesDrawn;
+  qDebug() << "    Number of points drawn:" << numberOfPointsDrawn;
+  qDebug() << "    Number of bars drawn:" << numberOfBarsDrawn;
+  if (b_1 > 0)       qDebug() << "            Lines: " << b_1 << "ms";
+  if (b_2 - b_1 > 0) qDebug() << "             Bars: " << (b_2 - b_1) << "ms";
+  if (b_3 - b_2 > 0) qDebug() << "           Points: " << (b_3 - b_2) << "ms";
+  if (b_4 - b_3 > 0) qDebug() << "           Errors: " << (b_4 - b_3) << "ms";
 #endif
 }
 

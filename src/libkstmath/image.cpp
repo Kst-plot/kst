@@ -26,6 +26,8 @@
 
 #include <math.h>
 
+// #define BENCHMARK
+
 namespace Kst {
 
 const QString Image::staticTypeString = I18N_NOOP("Image");
@@ -133,6 +135,8 @@ Object::UpdateType Image::update() {
     }
 
     unlockInputsAndOutputs();
+
+    _redrawRequired = true;
     return UPDATE;
   }
 
@@ -461,20 +465,42 @@ double Image::distanceToPoint(double xpos, double dx, double ypos) const {
 }
 
 
-void Image::paint(const CurveRenderContext& context) {
+void Image::paintObects(const CurveRenderContext& context) {
+  QPainter* p = context.painter;
+  p->drawImage(_imageLocation, _image);
+
+  QColor lineColor = contourColor();
+
+  foreach(CoutourLineDetails lineDetails, _lines) {
+    p->setPen(QPen(lineColor, lineDetails._lineWidth, Qt::SolidLine, Qt::RoundCap, Qt::MiterJoin));
+    p->drawLine(lineDetails._line);
+  }
+}
+
+
+void Image::updatePaintObjects(const CurveRenderContext& context) {
   double Lx = context.Lx, Hx = context.Hx, Ly = context.Ly, Hy = context.Hy;
   double m_X = context.m_X, m_Y = context.m_Y, b_X = context.b_X, b_Y = context.b_Y;
   double x_max = context.x_max, y_max = context.y_max, x_min = context.x_min, y_min = context.y_min;
   bool xLog = context.xLog, yLog = context.yLog;
   double xLogBase = context.xLogBase;
   double yLogBase = context.yLogBase;
-  /*Kst*/QPainter* p = context.painter;
-  QColor invalid = context.backgroundColor;
 
   double x, y, width, height;
   double img_Lx_pix = 0, img_Ly_pix = 0, img_Hx_pix = 0, img_Hy_pix = 0;
 
+#ifdef BENCHMARK
+  QTime bench_time, benchtmp;
+  int b_1 = 0, b_2 = 0;
+  bench_time.start();
+  benchtmp.start();
+  int numberOfLinesDrawn = 0;
+#endif
+
   ImagePtr image = this;
+
+  _image = QImage();
+  _lines.clear();
 
   if (_inputMatrices.contains(THEMATRIX)) { // don't paint if we have no matrix
     image->matrixDimensions(x, y, width, height);
@@ -529,15 +555,14 @@ void Image::paint(const CurveRenderContext& context) {
       }
 
       // color map
-
       QColor thisPixel;
       if (image->hasColorMap()) {
         int hXlXDiff = d2i(img_Hx_pix - img_Lx_pix);
         int hYlYDiff = d2i(img_Hy_pix - img_Ly_pix - 1);
-        QImage tempImage(hXlXDiff, hYlYDiff, QImage::Format_RGB32);
-        for (int y = 0; y < tempImage.height(); ++y) {
-          QRgb *scanLine = (QRgb *)tempImage.scanLine(y);
-          for (int x = 0; x < tempImage.width(); ++x) {
+        _image = QImage(hXlXDiff, hYlYDiff, QImage::Format_RGB32);
+        for (int y = 0; y < _image.height(); ++y) {
+          QRgb *scanLine = (QRgb *)_image.scanLine(y);
+          for (int x = 0; x < _image.width(); ++x) {
             double new_x, new_y;
             if (xLog) {
               new_x = pow(xLogBase, (x + img_Lx_pix - b_X) / m_X);
@@ -555,8 +580,11 @@ void Image::paint(const CurveRenderContext& context) {
             }
           }
         }
-        p->drawImage(d2i(img_Lx_pix), d2i(img_Ly_pix + 1), tempImage);
+        _imageLocation = QPoint(d2i(img_Lx_pix), d2i(img_Ly_pix + 1));
       }
+#ifdef BENCHMARK
+    b_1 = benchtmp.elapsed();
+#endif
       //*******************************************************************
       // CONTOURS
       //*******************************************************************
@@ -567,9 +595,10 @@ void Image::paint(const CurveRenderContext& context) {
       if (image->hasContourMap()) {
         QColor tempColor = image->contourColor();
         bool variableWeight = image->contourWeight() < 0;
+        int lineWeight;
         if (!variableWeight) {
           // + 1 because 0 and 1 are the same width
-          p->setPen(QPen(tempColor, image->contourWeight() + 1, Qt::SolidLine, Qt::RoundCap, Qt::MiterJoin));
+          lineWeight = image->contourWeight() + 1;
         }
         // do the drawing for each contour line
         QList<double> lines = image->contourLines();
@@ -580,7 +609,7 @@ void Image::paint(const CurveRenderContext& context) {
           double lineK = lines[k];
           if (variableWeight) {
             // + 1 because 0 and 1 are the same width
-            p->setPen(QPen(tempColor, k + 1, Qt::SolidLine, Qt::RoundCap, Qt::MiterJoin));
+            lineWeight = k + 1;
           }
           int flImgHx = d2i(floor(img_Hx_pix));
           int flImgHy = d2i(floor(img_Hy_pix));
@@ -654,23 +683,29 @@ void Image::paint(const CurveRenderContext& context) {
 
               if (numPoints == 4) {
                 // draw a cross
-                p->drawLine(topPoint, bottomPoint);
-                p->drawLine(rightPoint, leftPoint);
+                _lines.append(CoutourLineDetails(QLine(topPoint, bottomPoint), lineWeight));
+                _lines.append(CoutourLineDetails(QLine(rightPoint, leftPoint), lineWeight));
+#ifdef BENCHMARK
+  numberOfLinesDrawn += 2;
+#endif
               } else if (numPoints == 3) {
                 // draw a V opening to non-intersecting side
                 if (!passTop) {
-                  p->drawLine(leftPoint, bottomPoint);
-                  p->drawLine(bottomPoint, rightPoint);
+                  _lines.append(CoutourLineDetails(QLine(leftPoint, bottomPoint), lineWeight));
+                  _lines.append(CoutourLineDetails(QLine(bottomPoint, rightPoint), lineWeight));
                 } else if (!passLeft) {
-                  p->drawLine(topPoint, rightPoint);
-                  p->drawLine(rightPoint, bottomPoint);
+                  _lines.append(CoutourLineDetails(QLine(topPoint, rightPoint), lineWeight));
+                  _lines.append(CoutourLineDetails(QLine(rightPoint, bottomPoint), lineWeight));
                 } else if (!passBottom) {
-                  p->drawLine(leftPoint, topPoint);
-                  p->drawLine(topPoint, rightPoint);
+                  _lines.append(CoutourLineDetails(QLine(leftPoint, topPoint), lineWeight));
+                  _lines.append(CoutourLineDetails(QLine(topPoint, rightPoint), lineWeight));
                 } else {
-                  p->drawLine(topPoint, leftPoint);
-                  p->drawLine(leftPoint, bottomPoint);
+                  _lines.append(CoutourLineDetails(QLine(topPoint, leftPoint), lineWeight));
+                  _lines.append(CoutourLineDetails(QLine(leftPoint, bottomPoint), lineWeight));
                 }
+#ifdef BENCHMARK
+  numberOfLinesDrawn += 2;
+#endif
               } else if (numPoints == 2) {
                 // two points - connect them
                 QPoint point1, point2;
@@ -698,7 +733,10 @@ void Image::paint(const CurveRenderContext& context) {
                 if (passRight) {
                   point2 = rightPoint;
                 }
-                p->drawLine(point1, point2);
+                _lines.append(CoutourLineDetails(QLine(point1, point2), lineWeight));
+#ifdef BENCHMARK
+  ++numberOfLinesDrawn;
+#endif
               }
             }
           }
@@ -706,6 +744,15 @@ void Image::paint(const CurveRenderContext& context) {
       }
     }
   }
+#ifdef BENCHMARK
+  b_2 = benchtmp.elapsed();
+  int i = bench_time.elapsed();
+  qDebug() << endl << "Plotting image " << (void *)this << ": " << i << "ms";
+  qDebug() << "         Without locks: " << b_2 << "ms";
+  qDebug() << " Number of lines drawn: " << numberOfLinesDrawn;
+  if (b_1 > 0)       qDebug() << "             Color Map: " << b_1 << "ms";
+  if (b_2 - b_1 > 0) qDebug() << "         Coutour Lines: " << (b_2 - b_1) << "ms" << endl;
+#endif
 }
 
 

@@ -61,6 +61,16 @@ class CurveRenderContext {
 
 enum CurveType { VCURVE, HISTOGRAM, IMAGE };
 
+  struct CurveContextDetails {
+    double Lx, Hx, Ly, Hy;
+    double m_X, m_Y;
+    double b_X, b_Y;
+    double XMin, XMax;
+    bool xLog, yLog;
+    double xLogBase, yLogBase;
+    int penWidth;
+  };
+
 class ObjectStore;
 class Relation;
 
@@ -122,7 +132,10 @@ class KST_EXPORT Relation : public Object {
     virtual double distanceToPoint(double xpos, double dx, double ypos) const = 0;
 
     // render this curve
-    virtual void paint(const CurveRenderContext& context) = 0;
+    void paint(const CurveRenderContext& context);
+
+    virtual void paintObects(const CurveRenderContext& context) = 0;
+    virtual void updatePaintObjects(const CurveRenderContext& context) = 0;
 
     // render the legend symbol for this curve
     virtual void paintLegendSymbol(QPainter *p, const QRect& bound) = 0;
@@ -134,6 +147,9 @@ class KST_EXPORT Relation : public Object {
     virtual void replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix);
 
     virtual void processUpdate(ObjectPtr object);
+
+    // Compare the cached the context to the provided one.
+    bool redrawRequired(const CurveRenderContext& context); 
 
   Q_SIGNALS:
     void relationUpdated(ObjectPtr object);
@@ -173,6 +189,9 @@ class KST_EXPORT Relation : public Object {
     int NS;
 
     bool _ignoreAutoScale;
+
+    CurveContextDetails _contextDetails;
+    bool _redrawRequired;
 
   private:
     void commonConstructor();

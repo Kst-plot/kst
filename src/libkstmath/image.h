@@ -24,6 +24,15 @@ namespace Kst {
 
 class ObjectStore;
 
+class CoutourLineDetails {
+  public:
+    CoutourLineDetails() { }
+    CoutourLineDetails(QLine line, int width) { _line = line; _lineWidth = width; }
+
+  QLine _line;
+  int _lineWidth;
+};
+
 /**A class for handling images for Kst
  *@author University of British Columbia
  */
@@ -97,7 +106,10 @@ class KST_EXPORT Image : public Relation {
     virtual double distanceToPoint(double xpos, double dx, double ypos) const;
 
     // see KstRelation::paint
-    virtual void paint(const CurveRenderContext& context);
+    void paintObects(const CurveRenderContext& context);
+
+    // Update the curve details.
+    void updatePaintObjects(const CurveRenderContext& context);
 
     // see KstRelation::yRange
     virtual void yRange(double xFrom, double xTo, double* yMin, double* yMax);
@@ -134,6 +146,10 @@ class KST_EXPORT Image : public Relation {
     QList<double> _contourLines;
     QColor _contourColor;
     int _contourWeight; //_contourWeight = -1 means variable weight
+
+    QVector<CoutourLineDetails> _lines;
+    QImage _image;
+    QPoint _imageLocation;
 };
 
 

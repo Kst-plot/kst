@@ -40,6 +40,7 @@ void Relation::commonConstructor() {
   _ns_maxx = _ns_minx = _ns_maxy = _ns_miny = MaxX = MinX = MinPosX = MeanX = MaxY = MinY = MinPosY = 0.0;
   NS = 0;
 
+  _redrawRequired = true;
   _ignoreAutoScale = false;
 }
 
@@ -55,6 +56,54 @@ void Relation::save(QXmlStreamWriter &s) {
 
 void Relation::deleteDependents() {
   Data::self()->removeCurveFromPlots(this);
+}
+
+
+void Relation::paint(const CurveRenderContext& context) {
+  if (redrawRequired(context) || _redrawRequired) {
+    updatePaintObjects(context);
+    _redrawRequired = false;
+  }
+
+  paintObects(context);
+}
+
+
+bool Relation::redrawRequired(const CurveRenderContext& context) {
+  if ((_contextDetails.Lx == context.Lx) &&
+      (_contextDetails.Hx == context.Hx) &&  
+      (_contextDetails.Ly == context.Ly) &&  
+      (_contextDetails.Hy == context.Hy) &&  
+      (_contextDetails.m_X == context.m_X) &&  
+      (_contextDetails.m_Y == context.m_Y) &&  
+      (_contextDetails.b_X == context.b_X) &&  
+      (_contextDetails.b_Y == context.b_Y) &&  
+      (_contextDetails.XMin == context.XMin) &&  
+      (_contextDetails.XMax == context.XMax) &&  
+      (_contextDetails.xLog == context.xLog) &&  
+      (_contextDetails.yLog == context.yLog) &&  
+      (_contextDetails.xLogBase == context.xLogBase) &&  
+      (_contextDetails.yLogBase == context.yLogBase) &&  
+      (_contextDetails.penWidth == context.penWidth) ) {
+    return false;
+  } else {
+    _contextDetails.Lx = context.Lx;
+    _contextDetails.Hx = context.Hx;
+    _contextDetails.Ly = context.Ly;
+    _contextDetails.Hy = context.Hy;
+    _contextDetails.m_X = context.m_X;
+    _contextDetails.m_Y = context.m_Y;
+    _contextDetails.b_X = context.b_X;
+    _contextDetails.b_Y = context.b_Y;
+    _contextDetails.XMin = context.XMin;
+    _contextDetails.XMax = context.XMax;
+    _contextDetails.xLog = context.xLog;
+    _contextDetails.yLog = context.yLog;
+    _contextDetails.xLogBase = context.xLogBase;
+    _contextDetails.yLogBase = context.yLogBase;
+    _contextDetails.penWidth = context.penWidth;
+    return true;
+  }
 }
 
 
