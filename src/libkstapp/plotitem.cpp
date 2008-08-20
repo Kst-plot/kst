@@ -1808,7 +1808,7 @@ void PlotItem::zoomFixedExpression(const QRectF &projection) {
 
 void PlotItem::zoomXRange(const QRectF &projection) {
 #if DEBUG_ZOOM
-  qDebug() << "zoomXRange" << endl;
+  qDebug() << "zoomXRange" << projection << endl;
 #endif
   if (projection.isValid()) {
     ZoomCommand *cmd = new ZoomXRangeCommand(this, projection);
@@ -1820,7 +1820,7 @@ void PlotItem::zoomXRange(const QRectF &projection) {
 
 void PlotItem::zoomYRange(const QRectF &projection) {
 #if DEBUG_ZOOM
-  qDebug() << "zoomYRange" << endl;
+  qDebug() << "zoomYRange" << projection << endl;
 #endif
   if (projection.isValid()) {
     ZoomCommand *cmd = new ZoomYRangeCommand(this, projection);
@@ -2304,7 +2304,7 @@ void ZoomFixedExpressionCommand::applyZoomTo(PlotItem *item) {
  */
 void ZoomXRangeCommand::applyZoomTo(PlotItem *item) {
   item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
-  item->setProjectionRect(QRect(_fixed.x(), item->projectionRect().y(), _fixed.width(), item->projectionRect().height()));
+  item->setProjectionRect(QRectF(_fixed.x(), item->projectionRect().y(), _fixed.width(), item->projectionRect().height()));
 }
 
 
@@ -2313,7 +2313,7 @@ void ZoomXRangeCommand::applyZoomTo(PlotItem *item) {
  */
 void ZoomYRangeCommand::applyZoomTo(PlotItem *item) {
   item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
-  item->setProjectionRect(QRect(item->projectionRect().x(), _fixed.y(), item->projectionRect().width(), _fixed.height()));
+  item->setProjectionRect(QRectF(item->projectionRect().x(), _fixed.y(), item->projectionRect().width(), _fixed.height()));
 }
 
 
