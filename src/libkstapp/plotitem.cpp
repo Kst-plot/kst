@@ -39,6 +39,9 @@
 // Zoom Debugging.  0 Off, 1 On.
 #define DEBUG_ZOOM 0
 
+// Label Region Debugging.  0 Off, 1 On.
+#define DEBUG_LABEL_REGION 0
+
 static qreal TOP_MARGIN = 20.0;
 static qreal BOTTOM_MARGIN = 0.0;
 static qreal LEFT_MARGIN = 0.0;
@@ -337,13 +340,21 @@ void PlotItem::paint(QPainter *painter) {
   setCalculatedTopLabelMargin(calculateTopLabelBound(painter).height());
   setCalculatedBottomLabelMargin(calculateBottomLabelBound(painter).height());
 
+#if DEBUG_LABEL_REGION
 //  qDebug() << "=============> leftLabel:" << leftLabel() << endl;
+#endif
   paintLeftLabel(painter);
+#if DEBUG_LABEL_REGION
 //  qDebug() << "=============> bottomLabel:" << bottomLabel() << endl;
+#endif
   paintBottomLabel(painter);
+#if DEBUG_LABEL_REGION
 //  qDebug() << "=============> rightLabel:" << rightLabel() << endl;
+#endif
   paintRightLabel(painter);
+#if DEBUG_LABEL_REGION
 //  qDebug() << "=============> topLabel:" << topLabel() << endl;
+#endif
   paintTopLabel(painter);
 
   paintPlot(painter);
@@ -548,11 +559,13 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
   }
   _xLabelRect = xLabelRect;
 
-//   painter->save();
-//   painter->setOpacity(0.3);
-// //   qDebug() << "xLabelRect:" << xLabelRect;
-//   painter->fillRect(xLabelRect, Qt::green);
-//   painter->restore();
+#if DEBUG_LABEL_REGION
+  painter->save();
+  painter->setOpacity(0.3);
+  qDebug() << "Bottom Tick Labels - xLabelRect:" << xLabelRect;
+  painter->fillRect(xLabelRect, Qt::green);
+  painter->restore();
+#endif
 }
 
 
@@ -603,11 +616,13 @@ void PlotItem::paintLeftTickLabels(QPainter *painter) {
   }
   _yLabelRect = yLabelRect;
 
-//   painter->save();
-//   painter->setOpacity(0.3);
-// //   qDebug() << "yLabelRect:" << yLabelRect;
-//   painter->fillRect(yLabelRect, Qt::green);
-//   painter->restore();
+#if DEBUG_LABEL_REGION
+  painter->save();
+  painter->setOpacity(0.3);
+  qDebug() << "Left Tick Labels - yLabelRect:" << yLabelRect;
+  painter->fillRect(yLabelRect, Qt::green);
+  painter->restore();
+#endif
 }
 
 
@@ -1358,21 +1373,23 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
     parsed = 0;
   }
 
-//   painter->save();
-//   QTransform t;
-//   t.rotate(90.0);
-//   painter->rotate(-90.0);
-// 
-//   QRectF leftLabel = leftLabelRect(false);
-//   leftLabel.moveTopRight(plotAxisRect().topLeft());
-// 
-//   painter->save();
-//   painter->setOpacity(0.3);
-//   qDebug() << "leftLabel:" << t.mapRect(leftLabel) << endl;
-//   painter->fillRect(t.mapRect(leftLabel), Qt::red);
-//   painter->restore();
-// 
-//   painter->restore();
+#if DEBUG_LABEL_REGION
+  painter->save();
+  QTransform t;
+  t.rotate(90.0);
+  painter->rotate(-90.0);
+
+  QRectF leftLabel = leftLabelRect(false);
+  leftLabel.moveTopRight(plotAxisRect().topLeft());
+
+  painter->save();
+  painter->setOpacity(0.3);
+  qDebug() << "leftLabel:" << t.mapRect(leftLabel) << endl;
+  painter->fillRect(t.mapRect(leftLabel), Qt::red);
+  painter->restore();
+
+  painter->restore();
+#endif
 }
 
 
@@ -1427,18 +1444,20 @@ void PlotItem::paintBottomLabel(QPainter *painter) {
     parsed = 0;
   }
 
-//   painter->save();
-// 
-//   QRectF bottomLabel = bottomLabelRect(false);
-//   bottomLabel.moveTopLeft(plotAxisRect().bottomLeft());
-// 
-//   painter->save();
-//   painter->setOpacity(0.3);
-// //   qDebug() << "bottomLabel:" << bottomLabel;
-//   painter->fillRect(bottomLabel, Qt::red);
-//   painter->restore();
-// 
-//   painter->restore();
+#if DEBUG_LABEL_REGION
+  painter->save();
+
+  QRectF bottomLabel = bottomLabelRect(false);
+  bottomLabel.moveTopLeft(plotAxisRect().bottomLeft());
+
+  painter->save();
+  painter->setOpacity(0.3);
+  qDebug() << "bottomLabel:" << bottomLabel;
+  painter->fillRect(bottomLabel, Qt::red);
+  painter->restore();
+
+  painter->restore();
+#endif
 }
 
 
@@ -1495,21 +1514,23 @@ void PlotItem::paintRightLabel(QPainter *painter) {
     parsed = 0;
   }
 
-//   painter->save();
-//   QTransform t;
-//   t.rotate(-90.0);
-//   painter->rotate(90.0);
-// 
-//   QRectF rightLabel = rightLabelRect(false);
-//   rightLabel.moveTopLeft(plotAxisRect().topRight());
-// 
-//   painter->save();
-//   painter->setOpacity(0.3);
-// //   qDebug() << "rightLabel:" << t.mapRect(rightLabel) << endl;
-//   painter->fillRect(t.mapRect(rightLabel), Qt::red);
-//   painter->restore();
-// 
-//   painter->restore();
+#if DEBUG_LABEL_REGION
+  painter->save();
+  QTransform t;
+  t.rotate(-90.0);
+  painter->rotate(90.0);
+
+  QRectF rightLabel = rightLabelRect(false);
+  rightLabel.moveTopLeft(plotAxisRect().topRight());
+
+  painter->save();
+  painter->setOpacity(0.3);
+  qDebug() << "rightLabel:" << t.mapRect(rightLabel) << endl;
+  painter->fillRect(t.mapRect(rightLabel), Qt::red);
+  painter->restore();
+
+  painter->restore();
+#endif
 }
 
 
@@ -1566,18 +1587,20 @@ void PlotItem::paintTopLabel(QPainter *painter) {
     parsed = 0;
   }
 
-//   painter->save();
-// 
-//   QRectF topLabel = topLabelRect(false);
-//   topLabel.moveBottomLeft(plotAxisRect().topLeft());
-// 
-//   painter->save();
-//   painter->setOpacity(0.3);
-// //   qDebug() << "topLabel:" << topLabel;
-//   painter->fillRect(topLabel, Qt::red);
-//   painter->restore();
-// 
-//   painter->restore();
+#if DEBUG_LABEL_REGION
+  painter->save();
+
+  QRectF topLabel = topLabelRect(false);
+  topLabel.moveBottomLeft(plotAxisRect().topLeft());
+
+  painter->save();
+  painter->setOpacity(0.3);
+  qDebug() << "topLabel:" << topLabel;
+  painter->fillRect(topLabel, Qt::red);
+  painter->restore();
+
+  painter->restore();
+#endif
 }
 
 
