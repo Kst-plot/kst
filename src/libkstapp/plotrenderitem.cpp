@@ -96,7 +96,7 @@ void PlotRenderItem::relationUpdated(ObjectPtr object) {
 #if DEBUG_UPDATE_CYCLE > 1
   qDebug() << "UP - Curve update required by Plot for update of" << object->shortName();
 #endif
-  UpdateManager::self()->requestUpdate(object, this);
+  UpdateManager::self()->requestUpdate(object, plotItem());
 }
 
 

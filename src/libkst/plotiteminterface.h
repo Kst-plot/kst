@@ -24,6 +24,7 @@ class PlotItemInterface
     virtual ~PlotItemInterface();
 
     virtual QString plotName() const = 0;
+    virtual void updateObject() = 0;
 };
 
 }

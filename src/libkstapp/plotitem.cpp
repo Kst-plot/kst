@@ -299,6 +299,41 @@ void PlotItem::addToMenuForContextEvent(QMenu &menu) {
 }
 
 
+void PlotItem::updateObject() {
+#if DEBUG_UPDATE_CYCLE > 1
+  qDebug() << "UP - Updating Plot";
+#endif
+  if (xAxis()->axisZoomMode() == PlotAxis::Auto) {
+    if (yAxis()->axisZoomMode() == PlotAxis::AutoBorder || yAxis()->axisZoomMode() == PlotAxis::Auto
+         || yAxis()->axisZoomMode() == PlotAxis::SpikeInsensitive || yAxis()->axisZoomMode() == PlotAxis::MeanCentered) {
+#if DEBUG_UPDATE_CYCLE > 1
+      qDebug() << "UP - Updating Plot Projection Rect - X and Y Maximum";
+#endif
+      setProjectionRect(computedProjectionRect());
+    } else {
+#if DEBUG_UPDATE_CYCLE > 1
+      qDebug() << "UP - Updating Plot Projection Rect - X Maximum";
+#endif
+      QRectF compute = computedProjectionRect();
+      setProjectionRect(QRectF(compute.x(),
+                              projectionRect().y(),
+                              compute.width(),
+                              projectionRect().height()));
+    }
+  } else if (yAxis()->axisZoomMode() == PlotAxis::Auto) {
+#if DEBUG_UPDATE_CYCLE > 1
+      qDebug() << "UP - Updating Plot Projection Rect - Y Maximum";
+#endif
+    QRectF compute = computedProjectionRect();
+    setProjectionRect(QRectF(projectionRect().x(),
+                            compute.y(),
+                            projectionRect().width(),
+                            compute.height()));
+  }
+  update();
+}
+
+
 QList<PlotRenderItem*> PlotItem::renderItems() const {
   return _renderers.values();
 }

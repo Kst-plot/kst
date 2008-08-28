@@ -171,6 +171,8 @@ class PlotItem : public ViewItem, public PlotItemInterface
     virtual void addToMenuForContextEvent(QMenu &menu);
     virtual bool tryShortcut(const QString &keySequence);
 
+    virtual void updateObject();
+
     LegendItem* legend();
 
   Q_SIGNALS:

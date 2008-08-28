@@ -72,9 +72,9 @@ void UpdateManager::requestUpdate(ObjectPtr updateObject, ObjectPtr object) {
 }
 
 
-void UpdateManager::requestUpdate(ObjectPtr updateObject, QGraphicsRectItem* displayObject) {
+void UpdateManager::requestUpdate(ObjectPtr updateObject, PlotItemInterface* displayObject) {
   if (!_displayUpdateRequests.contains(updateObject)) {
-    QList<QGraphicsRectItem*> newList;
+    QList<PlotItemInterface*> newList;
     newList.append(displayObject);
     _displayUpdateRequests.insert(updateObject, newList);
   } else {
@@ -169,9 +169,9 @@ void UpdateManager::updateFinished(ObjectPtr updateObject, ObjectPtr reportingOb
 #if DEBUG_UPDATE_CYCLE > 0
         qDebug() << "UM - All updates complete, updating plots";
 #endif
-        foreach (QList<QGraphicsRectItem*> objectList, _displayUpdateRequests) {
-          foreach (QGraphicsRectItem* object, objectList) {
-            object->update();
+        foreach (QList<PlotItemInterface*> objectList, _displayUpdateRequests) {
+          foreach (PlotItemInterface* object, objectList) {
+            object->updateObject();
           }
         }
         _dependentUpdateRequests.clear();

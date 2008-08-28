@@ -13,6 +13,7 @@
 #define UPDATEMANAGER_H
 
 #include "object.h"
+#include "plotiteminterface.h"
 
 #include <QGraphicsRectItem>
 
@@ -32,7 +33,7 @@ class UpdateManager : public QObject
 
     void requestUpdate(ObjectPtr object);
     void requestUpdate(ObjectPtr updateObject, ObjectPtr object);
-    void requestUpdate(ObjectPtr updateObject, QGraphicsRectItem* displayObject);
+    void requestUpdate(ObjectPtr updateObject, PlotItemInterface* displayObject);
     void objectDeleted(ObjectPtr object);
 
     void updateStarted(ObjectPtr updateObject, ObjectPtr reportingObject);
@@ -55,7 +56,7 @@ class UpdateManager : public QObject
     QList<ObjectPtr> _updateRequests;
     QMap<ObjectPtr, int> _activeUpdates;
     QMap<ObjectPtr, QList<ObjectPtr> > _dependentUpdateRequests;
-    QMap<ObjectPtr, QList<QGraphicsRectItem*> > _displayUpdateRequests;
+    QMap<ObjectPtr, QList<PlotItemInterface*> > _displayUpdateRequests;
 
     bool _delayedUpdate;
     int _maxUpdate;
