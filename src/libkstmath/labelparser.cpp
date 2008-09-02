@@ -25,6 +25,9 @@
 
 using namespace Label;
 
+// Debug output for Parsing - 0 Off 1 On
+#define DEBUG_PARSING 0
+
 #if 0
 #define dumpattr(node, text) do { printf("%s: bold:%d italic:%d underline:%d\n", text, (node)->attributes.bold, (node)->attributes.italic, (node)->attributes.underline); } while(0)
 #else
@@ -188,7 +191,10 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
   *skip = 1;
   short x = 0;
 
+#if DEBUG_PARSING
   qDebug() << "----- parsing " << txt;
+#endif
+
   switch (c.unicode()) {
     EXPAND_GREEK('B', 'b', "eta",  4, 0x392)
     EXPAND_GREEK('D', 'd', "elta", 5, 0x394)
