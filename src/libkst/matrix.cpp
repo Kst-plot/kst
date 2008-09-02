@@ -616,14 +616,7 @@ void Matrix::change(QByteArray &data, uint nX, uint nY, double minX, double minY
 }
 
 QString Matrix::descriptionTip() const {
-    QString tip;
-  //QString range_string;
-
-  tip = i18n(
-      "Matrix: %1\n"
-      "  %2 x %3"
-            ).arg(Name()).arg(_nX).arg(_nY);
-
+  return i18n("Matrix: %1\n %2 x %3").arg(Name()).arg(_nX).arg(_nY);
 }
 }
 // vim: ts=2 sw=2 et

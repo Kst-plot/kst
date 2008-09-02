@@ -587,11 +587,7 @@ QString Equation::_automaticDescriptiveName() const {
 }
 
 QString Equation::descriptionTip() const {
-  QString tip;
-
-  tip = i18n("Equation: %1\n  %2\nX: %3").arg(Name()).arg(equation()).arg(vXIn()->descriptionTip());
-  
-  return tip;
+  return i18n("Equation: %1\n  %2\nX: %3").arg(Name()).arg(equation()).arg(vXIn()->descriptionTip());
 }
 
 }

@@ -807,7 +807,9 @@ QString Image::descriptionTip() const {
   if (_hasColorMap) {
     tip += i18n("  Color Map");
   }
-  tip+= matrix()->descriptionTip();
+
+  tip += matrix()->descriptionTip();
+  return tip;
 }
 
 }

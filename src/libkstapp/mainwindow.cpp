@@ -71,16 +71,14 @@ MainWindow::MainWindow() {
   _debugDialog = new DebugDialog(this); // need this early for hookups
   Debug::self()->setHandler(_debugDialog);
 
-  connect(_tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentViewChanged()));
-
-  _tabWidget->createView();
-
-  setCentralWidget(_tabWidget);
-
   createActions();
   createMenus();
   createToolBars();
   createStatusBar();
+
+  _tabWidget->createView();
+  setCentralWidget(_tabWidget);
+  connect(_tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentViewChanged()));
 
   readSettings();
   QTimer::singleShot(0, this, SLOT(performHeavyStartupActions()));

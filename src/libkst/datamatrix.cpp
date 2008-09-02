@@ -569,17 +569,12 @@ QString DataMatrix::_automaticDescriptiveName() const{
 }
 
 QString DataMatrix::descriptionTip() const {
-  QString IDstring;
-  //QString range_string;
-
-  IDstring = i18n(
+  return i18n(
       "Data Matrix: %1\n"
       "  %2\n"
       "  Field: %3\n"
       "  %4 x %5"
       ).arg(Name()).arg(dataSource()->fileName()).arg(field().arg(_nX).arg(_nY));
-
-  return IDstring;
 }
 
 }
