@@ -1754,6 +1754,7 @@ bool PlotItem::showLegend() const {
 LegendItem* PlotItem::legend() {
   if (!_legend) {
     _legend = new LegendItem(this);
+    _legend->setVisible(false);
   }
   return _legend;
 }
