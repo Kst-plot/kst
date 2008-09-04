@@ -550,6 +550,8 @@ void DataWizard::finished() {
   uint n_curves = 0;
   uint n_steps = 0;
 
+  QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
   DataSourcePtr ds = _pageDataSource->dataSource();
 
   // check for sufficient memory
@@ -785,8 +787,6 @@ void DataWizard::finished() {
       if (*plotIterator) {
         PlotRenderItem *renderItem = (*plotIterator)->renderItem(PlotRenderItem::Cartesian);
         renderItem->addRelation(kst_cast<Relation>(curve));
-        (*plotIterator)->update();
-        (*plotIterator)->parentView()->appendToLayout(_pagePlot->layout(), (*plotIterator), _pagePlot->gridColumns());
       }
 
       if (_pagePlot->curvePlacement() != DataWizardPagePlot::OnePlot) { 
@@ -873,8 +873,6 @@ void DataWizard::finished() {
           (*plotIterator)->xAxis()->setAxisLog(_pagePlot->PSDLogX());
           (*plotIterator)->yAxis()->setAxisLog(_pagePlot->PSDLogY());
           renderItem->addRelation(kst_cast<Relation>(curve));
-          (*plotIterator)->update();
-          (*plotIterator)->parentView()->appendToLayout(_pagePlot->layout(), (*plotIterator), _pagePlot->gridColumns());
         }
 
         if (_pagePlot->curvePlacement() != DataWizardPagePlot::OnePlot) { 
@@ -893,6 +891,11 @@ void DataWizard::finished() {
     if (n_psd>0) {
       _pageDataPresentation->getFFTOptions()->setWidgetDefaults();
     }
+  }
+
+  foreach (PlotItem* plot, plotList) {
+    plot->update();
+    plot->parentView()->appendToLayout(_pagePlot->layout(), plot, _pagePlot->gridColumns());
   }
 
   // legends and labels
@@ -925,6 +928,8 @@ void DataWizard::finished() {
     }
     ++plotIterator;
   }
+  QApplication::restoreOverrideCursor();
+
   accept();
 
 }
