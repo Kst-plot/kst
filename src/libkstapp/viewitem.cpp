@@ -1266,7 +1266,7 @@ QPointF ViewItem::lockOffset(const QPointF &offset, qreal ratio, bool oddCorner)
 
 bool ViewItem::maybeReparent() {
   //First get a list of all items that collide with this one
-  QList<QGraphicsItem*> collisions = collidingItems(Qt::IntersectsItemShape);
+  QList<QGraphicsItem*> collisions = collidingItems(Qt::ContainsItemShape);
 
   bool topLevel = !parentItem();
   QPointF origin = mapToScene(QPointF(0,0));
@@ -1317,9 +1317,6 @@ bool ViewItem::maybeReparent() {
     ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
 
     if (!viewItem || !viewItem->acceptsChildItems()) /*bah*/
-      continue;
-
-    if (!viewItem->collidesWithItem(this, Qt::ContainsItemShape)) /*doesn't contain*/
       continue;
 
     if (parentItem() == viewItem) { /*already done*/
