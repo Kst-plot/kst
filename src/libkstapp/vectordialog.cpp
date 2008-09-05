@@ -401,7 +401,6 @@ ObjectPtr VectorDialog::createNewGeneratedVector() {
   const qreal from = _vectorTab->from();
   const qreal to = _vectorTab->to();
   const int numberOfSamples = _vectorTab->numberOfSamples();
-  Q_ASSERT(_document && _document->objectStore());
 
   Q_ASSERT(_document && _document->objectStore());
   GeneratedVectorPtr vector = _document->objectStore()->createObject<GeneratedVector>();
