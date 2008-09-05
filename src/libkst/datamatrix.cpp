@@ -574,7 +574,7 @@ QString DataMatrix::descriptionTip() const {
       "  %2\n"
       "  Field: %3\n"
       "  %4 x %5"
-      ).arg(Name()).arg(dataSource()->fileName()).arg(field().arg(_nX).arg(_nY));
+      ).arg(Name()).arg(dataSource()->fileName()).arg(field()).arg(_nX).arg(_nY);
 }
 
 }
