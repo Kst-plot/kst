@@ -25,10 +25,6 @@
 
 namespace Kst {
 
-namespace Equation {
-  class Node;
-}
-
 /**A class for handling data vectors for kst.
  *@author cbn
  */
