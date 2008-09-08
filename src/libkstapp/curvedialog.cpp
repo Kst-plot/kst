@@ -402,11 +402,13 @@ ObjectPtr CurveDialog::createNewDataObject() {
     break;
   }
 
-  PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
-  renderItem->addRelation(kst_cast<Relation>(curve));
-  plotItem->update();
+  if (_curveTab->curvePlacement()->place() != CurvePlacement::NoPlot) {
+    PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
+    renderItem->addRelation(kst_cast<Relation>(curve));
+    plotItem->update();
 
-  plotItem->parentView()->appendToLayout(_curveTab->curvePlacement()->layout(), plotItem, _curveTab->curvePlacement()->gridColumns());
+    plotItem->parentView()->appendToLayout(_curveTab->curvePlacement()->layout(), plotItem, _curveTab->curvePlacement()->gridColumns());
+  }
 
   return ObjectPtr(curve.data());
 }

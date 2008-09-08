@@ -253,11 +253,13 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
     break;
   }
 
-  PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
-  renderItem->addRelation(kst_cast<Relation>(curve));
-  plotItem->update();
+  if (_powerSpectrumTab->curvePlacement()->place() != CurvePlacement::NoPlot) {
+    PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
+    renderItem->addRelation(kst_cast<Relation>(curve));
+    plotItem->update();
 
-  plotItem->parentView()->appendToLayout(_powerSpectrumTab->curvePlacement()->layout(), plotItem, _powerSpectrumTab->curvePlacement()->gridColumns());
+    plotItem->parentView()->appendToLayout(_powerSpectrumTab->curvePlacement()->layout(), plotItem, _powerSpectrumTab->curvePlacement()->gridColumns());
+  }
 
   return ObjectPtr(powerspectrum.data());
 }

@@ -250,11 +250,13 @@ ObjectPtr CSDDialog::createNewDataObject() {
     break;
   }
 
-  PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
-  renderItem->addRelation(kst_cast<Relation>(image));
-  plotItem->update();
+  if (_CSDTab->curvePlacement()->place() != CurvePlacement::NoPlot) {
+    PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
+    renderItem->addRelation(kst_cast<Relation>(image));
+    plotItem->update();
 
-  plotItem->parentView()->appendToLayout(_CSDTab->curvePlacement()->layout(), plotItem, _CSDTab->curvePlacement()->gridColumns());
+    plotItem->parentView()->appendToLayout(_CSDTab->curvePlacement()->layout(), plotItem, _CSDTab->curvePlacement()->gridColumns());
+  }
 
   return ObjectPtr(image.data());
 }

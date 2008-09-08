@@ -328,11 +328,13 @@ ObjectPtr EquationDialog::createNewDataObject() {
     break;
   }
 
-  PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
-  renderItem->addRelation(kst_cast<Relation>(curve));
-  plotItem->update();
+  if (_equationTab->curvePlacement()->place() != CurvePlacement::NoPlot) {
+    PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
+    renderItem->addRelation(kst_cast<Relation>(curve));
+    plotItem->update();
 
-  plotItem->parentView()->appendToLayout(_equationTab->curvePlacement()->layout(), plotItem, _equationTab->curvePlacement()->gridColumns());
+    plotItem->parentView()->appendToLayout(_equationTab->curvePlacement()->layout(), plotItem, _equationTab->curvePlacement()->gridColumns());
+  }
 
   return ObjectPtr(equation.data());
 }

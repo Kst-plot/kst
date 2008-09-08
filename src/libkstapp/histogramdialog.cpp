@@ -395,12 +395,13 @@ ObjectPtr HistogramDialog::createNewDataObject() {
     break;
   }
 
-  PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
-  renderItem->addRelation(kst_cast<Relation>(curve));
-  plotItem->update();
+  if (_histogramTab->curvePlacement()->place() != CurvePlacement::NoPlot) {
+    PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
+    renderItem->addRelation(kst_cast<Relation>(curve));
+    plotItem->update();
 
-  plotItem->parentView()->appendToLayout(_histogramTab->curvePlacement()->layout(), plotItem, _histogramTab->curvePlacement()->gridColumns());
-
+    plotItem->parentView()->appendToLayout(_histogramTab->curvePlacement()->layout(), plotItem, _histogramTab->curvePlacement()->gridColumns());
+  }
   return ObjectPtr(histogram.data());
 }
 
