@@ -32,7 +32,6 @@ class StringEditorDialog;
 class TabWidget;
 class VectorEditorDialog;
 class View;
-class ViewManager;
 
 class MainWindow : public QMainWindow
 {
@@ -55,7 +54,6 @@ class MainWindow : public QMainWindow
     void showScalarEditor();
     void showMatrixEditor();
     void showStringEditor();
-    void showViewManager();
     void showSettingsDialog();
     void showDifferentiateCurvesDialog();
     void showChooseColorDialog();
@@ -124,7 +122,6 @@ class MainWindow : public QMainWindow
     ScalarEditorDialog *_scalarEditor;
     StringEditorDialog * _stringEditor;
     MatrixEditorDialog *_matrixEditor;
-    ViewManager *_viewManager;
 
     QPointer<QProgressBar> _progressBar;
 
@@ -174,7 +171,6 @@ class MainWindow : public QMainWindow
     QAction *_matrixEditorAct;
     QAction *_stringEditorAct;
 
-    QAction *_viewManagerAct;
     QAction *_layoutModeAct;
     QAction *_tiedZoomAct;
 

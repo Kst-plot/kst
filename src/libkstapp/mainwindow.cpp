@@ -67,7 +67,6 @@ MainWindow::MainWindow() {
   _scalarEditor = 0;
   _stringEditor = 0;
   _matrixEditor = 0;
-  _viewManager = 0;
   _doc = new Document(this);
   _tabWidget = new TabWidget(this);
   _undoGroup = new QUndoGroup(this);
@@ -93,8 +92,6 @@ MainWindow::~MainWindow() {
   _vectorEditor = 0;
   delete _dataManager;
   _dataManager = 0;
-  delete _viewManager;
-  _viewManager = 0;
   delete _doc;
   _doc = 0;
 }
@@ -506,11 +503,6 @@ void MainWindow::createActions() {
   _dataManagerAct->setIcon(QPixmap(":kst_datamanager.png"));
   connect(_dataManagerAct, SIGNAL(triggered()), this, SLOT(showDataManager()));
 
-  _viewManagerAct = new QAction(tr("View &Manager..."), this);
-  _viewManagerAct->setStatusTip(tr("Show Kst's view manager window"));
-  _viewManagerAct->setIcon(QPixmap(":kst_viewmanager.png"));
-  connect(_viewManagerAct, SIGNAL(triggered()), this, SLOT(showViewManager()));
-
   _vectorEditorAct = new QAction(tr("&View Vectors..."), this);
   _vectorEditorAct->setStatusTip(tr("Show all vectors in a spreadsheet"));
   connect(_vectorEditorAct, SIGNAL(triggered()), this, SLOT(showVectorEditor()));
@@ -670,7 +662,6 @@ void MainWindow::createMenus() {
   _dataMenu->addAction(_stringEditorAct);
 
   _viewMenu = menuBar()->addMenu(tr("&View"));
-  _viewMenu->addAction(_viewManagerAct);
   _viewMenu->addAction(_tiedZoomAct);
   _viewMenu->addSeparator();
 
@@ -734,7 +725,6 @@ void MainWindow::createToolBars() {
   _layoutToggleToolBar->addAction(_layoutModeAct);
 
   _zoomToolBar = addToolBar(tr("Zoom"));
-  //_viewToolBar->addAction(_viewManagerAct);  // doesn't do anything yet
   _zoomToolBar->addAction(_tiedZoomAct);
 
   _layoutToolBar = new QToolBar(tr("Layout"), this);
@@ -900,14 +890,6 @@ void MainWindow::showDataManager() {
     _dataManager = new DataManager(this, _doc);
   }
   _dataManager->show();
-}
-
-
-void MainWindow::showViewManager() {
-  if (!_viewManager) {
-    _viewManager = new ViewManager(this);
-  }
-  _viewManager->show();
 }
 
 
