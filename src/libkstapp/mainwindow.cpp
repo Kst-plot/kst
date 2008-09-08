@@ -49,11 +49,14 @@
 
 #include <QtGui>
 
-//FIXME Temporaries REMOVE!!
-//#include "editablevector.h"
-//#include "generatedvector.h"
-//#include "datacollection.h"
-//#include "equation.h"
+// Enable Demo Vector Model 0 Disabled 1 Enabled.
+#define DEMO_VECTOR_MODEL 0
+
+#if DEMO_VECTOR_MODEL
+#include "equation.h"
+#include "generatedvector.h"
+#endif
+
 
 namespace Kst {
 
@@ -413,24 +416,8 @@ void MainWindow::createLayout() {
 
 
 void MainWindow::demoModel() {
-/*  Q_ASSERT(document() && document()->objectStore());
-  VectorPtr v = kst_cast<Vector>(document()->objectStore()->createObject<Vector>());
-  Q_ASSERT(v);
-  v->resize(999999);
-  VectorPtr v2 = kst_cast<Vector>(document()->objectStore()->createObject<Vector>());
-  Q_ASSERT(v2);
-  v2->resize(999999);
-  EditableVectorPtr v3 = kst_cast<EditableVector>(document()->objectStore()->createObject<EditableVector>());
-  Q_ASSERT(v3);
-  v3->resize(25);
-  double *d = const_cast<double *>(v->value()); // yay :)
-  double *d2 = const_cast<double *>(v2->value()); // yay :)
-  d[0] = 1;
-  d2[0] = 1;
-  for (int i = 1; i < v->length(); ++i) {
-    d[i] = d[i-1] + 0.002;
-    d2[i] = d2[i-1] + 0.003;
-  }
+#if DEMO_VECTOR_MODEL
+  Q_ASSERT(document() && document()->objectStore());
   GeneratedVectorPtr gv = kst_cast<GeneratedVector>(document()->objectStore()->createObject<GeneratedVector>());
   Q_ASSERT(gv);
   gv->changeRange(0, 100, 1000);
@@ -441,7 +428,7 @@ void MainWindow::demoModel() {
   ep->writeLock();
   ep->update();
   ep->unlock();
-//  addDataObjectToList(ep.data());*/
+#endif
 }
 
 
@@ -719,12 +706,13 @@ void MainWindow::createMenus() {
   _helpMenu->addAction(_debugDialogAct);
   _helpMenu->addAction(_aboutAct);
 
-  // FIXME: remove this later.
+#if DEMO_VECTOR_MODEL
   QMenu *demoMenu = menuBar()->addMenu("&Demo");
 
   QAction *demoModel = new QAction("Vector model", this);
   connect(demoModel, SIGNAL(triggered()), this, SLOT(demoModel()));
   demoMenu->addAction(demoModel);
+#endif
 }
 
 
