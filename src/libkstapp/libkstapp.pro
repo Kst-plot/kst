@@ -79,6 +79,7 @@ SOURCES += \
     legenditemdialog.cpp \
     legendtab.cpp \
     lineitem.cpp \
+    logwidget.cpp \
     mainwindow.cpp \
     markerstab.cpp \
     matrixdialog.cpp \
@@ -175,6 +176,7 @@ HEADERS += \
     legenditemdialog.h \
     legendtab.h \
     lineitem.h \
+    logwidget.h \
     mainwindow.h \
     markerstab.h \
     matrixdialog.h \

@@ -70,7 +70,7 @@ MainWindow::MainWindow() {
   _doc = new Document(this);
   _tabWidget = new TabWidget(this);
   _undoGroup = new QUndoGroup(this);
-  _debugDialog = new DebugDialog(this); // need this early for hookups
+  _debugDialog = new DebugDialog(this);
   Debug::self()->setHandler(_debugDialog);
 
   createActions();
@@ -924,6 +924,7 @@ void MainWindow::showDebugDialog() {
   if (!_debugDialog) {
     _debugDialog = new DebugDialog(this);
   }
+  _debugDialog->setObjectStore(document()->objectStore());
   _debugDialog->show();
 }
 

@@ -174,6 +174,7 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   _valid = false;
   _haveHeader = false;
   _fieldListComplete = false;
+  _source = "ASCII File Reader";
   if (!type.isEmpty() && type != "ASCII") {
     return;
   }

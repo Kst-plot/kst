@@ -19,10 +19,33 @@
    <property name="spacing" >
     <number>6</number>
    </property>
-   <item row="0" column="0" colspan="2" >
+   <item row="2" column="0" >
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeType" >
+      <enum>QSizePolicy::Expanding</enum>
+     </property>
+     <property name="sizeHint" stdset="0" >
+      <size>
+       <width>421</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="1" >
+    <widget class="QPushButton" name="_close" >
+     <property name="text" >
+      <string>&amp;Close</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" >
     <widget class="QTabWidget" name="_tabs" >
      <property name="currentIndex" >
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="_buildInfoTab" >
       <attribute name="title" >
@@ -56,7 +79,7 @@
          <property name="sizeType" >
           <enum>QSizePolicy::Expanding</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>530</width>
            <height>250</height>
@@ -79,7 +102,7 @@
          <property name="sizeType" >
           <enum>QSizePolicy::Expanding</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>301</width>
            <height>21</height>
@@ -105,16 +128,13 @@
          <property name="orientation" >
           <enum>Qt::Horizontal</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>221</width>
            <height>20</height>
           </size>
          </property>
         </spacer>
-       </item>
-       <item row="0" column="0" colspan="3" >
-        <widget class="QTextBrowser" name="_log" />
        </item>
        <item row="1" column="1" >
         <widget class="QGroupBox" name="groupBox" >
@@ -128,16 +148,6 @@
           <property name="spacing" >
            <number>6</number>
           </property>
-          <item row="0" column="4" >
-           <widget class="QCheckBox" name="_showOther" >
-            <property name="text" >
-             <string>&amp;Other</string>
-            </property>
-            <property name="checked" >
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="1" >
            <widget class="QCheckBox" name="_showNotice" >
             <property name="text" >
@@ -188,6 +198,19 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="1" >
+        <spacer name="verticalSpacer" >
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0" >
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tab" >
@@ -202,37 +225,24 @@
         <number>6</number>
        </property>
        <item row="0" column="0" >
-        <widget class="QTreeView" name="_dataSources" >
-         <property name="rootIsDecorated" >
+        <widget class="QTreeWidget" name="_dataSources" >
+         <property name="allColumnsShowFocus" >
           <bool>true</bool>
          </property>
+         <column>
+          <property name="text" >
+           <string>Plugin</string>
+          </property>
+         </column>
+         <column>
+          <property name="text" >
+           <string>Loaded Instance</string>
+          </property>
+         </column>
         </widget>
        </item>
       </layout>
      </widget>
-    </widget>
-   </item>
-   <item row="1" column="0" >
-    <spacer>
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeType" >
-      <enum>QSizePolicy::Expanding</enum>
-     </property>
-     <property name="sizeHint" >
-      <size>
-       <width>421</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="1" column="1" >
-    <widget class="QPushButton" name="_close" >
-     <property name="text" >
-      <string>&amp;Close</string>
-     </property>
     </widget>
    </item>
   </layout>
@@ -240,15 +250,12 @@
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <tabstops>
-  <tabstop>_tabs</tabstop>
   <tabstop>_email</tabstop>
   <tabstop>_showDebug</tabstop>
   <tabstop>_showNotice</tabstop>
   <tabstop>_showWarning</tabstop>
   <tabstop>_showError</tabstop>
-  <tabstop>_showOther</tabstop>
   <tabstop>_clear</tabstop>
-  <tabstop>_dataSources</tabstop>
   <tabstop>_close</tabstop>
  </tabstops>
  <resources/>

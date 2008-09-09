@@ -10,15 +10,33 @@
  ***************************************************************************/
 
 #include "debugdialog.h"
+#include "logwidget.h"
 #include <debug.h>
 #include <events.h>
 #include <logevents.h>
+#include <datasource.h>
+
+#include "kst_i18n.h"
+
+#include <QDebug>
 
 namespace Kst {
 
 DebugDialog::DebugDialog(QWidget *parent)
-  : QDialog(parent) {
+  : QDialog(parent), _store(0) {
   setupUi(this);
+
+  _log = new LogWidget(TabPage);
+
+  gridLayout2->addMultiCellWidget(_log, 0, 0, 0, 2);
+
+  connect(_clear, SIGNAL(clicked()), this, SLOT(clear()));
+  connect(_showDebug, SIGNAL(toggled(bool)), _log, SLOT(setShowDebug(bool)));
+  connect(_showWarning, SIGNAL(toggled(bool)), _log, SLOT(setShowWarning(bool)));
+  connect(_showNotice, SIGNAL(toggled(bool)), _log, SLOT(setShowNotice(bool)));
+  connect(_showError, SIGNAL(toggled(bool)), _log, SLOT(setShowError(bool)));
+
+  _buildInfo->setText(i18n("<h1>Kst</h1> Version %1 (%2)").arg(KSTVERSION).arg(Debug::self()->kstRevision()));
 }
 
 
@@ -32,7 +50,7 @@ bool DebugDialog::event(QEvent* e) {
     if (le) {
       switch (le->_eventType) {
         case LogEvent::LogAdded:
-          _log->append(le->_msg.msg);
+          _log->logAdded(le->_msg);
           if (le->_msg.level == Debug::Error) {
             emit notifyOfError();
           }
@@ -45,9 +63,37 @@ bool DebugDialog::event(QEvent* e) {
           break;
       }
     }
-    return true;
   }
-  return false;
+  return QDialog::event(e);
+}
+
+
+void DebugDialog::clear() {
+  Debug::self()->clear();
+}
+
+
+void DebugDialog::show() {
+  Q_ASSERT(_store);
+  _dataSources->clear();
+
+  const QStringList& pl = DataSource::pluginList();
+  foreach (QString pluginName, pl) {
+    new QTreeWidgetItem(_dataSources, QStringList(pluginName));
+  }
+
+  QTreeWidgetItemIterator it(_dataSources);
+  while (*it) {
+    foreach (DataSourcePtr dataSource, _store->dataSourceList()) {
+      if (dataSource->sourceName() == (*it)->text(0)) {
+        QStringList list(QString::null);
+        list += dataSource->fileName();
+        new QTreeWidgetItem(*it, list);
+      }
+    }
+    ++it;
+  }
+  QDialog::show();
 }
 
 }

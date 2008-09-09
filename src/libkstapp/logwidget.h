@@ -9,43 +9,35 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef DEBUGDIALOG_H
-#define DEBUGDIALOG_H
+#ifndef LOGWIDGET_H
+#define LOGWIDGET_H
 
-#include <QDialog>
-
-#include "ui_debugdialog.h"
+#include <QTextBrowser>
+#include "debug.h"
 
 #include "kst_export.h"
-#include "objectstore.h"
 
 namespace Kst {
 
-class LogWidget;
-
-class KST_EXPORT DebugDialog : public QDialog, Ui::DebugDialog
+class KST_EXPORT LogWidget : public QTextBrowser
 {
   Q_OBJECT
   public:
-    DebugDialog(QWidget *parent);
-    virtual ~DebugDialog();
-
-    void setObjectStore(ObjectStore* store) { _store = store; }
-
-  Q_SIGNALS:
-    void notifyOfError();
-    void notifyAllClear();
+    LogWidget(QWidget *parent);
+    virtual ~LogWidget();
 
   public Q_SLOTS:
-    void clear();
-    void show();
+    void logAdded(const Debug::LogMessage&);
+    void setShowDebug(bool show);
+    void setShowNotice(bool show);
+    void setShowWarning(bool show);
+    void setShowError(bool show);
 
-  protected:
-    bool event(QEvent *e);
+  private slots:
+    void regenerate();
 
   private:
-    LogWidget *_log;
-    ObjectStore *_store;
+    int _show;
 };
 
 }
