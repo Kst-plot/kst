@@ -280,13 +280,16 @@ void MainWindow::print() {
   pd.addEnabledOption(QPrintDialog::PrintPageRange);
 
   if (pd.exec() == QDialog::Accepted) {
+
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
     QPainter painter(&printer);
-    QList<QGraphicsView*> pages;
+    QList<View*> pages;
     switch (printer.printRange()) {
       case QPrinter::PageRange:
         break;
       case QPrinter::AllPages:
-        foreach (QGraphicsView *view, _tabWidget->views()) {
+        foreach (View *view, _tabWidget->views()) {
           pages.append(view);
         }
         break;
@@ -297,11 +300,15 @@ void MainWindow::print() {
     }
 
     for (int i = 0; i < printer.numCopies(); ++i) {
-      foreach (QGraphicsView *view, pages) {
+      foreach (View *view, pages) {
+        view->setPrinting(true);
         view->render(&painter);
+        view->setPrinting(false);
         printer.newPage();
       }
     }
+
+    QApplication::restoreOverrideCursor();
   }
 }
 

@@ -37,7 +37,8 @@ View::View()
     _layoutBoxItem(0),
     _gridSpacing(QSizeF(20,20)),
     _snapToGridHorizontal(false),
-    _snapToGridVertical(false) {
+    _snapToGridVertical(false),
+    _printing(false) {
 
   _undoStack = new QUndoStack(this);
   setScene(new Scene(this));
@@ -316,6 +317,10 @@ void View::updateBrush() {
 
 
 void View::drawBackground(QPainter *painter, const QRectF &rect) {
+  if (isPrinting()) {
+    return;
+  }
+
   QGraphicsView::drawBackground(painter, rect);
 
   if (!showGrid())

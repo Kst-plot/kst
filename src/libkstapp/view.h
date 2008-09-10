@@ -87,6 +87,10 @@ class KST_EXPORT View : public QGraphicsView
 
     QPointF snapPoint(const QPointF &point);
 
+    void setPrinting(bool printing) { _printing = printing; }
+    bool isPrinting() { return _printing; }
+
+
   Q_SIGNALS:
     void viewModeChanged(View::ViewMode oldMode);
     void mouseModeChanged(View::MouseMode oldMode);
@@ -124,6 +128,8 @@ class KST_EXPORT View : public QGraphicsView
     bool _showGrid;
     bool _snapToGridHorizontal;
     bool _snapToGridVertical;
+
+    bool _printing;
 };
 
 }

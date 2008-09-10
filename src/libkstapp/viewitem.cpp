@@ -624,45 +624,45 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   painter->setBrush(brush());
   paint(painter); //this is the overload that subclasses should use...
 
-  painter->save();
-  painter->setPen(Qt::DotLine);
-  painter->setBrush(Qt::NoBrush);
-  if ((isSelected() || isHovering())
-      && parentView()->mouseMode() != View::Create
-      && parentView()->viewMode() != View::Data) {
-    painter->drawPath(shape());
-    if (_gripMode == Resize)
-      painter->fillPath(grips(), Qt::blue);
-    else if (_gripMode == Scale)
-      painter->fillPath(grips(), Qt::black);
-    else if (_gripMode == Rotate)
-      painter->fillPath(grips(), Qt::red);
-    else if (_gripMode == Move)
-      painter->fillPath(grips(), Qt::transparent);
-  }
+  if (!parentView()->isPrinting()) {
+    painter->save();
+    painter->setPen(Qt::DotLine);
+    painter->setBrush(Qt::NoBrush);
+    if ((isSelected() || isHovering())
+        && parentView()->mouseMode() != View::Create
+        && parentView()->viewMode() != View::Data) {
+      painter->drawPath(shape());
+      if (_gripMode == Resize)
+        painter->fillPath(grips(), Qt::blue);
+      else if (_gripMode == Scale)
+        painter->fillPath(grips(), Qt::black);
+      else if (_gripMode == Rotate)
+        painter->fillPath(grips(), Qt::red);
+      else if (_gripMode == Move)
+        painter->fillPath(grips(), Qt::transparent);
+    }
 
 #ifdef DEBUG_GEOMETRY
-//  painter->fillRect(selectBoundingRect(), Qt::blue);
-  QColor semiRed(QColor(255, 0, 0, 50));
-  painter->fillPath(shape(), semiRed);
+  //  painter->fillRect(selectBoundingRect(), Qt::blue);
+    QColor semiRed(QColor(255, 0, 0, 50));
+    painter->fillPath(shape(), semiRed);
 
-  QPen p = painter->pen();
+    QPen p = painter->pen();
 
-  painter->setPen(Qt::white);
-  painter->drawLine(_normalLine);
+    painter->setPen(Qt::white);
+    painter->drawLine(_normalLine);
 
-  painter->setPen(Qt::red);
-  painter->drawLine(_rotationLine);
-  painter->setPen(p);
+    painter->setPen(Qt::red);
+    painter->drawLine(_rotationLine);
+    painter->setPen(p);
 
-  painter->drawText(rect().topLeft(), "TL");
-  painter->drawText(rect().topRight(), "TR");
-  painter->drawText(rect().bottomLeft(), "BL");
-  painter->drawText(rect().bottomRight(), "BR");
+    painter->drawText(rect().topLeft(), "TL");
+    painter->drawText(rect().topRight(), "TR");
+    painter->drawText(rect().bottomLeft(), "BL");
+    painter->drawText(rect().bottomRight(), "BR");
 #endif
-  painter->restore();
-
-//   QGraphicsRectItem::paint(painter, option, widget);
+    painter->restore();
+  }
 }
 
 
