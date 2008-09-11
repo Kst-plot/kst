@@ -326,6 +326,9 @@ QString DirFilePlugin::getDirectory(QString filepath) {
   QString properDirPath = info.path();
   if (info.fileName() == "format") {
     //do nothing... allows for format file to be selected.
+  } else if (info.isDir()) {
+    //do nothing... a directory was selected.
+    properDirPath = filepath;
   } else {
     QFile file(filepath);
     if (file.open(QFile::ReadOnly)) {
