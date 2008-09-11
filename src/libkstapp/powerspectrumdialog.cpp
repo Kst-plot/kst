@@ -89,7 +89,6 @@ void PowerSpectrumTab::setObjectStore(ObjectStore *store) {
 void PowerSpectrumTab::hideCurveOptions() {
   _curvePlacement->setVisible(false);
   _curveAppearance->setVisible(false);
-  setMaximumHeight(235);
 }
 
 

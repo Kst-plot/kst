@@ -11,6 +11,6 @@ SUBDIRS += \
     src/d2asc \
 #    src/d2d \
     tests \
-    src/plugins 
+#    src/plugins 
 #     src/extensions \
 #     misc

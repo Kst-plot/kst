@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>300</width>
-    <height>25</height>
+    <height>32</height>
    </rect>
   </property>
   <property name="maximumSize" >
@@ -19,16 +19,7 @@
    <string>Select a scalar to utilize.  If you wish to create a new scalar, select the icon to the right.</string>
   </property>
   <layout class="QGridLayout" >
-   <property name="leftMargin" >
-    <number>0</number>
-   </property>
-   <property name="topMargin" >
-    <number>0</number>
-   </property>
-   <property name="rightMargin" >
-    <number>0</number>
-   </property>
-   <property name="bottomMargin" >
+   <property name="margin" >
     <number>0</number>
    </property>
    <item row="0" column="3" >

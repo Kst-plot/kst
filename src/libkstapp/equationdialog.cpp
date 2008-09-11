@@ -183,7 +183,6 @@ void EquationTab::setObjectStore(ObjectStore *store) {
 void EquationTab::hideCurveOptions() {
   _curvePlacement->setVisible(false);
   _curveAppearance->setVisible(false);
-  setMaximumHeight(250);
 }
 
 

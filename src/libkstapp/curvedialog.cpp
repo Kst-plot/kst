@@ -171,12 +171,14 @@ void CurveTab::setYMinusError(VectorPtr vector) {
 
 void CurveTab::xCheckboxClicked() {
   _xMinusError->setEnabled(!_xMinusSameAsPlus->isChecked());
+  _xMinusErrorLabel->setEnabled(!_xMinusSameAsPlus->isChecked());
   xErrorChanged();
 }
 
 
 void CurveTab::yCheckboxClicked() {
   _yMinusError->setEnabled(!_yMinusSameAsPlus->isChecked());
+  _yMinusErrorLabel->setEnabled(!_yMinusSameAsPlus->isChecked());
   yErrorChanged();
 }
 
@@ -207,7 +209,6 @@ void CurveTab::setObjectStore(ObjectStore *store) {
 
 void CurveTab::hidePlacementOptions() {
   _curvePlacement->setVisible(false);
-  setMaximumHeight(400);
 }
 
 
@@ -306,6 +307,7 @@ void CurveDialog::configureTab(ObjectPtr object) {
   if (!object) {
     _curveTab->curveAppearance()->loadWidgetDefaults();
   } else if (CurvePtr curve = kst_cast<Curve>(object)) {
+    _curveTab->curveAppearance()->loadWidgetDefaults();
     _curveTab->setXVector(curve->xVector());
     _curveTab->setYVector(curve->yVector());
     if (curve->hasXError()) {

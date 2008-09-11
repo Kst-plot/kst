@@ -243,6 +243,32 @@ QStringList DirFilePlugin::matrixList(QSettings *cfg,
   return QStringList();
 }
 
+QStringList DirFilePlugin::scalarList(QSettings *cfg,
+                                            const QString& filename,
+                                            const QString& type,
+                                            QString *typeSuggestion,
+                                            bool *complete) const {
+
+  Q_UNUSED(cfg);
+  Q_UNUSED(type)
+  int err = 0;
+  struct FormatType *ft = GetFormat(getDirectory(filename).toLatin1(), &err);
+  QStringList scalarList;
+
+  if (complete) {
+    *complete = true;
+  }
+
+  if (typeSuggestion) {
+    *typeSuggestion = "Directory of Binary Files";
+  }
+
+  if (err == GD_E_OK) {
+    scalarList.append("FRAMES");
+  }
+  return scalarList;
+
+}
 
 QStringList DirFilePlugin::fieldList(QSettings *cfg,
                                             const QString& filename,

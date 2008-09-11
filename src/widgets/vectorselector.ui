@@ -5,40 +5,27 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>318</width>
-    <height>25</height>
+    <width>277</width>
+    <height>32</height>
    </rect>
   </property>
   <property name="whatsThis" >
    <string>Select a vector to utilize.  If you wish to create a new vector, click on the icon to the right.</string>
   </property>
   <layout class="QHBoxLayout" >
-   <property name="leftMargin" >
+   <property name="spacing" >
     <number>0</number>
    </property>
-   <property name="topMargin" >
-    <number>0</number>
-   </property>
-   <property name="rightMargin" >
-    <number>0</number>
-   </property>
-   <property name="bottomMargin" >
+   <property name="margin" >
     <number>0</number>
    </property>
    <item>
     <widget class="Kst::ComboBox" name="_vector" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="maximumSize" >
-      <size>
-       <width>300</width>
-       <height>72</height>
-      </size>
-     </property>
+     <item>
+      <property name="text" >
+       <string>M</string>
+      </property>
+     </item>
     </widget>
    </item>
    <item>

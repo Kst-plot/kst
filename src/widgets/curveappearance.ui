@@ -5,27 +5,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>373</width>
-    <height>148</height>
+    <width>486</width>
+    <height>193</height>
    </rect>
   </property>
   <property name="sizePolicy" >
-   <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
+   <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
   <layout class="QVBoxLayout" >
-   <property name="leftMargin" >
+   <property name="spacing" >
     <number>0</number>
    </property>
-   <property name="topMargin" >
-    <number>0</number>
-   </property>
-   <property name="rightMargin" >
-    <number>0</number>
-   </property>
-   <property name="bottomMargin" >
+   <property name="margin" >
     <number>0</number>
    </property>
    <item>
@@ -36,19 +30,22 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="whatsThis" >
-      <string>Reset the dialog to reflect labels currently displayed on plot.</string>
+     <property name="font" >
+      <font>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
      </property>
      <property name="title" >
       <string>Appearance</string>
      </property>
-     <layout class="QGridLayout" >
+     <layout class="QGridLayout" name="_2" >
       <item row="0" column="0" colspan="7" >
        <layout class="QHBoxLayout" >
         <item>
          <widget class="QLabel" name="_label" >
           <property name="sizePolicy" >
-           <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+           <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -85,7 +82,7 @@
           <property name="sizeType" >
            <enum>QSizePolicy::Expanding</enum>
           </property>
-          <property name="sizeHint" >
+          <property name="sizeHint" stdset="0" >
            <size>
             <width>30</width>
             <height>21</height>
@@ -102,17 +99,6 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="font" >
-         <font>
-          <family>Sans Serif</family>
-          <pointsize>9</pointsize>
-          <weight>50</weight>
-          <italic>false</italic>
-          <bold>false</bold>
-          <underline>false</underline>
-          <strikeout>false</strikeout>
-         </font>
         </property>
         <property name="whatsThis" >
          <string>Check this to cause the selected points to be drawn at each data point.</string>
@@ -152,17 +138,6 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="font" >
-         <font>
-          <family>Sans Serif</family>
-          <pointsize>9</pointsize>
-          <weight>50</weight>
-          <italic>false</italic>
-          <bold>false</bold>
-          <underline>false</underline>
-          <strikeout>false</strikeout>
-         </font>
-        </property>
         <property name="toolTip" >
          <string>Point Type</string>
         </property>
@@ -201,17 +176,6 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="font" >
-         <font>
-          <family>Sans Serif</family>
-          <pointsize>9</pointsize>
-          <weight>50</weight>
-          <italic>false</italic>
-          <bold>false</bold>
-          <underline>false</underline>
-          <strikeout>false</strikeout>
-         </font>
-        </property>
         <property name="toolTip" >
          <string>Point Type</string>
         </property>
@@ -247,17 +211,6 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="font" >
-         <font>
-          <family>Sans Serif</family>
-          <pointsize>9</pointsize>
-          <weight>50</weight>
-          <italic>false</italic>
-          <bold>false</bold>
-          <underline>false</underline>
-          <strikeout>false</strikeout>
-         </font>
         </property>
         <property name="whatsThis" >
          <string>Check this to cause lines to be drawn between data points.</string>
@@ -297,17 +250,6 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="font" >
-         <font>
-          <family>Sans Serif</family>
-          <pointsize>9</pointsize>
-          <weight>50</weight>
-          <italic>false</italic>
-          <bold>false</bold>
-          <underline>false</underline>
-          <strikeout>false</strikeout>
-         </font>
-        </property>
         <property name="toolTip" >
          <string>Line Type</string>
         </property>
@@ -338,16 +280,10 @@
       <item row="2" column="6" >
        <widget class="QSpinBox" name="_spinBoxLineWidth" >
         <property name="sizePolicy" >
-         <sizepolicy vsizetype="MinimumExpanding" hsizetype="Minimum" >
+         <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="minimumSize" >
-         <size>
-          <width>45</width>
-          <height>0</height>
-         </size>
         </property>
         <property name="toolTip" >
          <string>Line Width</string>
@@ -367,17 +303,6 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="font" >
-         <font>
-          <family>Sans Serif</family>
-          <pointsize>9</pointsize>
-          <weight>50</weight>
-          <italic>false</italic>
-          <bold>false</bold>
-          <underline>false</underline>
-          <strikeout>false</strikeout>
-         </font>
         </property>
         <property name="whatsThis" >
          <string>Check this to cause lines to be drawn between data points.</string>
@@ -419,17 +344,6 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="font" >
-         <font>
-          <family>Sans Serif</family>
-          <pointsize>9</pointsize>
-          <weight>50</weight>
-          <italic>false</italic>
-          <bold>false</bold>
-          <underline>false</underline>
-          <strikeout>false</strikeout>
-         </font>
         </property>
         <property name="toolTip" >
          <string>Line Type</string>

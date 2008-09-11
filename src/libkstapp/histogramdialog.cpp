@@ -247,7 +247,6 @@ void HistogramTab::setObjectStore(ObjectStore *store) {
 void HistogramTab::hideCurveOptions() {
   _curvePlacement->setVisible(false);
   _curveAppearance->setVisible(false);
-  setMaximumHeight(235);
 }
 
 

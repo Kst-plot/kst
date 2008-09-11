@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>440</width>
-    <height>119</height>
+    <width>611</width>
+    <height>156</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -16,22 +16,10 @@
    </sizepolicy>
   </property>
   <layout class="QGridLayout" >
-   <property name="leftMargin" >
+   <property name="margin" >
     <number>0</number>
    </property>
-   <property name="topMargin" >
-    <number>0</number>
-   </property>
-   <property name="rightMargin" >
-    <number>0</number>
-   </property>
-   <property name="bottomMargin" >
-    <number>0</number>
-   </property>
-   <property name="horizontalSpacing" >
-    <number>0</number>
-   </property>
-   <property name="verticalSpacing" >
+   <property name="spacing" >
     <number>0</number>
    </property>
    <item row="0" column="0" >
@@ -40,6 +28,12 @@
       <string>Data Range</string>
      </property>
      <layout class="QGridLayout" >
+      <property name="topMargin" >
+       <number>0</number>
+      </property>
+      <property name="verticalSpacing" >
+       <number>0</number>
+      </property>
       <item row="2" column="5" >
        <widget class="QCheckBox" name="_doFilter" >
         <property name="enabled" >
@@ -126,12 +120,6 @@
         <property name="enabled" >
          <bool>false</bool>
         </property>
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
         <property name="whatsThis" >
          <string>Number of frame to skip, if "Skip Frames" is selected.</string>
         </property>
@@ -183,12 +171,6 @@
       </item>
       <item row="0" column="1" colspan="2" >
        <widget class="QLineEdit" name="_start" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
         <property name="toolTip" >
          <string>Input a number, or the format [[[[YYYY:]MM:]DD:]HH:]MM[.SS] for dates.</string>
         </property>
@@ -204,12 +186,6 @@
        <widget class="QLineEdit" name="_range" >
         <property name="enabled" >
          <bool>false</bool>
-        </property>
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
         </property>
         <property name="toolTip" >
          <string>Input a number, or the format [[[[YYYY:]MM:]DD:]HH:]MM[.SS] for dates.</string>

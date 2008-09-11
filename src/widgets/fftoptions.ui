@@ -5,36 +5,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>488</width>
-    <height>188</height>
+    <width>743</width>
+    <height>200</height>
    </rect>
-  </property>
-  <property name="sizePolicy" >
-   <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
   </property>
   <property name="windowTitle" >
    <string>FFTOptions</string>
   </property>
-  <layout class="QGridLayout" >
-   <property name="leftMargin" >
+  <layout class="QGridLayout" name="gridLayout_2" >
+   <property name="margin" >
     <number>0</number>
    </property>
-   <property name="topMargin" >
-    <number>0</number>
-   </property>
-   <property name="rightMargin" >
-    <number>0</number>
-   </property>
-   <property name="bottomMargin" >
-    <number>0</number>
-   </property>
-   <property name="horizontalSpacing" >
-    <number>0</number>
-   </property>
-   <property name="verticalSpacing" >
+   <property name="spacing" >
     <number>0</number>
    </property>
    <item row="0" column="0" >
@@ -48,41 +30,14 @@
      <property name="title" >
       <string>FFT Options</string>
      </property>
-     <layout class="QVBoxLayout" >
-      <property name="leftMargin" >
-       <number>0</number>
-      </property>
-      <property name="topMargin" >
-       <number>0</number>
-      </property>
-      <property name="rightMargin" >
-       <number>0</number>
-      </property>
-      <property name="bottomMargin" >
-       <number>0</number>
-      </property>
-      <item>
+     <layout class="QGridLayout" name="gridLayout" >
+      <item row="0" column="0" >
        <layout class="QGridLayout" >
-        <property name="leftMargin" >
+        <property name="margin" >
          <number>0</number>
         </property>
-        <property name="topMargin" >
-         <number>0</number>
-        </property>
-        <property name="rightMargin" >
-         <number>0</number>
-        </property>
-        <property name="bottomMargin" >
-         <number>0</number>
-        </property>
-        <item row="0" column="2" >
+        <item row="0" column="3" >
          <widget class="QComboBox" name="_apodizeFunction" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
           <item>
            <property name="text" >
             <string>Default</string>
@@ -130,8 +85,14 @@
           </item>
          </widget>
         </item>
-        <item row="0" column="3" >
+        <item row="0" column="4" >
          <widget class="QLabel" name="textLabel1" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text" >
            <string>&amp;Sigma:</string>
           </property>
@@ -143,7 +104,7 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="4" >
+        <item row="0" column="5" >
          <widget class="QDoubleSpinBox" name="_sigma" >
           <property name="enabled" >
            <bool>false</bool>
@@ -153,10 +114,10 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="0" >
+        <item row="0" column="1" >
          <widget class="QCheckBox" name="_apodize" >
           <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+           <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -172,8 +133,14 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="1" >
+        <item row="0" column="2" >
          <widget class="QLabel" name="textLabel2" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text" >
            <string>&amp;Function:</string>
           </property>
@@ -185,32 +152,23 @@
           </property>
          </widget>
         </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QGridLayout" >
-        <property name="leftMargin" >
-         <number>0</number>
-        </property>
-        <property name="topMargin" >
-         <number>0</number>
-        </property>
-        <property name="rightMargin" >
-         <number>0</number>
-        </property>
-        <property name="bottomMargin" >
-         <number>0</number>
-        </property>
-        <item row="0" column="1" >
-         <widget class="QCheckBox" name="_interleavedAverage" >
+        <item row="0" column="0" >
+         <widget class="QCheckBox" name="_removeMean" >
           <property name="text" >
-           <string>&amp;Interleaved average</string>
+           <string>Remo&amp;ve mean</string>
           </property>
           <property name="checked" >
            <bool>true</bool>
           </property>
          </widget>
         </item>
+       </layout>
+      </item>
+      <item row="1" column="0" >
+       <layout class="QGridLayout" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
         <item row="0" column="2" >
          <widget class="QLabel" name="TextLabel1_9" >
           <property name="sizePolicy" >
@@ -235,12 +193,6 @@
         </item>
         <item row="0" column="3" >
          <widget class="QSpinBox" name="_FFTLength" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
           <property name="whatsThis" >
            <string>Sets the length of the FFTs in generating the power spectrum.  2^10 = 1024, etc.  The larger the number, the larger the noise and resolution.</string>
           </property>
@@ -256,16 +208,16 @@
          </widget>
         </item>
         <item row="0" column="0" >
-         <widget class="QCheckBox" name="_removeMean" >
+         <widget class="QCheckBox" name="_interleavedAverage" >
           <property name="text" >
-           <string>Remo&amp;ve mean</string>
+           <string>&amp;Interleaved average</string>
           </property>
           <property name="checked" >
            <bool>true</bool>
           </property>
          </widget>
         </item>
-        <item row="1" column="0" >
+        <item row="0" column="4" >
          <widget class="QCheckBox" name="_interpolateOverHoles" >
           <property name="text" >
            <string>Interpolate Over &amp;Holes</string>
@@ -277,18 +229,9 @@
         </item>
        </layout>
       </item>
-      <item>
+      <item row="2" column="0" >
        <layout class="QHBoxLayout" >
-        <property name="leftMargin" >
-         <number>0</number>
-        </property>
-        <property name="topMargin" >
-         <number>0</number>
-        </property>
-        <property name="rightMargin" >
-         <number>0</number>
-        </property>
-        <property name="bottomMargin" >
+        <property name="margin" >
          <number>0</number>
         </property>
         <item>
@@ -315,12 +258,6 @@
         </item>
         <item>
          <widget class="QLineEdit" name="_sampleRate" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
           <property name="whatsThis" >
            <string>The sample rate at which the measurements were acquired, for proper normalization.</string>
           </property>
@@ -356,12 +293,6 @@
         </item>
         <item>
          <widget class="QLineEdit" name="_vectorUnits" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
           <property name="whatsThis" >
            <string>The units of the Data Vector - for automatic labels.</string>
           </property>
@@ -394,12 +325,6 @@
         </item>
         <item>
          <widget class="QLineEdit" name="_rateUnits" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
           <property name="whatsThis" >
            <string>The units for the sample rate.  Used for automatic labels.</string>
           </property>
@@ -410,22 +335,19 @@
         </item>
        </layout>
       </item>
-      <item>
+      <item row="3" column="0" >
        <layout class="QHBoxLayout" >
-        <property name="leftMargin" >
-         <number>0</number>
-        </property>
-        <property name="topMargin" >
-         <number>0</number>
-        </property>
-        <property name="rightMargin" >
-         <number>0</number>
-        </property>
-        <property name="bottomMargin" >
+        <property name="margin" >
          <number>0</number>
         </property>
         <item>
          <widget class="QLabel" name="textLabel1_2" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text" >
            <string>Output:</string>
           </property>
@@ -436,12 +358,6 @@
         </item>
         <item>
          <widget class="QComboBox" name="_output" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
           <item>
            <property name="text" >
             <string>Amplitude spectral density (V/Hz^1/2)</string>
@@ -477,10 +393,7 @@
   <tabstop>_apodize</tabstop>
   <tabstop>_apodizeFunction</tabstop>
   <tabstop>_sigma</tabstop>
-  <tabstop>_removeMean</tabstop>
-  <tabstop>_interleavedAverage</tabstop>
   <tabstop>_FFTLength</tabstop>
-  <tabstop>_interpolateOverHoles</tabstop>
   <tabstop>_sampleRate</tabstop>
   <tabstop>_vectorUnits</tabstop>
   <tabstop>_rateUnits</tabstop>

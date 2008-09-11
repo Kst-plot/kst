@@ -610,6 +610,22 @@ bool AsciiSource::isEmpty() const {
   return _numFrames < 1;
 }
 
+QStringList AsciiSource::scalarListFor(const QString& filename, AsciiSource::Config *cfg) {
+  Q_UNUSED(cfg)
+  QStringList rc;
+  QFile file(filename);
+
+  if (!file.open(QIODevice::ReadOnly)) {
+    return rc;
+  }
+
+  file.close();
+
+  rc += "FRAMES";
+  return rc;
+
+}
+
 QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSource::Config *cfg) {
   QStringList rc;
   QFile file(filename);
@@ -979,6 +995,35 @@ QStringList AsciiPlugin::fieldList(QSettings *cfg,
 
 }
 
+QStringList AsciiPlugin::scalarList(QSettings *cfg,
+                                    const QString& filename,
+                                    const QString& type,
+                                    QString *typeSuggestion,
+                                    bool *complete) const {
+
+  if ((!type.isEmpty() && !provides().contains(type)) ||
+      0 == understands(cfg, filename)) {
+    if (complete) {
+      *complete = false;
+    }
+    return QStringList();
+  }
+
+  if (typeSuggestion) {
+    *typeSuggestion = "ASCII";
+  }
+
+  AsciiSource::Config config;
+  config.read(cfg, filename);
+  QStringList rc = AsciiSource::scalarListFor(filename, &config);
+
+  if (complete) {
+    *complete = rc.count() > 1;
+  }
+
+  return rc;
+
+}
 
 int AsciiPlugin::understands(QSettings *cfg, const QString& filename) const {
   AsciiSource::Config config;

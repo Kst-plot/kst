@@ -182,7 +182,6 @@ class KST_EXPORT Curve: public Relation {
     QStack<bool> _hasPointsStack;
     QStack<bool> _hasLinesStack;
     QStack<int> _pointDensityStack;
-
     QVector<QPolygon> _polygons;
     QVector<QLine> _lines;
     QVector<QPoint> _points;

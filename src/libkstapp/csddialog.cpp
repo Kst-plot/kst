@@ -108,7 +108,6 @@ void CSDTab::setObjectStore(ObjectStore *store) {
 void CSDTab::hideImageOptions() {
   _imageOptionsGroup->setVisible(false);
   _curvePlacement->setVisible(false);
-  setMaximumHeight(250);
 }
 
 

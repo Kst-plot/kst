@@ -304,7 +304,6 @@ void ImageTab::setObjectStore(ObjectStore *store) {
 
 void ImageTab::hidePlacementOptions() {
   _curvePlacement->setVisible(false);
-  setMaximumHeight(335);
 }
 
 

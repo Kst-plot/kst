@@ -73,6 +73,7 @@ class AsciiSource : public Kst::DataSource {
 
     class Config;
     static QStringList fieldListFor(const QString& filename, Config *cfg);
+    static QStringList scalarListFor(const QString& filename, Config *cfg);
 
   private:
     int *_rowIndex;
@@ -112,6 +113,12 @@ class AsciiPlugin : public QObject, public Kst::DataSourcePluginInterface {
                                   bool *complete) const;
 
     virtual QStringList fieldList(QSettings *cfg,
+                                  const QString& filename,
+                                  const QString& type,
+                                  QString *typeSuggestion,
+                                  bool *complete) const;
+
+    virtual QStringList scalarList(QSettings *cfg,
                                   const QString& filename,
                                   const QString& type,
                                   QString *typeSuggestion,

@@ -435,6 +435,36 @@ QStringList DataSource::matrixListForSource(const QString& filename, const QStri
   return rc;
 }
 
+QStringList DataSource::scalarListForSource(const QString& filename, const QString& type, QString *outType, bool *complete) {
+  if (filename == "stdin" || filename == "-") {
+    return QStringList();
+  }
+
+  QString fn = obtainFile(filename);
+  if (fn.isEmpty()) {
+    return QStringList();
+  }
+
+  QList<PluginSortContainer> bestPlugins = bestPluginsForSource(fn, type);
+  QStringList rc;
+  for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
+    QString typeSuggestion;
+    rc = (*i).plugin->scalarList(settingsObject, fn, QString::null, &typeSuggestion, complete);
+    if (!rc.isEmpty()) {
+      if (outType) {
+        if (typeSuggestion.isEmpty()) {
+          *outType = (*i).plugin->provides()[0];
+        } else {
+          *outType = typeSuggestion;
+        }
+      }
+      break;
+    }
+  }
+
+  return rc;
+}
+
 
 DataSourcePtr DataSource::loadSource(ObjectStore *store, QDomElement& e) {
   QString filename, type, tag;
@@ -598,6 +628,11 @@ int DataSource::readMatrix(MatrixData* data, const QString& matrix, int xStart, 
   return -9999;
 }
 
+int DataSource::readScalar(double &S, const QString& scalar) {
+  Q_UNUSED(scalar)
+  S = -9999;
+  return 1;
+}
 
 int DataSource::readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps) {
   Q_UNUSED(data)
@@ -634,6 +669,10 @@ bool DataSource::isValidMatrix(const QString& field) const {
   return false;
 }
 
+bool DataSource::isValidScalar(const QString& field) const {
+  Q_UNUSED(field)
+  return false;
+}
 
 int DataSource::samplesPerFrame(const QString &field) {
   Q_UNUSED(field)
@@ -667,6 +706,9 @@ QStringList DataSource::matrixList() const {
   return _matrixList;
 }
 
+QStringList DataSource::scalarList() const {
+  return _scalarList;
+}
 
 QString DataSource::fileType() const {
   return QString::null;

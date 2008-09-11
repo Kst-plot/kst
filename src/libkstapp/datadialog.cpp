@@ -77,7 +77,7 @@ void DataDialog::createGui() {
   QWidget *box = topCustomWidget();
 
   QHBoxLayout *layout = new QHBoxLayout(box);
-  layout->setContentsMargins(0, -1, 0, -1);
+//  layout->setContentsMargins(0, -1, 0, -1);
 
   QLabel *label = new QLabel(tr("Unique Name:"), box);
   _tagString = new QLineEdit(box);

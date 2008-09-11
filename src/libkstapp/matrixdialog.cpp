@@ -128,7 +128,6 @@ void MatrixTab::updateEnables() {
 void MatrixTab::hideGeneratedOptions() {
   _sourceGroup->setVisible(false);
   _gradientGroup->setVisible(false);
-  setMaximumHeight(380);
 }
 
 
@@ -136,7 +135,6 @@ void MatrixTab::hideDataOptions() {
   _sourceGroup->setVisible(false);
   _dataSourceGroup->setVisible(false);
   _dataRangeGroup->setVisible(false);
-  setMaximumHeight(200);
 }
 
 

@@ -36,7 +36,6 @@ static double RAD2DEG = 180.0 / ONE_PI;
 
 // #define DEBUG_GEOMETRY
 // #define DEBUG_REPARENT
-#define INKSCAPE_MODE 0
 
 namespace Kst {
 
@@ -372,12 +371,8 @@ QSizeF ViewItem::sizeOfGrip() const {
   if (!parentView())
     return QSizeF();
 
-  int base = 15;
-#if INKSCAPE_MODE
-  return mapFromScene(parentView()->mapToScene(QRect(0, 0, base, base)).boundingRect()).boundingRect().size();
-#else
+  int base = 9;
   return parentView()->mapToScene(QRect(0, 0, base, base)).boundingRect().size();
-#endif
 }
 
 
@@ -390,11 +385,7 @@ QPainterPath ViewItem::topLeftGrip() const {
   else
     path.addEllipse(grip);
 
-#if INKSCAPE_MODE
-    return mapFromScene(path);
-#else
-    return path;
-#endif
+  return path;
 }
 
 
@@ -407,11 +398,7 @@ QPainterPath ViewItem::topRightGrip() const {
   else
     path.addEllipse(grip);
 
-#if INKSCAPE_MODE
-    return mapFromScene(path);
-#else
-    return path;
-#endif
+  return path;
 }
 
 
@@ -424,11 +411,7 @@ QPainterPath ViewItem::bottomRightGrip() const {
   else
     path.addEllipse(grip);
 
-#if INKSCAPE_MODE
-    return mapFromScene(path);
-#else
-    return path;
-#endif
+  return path;
 }
 
 
@@ -441,11 +424,7 @@ QPainterPath ViewItem::bottomLeftGrip() const {
   else
     path.addEllipse(grip);
 
-#if INKSCAPE_MODE
-    return mapFromScene(path);
-#else
-    return path;
-#endif
+  return path;
 }
 
 
@@ -460,11 +439,7 @@ QPainterPath ViewItem::topMidGrip() const {
   QPainterPath path;
   path.addRect(grip);
 
-#if INKSCAPE_MODE
-    return mapFromScene(path);
-#else
-    return path;
-#endif
+  return path;
 }
 
 
@@ -479,11 +454,7 @@ QPainterPath ViewItem::rightMidGrip() const {
   QPainterPath path;
   path.addRect(grip);
 
-#if INKSCAPE_MODE
-    return mapFromScene(path);
-#else
-    return path;
-#endif
+  return path;
 }
 
 
@@ -498,11 +469,7 @@ QPainterPath ViewItem::bottomMidGrip() const {
   QPainterPath path;
   path.addRect(grip);
 
-#if INKSCAPE_MODE
-    return mapFromScene(path);
-#else
-    return path;
-#endif
+  return path;
 }
 
 
@@ -517,11 +484,7 @@ QPainterPath ViewItem::leftMidGrip() const {
   QPainterPath path;
   path.addRect(grip);
 
-#if INKSCAPE_MODE
-    return mapFromScene(path);
-#else
-    return path;
-#endif
+  return path;
 }
 
 
@@ -565,11 +528,7 @@ bool ViewItem::isAllowed(ActiveGrip grip) const {
 
 
 QRectF ViewItem::selectBoundingRect() const {
-#if INKSCAPE_MODE
-  return mapToScene(itemShape()).controlPointRect();
-#else
   return rect();
-#endif
 }
 
 
@@ -589,11 +548,7 @@ QRectF ViewItem::boundingRect() const {
   if (!isSelected() && !isHovering() || inCreation)
     return QGraphicsRectItem::boundingRect();
 
-#if INKSCAPE_MODE
-  QPolygonF gripBound = mapFromScene(gripBoundingRect());
-#else
   QPolygonF gripBound = gripBoundingRect();
-#endif
   return QRectF(gripBound[0], gripBound[2]);
 }
 
@@ -605,11 +560,7 @@ QPainterPath ViewItem::shape() const {
   QPainterPath selectPath;
   selectPath.setFillRule(Qt::WindingFill);
 
-#if INKSCAPE_MODE
-    selectPath.addPolygon(mapFromScene(selectBoundingRect()));
-#else
-    selectPath.addPolygon(rect());
-#endif
+  selectPath.addPolygon(rect());
 
   selectPath.addPath(grips());
   return selectPath;
@@ -619,7 +570,6 @@ QPainterPath ViewItem::shape() const {
 void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
   Q_UNUSED(option);
   Q_UNUSED(widget);
-
   painter->setPen(pen());
   painter->setBrush(brush());
   paint(painter); //this is the overload that subclasses should use...
@@ -850,10 +800,6 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   QPointF s = event->scenePos();
 
   if (gripMode() == ViewItem::Rotate) {
-
-#if INKSCAPE_MODE
-    rotateTowards(l, p);
-#else
     switch(_activeGrip) {
     case TopLeftGrip:
         rotateTowards(topLeftGrip().controlPointRect().center(), p); break;
@@ -874,8 +820,6 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     case NoGrip:
       break;
     }
-#endif
-
   } else if (gripMode() == ViewItem::Resize) {
 
     switch(_activeGrip) {
