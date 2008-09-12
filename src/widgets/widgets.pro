@@ -30,6 +30,7 @@ SOURCES += \
     curveplacement.cpp \
     curveselector.cpp \
     datarange.cpp \
+    datasourceselectordialog.cpp \
     dialogdefaults.cpp \
     fftoptions.cpp \
     filerequester.cpp \
@@ -49,6 +50,7 @@ HEADERS += \
     curveplacement.h \
     curveselector.h \
     datarange.h \
+    datasourceselectordialog.h \
     dialogdefaults.h \
     fftoptions.h \
     filerequester.h \

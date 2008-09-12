@@ -11,6 +11,8 @@
 
 #include "filerequester.h"
 
+#include "datasourceselectordialog.h"
+
 #include <QStyle>
 #include <QLineEdit>
 #include <QToolButton>
@@ -55,7 +57,7 @@ void FileRequester::setup() {
   _fileButton->setFixedSize(size + 8, size + 8);
 
   setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-  connect (_fileEdit, SIGNAL(textEdited(const QString &)), this, SLOT(setFile(const QString &)));
+  connect (_fileEdit, SIGNAL(textChanged(const QString &)), this, SLOT(setFile(const QString &)));
   connect (_fileButton, SIGNAL(clicked()), this, SLOT(chooseFile()));
 
   QDirModel *dirModel = new QDirModel(this);
@@ -85,11 +87,12 @@ void FileRequester::setFile(const QString &file) {
 
 void FileRequester::chooseFile() {
   QString file;
-  if (_mode == QFileDialog::ExistingFile) {
-    file = QFileDialog::getOpenFileName(this, QString(), _file);
-  } else {
-    file = QFileDialog::getExistingDirectory(this, QString(), _file);
-  }
+
+  DataSourceSelectorDialog dialog(_file);
+  dialog.exec();
+
+  file = dialog.selectedDataSource();
+
   if (!file.isEmpty()) {
     setFile(file);
   }
