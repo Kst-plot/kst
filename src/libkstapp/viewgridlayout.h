@@ -53,7 +53,9 @@ class ViewGridLayout : public QObject
 
     bool isEnabled() const;
     void setEnabled(bool enabled);
+
     static void resetSharedPlots(ViewItem *item);
+    static void standardizePlotMargins(ViewItem *item);
 
   public Q_SLOTS:
     void reset();

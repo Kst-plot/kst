@@ -16,7 +16,9 @@
 
 #include <QDebug>
 
-// #define DEBUG_LAYOUT
+// 0 off, 1 On
+#define DEBUG_LAYOUT 0
+#define DEBUG_PLOT_STANDARDIZATION 0
 
 static qreal DEFAULT_STRUT = 20.0;
 
@@ -178,6 +180,57 @@ void ViewGridLayout::resetSharedPlots(ViewItem *item) {
 }
 
 
+void ViewGridLayout::standardizePlotMargins(ViewItem *item) {
+
+  QList<QGraphicsItem*> list;
+  QList<PlotItem*> plotItems;
+  if (item->parentView()) {
+    QList<QGraphicsItem*> list = item->parentView()->items();
+    foreach (QGraphicsItem *item, list) {
+      ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+      if (!viewItem || viewItem->parentItem() || !viewItem->isVisible())
+        continue;
+      if (PlotItem *plotItem = qobject_cast<PlotItem*>(viewItem)) {
+        plotItems.append(plotItem);
+      }
+    }
+  }
+
+#if DEBUG_PLOT_STANDARDIZATION
+  qDebug() << "Ready to standarize" << plotItems.count() << "plots";
+#endif
+
+  QMap<qreal, qreal> marginWidths;
+  QMap<qreal, qreal> marginHeights;
+  foreach (PlotItem* plotItem, plotItems) {
+    if (marginWidths[plotItem->width()] < plotItem->leftMarginSize()) {
+      marginWidths[plotItem->width()] = plotItem->leftMarginSize();
+    }
+    if (marginHeights[plotItem->height()] < plotItem->bottomMarginSize()) {
+      marginHeights[plotItem->height()] = plotItem->bottomMarginSize();
+    }
+  }
+
+#if DEBUG_PLOT_STANDARDIZATION
+  qDebug() << "Maximum margin widths" << marginWidths;
+  qDebug() << "Maximum margin heights" << marginHeights;
+#endif
+
+
+  foreach (PlotItem* plotItem, plotItems) {
+
+#if DEBUG_PLOT_STANDARDIZATION
+    qDebug() << "Margin width is " << plotItem->leftMarginSize() << "setting to" << marginWidths[plotItem->width()] - plotItem->leftMarginSize();
+    qDebug() << "Margin height is " << plotItem->bottomMarginSize() << "setting to" << marginHeights[plotItem->height()] - plotItem->bottomMarginSize();
+#endif
+
+    plotItem->setLeftPadding(marginWidths[plotItem->width()] - plotItem->leftMarginSize());
+    plotItem->setBottomPadding(marginHeights[plotItem->height()] - plotItem->bottomMarginSize());
+    emit plotItem->updatePlotRect();
+  }
+}
+
+
 void ViewGridLayout::resetSharedAxis() {
   foreach (LayoutItem item, _items) {
     if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem)) {
@@ -205,7 +258,7 @@ void ViewGridLayout::apply() {
   qreal itemWidth = layoutSize.width() / columnCount();
   qreal itemHeight = layoutSize.height() / rowCount();
 
-#ifdef DEBUG_LAYOUT
+#if DEBUG_LAYOUT
   qDebug() << "layouting" << _items.count()
            << "itemWidth:" << itemWidth
            << "itemHeight:" << itemHeight
@@ -254,7 +307,7 @@ void ViewGridLayout::apply() {
     if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem))
       emit plotItem->updatePlotRect();
 
-#ifdef DEBUG_LAYOUT
+#if DEBUG_LAYOUT
     qDebug() << "layout"
              << "row:" << item.row
              << "column:" << item.column

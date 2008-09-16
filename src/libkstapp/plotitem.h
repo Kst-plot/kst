@@ -79,6 +79,11 @@ class PlotItem : public ViewItem, public PlotItemInterface
     bool isTiedZoom() const;
     void setTiedZoom(bool tiedZoom);
 
+    qreal leftMarginSize() const;
+    void setLeftPadding(const qreal);
+    qreal bottomMarginSize() const;
+    void setBottomPadding(const qreal);
+
     qreal leftLabelMargin() const;
     qreal rightLabelMargin() const;
     qreal topLabelMargin() const;
@@ -204,6 +209,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void zoomNormalizeYtoX();
     void zoomLogY();
     virtual void edit();
+    void marginsUpdated();
 
   private:
     void createActions();
@@ -286,6 +292,9 @@ class PlotItem : public ViewItem, public PlotItemInterface
     qreal _calculatedLabelMarginHeight;
     qreal _calculatedAxisMarginWidth;
     qreal _calculatedAxisMarginHeight;
+
+    qreal _leftPadding;
+    qreal _bottomPadding;
 
     PlotAxis *_xAxis;
     PlotAxis *_yAxis;

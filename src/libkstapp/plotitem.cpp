@@ -64,6 +64,8 @@ PlotItem::PlotItem(View *parent)
   _calculatedLabelMarginHeight(0.0),
   _calculatedAxisMarginWidth(0.0),
   _calculatedAxisMarginHeight(0.0),
+  _leftPadding(0.0),
+  _bottomPadding(0.0),
   _leftLabelFontScale(0.0),
   _bottomLabelFontScale(0.0),
   _topLabelFontScale(0.0),
@@ -94,6 +96,8 @@ PlotItem::PlotItem(View *parent)
   // Set the initial projection.
   setProjectionRect(QRectF(QPointF(-0.1, -0.1), QPointF(0.1, 0.1)));
   renderItem(PlotRenderItem::Cartesian);
+
+  connect(this, SIGNAL(marginsChanged()), this, SLOT(marginsUpdated()));
 }
 
 
@@ -331,6 +335,11 @@ void PlotItem::updateObject() {
                             compute.height()));
   }
   update();
+}
+
+
+void PlotItem::marginsUpdated() {
+  ViewGridLayout::standardizePlotMargins(this);
 }
 
 
@@ -730,10 +739,38 @@ QRectF PlotItem::plotRect() const {
   QRectF plot = plotAxisRect();
   qreal xOffset = _xAxis->isAxisVisible() ? axisMarginHeight() : 0.0;
   qreal yOffset = _yAxis->isAxisVisible() ? axisMarginWidth() : 0.0;
+  qreal xPadding = _xAxis->isAxisVisible() ? _bottomPadding : 0.0;
+  qreal yPadding = _yAxis->isAxisVisible() ? _leftPadding : 0.0;
 
-  plot.setLeft(plot.left() + yOffset);
-  plot.setBottom(plot.bottom() - xOffset);
+  plot.setLeft(plot.left() + yOffset + yPadding);
+  plot.setBottom(plot.bottom() - xOffset - xPadding);
   return plot;
+}
+
+
+qreal PlotItem::leftMarginSize() const {
+  qreal margin = isLeftLabelVisible() ? leftLabelMargin() : 0.0;
+  margin += _yAxis->isAxisVisible() ? axisMarginWidth() : 0.0;
+
+  return margin;
+}
+
+
+qreal PlotItem::bottomMarginSize() const {
+  qreal margin = isBottomLabelVisible() ? bottomLabelMargin() : 0.0;
+  margin += _xAxis->isAxisVisible() ? axisMarginHeight() : 0.0;
+
+  return margin;
+}
+
+
+void PlotItem::setLeftPadding(const qreal padding) {
+  _leftPadding = padding;
+}
+
+
+void PlotItem::setBottomPadding(const qreal padding) {
+  _bottomPadding = padding;
 }
 
 
