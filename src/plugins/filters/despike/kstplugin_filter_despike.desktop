@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=filterdespike
+X-Kst-Plugin-Author=The University of Toronto
+Name=Filter - Despike Plugin
+Comment=Implements a Despike Filter Plugin for Kst.

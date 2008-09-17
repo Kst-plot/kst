@@ -25,11 +25,15 @@ class ObjectStore;
 
 class DataObjectPluginInterface : public PluginInterface {
   public:
+    enum PluginTypeID { Generic, Fit, Filter };
+
     virtual ~DataObjectPluginInterface() {}
 
     virtual DataObject *create(ObjectStore *store, DataObjectConfigWidget *configWidget, bool setupInputsOutputs = true) const = 0;
 
     virtual DataObjectConfigWidget *configWidget(QSettings *settingsObject) const = 0;
+
+    virtual PluginTypeID pluginType() const = 0;
 };
 
 

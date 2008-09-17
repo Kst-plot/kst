@@ -210,6 +210,7 @@ void DirFileSource::save(QXmlStreamWriter &streamWriter) {
 
 
 QString DirFilePlugin::pluginName() const { return "DirFile Reader"; }
+QString DirFilePlugin::pluginDescription() const { return "DirFile Reader"; }
 
 
 Kst::DataSource *DirFilePlugin::create(Kst::ObjectStore *store,

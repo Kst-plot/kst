@@ -77,6 +77,7 @@ class DirFilePlugin : public QObject, public Kst::DataSourcePluginInterface {
     virtual ~DirFilePlugin() {}
 
     virtual QString pluginName() const;
+    virtual QString pluginDescription() const;
 
     virtual bool hasConfigWidget() const { return false; }
 

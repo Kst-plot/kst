@@ -126,6 +126,56 @@ QStringList DataObject::pluginList() {
 }
 
 
+QStringList DataObject::dataObjectPluginList() {
+  if (_pluginList.isEmpty()) {
+    scanPlugins();
+  }
+
+  QStringList plugins;
+
+  for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+    if ((*it)->pluginType() == DataObjectPluginInterface::Generic) {
+      plugins += (*it)->pluginName();
+    }
+  }
+
+  return plugins;
+}
+
+
+QStringList DataObject::filterPluginList() {
+  if (_pluginList.isEmpty()) {
+    scanPlugins();
+  }
+
+  QStringList plugins;
+
+  for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+    if ((*it)->pluginType() == DataObjectPluginInterface::Filter) {
+      plugins += (*it)->pluginName();
+    }
+  }
+
+  return plugins;
+}
+
+
+QStringList DataObject::fitsPluginList() {
+  if (_pluginList.isEmpty()) {
+    scanPlugins();
+  }
+
+  QStringList plugins;
+
+  for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+    if ((*it)->pluginType() == DataObjectPluginInterface::Fit) {
+      plugins += (*it)->pluginName();
+    }
+  }
+
+  return plugins;
+}
+
 
 DataObjectConfigWidget* DataObject::pluginWidget(const QString& name) {
   if (_pluginList.isEmpty()) {
@@ -141,6 +191,34 @@ DataObjectConfigWidget* DataObject::pluginWidget(const QString& name) {
     }
   }
   return 0L;
+}
+
+
+QString DataObject::pluginDescription(const QString& name) {
+  if (_pluginList.isEmpty()) {
+    scanPlugins();
+  }
+
+  for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+    if ((*it)->pluginName() == name) {
+      return (*it)->pluginDescription();
+    }
+  }
+  return QString();
+}
+
+
+int DataObject::pluginType(const QString& name) {
+  if (_pluginList.isEmpty()) {
+    scanPlugins();
+  }
+
+  for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+    if ((*it)->pluginName() == name) {
+      return (*it)->pluginType();
+    }
+  }
+  return -1;
 }
 
 

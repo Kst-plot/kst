@@ -221,6 +221,7 @@ void SamplePluginSource::saveProperties(QXmlStreamWriter &s) {
 
 // Name used to identify the plugin.  Used when loading the plugin.
 QString SamplePlugin::pluginName() const { return "Sample DataObject Plugin"; }
+QString SamplePlugin::pluginDescription() const { return "Sample DataObject Plugin Description"; }
 
 
 /**********************

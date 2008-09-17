@@ -9,21 +9,23 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef SAMPLEPLUGIN_H
-#define SAMPLEPLUGIN_H
+#ifndef FILTERDESPIKEPLUGIN_H
+#define FILTERDESPIKEPLUGIN_H
 
 #include <QFile>
 
 #include <basicplugin.h>
 #include <dataobjectplugin.h>
 
-class SamplePluginSource : public Kst::BasicPlugin {
+class FilterDespikeSource : public Kst::BasicPlugin {
   Q_OBJECT
 
   public:
     virtual QString _automaticDescriptiveName() const;
 
     Kst::VectorPtr vector() const;
+    Kst::ScalarPtr nSigmaScalar() const;
+    Kst::ScalarPtr spacingScalar() const;
 
     virtual void change(Kst::DataObjectConfigWidget *configWidget);
 
@@ -40,8 +42,8 @@ class SamplePluginSource : public Kst::BasicPlugin {
     virtual void saveProperties(QXmlStreamWriter &s);
 
   protected:
-    SamplePluginSource(Kst::ObjectStore *store);
-    ~SamplePluginSource();
+    FilterDespikeSource(Kst::ObjectStore *store);
+    ~FilterDespikeSource();
 
   friend class Kst::ObjectStore;
 
@@ -49,16 +51,16 @@ class SamplePluginSource : public Kst::BasicPlugin {
 };
 
 
-class SamplePlugin : public QObject, public Kst::DataObjectPluginInterface {
+class FilterDespikePlugin : public QObject, public Kst::DataObjectPluginInterface {
     Q_OBJECT
     Q_INTERFACES(Kst::DataObjectPluginInterface)
   public:
-    virtual ~SamplePlugin() {}
+    virtual ~FilterDespikePlugin() {}
 
     virtual QString pluginName() const;
     virtual QString pluginDescription() const;
 
-    virtual DataObjectPluginInterface::PluginTypeID pluginType() const { return Generic; }
+    virtual DataObjectPluginInterface::PluginTypeID pluginType() const { return Filter; }
 
     virtual bool hasConfigWidget() const { return true; }
 

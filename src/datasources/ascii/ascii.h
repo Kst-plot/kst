@@ -97,6 +97,7 @@ class AsciiPlugin : public QObject, public Kst::DataSourcePluginInterface {
     virtual ~AsciiPlugin() {}
 
     virtual QString pluginName() const;
+    virtual QString pluginDescription() const;
 
     virtual bool hasConfigWidget() const { return true; }
 

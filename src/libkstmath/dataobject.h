@@ -56,11 +56,16 @@ class KST_EXPORT DataObject : public Object {
     static void cleanupForExit();
     /** Returns a list of object plugins found on the system. */
     static QStringList pluginList();
+    static QStringList dataObjectPluginList();
+    static QStringList filterPluginList();
+    static QStringList fitsPluginList();
 
     //     static QWidget* pluginWidget(const QString& name, ObjectPtr objectPtr = 0, VectorPtr vector = 0);
     static DataObjectPtr createPlugin(const QString& name, ObjectStore *store, VectorPtr vector);
     static DataObjectConfigWidget* pluginWidget(const QString& name);
     static DataObjectPtr createPlugin(const QString& name, ObjectStore *store, DataObjectConfigWidget *configWidget, bool setupInputsOutputs = true);
+    static QString pluginDescription(const QString &name);
+    static int pluginType(const QString &name);
 
     virtual UpdateType update() = 0;
 
