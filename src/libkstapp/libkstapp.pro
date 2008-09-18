@@ -62,6 +62,7 @@ SOURCES += \
     eventmonitordialog.cpp \
     exportgraphicsdialog.cpp \
     filltab.cpp \
+    filterfitdialog.cpp \
     generaltab.cpp \
     graphicsfactory.cpp \
     gridlayouthelper.cpp \
@@ -159,6 +160,7 @@ HEADERS += \
     eventmonitordialog.h \
     exportgraphicsdialog.h \
     filltab.h \
+    filterfitdialog.h \
     generaltab.h \
     graphicsfactory.h \
     gridlayouthelper.h \
@@ -238,6 +240,7 @@ FORMS += \
     eventmonitortab.ui \
     exportgraphicsdialog.ui \
     filltab.ui \
+    filterfittab.ui \
     generaltab.ui \
     gridtab.ui \
     histogramtab.ui \

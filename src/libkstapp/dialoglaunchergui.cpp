@@ -23,6 +23,7 @@
 #include "imagedialog.h"
 #include "eventmonitordialog.h"
 #include "basicplugindialog.h"
+#include "filterfitdialog.h"
 
 namespace Kst {
 
@@ -117,10 +118,14 @@ void DialogLauncherGui::showEventMonitorDialog(ObjectPtr objectPtr) {
 
 
 void DialogLauncherGui::showBasicPluginDialog(QString pluginName, ObjectPtr objectPtr) {
-  BasicPluginDialog dialog(pluginName, objectPtr, kstApp->mainWindow());
-  dialog.exec();
+  if (DataObject::pluginType(pluginName) == DataObjectPluginInterface::Generic) {
+    BasicPluginDialog dialog(pluginName, objectPtr, kstApp->mainWindow());
+    dialog.exec();
+  } else {
+    FilterFitDialog dialog(pluginName, objectPtr, kstApp->mainWindow());
+    dialog.exec();
+  }
 }
-
 }
 
 // vim: ts=2 sw=2 et

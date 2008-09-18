@@ -121,10 +121,16 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   connect(action, SIGNAL(triggered()), this, SLOT(showCSDDialog()));
   _dataObjects->addAction(action);
 
-  foreach (QString pluginName, DataObject::pluginList()) {
+  foreach (QString pluginName, DataObject::dataObjectPluginList()) {
     action = new DataButtonAction(tr(pluginName));
     connect(action, SIGNAL(triggered(QString&)), this, SLOT(showPluginDialog(QString&)));
     _dataObjects->addAction(action);
+  }
+
+  foreach (QString pluginName, DataObject::fitsPluginList()) {
+    action = new DataButtonAction(tr(pluginName));
+    connect(action, SIGNAL(triggered(QString&)), this, SLOT(showPluginDialog(QString&)));
+    _fits->addAction(action);
   }
 
   foreach (QString pluginName, DataObject::filterPluginList()) {
