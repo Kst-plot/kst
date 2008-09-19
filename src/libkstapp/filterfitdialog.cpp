@@ -16,11 +16,13 @@
 #include "datacollection.h"
 #include "document.h"
 #include "basicplugin.h"
+#include "objectstore.h"
+#include "curve.h"
 
 namespace Kst {
 
 FilterFitTab::FilterFitTab(QString& pluginName, QWidget *parent)
-  : DataTab(parent), _configWidget(0), _layout(0), _store(0) {
+  : DataTab(parent), _configWidget(0), _layout(0), _store(0), _vectorX(0), _vectorY(0) {
 
   setupUi(this);
   setTabTitle(tr("Plugin"));
@@ -49,6 +51,32 @@ void FilterFitTab::setObjectStore(ObjectStore *store) {
 }
 
 
+void FilterFitTab::setVectorX(VectorPtr vector) {
+  _vectorX = vector;
+  if (_configWidget) {
+    _configWidget->setVectorX(vector);
+  }
+}
+
+
+void FilterFitTab::setVectorY(VectorPtr vector) {
+  _vectorY = vector;
+  if (_configWidget) {
+    _configWidget->setVectorY(vector);
+  }
+}
+
+
+void FilterFitTab::setPlotMode() {
+  _curveAppearance->setVisible(true);
+}
+
+
+CurveAppearance* FilterFitTab::curveAppearance() const {
+  return _curveAppearance;
+}
+
+
 void FilterFitTab::pluginChanged(const QString &plugin) {
   if (plugin != _pluginCombo->currentText()) {
     _pluginCombo->setCurrentIndex(_pluginCombo->findText(plugin));
@@ -69,13 +97,19 @@ void FilterFitTab::pluginChanged(const QString &plugin) {
   if (_store) {
     _configWidget->setObjectStore(_store);
   }
+  if (_vectorX) {
+    _configWidget->setVectorX(_vectorX);
+  }
+  if (_vectorY) {
+    _configWidget->setVectorY(_vectorY);
+  }
   _layout->addWidget(_configWidget, 0, 0);
   _layout->activate();
 }
 
 
 FilterFitDialog::FilterFitDialog(QString& pluginName, ObjectPtr dataObject, QWidget *parent)
-  : DataDialog(dataObject, parent), _pluginName(pluginName) {
+  : DataDialog(dataObject, parent), _pluginName(pluginName), _plotItem(0), _vectorX(0), _vectorY(0) {
 
   if (editMode() == Edit)
     setWindowTitle(tr("Edit Plugin"));
@@ -89,6 +123,7 @@ FilterFitDialog::FilterFitDialog(QString& pluginName, ObjectPtr dataObject, QWid
     _filterFitTab->configWidget()->setupFromObject(dataObject);
   } else {
     _filterFitTab->configWidget()->load();
+    configureTab();
   }
 }
 
@@ -97,14 +132,72 @@ FilterFitDialog::~FilterFitDialog() {
 }
 
 
+void FilterFitDialog::configureTab() {
+  _filterFitTab->curveAppearance()->loadWidgetDefaults();
+}
+
+
 QString FilterFitDialog::tagString() const {
   return DataDialog::tagString();
 }
 
 
+void FilterFitDialog::setVectorX(VectorPtr vector) {
+  _vectorX = vector;
+  _filterFitTab->setVectorX(vector);
+}
+
+
+void FilterFitDialog::setVectorY(VectorPtr vector) {
+  _vectorY = vector;
+  _filterFitTab->setVectorY(vector);
+}
+
+
+void FilterFitDialog::setPlotMode(PlotItem* plot) {
+  _plotItem = plot;
+  _filterFitTab->setPlotMode();
+}
+
+
 ObjectPtr FilterFitDialog::createNewDataObject() {
-  DataObjectPtr dataObject = DataObject::createPlugin(_pluginName, _document->objectStore(), _filterFitTab->configWidget());
   _filterFitTab->configWidget()->save();
+
+  BasicPluginPtr dataObject = kst_cast<BasicPlugin>(DataObject::createPlugin(_pluginName, _document->objectStore(), _filterFitTab->configWidget()));
+  Q_ASSERT(dataObject);
+
+  if (_plotItem) {
+    CurvePtr curve = _document->objectStore()->createObject<Curve>();
+
+    Q_ASSERT(curve);
+
+    curve->setXVector(_vectorX);
+
+    VectorPtr yVector = dataObject->outputVectors().value(dataObject->outputVectorList().first());
+    Q_ASSERT(yVector);
+    curve->setYVector(yVector);
+
+    curve->setColor(_filterFitTab->curveAppearance()->color());
+    curve->setHasPoints(_filterFitTab->curveAppearance()->showPoints());
+    curve->setHasLines(_filterFitTab->curveAppearance()->showLines());
+    curve->setHasBars(_filterFitTab->curveAppearance()->showBars());
+    curve->setLineWidth(_filterFitTab->curveAppearance()->lineWidth());
+    curve->setLineStyle(_filterFitTab->curveAppearance()->lineStyle());
+    curve->setPointType(_filterFitTab->curveAppearance()->pointType());
+    curve->setPointDensity(_filterFitTab->curveAppearance()->pointDensity());
+    curve->setBarStyle(_filterFitTab->curveAppearance()->barStyle());
+
+    curve->writeLock();
+    curve->update();
+    curve->unlock();
+
+    _filterFitTab->curveAppearance()->setWidgetDefaults();
+
+    PlotRenderItem *renderItem = _plotItem->renderItem(PlotRenderItem::Cartesian);
+    renderItem->addRelation(kst_cast<Relation>(curve));
+    _plotItem->update();
+  }
+
   return dataObject;
 }
 

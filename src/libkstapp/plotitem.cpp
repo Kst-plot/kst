@@ -28,6 +28,7 @@
 #include "cartesianrenderitem.h"
 
 #include "plotitemdialog.h"
+#include "dialoglauncher.h"
 
 #include "math_kst.h"
 
@@ -72,7 +73,9 @@ PlotItem::PlotItem(View *parent)
   _rightLabelFontScale(0.0),
   _showLegend(false),
   _legend(0),
-  _zoomMenu(0)
+  _zoomMenu(0),
+  _filterMenu(0),
+  _fitMenu(0)
  {
 
   setName("Plot");
@@ -295,11 +298,87 @@ void PlotItem::createZoomMenu() {
   _zoomMenu->addAction(_zoomLogY);
 }
 
+void PlotItem::createFilterMenu() {
+  if (_filterMenu) {
+    delete _filterMenu;
+  }
+
+  _filterMenu = new QMenu;
+  _filterMenu->setTitle(tr("Filter"));
+
+  QAction *action;
+  foreach (PlotRenderItem *renderer, renderItems()) {
+    foreach (RelationPtr relation, renderer->relationList()) {
+      if (CurvePtr curve = kst_cast<Curve>(relation)) {
+        action = new QAction(relation->Name(), this);
+        _filterMenu->addAction(action);
+      }
+    }
+  }
+  connect(_filterMenu, SIGNAL(triggered(QAction*)), this, SLOT(showFilterDialog(QAction*)));
+}
+
+
+void PlotItem::createFitMenu() {
+  if (_fitMenu) {
+    delete _fitMenu;
+  }
+
+  _fitMenu = new QMenu;
+  _fitMenu->setTitle(tr("Fit"));
+
+  QAction *action;
+  foreach (PlotRenderItem *renderer, renderItems()) {
+    foreach (RelationPtr relation, renderer->relationList()) {
+      if (CurvePtr curve = kst_cast<Curve>(relation)) {
+        action = new QAction(relation->Name(), this);
+        _fitMenu->addAction(action);
+      }
+    }
+  }
+  connect(_fitMenu, SIGNAL(triggered(QAction*)), this, SLOT(showFitDialog(QAction*)));
+}
+
 
 void PlotItem::addToMenuForContextEvent(QMenu &menu) {
   _zoomLogX->setChecked(xAxis()->axisLog());
   _zoomLogY->setChecked(yAxis()->axisLog());
   menu.addMenu(_zoomMenu);
+  if (!DataObject::filterPluginList().empty()) {
+    createFilterMenu();
+    menu.addMenu(_filterMenu);
+  }
+
+  if (!DataObject::fitsPluginList().empty()) {
+    createFitMenu();
+    menu.addMenu(_fitMenu);
+  }
+}
+
+
+void PlotItem::showFilterDialog(QAction* action) {
+  foreach (PlotRenderItem *renderer, renderItems()) {
+    foreach (RelationPtr relation, renderer->relationList()) {
+      if (relation->Name() == action->text()) {
+        if (CurvePtr curve = kst_cast<Curve>(relation)) {
+          DialogLauncher::self()->showBasicPluginDialog(DataObject::filterPluginList().first(), 0, curve->xVector(), curve->yVector(), this);
+        }
+      }
+    }
+  }
+}
+
+
+void PlotItem::showFitDialog(QAction* action) {
+  foreach (PlotRenderItem *renderer, renderItems()) {
+    foreach (RelationPtr relation, renderer->relationList()) {
+      if (relation->Name() == action->text()) {
+        if (CurvePtr curve = kst_cast<Curve>(relation)) {
+          DialogLauncher::self()->showBasicPluginDialog(DataObject::fitsPluginList().first(), 0, curve->xVector(), curve->yVector(), this);
+        }
+      }
+    }
+  }
 }
 
 

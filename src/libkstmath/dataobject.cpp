@@ -912,6 +912,16 @@ void DataObjectConfigWidget::setupFromObject(Object* dataObject) {
 }
 
 
+void DataObjectConfigWidget::setVectorX(VectorPtr vector) {
+  Q_UNUSED(vector);
+}
+
+
+void DataObjectConfigWidget::setVectorY(VectorPtr vector) {
+  Q_UNUSED(vector);
+}
+
+
 void DataObjectConfigWidget::setupSlots(QWidget* dialog) {
   Q_UNUSED(dialog);
 }

@@ -178,6 +178,17 @@ void DataManager::showContextMenu(const QPoint &position) {
           connect(action, SIGNAL(triggered()), this, SLOT(showHistogramDialog()));
           actions.append(action);
 
+          if (!DataObject::fitsPluginList().empty()) {
+            action = new QAction(tr("Apply Fit"), this);
+            connect(action, SIGNAL(triggered()), this, SLOT(showFitDialog()));
+            actions.append(action);
+          }
+
+          if (!DataObject::filterPluginList().empty()) {
+            action = new QAction(tr("Apply Filter"), this);
+            connect(action, SIGNAL(triggered()), this, SLOT(showFilterDialog()));
+            actions.append(action);
+          }
         } else if (MatrixPtr m = kst_cast<Matrix>(_currentObject)) {
           action = new QAction(tr("Make Image"), this);
           connect(action, SIGNAL(triggered()), this, SLOT(showImageDialog()));
@@ -218,6 +229,18 @@ void DataManager::showContextMenu(const QPoint &position) {
 
           action->setMenu(removeMenu);
           actions.append(action);
+
+          if (!DataObject::fitsPluginList().empty()) {
+            action = new QAction(tr("Apply Fit"), this);
+            connect(action, SIGNAL(triggered()), this, SLOT(showFitDialog()));
+            actions.append(action);
+          }
+
+          if (!DataObject::filterPluginList().empty()) {
+            action = new QAction(tr("Apply Filter"), this);
+            connect(action, SIGNAL(triggered()), this, SLOT(showFilterDialog()));
+            actions.append(action);
+          }
         }
 
         action = new QAction(tr("Delete"), this);
@@ -385,9 +408,25 @@ void DataManager::showImageDialog() {
 
 
 void DataManager::showPluginDialog(QString &pluginName) {
-  DialogLauncher::self()->showBasicPluginDialog(pluginName);
+  if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
+    DialogLauncher::self()->showBasicPluginDialog(pluginName, 0, vector);
+  } else if (CurvePtr curve = kst_cast<Curve>(_currentObject)) {
+    DialogLauncher::self()->showBasicPluginDialog(pluginName, 0, curve->xVector(), curve->yVector());
+  } else {
+    DialogLauncher::self()->showBasicPluginDialog(pluginName);
+}
 
   _doc->session()->triggerReset();
+}
+
+
+void DataManager::showFilterDialog() {
+  showPluginDialog(DataObject::filterPluginList().first());
+}
+
+
+void DataManager::showFitDialog() {
+  showPluginDialog(DataObject::fitsPluginList().first());
 }
 
 

@@ -49,6 +49,8 @@ class KST_EXPORT DataManager : public QDialog, Ui::DataManager
     void showEventMonitorDialog();
     void showEquationDialog();
     void showPluginDialog(QString &pluginName);
+    void showFitDialog();
+    void showFilterDialog();
 
     void addToPlot(QAction* action);
     void removeFromPlot(QAction* action);

@@ -117,12 +117,23 @@ void DialogLauncherGui::showEventMonitorDialog(ObjectPtr objectPtr) {
 }
 
 
-void DialogLauncherGui::showBasicPluginDialog(QString pluginName, ObjectPtr objectPtr) {
+void DialogLauncherGui::showBasicPluginDialog(QString pluginName, ObjectPtr objectPtr, VectorPtr vectorX, VectorPtr vectorY, PlotItemInterface *plotItem) {
   if (DataObject::pluginType(pluginName) == DataObjectPluginInterface::Generic) {
     BasicPluginDialog dialog(pluginName, objectPtr, kstApp->mainWindow());
     dialog.exec();
   } else {
     FilterFitDialog dialog(pluginName, objectPtr, kstApp->mainWindow());
+    if (!objectPtr) {
+      if (vectorX) {
+        dialog.setVectorX(vectorX);
+      }
+      if (vectorY) {
+        dialog.setVectorY(vectorY);
+      }
+      if (plotItem) {
+        dialog.setPlotMode((PlotItem*)plotItem);
+      }
+    }
     dialog.exec();
   }
 }

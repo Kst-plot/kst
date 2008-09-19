@@ -15,6 +15,7 @@
 #include "datadialog.h"
 #include "datatab.h"
 #include "dataobjectplugin.h"
+#include "plotitem.h"
 
 #include "kst_export.h"
 
@@ -29,11 +30,17 @@ class KST_EXPORT FilterFitTab : public DataTab, Ui::FilterFitTab {
     virtual ~FilterFitTab();
 
     void setObjectStore(ObjectStore *store);
+    void setVectorX(VectorPtr vector);
+    void setVectorY(VectorPtr vector);
+
+    CurveAppearance* curveAppearance() const;
 
     DataObjectConfigWidget* configWidget() { return _configWidget; }
 
     void loadSettings();
     void saveSettings();
+
+    void setPlotMode();
 
   public Q_SLOTS:
     void pluginChanged(const QString&);
@@ -43,6 +50,7 @@ class KST_EXPORT FilterFitTab : public DataTab, Ui::FilterFitTab {
     QGridLayout* _layout;
     DataObjectPluginInterface::PluginTypeID _type;
     ObjectStore *_store;
+    VectorPtr _vectorX, _vectorY;
 
 };
 
@@ -52,14 +60,22 @@ class KST_EXPORT FilterFitDialog : public DataDialog {
     FilterFitDialog(QString& pluginName, ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~FilterFitDialog();
 
+    void setVectorX(VectorPtr vector);
+    void setVectorY(VectorPtr vector);
+    void setPlotMode(PlotItem* plot);
+
   protected:
     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject();
     virtual ObjectPtr editExistingDataObject() const;
 
   private:
+    void configureTab();
     FilterFitTab *_filterFitTab;
     QString _pluginName;
+    PlotItem* _plotItem;
+    VectorPtr _vectorX;
+    VectorPtr _vectorY;
 };
 
 }

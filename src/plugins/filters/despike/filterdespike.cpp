@@ -42,6 +42,15 @@ class ConfigWidgetFilterDespikePlugin : public Kst::DataObjectConfigWidget, publ
       }
     }
 
+    void setVectorX(Kst::VectorPtr vector) {
+      setSelectedVector(vector);
+    }
+
+    void setVectorY(Kst::VectorPtr vector) {
+      Q_UNUSED(vector);
+    }
+
+
     Kst::VectorPtr selectedVector() { return _vector->selectedVector(); };
     void setSelectedVector(Kst::VectorPtr vector) { return _vector->setSelectedVector(vector); };
 

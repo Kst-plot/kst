@@ -211,9 +211,14 @@ class PlotItem : public ViewItem, public PlotItemInterface
     virtual void edit();
     void marginsUpdated();
 
+    void showFilterDialog(QAction*);
+    void showFitDialog(QAction*);
+
   private:
     void createActions();
     void createZoomMenu();
+    void createFilterMenu();
+    void createFitMenu();
 
     void resetSelectionRect();
 
@@ -348,6 +353,11 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QAction *_zoomYIn;
     QAction *_zoomNormalizeYtoX;
     QAction *_zoomLogY;
+
+    QMenu *_filterMenu;
+    QAction *_filterAction;
+    QMenu *_fitMenu;
+    QAction *_fitAction;
 
     QUndoStack *_undoStack;
 

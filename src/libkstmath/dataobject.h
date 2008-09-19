@@ -198,6 +198,9 @@ class DataObjectConfigWidget : public QWidget {
     virtual void setupFromObject(Object* dataObject);
     virtual void setupSlots(QWidget* dialog);
 
+    virtual void setVectorX(VectorPtr vector);
+    virtual void setVectorY(VectorPtr vector);
+
     virtual bool configurePropertiesFromXml(ObjectStore *store, QXmlStreamAttributes& attrs);
 
     KST_EXPORT void setInstance(DataObjectPtr inst);
