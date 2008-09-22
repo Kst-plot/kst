@@ -118,10 +118,6 @@ class MainWindow : public QMainWindow
     DataManager *_dataManager;
     DebugDialog *_debugDialog;
     ExportGraphicsDialog *_exportGraphics;
-    VectorEditorDialog *_vectorEditor;
-    ScalarEditorDialog *_scalarEditor;
-    StringEditorDialog * _stringEditor;
-    MatrixEditorDialog *_matrixEditor;
 
     QPointer<QProgressBar> _progressBar;
 

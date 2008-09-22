@@ -63,10 +63,6 @@ namespace Kst {
 MainWindow::MainWindow() {
   _dataManager = 0;
   _exportGraphics = 0;
-  _vectorEditor = 0;
-  _scalarEditor = 0;
-  _stringEditor = 0;
-  _matrixEditor = 0;
   _doc = new Document(this);
   _tabWidget = new TabWidget(this);
   _undoGroup = new QUndoGroup(this);
@@ -88,8 +84,6 @@ MainWindow::MainWindow() {
 
 
 MainWindow::~MainWindow() {
-  delete _vectorEditor;
-  _vectorEditor = 0;
   delete _dataManager;
   _dataManager = 0;
   delete _doc;
@@ -901,10 +895,8 @@ void MainWindow::showDataManager() {
 
 
 void MainWindow::showVectorEditor() {
-  if (!_vectorEditor) {
-    _vectorEditor = new VectorEditorDialog(this, _doc);
-  }
-  _vectorEditor->show();
+  VectorEditorDialog vectorDialog(this, _doc);
+  vectorDialog.exec();
 }
 
 
@@ -920,10 +912,8 @@ void MainWindow::showStringEditor() {
 }
 
 void MainWindow::showMatrixEditor() {
-  if (!_matrixEditor) {
-    _matrixEditor = new MatrixEditorDialog(this, _doc);
-  }
-  _matrixEditor->show();
+  MatrixEditorDialog matrixDialog(this, _doc);
+  matrixDialog.exec();
 }
 
 
