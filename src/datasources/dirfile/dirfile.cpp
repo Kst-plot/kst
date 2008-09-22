@@ -48,7 +48,6 @@ DirFileSource::DirFileSource(Kst::ObjectStore *store, QSettings *cfg, const QStr
 : Kst::DataSource(store, cfg, filename, type, None), _rowIndex(0L), _config(0L), _tmpBuf(0L), _tmpBufSize(0) {
   _valid = false;
   _haveHeader = false;
-  _fieldListComplete = false;
   if (!type.isEmpty() && type != "Directory of Binary Files") {
     return;
   }
@@ -90,6 +89,7 @@ DirFileSource::~DirFileSource() {
 
 bool DirFileSource::reset() {
   _fieldList.clear();
+  _scalarList.clear();
   init();
   return true;
 }
@@ -102,6 +102,8 @@ bool DirFileSource::init() {
   FormatType *ft = GetFormat(_directoryName.toLatin1(), &err);
 
   if (err == GD_E_OK) {
+    _scalarList.append("FRAMES");
+
     _fieldList.append("INDEX");
     for (int i = 0; i < ft->n_lincom; i++) {
       _fieldList.append(ft->lincomEntries[i].field);
@@ -140,7 +142,6 @@ Kst::Object::UpdateType DirFileSource::update() {
 
   _frameCount = newNF;
 
-  updateNumFramesScalar();
   return (isnew ? Kst::Object::UPDATE : Kst::Object::NO_CHANGE);
 }
 
@@ -209,6 +210,15 @@ void DirFileSource::save(QXmlStreamWriter &streamWriter) {
 }
 
 
+int DirFileSource::readScalar(double &S, const QString& scalar) {
+  if (scalar == "FRAMES") {
+    S = _frameCount;
+    return 1;
+  }
+  return 0;
+}
+
+
 QString DirFilePlugin::pluginName() const { return "DirFile Reader"; }
 QString DirFilePlugin::pluginDescription() const { return "DirFile Reader"; }
 
@@ -253,9 +263,10 @@ QStringList DirFilePlugin::scalarList(QSettings *cfg,
   Q_UNUSED(cfg);
   Q_UNUSED(type)
   int err = 0;
-  struct FormatType *ft = GetFormat(getDirectory(filename).toLatin1(), &err);
+  //struct FormatType *ft = GetFormat(getDirectory(filename).toLatin1(), &err);
   QStringList scalarList;
 
+  GetFormat(getDirectory(filename).toLatin1(), &err);
   if (complete) {
     *complete = true;
   }

@@ -496,10 +496,10 @@ DataSourcePtr DataSource::loadSource(ObjectStore *store, QDomElement& e) {
   return findPluginFor(store, filename, type, e);
 }
 
-
 DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const UpdateCheckType updateType)
     : Object(), _filename(filename), _cfg(cfg), _updateCheckType(updateType) {
   Q_UNUSED(type)
+  Q_UNUSED(store)
   _valid = false;
   _reusable = true;
   _writable = false;
@@ -510,14 +510,6 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
   }
   shortFilename = shortFilename.section('/', -1);
   QString tn = i18n("DS-%1", shortFilename);
-//  int count = 1;
-
-//   Object::setTagName(ObjectTag(tn, ObjectTag::globalTagContext));  // are DataSources always top-level?
-
-  Q_ASSERT(store);
-  _numFramesScalar = store->createObject<Scalar>();
-  _numFramesScalar->setSlaveName(QString("frames"));
-  // Don't set provider - this is always up-to-date
 
   if (_updateCheckType == Timer) {
     QTimer::singleShot(UpdateManager::self()->minimumUpdatePeriod()-1, this, SLOT(checkUpdate()));
@@ -560,9 +552,6 @@ void DataSource::processUpdate(ObjectPtr object) {
 
 
 void DataSource::deleteDependents() {
-  _store->removeObject(_numFramesScalar);
-  _numFramesScalar = 0L;
-
   for (QHash<QString, String*>::Iterator it = _metaData.begin(); it != _metaData.end(); ++it) {
     _store->removeObject(it.value());
   }
@@ -578,11 +567,6 @@ Object::UpdateType DataSource::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   return Object::NO_CHANGE;
-}
-
-
-void DataSource::updateNumFramesScalar() {
-  _numFramesScalar->setValue(frameCount());
 }
 
 
@@ -670,7 +654,9 @@ bool DataSource::isValidMatrix(const QString& field) const {
 }
 
 bool DataSource::isValidScalar(const QString& field) const {
-  Q_UNUSED(field)
+  if (_scalarList.contains(field)) {
+    return true;
+  }
   return false;
 }
 
@@ -758,6 +744,11 @@ void *DataSource::bufferRealloc(void *ptr, size_t size) {
 
 
 bool DataSource::fieldListIsComplete() const {
+  return true;
+}
+
+
+bool DataSource::scalarListIsComplete() const {
   return true;
 }
 

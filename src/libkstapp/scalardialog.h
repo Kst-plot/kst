@@ -27,17 +27,45 @@ namespace Kst {
 class KST_EXPORT ScalarTab : public DataTab, Ui::ScalarTab {
   Q_OBJECT
   public:
-    ScalarTab(QWidget *parent = 0);
+    enum ScalarMode { DataScalar, GeneratedScalar };
+
+    ScalarTab(ObjectStore *store, QWidget *parent = 0);
     virtual ~ScalarTab();
+
+    ScalarMode scalarMode() const { return _mode; }
+    void setScalarMode(ScalarMode mode);
 
     QString value() const;
     void setValue(const QString &value);
 
+    DataSourcePtr dataSource() const;
+    void setDataSource(DataSourcePtr dataSource);
+
+    QString file() const;
+    void setFile(const QString &file);
+
+    QString field() const;
+    void setField(const QString &field);
+
+    void setFieldList(const QStringList &fieldList);
+
+    void hideGeneratedOptions();
+    void hideDataOptions();
   Q_SIGNALS:
     void valueChanged();
+    void sourceChanged();
 
   private Q_SLOTS:
+    void readFromSourceChanged();
     void textChanged();
+    void fileNameChanged(const QString &file);
+    void showConfigWidget();
+
+  private:
+    void updateDataSource();
+    ScalarMode _mode;
+    ObjectStore *_store;
+    DataSourcePtr _dataSource;
 };
 
 class KST_EXPORT ScalarDialog : public DataDialog {
@@ -49,6 +77,8 @@ class KST_EXPORT ScalarDialog : public DataDialog {
   protected:
 //     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject();
+    virtual ObjectPtr createNewGeneratedScalar();
+    virtual ObjectPtr createNewDataScalar();
     virtual ObjectPtr editExistingDataObject() const;
 
   private:
@@ -59,6 +89,7 @@ class KST_EXPORT ScalarDialog : public DataDialog {
 
   private:
     ScalarTab *_scalarTab;
+
 };
 
 }

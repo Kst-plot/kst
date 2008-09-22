@@ -708,7 +708,7 @@ void PlotAxis::update(bool useOverrideTicks) {
   _baseLabel.clear();
 
   int longest = 0, shortest = 1000;
-  qreal base;
+  qreal base=10;
   QMapIterator<qreal, QString> iLabel(labels);
   while (iLabel.hasNext()) {
     iLabel.next();

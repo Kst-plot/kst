@@ -52,8 +52,6 @@ class AsciiSource : public Kst::DataSource {
 
     QString fileType() const;
 
-    QStringList fieldList() const;
-
     QStringList matrixList() const;
 
     void save(QXmlStreamWriter &s);
@@ -69,6 +67,12 @@ class AsciiSource : public Kst::DataSource {
 
     bool fieldListIsComplete() const;
 
+    int readScalar(double &S, const QString& scalar);
+
+    bool isValidScalar(const QString& field) const;
+
+    bool scalarListIsComplete() const;
+
     bool reset();
 
     class Config;
@@ -80,13 +84,13 @@ class AsciiSource : public Kst::DataSource {
     int _numLinesAlloc;
     int _numFrames;
     int _byteLength;
-    mutable QStringList _fields;
     friend class ConfigWidgetAscii;
     mutable Config *_config;
     char *_tmpBuf;
     uint _tmpBufSize;
     bool _haveHeader;
-    mutable bool _fieldListComplete;
+    bool _fieldListComplete;
+    bool _scalarListComplete;
 };
 
 

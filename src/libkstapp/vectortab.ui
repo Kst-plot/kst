@@ -70,7 +70,7 @@
       </sizepolicy>
      </property>
      <property name="title" >
-      <string>Data Vector Parameters</string>
+      <string>Data Source Parameters</string>
      </property>
      <layout class="QGridLayout" name="gridLayout" >
       <item row="0" column="0" >
@@ -177,7 +177,7 @@
       </sizepolicy>
      </property>
      <property name="title" >
-      <string>Vector values</string>
+      <string>Generate Vector</string>
      </property>
      <layout class="QGridLayout" >
       <item row="0" column="0" >

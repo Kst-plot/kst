@@ -120,10 +120,6 @@ class KST_EXPORT DataSource : public Object {
     virtual void bufferFree(void *ptr);
     virtual void *bufferRealloc(void *ptr, size_t size);
 
-    /** Returns true if the field list is complete, therefore the user should
-      not be able to edit the field combobox.  Default is true. */
-    virtual bool fieldListIsComplete() const;
-
     /** Returns true if this file is empty */
     virtual bool isEmpty() const;
 
@@ -192,6 +188,10 @@ class KST_EXPORT DataSource : public Object {
     /* referred to as fields in data sources                    */
     /************************************************************/
     static QStringList fieldListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
+
+    /** Returns true if the field list is complete, therefore the user should
+      not be able to edit the field combobox.  Default is true. */
+    virtual bool fieldListIsComplete() const;
 
     virtual QStringList fieldList() const;
 
@@ -264,6 +264,10 @@ class KST_EXPORT DataSource : public Object {
     /************************************************************/
     static QStringList scalarListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
 
+    /** Returns true if the scalar list is complete, therefore the user should
+        not be able to edit the scalar combobox.  Default is true. */
+    virtual bool scalarListIsComplete() const;
+
     /** Returns the list of fields that support readScalar **/
     virtual QStringList scalarList() const;
 
@@ -280,7 +284,6 @@ class KST_EXPORT DataSource : public Object {
     void sourceUpdated(ObjectPtr sourceObject);
 
   protected:
-    void updateNumFramesScalar();
 
     /** Is the object valid? */
     bool _valid;
@@ -309,8 +312,6 @@ class KST_EXPORT DataSource : public Object {
     QHash<QString, String*> _metaData;
 
     QSettings *_cfg;
-
-    ScalarPtr _numFramesScalar;
 
     UpdateCheckType _updateCheckType;
 

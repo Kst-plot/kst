@@ -56,7 +56,7 @@ class KST_EXPORT Scalar : public Primitive {
     virtual void save(QXmlStreamWriter &s);
 
     /** Update the scalar.  Return true if there was new data. */
-    UpdateType update();
+    virtual UpdateType update();
 
     Scalar& operator=(double v);
 
@@ -80,8 +80,10 @@ class KST_EXPORT Scalar : public Primitive {
   signals:
     void trigger();
 
-  private:
+  protected:
     double _value;
+
+  private:
     bool _orphan;
     bool _displayable;
     bool _editable;

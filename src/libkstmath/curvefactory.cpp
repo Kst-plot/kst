@@ -32,10 +32,10 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
 
   Q_ASSERT(store);
 
-  int lineStyle, lineWidth, pointType, pointDensity, barStyle;
+  int lineStyle=0, lineWidth=0, pointType=0, pointDensity=0, barStyle=0;
   QString xVectorName, yVectorName, legend, errorXVectorName, errorYVectorName, errorXMinusVectorName, errorYMinusVectorName, color;
   QString descriptiveName;
-  bool hasLines, hasPoints, hasBars, ignoreAutoScale;
+  bool hasLines=true, hasPoints=false, hasBars=false, ignoreAutoScale=false;
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();

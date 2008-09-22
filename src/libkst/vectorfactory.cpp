@@ -92,8 +92,8 @@ GeneratedVectorFactory::~GeneratedVectorFactory() {
 
 
 PrimitivePtr GeneratedVectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
-  double min, max;
-  int count;
+  double min=-1.0, max=1.0;
+  int count=0;
   QString descriptiveName;
 
   while (!xml.atEnd()) {
@@ -209,8 +209,8 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
   QByteArray data;
   QString provider, file, field;
   QString descriptiveName;
-  int start, count, skip = -1;
-  bool doAve;
+  int start=0, count=0, skip = -1;
+  bool doAve=false;
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();

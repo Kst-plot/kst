@@ -164,7 +164,6 @@ void VectorTab::readFromSourceChanged() {
 void VectorTab::hideGeneratedOptions() {
   _sourceGroup->setVisible(false);
   _generatedVectorGroup->setVisible(false);
-  setMaximumHeight(300);
 }
 
 
@@ -172,7 +171,6 @@ void VectorTab::hideDataOptions() {
   _sourceGroup->setVisible(false);
   _dataVectorGroup->setVisible(false);
   _dataRange->setVisible(false);
-  setMaximumHeight(150);
 }
 
 

@@ -76,10 +76,10 @@ class KST_EXPORT DataVector : public Vector {
     /** Save vector information */
     virtual void save(QXmlStreamWriter &s);
 
-    /** return the name of the file if a RVector - otherwise return "" */
+    /** return the name of the file */
     QString filename() const;
 
-    /** return the field name if an RVector, other wise return "" */
+    /** return the field name */
     const QString& field() const;
 
     /** return a sensible label for this vector */
@@ -101,7 +101,7 @@ class KST_EXPORT DataVector : public Vector {
     /** Read from end */
     void setFromEnd();
 
-    // make a copy
+    /** make a copy of the DataVector */
     SharedPtr<DataVector> makeDuplicate() const;
 
     /** the data source */
@@ -148,7 +148,7 @@ class KST_EXPORT DataVector : public Vector {
     /** file to read for rvectors */
     DataSourcePtr _file;
 
-    /** For rvector, the field.  For fvector, the equation. */
+    /** The vector field in the data source */
     QString _field;
 
     /** Number of Samples allocated to the vector */

@@ -53,6 +53,8 @@ class DirFileSource : public Kst::DataSource {
 
     class Config;
 
+    int readScalar(double &S, const QString& scalar);
+
   private:
     QString _directoryName;
 
@@ -66,7 +68,6 @@ class DirFileSource : public Kst::DataSource {
     char *_tmpBuf;
     uint _tmpBufSize;
     bool _haveHeader;
-    mutable bool _fieldListComplete;
 };
 
 

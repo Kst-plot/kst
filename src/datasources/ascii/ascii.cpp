@@ -223,6 +223,7 @@ bool AsciiSource::reset() {
   _haveHeader = false;
   _fieldListComplete = false;
   _fieldList.clear();
+  _scalarList.clear();
 
   update(); // Yuck - same problem as in the constructor presently.
 
@@ -289,9 +290,12 @@ Kst::Object::UpdateType AsciiSource::update() {
       return Kst::Object::NO_CHANGE;
     }
     // Re-update the field list since we have one now
-    _fields = fieldListFor(_filename, _config);
-    _fieldListComplete = _fields.count() > 1;
-    
+    _fieldList = fieldListFor(_filename, _config);
+    _fieldListComplete = _fieldList.count() > 1;
+
+    _scalarList = scalarListFor(_filename, _config);
+    _scalarListComplete = _scalarList.count() > 1;
+
     // Re-update the matrix list since we have one now
     _matrixList = matrixList();
   }
@@ -364,13 +368,17 @@ Kst::Object::UpdateType AsciiSource::update() {
 
   file.close();
 
-  updateNumFramesScalar();
   return (forceUpdate ? Kst::Object::UPDATE : (new_data ? Kst::Object::UPDATE : Kst::Object::NO_CHANGE));
 }
 
 
 bool AsciiSource::fieldListIsComplete() const {
   return _fieldListComplete;
+}
+
+
+bool AsciiSource::scalarListIsComplete() const {
+  return _scalarListComplete;
 }
 
 
@@ -447,6 +455,15 @@ int AsciiSource::readMatrix(Kst::MatrixData* data, const QString& matrix, int xS
   data->yStepSize = mYStepSize;
   
   return totalSamples;
+}
+
+
+int AsciiSource::readScalar(double &S, const QString& scalar) {
+  if (scalar == "FRAMES") {
+    S = _numFrames;
+    return 1;
+  }
+  return 0;
 }
 
 
@@ -543,7 +560,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
     for (int i = 0; i < n; i++, s++) {
       bool incol = false;
       int i_col = 0;
-      
+
       v[i] = Kst::NOPOINT;
       for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {     
         if (isspace(_tmpBuf[ch])) {
@@ -588,6 +605,12 @@ bool AsciiSource::isValidMatrix(const QString& matrix) const {
   return matrixList().contains(matrix);  
 }
 
+bool AsciiSource::isValidScalar(const QString& field) const{
+  if (field == "FRAMES") {
+    return true;
+  }
+  return false;
+}
 
 int AsciiSource::samplesPerFrame(const QString &field) {
   Q_UNUSED(field)
@@ -737,17 +760,6 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSource::Conf
 
   return rc;
 }
-
-
-QStringList AsciiSource::fieldList() const {
-  if (_fields.isEmpty()) {
-    _fields = fieldListFor(_filename, _config);
-    _fieldListComplete = _fields.count() > 1;
-  }
-
-  return _fields;
-}
-
 
 QStringList AsciiSource::matrixList() const {
   if (_matrixList.isEmpty()) {
