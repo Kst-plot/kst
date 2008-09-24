@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=filterbutterworthbandstop
+X-Kst-Plugin-Author=The University of Toronto
+Name=Filter - Butterworth Band Stop Plugin
+Comment=Implements a Butterworth Band Stop Filter Plugin for Kst.

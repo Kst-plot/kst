@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=filterbutterworthbandpass
+X-Kst-Plugin-Author=The University of Toronto
+Name=Filter - Butterworth Band Pass Plugin
+Comment=Implements a Butterworth Band Pass Filter Plugin for Kst.
