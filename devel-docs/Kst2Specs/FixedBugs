@@ -40,3 +40,10 @@ place a special characters in a plot label (eg, \omega in the X axis label).
 The special character is not interpreted.  It should be.
 Note: it is interpreted properly in floating labels.
 
+
+Plot ranges don't update.
+Create a plot with a curve of sine vs INDEX from dm.cur.  Read from end the last 100 frames.  In the plot hit 'm'.
+What happens:
+  As the curve is updated it dissappears from the plot.  Hitting 'm' recenters the curve.
+What should happen:
+  In 'm' zoom mode, the plot ranges should dynamically update to cover the full range of the curve on every curve update (As if you were holding 'm' down continuously.  Try kst1.x for a demonstration of the appropriate behavior.
