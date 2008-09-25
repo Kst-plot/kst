@@ -58,6 +58,12 @@ class DataSourcePluginInterface : public PluginInterface {
                                   QString *typeSuggestion,
                                   bool *complete) const = 0;
 
+    virtual QStringList stringList(QSettings *cfg,
+                                  const QString& filename,
+                                  const QString& type,
+                                  QString *typeSuggestion,
+                                  bool *complete) const = 0;
+
     virtual QStringList fieldList(QSettings *cfg,
                                   const QString& filename,
                                   const QString& type,

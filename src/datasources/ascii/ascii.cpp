@@ -224,6 +224,7 @@ bool AsciiSource::reset() {
   _fieldListComplete = false;
   _fieldList.clear();
   _scalarList.clear();
+  _matrixList.clear();
 
   update(); // Yuck - same problem as in the constructor presently.
 
@@ -293,11 +294,10 @@ Kst::Object::UpdateType AsciiSource::update() {
     _fieldList = fieldListFor(_filename, _config);
     _fieldListComplete = _fieldList.count() > 1;
 
+    // Re-update the scalar list since we have one now
     _scalarList = scalarListFor(_filename, _config);
     _scalarListComplete = _scalarList.count() > 1;
 
-    // Re-update the matrix list since we have one now
-    _matrixList = matrixList();
   }
 
   bool forceUpdate = false;
@@ -379,82 +379,6 @@ bool AsciiSource::fieldListIsComplete() const {
 
 bool AsciiSource::scalarListIsComplete() const {
   return _scalarListComplete;
-}
-
-
-bool AsciiSource::matrixDimensions(const QString& matrix, int* xDim, int* yDim) {
-
-  if (!isValidMatrix(matrix)) {
-    return false;  
-  }
-
-  // total frames in the matrix
-  int totalFrames = frameCount(matrix);
-
-  // y dimension is in the matrix name
-  *yDim = matrix.section(',', 1,1).toInt();
-  *xDim = totalFrames / (*yDim); // the last row doesn't count
-  return true;
-}
-
-
-int AsciiSource::readMatrix(Kst::MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps) {
-  
-  if (!isValidMatrix(matrix)) {
-    return 0;  
-  }
-  
-  // empty submatrix
-  if (xNumSteps == 0 || yNumSteps == 0) {
-    return 0;  
-  }
-  
-  // first get matrix parameters - for ascii, this is just in the field name in the
-  // form [MATRIX,Y,x,y,w,l]
-  int mYDimension = matrix.section(',', 1,1).toInt();
-  double mXMin = matrix.section(',', 2,2).toDouble();
-  double mYMin = matrix.section(',', 3,3).toDouble();
-  double mXStepSize = matrix.section(',', 4,4).toDouble();
-  QString mYStepSizeString = matrix.section(',', 5,5);
-  mYStepSizeString.truncate(mYStepSizeString.length() - 1);
-  double mYStepSize = mYStepSizeString.toDouble();
-  
-  // if we are trying to start beyond the y dimension, just return 0 samples read
-  if (yStart >= mYDimension) {
-    return 0;  
-  }
-  
-  // ?NumSteps < 0 means read one sample per frame - but AsciiSource always has 1 sample per frame
-  if (xNumSteps < 0) {
-    xNumSteps = 1;   
-  }  
-  if (yNumSteps < 0) {
-    yNumSteps = 1;  
-  }
-  
-  // make sure requested number of steps in y direction is not greater than the 
-  // y dimension of the matrix - can't just reduce it because yNumSteps is not returned
-  if (yNumSteps + yStart > mYDimension) {
-    return 0; 
-  } 
-  // use readField to read the specified matrix range 
-  // (for AsciiSource, all matrix fields are vector fields as well)
-  double* zPos = data->z;
-  int totalSamples = 0;
-  
-  for (int i = 0; i < xNumSteps; i++) {
-    int samples = readField(zPos, matrix, xStart*mYDimension + i*mYDimension + yStart, yNumSteps);
-    totalSamples += samples;
-    zPos += samples;
-  }
-  
-  // set the suggested matrix transform params
-  data->xMin = mXMin + xStart*mXStepSize;
-  data->yMin = mYMin + yStart*mYStepSize;
-  data->xStepSize = mXStepSize;
-  data->yStepSize = mYStepSize;
-  
-  return totalSamples;
 }
 
 
@@ -593,23 +517,6 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
   file.close();
 
   return n;
-}
-
-
-bool AsciiSource::isValidField(const QString& field) const {
-  return fieldList().contains(field);
-}
-
-
-bool AsciiSource::isValidMatrix(const QString& matrix) const {
-  return matrixList().contains(matrix);  
-}
-
-bool AsciiSource::isValidScalar(const QString& field) const{
-  if (field == "FRAMES") {
-    return true;
-  }
-  return false;
 }
 
 int AsciiSource::samplesPerFrame(const QString &field) {
@@ -760,21 +667,6 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSource::Conf
 
   return rc;
 }
-
-QStringList AsciiSource::matrixList() const {
-  if (_matrixList.isEmpty()) {
-    // for ascii data sources, matrix fields start with [MATRIXNAME,Y,x,y,w,l]
-    // where Y = size of y dimension
-    //       x = x coordinate of minimum
-    //       y = y coordinate of minimum
-    //       w = x step size
-    //       l = y step size
-    _matrixList = fieldList().filter(QRegExp("^\\[\\w*,\\S*,\\S*,\\S*,\\S*,\\S*\\]$"));
-  }
-
-  return _matrixList;
-}
-
 
 void AsciiSource::save(QXmlStreamWriter &s) {
   Kst::DataSource::save(s);
@@ -977,7 +869,6 @@ QStringList AsciiPlugin::matrixList(QSettings *cfg,
   return QStringList();
 }
 
-
 QStringList AsciiPlugin::fieldList(QSettings *cfg,
                                             const QString& filename,
                                             const QString& type,
@@ -1029,6 +920,38 @@ QStringList AsciiPlugin::scalarList(QSettings *cfg,
   AsciiSource::Config config;
   config.read(cfg, filename);
   QStringList rc = AsciiSource::scalarListFor(filename, &config);
+
+  if (complete) {
+    *complete = rc.count() > 1;
+  }
+
+  return rc;
+
+}
+
+QStringList AsciiPlugin::stringList(QSettings *cfg,
+                                    const QString& filename,
+                                    const QString& type,
+                                    QString *typeSuggestion,
+                                    bool *complete) const {
+
+  if ((!type.isEmpty() && !provides().contains(type)) ||
+      0 == understands(cfg, filename)) {
+    if (complete) {
+      *complete = false;
+    }
+    return QStringList();
+  }
+
+  if (typeSuggestion) {
+    *typeSuggestion = "ASCII";
+  }
+
+  AsciiSource::Config config;
+  config.read(cfg, filename);
+  QStringList rc;// = AsciiSource::scalarListFor(filename, &config);
+
+  rc.append("FILENAME");
 
   if (complete) {
     *complete = rc.count() > 1;

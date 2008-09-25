@@ -106,6 +106,12 @@ class DirFilePlugin : public QObject, public Kst::DataSourcePluginInterface {
                                   QString *typeSuggestion,
                                   bool *complete) const;
 
+    virtual QStringList stringList(QSettings *cfg,
+                                  const QString& filename,
+                                  const QString& type,
+                                  QString *typeSuggestion,
+                                  bool *complete) const;
+
     virtual int understands(QSettings *cfg, const QString& filename) const;
 
     static QString getDirectory(QString filepath);

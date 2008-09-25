@@ -17,6 +17,7 @@
 #include <QMenu>
 #include <QTabBar>
 #include <QUndoGroup>
+#include <QDebug>
 
 namespace Kst {
 

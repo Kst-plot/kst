@@ -466,6 +466,37 @@ QStringList DataSource::scalarListForSource(const QString& filename, const QStri
 }
 
 
+QStringList DataSource::stringListForSource(const QString& filename, const QString& type, QString *outType, bool *complete) {
+  if (filename == "stdin" || filename == "-") {
+    return QStringList();
+  }
+
+  QString fn = obtainFile(filename);
+  if (fn.isEmpty()) {
+    return QStringList();
+  }
+
+  QList<PluginSortContainer> bestPlugins = bestPluginsForSource(fn, type);
+  QStringList rc;
+  for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
+    QString typeSuggestion;
+    rc = (*i).plugin->stringList(settingsObject, fn, QString::null, &typeSuggestion, complete);
+    if (!rc.isEmpty()) {
+      if (outType) {
+        if (typeSuggestion.isEmpty()) {
+          *outType = (*i).plugin->provides()[0];
+        } else {
+          *outType = typeSuggestion;
+        }
+      }
+      break;
+    }
+  }
+
+  return rc;
+}
+
+
 DataSourcePtr DataSource::loadSource(ObjectStore *store, QDomElement& e) {
   QString filename, type, tag;
 
@@ -618,6 +649,12 @@ int DataSource::readScalar(double &S, const QString& scalar) {
   return 1;
 }
 
+int DataSource::readString(QString &S, const QString& field) {
+  Q_UNUSED(field)
+  S = QString();
+  return 1;
+}
+
 int DataSource::readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps) {
   Q_UNUSED(data)
   Q_UNUSED(matrix)
@@ -643,22 +680,24 @@ bool DataSource::isValid() const {
 
 
 bool DataSource::isValidField(const QString& field) const {
-  Q_UNUSED(field)
-  return false;
+  return fieldList().contains(field);
 }
 
 
 bool DataSource::isValidMatrix(const QString& field) const {
-  Q_UNUSED(field)
-  return false;
+  return matrixList().contains(field);
 }
 
+
 bool DataSource::isValidScalar(const QString& field) const {
-  if (_scalarList.contains(field)) {
-    return true;
-  }
-  return false;
+  return scalarList().contains(field);
 }
+
+
+bool DataSource::isValidString(const QString& field) const {
+  return stringList().contains(field);
+}
+
 
 int DataSource::samplesPerFrame(const QString &field) {
   Q_UNUSED(field)
@@ -694,6 +733,10 @@ QStringList DataSource::matrixList() const {
 
 QStringList DataSource::scalarList() const {
   return _scalarList;
+}
+
+QStringList DataSource::stringList() const {
+  return _stringList;
 }
 
 QString DataSource::fileType() const {
@@ -749,6 +792,11 @@ bool DataSource::fieldListIsComplete() const {
 
 
 bool DataSource::scalarListIsComplete() const {
+  return true;
+}
+
+
+bool DataSource::stringListIsComplete() const {
   return true;
 }
 

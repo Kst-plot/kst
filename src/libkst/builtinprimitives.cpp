@@ -23,6 +23,7 @@ namespace Kst {
       new EditableVectorFactory();
       new DataVectorFactory();
       new ScalarFactory();
+      new DataScalarFactory();
       new StringFactory();
       new GeneratedMatrixFactory();
       new EditableMatrixFactory();

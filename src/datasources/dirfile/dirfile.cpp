@@ -88,8 +88,6 @@ DirFileSource::~DirFileSource() {
 
 
 bool DirFileSource::reset() {
-  _fieldList.clear();
-  _scalarList.clear();
   init();
   return true;
 }
@@ -97,6 +95,10 @@ bool DirFileSource::reset() {
 
 bool DirFileSource::init() {
   int err = 0;
+
+  _fieldList.clear();
+  _scalarList.clear();
+  _matrixList.clear();
 
   _frameCount = 0;
   FormatType *ft = GetFormat(_directoryName.toLatin1(), &err);
@@ -279,6 +281,34 @@ QStringList DirFilePlugin::scalarList(QSettings *cfg,
     scalarList.append("FRAMES");
   }
   return scalarList;
+
+}
+
+QStringList DirFilePlugin::stringList(QSettings *cfg,
+                                      const QString& filename,
+                                      const QString& type,
+                                      QString *typeSuggestion,
+                                      bool *complete) const {
+
+  Q_UNUSED(cfg);
+  Q_UNUSED(type)
+  int err = 0;
+  //struct FormatType *ft = GetFormat(getDirectory(filename).toLatin1(), &err);
+  QStringList stringList;
+
+  GetFormat(getDirectory(filename).toLatin1(), &err);
+  if (complete) {
+    *complete = true;
+  }
+
+  if (typeSuggestion) {
+    *typeSuggestion = "Directory of Binary Files";
+  }
+
+  if (err == GD_E_OK) {
+    stringList.append("FILENAME");
+  }
+  return stringList;
 
 }
 

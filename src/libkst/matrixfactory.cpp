@@ -36,8 +36,8 @@ PrimitivePtr GeneratedMatrixFactory::generatePrimitive(ObjectStore *store, QXmlS
 
   Q_ASSERT(store);
 
-  bool xDirection;
-  double gradZMin, gradZMax, minX, minY, nX, nY, stepX, stepY;
+  bool xDirection=1;
+  double gradZMin=-1, gradZMax=1, minX=0, minY=0, nX=10, nY=10, stepX=1, stepY=1;
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();
@@ -104,7 +104,7 @@ PrimitivePtr EditableMatrixFactory::generatePrimitive(ObjectStore *store, QXmlSt
 
   Q_ASSERT(store);
 
-  double minX, minY, nX, nY, stepX, stepY;
+  double minX=0, minY=0, nX=10, nY=10, stepX=1, stepY=1;
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();
@@ -174,9 +174,9 @@ PrimitivePtr DataMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStream
 
   Q_ASSERT(store);
 
-  bool doAve, doSkip;
-  int requestedXStart, requestedYStart, requestedXCount, requestedYCount, skip;
-  double minX, minY, stepX, stepY;
+  bool doAve=false, doSkip=false;
+  int requestedXStart=0, requestedYStart=0, requestedXCount=-1, requestedYCount=-1, skip=0;
+  double minX=0, minY=0, stepX=1, stepY=1;
   QString provider, file, field;
 
   while (!xml.atEnd()) {

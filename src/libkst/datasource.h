@@ -32,6 +32,7 @@
 #include "dateparser.h"
 #include "objectlist.h"
 #include "scalar.h"
+#include "string_kst.h"
 
 class QXmlStreamWriter;
 class QXmlStreamAttributes;
@@ -53,9 +54,8 @@ struct MatrixData {
 
 class String;
 class Scalar;
-class String;
 class DataSourceConfigWidget;
-typedef SharedPtr<Scalar> ScalarPtr;
+//typedef SharedPtr<Scalar> ScalarPtr;
 
 class KST_EXPORT DataSource : public Object {
   Q_OBJECT
@@ -258,9 +258,6 @@ class KST_EXPORT DataSource : public Object {
 
     /************************************************************/
     /* Methods for Scalars                                      */
-    /* all of the virtual methods, and                          */
-    /* DataSourcePluginInterface::scalarList(...)               */
-    /* must be defined                                          */
     /************************************************************/
     static QStringList scalarListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
 
@@ -276,6 +273,25 @@ class KST_EXPORT DataSource : public Object {
 
     /** Returns true if the scalar is valid, or false if it is not */
     virtual bool isValidScalar(const QString& field) const;
+
+    /************************************************************/
+    /* Methods for Strings                                      */
+    /************************************************************/
+    static QStringList stringListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
+
+    /** Returns true if the string list is complete, therefore the user should
+        not be able to edit the scalar combobox.  Default is true. */
+    virtual bool stringListIsComplete() const;
+
+    /** Returns the list of fields that support readString **/
+    virtual QStringList stringList() const;
+
+    /** Read the specified string **/
+    virtual int readString(QString &S, const QString& string);
+
+    /** Returns true if the string is valid, or false if it is not */
+    virtual bool isValidString(const QString& field) const;
+
 
   public Q_SLOTS:
     virtual void checkUpdate();
@@ -296,10 +312,13 @@ class KST_EXPORT DataSource : public Object {
     QStringList _fieldList;
 
     /** Place to store the list of matrices.  Base implementation returns this. */
-    mutable QStringList _matrixList;
+    QStringList _matrixList;
 
     /** Place to store the list of scalars.  Base implementation returns this. */
     QStringList _scalarList;
+
+    /** Place to store the list of strings.  Base implementation returns this. */
+    QStringList _stringList;
 
     /** The filename.  Populated by the base class constructor.  */
     QString _filename;

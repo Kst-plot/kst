@@ -31,10 +31,10 @@ PSDFactory::~PSDFactory() {
 DataObjectPtr PSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& xml) {
   Q_ASSERT(store);
 
-  double frequency, gaussianSigma;
-  int length, apodizeFunction, outputType;
+  double frequency=1.0, gaussianSigma=1.0;
+  int length=8, apodizeFunction=0, outputType=0;
   QString vectorName, vectorUnits, rateUnits, descriptiveName;
-  bool average, removeMean, apodize, interpolateHoles;
+  bool average=false, removeMean=false, apodize=false, interpolateHoles=false;
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();

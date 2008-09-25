@@ -13,6 +13,7 @@
 
 #include "debug.h"
 #include "scalar.h"
+#include "datascalar.h"
 #include "objectstore.h"
 
 namespace Kst {
@@ -28,18 +29,17 @@ ScalarFactory::~ScalarFactory() {
 
 
 PrimitivePtr ScalarFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
-  QByteArray data;
   QString descriptiveName;
 
   Q_ASSERT(store);
 
   bool orphan, editable;
-  double value;
+  double value=0.0;
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();
     if (xml.isStartElement()) {
-      if (n == "scalar") {
+      if (n == Scalar::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
         value = attrs.value("value").toString().toDouble();
         orphan = attrs.value("orphan").toString() == "true" ? true : false;
@@ -75,6 +75,74 @@ PrimitivePtr ScalarFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
   return scalar;
 }
 
+////////////////////////////////////////
+
+DataScalarFactory::DataScalarFactory()
+: PrimitiveFactory() {
+  registerFactory(DataScalar::staticTypeTag, this);
+}
+
+
+DataScalarFactory::~DataScalarFactory() {
+}
+
+
+PrimitivePtr DataScalarFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
+  QString descriptiveName;
+  Q_ASSERT(store);
+
+  QString provider, file, field;
+
+  while (!xml.atEnd()) {
+    const QString n = xml.name().toString();
+    if (xml.isStartElement()) {
+      if (n == DataScalar::staticTypeTag) {
+        QXmlStreamAttributes attrs = xml.attributes();
+        provider = attrs.value("provider").toString();
+        file = attrs.value("file").toString();
+        field = attrs.value("field").toString();
+
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          descriptiveName = attrs.value("descriptiveName").toString();
+        }
+        Object::processShortNameIndexAttributes(attrs);
+      } else {
+        
+        return 0;
+      }
+    } else if (xml.isEndElement()) {
+      if (n == DataScalar::staticTypeTag) {
+        break;
+      } else {
+        Debug::self()->log(QObject::tr("Error creating scalar from Kst file."), Debug::Warning);
+        return 0;
+      }
+    }
+    xml.readNext();
+  }
+
+  if (xml.hasError()) {
+    return 0;
+  }
+
+  Q_ASSERT(store);
+  DataSourcePtr dataSource = DataSource::findOrLoadSource(store, file);
+
+  if (!dataSource) {
+    return 0; //Couldn't find a suitable datasource
+  }
+
+  DataScalarPtr scalar = store->createObject<DataScalar>();
+
+  scalar->writeLock();
+  scalar->change(dataSource, field);
+
+  scalar->setDescriptiveName(descriptiveName);
+  scalar->update();
+  scalar->unlock();
+
+  return scalar;
+}
 
 }
 

@@ -31,10 +31,10 @@ ImageFactory::~ImageFactory() {
 RelationPtr ImageFactory::generateRelation(ObjectStore *store, QXmlStreamReader& xml) {
   Q_ASSERT(store);
 
-  double lowerThreshold, upperThreshold;
-  int numberOfContourLines, contourWeight;
+  double lowerThreshold=0, upperThreshold=1;
+  int numberOfContourLines=4, contourWeight=0;
   QString matrixName, paletteName, legend, contourColor, descriptiveName;
-  bool hasColorMap, hasContourMap, autoThreshold;
+  bool hasColorMap=true, hasContourMap=false, autoThreshold=true;
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();

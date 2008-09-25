@@ -31,8 +31,8 @@ HistogramFactory::~HistogramFactory() {
 DataObjectPtr HistogramFactory::generateObject(ObjectStore *store, QXmlStreamReader& xml) {
   Q_ASSERT(store);
 
-  double min, max;
-  int numberOfBins, normalizationMode;
+  double min=-1, max=1;
+  int numberOfBins=16, normalizationMode=0;
   QString VectorName, descriptiveName;
   bool realTimeAutoBin;
 

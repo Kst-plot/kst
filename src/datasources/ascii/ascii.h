@@ -38,21 +38,11 @@ class AsciiSource : public Kst::DataSource {
 
     int readField(double *v, const QString &field, int s, int n);
 
-    virtual int readMatrix(Kst::MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps);
-
-    bool matrixDimensions(const QString& matrix, int* xDim, int* yDim);
-
-    bool isValidField(const QString &field) const;
-
-    bool isValidMatrix(const QString &field) const;
-
     int samplesPerFrame(const QString &field);
 
     int frameCount(const QString& field = QString::null) const;
 
     QString fileType() const;
-
-    QStringList matrixList() const;
 
     void save(QXmlStreamWriter &s);
     void parseProperties(QXmlStreamAttributes &properties);
@@ -68,8 +58,6 @@ class AsciiSource : public Kst::DataSource {
     bool fieldListIsComplete() const;
 
     int readScalar(double &S, const QString& scalar);
-
-    bool isValidScalar(const QString& field) const;
 
     bool scalarListIsComplete() const;
 
@@ -124,6 +112,12 @@ class AsciiPlugin : public QObject, public Kst::DataSourcePluginInterface {
                                   bool *complete) const;
 
     virtual QStringList scalarList(QSettings *cfg,
+                                  const QString& filename,
+                                  const QString& type,
+                                  QString *typeSuggestion,
+                                  bool *complete) const;
+
+    virtual QStringList stringList(QSettings *cfg,
                                   const QString& filename,
                                   const QString& type,
                                   QString *typeSuggestion,
