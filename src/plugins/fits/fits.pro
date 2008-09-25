@@ -2,7 +2,4 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 SUBDIRS += \
-    sampleplugin \
-    filters \
-    fits
-
+    linear_weighted

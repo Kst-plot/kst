@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=fitlinear_weighted
+X-Kst-Plugin-Author=The University of Toronto
+Name=Fits - Linear Weighted Plugin
+Comment=Implements a Linear Weighted Fits Plugin for Kst.
