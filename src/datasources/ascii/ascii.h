@@ -59,13 +59,14 @@ class AsciiSource : public Kst::DataSource {
 
     int readScalar(double &S, const QString& scalar);
 
-    bool scalarListIsComplete() const;
+    int readString(QString &S, const QString& string);
 
     bool reset();
 
     class Config;
     static QStringList fieldListFor(const QString& filename, Config *cfg);
     static QStringList scalarListFor(const QString& filename, Config *cfg);
+    static QStringList stringListFor(const QString& filename, Config *cfg);
 
   private:
     int *_rowIndex;
@@ -78,7 +79,6 @@ class AsciiSource : public Kst::DataSource {
     uint _tmpBufSize;
     bool _haveHeader;
     bool _fieldListComplete;
-    bool _scalarListComplete;
 };
 
 

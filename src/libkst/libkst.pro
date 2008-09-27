@@ -24,6 +24,7 @@ SOURCES += \
     datasourcepluginfactory.cpp \
     datavector.cpp \
     datascalar.cpp \
+    datastring.cpp \
     dateparser.cpp \
     debug.cpp \
     editablematrix.cpp \
@@ -67,6 +68,7 @@ HEADERS += \
     datasourcepluginfactory.h \
     datavector.h \
     datascalar.h \
+    datastring.h \
     dateparser.h \
     debug.h \
     editablematrix.h \

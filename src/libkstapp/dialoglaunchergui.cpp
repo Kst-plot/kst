@@ -17,6 +17,7 @@
 #include "histogramdialog.h"
 #include "vectordialog.h"
 #include "scalardialog.h"
+#include "stringdialog.h"
 #include "matrixdialog.h"
 #include "powerspectrumdialog.h"
 #include "csddialog.h"
@@ -56,8 +57,10 @@ void DialogLauncherGui::showScalarDialog(QString &scalarname, ObjectPtr objectPt
 }
 
 
-void DialogLauncherGui::showStringDialog(ObjectPtr objectPtr) {
-  Q_UNUSED(objectPtr);
+void DialogLauncherGui::showStringDialog(QString &stringname, ObjectPtr objectPtr) {
+  StringDialog dialog(objectPtr, kstApp->mainWindow());
+  dialog.exec();
+  stringname = dialog.dataObjectName();
 }
 
 

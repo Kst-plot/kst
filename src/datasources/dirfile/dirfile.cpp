@@ -99,12 +99,14 @@ bool DirFileSource::init() {
   _fieldList.clear();
   _scalarList.clear();
   _matrixList.clear();
+  _stringList.clear();
 
   _frameCount = 0;
   FormatType *ft = GetFormat(_directoryName.toLatin1(), &err);
 
   if (err == GD_E_OK) {
     _scalarList.append("FRAMES");
+    _stringList.append("FILE");
 
     _fieldList.append("INDEX");
     for (int i = 0; i < ft->n_lincom; i++) {
@@ -215,6 +217,15 @@ void DirFileSource::save(QXmlStreamWriter &streamWriter) {
 int DirFileSource::readScalar(double &S, const QString& scalar) {
   if (scalar == "FRAMES") {
     S = _frameCount;
+    return 1;
+  }
+  return 0;
+}
+
+
+int DirFileSource::readString(QString &S, const QString& string) {
+  if (string == "FILE") {
+    S = _filename;
     return 1;
   }
   return 0;

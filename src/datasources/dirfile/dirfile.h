@@ -55,6 +55,8 @@ class DirFileSource : public Kst::DataSource {
 
     int readScalar(double &S, const QString& scalar);
 
+    int readString(QString &S, const QString& string);
+
   private:
     QString _directoryName;
 

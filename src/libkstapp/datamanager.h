@@ -40,6 +40,7 @@ class KST_EXPORT DataManager : public QDialog, Ui::DataManager
     void showVectorDialog();
     void showMatrixDialog();
     void showScalarDialog();
+    void showStringDialog();
 
     void showCurveDialog();
     void showCSDDialog();

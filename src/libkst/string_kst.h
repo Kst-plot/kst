@@ -66,8 +66,10 @@ class KST_EXPORT String : public Primitive {
   signals:
     void trigger();
 
-  private:
+  protected:
     QString _value;
+
+  private:
     bool _orphan : 1;
     bool _editable;
 };

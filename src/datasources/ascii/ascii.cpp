@@ -225,6 +225,7 @@ bool AsciiSource::reset() {
   _fieldList.clear();
   _scalarList.clear();
   _matrixList.clear();
+  _stringList.clear();
 
   update(); // Yuck - same problem as in the constructor presently.
 
@@ -296,8 +297,7 @@ Kst::Object::UpdateType AsciiSource::update() {
 
     // Re-update the scalar list since we have one now
     _scalarList = scalarListFor(_filename, _config);
-    _scalarListComplete = _scalarList.count() > 1;
-
+    _stringList = stringListFor(_filename, _config);
   }
 
   bool forceUpdate = false;
@@ -377,11 +377,6 @@ bool AsciiSource::fieldListIsComplete() const {
 }
 
 
-bool AsciiSource::scalarListIsComplete() const {
-  return _scalarListComplete;
-}
-
-
 int AsciiSource::readScalar(double &S, const QString& scalar) {
   if (scalar == "FRAMES") {
     S = _numFrames;
@@ -389,6 +384,16 @@ int AsciiSource::readScalar(double &S, const QString& scalar) {
   }
   return 0;
 }
+
+
+int AsciiSource::readString(QString &S, const QString& string) {
+  if (string == "FILE") {
+    S = _filename;
+    return 1;
+  }
+  return 0;
+}
+
 
 
 int AsciiSource::readField(double *v, const QString& field, int s, int n) {
@@ -552,6 +557,22 @@ QStringList AsciiSource::scalarListFor(const QString& filename, AsciiSource::Con
   file.close();
 
   rc += "FRAMES";
+  return rc;
+
+}
+
+QStringList AsciiSource::stringListFor(const QString& filename, AsciiSource::Config *cfg) {
+  Q_UNUSED(cfg)
+  QStringList rc;
+  QFile file(filename);
+
+  if (!file.open(QIODevice::ReadOnly)) {
+    return rc;
+  }
+
+  file.close();
+
+  rc += "FILE";
   return rc;
 
 }
@@ -949,9 +970,7 @@ QStringList AsciiPlugin::stringList(QSettings *cfg,
 
   AsciiSource::Config config;
   config.read(cfg, filename);
-  QStringList rc;// = AsciiSource::scalarListFor(filename, &config);
-
-  rc.append("FILENAME");
+  QStringList rc = AsciiSource::stringListFor(filename, &config);
 
   if (complete) {
     *complete = rc.count() > 1;

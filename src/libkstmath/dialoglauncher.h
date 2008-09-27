@@ -49,7 +49,7 @@ class KST_EXPORT DialogLauncher : public QObject {
 
     virtual void showScalarDialog(QString &scalarname, ObjectPtr objectPtr = 0);
 
-    virtual void showStringDialog(ObjectPtr objectPtr = 0);
+    virtual void showStringDialog(QString &scalarname, ObjectPtr objectPtr = 0);
 
     //standard objects
     virtual void showCurveDialog(ObjectPtr objectPtr = 0, VectorPtr vector = 0);

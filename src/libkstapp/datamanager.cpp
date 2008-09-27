@@ -88,10 +88,10 @@ DataManager::DataManager(QWidget *parent, Document *doc)
    action = new DataButtonAction(tr("Scalar"));
    connect(action, SIGNAL(triggered()), this, SLOT(showScalarDialog()));
    _primitives->addAction(action);
-// 
-//   action = new DataButtonAction(tr("String"));
-//   connect(action, SIGNAL(triggered()), this, SLOT(showStringDialog()));
-//   _primitives->addAction(action);
+ 
+   action = new DataButtonAction(tr("String"));
+   connect(action, SIGNAL(triggered()), this, SLOT(showStringDialog()));
+   _primitives->addAction(action);
 
   action = new DataButtonAction(tr("Curve"));
   connect(action, SIGNAL(triggered()), this, SLOT(showCurveDialog()));
@@ -341,6 +341,13 @@ void DataManager::showMatrixDialog() {
 void DataManager::showScalarDialog() {
   QString scalarName;
   DialogLauncher::self()->showScalarDialog(scalarName);
+  _doc->session()->triggerReset();
+}
+
+
+void DataManager::showStringDialog() {
+  QString stringName;
+  DialogLauncher::self()->showStringDialog(stringName);
   _doc->session()->triggerReset();
 }
 

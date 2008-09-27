@@ -31,10 +31,10 @@ CSDFactory::~CSDFactory() {
 DataObjectPtr CSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& xml) {
   Q_ASSERT(store);
 
-  double frequency, gaussianSigma;
-  int length, windowSize, apodizeFunction, outputType;
+  double frequency=1.0, gaussianSigma=1.0;
+  int length=8, windowSize=8, apodizeFunction=0, outputType=0;
   QString vectorName, vectorUnits, rateUnits, descriptiveName;
-  bool average, removeMean, apodize;
+  bool average=false, removeMean=false, apodize=false;
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();

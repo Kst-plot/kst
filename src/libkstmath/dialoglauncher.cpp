@@ -70,8 +70,9 @@ void DialogLauncher::showScalarDialog(QString &scalarname, ObjectPtr objectPtr) 
 }
 
 
-void DialogLauncher::showStringDialog(ObjectPtr objectPtr) {
+void DialogLauncher::showStringDialog(QString &scalarname, ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
+  Q_UNUSED(scalarname);
 }
 
 

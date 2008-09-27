@@ -30,7 +30,7 @@ class KST_EXPORT DialogLauncherGui : public DialogLauncher {
 
     virtual void showScalarDialog(QString &scalarname, ObjectPtr objectPtr = 0);
 
-    virtual void showStringDialog(ObjectPtr objectPtr = 0);
+    virtual void showStringDialog(QString &stringname, ObjectPtr objectPtr = 0);
 
     //standard objects
     virtual void showCurveDialog(ObjectPtr objectPtr = 0, VectorPtr vector = 0);

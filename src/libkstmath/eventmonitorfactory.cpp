@@ -32,8 +32,8 @@ DataObjectPtr EventMonitorFactory::generateObject(ObjectStore *store, QXmlStream
   Q_ASSERT(store);
 
   QString equation, description, emailRecipients, script;
-  bool logDebug, logEmail, logELOG;
-  int logLevel;
+  bool logDebug=false, logEmail=false, logELOG=false;
+  int logLevel=1;
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();
