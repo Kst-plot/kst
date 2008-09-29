@@ -135,19 +135,6 @@ class KST_EXPORT DataSource : public Object {
     virtual QString descriptionTip() const;
 
     /************************************************************/
-    /* Methods for Metadata:                                    */
-    /* not currently used.  Will be replaced with strings and   */
-    /* scalars, and will probably all be removed                */
-    /************************************************************/
-    virtual const QHash<QString, String*>& metaData() const;
-
-    virtual QString metaData(const QString& key) const;
-
-    virtual bool hasMetaData() const;
-
-    virtual bool hasMetaData(const QString& key) const;
-
-    /************************************************************/
     /* Methods for writing                                      */
     /* only used by d2d - may be reworked (remove this note     */
     /* if you use it)                                           */
@@ -327,8 +314,6 @@ class KST_EXPORT DataSource : public Object {
 
     /** The source type name. */
     QString _source;
-
-    QHash<QString, String*> _metaData;
 
     QSettings *_cfg;
 

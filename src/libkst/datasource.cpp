@@ -583,9 +583,6 @@ void DataSource::processUpdate(ObjectPtr object) {
 
 
 void DataSource::deleteDependents() {
-  for (QHash<QString, String*>::Iterator it = _metaData.begin(); it != _metaData.end(); ++it) {
-    _store->removeObject(it.value());
-  }
 }
 
 
@@ -808,30 +805,6 @@ bool DataSource::isEmpty() const {
 
 bool DataSource::reset() {
   return false;
-}
-
-
-const QHash<QString, String*>& DataSource::metaData() const {
-  return _metaData;
-}
-
-
-QString DataSource::metaData(const QString& key) const {
-  if (_metaData[key]) {
-    return _metaData[key]->value();
-  } else {
-    return QString::null;
-  }
-}
-
-
-bool DataSource::hasMetaData() const {
-  return !_metaData.isEmpty();
-}
-
-
-bool DataSource::hasMetaData(const QString& key) const {
-  return (_metaData[key] != NULL);
 }
 
 
