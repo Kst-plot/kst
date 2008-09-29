@@ -1,7 +1,8 @@
 Crash deleting last tab:
 start kst, and in the only tab, select rmb->close.  CRASH!
 This is especially a problem since this is what TabWidget->clear() does.  TabWidget->clear() is used when opening
-a file to get rid of all of the old tabs.  Currently, clear() is not called, so all of the old tabs linger after opening a file.
+a file to get rid of all of the old tabs.   As a temp hack (to allow file opening) clear() is not called on file open,
+so all of the old tabs linger after opening a file.  This should be reverted once the bug is fixed.
 
 
 
