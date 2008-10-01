@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=fitgradient_unweighted
+X-Kst-Plugin-Author=The University of Toronto
+Name=Fits - Gradient Plugin
+Comment=Implements a Gradient Fits Plugin for Kst.
