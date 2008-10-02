@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=fitsinusoid_unweighted
+X-Kst-Plugin-Author=The University of Toronto
+Name=Fits - Sinusoid Plugin
+Comment=Implements a Sinusoid Fits Plugin for Kst.

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=fitpolynomial_unweighted
+X-Kst-Plugin-Author=The University of Toronto
+Name=Fits - Polynomial Plugin
+Comment=Implements a Polynomial Fits Plugin for Kst.
