@@ -279,6 +279,18 @@ void FitGradientWeightedSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
+QString FitGradientWeightedSource::parameterName(int index) const {
+  QString parameter;
+  switch (index) {
+    case 0:
+      parameter = "Gradient";
+      break;
+  }
+
+  return parameter;
+}
+
+
 // Name used to identify the plugin.  Used when loading the plugin.
 QString FitGradientWeightedPlugin::pluginName() const { return "Gradient Weighted Fit"; }
 QString FitGradientWeightedPlugin::pluginDescription() const { return "Generates a gradient weighted fit for a set of data."; }

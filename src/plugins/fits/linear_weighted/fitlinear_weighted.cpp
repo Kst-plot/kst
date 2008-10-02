@@ -183,7 +183,7 @@ bool FitLinearWeightedSource::algorithm() {
 
   int i = 0;
   int iLength;
-  int iReturn = -1;
+  bool bReturn = false;
   double* pInputs[3];
   double c0 = 0.0;
   double c1 = 0.0;
@@ -212,13 +212,13 @@ bool FitLinearWeightedSource::algorithm() {
       outputVectorYCovariance->value()[2] = cov11;
 
       outputScalar->setValue(dSumSq / ( (double)iLength - 2.0 ));
-      iReturn = 0;
+      bReturn = true;
     }
   }
 
   postcursor( true, pInputs );
 
-  return iReturn;
+  return bReturn;
 }
 
 
@@ -280,6 +280,21 @@ QStringList FitLinearWeightedSource::outputStringList() const {
 void FitLinearWeightedSource::saveProperties(QXmlStreamWriter &s) {
   Q_UNUSED(s);
 //   s.writeAttribute("value", _configValue);
+}
+
+
+QString FitLinearWeightedSource::parameterName(int index) const {
+  QString parameter;
+  switch (index) {
+    case 0:
+      parameter = "Intercept";
+      break;
+    case 1:
+      parameter = "Gradient";
+      break;
+  }
+
+  return parameter;
 }
 
 

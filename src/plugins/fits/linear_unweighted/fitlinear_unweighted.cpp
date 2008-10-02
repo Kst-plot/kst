@@ -261,6 +261,21 @@ void FitLinearUnweightedSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
+QString FitLinearUnweightedSource::parameterName(int index) const {
+  QString parameter;
+  switch (index) {
+    case 0:
+      parameter = "Intercept";
+      break;
+    case 1:
+      parameter = "Gradient";
+      break;
+  }
+
+  return parameter;
+}
+
+
 // Name used to identify the plugin.  Used when loading the plugin.
 QString FitLinearUnweightedPlugin::pluginName() const { return "Linear Fit"; }
 QString FitLinearUnweightedPlugin::pluginDescription() const { return "Generates a linear fit for a set of data."; }

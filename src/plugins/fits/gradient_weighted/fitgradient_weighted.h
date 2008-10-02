@@ -45,6 +45,8 @@ class FitGradientWeightedSource : public Kst::BasicPlugin {
     FitGradientWeightedSource(Kst::ObjectStore *store);
     ~FitGradientWeightedSource();
 
+    virtual QString parameterName(int index) const;
+
   friend class Kst::ObjectStore;
 
 

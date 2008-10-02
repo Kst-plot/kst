@@ -19,6 +19,8 @@
 #include "objectstore.h"
 #include "curve.h"
 
+#include <QMessageBox>
+
 namespace Kst {
 
 FilterFitTab::FilterFitTab(QString& pluginName, QWidget *parent)
@@ -165,6 +167,13 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
 
   BasicPluginPtr dataObject = kst_cast<BasicPlugin>(DataObject::createPlugin(_pluginName, _document->objectStore(), _filterFitTab->configWidget()));
   Q_ASSERT(dataObject);
+
+  if (!dataObject->isValid()) {
+    _document->objectStore()->removeObject(dataObject);
+    QMessageBox::warning(this, tr("Kst"), tr("Unable to create Plugin Object using provided parameters."));
+
+    return 0;
+  }
 
   if (_plotItem) {
     CurvePtr curve = _document->objectStore()->createObject<Curve>();

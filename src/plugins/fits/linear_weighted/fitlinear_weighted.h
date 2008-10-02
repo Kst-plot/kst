@@ -41,9 +41,12 @@ class FitLinearWeightedSource : public Kst::BasicPlugin {
 
     virtual void saveProperties(QXmlStreamWriter &s);
 
+
   protected:
     FitLinearWeightedSource(Kst::ObjectStore *store);
     ~FitLinearWeightedSource();
+
+    virtual QString parameterName(int index) const;
 
   friend class Kst::ObjectStore;
 

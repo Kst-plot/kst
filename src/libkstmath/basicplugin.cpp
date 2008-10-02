@@ -24,6 +24,7 @@
 #include "dialoglauncher.h"
 #include "datacollection.h"
 #include "objectstore.h"
+#include "dataobjectplugin.h"
 
 namespace Kst {
 
@@ -31,7 +32,7 @@ const QString BasicPlugin::staticTypeString = I18N_NOOP("Plugin");
 const QString BasicPlugin::staticTypeTag = I18N_NOOP("plugin");
 
 BasicPlugin::BasicPlugin(ObjectStore *store)
-: DataObject(store), _isFit(false) {
+: DataObject(store) {
   _typeString = i18n("Plugin");
   _type = "Plugin";
 
@@ -240,7 +241,7 @@ Object::UpdateType BasicPlugin::update() {
   //Perform update on the outputs
   updateOutput();
 
-  createFitScalars();
+  createScalars();
 
   unlockInputsAndOutputs();
 
@@ -249,12 +250,12 @@ Object::UpdateType BasicPlugin::update() {
 
 
 // FIXME: BasicPlugin should not know about fit scalars!!
-void BasicPlugin::createFitScalars() {
+void BasicPlugin::createScalars() {
   // Assumes that this is called with a write lock in place on this object
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  if (_isFit && _outputVectors.contains("Parameters")) {
-    VectorPtr vectorParam = _outputVectors["Parameters"];
+  if (_outputVectors.contains("Parameters Vector")) {
+    VectorPtr vectorParam = _outputVectors["Parameters Vector"];
     if (vectorParam) {
       QString paramName;
       int i = 0;
@@ -268,8 +269,9 @@ void BasicPlugin::createFitScalars() {
         if (!_outputScalars.contains(paramName)) {
           ScalarPtr s = store()->createObject<Scalar>();
           s->setProvider(this);
-          //FIXME: set slaveName
+          s->setSlaveName(paramName);
           s->setValue(scalarValue);
+          s->writeLock();
           _outputScalars.insert(paramName, s);
         } else {
           _outputScalars[paramName]->setValue(scalarValue);

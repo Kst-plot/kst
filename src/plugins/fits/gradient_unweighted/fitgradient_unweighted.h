@@ -44,6 +44,8 @@ class FitGradientUnweightedSource : public Kst::BasicPlugin {
     FitGradientUnweightedSource(Kst::ObjectStore *store);
     ~FitGradientUnweightedSource();
 
+    virtual QString parameterName(int index) const;
+
   friend class Kst::ObjectStore;
 
 

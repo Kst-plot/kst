@@ -51,6 +51,9 @@ class KST_EXPORT BasicPlugin : public DataObject {
 
     virtual QString descriptionTip() const;
 
+    // Validator of plugin data.  Expensive, only use to verify successful creation.
+    bool isValid() { return algorithm(); }
+
   public slots:
     //Pure virtual slots from DataObject
     //Each plugin can provide an implementation or use the default
@@ -88,9 +91,7 @@ class KST_EXPORT BasicPlugin : public DataObject {
     virtual void save(QXmlStreamWriter &s);
     virtual void saveProperties(QXmlStreamWriter &s);
 
-    bool isFit() const { return _isFit; }
-    // FIXME: remove this
-    void createFitScalars();
+    void createScalars();
     QString label(int precision) const;
 
   protected:
