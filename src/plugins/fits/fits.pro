@@ -7,5 +7,7 @@ SUBDIRS += \
     linear_weighted \
     linear_unweighted \
     polynomial_unweighted \
-    sinusoid_unweighted
+    polynomial_weighted \
+    sinusoid_unweighted \
+    sinusoid_weighted
 
