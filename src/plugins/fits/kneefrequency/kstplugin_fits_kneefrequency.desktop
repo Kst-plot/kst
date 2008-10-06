@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=fitkneefrequency
+X-Kst-Plugin-Author=The University of Toronto
+Name=Fits - Knee Frequency Plugin
+Comment=Implements a Knee Frequency Fits Plugin for Kst.

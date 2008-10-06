@@ -170,7 +170,9 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
 
   if (!dataObject->isValid()) {
     _document->objectStore()->removeObject(dataObject);
-    QMessageBox::warning(this, tr("Kst"), tr("Unable to create Plugin Object using provided parameters."));
+    QString msg(tr("Unable to create Plugin Object using provided parameters.\n\n"));
+    msg += dataObject->errorMessage();
+    QMessageBox::warning(this, tr("Kst"), msg);
 
     return 0;
   }

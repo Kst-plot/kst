@@ -53,6 +53,7 @@ class KST_EXPORT BasicPlugin : public DataObject {
 
     // Validator of plugin data.  Expensive, only use to verify successful creation.
     bool isValid() { return algorithm(); }
+    QString errorMessage() { return _errorString; }
 
   public slots:
     //Pure virtual slots from DataObject
@@ -99,7 +100,7 @@ class KST_EXPORT BasicPlugin : public DataObject {
     virtual ~BasicPlugin();
 
     virtual QString parameterName(int index) const;
-    bool _isFit;
+    QString _errorString;
 
   private:
     bool inputsExist() const;
