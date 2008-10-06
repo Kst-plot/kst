@@ -2,6 +2,7 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 SUBDIRS += \
+    exponential_unweighted \
     gradient_weighted \
     gradient_unweighted \
     kneefrequency \
