@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=fitlorentzian_unweighted
+X-Kst-Plugin-Author=The University of Toronto
+Name=Fits - Lorentzian Plugin
+Comment=Implements a Lorentzian Fits Plugin for Kst.
