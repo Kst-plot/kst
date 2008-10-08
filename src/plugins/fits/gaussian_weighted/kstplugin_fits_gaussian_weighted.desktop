@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=fitgaussian_weighted
+X-Kst-Plugin-Author=The University of Toronto
+Name=Fits - Gradient Gaussian Plugin
+Comment=Implements a Gradient Gaussian Fits Plugin for Kst.
