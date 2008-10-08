@@ -3,6 +3,7 @@ CONFIG += ordered
 
 SUBDIRS += \
     exponential_unweighted \
+    exponential_weighted \
     gaussian_unweighted \
     gradient_weighted \
     gradient_unweighted \
