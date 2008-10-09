@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=chop
+X-Kst-Plugin-Author=The University of Toronto
+Name=Chop Data Object Plugin
+Comment=Implements a Chop Data Object Plugin for Kst.
