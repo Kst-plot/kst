@@ -13,9 +13,12 @@
 
 #include "dialogpage.h"
 
+#include "objectstore.h"
 #include "datacollection.h"
 #include "document.h"
 #include "basicplugin.h"
+
+#include <QMessageBox>
 
 namespace Kst {
 
@@ -71,8 +74,19 @@ QString BasicPluginDialog::tagString() const {
 
 
 ObjectPtr BasicPluginDialog::createNewDataObject() {
-  DataObjectPtr dataObject = DataObject::createPlugin(_pluginName, _document->objectStore(), _basicPluginTab->configWidget());
+  BasicPluginPtr dataObject = kst_cast<BasicPlugin>(DataObject::createPlugin(_pluginName, _document->objectStore(), _basicPluginTab->configWidget()));
+
   _basicPluginTab->configWidget()->save();
+
+  if (!dataObject->isValid()) {
+    _document->objectStore()->removeObject(dataObject);
+    QString msg(tr("Unable to create Plugin Object using provided parameters.\n\n"));
+    msg += dataObject->errorMessage();
+    QMessageBox::warning(this, tr("Kst"), msg);
+
+    return 0;
+  }
+
   return dataObject;
 }
 

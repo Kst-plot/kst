@@ -63,6 +63,7 @@ class KST_EXPORT DataManager : public QDialog, Ui::DataManager
 
     QToolBar *_primitives;
     QToolBar *_dataObjects;
+    QToolBar *_plugins;
     QToolBar *_fits;
     QToolBar *_filters;
 

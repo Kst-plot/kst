@@ -62,6 +62,10 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   _dataObjects->setOrientation(Qt::Vertical);
   _dataObjects->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
+  _plugins = new QToolBar(_objects);
+  _plugins->setOrientation(Qt::Vertical);
+  _plugins->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
   _fits = new QToolBar(_objects);
   _fits->setOrientation(Qt::Vertical);
   _fits->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
@@ -72,6 +76,7 @@ DataManager::DataManager(QWidget *parent, Document *doc)
 
   _objects->addItem(_primitives, tr("Create Primitive"));
   _objects->addItem(_dataObjects, tr("Create Data Object"));
+  _objects->addItem(_plugins, tr("Create Plugin"));
   _objects->addItem(_fits, tr("Create Fit"));
   _objects->addItem(_filters, tr("Create Filter"));
 
@@ -124,7 +129,7 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   foreach (QString pluginName, DataObject::dataObjectPluginList()) {
     action = new DataButtonAction(tr(pluginName));
     connect(action, SIGNAL(triggered(QString&)), this, SLOT(showPluginDialog(QString&)));
-    _dataObjects->addAction(action);
+    _plugins->addAction(action);
   }
 
   foreach (QString pluginName, DataObject::fitsPluginList()) {
