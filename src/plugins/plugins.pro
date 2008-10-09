@@ -4,5 +4,5 @@ CONFIG += ordered
 SUBDIRS += \
     sampleplugin \
     filters \
-    fits
-
+    fits \
+    dataobject
