@@ -3,5 +3,7 @@ CONFIG += ordered
 
 SUBDIRS += \
     bin \
-    chop
+    chop \
+    convolution \
+    correlation
 

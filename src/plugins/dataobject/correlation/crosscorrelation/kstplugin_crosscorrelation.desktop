@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=crosscorrelation
+X-Kst-Plugin-Author=The University of Toronto
+Name=Cross Correlation Data Object Plugin
+Comment=Implements a Cross Correlation Data Object Plugin for Kst.
