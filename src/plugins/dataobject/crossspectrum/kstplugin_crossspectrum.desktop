@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=crossspectrum
+X-Kst-Plugin-Author=The University of Toronto
+Name=Cross Spectrum Data Object Plugin
+Comment=Implements a Cross Spectrum Data Object Plugin for Kst.

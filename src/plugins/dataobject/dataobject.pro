@@ -5,5 +5,6 @@ SUBDIRS += \
     bin \
     chop \
     convolution \
-    correlation
+    correlation \
+    crossspectrum
 
