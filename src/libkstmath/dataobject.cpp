@@ -139,6 +139,7 @@ QStringList DataObject::dataObjectPluginList() {
     }
   }
 
+  plugins.sort();
   return plugins;
 }
 
@@ -156,6 +157,7 @@ QStringList DataObject::filterPluginList() {
     }
   }
 
+  plugins.sort();
   return plugins;
 }
 
@@ -173,6 +175,7 @@ QStringList DataObject::fitsPluginList() {
     }
   }
 
+  plugins.sort();
   return plugins;
 }
 
