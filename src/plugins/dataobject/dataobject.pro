@@ -7,5 +7,6 @@ SUBDIRS += \
     convolution \
     correlation \
     crossspectrum \
-    cumulativesum
+    cumulativesum \
+    differentiation
 

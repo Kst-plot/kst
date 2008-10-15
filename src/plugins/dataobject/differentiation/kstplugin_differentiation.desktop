@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=differentiation
+X-Kst-Plugin-Author=The University of Toronto
+Name=Differentiation Data Object Plugin
+Comment=Implements a Differentiation Data Object Plugin for Kst.
