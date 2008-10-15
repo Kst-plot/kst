@@ -6,5 +6,6 @@ SUBDIRS += \
     chop \
     convolution \
     correlation \
-    crossspectrum
+    crossspectrum \
+    cumulativesum
 
