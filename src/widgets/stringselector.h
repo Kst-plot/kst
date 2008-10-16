@@ -34,10 +34,24 @@ class KST_EXPORT StringSelector : public QWidget, public Ui::StringSelector {
     StringPtr selectedString() const;
     void setSelectedString(StringPtr selectedString);
 
+    bool allowEmptySelection() const;
+    void setAllowEmptySelection(bool allowEmptySelection);
+
+    void fillStrings();
+
+
   Q_SIGNALS:
-    void selectionChanged();
+    void selectionChanged(const QString&);
+
+  private Q_SLOTS:
+    void newString();
+    void editString();
+    void emitSelectionChanged();
+    void updateDescriptionTip();
 
   private:
+    bool _allowEmptySelection;
+
     ObjectStore *_store;
 };
 

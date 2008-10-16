@@ -11,12 +11,13 @@
 
 #include "stringselector.h"
 
+#include "dialoglauncher.h"
 #include "objectstore.h"
 
 namespace Kst {
 
 StringSelector::StringSelector(QWidget *parent, ObjectStore *store)
-  : QWidget(parent), _store(store) {
+  : QWidget(parent), _allowEmptySelection(false), _store(store) {
 
   setupUi(this);
 
@@ -28,6 +29,13 @@ StringSelector::StringSelector(QWidget *parent, ObjectStore *store)
   _newString->setFixedSize(size + 8, size + 8);
   _editString->setFixedSize(size + 8, size + 8);
   _selectString->setFixedSize(size + 8, size + 8);
+
+  fillStrings();
+
+  connect(_newString, SIGNAL(pressed()), this, SLOT(newString()));
+  connect(_editString, SIGNAL(pressed()), this, SLOT(editString()));
+  connect(_string, SIGNAL(activated(int)), this, SLOT(emitSelectionChanged()));
+  connect(_string, SIGNAL(currentIndexChanged(int)), this, SLOT(updateDescriptionTip()));
 }
 
 
@@ -37,18 +45,120 @@ StringSelector::~StringSelector() {
 
 void StringSelector::setObjectStore(ObjectStore *store) {
   _store = store;
+  fillStrings();
+}
+
+
+void StringSelector::updateDescriptionTip() {
+  if (selectedString()) {
+    setToolTip(selectedString()->descriptionTip());
+  } else {
+    setToolTip(QString());
+  }
+}
+
+
+void StringSelector::emitSelectionChanged() {
+  emit selectionChanged(_string->currentText());
 }
 
 
 StringPtr StringSelector::selectedString() const {
-  return 0;
+  return qVariantValue<String*>(_string->itemData(_string->currentIndex()));
 }
 
 
 void StringSelector::setSelectedString(StringPtr selectedString) {
-  Q_UNUSED(selectedString);
+  int i=-1,j;
+  for (j=0; j<_string->count() ; j++) {
+    if (selectedString.data() == (qVariantValue<String*>(_string->itemData(j)))) {
+      i=j;
+      break;
+    }
+  }
+  Q_ASSERT(i != -1);
+
+  _string->setCurrentIndex(i);
 }
 
+
+void StringSelector::newString() {
+  QString stringName;
+  DialogLauncher::self()->showStringDialog(stringName);
+  fillStrings();
+  StringPtr string = kst_cast<String>(_store->retrieveObject(stringName));
+
+  if (string) {
+    setSelectedString(string);
+    emitSelectionChanged();
+  }
+}
+
+
+void StringSelector::editString() {
+  QString stringName;
+  DialogLauncher::self()->showStringDialog(stringName, ObjectPtr(selectedString()));
+  fillStrings();
+}
+
+
+void StringSelector::fillStrings() {
+  if (!_store) {
+    return;
+  }
+
+  QHash<QString, StringPtr> strings;
+
+  StringList stringList = _store->getObjects<String>();
+
+  StringList::ConstIterator it = stringList.begin();
+  for (; it != stringList.end(); ++it) {
+    StringPtr string = (*it);
+
+    string->readLock();
+    strings.insert(string->Name(), string);
+    string->unlock();
+  }
+
+  QStringList list = strings.keys();
+
+  qSort(list);
+
+  StringPtr current = selectedString();
+
+  _string->clear();
+  foreach (QString string, list) {
+    StringPtr s = strings.value(string);
+    _string->addItem(string, qVariantFromValue(s.data()));
+  }
+
+  if (_allowEmptySelection) //reset the <None>
+    setAllowEmptySelection(true);
+
+  if (current)
+    setSelectedString(current);
+
+  _editString->setEnabled(_string->count() > 0);
+}
+
+
+bool StringSelector::allowEmptySelection() const {
+  return _allowEmptySelection;
+}
+
+
+void StringSelector::setAllowEmptySelection(bool allowEmptySelection) {
+  _allowEmptySelection = allowEmptySelection;
+
+  int i = _string->findText(tr("<None>"));
+  if (i != -1)
+    _string->removeItem(i);
+
+  if (_allowEmptySelection) {
+    _string->insertItem(0, tr("<None>"), qVariantFromValue(0));
+    _string->setCurrentIndex(0);
+  }
+}
 }
 
 // vim: ts=2 sw=2 et
