@@ -9,5 +9,6 @@ SUBDIRS += \
     crossspectrum \
     cumulativesum \
     differentiation \
-    effectivebandwidth
+    effectivebandwidth \
+    genericfilter
 
