@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=effectivebandwidth
+X-Kst-Plugin-Author=The University of Toronto
+Name=Effective Bandwidth Data Object Plugin
+Comment=Implements a Effective Bandwidth Data Object Plugin for Kst.

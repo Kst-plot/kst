@@ -8,5 +8,6 @@ SUBDIRS += \
     correlation \
     crossspectrum \
     cumulativesum \
-    differentiation
+    differentiation \
+    effectivebandwidth
 
