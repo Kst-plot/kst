@@ -701,5 +701,10 @@ QString DataVector::descriptionTip() const {
   }
   return IDstring;
 }
+
+QString DataVector::propertyString() const {
+  return i18n("%2 F0: %3 N: %4 of %1").arg(dataSource()->fileName()).arg(field()).arg(startFrame()).arg(numFrames());
+}
+
 }
 // vim: ts=2 sw=2 et

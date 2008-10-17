@@ -73,6 +73,7 @@ class KST_EXPORT DataString : public String {
 
     /** return true if it has a valid file and field, or false otherwise */
     bool isValid() const;
+    virtual QString propertyString() const;
 
   public Q_SLOTS:
     void sourceUpdated(ObjectPtr object);

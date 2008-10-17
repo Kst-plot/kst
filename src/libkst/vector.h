@@ -148,6 +148,7 @@ class Vector : public Primitive {
 
     virtual QString descriptionTip() const;
 
+    virtual QString sizeString() const;
   protected:
     /** current number of samples */
     int _size;

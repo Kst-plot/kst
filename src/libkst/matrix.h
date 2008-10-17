@@ -136,6 +136,7 @@ class KST_EXPORT Matrix : public Primitive {
 
     virtual void deleteDependents();
 
+    virtual QString sizeString() const;
   protected:
     int _NS;
     int _NRealS; // number of samples with real values

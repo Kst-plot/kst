@@ -211,5 +211,9 @@ bool DataScalar::isValid() const {
   return false;
 }
 
+QString DataScalar::propertyString() const {
+  return i18n("%2 of %1 = %3").arg(dataSource()->fileName()).arg(field()).arg(value());
+}
+
 }
 // vim: ts=2 sw=2 et

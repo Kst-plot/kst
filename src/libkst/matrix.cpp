@@ -607,7 +607,7 @@ void Matrix::change(QByteArray &data, uint nX, uint nY, double minX, double minY
   // fill in the raw array with the data
   for (i = 0; i < nX*nY && !qds.atEnd(); i++) {
     qds >> _z[i];  // stored in the same order as it was saved
-  }
+  } 
   if (i < nX*nY) {
     Debug::self()->log(i18n("Saved matrix contains less data than it claims."), Debug::Warning);
     resizeZ(i, false);
@@ -617,6 +617,10 @@ void Matrix::change(QByteArray &data, uint nX, uint nY, double minX, double minY
 
 QString Matrix::descriptionTip() const {
   return i18n("Matrix: %1\n %2 x %3").arg(Name()).arg(_nX).arg(_nY);
+}
+
+QString Matrix::sizeString() const {
+  return QString("%1x%2").arg(_nX).arg(_nY);
 }
 }
 // vim: ts=2 sw=2 et

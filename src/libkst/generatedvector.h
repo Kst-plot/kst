@@ -40,7 +40,7 @@ class KST_EXPORT GeneratedVector : public Vector {
     void setSaveData(bool save);
 
     virtual QString descriptionTip() const;
-
+    virtual QString propertyString() const;
   protected:
     GeneratedVector(ObjectStore *store);
 

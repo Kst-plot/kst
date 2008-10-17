@@ -62,6 +62,8 @@ class KST_EXPORT Scalar : public Primitive {
 
     virtual QString descriptionTip() const;
 
+    virtual QString propertyString() const;
+    virtual QString sizeString() const;
   public slots:
     double value() const;
 

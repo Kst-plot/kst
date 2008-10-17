@@ -40,8 +40,7 @@ public:
 
 private:
   QVariant dataObjectOutputData(DataObjectPtr parent, const QModelIndex& index) const;
-  QVariant vectorData(VectorPtr parent, const QModelIndex& index) const;
-  QVariant matrixData(MatrixPtr parent, const QModelIndex& index) const;
+  QVariant primitiveData(PrimitivePtr parent, const QModelIndex& index) const;
   QVariant dataObjectData(DataObjectPtr dataObject, const QModelIndex& index) const;
   QVariant relationData(RelationPtr relation, const QModelIndex& index) const;
 

@@ -92,9 +92,25 @@ void String::setValue(const QString& inV) {
   emit trigger();
 }
 
+
+QString String::_automaticDescriptiveName() const {
+  return _value;
+}
+
+
+
 QString String::descriptionTip() const {
   return i18n("String: %1").arg(Name());
 }
+
+QString String::sizeString() const {
+  return QString::number(_value.size());
+}
+
+QString String::propertyString() const {
+  return _value;
+}
+
 }
 
 // vim: ts=2 sw=2 et

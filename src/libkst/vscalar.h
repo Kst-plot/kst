@@ -1,5 +1,5 @@
 /***************************************************************************
-                          datastscalar.h  -  a scalar from a data source
+                          vscalar.h  -  a scalar from a sample of a vector field
                              -------------------
     begin                : September, 2008
     copyright            : (C) 2008 by cbn
@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef DATASCALAR_H
-#define DATASCALAR_H
+#ifndef VSCALAR_H
+#define VSCALAR_H
 
 #include "scalar.h"
 #include "datasource.h"
@@ -26,17 +26,17 @@ class QXmlStreamWriter;
 
 namespace Kst {
 
-/**A class for handling data scalars for kst.
+/**A class for handling vector scalars for kst.
  *@author cbn
  */
 
-/** A scalar which gets its value from a data file. */
-class KST_EXPORT DataScalar : public Scalar {
+/** A scalar which gets its value from a vector field in a data file. */
+class KST_EXPORT VScalar : public Scalar {
   Q_OBJECT
 
   protected:
-    DataScalar(ObjectStore *store);
-    virtual ~DataScalar();
+    VScalar(ObjectStore *store);
+    virtual ~VScalar();
 
     friend class ObjectStore;
 
@@ -47,8 +47,8 @@ class KST_EXPORT DataScalar : public Scalar {
     static const QString staticTypeString;
     static const QString staticTypeTag;
 
-    /** change the properties of a DataScalar */
-    void change(DataSourcePtr file, const QString &field);
+    /** change the properties of a VScalar */
+    void change(DataSourcePtr file, const QString &field, int f0);
     void changeFile(DataSourcePtr file);
 
     /** return the name of the file */
@@ -57,14 +57,17 @@ class KST_EXPORT DataScalar : public Scalar {
     /** return the field name */
     const QString& field() const;
 
+    /** return sample number */
+    int F0() const;
+
     /** Save scalar information */
     virtual void save(QXmlStreamWriter &s);
 
     /** Update the scalar.  Return true if there was new data. */
     virtual UpdateType update();
 
-    /** make a copy of the DataScalar */
-    SharedPtr<DataScalar> makeDuplicate() const;
+    /** make a copy of the VScalar */
+    SharedPtr<VScalar> makeDuplicate() const;
 
     /** the data source */
     DataSourcePtr dataSource() const;
@@ -85,10 +88,11 @@ class KST_EXPORT DataScalar : public Scalar {
     /** For the scalar field in the data source */
     QString _field;
 
+    int _f0;
 };
 
-typedef SharedPtr<DataScalar> DataScalarPtr;
-typedef ObjectList<DataScalar> DataScalarList;
+typedef SharedPtr<VScalar> VScalarPtr;
+typedef ObjectList<VScalar> VScalarList;
 
 }
 

@@ -29,6 +29,13 @@ class DataScalarFactory : public PrimitiveFactory {
     ~DataScalarFactory();
     PrimitivePtr generatePrimitive(ObjectStore *store, QXmlStreamReader& stream);
 };
+
+class VScalarFactory : public PrimitiveFactory {
+  public:
+    VScalarFactory();
+    ~VScalarFactory();
+    PrimitivePtr generatePrimitive(ObjectStore *store, QXmlStreamReader& stream);
+};
 }
 
 #endif

@@ -27,13 +27,12 @@ namespace Kst {
 class KST_EXPORT ScalarTab : public DataTab, Ui::ScalarTab {
   Q_OBJECT
   public:
-    enum ScalarMode { DataScalar, GeneratedScalar };
+    enum ScalarMode { DataScalar, GeneratedScalar, RVectorScalar };
 
     ScalarTab(ObjectStore *store, QWidget *parent = 0);
     virtual ~ScalarTab();
 
     ScalarMode scalarMode() const { return _mode; }
-    void setScalarMode(ScalarMode mode);
 
     QString value() const;
     void setValue(const QString &value);
@@ -47,17 +46,24 @@ class KST_EXPORT ScalarTab : public DataTab, Ui::ScalarTab {
     QString field() const;
     void setField(const QString &field);
 
-    void setFieldList(const QStringList &fieldList);
+    QString fieldRV() const;
+    void setFieldRV(const QString &field);
+
+    int F0() const;
+    void setF0(int f0);
 
     void hideGeneratedOptions();
     void hideDataOptions();
+    void setRVOptions();
+    void setDataOptions();
+
   Q_SIGNALS:
     void valueChanged();
     void sourceChanged();
 
   private Q_SLOTS:
     void readFromSourceChanged();
-    void textChanged();
+    void entryChanged();
     void fileNameChanged(const QString &file);
     void showConfigWidget();
 
@@ -75,10 +81,10 @@ class KST_EXPORT ScalarDialog : public DataDialog {
     virtual ~ScalarDialog();
 
   protected:
-//     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject();
     virtual ObjectPtr createNewGeneratedScalar();
     virtual ObjectPtr createNewDataScalar();
+    virtual ObjectPtr createNewVScalar();
     virtual ObjectPtr editExistingDataObject() const;
 
   private:

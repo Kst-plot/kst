@@ -724,6 +724,31 @@ QStringList DataSource::fieldList() const {
 }
 
 
+QStringList DataSource::fieldScalars(const QString& field) {
+  Q_UNUSED(field)
+  return QStringList();
+}
+
+int DataSource::readFieldScalars(double v[], const QString& field) {
+  Q_UNUSED(v)
+  Q_UNUSED(field)
+  return (0);
+}
+
+
+QStringList DataSource::fieldStrings(const QString& field) {
+  Q_UNUSED(field)
+  return QStringList();
+}
+
+
+int DataSource::readFieldScalars(QStringList &v, const QString& field) {
+  Q_UNUSED(v)
+  Q_UNUSED(field)
+  return (0);
+}
+
+
 QStringList DataSource::matrixList() const {
   return _matrixList;
 }

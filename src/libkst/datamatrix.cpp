@@ -577,5 +577,9 @@ QString DataMatrix::descriptionTip() const {
       ).arg(Name()).arg(dataSource()->fileName()).arg(field()).arg(_nX).arg(_nY);
 }
 
+QString DataMatrix::propertyString() const {
+  return i18n("%1 of %2").arg(field()).arg(dataSource()->fileName());
+}
+
 }
 // vim: ts=2 sw=2 et

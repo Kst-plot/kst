@@ -1,5 +1,5 @@
 /***************************************************************************
-                          dataststring.cpp  -  a string from a data source
+                          vscalar.cpp  -  a scalar from a data source
                              -------------------
     begin                : September, 2008
     copyright            : (C) 2008 by cbn
@@ -19,19 +19,19 @@
 #include <QXmlStreamWriter>
 
 #include "kst_i18n.h"
-#include "datastring.h"
+#include "vscalar.h"
 #include "debug.h"
 #include "objectstore.h"
 #include "updatemanager.h"
 
 namespace Kst {
 
-const QString DataString::staticTypeString = I18N_NOOP("Data String");
-const QString DataString::staticTypeTag = I18N_NOOP("datastring");
+const QString VScalar::staticTypeString = I18N_NOOP("Vector Field Scalar");
+const QString VScalar::staticTypeTag = I18N_NOOP("vscalar");
 
-/** Create a DataVector: raw data from a file */
-DataString::DataString(ObjectStore *store)
-: String(store) {
+/** Create a VScalar: a scalar from a single sample of a vector field */
+VScalar::VScalar(ObjectStore *store)
+: Scalar(store) {
 
   _file = 0L;
   _field = QString::null;
@@ -41,26 +41,27 @@ DataString::DataString(ObjectStore *store)
 }
 
 
-DataString::~DataString() {
+VScalar::~VScalar() {
   _file = 0;
 }
 
 
-QString DataString::_automaticDescriptiveName() const {
+QString VScalar::_automaticDescriptiveName() const {
   return field();
 }
 
 
-const QString& DataString::typeString() const {
+const QString& VScalar::typeString() const {
   return staticTypeString;
 }
 
 
-void DataString::change(DataSourcePtr in_file, const QString &in_field) {
+void VScalar::change(DataSourcePtr in_file, const QString &in_field, int in_f0) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   _field = in_field;
   _file = in_file;
+  _f0 = in_f0;
 
   if (_file) {
     _file->writeLock();
@@ -77,7 +78,7 @@ void DataString::change(DataSourcePtr in_file, const QString &in_field) {
 }
 
 
-void DataString::sourceUpdated(ObjectPtr object) {
+void VScalar::sourceUpdated(ObjectPtr object) {
   //qDebug() << "UP - Data Source update required by Vector" << shortName() << "for update of" << object->shortName();
   writeLock();
   UpdateManager::self()->updateStarted(object, this);
@@ -90,11 +91,11 @@ void DataString::sourceUpdated(ObjectPtr object) {
 }
 
 
-void DataString::changeFile(DataSourcePtr in_file) {
+void VScalar::changeFile(DataSourcePtr in_file) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (!in_file) {
-    Debug::self()->log(i18n("Data file for string %1 was not opened.", Name()), Debug::Warning);
+    Debug::self()->log(i18n("Data file for scalar %1 was not opened.", Name()), Debug::Warning);
   }
   _file = in_file;
   if (_file) {
@@ -108,7 +109,7 @@ void DataString::changeFile(DataSourcePtr in_file) {
 
 
 /** return the name of the file */
-QString DataString::filename() const {
+QString VScalar::filename() const {
   QString rc;
   if (_file) {
     _file->readLock();
@@ -120,20 +121,27 @@ QString DataString::filename() const {
 
 
 /** return the field */
-const QString& DataString::field() const {
+const QString& VScalar::field() const {
   return _field;
 }
 
+/** return the sample number */
+int VScalar::F0() const {
+  return _f0;
+}
 
-/** Save data string information */
-void DataString::save(QXmlStreamWriter &s) {
+/** Save data scalar information */
+void VScalar::save(QXmlStreamWriter &s) {
   if (_file) {
-    s.writeStartElement("datastring");
+    s.writeStartElement("vscalar");
+
     _file->readLock();
     s.writeAttribute("provider", _file->Name());
     s.writeAttribute("file", _file->fileName());
     _file->unlock();
+
     s.writeAttribute("field", _field);
+    s.writeAttribute("f0", QString::number(_f0));
 
     saveNameInfo(s, XNUM);
     s.writeEndElement();
@@ -141,15 +149,21 @@ void DataString::save(QXmlStreamWriter &s) {
 }
 
 
-/** Update a data String */
-Object::UpdateType DataString::update() {
+/** Update a data Scalar */
+Object::UpdateType VScalar::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
-  QString old_value;
+  double old_value;
   Object::UpdateType rc = NO_CHANGE;
   old_value = _value;
   if (_file) {
+    int f0;
+    if (_f0<0) { 
+      f0 = _file->frameCount(_field);
+    } else {
+      f0 = _f0;
+    }
     _file->writeLock();
-    _file->readString(_value, _field);
+    _file->readField(&_value, _field, f0, -1);
     _file->unlock();
     if (dirty() || (_value != old_value)) {
       rc = UPDATE;
@@ -166,42 +180,43 @@ Object::UpdateType DataString::update() {
 }
 
 
-DataStringPtr DataString::makeDuplicate() const {
+VScalarPtr VScalar::makeDuplicate() const {
   Q_ASSERT(store());
-  DataStringPtr string = store()->createObject<DataString>();
+  VScalarPtr scalar = store()->createObject<VScalar>();
 
-  string->writeLock();
-  string->change(_file, _field);
+  scalar->writeLock();
+  scalar->change(_file, _field, _f0);
   if (descriptiveNameIsManual()) {
-    string->setDescriptiveName(descriptiveName());
+    scalar->setDescriptiveName(descriptiveName());
   }
 
-  string->update();
-  string->unlock();
+  scalar->update();
+  scalar->unlock();
 
-  return string;
+  return scalar;
 }
 
 
-DataSourcePtr DataString::dataSource() const {
+DataSourcePtr VScalar::dataSource() const {
   return _file;
 }
 
 
-QString DataString::descriptionTip() const {
+QString VScalar::descriptionTip() const {
   QString IDstring;
 
   IDstring = i18n(
-      "Data String: %1 = %4\n"
+      "Data Scalar: %1 = %4\n"
       "  %2\n"
-      "  Field: %3"
-  ).arg(Name()).arg(dataSource()->fileName()).arg(field()).arg(value());
+      "  Field: %3\n"
+      "  Frame: %5"
+                 ).arg(Name()).arg(dataSource()->fileName()).arg(field()).arg(value()).arg(F0());
   return IDstring;
 }
 
 
 /** return true if it has a valid file and field, or false otherwise */
-bool DataString::isValid() const {
+bool VScalar::isValid() const {
   if (_file) {
     _file->readLock();
     bool rc = _file->isValidField(_field);
@@ -211,8 +226,9 @@ bool DataString::isValid() const {
   return false;
 }
 
-QString DataString::propertyString() const {
-  return i18n("%1 of %2").arg(_field).arg(dataSource()->fileName());
+QString VScalar::propertyString() const {
+  return i18n("%2 frame %3 of %1 = %4").arg(dataSource()->fileName()).arg(field()).arg(F0()).arg(value());
 }
+
 }
 // vim: ts=2 sw=2 et

@@ -35,11 +35,6 @@
 
 namespace Kst {
 
-// "Zero" means set to NAN.
-// Use 1 for a simple for() loop
-// Use 2 for memset (presently broken)
-#define ZERO_MEMORY 1
-
 #define INITSIZE 1
 
 const QString Vector::staticTypeString = I18N_NOOP("Vector");
@@ -345,14 +340,9 @@ void Vector::zero() {
 void Vector::blank() {
   setDirty();
   _ns_min = _ns_max = 0.0;
-#if 0
-  // FIXME: make this set NANs across, portably
-  memset(_v, 0, sizeof(double)*_size);
-#else
   for (int i = 0; i < _size; ++i) {
     _v[i] = NOPOINT;
   }
-#endif
   updateScalars();
 }
 
@@ -364,20 +354,11 @@ bool Vector::resize(int sz, bool init) {
     if (!_v) {
       return false;
     }
-#ifdef ZERO_MEMORY
     if (init && _size < sz) {
-#if ZERO_MEMORY == 2
-      abort(); // must use NAN here
-      memset(&_v[_size], 0, (sz - _size)*sizeof(double));
-#else
       for (int i = _size; i < sz; i++) {
         _v[i] = NOPOINT;
       }
-#endif
     }
-#else
-    abort();  // avoid unpleasant surprises
-#endif
     _size = sz;
     updateScalars();
   }
@@ -399,12 +380,12 @@ Object::UpdateType Vector::internalUpdate(Object::UpdateType providerRC) {
   if (_size > 0) {
     _is_rising = true;
 
-    // FIXME: expensive!!  Can we somehow cache this at least?
+    // Look for a valid (finite) point...
     for (i = 0; i < _size && !finite(_v[i]); i++) {
       // do nothing
     }
 
-    if (i == _size) {
+    if (i == _size) { // there were no finite points:
       if (!_isScalarList) {
         _scalars["sum"]->setValue(sum);
         _scalars["sumsquared"]->setValue(sum2);
@@ -619,7 +600,10 @@ QString Vector::descriptionTip() const {
   return i18n("Vector: %1\n  %2 samples\n%3").arg(Name()).arg(length()).arg(_provider->descriptionTip());
 }
 
-#undef ZERO_MEMORY
+QString Vector::sizeString() const {
+  return QString::number(length());
+}
+
 #undef INITSIZE
 
 }

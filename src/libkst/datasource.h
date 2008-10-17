@@ -55,7 +55,6 @@ struct MatrixData {
 class String;
 class Scalar;
 class DataSourceConfigWidget;
-//typedef SharedPtr<Scalar> ScalarPtr;
 
 class KST_EXPORT DataSource : public Object {
   Q_OBJECT
@@ -209,6 +208,38 @@ class KST_EXPORT DataSource : public Object {
       for different fields.  When implementing this, field may be ignored. */
     virtual int frameCount(const QString& field = QString::null) const;
 
+    /** Returns a list of scalars associated with a field by the data source.
+        These could be sample rate, calibrations, etc.  This list must be
+        complete the very first time it is called and must never change its
+        order or size, because readFieldScalars counts on its order and size. 
+        In order to remain fast, the data source can additionally assume that
+        readField() has already been called on the field, so the updating
+        of scalar values can be done there instead and cached for read by this
+        call.  */
+    virtual QStringList fieldScalars(const QString& field);
+
+    /** Read the values of the field scalars.  This is called for every field scalar
+        every time the vector is updated, so it needs to be kept very cheap.
+        Returns the number of scalars returned, and 0 on failure. V must
+        be pre allocated to the right size as given by the length of the list
+        returned by fieldScalars() */ 
+    virtual int readFieldScalars(double v[], const QString& field);
+
+    /** Returns a list of strings associated with a field by the data source.
+        These could be units, notes, etc.  This list must be
+        complete the very first time it is called and must never change its
+        order or size, because readFieldScalars counts on its order and size. 
+        In order to remain fast, the data source can additionally assume that
+        readField() has already been called on the field, so the updating
+        of string values can be done there instead and cached for read by this
+        call.  */
+    virtual QStringList fieldStrings(const QString& field);
+
+    /** Read the values of the field strings.  This is called 
+        every time the vector is updated, so it needs to be kept very cheap.
+        Returns the number of strings returned, and 0 on failure. */ 
+    virtual int readFieldScalars(QStringList &v, const QString& field);
+
     /************************************************************/
     /* Methods for Matrixes                                     */
     /************************************************************/
@@ -245,6 +276,7 @@ class KST_EXPORT DataSource : public Object {
 
     /************************************************************/
     /* Methods for Scalars                                      */
+    /* see also fieldScalars                                    */
     /************************************************************/
     static QStringList scalarListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
 

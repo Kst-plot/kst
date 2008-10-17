@@ -269,7 +269,9 @@ void VectorDialog::editSingleMode() {
 
 
 void VectorDialog::updateButtons() {
-  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_vectorTab->vectorMode() == VectorTab::GeneratedVector || !_vectorTab->field().isEmpty());
+  bool valid = _vectorTab->vectorMode() == VectorTab::GeneratedVector || !_vectorTab->field().isEmpty();
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(valid);
+  _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(valid);
 }
 
 

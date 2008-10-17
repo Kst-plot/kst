@@ -104,6 +104,10 @@ QString GeneratedVector::descriptionTip() const {
       "  %2 values from %3 to %4").arg(Name()).arg(length()).arg(_v[0]).arg(_v[length()-1]);
 }
 
+QString GeneratedVector::propertyString() const {
+  return i18n("%3 points from %1 to %2").arg(_v[0]).arg(_v[length()-1]).arg(length());
+}
+
 }
 
 // vim: ts=2 sw=2 et

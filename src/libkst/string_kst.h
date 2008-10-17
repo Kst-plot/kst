@@ -34,12 +34,14 @@ class KST_EXPORT String : public Primitive {
     static const QString staticTypeTag;
 
     virtual QString descriptionTip() const;
+    virtual QString sizeString() const;
+    virtual QString propertyString() const;
   protected:
     String(ObjectStore *store);
     virtual ~String();
 
     friend class ObjectStore;
-
+    virtual QString _automaticDescriptiveName() const;
   public:
     /** Save information */
     void save(QXmlStreamWriter &s);

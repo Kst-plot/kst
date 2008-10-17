@@ -16,6 +16,8 @@
 #include <dataobject.h>
 #include <relation.h>
 #include <datavector.h>
+#include <datascalar.h>
+#include <vscalar.h>
 #include <generatedvector.h>
 #include <datamatrix.h>
 #include <generatedmatrix.h>
@@ -44,27 +46,14 @@ void SessionModel::triggerReset() {
 
 const ObjectList<Object> SessionModel::generateObjectList() const {
   ObjectList<Object> ol;
-  ObjectList<DataVector> dvol = _store->getObjects<DataVector>();
-  ObjectList<GeneratedVector> gvol = _store->getObjects<GeneratedVector>();
-  ObjectList<DataMatrix> dmol = _store->getObjects<DataMatrix>();
-  ObjectList<GeneratedMatrix> gmol = _store->getObjects<GeneratedMatrix>();
+  ObjectList<Primitive> pol = _store->getObjects<Primitive>();
   ObjectList<Relation> rol = _store->getObjects<Relation>();
   ObjectList<DataObject> dol = _store->getObjects<DataObject>();
 
-  foreach(DataVector* vector, dvol) {
-    ol.append(vector);
-  }
-
-  foreach(GeneratedVector* vector, gvol) {
-    ol.append(vector);
-  }
-
-  foreach(DataMatrix* matrix, dmol) {
-    ol.append(matrix);
-  }
-
-  foreach(GeneratedMatrix* matrix, gmol) {
-    ol.append(matrix);
+  foreach(Primitive* P, pol) {
+    if (!P->provider()) {
+      ol.append(P);
+    }
   }
 
   foreach(Relation* relation, rol) {
@@ -150,10 +139,8 @@ QVariant SessionModel::data(const QModelIndex& index, int role) const {
     return dataObjectData(p, index);
   } else if (RelationPtr p = kst_cast<Relation>(objectList.at(row))) {
     return relationData(p, index);
-  } else if (VectorPtr p = kst_cast<Vector>(objectList.at(row))) {
-    return vectorData(p, index);
-  } else if (MatrixPtr p = kst_cast<Matrix>(objectList.at(row))) {
-    return matrixData(p, index);  
+  } else if (PrimitivePtr p=kst_cast<Primitive>(objectList.at(row))) {
+    return primitiveData(p, index);
   } else {
     return QVariant();
   }
@@ -171,92 +158,44 @@ QVariant SessionModel::dataObjectOutputData(DataObjectPtr parent, const QModelIn
   const int vectorCount = parent->outputVectors().count();
   if (parent->outputVectors().count() > row) {
     if (VectorPtr v = parent->outputVectors().values()[row]) {
-      return vectorData(v, index);
+      return primitiveData(v, index);
     }
   } else if (MatrixPtr m = parent->outputMatrices().values()[row - vectorCount]) {
-    return matrixData(m, index);
+    return primitiveData(m, index);
   }
   return rc;
 }
 
 
-QVariant SessionModel::vectorData(VectorPtr v, const QModelIndex& index) const {
+QVariant SessionModel::primitiveData(PrimitivePtr p, const QModelIndex& index) const {
   QVariant rc;
 
-  if (!v) {
+  if (!p) {
     return rc;
   }
 
+  p->readLock();
   switch (index.column()) {
     case 0:
-      {
-      v->readLock();
-      rc.setValue(v->Name());
-      v->unlock();
+      rc.setValue(p->Name());
       break;
-      }
     case 1:
-      v->readLock();
-      rc = v->typeString();
-      v->unlock();
+      rc = p->typeString();
       break;
     case 2:
       break;
     case 3:
-      v->readLock();
-      rc = v->length();
-      v->unlock();
+      rc = p->sizeString();
       break;
     case 4:
-      v->readLock();
-      rc = tr("[%1..%2]").arg(v->min()).arg(v->max());
-      v->unlock();
+      rc = p->propertyString();
       break;
     default:
       break;
   }
+  p->unlock();
   return rc;
 }
-
-
-QVariant SessionModel::matrixData(MatrixPtr matrix, const QModelIndex& index) const {
-  QVariant rc;
-
-  if (!matrix) {
-    return rc;
-  }
-
-  switch (index.column()) {
-    case 0:
-      {
-      matrix->readLock();
-      rc.setValue(matrix->Name());
-      matrix->unlock();
-      break;
-      }
-    case 1:
-      matrix->readLock();
-      rc = matrix->typeString();
-      matrix->unlock();
-      break;
-    case 2:
-      break;
-    case 3:
-      matrix->readLock();
-      rc = tr("[%1x%2]").arg(matrix->xNumSteps()).arg(matrix->yNumSteps());
-      matrix->unlock();
-      break;
-    case 4:
-      matrix->readLock();
-      rc = tr("[%1..%2]").arg(matrix->minValue()).arg(matrix->maxValue());
-      matrix->unlock();
-      break;
-    default:
-      break;
-  }
-  return rc;
-}
-
 
 QVariant SessionModel::dataObjectData(DataObjectPtr p, const QModelIndex& index) const {
   QVariant rc;

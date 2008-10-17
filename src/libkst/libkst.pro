@@ -51,7 +51,8 @@ SOURCES += \
     stringfactory.cpp \
     updatemanager.cpp \
     vector.cpp \
-    vectorfactory.cpp
+    vectorfactory.cpp \
+    vscalar.cpp
 
 !win32:SOURCES += stdinsource.cpp
 !macx:!win32:SOURCES += sysinfo.c psversion.c
@@ -107,4 +108,5 @@ HEADERS += \
     timezones.h \
     updatemanager.h \
     vector.h \
-    vectorfactory.h
+    vectorfactory.h \
+    vscalar.h

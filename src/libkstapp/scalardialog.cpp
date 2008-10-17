@@ -10,11 +10,13 @@
  ***************************************************************************/
 
 #include "datasourcedialog.h"
+
 #include "scalardialog.h"
 #include "enodes.h"
 #include "document.h"
 #include "objectstore.h"
 #include "datascalar.h"
+#include "vscalar.h"
 #include "dialogdefaults.h"
 
 #include <QPushButton>
@@ -27,8 +29,14 @@ ScalarTab::ScalarTab(ObjectStore *store, QWidget *parent)
   setupUi(this);
   setTabTitle(tr("Scalar"));
 
-  connect(_scalarValue, SIGNAL(textChanged(const QString&)), this, SLOT(textChanged()));
+  setDataOptions();
+
+  connect(_scalarValue, SIGNAL(textChanged(const QString&)), this, SLOT(entryChanged()));
+  connect(_start, SIGNAL(textChanged(const QString&)), this, SLOT(entryChanged()));
+  connect(_field, SIGNAL(textChanged(const QString&)), this, SLOT(entryChanged()));
+  connect(_fieldRV, SIGNAL(textChanged(const QString&)), this, SLOT(entryChanged()));
   connect(_readFromSource, SIGNAL(toggled(bool)), this, SLOT(readFromSourceChanged()));
+  connect(_readFromRVector, SIGNAL(toggled(bool)), this, SLOT(readFromSourceChanged()));
   connect(_fileName, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
   connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
 }
@@ -48,19 +56,32 @@ void ScalarTab::setValue(const QString &value) {
 }
 
 
-void ScalarTab::textChanged() {
+void ScalarTab::entryChanged() {
   emit valueChanged();
 }
 
+
 void ScalarTab::readFromSourceChanged() {
 
-  if (_readFromSource->isChecked())
-    setScalarMode(DataScalar);
-  else
-    setScalarMode(GeneratedScalar);
+  if (_readFromSource->isChecked()) {
+    _mode = DataScalar;
+    setDataOptions();
+  } else if (_readFromRVector->isChecked()) {
+    _mode = RVectorScalar;
+    setRVOptions();
+  } else {
+    _mode = GeneratedScalar;
+  }
+  _dataScalarGroup->setEnabled((_readFromSource->isChecked())||(_readFromRVector->isChecked()));
 
-  _dataScalarGroup->setEnabled(_readFromSource->isChecked());
-  _generatedScalarGroup->setEnabled(!_readFromSource->isChecked());
+  bool isRV = _readFromRVector->isChecked();
+
+  label_6->setEnabled(isRV);
+  label_7->setEnabled(isRV);
+  _start->setEnabled(isRV);
+  _countFromEnd->setEnabled(isRV);
+
+ _generatedScalarGroup->setEnabled(_generateX->isChecked());
 
   emit sourceChanged();
 }
@@ -70,6 +91,7 @@ void ScalarTab::readFromSourceChanged() {
 void ScalarTab::hideGeneratedOptions() {
   _readFromSource->setVisible(false);
   _generateX->setVisible(false);
+  _readFromRVector->setVisible(false);
   _generatedScalarGroup->setVisible(false);
 }
 
@@ -77,8 +99,27 @@ void ScalarTab::hideGeneratedOptions() {
 void ScalarTab::hideDataOptions() {
   _readFromSource->setVisible(false);
   _generateX->setVisible(false);
+  _readFromRVector->setVisible(false);
   _dataScalarGroup->setVisible(false);
   _generatedScalarGroup->setEnabled(true);
+}
+
+void ScalarTab::setRVOptions() {
+ // replace in right order to avoid flicker
+ _field->setVisible(false);
+ label_5->setVisible(false);
+ _fieldRV->setVisible(true);
+ label_8->setVisible(true);
+ _readFromRVector->setChecked(true);
+}
+
+
+void ScalarTab::setDataOptions() {
+  _fieldRV->setVisible(false);
+  label_8->setVisible(false);
+  _field->setVisible(true);
+  label_5->setVisible(true);
+  _readFromSource->setChecked(true);
 }
 
 
@@ -89,13 +130,6 @@ DataSourcePtr ScalarTab::dataSource() const {
 
 void ScalarTab::setDataSource(DataSourcePtr dataSource) {
   _dataSource = dataSource;
-}
-
-
-void ScalarTab::setScalarMode(ScalarMode mode) {
-  _mode = mode;
-  _readFromSource->setChecked(mode == DataScalar);
-  _generateX->setChecked(mode == GeneratedScalar);
 }
 
 
@@ -119,11 +153,22 @@ void ScalarTab::setField(const QString &field) {
 }
 
 
-void ScalarTab::setFieldList(const QStringList &fieldList) {
-  _field->clear();
-  _field->addItems(fieldList);
+QString ScalarTab::fieldRV() const {
+  return _fieldRV->currentText();
 }
 
+
+void ScalarTab::setFieldRV(const QString &field) {
+  _fieldRV->setCurrentIndex(_fieldRV->findText(field));
+}
+
+void ScalarTab::setF0(int f0) {
+  _start->setText(QString::number(f0));
+}
+
+int ScalarTab::F0() const {
+  return _start->text().toInt();
+}
 
 void ScalarTab::updateDataSource() {
   fileNameChanged(_fileName->file());
@@ -134,32 +179,39 @@ void ScalarTab::fileNameChanged(const QString &file) {
   QFileInfo info(file);
   if (!info.exists()) {
     _field->setEnabled(false);
+    _fieldRV->setEnabled(false);
     _configure->setEnabled(false);
     return;
   }
 
   _field->clear();
+  _fieldRV->clear();
   Q_ASSERT(_store);
   _dataSource = DataSource::findOrLoadSource(_store, file);
 
   if (!_dataSource) {
     _field->setEnabled(false);
+    _fieldRV->setEnabled(false);
     _configure->setEnabled(false);
     return; //Couldn't find a suitable datasource
   }
 
   _field->setEnabled(true);
+  _fieldRV->setEnabled(true);
 
   _dataSource->readLock();
 
   _field->addItems(_dataSource->scalarList());
   _field->setEditable(!_dataSource->scalarListIsComplete());
+  _fieldRV->addItems(_dataSource->fieldList());
+  _fieldRV->setEditable(!_dataSource->fieldListIsComplete());
   _configure->setEnabled(_dataSource->hasConfigWidget());
 
   //FIXME deal with time...
   //_dataRange->setAllowTime(ds->supportsTimeConversions());
 
   _dataSource->unlock();
+  modified();
   emit sourceChanged();
 }
 
@@ -188,6 +240,7 @@ ScalarDialog::ScalarDialog(ObjectPtr dataObject, QWidget *parent)
   }
 
   connect(_scalarTab, SIGNAL(valueChanged()), this, SLOT(updateButtons()));
+  connect(_scalarTab, SIGNAL(valueChanged()), this, SLOT(modified()));
   updateButtons();
 }
 
@@ -195,18 +248,20 @@ ScalarDialog::ScalarDialog(ObjectPtr dataObject, QWidget *parent)
 ScalarDialog::~ScalarDialog() {
 }
 
-
-// QString ScalarDialog::tagString() const {
-//   return DataDialog::tagString();
-// }
-
-
 void ScalarDialog::configureTab(ObjectPtr object) {
   if (DataScalarPtr dataScalar = kst_cast<DataScalar>(object)) {
     _scalarTab->setFile(dataScalar->dataSource()->fileName());
     _scalarTab->setDataSource(dataScalar->dataSource());
     _scalarTab->setField(dataScalar->field());
     _scalarTab->hideGeneratedOptions();
+    _scalarTab->setDataOptions();
+  } else if (VScalarPtr vScalar = kst_cast<VScalar>(object)) {
+    _scalarTab->setFile(vScalar->dataSource()->fileName());
+    _scalarTab->setDataSource(vScalar->dataSource());
+    _scalarTab->setFieldRV(vScalar->field());
+    _scalarTab->setF0(vScalar->F0());
+    _scalarTab->hideGeneratedOptions();
+    _scalarTab->setRVOptions();
   } else if (ScalarPtr scalar = kst_cast<Scalar>(object)) { // edit value scalar
     _scalarTab->hideDataOptions();
     _scalarTab->setValue(QString::number(scalar->value()));
@@ -216,8 +271,24 @@ void ScalarDialog::configureTab(ObjectPtr object) {
 }
 
 void ScalarDialog::updateButtons() {
-  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(!_scalarTab->value().isEmpty()
-                                                      || !_scalarTab->field().isEmpty());
+  bool valid=false;
+
+  switch(_scalarTab->scalarMode()) {
+  case ScalarTab::DataScalar:
+    valid = !_scalarTab->field().isEmpty();
+    break;
+  case ScalarTab::RVectorScalar:
+    valid = !_scalarTab->fieldRV().isEmpty();
+    break;
+  case ScalarTab::GeneratedScalar:
+    valid = !_scalarTab->value().isEmpty();
+    break;
+  default:
+    valid = false;
+  }
+
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(valid);
+  //_buttonBox->button(QDialogButtonBox::Apply)->setEnabled(valid);
 }
 
 
@@ -225,6 +296,8 @@ ObjectPtr ScalarDialog::createNewDataObject() {
   switch(_scalarTab->scalarMode()) {
   case ScalarTab::DataScalar:
     return createNewDataScalar();
+  case ScalarTab::RVectorScalar:
+    return createNewVScalar();
   case ScalarTab::GeneratedScalar:
     return createNewGeneratedScalar();
   default:
@@ -245,11 +318,6 @@ ObjectPtr ScalarDialog::createNewGeneratedScalar(){
   if (!ok) {
     return 0; //invalid
   }
-
-//   qDebug() << "Creating new scalar  ===>"
-//            << "\n\ttag:" << DataDialog::tagString()
-//            << "\n\tvalue:" << value
-//            << endl;
 
   ScalarPtr scalar = _document->objectStore()->createObject<Scalar>();
   scalar->setValue(value);
@@ -293,8 +361,62 @@ ObjectPtr ScalarDialog::createNewDataScalar() {
 }
 
 
+ObjectPtr ScalarDialog::createNewVScalar() {
+  const DataSourcePtr dataSource = _scalarTab->dataSource();
+
+  if (!dataSource)
+    return 0;
+
+  const QString field = _scalarTab->fieldRV();
+  const int f0 = _scalarTab->F0();
+
+  Q_ASSERT(_document && _document->objectStore());
+
+  VScalarPtr scalar = _document->objectStore()->createObject<VScalar>();
+
+  scalar->writeLock();
+  scalar->change(dataSource, field, f0);
+
+  scalar->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+
+  scalar->update();
+  scalar->unlock();
+
+  _dataObjectName = scalar->Name();
+
+  return scalar;
+}
+
+
 ObjectPtr ScalarDialog::editExistingDataObject() const {
-  if (ScalarPtr scalar = kst_cast<Scalar>(dataObject())) {
+  if (DataScalarPtr scalar = kst_cast<DataScalar>(dataObject())) {
+    const DataSourcePtr dataSource = _scalarTab->dataSource();
+
+    if (dataSource) {
+      const QString field = _scalarTab->field();
+      scalar->writeLock();
+      scalar->change(dataSource, field);
+
+      scalar->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+
+      scalar->immediateUpdate();
+      scalar->unlock();
+    }
+  } else if (VScalarPtr scalar = kst_cast<VScalar>(dataObject())) {
+    const DataSourcePtr dataSource = _scalarTab->dataSource();
+
+    if (dataSource) {
+      const QString field = _scalarTab->fieldRV();
+      int f0 = _scalarTab->F0();;
+      scalar->writeLock();
+      scalar->change(dataSource, field, f0);
+
+      scalar->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+
+      scalar->immediateUpdate();
+      scalar->unlock();
+    }
+  } else   if (ScalarPtr scalar = kst_cast<Scalar>(dataObject())) {
     bool ok;
     double value = _scalarTab->value().toDouble(&ok);
     if (!ok) {
@@ -306,6 +428,7 @@ ObjectPtr ScalarDialog::editExistingDataObject() const {
     scalar->immediateUpdate();
     scalar->unlock();
   }
+
   return dataObject();
 }
 

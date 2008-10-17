@@ -109,6 +109,7 @@ class KST_EXPORT DataVector : public Vector {
 
     virtual QString descriptionTip() const;
 
+    virtual QString propertyString() const;
   public Q_SLOTS:
     void sourceUpdated(ObjectPtr object);
 

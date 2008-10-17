@@ -168,5 +168,12 @@ QString Scalar::_automaticDescriptiveName() const {
   }
 }
 
+QString Scalar::sizeString() const {
+  return QString("1");
+}
+
+QString Scalar::propertyString() const {
+  return i18n("Value: %1").arg(value());
+}
 }
 // vim: et ts=2 sw=2

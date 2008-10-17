@@ -14,6 +14,7 @@
 #include "debug.h"
 #include "scalar.h"
 #include "datascalar.h"
+#include "vscalar.h"
 #include "objectstore.h"
 
 namespace Kst {
@@ -107,7 +108,6 @@ PrimitivePtr DataScalarFactory::generatePrimitive(ObjectStore *store, QXmlStream
         }
         Object::processShortNameIndexAttributes(attrs);
       } else {
-        
         return 0;
       }
     } else if (xml.isEndElement()) {
@@ -136,6 +136,75 @@ PrimitivePtr DataScalarFactory::generatePrimitive(ObjectStore *store, QXmlStream
 
   scalar->writeLock();
   scalar->change(dataSource, field);
+
+  scalar->setDescriptiveName(descriptiveName);
+  scalar->update();
+  scalar->unlock();
+
+  return scalar;
+}
+
+////////////////////////////////////////
+
+VScalarFactory::VScalarFactory()
+: PrimitiveFactory() {
+  registerFactory(VScalar::staticTypeTag, this);
+}
+
+
+VScalarFactory::~VScalarFactory() {
+}
+
+
+PrimitivePtr VScalarFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
+  QString descriptiveName;
+  Q_ASSERT(store);
+
+  QString provider, file, field;
+  int f0=0;
+
+  while (!xml.atEnd()) {
+    const QString n = xml.name().toString();
+    if (xml.isStartElement()) {
+      if (n == VScalar::staticTypeTag) {
+        QXmlStreamAttributes attrs = xml.attributes();
+        provider = attrs.value("provider").toString();
+        file = attrs.value("file").toString();
+        field = attrs.value("field").toString();
+        f0 = attrs.value("f0").toString().toInt();
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          descriptiveName = attrs.value("descriptiveName").toString();
+        }
+        Object::processShortNameIndexAttributes(attrs);
+      } else {
+        return 0;
+      }
+    } else if (xml.isEndElement()) {
+      if (n == VScalar::staticTypeTag) {
+        break;
+      } else {
+        Debug::self()->log(QObject::tr("Error creating scalar from Kst file."), Debug::Warning);
+        return 0;
+      }
+    }
+    xml.readNext();
+  }
+
+  if (xml.hasError()) {
+    return 0;
+  }
+
+  Q_ASSERT(store);
+  DataSourcePtr dataSource = DataSource::findOrLoadSource(store, file);
+
+  if (!dataSource) {
+    return 0; //Couldn't find a suitable datasource
+  }
+
+  VScalarPtr scalar = store->createObject<VScalar>();
+
+  scalar->writeLock();
+  scalar->change(dataSource, field, f0);
 
   scalar->setDescriptiveName(descriptiveName);
   scalar->update();

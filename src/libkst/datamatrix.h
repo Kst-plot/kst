@@ -81,6 +81,7 @@ class KST_EXPORT DataMatrix : public Matrix {
 
     virtual QString descriptionTip() const;
 
+    virtual QString propertyString() const;
   protected:
     DataMatrix(ObjectStore *store);
     virtual ~DataMatrix();

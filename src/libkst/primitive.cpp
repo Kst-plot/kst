@@ -107,6 +107,14 @@ void Primitive::immediateUpdate() {
   UpdateManager::self()->updateFinished(this,this);
 }
 
+QString Primitive::propertyString() const {
+  return QString("Base Class Property String");
+}
+
+QString Primitive::sizeString() const {
+  return QString("Base Class Size String");
+}
+
 }
 
 // vim: et sw=2 ts=2

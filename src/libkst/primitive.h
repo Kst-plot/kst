@@ -48,7 +48,8 @@ class KST_EXPORT Primitive : public Object {
     void setSlaveName(QString slaveName);
     QString slaveName() { return _slaveName; }
     void triggerUpdateSignal(ObjectPtr object);
-
+    virtual QString propertyString() const;
+    virtual QString  sizeString() const;
   Q_SIGNALS:
     void updated(ObjectPtr object);
 
