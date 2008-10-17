@@ -94,18 +94,23 @@ void String::setValue(const QString& inV) {
 
 
 QString String::_automaticDescriptiveName() const {
-  return _value;
+  if (_orphan) {
+    return value();
+  } else {
+    return Primitive::_automaticDescriptiveName();
+  }
 }
-
 
 
 QString String::descriptionTip() const {
   return i18n("String: %1").arg(Name());
 }
 
+
 QString String::sizeString() const {
   return QString::number(_value.size());
 }
+
 
 QString String::propertyString() const {
   return _value;
