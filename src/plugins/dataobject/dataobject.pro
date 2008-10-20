@@ -10,5 +10,6 @@ SUBDIRS += \
     cumulativesum \
     differentiation \
     effectivebandwidth \
-    genericfilter
+    genericfilter \
+    interpolations
 

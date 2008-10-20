@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=polynomialinterpolation
+X-Kst-Plugin-Author=The University of Toronto
+Name=Polynomial Interpolation Data Object Plugin
+Comment=Implements a Polynomial Interpolation Data Object Plugin for Kst.

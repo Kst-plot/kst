@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=linearinterpolation
+X-Kst-Plugin-Author=The University of Toronto
+Name=Linear Interpolation Data Object Plugin
+Comment=Implements a Linear Interpolation Data Object Plugin for Kst.
