@@ -11,5 +11,6 @@ SUBDIRS += \
     differentiation \
     effectivebandwidth \
     genericfilter \
-    interpolations
+    interpolations \
+    linefit
 
