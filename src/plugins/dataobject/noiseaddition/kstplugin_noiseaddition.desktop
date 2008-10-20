@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=noiseaddition
+X-Kst-Plugin-Author=The University of Toronto
+Name=Noise Addition Data Object Plugin
+Comment=Implements a Noise Addition Data Object Plugin for Kst.

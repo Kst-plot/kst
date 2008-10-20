@@ -12,5 +12,6 @@ SUBDIRS += \
     effectivebandwidth \
     genericfilter \
     interpolations \
-    linefit
+    linefit \
+    noiseaddition
 
