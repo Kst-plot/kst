@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=periodogram
+X-Kst-Plugin-Author=The University of Toronto
+Name=Periodogram Data Object Plugin
+Comment=Implements a Periodogram Data Object Plugin for Kst.

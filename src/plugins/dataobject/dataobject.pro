@@ -13,5 +13,6 @@ SUBDIRS += \
     genericfilter \
     interpolations \
     linefit \
-    noiseaddition
+    noiseaddition \
+    periodogram
 
