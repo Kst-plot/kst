@@ -14,5 +14,6 @@ SUBDIRS += \
     interpolations \
     linefit \
     noiseaddition \
-    periodogram
+    periodogram \
+    phase
 
