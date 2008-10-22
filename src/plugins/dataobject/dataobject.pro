@@ -16,5 +16,6 @@ SUBDIRS += \
     noiseaddition \
     periodogram \
     phase \
-    shift
+    shift \
+    statistics
 
