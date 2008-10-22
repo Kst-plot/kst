@@ -17,5 +17,7 @@ SUBDIRS += \
     periodogram \
     phase \
     shift \
-    statistics
+    statistics \
+    syncbin
+
 

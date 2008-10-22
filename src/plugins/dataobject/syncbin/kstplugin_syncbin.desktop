@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=syncbin
+X-Kst-Plugin-Author=The University of Toronto
+Name=Sync Bin Data Object Plugin
+Comment=Implements a Sync Bin Data Object Plugin for Kst.
