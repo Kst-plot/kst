@@ -254,7 +254,6 @@ void DataVector::save(QXmlStreamWriter &s) {
   if (_file) {
     s.writeStartElement("datavector");
     _file->readLock();
-    s.writeAttribute("provider", _file->Name());
     s.writeAttribute("file", _file->fileName());
     _file->unlock();
     s.writeAttribute("field", _field);
@@ -267,7 +266,11 @@ void DataVector::save(QXmlStreamWriter &s) {
       if (doAve()) {
         s.writeAttribute("doAve", "true");
       }
+    } else {
+      s.writeAttribute("skip", QString::number(-1));
+      s.writeAttribute("doAve", "false");
     }
+
     saveNameInfo(s, VNUM|XNUM);
     s.writeEndElement();
   }

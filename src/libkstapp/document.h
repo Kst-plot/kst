@@ -21,6 +21,7 @@ namespace Kst {
 
 class MainWindow;
 class SessionModel;
+class View;
 
 class Document : public CoreDocument {
   public:
@@ -41,7 +42,7 @@ class Document : public CoreDocument {
     bool isOpen() const;
 
     QString lastError() const;
-
+    //View *currentView() const;
   private:
     QPointer<MainWindow> _win;
     SessionModel *_session;

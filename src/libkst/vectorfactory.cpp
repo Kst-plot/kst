@@ -207,7 +207,8 @@ DataVectorFactory::~DataVectorFactory() {
 
 PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
   QByteArray data;
-  QString provider, file, field;
+  //QString provider;
+  QString file, field;
   QString descriptiveName;
   int start=0, count=0, skip = -1;
   bool doAve=false;
@@ -218,7 +219,7 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
       if (n == DataVector::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
 
-        provider = attrs.value("provider").toString();
+        //provider = attrs.value("provider").toString();
         file = attrs.value("file").toString();
         field = attrs.value("field").toString();
         start = attrs.value("start").toString().toInt();

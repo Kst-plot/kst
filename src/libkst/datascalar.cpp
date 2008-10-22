@@ -130,7 +130,6 @@ void DataScalar::save(QXmlStreamWriter &s) {
   if (_file) {
     s.writeStartElement("datascalar");
     _file->readLock();
-    s.writeAttribute("provider", _file->Name());
     s.writeAttribute("file", _file->fileName());
     _file->unlock();
     s.writeAttribute("field", _field);

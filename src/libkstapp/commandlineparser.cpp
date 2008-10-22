@@ -246,9 +246,12 @@ void CommandLineParser::createOrFindPlot( const QString plot_name ) {
     }
 
     if (!found) {
+
       CreatePlotForCurve *cmd = new CreatePlotForCurve();
       cmd->createItem();
       pi = static_cast<PlotItem*> ( cmd->item() );
+      //pi = new PlotItem(_document->currentView()); xxxx
+
       pi->setName ( plot_name );
       _plotNames.append(plot_name);
       _plotItems.append(pi);

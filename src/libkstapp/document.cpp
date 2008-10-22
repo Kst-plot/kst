@@ -151,10 +151,13 @@ bool Document::open(const QString& file) {
   // If we move this into the <graphics> block then we could, if desired, open
   // .kst files that contained only data and basically "merge" that data into
   // the current session
-  //qDebug() << "Tab widget count:" << _win->tabWidget()->count() << " p: " << _win->tabWidget();
-  //FIXME: the following line should clear out all the old tabs.  Instead it crashes!
-  //_win->tabWidget()->clear();
-qDebug() << "zzz document.cpp: There is a serious FIXME on previous line zzz";
+
+  // Clear out old tabs.  We will be left with one to delete later.
+  int i=_win->tabWidget()->count();
+  while (i>0) {
+    _win->tabWidget()->closeCurrentView();
+    i--;
+  }
   View *currentView = 0;
 
   QXmlStreamReader xml;
@@ -280,6 +283,10 @@ qDebug() << "zzz document.cpp: There is a serious FIXME on previous line zzz";
   _tnum = max_tnum+1;
   _mnum = max_mnum+1;
 
+  // delete the empty tab
+  _win->tabWidget()->setCurrentIndex(0);
+  _win->tabWidget()->closeCurrentView();
+
   return _isOpen = true;
 }
 
@@ -303,7 +310,10 @@ void Document::setChanged(bool dirty) {
   _dirty = dirty;
 }
 
-
+/*View* Document::currentView() const {
+  return _win->tabWidget()->currentView();
+}
+*/
 }
 
 // vim: ts=2 sw=2 et

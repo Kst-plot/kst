@@ -34,6 +34,7 @@ class KST_EXPORT DataManager : public QDialog, Ui::DataManager
 
   public Q_SLOTS:
     void showContextMenu(const QPoint &);
+    void showEditDialog(QModelIndex qml);
     void showEditDialog();
     void deleteObject();
 

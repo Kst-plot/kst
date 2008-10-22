@@ -160,7 +160,6 @@ bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store)
       expectedEnd = xml.name().toString();
       attrs = xml.attributes();
       QString tagName = attrs.value("tag").toString();
-      qDebug(tagName);
       RelationPtr relation = kst_cast<Relation>(store->retrieveObject(tagName));
       if (relation) {
         addRelation(relation);

@@ -36,6 +36,9 @@ class TabWidget : public QTabWidget
   private Q_SLOTS:
     void viewDestroyed(QObject *object);
     void contextMenu(const QPoint&);
+  private:
+    int _cnt;
+
 };
 
 }

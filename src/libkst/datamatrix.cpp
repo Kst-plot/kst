@@ -48,7 +48,6 @@ void DataMatrix::save(QXmlStreamWriter &xml) {
     xml.writeStartElement(staticTypeTag);
 
     _file->readLock();
-    xml.writeAttribute("provider", _file->Name());
     xml.writeAttribute("file", _file->fileName());
     _file->unlock();
 

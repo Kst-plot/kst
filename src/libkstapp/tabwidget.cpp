@@ -25,6 +25,7 @@ TabWidget::TabWidget(QWidget *parent)
 : QTabWidget(parent) {
   tabBar()->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(tabBar(), SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(contextMenu(const QPoint&)));
+  _cnt = 0;
 }
 
 
@@ -41,9 +42,8 @@ View *TabWidget::createView() {
     parent->undoGroup()->setActiveStack(view->undoStack());
   }
 
-  static int cnt = 1;
   QString label = view->objectName().isEmpty() ?
-                  tr("View %1").arg(cnt++) :
+                  tr("View %1").arg(++_cnt) :
                   view->objectName();
 
   addTab(view, label);
@@ -73,10 +73,12 @@ void TabWidget::viewDestroyed(QObject *object) {
 
 
 void TabWidget::closeCurrentView() {
-  delete currentView();
-  if (count() == 0) {
+  if (count() == 1) {
+    _cnt = 0;
     createView();
+    setCurrentIndex(0);
   }
+  delete currentView();
 }
 
 

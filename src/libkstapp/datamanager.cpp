@@ -48,6 +48,8 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   _session->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(_session, SIGNAL(customContextMenuRequested(const QPoint &)),
           this, SLOT(showContextMenu(const QPoint &)));
+  connect(_session, SIGNAL(doubleClicked(const QModelIndex &)),
+          this, SLOT(showEditDialog(QModelIndex)));
 
   _contextMenu = new QMenu(this);
 
@@ -294,6 +296,15 @@ void DataManager::showContextMenu(const QPoint &position) {
       QMenu::exec(actions, _session->mapToGlobal(position));
 }
 
+void DataManager::showEditDialog(QModelIndex qml) {
+  if (!qml.parent().isValid()) { // don't edit slave objects
+    SessionModel *model = static_cast<SessionModel*>(_session->model());
+
+    _currentObject = model->generateObjectList().at(qml.row());
+
+    showEditDialog();
+  }
+}
 
 void DataManager::showEditDialog() {
   if (CurvePtr curve = kst_cast<Curve>(_currentObject)) {
@@ -318,6 +329,12 @@ void DataManager::showEditDialog() {
     DialogLauncher::self()->showMatrixDialog(tmp, matrix);
   } else if (BasicPluginPtr plugin = kst_cast<BasicPlugin>(_currentObject)) {
     DialogLauncher::self()->showBasicPluginDialog(plugin->pluginName(), plugin);
+  }  else if (ScalarPtr scalar = kst_cast<Scalar>(_currentObject)) {
+    QString tmp;
+    DialogLauncher::self()->showScalarDialog(tmp, scalar);
+  } else if (StringPtr string = kst_cast<String>(_currentObject)) {
+    QString tmp;
+    DialogLauncher::self()->showStringDialog(tmp, string);
   }
   _doc->session()->triggerReset();
 }
