@@ -15,5 +15,6 @@ SUBDIRS += \
     linefit \
     noiseaddition \
     periodogram \
-    phase
+    phase \
+    shift
 
