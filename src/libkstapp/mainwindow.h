@@ -27,10 +27,8 @@ class DebugDialog;
 class Document;
 class ExportGraphicsDialog;
 class MatrixEditorDialog;
-class ScalarEditorDialog;
-class StringEditorDialog;
 class TabWidget;
-class VectorEditorDialog;
+class ViewVectorDialog;
 class View;
 
 class MainWindow : public QMainWindow

@@ -106,16 +106,15 @@ SOURCES += \
     svgitem.cpp \
     tabwidget.cpp \
     vectordialog.cpp \
-    vectoreditordialog.cpp \
     vectormodel.cpp \
-    vectortablemodel.cpp \
     viewcommand.cpp \
     view.cpp \
     viewgridlayout.cpp \
     viewitem.cpp \
     viewitemdialog.cpp \
     viewmanager.cpp \
-    viewprimitivedialog.cpp
+    viewprimitivedialog.cpp \
+    viewvectordialog.cpp
 
 HEADERS += \
     application.h \
@@ -205,9 +204,7 @@ HEADERS += \
     stroketab.h \
     tabwidget.h \
     vectordialog.h \
-    vectoreditordialog.h \
     vectormodel.h \
-    vectortablemodel.h \
     viewcommand.h \
     view.h \
     viewgridlayout.h \
@@ -215,7 +212,8 @@ HEADERS += \
     viewitem.h \
     viewitemzorder.h \
     viewmanager.h \
-    viewprimitivedialog.h
+    viewprimitivedialog.h \
+    viewvectordialog.h
 
 FORMS += \
     aboutdialog.ui \
@@ -258,10 +256,10 @@ FORMS += \
     scalartab.ui \
     stringtab.ui \
     stroketab.ui \
-    vectoreditordialog.ui \
     vectortab.ui \
     viewmanager.ui \
-    viewprimitivedialog.ui
+    viewprimitivedialog.ui \
+    viewvectordialog.ui
 
 RESOURCES += \
     $$TOPLEVELDIR/src/images/images.qrc

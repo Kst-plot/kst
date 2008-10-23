@@ -9,30 +9,35 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef VECTOREDITORDIALOG_H
-#define VECTOREDITORDIALOG_H
+#ifndef VIEWVECTORDIALOG_H
+#define VIEWVECTORDIALOG_H
 
 #include <QDialog>
 
-#include "ui_vectoreditordialog.h"
+#include "ui_viewvectordialog.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
 class Document;
-class VectorTableModel;
+class VectorModel;
 
-class KST_EXPORT VectorEditorDialog : public QDialog, Ui::VectorEditorDialog
+class KST_EXPORT ViewVectorDialog : public QDialog, Ui::ViewVectorDialog
 {
   Q_OBJECT
   public:
-    VectorEditorDialog(QWidget *parent, Document *doc);
-    virtual ~VectorEditorDialog();
+    ViewVectorDialog(QWidget *parent, Document *doc);
+    virtual ~ViewVectorDialog();
+
+    virtual void exec();
+
+private Q_SLOTS:
+    void vectorSelected();
 
   private:
     Document *_doc;
-    VectorTableModel *_model;
+    VectorModel *_model;
 };
 
 }

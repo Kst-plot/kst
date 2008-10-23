@@ -9,10 +9,10 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "vectoreditordialog.h"
+#include "viewvectordialog.h"
 
 #include "document.h"
-#include "vectortablemodel.h"
+#include "vectormodel.h"
 
 #include <datacollection.h>
 #include <objectstore.h>
@@ -20,29 +20,41 @@
 
 namespace Kst {
 
-VectorEditorDialog::VectorEditorDialog(QWidget *parent, Document *doc)
+ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
   : QDialog(parent), _doc(doc) {
-  _model = new VectorTableModel;
-  // TODO: Extract this model so the dialog can be reused, and make a new model
-  // or modification to the model so that it tracks all the vector creates and
-  // destroys
+  _model = 0;
+
   Q_ASSERT(_doc && _doc->objectStore());
-  foreach (VectorPtr v, _doc->objectStore()->getObjects<Vector>()) {
-    VectorModel *vm = new VectorModel(v);
-    _model->vectors().append(vm);
-  }
   setupUi(this);
   _vectors->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-  _vectors->setModel(_model);
+
+  connect(_vectorSelector, SIGNAL(selectionChanged(const QString&)), this, SLOT(vectorSelected()));
+  _vectorSelector->setObjectStore(doc->objectStore());
 }
 
 
-VectorEditorDialog::~VectorEditorDialog() {
-  _vectors->setModel(0);
-  qDeleteAll(_model->vectors());
-  _model->vectors().clear();
+ViewVectorDialog::~ViewVectorDialog() {
   delete _model;
   _model = 0;
+}
+
+
+void ViewVectorDialog::exec() {
+  vectorSelected();
+  QDialog::exec();
+}
+
+
+void ViewVectorDialog::vectorSelected() {
+  if (_model) {
+    delete _model;
+  }
+
+  VectorPtr vector = _vectorSelector->selectedVector();
+  if (vector) {
+    _model = new VectorModel(vector);
+    _vectors->setModel(_model);
+  }
 }
 
 }

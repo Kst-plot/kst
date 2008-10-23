@@ -31,7 +31,7 @@
 #include "svgitem.h"
 #include "tabwidget.h"
 #include "ui_aboutdialog.h"
-#include "vectoreditordialog.h"
+#include "viewvectordialog.h"
 #include "matrixeditordialog.h"
 #include "viewprimitivedialog.h"
 #include "view.h"
@@ -895,7 +895,7 @@ void MainWindow::showDataManager() {
 
 
 void MainWindow::showVectorEditor() {
-  VectorEditorDialog vectorDialog(this, _doc);
+  ViewVectorDialog vectorDialog(this, _doc);
   vectorDialog.exec();
 }
 
