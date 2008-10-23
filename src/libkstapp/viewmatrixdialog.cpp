@@ -9,7 +9,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "matrixeditordialog.h"
+#include "viewmatrixdialog.h"
 
 #include "document.h"
 #include "matrixmodel.h"
@@ -18,7 +18,7 @@
 
 namespace Kst {
 
-MatrixEditorDialog::MatrixEditorDialog(QWidget *parent, Document *doc)
+ViewMatrixDialog::ViewMatrixDialog(QWidget *parent, Document *doc)
   : QDialog(parent), _doc(doc) {
   _model = 0;
   setupUi(this);
@@ -28,20 +28,20 @@ MatrixEditorDialog::MatrixEditorDialog(QWidget *parent, Document *doc)
 }
 
 
-MatrixEditorDialog::~MatrixEditorDialog() {
+ViewMatrixDialog::~ViewMatrixDialog() {
   delete _model;
   _model = 0;
 }
 
 
-void MatrixEditorDialog::show() {
+void ViewMatrixDialog::show() {
   matrixSelector->updateMatrices();
   matrixSelected();
   QDialog::show();
 }
 
 
-void MatrixEditorDialog::matrixSelected() {
+void ViewMatrixDialog::matrixSelected() {
   if (_model) {
     delete _model;
   }

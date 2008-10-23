@@ -32,7 +32,7 @@
 #include "tabwidget.h"
 #include "ui_aboutdialog.h"
 #include "viewvectordialog.h"
-#include "matrixeditordialog.h"
+#include "viewmatrixdialog.h"
 #include "viewprimitivedialog.h"
 #include "view.h"
 #include "viewmanager.h"
@@ -912,7 +912,7 @@ void MainWindow::showStringEditor() {
 }
 
 void MainWindow::showMatrixEditor() {
-  MatrixEditorDialog matrixDialog(this, _doc);
+  ViewMatrixDialog matrixDialog(this, _doc);
   matrixDialog.exec();
 }
 

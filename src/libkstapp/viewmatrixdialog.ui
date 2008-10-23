@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>MatrixEditorDialog</class>
- <widget class="QDialog" name="MatrixEditorDialog" >
+ <class>ViewMatrixDialog</class>
+ <widget class="QDialog" name="ViewMatrixDialog" >
   <property name="geometry" >
    <rect>
     <x>0</x>

@@ -84,7 +84,6 @@ SOURCES += \
     mainwindow.cpp \
     markerstab.cpp \
     matrixdialog.cpp \
-    matrixeditordialog.cpp \
     matrixmodel.cpp \
     memorywidget.cpp \
     pictureitem.cpp \
@@ -113,6 +112,7 @@ SOURCES += \
     viewitem.cpp \
     viewitemdialog.cpp \
     viewmanager.cpp \
+    viewmatrixdialog.cpp \
     viewprimitivedialog.cpp \
     viewvectordialog.cpp
 
@@ -182,7 +182,6 @@ HEADERS += \
     mainwindow.h \
     markerstab.h \
     matrixdialog.h \
-    matrixeditordialog.h \
     matrixmodel.h \
     memorywidget.h \
     pictureitem.h \
@@ -212,6 +211,7 @@ HEADERS += \
     viewitem.h \
     viewitemzorder.h \
     viewmanager.h \
+    viewmatrixdialog.h \
     viewprimitivedialog.h \
     viewvectordialog.h
 
@@ -250,7 +250,6 @@ FORMS += \
     layouttab.ui \
     legendtab.ui \
     markerstab.ui \
-    matrixeditordialog.ui \
     matrixtab.ui \
     powerspectrumtab.ui \
     scalartab.ui \
@@ -258,6 +257,7 @@ FORMS += \
     stroketab.ui \
     vectortab.ui \
     viewmanager.ui \
+    viewmatrixdialog.ui \
     viewprimitivedialog.ui \
     viewvectordialog.ui
 

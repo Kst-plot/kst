@@ -26,10 +26,10 @@ class DataManager;
 class DebugDialog;
 class Document;
 class ExportGraphicsDialog;
-class MatrixEditorDialog;
 class TabWidget;
-class ViewVectorDialog;
 class View;
+class ViewMatrixDialog;
+class ViewVectorDialog;
 
 class MainWindow : public QMainWindow
 {

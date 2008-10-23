@@ -9,12 +9,12 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef MATRIXEDITORDIALOG_H
-#define MATRIXEDITORDIALOG_H
+#ifndef VIEWMATRIXDIALOG_H
+#define VIEWMATRIXDIALOG_H
 
 #include <QDialog>
 
-#include "ui_matrixeditordialog.h"
+#include "ui_viewmatrixdialog.h"
 
 #include "kst_export.h"
 
@@ -23,12 +23,12 @@ namespace Kst {
 class Document;
 class MatrixModel;
 
-class KST_EXPORT MatrixEditorDialog : public QDialog, Ui::MatrixEditorDialog
+class KST_EXPORT ViewMatrixDialog : public QDialog, Ui::ViewMatrixDialog
 {
   Q_OBJECT
   public:
-    MatrixEditorDialog(QWidget *parent, Document *doc);
-    virtual ~MatrixEditorDialog();
+    ViewMatrixDialog(QWidget *parent, Document *doc);
+    virtual ~ViewMatrixDialog();
 
     virtual void show();
 
