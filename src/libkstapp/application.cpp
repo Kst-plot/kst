@@ -63,9 +63,10 @@ Application::Application(int &argc, char **argv)
   if (!file.toString().isEmpty())
     _mainWindow->openFile(file.toString());*/
 
+  _mainWindow->show();
+
   _mainWindow->initFromCommandLine();
 
-  _mainWindow->show();
 }
 
 
