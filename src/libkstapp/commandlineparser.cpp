@@ -250,7 +250,6 @@ void CommandLineParser::createOrFindPlot( const QString plot_name ) {
       CreatePlotForCurve *cmd = new CreatePlotForCurve();
       cmd->createItem();
       pi = static_cast<PlotItem*> ( cmd->item() );
-      //pi = new PlotItem(_document->currentView()); xxxx
 
       pi->setName ( plot_name );
       _plotNames.append(plot_name);
@@ -422,15 +421,10 @@ bool CommandLineParser::processCommandLine() {
         DataSourcePtr ds = DataSource::findOrLoadSource ( _document->objectStore(), file );
 
         DataVectorPtr hv = createOrFindDataVector ( field, ds );
-
         Q_ASSERT ( _document && _document->objectStore() );
         HistogramPtr histogram = _document->objectStore()->createObject<Histogram> ();
 
-        histogram->setVector ( hv );
-        histogram->setXRange ( -1.0, 1.0 );
-        histogram->setNumberOfBins ( 60 );
-        histogram->setNormalizationType ( Histogram::Number );
-        histogram->setRealTimeAutoBin ( true );
+        histogram->change(hv, -1, 1, 60, Histogram::Number, true);
 
         histogram->writeLock();
         histogram->update ();

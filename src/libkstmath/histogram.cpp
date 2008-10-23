@@ -42,6 +42,27 @@ Histogram::Histogram(ObjectStore *store)
   setRealTimeAutoBin(false);
   _typeString = staticTypeString;
   _type = "Histogram";
+
+  // _Bins, _bVector and _hVector need to be valid, 
+  // so initialize them as size 2 (where 2 is a small valid number)
+  _Bins = new unsigned long[2];
+
+  VectorPtr v = store->createObject<Vector>();
+  v->setProvider(this);
+  v->setSlaveName("bin");
+  v->resize(2);
+  _bVector = _outputVectors.insert(BINS, v).value();
+
+  v = store->createObject<Vector>();
+  v->setProvider(this);
+  v->setSlaveName("num");
+  v->resize(2);
+  _hVector = _outputVectors.insert(HIST, v).value();
+
+  _shortName = "H"+QString::number(_hnum);
+  if (_hnum>max_hnum) 
+    max_hnum = _hnum;
+  _hnum++;
 }
 
 
@@ -54,7 +75,6 @@ void Histogram::change(VectorPtr in_V,
 
   _NormalizationMode = in_norm_mode;
   _realTimeAutoBin = realTimeAutoBin;
-  _Bins = 0L;
   _NumberOfBins = 0;
 
   _inputVectors[RAWVECTOR] = in_V;
@@ -75,28 +95,13 @@ void Histogram::change(VectorPtr in_V,
   if (_NumberOfBins < 2) {
     _NumberOfBins = 2;
   }
+
+  delete[] _Bins;
   _Bins = new unsigned long[_NumberOfBins];
   _NS = 3 * _NumberOfBins + 1;
 
-  Q_ASSERT(store());
-  VectorPtr v = store()->createObject<Vector>();
-
-  v->setProvider(this);
-  v->setSlaveName("bin");
-  v->resize(_NumberOfBins);
-  _bVector = _outputVectors.insert(BINS, v).value();
-
-  v = store()->createObject<Vector>();
-
-  v->setProvider(this);
-  v->setSlaveName("num");
-  v->resize(_NumberOfBins);
-  _hVector = _outputVectors.insert(HIST, v).value();
-
-  _shortName = "H"+QString::number(_hnum);
-  if (_hnum>max_hnum) 
-    max_hnum = _hnum;
-  _hnum++;
+  _bVector->resize(_NumberOfBins);
+  _hVector->resize(_NumberOfBins);
 
   setDirty();
 }
@@ -234,6 +239,7 @@ void Histogram::setXRange(double xmin_in, double xmax_in) {
     _MaxX = xmax_in + 1.0;
   }
   _W = (_MaxX - _MinX)/double(_NumberOfBins);
+  setDirty();
 }
 
 
@@ -243,9 +249,11 @@ void Histogram::internalSetNumberOfBins(int in_n_bins) {
   }
   if (_NumberOfBins != in_n_bins) {
     _NumberOfBins = in_n_bins;
+
     delete[] _Bins;
     _Bins = new unsigned long[_NumberOfBins];
     memset(_Bins, 0, _NumberOfBins*sizeof(*_Bins));
+
     _bVector->resize(_NumberOfBins);
     _hVector->resize(_NumberOfBins);
   }
@@ -264,6 +272,7 @@ void Histogram::setVector(VectorPtr new_v) {
   if (new_v) {
     connect(new_v, SIGNAL(updated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
     _inputVectors[RAWVECTOR] = new_v;
+    setDirty();
   }
 }
 
@@ -366,6 +375,7 @@ bool Histogram::slaveVectorsUsed() const {
 
 void Histogram::setRealTimeAutoBin(bool autoBin) {
   _realTimeAutoBin = autoBin;
+  setDirty();
 }
 
 
