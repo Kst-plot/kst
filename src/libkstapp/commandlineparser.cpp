@@ -378,19 +378,7 @@ bool CommandLineParser::processCommandLine() {
         Q_ASSERT(powerspectrum);
 
         powerspectrum->writeLock();
-        powerspectrum->setVector(pv);
-        powerspectrum->setFrequency(_sampleRate);
-        powerspectrum->setAverage(true);
-        powerspectrum->setLength(14);
-        powerspectrum->setApodize(true);
-        powerspectrum->setRemoveMean(true);
-        //powerspectrum->setVectorUnits();
-        //powerspectrum->setRateUnits(_powerSpectrumTab->FFTOptionsWidget()->rateUnits());
-        powerspectrum->setApodizeFxn(WindowOriginal);
-        //powerspectrum->setGaussianSigma(_powerSpectrumTab->FFTOptionsWidget()->sigma());
-        powerspectrum->setOutput(PSDAmplitudeSpectralDensity);
-        powerspectrum->setInterpolateHoles(false);
-
+        powerspectrum->change(pv, _sampleRate, true, 14, true, true, QString(), QString());
         powerspectrum->update();
         powerspectrum->unlock();
 

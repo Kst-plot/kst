@@ -43,6 +43,18 @@ CSD::CSD(ObjectStore *store)
   : DataObject(store) {
   _typeString = staticTypeString;
   _type = "Cumulative Spectral Decay";
+
+  Q_ASSERT(store);
+  MatrixPtr outMatrix = store->createObject<Matrix>();
+  outMatrix->setProvider(this);
+  outMatrix->setSlaveName("SG");
+  outMatrix->change(1, 1);
+  _outMatrix = _outputMatrices.insert(OUTMATRIX, outMatrix).value();
+
+  _shortName = "G"+QString::number(_csdnum);
+  if (_csdnum>max_csdnum) 
+    max_csdnum = _csdnum;
+  _csdnum++;
 }
 
 
@@ -74,23 +86,13 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
     _frequency = 1.0;
   }
 
-  Q_ASSERT(store());
-  MatrixPtr outMatrix = store()->createObject<Matrix>();
-  outMatrix->setProvider(this);
-  outMatrix->setSlaveName("SG");
-  outMatrix->change(1, 1);
-  outMatrix->setLabel(i18n("Power [%1/%2^{1/2}]").arg(_vectorUnits).arg(_rateUnits));
-  outMatrix->setXLabel(i18n("%1 [%2]").arg(vecName).arg(_vectorUnits));
-  outMatrix->setYLabel(i18n("Frequency [%1]").arg(_rateUnits));
-  _outMatrix = _outputMatrices.insert(OUTMATRIX, outMatrix).value();
+  _outMatrix->setLabel(i18n("Power [%1/%2^{1/2}]").arg(_vectorUnits).arg(_rateUnits));
+  _outMatrix->setXLabel(i18n("%1 [%2]").arg(vecName).arg(_vectorUnits));
+  _outMatrix->setYLabel(i18n("Frequency [%1]").arg(_rateUnits));
 
   updateMatrixLabels();
   _outMatrix->setDirty();
   setDirty();
-  _shortName = "G"+QString::number(_csdnum);
-  if (_csdnum>max_csdnum) 
-    max_csdnum = _csdnum;
-  _csdnum++;
 
   connect(_inputVectors[INVECTOR], SIGNAL(updated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
 

@@ -51,6 +51,26 @@ PSD::PSD(ObjectStore *store)
 : DataObject(store) {
   _typeString = staticTypeString;
   _type = "PowerSpectrum";
+
+  Q_ASSERT(store);
+  VectorPtr ov = store->createObject<Vector>();
+  ov->setProvider(this);
+  ov->setSlaveName("f");
+  ov->resize(2);
+  _fVector = _outputVectors.insert(FVECTOR, ov).value();
+
+  ov = store->createObject<Vector>();
+  ov->setProvider(this);
+  ov->setSlaveName("psd");
+  ov->resize(2);
+  _sVector = _outputVectors.insert(SVECTOR, ov).value();
+
+  _shortName = "S"+QString::number(_psdnum);
+  if (_psdnum>max_psdnum) 
+    max_psdnum = _psdnum;
+  _psdnum++;
+
+
 }
 
 
@@ -81,25 +101,10 @@ void PSD::change(VectorPtr in_V,
 
   _PSDLength = 1;
 
-  Q_ASSERT(store());
-  VectorPtr ov = store()->createObject<Vector>();
-  ov->setProvider(this);
-  ov->setSlaveName("f");
-  ov->resize(_PSDLength);
-  _fVector = _outputVectors.insert(FVECTOR, ov).value();
-
-  ov = store()->createObject<Vector>();
-  ov->setProvider(this);
-  ov->setSlaveName("psd");
-  ov->resize(_PSDLength);
-  _sVector = _outputVectors.insert(SVECTOR, ov).value();
+  _fVector->resize(_PSDLength);
+  _sVector->resize(_PSDLength);
 
   updateVectorLabels();
-
-  _shortName = "S"+QString::number(_psdnum);
-  if (_psdnum>max_psdnum) 
-    max_psdnum = _psdnum;
-  _psdnum++;
 
   setDirty();
 }
@@ -289,6 +294,7 @@ void PSD::setOutput(PSDType in_output)  {
 
 
 VectorPtr PSD::vector() const {
+  
   return _inputVectors[INVECTOR];
 }
 
