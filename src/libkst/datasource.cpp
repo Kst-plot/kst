@@ -541,6 +541,7 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
   }
   shortFilename = shortFilename.section('/', -1);
   QString tn = i18n("DS-%1", shortFilename);
+  _shortName = tn;
 
   if (_updateCheckType == Timer) {
     QTimer::singleShot(UpdateManager::self()->minimumUpdatePeriod()-1, this, SLOT(checkUpdate()));
