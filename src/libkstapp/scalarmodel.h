@@ -14,11 +14,33 @@
 
 #include <QAbstractItemModel>
 #include "dataobject.h"
+#include "datasource.h"
 #include "object.h"
 
 namespace Kst {
 
 class ObjectStore;
+
+ class ScalarTreeItem
+ {
+ public:
+     ScalarTreeItem(const QList<QVariant> &data, ScalarTreeItem *parent = 0);
+     ~ScalarTreeItem();
+
+     void addChild(ScalarTreeItem *child);
+
+     ScalarTreeItem *child(int row);
+     int childCount() const;
+     int columnCount() const;
+     QVariant data(int column) const;
+     int row() const;
+     ScalarTreeItem *parent();
+
+ private:
+     QList<ScalarTreeItem*> childItems;
+     QList<QVariant> itemData;
+     ScalarTreeItem *parentItem;
+ };
 
 class ScalarModel : public QAbstractItemModel
 {
@@ -35,17 +57,18 @@ public:
   QModelIndex index(int row, int col, const QModelIndex& parent = QModelIndex()) const;
   QModelIndex parent(const QModelIndex& index) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-  void generateObjectList();
+  void createTree();
+  void addScalar(ScalarPtr scalar, ScalarTreeItem* parent = 0);
+  void addVector(VectorPtr vector, ScalarTreeItem* parent = 0);
+  void addMatrix(MatrixPtr matrix, ScalarTreeItem* parent = 0);
+  void addDataObject(DataObjectPtr dataObject, ScalarTreeItem* parent = 0);
+  void addDataSource(DataSourcePtr dataSource, ScalarTreeItem* parent = 0);
+  void addScalars(const QHash<QString, Kst::Scalar*> scalarMap, ScalarTreeItem* parent = 0);
 
 private:
-  QVariant dataObjectOutputData(DataObjectPtr parent, const QModelIndex& index) const;
-  QVariant vectorOutputData(VectorPtr parent, const QModelIndex& index) const;
-  QVariant matrixOutputData(MatrixPtr parent, const QModelIndex& index) const;
-  QVariant objectData(ObjectPtr parent, const QModelIndex& index) const;
-  QVariant scalarData(ScalarPtr parent, const QModelIndex& index) const;
-
   ObjectStore *_store;
-  ObjectList<Object> _objectList;
+  ScalarTreeItem *_rootItem;
+
 };
 
 }

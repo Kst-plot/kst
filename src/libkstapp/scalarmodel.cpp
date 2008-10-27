@@ -18,12 +18,66 @@
 #include <generatedvector.h>
 #include <datamatrix.h>
 #include <generatedmatrix.h>
+#include <datasource.h>
 
 namespace Kst {
 
+ScalarTreeItem::ScalarTreeItem(const QList<QVariant> &data, ScalarTreeItem *parent) {
+  parentItem = parent;
+  itemData = data; 
+  if (parent) {
+    parent->addChild(this);
+  }
+}
+
+
+ScalarTreeItem::~ScalarTreeItem() {
+  qDeleteAll(childItems);
+}
+
+
+void ScalarTreeItem::addChild(ScalarTreeItem *item) {
+  childItems.append(item);
+}
+
+
+ScalarTreeItem *ScalarTreeItem::child(int row) {
+    return childItems.value(row);
+}
+
+int ScalarTreeItem::childCount() const {
+    return childItems.count();
+}
+
+
+int ScalarTreeItem::row() const {
+    if (parentItem)
+        return parentItem->childItems.indexOf(const_cast<ScalarTreeItem*>(this));
+
+    return 0;
+}
+
+
+int ScalarTreeItem::columnCount() const {
+    return itemData.count();
+}
+
+
+QVariant ScalarTreeItem::data(int column) const {
+    return itemData.value(column);
+}
+
+ScalarTreeItem *ScalarTreeItem::parent() {
+    return parentItem;
+}
+
+
 ScalarModel::ScalarModel(ObjectStore *store)
 : QAbstractItemModel(), _store(store) {
-  generateObjectList();
+  QList<QVariant> rootData;
+  rootData << "Scalars";
+  _rootItem = new ScalarTreeItem(rootData);
+  createTree();
 }
 
 
@@ -37,62 +91,175 @@ int ScalarModel::columnCount(const QModelIndex& parent) const {
 }
 
 
-void ScalarModel::generateObjectList() {
-  ObjectList<DataVector> dvol = _store->getObjects<DataVector>();
-  ObjectList<GeneratedVector> gvol = _store->getObjects<GeneratedVector>();
-  ObjectList<DataMatrix> dmol = _store->getObjects<DataMatrix>();
-  ObjectList<GeneratedMatrix> gmol = _store->getObjects<GeneratedMatrix>();
-  ObjectList<DataObject> dol = _store->getObjects<DataObject>();
-  ObjectList<Scalar> sol = _store->getObjects<Scalar>();
+void ScalarModel::addScalar(ScalarPtr scalar, ScalarTreeItem* parent) {
+  ScalarTreeItem* parentItem;
+  if (parent) {
+    parentItem = parent;
+  } else {
+    parentItem = _rootItem;
+  }
+  QList<QVariant> data;
+  data << scalar->Name() << scalar->value();
+  new ScalarTreeItem(data, parentItem);
+}
 
-  foreach(DataVector* vector, dvol) {
-    _objectList.append(vector);
+
+void ScalarModel::addScalars(const QHash<QString, Kst::Scalar*> scalarMap, ScalarTreeItem* parent) {
+  QMap<QString, ScalarPtr> map;
+  foreach(Scalar* scalar, scalarMap) {
+    map.insert(scalar->Name(), scalar);
+  }
+  QMapIterator<QString, ScalarPtr> iObject(map);
+  while (iObject.hasNext()) {
+    iObject.next();
+    addScalar(iObject.value(), parent);
+  }
+}
+
+
+void ScalarModel::addVector(VectorPtr vector, ScalarTreeItem* parent) {
+  ScalarTreeItem* parentItem;
+  if (parent) {
+    parentItem = parent;
+  } else {
+    parentItem = _rootItem;
+  }
+  QList<QVariant> data;
+  data << vector->Name();
+  ScalarTreeItem* item = new ScalarTreeItem(data, parentItem);
+  addScalars(vector->scalars(), item);
+}
+
+
+void ScalarModel::addMatrix(MatrixPtr matrix, ScalarTreeItem* parent) {
+  ScalarTreeItem* parentItem;
+  if (parent) {
+    parentItem = parent;
+  } else {
+    parentItem = _rootItem;
+  }
+  QList<QVariant> data;
+  data << matrix->Name();
+  ScalarTreeItem* item = new ScalarTreeItem(data, parentItem);
+  addScalars(matrix->scalars(), item);
+}
+
+
+void ScalarModel::addDataObject(DataObjectPtr dataObject, ScalarTreeItem* parent) {
+  ScalarTreeItem* parentItem;
+  if (parent) {
+    parentItem = parent;
+  } else {
+    parentItem = _rootItem;
+  }
+  QList<QVariant> data;
+  data << dataObject->Name();
+  ScalarTreeItem* item = new ScalarTreeItem(data, parentItem);
+
+  QMap<QString, ObjectPtr> objectMap;
+  foreach(Scalar* scalar, dataObject->outputScalars()) {
+    objectMap.insert(scalar->Name(), scalar);
+  }
+  foreach(Vector* vector, dataObject->outputVectors()) {
+    objectMap.insert(vector->Name(), vector);
+  }
+  foreach(Matrix* matrix, dataObject->outputMatrices()) {
+    objectMap.insert(matrix->Name(), matrix);
   }
 
-  foreach(GeneratedVector* vector, gvol) {
-    _objectList.append(vector);
-  }
-
-  foreach(DataMatrix* matrix, dmol) {
-    _objectList.append(matrix);
-  }
-
-  foreach(GeneratedMatrix* matrix, gmol) {
-    _objectList.append(matrix);
-  }
-
-  foreach(DataObject* dataObject, dol) {
-    foreach(VectorPtr vector, dataObject->outputVectors()) {
-      _objectList.append(vector);
+  QMapIterator<QString, ObjectPtr> iObject(objectMap);
+  while (iObject.hasNext()) {
+    iObject.next();
+    if (VectorPtr vector = kst_cast<Vector>(iObject.value())) {
+      addVector(vector, item);
+    } else if (MatrixPtr matrix = kst_cast<Matrix>(iObject.value())) {
+      addMatrix(matrix, item);
+    } else if (ScalarPtr scalar = kst_cast<Scalar>(iObject.value())) {
+      addScalar(scalar, item);
     }
-    foreach(MatrixPtr matrix, dataObject->outputMatrices()) {
-      _objectList.append(matrix);
-    }
   }
+}
 
-  foreach(Scalar* scalar, sol) {
+
+void ScalarModel::addDataSource(DataSourcePtr dataSource, ScalarTreeItem* parent) {
+  ScalarTreeItem* parentItem;
+  if (parent) {
+    parentItem = parent;
+  } else {
+    parentItem = _rootItem;
+  }
+  QList<QVariant> data;
+  data << dataSource->shortName();
+  ScalarTreeItem* item = new ScalarTreeItem(data, parentItem);
+
+  QStringList scalars = dataSource->scalarList();
+  scalars.sort();
+  foreach(QString scalar, scalars) {
+    QList<QVariant> data;
+    double value;
+    dataSource->readScalar(value, scalar);
+    data << scalar << value;
+    new ScalarTreeItem(data, item);
+  }
+}
+
+
+void ScalarModel::createTree() {
+  QMap<QString, ObjectPtr> objectMap;
+  foreach(DataVector* vector, _store->getObjects<DataVector>()) {
+    objectMap.insert(vector->Name(), vector);
+  }
+  foreach(GeneratedVector* vector, _store->getObjects<GeneratedVector>()) {
+    objectMap.insert(vector->Name(), vector);
+  }
+  foreach(DataMatrix* matrix, _store->getObjects<DataMatrix>()) {
+    objectMap.insert(matrix->Name(), matrix);
+  }
+  foreach(GeneratedMatrix* matrix, _store->getObjects<GeneratedMatrix>()) {
+    objectMap.insert(matrix->Name(), matrix);
+  }
+  foreach(DataObjectPtr dataObject, _store->getObjects<DataObject>()) {
+    objectMap.insert(dataObject->Name(), dataObject);
+  }
+  foreach(Scalar* scalar, _store->getObjects<Scalar>()) {
     if (scalar->orphan()) {
-      _objectList.append(scalar);
+      objectMap.insert(scalar->Name(), scalar);
+    }
+  }
+  foreach(DataSource* ds, _store->dataSourceList()) {
+    if (!ds->scalarList().isEmpty()) {
+      objectMap.insert(ds->shortName(), ds);
+    }
+  }
+
+  QMapIterator<QString, ObjectPtr> iObject(objectMap);
+  while (iObject.hasNext()) {
+    iObject.next();
+    if (VectorPtr vector = kst_cast<Vector>(iObject.value())) {
+      addVector(vector);
+    } else if (MatrixPtr matrix = kst_cast<Matrix>(iObject.value())) {
+      addMatrix(matrix);
+    } else if (DataObjectPtr dataObject = kst_cast<DataObject>(iObject.value())) {
+      addDataObject(dataObject);
+    } else if (ScalarPtr scalar = kst_cast<Scalar>(iObject.value())) {
+      addScalar(scalar);
+    } else if (DataSourcePtr dataSource = kst_cast<DataSource>(iObject.value())) {
+      addDataSource(dataSource);
     }
   }
 }
 
 int ScalarModel::rowCount(const QModelIndex& parent) const {
-  int rc = 0;
-  if (!parent.isValid()) {
-    rc = _objectList.count();
-  } else if (!parent.parent().isValid()) {
-    if (VectorPtr vector = kst_cast<Vector>(_objectList.at(parent.row()))) {
-      vector->readLock();
-      rc = vector->scalars().count();
-      vector->unlock();
-    } else if (MatrixPtr matrix = kst_cast<Matrix>(_objectList.at(parent.row()))) {
-      matrix->readLock();
-      rc = matrix->scalars().count();
-      matrix->unlock();
-    }
-  }
-  return rc;
+  ScalarTreeItem *parentItem;
+  if (parent.column() > 0)
+      return 0;
+
+  if (!parent.isValid())
+      parentItem = _rootItem;
+  else
+      parentItem = static_cast<ScalarTreeItem*>(parent.internalPointer());
+
+  return parentItem->childCount();
 }
 
 
@@ -105,93 +272,9 @@ QVariant ScalarModel::data(const QModelIndex& index, int role) const {
     return QVariant();
   }
 
-  if (index.internalPointer()) {
-    Object* object = static_cast<Object*>(index.internalPointer());
-    if (!object) {
-      return QVariant();
-    }
+  ScalarTreeItem *item = static_cast<ScalarTreeItem*>(index.internalPointer());
 
-    if (VectorPtr parent = kst_cast<Vector>(object)) {
-      return vectorOutputData(parent, index);
-    } else if (MatrixPtr parent = kst_cast<Matrix>(object)) {
-      return matrixOutputData(parent, index);
-    }
-  }
-
-  const int row = index.row();
-  if (row < _objectList.count()) {
-    if (ScalarPtr p = kst_cast<Scalar>(_objectList.at(row))) {
-      return scalarData(p, index);
-    } else if (ObjectPtr p = kst_cast<Object>(_objectList.at(row))) {
-      return objectData(p, index);
-    }
-  }
-
-  return QVariant();
-}
-
-
-QVariant ScalarModel::vectorOutputData(VectorPtr parent, const QModelIndex& index) const {
-  QVariant rc;
-
-  if (parent) {
-    if (parent->scalars().count() > index.row()) {
-      if (ScalarPtr scalar = parent->scalars().values()[index.row()]) {
-        return scalarData(scalar, index);
-      }
-    }
-  }
-
-  return rc;
-}
-
-
-QVariant ScalarModel::matrixOutputData(MatrixPtr parent, const QModelIndex& index) const {
-  QVariant rc;
-
-  if (parent) {
-    if (parent->scalars().count() > index.row()) {
-      if (ScalarPtr scalar = parent->scalars().values()[index.row()]) {
-        return scalarData(scalar, index);
-      }
-    }
-  }
-
-  return rc;
-}
-
-
-QVariant ScalarModel::objectData(ObjectPtr object, const QModelIndex& index) const {
-  QVariant rc;
-
-  if (object) {
-    if (index.column() == Name) {
-      object->readLock();
-      rc.setValue(object->Name());
-      object->unlock();
-    }
-  }
-
-  return rc;
-}
-
-
-QVariant ScalarModel::scalarData(ScalarPtr scalar, const QModelIndex& index) const {
-  QVariant rc;
-
-  if (scalar) {
-    if (index.column() == Name) {
-      scalar->readLock();
-      rc.setValue(scalar->Name());
-      scalar->unlock();
-    } else if (index.column() == Value) {
-      scalar->readLock();
-      rc = QVariant(scalar->value());
-      scalar->unlock();
-    }
-  }
-
-  return rc;
+  return item->data(index.column());
 }
 
 
@@ -200,52 +283,37 @@ QModelIndex ScalarModel::index(int row, int col, const QModelIndex& parent) cons
     return QModelIndex();
   }
 
-  const int count = _objectList.count();
-  ObjectPtr object = 0;
-  if (!parent.isValid()) {
-    if (row < count) {
-      return createIndex(row, col);
-    }
-  } else if (!parent.parent().isValid()) {
-    if (parent.row() >= 0 && parent.row() < count) { 
-      if (VectorPtr vector = kst_cast<Vector>(_objectList.at(parent.row()))) {
-        vector->readLock();
-        if (row < vector->scalars().count()) {
-          object = vector;
-        }
-        vector->unlock();
-      } else if (MatrixPtr matrix = kst_cast<Matrix>(_objectList.at(parent.row()))) {
-        matrix->readLock();
-        if (row < matrix->scalars().count()) {
-          object = matrix;
-        }
-        matrix->unlock();
-      }
-    }
-  }
+  if (!hasIndex(row, col, parent))
+      return QModelIndex();
 
-  if (object) {
-    return createIndex(row, col, object);
-  } else {
-    return QModelIndex();
-  }
+  ScalarTreeItem *parentItem;
+
+  if (!parent.isValid())
+      parentItem = _rootItem;
+  else
+      parentItem = static_cast<ScalarTreeItem*>(parent.internalPointer());
+
+  ScalarTreeItem *childItem = parentItem->child(row);
+  if (childItem)
+      return createIndex(row, col, childItem);
+  else
+      return QModelIndex();
 }
 
 
 QModelIndex ScalarModel::parent(const QModelIndex& index) const {
   Q_ASSERT(_store);
-  int row = -1;
 
-  if (Vector *vector = static_cast<Vector*>(index.internalPointer())) {
-    row = _objectList.indexOf(vector);
-  } else if (Matrix *matrix = static_cast<Matrix*>(index.internalPointer())) {
-    row = _objectList.indexOf(matrix);
-  }
+  if (!index.isValid())
+      return QModelIndex();
 
-  if (row < 0) {
-    return QModelIndex();
-  }
-  return createIndex(row, index.column());
+  ScalarTreeItem *childItem = static_cast<ScalarTreeItem*>(index.internalPointer());
+  ScalarTreeItem *parentItem = childItem->parent();
+
+  if (parentItem == _rootItem)
+      return QModelIndex();
+
+  return createIndex(parentItem->row(), 0, parentItem);
 }
 
 
