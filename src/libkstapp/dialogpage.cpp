@@ -19,9 +19,7 @@
 namespace Kst {
 
 DialogPage::DialogPage(Dialog *parent)
-  : QTabWidget(parent), _dialog(parent) {
-
-  tabBar()->setVisible(false);
+  : QWidget(parent), _dialog(parent) {
 }
 
 
@@ -39,15 +37,44 @@ void DialogPage::addDialogTab(DialogTab *tab) {
   connect(this, SIGNAL(apply()), tab, SIGNAL(apply()));
   connect(this, SIGNAL(cancel()), tab, SIGNAL(cancel()));
   connect(tab, SIGNAL(modified()), this, SIGNAL(modified()));
-  addTab(tab, tab->tabTitle());
+  _widget = tab;
+  QVBoxLayout *layout = new QVBoxLayout(this);
+  layout->setContentsMargins(0, 0, 0, 0);
+  layout->addWidget(tab);
+  setLayout(layout);
 }
 
 
-void DialogPage::setVisible(bool visible) {
+QWidget* DialogPage::currentWidget() {
+  return _widget;
+}
 
-  tabBar()->setVisible(count() > 1);
+DialogPageTab::DialogPageTab(Dialog *parent)
+  : DialogPage(parent) {
 
-  QTabWidget::setVisible(visible);
+  _tabWidget = new QTabWidget(this);
+  QVBoxLayout *layout = new QVBoxLayout(this);
+  layout->setContentsMargins(0, 0, 0, 0);
+  layout->addWidget(_tabWidget);
+  setLayout(layout);
+}
+
+
+DialogPageTab::~DialogPageTab() {
+}
+
+
+void DialogPageTab::addDialogTab(DialogTab *tab) {
+  connect(this, SIGNAL(ok()), tab, SIGNAL(ok()));
+  connect(this, SIGNAL(apply()), tab, SIGNAL(apply()));
+  connect(this, SIGNAL(cancel()), tab, SIGNAL(cancel()));
+  connect(tab, SIGNAL(modified()), this, SIGNAL(modified()));
+  _tabWidget->addTab(tab, tab->tabTitle());
+}
+
+
+QWidget* DialogPageTab::currentWidget() {
+  return _tabWidget->currentWidget();
 }
 
 }

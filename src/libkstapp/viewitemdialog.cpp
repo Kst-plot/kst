@@ -36,7 +36,7 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
   connect(_strokeTab, SIGNAL(apply()), this, SLOT(strokeChanged()));
   connect(_layoutTab, SIGNAL(apply()), this, SLOT(layoutChanged()));
 
-  DialogPage *page = new DialogPage(this);
+  DialogPageTab *page = new DialogPageTab(this);
   page->setPageTitle(tr("Appearance"));
   page->addDialogTab(_fillTab);
   page->addDialogTab(_strokeTab);

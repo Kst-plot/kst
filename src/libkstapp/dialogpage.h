@@ -22,7 +22,7 @@ namespace Kst {
 class Dialog;
 class DialogTab;
 
-class KST_EXPORT DialogPage : public QTabWidget
+class KST_EXPORT DialogPage : public QWidget
 {
   Q_OBJECT
   public:
@@ -39,19 +39,34 @@ class KST_EXPORT DialogPage : public QTabWidget
 
     void addDialogTab(DialogTab *tab);
 
+    virtual QWidget* currentWidget();
+
   Q_SIGNALS:
     void ok();
     void apply();
     void cancel();
     void modified();
 
-  protected:
-    void setVisible(bool visible);
-
   private:
     QString _pageTitle;
     QPixmap _pageIcon;
     QPointer<Dialog> _dialog;
+    QWidget* _widget;
+};
+
+class KST_EXPORT DialogPageTab : public DialogPage
+{
+  Q_OBJECT
+  public:
+    DialogPageTab(Dialog *parent);
+    virtual ~DialogPageTab();
+
+    void addDialogTab(DialogTab *tab);
+
+    QWidget* currentWidget();
+
+  private:
+    QTabWidget* _tabWidget;
 };
 
 }
