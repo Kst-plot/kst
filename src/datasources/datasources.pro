@@ -2,7 +2,8 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 SUBDIRS += \
-    ascii
+    ascii \
+    sampledatasource
 
 
 !win32:SUBDIRS += dirfile
