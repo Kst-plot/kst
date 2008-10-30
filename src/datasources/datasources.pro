@@ -3,6 +3,7 @@ CONFIG += ordered
 
 SUBDIRS += \
     ascii \
+    qimagesource \
     sampledatasource
 
 
