@@ -1,0 +1,14 @@
+How to make a Kst release:  Currently Incomplete.
+
+- update from SVN (svn update)
+- svn copy to a branch (svn cp)
+- edit RELEASE.NOTES (kst/RELEASE.NOTES)
+- update config.h to set the version number
+- build kst and make sure it builds correctly 
+  (kst/build-kst)
+- run a tests and make sure it completely passes 
+  (kst/run-tests)
+
+Update Documentation. (Not yet documented)
+Package and distribute. (Not yet documented)
+Test distribution and announce (Not yet documented)
