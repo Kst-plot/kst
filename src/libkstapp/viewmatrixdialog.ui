@@ -14,16 +14,7 @@
   </property>
   <layout class="QGridLayout" >
    <item row="0" column="0" >
-    <widget class="Kst::MatrixSelector" native="1" name="matrixSelector" >
-    <property name="geometry" >
-      <rect>
-      <x>11</x>
-      <y>11</y>
-      <width>485</width>
-      <height>0</height>
-      </rect>
-    </property>
-    </widget>
+    <widget class="Kst::MatrixSelector" native="1" name="matrixSelector" />
    </item>
    <item row="1" column="0" >
     <widget class="QTableView" name="_matrices" />
@@ -52,32 +43,32 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>MatrixEditorDialog</receiver>
+   <receiver>ViewMatrixDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>248</x>
-     <y>254</y>
+     <x>298</x>
+     <y>513</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>157</x>
-     <y>274</y>
+     <x>298</x>
+     <y>267</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>MatrixEditorDialog</receiver>
+   <receiver>ViewMatrixDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>316</x>
-     <y>260</y>
+     <x>298</x>
+     <y>513</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>286</x>
-     <y>274</y>
+     <x>298</x>
+     <y>267</y>
     </hint>
    </hints>
   </connection>
