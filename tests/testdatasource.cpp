@@ -24,6 +24,7 @@
 
 #define protected public
 #include <datavector.h>
+#include <datamatrix.h>
 #undef protected
 
 static Kst::ObjectStore _store;
@@ -321,10 +322,11 @@ void TestDataSource::testDirfile() {
   //These tests assume that the dirfile was generated with dirfile_maker
 
   {
-    QString fifteen = QDir::currentPath() + QDir::separator() + QString("dirfile_testcase") +
+    QString fifteen = QDir::currentPath() + QDir::separator() + QString("tests") +
+                      QDir::separator() + QString("dirfile_testcase") +
                       QDir::separator() + QString("15count");
     if (!QFile::exists(fifteen + QDir::separator() + "format")) {
-      return;
+      QSKIP("...unable to perform test.  Datafile missing", SkipAll);
     }
     printf("Opening dirfile = %s for test.\n", fifteen.toLatin1().data());
 
@@ -333,8 +335,8 @@ void TestDataSource::testDirfile() {
 
     QVERIFY(dsp);
     QVERIFY(dsp->isValid());
-    QVERIFY(dsp->hasConfigWidget());
-    QCOMPARE(dsp->fileType(), QLatin1String("DirFile"));
+    QVERIFY(!dsp->hasConfigWidget());
+    QCOMPARE(dsp->fileType(), QLatin1String("Directory of Binary Files"));
     QVERIFY(dsp->isValidField("INDEX"));
     QCOMPARE(dsp->frameCount("INDEX"), 15);
     QVERIFY(dsp->isValidField("cos"));
@@ -369,9 +371,7 @@ void TestDataSource::testDirfile() {
     QCOMPARE(5.0, rvp->value(1));
     QCOMPARE(10.0, rvp->value(2));
 
-    //The numFrames should report 11 as it lies on the skip boundary
-    QCOMPARE(11, rvp->numFrames());
-    //The startFrame should report 0 as it lies on the skip boundary
+    QCOMPARE(15, rvp->numFrames());
     QCOMPARE(0, rvp->startFrame());
 
     QCOMPARE(-1, rvp->reqNumFrames());
@@ -384,7 +384,7 @@ void TestDataSource::testDirfile() {
     QCOMPARE(false, rvp->doAve());
   }
   {
-    //Skip FIVE frames...
+    //Skip FIVE frames start at 3...
     Kst::DataVectorPtr rvp = Kst::kst_cast<Kst::DataVector>(_store.createObject<Kst::DataVector>());
 
     rvp->writeLock();
@@ -392,15 +392,12 @@ void TestDataSource::testDirfile() {
     rvp->update();
     rvp->unlock();
 
-    //We should have length equal to three...  items {5, 10}
+    //We should have length equal to two...  items {5, 10}
     QCOMPARE(2, rvp->length());
     QCOMPARE(5.0, rvp->value(0));
     QCOMPARE(10.0, rvp->value(1));
-    QCOMPARE(13.0, rvp->value(2));
 
-    //The numFrames should still report 11 as it lies on the skip boundary
-    QCOMPARE(6, rvp->numFrames());
-    //The startFrame should report 3 as it lies on the skip boundary and was requested
+    QCOMPARE(10, rvp->numFrames());
     QCOMPARE(5, rvp->startFrame());
 
     QCOMPARE(-1, rvp->reqNumFrames());
@@ -413,7 +410,7 @@ void TestDataSource::testDirfile() {
     QCOMPARE(false, rvp->doAve());
   }
   {
-    //Skip FIVE frames...
+    //Skip FIVE frames 11 from end...
     Kst::DataVectorPtr rvp = Kst::kst_cast<Kst::DataVector>(_store.createObject<Kst::DataVector>());
 
     rvp->writeLock();
@@ -421,15 +418,12 @@ void TestDataSource::testDirfile() {
     rvp->update();
     rvp->unlock();
 
-    //We should have length equal to three...  items {0, 5, 10}
-    QCOMPARE(3, rvp->length());
+    //We should have length equal to two...  items {0, 5}
+    QCOMPARE(2, rvp->length());
     QCOMPARE(0.0, rvp->value(0));
     QCOMPARE(5.0, rvp->value(1));
-    QCOMPARE(10.0, rvp->value(2));
 
-    //The numFrames should still report 11 as it lies on the skip boundary
-    QCOMPARE(11, rvp->numFrames());
-    //The startFrame should still report 0 as it lies on the skip boundary
+    QCOMPARE(10, rvp->numFrames());
     QCOMPARE(0, rvp->startFrame());
 
     QCOMPARE(11, rvp->reqNumFrames());
@@ -455,9 +449,7 @@ void TestDataSource::testDirfile() {
     QCOMPARE(5.0, rvp->value(0));
     QCOMPARE(10.0, rvp->value(1));
 
-    //The numFrames should report 6 as it lies on the skip boundary
-    QCOMPARE(6, rvp->numFrames());
-    //The startFrame should report 5 as it lies on the skip boundary
+    QCOMPARE(10, rvp->numFrames());
     QCOMPARE(5, rvp->startFrame());
 
     QCOMPARE(10, rvp->reqNumFrames());
@@ -514,6 +506,109 @@ void TestDataSource::testPlanck() {
 
 
 void TestDataSource::testStdin() {
+}
+
+void TestDataSource::testQImageSource() {
+  bool ok = true;
+
+  if (!_plugins.contains("QImage Source Reader"))
+    QSKIP("...couldn't find plugin.", SkipAll);
+
+  //These tests assume that the image kst.png exists in src/images
+  QString imageFile = QDir::currentPath() + QDir::separator() + QString("src") +
+                      QDir::separator() + QString("images") + QDir::separator() + QString("kst.png");
+
+  if (!QFile::exists(imageFile)) {
+    QSKIP("...unable to perform test.  Image file missing.", SkipAll);
+  }
+
+  printf("Opening image = %s for test.\n", imageFile.toLatin1().data());
+
+  Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(&_store, imageFile);
+  dsp->update();
+
+  QVERIFY(dsp);
+  QVERIFY(dsp->isValid());
+  QVERIFY(!dsp->hasConfigWidget());
+  QCOMPARE(dsp->fileType(), QLatin1String("QImage compatible Image"));
+  QVERIFY(dsp->isValidField("INDEX"));
+  QCOMPARE(dsp->frameCount("INDEX"), 1024);
+  QVERIFY(dsp->isValidField("RED"));
+  QVERIFY(dsp->isValidField("BLUE"));
+  QVERIFY(dsp->isValidField("GREEN"));
+  QVERIFY(dsp->isValidField("GRAY"));
+  QVERIFY(!dsp->isValidField("foo"));
+
+  //TODO test samples per frame?
+
+  QCOMPARE(dsp->fileName(), imageFile);
+  QCOMPARE(dsp->fieldList().count(), 5);
+  QVERIFY(dsp->fieldListIsComplete());
+
+  QVERIFY(!dsp->isEmpty());
+
+  QVERIFY(dsp->isValidMatrix("RED"));
+  QVERIFY(dsp->isValidMatrix("BLUE"));
+  QVERIFY(dsp->isValidMatrix("GREEN"));
+  QVERIFY(dsp->isValidMatrix("GRAY"));
+  QVERIFY(!dsp->isValidMatrix("foo"));
+
+  {
+    Kst::DataMatrixPtr matrix = Kst::kst_cast<Kst::DataMatrix>(_store.createObject<Kst::DataMatrix>());
+    matrix->change(dsp, "GRAY", 0, 0,
+        -1, -1, false,
+        false, 0, 0, 0, 1, 1);
+
+    matrix->writeLock();
+    matrix->update();
+    matrix->unlock();
+
+
+    QCOMPARE(matrix->xNumSteps(), 32);
+    QCOMPARE(matrix->yNumSteps(), 32);
+    QCOMPARE(matrix->xStepSize(), 1.0);
+    QCOMPARE(matrix->yStepSize(), 1.0);
+    QCOMPARE(matrix->minX(), 0.0);
+    QCOMPARE(matrix->minY(), 0.0);
+
+    QCOMPARE(matrix->minValue(), 0.0);
+    QCOMPARE(matrix->maxValue(), 255.0);
+
+    QCOMPARE(matrix->minValuePositive(), 7.0);
+
+    QCOMPARE(matrix->sampleCount(), 1024);
+
+    QCOMPARE(matrix->value(0, 0, &ok), 0.0);
+    QVERIFY(ok);
+    QCOMPARE(matrix->value(25, 3, &ok), 81.0);
+    QVERIFY(ok);
+  }
+  {
+    Kst::DataVectorPtr rvp = Kst::kst_cast<Kst::DataVector>(_store.createObject<Kst::DataVector>());
+
+    rvp->writeLock();
+    rvp->change(dsp, "INDEX", 0, -1, 1, false, false);
+    rvp->update();
+    rvp->unlock();
+
+    QCOMPARE(1024, rvp->length());
+    QCOMPARE(0.0, rvp->value(0));
+    QCOMPARE(1.0, rvp->value(1));
+    QCOMPARE(2.0, rvp->value(2));
+    QCOMPARE(1023.0, rvp->value(1023));
+
+    QCOMPARE(1024, rvp->numFrames());
+    QCOMPARE(0, rvp->startFrame());
+
+    QCOMPARE(-1, rvp->reqNumFrames());
+    QCOMPARE(0, rvp->reqStartFrame());
+
+    QCOMPARE(true, rvp->readToEOF());
+    QCOMPARE(false, rvp->countFromEOF());
+    QCOMPARE(false, rvp->doSkip());
+    QCOMPARE(0, rvp->skip());
+    QCOMPARE(false, rvp->doAve());
+  }
 }
 
 // vim: ts=2 sw=2 et
