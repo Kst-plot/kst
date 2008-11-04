@@ -36,13 +36,7 @@
 #include "debug.h"
 #include "math_kst.h"
 #include "objectstore.h"
-
-#define SMALL_NON_ZERO 0.00000000001
-#define DOUBLE_EQUAL(X,Y) ( (fabs( (X) - (Y) ) < SMALL_NON_ZERO) || (X == Y) ) /* X == Y */
-#define DOUBLE_LESSTHAN(X,Y) ( (Y) - (X) > SMALL_NON_ZERO ) /* X > Y */
-#define DOUBLE_LESSTHAN_EQUAL(X,Y) ( DOUBLE_LESSTHAN(X, Y) || DOUBLE_EQUAL(X, Y) ) /* X >= Y */
-#define DOUBLE_GREATERTHAN(X,Y) ( (X) - (Y) > SMALL_NON_ZERO ) /* Y > X */
-#define DOUBLE_GREATERTHAN_EQUAL(X,Y) ( DOUBLE_GREATERTHAN(X, Y) || DOUBLE_EQUAL(X, Y) ) /* X >= Y */
+#include "doublecompare.h"
 
 extern /*"C"*/ int yyparse(Kst::ObjectStore *store);
 extern /*"C"*/ void *ParsedEquation;
@@ -1038,7 +1032,7 @@ LessThan::~LessThan() {
 
 
 double LessThan::value(Context *ctx) {
-  return DOUBLE_LESSTHAN(_left->value(ctx), _right->value(ctx)) ? EQ_TRUE : EQ_FALSE;
+  return doubleLessThan(_left->value(ctx), _right->value(ctx)) ? EQ_TRUE : EQ_FALSE;
 }
 
 
@@ -1068,7 +1062,7 @@ LessThanEqual::~LessThanEqual() {
 
 
 double LessThanEqual::value(Context *ctx) {
-  return DOUBLE_LESSTHAN_EQUAL(_left->value(ctx), _right->value(ctx)) ? EQ_TRUE : EQ_FALSE;
+  return doubleLessThanEqual(_left->value(ctx), _right->value(ctx)) ? EQ_TRUE : EQ_FALSE;
 }
 
 
@@ -1098,7 +1092,7 @@ GreaterThan::~GreaterThan() {
 
 
 double GreaterThan::value(Context *ctx) {
-  return DOUBLE_GREATERTHAN(_left->value(ctx), _right->value(ctx)) ? EQ_TRUE : EQ_FALSE;
+  return doubleGreaterThan(_left->value(ctx), _right->value(ctx)) ? EQ_TRUE : EQ_FALSE;
 }
 
 
@@ -1128,7 +1122,7 @@ GreaterThanEqual::~GreaterThanEqual() {
 
 
 double GreaterThanEqual::value(Context *ctx) {
-  return DOUBLE_GREATERTHAN_EQUAL(_left->value(ctx), _right->value(ctx)) ? EQ_TRUE : EQ_FALSE;
+  return doubleGreaterThanEqual(_left->value(ctx), _right->value(ctx)) ? EQ_TRUE : EQ_FALSE;
 }
 
 
@@ -1158,7 +1152,7 @@ EqualTo::~EqualTo() {
 
 
 double EqualTo::value(Context *ctx) {
-  return DOUBLE_EQUAL(_left->value(ctx), _right->value(ctx)) ? EQ_TRUE : EQ_FALSE;
+  return doubleEqual(_left->value(ctx), _right->value(ctx)) ? EQ_TRUE : EQ_FALSE;
 }
 
 
@@ -1188,7 +1182,7 @@ NotEqualTo::~NotEqualTo() {
 
 
 double NotEqualTo::value(Context *ctx) {
-  return _left->value(ctx) != _right->value(ctx) ? EQ_TRUE : EQ_FALSE;
+  return (!doubleEqual(_left->value(ctx), _right->value(ctx))) ? EQ_TRUE : EQ_FALSE;
 }
 
 
