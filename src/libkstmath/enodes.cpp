@@ -38,7 +38,7 @@
 #include "objectstore.h"
 
 #define SMALL_NON_ZERO 0.00000000001
-#define DOUBLE_EQUAL(X,Y) ( (fabs( (X) - (Y) ) < SMALL_NON_ZERO) || X == Y ) /* X == Y */
+#define DOUBLE_EQUAL(X,Y) ( (fabs( (X) - (Y) ) < SMALL_NON_ZERO) || (X == Y) ) /* X == Y */
 #define DOUBLE_LESSTHAN(X,Y) ( (Y) - (X) > SMALL_NON_ZERO ) /* X > Y */
 #define DOUBLE_LESSTHAN_EQUAL(X,Y) ( DOUBLE_LESSTHAN(X, Y) || DOUBLE_EQUAL(X, Y) ) /* X >= Y */
 #define DOUBLE_GREATERTHAN(X,Y) ( (X) - (Y) > SMALL_NON_ZERO ) /* Y > X */
