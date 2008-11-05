@@ -128,6 +128,9 @@ void ObjectStore::clear() {
   foreach(Object *o, _list) {
     removeObject(o);
   }
+
+  // Reset the named objects id's.
+  NamedObject::resetNameIndex();
 }
 
 

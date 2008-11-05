@@ -79,6 +79,9 @@ public:
     bool descriptiveNameIsManual() const;
     static void processShortNameIndexAttributes(QXmlStreamAttributes &attrs);
 
+    // Reset all name indexes.  Should only be used by ObjectStore when clearing the store entirely.
+    static void resetNameIndex();
+
   protected:
     virtual QString _automaticDescriptiveName() const= 0;
     QString _manualDescriptiveName;

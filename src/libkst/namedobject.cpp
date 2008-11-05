@@ -152,6 +152,34 @@ void NamedObject::processShortNameIndexAttributes(QXmlStreamAttributes &attrs) {
     _mnum = R.toString().toInt();
 }
 
+
+// Reset all name indexes.  Should only be used by ObjectStore when clearing the store entirely.
+void NamedObject::resetNameIndex() {
+  _vnum = 1; // vectors
+  _pnum = 1; // plugins
+  _csdnum = 1; // csd
+  _cnum = 1; // curves
+  _enum = 1; // equations
+  _hnum = 1; // histograms
+  _inum = 1; // images
+  _psdnum = 1; // psd
+  _xnum = 1; // scalars
+  _tnum = 1; // text string
+  _mnum = 1; // matrix
+
+  max_vnum = 0; // vectors
+  max_pnum = 0; // plugins
+  max_csdnum = 0; // csd
+  max_cnum = 0; // curves
+  max_enum = 0; // equations
+  max_hnum = 0; // histograms
+  max_inum = 0; // images
+  max_psdnum = 0; // psd
+  max_xnum = 0; // scalars
+  max_tnum = 0; // text string
+  max_mnum = 0; // matrix
+}
+
 // QString NamedObject::descriptionTip() const {
 //   return Name();
 // }
