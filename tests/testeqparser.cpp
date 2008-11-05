@@ -216,6 +216,18 @@ void TestEqParser::testEqParser() {
   QVERIFY(validateEquation("cos(0.0)", 0.0, 1.0));
   QVERIFY(validateEquation("cos(3.14159265358979323)", 0.0, -1.0));
   QVERIFY(validateEquation("cos(3.14159265358979323/2.00000000000000000000000000)", 0.0, 0.0));
+
+  QVERIFY(validateEquation("sec(0.2332744)", 0.0, 1.0278393504553487));
+  QVERIFY(validateEquation("csc(0.2332744)", 0.0, 4.3259243283703714));
+  QVERIFY(validateEquation("cot(0.2332744)", 0.0, 4.2087553141976128));
+  QVERIFY(validateEquation("1/cos(0.2332744)", 0.0, 1.0278393504553487));
+  QVERIFY(validateEquation("1/sin(0.2332744)", 0.0, 4.3259243283703714));
+  QVERIFY(validateEquation("1/tan(0.2332744)", 0.0, 4.2087553141976128));
+
+  QVERIFY(validateEquation("sec(0.2332744) == 1/cos(0.2332744)", 0.2332744, 1.0));
+  QVERIFY(validateEquation("csc(0.2332744) == 1/sin(0.2332744)", 0.2332744, 1.0));
+  QVERIFY(validateEquation("cot(0.2332744) == 1/tan(0.2332744)", 0.2332744, 1.0));
+
   QVERIFY(validateEquation("sec(x) == 1/cos(x)", 0.2332744, 1.0));
   QVERIFY(validateEquation("csc(x) == 1/sin(x)", 0.2332744, 1.0));
   QVERIFY(validateEquation("cot(x) == 1/tan(x)", 0.2332744, 1.0));
@@ -328,28 +340,47 @@ void TestEqParser::testEqParser() {
   Kst::ScalarPtr s = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>());
   s->setValue(1.0);
   s->setOrphan(true);
+  s->setDescriptiveName("test1");
   s = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>());
   s->setValue(0.0);
   s->setOrphan(true);
+  s->setDescriptiveName("test2");
   s = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>());
   s->setValue(-1.0);
   s->setOrphan(true);
+  s->setDescriptiveName("test3");
   s = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>());
   s->setValue(_NOPOINT);
   s->setOrphan(true);
+  s->setDescriptiveName("test4");
   s = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>());
   s->setValue(INF);
   s->setOrphan(true);
+  s->setDescriptiveName("test5");
   s = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>());
   s->setValue(-INF);
   s->setOrphan(true);
+  s->setDescriptiveName("sdf");
 
   QVERIFY(validateEquation("[test1]", 0.0, 1.0));
   QVERIFY(validateEquation("[test4]", 0.0, _NOPOINT));
   QVERIFY(validateEquation("[test4] - [test4]", 0.0, _NOPOINT));
   QVERIFY(validateEquation("[test4] - [test5]", 0.0, _NOPOINT));
   QVERIFY(validateEquation("[test4]*[test5]", 0.0, _NOPOINT));
-  QVERIFY(validateEquation("[sdf]", 0.0, _NOPOINT));
+
+  QVERIFY(validateEquation("[test1 (X1)]", 0.0, 1.0));
+  QVERIFY(validateEquation("[test4 (X4)]", 0.0, _NOPOINT));
+  QVERIFY(validateEquation("[test4 (X4)] - [test4 (X4)]", 0.0, _NOPOINT));
+  QVERIFY(validateEquation("[test4 (X4)] - [test5 (X5)]", 0.0, _NOPOINT));
+  QVERIFY(validateEquation("[test4 (X4)]*[test5 (X5)]", 0.0, _NOPOINT));
+
+  QVERIFY(validateEquation("[X1]", 0.0, 1.0));
+  QVERIFY(validateEquation("[X4]", 0.0, _NOPOINT));
+  QVERIFY(validateEquation("[X4] - [X4]", 0.0, _NOPOINT));
+  QVERIFY(validateEquation("[X4] - [X5]", 0.0, _NOPOINT));
+  QVERIFY(validateEquation("[X4]*[X5]", 0.0, _NOPOINT));
+
+  QVERIFY(validateEquation("[sdf]", 0.0, -INF));
 
   QVERIFY(validateEquation("[=10+10]", 0.0, 20.0));
 
@@ -357,26 +388,47 @@ void TestEqParser::testEqParser() {
   Kst::GeneratedVectorPtr gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>());
   Q_ASSERT(gv);
   gv->changeRange(0, 1.0, 10);
+  gv->setDescriptiveName("gvector1");
   gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>());
   Q_ASSERT(gv);
   gv->changeRange(0, 1.0, 10);
+  gv->setDescriptiveName("gvector2");
   gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>());
   Q_ASSERT(gv);
   gv->changeRange(1.0, 2.0, 10);
+  gv->setDescriptiveName("gvector3");
   gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>());
   Q_ASSERT(gv);
   gv->changeRange(0, 1.0, 2);
+  gv->setDescriptiveName("gvector4");
   gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>());
   Q_ASSERT(gv);
   gv->changeRange(-1.0, 1.0, 1000);
+  gv->setDescriptiveName("gvector5");
   gv = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>());
   Q_ASSERT(gv);
   gv->changeRange(-1.0, 1.0, 1000);
-  QVERIFY(validateEquation("[V2] - [V1]", 0.0, 1.0));
-  QVERIFY(validateEquation("[V2[9]]", 0.0, 2.0));
-  QVERIFY(validateEquation("[V2[5+4]]", 0.0, 2.0));
-  QVERIFY(validateEquation("[V2[]]", 0.0, 1.0));
-  QVERIFY(validateEquation("2*sin([V5-%+-_!])", 0.0, -1.6829419696157930));
+  gv->setDescriptiveName("gvector6");
+
+  QVERIFY(validateEquation("[gvector3] - [gvector2]", 0.0, 1.0));
+  QVERIFY(validateEquation("[gvector3[9]]", 0.0, 2.0));
+  QVERIFY(validateEquation("[gvector3[5+4]]", 0.0, 2.0));
+  QVERIFY(validateEquation("[gvector3[]]", 0.0, 1.0));
+  QVERIFY(validateEquation("2*sin([gvector6])", 0.0, -1.6829419696157930));
+
+  QVERIFY(validateEquation("[gvector3 (V3)] - [gvector2 (V2)]", 0.0, 1.0));
+  QVERIFY(validateEquation("[gvector3 (V3)[9]]", 0.0, 2.0));
+  QVERIFY(validateEquation("[gvector3 (V3)[5+4]]", 0.0, 2.0));
+  QVERIFY(validateEquation("[gvector3 (V3)[]]", 0.0, 1.0));
+  QVERIFY(validateEquation("2*sin([gvector6 (V6)])", 0.0, -1.6829419696157930));
+
+
+  QVERIFY(validateEquation("[V3] - [V2]", 0.0, 1.0));
+  QVERIFY(validateEquation("[V3[9]]", 0.0, 2.0));
+  QVERIFY(validateEquation("[V3[5+4]]", 0.0, 2.0));
+  QVERIFY(validateEquation("[V3[]]", 0.0, 1.0));
+  QVERIFY(validateEquation("2*sin([V6])", 0.0, -1.6829419696157930));
+
   // TODO: interpolation, more vector combinations
 
   // Plugins
@@ -409,13 +461,24 @@ void TestEqParser::testEqParser() {
   QVERIFY(validateEquation("0||2-2", 0.0, 0.0));
   QVERIFY(validateEquation("8|2*2", 0.0, 12.0));
   QVERIFY(validateEquation("2*2|8", 0.0, 12.0));
-  QVERIFY(validateEquation("[V1] > 0.0", 0.0, 0.0));
-  QVERIFY(validateEquation("[V1] > -1.0", 0.0, 1.0));
-  QVERIFY(validateEquation("[1] > 0.0", 0.0, 0.0));
-  QVERIFY(validateEquation("[1] > -1.0", 0.0, 1.0));
 
-  QVERIFY(validateEquation("-([V1]*sin([V1]*[V2])+[V3]*cos([V3]*[V3]))", 0.0, 0.0));
-  QVERIFY(validateEquation("[V3] * -1", 0.0, 0.0));
+  QVERIFY(validateEquation("[gvector2] > 0.0", 0.0, 0.0));
+  QVERIFY(validateEquation("[gvector2] > -1.0", 0.0, 1.0));
+
+  QVERIFY(validateEquation("[gvector2 (V2)] > 0.0", 0.0, 0.0));
+  QVERIFY(validateEquation("[gvector2 (V2)] > -1.0", 0.0, 1.0));
+
+  QVERIFY(validateEquation("[V2] > 0.0", 0.0, 0.0));
+  QVERIFY(validateEquation("[V2] > -1.0", 0.0, 1.0));
+
+  QVERIFY(validateEquation("-([gvector2]*sin([gvector2]*[gvector3])+[gvector4]*cos([gvector4]*[gvector4]))", 0.0, 0.0));
+  QVERIFY(validateEquation("[gvector4] * -1", 0.0, 0.0));
+
+  QVERIFY(validateEquation("-([gvector2 (V2)]*sin([gvector2 (V2)]*[gvector3 (V3)])+[gvector4 (V4)]*cos([gvector4 (V4)]*[gvector4 (V4)]))", 0.0, 0.0));
+  QVERIFY(validateEquation("[gvector4 (V4)] * -1", 0.0, 0.0));
+
+  QVERIFY(validateEquation("-([V2]*sin([V2]*[V3])+[V4]*cos([V4]*[V4]))", 0.0, 0.0));
+  QVERIFY(validateEquation("[V4] * -1", 0.0, 0.0));
 
   QVERIFY(validateText("3*x", "3*x"));
   QVERIFY(validateText("(3*x)", "(3*x)"));
