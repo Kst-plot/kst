@@ -114,7 +114,7 @@ static void scanPlugins() {
     //try a cast
     if (DataSourcePluginInterface *ds = dynamic_cast<DataSourcePluginInterface*>(plugin)) {
       tmpList.append(ds);
-    }
+    } 
   }
 
   QStringList pluginPaths;
@@ -130,6 +130,8 @@ static void scanPlugins() {
           if (DataSourcePluginInterface *ds = dynamic_cast<DataSourcePluginInterface*>(plugin)) {
             tmpList.append(ds);
           }
+        } else {
+              Debug::self()->log(QString("instance failed for %1 (%2)").arg(fileName).arg(loader.errorString()));
         }
     }
   }
@@ -218,7 +220,6 @@ static DataSourcePtr findPluginFor(ObjectStore *store, const QString& filename, 
       return plugin;
     }
   }
-
   return 0L;
 }
 
@@ -730,9 +731,10 @@ QStringList DataSource::fieldScalars(const QString& field) {
   return QStringList();
 }
 
-int DataSource::readFieldScalars(double v[], const QString& field) {
+int DataSource::readFieldScalars(QList<double> &v, const QString& field, bool init) {
   Q_UNUSED(v)
   Q_UNUSED(field)
+  Q_UNUSED(init)
   return (0);
 }
 
@@ -743,9 +745,10 @@ QStringList DataSource::fieldStrings(const QString& field) {
 }
 
 
-int DataSource::readFieldScalars(QStringList &v, const QString& field) {
+int DataSource::readFieldStrings(QStringList &v, const QString& field, bool init) {
   Q_UNUSED(v)
   Q_UNUSED(field)
+  Q_UNUSED(init)
   return (0);
 }
 

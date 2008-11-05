@@ -25,6 +25,7 @@
 
 #include "primitive.h"
 #include "scalar.h"
+#include "string_kst.h"
 #include "kst_export.h"
 
 class QXmlStreamWriter;
@@ -135,6 +136,7 @@ class Vector : public Primitive {
     bool isScalarList() const { return _isScalarList; }
 
     const QHash<QString, Scalar*>& scalars() const;
+    const QHash<QString, String*>& strings() const; // used by datavector
 
     void setLabel(const QString& label_in);
 
@@ -172,6 +174,9 @@ class Vector : public Primitive {
     /** Statistics Scalars */
     QHash<QString, Scalar*> _scalars;
 
+    /** Dependent Strings: used by datavector */
+    QHash<QString, String*> _strings;
+
     /** is the vector monotonically rising */
     bool _is_rising : 1;
 
@@ -193,7 +198,6 @@ class Vector : public Primitive {
 
     /** Scalar Maintenance methods */
     void CreateScalars(ObjectStore *store);
-    void RenameScalars();
 
     virtual void deleteDependents();
 

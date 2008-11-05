@@ -118,6 +118,7 @@ void DataVector::change(DataSourcePtr in_file, const QString &in_field,
     _file->writeLock();
   }
   reset();
+  _resetFieldMetadata();
   if (_file) {
     _file->unlock();
   }
@@ -144,6 +145,7 @@ void DataVector::changeFile(DataSourcePtr in_file) {
     _file->writeLock();
   }
   reset();
+  _resetFieldMetadata();
   if (_file) {
     _file->unlock();
   }
@@ -649,10 +651,95 @@ void DataVector::reload() {
         reset();
       }
     }
+    _resetFieldMetadata();
     _file->unlock();
   }
 }
 
+void DataVector::_resetFieldMetadata() {
+  _resetFieldScalars();
+  _resetFieldStrings();
+}
+
+void DataVector::_resetFieldStrings() {
+  // Note: this does not necessarily preseve order if the 
+  // datasource or field have been changed.  If dynamic
+  // fieldScalars are ever wanted, this should be fixed.
+  QStringList string_names = dataSource()->fieldStrings(field());
+  QStringList string_values;
+  dataSource()->readFieldStrings(string_values, field(), true);
+  StringPtr sp;
+  QString key;
+
+  QStringList fieldStringKeys = _fieldStrings.keys();
+  // remove field strings that no longer need to exist
+  readLock();
+  for (int i=0; i<fieldStringKeys.count(); i++) {
+    key = fieldStringKeys.at(i);
+    if (!string_names.contains(key)) {
+      StringPtr sp = _fieldStrings[key];
+      _strings.remove(key);
+      _fieldStrings.remove(key);
+      sp = 0L;
+    }
+  }
+  // find or insert strings, to set their value
+  for (int i=0; i<string_names.count(); i++) {
+    key = string_names.at(i);
+    if (!_fieldStrings.contains(key)) { // insert a new one
+      _strings.insert(key, sp = store()->createObject<String>());
+      _fieldStrings.insert(key, sp);
+      sp->setProvider(this);
+      sp->setSlaveName(string_names.at(i));
+      sp->_KShared_ref();
+    } else {  // find it
+      sp = _fieldStrings[key];
+    }
+    sp->setValue(string_values[i]);
+  }
+  unlock();
+}
+
+
+void DataVector::_resetFieldScalars() {
+  // Note: this does not necessarily preseve order if the 
+  // datasource or field have been changed.  If dynamic
+  // fieldScalars are ever wanted, this should be fixed.
+  QStringList scalar_names = dataSource()->fieldScalars(field());
+  QList<double> scalar_values;
+  dataSource()->readFieldScalars(scalar_values, field(), true);
+
+  ScalarPtr sp;
+  QString key;
+
+  QStringList fieldScalarKeys = _fieldScalars.keys();
+  // remove field scalars that no longer need to exist
+  readLock();
+  for (int i=0; i<fieldScalarKeys.count(); i++) {
+    key = fieldScalarKeys.at(i);
+    if (!scalar_names.contains(key)) {
+      ScalarPtr sp = _fieldScalars[key];
+      _scalars.remove(key);
+      _fieldScalars.remove(key);
+      sp = 0L;
+    }
+  }
+  // find or insert scalars, to set their value
+  for (int i=0; i<scalar_names.count(); i++) {
+    key = scalar_names.at(i);
+    if (!_fieldScalars.contains(key)) { // insert a new one
+      _scalars.insert(key, sp = store()->createObject<Scalar>());
+      _fieldScalars.insert(key, sp);
+      sp->setProvider(this);
+      sp->setSlaveName(scalar_names.at(i));
+      sp->_KShared_ref();
+    } else {  // find it
+      sp = _fieldScalars[key];
+    }
+    sp->setValue(scalar_values[i]);
+  }
+  unlock();
+}
 
 DataSourcePtr DataVector::dataSource() const {
   return _file;

@@ -2,7 +2,7 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 SUBDIRS += \
-    #sampleplugin \
+    sampleplugin \
     filters \
     fits \
     dataobject

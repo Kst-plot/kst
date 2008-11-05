@@ -7,7 +7,7 @@ SUBDIRS += \
     sampledatasource
 
 
-!win32:SUBDIRS += dirfile
+!win32:SUBDIRS += dirfilesource
 
 #     cdf \
 #     fitsimage \

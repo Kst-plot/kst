@@ -121,7 +121,11 @@ class KST_EXPORT DataVector : public Vector {
 
     virtual QString _automaticDescriptiveName() const;
 
+    virtual void _resetFieldMetadata();
   private:
+    virtual void _resetFieldScalars();
+    virtual void _resetFieldStrings();
+
     Object::UpdateType doUpdate(bool force = false);
 
     bool _dirty; // different from the Object dirty flag
@@ -163,6 +167,10 @@ class KST_EXPORT DataVector : public Vector {
     void checkIntegrity(); // must be called with a lock
 
     bool _dontUseSkipAccel;
+
+    QHash<QString, Scalar*> _fieldScalars;
+    QHash<QString, String*> _fieldStrings;
+
 };
 
 typedef SharedPtr<DataVector> DataVectorPtr;

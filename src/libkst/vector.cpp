@@ -315,6 +315,11 @@ const QHash<QString, Scalar*>& Vector::scalars() const {
 }
 
 
+const QHash<QString, String*>& Vector::strings() const {
+  return _strings;
+}
+
+
 double* Vector::realloced(double *memptr, int newSize) {
   double *old = _v;
   _v = memptr;

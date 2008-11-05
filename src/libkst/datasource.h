@@ -31,8 +31,8 @@
 #include "object.h"
 #include "dateparser.h"
 #include "objectlist.h"
-#include "scalar.h"
-#include "string_kst.h"
+//#include "scalar.h"
+//#include "string_kst.h"
 
 class QXmlStreamWriter;
 class QXmlStreamAttributes;
@@ -212,18 +212,19 @@ class KST_EXPORT DataSource : public Object {
         These could be sample rate, calibrations, etc.  This list must be
         complete the very first time it is called and must never change its
         order or size, because readFieldScalars counts on its order and size. 
-        In order to remain fast, the data source can additionally assume that
-        readField() has already been called on the field, so the updating
-        of scalar values can be done there instead and cached for read by this
-        call.  */
+        */
     virtual QStringList fieldScalars(const QString& field);
 
     /** Read the values of the field scalars.  This is called for every field scalar
         every time the vector is updated, so it needs to be kept very cheap.
         Returns the number of scalars returned, and 0 on failure. V must
         be pre allocated to the right size as given by the length of the list
-        returned by fieldScalars() */ 
-    virtual int readFieldScalars(double v[], const QString& field);
+        returned by fieldScalars(). 
+        Most data sources will never change the the field scalars once they have 
+        been initialized.  In order to keep this case as fast as possible, the data 
+        source can chose to only update v[] if init is true.  
+        Note: datavector currently assumes these never change, and only gets them once! */ 
+    virtual int readFieldScalars(QList<double> &v, const QString& field, bool init);
 
     /** Returns a list of strings associated with a field by the data source.
         These could be units, notes, etc.  This list must be
@@ -237,8 +238,11 @@ class KST_EXPORT DataSource : public Object {
 
     /** Read the values of the field strings.  This is called 
         every time the vector is updated, so it needs to be kept very cheap.
-        Returns the number of strings returned, and 0 on failure. */ 
-    virtual int readFieldScalars(QStringList &v, const QString& field);
+        Returns the number of strings returned, and 0 on failure. 
+        Most data sources will never change the the field strings once they have 
+        been initialized.  In order to keep this case as fast as possible, the data 
+        source can chose to only update v if init is true.  */ 
+    virtual int readFieldStrings(QStringList &v, const QString& field, bool init);
 
     /************************************************************/
     /* Methods for Matrixes                                     */

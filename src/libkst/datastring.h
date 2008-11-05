@@ -18,7 +18,7 @@
 #ifndef DATASTRING_H
 #define DATASTRING_H
 
-#include "string.h"
+#include "string_kst.h"
 #include "datasource.h"
 #include "kst_export.h"
 
