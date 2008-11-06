@@ -185,7 +185,7 @@ bool DirFileSource::isEmpty() const {
 
 
 QString DirFileSource::fileType() const {
-  return staticTypeString;
+  return "Directory of Binary Files";
 }
 
 
