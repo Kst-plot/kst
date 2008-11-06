@@ -17,7 +17,7 @@ INCLUDEPATH += \
     $$OUTPUT_DIR/src/widgets \
     $$OUTPUT_DIR/src/datasources/ascii/tmp
 
-LIBS += -lkst -lgsl
+LIBS += -lkst -lkstmath -lkstwidgets -lkstapp -lgsl
 
 SOURCES += \
     convolve.cpp

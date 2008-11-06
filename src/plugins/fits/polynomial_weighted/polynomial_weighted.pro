@@ -17,7 +17,7 @@ INCLUDEPATH += \
     $$OUTPUT_DIR/src/widgets \
     $$OUTPUT_DIR/src/datasources/ascii/tmp
 
-LIBS += -lkst -lgsl
+LIBS += -lkst -lgsl -lkstmath -lkstwidgets -lkstapp
 
 SOURCES += \
     fitpolynomial_weighted.cpp
