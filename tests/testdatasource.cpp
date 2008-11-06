@@ -338,7 +338,7 @@ void TestDataSource::testDirfile() {
     QVERIFY(!dsp->hasConfigWidget());
     QCOMPARE(dsp->fileType(), QLatin1String("Directory of Binary Files"));
     QVERIFY(dsp->isValidField("INDEX"));
-    QCOMPARE(dsp->frameCount("INDEX"), 15);
+    QCOMPARE(dsp->frameCount("INDEX"), 17);
     QVERIFY(dsp->isValidField("cos"));
     QVERIFY(dsp->isValidField("fcount"));
     QVERIFY(dsp->isValidField("scount"));
@@ -446,11 +446,11 @@ void TestDataSource::testDirfile() {
 
     //We should have length equal to two...  items {5, 10}
     QCOMPARE(2, rvp->length());
-    QCOMPARE(5.0, rvp->value(0));
-    QCOMPARE(10.0, rvp->value(1));
+    QCOMPARE(10.0, rvp->value(0));
+    QCOMPARE(15.0, rvp->value(1));
 
     QCOMPARE(10, rvp->numFrames());
-    QCOMPARE(5, rvp->startFrame());
+    QCOMPARE(10, rvp->startFrame());
 
     QCOMPARE(10, rvp->reqNumFrames());
     QCOMPARE(-1, rvp->reqStartFrame());
