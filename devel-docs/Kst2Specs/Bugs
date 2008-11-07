@@ -1,8 +1,52 @@
-Crash deleting last tab:
-start kst, and in the only tab, select rmb->close.  CRASH!
-This is especially a problem since this is what TabWidget->clear() does.  TabWidget->clear() is used when opening
-a file to get rid of all of the old tabs.   As a temp hack (to allow file opening) clear() is not called on file open,
-so all of the old tabs linger after opening a file.  This should be reverted once the bug is fixed.
+Update curve after editing equation
+Create a plot with a curve from an equation.
+    eg, x = 0..100, y = x
+Put the plot in auto zoom ('m') mode.
+Edit the equation to change its Y range
+    eg, x = 0..100, y = 2x
+On apply, nothing changes.
+Do something that causes the curve to redraw (eg, resize the window).
+The curve redraws, but the Y zoom range stays at the old range.  'm' resets to the old zoom range.
+Now edit the curve, do nothing, and hit OK.  Still no change.
+Now do something to redraw the plot.  'm' mode now works.
+
+-----------
+Editing a slave vector from a vector selector should bring up the
+edit dialog for the provider.  Instead it brings up a vector edit 
+dialog.... not what is wanted and won't work anyway.
+(cbn to fix this)
+
+-----------
+Editing a slave scalar from a scalar selector should bring up the
+edit dialog for the provider.  Instead it brings up a scalar edit 
+dialog.... not what is wanted and won't work anyway.
+(cbn to fix this)
+
+----------
+Cur files no longer work.
+Select a cur file from dirfile_maker.  It thinks its a ascii file.
+
+--------
+Files can't be chosen from the command line (Same behavior as data wizard).
+  dirfiles aren't recognized at all
+  ascii files return empty 
+
+--------
+Data sources can't be selected from the data wizard.
+Try to select an ascii file or a dirfile using the data wizard.  It doesn't work.
+
+-------
+Problems with file selector
+If you browse to select a dirfile, the name of the previous dirfile has been put into "File name:" entry.  So you have to erase it to select a dirfile.
+Of course, selecting a data file replaces the old name with a new one, but there is no way to clear it selecting a dirfile.
+If the 'current file' is a dirfile, then the File name entry should be blank.
+Either:
+  always clear the current file: entry when a directory is changed, and don't fill it in the first place if the default file is a directory
+Or:
+  Check to see if the current directory is recognized as a valid datasource - if it is, clear the current file entry.
 
 
+--------
+Places where text labels are entered need string and scalar selectors to aid in the insertion of 
+strings and scalars (eg, primarily label editor)
 

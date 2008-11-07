@@ -47,3 +47,10 @@ What happens:
   As the curve is updated it dissappears from the plot.  Hitting 'm' recenters the curve.
 What should happen:
   In 'm' zoom mode, the plot ranges should dynamically update to cover the full range of the curve on every curve update (As if you were holding 'm' down continuously.  Try kst1.x for a demonstration of the appropriate behavior.
+
+Crash deleting last tab:
+start kst, and in the only tab, select rmb->close.  CRASH!
+This is especially a problem since this is what TabWidget->clear() does.  TabWidget->clear() is used when opening
+a file to get rid of all of the old tabs.   As a temp hack (to allow file opening) clear() is not called on file open,
+so all of the old tabs linger after opening a file.  This should be reverted once the bug is fixed.
+
