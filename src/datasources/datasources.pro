@@ -12,4 +12,8 @@ SUBDIRS += \
      message(CFITSIO configured.  Plugins will be built.)
      SUBDIRS += fitsimage
  }
-!win32:SUBDIRS += dirfilesource
+
+contains(HAVE_DIRFILE, 1) {
+     message(DIRFILE configured.  Plugins will be built.)
+  !win32:SUBDIRS += dirfilesource
+}
