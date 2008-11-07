@@ -100,8 +100,12 @@ void ScalarSelector::newScalar() {
 
 
 void ScalarSelector::editScalar() {
-  QString scalarName;
-  DialogLauncher::self()->showScalarDialog(scalarName, ObjectPtr(selectedScalar()));
+  if (selectedScalar()->provider()) {
+    DialogLauncher::self()->showObjectDialog(selectedScalar()->provider());
+  } else {
+    QString scalarName;
+    DialogLauncher::self()->showScalarDialog(scalarName, ObjectPtr(selectedScalar()));
+  }
   fillScalars();
 }
 

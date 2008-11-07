@@ -127,8 +127,12 @@ void VectorSelector::newVector() {
 
 
 void VectorSelector::editVector() {
-  QString vectorname;
-  DialogLauncher::self()->showVectorDialog(vectorname, ObjectPtr(selectedVector()));
+  if (selectedVector()->provider()) {
+    DialogLauncher::self()->showObjectDialog(selectedVector()->provider());
+  } else {
+    QString vectorname;
+    DialogLauncher::self()->showVectorDialog(vectorname, ObjectPtr(selectedVector()));
+  }
   fillVectors(); // we might have just changed the name, so refill the combo.
 
   emit contentChanged();

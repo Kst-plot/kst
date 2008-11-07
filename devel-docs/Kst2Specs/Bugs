@@ -10,18 +10,6 @@ The curve redraws, but the Y zoom range stays at the old range.  'm' resets to t
 Now edit the curve, do nothing, and hit OK.  Still no change.
 Now do something to redraw the plot.  'm' mode now works.
 
------------
-Editing a slave vector from a vector selector should bring up the
-edit dialog for the provider.  Instead it brings up a vector edit 
-dialog.... not what is wanted and won't work anyway.
-(cbn to fix this)
-
------------
-Editing a slave scalar from a scalar selector should bring up the
-edit dialog for the provider.  Instead it brings up a scalar edit 
-dialog.... not what is wanted and won't work anyway.
-(cbn to fix this)
-
 ----------
 Cur files no longer work.
 Select a cur file from dirfile_maker.  It thinks its a ascii file.

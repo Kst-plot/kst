@@ -307,35 +307,7 @@ void DataManager::showEditDialog(QModelIndex qml) {
 }
 
 void DataManager::showEditDialog() {
-  if (CurvePtr curve = kst_cast<Curve>(_currentObject)) {
-    DialogLauncher::self()->showCurveDialog(curve);
-  } else if (EquationPtr equation = kst_cast<Equation>(_currentObject)) {
-    DialogLauncher::self()->showEquationDialog(equation);
-  } else if (HistogramPtr histogram = kst_cast<Histogram>(_currentObject)) {
-    DialogLauncher::self()->showHistogramDialog(histogram);
-  } else if (PSDPtr psd = kst_cast<PSD>(_currentObject)) {
-    DialogLauncher::self()->showPowerSpectrumDialog(psd);
-  } else if (EventMonitorEntryPtr eventMonitorEntry = kst_cast<EventMonitorEntry>(_currentObject)) {
-    DialogLauncher::self()->showEventMonitorDialog(eventMonitorEntry);
-  } else if (ImagePtr image = kst_cast<Image>(_currentObject)) {
-    DialogLauncher::self()->showImageDialog(image);
-  } else if (CSDPtr csd = kst_cast<CSD>(_currentObject)) {
-    DialogLauncher::self()->showCSDDialog(csd);
-  } else if (VectorPtr vector = kst_cast<Vector>(_currentObject)) {
-    QString tmp;
-    DialogLauncher::self()->showVectorDialog(tmp, vector);
-  } else if (MatrixPtr matrix = kst_cast<Matrix>(_currentObject)) {
-    QString tmp;
-    DialogLauncher::self()->showMatrixDialog(tmp, matrix);
-  } else if (BasicPluginPtr plugin = kst_cast<BasicPlugin>(_currentObject)) {
-    DialogLauncher::self()->showBasicPluginDialog(plugin->pluginName(), plugin);
-  }  else if (ScalarPtr scalar = kst_cast<Scalar>(_currentObject)) {
-    QString tmp;
-    DialogLauncher::self()->showScalarDialog(tmp, scalar);
-  } else if (StringPtr string = kst_cast<String>(_currentObject)) {
-    QString tmp;
-    DialogLauncher::self()->showStringDialog(tmp, string);
-  }
+  DialogLauncher::self()->showObjectDialog(_currentObject);
   _doc->session()->triggerReset();
 }
 

@@ -26,6 +26,17 @@
 #include "basicplugindialog.h"
 #include "filterfitdialog.h"
 
+#include "curve.h"
+#include "equation.h"
+#include "vector.h"
+#include "matrix.h"
+#include "histogram.h"
+#include "psd.h"
+#include "eventmonitorentry.h"
+#include "image.h"
+#include "csd.h"
+#include "basicplugin.h"
+
 namespace Kst {
 
 DialogLauncherGui::DialogLauncherGui() {
@@ -140,6 +151,40 @@ void DialogLauncherGui::showBasicPluginDialog(QString pluginName, ObjectPtr obje
     dialog.exec();
   }
 }
+
+
+void DialogLauncherGui::showObjectDialog(ObjectPtr objectPtr) {
+  if (CurvePtr curve = kst_cast<Curve>(objectPtr)) {
+    DialogLauncher::self()->showCurveDialog(curve);
+  } else if (EquationPtr equation = kst_cast<Equation>(objectPtr)) {
+    DialogLauncher::self()->showEquationDialog(equation);
+  } else if (HistogramPtr histogram = kst_cast<Histogram>(objectPtr)) {
+    DialogLauncher::self()->showHistogramDialog(histogram);
+  } else if (PSDPtr psd = kst_cast<PSD>(objectPtr)) {
+    DialogLauncher::self()->showPowerSpectrumDialog(psd);
+  } else if (EventMonitorEntryPtr eventMonitorEntry = kst_cast<EventMonitorEntry>(objectPtr)) {
+    DialogLauncher::self()->showEventMonitorDialog(eventMonitorEntry);
+  } else if (ImagePtr image = kst_cast<Image>(objectPtr)) {
+    DialogLauncher::self()->showImageDialog(image);
+  } else if (CSDPtr csd = kst_cast<CSD>(objectPtr)) {
+    DialogLauncher::self()->showCSDDialog(csd);
+  } else if (VectorPtr vector = kst_cast<Vector>(objectPtr)) {
+    QString tmp;
+    DialogLauncher::self()->showVectorDialog(tmp, vector);
+  } else if (MatrixPtr matrix = kst_cast<Matrix>(objectPtr)) {
+    QString tmp;
+    DialogLauncher::self()->showMatrixDialog(tmp, matrix);
+  } else if (BasicPluginPtr plugin = kst_cast<BasicPlugin>(objectPtr)) {
+    DialogLauncher::self()->showBasicPluginDialog(plugin->pluginName(), plugin);
+  }  else if (ScalarPtr scalar = kst_cast<Scalar>(objectPtr)) {
+    QString tmp;
+    DialogLauncher::self()->showScalarDialog(tmp, scalar);
+  } else if (StringPtr string = kst_cast<String>(objectPtr)) {
+    QString tmp;
+    DialogLauncher::self()->showStringDialog(tmp, string);
+  }
+}
+
 }
 
 // vim: ts=2 sw=2 et

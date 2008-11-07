@@ -124,6 +124,11 @@ void DialogLauncher::showBasicPluginDialog(QString pluginName, ObjectPtr objectP
   Q_UNUSED(plotItem);
 }
 
+
+void DialogLauncher::showObjectDialog(ObjectPtr objectPtr) {
+  Q_UNUSED(objectPtr);
+}
+
 }
 
 // vim: ts=2 sw=2 et

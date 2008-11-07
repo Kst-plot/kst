@@ -314,6 +314,15 @@ bool Relation::uses(ObjectPtr p) const {
         }
       }
     }
+    QHashIterator<QString, String*> stringDictIter(v->strings());
+    for (StringMap::ConstIterator j = _inputStrings.begin(); j != _inputStrings.end(); ++j) {
+      while (stringDictIter.hasNext()) {
+        stringDictIter.next();
+        if (stringDictIter.value() == j.value()) {
+          return true;
+        }
+      }
+    }
   } else if (MatrixPtr matrix = kst_cast<Matrix>(p)) {
     for (MatrixMap::ConstIterator j = _inputMatrices.begin(); j != _inputMatrices.end(); ++j) {
       if (j.value() == matrix) {
@@ -343,6 +352,16 @@ bool Relation::uses(ObjectPtr p) const {
         while (scalarDictIter.hasNext()) {
           scalarDictIter.next();
           if (scalarDictIter.value() == k.value()) {
+            return true;
+          }
+        }
+      }
+      // also check dependencies on vector strings
+      QHashIterator<QString, String*> stringDictIter(j.value()->strings());
+      for (StringMap::ConstIterator k = _inputStrings.begin(); k != _inputStrings.end(); ++k) {
+        while (stringDictIter.hasNext()) {
+          stringDictIter.next();
+          if (stringDictIter.value() == k.value()) {
             return true;
           }
         }
@@ -409,6 +428,16 @@ void Relation::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObjec
         }
       }
     }
+    // also replace dependencies on vector strings
+    QHashIterator<QString, String*> stringDictIter(j.value()->strings());
+    for (StringMap::Iterator k = _inputStrings.begin(); k != _inputStrings.end(); ++k) {
+      while (stringDictIter.hasNext()) {
+        stringDictIter.next();
+        if (stringDictIter.value() == k.value()) {
+          _inputStrings[k.key()] = (((newObject->outputVectors())[j.key()])->strings())[stringDictIter.key()];
+        }
+      }
+    }
   }
 
   // matrices
@@ -466,6 +495,15 @@ void Relation::replaceDependency(VectorPtr oldVector, VectorPtr newVector) {
       scalarDictIter.next();
       if (scalarDictIter.value() == j.value()) {
         _inputScalars[j.key()] = (newVector->scalars())[scalarDictIter.key()];
+      }
+    }
+  }
+  QHashIterator<QString, String*> stringDictIter(oldVector->strings());
+  for (StringMap::Iterator j = _inputStrings.begin(); j != _inputStrings.end(); ++j) {
+    while (stringDictIter.hasNext()) {
+      stringDictIter.next();
+      if (stringDictIter.value() == j.value()) {
+        _inputStrings[j.key()] = (newVector->strings())[stringDictIter.key()];
       }
     }
   }

@@ -54,3 +54,15 @@ This is especially a problem since this is what TabWidget->clear() does.  TabWid
 a file to get rid of all of the old tabs.   As a temp hack (to allow file opening) clear() is not called on file open,
 so all of the old tabs linger after opening a file.  This should be reverted once the bug is fixed.
 
+-----------
+Editing a slave vector from a vector selector should bring up the
+edit dialog for the provider.  Instead it brings up a vector edit 
+dialog.... not what is wanted and won't work anyway.
+(cbn to fix this)
+
+-----------
+Editing a slave scalar from a scalar selector should bring up the
+edit dialog for the provider.  Instead it brings up a scalar edit 
+dialog.... not what is wanted and won't work anyway.
+(cbn to fix this)
+

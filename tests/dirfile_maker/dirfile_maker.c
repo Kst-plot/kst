@@ -55,6 +55,12 @@ int main() {
     sprintf(tmpstr,"%s/%s", dirfilename, df[i].field);
     df[i].fp = open(tmpstr, O_WRONLY|O_CREAT, 00644);
   }
+
+  fprintf(fpf,"CONST1 CONST FLOAT32 16.4\nCONST2 CONST DOUBLE 3.14159\n"
+  "STR1 STRING Test\\ String\n");
+  fprintf(fpf,"META cos metaC CONST FLOAT64 3.291882\n"
+  "META cos metaS STRING Test_String\n");
+
   fclose(fpf);
 
   /* make curfile */

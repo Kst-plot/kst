@@ -721,6 +721,7 @@ void MainWindow::createToolBars() {
   _dataToolBar->addAction(_forwardAct);
   _dataToolBar->addAction(_pauseAct);
   _dataToolBar->addAction(_readFromEndAct);
+  //_dataToolBar->addAction(_dataWizardAct);
 
   _layoutToggleToolBar = addToolBar(tr("Mode"));
   _layoutToggleToolBar->addAction(_layoutModeAct);

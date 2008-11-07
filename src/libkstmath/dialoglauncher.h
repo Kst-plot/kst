@@ -69,6 +69,9 @@ class KST_EXPORT DialogLauncher : public QObject {
 
     //plugins
     virtual void showBasicPluginDialog(QString pluginName, ObjectPtr objectPtr = 0, VectorPtr vectorX = 0, VectorPtr vectorY = 0, PlotItemInterface *plotItem = 0);
+
+    //show appropriate dialog
+    virtual void showObjectDialog(ObjectPtr objectPtr = 0);
 };
 
 }
