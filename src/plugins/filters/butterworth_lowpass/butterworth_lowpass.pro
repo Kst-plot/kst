@@ -17,7 +17,7 @@ INCLUDEPATH += \
     $$OUTPUT_DIR/src/widgets \
     $$OUTPUT_DIR/src/datasources/ascii/tmp
 
-LIBS += -lkst -lgsl -lkstmath -lkstwidgets -lkstapp
+LIBS += -lkst -lgsl -lgslcblas -lkstmath -lkstwidgets -lkstapp
 
 SOURCES += \
     butterworth_lowpass.cpp
