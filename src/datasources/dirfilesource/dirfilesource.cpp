@@ -323,8 +323,7 @@ QStringList DirFilePlugin::scalarList(QSettings *cfg,
   Q_UNUSED(type)
   QStringList scalarList;
 
-  Dirfile dirfile(filename.toLatin1(), GD_RDONLY);
-
+  Dirfile dirfile(getDirectory(filename).toLatin1(), GD_RDONLY);
   if (dirfile.Error() == GD_E_OK) {
 
     scalarList.append("FRAMES");
@@ -354,7 +353,7 @@ QStringList DirFilePlugin::stringList(QSettings *cfg,
   Q_UNUSED(type)
   QStringList stringList;
 
-  Dirfile dirfile(filename.toLatin1(), GD_RDONLY);
+  Dirfile dirfile(getDirectory(filename).toLatin1(), GD_RDONLY);
 
   if (dirfile.Error() == GD_E_OK) {
 
@@ -386,7 +385,7 @@ QStringList DirFilePlugin::fieldList(QSettings *cfg,
   
   QStringList fieldList;
 
-  Dirfile dirfile(filename.toLatin1(), GD_RDONLY);
+  Dirfile dirfile(getDirectory(filename).toLatin1(), GD_RDONLY);
 
   if (dirfile.Error() == GD_E_OK) {
 
@@ -432,7 +431,7 @@ QString DirFilePlugin::getDirectory(QString filepath) {
 int DirFilePlugin::understands(QSettings *cfg, const QString& filename) const {
   Q_UNUSED(cfg);
 
-  Dirfile dirfile(filename.toLatin1(), GD_RDONLY);
+  Dirfile dirfile(getDirectory(filename).toLatin1(), GD_RDONLY);
 
   if (dirfile.Error() == GD_E_OK) {
     return 98;
