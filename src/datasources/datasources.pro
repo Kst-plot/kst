@@ -1,3 +1,4 @@
+include($$PWD/../../config.pri)
 TEMPLATE = subdirs
 CONFIG += ordered
 
@@ -7,21 +8,8 @@ SUBDIRS += \
     sampledatasource
 
 
+ contains(HAVE_CFITSIO, 1) {
+     message(CFITSIO configured.  Plugins will be built.)
+     SUBDIRS += fitsimage
+ }
 !win32:SUBDIRS += dirfilesource
-
-#     cdf \
-#     fitsimage \
-#     frame \
-#     healpix \
-#     indirect \
-#     lfiio \
-#     libfitstools \
-#     nad \
-#     naddirect \
-#     netcdf \
-#     planck \
-#     planckIDEF \
-#     qimagesource \
-#     scuba2 \
-#     template \
-#     wmap
