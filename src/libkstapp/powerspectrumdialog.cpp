@@ -300,7 +300,7 @@ ObjectPtr PowerSpectrumDialog::editExistingDataObject() const {
           powerspectrum->setOutput(output);
           powerspectrum->setInterpolateHoles(interpolateOverHoles);
 
-          powerspectrum->update();
+          powerspectrum->inputObjectUpdated(powerspectrum);
           powerspectrum->unlock();
         }
       }
@@ -320,7 +320,7 @@ ObjectPtr PowerSpectrumDialog::editExistingDataObject() const {
       powerspectrum->setInterpolateHoles(_powerSpectrumTab->FFTOptionsWidget()->interpolateOverHoles());
       powerspectrum->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
-      powerspectrum->update();
+      powerspectrum->inputObjectUpdated(powerspectrum);
       powerspectrum->unlock();
 
       _powerSpectrumTab->FFTOptionsWidget()->setWidgetDefaults();

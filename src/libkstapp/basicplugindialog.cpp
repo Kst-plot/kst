@@ -95,7 +95,7 @@ ObjectPtr BasicPluginDialog::editExistingDataObject() const {
   if (BasicPlugin* plugin = kst_cast<BasicPlugin>(dataObject())) {
     plugin->writeLock();
     plugin->change(_basicPluginTab->configWidget());
-    plugin->update();
+    plugin->inputObjectUpdated(plugin);
     plugin->unlock();
   }
   return dataObject();

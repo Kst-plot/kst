@@ -354,7 +354,7 @@ ObjectPtr EquationDialog::editExistingDataObject() const {
           equation->setEquation(equationString);
           equation->setExistingXVector(xVector, doInterpolation);
 
-          equation->update();
+          equation->inputObjectUpdated(equation);
           equation->unlock();
         }
       }
@@ -363,8 +363,7 @@ ObjectPtr EquationDialog::editExistingDataObject() const {
       equation->setEquation(_equationTab->equation());
       equation->setExistingXVector(_equationTab->xVector(), _equationTab->doInterpolation());
       equation->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
-
-      equation->update();
+      equation->inputObjectUpdated(equation);
       equation->unlock();
     }
   }

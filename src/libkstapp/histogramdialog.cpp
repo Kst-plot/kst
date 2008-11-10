@@ -426,8 +426,9 @@ ObjectPtr HistogramDialog::editExistingDataObject() const {
           histogram->setNormalizationType(normalizationType);
           histogram->setRealTimeAutoBin(realTimeAutoBin);
 
-          histogram->update();
           histogram->unlock();
+
+          histogram->inputObjectUpdated(histogram);
         }
       }
     } else {
@@ -439,9 +440,9 @@ ObjectPtr HistogramDialog::editExistingDataObject() const {
       histogram->setRealTimeAutoBin(_histogramTab->realTimeAutoBin());
       histogram->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
-      histogram->update();
       histogram->unlock();
 
+      histogram->inputObjectUpdated(histogram);
       setHistogramDefaults(histogram);
     }
   }

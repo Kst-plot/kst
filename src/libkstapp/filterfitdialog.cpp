@@ -217,7 +217,7 @@ ObjectPtr FilterFitDialog::editExistingDataObject() const {
   if (BasicPlugin* plugin = kst_cast<BasicPlugin>(dataObject())) {
     plugin->writeLock();
     plugin->change(_filterFitTab->configWidget());
-    plugin->update();
+    plugin->inputObjectUpdated(plugin);
     plugin->unlock();
   }
   return dataObject();

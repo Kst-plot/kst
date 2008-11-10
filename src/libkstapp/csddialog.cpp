@@ -296,7 +296,7 @@ ObjectPtr CSDDialog::editExistingDataObject() const {
                       vectorUnits,
                       rateUnits);
 
-          csd->update();
+          csd->inputObjectUpdated(csd);
           csd->unlock();
         }
       }
@@ -315,8 +315,7 @@ ObjectPtr CSDDialog::editExistingDataObject() const {
                   _CSDTab->FFTOptionsWidget()->vectorUnits(),
                   _CSDTab->FFTOptionsWidget()->rateUnits());
       csd->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
-
-      csd->update();
+      csd->inputObjectUpdated(csd);
       csd->unlock();
     }
   }
