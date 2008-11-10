@@ -10,19 +10,6 @@ The curve redraws, but the Y zoom range stays at the old range.  'm' resets to t
 Now edit the curve, do nothing, and hit OK.  Still no change.
 Now do something to redraw the plot.  'm' mode now works.
 
-----------
-Cur files no longer work.
-Select a cur file from dirfile_maker.  It thinks its a ascii file.
-
---------
-Files can't be chosen from the command line (Same behavior as data wizard).
-  dirfiles aren't recognized at all
-  ascii files return empty 
-
---------
-Data sources can't be selected from the data wizard.
-Try to select an ascii file or a dirfile using the data wizard.  It doesn't work.
-
 -------
 Problems with file selector
 If you browse to select a dirfile, the name of the previous dirfile has been put into "File name:" entry.  So you have to erase it to select a dirfile.
@@ -38,3 +25,24 @@ Or:
 Places where text labels are entered need string and scalar selectors to aid in the insertion of 
 strings and scalars (eg, primarily label editor)
 
+--------
+Filters should have default values
+  eg, low pass filter should default to order = 4, lowpass  = 0.1: see 1.x for defaults.
+
+-------
+Butterworth low-pass crashes.
+  create a plot, apply filter with order=4, lowpass = 0.01.  Crash.
+
+-------
+When chosing to filter a curve from the plot rmb, the input vectors should be fixed to the right thing:
+  eg, Butterworth low pass Y vector should be fixed to the Y vector of the curve selected in the RMB menue.
+
+-------
+Entering a numerical value into a scalar selector should create a scalar of that value, if there is not
+already a scalar of that name.  This is particularly important for plugin entries.  It can be created when
+the scalar that the selector has selected is asked for.
+
+--------
+Only curfiles can be chosen from the command line or from the data wizard.
+  dirfiles aren't recognized at all
+  ascii files can't find any fields

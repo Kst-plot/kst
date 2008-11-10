@@ -66,3 +66,8 @@ edit dialog for the provider.  Instead it brings up a scalar edit
 dialog.... not what is wanted and won't work anyway.
 (cbn to fix this)
 
+----------
+Cur files no longer work.
+Select a cur file from dirfile_maker.  It thinks its a ascii file.
+
+
