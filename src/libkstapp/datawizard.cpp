@@ -74,7 +74,7 @@ void DataWizardPageDataSource::configureSource() {
 
 void DataWizardPageDataSource::sourceChanged(const QString& file) {
   QFileInfo info(file);
-  if (!info.exists() || !info.isFile())
+  if (!info.exists())
     return;
 
   Q_ASSERT(_store);
