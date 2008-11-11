@@ -49,5 +49,3 @@ Only dirfiles can be chosen from the data wizard.
 --------
 Problems reading files from the command line
   ascii files can't find any fields from the command line
-  dirfiles can't be refered to by their directory
-  
