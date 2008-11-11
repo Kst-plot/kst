@@ -304,7 +304,8 @@ QStringList SampleDatasourcePlugin::fieldList(QSettings *cfg,
                                             const QString& type,
                                             QString *typeSuggestion,
                                             bool *complete) const {
-
+  Q_UNUSED(cfg)
+  Q_UNUSED(filename)
   Q_UNUSED(type)
 
   if (complete) {

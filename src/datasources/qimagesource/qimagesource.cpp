@@ -93,7 +93,6 @@ bool QImageSource::init() {
 
 
 Kst::Object::UpdateType QImageSource::update() {
-  int err = 0;
   int newNF = _image.width()*_image.height();
   bool isnew = newNF != _frameCount;
 
@@ -373,8 +372,8 @@ QStringList QImageSourcePlugin::fieldList(QSettings *cfg,
                                             const QString& type,
                                             QString *typeSuggestion,
                                             bool *complete) const {
-
   Q_UNUSED(type)
+  Q_UNUSED(cfg)
   QStringList fieldList;
 
   if (complete) {
@@ -396,6 +395,7 @@ QStringList QImageSourcePlugin::fieldList(QSettings *cfg,
 
 
 int QImageSourcePlugin::understands(QSettings *cfg, const QString& filename) const {
+  Q_UNUSED(cfg)
   QString ftype( QImageReader::imageFormat( filename ) );
 
   if ( ftype.isEmpty() ) 
