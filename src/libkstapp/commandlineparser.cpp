@@ -27,7 +27,7 @@ namespace Kst {
 CommandLineParser::CommandLineParser(Document *doc):
       _doAve(false), _doSkip(false), _doConsecutivePlots(true), _useBargraph(false), 
       _useLines(true), _usePoints(false), _overrideStyle(false), _sampleRate(1.0), 
-      _numFrames(-1), _startFrame(0),
+      _numFrames(-1), _startFrame(-1),
       _skip(0), _plotName(), _errorField(), _fileName(), _xField(QString("INDEX")) {
 
   Q_ASSERT(QCoreApplication::instance());
@@ -64,8 +64,8 @@ void CommandLineParser::usage(QString Message) {
 "\n"
 "OPTIONS are read and interpreted in order. Except for data object options, all are applied to all future data objects, unless later overridden.\n"
 "File Options:\n"
-"      -f <startframe>          default: 0.  'end' counts from end.\n"
-"      -n <numframes>           default: to end of file ('eof')\n"
+"      -f <startframe>          default: 'end' counts from end.\n"
+"      -n <numframes>           default: 'end' reads to end of file\n"
 "      -s <frames per sample>   default: 0 (read every sample)\n"
 "      -a                       apply averaging filter: requires -s\n"
 "Position:\n"
@@ -116,13 +116,17 @@ void CommandLineParser::usage(QString Message) {
   exit(0);
 }
 
-void CommandLineParser::_setIntArg(int *arg, QString Message) {
+void CommandLineParser::_setIntArg(int *arg, QString Message, bool accept_end) {
   QString param;
   bool ok = true;
-  
+
   if (_arguments.count()> 0) {
     param = _arguments.takeFirst();
-    *arg = param.toInt(&ok);
+    if ((param==i18n("end") || (param=="end")) && (accept_end)) {
+      *arg = -1;
+    } else {
+      *arg = param.toInt(&ok);
+    }
   } else {
     ok=false;
   }
@@ -158,6 +162,10 @@ void CommandLineParser::_setStringArg(QString &arg, QString Message) {
 DataVectorPtr CommandLineParser::createOrFindDataVector(QString field, DataSourcePtr ds) {
     DataVectorPtr xv;
     bool found = false;
+
+    if ((_startFrame==-1) && (_numFrames==-1)) { // count from end and read to end
+      _startFrame = 0;
+    }
 
     // check to see if an identical vector already exists.  If so, use it.
     for (int i=0; i<_vectors.count(); i++) {
@@ -280,9 +288,9 @@ bool CommandLineParser::processCommandLine() {
     if ((arg == "--help")||(arg == "-help")) {
       usage();
     } else if (arg == "-f") {
-      _setIntArg(&_startFrame, i18n("Usage: -f <startframe>\n"));
+      _setIntArg(&_startFrame, i18n("Usage: -f <startframe>\n"), true);
     } else if (arg == "-n") {
-      _setIntArg(&_numFrames, i18n("Usage: -f <numframes>\n"));
+      _setIntArg(&_numFrames, i18n("Usage: -f <numframes>\n"), true);
     } else if (arg == "-s") {
       _setIntArg(&_skip, i18n("Usage: -s <frames per sample>\n"));
     } else if (arg == "-a") {
@@ -330,7 +338,6 @@ bool CommandLineParser::processCommandLine() {
           usage(i18n("file %1 does not exist\n").arg(file));
 
         DataSourcePtr ds = DataSource::findOrLoadSource(_document->objectStore(), file);
-
         DataVectorPtr xv = createOrFindDataVector(_xField, ds);
         DataVectorPtr yv = createOrFindDataVector(field, ds);
 

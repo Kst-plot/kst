@@ -66,6 +66,12 @@ class DirFileSource : public Kst::DataSource {
 
     virtual int readFieldStrings(QStringList &v, const QString& field, bool init);
 
+    virtual const QString& typeString() const;
+    //static const QString staticTypeString;
+    //static const QString staticTypeTag;
+
+
+
   private:
     QString _directoryName;
     Dirfile *_dirfile;

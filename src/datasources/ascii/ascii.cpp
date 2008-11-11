@@ -37,9 +37,15 @@
 #include <math_kst.h>
 #include "ascii.h"
 #include "ui_asciiconfig.h"
+#include "kst_i18n.h"
 
 #define DEFAULT_DELIMITERS "#/c!;"
 #define DEFAULT_COLUMN_WIDTH 16
+
+static const QString asciiTypeString = I18N_NOOP("ASCII file");
+
+//const QString AsciiSource::staticTypeString = I18N_NOOP("Ascii Source");
+//const QString AsciiSource::staticTypeTag = I18N_NOOP("source");
 
 class AsciiSource::Config {
   public:
@@ -55,7 +61,7 @@ class AsciiSource::Config {
     }
 
     void read(QSettings *cfg, const QString& fileName = QString::null) {
-      cfg->beginGroup("ASCII General");
+      cfg->beginGroup(asciiTypeString);
       _fileNamePattern = cfg->value("Filename Pattern").toString();
       _delimiters = cfg->value("Comment Delimiters", "#/c!;").toString().toLatin1();
       _indexInterpretation = (Interpretation)cfg->value("Default INDEX Interpretation", (int)Unknown).toInt();
@@ -174,8 +180,8 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   _valid = false;
   _haveHeader = false;
   _fieldListComplete = false;
-  _source = "ASCII File Reader";
-  if (!type.isEmpty() && type != "ASCII") {
+  _source = asciiTypeString;
+  if (!type.isEmpty() && type != asciiTypeString) {
     return;
   }
   _config = new AsciiSource::Config;
@@ -537,7 +543,7 @@ int AsciiSource::frameCount(const QString& field) const {
 
 
 QString AsciiSource::fileType() const {
-  return "ASCII";
+  return asciiTypeString;
 }
 
 
@@ -725,6 +731,11 @@ int AsciiSource::sampleForTime(double ms, bool *ok) {
 }
 
 
+const QString& AsciiSource::typeString() const {
+  return asciiTypeString;
+}
+
+
 int AsciiSource::sampleForTime(const QDateTime& time, bool *ok) {
   switch (_config->_indexInterpretation) {
     case AsciiSource::Config::Seconds:
@@ -767,7 +778,7 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
     }
 
     void load() {
-      _cfg->beginGroup("ASCII General");
+      _cfg->beginGroup(asciiTypeString);
       _ac->_delimiters->setText(_cfg->value("Comment Delimiters", DEFAULT_DELIMITERS).toString());
       _ac->_fileNamePattern->setText(_cfg->value("Filename Pattern").toString());
       _ac->_columnDelimiter->setText(_cfg->value("Column Delimiter").toString());
@@ -825,7 +836,7 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
 
     void save() {
       assert(_cfg);
-      _cfg->beginGroup("ASCII General");
+      _cfg->beginGroup(asciiTypeString);
       _cfg->setValue("Filename Pattern", _ac->_fileNamePattern->text());
       // If we have an instance, save settings for that instance only
       Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(_instance);
@@ -878,7 +889,7 @@ QStringList AsciiPlugin::matrixList(QSettings *cfg,
 
 
   if (typeSuggestion) {
-    *typeSuggestion = "ASCII";
+    *typeSuggestion = asciiTypeString;
   }
   if ((!type.isEmpty() && !provides().contains(type)) ||
       0 == understands(cfg, filename)) {
@@ -905,7 +916,7 @@ QStringList AsciiPlugin::fieldList(QSettings *cfg,
   }
 
   if (typeSuggestion) {
-    *typeSuggestion = "ASCII";
+    *typeSuggestion = asciiTypeString;
   }
 
   AsciiSource::Config config;
@@ -935,7 +946,7 @@ QStringList AsciiPlugin::scalarList(QSettings *cfg,
   }
 
   if (typeSuggestion) {
-    *typeSuggestion = "ASCII";
+    *typeSuggestion = asciiTypeString;
   }
 
   AsciiSource::Config config;
@@ -965,7 +976,7 @@ QStringList AsciiPlugin::stringList(QSettings *cfg,
   }
 
   if (typeSuggestion) {
-    *typeSuggestion = "ASCII";
+    *typeSuggestion = asciiTypeString;
   }
 
   AsciiSource::Config config;
@@ -1055,7 +1066,7 @@ bool AsciiPlugin::supportsTime(QSettings *cfg, const QString& filename) const {
 
 QStringList AsciiPlugin::provides() const {
   QStringList rc;
-  rc += "ASCII";
+  rc += asciiTypeString;
   return rc;
 }
 

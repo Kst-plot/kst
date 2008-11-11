@@ -56,7 +56,7 @@ private:
 
   Document *_document;
 
-  void _setIntArg(int *arg, QString Message);
+  void _setIntArg(int *arg, QString Message, bool accept_end=false);
   void _setDoubleArg(double *arg, QString Message);
   void _setStringArg(QString &arg, QString Message);
   void usage(QString Message = "");

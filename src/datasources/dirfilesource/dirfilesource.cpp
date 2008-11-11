@@ -22,8 +22,7 @@
 #include <QFileSystemWatcher>
 #include <QDir>
 
-static const QString staticTypeString = I18N_NOOP("Directory of Binary Files");
-//#define staticTypeString "Directory of Binary Files"
+static const QString dirfileTypeString = I18N_NOOP("Directory of Binary Files");
 
 class DirFileSource::Config {
   public:
@@ -32,7 +31,7 @@ class DirFileSource::Config {
 
     void read(QSettings *cfg, const QString& fileName = QString::null) {
       Q_UNUSED(fileName);
-      cfg->beginGroup(staticTypeString);
+      cfg->beginGroup(dirfileTypeString);
       cfg->endGroup();
     }
 
@@ -49,10 +48,10 @@ class DirFileSource::Config {
 DirFileSource::DirFileSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
 : Kst::DataSource(store, cfg, filename, type, None), _config(0L) {
   _valid = false;
-  if (!type.isEmpty() && type != staticTypeString) {
+  if (!type.isEmpty() && type != dirfileTypeString) {
     return;
   }
-  
+
   _config = new DirFileSource::Config;
   _config->read(cfg, filename);
   if (!e.isNull()) {
@@ -185,7 +184,7 @@ bool DirFileSource::isEmpty() const {
 
 
 QString DirFileSource::fileType() const {
-  return "Directory of Binary Files";
+  return dirfileTypeString;
 }
 
 
@@ -301,7 +300,7 @@ QStringList DirFilePlugin::matrixList(QSettings *cfg,
 
 
   if (typeSuggestion) {
-    *typeSuggestion = staticTypeString;
+    *typeSuggestion = dirfileTypeString;
   }
   if ((!type.isEmpty() && !provides().contains(type)) ||
       0 == understands(cfg, filename)) {
@@ -312,6 +311,12 @@ QStringList DirFilePlugin::matrixList(QSettings *cfg,
   }
   return QStringList();
 }
+
+const QString& DirFileSource::typeString() const {
+  return dirfileTypeString;
+}
+
+
 
 QStringList DirFilePlugin::scalarList(QSettings *cfg,
                                             const QString& filename,
@@ -338,7 +343,7 @@ QStringList DirFilePlugin::scalarList(QSettings *cfg,
   }
 
   if (typeSuggestion) {
-    *typeSuggestion = staticTypeString;
+    *typeSuggestion = dirfileTypeString;
   }
 
   return scalarList;
@@ -369,7 +374,7 @@ QStringList DirFilePlugin::stringList(QSettings *cfg,
   }
 
   if (typeSuggestion) {
-    *typeSuggestion = staticTypeString;
+    *typeSuggestion = dirfileTypeString;
   }
 
   return stringList;
@@ -400,7 +405,7 @@ QStringList DirFilePlugin::fieldList(QSettings *cfg,
   }
 
   if (typeSuggestion) {
-    *typeSuggestion = staticTypeString;
+    *typeSuggestion = dirfileTypeString;
   }
 
   return fieldList;
@@ -451,7 +456,7 @@ bool DirFilePlugin::supportsTime(QSettings *cfg, const QString& filename) const 
 
 QStringList DirFilePlugin::provides() const {
   QStringList rc;
-  rc += staticTypeString;
+  rc += dirfileTypeString;
   return rc;
 }
 

@@ -67,6 +67,7 @@ void ScalarSelector::emitSelectionChanged() {
 
 
 ScalarPtr ScalarSelector::selectedScalar() const {
+  //qDebug() << "xxx text: " << _scalar->currentText();
   return qVariantValue<Scalar*>(_scalar->itemData(_scalar->currentIndex()));
 }
 

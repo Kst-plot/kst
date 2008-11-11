@@ -42,10 +42,3 @@ Entering a numerical value into a scalar selector should create a scalar of that
 already a scalar of that name.  This is particularly important for plugin entries.  It can be created when
 the scalar that the selector has selected is asked for.
 
---------
-Only dirfiles can be chosen from the data wizard.
-  ascii files can't find any fields
-
---------
-Problems reading files from the command line
-  ascii files can't find any fields from the command line

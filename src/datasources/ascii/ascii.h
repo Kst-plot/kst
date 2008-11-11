@@ -63,6 +63,8 @@ class AsciiSource : public Kst::DataSource {
 
     bool reset();
 
+    virtual const QString& typeString() const;
+
     class Config;
     static QStringList fieldListFor(const QString& filename, Config *cfg);
     static QStringList scalarListFor(const QString& filename, Config *cfg);

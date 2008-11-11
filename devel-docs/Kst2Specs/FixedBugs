@@ -70,4 +70,10 @@ dialog.... not what is wanted and won't work anyway.
 Cur files no longer work.
 Select a cur file from dirfile_maker.  It thinks its a ascii file.
 
+--------
+Problems reading files from the command line
+  ascii files can't find any fields from the command line
 
+--------
+Only dirfiles can be chosen from the data wizard.
+  ascii files can't find any fields
