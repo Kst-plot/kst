@@ -44,6 +44,8 @@ class FitsImageSource : public Kst::DataSource {
 
     void save(QXmlStreamWriter &streamWriter);
 
+    virtual const QString& typeString() const;
+
     class Config;
 
     int readScalar(double &S, const QString& scalar);

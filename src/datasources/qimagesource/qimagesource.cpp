@@ -15,6 +15,10 @@
 #include <QImageReader>
 #include <qcolor.h>
 
+#include "kst_i18n.h"
+
+static const QString qimageTypeString = I18N_NOOP("QImage image");
+
 class QImageSource::Config {
   public:
     Config() {
@@ -22,7 +26,7 @@ class QImageSource::Config {
 
     void read(QSettings *cfg, const QString& fileName = QString::null) {
       Q_UNUSED(fileName);
-      cfg->beginGroup("QImage Source");
+      cfg->beginGroup(qimageTypeString);
       cfg->endGroup();
     }
 
@@ -39,7 +43,7 @@ class QImageSource::Config {
 QImageSource::QImageSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
 : Kst::DataSource(store, cfg, filename, type, None), _config(0L) {
   _valid = false;
-  if (!type.isEmpty() && type != "QImage Source") {
+  if (!type.isEmpty() && type != qimageTypeString) {
     return;
   }
 
@@ -60,6 +64,11 @@ QImageSource::QImageSource(Kst::ObjectStore *store, QSettings *cfg, const QStrin
 
 
 QImageSource::~QImageSource() {
+}
+
+
+const QString& QImageSource::typeString() const {
+  return qimageTypeString;
 }
 
 
@@ -242,7 +251,7 @@ bool QImageSource::isEmpty() const {
 
 
 QString QImageSource::fileType() const {
-  return "QImage compatible Image";
+  return qimageTypeString;
 }
 
 
@@ -292,7 +301,7 @@ QStringList QImageSourcePlugin::matrixList(QSettings *cfg,
 
 
   if (typeSuggestion) {
-    *typeSuggestion = "QImage compatible Image";
+    *typeSuggestion = qimageTypeString;
   }
   if ((!type.isEmpty() && !provides().contains(type)) ||
       0 == understands(cfg, filename)) {
@@ -334,7 +343,7 @@ QStringList QImageSourcePlugin::scalarList(QSettings *cfg,
   }
 
   if (typeSuggestion) {
-    *typeSuggestion = "QImage compatible Image";
+    *typeSuggestion = qimageTypeString;
   }
 
   scalarList.append("FRAMES");
@@ -359,7 +368,7 @@ QStringList QImageSourcePlugin::stringList(QSettings *cfg,
   }
 
   if (typeSuggestion) {
-    *typeSuggestion = "QImage compatible Image";
+    *typeSuggestion = qimageTypeString;
   }
 
   stringList.append("FILENAME");
@@ -381,7 +390,7 @@ QStringList QImageSourcePlugin::fieldList(QSettings *cfg,
   }
 
   if (typeSuggestion) {
-    *typeSuggestion = "QImage compatible Image";
+    *typeSuggestion = qimageTypeString;
   }
   if ( !QImageReader::imageFormat( filename ).isEmpty() ) {
     fieldList.append("INDEX");
@@ -420,7 +429,7 @@ bool QImageSourcePlugin::supportsTime(QSettings *cfg, const QString& filename) c
 
 QStringList QImageSourcePlugin::provides() const {
   QStringList rc;
-  rc += "QImage Source";
+  rc += qimageTypeString;
   return rc;
 }
 

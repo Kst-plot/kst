@@ -15,6 +15,10 @@
 #include <fitsio.h>
 #include <math.h>
 
+#include "kst_i18n.h"
+
+static const QString fitsTypeString = I18N_NOOP("Fits image");
+
 class FitsImageSource::Config {
   public:
     Config() {
@@ -22,7 +26,7 @@ class FitsImageSource::Config {
 
     void read(QSettings *cfg, const QString& fileName = QString::null) {
       Q_UNUSED(fileName);
-      cfg->beginGroup("FITS Image Source");
+      cfg->beginGroup(fitsTypeString);
       cfg->endGroup();
     }
 
@@ -41,7 +45,7 @@ FitsImageSource::FitsImageSource(Kst::ObjectStore *store, QSettings *cfg, const 
   _fptr = 0L;
   _valid = false;
 
-  if (!type.isEmpty() && type != "FITS Image Source") {
+  if (!type.isEmpty() && type != fitsTypeString) {
     return;
   }
 
@@ -67,6 +71,11 @@ FitsImageSource::~FitsImageSource() {
     _fptr = 0L;
   }
 }
+
+const QString& FitsImageSource::typeString() const {
+  return fitsTypeString;
+}
+
 
 
 bool FitsImageSource::reset() {
@@ -294,7 +303,7 @@ bool FitsImageSource::isEmpty() const {
 
 
 QString FitsImageSource::fileType() const {
-  return "FITS Image";
+  return fitsTypeString;
 }
 
 
@@ -349,7 +358,7 @@ QStringList FitsImagePlugin::matrixList(QSettings *cfg,
   }
 
   if (typeSuggestion) {
-    *typeSuggestion = "FITS Image";
+    *typeSuggestion = fitsTypeString;
   }
   if ( understands(cfg, filename) ) {
     matrixList.append( "1" );
@@ -375,7 +384,7 @@ QStringList FitsImagePlugin::scalarList(QSettings *cfg,
   }
 
   if (typeSuggestion) {
-    *typeSuggestion = "FITS Image";
+    *typeSuggestion = fitsTypeString;
   }
 
   scalarList.append("FRAMES");
@@ -400,7 +409,7 @@ QStringList FitsImagePlugin::stringList(QSettings *cfg,
   }
 
   if (typeSuggestion) {
-    *typeSuggestion = "FITS Image";
+    *typeSuggestion = fitsTypeString;
   }
 
   stringList.append("FILENAME");
@@ -421,7 +430,7 @@ QStringList FitsImagePlugin::fieldList(QSettings *cfg,
   }
 
   if (typeSuggestion) {
-    *typeSuggestion = "FITS Image";
+    *typeSuggestion = fitsTypeString;
   }
   if (understands(cfg, filename)) {
     fieldList.append("INDEX");
@@ -465,7 +474,7 @@ bool FitsImagePlugin::supportsTime(QSettings *cfg, const QString& filename) cons
 
 QStringList FitsImagePlugin::provides() const {
   QStringList rc;
-  rc += "FITS Image Source";
+  rc += fitsTypeString;
   return rc;
 }
 
