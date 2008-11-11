@@ -2,6 +2,6 @@ Installation Notes for Kst 2.0 Beta
 
 1. Download or otherwise install Qt 4.3/4.4.
 2. Make sure your QTDIR is set to that Qt installation.
-3. cd /path/branches/work/kst/portto4/kst
+3. Make sure your ./config.pri has the appropriate settings for you machine.
 4. ./build-kst
 5. ./run-kst
