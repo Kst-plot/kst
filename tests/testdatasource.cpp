@@ -611,4 +611,102 @@ void TestDataSource::testQImageSource() {
   }
 }
 
+
+void TestDataSource::testFITSImage() {
+  bool ok = true;
+
+  if (!_plugins.contains("FITS Image Source Reader"))
+    QSKIP("...couldn't find plugin.", SkipAll);
+
+  //These tests assume that the fits image test.fits exists in tests/fitsimage_testcase
+  QString imageFile = QDir::currentPath() + QDir::separator() + QString("tests") +
+                      QDir::separator() + QString("fitsimage_testcase") + QDir::separator() + QString("test.fits");
+
+  if (!QFile::exists(imageFile)) {
+    QSKIP("...unable to perform test.  Image file missing.", SkipAll);
+  }
+
+  printf("Opening image = %s for test.\n", imageFile.toLatin1().data());
+
+  Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(&_store, imageFile);
+  dsp->update();
+
+  QVERIFY(dsp);
+  QVERIFY(dsp->isValid());
+  QVERIFY(!dsp->hasConfigWidget());
+  QCOMPARE(dsp->fileType(), QLatin1String("FITS Image"));
+  QVERIFY(dsp->isValidField("INDEX"));
+  QCOMPARE(dsp->frameCount("INDEX"), 58800);
+  QVERIFY(dsp->isValidField("1"));
+  QVERIFY(!dsp->isValidField("foo"));
+
+  //TODO test samples per frame?
+
+  QCOMPARE(dsp->fileName(), imageFile);
+  QCOMPARE(dsp->fieldList().count(), 2);
+  QVERIFY(dsp->fieldListIsComplete());
+
+  QVERIFY(!dsp->isEmpty());
+
+  QVERIFY(dsp->isValidMatrix("1"));
+  QVERIFY(!dsp->isValidMatrix("foo"));
+
+  {
+    Kst::DataMatrixPtr matrix = Kst::kst_cast<Kst::DataMatrix>(_store.createObject<Kst::DataMatrix>());
+    matrix->change(dsp, "1", 0, 0,
+        -1, -1, false, false, 0, 0, 0, 1, 1);
+
+    matrix->writeLock();
+    matrix->update();
+    matrix->unlock();
+
+    QCOMPARE(matrix->xNumSteps(), 280);
+    QCOMPARE(matrix->yNumSteps(), 210);
+
+    QCOMPARE(matrix->xStepSize(), 1.0);
+    QCOMPARE(matrix->yStepSize(), 1.0);
+    QCOMPARE(matrix->minX(), 0.0);
+    QCOMPARE(matrix->minY(), 0.0);
+
+    QCOMPARE(matrix->minValue(), -86.297431945800781);
+    QCOMPARE(matrix->maxValue(), 487.873565673828125);
+
+    QCOMPARE(matrix->minValuePositive(), 0.000308976683300);
+
+    QCOMPARE(matrix->sampleCount(), 58800);
+
+    QCOMPARE(matrix->value(0, 0, &ok), 0.0);
+    QVERIFY(!ok);
+
+    QCOMPARE(matrix->value(12, 61, &ok), -17.691156387329102);
+    QVERIFY(ok);
+  }
+  {
+    Kst::DataVectorPtr rvp = Kst::kst_cast<Kst::DataVector>(_store.createObject<Kst::DataVector>());
+
+    rvp->writeLock();
+    rvp->change(dsp, "INDEX", 0, -1, 1, false, false);
+    rvp->update();
+    rvp->unlock();
+
+    QCOMPARE(58800, rvp->length());
+    QCOMPARE(0.0, rvp->value(0));
+    QCOMPARE(1.0, rvp->value(1));
+    QCOMPARE(2.0, rvp->value(2));
+    QCOMPARE(1023.0, rvp->value(1023));
+
+    QCOMPARE(58800, rvp->numFrames());
+    QCOMPARE(0, rvp->startFrame());
+
+    QCOMPARE(-1, rvp->reqNumFrames());
+    QCOMPARE(0, rvp->reqStartFrame());
+
+    QCOMPARE(true, rvp->readToEOF());
+    QCOMPARE(false, rvp->countFromEOF());
+    QCOMPARE(false, rvp->doSkip());
+    QCOMPARE(0, rvp->skip());
+    QCOMPARE(false, rvp->doAve());
+  }
+}
+
 // vim: ts=2 sw=2 et

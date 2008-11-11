@@ -31,6 +31,7 @@ class TestDataSource : public QObject
     void testPlanck();
     void testStdin();
     void testQImageSource();
+    void testFITSImage();
 
   private:
     QStringList _plugins;
