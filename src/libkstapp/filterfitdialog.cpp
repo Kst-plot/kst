@@ -79,6 +79,11 @@ CurveAppearance* FilterFitTab::curveAppearance() const {
 }
 
 
+QString FilterFitTab::pluginName() {
+  return _pluginCombo->currentText();
+}
+
+
 void FilterFitTab::pluginChanged(const QString &plugin) {
   if (plugin != _pluginCombo->currentText()) {
     _pluginCombo->setCurrentIndex(_pluginCombo->findText(plugin));
@@ -111,7 +116,7 @@ void FilterFitTab::pluginChanged(const QString &plugin) {
 
 
 FilterFitDialog::FilterFitDialog(QString& pluginName, ObjectPtr dataObject, QWidget *parent)
-  : DataDialog(dataObject, parent), _pluginName(pluginName), _plotItem(0), _vectorX(0), _vectorY(0) {
+  : DataDialog(dataObject, parent), _plotItem(0), _vectorX(0), _vectorY(0) {
 
   if (editMode() == Edit)
     setWindowTitle(tr("Edit Plugin"));
@@ -165,7 +170,7 @@ void FilterFitDialog::setPlotMode(PlotItem* plot) {
 ObjectPtr FilterFitDialog::createNewDataObject() {
   _filterFitTab->configWidget()->save();
 
-  BasicPluginPtr dataObject = kst_cast<BasicPlugin>(DataObject::createPlugin(_pluginName, _document->objectStore(), _filterFitTab->configWidget()));
+  BasicPluginPtr dataObject = kst_cast<BasicPlugin>(DataObject::createPlugin(_filterFitTab->pluginName(), _document->objectStore(), _filterFitTab->configWidget()));
   Q_ASSERT(dataObject);
 
   if (!dataObject->isValid()) {

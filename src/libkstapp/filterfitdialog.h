@@ -42,6 +42,8 @@ class KST_EXPORT FilterFitTab : public DataTab, Ui::FilterFitTab {
 
     void setPlotMode();
 
+    QString pluginName();
+
   public Q_SLOTS:
     void pluginChanged(const QString&);
 
@@ -72,7 +74,6 @@ class KST_EXPORT FilterFitDialog : public DataDialog {
   private:
     void configureTab();
     FilterFitTab *_filterFitTab;
-    QString _pluginName;
     PlotItem* _plotItem;
     VectorPtr _vectorX;
     VectorPtr _vectorY;
