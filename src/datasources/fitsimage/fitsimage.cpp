@@ -197,34 +197,37 @@ int FitsImageSource::readMatrix(Kst::MatrixData* data, const QString& field, int
 
   free(buffer);
 
-  // set the suggested matrix transform params: pixel index....
-  double x, y, dx, dy, cx, cy;
-  char charCRVal1[] = "CRVAL1";
-  char charCRVal2[] = "CRVAL2";
-  char charCDelt1[] = "CDELT1";
-  char charCDelt2[] = "CDELT2";
-  char charCRPix1[] = "CRPIX1";
-  char charCRPix2[] = "CRPIX2";
-  fits_read_key(_fptr, TDOUBLE, charCRVal1, &x, NULL, &status);
-  fits_read_key(_fptr, TDOUBLE, charCRVal2, &y, NULL, &status);
-  fits_read_key(_fptr, TDOUBLE, charCDelt1, &dx, NULL, &status);
-  fits_read_key(_fptr, TDOUBLE, charCDelt2, &dy, NULL, &status);
-  fits_read_key(_fptr, TDOUBLE, charCRPix1, &cx, NULL, &status);
-  fits_read_key(_fptr, TDOUBLE, charCRPix2, &cy, NULL, &status);
+// NOTE: This code results in invalid stepsize / mins.  Should be reviewed.
+// temporarily disabled.
 
-  if (status) {
+  // set the suggested matrix transform params: pixel index....
+//   double x, y, dx, dy, cx, cy;
+//   char charCRVal1[] = "CRVAL1";
+//   char charCRVal2[] = "CRVAL2";
+//   char charCDelt1[] = "CDELT1";
+//   char charCDelt2[] = "CDELT2";
+//   char charCRPix1[] = "CRPIX1";
+//   char charCRPix2[] = "CRPIX2";
+//   fits_read_key(_fptr, TDOUBLE, charCRVal1, &x, NULL, &status);
+//   fits_read_key(_fptr, TDOUBLE, charCRVal2, &y, NULL, &status);
+//   fits_read_key(_fptr, TDOUBLE, charCDelt1, &dx, NULL, &status);
+//   fits_read_key(_fptr, TDOUBLE, charCDelt2, &dy, NULL, &status);
+//   fits_read_key(_fptr, TDOUBLE, charCRPix1, &cx, NULL, &status);
+//   fits_read_key(_fptr, TDOUBLE, charCRPix2, &cy, NULL, &status);
+// 
+//   if (status) {
     data->xMin = x0;
     data->yMin = y0;
     data->xStepSize = 1;
     data->yStepSize = 1;
-  } else {
-    dx = fabs(dx);
-    dy = fabs(dy);
-    data->xStepSize = dx;
-    data->yStepSize = dy;
-    data->xMin = x - cx*dx;
-    data->yMin = y - cy*dy;
-  }
+//   } else {
+//     dx = fabs(dx);
+//     dy = fabs(dy);
+//     data->xStepSize = dx;
+//     data->yStepSize = dy;
+//     data->xMin = x - cx*dx;
+//     data->yMin = y - cy*dy;
+//   }
 
   return(i);
 }
@@ -233,7 +236,7 @@ int FitsImageSource::readMatrix(Kst::MatrixData* data, const QString& field, int
 int FitsImageSource::readField(double *v, const QString& field, int s, int n) {
   int i = 0;
 
-  if (!_matrixList.contains(field)) {
+  if (!_fieldList.contains(field)) {
     return false;
   }
 
