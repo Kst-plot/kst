@@ -35,7 +35,7 @@ Butterworth low-pass crashes.
 
 -------
 When chosing to filter a curve from the plot rmb, the input vectors should be fixed to the right thing:
-  eg, Butterworth low pass Y vector should be fixed to the Y vector of the curve selected in the RMB menue.
+  eg, Butterworth low pass Y vector should be fixed to the Y vector of the curve selected in the RMB menu.
 
 -------
 Entering a numerical value into a scalar selector should create a scalar of that value, if there is not
@@ -43,6 +43,11 @@ already a scalar of that name.  This is particularly important for plugin entrie
 the scalar that the selector has selected is asked for.
 
 --------
-Only curfiles can be chosen from the command line or from the data wizard.
-  dirfiles aren't recognized at all
+Only dirfiles can be chosen from the data wizard.
   ascii files can't find any fields
+
+--------
+Problems reading files from the command line
+  ascii files can't find any fields from the command line
+  dirfiles can't be refered to by their directory
+  
