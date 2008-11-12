@@ -14,10 +14,6 @@
 #include "objectstore.h"
 #include "ui_linefitconfig.h"
 
-#include <gsl/gsl_fft_real.h>
-#include <gsl/gsl_fft_halfcomplex.h>
-
-
 static const QString& VECTOR_IN_X = "Vector In X";
 static const QString& VECTOR_IN_Y = "Vector In Y";
 static const QString& VECTOR_OUT_X = "X Interpolated";
