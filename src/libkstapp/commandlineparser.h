@@ -50,7 +50,6 @@ private:
   
   // lists of command line named plot items (and their names).
   QList<PlotItem*> _plotItems;
-  QStringList _plotNames;
 
   DataVectorList _vectors;
 

@@ -1887,6 +1887,9 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
       viewItems.append(item);
       appendRequired = false;
     }
+    if (layout == CurvePlacement::Auto) {
+      columns = (int)sqrt((double)viewItems.count()+1);
+    }
 
     Grid *grid = Grid::buildGrid(viewItems, columns);
     Q_ASSERT(grid);

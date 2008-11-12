@@ -38,7 +38,6 @@ CommandLineParser::CommandLineParser(Document *doc):
 
   _fileNames.clear();
   _vectors.clear();
-  _plotNames.clear();
   _plotItems.clear();
 }
 
@@ -232,12 +231,11 @@ void CommandLineParser::createCurveInPlot(VectorPtr xv, VectorPtr yv, VectorPtr 
       cmd->createItem();
       _plotItem = static_cast<PlotItem*>(cmd->item());
       _plotItem->setName(QString("P-")+curve->Name());
+      _plotItem->parentView()->appendToLayout(CurvePlacement::Auto, _plotItem);
     }
     PlotRenderItem *renderItem = _plotItem->renderItem(PlotRenderItem::Cartesian);
     renderItem->addRelation(kst_cast<Relation>(curve));
     _plotItem->update();
-
-    _plotItem->parentView()->appendToLayout(CurvePlacement::Auto, _plotItem);
 }
 
 void CommandLineParser::createOrFindPlot( const QString plot_name ) {
@@ -260,8 +258,8 @@ void CommandLineParser::createOrFindPlot( const QString plot_name ) {
       pi = static_cast<PlotItem*> ( cmd->item() );
 
       pi->setName ( plot_name );
-      _plotNames.append(plot_name);
       _plotItems.append(pi);
+      pi->parentView()->appendToLayout(CurvePlacement::Auto, pi);
     }
     _plotItem = pi;
 }
