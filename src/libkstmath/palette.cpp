@@ -39,8 +39,8 @@ QStringList Palette::getPaletteList() {
   QStringList paletteList;
 
   //TODO Populate a shared list of colors to return here.
-  paletteList.append(KstColorsName);
   paletteList.append(KstGrayscaleName);
+  paletteList.append(KstColorsName);
 
   return paletteList;
 }

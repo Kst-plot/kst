@@ -20,6 +20,9 @@
 #include "curve.h"
 #include "psd.h"
 #include "histogram.h"
+#include "datamatrix.h"
+#include "image.h"
+#include "palette.h"
 #include "kst_i18n.h"
 
 namespace Kst {
@@ -238,6 +241,27 @@ void CommandLineParser::createCurveInPlot(VectorPtr xv, VectorPtr yv, VectorPtr 
     _plotItem->update();
 }
 
+void CommandLineParser::createImageInPlot(MatrixPtr m) {
+    ImagePtr image = _document->objectStore()->createObject<Image>();
+
+    image->changeToColorOnly(m, 0.0, 1.0, true, Palette::getPaletteList().at(0));
+
+    image->writeLock();
+    image->update();
+    image->unlock();
+
+    if (_doConsecutivePlots) {
+      CreatePlotForCurve *cmd = new CreatePlotForCurve();
+      cmd->createItem();
+      _plotItem = static_cast<PlotItem*>(cmd->item());
+      _plotItem->setName(QString("P-")+image->Name());
+      _plotItem->parentView()->appendToLayout(CurvePlacement::Auto, _plotItem);
+    }
+    PlotRenderItem *renderItem = _plotItem->renderItem(PlotRenderItem::Cartesian);
+    renderItem->addRelation(kst_cast<Relation>(image));
+    _plotItem->update();
+}
+
 void CommandLineParser::createOrFindPlot( const QString plot_name ) {
     bool found = false;
     PlotItem *pi;
@@ -440,7 +464,24 @@ bool CommandLineParser::processCommandLine() {
     } else if (arg == "-z") {
       QString field;
       _setStringArg(field,i18n("Usage: -z <fieldname>\n"));
-      //FIXME: Create the matrix, and the image
+      for (int i_file=0; i_file<_fileNames.size(); i_file++) { 
+        QString file = _fileNames.at(i_file);
+        QFileInfo info(file);
+        if (!info.exists() || !info.isFile())
+          usage(i18n("file %1 does not exist\n").arg(file));
+
+        DataSourcePtr ds = DataSource::findOrLoadSource(_document->objectStore(), file);
+
+        DataMatrixPtr dm = _document->objectStore()->createObject<DataMatrix>();
+
+        dm->writeLock();
+        dm->change(ds, field, 0, 0, -1, -1, _doAve, _skip>0, _skip, 0.0, 0.0, 1.0, 1.0);
+
+        dm->update();
+        dm->unlock();
+
+        createImageInPlot(dm);
+      }
       new_fileList = true;
       dataPlotted = true;
     } else { // arg is not an option... must be a file
