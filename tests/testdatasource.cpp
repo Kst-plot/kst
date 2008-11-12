@@ -64,7 +64,7 @@ void TestDataSource::testAscii() {
     QVERIFY(dsp);
     QVERIFY(dsp->isValid());
     QVERIFY(dsp->hasConfigWidget());
-    QCOMPARE(dsp->fileType(), QLatin1String("ASCII"));
+    QCOMPARE(dsp->fileType(), QLatin1String("ASCII file"));
     QVERIFY(dsp->isValidField("INDEX"));
     QVERIFY(dsp->isValidField("1"));
     QVERIFY(!dsp->isValidField("0"));
@@ -122,7 +122,7 @@ void TestDataSource::testAscii() {
     QVERIFY(dsp);
     QVERIFY(dsp->isValid());
     QVERIFY(dsp->hasConfigWidget());
-    QCOMPARE(dsp->fileType(), QLatin1String("ASCII"));
+    QCOMPARE(dsp->fileType(), QLatin1String("ASCII file"));
     QVERIFY(dsp->isValidField("INDEX"));
     QVERIFY(dsp->isValidField("1"));
     QVERIFY(!dsp->isValidField("0"));
@@ -184,7 +184,7 @@ void TestDataSource::testAscii() {
     QVERIFY(dsp);
     QVERIFY(dsp->isValid());
     QVERIFY(dsp->hasConfigWidget());
-    QCOMPARE(dsp->fileType(), QLatin1String("ASCII"));
+    QCOMPARE(dsp->fileType(), QLatin1String("ASCII file"));
     QVERIFY(dsp->isValidField("INDEX"));
     QVERIFY(dsp->isValidField("1"));
     QVERIFY(!dsp->isValidField("0"));
@@ -237,7 +237,7 @@ void TestDataSource::testAscii() {
 
     QVERIFY(dsp);
     QVERIFY(dsp->hasConfigWidget());
-    QCOMPARE(dsp->fileType(), QLatin1String("ASCII"));
+    QCOMPARE(dsp->fileType(), QLatin1String("ASCII file"));
     tf.close();
   }
 
@@ -255,7 +255,7 @@ void TestDataSource::testAscii() {
     QVERIFY(dsp);
     QVERIFY(dsp->isValid());
     QVERIFY(dsp->hasConfigWidget());
-    QCOMPARE(dsp->fileType(), QLatin1String("ASCII"));
+    QCOMPARE(dsp->fileType(), QLatin1String("ASCII file"));
     QCOMPARE(dsp->frameCount(QString::null), 39000);
     QCOMPARE(dsp->frameCount("1"), 39000);
     QCOMPARE(dsp->frameCount("2"), 39000);
@@ -530,7 +530,7 @@ void TestDataSource::testQImageSource() {
   QVERIFY(dsp);
   QVERIFY(dsp->isValid());
   QVERIFY(!dsp->hasConfigWidget());
-  QCOMPARE(dsp->fileType(), QLatin1String("QImage compatible Image"));
+  QCOMPARE(dsp->fileType(), QLatin1String("QImage image"));
   QVERIFY(dsp->isValidField("INDEX"));
   QCOMPARE(dsp->frameCount("INDEX"), 1024);
   QVERIFY(dsp->isValidField("RED"));
@@ -634,7 +634,7 @@ void TestDataSource::testFITSImage() {
   QVERIFY(dsp);
   QVERIFY(dsp->isValid());
   QVERIFY(!dsp->hasConfigWidget());
-  QCOMPARE(dsp->fileType(), QLatin1String("FITS Image"));
+  QCOMPARE(dsp->fileType(), QLatin1String("FITS image"));
   QVERIFY(dsp->isValidField("INDEX"));
   QCOMPARE(dsp->frameCount("INDEX"), 58800);
   QVERIFY(dsp->isValidField("1"));
