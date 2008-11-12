@@ -17,7 +17,7 @@
 
 #include "kst_i18n.h"
 
-static const QString fitsTypeString = I18N_NOOP("Fits image");
+static const QString fitsTypeString = I18N_NOOP("FITS image");
 
 class FitsImageSource::Config {
   public:
