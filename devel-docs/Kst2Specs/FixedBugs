@@ -77,3 +77,20 @@ Problems reading files from the command line
 --------
 Only dirfiles can be chosen from the data wizard.
   ascii files can't find any fields
+
+--------
+Update curve after editing equation
+Create a plot with a curve from an equation.
+    eg, x = 0..100, y = x
+Put the plot in auto zoom ('m') mode.
+Edit the equation to change its Y range
+    eg, x = 0..100, y = 2x
+On apply, nothing changes.
+Do something that causes the curve to redraw (eg, resize the window).
+The curve redraws, but the Y zoom range stays at the old range.  'm' resets to the old zoom range.
+Now edit the curve, do nothing, and hit OK.  Still no change.
+Now do something to redraw the plot.  'm' mode now works.
+
+-------
+Butterworth low-pass crashes.
+  create a plot, apply filter with order=4, lowpass = 0.01.  Crash.

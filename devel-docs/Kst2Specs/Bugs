@@ -1,16 +1,3 @@
-Update curve after editing equation
-Create a plot with a curve from an equation.
-    eg, x = 0..100, y = x
-Put the plot in auto zoom ('m') mode.
-Edit the equation to change its Y range
-    eg, x = 0..100, y = 2x
-On apply, nothing changes.
-Do something that causes the curve to redraw (eg, resize the window).
-The curve redraws, but the Y zoom range stays at the old range.  'm' resets to the old zoom range.
-Now edit the curve, do nothing, and hit OK.  Still no change.
-Now do something to redraw the plot.  'm' mode now works.
-
--------
 Problems with file selector
 If you browse to select a dirfile, the name of the previous dirfile has been put into "File name:" entry.  So you have to erase it to select a dirfile.
 Of course, selecting a data file replaces the old name with a new one, but there is no way to clear it selecting a dirfile.
@@ -20,7 +7,6 @@ Either:
 Or:
   Check to see if the current directory is recognized as a valid datasource - if it is, clear the current file entry.
 
-
 --------
 Places where text labels are entered need string and scalar selectors to aid in the insertion of 
 strings and scalars (eg, primarily label editor)
@@ -29,9 +15,6 @@ strings and scalars (eg, primarily label editor)
 Filters should have default values
   eg, low pass filter should default to order = 4, lowpass  = 0.1: see 1.x for defaults.
 
--------
-Butterworth low-pass crashes.
-  create a plot, apply filter with order=4, lowpass = 0.01.  Crash.
 
 -------
 When chosing to filter a curve from the plot rmb, the input vectors should be fixed to the right thing:
