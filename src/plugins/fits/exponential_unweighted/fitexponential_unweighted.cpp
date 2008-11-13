@@ -58,6 +58,11 @@ class ConfigWidgetFitExponentialUnweightedPlugin : public Kst::DataObjectConfigW
       setSelectedVectorY(vector);
     }
 
+    void setVectorsLocked(bool locked = true) {
+      _vectorX->setEnabled(!locked);
+      _vectorY->setEnabled(!locked);
+    }
+
     Kst::VectorPtr selectedVectorX() { return _vectorX->selectedVector(); };
     void setSelectedVectorX(Kst::VectorPtr vector) { return _vectorX->setSelectedVector(vector); };
 

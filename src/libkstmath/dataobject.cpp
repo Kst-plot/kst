@@ -972,6 +972,11 @@ void DataObjectConfigWidget::setupSlots(QWidget* dialog) {
 }
 
 
+void DataObjectConfigWidget::setVectorsLocked(bool locked) {
+  Q_UNUSED(locked);
+}
+
+
 bool DataObjectConfigWidget::configurePropertiesFromXml(ObjectStore *store, QXmlStreamAttributes& attrs) {
   Q_UNUSED(store);
   Q_UNUSED(attrs);

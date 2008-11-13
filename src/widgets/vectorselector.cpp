@@ -36,7 +36,6 @@ VectorSelector::VectorSelector(QWidget *parent, ObjectStore *store)
   connect(_editVector, SIGNAL(pressed()), this, SLOT(editVector()));
   connect(_vector, SIGNAL(activated(int)), this, SLOT(emitSelectionChanged()));
   connect(_vector, SIGNAL(currentIndexChanged(int)), this, SLOT(updateDescriptionTip()));
-
 }
 
 

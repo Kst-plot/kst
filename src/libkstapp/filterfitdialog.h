@@ -53,6 +53,7 @@ class KST_EXPORT FilterFitTab : public DataTab, Ui::FilterFitTab {
     DataObjectPluginInterface::PluginTypeID _type;
     ObjectStore *_store;
     VectorPtr _vectorX, _vectorY;
+    bool _lockVectors;
 
 };
 

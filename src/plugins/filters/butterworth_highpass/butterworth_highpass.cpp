@@ -52,6 +52,9 @@ class ConfigFilterButterworthHighPassPlugin : public Kst::DataObjectConfigWidget
       Q_UNUSED(vector);
     }
 
+    void setVectorsLocked(bool locked = true) {
+      _vector->setEnabled(!locked);
+    }
 
     Kst::VectorPtr selectedVector() { return _vector->selectedVector(); };
     void setSelectedVector(Kst::VectorPtr vector) { return _vector->setSelectedVector(vector); };

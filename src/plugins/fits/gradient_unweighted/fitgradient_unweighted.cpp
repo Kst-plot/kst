@@ -48,13 +48,17 @@ class ConfigWidgetFitGradientUnweightedPlugin : public Kst::DataObjectConfigWidg
       }
     }
 
-
     void setVectorX(Kst::VectorPtr vector) {
       setSelectedVectorX(vector);
     }
 
     void setVectorY(Kst::VectorPtr vector) {
       setSelectedVectorY(vector);
+    }
+
+    void setVectorsLocked(bool locked = true) {
+      _vectorX->setEnabled(!locked);
+      _vectorY->setEnabled(!locked);
     }
 
     Kst::VectorPtr selectedVectorX() { return _vectorX->selectedVector(); };

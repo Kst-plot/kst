@@ -200,6 +200,7 @@ class DataObjectConfigWidget : public QWidget {
 
     virtual void setVectorX(VectorPtr vector);
     virtual void setVectorY(VectorPtr vector);
+    virtual void setVectorsLocked(bool locked = true);
 
     virtual bool configurePropertiesFromXml(ObjectStore *store, QXmlStreamAttributes& attrs);
 

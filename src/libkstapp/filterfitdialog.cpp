@@ -24,7 +24,7 @@
 namespace Kst {
 
 FilterFitTab::FilterFitTab(QString& pluginName, QWidget *parent)
-  : DataTab(parent), _configWidget(0), _layout(0), _store(0), _vectorX(0), _vectorY(0) {
+  : DataTab(parent), _configWidget(0), _layout(0), _store(0), _vectorX(0), _vectorY(0), _lockVectors(false) {
 
   setupUi(this);
   setTabTitle(tr("Plugin"));
@@ -71,6 +71,8 @@ void FilterFitTab::setVectorY(VectorPtr vector) {
 
 void FilterFitTab::setPlotMode() {
   _curveAppearance->setVisible(true);
+  _lockVectors = true;
+  _configWidget->setVectorsLocked(true);
 }
 
 
@@ -109,6 +111,9 @@ void FilterFitTab::pluginChanged(const QString &plugin) {
   }
   if (_vectorY) {
     _configWidget->setVectorY(_vectorY);
+  }
+  if (_lockVectors) {
+    _configWidget->setVectorsLocked(true);
   }
   _layout->addWidget(_configWidget, 0, 0);
   _layout->activate();
