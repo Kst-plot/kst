@@ -33,7 +33,7 @@ class KST_EXPORT ScalarSelector : public QWidget, public Ui::ScalarSelector {
 
     void setObjectStore(ObjectStore *store);
 
-    ScalarPtr selectedScalar() const;
+    ScalarPtr selectedScalar();
     void setSelectedScalar(ScalarPtr selectedScalar);
     void fillScalars();
 

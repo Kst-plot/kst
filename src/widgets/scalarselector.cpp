@@ -15,6 +15,8 @@
 #include "datacollection.h"
 #include "objectstore.h"
 
+#include "enodes.h"
+
 namespace Kst {
 
 ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
@@ -66,8 +68,36 @@ void ScalarSelector::emitSelectionChanged() {
 }
 
 
-ScalarPtr ScalarSelector::selectedScalar() const {
-  //qDebug() << "xxx text: " << _scalar->currentText();
+ScalarPtr ScalarSelector::selectedScalar() {
+//   qDebug() << "xxx text: " << _scalar->currentText();
+  if (_scalar->findText(_scalar->currentText(),Qt::MatchExactly) == -1) {
+    // Create the Scalar.
+    bool ok = false;
+    double value = _scalar->currentText().toDouble(&ok);
+    if (!ok) {
+      value = Equations::interpret(_store, _scalar->currentText().toLatin1(), &ok);
+    }
+
+    if (!ok) {
+      return 0; //invalid
+    }
+
+    ScalarPtr scalar = _store->createObject<Scalar>();
+    scalar->setValue(value);
+    scalar->setOrphan(true);
+    scalar->setEditable(true);
+
+    scalar->writeLock();
+    scalar->update();
+    scalar->unlock();
+
+    _scalar->clearEditText();
+    fillScalars();
+    setSelectedScalar(scalar);
+
+    return scalar;
+  }
+
   return qVariantValue<Scalar*>(_scalar->itemData(_scalar->currentIndex()));
 }
 
