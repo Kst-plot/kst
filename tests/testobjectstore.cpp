@@ -35,7 +35,7 @@ void TestObjectStore::testObjectStore() {
   QCOMPARE(store.getObjects<Scalar>().count(), 2);
   QCOMPARE(store.getObjects<Vector>().count(), 0);
 
-  QVERIFY(sc == store.retrieveObject(sc->Name())); // can retrieve the object from the store
+  QVERIFY(sc == kst_cast<Scalar>(store.retrieveObject(sc->Name()))); // can retrieve the object from the store
 
   VectorPtr vec = kst_cast<Vector>(store.createObject<Vector>());
   QVERIFY(vec);
