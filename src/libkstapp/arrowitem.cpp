@@ -15,6 +15,8 @@
 #include "viewitemzorder.h"
 #include "arrowitemdialog.h"
 
+#include "math_kst.h"
+
 #include <debug.h>
 
 #include <QDebug>

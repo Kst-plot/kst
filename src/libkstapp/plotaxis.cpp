@@ -551,7 +551,7 @@ void PlotAxis::computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTick
   int High = floor(max)+1;
   bool minorLabels = ((High - Low) <= 1);
   for (int i = Low - 1; i <= High; i+=tick) {
-    qreal majorPoint = pow(10, i);
+    qreal majorPoint = pow(10.0, i);
     if (majorPoint == 0) majorPoint = -350;
     if (i >= min && i <= max) {
       *MajorTicks << majorPoint;
