@@ -52,7 +52,7 @@ class KST_EXPORT BasicPlugin : public DataObject {
     virtual QString descriptionTip() const;
 
     // Validator of plugin data.  Expensive, only use to verify successful creation.
-    bool isValid() { return algorithm(); }
+    bool isValid() { return (inputsExist() && algorithm()); }
     QString errorMessage() { return _errorString; }
 
   public slots:
