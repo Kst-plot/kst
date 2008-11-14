@@ -35,8 +35,6 @@ ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
 
   _scalarListSelector = new ScalarListSelector(this);
 
-  fillScalars();
-
   connect(_newScalar, SIGNAL(pressed()), this, SLOT(newScalar()));
   connect(_editScalar, SIGNAL(pressed()), this, SLOT(editScalar()));
   connect(_selectScalar, SIGNAL(pressed()), this, SLOT(selectScalar()));
@@ -55,11 +53,7 @@ void ScalarSelector::setObjectStore(ObjectStore *store) {
 }
 
 void ScalarSelector::updateDescriptionTip() {
-  if (selectedScalar()) {
-    setToolTip(selectedScalar()->descriptionTip());
-  } else {
-    setToolTip(QString());
-  }
+  setToolTip(selectedScalarString());
 }
 
 
@@ -68,9 +62,29 @@ void ScalarSelector::emitSelectionChanged() {
 }
 
 
+void ScalarSelector::setDefaultValue(double value) {
+  QString string = QString::number(value);
+  _scalar->addItem(string, qVariantFromValue(NULL));
+  _scalar->setCurrentIndex(_scalar->findText(string));
+}
+
+
 ScalarPtr ScalarSelector::selectedScalar() {
 //   qDebug() << "xxx text: " << _scalar->currentText();
-  if (_scalar->findText(_scalar->currentText(),Qt::MatchExactly) == -1) {
+  bool existingScalar;
+  if (_scalar->findText(_scalar->currentText(), Qt::MatchExactly) == -1) {
+    // Value typed in.
+    existingScalar = false;
+  } else {
+    if (Scalar* scalar = qVariantValue<Scalar*>(_scalar->itemData(_scalar->findText(_scalar->currentText())))) {
+      existingScalar = true;
+    } else {
+      // Default Value.  Doesn't exist as scalar yet.
+      existingScalar = false;
+    }
+  }
+
+  if (!existingScalar) {
     // Create the Scalar.
     bool ok = false;
     double value = _scalar->currentText().toDouble(&ok);
@@ -79,7 +93,16 @@ ScalarPtr ScalarSelector::selectedScalar() {
     }
 
     if (!ok) {
-      return 0; //invalid
+      return 0;
+    }
+
+    // Check if a scalar with this value exist & is orphan.
+    foreach(Scalar* scalar, _store->getObjects<Scalar>()) {
+      if (scalar->orphan()) {
+        if (scalar->value() == value) {
+          return scalar;
+        }
+      }
     }
 
     ScalarPtr scalar = _store->createObject<Scalar>();
@@ -97,8 +120,21 @@ ScalarPtr ScalarSelector::selectedScalar() {
 
     return scalar;
   }
-
   return qVariantValue<Scalar*>(_scalar->itemData(_scalar->currentIndex()));
+}
+
+
+QString ScalarSelector::selectedScalarString() {
+  if (_scalar->findText(_scalar->currentText(),Qt::MatchExactly) == -1) {
+    return _scalar->currentText();
+  }
+
+  Scalar* scalar = qVariantValue<Scalar*>(_scalar->itemData(_scalar->currentIndex()));
+  if (scalar) {
+    return scalar->descriptionTip();
+  } else {
+    return QString();
+  }
 }
 
 
@@ -170,7 +206,7 @@ void ScalarSelector::fillScalars() {
 
   qSort(list);
 
-  ScalarPtr current = selectedScalar();
+  ScalarPtr current = qVariantValue<Scalar*>(_scalar->itemData(_scalar->currentIndex()));;
 
   _scalar->clear();
   foreach (QString string, list) {

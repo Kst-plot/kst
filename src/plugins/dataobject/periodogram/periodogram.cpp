@@ -38,8 +38,10 @@ class ConfigPeriodogramPlugin : public Kst::DataObjectConfigWidget, public Ui_Pe
       _store = store; 
       _vectorTime->setObjectStore(store);
       _vectorData->setObjectStore(store);
-      _scalarOversampling->setObjectStore(store); 
-      _scalarANFF->setObjectStore(store); 
+      _scalarOversampling->setObjectStore(store);
+      _scalarANFF->setObjectStore(store);
+      _scalarOversampling->setDefaultValue(0);
+      _scalarANFF->setDefaultValue(0);
     }
 
     void setupSlots(QWidget* dialog) {

@@ -29,7 +29,8 @@ class ConfigWidgetBinPlugin : public Kst::DataObjectConfigWidget, public Ui_BinC
     void setObjectStore(Kst::ObjectStore* store) { 
       _store = store; 
       _vector->setObjectStore(store); 
-      _scalarBin->setObjectStore(store); 
+      _scalarBin->setObjectStore(store);
+      _scalarBin->setDefaultValue(10);
     }
 
     void setupSlots(QWidget* dialog) {

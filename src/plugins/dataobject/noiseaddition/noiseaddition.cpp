@@ -31,8 +31,9 @@ class ConfigNoiseAdditionPlugin : public Kst::DataObjectConfigWidget, public Ui_
 
     void setObjectStore(Kst::ObjectStore* store) { 
       _store = store; 
-      _vector->setObjectStore(store); 
-      _scalarSigma->setObjectStore(store); 
+      _vector->setObjectStore(store);
+      _scalarSigma->setObjectStore(store);
+      _scalarSigma->setDefaultValue(0);
     }
 
     void setupSlots(QWidget* dialog) {

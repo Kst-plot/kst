@@ -35,9 +35,10 @@ class ConfigGenericFilterPlugin : public Kst::DataObjectConfigWidget, public Ui_
     void setObjectStore(Kst::ObjectStore* store) { 
       _store = store; 
       _vector->setObjectStore(store); 
-      _scalarInterval->setObjectStore(store); 
-      _stringNumerator->setObjectStore(store); 
-      _stringDenominator->setObjectStore(store); 
+      _scalarInterval->setObjectStore(store);
+      _stringNumerator->setObjectStore(store);
+      _stringDenominator->setObjectStore(store);
+      _scalarInterval->setDefaultValue(0);
     }
 
     void setupSlots(QWidget* dialog) {

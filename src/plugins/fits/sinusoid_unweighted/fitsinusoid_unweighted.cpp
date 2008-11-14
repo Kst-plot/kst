@@ -42,6 +42,8 @@ class ConfigWidgetFitSinusoidUnweightedPlugin : public Kst::DataObjectConfigWidg
       _vectorY->setObjectStore(store);
       _scalarHarmonics->setObjectStore(store);
       _scalarPeriod->setObjectStore(store);
+      _scalarHarmonics->setDefaultValue(0);
+      _scalarPeriod->setDefaultValue(1);
     }
 
     void setupSlots(QWidget* dialog) {

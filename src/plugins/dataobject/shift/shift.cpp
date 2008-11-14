@@ -29,7 +29,8 @@ class ConfigWidgetShiftPlugin : public Kst::DataObjectConfigWidget, public Ui_Sh
     void setObjectStore(Kst::ObjectStore* store) { 
       _store = store; 
       _vector->setObjectStore(store); 
-      _scalarShift->setObjectStore(store); 
+      _scalarShift->setObjectStore(store);
+      _scalarShift->setDefaultValue(0);
     }
 
     void setupSlots(QWidget* dialog) {

@@ -32,10 +32,12 @@ class ConfigCrossSpectrumPlugin : public Kst::DataObjectConfigWidget, public Ui_
 
     void setObjectStore(Kst::ObjectStore* store) { 
       _store = store; 
-      _vectorOne->setObjectStore(store); 
-      _vectorTwo->setObjectStore(store); 
-      _scalarFFT->setObjectStore(store); 
-      _scalarRate->setObjectStore(store); 
+      _vectorOne->setObjectStore(store);
+      _vectorTwo->setObjectStore(store);
+      _scalarFFT->setObjectStore(store);
+      _scalarRate->setObjectStore(store);
+      _scalarFFT->setDefaultValue(10);
+      _scalarRate->setDefaultValue(100);
     }
 
     void setupSlots(QWidget* dialog) {

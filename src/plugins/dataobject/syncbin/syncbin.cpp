@@ -42,9 +42,12 @@ class ConfigSyncBinPlugin : public Kst::DataObjectConfigWidget, public Ui_SyncBi
       _store = store; 
       _vectorX->setObjectStore(store);
       _vectorY->setObjectStore(store);
-      _scalarBins->setObjectStore(store); 
-      _scalarXMin->setObjectStore(store); 
-      _scalarXMax->setObjectStore(store); 
+      _scalarBins->setObjectStore(store);
+      _scalarXMin->setObjectStore(store);
+      _scalarXMax->setObjectStore(store);
+      _scalarBins->setDefaultValue(0);
+      _scalarXMin->setDefaultValue(0);
+      _scalarXMax->setDefaultValue(0);
     }
 
     void setupSlots(QWidget* dialog) {

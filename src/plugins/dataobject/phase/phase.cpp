@@ -34,8 +34,10 @@ class ConfigPhasePlugin : public Kst::DataObjectConfigWidget, public Ui_PhaseCon
       _store = store; 
       _vectorTime->setObjectStore(store);
       _vectorData->setObjectStore(store);
-      _scalarPeriod->setObjectStore(store); 
-      _scalarZeroPhase->setObjectStore(store); 
+      _scalarPeriod->setObjectStore(store);
+      _scalarZeroPhase->setObjectStore(store);
+      _scalarPeriod->setDefaultValue(0);
+      _scalarZeroPhase->setDefaultValue(0);
     }
 
     void setupSlots(QWidget* dialog) {

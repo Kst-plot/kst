@@ -40,6 +40,7 @@ class ConfigWidgetFitPolynomialUnweightedPlugin : public Kst::DataObjectConfigWi
       _vectorX->setObjectStore(store);
       _vectorY->setObjectStore(store);
       _scalarOrder->setObjectStore(store);
+      _scalarOrder->setDefaultValue(2);
     }
 
     void setupSlots(QWidget* dialog) {

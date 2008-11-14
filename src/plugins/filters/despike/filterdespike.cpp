@@ -32,6 +32,8 @@ class ConfigWidgetFilterDespikePlugin : public Kst::DataObjectConfigWidget, publ
       _vector->setObjectStore(store);
       _scalarNSigma->setObjectStore(store);
       _scalarSpacing->setObjectStore(store);
+      _scalarNSigma->setDefaultValue(5.0);
+      _scalarSpacing->setDefaultValue(1);
     }
 
     void setupSlots(QWidget* dialog) {

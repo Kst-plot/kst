@@ -29,7 +29,8 @@ class ConfigCumulativeSumPlugin : public Kst::DataObjectConfigWidget, public Ui_
     void setObjectStore(Kst::ObjectStore* store) { 
       _store = store; 
       _vector->setObjectStore(store); 
-      _scalarStep->setObjectStore(store); 
+      _scalarStep->setObjectStore(store);
+      _scalarStep->setDefaultValue(0);
     }
 
     void setupSlots(QWidget* dialog) {

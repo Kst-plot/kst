@@ -36,6 +36,9 @@ class ConfigFilterButterworthBandStopPlugin : public Kst::DataObjectConfigWidget
       _scalarOrder->setObjectStore(store);
       _scalarRate->setObjectStore(store);
       _scalarBandwidth->setObjectStore(store);
+      _scalarOrder->setDefaultValue(0);
+      _scalarRate->setDefaultValue(1);
+      _scalarBandwidth->setDefaultValue(1);
     }
 
     void setupSlots(QWidget* dialog) {

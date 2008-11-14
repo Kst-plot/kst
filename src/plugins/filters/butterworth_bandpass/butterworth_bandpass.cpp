@@ -36,6 +36,9 @@ class ConfigFilterButterworthBandPassPlugin : public Kst::DataObjectConfigWidget
       _scalarOrder->setObjectStore(store);
       _scalarRate->setObjectStore(store);
       _scalarBandwidth->setObjectStore(store);
+      _scalarOrder->setDefaultValue(4);
+      _scalarRate->setDefaultValue(0.052);
+      _scalarBandwidth->setDefaultValue(0.096);
     }
 
     void setupSlots(QWidget* dialog) {

@@ -34,6 +34,8 @@ class ConfigFilterButterworthHighPassPlugin : public Kst::DataObjectConfigWidget
       _vector->setObjectStore(store);
       _scalarOrder->setObjectStore(store);
       _scalarCutoff->setObjectStore(store);
+      _scalarOrder->setDefaultValue(4);
+      _scalarCutoff->setDefaultValue(0.02);
     }
 
     void setupSlots(QWidget* dialog) {

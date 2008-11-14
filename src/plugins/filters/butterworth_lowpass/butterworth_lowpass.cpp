@@ -35,6 +35,8 @@ class ConfigFilterButterworthLowPassPlugin : public Kst::DataObjectConfigWidget,
       _vector->setObjectStore(store);
       _scalarOrder->setObjectStore(store);
       _scalarCutoff->setObjectStore(store);
+      _scalarOrder->setDefaultValue(4);
+      _scalarCutoff->setDefaultValue(0.1);
     }
 
     void setupSlots(QWidget* dialog) {

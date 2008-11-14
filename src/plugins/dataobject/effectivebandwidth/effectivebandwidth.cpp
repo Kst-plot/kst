@@ -36,9 +36,12 @@ class ConfigEffectiveBandwidthPlugin : public Kst::DataObjectConfigWidget, publi
       _store = store; 
       _vectorX->setObjectStore(store);
       _vectorY->setObjectStore(store);
-      _scalarMin->setObjectStore(store); 
-      _scalarFreq->setObjectStore(store); 
-      _scalarK->setObjectStore(store); 
+      _scalarMin->setObjectStore(store);
+      _scalarFreq->setObjectStore(store);
+      _scalarK->setObjectStore(store);
+      _scalarMin->setDefaultValue(0);
+      _scalarFreq->setDefaultValue(0);
+      _scalarK->setDefaultValue(0);
     }
 
     void setupSlots(QWidget* dialog) {

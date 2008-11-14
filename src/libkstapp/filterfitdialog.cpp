@@ -173,8 +173,6 @@ void FilterFitDialog::setPlotMode(PlotItem* plot) {
 
 
 ObjectPtr FilterFitDialog::createNewDataObject() {
-  _filterFitTab->configWidget()->save();
-
   BasicPluginPtr dataObject = kst_cast<BasicPlugin>(DataObject::createPlugin(_filterFitTab->pluginName(), _document->objectStore(), _filterFitTab->configWidget()));
   Q_ASSERT(dataObject);
 
@@ -218,6 +216,8 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
     renderItem->addRelation(kst_cast<Relation>(curve));
     _plotItem->update();
   }
+
+  _filterFitTab->configWidget()->save();
 
   return dataObject;
 }

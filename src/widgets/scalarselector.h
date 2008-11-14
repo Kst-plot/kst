@@ -35,7 +35,12 @@ class KST_EXPORT ScalarSelector : public QWidget, public Ui::ScalarSelector {
 
     ScalarPtr selectedScalar();
     void setSelectedScalar(ScalarPtr selectedScalar);
+
     void fillScalars();
+
+    QString selectedScalarString();
+
+    void setDefaultValue(double value);
 
   Q_SIGNALS:
     void selectionChanged(const QString&);
