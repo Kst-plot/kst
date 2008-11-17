@@ -1,13 +1,19 @@
 <ui version="4.0" >
-  <class>LinearConfig</class>
+ <class>LinearConfig</class>
  <widget class="QWidget" name="LinearConfig" >
   <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>254</width>
-    <height>167</height>
+    <width>421</width>
+    <height>113</height>
    </rect>
+  </property>
+  <property name="minimumSize" >
+   <size>
+    <width>400</width>
+    <height>0</height>
+   </size>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" >
    <item>

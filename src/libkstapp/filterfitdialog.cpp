@@ -134,10 +134,12 @@ void FilterFitTab::pluginChanged(const QString &plugin) {
 FilterFitDialog::FilterFitDialog(QString& pluginName, ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent), _plotItem(0), _vectorX(0), _vectorY(0) {
 
+  QString title;
   if (editMode() == Edit)
-    setWindowTitle(tr("Edit Plugin"));
+    title = tr("Edit ") + pluginName + tr(" Plugin");
   else
-    setWindowTitle(tr("New Plugin"));
+    title = tr("New ") + pluginName + tr(" Plugin");
+  setWindowTitle(title);
 
   _filterFitTab = new FilterFitTab(pluginName, this);
   addDataTab(_filterFitTab);

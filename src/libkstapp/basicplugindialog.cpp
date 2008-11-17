@@ -48,10 +48,12 @@ void BasicPluginTab::setObjectStore(ObjectStore *store) {
 BasicPluginDialog::BasicPluginDialog(QString& pluginName, ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent), _pluginName(pluginName) {
 
+  QString title;
   if (editMode() == Edit)
-    setWindowTitle(tr("Edit Basic Plugin"));
+    title = tr("Edit ") + pluginName + tr(" Plugin");
   else
-    setWindowTitle(tr("New Basic Plugin"));
+    title = tr("New ") + pluginName + tr(" Plugin");
+  setWindowTitle(title);
 
   _basicPluginTab = new BasicPluginTab(pluginName, this);
   addDataTab(_basicPluginTab);

@@ -1,13 +1,19 @@
 <ui version="4.0" >
-  <class>CrossCorrelationConfig</class>
-  <widget class="QWidget" name="CrossCorrelationConfig" >
+ <class>CrossCorrelationConfig</class>
+ <widget class="QWidget" name="CrossCorrelationConfig" >
   <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>254</width>
-    <height>118</height>
+    <width>428</width>
+    <height>86</height>
    </rect>
+  </property>
+  <property name="minimumSize" >
+   <size>
+    <width>400</width>
+    <height>0</height>
+   </size>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" >
    <item>
