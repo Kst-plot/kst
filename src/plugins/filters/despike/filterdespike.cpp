@@ -49,7 +49,7 @@ class ConfigWidgetFilterDespikePlugin : public Kst::DataObjectConfigWidget, publ
     }
 
     void setVectorY(Kst::VectorPtr vector) {
-      Q_UNUSED(vector);
+      setSelectedVector(vector);
     }
 
     void setVectorsLocked(bool locked = true) {

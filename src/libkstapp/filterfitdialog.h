@@ -41,6 +41,7 @@ class KST_EXPORT FilterFitTab : public DataTab, Ui::FilterFitTab {
     void saveSettings();
 
     void setPlotMode();
+    void lockVectors();
 
     QString pluginName();
 

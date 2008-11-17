@@ -58,6 +58,7 @@ void FilterFitTab::setVectorX(VectorPtr vector) {
   if (_configWidget) {
     _configWidget->setVectorX(vector);
   }
+  lockVectors();
 }
 
 
@@ -66,13 +67,23 @@ void FilterFitTab::setVectorY(VectorPtr vector) {
   if (_configWidget) {
     _configWidget->setVectorY(vector);
   }
+  lockVectors();
 }
 
 
 void FilterFitTab::setPlotMode() {
   _curveAppearance->setVisible(true);
-  _lockVectors = true;
-  _configWidget->setVectorsLocked(true);
+  lockVectors();
+}
+
+
+void FilterFitTab::lockVectors() {
+  if (!_lockVectors) {
+    _lockVectors = true;
+    if (_configWidget) {
+      _configWidget->setVectorsLocked(true);
+    }
+  }
 }
 
 

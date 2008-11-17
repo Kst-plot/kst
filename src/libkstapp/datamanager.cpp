@@ -185,12 +185,6 @@ void DataManager::showContextMenu(const QPoint &position) {
           connect(action, SIGNAL(triggered()), this, SLOT(showHistogramDialog()));
           actions.append(action);
 
-          if (!DataObject::fitsPluginList().empty()) {
-            action = new QAction(tr("Apply Fit"), this);
-            connect(action, SIGNAL(triggered()), this, SLOT(showFitDialog()));
-            actions.append(action);
-          }
-
           if (!DataObject::filterPluginList().empty()) {
             action = new QAction(tr("Apply Filter"), this);
             connect(action, SIGNAL(triggered()), this, SLOT(showFilterDialog()));
@@ -228,7 +222,6 @@ void DataManager::showContextMenu(const QPoint &position) {
 
           action->setMenu(addMenu);
           actions.append(action);
-
 
           connect(removeMenu, SIGNAL(triggered(QAction*)), this, SLOT(removeFromPlot(QAction*)));
           action = new QAction(tr("Remove From Plot"), this);
@@ -283,6 +276,13 @@ void DataManager::showContextMenu(const QPoint &position) {
             action = new QAction(tr("Make Histogram"), this);
             connect(action, SIGNAL(triggered()), this, SLOT(showHistogramDialog()));
             actions.append(action);
+
+            if (!DataObject::filterPluginList().empty()) {
+              action = new QAction(tr("Apply Filter"), this);
+              connect(action, SIGNAL(triggered()), this, SLOT(showFilterDialog()));
+              actions.append(action);
+            }
+
           } else if (MatrixPtr m = kst_cast<Matrix>(_currentObject)) {
             action = new QAction(tr("Make Image"), this);
             connect(action, SIGNAL(triggered()), this, SLOT(showImageDialog()));
