@@ -194,7 +194,7 @@ bool CrossSpectrumSource::algorithm() {
   if ( xps_len<2 )  {
     xps_len = 2;
   }
-  xps_len = int ( pow( 2,  xps_len ) );
+  xps_len = int ( pow( 2.0,  xps_len ) );
 
   /* input vector lengths */
   v_len = ( ( inputVectorOne->length() < inputVectorTwo->length() ) ? inputVectorOne->length() : inputVectorTwo->length() );
