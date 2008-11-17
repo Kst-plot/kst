@@ -15,7 +15,6 @@ strings and scalars (eg, primarily label editor)
 Filters should have default values
   eg, low pass filter should default to order = 4, lowpass  = 0.1: see 1.x for defaults.
 
-
 -------
 When chosing to filter a curve from the plot rmb, the input vectors should be fixed to the right thing:
   eg, Butterworth low pass Y vector should be fixed to the Y vector of the curve selected in the RMB menu.

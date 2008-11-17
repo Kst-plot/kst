@@ -147,7 +147,6 @@ class KST_EXPORT DataWizardPageDataPresentation : public QWizardPage, Ui::DataWi
   DataRange* dataRange() const;
 
   public Q_SLOTS:
-    void updatePlotTypeOptions();
     void applyFilter(bool);
     void updateVectors();
     void optionsUpdated();

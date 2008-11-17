@@ -379,14 +379,13 @@ DataWizardPageDataPresentation::DataWizardPageDataPresentation(ObjectStore *stor
   dataRange()->loadWidgetDefaults();
   getFFTOptions()->loadWidgetDefaults();
 
-  connect(_radioButtonPlotData, SIGNAL(clicked()), this, SLOT(updatePlotTypeOptions()));
-  connect(_radioButtonPlotPSD, SIGNAL(clicked()), this, SLOT(updatePlotTypeOptions()));
-  connect(_radioButtonPlotDataPSD, SIGNAL(clicked()), this, SLOT(updatePlotTypeOptions()));
-  connect(_applyFilters, SIGNAL(toggled(bool)), this, SLOT(applyFilter(bool)));
   connect(_xAxisCreateFromField, SIGNAL(toggled(bool)), this, SLOT(optionsUpdated()));
   connect(_xVector, SIGNAL(currentIndexChanged(int)), this, SLOT(optionsUpdated()));
   connect(_xVectorExisting, SIGNAL(selectionChanged(QString)), this, SLOT(optionsUpdated()));
 
+  _FFTOptions->GroupBoxFFTOptions->setCheckable(true);
+  _FFTOptions->GroupBoxFFTOptions->setTitle(i18n("Create S&pectra Plots.  FFT Options:"));
+  _FFTOptions->GroupBoxFFTOptions->setChecked(false); // fixme: use persistant defaults
 }
 
 
@@ -421,17 +420,17 @@ VectorPtr DataWizardPageDataPresentation::selectedVector() const {
 
 
 bool DataWizardPageDataPresentation::plotPSD() const {
-  return _radioButtonPlotPSD->isChecked();
+  return _FFTOptions->GroupBoxFFTOptions->isChecked();
 }
 
 
 bool DataWizardPageDataPresentation::plotData() const {
-  return _radioButtonPlotData->isChecked();
+  return _xAxisGroup->isChecked();
 }
 
 
 bool DataWizardPageDataPresentation::plotDataPSD() const {
-  return _radioButtonPlotDataPSD->isChecked();
+  return (plotPSD() && plotData());
 }
 
 
@@ -446,12 +445,6 @@ void DataWizardPageDataPresentation::updateVectors() {
   _xVector->addItems(((DataWizard*)wizard())->dataSourceFieldList());
   _pageValid = validOptions();
   emit completeChanged();
-}
-
-
-void DataWizardPageDataPresentation::updatePlotTypeOptions() {
- _xAxisGroup->setEnabled(_radioButtonPlotData->isChecked() || _radioButtonPlotDataPSD->isChecked());
-_FFTOptions->setEnabled(_radioButtonPlotPSD->isChecked() || _radioButtonPlotDataPSD->isChecked());
 }
 
 
@@ -486,11 +479,11 @@ bool DataWizardPageDataPresentation::validOptions() {
 
 
 int DataWizardPageDataPresentation::nextId() const {
-  if (_applyFilters->isChecked()) {
-    return DataWizard::PageFilters;
-  } else {
+//  if (_applyFilters->isChecked()) {
+//    return DataWizard::PageFilters;
+//  } else {
     return DataWizard::PagePlot;
-  }
+//  }
 }
 
 
@@ -601,7 +594,7 @@ void DataWizard::finished() {
       } else {
         memoryRequested += frames * ds->samplesPerFrame(field)*sizeof(double);
       }
-      if (_pageDataPresentation->plotPSD() || _pageDataPresentation->plotDataPSD()) {
+      if (_pageDataPresentation->plotPSD()) {
         memoryRequested += fftLen * 6;
       }
     }
@@ -614,12 +607,11 @@ void DataWizard::finished() {
   }
 
   n_steps += _pageVectors->plotVectors()->count();
-  if (_pageDataPresentation->plotPSD() || _pageDataPresentation->plotDataPSD()) {
+  if (_pageDataPresentation->plotPSD()) {
     n_steps += _pageVectors->plotVectors()->count();
   }
 
-  DataVectorPtr xv;
-
+  VectorPtr xv;
   // only create x vector if needed
   if (_pageDataPresentation->createXAxisFromField()) {
     n_steps += 1; // for the creation of the x-vector
@@ -628,21 +620,22 @@ void DataWizard::finished() {
 
     Q_ASSERT(_document && _document->objectStore());
 
-    xv = _document->objectStore()->createObject<DataVector>();
+    DataVectorPtr dxv = _document->objectStore()->createObject<DataVector>();
 
-    xv->writeLock();
-    xv->change(ds, field,
+    dxv->writeLock();
+    dxv->change(ds, field,
         _pageDataPresentation->dataRange()->countFromEnd() ? -1 : startOffset,
         _pageDataPresentation->dataRange()->readToEnd() ? -1 : rangeCount,
         _pageDataPresentation->dataRange()->skip(),
         _pageDataPresentation->dataRange()->doSkip(),
         _pageDataPresentation->dataRange()->doFilter());
 
-    xv->update();
-    xv->unlock();
+    dxv->update();
+    dxv->unlock();
+    xv = dxv;
 
   } else {
-    xv = kst_cast<DataVector>(_pageDataPresentation->selectedVector());
+    xv = kst_cast<Vector>(_pageDataPresentation->selectedVector());
   }
 
   // only create create the y-vectors
@@ -758,7 +751,7 @@ void DataWizard::finished() {
   int ptype = 0;
   QList<PlotItem*>::iterator plotIterator = plotList.begin();
   for (DataVectorList::Iterator it = vectors.begin(); it != vectors.end(); ++it) {
-    if (_pageDataPresentation->plotData() || _pageDataPresentation->plotDataPSD()) {
+    if (_pageDataPresentation->plotData()) {
       color = ColorSequence::next();
       colors.append(color);
 
@@ -813,7 +806,7 @@ void DataWizard::finished() {
   }
 
   // create the PSDs
-  if (_pageDataPresentation->plotPSD() || _pageDataPresentation->plotDataPSD()) {
+  if (_pageDataPresentation->plotPSD()) {
     int indexColor = 0;
     ptype = 0; 
 

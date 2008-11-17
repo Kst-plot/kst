@@ -6,10 +6,10 @@
     <x>0</x>
     <y>0</y>
     <width>884</width>
-    <height>617</height>
+    <height>428</height>
    </rect>
   </property>
-  <layout class="QGridLayout" >
+  <layout class="QGridLayout" name="gridLayout_2" >
    <item row="0" column="0" >
     <widget class="QGroupBox" name="buttonGroup1" >
      <property name="title" >
@@ -46,12 +46,45 @@
      </layout>
     </widget>
    </item>
-   <item rowspan="4" row="0" column="1" >
+   <item row="0" column="1" >
+    <widget class="QGroupBox" name="buttonGroup7" >
+     <property name="title" >
+      <string>Legend</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout" >
+      <item>
+       <widget class="QRadioButton" name="_legendsOn" >
+        <property name="text" >
+         <string>O&amp;n</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="_legendsOff" >
+        <property name="text" >
+         <string>&amp;Off</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="_legendsAuto" >
+        <property name="text" >
+         <string>A&amp;uto</string>
+        </property>
+        <property name="checked" >
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item rowspan="2" row="0" column="2" >
     <widget class="QGroupBox" name="_plotGroup" >
      <property name="title" >
       <string>Curve Placement</string>
      </property>
-     <layout class="QGridLayout" >
+     <layout class="QGridLayout" name="gridLayout" >
       <item row="0" column="0" >
        <widget class="QRadioButton" name="_onePlot" >
         <property name="text" >
@@ -74,16 +107,7 @@
       </item>
       <item row="2" column="0" >
        <layout class="QHBoxLayout" >
-        <property name="leftMargin" >
-         <number>0</number>
-        </property>
-        <property name="topMargin" >
-         <number>0</number>
-        </property>
-        <property name="rightMargin" >
-         <number>0</number>
-        </property>
-        <property name="bottomMargin" >
+        <property name="margin" >
          <number>0</number>
         </property>
         <item>
@@ -126,16 +150,7 @@
       </item>
       <item row="4" column="0" >
        <layout class="QHBoxLayout" >
-        <property name="leftMargin" >
-         <number>0</number>
-        </property>
-        <property name="topMargin" >
-         <number>0</number>
-        </property>
-        <property name="rightMargin" >
-         <number>0</number>
-        </property>
-        <property name="bottomMargin" >
+        <property name="margin" >
          <number>0</number>
         </property>
         <item>
@@ -154,85 +169,38 @@
         </item>
        </layout>
       </item>
-      <item row="5" column="0" >
-       <widget class="QGroupBox" name="groupBox_2" >
-        <property name="title" >
-         <string/>
+     </layout>
+    </widget>
+   </item>
+   <item rowspan="2" row="1" column="0" >
+    <widget class="QGroupBox" name="_psdAxisGroup" >
+     <property name="title" >
+      <string>Spectrum Axis Mode</string>
+     </property>
+     <layout class="QVBoxLayout" >
+      <item>
+       <widget class="QCheckBox" name="_psdLogX" >
+        <property name="text" >
+         <string>Lo&amp;g X axis</string>
         </property>
-        <layout class="QGridLayout" >
-         <item row="0" column="0" colspan="2" >
-          <widget class="QRadioButton" name="_autoLayout" >
-           <property name="text" >
-            <string>Automatic Layout</string>
-           </property>
-           <property name="checked" >
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" >
-          <widget class="QRadioButton" name="_customGrid" >
-           <property name="text" >
-            <string>Custom Grid</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1" >
-          <layout class="QHBoxLayout" >
-           <item>
-            <widget class="QLabel" name="label_3" >
-             <property name="text" >
-              <string>Columns:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="_gridColumns" >
-             <property name="enabled" >
-              <bool>false</bool>
-             </property>
-             <property name="minimum" >
-              <number>1</number>
-             </property>
-             <property name="maximum" >
-              <number>10</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="2" column="0" colspan="2" >
-          <widget class="QRadioButton" name="_protectLayout" >
-           <property name="text" >
-            <string>Protect Existing Layout</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
        </widget>
       </item>
-      <item row="6" column="0" >
-       <spacer>
-        <property name="orientation" >
-         <enum>Qt::Vertical</enum>
+      <item>
+       <widget class="QCheckBox" name="_psdLogY" >
+        <property name="text" >
+         <string>&amp;Log Y axis</string>
         </property>
-        <property name="sizeHint" >
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
+       </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="1" column="0" >
+   <item rowspan="2" row="1" column="1" >
     <widget class="QGroupBox" name="buttonGroup3" >
      <property name="title" >
-      <string>Label &amp;Generation</string>
+      <string>Labels</string>
      </property>
-     <layout class="QVBoxLayout" >
+     <layout class="QVBoxLayout" name="verticalLayout_2" >
       <item>
        <widget class="QCheckBox" name="_xAxisLabels" >
         <property name="text" >
@@ -253,105 +221,101 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QLabel" name="textLabel2_3" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text" >
-         <string>Legends:</string>
-        </property>
-        <property name="wordWrap" >
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QGroupBox" name="buttonGroup7" >
-        <property name="title" >
-         <string/>
-        </property>
-        <layout class="QHBoxLayout" >
-         <property name="spacing" >
-          <number>0</number>
-         </property>
-         <property name="leftMargin" >
-          <number>0</number>
-         </property>
-         <property name="topMargin" >
-          <number>0</number>
-         </property>
-         <property name="rightMargin" >
-          <number>0</number>
-         </property>
-         <property name="bottomMargin" >
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QRadioButton" name="_legendsOn" >
-           <property name="text" >
-            <string>O&amp;n</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="_legendsOff" >
-           <property name="text" >
-            <string>&amp;Off</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="_legendsAuto" >
-           <property name="text" >
-            <string>A&amp;uto</string>
-           </property>
-           <property name="checked" >
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
-   <item row="2" column="0" >
-    <widget class="QGroupBox" name="_psdAxisGroup" >
+   <item rowspan="2" row="2" column="2" >
+    <widget class="QGroupBox" name="groupBox_2" >
      <property name="title" >
-      <string>Power Spectrum Axis Mode</string>
+      <string>Plot Layout</string>
      </property>
-     <layout class="QVBoxLayout" >
-      <item>
-       <widget class="QCheckBox" name="_psdLogX" >
+     <layout class="QGridLayout" >
+      <item row="0" column="0" colspan="2" >
+       <widget class="QRadioButton" name="_autoLayout" >
         <property name="text" >
-         <string>Lo&amp;g X axis</string>
+         <string>Automatic Layout</string>
+        </property>
+        <property name="checked" >
+         <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QCheckBox" name="_psdLogY" >
+      <item row="1" column="0" >
+       <widget class="QRadioButton" name="_customGrid" >
         <property name="text" >
-         <string>&amp;Log Y axis</string>
+         <string>Custom Grid</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" >
+       <layout class="QHBoxLayout" >
+        <item>
+         <widget class="QLabel" name="label_3" >
+          <property name="text" >
+           <string>Columns:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="_gridColumns" >
+          <property name="enabled" >
+           <bool>false</bool>
+          </property>
+          <property name="minimum" >
+           <number>1</number>
+          </property>
+          <property name="maximum" >
+           <number>10</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="0" colspan="2" >
+       <widget class="QRadioButton" name="_protectLayout" >
+        <property name="text" >
+         <string>Protect Existing Layout</string>
         </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="3" column="0" >
-    <spacer>
+   <item rowspan="2" row="3" column="0" >
+    <spacer name="verticalSpacer" >
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeHint" >
+     <property name="sizeHint" stdset="0" >
       <size>
        <width>20</width>
-       <height>40</height>
+       <height>131</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item rowspan="2" row="3" column="1" >
+    <spacer name="verticalSpacer_2" >
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0" >
+      <size>
+       <width>20</width>
+       <height>131</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="4" column="2" >
+    <spacer name="verticalSpacer_3" >
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0" >
+      <size>
+       <width>20</width>
+       <height>58</height>
       </size>
      </property>
     </spacer>
@@ -364,11 +328,6 @@
    <class>Kst::ComboBox</class>
    <extends>QComboBox</extends>
    <header>combobox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>QWizardPage</class>
-   <extends>QWidget</extends>
-   <header>qwizardpage.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

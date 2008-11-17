@@ -52,16 +52,6 @@ Application::Application(int &argc, char **argv)
   DialogLauncher::replaceSelf(new DialogLauncherGui);
 
   connect(this, SIGNAL(aboutToQuit()), _mainWindow, SLOT(aboutToQuit()));
-/*
-  QGetOptions options;
-
-  QVariant file;
-  options.addOption("file", QOption::Argument, &file);
-
-  options.getValues();
-
-  if (!file.toString().isEmpty())
-    _mainWindow->openFile(file.toString());*/
 
   _mainWindow->show();
 

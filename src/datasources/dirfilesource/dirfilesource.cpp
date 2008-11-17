@@ -71,6 +71,9 @@ DirFileSource::DirFileSource(Kst::ObjectStore *store, QSettings *cfg, const QStr
   // watcher->addPath(_directoryName);
 
   // Alternate method.
+  // FIXME: this breaks for some dirfiles.
+  // The truly proper plan is to put a watcher on the reference field
+  // whose name getdata needs to provide.
   if (_fieldList.count() > 1) {
     QString filePath = _directoryName + "/" + _fieldList[1];
     watcher->addPath(filePath);

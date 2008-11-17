@@ -41,6 +41,8 @@ View::View()
     _printing(false) {
 
   _undoStack = new QUndoStack(this);
+  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setScene(new Scene(this));
   scene()->installEventFilter(this);
   setInteractive(true);
