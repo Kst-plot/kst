@@ -34,7 +34,8 @@ VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
   setupUi(this);
   setTabTitle(tr("Vector"));
 
-  connect(_readFromSource, SIGNAL(toggled(bool)), this, SLOT(readFromSourceChanged()));
+  connect(_generatedVectorGroup, SIGNAL(clicked(bool)), this, SLOT(generateClicked()));
+  connect(_dataVectorGroup, SIGNAL(clicked(bool)), this, SLOT(readFromSourceClicked()));
   connect(_fileName, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
   connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
 
@@ -43,6 +44,13 @@ VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
   connect(_from, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
   connect(_to, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
   _fileName->setFile(QDir::currentPath());
+
+  // embed data range in the data source box
+  _dataRange->groupBox2->setFlat(true);
+  _dataRange->groupBox2->setTitle("");
+  int top_margin;
+  _dataRange->groupBox2->layout()->getContentsMargins(NULL,&top_margin,NULL,NULL);
+  _dataRange->groupBox2->layout()->setContentsMargins(0,top_margin,0,0); 
 
   _connect->setVisible(false);
 }
@@ -64,8 +72,9 @@ void VectorTab::setDataSource(DataSourcePtr dataSource) {
 
 void VectorTab::setVectorMode(VectorMode mode) {
   _mode = mode;
-  _readFromSource->setChecked(mode == DataVector);
-  _generateX->setChecked(mode == GeneratedVector);
+  _dataVectorGroup->setChecked(mode == DataVector);
+  _dataRange->setEnabled(mode == DataVector);
+  _generatedVectorGroup->setChecked(mode == GeneratedVector);
 }
 
 
@@ -145,32 +154,44 @@ void VectorTab::setNumberOfSamples(int numberOfSamples) {
   _numberOfSamples->setValue(numberOfSamples);
 }
 
-
-void VectorTab::readFromSourceChanged() {
-
-  if (_readFromSource->isChecked())
-    setVectorMode(DataVector);
-  else
+void VectorTab::generateClicked() {
+  if (_generatedVectorGroup->isChecked())
     setVectorMode(GeneratedVector);
-
-  _dataVectorGroup->setEnabled(_readFromSource->isChecked());
-  _dataRange->setEnabled(_readFromSource->isChecked());
-  _generatedVectorGroup->setEnabled(!_readFromSource->isChecked());
+  else
+    setVectorMode(DataVector);
 
   emit sourceChanged();
 }
 
+void VectorTab::readFromSourceClicked() {
+  if (_dataVectorGroup->isChecked())
+    setVectorMode(DataVector);
+  else
+    setVectorMode(GeneratedVector);
+
+  emit sourceChanged();
+}
 
 void VectorTab::hideGeneratedOptions() {
-  _sourceGroup->setVisible(false);
   _generatedVectorGroup->setVisible(false);
+  _dataVectorGroup->setCheckable(false);
+  _dataVectorGroup->setTitle("");
+  _dataVectorGroup->setFlat(true);
+  int top_margin;
+  _dataVectorGroup->layout()->getContentsMargins(NULL,&top_margin,NULL,NULL);
+  _dataVectorGroup->layout()->setContentsMargins(0,top_margin,0,0); 
 }
 
 
 void VectorTab::hideDataOptions() {
-  _sourceGroup->setVisible(false);
   _dataVectorGroup->setVisible(false);
   _dataRange->setVisible(false);
+  _generatedVectorGroup->setCheckable(false);
+  _generatedVectorGroup->setTitle("");
+  _generatedVectorGroup->setFlat(true);
+  int top_margin;
+  _generatedVectorGroup->layout()->getContentsMargins(NULL,&top_margin,NULL,NULL);
+  _generatedVectorGroup->layout()->setContentsMargins(0,top_margin,0,0); 
 }
 
 

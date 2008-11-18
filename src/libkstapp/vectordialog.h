@@ -75,7 +75,8 @@ class KST_EXPORT VectorTab : public DataTab, Ui::VectorTab {
     void sourceChanged();
 
   private Q_SLOTS:
-    void readFromSourceChanged();
+    void readFromSourceClicked();
+    void generateClicked();
     void fileNameChanged(const QString &file);
     void showConfigWidget();
 
