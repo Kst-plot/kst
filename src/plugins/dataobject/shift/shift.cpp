@@ -13,6 +13,7 @@
 #include "shift.h"
 #include "objectstore.h"
 #include "ui_shiftconfig.h"
+#include "math_kst.h"
 
 static const QString& VECTOR_IN = "Vector In";
 static const QString& SCALAR_IN = "Shift value (# points, negative allowed)";
@@ -136,7 +137,6 @@ bool ShiftSource::algorithm() {
   Kst::VectorPtr outputVector = _outputVectors[VECTOR_OUT];
 
   int delay = 0;
-  const double nan = 0.0 / 0.0;
 
   /* Memory allocation */
   outputVector->resize(inputVector->length(), false);
@@ -153,7 +153,7 @@ bool ShiftSource::algorithm() {
   if (delay >= 0) {
     /* Pad beginning with zeros */
     for (int i = 0; i < delay; i++) {
-      outputVector->value()[i] = nan;
+      outputVector->value()[i] = NAN;
     }
     /* Then, copy values with the right offset */
     for (int i = delay; i < inputVector->length(); i++) {
@@ -170,7 +170,7 @@ bool ShiftSource::algorithm() {
     }
     /* Pad end with zeros */
     for (int i = inputVector->length()-delay; i < inputVector->length(); i++) {
-      outputVector->value()[i] = nan;
+      outputVector->value()[i] = NAN;
     }
   }
   return true;

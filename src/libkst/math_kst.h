@@ -141,6 +141,20 @@ inline double logYHi(double x, double base = 10.0) {
   }
 }
 
+#ifdef Q_WS_WIN32
+inline double roundDouble (double x) {
+  int i = (int) x;
+  if (x >= 0.0) {
+    return ((x-i) >= 0.5) ? (i + 1) : (i);
+  } else {
+    return (-x+i >= 0.5) ? (i - 1) : (i);
+  }
+}
+#else
+inline double roundDouble(double x) {
+  return rint(x);
+}
+#endif
 }
 #endif
 

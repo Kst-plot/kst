@@ -14,6 +14,8 @@
 #include "objectstore.h"
 #include "ui_linefitconfig.h"
 
+#include "math_kst.h"
+
 static const QString& VECTOR_IN_X = "Vector In X";
 static const QString& VECTOR_IN_Y = "Vector In Y";
 static const QString& VECTOR_OUT_X = "X Interpolated";
@@ -181,7 +183,7 @@ bool LineFitSource::algorithm() {
 
   for (i = 0; i < inputVectorY->length(); i++) {
     double z = xScale*i;
-    long int idx = long(rint(z));
+    long int idx = long(Kst::roundDouble(z));
     double skew = z - floor(z); /* [0..1] */
     long int idx2 = idx + 1;
     sy += inputVectorY->value()[i];
@@ -211,7 +213,7 @@ bool LineFitSource::algorithm() {
 
   for (i = 0; i < inputVectorX->length(); i++) {
     double z = xScale*i;
-    long int idx = long(rint(z));
+    long int idx = long(Kst::roundDouble(z));
     double skew = z - floor(z); /* [0..1] */
     long int idx2 = idx + 1;
     double newX;
