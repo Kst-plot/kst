@@ -1,7 +1,60 @@
 Installation Notes for Kst 2.0 Beta
 
+Linux
+
 1. Download or otherwise install Qt 4.3/4.4.
 2. Make sure your QTDIR is set to that Qt installation.
 3. Make sure your ./config.pri has the appropriate settings for you machine.
 4. ./build-kst
 5. ./run-kst
+
+Windows
+
+Note:  This has only been build using Visual Studio & Cygwin.  The following steps
+are used on the current Windows build machine used for testing, but may vary.
+
+1. Download or otherwise install Qt 4.3/4.4.
+2. Make sure your QTDIR is set to that Qt installation.
+3. Make sure your ./config.pri has the appropriate settings for you machine.
+4. Start up Cygwin's bash shell - Required due to command line length limit in cmd.exe.
+4a. Setup environment variables in Cygwin to link against Visual Studio - See qtvars.bat at end of file. It can be run as qtvars.bat vsbash to setup variables and start the shell.
+5. mkdir build && cd build
+6. qmake -r ../kst.pro
+7. nmake
+7a.  If an error occurs, you may need to update Makefile.debug and replace "CXX  = @echo compiling $< && cl" with "CXX=cl"
+8. ../run-kst
+
+
+qtvars.bat  - Update directories to match machine configuration.
+-------------------------------------------------------------
+
+@echo off
+rem
+rem This file is generated
+rem
+
+echo Setting up a Qt environment...
+echo -- QTDIR set to C:\Qt\4.3.4
+echo -- Added C:\Qt\4.3.4\bin to PATH
+echo -- QMAKESPEC set to win32-msvc2005
+
+set QTDIR=C:\Qt\4.3.4
+set PATH=C:\Qt\4.3.4\bin;%PATH%
+set QMAKESPEC=win32-msvc2005
+
+if not "%1"=="vsvars" goto END
+call "C:\Program Files\Microsoft Visual Studio 8\\Common7\Tools\vsvars32.bat"
+:END
+
+if not "%1"=="vsstart" goto ENDSTARTVS
+call "C:\Program Files\Microsoft Visual Studio 8\\Common7\Tools\vsvars32.bat"
+devenv /useenv
+:ENDSTARTVS
+
+if not "%1"=="vsbash" goto ENDBASH
+call "C:\Program Files\Microsoft Visual Studio 8\\Common7\Tools\vsvars32.bat"
+rem Don't launch batch with --login so it doesn't prepend /usr/bin to the path; this stops cygwin's bin/link for overriding Visual Studio's link.exe
+call "C:\cygwin\Cygwin.bat" -i
+:ENDBASH
+
+-------------------------------------------------------------
