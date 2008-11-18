@@ -94,3 +94,12 @@ Now do something to redraw the plot.  'm' mode now works.
 -------
 Butterworth low-pass crashes.
   create a plot, apply filter with order=4, lowpass = 0.01.  Crash.
+  
+-------
+When chosing to filter a curve from the plot rmb, the input vectors should be fixed to the right thing:
+  eg, Butterworth low pass Y vector should be fixed to the Y vector of the curve selected in the RMB menu.
+
+-------
+Entering a numerical value into a scalar selector should create a scalar of that value, if there is not
+already a scalar of that name.  This is particularly important for plugin entries.  It can be created when
+the scalar that the selector has selected is asked for.

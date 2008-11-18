@@ -15,12 +15,10 @@ strings and scalars (eg, primarily label editor)
 Filters should have default values
   eg, low pass filter should default to order = 4, lowpass  = 0.1: see 1.x for defaults.
 
--------
-When chosing to filter a curve from the plot rmb, the input vectors should be fixed to the right thing:
-  eg, Butterworth low pass Y vector should be fixed to the Y vector of the curve selected in the RMB menu.
+--------
+Ascii file configure button troubles I: it doesn't work.
+  Configure from the data wizard brings up the configuration dialog, but applying it does nothing.
 
--------
-Entering a numerical value into a scalar selector should create a scalar of that value, if there is not
-already a scalar of that name.  This is particularly important for plugin entries.  It can be created when
-the scalar that the selector has selected is asked for.
-
+--------
+Ascii file configure button troubles I: it crashes
+  Configure from the vector dialog crashes kst
