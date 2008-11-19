@@ -64,18 +64,9 @@ DirFileSource::DirFileSource(Kst::ObjectStore *store, QSettings *cfg, const QStr
   init();
   update();
 
-  // In testing using the automatic creator provided by Barth, the FileSystemWatcher is not properly picking up 
-  // modifications to files in the directory.  Temporarily, it's going to check one of the files for updates.
   QFileSystemWatcher *watcher = new QFileSystemWatcher();
-  // Proper way.  See above
-  // watcher->addPath(_directoryName);
-
-  // Alternate method.
-  // FIXME: this breaks for some dirfiles.
-  // The truly proper plan is to put a watcher on the reference field
-  // whose name getdata needs to provide.
   if (_fieldList.count() > 1) {
-    QString filePath = _directoryName + "/" + _fieldList[1];
+    QString filePath = _dirfile->ReferenceFilename();
     watcher->addPath(filePath);
   }
 

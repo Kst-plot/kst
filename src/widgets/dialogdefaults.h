@@ -64,3 +64,4 @@ namespace Kst {
 // spectrum/output       int      FFToptions 
 // spectrum/interpolateHoles bool FFToptions 
 
+// curve/xvectorfield    QString  datawizard, curvedialog

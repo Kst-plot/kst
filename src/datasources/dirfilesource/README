@@ -1,5 +1,7 @@
-Kst Data source for reading dirfiles using the getdata library.
+Kst Data source for reading dirfiles using the getdata library
 
 Get and install getdata from http://getdata.sourceforge.net/ 
 or this datasource won't build.
+
+Requires version 0.4.2 or better.
 

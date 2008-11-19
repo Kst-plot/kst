@@ -444,6 +444,16 @@ void DataWizardPageDataPresentation::updateVectors() {
   _xVector->clear();
   _xVector->addItems(((DataWizard*)wizard())->dataSourceFieldList());
   _pageValid = validOptions();
+
+  int x_index = _xVector->findText(_dialogDefaults->value("curve/xvectorfield","INDEX").toString());
+  if (x_index<0) {
+    x_index = _xVector->findText("INDEX");
+  }
+  if (x_index<0) {
+    x_index = 0;
+  }
+  _xVector->setCurrentIndex(x_index);
+
   emit completeChanged();
 }
 
@@ -618,6 +628,7 @@ void DataWizard::finished() {
 
     const QString field = _pageDataPresentation->vectorField();
 
+    _dialogDefaults->setValue("curve/xvectorfield",field);
     Q_ASSERT(_document && _document->objectStore());
 
     DataVectorPtr dxv = _document->objectStore()->createObject<DataVector>();
