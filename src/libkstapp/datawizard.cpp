@@ -123,7 +123,7 @@ DataWizardPageVectors::DataWizardPageVectors(QWidget *parent)
   connect(_vectorReduction, SIGNAL(textChanged(const QString&)), this, SLOT(filterVectors(const QString&)));
   connect(_vectorSearch, SIGNAL(clicked()), this, SLOT(searchVectors()));
 
-  _vectors->setSortingEnabled(true);
+  _vectors->setSortingEnabled(false);
   _vectorsToPlot->setSortingEnabled(false);
 }
 
@@ -179,13 +179,11 @@ void DataWizardPageVectors::add() {
       _vectorsToPlot->addItem(_vectors->takeItem(i));
       _vectorsToPlot->clearSelection();
       _vectorsToPlot->item(_vectorsToPlot->count() - 1)->setSelected(true);
+      i--;
     }
   }
 
   _vectors->setFocus();
-  if (_vectors->currentItem()) {
-  _vectors->currentItem()->setSelected(true);
-  }
 
   emit completeChanged();
 }
@@ -220,9 +218,14 @@ void DataWizardPageVectors::down() {
 void DataWizardPageVectors::filterVectors(const QString& filter) {
   _vectors->clearSelection();
   QRegExp re(filter, Qt::CaseSensitive, QRegExp::Wildcard);
+  int j=0;
+  // FIXME: n^2.
   for (int i = 0; i < _vectors->count(); i++) {
     QListWidgetItem *item = _vectors->item(i);
     if (re.exactMatch(item->text())) {
+      item = _vectors->takeItem(i);
+      _vectors->insertItem(j, item);
+      j++;
       item->setSelected(true);
     }
   }
