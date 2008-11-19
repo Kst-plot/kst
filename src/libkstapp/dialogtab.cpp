@@ -34,7 +34,7 @@ Dialog *DialogTab::dialog() const {
 
 
 DialogPage *DialogTab::dialogPage() const {
-  return qobject_cast<DialogPage*>(parentWidget()->parentWidget());
+  return qobject_cast<DialogPage*>(parentWidget());
 }
 
 }

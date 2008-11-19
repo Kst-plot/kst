@@ -243,6 +243,7 @@ void VectorTab::fileNameChanged(const QString &file) {
 void VectorTab::showConfigWidget() {
   DataSourceDialog dialog(dataDialog()->editMode(), _dataSource, this);
   dialog.exec();
+  fileNameChanged(file());
 }
 
 

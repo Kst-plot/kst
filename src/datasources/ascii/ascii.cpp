@@ -863,6 +863,7 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
       // Update the instance from our new settings
       if (src && src->reusable()) {
         src->_config->read(_cfg, src->fileName());
+        src->reset();
       }
     }
 
@@ -1072,10 +1073,10 @@ QStringList AsciiPlugin::provides() const {
 
 
 Kst::DataSourceConfigWidget *AsciiPlugin::configWidget(QSettings *cfg, const QString& filename) const {
-
   Q_UNUSED(filename)
   ConfigWidgetAscii *config = new ConfigWidgetAscii;
   config->setConfig(cfg);
+  config->load();
   return config;
 
 }
