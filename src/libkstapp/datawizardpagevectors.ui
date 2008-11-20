@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>805</width>
+    <width>779</width>
     <height>313</height>
    </rect>
   </property>
@@ -83,6 +83,9 @@
        <property name="text" >
         <string/>
        </property>
+       <property name="shortcut" >
+        <string>Alt+S</string>
+       </property>
       </widget>
      </item>
      <item row="2" column="0" >
@@ -98,6 +101,9 @@
        </property>
        <property name="text" >
         <string/>
+       </property>
+       <property name="shortcut" >
+        <string>Alt+R</string>
        </property>
       </widget>
      </item>
@@ -205,6 +211,16 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11" />
+ <tabstops>
+  <tabstop>_vectorReduction</tabstop>
+  <tabstop>_vectors</tabstop>
+  <tabstop>_vectorsToPlot</tabstop>
+  <tabstop>_add</tabstop>
+  <tabstop>_remove</tabstop>
+  <tabstop>_up</tabstop>
+  <tabstop>_down</tabstop>
+  <tabstop>_vectorSearch</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

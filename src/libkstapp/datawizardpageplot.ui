@@ -331,5 +331,54 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>_cycleThrough</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_plotNumber</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>650</x>
+     <y>118</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>735</x>
+     <y>106</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_customGrid</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_gridColumns</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>630</x>
+     <y>303</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>831</x>
+     <y>304</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_existingPlot</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_existingPlotName</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>683</x>
+     <y>185</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>776</x>
+     <y>195</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

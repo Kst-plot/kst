@@ -67,5 +67,9 @@
         <file>kst_pause.png</file>
         <file>kst_back.png</file>
         <file>kst_forward.png</file>
+        <file>kst_rightarrow.png</file>
+        <file>kst_leftarrow.png</file>
+        <file>kst_uparrow.png</file>
+        <file>kst_downarrow.png</file>
     </qresource>
 </RCC>

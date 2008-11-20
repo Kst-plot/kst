@@ -100,15 +100,10 @@ DataWizardPageVectors::DataWizardPageVectors(QWidget *parent)
   : QWizardPage(parent) {
    setupUi(this);
 
-// TODO Icons required.
-//  _up->setIcon(QPixmap(":kst_uparrow.png"));
-  _up->setText("Up");
-//  _down->setIcon(QPixmap(":kst_downarrow.png"));
-  _down->setText("Down");
-//  _add->setIcon(QPixmap(":kst_rightarrow.png"));
-  _add->setText("Add");
-//  _remove->setIcon(QPixmap(":kst_leftarrow.png"));
-  _remove->setText("Remove");
+  _up->setIcon(QPixmap(":kst_uparrow.png"));
+  _down->setIcon(QPixmap(":kst_downarrow.png"));
+  _add->setIcon(QPixmap(":kst_rightarrow.png"));
+  _remove->setIcon(QPixmap(":kst_leftarrow.png"));
   _up->setToolTip(i18n("Raise in plot order: Alt+Up"));
   _down->setToolTip(i18n("Lower in plot order: Alt+Down"));
   _add->setToolTip(i18n("Select: Alt+s"));
@@ -125,6 +120,7 @@ DataWizardPageVectors::DataWizardPageVectors(QWidget *parent)
 
   _vectors->setSortingEnabled(false);
   _vectorsToPlot->setSortingEnabled(false);
+
 }
 
 
@@ -156,18 +152,19 @@ bool DataWizardPageVectors::isComplete() const {
 
 
 void DataWizardPageVectors::remove() {
+  int j=0;
   for (int i = 0; i < _vectorsToPlot->count(); i++) {
     if (_vectorsToPlot->item(i) && _vectorsToPlot->item(i)->isSelected()) {
       _vectors->addItem(_vectorsToPlot->takeItem(i));
-      _vectors->clearSelection();
-      _vectors->item(_vectors->count() - 1)->setSelected(true);
+      j = i;
     }
   }
-
-  _vectorsToPlot->setFocus();
-  if (_vectorsToPlot->currentItem()) {
-    _vectorsToPlot->currentItem()->setSelected(true);
+  if (j>=_vectorsToPlot->count()) {
+    j = _vectorsToPlot->count()-1;
   }
+  _vectorsToPlot->setFocus();
+  _vectorsToPlot->setCurrentRow(j);
+  _vectors->clearSelection();
 
   emit completeChanged();
 }
@@ -177,11 +174,11 @@ void DataWizardPageVectors::add() {
   for (int i = 0; i < _vectors->count(); i++) {
     if (_vectors->item(i) && _vectors->item(i)->isSelected()) {
       _vectorsToPlot->addItem(_vectors->takeItem(i));
-      _vectorsToPlot->clearSelection();
-      _vectorsToPlot->item(_vectorsToPlot->count() - 1)->setSelected(true);
       i--;
     }
   }
+
+  _vectorsToPlot->setCurrentRow(_vectorsToPlot->count() - 1);
 
   _vectors->setFocus();
 
@@ -190,12 +187,14 @@ void DataWizardPageVectors::add() {
 
 
 void DataWizardPageVectors::up() {
+  _vectorsToPlot->setFocus();
+
   int i = _vectorsToPlot->currentRow();
   if (i != -1) {
     QListWidgetItem *item = _vectorsToPlot->takeItem(i);
     _vectorsToPlot->insertItem(i-1, item);
     _vectorsToPlot->clearSelection();
-    item->setSelected(true);
+    _vectorsToPlot->setCurrentItem(item);
     emit completeChanged();
   }
 }
@@ -208,8 +207,7 @@ void DataWizardPageVectors::down() {
     QListWidgetItem *item = _vectorsToPlot->takeItem(i);
     _vectorsToPlot->insertItem(i+1, item);
     _vectorsToPlot->clearSelection();
-    item->setSelected(true);
-
+    _vectorsToPlot->setCurrentItem(item);
     emit completeChanged();
   }
 }
@@ -218,16 +216,18 @@ void DataWizardPageVectors::down() {
 void DataWizardPageVectors::filterVectors(const QString& filter) {
   _vectors->clearSelection();
   QRegExp re(filter, Qt::CaseSensitive, QRegExp::Wildcard);
-  int j=0;
-  // FIXME: n^2.
+  QStringList selected;
   for (int i = 0; i < _vectors->count(); i++) {
     QListWidgetItem *item = _vectors->item(i);
     if (re.exactMatch(item->text())) {
       item = _vectors->takeItem(i);
-      _vectors->insertItem(j, item);
-      j++;
-      item->setSelected(true);
+      selected.append(item->text());
+      i--;
     }
+  }
+  _vectors->insertItems(0, selected);
+  for (int i=0; i<selected.count(); i++) {
+    _vectors->item(i)->setSelected(true);
   }
 }
 
