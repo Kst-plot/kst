@@ -1,0 +1,346 @@
+<ui version="4.0" >
+ <class>HealpixConfig</class>
+ <widget class="QWidget" name="HealpixConfig" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>425</width>
+    <height>383</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_5" >
+   <item>
+    <widget class="QGroupBox" name="buttonGroup2" >
+     <property name="title" >
+      <string>Projection Matrix</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_4" >
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout" >
+        <item>
+         <widget class="QLabel" name="matDimLabel" >
+          <property name="text" >
+           <string>Dimensions:</string>
+          </property>
+          <property name="wordWrap" >
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="matDimXLabel" >
+          <property name="text" >
+           <string>X =</string>
+          </property>
+          <property name="wordWrap" >
+           <bool>false</bool>
+          </property>
+          <property name="buddy" >
+           <cstring>matDimX</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="matDimX" >
+          <property name="maximum" >
+           <number>10000</number>
+          </property>
+          <property name="value" >
+           <number>1200</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="matDimYLabel" >
+          <property name="text" >
+           <string>Y =</string>
+          </property>
+          <property name="wordWrap" >
+           <bool>false</bool>
+          </property>
+          <property name="buddy" >
+           <cstring>matDimY</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="matDimY" >
+          <property name="maximum" >
+           <number>10000</number>
+          </property>
+          <property name="value" >
+           <number>90</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QGridLayout" name="gridLayout_3" >
+        <item row="0" column="0" >
+         <layout class="QVBoxLayout" name="verticalLayout_3" >
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2" >
+            <item>
+             <widget class="QLabel" name="matThetaLabel" >
+              <property name="text" >
+               <string>Theta Range: </string>
+              </property>
+              <property name="wordWrap" >
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="matThetaUnits" />
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="matThetaAuto" >
+            <property name="text" >
+             <string>Autoscale Theta</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="1" >
+         <layout class="QGridLayout" name="gridLayout" >
+          <item row="0" column="0" >
+           <widget class="QLabel" name="matThetaMinLabel" >
+            <property name="text" >
+             <string>Min =</string>
+            </property>
+            <property name="wordWrap" >
+             <bool>false</bool>
+            </property>
+            <property name="buddy" >
+             <cstring>matThetaMin</cstring>
+            </property>
+           </widget>
+          </item>
+          <item rowspan="2" row="0" column="1" >
+           <widget class="QLineEdit" name="matThetaMin" />
+          </item>
+          <item rowspan="2" row="1" column="0" >
+           <widget class="QLabel" name="matThetaMaxLabel" >
+            <property name="text" >
+             <string>Max =</string>
+            </property>
+            <property name="wordWrap" >
+             <bool>false</bool>
+            </property>
+            <property name="buddy" >
+             <cstring>matThetaMax</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" >
+           <widget class="QLineEdit" name="matThetaMax" />
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="0" >
+         <layout class="QVBoxLayout" name="verticalLayout" >
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3" >
+            <item>
+             <widget class="QLabel" name="matPhiLabel" >
+              <property name="text" >
+               <string>Phi Range: </string>
+              </property>
+              <property name="wordWrap" >
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="matPhiUnits" />
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="matPhiAuto" >
+            <property name="text" >
+             <string>Autoscale Phi</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="1" >
+         <layout class="QGridLayout" name="gridLayout_2" >
+          <item row="0" column="0" >
+           <widget class="QLabel" name="matPhiMinLabel" >
+            <property name="text" >
+             <string>Min =</string>
+            </property>
+            <property name="wordWrap" >
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item rowspan="2" row="0" column="1" >
+           <widget class="QLineEdit" name="matPhiMin" />
+          </item>
+          <item rowspan="2" row="1" column="0" >
+           <widget class="QLabel" name="matPhiMaxLabel" >
+            <property name="text" >
+             <string>Max =</string>
+            </property>
+            <property name="wordWrap" >
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" >
+           <widget class="QLineEdit" name="matPhiMax" />
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="buttonGroup2_2" >
+     <property name="title" >
+      <string>Vector Field</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2" >
+      <item>
+       <layout class="QGridLayout" name="gridLayout_5" >
+        <item row="0" column="0" >
+         <widget class="QLabel" name="vecThetaLabel" >
+          <property name="text" >
+           <string>Theta Component:</string>
+          </property>
+          <property name="wordWrap" >
+           <bool>false</bool>
+          </property>
+          <property name="buddy" >
+           <cstring>vecComp1</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1" >
+         <widget class="QComboBox" name="vecTheta" />
+        </item>
+        <item row="1" column="0" >
+         <widget class="QLabel" name="vecPhiLabel" >
+          <property name="text" >
+           <string>Phi Component:</string>
+          </property>
+          <property name="wordWrap" >
+           <bool>false</bool>
+          </property>
+          <property name="buddy" >
+           <cstring>vecComp2</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1" >
+         <widget class="QComboBox" name="vecPhi" />
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4" >
+        <item>
+         <widget class="QLabel" name="vecDegradeLabel" >
+          <property name="text" >
+           <string>Degrade Factor Relative to Scalar Field:</string>
+          </property>
+          <property name="wordWrap" >
+           <bool>false</bool>
+          </property>
+          <property name="buddy" >
+           <cstring>vecDegrade</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="vecDegrade" >
+          <property name="maximum" >
+           <number>12</number>
+          </property>
+          <property name="value" >
+           <number>1</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_5" >
+        <item>
+         <widget class="QLabel" name="vecMagLabel" >
+          <property name="text" >
+           <string>Max Magnitude:  </string>
+          </property>
+          <property name="wordWrap" >
+           <bool>false</bool>
+          </property>
+          <property name="buddy" >
+           <cstring>vecMag</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="vecMag" />
+        </item>
+        <item>
+         <widget class="QCheckBox" name="vecMagAuto" >
+          <property name="text" >
+           <string>Autoscale Magnitude</string>
+          </property>
+          <property name="checked" >
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="vecQU" >
+        <property name="text" >
+         <string>Interpret Components as Q/U Stokes Parameters</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>vecMagAuto</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>vecMag</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>549</x>
+     <y>760</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>386</x>
+     <y>760</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

@@ -10,7 +10,7 @@ SUBDIRS += \
 
  contains(HAVE_CFITSIO, 1) {
      message(CFITSIO configured.  Plugins will be built.)
-     SUBDIRS += fitsimage lfiio
+     SUBDIRS += fitsimage lfiio healpix
  }
 
 contains(HAVE_DIRFILE, 1) {
