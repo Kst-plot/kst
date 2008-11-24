@@ -52,7 +52,8 @@ void CommandLineParser::usage(QString Message) {
   //FIXME: proper printing and exiting!
   std::cerr <<
   i18n("KST Command Line Usage\n"
-"Load a kst file:\n"
+"************************\n"
+"*** Load a kst file: ***\n"
 "kst [OPTIONS] kstfile\n"
 "\n"
 "[OPTIONS] will override the datasource parameters for all data sources in the kst file:\n"
@@ -60,8 +61,9 @@ void CommandLineParser::usage(QString Message) {
 "      -f  <startframe>\n"
 "      -n  <numframes>\n"
 "      -s  <frames per sample>\n"
-"      -a                     (apply averaging filter: requires -s)\n"
-"Read a data file:\n"
+"      -a                     (apply averaging filter: requires -s)\n\n"
+"************************\n"
+"*** Read a data file ***\n"
 "kst datasource OPTIONS [datasource OPTIONS []]\n"
 "\n"
 "OPTIONS are read and interpreted in order. Except for data object options, all are applied to all future data objects, unless later overridden.\n"
@@ -69,7 +71,8 @@ void CommandLineParser::usage(QString Message) {
 "      -f <startframe>          default: 'end' counts from end.\n"
 "      -n <numframes>           default: 'end' reads to end of file\n"
 "      -s <frames per sample>   default: 0 (read every sample)\n"
-"      -a                       apply averaging filter: requires -s\n"
+"      -a                       apply averaging filter: requires -s\n\n"
+
 "Position:\n"
 "      -P <plot name>:          Place curves in one plot.\n"
 "      -A                       Place future curves in individual plots.\n"
@@ -86,28 +89,33 @@ void CommandLineParser::usage(QString Message) {
 "      -p <field>               plot the spectrum of field.\n"
 "      -h <field>               plot a histogram of field.\n"
 "      -z <field>               plot an image of matrix field.\n"
-"Examples:\n"
-"Data sources and fields\n"
+"\n"
+"****************\n"
+"*** Examples ***\n"
+"\n"
+"Data sources and fields:\n"
 "Plot all data in column 2 from data.dat.\n"
 "       kst data.dat -y 2\n"
 "\n"
 "Same as above, except only read 20 lines, starting at line 10.\n"
 "       kst data.dat -f 10 -n 20 -y 2\n"
 "\n"
-"...also read col 1. One plot per curve.\n"
+"... also read col 1. One plot per curve.\n"
 "       kst data.dat -f 10 -n 20 -y 1 -y 2\n"
 "\n"
-"...read col 1 from data2.dat and col 1 from data.dat\n"
+"Read col 1 from data2.dat and col 1 from data.dat\n"
 "       kst data.dat -f 10 -n 20 -y 2 data2.dat -y 1\n"
 "\n"
-"...same as above, except read 40 lines starting at 30 in data2.dat\n"
+"Same as above, except read 40 lines starting at 30 in data2.dat\n"
 "       kst data.dat -f 10 -n 20 -y 2 data2.dat -f 30 -n 40 -y 1\n"
-"Specify the X vector and error bars.\n"
+"\n"
+"Specify the X vector and error bars:\n"
 "Plot x = col 1 and Y = col 2 and error flags = col 3 from data.dat\n"
 "       kst data.dat -x 1 -e 3 -y 2\n"
 "\n"
 "Get the X vector from data1.dat, and the Y vector from data2.dat.\n"
 "       kst data1.dat -x 1 data2.dat -y 1\n"
+"\n"
 "Placement:\n"
 "Plot column 2 and column 3 in plot P1 and column 4 in plot P2\n"
 "       kst data.dat -P P1 -y 2 -y 3 -P P2 -y 4\n"
@@ -233,7 +241,6 @@ void CommandLineParser::createCurveInPlot(VectorPtr xv, VectorPtr yv, VectorPtr 
       CreatePlotForCurve *cmd = new CreatePlotForCurve();
       cmd->createItem();
       _plotItem = static_cast<PlotItem*>(cmd->item());
-      _plotItem->setName(QString("P-")+curve->Name());
       _plotItem->parentView()->appendToLayout(CurvePlacement::Auto, _plotItem);
     }
     PlotRenderItem *renderItem = _plotItem->renderItem(PlotRenderItem::Cartesian);
@@ -254,7 +261,6 @@ void CommandLineParser::createImageInPlot(MatrixPtr m) {
       CreatePlotForCurve *cmd = new CreatePlotForCurve();
       cmd->createItem();
       _plotItem = static_cast<PlotItem*>(cmd->item());
-      _plotItem->setName(QString("P-")+image->Name());
       _plotItem->parentView()->appendToLayout(CurvePlacement::Auto, _plotItem);
     }
     PlotRenderItem *renderItem = _plotItem->renderItem(PlotRenderItem::Cartesian);
@@ -269,7 +275,7 @@ void CommandLineParser::createOrFindPlot( const QString plot_name ) {
     // check to see if a plot with this name exists.  If so, use it.
     for (int i=0; i<_plotItems.count(); i++) {
       pi = _plotItems.at(i);
-      if (plot_name == pi->name()) {
+      if (plot_name == pi->descriptiveName()) {
         found = true;
         break;
       }
@@ -281,7 +287,7 @@ void CommandLineParser::createOrFindPlot( const QString plot_name ) {
       cmd->createItem();
       pi = static_cast<PlotItem*> ( cmd->item() );
 
-      pi->setName ( plot_name );
+      pi->setDescriptiveName( plot_name );
       _plotItems.append(pi);
       pi->parentView()->appendToLayout(CurvePlacement::Auto, pi);
     }

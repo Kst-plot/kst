@@ -37,6 +37,7 @@ extern int _psdnum; // psd
 extern int _xnum; // scalars
 extern int _tnum; // text string
 extern int _mnum; // matrix
+extern int _gnum; // plot item
 
 extern int max_vnum; // vectors
 extern int max_pnum; // plugins
@@ -49,7 +50,7 @@ extern int max_psdnum; // psd
 extern int max_xnum; // scalars
 extern int max_tnum; // string
 extern int max_mnum; // matrix
- 
+extern int max_gnum; // plot item
 
 class NamedObject {
 public: 
@@ -57,17 +58,18 @@ public:
      virtual ~NamedObject();
 
      enum ShortNameIndex {
-      VNUM = 0x0001,
-      PNUM = 0x0002,
+      VNUM   = 0x0001,
+      PNUM   = 0x0002,
       CSDNUM = 0x0004,
-      CNUM = 0x0008,
-      ENUM = 0x0010,
-      HNUM = 0x0020,
-      INUM = 0x0040,
+      CNUM   = 0x0008,
+      ENUM   = 0x0010,
+      HNUM   = 0x0020,
+      INUM   = 0x0040,
       PSDNUM = 0x0080,
-      XNUM = 0x0100,
-      TNUM = 0x0200,
-      MNUM = 0x0400
+      XNUM   = 0x0100,
+      TNUM   = 0x0200,
+      MNUM   = 0x0400,
+      GNUM   = 0x0800
     };
 
     // name system: see object names devel doc
@@ -101,6 +103,7 @@ public:
     int _initial_tnum; // text string
     int _initial_mnum; // matrix
 
+    int _initial_gnum; // plot item
 
 };
 

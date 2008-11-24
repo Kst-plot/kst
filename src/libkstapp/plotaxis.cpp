@@ -477,8 +477,9 @@ bool PlotAxis::isAxisVisible() const {
 
 
 void PlotAxis::setAxisVisible(bool visible) {
-  if (_isAxisVisible == visible)
+  if (_isAxisVisible == visible) {
     return;
+  }
 
   _isAxisVisible = visible;
   emit marginsChanged();

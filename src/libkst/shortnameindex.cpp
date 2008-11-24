@@ -10,6 +10,7 @@ namespace Kst {
   int _xnum = 1; // scalars
   int _tnum = 1; // text string
   int _mnum = 1; // matrix
+  int _gnum = 1;
 
   int max_vnum = 0; // vectors
   int max_pnum = 0; // plugins
@@ -22,4 +23,5 @@ namespace Kst {
   int max_xnum = 0; // scalars
   int max_tnum = 0; // text string
   int max_mnum = 0; // matrix
+  int max_gnum = 0;
 }

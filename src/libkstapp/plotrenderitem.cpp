@@ -113,7 +113,7 @@ void PlotRenderItem::removeRelation(RelationPtr relation) {
   if (relation) {
     disconnect(relation, SIGNAL(relationUpdated(ObjectPtr)));
     _relationList.removeAll(relation);
-    plotItem()->zoomMaximum();
+//    plotItem()->zoomMaximum();
   }
 }
 
@@ -240,9 +240,14 @@ void PlotRenderItem::paint(QPainter *painter) {
 
 
 QString PlotRenderItem::leftLabel() const {
+  // This will make sense once curves learn
+  // to return <Quantity> [<Units>]
+  QStringList labels;
+
   foreach (RelationPtr relation, relationList()) {
-    if (!relation->yLabel().isEmpty())
+    if (!relation->yLabel().isEmpty()) {
       return relation->yLabel();
+    }
   }
   return QString();
 }
@@ -258,23 +263,15 @@ QString PlotRenderItem::bottomLabel() const {
 
 
 QString PlotRenderItem::rightLabel() const {
-  //FIXME much less than ideal
-  QString left = leftLabel();
-  foreach (RelationPtr relation, relationList()) {
-    if (!relation->yLabel().isEmpty() && relation->yLabel() != left)
-      return relation->yLabel();
-  }
+  // right labels should only be used where there is more htan one 
+  // projection in the plot...
   return QString();
 }
 
 
 QString PlotRenderItem::topLabel() const {
-  //FIXME much less than ideal
-  QString bottom = bottomLabel();
-  foreach (RelationPtr relation, relationList()) {
-    if (!relation->xLabel().isEmpty() && relation->xLabel() != bottom)
-      return relation->xLabel();
-  }
+  // right labels should only be used where there is more htan one 
+  // projection in the plot...
   return QString();
 }
 

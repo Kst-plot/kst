@@ -274,7 +274,7 @@ DataSourceConfigWidget* DataSource::configWidget() {
 
   //This is still ugly to me...
   w->_instance = this;
-
+  w->load();
   return w;
 }
 

@@ -76,7 +76,7 @@ PlotItem::PlotItem(View *parent)
   _zoomMenu(0),
   _filterMenu(0),
   _fitMenu(0)
- {
+{
 
   setName("Plot");
   setZValue(PLOT_ZVALUE);
@@ -100,6 +100,11 @@ PlotItem::PlotItem(View *parent)
   setProjectionRect(QRectF(QPointF(-0.1, -0.1), QPointF(0.1, 0.1)));
   renderItem(PlotRenderItem::Cartesian);
 
+  _shortName = "G"+QString::number(_gnum);
+  if (_gnum>max_gnum)
+    max_gnum = _gnum;
+  _gnum++;
+
   connect(this, SIGNAL(marginsChanged()), this, SLOT(marginsUpdated()));
 }
 
@@ -112,7 +117,7 @@ PlotItem::~PlotItem() {
 
 
 QString PlotItem::plotName() const {
-  return name();
+  return Name();
 }
 
 
@@ -136,6 +141,7 @@ void PlotItem::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("rightlabelfont", QVariant(_rightLabelFont).toString());
   xml.writeAttribute("rightlabelfontscale", QVariant(_rightLabelFontScale).toString());
   xml.writeAttribute("showlegend", QVariant(_showLegend).toString());
+  saveNameInfo(xml, GNUM);
 
   ViewItem::save(xml);
   legend()->saveInPlot(xml);
@@ -388,7 +394,7 @@ void PlotItem::updateObject() {
 #endif
   if (xAxis()->axisZoomMode() == PlotAxis::Auto) {
     if (yAxis()->axisZoomMode() == PlotAxis::AutoBorder || yAxis()->axisZoomMode() == PlotAxis::Auto
-         || yAxis()->axisZoomMode() == PlotAxis::SpikeInsensitive || yAxis()->axisZoomMode() == PlotAxis::MeanCentered) {
+        || yAxis()->axisZoomMode() == PlotAxis::SpikeInsensitive || yAxis()->axisZoomMode() == PlotAxis::MeanCentered) {
 #if DEBUG_UPDATE_CYCLE > 1
       qDebug() << "UP - Updating Plot Projection Rect - X and Y Maximum";
 #endif
@@ -399,19 +405,19 @@ void PlotItem::updateObject() {
 #endif
       QRectF compute = computedProjectionRect();
       setProjectionRect(QRectF(compute.x(),
-                              projectionRect().y(),
-                              compute.width(),
-                              projectionRect().height()));
+            projectionRect().y(),
+            compute.width(),
+            projectionRect().height()));
     }
   } else if (yAxis()->axisZoomMode() == PlotAxis::Auto) {
 #if DEBUG_UPDATE_CYCLE > 1
-      qDebug() << "UP - Updating Plot Projection Rect - Y Maximum";
+    qDebug() << "UP - Updating Plot Projection Rect - Y Maximum";
 #endif
     QRectF compute = computedProjectionRect();
     setProjectionRect(QRectF(projectionRect().x(),
-                            compute.y(),
-                            projectionRect().width(),
-                            compute.height()));
+          compute.y(),
+          projectionRect().width(),
+          compute.height()));
   }
   update();
 }
@@ -432,7 +438,7 @@ PlotRenderItem *PlotItem::renderItem(PlotRenderItem::RenderType type) {
     return _renderers.value(type);
 
   switch (type) {
-  case PlotRenderItem::Cartesian:
+  case PlotRenderItem::Cartesian: 
     {
       CartesianRenderItem *renderItem = new CartesianRenderItem(this);
       _renderers.insert(type, renderItem);
@@ -464,19 +470,19 @@ void PlotItem::paint(QPainter *painter) {
   setCalculatedBottomLabelMargin(calculateBottomLabelBound(painter).height());
 
 #if DEBUG_LABEL_REGION
-//  qDebug() << "=============> leftLabel:" << leftLabel() << endl;
+  //  qDebug() << "=============> leftLabel:" << leftLabel() << endl;
 #endif
   paintLeftLabel(painter);
 #if DEBUG_LABEL_REGION
-//  qDebug() << "=============> bottomLabel:" << bottomLabel() << endl;
+  //  qDebug() << "=============> bottomLabel:" << bottomLabel() << endl;
 #endif
   paintBottomLabel(painter);
 #if DEBUG_LABEL_REGION
-//  qDebug() << "=============> rightLabel:" << rightLabel() << endl;
+  //  qDebug() << "=============> rightLabel:" << rightLabel() << endl;
 #endif
   paintRightLabel(painter);
 #if DEBUG_LABEL_REGION
-//  qDebug() << "=============> topLabel:" << topLabel() << endl;
+  //  qDebug() << "=============> topLabel:" << topLabel() << endl;
 #endif
   paintTopLabel(painter);
 
@@ -1535,7 +1541,7 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
 
   painter->save();
   painter->setOpacity(0.3);
-  qDebug() << "leftLabel:" << t.mapRect(leftLabel) << endl;
+  qDebug() << "leftLabel:" << t.mapRect(leftLabel)<< endl;
   painter->fillRect(t.mapRect(leftLabel), Qt::red);
   painter->restore();
 
@@ -1556,7 +1562,7 @@ QSizeF PlotItem::calculateLeftLabelBound(QPainter *painter) {
   painter->setFont(calculatedLeftLabelFont());
 
   QRectF leftLabelBound = painter->boundingRect(t.mapRect(leftLabelRect(true)),
-                                                Qt::TextWordWrap | Qt::AlignCenter, leftLabelOverride());
+      Qt::TextWordWrap | Qt::AlignCenter, leftLabelOverride());
   painter->restore();
 
   QSizeF margins;
@@ -1621,7 +1627,7 @@ QSizeF PlotItem::calculateBottomLabelBound(QPainter *painter) {
   painter->setFont(calculatedBottomLabelFont());
 
   QRectF bottomLabelBound = painter->boundingRect(bottomLabelRect(true),
-                                                  Qt::TextWordWrap | Qt::AlignCenter, bottomLabelOverride());
+      Qt::TextWordWrap | Qt::AlignCenter, bottomLabelOverride());
   painter->restore();
 
   QSizeF margins;
@@ -1676,7 +1682,7 @@ void PlotItem::paintRightLabel(QPainter *painter) {
 
   painter->save();
   painter->setOpacity(0.3);
-  qDebug() << "rightLabel:" << t.mapRect(rightLabel) << endl;
+  qDebug() << "rightLabel:" << t.mapRect(rightLabel)<< endl;
   painter->fillRect(t.mapRect(rightLabel), Qt::red);
   painter->restore();
 
@@ -1697,7 +1703,7 @@ QSizeF PlotItem::calculateRightLabelBound(QPainter *painter) {
   painter->setFont(calculatedRightLabelFont());
 
   QRectF rightLabelBound = painter->boundingRect(t.mapRect(rightLabelRect(true)),
-                                                 Qt::TextWordWrap | Qt::AlignCenter, rightLabelOverride());
+      Qt::TextWordWrap | Qt::AlignCenter, rightLabelOverride());
   painter->restore();
 
   QSizeF margins;
@@ -1729,7 +1735,7 @@ void PlotItem::paintTopLabel(QPainter *painter) {
       topLabel.moveBottomLeft(plotAxisRect().topLeft());
       topLabel.moveTopLeft(QPointF(topLabel.topLeft().x() + ((topLabel.width() / 2) - (rc.x / 2)), topLabel.topLeft().y()));
 
-      if (rc.x > 0) 
+      if (rc.x > 0)
         painter->drawPixmap(topLabel.topLeft(), pixmap, QRectF(0, 0, rc.x, topLabel.height()));
     }
     painter->restore();
@@ -1764,7 +1770,7 @@ QSizeF PlotItem::calculateTopLabelBound(QPainter *painter) {
   painter->setFont(calculatedTopLabelFont());
 
   QRectF topLabelBound = painter->boundingRect(topLabelRect(true),
-                                               Qt::TextWordWrap | Qt::AlignCenter, topLabelOverride());
+      Qt::TextWordWrap | Qt::AlignCenter, topLabelOverride());
 
   painter->restore();
 
@@ -1895,8 +1901,8 @@ void PlotItem::setProjectionRect(const QRectF &rect) {
   if (!(_projectionRect == rect || rect.isEmpty() || !rect.isValid())) {
 #if DEBUG_ZOOM
     qDebug() << "=== setProjectionRect() ======================>\n"
-              << "before:" << _projectionRect << "\n"
-              << "after:" << rect << endl;
+      << "before:" << _projectionRect << "\n"
+      << "after:" << rect << endl;
 #endif
 
     _projectionRect = rect;
@@ -1930,22 +1936,22 @@ void PlotItem::computedRelationalMax(qreal &minimum, qreal &maximum) {
   QRectF rect;
   foreach (PlotRenderItem *renderer, renderItems()) {
     foreach (RelationPtr relation, renderer->relationList()) {
-        if (relation->ignoreAutoScale())
-          continue;
+      if (relation->ignoreAutoScale())
+        continue;
 
-        qreal min, max;
-        relation->yRange(projectionRect().left(),
-                        projectionRect().right(),
-                        &min, &max);
+      qreal min, max;
+      relation->yRange(projectionRect().left(),
+          projectionRect().right(),
+          &min, &max);
 
-        //If the axis is in log mode, the lower extent will be the
-        //minimum value larger than zero.
-        if (yAxis()->axisLog())
-          minimum = minimum <= 0.0 ? min : qMin(min, minimum);
-        else
-          minimum = qMin(min, minimum);
+      //If the axis is in log mode, the lower extent will be the
+      //minimum value larger than zero.
+      if (yAxis()->axisLog())
+        minimum = minimum <= 0.0 ? min : qMin(min, minimum);
+      else
+        minimum = qMin(min, minimum);
 
-        maximum = qMax(max, maximum);
+      maximum = qMax(max, maximum);
     }
   }
 }
@@ -2210,6 +2216,36 @@ void PlotItem::zoomLogY() {
 }
 
 
+QString PlotItem::descriptionTip() const {
+  QString contents;
+  foreach (PlotRenderItem *renderer, renderItems()) {
+    foreach (RelationPtr relation, renderer->relationList()) {
+      contents += QString("  %1\n").arg(relation->Name());
+    }
+  }
+
+  return i18n("Plot: %1 \nContents:\n %2").arg(Name()).arg(contents);
+}
+
+
+QString PlotItem::_automaticDescriptiveName() const {
+  QString name = i18n("Empty Plot");
+  int n=0;
+  foreach (PlotRenderItem *renderer, renderItems()) {
+    foreach (RelationPtr relation, renderer->relationList()) {
+      if (n==0) {
+        name = relation->descriptiveName();
+      }
+      n++;
+    }
+  }
+  if (n>1) {
+    name += ", ...";
+  }
+  return name;
+}
+
+
 ZoomState PlotItem::currentZoomState() {
   ZoomState zoomState;
   zoomState.item = this; //the origin of this ZoomState
@@ -2355,8 +2391,12 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         if (!av.isNull()) {
           rc->setShowLegend(QVariant(av.toString()).toBool());
         }
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          rc->setDescriptiveName(attrs.value("descriptiveName").toString());
+        }
+        Object::processShortNameIndexAttributes(attrs);
 
-      // Add any new specialized PlotItem Properties here.
+        // Add any new specialized PlotItem Properties here.
       } else if (xml.name().toString() == "projectionrect") {
         QXmlStreamAttributes attrs = xml.attributes();
         QStringRef av;
@@ -2400,7 +2440,7 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         validTag = rc->legend()->configureFromXml(xml, store);
       } else {
         Q_ASSERT(rc);
-        if (!rc->parse(xml, validTag) && validTag) {
+        if (!rc->parse(xml, validTag)&& validTag) {
           ViewItem *i = GraphicsFactory::parse(xml, store, view, rc);
           if (!i) {
           }
@@ -2529,9 +2569,9 @@ void ZoomXMaximumCommand::applyZoomTo(PlotItem *item) {
   item->xAxis()->setAxisZoomMode(PlotAxis::Auto);
   QRectF compute = item->computedProjectionRect();
   item->setProjectionRect(QRectF(compute.x(),
-                           item->projectionRect().y(),
-                           compute.width(),
-                           item->projectionRect().height()));
+        item->projectionRect().y(),
+        compute.width(),
+        item->projectionRect().height()));
 }
 
 /*
@@ -2545,7 +2585,7 @@ void ZoomXRightCommand::applyZoomTo(PlotItem *item) {
   QRectF compute = item->projectionRect();
 
   qreal dx = (item->xMax() - item->xMin())*0.10;
-  if (item->xAxis()->axisLog()) { 
+  if (item->xAxis()->axisLog()) {
     compute.setLeft(pow(10, item->xMin() + dx));
     compute.setRight(pow(10, item->xMax() + dx));
   } else {
@@ -2567,7 +2607,7 @@ void ZoomXLeftCommand::applyZoomTo(PlotItem *item) {
   QRectF compute = item->projectionRect();
 
   qreal dx = (item->xMax() - item->xMin())*0.10;
-  if (item->xAxis()->axisLog()) { 
+  if (item->xAxis()->axisLog()) {
     compute.setLeft(pow(10, item->xMin() - dx));
     compute.setRight(pow(10, item->xMax() - dx));
   } else {
@@ -2589,7 +2629,7 @@ void ZoomXOutCommand::applyZoomTo(PlotItem *item) {
   QRectF compute = item->projectionRect();
 
   qreal dx = (item->xMax() - item->xMin())*0.25;
-  if (item->xAxis()->axisLog()) { 
+  if (item->xAxis()->axisLog()) {
     compute.setLeft(pow(10, item->xMin() - dx));
     compute.setRight(pow(10, item->xMax() + dx));
   } else {
@@ -2598,7 +2638,7 @@ void ZoomXOutCommand::applyZoomTo(PlotItem *item) {
   }
 
   item->setProjectionRect(compute);
-//   item->update();
+  //   item->update();
 }
 
 
@@ -2613,7 +2653,7 @@ void ZoomXInCommand::applyZoomTo(PlotItem *item) {
   QRectF compute = item->projectionRect();
 
   qreal dx = (item->xMax() - item->xMin())*0.1666666;
-  if (item->xAxis()->axisLog()) { 
+  if (item->xAxis()->axisLog()) {
     compute.setLeft(pow(10, item->xMin() + dx));
     compute.setRight(pow(10, item->xMax() - dx));
   } else {
@@ -2673,9 +2713,9 @@ void ZoomYMaximumCommand::applyZoomTo(PlotItem *item) {
   item->yAxis()->setAxisZoomMode(PlotAxis::Auto);
   QRectF compute = item->computedProjectionRect();
   item->setProjectionRect(QRectF(item->projectionRect().x(),
-                           compute.y(),
-                           item->projectionRect().width(),
-                           compute.height()));
+        compute.y(),
+        item->projectionRect().width(),
+        compute.height()));
 }
 
 
@@ -2692,7 +2732,7 @@ void ZoomYUpCommand::applyZoomTo(PlotItem *item) {
   QRectF compute = item->projectionRect();
 
   qreal dy = (item->yMax() - item->yMin())*0.1;
-  if (item->yAxis()->axisLog()) { 
+  if (item->yAxis()->axisLog()) {
     compute.setTop(pow(10, item->yMin() + dy));
     compute.setBottom(pow(10, item->yMax() + dy));
   } else {
@@ -2717,7 +2757,7 @@ void ZoomYDownCommand::applyZoomTo(PlotItem *item) {
   QRectF compute = item->projectionRect();
 
   qreal dy = (item->yMax() - item->yMin())*0.1;
-  if (item->yAxis()->axisLog()) { 
+  if (item->yAxis()->axisLog()) {
     compute.setTop(pow(10, item->yMin() - dy));
     compute.setBottom(pow(10, item->yMax() - dy));
   } else {
@@ -2742,7 +2782,7 @@ void ZoomYOutCommand::applyZoomTo(PlotItem *item) {
   QRectF compute = item->projectionRect();
 
   qreal dy = (item->yMax() - item->yMin())*0.25;
-  if (item->yAxis()->axisLog()) { 
+  if (item->yAxis()->axisLog()) {
     compute.setTop(pow(10, item->yMin() - dy));
     compute.setBottom(pow(10, item->yMax() + dy));
   } else {
@@ -2751,7 +2791,7 @@ void ZoomYOutCommand::applyZoomTo(PlotItem *item) {
   }
 
   item->setProjectionRect(compute);
-//   item->update();
+  //   item->update();
 }
 
 
@@ -2768,7 +2808,7 @@ void ZoomYInCommand::applyZoomTo(PlotItem *item) {
   QRectF compute = item->projectionRect();
 
   qreal dy = (item->yMax() - item->yMin())*0.1666666;
-  if (item->yAxis()->axisLog()) { 
+  if (item->yAxis()->axisLog()) {
     compute.setTop(pow(10, item->yMin() + dy));
     compute.setBottom(pow(10, item->yMax() - dy));
   } else {
@@ -2777,7 +2817,7 @@ void ZoomYInCommand::applyZoomTo(PlotItem *item) {
   }
 
   item->setProjectionRect(compute);
-//   item->update();
+  //   item->update();
 }
 
 

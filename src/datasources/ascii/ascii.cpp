@@ -794,9 +794,10 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
       } else {
         _ac->_whitespace->setChecked(true);
       }
-      bool hasInstance = _instance != 0L;
+      bool hasInstance = (_instance != 0L);
       _ac->_indexVector->clear();
       if (hasInstance) {
+        qDebug() << "xxx Has instance";
         _ac->_indexVector->addItems(_instance->fieldList());
         Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(_instance);
         assert(src);
@@ -1078,7 +1079,6 @@ Kst::DataSourceConfigWidget *AsciiPlugin::configWidget(QSettings *cfg, const QSt
   config->setConfig(cfg);
   config->load();
   return config;
-
 }
 
 Q_EXPORT_PLUGIN2(kstdata_ascii, AsciiPlugin)

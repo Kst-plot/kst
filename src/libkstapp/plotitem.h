@@ -14,6 +14,7 @@
 
 #include "viewitem.h"
 #include "graphicsfactory.h"
+#include "namedobject.h"
 
 #include <QHash>
 
@@ -44,7 +45,7 @@ struct ZoomState {
 };
 
 
-class PlotItem : public ViewItem, public PlotItemInterface
+class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 {
   Q_OBJECT
   public:
@@ -179,6 +180,11 @@ class PlotItem : public ViewItem, public PlotItemInterface
     virtual void updateObject();
 
     LegendItem* legend();
+
+    virtual QString descriptionTip() const; // description for tooltips
+
+  protected:
+    virtual QString _automaticDescriptiveName() const;
 
   Q_SIGNALS:
     void marginsChanged();
