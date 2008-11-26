@@ -320,7 +320,8 @@ int healpix_fits_map_test(char *filename, size_t * nside, int *order, int *coord
   }
 
   /* make sure this is a HEALPIX file */
-  if (fits_read_key(fp, TSTRING, "PIXTYPE", pixtype, comment, &ret)) {
+  char charPixType[] = "PIXTYPE";
+  if (fits_read_key(fp, TSTRING, charPixType, pixtype, comment, &ret)) {
     ret = 0;
     fits_close_file(fp, &ret);
     return 0;
@@ -332,7 +333,10 @@ int healpix_fits_map_test(char *filename, size_t * nside, int *order, int *coord
   }
 
   /* check required keywords (NSIDE, ORDERING, COORDSYS) */
-  if (fits_read_key(fp, TINT, "NSIDE", &inside, comment, &ret)) {
+  char charNSide[] = "NSIDE";
+  char charOrdering[] = "ORDERING";
+  char charCoordSys[] = "COORDSYS";
+  if (fits_read_key(fp, TINT, charNSide, &inside, comment, &ret)) {
     ret = 0;
     fits_close_file(fp, &ret);
     return 0;
@@ -343,7 +347,7 @@ int healpix_fits_map_test(char *filename, size_t * nside, int *order, int *coord
     fits_close_file(fp, &ret);
     return 0;
   }
-  if (fits_read_key(fp, TSTRING, "ORDERING", orderstr, comment, &ret)) {
+  if (fits_read_key(fp, TSTRING, charOrdering, orderstr, comment, &ret)) {
     ret = 0;
     fits_close_file(fp, &ret);
     return 0;
@@ -357,7 +361,7 @@ int healpix_fits_map_test(char *filename, size_t * nside, int *order, int *coord
     fits_close_file(fp, &ret);
     return 0;
   }
-  if (fits_read_key(fp, TSTRING, "COORDSYS", coordstr, comment, &ret)) {
+  if (fits_read_key(fp, TSTRING, charCoordSys, coordstr, comment, &ret)) {
     ret = 0;
     (*coord) = HEALPIX_COORD_C;
   } else {
@@ -373,11 +377,13 @@ int healpix_fits_map_test(char *filename, size_t * nside, int *order, int *coord
   }
 
   /* check for INDXSCHM and GRAIN.  if not found, assume implicit */
-  
+  char charObject[] = "OBJECT";
+  char charIndxSchm[] = "INDXSCHM";
+  char charGrain[] = "GRAIN";
   strcpy(indxstr,"");
-  if (fits_read_key(fp, TSTRING, "OBJECT", indxstr, comment, &ret)) {
+  if (fits_read_key(fp, TSTRING, charObject, indxstr, comment, &ret)) {
     ret = 0;
-    if (fits_read_key(fp, TSTRING, "INDXSCHM", indxstr, comment, &ret)) {
+    if (fits_read_key(fp, TSTRING, charIndxSchm, indxstr, comment, &ret)) {
       ret = 0;
       (*type) = HEALPIX_FITS_FULL;
     } else {
@@ -387,7 +393,7 @@ int healpix_fits_map_test(char *filename, size_t * nside, int *order, int *coord
         (*type) = HEALPIX_FITS_FULL;
       }
     }
-    if (fits_read_key(fp, TINT, "GRAIN", &grain, comment, &ret)) {
+    if (fits_read_key(fp, TINT, charGrain, &grain, comment, &ret)) {
       ret = 0;
       grain = 0;
     }
@@ -397,14 +403,14 @@ int healpix_fits_map_test(char *filename, size_t * nside, int *order, int *coord
       fits_close_file(fp, &ret);
       return 0;
     }
-  } else {   
+  } else {
     if (strncmp(indxstr, "PARTIAL", HEALPIX_STRNL) == 0) {
       (*type) = HEALPIX_FITS_CUT;
     } else {
       if (strncmp(indxstr, "FULLSKY", HEALPIX_STRNL) == 0) {
         (*type) = HEALPIX_FITS_FULL;
       } else {
-        if (fits_read_key(fp, TSTRING, "INDXSCHM", indxstr, comment, &ret)) {
+        if (fits_read_key(fp, TSTRING, charIndxSchm, indxstr, comment, &ret)) {
           ret = 0;
           (*type) = HEALPIX_FITS_FULL;
         } else {
@@ -414,7 +420,7 @@ int healpix_fits_map_test(char *filename, size_t * nside, int *order, int *coord
             (*type) = HEALPIX_FITS_FULL;
           }
         }
-        if (fits_read_key(fp, TINT, "GRAIN", &grain, comment, &ret)) {
+        if (fits_read_key(fp, TINT, charGrain, &grain, comment, &ret)) {
           ret = 0;
           grain = 0;
         }
@@ -427,22 +433,24 @@ int healpix_fits_map_test(char *filename, size_t * nside, int *order, int *coord
       } 
     }
   }
-  
+
   /* check for chunk file and truncation */
-  
+  char charFirstPix[] = "FIRSTPIX";
+  char charNPix[] = "NPIX";
+  char charLastPix[] = "LASTPIX";
   if ((*type) == HEALPIX_FITS_FULL) {
     (*nmaps) = tfields;
     if ((nrows != (long)(12*inside*inside))&&(1024*nrows != (long)(12*inside*inside))) {
       /*is this a chunk file?*/
-      if (fits_read_key(fp, TLONG, "FIRSTPIX", &keyfirst, comment, &ret)) {
+      if (fits_read_key(fp, TLONG, charFirstPix, &keyfirst, comment, &ret)) {
         /*must at least have FIRSTPIX key*/
         ret = 0;
         ischunk = 0;
       } else {
-        if (fits_read_key(fp, TLONG, "NPIX", &keynpix, comment, &ret)) {
+        if (fits_read_key(fp, TLONG, charNPix, &keynpix, comment, &ret)) {
           ret = 0;
           /*might be using LASTPIX instead*/
-          if (fits_read_key(fp, TLONG, "LASTPIX", &keynpix, comment, &ret)) {
+          if (fits_read_key(fp, TLONG, charLastPix, &keynpix, comment, &ret)) {
             ret = 0;
             ischunk = 0;
           } else {
@@ -490,9 +498,9 @@ int healpix_fits_map_test(char *filename, size_t * nside, int *order, int *coord
       ret = 0;
       fits_close_file(fp, &ret);
       return 0;
-    } 
+    }
   }
-  
+
   fits_close_file(fp, &ret);
   return 1;
 }
@@ -524,9 +532,10 @@ int healpix_fits_map_info(char *filename, size_t * nside, int *order, int *coord
   if (fits_open_file(&fp, filename, READONLY, &ret)) {
     return 0;
   }
-  
+
   /* read header info */
-  fits_read_key(fp, TSTRING, "CREATOR", creator, comment, &ret);
+  char charCreator[] = "CREATOR";
+  fits_read_key(fp, TSTRING, charCreator, creator, comment, &ret);
   ret = 0;
 
   /* make sure extension is a binary table */
@@ -547,9 +556,10 @@ int healpix_fits_map_info(char *filename, size_t * nside, int *order, int *coord
     fits_close_file(fp, &ret);
     return 0;
   }
-  
+
   /* make sure this is a HEALPIX file */
-  if (fits_read_key(fp, TSTRING, "PIXTYPE", pixtype, comment, &ret)) {
+  char charPixtype[] = "PIXTYPE";
+  if (fits_read_key(fp, TSTRING, charPixtype, pixtype, comment, &ret)) {
     ret = 0;
     fits_close_file(fp, &ret);
     return 0;
@@ -561,7 +571,10 @@ int healpix_fits_map_info(char *filename, size_t * nside, int *order, int *coord
   }
 
   /* check required keywords (NSIDE, ORDERING, COORDSYS) */
-  if (fits_read_key(fp, TINT, "NSIDE", &inside, comment, &ret)) {
+  char charNSide[] = "NSIDE";
+  char charOrdering[] = "ORDERING";
+  char charCoordSys[] = "COORDSYS";
+  if (fits_read_key(fp, TINT, charNSide, &inside, comment, &ret)) {
     ret = 0;
     fits_close_file(fp, &ret);
     return 0;
@@ -572,7 +585,7 @@ int healpix_fits_map_info(char *filename, size_t * nside, int *order, int *coord
     fits_close_file(fp, &ret);
     return 0;
   }
-  if (fits_read_key(fp, TSTRING, "ORDERING", orderstr, comment, &ret)) {
+  if (fits_read_key(fp, TSTRING, charOrdering, orderstr, comment, &ret)) {
     ret = 0;
     fits_close_file(fp, &ret);
     return 0;
@@ -586,7 +599,7 @@ int healpix_fits_map_info(char *filename, size_t * nside, int *order, int *coord
     fits_close_file(fp, &ret);
     return 0;
   }
-  if (fits_read_key(fp, TSTRING, "COORDSYS", coordstr, comment, &ret)) {
+  if (fits_read_key(fp, TSTRING, charCoordSys, coordstr, comment, &ret)) {
     ret = 0;
     (*coord) = HEALPIX_COORD_C;
   } else {
@@ -602,11 +615,13 @@ int healpix_fits_map_info(char *filename, size_t * nside, int *order, int *coord
   }
 
   /* check for INDXSCHM and GRAIN.  if not found, assume implicit */
-  
+  char charObject[] = "OBJECT";
+  char charIndxSchm[] = "INDXSCHM";
+  char charGrain[] = "GRAIN";
   strcpy(indxstr,"");
-  if (fits_read_key(fp, TSTRING, "OBJECT", indxstr, comment, &ret)) {
+  if (fits_read_key(fp, TSTRING, charObject, indxstr, comment, &ret)) {
     ret = 0;
-    if (fits_read_key(fp, TSTRING, "INDXSCHM", indxstr, comment, &ret)) {
+    if (fits_read_key(fp, TSTRING, charIndxSchm, indxstr, comment, &ret)) {
       ret = 0;
       (*type) = HEALPIX_FITS_FULL;
     } else {
@@ -616,7 +631,7 @@ int healpix_fits_map_info(char *filename, size_t * nside, int *order, int *coord
         (*type) = HEALPIX_FITS_FULL;
       }
     }
-    if (fits_read_key(fp, TINT, "GRAIN", &grain, comment, &ret)) {
+    if (fits_read_key(fp, TINT, charGrain, &grain, comment, &ret)) {
       ret = 0;
       grain = 0;
     }
@@ -626,14 +641,14 @@ int healpix_fits_map_info(char *filename, size_t * nside, int *order, int *coord
       fits_close_file(fp, &ret);
       return 0;
     }
-  } else {   
+  } else {
     if (strncmp(indxstr, "PARTIAL", HEALPIX_STRNL) == 0) {
       (*type) = HEALPIX_FITS_CUT;
     } else {
       if (strncmp(indxstr, "FULLSKY", HEALPIX_STRNL) == 0) {
         (*type) = HEALPIX_FITS_FULL;
       } else {
-        if (fits_read_key(fp, TSTRING, "INDXSCHM", indxstr, comment, &ret)) {
+        if (fits_read_key(fp, TSTRING, charIndxSchm, indxstr, comment, &ret)) {
           ret = 0;
           (*type) = HEALPIX_FITS_FULL;
         } else {
@@ -643,7 +658,7 @@ int healpix_fits_map_info(char *filename, size_t * nside, int *order, int *coord
             (*type) = HEALPIX_FITS_FULL;
           }
         }
-        if (fits_read_key(fp, TINT, "GRAIN", &grain, comment, &ret)) {
+        if (fits_read_key(fp, TINT, charGrain, &grain, comment, &ret)) {
           ret = 0;
           grain = 0;
         }
@@ -652,29 +667,32 @@ int healpix_fits_map_info(char *filename, size_t * nside, int *order, int *coord
           ret = 0;
           fits_close_file(fp, &ret);
           return 0;
-        } 
-      } 
+        }
+      }
     }
   }
-      
+
   /* read extension keys */
   healpix_keys_read(keys, fp, &ret);
-        
+
   /* check for chunk file and truncation */
-  
+  char charFirstPix[] = "FIRSTPIX";
+  char charNPix[] = "NPIX";
+  char charLastPix[] = "LASTPIX";
+
   if ((*type) == HEALPIX_FITS_FULL) {
     (*nmaps) = tfields;
     if ((nrows != (long)(12*inside*inside))&&(1024*nrows != (long)(12*inside*inside))) {
       /*is this a chunk file?*/
-      if (fits_read_key(fp, TLONG, "FIRSTPIX", &keyfirst, comment, &ret)) {
+      if (fits_read_key(fp, TLONG, charFirstPix, &keyfirst, comment, &ret)) {
         /*must at least have FIRSTPIX key*/
         ret = 0;
         ischunk = 0;
       } else {
-        if (fits_read_key(fp, TLONG, "NPIX", &keynpix, comment, &ret)) {
+        if (fits_read_key(fp, TLONG, charNPix, &keynpix, comment, &ret)) {
           ret = 0;
           /*might be using LASTPIX instead*/
-          if (fits_read_key(fp, TLONG, "LASTPIX", &keynpix, comment, &ret)) {
+          if (fits_read_key(fp, TLONG, charLastPix, &keynpix, comment, &ret)) {
             ret = 0;
             ischunk = 0;
           } else {
@@ -722,9 +740,9 @@ int healpix_fits_map_info(char *filename, size_t * nside, int *order, int *coord
       ret = 0;
       fits_close_file(fp, &ret);
       return 0;
-    } 
+    }
   }
-  
+
   fits_close_file(fp, &ret);
   return 1;
 }

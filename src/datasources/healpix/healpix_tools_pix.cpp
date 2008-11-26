@@ -115,7 +115,7 @@ int healpix_nsidecheck(size_t nside)
   if (nside == 0) {
     return 1;
   }
-  if ((~nside)&(nside-1) != (nside-1)) {  
+  if (((~nside)&(nside-1)) != (nside-1)) {  
     return 1;
   }
   return 0;
