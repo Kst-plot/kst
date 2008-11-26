@@ -130,7 +130,7 @@ class Vector : public Primitive {
     virtual void save(QXmlStreamWriter &s);
 
     /** Return a pointer to the raw vector */
-    double *const value() const;
+    double *value() const;
 
     /** access functions for _isScalarList */
     bool isScalarList() const { return _isScalarList; }

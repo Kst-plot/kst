@@ -538,7 +538,7 @@ QString Vector::fileLabel() const {
 }
 
 
-double *const Vector::value() const {
+double *Vector::value() const {
   return _v;
 }
 

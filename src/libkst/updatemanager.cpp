@@ -126,6 +126,8 @@ void UpdateManager::updateStarted(ObjectPtr updateObject, ObjectPtr reportingObj
   _activeUpdates[updateObject]++;
 #if DEBUG_UPDATE_CYCLE > 0
     qDebug() << "UM - Update beginning for" << reportingObject->shortName() << "for update" << updateObject->shortName() << "update count" << _activeUpdates[updateObject];
+#else
+  Q_UNUSED(reportingObject)
 #endif
 }
 
@@ -134,6 +136,8 @@ void UpdateManager::updateFinished(ObjectPtr updateObject, ObjectPtr reportingOb
   _activeUpdates[updateObject]--;
 #if DEBUG_UPDATE_CYCLE > 0
   qDebug() << "UM - Update is complete for" << reportingObject->shortName() << "for update" << updateObject->shortName() << "update count" << _activeUpdates[updateObject];
+#else
+  Q_UNUSED(reportingObject)
 #endif
   if (_activeUpdates[updateObject] == 0) {
 #if DEBUG_UPDATE_CYCLE > 0
