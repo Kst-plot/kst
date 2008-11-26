@@ -150,7 +150,7 @@ void ViewGridLayout::reset() {
 
 
 void ViewGridLayout::resetSharedPlots(ViewItem *item) {
-  if (PlotItem *plotItem = qobject_cast<PlotItem*>(item)) {
+  if (qobject_cast<PlotItem*>(item)) {
   } else {
     return;
   }

@@ -173,24 +173,29 @@ bool Document::open(const QString& file) {
       QString n = xml.name().toString();
       if (n == "kst") {
       } else if (n == "data") {
-        if (state != Unknown)
+        if (state != Unknown) {
           malformed();
+        }
         state = Data;
       } else if (n == "variables") {
-        if (state != Unknown)
+        if (state != Unknown) {
           malformed();
+        }
         state = Variables;
       } else if (n == "objects") {
-        if (state != Unknown)
+        if (state != Unknown) {
           malformed();
+        }
         state = Objects;
       } else if (n == "relations") {
-        if (state != Unknown)
+        if (state != Unknown) {
           malformed();
+        }
         state = Relations;
       } else if (n == "graphics") {
-        if (state != Unknown)
+        if (state != Unknown) {
           malformed();
+        }
         state = Graphics;
       } else {
         switch (state) {
@@ -245,8 +250,9 @@ bool Document::open(const QString& file) {
     } else if (xml.isEndElement()) {
       QString n = xml.name().toString();
       if (n == "kst") {
-        if (state != Unknown)
+        if (state != Unknown) {
           malformed();
+        }
         break;
       } else if (n == "view") {
         state = Graphics;

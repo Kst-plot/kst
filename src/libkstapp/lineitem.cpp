@@ -199,7 +199,7 @@ void LineItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   QGraphicsRectItem::hoverMoveEvent(event);
   if (isSelected()) {
     QPointF p = event->pos();
-    if (isAllowed(RightMidGrip) && rightMidGrip().contains(p) || isAllowed(LeftMidGrip) && leftMidGrip().contains(p)) {
+    if ((isAllowed(RightMidGrip) && rightMidGrip().contains(p)) || (isAllowed(LeftMidGrip) && leftMidGrip().contains(p))) {
       parentView()->setCursor(Qt::CrossCursor);
     } else {
       parentView()->setCursor(Qt::SizeAllCursor);
