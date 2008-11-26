@@ -26,7 +26,6 @@ namespace Equations {
   KST_EXPORT QStringList errorStack;
 }
 
-static const char *EParseErrorUnknown = I18N_NOOP("parse error"); // from bison
 /*extern "C"*/ const char *EParseErrorEmpty = I18N_NOOP("Equations is empty.");
 /*extern "C"*/ const char *EParseErrorEmptyArg = I18N_NOOP("Function argument is empty.");
 /*extern "C"*/ const char *EParseErrorTwoOperands = I18N_NOOP("Two operands are required.");
@@ -48,6 +47,7 @@ static const char *EParseErrorUnknown = I18N_NOOP("parse error"); // from bison
 
 
 /*extern "C"*/ void yyerror(Kst::ObjectStore *store, const char *s) {
+  Q_UNUSED(store)
   Equations::errorStack << i18n(s);
 }
 

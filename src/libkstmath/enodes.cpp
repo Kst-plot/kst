@@ -449,8 +449,7 @@ Function::~Function() {
 
 
 Kst::Object::UpdateType Function::update(Context *ctx) {
-  Kst::Object::UpdateType ut = _args->update(ctx);
-
+  _args->update(ctx);
   return Kst::Object::NO_CHANGE;
 }
 

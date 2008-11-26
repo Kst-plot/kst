@@ -45,7 +45,6 @@ namespace Kst {
 
   int yyErrorCount();
 
-  extern const char *EParseErrorUnknown;
   extern const char *EParseErrorEmpty;
   extern const char *EParseErrorEmptyArg;
   extern const char *EParseErrorTwoOperands;
