@@ -1,0 +1,26 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Source
+X-KDE-ModuleType=Plugin
+X-KDE-Library=planckIDEF
+X-Kst-Plugin-Author=The University of Toronto
+Name=Planck IDIS DMC Exchange Format Reader
+Name[bg]=Четене на формат за обмен Planck IDIS DMC
+Name[da]=Planck IDIS DMC-udvekslingsformat-læser
+Name[de]=Planck IDIS DMC Austauschformatleser
+Name[el]=Προβολέας τύπου Planck IDIS DMC Exchange
+Name[es]=Lector del formato de intercambio Planck IDIS DMC
+Name[et]=Planck IDIS DMC Exchange vormingu lugeja
+Name[is]=Planck IDIS DMC Exchange Format lesari
+Name[it]=Lettore del formato di scambio Planck IDIS DMC
+Name[nds]=Leser för't Planck-IDIS-DMC-Formaat
+Name[nl]=Leesprogramma voor het Planck IDIS DMC Exchange Format (IDEF)
+Name[pt]=Leitor do Formato de Intercâmbio Planck IDIS DMC
+Name[pt_BR]=Leitor do Formato de Intercâmbio Planck IDIS DMC
+Name[sr]=Читач формата размене Planck IDIS DMC
+Name[sr@Latn]=Čitač formata razmene Planck IDIS DMC
+Name[sv]=Planck IDIS DMC-utbytesformatläsare
+Name[vi]=Bộ đọc Định dạng Trao đổi DMC IDIS Planck
+Name[xx]=xxPlanck IDIS DMC Exchange Format Readerxx
+
