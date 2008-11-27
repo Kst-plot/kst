@@ -177,7 +177,6 @@
      <zorder>_plotList</zorder>
      <zorder>_newPlot</zorder>
      <zorder>_layoutGroup</zorder>
-     <zorder>horizontalSpacer</zorder>
     </widget>
    </item>
   </layout>
