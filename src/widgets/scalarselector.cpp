@@ -76,7 +76,7 @@ ScalarPtr ScalarSelector::selectedScalar() {
     // Value typed in.
     existingScalar = false;
   } else {
-    if (Scalar* scalar = qVariantValue<Scalar*>(_scalar->itemData(_scalar->findText(_scalar->currentText())))) {
+    if (qVariantValue<Scalar*>(_scalar->itemData(_scalar->findText(_scalar->currentText())))) {
       existingScalar = true;
     } else {
       // Default Value.  Doesn't exist as scalar yet.
