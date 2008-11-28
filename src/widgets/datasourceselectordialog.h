@@ -26,6 +26,10 @@ class KST_EXPORT DataSourceSelectorDialog : public QFileDialog {
 
     QString selectedDataSource();
 
+  public Q_SLOTS:
+    void directoryChanged();
+    void currentChanged(const QString &current);
+
   protected:
     void accept();
 };

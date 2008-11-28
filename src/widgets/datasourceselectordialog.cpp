@@ -14,14 +14,16 @@
 #include <QMessageBox>
 #include <QDebug>
 
-
 namespace Kst {
 
 DataSourceSelectorDialog::DataSourceSelectorDialog(QString &file, QWidget *parent)
   : QFileDialog(parent) {
 
-  setFileMode(QFileDialog::ExistingFile);
+  setFileMode(QFileDialog::Directory);
   selectFile(file);
+
+  connect(this, SIGNAL(directoryEntered(const QString &)), this, SLOT(directoryChanged()));
+  connect(this, SIGNAL(currentChanged(const QString &)), this, SLOT(currentChanged(const QString &)));
 }
 
 
@@ -31,6 +33,28 @@ DataSourceSelectorDialog::~DataSourceSelectorDialog() {
 
 QString DataSourceSelectorDialog::selectedDataSource() {
   return selectedFiles().first();
+}
+
+
+void DataSourceSelectorDialog::directoryChanged() {
+//   qDebug() << "directory changed" << directory();
+}
+
+
+void DataSourceSelectorDialog::currentChanged(const QString &current) {
+//   qDebug() << "currentChanged" << current;
+  QFileInfo fileInfo(current);
+  if (fileInfo.isDir()) {
+//     qDebug() << "Directory Selected";
+    if (fileMode() != QFileDialog::Directory) {
+      setFileMode(QFileDialog::Directory);
+    }
+  } else if (fileInfo.exists()) {
+//     qDebug() << "File Selected";
+    if (fileMode() != QFileDialog::ExistingFile) {
+      setFileMode(QFileDialog::ExistingFile);
+    }
+  }
 }
 
 
