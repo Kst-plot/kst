@@ -177,7 +177,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="Kst::FileRequester" native="1" name="_dataFile" />
+           <widget class="Kst::DataSourceSelector" native="1" name="_dataFile" />
           </item>
          </layout>
         </item>
@@ -283,9 +283,9 @@
    <header>combobox.h</header>
   </customwidget>
   <customwidget>
-   <class>Kst::FileRequester</class>
+    <class>Kst::DataSourceSelector</class>
    <extends>QWidget</extends>
-   <header>filerequester.h</header>
+   <header>datasourceselector.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
