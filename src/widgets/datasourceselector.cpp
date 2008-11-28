@@ -9,7 +9,9 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "filerequester.h"
+#include "datasourceselector.h"
+
+#include "datasourceselectordialog.h"
 
 #include <QStyle>
 #include <QLineEdit>
@@ -23,17 +25,18 @@
 
 namespace Kst {
 
-FileRequester::FileRequester(QWidget *parent)
-  : QWidget(parent), _mode(QFileDialog::AnyFile) {
+DataSourceSelector::DataSourceSelector(QWidget *parent)
+  : QWidget(parent), _mode(QFileDialog::ExistingFile) {
   setup();
 }
 
 
-FileRequester::~FileRequester() {
+DataSourceSelector::~DataSourceSelector() {
 }
 
 
-void FileRequester::setup() {
+void DataSourceSelector::setup() {
+
   _fileEdit = new QLineEdit(this);
   _fileButton = new QToolButton(this);
 
@@ -61,12 +64,12 @@ void FileRequester::setup() {
 }
 
 
-QString FileRequester::file() const {
+QString DataSourceSelector::file() const {
   return _file;
 }
 
 
-void FileRequester::setFile(const QString &file) {
+void DataSourceSelector::setFile(const QString &file) {
   _file = file;
   //FIXME grrr QLineEdit doc *lies* to me... the textEdited signal is being triggered!!
   _fileEdit->blockSignals(true);
@@ -76,16 +79,16 @@ void FileRequester::setFile(const QString &file) {
 }
 
 
-void FileRequester::chooseFile() {
+void DataSourceSelector::chooseFile() {
   QString file;
-  if (_mode == QFileDialog::ExistingFile) {
-    file = QFileDialog::getOpenFileName(this, tr("Open File"), _file, tr("All Files (*)"));
-  } else {
-    file = QFileDialog::getSaveFileName(this, tr("Save File"), _file, tr("All Files (*)"));
-  }
 
-  if (!file.isEmpty()) {
-    setFile(file);
+  DataSourceSelectorDialog dialog(_file);
+  if (dialog.exec() == QDialog::Accepted) {
+    file = dialog.selectedDataSource();
+
+    if (!file.isEmpty()) {
+      setFile(file);
+    }
   }
 }
 

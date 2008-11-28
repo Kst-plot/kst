@@ -31,6 +31,7 @@
 #include "curveplacement.h"
 #include "fftoptions.h"
 #include "colorpalette.h"
+#include "datasourceselector.h"
 
 namespace Kst {
 
@@ -78,6 +79,19 @@ class ColorButtonPlugin : public WidgetPlugin {
     } //do not translate
     QWidget *createWidget(QWidget *parent) {
       return new ColorButton(parent);
+    }
+};
+
+class DataSourceSelectorPlugin : public WidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+  public:
+    DataSourceSelectorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    QString name() const {
+      return QLatin1String("DataSourceSelector");
+    } //do not translate
+    QWidget *createWidget(QWidget *parent) {
+      return new DataSourceSelector(parent);
     }
 };
 

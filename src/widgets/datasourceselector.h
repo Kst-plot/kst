@@ -9,8 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FILEREQUESTER_H
-#define FILEREQUESTER_H
+#ifndef DATASOURCESELECTOR_H
+#define DATASOURCESELECTOR_H
 
 #include <QWidget>
 #include <QFileDialog>
@@ -22,12 +22,12 @@ class QToolButton;
 
 namespace Kst {
 
-class KST_EXPORT FileRequester : public QWidget {
+class KST_EXPORT DataSourceSelector : public QWidget {
   Q_OBJECT
   Q_PROPERTY(QString file READ file WRITE setFile USER true)
   public:
-    FileRequester(QWidget *parent = 0);
-    virtual ~FileRequester();
+    DataSourceSelector(QWidget *parent = 0);
+    virtual ~DataSourceSelector();
 
     QString file() const;
     void setMode(QFileDialog::FileMode mode) { _mode = mode; }

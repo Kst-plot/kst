@@ -16,6 +16,7 @@ namespace Kst {
 Widgets::Widgets(QObject *parent)
     : QObject(parent) {
   _plugins.append(new ColorButtonPlugin(this));
+  _plugins.append(new DataSourceSelectorPlugin(this));
   _plugins.append(new GradientEditorPlugin(this));
   _plugins.append(new FileRequesterPlugin(this));
   _plugins.append(new ComboBoxPlugin(this));
