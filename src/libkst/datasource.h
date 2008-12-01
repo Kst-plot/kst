@@ -71,6 +71,7 @@ class KST_EXPORT DataSource : public Object {
     static SharedPtr<DataSource> loadSource(ObjectStore *store, const QString& filename, const QString& type = QString::null);
     static SharedPtr<DataSource> loadSource(ObjectStore *store, QDomElement& e);
     static SharedPtr<DataSource> findOrLoadSource(ObjectStore *store, const QString& filename);
+    static bool validSource(const QString& filename);
 
     static bool sourceHasConfigWidget(const QString& filename, const QString& type = QString());
     static DataSourceConfigWidget *configWidgetForSource(const QString& filename, const QString& type = QString());

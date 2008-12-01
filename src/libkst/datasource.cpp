@@ -258,6 +258,24 @@ DataSourcePtr DataSource::findOrLoadSource(ObjectStore *store, const QString& fi
 }
 
 
+bool DataSource::validSource(const QString& filename) {
+#ifndef Q_WS_WIN32
+  if (filename == "stdin" || filename == "-") {
+    return true;
+  }
+#endif
+  QString fn = obtainFile(filename);
+  if (fn.isEmpty()) {
+    return false;
+  }
+
+  // Use a local version of the store, we don't want to save this.
+  ObjectStore store;
+  if (DataSourcePtr dataSource = findPluginFor(&store, fn, QString::null)) {
+    return true;
+  }
+  return false;
+}
 
 
 bool DataSource::hasConfigWidget() const {
