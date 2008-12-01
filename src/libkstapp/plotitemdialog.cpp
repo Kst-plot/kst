@@ -105,11 +105,13 @@ void PlotItemDialog::setupLabels() {
   _labelTab->setBottomLabelFont(_plotItem->bottomLabelFont());
   _labelTab->setTopLabelFont(_plotItem->topLabelFont());
   _labelTab->setRightLabelFont(_plotItem->rightLabelFont());
+  _labelTab->setNumberLabelFont(_plotItem->numberLabelFont());
 
   _labelTab->setLeftLabelFontScale(_plotItem->leftLabelFontScale());
   _labelTab->setBottomLabelFontScale(_plotItem->bottomLabelFontScale());
   _labelTab->setTopLabelFontScale(_plotItem->topLabelFontScale());
   _labelTab->setRightLabelFontScale(_plotItem->rightLabelFontScale());
+  _labelTab->setNumberLabelFontScale(_plotItem->numberLabelFontScale());
 
   _labelTab->setShowLegend(_plotItem->showLegend());
 }
@@ -437,11 +439,13 @@ void PlotItemDialog::labelsChanged() {
   _plotItem->setRightLabelFont(_labelTab->rightLabelFont());
   _plotItem->setTopLabelFont(_labelTab->topLabelFont());
   _plotItem->setBottomLabelFont(_labelTab->bottomLabelFont());
+  _plotItem->setNumberLabelFont(_labelTab->numberLabelFont());
 
   _plotItem->setLeftLabelFontScale(_labelTab->leftLabelFontScale());
   _plotItem->setRightLabelFontScale(_labelTab->rightLabelFontScale());
   _plotItem->setTopLabelFontScale(_labelTab->topLabelFontScale());
   _plotItem->setBottomLabelFontScale(_labelTab->bottomLabelFontScale());
+  _plotItem->setNumberLabelFontScale(_labelTab->numberLabelFontScale());
   _plotItem->setShowLegend(_labelTab->showLegend());
 }
 

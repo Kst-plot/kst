@@ -21,11 +21,14 @@ ContentTab::ContentTab(QWidget *parent)
 
   setupUi(this);
 
-  //TODO Need icons.
-  _add->setText("Add");
-  _remove->setText("Remove");
-  _up->setText("Up");
-  _down->setText("Down");
+  _up->setIcon(QPixmap(":kst_uparrow.png"));
+  _down->setIcon(QPixmap(":kst_downarrow.png"));
+  _add->setIcon(QPixmap(":kst_rightarrow.png"));
+  _remove->setIcon(QPixmap(":kst_leftarrow.png"));
+  _up->setToolTip(i18n("Raise in plot order: Alt+Up"));
+  _down->setToolTip(i18n("Lower in plot order: Alt+Down"));
+  _add->setToolTip(i18n("Select: Alt+s"));
+  _remove->setToolTip(i18n("Remove: Alt+r"));
 
   connect(_add, SIGNAL(clicked()), this, SLOT(addButtonClicked()));
   connect(_remove, SIGNAL(clicked()), this, SLOT(removeButtonClicked()));
@@ -80,33 +83,38 @@ void ContentTab::addButtonClicked() {
     if (_availableRelationList->item(i) && _availableRelationList->item(i)->isSelected()) {
       _displayedRelationList->addItem(_availableRelationList->takeItem(i));
       _displayedRelationList->clearSelection();
-      _displayedRelationList->item(_displayedRelationList->count() - 1)->setSelected(true);
     }
   }
+  _displayedRelationList->setCurrentRow(_displayedRelationList->count() - 1);;
   updateButtons();
 }
 
 
 void ContentTab::upButtonClicked() {
+  _displayedRelationList->setFocus();
+
   int i = _displayedRelationList->currentRow();
   if (i != -1) {
     QListWidgetItem *item = _displayedRelationList->takeItem(i);
     _displayedRelationList->insertItem(i-1, item);
     _displayedRelationList->clearSelection();
-    item->setSelected(true);
+    _displayedRelationList->setCurrentItem(item);
+    //item->setSelected(true);
     updateButtons();
   }
 }
 
 
 void ContentTab::downButtonClicked() {
+  _displayedRelationList->setFocus();
   // move item down
   int i = _displayedRelationList->currentRow();
   if (i != -1) {
     QListWidgetItem *item = _displayedRelationList->takeItem(i);
     _displayedRelationList->insertItem(i+1, item);
     _displayedRelationList->clearSelection();
-    item->setSelected(true);
+    _displayedRelationList->setCurrentItem(item);
+    //item->setSelected(true);
     updateButtons();
   }
 }

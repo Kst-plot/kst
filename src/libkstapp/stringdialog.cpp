@@ -27,14 +27,33 @@ StringTab::StringTab(ObjectStore *store, QWidget *parent)
   setupUi(this);
   setTabTitle(tr("String"));
 
+  connect(_generatedStringGroup, SIGNAL(clicked(bool)), this, SLOT(generateClicked()));
+  connect(_dataStringGroup, SIGNAL(clicked(bool)), this, SLOT(readFromSourceClicked()));
   connect(_stringValue, SIGNAL(textChanged(const QString&)), this, SLOT(textChanged()));
-  connect(_readFromSource, SIGNAL(toggled(bool)), this, SLOT(readFromSourceChanged()));
   connect(_fileName, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
   connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
 }
 
 
 StringTab::~StringTab() {
+}
+
+void StringTab::generateClicked() {
+  if (_generatedStringGroup->isChecked())
+    setStringMode(GeneratedString);
+  else
+    setStringMode(DataString);
+
+  emit sourceChanged();
+}
+
+void StringTab::readFromSourceClicked() {
+  if (_dataStringGroup->isChecked())
+    setStringMode(DataString);
+  else
+    setStringMode(GeneratedString);
+
+  emit sourceChanged();
 }
 
 
@@ -52,33 +71,27 @@ void StringTab::textChanged() {
   emit valueChanged();
 }
 
-void StringTab::readFromSourceChanged() {
-
-  if (_readFromSource->isChecked())
-    setStringMode(DataString);
-  else
-    setStringMode(GeneratedString);
-
-  _dataStringGroup->setEnabled(_readFromSource->isChecked());
-  _generatedStringGroup->setEnabled(!_readFromSource->isChecked());
-
-  emit sourceChanged();
-}
-
-
 
 void StringTab::hideGeneratedOptions() {
-  _readFromSource->setVisible(false);
-  _generateX->setVisible(false);
   _generatedStringGroup->setVisible(false);
+  _dataStringGroup->setCheckable(false);
+  _dataStringGroup->setTitle("");
+  _dataStringGroup->setFlat(true);
+  int top_margin;
+  _dataStringGroup->layout()->getContentsMargins(NULL,&top_margin,NULL,NULL);
+  _dataStringGroup->layout()->setContentsMargins(0,top_margin,0,0); 
+
 }
 
 
 void StringTab::hideDataOptions() {
-  _readFromSource->setVisible(false);
-  _generateX->setVisible(false);
   _dataStringGroup->setVisible(false);
-  _generatedStringGroup->setEnabled(true);
+  _generatedStringGroup->setCheckable(false);
+  _generatedStringGroup->setTitle("");
+  _generatedStringGroup->setFlat(true);
+  int top_margin;
+  _generatedStringGroup->layout()->getContentsMargins(NULL,&top_margin,NULL,NULL);
+  _generatedStringGroup->layout()->setContentsMargins(0,top_margin,0,0); 
 }
 
 
@@ -94,8 +107,8 @@ void StringTab::setDataSource(DataSourcePtr dataSource) {
 
 void StringTab::setStringMode(StringMode mode) {
   _mode = mode;
-  _readFromSource->setChecked(mode == DataString);
-  _generateX->setChecked(mode == GeneratedString);
+  _dataStringGroup->setChecked(mode == DataString);
+  _generatedStringGroup->setChecked(mode == GeneratedString);
 }
 
 
@@ -211,7 +224,7 @@ void StringDialog::configureTab(ObjectPtr object) {
     _stringTab->hideDataOptions();
     _stringTab->setValue(string->value());
   } else { // new string
-    _stringTab->setFile(_dialogDefaults->value("vector/datasource",_stringTab->file()).toString());
+    _stringTab->setFile(_dialogDefaults->value("String/datasource",_stringTab->file()).toString());
   }
 }
 

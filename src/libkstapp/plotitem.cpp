@@ -71,6 +71,7 @@ PlotItem::PlotItem(View *parent)
   _bottomLabelFontScale(0.0),
   _topLabelFontScale(0.0),
   _rightLabelFontScale(0.0),
+  _numberLabelFontScale(0.0),
   _showLegend(false),
   _legend(0),
   _zoomMenu(0),
@@ -89,6 +90,7 @@ PlotItem::PlotItem(View *parent)
   _bottomLabelFont = parentView()->defaultFont();
   _topLabelFont = parentView()->defaultFont();
   _rightLabelFont = parentView()->defaultFont();
+  _numberLabelFont = parentView()->defaultFont();
 
   _undoStack = new QUndoStack(this);
 
@@ -140,6 +142,8 @@ void PlotItem::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("rightlabeloverride", _rightLabelOverride);
   xml.writeAttribute("rightlabelfont", QVariant(_rightLabelFont).toString());
   xml.writeAttribute("rightlabelfontscale", QVariant(_rightLabelFontScale).toString());
+  xml.writeAttribute("numberlabelfont", QVariant(_numberLabelFont).toString());
+  xml.writeAttribute("numberlabelfontscale", QVariant(_numberLabelFontScale).toString());
   xml.writeAttribute("showlegend", QVariant(_showLegend).toString());
   saveNameInfo(xml, GNUM);
 
@@ -459,7 +463,7 @@ void PlotItem::paint(QPainter *painter) {
   painter->restore();
 
   painter->save();
-  painter->setFont(parentView()->defaultFont());
+  painter->setFont(calculatedNumberLabelFont());
 
   setCalculatedAxisMarginWidth(calculateLeftTickLabelBound(painter).width());
   setCalculatedAxisMarginHeight(calculateBottomTickLabelBound(painter).height());
@@ -1092,6 +1096,16 @@ void PlotItem::setBottomLabelFont(const QFont &font) {
 }
 
 
+QFont PlotItem::numberLabelFont() const {
+  return _numberLabelFont;
+}
+
+
+void PlotItem::setNumberLabelFont(const QFont &font) {
+  _numberLabelFont = font;
+}
+
+
 qreal PlotItem::rightLabelFontScale() const {
   return _rightLabelFontScale;
 }
@@ -1131,6 +1145,15 @@ void PlotItem::setBottomLabelFontScale(const qreal scale) {
   _bottomLabelFontScale = scale;
 }
 
+
+qreal PlotItem::numberLabelFontScale() const {
+  return _numberLabelFontScale;
+}
+
+
+void PlotItem::setNumberLabelFontScale(const qreal scale) {
+  _numberLabelFontScale = scale;
+}
 
 QString PlotItem::leftLabelOverride() const {
   if (_leftLabelOverride.isEmpty()) {
@@ -1493,6 +1516,14 @@ QFont PlotItem::calculatedTopLabelFont() {
 QFont PlotItem::calculatedBottomLabelFont() {
   QFont font(_bottomLabelFont);
   font.setPixelSize(parentView()->defaultFont(_bottomLabelFontScale).pixelSize());
+
+  return font;
+}
+
+
+QFont PlotItem::calculatedNumberLabelFont() {
+  QFont font(_numberLabelFont);
+  font.setPixelSize(parentView()->defaultFont(_numberLabelFontScale).pixelSize());
 
   return font;
 }
@@ -2440,7 +2471,7 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         validTag = rc->legend()->configureFromXml(xml, store);
       } else {
         Q_ASSERT(rc);
-        if (!rc->parse(xml, validTag)&& validTag) {
+        if (!rc->parse(xml, validTag) && validTag) {
           ViewItem *i = GraphicsFactory::parse(xml, store, view, rc);
           if (!i) {
           }

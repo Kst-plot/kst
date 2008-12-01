@@ -56,7 +56,8 @@ class KST_EXPORT StringTab : public DataTab, Ui::StringTab {
     void sourceChanged();
 
   private Q_SLOTS:
-    void readFromSourceChanged();
+    void readFromSourceClicked();
+    void generateClicked();
     void textChanged();
     void fileNameChanged(const QString &file);
     void showConfigWidget();

@@ -31,26 +31,31 @@ LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
   connect(_leftFontSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_bottomFontSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_rightFontSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
+  connect(_numberFontSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
 
   connect(_topBold, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_leftBold, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_bottomBold, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_rightBold, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_numberBold, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
 
   connect(_topUnderline, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_leftUnderline, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_bottomUnderline, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_rightUnderline, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_numberUnderline, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
 
   connect(_topItalic, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_leftItalic, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_bottomItalic, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_rightItalic, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_numberItalic, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
 
   connect(_topFamily, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_leftFamily, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_bottomFamily, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_rightFamily, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
+  connect(_numberFamily, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
 
   connect(_showLegend, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
 
@@ -185,6 +190,23 @@ void LabelTab::setBottomLabelFont(const QFont &font) {
 }
 
 
+QFont LabelTab::numberLabelFont() const {
+  QFont font(_numberFamily->currentFont());
+  font.setItalic(_numberItalic->isChecked());
+  font.setBold(_numberBold->isChecked());
+  font.setUnderline(_numberUnderline->isChecked());
+  return font;
+}
+
+
+void LabelTab::setNumberLabelFont(const QFont &font) {
+  _numberFamily->setCurrentFont(font);
+  _numberBold->setChecked(font.bold());
+  _numberUnderline->setChecked(font.underline());
+  _numberItalic->setChecked(font.italic());
+}
+
+
 void LabelTab::applyGlobals() {
   QFont font(_globalLabelFontFamily->currentFont());
   font.setItalic(_globalLabelItalic->isChecked());
@@ -195,11 +217,13 @@ void LabelTab::applyGlobals() {
   setRightLabelFont(font);
   setTopLabelFont(font);
   setBottomLabelFont(font);
+  setNumberLabelFont(font);
 
   setLeftLabelFontScale(_globalLabelFontSize->value());
   setRightLabelFontScale(_globalLabelFontSize->value());
   setTopLabelFontScale(_globalLabelFontSize->value());
   setBottomLabelFontScale(_globalLabelFontSize->value());
+  setNumberLabelFontScale(_globalLabelFontSize->value());
 
 }
 
@@ -250,6 +274,16 @@ qreal LabelTab::bottomLabelFontScale() const {
 
 void LabelTab::setBottomLabelFontScale(const qreal scale) {
   _bottomFontSize->setValue(scale);
+}
+
+
+qreal LabelTab::numberLabelFontScale() const {
+  return _numberFontSize->value();
+}
+
+
+void LabelTab::setNumberLabelFontScale(const qreal scale) {
+  _numberFontSize->setValue(scale);
 }
 
 

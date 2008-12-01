@@ -10,16 +10,7 @@
    </rect>
   </property>
   <layout class="QGridLayout" >
-   <property name="leftMargin" >
-    <number>0</number>
-   </property>
-   <property name="topMargin" >
-    <number>0</number>
-   </property>
-   <property name="rightMargin" >
-    <number>0</number>
-   </property>
-   <property name="bottomMargin" >
+   <property name="margin" >
     <number>0</number>
    </property>
    <item row="0" column="1" >
@@ -30,7 +21,7 @@
      <property name="sizeType" >
       <enum>QSizePolicy::Expanding</enum>
      </property>
-     <property name="sizeHint" >
+     <property name="sizeHint" stdset="0" >
       <size>
        <width>31</width>
        <height>50</height>
@@ -46,7 +37,7 @@
      <property name="sizeType" >
       <enum>QSizePolicy::Expanding</enum>
      </property>
-     <property name="sizeHint" >
+     <property name="sizeHint" stdset="0" >
       <size>
        <width>31</width>
        <height>110</height>
@@ -56,16 +47,7 @@
    </item>
    <item rowspan="3" row="0" column="0" >
     <layout class="QVBoxLayout" >
-     <property name="leftMargin" >
-      <number>0</number>
-     </property>
-     <property name="topMargin" >
-      <number>0</number>
-     </property>
-     <property name="rightMargin" >
-      <number>0</number>
-     </property>
-     <property name="bottomMargin" >
+     <property name="margin" >
       <number>0</number>
      </property>
      <item>
@@ -91,16 +73,7 @@
    </item>
    <item rowspan="3" row="0" column="2" >
     <layout class="QVBoxLayout" >
-     <property name="leftMargin" >
-      <number>0</number>
-     </property>
-     <property name="topMargin" >
-      <number>0</number>
-     </property>
-     <property name="rightMargin" >
-      <number>0</number>
-     </property>
-     <property name="bottomMargin" >
+     <property name="margin" >
       <number>0</number>
      </property>
      <item>
@@ -126,16 +99,7 @@
    </item>
    <item row="1" column="1" >
     <layout class="QGridLayout" >
-     <property name="leftMargin" >
-      <number>0</number>
-     </property>
-     <property name="topMargin" >
-      <number>0</number>
-     </property>
-     <property name="rightMargin" >
-      <number>0</number>
-     </property>
-     <property name="bottomMargin" >
+     <property name="margin" >
       <number>0</number>
      </property>
      <item row="1" column="1" >
@@ -200,7 +164,7 @@
         <string/>
        </property>
        <property name="shortcut" >
-        <string>Alt+S, Alt+F, Alt+F</string>
+        <string>Alt+S</string>
        </property>
       </widget>
      </item>
@@ -221,12 +185,23 @@
        <property name="text" >
         <string/>
        </property>
+       <property name="shortcut" >
+        <string>Alt+R</string>
+       </property>
       </widget>
      </item>
     </layout>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>_displayedRelationList</tabstop>
+  <tabstop>_availableRelationList</tabstop>
+  <tabstop>_down</tabstop>
+  <tabstop>_add</tabstop>
+  <tabstop>_remove</tabstop>
+  <tabstop>_up</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

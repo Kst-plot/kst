@@ -10,42 +10,28 @@
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout" >
-   <item row="0" column="0" >
-    <widget class="QRadioButton" name="_readFromSource" >
-     <property name="text" >
-      <string>Read from data source</string>
-     </property>
-     <property name="checked" >
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1" >
-    <widget class="QRadioButton" name="_generateX" >
-     <property name="whatsThis" >
-      <string>Generate a new vector with the properties given here as the independent variable.</string>
-     </property>
-     <property name="text" >
-      <string>&amp;Generate</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="0" colspan="2" >
     <widget class="QGroupBox" name="_dataStringGroup" >
      <property name="title" >
       <string>Read from data source</string>
      </property>
-     <layout class="QGridLayout" name="_2" >
-      <property name="topMargin" >
-       <number>0</number>
-      </property>
+     <property name="checkable" >
+      <bool>true</bool>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2" >
       <item row="0" column="0" >
        <widget class="QLabel" name="label_4" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text" >
          <string>File name:</string>
         </property>
         <property name="alignment" >
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="wordWrap" >
          <bool>false</bool>
@@ -61,7 +47,7 @@
          <string>Field:</string>
         </property>
         <property name="alignment" >
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="wordWrap" >
          <bool>false</bool>
@@ -121,13 +107,16 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="0" colspan="2" >
+   <item row="0" column="0" colspan="2" >
     <widget class="QGroupBox" name="_generatedStringGroup" >
-     <property name="enabled" >
-      <bool>false</bool>
-     </property>
      <property name="title" >
       <string>Generate</string>
+     </property>
+     <property name="checkable" >
+      <bool>true</bool>
+     </property>
+     <property name="checked" >
+      <bool>false</bool>
      </property>
      <layout class="QGridLayout" name="_4" >
       <property name="topMargin" >

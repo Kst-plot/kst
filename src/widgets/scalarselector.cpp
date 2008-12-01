@@ -70,7 +70,6 @@ void ScalarSelector::setDefaultValue(double value) {
 
 
 ScalarPtr ScalarSelector::selectedScalar() {
-//   qDebug() << "xxx text: " << _scalar->currentText();
   bool existingScalar;
   if (_scalar->findText(_scalar->currentText(), Qt::MatchExactly) == -1) {
     // Value typed in.

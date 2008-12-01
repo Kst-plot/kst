@@ -797,7 +797,6 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
       bool hasInstance = (_instance != 0L);
       _ac->_indexVector->clear();
       if (hasInstance) {
-        qDebug() << "xxx Has instance";
         _ac->_indexVector->addItems(_instance->fieldList());
         Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(_instance);
         assert(src);

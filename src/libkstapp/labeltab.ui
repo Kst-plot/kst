@@ -5,14 +5,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>773</width>
-    <height>499</height>
+    <width>1010</width>
+    <height>566</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" >
+  <layout class="QGridLayout" name="gridLayout_2" >
    <item row="0" column="0" colspan="2" >
     <widget class="QGroupBox" name="_globalLabelBox" >
      <property name="title" >
@@ -22,7 +22,10 @@
       <item row="0" column="0" >
        <widget class="QLabel" name="_Label_4" >
         <property name="text" >
-         <string>Font Size</string>
+         <string>Font &amp;Size</string>
+        </property>
+        <property name="buddy" >
+         <cstring>_globalLabelFontSize</cstring>
         </property>
        </widget>
       </item>
@@ -31,36 +34,36 @@
         <property name="decimals" >
          <number>1</number>
         </property>
-        <property name="minimum" >
-         <double>-25.000000000000000</double>
-        </property>
        </widget>
       </item>
       <item row="0" column="2" >
        <widget class="QCheckBox" name="_globalLabelBold" >
         <property name="text" >
-         <string>Bold</string>
+         <string>&amp;Bold</string>
         </property>
        </widget>
       </item>
       <item row="0" column="3" >
        <widget class="QCheckBox" name="_globalLabelItalic" >
         <property name="text" >
-         <string>Italics</string>
+         <string>&amp;Italics</string>
         </property>
        </widget>
       </item>
       <item row="0" column="4" >
        <widget class="QCheckBox" name="_globalLabelUnderline" >
         <property name="text" >
-         <string>Underline</string>
+         <string>&amp;Underline</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0" >
        <widget class="QLabel" name="_Label_7" >
         <property name="text" >
-         <string>Font Family</string>
+         <string>Font &amp;Family</string>
+        </property>
+        <property name="buddy" >
+         <cstring>_globalLabelFontFamily</cstring>
         </property>
        </widget>
       </item>
@@ -70,14 +73,14 @@
       <item row="1" column="4" >
        <widget class="QPushButton" name="_applyGlobalsButton" >
         <property name="text" >
-         <string>Apply Globals</string>
+         <string>Apply &amp;Globals</string>
         </property>
        </widget>
       </item>
       <item row="1" column="5" >
        <widget class="QPushButton" name="_autoLabel" >
         <property name="text" >
-         <string>Auto Label</string>
+         <string>&amp;Auto Label</string>
         </property>
        </widget>
       </item>
@@ -364,7 +367,7 @@
      </layout>
     </widget>
    </item>
-   <item row="3" column="0" colspan="2" >
+   <item row="3" column="0" >
     <widget class="QGroupBox" name="_legendGroupBox" >
      <property name="title" >
       <string>Legend</string>
@@ -389,7 +392,7 @@
         <property name="orientation" >
          <enum>Qt::Horizontal</enum>
         </property>
-        <property name="sizeHint" >
+        <property name="sizeHint" stdset="0" >
          <size>
           <width>40</width>
           <height>20</height>
@@ -400,12 +403,72 @@
      </layout>
     </widget>
    </item>
+   <item rowspan="2" row="3" column="1" >
+    <widget class="QGroupBox" name="groupBox" >
+     <property name="title" >
+      <string>Axis Numbers</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout" >
+      <item row="0" column="0" >
+       <widget class="QLabel" name="_Label_22" >
+        <property name="text" >
+         <string>Font Size Offset</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" >
+       <widget class="QDoubleSpinBox" name="_numberFontSize" >
+        <property name="decimals" >
+         <number>1</number>
+        </property>
+        <property name="minimum" >
+         <double>-25.000000000000000</double>
+        </property>
+        <property name="singleStep" >
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" >
+       <widget class="QCheckBox" name="_numberBold" >
+        <property name="text" >
+         <string>Bold</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3" >
+       <widget class="QCheckBox" name="_numberUnderline" >
+        <property name="text" >
+         <string>Underline</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4" >
+       <widget class="QCheckBox" name="_numberItalic" >
+        <property name="text" >
+         <string>Italics</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" >
+       <widget class="QLabel" name="_Label_23" >
+        <property name="text" >
+         <string>Font Family</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="4" >
+       <widget class="QFontComboBox" name="_numberFamily" />
+      </item>
+     </layout>
+    </widget>
+   </item>
    <item row="4" column="0" >
     <spacer>
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeHint" >
+     <property name="sizeHint" stdset="0" >
       <size>
        <width>372</width>
        <height>21</height>
@@ -415,6 +478,46 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>_topLabel</tabstop>
+  <tabstop>_bottomLabel</tabstop>
+  <tabstop>_leftLabel</tabstop>
+  <tabstop>_rightLabel</tabstop>
+  <tabstop>_globalLabelFontSize</tabstop>
+  <tabstop>_globalLabelFontFamily</tabstop>
+  <tabstop>_applyGlobalsButton</tabstop>
+  <tabstop>_topFontSize</tabstop>
+  <tabstop>_bottomFontSize</tabstop>
+  <tabstop>_leftFontSize</tabstop>
+  <tabstop>_rightFontSize</tabstop>
+  <tabstop>_numberFontSize</tabstop>
+  <tabstop>_topBold</tabstop>
+  <tabstop>_bottomBold</tabstop>
+  <tabstop>_leftBold</tabstop>
+  <tabstop>_rightBold</tabstop>
+  <tabstop>_numberBold</tabstop>
+  <tabstop>_topUnderline</tabstop>
+  <tabstop>_bottomUnderline</tabstop>
+  <tabstop>_leftUnderline</tabstop>
+  <tabstop>_rightUnderline</tabstop>
+  <tabstop>_numberUnderline</tabstop>
+  <tabstop>_topItalic</tabstop>
+  <tabstop>_bottomItalic</tabstop>
+  <tabstop>_leftItalic</tabstop>
+  <tabstop>_rightItalic</tabstop>
+  <tabstop>_numberItalic</tabstop>
+  <tabstop>_topFamily</tabstop>
+  <tabstop>_bottomFamily</tabstop>
+  <tabstop>_leftFamily</tabstop>
+  <tabstop>_rightFamily</tabstop>
+  <tabstop>_numberFamily</tabstop>
+  <tabstop>_globalLabelBold</tabstop>
+  <tabstop>_globalLabelItalic</tabstop>
+  <tabstop>_globalLabelUnderline</tabstop>
+  <tabstop>_autoLabel</tabstop>
+  <tabstop>_showLegend</tabstop>
+  <tabstop>_editLegendContents</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

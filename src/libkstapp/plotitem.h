@@ -144,6 +144,9 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QFont bottomLabelFont() const;
     void setBottomLabelFont(const QFont &font);
 
+    QFont numberLabelFont() const;
+    void setNumberLabelFont(const QFont &font);
+
     qreal bottomLabelFontScale() const;
     void setBottomLabelFontScale(const qreal scale);
 
@@ -155,6 +158,9 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 
     qreal rightLabelFontScale() const;
     void setRightLabelFontScale(const qreal scale);
+
+    qreal numberLabelFontScale() const;
+    void setNumberLabelFontScale(const qreal scale);
 
     bool showLegend() const;
     void setShowLegend(const bool show);
@@ -274,6 +280,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QFont calculatedBottomLabelFont();
     QFont calculatedLeftLabelFont();
     QFont calculatedRightLabelFont();
+    QFont calculatedNumberLabelFont();
 
     qreal calculatedAxisMarginWidth() const;
     void setCalculatedAxisMarginWidth(qreal marginWidth);
@@ -329,11 +336,13 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QFont _bottomLabelFont;
     QFont _topLabelFont;
     QFont _rightLabelFont;
+    QFont _numberLabelFont;
 
     qreal _leftLabelFontScale;
     qreal _bottomLabelFontScale;
     qreal _topLabelFontScale;
     qreal _rightLabelFontScale;
+    qreal _numberLabelFontScale;
 
     bool _showLegend;
 
