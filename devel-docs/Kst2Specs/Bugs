@@ -1,24 +1,27 @@
-Problems with file selector
-If you browse to select a dirfile, the name of the previous dirfile has been put into "File name:" entry.  So you have to erase it to select a dirfile.
-Of course, selecting a data file replaces the old name with a new one, but there is no way to clear it selecting a dirfile.
-If the 'current file' is a dirfile, then the File name entry should be blank.
-Either:
-  always clear the current file: entry when a directory is changed, and don't fill it in the first place if the default file is a directory
-Or:
-  Check to see if the current directory is recognized as a valid datasource - if it is, clear the current file entry.
-
---------
 Places where text labels are entered need string and scalar selectors to aid in the insertion of 
 strings and scalars (eg, primarily label editor)
 
---------
-Filters should have default values
-  eg, low pass filter should default to order = 4, lowpass  = 0.1: see 1.x for defaults.
+---------
 
---------
-Ascii file configure button troubles I: it doesn't work.
-  Configure from the data wizard brings up the configuration dialog, but applying it does nothing.
+Tied zoom problems: (see devel-docs/Kst2Specs/Plot Geometry.pdf, last page).
+  -The tied zoom conditions are not honored
+  -The parent option condition is not met.  In fact, there is no way to set parent options, even if there were parent options.
+  -The plots are not automatically re-sized to have equal size once the axis are shared.
 
---------
-Ascii file configure button troubles I: it crashes
-  Configure from the vector dialog crashes kst
+---------
+
+Missing tab in pot dialog:
+  -There is no tab to manually set plot zoom ranges.  There should be (see 1.x).
+
+---------
+
+Plot axis number rounding bug:
+occasionally, the axis numbers can be something like 0.499999999993 instead of 0.5.  It is hard to
+reproduce.
+
+---------
+
+Number of major ticks bug:
+Occasionally there will be too few (<2) or too many (serious overlap) in the number of major 
+ticks.  This seems to have changed from 1.x
+

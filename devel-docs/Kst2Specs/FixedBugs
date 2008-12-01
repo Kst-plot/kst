@@ -103,3 +103,27 @@ When chosing to filter a curve from the plot rmb, the input vectors should be fi
 Entering a numerical value into a scalar selector should create a scalar of that value, if there is not
 already a scalar of that name.  This is particularly important for plugin entries.  It can be created when
 the scalar that the selector has selected is asked for.
+
+--------
+Ascii file configure button troubles I: it doesn't work.
+  Configure from the data wizard brings up the configuration dialog, but applying it does nothing.
+
+--------
+Ascii file configure button troubles I: it crashes
+  Configure from the vector dialog crashes kst
+
+--------
+Filters should have default values
+  eg, low pass filter should default to order = 4, lowpass  = 0.1: see 1.x for defaults.
+
+-------
+Problems with file selector
+If you browse to select a dirfile, the name of the previous dirfile has been put into "File name:" entry.  So you have to erase it to select a dirfile.
+Of course, selecting a data file replaces the old name with a new one, but there is no way to clear it selecting a dirfile.
+If the 'current file' is a dirfile, then the File name entry should be blank.
+Either:
+  always clear the current file: entry when a directory is changed, and don't fill it in the first place if the default file is a directory
+Or:
+  Check to see if the current directory is recognized as a valid datasource - if it is, clear the current file entry.
+
+--------
