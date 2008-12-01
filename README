@@ -1,10 +1,6 @@
-
 This application is used to display scientific data.  More to come later.
 
-When installing, please be sure to use --prefix to point to the KDE install
-directory to ensure that the XML and desktop files are picked up.  Symptoms
-of an incorrect installation include missing menu entries and inability to
-load and display data.
+Please see INSTALL for installation details.
 
 Please direct questions or concerns to kst@kde.org.
 

@@ -8,6 +8,14 @@ Linux
 4. ./build-kst
 5. ./run-kst
 
+Mac OS
+
+Notes:
+
+#1.  Same as the steps for Linux with some modifications required.
+#2.  The qmake command line needs to be updated to include -spec macx-g++.
+#3.  An error has been observed compiling view.cpp, view.h may need to be updated to change QXmlStreamWriter to QCoreXmlStreamWriter on line 45.
+
 Windows
 
 Note:  This has only been build using Visual Studio & Cygwin.  The following steps
