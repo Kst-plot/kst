@@ -5,23 +5,70 @@ strings and scalars (eg, primarily label editor)
 
 Tied zoom problems: (see devel-docs/Kst2Specs/Plot Geometry.pdf, last page).
   -The tied zoom conditions are not honored
-  -The parent option condition is not met.  In fact, there is no way to set parent options, even if there were parent options.
+  -The parent option condition is not honored.  In fact, there is no way to set parent options, even if there were parent options.
   -The plots are not automatically re-sized to have equal size once the axis are shared.
 
+*Mike*
 ---------
 
-Missing tab in pot dialog:
+Missing tabs in plot dialog:
   -There is no tab to manually set plot zoom ranges.  There should be (see 1.x).
-
+  -There is no tab to set size, position, and rotation.  There should be.
+*cbn*
 ---------
 
 Plot axis number rounding bug:
 occasionally, the axis numbers can be something like 0.499999999993 instead of 0.5.  It is hard to
 reproduce.
-
+*Mike*
 ---------
 
 Number of major ticks bug:
 Occasionally there will be too few (<2) or too many (serious overlap) in the number of major 
 ticks.  This seems to have changed from 1.x
+
+---------
+
+Auto-labels, and '_' in field names:
+When plots are using name-based auto-labels, any '_' in field names gets interpreted as a subscript.
+There needs to be an option to somehow escape these when using them in a label.
+*cbn*
+---------
+
+No space allocated for subscripts or superscripts in axis lables
+  The subscript is cut off
+
+---------
+
+Formatting/spacing issues:
+  -Superscript and subscript size and position seems off.  This should be researched more
+  but wikipedia as an almost reasonable article on it.  It suggests both should be scaled by ~60%, and subscripts dropped by 16% and superscripts raised by 44%.  OOffice, illustrator, and photoshop use scale 58%, raise 33%, lower 33%.  msoffice uses 65%, -14%, +35%.  It might also pay to compare w/ TeX.
+
+  -The spacing between the X-axis numbers and the axis is too small.
+  -The spacing between the Y-axis numbers and the axis doesn't seem to scale with window size.
+  -The plot selection buttons are too small.
+
+---------
+
+Change data sample range tool doesn't use defaults.
+*cbn*
+---------
+
+Edit plot dialog format issue:
+The tab list on the left doesn't have enough room for the tab names, and can not be expanded.
+*cbn*
+---------
+
+Accelerators for the plot edit dialog:
+'E' should bring up the plot edit dialog
+clicking on the plot outside the plot region in zoom mode should bring up the plot edit dialog.
+  if on a label, to the label page
+  if on the numbers to the axis range page (which doesn't yet exist).
+*cbn*
+---------
+
+Top Level View needs rmb menu:
+  -set background properties (colour, gradient, etc)
+  -set tied zoom mode for children (?)
+  -cleanup layout menu option
 
