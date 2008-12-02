@@ -8,7 +8,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+#include <QDebug>
 #include "dialog.h"
 
 #include "dialogpage.h"
@@ -31,7 +31,6 @@ Dialog::Dialog(QWidget *parent)
   connect(_buttonBox, SIGNAL(clicked(QAbstractButton *)),
           this, SLOT(buttonClicked(QAbstractButton *)));
 
-  setMaximumSize(QSize(1024, 768));
   resize(minimumSizeHint());
 }
 

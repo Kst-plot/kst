@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>396</width>
+    <width>709</width>
     <height>299</height>
    </rect>
   </property>
@@ -21,10 +21,7 @@
   <layout class="QGridLayout" >
    <item row="0" column="0" >
     <layout class="QGridLayout" >
-     <property name="horizontalSpacing" >
-      <number>0</number>
-     </property>
-     <property name="verticalSpacing" >
+     <property name="spacing" >
       <number>0</number>
      </property>
      <item row="0" column="0" colspan="3" >
@@ -34,6 +31,25 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item rowspan="3" row="0" column="3" >
+      <widget class="QWidget" native="1" name="_extensionWidget" >
+       <property name="enabled" >
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>325</width>
+         <height>0</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -65,11 +81,11 @@
         <bool>false</bool>
        </property>
        <widget class="QListWidget" name="_listWidget" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+        <property name="minimumSize" >
+         <size>
+          <width>175</width>
+          <height>0</height>
+         </size>
         </property>
        </widget>
        <widget class="QStackedWidget" name="_stackedWidget" >
@@ -105,25 +121,6 @@
        </property>
       </widget>
      </item>
-     <item rowspan="3" row="0" column="3" >
-      <widget class="QWidget" native="1" name="_extensionWidget" >
-       <property name="enabled" >
-        <bool>true</bool>
-       </property>
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize" >
-        <size>
-         <width>325</width>
-         <height>0</height>
-        </size>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item row="1" column="0" >
@@ -132,7 +129,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons" >
-      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::NoButton|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>
