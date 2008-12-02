@@ -11,6 +11,8 @@
 
 #include "datasourceselectordialog.h"
 
+#include "datasource.h"
+
 #include <QMessageBox>
 #include <QDebug>
 
@@ -21,8 +23,8 @@ DataSourceSelectorDialog::DataSourceSelectorDialog(QString &file, QWidget *paren
 
   setFileMode(QFileDialog::Directory);
   selectFile(file);
+  currentChanged(file);
 
-  connect(this, SIGNAL(directoryEntered(const QString &)), this, SLOT(directoryChanged()));
   connect(this, SIGNAL(currentChanged(const QString &)), this, SLOT(currentChanged(const QString &)));
 }
 
@@ -36,25 +38,31 @@ QString DataSourceSelectorDialog::selectedDataSource() {
 }
 
 
-void DataSourceSelectorDialog::directoryChanged() {
-//   qDebug() << "directory changed" << directory();
-}
-
-
 void DataSourceSelectorDialog::currentChanged(const QString &current) {
 //   qDebug() << "currentChanged" << current;
-  QFileInfo fileInfo(current);
-  if (fileInfo.isDir()) {
-//     qDebug() << "Directory Selected";
-    if (fileMode() != QFileDialog::Directory) {
-      setFileMode(QFileDialog::Directory);
-    }
-  } else if (fileInfo.exists()) {
-//     qDebug() << "File Selected";
-    if (fileMode() != QFileDialog::ExistingFile) {
-      setFileMode(QFileDialog::ExistingFile);
+  if (current.isEmpty()) {
+    setFileMode(QFileDialog::Directory);
+  } else {
+    QFileInfo fileInfo(current);
+    if (fileInfo.isDir()) {
+//       qDebug() << "Directory Selected - valid?" << DataSource::validSource(current);
+      if (DataSource::validSource(current)) {
+        setFileMode(QFileDialog::Directory);
+      } else {
+        setFileMode(QFileDialog::ExistingFile);
+      }
+    } else if (fileInfo.exists()) {
+//       qDebug() << "File Selected - valid?" << DataSource::validSource(current);
+      if (DataSource::validSource(current)) {
+        setFileMode(QFileDialog::ExistingFile);
+      } else {
+        setFileMode(QFileDialog::Directory);
+      }
     }
   }
+  QStringList filters;
+  filters << "Any files (*)";
+  setNameFilters(filters);
 }
 
 
