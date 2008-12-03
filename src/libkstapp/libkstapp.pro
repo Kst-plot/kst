@@ -30,6 +30,7 @@ SOURCES += \
     axistab.cpp \
     basicplugindialog.cpp \
     boxitem.cpp \
+    bugreportwizard.cpp \
     builtingraphics.cpp \
     cartesianrenderitem.cpp \
     changedatasampledialog.cpp \
@@ -127,6 +128,7 @@ HEADERS += \
     axistab.h \
     basicplugindialog.h \
     boxitem.h \
+    bugreportwizard.h \
     builtingraphics.h \
     cartesianrenderitem.h \
     changedatasampledialog.h \
@@ -220,6 +222,7 @@ FORMS += \
     arrowpropertiestab.ui \
     axistab.ui \
     basicplugintab.ui \
+    bugreportwizard.ui \
     changedatasampledialog.ui \
     changefiledialog.ui \
     choosecolordialog.ui \

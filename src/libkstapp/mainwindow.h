@@ -58,6 +58,7 @@ class MainWindow : public QMainWindow
     void showChangeDataSampleDialog();
     void showChangeFileDialog();
     void showDataWizard();
+    void showBugReportWizard();
 
     void readFromEnd();
     void pause(bool pause);
@@ -175,6 +176,7 @@ class MainWindow : public QMainWindow
     QAction *_changeDataSampleDialogAct;
     QAction *_changeFileDialogAct;
     QAction *_dataWizardAct;
+    QAction *_bugReportWizardAct;
 
     QAction *_readFromEndAct;
     QAction *_pauseAct;

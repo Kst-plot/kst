@@ -44,6 +44,7 @@
 #include "choosecolordialog.h"
 #include "changedatasampledialog.h"
 #include "changefiledialog.h"
+#include "bugreportwizard.h"
 #include "datawizard.h"
 #include "datavector.h"
 
@@ -543,6 +544,10 @@ void MainWindow::createActions() {
   _dataWizardAct->setIcon(QPixmap(":kst_datawizard.png"));
   connect(_dataWizardAct, SIGNAL(triggered()), this, SLOT(showDataWizard()));
 
+  _bugReportWizardAct = new QAction(tr("&Bug Report Wizard"), this);
+  _bugReportWizardAct->setStatusTip(tr("Show Kst's Bug Report Wizard"));
+  connect(_bugReportWizardAct, SIGNAL(triggered()), this, SLOT(showBugReportWizard()));
+
   // ****************************************************************************** //
 
   // ***************************** -> File actions ******************************** //
@@ -696,6 +701,8 @@ void MainWindow::createMenus() {
 
   _helpMenu = menuBar()->addMenu(tr("&Help"));
   _helpMenu->addAction(_debugDialogAct);
+  _helpMenu->addAction(_bugReportWizardAct);
+  _helpMenu->addSeparator();
   _helpMenu->addAction(_aboutAct);
 
 #if DEMO_VECTOR_MODEL
@@ -963,6 +970,12 @@ void MainWindow::showChangeDataSampleDialog() {
 void MainWindow::showDataWizard() {
   DataWizard dataWizard(this);
   dataWizard.exec();
+}
+
+
+void MainWindow::showBugReportWizard() {
+  BugReportWizard bugReportWizard(this);
+  bugReportWizard.exec();
 }
 
 
