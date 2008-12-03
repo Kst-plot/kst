@@ -132,7 +132,7 @@ QString Debug::label(LogLevel level) const {
 
 QString Debug::text() {
   QMutexLocker ml(&_lock);
-  QString body = i18n("Kst version %1\n\n\nKst log:\n", QString::fromLatin1(KSTVERSION));
+  QString body = i18n("Kst version %1\n\n\nKst log:\n").arg(KSTVERSION);
 
   QLocale locale;
   for (int i = 0; i < _messages.count(); i++ ) {
