@@ -36,6 +36,7 @@ SOURCES += \
     fftoptions.cpp \
     filerequester.cpp \
     gradienteditor.cpp \
+    labelbuilder.cpp \
     matrixselector.cpp \
     scalarlistselector.cpp \
     scalarselector.cpp \
@@ -57,6 +58,7 @@ HEADERS += \
     fftoptions.h \
     filerequester.h \
     gradienteditor.h \
+    labelbuilder.h \
     matrixselector.h \
     scalarselector.h \
     scalarlistselector.h \
@@ -71,6 +73,7 @@ FORMS += \
     curveselector.ui \
     datarange.ui \
     fftoptions.ui \
+    labelbuilder.ui \
     matrixselector.ui \
     scalarlistselector.ui \
     scalarselector.ui \
