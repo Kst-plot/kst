@@ -11,6 +11,11 @@
 
 #include "labeltab.h"
 
+#include "application.h"
+#include "objectstore.h"
+#include "mainwindow.h"
+#include "document.h"
+
 namespace Kst {
 
 LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
@@ -22,10 +27,15 @@ LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
   QFont font;
   setGlobalFont(font);
 
-  connect(_topLabel, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_leftLabel, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_bottomLabel, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_rightLabel, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  _topLabel->setObjectStore(kstApp->mainWindow()->document()->objectStore());
+  _leftLabel->setObjectStore(kstApp->mainWindow()->document()->objectStore());
+  _bottomLabel->setObjectStore(kstApp->mainWindow()->document()->objectStore());
+  _rightLabel->setObjectStore(kstApp->mainWindow()->document()->objectStore());
+
+  connect(_topLabel, SIGNAL(labelChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_leftLabel, SIGNAL(labelChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_bottomLabel, SIGNAL(labelChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_rightLabel, SIGNAL(labelChanged(const QString&)), this, SIGNAL(modified()));
 
   connect(_topFontSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_leftFontSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
@@ -75,42 +85,42 @@ void LabelTab::update() {
 
 
 QString LabelTab::leftLabel() const {
-  return _leftLabel->text();
+  return _leftLabel->labelText();
 }
 
 
 void LabelTab::setLeftLabel(const QString &label) {
-  _leftLabel->setText(label);
+  _leftLabel->setLabelText(label);
 }
 
 
 QString LabelTab::bottomLabel() const {
-  return _bottomLabel->text();
+  return _bottomLabel->labelText();
 }
 
 
 void LabelTab::setBottomLabel(const QString &label) {
-  _bottomLabel->setText(label);
+  _bottomLabel->setLabelText(label);
 }
 
 
 QString LabelTab::rightLabel() const {
-  return _rightLabel->text();
+  return _rightLabel->labelText();
 }
 
 
 void LabelTab::setRightLabel(const QString &label) {
-  _rightLabel->setText(label);
+  _rightLabel->setLabelText(label);
 }
 
 
 QString LabelTab::topLabel() const {
-  return _topLabel->text();
+  return _topLabel->labelText();
 }
 
 
 void LabelTab::setTopLabel(const QString &label) {
-  _topLabel->setText(label);
+  _topLabel->setLabelText(label);
 }
 
 

@@ -15,6 +15,7 @@
 #include "labelrenderer.h"
 #include "viewitemzorder.h"
 #include "labelitemdialog.h"
+#include "labelcreator.h"
 
 #include "debug.h"
 
@@ -114,8 +115,14 @@ void LabelItem::edit() {
 
 
 void CreateLabelCommand::createItem() {
-  bool ok;
-  QString text = QInputDialog::getText(_view, tr("Kst: Create Label"), tr("Label:"), QLineEdit::Normal, QString::null, &ok);
+  bool ok = false;
+  QString text;
+  LabelCreator dialog;
+  if (dialog.exec() == QDialog::Accepted) {
+    text = dialog.labelText();
+    ok = true;
+  }
+
   if (!ok || text.isEmpty()) {
     return;
   }

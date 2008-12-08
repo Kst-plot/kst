@@ -93,15 +93,8 @@
       <string>Top Label</string>
      </property>
      <layout class="QGridLayout" >
-      <item row="0" column="0" >
-       <widget class="QLabel" name="_Label_10" >
-        <property name="text" >
-         <string>Label</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1" colspan="4" >
-       <widget class="QLineEdit" name="_topLabel" />
+      <item row="0" column="0" colspan="5" >
+       <widget class="Kst::LabelBuilder" native="1" name="_topLabel" />
       </item>
       <item row="1" column="0" >
        <widget class="QLabel" name="_Label_11" >
@@ -163,15 +156,8 @@
       <string>Bottom Label</string>
      </property>
      <layout class="QGridLayout" >
-      <item row="0" column="0" >
-       <widget class="QLabel" name="_Label_19" >
-        <property name="text" >
-         <string>Label</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1" colspan="4" >
-       <widget class="QLineEdit" name="_bottomLabel" />
+      <item row="0" column="0" colspan="5" >
+       <widget class="Kst::LabelBuilder" native="1" name="_bottomLabel" />
       </item>
       <item row="1" column="0" >
        <widget class="QLabel" name="_Label_20" >
@@ -233,15 +219,8 @@
       <string>Left Label</string>
      </property>
      <layout class="QGridLayout" >
-      <item row="0" column="0" >
-       <widget class="QLabel" name="_Label_13" >
-        <property name="text" >
-         <string>Label</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1" colspan="4" >
-       <widget class="QLineEdit" name="_leftLabel" />
+      <item row="0" column="0" colspan="5" >
+       <widget class="Kst::LabelBuilder" native="1" name="_leftLabel" />
       </item>
       <item row="1" column="0" >
        <widget class="QLabel" name="_Label_14" >
@@ -303,15 +282,8 @@
       <string>Right Label</string>
      </property>
      <layout class="QGridLayout" >
-      <item row="0" column="0" >
-       <widget class="QLabel" name="_Label_16" >
-        <property name="text" >
-         <string>Label</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1" colspan="4" >
-       <widget class="QLineEdit" name="_rightLabel" />
+      <item row="0" column="0" colspan="5" >
+       <widget class="Kst::LabelBuilder" native="1" name="_rightLabel" />
       </item>
       <item row="1" column="0" >
        <widget class="QLabel" name="_Label_17" >
@@ -478,6 +450,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Kst::LabelBuilder</class>
+   <extends>QWidget</extends>
+   <header>labelbuilder.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>_topLabel</tabstop>
   <tabstop>_bottomLabel</tabstop>

@@ -70,6 +70,7 @@ SOURCES += \
     gridtab.cpp \
     histogramdialog.cpp \
     imagedialog.cpp \
+    labelcreator.cpp \
     labelitem.cpp \
     labelitemdialog.cpp \
     labelpropertiestab.cpp \
@@ -169,6 +170,7 @@ HEADERS += \
     gridtab.h \
     histogramdialog.h \
     imagedialog.h \
+    labelcreator.h \
     labelitem.h \
     labelitemdialog.h \
     labelpropertiestab.h \
@@ -248,6 +250,7 @@ FORMS += \
     gridtab.ui \
     histogramtab.ui \
     imagetab.ui \
+    labelcreator.ui \
     labeltab.ui \
     labelpropertiestab.ui \
     layouttab.ui \

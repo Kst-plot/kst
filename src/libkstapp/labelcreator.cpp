@@ -9,7 +9,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "labelpropertiestab.h"
+#include "labelcreator.h"
 
 #include "application.h"
 #include "objectstore.h"
@@ -18,52 +18,23 @@
 
 namespace Kst {
 
-LabelPropertiesTab::LabelPropertiesTab(QWidget *parent)
-  : DialogTab(parent) {
+LabelCreator::LabelCreator(QWidget *parent)
+  : QDialog(parent) {
 
   setupUi(this);
-  setTabTitle(tr("Label Properties"));
 
   _labelText->setObjectStore(kstApp->mainWindow()->document()->objectStore());
-
-  connect(_labelText, SIGNAL(labelChanged(const QString &)), this, SIGNAL(modified()));
-  connect(_labelFontScale, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
-  connect(_labelColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
 }
 
 
-LabelPropertiesTab::~LabelPropertiesTab() {
+LabelCreator::~LabelCreator() {
 }
 
 
-QString LabelPropertiesTab::labelText() const { 
-  return _labelText->labelText(); 
-}
-
-
-void LabelPropertiesTab::setLabelText(const QString &text) {
-  _labelText->setLabelText(text);
-}
-
-
-qreal LabelPropertiesTab::labelScale() const { 
-  return _labelFontScale->value(); 
-}
-
-
-void LabelPropertiesTab::setLabelScale(const qreal scale) { 
-  _labelFontScale->setValue(scale);
-}
-
-
-QColor LabelPropertiesTab::labelColor() const { 
-  return _labelColor->color();
-}
-
-
-void LabelPropertiesTab::setLabelColor(const QColor &color) {
-  _labelColor->setColor(color);
+QString LabelCreator::labelText() {
+  return _labelText->labelText();
 }
 
 }
+
 // vim: ts=2 sw=2 et
