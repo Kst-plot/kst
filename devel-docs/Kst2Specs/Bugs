@@ -1,8 +1,3 @@
-Places where text labels are entered need string and scalar selectors to aid in the insertion of 
-strings and scalars (eg, primarily label editor)
-
----------
-
 Tied zoom problems: (see devel-docs/Kst2Specs/Plot Geometry.pdf, last page).
   -The tied zoom conditions are not honored
   -The parent option condition is not honored.  In fact, there is no way to set parent options, even if there were parent options.
@@ -13,7 +8,6 @@ Tied zoom problems: (see devel-docs/Kst2Specs/Plot Geometry.pdf, last page).
 
 Missing tabs in plot dialog:
   -There is no tab to manually set plot zoom ranges.  There should be (see 1.x).
-  -There is no tab to set size, position, and rotation.  There should be.
 *cbn*
 ---------
 
@@ -50,21 +44,17 @@ Formatting/spacing issues:
 
 ---------
 
-Change data sample range tool doesn't use defaults.
-*cbn*
----------
-
 Edit plot dialog format issue:
-The tab list on the left doesn't have enough room for the tab names, and can not be expanded.
-*cbn*
+The tab list on the left has a minimum size set in pixels, and is not dependent on
+the size of the tab names.
+
 ---------
 
 Accelerators for the plot edit dialog:
-'E' should bring up the plot edit dialog
 clicking on the plot outside the plot region in zoom mode should bring up the plot edit dialog.
   if on a label, to the label page
   if on the numbers to the axis range page (which doesn't yet exist).
-*cbn*
+
 ---------
 
 Top Level View needs rmb menu:
@@ -72,3 +62,53 @@ Top Level View needs rmb menu:
   -set tied zoom mode for children (?)
   -cleanup layout menu option
 
+---------
+
+Axis labels are not transparent
+Create a plot with X, or Y or Top axis labels.  Change the background of the plot to a gradient.
+The axis label backgrounds are still white.  They should be the color of the background (alpha channel?)
+
+---------
+
+View Object parents not preserved in saving/loading kst file
+  Create a plot.  Put  a box in the plot.  Put a label in the box.
+  move the plot around - verify that the box is a child of the plot.
+  move the box around - verify that the label is a child of the box.
+  save as a .kst file.
+  load the kst file
+    -note that everything is positioned relative to the tlv, and are all children of the tlv.
+
+---------
+
+Fragility in moving parents:
+  create a plot.
+  Put a child box in the plot.
+  Rapidly resize the plot.  Sometimes the box will either drift or loose parenting altogether.
+  (Editorial: Fundamentally, I think this is because qt's QGraphics system has been used to track placement
+  of objects, and QGraphics doesn't have the right model of what we are doing.)
+
+---------
+
+Plot dialog label tab has grown out of control!  It should be shrunk to fit in 800x600
+It needs to shrink.  
+  -There needs to be only one scalar and string selection combos, and they need to apply
+  to the most recenly selected label text entry.
+  -The per-label font selection needs to be drastically shrunk.
+      maybe: only the text and the size active, w/ the info in a label, with a button to edit.
+      or maybe: only one font allowed for a plot, and have toggle buttons for U B I.
+      or maybe: only one font and UBI combo for a plot.  UBI can be set w/ latex commands in the label.
+  -get rid of all the per-item boxes and use more space efficient separators.
+
+---------
+
+Missing features in edit label label dialog:
+  there is no mechanism to adjust the font, or Underline Bold Italics (UBI) in the edit label dialog.
+  
+---------
+
+The entire edit label properties tab should be shown when creating a label, not just the label text and the
+string/scalar selections (ie, incude size, font, UBI, and colour.)
+
+---------
+
+Tooltips everywhere.

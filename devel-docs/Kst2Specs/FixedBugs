@@ -127,3 +127,19 @@ Or:
   Check to see if the current directory is recognized as a valid datasource - if it is, clear the current file entry.
 
 --------
+Change data sample range tool doesn't use defaults.
+---------
+
+Accelerators for the plot edit dialog:
+'E' should bring up the plot edit dialog
+
+---------
+
+Places where text labels are entered need string and scalar selectors to aid in the insertion of 
+strings and scalars (eg, primarily label editor)
+
+---------
+
+Missing tabs in plot dialog:
+  -There is no tab to set size, position, and rotation.  There should be.
+*cbn*
