@@ -61,14 +61,22 @@ Top Level View needs rmb menu:
   -set background properties (colour, gradient, etc)
   -set tied zoom mode for children (?)
   -cleanup layout menu option
-
+*Mike*
 ---------
 
 Axis labels are not transparent
 Create a plot with X, or Y or Top axis labels.  Change the background of the plot to a gradient.
 The axis label backgrounds are still white.  They should be the color of the background (alpha channel?)
-
+*Mike*
 ---------
+
+Axis labels should have configurable colour.
+  A byproduct of making the label backgrounds transparent will be that if the background is set to a colour
+  with a low contrast to black (like black, or close to black) the labels will not be visible and there is 
+  currently no way to change them.
+*Mike*
+---------
+
 
 View Object parents not preserved in saving/loading kst file
   Create a plot.  Put  a box in the plot.  Put a label in the box.
@@ -103,12 +111,24 @@ It needs to shrink.
 
 Missing features in edit label label dialog:
   there is no mechanism to adjust the font, or Underline Bold Italics (UBI) in the edit label dialog.
-  
+*Mike*
 ---------
 
 The entire edit label properties tab should be shown when creating a label, not just the label text and the
 string/scalar selections (ie, incude size, font, UBI, and colour.)
+*Mike*
+---------
 
+Labels should have configurable font and UBI.
+*Mike*
 ---------
 
 Tooltips everywhere.
+
+---------
+
+Labels drawn outside of PlotItem region.
+  With inappropriately sized PlotItem's the labels / axis / etc are occasionally drawn outside of the PlotItem.
+  Anything drawn outside of the item is not cleaned up by the item and remains until the view invalidates it, these
+  remnants are common when creating plots from the layout mode.
+  Additional checks should be added to provide drawing of items that extend outside of the PlotItem.
