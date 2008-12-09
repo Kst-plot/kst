@@ -146,6 +146,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     virtual void lower();
     virtual void createAutoLayout();
     virtual void createCustomLayout();
+    virtual void sharePlots();
     virtual void remove();
     void resizeTopLeft(const QPointF &offset);
     void resizeTopRight(const QPointF &offset);
@@ -277,6 +278,22 @@ class KST_EXPORT LayoutCommand : public ViewItemCommand
         : ViewItemCommand(item, QObject::tr("Create layout"), false) {}
 
     virtual ~LayoutCommand() {}
+
+    virtual void undo();
+    virtual void redo();
+    void createLayout(int columns = 0);
+
+  private:
+    QPointer<ViewGridLayout> _layout;
+};
+
+class KST_EXPORT SharedAxisCommand : public ViewItemCommand
+{
+  public:
+    SharedAxisCommand(ViewItem *item)
+        : ViewItemCommand(item, QObject::tr("Share Axis"), false) {}
+
+    virtual ~SharedAxisCommand() {}
 
     virtual void undo();
     virtual void redo();

@@ -21,6 +21,7 @@
 
 namespace Kst {
 
+class View;
 class ViewItem;
 class PlotItem;
 
@@ -56,11 +57,14 @@ class ViewGridLayout : public QObject
 
     static void resetSharedPlots(ViewItem *item);
     static void standardizePlotMargins(ViewItem *item);
+    static void sharePlots(ViewItem *item);
+    static void sharePlots(View *view);
 
   public Q_SLOTS:
     void reset();
     void resetSharedAxis();
     void apply();
+    void applyAxis();
 
   Q_SIGNALS:
     void enabledChanged(bool enabled);

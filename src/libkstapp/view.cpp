@@ -16,6 +16,7 @@
 #include "mainwindow.h"
 #include "application.h"
 #include "applicationsettings.h"
+#include "viewgridlayout.h"
 
 #include <math.h>
 
@@ -259,6 +260,27 @@ bool View::eventFilter(QObject *obj, QEvent *event) {
 void View::createLayout(int columns) {
   LayoutCommand *layout = new LayoutCommand(new LayoutBoxItem(this));
   layout->createLayout(columns);
+
+  if (_layoutBoxItem) {
+    _layoutBoxItem->setEnabled(false);
+    delete _layoutBoxItem;
+    _layoutBoxItem = 0;
+  }
+}
+
+
+void View::sharePlots() {
+  qDebug() << "View::sharePlots";
+//   SharedAxisCommand *layout = new SharedAxisCommand(new LayoutBoxItem(this));
+//   layout->createLayout(0);
+// 
+//   if (_layoutBoxItem) {
+//     _layoutBoxItem->setEnabled(false);
+//     delete _layoutBoxItem;
+//     _layoutBoxItem = 0;
+//   }
+  new LayoutBoxItem(this);
+  ViewGridLayout::sharePlots(_layoutBoxItem);
 
   if (_layoutBoxItem) {
     _layoutBoxItem->setEnabled(false);
