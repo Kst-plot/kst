@@ -1,0 +1,280 @@
+<ui version="4.0" >
+ <class>DimensionsTab</class>
+ <widget class="QWidget" name="DimensionsTab" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>303</width>
+    <height>142</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout" >
+   <item row="0" column="1" colspan="3" >
+    <widget class="QCheckBox" name="_fixAspectRatio" >
+     <property name="text" >
+      <string>Fix Aspect Ratio</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" >
+    <widget class="QLabel" name="label" >
+     <property name="text" >
+      <string>Position:</string>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1" >
+    <widget class="QDoubleSpinBox" name="_x" >
+     <property name="decimals" >
+      <number>4</number>
+     </property>
+     <property name="maximum" >
+      <double>1.000000000000000</double>
+     </property>
+     <property name="singleStep" >
+      <double>0.010000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2" >
+    <widget class="QLabel" name="label_2" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text" >
+      <string>,</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3" >
+    <widget class="QDoubleSpinBox" name="_y" >
+     <property name="decimals" >
+      <number>4</number>
+     </property>
+     <property name="maximum" >
+      <double>1.000000000000000</double>
+     </property>
+     <property name="singleStep" >
+      <double>0.010000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" >
+    <widget class="QLabel" name="label_3" >
+     <property name="text" >
+      <string>Size:</string>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" >
+    <widget class="QDoubleSpinBox" name="_width" >
+     <property name="decimals" >
+      <number>4</number>
+     </property>
+     <property name="maximum" >
+      <double>1.000000000000000</double>
+     </property>
+     <property name="singleStep" >
+      <double>0.010000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2" >
+    <widget class="QLabel" name="_dimXlabel" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text" >
+      <string>x</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3" >
+    <widget class="QDoubleSpinBox" name="_height" >
+     <property name="decimals" >
+      <number>4</number>
+     </property>
+     <property name="maximum" >
+      <double>1.000000000000000</double>
+     </property>
+     <property name="singleStep" >
+      <double>0.010000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" >
+    <widget class="QLabel" name="label_5" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text" >
+      <string>Rotation:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1" >
+    <widget class="QDoubleSpinBox" name="_rotation" >
+     <property name="minimum" >
+      <double>-180.000000000000000</double>
+     </property>
+     <property name="maximum" >
+      <double>360.000000000000000</double>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>_fixAspectRatio</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_height</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>134</x>
+     <y>15</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>223</x>
+     <y>84</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_fixAspectRatio</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_dimXlabel</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>105</x>
+     <y>15</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>195</x>
+     <y>87</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_x</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>DimensionsTab</receiver>
+   <slot>modified()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>132</x>
+     <y>47</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>36</x>
+     <y>13</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_y</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>DimensionsTab</receiver>
+   <slot>modified()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>252</x>
+     <y>45</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>49</x>
+     <y>17</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_width</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>DimensionsTab</receiver>
+   <slot>modified()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>95</x>
+     <y>81</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>12</x>
+     <y>64</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_height</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>DimensionsTab</receiver>
+   <slot>modified()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>216</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>207</x>
+     <y>112</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_rotation</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>DimensionsTab</receiver>
+   <slot>modified()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>157</x>
+     <y>127</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>278</x>
+     <y>111</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_fixAspectRatio</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>DimensionsTab</receiver>
+   <slot>modified()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>262</x>
+     <y>10</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>72</x>
+     <y>24</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>modified()</slot>
+ </slots>
+</ui>

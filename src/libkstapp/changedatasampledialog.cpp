@@ -16,11 +16,12 @@
 #include "objectstore.h"
 #include "document.h"
 #include "mainwindow.h"
+#include "dialogdefaults.h"
 
 namespace Kst {
 
 ChangeDataSampleDialog::ChangeDataSampleDialog(QWidget *parent)
-  : QDialog(parent), _modified(false) {
+  : QDialog(parent) {
    setupUi(this);
 
   if (MainWindow *mw = qobject_cast<MainWindow*>(parent)) {
@@ -32,7 +33,7 @@ ChangeDataSampleDialog::ChangeDataSampleDialog(QWidget *parent)
 
   connect(_clear, SIGNAL(clicked()), _curveList, SLOT(clearSelection()));
   connect(_selectAll, SIGNAL(clicked()), this, SLOT(selectAll()));
-  connect(_curveList, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(updateDefaults(QListWidgetItem*)));
+  //connect(_curveList, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(updateDefaults(QListWidgetItem*)));
   connect(_curveList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
 
   connect(_dataRange, SIGNAL(modified()), this, SLOT(modified()));
@@ -41,6 +42,7 @@ ChangeDataSampleDialog::ChangeDataSampleDialog(QWidget *parent)
   connect(_buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(OKClicked()));
   connect(_buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
 
+  initialzeEntries();
   updateButtons();
 }
 
@@ -56,12 +58,12 @@ void ChangeDataSampleDialog::exec() {
 
 
 void ChangeDataSampleDialog::updateButtons() {
-  _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(_curveList->selectedItems().count() > 0 && (_modified || _curveList->selectedItems().count() > 1));
+  bool ok = (_curveList->selectedItems().count() > 0);
+  _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(ok);
 }
 
 
 void ChangeDataSampleDialog::modified() {
-  _modified = true;
   updateButtons();
 }
 
@@ -80,8 +82,8 @@ void ChangeDataSampleDialog::updateCurveListDialog() {
     _curveList->addItem(wi);
   }
 
-  _curveList->selectAll();
   _curveList->blockSignals(false);
+  _curveList->selectAll();
 }
 
 
@@ -89,6 +91,16 @@ void ChangeDataSampleDialog::selectAll() {
   _curveList->selectAll();
 }
 
+
+void ChangeDataSampleDialog::initialzeEntries() {
+    _dataRange->setCountFromEnd(_dialogDefaults->value("vector/countFromEnd",false).toBool());
+    _dataRange->setStart(_dialogDefaults->value("vector/start", 0).toInt());
+    _dataRange->setReadToEnd(_dialogDefaults->value("vector/readToEnd",true).toBool());
+    _dataRange->setRange(_dialogDefaults->value("vector/range", 1).toInt());
+    _dataRange->setSkip(_dialogDefaults->value("vector/skip", 0).toInt());
+    _dataRange->setDoSkip(_dialogDefaults->value("vector/doSkip", false).toBool());
+    _dataRange->setDoFilter(_dialogDefaults->value("vector/doAve",false).toBool());
+}
 
 void ChangeDataSampleDialog::updateDefaults(QListWidgetItem* item) {
   if (!item) {
@@ -108,15 +120,11 @@ void ChangeDataSampleDialog::updateDefaults(QListWidgetItem* item) {
 
     vector->unlock();
   }
-
-  _modified = false;
 }
 
 
 void ChangeDataSampleDialog::OKClicked() {
-  if (_buttonBox->button(QDialogButtonBox::Apply)->isEnabled()) {
-    apply();
-  }
+  apply();
   accept();
 }
 
@@ -135,6 +143,14 @@ void ChangeDataSampleDialog::apply() {
       vector->unlock();
     }
   }
+  _dialogDefaults->setValue("vector/range", _dataRange->range());
+  _dialogDefaults->setValue("vector/start", _dataRange->start());
+  _dialogDefaults->setValue("vector/countFromEnd", _dataRange->countFromEnd());
+  _dialogDefaults->setValue("vector/readToEnd", _dataRange->readToEnd());
+  _dialogDefaults->setValue("vector/skip", _dataRange->skip());
+  _dialogDefaults->setValue("vector/doSkip", _dataRange->doSkip());
+  _dialogDefaults->setValue("vector/doAve", _dataRange->doFilter());
+
   updateCurveListDialog();
 }
 

@@ -200,7 +200,6 @@ QPointF View::snapPoint(const QPointF &point) {
 
 
 bool View::event(QEvent *event) {
-
   if (event->type() == QEvent::Shortcut) {
     QShortcutEvent *e = static_cast<QShortcutEvent*>(event);
 

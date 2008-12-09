@@ -24,6 +24,7 @@ class ViewItem;
 class FillTab;
 class StrokeTab;
 class LayoutTab;
+class DimensionsTab;
 
 class KST_EXPORT ViewItemDialog : public Dialog
 {
@@ -36,17 +37,19 @@ class KST_EXPORT ViewItemDialog : public Dialog
     void fillChanged();
     void strokeChanged();
     void layoutChanged();
+    void dimensionsChanged();
 
   private:
     void setupFill();
     void setupStroke();
     void setupLayout();
-
+    void setupDimensions();
   private:
     QPointer<ViewItem> _item;
     FillTab *_fillTab;
     StrokeTab *_strokeTab;
     LayoutTab *_layoutTab;
+    DimensionsTab *_dimensionsTab;
 };
 
 }

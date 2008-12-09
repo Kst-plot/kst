@@ -56,6 +56,7 @@ SOURCES += \
     dialogpage.cpp \
     dialogtab.cpp \
     differentiatecurvesdialog.cpp \
+    dimensionstab.cpp \
     document.cpp \
     editmultiplewidget.cpp \
     ellipseitem.cpp \
@@ -156,6 +157,7 @@ HEADERS += \
     dialogpage.h \
     dialogtab.h \
     differentiatecurvesdialog.h \
+    dimensionstab.h \
     document.h \
     editmultiplewidget.h \
     ellipseitem.h \
@@ -240,6 +242,7 @@ FORMS += \
     debugdialog.ui \
     dialog.ui \
     differentiatecurvesdialog.ui \
+    dimensionstab.ui \
     editmultiplewidget.ui \
     equationtab.ui \
     eventmonitortab.ui \

@@ -66,6 +66,32 @@ ViewItem::ViewItem(View *parent)
           this, SLOT(viewMouseModeChanged(View::MouseMode)));
   connect(parent, SIGNAL(viewModeChanged(View::ViewMode)),
           this, SLOT(updateView()));
+
+  // Add actions common to all view objects
+  // create them here in the constructor so we
+  // can register shortcuts.
+  _editAction = new QAction(tr("Edit"), this);
+  _editAction->setShortcut(Qt::Key_E);
+  registerShortcut(_editAction);
+  connect(_editAction, SIGNAL(triggered()), this, SLOT(edit()));
+
+  _deleteAction = new QAction(tr("Delete"), this);
+  _deleteAction->setShortcut(Qt::Key_Delete);
+  registerShortcut(_deleteAction);
+  connect(_deleteAction, SIGNAL(triggered()), this, SLOT(remove()));
+
+  _raiseAction = new QAction(tr("Raise"), this);
+  connect(_raiseAction, SIGNAL(triggered()), this, SLOT(raise()));
+
+  _lowerAction = new QAction(tr("Lower"), this);
+  connect(_lowerAction, SIGNAL(triggered()), this, SLOT(lower()));
+
+  _autoLayoutAction = new QAction(tr("Automatic"), this);
+  connect(_autoLayoutAction, SIGNAL(triggered()), this, SLOT(createAutoLayout()));
+
+  _customLayoutAction = new QAction(tr("Custom"), this);
+  connect(_customLayoutAction, SIGNAL(triggered()), this, SLOT(createCustomLayout()));
+
 }
 
 
@@ -747,28 +773,19 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 
   addTitle(&menu);
 
-  QAction *editAction = menu.addAction(tr("Edit"));
-  connect(editAction, SIGNAL(triggered()), this, SLOT(edit()));
-
-  QAction *raiseAction = menu.addAction(tr("Raise"));
-  connect(raiseAction, SIGNAL(triggered()), this, SLOT(raise()));
-
-  QAction *lowerAction = menu.addAction(tr("Lower"));
-  connect(lowerAction, SIGNAL(triggered()), this, SLOT(lower()));
+  menu.addAction(_editAction);
+  menu.addAction(_raiseAction);
+  menu.addAction(_lowerAction);
 
   QMenu layoutMenu;
   layoutMenu.setTitle(tr("Cleanup Layout"));
 
-  QAction *autoLayoutAction = layoutMenu.addAction(tr("Automatic"));
-  connect(autoLayoutAction, SIGNAL(triggered()), this, SLOT(createAutoLayout()));
-
-  QAction *customLayoutAction = layoutMenu.addAction(tr("Custom"));
-  connect(customLayoutAction, SIGNAL(triggered()), this, SLOT(createCustomLayout()));
+  layoutMenu.addAction(_autoLayoutAction);
+  layoutMenu.addAction(_customLayoutAction);
 
   menu.addMenu(&layoutMenu);
 
-  QAction *removeAction = menu.addAction(tr("Remove"));
-  connect(removeAction, SIGNAL(triggered()), this, SLOT(remove()));
+  menu.addAction(_deleteAction);
 
   addToMenuForContextEvent(menu);
 
@@ -1290,8 +1307,9 @@ bool ViewItem::maybeReparent() {
              << endl;
 #endif
 
-    if (!topLevel) /*bring the old parent's transform with us*/
+    if (!topLevel) { /*bring the old parent's transform with us*/
       setTransform(parentItem()->transform(), true);
+    }
 
     /*cancel out the new parent's initial transform*/
     setTransform(viewItem->transform().inverted(), true);
@@ -1361,7 +1379,7 @@ void ViewItem::updateRelativeSize() {
     _parentRelativeWidth = (width() / parentViewItem()->width());
     _parentRelativeCenter =  mapToParent(rect().center()) - parentViewItem()->rect().topLeft();
     _parentRelativeCenter =  QPointF(_parentRelativeCenter.x() / parentViewItem()->width(), _parentRelativeCenter.y() / parentViewItem()->height());
-  } else if (parentView()) {
+   } else if (parentView()) {
     _parentRelativeHeight = (height() / parentView()->height());
     _parentRelativeWidth = (width() / parentView()->width());
     _parentRelativeCenter =  mapToParent(rect().center()) - parentView()->rect().topLeft();
@@ -1370,9 +1388,22 @@ void ViewItem::updateRelativeSize() {
     _parentRelativeHeight = 0;
     _parentRelativeWidth = 0;
     _parentRelativeCenter = QPointF(0, 0);
-  }
+   }
 }
 
+QPointF ViewItem::relativeCenter() const {
+  QPointF c;
+  if (parentViewItem()) {
+    c =  mapToParent(rect().center()) - parentViewItem()->rect().topLeft();
+    c =  QPointF(c.x() / parentViewItem()->width(), c.y() / parentViewItem()->height());
+  } else if (parentView()) {
+    c =  mapToParent(rect().center()) - parentView()->rect().topLeft();
+    c =  QPointF(c.x() / parentView()->width(), c.y() / parentView()->height());
+  } else {
+    c = QPointF(0, 0);
+  }
+  return c;
+}
 
 void ViewItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect) {
 //   qDebug() << "ViewItem::updateChildGeometry" << oldParentRect << newParentRect << endl;
@@ -1677,6 +1708,7 @@ void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
     new MoveCommand(this, _originalPosition, pos());
 
     maybeReparent();
+    updateRelativeSize();
     ViewGridLayout::resetSharedPlots(this);
   } else if (oldMode == View::Resize && _originalRect != rect()) {
     new ResizeCommand(this, _originalRect, rect());
@@ -1719,6 +1751,10 @@ bool ViewItem::tryShortcut(const QString &shortcut) {
 
 void ViewItem::updateView() {
   update();
+}
+
+qreal ViewItem::rotationAngle() const {
+  return 180.0/M_PI * atan2(transform().m12(), transform().m11());
 }
 
 

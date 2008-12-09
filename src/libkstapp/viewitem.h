@@ -67,7 +67,8 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     virtual void updateRelativeSize();
     qreal relativeHeight() const { return _parentRelativeHeight; }
     qreal relativeWidth() const { return _parentRelativeWidth; }
-    QPointF relativeCenter() const { return _parentRelativeCenter; }
+    QPointF relativeCenter() const;
+    qreal rotationAngle() const;
 
     GripMode gripMode() const;
     void setGripMode(GripMode mode);
@@ -199,6 +200,13 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
+    QAction *_editAction;
+    QAction *_deleteAction;
+    QAction *_raiseAction;
+    QAction *_lowerAction;
+    QAction *_autoLayoutAction;
+    QAction *_customLayoutAction;
+
   private Q_SLOTS:
     void viewMouseModeChanged(View::MouseMode oldMode);
     void updateView();
@@ -218,6 +226,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     bool _acceptsChildItems;
     bool _acceptsContextMenuEvents;
     QPointF _originalPosition;
+    QPointF _parentRelativeCenter;
     QRectF _originalRect;
     QTransform _originalTransform;
     QLineF _normalLine;
@@ -227,7 +236,6 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     QTransform _rotationTransform;
     QHash<QString, QAction*> _shortcutMap;
     qreal _parentRelativeHeight, _parentRelativeWidth;
-    QPointF _parentRelativeCenter;
 
     friend class View;
     friend class Scene;

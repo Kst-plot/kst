@@ -15,12 +15,14 @@
 #include "filltab.h"
 #include "stroketab.h"
 #include "layouttab.h"
+#include "dimensionstab.h"
 #include "dialogpage.h"
 #include "viewgridlayout.h"
 
 #include <QPen>
 #include <QBrush>
 #include <QDebug>
+#include <QtGlobal>
 
 namespace Kst {
 
@@ -43,6 +45,13 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
   page->addDialogTab(_layoutTab);
   addDialogPage(page);
 
+  _dimensionsTab = new DimensionsTab(_item, this);
+  DialogPage *dimensionsPage = new DialogPage(this);
+  dimensionsPage->setPageTitle(tr("Dimensions"));
+  dimensionsPage->addDialogTab(_dimensionsTab);
+  addDialogPage(dimensionsPage);
+  connect(_dimensionsTab, SIGNAL(apply()), this, SLOT(dimensionsChanged()));
+
   QList<DialogPage*> dialogPages = _item->dialogPages();
   foreach (DialogPage *dialogPage, dialogPages)
     addDialogPage(dialogPage);
@@ -50,6 +59,9 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
   setupFill();
   setupStroke();
   setupLayout();
+  setupDimensions();
+
+  connect(_dimensionsTab, SIGNAL(tabModified()), this, SLOT(modified()));
 }
 
 
@@ -102,6 +114,11 @@ void ViewItemDialog::setupLayout() {
   _layoutTab->setVerticalMargin(layout->margin().height());
   _layoutTab->setHorizontalSpacing(layout->spacing().width());
   _layoutTab->setVerticalSpacing(layout->spacing().height());*/
+}
+
+
+void ViewItemDialog::setupDimensions() {
+  _dimensionsTab->setupDimensions();
 }
 
 
@@ -158,6 +175,63 @@ void ViewItemDialog::layoutChanged() {
   layout->update();*/
 }
 
+void ViewItemDialog::dimensionsChanged() {
+  Q_ASSERT(_item);
+
+  double pw; // parent width
+  double ph; // parent height
+  double ptlx; // parent top left x
+  double ptly; // parent top left y
+  double r; // rotation
+  double w; // width
+  double h; // height
+  double x;
+  double y;
+
+  if (_item->parentViewItem()) {
+    pw = _item->parentViewItem()->width();
+    ph = _item->parentViewItem()->height();
+    ptlx = _item->parentViewItem()->rect().topLeft().x();
+    ptly = _item->parentViewItem()->rect().topLeft().y();
+  } else if (_item->parentView()) {
+    pw = _item->parentView()->width();
+    ph = _item->parentView()->height();
+    ptlx = _item->parentView()->rect().topLeft().x();
+    ptly = _item->parentView()->rect().topLeft().y();
+  } else {
+    Q_ASSERT_X(false,"parent test", "item has no parentview item");
+    pw = ph = ptlx = ptly = 1.0;
+  }
+
+  if (rect().width()>0) {
+    r = double(_item->rect().height()) / double(_item->rect().width());
+  } else {
+    r = 10000.0;
+  }
+
+  w = _dimensionsTab->w() * pw;
+  if (_dimensionsTab->fixedAspect()) {
+    h = w*r;
+    _item->setLockAspectRatio(true);
+  } else {
+    h = _dimensionsTab->h() * ph;
+    _item->setLockAspectRatio(false);
+  }
+  x = _dimensionsTab->x() * pw + ptlx - w/2.0;
+  y = _dimensionsTab->y() * ph + ptly - h/2.0;
+
+  _item->setViewRect(0,0,w,h);
+  _item->setPos(x,y);
+
+  QTransform t;
+  QPointF origin = _item->centerOfRotation();
+  t.translate(origin.x(), origin.y());
+  t.rotate(_dimensionsTab->r());
+  t.translate(-origin.x(), -origin.y());
+
+  _item->setTransform(t);
+  _item->updateRelativeSize();
+}
 
 }
 
