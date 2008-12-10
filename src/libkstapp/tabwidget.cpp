@@ -108,6 +108,15 @@ void TabWidget::contextMenu(const QPoint& pos) {
   m.addAction(tr("&Add tab"), this, SLOT(createView()));
   m.addAction(tr("&Rename tab"), this, SLOT(renameCurrentView()));
   m.addAction(tr("&Close tab"), this, SLOT(closeCurrentView()));
+  m.addSeparator();
+  m.addAction(tr("&Edit View"), currentView(), SLOT(edit()));
+
+  QMenu layoutMenu;
+  layoutMenu.setTitle(tr("Cleanup Layout"));
+  layoutMenu.addAction(tr("Automatic"), currentView(), SLOT(createLayout()));
+  layoutMenu.addAction(tr("Custom"), currentView(), SLOT(createCustomLayout()));
+  m.addMenu(&layoutMenu);
+
   m.exec(tb->mapToGlobal(pos));
 }
 

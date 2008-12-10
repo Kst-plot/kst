@@ -23,6 +23,7 @@ namespace Kst {
 class GeneralTab;
 class GridTab;
 class FillTab;
+class ChildViewOptionsTab;
 
 class KST_EXPORT ApplicationSettingsDialog : public Dialog
 {
@@ -35,16 +36,19 @@ class KST_EXPORT ApplicationSettingsDialog : public Dialog
     void generalChanged();
     void gridChanged();
     void fillChanged();
+    void childViewOptionsChanged();
 
   private:
     void setupGeneral();
     void setupGrid();
     void setupFill();
+    void setupChildViewOptions();
 
   private:
     GeneralTab *_generalTab;
     GridTab *_gridTab;
     FillTab *_fillTab;
+    ChildViewOptionsTab *_childViewOptionsTab;
 };
 
 }

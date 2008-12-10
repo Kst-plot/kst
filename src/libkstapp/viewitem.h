@@ -128,6 +128,9 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     bool acceptsChildItems() const { return _acceptsChildItems; }
     void setAcceptsChildItems(bool acceptsChildItems) { _acceptsChildItems = acceptsChildItems; }
 
+    bool shareAxis() const { return _shareAxis; }
+    void setShareAxis(bool shareAxis);
+
     //This is a workaround for context menu bug in Qt4.3 graphicsview
     bool acceptsContextMenuEvents() const
     { return _acceptsContextMenuEvents; }
@@ -225,6 +228,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     bool _hovering;
     bool _acceptsChildItems;
     bool _acceptsContextMenuEvents;
+    bool _shareAxis;
     QPointF _originalPosition;
     QPointF _parentRelativeCenter;
     QRectF _originalRect;

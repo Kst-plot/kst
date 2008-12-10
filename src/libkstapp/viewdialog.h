@@ -1,6 +1,6 @@
 /***************************************************************************
  *                                                                         *
- *   copyright : (C) 2007 The University of Toronto                        *
+ *   copyright : (C) 2008 The University of Toronto                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -9,8 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef VIEWITEMDIALOG_H
-#define VIEWITEMDIALOG_H
+#ifndef VIEWDIALOG_H
+#define VIEWDIALOG_H
 
 #include "dialog.h"
 
@@ -20,41 +20,33 @@
 
 namespace Kst {
 
-class ViewItem;
+class View;
 class FillTab;
-class StrokeTab;
-class LayoutTab;
+class GridTab;
 class ChildViewOptionsTab;
-class DimensionsTab;
 
-class KST_EXPORT ViewItemDialog : public Dialog
+class KST_EXPORT ViewDialog : public Dialog
 {
   Q_OBJECT
   public:
-    ViewItemDialog(ViewItem *item, QWidget *parent = 0);
-    virtual ~ViewItemDialog();
+    ViewDialog(View *view, QWidget *parent = 0);
+    virtual ~ViewDialog();
 
   private Q_SLOTS:
     void fillChanged();
-    void strokeChanged();
-    void layoutChanged();
+    void gridChanged();
     void childViewOptionsChanged();
-    void dimensionsChanged();
 
   private:
     void setupFill();
-    void setupStroke();
-    void setupLayout();
+    void setupGrid();
     void setupChildViewOptions();
-    void setupDimensions();
 
   private:
-    QPointer<ViewItem> _item;
+    QPointer<View> _view;
     FillTab *_fillTab;
-    StrokeTab *_strokeTab;
-    LayoutTab *_layoutTab;
-    ChildViewOptionsTab *_childViewOptionsTab;
-    DimensionsTab *_dimensionsTab;
+    GridTab *_gridTab;
+    ChildViewOptionsTab * _childViewOptionsTab;
 };
 
 }

@@ -68,6 +68,9 @@ class ApplicationSettings : public QObject
 
     QGradientStops gradientStops() const;
 
+    bool shareAxis() const;
+    void setShareAxis(bool shareAxis);
+
   Q_SIGNALS:
     void modified();
 
@@ -91,6 +94,7 @@ class ApplicationSettings : public QObject
     qreal _gridVerSpacing;
     QBrush _backgroundBrush;
     QGradientStops _gradientStops;
+    bool _shareAxis;
 
     friend class ApplicationSettingsDialog;
 };

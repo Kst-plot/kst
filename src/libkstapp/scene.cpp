@@ -35,18 +35,23 @@ Scene::~Scene() {
  */
 void Scene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   QList<QGraphicsItem*> list = items(event->scenePos());
-  foreach (QGraphicsItem *item, list) {
-    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
-    if (!viewItem)
-      continue;
+  if (list.isEmpty()) {
+    if (View *view = qobject_cast<View*>(parent())) {
+      view->contextMenuEvent();
+    }
+  } else {
+    foreach (QGraphicsItem *item, list) {
+      ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+      if (!viewItem)
+        continue;
 
-    if (viewItem->acceptsContextMenuEvents()) {
-        event->setPos(viewItem->mapFromScene(event->scenePos()));
-        if (viewItem->sceneEvent(event))
-          return;
+      if (viewItem->acceptsContextMenuEvents()) {
+          event->setPos(viewItem->mapFromScene(event->scenePos()));
+          if (viewItem->sceneEvent(event))
+            return;
+      }
     }
   }
-
   QGraphicsScene::contextMenuEvent(event);
 }
 

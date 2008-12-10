@@ -15,6 +15,7 @@
 #include "filltab.h"
 #include "stroketab.h"
 #include "layouttab.h"
+#include "childviewoptionstab.h"
 #include "dimensionstab.h"
 #include "dialogpage.h"
 #include "viewgridlayout.h"
@@ -34,15 +35,18 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
   _fillTab = new FillTab(this);
   _strokeTab = new StrokeTab(this);
   _layoutTab = new LayoutTab(this);
+//   _childViewOptionsTab = new ChildViewOptionsTab(this);
   connect(_fillTab, SIGNAL(apply()), this, SLOT(fillChanged()));
   connect(_strokeTab, SIGNAL(apply()), this, SLOT(strokeChanged()));
   connect(_layoutTab, SIGNAL(apply()), this, SLOT(layoutChanged()));
+//   connect(_childViewOptionsTab, SIGNAL(apply()), this, SLOT(childViewOptionsChanged()));
 
   DialogPageTab *page = new DialogPageTab(this);
   page->setPageTitle(tr("Appearance"));
   page->addDialogTab(_fillTab);
   page->addDialogTab(_strokeTab);
   page->addDialogTab(_layoutTab);
+//   page->addDialogTab(_childViewOptionsTab);
   addDialogPage(page);
 
   _dimensionsTab = new DimensionsTab(_item, this);
@@ -59,6 +63,7 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
   setupFill();
   setupStroke();
   setupLayout();
+//   setupChildViewOptions();
   setupDimensions();
 
   connect(_dimensionsTab, SIGNAL(tabModified()), this, SLOT(modified()));
@@ -232,6 +237,17 @@ void ViewItemDialog::dimensionsChanged() {
   _item->setTransform(t);
   _item->updateRelativeSize();
 }
+
+
+void ViewItemDialog::setupChildViewOptions() {
+  _childViewOptionsTab->setShareAxis(_item->shareAxis());
+}
+
+
+void ViewItemDialog::childViewOptionsChanged() {
+  _item->setShareAxis(_childViewOptionsTab->shareAxis());
+}
+
 
 }
 

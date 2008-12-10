@@ -78,6 +78,7 @@ ApplicationSettings::ApplicationSettings() {
    _gradientStops = gradient.stops();
     _backgroundBrush = QBrush(gradient);
   }
+  _shareAxis = _settings->value("childviewoptions/shareaxis", QVariant(true)).toBool();
 }
 
 
@@ -271,6 +272,17 @@ QGradientStops ApplicationSettings::gradientStops() const {
   return _gradientStops;
 }
 
+
+bool ApplicationSettings::shareAxis() const {
+  return _shareAxis;
+}
+
+
+void ApplicationSettings::setShareAxis(bool shareAxis) {
+  _shareAxis = shareAxis;
+  _settings->setValue("childviewoptions/shareaxis", shareAxis);
+  emit modified();
+}
 
 }
 

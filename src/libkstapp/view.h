@@ -87,9 +87,13 @@ class KST_EXPORT View : public QGraphicsView
 
     QPointF snapPoint(const QPointF &point);
 
+    bool shareAxis() const { return _shareAxis; }
+    void setShareAxis(bool shareAxis);
+
     void setPrinting(bool printing) { _printing = printing; }
     bool isPrinting() { return _printing; }
 
+    virtual void contextMenuEvent();
 
   Q_SIGNALS:
     void viewModeChanged(View::ViewMode oldMode);
@@ -99,6 +103,7 @@ class KST_EXPORT View : public QGraphicsView
   public Q_SLOTS:
     void createLayout(int columns = 0);
     void appendToLayout(CurvePlacement::Layout layout, ViewItem* item, int columns = 0);
+    void createCustomLayout();
     void sharePlots();
 
   protected:
@@ -106,11 +111,18 @@ class KST_EXPORT View : public QGraphicsView
     bool eventFilter(QObject *obj, QEvent *event);
     void resizeEvent(QResizeEvent *event);
     void drawBackground(QPainter *painter, const QRectF &rect);
+    void addTitle(QMenu *menu) const;
+
+    QAction *_editAction;
+    QAction *_autoLayoutAction;
+    QAction *_customLayoutAction;
 
   private Q_SLOTS:
     void updateSettings();
+    void loadSettings();
     void updateFont();
     void updateBrush();
+    virtual void edit();
 
   private:
     void updateChildGeometry(const QRectF &oldSceneRect);
@@ -129,6 +141,7 @@ class KST_EXPORT View : public QGraphicsView
     bool _showGrid;
     bool _snapToGridHorizontal;
     bool _snapToGridVertical;
+    bool _shareAxis;
 
     bool _printing;
 };

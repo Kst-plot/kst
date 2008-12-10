@@ -35,6 +35,7 @@ SOURCES += \
     cartesianrenderitem.cpp \
     changedatasampledialog.cpp \
     changefiledialog.cpp \
+    childviewoptionstab.cpp \
     choosecolordialog.cpp \
     circleitem.cpp \
     commandlineparser.cpp \
@@ -111,6 +112,7 @@ SOURCES += \
     vectormodel.cpp \
     viewcommand.cpp \
     view.cpp \
+    viewdialog.cpp \
     viewgridlayout.cpp \
     viewitem.cpp \
     viewitemdialog.cpp \
@@ -135,6 +137,7 @@ HEADERS += \
     cartesianrenderitem.h \
     changedatasampledialog.h \
     changefiledialog.h \
+    childviewoptionstab.h \
     choosecolordialog.h \
     circleitem.h \
     commandlineparser.h\
@@ -212,6 +215,7 @@ HEADERS += \
     vectormodel.h \
     viewcommand.h \
     view.h \
+    viewdialog.h \
     viewgridlayout.h \
     viewitemdialog.h \
     viewitem.h \
@@ -229,6 +233,7 @@ FORMS += \
     bugreportwizard.ui \
     changedatasampledialog.ui \
     changefiledialog.ui \
+    childviewoptionstab.ui \
     choosecolordialog.ui \
     contenttab.ui \
     csdtab.ui \

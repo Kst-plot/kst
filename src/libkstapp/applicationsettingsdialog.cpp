@@ -16,6 +16,7 @@
 #include "generaltab.h"
 #include "filltab.h"
 #include "dialogpage.h"
+#include "childviewoptionstab.h"
 
 #include <QDebug>
 
@@ -29,10 +30,12 @@ ApplicationSettingsDialog::ApplicationSettingsDialog(QWidget *parent)
   _generalTab = new GeneralTab(this);
   _gridTab = new GridTab(this);
   _fillTab = new FillTab(this);
+//   _childViewOptionsTab = new ChildViewOptionsTab(this);
 
   connect(_generalTab, SIGNAL(apply()), this, SLOT(generalChanged()));
   connect(_gridTab, SIGNAL(apply()), this, SLOT(gridChanged()));
   connect(_fillTab, SIGNAL(apply()), this, SLOT(fillChanged()));
+//   connect(_childViewOptionsTab, SIGNAL(apply()), this, SLOT(childViewOptionsChanged()));
 
   DialogPage *general = new DialogPage(this);
   general->setPageTitle(tr("General"));
@@ -49,9 +52,15 @@ ApplicationSettingsDialog::ApplicationSettingsDialog(QWidget *parent)
   fill->addDialogTab(_fillTab);
   addDialogPage(fill);
 
+//   DialogPage *childViewOptions = new DialogPage(this);
+//   childViewOptions->setPageTitle(tr("Child View Options"));
+//   childViewOptions->addDialogTab(_childViewOptionsTab);
+//   addDialogPage(childViewOptions);
+
   setupGeneral();
   setupGrid();
   setupFill();
+//   setupChildViewOptions();
 }
 
 
@@ -140,6 +149,16 @@ void ApplicationSettingsDialog::fillChanged() {
   ApplicationSettings::self()->setBackgroundBrush(b);
 
   emit ApplicationSettings::self()->modified();
+}
+
+
+void ApplicationSettingsDialog::setupChildViewOptions() {
+  _childViewOptionsTab->setShareAxis(ApplicationSettings::self()->shareAxis());
+}
+
+
+void ApplicationSettingsDialog::childViewOptionsChanged() {
+  ApplicationSettings::self()->setShareAxis(_childViewOptionsTab->shareAxis());
 }
 
 }

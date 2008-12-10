@@ -16,6 +16,7 @@
 #include "mainwindow.h"
 #include "application.h"
 #include "applicationsettings.h"
+#include "viewdialog.h"
 #include "viewgridlayout.h"
 
 #include <math.h>
@@ -24,10 +25,13 @@
 #include <QTimer>
 #include <QUndoStack>
 #include <QResizeEvent>
+#include <QMenu>
+#include <QWidgetAction>
 #include <QGLWidget>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
+#include <QInputDialog>
 
 namespace Kst {
 
@@ -39,6 +43,7 @@ View::View()
     _gridSpacing(QSizeF(20,20)),
     _snapToGridHorizontal(false),
     _snapToGridVertical(false),
+    _shareAxis(true),
     _printing(false) {
 
   _undoStack = new QUndoStack(this);
@@ -48,6 +53,8 @@ View::View()
   scene()->installEventFilter(this);
   setInteractive(true);
   setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
+
+  setContextMenuPolicy(Qt::DefaultContextMenu);
 
   _useOpenGL = ApplicationSettings::self()->useOpenGL();
   if (_useOpenGL) {
@@ -59,7 +66,18 @@ View::View()
   }
 
   connect(ApplicationSettings::self(), SIGNAL(modified()), this, SLOT(updateSettings()));
-  updateSettings();
+  loadSettings();
+
+  _editAction = new QAction(tr("Edit"), this);
+  _editAction->setShortcut(Qt::Key_E);
+//   registerShortcut(_editAction);
+  connect(_editAction, SIGNAL(triggered()), this, SLOT(edit()));
+
+  _autoLayoutAction = new QAction(tr("Automatic"), this);
+  connect(_autoLayoutAction, SIGNAL(triggered()), this, SLOT(createLayout()));
+
+  _customLayoutAction = new QAction(tr("Custom"), this);
+  connect(_customLayoutAction, SIGNAL(triggered()), this, SLOT(createCustomLayout()));
 }
 
 
@@ -186,6 +204,15 @@ void View::setGridSpacing(const QSizeF &gridSpacing) {
 }
 
 
+void View::setShareAxis(bool shareAxis) {
+  if (_shareAxis == shareAxis)
+    return;
+
+  _shareAxis = shareAxis;
+  // TODO Trigger appropriate updates.
+}
+
+
 QPointF View::snapPoint(const QPointF &point) {
   qreal x = point.x();
   qreal y = point.y();
@@ -205,14 +232,26 @@ bool View::event(QEvent *event) {
 
     QPointF mousePos = mapToScene(mapFromGlobal(QCursor::pos()));
     QList<QGraphicsItem*> list = scene()->items(mousePos);
-    foreach (QGraphicsItem *item, list) {
-      ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
-      if (!viewItem)
-        continue;
-
-      if (viewItem && viewItem->hasFocus() && viewItem->tryShortcut(e->key())) {
-        return true;
+    if (list.isEmpty()) {
+      if (e->key() == _editAction->shortcut()) {
+        _editAction->trigger();
       }
+    } else {
+      foreach (QGraphicsItem *item, list) {
+        ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+        if (!viewItem)
+          continue;
+
+        if (viewItem && viewItem->hasFocus() && viewItem->tryShortcut(e->key())) {
+          return true;
+        }
+      }
+    }
+  } else if (event->type() == QEvent::MouseButtonPress) {
+    QMouseEvent *e = static_cast<QMouseEvent*>(event);
+    if (e->button() == Qt::RightButton) {
+      contextMenuEvent();
+      return true;
     }
   }
 
@@ -228,10 +267,11 @@ bool View::eventFilter(QObject *obj, QEvent *event) {
   case QEvent::GraphicsSceneMousePress:
     {
       QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
-      if (e->button() != Qt::LeftButton) break;
-      _creationPolygonPress << snapPoint(e->buttonDownScenePos(Qt::LeftButton));
-      emit creationPolygonChanged(MousePress);
-      return true; //filter this otherwise something can grab our mouse...
+      if (e->button() == Qt::LeftButton) {
+        _creationPolygonPress << snapPoint(e->buttonDownScenePos(Qt::LeftButton));
+        emit creationPolygonChanged(MousePress);
+        return true; //filter this otherwise something can grab our mouse...
+      }
     }
   case QEvent::GraphicsSceneMouseRelease:
     {
@@ -253,6 +293,17 @@ bool View::eventFilter(QObject *obj, QEvent *event) {
   }
 
   return QGraphicsView::eventFilter(obj, event);
+}
+
+
+void View::createCustomLayout() {
+  bool ok;
+  int columns = QInputDialog::getInteger(tr("Kst"),
+                                      tr("Select Number of Columns"),1, 0,
+                                      10, 1, &ok);
+  if (ok) {
+    createLayout(columns);
+  }
 }
 
 
@@ -382,6 +433,11 @@ void View::drawBackground(QPainter *painter, const QRectF &rect) {
 
 void View::updateSettings() {
   setUseOpenGL(ApplicationSettings::self()->useOpenGL());
+}
+
+
+void View::loadSettings() {
+  setUseOpenGL(ApplicationSettings::self()->useOpenGL());
 
   setShowGrid(ApplicationSettings::self()->showGrid());
 
@@ -389,6 +445,8 @@ void View::updateSettings() {
 
   setGridSpacing(QSizeF(ApplicationSettings::self()->gridHorizontalSpacing(),
                         ApplicationSettings::self()->gridVerticalSpacing()));
+
+  setShareAxis(ApplicationSettings::self()->shareAxis());
 
   updateFont();
   updateBrush();
@@ -438,6 +496,45 @@ QFont View::defaultFont(double scale) const {
   }
 
   return font;
+}
+
+
+void View::contextMenuEvent() {
+  QMenu menu;
+
+  addTitle(&menu);
+  menu.addAction(_editAction);
+
+  QMenu layoutMenu;
+  layoutMenu.setTitle(tr("Cleanup Layout"));
+  layoutMenu.addAction(_autoLayoutAction);
+  layoutMenu.addAction(_customLayoutAction);
+  menu.addMenu(&layoutMenu);
+
+  menu.exec(QCursor::pos());
+}
+
+
+void View::addTitle(QMenu *menu) const {
+  QWidgetAction *action = new QWidgetAction(menu);
+  action->setEnabled(false);
+
+  QLabel *label = new QLabel(name() + tr("View Menu"), menu);
+  label->setAlignment(Qt::AlignCenter);
+  label->setStyleSheet("QLabel {"
+                       "border-bottom: 2px solid lightGray;"
+                       "font: bold large;"
+                       "padding: 3px;"
+                       "margin: 1px;"
+                       "}");
+  action->setDefaultWidget(label);
+  menu->addAction(action);
+}
+
+
+void View::edit() {
+  ViewDialog editDialog(this);
+  editDialog.exec();
 }
 
 }

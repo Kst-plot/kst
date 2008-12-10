@@ -11,6 +11,7 @@
 
 #include "viewitem.h"
 #include "application.h"
+#include "applicationsettings.h"
 #include "tabwidget.h"
 #include "viewitemdialog.h"
 #include "viewgridlayout.h"
@@ -67,6 +68,8 @@ ViewItem::ViewItem(View *parent)
   connect(parent, SIGNAL(viewModeChanged(View::ViewMode)),
           this, SLOT(updateView()));
 
+  setShareAxis(ApplicationSettings::self()->shareAxis());
+
   // Add actions common to all view objects
   // create them here in the constructor so we
   // can register shortcuts.
@@ -91,7 +94,6 @@ ViewItem::ViewItem(View *parent)
 
   _customLayoutAction = new QAction(tr("Custom"), this);
   connect(_customLayoutAction, SIGNAL(triggered()), this, SLOT(createCustomLayout()));
-
 }
 
 
@@ -349,6 +351,15 @@ void ViewItem::setAllowedGripModes(GripModes modes) {
 
 bool ViewItem::isAllowed(GripMode mode) const {
   return _allowedGripModes & mode;
+}
+
+
+void ViewItem::setShareAxis(bool shareAxis) {
+  if (_shareAxis == shareAxis)
+    return;
+
+  _shareAxis = shareAxis;
+  // TODO Trigger appropriate updates.
 }
 
 
