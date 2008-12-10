@@ -1537,7 +1537,7 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
   if (parsed) {
     QRectF leftLabel = leftLabelRect(false);
     QPixmap pixmap(leftLabel.height(), leftLabel.width());
-    pixmap.fill(Qt::white);
+    pixmap.fill(Qt::transparent);
     QPainter pixmapPainter(&pixmap);
 
     Label::RenderContext rc(calculatedLeftLabelFont(), &pixmapPainter);
@@ -1613,7 +1613,7 @@ void PlotItem::paintBottomLabel(QPainter *painter) {
 
     QRectF bottomLabel = bottomLabelRect(false);
     QPixmap pixmap(bottomLabel.width(), bottomLabel.height());
-    pixmap.fill(Qt::white);
+    pixmap.fill(Qt::transparent);
     QPainter pixmapPainter(&pixmap);
 
     Label::RenderContext rc(calculatedBottomLabelFont(), &pixmapPainter);
@@ -1677,7 +1677,7 @@ void PlotItem::paintRightLabel(QPainter *painter) {
     QRectF rightLabel = rightLabelRect(false);
     if (rightLabel.isValid()) {
       QPixmap pixmap(rightLabel.height(), rightLabel.width());
-      pixmap.fill(Qt::white);
+      pixmap.fill(Qt::transparent);
       QPainter pixmapPainter(&pixmap);
 
       Label::RenderContext rc(calculatedRightLabelFont(), &pixmapPainter);
@@ -1755,7 +1755,7 @@ void PlotItem::paintTopLabel(QPainter *painter) {
     QRectF topLabel = topLabelRect(false);
     if (topLabel.isValid()) {
       QPixmap pixmap(topLabel.width(), topLabel.height());
-      pixmap.fill(Qt::white);
+      pixmap.fill(Qt::transparent);
       QPainter pixmapPainter(&pixmap);
 
       Label::RenderContext rc(calculatedTopLabelFont(), &pixmapPainter);
