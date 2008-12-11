@@ -107,6 +107,7 @@ It needs to shrink.
       or maybe: only one font and UBI combo for a plot.  UBI can be set w/ latex commands in the label.
   -get rid of all the per-item boxes and use more space efficient separators.
 
+*cbn*
 ---------
 
 Missing features in edit label label dialog:
