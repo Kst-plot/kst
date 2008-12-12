@@ -39,6 +39,9 @@ class LabelItem : public ViewItem {
     QColor labelColor() const;
     void setLabelColor(const QColor &color);
 
+    QFont labelFont() const;
+    void setLabelFont(const QFont &font);
+
   public Q_SLOTS:
     virtual void edit();
 
@@ -47,6 +50,7 @@ class LabelItem : public ViewItem {
     QString _text;
     qreal _scale;
     QColor _color;
+    QFont _font;
 };
 
 

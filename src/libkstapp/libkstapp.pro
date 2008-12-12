@@ -52,6 +52,7 @@ SOURCES += \
     datawizard.cpp \
     debugdialog.cpp \
     debugnotifier.cpp \
+    defaultlabelpropertiestab.cpp \
     dialog.cpp \
     dialoglaunchergui.cpp \
     dialogpage.cpp \
@@ -90,6 +91,7 @@ SOURCES += \
     matrixdialog.cpp \
     matrixmodel.cpp \
     memorywidget.cpp \
+    overridelabeltab.cpp \
     pictureitem.cpp \
     plotaxis.cpp \
     plotitem.cpp \
@@ -155,6 +157,7 @@ HEADERS += \
     datawizard.h \
     debugdialog.h \
     debugnotifier.h \
+    defaultlabelpropertiestab.h \
     dialog.h \
     dialoglaunchergui.h \
     dialogpage.h \
@@ -193,6 +196,7 @@ HEADERS += \
     matrixdialog.h \
     matrixmodel.h \
     memorywidget.h \
+    overridelabeltab.h \
     pictureitem.h \
     plotaxis.h \
     plotitem.h \
@@ -245,6 +249,7 @@ FORMS += \
     datawizardpageplot.ui \
     datawizardpagevectors.ui \
     debugdialog.ui \
+    defaultlabelpropertiestab.ui \
     dialog.ui \
     differentiatecurvesdialog.ui \
     dimensionstab.ui \
@@ -266,6 +271,7 @@ FORMS += \
     markerstab.ui \
     matrixtab.ui \
     powerspectrumtab.ui \
+    overridelabeltab.ui \
     scalartab.ui \
     stringtab.ui \
     stroketab.ui \

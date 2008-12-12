@@ -1,6 +1,6 @@
 /***************************************************************************
  *                                                                         *
- *   copyright : (C) 2007 The University of Toronto                        *
+ *   copyright : (C) 2008 The University of Toronto                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -9,39 +9,30 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef GENERALTAB_H
-#define GENERALTAB_H
+#ifndef OVERRIDETAB_H
+#define OVERRIDETAB_H
 
 #include "dialogtab.h"
-#include "ui_generaltab.h"
+#include "ui_overridelabeltab.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class KST_EXPORT GeneralTab : public DialogTab, Ui::GeneralTab {
+class KST_EXPORT OverrideLabelTab : public DialogTab, Ui::OverrideLabelTab {
   Q_OBJECT
   public:
-    GeneralTab(QWidget *parent = 0);
-    virtual ~GeneralTab();
+    OverrideLabelTab(QString title, QWidget *parent = 0);
+    virtual ~OverrideLabelTab();
 
-    bool useOpenGL() const;
-    void setUseOpenGL(const bool useOpenGL);
+    QFont labelFont() const;
+    void setLabelFont(const QFont &font);
 
-    double referenceViewWidth() const;
-    void setReferenceViewWidth(const double width);
+    qreal labelFontScale() const;
+    void setLabelFontScale(const qreal scale);
 
-    double referenceViewHeight() const;
-    void setReferenceViewHeight(const double height);
-
-    int referenceFontSize() const;
-    void setReferenceFontSize(const int points);
-
-    int minimumFontSize() const;
-    void setMinimumFontSize(const int points);
-
-    int minimumUpdatePeriod() const;
-    void setMinimumUpdatePeriod(const int Period);
+    QColor labelColor() const;
+    void setLabelColor(const QColor &color);
 };
 
 }

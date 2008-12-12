@@ -44,6 +44,7 @@ void LabelItemDialog::setupProperties() {
   _propertiesTab->setLabelText(_labelItem->labelText());
   _propertiesTab->setLabelScale(_labelItem->labelScale());
   _propertiesTab->setLabelColor(_labelItem->labelColor());
+  _propertiesTab->setLabelFont(_labelItem->labelFont());
 }
 
 
@@ -51,6 +52,7 @@ void LabelItemDialog::propertiesChanged() {
   _labelItem->setLabelText(_propertiesTab->labelText());
   _labelItem->setLabelScale(_propertiesTab->labelScale());
   _labelItem->setLabelColor(_propertiesTab->labelColor());
+  _labelItem->setLabelFont(_propertiesTab->labelFont());
 }
 
 }

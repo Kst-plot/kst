@@ -24,7 +24,6 @@ GeneralTab::GeneralTab(QWidget *parent)
   connect(_refViewHeight, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_refFontSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_minFontSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
-  connect(_defaultFontFamily, SIGNAL(currentFontChanged(const QFont &)), this, SIGNAL(modified()));
   connect(_maxUpdate, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
 }
 
@@ -80,16 +79,6 @@ int GeneralTab::minimumFontSize() const {
 
 void GeneralTab::setMinimumFontSize(const int points) {
   _minFontSize->setValue(points);
-}
-
-
-QString GeneralTab::defaultFontFamily() const {
-  return _defaultFontFamily->currentFont().family();
-}
-
-
-void GeneralTab::setDefaultFontFamily(const QString &fontFamily) {
-  _defaultFontFamily->setCurrentFont(QFont(fontFamily));
 }
 
 

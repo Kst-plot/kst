@@ -17,6 +17,7 @@
 #include "filltab.h"
 #include "dialogpage.h"
 #include "childviewoptionstab.h"
+#include "defaultlabelpropertiestab.h"
 
 #include <QDebug>
 
@@ -30,12 +31,14 @@ ApplicationSettingsDialog::ApplicationSettingsDialog(QWidget *parent)
   _generalTab = new GeneralTab(this);
   _gridTab = new GridTab(this);
   _fillTab = new FillTab(this);
+  _defaultLabelPropertiesTab = new DefaultLabelPropertiesTab(this);
 //   _childViewOptionsTab = new ChildViewOptionsTab(this);
 
   connect(_generalTab, SIGNAL(apply()), this, SLOT(generalChanged()));
   connect(_gridTab, SIGNAL(apply()), this, SLOT(gridChanged()));
   connect(_fillTab, SIGNAL(apply()), this, SLOT(fillChanged()));
 //   connect(_childViewOptionsTab, SIGNAL(apply()), this, SLOT(childViewOptionsChanged()));
+  connect(_defaultLabelPropertiesTab, SIGNAL(apply()), this, SLOT(defaultLabelPropertiesChanged()));
 
   DialogPage *general = new DialogPage(this);
   general->setPageTitle(tr("General"));
@@ -52,6 +55,11 @@ ApplicationSettingsDialog::ApplicationSettingsDialog(QWidget *parent)
   fill->addDialogTab(_fillTab);
   addDialogPage(fill);
 
+  DialogPage *defaultLabelProperties = new DialogPage(this);
+  defaultLabelProperties->setPageTitle(tr("Default Label Properties"));
+  defaultLabelProperties->addDialogTab(_defaultLabelPropertiesTab);
+  addDialogPage(defaultLabelProperties);
+
 //   DialogPage *childViewOptions = new DialogPage(this);
 //   childViewOptions->setPageTitle(tr("Child View Options"));
 //   childViewOptions->addDialogTab(_childViewOptionsTab);
@@ -60,6 +68,7 @@ ApplicationSettingsDialog::ApplicationSettingsDialog(QWidget *parent)
   setupGeneral();
   setupGrid();
   setupFill();
+  setupDefaultLabelProperties();
 //   setupChildViewOptions();
 }
 
@@ -74,7 +83,6 @@ void ApplicationSettingsDialog::setupGeneral() {
   _generalTab->setReferenceViewHeight(ApplicationSettings::self()->referenceViewHeightCM());
   _generalTab->setReferenceFontSize(ApplicationSettings::self()->referenceFontSize());
   _generalTab->setMinimumFontSize(ApplicationSettings::self()->minimumFontSize());
-  _generalTab->setDefaultFontFamily(ApplicationSettings::self()->defaultFontFamily());
   _generalTab->setMinimumUpdatePeriod(ApplicationSettings::self()->minimumUpdatePeriod());
 }
 
@@ -104,6 +112,13 @@ void ApplicationSettingsDialog::setupFill() {
 }
 
 
+void ApplicationSettingsDialog::setupDefaultLabelProperties() {
+  _defaultLabelPropertiesTab->setLabelFont(ApplicationSettings::self()->defaultFont());
+  _defaultLabelPropertiesTab->setLabelScale(ApplicationSettings::self()->defaultFontScale());
+  _defaultLabelPropertiesTab->setLabelColor(ApplicationSettings::self()->defaultFontColor());
+}
+
+
 void ApplicationSettingsDialog::generalChanged() {
   //Need to block the signals so that the modified signal only goes out once...
   ApplicationSettings::self()->blockSignals(true);
@@ -112,7 +127,6 @@ void ApplicationSettingsDialog::generalChanged() {
   ApplicationSettings::self()->setReferenceViewHeightCM(_generalTab->referenceViewHeight());
   ApplicationSettings::self()->setReferenceFontSize(_generalTab->referenceFontSize());
   ApplicationSettings::self()->setMinimumFontSize(_generalTab->minimumFontSize());
-  ApplicationSettings::self()->setDefaultFontFamily(_generalTab->defaultFontFamily());
   ApplicationSettings::self()->setMinimumUpdatePeriod(_generalTab->minimumUpdatePeriod());
   ApplicationSettings::self()->blockSignals(false);
 
@@ -147,6 +161,18 @@ void ApplicationSettingsDialog::fillChanged() {
   }
 
   ApplicationSettings::self()->setBackgroundBrush(b);
+
+  emit ApplicationSettings::self()->modified();
+}
+
+
+void ApplicationSettingsDialog::defaultLabelPropertiesChanged() {
+  //Need to block the signals so that the modified signal only goes out once...
+  ApplicationSettings::self()->blockSignals(true);
+  ApplicationSettings::self()->setDefaultFont(_defaultLabelPropertiesTab->labelFont());
+  ApplicationSettings::self()->setDefaultFontScale(_defaultLabelPropertiesTab->labelScale());
+  ApplicationSettings::self()->setDefaultFontColor(_defaultLabelPropertiesTab->labelColor());
+  ApplicationSettings::self()->blockSignals(false);
 
   emit ApplicationSettings::self()->modified();
 }

@@ -1,6 +1,6 @@
 /***************************************************************************
  *                                                                         *
- *   copyright : (C) 2007 The University of Toronto                        *
+ *   copyright : (C) 2008 The University of Toronto                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -9,39 +9,30 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef GENERALTAB_H
-#define GENERALTAB_H
+#ifndef DEFAULTLABELPROPERTIESTAB_H
+#define DEFAULTLABELPROPERTIESTAB_H
 
 #include "dialogtab.h"
-#include "ui_generaltab.h"
+#include "ui_defaultlabelpropertiestab.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class KST_EXPORT GeneralTab : public DialogTab, Ui::GeneralTab {
+class KST_EXPORT DefaultLabelPropertiesTab : public DialogTab, Ui_DefaultLabelPropertiesTab {
   Q_OBJECT
   public:
-    GeneralTab(QWidget *parent = 0);
-    virtual ~GeneralTab();
+    DefaultLabelPropertiesTab(QWidget *parent = 0);
+    virtual ~DefaultLabelPropertiesTab();
 
-    bool useOpenGL() const;
-    void setUseOpenGL(const bool useOpenGL);
+    qreal labelScale() const;
+    void setLabelScale(const qreal scale);
 
-    double referenceViewWidth() const;
-    void setReferenceViewWidth(const double width);
+    QColor labelColor() const;
+    void setLabelColor(const QColor &color);
 
-    double referenceViewHeight() const;
-    void setReferenceViewHeight(const double height);
-
-    int referenceFontSize() const;
-    void setReferenceFontSize(const int points);
-
-    int minimumFontSize() const;
-    void setMinimumFontSize(const int points);
-
-    int minimumUpdatePeriod() const;
-    void setMinimumUpdatePeriod(const int Period);
+    QFont labelFont() const;
+    void setLabelFont(const QFont &font);
 };
 
 }

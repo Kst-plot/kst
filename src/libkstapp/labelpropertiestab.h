@@ -33,6 +33,9 @@ class KST_EXPORT LabelPropertiesTab : public DialogTab, Ui::LabelPropertiesTab {
 
     QColor labelColor() const;
     void setLabelColor(const QColor &color);
+
+    QFont labelFont() const;
+    void setLabelFont(const QFont &font);
 };
 
 }

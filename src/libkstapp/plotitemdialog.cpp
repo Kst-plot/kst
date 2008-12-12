@@ -15,6 +15,7 @@
 #include "axistab.h"
 #include "markerstab.h"
 #include "labeltab.h"
+#include "overridelabeltab.h"
 #include "dialogpage.h"
 #include "application.h"
 #include "objectstore.h"
@@ -28,6 +29,9 @@
 #include "image.h"
 #include "imagedialog.h"
 
+#include "filltab.h"
+#include "stroketab.h"
+
 namespace Kst {
 
 PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
@@ -36,11 +40,29 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
   _store = kstApp->mainWindow()->document()->objectStore();
 
   _labelTab = new LabelTab(_plotItem, this);
-  DialogPage *labelPage = new DialogPage(this);
+  _topLabelTab = new OverrideLabelTab(tr("Top Label"), this);
+  _bottomLabelTab = new OverrideLabelTab(tr("Bottom Label"), this);
+  _leftLabelTab = new OverrideLabelTab(tr("Left Label"), this);
+  _rightLabelTab = new OverrideLabelTab(tr("Right Label"), this);
+  _axisLabelTab = new OverrideLabelTab(tr("Axis Numbers"), this);
+
+  DialogPageTab *labelPage = new DialogPageTab(this);
   labelPage->setPageTitle(tr("Labels"));
   labelPage->addDialogTab(_labelTab);
+  labelPage->addDialogTab(_topLabelTab);
+  labelPage->addDialogTab(_bottomLabelTab);
+  labelPage->addDialogTab(_leftLabelTab);
+  labelPage->addDialogTab(_rightLabelTab);
+  labelPage->addDialogTab(_axisLabelTab);
   addDialogPage(labelPage);
+
   connect(_labelTab, SIGNAL(apply()), this, SLOT(labelsChanged()));
+  connect(_topLabelTab, SIGNAL(apply()), this, SLOT(labelsChanged()));
+  connect(_bottomLabelTab, SIGNAL(apply()), this, SLOT(labelsChanged()));
+  connect(_leftLabelTab, SIGNAL(apply()), this, SLOT(labelsChanged()));
+  connect(_rightLabelTab, SIGNAL(apply()), this, SLOT(labelsChanged()));
+  connect(_axisLabelTab, SIGNAL(apply()), this, SLOT(labelsChanged()));
+  connect(_labelTab, SIGNAL(globalFontUpdate()), this, SLOT(globalFontUpdate()));
 
   _xAxisTab = new AxisTab(this);
   DialogPage *xAxisPage = new DialogPage(this);
@@ -100,20 +122,27 @@ void PlotItemDialog::setupLabels() {
   _labelTab->setBottomLabel(_plotItem->bottomLabelOverride());
   _labelTab->setTopLabel(_plotItem->topLabelOverride());
   _labelTab->setRightLabel(_plotItem->rightLabelOverride());
-
-  _labelTab->setLeftLabelFont(_plotItem->leftLabelFont());
-  _labelTab->setBottomLabelFont(_plotItem->bottomLabelFont());
-  _labelTab->setTopLabelFont(_plotItem->topLabelFont());
-  _labelTab->setRightLabelFont(_plotItem->rightLabelFont());
-  _labelTab->setNumberLabelFont(_plotItem->numberLabelFont());
-
-  _labelTab->setLeftLabelFontScale(_plotItem->leftLabelFontScale());
-  _labelTab->setBottomLabelFontScale(_plotItem->bottomLabelFontScale());
-  _labelTab->setTopLabelFontScale(_plotItem->topLabelFontScale());
-  _labelTab->setRightLabelFontScale(_plotItem->rightLabelFontScale());
-  _labelTab->setNumberLabelFontScale(_plotItem->numberLabelFontScale());
-
   _labelTab->setShowLegend(_plotItem->showLegend());
+
+  _topLabelTab->setLabelFont(_plotItem->topLabelFont());
+  _topLabelTab->setLabelFontScale(_plotItem->topLabelFontScale());
+  _topLabelTab->setLabelColor(_plotItem->topLabelFontColor());
+
+  _bottomLabelTab->setLabelFont(_plotItem->bottomLabelFont());
+  _bottomLabelTab->setLabelFontScale(_plotItem->bottomLabelFontScale());
+  _bottomLabelTab->setLabelColor(_plotItem->bottomLabelFontColor());
+
+  _leftLabelTab->setLabelFont(_plotItem->leftLabelFont());
+  _leftLabelTab->setLabelFontScale(_plotItem->leftLabelFontScale());
+  _leftLabelTab->setLabelColor(_plotItem->leftLabelFontColor());
+
+  _rightLabelTab->setLabelFont(_plotItem->rightLabelFont());
+  _rightLabelTab->setLabelFontScale(_plotItem->rightLabelFontScale());
+  _rightLabelTab->setLabelColor(_plotItem->rightLabelFontColor());
+
+  _axisLabelTab->setLabelFont(_plotItem->numberLabelFont());
+  _axisLabelTab->setLabelFontScale(_plotItem->numberLabelFontScale());
+  _axisLabelTab->setLabelColor(_plotItem->numberLabelFontColor());
 }
 
 
@@ -435,17 +464,24 @@ void PlotItemDialog::labelsChanged() {
   _plotItem->setRightLabelOverride(_labelTab->rightLabel());
   _plotItem->setTopLabelOverride(_labelTab->topLabel());
 
-  _plotItem->setLeftLabelFont(_labelTab->leftLabelFont());
-  _plotItem->setRightLabelFont(_labelTab->rightLabelFont());
-  _plotItem->setTopLabelFont(_labelTab->topLabelFont());
-  _plotItem->setBottomLabelFont(_labelTab->bottomLabelFont());
-  _plotItem->setNumberLabelFont(_labelTab->numberLabelFont());
+  _plotItem->setLeftLabelFont(_leftLabelTab->labelFont());
+  _plotItem->setRightLabelFont(_rightLabelTab->labelFont());
+  _plotItem->setTopLabelFont(_topLabelTab->labelFont());
+  _plotItem->setBottomLabelFont(_bottomLabelTab->labelFont());
+  _plotItem->setNumberLabelFont(_axisLabelTab->labelFont());
 
-  _plotItem->setLeftLabelFontScale(_labelTab->leftLabelFontScale());
-  _plotItem->setRightLabelFontScale(_labelTab->rightLabelFontScale());
-  _plotItem->setTopLabelFontScale(_labelTab->topLabelFontScale());
-  _plotItem->setBottomLabelFontScale(_labelTab->bottomLabelFontScale());
-  _plotItem->setNumberLabelFontScale(_labelTab->numberLabelFontScale());
+  _plotItem->setLeftLabelFontScale(_leftLabelTab->labelFontScale());
+  _plotItem->setRightLabelFontScale(_rightLabelTab->labelFontScale());
+  _plotItem->setTopLabelFontScale(_topLabelTab->labelFontScale());
+  _plotItem->setBottomLabelFontScale(_bottomLabelTab->labelFontScale());
+  _plotItem->setNumberLabelFontScale(_axisLabelTab->labelFontScale());
+
+  _plotItem->setLeftLabelFontColor(_leftLabelTab->labelColor());
+  _plotItem->setRightLabelFontColor(_rightLabelTab->labelColor());
+  _plotItem->setTopLabelFontColor(_topLabelTab->labelColor());
+  _plotItem->setBottomLabelFontColor(_bottomLabelTab->labelColor());
+  _plotItem->setNumberLabelFontColor(_axisLabelTab->labelColor());
+
   _plotItem->setShowLegend(_labelTab->showLegend());
 }
 
@@ -461,6 +497,31 @@ void PlotItemDialog::yAxisPlotMarkersChanged() {
   _plotItem->yAxis()->setAxisPlotMarkers(_yMarkersTab->plotMarkers());
 }
 
+
+void PlotItemDialog::globalFontUpdate() {
+  qreal fontScale = _labelTab->globalLabelFontScale();
+  QFont font = _labelTab->globalLabelFont();
+  QColor color = _labelTab->globalLabelColor();
+
+  _topLabelTab->setLabelFontScale(fontScale);
+  _bottomLabelTab->setLabelFontScale(fontScale);
+  _leftLabelTab->setLabelFontScale(fontScale);
+  _rightLabelTab->setLabelFontScale(fontScale);
+  _axisLabelTab->setLabelFontScale(fontScale);
+
+  _topLabelTab->setLabelFont(font);
+  _bottomLabelTab->setLabelFont(font);
+  _leftLabelTab->setLabelFont(font);
+  _rightLabelTab->setLabelFont(font);
+  _axisLabelTab->setLabelFont(font);
+
+  _topLabelTab->setLabelColor(color);
+  _bottomLabelTab->setLabelColor(color);
+  _leftLabelTab->setLabelColor(color);
+  _rightLabelTab->setLabelColor(color);
+  _axisLabelTab->setLabelColor(color);
+
+}
 
 }
 

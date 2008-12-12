@@ -54,7 +54,6 @@ ApplicationSettings::ApplicationSettings() {
   _refViewHeight = _settings->value("general/referenceviewheight", QVariant(12)).toDouble();
   _refFontSize = _settings->value("general/referencefontsize", QVariant(12)).toInt();
   _minFontSize = _settings->value("general/minimumfontsize", QVariant(5)).toInt();
-  _defaultFontFamily = _settings->value("general/defaultfontfamily", "Albany AMT").toString();
   _maxUpdate = _settings->value("general/minimumupdateperiod", QVariant(2000)).toInt();
 
   _showGrid = _settings->value("grid/showgrid", QVariant(true)).toBool();
@@ -78,6 +77,12 @@ ApplicationSettings::ApplicationSettings() {
    _gradientStops = gradient.stops();
     _backgroundBrush = QBrush(gradient);
   }
+
+  QString fontString = _settings->value("defaultlabelproperties/defaultfont", QFont("Albany AMT")).toString();
+  _defaultFont.fromString(fontString);
+  _defaultFontScale = _settings->value("defaultlabelproperties/defaultfontscale", QVariant(0)).toDouble();
+  _defaultFontColor = QColor(_settings->value("defaultlabelproperties/defaultfontcolor", "black").toString());
+
   _shareAxis = _settings->value("childviewoptions/shareaxis", QVariant(true)).toBool();
 }
 
@@ -165,14 +170,38 @@ void ApplicationSettings::setMinimumFontSize(int points) {
 }
 
 
-QString ApplicationSettings::defaultFontFamily() const {
-  return _defaultFontFamily;
+QFont ApplicationSettings::defaultFont() const {
+  return _defaultFont;
 }
 
 
-void ApplicationSettings::setDefaultFontFamily(const QString &fontFamily) {
-  _defaultFontFamily = fontFamily;
-  _settings->setValue("general/defaultfontfamily", fontFamily);
+void ApplicationSettings::setDefaultFont(const QFont &font) {
+  _defaultFont = font;
+  _settings->setValue("defaultlabelproperties/defaultfont", QVariant(font).toString());
+  emit modified();
+}
+
+
+qreal ApplicationSettings::defaultFontScale() const {
+  return _defaultFontScale;
+}
+
+
+void ApplicationSettings::setDefaultFontScale(const qreal scale) {
+  _defaultFontScale = scale;
+  _settings->setValue("defaultlabelproperties/defaultfontscale", _defaultFontScale);
+  emit modified();
+}
+
+
+QColor ApplicationSettings::defaultFontColor() const {
+  return _defaultFontColor;
+}
+
+
+void ApplicationSettings::setDefaultFontColor(const QColor &color) {
+  _defaultFontColor = color;
+  _settings->setValue("defaultlabelproperties/defaultfontcolor", _defaultFontColor.name());
   emit modified();
 }
 

@@ -14,6 +14,7 @@
 
 #include <QObject>
 #include <QBrush>
+#include <QFont>
 
 class QSettings;
 
@@ -45,8 +46,14 @@ class ApplicationSettings : public QObject
     int minimumFontSize() const;
     void setMinimumFontSize(const int points);
 
-    QString defaultFontFamily() const;
-    void setDefaultFontFamily(const QString &fontFamily);
+    QFont defaultFont() const;
+    void setDefaultFont(const QFont &font);
+
+    qreal defaultFontScale() const;
+    void setDefaultFontScale(const qreal scale);
+
+    QColor defaultFontColor() const;
+    void setDefaultFontColor(const QColor &color);
 
     int minimumUpdatePeriod() const;
     void setMinimumUpdatePeriod(const int period);
@@ -87,6 +94,9 @@ class ApplicationSettings : public QObject
     int _refFontSize;
     int _minFontSize;
     QString _defaultFontFamily;
+    QFont _defaultFont;
+    qreal _defaultFontScale;
+    QColor _defaultFontColor;
     int _maxUpdate;
     bool _showGrid;
     bool _snapToGrid;

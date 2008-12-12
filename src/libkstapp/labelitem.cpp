@@ -17,6 +17,8 @@
 #include "labelitemdialog.h"
 #include "labelcreator.h"
 
+#include "applicationsettings.h"
+
 #include "debug.h"
 
 #include <QDebug>
@@ -27,12 +29,15 @@
 namespace Kst {
 
 LabelItem::LabelItem(View *parent, const QString& txt)
-  : ViewItem(parent), _parsed(0), _text(txt), _scale(0) {
+  : ViewItem(parent), _parsed(0), _text(txt) {
   setName("Label");
   setZValue(LABEL_ZVALUE);
 
   setFixedSize(true);
   setAllowedGripModes(Move /*| Resize*/ | Rotate /*| Scale*/);
+  _font = parentView()->defaultFont();
+  _color = ApplicationSettings::self()->defaultFontColor();
+  _scale = ApplicationSettings::self()->defaultFontScale();
 }
 
 
@@ -52,7 +57,8 @@ void LabelItem::paint(QPainter *painter) {
   if (_parsed) {
     painter->save();
     QRectF box = rect();
-    QFont font(parentView()->defaultFont(_scale));
+    QFont font(_font);
+    font.setPixelSize(parentView()->defaultFont(_scale).pixelSize());
     QFontMetrics fm(font);
     painter->translate(QPointF(box.x(), box.y() + fm.ascent()));
     Label::RenderContext rc(font, painter);
@@ -71,6 +77,7 @@ void LabelItem::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("text", _text);
   xml.writeAttribute("scale", QVariant(_scale).toString());
   xml.writeAttribute("color", QVariant(_color).toString());
+  xml.writeAttribute("font", QVariant(_font).toString());
   ViewItem::save(xml);
   xml.writeEndElement();
 }
@@ -114,6 +121,16 @@ void LabelItem::edit() {
 }
 
 
+QFont LabelItem::labelFont() const {
+  return _font;
+}
+
+
+void LabelItem::setLabelFont(const QFont &font) {
+  _font = font;
+}
+
+
 void CreateLabelCommand::createItem() {
   bool ok = false;
   QString text;
@@ -128,6 +145,11 @@ void CreateLabelCommand::createItem() {
   }
 
   _item = new LabelItem(_view, text);
+  LabelItem *label = qgraphicsitem_cast<LabelItem*>(_item);
+  label->setLabelScale(dialog.labelScale());
+  label->setLabelColor(dialog.labelColor());
+  label->setLabelFont(dialog.labelFont());
+
   _view->setCursor(Qt::IBeamCursor);
 
   CreateCommand::createItem();
@@ -168,6 +190,12 @@ ViewItem* LabelItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore 
         av = attrs.value("color");
         if (!av.isNull()) {
             rc->setLabelColor(QColor(av.toString()));
+        }
+        av = attrs.value("font");
+        if (!av.isNull()) {
+          QFont font;
+          font.fromString(av.toString());
+          rc->setLabelFont(font);
         }
       } else {
         Q_ASSERT(rc);

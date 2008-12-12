@@ -162,6 +162,21 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     qreal numberLabelFontScale() const;
     void setNumberLabelFontScale(const qreal scale);
 
+    QColor bottomLabelFontColor() const;
+    void setBottomLabelFontColor(const QColor &color);
+
+    QColor topLabelFontColor() const;
+    void setTopLabelFontColor(const QColor &color);
+
+    QColor leftLabelFontColor() const;
+    void setLeftLabelFontColor(const QColor &color);
+
+    QColor rightLabelFontColor() const;
+    void setRightLabelFontColor(const QColor &color);
+
+    QColor numberLabelFontColor() const;
+    void setNumberLabelFontColor(const QColor &color);
+
     bool showLegend() const;
     void setShowLegend(const bool show);
 
@@ -343,6 +358,12 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     qreal _topLabelFontScale;
     qreal _rightLabelFontScale;
     qreal _numberLabelFontScale;
+
+    QColor _leftLabelFontColor;
+    QColor _bottomLabelFontColor;
+    QColor _topLabelFontColor;
+    QColor _rightLabelFontColor;
+    QColor _numberLabelFontColor;
 
     bool _showLegend;
 

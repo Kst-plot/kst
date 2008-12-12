@@ -1,21 +1,18 @@
 <ui version="4.0" >
- <class>LabelCreator</class>
- <widget class="QDialog" name="LabelCreator" >
+ <class>DefaultLabelPropertiesTab</class>
+ <widget class="QWidget" name="DefaultLabelPropertiesTab" >
   <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>392</width>
+    <width>445</width>
     <height>161</height>
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Dialog</string>
+   <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" >
-   <item>
-    <widget class="Kst::LabelBuilder" native="1" name="_labelText" />
-   </item>
    <item>
     <layout class="QGridLayout" name="gridLayout" >
      <item row="0" column="0" >
@@ -95,14 +92,17 @@
     </layout>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="buttonBox" >
+    <spacer>
      <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Vertical</enum>
      </property>
-     <property name="standardButtons" >
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     <property name="sizeHint" stdset="0" >
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
      </property>
-    </widget>
+    </spacer>
    </item>
   </layout>
  </widget>
@@ -112,45 +112,7 @@
    <extends>QToolButton</extends>
    <header>colorbutton.h</header>
   </customwidget>
-  <customwidget>
-   <class>Kst::LabelBuilder</class>
-   <extends>QWidget</extends>
-   <header>labelbuilder.h</header>
-  </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>LabelCreator</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>LabelCreator</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

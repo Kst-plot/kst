@@ -16,10 +16,12 @@
 #include "mainwindow.h"
 #include "document.h"
 
+#include "applicationsettings.h"
+
 namespace Kst {
 
 LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
-  : DialogTab(parent), _plotItem(plotItem) {
+  : DialogTab(parent), _plotItem(plotItem), _activeLineEdit(0) {
 
   setupUi(this);
   setTabTitle(tr("Labels"));
@@ -27,45 +29,25 @@ LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
   QFont font;
   setGlobalFont(font);
 
-  _topLabel->setObjectStore(kstApp->mainWindow()->document()->objectStore());
-  _leftLabel->setObjectStore(kstApp->mainWindow()->document()->objectStore());
-  _bottomLabel->setObjectStore(kstApp->mainWindow()->document()->objectStore());
-  _rightLabel->setObjectStore(kstApp->mainWindow()->document()->objectStore());
+  setGlobalFont(ApplicationSettings::self()->defaultFont());
+  _globalLabelColor->setColor(ApplicationSettings::self()->defaultFontColor());
+  _globalLabelFontSize->setValue(ApplicationSettings::self()->defaultFontScale());
 
-  connect(_topLabel, SIGNAL(labelChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_leftLabel, SIGNAL(labelChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_bottomLabel, SIGNAL(labelChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_rightLabel, SIGNAL(labelChanged(const QString&)), this, SIGNAL(modified()));
+  _scalars->setObjectStore(kstApp->mainWindow()->document()->objectStore());
+  _strings->setObjectStore(kstApp->mainWindow()->document()->objectStore());
 
-  connect(_topFontSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
-  connect(_leftFontSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
-  connect(_bottomFontSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
-  connect(_rightFontSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
-  connect(_numberFontSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
+  connect(_topLabelText, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
+  connect(_leftLabelText, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
+  connect(_bottomLabelText, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
+  connect(_rightLabelText, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
 
-  connect(_topBold, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_leftBold, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_bottomBold, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_rightBold, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_numberBold, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_topLabelText, SIGNAL(inFocus()), this, SLOT(labelSelected()));
+  connect(_leftLabelText, SIGNAL(inFocus()), this, SLOT(labelSelected()));
+  connect(_bottomLabelText, SIGNAL(inFocus()), this, SLOT(labelSelected()));
+  connect(_rightLabelText, SIGNAL(inFocus()), this, SLOT(labelSelected()));
 
-  connect(_topUnderline, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_leftUnderline, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_bottomUnderline, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_rightUnderline, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_numberUnderline, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-
-  connect(_topItalic, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_leftItalic, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_bottomItalic, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_rightItalic, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_numberItalic, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-
-  connect(_topFamily, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
-  connect(_leftFamily, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
-  connect(_bottomFamily, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
-  connect(_rightFamily, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
-  connect(_numberFamily, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
+  connect(_strings, SIGNAL(selectionChanged(QString)), this, SLOT(labelUpdate(const QString&)));
+  connect(_scalars, SIGNAL(selectionChanged(QString)), this, SLOT(labelUpdate(const QString&)));
 
   connect(_showLegend, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
 
@@ -85,42 +67,42 @@ void LabelTab::update() {
 
 
 QString LabelTab::leftLabel() const {
-  return _leftLabel->labelText();
+  return _leftLabelText->text();
 }
 
 
 void LabelTab::setLeftLabel(const QString &label) {
-  _leftLabel->setLabelText(label);
+  _leftLabelText->setText(label);
 }
 
 
 QString LabelTab::bottomLabel() const {
-  return _bottomLabel->labelText();
+  return _bottomLabelText->text();
 }
 
 
 void LabelTab::setBottomLabel(const QString &label) {
-  _bottomLabel->setLabelText(label);
+  _bottomLabelText->setText(label);
 }
 
 
 QString LabelTab::rightLabel() const {
-  return _rightLabel->labelText();
+  return _rightLabelText->text();
 }
 
 
 void LabelTab::setRightLabel(const QString &label) {
-  _rightLabel->setLabelText(label);
+  _rightLabelText->setText(label);
 }
 
 
 QString LabelTab::topLabel() const {
-  return _topLabel->labelText();
+  return _topLabelText->text();
 }
 
 
 void LabelTab::setTopLabel(const QString &label) {
-  _topLabel->setLabelText(label);
+  _topLabelText->setText(label);
 }
 
 
@@ -132,109 +114,28 @@ void LabelTab::setGlobalFont(const QFont &font) {
 }
 
 
-QFont LabelTab::leftLabelFont() const {
-  QFont font(_leftFamily->currentFont());
-  font.setItalic(_leftItalic->isChecked());
-  font.setBold(_leftBold->isChecked());
-  font.setUnderline(_leftUnderline->isChecked());
-  return font;
-}
-
-
-void LabelTab::setLeftLabelFont(const QFont &font) {
-  _leftFamily->setCurrentFont(font);
-  _leftBold->setChecked(font.bold());
-  _leftUnderline->setChecked(font.underline());
-  _leftItalic->setChecked(font.italic());
-}
-
-
-QFont LabelTab::rightLabelFont() const {
-  QFont font(_rightFamily->currentFont());
-  font.setItalic(_rightItalic->isChecked());
-  font.setBold(_rightBold->isChecked());
-  font.setUnderline(_rightUnderline->isChecked());
-  return font;
-}
-
-
-void LabelTab::setRightLabelFont(const QFont &font) {
-  _rightFamily->setCurrentFont(font);
-  _rightBold->setChecked(font.bold());
-  _rightUnderline->setChecked(font.underline());
-  _rightItalic->setChecked(font.italic());
-}
-
-
-QFont LabelTab::topLabelFont() const {
-  QFont font(_topFamily->currentFont());
-  font.setItalic(_topItalic->isChecked());
-  font.setBold(_topBold->isChecked());
-  font.setUnderline(_topUnderline->isChecked());
-  return font;
-}
-
-
-void LabelTab::setTopLabelFont(const QFont &font) {
-  _topFamily->setCurrentFont(font);
-  _topBold->setChecked(font.bold());
-  _topUnderline->setChecked(font.underline());
-  _topItalic->setChecked(font.italic());
-}
-
-
-QFont LabelTab::bottomLabelFont() const {
-  QFont font(_bottomFamily->currentFont());
-  font.setItalic(_bottomItalic->isChecked());
-  font.setBold(_bottomBold->isChecked());
-  font.setUnderline(_bottomUnderline->isChecked());
-  return font;
-}
-
-
-void LabelTab::setBottomLabelFont(const QFont &font) {
-  _bottomFamily->setCurrentFont(font);
-  _bottomBold->setChecked(font.bold());
-  _bottomUnderline->setChecked(font.underline());
-  _bottomItalic->setChecked(font.italic());
-}
-
-
-QFont LabelTab::numberLabelFont() const {
-  QFont font(_numberFamily->currentFont());
-  font.setItalic(_numberItalic->isChecked());
-  font.setBold(_numberBold->isChecked());
-  font.setUnderline(_numberUnderline->isChecked());
-  return font;
-}
-
-
-void LabelTab::setNumberLabelFont(const QFont &font) {
-  _numberFamily->setCurrentFont(font);
-  _numberBold->setChecked(font.bold());
-  _numberUnderline->setChecked(font.underline());
-  _numberItalic->setChecked(font.italic());
-}
-
-
-void LabelTab::applyGlobals() {
+QFont LabelTab::globalLabelFont() const {
   QFont font(_globalLabelFontFamily->currentFont());
   font.setItalic(_globalLabelItalic->isChecked());
   font.setBold(_globalLabelBold->isChecked());
   font.setUnderline(_globalLabelUnderline->isChecked());
+  return font;
+}
 
-  setLeftLabelFont(font);
-  setRightLabelFont(font);
-  setTopLabelFont(font);
-  setBottomLabelFont(font);
-  setNumberLabelFont(font);
 
-  setLeftLabelFontScale(_globalLabelFontSize->value());
-  setRightLabelFontScale(_globalLabelFontSize->value());
-  setTopLabelFontScale(_globalLabelFontSize->value());
-  setBottomLabelFontScale(_globalLabelFontSize->value());
-  setNumberLabelFontScale(_globalLabelFontSize->value());
+qreal LabelTab::globalLabelFontScale() const {
+  return _globalLabelFontSize->value();
+}
 
+
+QColor LabelTab::globalLabelColor() const {
+  return _globalLabelColor->color();
+}
+
+
+void LabelTab::applyGlobals() {
+  emit globalFontUpdate();
+  emit modified();
 }
 
 
@@ -247,56 +148,6 @@ void LabelTab::autoLabel() {
 }
 
 
-qreal LabelTab::rightLabelFontScale() const {
-  return _rightFontSize->value();
-}
-
-
-void LabelTab::setRightLabelFontScale(const qreal scale) {
-  _rightFontSize->setValue(scale);
-}
-
-
-qreal LabelTab::leftLabelFontScale() const {
-  return _leftFontSize->value();
-}
-
-
-void LabelTab::setLeftLabelFontScale(const qreal scale) {
-  _leftFontSize->setValue(scale);
-}
-
-
-qreal LabelTab::topLabelFontScale() const {
-  return _topFontSize->value();
-}
-
-
-void LabelTab::setTopLabelFontScale(const qreal scale) {
-  _topFontSize->setValue(scale);
-}
-
-
-qreal LabelTab::bottomLabelFontScale() const {
-  return _bottomFontSize->value();
-}
-
-
-void LabelTab::setBottomLabelFontScale(const qreal scale) {
-  _bottomFontSize->setValue(scale);
-}
-
-
-qreal LabelTab::numberLabelFontScale() const {
-  return _numberFontSize->value();
-}
-
-
-void LabelTab::setNumberLabelFontScale(const qreal scale) {
-  _numberFontSize->setValue(scale);
-}
-
-
 bool LabelTab::showLegend() const {
   return _showLegend->isChecked();
 }
@@ -306,6 +157,27 @@ void LabelTab::setShowLegend(const bool show) {
   _showLegend->setChecked(show);
 }
 
+
+void LabelTab::labelUpdate(const QString& string) {
+  if (_activeLineEdit) {
+    QString label = _activeLineEdit->text();
+    label += "[" + string + "]";
+    _activeLineEdit->setText(label); 
+  }
+}
+
+
+void LabelTab::labelSelected() {
+  if (_rightLabelText->hasFocus()) {
+    _activeLineEdit = _rightLabelText;
+  } else if (_bottomLabelText->hasFocus()) {
+    _activeLineEdit = _bottomLabelText;
+  } else if (_leftLabelText->hasFocus()) {
+    _activeLineEdit = _leftLabelText;
+  } else {
+    _activeLineEdit = _topLabelText;
+  }
+}
 }
 
 // vim: ts=2 sw=2 et

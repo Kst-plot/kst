@@ -9,68 +9,50 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "labelpropertiestab.h"
-
-#include "application.h"
-#include "objectstore.h"
-#include "mainwindow.h"
-#include "document.h"
+#include "defaultlabelpropertiestab.h"
 
 namespace Kst {
 
-LabelPropertiesTab::LabelPropertiesTab(QWidget *parent)
+DefaultLabelPropertiesTab::DefaultLabelPropertiesTab(QWidget *parent)
   : DialogTab(parent) {
 
   setupUi(this);
-  setTabTitle(tr("Label Properties"));
+  setTabTitle(tr("Default Label Properties"));
 
-  _labelText->setObjectStore(kstApp->mainWindow()->document()->objectStore());
-
-  connect(_labelText, SIGNAL(labelChanged(const QString &)), this, SIGNAL(modified()));
   connect(_labelFontScale, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_labelColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
   connect(_bold, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_underline, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_italic, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_family, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
+  connect(_family, SIGNAL(currentFontChanged(const QFont &)), this, SIGNAL(modified()));
 }
 
 
-LabelPropertiesTab::~LabelPropertiesTab() {
+DefaultLabelPropertiesTab::~DefaultLabelPropertiesTab() {
 }
 
 
-QString LabelPropertiesTab::labelText() const { 
-  return _labelText->labelText(); 
-}
-
-
-void LabelPropertiesTab::setLabelText(const QString &text) {
-  _labelText->setLabelText(text);
-}
-
-
-qreal LabelPropertiesTab::labelScale() const { 
+qreal DefaultLabelPropertiesTab::labelScale() const { 
   return _labelFontScale->value(); 
 }
 
 
-void LabelPropertiesTab::setLabelScale(const qreal scale) { 
+void DefaultLabelPropertiesTab::setLabelScale(const qreal scale) { 
   _labelFontScale->setValue(scale);
 }
 
 
-QColor LabelPropertiesTab::labelColor() const { 
+QColor DefaultLabelPropertiesTab::labelColor() const { 
   return _labelColor->color();
 }
 
 
-void LabelPropertiesTab::setLabelColor(const QColor &color) {
+void DefaultLabelPropertiesTab::setLabelColor(const QColor &color) {
   _labelColor->setColor(color);
 }
 
 
-QFont LabelPropertiesTab::labelFont() const {
+QFont DefaultLabelPropertiesTab::labelFont() const {
   QFont font(_family->currentFont());
   font.setItalic(_italic->isChecked());
   font.setBold(_bold->isChecked());
@@ -79,14 +61,13 @@ QFont LabelPropertiesTab::labelFont() const {
 }
 
 
-void LabelPropertiesTab::setLabelFont(const QFont &font) {
+void DefaultLabelPropertiesTab::setLabelFont(const QFont &font) {
   _family->setCurrentFont(font);
   _bold->setChecked(font.bold());
   _underline->setChecked(font.underline());
   _italic->setChecked(font.italic());
 }
 
-
-
 }
+
 // vim: ts=2 sw=2 et

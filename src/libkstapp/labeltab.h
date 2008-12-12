@@ -38,48 +38,31 @@ class KST_EXPORT LabelTab : public DialogTab, Ui::LabelTab {
     QString rightLabel() const;
     void setRightLabel(const QString &label);
 
-    QFont leftLabelFont() const;
-    void setLeftLabelFont(const QFont &font);
-
-    QFont rightLabelFont() const;
-    void setRightLabelFont(const QFont &font);
-
-    QFont topLabelFont() const;
-    void setTopLabelFont(const QFont &font);
-
-    QFont bottomLabelFont() const;
-    void setBottomLabelFont(const QFont &font);
-
-    QFont numberLabelFont() const;
-    void setNumberLabelFont(const QFont &font);
-
-    qreal bottomLabelFontScale() const;
-    void setBottomLabelFontScale(const qreal scale);
-
-    qreal numberLabelFontScale() const;
-    void setNumberLabelFontScale(const qreal scale);
-
-    qreal leftLabelFontScale() const;
-    void setLeftLabelFontScale(const qreal scale);
-
-    qreal topLabelFontScale() const;
-    void setTopLabelFontScale(const qreal scale);
-
-    qreal rightLabelFontScale() const;
-    void setRightLabelFontScale(const qreal scale);
-
     bool showLegend() const;
     void setShowLegend(const bool show);
+
+    QFont globalLabelFont() const;
+    qreal globalLabelFontScale() const;
+    QColor globalLabelColor() const;
+
+  Q_SIGNALS:
+    void test();
+    void globalFontUpdate();
 
   public Q_SLOTS:
     void update();
     void autoLabel();
     void applyGlobals();
 
+  private Q_SLOTS:
+    void labelUpdate(const QString&);
+    void labelSelected();
+
   private:
     void setGlobalFont(const QFont &font);
 
     PlotItem *_plotItem;
+    QLineEdit* _activeLineEdit;
 
 };
 

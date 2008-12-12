@@ -475,8 +475,8 @@ void View::updateFont() {
     fontSize = ApplicationSettings::self()->minimumFontSize();
   }
 
+  _defaultFont = ApplicationSettings::self()->defaultFont();
   _defaultFont.setPixelSize(fontSize);
-  _defaultFont.setFamily(ApplicationSettings::self()->defaultFontFamily());
 }
 
 

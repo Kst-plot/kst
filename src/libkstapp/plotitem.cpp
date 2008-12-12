@@ -30,6 +30,8 @@
 #include "plotitemdialog.h"
 #include "dialoglauncher.h"
 
+#include "applicationsettings.h"
+
 #include "math_kst.h"
 
 #include "settings.h"
@@ -67,11 +69,6 @@ PlotItem::PlotItem(View *parent)
   _calculatedAxisMarginHeight(0.0),
   _leftPadding(0.0),
   _bottomPadding(0.0),
-  _leftLabelFontScale(0.0),
-  _bottomLabelFontScale(0.0),
-  _topLabelFontScale(0.0),
-  _rightLabelFontScale(0.0),
-  _numberLabelFontScale(0.0),
   _showLegend(false),
   _legend(0),
   _zoomMenu(0),
@@ -91,6 +88,18 @@ PlotItem::PlotItem(View *parent)
   _topLabelFont = parentView()->defaultFont();
   _rightLabelFont = parentView()->defaultFont();
   _numberLabelFont = parentView()->defaultFont();
+
+  _leftLabelFontColor = ApplicationSettings::self()->defaultFontColor();
+  _bottomLabelFontColor = ApplicationSettings::self()->defaultFontColor();
+  _topLabelFontColor = ApplicationSettings::self()->defaultFontColor();
+  _rightLabelFontColor = ApplicationSettings::self()->defaultFontColor();
+  _numberLabelFontColor = ApplicationSettings::self()->defaultFontColor();
+
+  _leftLabelFontScale = ApplicationSettings::self()->defaultFontScale();
+  _bottomLabelFontScale = ApplicationSettings::self()->defaultFontScale();
+  _topLabelFontScale = ApplicationSettings::self()->defaultFontScale();
+  _rightLabelFontScale = ApplicationSettings::self()->defaultFontScale();
+  _numberLabelFontScale = ApplicationSettings::self()->defaultFontScale();
 
   _undoStack = new QUndoStack(this);
 
@@ -133,17 +142,22 @@ void PlotItem::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("leftlabeloverride", _leftLabelOverride);
   xml.writeAttribute("leftlabelfont", QVariant(_leftLabelFont).toString());
   xml.writeAttribute("leftlabelfontscale", QVariant(_leftLabelFontScale).toString());
+  xml.writeAttribute("leftlabelfontcolor", QVariant(_topLabelFontColor).toString());
   xml.writeAttribute("bottomlabeloverride", _bottomLabelOverride);
   xml.writeAttribute("bottomlabelfont", QVariant(_bottomLabelFont).toString());
   xml.writeAttribute("bottomlabelfontscale", QVariant(_bottomLabelFontScale).toString());
+  xml.writeAttribute("bottomlabelfontcolor", QVariant(_topLabelFontColor).toString());
   xml.writeAttribute("toplabeloverride", _topLabelOverride);
   xml.writeAttribute("toplabelfont", QVariant(_topLabelFont).toString());
   xml.writeAttribute("toplabelfontscale", QVariant(_topLabelFontScale).toString());
+  xml.writeAttribute("toplabelfontcolor", QVariant(_topLabelFontColor).toString());
   xml.writeAttribute("rightlabeloverride", _rightLabelOverride);
   xml.writeAttribute("rightlabelfont", QVariant(_rightLabelFont).toString());
   xml.writeAttribute("rightlabelfontscale", QVariant(_rightLabelFontScale).toString());
+  xml.writeAttribute("rightlabelfontcolor", QVariant(_topLabelFontColor).toString());
   xml.writeAttribute("numberlabelfont", QVariant(_numberLabelFont).toString());
   xml.writeAttribute("numberlabelfontscale", QVariant(_numberLabelFontScale).toString());
+  xml.writeAttribute("numberlabelfontcolor", QVariant(_topLabelFontColor).toString());
   xml.writeAttribute("showlegend", QVariant(_showLegend).toString());
   saveNameInfo(xml, GNUM);
 
@@ -658,6 +672,9 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
 
   _xAxis->validateDrawingRegion(flags, painter);
 
+  painter->save();
+  painter->setPen(_numberLabelFontColor);
+
   QMapIterator<qreal, QString> xLabelIt(_xAxis->axisLabels());
   while (xLabelIt.hasNext()) {
     xLabelIt.next();
@@ -691,6 +708,7 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
     painter->drawText(bound, flags, _xAxis->baseLabel());
   }
   _xLabelRect = xLabelRect;
+  painter->restore();
 
 #if DEBUG_LABEL_REGION
   painter->save();
@@ -707,6 +725,8 @@ void PlotItem::paintLeftTickLabels(QPainter *painter) {
   QRectF yLabelRect;
   int flags = Qt::TextSingleLine | Qt::AlignVCenter;
 
+  painter->save();
+  painter->setPen(_numberLabelFontColor);
   QMapIterator<qreal, QString> yLabelIt(_yAxis->axisLabels());
   while (yLabelIt.hasNext()) {
     yLabelIt.next();
@@ -748,6 +768,7 @@ void PlotItem::paintLeftTickLabels(QPainter *painter) {
     painter->restore();
   }
   _yLabelRect = yLabelRect;
+  painter->restore();
 
 #if DEBUG_LABEL_REGION
   painter->save();
@@ -1155,6 +1176,57 @@ void PlotItem::setNumberLabelFontScale(const qreal scale) {
   _numberLabelFontScale = scale;
 }
 
+
+QColor PlotItem::leftLabelFontColor() const {
+  return _leftLabelFontColor;
+}
+
+
+void PlotItem::setLeftLabelFontColor(const QColor &color) {
+  _leftLabelFontColor = color;
+}
+
+
+QColor PlotItem::rightLabelFontColor() const {
+  return _rightLabelFontColor;
+}
+
+
+void PlotItem::setRightLabelFontColor(const QColor &color) {
+  _rightLabelFontColor = color;
+}
+
+
+QColor PlotItem::topLabelFontColor() const {
+  return _topLabelFontColor;
+}
+
+
+void PlotItem::setTopLabelFontColor(const QColor &color) {
+  _topLabelFontColor = color;
+}
+
+
+QColor PlotItem::bottomLabelFontColor() const {
+  return _bottomLabelFontColor;
+}
+
+
+void PlotItem::setBottomLabelFontColor(const QColor &color) {
+  _bottomLabelFontColor = color;
+}
+
+
+QColor PlotItem::numberLabelFontColor() const {
+  return _numberLabelFontColor;
+}
+
+
+void PlotItem::setNumberLabelFontColor(const QColor &color) {
+  _numberLabelFontColor = color;
+}
+
+
 QString PlotItem::leftLabelOverride() const {
   if (_leftLabelOverride.isEmpty()) {
     return leftLabel();
@@ -1535,6 +1607,9 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
 
   Label::Parsed *parsed = Label::parse(leftLabelOverride());
   if (parsed) {
+
+    parsed->chunk->attributes.color = _leftLabelFontColor;
+
     QRectF leftLabel = leftLabelRect(false);
     QPixmap pixmap(leftLabel.height(), leftLabel.width());
     pixmap.fill(Qt::transparent);
@@ -1611,6 +1686,8 @@ void PlotItem::paintBottomLabel(QPainter *painter) {
   if (parsed) {
     painter->save();
 
+    parsed->chunk->attributes.color = _bottomLabelFontColor;
+
     QRectF bottomLabel = bottomLabelRect(false);
     QPixmap pixmap(bottomLabel.width(), bottomLabel.height());
     pixmap.fill(Qt::transparent);
@@ -1675,6 +1752,9 @@ void PlotItem::paintRightLabel(QPainter *painter) {
 
   if (parsed) {
     QRectF rightLabel = rightLabelRect(false);
+
+    parsed->chunk->attributes.color = _rightLabelFontColor;
+
     if (rightLabel.isValid()) {
       QPixmap pixmap(rightLabel.height(), rightLabel.width());
       pixmap.fill(Qt::transparent);
@@ -1751,6 +1831,8 @@ void PlotItem::paintTopLabel(QPainter *painter) {
 
   if (parsed) {
     painter->save();
+
+    parsed->chunk->attributes.color = _topLabelFontColor;
 
     QRectF topLabel = topLabelRect(false);
     if (topLabel.isValid()) {
@@ -2373,7 +2455,10 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         if (!av.isNull()) {
           rc->setLeftLabelFontScale(QVariant(av.toString()).toDouble());
         }
-
+        av = attrs.value("leftlabelfontcolor");
+        if (!av.isNull()) {
+          rc->setLeftLabelFontColor(QColor(av.toString()));
+        }
         av = attrs.value("bottomlabeloverride");
         if (!av.isNull()) {
           rc->setBottomLabelOverride(av.toString());
@@ -2387,6 +2472,10 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         av = attrs.value("bottomlabelfontscale");
         if (!av.isNull()) {
           rc->setBottomLabelFontScale(QVariant(av.toString()).toDouble());
+        }
+        av = attrs.value("bottomlabelfontcolor");
+        if (!av.isNull()) {
+          rc->setBottomLabelFontColor(QColor(av.toString()));
         }
 
         av = attrs.value("toplabeloverride");
@@ -2403,6 +2492,10 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         if (!av.isNull()) {
           rc->setTopLabelFontScale(QVariant(av.toString()).toDouble());
         }
+        av = attrs.value("toplabelfontcolor");
+        if (!av.isNull()) {
+          rc->setTopLabelFontColor(QColor(av.toString()));
+        }
 
         av = attrs.value("rightlabeloverride");
         if (!av.isNull()) {
@@ -2418,6 +2511,12 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         if (!av.isNull()) {
           rc->setRightLabelFontScale(QVariant(av.toString()).toDouble());
         }
+        av = attrs.value("rightlabelfontcolor");
+        if (!av.isNull()) {
+          rc->setTopLabelFontColor(QColor(av.toString()));
+        }
+
+
         av = attrs.value("showlegend");
         if (!av.isNull()) {
           rc->setShowLegend(QVariant(av.toString()).toBool());

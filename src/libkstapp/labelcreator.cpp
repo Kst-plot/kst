@@ -16,6 +16,8 @@
 #include "mainwindow.h"
 #include "document.h"
 
+#include "applicationsettings.h"
+
 namespace Kst {
 
 LabelCreator::LabelCreator(QWidget *parent)
@@ -24,6 +26,14 @@ LabelCreator::LabelCreator(QWidget *parent)
   setupUi(this);
 
   _labelText->setObjectStore(kstApp->mainWindow()->document()->objectStore());
+
+  QFont defaultFont(ApplicationSettings::self()->defaultFont());
+  _family->setCurrentFont(defaultFont);
+  _bold->setChecked(defaultFont.bold());
+  _underline->setChecked(defaultFont.underline());
+  _italic->setChecked(defaultFont.italic());
+  _labelColor->setColor(ApplicationSettings::self()->defaultFontColor());
+  _labelFontScale->setValue(ApplicationSettings::self()->defaultFontScale());
 }
 
 
@@ -33,6 +43,25 @@ LabelCreator::~LabelCreator() {
 
 QString LabelCreator::labelText() {
   return _labelText->labelText();
+}
+
+
+qreal LabelCreator::labelScale() const { 
+  return _labelFontScale->value(); 
+}
+
+
+QColor LabelCreator::labelColor() const { 
+  return _labelColor->color();
+}
+
+
+QFont LabelCreator::labelFont() const {
+  QFont font(_family->currentFont());
+  font.setItalic(_italic->isChecked());
+  font.setBold(_bold->isChecked());
+  font.setUnderline(_underline->isChecked());
+  return font;
 }
 
 }

@@ -30,6 +30,10 @@ class KST_EXPORT LabelCreator : public QDialog, Ui::LabelCreator
     virtual ~LabelCreator();
 
     QString labelText();
+
+    qreal labelScale() const;
+    QColor labelColor() const;
+    QFont labelFont() const;
 };
 
 }
