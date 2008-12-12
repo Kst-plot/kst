@@ -33,6 +33,7 @@
 #include "colorpalette.h"
 #include "datasourceselector.h"
 #include "labelbuilder.h"
+#include "labellineedit.h"
 
 namespace Kst {
 
@@ -276,6 +277,19 @@ class LabelBuilderPlugin : public WidgetPlugin {
     } //do not translate
     QWidget *createWidget(QWidget *parent) {
       return new LabelBuilder(parent);
+    }
+};
+
+class LabelLineEditPlugin : public WidgetPlugin {
+  Q_OBJECT
+  Q_INTERFACES(QDesignerCustomWidgetInterface)
+  public:
+    LabelLineEditPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    QString name() const {
+      return QLatin1String("LabelLineEdit");
+    } //do not translate
+    QWidget *createWidget(QWidget *parent) {
+      return new LabelLineEdit(parent);
     }
 };
 

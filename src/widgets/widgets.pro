@@ -37,6 +37,7 @@ SOURCES += \
     filerequester.cpp \
     gradienteditor.cpp \
     labelbuilder.cpp \
+    labellineedit.cpp \
     matrixselector.cpp \
     scalarlistselector.cpp \
     scalarselector.cpp \
@@ -59,6 +60,7 @@ HEADERS += \
     filerequester.h \
     gradienteditor.h \
     labelbuilder.h \
+    labellineedit.h \
     matrixselector.h \
     scalarselector.h \
     scalarlistselector.h \
