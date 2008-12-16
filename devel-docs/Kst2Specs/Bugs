@@ -1,3 +1,8 @@
+Bugs in Build System:
+  -picks up libraries in lib/X11 before local libs
+  -doesn't support 'make install' nor DESTDIR
+---------
+
 Tied zoom problems: (see devel-docs/Kst2Specs/Plot Geometry.pdf, last page).
   -The tied zoom conditions are not honored
   -The parent option condition is not honored.  In fact, there is no way to set parent options, even if there were parent options.
@@ -107,7 +112,7 @@ It needs to shrink.
       or maybe: only one font and UBI combo for a plot.  UBI can be set w/ latex commands in the label.
   -get rid of all the per-item boxes and use more space efficient separators.
 
-*cbn*
+*Mike*
 ---------
 
 Missing features in edit label label dialog:
@@ -133,3 +138,87 @@ Labels drawn outside of PlotItem region.
   Anything drawn outside of the item is not cleaned up by the item and remains until the view invalidates it, these
   remnants are common when creating plots from the layout mode.
   Additional checks should be added to provide drawing of items that extend outside of the PlotItem.
+
+----------
+
+With multiple plots, when zooming one changes the size properties of
+another (due to axis label changes, for example), the axes labels on the
+non-modified plot(s) can get garbled until the mouse is moved over them.
+
+----------
+
+When displaying data that is constant, the range is from about zero to slightly
+above the curve (meaning the curve is very near the top of the plot.
+instead, it should center the curve and have a range of ±0.1 around the constant
+value.
+
+----------
+
+Double clicking on a curve in zoom mode should bring up the edit curve dialog (was in 1.x, 
+but was a little buggy).
+
+----------
+
+Data mode (see 1.x) should be implemented
+
+----------
+ 
+Reference point (see 1.x, 'c')  should be implemented.
+
+----------
+ 
+Export as png with a set width and height shows transparency (blank)
+where extra space is, rather than resizing the view for the export.
+
+----------
+ 
+Kst should ask about saving the .kst file on exit if the document has changed
+(basically, any change other than a mouse/arrow zoom).  See 1.x.
+
+----------
+ 
+.kst should be appended to the name of a .kst file if it is not already there.
+
+---------
+
+kst reads live dirfiles less efficiently than before.  On a shitty
+computer (devlin666), kst1.7 can display 200 frames of 24 bolometer
+channels (100Hz samples; 20 samples per frame) with a 500ms kst update
+timer, and only use about 20% of the cpu and the computer will still
+seem 'responsive enough'.  kst2 under the same conditions, except with
+2000ms kst update timer uses about 55% of the cpu and the computer (and
+kst) seem more sluggish.  
+
+---------
+
+datawizard generated multiple plots per view have the font size for
+the lables way too big (so big that, in the case of 24 plots), the axis
+labels take up >75% of the real estate.  The wizard should chose the font
+based on the number of plots that will be in the tlv when finished.
+
+--------
+
+kst settings dialogue box should select "General" when first opened
+to indicate that what we're seeing to the right is the General tab.
+
+--------
+
+The first pane of the data wizard should be reading directories in
+the background, instead of in the foreground where it steals X focus
+until the directory is read.  I ran into a interminable-focus-stealing
+problem where kst was attempting to read a dead NFS mount.  Required an
+X restart.
+
+--------
+
+No way to cancel a drawing command.
+  Select a drawing tool (say, a box)
+  Change your mind.... tough - you have to draw something.
+
+--------
+
+No visible feedback as to what drawing mode you are in...
+  Select a drawing tool (say, a box).  There is no visible indication
+  that you just selected a drawing tool.  The tool should be clearly shown 
+  either with the toolbar icon remaining depressed until the action is finished, 
+  or in the mouse icon.
