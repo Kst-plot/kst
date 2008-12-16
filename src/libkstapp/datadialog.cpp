@@ -75,10 +75,10 @@ void DataDialog::createGui() {
   QWidget *box = topCustomWidget();
 
   QHBoxLayout *layout = new QHBoxLayout(box);
-//  layout->setContentsMargins(0, -1, 0, -1);
 
   QLabel *label = new QLabel(tr("Unique Name:"), box);
   _tagString = new QLineEdit(box);
+  connect(_tagString, SIGNAL(textChanged(QString)), this, SLOT(modified()));
 
   QPushButton *button = new QPushButton(tr("Edit Multiple >>"));
   connect(button, SIGNAL(clicked()), this, SLOT(slotEditMultiple()));
@@ -99,6 +99,7 @@ void DataDialog::createGui() {
   layout->addWidget(button);
 
   box->setLayout(layout);
+
 }
 
 

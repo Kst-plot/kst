@@ -314,6 +314,7 @@ QString DataVector::label() const {
     label = _field;
   }
 
+  label.replace('_', "\\_");
   return label;
 }
 

@@ -505,6 +505,7 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
       curve->setPointDensity(_curveTab->curveAppearance()->pointDensity());
       curve->setBarStyle(_curveTab->curveAppearance()->barStyle());
       curve->setIgnoreAutoScale(_curveTab->ignoreAutoScale());
+      curve->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
       curve->update();
       curve->unlock();

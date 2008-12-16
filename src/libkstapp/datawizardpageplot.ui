@@ -91,7 +91,7 @@
          <string>&amp;All curves in one plot</string>
         </property>
         <property name="checked" >
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -102,6 +102,9 @@
         </property>
         <property name="shortcut" >
          <string>Alt+1</string>
+        </property>
+        <property name="checked" >
+         <bool>true</bool>
         </property>
        </widget>
       </item>

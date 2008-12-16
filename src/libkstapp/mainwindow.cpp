@@ -114,20 +114,8 @@ void MainWindow::setLayoutMode(bool layoutMode) {
   else
     v->setViewMode(View::Data);
 
-  //disable all layout actions
-  _createLabelAct->setEnabled(layoutMode);
-  _createBoxAct->setEnabled(layoutMode);
-  _createCircleAct->setEnabled(layoutMode);
-  _createEllipseAct->setEnabled(layoutMode);
-  _createLineAct->setEnabled(layoutMode);
-  _createArrowAct->setEnabled(layoutMode);
-  _createPictureAct->setEnabled(layoutMode);
-  _createPlotAct->setEnabled(layoutMode);
-  _createSvgAct->setEnabled(layoutMode);
-  _createLayoutAct->setEnabled(layoutMode);
-
-  _layoutToolBar->setVisible(layoutMode);
-  _zoomToolBar->setVisible(!layoutMode);
+/*  _layoutToolBar->setVisible(layoutMode);
+  _zoomToolBar->setVisible(!layoutMode);*/
 }
 
 
@@ -326,7 +314,7 @@ void MainWindow::about() {
   // Sorted alphabetically, first group is 2.0 contributors
   const QString msg = tr(
   "<qt><h2>Kst 2.0 - A data viewing program.</h2>\n<hr>\n"
-  "Copyright &copy; 2000-2007 Barth Netterfield<br>"
+  "Copyright &copy; 2000-2008 Barth Netterfield<br>"
   "<a href=\"http://kst.kde.org/\">http://kst.kde.org/</a><br>"
   "Please report bugs to: <a href=\"http://bugs.kde.org/\">http://bugs.kde.org/</a><br>"
   "Authors:<ul>"
@@ -441,54 +429,54 @@ void MainWindow::createActions() {
   _createLabelAct = new QAction(tr("&Create label"), this);
   _createLabelAct->setStatusTip(tr("Create a label for the current view"));
   _createLabelAct->setIcon(QPixmap(":kst_gfx_label.png"));
-  _createLabelAct->setEnabled(false);
+  _createLabelAct->setShortcut(QString("F3"));
   connect(_createLabelAct, SIGNAL(triggered()), this, SLOT(createLabel()));
 
   _createBoxAct = new QAction(tr("&Create box"), this);
   _createBoxAct->setStatusTip(tr("Create a box for the current view"));
   _createBoxAct->setIcon(QPixmap(":kst_gfx_rectangle.png"));
-  _createBoxAct->setEnabled(false);
+  _createBoxAct->setShortcut(QString("F4"));
   connect(_createBoxAct, SIGNAL(triggered()), this, SLOT(createBox()));
 
   _createCircleAct = new QAction(tr("&Create circle"), this);
   _createCircleAct->setStatusTip(tr("Create a circle for the current view"));
   _createCircleAct->setIcon(QPixmap(":kst_gfx_ellipse.png"));
-  _createCircleAct->setEnabled(false);
+  _createCircleAct->setShortcut(QString("F5"));
   connect(_createCircleAct, SIGNAL(triggered()), this, SLOT(createCircle()));
 
   _createEllipseAct = new QAction(tr("&Create ellipse"), this);
   _createEllipseAct->setStatusTip(tr("Create an ellipse for the current view"));
   _createEllipseAct->setIcon(QPixmap(":kst_gfx_ellipse.png"));
-  _createEllipseAct->setEnabled(false);
+  _createEllipseAct->setShortcut(QString("F6"));
   connect(_createEllipseAct, SIGNAL(triggered()), this, SLOT(createEllipse()));
 
   _createLineAct = new QAction(tr("&Create line"), this);
   _createLineAct->setStatusTip(tr("Create a line for the current view"));
   _createLineAct->setIcon(QPixmap(":kst_gfx_line.png"));
-  _createLineAct->setEnabled(false);
+  _createLineAct->setShortcut(QString("F7"));
   connect(_createLineAct, SIGNAL(triggered()), this, SLOT(createLine()));
 
   _createArrowAct = new QAction(tr("&Create arrow"), this);
   _createArrowAct->setStatusTip(tr("Create a arrow for the current view"));
   _createArrowAct->setIcon(QPixmap(":kst_gfx_arrow.png"));
-  _createArrowAct->setEnabled(false);
+  _createArrowAct->setShortcut(QString("F8"));
   connect(_createArrowAct, SIGNAL(triggered()), this, SLOT(createArrow()));
 
   _createPictureAct = new QAction(tr("&Create picture"), this);
   _createPictureAct->setStatusTip(tr("Create a picture for the current view"));
   _createPictureAct->setIcon(QPixmap(":kst_gfx_picture.png"));
-  _createPictureAct->setEnabled(false);
+  _createPictureAct->setShortcut(QString("F9"));
   connect(_createPictureAct, SIGNAL(triggered()), this, SLOT(createPicture()));
 
   _createPlotAct = new QAction(tr("&Create plot"), this);
   _createPlotAct->setStatusTip(tr("Create a plot for the current view"));
   _createPlotAct->setIcon(QPixmap(":kst_newplot.png"));
-  _createPlotAct->setEnabled(false);
+  _createPlotAct->setShortcut(QString("F10"));
   connect(_createPlotAct, SIGNAL(triggered()), this, SLOT(createPlot()));
 
   _createSvgAct = new QAction(tr("&Create svg"), this);
   _createSvgAct->setStatusTip(tr("Create a svg for the current view"));
-  _createSvgAct->setEnabled(false);
+  _createSvgAct->setShortcut(QString("F11"));
   connect(_createSvgAct, SIGNAL(triggered()), this, SLOT(createSvg()));
 
   _createLayoutAct = new QAction(tr("&Create layout"), this);
@@ -503,6 +491,7 @@ void MainWindow::createActions() {
   _dataManagerAct = new QAction(tr("Data &Manager..."), this);
   _dataManagerAct->setStatusTip(tr("Show Kst's data manager window"));
   _dataManagerAct->setIcon(QPixmap(":kst_datamanager.png"));
+  _dataManagerAct->setShortcut(QString("d"));
   connect(_dataManagerAct, SIGNAL(triggered()), this, SLOT(showDataManager()));
 
   _vectorEditorAct = new QAction(tr("&View Vectors..."), this);
@@ -542,6 +531,7 @@ void MainWindow::createActions() {
   _dataWizardAct = new QAction(tr("&Data Wizard"), this);
   _dataWizardAct->setStatusTip(tr("Show Kst's Data Wizard"));
   _dataWizardAct->setIcon(QPixmap(":kst_datawizard.png"));
+  _dataWizardAct->setShortcut(QString("w"));
   connect(_dataWizardAct, SIGNAL(triggered()), this, SLOT(showDataWizard()));
 
   _bugReportWizardAct = new QAction(tr("&Bug Report Wizard"), this);
@@ -621,6 +611,7 @@ void MainWindow::createActions() {
   _layoutModeAct->setStatusTip(tr("Toggle the current view's layout mode"));
   _layoutModeAct->setIcon(QPixmap(":kst_layoutmode.png"));
   _layoutModeAct->setCheckable(true);
+  _layoutModeAct->setShortcut(QString("F2"));
   connect(_layoutModeAct, SIGNAL(toggled(bool)), this, SLOT(setLayoutMode(bool)));
 
   _tiedZoomAct = new QAction(tr("&Tied Zoom"), this);
@@ -671,21 +662,17 @@ void MainWindow::createMenus() {
   _viewMenu->addAction(_tiedZoomAct);
   _viewMenu->addSeparator();
 
-  _layoutMenu = _viewMenu->addMenu(tr("&Layout"));
-
-  _layoutMenu->setIcon(QPixmap(":kst_layoutmode.png"));
-
-  _layoutMenu->addAction(_layoutModeAct);
-  _layoutMenu->addSeparator();
-  _layoutMenu->addAction(_createLabelAct);
-  _layoutMenu->addAction(_createBoxAct);
-  _layoutMenu->addAction(_createCircleAct);
-  _layoutMenu->addAction(_createEllipseAct);
-  _layoutMenu->addAction(_createLineAct);
-  _layoutMenu->addAction(_createArrowAct);
-  _layoutMenu->addAction(_createPictureAct);
-  _layoutMenu->addAction(_createPlotAct);
-  _layoutMenu->addAction(_createSvgAct);
+  _viewMenu->addAction(_layoutModeAct);
+  _viewMenu->addSeparator();
+  _viewMenu->addAction(_createLabelAct);
+  _viewMenu->addAction(_createBoxAct);
+  _viewMenu->addAction(_createCircleAct);
+  _viewMenu->addAction(_createEllipseAct);
+  _viewMenu->addAction(_createLineAct);
+  _viewMenu->addAction(_createArrowAct);
+  _viewMenu->addAction(_createPictureAct);
+  _viewMenu->addAction(_createPlotAct);
+  _viewMenu->addAction(_createSvgAct);
 
   _toolsMenu = menuBar()->addMenu(tr("&Tools"));
   _toolsMenu->addAction(_dataWizardAct);
@@ -721,22 +708,19 @@ void MainWindow::createToolBars() {
   _dataToolBar = addToolBar(tr("Data"));
   _dataToolBar->addAction(_dataManagerAct);
   _dataToolBar->addAction(_dataWizardAct);
-//   _dataToolBar->addAction(_vectorEditorAct); //no icon
-//   _dataToolBar->addAction(_scalarEditorAct); //no icon
-//   _dataToolBar->addAction(_matrixEditorAct); //no icon
   _dataToolBar->addAction(_backAct);
   _dataToolBar->addAction(_forwardAct);
   _dataToolBar->addAction(_pauseAct);
   _dataToolBar->addAction(_readFromEndAct);
-  //_dataToolBar->addAction(_dataWizardAct);
 
-  _layoutToggleToolBar = addToolBar(tr("Mode"));
-  _layoutToggleToolBar->addAction(_layoutModeAct);
+//   _layoutToggleToolBar = addToolBar(tr("Mode"));
 
   _zoomToolBar = addToolBar(tr("Zoom"));
   _zoomToolBar->addAction(_tiedZoomAct);
 
   _layoutToolBar = new QToolBar(tr("Layout"), this);
+  _layoutToolBar->addAction(_layoutModeAct);
+  _layoutToolBar->addSeparator();
   _layoutToolBar->addAction(_createLabelAct); //no icon
   _layoutToolBar->addAction(_createBoxAct);
   _layoutToolBar->addAction(_createCircleAct);
@@ -750,8 +734,8 @@ void MainWindow::createToolBars() {
   _layoutToolBar->addSeparator();
 
   _layoutToolBar->addAction(_createLayoutAct);
-  _layoutToolBar->setVisible(false);
   _zoomToolBar->setVisible(true);
+  _layoutToolBar->setVisible(true);
 
   addToolBar(Qt::TopToolBarArea, _layoutToolBar);
 }

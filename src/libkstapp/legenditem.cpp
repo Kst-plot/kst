@@ -142,7 +142,7 @@ void LegendItem::paint(QPainter *painter) {
 
 
 QSize LegendItem::paintRelation(RelationPtr relation, QPixmap *pixmap, const QFont &font) {
-  Label::Parsed *parsed = Label::parse(relation->Name());
+  Label::Parsed *parsed = Label::parse(relation->descriptiveName());
 
   pixmap->fill(Qt::transparent);
 
