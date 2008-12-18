@@ -220,5 +220,17 @@ No way to cancel a drawing command.
 No visible feedback as to what drawing mode you are in...
   Select a drawing tool (say, a box).  There is no visible indication
   that you just selected a drawing tool.  The tool should be clearly shown 
-  either with the toolbar icon remaining depressed until the action is finished, 
-  or in the mouse icon.
+  either with the toolbar icon remaining depressed until the action is
+  finished, or in the mouse icon.
+
+--------
+
+In labels, \textbf{text} and \textit{text} set bold and italics for 'text',
+but they don't un-set bold and italics after the end of the curley brackets.
+They should.
+
+--------
+
+Should add some more latex mode fields
+  \odot
+
