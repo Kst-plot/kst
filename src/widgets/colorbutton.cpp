@@ -65,7 +65,8 @@ void ColorButton::paintEvent(QPaintEvent *event)
 
   QPainter painter(this);
   QBrush brush(_color);
-  qDrawShadePanel(&painter, rect().x() + 2, rect().y() + 2, rect().width() - 4, rect().height() - 4,
+  int m = (rect().height())/6;
+  qDrawShadePanel(&painter, rect().x() + m, rect().y() + m, rect().width() - 2*m, rect().height() - 2*m,
                   palette(), /*sunken*/ isDown(), /*lineWidth*/ 1, /*fill*/ &brush);
 }
 

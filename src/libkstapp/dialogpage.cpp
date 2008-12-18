@@ -73,6 +73,11 @@ void DialogPageTab::addDialogTab(DialogTab *tab) {
 }
 
 
+void DialogPageTab::setTabText(int i, const QString &text) {
+  _tabWidget->setTabText(i, text);
+}
+
+
 QWidget* DialogPageTab::currentWidget() {
   return _tabWidget->currentWidget();
 }

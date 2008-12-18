@@ -132,6 +132,24 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QString titleOverride() const;
     void setTitleOverride(const QString &label);
 
+    bool leftFontUseGlobal() const {return _leftFontUseGlobal;}
+    void setLeftFontUseGlobal(const bool use_global) {_leftFontUseGlobal = use_global;}
+
+    bool rightFontUseGlobal() const {return _rightFontUseGlobal;}
+    void setRightFontUseGlobal(const bool use_global) {_rightFontUseGlobal = use_global;}
+
+    bool topFontUseGlobal() const {return _topFontUseGlobal;}
+    void setTopFontUseGlobal(const bool use_global) {_topFontUseGlobal = use_global;}
+
+    bool bottomFontUseGlobal() const {return _bottomFontUseGlobal;}
+    void setBottomFontUseGlobal(const bool use_global) {_bottomFontUseGlobal = use_global;}
+
+    bool numberFontUseGlobal() const {return _numberFontUseGlobal;}
+    void setNumberFontUseGlobal(const bool use_global) {_numberFontUseGlobal = use_global;}
+
+    QFont globalFont() const;
+    void setGlobalFont(const QFont &font);
+
     QFont topLabelFont() const;
     void setTopLabelFont(const QFont &font);
 
@@ -147,6 +165,9 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QFont numberLabelFont() const;
     void setNumberLabelFont(const QFont &font);
 
+    qreal globalFontScale() const;
+    void setGlobalFontScale(const qreal scale);
+
     qreal bottomLabelFontScale() const;
     void setBottomLabelFontScale(const qreal scale);
 
@@ -161,6 +182,9 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 
     qreal numberLabelFontScale() const;
     void setNumberLabelFontScale(const qreal scale);
+
+    QColor globalFontColor() const;
+    void setGlobalFontColor(const QColor &color);
 
     QColor bottomLabelFontColor() const;
     void setBottomLabelFontColor(const QColor &color);
@@ -347,23 +371,32 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QString _topLabelOverride;
     QString _rightLabelOverride;
 
+    QFont _globalFont;
     QFont _leftLabelFont;
     QFont _bottomLabelFont;
     QFont _topLabelFont;
     QFont _rightLabelFont;
     QFont _numberLabelFont;
 
+    qreal _globalFontScale;
     qreal _leftLabelFontScale;
     qreal _bottomLabelFontScale;
     qreal _topLabelFontScale;
     qreal _rightLabelFontScale;
     qreal _numberLabelFontScale;
 
+    QColor _globalFontColor;
     QColor _leftLabelFontColor;
     QColor _bottomLabelFontColor;
     QColor _topLabelFontColor;
     QColor _rightLabelFontColor;
     QColor _numberLabelFontColor;
+
+    bool _leftFontUseGlobal;
+    bool _rightFontUseGlobal;
+    bool _topFontUseGlobal;
+    bool _bottomFontUseGlobal;
+    bool _numberFontUseGlobal;
 
     bool _showLegend;
 

@@ -71,5 +71,7 @@
         <file>kst_leftarrow.png</file>
         <file>kst_uparrow.png</file>
         <file>kst_downarrow.png</file>
+        <file>kst_bold.png</file>
+        <file>kst_italic.png</file>
     </qresource>
 </RCC>

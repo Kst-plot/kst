@@ -26,6 +26,7 @@ class LabelTab;
 class ObjectStore;
 class PlotItem;
 class OverrideLabelTab;
+class DialogPageTab;
 
 class KST_EXPORT PlotItemDialog : public ViewItemDialog
 {
@@ -43,7 +44,11 @@ class KST_EXPORT PlotItemDialog : public ViewItemDialog
     void xAxisPlotMarkersChanged();
     void yAxisPlotMarkersChanged();
     void globalFontUpdate();
-
+    void useTopDefaultChanged(bool);
+    void useBottomDefaultChanged(bool);
+    void useLeftDefaultChanged(bool);
+    void useRightDefaultChanged(bool);
+    void useAxisDefaultChanged(bool);
   private:
     void setupContent();
     void setupAxis();
@@ -67,6 +72,8 @@ class KST_EXPORT PlotItemDialog : public ViewItemDialog
     OverrideLabelTab *_rightLabelTab;
     OverrideLabelTab *_axisLabelTab;
     PlotMarkersTab* _plotMarkersTab;
+    DialogPageTab *_labelPage;
+
 
     QList<DialogPage*> _relationPages;
 

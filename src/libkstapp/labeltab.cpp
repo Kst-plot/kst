@@ -24,14 +24,19 @@ LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
   : DialogTab(parent), _plotItem(plotItem), _activeLineEdit(0) {
 
   setupUi(this);
+
+  _globalLabelBold->setIcon(QPixmap(":kst_bold.png"));
+  _globalLabelBold->setFixedWidth(32);
+  _globalLabelItalic->setIcon(QPixmap(":kst_italic.png"));
+  _globalLabelItalic->setFixedWidth(32);
+  _globalLabelColor->setFixedWidth(32);
+  _globalLabelColor->setFixedHeight(32);
+
   setTabTitle(tr("Labels"));
 
-  QFont font;
-  setGlobalFont(font);
-
-  setGlobalFont(ApplicationSettings::self()->defaultFont());
-  _globalLabelColor->setColor(ApplicationSettings::self()->defaultFontColor());
-  _globalLabelFontSize->setValue(ApplicationSettings::self()->defaultFontScale());
+  setGlobalFont(_plotItem->globalFont());
+  _globalLabelColor->setColor(_plotItem->globalFontColor());
+  _globalLabelFontSize->setValue(_plotItem->globalFontScale());
 
   _scalars->setObjectStore(kstApp->mainWindow()->document()->objectStore());
   _strings->setObjectStore(kstApp->mainWindow()->document()->objectStore());
@@ -51,10 +56,17 @@ LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
 
   connect(_showLegend, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
 
-  connect(_applyGlobalsButton, SIGNAL(pressed()), this, SLOT(applyGlobals()));
-  connect(_autoLabel, SIGNAL(pressed()), this, SLOT(autoLabel()));
+  //connect(_applyGlobalsButton, SIGNAL(pressed()), this, SLOT(applyGlobals()));
+  //connect(_autoLabel, SIGNAL(pressed()), this, SLOT(autoLabel()));
 
   connect(_editLegendContents, SIGNAL(pressed()), _plotItem->legend(), SLOT(edit()));
+
+  connect(_globalLabelFontSize, SIGNAL(valueChanged(double)), this, SIGNAL(globalFontUpdate()));
+  connect(_globalLabelBold, SIGNAL(toggled(bool)), this, SIGNAL(globalFontUpdate()));
+  connect(_globalLabelItalic, SIGNAL(toggled(bool)), this, SIGNAL(globalFontUpdate()));
+  connect(_globalLabelFontFamily, SIGNAL(currentFontChanged(const QFont &)), this, SIGNAL(globalFontUpdate()));
+  connect(_globalLabelColor, SIGNAL(changed(const QColor &)), this, SIGNAL(globalFontUpdate()));
+
 }
 
 
@@ -109,7 +121,6 @@ void LabelTab::setTopLabel(const QString &label) {
 void LabelTab::setGlobalFont(const QFont &font) {
   _globalLabelFontFamily->setCurrentFont(font);
   _globalLabelBold->setChecked(font.bold());
-  _globalLabelUnderline->setChecked(font.underline());
   _globalLabelItalic->setChecked(font.italic());
 }
 
@@ -118,7 +129,6 @@ QFont LabelTab::globalLabelFont() const {
   QFont font(_globalLabelFontFamily->currentFont());
   font.setItalic(_globalLabelItalic->isChecked());
   font.setBold(_globalLabelBold->isChecked());
-  font.setUnderline(_globalLabelUnderline->isChecked());
   return font;
 }
 
@@ -130,12 +140,6 @@ qreal LabelTab::globalLabelFontScale() const {
 
 QColor LabelTab::globalLabelColor() const {
   return _globalLabelColor->color();
-}
-
-
-void LabelTab::applyGlobals() {
-  emit globalFontUpdate();
-  emit modified();
 }
 
 

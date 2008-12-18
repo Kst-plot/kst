@@ -40,21 +40,21 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
   _store = kstApp->mainWindow()->document()->objectStore();
 
   _labelTab = new LabelTab(_plotItem, this);
-  _topLabelTab = new OverrideLabelTab(tr("Top Label"), this);
-  _bottomLabelTab = new OverrideLabelTab(tr("Bottom Label"), this);
-  _leftLabelTab = new OverrideLabelTab(tr("Left Label"), this);
-  _rightLabelTab = new OverrideLabelTab(tr("Right Label"), this);
-  _axisLabelTab = new OverrideLabelTab(tr("Axis Numbers"), this);
+  _topLabelTab = new OverrideLabelTab(tr("Top Font"), this);
+  _bottomLabelTab = new OverrideLabelTab(tr("Bottom Font"), this);
+  _leftLabelTab = new OverrideLabelTab(tr("Left Font"), this);
+  _rightLabelTab = new OverrideLabelTab(tr("Right Font"), this);
+  _axisLabelTab = new OverrideLabelTab(tr("Axis Font"), this);
 
-  DialogPageTab *labelPage = new DialogPageTab(this);
-  labelPage->setPageTitle(tr("Labels"));
-  labelPage->addDialogTab(_labelTab);
-  labelPage->addDialogTab(_topLabelTab);
-  labelPage->addDialogTab(_bottomLabelTab);
-  labelPage->addDialogTab(_leftLabelTab);
-  labelPage->addDialogTab(_rightLabelTab);
-  labelPage->addDialogTab(_axisLabelTab);
-  addDialogPage(labelPage);
+  _labelPage = new DialogPageTab(this);
+  _labelPage->setPageTitle(tr("Labels"));
+  _labelPage->addDialogTab(_labelTab);
+  _labelPage->addDialogTab(_topLabelTab);
+  _labelPage->addDialogTab(_bottomLabelTab);
+  _labelPage->addDialogTab(_leftLabelTab);
+  _labelPage->addDialogTab(_rightLabelTab);
+  _labelPage->addDialogTab(_axisLabelTab);
+  addDialogPage(_labelPage);
 
   connect(_labelTab, SIGNAL(apply()), this, SLOT(labelsChanged()));
   connect(_topLabelTab, SIGNAL(apply()), this, SLOT(labelsChanged()));
@@ -63,6 +63,12 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
   connect(_rightLabelTab, SIGNAL(apply()), this, SLOT(labelsChanged()));
   connect(_axisLabelTab, SIGNAL(apply()), this, SLOT(labelsChanged()));
   connect(_labelTab, SIGNAL(globalFontUpdate()), this, SLOT(globalFontUpdate()));
+
+  connect(_topLabelTab, SIGNAL(useDefaultChanged(bool)), this, SLOT(useTopDefaultChanged(bool)));
+  connect(_bottomLabelTab, SIGNAL(useDefaultChanged(bool)), this, SLOT(useBottomDefaultChanged(bool)));
+  connect(_leftLabelTab, SIGNAL(useDefaultChanged(bool)), this, SLOT(useLeftDefaultChanged(bool)));
+  connect(_rightLabelTab, SIGNAL(useDefaultChanged(bool)), this, SLOT(useRightDefaultChanged(bool)));
+  connect(_axisLabelTab, SIGNAL(useDefaultChanged(bool)), this, SLOT(useAxisDefaultChanged(bool)));
 
   _xAxisTab = new AxisTab(this);
   DialogPage *xAxisPage = new DialogPage(this);
@@ -124,22 +130,27 @@ void PlotItemDialog::setupLabels() {
   _labelTab->setRightLabel(_plotItem->rightLabelOverride());
   _labelTab->setShowLegend(_plotItem->showLegend());
 
+  _topLabelTab->setUseDefault(_plotItem->topFontUseGlobal());
   _topLabelTab->setLabelFont(_plotItem->topLabelFont());
   _topLabelTab->setLabelFontScale(_plotItem->topLabelFontScale());
   _topLabelTab->setLabelColor(_plotItem->topLabelFontColor());
 
+  _bottomLabelTab->setUseDefault(_plotItem->bottomFontUseGlobal());
   _bottomLabelTab->setLabelFont(_plotItem->bottomLabelFont());
   _bottomLabelTab->setLabelFontScale(_plotItem->bottomLabelFontScale());
   _bottomLabelTab->setLabelColor(_plotItem->bottomLabelFontColor());
 
+  _leftLabelTab->setUseDefault(_plotItem->leftFontUseGlobal());
   _leftLabelTab->setLabelFont(_plotItem->leftLabelFont());
   _leftLabelTab->setLabelFontScale(_plotItem->leftLabelFontScale());
   _leftLabelTab->setLabelColor(_plotItem->leftLabelFontColor());
 
+  _rightLabelTab->setUseDefault(_plotItem->rightFontUseGlobal());
   _rightLabelTab->setLabelFont(_plotItem->rightLabelFont());
   _rightLabelTab->setLabelFontScale(_plotItem->rightLabelFontScale());
   _rightLabelTab->setLabelColor(_plotItem->rightLabelFontColor());
 
+  _axisLabelTab->setUseDefault(_plotItem->numberFontUseGlobal());
   _axisLabelTab->setLabelFont(_plotItem->numberLabelFont());
   _axisLabelTab->setLabelFontScale(_plotItem->numberLabelFontScale());
   _axisLabelTab->setLabelColor(_plotItem->numberLabelFontColor());
@@ -464,24 +475,32 @@ void PlotItemDialog::labelsChanged() {
   _plotItem->setRightLabelOverride(_labelTab->rightLabel());
   _plotItem->setTopLabelOverride(_labelTab->topLabel());
 
+  _plotItem->setGlobalFont(_labelTab->globalLabelFont());
   _plotItem->setLeftLabelFont(_leftLabelTab->labelFont());
   _plotItem->setRightLabelFont(_rightLabelTab->labelFont());
   _plotItem->setTopLabelFont(_topLabelTab->labelFont());
   _plotItem->setBottomLabelFont(_bottomLabelTab->labelFont());
   _plotItem->setNumberLabelFont(_axisLabelTab->labelFont());
 
+  _plotItem->setGlobalFontScale(_labelTab->globalLabelFontScale());
   _plotItem->setLeftLabelFontScale(_leftLabelTab->labelFontScale());
   _plotItem->setRightLabelFontScale(_rightLabelTab->labelFontScale());
   _plotItem->setTopLabelFontScale(_topLabelTab->labelFontScale());
   _plotItem->setBottomLabelFontScale(_bottomLabelTab->labelFontScale());
   _plotItem->setNumberLabelFontScale(_axisLabelTab->labelFontScale());
 
+  _plotItem->setGlobalFontColor(_labelTab->globalLabelColor());
   _plotItem->setLeftLabelFontColor(_leftLabelTab->labelColor());
   _plotItem->setRightLabelFontColor(_rightLabelTab->labelColor());
   _plotItem->setTopLabelFontColor(_topLabelTab->labelColor());
   _plotItem->setBottomLabelFontColor(_bottomLabelTab->labelColor());
   _plotItem->setNumberLabelFontColor(_axisLabelTab->labelColor());
 
+  _plotItem->setTopFontUseGlobal(_topLabelTab->useDefault());
+  _plotItem->setBottomFontUseGlobal(_bottomLabelTab->useDefault());
+  _plotItem->setLeftFontUseGlobal(_leftLabelTab->useDefault());
+  _plotItem->setRightFontUseGlobal(_rightLabelTab->useDefault());
+  _plotItem->setNumberFontUseGlobal(_topLabelTab->useDefault());
   _plotItem->setShowLegend(_labelTab->showLegend());
 }
 
@@ -497,30 +516,67 @@ void PlotItemDialog::yAxisPlotMarkersChanged() {
   _plotItem->yAxis()->setAxisPlotMarkers(_yMarkersTab->plotMarkers());
 }
 
+void PlotItemDialog::useTopDefaultChanged(bool use) {
+  if (use) {
+    _labelPage->setTabText(1, tr("Top Font"));
+    globalFontUpdate();
+  } else {
+    _labelPage->setTabText(1, tr("Top Font*"));
+  }
+}
+
+
+void PlotItemDialog::useBottomDefaultChanged(bool use) {
+  if (use) {
+    _labelPage->setTabText(2, tr("Bottom Font"));
+    globalFontUpdate();
+  } else {
+    _labelPage->setTabText(2, tr("Bottom Font*"));
+  }
+}
+
+
+void PlotItemDialog::useLeftDefaultChanged(bool use) {
+  if (use) {
+    _labelPage->setTabText(3, tr("Left Font"));
+    globalFontUpdate();
+  } else {
+    _labelPage->setTabText(3, tr("Left Font*"));
+  }
+}
+
+
+void PlotItemDialog::useRightDefaultChanged(bool use) {
+  if (use) {
+    _labelPage->setTabText(4, tr("Right Font"));
+    globalFontUpdate();
+  } else {
+    _labelPage->setTabText(4, tr("Right Font*"));
+  }
+}
+
+
+void PlotItemDialog::useAxisDefaultChanged(bool use) {
+  if (use) {
+    _labelPage->setTabText(5, tr("Axis Font"));
+    globalFontUpdate();
+  } else {
+    _labelPage->setTabText(5, tr("Axis Font*"));
+  }
+}
+
 
 void PlotItemDialog::globalFontUpdate() {
   qreal fontScale = _labelTab->globalLabelFontScale();
   QFont font = _labelTab->globalLabelFont();
   QColor color = _labelTab->globalLabelColor();
 
-  _topLabelTab->setLabelFontScale(fontScale);
-  _bottomLabelTab->setLabelFontScale(fontScale);
-  _leftLabelTab->setLabelFontScale(fontScale);
-  _rightLabelTab->setLabelFontScale(fontScale);
-  _axisLabelTab->setLabelFontScale(fontScale);
 
-  _topLabelTab->setLabelFont(font);
-  _bottomLabelTab->setLabelFont(font);
-  _leftLabelTab->setLabelFont(font);
-  _rightLabelTab->setLabelFont(font);
-  _axisLabelTab->setLabelFont(font);
-
-  _topLabelTab->setLabelColor(color);
-  _bottomLabelTab->setLabelColor(color);
-  _leftLabelTab->setLabelColor(color);
-  _rightLabelTab->setLabelColor(color);
-  _axisLabelTab->setLabelColor(color);
-
+  _topLabelTab->setFontSpecsIfDefault(font, fontScale, color);
+  _bottomLabelTab->setFontSpecsIfDefault(font, fontScale, color);
+  _leftLabelTab->setFontSpecsIfDefault(font, fontScale, color);
+  _rightLabelTab->setFontSpecsIfDefault(font, fontScale, color);
+  _axisLabelTab->setFontSpecsIfDefault(font, fontScale, color);
 }
 
 }

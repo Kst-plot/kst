@@ -120,7 +120,6 @@ class MainWindow : public QMainWindow
 
     QPointer<QProgressBar> _progressBar;
 
-    // Do we need these?  I don't think so...
     QMenu *_fileMenu;
     QMenu *_editMenu;
     QMenu *_dataMenu;

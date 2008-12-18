@@ -52,7 +52,6 @@ class KST_EXPORT LabelTab : public DialogTab, Ui::LabelTab {
   public Q_SLOTS:
     void update();
     void autoLabel();
-    void applyGlobals();
 
   private Q_SLOTS:
     void labelUpdate(const QString&);

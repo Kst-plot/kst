@@ -33,6 +33,15 @@ class KST_EXPORT OverrideLabelTab : public DialogTab, Ui::OverrideLabelTab {
 
     QColor labelColor() const;
     void setLabelColor(const QColor &color);
+
+    bool useDefault() const;
+    void setUseDefault(const bool useDefault);
+
+    void setFontSpecsIfDefault(const QFont &font, const qreal scale, const QColor &color);
+
+  Q_SIGNALS:
+    void useDefaultChanged(bool);
+
 };
 
 }

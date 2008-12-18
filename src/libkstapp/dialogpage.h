@@ -62,6 +62,7 @@ class KST_EXPORT DialogPageTab : public DialogPage
     virtual ~DialogPageTab();
 
     void addDialogTab(DialogTab *tab);
+    void setTabText(int i, const QString &title);
 
     QWidget* currentWidget();
 

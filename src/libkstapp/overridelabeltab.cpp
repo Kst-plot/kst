@@ -22,26 +22,31 @@ OverrideLabelTab::OverrideLabelTab(QString title, QWidget *parent)
   : DialogTab(parent) {
 
   setupUi(this);
+  _bold->setIcon(QPixmap(":kst_bold.png"));
+  _bold->setFixedWidth(32);
+  _italic->setIcon(QPixmap(":kst_italic.png"));
+  _italic->setFixedWidth(32);
+  _labelColor->setFixedWidth(32);
+  _labelColor->setFixedHeight(32);
+
   setTabTitle(title);
 
   connect(_fontSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
-  connect(_bold, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_underline, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_italic, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_bold, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
+  connect(_italic, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_family, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_labelColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
+  connect(_useDefault, SIGNAL(toggled(bool)), this, SIGNAL(useDefaultChanged(bool)));
 }
 
 
 OverrideLabelTab::~OverrideLabelTab() {
 }
 
-
 QFont OverrideLabelTab::labelFont() const {
   QFont font(_family->currentFont());
   font.setItalic(_italic->isChecked());
   font.setBold(_bold->isChecked());
-  font.setUnderline(_underline->isChecked());
   return font;
 }
 
@@ -49,7 +54,6 @@ QFont OverrideLabelTab::labelFont() const {
 void OverrideLabelTab::setLabelFont(const QFont &font) {
   _family->setCurrentFont(font);
   _bold->setChecked(font.bold());
-  _underline->setChecked(font.underline());
   _italic->setChecked(font.italic());
 }
 
@@ -72,6 +76,23 @@ QColor OverrideLabelTab::labelColor() const {
 void OverrideLabelTab::setLabelColor(const QColor &color) {
   _labelColor->setColor(color);
 }
+
+void OverrideLabelTab::setFontSpecsIfDefault(const QFont &font, const qreal scale, const QColor &color) {
+  if (_useDefault->isChecked()) {
+    setLabelFontScale(scale);
+    setLabelFont(font);
+    setLabelColor(color);
+  }
+}
+
+void OverrideLabelTab::setUseDefault(bool use_default) {
+  _useDefault->setChecked(use_default);
+}
+
+bool OverrideLabelTab::useDefault() const {
+  return (_useDefault->isChecked());
+}
+
 }
 
 // vim: ts=2 sw=2 et

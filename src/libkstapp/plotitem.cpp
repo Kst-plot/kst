@@ -83,23 +83,32 @@ PlotItem::PlotItem(View *parent)
   _xAxis = new PlotAxis(this, Qt::Horizontal);
   _yAxis = new PlotAxis(this, Qt::Vertical);
 
+  _globalFont = parentView()->defaultFont();
   _leftLabelFont = parentView()->defaultFont();
   _bottomLabelFont = parentView()->defaultFont();
   _topLabelFont = parentView()->defaultFont();
   _rightLabelFont = parentView()->defaultFont();
   _numberLabelFont = parentView()->defaultFont();
 
+  _globalFontColor = ApplicationSettings::self()->defaultFontColor();
   _leftLabelFontColor = ApplicationSettings::self()->defaultFontColor();
   _bottomLabelFontColor = ApplicationSettings::self()->defaultFontColor();
   _topLabelFontColor = ApplicationSettings::self()->defaultFontColor();
   _rightLabelFontColor = ApplicationSettings::self()->defaultFontColor();
   _numberLabelFontColor = ApplicationSettings::self()->defaultFontColor();
 
+  _globalFontScale = ApplicationSettings::self()->defaultFontScale();
   _leftLabelFontScale = ApplicationSettings::self()->defaultFontScale();
   _bottomLabelFontScale = ApplicationSettings::self()->defaultFontScale();
   _topLabelFontScale = ApplicationSettings::self()->defaultFontScale();
   _rightLabelFontScale = ApplicationSettings::self()->defaultFontScale();
   _numberLabelFontScale = ApplicationSettings::self()->defaultFontScale();
+
+  _leftFontUseGlobal = true;
+  _rightFontUseGlobal = true;
+  _topFontUseGlobal = true;
+  _bottomFontUseGlobal = true;
+  _numberFontUseGlobal = true;
 
   _undoStack = new QUndoStack(this);
 
@@ -139,25 +148,33 @@ void PlotItem::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("bottomlabelvisible", QVariant(_isBottomLabelVisible).toString());
   xml.writeAttribute("rightlabelvisible", QVariant(_isRightLabelVisible).toString());
   xml.writeAttribute("toplabelvisible", QVariant(_isTopLabelVisible).toString());
+  xml.writeAttribute("globalfont", QVariant(_globalFont).toString());
+  xml.writeAttribute("globalfontscale", QVariant(_globalFontScale).toString());
+  xml.writeAttribute("globalfontcolor", QVariant(_globalFontColor).toString());
   xml.writeAttribute("leftlabeloverride", _leftLabelOverride);
+  xml.writeAttribute("leftlabeluseglobal", QVariant(_leftFontUseGlobal).toString());
   xml.writeAttribute("leftlabelfont", QVariant(_leftLabelFont).toString());
   xml.writeAttribute("leftlabelfontscale", QVariant(_leftLabelFontScale).toString());
-  xml.writeAttribute("leftlabelfontcolor", QVariant(_topLabelFontColor).toString());
+  xml.writeAttribute("leftlabelfontcolor", QVariant(_leftLabelFontColor).toString());
   xml.writeAttribute("bottomlabeloverride", _bottomLabelOverride);
+  xml.writeAttribute("bottomlabeluseglobal", QVariant(_bottomFontUseGlobal).toString());
   xml.writeAttribute("bottomlabelfont", QVariant(_bottomLabelFont).toString());
   xml.writeAttribute("bottomlabelfontscale", QVariant(_bottomLabelFontScale).toString());
-  xml.writeAttribute("bottomlabelfontcolor", QVariant(_topLabelFontColor).toString());
+  xml.writeAttribute("bottomlabelfontcolor", QVariant(_bottomLabelFontColor).toString());
   xml.writeAttribute("toplabeloverride", _topLabelOverride);
+  xml.writeAttribute("toplabeluseglobal", QVariant(_topFontUseGlobal).toString());
   xml.writeAttribute("toplabelfont", QVariant(_topLabelFont).toString());
   xml.writeAttribute("toplabelfontscale", QVariant(_topLabelFontScale).toString());
   xml.writeAttribute("toplabelfontcolor", QVariant(_topLabelFontColor).toString());
   xml.writeAttribute("rightlabeloverride", _rightLabelOverride);
+  xml.writeAttribute("rightlabeluseglobal", QVariant(_rightFontUseGlobal).toString());
   xml.writeAttribute("rightlabelfont", QVariant(_rightLabelFont).toString());
   xml.writeAttribute("rightlabelfontscale", QVariant(_rightLabelFontScale).toString());
-  xml.writeAttribute("rightlabelfontcolor", QVariant(_topLabelFontColor).toString());
+  xml.writeAttribute("rightlabelfontcolor", QVariant(_rightLabelFontColor).toString());
   xml.writeAttribute("numberlabelfont", QVariant(_numberLabelFont).toString());
+  xml.writeAttribute("numberlabeluseglobal", QVariant(_numberFontUseGlobal).toString());
   xml.writeAttribute("numberlabelfontscale", QVariant(_numberLabelFontScale).toString());
-  xml.writeAttribute("numberlabelfontcolor", QVariant(_topLabelFontColor).toString());
+  xml.writeAttribute("numberlabelfontcolor", QVariant(_numberLabelFontColor).toString());
   xml.writeAttribute("showlegend", QVariant(_showLegend).toString());
   saveNameInfo(xml, GNUM);
 
@@ -1097,6 +1114,16 @@ void PlotItem::setTopLabelFont(const QFont &font) {
 }
 
 
+QFont PlotItem::globalFont() const {
+  return _globalFont;
+}
+
+
+void PlotItem::setGlobalFont(const QFont &font) {
+  _globalFont = font;
+}
+
+
 QFont PlotItem::leftLabelFont() const {
   return _leftLabelFont;
 }
@@ -1137,6 +1164,16 @@ void PlotItem::setRightLabelFontScale(const qreal scale) {
 }
 
 
+qreal PlotItem::globalFontScale() const {
+  return _globalFontScale;
+}
+
+
+void PlotItem::setGlobalFontScale(const qreal scale) {
+  _globalFontScale = scale;
+}
+
+
 qreal PlotItem::leftLabelFontScale() const {
   return _leftLabelFontScale;
 }
@@ -1174,6 +1211,16 @@ qreal PlotItem::numberLabelFontScale() const {
 
 void PlotItem::setNumberLabelFontScale(const qreal scale) {
   _numberLabelFontScale = scale;
+}
+
+
+QColor PlotItem::globalFontColor() const {
+  return _globalFontColor;
+}
+
+
+void PlotItem::setGlobalFontColor(const QColor &color) {
+  _globalFontColor = color;
 }
 
 
@@ -2441,9 +2488,27 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         if (!av.isNull()) {
           rc->setTopLabelVisible(QVariant(av.toString()).toBool());
         }
+        av = attrs.value("globalfont");
+        if (!av.isNull()) {
+          QFont font;
+          font.fromString(av.toString());
+          rc->setGlobalFont(font);
+        }
+        av = attrs.value("globalfontscale");
+        if (!av.isNull()) {
+          rc->setGlobalFontScale(QVariant(av.toString()).toDouble());
+        }
+        av = attrs.value("globalfontcolor");
+        if (!av.isNull()) {
+          rc->setGlobalFontColor(QColor(av.toString()));
+        }
         av = attrs.value("leftlabeloverride");
         if (!av.isNull()) {
           rc->setLeftLabelOverride(av.toString());
+        }
+        av = attrs.value("leftlabeluseglobal");
+        if (!av.isNull()) {
+          rc->setLeftFontUseGlobal(av.toString().toInt());
         }
         av = attrs.value("leftlabelfont");
         if (!av.isNull()) {
@@ -2462,6 +2527,10 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         av = attrs.value("bottomlabeloverride");
         if (!av.isNull()) {
           rc->setBottomLabelOverride(av.toString());
+        }
+        av = attrs.value("bottomlabeluseglobal");
+        if (!av.isNull()) {
+          rc->setBottomFontUseGlobal(av.toString().toInt());
         }
         av = attrs.value("bottomlabelfont");
         if (!av.isNull()) {
@@ -2482,6 +2551,10 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         if (!av.isNull()) {
           rc->setTopLabelOverride(av.toString());
         }
+        av = attrs.value("toplabeluseglobal");
+        if (!av.isNull()) {
+          rc->setTopFontUseGlobal(av.toString().toInt());
+        }
         av = attrs.value("toplabelfont");
         if (!av.isNull()) {
           QFont font;
@@ -2501,6 +2574,10 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         if (!av.isNull()) {
           rc->setRightLabelOverride(av.toString());
         }
+        av = attrs.value("rightlabeluseglobal");
+        if (!av.isNull()) {
+          rc->setRightFontUseGlobal(av.toString().toInt());
+        }
         av = attrs.value("rightlabelfont");
         if (!av.isNull()) {
           QFont font;
@@ -2513,9 +2590,26 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         }
         av = attrs.value("rightlabelfontcolor");
         if (!av.isNull()) {
-          rc->setTopLabelFontColor(QColor(av.toString()));
+          rc->setRightLabelFontColor(QColor(av.toString()));
         }
-
+        av = attrs.value("numberlabeluseglobal");
+        if (!av.isNull()) {
+          rc->setNumberFontUseGlobal(av.toString().toInt());
+        }
+        av = attrs.value("numberlabelfont");
+        if (!av.isNull()) {
+          QFont font;
+          font.fromString(av.toString());
+          rc->setNumberLabelFont(font);
+        }
+        av = attrs.value("numberlabelfontscale");
+        if (!av.isNull()) {
+          rc->setNumberLabelFontScale(QVariant(av.toString()).toDouble());
+        }
+        av = attrs.value("numberlabelfontcolor");
+        if (!av.isNull()) {
+          rc->setNumberLabelFontColor(QColor(av.toString()));
+        }
 
         av = attrs.value("showlegend");
         if (!av.isNull()) {
