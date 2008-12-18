@@ -24,13 +24,20 @@ LabelCreator::LabelCreator(QWidget *parent)
   : QDialog(parent) {
 
   setupUi(this);
+  _bold->setFixedWidth(32);
+  _bold->setFixedHeight(32);
+  _bold->setIcon(QPixmap(":kst_bold.png"));
+  _italic->setFixedWidth(32);
+  _italic->setFixedHeight(32);
+  _italic->setIcon(QPixmap(":kst_italic.png"));
+  _labelColor->setFixedWidth(32);
+  _labelColor->setFixedHeight(32);
 
   _labelText->setObjectStore(kstApp->mainWindow()->document()->objectStore());
 
   QFont defaultFont(ApplicationSettings::self()->defaultFont());
   _family->setCurrentFont(defaultFont);
   _bold->setChecked(defaultFont.bold());
-  _underline->setChecked(defaultFont.underline());
   _italic->setChecked(defaultFont.italic());
   _labelColor->setColor(ApplicationSettings::self()->defaultFontColor());
   _labelFontScale->setValue(ApplicationSettings::self()->defaultFontScale());
@@ -60,7 +67,6 @@ QFont LabelCreator::labelFont() const {
   QFont font(_family->currentFont());
   font.setItalic(_italic->isChecked());
   font.setBold(_bold->isChecked());
-  font.setUnderline(_underline->isChecked());
   return font;
 }
 

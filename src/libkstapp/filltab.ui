@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>459</width>
-    <height>282</height>
+    <width>400</width>
+    <height>171</height>
    </rect>
   </property>
   <property name="minimumSize" >
@@ -23,32 +23,50 @@
     <layout class="QGridLayout" >
      <item row="0" column="0" >
       <widget class="QLabel" name="label" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text" >
         <string>Color:</string>
        </property>
+       <property name="alignment" >
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
       </widget>
      </item>
-     <item row="0" column="1" >
+     <item row="0" column="1" colspan="2" >
       <widget class="Kst::ColorButton" name="_color" />
      </item>
      <item row="1" column="0" >
       <widget class="QLabel" name="label_2" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text" >
         <string>Style:</string>
        </property>
+       <property name="alignment" >
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
       </widget>
      </item>
-     <item row="1" column="1" >
+     <item row="1" column="1" colspan="2" >
       <widget class="QComboBox" name="_style" />
      </item>
-     <item row="2" column="0" >
+     <item row="2" column="0" colspan="2" >
       <widget class="QCheckBox" name="_useGradient" >
        <property name="text" >
         <string>Use Linear Gradient</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="1" >
+     <item row="2" column="2" >
       <widget class="QPushButton" name="_gradientReset" >
        <property name="enabled" >
         <bool>false</bool>
@@ -58,33 +76,27 @@
        </property>
       </widget>
      </item>
+     <item row="3" column="0" colspan="3" >
+      <widget class="Kst::GradientEditor" native="1" name="_gradientEditor" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>0</width>
+         <height>22</height>
+        </size>
+       </property>
+      </widget>
+     </item>
     </layout>
-   </item>
-   <item>
-    <widget class="Kst::GradientEditor" native="1" name="_gradientEditor" >
-     <property name="enabled" >
-      <bool>false</bool>
-     </property>
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize" >
-      <size>
-       <width>400</width>
-       <height>80</height>
-      </size>
-     </property>
-    </widget>
    </item>
    <item>
     <spacer>
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeHint" >
+     <property name="sizeHint" stdset="0" >
       <size>
        <width>20</width>
        <height>40</height>

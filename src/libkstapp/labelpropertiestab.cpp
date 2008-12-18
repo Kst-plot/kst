@@ -26,12 +26,20 @@ LabelPropertiesTab::LabelPropertiesTab(QWidget *parent)
 
   _labelText->setObjectStore(kstApp->mainWindow()->document()->objectStore());
 
+  _bold->setFixedWidth(32);
+  _bold->setFixedHeight(32);
+  _bold->setIcon(QPixmap(":kst_bold.png"));
+  _italic->setFixedWidth(32);
+  _italic->setFixedHeight(32);
+  _italic->setIcon(QPixmap(":kst_italic.png"));
+  _labelColor->setFixedWidth(32);
+  _labelColor->setFixedHeight(32);
+
   connect(_labelText, SIGNAL(labelChanged(const QString &)), this, SIGNAL(modified()));
   connect(_labelFontScale, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_labelColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
-  connect(_bold, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_underline, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_italic, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_bold, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
+  connect(_italic, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_family, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
 }
 
@@ -74,7 +82,6 @@ QFont LabelPropertiesTab::labelFont() const {
   QFont font(_family->currentFont());
   font.setItalic(_italic->isChecked());
   font.setBold(_bold->isChecked());
-  font.setUnderline(_underline->isChecked());
   return font;
 }
 
@@ -82,7 +89,6 @@ QFont LabelPropertiesTab::labelFont() const {
 void LabelPropertiesTab::setLabelFont(const QFont &font) {
   _family->setCurrentFont(font);
   _bold->setChecked(font.bold());
-  _underline->setChecked(font.underline());
   _italic->setChecked(font.italic());
 }
 

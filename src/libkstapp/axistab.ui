@@ -5,15 +5,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>496</width>
-    <height>486</height>
+    <width>671</width>
+    <height>386</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" >
-   <item row="0" column="0" >
+  <layout class="QGridLayout" name="gridLayout_3" >
+   <property name="leftMargin" >
+    <number>0</number>
+   </property>
+   <property name="rightMargin" >
+    <number>0</number>
+   </property>
+   <item row="0" column="0" colspan="2" >
     <widget class="QGroupBox" name="_scaleGroup" >
      <property name="title" >
       <string>Scale</string>
@@ -22,52 +28,84 @@
       <item row="0" column="0" >
        <widget class="QCheckBox" name="_scaleLog" >
         <property name="text" >
-         <string>Logarithmic</string>
+         <string>&amp;Logarithmic</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1" >
        <widget class="QCheckBox" name="_scaleBaseOffset" >
         <property name="text" >
-         <string>Base and Offset Mode</string>
+         <string>&amp;Base and offset mode</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="2" >
+      <item row="0" column="2" colspan="2" >
        <widget class="QCheckBox" name="_scaleReverse" >
         <property name="text" >
-         <string>Reverse</string>
+         <string>&amp;Reverse</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0" >
        <widget class="QCheckBox" name="_scaleInterpret" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text" >
-         <string>Interpret As:</string>
+         <string>&amp;Interpret as:</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1" >
-       <widget class="QComboBox" name="_scaleInterpretType" />
+       <widget class="QComboBox" name="_scaleInterpretType" >
+        <property name="enabled" >
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
       <item row="1" column="2" >
        <widget class="QLabel" name="_Label_6" >
+        <property name="enabled" >
+         <bool>false</bool>
+        </property>
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text" >
-         <string>Display As:</string>
+         <string>&amp;Display As:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>_scaleDisplayType</cstring>
         </property>
        </widget>
       </item>
       <item row="1" column="3" >
-       <widget class="QComboBox" name="_scaleDisplayType" />
-      </item>
-      <item row="2" column="0" colspan="2" >
-       <widget class="QLabel" name="label_2" >
-        <property name="text" >
-         <string>Significant Digits before automatic Base/Offset Mode</string>
+       <widget class="QComboBox" name="_scaleDisplayType" >
+        <property name="enabled" >
+         <bool>false</bool>
         </property>
        </widget>
       </item>
-      <item row="2" column="2" colspan="2" >
+      <item row="2" column="0" colspan="3" >
+       <widget class="QLabel" name="label_2" >
+        <property name="text" >
+         <string>Sig&amp;nificant digits before automatic base/offset mode:</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy" >
+         <cstring>_significantDigits</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3" >
        <widget class="QSpinBox" name="_significantDigits" >
         <property name="minimum" >
          <number>2</number>
@@ -84,69 +122,193 @@
     </widget>
    </item>
    <item row="1" column="0" >
-    <widget class="QGroupBox" name="_axisDetailsGroup" >
+    <widget class="QGroupBox" name="_axisMajorGridGroup" >
      <property name="title" >
-      <string>Axis Details</string>
+      <string>Major Ticks and Lines</string>
      </property>
-     <layout class="QGridLayout" >
-      <item row="0" column="0" >
+     <layout class="QGridLayout" name="gridLayout" >
+      <item row="2" column="0" colspan="2" >
        <widget class="QCheckBox" name="_drawAxisMajorTicks" >
         <property name="text" >
-         <string>Draw Major Ticks</string>
+         <string>Dra&amp;w major ticks</string>
         </property>
         <property name="checked" >
          <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2" >
+       <widget class="QCheckBox" name="_drawAxisMajorGridLines" >
+        <property name="text" >
+         <string>Draw major &amp;grid lines</string>
+        </property>
+        <property name="checked" >
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" >
+       <widget class="QLabel" name="_Label_3" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>Line &amp;style:</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy" >
+         <cstring>_axisMajorLineStyle</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1" >
+       <widget class="QComboBox" name="_axisMajorLineStyle" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0" >
+       <widget class="QLabel" name="label_10" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>Line &amp;color:</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy" >
+         <cstring>_axisMajorLineColor</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1" >
+       <widget class="Kst::ColorButton" name="_axisMajorLineColor" />
+      </item>
+      <item row="0" column="0" >
+       <widget class="QLabel" name="label" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>S&amp;pacing:</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy" >
+         <cstring>_axisMajorTickSpacing</cstring>
         </property>
        </widget>
       </item>
       <item row="0" column="1" >
-       <widget class="QLabel" name="label" >
-        <property name="text" >
-         <string>Major Tick Spacing</string>
+       <widget class="QComboBox" name="_axisMajorTickSpacing" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
        </widget>
       </item>
-      <item row="0" column="2" >
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="1" >
+    <widget class="QGroupBox" name="_axisMinorGridGroup" >
+     <property name="title" >
+      <string>Minor Ticks and Lines</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2" >
+      <item row="2" column="0" colspan="2" >
        <widget class="QCheckBox" name="_drawAxisMinorTicks" >
         <property name="text" >
-         <string>Draw Minor Ticks</string>
+         <string>Dr&amp;aw minor ticks</string>
         </property>
         <property name="checked" >
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="0" column="3" >
-       <widget class="QLabel" name="label_3" >
+      <item row="3" column="0" colspan="2" >
+       <widget class="QCheckBox" name="_drawAxisMinorGridLines" >
         <property name="text" >
-         <string>Minor Tick Count</string>
+         <string>Draw &amp;minor grid lines</string>
+        </property>
+        <property name="checked" >
+         <bool>true</bool>
         </property>
        </widget>
+      </item>
+      <item row="5" column="0" >
+       <widget class="QLabel" name="_axisMinorLineStyleLabel" >
+        <property name="text" >
+         <string>Line st&amp;yle:</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy" >
+         <cstring>_axisMinorLineStyle</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1" >
+       <widget class="QComboBox" name="_axisMinorLineStyle" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0" >
+       <widget class="QLabel" name="label_12" >
+        <property name="text" >
+         <string>Lin&amp;e color:</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy" >
+         <cstring>_axisMinorLineColor</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1" >
+       <widget class="Kst::ColorButton" name="_axisMinorLineColor" />
       </item>
       <item row="1" column="0" >
-       <widget class="QCheckBox" name="_drawAxisMajorGridLines" >
+       <widget class="QLabel" name="label_3" >
         <property name="text" >
-         <string>Draw Major Grid Lines</string>
+         <string>Tic&amp;k count:</string>
         </property>
-        <property name="checked" >
-         <bool>true</bool>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy" >
+         <cstring>_axisMinorTickCount</cstring>
         </property>
        </widget>
       </item>
       <item row="1" column="1" >
-       <widget class="QComboBox" name="_axisMajorTickSpacing" />
-      </item>
-      <item row="1" column="2" >
-       <widget class="QCheckBox" name="_drawAxisMinorGridLines" >
-        <property name="text" >
-         <string>Draw Minor Grid Lines</string>
-        </property>
-        <property name="checked" >
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3" >
        <widget class="QSpinBox" name="_axisMinorTickCount" >
         <property name="minimum" >
          <number>1</number>
@@ -159,79 +321,8 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0" colspan="2" >
-       <widget class="QGroupBox" name="_axisMajorGridGroup" >
-        <property name="title" >
-         <string>Major Grid Appearance</string>
-        </property>
-        <layout class="QGridLayout" >
-         <item row="0" column="0" >
-          <widget class="QLabel" name="_Label_3" >
-           <property name="text" >
-            <string>Line Style</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1" >
-          <widget class="QComboBox" name="_axisMajorLineStyle" />
-         </item>
-         <item row="1" column="0" >
-          <widget class="QLabel" name="label_10" >
-           <property name="text" >
-            <string>Line Color</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1" >
-          <widget class="Kst::ColorButton" name="_axisMajorLineColor" />
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item row="2" column="2" colspan="2" >
-       <widget class="QGroupBox" name="_axisMinorGridGroup" >
-        <property name="title" >
-         <string>Minor Grid Appearance</string>
-        </property>
-        <layout class="QGridLayout" >
-         <item row="0" column="0" >
-          <widget class="QLabel" name="_axisMinorLineStyleLabel" >
-           <property name="text" >
-            <string>Line Style</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1" >
-          <widget class="QComboBox" name="_axisMinorLineStyle" />
-         </item>
-         <item row="1" column="0" >
-          <widget class="QLabel" name="label_12" >
-           <property name="text" >
-            <string>Line Color</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1" >
-          <widget class="Kst::ColorButton" name="_axisMinorLineColor" />
-         </item>
-        </layout>
-       </widget>
-      </item>
      </layout>
     </widget>
-   </item>
-   <item row="2" column="0" >
-    <spacer>
-     <property name="orientation" >
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" >
-      <size>
-       <width>20</width>
-       <height>41</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>
@@ -243,5 +334,182 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>_drawAxisMajorGridLines</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_Label_3</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>19</x>
+     <y>302</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>19</x>
+     <y>326</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_drawAxisMajorGridLines</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_10</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>43</x>
+     <y>303</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>42</x>
+     <y>353</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_drawAxisMajorGridLines</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_axisMajorLineColor</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>116</x>
+     <y>295</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>115</x>
+     <y>355</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_drawAxisMajorGridLines</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_axisMajorLineStyle</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>158</x>
+     <y>297</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>159</x>
+     <y>321</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_drawAxisMinorGridLines</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_axisMinorLineStyleLabel</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>366</x>
+     <y>294</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>365</x>
+     <y>322</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_drawAxisMinorGridLines</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_12</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>388</x>
+     <y>302</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>394</x>
+     <y>355</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_drawAxisMinorGridLines</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_axisMinorLineColor</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>447</x>
+     <y>300</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>451</x>
+     <y>352</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_drawAxisMinorGridLines</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_axisMinorLineStyle</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>501</x>
+     <y>301</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>499</x>
+     <y>318</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_scaleInterpret</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_scaleDisplayType</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>62</x>
+     <y>94</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>467</x>
+     <y>89</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_scaleInterpret</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_Label_6</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>90</x>
+     <y>108</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>399</x>
+     <y>86</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_scaleInterpret</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_scaleInterpretType</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>124</x>
+     <y>104</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>184</x>
+     <y>102</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

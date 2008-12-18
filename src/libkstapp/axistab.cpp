@@ -53,11 +53,6 @@ AxisTab::AxisTab(QWidget *parent)
     _scaleInterpretType->addItem(AxisInterpretations[i].label, QVariant(AxisInterpretations[i].type));
   }
 
-  connect(_drawAxisMajorTicks, SIGNAL(stateChanged(int)), this, SLOT(update()));
-  connect(_drawAxisMajorGridLines, SIGNAL(stateChanged(int)), this, SLOT(update()));
-  connect(_drawAxisMinorGridLines, SIGNAL(stateChanged(int)), this, SLOT(update()));
-  connect(_scaleInterpret, SIGNAL(stateChanged(int)), this, SLOT(update()));
-
   connect(_drawAxisMajorTicks, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_drawAxisMajorGridLines, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_drawAxisMinorGridLines, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
@@ -82,23 +77,6 @@ AxisTab::AxisTab(QWidget *parent)
 
 
 AxisTab::~AxisTab() {
-}
-
-
-void AxisTab::update() {
-  bool optionsEnabled = drawAxisMajorTicks() || drawAxisMajorGridLines();
-  bool minorOptionsEnabled = drawAxisMinorTicks() || drawAxisMinorGridLines();
-
-  _drawAxisMinorGridLines->setEnabled(optionsEnabled);
-  _drawAxisMinorTicks->setEnabled(optionsEnabled);
-  _axisMajorTickSpacing->setEnabled(optionsEnabled);
-
-  _axisMinorTickCount->setEnabled(minorOptionsEnabled);
-
-  _axisMajorGridGroup->setEnabled(_drawAxisMajorGridLines->isChecked() && _drawAxisMajorGridLines->isEnabled());
-  _axisMinorGridGroup->setEnabled(_drawAxisMinorGridLines->isChecked() && _drawAxisMinorGridLines->isEnabled());
-  _scaleInterpretType->setEnabled(_scaleInterpret->isChecked());
-  _scaleDisplayType->setEnabled(_scaleInterpret->isChecked());
 }
 
 
