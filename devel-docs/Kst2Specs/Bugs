@@ -234,3 +234,27 @@ They should.
 Should add some more latex mode fields
   \odot
 
+--------
+
+Line Endpoints drift relative to plot contents:
+Create a plot.  Put a line in the plot.  Resize the plot.
+The end points of the line don't stay fixed in plot space.  
+It seems to have something to do with the 'centerpoint' of the line.
+It rotates around an end point.
+This problem doesn't happen with boxes.
+
+--------
+
+Tied zoom behavior oddness:
+Tied zoom has been implemented as a toggle button, setting or unsetting
+all of the zoom ties.  However, when in tied zoom, it is still possible to un-tie
+individual plots (which is good).  But: when you un-tie one of several plots, perhaps
+the tied zoom button should become disabled, as you are no longer in all-tied zoom mode.
+
+--------
+
+"Change color per file" changes are not shown in plots until the plot is moused over.
+
+--------
+
+"Differentiate Curves" changes are not shown in plots until the plot is moused over.
