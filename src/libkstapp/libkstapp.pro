@@ -105,6 +105,7 @@ SOURCES += \
     scene.cpp \
     selectionrect.cpp \
     sessionmodel.cpp \
+    sharedaxisboxitem.cpp \
     stringdialog.cpp \
     stringmodel.cpp \
     stroketab.cpp \
@@ -210,6 +211,7 @@ HEADERS += \
     scene.h \
     selectionrect.h \
     sessionmodel.h \
+    sharedaxisboxitem.h \
     stringdialog.h \
     stringmodel.h \
     svgitem.h \

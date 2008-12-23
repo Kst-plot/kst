@@ -22,5 +22,6 @@
 #define LEGEND_ZVALUE       8
 #define LINE_ZVALUE         9
 #define ARROW_ZVALUE        9
+#define SHAREDAXISBOX_ZVALUE   10
 
 // vim: ts=2 sw=2 et

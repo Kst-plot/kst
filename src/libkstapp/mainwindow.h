@@ -87,6 +87,7 @@ class MainWindow : public QMainWindow
     void createPlot();
     void createSvg();
     void createLayout();
+    void createSharedAxisBox();
 
     void demoModel();
 
@@ -146,6 +147,7 @@ class MainWindow : public QMainWindow
     QAction *_createPlotAct;
     QAction *_createSvgAct;
     QAction *_createLayoutAct;
+    QAction *_createSharedAxisBoxAct;
 
     QAction *_aboutAct;
     QAction *_closeTabAct;

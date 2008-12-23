@@ -30,6 +30,7 @@
 #include "plotitemmanager.h"
 #include "svgitem.h"
 #include "tabwidget.h"
+#include "sharedaxisboxitem.h"
 #include "ui_aboutdialog.h"
 #include "viewvectordialog.h"
 #include "viewmatrixdialog.h"
@@ -341,6 +342,13 @@ void MainWindow::createBox() {
 }
 
 
+
+void MainWindow::createSharedAxisBox() {
+  CreateSharedAxisBoxCommand *cmd = new CreateSharedAxisBoxCommand;
+  cmd->createItem();
+}
+
+
 void MainWindow::createCircle() {
   CreateCircleCommand *cmd = new CreateCircleCommand;
   cmd->createItem();
@@ -482,8 +490,14 @@ void MainWindow::createActions() {
   _createLayoutAct = new QAction(tr("&Create layout"), this);
   _createLayoutAct->setStatusTip(tr("Create a layout for the current item"));
   _createLayoutAct->setIcon(QPixmap(":kst_gfx_layout.png"));
-  _createLayoutAct->setEnabled(false);
+//   _createLayoutAct->setEnabled(false);
   connect(_createLayoutAct, SIGNAL(triggered()), this, SLOT(createLayout()));
+
+  _createSharedAxisBoxAct = new QAction(tr("&Create Shared Axis Box"), this);
+  _createSharedAxisBoxAct->setStatusTip(tr("Create a shared axis box for the current item"));
+  _createSharedAxisBoxAct->setIcon(QPixmap(":kst_gfx_sharedaxisbox.png"));
+//   _createSharedAxisBoxAct->setEnabled(false);
+  connect(_createSharedAxisBoxAct, SIGNAL(triggered()), this, SLOT(createSharedAxisBox()));
 
   // ****************************************************************************** //
 
@@ -673,6 +687,7 @@ void MainWindow::createMenus() {
   _viewMenu->addAction(_createPictureAct);
   _viewMenu->addAction(_createPlotAct);
   _viewMenu->addAction(_createSvgAct);
+  _viewMenu->addAction(_createSharedAxisBoxAct);
 
   _toolsMenu = menuBar()->addMenu(tr("&Tools"));
   _toolsMenu->addAction(_dataWizardAct);
@@ -730,6 +745,8 @@ void MainWindow::createToolBars() {
   _layoutToolBar->addAction(_createPictureAct);
   _layoutToolBar->addAction(_createPlotAct);
 //  _layoutToolBar->addAction(_createSvgAct); //no icon
+  _layoutToolBar->addAction(_createSharedAxisBoxAct);
+
 
   _layoutToolBar->addSeparator();
 
