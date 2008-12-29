@@ -76,7 +76,7 @@ ViewItem* EllipseItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStor
   while (!xml.atEnd()) {
     bool validTag = true;
     if (xml.isStartElement()) {
-      if (xml.name().toString() == "ellipse") {
+      if (!rc && xml.name().toString() == "ellipse") {
         Q_ASSERT(!rc);
         rc = new EllipseItem(view);
         if (parent) {

@@ -105,7 +105,7 @@ ViewItem* CircleItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore
   while (!xml.atEnd()) {
     bool validTag = true;
     if (xml.isStartElement()) {
-      if (xml.name().toString() == "circle") {
+      if (!rc && xml.name().toString() == "circle") {
         Q_ASSERT(!rc);
         rc = new CircleItem(view);
         if (parent) {

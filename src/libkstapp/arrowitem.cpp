@@ -125,7 +125,7 @@ ViewItem* ArrowItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore 
   while (!xml.atEnd()) {
     bool validTag = true;
     if (xml.isStartElement()) {
-      if (xml.name().toString() == "arrow") {
+      if (!rc && xml.name().toString() == "arrow") {
         Q_ASSERT(!rc);
         rc = new ArrowItem(view);
         if (parent) {

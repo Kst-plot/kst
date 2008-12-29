@@ -163,7 +163,7 @@ ViewItem* LayoutBoxItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectSt
   while (!xml.atEnd()) {
     bool validTag = true;
     if (xml.isStartElement()) {
-      if (xml.name().toString() == "layoutbox") {
+      if (!rc && xml.name().toString() == "layoutbox") {
         Q_ASSERT(!rc);
         rc = new LayoutBoxItem(view);
         if (parent) {

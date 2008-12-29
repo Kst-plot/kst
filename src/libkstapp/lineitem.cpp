@@ -259,7 +259,7 @@ ViewItem* LineItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
   while (!xml.atEnd()) {
     bool validTag = true;
     if (xml.isStartElement()) {
-      if (xml.name().toString() == "line") {
+      if (!rc && xml.name().toString() == "line") {
         Q_ASSERT(!rc);
         rc = new LineItem(view);
         if (parent) {

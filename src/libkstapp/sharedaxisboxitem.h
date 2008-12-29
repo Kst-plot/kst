@@ -35,6 +35,7 @@ class SharedAxisBoxItem : public ViewItem
   public slots:
     void breakShare();
     void acceptItems();
+    void lockItems();
 
   private:
     QAction *_breakAction;

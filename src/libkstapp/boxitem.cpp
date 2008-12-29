@@ -67,7 +67,7 @@ ViewItem* BoxItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *s
   while (!xml.atEnd()) {
     bool validTag = true;
     if (xml.isStartElement()) {
-      if (xml.name().toString() == "box") {
+      if (!rc && xml.name().toString() == "box") {
         Q_ASSERT(!rc);
         rc = new BoxItem(view);
         if (parent) {

@@ -20,6 +20,7 @@
 #include "svgitem.h"
 #include "arrowitem.h"
 #include "circleitem.h"
+#include "sharedaxisboxitem.h"
 
 namespace Kst {
   namespace Builtins {
@@ -34,6 +35,7 @@ namespace Kst {
       new PictureItemFactory;
       new PlotItemFactory;
       new SvgItemFactory;
+      new SharedAxisBoxItemFactory;
     }
   }
 }

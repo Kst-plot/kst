@@ -2460,7 +2460,7 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
   while (!xml.atEnd()) {
     bool validTag = true;
     if (xml.isStartElement()) {
-      if (xml.name().toString() == "plot") {
+      if (!rc && xml.name().toString() == "plot") {
         Q_ASSERT(!rc);
         rc = new PlotItem(view);
         if (parent) {

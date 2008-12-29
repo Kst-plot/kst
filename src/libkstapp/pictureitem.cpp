@@ -94,7 +94,7 @@ ViewItem* PictureItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStor
   while (!xml.atEnd()) {
     bool validTag = true;
     if (xml.isStartElement()) {
-      if (xml.name().toString() == "picture") {
+      if (!rc && xml.name().toString() == "picture") {
         Q_ASSERT(!rc);
         rc = new PictureItem(view);
         if (parent) {

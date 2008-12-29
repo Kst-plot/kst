@@ -79,6 +79,7 @@ void SharedAxisBoxItem::acceptItems() {
         plotItem->setParent(this);
         plotItem->setAllowedGripModes(0);
         plotItem->setFlags(0);
+        plotItem->setTiedZoom(true);
         child = plotItem;
       }
     }
@@ -135,14 +136,36 @@ void SharedAxisBoxItem::breakShare() {
     if (!viewItem)
       continue;
 
-    viewItem->setParent(0);
-    viewItem->setAllowedGripModes(Move | Resize | Rotate);
-    viewItem->setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
+    if (PlotItem *plotItem = qobject_cast<PlotItem*>(viewItem)) {
+      plotItem->setParent(0);
+      plotItem->setAllowedGripModes(Move | Resize | Rotate);
+      plotItem->setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
+      plotItem->setTiedZoom(false);
+    }
   }
   if (_layout) {
     _layout->reset();
   }
   hide();
+}
+
+
+void SharedAxisBoxItem::lockItems() {
+  QList<QGraphicsItem*> list = QGraphicsItem::children();
+  foreach (QGraphicsItem *item, list) {
+    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+    if (!viewItem)
+      continue;
+
+    if (PlotItem *plotItem = qobject_cast<PlotItem*>(viewItem)) {
+      plotItem->setAllowedGripModes(0);
+      plotItem->setFlags(0);
+      plotItem->setTiedZoom(true);
+    }
+  }
+  if (!list.isEmpty()) {
+    setBrush(Qt::white);
+  }
 }
 
 
@@ -194,7 +217,7 @@ ViewItem* SharedAxisBoxItemFactory::generateGraphics(QXmlStreamReader& xml, Obje
   while (!xml.atEnd()) {
     bool validTag = true;
     if (xml.isStartElement()) {
-      if (xml.name().toString() == "sharedaxisbox") {
+      if (!rc && xml.name().toString() == "sharedaxisbox") {
         Q_ASSERT(!rc);
         rc = new SharedAxisBoxItem(view);
         if (parent) {
@@ -224,6 +247,7 @@ ViewItem* SharedAxisBoxItemFactory::generateGraphics(QXmlStreamReader& xml, Obje
     }
     xml.readNext();
   }
+  rc->lockItems();
   return rc;
 }
 

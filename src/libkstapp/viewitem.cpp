@@ -152,6 +152,15 @@ void ViewItem::save(QXmlStreamWriter &xml) {
     xml.writeAttribute("gradient", stopList);
   }
   xml.writeEndElement();
+
+  QList<QGraphicsItem*> list = QGraphicsItem::children();
+  foreach (QGraphicsItem *item, list) {
+    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+    if (!viewItem)
+      continue;
+
+    viewItem->save(xml);
+  }
 }
 
 
@@ -268,6 +277,7 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
       }
      setViewRect(QRectF(QPointF(x, y), QSizeF(w, h)));
     } else if (xml.name().toString() == "transform") {
+      knownTag = true;
       double m11 = 1.0, m12 = 0, m13 = 0, m21 = 0, m22 = 1.0, m23 = 0, m31 = 0, m32= 0, m33 = 1.0;
       av = attrs.value("m11");
       if (!av.isNull()) {
@@ -309,10 +319,12 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
     }
   }
 
-  xml.readNext();
-  if (xml.isEndElement()) {
-    if ((xml.name().toString() == expectedTag) ) {
-    validChildTag = true;
+  if (knownTag) {
+    xml.readNext();
+    if (xml.isEndElement()) {
+      if ((xml.name().toString() == expectedTag) ) {
+      validChildTag = true;
+      }
     }
   }
   return knownTag;

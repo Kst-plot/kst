@@ -171,7 +171,7 @@ ViewItem* LabelItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore 
   while (!xml.atEnd()) {
     bool validTag = true;
     if (xml.isStartElement()) {
-      if (xml.name().toString() == "label") {
+      if (!rc && xml.name().toString() == "label") {
       QXmlStreamAttributes attrs = xml.attributes();
       QStringRef av;
       av = attrs.value("text");

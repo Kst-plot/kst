@@ -125,7 +125,9 @@ void View::save(QXmlStreamWriter &xml) {
   QList<QGraphicsItem*> items = scene()->items();
 
   foreach(QGraphicsItem* viewItem, items) {
-    qgraphicsitem_cast<ViewItem*>(viewItem)->save(xml);
+    if (!viewItem->parentItem()) {
+      qgraphicsitem_cast<ViewItem*>(viewItem)->save(xml);
+    }
   }
 }
 

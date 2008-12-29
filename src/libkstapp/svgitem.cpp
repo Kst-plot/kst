@@ -98,7 +98,7 @@ ViewItem* SvgItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *s
   while (!xml.atEnd()) {
     bool validTag = true;
     if (xml.isStartElement()) {
-      if (xml.name().toString() == "svg") {
+      if (!rc && xml.name().toString() == "svg") {
         Q_ASSERT(!rc);
         rc = new SvgItem(view);
         if (parent) {
