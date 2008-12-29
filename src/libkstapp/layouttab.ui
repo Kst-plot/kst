@@ -20,40 +20,80 @@
        <property name="text" >
         <string>Horizontal Margin:</string>
        </property>
+       <property name="alignment" >
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
       </widget>
      </item>
      <item row="0" column="1" >
-      <widget class="QDoubleSpinBox" name="_horMargin" />
+      <widget class="QDoubleSpinBox" name="_horMargin" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
      <item row="1" column="0" >
       <widget class="QLabel" name="label_4" >
        <property name="text" >
         <string>Vertical Margin:</string>
        </property>
+       <property name="alignment" >
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
       </widget>
      </item>
      <item row="1" column="1" >
-      <widget class="QDoubleSpinBox" name="_verMargin" />
+      <widget class="QDoubleSpinBox" name="_verMargin" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
      <item row="2" column="0" >
       <widget class="QLabel" name="label_5" >
        <property name="text" >
         <string>Horizontal Spacing:</string>
        </property>
+       <property name="alignment" >
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
       </widget>
      </item>
      <item row="2" column="1" >
-      <widget class="QDoubleSpinBox" name="_horSpacing" />
+      <widget class="QDoubleSpinBox" name="_horSpacing" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
      <item row="3" column="0" >
       <widget class="QLabel" name="label_6" >
        <property name="text" >
         <string>Vertical Spacing:</string>
        </property>
+       <property name="alignment" >
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
       </widget>
      </item>
      <item row="3" column="1" >
-      <widget class="QDoubleSpinBox" name="_verSpacing" />
+      <widget class="QDoubleSpinBox" name="_verSpacing" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
      <item row="4" column="0" colspan="2" >
       <widget class="QCheckBox" name="_lockAspectRatio" >
@@ -69,7 +109,7 @@
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeHint" >
+     <property name="sizeHint" stdset="0" >
       <size>
        <width>401</width>
        <height>121</height>

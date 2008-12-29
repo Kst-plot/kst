@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>163</width>
-    <height>214</height>
+    <width>386</width>
+    <height>218</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -18,15 +18,28 @@
      <property name="text" >
       <string>Style:</string>
      </property>
+     <property name="alignment" >
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
     </widget>
    </item>
    <item row="0" column="1" >
-    <widget class="QComboBox" name="_style" />
+    <widget class="QComboBox" name="_style" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
    </item>
    <item row="1" column="0" >
     <widget class="QLabel" name="label_2" >
      <property name="text" >
       <string>Width:</string>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>
@@ -38,6 +51,9 @@
      <property name="text" >
       <string>Brush Color:</string>
      </property>
+     <property name="alignment" >
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
     </widget>
    </item>
    <item row="2" column="1" >
@@ -47,6 +63,9 @@
     <widget class="QLabel" name="label_4" >
      <property name="text" >
       <string>Brush Style:</string>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>
@@ -58,6 +77,9 @@
      <property name="text" >
       <string>Join Style:</string>
      </property>
+     <property name="alignment" >
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
     </widget>
    </item>
    <item row="4" column="1" >
@@ -67,6 +89,9 @@
     <widget class="QLabel" name="label_6" >
      <property name="text" >
       <string>Cap Style:</string>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>
@@ -78,7 +103,7 @@
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeHint" >
+     <property name="sizeHint" stdset="0" >
       <size>
        <width>20</width>
        <height>40</height>

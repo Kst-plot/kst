@@ -156,17 +156,18 @@ void DataDialog::updateApplyButton() {
 
 void DataDialog::slotEditMultiple() {
   int currentWidth = width();
-  int extensionWidth = 400;
+  int extensionWidth = extensionWidget()->width();
+  if (extensionWidth<204) extensionWidth = 204; // FIXME: magic number hack...
   extensionWidget()->setVisible(!extensionWidget()->isVisible());
  _tagString->setEnabled(!extensionWidget()->isVisible());
   if (!extensionWidget()->isVisible()) {
-    setMaximumWidth(currentWidth - extensionWidth);
     setMinimumWidth(currentWidth - extensionWidth);
+    resize(currentWidth - extensionWidth, height());
     _mode = Edit;
     emit editSingleMode();
   } else {
     setMinimumWidth(currentWidth + extensionWidth);
-    setMaximumWidth(currentWidth + extensionWidth);
+    resize(currentWidth + extensionWidth, height());
     _mode = EditMultiple;
     emit editMultipleMode();
   }
