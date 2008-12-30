@@ -174,6 +174,11 @@ void SharedAxisBoxItem::addToMenuForContextEvent(QMenu &menu) {
 }
 
 
+void SharedAxisBoxItem::triggerContextEvent(QGraphicsSceneContextMenuEvent *event) {
+  contextMenuEvent(event);
+}
+
+
 void CreateSharedAxisBoxCommand::createItem() {
   _item = new SharedAxisBoxItem(_view);
   _view->setCursor(Qt::CrossCursor);

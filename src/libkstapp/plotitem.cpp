@@ -29,6 +29,7 @@
 
 #include "plotitemdialog.h"
 #include "dialoglauncher.h"
+#include "sharedaxisboxitem.h"
 
 #include "applicationsettings.h"
 
@@ -382,6 +383,16 @@ void PlotItem::createFitMenu() {
 
 
 void PlotItem::addToMenuForContextEvent(QMenu &menu) {
+  if (parentItem()) {
+    if (SharedAxisBoxItem *sharedBox = qgraphicsitem_cast<SharedAxisBoxItem*>(parentItem())) {
+      if (parentView()->viewMode() == View::Data) {
+        QAction *breakSharedBox = new QAction(tr("Break Shared Axis Box"), this);
+        breakSharedBox->setShortcut(Qt::Key_B);
+        connect(breakSharedBox, SIGNAL(triggered()), sharedBox, SLOT(breakShare()));
+        menu.addAction(breakSharedBox);
+      }
+    }
+  }
   _zoomLogX->setChecked(xAxis()->axisLog());
   _zoomLogY->setChecked(yAxis()->axisLog());
   menu.addMenu(_zoomMenu);

@@ -28,6 +28,7 @@ class SharedAxisBoxItem : public ViewItem
     virtual void paint(QPainter *painter);
 
     virtual void addToMenuForContextEvent(QMenu &menu);
+    void triggerContextEvent(QGraphicsSceneContextMenuEvent *event);
 
   Q_SIGNALS:
     void breakShareSignal();

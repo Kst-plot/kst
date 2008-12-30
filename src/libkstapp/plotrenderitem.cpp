@@ -17,6 +17,7 @@
 #include "application.h"
 #include "objectstore.h"
 #include "updatemanager.h"
+#include "sharedaxisboxitem.h"
 
 #include <QTime>
 #include <QMenu>
@@ -779,6 +780,20 @@ void PlotRenderItem::computeNoSpike(Qt::Orientation orientation, qreal *min, qre
 bool PlotRenderItem::tryShortcut(const QString &keySequence) {
   return plotItem()->tryShortcut(keySequence);
 }
+
+
+void PlotRenderItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
+  if (plotItem() && plotItem()->parentItem()) {
+    if (SharedAxisBoxItem *sharedBox = qgraphicsitem_cast<SharedAxisBoxItem*>(plotItem()->parentItem())) {
+      if (plotItem()->parentView()->viewMode() == View::Layout) {
+       sharedBox->triggerContextEvent(event);
+       return;
+      }
+    }
+  }
+  ViewItem::contextMenuEvent(event);
+}
+
 
 }
 
