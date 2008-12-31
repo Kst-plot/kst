@@ -55,6 +55,8 @@ class ViewGridLayout : public QObject
     bool isEnabled() const;
     void setEnabled(bool enabled);
 
+    void calculateSharing();
+
     static void resetSharedPlots(ViewItem *item);
     static void standardizePlotMargins(ViewItem *item);
     static void sharePlots(ViewItem *item);
@@ -100,6 +102,9 @@ class ViewGridLayout : public QObject
     bool _enabled;
     int _rowCount;
     int _columnCount;
+
+    bool _shareX;
+    bool _shareY;
 
     QSizeF _spacing;
     QSizeF _margin;

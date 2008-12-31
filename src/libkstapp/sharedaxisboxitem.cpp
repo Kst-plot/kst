@@ -76,52 +76,14 @@ void SharedAxisBoxItem::acceptItems() {
             continue;
           }
         }
-        plotItem->setParent(this);
-        plotItem->setAllowedGripModes(0);
-        plotItem->setFlags(0);
-        plotItem->setTiedZoom(true);
+        plotItem->setSharedAxisBox(this);
         child = plotItem;
       }
     }
     if (child) {
       setBrush(Qt::white);
 
-      QList<ViewItem*> viewItems;
-      QList<QGraphicsItem*> list = QGraphicsItem::children();
-      if (list.isEmpty())
-        return; //not added to undostack
-
-      foreach (QGraphicsItem *item, list) {
-        ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
-        if (!viewItem || viewItem->hasStaticGeometry() || !viewItem->allowsLayout() || viewItem->parentItem() != this)
-          continue;
-        viewItems.append(viewItem);
-      }
-
-      if (viewItems.isEmpty())
-        return; //not added to undostack
-
-      Grid *grid = Grid::buildGrid(viewItems, 0);
-      Q_ASSERT(grid);
-
-      _layout = new ViewGridLayout(this);
-
-      foreach (ViewItem *v, viewItems) {
-        int r = 0, c = 0, rs = 0, cs = 0;
-        if (grid->locateWidget(v, r, c, rs, cs)) {
-          _layout->addViewItem(v, r, c, rs, cs);
-        } else {
-          grid->appendItem(v);
-          if (grid->locateWidget(v, r, c, rs, cs)) {
-            _layout->addViewItem(v, r, c, rs, cs);
-          } else {
-            qDebug() << "ooops, viewItem does not fit in layout" << endl;
-          }
-        }
-      }
-
-      _layout->apply();
-      _layout->apply();
+      sharePlots();
     } else {
       delete this;
     }
@@ -137,10 +99,7 @@ void SharedAxisBoxItem::breakShare() {
       continue;
 
     if (PlotItem *plotItem = qobject_cast<PlotItem*>(viewItem)) {
-      plotItem->setParent(0);
-      plotItem->setAllowedGripModes(Move | Resize | Rotate);
-      plotItem->setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
-      plotItem->setTiedZoom(false);
+       plotItem->setSharedAxisBox(0);
     }
   }
   if (_layout) {

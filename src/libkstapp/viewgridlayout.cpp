@@ -32,6 +32,8 @@ ViewGridLayout::ViewGridLayout(ViewItem *parent)
     _enabled(false),
     _rowCount(0),
     _columnCount(0),
+    _shareX(false),
+    _shareY(false),
     _spacing(QSizeF(DEFAULT_STRUT,DEFAULT_STRUT)),
     _margin(QSizeF(DEFAULT_STRUT,DEFAULT_STRUT)) {
 }
@@ -227,6 +229,7 @@ void ViewGridLayout::sharePlots(ViewItem *item) {
     }
   }
   layout->applyAxis();
+  layout->applyAxis();
 }
 
 
@@ -292,7 +295,6 @@ void ViewGridLayout::resetSharedAxis() {
 
 void ViewGridLayout::apply() {
   updatePlotMargins();
-  updateSharedAxis();
 
   //For now we divide up equally... can do stretch factors and such later...
 
@@ -366,11 +368,85 @@ void ViewGridLayout::apply() {
              << endl;
 #endif
   }
-  updateSharedAxis();
 }
 
 
 void ViewGridLayout::applyAxis() {
+  updatePlotMargins();
+
+  //For now we divide up equally... can do stretch factors and such later...
+
+  QSizeF layoutSize(parentItem()->width() - _margin.width() * 2,
+                    parentItem()->height() - _margin.height() * 2);
+
+  QPointF layoutTopLeft = parentItem()->rect().topLeft();
+  layoutTopLeft += QPointF(_margin.width(), _margin.height());
+
+  QRectF layoutRect(layoutTopLeft, layoutSize);
+
+  qreal itemWidth = layoutSize.width() / columnCount();
+  qreal itemHeight = layoutSize.height() / rowCount();
+
+#if DEBUG_LAYOUT
+  qDebug() << "layouting" << _items.count()
+           << "itemWidth:" << itemWidth
+           << "itemHeight:" << itemHeight
+           << endl;
+#endif
+
+  foreach (LayoutItem item, _items) {
+    QPointF topLeft(itemWidth * item.column, itemHeight * item.row);
+    QSizeF size(itemWidth * item.columnSpan, itemHeight * item.rowSpan);
+    topLeft += layoutTopLeft;
+
+    QRectF itemRect(topLeft, size);
+
+    if (itemRect.top() != layoutRect.top())
+      itemRect.setTop(itemRect.top() + _spacing.height() / 2);
+    if (itemRect.left() != layoutRect.left())
+      itemRect.setLeft(itemRect.left() + _spacing.width() / 2);
+    if (itemRect.bottom() != layoutRect.bottom())
+      itemRect.setBottom(itemRect.bottom() - _spacing.height() / 2);
+    if (itemRect.right() != layoutRect.right())
+      itemRect.setRight(itemRect.right() - _spacing.width() / 2);
+
+    item.viewItem->resetTransform();
+    item.viewItem->setPos(itemRect.topLeft());
+
+    if (item.viewItem->fixedSize()) {
+      itemRect.setBottom(itemRect.top() + item.viewItem->rect().height());
+      itemRect.setRight(itemRect.left() + item.viewItem->rect().width());
+    } else if (item.viewItem->lockAspectRatio()) {
+      qreal newHeight = itemRect.height();
+      qreal newWidth = itemRect.width();
+
+      qreal aspectRatio = item.viewItem->rect().width() / item.viewItem->rect().height();
+      if ((newWidth / newHeight) > aspectRatio) {
+        // newWidth is too large.  Use newHeight as key.
+        newWidth = newHeight * aspectRatio;
+      } else {
+        // newHeight is either too large, or perfect.  use newWidth as key.
+        newHeight = newWidth / aspectRatio;
+      }
+      itemRect.setBottom(itemRect.top() + newHeight);
+      itemRect.setRight(itemRect.left() + newWidth);
+    }
+    item.viewItem->setViewRect(QRectF(QPoint(0,0), itemRect.size()));
+
+    if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem))
+      emit plotItem->updatePlotRect();
+
+#if DEBUG_LAYOUT
+    qDebug() << "layout"
+             << "row:" << item.row
+             << "column:" << item.column
+             << "rowSpan:" << item.rowSpan
+             << "columnSpan:" << item.columnSpan
+             << "itemRect:" << itemRect
+             << endl;
+#endif
+  }
+  calculateSharing();
   updateSharedAxis();
 }
 
@@ -418,6 +494,9 @@ void ViewGridLayout::updatePlotMargins() {
 
 
 void ViewGridLayout::updateSharedAxis() {
+  if (!_shareX && !_shareY) {
+    return;
+  }
   foreach (LayoutItem item, _items) {
     PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
 
@@ -426,10 +505,54 @@ void ViewGridLayout::updateSharedAxis() {
 
     //same horizontal range and same row/rowspan
     //same vertical range and same col/colspan
-    shareAxisWithPlotToLeft(item);
-    shareAxisWithPlotToRight(item);
-    shareAxisWithPlotAbove(item);
-    shareAxisWithPlotBelow(item);
+    if (_shareX) {
+      shareAxisWithPlotAbove(item);
+      shareAxisWithPlotBelow(item);
+    }
+    if (_shareY) {
+      shareAxisWithPlotToLeft(item);
+      shareAxisWithPlotToRight(item);
+    }
+  }
+}
+
+
+void ViewGridLayout::calculateSharing() {
+  bool xMatch = true;
+  bool yMatch = true;
+
+  bool first = true;
+
+  qreal xStart = 0.0, xStop = 0.0;
+  qreal yStart = 0.0, yStop = 0.0;
+
+  foreach (LayoutItem item, _items) {
+    PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
+
+    if (!plotItem)
+      continue;
+
+    if (first) {
+      xStart = plotItem->projectionRect().left();
+      xStop = plotItem->projectionRect().right();
+      yStart = plotItem->projectionRect().top();
+      yStop = plotItem->projectionRect().bottom();
+      first = false;
+    } else {
+      if (xMatch && (plotItem->projectionRect().left() != xStart || plotItem->projectionRect().right() != xStop)) {
+        xMatch = false;
+      }
+      if (yMatch && (plotItem->projectionRect().top() != yStart || plotItem->projectionRect().bottom() != yStop)) {
+        yMatch = false;
+      }
+    }
+  }
+  if (xMatch || yMatch) {
+    _shareX = xMatch;
+    _shareY = yMatch;
+  } else {
+    _shareX = true;
+    _shareY = true;
   }
 }
 

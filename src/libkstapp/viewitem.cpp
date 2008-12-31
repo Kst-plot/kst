@@ -677,14 +677,7 @@ void ViewItem::edit() {
 
 
 void ViewItem::sharePlots() {
-  qDebug() << "ViewItem::sharePlots";
-  if (parentViewItem()) {
-    ViewGridLayout::sharePlots(parentViewItem());
-/*    LayoutCommand *layout = new LayoutCommand(parentViewItem());
-    layout->createLayout();*/
-  } else if (parentView()) {
-    parentView()->sharePlots();
-  }
+  ViewGridLayout::sharePlots(this);
 }
 
 

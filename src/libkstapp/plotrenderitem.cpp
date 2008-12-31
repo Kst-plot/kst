@@ -215,21 +215,23 @@ void PlotRenderItem::paint(QPainter *painter) {
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing, true);
     painter->fillPath(checkBox(), Qt::white);
-    if (isHovering()) {
-      QRectF check = checkBox().controlPointRect();
-      check.setSize(QSizeF(check.width() / 1.8, check.height() / 1.8));
-      check.moveCenter(checkBox().controlPointRect().center());
-      QPainterPath p;
-      p.addEllipse(check);
-      painter->fillPath(p, Qt::black);
+    if (!plotItem()->isInSharedAxisBox()) {
+      if (isHovering()) {
+        QRectF check = checkBox().controlPointRect();
+        check.setSize(QSizeF(check.width() / 1.8, check.height() / 1.8));
+        check.moveCenter(checkBox().controlPointRect().center());
+        QPainterPath p;
+        p.addEllipse(check);
+        painter->fillPath(p, Qt::black);
+      }
+      if (plotItem()->isTiedZoom()) {
+        painter->save();
+        painter->setOpacity(0.5);
+        painter->fillPath(checkBox(), Qt::black);
+        painter->restore();
+      }
+      painter->drawPath(checkBox());
     }
-    if (plotItem()->isTiedZoom()) {
-      painter->save();
-      painter->setOpacity(0.5);
-      painter->fillPath(checkBox(), Qt::black);
-      painter->restore();
-    }
-    painter->drawPath(checkBox());
     painter->restore();
   }
 

@@ -56,6 +56,7 @@ namespace Kst {
 PlotItem::PlotItem(View *parent)
   : ViewItem(parent),
   _isTiedZoom(false),
+  _isInSharedAxisBox(false),
   _isLeftLabelVisible(true),
   _isBottomLabelVisible(true),
   _isRightLabelVisible(true),
@@ -923,7 +924,7 @@ bool PlotItem::isTiedZoom() const {
 
 
 void PlotItem::setTiedZoom(bool tiedZoom) {
-  if (_isTiedZoom == tiedZoom)
+  if ((_isInSharedAxisBox && !tiedZoom) || (_isTiedZoom == tiedZoom))
     return;
 
   _isTiedZoom = tiedZoom;
@@ -935,6 +936,33 @@ void PlotItem::setTiedZoom(bool tiedZoom) {
 
   //FIXME ugh, this is expensive, but need to redraw the renderitems checkboxes...
   update();
+}
+
+
+bool PlotItem::isInSharedAxisBox() const {
+  return _isInSharedAxisBox;
+}
+
+
+void PlotItem::setInSharedAxisBox(bool inSharedBox) {
+  _isInSharedAxisBox = inSharedBox;
+}
+
+
+void PlotItem::setSharedAxisBox(ViewItem* parent) {
+  if (parent) {
+    setInSharedAxisBox(true);
+    setTiedZoom(true);
+    setAllowedGripModes(0);
+    setFlags(0);
+    setParent(parent);
+  } else {
+    setInSharedAxisBox(false);
+    setTiedZoom(false);
+    setAllowedGripModes(Move | Resize | Rotate);
+    setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
+    setParent(0);
+  }
 }
 
 

@@ -80,6 +80,11 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     bool isTiedZoom() const;
     void setTiedZoom(bool tiedZoom);
 
+    bool isInSharedAxisBox() const;
+    void setInSharedAxisBox(bool inSharedBox);
+
+    void setSharedAxisBox(ViewItem* parent);
+
     qreal leftMarginSize() const;
     void setLeftPadding(const qreal);
     qreal bottomMarginSize() const;
@@ -336,6 +341,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
   private:
     QHash<PlotRenderItem::RenderType, PlotRenderItem*> _renderers;
     bool _isTiedZoom;
+    bool _isInSharedAxisBox;
     bool _isLeftLabelVisible;
     bool _isBottomLabelVisible;
     bool _isRightLabelVisible;
