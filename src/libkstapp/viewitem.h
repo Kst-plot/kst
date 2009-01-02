@@ -229,6 +229,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     bool _acceptsChildItems;
     bool _acceptsContextMenuEvents;
     bool _shareAxis;
+    bool _updatingLayout;
     QPointF _originalPosition;
     QPointF _parentRelativeCenter;
     QRectF _originalRect;

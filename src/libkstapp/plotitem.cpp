@@ -472,6 +472,11 @@ void PlotItem::updateObject() {
 
 void PlotItem::marginsUpdated() {
   ViewGridLayout::standardizePlotMargins(this);
+  if (isInSharedAxisBox() && parentItem()) {
+    if (SharedAxisBoxItem *sharedBox = qgraphicsitem_cast<SharedAxisBoxItem*>(parentItem())) {
+      sharedBox->sharePlots();
+    }
+  }
 }
 
 

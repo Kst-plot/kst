@@ -15,6 +15,7 @@
 #include "tabwidget.h"
 #include "viewitemdialog.h"
 #include "viewgridlayout.h"
+#include "sharedaxisboxitem.h"
 
 #include "layoutboxitem.h"
 
@@ -52,6 +53,7 @@ ViewItem::ViewItem(View *parent)
     _hovering(false),
     _acceptsChildItems(true),
     _acceptsContextMenuEvents(true),
+    _updatingLayout(false),
     _activeGrip(NoGrip),
     _allowedGrips(TopLeftGrip | TopRightGrip | BottomRightGrip | BottomLeftGrip |
                   TopMidGrip | RightMidGrip | BottomMidGrip | LeftMidGrip),
@@ -677,7 +679,11 @@ void ViewItem::edit() {
 
 
 void ViewItem::sharePlots() {
-  ViewGridLayout::sharePlots(this);
+  if (!_updatingLayout) {
+    _updatingLayout = true;
+    ViewGridLayout::sharePlots(this);
+    _updatingLayout = false;
+  }
 }
 
 
@@ -790,16 +796,24 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   addTitle(&menu);
 
   menu.addAction(_editAction);
-  menu.addAction(_raiseAction);
-  menu.addAction(_lowerAction);
 
-  QMenu layoutMenu;
-  layoutMenu.setTitle(tr("Cleanup Layout"));
+  bool inSharedBox = false;
+  if (parentItem()) {
+    if (SharedAxisBoxItem *sharedBox = qgraphicsitem_cast<SharedAxisBoxItem*>(parentItem())) {
+      inSharedBox = true;
+    }
+  }
 
-  layoutMenu.addAction(_autoLayoutAction);
-  layoutMenu.addAction(_customLayoutAction);
+  if (!inSharedBox) {
+    menu.addAction(_raiseAction);
+    menu.addAction(_lowerAction);
 
-  menu.addMenu(&layoutMenu);
+    QMenu layoutMenu;
+    layoutMenu.setTitle(tr("Cleanup Layout"));
+    layoutMenu.addAction(_autoLayoutAction);
+    layoutMenu.addAction(_customLayoutAction);
+    menu.addMenu(&layoutMenu);
+  }
 
   menu.addAction(_deleteAction);
 
