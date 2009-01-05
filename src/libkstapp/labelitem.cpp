@@ -73,13 +73,15 @@ void LabelItem::paint(QPainter *painter) {
 
 
 void LabelItem::save(QXmlStreamWriter &xml) {
-  xml.writeStartElement("label");
-  xml.writeAttribute("text", _text);
-  xml.writeAttribute("scale", QVariant(_scale).toString());
-  xml.writeAttribute("color", QVariant(_color).toString());
-  xml.writeAttribute("font", QVariant(_font).toString());
-  ViewItem::save(xml);
-  xml.writeEndElement();
+  if (isVisible()) {
+    xml.writeStartElement("label");
+    xml.writeAttribute("text", _text);
+    xml.writeAttribute("scale", QVariant(_scale).toString());
+    xml.writeAttribute("color", QVariant(_color).toString());
+    xml.writeAttribute("font", QVariant(_font).toString());
+    ViewItem::save(xml);
+    xml.writeEndElement();
+  }
 }
 
 

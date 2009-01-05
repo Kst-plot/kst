@@ -39,16 +39,18 @@ PictureItem::~PictureItem() {
 
 
 void PictureItem::save(QXmlStreamWriter &xml) {
-  xml.writeStartElement("picture");
-  ViewItem::save(xml);
-  xml.writeStartElement("data");
-  QByteArray qba;
-  QBuffer buffer(&qba);
-  buffer.open(QIODevice::WriteOnly);
-  QImage(_image).save(&buffer, "PNG"); // writes image into ba in PNG format
-  xml.writeCharacters(qCompress(qba).toBase64());
-  xml.writeEndElement();
-  xml.writeEndElement();
+  if (isVisible()) {
+    xml.writeStartElement("picture");
+    ViewItem::save(xml);
+    xml.writeStartElement("data");
+    QByteArray qba;
+    QBuffer buffer(&qba);
+    buffer.open(QIODevice::WriteOnly);
+    QImage(_image).save(&buffer, "PNG"); // writes image into ba in PNG format
+    xml.writeCharacters(qCompress(qba).toBase64());
+    xml.writeEndElement();
+    xml.writeEndElement();
+  }
 }
 
 

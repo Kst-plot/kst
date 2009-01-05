@@ -38,9 +38,11 @@ void BoxItem::paint(QPainter *painter) {
 
 
 void BoxItem::save(QXmlStreamWriter &xml) {
-  xml.writeStartElement("box");
-  ViewItem::save(xml);
-  xml.writeEndElement();
+  if (isVisible()) {
+    xml.writeStartElement("box");
+    ViewItem::save(xml);
+    xml.writeEndElement();
+  }
 }
 
 

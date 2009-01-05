@@ -34,9 +34,11 @@ EllipseItem::~EllipseItem() {
 
 
 void EllipseItem::save(QXmlStreamWriter &xml) {
-  xml.writeStartElement("ellipse");
-  ViewItem::save(xml);
-  xml.writeEndElement();
+  if (isVisible()) {
+    xml.writeStartElement("ellipse");
+    ViewItem::save(xml);
+    xml.writeEndElement();
+  }
 }
 
 

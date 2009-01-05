@@ -144,58 +144,60 @@ QString PlotItem::plotName() const {
 
 
 void PlotItem::save(QXmlStreamWriter &xml) {
-  xml.writeStartElement("plot");
-  xml.writeAttribute("tiedzoom", QVariant(_isTiedZoom).toString());
-  xml.writeAttribute("leftlabelvisible", QVariant(_isLeftLabelVisible).toString());
-  xml.writeAttribute("bottomlabelvisible", QVariant(_isBottomLabelVisible).toString());
-  xml.writeAttribute("rightlabelvisible", QVariant(_isRightLabelVisible).toString());
-  xml.writeAttribute("toplabelvisible", QVariant(_isTopLabelVisible).toString());
-  xml.writeAttribute("globalfont", QVariant(_globalFont).toString());
-  xml.writeAttribute("globalfontscale", QVariant(_globalFontScale).toString());
-  xml.writeAttribute("globalfontcolor", QVariant(_globalFontColor).toString());
-  xml.writeAttribute("leftlabeloverride", _leftLabelOverride);
-  xml.writeAttribute("leftlabeluseglobal", QVariant(_leftFontUseGlobal).toString());
-  xml.writeAttribute("leftlabelfont", QVariant(_leftLabelFont).toString());
-  xml.writeAttribute("leftlabelfontscale", QVariant(_leftLabelFontScale).toString());
-  xml.writeAttribute("leftlabelfontcolor", QVariant(_leftLabelFontColor).toString());
-  xml.writeAttribute("bottomlabeloverride", _bottomLabelOverride);
-  xml.writeAttribute("bottomlabeluseglobal", QVariant(_bottomFontUseGlobal).toString());
-  xml.writeAttribute("bottomlabelfont", QVariant(_bottomLabelFont).toString());
-  xml.writeAttribute("bottomlabelfontscale", QVariant(_bottomLabelFontScale).toString());
-  xml.writeAttribute("bottomlabelfontcolor", QVariant(_bottomLabelFontColor).toString());
-  xml.writeAttribute("toplabeloverride", _topLabelOverride);
-  xml.writeAttribute("toplabeluseglobal", QVariant(_topFontUseGlobal).toString());
-  xml.writeAttribute("toplabelfont", QVariant(_topLabelFont).toString());
-  xml.writeAttribute("toplabelfontscale", QVariant(_topLabelFontScale).toString());
-  xml.writeAttribute("toplabelfontcolor", QVariant(_topLabelFontColor).toString());
-  xml.writeAttribute("rightlabeloverride", _rightLabelOverride);
-  xml.writeAttribute("rightlabeluseglobal", QVariant(_rightFontUseGlobal).toString());
-  xml.writeAttribute("rightlabelfont", QVariant(_rightLabelFont).toString());
-  xml.writeAttribute("rightlabelfontscale", QVariant(_rightLabelFontScale).toString());
-  xml.writeAttribute("rightlabelfontcolor", QVariant(_rightLabelFontColor).toString());
-  xml.writeAttribute("numberlabelfont", QVariant(_numberLabelFont).toString());
-  xml.writeAttribute("numberlabeluseglobal", QVariant(_numberFontUseGlobal).toString());
-  xml.writeAttribute("numberlabelfontscale", QVariant(_numberLabelFontScale).toString());
-  xml.writeAttribute("numberlabelfontcolor", QVariant(_numberLabelFontColor).toString());
-  xml.writeAttribute("showlegend", QVariant(_showLegend).toString());
-  saveNameInfo(xml, GNUM);
+  if (isVisible()) {
+    xml.writeStartElement("plot");
+    xml.writeAttribute("tiedzoom", QVariant(_isTiedZoom).toString());
+    xml.writeAttribute("leftlabelvisible", QVariant(_isLeftLabelVisible).toString());
+    xml.writeAttribute("bottomlabelvisible", QVariant(_isBottomLabelVisible).toString());
+    xml.writeAttribute("rightlabelvisible", QVariant(_isRightLabelVisible).toString());
+    xml.writeAttribute("toplabelvisible", QVariant(_isTopLabelVisible).toString());
+    xml.writeAttribute("globalfont", QVariant(_globalFont).toString());
+    xml.writeAttribute("globalfontscale", QVariant(_globalFontScale).toString());
+    xml.writeAttribute("globalfontcolor", QVariant(_globalFontColor).toString());
+    xml.writeAttribute("leftlabeloverride", _leftLabelOverride);
+    xml.writeAttribute("leftlabeluseglobal", QVariant(_leftFontUseGlobal).toString());
+    xml.writeAttribute("leftlabelfont", QVariant(_leftLabelFont).toString());
+    xml.writeAttribute("leftlabelfontscale", QVariant(_leftLabelFontScale).toString());
+    xml.writeAttribute("leftlabelfontcolor", QVariant(_leftLabelFontColor).toString());
+    xml.writeAttribute("bottomlabeloverride", _bottomLabelOverride);
+    xml.writeAttribute("bottomlabeluseglobal", QVariant(_bottomFontUseGlobal).toString());
+    xml.writeAttribute("bottomlabelfont", QVariant(_bottomLabelFont).toString());
+    xml.writeAttribute("bottomlabelfontscale", QVariant(_bottomLabelFontScale).toString());
+    xml.writeAttribute("bottomlabelfontcolor", QVariant(_bottomLabelFontColor).toString());
+    xml.writeAttribute("toplabeloverride", _topLabelOverride);
+    xml.writeAttribute("toplabeluseglobal", QVariant(_topFontUseGlobal).toString());
+    xml.writeAttribute("toplabelfont", QVariant(_topLabelFont).toString());
+    xml.writeAttribute("toplabelfontscale", QVariant(_topLabelFontScale).toString());
+    xml.writeAttribute("toplabelfontcolor", QVariant(_topLabelFontColor).toString());
+    xml.writeAttribute("rightlabeloverride", _rightLabelOverride);
+    xml.writeAttribute("rightlabeluseglobal", QVariant(_rightFontUseGlobal).toString());
+    xml.writeAttribute("rightlabelfont", QVariant(_rightLabelFont).toString());
+    xml.writeAttribute("rightlabelfontscale", QVariant(_rightLabelFontScale).toString());
+    xml.writeAttribute("rightlabelfontcolor", QVariant(_rightLabelFontColor).toString());
+    xml.writeAttribute("numberlabelfont", QVariant(_numberLabelFont).toString());
+    xml.writeAttribute("numberlabeluseglobal", QVariant(_numberFontUseGlobal).toString());
+    xml.writeAttribute("numberlabelfontscale", QVariant(_numberLabelFontScale).toString());
+    xml.writeAttribute("numberlabelfontcolor", QVariant(_numberLabelFontColor).toString());
+    xml.writeAttribute("showlegend", QVariant(_showLegend).toString());
+    saveNameInfo(xml, GNUM);
 
-  ViewItem::save(xml);
-  legend()->saveInPlot(xml);
+    ViewItem::save(xml);
+    legend()->saveInPlot(xml);
 
-  foreach (PlotRenderItem *renderer, renderItems()) {
-    renderer->saveInPlot(xml);
+    foreach (PlotRenderItem *renderer, renderItems()) {
+      renderer->saveInPlot(xml);
+    }
+    _xAxis->saveInPlot(xml, QString("xaxis"));
+    _yAxis->saveInPlot(xml, QString("yaxis"));
+
+    xml.writeStartElement("projectionrect");
+    xml.writeAttribute("x", QVariant(projectionRect().x()).toString());
+    xml.writeAttribute("y", QVariant(projectionRect().y()).toString());
+    xml.writeAttribute("width", QVariant(projectionRect().width()).toString());
+    xml.writeAttribute("height", QVariant(projectionRect().height()).toString());
+    xml.writeEndElement();
+    xml.writeEndElement();
   }
-  _xAxis->saveInPlot(xml, QString("xaxis"));
-  _yAxis->saveInPlot(xml, QString("yaxis"));
-
-  xml.writeStartElement("projectionrect");
-  xml.writeAttribute("x", QVariant(projectionRect().x()).toString());
-  xml.writeAttribute("y", QVariant(projectionRect().y()).toString());
-  xml.writeAttribute("width", QVariant(projectionRect().width()).toString());
-  xml.writeAttribute("height", QVariant(projectionRect().height()).toString());
-  xml.writeEndElement();
-  xml.writeEndElement();
 }
 
 

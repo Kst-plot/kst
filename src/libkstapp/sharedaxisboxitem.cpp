@@ -50,9 +50,11 @@ void SharedAxisBoxItem::paint(QPainter *painter) {
 
 
 void SharedAxisBoxItem::save(QXmlStreamWriter &xml) {
-  xml.writeStartElement("sharedaxisbox");
-  ViewItem::save(xml);
-  xml.writeEndElement();
+  if (isVisible()) {
+    xml.writeStartElement("sharedaxisbox");
+    ViewItem::save(xml);
+    xml.writeEndElement();
+  }
 }
 
 

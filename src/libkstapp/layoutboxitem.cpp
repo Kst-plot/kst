@@ -54,21 +54,23 @@ void LayoutBoxItem::appendItem(ViewItem *item) {
 
 
 void LayoutBoxItem::save(QXmlStreamWriter &xml) {
-  xml.writeStartElement("layoutbox");
-  ViewItem::save(xml);
+  if (isVisible()) {
+    xml.writeStartElement("layoutbox");
+    ViewItem::save(xml);
 
-  QList<QGraphicsItem*> list = QGraphicsItem::children();
-  foreach (QGraphicsItem *item, list) {
-    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
-    if (!viewItem)
-      continue;
+    QList<QGraphicsItem*> list = QGraphicsItem::children();
+    foreach (QGraphicsItem *item, list) {
+      ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+      if (!viewItem)
+        continue;
 
-    xml.writeStartElement("layoutitem");
-    xml.writeAttribute("name", viewItem->name());
+      xml.writeStartElement("layoutitem");
+      xml.writeAttribute("name", viewItem->name());
+      xml.writeEndElement();
+    }
+
     xml.writeEndElement();
   }
-
-  xml.writeEndElement();
 }
 
 

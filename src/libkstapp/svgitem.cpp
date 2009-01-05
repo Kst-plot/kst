@@ -57,12 +57,14 @@ void SvgItem::paint(QPainter *painter) {
 
 
 void SvgItem::save(QXmlStreamWriter &xml) {
-  xml.writeStartElement("svg");
-  ViewItem::save(xml);
-  xml.writeStartElement("data");
-  xml.writeCharacters(qCompress(_svgData).toBase64());
-  xml.writeEndElement();
-  xml.writeEndElement();
+  if (isVisible()) {
+    xml.writeStartElement("svg");
+    ViewItem::save(xml);
+    xml.writeStartElement("data");
+    xml.writeCharacters(qCompress(_svgData).toBase64());
+    xml.writeEndElement();
+    xml.writeEndElement();
+  }
 }
 
 

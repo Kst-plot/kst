@@ -45,9 +45,11 @@ void LineItem::paint(QPainter *painter) {
 
 
 void LineItem::save(QXmlStreamWriter &xml) {
-  xml.writeStartElement("line");
-  ViewItem::save(xml);
-  xml.writeEndElement();
+  if (isVisible()) {
+    xml.writeStartElement("line");
+    ViewItem::save(xml);
+    xml.writeEndElement();
+  }
 }
 
 

@@ -87,13 +87,15 @@ void ArrowItem::paint(QPainter *painter) {
 
 
 void ArrowItem::save(QXmlStreamWriter &xml) {
-  xml.writeStartElement("arrow");
-  xml.writeAttribute("startarrowhead", QVariant(_startArrowHead).toString());
-  xml.writeAttribute("endarrowhead", QVariant(_startArrowHead).toString());
-  xml.writeAttribute("startarrowheadscale", QVariant(_startArrowScale).toString());
-  xml.writeAttribute("endarrowheadscale", QVariant(_endArrowScale).toString());
-  ViewItem::save(xml);
-  xml.writeEndElement();
+  if (isVisible()) {
+    xml.writeStartElement("arrow");
+    xml.writeAttribute("startarrowhead", QVariant(_startArrowHead).toString());
+    xml.writeAttribute("endarrowhead", QVariant(_startArrowHead).toString());
+    xml.writeAttribute("startarrowheadscale", QVariant(_startArrowScale).toString());
+    xml.writeAttribute("endarrowheadscale", QVariant(_endArrowScale).toString());
+    ViewItem::save(xml);
+    xml.writeEndElement();
+  }
 }
 
 

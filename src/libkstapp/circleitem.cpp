@@ -41,9 +41,11 @@ void CircleItem::paint(QPainter *painter) {
 
 
 void CircleItem::save(QXmlStreamWriter &xml) {
-  xml.writeStartElement("circle");
-  ViewItem::save(xml);
-  xml.writeEndElement();
+  if (isVisible()) {
+    xml.writeStartElement("circle");
+    ViewItem::save(xml);
+    xml.writeEndElement();
+  }
 }
 
 
