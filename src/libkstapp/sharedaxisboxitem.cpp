@@ -26,7 +26,7 @@
 namespace Kst {
 
 SharedAxisBoxItem::SharedAxisBoxItem(View *parent)
-    : ViewItem(parent), _layout(0) {
+    : ViewItem(parent), _layout(0), _loaded(false) {
   setName("Shared Axis Box");
   setZValue(SHAREDAXISBOX_ZVALUE);
   setBrush(Qt::transparent);
@@ -56,13 +56,21 @@ void SharedAxisBoxItem::save(QXmlStreamWriter &xml) {
 }
 
 
-void SharedAxisBoxItem::acceptItems() {
+bool SharedAxisBoxItem::acceptItems() {
+  bool bReturn = false;
+
+  if (_loaded) {
+    return true;
+  } else {
+    _loaded = true;
+  }
+
   ViewItem* child = 0;
   if (parentView()) {
     QList<QGraphicsItem*> list = parentView()->items();
     foreach (QGraphicsItem *item, list) {
       ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
-      if (!viewItem || !viewItem->isVisible() || viewItem == this ||  !collidesWithItem(viewItem, Qt::IntersectsItemBoundingRect)) {
+      if (!viewItem || !viewItem->isVisible() || viewItem == this ||  viewItem == parentItem() || !collidesWithItem(viewItem, Qt::IntersectsItemBoundingRect)) {
         continue;
       }
 
@@ -75,6 +83,8 @@ void SharedAxisBoxItem::acceptItems() {
           } else if (parent != parentItem()) {
             continue;
           }
+        } else if (parentItem()) {
+          continue;
         }
         plotItem->setSharedAxisBox(this);
         child = plotItem;
@@ -82,16 +92,17 @@ void SharedAxisBoxItem::acceptItems() {
     }
     if (child) {
       setBrush(Qt::white);
-
+      ViewGridLayout::updateProjections(this);
       sharePlots();
-    } else {
-      delete this;
+      bReturn =  true;
     }
   }
+  return bReturn;
 }
 
 
 void SharedAxisBoxItem::breakShare() {
+  _loaded = false;
   QList<QGraphicsItem*> list = QGraphicsItem::children();
   foreach (QGraphicsItem *item, list) {
     ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
@@ -161,7 +172,22 @@ void CreateSharedAxisBoxCommand::redo() {
   _item->show();
   SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(_item);
   if (shareBox) {
-    shareBox->acceptItems();
+    if (!shareBox->acceptItems()) {
+      _item->hide();
+    }
+  }
+}
+
+
+void CreateSharedAxisBoxCommand::creationComplete() {
+  Q_ASSERT(_item);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(_item);
+  if (shareBox) {
+    if (shareBox->acceptItems()) {
+      CreateCommand::creationComplete();
+    } else {
+      delete _item;
+    }
   }
 }
 

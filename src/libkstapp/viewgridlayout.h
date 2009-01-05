@@ -56,6 +56,7 @@ class ViewGridLayout : public QObject
     void setEnabled(bool enabled);
 
     void calculateSharing();
+    static void updateProjections(ViewItem *item);
 
     static void resetSharedPlots(ViewItem *item);
     static void standardizePlotMargins(ViewItem *item);

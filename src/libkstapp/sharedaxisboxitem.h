@@ -35,16 +35,18 @@ class SharedAxisBoxItem : public ViewItem
 
   public slots:
     void breakShare();
-    void acceptItems();
+    bool acceptItems();
     void lockItems();
 
   private:
     QAction *_breakAction;
     QPointer<ViewGridLayout> _layout;
+    bool _loaded;
 };
 
 class KST_EXPORT CreateSharedAxisBoxCommand : public CreateCommand
 {
+  Q_OBJECT
   public:
     CreateSharedAxisBoxCommand() : CreateCommand(QObject::tr("Create Shared Axis Box")) {}
     CreateSharedAxisBoxCommand(View *view) : CreateCommand(view, QObject::tr("Create Shared Axis Box")) {}
@@ -52,6 +54,9 @@ class KST_EXPORT CreateSharedAxisBoxCommand : public CreateCommand
     virtual void undo();
     virtual void redo();
     virtual void createItem();
+
+  public Q_SLOTS:
+    virtual void creationComplete();
 };
 
 class SharedAxisBoxItemFactory : public GraphicsFactory {

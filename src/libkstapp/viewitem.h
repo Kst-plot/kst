@@ -278,7 +278,7 @@ class KST_EXPORT CreateCommand : public QObject, public ViewCommand
     ViewItem *item() const { return _item; }
 
   public Q_SLOTS:
-    void creationComplete();
+    virtual void creationComplete();
 
   protected:
     QPointer<ViewItem> _item;

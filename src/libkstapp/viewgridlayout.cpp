@@ -557,6 +557,88 @@ void ViewGridLayout::calculateSharing() {
 }
 
 
+void ViewGridLayout::updateProjections(ViewItem *item) {
+  bool xMatch = true;
+  bool yMatch = true;
+
+  bool first = true;
+
+  qreal xStart = 0.0, xStop = 0.0;
+  qreal yStart = 0.0, yStop = 0.0;
+  qreal xMin, xMax, yMin, yMax;
+
+  QList<ViewItem*> viewItems;
+  QList<QGraphicsItem*> list = item->QGraphicsItem::children();
+  if (list.isEmpty())
+    return; //not added to undostack
+
+  foreach (QGraphicsItem *graphicsItem, list) {
+    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(graphicsItem);
+    if (!viewItem || viewItem->hasStaticGeometry() || !viewItem->allowsLayout() || viewItem->parentItem() != item)
+      continue;
+
+    PlotItem *plotItem = qobject_cast<PlotItem*>(viewItem);
+
+    if (!plotItem)
+      continue;
+
+    if (first) {
+      xStart = plotItem->projectionRect().left();
+      xStop = plotItem->projectionRect().right();
+      yStart = plotItem->projectionRect().top();
+      yStop = plotItem->projectionRect().bottom();
+      xMin = xStart;
+      xMax = xStop;
+      yMin = yStart;
+      yMax = yStop;
+      first = false;
+    } else {
+      if (xMatch && (plotItem->projectionRect().left() != xStart || plotItem->projectionRect().right() != xStop)) {
+        xMatch = false;
+      }
+      if (yMatch && (plotItem->projectionRect().top() != yStart || plotItem->projectionRect().bottom() != yStop)) {
+        yMatch = false;
+      }
+      if (xMin > plotItem->projectionRect().left()) {
+        xMin = plotItem->projectionRect().left();
+      }
+      if (xMax < plotItem->projectionRect().right()) {
+        xMax = plotItem->projectionRect().right();
+      }
+      if (yMin > plotItem->projectionRect().top()) {
+        yMin = plotItem->projectionRect().top();
+      }
+      if (yMax < plotItem->projectionRect().bottom()) {
+        yMax = plotItem->projectionRect().bottom();
+      }
+    }
+  }
+
+  if (!xMatch && !yMatch) {
+    xMatch = true;
+    yMatch = true;
+  }
+
+  QRectF projectionRect(QPointF(xMin, yMin), QPointF(xMax, yMax));
+
+  foreach (QGraphicsItem *graphicsItem, list) {
+    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(graphicsItem);
+    if (!viewItem || viewItem->hasStaticGeometry() || !viewItem->allowsLayout() || viewItem->parentItem() != item)
+      continue;
+
+    if (PlotItem *plotItem = qobject_cast<PlotItem*>(viewItem)) {
+      if (xMatch && yMatch) {
+        plotItem->zoomFixedExpression(projectionRect);
+      } else if (xMatch) {
+        plotItem->zoomXRange(projectionRect);
+      } else if (yMatch) {
+        plotItem->zoomYRange(projectionRect);
+      }
+    }
+  }
+}
+
+
 void ViewGridLayout::shareAxisWithPlotToLeft(LayoutItem item) {
   PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
 
