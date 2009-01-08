@@ -22,6 +22,7 @@
 // 0 off, 1 On
 #define DEBUG_LAYOUT 0
 #define DEBUG_PLOT_STANDARDIZATION 0
+#define DEBUG_SHAREDAXIS 0
 
 static qreal DEFAULT_STRUT = 20.0;
 
@@ -195,6 +196,7 @@ void ViewGridLayout::sharePlots(ViewItem *item) {
   Q_ASSERT(item);
   Q_ASSERT(item->parentView());
 
+  // Gather all children of the SharedAxisBoxItem.
   QList<ViewItem*> viewItems;
   QList<QGraphicsItem*> list = item->QGraphicsItem::children();
   if (list.isEmpty())
@@ -210,6 +212,8 @@ void ViewGridLayout::sharePlots(ViewItem *item) {
   if (viewItems.isEmpty())
     return; //not added to undostack
 
+
+  // Build an automatic layout to try to maintain the existing layout.
   Grid *grid = Grid::buildGrid(viewItems, 0);
   Q_ASSERT(grid);
 
@@ -228,8 +232,33 @@ void ViewGridLayout::sharePlots(ViewItem *item) {
       }
     }
   }
-  layout->applyAxis();
-  layout->applyAxis();
+  layout->apply();
+  layout->apply();
+
+  // Using the automatic layout as a basis, build a custom grid with the same column count,
+  // this will remove all spans, making each plot the same size.  When this is built, the 
+  // sharedAxis layout will be applied.
+  int columnCount = layout->columnCount();
+  grid = Grid::buildGrid(viewItems, columnCount);
+  Q_ASSERT(grid);
+
+  layout = new ViewGridLayout(item);
+
+  foreach (ViewItem *v, viewItems) {
+    int r = 0, c = 0, rs = 0, cs = 0;
+    if (grid->locateWidget(v, r, c, rs, cs)) {
+      layout->addViewItem(v, r, c, rs, cs);
+    } else {
+      grid->appendItem(v);
+      if (grid->locateWidget(v, r, c, rs, cs)) {
+        layout->addViewItem(v, r, c, rs, cs);
+      } else {
+        qDebug() << "ooops, viewItem does not fit in layout" << endl;
+      }
+    }
+  }
+  layout->shareAxis();
+  layout->shareAxis();
 }
 
 
@@ -371,83 +400,197 @@ void ViewGridLayout::apply() {
 }
 
 
-void ViewGridLayout::applyAxis() {
-  updatePlotMargins();
+void ViewGridLayout::shareAxis() {
+  calculateSharing();
+  updateSharedAxis();
 
-  //For now we divide up equally... can do stretch factors and such later...
-
-  QSizeF layoutSize(parentItem()->width() - _margin.width() * 2,
-                    parentItem()->height() - _margin.height() * 2);
-
+  // Determine area of layout.  Minimal spacing on SharedAxisBoxItems.
+  QSizeF layoutSize(parentItem()->width() - 1, parentItem()->height() - 1);
   QPointF layoutTopLeft = parentItem()->rect().topLeft();
-  layoutTopLeft += QPointF(_margin.width(), _margin.height());
+  layoutTopLeft += QPointF(0, 1);
 
   QRectF layoutRect(layoutTopLeft, layoutSize);
 
-  qreal itemWidth = layoutSize.width() / columnCount();
-  qreal itemHeight = layoutSize.height() / rowCount();
+  QMap<int, int> leftLabelBounds;
+  QMap<int, int> rightLabelBounds;
+  QMap<int, int> topLabelBounds;
+  QMap<int, int> bottomLabelBounds;
 
-#if DEBUG_LAYOUT
-  qDebug() << "layouting" << _items.count()
-           << "itemWidth:" << itemWidth
-           << "itemHeight:" << itemHeight
-           << endl;
+#if DEBUG_SHAREDAXIS
+  qDebug() << "Creating Shared Axis Layout in rect " << layoutRect
+           << "rowCount" << rowCount() << "columnCount" << columnCount();
 #endif
 
   foreach (LayoutItem item, _items) {
-    QPointF topLeft(itemWidth * item.column, itemHeight * item.row);
-    QSizeF size(itemWidth * item.columnSpan, itemHeight * item.rowSpan);
-    topLeft += layoutTopLeft;
+    if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem)) {
+      if (plotItem->leftMarginSize() > leftLabelBounds[item.column]) {
+        leftLabelBounds[item.column] = plotItem->leftMarginSize();
+      }
+      if (plotItem->rightMarginSize() > rightLabelBounds[item.column]) {
+        rightLabelBounds[item.column] = plotItem->rightMarginSize();
+      }
+      if (plotItem->topMarginSize() > topLabelBounds[item.row]) {
+        topLabelBounds[item.row] = plotItem->topMarginSize();
+      }
+      if (plotItem->bottomMarginSize() > bottomLabelBounds[item.row]) {
+        bottomLabelBounds[item.row] = plotItem->bottomMarginSize();
+      }
+    }
+  }
 
-    QRectF itemRect(topLeft, size);
+#if DEBUG_SHAREDAXIS
+  qDebug() << "Calculated maximum bounds for labels."
+  qDebug() << "Left bounds by column" << leftLabelBounds;
+  qDebug() << "Right bounds by column" << rightLabelBounds;
+  qDebug() << "Top bounds by row" << topLabelBounds;
+  qDebug() << "Bottom bounds by row" << bottomLabelBounds;
+#endif
 
-    if (itemRect.top() != layoutRect.top())
-      itemRect.setTop(itemRect.top() + _spacing.height() / 2);
-    if (itemRect.left() != layoutRect.left())
-      itemRect.setLeft(itemRect.left() + _spacing.width() / 2);
-    if (itemRect.bottom() != layoutRect.bottom())
-      itemRect.setBottom(itemRect.bottom() - _spacing.height() / 2);
-    if (itemRect.right() != layoutRect.right())
-      itemRect.setRight(itemRect.right() - _spacing.width() / 2);
+  bool blockMode = false;
+  bool rowMode = false;
+  bool colMode = false;
+
+#if DEBUG_SHAREDAXIS
+  qDebug() << "Calculated sharing modes" << "sharing X = " << _shareX << "sharing Y = " << _shareY;
+#endif
+
+  if (_shareX && _shareY) {
+#if DEBUG_SHAREDAXIS
+    qDebug() << "Sharing X & Y, one block, all projectionRect's inside frame";
+#endif
+    blockMode = true;
+  } else if (_shareX) {
+    if (columnCount() == 1) {
+#if DEBUG_SHAREDAXIS
+      qDebug() << "Sharing only X, one column, use block logic";
+#endif
+      blockMode = true;
+    } else {
+#if DEBUG_SHAREDAXIS
+      qDebug() << "Sharing only X, multiple columns, use block for each column, columns divide space equally - number of columns" << columnCount();
+#endif
+      colMode = true;
+    }
+  } else if (_shareY) {
+    if (rowCount() == 1) {
+#if DEBUG_SHAREDAXIS
+      qDebug() << "Sharing only Y, one row, use block logic";
+#endif
+      blockMode = true;
+    } else {
+#if DEBUG_SHAREDAXIS
+      qDebug() << "Sharing only Y, multiple rows, use block for each row, rows divide space equally - number of rows" << rowCount();
+#endif
+      rowMode = true;
+    }
+  }
+
+  int totalProjWidth;
+  int totalProjHeight;
+
+  if (blockMode) {
+    totalProjWidth = (layoutRect.width() - leftLabelBounds[0]) - rightLabelBounds[columnCount() - 1];
+    totalProjHeight = (layoutRect.height() - topLabelBounds[0]) - bottomLabelBounds[rowCount() - 1];
+  } else if (rowMode) {
+    int totalHeight = 0;
+    for (int i = 0; i < rowCount(); i++) {
+      totalHeight = topLabelBounds[i] + bottomLabelBounds[i];
+    }
+    totalProjWidth = layoutRect.width() - leftLabelBounds[0] - rightLabelBounds[columnCount() - 1];
+    totalProjHeight = layoutRect.height() - totalHeight;
+
+  } else if (colMode) {
+    int totalWidth = 0;
+    for (int i = 0; i < columnCount(); i++) {
+      totalWidth = leftLabelBounds[i] + rightLabelBounds[i];
+    }
+    totalProjWidth = layoutRect.width() - totalWidth;
+    totalProjHeight = layoutRect.height() - topLabelBounds[0] - bottomLabelBounds[columnCount() - 1];
+  } else {
+    return;
+  }
+
+  int columnProjWidth = totalProjWidth / (columnCount());
+  int rowProjHeight = totalProjHeight / (rowCount());
+
+  QMap<int, QMap<int, int> > cellHeights;
+  QMap<int, QMap<int, int> > cellWidths;
+
+  foreach (LayoutItem item, _items) {
+    if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem)) {
+      int width = columnProjWidth;
+      if (plotItem->isLeftLabelVisible()) {
+        width += leftLabelBounds[item.column];
+      }
+      if (plotItem->isRightLabelVisible()) {
+        width += rightLabelBounds[item.column];
+      }
+      cellWidths[item.row][item.column] = width;
+
+      int height = rowProjHeight;
+      if (plotItem->isTopLabelVisible()) {
+        height += topLabelBounds[item.row];
+      }
+      if (plotItem->isBottomLabelVisible()) {
+        height += bottomLabelBounds[item.row];
+      }
+      cellHeights[item.row][item.column] = height;
+    }
+  }
+
+#if DEBUG_SHAREDAXIS
+  qDebug() << "Calculated Total projectRect values - width = " << totalProjWidth << " height = " << totalProjHeight;
+  qDebug() << "Column Projection Width" << columnProjWidth << "Row Projection Height" << rowProjHeight;
+  qDebug() << "Calculated cell widths (row x column)" << cellWidths;
+  qDebug() << "Calculated cell heights (row x column)" << cellHeights;
+#endif
+
+  foreach (LayoutItem item, _items) {
+    int columnStart = 0;
+    for (int i = 0; i < item.column; i++) {
+      columnStart += cellWidths[item.row][i];
+    }
+
+    int rowStart = 0;
+    for (int i = 0; i < item.row; i++) {
+      rowStart += cellHeights[i][item.column];
+    }
+
+    QPointF itemTopLeft(columnStart, rowStart);
+    itemTopLeft += layoutTopLeft;
+    QSizeF itemSize(cellWidths[item.row][item.column], cellHeights[item.row][item.column]);
+    QRectF itemRect(itemTopLeft, itemSize);
+
+    if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem)) {
+      if (plotItem->isLeftLabelVisible()) {
+        plotItem->setLeftPadding(leftLabelBounds[item.column] - plotItem->leftMarginSize());
+      }
+      if (plotItem->isRightLabelVisible()) {
+        plotItem->setRightPadding(rightLabelBounds[item.column] - plotItem->rightMarginSize());
+      }
+      if (plotItem->isTopLabelVisible()) {
+        plotItem->setTopPadding(topLabelBounds[item.row] - plotItem->topMarginSize());
+      }
+      if (plotItem->isBottomLabelVisible()) {
+        plotItem->setBottomPadding(bottomLabelBounds[item.row] - plotItem->bottomMarginSize());
+      }
+    }
 
     item.viewItem->resetTransform();
     item.viewItem->setPos(itemRect.topLeft());
-
-    if (item.viewItem->fixedSize()) {
-      itemRect.setBottom(itemRect.top() + item.viewItem->rect().height());
-      itemRect.setRight(itemRect.left() + item.viewItem->rect().width());
-    } else if (item.viewItem->lockAspectRatio()) {
-      qreal newHeight = itemRect.height();
-      qreal newWidth = itemRect.width();
-
-      qreal aspectRatio = item.viewItem->rect().width() / item.viewItem->rect().height();
-      if ((newWidth / newHeight) > aspectRatio) {
-        // newWidth is too large.  Use newHeight as key.
-        newWidth = newHeight * aspectRatio;
-      } else {
-        // newHeight is either too large, or perfect.  use newWidth as key.
-        newHeight = newWidth / aspectRatio;
-      }
-      itemRect.setBottom(itemRect.top() + newHeight);
-      itemRect.setRight(itemRect.left() + newWidth);
-    }
     item.viewItem->setViewRect(QRectF(QPoint(0,0), itemRect.size()));
 
     if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem))
       emit plotItem->updatePlotRect();
 
-#if DEBUG_LAYOUT
-    qDebug() << "layout"
+#if DEBUG_SHAREDAXIS
+    qDebug() << "Shared Axis Plot item details:"
              << "row:" << item.row
              << "column:" << item.column
-             << "rowSpan:" << item.rowSpan
-             << "columnSpan:" << item.columnSpan
              << "itemRect:" << itemRect
              << endl;
 #endif
   }
-  calculateSharing();
-  updateSharedAxis();
 }
 
 

@@ -71,6 +71,8 @@ PlotItem::PlotItem(View *parent)
   _calculatedAxisMarginHeight(0.0),
   _leftPadding(0.0),
   _bottomPadding(0.0),
+  _rightPadding(0.0),
+  _topPadding(0.0),
   _showLegend(false),
   _legend(0),
   _zoomMenu(0),
@@ -885,11 +887,15 @@ QRectF PlotItem::plotRect() const {
   QRectF plot = plotAxisRect();
   qreal xOffset = _xAxis->isAxisVisible() ? axisMarginHeight() : 0.0;
   qreal yOffset = _yAxis->isAxisVisible() ? axisMarginWidth() : 0.0;
-  qreal xPadding = _xAxis->isAxisVisible() ? _bottomPadding : 0.0;
-  qreal yPadding = _yAxis->isAxisVisible() ? _leftPadding : 0.0;
+  qreal bottomPadding = _xAxis->isAxisVisible() ? _bottomPadding : 0.0;
+  qreal leftPadding = _yAxis->isAxisVisible() ? _leftPadding : 0.0;
+  qreal rightPadding = isRightLabelVisible() ? _rightPadding : 0.0;
+  qreal topPadding = isTopLabelVisible() ? _topPadding : 0.0;
 
-  plot.setLeft(plot.left() + yOffset + yPadding);
-  plot.setBottom(plot.bottom() - xOffset - xPadding);
+  plot.setLeft(plot.left() + yOffset + leftPadding);
+  plot.setBottom(plot.bottom() - xOffset - bottomPadding);
+  plot.setRight(plot.right() - rightPadding);
+  plot.setTop(plot.top() + topPadding);
   return plot;
 }
 
@@ -910,6 +916,18 @@ qreal PlotItem::bottomMarginSize() const {
 }
 
 
+qreal PlotItem::rightMarginSize() const {
+  qreal margin = isRightLabelVisible() ? rightLabelMargin() : 0.0;
+  return margin;
+}
+
+
+qreal PlotItem::topMarginSize() const {
+  qreal margin = isTopLabelVisible() ? topLabelMargin() : 0.0;
+  return margin;
+}
+
+
 void PlotItem::setLeftPadding(const qreal padding) {
   _leftPadding = padding;
 }
@@ -917,6 +935,16 @@ void PlotItem::setLeftPadding(const qreal padding) {
 
 void PlotItem::setBottomPadding(const qreal padding) {
   _bottomPadding = padding;
+}
+
+
+void PlotItem::setRightPadding(const qreal padding) {
+  _rightPadding = padding;
+}
+
+
+void PlotItem::setTopPadding(const qreal padding) {
+  _topPadding = padding;
 }
 
 

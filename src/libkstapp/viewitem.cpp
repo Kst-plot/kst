@@ -1918,68 +1918,6 @@ void LayoutCommand::createLayout(int columns) {
 }
 
 
-
-void SharedAxisCommand::undo() {
-  Q_ASSERT(_layout);
-  _layout->reset();
-}
-
-
-void SharedAxisCommand::redo() {
-  Q_ASSERT(_layout);
-  _layout->applyAxis();
-}
-
-
-void SharedAxisCommand::createLayout(int columns) {
-  Q_ASSERT(_item);
-  Q_ASSERT(_item->parentView());
-
-  QList<ViewItem*> viewItems;
-  QList<QGraphicsItem*> list = _item->QGraphicsItem::children();
-  if (list.isEmpty())
-    return; //not added to undostack
-
-  foreach (QGraphicsItem *item, list) {
-    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
-    if (!viewItem || viewItem->hasStaticGeometry() || !viewItem->allowsLayout() || viewItem->parentItem() != _item)
-      continue;
-    viewItems.append(viewItem);
-  }
-
-  if (viewItems.isEmpty())
-    return; //not added to undostack
-
-  Grid *grid = Grid::buildGrid(viewItems, columns);
-  Q_ASSERT(grid);
-
-  _layout = new ViewGridLayout(_item);
-
-  foreach (ViewItem *v, viewItems) {
-    int r = 0, c = 0, rs = 0, cs = 0;
-    if (grid->locateWidget(v, r, c, rs, cs)) {
-      _layout->addViewItem(v, r, c, rs, cs);
-    } else {
-      grid->appendItem(v);
-      if (grid->locateWidget(v, r, c, rs, cs)) {
-        _layout->addViewItem(v, r, c, rs, cs);
-      } else {
-        qDebug() << "ooops, viewItem does not fit in layout" << endl;
-      }
-    }
-  }
-
-  if (qobject_cast<LayoutBoxItem*>(_item)) {
-    _layout->setMargin((_item->sizeOfGrip() / 2.0));
-    _layout->setSpacing((_item->sizeOfGrip() / 2.0));
-    QObject::connect(_layout, SIGNAL(enabledChanged(bool)),
-                     _item, SLOT(setEnabled(bool)));
-  }
-
-  _layout->applyAxis();
-  _item->parentView()->undoStack()->push(this);
-}
-
 void AppendLayoutCommand::undo() {
   Q_ASSERT(_layout);
   _layout->reset();

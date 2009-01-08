@@ -89,6 +89,10 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void setLeftPadding(const qreal);
     qreal bottomMarginSize() const;
     void setBottomPadding(const qreal);
+    qreal rightMarginSize() const;
+    void setRightPadding(const qreal);
+    qreal topMarginSize() const;
+    void setTopPadding(const qreal);
 
     qreal leftLabelMargin() const;
     qreal rightLabelMargin() const;
@@ -358,6 +362,8 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 
     qreal _leftPadding;
     qreal _bottomPadding;
+    qreal _rightPadding;
+    qreal _topPadding;
 
     PlotAxis *_xAxis;
     PlotAxis *_yAxis;

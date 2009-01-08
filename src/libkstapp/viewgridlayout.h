@@ -67,7 +67,7 @@ class ViewGridLayout : public QObject
     void reset();
     void resetSharedAxis();
     void apply();
-    void applyAxis();
+    void shareAxis();
 
   Q_SIGNALS:
     void enabledChanged(bool enabled);

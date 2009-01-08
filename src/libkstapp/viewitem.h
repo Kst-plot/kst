@@ -300,22 +300,6 @@ class KST_EXPORT LayoutCommand : public ViewItemCommand
     QPointer<ViewGridLayout> _layout;
 };
 
-class KST_EXPORT SharedAxisCommand : public ViewItemCommand
-{
-  public:
-    SharedAxisCommand(ViewItem *item)
-        : ViewItemCommand(item, QObject::tr("Share Axis"), false) {}
-
-    virtual ~SharedAxisCommand() {}
-
-    virtual void undo();
-    virtual void redo();
-    void createLayout(int columns = 0);
-
-  private:
-    QPointer<ViewGridLayout> _layout;
-};
-
 class KST_EXPORT AppendLayoutCommand : public ViewItemCommand
 {
   public:
