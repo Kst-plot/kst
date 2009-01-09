@@ -509,6 +509,12 @@ PlotRenderItem *PlotItem::renderItem(PlotRenderItem::RenderType type) {
 
 
 void PlotItem::paint(QPainter *painter) {
+  if (isInSharedAxisBox()) {
+    setBrush(Qt::transparent);
+  } else {
+    setBrush(Qt::white);
+  }
+
   painter->save();
   painter->setPen(Qt::NoPen);
   painter->drawRect(rect());

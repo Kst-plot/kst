@@ -212,10 +212,10 @@ void PlotRenderItem::paint(QPainter *painter) {
       painter->drawRect(_selectionRect.rect());
     }
 
-    painter->save();
-    painter->setRenderHint(QPainter::Antialiasing, true);
-    painter->fillPath(checkBox(), Qt::white);
     if (!plotItem()->isInSharedAxisBox()) {
+      painter->save();
+      painter->setRenderHint(QPainter::Antialiasing, true);
+      painter->fillPath(checkBox(), Qt::white);
       if (isHovering()) {
         QRectF check = checkBox().controlPointRect();
         check.setSize(QSizeF(check.width() / 1.8, check.height() / 1.8));
@@ -231,8 +231,8 @@ void PlotRenderItem::paint(QPainter *painter) {
         painter->restore();
       }
       painter->drawPath(checkBox());
+      painter->restore();
     }
-    painter->restore();
   }
 
 #ifdef CURVE_DRAWING_TIME
