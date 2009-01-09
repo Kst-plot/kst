@@ -70,6 +70,8 @@ ApplicationSettingsDialog::ApplicationSettingsDialog(QWidget *parent)
   setupFill();
   setupDefaultLabelProperties();
 //   setupChildViewOptions();
+
+  selectDialogPage(general);
 }
 
 
