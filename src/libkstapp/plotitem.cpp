@@ -2251,6 +2251,13 @@ void PlotItem::zoomYRange(const QRectF &projection) {
 }
 
 
+void PlotItem::zoomGeneral(ZoomState &zoomstate) {
+  ZoomCommand *cmd = new ZoomGeneralCommand(this, zoomstate);
+  _undoStack->push(cmd);
+  cmd->redo();
+}
+
+
 void PlotItem::zoomMaximum() {
 #if DEBUG_ZOOM
   qDebug() << "zoomMaximum" << endl;
@@ -2807,6 +2814,14 @@ void ZoomCommand::redo() {
   }
 }
 
+/* 
+ * Set zoom to arbitrary state: used by the dialog
+ */
+void ZoomGeneralCommand::applyZoomTo(PlotItem *item) {
+  item->xAxis()->setAxisZoomMode((PlotAxis::ZoomMode)_zoomstate.xAxisZoomMode);
+  item->yAxis()->setAxisZoomMode((PlotAxis::ZoomMode)_zoomstate.yAxisZoomMode);
+  item->setProjectionRect(_zoomstate.projectionRect);
+}
 
 /*
  * X axis zoom to FixedExpression, Y axis zoom to FixedExpression.

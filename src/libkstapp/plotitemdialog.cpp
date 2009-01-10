@@ -13,6 +13,7 @@
 
 #include "contenttab.h"
 #include "axistab.h"
+#include "rangetab.h"
 #include "markerstab.h"
 #include "labeltab.h"
 #include "overridelabeltab.h"
@@ -84,6 +85,13 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
   addDialogPage(yAxisPage);
   connect(_yAxisTab, SIGNAL(apply()), this, SLOT(yAxisChanged()));
 
+  _rangeTab = new RangeTab(_plotItem, this);
+  DialogPage *rangePage = new DialogPage(this);
+  rangePage->setPageTitle(tr("Range"));
+  rangePage->addDialogTab(_rangeTab);
+  addDialogPage(rangePage);
+  connect(_rangeTab, SIGNAL(apply()), this, SLOT(rangeChanged()));
+
   _xMarkersTab = new MarkersTab(this);
   DialogPage *xMarkersPage = new DialogPage(this);
   xMarkersPage->setPageTitle(tr("x-Axis markers"));
@@ -112,6 +120,7 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
 
   setupContent();
   setupAxis();
+  setupRange();
   setupLabels();
   setupMarkers();
 }
@@ -154,6 +163,11 @@ void PlotItemDialog::setupLabels() {
   _axisLabelTab->setLabelFont(_plotItem->numberLabelFont());
   _axisLabelTab->setLabelFontScale(_plotItem->numberLabelFontScale());
   _axisLabelTab->setLabelColor(_plotItem->numberLabelFontColor());
+}
+
+
+void PlotItemDialog::setupRange() {
+  _rangeTab->setupRange();
 }
 
 
@@ -417,7 +431,70 @@ void PlotItemDialog::relationChanged() {
     }
   }
 }
+  QPointer<PlotItem> item;
+  QRectF projectionRect;
+  int xAxisZoomMode;
+  int yAxisZoomMode;
+  bool isXAxisLog;
+  bool isYAxisLog;
+  qreal xLogBase;
+  qreal yLogBase;
 
+void PlotItemDialog::rangeChanged() {
+  Q_ASSERT(_plotItem);
+  ZoomState zoomstate;
+  double x;
+  double y;
+  double w;
+  double h;
+
+  zoomstate = _plotItem->currentZoomState();
+
+  zoomstate.item = _plotItem;
+  if (_rangeTab->xMean()) {
+    w = (_rangeTab->xRange());
+    x = (_plotItem->xMin() + _plotItem->xMax()-w)/2.0;
+  } else {
+    x = qMin(_rangeTab->xMax(), _rangeTab->xMin());
+    w = fabs(_rangeTab->xMax() - _rangeTab->xMin());
+  }
+  if (_rangeTab->yMean()) {
+    h = (_rangeTab->yRange());
+    y = (_plotItem->yMax() + _plotItem->yMin()-h)/2;
+  } else {
+    y = qMin(_rangeTab->yMax(), _rangeTab->yMin());
+    h = fabs(_rangeTab->yMax() - _rangeTab->yMin());
+  }
+
+  if (w == 0.0) w = 0.2;
+  if (h == 0.0) h = 0.2;
+
+  if (_rangeTab->xAuto()) {
+  } else if (_rangeTab->xSpike()) {
+    zoomstate.xAxisZoomMode = PlotAxis::SpikeInsensitive;
+  } else if (_rangeTab->xBorder()) {
+    zoomstate.xAxisZoomMode = PlotAxis::AutoBorder;
+  } else if (_rangeTab->xMean()) {
+    zoomstate.xAxisZoomMode = PlotAxis::MeanCentered;
+  } else if (_rangeTab->xFixed()) {
+    zoomstate.xAxisZoomMode = PlotAxis::FixedExpression;
+  }
+
+  if (_rangeTab->yAuto()) {
+    zoomstate.yAxisZoomMode = PlotAxis::Auto;
+  } else if (_rangeTab->ySpike()) {
+    zoomstate.yAxisZoomMode = PlotAxis::SpikeInsensitive;
+  } else if (_rangeTab->yBorder()) {
+    zoomstate.yAxisZoomMode = PlotAxis::AutoBorder;
+  } else if (_rangeTab->yMean()) {
+    zoomstate.yAxisZoomMode = PlotAxis::MeanCentered;
+  } else if (_rangeTab->yFixed()) {
+    zoomstate.yAxisZoomMode = PlotAxis::FixedExpression;
+  }
+  zoomstate.projectionRect = QRectF(x,y,w,h);
+
+  _plotItem->zoomGeneral(zoomstate);
+}
 
 void PlotItemDialog::xAxisChanged() {
   Q_ASSERT(_plotItem);

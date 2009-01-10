@@ -236,6 +236,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     LegendItem* legend();
 
     virtual QString descriptionTip() const; // description for tooltips
+    ZoomState currentZoomState();
 
   protected:
     virtual QString _automaticDescriptiveName() const;
@@ -250,6 +251,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void zoomXRange(const QRectF &projection);
     void zoomYRange(const QRectF &projection);
     void zoomMaximum();
+    void zoomGeneral(ZoomState &zoomstate);
     void zoomMaxSpikeInsensitive();
     void zoomPrevious();
     void zoomYMeanCentered();
@@ -339,7 +341,6 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QSizeF calculateBottomTickLabelBound(QPainter *painter);
     QSizeF calculateLeftTickLabelBound(QPainter *painter);
 
-    ZoomState currentZoomState();
     void setCurrentZoomState(ZoomState zoomState);
 
   private:
@@ -444,6 +445,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 
     friend class ZoomCommand;
     friend class ZoomMaximumCommand;
+    friend class ZoomGeneralCommand;
     friend class ZoomMaxSpikeInsensitiveCommand;
     friend class ZoomYMeanCenteredCommand;
     friend class ZoomXMaximumCommand;
@@ -507,6 +509,20 @@ class KST_EXPORT ZoomFixedExpressionCommand : public ZoomCommand
 
   private:
     QRectF _fixed;
+};
+
+
+class KST_EXPORT ZoomGeneralCommand : public ZoomCommand
+{
+  public:
+    ZoomGeneralCommand(PlotItem *item, const ZoomState &zoomstate)
+        : ZoomCommand(item, QObject::tr("Zoom Fixed Expression")), _zoomstate(zoomstate) {}
+    virtual ~ZoomGeneralCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item);
+
+  private:
+    ZoomState _zoomstate;
 };
 
 

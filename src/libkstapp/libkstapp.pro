@@ -100,6 +100,7 @@ SOURCES += \
     plotmarkers.cpp \
     plotrenderitem.cpp \
     powerspectrumdialog.cpp \
+    rangetab.cpp \
     scalardialog.cpp \
     scalarmodel.cpp \
     scene.cpp \
@@ -206,6 +207,7 @@ HEADERS += \
     plotitemmanager.h \
     plotrenderitem.h \
     powerspectrumdialog.h \
+    rangetab.h \
     scalardialog.h \
     scalarmodel.h \
     scene.h \
@@ -274,6 +276,7 @@ FORMS += \
     matrixtab.ui \
     powerspectrumtab.ui \
     overridelabeltab.ui \
+    rangetab.ui \
     scalartab.ui \
     stringtab.ui \
     stroketab.ui \

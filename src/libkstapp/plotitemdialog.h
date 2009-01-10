@@ -21,6 +21,7 @@ namespace Kst {
 class ContentTab;
 class PlotMarkersTab;
 class AxisTab;
+class RangeTab;
 class MarkersTab;
 class LabelTab;
 class ObjectStore;
@@ -49,9 +50,11 @@ class KST_EXPORT PlotItemDialog : public ViewItemDialog
     void useLeftDefaultChanged(bool);
     void useRightDefaultChanged(bool);
     void useAxisDefaultChanged(bool);
+    void rangeChanged();
   private:
     void setupContent();
     void setupAxis();
+    void setupRange();
     void setupLabels();
     void setupMarkers();
     void addRelations();
@@ -63,6 +66,7 @@ class KST_EXPORT PlotItemDialog : public ViewItemDialog
     ContentTab *_contentTab;
     AxisTab *_xAxisTab;
     AxisTab *_yAxisTab;
+    RangeTab *_rangeTab;
     MarkersTab *_xMarkersTab;
     MarkersTab *_yMarkersTab;
     LabelTab *_labelTab;
