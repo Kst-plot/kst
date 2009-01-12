@@ -66,6 +66,8 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
 //   setupChildViewOptions();
   setupDimensions();
 
+  selectDialogPage(page);
+
   connect(_dimensionsTab, SIGNAL(tabModified()), this, SLOT(modified()));
 }
 

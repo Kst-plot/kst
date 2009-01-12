@@ -53,6 +53,8 @@ ViewDialog::ViewDialog(View *view, QWidget *parent)
   setupFill();
   setupGrid();
 //   setupChildViewOptions();
+
+  selectDialogPage(grid);
 }
 
 
