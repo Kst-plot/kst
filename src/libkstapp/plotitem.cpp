@@ -509,13 +509,6 @@ PlotRenderItem *PlotItem::renderItem(PlotRenderItem::RenderType type) {
 
 
 void PlotItem::paint(QPainter *painter) {
-  qDebug() << "Plot Item Paint";
-  if (isInSharedAxisBox()) {
-    setBrush(Qt::transparent);
-  } else {
-    setBrush(Qt::white);
-  }
-
   painter->save();
   painter->setPen(Qt::NoPen);
   painter->drawRect(rect());
@@ -998,12 +991,14 @@ void PlotItem::setSharedAxisBox(ViewItem* parent) {
     setAllowedGripModes(0);
     setFlags(0);
     setParent(parent);
+    setBrush(Qt::transparent);
   } else {
     setInSharedAxisBox(false);
     setTiedZoom(false);
     setAllowedGripModes(Move | Resize | Rotate);
     setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
     setParent(0);
+    setBrush(Qt::white);
   }
 }
 
