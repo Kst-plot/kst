@@ -649,8 +649,8 @@ void PlotRenderItem::computeYAxisRange(qreal *min, qreal *max) const {
 void PlotRenderItem::computeAuto(Qt::Orientation orientation, qreal *min, qreal *max) const {
   //The previous values are of no consequence as this algorithm does not depend
   //on the previous values.  So start over so that first active relation initializes.
-  qreal minimum;
-  qreal maximum;
+  qreal minimum=-0.1;
+  qreal maximum= 0.1;;
   bool unInitialized = true;
 
   bool axisLog = orientation == Qt::Horizontal ? plotItem()->xAxis()->axisLog() : plotItem()->yAxis()->axisLog();
@@ -675,9 +675,24 @@ void PlotRenderItem::computeAuto(Qt::Orientation orientation, qreal *min, qreal 
       unInitialized = false;
   }
 
-  if (unInitialized || maximum <= minimum) {
-    minimum = axisLog ? 0.0 : -0.1;
-    minimum = 0.1;
+  if (axisLog) {
+    if (unInitialized){ 
+      maximum = 100.0;
+      minimum = 0.01;
+    }
+    if (minimum < 0) {
+      minimum = 0;
+    }
+    if (minimum >= maximum) {
+      if (minimum <=0) maximum = 1;
+      else maximum = minimum * 1.1;
+      minimum = minimum * 0.9;
+    }
+  } else {
+    if (maximum <= minimum) {
+      minimum = maximum -0.1;
+      maximum += 0.1;
+    }
   }
 
   *min = minimum;

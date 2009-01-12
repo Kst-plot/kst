@@ -509,6 +509,7 @@ PlotRenderItem *PlotItem::renderItem(PlotRenderItem::RenderType type) {
 
 
 void PlotItem::paint(QPainter *painter) {
+  qDebug() << "Plot Item Paint";
   if (isInSharedAxisBox()) {
     setBrush(Qt::transparent);
   } else {
