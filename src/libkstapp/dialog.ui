@@ -75,11 +75,17 @@
         <bool>false</bool>
        </property>
        <widget class="QListWidget" name="_listWidget" >
-        <property name="minimumSize" >
-         <size>
-          <width>175</width>
-          <height>0</height>
-         </size>
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="resizeMode" >
+         <enum>QListView::Adjust</enum>
+        </property>
+        <property name="uniformItemSizes" >
+         <bool>true</bool>
         </property>
        </widget>
        <widget class="QStackedWidget" name="_stackedWidget" >
