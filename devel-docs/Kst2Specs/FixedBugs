@@ -143,3 +143,73 @@ strings and scalars (eg, primarily label editor)
 Missing tabs in plot dialog:
   -There is no tab to set size, position, and rotation.  There should be.
 *cbn*
+
+
+Top Level View needs rmb menu:
+  -set background properties (colour, gradient, etc)
+  -set tied zoom mode for children (?)
+  -cleanup layout menu option
+*Mike*
+---------
+
+Axis labels are not transparent
+Create a plot with X, or Y or Top axis labels.  Change the background of the plot to a gradient.
+The axis label backgrounds are still white.  They should be the color of the background (alpha channel?)
+*Mike*
+---------
+
+Axis labels should have configurable colour.
+  A byproduct of making the label backgrounds transparent will be that if the background is set to a colour
+  with a low contrast to black (like black, or close to black) the labels will not be visible and there is 
+  currently no way to change them.
+*Mike*
+---------
+
+View Object parents not preserved in saving/loading kst file
+  Create a plot.  Put  a box in the plot.  Put a label in the box.
+  move the plot around - verify that the box is a child of the plot.
+  move the box around - verify that the label is a child of the box.
+  save as a .kst file.
+  load the kst file
+    -note that everything is positioned relative to the tlv, and are all children of the tlv.
+*Mike*
+---------
+Plot dialog label tab has grown out of control!  It should be shrunk to fit in 800x600
+It needs to shrink.  
+  -There needs to be only one scalar and string selection combos, and they need to apply
+  to the most recenly selected label text entry.
+  -The per-label font selection needs to be drastically shrunk.
+      maybe: only the text and the size active, w/ the info in a label, with a button to edit.
+      or maybe: only one font allowed for a plot, and have toggle buttons for U B I.
+      or maybe: only one font and UBI combo for a plot.  UBI can be set w/ latex commands in the label.
+  -get rid of all the per-item boxes and use more space efficient separators.
+
+*Mike*
+---------
+
+Missing features in edit label label dialog:
+  there is no mechanism to adjust the font, or Underline Bold Italics (UBI) in the edit label dialog.
+*Mike*
+---------
+
+The entire edit label properties tab should be shown when creating a label, not just the label text and the
+string/scalar selections (ie, incude size, font, UBI, and colour.)
+*Mike*
+---------
+
+Labels should have configurable font and UBI.
+*Mike*
+---------
+
+Tied zoom problems: (see devel-docs/Kst2Specs/Plot Geometry.pdf, last page).
+  -The tied zoom conditions are not honored
+  -The parent option condition is not honored.  In fact, there is no way to set parent options, even if there were parent options.
+  -The plots are not automatically re-sized to have equal size once the axis are shared.
+
+*Mike*
+---------
+
+kst settings dialogue box should select "General" when first opened
+to indicate that what we're seeing to the right is the General tab.
+*Mike*
+--------
