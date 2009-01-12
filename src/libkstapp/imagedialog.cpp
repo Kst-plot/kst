@@ -534,7 +534,7 @@ ObjectPtr ImageDialog::editExistingDataObject() const {
                 useVariableLineWeight ? -1 : contourWeight);
           }
 
-          image->update();
+          image->processUpdate(image);
           image->unlock();
         }
       }
@@ -563,7 +563,7 @@ ObjectPtr ImageDialog::editExistingDataObject() const {
       }
       image->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
-      image->update();
+      image->processUpdate(image);
       image->unlock();
     }
   }

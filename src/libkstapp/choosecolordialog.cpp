@@ -140,7 +140,7 @@ void ChooseColorDialog::apply() {
     {
       curve->writeLock();
       curve->setColor(getColorForFile(dataVector->filename()));
-      curve->update();
+      curve->processUpdate(curve);
       curve->unlock();
     }
   }

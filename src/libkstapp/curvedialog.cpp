@@ -483,7 +483,7 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
           curve->setIgnoreAutoScale(ignoreAutoScale);
           curve->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
-          curve->update();
+          curve->processUpdate(curve);
           curve->unlock();
         }
       }
@@ -507,7 +507,7 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
       curve->setIgnoreAutoScale(_curveTab->ignoreAutoScale());
       curve->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
 
-      curve->update();
+      curve->processUpdate(curve);
       curve->unlock();
 
       _curveTab->curveAppearance()->setWidgetDefaults(false);

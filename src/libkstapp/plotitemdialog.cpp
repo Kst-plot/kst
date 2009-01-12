@@ -40,6 +40,8 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
 
   _store = kstApp->mainWindow()->document()->objectStore();
 
+  setWindowTitle(tr("Edit Plot Item"));
+
   _labelTab = new LabelTab(_plotItem, this);
   _topLabelTab = new OverrideLabelTab(tr("Top Font"), this);
   _bottomLabelTab = new OverrideLabelTab(tr("Bottom Font"), this);
@@ -396,7 +398,7 @@ void PlotItemDialog::relationChanged() {
         curve->setPointDensity(curveTab->curveAppearance()->pointDensity());
         curve->setBarStyle(curveTab->curveAppearance()->barStyle());
 
-        curve->update();
+        curve->processUpdate(curve);
         curve->unlock();
       }
     } else if (ImagePtr image = kst_cast<Image>(_store->retrieveObject(page->pageTitle()))) {
@@ -425,7 +427,7 @@ void PlotItemDialog::relationChanged() {
               imageTab->useVariableLineWeight() ? -1 : imageTab->contourWeight());
         }
 
-        image->update();
+        image->processUpdate(image);
         image->unlock();
       }
     }
