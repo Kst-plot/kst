@@ -3,11 +3,6 @@ Bugs in Build System:
   -doesn't support 'make install' nor DESTDIR
 ---------
 
-Missing tabs in plot dialog:
-  -There is no tab to manually set plot zoom ranges.  There should be (see 1.x).
-*cbn*
----------
-
 Plot axis number rounding bug:
 occasionally, the axis numbers can be something like 0.499999999993 instead of 0.5.  It is hard to
 reproduce.
@@ -70,13 +65,6 @@ Tooltips everywhere.
 With multiple plots, when zooming one changes the size properties of
 another (due to axis label changes, for example), the axes labels on the
 non-modified plot(s) can get garbled until the mouse is moved over them.
-
-----------
-
-When displaying data that is constant, the range is from about zero to slightly
-above the curve (meaning the curve is very near the top of the plot.
-instead, it should center the curve and have a range of �0.1 around the constant
-value.
 
 ----------
 

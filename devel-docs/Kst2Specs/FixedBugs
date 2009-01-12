@@ -213,3 +213,17 @@ kst settings dialogue box should select "General" when first opened
 to indicate that what we're seeing to the right is the General tab.
 *Mike*
 --------
+
+
+Missing tabs in plot dialog:
+  -There is no tab to manually set plot zoom ranges.  There should be (see 1.x).
+*cbn*
+---------
+
+When displaying data that is constant, the range is from about zero to slightly
+above the curve (meaning the curve is very near the top of the plot.
+instead, it should center the curve and have a range of �0.1 around the constant
+value.
+
+----------
+
