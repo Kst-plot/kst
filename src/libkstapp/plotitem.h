@@ -241,6 +241,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 
   protected:
     virtual QString _automaticDescriptiveName() const;
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
   Q_SIGNALS:
     void marginsChanged();

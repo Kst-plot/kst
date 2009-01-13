@@ -354,6 +354,31 @@ void PlotRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 
+void PlotRenderItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
+  const QPointF point = plotItem()->mapToProjection(event->pos());
+  qreal range = qMax(plotItem()->xMax() - plotItem()->xMin(), plotItem()->yMax() - plotItem()->yMin());
+  double distance;
+  bool first = true;
+  RelationPtr closestRelation = 0;
+  foreach (RelationPtr relation, _relationList) {
+    double relationsDistance = relation->distanceToPoint(point.x(), range, point.y());
+    if (first) {
+      distance = relationsDistance;
+      closestRelation = relation;
+      first = false;
+    } else {
+      if (distance > relationsDistance) {
+        distance = relationsDistance;
+        closestRelation = relation;
+      }
+    }
+  }
+  if (closestRelation) {
+    closestRelation->showEditDialog();
+  }
+}
+
+
 void PlotRenderItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   if (parentView()->viewMode() != View::Data) {
     event->ignore();

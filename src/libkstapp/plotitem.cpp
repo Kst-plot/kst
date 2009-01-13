@@ -39,6 +39,7 @@
 
 #include <QMenu>
 #include <QDebug>
+#include <QGraphicsSceneMouseEvent>
 
 // Zoom Debugging.  0 Off, 1 On.
 #define DEBUG_ZOOM 0
@@ -2207,6 +2208,14 @@ void PlotItem::computeBorder(Qt::Orientation orientation, qreal &minimum, qreal 
 void PlotItem::resetSelectionRect() {
   foreach (PlotRenderItem *renderer, renderItems()) {
     renderer->resetSelectionRect();
+  }
+}
+
+
+void PlotItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+  if (event->button() == Qt::LeftButton) {
+    edit();
+    event->ignore();
   }
 }
 
