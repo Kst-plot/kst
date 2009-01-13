@@ -214,6 +214,31 @@ to indicate that what we're seeing to the right is the General tab.
 *Mike*
 --------
 
+Double clicking on a curve in zoom mode should bring up the edit curve dialog (was in 1.x, 
+but was a little buggy).
+*Mike*
+----------
+
+Edit plot dialog format issue:
+The tab list on the left has a minimum size set in pixels, and is not dependent on
+the size of the tab names.
+*Mike*
+---------
+
+"Change color per file" changes are not shown in plots until the plot is moused over.
+*Mike*
+--------
+
+"Differentiate Curves" changes are not shown in plots until the plot is moused over.
+*Mike*
+--------
+
+Accelerators for the plot edit dialog:
+clicking on the plot outside the plot region in zoom mode should bring up the plot edit dialog.
+  if on a label, to the label page
+  if on the numbers to the axis range page (which doesn't yet exist).
+--------
+
 
 Missing tabs in plot dialog:
   -There is no tab to manually set plot zoom ranges.  There should be (see 1.x).
@@ -226,4 +251,3 @@ instead, it should center the curve and have a range of �0.1 around the consta
 value.
 
 ----------
-
