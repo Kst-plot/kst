@@ -251,3 +251,12 @@ instead, it should center the curve and have a range of �0.1 around the consta
 value.
 
 ----------
+
+Line Endpoints drift relative to plot contents:
+Create a plot.  Put a line in the plot.  Resize the plot.
+The end points of the line don't stay fixed in plot space.  
+It seems to have something to do with the 'centerpoint' of the line.
+It rotates around an end point.
+This problem doesn't happen with boxes.
+*Mike*
+--------
