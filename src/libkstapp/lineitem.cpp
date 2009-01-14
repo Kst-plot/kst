@@ -222,19 +222,23 @@ void LineItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &ne
 //   qDebug() << "Relative Bottom Right x" << QPointF(mapToParent(rightMidGrip().controlPointRect().center()) - oldParentRect.topLeft()).x() / oldParentRect.width();
 //   qDebug() << "Relative Bottom Right y" << QPointF(mapToParent(rightMidGrip().controlPointRect().center()) - oldParentRect.topLeft()).y() / oldParentRect.height();
 
-  qreal dx = oldParentRect.width() ? newParentRect.width() / oldParentRect.width() : 0.0;
-  qreal dy = oldParentRect.height() ? newParentRect.height() / oldParentRect.height() : 0.0;
+  qreal relLeftX = QPointF(mapToParent(leftMidGrip().controlPointRect().center()) - oldParentRect.topLeft()).x() / oldParentRect.width();
+  qreal relLeftY = QPointF(mapToParent(leftMidGrip().controlPointRect().center()) - oldParentRect.topLeft()).y() / oldParentRect.height();
+  qreal relRightX = QPointF(mapToParent(rightMidGrip().controlPointRect().center()) - oldParentRect.topLeft()).x() / oldParentRect.width();
+  qreal relRightY = QPointF(mapToParent(rightMidGrip().controlPointRect().center()) - oldParentRect.topLeft()).y() / oldParentRect.height();
 
-  QPointF oldRightPos = pos() + mapToParent(rect().topRight()) - mapToParent(rect().topLeft());
-  setPos(QPointF(pos().x() * dx, pos().y() * dy));
+  QPointF newLeft = QPointF((relLeftX * newParentRect.width()) + newParentRect.topLeft().x(), (relLeftY * newParentRect.height()) + newParentRect.topLeft().y());
+  QPointF newRight = QPointF((relRightX * newParentRect.width()) + newParentRect.topLeft().x(), (relRightY * newParentRect.height()) + newParentRect.topLeft().y());
 
-  QPointF newRightPos = QPointF(oldRightPos.x() * dx, (oldRightPos.y() * dy));
+  newLeft -= leftMidGrip().controlPointRect().center();
+  newRight -= leftMidGrip().controlPointRect().center();
 
-  itemRect.setRight(itemRect.left() + QLineF(pos(), newRightPos).length());
-  rotateTowards(rightMidGrip().controlPointRect().center(), mapFromParent(QPointF(newRightPos.x(), newRightPos.y() + (itemRect.height() / 2))));
+  setPos(newLeft);
+
+  itemRect.setRight(itemRect.left() + QLineF(pos(), newRight).length());
+  rotateTowards(rightMidGrip().controlPointRect().center(), mapFromParent(QPointF(newRight.x(), newRight.y() + (itemRect.height() / 2))));
 
   setViewRect(itemRect, true);
-
 }
 
 
