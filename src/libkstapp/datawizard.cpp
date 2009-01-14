@@ -28,6 +28,7 @@
 #include "plotitem.h"
 #include "plotiteminterface.h"
 #include "settings.h"
+#include "applicationsettings.h"
 
 namespace Kst {
 
@@ -713,19 +714,14 @@ void DataWizard::finished() {
     }
     case DataWizardPagePlot::MultiplePlots:
     {
-      for (int i = 0; i < vectors.count(); ++i) {
+      int nplots = vectors.count() * (_pageDataPresentation->plotPSD() + _pageDataPresentation->plotData());
+
+      for (int i = 0; i < nplots; ++i) {
         CreatePlotForCurve *cmd = new CreatePlotForCurve();
         cmd->createItem();
 
         plotItem = static_cast<PlotItem*>(cmd->item());
         plotList.append(plotItem);
-        if (_pageDataPresentation->plotDataPSD()) {
-          CreatePlotForCurve *cmd = new CreatePlotForCurve();
-          cmd->createItem();
-
-          plotItem = static_cast<PlotItem*>(cmd->item());
-          plotList.append(plotItem);
-        }
       }
       break;
     }
@@ -740,19 +736,13 @@ void DataWizard::finished() {
     }
     case DataWizardPagePlot::CyclePlotCount:
     {
-      for (int i = 0; i < _pagePlot->plotCount(); ++i) {
+      int nplots = _pagePlot->plotCount() * (_pageDataPresentation->plotPSD() + _pageDataPresentation->plotData());
+      for (int i = 0; i < nplots; ++i) {
         CreatePlotForCurve *cmd = new CreatePlotForCurve();
         cmd->createItem();
 
         plotItem = static_cast<PlotItem*>(cmd->item());
         plotList.append(plotItem);
-        if (_pageDataPresentation->plotDataPSD()) {
-          CreatePlotForCurve *cmd = new CreatePlotForCurve();
-          cmd->createItem();
-
-          plotItem = static_cast<PlotItem*>(cmd->item());
-          plotList.append(plotItem);
-        }
       }
     }
     default:
@@ -763,7 +753,7 @@ void DataWizard::finished() {
   QList<QColor> colors;
   QColor color;
   int ptype = 0;
-  QList<PlotItem*>::iterator plotIterator = plotList.begin();
+  int i_plot = 0;
   for (DataVectorList::Iterator it = vectors.begin(); it != vectors.end(); ++it) {
     if (_pageDataPresentation->plotData()) {
       color = ColorSequence::next();
@@ -791,32 +781,32 @@ void DataWizard::finished() {
       curve->update();
       curve->unlock();
 
-      if (*plotIterator) {
-        PlotRenderItem *renderItem = (*plotIterator)->renderItem(PlotRenderItem::Cartesian);
-        renderItem->addRelation(kst_cast<Relation>(curve));
-      }
+      Q_ASSERT(plotList[i_plot]);
 
+      PlotRenderItem *renderItem = plotList[i_plot]->renderItem(PlotRenderItem::Cartesian);
+      renderItem->addRelation(kst_cast<Relation>(curve));
+
+      // increment i_plot, as appropriate;
       if (_pagePlot->curvePlacement() != DataWizardPagePlot::OnePlot) { 
-          // change plots if we are not onePlot
-          if (_pageDataPresentation->plotDataPSD()) { // if xy and psd
-            ++plotIterator;
-            if (plotList.indexOf(*plotIterator) >= (int)plotList.count()/2) {
-              plotIterator = plotList.begin();
-            }
-          } else if (++plotIterator == plotList.end()) {
-            plotIterator = plotList.begin();
+        ++i_plot;
+        if (_pagePlot->curvePlacement()==DataWizardPagePlot::CyclePlotCount) {
+          if (i_plot == _pagePlot->plotCount()) {
+            i_plot = 0;
           }
+        } else if (i_plot == plotList.count()) {
+          i_plot = 0;
         }
       }
-   }
+    }
+  }
 
   if (_pagePlot->curvePlacement() == DataWizardPagePlot::OnePlot) {
     // if we are one plot, now we can move to the psd plot
-    if (++plotIterator == plotList.end()) {
-      plotIterator = plotList.begin();
+    if (++i_plot == plotList.count()) {
+      i_plot = 0;
     }
   } else if (_pageDataPresentation->plotDataPSD()) {
-    *plotIterator = plotList.at(plotList.count()/2);
+    i_plot = plotList.count()/2;
   }
 
   // create the PSDs
@@ -875,20 +865,20 @@ void DataWizard::finished() {
         curve->update();
         curve->unlock();
 
-        if (*plotIterator) {
-          PlotRenderItem *renderItem = (*plotIterator)->renderItem(PlotRenderItem::Cartesian);
-          (*plotIterator)->xAxis()->setAxisLog(_pagePlot->PSDLogX());
-          (*plotIterator)->yAxis()->setAxisLog(_pagePlot->PSDLogY());
-          renderItem->addRelation(kst_cast<Relation>(curve));
-        }
+        Q_ASSERT(plotList[i_plot]);
+
+        PlotRenderItem *renderItem = plotList[i_plot]->renderItem(PlotRenderItem::Cartesian);
+        plotList[i_plot]->xAxis()->setAxisLog(_pagePlot->PSDLogX());
+        plotList[i_plot]->yAxis()->setAxisLog(_pagePlot->PSDLogY());
+        renderItem->addRelation(kst_cast<Relation>(curve));
 
         if (_pagePlot->curvePlacement() != DataWizardPagePlot::OnePlot) { 
         // change plots if we are not onePlot
-          if (++plotIterator == plotList.end()) {
+          if (++i_plot == plotList.count()) {
             if (_pageDataPresentation->plotDataPSD()) { // if xy and psd
-              *plotIterator = plotList.at(plotList.count()/2);
+              i_plot = plotList.count()/2;
             } else {
-              plotIterator = plotList.begin();
+              i_plot = 0;;
             }
           }
         }
@@ -900,23 +890,24 @@ void DataWizard::finished() {
     }
   }
 
+  int tmpi=0;
   foreach (PlotItem* plot, plotList) {
+    tmpi++;
     plot->update();
     plot->parentView()->appendToLayout(_pagePlot->layout(), plot, _pagePlot->gridColumns());
   }
-
   // legends and labels
   bool xLabels = _pagePlot->xAxisLabels();
   bool yLabels = _pagePlot->yAxisLabels();
 
-  plotIterator = plotList.begin();
-  while (plotIterator != plotList.end()) {
-    PlotItem *plotItem = static_cast<PlotItem*>(*plotIterator);
-    if (!plotItem) {
-      ++plotIterator;
-      continue;
-    }
+  for (i_plot = 0; i_plot < plotList.count(); i_plot ++) { 
+    PlotItem *plotItem = plotList[i_plot];
 
+    Q_ASSERT(plotItem);
+
+
+//     double fontScale = ApplicationSettings::self()->referenceFontSize()/sqrt(plotList.count()) - ApplicationSettings::self()->referenceFontSize();
+// qDebug() << " proposed font scale:" << fontScale;
     if (!xLabels) {
       plotItem->setLeftLabelOverride(QString(" "));
       plotItem->setRightLabelOverride(QString(" "));
@@ -933,7 +924,6 @@ void DataWizard::finished() {
         plotItem->setShowLegend(true);
       }
     }
-    ++plotIterator;
   }
   QApplication::restoreOverrideCursor();
 
