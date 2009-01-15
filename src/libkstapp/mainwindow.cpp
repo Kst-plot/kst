@@ -218,7 +218,7 @@ void MainWindow::openFile(const QString &file) {
 
 void MainWindow::exportGraphicsFile(const QString &filename, const QString &format, int width, int height, int display) {
   int viewCount = 0;
-  foreach (QGraphicsView *view, _tabWidget->views()) {
+  foreach (View *view, _tabWidget->views()) {
     QSize size;
     if (display == 0) {
       size.setWidth(width);
@@ -241,7 +241,12 @@ void MainWindow::exportGraphicsFile(const QString &filename, const QString &form
     QImage image(size, QImage::Format_ARGB32);
 
     QPainter painter(&image);
-    view->render(&painter, QRectF(0, 0, size.width(), size.height()), QRect(), Qt::KeepAspectRatio);
+    QSize currentSize(view->size());
+    view->resize(size);
+    view->setPrinting(true);
+    view->render(&painter);
+    view->setPrinting(false);
+    view->resize(currentSize);
 
     QString file = filename;
     if (viewCount != 0) {

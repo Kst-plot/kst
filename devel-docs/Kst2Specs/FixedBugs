@@ -286,3 +286,8 @@ No visible feedback as to what drawing mode you are in...
   finished, or in the mouse icon.
 *Mike*
 --------
+ 
+Export as png with a set width and height shows transparency (blank)
+where extra space is, rather than resizing the view for the export.
+*Mike*
+----------

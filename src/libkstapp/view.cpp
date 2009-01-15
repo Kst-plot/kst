@@ -330,15 +330,6 @@ void View::createLayout(int columns) {
 
 
 void View::sharePlots() {
-  qDebug() << "View::sharePlots";
-//   SharedAxisCommand *layout = new SharedAxisCommand(new LayoutBoxItem(this));
-//   layout->createLayout(0);
-// 
-//   if (_layoutBoxItem) {
-//     _layoutBoxItem->setEnabled(false);
-//     delete _layoutBoxItem;
-//     _layoutBoxItem = 0;
-//   }
   new LayoutBoxItem(this);
   ViewGridLayout::sharePlots(_layoutBoxItem);
 
@@ -402,6 +393,10 @@ void View::updateBrush() {
 
 void View::drawBackground(QPainter *painter, const QRectF &rect) {
   if (isPrinting()) {
+    QBrush currentBrush(backgroundBrush());
+    setBackgroundBrush(Qt::white);
+    QGraphicsView::drawBackground(painter, rect);
+    setBackgroundBrush(currentBrush);
     return;
   }
 
