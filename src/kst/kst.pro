@@ -5,6 +5,7 @@ OBJECTS_DIR = tmp
 MOC_DIR = tmp
 TARGET = kst
 DESTDIR = $$OUTPUT_DIR/bin
+CONFIG += debug
 
 INCLUDEPATH += \
     tmp \

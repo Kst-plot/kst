@@ -8,6 +8,7 @@ OBJECTS_DIR = tmp
 MOC_DIR = tmp
 TARGET = kstdata_ascii
 DESTDIR = $$OUTPUT_DIR/plugin
+CONFIG += debug
 
 INCLUDEPATH += \
     tmp \

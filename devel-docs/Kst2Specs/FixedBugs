@@ -260,3 +260,15 @@ It rotates around an end point.
 This problem doesn't happen with boxes.
 *Mike*
 --------
+
+datawizard generated multiple plots per view have the font size for
+the lables way too big (so big that, in the case of 24 plots), the axis
+labels take up >75% of the real estate. �The wizard should chose the font
+based on the number of plots that will be in the tlv when finished.
+
+--------
+
+Clicking in a plot when in *layout* mode brings up the plot edit dialog.
+This should only happen in *zoom* mode!  The way it is now, you can't 
+move or resize plots.
+

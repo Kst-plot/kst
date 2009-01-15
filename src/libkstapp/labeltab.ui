@@ -31,6 +31,9 @@
      <property name="decimals" >
       <number>1</number>
      </property>
+     <property name="minimum" >
+      <double>-25.000000000000000</double>
+     </property>
     </widget>
    </item>
    <item row="0" column="4" >

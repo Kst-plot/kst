@@ -87,12 +87,6 @@ kst) seem more sluggish. �
 
 ---------
 
-datawizard generated multiple plots per view have the font size for
-the lables way too big (so big that, in the case of 24 plots), the axis
-labels take up >75% of the real estate. �The wizard should chose the font
-based on the number of plots that will be in the tlv when finished.
-
---------
 
 The first pane of the data wizard should be reading directories in
 the background, instead of in the foreground where it steals X focus
@@ -132,6 +126,4 @@ Tied zoom has been implemented as a toggle button, setting or unsetting
 all of the zoom ties.  However, when in tied zoom, it is still possible to un-tie
 individual plots (which is good).  But: when you un-tie one of several plots, perhaps
 the tied zoom button should become disabled, as you are no longer in all-tied zoom mode.
-
---------
 

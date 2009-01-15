@@ -2214,9 +2214,13 @@ void PlotItem::resetSelectionRect() {
 
 void PlotItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   if (event->button() == Qt::LeftButton) {
-    edit();
-    event->ignore();
-  }
+    if (parentView()->viewMode() == View::Data) {
+      edit();
+      event->ignore();
+    } else {
+      ViewItem::mousePressEvent(event);
+    }
+  } 
 }
 
 

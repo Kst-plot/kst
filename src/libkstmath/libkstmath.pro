@@ -8,6 +8,7 @@ MOC_DIR = tmp
 TARGET = kstmath
 DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
+CONFIG += debug
 
 INCLUDEPATH += \
     tmp \
