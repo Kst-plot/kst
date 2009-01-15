@@ -336,64 +336,118 @@ void MainWindow::about() {
 }
 
 
+void MainWindow::clearDrawingMarker() {
+  _createBoxAct->setChecked(false);
+  _createSharedAxisBoxAct->setChecked(false);
+  _createCircleAct->setChecked(false);
+  _createEllipseAct->setChecked(false);
+  _createLabelAct->setChecked(false);
+  _createLineAct->setChecked(false);
+  _createArrowAct->setChecked(false);
+  _createPictureAct->setChecked(false);
+  _createPlotAct->setChecked(false);
+  _createSvgAct->setChecked(false);
+}
+
+
 void MainWindow::createBox() {
-  CreateBoxCommand *cmd = new CreateBoxCommand;
-  cmd->createItem();
+  if (_createBoxAct->isChecked()) {
+    clearDrawingMarker();
+    _createBoxAct->setChecked(true);
+    CreateBoxCommand *cmd = new CreateBoxCommand;
+    cmd->createItem();
+  }
 }
 
 
 
 void MainWindow::createSharedAxisBox() {
-  CreateSharedAxisBoxCommand *cmd = new CreateSharedAxisBoxCommand;
-  cmd->createItem();
+  if (_createSharedAxisBoxAct->isChecked()) {
+    clearDrawingMarker();
+    _createSharedAxisBoxAct->setChecked(true);
+    CreateSharedAxisBoxCommand *cmd = new CreateSharedAxisBoxCommand;
+    cmd->createItem();
+  }
 }
 
 
 void MainWindow::createCircle() {
-  CreateCircleCommand *cmd = new CreateCircleCommand;
-  cmd->createItem();
+  if (_createCircleAct->isChecked()) {
+    clearDrawingMarker();
+    _createCircleAct->setChecked(true);
+    CreateCircleCommand *cmd = new CreateCircleCommand;
+    cmd->createItem();
+  }
 }
 
 
 void MainWindow::createEllipse() {
-  CreateEllipseCommand *cmd = new CreateEllipseCommand;
-  cmd->createItem();
+  if (_createEllipseAct->isChecked()) {
+    clearDrawingMarker();
+    _createEllipseAct->setChecked(true);
+    CreateEllipseCommand *cmd = new CreateEllipseCommand;
+    cmd->createItem();
+  }
 }
 
 
 void MainWindow::createLabel() {
-  CreateLabelCommand *cmd = new CreateLabelCommand;
-  cmd->createItem();
+  if (_createLabelAct->isChecked()) {
+    clearDrawingMarker();
+    _createLabelAct->setChecked(true);
+    CreateLabelCommand *cmd = new CreateLabelCommand;
+    cmd->createItem();
+  }
 }
 
 
 void MainWindow::createLine() {
-  CreateLineCommand *cmd = new CreateLineCommand;
-  cmd->createItem();
+  if (_createLineAct->isChecked()) {
+    clearDrawingMarker();
+    _createLineAct->setChecked(true);
+    CreateLineCommand *cmd = new CreateLineCommand;
+    cmd->createItem();
+  }
 }
 
 
 void MainWindow::createArrow() {
-  CreateArrowCommand *cmd = new CreateArrowCommand;
-  cmd->createItem();
+  if (_createArrowAct->isChecked()) {
+    clearDrawingMarker();
+    _createArrowAct->setChecked(true);
+    CreateArrowCommand *cmd = new CreateArrowCommand;
+    cmd->createItem();
+  }
 }
 
 
 void MainWindow::createPicture() {
-  CreatePictureCommand *cmd = new CreatePictureCommand;
-  cmd->createItem();
+  if (_createPictureAct->isChecked()) {
+    clearDrawingMarker();
+    _createPictureAct->setChecked(true);
+    CreatePictureCommand *cmd = new CreatePictureCommand;
+    cmd->createItem();
+  }
 }
 
 
 void MainWindow::createPlot() {
-  CreatePlotCommand *cmd = new CreatePlotCommand;
-  cmd->createItem();
+  if (_createPlotAct->isChecked()) {
+    clearDrawingMarker();
+    _createPlotAct->setChecked(true);
+    CreatePlotCommand *cmd = new CreatePlotCommand;
+    cmd->createItem();
+  }
 }
 
 
 void MainWindow::createSvg() {
-  CreateSvgCommand *cmd = new CreateSvgCommand;
-  cmd->createItem();
+  if (_createSvgAct->isChecked()) {
+    clearDrawingMarker();
+    _createSvgAct->setChecked(true);
+    CreateSvgCommand *cmd = new CreateSvgCommand;
+    cmd->createItem();
+  }
 }
 
 
@@ -438,64 +492,75 @@ void MainWindow::createActions() {
   _createLabelAct->setStatusTip(tr("Create a label for the current view"));
   _createLabelAct->setIcon(QPixmap(":kst_gfx_label.png"));
   _createLabelAct->setShortcut(QString("F3"));
+  _createLabelAct->setCheckable(true);
   connect(_createLabelAct, SIGNAL(triggered()), this, SLOT(createLabel()));
 
   _createBoxAct = new QAction(tr("&Create box"), this);
   _createBoxAct->setStatusTip(tr("Create a box for the current view"));
   _createBoxAct->setIcon(QPixmap(":kst_gfx_rectangle.png"));
   _createBoxAct->setShortcut(QString("F4"));
+  _createBoxAct->setCheckable(true);
   connect(_createBoxAct, SIGNAL(triggered()), this, SLOT(createBox()));
 
   _createCircleAct = new QAction(tr("&Create circle"), this);
   _createCircleAct->setStatusTip(tr("Create a circle for the current view"));
   _createCircleAct->setIcon(QPixmap(":kst_gfx_ellipse.png"));
   _createCircleAct->setShortcut(QString("F5"));
+  _createCircleAct->setCheckable(true);
   connect(_createCircleAct, SIGNAL(triggered()), this, SLOT(createCircle()));
 
   _createEllipseAct = new QAction(tr("&Create ellipse"), this);
   _createEllipseAct->setStatusTip(tr("Create an ellipse for the current view"));
   _createEllipseAct->setIcon(QPixmap(":kst_gfx_ellipse.png"));
   _createEllipseAct->setShortcut(QString("F6"));
+  _createEllipseAct->setCheckable(true);
   connect(_createEllipseAct, SIGNAL(triggered()), this, SLOT(createEllipse()));
 
   _createLineAct = new QAction(tr("&Create line"), this);
   _createLineAct->setStatusTip(tr("Create a line for the current view"));
   _createLineAct->setIcon(QPixmap(":kst_gfx_line.png"));
   _createLineAct->setShortcut(QString("F7"));
+  _createLineAct->setCheckable(true);
   connect(_createLineAct, SIGNAL(triggered()), this, SLOT(createLine()));
 
   _createArrowAct = new QAction(tr("&Create arrow"), this);
   _createArrowAct->setStatusTip(tr("Create a arrow for the current view"));
   _createArrowAct->setIcon(QPixmap(":kst_gfx_arrow.png"));
   _createArrowAct->setShortcut(QString("F8"));
+  _createArrowAct->setCheckable(true);
   connect(_createArrowAct, SIGNAL(triggered()), this, SLOT(createArrow()));
 
   _createPictureAct = new QAction(tr("&Create picture"), this);
   _createPictureAct->setStatusTip(tr("Create a picture for the current view"));
   _createPictureAct->setIcon(QPixmap(":kst_gfx_picture.png"));
   _createPictureAct->setShortcut(QString("F9"));
+  _createPictureAct->setCheckable(true);
   connect(_createPictureAct, SIGNAL(triggered()), this, SLOT(createPicture()));
 
   _createPlotAct = new QAction(tr("&Create plot"), this);
   _createPlotAct->setStatusTip(tr("Create a plot for the current view"));
   _createPlotAct->setIcon(QPixmap(":kst_newplot.png"));
   _createPlotAct->setShortcut(QString("F10"));
+  _createPlotAct->setCheckable(true);
   connect(_createPlotAct, SIGNAL(triggered()), this, SLOT(createPlot()));
 
   _createSvgAct = new QAction(tr("&Create svg"), this);
   _createSvgAct->setStatusTip(tr("Create a svg for the current view"));
   _createSvgAct->setShortcut(QString("F11"));
+  _createSvgAct->setCheckable(true);
   connect(_createSvgAct, SIGNAL(triggered()), this, SLOT(createSvg()));
 
   _createLayoutAct = new QAction(tr("&Create layout"), this);
   _createLayoutAct->setStatusTip(tr("Create a layout for the current item"));
   _createLayoutAct->setIcon(QPixmap(":kst_gfx_layout.png"));
+  _createLayoutAct->setCheckable(true);
 //   _createLayoutAct->setEnabled(false);
   connect(_createLayoutAct, SIGNAL(triggered()), this, SLOT(createLayout()));
 
   _createSharedAxisBoxAct = new QAction(tr("&Create Shared Axis Box"), this);
   _createSharedAxisBoxAct->setStatusTip(tr("Create a shared axis box for the current item"));
   _createSharedAxisBoxAct->setIcon(QPixmap(":kst_gfx_sharedaxisbox.png"));
+  _createSharedAxisBoxAct->setCheckable(true);
 //   _createSharedAxisBoxAct->setEnabled(false);
   connect(_createSharedAxisBoxAct, SIGNAL(triggered()), this, SLOT(createSharedAxisBox()));
 

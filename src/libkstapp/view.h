@@ -35,7 +35,8 @@ class KST_EXPORT View : public QGraphicsView
     enum CreationEvent {
       MousePress = 0x0,
       MouseRelease =0x1,
-      MouseMove = 0x2
+      MouseMove = 0x2,
+      EscapeEvent = 0x3
     };
     Q_DECLARE_FLAGS(CreationEvents, CreationEvent)
 

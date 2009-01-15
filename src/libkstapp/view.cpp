@@ -32,6 +32,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QInputDialog>
+#include <QKeyEvent>
 
 namespace Kst {
 
@@ -289,6 +290,13 @@ bool View::eventFilter(QObject *obj, QEvent *event) {
       _creationPolygonMove << snapPoint(e->scenePos());
       emit creationPolygonChanged(MouseMove);
       break;
+    }
+  case QEvent::KeyPress:
+    {
+      QKeyEvent *e = static_cast<QKeyEvent*>(event);
+      if (e->key() == Qt::Key_Escape) {
+        emit creationPolygonChanged(EscapeEvent);
+      }
     }
   default:
     break;

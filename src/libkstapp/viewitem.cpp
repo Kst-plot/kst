@@ -732,6 +732,12 @@ void ViewItem::remove() {
 
 
 void ViewItem::creationPolygonChanged(View::CreationEvent event) {
+  if (event == View::EscapeEvent) {
+    deleteLater();
+    kstApp->mainWindow()->clearDrawingMarker();
+    return;
+  }
+
   if (event == View::MousePress) {
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MousePress));
     setPos(poly.first().x(), poly.first().y());
@@ -1660,6 +1666,9 @@ void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
 void ViewItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   QGraphicsRectItem::hoverMoveEvent(event);
+  if (parentView()->viewMode() == View::Data) {
+    return;
+  }
   if (isSelected()) {
     QPointF p = event->pos();
     if ((isAllowed(TopLeftGrip) && topLeftGrip().contains(p)) || (isAllowed(BottomRightGrip) && bottomRightGrip().contains(p))) {
@@ -1853,6 +1862,7 @@ void CreateCommand::createItem() {
 
 void CreateCommand::creationComplete() {
   _view->undoStack()->push(this);
+  kstApp->mainWindow()->clearDrawingMarker();
 }
 
 

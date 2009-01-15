@@ -72,6 +72,8 @@ class MainWindow : public QMainWindow
     void print();
     void exportGraphicsFile(const QString &filename, const QString &format, int w, int h, int display);
 
+    void clearDrawingMarker();
+
   private Q_SLOTS:
     void aboutToQuit();
     void about();
