@@ -271,4 +271,18 @@ based on the number of plots that will be in the tlv when finished.
 Clicking in a plot when in *layout* mode brings up the plot edit dialog.
 This should only happen in *zoom* mode!  The way it is now, you can't 
 move or resize plots.
+--------
 
+No way to cancel a drawing command.
+  Select a drawing tool (say, a box)
+  Change your mind.... tough - you have to draw something.
+*Mike*
+--------
+
+No visible feedback as to what drawing mode you are in...
+  Select a drawing tool (say, a box).  There is no visible indication
+  that you just selected a drawing tool.  The tool should be clearly shown 
+  either with the toolbar icon remaining depressed until the action is
+  finished, or in the mouse icon.
+*Mike*
+--------
