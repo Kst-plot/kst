@@ -112,6 +112,11 @@ QPointF LineItem::centerOfRotation() const {
 
 
 void LineItem::creationPolygonChanged(View::CreationEvent event) {
+  if (event == View::EscapeEvent) {
+    ViewItem::creationPolygonChanged(event);
+    return;
+  }
+
   if (event == View::MousePress) {
     const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MousePress));
     setPos(poly.first().x(), poly.first().y());
