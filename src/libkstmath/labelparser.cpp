@@ -28,7 +28,7 @@ using namespace Label;
 // Debug output for Parsing - 0 Off 1 On
 #define DEBUG_PARSING 0
 
-#if 0
+#if 1
 #define dumpattr(node, text) do { printf("%s: bold:%d italic:%d underline:%d\n", text, (node)->attributes.bold, (node)->attributes.italic, (node)->attributes.underline); } while(0)
 #else
 #define dumpattr(node, text)
@@ -244,6 +244,10 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
         *skip = 3;
         setNormalChar(QChar(0x397+x), tail);
         return true;
+      } else if (txt.mid(from + 1).startsWith("ll")) {
+        *skip = 3;
+        setNormalChar(QChar(0x2113), tail);
+        return true;
       }
       break;
 
@@ -337,6 +341,10 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
       } else if (txt.mid(from + 1).startsWith("mega")) {
         *skip = 5;
         setNormalChar(QChar(0x3A9+x), tail);
+        return true;
+      } else if (txt.mid(from + 1).startsWith("dot")) {
+        *skip = 4;
+        setNormalChar(QChar(0x2299), tail);
         return true;
       }
       break;
@@ -466,6 +474,7 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
         parseInternal(working, txt, parseStart, txt.length(), interpretNewLine);
         *skip = parseStart - from + 1;
         dumpattr(working, "end group for underline");
+        working->attributes.underline = false;
         return true;
       } else if (txt.mid(from + 1).startsWith("psilon")) {
         *skip = 7;

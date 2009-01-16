@@ -97,11 +97,6 @@ They should.
 
 --------
 
-Should add some more latex mode fields
-  \odot
-
---------
-
 Tied zoom behavior oddness:
 Tied zoom has been implemented as a toggle button, setting or unsetting
 all of the zoom ties.  However, when in tied zoom, it is still possible to un-tie

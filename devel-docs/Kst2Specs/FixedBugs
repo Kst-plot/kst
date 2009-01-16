@@ -291,3 +291,6 @@ Export as png with a set width and height shows transparency (blank)
 where extra space is, rather than resizing the view for the export.
 *Mike*
 ----------
+
+Should add some more latex mode fields
+  \odot
