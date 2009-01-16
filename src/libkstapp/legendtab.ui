@@ -70,7 +70,7 @@
         <property name="sizeType" >
          <enum>QSizePolicy::Expanding</enum>
         </property>
-        <property name="sizeHint" >
+        <property name="sizeHint" stdset="0" >
          <size>
           <width>128</width>
           <height>71</height>
@@ -193,7 +193,7 @@
         <property name="sizeType" >
          <enum>QSizePolicy::Expanding</enum>
         </property>
-        <property name="sizeHint" >
+        <property name="sizeHint" stdset="0" >
          <size>
           <width>128</width>
           <height>61</height>
@@ -223,7 +223,7 @@
          <number>1</number>
         </property>
         <property name="minimum" >
-         <double>0.000000000000000</double>
+         <double>-25.000000000000000</double>
         </property>
         <property name="singleStep" >
          <double>1.000000000000000</double>

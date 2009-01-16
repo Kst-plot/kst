@@ -927,9 +927,11 @@ void DataWizard::finished() {
 
     if (_pagePlot->legendsOn()) {
       plotItem->setShowLegend(true);
+      plotItem->legend()->setFontScale(fontScale);
     } else if (_pagePlot->legendsAuto()) {
       if (plotItem->renderItem(PlotRenderItem::Cartesian)->relationList().count() > 1) {
         plotItem->setShowLegend(true);
+        plotItem->legend()->setFontScale(fontScale);
       }
     }
   }
