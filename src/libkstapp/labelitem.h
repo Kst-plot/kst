@@ -45,6 +45,9 @@ class LabelItem : public ViewItem {
   public Q_SLOTS:
     virtual void edit();
 
+  protected Q_SLOTS:
+    virtual void creationPolygonChanged(View::CreationEvent event);
+
   private:
     Label::Parsed *_parsed;
     QString _text;

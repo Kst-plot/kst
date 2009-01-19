@@ -761,12 +761,6 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
     QRectF newRect(rect().x(), rect().y(),
                    poly.last().x() - rect().x(),
                    poly.last().y() - rect().y());
-
-    if (!newRect.isValid()) {
-      // Special case for labels that don't need to have a size for creation to ensure proper parenting.
-      newRect.setSize(QSize(1, 1));
-    }
-
     setViewRect(newRect.normalized());
 
     parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself

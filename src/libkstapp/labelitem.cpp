@@ -133,6 +133,35 @@ void LabelItem::setLabelFont(const QFont &font) {
 }
 
 
+void LabelItem::creationPolygonChanged(View::CreationEvent event) {
+  if (event != View::MouseRelease) {
+    ViewItem::creationPolygonChanged(event);
+    return;
+  }
+
+  if (event == View::MouseRelease) {
+    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseRelease));
+    QRectF newRect(rect().x(), rect().y(),
+                   poly.last().x() - rect().x(),
+                   poly.last().y() - rect().y());
+
+    if (newRect.isNull()) {
+      // Special case for labels that don't need to have a size for creation to ensure proper parenting.
+      newRect.setSize(QSize(1, 1));
+    }
+
+    setViewRect(newRect.normalized());
+
+    parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
+    parentView()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
+    parentView()->setMouseMode(View::Default);
+    maybeReparent();
+    emit creationComplete();
+    return;
+  }
+}
+
+
 void CreateLabelCommand::createItem() {
   bool ok = false;
   QString text;
