@@ -301,3 +301,13 @@ In labels, \textbf{text} and \textit{text} set bold and italics for 'text',
 but they don't un-set bold and italics after the end of the curley brackets.
 They should.
 
+--------
+
+Negative size drawing considered invalid.
+Drawing items beginning with any corner other than the top left (negative height / width)
+results in an invalid viewRect and the item drawn with a nominal size rather than the 
+desired size.
+This is happening during completion processing as the objects are drawn currently during
+creation.
+*Mike*
+--------

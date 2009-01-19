@@ -99,13 +99,5 @@ the tied zoom button should become disabled, as you are no longer in all-tied zo
 *Mike*
 --------
 
-Negative size drawing considered invalid.
-Drawing items beginning with any corner other than the top left (negative height / width)
-results in an invalid viewRect and the item drawn with a nominal size rather than the 
-desired size.
-This is happening during completion processing as the objects are drawn currently during
-creation.
-*Mike*
---------
 
 
