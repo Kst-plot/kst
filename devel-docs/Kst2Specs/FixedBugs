@@ -294,3 +294,10 @@ where extra space is, rather than resizing the view for the export.
 
 Should add some more latex mode fields
   \odot
+
+--------
+
+In labels, \textbf{text} and \textit{text} set bold and italics for 'text',
+but they don't un-set bold and italics after the end of the curley brackets.
+They should.
+

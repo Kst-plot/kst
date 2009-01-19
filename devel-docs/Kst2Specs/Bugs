@@ -91,12 +91,6 @@ X restart.
 
 --------
 
-In labels, \textbf{text} and \textit{text} set bold and italics for 'text',
-but they don't un-set bold and italics after the end of the curley brackets.
-They should.
-
---------
-
 Tied zoom behavior oddness:
 Tied zoom has been implemented as a toggle button, setting or unsetting
 all of the zoom ties.  However, when in tied zoom, it is still possible to un-tie

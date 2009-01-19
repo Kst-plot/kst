@@ -411,7 +411,7 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
         *skip = parseStart - from + 1;
         dumpattr(working, "end group for textbf");
         return true;
-      } else if (txt.mid(from + 1).startsWith("extit")) {
+      } else if (txt.mid(from + 1).startsWith("extit{")) {
         if ((*tail)->group) {
           *tail = new Chunk(*tail, Chunk::None, false, true);
         }
@@ -474,7 +474,6 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
         parseInternal(working, txt, parseStart, txt.length(), interpretNewLine);
         *skip = parseStart - from + 1;
         dumpattr(working, "end group for underline");
-        working->attributes.underline = false;
         return true;
       } else if (txt.mid(from + 1).startsWith("psilon")) {
         *skip = 7;
@@ -573,9 +572,7 @@ static Chunk *parseInternal(Chunk *ctail, const QString& txt, uint& start, uint 
         } else {
           bool rc = false;
           if (ctail->vOffset == Chunk::None) {
-            dumpattr(ctail->group, "start group with text or group");
             rc = 0L != parseInternal(new Chunk(ctail, Chunk::None, true, true), txt, ++i, cnt, interpretNewLine);
-            dumpattr(ctail->group, "after start group with text or group");
           } else {
             rc = 0L != parseInternal(new Chunk(ctail->prev, Chunk::None, true, true), txt, ++i, cnt,  interpretNewLine);
           }

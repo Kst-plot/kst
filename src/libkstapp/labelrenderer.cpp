@@ -57,15 +57,9 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
       f.setPixelSize(rc.size);
     }
 
-    if (fi->attributes.bold) {
-      f.setBold(fi->attributes.bold);
-    }
-    if (fi->attributes.italic) {
-      f.setItalic(fi->attributes.italic);
-    }
-    if (fi->attributes.underline) {
-      f.setItalic(fi->attributes.underline);
-    }
+    f.setBold(fi->attributes.bold);
+    f.setItalic(fi->attributes.italic);
+    f.setUnderline(fi->attributes.underline);
 
     if (rc.p && fi->attributes.color.isValid()) {
       rc.p->setPen(fi->attributes.color);
