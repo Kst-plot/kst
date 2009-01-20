@@ -79,7 +79,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     PlotAxis* yAxis() { return _yAxis; }
 
     bool isTiedZoom() const;
-    void setTiedZoom(bool tiedZoom);
+    void setTiedZoom(bool tiedZoom, bool checkAllTied = true);
 
     bool isInSharedAxisBox() const;
     void setInSharedAxisBox(bool inSharedBox);

@@ -959,14 +959,14 @@ bool PlotItem::isTiedZoom() const {
 }
 
 
-void PlotItem::setTiedZoom(bool tiedZoom) {
+void PlotItem::setTiedZoom(bool tiedZoom, bool checkAllTied) {
   if ((_isInSharedAxisBox && !tiedZoom) || (_isTiedZoom == tiedZoom))
     return;
 
   _isTiedZoom = tiedZoom;
 
   if (_isTiedZoom)
-    PlotItemManager::self()->addTiedZoomPlot(this);
+    PlotItemManager::self()->addTiedZoomPlot(this, checkAllTied);
   else
     PlotItemManager::self()->removeTiedZoomPlot(this);
 

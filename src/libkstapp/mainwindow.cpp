@@ -79,6 +79,8 @@ MainWindow::MainWindow() {
   _tabWidget->createView();
   setCentralWidget(_tabWidget);
   connect(_tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentViewChanged()));
+  connect(PlotItemManager::self(), SIGNAL(tiedZoomRemoved()), this, SLOT(tiedZoomRemoved()));
+  connect(PlotItemManager::self(), SIGNAL(allPlotsTiedZoom()), this, SLOT(allPlotsTiedZoom()));
 
   readSettings();
   QTimer::singleShot(0, this, SLOT(performHeavyStartupActions()));
@@ -124,8 +126,18 @@ void MainWindow::setTiedZoom(bool tiedZoom) {
   View *v = tabWidget()->currentView();
   QList<PlotItem*> plots = PlotItemManager::plotsForView(v);
   foreach (PlotItem *plotItem, plots) {
-    plotItem->setTiedZoom(tiedZoom);
+    plotItem->setTiedZoom(tiedZoom, false);
   }
+}
+
+
+void MainWindow::tiedZoomRemoved() {
+  _tiedZoomAct->setChecked(false);
+}
+
+
+void MainWindow::allPlotsTiedZoom() {
+  _tiedZoomAct->setChecked(true);
 }
 
 

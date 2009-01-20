@@ -73,6 +73,8 @@ class MainWindow : public QMainWindow
     void exportGraphicsFile(const QString &filename, const QString &format, int w, int h, int display);
 
     void clearDrawingMarker();
+    void tiedZoomRemoved();
+    void allPlotsTiedZoom();
 
   private Q_SLOTS:
     void aboutToQuit();

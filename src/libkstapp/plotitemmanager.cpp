@@ -64,13 +64,18 @@ void PlotItemManager::removePlot(PlotItem *plotItem) {
 }
 
 
-void PlotItemManager::addTiedZoomPlot(PlotItem *plotItem) {
+void PlotItemManager::addTiedZoomPlot(PlotItem *plotItem, bool checkAllTied) {
   if (!_tiedZoomPlotLists.contains(plotItem->parentView())) {
     _tiedZoomPlotLists.insert(plotItem->parentView(), QList<PlotItem*>() << plotItem);
   } else {
     QList<PlotItem*> list = _tiedZoomPlotLists.value(plotItem->parentView());
     list << plotItem;
     _tiedZoomPlotLists.insert(plotItem->parentView(), list);
+  }
+  if (checkAllTied) {
+    if (_tiedZoomPlotLists[plotItem->parentView()] == _plotLists[plotItem->parentView()]) {
+      emit allPlotsTiedZoom();
+    }
   }
 }
 
@@ -82,6 +87,7 @@ void PlotItemManager::removeTiedZoomPlot(PlotItem *plotItem) {
   QList<PlotItem*> list = _tiedZoomPlotLists.value(plotItem->parentView());
   list.removeAll(plotItem);
   _tiedZoomPlotLists.insert(plotItem->parentView(), list);
+  emit tiedZoomRemoved();
 }
 
 

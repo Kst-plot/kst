@@ -28,9 +28,13 @@ class PlotItemManager : public QObject
   public:
     static QList<PlotItem*> plotsForView(View *view);
     static QList<PlotItem*> tiedZoomPlotsForView(View *view);
+    static PlotItemManager *self();
+
+  Q_SIGNALS:
+    void tiedZoomRemoved();
+    void allPlotsTiedZoom();
 
   private:
-    static PlotItemManager *self();
     static void cleanup();
 
     PlotItemManager();
@@ -39,7 +43,7 @@ class PlotItemManager : public QObject
     void addPlot(PlotItem *plotItem);
     void removePlot(PlotItem *plotItem);
 
-    void addTiedZoomPlot(PlotItem *plotItem);
+    void addTiedZoomPlot(PlotItem *plotItem, bool checkAll = true);
     void removeTiedZoomPlot(PlotItem *plotItem);
 
   private:
