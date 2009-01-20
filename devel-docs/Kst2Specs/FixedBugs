@@ -319,3 +319,12 @@ individual plots (which is good).  But: when you un-tie one of several plots, pe
 the tied zoom button should become disabled, as you are no longer in all-tied zoom mode.
 *Mike*
 --------
+
+Fragility in moving parents:
+  create a plot.
+  Put a child box in the plot.
+  Rapidly resize the plot.  Sometimes the box will either drift or loose parenting altogether.
+  (Editorial: Fundamentally, I think this is because qt's QGraphics system has been used to track placement
+  of objects, and QGraphics doesn't have the right model of what we are doing.)
+*Mike*
+---------
