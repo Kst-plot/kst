@@ -897,6 +897,14 @@ QRectF PlotItem::plotRect() const {
   plot.setBottom(plot.bottom() - xOffset - bottomPadding);
   plot.setRight(plot.right() - rightPadding);
   plot.setTop(plot.top() + topPadding);
+  if (!plot.isValid()) {
+    if (plot.width() <= 0) {
+      plot.setWidth(0.1);
+    }
+    if (plot.height() <= 0) {
+      plot.setHeight(0.1);
+    }
+  }
   return plot;
 }
 

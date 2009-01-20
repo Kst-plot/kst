@@ -68,6 +68,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     qreal relativeHeight() const { return _parentRelativeHeight; }
     qreal relativeWidth() const { return _parentRelativeWidth; }
     QPointF relativeCenter() const;
+    QPointF relativePosition() const;
     qreal rotationAngle() const;
 
     GripMode gripMode() const;
@@ -232,6 +233,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     bool _updatingLayout;
     QPointF _originalPosition;
     QPointF _parentRelativeCenter;
+    QPointF _parentRelativePosition;
     QRectF _originalRect;
     QTransform _originalTransform;
     QLineF _normalLine;
