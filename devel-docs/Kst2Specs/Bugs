@@ -3,18 +3,6 @@ Bugs in Build System:
   -doesn't support 'make install' nor DESTDIR
 ---------
 
-Plot axis number rounding bug:
-occasionally, the axis numbers can be something like 0.499999999993 instead of 0.5.  It is hard to
-reproduce.
-*Mike*
----------
-
-Number of major ticks bug:
-Occasionally there will be too few (<2) or too many (serious overlap) in the number of major 
-ticks.  This seems to have changed from 1.x
-*Mike*
----------
-
 Auto-labels, and '_' in field names:
 When plots are using name-based auto-labels, any '_' in field names gets interpreted as a subscript.
 There needs to be an option to somehow escape these when using them in a label.
@@ -40,11 +28,11 @@ non-modified plot(s) can get garbled until the mouse is moved over them.
 ----------
 
 Data mode (see 1.x) should be implemented
-
+*Mike*
 ----------
  
 Reference point (see 1.x, 'c')  should be implemented.
-
+*Mike*
 ----------
  
 Kst should ask about saving the .kst file on exit if the document has changed

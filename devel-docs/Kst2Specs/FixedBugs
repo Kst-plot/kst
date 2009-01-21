@@ -336,3 +336,16 @@ Fragility in moving parents:
 
 No space allocated for subscripts or superscripts in axis lables
   The subscript is cut off
+---------
+
+Number of major ticks bug:
+Occasionally there will be too few (<2) or too many (serious overlap) in the number of major 
+ticks.  This seems to have changed from 1.x
+*Mike*
+---------
+
+Plot axis number rounding bug:
+occasionally, the axis numbers can be something like 0.499999999993 instead of 0.5.  It is hard to
+reproduce.
+*Mike*
+---------
