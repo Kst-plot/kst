@@ -728,9 +728,10 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
       xLabelRect = bound;
     }
 
-    if ((rect().left() < bound.left()) && (rect().right() > bound.right())) {
-      painter->drawText(bound, flags, xLabelIt.value());
-    }
+    if (rect().left() > bound.left()) bound.setLeft(rect().left());
+    if (rect().right() < bound.right()) bound.setRight(rect().right());
+
+    painter->drawText(bound, flags, xLabelIt.value());
   }
 
   if (!_xAxis->baseLabel().isEmpty()) {
@@ -781,9 +782,10 @@ void PlotItem::paintLeftTickLabels(QPainter *painter) {
       yLabelRect = bound;
     }
 
-    if ((rect().top() < bound.top()) && (rect().bottom() > bound.bottom())) {
-      painter->drawText(bound, flags, yLabelIt.value());
-    }
+    if (rect().top() > bound.top()) bound.setTop(rect().top());
+    if (rect().bottom() < bound.bottom()) bound.setBottom(rect().bottom());
+
+    painter->drawText(bound, flags, yLabelIt.value());
   }
 
   if (!_yAxis->baseLabel().isEmpty()) {

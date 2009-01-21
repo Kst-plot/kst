@@ -15,6 +15,8 @@
 #include "settings.h"
 #include <QDate>
 
+#define MAJOR_TICK_DEBUG 0
+
 static int FULL_PRECISION = 15;
 static qreal JD1900 = 2415020.5;
 static qreal JD1970 = 2440587.5;
@@ -671,6 +673,10 @@ void PlotAxis::update(bool useOverrideTicks) {
     qreal majorTickSpacing = computedMajorTickSpacing(majorTickCount, _orientation);
     qreal firstTick = ceil(min / majorTickSpacing) * majorTickSpacing;
 
+#if MAJOR_TICK_DEBUG 
+  qDebug() << "Major Ticks spacing:" << majorTickSpacing << "\nFirst Tick" << firstTick;
+#endif
+
     int i = 0;
     qreal nextTick = firstTick;
     while (1) {
@@ -752,6 +758,17 @@ void PlotAxis::update(bool useOverrideTicks) {
   } else {
     _axisLabels = labels;
   }
+#if MAJOR_TICK_DEBUG 
+  qDebug() << "Calculated Major Ticks:" << _axisMajorTicks;
+  if (_orientation == Qt::Horizontal) {
+    qDebug() << "Horizontal";
+  } else {
+    qDebug() << "Vertical";
+  }
+  qDebug() << "\nLabels:" << _axisLabels
+           << "\nbase Label:" << _baseLabel
+           << endl;
+#endif
 }
 
 
@@ -773,11 +790,11 @@ qreal PlotAxis::computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orien
   qreal d2 = 2 * pow(10, B);
   qreal d5 = 5 * pow(10, B);
 
-  qreal r1 = d1 * M - 1;
-  qreal r2 = d2 * M - 1;
-  qreal r5 = d5 * M - 1;
+  qreal r1 = d1 * M;
+  qreal r2 = d2 * M;
+  qreal r5 = d5 * M;
 
-#ifdef MAJOR_TICK_DEBUG
+#if MAJOR_TICK_DEBUG 
   qDebug() << "MajorTickMode:" << M << "Range:" << R
            << "\n\tranges:" << r1 << r2 << r5
            << "\n\tspaces:" << d1 << d2 << d5
@@ -788,12 +805,27 @@ qreal PlotAxis::computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orien
   qreal s2 = qAbs(r2 - R);
   qreal s5 = qAbs(r5 - R);
 
-  if (s1 < s2 && s1 < s5)
+  if (s1 <= s2 && s1 <= s5) {
     return d1;
-  else if (s2 < s5)
-    return d2;
-  else
-    return d5;
+  } else if (s2 <= s5) {
+    if ((M == 2) && (r2 > R)) {
+#if MAJOR_TICK_DEBUG 
+      qDebug() << "Minimum ticks not met using d2 using d1 instead";
+#endif
+      return d1;
+    } else {
+      return d2;
+    }
+  } else {
+    if ((M == 2) && (r5 > R)) {
+#if MAJOR_TICK_DEBUG 
+      qDebug() << "Minimum ticks not met using d5 using d2 instead";
+#endif
+      return d2;
+    } else {
+      return d5;
+    }
+  }
 }
 
 
