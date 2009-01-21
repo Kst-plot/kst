@@ -65,8 +65,7 @@ void LabelItem::paint(QPainter *painter) {
     Label::renderLabel(rc, _parsed->chunk);
 
     // Make sure we have a rect for selection, movement, etc
-    setViewRect(QRectF(box.x(), box.y(), rc.x, fm.height()));
-
+    setViewRect(QRectF(box.x(), box.y(), rc.xMax, (rc.lines+1) * fm.height()));
     painter->restore();
   }
 }

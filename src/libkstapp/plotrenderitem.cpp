@@ -226,8 +226,9 @@ void PlotRenderItem::paint(QPainter *painter) {
       }
       if (plotItem()->isTiedZoom()) {
         painter->save();
-        painter->setOpacity(0.5);
-        painter->fillPath(checkBox(), Qt::black);
+        QColor c = Qt::black;
+        c.setAlphaF(c.alphaF() * 0.5);
+        painter->fillPath(checkBox(), c);
         painter->restore();
       }
       painter->drawPath(checkBox());

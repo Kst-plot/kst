@@ -38,6 +38,7 @@ struct RenderContext {
     _cache = 0L;
     substitute = true;
     setFont(font);
+    lines = 0;
   }
 
   inline const QFont& font() const {
@@ -114,12 +115,12 @@ struct RenderContext {
   bool substitute;
   QVector<DataRef> *_cache;
   QPen pen;
+  int lines;
 
   private:
     QFont _font;
     QFontMetrics _fm;
-    int _ascent, _descent, _height, _lineSpacing; // caches to avoid performance problem
-                                    // with QFont*
+    int _ascent, _descent, _height, _lineSpacing; // caches to avoid performance problem                                        // with QFont*
     int _fontSize;
 };
 

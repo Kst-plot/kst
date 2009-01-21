@@ -328,3 +328,11 @@ Fragility in moving parents:
   of objects, and QGraphics doesn't have the right model of what we are doing.)
 *Mike*
 ---------
+
+  -Superscript and subscript size and position seems off.  This should be researched more
+  but wikipedia as an almost reasonable article on it.  It suggests both should be scaled by ~60%, and subscripts dropped by 16% and superscripts raised by 44%.  OOffice, illustrator, and photoshop use scale 58%, raise 33%, lower 33%.  msoffice uses 65%, -14%, +35%.  It might also pay to compare w/ TeX.
+
+---------
+
+No space allocated for subscripts or superscripts in axis lables
+  The subscript is cut off

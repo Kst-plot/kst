@@ -24,8 +24,14 @@
 #include "document.h"
 #include "objectstore.h"
 #include "application.h"
+#include "applicationsettings.h"
 
 #include <QDebug>
+
+const double subscript_scale = 0.60;
+const double subscript_drop = 0.16;
+const double superscript_scale = 0.60;
+const double superscript_raise = 0.44;
 
 namespace Label {
 
@@ -43,12 +49,14 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
   while (fi) {
     if (fi->vOffset != Label::Chunk::None) {
       if (fi->vOffset == Label::Chunk::Up) {
-        rc.y -= int(0.4 * rc.fontHeight());
+        rc.size = int(double(rc.size)*superscript_scale);
+        rc.y -= int(superscript_raise * rc.fontHeight());
       } else { // Down
-        rc.y += int(0.4 * rc.fontHeight());
+        rc.size = int(double(rc.size)*subscript_scale);
+        rc.y += int(subscript_drop * rc.fontHeight());
       }
-      if (rc.size > 5) {
-        rc.size = (rc.size*2)/3;
+      if (rc.size<Kst::ApplicationSettings::self()->minimumFontSize()) {
+        rc.size = Kst::ApplicationSettings::self()->minimumFontSize();
       }
     }
 
@@ -72,6 +80,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
       rc.x = oldX;
       rc.y += rc.fontAscent() + rc.fontDescent() + 1;
       fi = fi->next;
+      rc.lines++;
       continue;
     }
 
@@ -143,7 +152,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
       }
       rc.x += rc.fontWidth(txt);
     } else if (fi->tab) {
-      const int tabWidth = rc.fontWidth("MMMMMMMM");
+      const int tabWidth = rc.fontWidth("MMMM");
       const int toSkip = tabWidth - (rc.x - rc.xStart) % tabWidth;
       if (rc.p && fi->attributes.underline) {
         const int spaceWidth = rc.fontWidth(" ");

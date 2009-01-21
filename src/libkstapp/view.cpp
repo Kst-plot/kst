@@ -406,8 +406,14 @@ void View::drawBackground(QPainter *painter, const QRectF &rect) {
     return;
 
   painter->save();
-  painter->setPen(Qt::gray);
-  painter->setOpacity(0.2);
+  QColor c = Qt::gray;
+  c.setAlphaF(c.alphaF() * 0.2);
+  painter->setPen(c);
+  // http://techbase.kde.org/Development/Tutorials/Graphics/Performance says
+  // setOpacity turns off hardware acceleration.
+  // they suggest setting alpha in the color instead, which
+  // we have done, above.
+  //painter->setOpacity(0.2);
 
   const QRectF r = sceneRect();
   qreal spacing = gridSpacing().width();

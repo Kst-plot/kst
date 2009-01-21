@@ -19,17 +19,10 @@ Auto-labels, and '_' in field names:
 When plots are using name-based auto-labels, any '_' in field names gets interpreted as a subscript.
 There needs to be an option to somehow escape these when using them in a label.
 *cbn*
----------
-
-No space allocated for subscripts or superscripts in axis lables
-  The subscript is cut off
 
 ---------
 
 Formatting/spacing issues:
-  -Superscript and subscript size and position seems off.  This should be researched more
-  but wikipedia as an almost reasonable article on it.  It suggests both should be scaled by ~60%, and subscripts dropped by 16% and superscripts raised by 44%.  OOffice, illustrator, and photoshop use scale 58%, raise 33%, lower 33%.  msoffice uses 65%, -14%, +35%.  It might also pay to compare w/ TeX.
-
   -The spacing between the X-axis numbers and the axis is too small.
   -The spacing between the Y-axis numbers and the axis doesn't seem to scale with window size.
   -The plot selection buttons are too small.
@@ -73,7 +66,6 @@ kst) seem more sluggish. �
 
 ---------
 
-
 The first pane of the data wizard should be reading directories in
 the background, instead of in the foreground where it steals X focus
 until the directory is read. �I ran into a interminable-focus-stealing
@@ -81,7 +73,3 @@ problem where kst was attempting to read a dead NFS mount. �Required an
 X restart.
 
 --------
-
-
-
-
