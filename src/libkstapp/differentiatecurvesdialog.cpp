@@ -17,6 +17,7 @@
 #include "objectstore.h"
 #include "mainwindow.h"
 #include "document.h"
+#include "application.h"
 
 namespace Kst {
 
@@ -192,6 +193,7 @@ void DifferentiateCurvesDialog::apply() {
     ++sequenceNum;
   }
   resetLists();
+  kstApp->mainWindow()->document()->setChanged(true);
 }
 
 }

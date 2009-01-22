@@ -16,6 +16,9 @@
 #include "gridtab.h"
 #include "childviewoptionstab.h"
 #include "dialogpage.h"
+#include "document.h"
+#include "mainwindow.h"
+#include "application.h"
 
 #include <QBrush>
 #include <QDebug>
@@ -100,7 +103,7 @@ void ViewDialog::fillChanged() {
   if (gradient.type() != QGradient::NoGradient) {
     b = QBrush(gradient);
   }
-
+  kstApp->mainWindow()->document()->setChanged(true);
   _view->setBackgroundBrush(b);
 }
 

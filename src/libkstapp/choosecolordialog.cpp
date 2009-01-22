@@ -16,6 +16,7 @@
 #include "objectstore.h"
 #include "mainwindow.h"
 #include "document.h"
+#include "application.h"
 
 #include "colorsequence.h"
 #include <QPushButton>
@@ -145,6 +146,7 @@ void ChooseColorDialog::apply() {
     }
   }
   updateColorGroup();
+  kstApp->mainWindow()->document()->setChanged(true);
 }
 
 

@@ -106,6 +106,7 @@ class KST_EXPORT View : public QGraphicsView
     void appendToLayout(CurvePlacement::Layout layout, ViewItem* item, int columns = 0);
     void createCustomLayout();
     void sharePlots();
+    void viewChanged();
 
   protected:
     bool event(QEvent *event);

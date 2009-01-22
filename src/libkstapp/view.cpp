@@ -18,6 +18,7 @@
 #include "applicationsettings.h"
 #include "viewdialog.h"
 #include "viewgridlayout.h"
+#include "document.h"
 
 #include <math.h>
 
@@ -546,6 +547,11 @@ void View::addTitle(QMenu *menu) const {
 void View::edit() {
   ViewDialog editDialog(this);
   editDialog.exec();
+}
+
+
+void View::viewChanged() {
+  kstApp->mainWindow()->document()->setChanged(true);
 }
 
 }

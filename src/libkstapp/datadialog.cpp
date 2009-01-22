@@ -26,6 +26,7 @@
 #include "dataobject.h"
 #include "document.h"
 #include "mainwindow.h"
+#include "application.h"
 
 namespace Kst {
 
@@ -133,6 +134,7 @@ void DataDialog::slotApply() {
   else
     ptr = editExistingDataObject();
   setDataObject(ptr);
+  kstApp->mainWindow()->document()->setChanged(true);
   clearModified();
 }
 

@@ -54,6 +54,9 @@ QString Document::fileName() const {
 bool Document::save(const QString& to) {
 
   QString file = !to.isEmpty() ? to : _fileName;
+  if (!file.endsWith(".kst")) {
+    file.append(".kst");
+  }
   QFile f(file);
   if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
     _lastError = QObject::tr("File could not be opened for writing.");

@@ -19,6 +19,9 @@
 #include "dimensionstab.h"
 #include "dialogpage.h"
 #include "viewgridlayout.h"
+#include "document.h"
+#include "mainwindow.h"
+#include "application.h"
 
 #include <QPen>
 #include <QBrush>
@@ -141,7 +144,7 @@ void ViewItemDialog::fillChanged() {
   if (gradient.type() != QGradient::NoGradient) {
     b = QBrush(gradient);
   }
-
+  kstApp->mainWindow()->document()->setChanged(true);
   _item->setBrush(b);
 }
 
@@ -160,7 +163,6 @@ void ViewItemDialog::strokeChanged() {
   p.setJoinStyle(_strokeTab->joinStyle());
   p.setCapStyle(_strokeTab->capStyle());
   p.setBrush(b);
-
   _item->setPen(p);
 }
 

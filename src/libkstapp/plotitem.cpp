@@ -21,6 +21,7 @@
 
 #include "application.h"
 #include "mainwindow.h"
+#include "document.h"
 #include "tabwidget.h"
 #include "labelrenderer.h"
 
@@ -2818,6 +2819,7 @@ void ZoomCommand::undo() {
   foreach (ZoomState state, _originalStates) {
     state.item->setCurrentZoomState(state);
   }
+  kstApp->mainWindow()->document()->setChanged(true);
 }
 
 
@@ -2831,6 +2833,7 @@ void ZoomCommand::redo() {
       ViewGridLayout::resetSharedPlots(plotItem);
     }
   }
+  kstApp->mainWindow()->document()->setChanged(true);
 }
 
 /* 

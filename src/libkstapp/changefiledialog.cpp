@@ -20,6 +20,7 @@
 #include "objectstore.h"
 #include "document.h"
 #include "mainwindow.h"
+#include "application.h"
 
 #include <QDir>
 #include <QMessageBox>
@@ -267,6 +268,7 @@ void ChangeFileDialog::apply() {
     }
   }
   updatePrimitiveList();
+  kstApp->mainWindow()->document()->setChanged(true);
 }
 
 

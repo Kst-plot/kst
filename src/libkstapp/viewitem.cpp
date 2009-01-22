@@ -70,6 +70,8 @@ ViewItem::ViewItem(View *parent)
   connect(parent, SIGNAL(viewModeChanged(View::ViewMode)),
           this, SLOT(updateView()));
 
+  connect(this, SIGNAL(geometryChanged()), parent,SLOT(viewChanged()));
+
   setShareAxis(ApplicationSettings::self()->shareAxis());
 
   // Add actions common to all view objects

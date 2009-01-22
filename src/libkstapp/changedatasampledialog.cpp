@@ -16,6 +16,7 @@
 #include "objectstore.h"
 #include "document.h"
 #include "mainwindow.h"
+#include "application.h"
 #include "dialogdefaults.h"
 
 namespace Kst {
@@ -152,6 +153,7 @@ void ChangeDataSampleDialog::apply() {
   _dialogDefaults->setValue("vector/doAve", _dataRange->doFilter());
 
   updateCurveListDialog();
+  kstApp->mainWindow()->document()->setChanged(true);
 }
 
 
