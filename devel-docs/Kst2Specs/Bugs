@@ -34,15 +34,6 @@ Data mode (see 1.x) should be implemented
 Reference point (see 1.x, 'c')  should be implemented.
 *Mike*
 ----------
- 
-Kst should ask about saving the .kst file on exit if the document has changed
-(basically, any change other than a mouse/arrow zoom).  See 1.x.
-*Mike*
-----------
- 
-.kst should be appended to the name of a .kst file if it is not already there.
-*Mike*
----------
 
 kst reads live dirfiles less efficiently than before. �On a shitty
 computer (devlin666), kst1.7 can display 200 frames of 24 bolometer
