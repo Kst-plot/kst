@@ -358,3 +358,7 @@ Kst should ask about saving the .kst file on exit if the document has changed
 .kst should be appended to the name of a .kst file if it is not already there.
 *Mike*
 ---------
+ 
+Reference point (see 1.x, 'c')  should be implemented.
+*Mike*
+----------
