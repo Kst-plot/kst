@@ -33,7 +33,7 @@
 namespace Kst {
 
 PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
-  : ViewItem(parentItem->parentView()) {
+  : ViewItem(parentItem->parentView()), _referencePointMode(false) {
 
   setName(tr("Plot Render"));
   setZValue(PLOTRENDER_ZVALUE);
@@ -206,6 +206,8 @@ void PlotRenderItem::paint(QPainter *painter) {
 
   painter->restore();
 
+  paintReferencePoint(painter);
+
   if (!parentView()->isPrinting()) {
     if (_selectionRect.isValid()) {
       painter->setPen(QPen(QBrush(Qt::black), 1.0, Qt::DotLine));
@@ -240,6 +242,17 @@ void PlotRenderItem::paint(QPainter *painter) {
   int elapsed = time.elapsed();
   qDebug()<<"curve drawing took" << elapsed << "to render.";
 #endif
+}
+
+
+void PlotRenderItem::paintReferencePoint(QPainter *painter) {
+  if (_referencePointMode && plotItem()->projectionRect().contains(_referencePoint)) {
+    QPointF point = plotItem()->mapToPlot(_referencePoint);
+    painter->save();
+    painter->setPen(QPen(QColor("gray"), 1));
+    CurvePointSymbol::draw(7, painter, point.x(), point.y(), 1);
+    painter->restore();
+  }
 }
 
 
@@ -296,6 +309,17 @@ void PlotRenderItem::keyPressEvent(QKeyEvent *event) {
     _selectionRect.setFrom(QPointF(_lastPos.x(), rect().top()));
     _selectionRect.setTo(QPointF(_lastPos.x(), rect().bottom()));
   }
+
+  if (event->key() == Qt::Key_C) {
+    if (modifiers & Qt::ShiftModifier) {
+      _referencePointMode = false;
+    } else {
+      _referencePointMode = true;
+      _referencePoint = plotItem()->mapToProjection(_lastPos);
+      update();
+    }
+  }
+
   ViewItem::keyPressEvent(event);
 
   updateSelectionRect();

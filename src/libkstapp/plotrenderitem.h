@@ -52,6 +52,7 @@ class PlotRenderItem : public ViewItem
     virtual void saveInPlot(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
     virtual void paintRelations(QPainter *painter) = 0;
+    void paintReferencePoint(QPainter *painter);
 
     virtual bool configureFromXml(QXmlStreamReader &xml, ObjectStore *store);
 
@@ -116,6 +117,8 @@ class PlotRenderItem : public ViewItem
   private:
     RenderType _type;
     QPointF _lastPos;
+    bool _referencePointMode;
+    QPointF _referencePoint;
 
     RelationList _relationList;
     SelectionRect _selectionRect;
