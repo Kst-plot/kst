@@ -570,7 +570,6 @@ void MainWindow::createActions() {
   _createLayoutAct = new QAction(tr("&Create layout"), this);
   _createLayoutAct->setStatusTip(tr("Create a layout for the current item"));
   _createLayoutAct->setIcon(QPixmap(":kst_gfx_layout.png"));
-  _createLayoutAct->setCheckable(true);
 //   _createLayoutAct->setEnabled(false);
   connect(_createLayoutAct, SIGNAL(triggered()), this, SLOT(createLayout()));
 
