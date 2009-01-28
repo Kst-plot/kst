@@ -46,10 +46,9 @@ void Dialog::addDialogPage(DialogPage *page) {
   _listWidget->addItem(item);
   _stackedWidget->addWidget(page);
   _itemHash.insert(item, page);
-  if (_listWidget->width() < item->text().length() * 7) {
-    int extra = (item->text().length() * 7) - _listWidget->width();
-    _listWidget->setMinimumSize(_listWidget->size().width() + extra, _listWidget->size().height());
-    resize(minimumSizeHint());
+  int itemWidth = _listWidget->visualItemRect(item).width() + 5;
+  if (_listWidget->width() < itemWidth) {
+    _listWidget->setMinimumSize(itemWidth, _listWidget->size().height());
   }
 }
 
