@@ -407,3 +407,13 @@ There is no visual feedback as to what plots have been selected
 when drawing the shared axis box.  There should be something (eg, the
 selection rect shown in mouse over mode like in layout mode)
 *Mike*
+--------
+
+The size of selector on left of dialogs is too small to fit the entries, though it
+is resizeable.  It should default to a size which fits all of the entries, up to
+some reasonable maximum, but then be resizeable to either larger or smaller.
+At one point it was fixed too small.  Then it was changed to be resizeable 
+to larger than some fixed minimum.  Now it defaults too small, but can
+be resized.
+*Mike*
+--------
