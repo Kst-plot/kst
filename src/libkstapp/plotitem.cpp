@@ -993,6 +993,7 @@ bool PlotItem::isInSharedAxisBox() const {
 
 void PlotItem::setInSharedAxisBox(bool inSharedBox) {
   _isInSharedAxisBox = inSharedBox;
+  setLockParent(inSharedBox);
 }
 
 

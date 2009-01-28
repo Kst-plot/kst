@@ -90,8 +90,14 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     bool hasStaticGeometry() const { return _hasStaticGeometry; }
     void setHasStaticGeometry(bool hasStaticGeometry ) { _hasStaticGeometry = hasStaticGeometry; }
 
+    bool lockParent() const { return _lockParent; }
+    void setLockParent(bool lockParent ) { _lockParent = lockParent; }
+
     bool allowsLayout() const { return _allowsLayout; }
     void setAllowsLayout(bool allowsLayout ) { _allowsLayout = allowsLayout; }
+
+    bool isHighlighted() const { return _highlighted; }
+    void setHighlighted(bool highlighted ) { _highlighted = highlighted; }
 
     //NOTE This should be used in place of QGraphicsRectItem::setRect()...
     QRectF viewRect() const;
@@ -225,12 +231,14 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     bool _lockAspectRatio;
     bool _lockAspectRatioFixed;
     bool _hasStaticGeometry;
+    bool _lockParent;
     bool _allowsLayout;
     bool _hovering;
     bool _acceptsChildItems;
     bool _acceptsContextMenuEvents;
     bool _shareAxis;
     bool _updatingLayout;
+    bool _highlighted;
     QPointF _originalPosition;
     QPointF _parentRelativeCenter;
     QPointF _parentRelativePosition;

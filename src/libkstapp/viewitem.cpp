@@ -15,7 +15,7 @@
 #include "tabwidget.h"
 #include "viewitemdialog.h"
 #include "viewgridlayout.h"
-#include "sharedaxisboxitem.h"
+#include "plotitem.h"
 
 #include "layoutboxitem.h"
 
@@ -49,11 +49,13 @@ ViewItem::ViewItem(View *parent)
     _lockAspectRatio(false),
     _lockAspectRatioFixed(false),
     _hasStaticGeometry(false),
+    _lockParent(false),
     _allowsLayout(true),
     _hovering(false),
     _acceptsChildItems(true),
     _acceptsContextMenuEvents(true),
     _updatingLayout(false),
+    _highlighted(false),
     _activeGrip(NoGrip),
     _allowedGrips(TopLeftGrip | TopRightGrip | BottomRightGrip | BottomLeftGrip |
                   TopMidGrip | RightMidGrip | BottomMidGrip | LeftMidGrip),
@@ -643,6 +645,9 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         painter->fillPath(grips(), Qt::red);
       else if (_gripMode == Move)
         painter->fillPath(grips(), Qt::transparent);
+    } else if (isHighlighted()) {
+      QColor highlightColor(QColor(255, 255, 0, 120));
+      painter->fillPath(shape(), highlightColor);
     }
 
 #ifdef DEBUG_GEOMETRY
@@ -799,18 +804,11 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 
   menu.addAction(_editAction);
 
-  bool inSharedBox = false;
-  if (parentItem()) {
-    if (SharedAxisBoxItem *sharedBox = qgraphicsitem_cast<SharedAxisBoxItem*>(parentItem())) {
-      inSharedBox = true;
-    }
-  }
-
-  if (!inSharedBox) {
+  QMenu layoutMenu;
+  if (!lockParent()) {
     menu.addAction(_raiseAction);
     menu.addAction(_lowerAction);
 
-    QMenu layoutMenu;
     layoutMenu.setTitle(tr("Cleanup Layout"));
     layoutMenu.addAction(_autoLayoutAction);
     layoutMenu.addAction(_customLayoutAction);
@@ -1270,8 +1268,11 @@ QPointF ViewItem::lockOffset(const QPointF &offset, qreal ratio, bool oddCorner)
 
 
 bool ViewItem::maybeReparent() {
+  if (lockParent()) {
+    return false;
+  }
   //First get a list of all items that collide with this one
-  QList<QGraphicsItem*> collisions = collidingItems(Qt::ContainsItemShape);
+  QList<QGraphicsItem*> collisions = collidingItems(Qt::IntersectsItemShape);
 
   bool topLevel = !parentItem();
   QPointF origin = mapToScene(QPointF(0,0));
@@ -1321,7 +1322,7 @@ bool ViewItem::maybeReparent() {
   foreach (QGraphicsItem *item, collisions) {
     ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
 
-    if (!viewItem || !viewItem->acceptsChildItems()) /*bah*/
+    if (!viewItem || !viewItem->acceptsChildItems() || isAncestorOf(viewItem) || !collidesWithItem(viewItem, Qt::ContainsItemShape))
       continue;
 
     if (parentItem() == viewItem) { /*already done*/
@@ -1848,8 +1849,6 @@ void LayoutCommand::createLayout(int columns) {
   }
 
   if (qobject_cast<LayoutBoxItem*>(_item)) {
-    _layout->setMargin((_item->sizeOfGrip() / 2.0));
-    _layout->setSpacing((_item->sizeOfGrip() / 2.0));
     QObject::connect(_layout, SIGNAL(enabledChanged(bool)),
                      _item, SLOT(setEnabled(bool)));
   }
@@ -1934,8 +1933,6 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
     }
 
     if (qobject_cast<LayoutBoxItem*>(_item)) {
-      _layout->setMargin((_item->sizeOfGrip() / 2.0));
-      _layout->setSpacing((_item->sizeOfGrip() / 2.0));
       QObject::connect(_layout, SIGNAL(enabledChanged(bool)),
                       _item, SLOT(setEnabled(bool)));
     }

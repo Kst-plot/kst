@@ -17,6 +17,8 @@
 #include "gridlayouthelper.h"
 #include "viewgridlayout.h"
 
+#include "application.h"
+
 #include <debug.h>
 
 #include <QDebug>
@@ -26,7 +28,7 @@
 namespace Kst {
 
 SharedAxisBoxItem::SharedAxisBoxItem(View *parent)
-    : ViewItem(parent), _layout(0), _loaded(false) {
+    : ViewItem(parent), _layout(0), _loaded(false), _creationStarted(false) {
   setName("Shared Axis Box");
   setZValue(SHAREDAXISBOX_ZVALUE);
   setBrush(Qt::transparent);
@@ -67,6 +69,7 @@ bool SharedAxisBoxItem::acceptItems() {
     _loaded = true;
   }
 
+  QRectF maxSize(mapToParent(viewRect().topLeft()), mapToParent(viewRect().bottomRight()));
   ViewItem* child = 0;
   if (parentView()) {
     QList<QGraphicsItem*> list = parentView()->items();
@@ -90,14 +93,27 @@ bool SharedAxisBoxItem::acceptItems() {
         }
         plotItem->setSharedAxisBox(this);
         child = plotItem;
+        if (!maxSize.contains(plotItem->mapToParent(plotItem->viewRect().topLeft()))) {
+          maxSize.setTop(qMin(plotItem->mapToParent(plotItem->viewRect().topLeft()).y(), maxSize.top()));
+          maxSize.setLeft(qMin(plotItem->mapToParent(plotItem->viewRect().topLeft()).x(), maxSize.left()));
+        }
+        if (!maxSize.contains(plotItem->mapToParent(plotItem->viewRect().bottomRight()))) {
+          maxSize.setBottom(qMax(plotItem->mapToParent(plotItem->viewRect().bottomRight()).y(), maxSize.bottom()));
+          maxSize.setRight(qMax(plotItem->mapToParent(plotItem->viewRect().bottomRight()).x(), maxSize.right()));
+        }
       }
     }
     if (child) {
+      setPen(QPen(Qt::white));
       setBrush(Qt::white);
       ViewGridLayout::updateProjections(this);
       sharePlots();
       bReturn =  true;
     }
+  }
+  if (maxSize != viewRect()) {
+    setPos(maxSize.topLeft());
+    setViewRect(QRectF(mapFromParent(maxSize.topLeft()), mapFromParent(maxSize.bottomRight())));
   }
   return bReturn;
 }
@@ -138,6 +154,7 @@ void SharedAxisBoxItem::lockItems() {
     }
   }
   if (!list.isEmpty()) {
+    setPen(QPen(Qt::white));
     setBrush(Qt::white);
   }
 }
@@ -150,6 +167,65 @@ void SharedAxisBoxItem::addToMenuForContextEvent(QMenu &menu) {
 
 void SharedAxisBoxItem::triggerContextEvent(QGraphicsSceneContextMenuEvent *event) {
   contextMenuEvent(event);
+}
+
+
+void SharedAxisBoxItem::creationPolygonChanged(View::CreationEvent event) {
+  if (event == View::MousePress) {
+    ViewItem::creationPolygonChanged(event);
+    _creationStarted = true;
+    return;
+  }
+
+  if (event == View::MouseMove) {
+    ViewItem::creationPolygonChanged(event);
+    if (!_creationStarted) {
+      return;
+    }
+
+    QList<PlotItem*> plots;
+    if (parentView()) {
+      QList<QGraphicsItem*> list = parentView()->items();
+      foreach (QGraphicsItem *item, list) {
+        ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+        if (!viewItem || !viewItem->isVisible() || viewItem == this ||  viewItem == parentItem() || !collidesWithItem(viewItem, Qt::IntersectsItemBoundingRect)) {
+          continue;
+        }
+        if (PlotItem *plotItem = qobject_cast<PlotItem*>(viewItem)) {
+          plots.append(plotItem);
+        }
+      }
+      highlightPlots(plots);
+    }
+    return;
+  }
+
+  if (event == View::EscapeEvent || event == View::MouseRelease) {
+    ViewItem::creationPolygonChanged(event);
+    highlightPlots(QList<PlotItem*>());
+    return;
+  }
+}
+
+
+void SharedAxisBoxItem::highlightPlots(QList<PlotItem*> plots) {
+  QList<PlotItem*> currentlyHighlighted = _highlightedPlots;
+  _highlightedPlots.clear();
+
+  foreach(PlotItem *plotItem, plots) {
+    _highlightedPlots.append(plotItem);
+    if (!currentlyHighlighted.contains(plotItem)) {
+      plotItem->setHighlighted(true);
+      plotItem->update();
+    }
+  }
+
+  foreach(PlotItem* plotItem, currentlyHighlighted) {
+    if (!_highlightedPlots.contains(plotItem)) {
+      plotItem->setHighlighted(false);
+      plotItem->update();
+    }
+  }
 }
 
 
@@ -191,6 +267,8 @@ void CreateSharedAxisBoxCommand::creationComplete() {
       CreateCommand::creationComplete();
     } else {
       delete _item;
+      deleteLater();
+      kstApp->mainWindow()->clearDrawingMarker();
     }
   }
 }

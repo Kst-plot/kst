@@ -24,7 +24,7 @@
 #define DEBUG_PLOT_STANDARDIZATION 0
 #define DEBUG_SHAREDAXIS 0
 
-static qreal DEFAULT_STRUT = 20.0;
+static qreal DEFAULT_STRUT = 5.0;
 
 namespace Kst {
 
@@ -35,7 +35,7 @@ ViewGridLayout::ViewGridLayout(ViewItem *parent)
     _columnCount(0),
     _shareX(false),
     _shareY(false),
-    _spacing(QSizeF(DEFAULT_STRUT,DEFAULT_STRUT)),
+    _spacing(QSizeF(0.0, 0.0)),
     _margin(QSizeF(DEFAULT_STRUT,DEFAULT_STRUT)) {
 }
 

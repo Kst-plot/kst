@@ -17,6 +17,8 @@
 
 namespace Kst {
 
+class PlotItem;
+
 class SharedAxisBoxItem : public ViewItem
 {
   Q_OBJECT
@@ -38,10 +40,17 @@ class SharedAxisBoxItem : public ViewItem
     bool acceptItems();
     void lockItems();
 
+  protected Q_SLOTS:
+    virtual void creationPolygonChanged(View::CreationEvent event);
+
   private:
+    void highlightPlots(QList<PlotItem*> plots);
+
     QAction *_breakAction;
     QPointer<ViewGridLayout> _layout;
+    QList<PlotItem*> _highlightedPlots;
     bool _loaded;
+    bool _creationStarted;
 };
 
 class KST_EXPORT CreateSharedAxisBoxCommand : public CreateCommand
