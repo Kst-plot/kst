@@ -72,45 +72,6 @@ of things simply not drawn.
 
 --------
 
-RMB menu over a plot render item in layout mode doesn't have raise or lower, but
-but does have the zoom options, etc.
-the RMB menu should always have raise and lower in layout mode over any 
-raisable or lowerable object.
-*Mike*
---------
-
-Shared axis Box Behavior: box shows in data mode
-Create a shared axis box around some plots. A grey box appears around the shared plots.
-It should not when in data mode.  In layout mode, when the group it moused over, then 
-a box can appear, as with other data object.  Otherwise, no visible box.
-*Mike*
---------
-
-Automatic layout behavior: there are gaps between layed out plots
-Create some plots and apply cleanup layout.  The plots are aligned in a grid,
-but between the plots, and between the plots and the edge of the tlv there is a 
-gap, presumably to make room for the grips.  There should be no space.  Instead
-the plots should touch each other and the edge of the tlv, even if the grips would 
-overlap, and even if the grips would extend partially outside the tlv.  
-This applies to all layoutable objects.
-*Mike*
---------
-
-Shared axis box creation behavior:
-The shared axis box dimensions are set by the corners of where the box is drawn.
-This is inconvenient.  It would be better if the box dimensions were set by the
-extents of all plots which have been included in the shared box.
-*Mike*
---------
-
-Shared axis box behavior: resizing separates box
-Create several plots and put them in a shared axis box.
-In layout mode, resize the shared axis box.  The box ends up
-on top of the plots, and the plots cease to share axis.
-The plots should stay in the box.
-*Mike*
---------
-
 Shared Axis box behavior: different boxes have tied zoom.
 When more than one shared axis box is created, the zooms
 seem to be tied between them.  The zooms should only be tied
@@ -119,9 +80,3 @@ does not have, but should.  By default, each shared axis box
 has it own zoom.
 
 --------
-
-Shared axis box creation behavior: no visual feedback
-There is no visual feedback as to what plots have been selected
-when drawing the shared axis box.  There should be something (eg, the
-selection rect shown in mouse over mode like in layout mode)
-*Mike*
