@@ -2150,7 +2150,6 @@ void PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
   } else {
     _calculatedAxisMarginTOverflow = ViewItem::sizeOfGrip().width()/1.2;
   }
-  qDebug() << "marginWidth: " << _calculatedAxisMarginWidth << " plotWidth: " << rect().width();
   if ((inWidth != _calculatedAxisMarginWidth) 
        || (inHLead != _calculatedAxisMarginHLead) 
        || (inTOver != _calculatedAxisMarginTOverflow)) {
