@@ -128,6 +128,7 @@ void SharedAxisBoxItem::breakShare() {
       continue;
 
     if (PlotItem *plotItem = qobject_cast<PlotItem*>(viewItem)) {
+      plotItem->setPos(mapToParent(plotItem->pos()));
       plotItem->setSharedAxisBox(0);
       plotItem->setLabelsVisible(true);
       plotItem->update();
