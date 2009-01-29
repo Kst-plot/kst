@@ -805,7 +805,7 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   menu.addAction(_editAction);
 
   QMenu layoutMenu;
-  if (!lockParent()) {
+  if (!(lockParent() || (parentViewItem() && parentViewItem()->lockParent()))) {
     menu.addAction(_raiseAction);
     menu.addAction(_lowerAction);
 
@@ -813,9 +813,10 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
     layoutMenu.addAction(_autoLayoutAction);
     layoutMenu.addAction(_customLayoutAction);
     menu.addMenu(&layoutMenu);
+
+    menu.addAction(_deleteAction);
   }
 
-  menu.addAction(_deleteAction);
 
   addToMenuForContextEvent(menu);
 
@@ -976,7 +977,6 @@ void ViewItem::resizeBottomLeft(const QPointF &offset) {
 
 void ViewItem::resizeBottomRight(const QPointF &offset) {
   const qreal oldAspect = rect().width() / rect().height();
-
   QRectF r = rect();
   QPointF o = _lockAspectRatio ? lockOffset(offset, oldAspect, false) : offset;
   r.setBottomRight(r.bottomRight() + o);
