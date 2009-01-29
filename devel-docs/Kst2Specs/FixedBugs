@@ -416,4 +416,8 @@ At one point it was fixed too small.  Then it was changed to be resizeable
 to larger than some fixed minimum.  Now it defaults too small, but can
 be resized.
 *Mike*
---------
+---------
+
+Formatting/spacing issues:
+  -The spacing between the X-axis numbers and the axis is too small.
+  -The spacing between the Y-axis numbers and the axis doesn't seem to scale with window size.

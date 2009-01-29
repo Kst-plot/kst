@@ -48,10 +48,9 @@
 // Label Region Debugging.  0 Off, 1 On.
 #define DEBUG_LABEL_REGION 0
 
-static qreal TOP_MARGIN = 20.0;
+// FIXME:no magic numbers in pixels
 static qreal BOTTOM_MARGIN = 0.0;
 static qreal LEFT_MARGIN = 0.0;
-static qreal RIGHT_MARGIN = 20.0;
 
 namespace Kst {
 
@@ -71,6 +70,10 @@ PlotItem::PlotItem(View *parent)
   _calculatedLabelMarginHeight(0.0),
   _calculatedAxisMarginWidth(0.0),
   _calculatedAxisMarginHeight(0.0),
+  _calculatedAxisMarginVLead(0.0),
+  _calculatedAxisMarginHLead(0.0),
+  _calculatedAxisMarginROverflow(0.0),
+  _calculatedAxisMarginTOverflow(0.0),
   _leftPadding(0.0),
   _bottomPadding(0.0),
   _rightPadding(0.0),
@@ -519,8 +522,9 @@ void PlotItem::paint(QPainter *painter) {
   painter->save();
   painter->setFont(calculatedNumberLabelFont());
 
-  setCalculatedAxisMarginWidth(calculateLeftTickLabelBound(painter).width());
-  setCalculatedAxisMarginHeight(calculateBottomTickLabelBound(painter).height());
+  calculateBottomTickLabelBound(painter);
+  calculateLeftTickLabelBound(painter);
+  //setCalculatedAxisMarginWidth(calculateLeftTickLabelBound(painter).width());
 
   setCalculatedLeftLabelMargin(calculateLeftLabelBound(painter).width());
   setCalculatedRightLabelMargin(calculateRightLabelBound(painter).width());
@@ -720,9 +724,10 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
     xLabelIt.next();
 
     QRectF bound = painter->boundingRect(QRectF(), flags, xLabelIt.value());
-    QPointF p = QPointF(mapXToPlot(xLabelIt.key()), plotRect().bottom() + bound.height() / 2.0);
+    bound.setWidth(bound.width());
+    QPointF p = QPointF(mapXToPlot(xLabelIt.key()), plotRect().bottom() + 
+        bound.height()*0.5 + _calculatedAxisMarginVLead);
     bound.moveCenter(p);
-
     if (xLabelRect.isValid()) {
       xLabelRect = xLabelRect.united(bound);
     } else {
@@ -737,7 +742,7 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
 
   if (!_xAxis->baseLabel().isEmpty()) {
     QRectF bound = painter->boundingRect(QRectF(), flags, _xAxis->baseLabel());
-    QPointF p = QPointF(plotRect().left(), plotRect().bottom() + bound.height() * 2.0);
+    QPointF p = QPointF(plotRect().left(), plotRect().bottom() + bound.height() * 2.0 + _calculatedAxisMarginVLead);
     bound.moveBottomLeft(p);
 
     if (xLabelRect.isValid()) {
@@ -773,8 +778,8 @@ void PlotItem::paintLeftTickLabels(QPainter *painter) {
     yLabelIt.next();
 
     QRectF bound = painter->boundingRect(QRectF(), flags, yLabelIt.value());
-    bound.setWidth(bound.width() + 6);
-    QPointF p = QPointF(plotRect().left() - (bound.width() / 2.0), mapYToPlot(yLabelIt.key()));
+    bound.setWidth(bound.width());
+    QPointF p = QPointF(plotRect().left() - (bound.width() / 2.0) - _calculatedAxisMarginHLead, mapYToPlot(yLabelIt.key()));
     bound.moveCenter(p);
 
     if (yLabelRect.isValid()) {
@@ -1590,7 +1595,7 @@ void PlotItem::setCalculatedLeftLabelMargin(qreal margin) {
 
 
 qreal PlotItem::calculatedRightLabelMargin() const {
-  qreal m = qMax(RIGHT_MARGIN, _calculatedRightLabelMargin);
+  qreal m = qMax(_calculatedAxisMarginROverflow, _calculatedRightLabelMargin);
 
   //No more than 1/4 the width of the plot
   if (width() < m * 4)
@@ -1628,7 +1633,7 @@ qreal PlotItem::calculatedLabelMarginHeight() const {
 
 
 qreal PlotItem::calculatedTopLabelMargin() const {
-  qreal m = qMax(TOP_MARGIN, _calculatedTopLabelMargin);
+  qreal m = qMax(_calculatedAxisMarginTOverflow, _calculatedTopLabelMargin);
 
   //No more than 1/4 the height of the plot
   if (height() < m * 4)
@@ -1732,7 +1737,6 @@ QFont PlotItem::calculatedBottomLabelFont() {
 QFont PlotItem::calculatedNumberLabelFont() {
   QFont font(_numberLabelFont);
   font.setPixelSize(parentView()->defaultFont(_numberLabelFontScale).pixelSize());
-
   return font;
 }
 
@@ -1834,8 +1838,7 @@ void PlotItem::paintBottomLabel(QPainter *painter) {
     rc.y = fm.ascent();
     Label::renderLabel(rc, parsed->chunk);
 
-    bottomLabel.moveTopLeft(plotAxisRect().bottomLeft());
-    bottomLabel.moveTopLeft(QPointF(bottomLabel.topLeft().x() + ((bottomLabel.width() / 2) - (rc.x / 2)), bottomLabel.topLeft().y()));
+    bottomLabel.moveBottomLeft(QPointF(plotRect().center().x()-rc.x/2, rect().bottomLeft().y()));
 
     if (rc.x > 0)
       painter->drawPixmap(bottomLabel.topLeft(), pixmap, QRectF(0, 0, rc.x, bottomLabel.height()));
@@ -1981,9 +1984,7 @@ void PlotItem::paintTopLabel(QPainter *painter) {
       rc.y = fm.ascent();
       Label::renderLabel(rc, parsed->chunk);
 
-      topLabel.moveBottomLeft(plotAxisRect().topLeft());
-      topLabel.moveTopLeft(QPointF(topLabel.topLeft().x() + ((topLabel.width() / 2) - (rc.x / 2)), topLabel.topLeft().y()));
-
+      topLabel.moveTopLeft(QPointF(plotRect().center().x()-rc.x/2, 0));
       if (rc.x > 0)
         painter->drawPixmap(topLabel.topLeft(), pixmap, QRectF(0, 0, rc.x, topLabel.height()));
     }
@@ -2046,26 +2047,30 @@ qreal PlotItem::calculatedAxisMarginHeight() const {
   return _calculatedAxisMarginHeight;
 }
 
-
-void PlotItem::setCalculatedAxisMarginHeight(qreal marginHeight) {
-  qreal before = this->calculatedAxisMarginHeight();
-  _calculatedAxisMarginHeight = marginHeight;
-  if (before != this->calculatedAxisMarginHeight())
-    emit marginsChanged();
-}
-
-
-QSizeF PlotItem::calculateBottomTickLabelBound(QPainter *painter) {
+/** This function calculates and sets three things:
+      _calculatedAxisMarginVLead: spacing between bottom of plotRect and top of axis labels
+      _calculatedAxisMarginROverflow: rightmost axis number extension beyond plotRect 
+      _calculatedAxisMarginHeight: the height of the axis numbers
+*/
+void PlotItem::calculateBottomTickLabelBound(QPainter *painter) {
+  qreal inHeight = _calculatedAxisMarginHeight;
+  qreal inVLead = _calculatedAxisMarginVLead;
+  qreal inROver = _calculatedAxisMarginROverflow;
   QRectF xLabelRect;
+
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
 
+  _calculatedAxisMarginVLead = painter->fontMetrics().boundingRect('0').height()/2;
+
   if (_xAxis->isAxisVisible()) {
+    // future potential optimization: only get bounds of the rightmost label 
+    // but remember: the axis may be reversed.
     QMapIterator<qreal, QString> xLabelIt(_xAxis->axisLabels());
     while (xLabelIt.hasNext()) {
       xLabelIt.next();
 
       QRectF bound = painter->boundingRect(QRectF(), flags, xLabelIt.value());
-      QPointF p(mapXToPlot(xLabelIt.key()), plotRect().bottom() + bound.height() / 2.0);
+      QPointF p(mapXToPlot(xLabelIt.key()), plotRect().bottom() + bound.height() / 2.0 + _calculatedAxisMarginVLead);
       bound.moveCenter(p);
 
       if (xLabelRect.isValid()) {
@@ -2075,6 +2080,7 @@ QSizeF PlotItem::calculateBottomTickLabelBound(QPainter *painter) {
       }
     }
   }
+  xLabelRect.setHeight(xLabelRect.height() + _calculatedAxisMarginVLead);
 
   if (!_xAxis->baseLabel().isEmpty()) {
     qreal height = painter->boundingRect(QRectF(), flags, _xAxis->baseLabel()).height();
@@ -2082,13 +2088,36 @@ QSizeF PlotItem::calculateBottomTickLabelBound(QPainter *painter) {
       xLabelRect.setHeight(xLabelRect.height() + (height - calculatedBottomLabelMargin()));
     }
   }
-  return xLabelRect.size();
+
+  _calculatedAxisMarginHeight = xLabelRect.height();
+  if (xLabelRect.right() > plotRect().right()) {
+    _calculatedAxisMarginROverflow = qMax(ViewItem::sizeOfGrip().width()/1.2, xLabelRect.right() - plotRect().right());
+  } else {
+    _calculatedAxisMarginROverflow = ViewItem::sizeOfGrip().width()/1.2;
+  }
+
+  if ((inHeight != _calculatedAxisMarginHeight) 
+       || (inVLead != _calculatedAxisMarginVLead) 
+       || (inROver != _calculatedAxisMarginROverflow)) {
+    emit marginsChanged();
+  }
 }
 
+/** This function calculates and sets three things:
+      _calculatedAxisMarginHLead: spacing between left of plotRect and right of axis labels
+      _calculatedAxisMarginVOverflow: topmost axis number extension beyond plotRect 
+      _calculatedAxisMarginWidth: the width of the widest axis number
+*/
+void PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
+  qreal inWidth = _calculatedAxisMarginWidth;
+  qreal inHLead = _calculatedAxisMarginHLead;
+  qreal inTOver = _calculatedAxisMarginTOverflow;
 
-QSizeF PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
   QRectF yLabelRect;
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
+
+  _calculatedAxisMarginHLead = painter->fontMetrics().boundingRect('[').height()/2;
+
   if (_yAxis->isAxisVisible()) {
 
     QMapIterator<qreal, QString> yLabelIt(_yAxis->axisLabels());
@@ -2096,8 +2125,8 @@ QSizeF PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
       yLabelIt.next();
 
       QRectF bound = painter->boundingRect(QRectF(), flags, yLabelIt.value());
-      bound.setWidth(bound.width() + 6);
-      QPointF p(plotRect().left() - bound.width() / 2.0, mapYToPlot(yLabelIt.key()));
+      //bound.setWidth(bound.width() + 6);
+      QPointF p(plotRect().left() - bound.width() / 2.0 - _calculatedAxisMarginHLead, mapYToPlot(yLabelIt.key()));
       bound.moveCenter(p);
 
       if (yLabelRect.isValid()) {
@@ -2107,13 +2136,26 @@ QSizeF PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
       }
     }
   }
+
+  yLabelRect.setWidth(yLabelRect.width() + _calculatedAxisMarginHLead);
   if (!_yAxis->baseLabel().isEmpty()) {
     qreal height = painter->boundingRect(QRectF(), flags, _yAxis->baseLabel()).height();
     if (calculatedLeftLabelMargin() < height) {
       yLabelRect.setWidth(yLabelRect.width() + (height - calculatedLeftLabelMargin()));
     }
   }
-  return yLabelRect.size();
+  _calculatedAxisMarginWidth = yLabelRect.width();
+  if (yLabelRect.top() < plotRect().top()) {
+    _calculatedAxisMarginTOverflow = qMax(ViewItem::sizeOfGrip().width()/1.2, -yLabelRect.top() + plotRect().top());
+  } else {
+    _calculatedAxisMarginTOverflow = ViewItem::sizeOfGrip().width()/1.2;
+  }
+  qDebug() << "marginWidth: " << _calculatedAxisMarginWidth << " plotWidth: " << rect().width();
+  if ((inWidth != _calculatedAxisMarginWidth) 
+       || (inHLead != _calculatedAxisMarginHLead) 
+       || (inTOver != _calculatedAxisMarginTOverflow)) {
+     emit marginsChanged();
+  }
 }
 
 

@@ -125,7 +125,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void setLabelsVisible(bool visible);
 
     qreal axisMarginWidth() const;
-    qreal axisMarginHeight() const;
+    qreal axisMarginHeight() const; // zzz
 
     QString bottomLabelOverride() const;
     void setBottomLabelOverride(const QString &label);
@@ -294,7 +294,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     virtual void paintMinorTicks(QPainter *painter);
 
     virtual void paintTickLabels(QPainter *painter);
-    virtual void paintBottomTickLabels(QPainter *painter);
+    virtual void paintBottomTickLabels(QPainter *painter); // zzz
     virtual void paintLeftTickLabels(QPainter *painter);
 
     virtual void paintPlotMarkers(QPainter *painter);
@@ -337,11 +337,10 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     qreal calculatedAxisMarginWidth() const;
     void setCalculatedAxisMarginWidth(qreal marginWidth);
 
-    qreal calculatedAxisMarginHeight() const;
-    void setCalculatedAxisMarginHeight(qreal marginHeight);
+    qreal calculatedAxisMarginHeight() const; // zzz
 
-    QSizeF calculateBottomTickLabelBound(QPainter *painter);
-    QSizeF calculateLeftTickLabelBound(QPainter *painter);
+    void calculateBottomTickLabelBound(QPainter *painter); // zzz
+    void calculateLeftTickLabelBound(QPainter *painter);
 
     void setCurrentZoomState(ZoomState zoomState);
 
@@ -362,6 +361,10 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     qreal _calculatedLabelMarginHeight;
     qreal _calculatedAxisMarginWidth;
     qreal _calculatedAxisMarginHeight;
+    qreal _calculatedAxisMarginVLead; 
+    qreal _calculatedAxisMarginHLead; 
+    qreal _calculatedAxisMarginROverflow;
+    qreal _calculatedAxisMarginTOverflow;
 
     qreal _leftPadding;
     qreal _bottomPadding;

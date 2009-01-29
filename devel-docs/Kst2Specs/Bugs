@@ -11,10 +11,8 @@ There needs to be an option to somehow escape these when using them in a label.
 ---------
 
 Formatting/spacing issues:
-  -The spacing between the X-axis numbers and the axis is too small.
-  -The spacing between the Y-axis numbers and the axis doesn't seem to scale with window size.
   -The plot selection buttons are too small.
-
+*cbn*
 ---------
 
 Tooltips everywhere.
