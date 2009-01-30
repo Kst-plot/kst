@@ -421,3 +421,4 @@ be resized.
 Formatting/spacing issues:
   -The spacing between the X-axis numbers and the axis is too small.
   -The spacing between the Y-axis numbers and the axis doesn't seem to scale with window size.
+  -The plot selection buttons are too small.

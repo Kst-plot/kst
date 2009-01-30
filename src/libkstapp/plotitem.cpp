@@ -481,6 +481,7 @@ void PlotItem::updateObject() {
 
 void PlotItem::marginsUpdated() {
   ViewGridLayout::standardizePlotMargins(this);
+  //qDebug() << "---Margins updated called";
   if (isInSharedAxisBox() && parentItem()) {
     if (SharedAxisBoxItem *sharedBox = qgraphicsitem_cast<SharedAxisBoxItem*>(parentItem())) {
       sharedBox->sharePlots();
@@ -521,6 +522,9 @@ void PlotItem::paint(QPainter *painter) {
 
   painter->save();
   painter->setFont(calculatedNumberLabelFont());
+
+  // FIXME: the plot size calculations need to be separated from the 
+  // painting to avoid n^2 or worse behavior.
 
   calculateBottomTickLabelBound(painter);
   calculateLeftTickLabelBound(painter);
@@ -1624,14 +1628,6 @@ qreal PlotItem::calculatedLabelMarginHeight() const {
 }
 
 
-// void PlotItem::setCalculatedLabelMarginHeight(qreal marginHeight) {
-//   qreal before = this->calculatedLabelMarginHeight();
-//   _calculatedLabelMarginHeight = marginHeight;
-//   if (before != this->calculatedLabelMarginHeight())
-//     emit marginsChanged();
-// }
-
-
 qreal PlotItem::calculatedTopLabelMargin() const {
   qreal m = qMax(_calculatedAxisMarginTOverflow, _calculatedTopLabelMargin);
 
@@ -1761,7 +1757,7 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
     Label::renderLabel(rc, parsed->chunk);
 
     leftLabel.moveTopRight(plotAxisRect().topLeft());
-    leftLabel.moveBottomLeft(QPointF(leftLabel.bottomLeft().x(), leftLabel.bottomLeft().y() - ((leftLabel.height() / 2) - (rc.x / 2))));
+    leftLabel.moveBottomLeft(QPointF(leftLabel.bottomLeft().x(), plotRect().center().y()+ rc.x / 2));
 
     painter->save();
     QTransform t;
@@ -1904,8 +1900,7 @@ void PlotItem::paintRightLabel(QPainter *painter) {
       rc.y = fm.ascent();
       Label::renderLabel(rc, parsed->chunk);
 
-      rightLabel.moveTopLeft(plotAxisRect().topRight());
-      rightLabel.moveTopLeft(QPointF(rightLabel.topLeft().x(), rightLabel.topLeft().y() + ((rightLabel.height() / 2) - (rc.x) / 2)));
+      rightLabel.moveTopLeft(QPointF(plotAxisRect().right(), plotRect().center().y() - rc.x / 2));
 
       painter->save();
       QTransform t;
@@ -2091,9 +2086,9 @@ void PlotItem::calculateBottomTickLabelBound(QPainter *painter) {
 
   _calculatedAxisMarginHeight = xLabelRect.height();
   if (xLabelRect.right() > plotRect().right()) {
-    _calculatedAxisMarginROverflow = qMax(ViewItem::sizeOfGrip().width()/1.2, xLabelRect.right() - plotRect().right());
+    _calculatedAxisMarginROverflow = qMax(ViewItem::sizeOfGrip().width(), xLabelRect.right() - plotRect().right());
   } else {
-    _calculatedAxisMarginROverflow = ViewItem::sizeOfGrip().width()/1.2;
+    _calculatedAxisMarginROverflow = ViewItem::sizeOfGrip().width();
   }
 
   if ((inHeight != _calculatedAxisMarginHeight) 
@@ -2125,7 +2120,6 @@ void PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
       yLabelIt.next();
 
       QRectF bound = painter->boundingRect(QRectF(), flags, yLabelIt.value());
-      //bound.setWidth(bound.width() + 6);
       QPointF p(plotRect().left() - bound.width() / 2.0 - _calculatedAxisMarginHLead, mapYToPlot(yLabelIt.key()));
       bound.moveCenter(p);
 
@@ -2146,9 +2140,9 @@ void PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
   }
   _calculatedAxisMarginWidth = yLabelRect.width();
   if (yLabelRect.top() < plotRect().top()) {
-    _calculatedAxisMarginTOverflow = qMax(ViewItem::sizeOfGrip().width()/1.2, -yLabelRect.top() + plotRect().top());
+    _calculatedAxisMarginTOverflow = qMax(ViewItem::sizeOfGrip().width(), -yLabelRect.top() + plotRect().top());
   } else {
-    _calculatedAxisMarginTOverflow = ViewItem::sizeOfGrip().width()/1.2;
+    _calculatedAxisMarginTOverflow = ViewItem::sizeOfGrip().width();
   }
   if ((inWidth != _calculatedAxisMarginWidth) 
        || (inHLead != _calculatedAxisMarginHLead) 

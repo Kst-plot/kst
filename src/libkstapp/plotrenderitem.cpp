@@ -540,7 +540,7 @@ QRectF PlotRenderItem::boundingRect() const {
 
 
 QSizeF PlotRenderItem::sizeOfGrip() const {
-  return ViewItem::sizeOfGrip() / 1.2;
+  return ViewItem::sizeOfGrip();// / 1.2;
 }
 
 
