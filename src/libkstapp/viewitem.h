@@ -138,6 +138,12 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     bool shareAxis() const { return _shareAxis; }
     void setShareAxis(bool shareAxis);
 
+    QSizeF layoutMargins() const { return _layoutMargins; }
+    void setLayoutMargins(const QSizeF margins) { _layoutMargins = margins; }
+
+    QSizeF layoutSpacing() const { return _layoutSpacing; }
+    void setLayoutSpacing(const QSizeF spacing) { _layoutSpacing = spacing; }
+
     //This is a workaround for context menu bug in Qt4.3 graphicsview
     bool acceptsContextMenuEvents() const
     { return _acceptsContextMenuEvents; }
@@ -251,6 +257,8 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     QTransform _rotationTransform;
     QHash<QString, QAction*> _shortcutMap;
     qreal _parentRelativeHeight, _parentRelativeWidth;
+
+    QSizeF _layoutMargins, _layoutSpacing;
 
     friend class View;
     friend class Scene;

@@ -78,6 +78,12 @@ class ApplicationSettings : public QObject
     bool shareAxis() const;
     void setShareAxis(bool shareAxis);
 
+    QSizeF layoutMargins() const;
+    void setLayoutMargins(QSizeF margins);
+
+    QSizeF layoutSpacing() const;
+    void setLayoutSpacing(QSizeF spacing);
+
   Q_SIGNALS:
     void modified();
 
@@ -105,6 +111,8 @@ class ApplicationSettings : public QObject
     QBrush _backgroundBrush;
     QGradientStops _gradientStops;
     bool _shareAxis;
+    QSizeF _layoutMargins;
+    QSizeF _layoutSpacing;
 
     friend class ApplicationSettingsDialog;
 };

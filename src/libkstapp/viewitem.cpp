@@ -76,6 +76,9 @@ ViewItem::ViewItem(View *parent)
 
   setShareAxis(ApplicationSettings::self()->shareAxis());
 
+  setLayoutMargins(ApplicationSettings::self()->layoutMargins());
+  setLayoutSpacing(ApplicationSettings::self()->layoutSpacing());
+
   // Add actions common to all view objects
   // create them here in the constructor so we
   // can register shortcuts.

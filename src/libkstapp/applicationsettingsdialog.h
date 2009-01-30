@@ -25,6 +25,7 @@ class GridTab;
 class FillTab;
 class ChildViewOptionsTab;
 class DefaultLabelPropertiesTab;
+class LayoutTab;
 
 class KST_EXPORT ApplicationSettingsDialog : public Dialog
 {
@@ -39,6 +40,7 @@ class KST_EXPORT ApplicationSettingsDialog : public Dialog
     void fillChanged();
     void childViewOptionsChanged();
     void defaultLabelPropertiesChanged();
+    void layoutChanged();
 
   private:
     void setupGeneral();
@@ -46,6 +48,7 @@ class KST_EXPORT ApplicationSettingsDialog : public Dialog
     void setupFill();
     void setupChildViewOptions();
     void setupDefaultLabelProperties();
+    void setupLayout();
 
   private:
     GeneralTab *_generalTab;
@@ -53,6 +56,7 @@ class KST_EXPORT ApplicationSettingsDialog : public Dialog
     FillTab *_fillTab;
     ChildViewOptionsTab *_childViewOptionsTab;
     DefaultLabelPropertiesTab *_defaultLabelPropertiesTab;
+    LayoutTab *_layoutTab;
 };
 
 }

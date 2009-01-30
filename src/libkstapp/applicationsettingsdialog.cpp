@@ -18,6 +18,7 @@
 #include "dialogpage.h"
 #include "childviewoptionstab.h"
 #include "defaultlabelpropertiestab.h"
+#include "layouttab.h"
 
 #include <QDebug>
 
@@ -32,6 +33,7 @@ ApplicationSettingsDialog::ApplicationSettingsDialog(QWidget *parent)
   _gridTab = new GridTab(this);
   _fillTab = new FillTab(this);
   _defaultLabelPropertiesTab = new DefaultLabelPropertiesTab(this);
+  _layoutTab = new LayoutTab(this);
 //   _childViewOptionsTab = new ChildViewOptionsTab(this);
 
   connect(_generalTab, SIGNAL(apply()), this, SLOT(generalChanged()));
@@ -39,6 +41,7 @@ ApplicationSettingsDialog::ApplicationSettingsDialog(QWidget *parent)
   connect(_fillTab, SIGNAL(apply()), this, SLOT(fillChanged()));
 //   connect(_childViewOptionsTab, SIGNAL(apply()), this, SLOT(childViewOptionsChanged()));
   connect(_defaultLabelPropertiesTab, SIGNAL(apply()), this, SLOT(defaultLabelPropertiesChanged()));
+  connect(_layoutTab, SIGNAL(apply()), this, SLOT(layoutChanged()));
 
   DialogPage *general = new DialogPage(this);
   general->setPageTitle(tr("General"));
@@ -55,6 +58,11 @@ ApplicationSettingsDialog::ApplicationSettingsDialog(QWidget *parent)
   fill->addDialogTab(_fillTab);
   addDialogPage(fill);
 
+  DialogPage *layout = new DialogPage(this);
+  layout->setPageTitle(tr("Default Layout Properties"));
+  layout->addDialogTab(_layoutTab);
+  addDialogPage(layout);
+
   DialogPage *defaultLabelProperties = new DialogPage(this);
   defaultLabelProperties->setPageTitle(tr("Default Label Properties"));
   defaultLabelProperties->addDialogTab(_defaultLabelPropertiesTab);
@@ -69,6 +77,7 @@ ApplicationSettingsDialog::ApplicationSettingsDialog(QWidget *parent)
   setupGrid();
   setupFill();
   setupDefaultLabelProperties();
+  setupLayout();
 //   setupChildViewOptions();
 
   selectDialogPage(general);
@@ -118,6 +127,14 @@ void ApplicationSettingsDialog::setupDefaultLabelProperties() {
   _defaultLabelPropertiesTab->setLabelFont(ApplicationSettings::self()->defaultFont());
   _defaultLabelPropertiesTab->setLabelScale(ApplicationSettings::self()->defaultFontScale());
   _defaultLabelPropertiesTab->setLabelColor(ApplicationSettings::self()->defaultFontColor());
+}
+
+
+void ApplicationSettingsDialog::setupLayout() {
+  _layoutTab->setHorizontalMargin(ApplicationSettings::self()->layoutMargins().width());
+  _layoutTab->setVerticalMargin(ApplicationSettings::self()->layoutMargins().height());
+  _layoutTab->setHorizontalSpacing(ApplicationSettings::self()->layoutSpacing().width());
+  _layoutTab->setVerticalSpacing(ApplicationSettings::self()->layoutSpacing().height());
 }
 
 
@@ -174,6 +191,17 @@ void ApplicationSettingsDialog::defaultLabelPropertiesChanged() {
   ApplicationSettings::self()->setDefaultFont(_defaultLabelPropertiesTab->labelFont());
   ApplicationSettings::self()->setDefaultFontScale(_defaultLabelPropertiesTab->labelScale());
   ApplicationSettings::self()->setDefaultFontColor(_defaultLabelPropertiesTab->labelColor());
+  ApplicationSettings::self()->blockSignals(false);
+
+  emit ApplicationSettings::self()->modified();
+}
+
+
+void ApplicationSettingsDialog::layoutChanged() {
+  //Need to block the signals so that the modified signal only goes out once...
+  ApplicationSettings::self()->blockSignals(true);
+  ApplicationSettings::self()->setLayoutMargins(QSizeF(_layoutTab->horizontalMargin(), _layoutTab->verticalMargin()));
+  ApplicationSettings::self()->setLayoutSpacing(QSizeF(_layoutTab->horizontalSpacing(), _layoutTab->verticalSpacing()));
   ApplicationSettings::self()->blockSignals(false);
 
   emit ApplicationSettings::self()->modified();

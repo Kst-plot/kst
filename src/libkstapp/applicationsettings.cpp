@@ -84,6 +84,11 @@ ApplicationSettings::ApplicationSettings() {
   _defaultFontColor = QColor(_settings->value("defaultlabelproperties/defaultfontcolor", "black").toString());
 
   _shareAxis = _settings->value("childviewoptions/shareaxis", QVariant(true)).toBool();
+
+  _layoutMargins.setHeight(_settings->value("layout/marginheight", QVariant(5.0)).toDouble());
+  _layoutMargins.setWidth(_settings->value("layout/marginwidth", QVariant(5.0)).toDouble());
+  _layoutSpacing.setHeight(_settings->value("layout/spacingheight", QVariant(0.0)).toDouble());
+  _layoutSpacing.setWidth(_settings->value("layout/spacingwidth", QVariant(0.0)).toDouble());
 }
 
 
@@ -310,6 +315,32 @@ bool ApplicationSettings::shareAxis() const {
 void ApplicationSettings::setShareAxis(bool shareAxis) {
   _shareAxis = shareAxis;
   _settings->setValue("childviewoptions/shareaxis", shareAxis);
+  emit modified();
+}
+
+
+QSizeF ApplicationSettings::layoutMargins() const {
+  return _layoutMargins;
+}
+
+
+void ApplicationSettings::setLayoutMargins(QSizeF margins) {
+  _layoutMargins = margins;
+  _settings->setValue("layout/marginheight", margins.height());
+  _settings->setValue("layout/marginwidth", margins.width());
+  emit modified();
+}
+
+
+QSizeF ApplicationSettings::layoutSpacing() const {
+  return _layoutSpacing;
+}
+
+
+void ApplicationSettings::setLayoutSpacing(QSizeF spacing) {
+  _layoutSpacing = spacing;
+  _settings->setValue("layout/spacingheight", spacing.height());
+  _settings->setValue("layout/spacingwidth", spacing.width());
   emit modified();
 }
 

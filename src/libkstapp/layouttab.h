@@ -25,8 +25,6 @@ class KST_EXPORT LayoutTab : public DialogTab, Ui::LayoutTab {
     LayoutTab(QWidget *parent = 0);
     virtual ~LayoutTab();
 
-    void setLayoutEnabled(bool layoutEnabled);
-
     double horizontalMargin() const;
     void setHorizontalMargin(double horizontalMargin);
 
@@ -38,10 +36,6 @@ class KST_EXPORT LayoutTab : public DialogTab, Ui::LayoutTab {
 
     double verticalSpacing() const;
     void setVerticalSpacing(double verticalSpacing);
-
-    bool lockAspectRatio() const;
-    void setLockAspectRatio(const bool lock);
-    void enableLockAspectRatio(const bool enable);
 };
 
 }
