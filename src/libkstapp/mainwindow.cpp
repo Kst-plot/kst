@@ -160,6 +160,7 @@ bool MainWindow::promptSave() {
 
 void MainWindow::closeEvent(QCloseEvent *e) {
   if (_doc->isChanged() && !promptSave()) {
+    e->ignore();
     return;
   }
   cleanup();
