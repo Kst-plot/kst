@@ -53,6 +53,7 @@ class PlotRenderItem : public ViewItem
     virtual void paint(QPainter *painter);
     virtual void paintRelations(QPainter *painter) = 0;
     void paintReferencePoint(QPainter *painter);
+    void paintHighlightPoint(QPainter *painter);
 
     virtual bool configureFromXml(QXmlStreamReader &xml, ObjectStore *store);
 
@@ -75,6 +76,8 @@ class PlotRenderItem : public ViewItem
     virtual void createCustomLayout();
     virtual void remove();
     virtual void relationUpdated(ObjectPtr object);
+    virtual void referenceMode();
+    virtual void referenceModeDisabled();
 
   protected:
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -114,11 +117,18 @@ class PlotRenderItem : public ViewItem
     void computeMeanCentered(Qt::Orientation orientation, qreal *min, qreal *max) const;
     void computeNoSpike(Qt::Orientation orientation, qreal *min, qreal *max) const;
 
+    void highlightNearestDataPoint(const QPointF& position);
+
   private:
     RenderType _type;
     QPointF _lastPos;
     bool _referencePointMode;
     QPointF _referencePoint;
+    bool _highlightPointActive;
+    bool _invertHighlight;
+    QPointF _highlightPoint;
+    QAction *_referenceMode;
+    QAction *_referenceModeDisabled;
 
     RelationList _relationList;
     SelectionRect _selectionRect;

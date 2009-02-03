@@ -94,6 +94,9 @@ class KST_EXPORT View : public QGraphicsView
     void setPrinting(bool printing) { _printing = printing; }
     bool isPrinting() { return _printing; }
 
+    void setDataMode(bool dataMode) { _dataMode = dataMode; }
+    bool isDataMode() { return _dataMode; }
+
     virtual void contextMenuEvent();
 
   Q_SIGNALS:
@@ -144,8 +147,8 @@ class KST_EXPORT View : public QGraphicsView
     bool _snapToGridHorizontal;
     bool _snapToGridVertical;
     bool _shareAxis;
-
     bool _printing;
+    bool _dataMode;
 };
 
 }

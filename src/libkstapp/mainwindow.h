@@ -43,6 +43,7 @@ class MainWindow : public QMainWindow
     Document *document() const;
     QProgressBar *progressBar() const;
     void initFromCommandLine();
+    bool isDataMode() { return _dataMode; }
 
   public Q_SLOTS:
     void showDataManager();
@@ -101,6 +102,8 @@ class MainWindow : public QMainWindow
     void setLayoutMode(bool layoutMode);
     void setTiedZoom(bool tiedZoom);
 
+    void setDataMode(bool dataMode);
+
   protected:
     void closeEvent(QCloseEvent *e);
 
@@ -124,6 +127,8 @@ class MainWindow : public QMainWindow
     ExportGraphicsDialog *_exportGraphics;
 
     QPointer<QProgressBar> _progressBar;
+
+    bool _dataMode;
 
     QMenu *_fileMenu;
     QMenu *_editMenu;
@@ -157,6 +162,7 @@ class MainWindow : public QMainWindow
     QAction *_closeTabAct;
     QAction *_dataManagerAct;
     QAction *_debugDialogAct;
+    QAction *_dataModeAct;
     QAction *_exitAct;
     QAction *_exportGraphicsAct;
     QAction *_newTabAct;

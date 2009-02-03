@@ -70,6 +70,7 @@ MainWindow::MainWindow() {
   _undoGroup = new QUndoGroup(this);
   _debugDialog = new DebugDialog(this);
   Debug::self()->setHandler(_debugDialog);
+  _dataMode = false;
 
   createActions();
   createMenus();
@@ -119,6 +120,11 @@ void MainWindow::setLayoutMode(bool layoutMode) {
 
 /*  _layoutToolBar->setVisible(layoutMode);
   _zoomToolBar->setVisible(!layoutMode);*/
+}
+
+
+void MainWindow::setDataMode(bool dataMode) {
+  _dataMode = dataMode;
 }
 
 
@@ -715,6 +721,12 @@ void MainWindow::createActions() {
   _tiedZoomAct->setCheckable(true);
   connect(_tiedZoomAct, SIGNAL(toggled(bool)), this, SLOT(setTiedZoom(bool)));
 
+  _dataModeAct = new QAction(tr("&Data Mode"), this);
+  _dataModeAct->setStatusTip(tr("Toggle the current view's data mode"));
+  _dataModeAct->setIcon(QPixmap(":kst_datamode.png"));
+  _dataModeAct->setCheckable(true);
+  connect(_dataModeAct, SIGNAL(toggled(bool)), this, SLOT(setDataMode(bool)));
+
   _newTabAct = new QAction(tr("&New tab"), this);
   _newTabAct->setStatusTip(tr("Create a new tab"));
   _newTabAct->setIcon(QPixmap(":kst_newtab.png"));
@@ -755,6 +767,7 @@ void MainWindow::createMenus() {
 
   _viewMenu = menuBar()->addMenu(tr("&View"));
   _viewMenu->addAction(_tiedZoomAct);
+  _viewMenu->addAction(_dataModeAct);
   _viewMenu->addSeparator();
 
   _viewMenu->addAction(_layoutModeAct);
@@ -813,6 +826,7 @@ void MainWindow::createToolBars() {
 
   _zoomToolBar = addToolBar(tr("Zoom"));
   _zoomToolBar->addAction(_tiedZoomAct);
+  _zoomToolBar->addAction(_dataModeAct);
 
   _layoutToolBar = new QToolBar(tr("Layout"), this);
   _layoutToolBar->addAction(_layoutModeAct);

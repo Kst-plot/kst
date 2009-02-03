@@ -46,7 +46,8 @@ View::View()
     _snapToGridHorizontal(false),
     _snapToGridVertical(false),
     _shareAxis(true),
-    _printing(false) {
+    _printing(false),
+    _dataMode(false) {
 
   _undoStack = new QUndoStack(this);
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

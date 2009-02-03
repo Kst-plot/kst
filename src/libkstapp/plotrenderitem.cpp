@@ -18,6 +18,8 @@
 #include "objectstore.h"
 #include "updatemanager.h"
 #include "sharedaxisboxitem.h"
+#include "application.h"
+#include "image.h"
 
 #include <QTime>
 #include <QMenu>
@@ -33,7 +35,7 @@
 namespace Kst {
 
 PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
-  : ViewItem(parentItem->parentView()), _referencePointMode(false) {
+  : ViewItem(parentItem->parentView()), _referencePointMode(false), _highlightPointActive(false), _invertHighlight(false) {
 
   setName(tr("Plot Render"));
   setZValue(PLOTRENDER_ZVALUE);
@@ -53,6 +55,16 @@ PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
 
   updateGeometry(); //the initial rect
   updateViewMode(); //the initial view
+
+  _referenceMode = new QAction(tr("Reference Mode"), this);
+  _referenceMode->setShortcut(Qt::Key_C);
+  registerShortcut(_referenceMode);
+  connect(_referenceMode, SIGNAL(triggered()), this, SLOT(referenceMode()));
+
+  _referenceModeDisabled = new QAction(tr("Reference Mode"), this);
+  _referenceModeDisabled->setShortcut(Qt::SHIFT + Qt::Key_C);
+  registerShortcut(_referenceModeDisabled);
+  connect(_referenceModeDisabled, SIGNAL(triggered()), this, SLOT(referenceModeDisabled()));
 }
 
 
@@ -62,6 +74,22 @@ PlotRenderItem::~PlotRenderItem() {
 
 PlotItem *PlotRenderItem::plotItem() const {
   return qobject_cast<PlotItem*>(qgraphicsitem_cast<ViewItem*>(parentItem()));
+}
+
+
+void PlotRenderItem::referenceMode() {
+  _referencePointMode = true;
+  if (_highlightPointActive) {
+    _referencePoint = _highlightPoint;
+  } else {
+    _referencePoint = plotItem()->mapToProjection(_lastPos);
+  }
+  update();
+}
+
+
+void PlotRenderItem::referenceModeDisabled() {
+  _referencePointMode = false;
 }
 
 
@@ -207,6 +235,7 @@ void PlotRenderItem::paint(QPainter *painter) {
   painter->restore();
 
   paintReferencePoint(painter);
+  paintHighlightPoint(painter);
 
   if (!parentView()->isPrinting()) {
     if (_selectionRect.isValid()) {
@@ -251,6 +280,23 @@ void PlotRenderItem::paintReferencePoint(QPainter *painter) {
     painter->save();
     painter->setPen(QPen(QColor("gray"), 1));
     CurvePointSymbol::draw(7, painter, point.x(), point.y(), 1);
+    painter->restore();
+  }
+}
+
+
+void PlotRenderItem::paintHighlightPoint(QPainter *painter) {
+  if (_highlightPointActive && kstApp->mainWindow()->isDataMode() && plotItem()->projectionRect().contains(_referencePoint)) {
+    QPointF point = plotItem()->mapToPlot(_highlightPoint);
+    painter->save();
+    painter->setPen(QPen(QColor("gray"), 1));
+    painter->setBrush(Qt::SolidPattern);
+    QColor highlightColor(QColor(0, 0, 0, 127));
+    if (_invertHighlight) {
+      highlightColor = QColor(255, 255, 255, 127);
+    }
+    painter->setBrush(highlightColor);
+    painter->drawEllipse(point.x()-3, point.y()-3, 7, 7);
     painter->restore();
   }
 }
@@ -308,16 +354,6 @@ void PlotRenderItem::keyPressEvent(QKeyEvent *event) {
     parentView()->setCursor(Qt::SizeHorCursor);
     _selectionRect.setFrom(QPointF(_lastPos.x(), rect().top()));
     _selectionRect.setTo(QPointF(_lastPos.x(), rect().bottom()));
-  }
-
-  if (event->key() == Qt::Key_C) {
-    if (modifiers & Qt::ShiftModifier) {
-      _referencePointMode = false;
-    } else {
-      _referencePointMode = true;
-      _referencePoint = plotItem()->mapToProjection(_lastPos);
-      update();
-    }
   }
 
   ViewItem::keyPressEvent(event);
@@ -484,20 +520,77 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
     updateCursor(event->pos());
   }
   const QPointF point = plotItem()->mapToProjection(event->pos());
-  QString message = QString("(%1, %2)").arg(QString::number(point.x(), 'G')).arg(QString::number(point.y()));
-  kstApp->mainWindow()->statusBar()->showMessage(message);
+  if (kstApp->mainWindow()->isDataMode()) {
+    highlightNearestDataPoint(point);
+  } else {
+    _highlightPointActive = false;
+    QString message = QString("(%1, %2)").arg(QString::number(point.x(), 'G')).arg(QString::number(point.y()));
+    kstApp->mainWindow()->statusBar()->showMessage(message);
+  }
+}
+
+
+void PlotRenderItem::highlightNearestDataPoint(const QPointF& position) {
+  QString curveMsg;
+  QString imageMsg;
+
+  _highlightPointActive = false;
+  _invertHighlight = false;
+
+  if (!relationList().isEmpty()) {
+    QString curveName, imageName;
+
+    bool bFirst = true;
+    bool bFoundImage = false;
+
+    qreal distance, minDistance = 1.0E300;
+    qreal x, y;
+    QPointF matchedPoint;
+    qreal imageZ;
+
+    foreach(RelationPtr relation, relationList()) {
+      if (Curve* curve = kst_cast<Curve>(relation)) {
+        int index = curve->getIndexNearXY(position.x(), 0, position.y());
+        curve->point(index, x, y);
+        distance = fabs(position.y() - y);
+        if (bFirst || distance < minDistance) {
+          matchedPoint = QPointF(x, y);
+          bFirst = false;
+          minDistance = distance;
+          curveName = curve->Name();
+          if (curve->color() == Qt::black) {
+            _invertHighlight = true;
+          }
+        }
+      } else if (Image* image = kst_cast<Image>(relation)) {
+        if (!bFoundImage && image->getNearestZ(position.x(), position.y(), imageZ)) {
+          bFoundImage = true;
+          imageName = image->Name();
+        }
+      }
+    }
+    if (!curveName.isEmpty()) {
+      QString message = curveName + QString(" (%1, %2)").arg(QString::number(matchedPoint.x(), 'G')).arg(QString::number(matchedPoint.y()));
+      kstApp->mainWindow()->statusBar()->showMessage(message);
+      _highlightPointActive = true;
+      _highlightPoint = QPointF(matchedPoint.x(), matchedPoint.y());
+      update();
+    } else if (!imageName.isEmpty()) {
+      QString message = imageName + QString(" (%1, %2, %3)").arg(QString::number(position.x(), 'G')).arg(QString::number(position.y())).arg(QString::number(imageZ, 'G'));
+      kstApp->mainWindow()->statusBar()->showMessage(message);
+    }
+  }
 }
 
 
 void PlotRenderItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
   ViewItem::hoverEnterEvent(event);
-
   if (parentView()->viewMode() != View::Data) {
     event->ignore();
     return;
   }
 
-  setFocus();
+  setFocus(Qt::MouseFocusReason);
 
   updateCursor(event->pos());
 
@@ -845,7 +938,11 @@ void PlotRenderItem::computeNoSpike(Qt::Orientation orientation, qreal *min, qre
 
 
 bool PlotRenderItem::tryShortcut(const QString &keySequence) {
-  return plotItem()->tryShortcut(keySequence);
+  if (ViewItem::tryShortcut(keySequence)) {
+    return true;
+  } else {
+    return plotItem()->tryShortcut(keySequence);
+  }
 }
 
 
