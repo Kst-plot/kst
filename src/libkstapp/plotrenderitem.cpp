@@ -286,7 +286,7 @@ void PlotRenderItem::paintReferencePoint(QPainter *painter) {
 
 
 void PlotRenderItem::paintHighlightPoint(QPainter *painter) {
-  if (_highlightPointActive && kstApp->mainWindow()->isDataMode() && plotItem()->projectionRect().contains(_referencePoint)) {
+  if (_highlightPointActive && kstApp->mainWindow()->isDataMode() && plotItem()->projectionRect().contains(_highlightPoint)) {
     QPointF point = plotItem()->mapToPlot(_highlightPoint);
     painter->save();
     painter->setPen(QPen(QColor("gray"), 1));
