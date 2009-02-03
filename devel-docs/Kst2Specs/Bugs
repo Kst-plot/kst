@@ -20,10 +20,6 @@ non-modified plot(s) can get garbled until the mouse is moved over them.
 
 ----------
 
-Data mode (see 1.x) should be implemented
-*Mike*
-----------
-
 kst reads live dirfiles less efficiently than before. �On a shitty
 computer (devlin666), kst1.7 can display 200 frames of 24 bolometer
 channels (100Hz samples; 20 samples per frame) with a 500ms kst update
