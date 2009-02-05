@@ -34,6 +34,9 @@ class PlotItemManager : public QObject
     void tiedZoomRemoved();
     void allPlotsTiedZoom();
 
+  public Q_SLOTS:
+    void clearFocusedPlots();
+
   private:
     static void cleanup();
 
@@ -46,10 +49,14 @@ class PlotItemManager : public QObject
     void addTiedZoomPlot(PlotItem *plotItem, bool checkAll = true);
     void removeTiedZoomPlot(PlotItem *plotItem);
 
+    void setFocusPlot(PlotItem *plotItem);
+    void removeFocusPlot(PlotItem *plotItem);
+
   private:
     friend class PlotItem;
     QHash< View*, QList<PlotItem*> > _plotLists;
     QHash< View*, QList<PlotItem*> > _tiedZoomPlotLists;
+    QList<PlotItem*> _focusedPlots;
 };
 
 }

@@ -79,6 +79,9 @@ PlotItem::PlotItem(View *parent)
   _rightPadding(0.0),
   _topPadding(0.0),
   _showLegend(false),
+  _plotMaximized(false),
+  _allowUpdates(true),
+  _updateDelayed(false),
   _legend(0),
   _zoomMenu(0),
   _filterMenu(0),
@@ -312,6 +315,12 @@ void PlotItem::createActions() {
   connect(_zoomLogY, SIGNAL(triggered()), this, SLOT(zoomLogY()));
 
   createZoomMenu();
+
+  _plotMaximize = new QAction(tr("Maximize Plot"), this);
+  _plotMaximize->setShortcut(Qt::Key_Z);
+  _plotMaximize->setCheckable(true);
+  registerShortcut(_plotMaximize);
+  connect(_plotMaximize, SIGNAL(triggered()), this, SLOT(plotMaximize()));
 }
 
 
@@ -349,6 +358,7 @@ void PlotItem::createZoomMenu() {
   _zoomMenu->addAction(_zoomNormalizeYtoX);
   _zoomMenu->addAction(_zoomLogY);
 }
+
 
 void PlotItem::createFilterMenu() {
   if (_filterMenu) {
@@ -403,6 +413,12 @@ void PlotItem::addToMenuForContextEvent(QMenu &menu) {
       }
     }
   }
+
+  if (parentView()->viewMode() == View::Data) {
+    _plotMaximize->setChecked(_plotMaximized);
+    menu.addAction(_plotMaximize);
+  }
+
   _zoomLogX->setChecked(xAxis()->axisLog());
   _zoomLogY->setChecked(yAxis()->axisLog());
   menu.addMenu(_zoomMenu);
@@ -445,6 +461,10 @@ void PlotItem::showFitDialog(QAction* action) {
 
 
 void PlotItem::updateObject() {
+  if (!_allowUpdates) {
+    _updateDelayed = true;
+    return;
+  }
 #if DEBUG_UPDATE_CYCLE > 1
   qDebug() << "UP - Updating Plot";
 #endif
@@ -515,6 +535,12 @@ PlotRenderItem *PlotItem::renderItem(PlotRenderItem::RenderType type) {
 
 
 void PlotItem::paint(QPainter *painter) {
+  if (parentViewItem() && isInSharedAxisBox()) {
+    setBrush(Qt::transparent);
+  } else {
+    setBrush(Qt::white);
+  }
+
   painter->save();
   painter->setPen(Qt::NoPen);
   painter->drawRect(rect());
@@ -1013,14 +1039,12 @@ void PlotItem::setSharedAxisBox(ViewItem* parent) {
     setAllowedGripModes(0);
     setFlags(0);
     setParent(parent);
-    setBrush(Qt::transparent);
   } else {
     setInSharedAxisBox(false);
     setTiedZoom(false);
     setAllowedGripModes(Move | Resize | Rotate);
     setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
     setParent(0);
-    setBrush(Qt::white);
   }
 }
 
@@ -2268,6 +2292,48 @@ void PlotItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
       ViewItem::mousePressEvent(event);
     }
   } 
+}
+
+
+void PlotItem::setAllowUpdates(bool allowed) {
+  if (allowed == _allowUpdates)
+    return;
+
+  _allowUpdates = allowed;
+  if (_allowUpdates) {
+    if (_updateDelayed) {
+      _updateDelayed = false;
+      updateObject();
+    }
+  }
+}
+
+
+void PlotItem::plotMaximize() {
+  if (!_plotMaximized && parentView()->viewMode() != View::Data) {
+    return;
+  }
+
+  if (_plotMaximized) {
+    _plotMaximized = false;
+    PlotItemManager::self()->removeFocusPlot(this);
+    setParent(_plotMaximizedSourceParent);
+    setPos(_plotMaximizedSourcePosition);
+    setViewRect(_plotMaximizedSourceRect);
+    setZValue(_plotMaximizedSourceZValue);
+  } else {
+    _plotMaximized = true;
+    _plotMaximizedSourcePosition = pos();
+    _plotMaximizedSourceRect = viewRect();
+    _plotMaximizedSourceZValue = zValue();
+    _plotMaximizedSourceParent = parentViewItem();
+
+    setParent(0);
+    setPos(0, 0);
+    setViewRect(parentView()->sceneRect());
+    setZValue(1000);
+    PlotItemManager::self()->setFocusPlot(this);
+  }
 }
 
 

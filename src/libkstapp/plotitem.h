@@ -239,6 +239,8 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     virtual QString descriptionTip() const; // description for tooltips
     ZoomState currentZoomState();
 
+    void setAllowUpdates(bool allowed);
+
   protected:
     virtual QString _automaticDescriptiveName() const;
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -274,6 +276,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void zoomLogY();
     virtual void edit();
     void marginsUpdated();
+    void plotMaximize();
 
     void showFilterDialog(QAction*);
     void showFitDialog(QAction*);
@@ -418,6 +421,15 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 
     bool _showLegend;
 
+    bool _plotMaximized;
+    QPointF _plotMaximizedSourcePosition;
+    QRectF _plotMaximizedSourceRect;
+    qreal _plotMaximizedSourceZValue;
+    ViewItem* _plotMaximizedSourceParent;
+
+    bool _allowUpdates;
+    bool _updateDelayed;
+
     LegendItem* _legend;
 
     QMenu *_zoomMenu;
@@ -440,6 +452,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QAction *_zoomYIn;
     QAction *_zoomNormalizeYtoX;
     QAction *_zoomLogY;
+    QAction *_plotMaximize;
 
     QMenu *_filterMenu;
     QAction *_filterAction;

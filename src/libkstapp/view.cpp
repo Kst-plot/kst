@@ -19,6 +19,7 @@
 #include "viewdialog.h"
 #include "viewgridlayout.h"
 #include "document.h"
+#include "plotitemmanager.h"
 
 #include <math.h>
 
@@ -81,6 +82,8 @@ View::View()
 
   _customLayoutAction = new QAction(tr("Custom"), this);
   connect(_customLayoutAction, SIGNAL(triggered()), this, SLOT(createCustomLayout()));
+
+  connect(this, SIGNAL(viewModeChanged(View::ViewMode)), PlotItemManager::self(), SLOT(clearFocusedPlots()));
 }
 
 
@@ -320,6 +323,8 @@ void View::createCustomLayout() {
 
 
 void View::createLayout(int columns) {
+  PlotItemManager::self()->clearFocusedPlots();
+
   LayoutCommand *layout = new LayoutCommand(new LayoutBoxItem(this));
   layout->createLayout(columns);
 

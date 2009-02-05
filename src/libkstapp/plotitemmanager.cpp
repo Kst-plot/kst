@@ -106,6 +106,37 @@ QList<PlotItem*> PlotItemManager::tiedZoomPlotsForView(View *view) {
   return QList<PlotItem*>();
 }
 
+
+void PlotItemManager::setFocusPlot(PlotItem *plotItem) {
+  _focusedPlots.append(plotItem);
+  if (_plotLists.contains(plotItem->parentView())) {
+    foreach (PlotItem* plot, _plotLists.value(plotItem->parentView())) {
+      if (plotItem != plot) {
+        plot->setAllowUpdates(false);
+      }
+    }
+  }
+}
+
+
+void PlotItemManager::removeFocusPlot(PlotItem *plotItem) {
+  _focusedPlots.remove(plotItem);
+  if (_plotLists.contains(plotItem->parentView())) {
+    foreach (PlotItem* plot, _plotLists.value(plotItem->parentView())) {
+      if (plotItem != plot) {
+        plot->setAllowUpdates(true);
+      }
+    }
+  }
+}
+
+
+void PlotItemManager::clearFocusedPlots() {
+  foreach (PlotItem* plotItem, _focusedPlots) {
+    plotItem->plotMaximize();
+  }
+}
+
 }
 
 // vim: ts=2 sw=2 et
