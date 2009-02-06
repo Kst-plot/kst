@@ -60,3 +60,13 @@ does not have, but should.  By default, each shared axis box
 has it own zoom.
 
 --------
+
+PlotMarginStandardization is applied inconsistently.
+*Mike*
+--------
+
+SharedAxisBox plot sharing occasionally breaks for no apparent reason.
+Have not identified a pattern or cause as of yet.
+*Mike*
+--------
+
