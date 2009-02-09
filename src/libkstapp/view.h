@@ -99,6 +99,9 @@ class KST_EXPORT View : public QGraphicsView
 
     virtual void contextMenuEvent();
 
+    bool plotBordersDirty() const {return _plotBordersDirty;}
+    void setPlotBordersDirty(bool dirty) {_plotBordersDirty = dirty;}
+
   Q_SIGNALS:
     void viewModeChanged(View::ViewMode oldMode);
     void mouseModeChanged(View::MouseMode oldMode);
@@ -147,6 +150,7 @@ class KST_EXPORT View : public QGraphicsView
     bool _snapToGridHorizontal;
     bool _snapToGridVertical;
     bool _shareAxis;
+    bool _plotBordersDirty;
     bool _printing;
     bool _dataMode;
 };

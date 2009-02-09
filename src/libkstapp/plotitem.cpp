@@ -500,7 +500,7 @@ void PlotItem::updateObject() {
 
 
 void PlotItem::marginsUpdated() {
-  ViewGridLayout::standardizePlotMargins(this);
+  //ViewGridLayout::standardizePlotMargins(this);
   //qDebug() << "---Margins updated called";
   if (isInSharedAxisBox() && parentItem()) {
     if (SharedAxisBoxItem *sharedBox = qgraphicsitem_cast<SharedAxisBoxItem*>(parentItem())) {
@@ -533,6 +533,16 @@ PlotRenderItem *PlotItem::renderItem(PlotRenderItem::RenderType type) {
   }
 }
 
+void PlotItem::calculateBorders(QPainter *painter) {
+  calculateBottomTickLabelBound(painter);
+  calculateLeftTickLabelBound(painter);
+
+  setCalculatedLeftLabelMargin(calculateLeftLabelBound(painter).width());
+  setCalculatedRightLabelMargin(calculateRightLabelBound(painter).width());
+  setCalculatedTopLabelMargin(calculateTopLabelBound(painter).height());
+  setCalculatedBottomLabelMargin(calculateBottomLabelBound(painter).height());
+}
+
 
 void PlotItem::paint(QPainter *painter) {
   if (parentViewItem() && isInSharedAxisBox()) {
@@ -552,14 +562,10 @@ void PlotItem::paint(QPainter *painter) {
   // FIXME: the plot size calculations need to be separated from the 
   // painting to avoid n^2 or worse behavior.
 
-  calculateBottomTickLabelBound(painter);
-  calculateLeftTickLabelBound(painter);
-  //setCalculatedAxisMarginWidth(calculateLeftTickLabelBound(painter).width());
-
-  setCalculatedLeftLabelMargin(calculateLeftLabelBound(painter).width());
-  setCalculatedRightLabelMargin(calculateRightLabelBound(painter).width());
-  setCalculatedTopLabelMargin(calculateTopLabelBound(painter).height());
-  setCalculatedBottomLabelMargin(calculateBottomLabelBound(painter).height());
+  if (parentView()->plotBordersDirty()) {
+    ViewGridLayout::standardizePlotMargins(this, painter);
+    parentView()->setPlotBordersDirty(false);
+  }
 
 #if DEBUG_LABEL_REGION
   //  qDebug() << "=============> leftLabel:" << leftLabel() << endl;
@@ -1617,8 +1623,9 @@ qreal PlotItem::calculatedLeftLabelMargin() const {
 void PlotItem::setCalculatedLeftLabelMargin(qreal margin) {
   qreal before = this->calculatedLeftLabelMargin();
   _calculatedLeftLabelMargin = margin;
-  if (before != this->calculatedLeftLabelMargin())
+  if (before != this->calculatedLeftLabelMargin()) {
     emit marginsChanged();
+  }
 }
 
 
@@ -1636,8 +1643,9 @@ qreal PlotItem::calculatedRightLabelMargin() const {
 void PlotItem::setCalculatedRightLabelMargin(qreal margin) {
   qreal before = this->calculatedRightLabelMargin();
   _calculatedRightLabelMargin = margin;
-  if (before != this->calculatedRightLabelMargin())
+  if (before != this->calculatedRightLabelMargin()) {
     emit marginsChanged();
+  }
 }
 
 
@@ -1666,8 +1674,9 @@ qreal PlotItem::calculatedTopLabelMargin() const {
 void PlotItem::setCalculatedTopLabelMargin(qreal margin) {
   qreal before = this->calculatedTopLabelMargin();
   _calculatedTopLabelMargin = margin;
-  if (before != this->calculatedTopLabelMargin())
+  if (before != this->calculatedTopLabelMargin()) {
     emit marginsChanged();
+  }
 }
 
 
@@ -1685,8 +1694,9 @@ qreal PlotItem::calculatedBottomLabelMargin() const {
 void PlotItem::setCalculatedBottomLabelMargin(qreal margin) {
   qreal before = this->calculatedBottomLabelMargin();
   _calculatedBottomLabelMargin = margin;
-  if (before != this->calculatedBottomLabelMargin())
+  if (before != this->calculatedBottomLabelMargin()) {
     emit marginsChanged();
+  }
 }
 
 
@@ -2057,8 +2067,9 @@ qreal PlotItem::calculatedAxisMarginWidth() const {
 void PlotItem::setCalculatedAxisMarginWidth(qreal marginWidth) {
   qreal before = this->calculatedAxisMarginWidth();
   _calculatedAxisMarginWidth = marginWidth;
-  if (before != this->calculatedAxisMarginWidth())
+  if (before != this->calculatedAxisMarginWidth()) {
     emit marginsChanged();
+  }
 }
 
 
@@ -2214,7 +2225,7 @@ void PlotItem::setProjectionRect(const QRectF &rect) {
 #endif
 
     _projectionRect = rect;
-    emit marginsChanged();
+    parentView()->setPlotBordersDirty(true);
   }
   emit updateAxes();
   update(); //slow, but need to update everything...

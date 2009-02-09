@@ -47,9 +47,9 @@ View::View()
     _snapToGridHorizontal(false),
     _snapToGridVertical(false),
     _shareAxis(true),
+    _plotBordersDirty(false),
     _printing(false),
     _dataMode(false) {
-
   _undoStack = new QUndoStack(this);
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -363,6 +363,7 @@ void View::appendToLayout(CurvePlacement::Layout layout, ViewItem* item, int col
 
 void View::resizeEvent(QResizeEvent *event) {
   QGraphicsView::resizeEvent(event);
+  setPlotBordersDirty(true);
 
   if (size() != sceneRect().size()) {
     QRectF oldSceneRect = sceneRect();

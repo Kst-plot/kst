@@ -629,6 +629,7 @@ void PlotAxis::validateDrawingRegion(int flags, QPainter *painter) {
       _axisBaseOffsetOverride = true;
       _axisOverrideMajorTicks = Coarse;
     }
+
     update(true);
   }
 }
@@ -647,7 +648,6 @@ PlotAxis::MajorTickMode PlotAxis::convertToMajorTickMode(int tickCount) {
   }
   return mode;
 }
-
 
 void PlotAxis::update(bool useOverrideTicks) {
   MajorTickMode majorTickCount;

@@ -59,7 +59,7 @@ class ViewGridLayout : public QObject
     static void updateProjections(ViewItem *item);
 
     static void resetSharedPlots(ViewItem *item);
-    static void standardizePlotMargins(ViewItem *item);
+    static void standardizePlotMargins(ViewItem *item, QPainter *painter);
     static void sharePlots(ViewItem *item);
     static void sharePlots(View *view);
 

@@ -302,6 +302,8 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 
     virtual void paintPlotMarkers(QPainter *painter);
 
+    void calculateBorders(QPainter *painter);
+
     qreal calculatedLabelMarginWidth() const;
     qreal calculatedLabelMarginHeight() const;
 

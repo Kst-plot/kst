@@ -171,7 +171,8 @@ void UpdateManager::updateFinished(ObjectPtr updateObject, ObjectPtr reportingOb
       // Display level update required.
       if (_activeUpdates.empty()) {
 #if DEBUG_UPDATE_CYCLE > 0
-        qDebug() << "UM - All updates complete, updating plots";
+        qDebug() << "UM - All updates complete, updating plots "<< "Current dependent update list" <<  _dependentUpdateRequests;
+
 #endif
         foreach (QList<PlotItemInterface*> objectList, _displayUpdateRequests) {
           foreach (PlotItemInterface* object, objectList) {
@@ -179,6 +180,10 @@ void UpdateManager::updateFinished(ObjectPtr updateObject, ObjectPtr reportingOb
           }
         }
         _dependentUpdateRequests.clear();
+#if DEBUG_UPDATE_CYCLE > 0
+      } else {
+        qDebug() << "UM - updates not complete: not updating plots: count:" << _updateRequests.count();
+#endif
       }
     }
   }

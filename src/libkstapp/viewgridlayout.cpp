@@ -260,10 +260,9 @@ void ViewGridLayout::sharePlots(ViewItem *item) {
 }
 
 
-void ViewGridLayout::standardizePlotMargins(ViewItem *item) {
-
-  QList<QGraphicsItem*> list;
+void ViewGridLayout::standardizePlotMargins(ViewItem *item, QPainter *painter) {
   QList<PlotItem*> plotItems;
+  qDebug() << "standardizePlotMargins called";
   if (item->parentView()) {
     QList<QGraphicsItem*> list = item->parentView()->items();
     foreach (QGraphicsItem *item, list) {
@@ -283,6 +282,7 @@ void ViewGridLayout::standardizePlotMargins(ViewItem *item) {
   QMap<qreal, qreal> marginWidths;
   QMap<qreal, qreal> marginHeights;
   foreach (PlotItem* plotItem, plotItems) {
+    plotItem->calculateBorders(painter);
     if (marginWidths[plotItem->width()] < plotItem->leftMarginSize()) {
       marginWidths[plotItem->width()] = plotItem->leftMarginSize();
     }
