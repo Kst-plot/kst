@@ -117,51 +117,6 @@ class ViewGridLayout : public QObject
     QHash< QPair<int, int>, LayoutItem> _itemLayouts;
 };
 
-//FIXME How far should we go with the command pattern?
-//Should we provide undo support for layout margins?
-//How about for setting the pens/brushes of a viewitem??
-#if 0
-class KST_EXPORT LayoutMarginCommand : public ViewItemCommand
-{
-  public:
-    LayoutMarginCommand(ViewItem *item, const QPointF &originalMargin, const QPointF &newMargin)
-        : ViewItemCommand(item, QObject::tr("Margin"))
-          _originalMargin(originalMargin),
-          _newMargin(newMargin),
-          _layout(item->layout) {}
-
-    virtual ~LayoutMarginCommand() {}
-
-    virtual void undo();
-    virtual void redo();
-
-  private:
-    QSizeF _originalMargin;
-    QSizeF _newMargin;
-    QPointer<ViewGridLayout> _layout;
-};
-
-class KST_EXPORT LayoutSpacingCommand : public ViewItemCommand
-{
-  public:
-    LayoutSpacingCommand(ViewItem *item, const QPointF &originalSpacing, const QPointF &newSpacing)
-        : ViewItemCommand(item, QObject::tr("Spacing"))
-          _originalSpacing(originalSpacing),
-          _newSpacing(newSpacing),
-          _layout(item->layout) {}
-
-    virtual ~LayoutSpacingCommand() {}
-
-    virtual void undo();
-    virtual void redo();
-
-  private:
-    QSizeF _originalSpacing;
-    QSizeF _newSpacing;
-    QPointer<ViewGridLayout> _layout;
-};
-#endif
-
 }
 
 #endif

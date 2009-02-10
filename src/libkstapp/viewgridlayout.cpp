@@ -24,6 +24,9 @@
 #define DEBUG_PLOT_STANDARDIZATION 0
 #define DEBUG_SHAREDAXIS 0
 
+// What factor should be used to determine "close" plot sizes.
+#define PLOT_STANDARDIZATION_FACTOR .2
+
 namespace Kst {
 
 ViewGridLayout::ViewGridLayout(ViewItem *parent)
@@ -262,15 +265,17 @@ void ViewGridLayout::sharePlots(ViewItem *item) {
 
 void ViewGridLayout::standardizePlotMargins(ViewItem *item, QPainter *painter) {
   QList<PlotItem*> plotItems;
-  qDebug() << "standardizePlotMargins called";
+//   qDebug() << "standardizePlotMargins called";
   if (item->parentView()) {
     QList<QGraphicsItem*> list = item->parentView()->items();
     foreach (QGraphicsItem *item, list) {
       ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
-      if (!viewItem || viewItem->parentItem() || !viewItem->isVisible())
+      if (!viewItem || !viewItem->isVisible())
         continue;
       if (PlotItem *plotItem = qobject_cast<PlotItem*>(viewItem)) {
-        plotItems.append(plotItem);
+        if (!plotItem->isInSharedAxisBox()) {  // Let the box worry about itself.
+          plotItems.append(plotItem);
+        }
       }
     }
   }
@@ -279,33 +284,47 @@ void ViewGridLayout::standardizePlotMargins(ViewItem *item, QPainter *painter) {
   qDebug() << "Ready to standarize" << plotItems.count() << "plots";
 #endif
 
-  QMap<qreal, qreal> marginWidths;
-  QMap<qreal, qreal> marginHeights;
+  QMap<int, qreal> leftMarginWidths;
+  QMap<int, qreal> rightMarginWidths;
+  QMap<int, qreal> topMarginWidths;
+  QMap<int, qreal> bottomMarginHeights;
   foreach (PlotItem* plotItem, plotItems) {
     plotItem->calculateBorders(painter);
-    if (marginWidths[plotItem->width()] < plotItem->leftMarginSize()) {
-      marginWidths[plotItem->width()] = plotItem->leftMarginSize();
+    if (leftMarginWidths[plotItem->width()*PLOT_STANDARDIZATION_FACTOR] < plotItem->leftMarginSize()) {
+      leftMarginWidths[plotItem->width()*PLOT_STANDARDIZATION_FACTOR] = plotItem->leftMarginSize();
     }
-    if (marginHeights[plotItem->height()] < plotItem->bottomMarginSize()) {
-      marginHeights[plotItem->height()] = plotItem->bottomMarginSize();
+    if (rightMarginWidths[plotItem->width()*PLOT_STANDARDIZATION_FACTOR] < plotItem->rightMarginSize()) {
+      rightMarginWidths[plotItem->width()*PLOT_STANDARDIZATION_FACTOR] = plotItem->rightMarginSize();
+    }
+    if (topMarginWidths[plotItem->height()*PLOT_STANDARDIZATION_FACTOR] < plotItem->topMarginSize()) {
+      topMarginWidths[plotItem->height()*PLOT_STANDARDIZATION_FACTOR] = plotItem->topMarginSize();
+    }
+    if (bottomMarginHeights[plotItem->height()*PLOT_STANDARDIZATION_FACTOR] < plotItem->bottomMarginSize()) {
+      bottomMarginHeights[plotItem->height()*PLOT_STANDARDIZATION_FACTOR] = plotItem->bottomMarginSize();
     }
   }
 
 #if DEBUG_PLOT_STANDARDIZATION
-  qDebug() << "Maximum margin widths" << marginWidths;
-  qDebug() << "Maximum margin heights" << marginHeights;
+  qDebug() << "Maximum left margin widths" << leftMarginWidths;
+  qDebug() << "Maximum right margin widths" << rightMarginWidths;
+  qDebug() << "Maximum top margin widths" << topMarginWidths;
+  qDebug() << "Maximum bottom margin heights" << bottomMarginHeights;
 #endif
 
 
   foreach (PlotItem* plotItem, plotItems) {
 
 #if DEBUG_PLOT_STANDARDIZATION
-    qDebug() << "Margin width is " << plotItem->leftMarginSize() << "setting to" << marginWidths[plotItem->width()] - plotItem->leftMarginSize();
-    qDebug() << "Margin height is " << plotItem->bottomMarginSize() << "setting to" << marginHeights[plotItem->height()] - plotItem->bottomMarginSize();
+    qDebug() << "Margin left width is " << plotItem->leftMarginSize() << "setting to" << leftMarginWidths[plotItem->width()*PLOT_STANDARDIZATION_FACTOR] - plotItem->leftMarginSize();
+    qDebug() << "Margin right width is " << plotItem->rightMarginSize() << "setting to" << rightMarginWidths[plotItem->width()*PLOT_STANDARDIZATION_FACTOR] - plotItem->rightMarginSize();
+    qDebug() << "Margin top width is " << plotItem->topMarginSize() << "setting to" << topMarginWidths[plotItem->height()*PLOT_STANDARDIZATION_FACTOR] - plotItem->topMarginSize();
+    qDebug() << "Margin bottom height is " << plotItem->bottomMarginSize() << "setting to" << bottomMarginHeights[plotItem->height()*PLOT_STANDARDIZATION_FACTOR] - plotItem->bottomMarginSize();
 #endif
 
-    plotItem->setLeftPadding(marginWidths[plotItem->width()] - plotItem->leftMarginSize());
-    plotItem->setBottomPadding(marginHeights[plotItem->height()] - plotItem->bottomMarginSize());
+    plotItem->setLeftPadding(leftMarginWidths[plotItem->width()*PLOT_STANDARDIZATION_FACTOR] - plotItem->leftMarginSize());
+    plotItem->setRightPadding(rightMarginWidths[plotItem->width()*PLOT_STANDARDIZATION_FACTOR] - plotItem->rightMarginSize());
+    plotItem->setTopPadding(topMarginWidths[plotItem->height()*PLOT_STANDARDIZATION_FACTOR] - plotItem->topMarginSize());
+    plotItem->setBottomPadding(bottomMarginHeights[plotItem->height()*PLOT_STANDARDIZATION_FACTOR] - plotItem->bottomMarginSize());
     emit plotItem->updatePlotRect();
   }
 }
@@ -343,6 +362,7 @@ void ViewGridLayout::apply() {
            << endl;
 #endif
 
+  PlotItem *plot = 0;
   foreach (LayoutItem item, _items) {
     QPointF topLeft(itemWidth * item.column, itemHeight * item.row);
     QSizeF size(itemWidth * item.columnSpan, itemHeight * item.rowSpan);
@@ -382,8 +402,10 @@ void ViewGridLayout::apply() {
     }
     item.viewItem->setViewRect(QRectF(QPoint(0,0), itemRect.size()));
 
-    if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem))
+    if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem)) {
+      plot = plotItem;
       emit plotItem->updatePlotRect();
+    }
 
 #if DEBUG_LAYOUT
     qDebug() << "layout"
@@ -394,6 +416,9 @@ void ViewGridLayout::apply() {
              << "itemRect:" << itemRect
              << endl;
 #endif
+  }
+  if (plot) {
+    plot->parentView()->setPlotBordersDirty(true);
   }
 }
 
@@ -955,32 +980,6 @@ void ViewGridLayout::shareAxisWithPlotBelow(LayoutItem item) {
     setSpacing(QSizeF(spacing().width(), 0.0));
   }
 }
-
-
-#if 0
-void LayoutMarginCommand::undo() {
-  Q_ASSERT(_layout);
-  _layout->setMargin(_originalMargin);
-}
-
-
-void LayoutMarginCommand::redo() {
-  Q_ASSERT(_layout);
-  _layout->setMargin(_newMargin);
-}
-
-
-void LayoutSpacingCommand::undo() {
-  Q_ASSERT(_layout);
-  _layout->setSpacing(_originalSpacing);
-}
-
-
-void LayoutSpacingCommand::redo() {
-  Q_ASSERT(_layout);
-  _layout->setSpacing(_newSpacing);
-}
-#endif
 
 }
 
