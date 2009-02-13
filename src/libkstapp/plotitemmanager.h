@@ -20,7 +20,9 @@
 namespace Kst {
 
 class View;
+class ViewItem;
 class PlotItem;
+class SharedAxisBoxItem;
 
 class PlotItemManager : public QObject
 {
@@ -28,7 +30,11 @@ class PlotItemManager : public QObject
   public:
     static QList<PlotItem*> plotsForView(View *view);
     static QList<PlotItem*> tiedZoomPlotsForView(View *view);
+    static QList<PlotItem*> tiedZoomPlotsForViewItem(ViewItem *viewItem);
+    static QList<PlotItem*> tiedZoomPlots(PlotItem* plotItem);
     static PlotItemManager *self();
+
+    void setAllTiedZoom(View *view, bool tiedZoom);
 
   Q_SIGNALS:
     void tiedZoomRemoved();
@@ -44,18 +50,29 @@ class PlotItemManager : public QObject
     virtual ~PlotItemManager();
 
     void addPlot(PlotItem *plotItem);
+    void addViewItem(ViewItem *viewItem);
     void removePlot(PlotItem *plotItem);
+    void removeViewItem(ViewItem *viewItem);
 
     void addTiedZoomPlot(PlotItem *plotItem, bool checkAll = true);
+    void addTiedZoomViewItem(ViewItem *viewItem, bool checkAll = true);
     void removeTiedZoomPlot(PlotItem *plotItem);
+    void removeTiedZoomViewItem(ViewItem *viewItem);
 
     void setFocusPlot(PlotItem *plotItem);
     void removeFocusPlot(PlotItem *plotItem);
 
+    void checkAllTied(View* view);
+
   private:
+    friend class ViewItem;
     friend class PlotItem;
+    friend class SharedAxisBoxItem;
     QHash< View*, QList<PlotItem*> > _plotLists;
-    QHash< View*, QList<PlotItem*> > _tiedZoomPlotLists;
+    QHash< View*, QList<ViewItem*> > _viewItemLists;
+    QHash< View*, QList<PlotItem*> > _tiedZoomViewPlotLists;
+    QHash< View*, QList<ViewItem*> > _tiedZoomViewItemLists;
+    QHash< ViewItem*, QList<PlotItem*> > _tiedZoomViewItemPlotLists;
     QList<PlotItem*> _focusedPlots;
 };
 

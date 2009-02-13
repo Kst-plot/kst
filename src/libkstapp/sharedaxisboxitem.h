@@ -32,6 +32,8 @@ class SharedAxisBoxItem : public ViewItem
     virtual void addToMenuForContextEvent(QMenu &menu);
     void triggerContextEvent(QGraphicsSceneContextMenuEvent *event);
 
+    bool tryMousePressEvent(ViewItem* viewItem, QGraphicsSceneMouseEvent *event);
+
   Q_SIGNALS:
     void breakShareSignal();
 

@@ -56,7 +56,6 @@ namespace Kst {
 
 PlotItem::PlotItem(View *parent)
   : ViewItem(parent),
-  _isTiedZoom(false),
   _isInSharedAxisBox(false),
   _isLeftLabelVisible(true),
   _isBottomLabelVisible(true),
@@ -91,6 +90,8 @@ PlotItem::PlotItem(View *parent)
   setName("Plot");
   setZValue(PLOT_ZVALUE);
   setBrush(Qt::white);
+
+  setSupportsTiedZoom(true);
 
   _xAxis = new PlotAxis(this, Qt::Horizontal);
   _yAxis = new PlotAxis(this, Qt::Vertical);
@@ -158,7 +159,7 @@ QString PlotItem::plotName() const {
 void PlotItem::save(QXmlStreamWriter &xml) {
   if (isVisible()) {
     xml.writeStartElement("plot");
-    xml.writeAttribute("tiedzoom", QVariant(_isTiedZoom).toString());
+    xml.writeAttribute("tiedzoom", QVariant(isTiedZoom()).toString());
     xml.writeAttribute("leftlabelvisible", QVariant(_isLeftLabelVisible).toString());
     xml.writeAttribute("bottomlabelvisible", QVariant(_isBottomLabelVisible).toString());
     xml.writeAttribute("rightlabelvisible", QVariant(_isRightLabelVisible).toString());
@@ -920,8 +921,8 @@ void PlotItem::paintPlotMarkers(QPainter *painter) {
 QRectF PlotItem::plotAxisRect() const {
   qreal left = isLeftLabelVisible() ? leftLabelMargin() : 0.0;
   qreal bottom = isBottomLabelVisible() ? bottomLabelMargin() : 0.0;
-  qreal right = isRightLabelVisible() ? rightLabelMargin() : 0.0;
-  qreal top = isTopLabelVisible() ? topLabelMargin() : 0.0;
+  qreal right = isRightLabelVisible() ? rightMarginSize() : 0.0;
+  qreal top = isTopLabelVisible() ? topMarginSize() : 0.0;
 
   QPointF topLeft(rect().topLeft() + QPointF(left, top));
   QPointF bottomRight(rect().bottomRight() - QPointF(right, bottom));
@@ -974,12 +975,14 @@ qreal PlotItem::bottomMarginSize() const {
 
 qreal PlotItem::rightMarginSize() const {
   qreal margin = isRightLabelVisible() ? rightLabelMargin() : 0.0;
+  if (supportsTiedZoom() && margin < tiedZoomSize().width()) margin = tiedZoomSize().width();
   return margin;
 }
 
 
 qreal PlotItem::topMarginSize() const {
   qreal margin = isTopLabelVisible() ? topLabelMargin() : 0.0;
+  if (supportsTiedZoom() && margin < tiedZoomSize().height()) margin = tiedZoomSize().height();
   return margin;
 }
 
@@ -1009,11 +1012,6 @@ QRectF PlotItem::projectionRect() const {
 }
 
 
-bool PlotItem::isTiedZoom() const {
-  return _isTiedZoom;
-}
-
-
 void PlotItem::setTiedZoom(bool tiedZoom, bool checkAllTied) {
   if ((_isInSharedAxisBox && !tiedZoom) || (_isTiedZoom == tiedZoom))
     return;
@@ -1037,17 +1035,21 @@ bool PlotItem::isInSharedAxisBox() const {
 
 void PlotItem::setInSharedAxisBox(bool inSharedBox) {
   _isInSharedAxisBox = inSharedBox;
+  setSupportsTiedZoom(!_isInSharedAxisBox);
   setLockParent(inSharedBox);
 }
 
 
 void PlotItem::setSharedAxisBox(ViewItem* parent) {
   if (parent) {
+    if (_isTiedZoom) {
+      setTiedZoom(false);
+    }
     setInSharedAxisBox(true);
-    setTiedZoom(true);
     setAllowedGripModes(0);
     setFlags(0);
     setParent(parent);
+    setTiedZoom(true);
   } else {
     setInSharedAxisBox(false);
     setTiedZoom(false);
@@ -2356,8 +2358,17 @@ void PlotItem::resetSelectionRect() {
 
 
 void PlotItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+  if (isInSharedAxisBox()) {
+    if (SharedAxisBoxItem *sharedBox = qgraphicsitem_cast<SharedAxisBoxItem*>(parentItem())) {
+      if (sharedBox->tryMousePressEvent(this, event)) {
+        return;
+      }
+    }
+  }
   if (event->button() == Qt::LeftButton) {
-    if (parentView()->viewMode() == View::Data) {
+    if (checkBox().contains(event->pos())) {
+      setTiedZoom(!isTiedZoom());
+    } else if (parentView()->viewMode() == View::Data) {
       edit();
       event->ignore();
     } else {
@@ -2977,7 +2988,7 @@ ZoomCommand::ZoomCommand(PlotItem *item, const QString &text)
   if (!item->isTiedZoom()) {
     _originalStates << item->currentZoomState();
   } else {
-    QList<PlotItem*> plots = PlotItemManager::tiedZoomPlotsForView(item->parentView());
+    QList<PlotItem*> plots = PlotItemManager::tiedZoomPlots(item);
     foreach (PlotItem *plotItem, plots) {
       _originalStates << plotItem->currentZoomState();
     }

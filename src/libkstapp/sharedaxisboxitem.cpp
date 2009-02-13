@@ -13,6 +13,7 @@
 
 #include "viewitemzorder.h"
 #include "plotitem.h"
+#include "plotitemmanager.h"
 
 #include "gridlayouthelper.h"
 #include "viewgridlayout.h"
@@ -23,6 +24,7 @@
 
 #include <QDebug>
 #include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
 #include <QMenu>
 
 namespace Kst {
@@ -54,6 +56,7 @@ void SharedAxisBoxItem::paint(QPainter *painter) {
 void SharedAxisBoxItem::save(QXmlStreamWriter &xml) {
   if (isVisible()) {
     xml.writeStartElement("sharedaxisbox");
+    xml.writeAttribute("tiedzoom", QVariant(isTiedZoom()).toString());
     ViewItem::save(xml);
     xml.writeEndElement();
   }
@@ -106,6 +109,7 @@ bool SharedAxisBoxItem::acceptItems() {
     if (child) {
       setPen(QPen(Qt::white));
       setBrush(Qt::white);
+      setSupportsTiedZoom(true);
       ViewGridLayout::updateProjections(this);
       sharePlots();
       bReturn =  true;
@@ -230,6 +234,17 @@ void SharedAxisBoxItem::highlightPlots(QList<PlotItem*> plots) {
 }
 
 
+bool SharedAxisBoxItem::tryMousePressEvent(ViewItem* viewItem, QGraphicsSceneMouseEvent *event) {
+  if (event->button() == Qt::LeftButton) {
+    if (checkBox().contains(viewItem->mapToParent(event->pos()))) {
+      setTiedZoom(!isTiedZoom());
+      return true;
+    }
+  }
+  return false;
+}
+
+
 void CreateSharedAxisBoxCommand::createItem() {
   _item = new SharedAxisBoxItem(_view);
   _view->setCursor(Qt::CrossCursor);
@@ -295,6 +310,12 @@ ViewItem* SharedAxisBoxItemFactory::generateGraphics(QXmlStreamReader& xml, Obje
         rc = new SharedAxisBoxItem(view);
         if (parent) {
           rc->setParent(parent);
+        }
+        QXmlStreamAttributes attrs = xml.attributes();
+        QStringRef av;
+        av = attrs.value("tiedzoom");
+        if (!av.isNull()) {
+          rc->setTiedZoom(QVariant(av.toString()).toBool());
         }
         // Add any new specialized SharedAxisBoxItem Properties here.
       } else {

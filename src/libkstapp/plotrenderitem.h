@@ -95,11 +95,7 @@ class PlotRenderItem : public ViewItem
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
     virtual QPainterPath shape() const;
-    virtual QRectF boundingRect() const;
-    virtual QSizeF sizeOfGrip() const;
     virtual bool maybeReparent();
-    QRectF checkBoxBoundingRect() const;
-    QPainterPath checkBox() const;
 
   private Q_SLOTS:
     void updateGeometry();

@@ -151,6 +151,13 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     { _acceptsContextMenuEvents = acceptsContextMenuEvents; }
 
     virtual bool tryShortcut(const QString &keySequence);
+    QPainterPath checkBox() const;
+
+    virtual bool isTiedZoom() const { return _isTiedZoom; }
+    virtual bool supportsTiedZoom() const { return _supportsTiedZoom; }
+    virtual void setSupportsTiedZoom(const bool supports);
+    virtual void setTiedZoom(bool tiedZoom, bool checkAllTied = true);
+    virtual QSizeF tiedZoomSize() const { return QSizeF(checkBox().controlPointRect().size() * 1.5); }
 
   Q_SIGNALS:
     void geometryChanged();
@@ -223,6 +230,8 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     QAction *_autoLayoutAction;
     QAction *_customLayoutAction;
 
+    bool _isTiedZoom;
+
   private Q_SLOTS:
     void viewMouseModeChanged(View::MouseMode oldMode);
     void updateView();
@@ -233,6 +242,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
   private:
     GripMode _gripMode;
     GripModes _allowedGripModes;
+    bool _supportsTiedZoom;
     bool _fixedSize;
     bool _lockAspectRatio;
     bool _lockAspectRatioFixed;

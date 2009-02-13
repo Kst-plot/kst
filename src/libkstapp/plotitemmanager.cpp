@@ -54,6 +54,17 @@ void PlotItemManager::addPlot(PlotItem *plotItem) {
 }
 
 
+void PlotItemManager::addViewItem(ViewItem *viewItem) {
+  if (!_viewItemLists.contains(viewItem->parentView())) {
+    _viewItemLists.insert(viewItem->parentView(), QList<ViewItem*>() << viewItem);
+  } else {
+    QList<ViewItem*> list = _viewItemLists.value(viewItem->parentView());
+    list << viewItem;
+    _viewItemLists.insert(viewItem->parentView(), list);
+  }
+}
+
+
 void PlotItemManager::removePlot(PlotItem *plotItem) {
   if (!_plotLists.contains(plotItem->parentView()))
     return;
@@ -64,30 +75,115 @@ void PlotItemManager::removePlot(PlotItem *plotItem) {
 }
 
 
-void PlotItemManager::addTiedZoomPlot(PlotItem *plotItem, bool checkAllTied) {
-  if (!_tiedZoomPlotLists.contains(plotItem->parentView())) {
-    _tiedZoomPlotLists.insert(plotItem->parentView(), QList<PlotItem*>() << plotItem);
+void PlotItemManager::removeViewItem(ViewItem *viewItem) {
+  if (!_viewItemLists.contains(viewItem->parentView()))
+    return;
+
+  QList<ViewItem*> list = _viewItemLists.value(viewItem->parentView());
+  list.removeAll(viewItem);
+  _viewItemLists.insert(viewItem->parentView(), list);
+}
+
+
+void PlotItemManager::addTiedZoomPlot(PlotItem *plotItem, bool checkAll) {
+  if (plotItem->isInSharedAxisBox()) {
+    if (!_tiedZoomViewItemPlotLists.contains(plotItem->parentViewItem())) {
+      _tiedZoomViewItemPlotLists.insert(plotItem->parentViewItem(), QList<PlotItem*>() << plotItem);
+    } else {
+      QList<PlotItem*> list = _tiedZoomViewItemPlotLists.value(plotItem->parentViewItem());
+      list << plotItem;
+      _tiedZoomViewItemPlotLists.insert(plotItem->parentViewItem(), list);
+    }
   } else {
-    QList<PlotItem*> list = _tiedZoomPlotLists.value(plotItem->parentView());
-    list << plotItem;
-    _tiedZoomPlotLists.insert(plotItem->parentView(), list);
-  }
-  if (checkAllTied) {
-    if (_tiedZoomPlotLists[plotItem->parentView()] == _plotLists[plotItem->parentView()]) {
-      emit allPlotsTiedZoom();
+    if (!_tiedZoomViewPlotLists.contains(plotItem->parentView())) {
+      _tiedZoomViewPlotLists.insert(plotItem->parentView(), QList<PlotItem*>() << plotItem);
+    } else {
+      QList<PlotItem*> list = _tiedZoomViewPlotLists.value(plotItem->parentView());
+      list << plotItem;
+      _tiedZoomViewPlotLists.insert(plotItem->parentView(), list);
+    }
+    if (checkAll) {
+      checkAllTied(plotItem->parentView());
     }
   }
 }
 
 
-void PlotItemManager::removeTiedZoomPlot(PlotItem *plotItem) {
-  if (!_tiedZoomPlotLists.contains(plotItem->parentView()))
-    return;
+void PlotItemManager::checkAllTied(View* view) {
+  bool bAllTied = true;
+  if (_plotLists.contains(view)) {
+    foreach(PlotItem* plot, _plotLists[view]) {
+      if (plot->supportsTiedZoom() && !plot->isTiedZoom()) {
+        bAllTied = false;
+      }
+    }
+  }
+  if (_viewItemLists.contains(view)) {
+    foreach(ViewItem* viewItem, _viewItemLists[view]) {
+      if (viewItem->supportsTiedZoom() && !viewItem->isTiedZoom()) {
+        bAllTied = false;
+      }
+    }
+  }
+  if (bAllTied) {
+    emit allPlotsTiedZoom();
+  }
+}
 
-  QList<PlotItem*> list = _tiedZoomPlotLists.value(plotItem->parentView());
-  list.removeAll(plotItem);
-  _tiedZoomPlotLists.insert(plotItem->parentView(), list);
-  emit tiedZoomRemoved();
+
+void PlotItemManager::setAllTiedZoom(View *view, bool tiedZoom) {
+  if (_plotLists.contains(view)) {
+    foreach(PlotItem* plot, _plotLists[view]) {
+      if (plot->supportsTiedZoom()) {
+        plot->setTiedZoom(tiedZoom, false);
+      }
+    }
+  }
+  if (_viewItemLists.contains(view)) {
+    foreach(ViewItem* viewItem, _viewItemLists[view]) {
+      if (viewItem->supportsTiedZoom()) {
+        viewItem->setTiedZoom(tiedZoom, false);
+      }
+    }
+  }
+}
+
+
+void PlotItemManager::addTiedZoomViewItem(ViewItem *viewItem, bool checkAll) {
+  if (!_tiedZoomViewItemLists.contains(viewItem->parentView())) {
+    _tiedZoomViewItemLists.insert(viewItem->parentView(), QList<ViewItem*>() << viewItem);
+  } else {
+    QList<ViewItem*> list = _tiedZoomViewItemLists.value(viewItem->parentView());
+    list << viewItem;
+    _tiedZoomViewItemLists.insert(viewItem->parentView(), list);
+  }
+  if (checkAll) {
+    checkAllTied(viewItem->parentView());
+  }
+}
+
+
+void PlotItemManager::removeTiedZoomPlot(PlotItem *plotItem) {
+  if (_tiedZoomViewItemPlotLists.contains(plotItem->parentViewItem())) {
+    QList<PlotItem*> list = _tiedZoomViewItemPlotLists.value(plotItem->parentViewItem());
+    list.removeAll(plotItem);
+    _tiedZoomViewItemPlotLists.insert(plotItem->parentViewItem(), list);
+  } else if (_tiedZoomViewPlotLists.contains(plotItem->parentView())) {
+    QList<PlotItem*> list = _tiedZoomViewPlotLists.value(plotItem->parentView());
+    list.removeAll(plotItem);
+    _tiedZoomViewPlotLists.insert(plotItem->parentView(), list);
+    emit tiedZoomRemoved();
+  }
+}
+
+
+void PlotItemManager::removeTiedZoomViewItem(ViewItem *viewItem) {
+  if (_tiedZoomViewItemLists.contains(viewItem->parentView())) {
+    QList<ViewItem*> list = _tiedZoomViewItemLists.value(viewItem->parentView());
+    list.removeAll(viewItem);
+    _tiedZoomViewItemLists.insert(viewItem->parentView(), list);
+    emit tiedZoomRemoved();
+  }
 }
 
 
@@ -100,8 +196,22 @@ QList<PlotItem*> PlotItemManager::plotsForView(View *view) {
 
 
 QList<PlotItem*> PlotItemManager::tiedZoomPlotsForView(View *view) {
-  if (PlotItemManager::self()->_tiedZoomPlotLists.contains(view)) {
-    return PlotItemManager::self()->_tiedZoomPlotLists.value(view);
+  if (PlotItemManager::self()->_tiedZoomViewPlotLists.contains(view)) {
+    QList<PlotItem*> plots = PlotItemManager::self()->_tiedZoomViewPlotLists.value(view);
+    if (PlotItemManager::self()->_tiedZoomViewItemLists.contains(view)) {
+      foreach (ViewItem *viewItem, PlotItemManager::self()->_tiedZoomViewItemLists.value(view)) {
+        plots << tiedZoomPlotsForViewItem(viewItem);
+      }
+    }
+    return plots;
+  }
+  return QList<PlotItem*>();
+}
+
+
+QList<PlotItem*> PlotItemManager::tiedZoomPlotsForViewItem(ViewItem *viewItem) {
+  if (PlotItemManager::self()->_tiedZoomViewItemPlotLists.contains(viewItem)) {
+    return PlotItemManager::self()->_tiedZoomViewItemPlotLists.value(viewItem);
   }
   return QList<PlotItem*>();
 }
@@ -115,6 +225,15 @@ void PlotItemManager::setFocusPlot(PlotItem *plotItem) {
         plot->setAllowUpdates(false);
       }
     }
+  }
+}
+
+
+QList<PlotItem*> PlotItemManager::tiedZoomPlots(PlotItem* plotItem) {
+  if (plotItem->isInSharedAxisBox() && !plotItem->parentViewItem()->isTiedZoom()) {
+    return tiedZoomPlotsForViewItem(plotItem->parentViewItem());
+  } else {
+    return tiedZoomPlotsForView(plotItem->parentView());
   }
 }
 

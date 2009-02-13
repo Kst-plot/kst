@@ -242,29 +242,6 @@ void PlotRenderItem::paint(QPainter *painter) {
       painter->setPen(QPen(QBrush(Qt::black), 1.0, Qt::DotLine));
       painter->drawRect(_selectionRect.rect());
     }
-
-    if (!plotItem()->isInSharedAxisBox()) {
-      painter->save();
-      painter->setRenderHint(QPainter::Antialiasing, true);
-      painter->fillPath(checkBox(), Qt::white);
-      if (isHovering()) {
-        QRectF check = checkBox().controlPointRect();
-        check.setSize(QSizeF(check.width() / 1.8, check.height() / 1.8));
-        check.moveCenter(checkBox().controlPointRect().center());
-        QPainterPath p;
-        p.addEllipse(check);
-        painter->fillPath(p, Qt::black);
-      }
-      if (plotItem()->isTiedZoom()) {
-        painter->save();
-        QColor c = Qt::black;
-        c.setAlphaF(c.alphaF() * 0.5);
-        painter->fillPath(checkBox(), c);
-        painter->restore();
-      }
-      painter->drawPath(checkBox());
-      painter->restore();
-    }
   }
 
 #ifdef CURVE_DRAWING_TIME
@@ -451,11 +428,6 @@ void PlotRenderItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     event->ignore();
   }
 
-  if (checkBox().contains(event->pos())) {
-    plotItem()->setTiedZoom(!plotItem()->isTiedZoom());
-    update(); //FIXME should optimize instead of redrawing entire curve!
-  }
-
   const QPointF p = event->pos();
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::ShiftModifier) {
@@ -626,37 +598,8 @@ QPainterPath PlotRenderItem::shape() const {
 }
 
 
-QRectF PlotRenderItem::boundingRect() const {
-  QPolygonF checkBound = checkBoxBoundingRect();
-  return QRectF(checkBound[0], checkBound[2]);
-}
-
-
-QSizeF PlotRenderItem::sizeOfGrip() const {
-  return ViewItem::sizeOfGrip();// / 1.2;
-}
-
-
 bool PlotRenderItem::maybeReparent() {
   return false; //never reparent a plot renderer
-}
-
-
-QRectF PlotRenderItem::checkBoxBoundingRect() const {
-  QRectF bound = selectBoundingRect();
-  bound.setTopLeft(bound.topLeft() - QPointF(sizeOfGrip().width(), sizeOfGrip().height()));
-  bound.setWidth(bound.width() + sizeOfGrip().width());
-  bound.setHeight(bound.height() + sizeOfGrip().height());
-  return bound;
-}
-
-
-QPainterPath PlotRenderItem::checkBox() const {
-  QRectF bound = checkBoxBoundingRect();
-  QRectF grip = QRectF(bound.topRight() - QPointF(sizeOfGrip().width(), 0), sizeOfGrip());
-  QPainterPath path;
-  path.addEllipse(grip);
-  return path;
 }
 
 

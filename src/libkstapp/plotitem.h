@@ -78,8 +78,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     PlotAxis* xAxis() { return _xAxis; }
     PlotAxis* yAxis() { return _yAxis; }
 
-    bool isTiedZoom() const;
-    void setTiedZoom(bool tiedZoom, bool checkAllTied = true);
+    virtual void setTiedZoom(bool tiedZoom, bool checkAllTied = true);
 
     bool isInSharedAxisBox() const;
     void setInSharedAxisBox(bool inSharedBox);
@@ -351,7 +350,6 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 
   private:
     QHash<PlotRenderItem::RenderType, PlotRenderItem*> _renderers;
-    bool _isTiedZoom;
     bool _isInSharedAxisBox;
     bool _isLeftLabelVisible;
     bool _isBottomLabelVisible;

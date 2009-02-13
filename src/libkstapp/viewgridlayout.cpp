@@ -463,8 +463,16 @@ void ViewGridLayout::shareAxis() {
     }
   }
 
+  // Adjust to make sure there is sufficient room for the tiedzoom box.
+  if (topLabelBounds[0] < parentItem()->tiedZoomSize().height()) {
+    topLabelBounds[0] = parentItem()->tiedZoomSize().height();
+  }
+  if (rightLabelBounds[columnCount()] < parentItem()->tiedZoomSize().width()) {
+    rightLabelBounds[columnCount()] = parentItem()->tiedZoomSize().width();
+  }
+
 #if DEBUG_SHAREDAXIS
-  qDebug() << "Calculated maximum bounds for labels."
+  qDebug() << "Calculated maximum bounds for labels.";
   qDebug() << "Left bounds by column" << leftLabelBounds;
   qDebug() << "Right bounds by column" << rightLabelBounds;
   qDebug() << "Top bounds by row" << topLabelBounds;

@@ -16,6 +16,7 @@
 #include "viewitemdialog.h"
 #include "viewgridlayout.h"
 #include "plotitem.h"
+#include "plotitemmanager.h"
 
 #include "layoutboxitem.h"
 
@@ -43,8 +44,10 @@ namespace Kst {
 
 ViewItem::ViewItem(View *parent)
   : QObject(parent),
+    _isTiedZoom(false),
     _gripMode(Move),
     _allowedGripModes(Move | Resize | Rotate /*| Scale*/),
+    _supportsTiedZoom(false),
     _fixedSize(false),
     _lockAspectRatio(false),
     _lockAspectRatioFixed(false),
@@ -652,7 +655,30 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
       QColor highlightColor(QColor(255, 255, 0, 120));
       painter->fillPath(shape(), highlightColor);
     }
-
+    if (_supportsTiedZoom) {
+      painter->save();
+      painter->setPen(Qt::black);
+      painter->setRenderHint(QPainter::Antialiasing, true);
+      painter->fillPath(checkBox(), Qt::white);
+      if (isHovering()) {
+        QRectF check = checkBox().controlPointRect();
+        check.setSize(QSizeF(check.width() / 1.8, check.height() / 1.8));
+        check.moveCenter(checkBox().controlPointRect().center());
+        QPainterPath p;
+        p.addEllipse(check);
+        painter->fillPath(p, Qt::black);
+      }
+      if (isTiedZoom()) {
+        painter->save();
+        QColor c = Qt::black;
+        c.setAlphaF(c.alphaF() * 0.5);
+        painter->fillPath(checkBox(), c);
+        painter->restore();
+      }
+      painter->setBrush(Qt::transparent);
+      painter->drawPath(checkBox());
+      painter->restore();
+    }
 #ifdef DEBUG_GEOMETRY
   //  painter->fillRect(selectBoundingRect(), Qt::blue);
     QColor semiRed(QColor(255, 0, 0, 50));
@@ -1450,6 +1476,7 @@ QPointF ViewItem::relativeCenter() const {
 
 void ViewItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect) {
 //   qDebug() << "ViewItem::updateChildGeometry" << this << oldParentRect << newParentRect << endl;
+  Q_UNUSED(oldParentRect);
 
   QRectF itemRect = rect();
 
@@ -1723,12 +1750,58 @@ bool ViewItem::tryShortcut(const QString &shortcut) {
 }
 
 
+QPainterPath ViewItem::checkBox() const {
+  QRectF bound = selectBoundingRect();
+  QRectF grip = QRectF(bound.topRight() - QPointF(sizeOfGrip().width() * 1.25, sizeOfGrip().height() * -.25), sizeOfGrip());
+  QPainterPath path;
+  path.addEllipse(grip);
+  return path;
+}
+
+
 void ViewItem::updateView() {
   update();
 }
 
+
 qreal ViewItem::rotationAngle() const {
   return 180.0/M_PI * atan2(transform().m12(), transform().m11());
+}
+
+
+void ViewItem::setSupportsTiedZoom(const bool supports) {
+  if (supports != _supportsTiedZoom) {
+
+    _supportsTiedZoom = supports;
+
+    if (_supportsTiedZoom && ((layoutMargins().width() < tiedZoomSize().width()) || (layoutMargins().height() < tiedZoomSize().height()))) {
+      setLayoutMargins(layoutMargins().expandedTo(tiedZoomSize()));
+    }
+
+    if (_supportsTiedZoom) {
+      PlotItemManager::self()->addViewItem(this);
+    } else {
+      PlotItemManager::self()->removeViewItem(this);
+    }
+  }
+}
+
+
+void ViewItem::setTiedZoom(bool tiedZoom, bool checkAllTied) {
+  Q_UNUSED(checkAllTied)
+
+  if (_isTiedZoom == tiedZoom)
+    return;
+
+  _isTiedZoom = tiedZoom;
+
+  if (_isTiedZoom)
+    PlotItemManager::self()->addTiedZoomViewItem(this);
+  else
+    PlotItemManager::self()->removeTiedZoomViewItem(this);
+
+  //FIXME ugh, this is expensive, but need to redraw the renderitems checkboxes...
+  update();
 }
 
 
