@@ -30,7 +30,7 @@
 namespace Kst {
 
 SharedAxisBoxItem::SharedAxisBoxItem(View *parent)
-    : ViewItem(parent), _layout(0), _loaded(false), _creationStarted(false) {
+    : ViewItem(parent), _layout(0), _loaded(false) {
   setName("Shared Axis Box");
   setZValue(SHAREDAXISBOX_ZVALUE);
   setBrush(Qt::transparent);
@@ -178,13 +178,12 @@ void SharedAxisBoxItem::triggerContextEvent(QGraphicsSceneContextMenuEvent *even
 void SharedAxisBoxItem::creationPolygonChanged(View::CreationEvent event) {
   if (event == View::MousePress) {
     ViewItem::creationPolygonChanged(event);
-    _creationStarted = true;
     return;
   }
 
   if (event == View::MouseMove) {
     ViewItem::creationPolygonChanged(event);
-    if (!_creationStarted) {
+    if (creationState() == ViewItem::None) {
       return;
     }
 

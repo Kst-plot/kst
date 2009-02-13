@@ -47,6 +47,7 @@ ViewItem::ViewItem(View *parent)
     _isTiedZoom(false),
     _gripMode(Move),
     _allowedGripModes(Move | Resize | Rotate /*| Scale*/),
+    _creationState(None),
     _supportsTiedZoom(false),
     _fixedSize(false),
     _lockAspectRatio(false),
@@ -779,6 +780,7 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
     setPos(poly.first().x(), poly.first().y());
     setViewRect(0.0, 0.0, 0.0, 0.0);
     parentView()->scene()->addItem(this);
+    _creationState = InProgress;
     //setZValue(1);
     return;
   }
@@ -803,6 +805,7 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
     parentView()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
     parentView()->setMouseMode(View::Default);
     maybeReparent();
+    _creationState = Completed;
     emit creationComplete();
     return;
   }

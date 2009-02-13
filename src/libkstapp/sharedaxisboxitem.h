@@ -52,7 +52,6 @@ class SharedAxisBoxItem : public ViewItem
     QPointer<ViewGridLayout> _layout;
     QList<PlotItem*> _highlightedPlots;
     bool _loaded;
-    bool _creationStarted;
 };
 
 class KST_EXPORT CreateSharedAxisBoxCommand : public CreateCommand

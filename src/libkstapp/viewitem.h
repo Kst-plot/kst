@@ -53,6 +53,12 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     };
     Q_DECLARE_FLAGS(ActiveGrips, ActiveGrip)
 
+    enum CreationState {
+      None,
+      InProgress,
+      Completed
+    };
+
     ViewItem(View *parent);
     virtual ~ViewItem();
 
@@ -159,6 +165,8 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     virtual void setTiedZoom(bool tiedZoom, bool checkAllTied = true);
     virtual QSizeF tiedZoomSize() const { return QSizeF(checkBox().controlPointRect().size() * 1.5); }
 
+    CreationState creationState() const { return _creationState; }
+
   Q_SIGNALS:
     void geometryChanged();
     void creationComplete();
@@ -242,6 +250,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
   private:
     GripMode _gripMode;
     GripModes _allowedGripModes;
+    CreationState _creationState;
     bool _supportsTiedZoom;
     bool _fixedSize;
     bool _lockAspectRatio;

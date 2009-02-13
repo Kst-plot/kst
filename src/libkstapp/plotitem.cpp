@@ -548,7 +548,7 @@ void PlotItem::calculateBorders(QPainter *painter) {
 
 
 void PlotItem::paint(QPainter *painter) {
-  qDebug() << "paint in plotitem";
+  painter->save();
   if (parentViewItem() && isInSharedAxisBox()) {
     setBrush(Qt::transparent);
   } else {
@@ -566,7 +566,7 @@ void PlotItem::paint(QPainter *painter) {
   // FIXME: the plot size calculations need to be separated from the 
   // painting to avoid n^2 or worse behavior.
 
-  if (parentView()->plotBordersDirty()) {
+  if (parentView()->plotBordersDirty() || (creationState() == ViewItem::InProgress)) {
     ViewGridLayout::standardizePlotMargins(this, painter);
     parentView()->setPlotBordersDirty(false);
   }
@@ -592,6 +592,7 @@ void PlotItem::paint(QPainter *painter) {
   paintTickLabels(painter);
   paintPlotMarkers(painter);
 
+  painter->restore();
   painter->restore();
 }
 
