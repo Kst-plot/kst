@@ -428,3 +428,12 @@ Formatting/spacing issues:
 Data mode (see 1.x) should be implemented
 *Mike*
 ----------
+
+Shared Axis box behavior: different boxes have tied zoom.
+When more than one shared axis box is created, the zooms
+seem to be tied between them.  The zooms should only be tied
+if indicated by the tied zoom box, which the shared axis box
+does not have, but should.  By default, each shared axis box
+has it own zoom.
+*Mike*
+----------

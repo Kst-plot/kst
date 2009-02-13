@@ -35,14 +35,14 @@ the background, instead of in the foreground where it steals X focus
 until the directory is read. �I ran into a interminable-focus-stealing
 problem where kst was attempting to read a dead NFS mount. �Required an
 X restart.
-
+*Mike*
 --------
 
 Pointless complaints from Qt:
 we are getting on the console like 
   "QGraphicsItem::ungrabMouse: not a mouse grabber".
 These need to be found and killed.
-
+*Mike*
 --------
 
 General drawing 'flicker' and missing regions in drawing with openGL enabled:
@@ -50,15 +50,6 @@ OpenGL is qualitatively much faster, but on my laptop with Intel graphics,
 embedded, and running opengl with kwin, there is lots of flicker, and lots
 of things simply not drawn.
 
---------
-
-Shared Axis box behavior: different boxes have tied zoom.
-When more than one shared axis box is created, the zooms
-seem to be tied between them.  The zooms should only be tied
-if indicated by the tied zoom box, which the shared axis box
-does not have, but should.  By default, each shared axis box
-has it own zoom.
-*Mike*
 --------
 
 PlotMarginStandardization is applied inconsistently.
