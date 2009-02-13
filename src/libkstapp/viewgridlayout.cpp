@@ -288,6 +288,8 @@ void ViewGridLayout::standardizePlotMargins(ViewItem *item, QPainter *painter) {
   QMap<int, qreal> rightMarginWidths;
   QMap<int, qreal> topMarginWidths;
   QMap<int, qreal> bottomMarginHeights;
+  //FIXME: this approach to tolerance only works often
+  // (truncation flips bits suddenly)
   foreach (PlotItem* plotItem, plotItems) {
     plotItem->calculateBorders(painter);
     if (leftMarginWidths[plotItem->width()*PLOT_STANDARDIZATION_FACTOR] < plotItem->leftMarginSize()) {

@@ -579,7 +579,7 @@ void PlotItemDialog::labelsChanged() {
   _plotItem->setBottomFontUseGlobal(_bottomLabelTab->useDefault());
   _plotItem->setLeftFontUseGlobal(_leftLabelTab->useDefault());
   _plotItem->setRightFontUseGlobal(_rightLabelTab->useDefault());
-  _plotItem->setNumberFontUseGlobal(_topLabelTab->useDefault());
+  _plotItem->setNumberFontUseGlobal(_axisLabelTab->useDefault());
   _plotItem->setShowLegend(_labelTab->showLegend());
 }
 

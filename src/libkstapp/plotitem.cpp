@@ -137,6 +137,8 @@ PlotItem::PlotItem(View *parent)
     max_gnum = _gnum;
   _gnum++;
 
+  parentView()->setPlotBordersDirty(true);
+
   connect(this, SIGNAL(marginsChanged()), this, SLOT(marginsUpdated()));
 }
 
@@ -545,6 +547,7 @@ void PlotItem::calculateBorders(QPainter *painter) {
 
 
 void PlotItem::paint(QPainter *painter) {
+  qDebug() << "paint in plotitem";
   if (parentViewItem() && isInSharedAxisBox()) {
     setBrush(Qt::transparent);
   } else {
@@ -1229,6 +1232,7 @@ QFont PlotItem::rightLabelFont() const {
 
 void PlotItem::setRightLabelFont(const QFont &font) {
   _rightLabelFont = font;
+  parentView()->setPlotBordersDirty(true);
 }
 
 
@@ -1239,6 +1243,7 @@ QFont PlotItem::topLabelFont() const {
 
 void PlotItem::setTopLabelFont(const QFont &font) {
   _topLabelFont = font;
+  parentView()->setPlotBordersDirty(true);
 }
 
 
@@ -1259,6 +1264,7 @@ QFont PlotItem::leftLabelFont() const {
 
 void PlotItem::setLeftLabelFont(const QFont &font) {
   _leftLabelFont = font;
+  parentView()->setPlotBordersDirty(true);
 }
 
 
@@ -1269,6 +1275,7 @@ QFont PlotItem::bottomLabelFont() const {
 
 void PlotItem::setBottomLabelFont(const QFont &font) {
   _bottomLabelFont = font;
+  parentView()->setPlotBordersDirty(true);
 }
 
 
@@ -1279,6 +1286,7 @@ QFont PlotItem::numberLabelFont() const {
 
 void PlotItem::setNumberLabelFont(const QFont &font) {
   _numberLabelFont = font;
+  parentView()->setPlotBordersDirty(true);
 }
 
 
@@ -1289,6 +1297,7 @@ qreal PlotItem::rightLabelFontScale() const {
 
 void PlotItem::setRightLabelFontScale(const qreal scale) {
   _rightLabelFontScale = scale;
+  parentView()->setPlotBordersDirty(true);
 }
 
 
@@ -1309,6 +1318,7 @@ qreal PlotItem::leftLabelFontScale() const {
 
 void PlotItem::setLeftLabelFontScale(const qreal scale) {
   _leftLabelFontScale = scale;
+  parentView()->setPlotBordersDirty(true);
 }
 
 
@@ -1319,6 +1329,7 @@ qreal PlotItem::topLabelFontScale() const {
 
 void PlotItem::setTopLabelFontScale(const qreal scale) {
   _topLabelFontScale = scale;
+  parentView()->setPlotBordersDirty(true);
 }
 
 
@@ -1329,6 +1340,7 @@ qreal PlotItem::bottomLabelFontScale() const {
 
 void PlotItem::setBottomLabelFontScale(const qreal scale) {
   _bottomLabelFontScale = scale;
+  parentView()->setPlotBordersDirty(true);
 }
 
 
@@ -1339,6 +1351,7 @@ qreal PlotItem::numberLabelFontScale() const {
 
 void PlotItem::setNumberLabelFontScale(const qreal scale) {
   _numberLabelFontScale = scale;
+  parentView()->setPlotBordersDirty(true);
 }
 
 
@@ -1417,6 +1430,7 @@ void PlotItem::setLeftLabelOverride(const QString &label) {
   } else {
     _leftLabelOverride = label;
   }
+  parentView()->setPlotBordersDirty(true);
 }
 
 
@@ -1435,6 +1449,7 @@ void PlotItem::setBottomLabelOverride(const QString &label) {
   } else {
     _bottomLabelOverride = label;
   }
+  parentView()->setPlotBordersDirty(true);
 }
 
 
@@ -1453,6 +1468,7 @@ void PlotItem::setTopLabelOverride(const QString &label) {
   } else {
     _topLabelOverride = label;
   }
+  parentView()->setPlotBordersDirty(true);
 }
 
 
@@ -1471,6 +1487,7 @@ void PlotItem::setRightLabelOverride(const QString &label) {
   } else {
     _rightLabelOverride = label;
   }
+  parentView()->setPlotBordersDirty(true);
 }
 
 
@@ -1523,6 +1540,7 @@ void PlotItem::setRightSuppressed(bool suppressed) {
 void PlotItem::setLeftSuppressed(bool suppressed) {
   setLeftLabelVisible(!suppressed);
   _yAxis->setAxisVisible(!suppressed);
+  parentView()->setPlotBordersDirty(true);
 }
 
 
@@ -1542,7 +1560,8 @@ void PlotItem::setLeftLabelVisible(bool visible) {
     return;
 
   _isLeftLabelVisible = visible;
-  emit marginsChanged();
+  parentView()->setPlotBordersDirty(true);
+//   emit marginsChanged();
 }
 
 
@@ -1556,7 +1575,8 @@ void PlotItem::setBottomLabelVisible(bool visible) {
     return;
 
   _isBottomLabelVisible = visible;
-  emit marginsChanged();
+  parentView()->setPlotBordersDirty(true);
+//   emit marginsChanged();
 }
 
 
@@ -1570,7 +1590,8 @@ void PlotItem::setRightLabelVisible(bool visible) {
     return;
 
   _isRightLabelVisible = visible;
-  emit marginsChanged();
+  parentView()->setPlotBordersDirty(true);
+//   emit marginsChanged();
 }
 
 
@@ -1584,7 +1605,8 @@ void PlotItem::setTopLabelVisible(bool visible) {
     return;
 
   _isTopLabelVisible = visible;
-  emit marginsChanged();
+  parentView()->setPlotBordersDirty(true);
+//   emit marginsChanged();
 }
 
 
@@ -1623,9 +1645,9 @@ qreal PlotItem::calculatedLeftLabelMargin() const {
 void PlotItem::setCalculatedLeftLabelMargin(qreal margin) {
   qreal before = this->calculatedLeftLabelMargin();
   _calculatedLeftLabelMargin = margin;
-  if (before != this->calculatedLeftLabelMargin()) {
+/*  if (before != this->calculatedLeftLabelMargin()) {
     emit marginsChanged();
-  }
+  }*/
 }
 
 
@@ -1643,9 +1665,9 @@ qreal PlotItem::calculatedRightLabelMargin() const {
 void PlotItem::setCalculatedRightLabelMargin(qreal margin) {
   qreal before = this->calculatedRightLabelMargin();
   _calculatedRightLabelMargin = margin;
-  if (before != this->calculatedRightLabelMargin()) {
+/*  if (before != this->calculatedRightLabelMargin()) {
     emit marginsChanged();
-  }
+  }*/
 }
 
 
@@ -1674,9 +1696,9 @@ qreal PlotItem::calculatedTopLabelMargin() const {
 void PlotItem::setCalculatedTopLabelMargin(qreal margin) {
   qreal before = this->calculatedTopLabelMargin();
   _calculatedTopLabelMargin = margin;
-  if (before != this->calculatedTopLabelMargin()) {
+/*  if (before != this->calculatedTopLabelMargin()) {
     emit marginsChanged();
-  }
+  }*/
 }
 
 
@@ -1694,9 +1716,9 @@ qreal PlotItem::calculatedBottomLabelMargin() const {
 void PlotItem::setCalculatedBottomLabelMargin(qreal margin) {
   qreal before = this->calculatedBottomLabelMargin();
   _calculatedBottomLabelMargin = margin;
-  if (before != this->calculatedBottomLabelMargin()) {
+/*  if (before != this->calculatedBottomLabelMargin()) {
     emit marginsChanged();
-  }
+  }*/
 }
 
 
@@ -1733,40 +1755,66 @@ QRectF PlotItem::rightLabelRect(bool calc) const {
 
 
 QFont PlotItem::calculatedLeftLabelFont() {
-  QFont font(_leftLabelFont);
-  font.setPixelSize(parentView()->defaultFont(_leftLabelFontScale).pixelSize());
-
+  QFont font;
+  if (leftFontUseGlobal()) {
+    font = _globalFont;
+    font.setPixelSize(parentView()->defaultFont(_globalFontScale).pixelSize());
+  } else {
+    font = _leftLabelFont;
+    font.setPixelSize(parentView()->defaultFont(_leftLabelFontScale).pixelSize());
+  }
   return font;
 }
 
 
 QFont PlotItem::calculatedRightLabelFont() {
-  QFont font(_rightLabelFont);
-  font.setPixelSize(parentView()->defaultFont(_rightLabelFontScale).pixelSize());
-
+  QFont font;
+  if (rightFontUseGlobal()) {
+    font = _globalFont;
+    font.setPixelSize(parentView()->defaultFont(_globalFontScale).pixelSize());
+  } else {
+    font = _rightLabelFont;
+    font.setPixelSize(parentView()->defaultFont(_rightLabelFontScale).pixelSize());
+  }
   return font;
 }
 
 
 QFont PlotItem::calculatedTopLabelFont() {
-  QFont font(_topLabelFont);
-  font.setPixelSize(parentView()->defaultFont(_topLabelFontScale).pixelSize());
-
+  QFont font;
+  if (topFontUseGlobal()) {
+    font = _globalFont;
+    font.setPixelSize(parentView()->defaultFont(_globalFontScale).pixelSize());
+  } else {
+    font = _topLabelFont;
+    font.setPixelSize(parentView()->defaultFont(_topLabelFontScale).pixelSize());
+  }
   return font;
 }
 
 
 QFont PlotItem::calculatedBottomLabelFont() {
-  QFont font(_bottomLabelFont);
-  font.setPixelSize(parentView()->defaultFont(_bottomLabelFontScale).pixelSize());
-
+  QFont font;
+  if (bottomFontUseGlobal()) {
+    font = _globalFont;
+    font.setPixelSize(parentView()->defaultFont(_globalFontScale).pixelSize());
+  } else {
+    font = _bottomLabelFont;
+    font.setPixelSize(parentView()->defaultFont(_bottomLabelFontScale).pixelSize());
+  }
   return font;
 }
 
 
 QFont PlotItem::calculatedNumberLabelFont() {
-  QFont font(_numberLabelFont);
-  font.setPixelSize(parentView()->defaultFont(_numberLabelFontScale).pixelSize());
+  QFont font;
+  if (numberFontUseGlobal()) {
+    font = _globalFont;
+    font.setPixelSize(parentView()->defaultFont(_globalFontScale).pixelSize());
+  } else {
+    font = _numberLabelFont;
+    font.setPixelSize(parentView()->defaultFont(_numberLabelFontScale).pixelSize());
+  }
   return font;
 }
 
@@ -1843,6 +1891,7 @@ QSizeF PlotItem::calculateLeftLabelBound(QPainter *painter) {
 
   QSizeF margins;
   margins.setWidth(leftLabelBound.height());
+
   return margins;
 }
 
@@ -1943,8 +1992,9 @@ void PlotItem::paintRightLabel(QPainter *painter) {
 
       if (rc.x > 0)
         painter->drawPixmap(t.mapRect(rightLabel).topLeft(), pixmap, QRectF(0, 0, rc.x, rightLabel.height()));
+
+      painter->restore();
     }
-    painter->restore();
 
     delete parsed;
     parsed = 0;
@@ -2067,9 +2117,9 @@ qreal PlotItem::calculatedAxisMarginWidth() const {
 void PlotItem::setCalculatedAxisMarginWidth(qreal marginWidth) {
   qreal before = this->calculatedAxisMarginWidth();
   _calculatedAxisMarginWidth = marginWidth;
-  if (before != this->calculatedAxisMarginWidth()) {
-    emit marginsChanged();
-  }
+//   if (before != this->calculatedAxisMarginWidth()) {
+//     emit marginsChanged();
+//   }
 }
 
 
@@ -2087,6 +2137,11 @@ void PlotItem::calculateBottomTickLabelBound(QPainter *painter) {
   qreal inVLead = _calculatedAxisMarginVLead;
   qreal inROver = _calculatedAxisMarginROverflow;
   QRectF xLabelRect;
+
+  painter->save();
+
+  painter->setFont(calculatedNumberLabelFont());
+
 
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
 
@@ -2126,11 +2181,12 @@ void PlotItem::calculateBottomTickLabelBound(QPainter *painter) {
     _calculatedAxisMarginROverflow = ViewItem::sizeOfGrip().width();
   }
 
-  if ((inHeight != _calculatedAxisMarginHeight) 
+  painter->restore();
+/*  if ((inHeight != _calculatedAxisMarginHeight) 
        || (inVLead != _calculatedAxisMarginVLead) 
        || (inROver != _calculatedAxisMarginROverflow)) {
     emit marginsChanged();
-  }
+  }*/
 }
 
 /** This function calculates and sets three things:
@@ -2145,6 +2201,10 @@ void PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
 
   QRectF yLabelRect;
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
+
+  painter->save();
+
+  painter->setFont(calculatedNumberLabelFont());
 
   _calculatedAxisMarginHLead = painter->fontMetrics().boundingRect('[').height()/2;
 
@@ -2179,11 +2239,12 @@ void PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
   } else {
     _calculatedAxisMarginTOverflow = ViewItem::sizeOfGrip().width();
   }
-  if ((inWidth != _calculatedAxisMarginWidth) 
+  painter->restore();
+/*  if ((inWidth != _calculatedAxisMarginWidth) 
        || (inHLead != _calculatedAxisMarginHLead) 
        || (inTOver != _calculatedAxisMarginTOverflow)) {
      emit marginsChanged();
-  }
+  }*/
 }
 
 
