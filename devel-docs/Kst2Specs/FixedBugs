@@ -437,3 +437,10 @@ does not have, but should.  By default, each shared axis box
 has it own zoom.
 *Mike*
 ----------
+
+Pointless complaints from Qt:
+we are getting on the console like 
+  "QGraphicsItem::ungrabMouse: not a mouse grabber".
+These need to be found and killed.
+*Mike*
+--------
