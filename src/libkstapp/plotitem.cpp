@@ -2371,7 +2371,6 @@ void PlotItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
       setTiedZoom(!isTiedZoom());
     } else if (parentView()->viewMode() == View::Data) {
       edit();
-      event->ignore();
     } else {
       ViewItem::mousePressEvent(event);
     }
