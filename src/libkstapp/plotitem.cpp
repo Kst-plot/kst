@@ -548,14 +548,6 @@ void PlotItem::calculateBorders(QPainter *painter) {
 
 
 void PlotItem::paint(QPainter *painter) {
-  qDebug() << "PlotItem::paint called";
-  painter->save();
-  if (parentViewItem() && isInSharedAxisBox()) {
-    setBrush(Qt::transparent);
-  } else {
-    setBrush(Qt::white);
-  }
-
   painter->save();
   painter->setPen(Qt::NoPen);
   painter->drawRect(rect());
@@ -593,7 +585,6 @@ void PlotItem::paint(QPainter *painter) {
   paintTickLabels(painter);
   paintPlotMarkers(painter);
 
-  painter->restore();
   painter->restore();
 }
 
@@ -1052,12 +1043,14 @@ void PlotItem::setSharedAxisBox(ViewItem* parent) {
     setFlags(0);
     setParent(parent);
     setTiedZoom(true);
+    setBrush(Qt::transparent);
   } else {
     setInSharedAxisBox(false);
     setTiedZoom(false);
     setAllowedGripModes(Move | Resize | Rotate);
     setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
     setParent(0);
+    setBrush(Qt::white);
   }
 }
 
