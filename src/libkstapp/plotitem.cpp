@@ -548,6 +548,7 @@ void PlotItem::calculateBorders(QPainter *painter) {
 
 
 void PlotItem::paint(QPainter *painter) {
+  qDebug() << "PlotItem::paint called";
   painter->save();
   if (parentViewItem() && isInSharedAxisBox()) {
     setBrush(Qt::transparent);
