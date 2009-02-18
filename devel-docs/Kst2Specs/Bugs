@@ -42,7 +42,25 @@ General drawing 'flicker' and missing regions in drawing with openGL enabled:
 OpenGL is qualitatively much faster, but on my laptop with Intel graphics, 
 embedded, and running opengl with kwin, there is lots of flicker, and lots
 of things simply not drawn.
-*Mike*
+
+Notes:
+ - We are doing everything correctly according to the Qt documentation.
+
+ - This can be reproduced using the Qt example code.  Corruption extends beyond
+   Kst, and can be seen in all other apps showing drawing problems. while QGLWidget
+   is running.
+
+ - Sample Qt code:
+    http://labs.trolltech.com/blogs/2008/06/27/accelerate-your-widgets-with-opengl/
+
+ - Performance will be improved in future versions of Qt and is a known issue.
+   http://labs.trolltech.com/blogs/2008/02/04/qt-44-and-painting-performance/
+
+ - This bug is a platform specific to X11 and is documented by ubuntu with a work around.
+   https://wiki.ubuntu.com/RedirectedDirectRendering
+
+ - Sample app from Qt runs correctly under Windows, no reported problems with Mac.
+
 --------
 
 PlotMarginStandardization is applied inconsistently.
