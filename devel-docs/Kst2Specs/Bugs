@@ -75,3 +75,23 @@ Have not identified a pattern or cause as of yet.
 *Mike*
 --------
 
+Fragility in moving parents:
+  create a plot.
+  Put a child box in the plot.
+  Rapidly resize the plot.  Sometimes the box will either drift or loose parenting altogether.
+  (Editorial: Fundamentally, I think this is because qt's QGraphics system has been used to track placement
+  of objects, and QGraphics doesn't have the right model of what we are doing.)
+
+  Note:  This is still causing parenting to fail.  Updates are required to prevent reparenting on parent resize.
+*Mike*
+---------
+
+qgraphicsitem_cast is not setup correctly and causing bugs.
+  A number of bugs are occurring as the result of qgraphicsitem_cast failing.  All ViewItem objects will need to be
+  updated to support type and casts re-evaluated.
+
+  This causes context menu bugs.
+
+  Object selection bugs.
+*Mike*
+---------
