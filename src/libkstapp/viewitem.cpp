@@ -37,8 +37,9 @@ static const double ONE_PI = 3.14159265358979323846264338327950288419717;
 static double TWO_PI = 2.0 * ONE_PI;
 static double RAD2DEG = 180.0 / ONE_PI;
 
-// #define DEBUG_GEOMETRY
-// #define DEBUG_REPARENT
+#define DEBUG_GEOMETRY 0
+#define DEBUG_REPARENT 0
+#define DEBUG_CHILD_GEOMETRY 0
 
 namespace Kst {
 
@@ -680,7 +681,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
       painter->drawPath(checkBox());
       painter->restore();
     }
-#ifdef DEBUG_GEOMETRY
+#if DEBUG_GEOMETRY
   //  painter->fillRect(selectBoundingRect(), Qt::blue);
     QColor semiRed(QColor(255, 0, 0, 50));
     painter->fillPath(shape(), semiRed);
@@ -1309,7 +1310,7 @@ bool ViewItem::maybeReparent() {
   bool topLevel = !parentItem();
   QPointF origin = mapToScene(QPointF(0,0));
 
-#ifdef DEBUG_REPARENT
+#if DEBUG_REPARENT
   qDebug() << "maybeReparent" << this
            << "topLevel:" << (topLevel ? "true" : "false")
            << "origin:" << origin
@@ -1320,7 +1321,7 @@ bool ViewItem::maybeReparent() {
 
   //Doesn't collide then reparent to top-level
   if (collisions.isEmpty() && !topLevel) {
-#ifdef DEBUG_REPARENT
+#if DEBUG_REPARENT
     qDebug() << "reparent to topLevel" << endl;
 
     qDebug() << "before transform"
@@ -1331,7 +1332,7 @@ bool ViewItem::maybeReparent() {
     /*bring the old parent's transform with us*/
     setTransform(parentItem()->transform(), true);
 
-#ifdef DEBUG_REPARENT
+#if DEBUG_REPARENT
     qDebug() << "after transform"
              << "origin:" << mapToScene(QPointF(0,0))
              << endl;
@@ -1341,7 +1342,7 @@ bool ViewItem::maybeReparent() {
     setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
     updateRelativeSize();
 
-#ifdef DEBUG_REPARENT
+#if DEBUG_REPARENT
     qDebug() << "after new parent"
              << "origin:" << mapToScene(QPointF(0,0))
              << endl;
@@ -1358,13 +1359,13 @@ bool ViewItem::maybeReparent() {
       continue;
 
     if (parentItem() == viewItem) { /*already done*/
-#ifdef DEBUG_REPARENT
+#if DEBUG_REPARENT
       qDebug() << "already in containing parent" << endl;
 #endif
       return false;
     }
 
-#ifdef DEBUG_REPARENT
+#if DEBUG_REPARENT
     qDebug() << "reparent to" << viewItem << endl;
 
     qDebug() << "before transform"
@@ -1379,7 +1380,7 @@ bool ViewItem::maybeReparent() {
     /*cancel out the new parent's initial transform*/
     setTransform(viewItem->transform().inverted(), true);
 
-#ifdef DEBUG_REPARENT
+#if DEBUG_REPARENT
     qDebug() << "after transform"
              << "origin:" << mapToScene(QPointF(0,0))
              << endl;
@@ -1389,7 +1390,7 @@ bool ViewItem::maybeReparent() {
     setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
     updateRelativeSize();
 
-#ifdef DEBUG_REPARENT
+#if DEBUG_REPARENT
     qDebug() << "after new parent"
              << "origin:" << mapToScene(QPointF(0,0))
              << endl;
@@ -1400,7 +1401,7 @@ bool ViewItem::maybeReparent() {
 
   //No suitable collisions then reparent to top-level
   if (!topLevel) {
-#ifdef DEBUG_REPARENT
+#if DEBUG_REPARENT
     qDebug() << "reparent to topLevel" << endl;
 
     qDebug() << "before transform"
@@ -1411,7 +1412,7 @@ bool ViewItem::maybeReparent() {
     /*bring the old parent's transform with us*/
     setTransform(parentItem()->transform(), true);
 
-#ifdef DEBUG_REPARENT
+#if DEBUG_REPARENT
     qDebug() << "after transform"
              << "origin:" << mapToScene(QPointF(0,0))
              << endl;
@@ -1421,7 +1422,7 @@ bool ViewItem::maybeReparent() {
     setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
     updateRelativeSize();
 
-#ifdef DEBUG_REPARENT
+#if DEBUG_REPARENT
     qDebug() << "after new parent"
              << "origin:" << mapToScene(QPointF(0,0))
              << endl;
@@ -1478,8 +1479,11 @@ QPointF ViewItem::relativeCenter() const {
 
 
 void ViewItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect) {
-//   qDebug() << "ViewItem::updateChildGeometry" << this << oldParentRect << newParentRect << endl;
+#if DEBUG_CHILD_GEOMETRY
+  qDebug() << "ViewItem::updateChildGeometry" << this << oldParentRect << newParentRect << endl;
+#else
   Q_UNUSED(oldParentRect);
+#endif
 
   QRectF itemRect = rect();
 
@@ -1487,7 +1491,9 @@ void ViewItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &ne
   //FIXME is the child rotated with respect to the parent is the real question...
   if (transform().isRotating() || lockAspectRatio()) {
 
-//     qDebug() << "ViewItem::updateChildGeometry" << mapToParent(rect().center()) << _parentRelativeCenter;
+#if DEBUG_CHILD_GEOMETRY
+    qDebug() << "ViewItem::updateChildGeometry Fixed Ratio" << mapToParent(rect().center()) << _parentRelativeCenter;
+#endif
 
     if (!_fixedSize) {
       qreal newHeight = relativeHeight() * newParentRect.height();
@@ -1515,6 +1521,10 @@ void ViewItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &ne
     qreal newHeight = relativeHeight() * newParentRect.height();
     qreal newWidth = relativeWidth() * newParentRect.width();
 
+#if DEBUG_CHILD_GEOMETRY
+    qDebug() << "ViewItem::updateChildGeometry non-Fixed Ratio" << "relativeHeight = " << relativeHeight() << "relative Width" << relativeWidth();
+#endif
+
     QPointF newTopLeft = newParentRect.topLeft() + QPointF(newParentRect.width() * _parentRelativePosition.x(), newParentRect.height() * _parentRelativePosition.y());
 
     itemRect.setWidth(newWidth);
@@ -1522,12 +1532,13 @@ void ViewItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &ne
     setPos(newTopLeft);
   }
 
-//   qDebug() << "resize"
-//             << "\nbefore:" << rect()
-//             << "\nafter:" << rect
-//             << "\nwidth:" << width
-//             << "\nheight:" << height
-//             << endl;
+#if DEBUG_CHILD_GEOMETRY
+  qDebug() << "resize"
+            << "\nbefore:" << rect()
+            << "\nafter:" << itemRect
+            << endl;
+#endif
+
   setViewRect(itemRect, true);
 }
 
@@ -2048,13 +2059,13 @@ void MoveCommand::redo() {
 
 void ResizeCommand::undo() {
   Q_ASSERT(_item);
-  _item->setViewRect(_originalRect);
+  _item->setViewRect(_originalRect, true);
 }
 
 
 void ResizeCommand::redo() {
   Q_ASSERT(_item);
-  _item->setViewRect(_newRect);
+  _item->setViewRect(_newRect, true);
 }
 
 
