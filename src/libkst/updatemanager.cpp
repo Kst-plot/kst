@@ -11,6 +11,9 @@
 
 #include "updatemanager.h"
 
+#include "primitive.h"
+#include "datasource.h"
+
 #include <QCoreApplication>
 #include <QTimer>
 #include <QDebug>
@@ -67,7 +70,8 @@ void UpdateManager::requestUpdate(ObjectPtr updateObject, ObjectPtr object) {
     }
   }
 #if DEBUG_UPDATE_CYCLE > 0
-  qDebug() << "UM - Curve" << object->shortName() << "requested update requested for" << updateObject->Name() << "Current dependent update list" <<  _dependentUpdateRequests;
+  qDebug() << "\t\t\tUM - Curve" << object->shortName() << "requested update requested for" << updateObject->Name();
+  qDebug() << "\t\t\t     Current dependent update list" <<  _dependentUpdateRequests;
 #endif
 }
 
@@ -83,7 +87,8 @@ void UpdateManager::requestUpdate(ObjectPtr updateObject, PlotItemInterface* dis
     }
   }
 #if DEBUG_UPDATE_CYCLE > 0
-  qDebug() << "UM - Plot update requested for" << updateObject->Name() << "Current display update list" <<  _displayUpdateRequests;
+  qDebug() << "\t\t\tUM - Plot update requested for" << updateObject->Name();
+  qDebug() << "\t\t\t     Current display update list" <<  _displayUpdateRequests;
 #endif
 }
 
@@ -125,7 +130,13 @@ void UpdateManager::objectDeleted(ObjectPtr object) {
 void UpdateManager::updateStarted(ObjectPtr updateObject, ObjectPtr reportingObject) {
   _activeUpdates[updateObject]++;
 #if DEBUG_UPDATE_CYCLE > 0
-    qDebug() << "UM - Update beginning for" << reportingObject->shortName() << "for update" << updateObject->shortName() << "update count" << _activeUpdates[updateObject];
+    if (PrimitivePtr primitive = kst_cast<Primitive>(reportingObject)) {
+      qDebug() << "\t\tUM - Update beginning for" << reportingObject->shortName() << "for update" << updateObject->shortName() << "update count" << _activeUpdates[updateObject];
+    } else if (DataSourcePtr ds = kst_cast<DataSource>(reportingObject)) {
+      qDebug() << "\tUM - Update beginning for" << reportingObject->shortName() << "for update" << updateObject->shortName() << "update count" << _activeUpdates[updateObject];
+    } else {
+      qDebug() << "\t\tUM - Update beginning for" << reportingObject->shortName() << "for update" << updateObject->shortName() << "update count" << _activeUpdates[updateObject];
+    }
 #else
   Q_UNUSED(reportingObject)
 #endif
@@ -135,21 +146,29 @@ void UpdateManager::updateStarted(ObjectPtr updateObject, ObjectPtr reportingObj
 void UpdateManager::updateFinished(ObjectPtr updateObject, ObjectPtr reportingObject) {
   _activeUpdates[updateObject]--;
 #if DEBUG_UPDATE_CYCLE > 0
-  qDebug() << "UM - Update is complete for" << reportingObject->shortName() << "for update" << updateObject->shortName() << "update count" << _activeUpdates[updateObject];
+    if (PrimitivePtr primitive = kst_cast<Primitive>(reportingObject)) {
+      qDebug() << "\t\tUM - Update finish notification from" << reportingObject->shortName() << "for update" << updateObject->shortName() << "update count" << _activeUpdates[updateObject];
+    } else if (DataSourcePtr ds = kst_cast<DataSource>(reportingObject)) {
+      qDebug() << "\tUM - Update finish notification from" << reportingObject->shortName() << "for update" << updateObject->shortName() << "update count" << _activeUpdates[updateObject];
+    } else {
+      qDebug() << "\t\t\tUM - Update finish notification from" << reportingObject->shortName() << "for update" << updateObject->shortName() << "update count" << _activeUpdates[updateObject];
+    }
 #else
   Q_UNUSED(reportingObject)
 #endif
   if (_activeUpdates[updateObject] == 0) {
-#if DEBUG_UPDATE_CYCLE > 0
-    qDebug() << "UM - All updates have completed for update of" << updateObject->shortName();
-#endif
     _activeUpdates.remove(updateObject);
 
   // Add Logic for no curves to update plots.
     if (!_dependentUpdateRequests[updateObject].empty()) {
+      if (_dispatchingRequests.contains(updateObject)) {
+        return;
+      }
 #if DEBUG_UPDATE_CYCLE > 0
-        qDebug() << "UM - All updates complete updating relations for update of" <<  updateObject->shortName();
+        qDebug() << "\tUM - All primitive updates complete updating relations for update of" <<  updateObject->shortName();
+        qDebug() << "\t     Current dependentUpdate requests" << _dependentUpdateRequests;
 #endif
+      _dispatchingRequests.append(updateObject);
       foreach (ObjectPtr object, _dependentUpdateRequests[updateObject]) {
         _dependentUpdateRequests[updateObject].remove(object);
         bool continueWaiting = false;
@@ -157,7 +176,7 @@ void UpdateManager::updateFinished(ObjectPtr updateObject, ObjectPtr reportingOb
           if (list.contains(object)) {
             continueWaiting = true;
 #if DEBUG_UPDATE_CYCLE > 0
-            qDebug() << "UM - Delaying relation update for" << object->shortName() << "object is part of another update.";
+            qDebug() << "\t\tUM - Delaying relation update for" << object->shortName() << "object is part of another update.";
 #endif
             break;
           }
@@ -167,20 +186,23 @@ void UpdateManager::updateFinished(ObjectPtr updateObject, ObjectPtr reportingOb
         }
       }
       _dependentUpdateRequests.remove(updateObject);
+      _dispatchingRequests.removeAll(updateObject);
     } else {
       // Display level update required.
       if (_activeUpdates.empty()) {
 #if DEBUG_UPDATE_CYCLE > 0
-        qDebug() << "UM - All updates complete, updating plots "<< "Current dependent update list" <<  _dependentUpdateRequests;
-
+        qDebug() << "\tUM - All relation updates complete, updating plots for update of" <<  updateObject->shortName();
+        qDebug() << "\t     Current display update list" <<  _displayUpdateRequests;
 #endif
         foreach (QList<PlotItemInterface*> objectList, _displayUpdateRequests) {
           foreach (PlotItemInterface* object, objectList) {
             object->updateObject();
           }
         }
-        _dependentUpdateRequests.clear();
+        _displayUpdateRequests.clear();
 #if DEBUG_UPDATE_CYCLE > 0
+        qDebug() << "\tUM - All Plot updates completed for update of " << updateObject->Name();
+        qDebug() << "UM - Update Complete for " << updateObject->Name();
       } else {
         qDebug() << "UM - updates not complete: not updating plots: count:" << _updateRequests.count();
 #endif

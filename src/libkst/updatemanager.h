@@ -57,6 +57,7 @@ class UpdateManager : public QObject
     QMap<ObjectPtr, int> _activeUpdates;
     QMap<ObjectPtr, QList<ObjectPtr> > _dependentUpdateRequests;
     QMap<ObjectPtr, QList<PlotItemInterface*> > _displayUpdateRequests;
+    QList<ObjectPtr> _dispatchingRequests;
 
     bool _delayedUpdate;
     int _maxUpdate;
