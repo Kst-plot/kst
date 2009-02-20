@@ -123,7 +123,7 @@ RelationList PlotRenderItem::relationList() const {
 
 void PlotRenderItem::relationUpdated(ObjectPtr object) {
 #if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "UP - Curve update required by Plot for update of" << object->shortName();
+  qDebug() << "\t\t\tUP - Curve update required by Plot for update of" << object->shortName();
 #endif
   UpdateManager::self()->requestUpdate(object, plotItem());
 }

@@ -33,6 +33,7 @@
 #include "sharedaxisboxitem.h"
 
 #include "applicationsettings.h"
+#include "updatemanager.h"
 
 #include "math_kst.h"
 
@@ -469,18 +470,18 @@ void PlotItem::updateObject() {
     return;
   }
 #if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "UP - Updating Plot";
+  qDebug() << "\t\tUP - Updating Plot";
 #endif
   if (xAxis()->axisZoomMode() == PlotAxis::Auto) {
     if (yAxis()->axisZoomMode() == PlotAxis::AutoBorder || yAxis()->axisZoomMode() == PlotAxis::Auto
         || yAxis()->axisZoomMode() == PlotAxis::SpikeInsensitive || yAxis()->axisZoomMode() == PlotAxis::MeanCentered) {
 #if DEBUG_UPDATE_CYCLE > 1
-      qDebug() << "UP - Updating Plot Projection Rect - X and Y Maximum";
+      qDebug() << "\t\t\tUP - Updating Plot Projection Rect - X and Y Maximum";
 #endif
       setProjectionRect(computedProjectionRect());
     } else {
 #if DEBUG_UPDATE_CYCLE > 1
-      qDebug() << "UP - Updating Plot Projection Rect - X Maximum";
+      qDebug() << "\t\t\tUP - Updating Plot Projection Rect - X Maximum";
 #endif
       QRectF compute = computedProjectionRect();
       setProjectionRect(QRectF(compute.x(),
@@ -490,7 +491,7 @@ void PlotItem::updateObject() {
     }
   } else if (yAxis()->axisZoomMode() == PlotAxis::Auto) {
 #if DEBUG_UPDATE_CYCLE > 1
-    qDebug() << "UP - Updating Plot Projection Rect - Y Maximum";
+    qDebug() << "\t\t\tUP - Updating Plot Projection Rect - Y Maximum";
 #endif
     QRectF compute = computedProjectionRect();
     setProjectionRect(QRectF(projectionRect().x(),
