@@ -80,13 +80,13 @@ const QString& DataVector::typeString() const {
 
 void DataVector::sourceUpdated(ObjectPtr object) {
 #if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "UP - Data Source update required by Vector" << shortName() << "for update of" << object->shortName();
+  qDebug() << "\t\tUP - Data Source update required by Vector" << shortName() << "for update of" << object->shortName();
 #endif
   writeLock();
   UpdateManager::self()->updateStarted(object, this);
   if (update()) {
 #if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "UP - Vector" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
+  qDebug() << "\t\t\tUP - Vector" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
 #endif
     emit updated(object);
   }
