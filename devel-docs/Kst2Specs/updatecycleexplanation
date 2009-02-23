@@ -1,0 +1,142 @@
+Overview of Update Cycle
+
+Process Overview
+
+The basic idea behind the update cycle is that the DataSource detects an update and then emits a signal telling all objects that
+are dependent on it to update and the loop continues until all updates are complete.
+
+Creation of connections
+
+The connections are all created by the dependent objects connecting to the source's signal.  Each object is responsible for
+knowing what objects it depends on and creating and disconnecting the links as necessary when changes are made to the object.
+
+Processing of updates
+
+Processing of updates is triggered by the UpdateManager each time the Timer for the minimum update cycle has triggered.  If a 
+change was detected the update cycle for the datasources that requested updates begins, otherwise it waits for another minimum
+update cycle.
+
+Detecting change
+
+Detecting the change to the datasource is the responsibility of the plugin.  There are two common ways to check.
+
+Timer
+
+  Timer based detecting means that the plugin checks if the datasource has each each time the timer is triggered.
+
+File Based
+
+  File or Data based detecting does not use a timer but is still constrained by the update cycle timer.  This uses
+  QFileSystemWatcher to monitor the files on disk and when the file changes the update request is triggered.
+
+
+Requesing Update
+
+The update manager controls all updates, as such, if any object wants to update it must ask the UpdateManager.  When the 
+DataSource detects a change it tells the UpdateManager who, when the timer triggers, begins the update cycle by telling the
+DataSource it can notify it's dependents.
+
+Each Dependent then requests from the UpdateManager to update, and waits for permission to begin, this continues down the 
+line until all objects are updated.  The UpdateManager also requires each object indicate when it's update has started and 
+finished and uses this information to ensure that each type of update is completed before continuing to the next.  All
+DataVectors must be updated before any DataObjects and it continues for Relations and Plots until everything is updated
+in such a way as to prevent any data inconsistencies or reprocessing of data.
+
+
+Processing an Update
+
+Each object processes the update using it's update function and is entirely dependent on the object type.  In doing an update
+it must follow the following steps.
+
+  0.  Get an update Signal from parent object.
+  1.  Request Update from the UpdateManager
+  2.  Wait for permission to begin.
+  3.  Notify the UpdateManager it is starting.
+  4.  Update the object.
+  5.  emit the Update cycle for dependents to pick up.
+  6.  Notify the UpdateManager it is finished.
+
+
+Debugging
+
+Debugging output is configured in updatemanager.h and provides two levels of debugging.
+
+  1   UpdateManager based.  This outputs all data from the UpdateManager.  Lines denoted with UM -
+  2   Full Debugging.  This also includes output from all Updatable objects as they are updating.  Lines denoted with UP -
+
+
+Sample Output from full debugging.
+
+UM - Allow updates triggered
+UM - Beginning update for "/home/kst2/kst/tests/dirfile_maker/dm.cur (DS-dm.cur)"
+# Beginning Update Cycle based on DataSource change.
+        UM - Update beginning for "DS-dm.cur" for update "DS-dm.cur" update count 1
+                UP - Data Source update required by Vector "V1" for update of "DS-dm.cur"
+# DataSource has 3 Vectors configured for it.  Once update begins each Vector must be updated.
+# As each Vector begins updating the update count is incremented and when it finished is 
+# decremented.
+                UM - Update beginning for "V1" for update "DS-dm.cur" update count 2
+                        UP - Vector "V1" has been updated as part of update of "DS-dm.cur" informing dependents
+                        UP - Curve update ready for "DS-dm.cur"
+# This vector has two curves associated with it.  After it updates, both request updates.
+                        UM - Curve "C1" requested update requested for "/home/kst2/kst/tests/dirfile_maker/dm.cur (DS-dm.cur)"
+                             Current dependent update list QMap((DirFileSource(0x80ff448) ,  (Kst::Curve(0xb420a298) )  ) )
+                        UP - Curve update ready for "DS-dm.cur"
+                        UM - Curve "C2" requested update requested for "/home/kst2/kst/tests/dirfile_maker/dm.cur (DS-dm.cur)"
+                             Current dependent update list QMap((DirFileSource(0x80ff448) ,  (Kst::Curve(0xb420a298) ,  Kst::Curve(0xb420a998) )  ) )
+                UM - Update finish notification from "V1" for update "DS-dm.cur" update count 1
+# Vector update is finished update count is reduced.
+                UP - Data Source update required by Vector "V2" for update of "DS-dm.cur"
+                UM - Update beginning for "V2" for update "DS-dm.cur" update count 2
+                        UP - Vector "V2" has been updated as part of update of "DS-dm.cur" informing dependents
+# Second Vector updating
+                        UP - Curve update ready for "DS-dm.cur"
+# One curve associated.  Overlaps V1, no effective change.
+                        UM - Curve "C1" requested update requested for "/home/kst2/kst/tests/dirfile_maker/dm.cur (DS-dm.cur)"
+                             Current dependent update list QMap((DirFileSource(0x80ff448) ,  (Kst::Curve(0xb420a298) ,  Kst::Curve(0xb420a998) )  ) )
+                UM - Update finish notification from "V2" for update "DS-dm.cur" update count 1
+                UP - Data Source update required by Vector "V3" for update of "DS-dm.cur"
+                UM - Update beginning for "V3" for update "DS-dm.cur" update count 2
+                        UP - Vector "V3" has been updated as part of update of "DS-dm.cur" informing dependents
+# Third Vector Updating
+                        UP - Curve update ready for "DS-dm.cur"
+# One curve associated.  Overlaps V1, no effective change.
+                        UM - Curve "C2" requested update requested for "/home/kst2/kst/tests/dirfile_maker/dm.cur (DS-dm.cur)"
+                             Current dependent update list QMap((DirFileSource(0x80ff448) ,  (Kst::Curve(0xb420a298) ,  Kst::Curve(0xb420a998) )  ) )
+                UM - Update finish notification from "V3" for update "DS-dm.cur" update count 1
+        UM - Update finish notification from "DS-dm.cur" for update "DS-dm.cur" update count 0
+# All Vectors have now been updated.  The Primitives have all been updated and update count is 0.  Moving on to relations.
+        UM - All primitive updates complete updating relations for update of "DS-dm.cur"
+             Current dependentUpdate requests QMap((DirFileSource(0x80ff448) ,  (Kst::Curve(0xb420a298) ,  Kst::Curve(0xb420a998) )  ) )
+# Relation Map has been built during Primitive Updates.  Update Manager triggers each.
+                UP - Relation "C1" is processing update of "DS-dm.cur"
+                UM - Update beginning for "C1" for update "DS-dm.cur" update count 1
+                UP - Relation "C1" has been updated as part of update of "DS-dm.cur" informing dependents
+# Updating Curve 1, Plots containing Curve request updates.  Update count is tracked.
+                        UP - Curve update required by Plot for update of "DS-dm.cur"
+                        UM - Plot update requested for "/home/kst2/kst/tests/dirfile_maker/dm.cur (DS-dm.cur)"
+                             Current display update list QMap((DirFileSource(0x80ff448) ,  (0x80d535c) ) )
+                        UM - Update finish notification from "C1" for update "DS-dm.cur" update count 0
+                UP - Relation "C2" is processing update of "DS-dm.cur"
+# Finished Updating Curve, Update count reduced.
+                UM - Update beginning for "C2" for update "DS-dm.cur" update count 1
+                UP - Relation "C2" has been updated as part of update of "DS-dm.cur" informing dependents
+# Repeating for Curve 2
+                        UP - Curve update required by Plot for update of "DS-dm.cur"
+                        UM - Plot update requested for "/home/kst2/kst/tests/dirfile_maker/dm.cur (DS-dm.cur)"
+                             Current display update list QMap((DirFileSource(0x80ff448) ,  (0x80d535c, 0x81e0d64) ) )
+                        UM - Update finish notification from "C2" for update "DS-dm.cur" update count 0
+        UM - All relation updates complete, updating plots for update of "DS-dm.cur"
+# All relations updated, use Map of Plots to trigger update.  No display object is updated until all objects are updated.
+             Current display update list QMap((DirFileSource(0x80ff448) ,  (0x80d535c, 0x81e0d64) ) )
+                UP - Updating Plot
+                        UP - Updating Plot Projection Rect - X and Y Maximum
+# Plot is updated and if necessary zoom is changed.
+                UP - Updating Plot
+                        UP - Updating Plot Projection Rect - X and Y Maximum
+        UM - All Plot updates completed for update of  "/home/kst2/kst/tests/dirfile_maker/dm.cur (DS-dm.cur)"
+# Finish of all Plot Updates.
+UM - Update Complete for  "/home/kst2/kst/tests/dirfile_maker/dm.cur (DS-dm.cur)"
+# Finish of Update Cycle
+UM - Delaying for  2000 ms before allowing next update  
+# Delay until next update.
