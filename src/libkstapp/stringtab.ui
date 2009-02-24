@@ -39,7 +39,7 @@
        </widget>
       </item>
       <item row="0" column="1" >
-       <widget class="Kst::FileRequester" native="1" name="_fileName" />
+       <widget class="Kst::DataSourceSelector" native="1" name="_fileName" />
       </item>
       <item row="1" column="0" >
        <widget class="QLabel" name="label_5" >
@@ -164,9 +164,9 @@
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
   <customwidget>
-   <class>Kst::FileRequester</class>
-   <extends>QWidget</extends>
-   <header>filerequester.h</header>
+    <class>Kst::DataSourceSelector</class>
+    <extends>QWidget</extends>
+   <header>datasourceselector.h</header>
   </customwidget>
   <customwidget>
    <class>Kst::ComboBox</class>
