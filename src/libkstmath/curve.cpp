@@ -96,7 +96,7 @@ Curve::~Curve() {
 
 void Curve::vectorUpdated(ObjectPtr object) {
 #if DEBUG_UPDATE_CYCLE > 1
-    qDebug() << "UP - Curve update ready for" << object->shortName();
+    qDebug() << "\t\t\tUP - Curve update ready for" << object->shortName();
 #endif
     UpdateManager::self()->requestUpdate(object, this);
 }

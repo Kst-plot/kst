@@ -115,13 +115,13 @@ void Relation::setIgnoreAutoScale(bool ignoreAutoScale) {
 
 void Relation::processUpdate(ObjectPtr object) {
 #if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "UP - Relation" << shortName() << "is processing update of" << object->shortName();
+  qDebug() << "\t\tUP - Relation" << shortName() << "is processing update of" << object->shortName();
 #endif
   UpdateManager::self()->updateStarted(object, this);
   writeLock();
   if (update()) {
 #if DEBUG_UPDATE_CYCLE > 1
-    qDebug() << "UP - Relation" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
+    qDebug() << "\t\tUP - Relation" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
 #endif
     emit relationUpdated(object);
   }
