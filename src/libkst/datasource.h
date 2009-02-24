@@ -24,6 +24,7 @@
 #include <qstring.h>
 #include <qtextstream.h>
 #include <qwidget.h>
+#include <QRunnable>
 
 #include <qsettings.h>
 
@@ -434,6 +435,24 @@ class DataSourceConfigWidget : public QWidget {
     // particular instance of the source, as opposed to globally.
     DataSourcePtr _instance;
 } KST_EXPORT;
+
+class KST_EXPORT ValidateDataSourceThread : public QObject, public QRunnable
+{
+  Q_OBJECT
+
+  public:
+    ValidateDataSourceThread(const QString& file, const int requestID);
+    void run();
+
+  Q_SIGNALS:
+    void dataSourceValid(QString filename, int requestID);
+    void dataSourceInvalid(int requestID);
+
+  private:
+    ObjectStore *_store;
+    QString _file;
+    int _requestID;
+};
 
 }
 #endif

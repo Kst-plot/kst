@@ -13,6 +13,7 @@
 #define DATAWIZARD_H
 
 #include <QWizard>
+#include <QThread>
 
 #include "kst_export.h"
 
@@ -30,6 +31,7 @@ namespace Kst {
 class Document;
 class ObjectStore;
 class PlotItemInterface;
+class ValidateDataSourceThread;
 
 class KST_EXPORT DataWizardPageDataSource : public QWizardPage, Ui::DataWizardPageDataSource
 {
@@ -46,6 +48,7 @@ class KST_EXPORT DataWizardPageDataSource : public QWizardPage, Ui::DataWizardPa
   public Q_SLOTS:
     void sourceChanged(const QString&);
     void configureSource();
+    void sourceValid(QString filename, int requestID);
 
   Q_SIGNALS:
     void dataSourceChanged();
@@ -54,6 +57,7 @@ class KST_EXPORT DataWizardPageDataSource : public QWizardPage, Ui::DataWizardPa
     bool _pageValid;
     ObjectStore *_store;
     DataSourcePtr _dataSource;
+    int _requestID;
 };
 
 class KST_EXPORT DataWizardPageVectors : public QWizardPage, Ui::DataWizardPageVectors
@@ -187,7 +191,6 @@ class KST_EXPORT DataWizard : public QWizard
 };
 
 }
-
 #endif
 
 // vim: ts=2 sw=2 et

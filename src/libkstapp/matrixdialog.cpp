@@ -28,11 +28,12 @@
 #include "dialogdefaults.h"
 
 #include <QDir>
+#include <QThreadPool>
 
 namespace Kst {
 
 MatrixTab::MatrixTab(ObjectStore *store, QWidget *parent)
-  : DataTab(parent), _mode(DataMatrix), _store(store) {
+  : DataTab(parent), _mode(DataMatrix), _store(store), _requestID(0) {
 
   setupUi(this);
   setTabTitle(tr("Matrix"));
@@ -72,14 +73,13 @@ MatrixTab::MatrixTab(ObjectStore *store, QWidget *parent)
   connect(_gradientX, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_gradientY, SIGNAL(clicked()), this, SIGNAL(modified()));
 
-  _fileName->setFile(QDir::currentPath());
-
   _connect->setVisible(false);
 }
 
 
 MatrixTab::~MatrixTab() {
 }
+
 
 void MatrixTab::xStartCountFromEndClicked() {
   _xNumStepsReadToEnd->setChecked(_xNumStepsReadToEnd->isChecked() && !_xStartCountFromEnd->isChecked());
@@ -490,21 +490,11 @@ void MatrixTab::setMatrixMode(MatrixMode mode) {
 }
 
 
-void MatrixTab::fileNameChanged(const QString &file) {
-  QFileInfo info(file);
-  if (!info.exists() || !info.isFile())
+void MatrixTab::sourceValid(QString filename, int requestID) {
+  if (_requestID != requestID) {
     return;
-
-  _field->clear();
-
-  Q_ASSERT(_store);
-  _dataSource = DataSource::findOrLoadSource(_store, file);
-
-  if (!_dataSource) {
-    _field->setEnabled(false);
-    _configure->setEnabled(false);
-    return; //Couldn't find a suitable datasource
   }
+  _dataSource = DataSource::findOrLoadSource(_store, filename);
 
   _field->setEnabled(true);
 
@@ -517,6 +507,19 @@ void MatrixTab::fileNameChanged(const QString &file) {
   _dataSource->unlock();
 
   emit sourceChanged();
+}
+
+
+void MatrixTab::fileNameChanged(const QString &file) {
+  _field->clear();
+  _field->setEnabled(false);
+  _configure->setEnabled(false);
+  emit sourceChanged();
+
+  _requestID += 1;
+  ValidateDataSourceThread *validateDSThread = new ValidateDataSourceThread(file, _requestID);
+  connect(validateDSThread, SIGNAL(dataSourceValid(QString, int)), this, SLOT(sourceValid(QString, int)));
+  QThreadPool::globalInstance()->start(validateDSThread);
 }
 
 

@@ -24,11 +24,12 @@
 
 #include <QDir>
 #include <QMessageBox>
+#include <QThreadPool>
 
 namespace Kst {
 
 ChangeFileDialog::ChangeFileDialog(QWidget *parent)
-  : QDialog(parent) {
+  : QDialog(parent), _dataSource(0), _requestID(0) {
    setupUi(this);
 
   if (MainWindow *mw = qobject_cast<MainWindow*>(parent)) {
@@ -60,6 +61,8 @@ ChangeFileDialog::ChangeFileDialog(QWidget *parent)
   connect(_filter, SIGNAL(textChanged(const QString&)), this, SLOT(updateSelection(const QString&)));
   connect(_changeFilePrimitiveList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
 
+  connect(_dataFile, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
+
   _dataFile->setFile(QDir::currentPath());
   updateButtons();
 }
@@ -72,6 +75,28 @@ ChangeFileDialog::~ChangeFileDialog() {
 void ChangeFileDialog::exec() {
   updatePrimitiveList();
   QDialog::exec();
+}
+
+
+
+
+void ChangeFileDialog::sourceValid(QString filename, int requestID) {
+  if (_requestID != requestID) {
+    return;
+  }
+  _dataSource = DataSource::findOrLoadSource(_store, filename);
+  updateButtons();
+}
+
+
+void ChangeFileDialog::fileNameChanged(const QString &file) {
+  _dataSource = 0;
+  updateButtons();
+
+  _requestID += 1;
+  ValidateDataSourceThread *validateDSThread = new ValidateDataSourceThread(file, _requestID);
+  connect(validateDSThread, SIGNAL(dataSourceValid(QString, int)), this, SLOT(sourceValid(QString, int)));
+  QThreadPool::globalInstance()->start(validateDSThread);
 }
 
 
@@ -110,8 +135,9 @@ void ChangeFileDialog::updatePrimitiveList() {
 
 
 void ChangeFileDialog::updateButtons() {
-  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_changeFilePrimitiveList->selectedItems().count() > 0);
-  _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(_changeFilePrimitiveList->selectedItems().count() > 0);
+  bool valid = _changeFilePrimitiveList->selectedItems().count() > 0 && _dataSource;
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(valid);
+  _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(valid);
 }
 
 
@@ -154,8 +180,7 @@ void ChangeFileDialog::OKClicked() {
 
 void ChangeFileDialog::apply() {
   Q_ASSERT(_store);
-  DataSourcePtr dataSource = DataSource::findOrLoadSource(_store, _dataFile->file());
-  if (!dataSource || !dataSource->isValid() || dataSource->isEmpty()) {
+  if (!_dataSource->isValid() || _dataSource->isEmpty()) {
     QMessageBox::critical(this, tr("Kst"), tr("The file could not be loaded or contains no data."), QMessageBox::Ok);
     return;
   }
@@ -172,9 +197,9 @@ void ChangeFileDialog::apply() {
   for (int i = 0; i < selectedItems.size(); ++i) {
     if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(selectedItems[i]->text()))) {
       vector->writeLock();
-      dataSource->readLock();
-      bool valid = dataSource->isValidField(vector->field());
-      dataSource->unlock();
+      _dataSource->readLock();
+      bool valid = _dataSource->isValidField(vector->field());
+      _dataSource->unlock();
       if (!valid) {
         if (invalid > 0) {
           invalidSources += ", ";
@@ -186,7 +211,7 @@ void ChangeFileDialog::apply() {
           DataVectorPtr newVector = vector->makeDuplicate();
 
           newVector->writeLock();
-          newVector->changeFile(dataSource);
+          newVector->changeFile(_dataSource);
           newVector->update();
           newVector->unlock();
 
@@ -198,7 +223,7 @@ void ChangeFileDialog::apply() {
             oldSources << vector->dataSource();
           }
           vector->writeLock();
-          vector->changeFile(dataSource);
+          vector->changeFile(_dataSource);
           vector->update();
           vector->unlock();
         }
@@ -206,9 +231,9 @@ void ChangeFileDialog::apply() {
       vector->unlock();
     } else if (DataMatrixPtr matrix = kst_cast<DataMatrix>(_store->retrieveObject(selectedItems[i]->text()))) {
       matrix->writeLock();
-      dataSource->readLock();
-      bool valid = dataSource->isValidMatrix(matrix->field());
-      dataSource->unlock();
+      _dataSource->readLock();
+      bool valid = _dataSource->isValidMatrix(matrix->field());
+      _dataSource->unlock();
       if (!valid) {
         if (invalid > 0) {
           invalidSources += ", ";
@@ -220,7 +245,7 @@ void ChangeFileDialog::apply() {
           DataMatrixPtr newMatrix = matrix->makeDuplicate();
 
           newMatrix->writeLock();
-          newMatrix->changeFile(dataSource);
+          newMatrix->changeFile(_dataSource);
           newMatrix->update();
           newMatrix->unlock();
 
@@ -232,7 +257,7 @@ void ChangeFileDialog::apply() {
             oldSources << matrix->dataSource();
           }
           matrix->writeLock();
-          matrix->changeFile(dataSource);
+          matrix->changeFile(_dataSource);
           matrix->update();
           matrix->unlock();
         }

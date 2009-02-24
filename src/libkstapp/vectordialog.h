@@ -79,11 +79,13 @@ class KST_EXPORT VectorTab : public DataTab, Ui::VectorTab {
     void generateClicked();
     void fileNameChanged(const QString &file);
     void showConfigWidget();
+    void sourceValid(QString filename, int requestID);
 
   private:
     VectorMode _mode;
     ObjectStore *_store;
     DataSourcePtr _dataSource;
+    int _requestID;
 };
 
 class KST_EXPORT VectorDialog : public DataDialog {

@@ -15,6 +15,7 @@
 #include <QMessageBox>
 #include <psversion.h>
 #include <sysinfo.h>
+#include <QThreadPool>
 
 #include "colorsequence.h"
 #include "curve.h"
@@ -33,7 +34,7 @@
 namespace Kst {
 
 DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *parent)
-  : QWizardPage(parent), _pageValid(false), _store(store) {
+  : QWizardPage(parent), _pageValid(false), _store(store), _requestID(0) {
    setupUi(this);
 
    connect(_url, SIGNAL(changed(const QString&)), this, SLOT(sourceChanged(const QString&)));
@@ -42,8 +43,6 @@ DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *
    QString default_source = _dialogDefaults->value("vector/datasource",".").toString();
   _url->setFile(default_source);
   _url->setFocus();
-  //sourceChanged(default_source);
-
 }
 
 
@@ -73,21 +72,13 @@ void DataWizardPageDataSource::configureSource() {
 }
 
 
-void DataWizardPageDataSource::sourceChanged(const QString& file) {
-  QFileInfo info(file);
-  if (!info.exists())
+void DataWizardPageDataSource::sourceValid(QString filename, int requestID) {
+  if (_requestID != requestID) {
     return;
-
-  Q_ASSERT(_store);
-  _dataSource = DataSource::findOrLoadSource(_store, file);
-
-  if (!_dataSource) {
-    _pageValid = false;
-    _configureSource->setEnabled(false);
-    return; //Couldn't find a suitable datasource
   }
-
   _pageValid = true;
+
+  _dataSource = DataSource::findOrLoadSource(_store, filename);
 
   _dataSource->readLock();
   _configureSource->setEnabled(_dataSource->hasConfigWidget());
@@ -96,6 +87,19 @@ void DataWizardPageDataSource::sourceChanged(const QString& file) {
   emit completeChanged();
   emit dataSourceChanged();
 }
+
+
+void DataWizardPageDataSource::sourceChanged(const QString& file) {
+  _pageValid = false;
+  _configureSource->setEnabled(false);
+  emit completeChanged();
+
+  _requestID += 1;
+  ValidateDataSourceThread *validateDSThread = new ValidateDataSourceThread(file, _requestID);
+  connect(validateDSThread, SIGNAL(dataSourceValid(QString, int)), this, SLOT(sourceValid(QString, int)));
+  QThreadPool::globalInstance()->start(validateDSThread);
+}
+
 
 DataWizardPageVectors::DataWizardPageVectors(QWidget *parent)
   : QWizardPage(parent) {
@@ -940,7 +944,6 @@ void DataWizard::finished() {
   accept();
 
 }
-
 
 }
 

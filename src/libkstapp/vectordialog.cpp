@@ -25,11 +25,12 @@
 #include "dialogdefaults.h"
 
 #include <QDir>
+#include <QThreadPool>
 
 namespace Kst {
 
 VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
-  : DataTab(parent), _mode(DataVector), _store(store) {
+  : DataTab(parent), _mode(DataVector), _store(store), _requestID(0) {
 
   setupUi(this);
   setTabTitle(tr("Vector"));
@@ -43,7 +44,6 @@ VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
   connect(_numberOfSamples, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_from, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
   connect(_to, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  _fileName->setFile(QDir::currentPath());
 
   // embed data range in the data source box
   _dataRange->groupBox2->setFlat(true);
@@ -208,22 +208,11 @@ void VectorTab::enableSingleEditOptions(bool enabled) {
 }
 
 
-void VectorTab::fileNameChanged(const QString &file) {
-  QFileInfo info(file);
-  if (!info.exists())
+void VectorTab::sourceValid(QString filename, int requestID) {
+  if (_requestID != requestID) {
     return;
-
-  _field->clear();
-
-  Q_ASSERT(_store);
-  _dataSource = DataSource::findOrLoadSource(_store, file);
-
-  if (!_dataSource) {
-    _field->setEnabled(false);
-    _configure->setEnabled(false);
-    return; //Couldn't find a suitable datasource
   }
-
+  _dataSource = DataSource::findOrLoadSource(_store, filename);
   _field->setEnabled(true);
 
   _dataSource->readLock();
@@ -232,11 +221,21 @@ void VectorTab::fileNameChanged(const QString &file) {
   _field->setEditable(!_dataSource->fieldListIsComplete());
   _configure->setEnabled(_dataSource->hasConfigWidget());
 
-  //FIXME deal with time...
-  //_dataRange->setAllowTime(ds->supportsTimeConversions());
-
   _dataSource->unlock();
   emit sourceChanged();
+}
+
+
+void VectorTab::fileNameChanged(const QString &file) {
+  _field->clear();
+  _field->setEnabled(false);
+  _configure->setEnabled(false);
+  emit sourceChanged();
+
+  _requestID += 1;
+  ValidateDataSourceThread *validateDSThread = new ValidateDataSourceThread(file, _requestID);
+  connect(validateDSThread, SIGNAL(dataSourceValid(QString, int)), this, SLOT(sourceValid(QString, int)));
+  QThreadPool::globalInstance()->start(validateDSThread);
 }
 
 

@@ -61,12 +61,14 @@ class KST_EXPORT StringTab : public DataTab, Ui::StringTab {
     void textChanged();
     void fileNameChanged(const QString &file);
     void showConfigWidget();
+    void sourceValid(QString filename, int requestID);
 
   private:
     void updateDataSource();
     StringMode _mode;
     ObjectStore *_store;
     DataSourcePtr _dataSource;
+    int _requestID;
 };
 
 class KST_EXPORT StringDialog : public DataDialog {

@@ -18,11 +18,12 @@
 #include "dialogdefaults.h"
 
 #include <QPushButton>
+#include <QThreadPool>
 
 namespace Kst {
 
 StringTab::StringTab(ObjectStore *store, QWidget *parent)
-  : DataTab(parent),  _mode(DataString), _store(store){
+  : DataTab(parent),  _mode(DataString), _store(store), _requestID(0) {
 
   setupUi(this);
   setTabTitle(tr("String"));
@@ -37,6 +38,7 @@ StringTab::StringTab(ObjectStore *store, QWidget *parent)
 
 StringTab::~StringTab() {
 }
+
 
 void StringTab::generateClicked() {
   if (_generatedStringGroup->isChecked())
@@ -143,23 +145,11 @@ void StringTab::updateDataSource() {
 }
 
 
-void StringTab::fileNameChanged(const QString &file) {
-  QFileInfo info(file);
-  if (!info.exists()) {
-    _field->setEnabled(false);
-    _configure->setEnabled(false);
+void StringTab::sourceValid(QString filename, int requestID) {
+  if (_requestID != requestID) {
     return;
   }
-
-  _field->clear();
-  Q_ASSERT(_store);
-  _dataSource = DataSource::findOrLoadSource(_store, file);
-
-  if (!_dataSource) {
-    _field->setEnabled(false);
-    _configure->setEnabled(false);
-    return; //Couldn't find a suitable datasource
-  }
+  _dataSource = DataSource::findOrLoadSource(_store, filename);
 
   _field->setEnabled(true);
 
@@ -169,11 +159,22 @@ void StringTab::fileNameChanged(const QString &file) {
   _field->setEditable(!_dataSource->stringListIsComplete());
   _configure->setEnabled(_dataSource->hasConfigWidget());
 
-  //FIXME deal with time...
-  //_dataRange->setAllowTime(ds->supportsTimeConversions());
-
   _dataSource->unlock();
   emit sourceChanged();
+//   emit valueChanged();
+}
+
+
+void StringTab::fileNameChanged(const QString &file) {
+  _field->clear();
+  _field->setEnabled(false);
+  _configure->setEnabled(false);
+  emit sourceChanged();
+
+  _requestID += 1;
+  ValidateDataSourceThread *validateDSThread = new ValidateDataSourceThread(file, _requestID);
+  connect(validateDSThread, SIGNAL(dataSourceValid(QString, int)), this, SLOT(sourceValid(QString, int)));
+  QThreadPool::globalInstance()->start(validateDSThread);
 }
 
 
@@ -201,6 +202,7 @@ StringDialog::StringDialog(ObjectPtr dataObject, QWidget *parent)
   }
 
   connect(_stringTab, SIGNAL(valueChanged()), this, SLOT(updateButtons()));
+  connect(_stringTab, SIGNAL(sourceChanged()), this, SLOT(updateButtons()));
   updateButtons();
 }
 

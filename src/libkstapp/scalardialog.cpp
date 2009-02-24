@@ -20,11 +20,12 @@
 #include "dialogdefaults.h"
 
 #include <QPushButton>
+#include <QThreadPool>
 
 namespace Kst {
 
 ScalarTab::ScalarTab(ObjectStore *store, QWidget *parent)
-  : DataTab(parent),  _mode(DataScalar), _store(store){
+  : DataTab(parent),  _mode(DataScalar), _store(store), _requestID(0) {
 
   setupUi(this);
   setTabTitle(tr("Scalar"));
@@ -175,26 +176,11 @@ void ScalarTab::updateDataSource() {
 }
 
 
-void ScalarTab::fileNameChanged(const QString &file) {
-  QFileInfo info(file);
-  if (!info.exists()) {
-    _field->setEnabled(false);
-    _fieldRV->setEnabled(false);
-    _configure->setEnabled(false);
+void ScalarTab::sourceValid(QString filename, int requestID) {
+  if (_requestID != requestID) {
     return;
   }
-
-  _field->clear();
-  _fieldRV->clear();
-  Q_ASSERT(_store);
-  _dataSource = DataSource::findOrLoadSource(_store, file);
-
-  if (!_dataSource) {
-    _field->setEnabled(false);
-    _fieldRV->setEnabled(false);
-    _configure->setEnabled(false);
-    return; //Couldn't find a suitable datasource
-  }
+  _dataSource = DataSource::findOrLoadSource(_store, filename);
 
   _field->setEnabled(true);
   _fieldRV->setEnabled(true);
@@ -207,12 +193,25 @@ void ScalarTab::fileNameChanged(const QString &file) {
   _fieldRV->setEditable(!_dataSource->fieldListIsComplete());
   _configure->setEnabled(_dataSource->hasConfigWidget());
 
-  //FIXME deal with time...
-  //_dataRange->setAllowTime(ds->supportsTimeConversions());
-
   _dataSource->unlock();
   modified();
   emit sourceChanged();
+}
+
+
+
+void ScalarTab::fileNameChanged(const QString &file) {
+  _field->clear();
+  _fieldRV->clear();
+  _field->setEnabled(false);
+  _fieldRV->setEnabled(false);
+  _configure->setEnabled(false);
+  emit sourceChanged();
+
+  _requestID += 1;
+  ValidateDataSourceThread *validateDSThread = new ValidateDataSourceThread(file, _requestID);
+  connect(validateDSThread, SIGNAL(dataSourceValid(QString, int)), this, SLOT(sourceValid(QString, int)));
+  QThreadPool::globalInstance()->start(validateDSThread);
 }
 
 

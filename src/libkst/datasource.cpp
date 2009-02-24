@@ -574,7 +574,7 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
 
 
 DataSource::~DataSource() {
-  //  qDebug() << "DataSource destructor: " << Name() << endl;
+//    qDebug() << "DataSource destructor: " << Name() << endl;
 }
 
 
@@ -946,6 +946,28 @@ void DataSourceConfigWidget::setInstance(DataSourcePtr inst) {
 
 DataSourcePtr DataSourceConfigWidget::instance() const {
   return _instance;
+}
+
+
+ValidateDataSourceThread::ValidateDataSourceThread(const QString& file, const int requestID) : QRunnable(), 
+  _file(file),
+  _requestID(requestID) {
+}
+
+
+void ValidateDataSourceThread::run() {
+  QFileInfo info(_file);
+  if (!info.exists()) {
+    emit dataSourceInvalid(_requestID);
+    return;
+  }
+
+  if (!DataSource::validSource(_file)) {
+    emit dataSourceInvalid(_requestID);
+    return;
+  }
+
+  emit dataSourceValid(_file, _requestID);
 }
 
 }

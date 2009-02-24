@@ -141,6 +141,7 @@ class KST_EXPORT MatrixTab : public DataTab, Ui::MatrixTab {
     void readFromSourceChanged();
     void fileNameChanged(const QString &file);
     void showConfigWidget();
+    void sourceValid(QString filename, int requestID);
 
     void updateEnables();
     void xStartCountFromEndClicked();
@@ -152,6 +153,7 @@ class KST_EXPORT MatrixTab : public DataTab, Ui::MatrixTab {
     MatrixMode _mode;
     DataSourcePtr _dataSource;
     ObjectStore *_store;
+    int _requestID;
 };
 
 class KST_EXPORT MatrixDialog : public DataDialog {

@@ -66,12 +66,14 @@ class KST_EXPORT ScalarTab : public DataTab, Ui::ScalarTab {
     void entryChanged();
     void fileNameChanged(const QString &file);
     void showConfigWidget();
+    void sourceValid(QString filename, int requestID);
 
   private:
     void updateDataSource();
     ScalarMode _mode;
     ObjectStore *_store;
     DataSourcePtr _dataSource;
+    int _requestID;
 };
 
 class KST_EXPORT ScalarDialog : public DataDialog {
