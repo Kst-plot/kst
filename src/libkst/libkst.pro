@@ -10,6 +10,12 @@ DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
 CONFIG += debug
 
+INSTALL_DIR = $$(INSTDIR)
+! isEmpty(INSTALL_DIR) {
+  target.path = $$INSTALL_DIR/lib
+  INSTALLS += target
+}
+
 INCLUDEPATH += \
     tmp \
     $$OUTPUT_DIR/src/libkst/tmp

@@ -10,12 +10,18 @@ DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
 CONFIG += debug
 
+INSTALL_DIR = $$(INSTDIR)
+! isEmpty(INSTALL_DIR) {
+  target.path = $$INSTALL_DIR/lib
+  INSTALLS += target
+}
+
 INCLUDEPATH += \
     tmp \
     $$TOPLEVELDIR/src/libkst \
     $$OUTPUT_DIR/src/libkstmath/tmp
 
-LIBS += -lkst
+LIBS += -L$$OUTPUT_DIR/lib -lkst
 
 #Don't trigger qmake's lex/yacc handling by default.
 #Rather we want to use the files that are pre-generated and checked in.

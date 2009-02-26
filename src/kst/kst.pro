@@ -7,6 +7,12 @@ TARGET = kst
 DESTDIR = $$OUTPUT_DIR/bin
 CONFIG += debug
 
+INSTALL_DIR = $$(INSTDIR)
+! isEmpty(INSTALL_DIR) {
+  target.path = $$INSTALL_DIR/bin
+  INSTALLS += target
+}
+
 INCLUDEPATH += \
     tmp \
     $$TOPLEVELDIR/src/libkst \
@@ -15,7 +21,7 @@ INCLUDEPATH += \
     $$TOPLEVELDIR/src/libkstapp \
     $$OUTPUT_DIR/src/kst/tmp
 
-LIBS += -lkst -lkstmath -lkstwidgets -lkstapp
+LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkst -lkstmath -lkstwidgets -lkstapp
 
 SOURCES += \
     main.cpp

@@ -17,11 +17,12 @@ SUBDIRS += \
     statistics \
     syncbin
 
- contains(HAVE_GSL, 1) {
+  LibExists(gsl) {
      message(GSL configured.  Data Object plugins will be built.)
      SUBDIRS += convolution \
                 correlation \
                 interpolations \
                 noiseaddition
- }
-
+     CONFIG += link_pkgconfig
+     PKGCONFIG += gsl
+  }

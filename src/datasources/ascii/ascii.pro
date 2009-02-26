@@ -10,12 +10,18 @@ TARGET = kstdata_ascii
 DESTDIR = $$OUTPUT_DIR/plugin
 CONFIG += debug
 
+INSTALL_DIR = $$(INSTDIR)
+! isEmpty(INSTALL_DIR) {
+  target.path = $$INSTALL_DIR/plugin
+  INSTALLS += target
+}
+
 INCLUDEPATH += \
     tmp \
     $$TOPLEVELDIR/src/libkst \
     $$OUTPUT_DIR/src/datasources/ascii/tmp
 
-LIBS += -lkst
+LIBS += -L$$OUTPUT_DIR/lib -lkst
 
 SOURCES += \
     ascii.cpp

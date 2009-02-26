@@ -9,6 +9,12 @@ MOC_DIR = tmp
 TARGET = kstplugin_crossspectrum
 DESTDIR = $$OUTPUT_DIR/plugin
 
+INSTALL_DIR = $$(INSTDIR)
+! isEmpty(INSTALL_DIR) {
+  target.path = $$INSTALL_DIR/plugin
+  INSTALLS += target
+}
+
 INCLUDEPATH += \
     tmp \
     $$TOPLEVELDIR/src/libkst \
@@ -17,7 +23,7 @@ INCLUDEPATH += \
     $$OUTPUT_DIR/src/widgets \
     $$OUTPUT_DIR/src/datasources/ascii/tmp
 
-LIBS += -lkst -lkstmath -lkstwidgets -lkstapp
+LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkst -lkstmath -lkstwidgets -lkstapp
 
 SOURCES += \
     fftsg_h.c \

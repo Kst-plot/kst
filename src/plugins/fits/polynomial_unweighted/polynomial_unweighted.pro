@@ -9,6 +9,12 @@ MOC_DIR = tmp
 TARGET = kstplugin_fitpolynomial_unweighted
 DESTDIR = $$OUTPUT_DIR/plugin
 
+INSTALL_DIR = $$(INSTDIR)
+! isEmpty(INSTALL_DIR) {
+  target.path = $$INSTALL_DIR/plugin
+  INSTALLS += target
+}
+
 INCLUDEPATH += \
     tmp \
     $$TOPLEVELDIR/src/libkst \
@@ -17,7 +23,7 @@ INCLUDEPATH += \
     $$OUTPUT_DIR/src/widgets \
     $$OUTPUT_DIR/src/datasources/ascii/tmp
 
-LIBS += -lkst -lgsl -lkstmath -lkstwidgets -lkstapp
+LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkst -lgsl -lkstmath -lkstwidgets -lkstapp
 
 SOURCES += \
     fitpolynomial_unweighted.cpp

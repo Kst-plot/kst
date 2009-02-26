@@ -7,13 +7,16 @@ SUBDIRS += \
     qimagesource \
     sampledatasource
 
+LibExists(cfitsio) {
+    message(CFITSIO configured.  Plugins will be built.)
+    SUBDIRS += fitsimage lfiio healpix planckIDEF
+    CONFIG += link_pkgconfig
+    PKGCONFIG += cfitsio
+}
 
- contains(HAVE_CFITSIO, 1) {
-     message(CFITSIO configured.  Plugins will be built.)
-     SUBDIRS += fitsimage lfiio healpix planckIDEF
- }
-
-contains(HAVE_DIRFILE, 1) {
-     message(DIRFILE configured.  Plugins will be built.)
-  !win32:SUBDIRS += dirfilesource
+LibExists(getdata) {
+    message(DIRFILE configured.  Plugins will be built.)
+    SUBDIRS += dirfilesource
+    CONFIG += link_pkgconfig
+    PKGCONFIG += getdata
 }

@@ -1,3 +1,4 @@
+OUTPUT_DIR = $$(OUTPUT_DIR)
 isEmpty(OUTPUT_DIR):OUTPUT_DIR=$$PWD/build
 
 QT += core

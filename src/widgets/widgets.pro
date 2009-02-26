@@ -10,9 +10,11 @@ TARGET = kstwidgets
 win32:CONFIG += staticlib
 CONFIG += debug
 
-
-target.path = $$[QT_INSTALL_PLUGINS]/designer
-INSTALLS += target
+INSTALL_DIR = $$(INSTDIR)
+! isEmpty(INSTALL_DIR) {
+  target.path = $$INSTALL_DIR/plugin
+  INSTALLS += target
+}
 
 DESTDIR = $$OUTPUT_DIR/plugin
 
@@ -22,7 +24,7 @@ INCLUDEPATH += \
     $$TOPLEVELDIR/src/libkstmath \
     $$OUTPUT_DIR/src/widgets/tmp
 
-LIBS += -lkst -lkstmath
+LIBS += -L$$OUTPUT_DIR/lib -lkst -lkstmath
 
 SOURCES += \
     colorbutton.cpp \

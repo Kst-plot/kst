@@ -2,7 +2,7 @@ include($$PWD/../../../config.pri)
 TEMPLATE = subdirs
 CONFIG += ordered
 
-contains(HAVE_GSL, 1) {
+LibExists(gsl) {
   message(GSL configured.  Fits plugins will be built.)
   SUBDIRS += \
       exponential_unweighted \
@@ -20,4 +20,6 @@ contains(HAVE_GSL, 1) {
       polynomial_weighted \
       sinusoid_unweighted \
       sinusoid_weighted
- }
+    CONFIG += link_pkgconfig
+    PKGCONFIG += gsl
+}

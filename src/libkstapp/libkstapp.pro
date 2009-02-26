@@ -10,6 +10,12 @@ DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
 CONFIG += debug
 
+INSTALL_DIR = $$(INSTDIR)
+! isEmpty(INSTALL_DIR) {
+  target.path = $$INSTALL_DIR/lib
+  INSTALLS += target
+}
+
 INCLUDEPATH += \
     tmp \
     $$TOPLEVELDIR/src/libkst \
@@ -18,7 +24,7 @@ INCLUDEPATH += \
     $$OUTPUT_DIR/src/widgets \
     $$OUTPUT_DIR/src/libkstapp/tmp
 
-LIBS += -lkst -lkstmath -lkstwidgets
+LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkst -lkstmath -lkstwidgets
 
 SOURCES += \
     application.cpp \
