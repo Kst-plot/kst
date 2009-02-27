@@ -73,7 +73,7 @@ PlotRenderItem::~PlotRenderItem() {
 
 
 PlotItem *PlotRenderItem::plotItem() const {
-  return qobject_cast<PlotItem*>(qgraphicsitem_cast<ViewItem*>(parentItem()));
+  return static_cast<PlotItem*>(parentItem());
 }
 
 
@@ -890,12 +890,10 @@ bool PlotRenderItem::tryShortcut(const QString &keySequence) {
 
 
 void PlotRenderItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
-  if (plotItem() && plotItem()->parentItem()) {
-    if (SharedAxisBoxItem *sharedBox = qgraphicsitem_cast<SharedAxisBoxItem*>(plotItem()->parentItem())) {
-      if (plotItem()->parentView()->viewMode() == View::Layout) {
-       sharedBox->triggerContextEvent(event);
-       return;
-      }
+  if (plotItem() && plotItem()->parentItem() && plotItem()->isInSharedAxisBox()) {
+    if (plotItem()->parentView()->viewMode() == View::Layout) {
+      plotItem()->sharedAxisBox()->triggerContextEvent(event);
+      return;
     }
   }
   ViewItem::contextMenuEvent(event);

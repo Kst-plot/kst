@@ -28,6 +28,7 @@
 #include "plotaxis.h"
 #include "legenditem.h"
 #include "curveplacement.h"
+#include "sharedaxisboxitem.h"
 
 namespace Kst {
 
@@ -83,7 +84,8 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     bool isInSharedAxisBox() const;
     void setInSharedAxisBox(bool inSharedBox);
 
-    void setSharedAxisBox(ViewItem* parent);
+    SharedAxisBoxItem* sharedAxisBox();
+    void setSharedAxisBox(SharedAxisBoxItem* parent);
 
     qreal leftMarginSize() const;
     void setLeftPadding(const qreal);
@@ -458,6 +460,8 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QAction *_filterAction;
     QMenu *_fitMenu;
     QAction *_fitAction;
+
+    SharedAxisBoxItem * _sharedBox;
 
     QUndoStack *_undoStack;
 

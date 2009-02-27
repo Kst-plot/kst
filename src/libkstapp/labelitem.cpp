@@ -175,7 +175,7 @@ void CreateLabelCommand::createItem() {
   }
 
   _item = new LabelItem(_view, text);
-  LabelItem *label = qgraphicsitem_cast<LabelItem*>(_item);
+  LabelItem *label = qobject_cast<LabelItem*>(_item);
   label->setLabelScale(dialog.labelScale());
   label->setLabelColor(dialog.labelColor());
   label->setLabelFont(dialog.labelFont());

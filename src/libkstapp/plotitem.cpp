@@ -85,7 +85,8 @@ PlotItem::PlotItem(View *parent)
   _legend(0),
   _zoomMenu(0),
   _filterMenu(0),
-  _fitMenu(0)
+  _fitMenu(0),
+  _sharedBox(0)
 {
 
   setName("Plot");
@@ -407,14 +408,12 @@ void PlotItem::createFitMenu() {
 
 
 void PlotItem::addToMenuForContextEvent(QMenu &menu) {
-  if (parentItem()) {
-    if (SharedAxisBoxItem *sharedBox = qgraphicsitem_cast<SharedAxisBoxItem*>(parentItem())) {
-      if (parentView()->viewMode() == View::Data) {
-        QAction *breakSharedBox = new QAction(tr("Break Shared Axis Box"), this);
-        breakSharedBox->setShortcut(Qt::Key_B);
-        connect(breakSharedBox, SIGNAL(triggered()), sharedBox, SLOT(breakShare()));
-        menu.addAction(breakSharedBox);
-      }
+  if (parentItem() && isInSharedAxisBox() && _sharedBox) {
+    if (parentView()->viewMode() == View::Data) {
+      QAction *breakSharedBox = new QAction(tr("Break Shared Axis Box"), this);
+      breakSharedBox->setShortcut(Qt::Key_B);
+      connect(breakSharedBox, SIGNAL(triggered()), _sharedBox, SLOT(breakShare()));
+      menu.addAction(breakSharedBox);
     }
   }
 
@@ -506,10 +505,8 @@ void PlotItem::updateObject() {
 void PlotItem::marginsUpdated() {
   //ViewGridLayout::standardizePlotMargins(this);
   //qDebug() << "---Margins updated called";
-  if (isInSharedAxisBox() && parentItem()) {
-    if (SharedAxisBoxItem *sharedBox = qgraphicsitem_cast<SharedAxisBoxItem*>(parentItem())) {
-      sharedBox->sharePlots();
-    }
+  if (isInSharedAxisBox() && parentItem() && _sharedBox) {
+    _sharedBox->sharePlots();
   }
 }
 
@@ -1034,7 +1031,12 @@ void PlotItem::setInSharedAxisBox(bool inSharedBox) {
 }
 
 
-void PlotItem::setSharedAxisBox(ViewItem* parent) {
+SharedAxisBoxItem* PlotItem::sharedAxisBox() {
+  return _sharedBox;
+}
+
+
+void PlotItem::setSharedAxisBox(SharedAxisBoxItem* parent) {
   if (parent) {
     if (_isTiedZoom) {
       setTiedZoom(false);
@@ -1053,6 +1055,7 @@ void PlotItem::setSharedAxisBox(ViewItem* parent) {
     setParent(0);
     setBrush(Qt::white);
   }
+  _sharedBox = parent;
 }
 
 
@@ -2354,11 +2357,9 @@ void PlotItem::resetSelectionRect() {
 
 
 void PlotItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-  if (isInSharedAxisBox()) {
-    if (SharedAxisBoxItem *sharedBox = qgraphicsitem_cast<SharedAxisBoxItem*>(parentItem())) {
-      if (sharedBox->tryMousePressEvent(this, event)) {
-        return;
-      }
+  if (isInSharedAxisBox() && _sharedBox) {
+    if (_sharedBox->tryMousePressEvent(this, event)) {
+      return;
     }
   }
   if (event->button() == Qt::LeftButton) {
