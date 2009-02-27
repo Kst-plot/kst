@@ -5,7 +5,7 @@ CONFIG += ordered
 SUBDIRS += \
     despike 
 
- contains(HAVE_GSL, 1) {
+LibExists(gsl) {
      message(GSL configured.  Filter plugins will be built.)
      SUBDIRS += butterworth_bandpass \
                 butterworth_bandstop \
