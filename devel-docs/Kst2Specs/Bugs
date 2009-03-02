@@ -1,7 +1,3 @@
-Bugs in Build System:
-  -picks up libraries in lib/X11 before local libs
-  -doesn't support 'make install' nor DESTDIR
----------
 
 Auto-labels, and '_' in field names:
 When plots are using name-based auto-labels, any '_' in field names gets interpreted as a subscript.
@@ -30,38 +26,6 @@ kst) seem more sluggish. �
 
 ---------
 
-The first pane of the data wizard should be reading directories in
-the background, instead of in the foreground where it steals X focus
-until the directory is read. �I ran into a interminable-focus-stealing
-problem where kst was attempting to read a dead NFS mount. �Required an
-X restart.
-*Mike*
---------
-
-General drawing 'flicker' and missing regions in drawing with openGL enabled:
-OpenGL is qualitatively much faster, but on my laptop with Intel graphics, 
-embedded, and running opengl with kwin, there is lots of flicker, and lots
-of things simply not drawn.
-
-Notes:
- - We are doing everything correctly according to the Qt documentation.
-
- - This can be reproduced using the Qt example code.  Corruption extends beyond
-   Kst, and can be seen in all other apps showing drawing problems. while QGLWidget
-   is running.
-
- - Sample Qt code:
-    http://labs.trolltech.com/blogs/2008/06/27/accelerate-your-widgets-with-opengl/
-
- - Performance will be improved in future versions of Qt and is a known issue.
-   http://labs.trolltech.com/blogs/2008/02/04/qt-44-and-painting-performance/
-
- - This bug is a platform specific to X11 and is documented by ubuntu with a work around.
-   https://wiki.ubuntu.com/RedirectedDirectRendering
-
- - Sample app from Qt runs correctly under Windows, no reported problems with Mac.
-
---------
 
 PlotMarginStandardization is applied inconsistently.
 - Note: Fixed many cases.  After applying layout, plotBorders are set to Dirty, this may not be
@@ -86,12 +50,3 @@ Fragility in moving parents:
 *Mike*
 ---------
 
-qgraphicsitem_cast is not setup correctly and causing bugs.
-  A number of bugs are occurring as the result of qgraphicsitem_cast failing.  All ViewItem objects will need to be
-  updated to support type and casts re-evaluated.
-
-  This causes context menu bugs.
-
-  Object selection bugs.
-*Mike*
----------
