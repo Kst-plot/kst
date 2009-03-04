@@ -58,16 +58,14 @@ class ViewGridLayout : public QObject
     void calculateSharing();
     static void updateProjections(ViewItem *item);
 
-    static void resetSharedPlots(ViewItem *item);
     static void standardizePlotMargins(ViewItem *item, QPainter *painter);
-    static void sharePlots(ViewItem *item);
-    static void sharePlots(View *view);
+    static void sharePlots(ViewItem *item, QPainter *painter);
+
+    void reset();
 
   public Q_SLOTS:
-    void reset();
-    void resetSharedAxis();
     void apply();
-    void shareAxis();
+    void shareAxis(QPainter *painter);
 
   Q_SIGNALS:
     void enabledChanged(bool enabled);

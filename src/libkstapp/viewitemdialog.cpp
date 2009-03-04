@@ -225,12 +225,10 @@ void ViewItemDialog::dimensionsChanged() {
 
 
 void ViewItemDialog::setupChildViewOptions() {
-  _childViewOptionsTab->setShareAxis(_item->shareAxis());
 }
 
 
 void ViewItemDialog::childViewOptionsChanged() {
-  _item->setShareAxis(_childViewOptionsTab->shareAxis());
 }
 
 

@@ -75,9 +75,6 @@ class ApplicationSettings : public QObject
 
     QGradientStops gradientStops() const;
 
-    bool shareAxis() const;
-    void setShareAxis(bool shareAxis);
-
     QSizeF layoutMargins() const;
     void setLayoutMargins(QSizeF margins);
 

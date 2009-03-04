@@ -30,7 +30,7 @@
 namespace Kst {
 
 SharedAxisBoxItem::SharedAxisBoxItem(View *parent)
-    : ViewItem(parent), _layout(0), _loaded(false) {
+    : ViewItem(parent), _layout(0), _loaded(false), _dirty(false) {
   setName("Shared Axis Box");
   setZValue(SHAREDAXISBOX_ZVALUE);
   setBrush(Qt::transparent);
@@ -49,6 +49,10 @@ SharedAxisBoxItem::~SharedAxisBoxItem() {
 
 
 void SharedAxisBoxItem::paint(QPainter *painter) {
+  if (_dirty) {
+    sharePlots(painter);
+    _dirty = false;
+  }
   painter->drawRect(rect());
 }
 
@@ -111,7 +115,7 @@ bool SharedAxisBoxItem::acceptItems() {
       setBrush(Qt::white);
       setSupportsTiedZoom(true);
       ViewGridLayout::updateProjections(this);
-      sharePlots();
+      _dirty = true;
       bReturn =  true;
     }
   }

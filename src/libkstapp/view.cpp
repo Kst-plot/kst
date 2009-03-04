@@ -46,7 +46,6 @@ View::View()
     _gridSpacing(QSizeF(20,20)),
     _snapToGridHorizontal(false),
     _snapToGridVertical(false),
-    _shareAxis(true),
     _plotBordersDirty(false),
     _printing(false),
     _dataMode(false) {
@@ -212,15 +211,6 @@ void View::setGridSpacing(const QSizeF &gridSpacing) {
 }
 
 
-void View::setShareAxis(bool shareAxis) {
-  if (_shareAxis == shareAxis)
-    return;
-
-  _shareAxis = shareAxis;
-  // TODO Trigger appropriate updates.
-}
-
-
 QPointF View::snapPoint(const QPointF &point) {
   qreal x = point.x();
   qreal y = point.y();
@@ -336,18 +326,6 @@ void View::createLayout(int columns) {
 }
 
 
-void View::sharePlots() {
-  new LayoutBoxItem(this);
-  ViewGridLayout::sharePlots(_layoutBoxItem);
-
-  if (_layoutBoxItem) {
-    _layoutBoxItem->setEnabled(false);
-    delete _layoutBoxItem;
-    _layoutBoxItem = 0;
-  }
-}
-
-
 void View::appendToLayout(CurvePlacement::Layout layout, ViewItem* item, int columns) {
   AppendLayoutCommand *appendlayout = new AppendLayoutCommand(new LayoutBoxItem(this));
   appendlayout->appendLayout(layout, item, columns);
@@ -364,7 +342,6 @@ void View::appendToLayout(CurvePlacement::Layout layout, ViewItem* item, int col
 void View::resizeEvent(QResizeEvent *event) {
   QGraphicsView::resizeEvent(event);
   setPlotBordersDirty(true);
-
   if (size() != sceneRect().size()) {
     QRectF oldSceneRect = sceneRect();
 
@@ -464,8 +441,6 @@ void View::loadSettings() {
 
   setGridSpacing(QSizeF(ApplicationSettings::self()->gridHorizontalSpacing(),
                         ApplicationSettings::self()->gridVerticalSpacing()));
-
-  setShareAxis(ApplicationSettings::self()->shareAxis());
 
   updateFont();
   updateBrush();

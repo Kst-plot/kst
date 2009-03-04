@@ -140,9 +140,7 @@ PlotItem::PlotItem(View *parent)
     max_gnum = _gnum;
   _gnum++;
 
-  parentView()->setPlotBordersDirty(true);
-
-  connect(this, SIGNAL(marginsChanged()), this, SLOT(marginsUpdated()));
+  setPlotBordersDirty(true);
 }
 
 
@@ -502,15 +500,6 @@ void PlotItem::updateObject() {
 }
 
 
-void PlotItem::marginsUpdated() {
-  //ViewGridLayout::standardizePlotMargins(this);
-  //qDebug() << "---Margins updated called";
-  if (isInSharedAxisBox() && parentItem() && _sharedBox) {
-    _sharedBox->sharePlots();
-  }
-}
-
-
 QList<PlotRenderItem*> PlotItem::renderItems() const {
   return _renderers.values();
 }
@@ -559,7 +548,7 @@ void PlotItem::paint(QPainter *painter) {
 
   if (parentView()->plotBordersDirty() || (creationState() == ViewItem::InProgress)) {
     ViewGridLayout::standardizePlotMargins(this, painter);
-    parentView()->setPlotBordersDirty(false);
+    setPlotBordersDirty(false);
   }
 
 #if DEBUG_LABEL_REGION
@@ -1059,6 +1048,15 @@ void PlotItem::setSharedAxisBox(SharedAxisBoxItem* parent) {
 }
 
 
+void PlotItem::setPlotBordersDirty(bool dirty) {
+  if (isInSharedAxisBox() && dirty && _sharedBox) {
+    _sharedBox->setDirty();
+  } else {
+    parentView()->setPlotBordersDirty(dirty);
+  }
+}
+
+
 qreal PlotItem::leftLabelMargin() const {
   return calculatedLeftLabelMargin();
 }
@@ -1233,7 +1231,7 @@ QFont PlotItem::rightLabelFont() const {
 
 void PlotItem::setRightLabelFont(const QFont &font) {
   _rightLabelFont = font;
-  parentView()->setPlotBordersDirty(true);
+  setPlotBordersDirty(true);
 }
 
 
@@ -1244,7 +1242,7 @@ QFont PlotItem::topLabelFont() const {
 
 void PlotItem::setTopLabelFont(const QFont &font) {
   _topLabelFont = font;
-  parentView()->setPlotBordersDirty(true);
+  setPlotBordersDirty(true);
 }
 
 
@@ -1265,7 +1263,7 @@ QFont PlotItem::leftLabelFont() const {
 
 void PlotItem::setLeftLabelFont(const QFont &font) {
   _leftLabelFont = font;
-  parentView()->setPlotBordersDirty(true);
+  setPlotBordersDirty(true);
 }
 
 
@@ -1276,7 +1274,7 @@ QFont PlotItem::bottomLabelFont() const {
 
 void PlotItem::setBottomLabelFont(const QFont &font) {
   _bottomLabelFont = font;
-  parentView()->setPlotBordersDirty(true);
+  setPlotBordersDirty(true);
 }
 
 
@@ -1287,7 +1285,7 @@ QFont PlotItem::numberLabelFont() const {
 
 void PlotItem::setNumberLabelFont(const QFont &font) {
   _numberLabelFont = font;
-  parentView()->setPlotBordersDirty(true);
+  setPlotBordersDirty(true);
 }
 
 
@@ -1298,7 +1296,7 @@ qreal PlotItem::rightLabelFontScale() const {
 
 void PlotItem::setRightLabelFontScale(const qreal scale) {
   _rightLabelFontScale = scale;
-  parentView()->setPlotBordersDirty(true);
+  setPlotBordersDirty(true);
 }
 
 
@@ -1319,7 +1317,7 @@ qreal PlotItem::leftLabelFontScale() const {
 
 void PlotItem::setLeftLabelFontScale(const qreal scale) {
   _leftLabelFontScale = scale;
-  parentView()->setPlotBordersDirty(true);
+  setPlotBordersDirty(true);
 }
 
 
@@ -1330,7 +1328,7 @@ qreal PlotItem::topLabelFontScale() const {
 
 void PlotItem::setTopLabelFontScale(const qreal scale) {
   _topLabelFontScale = scale;
-  parentView()->setPlotBordersDirty(true);
+  setPlotBordersDirty(true);
 }
 
 
@@ -1341,7 +1339,7 @@ qreal PlotItem::bottomLabelFontScale() const {
 
 void PlotItem::setBottomLabelFontScale(const qreal scale) {
   _bottomLabelFontScale = scale;
-  parentView()->setPlotBordersDirty(true);
+  setPlotBordersDirty(true);
 }
 
 
@@ -1352,7 +1350,7 @@ qreal PlotItem::numberLabelFontScale() const {
 
 void PlotItem::setNumberLabelFontScale(const qreal scale) {
   _numberLabelFontScale = scale;
-  parentView()->setPlotBordersDirty(true);
+  setPlotBordersDirty(true);
 }
 
 
@@ -1431,7 +1429,7 @@ void PlotItem::setLeftLabelOverride(const QString &label) {
   } else {
     _leftLabelOverride = label;
   }
-  parentView()->setPlotBordersDirty(true);
+  setPlotBordersDirty(true);
 }
 
 
@@ -1450,7 +1448,7 @@ void PlotItem::setBottomLabelOverride(const QString &label) {
   } else {
     _bottomLabelOverride = label;
   }
-  parentView()->setPlotBordersDirty(true);
+  setPlotBordersDirty(true);
 }
 
 
@@ -1469,7 +1467,7 @@ void PlotItem::setTopLabelOverride(const QString &label) {
   } else {
     _topLabelOverride = label;
   }
-  parentView()->setPlotBordersDirty(true);
+  setPlotBordersDirty(true);
 }
 
 
@@ -1488,7 +1486,7 @@ void PlotItem::setRightLabelOverride(const QString &label) {
   } else {
     _rightLabelOverride = label;
   }
-  parentView()->setPlotBordersDirty(true);
+  setPlotBordersDirty(true);
 }
 
 
@@ -1541,7 +1539,7 @@ void PlotItem::setRightSuppressed(bool suppressed) {
 void PlotItem::setLeftSuppressed(bool suppressed) {
   setLeftLabelVisible(!suppressed);
   _yAxis->setAxisVisible(!suppressed);
-  parentView()->setPlotBordersDirty(true);
+  setPlotBordersDirty(true);
 }
 
 
@@ -1561,7 +1559,7 @@ void PlotItem::setLeftLabelVisible(bool visible) {
     return;
 
   _isLeftLabelVisible = visible;
-  parentView()->setPlotBordersDirty(true);
+  setPlotBordersDirty(true);
 //   emit marginsChanged();
 }
 
@@ -1576,7 +1574,7 @@ void PlotItem::setBottomLabelVisible(bool visible) {
     return;
 
   _isBottomLabelVisible = visible;
-  parentView()->setPlotBordersDirty(true);
+  setPlotBordersDirty(true);
 //   emit marginsChanged();
 }
 
@@ -1591,7 +1589,7 @@ void PlotItem::setRightLabelVisible(bool visible) {
     return;
 
   _isRightLabelVisible = visible;
-  parentView()->setPlotBordersDirty(true);
+  setPlotBordersDirty(true);
 //   emit marginsChanged();
 }
 
@@ -1606,7 +1604,7 @@ void PlotItem::setTopLabelVisible(bool visible) {
     return;
 
   _isTopLabelVisible = visible;
-  parentView()->setPlotBordersDirty(true);
+  setPlotBordersDirty(true);
 //   emit marginsChanged();
 }
 
@@ -2287,7 +2285,7 @@ void PlotItem::setProjectionRect(const QRectF &rect) {
 #endif
 
     _projectionRect = rect;
-    parentView()->setPlotBordersDirty(true);
+    setPlotBordersDirty(true);
   }
   emit updateAxes();
   update(); //slow, but need to update everything...
@@ -2717,6 +2715,12 @@ void PlotItem::setCurrentZoomState(ZoomState zoomState) {
 }
 
 
+void PlotItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect) {
+  ViewItem::updateChildGeometry(oldParentRect, newParentRect);
+  setPlotBordersDirty(true);
+}
+
+
 void CreatePlotCommand::createItem() {
   _item = new PlotItem(_view);
   _view->setCursor(Qt::CrossCursor);
@@ -3009,11 +3013,6 @@ void ZoomCommand::redo() {
     applyZoomTo(state.item);
   }
 
-  if (PlotItem *plotItem = qobject_cast<PlotItem*>(_item)) {
-    if (!plotItem->isTiedZoom()) {
-      ViewGridLayout::resetSharedPlots(plotItem);
-    }
-  }
   kstApp->mainWindow()->document()->setChanged(true);
 }
 

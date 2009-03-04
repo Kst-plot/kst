@@ -209,12 +209,10 @@ void ApplicationSettingsDialog::layoutChanged() {
 
 
 void ApplicationSettingsDialog::setupChildViewOptions() {
-  _childViewOptionsTab->setShareAxis(ApplicationSettings::self()->shareAxis());
 }
 
 
 void ApplicationSettingsDialog::childViewOptionsChanged() {
-  ApplicationSettings::self()->setShareAxis(_childViewOptionsTab->shareAxis());
 }
 
 }

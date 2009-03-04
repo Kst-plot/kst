@@ -79,8 +79,6 @@ ViewItem::ViewItem(View *parent)
 
   connect(this, SIGNAL(geometryChanged()), parent,SLOT(viewChanged()));
 
-  setShareAxis(ApplicationSettings::self()->shareAxis());
-
   setLayoutMargins(ApplicationSettings::self()->layoutMargins());
   setLayoutSpacing(ApplicationSettings::self()->layoutSpacing());
 
@@ -377,15 +375,6 @@ void ViewItem::setAllowedGripModes(GripModes modes) {
 
 bool ViewItem::isAllowed(GripMode mode) const {
   return _allowedGripModes & mode;
-}
-
-
-void ViewItem::setShareAxis(bool shareAxis) {
-  if (_shareAxis == shareAxis)
-    return;
-
-  _shareAxis = shareAxis;
-  // TODO Trigger appropriate updates.
 }
 
 
@@ -716,10 +705,10 @@ void ViewItem::edit() {
 }
 
 
-void ViewItem::sharePlots() {
+void ViewItem::sharePlots(QPainter *painter) {
   if (!_updatingLayout) {
     _updatingLayout = true;
-    ViewGridLayout::sharePlots(this);
+    ViewGridLayout::sharePlots(this, painter);
     _updatingLayout = false;
   }
 }
@@ -1724,22 +1713,18 @@ void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
 
     maybeReparent();
     updateRelativeSize();
-    ViewGridLayout::resetSharedPlots(this);
   } else if (oldMode == View::Resize && _originalRect != rect()) {
     new ResizeCommand(this, _originalRect, rect());
 
     maybeReparent();
-    ViewGridLayout::resetSharedPlots(this);
   } else if (oldMode == View::Scale && _originalTransform != transform()) {
     new ScaleCommand(this, _originalTransform, transform());
 
     maybeReparent();
-    ViewGridLayout::resetSharedPlots(this);
   } else if (oldMode == View::Rotate && _originalTransform != transform()) {
     new RotateCommand(this, _originalTransform, transform());
 
     maybeReparent();
-    ViewGridLayout::resetSharedPlots(this);
   }
 }
 
@@ -2030,18 +2015,6 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
     _layout->apply();
   }
   _item->parentView()->undoStack()->push(this);
-}
-
-
-void BreakLayoutCommand::undo() {
-  Q_ASSERT(_layout);
-  _layout->apply();
-}
-
-
-void BreakLayoutCommand::redo() {
-  Q_ASSERT(_layout);
-  _layout->resetSharedAxis();
 }
 
 

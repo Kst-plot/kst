@@ -33,6 +33,7 @@ class SharedAxisBoxItem : public ViewItem
     void triggerContextEvent(QGraphicsSceneContextMenuEvent *event);
 
     bool tryMousePressEvent(ViewItem* viewItem, QGraphicsSceneMouseEvent *event);
+    void setDirty() { _dirty = true; }
 
   Q_SIGNALS:
     void breakShareSignal();
@@ -52,6 +53,7 @@ class SharedAxisBoxItem : public ViewItem
     QPointer<ViewGridLayout> _layout;
     QList<PlotItem*> _highlightedPlots;
     bool _loaded;
+    bool _dirty;
 };
 
 class KST_EXPORT CreateSharedAxisBoxCommand : public CreateCommand

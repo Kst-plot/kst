@@ -241,10 +241,12 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     ZoomState currentZoomState();
 
     void setAllowUpdates(bool allowed);
+    void setPlotBordersDirty(bool dirty);
 
   protected:
     virtual QString _automaticDescriptiveName() const;
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect);
 
   Q_SIGNALS:
     void marginsChanged();
@@ -276,7 +278,6 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void zoomNormalizeYtoX();
     void zoomLogY();
     virtual void edit();
-    void marginsUpdated();
     void plotMaximize();
 
     void showFilterDialog(QAction*);

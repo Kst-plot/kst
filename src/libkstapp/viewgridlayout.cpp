@@ -150,50 +150,11 @@ void ViewGridLayout::reset() {
     item.viewItem->setTransform(item.transform);
     item.viewItem->setPos(item.position);
     item.viewItem->setViewRect(item.rect);
-    if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem))
-      plotItem->setLabelsVisible(true);
   }
 }
 
 
-void ViewGridLayout::resetSharedPlots(ViewItem *item) {
-  if (qobject_cast<PlotItem*>(item)) {
-  } else {
-    return;
-  }
-
-  QList<QGraphicsItem*> list;
-  if (item->parentItem()) {
-    list = item->parentItem()->QGraphicsItem::children();
-    foreach (QGraphicsItem *graphicsItem, list) {
-      if (PlotItem *plotItem = qgraphicsitem_cast<PlotItem*>(graphicsItem)) {
-        plotItem->setLabelsVisible(true);
-        plotItem->update();
-      }
-    }
-  } else {
-    if (item->parentView()) {
-      QList<QGraphicsItem*> list = item->parentView()->items();
-      foreach (QGraphicsItem *item, list) {
-        ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
-        if (!viewItem || viewItem->parentItem() || !viewItem->isVisible())
-          continue;
-        if (PlotItem *plotItem = qobject_cast<PlotItem*>(viewItem)) {
-          plotItem->setLabelsVisible(true);
-        }
-      }
-    }
-  }
-}
-
-
-void ViewGridLayout::sharePlots(View *view) {
-  qDebug() << "ViewGridLayout::sharePlots";
-  sharePlots(new LayoutBoxItem(view));
-}
-
-
-void ViewGridLayout::sharePlots(ViewItem *item) {
+void ViewGridLayout::sharePlots(ViewItem *item, QPainter *painter) {
   Q_ASSERT(item);
   Q_ASSERT(item->parentView());
 
@@ -258,14 +219,13 @@ void ViewGridLayout::sharePlots(ViewItem *item) {
       }
     }
   }
-  layout->shareAxis();
-  layout->shareAxis();
+
+  layout->shareAxis(painter);
 }
 
 
 void ViewGridLayout::standardizePlotMargins(ViewItem *item, QPainter *painter) {
   QList<PlotItem*> plotItems;
-//   qDebug() << "standardizePlotMargins called";
   if (item->parentView()) {
     QList<QGraphicsItem*> list = item->parentView()->items();
     foreach (QGraphicsItem *item, list) {
@@ -328,15 +288,6 @@ void ViewGridLayout::standardizePlotMargins(ViewItem *item, QPainter *painter) {
     plotItem->setTopPadding(topMarginWidths[plotItem->height()*PLOT_STANDARDIZATION_FACTOR] - plotItem->topMarginSize());
     plotItem->setBottomPadding(bottomMarginHeights[plotItem->height()*PLOT_STANDARDIZATION_FACTOR] - plotItem->bottomMarginSize());
     emit plotItem->updatePlotRect();
-  }
-}
-
-
-void ViewGridLayout::resetSharedAxis() {
-  foreach (LayoutItem item, _items) {
-    if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem)) {
-      plotItem->setLabelsVisible(true);
-    }
   }
 }
 
@@ -420,12 +371,12 @@ void ViewGridLayout::apply() {
 #endif
   }
   if (plot) {
-    plot->parentView()->setPlotBordersDirty(true);
+    plot->setPlotBordersDirty(true);
   }
 }
 
 
-void ViewGridLayout::shareAxis() {
+void ViewGridLayout::shareAxis(QPainter *painter) {
   calculateSharing();
   updateSharedAxis();
 
@@ -448,6 +399,7 @@ void ViewGridLayout::shareAxis() {
 
   foreach (LayoutItem item, _items) {
     if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem)) {
+      plotItem->calculateBorders(painter);
       if (plotItem->leftMarginSize() > leftLabelBounds[item.column]) {
         leftLabelBounds[item.column] = plotItem->leftMarginSize();
       }
@@ -833,24 +785,6 @@ void ViewGridLayout::shareAxisWithPlotToLeft(LayoutItem item) {
     return;
   }
 
-  //vertical range check...
-  if (plotItem->projectionRect().top() != leftItem->projectionRect().top() ||
-      plotItem->projectionRect().bottom() != leftItem->projectionRect().bottom()) {
-    plotItem->setLeftSuppressed(false);
-    leftItem->setRightSuppressed(false);
-    setSpacing(QSizeF(spacing().width(), spacing().height()));
-    return;
-  }
-
-  //location check
-  if (((leftItem->mapToParent(leftItem->rect().topRight()).y() != plotItem->mapToParent(plotItem->rect().topLeft()).y()) || 
-        (plotItem->mapToParent(plotItem->rect().topLeft()).x() - leftItem->mapToParent(leftItem->rect().topRight()).x() > spacing().width()))) {
-    plotItem->setLeftSuppressed(false);
-    leftItem->setRightSuppressed(false);
-    setSpacing(QSizeF(spacing().width(), spacing().height()));
-    return;
-  }
-
   if (item.rowSpan == left.rowSpan && item.columnSpan == left.columnSpan) {
     plotItem->setLeftSuppressed(true);
     leftItem->setRightSuppressed(true);
@@ -874,24 +808,6 @@ void ViewGridLayout::shareAxisWithPlotToRight(LayoutItem item) {
   PlotItem *rightItem = qobject_cast<PlotItem*>(right.viewItem);
   if (!rightItem) {
     plotItem->setRightSuppressed(false);
-    setSpacing(QSizeF(spacing().width(), spacing().height()));
-    return;
-  }
-
-  //vertical range check...
-  if (plotItem->projectionRect().top() != rightItem->projectionRect().top() ||
-      plotItem->projectionRect().bottom() != rightItem->projectionRect().bottom()) {
-    plotItem->setRightSuppressed(false);
-    rightItem->setLeftSuppressed(false);
-    setSpacing(QSizeF(spacing().width(), spacing().height()));
-    return;
-  }
-
-  //location check
-  if (((plotItem->mapToParent(plotItem->rect().topRight()).y() != rightItem->mapToParent(rightItem->rect().topLeft()).y()) || 
-        (rightItem->mapToParent(rightItem->rect().topLeft()).x() - plotItem->mapToParent(plotItem->rect().topRight()).x() > spacing().width()))) {
-    plotItem->setRightSuppressed(false);
-    rightItem->setLeftSuppressed(false);
     setSpacing(QSizeF(spacing().width(), spacing().height()));
     return;
   }
@@ -922,24 +838,6 @@ void ViewGridLayout::shareAxisWithPlotAbove(LayoutItem item) {
     return;
   }
 
-  //horizontal range check...
-  if (plotItem->projectionRect().left() != topItem->projectionRect().left() ||
-      plotItem->projectionRect().right() != topItem->projectionRect().right()) {
-    plotItem->setTopSuppressed(false);
-    topItem->setBottomSuppressed(false);
-    setSpacing(QSizeF(spacing().width(), spacing().height()));
-    return;
-  }
-
-  //location check
-  if (((topItem->mapToParent(topItem->rect().bottomLeft()).x() != plotItem->mapToParent(plotItem->rect().topLeft()).x()) || 
-        (plotItem->mapToParent(plotItem->rect().topLeft()).y() - topItem->mapToParent(topItem->rect().bottomLeft()).y() > spacing().height()))) {
-    plotItem->setTopSuppressed(false);
-    topItem->setBottomSuppressed(false);
-    setSpacing(QSizeF(spacing().width(), spacing().height()));
-    return;
-  }
-
   if (item.rowSpan == top.rowSpan && item.columnSpan == top.columnSpan) {
     plotItem->setTopSuppressed(true);
     topItem->setBottomSuppressed(true);
@@ -962,24 +860,6 @@ void ViewGridLayout::shareAxisWithPlotBelow(LayoutItem item) {
   PlotItem *bottomItem = qobject_cast<PlotItem*>(bottom.viewItem);
   if (!bottomItem) {
     plotItem->setBottomSuppressed(false);
-    setSpacing(QSizeF(spacing().width(), spacing().height()));
-    return;
-  }
-
-  //horizontal range check...
-  if (plotItem->projectionRect().left() != bottomItem->projectionRect().left() ||
-      plotItem->projectionRect().right() != bottomItem->projectionRect().right()) {
-    plotItem->setBottomSuppressed(false);
-    bottomItem->setTopSuppressed(false);
-    setSpacing(QSizeF(spacing().width(), spacing().height()));
-    return;
-  }
-
-  //location check
-  if (((plotItem->mapToParent(plotItem->rect().bottomLeft()).x() != bottomItem->mapToParent(bottomItem->rect().topLeft()).x()) || 
-        (bottomItem->mapToParent(bottomItem->rect().topLeft()).y() - plotItem->mapToParent(plotItem->rect().bottomLeft()).y() > spacing().height()))) {
-    plotItem->setBottomSuppressed(false);
-    bottomItem->setTopSuppressed(false);
     setSpacing(QSizeF(spacing().width(), spacing().height()));
     return;
   }

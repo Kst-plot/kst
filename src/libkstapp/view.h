@@ -88,9 +88,6 @@ class KST_EXPORT View : public QGraphicsView
 
     QPointF snapPoint(const QPointF &point);
 
-    bool shareAxis() const { return _shareAxis; }
-    void setShareAxis(bool shareAxis);
-
     void setPrinting(bool printing) { _printing = printing; }
     bool isPrinting() { return _printing; }
 
@@ -111,7 +108,6 @@ class KST_EXPORT View : public QGraphicsView
     void createLayout(int columns = 0);
     void appendToLayout(CurvePlacement::Layout layout, ViewItem* item, int columns = 0);
     void createCustomLayout();
-    void sharePlots();
     void viewChanged();
 
   protected:
@@ -149,7 +145,6 @@ class KST_EXPORT View : public QGraphicsView
     bool _showGrid;
     bool _snapToGridHorizontal;
     bool _snapToGridVertical;
-    bool _shareAxis;
     bool _plotBordersDirty;
     bool _printing;
     bool _dataMode;

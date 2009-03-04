@@ -141,9 +141,6 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     bool acceptsChildItems() const { return _acceptsChildItems; }
     void setAcceptsChildItems(bool acceptsChildItems) { _acceptsChildItems = acceptsChildItems; }
 
-    bool shareAxis() const { return _shareAxis; }
-    void setShareAxis(bool shareAxis);
-
     QSizeF layoutMargins() const { return _layoutMargins; }
     void setLayoutMargins(const QSizeF margins) { _layoutMargins = margins; }
 
@@ -178,7 +175,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     virtual void lower();
     virtual void createAutoLayout();
     virtual void createCustomLayout();
-    virtual void sharePlots();
+    virtual void sharePlots(QPainter *painter);
     virtual void remove();
     void resizeTopLeft(const QPointF &offset);
     void resizeTopRight(const QPointF &offset);
@@ -244,7 +241,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     void viewMouseModeChanged(View::MouseMode oldMode);
     void updateView();
 
-  private:
+  protected:
     virtual void updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect);
 
   private:
@@ -261,7 +258,6 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     bool _hovering;
     bool _acceptsChildItems;
     bool _acceptsContextMenuEvents;
-    bool _shareAxis;
     bool _updatingLayout;
     bool _highlighted;
     QPointF _originalPosition;
@@ -348,21 +344,6 @@ class KST_EXPORT AppendLayoutCommand : public ViewItemCommand
     virtual void undo();
     virtual void redo();
     void appendLayout(CurvePlacement::Layout layout, ViewItem* item, int columns = 0);
-
-  private:
-    QPointer<ViewGridLayout> _layout;
-};
-
-class KST_EXPORT BreakLayoutCommand : public ViewItemCommand
-{
-  public:
-    BreakLayoutCommand(ViewItem *item)
-        : ViewItemCommand(item, QObject::tr("Break layout")) {}
-
-    virtual ~BreakLayoutCommand() {}
-
-    virtual void undo();
-    virtual void redo();
 
   private:
     QPointer<ViewGridLayout> _layout;

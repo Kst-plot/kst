@@ -87,7 +87,6 @@ void ViewDialog::setupGrid() {
 
 
 void ViewDialog::setupChildViewOptions() {
-  _childViewOptionsTab->setShareAxis(_view->shareAxis());
 }
 
 
@@ -116,7 +115,6 @@ void ViewDialog::gridChanged() {
 
 
 void ViewDialog::childViewOptionsChanged() {
-  _view->setShareAxis(_childViewOptionsTab->shareAxis());
 }
 
 }

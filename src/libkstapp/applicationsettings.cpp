@@ -307,18 +307,6 @@ QGradientStops ApplicationSettings::gradientStops() const {
 }
 
 
-bool ApplicationSettings::shareAxis() const {
-  return _shareAxis;
-}
-
-
-void ApplicationSettings::setShareAxis(bool shareAxis) {
-  _shareAxis = shareAxis;
-  _settings->setValue("childviewoptions/shareaxis", shareAxis);
-  emit modified();
-}
-
-
 QSizeF ApplicationSettings::layoutMargins() const {
   return _layoutMargins;
 }
