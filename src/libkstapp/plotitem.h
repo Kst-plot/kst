@@ -279,6 +279,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void zoomLogY();
     virtual void edit();
     void plotMaximize();
+    void redrawPlot();
 
     void showFilterDialog(QAction*);
     void showFitDialog(QAction*);

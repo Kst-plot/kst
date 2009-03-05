@@ -141,6 +141,7 @@ PlotItem::PlotItem(View *parent)
   _gnum++;
 
   setPlotBordersDirty(true);
+  connect(this, SIGNAL(updatePlotRect()), this, SLOT(redrawPlot()));
 }
 
 
@@ -458,6 +459,11 @@ void PlotItem::showFitDialog(QAction* action) {
       }
     }
   }
+}
+
+
+void PlotItem::redrawPlot() {
+  update();
 }
 
 
