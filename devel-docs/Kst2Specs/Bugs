@@ -10,12 +10,6 @@ Tooltips everywhere.
 
 ---------
 
-With multiple plots, when zooming one changes the size properties of
-another (due to axis label changes, for example), the axes labels on the
-non-modified plot(s) can get garbled until the mouse is moved over them.
-
-----------
-
 kst reads live dirfiles less efficiently than before. �On a shitty
 computer (devlin666), kst1.7 can display 200 frames of 24 bolometer
 channels (100Hz samples; 20 samples per frame) with a 500ms kst update
@@ -25,19 +19,6 @@ seem 'responsive enough'. �kst2 under the same conditions, except with
 kst) seem more sluggish. �
 
 ---------
-
-
-PlotMarginStandardization is applied inconsistently.
-- Note: Fixed many cases.  After applying layout, plotBorders are set to Dirty, this may not be
-correct.  A number of margins are not updated within the changed plot currently preventing full
-validation.
-*Mike*
---------
-
-SharedAxisBox plot sharing occasionally breaks for no apparent reason.
-Have not identified a pattern or cause as of yet.
-*Mike*
---------
 
 Fragility in moving parents:
   create a plot.

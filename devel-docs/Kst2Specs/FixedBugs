@@ -483,3 +483,21 @@ Bugs in Build System:
   -picks up libraries in lib/X11 before local libs
   -doesn't support 'make install' nor DESTDIR
 ---------
+
+With multiple plots, when zooming one changes the size properties of
+another (due to axis label changes, for example), the axes labels on the
+non-modified plot(s) can get garbled until the mouse is moved over them.
+
+----------
+
+PlotMarginStandardization is applied inconsistently.
+- Note: Fixed many cases.  After applying layout, plotBorders are set to Dirty, this may not be
+correct.  A number of margins are not updated within the changed plot currently preventing full
+validation.
+*Mike*
+--------
+
+SharedAxisBox plot sharing occasionally breaks for no apparent reason.
+Have not identified a pattern or cause as of yet.
+*Mike*
+--------
