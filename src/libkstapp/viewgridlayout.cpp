@@ -248,21 +248,19 @@ void ViewGridLayout::standardizePlotMargins(ViewItem *item, QPainter *painter) {
   QMap<int, qreal> rightMarginWidths;
   QMap<int, qreal> topMarginWidths;
   QMap<int, qreal> bottomMarginHeights;
-  //FIXME: this approach to tolerance only works often
-  // (truncation flips bits suddenly)
   foreach (PlotItem* plotItem, plotItems) {
     plotItem->calculateBorders(painter);
-    if (leftMarginWidths[plotItem->width()*PLOT_STANDARDIZATION_FACTOR] < plotItem->leftMarginSize()) {
-      leftMarginWidths[plotItem->width()*PLOT_STANDARDIZATION_FACTOR] = plotItem->leftMarginSize();
+    if (leftMarginWidths[floor(plotItem->width()*PLOT_STANDARDIZATION_FACTOR)] < plotItem->leftMarginSize()) {
+      leftMarginWidths[floor(plotItem->width()*PLOT_STANDARDIZATION_FACTOR)] = plotItem->leftMarginSize();
     }
-    if (rightMarginWidths[plotItem->width()*PLOT_STANDARDIZATION_FACTOR] < plotItem->rightMarginSize()) {
-      rightMarginWidths[plotItem->width()*PLOT_STANDARDIZATION_FACTOR] = plotItem->rightMarginSize();
+    if (rightMarginWidths[floor(plotItem->width()*PLOT_STANDARDIZATION_FACTOR)] < plotItem->rightMarginSize()) {
+      rightMarginWidths[floor(plotItem->width()*PLOT_STANDARDIZATION_FACTOR)] = plotItem->rightMarginSize();
     }
-    if (topMarginWidths[plotItem->height()*PLOT_STANDARDIZATION_FACTOR] < plotItem->topMarginSize()) {
-      topMarginWidths[plotItem->height()*PLOT_STANDARDIZATION_FACTOR] = plotItem->topMarginSize();
+    if (topMarginWidths[floor(plotItem->height()*PLOT_STANDARDIZATION_FACTOR)] < plotItem->topMarginSize()) {
+      topMarginWidths[floor(plotItem->height()*PLOT_STANDARDIZATION_FACTOR)] = plotItem->topMarginSize();
     }
-    if (bottomMarginHeights[plotItem->height()*PLOT_STANDARDIZATION_FACTOR] < plotItem->bottomMarginSize()) {
-      bottomMarginHeights[plotItem->height()*PLOT_STANDARDIZATION_FACTOR] = plotItem->bottomMarginSize();
+    if (bottomMarginHeights[floor(plotItem->height()*PLOT_STANDARDIZATION_FACTOR)] < plotItem->bottomMarginSize()) {
+      bottomMarginHeights[floor(plotItem->height()*PLOT_STANDARDIZATION_FACTOR)] = plotItem->bottomMarginSize();
     }
   }
 
@@ -277,16 +275,16 @@ void ViewGridLayout::standardizePlotMargins(ViewItem *item, QPainter *painter) {
   foreach (PlotItem* plotItem, plotItems) {
 
 #if DEBUG_PLOT_STANDARDIZATION
-    qDebug() << "Margin left width is " << plotItem->leftMarginSize() << "setting to" << leftMarginWidths[plotItem->width()*PLOT_STANDARDIZATION_FACTOR] - plotItem->leftMarginSize();
-    qDebug() << "Margin right width is " << plotItem->rightMarginSize() << "setting to" << rightMarginWidths[plotItem->width()*PLOT_STANDARDIZATION_FACTOR] - plotItem->rightMarginSize();
-    qDebug() << "Margin top width is " << plotItem->topMarginSize() << "setting to" << topMarginWidths[plotItem->height()*PLOT_STANDARDIZATION_FACTOR] - plotItem->topMarginSize();
-    qDebug() << "Margin bottom height is " << plotItem->bottomMarginSize() << "setting to" << bottomMarginHeights[plotItem->height()*PLOT_STANDARDIZATION_FACTOR] - plotItem->bottomMarginSize();
+    qDebug() << "Margin left width is " << plotItem->leftMarginSize() << "setting to" << leftMarginWidths[floor(plotItem->width()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->leftMarginSize();
+    qDebug() << "Margin right width is " << plotItem->rightMarginSize() << "setting to" << rightMarginWidths[floor(plotItem->width()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->rightMarginSize();
+    qDebug() << "Margin top width is " << plotItem->topMarginSize() << "setting to" << topMarginWidths[floor(plotItem->height()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->topMarginSize();
+    qDebug() << "Margin bottom height is " << plotItem->bottomMarginSize() << "setting to" << bottomMarginHeights[floor(plotItem->height()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->bottomMarginSize();
 #endif
 
-    plotItem->setLeftPadding(leftMarginWidths[plotItem->width()*PLOT_STANDARDIZATION_FACTOR] - plotItem->leftMarginSize());
-    plotItem->setRightPadding(rightMarginWidths[plotItem->width()*PLOT_STANDARDIZATION_FACTOR] - plotItem->rightMarginSize());
-    plotItem->setTopPadding(topMarginWidths[plotItem->height()*PLOT_STANDARDIZATION_FACTOR] - plotItem->topMarginSize());
-    plotItem->setBottomPadding(bottomMarginHeights[plotItem->height()*PLOT_STANDARDIZATION_FACTOR] - plotItem->bottomMarginSize());
+    plotItem->setLeftPadding(leftMarginWidths[floor(plotItem->width()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->leftMarginSize());
+    plotItem->setRightPadding(rightMarginWidths[floor(plotItem->width()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->rightMarginSize());
+    plotItem->setTopPadding(topMarginWidths[floor(plotItem->height()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->topMarginSize());
+    plotItem->setBottomPadding(bottomMarginHeights[floor(plotItem->height()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->bottomMarginSize());
     emit plotItem->updatePlotRect();
   }
 }
