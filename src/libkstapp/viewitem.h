@@ -99,6 +99,9 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     bool lockParent() const { return _lockParent; }
     void setLockParent(bool lockParent ) { _lockParent = lockParent; }
 
+    bool skipNextParentCheck() const { return _skipNextParentCheck; }
+    void setSkipNextParentCheck(bool skipNextParentCheck) { _skipNextParentCheck = skipNextParentCheck; }
+
     bool allowsLayout() const { return _allowsLayout; }
     void setAllowsLayout(bool allowsLayout ) { _allowsLayout = allowsLayout; }
 
@@ -254,6 +257,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     bool _lockAspectRatioFixed;
     bool _hasStaticGeometry;
     bool _lockParent;
+    bool _skipNextParentCheck;
     bool _allowsLayout;
     bool _hovering;
     bool _acceptsChildItems;

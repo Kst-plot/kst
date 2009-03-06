@@ -55,6 +55,7 @@ ViewItem::ViewItem(View *parent)
     _lockAspectRatioFixed(false),
     _hasStaticGeometry(false),
     _lockParent(false),
+    _skipNextParentCheck(false),
     _allowsLayout(true),
     _hovering(false),
     _acceptsChildItems(true),
@@ -409,6 +410,7 @@ void ViewItem::setViewRect(const QRectF &viewRect, bool automaticChange) {
       continue;
 
 
+    viewItem->setSkipNextParentCheck(true);
     viewItem->updateChildGeometry(oldViewRect, viewRect);
   }
 }
@@ -794,6 +796,7 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
     parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
     parentView()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
     parentView()->setMouseMode(View::Default);
+
     maybeReparent();
     _creationState = Completed;
     emit creationComplete();
@@ -1290,7 +1293,8 @@ QPointF ViewItem::lockOffset(const QPointF &offset, qreal ratio, bool oddCorner)
 
 
 bool ViewItem::maybeReparent() {
-  if (lockParent()) {
+  if (lockParent() || skipNextParentCheck()) {
+    setSkipNextParentCheck(false);
     return false;
   }
   //First get a list of all items that collide with this one
@@ -1344,8 +1348,12 @@ bool ViewItem::maybeReparent() {
   foreach (QGraphicsItem *item, collisions) {
     ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
 
-    if (!viewItem || !viewItem->acceptsChildItems() || isAncestorOf(viewItem) || !collidesWithItem(viewItem, Qt::ContainsItemShape))
+    if (!viewItem || !viewItem->acceptsChildItems() || isAncestorOf(viewItem) || !collidesWithItem(viewItem, Qt::ContainsItemBoundingRect)) {
+#if DEBUG_REPARENT
+     qDebug() << "rejecting collision" << viewItem << !viewItem->acceptsChildItems() << isAncestorOf(viewItem) << !collidesWithItem(viewItem, Qt::ContainsItemBoundingRect); 
+#endif
       continue;
+    }
 
     if (parentItem() == viewItem) { /*already done*/
 #if DEBUG_REPARENT
