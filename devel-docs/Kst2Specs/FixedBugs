@@ -501,3 +501,14 @@ SharedAxisBox plot sharing occasionally breaks for no apparent reason.
 Have not identified a pattern or cause as of yet.
 *Mike*
 --------
+
+Fragility in moving parents:
+  create a plot.
+  Put a child box in the plot.
+  Rapidly resize the plot.  Sometimes the box will either drift or loose parenting altogether.
+  (Editorial: Fundamentally, I think this is because qt's QGraphics system has been used to track placement
+  of objects, and QGraphics doesn't have the right model of what we are doing.)
+
+  Note:  This is still causing parenting to fail.  Updates are required to prevent reparenting on parent resize.
+*Mike*
+---------
