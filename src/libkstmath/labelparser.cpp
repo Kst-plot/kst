@@ -28,7 +28,7 @@ using namespace Label;
 // Debug output for Parsing - 0 Off 1 On
 #define DEBUG_PARSING 0
 
-#if 1
+#if DEBUG_PARSING
 #define dumpattr(node, text) do { printf("%s: bold:%d italic:%d underline:%d\n", text, (node)->attributes.bold, (node)->attributes.italic, (node)->attributes.underline); } while(0)
 #else
 #define dumpattr(node, text)
