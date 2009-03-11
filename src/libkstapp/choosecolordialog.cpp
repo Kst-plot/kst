@@ -70,7 +70,8 @@ void ChooseColorDialog::updateColorGroup() {
 
   cleanColorGroup();
 
-  grid = new QGridLayout(colorFrame, fileNameList.count(), 2, 0, 8);
+  grid = new QGridLayout(colorFrame);
+  grid->setSpacing(8);
   grid->setColumnStretch(1,0);
 
   int i = fileNameList.count();
@@ -78,7 +79,7 @@ void ChooseColorDialog::updateColorGroup() {
         it != fileNameList.end();
         ++it)
   {
-    QLineEdit* dataSourceName = new QLineEdit(colorFrame, "dataSourceName"+i);
+    QLineEdit* dataSourceName = new QLineEdit(colorFrame);
     dataSourceName->setReadOnly(true);
     dataSourceName->setText(*it);
     grid->addWidget(dataSourceName,i,0);
@@ -86,7 +87,6 @@ void ChooseColorDialog::updateColorGroup() {
     dataSourceName->show();
 
     ColorButton* dataSourceColor = new ColorButton(colorFrame);
-    dataSourceColor->setObjectName("dataSourceColor"+i);
     dataSourceColor->setColor(ColorSequence::next());
     grid->addWidget(dataSourceColor,i,1);
     colorButtons.push_back(dataSourceColor);

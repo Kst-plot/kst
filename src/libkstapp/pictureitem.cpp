@@ -27,7 +27,7 @@ PictureItem::PictureItem(View *parent, const QImage &image)
   if (!image.isNull()) {
     _image = QPixmap::fromImage(image);
   }
-  setName("Picture");
+  setTypeName("Picture");
   setZValue(PICTURE_ZVALUE);
   setLockAspectRatio(true);
   setLockAspectRatioFixed(true);
@@ -46,7 +46,7 @@ void PictureItem::save(QXmlStreamWriter &xml) {
     QByteArray qba;
     QBuffer buffer(&qba);
     buffer.open(QIODevice::WriteOnly);
-    QImage(_image).save(&buffer, "PNG"); // writes image into ba in PNG format
+    _image.toImage().save(&buffer, "PNG"); // writes image into ba in PNG format
     xml.writeCharacters(qCompress(qba).toBase64());
     xml.writeEndElement();
     xml.writeEndElement();

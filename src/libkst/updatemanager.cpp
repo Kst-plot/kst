@@ -170,7 +170,7 @@ void UpdateManager::updateFinished(ObjectPtr updateObject, ObjectPtr reportingOb
 #endif
       _dispatchingRequests.append(updateObject);
       foreach (ObjectPtr object, _dependentUpdateRequests[updateObject]) {
-        _dependentUpdateRequests[updateObject].remove(object);
+        _dependentUpdateRequests[updateObject].removeAll(object);
         bool continueWaiting = false;
         foreach (QList<ObjectPtr> list, _dependentUpdateRequests) {
           if (list.contains(object)) {

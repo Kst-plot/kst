@@ -49,6 +49,7 @@ ViewItem::ViewItem(View *parent)
     _gripMode(Move),
     _allowedGripModes(Move | Resize | Rotate /*| Scale*/),
     _creationState(None),
+    _typeName("View Item"),
     _supportsTiedZoom(false),
     _fixedSize(false),
     _lockAspectRatio(false),
@@ -70,7 +71,6 @@ ViewItem::ViewItem(View *parent)
  {
 
   setZValue(1);
-  setName("View Item");
   setAcceptsHoverEvents(true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
   connect(parent, SIGNAL(mouseModeChanged(View::MouseMode)),
@@ -115,7 +115,7 @@ ViewItem::~ViewItem() {
 
 
 void ViewItem::save(QXmlStreamWriter &xml) {
-  xml.writeAttribute("name", name());
+  xml.writeAttribute("name", typeName());
   xml.writeStartElement("position");
   xml.writeAttribute("x", QVariant(pos().x()).toString());
   xml.writeAttribute("y", QVariant(pos().y()).toString());
@@ -188,7 +188,7 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
       knownTag = true;
       av = attrs.value("name");
       if (!av.isNull()) {
-        setName(av.toString());
+        setTypeName(av.toString());
      }
     } else if (xml.name().toString() == "position") {
       knownTag = true;
@@ -728,7 +728,7 @@ void ViewItem::createAutoLayout() {
 
 void ViewItem::createCustomLayout() {
   bool ok;
-  int columns = QInputDialog::getInteger(tr("Kst"),
+  int columns = QInputDialog::getInteger(parentView(), tr("Kst"),
                                       tr("Select Number of Columns"),1, 0,
                                       10, 1, &ok);
   if (ok) {
@@ -809,7 +809,7 @@ void ViewItem::addTitle(QMenu *menu) const {
   QWidgetAction *action = new QWidgetAction(menu);
   action->setEnabled(false);
 
-  QLabel *label = new QLabel(name() + tr(" Menu"), menu);
+  QLabel *label = new QLabel(typeName() + tr(" Menu"), menu);
   label->setAlignment(Qt::AlignCenter);
   label->setStyleSheet("QLabel {"
                        "border-bottom: 2px solid lightGray;"
@@ -965,7 +965,7 @@ void ViewItem::resizeTopLeft(const QPointF &offset) {
 
   const qreal newAspect = r.width() / r.height();
   Q_ASSERT_X(_lockAspectRatio ? qFuzzyCompare(newAspect, oldAspect) : true,
-              "lockAspect error", QString::number(newAspect) + "!=" + QString::number(oldAspect));
+              "lockAspect error", QString(QString::number(newAspect) + "!=" + QString::number(oldAspect)).toLatin1().constData());
   setViewRect(r);
 }
 
@@ -980,7 +980,7 @@ void ViewItem::resizeTopRight(const QPointF &offset) {
 
   const qreal newAspect = r.width() / r.height();
   Q_ASSERT_X(_lockAspectRatio ? qFuzzyCompare(newAspect, oldAspect) : true,
-              "lockAspect error", QString::number(newAspect) + "!=" + QString::number(oldAspect));
+              "lockAspect error", QString(QString::number(newAspect) + "!=" + QString::number(oldAspect)).toLatin1().constData());
   setViewRect(r);
 }
 
@@ -995,7 +995,7 @@ void ViewItem::resizeBottomLeft(const QPointF &offset) {
 
   const qreal newAspect = r.width() / r.height();
   Q_ASSERT_X(_lockAspectRatio ? qFuzzyCompare(newAspect, oldAspect) : true,
-              "lockAspect error", QString::number(newAspect) + "!=" + QString::number(oldAspect));
+              "lockAspect error", QString(QString::number(newAspect) + "!=" + QString::number(oldAspect)).toLatin1().constData());
   setViewRect(r);
 }
 
@@ -1009,7 +1009,7 @@ void ViewItem::resizeBottomRight(const QPointF &offset) {
 
   const qreal newAspect = r.width() / r.height();
   Q_ASSERT_X(_lockAspectRatio ? qFuzzyCompare(newAspect, oldAspect) : true,
-              "lockAspect error", QString::number(newAspect) + "!=" + QString::number(oldAspect));
+              "lockAspect error", QString(QString::number(newAspect) + "!=" + QString::number(oldAspect)).toLatin1().constData());
   setViewRect(r);
 }
 
@@ -1814,7 +1814,7 @@ void ViewItem::setTiedZoom(bool tiedZoom, bool checkAllTied) {
 
 #ifndef QT_NO_DEBUG_STREAM
 QDebug operator<<(QDebug dbg, ViewItem *viewItem) {
-    dbg.nospace() << viewItem->name();
+    dbg.nospace() << viewItem->typeName();
     return dbg.space();
 }
 #endif

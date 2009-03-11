@@ -165,7 +165,7 @@ void DifferentiateCurvesDialog::apply() {
   bool lineWidthOrder  = !_selectedListBox->findItems(tr("Line Width"), Qt::MatchExactly).empty();
 
   int maxLineWidth = _maxLineWidth->value();
-  int pointDensity = _pointDensity->currentItem();
+  int pointDensity = _pointDensity->currentIndex();
 
   int sequenceNum = 0;
   CurveList curveList = _store->getObjects<Curve>();

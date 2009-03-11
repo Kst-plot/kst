@@ -1,14 +1,11 @@
 include($$PWD/../../kst.pri)
 
-QT += gui network svg xml opengl qt3support
+QT += gui network svg opengl
 
 TEMPLATE = lib
-OBJECTS_DIR = tmp
-MOC_DIR = tmp
 TARGET = kstapp
 DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
-CONFIG += debug
 
 INSTALL_DIR = $$(INSTDIR)
 ! isEmpty(INSTALL_DIR) {

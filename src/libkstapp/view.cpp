@@ -303,7 +303,7 @@ bool View::eventFilter(QObject *obj, QEvent *event) {
 
 void View::createCustomLayout() {
   bool ok;
-  int columns = QInputDialog::getInteger(tr("Kst"),
+  int columns = QInputDialog::getInteger(this, tr("Kst"),
                                       tr("Select Number of Columns"),1, 0,
                                       10, 1, &ok);
   if (ok) {
@@ -513,7 +513,7 @@ void View::addTitle(QMenu *menu) const {
   QWidgetAction *action = new QWidgetAction(menu);
   action->setEnabled(false);
 
-  QLabel *label = new QLabel(name() + tr("View Menu"), menu);
+  QLabel *label = new QLabel(tr("View Menu"), menu);
   label->setAlignment(Qt::AlignCenter);
   label->setStyleSheet("QLabel {"
                        "border-bottom: 2px solid lightGray;"

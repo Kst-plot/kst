@@ -37,7 +37,7 @@ namespace Kst {
 PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
   : ViewItem(parentItem->parentView()), _referencePointMode(false), _highlightPointActive(false), _invertHighlight(false) {
 
-  setName(tr("Plot Render"));
+  setTypeName(tr("Plot Render"));
   setZValue(PLOTRENDER_ZVALUE);
   setParent(parentItem);
   setHasStaticGeometry(true);
@@ -162,7 +162,7 @@ void PlotRenderItem::save(QXmlStreamWriter &xml) {
 
 
 void PlotRenderItem::saveInPlot(QXmlStreamWriter &xml) {
-  xml.writeAttribute("name", name());
+  xml.writeAttribute("name", typeName());
   xml.writeAttribute("type", QVariant(_type).toString());
   foreach (RelationPtr relation, relationList()) {
     xml.writeStartElement("relation");

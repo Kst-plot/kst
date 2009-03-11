@@ -14,7 +14,6 @@
 
 #include <qstring.h>
 #include <qcolor.h>
-#include <q3valuelist.h>
 
 #include "vector.h"
 

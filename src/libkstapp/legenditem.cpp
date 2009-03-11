@@ -37,7 +37,7 @@ struct DrawnLegendItem {
 
 LegendItem::LegendItem(PlotItem *parent)
   : ViewItem(parent->parentView()), _plotItem(parent), _auto(true), _fontScale(0.0), _verticalDisplay(true) {
-  setName("Legend");
+  setTypeName("Legend");
   setZValue(LEGEND_ZVALUE);
 
   setAllowedGripModes(Move /*| Resize*/ /*| Rotate*/ /*| Scale*/);

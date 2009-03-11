@@ -1,14 +1,9 @@
 include($$PWD/../../kst.pri)
 
-QT += xml qt3support
-
 TEMPLATE = lib
-OBJECTS_DIR = tmp
-MOC_DIR = tmp
 TARGET = kst
 DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
-CONFIG += debug
 
 INSTALL_DIR = $$(INSTDIR)
 ! isEmpty(INSTALL_DIR) {

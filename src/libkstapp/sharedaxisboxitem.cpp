@@ -31,7 +31,7 @@ namespace Kst {
 
 SharedAxisBoxItem::SharedAxisBoxItem(View *parent)
     : ViewItem(parent), _layout(0), _loaded(false), _dirty(false) {
-  setName("Shared Axis Box");
+  setTypeName("Shared Axis Box");
   setZValue(SHAREDAXISBOX_ZVALUE);
   setBrush(Qt::transparent);
 

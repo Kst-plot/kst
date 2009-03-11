@@ -30,7 +30,7 @@ namespace Kst {
 
 LabelItem::LabelItem(View *parent, const QString& txt)
   : ViewItem(parent), _parsed(0), _text(txt) {
-  setName("Label");
+  setTypeName("Label");
   setZValue(LABEL_ZVALUE);
 
   setFixedSize(true);

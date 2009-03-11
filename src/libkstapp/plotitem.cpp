@@ -89,7 +89,7 @@ PlotItem::PlotItem(View *parent)
   _sharedBox(0)
 {
 
-  setName("Plot");
+  setTypeName("Plot");
   setZValue(PLOT_ZVALUE);
   setBrush(Qt::white);
 

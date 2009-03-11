@@ -129,19 +129,19 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   _dataObjects->addAction(action);
 
   foreach (QString pluginName, DataObject::dataObjectPluginList()) {
-    action = new DataButtonAction(tr(pluginName));
+    action = new DataButtonAction(pluginName);
     connect(action, SIGNAL(triggered(QString&)), this, SLOT(showPluginDialog(QString&)));
     _plugins->addAction(action);
   }
 
   foreach (QString pluginName, DataObject::fitsPluginList()) {
-    action = new DataButtonAction(tr(pluginName));
+    action = new DataButtonAction(pluginName);
     connect(action, SIGNAL(triggered(QString&)), this, SLOT(showPluginDialog(QString&)));
     _fits->addAction(action);
   }
 
   foreach (QString pluginName, DataObject::filterPluginList()) {
-    action = new DataButtonAction(tr(pluginName));
+    action = new DataButtonAction(pluginName);
     connect(action, SIGNAL(triggered(QString&)), this, SLOT(showPluginDialog(QString&)));
     _filters->addAction(action);
   }

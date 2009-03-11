@@ -239,7 +239,7 @@ QList<PlotItem*> PlotItemManager::tiedZoomPlots(PlotItem* plotItem) {
 
 
 void PlotItemManager::removeFocusPlot(PlotItem *plotItem) {
-  _focusedPlots.remove(plotItem);
+  _focusedPlots.removeAll(plotItem);
   if (_plotLists.contains(plotItem->parentView())) {
     foreach (PlotItem* plot, _plotLists.value(plotItem->parentView())) {
       if (plotItem != plot) {

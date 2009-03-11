@@ -36,7 +36,7 @@ ExportGraphicsDialog::ExportGraphicsDialog(MainWindow *parent)
   }
 
   _comboBoxFormats->addItems(formats);
-  _comboBoxFormats->setCurrentItem(0);
+  _comboBoxFormats->setCurrentIndex(0);
 
   connect(_autoSaveTimer, SIGNAL(timeout()),      this, SLOT(createFile()));
   connect(_comboBoxSizeOption, SIGNAL(activated(int)), this, SLOT(enableWidthHeight()));
@@ -52,7 +52,7 @@ ExportGraphicsDialog::~ExportGraphicsDialog() {
 
 
 void ExportGraphicsDialog::enableWidthHeight() {
-  int displayOption = _comboBoxSizeOption->currentItem();
+  int displayOption = _comboBoxSizeOption->currentIndex();
 
   switch (displayOption) {
     case 0:
@@ -77,7 +77,7 @@ void ExportGraphicsDialog::enableWidthHeight() {
 
 void ExportGraphicsDialog::applyAutosave() {
   if (_autosave->isChecked()) {
-    _autoSaveTimer->start(_period->value()*1000, false);
+    _autoSaveTimer->start(_period->value()*1000);
   } else {
     _autoSaveTimer->stop();
   }
@@ -94,7 +94,7 @@ void ExportGraphicsDialog::apply() {
 
 
 void ExportGraphicsDialog::createFile() {
-  emit exportGraphics(_saveLocation->file(), _comboBoxFormats->currentText(), _xSize->value(), _ySize->value(), _comboBoxSizeOption->currentItem());
+  emit exportGraphics(_saveLocation->file(), _comboBoxFormats->currentText(), _xSize->value(), _ySize->value(), _comboBoxSizeOption->currentIndex());
 }
 
 

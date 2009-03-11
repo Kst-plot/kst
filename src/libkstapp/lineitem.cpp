@@ -24,7 +24,7 @@ namespace Kst {
 
 LineItem::LineItem(View *parent)
   : ViewItem(parent) {
-  setName("Line");
+  setTypeName("Line");
   setZValue(LINE_ZVALUE);
   setAllowedGrips(RightMidGrip | LeftMidGrip);
   setAllowedGripModes(Resize);

@@ -1,14 +1,11 @@
 include($$PWD/../../kst.pri)
 
-QT += gui xml qt3support
+QT += gui
 
 TEMPLATE = lib
 CONFIG += designer plugin
-OBJECTS_DIR = tmp
-MOC_DIR = tmp
 TARGET = kstwidgets
 win32:CONFIG += staticlib
-CONFIG += debug
 
 INSTALL_DIR = $$(INSTDIR)
 ! isEmpty(INSTALL_DIR) {

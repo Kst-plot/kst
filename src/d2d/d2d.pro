@@ -1,10 +1,6 @@
 include($$PWD/../../kst.pri)
 
-QT += xml qt3support
-
 TEMPLATE = app
-OBJECTS_DIR = tmp
-MOC_DIR = tmp
 TARGET = d2d
 DESTDIR = $$OUTPUT_DIR/bin
 

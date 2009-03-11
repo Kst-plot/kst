@@ -191,7 +191,7 @@ bool FFTOptions::apodizeFunctionDirty() const {
 
 
 void FFTOptions::setApodizeFunction(const ApodizeFunction apodizeFunction) {
-  _apodizeFunction->setCurrentItem((ApodizeFunction)apodizeFunction);
+  _apodizeFunction->setCurrentIndex((ApodizeFunction)apodizeFunction);
 }
 
 
@@ -206,7 +206,7 @@ bool FFTOptions::outputDirty() const {
 
 
 void FFTOptions::setOutput(const PSDType output) {
-  _output->setCurrentItem((PSDType)output);
+  _output->setCurrentIndex((PSDType)output);
 }
 
 

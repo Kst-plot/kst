@@ -7,6 +7,21 @@ export BUILDDIR=$PWD/build
 
 echo "Building Kst from $SCRIPTDIR into $BUILDDIR"
 
+if [ "$1" = "debug" ]
+then
+  echo "Building in Debug mode"
+  export KST_DEBUG_MODE=1
+else
+  echo "Build in Release mode"
+  export KST_DEBUG_MODE=0
+fi
+
+if [ "$2" ]
+then
+  echo "Output directory of $2 has been requested"
+  export OUTPUT_DIR=$2
+fi
+
 mkdir -p $BUILDDIR
 cd $BUILDDIR
 qmake -r $SCRIPTDIR/kst.pro

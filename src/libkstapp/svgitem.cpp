@@ -37,7 +37,7 @@ SvgItem::SvgItem(View *parent, const QString &file)
     _svg = new QSvgRenderer();
   }
   //FIXME need to set the element id??
-  setName("Svg");
+  setTypeName("Svg");
   setZValue(SVG_ZVALUE);
   setLockAspectRatio(true);
   setLockAspectRatioFixed(true);

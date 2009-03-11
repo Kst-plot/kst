@@ -67,6 +67,9 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     enum { Type = UserType + 1 };
     int type() const { return Type; }
 
+    void setTypeName(const QString& name) { _typeName = name; }
+    const QString typeName() const { return _typeName; }
+
     View *parentView() const;
     ViewItem *parentViewItem() const;
     void setParent(ViewItem *parent);
@@ -251,6 +254,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     GripMode _gripMode;
     GripModes _allowedGripModes;
     CreationState _creationState;
+    QString _typeName;
     bool _supportsTiedZoom;
     bool _fixedSize;
     bool _lockAspectRatio;

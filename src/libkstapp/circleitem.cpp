@@ -22,7 +22,7 @@ namespace Kst {
 
 CircleItem::CircleItem(View *parent)
     : ViewItem(parent) {
-  setName("Circle");
+  setTypeName("Circle");
   setZValue(CIRCLE_ZVALUE);
   setBrush(Qt::white);
   setLockAspectRatio(true);

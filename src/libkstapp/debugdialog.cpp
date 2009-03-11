@@ -28,7 +28,7 @@ DebugDialog::DebugDialog(QWidget *parent)
 
   _log = new LogWidget(TabPage);
 
-  gridLayout2->addMultiCellWidget(_log, 0, 0, 0, 2);
+  gridLayout2->addWidget(_log, 0, 0, 0, 2);
 
   connect(_clear, SIGNAL(clicked()), this, SLOT(clear()));
   connect(_showDebug, SIGNAL(toggled(bool)), _log, SLOT(setShowDebug(bool)));

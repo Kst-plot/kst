@@ -25,7 +25,7 @@ namespace Kst {
 
 LayoutBoxItem::LayoutBoxItem(View *parent)
     : ViewItem(parent) {
-  setName("Layout Box");
+  setTypeName("Layout Box");
   setZValue(LAYOUTBOX_ZVALUE);
   setPen(Qt::NoPen);
   setBrush(Qt::NoBrush);
@@ -65,7 +65,7 @@ void LayoutBoxItem::save(QXmlStreamWriter &xml) {
         continue;
 
       xml.writeStartElement("layoutitem");
-      xml.writeAttribute("name", viewItem->name());
+      xml.writeAttribute("name", viewItem->typeName());
       xml.writeEndElement();
     }
 

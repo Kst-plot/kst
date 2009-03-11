@@ -1,5 +1,5 @@
 TEMPLATE = subdirs
-CONFIG += ordered debug qt thread
+CONFIG += ordered qt thread
 
 SUBDIRS += \
     src/libkst \

@@ -1,11 +1,8 @@
 include($$PWD/../../kst.pri)
 
 TEMPLATE = app
-OBJECTS_DIR = tmp
-MOC_DIR = tmp
 TARGET = kst
 DESTDIR = $$OUTPUT_DIR/bin
-CONFIG += debug
 
 INSTALL_DIR = $$(INSTDIR)
 ! isEmpty(INSTALL_DIR) {
@@ -29,4 +26,4 @@ SOURCES += \
 RESOURCES += \
     $$TOPLEVELDIR/src/images/images.qrc
 
-win32:QT += xml svg opengl qt3support
+win32:QT += svg opengl

@@ -9,8 +9,12 @@ Linux
 5. ./run-kst
 
 Notes:
-To configure the output directory, set OUTPUT_DIR.
+To build in debug mode debug can be added as a parameter to build-kst
+ie.  ./build-kst debug
+To configure the output directory, set OUTPUT_DIR or include it after the command line argument for debug.
+ie.  ./build-kst release /home/kst
 To enable make install support, set INSTDIR
+
 
 Mac OS
 

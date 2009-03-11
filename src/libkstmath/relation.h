@@ -19,7 +19,6 @@
 #define RELATION_H
 
 #include <qcolor.h>
-#include <q3valuestack.h>
 
 #include "dataobject.h"
 #include "painter.h"

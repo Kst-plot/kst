@@ -19,7 +19,7 @@
 #ifndef SharedPTR_H
 #define SharedPTR_H
 
-#include <q3semaphore.h>
+#include <QSemaphore>
 
 #include <qdebug.h>
 
@@ -31,19 +31,21 @@
 
 namespace Kst {
 
+#define SEMAPHORE_COUNT 999999
+
 class Shared {
 public:
    /**
     * Standard constructor.  This will initialize the reference count
     * on this object to 0.
     */
-   Shared() : sem(999999) { }
+   Shared() : sem(SEMAPHORE_COUNT) { }
 
    /**
     * Copy constructor.  This will @em not actually copy the objects
     * but it will initialize the reference count on this object to 0.
     */
-   Shared( const Shared & ) : sem(999999) { }
+   Shared( const Shared & ) : sem(SEMAPHORE_COUNT) { }
 
    /**
     * Overloaded assignment operator.
@@ -54,7 +56,7 @@ public:
     * Increases the reference count by one.
     */
    void _KShared_ref() const {
-	   sem++;
+	   sem.acquire(1);
 //	   qDebug() << "KShared_ref: " << (void*)this << " -> " << _KShared_count() << endl;
 //	   qDebug() << kstdBacktrace() << endl;
    }
@@ -64,10 +66,10 @@ public:
     * the count goes to 0, this object will delete itself.
     */
    void _KShared_unref() const {
-	   sem--;
+	   sem.release(1);
 //	   qDebug() << "KShared_unref: " << (void*)this << " -> " << _KShared_count() << endl;
 //	   qDebug() << kstdBacktrace() << endl;
-	   if (sem.total() == sem.available()) delete this;
+	   if (SEMAPHORE_COUNT == sem.available()) delete this;
    }
 
    /**
@@ -75,12 +77,12 @@ public:
     *
     * @return Number of references
     */
-   int _KShared_count() const { return sem.total() - sem.available(); }
+   int _KShared_count() const { return SEMAPHORE_COUNT - sem.available(); }
 
 protected:
    virtual ~Shared() { }
 private:
-   mutable Q3Semaphore sem;
+   mutable QSemaphore sem;
 };
 
 template< class T >

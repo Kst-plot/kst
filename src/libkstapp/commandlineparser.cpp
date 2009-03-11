@@ -119,9 +119,9 @@ void CommandLineParser::usage(QString Message) {
 "Placement:\n"
 "Plot column 2 and column 3 in plot P1 and column 4 in plot P2\n"
 "       kst data.dat -P P1 -y 2 -y 3 -P P2 -y 4\n"
-      ).latin1();
+      ).toLatin1().constData();
 
-  std::cerr << Message.latin1();
+  std::cerr << Message.toLatin1().constData();
 
   exit(0);
 }
