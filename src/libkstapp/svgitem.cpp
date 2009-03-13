@@ -12,8 +12,6 @@
 #include "svgitem.h"
 #include "debug.h"
 
-#include "viewitemzorder.h"
-
 #include <QDebug>
 #include <QFileDialog>
 #include <QGraphicsScene>
@@ -36,9 +34,7 @@ SvgItem::SvgItem(View *parent, const QString &file)
   } else {
     _svg = new QSvgRenderer();
   }
-  //FIXME need to set the element id??
   setTypeName("Svg");
-  setZValue(SVG_ZVALUE);
   setLockAspectRatio(true);
   setLockAspectRatioFixed(true);
 }

@@ -11,8 +11,6 @@
 
 #include "ellipseitem.h"
 
-#include "viewitemzorder.h"
-
 #include <QDebug>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
@@ -24,7 +22,6 @@ namespace Kst {
 EllipseItem::EllipseItem(View *parent)
   : ViewItem(parent) {
   setTypeName("Ellipse");
-  setZValue(ELLIPSE_ZVALUE);
   setBrush(Qt::white);
 }
 

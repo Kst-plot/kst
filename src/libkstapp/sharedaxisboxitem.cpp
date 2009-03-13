@@ -11,7 +11,6 @@
 
 #include "sharedaxisboxitem.h"
 
-#include "viewitemzorder.h"
 #include "plotitem.h"
 #include "plotitemmanager.h"
 
@@ -32,7 +31,6 @@ namespace Kst {
 SharedAxisBoxItem::SharedAxisBoxItem(View *parent)
     : ViewItem(parent), _layout(0), _loaded(false), _dirty(false) {
   setTypeName("Shared Axis Box");
-  setZValue(SHAREDAXISBOX_ZVALUE);
   setBrush(Qt::transparent);
 
   _breakAction = new QAction(tr("Break Shared Axis Box"), this);

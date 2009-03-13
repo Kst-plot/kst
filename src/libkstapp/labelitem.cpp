@@ -13,7 +13,6 @@
 
 #include <labelparser.h>
 #include "labelrenderer.h"
-#include "viewitemzorder.h"
 #include "labelitemdialog.h"
 #include "labelcreator.h"
 
@@ -31,8 +30,6 @@ namespace Kst {
 LabelItem::LabelItem(View *parent, const QString& txt)
   : ViewItem(parent), _parsed(0), _text(txt) {
   setTypeName("Label");
-  setZValue(LABEL_ZVALUE);
-
   setFixedSize(true);
   setAllowedGripModes(Move /*| Resize*/ | Rotate /*| Scale*/);
   _font = parentView()->defaultFont();

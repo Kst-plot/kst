@@ -12,7 +12,6 @@
 #include "arrowitem.h"
 
 #include "view.h"
-#include "viewitemzorder.h"
 #include "arrowitemdialog.h"
 
 #include "math_kst.h"
@@ -32,7 +31,6 @@ ArrowItem::ArrowItem(View *parent)
   _startArrowScale(1.0),
   _endArrowScale(1.0) {
   setTypeName("Arrow");
-  setZValue(ARROW_ZVALUE);
   QBrush b = brush();
   b.setStyle(Qt::SolidPattern);
   setBrush(b);

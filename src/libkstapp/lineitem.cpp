@@ -12,7 +12,6 @@
 #include "lineitem.h"
 
 #include "view.h"
-#include "viewitemzorder.h"
 
 #include <debug.h>
 
@@ -25,7 +24,6 @@ namespace Kst {
 LineItem::LineItem(View *parent)
   : ViewItem(parent) {
   setTypeName("Line");
-  setZValue(LINE_ZVALUE);
   setAllowedGrips(RightMidGrip | LeftMidGrip);
   setAllowedGripModes(Resize);
   setAllowsLayout(false);
@@ -122,7 +120,6 @@ void LineItem::creationPolygonChanged(View::CreationEvent event) {
     setPos(poly.first().x(), poly.first().y());
     setViewRect(QRectF(0.0, 0.0, 0.0, sizeOfGrip().height()));
     parentView()->scene()->addItem(this);
-    //setZValue(1);
     return;
   }
 

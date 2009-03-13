@@ -11,8 +11,6 @@
 
 #include "circleitem.h"
 
-#include "viewitemzorder.h"
-
 #include <debug.h>
 
 #include <QDebug>
@@ -23,7 +21,6 @@ namespace Kst {
 CircleItem::CircleItem(View *parent)
     : ViewItem(parent) {
   setTypeName("Circle");
-  setZValue(CIRCLE_ZVALUE);
   setBrush(Qt::white);
   setLockAspectRatio(true);
   setLockAspectRatioFixed(true);
@@ -60,7 +57,6 @@ void CircleItem::creationPolygonChanged(View::CreationEvent event) {
     setPos(poly.first().x(), poly.first().y());
     setViewRect(QRectF(0.0, 0.0, 0.0, sizeOfGrip().height()));
     parentView()->scene()->addItem(this);
-    //setZValue(1);
     return;
   }
 

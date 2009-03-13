@@ -12,7 +12,6 @@
 #include "plotrenderitem.h"
 
 #include "plotitem.h"
-#include "viewitemzorder.h"
 #include "plotitemmanager.h"
 #include "application.h"
 #include "objectstore.h"
@@ -38,7 +37,6 @@ PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
   : ViewItem(parentItem->parentView()), _referencePointMode(false), _highlightPointActive(false), _invertHighlight(false) {
 
   setTypeName(tr("Plot Render"));
-  setZValue(PLOTRENDER_ZVALUE);
   setParent(parentItem);
   setHasStaticGeometry(true);
   setAllowedGripModes(0);

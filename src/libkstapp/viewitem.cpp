@@ -36,6 +36,7 @@
 static const double ONE_PI = 3.14159265358979323846264338327950288419717;
 static double TWO_PI = 2.0 * ONE_PI;
 static double RAD2DEG = 180.0 / ONE_PI;
+static const int DRAWING_ZORDER = 500;
 
 #define DEBUG_GEOMETRY 0
 #define DEBUG_REPARENT 0
@@ -70,7 +71,7 @@ ViewItem::ViewItem(View *parent)
     _parentRelativeWidth(0)
  {
 
-  setZValue(1);
+  setZValue(DRAWING_ZORDER);
   setAcceptsHoverEvents(true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
   connect(parent, SIGNAL(mouseModeChanged(View::MouseMode)),
@@ -773,7 +774,6 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
     setViewRect(0.0, 0.0, 0.0, 0.0);
     parentView()->scene()->addItem(this);
     _creationState = InProgress;
-    //setZValue(1);
     return;
   }
 
@@ -800,6 +800,7 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
     maybeReparent();
     _creationState = Completed;
     emit creationComplete();
+    setZValue(1);
     return;
   }
 }
@@ -1965,7 +1966,6 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
 
   item->setPos(center);
   item->setViewRect(0.0, 0.0, 200.0, 200.0);
-  //_item->setZValue(1);
   _item->parentView()->scene()->addItem(item);
 
   if (layout == CurvePlacement::Auto) {

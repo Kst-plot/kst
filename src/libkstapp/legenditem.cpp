@@ -11,7 +11,6 @@
 
 #include "legenditem.h"
 
-#include "viewitemzorder.h"
 #include <labelparser.h>
 #include "labelrenderer.h"
 
@@ -38,7 +37,6 @@ struct DrawnLegendItem {
 LegendItem::LegendItem(PlotItem *parent)
   : ViewItem(parent->parentView()), _plotItem(parent), _auto(true), _fontScale(0.0), _verticalDisplay(true) {
   setTypeName("Legend");
-  setZValue(LEGEND_ZVALUE);
 
   setAllowedGripModes(Move /*| Resize*/ /*| Rotate*/ /*| Scale*/);
 

@@ -11,7 +11,6 @@
 
 #include "plotitem.h"
 
-#include "viewitemzorder.h"
 #include "plotitemmanager.h"
 #include "plotrenderitem.h"
 
@@ -52,6 +51,7 @@
 // FIXME:no magic numbers in pixels
 static qreal BOTTOM_MARGIN = 0.0;
 static qreal LEFT_MARGIN = 0.0;
+static const int PLOT_MAXIMIZED_ZORDER = 1000;
 
 namespace Kst {
 
@@ -90,7 +90,6 @@ PlotItem::PlotItem(View *parent)
 {
 
   setTypeName("Plot");
-  setZValue(PLOT_ZVALUE);
   setBrush(Qt::white);
 
   setSupportsTiedZoom(true);
@@ -2414,7 +2413,7 @@ void PlotItem::plotMaximize() {
     setParent(0);
     setPos(0, 0);
     setViewRect(parentView()->sceneRect());
-    setZValue(1000);
+    setZValue(PLOT_MAXIMIZED_ZORDER);
     PlotItemManager::self()->setFocusPlot(this);
   }
 }
