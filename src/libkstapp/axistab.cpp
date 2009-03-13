@@ -64,6 +64,7 @@ AxisTab::AxisTab(QWidget *parent)
   connect(_axisMinorLineColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
 
   connect(_scaleInterpret, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_scaleInterpret, SIGNAL(stateChanged(int)), this, SLOT(updateButtons()));
   connect(_scaleLog, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_scaleBaseOffset, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_scaleReverse, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
@@ -247,6 +248,11 @@ AxisInterpretationType AxisTab::axisInterpretation() const {
 
 void AxisTab::setAxisInterpretation(AxisInterpretationType interpret) {
   _scaleInterpretType->setCurrentIndex(_scaleInterpretType->findData(QVariant(interpret)));
+}
+
+
+void AxisTab::updateButtons() {
+  _scaleBaseOffset->setEnabled(!isInterpret());
 }
 
 }
