@@ -231,7 +231,6 @@ HEADERS += \
     viewgridlayout.h \
     viewitemdialog.h \
     viewitem.h \
-    viewitemzorder.h \
     viewmanager.h \
     viewmatrixdialog.h \
     viewprimitivedialog.h \
