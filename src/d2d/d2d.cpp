@@ -42,8 +42,7 @@ static void exitHelper() {
 int main(int argc, char *argv[]) {
   atexit(exitHelper);
 
-  QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
-  Kst::DataSource::setupOnStartup(settingsObject);
+  Kst::DataSource::init();
 
   char field_list[40][120], in_filename[180], out_filename[180], out_type[40];
   int n_field=0;

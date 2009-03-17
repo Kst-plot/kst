@@ -42,8 +42,7 @@ int main(int argc, char *argv[]) {
   Kst::DataSourcePtr file;
   int i;
 
-  QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
-  Kst::DataSource::setupOnStartup(settingsObject);
+  Kst::DataSource::init();
 
   char field_list[40][120], filename[180];
   bool do_hex[40];

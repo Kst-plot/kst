@@ -30,8 +30,7 @@
 static Kst::ObjectStore _store;
 
 void TestDataSource::initTestCase() {
-  QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
-  Kst::DataSource::setupOnStartup(settingsObject);
+  Kst::DataSource::init();
   _plugins = Kst::DataSource::pluginList();
 }
 
