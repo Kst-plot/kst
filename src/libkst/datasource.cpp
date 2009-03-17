@@ -52,8 +52,12 @@ const QString DataSource::staticTypeTag = I18N_NOOP("source");
 
 static QSettings *settingsObject = 0L;
 static QMap<QString,QString> urlMap;
-void DataSource::setupOnStartup(QSettings *cfg) {
-  settingsObject = cfg;
+void DataSource::init() {
+  if (!settingsObject) {
+    QSettings *settingsObj = new QSettings("kstdatarc", QSettings::IniFormat);
+    settingsObject = settingsObj;
+  }
+  initPlugins();
 }
 
 
@@ -143,12 +147,18 @@ static void scanPlugins() {
 }
 
 
+void DataSource::initPlugins() {
+  if (_pluginList.isEmpty()) {
+      scanPlugins();
+  }
+}
+
+
 QStringList DataSource::pluginList() {
   QStringList plugins;
 
-  if (_pluginList.isEmpty()) {
-    scanPlugins();
-  }
+  // Ensure state.  When using kstapp MainWindow calls init.
+  init();
 
   for (PluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
     plugins += (*it)->pluginName();
@@ -175,9 +185,7 @@ class PluginSortContainer {
 
 static QList<PluginSortContainer> bestPluginsForSource(const QString& filename, const QString& type) {
   QList<PluginSortContainer> bestPlugins;
-  if (_pluginList.isEmpty()) {
-    scanPlugins();
-  }
+  DataSource::initPlugins();
 
   PluginList info = _pluginList;
 
@@ -298,9 +306,7 @@ DataSourceConfigWidget* DataSource::configWidget() {
 
 
 bool DataSource::pluginHasConfigWidget(const QString& plugin) {
-  if (_pluginList.isEmpty()) {
-    scanPlugins();
-  }
+  initPlugins();
 
   PluginList info = _pluginList;
 
@@ -315,9 +321,7 @@ bool DataSource::pluginHasConfigWidget(const QString& plugin) {
 
 
 DataSourceConfigWidget* DataSource::configWidgetForPlugin(const QString& plugin) {
-  if (_pluginList.isEmpty()) {
-    scanPlugins();
-  }
+  initPlugins();
 
   PluginList info = _pluginList;
 

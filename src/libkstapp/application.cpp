@@ -36,13 +36,6 @@ Application::Application(int &argc, char **argv)
   Builtins::initRelations();  //libkstmath
   Builtins::initGraphics();   //libkstapp
 
-  //FIXME Set the datasource settings file...
-  //I think that KstDataSource can have a manager singleton that does this itself
-  //inside of libkst... no?
-  QSettings *settingsObject = new QSettings("kstdatarc", QSettings::IniFormat);
-  DataSource::setupOnStartup(settingsObject);
-  DataObject::setupOnStartup(settingsObject);
-
   _mainWindow = new MainWindow;
 
   //Replace the data singleton with one that actually works

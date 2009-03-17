@@ -52,8 +52,9 @@ class KST_EXPORT DataObject : public Object {
     virtual void attach();
 
     // These static methods are not for plugins to use
-    static void setupOnStartup(QSettings*);
+    static void init();
     static void cleanupForExit();
+    static void initPlugins();
     /** Returns a list of object plugins found on the system. */
     static QStringList pluginList();
     static QStringList dataObjectPluginList();

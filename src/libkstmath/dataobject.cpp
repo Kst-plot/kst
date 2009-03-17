@@ -43,8 +43,13 @@ namespace Kst {
 
 static QSettings *settingsObject = 0L;
 static QMap<QString,QString> urlMap;
-void DataObject::setupOnStartup(QSettings *cfg) {
-  settingsObject = cfg;
+void DataObject::init() {
+  if (!settingsObject) {
+    QSettings *settingsObj = new QSettings("kstdatarc", QSettings::IniFormat);
+    settingsObject = settingsObj;
+  }
+
+  initPlugins();
 }
 
 
@@ -111,10 +116,16 @@ void DataObject::scanPlugins() {
 }
 
 
-QStringList DataObject::pluginList() {
+void DataObject::initPlugins() {
   if (_pluginList.isEmpty()) {
-    scanPlugins();
+      scanPlugins();
   }
+}
+
+
+QStringList DataObject::pluginList() {
+  // Ensure state.  When using kstapp MainWindow calls init.
+  init();
 
   QStringList plugins;
 
@@ -127,9 +138,8 @@ QStringList DataObject::pluginList() {
 
 
 QStringList DataObject::dataObjectPluginList() {
-  if (_pluginList.isEmpty()) {
-    scanPlugins();
-  }
+  // Ensure state.  When using kstapp MainWindow calls init.
+  init();
 
   QStringList plugins;
 
@@ -145,9 +155,8 @@ QStringList DataObject::dataObjectPluginList() {
 
 
 QStringList DataObject::filterPluginList() {
-  if (_pluginList.isEmpty()) {
-    scanPlugins();
-  }
+  // Ensure state.  When using kstapp MainWindow calls init.
+  init();
 
   QStringList plugins;
 
@@ -163,9 +172,8 @@ QStringList DataObject::filterPluginList() {
 
 
 QStringList DataObject::fitsPluginList() {
-  if (_pluginList.isEmpty()) {
-    scanPlugins();
-  }
+  // Ensure state.  When using kstapp MainWindow calls init.
+  init();
 
   QStringList plugins;
 
@@ -181,9 +189,8 @@ QStringList DataObject::fitsPluginList() {
 
 
 DataObjectConfigWidget* DataObject::pluginWidget(const QString& name) {
-  if (_pluginList.isEmpty()) {
-    scanPlugins();
-  }
+  // Ensure state.  When using kstapp MainWindow calls init.
+  init();
 
   for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
     if ((*it)->pluginName() == name) {
@@ -198,9 +205,8 @@ DataObjectConfigWidget* DataObject::pluginWidget(const QString& name) {
 
 
 QString DataObject::pluginDescription(const QString& name) {
-  if (_pluginList.isEmpty()) {
-    scanPlugins();
-  }
+  // Ensure state.  When using kstapp MainWindow calls init.
+  init();
 
   for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
     if ((*it)->pluginName() == name) {
@@ -212,9 +218,8 @@ QString DataObject::pluginDescription(const QString& name) {
 
 
 int DataObject::pluginType(const QString& name) {
-  if (_pluginList.isEmpty()) {
-    scanPlugins();
-  }
+  // Ensure state.  When using kstapp MainWindow calls init.
+  init();
 
   for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
     if ((*it)->pluginName() == name) {
@@ -226,6 +231,9 @@ int DataObject::pluginType(const QString& name) {
 
 
 DataObjectPtr DataObject::createPlugin(const QString& name, ObjectStore *store, DataObjectConfigWidget *configWidget, bool setupInputsOutputs) {
+  // Ensure state.  When using kstapp MainWindow calls init.
+  init();
+
   for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
     if ((*it)->pluginName() == name) {
       if (DataObjectPtr object = (*it)->create(store, configWidget, setupInputsOutputs)) {

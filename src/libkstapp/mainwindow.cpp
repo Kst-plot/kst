@@ -99,6 +99,8 @@ MainWindow::~MainWindow() {
 void MainWindow::performHeavyStartupActions() {
   // Set the timer for the UpdateManager.
   UpdateManager::self()->setMinimumUpdatePeriod(ApplicationSettings::self()->minimumUpdatePeriod());
+  DataObject::init();
+  DataSource::init();
 }
 
 

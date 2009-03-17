@@ -63,8 +63,9 @@ class KST_EXPORT DataSource : public Object {
   public:
     enum UpdateCheckType { Timer, File, None };
 
-    static void setupOnStartup(QSettings*);
+    static void init();
     static void cleanupForExit();
+    static void initPlugins();
 
     /** Returns a list of plugins found on the system. */
     static QStringList pluginList();
