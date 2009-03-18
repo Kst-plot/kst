@@ -1434,6 +1434,7 @@ bool ViewItem::maybeReparent() {
 
 void ViewItem::setParent(ViewItem* parent) {
   setParentItem(parent);
+  updateRelativeSize();
 }
 
 

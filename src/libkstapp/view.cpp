@@ -329,11 +329,10 @@ void View::createLayout(int columns) {
 void View::appendToLayout(CurvePlacement::Layout layout, ViewItem* item, int columns) {
   AppendLayoutCommand *appendlayout = new AppendLayoutCommand(new LayoutBoxItem(this));
   appendlayout->appendLayout(layout, item, columns);
-
   if (_layoutBoxItem) {
+    LayoutBoxItem *layoutBox = _layoutBoxItem;
     _layoutBoxItem->setEnabled(false);
-    delete _layoutBoxItem;
-    _layoutBoxItem = 0;
+    delete layoutBox;
   }
 
 }

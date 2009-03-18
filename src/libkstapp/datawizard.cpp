@@ -894,12 +894,6 @@ void DataWizard::finished() {
     }
   }
 
-  int tmpi=0;
-  foreach (PlotItem* plot, plotList) {
-    tmpi++;
-    plot->update();
-    plot->parentView()->appendToLayout(_pagePlot->layout(), plot, _pagePlot->gridColumns());
-  }
   // legends and labels
   bool xLabels = _pagePlot->xAxisLabels();
   bool yLabels = _pagePlot->yAxisLabels();
@@ -939,6 +933,12 @@ void DataWizard::finished() {
       }
     }
   }
+
+  foreach (PlotItem* plot, plotList) {
+    plot->update();
+    plot->parentView()->appendToLayout(_pagePlot->layout(), plot, _pagePlot->gridColumns());
+  }
+
   QApplication::restoreOverrideCursor();
 
   accept();
