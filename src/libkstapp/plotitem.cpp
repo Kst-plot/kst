@@ -48,6 +48,9 @@
 // Label Region Debugging.  0 Off, 1 On.
 #define DEBUG_LABEL_REGION 0
 
+// Benchmark drawing
+// #define BENCHMARK 1
+
 // FIXME:no magic numbers in pixels
 static qreal BOTTOM_MARGIN = 0.0;
 static qreal LEFT_MARGIN = 0.0;
@@ -96,6 +99,9 @@ PlotItem::PlotItem(View *parent)
 
   _xAxis = new PlotAxis(this, Qt::Horizontal);
   _yAxis = new PlotAxis(this, Qt::Vertical);
+
+  connect(this, SIGNAL(geometryChanged()), this, SLOT(updateXAxisLines()));
+  connect(this, SIGNAL(geometryChanged()), this, SLOT(updateYAxisLines()));
 
   _globalFont = parentView()->defaultFont();
   _leftLabelFont = parentView()->defaultFont();
@@ -538,8 +544,13 @@ void PlotItem::calculateBorders(QPainter *painter) {
   setCalculatedBottomLabelMargin(calculateBottomLabelBound(painter).height());
 }
 
-
 void PlotItem::paint(QPainter *painter) {
+#ifdef BENCHMARK
+  QTime bench_time, benchtmp;
+  int b_1 = 0, b_2 = 0, b_3 = 0, b_4 = 0, b_5 = 0;
+  bench_time.start();
+  benchtmp.start();
+#endif
   painter->save();
   painter->setPen(Qt::NoPen);
   painter->drawRect(rect());
@@ -556,6 +567,9 @@ void PlotItem::paint(QPainter *painter) {
     setPlotBordersDirty(false);
   }
 
+#ifdef BENCHMARK
+    b_1 = benchtmp.elapsed();
+#endif
 #if DEBUG_LABEL_REGION
   //  qDebug() << "=============> leftLabel:" << leftLabel() << endl;
 #endif
@@ -572,164 +586,214 @@ void PlotItem::paint(QPainter *painter) {
   //  qDebug() << "=============> topLabel:" << topLabel() << endl;
 #endif
   paintTopLabel(painter);
+#ifdef BENCHMARK
+    b_2 = benchtmp.elapsed();
+#endif
 
   paintPlot(painter);
+#ifdef BENCHMARK
+    b_3 = benchtmp.elapsed();
+#endif
+
   paintTickLabels(painter);
+#ifdef BENCHMARK
+    b_4 = benchtmp.elapsed();
+#endif
+
   paintPlotMarkers(painter);
+#ifdef BENCHMARK
+    b_5 = benchtmp.elapsed();
+#endif
 
   painter->restore();
+#ifdef BENCHMARK
+  int i = bench_time.elapsed();
+  qDebug() << endl << "Painting Plot " << (void *)this << ": " << i << "ms";
+  if (b_1 > 0)       qDebug() << "            Setup: " << b_1 << "ms";
+  if (b_2 - b_1 > 0) qDebug() << "           Labels: " << (b_2 - b_1) << "ms";
+  if (b_3 - b_2 > 0) qDebug() << "             Plot: " << (b_3 - b_2) << "ms";
+  if (b_4 - b_3 > 0) qDebug() << "      Tick Labels: " << (b_4 - b_3) << "ms";
+  if (b_5 - b_4 > 0) qDebug() << "          Markers: " << (b_5 - b_4) << "ms";
+#endif
 }
 
 
 void PlotItem::paintPlot(QPainter *painter) {
-  paintMajorGridLines(painter);
-  paintMinorGridLines(painter);
+  if (xAxis()->ticksUpdated()) {
+    updateXAxisLines();
+  }
+  if (yAxis()->ticksUpdated()) {
+    updateYAxisLines();
+  }
 
+#ifdef BENCHMARK
+  QTime bench_time, benchtmp;
+  int b_1 = 0, b_2 = 0, b_3 = 0, b_4 = 0, b_5 = 0;
+  bench_time.start();
+  benchtmp.start();
+#endif
+  paintMajorGridLines(painter);
+#ifdef BENCHMARK
+    b_1 = benchtmp.elapsed();
+#endif
+  paintMinorGridLines(painter);
+#ifdef BENCHMARK
+    b_2 = benchtmp.elapsed();
+#endif
   painter->save();
   painter->setBrush(Qt::NoBrush);
   painter->drawRect(plotRect());
   painter->restore();
-
+#ifdef BENCHMARK
+    b_3 = benchtmp.elapsed();
+#endif
   paintMajorTicks(painter);
+#ifdef BENCHMARK
+    b_4 = benchtmp.elapsed();
+#endif
   paintMinorTicks(painter);
+#ifdef BENCHMARK
+    b_5 = benchtmp.elapsed();
+#endif
+
+#ifdef BENCHMARK
+  int i = bench_time.elapsed();
+  qDebug() << endl << "Painting Plot - PaintPlot " << (void *)this << ": " << i << "ms";
+  if (b_1 > 0)       qDebug() << "            Major Lines: " << b_1 << "ms";
+  if (b_2 - b_1 > 0) qDebug() << "            Minor Lines: " << (b_2 - b_1) << "ms";
+  if (b_3 - b_2 > 0) qDebug() << "                   Rect: " << (b_3 - b_2) << "ms";
+  if (b_4 - b_3 > 0) qDebug() << "            Major Ticks: " << (b_4 - b_3) << "ms";
+  if (b_5 - b_4 > 0) qDebug() << "            Minor Ticks: " << (b_5 - b_4) << "ms";
+#endif
+}
+
+
+void PlotItem::updateXAxisLines() {
+  qreal majorTickLength = qMin(rect().width(), rect().height()) * .02; //two percent
+  qreal minorTickLength = qMin(rect().width(), rect().height()) * 0.01; //one percent
+  QRectF rect = plotRect();
+
+  _xMajorGridLines.clear();
+  _xMajorTickLines.clear();
+  foreach (qreal x, _xAxis->axisMajorTicks()) {
+    QPointF p1 = QPointF(mapXToPlot(x), rect.bottom());
+    QPointF p2 = p1 - QPointF(0, rect.height());
+    _xMajorGridLines << QLineF(p1, p2);
+
+    p2 = p1 - QPointF(0, majorTickLength);
+    _xMajorTickLines << QLineF(p1, p2);
+
+    p1.setY(rect.top());
+    p2 = p1 + QPointF(0, majorTickLength);
+    _xMajorTickLines << QLineF(p1, p2);
+  }
+  _xMinorGridLines.clear();
+  _xMinorTickLines.clear();
+  foreach (qreal x, _xAxis->axisMinorTicks()) {
+    QPointF p1 = QPointF(mapXToPlot(x), rect.bottom());
+    QPointF p2 = p1 - QPointF(0, rect.height());
+    _xMinorGridLines << QLineF(p1, p2);
+
+    p2 = p1 - QPointF(0, minorTickLength);
+    _xMinorTickLines << QLineF(p1, p2);
+
+    p1.setY(rect.top());
+    p2 = p1 + QPointF(0, minorTickLength);
+    _xMinorTickLines << QLineF(p1, p2);
+
+  }
+}
+
+
+void PlotItem::updateYAxisLines() {
+  qreal majorTickLength = qMin(rect().width(), rect().height()) * .02; //two percent
+  qreal minorTickLength = qMin(rect().width(), rect().height()) * 0.01; //one percent
+  QRectF rect = plotRect();
+
+  _yMajorGridLines.clear();
+  _yMajorTickLines.clear();
+  foreach (qreal y, _yAxis->axisMajorTicks()) {
+    QPointF p1 = QPointF(rect.left(), mapYToPlot(y));
+    QPointF p2 = p1 + QPointF(rect.width(), 0);
+    _yMajorGridLines << QLineF(p1, p2);
+
+    p2 = p1 + QPointF(majorTickLength, 0);
+    _yMajorTickLines << QLineF(p1, p2);
+
+    p1.setX(rect.right());
+    p2 = p1 - QPointF(majorTickLength, 0);
+    _yMajorTickLines << QLineF(p1, p2);
+  }
+
+  _yMinorGridLines.clear();
+  _yMinorTickLines.clear();
+  foreach (qreal y, _yAxis->axisMinorTicks()) {
+    QPointF p1 = QPointF(rect.left(), mapYToPlot(y));
+    QPointF p2 = p1 + QPointF(rect.width(), 0);
+    _yMinorGridLines << QLineF(p1, p2);
+
+    p2 = p1 + QPointF(minorTickLength, 0);
+    _yMinorTickLines << QLineF(p1, p2);
+
+    p1.setX(rect.right());
+    p2 = p1 - QPointF(minorTickLength, 0);
+    _yMinorTickLines << QLineF(p1, p2);
+  }
 }
 
 
 void PlotItem::paintMajorGridLines(QPainter *painter) {
-
-  QRectF rect = plotRect();
-
   if (xAxis()->drawAxisMajorGridLines()) {
-    QVector<QLineF> xMajorTickLines;
-    foreach (qreal x, _xAxis->axisMajorTicks()) {
-      QPointF p1 = QPointF(mapXToPlot(x), plotRect().bottom());
-      QPointF p2 = p1 - QPointF(0, rect.height());
-      xMajorTickLines << QLineF(p1, p2);
-    }
-
     painter->save();
     painter->setPen(QPen(QBrush(_xAxis->axisMajorGridLineColor()), 1.0, _xAxis->axisMajorGridLineStyle()));
-    painter->drawLines(xMajorTickLines);
+    painter->drawLines(_xMajorGridLines);
     painter->restore();
   }
 
   if (yAxis()->drawAxisMajorGridLines()) {
-    QVector<QLineF> yMajorTickLines;
-    foreach (qreal y, _yAxis->axisMajorTicks()) {
-      QPointF p1 = QPointF(plotRect().left(), mapYToPlot(y));
-      QPointF p2 = p1 + QPointF(rect.width(), 0);
-      yMajorTickLines << QLineF(p1, p2);
-    }
-
     painter->save();
     painter->setPen(QPen(QBrush(_yAxis->axisMajorGridLineColor()), 1.0, _yAxis->axisMajorGridLineStyle()));
-    painter->drawLines(yMajorTickLines);
+    painter->drawLines(_yMajorGridLines);
     painter->restore();
   }
 }
 
 
 void PlotItem::paintMinorGridLines(QPainter *painter) {
-
-  QRectF rect = plotRect();
-
   if (xAxis()->drawAxisMinorGridLines()) {
-    QVector<QLineF> xMinorTickLines;
-    foreach (qreal x, _xAxis->axisMinorTicks()) {
-      QPointF p1 = QPointF(mapXToPlot(x), plotRect().bottom());
-      QPointF p2 = p1 - QPointF(0, rect.height());
-      xMinorTickLines << QLineF(p1, p2);
-    }
     painter->save();
     painter->setPen(QPen(QBrush(_xAxis->axisMinorGridLineColor()), 1.0, _xAxis->axisMinorGridLineStyle()));
-    painter->drawLines(xMinorTickLines);
+    painter->drawLines(_xMinorGridLines);
     painter->restore();
   }
 
   if (yAxis()->drawAxisMinorGridLines()) {
-    QVector<QLineF> yMinorTickLines;
-    foreach (qreal y, _yAxis->axisMinorTicks()) {
-      QPointF p1 = QPointF(plotRect().left(), mapYToPlot(y));
-      QPointF p2 = p1 + QPointF(rect.width(), 0);
-      yMinorTickLines << QLineF(p1, p2);
-    }
-
     painter->save();
     painter->setPen(QPen(QBrush(_yAxis->axisMinorGridLineColor()), 1.0, _yAxis->axisMinorGridLineStyle()));
-    painter->drawLines(yMinorTickLines);
+    painter->drawLines(_yMinorGridLines);
     painter->restore();
   }
 }
 
 
 void PlotItem::paintMajorTicks(QPainter *painter) {
-
-  qreal majorTickLength = qMin(rect().width(), rect().height()) * .02; //two percent
-
   if (xAxis()->drawAxisMajorTicks()) {
-    QVector<QLineF> xMajorTickLines;
-    foreach (qreal x, _xAxis->axisMajorTicks()) {
-      QPointF p1 = QPointF(mapXToPlot(x), plotRect().bottom());
-      QPointF p2 = p1 - QPointF(0, majorTickLength);
-      xMajorTickLines << QLineF(p1, p2);
-
-      p1.setY(plotRect().top());
-      p2 = p1 + QPointF(0, majorTickLength);
-      xMajorTickLines << QLineF(p1, p2);
-    }
-
-    painter->drawLines(xMajorTickLines);
+    painter->drawLines(_xMajorTickLines);
   }
 
   if (yAxis()->drawAxisMajorTicks()) {
-    QVector<QLineF> yMajorTickLines;
-    foreach (qreal y, _yAxis->axisMajorTicks()) {
-      QPointF p1 = QPointF(plotRect().left(), mapYToPlot(y));
-      QPointF p2 = p1 + QPointF(majorTickLength, 0);
-      yMajorTickLines << QLineF(p1, p2);
-
-      p1.setX(plotRect().right());
-      p2 = p1 - QPointF(majorTickLength, 0);
-      yMajorTickLines << QLineF(p1, p2);
-    }
-
-    painter->drawLines(yMajorTickLines);
+    painter->drawLines(_yMajorTickLines);
   }
 }
 
 
 void PlotItem::paintMinorTicks(QPainter *painter) {
-
-  qreal minorTickLength = qMin(rect().width(), rect().height()) * 0.01; //one percent
-
   if (xAxis()->drawAxisMinorTicks()) {
-    QVector<QLineF> xMinorTickLines;
-    foreach (qreal x, _xAxis->axisMinorTicks()) {
-      QPointF p1 = QPointF(mapXToPlot(x), plotRect().bottom());
-      QPointF p2 = p1 - QPointF(0, minorTickLength);
-      xMinorTickLines << QLineF(p1, p2);
-
-      p1.setY(plotRect().top());
-      p2 = p1 + QPointF(0, minorTickLength);
-      xMinorTickLines << QLineF(p1, p2);
-    }
-
-    painter->drawLines(xMinorTickLines);
+    painter->drawLines(_xMinorTickLines);
   }
 
   if (yAxis()->drawAxisMinorTicks()) {
-    QVector<QLineF> yMinorTickLines;
-    foreach (qreal y, _yAxis->axisMinorTicks()) {
-      QPointF p1 = QPointF(plotRect().left(), mapYToPlot(y));
-      QPointF p2 = p1 + QPointF(minorTickLength, 0);
-      yMinorTickLines << QLineF(p1, p2);
-
-      p1.setX(plotRect().right());
-      p2 = p1 - QPointF(minorTickLength, 0);
-      yMinorTickLines << QLineF(p1, p2);
-    }
-
-    painter->drawLines(yMinorTickLines);
+    painter->drawLines(_yMinorTickLines);
   }
 }
 

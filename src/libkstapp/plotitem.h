@@ -280,6 +280,8 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     virtual void edit();
     void plotMaximize();
     void redrawPlot();
+    void updateXAxisLines();
+    void updateYAxisLines();
 
     void showFilterDialog(QAction*);
     void showFitDialog(QAction*);
@@ -464,6 +466,15 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QAction *_fitAction;
 
     SharedAxisBoxItem * _sharedBox;
+
+    QVector<QLineF> _xMajorGridLines;
+    QVector<QLineF> _yMajorGridLines;
+    QVector<QLineF> _xMinorGridLines;
+    QVector<QLineF> _yMinorGridLines;
+    QVector<QLineF> _xMajorTickLines;
+    QVector<QLineF> _yMajorTickLines;
+    QVector<QLineF> _xMinorTickLines;
+    QVector<QLineF> _yMinorTickLines;
 
     QUndoStack *_undoStack;
 

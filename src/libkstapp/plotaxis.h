@@ -109,11 +109,14 @@ class PlotAxis : public QObject
 
     void validateDrawingRegion(int flags, QPainter *painter);
 
+    // return the value and reset.
+    bool ticksUpdated() { bool bReturn = _ticksUpdated; _ticksUpdated = false; return bReturn; }
+
   Q_SIGNALS:
     void marginsChanged();
 
   public Q_SLOTS:
-    void update(bool useOverrideTicks = false);
+    void updateTicks(bool useOverrideTicks = false);
 
   private:
 
@@ -135,6 +138,8 @@ class PlotAxis : public QObject
 
     ZoomMode _axisZoomMode;
     bool _isAxisVisible;
+
+    bool _ticksUpdated;
 
     QRectF _labelRect;
     QMap<qreal, QString> _axisLabels;

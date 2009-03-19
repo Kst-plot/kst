@@ -30,6 +30,7 @@ PlotAxis::PlotAxis(PlotItem *plotItem, Qt::Orientation orientation) :
   _orientation(orientation),
   _axisZoomMode(Auto),
   _isAxisVisible(true),
+  _ticksUpdated(true),
   _axisLog(false),
   _axisReversed(false),
   _axisBaseOffset(false),
@@ -51,7 +52,7 @@ PlotAxis::PlotAxis(PlotItem *plotItem, Qt::Orientation orientation) :
   _axisMinorGridLineStyle(Qt::DashLine),
   _axisPlotMarkers(orientation == Qt::Horizontal)
  {
-  connect(_plotItem, SIGNAL(updateAxes()), this, SLOT(update()));
+  connect(_plotItem, SIGNAL(updateAxes()), this, SLOT(updateTicks()));
 }
 
 
@@ -597,7 +598,7 @@ void PlotAxis::validateDrawingRegion(int flags, QPainter *painter) {
   // Always try to use the settings requested.
   if (_axisOverrideMajorTicks != _axisMajorTickMode) {
     _axisBaseOffsetOverride = false;
-    update();
+    updateTicks();
   }
 
   int longest = 0;
@@ -630,7 +631,7 @@ void PlotAxis::validateDrawingRegion(int flags, QPainter *painter) {
       _axisOverrideMajorTicks = Coarse;
     }
 
-    update(true);
+    updateTicks(true);
   }
 }
 
@@ -649,7 +650,7 @@ PlotAxis::MajorTickMode PlotAxis::convertToMajorTickMode(int tickCount) {
   return mode;
 }
 
-void PlotAxis::update(bool useOverrideTicks) {
+void PlotAxis::updateTicks(bool useOverrideTicks) {
   MajorTickMode majorTickCount;
   if (useOverrideTicks) {
     majorTickCount = _axisOverrideMajorTicks;
@@ -708,8 +709,12 @@ void PlotAxis::update(bool useOverrideTicks) {
     }
   }
 
+  if (_axisMajorTicks == ticks && _axisMinorTicks == minTicks) {
+    return;
+  }
   _axisMajorTicks = ticks;
   _axisMinorTicks = minTicks;
+  _ticksUpdated = true;
 
   _axisLabels.clear();
   _baseLabel.clear();
