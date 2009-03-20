@@ -47,6 +47,16 @@ struct ZoomState {
 };
 
 
+struct DrawnLabel {
+  DrawnLabel() { valid = false; dirty = true; };
+
+  bool valid;
+  bool dirty;
+  QPixmap pixmap;
+  QRectF rect;
+  int location;
+};
+
 class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 {
   Q_OBJECT
@@ -286,6 +296,12 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void showFilterDialog(QAction*);
     void showFitDialog(QAction*);
 
+    void setLeftLabelDirty() { _leftLabel.dirty = true; }
+    void setRightLabelDirty() { _rightLabel.dirty = true; }
+    void setTopLabelDirty() { _topLabel.dirty = true; }
+    void setBottomLabelDirty() { _bottomLabel.dirty = true; }
+    void setLabelsDirty() { _leftLabel.dirty = true; _rightLabel.dirty = true; _topLabel.dirty = true; _bottomLabel.dirty = true; }
+
   private:
     void createActions();
     void createZoomMenu();
@@ -330,12 +346,16 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QRectF rightLabelRect(bool calc) const;
 
     void paintLeftLabel(QPainter *painter);
+    void generateLeftLabel();
     QSizeF calculateLeftLabelBound(QPainter *painter);
     void paintBottomLabel(QPainter *painter);
+    void generateBottomLabel();
     QSizeF calculateBottomLabelBound(QPainter *painter);
     void paintRightLabel(QPainter *painter);
+    void generateRightLabel();
     QSizeF calculateRightLabelBound(QPainter *painter);
     void paintTopLabel(QPainter *painter);
+    void generateTopLabel();
     QSizeF calculateTopLabelBound(QPainter *painter);
 
     QFont calculatedTopLabelFont();
@@ -437,6 +457,11 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     bool _updateDelayed;
 
     LegendItem* _legend;
+
+    DrawnLabel _leftLabel;
+    DrawnLabel _rightLabel;
+    DrawnLabel _topLabel;
+    DrawnLabel _bottomLabel;
 
     QMenu *_zoomMenu;
     QAction *_zoomMaximum;

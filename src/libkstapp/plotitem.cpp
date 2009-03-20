@@ -147,6 +147,7 @@ PlotItem::PlotItem(View *parent)
 
   setPlotBordersDirty(true);
   connect(this, SIGNAL(updatePlotRect()), this, SLOT(redrawPlot()));
+  connect(this, SIGNAL(geometryChanged()), this, SLOT(setLabelsDirty()));
 }
 
 
@@ -507,6 +508,7 @@ void PlotItem::updateObject() {
           projectionRect().width(),
           compute.height()));
   }
+  setLabelsDirty();
   update();
 }
 
@@ -1301,6 +1303,7 @@ QFont PlotItem::rightLabelFont() const {
 void PlotItem::setRightLabelFont(const QFont &font) {
   _rightLabelFont = font;
   setPlotBordersDirty(true);
+  setRightLabelDirty();
 }
 
 
@@ -1312,6 +1315,7 @@ QFont PlotItem::topLabelFont() const {
 void PlotItem::setTopLabelFont(const QFont &font) {
   _topLabelFont = font;
   setPlotBordersDirty(true);
+  setTopLabelDirty();
 }
 
 
@@ -1333,6 +1337,7 @@ QFont PlotItem::leftLabelFont() const {
 void PlotItem::setLeftLabelFont(const QFont &font) {
   _leftLabelFont = font;
   setPlotBordersDirty(true);
+  setLeftLabelDirty();
 }
 
 
@@ -1344,6 +1349,7 @@ QFont PlotItem::bottomLabelFont() const {
 void PlotItem::setBottomLabelFont(const QFont &font) {
   _bottomLabelFont = font;
   setPlotBordersDirty(true);
+  setBottomLabelDirty();
 }
 
 
@@ -1366,6 +1372,7 @@ qreal PlotItem::rightLabelFontScale() const {
 void PlotItem::setRightLabelFontScale(const qreal scale) {
   _rightLabelFontScale = scale;
   setPlotBordersDirty(true);
+  setRightLabelDirty();
 }
 
 
@@ -1387,6 +1394,7 @@ qreal PlotItem::leftLabelFontScale() const {
 void PlotItem::setLeftLabelFontScale(const qreal scale) {
   _leftLabelFontScale = scale;
   setPlotBordersDirty(true);
+  setLeftLabelDirty();
 }
 
 
@@ -1398,6 +1406,7 @@ qreal PlotItem::topLabelFontScale() const {
 void PlotItem::setTopLabelFontScale(const qreal scale) {
   _topLabelFontScale = scale;
   setPlotBordersDirty(true);
+  setTopLabelDirty();
 }
 
 
@@ -1409,6 +1418,7 @@ qreal PlotItem::bottomLabelFontScale() const {
 void PlotItem::setBottomLabelFontScale(const qreal scale) {
   _bottomLabelFontScale = scale;
   setPlotBordersDirty(true);
+  setBottomLabelDirty();
 }
 
 
@@ -1440,6 +1450,7 @@ QColor PlotItem::leftLabelFontColor() const {
 
 void PlotItem::setLeftLabelFontColor(const QColor &color) {
   _leftLabelFontColor = color;
+  setLeftLabelDirty();
 }
 
 
@@ -1450,6 +1461,7 @@ QColor PlotItem::rightLabelFontColor() const {
 
 void PlotItem::setRightLabelFontColor(const QColor &color) {
   _rightLabelFontColor = color;
+  setRightLabelDirty();
 }
 
 
@@ -1460,6 +1472,7 @@ QColor PlotItem::topLabelFontColor() const {
 
 void PlotItem::setTopLabelFontColor(const QColor &color) {
   _topLabelFontColor = color;
+  setTopLabelDirty();
 }
 
 
@@ -1470,6 +1483,7 @@ QColor PlotItem::bottomLabelFontColor() const {
 
 void PlotItem::setBottomLabelFontColor(const QColor &color) {
   _bottomLabelFontColor = color;
+  setBottomLabelDirty();
 }
 
 
@@ -1499,6 +1513,7 @@ void PlotItem::setLeftLabelOverride(const QString &label) {
     _leftLabelOverride = label;
   }
   setPlotBordersDirty(true);
+  setLeftLabelDirty();
 }
 
 
@@ -1518,6 +1533,7 @@ void PlotItem::setBottomLabelOverride(const QString &label) {
     _bottomLabelOverride = label;
   }
   setPlotBordersDirty(true);
+  setBottomLabelDirty();
 }
 
 
@@ -1537,6 +1553,7 @@ void PlotItem::setTopLabelOverride(const QString &label) {
     _topLabelOverride = label;
   }
   setPlotBordersDirty(true);
+  setTopLabelDirty();
 }
 
 
@@ -1556,6 +1573,7 @@ void PlotItem::setRightLabelOverride(const QString &label) {
     _rightLabelOverride = label;
   }
   setPlotBordersDirty(true);
+  setRightLabelDirty();
 }
 
 
@@ -1887,13 +1905,14 @@ QFont PlotItem::calculatedNumberLabelFont() {
 }
 
 
-void PlotItem::paintLeftLabel(QPainter *painter) {
-  if (!isLeftLabelVisible() || leftLabelOverride().isEmpty())
+void PlotItem::generateLeftLabel() {
+  if (!_leftLabel.dirty) {
     return;
-
+  }
+  _leftLabel.valid = false;
+  _leftLabel.dirty = false;
   Label::Parsed *parsed = Label::parse(leftLabelOverride());
   if (parsed) {
-
     parsed->chunk->attributes.color = _leftLabelFontColor;
 
     QRectF leftLabel = leftLabelRect(false);
@@ -1909,17 +1928,31 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
     leftLabel.moveTopRight(plotAxisRect().topLeft());
     leftLabel.moveBottomLeft(QPointF(leftLabel.bottomLeft().x(), plotRect().center().y()+ rc.x / 2));
 
-    painter->save();
     QTransform t;
-    t.rotate(90.0);
-    painter->rotate(-90.0);
+    t.rotate(-90.0);
+    _leftLabel.pixmap = pixmap.transformed(t);
+    _leftLabel.rect = leftLabel;
+    _leftLabel.location = rc.x;
+    if (rc.x > 0) {
+      _leftLabel.valid = true;
+    }
 
-    if (rc.x > 0)
-      painter->drawPixmap(t.mapRect(leftLabel).topLeft(), pixmap, QRectF(0, 0, rc.x, leftLabel.height()));
-
-    painter->restore();
     delete parsed;
     parsed = 0;
+  }
+}
+
+
+void PlotItem::paintLeftLabel(QPainter *painter) {
+  if (!isLeftLabelVisible() || leftLabelOverride().isEmpty())
+    return;
+
+  generateLeftLabel();
+
+  if (_leftLabel.valid) {
+    painter->save();
+    painter->drawPixmap(_leftLabel.rect.topLeft(), _leftLabel.pixmap, QRectF(0, 0, _leftLabel.location, _leftLabel.rect.height()));
+    painter->restore();
   }
 
 #if DEBUG_LABEL_REGION
@@ -1964,15 +1997,14 @@ QSizeF PlotItem::calculateLeftLabelBound(QPainter *painter) {
 }
 
 
-void PlotItem::paintBottomLabel(QPainter *painter) {
-  if (!isBottomLabelVisible() || bottomLabelOverride().isEmpty())
+void PlotItem::generateBottomLabel() {
+  if (!_bottomLabel.dirty) {
     return;
-
+  }
+  _bottomLabel.valid = false;
+  _bottomLabel.dirty = false;
   Label::Parsed *parsed = Label::parse(bottomLabelOverride());
-
   if (parsed) {
-    painter->save();
-
     parsed->chunk->attributes.color = _bottomLabelFontColor;
 
     QRectF bottomLabel = bottomLabelRect(false);
@@ -1987,12 +2019,29 @@ void PlotItem::paintBottomLabel(QPainter *painter) {
 
     bottomLabel.moveBottomLeft(QPointF(plotRect().center().x()-rc.x/2, rect().bottomLeft().y()));
 
-    if (rc.x > 0)
-      painter->drawPixmap(bottomLabel.topLeft(), pixmap, QRectF(0, 0, rc.x, bottomLabel.height()));
+    _bottomLabel.pixmap = pixmap;
+    _bottomLabel.rect = bottomLabel;
+    _bottomLabel.location = rc.x;
+    if (rc.x > 0) {
+      _bottomLabel.valid = true;
+    }
 
-    painter->restore();
     delete parsed;
     parsed = 0;
+  }
+}
+
+
+void PlotItem::paintBottomLabel(QPainter *painter) {
+  if (!isBottomLabelVisible() || bottomLabelOverride().isEmpty())
+    return;
+
+  generateBottomLabel();
+
+  if (_bottomLabel.valid) {
+    painter->save();
+    painter->drawPixmap(_bottomLabel.rect.topLeft(), _bottomLabel.pixmap, QRectF(0, 0, _bottomLabel.location, _bottomLabel.rect.height()));
+    painter->restore();
   }
 
 #if DEBUG_LABEL_REGION
@@ -2030,42 +2079,53 @@ QSizeF PlotItem::calculateBottomLabelBound(QPainter *painter) {
 }
 
 
-void PlotItem::paintRightLabel(QPainter *painter) {
-  if (!isRightLabelVisible() || rightLabelOverride().isEmpty())
+void PlotItem::generateRightLabel() {
+  if (!_rightLabel.dirty) {
     return;
-
+  }
+  _rightLabel.valid = false;
+  _rightLabel.dirty = false;
   Label::Parsed *parsed = Label::parse(rightLabelOverride());
-
-  if (parsed) {
-    QRectF rightLabel = rightLabelRect(false);
-
+  QRectF rightLabel = rightLabelRect(false);
+  if (parsed && rightLabel.isValid()) {
     parsed->chunk->attributes.color = _rightLabelFontColor;
 
-    if (rightLabel.isValid()) {
-      QPixmap pixmap(rightLabel.height(), rightLabel.width());
-      pixmap.fill(Qt::transparent);
-      QPainter pixmapPainter(&pixmap);
+    QPixmap pixmap(rightLabel.height(), rightLabel.width());
+    pixmap.fill(Qt::transparent);
+    QPainter pixmapPainter(&pixmap);
 
-      Label::RenderContext rc(calculatedRightLabelFont(), &pixmapPainter);
-      QFontMetrics fm(calculatedRightLabelFont());
-      rc.y = fm.ascent();
-      Label::renderLabel(rc, parsed->chunk);
+    Label::RenderContext rc(calculatedRightLabelFont(), &pixmapPainter);
+    QFontMetrics fm(calculatedRightLabelFont());
+    rc.y = fm.ascent();
+    Label::renderLabel(rc, parsed->chunk);
 
-      rightLabel.moveTopLeft(QPointF(plotAxisRect().right(), plotRect().center().y() - rc.x / 2));
+    rightLabel.moveTopLeft(QPointF(plotAxisRect().right(), plotRect().center().y() - rc.x / 2));
 
-      painter->save();
-      QTransform t;
-      t.rotate(-90.0);
-      painter->rotate(90.0);
-
-      if (rc.x > 0)
-        painter->drawPixmap(t.mapRect(rightLabel).topLeft(), pixmap, QRectF(0, 0, rc.x, rightLabel.height()));
-
-      painter->restore();
+    QTransform t;
+    t.rotate(90.0);
+    _rightLabel.pixmap = pixmap.transformed(t);
+    _rightLabel.rect = rightLabel;
+    _rightLabel.location = rc.x;
+    if (rc.x > 0) {
+      _rightLabel.valid = true;
     }
 
     delete parsed;
     parsed = 0;
+  }
+}
+
+
+void PlotItem::paintRightLabel(QPainter *painter) {
+  if (!isRightLabelVisible() || rightLabelOverride().isEmpty())
+    return;
+
+  generateRightLabel();
+
+  if (_rightLabel.valid) {
+    painter->save();
+    painter->drawPixmap(_rightLabel.rect.topLeft(), _rightLabel.pixmap, QRectF(0, 0, _rightLabel.location, _rightLabel.rect.height()));
+    painter->restore();
   }
 
 #if DEBUG_LABEL_REGION
@@ -2109,36 +2169,51 @@ QSizeF PlotItem::calculateRightLabelBound(QPainter *painter) {
 }
 
 
+void PlotItem::generateTopLabel() {
+  if (!_topLabel.dirty) {
+    return;
+  }
+  _topLabel.valid = false;
+  _topLabel.dirty = false;
+  Label::Parsed *parsed = Label::parse(topLabelOverride());
+  QRectF topLabel = topLabelRect(false);
+  if (parsed && topLabel.isValid()) {
+    parsed->chunk->attributes.color = _topLabelFontColor;
+
+    QPixmap pixmap(topLabel.width(), topLabel.height());
+    pixmap.fill(Qt::transparent);
+    QPainter pixmapPainter(&pixmap);
+
+    Label::RenderContext rc(calculatedTopLabelFont(), &pixmapPainter);
+    QFontMetrics fm(calculatedTopLabelFont());
+    rc.y = fm.ascent();
+    Label::renderLabel(rc, parsed->chunk);
+
+    topLabel.moveBottomLeft(QPointF(plotRect().center().x()-rc.x/2, plotAxisRect().topLeft().y()));
+
+    _topLabel.pixmap = pixmap;
+    _topLabel.rect = topLabel;
+    _topLabel.location = rc.x;
+    if (rc.x > 0) {
+      _topLabel.valid = true;
+    }
+
+    delete parsed;
+    parsed = 0;
+  }
+}
+
+
 void PlotItem::paintTopLabel(QPainter *painter) {
   if (!isTopLabelVisible() || topLabelOverride().isEmpty())
     return;
 
-  Label::Parsed *parsed = Label::parse(topLabelOverride());
+  generateTopLabel();
 
-  if (parsed) {
+  if (_topLabel.valid) {
     painter->save();
-
-    parsed->chunk->attributes.color = _topLabelFontColor;
-
-    QRectF topLabel = topLabelRect(false);
-    if (topLabel.isValid()) {
-      QPixmap pixmap(topLabel.width(), topLabel.height());
-      pixmap.fill(Qt::transparent);
-      QPainter pixmapPainter(&pixmap);
-
-      Label::RenderContext rc(calculatedTopLabelFont(), &pixmapPainter);
-      QFontMetrics fm(calculatedTopLabelFont());
-      rc.y = fm.ascent();
-      Label::renderLabel(rc, parsed->chunk);
-
-      topLabel.moveTopLeft(QPointF(plotRect().center().x()-rc.x/2, 0));
-      if (rc.x > 0)
-        painter->drawPixmap(topLabel.topLeft(), pixmap, QRectF(0, 0, rc.x, topLabel.height()));
-    }
+    painter->drawPixmap(_topLabel.rect.topLeft(), _topLabel.pixmap, QRectF(0, 0, _topLabel.location, _topLabel.rect.height()));
     painter->restore();
-
-    delete parsed;
-    parsed = 0;
   }
 
 #if DEBUG_LABEL_REGION
