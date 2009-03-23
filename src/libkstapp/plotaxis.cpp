@@ -590,7 +590,7 @@ void PlotAxis::computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTick
 
 
 // Function validates that the labels will not overlap.  Only functions for x Axis.
-void PlotAxis::validateDrawingRegion(int flags, QPainter *painter) {
+void PlotAxis::validateDrawingRegion(QPainter *painter) {
   if (_orientation != Qt::Horizontal) {
     return;
   }
@@ -601,6 +601,7 @@ void PlotAxis::validateDrawingRegion(int flags, QPainter *painter) {
     updateTicks();
   }
 
+  int flags = Qt::TextSingleLine | Qt::AlignCenter;
   int longest = 0;
   QMapIterator<qreal, QString> iLongestLabelCheck(_axisLabels);
   while (iLongestLabelCheck.hasNext()) {

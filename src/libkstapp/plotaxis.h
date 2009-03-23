@@ -107,7 +107,7 @@ class PlotAxis : public QObject
     void saveInPlot(QXmlStreamWriter &xml, QString axisId);
     bool configureFromXml(QXmlStreamReader &xml, ObjectStore *store);
 
-    void validateDrawingRegion(int flags, QPainter *painter);
+    void validateDrawingRegion(QPainter *painter);
 
     // return the value and reset.
     bool ticksUpdated() { bool bReturn = _ticksUpdated; _ticksUpdated = false; return bReturn; }
@@ -117,6 +117,7 @@ class PlotAxis : public QObject
 
   public Q_SLOTS:
     void updateTicks(bool useOverrideTicks = false);
+    void setTicksUpdated() { _ticksUpdated = true; }
 
   private:
 

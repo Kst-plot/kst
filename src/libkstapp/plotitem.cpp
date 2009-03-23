@@ -100,8 +100,8 @@ PlotItem::PlotItem(View *parent)
   _xAxis = new PlotAxis(this, Qt::Horizontal);
   _yAxis = new PlotAxis(this, Qt::Vertical);
 
-  connect(this, SIGNAL(geometryChanged()), this, SLOT(updateXAxisLines()));
-  connect(this, SIGNAL(geometryChanged()), this, SLOT(updateYAxisLines()));
+  connect(this, SIGNAL(geometryChanged()), _xAxis, SLOT(setTicksUpdated()));
+  connect(this, SIGNAL(geometryChanged()), _yAxis, SLOT(setTicksUpdated()));
 
   _globalFont = parentView()->defaultFont();
   _leftLabelFont = parentView()->defaultFont();
@@ -622,9 +622,11 @@ void PlotItem::paint(QPainter *painter) {
 
 void PlotItem::paintPlot(QPainter *painter) {
   if (xAxis()->ticksUpdated()) {
+    xAxis()->validateDrawingRegion(painter);
     updateXAxisLines();
   }
   if (yAxis()->ticksUpdated()) {
+    yAxis()->validateDrawingRegion(painter);
     updateYAxisLines();
   }
 
@@ -804,8 +806,6 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
 
   QRectF xLabelRect;
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
-
-  _xAxis->validateDrawingRegion(flags, painter);
 
   painter->save();
   painter->setPen(_numberLabelFontColor);
