@@ -624,10 +624,12 @@ void PlotItem::paintPlot(QPainter *painter) {
   if (xAxis()->ticksUpdated()) {
     xAxis()->validateDrawingRegion(painter);
     updateXAxisLines();
+    updateXAxisLabels(painter);
   }
   if (yAxis()->ticksUpdated()) {
     yAxis()->validateDrawingRegion(painter);
     updateYAxisLines();
+    updateYAxisLabels(painter);
   }
 
 #ifdef BENCHMARK
@@ -704,8 +706,56 @@ void PlotItem::updateXAxisLines() {
     p1.setY(rect.top());
     p2 = p1 + QPointF(0, minorTickLength);
     _xMinorTickLines << QLineF(p1, p2);
-
   }
+}
+
+
+void PlotItem::updateXAxisLabels(QPainter* painter) {
+  int flags = Qt::TextSingleLine | Qt::AlignCenter;
+  QRectF xLabelRect;
+  _xPlotLabels.clear();
+  QMapIterator<qreal, QString> xLabelIt(_xAxis->axisLabels());
+  while (xLabelIt.hasNext()) {
+    xLabelIt.next();
+
+    QRectF bound = painter->boundingRect(QRectF(), flags, xLabelIt.value());
+    bound.setWidth(bound.width());
+    QPointF p = QPointF(mapXToPlot(xLabelIt.key()), plotRect().bottom() + 
+        bound.height()*0.5 + _calculatedAxisMarginVLead);
+    bound.moveCenter(p);
+    if (xLabelRect.isValid()) {
+      xLabelRect = xLabelRect.united(bound);
+    } else {
+      xLabelRect = bound;
+    }
+
+    if (rect().left() > bound.left()) bound.setLeft(rect().left());
+    if (rect().right() < bound.right()) bound.setRight(rect().right());
+
+    CachedPlotLabel label;
+    label.bound = bound;
+    label.value = xLabelIt.value();
+    _xPlotLabels.append(label);
+  }
+
+  if (!_xAxis->baseLabel().isEmpty()) {
+    QRectF bound = painter->boundingRect(QRectF(), flags, _xAxis->baseLabel());
+    QPointF p = QPointF(plotRect().left(), plotRect().bottom() + bound.height() * 2.0 + _calculatedAxisMarginVLead);
+    bound.moveBottomLeft(p);
+
+    if (xLabelRect.isValid()) {
+      xLabelRect = xLabelRect.united(bound);
+    } else {
+      xLabelRect = bound;
+    }
+
+    CachedPlotLabel label;
+    label.bound = bound;
+    label.value = _xAxis->baseLabel();
+    label.baseLabel = true;
+    _xPlotLabels.append(label);
+  }
+  _xLabelRect = xLabelRect;
 }
 
 
@@ -743,6 +793,60 @@ void PlotItem::updateYAxisLines() {
     p2 = p1 - QPointF(minorTickLength, 0);
     _yMinorTickLines << QLineF(p1, p2);
   }
+}
+
+
+void PlotItem::updateYAxisLabels(QPainter* painter) {
+  int flags = Qt::TextSingleLine | Qt::AlignCenter;
+  QRectF yLabelRect;
+  _yPlotLabels.clear();
+  QMapIterator<qreal, QString> yLabelIt(_yAxis->axisLabels());
+  while (yLabelIt.hasNext()) {
+    yLabelIt.next();
+
+    QRectF bound = painter->boundingRect(QRectF(), flags, yLabelIt.value());
+    bound.setWidth(bound.width());
+    QPointF p = QPointF(plotRect().left() - (bound.width() / 2.0) - _calculatedAxisMarginHLead, mapYToPlot(yLabelIt.key()));
+    bound.moveCenter(p);
+
+    if (yLabelRect.isValid()) {
+      yLabelRect = yLabelRect.united(bound);
+    } else {
+      yLabelRect = bound;
+    }
+
+    if (rect().top() > bound.top()) bound.setTop(rect().top());
+    if (rect().bottom() < bound.bottom()) bound.setBottom(rect().bottom());
+
+    CachedPlotLabel label;
+    label.bound = bound;
+    label.value = yLabelIt.value();
+    _yPlotLabels.append(label);
+  }
+
+  if (!_yAxis->baseLabel().isEmpty()) {
+    painter->save();
+    painter->rotate(-90.0);
+
+    QRectF bound = painter->boundingRect(QRectF(), flags, _yAxis->baseLabel());
+    bound = QRectF(bound.x(), bound.bottomRight().y() - bound.width(), bound.height(), bound.width());
+    QPointF p = QPointF(rect().left(), plotRect().bottom());
+    bound.moveBottomLeft(p);
+
+    if (yLabelRect.isValid()) {
+      yLabelRect = yLabelRect.united(bound);
+    } else {
+      yLabelRect = bound;
+    }
+
+    CachedPlotLabel label;
+    label.bound = bound;
+    label.value = _yAxis->baseLabel();
+    label.baseLabel = true;
+    _yPlotLabels.append(label);
+    painter->restore();
+  }
+  _yLabelRect = yLabelRect;
 }
 
 
@@ -803,48 +907,15 @@ void PlotItem::paintMinorTicks(QPainter *painter) {
 
 
 void PlotItem::paintBottomTickLabels(QPainter *painter) {
-
   QRectF xLabelRect;
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
 
   painter->save();
   painter->setPen(_numberLabelFontColor);
 
-  QMapIterator<qreal, QString> xLabelIt(_xAxis->axisLabels());
-  while (xLabelIt.hasNext()) {
-    xLabelIt.next();
-
-    QRectF bound = painter->boundingRect(QRectF(), flags, xLabelIt.value());
-    bound.setWidth(bound.width());
-    QPointF p = QPointF(mapXToPlot(xLabelIt.key()), plotRect().bottom() + 
-        bound.height()*0.5 + _calculatedAxisMarginVLead);
-    bound.moveCenter(p);
-    if (xLabelRect.isValid()) {
-      xLabelRect = xLabelRect.united(bound);
-    } else {
-      xLabelRect = bound;
-    }
-
-    if (rect().left() > bound.left()) bound.setLeft(rect().left());
-    if (rect().right() < bound.right()) bound.setRight(rect().right());
-
-    painter->drawText(bound, flags, xLabelIt.value());
+  foreach(CachedPlotLabel label, _xPlotLabels) {
+    painter->drawText(label.bound, flags, label.value);
   }
-
-  if (!_xAxis->baseLabel().isEmpty()) {
-    QRectF bound = painter->boundingRect(QRectF(), flags, _xAxis->baseLabel());
-    QPointF p = QPointF(plotRect().left(), plotRect().bottom() + bound.height() * 2.0 + _calculatedAxisMarginVLead);
-    bound.moveBottomLeft(p);
-
-    if (xLabelRect.isValid()) {
-      xLabelRect = xLabelRect.united(bound);
-    } else {
-      xLabelRect = bound;
-    }
-
-    painter->drawText(bound, flags, _xAxis->baseLabel());
-  }
-  _xLabelRect = xLabelRect;
   painter->restore();
 
 #if DEBUG_LABEL_REGION
@@ -858,72 +929,40 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
 
 
 void PlotItem::paintLeftTickLabels(QPainter *painter) {
-
-  QRectF yLabelRect;
   int flags = Qt::TextSingleLine | Qt::AlignVCenter;
 
   painter->save();
   painter->setPen(_numberLabelFontColor);
-  QMapIterator<qreal, QString> yLabelIt(_yAxis->axisLabels());
-  while (yLabelIt.hasNext()) {
-    yLabelIt.next();
 
-    QRectF bound = painter->boundingRect(QRectF(), flags, yLabelIt.value());
-    bound.setWidth(bound.width());
-    QPointF p = QPointF(plotRect().left() - (bound.width() / 2.0) - _calculatedAxisMarginHLead, mapYToPlot(yLabelIt.key()));
-    bound.moveCenter(p);
+  foreach(CachedPlotLabel label, _yPlotLabels) {
+    if (label.baseLabel) {
+      painter->save();
+      QTransform t;
+      t.rotate(90.0);
+      painter->rotate(-90.0);
 
-    if (yLabelRect.isValid()) {
-      yLabelRect = yLabelRect.united(bound);
+      painter->drawText(t.mapRect(label.bound), flags, label.value);
+      painter->restore();
     } else {
-      yLabelRect = bound;
+      painter->drawText(label.bound, flags, label.value);
     }
-
-    if (rect().top() > bound.top()) bound.setTop(rect().top());
-    if (rect().bottom() < bound.bottom()) bound.setBottom(rect().bottom());
-
-    painter->drawText(bound, flags, yLabelIt.value());
   }
-
-  if (!_yAxis->baseLabel().isEmpty()) {
-    painter->save();
-    QTransform t;
-    t.rotate(90.0);
-    painter->rotate(-90.0);
-
-    QRectF bound = painter->boundingRect(QRectF(), flags, _yAxis->baseLabel());
-    bound = QRectF(bound.x(), bound.bottomRight().y() - bound.width(), bound.height(), bound.width());
-    QPointF p = QPointF(rect().left(), plotRect().bottom());
-    bound.moveBottomLeft(p);
-
-    if (yLabelRect.isValid()) {
-      yLabelRect = yLabelRect.united(bound);
-    } else {
-      yLabelRect = bound;
-    }
-
-    painter->drawText(t.mapRect(bound), flags, _yAxis->baseLabel());
-    painter->restore();
-  }
-  _yLabelRect = yLabelRect;
   painter->restore();
 
 #if DEBUG_LABEL_REGION
   painter->save();
   painter->setOpacity(0.3);
-  qDebug() << "Left Tick Labels - yLabelRect:" << yLabelRect;
-  painter->fillRect(yLabelRect, Qt::green);
+  qDebug() << "Left Tick Labels - yLabelRect:" << _yLabelRect;
+  painter->fillRect(_yLabelRect, Qt::green);
   painter->restore();
 #endif
 }
 
 
 void PlotItem::paintTickLabels(QPainter *painter) {
-
   if (_xAxis->isAxisVisible()) {
     paintBottomTickLabels(painter);
   }
-
   if (_yAxis->isAxisVisible()) {
     paintLeftTickLabels(painter);
   }

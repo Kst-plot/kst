@@ -57,6 +57,15 @@ struct DrawnLabel {
   int location;
 };
 
+
+struct CachedPlotLabel {
+  CachedPlotLabel() { baseLabel = false; };
+
+  bool baseLabel;
+  QRectF bound;
+  QString value;
+};
+
 class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 {
   Q_OBJECT
@@ -292,6 +301,8 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void redrawPlot();
     void updateXAxisLines();
     void updateYAxisLines();
+    void updateXAxisLabels(QPainter* painter);
+    void updateYAxisLabels(QPainter* painter);
 
     void showFilterDialog(QAction*);
     void showFitDialog(QAction*);
@@ -500,6 +511,9 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QVector<QLineF> _yMajorTickLines;
     QVector<QLineF> _xMinorTickLines;
     QVector<QLineF> _yMinorTickLines;
+
+    QVector<CachedPlotLabel> _xPlotLabels;
+    QVector<CachedPlotLabel> _yPlotLabels;
 
     QUndoStack *_undoStack;
 
