@@ -185,7 +185,7 @@ class PluginSortContainer {
 
 static QList<PluginSortContainer> bestPluginsForSource(const QString& filename, const QString& type) {
   QList<PluginSortContainer> bestPlugins;
-  DataSource::initPlugins();
+  DataSource::init();
 
   PluginList info = _pluginList;
 
