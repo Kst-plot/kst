@@ -587,8 +587,8 @@ void ViewGridLayout::updatePlotMargins() {
       continue;
 
     {
-      qreal labelMargin = plotItem->calculatedLabelMarginWidth();
-      qreal axisMargin = plotItem->calculatedAxisMarginWidth();
+      qreal labelMargin = plotItem->labelMarginWidth();
+      qreal axisMargin = plotItem->axisMarginWidth();
 
       if (_plotMarginWidth.contains(item.columnSpan)) {
         labelMargin = qMax(labelMargin, _plotMarginWidth.value(item.columnSpan).labelMargin);
@@ -602,8 +602,8 @@ void ViewGridLayout::updatePlotMargins() {
     }
 
     {
-      qreal labelMargin = plotItem->calculatedLabelMarginHeight();
-      qreal axisMargin = plotItem->calculatedAxisMarginHeight();
+      qreal labelMargin = plotItem->labelMarginHeight();
+      qreal axisMargin = plotItem->axisMarginHeight();
 
       if (_plotMarginHeight.contains(item.rowSpan)) {
         labelMargin = qMax(labelMargin, _plotMarginHeight.value(item.rowSpan).labelMargin);

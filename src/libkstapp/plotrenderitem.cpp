@@ -44,8 +44,6 @@ PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
 
   connect(parentItem, SIGNAL(geometryChanged()),
           this, SLOT(updateGeometry()));
-  connect(parentItem, SIGNAL(marginsChanged()),
-          this, SLOT(updateGeometry()));
   connect(parentItem, SIGNAL(updatePlotRect()),
           this, SLOT(updateGeometry()));
   connect(parentItem->parentView(), SIGNAL(viewModeChanged(View::ViewMode)),

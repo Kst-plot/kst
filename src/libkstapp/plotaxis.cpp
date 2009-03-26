@@ -485,7 +485,6 @@ void PlotAxis::setAxisVisible(bool visible) {
   }
 
   _isAxisVisible = visible;
-  emit marginsChanged();
 }
 
 

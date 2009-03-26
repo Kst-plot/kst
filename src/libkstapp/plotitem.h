@@ -84,10 +84,10 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     virtual void paint(QPainter *painter);
 
     /* This is the rectangle of the PlotAxis and includes the axis labels. */
-    QRectF plotAxisRect() const;
+    QRectF plotAxisRect();
 
     /* This is the rectangle of the PlotRenderItem's and includes the actual curves. */
-    QRectF plotRect() const;
+    QRectF plotRect();
 
     QRectF projectionRect() const;
     void setProjectionRect(const QRectF &rect);
@@ -115,11 +115,6 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     qreal topMarginSize() const;
     void setTopPadding(const qreal);
 
-    qreal leftLabelMargin() const;
-    qreal rightLabelMargin() const;
-    qreal topLabelMargin() const;
-    qreal bottomLabelMargin() const;
-
     QString leftLabel() const;
     QString bottomLabel() const;
     QString rightLabel() const;
@@ -145,7 +140,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void setLabelsVisible(bool visible);
 
     qreal axisMarginWidth() const;
-    qreal axisMarginHeight() const; // zzz
+    qreal axisMarginHeight() const;
 
     QString bottomLabelOverride() const;
     void setBottomLabelOverride(const QString &label);
@@ -234,9 +229,9 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     bool showLegend() const;
     void setShowLegend(const bool show);
 
-    qreal mapXToPlot(const qreal &x) const;
-    qreal mapYToPlot(const qreal &y) const;
-    QPointF mapToPlot(const QPointF &point) const;
+    qreal mapXToPlot(const qreal &x);
+    qreal mapYToPlot(const qreal &y);
+    QPointF mapToPlot(const QPointF &point);
 
     QPointF mapToProjection(const QPointF &point);
     QRectF mapToProjection(const QRectF &rect);
@@ -268,7 +263,6 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     virtual void updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect);
 
   Q_SIGNALS:
-    void marginsChanged();
     void updatePlotRect();
     void updateAxes();
 
@@ -296,13 +290,11 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void zoomYIn();
     void zoomNormalizeYtoX();
     void zoomLogY();
+
     virtual void edit();
     void plotMaximize();
     void redrawPlot();
-    void updateXAxisLines();
-    void updateYAxisLines();
-    void updateXAxisLabels(QPainter* painter);
-    void updateYAxisLabels(QPainter* painter);
+    void setPlotRectsDirty();
 
     void showFilterDialog(QAction*);
     void showFitDialog(QAction*);
@@ -321,6 +313,12 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 
     void resetSelectionRect();
 
+    void updateXAxisLines();
+    void updateYAxisLines();
+
+    void updateXAxisLabels(QPainter* painter);
+    void updateYAxisLabels(QPainter* painter);
+
     virtual void paintPlot(QPainter *painter);
 
     virtual void paintMajorGridLines(QPainter *painter);
@@ -329,45 +327,42 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     virtual void paintMinorTicks(QPainter *painter);
 
     virtual void paintTickLabels(QPainter *painter);
-    virtual void paintBottomTickLabels(QPainter *painter); // zzz
+    virtual void paintBottomTickLabels(QPainter *painter);
     virtual void paintLeftTickLabels(QPainter *painter);
 
     virtual void paintPlotMarkers(QPainter *painter);
 
     void calculateBorders(QPainter *painter);
 
-    qreal calculatedLabelMarginWidth() const;
-    qreal calculatedLabelMarginHeight() const;
+    qreal labelMarginWidth() const;
+    qreal labelMarginHeight() const;
 
-    qreal calculatedLeftLabelMargin() const;
-    void setCalculatedLeftLabelMargin(qreal margin);
+    qreal leftLabelMargin() const;
+    qreal rightLabelMargin() const;
+    qreal topLabelMargin() const;
+    qreal bottomLabelMargin() const;
 
-    qreal calculatedRightLabelMargin() const;
-    void setCalculatedRightLabelMargin(qreal margin);
+    QRectF topLabelRect() const;
+    QRectF bottomLabelRect() const;
+    QRectF leftLabelRect() const;
+    QRectF rightLabelRect() const;
 
-    qreal calculatedTopLabelMargin() const;
-    void setCalculatedTopLabelMargin(qreal margin);
+    void calculatePlotRects();
 
-    qreal calculatedBottomLabelMargin() const;
-    void setCalculatedBottomLabelMargin(qreal margin);
+    void calculateLeftLabelMargin(QPainter *painter);
+    void calculateBottomLabelMargin(QPainter *painter);
+    void calculateRightLabelMargin(QPainter *painter);
+    void calculateTopLabelMargin(QPainter *painter);
 
-    QRectF topLabelRect(bool calc) const;
-    QRectF bottomLabelRect(bool calc) const;
-    QRectF leftLabelRect(bool calc) const;
-    QRectF rightLabelRect(bool calc) const;
+    void generateLeftLabel();
+    void generateBottomLabel();
+    void generateRightLabel();
+    void generateTopLabel();
 
     void paintLeftLabel(QPainter *painter);
-    void generateLeftLabel();
-    QSizeF calculateLeftLabelBound(QPainter *painter);
     void paintBottomLabel(QPainter *painter);
-    void generateBottomLabel();
-    QSizeF calculateBottomLabelBound(QPainter *painter);
     void paintRightLabel(QPainter *painter);
-    void generateRightLabel();
-    QSizeF calculateRightLabelBound(QPainter *painter);
     void paintTopLabel(QPainter *painter);
-    void generateTopLabel();
-    QSizeF calculateTopLabelBound(QPainter *painter);
 
     QFont calculatedTopLabelFont();
     QFont calculatedBottomLabelFont();
@@ -375,12 +370,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QFont calculatedRightLabelFont();
     QFont calculatedNumberLabelFont();
 
-    qreal calculatedAxisMarginWidth() const;
-    void setCalculatedAxisMarginWidth(qreal marginWidth);
-
-    qreal calculatedAxisMarginHeight() const; // zzz
-
-    void calculateBottomTickLabelBound(QPainter *painter); // zzz
+    void calculateBottomTickLabelBound(QPainter *painter);
     void calculateLeftTickLabelBound(QPainter *painter);
 
     void setCurrentZoomState(ZoomState zoomState);
@@ -392,6 +382,10 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     bool _isBottomLabelVisible;
     bool _isRightLabelVisible;
     bool _isTopLabelVisible;
+
+    bool _plotRectsDirty;
+    QRectF _calculatedPlotRect;
+    QRectF _calculatedPlotAxisRect;
 
     qreal _calculatedLeftLabelMargin;
     qreal _calculatedRightLabelMargin;

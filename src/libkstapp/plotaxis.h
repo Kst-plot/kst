@@ -112,9 +112,6 @@ class PlotAxis : public QObject
     // return the value and reset.
     bool ticksUpdated() { bool bReturn = _ticksUpdated; _ticksUpdated = false; return bReturn; }
 
-  Q_SIGNALS:
-    void marginsChanged();
-
   public Q_SLOTS:
     void updateTicks(bool useOverrideTicks = false);
     void setTicksUpdated() { _ticksUpdated = true; }
