@@ -51,9 +51,6 @@
 // Benchmark drawing
 // #define BENCHMARK 1
 
-// FIXME:no magic numbers in pixels
-static qreal BOTTOM_MARGIN = 0.0;
-static qreal LEFT_MARGIN = 0.0;
 static const int PLOT_MAXIMIZED_ZORDER = 1000;
 
 namespace Kst {
@@ -87,6 +84,7 @@ PlotItem::PlotItem(View *parent)
   _allowUpdates(true),
   _updateDelayed(false),
   _legend(0),
+  _axisLabelsDirty(true),
   _zoomMenu(0),
   _filterMenu(0),
   _fitMenu(0),
@@ -625,17 +623,29 @@ void PlotItem::paint(QPainter *painter) {
 
 
 void PlotItem::paintPlot(QPainter *painter) {
+  bool xLabelsUpdated = false;
+  bool yLabelsUpdated = false;
   if (xAxis()->ticksUpdated()) {
     xAxis()->validateDrawingRegion(painter);
     updateXAxisLines();
     updateXAxisLabels(painter);
+    xLabelsUpdated = true;
   }
   if (yAxis()->ticksUpdated()) {
     yAxis()->validateDrawingRegion(painter);
     updateYAxisLines();
     updateYAxisLabels(painter);
+    yLabelsUpdated = true;
   }
 
+  if (_axisLabelsDirty) {
+    if (!xLabelsUpdated) {
+      updateXAxisLabels(painter);
+    }
+    if (!yLabelsUpdated) {
+      updateYAxisLabels(painter);
+    }
+  }
 #ifdef BENCHMARK
   QTime bench_time, benchtmp;
   int b_1 = 0, b_2 = 0, b_3 = 0, b_4 = 0, b_5 = 0;
@@ -1104,26 +1114,34 @@ qreal PlotItem::topMarginSize() const {
 
 
 void PlotItem::setLeftPadding(const qreal padding) {
-  _leftPadding = padding;
-  setPlotRectsDirty();
+  if (padding != _leftPadding) {
+    _leftPadding = padding;
+    setPlotRectsDirty();
+  }
 }
 
 
 void PlotItem::setBottomPadding(const qreal padding) {
-  _bottomPadding = padding;
-  setPlotRectsDirty();
+  if (padding != _bottomPadding) {
+    _bottomPadding = padding;
+    setPlotRectsDirty();
+  }
 }
 
 
 void PlotItem::setRightPadding(const qreal padding) {
-  _rightPadding = padding;
-  setPlotRectsDirty();
+  if (padding != _rightPadding) {
+    _rightPadding = padding;
+    setPlotRectsDirty();
+  }
 }
 
 
 void PlotItem::setTopPadding(const qreal padding) {
-  _topPadding = padding;
-  setPlotRectsDirty();
+  if (padding != _topPadding) {
+    _topPadding = padding;
+    setPlotRectsDirty();
+  }
 }
 
 
@@ -1341,9 +1359,11 @@ QFont PlotItem::rightLabelFont() const {
 
 
 void PlotItem::setRightLabelFont(const QFont &font) {
-  _rightLabelFont = font;
-  setPlotBordersDirty(true);
-  setRightLabelDirty();
+  if (font != _rightLabelFont) {
+    _rightLabelFont = font;
+    setPlotBordersDirty(true);
+    setRightLabelDirty();
+  }
 }
 
 
@@ -1353,9 +1373,11 @@ QFont PlotItem::topLabelFont() const {
 
 
 void PlotItem::setTopLabelFont(const QFont &font) {
-  _topLabelFont = font;
-  setPlotBordersDirty(true);
-  setTopLabelDirty();
+  if (font != _topLabelFont) {
+    _topLabelFont = font;
+    setPlotBordersDirty(true);
+    setTopLabelDirty();
+  }
 }
 
 
@@ -1365,7 +1387,11 @@ QFont PlotItem::globalFont() const {
 
 
 void PlotItem::setGlobalFont(const QFont &font) {
-  _globalFont = font;
+  if (font != _globalFont) {
+    _globalFont = font;
+    setPlotBordersDirty(true);
+    setLabelsDirty();
+  }
 }
 
 
@@ -1375,9 +1401,11 @@ QFont PlotItem::leftLabelFont() const {
 
 
 void PlotItem::setLeftLabelFont(const QFont &font) {
-  _leftLabelFont = font;
-  setPlotBordersDirty(true);
-  setLeftLabelDirty();
+  if (font != _leftLabelFont) {
+    _leftLabelFont = font;
+    setPlotBordersDirty(true);
+    setLeftLabelDirty();
+  }
 }
 
 
@@ -1387,9 +1415,11 @@ QFont PlotItem::bottomLabelFont() const {
 
 
 void PlotItem::setBottomLabelFont(const QFont &font) {
-  _bottomLabelFont = font;
-  setPlotBordersDirty(true);
-  setBottomLabelDirty();
+  if (font != _bottomLabelFont) {
+    _bottomLabelFont = font;
+    setPlotBordersDirty(true);
+    setBottomLabelDirty();
+  }
 }
 
 
@@ -1399,8 +1429,11 @@ QFont PlotItem::numberLabelFont() const {
 
 
 void PlotItem::setNumberLabelFont(const QFont &font) {
-  _numberLabelFont = font;
-  setPlotBordersDirty(true);
+  if (font != _numberLabelFont) {
+    _numberLabelFont = font;
+    setPlotBordersDirty(true);
+    setAxisLabelsDirty();
+  }
 }
 
 
@@ -1410,9 +1443,11 @@ qreal PlotItem::rightLabelFontScale() const {
 
 
 void PlotItem::setRightLabelFontScale(const qreal scale) {
-  _rightLabelFontScale = scale;
-  setPlotBordersDirty(true);
-  setRightLabelDirty();
+  if (scale != _rightLabelFontScale) {
+    _rightLabelFontScale = scale;
+    setPlotBordersDirty(true);
+    setRightLabelDirty();
+  }
 }
 
 
@@ -1422,7 +1457,11 @@ qreal PlotItem::globalFontScale() const {
 
 
 void PlotItem::setGlobalFontScale(const qreal scale) {
-  _globalFontScale = scale;
+  if (scale != _globalFontScale) {
+    _globalFontScale = scale;
+    setPlotBordersDirty(true);
+    setLabelsDirty();
+  }
 }
 
 
@@ -1432,9 +1471,11 @@ qreal PlotItem::leftLabelFontScale() const {
 
 
 void PlotItem::setLeftLabelFontScale(const qreal scale) {
-  _leftLabelFontScale = scale;
-  setPlotBordersDirty(true);
-  setLeftLabelDirty();
+  if (scale != _leftLabelFontScale) {
+    _leftLabelFontScale = scale;
+    setPlotBordersDirty(true);
+    setLeftLabelDirty();
+  }
 }
 
 
@@ -1444,9 +1485,11 @@ qreal PlotItem::topLabelFontScale() const {
 
 
 void PlotItem::setTopLabelFontScale(const qreal scale) {
-  _topLabelFontScale = scale;
-  setPlotBordersDirty(true);
-  setTopLabelDirty();
+  if (scale != _topLabelFontScale) {
+    _topLabelFontScale = scale;
+    setPlotBordersDirty(true);
+    setTopLabelDirty();
+  }
 }
 
 
@@ -1456,9 +1499,11 @@ qreal PlotItem::bottomLabelFontScale() const {
 
 
 void PlotItem::setBottomLabelFontScale(const qreal scale) {
-  _bottomLabelFontScale = scale;
-  setPlotBordersDirty(true);
-  setBottomLabelDirty();
+  if (scale != _bottomLabelFontScale) {
+    _bottomLabelFontScale = scale;
+    setPlotBordersDirty(true);
+    setBottomLabelDirty();
+  }
 }
 
 
@@ -1468,8 +1513,11 @@ qreal PlotItem::numberLabelFontScale() const {
 
 
 void PlotItem::setNumberLabelFontScale(const qreal scale) {
-  _numberLabelFontScale = scale;
-  setPlotBordersDirty(true);
+  if (scale != _numberLabelFontScale) {
+    _numberLabelFontScale = scale;
+    setPlotBordersDirty(true);
+    setAxisLabelsDirty();
+  }
 }
 
 
@@ -1479,7 +1527,10 @@ QColor PlotItem::globalFontColor() const {
 
 
 void PlotItem::setGlobalFontColor(const QColor &color) {
-  _globalFontColor = color;
+  if (color != _globalFontColor) {
+    _globalFontColor = color;
+    setLabelsDirty();
+  }
 }
 
 
@@ -1489,8 +1540,10 @@ QColor PlotItem::leftLabelFontColor() const {
 
 
 void PlotItem::setLeftLabelFontColor(const QColor &color) {
-  _leftLabelFontColor = color;
-  setLeftLabelDirty();
+  if (color != _leftLabelFontColor) {
+    _leftLabelFontColor = color;
+    setLeftLabelDirty();
+  }
 }
 
 
@@ -1500,8 +1553,10 @@ QColor PlotItem::rightLabelFontColor() const {
 
 
 void PlotItem::setRightLabelFontColor(const QColor &color) {
-  _rightLabelFontColor = color;
-  setRightLabelDirty();
+  if (color != _rightLabelFontColor) {
+    _rightLabelFontColor = color;
+    setRightLabelDirty();
+  }
 }
 
 
@@ -1511,8 +1566,10 @@ QColor PlotItem::topLabelFontColor() const {
 
 
 void PlotItem::setTopLabelFontColor(const QColor &color) {
-  _topLabelFontColor = color;
-  setTopLabelDirty();
+  if (color != _topLabelFontColor) {
+    _topLabelFontColor = color;
+    setTopLabelDirty();
+  }
 }
 
 
@@ -1522,8 +1579,10 @@ QColor PlotItem::bottomLabelFontColor() const {
 
 
 void PlotItem::setBottomLabelFontColor(const QColor &color) {
-  _bottomLabelFontColor = color;
-  setBottomLabelDirty();
+  if (color != _bottomLabelFontColor) {
+    _bottomLabelFontColor = color;
+    setBottomLabelDirty();
+  }
 }
 
 
@@ -1533,7 +1592,10 @@ QColor PlotItem::numberLabelFontColor() const {
 
 
 void PlotItem::setNumberLabelFontColor(const QColor &color) {
-  _numberLabelFontColor = color;
+  if (color != _numberLabelFontColor) {
+    _numberLabelFontColor = color;
+    setAxisLabelsDirty();
+  }
 }
 
 
@@ -1547,6 +1609,9 @@ QString PlotItem::leftLabelOverride() const {
 
 
 void PlotItem::setLeftLabelOverride(const QString &label) {
+  if (label == leftLabelOverride()) {
+    return;
+  }
   if (label == leftLabel()) {
     _leftLabelOverride.clear();
   } else {
@@ -1567,6 +1632,9 @@ QString PlotItem::bottomLabelOverride() const {
 
 
 void PlotItem::setBottomLabelOverride(const QString &label) {
+  if (label == bottomLabelOverride()) {
+    return;
+  }
   if (label == bottomLabel()) {
     _bottomLabelOverride.clear();
   } else {
@@ -1587,6 +1655,9 @@ QString PlotItem::topLabelOverride() const {
 
 
 void PlotItem::setTopLabelOverride(const QString &label) {
+  if (label == topLabelOverride()) {
+    return;
+  }
   if (label == topLabel()) {
     _topLabelOverride.clear();
   } else {
@@ -1607,6 +1678,9 @@ QString PlotItem::rightLabelOverride() const {
 
 
 void PlotItem::setRightLabelOverride(const QString &label) {
+  if (label == rightLabelOverride()) {
+    return;
+  }
   if (label == rightLabel()) {
     _rightLabelOverride.clear();
   } else {
@@ -1753,7 +1827,7 @@ qreal PlotItem::labelMarginWidth() const {
 
 
 qreal PlotItem::leftLabelMargin() const {
-  qreal m = qMax(LEFT_MARGIN, _calculatedLeftLabelMargin);
+  qreal m = _calculatedLeftLabelMargin;
 
   //No more than 1/4 the width of the plot
   if (width() < m * 4)
@@ -1798,7 +1872,7 @@ qreal PlotItem::topLabelMargin() const {
 
 
 qreal PlotItem::bottomLabelMargin() const {
-  qreal m = qMax(BOTTOM_MARGIN, _calculatedBottomLabelMargin);
+  qreal m = _calculatedBottomLabelMargin;
 
   //No more than 1/4 the height of the plot
   if (height() < m * 4)
@@ -2369,11 +2443,8 @@ LegendItem* PlotItem::legend() {
 
 
 void PlotItem::setShowLegend(const bool show) {
-  _showLegend = show;
-  if (show) {
-    legend()->setVisible(true);
-  } else {
-    legend()->setVisible(false);
+  if (show != _showLegend) {
+    legend()->setVisible(show);
   }
 }
 
@@ -2393,9 +2464,9 @@ void PlotItem::setProjectionRect(const QRectF &rect) {
 
     _projectionRect = rect;
     setPlotBordersDirty(true);
+    emit updateAxes();
+    update(); //slow, but need to update everything...
   }
-  emit updateAxes();
-  update(); //slow, but need to update everything...
 }
 
 

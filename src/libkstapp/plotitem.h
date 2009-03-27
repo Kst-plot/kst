@@ -106,14 +106,15 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     SharedAxisBoxItem* sharedAxisBox();
     void setSharedAxisBox(SharedAxisBoxItem* parent);
 
-    qreal leftMarginSize() const;
     void setLeftPadding(const qreal);
-    qreal bottomMarginSize() const;
     void setBottomPadding(const qreal);
-    qreal rightMarginSize() const;
     void setRightPadding(const qreal);
-    qreal topMarginSize() const;
     void setTopPadding(const qreal);
+
+    qreal leftMarginSize() const;
+    qreal bottomMarginSize() const;
+    qreal rightMarginSize() const;
+    qreal topMarginSize() const;
 
     QString leftLabel() const;
     QString bottomLabel() const;
@@ -305,6 +306,8 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void setBottomLabelDirty() { _bottomLabel.dirty = true; }
     void setLabelsDirty() { _leftLabel.dirty = true; _rightLabel.dirty = true; _topLabel.dirty = true; _bottomLabel.dirty = true; }
 
+    void setAxisLabelsDirty() { _axisLabelsDirty = true; }
+
   private:
     void createActions();
     void createZoomMenu();
@@ -463,6 +466,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 
     LegendItem* _legend;
 
+    bool _axisLabelsDirty;
     DrawnLabel _leftLabel;
     DrawnLabel _rightLabel;
     DrawnLabel _topLabel;
