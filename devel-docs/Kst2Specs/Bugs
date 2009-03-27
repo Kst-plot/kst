@@ -20,4 +20,30 @@ kst) seem more sluggish. �
 
 ---------
 
+Loading of a Kst file into a resized window does not adjust the loaded items to
+fit on the new window size.
 
+The View dimensions should be saved as part of the .kst file and if the newly created
+view on a load of a .kst file doesn't match, the resize logic should be triggered.
+
+-----------
+
+Base / Offset / Rotation of Axis Labels based on discussion.
+
+Here's the possible changes
+
+#1.   Ability to rotate axis labels.  Axis numbers could be rotated in
+1.x but cannot in 2.0.
+
+#2.  Change Base/Offset Mode to radio box set for On (same as current)
+Auto (same as current off) Off (new mode in which it will never
+automatically switch and will truncate if settings are inappropriate.)
+
+#2b.  Update behaviour only for interpreted axis where off makes it
+possible to not use base offset mode, but that would also require #1 as
+it would never fit as is.
+
+#3.  Kst 1.x also had the ability to set the justification for the top
+label, but we currently do not that option for labels in 2.0.
+
+----------
