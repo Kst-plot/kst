@@ -97,7 +97,7 @@ class PlotAxis : public QObject
     void setAxisInterpretation(const AxisInterpretationType interpret);
 
     PlotMarkers axisPlotMarkers() { return _axisPlotMarkers; }
-    void setAxisPlotMarkers(const PlotMarkers &plotMarkers) { _axisPlotMarkers = plotMarkers; }
+    void setAxisPlotMarkers(const PlotMarkers &plotMarkers) { _axisPlotMarkers = plotMarkers; _ticksUpdated = true; }
 
     QMap<qreal, QString> axisLabels() { return _axisLabels; }
     QList<qreal> axisMajorTicks() { return _axisMajorTicks; }

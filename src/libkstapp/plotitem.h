@@ -507,6 +507,9 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QVector<QLineF> _xMinorTickLines;
     QVector<QLineF> _yMinorTickLines;
 
+    QVector<QLineF> _xPlotMarkerLines;
+    QVector<QLineF> _yPlotMarkerLines;
+
     QVector<CachedPlotLabel> _xPlotLabels;
     QVector<CachedPlotLabel> _yPlotLabels;
 

@@ -721,6 +721,14 @@ void PlotItem::updateXAxisLines() {
     p2 = p1 + QPointF(0, minorTickLength);
     _xMinorTickLines << QLineF(p1, p2);
   }
+  _xPlotMarkerLines.clear();
+  foreach (double x, _xAxis->axisPlotMarkers().markers()) {
+    if (x > _xMin && x < _xMax) {
+      QPointF p1 = QPointF(mapXToPlot(x), rect.bottom());
+      QPointF p2 = p1 - QPointF(0, rect.height());
+      _xPlotMarkerLines << QLineF(p1, p2);
+    }
+  }
 }
 
 
@@ -800,6 +808,15 @@ void PlotItem::updateYAxisLines() {
     p1.setX(rect.right());
     p2 = p1 - QPointF(minorTickLength, 0);
     _yMinorTickLines << QLineF(p1, p2);
+  }
+
+  _yPlotMarkerLines.clear();
+  foreach (double y, _yAxis->axisPlotMarkers().markers()) {
+    if (y > _yMin && y < _yMax) {
+      QPointF p1 = QPointF(rect.left(), mapYToPlot(y));
+      QPointF p2 = p1 + QPointF(rect.width(), 0);
+      _yPlotMarkerLines << QLineF(p1, p2);
+    }
   }
 }
 
@@ -979,38 +996,16 @@ void PlotItem::paintTickLabels(QPainter *painter) {
 
 
 void PlotItem::paintPlotMarkers(QPainter *painter) {
-
-  QRectF rect = plotRect();
-
-  QVector<QLineF> xPlotMarkers;
-  foreach (double x, _xAxis->axisPlotMarkers().markers()) {
-    if (x > _xMin && x < _xMax) {
-      QPointF p1 = QPointF(mapXToPlot(x), plotRect().bottom());
-      QPointF p2 = p1 - QPointF(0, rect.height());
-      xPlotMarkers << QLineF(p1, p2);
-    }
-  }
-
-  if (!xPlotMarkers.isEmpty()) {
+  if (!_xPlotMarkerLines.isEmpty()) {
     painter->save();
     painter->setPen(QPen(QBrush(_xAxis->axisPlotMarkers().lineColor()), _xAxis->axisPlotMarkers().lineWidth(), _xAxis->axisPlotMarkers().lineStyle()));
-    painter->drawLines(xPlotMarkers);
+    painter->drawLines(_xPlotMarkerLines);
     painter->restore();
   }
-
-  QVector<QLineF> yPlotMarkers;
-  foreach (double y, _yAxis->axisPlotMarkers().markers()) {
-    if (y > _yMin && y < _yMax) {
-      QPointF p1 = QPointF(plotRect().left(), mapYToPlot(y));
-      QPointF p2 = p1 + QPointF(rect.width(), 0);
-      yPlotMarkers << QLineF(p1, p2);
-    }
-  }
-
-  if (!yPlotMarkers.isEmpty()) {
+  if (!_yPlotMarkerLines.isEmpty()) {
     painter->save();
     painter->setPen(QPen(QBrush(_yAxis->axisPlotMarkers().lineColor()), _yAxis->axisPlotMarkers().lineWidth(), _yAxis->axisPlotMarkers().lineStyle()));
-    painter->drawLines(yPlotMarkers);
+    painter->drawLines(_yPlotMarkerLines);
     painter->restore();
   }
 
