@@ -418,9 +418,6 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     qreal _yMax;
     qreal _yMin;
 
-    QRectF _yLabelRect;
-    QRectF _xLabelRect;
-
     QString _leftLabelOverride;
     QString _bottomLabelOverride;
     QString _topLabelOverride;

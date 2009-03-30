@@ -726,7 +726,6 @@ void PlotItem::updateXAxisLines() {
 
 void PlotItem::updateXAxisLabels(QPainter* painter) {
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
-  QRectF xLabelRect;
   _xPlotLabels.clear();
   QMapIterator<qreal, QString> xLabelIt(_xAxis->axisLabels());
   while (xLabelIt.hasNext()) {
@@ -737,11 +736,6 @@ void PlotItem::updateXAxisLabels(QPainter* painter) {
     QPointF p = QPointF(mapXToPlot(xLabelIt.key()), plotRect().bottom() + 
         bound.height()*0.5 + _calculatedAxisMarginVLead);
     bound.moveCenter(p);
-    if (xLabelRect.isValid()) {
-      xLabelRect = xLabelRect.united(bound);
-    } else {
-      xLabelRect = bound;
-    }
 
     if (rect().left() > bound.left()) bound.setLeft(rect().left());
     if (rect().right() < bound.right()) bound.setRight(rect().right());
@@ -757,19 +751,12 @@ void PlotItem::updateXAxisLabels(QPainter* painter) {
     QPointF p = QPointF(plotRect().left(), plotRect().bottom() + bound.height() * 2.0 + _calculatedAxisMarginVLead);
     bound.moveBottomLeft(p);
 
-    if (xLabelRect.isValid()) {
-      xLabelRect = xLabelRect.united(bound);
-    } else {
-      xLabelRect = bound;
-    }
-
     CachedPlotLabel label;
     label.bound = bound;
     label.value = _xAxis->baseLabel();
     label.baseLabel = true;
     _xPlotLabels.append(label);
   }
-  _xLabelRect = xLabelRect;
 }
 
 
@@ -819,7 +806,6 @@ void PlotItem::updateYAxisLines() {
 
 void PlotItem::updateYAxisLabels(QPainter* painter) {
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
-  QRectF yLabelRect;
   _yPlotLabels.clear();
   QMapIterator<qreal, QString> yLabelIt(_yAxis->axisLabels());
   while (yLabelIt.hasNext()) {
@@ -829,12 +815,6 @@ void PlotItem::updateYAxisLabels(QPainter* painter) {
     bound.setWidth(bound.width());
     QPointF p = QPointF(plotRect().left() - (bound.width() / 2.0) - _calculatedAxisMarginHLead, mapYToPlot(yLabelIt.key()));
     bound.moveCenter(p);
-
-    if (yLabelRect.isValid()) {
-      yLabelRect = yLabelRect.united(bound);
-    } else {
-      yLabelRect = bound;
-    }
 
     if (rect().top() > bound.top()) bound.setTop(rect().top());
     if (rect().bottom() < bound.bottom()) bound.setBottom(rect().bottom());
@@ -854,12 +834,6 @@ void PlotItem::updateYAxisLabels(QPainter* painter) {
     QPointF p = QPointF(rect().left(), plotRect().bottom());
     bound.moveBottomLeft(p);
 
-    if (yLabelRect.isValid()) {
-      yLabelRect = yLabelRect.united(bound);
-    } else {
-      yLabelRect = bound;
-    }
-
     CachedPlotLabel label;
     label.bound = bound;
     label.value = _yAxis->baseLabel();
@@ -867,7 +841,6 @@ void PlotItem::updateYAxisLabels(QPainter* painter) {
     _yPlotLabels.append(label);
     painter->restore();
   }
-  _yLabelRect = yLabelRect;
 }
 
 
@@ -928,7 +901,6 @@ void PlotItem::paintMinorTicks(QPainter *painter) {
 
 
 void PlotItem::paintBottomTickLabels(QPainter *painter) {
-  QRectF xLabelRect;
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
 
   painter->save();
@@ -940,6 +912,14 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
   painter->restore();
 
 #if DEBUG_LABEL_REGION
+  QRectF xLabelRect;
+  foreach(CachedPlotLabel label, _xPlotLabels) {
+    if (xLabelRect.isValid()) {
+      xLabelRect = xLabelRect.united(label.bound);
+    } else {
+      xLabelRect = label.bound;
+    }
+  }
   painter->save();
   painter->setOpacity(0.3);
   qDebug() << "Bottom Tick Labels - xLabelRect:" << xLabelRect;
@@ -971,10 +951,18 @@ void PlotItem::paintLeftTickLabels(QPainter *painter) {
   painter->restore();
 
 #if DEBUG_LABEL_REGION
+  QRectF yLabelRect;
+  foreach(CachedPlotLabel label, _yPlotLabels) {
+    if (yLabelRect.isValid()) {
+      yLabelRect = yLabelRect.united(label.bound);
+    } else {
+      yLabelRect = label.bound;
+    }
+  }
   painter->save();
   painter->setOpacity(0.3);
-  qDebug() << "Left Tick Labels - yLabelRect:" << _yLabelRect;
-  painter->fillRect(_yLabelRect, Qt::green);
+  qDebug() << "Left Tick Labels - yLabelRect:" << yLabelRect;
+  painter->fillRect(yLabelRect, Qt::green);
   painter->restore();
 #endif
 }
@@ -2023,7 +2011,7 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
   t.rotate(90.0);
   painter->rotate(-90.0);
 
-  QRectF leftLabel = leftLabelRect(false);
+  QRectF leftLabel = leftLabelRect();
   leftLabel.moveTopRight(plotAxisRect().topLeft());
 
   painter->save();
@@ -2106,7 +2094,7 @@ void PlotItem::paintBottomLabel(QPainter *painter) {
 #if DEBUG_LABEL_REGION
   painter->save();
 
-  QRectF bottomLabel = bottomLabelRect(false);
+  QRectF bottomLabel = bottomLabelRect();
   bottomLabel.moveTopLeft(plotAxisRect().bottomLeft());
 
   painter->save();
@@ -2192,7 +2180,7 @@ void PlotItem::paintRightLabel(QPainter *painter) {
   t.rotate(-90.0);
   painter->rotate(90.0);
 
-  QRectF rightLabel = rightLabelRect(false);
+  QRectF rightLabel = rightLabelRect();
   rightLabel.moveTopLeft(plotAxisRect().topRight());
 
   painter->save();
@@ -2276,7 +2264,7 @@ void PlotItem::paintTopLabel(QPainter *painter) {
 #if DEBUG_LABEL_REGION
   painter->save();
 
-  QRectF topLabel = topLabelRect(false);
+  QRectF topLabel = topLabelRect();
   topLabel.moveBottomLeft(plotAxisRect().topLeft());
 
   painter->save();
