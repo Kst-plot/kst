@@ -66,6 +66,48 @@ struct CachedPlotLabel {
   QString value;
 };
 
+
+class PlotLabel : public QObject {
+  Q_OBJECT
+  public:
+    PlotLabel(PlotItem *plotItem);
+
+    bool isVisible() const;
+    void setVisible(bool visible);
+
+    QString overrideText() const;
+    void setOverrideText(const QString &label);
+
+    bool fontUseGlobal() const;
+    void setFontUseGlobal(const bool use_global);
+
+    QFont font() const;
+    void setFont(const QFont &font);
+
+    qreal fontScale() const;
+    void setFontScale(const qreal scale);
+
+    QColor fontColor() const;
+    void setFontColor(const QColor &color);
+
+    void setDetails(const QString &label, const bool use_global, const QFont &font, const qreal scale, const QColor &color);
+    void saveInPlot(QXmlStreamWriter &xml, QString labelId);
+    bool configureFromXml(QXmlStreamReader &xml, ObjectStore *store);
+
+  Q_SIGNALS:
+    void labelChanged();
+
+  public:
+    PlotItem* _plotItem;
+    bool _visible;
+    QString _overrideText;
+    QFont _font;
+    qreal _fontScale;
+    QColor _fontColor;
+    bool _fontUseGlobal;
+};
+
+
 class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 {
   Q_OBJECT
@@ -121,111 +163,33 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QString rightLabel() const;
     QString topLabel() const;
 
+    PlotLabel* leftLabelDetails() { return _leftLabelDetails; };
+    PlotLabel* rightLabelDetails() { return _rightLabelDetails; };
+    PlotLabel* topLabelDetails() { return _topLabelDetails; };
+    PlotLabel* bottomLabelDetails() { return _bottomLabelDetails; };
+    PlotLabel* numberLabelDetails() { return _numberLabelDetails; };
+
     void setTopSuppressed(bool suppressed);
     void setBottomSuppressed(bool suppressed);
     void setLeftSuppressed(bool suppressed);
     void setRightSuppressed(bool suppressed);
-
-    bool isLeftLabelVisible() const;
-    void setLeftLabelVisible(bool visible);
-
-    bool isBottomLabelVisible() const;
-    void setBottomLabelVisible(bool visible);
-
-    bool isRightLabelVisible() const;
-    void setRightLabelVisible(bool visible);
-
-    bool isTopLabelVisible() const;
-    void setTopLabelVisible(bool visible);
 
     void setLabelsVisible(bool visible);
 
     qreal axisMarginWidth() const;
     qreal axisMarginHeight() const;
 
-    QString bottomLabelOverride() const;
-    void setBottomLabelOverride(const QString &label);
-
-    QString leftLabelOverride() const;
-    void setLeftLabelOverride(const QString &label);
-
-    QString topLabelOverride() const;
-    void setTopLabelOverride(const QString &label);
-
-    QString rightLabelOverride() const;
-    void setRightLabelOverride(const QString &label);
-
     QString titleOverride() const;
     void setTitleOverride(const QString &label);
-
-    bool leftFontUseGlobal() const {return _leftFontUseGlobal;}
-    void setLeftFontUseGlobal(const bool use_global) {_leftFontUseGlobal = use_global;}
-
-    bool rightFontUseGlobal() const {return _rightFontUseGlobal;}
-    void setRightFontUseGlobal(const bool use_global) {_rightFontUseGlobal = use_global;}
-
-    bool topFontUseGlobal() const {return _topFontUseGlobal;}
-    void setTopFontUseGlobal(const bool use_global) {_topFontUseGlobal = use_global;}
-
-    bool bottomFontUseGlobal() const {return _bottomFontUseGlobal;}
-    void setBottomFontUseGlobal(const bool use_global) {_bottomFontUseGlobal = use_global;}
-
-    bool numberFontUseGlobal() const {return _numberFontUseGlobal;}
-    void setNumberFontUseGlobal(const bool use_global) {_numberFontUseGlobal = use_global;}
 
     QFont globalFont() const;
     void setGlobalFont(const QFont &font);
 
-    QFont topLabelFont() const;
-    void setTopLabelFont(const QFont &font);
-
-    QFont leftLabelFont() const;
-    void setLeftLabelFont(const QFont &font);
-
-    QFont rightLabelFont() const;
-    void setRightLabelFont(const QFont &font);
-
-    QFont bottomLabelFont() const;
-    void setBottomLabelFont(const QFont &font);
-
-    QFont numberLabelFont() const;
-    void setNumberLabelFont(const QFont &font);
-
     qreal globalFontScale() const;
     void setGlobalFontScale(const qreal scale);
 
-    qreal bottomLabelFontScale() const;
-    void setBottomLabelFontScale(const qreal scale);
-
-    qreal leftLabelFontScale() const;
-    void setLeftLabelFontScale(const qreal scale);
-
-    qreal topLabelFontScale() const;
-    void setTopLabelFontScale(const qreal scale);
-
-    qreal rightLabelFontScale() const;
-    void setRightLabelFontScale(const qreal scale);
-
-    qreal numberLabelFontScale() const;
-    void setNumberLabelFontScale(const qreal scale);
-
     QColor globalFontColor() const;
     void setGlobalFontColor(const QColor &color);
-
-    QColor bottomLabelFontColor() const;
-    void setBottomLabelFontColor(const QColor &color);
-
-    QColor topLabelFontColor() const;
-    void setTopLabelFontColor(const QColor &color);
-
-    QColor leftLabelFontColor() const;
-    void setLeftLabelFontColor(const QColor &color);
-
-    QColor rightLabelFontColor() const;
-    void setRightLabelFontColor(const QColor &color);
-
-    QColor numberLabelFontColor() const;
-    void setNumberLabelFontColor(const QColor &color);
 
     bool showLegend() const;
     void setShowLegend(const bool show);
@@ -256,7 +220,6 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     ZoomState currentZoomState();
 
     void setAllowUpdates(bool allowed);
-    void setPlotBordersDirty(bool dirty);
 
   protected:
     virtual QString _automaticDescriptiveName() const;
@@ -291,6 +254,8 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void zoomYIn();
     void zoomNormalizeYtoX();
     void zoomLogY();
+
+    void setPlotBordersDirty(bool dirty = true);
 
     virtual void edit();
     void plotMaximize();
@@ -381,10 +346,12 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
   private:
     QHash<PlotRenderItem::RenderType, PlotRenderItem*> _renderers;
     bool _isInSharedAxisBox;
-    bool _isLeftLabelVisible;
-    bool _isBottomLabelVisible;
-    bool _isRightLabelVisible;
-    bool _isTopLabelVisible;
+
+    PlotLabel* _leftLabelDetails;
+    PlotLabel* _rightLabelDetails;
+    PlotLabel* _topLabelDetails;
+    PlotLabel* _bottomLabelDetails;
+    PlotLabel* _numberLabelDetails;
 
     bool _plotRectsDirty;
     QRectF _calculatedPlotRect;
@@ -418,36 +385,13 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     qreal _yMax;
     qreal _yMin;
 
-    QString _leftLabelOverride;
-    QString _bottomLabelOverride;
-    QString _topLabelOverride;
-    QString _rightLabelOverride;
-
     QFont _globalFont;
-    QFont _leftLabelFont;
-    QFont _bottomLabelFont;
-    QFont _topLabelFont;
-    QFont _rightLabelFont;
-    QFont _numberLabelFont;
-
     qreal _globalFontScale;
-    qreal _leftLabelFontScale;
-    qreal _bottomLabelFontScale;
-    qreal _topLabelFontScale;
-    qreal _rightLabelFontScale;
-    qreal _numberLabelFontScale;
-
     QColor _globalFontColor;
-    QColor _leftLabelFontColor;
-    QColor _bottomLabelFontColor;
-    QColor _topLabelFontColor;
-    QColor _rightLabelFontColor;
-    QColor _numberLabelFontColor;
 
-    bool _leftFontUseGlobal;
-    bool _rightFontUseGlobal;
-    bool _topFontUseGlobal;
-    bool _bottomFontUseGlobal;
+    QFont _numberLabelFont;
+    qreal _numberLabelFontScale;
+    QColor _numberLabelFontColor;
     bool _numberFontUseGlobal;
 
     bool _showLegend;

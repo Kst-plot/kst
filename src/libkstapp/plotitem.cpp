@@ -58,10 +58,6 @@ namespace Kst {
 PlotItem::PlotItem(View *parent)
   : ViewItem(parent),
   _isInSharedAxisBox(false),
-  _isLeftLabelVisible(true),
-  _isBottomLabelVisible(true),
-  _isRightLabelVisible(true),
-  _isTopLabelVisible(true),
   _plotRectsDirty(true),
   _calculatedLeftLabelMargin(0.0),
   _calculatedRightLabelMargin(0.0),
@@ -103,32 +99,26 @@ PlotItem::PlotItem(View *parent)
   connect(this, SIGNAL(geometryChanged()), _yAxis, SLOT(setTicksUpdated()));
   connect(this, SIGNAL(geometryChanged()), this, SLOT(setPlotRectsDirty()));
 
+  _leftLabelDetails = new PlotLabel(this);
+  _rightLabelDetails = new PlotLabel(this);
+  _topLabelDetails = new PlotLabel(this);
+  _bottomLabelDetails = new PlotLabel(this);
+  _numberLabelDetails = new PlotLabel(this);
+
+  connect(_leftLabelDetails, SIGNAL(labelChanged()), this, SLOT(setPlotBordersDirty()));
+  connect(_leftLabelDetails, SIGNAL(labelChanged()), this, SLOT(setLeftLabelDirty()));
+  connect(_rightLabelDetails, SIGNAL(labelChanged()), this, SLOT(setPlotBordersDirty()));
+  connect(_rightLabelDetails, SIGNAL(labelChanged()), this, SLOT(setRightLabelDirty()));
+  connect(_topLabelDetails, SIGNAL(labelChanged()), this, SLOT(setPlotBordersDirty()));
+  connect(_topLabelDetails, SIGNAL(labelChanged()), this, SLOT(setTopLabelDirty()));
+  connect(_bottomLabelDetails, SIGNAL(labelChanged()), this, SLOT(setPlotBordersDirty()));
+  connect(_bottomLabelDetails, SIGNAL(labelChanged()), this, SLOT(setBottomLabelDirty()));
+  connect(_numberLabelDetails, SIGNAL(labelChanged()), this, SLOT(setPlotBordersDirty()));
+  connect(_numberLabelDetails, SIGNAL(labelChanged()), this, SLOT(setAxisLabelsDirty()));
+
   _globalFont = parentView()->defaultFont();
-  _leftLabelFont = parentView()->defaultFont();
-  _bottomLabelFont = parentView()->defaultFont();
-  _topLabelFont = parentView()->defaultFont();
-  _rightLabelFont = parentView()->defaultFont();
-  _numberLabelFont = parentView()->defaultFont();
-
   _globalFontColor = ApplicationSettings::self()->defaultFontColor();
-  _leftLabelFontColor = ApplicationSettings::self()->defaultFontColor();
-  _bottomLabelFontColor = ApplicationSettings::self()->defaultFontColor();
-  _topLabelFontColor = ApplicationSettings::self()->defaultFontColor();
-  _rightLabelFontColor = ApplicationSettings::self()->defaultFontColor();
-  _numberLabelFontColor = ApplicationSettings::self()->defaultFontColor();
-
   _globalFontScale = ApplicationSettings::self()->defaultFontScale();
-  _leftLabelFontScale = ApplicationSettings::self()->defaultFontScale();
-  _bottomLabelFontScale = ApplicationSettings::self()->defaultFontScale();
-  _topLabelFontScale = ApplicationSettings::self()->defaultFontScale();
-  _rightLabelFontScale = ApplicationSettings::self()->defaultFontScale();
-  _numberLabelFontScale = ApplicationSettings::self()->defaultFontScale();
-
-  _leftFontUseGlobal = true;
-  _rightFontUseGlobal = true;
-  _topFontUseGlobal = true;
-  _bottomFontUseGlobal = true;
-  _numberFontUseGlobal = true;
 
   _undoStack = new QUndoStack(this);
 
@@ -154,6 +144,12 @@ PlotItem::PlotItem(View *parent)
 PlotItem::~PlotItem() {
   delete _xAxis;
   delete _yAxis;
+  delete _leftLabelDetails;
+  delete _rightLabelDetails;
+  delete _topLabelDetails;
+  delete _bottomLabelDetails;
+  delete _numberLabelDetails;
+
   PlotItemManager::self()->removePlot(this);
 }
 
@@ -167,37 +163,13 @@ void PlotItem::save(QXmlStreamWriter &xml) {
   if (isVisible()) {
     xml.writeStartElement("plot");
     xml.writeAttribute("tiedzoom", QVariant(isTiedZoom()).toString());
-    xml.writeAttribute("leftlabelvisible", QVariant(_isLeftLabelVisible).toString());
-    xml.writeAttribute("bottomlabelvisible", QVariant(_isBottomLabelVisible).toString());
-    xml.writeAttribute("rightlabelvisible", QVariant(_isRightLabelVisible).toString());
-    xml.writeAttribute("toplabelvisible", QVariant(_isTopLabelVisible).toString());
+    xml.writeAttribute("leftlabelvisible", QVariant(_leftLabelDetails->isVisible()).toString());
+    xml.writeAttribute("bottomlabelvisible", QVariant(_bottomLabelDetails->isVisible()).toString());
+    xml.writeAttribute("rightlabelvisible", QVariant(_rightLabelDetails->isVisible()).toString());
+    xml.writeAttribute("toplabelvisible", QVariant(_topLabelDetails->isVisible()).toString());
     xml.writeAttribute("globalfont", QVariant(_globalFont).toString());
     xml.writeAttribute("globalfontscale", QVariant(_globalFontScale).toString());
     xml.writeAttribute("globalfontcolor", QVariant(_globalFontColor).toString());
-    xml.writeAttribute("leftlabeloverride", _leftLabelOverride);
-    xml.writeAttribute("leftlabeluseglobal", QVariant(_leftFontUseGlobal).toString());
-    xml.writeAttribute("leftlabelfont", QVariant(_leftLabelFont).toString());
-    xml.writeAttribute("leftlabelfontscale", QVariant(_leftLabelFontScale).toString());
-    xml.writeAttribute("leftlabelfontcolor", QVariant(_leftLabelFontColor).toString());
-    xml.writeAttribute("bottomlabeloverride", _bottomLabelOverride);
-    xml.writeAttribute("bottomlabeluseglobal", QVariant(_bottomFontUseGlobal).toString());
-    xml.writeAttribute("bottomlabelfont", QVariant(_bottomLabelFont).toString());
-    xml.writeAttribute("bottomlabelfontscale", QVariant(_bottomLabelFontScale).toString());
-    xml.writeAttribute("bottomlabelfontcolor", QVariant(_bottomLabelFontColor).toString());
-    xml.writeAttribute("toplabeloverride", _topLabelOverride);
-    xml.writeAttribute("toplabeluseglobal", QVariant(_topFontUseGlobal).toString());
-    xml.writeAttribute("toplabelfont", QVariant(_topLabelFont).toString());
-    xml.writeAttribute("toplabelfontscale", QVariant(_topLabelFontScale).toString());
-    xml.writeAttribute("toplabelfontcolor", QVariant(_topLabelFontColor).toString());
-    xml.writeAttribute("rightlabeloverride", _rightLabelOverride);
-    xml.writeAttribute("rightlabeluseglobal", QVariant(_rightFontUseGlobal).toString());
-    xml.writeAttribute("rightlabelfont", QVariant(_rightLabelFont).toString());
-    xml.writeAttribute("rightlabelfontscale", QVariant(_rightLabelFontScale).toString());
-    xml.writeAttribute("rightlabelfontcolor", QVariant(_rightLabelFontColor).toString());
-    xml.writeAttribute("numberlabelfont", QVariant(_numberLabelFont).toString());
-    xml.writeAttribute("numberlabeluseglobal", QVariant(_numberFontUseGlobal).toString());
-    xml.writeAttribute("numberlabelfontscale", QVariant(_numberLabelFontScale).toString());
-    xml.writeAttribute("numberlabelfontcolor", QVariant(_numberLabelFontColor).toString());
     xml.writeAttribute("showlegend", QVariant(_showLegend).toString());
     saveNameInfo(xml, GNUM);
 
@@ -209,6 +181,11 @@ void PlotItem::save(QXmlStreamWriter &xml) {
     }
     _xAxis->saveInPlot(xml, QString("xaxis"));
     _yAxis->saveInPlot(xml, QString("yaxis"));
+    _leftLabelDetails->saveInPlot(xml, QString("leftlabel"));
+    _rightLabelDetails->saveInPlot(xml, QString("rightlabel"));
+    _topLabelDetails->saveInPlot(xml, QString("toplabel"));
+    _bottomLabelDetails->saveInPlot(xml, QString("bottomlabel"));
+    _numberLabelDetails->saveInPlot(xml, QString("numberlabel"));
 
     xml.writeStartElement("projectionrect");
     xml.writeAttribute("x", QVariant(projectionRect().x()).toString());
@@ -1014,10 +991,10 @@ void PlotItem::paintPlotMarkers(QPainter *painter) {
 
 void PlotItem::calculatePlotRects() {
   // Calculate the plotAxisRect first.
-  qreal left = isLeftLabelVisible() ? leftLabelMargin() : 0.0;
-  qreal bottom = isBottomLabelVisible() ? bottomLabelMargin() : 0.0;
-  qreal right = isRightLabelVisible() ? rightMarginSize() : 0.0;
-  qreal top = isTopLabelVisible() ? topMarginSize() : 0.0;
+  qreal left = _leftLabelDetails->isVisible() ? leftLabelMargin() : 0.0;
+  qreal bottom = _bottomLabelDetails->isVisible() ? bottomLabelMargin() : 0.0;
+  qreal right = _rightLabelDetails->isVisible() ? rightMarginSize() : 0.0;
+  qreal top = _topLabelDetails->isVisible() ? topMarginSize() : 0.0;
 
   QPointF topLeft(rect().topLeft() + QPointF(left, top));
   QPointF bottomRight(rect().bottomRight() - QPointF(right, bottom));
@@ -1030,8 +1007,8 @@ void PlotItem::calculatePlotRects() {
   qreal yOffset = _yAxis->isAxisVisible() ? axisMarginWidth() : 0.0;
   qreal bottomPadding = _xAxis->isAxisVisible() ? _bottomPadding : 0.0;
   qreal leftPadding = _yAxis->isAxisVisible() ? _leftPadding : 0.0;
-  qreal rightPadding = isRightLabelVisible() ? _rightPadding : 0.0;
-  qreal topPadding = isTopLabelVisible() ? _topPadding : 0.0;
+  qreal rightPadding = _rightLabelDetails->isVisible() ? _rightPadding : 0.0;
+  qreal topPadding = _topLabelDetails->isVisible() ? _topPadding : 0.0;
 
   plot.setLeft(plot.left() + yOffset + leftPadding);
   plot.setBottom(plot.bottom() - xOffset - bottomPadding);
@@ -1067,7 +1044,7 @@ QRectF PlotItem::plotRect() {
 
 
 qreal PlotItem::leftMarginSize() const {
-  qreal margin = isLeftLabelVisible() ? leftLabelMargin() : 0.0;
+  qreal margin = _leftLabelDetails->isVisible() ? leftLabelMargin() : 0.0;
   margin += _yAxis->isAxisVisible() ? axisMarginWidth() : 0.0;
 
   return margin;
@@ -1075,7 +1052,7 @@ qreal PlotItem::leftMarginSize() const {
 
 
 qreal PlotItem::bottomMarginSize() const {
-  qreal margin = isBottomLabelVisible() ? bottomLabelMargin() : 0.0;
+  qreal margin = _bottomLabelDetails->isVisible() ? bottomLabelMargin() : 0.0;
   margin += _xAxis->isAxisVisible() ? axisMarginHeight() : 0.0;
 
   return margin;
@@ -1083,14 +1060,14 @@ qreal PlotItem::bottomMarginSize() const {
 
 
 qreal PlotItem::rightMarginSize() const {
-  qreal margin = isRightLabelVisible() ? rightLabelMargin() : 0.0;
+  qreal margin = _rightLabelDetails->isVisible() ? rightLabelMargin() : 0.0;
   if (supportsTiedZoom() && margin < tiedZoomSize().width()) margin = tiedZoomSize().width();
   return margin;
 }
 
 
 qreal PlotItem::topMarginSize() const {
-  qreal margin = isTopLabelVisible() ? topLabelMargin() : 0.0;
+  qreal margin = _topLabelDetails->isVisible() ? topLabelMargin() : 0.0;
   if (supportsTiedZoom() && margin < tiedZoomSize().height()) margin = tiedZoomSize().height();
   return margin;
 }
@@ -1336,34 +1313,6 @@ qreal PlotItem::mapYToPlot(const qreal &y) {
 }
 
 
-QFont PlotItem::rightLabelFont() const {
-  return _rightLabelFont;
-}
-
-
-void PlotItem::setRightLabelFont(const QFont &font) {
-  if (font != _rightLabelFont) {
-    _rightLabelFont = font;
-    setPlotBordersDirty(true);
-    setRightLabelDirty();
-  }
-}
-
-
-QFont PlotItem::topLabelFont() const {
-  return _topLabelFont;
-}
-
-
-void PlotItem::setTopLabelFont(const QFont &font) {
-  if (font != _topLabelFont) {
-    _topLabelFont = font;
-    setPlotBordersDirty(true);
-    setTopLabelDirty();
-  }
-}
-
-
 QFont PlotItem::globalFont() const {
   return _globalFont;
 }
@@ -1374,62 +1323,6 @@ void PlotItem::setGlobalFont(const QFont &font) {
     _globalFont = font;
     setPlotBordersDirty(true);
     setLabelsDirty();
-  }
-}
-
-
-QFont PlotItem::leftLabelFont() const {
-  return _leftLabelFont;
-}
-
-
-void PlotItem::setLeftLabelFont(const QFont &font) {
-  if (font != _leftLabelFont) {
-    _leftLabelFont = font;
-    setPlotBordersDirty(true);
-    setLeftLabelDirty();
-  }
-}
-
-
-QFont PlotItem::bottomLabelFont() const {
-  return _bottomLabelFont;
-}
-
-
-void PlotItem::setBottomLabelFont(const QFont &font) {
-  if (font != _bottomLabelFont) {
-    _bottomLabelFont = font;
-    setPlotBordersDirty(true);
-    setBottomLabelDirty();
-  }
-}
-
-
-QFont PlotItem::numberLabelFont() const {
-  return _numberLabelFont;
-}
-
-
-void PlotItem::setNumberLabelFont(const QFont &font) {
-  if (font != _numberLabelFont) {
-    _numberLabelFont = font;
-    setPlotBordersDirty(true);
-    setAxisLabelsDirty();
-  }
-}
-
-
-qreal PlotItem::rightLabelFontScale() const {
-  return _rightLabelFontScale;
-}
-
-
-void PlotItem::setRightLabelFontScale(const qreal scale) {
-  if (scale != _rightLabelFontScale) {
-    _rightLabelFontScale = scale;
-    setPlotBordersDirty(true);
-    setRightLabelDirty();
   }
 }
 
@@ -1448,62 +1341,6 @@ void PlotItem::setGlobalFontScale(const qreal scale) {
 }
 
 
-qreal PlotItem::leftLabelFontScale() const {
-  return _leftLabelFontScale;
-}
-
-
-void PlotItem::setLeftLabelFontScale(const qreal scale) {
-  if (scale != _leftLabelFontScale) {
-    _leftLabelFontScale = scale;
-    setPlotBordersDirty(true);
-    setLeftLabelDirty();
-  }
-}
-
-
-qreal PlotItem::topLabelFontScale() const {
-  return _topLabelFontScale;
-}
-
-
-void PlotItem::setTopLabelFontScale(const qreal scale) {
-  if (scale != _topLabelFontScale) {
-    _topLabelFontScale = scale;
-    setPlotBordersDirty(true);
-    setTopLabelDirty();
-  }
-}
-
-
-qreal PlotItem::bottomLabelFontScale() const {
-  return _bottomLabelFontScale;
-}
-
-
-void PlotItem::setBottomLabelFontScale(const qreal scale) {
-  if (scale != _bottomLabelFontScale) {
-    _bottomLabelFontScale = scale;
-    setPlotBordersDirty(true);
-    setBottomLabelDirty();
-  }
-}
-
-
-qreal PlotItem::numberLabelFontScale() const {
-  return _numberLabelFontScale;
-}
-
-
-void PlotItem::setNumberLabelFontScale(const qreal scale) {
-  if (scale != _numberLabelFontScale) {
-    _numberLabelFontScale = scale;
-    setPlotBordersDirty(true);
-    setAxisLabelsDirty();
-  }
-}
-
-
 QColor PlotItem::globalFontColor() const {
   return _globalFontColor;
 }
@@ -1514,163 +1351,6 @@ void PlotItem::setGlobalFontColor(const QColor &color) {
     _globalFontColor = color;
     setLabelsDirty();
   }
-}
-
-
-QColor PlotItem::leftLabelFontColor() const {
-  return _leftLabelFontColor;
-}
-
-
-void PlotItem::setLeftLabelFontColor(const QColor &color) {
-  if (color != _leftLabelFontColor) {
-    _leftLabelFontColor = color;
-    setLeftLabelDirty();
-  }
-}
-
-
-QColor PlotItem::rightLabelFontColor() const {
-  return _rightLabelFontColor;
-}
-
-
-void PlotItem::setRightLabelFontColor(const QColor &color) {
-  if (color != _rightLabelFontColor) {
-    _rightLabelFontColor = color;
-    setRightLabelDirty();
-  }
-}
-
-
-QColor PlotItem::topLabelFontColor() const {
-  return _topLabelFontColor;
-}
-
-
-void PlotItem::setTopLabelFontColor(const QColor &color) {
-  if (color != _topLabelFontColor) {
-    _topLabelFontColor = color;
-    setTopLabelDirty();
-  }
-}
-
-
-QColor PlotItem::bottomLabelFontColor() const {
-  return _bottomLabelFontColor;
-}
-
-
-void PlotItem::setBottomLabelFontColor(const QColor &color) {
-  if (color != _bottomLabelFontColor) {
-    _bottomLabelFontColor = color;
-    setBottomLabelDirty();
-  }
-}
-
-
-QColor PlotItem::numberLabelFontColor() const {
-  return _numberLabelFontColor;
-}
-
-
-void PlotItem::setNumberLabelFontColor(const QColor &color) {
-  if (color != _numberLabelFontColor) {
-    _numberLabelFontColor = color;
-    setAxisLabelsDirty();
-  }
-}
-
-
-QString PlotItem::leftLabelOverride() const {
-  if (_leftLabelOverride.isEmpty()) {
-    return leftLabel();
-  } else {
-    return _leftLabelOverride;
-  }
-}
-
-
-void PlotItem::setLeftLabelOverride(const QString &label) {
-  if (label == leftLabelOverride()) {
-    return;
-  }
-  if (label == leftLabel()) {
-    _leftLabelOverride.clear();
-  } else {
-    _leftLabelOverride = label;
-  }
-  setPlotBordersDirty(true);
-  setLeftLabelDirty();
-}
-
-
-QString PlotItem::bottomLabelOverride() const {
-  if (_bottomLabelOverride.isEmpty()) {
-    return bottomLabel();
-  } else {
-    return _bottomLabelOverride;
-  }
-}
-
-
-void PlotItem::setBottomLabelOverride(const QString &label) {
-  if (label == bottomLabelOverride()) {
-    return;
-  }
-  if (label == bottomLabel()) {
-    _bottomLabelOverride.clear();
-  } else {
-    _bottomLabelOverride = label;
-  }
-  setPlotBordersDirty(true);
-  setBottomLabelDirty();
-}
-
-
-QString PlotItem::topLabelOverride() const {
-  if (_topLabelOverride.isEmpty()) {
-    return topLabel();
-  } else {
-    return _topLabelOverride;
-  }
-}
-
-
-void PlotItem::setTopLabelOverride(const QString &label) {
-  if (label == topLabelOverride()) {
-    return;
-  }
-  if (label == topLabel()) {
-    _topLabelOverride.clear();
-  } else {
-    _topLabelOverride = label;
-  }
-  setPlotBordersDirty(true);
-  setTopLabelDirty();
-}
-
-
-QString PlotItem::rightLabelOverride() const {
-  if (_rightLabelOverride.isEmpty()) {
-    return rightLabel();
-  } else {
-    return _rightLabelOverride;
-  }
-}
-
-
-void PlotItem::setRightLabelOverride(const QString &label) {
-  if (label == rightLabelOverride()) {
-    return;
-  }
-  if (label == rightLabel()) {
-    _rightLabelOverride.clear();
-  } else {
-    _rightLabelOverride = label;
-  }
-  setPlotBordersDirty(true);
-  setRightLabelDirty();
 }
 
 
@@ -1711,88 +1391,32 @@ QString PlotItem::topLabel() const {
 
 
 void PlotItem::setTopSuppressed(bool suppressed) {
-  setTopLabelVisible(!suppressed);
+  _topLabelDetails->setVisible(!suppressed);
 }
 
 
 void PlotItem::setRightSuppressed(bool suppressed) {
-  setRightLabelVisible(!suppressed);
+  _rightLabelDetails->setVisible(!suppressed);
 }
 
 
 void PlotItem::setLeftSuppressed(bool suppressed) {
-  setLeftLabelVisible(!suppressed);
+  _leftLabelDetails->setVisible(!suppressed);
   _yAxis->setAxisVisible(!suppressed);
 }
 
 
 void PlotItem::setBottomSuppressed(bool suppressed) {
-  setBottomLabelVisible(!suppressed);
+  _bottomLabelDetails->setVisible(!suppressed);
   _xAxis->setAxisVisible(!suppressed);
 }
 
 
-bool PlotItem::isLeftLabelVisible() const {
-  return _isLeftLabelVisible;
-}
-
-
-void PlotItem::setLeftLabelVisible(bool visible) {
-  if (_isLeftLabelVisible == visible)
-    return;
-
-  _isLeftLabelVisible = visible;
-  setPlotBordersDirty(true);
-}
-
-
-bool PlotItem::isBottomLabelVisible() const {
-  return _isBottomLabelVisible;
-}
-
-
-void PlotItem::setBottomLabelVisible(bool visible) {
-  if (_isBottomLabelVisible == visible)
-    return;
-
-  _isBottomLabelVisible = visible;
-  setPlotBordersDirty(true);
-}
-
-
-bool PlotItem::isRightLabelVisible() const {
-  return _isRightLabelVisible;
-}
-
-
-void PlotItem::setRightLabelVisible(bool visible) {
-  if (_isRightLabelVisible == visible)
-    return;
-
-  _isRightLabelVisible = visible;
-  setPlotBordersDirty(true);
-}
-
-
-bool PlotItem::isTopLabelVisible() const {
-  return _isTopLabelVisible;
-}
-
-
-void PlotItem::setTopLabelVisible(bool visible) {
-  if (_isTopLabelVisible == visible)
-    return;
-
-  _isTopLabelVisible = visible;
-  setPlotBordersDirty(true);
-}
-
-
 void PlotItem::setLabelsVisible(bool visible) {
-  setLeftLabelVisible(visible);
-  setRightLabelVisible(visible);
-  setBottomLabelVisible(visible);
-  setTopLabelVisible(visible);
+  _leftLabelDetails->setVisible(visible);
+  _rightLabelDetails->setVisible(visible);
+  _topLabelDetails->setVisible(visible);
+  _bottomLabelDetails->setVisible(visible);
   _xAxis->setAxisVisible(visible);
   _yAxis->setAxisVisible(visible);
 }
@@ -1887,12 +1511,12 @@ QRectF PlotItem::rightLabelRect() const {
 
 QFont PlotItem::calculatedLeftLabelFont() {
   QFont font;
-  if (leftFontUseGlobal()) {
+  if (_leftLabelDetails->fontUseGlobal()) {
     font = _globalFont;
     font.setPixelSize(parentView()->defaultFont(_globalFontScale).pixelSize());
   } else {
-    font = _leftLabelFont;
-    font.setPixelSize(parentView()->defaultFont(_leftLabelFontScale).pixelSize());
+    font = _leftLabelDetails->font();
+    font.setPixelSize(parentView()->defaultFont(_leftLabelDetails->fontScale()).pixelSize());
   }
   return font;
 }
@@ -1900,12 +1524,12 @@ QFont PlotItem::calculatedLeftLabelFont() {
 
 QFont PlotItem::calculatedRightLabelFont() {
   QFont font;
-  if (rightFontUseGlobal()) {
+  if (_rightLabelDetails->fontUseGlobal()) {
     font = _globalFont;
     font.setPixelSize(parentView()->defaultFont(_globalFontScale).pixelSize());
   } else {
-    font = _rightLabelFont;
-    font.setPixelSize(parentView()->defaultFont(_rightLabelFontScale).pixelSize());
+    font = _rightLabelDetails->font();
+    font.setPixelSize(parentView()->defaultFont(_rightLabelDetails->fontScale()).pixelSize());
   }
   return font;
 }
@@ -1913,12 +1537,12 @@ QFont PlotItem::calculatedRightLabelFont() {
 
 QFont PlotItem::calculatedTopLabelFont() {
   QFont font;
-  if (topFontUseGlobal()) {
+  if (_topLabelDetails->fontUseGlobal()) {
     font = _globalFont;
     font.setPixelSize(parentView()->defaultFont(_globalFontScale).pixelSize());
   } else {
-    font = _topLabelFont;
-    font.setPixelSize(parentView()->defaultFont(_topLabelFontScale).pixelSize());
+    font = _topLabelDetails->font();
+    font.setPixelSize(parentView()->defaultFont(_topLabelDetails->fontScale()).pixelSize());
   }
   return font;
 }
@@ -1926,12 +1550,12 @@ QFont PlotItem::calculatedTopLabelFont() {
 
 QFont PlotItem::calculatedBottomLabelFont() {
   QFont font;
-  if (bottomFontUseGlobal()) {
+  if (_bottomLabelDetails->fontUseGlobal()) {
     font = _globalFont;
     font.setPixelSize(parentView()->defaultFont(_globalFontScale).pixelSize());
   } else {
-    font = _bottomLabelFont;
-    font.setPixelSize(parentView()->defaultFont(_bottomLabelFontScale).pixelSize());
+    font = _bottomLabelDetails->font();
+    font.setPixelSize(parentView()->defaultFont(_bottomLabelDetails->fontScale()).pixelSize());
   }
   return font;
 }
@@ -1939,12 +1563,12 @@ QFont PlotItem::calculatedBottomLabelFont() {
 
 QFont PlotItem::calculatedNumberLabelFont() {
   QFont font;
-  if (numberFontUseGlobal()) {
+  if (_numberLabelDetails->fontUseGlobal()) {
     font = _globalFont;
     font.setPixelSize(parentView()->defaultFont(_globalFontScale).pixelSize());
   } else {
     font = _numberLabelFont;
-    font.setPixelSize(parentView()->defaultFont(_numberLabelFontScale).pixelSize());
+    font.setPixelSize(parentView()->defaultFont(_numberLabelDetails->fontScale()).pixelSize());
   }
   return font;
 }
@@ -1956,9 +1580,9 @@ void PlotItem::generateLeftLabel() {
   }
   _leftLabel.valid = false;
   _leftLabel.dirty = false;
-  Label::Parsed *parsed = Label::parse(leftLabelOverride());
+  Label::Parsed *parsed = Label::parse(_leftLabelDetails->overrideText());
   if (parsed) {
-    parsed->chunk->attributes.color = _leftLabelFontColor;
+    parsed->chunk->attributes.color = _leftLabelDetails->fontColor();
 
     QRectF leftLabel = leftLabelRect();
     QPixmap pixmap(leftLabel.height(), leftLabel.width());
@@ -1989,7 +1613,7 @@ void PlotItem::generateLeftLabel() {
 
 
 void PlotItem::paintLeftLabel(QPainter *painter) {
-  if (!isLeftLabelVisible() || leftLabelOverride().isEmpty())
+  if (!_leftLabelDetails->isVisible() || _leftLabelDetails->overrideText().isEmpty())
     return;
 
   generateLeftLabel();
@@ -2021,7 +1645,7 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
 
 
 void PlotItem::calculateLeftLabelMargin(QPainter *painter) {
-  if (!isLeftLabelVisible()) {
+  if (!_leftLabelDetails->isVisible()) {
     _calculatedLeftLabelMargin = 0;
   } else {
     painter->save();
@@ -2031,7 +1655,7 @@ void PlotItem::calculateLeftLabelMargin(QPainter *painter) {
 
     painter->setFont(calculatedLeftLabelFont());
     QRectF leftLabelBound = painter->boundingRect(t.mapRect(leftLabelRect()),
-        Qt::TextWordWrap | Qt::AlignCenter, leftLabelOverride());
+        Qt::TextWordWrap | Qt::AlignCenter, _leftLabelDetails->overrideText());
     painter->restore();
 
     _calculatedLeftLabelMargin = leftLabelBound.height();
@@ -2045,9 +1669,9 @@ void PlotItem::generateBottomLabel() {
   }
   _bottomLabel.valid = false;
   _bottomLabel.dirty = false;
-  Label::Parsed *parsed = Label::parse(bottomLabelOverride());
+  Label::Parsed *parsed = Label::parse(_bottomLabelDetails->overrideText());
   if (parsed) {
-    parsed->chunk->attributes.color = _bottomLabelFontColor;
+    parsed->chunk->attributes.color = _bottomLabelDetails->fontColor();
 
     QRectF bottomLabel = bottomLabelRect();
     QPixmap pixmap(bottomLabel.width(), bottomLabel.height());
@@ -2075,7 +1699,7 @@ void PlotItem::generateBottomLabel() {
 
 
 void PlotItem::paintBottomLabel(QPainter *painter) {
-  if (!isBottomLabelVisible() || bottomLabelOverride().isEmpty())
+  if (!_bottomLabelDetails->isVisible() || _bottomLabelDetails->overrideText().isEmpty())
     return;
 
   generateBottomLabel();
@@ -2104,7 +1728,7 @@ void PlotItem::paintBottomLabel(QPainter *painter) {
 
 
 void PlotItem::calculateBottomLabelMargin(QPainter *painter) {
-  if (!isBottomLabelVisible()) {
+  if (!_bottomLabelDetails->isVisible()) {
     _calculatedBottomLabelMargin = 0;
   } else {
     painter->save();
@@ -2112,7 +1736,7 @@ void PlotItem::calculateBottomLabelMargin(QPainter *painter) {
     painter->setFont(calculatedBottomLabelFont());
 
     QRectF bottomLabelBound = painter->boundingRect(bottomLabelRect(),
-        Qt::TextWordWrap | Qt::AlignCenter, bottomLabelOverride());
+        Qt::TextWordWrap | Qt::AlignCenter, _bottomLabelDetails->overrideText());
     painter->restore();
 
     _calculatedBottomLabelMargin = bottomLabelBound.height();
@@ -2126,10 +1750,10 @@ void PlotItem::generateRightLabel() {
   }
   _rightLabel.valid = false;
   _rightLabel.dirty = false;
-  Label::Parsed *parsed = Label::parse(rightLabelOverride());
+  Label::Parsed *parsed = Label::parse(_rightLabelDetails->overrideText());
   QRectF rightLabel = rightLabelRect();
   if (parsed && rightLabel.isValid()) {
-    parsed->chunk->attributes.color = _rightLabelFontColor;
+    parsed->chunk->attributes.color = _rightLabelDetails->fontColor();
 
     QPixmap pixmap(rightLabel.height(), rightLabel.width());
     pixmap.fill(Qt::transparent);
@@ -2158,7 +1782,7 @@ void PlotItem::generateRightLabel() {
 
 
 void PlotItem::paintRightLabel(QPainter *painter) {
-  if (!isRightLabelVisible() || rightLabelOverride().isEmpty())
+  if (!_rightLabelDetails->isVisible() || _rightLabelDetails->overrideText().isEmpty())
     return;
 
   generateRightLabel();
@@ -2190,7 +1814,7 @@ void PlotItem::paintRightLabel(QPainter *painter) {
 
 
 void PlotItem::calculateRightLabelMargin(QPainter *painter) {
-  if (!isRightLabelVisible()) {
+  if (!_rightLabelDetails->isVisible()) {
     _calculatedRightLabelMargin = 0;
   } else {
     painter->save();
@@ -2201,7 +1825,7 @@ void PlotItem::calculateRightLabelMargin(QPainter *painter) {
     painter->setFont(calculatedRightLabelFont());
 
     QRectF rightLabelBound = painter->boundingRect(t.mapRect(rightLabelRect()),
-        Qt::TextWordWrap | Qt::AlignCenter, rightLabelOverride());
+        Qt::TextWordWrap | Qt::AlignCenter, _rightLabelDetails->overrideText());
     painter->restore();
 
     _calculatedRightLabelMargin = rightLabelBound.height();
@@ -2215,10 +1839,10 @@ void PlotItem::generateTopLabel() {
   }
   _topLabel.valid = false;
   _topLabel.dirty = false;
-  Label::Parsed *parsed = Label::parse(topLabelOverride());
+  Label::Parsed *parsed = Label::parse(_topLabelDetails->overrideText());
   QRectF topLabel = topLabelRect();
   if (parsed && topLabel.isValid()) {
-    parsed->chunk->attributes.color = _topLabelFontColor;
+    parsed->chunk->attributes.color = _topLabelDetails->fontColor();
 
     QPixmap pixmap(topLabel.width(), topLabel.height());
     pixmap.fill(Qt::transparent);
@@ -2245,7 +1869,7 @@ void PlotItem::generateTopLabel() {
 
 
 void PlotItem::paintTopLabel(QPainter *painter) {
-  if (!isTopLabelVisible() || topLabelOverride().isEmpty())
+  if (!_topLabelDetails->isVisible() || _topLabelDetails->overrideText().isEmpty())
     return;
 
   generateTopLabel();
@@ -2274,7 +1898,7 @@ void PlotItem::paintTopLabel(QPainter *painter) {
 
 
 void PlotItem::calculateTopLabelMargin(QPainter *painter) {
-  if (!isTopLabelVisible()) {
+  if (!_topLabelDetails->isVisible()) {
     _calculatedTopLabelMargin = 0;
   } else {
     painter->save();
@@ -2282,7 +1906,7 @@ void PlotItem::calculateTopLabelMargin(QPainter *painter) {
     painter->setFont(calculatedTopLabelFont());
 
     QRectF topLabelBound = painter->boundingRect(topLabelRect(),
-        Qt::TextWordWrap | Qt::AlignCenter, topLabelOverride());
+        Qt::TextWordWrap | Qt::AlignCenter, _topLabelDetails->overrideText());
 
     painter->restore();
 
@@ -2882,6 +2506,184 @@ void PlotItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &ne
 }
 
 
+PlotLabel::PlotLabel(PlotItem *plotItem) : QObject(),
+  _plotItem(plotItem),
+  _visible(true),
+  _fontUseGlobal(true) {
+
+  _font = _plotItem->parentView()->defaultFont();
+  _fontColor = ApplicationSettings::self()->defaultFontColor();
+  _fontScale = ApplicationSettings::self()->defaultFontScale();
+}
+
+
+void PlotLabel::setDetails(const QString &label, 
+                           const bool use_global, const QFont &font, 
+                           const qreal scale, const QColor &color) {
+  if ((label != _overrideText) ||
+      (use_global != _fontUseGlobal) ||
+      (font != _font) ||
+      (scale != _fontScale) ||
+      (color != _fontColor)) {
+    _overrideText = label;
+    _fontUseGlobal = use_global;
+    _font = font;
+    _fontScale = scale;
+    _fontColor = color;
+    emit labelChanged();
+  }
+}
+
+
+bool PlotLabel::isVisible() const {
+  return _visible;
+}
+
+
+void PlotLabel::setVisible(bool visible) {
+  if (_visible == visible)
+    return;
+
+  _visible = visible;
+  emit labelChanged();
+}
+
+
+bool PlotLabel::fontUseGlobal() const {
+  return _fontUseGlobal; 
+}
+
+
+void PlotLabel::setFontUseGlobal(const bool use_global) {
+  if (_fontUseGlobal == use_global)
+    return;
+
+  _fontUseGlobal = use_global;
+  emit labelChanged();
+}
+
+
+QString PlotLabel::overrideText() const {
+  if (_overrideText.isEmpty()) {
+    return _plotItem->leftLabel();
+  } else {
+    return _overrideText;
+  }
+}
+
+
+void PlotLabel::setOverrideText(const QString &label) {
+  if (label == _overrideText) {
+    return;
+  }
+  if (label == _plotItem->leftLabel()) {
+    _overrideText.clear();
+  } else {
+    _overrideText = label;
+  }
+  emit labelChanged();
+}
+
+
+qreal PlotLabel::fontScale() const {
+  return _fontScale;
+}
+
+
+void PlotLabel::setFontScale(const qreal scale) {
+  if (scale != _fontScale) {
+    _fontScale = scale;
+    emit labelChanged();
+  }
+}
+
+
+QFont PlotLabel::font() const {
+  return _font;
+}
+
+
+void PlotLabel::setFont(const QFont &font) {
+  if (font != _font) {
+    _font = font;
+    emit labelChanged();
+  }
+}
+
+
+QColor PlotLabel::fontColor() const {
+  return _fontColor;
+}
+
+
+void PlotLabel::setFontColor(const QColor &color) {
+  if (color != _fontColor) {
+    _fontColor = color;
+    emit labelChanged();
+  }
+}
+
+
+void PlotLabel::saveInPlot(QXmlStreamWriter &xml, QString labelId) {
+  xml.writeStartElement("plotlabel");
+  xml.writeAttribute("id", labelId);
+  xml.writeAttribute("visible", QVariant(_visible).toString());
+  xml.writeAttribute("overridetext", _overrideText);
+  xml.writeAttribute("font", QVariant(_font).toString());
+  xml.writeAttribute("fontscale", QVariant(_fontScale).toString());
+  xml.writeAttribute("fontcolor", QVariant(_fontColor).toString());
+  xml.writeAttribute("fontuseglobal", QVariant(_fontUseGlobal).toString());
+  xml.writeEndElement();
+}
+
+
+bool PlotLabel::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
+  bool validTag = true;
+
+  QString primaryTag = xml.name().toString();
+  QXmlStreamAttributes attrs = xml.attributes();
+  QStringRef av = attrs.value("visible");
+  if (!av.isNull()) {
+    setVisible(QVariant(av.toString()).toBool());
+  }
+  av = attrs.value("overridetext");
+  if (!av.isNull()) {
+    setOverrideText(av.toString());
+  }
+  av = attrs.value("fontuseglobal");
+  if (!av.isNull()) {
+    setFontUseGlobal(QVariant(av.toString()).toBool());
+  }
+  av = attrs.value("font");
+  if (!av.isNull()) {
+    QFont font;
+    font.fromString(av.toString());
+    setFont(font);
+  }
+  av = attrs.value("fontcolor");
+  if (!av.isNull()) {
+    setFontColor(QColor(av.toString()));
+  }
+  av = attrs.value("fontscale");
+  if (!av.isNull()) {
+    setFontScale(QVariant(av.toString()).toDouble());
+  }
+
+  QString expectedEnd;
+  while (!(xml.isEndElement() && (xml.name().toString() == primaryTag))) {
+    if (xml.isEndElement()) {
+      if (xml.name().toString() != expectedEnd) {
+        validTag = false;
+        break;
+      }
+    }
+    xml.readNext();
+  }
+
+  return validTag;
+}
+
+
 void CreatePlotCommand::createItem() {
   _item = new PlotItem(_view);
   _view->setCursor(Qt::CrossCursor);
@@ -2927,19 +2729,19 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         }
         av = attrs.value("leftlabelvisible");
         if (!av.isNull()) {
-          rc->setLeftLabelVisible(QVariant(av.toString()).toBool());
+          rc->leftLabelDetails()->setVisible(QVariant(av.toString()).toBool());
         }
         av = attrs.value("bottomlabelvisible");
         if (!av.isNull()) {
-          rc->setBottomLabelVisible(QVariant(av.toString()).toBool());
+          rc->bottomLabelDetails()->setVisible(QVariant(av.toString()).toBool());
         }
         av = attrs.value("rightlabelvisible");
         if (!av.isNull()) {
-          rc->setRightLabelVisible(QVariant(av.toString()).toBool());
+          rc->rightLabelDetails()->setVisible(QVariant(av.toString()).toBool());
         }
         av = attrs.value("toplabelvisible");
         if (!av.isNull()) {
-          rc->setTopLabelVisible(QVariant(av.toString()).toBool());
+          rc->topLabelDetails()->setVisible(QVariant(av.toString()).toBool());
         }
         av = attrs.value("globalfont");
         if (!av.isNull()) {
@@ -2955,115 +2757,6 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         if (!av.isNull()) {
           rc->setGlobalFontColor(QColor(av.toString()));
         }
-        av = attrs.value("leftlabeloverride");
-        if (!av.isNull()) {
-          rc->setLeftLabelOverride(av.toString());
-        }
-        av = attrs.value("leftlabeluseglobal");
-        if (!av.isNull()) {
-          rc->setLeftFontUseGlobal(av.toString().toInt());
-        }
-        av = attrs.value("leftlabelfont");
-        if (!av.isNull()) {
-          QFont font;
-          font.fromString(av.toString());
-          rc->setLeftLabelFont(font);
-        }
-        av = attrs.value("leftlabelfontscale");
-        if (!av.isNull()) {
-          rc->setLeftLabelFontScale(QVariant(av.toString()).toDouble());
-        }
-        av = attrs.value("leftlabelfontcolor");
-        if (!av.isNull()) {
-          rc->setLeftLabelFontColor(QColor(av.toString()));
-        }
-        av = attrs.value("bottomlabeloverride");
-        if (!av.isNull()) {
-          rc->setBottomLabelOverride(av.toString());
-        }
-        av = attrs.value("bottomlabeluseglobal");
-        if (!av.isNull()) {
-          rc->setBottomFontUseGlobal(av.toString().toInt());
-        }
-        av = attrs.value("bottomlabelfont");
-        if (!av.isNull()) {
-          QFont font;
-          font.fromString(av.toString());
-          rc->setBottomLabelFont(font);
-        }
-        av = attrs.value("bottomlabelfontscale");
-        if (!av.isNull()) {
-          rc->setBottomLabelFontScale(QVariant(av.toString()).toDouble());
-        }
-        av = attrs.value("bottomlabelfontcolor");
-        if (!av.isNull()) {
-          rc->setBottomLabelFontColor(QColor(av.toString()));
-        }
-
-        av = attrs.value("toplabeloverride");
-        if (!av.isNull()) {
-          rc->setTopLabelOverride(av.toString());
-        }
-        av = attrs.value("toplabeluseglobal");
-        if (!av.isNull()) {
-          rc->setTopFontUseGlobal(av.toString().toInt());
-        }
-        av = attrs.value("toplabelfont");
-        if (!av.isNull()) {
-          QFont font;
-          font.fromString(av.toString());
-          rc->setTopLabelFont(font);
-        }
-        av = attrs.value("toplabelfontscale");
-        if (!av.isNull()) {
-          rc->setTopLabelFontScale(QVariant(av.toString()).toDouble());
-        }
-        av = attrs.value("toplabelfontcolor");
-        if (!av.isNull()) {
-          rc->setTopLabelFontColor(QColor(av.toString()));
-        }
-
-        av = attrs.value("rightlabeloverride");
-        if (!av.isNull()) {
-          rc->setRightLabelOverride(av.toString());
-        }
-        av = attrs.value("rightlabeluseglobal");
-        if (!av.isNull()) {
-          rc->setRightFontUseGlobal(av.toString().toInt());
-        }
-        av = attrs.value("rightlabelfont");
-        if (!av.isNull()) {
-          QFont font;
-          font.fromString(av.toString());
-          rc->setRightLabelFont(font);
-        }
-        av = attrs.value("rightlabelfontscale");
-        if (!av.isNull()) {
-          rc->setRightLabelFontScale(QVariant(av.toString()).toDouble());
-        }
-        av = attrs.value("rightlabelfontcolor");
-        if (!av.isNull()) {
-          rc->setRightLabelFontColor(QColor(av.toString()));
-        }
-        av = attrs.value("numberlabeluseglobal");
-        if (!av.isNull()) {
-          rc->setNumberFontUseGlobal(av.toString().toInt());
-        }
-        av = attrs.value("numberlabelfont");
-        if (!av.isNull()) {
-          QFont font;
-          font.fromString(av.toString());
-          rc->setNumberLabelFont(font);
-        }
-        av = attrs.value("numberlabelfontscale");
-        if (!av.isNull()) {
-          rc->setNumberLabelFontScale(QVariant(av.toString()).toDouble());
-        }
-        av = attrs.value("numberlabelfontcolor");
-        if (!av.isNull()) {
-          rc->setNumberLabelFontColor(QColor(av.toString()));
-        }
-
         av = attrs.value("showlegend");
         if (!av.isNull()) {
           rc->setShowLegend(QVariant(av.toString()).toBool());
@@ -3104,6 +2797,23 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
           } else if (av == "yaxis") {
             rc->yAxis()->configureFromXml(xml, store);
           }
+        }
+        xml.readNext();
+      } else if (xml.name().toString() == "plotlabel") {
+        Q_ASSERT(rc);
+        QXmlStreamAttributes subattrs = xml.attributes();
+        QStringRef av = subattrs.value("id");
+        if (!av.isNull()) {
+          if (av == "leftlabel") {
+            rc->leftLabelDetails()->configureFromXml(xml, store);
+          } else if (av == "rightlabel") {
+            rc->rightLabelDetails()->configureFromXml(xml, store);
+          } else if (av == "toplabel") {
+            rc->topLabelDetails()->configureFromXml(xml, store);
+          } else if (av == "bottomlabel") {
+            rc->bottomLabelDetails()->configureFromXml(xml, store);
+          } else if (av == "numberlabel") {
+            rc->numberLabelDetails()->configureFromXml(xml, store);         }
         }
         xml.readNext();
       } else if (xml.name().toString() == "cartesianrender") {

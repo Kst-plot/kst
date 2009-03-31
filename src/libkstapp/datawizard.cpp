@@ -908,19 +908,19 @@ void DataWizard::finished() {
     if (fontScale>0) fontScale = 0;
 
     plotItem->setGlobalFontScale(fontScale);
-    plotItem->setLeftLabelFontScale(fontScale);
-    plotItem->setTopLabelFontScale(fontScale);
-    plotItem->setRightLabelFontScale(fontScale);
-    plotItem->setBottomLabelFontScale(fontScale);
-    plotItem->setNumberLabelFontScale(fontScale);
+    plotItem->leftLabelDetails()->setFontScale(fontScale);
+    plotItem->rightLabelDetails()->setFontScale(fontScale);
+    plotItem->topLabelDetails()->setFontScale(fontScale);
+    plotItem->bottomLabelDetails()->setFontScale(fontScale);
+    plotItem->numberLabelDetails()->setFontScale(fontScale);
 
     if (!xLabels) {
-      plotItem->setLeftLabelOverride(QString(" "));
-      plotItem->setRightLabelOverride(QString(" "));
+      plotItem->leftLabelDetails()->setOverrideText(QString(" "));
+      plotItem->rightLabelDetails()->setOverrideText(QString(" "));
     }
     if (!yLabels) {
-      plotItem->setBottomLabelOverride(QString(" "));
-      plotItem->setTopLabelOverride(QString(" "));
+      plotItem->topLabelDetails()->setOverrideText(QString(" "));
+      plotItem->bottomLabelDetails()->setOverrideText(QString(" "));
     }
 
     if (_pagePlot->legendsOn()) {

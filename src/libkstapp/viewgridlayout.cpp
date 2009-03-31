@@ -502,19 +502,19 @@ void ViewGridLayout::shareAxis(QPainter *painter) {
   foreach (LayoutItem item, _items) {
     if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem)) {
       int width = columnProjWidth;
-      if (plotItem->isLeftLabelVisible()) {
+      if (plotItem->leftLabelDetails()->isVisible()) {
         width += leftLabelBounds[item.column];
       }
-      if (plotItem->isRightLabelVisible()) {
+      if (plotItem->rightLabelDetails()->isVisible()) {
         width += rightLabelBounds[item.column];
       }
       cellWidths[item.row][item.column] = width;
 
       int height = rowProjHeight;
-      if (plotItem->isTopLabelVisible()) {
+      if (plotItem->topLabelDetails()->isVisible()) {
         height += topLabelBounds[item.row];
       }
-      if (plotItem->isBottomLabelVisible()) {
+      if (plotItem->bottomLabelDetails()->isVisible()) {
         height += bottomLabelBounds[item.row];
       }
       cellHeights[item.row][item.column] = height;
@@ -545,16 +545,16 @@ void ViewGridLayout::shareAxis(QPainter *painter) {
     QRectF itemRect(itemTopLeft, itemSize);
 
     if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem)) {
-      if (plotItem->isLeftLabelVisible()) {
+      if (plotItem->leftLabelDetails()->isVisible()) {
         plotItem->setLeftPadding(leftLabelBounds[item.column] - plotItem->leftMarginSize());
       }
-      if (plotItem->isRightLabelVisible()) {
+      if (plotItem->rightLabelDetails()->isVisible()) {
         plotItem->setRightPadding(rightLabelBounds[item.column] - plotItem->rightMarginSize());
       }
-      if (plotItem->isTopLabelVisible()) {
+      if (plotItem->topLabelDetails()->isVisible()) {
         plotItem->setTopPadding(topLabelBounds[item.row] - plotItem->topMarginSize());
       }
-      if (plotItem->isBottomLabelVisible()) {
+      if (plotItem->bottomLabelDetails()->isVisible()) {
         plotItem->setBottomPadding(bottomLabelBounds[item.row] - plotItem->bottomMarginSize());
       }
     }
