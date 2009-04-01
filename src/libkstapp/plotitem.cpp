@@ -522,6 +522,8 @@ void PlotItem::calculateBorders(QPainter *painter) {
   calculateTopLabelMargin(painter);
   calculateBottomLabelMargin(painter);
 
+  calculateMargins();
+
   setPlotRectsDirty();
 }
 
@@ -538,7 +540,7 @@ void PlotItem::paint(QPainter *painter) {
   painter->restore();
 
   painter->save();
-  painter->setFont(calculatedNumberLabelFont());
+  painter->setFont(numberLabelDetails()->calculatedFont());
 
   // FIXME: the plot size calculations need to be separated from the 
   // painting to avoid n^2 or worse behavior.
@@ -898,7 +900,7 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
 
   painter->save();
-  painter->setPen(_numberLabelFontColor);
+  painter->setPen(_numberLabelDetails->fontColor());
 
   foreach(CachedPlotLabel label, _xPlotLabels) {
     painter->drawText(label.bound, flags, label.value);
@@ -927,7 +929,7 @@ void PlotItem::paintLeftTickLabels(QPainter *painter) {
   int flags = Qt::TextSingleLine | Qt::AlignVCenter;
 
   painter->save();
-  painter->setPen(_numberLabelFontColor);
+  painter->setPen(_numberLabelDetails->fontColor());
 
   foreach(CachedPlotLabel label, _yPlotLabels) {
     if (label.baseLabel) {
@@ -1423,69 +1425,33 @@ void PlotItem::setLabelsVisible(bool visible) {
 
 
 qreal PlotItem::labelMarginWidth() const {
-  qreal m = qMax(_calculatedLeftLabelMargin, _calculatedRightLabelMargin);
-
-  //No more than 1/4 the width of the plot
-  if (width() < m * 4)
-    return width() / 4;
-
-  return m;
+  return _calculatedLabelMarginWidth;
 }
 
 
 qreal PlotItem::leftLabelMargin() const {
-  qreal m = _calculatedLeftLabelMargin;
-
-  //No more than 1/4 the width of the plot
-  if (width() < m * 4)
-    return width() / 4;
-
-  return m;
+  return _calculatedLeftLabelMargin;
 }
 
 
 qreal PlotItem::rightLabelMargin() const {
-  qreal m = qMax(_calculatedAxisMarginROverflow, _calculatedRightLabelMargin);
-
-  //No more than 1/4 the width of the plot
-  if (width() < m * 4)
-    return width() / 4;
-
-  return m;
+  return _calculatedRightLabelMargin;
 }
 
 
 qreal PlotItem::labelMarginHeight() const {
-  qreal m = qMax(_calculatedTopLabelMargin, _calculatedBottomLabelMargin);
-
-  //No more than 1/4 the height of the plot
-  if (height() < m * 4)
-    return height() / 4;
-
-  return m;
+  return _calculatedLabelMarginHeight;
 }
 
 
 qreal PlotItem::topLabelMargin() const {
-  qreal m = qMax(_calculatedAxisMarginTOverflow, _calculatedTopLabelMargin);
-
-  //No more than 1/4 the height of the plot
-  if (height() < m * 4)
-    return height() / 4;
-
-  return m;
+  return _calculatedTopLabelMargin;
 }
 
 
 
 qreal PlotItem::bottomLabelMargin() const {
-  qreal m = _calculatedBottomLabelMargin;
-
-  //No more than 1/4 the height of the plot
-  if (height() < m * 4)
-    return height() / 4;
-
-  return m;
+  return _calculatedBottomLabelMargin;
 }
 
 
@@ -1509,71 +1475,6 @@ QRectF PlotItem::rightLabelRect() const {
 }
 
 
-QFont PlotItem::calculatedLeftLabelFont() {
-  QFont font;
-  if (_leftLabelDetails->fontUseGlobal()) {
-    font = _globalFont;
-    font.setPixelSize(parentView()->defaultFont(_globalFontScale).pixelSize());
-  } else {
-    font = _leftLabelDetails->font();
-    font.setPixelSize(parentView()->defaultFont(_leftLabelDetails->fontScale()).pixelSize());
-  }
-  return font;
-}
-
-
-QFont PlotItem::calculatedRightLabelFont() {
-  QFont font;
-  if (_rightLabelDetails->fontUseGlobal()) {
-    font = _globalFont;
-    font.setPixelSize(parentView()->defaultFont(_globalFontScale).pixelSize());
-  } else {
-    font = _rightLabelDetails->font();
-    font.setPixelSize(parentView()->defaultFont(_rightLabelDetails->fontScale()).pixelSize());
-  }
-  return font;
-}
-
-
-QFont PlotItem::calculatedTopLabelFont() {
-  QFont font;
-  if (_topLabelDetails->fontUseGlobal()) {
-    font = _globalFont;
-    font.setPixelSize(parentView()->defaultFont(_globalFontScale).pixelSize());
-  } else {
-    font = _topLabelDetails->font();
-    font.setPixelSize(parentView()->defaultFont(_topLabelDetails->fontScale()).pixelSize());
-  }
-  return font;
-}
-
-
-QFont PlotItem::calculatedBottomLabelFont() {
-  QFont font;
-  if (_bottomLabelDetails->fontUseGlobal()) {
-    font = _globalFont;
-    font.setPixelSize(parentView()->defaultFont(_globalFontScale).pixelSize());
-  } else {
-    font = _bottomLabelDetails->font();
-    font.setPixelSize(parentView()->defaultFont(_bottomLabelDetails->fontScale()).pixelSize());
-  }
-  return font;
-}
-
-
-QFont PlotItem::calculatedNumberLabelFont() {
-  QFont font;
-  if (_numberLabelDetails->fontUseGlobal()) {
-    font = _globalFont;
-    font.setPixelSize(parentView()->defaultFont(_globalFontScale).pixelSize());
-  } else {
-    font = _numberLabelFont;
-    font.setPixelSize(parentView()->defaultFont(_numberLabelDetails->fontScale()).pixelSize());
-  }
-  return font;
-}
-
-
 void PlotItem::generateLeftLabel() {
   if (!_leftLabel.dirty) {
     return;
@@ -1589,8 +1490,8 @@ void PlotItem::generateLeftLabel() {
     pixmap.fill(Qt::transparent);
     QPainter pixmapPainter(&pixmap);
 
-    Label::RenderContext rc(calculatedLeftLabelFont(), &pixmapPainter);
-    QFontMetrics fm(calculatedLeftLabelFont());
+    Label::RenderContext rc(leftLabelDetails()->calculatedFont(), &pixmapPainter);
+    QFontMetrics fm(leftLabelDetails()->calculatedFont());
     rc.y = fm.ascent();
     Label::renderLabel(rc, parsed->chunk);
 
@@ -1653,12 +1554,16 @@ void PlotItem::calculateLeftLabelMargin(QPainter *painter) {
     t.rotate(90.0);
     painter->rotate(-90.0);
 
-    painter->setFont(calculatedLeftLabelFont());
+    painter->setFont(leftLabelDetails()->calculatedFont());
     QRectF leftLabelBound = painter->boundingRect(t.mapRect(leftLabelRect()),
         Qt::TextWordWrap | Qt::AlignCenter, _leftLabelDetails->overrideText());
     painter->restore();
 
     _calculatedLeftLabelMargin = leftLabelBound.height();
+
+    //No more than 1/4 the width of the plot
+    if (width() < _calculatedLeftLabelMargin * 4)
+      _calculatedLeftLabelMargin = width() / 4;
   }
 }
 
@@ -1678,8 +1583,8 @@ void PlotItem::generateBottomLabel() {
     pixmap.fill(Qt::transparent);
     QPainter pixmapPainter(&pixmap);
 
-    Label::RenderContext rc(calculatedBottomLabelFont(), &pixmapPainter);
-    QFontMetrics fm(calculatedBottomLabelFont());
+    Label::RenderContext rc(bottomLabelDetails()->calculatedFont(), &pixmapPainter);
+    QFontMetrics fm(bottomLabelDetails()->calculatedFont());
     rc.y = fm.ascent();
     Label::renderLabel(rc, parsed->chunk);
 
@@ -1733,13 +1638,17 @@ void PlotItem::calculateBottomLabelMargin(QPainter *painter) {
   } else {
     painter->save();
 
-    painter->setFont(calculatedBottomLabelFont());
+    painter->setFont(bottomLabelDetails()->calculatedFont());
 
     QRectF bottomLabelBound = painter->boundingRect(bottomLabelRect(),
         Qt::TextWordWrap | Qt::AlignCenter, _bottomLabelDetails->overrideText());
     painter->restore();
 
     _calculatedBottomLabelMargin = bottomLabelBound.height();
+
+    //No more than 1/4 the height of the plot
+    if (height() < _calculatedBottomLabelMargin * 4)
+      _calculatedLeftLabelMargin = height() / 4;
   }
 }
 
@@ -1759,8 +1668,8 @@ void PlotItem::generateRightLabel() {
     pixmap.fill(Qt::transparent);
     QPainter pixmapPainter(&pixmap);
 
-    Label::RenderContext rc(calculatedRightLabelFont(), &pixmapPainter);
-    QFontMetrics fm(calculatedRightLabelFont());
+    Label::RenderContext rc(rightLabelDetails()->calculatedFont(), &pixmapPainter);
+    QFontMetrics fm(rightLabelDetails()->calculatedFont());
     rc.y = fm.ascent();
     Label::renderLabel(rc, parsed->chunk);
 
@@ -1822,13 +1731,17 @@ void PlotItem::calculateRightLabelMargin(QPainter *painter) {
     t.rotate(-90.0);
     painter->rotate(90.0);
 
-    painter->setFont(calculatedRightLabelFont());
+    painter->setFont(rightLabelDetails()->calculatedFont());
 
     QRectF rightLabelBound = painter->boundingRect(t.mapRect(rightLabelRect()),
         Qt::TextWordWrap | Qt::AlignCenter, _rightLabelDetails->overrideText());
     painter->restore();
 
-    _calculatedRightLabelMargin = rightLabelBound.height();
+    _calculatedRightLabelMargin = qMax(_calculatedAxisMarginROverflow, rightLabelBound.height());
+
+    //No more than 1/4 the width of the plot
+    if (width() < _calculatedRightLabelMargin * 4)
+      _calculatedRightLabelMargin = width() / 4;
   }
 }
 
@@ -1848,8 +1761,8 @@ void PlotItem::generateTopLabel() {
     pixmap.fill(Qt::transparent);
     QPainter pixmapPainter(&pixmap);
 
-    Label::RenderContext rc(calculatedTopLabelFont(), &pixmapPainter);
-    QFontMetrics fm(calculatedTopLabelFont());
+    Label::RenderContext rc(topLabelDetails()->calculatedFont(), &pixmapPainter);
+    QFontMetrics fm(topLabelDetails()->calculatedFont());
     rc.y = fm.ascent();
     Label::renderLabel(rc, parsed->chunk);
 
@@ -1903,15 +1816,38 @@ void PlotItem::calculateTopLabelMargin(QPainter *painter) {
   } else {
     painter->save();
 
-    painter->setFont(calculatedTopLabelFont());
+    painter->setFont(topLabelDetails()->calculatedFont());
 
     QRectF topLabelBound = painter->boundingRect(topLabelRect(),
         Qt::TextWordWrap | Qt::AlignCenter, _topLabelDetails->overrideText());
 
     painter->restore();
 
-    _calculatedTopLabelMargin = topLabelBound.height();
+    _calculatedTopLabelMargin = qMax(_calculatedAxisMarginTOverflow, topLabelBound.height());
+
+    //No more than 1/4 the height of the plot
+    if (height() < _calculatedTopLabelMargin * 4)
+      _calculatedTopLabelMargin = height() / 4;
   }
+}
+
+
+void PlotItem::calculateMargins() {
+  qreal m = qMax(_calculatedLeftLabelMargin, _calculatedRightLabelMargin);
+
+  //No more than 1/4 the width of the plot
+  if (width() < m * 4)
+    m = width() / 4;
+
+  _calculatedLabelMarginWidth = m;
+
+  m = qMax(_calculatedTopLabelMargin, _calculatedBottomLabelMargin);
+
+  //No more than 1/4 the height of the plot
+  if (height() < m * 4)
+    m = height() / 4;
+
+  _calculatedLabelMarginHeight = m;
 }
 
 
@@ -1937,7 +1873,7 @@ void PlotItem::calculateBottomTickLabelBound(QPainter *painter) {
 
   painter->save();
 
-  painter->setFont(calculatedNumberLabelFont());
+  painter->setFont(numberLabelDetails()->calculatedFont());
 
 
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
@@ -1996,7 +1932,7 @@ void PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
 
   painter->save();
 
-  painter->setFont(calculatedNumberLabelFont());
+  painter->setFont(numberLabelDetails()->calculatedFont());
 
   _calculatedAxisMarginHLead = painter->fontMetrics().boundingRect('[').height()/2;
 
@@ -2532,6 +2468,19 @@ void PlotLabel::setDetails(const QString &label,
     _fontColor = color;
     emit labelChanged();
   }
+}
+
+
+QFont PlotLabel::calculatedFont() {
+  QFont tempFont;
+  if (fontUseGlobal()) {
+    tempFont = _plotItem->globalFont();
+    tempFont.setPixelSize(_plotItem->parentView()->defaultFont(_plotItem->globalFontScale()).pixelSize());
+  } else {
+    tempFont = font();
+    tempFont.setPixelSize(_plotItem->parentView()->defaultFont(fontScale()).pixelSize());
+  }
+  return tempFont;
 }
 
 

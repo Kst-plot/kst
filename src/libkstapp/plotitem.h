@@ -90,6 +90,8 @@ class PlotLabel : public QObject {
     QColor fontColor() const;
     void setFontColor(const QColor &color);
 
+    QFont calculatedFont();
+
     void setDetails(const QString &label, const bool use_global, const QFont &font, const qreal scale, const QColor &color);
     void saveInPlot(QXmlStreamWriter &xml, QString labelId);
     bool configureFromXml(QXmlStreamReader &xml, ObjectStore *store);
@@ -321,6 +323,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void calculateBottomLabelMargin(QPainter *painter);
     void calculateRightLabelMargin(QPainter *painter);
     void calculateTopLabelMargin(QPainter *painter);
+    void calculateMargins();
 
     void generateLeftLabel();
     void generateBottomLabel();
@@ -331,12 +334,6 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void paintBottomLabel(QPainter *painter);
     void paintRightLabel(QPainter *painter);
     void paintTopLabel(QPainter *painter);
-
-    QFont calculatedTopLabelFont();
-    QFont calculatedBottomLabelFont();
-    QFont calculatedLeftLabelFont();
-    QFont calculatedRightLabelFont();
-    QFont calculatedNumberLabelFont();
 
     void calculateBottomTickLabelBound(QPainter *painter);
     void calculateLeftTickLabelBound(QPainter *painter);
@@ -363,6 +360,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     qreal _calculatedBottomLabelMargin;
     qreal _calculatedLabelMarginWidth;
     qreal _calculatedLabelMarginHeight;
+
     qreal _calculatedAxisMarginWidth;
     qreal _calculatedAxisMarginHeight;
     qreal _calculatedAxisMarginVLead; 
@@ -388,11 +386,6 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QFont _globalFont;
     qreal _globalFontScale;
     QColor _globalFontColor;
-
-    QFont _numberLabelFont;
-    qreal _numberLabelFontScale;
-    QColor _numberLabelFontColor;
-    bool _numberFontUseGlobal;
 
     bool _showLegend;
 
