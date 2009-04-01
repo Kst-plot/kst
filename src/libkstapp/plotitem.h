@@ -165,11 +165,16 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QString rightLabel() const;
     QString topLabel() const;
 
-    PlotLabel* leftLabelDetails() { return _leftLabelDetails; };
-    PlotLabel* rightLabelDetails() { return _rightLabelDetails; };
-    PlotLabel* topLabelDetails() { return _topLabelDetails; };
-    PlotLabel* bottomLabelDetails() { return _bottomLabelDetails; };
-    PlotLabel* numberLabelDetails() { return _numberLabelDetails; };
+    QString autoLeftLabel() const;
+    QString autoBottomLabel() const;
+    QString autoRightLabel() const;
+    QString autoTopLabel() const;
+
+    PlotLabel* leftLabelDetails() const { return _leftLabelDetails; };
+    PlotLabel* rightLabelDetails() const { return _rightLabelDetails; };
+    PlotLabel* topLabelDetails() const { return _topLabelDetails; };
+    PlotLabel* bottomLabelDetails() const { return _bottomLabelDetails; };
+    PlotLabel* numberLabelDetails() const { return _numberLabelDetails; };
 
     void setTopSuppressed(bool suppressed);
     void setBottomSuppressed(bool suppressed);

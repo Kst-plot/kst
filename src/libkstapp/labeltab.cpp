@@ -56,9 +56,6 @@ LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
 
   connect(_showLegend, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
 
-  //connect(_applyGlobalsButton, SIGNAL(pressed()), this, SLOT(applyGlobals()));
-  //connect(_autoLabel, SIGNAL(pressed()), this, SLOT(autoLabel()));
-
   connect(_editLegendContents, SIGNAL(pressed()), _plotItem->legend(), SLOT(edit()));
 
   connect(_globalLabelFontSize, SIGNAL(valueChanged(double)), this, SIGNAL(globalFontUpdate()));
@@ -140,15 +137,6 @@ qreal LabelTab::globalLabelFontScale() const {
 
 QColor LabelTab::globalLabelColor() const {
   return _globalLabelColor->color();
-}
-
-
-void LabelTab::autoLabel() {
-  setLeftLabel(_plotItem->leftLabel());
-  setBottomLabel(_plotItem->bottomLabel());
-  setTopLabel(_plotItem->topLabel());
-  setRightLabel(_plotItem->rightLabel());
-  emit modified();
 }
 
 

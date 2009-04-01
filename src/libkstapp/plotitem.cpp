@@ -513,6 +513,7 @@ PlotRenderItem *PlotItem::renderItem(PlotRenderItem::RenderType type) {
   }
 }
 
+
 void PlotItem::calculateBorders(QPainter *painter) {
   calculateBottomTickLabelBound(painter);
   calculateLeftTickLabelBound(painter);
@@ -527,7 +528,13 @@ void PlotItem::calculateBorders(QPainter *painter) {
   setPlotRectsDirty();
 }
 
+
 void PlotItem::paint(QPainter *painter) {
+  if (parentView()->plotBordersDirty() || (creationState() == ViewItem::InProgress)) {
+    ViewGridLayout::standardizePlotMargins(this, painter);
+    setPlotBordersDirty(false);
+  }
+
 #ifdef BENCHMARK
   QTime bench_time, benchtmp;
   int b_1 = 0, b_2 = 0, b_3 = 0, b_4 = 0, b_5 = 0;
@@ -541,14 +548,6 @@ void PlotItem::paint(QPainter *painter) {
 
   painter->save();
   painter->setFont(numberLabelDetails()->calculatedFont());
-
-  // FIXME: the plot size calculations need to be separated from the 
-  // painting to avoid n^2 or worse behavior.
-
-  if (parentView()->plotBordersDirty() || (creationState() == ViewItem::InProgress)) {
-    ViewGridLayout::standardizePlotMargins(this, painter);
-    setPlotBordersDirty(false);
-  }
 
 #ifdef BENCHMARK
     b_1 = benchtmp.elapsed();
@@ -1357,6 +1356,15 @@ void PlotItem::setGlobalFontColor(const QColor &color) {
 
 
 QString PlotItem::leftLabel() const {
+  if (!leftLabelDetails()->overrideText().isEmpty()) {
+    return leftLabelDetails()->overrideText();
+  } else {
+    return autoLeftLabel();
+  }
+}
+
+
+QString PlotItem::autoLeftLabel() const {
   foreach (PlotRenderItem *renderer, renderItems()) {
     if (!renderer->leftLabel().isEmpty())
       return renderer->leftLabel();
@@ -1366,6 +1374,15 @@ QString PlotItem::leftLabel() const {
 
 
 QString PlotItem::bottomLabel() const {
+  if (!bottomLabelDetails()->overrideText().isEmpty()) {
+    return bottomLabelDetails()->overrideText();
+  } else {
+    return autoBottomLabel();
+  }
+}
+
+
+QString PlotItem::autoBottomLabel() const {
   foreach (PlotRenderItem *renderer, renderItems()) {
     if (!renderer->bottomLabel().isEmpty())
       return renderer->bottomLabel();
@@ -1375,6 +1392,15 @@ QString PlotItem::bottomLabel() const {
 
 
 QString PlotItem::rightLabel() const {
+  if (!rightLabelDetails()->overrideText().isEmpty()) {
+    return rightLabelDetails()->overrideText();
+  } else {
+    return autoRightLabel();
+  }
+}
+
+
+QString PlotItem::autoRightLabel() const {
   foreach (PlotRenderItem *renderer, renderItems()) {
     if (!renderer->rightLabel().isEmpty())
       return renderer->rightLabel();
@@ -1384,6 +1410,15 @@ QString PlotItem::rightLabel() const {
 
 
 QString PlotItem::topLabel() const {
+  if (!topLabelDetails()->overrideText().isEmpty()) {
+    return topLabelDetails()->overrideText();
+  } else {
+    return autoTopLabel();
+  }
+}
+
+
+QString PlotItem::autoTopLabel() const {
   foreach (PlotRenderItem *renderer, renderItems()) {
     if (!renderer->topLabel().isEmpty())
       return renderer->topLabel();
@@ -1481,7 +1516,7 @@ void PlotItem::generateLeftLabel() {
   }
   _leftLabel.valid = false;
   _leftLabel.dirty = false;
-  Label::Parsed *parsed = Label::parse(_leftLabelDetails->overrideText());
+  Label::Parsed *parsed = Label::parse(leftLabel());
   if (parsed) {
     parsed->chunk->attributes.color = _leftLabelDetails->fontColor();
 
@@ -1514,7 +1549,7 @@ void PlotItem::generateLeftLabel() {
 
 
 void PlotItem::paintLeftLabel(QPainter *painter) {
-  if (!_leftLabelDetails->isVisible() || _leftLabelDetails->overrideText().isEmpty())
+  if (!_leftLabelDetails->isVisible() || leftLabel().isEmpty())
     return;
 
   generateLeftLabel();
@@ -1556,7 +1591,7 @@ void PlotItem::calculateLeftLabelMargin(QPainter *painter) {
 
     painter->setFont(leftLabelDetails()->calculatedFont());
     QRectF leftLabelBound = painter->boundingRect(t.mapRect(leftLabelRect()),
-        Qt::TextWordWrap | Qt::AlignCenter, _leftLabelDetails->overrideText());
+        Qt::TextWordWrap | Qt::AlignCenter, leftLabel());
     painter->restore();
 
     _calculatedLeftLabelMargin = leftLabelBound.height();
@@ -1574,7 +1609,7 @@ void PlotItem::generateBottomLabel() {
   }
   _bottomLabel.valid = false;
   _bottomLabel.dirty = false;
-  Label::Parsed *parsed = Label::parse(_bottomLabelDetails->overrideText());
+  Label::Parsed *parsed = Label::parse(bottomLabel());
   if (parsed) {
     parsed->chunk->attributes.color = _bottomLabelDetails->fontColor();
 
@@ -1604,7 +1639,7 @@ void PlotItem::generateBottomLabel() {
 
 
 void PlotItem::paintBottomLabel(QPainter *painter) {
-  if (!_bottomLabelDetails->isVisible() || _bottomLabelDetails->overrideText().isEmpty())
+  if (!_bottomLabelDetails->isVisible() || bottomLabel().isEmpty())
     return;
 
   generateBottomLabel();
@@ -1641,7 +1676,7 @@ void PlotItem::calculateBottomLabelMargin(QPainter *painter) {
     painter->setFont(bottomLabelDetails()->calculatedFont());
 
     QRectF bottomLabelBound = painter->boundingRect(bottomLabelRect(),
-        Qt::TextWordWrap | Qt::AlignCenter, _bottomLabelDetails->overrideText());
+        Qt::TextWordWrap | Qt::AlignCenter, bottomLabel());
     painter->restore();
 
     _calculatedBottomLabelMargin = bottomLabelBound.height();
@@ -1659,7 +1694,7 @@ void PlotItem::generateRightLabel() {
   }
   _rightLabel.valid = false;
   _rightLabel.dirty = false;
-  Label::Parsed *parsed = Label::parse(_rightLabelDetails->overrideText());
+  Label::Parsed *parsed = Label::parse(rightLabel());
   QRectF rightLabel = rightLabelRect();
   if (parsed && rightLabel.isValid()) {
     parsed->chunk->attributes.color = _rightLabelDetails->fontColor();
@@ -1691,7 +1726,7 @@ void PlotItem::generateRightLabel() {
 
 
 void PlotItem::paintRightLabel(QPainter *painter) {
-  if (!_rightLabelDetails->isVisible() || _rightLabelDetails->overrideText().isEmpty())
+  if (!_rightLabelDetails->isVisible() || rightLabel().isEmpty())
     return;
 
   generateRightLabel();
@@ -1734,7 +1769,7 @@ void PlotItem::calculateRightLabelMargin(QPainter *painter) {
     painter->setFont(rightLabelDetails()->calculatedFont());
 
     QRectF rightLabelBound = painter->boundingRect(t.mapRect(rightLabelRect()),
-        Qt::TextWordWrap | Qt::AlignCenter, _rightLabelDetails->overrideText());
+        Qt::TextWordWrap | Qt::AlignCenter, rightLabel());
     painter->restore();
 
     _calculatedRightLabelMargin = qMax(_calculatedAxisMarginROverflow, rightLabelBound.height());
@@ -1752,7 +1787,7 @@ void PlotItem::generateTopLabel() {
   }
   _topLabel.valid = false;
   _topLabel.dirty = false;
-  Label::Parsed *parsed = Label::parse(_topLabelDetails->overrideText());
+  Label::Parsed *parsed = Label::parse(topLabel());
   QRectF topLabel = topLabelRect();
   if (parsed && topLabel.isValid()) {
     parsed->chunk->attributes.color = _topLabelDetails->fontColor();
@@ -1782,7 +1817,7 @@ void PlotItem::generateTopLabel() {
 
 
 void PlotItem::paintTopLabel(QPainter *painter) {
-  if (!_topLabelDetails->isVisible() || _topLabelDetails->overrideText().isEmpty())
+  if (!_topLabelDetails->isVisible() || topLabel().isEmpty())
     return;
 
   generateTopLabel();
@@ -1819,7 +1854,7 @@ void PlotItem::calculateTopLabelMargin(QPainter *painter) {
     painter->setFont(topLabelDetails()->calculatedFont());
 
     QRectF topLabelBound = painter->boundingRect(topLabelRect(),
-        Qt::TextWordWrap | Qt::AlignCenter, _topLabelDetails->overrideText());
+        Qt::TextWordWrap | Qt::AlignCenter, topLabel());
 
     painter->restore();
 
@@ -2513,11 +2548,7 @@ void PlotLabel::setFontUseGlobal(const bool use_global) {
 
 
 QString PlotLabel::overrideText() const {
-  if (_overrideText.isEmpty()) {
-    return _plotItem->leftLabel();
-  } else {
-    return _overrideText;
-  }
+  return _overrideText;
 }
 
 
@@ -2525,11 +2556,7 @@ void PlotLabel::setOverrideText(const QString &label) {
   if (label == _overrideText) {
     return;
   }
-  if (label == _plotItem->leftLabel()) {
-    _overrideText.clear();
-  } else {
-    _overrideText = label;
-  }
+  _overrideText = label;
   emit labelChanged();
 }
 
