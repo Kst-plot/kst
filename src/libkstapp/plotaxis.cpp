@@ -633,6 +633,7 @@ void PlotAxis::validateDrawingRegion(QPainter *painter) {
 
     updateTicks(true);
   }
+  setTicksUpdated();
 }
 
 
