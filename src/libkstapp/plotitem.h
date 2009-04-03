@@ -150,6 +150,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     SharedAxisBoxItem* sharedAxisBox();
     void setSharedAxisBox(SharedAxisBoxItem* parent);
 
+    void setPadding(const qreal, const qreal, const qreal, const qreal);
     void setLeftPadding(const qreal);
     void setBottomPadding(const qreal);
     void setRightPadding(const qreal);

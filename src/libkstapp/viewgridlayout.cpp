@@ -281,11 +281,12 @@ void ViewGridLayout::standardizePlotMargins(ViewItem *item, QPainter *painter) {
     qDebug() << "Margin bottom height is " << plotItem->bottomMarginSize() << "setting to" << bottomMarginHeights[floor(plotItem->height()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->bottomMarginSize();
 #endif
 
-    plotItem->setLeftPadding(leftMarginWidths[floor(plotItem->width()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->leftMarginSize());
-    plotItem->setRightPadding(rightMarginWidths[floor(plotItem->width()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->rightMarginSize());
-    plotItem->setTopPadding(topMarginWidths[floor(plotItem->height()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->topMarginSize());
-    plotItem->setBottomPadding(bottomMarginHeights[floor(plotItem->height()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->bottomMarginSize());
-    emit plotItem->updatePlotRect();
+    qreal leftPadding = leftMarginWidths[floor(plotItem->width()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->leftMarginSize();
+    qreal rightPadding = rightMarginWidths[floor(plotItem->width()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->rightMarginSize();
+    qreal topPadding = topMarginWidths[floor(plotItem->height()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->topMarginSize();
+    qreal bottomPadding = bottomMarginHeights[floor(plotItem->height()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->bottomMarginSize();
+
+    plotItem->setPadding(leftPadding, rightPadding, topPadding, bottomPadding);
   }
 }
 

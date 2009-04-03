@@ -1074,6 +1074,19 @@ qreal PlotItem::topMarginSize() const {
 }
 
 
+void PlotItem::setPadding(const qreal left, const qreal right, const qreal top, const qreal bottom) {
+  if ((left == _leftPadding) && (right == _rightPadding) && (top == _topPadding) && (bottom == _bottomPadding)) {
+    return;
+  }
+  _leftPadding = left;
+  _rightPadding = right;
+  _topPadding = top;
+  _bottomPadding = bottom;
+  setPlotRectsDirty();
+  updatePlotRect();
+}
+
+
 void PlotItem::setLeftPadding(const qreal padding) {
   if (padding != _leftPadding) {
     _leftPadding = padding;
