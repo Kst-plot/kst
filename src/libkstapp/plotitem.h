@@ -237,6 +237,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
   Q_SIGNALS:
     void updatePlotRect();
     void updateAxes();
+    void triggerRedraw();
 
   public Q_SLOTS:
     void zoomFixedExpression(const QRectF &projection);

@@ -136,7 +136,7 @@ PlotItem::PlotItem(View *parent)
   _gnum++;
 
   setPlotBordersDirty(true);
-  connect(this, SIGNAL(updatePlotRect()), this, SLOT(redrawPlot()));
+  connect(this, SIGNAL(triggerRedraw()), this, SLOT(redrawPlot()));
   connect(this, SIGNAL(geometryChanged()), this, SLOT(setLabelsDirty()));
 }
 
@@ -1025,6 +1025,7 @@ void PlotItem::calculatePlotRects() {
   }
   _calculatedPlotRect = plot;
   _plotRectsDirty = false;
+  emit updatePlotRect();
 }
 
 
@@ -1083,7 +1084,7 @@ void PlotItem::setPadding(const qreal left, const qreal right, const qreal top, 
   _topPadding = top;
   _bottomPadding = bottom;
   setPlotRectsDirty();
-  updatePlotRect();
+  emit triggerRedraw();
 }
 
 
