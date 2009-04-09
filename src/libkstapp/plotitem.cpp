@@ -49,7 +49,8 @@
 #define DEBUG_LABEL_REGION 0
 
 // Benchmark drawing
-// #define BENCHMARK 1
+// 0 = None, 1 = PlotItem, 2 = More Details
+#define BENCHMARK 0
 
 static const int PLOT_MAXIMIZED_ZORDER = 1000;
 
@@ -80,11 +81,12 @@ PlotItem::PlotItem(View *parent)
   _allowUpdates(true),
   _updateDelayed(false),
   _legend(0),
-  _axisLabelsDirty(true),
   _zoomMenu(0),
   _filterMenu(0),
   _fitMenu(0),
-  _sharedBox(0)
+  _sharedBox(0),
+  _axisLabelsDirty(true),
+  _plotPixmapDirty(true)
 {
 
   setTypeName("Plot");
@@ -98,6 +100,8 @@ PlotItem::PlotItem(View *parent)
   connect(this, SIGNAL(geometryChanged()), _xAxis, SLOT(setTicksUpdated()));
   connect(this, SIGNAL(geometryChanged()), _yAxis, SLOT(setTicksUpdated()));
   connect(this, SIGNAL(geometryChanged()), this, SLOT(setPlotRectsDirty()));
+
+  _globalFont = parentView()->defaultFont();
 
   _leftLabelDetails = new PlotLabel(this);
   _rightLabelDetails = new PlotLabel(this);
@@ -138,6 +142,8 @@ PlotItem::PlotItem(View *parent)
   setPlotBordersDirty(true);
   connect(this, SIGNAL(triggerRedraw()), this, SLOT(redrawPlot()));
   connect(this, SIGNAL(geometryChanged()), this, SLOT(setLabelsDirty()));
+  connect(this, SIGNAL(updateAxes()), this, SLOT(setPlotPixmapDirty()));
+  connect(this, SIGNAL(geometryChanged()), this, SLOT(setPlotPixmapDirty()));
 }
 
 
@@ -529,18 +535,63 @@ void PlotItem::calculateBorders(QPainter *painter) {
 }
 
 
+void PlotItem::updatePlotPixmap() {
+#if BENCHMARK
+  QTime bench_time;
+  bench_time.start();
+#endif
+  _plotPixmapDirty = false;
+
+  QPixmap pixmap(rect().width()+1, rect().height()+1);
+  pixmap.fill(Qt::transparent);
+  QPainter pixmapPainter(&pixmap);
+
+  paintPixmap(&pixmapPainter);
+
+  _plotPixmap = pixmap;
+#if BENCHMARK
+  int i = bench_time.elapsed();
+  qDebug() << "Total Time to update plot pixmap " << (void *)this << ": " << i << "ms";
+#endif
+}
+
+
 void PlotItem::paint(QPainter *painter) {
+#if BENCHMARK
+  QTime bench_time;
+  bench_time.start();
+#endif
+  if (_plotPixmapDirty) {
+    updatePlotPixmap();
+  }
+
+  painter->save();
+  painter->setPen(Qt::NoPen);
+  painter->drawRect(rect());
+  painter->restore();
+
+  painter->drawPixmap(QPointF(0, 0), _plotPixmap);
+#if BENCHMARK
+  int i = bench_time.elapsed();
+  qDebug() << "Total Time to paint " << (void *)this << ": " << i << "ms" << endl;
+#endif
+
+}
+
+
+void PlotItem::paintPixmap(QPainter *painter) {
   if (parentView()->plotBordersDirty() || (creationState() == ViewItem::InProgress)) {
     ViewGridLayout::standardizePlotMargins(this, painter);
     setPlotBordersDirty(false);
   }
 
-#ifdef BENCHMARK
+#if BENCHMARK
   QTime bench_time, benchtmp;
   int b_1 = 0, b_2 = 0, b_3 = 0, b_4 = 0, b_5 = 0;
   bench_time.start();
   benchtmp.start();
 #endif
+
   painter->save();
   painter->setPen(Qt::NoPen);
   painter->drawRect(rect());
@@ -549,7 +600,7 @@ void PlotItem::paint(QPainter *painter) {
   painter->save();
   painter->setFont(numberLabelDetails()->calculatedFont());
 
-#ifdef BENCHMARK
+#if BENCHMARK
     b_1 = benchtmp.elapsed();
 #endif
 #if DEBUG_LABEL_REGION
@@ -568,29 +619,29 @@ void PlotItem::paint(QPainter *painter) {
   //  qDebug() << "=============> topLabel:" << topLabel() << endl;
 #endif
   paintTopLabel(painter);
-#ifdef BENCHMARK
+#if BENCHMARK
     b_2 = benchtmp.elapsed();
 #endif
 
   paintPlot(painter);
-#ifdef BENCHMARK
+#if BENCHMARK
     b_3 = benchtmp.elapsed();
 #endif
 
   paintTickLabels(painter);
-#ifdef BENCHMARK
+#if BENCHMARK
     b_4 = benchtmp.elapsed();
 #endif
 
   paintPlotMarkers(painter);
-#ifdef BENCHMARK
+#if BENCHMARK
     b_5 = benchtmp.elapsed();
 #endif
 
   painter->restore();
-#ifdef BENCHMARK
+#if BENCHMARK
   int i = bench_time.elapsed();
-  qDebug() << endl << "Painting Plot " << (void *)this << ": " << i << "ms";
+  qDebug() << "Painting Plot Pixmap " << (void *)this << ": " << i << "ms";
   if (b_1 > 0)       qDebug() << "            Setup: " << b_1 << "ms";
   if (b_2 - b_1 > 0) qDebug() << "           Labels: " << (b_2 - b_1) << "ms";
   if (b_3 - b_2 > 0) qDebug() << "             Plot: " << (b_3 - b_2) << "ms";
@@ -624,39 +675,39 @@ void PlotItem::paintPlot(QPainter *painter) {
       updateYAxisLabels(painter);
     }
   }
-#ifdef BENCHMARK
+#if BENCHMARK > 1
   QTime bench_time, benchtmp;
   int b_1 = 0, b_2 = 0, b_3 = 0, b_4 = 0, b_5 = 0;
   bench_time.start();
   benchtmp.start();
 #endif
   paintMajorGridLines(painter);
-#ifdef BENCHMARK
+#if BENCHMARK > 1
     b_1 = benchtmp.elapsed();
 #endif
   paintMinorGridLines(painter);
-#ifdef BENCHMARK
+#if BENCHMARK > 1
     b_2 = benchtmp.elapsed();
 #endif
   painter->save();
   painter->setBrush(Qt::NoBrush);
   painter->drawRect(plotRect());
   painter->restore();
-#ifdef BENCHMARK
+#if BENCHMARK > 1
     b_3 = benchtmp.elapsed();
 #endif
   paintMajorTicks(painter);
-#ifdef BENCHMARK
+#if BENCHMARK > 1
     b_4 = benchtmp.elapsed();
 #endif
   paintMinorTicks(painter);
-#ifdef BENCHMARK
+#if BENCHMARK > 1
     b_5 = benchtmp.elapsed();
 #endif
 
-#ifdef BENCHMARK
+#if BENCHMARK > 1
   int i = bench_time.elapsed();
-  qDebug() << endl << "Painting Plot - PaintPlot " << (void *)this << ": " << i << "ms";
+  qDebug() << "Painting Plot - PaintPlot " << (void *)this << ": " << i << "ms";
   if (b_1 > 0)       qDebug() << "            Major Lines: " << b_1 << "ms";
   if (b_2 - b_1 > 0) qDebug() << "            Minor Lines: " << (b_2 - b_1) << "ms";
   if (b_3 - b_2 > 0) qDebug() << "                   Rect: " << (b_3 - b_2) << "ms";
@@ -787,7 +838,6 @@ void PlotItem::updateYAxisLines() {
     p2 = p1 - QPointF(minorTickLength, 0);
     _yMinorTickLines << QLineF(p1, p2);
   }
-
   _yPlotMarkerLines.clear();
   foreach (double y, _yAxis->axisPlotMarkers().markers()) {
     if (y > _yMin && y < _yMax) {

@@ -280,6 +280,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void setBottomLabelDirty() { _bottomLabel.dirty = true; }
     void setLabelsDirty() { _leftLabel.dirty = true; _rightLabel.dirty = true; _topLabel.dirty = true; _bottomLabel.dirty = true; }
 
+    void setPlotPixmapDirty() { _plotPixmapDirty = true; } 
     void setAxisLabelsDirty() { _axisLabelsDirty = true; }
 
   private:
@@ -289,6 +290,9 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void createFitMenu();
 
     void resetSelectionRect();
+
+    void updatePlotPixmap();
+    virtual void paintPixmap(QPainter *painter);
 
     void updateXAxisLines();
     void updateYAxisLines();
@@ -407,12 +411,6 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 
     LegendItem* _legend;
 
-    bool _axisLabelsDirty;
-    DrawnLabel _leftLabel;
-    DrawnLabel _rightLabel;
-    DrawnLabel _topLabel;
-    DrawnLabel _bottomLabel;
-
     QMenu *_zoomMenu;
     QAction *_zoomMaximum;
     QAction *_zoomMaxSpikeInsensitive;
@@ -442,6 +440,12 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 
     SharedAxisBoxItem * _sharedBox;
 
+    bool _axisLabelsDirty;
+    DrawnLabel _leftLabel;
+    DrawnLabel _rightLabel;
+    DrawnLabel _topLabel;
+    DrawnLabel _bottomLabel;
+
     QVector<QLineF> _xMajorGridLines;
     QVector<QLineF> _yMajorGridLines;
     QVector<QLineF> _xMinorGridLines;
@@ -456,6 +460,9 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 
     QVector<CachedPlotLabel> _xPlotLabels;
     QVector<CachedPlotLabel> _yPlotLabels;
+
+    bool _plotPixmapDirty;
+    QPixmap _plotPixmap;
 
     QUndoStack *_undoStack;
 
