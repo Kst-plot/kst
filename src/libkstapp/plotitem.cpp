@@ -1584,30 +1584,11 @@ void PlotItem::generateLeftLabel() {
   if (parsed) {
     parsed->chunk->attributes.color = _leftLabelDetails->fontColor();
 
-    QRectF leftLabel = leftLabelRect();
-    QPixmap pixmap(leftLabel.height(), leftLabel.width());
-    pixmap.fill(Qt::transparent);
-    QPainter pixmapPainter(&pixmap);
-
-    Label::RenderContext rc(leftLabelDetails()->calculatedFont(), &pixmapPainter);
-    QFontMetrics fm(leftLabelDetails()->calculatedFont());
-    rc.y = fm.ascent();
-    Label::renderLabel(rc, parsed->chunk);
-
-    leftLabel.moveTopRight(plotAxisRect().topLeft());
-    leftLabel.moveBottomLeft(QPointF(leftLabel.bottomLeft().x(), plotRect().center().y()+ rc.x / 2));
-
-    QTransform t;
-    t.rotate(-90.0);
-    _leftLabel.pixmap = pixmap.transformed(t);
-    _leftLabel.rect = leftLabel;
-    _leftLabel.location = rc.x;
-    if (rc.x > 0) {
-      _leftLabel.valid = true;
+    if (_leftLabel.parsed) {
+      delete _leftLabel.parsed;
     }
-
-    delete parsed;
-    parsed = 0;
+    _leftLabel.parsed = parsed;
+    _leftLabel.valid = true;
   }
 }
 
@@ -1620,7 +1601,19 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
 
   if (_leftLabel.valid) {
     painter->save();
-    painter->drawPixmap(_leftLabel.rect.topLeft(), _leftLabel.pixmap, QRectF(0, 0, _leftLabel.location, _leftLabel.rect.height()));
+    QRectF leftLabel = leftLabelRect();
+
+    QRectF box = rect();
+
+    Label::RenderContext rc(leftLabelDetails()->calculatedFont(), painter);
+    leftLabel.moveTopRight(plotAxisRect().topLeft());
+    leftLabel.moveBottomLeft(QPointF(leftLabel.bottomLeft().x(), plotRect().center().y()));
+    QFontMetrics fm(leftLabelDetails()->calculatedFont());
+    rc.y = fm.ascent();
+    // Needs to be adjusted to be centered.  Must add way to get rc.x before painting.
+    painter->translate(QPointF(leftLabel.x(), -(leftLabel.y())));
+    painter->rotate(-90.0);
+    Label::renderLabel(rc, _leftLabel.parsed->chunk);
     painter->restore();
   }
 
@@ -1677,27 +1670,11 @@ void PlotItem::generateBottomLabel() {
   if (parsed) {
     parsed->chunk->attributes.color = _bottomLabelDetails->fontColor();
 
-    QRectF bottomLabel = bottomLabelRect();
-    QPixmap pixmap(bottomLabel.width(), bottomLabel.height());
-    pixmap.fill(Qt::transparent);
-    QPainter pixmapPainter(&pixmap);
-
-    Label::RenderContext rc(bottomLabelDetails()->calculatedFont(), &pixmapPainter);
-    QFontMetrics fm(bottomLabelDetails()->calculatedFont());
-    rc.y = fm.ascent();
-    Label::renderLabel(rc, parsed->chunk);
-
-    bottomLabel.moveBottomLeft(QPointF(plotRect().center().x()-rc.x/2, rect().bottomLeft().y()));
-
-    _bottomLabel.pixmap = pixmap;
-    _bottomLabel.rect = bottomLabel;
-    _bottomLabel.location = rc.x;
-    if (rc.x > 0) {
-      _bottomLabel.valid = true;
+    if (_bottomLabel.parsed) {
+      delete _bottomLabel.parsed;
     }
-
-    delete parsed;
-    parsed = 0;
+    _bottomLabel.parsed = parsed;
+    _bottomLabel.valid = true;
   }
 }
 
@@ -1710,7 +1687,15 @@ void PlotItem::paintBottomLabel(QPainter *painter) {
 
   if (_bottomLabel.valid) {
     painter->save();
-    painter->drawPixmap(_bottomLabel.rect.topLeft(), _bottomLabel.pixmap, QRectF(0, 0, _bottomLabel.location, _bottomLabel.rect.height()));
+    QRectF bottomLabel = bottomLabelRect();
+    bottomLabel.moveTopLeft(QPointF(plotRect().center().x(), plotAxisRect().bottomLeft().y()));
+
+    Label::RenderContext rc(bottomLabelDetails()->calculatedFont(), painter);
+    QFontMetrics fm(bottomLabelDetails()->calculatedFont());
+    rc.y = fm.ascent();
+    // Needs to be adjusted to be centered.  Must add way to get rc.x before painting.
+    painter->translate(QPointF(bottomLabel.x(), bottomLabel.y()));
+    Label::renderLabel(rc, _bottomLabel.parsed->chunk);
     painter->restore();
   }
 
@@ -1763,28 +1748,11 @@ void PlotItem::generateRightLabel() {
   if (parsed && rightLabel.isValid()) {
     parsed->chunk->attributes.color = _rightLabelDetails->fontColor();
 
-    QPixmap pixmap(rightLabel.height(), rightLabel.width());
-    pixmap.fill(Qt::transparent);
-    QPainter pixmapPainter(&pixmap);
-
-    Label::RenderContext rc(rightLabelDetails()->calculatedFont(), &pixmapPainter);
-    QFontMetrics fm(rightLabelDetails()->calculatedFont());
-    rc.y = fm.ascent();
-    Label::renderLabel(rc, parsed->chunk);
-
-    rightLabel.moveTopLeft(QPointF(plotAxisRect().right(), plotRect().center().y() - rc.x / 2));
-
-    QTransform t;
-    t.rotate(90.0);
-    _rightLabel.pixmap = pixmap.transformed(t);
-    _rightLabel.rect = rightLabel;
-    _rightLabel.location = rc.x;
-    if (rc.x > 0) {
-      _rightLabel.valid = true;
+    if (_rightLabel.parsed) {
+      delete _rightLabel.parsed;
     }
-
-    delete parsed;
-    parsed = 0;
+    _rightLabel.parsed = parsed;
+    _rightLabel.valid = true;
   }
 }
 
@@ -1797,7 +1765,17 @@ void PlotItem::paintRightLabel(QPainter *painter) {
 
   if (_rightLabel.valid) {
     painter->save();
-    painter->drawPixmap(_rightLabel.rect.topLeft(), _rightLabel.pixmap, QRectF(0, 0, _rightLabel.location, _rightLabel.rect.height()));
+    QRectF rightLabel = rightLabelRect();
+    rightLabel.moveTopLeft(plotAxisRect().topRight());
+    rightLabel.moveBottomRight(QPointF(rightLabel.bottomRight().x(), plotRect().center().y()));
+
+    Label::RenderContext rc(rightLabelDetails()->calculatedFont(), painter);
+    QFontMetrics fm(rightLabelDetails()->calculatedFont());
+    rc.y = fm.ascent();
+    // Needs to be adjusted to be centered.  Must add way to get rc.x before painting.
+    painter->translate(QPointF(rightLabel.x() + rightLabel.width(), -(rightLabel.y())));
+    painter->rotate(90.0);
+    Label::renderLabel(rc, _rightLabel.parsed->chunk);
     painter->restore();
   }
 
@@ -1856,26 +1834,11 @@ void PlotItem::generateTopLabel() {
   if (parsed && topLabel.isValid()) {
     parsed->chunk->attributes.color = _topLabelDetails->fontColor();
 
-    QPixmap pixmap(topLabel.width(), topLabel.height());
-    pixmap.fill(Qt::transparent);
-    QPainter pixmapPainter(&pixmap);
-
-    Label::RenderContext rc(topLabelDetails()->calculatedFont(), &pixmapPainter);
-    QFontMetrics fm(topLabelDetails()->calculatedFont());
-    rc.y = fm.ascent();
-    Label::renderLabel(rc, parsed->chunk);
-
-    topLabel.moveBottomLeft(QPointF(plotRect().center().x()-rc.x/2, plotAxisRect().topLeft().y()));
-
-    _topLabel.pixmap = pixmap;
-    _topLabel.rect = topLabel;
-    _topLabel.location = rc.x;
-    if (rc.x > 0) {
-      _topLabel.valid = true;
+    if (_topLabel.parsed) {
+      delete _topLabel.parsed;
     }
-
-    delete parsed;
-    parsed = 0;
+    _topLabel.parsed = parsed;
+    _topLabel.valid = true;
   }
 }
 
@@ -1888,7 +1851,15 @@ void PlotItem::paintTopLabel(QPainter *painter) {
 
   if (_topLabel.valid) {
     painter->save();
-    painter->drawPixmap(_topLabel.rect.topLeft(), _topLabel.pixmap, QRectF(0, 0, _topLabel.location, _topLabel.rect.height()));
+    QRectF topLabel = topLabelRect();
+    topLabel.moveBottomLeft(QPointF(plotRect().center().x(), plotAxisRect().topLeft().y()));
+
+    Label::RenderContext rc(topLabelDetails()->calculatedFont(), painter);
+    QFontMetrics fm(topLabelDetails()->calculatedFont());
+    rc.y = fm.ascent();
+    // Needs to be adjusted to be centered.  Must add way to get rc.x before painting.
+    painter->translate(QPointF(topLabel.x(), topLabel.y()));
+    Label::renderLabel(rc, _topLabel.parsed->chunk);
     painter->restore();
   }
 

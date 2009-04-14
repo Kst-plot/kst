@@ -47,12 +47,12 @@ struct ZoomState {
 };
 
 
-struct DrawnLabel {
-  DrawnLabel() { valid = false; dirty = true; };
+struct CachedLabel {
+  CachedLabel() { valid = false; dirty = true; parsed = 0; };
 
   bool valid;
   bool dirty;
-  QPixmap pixmap;
+  Label::Parsed *parsed;
   QRectF rect;
   int location;
 };
@@ -441,10 +441,10 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     SharedAxisBoxItem * _sharedBox;
 
     bool _axisLabelsDirty;
-    DrawnLabel _leftLabel;
-    DrawnLabel _rightLabel;
-    DrawnLabel _topLabel;
-    DrawnLabel _bottomLabel;
+    CachedLabel _leftLabel;
+    CachedLabel _rightLabel;
+    CachedLabel _topLabel;
+    CachedLabel _bottomLabel;
 
     QVector<QLineF> _xMajorGridLines;
     QVector<QLineF> _yMajorGridLines;
