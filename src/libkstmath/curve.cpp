@@ -715,7 +715,7 @@ RelationPtr Curve::makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelat
 }
 
 
-void Curve::paintObects(const CurveRenderContext& context) {
+void Curve::paintObjects(const CurveRenderContext& context) {
   QPainter *p = context.painter;
   Qt::PenStyle style = Kst::LineStyle[lineStyle()];
 

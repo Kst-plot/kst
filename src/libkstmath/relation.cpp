@@ -65,7 +65,7 @@ void Relation::paint(const CurveRenderContext& context) {
     _redrawRequired = false;
   }
 
-  paintObects(context);
+  paintObjects(context);
 }
 
 

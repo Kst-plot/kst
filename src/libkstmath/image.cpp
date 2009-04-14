@@ -465,7 +465,7 @@ double Image::distanceToPoint(double xpos, double dx, double ypos) const {
 }
 
 
-void Image::paintObects(const CurveRenderContext& context) {
+void Image::paintObjects(const CurveRenderContext& context) {
   QPainter* p = context.painter;
   p->drawImage(_imageLocation, _image);
 

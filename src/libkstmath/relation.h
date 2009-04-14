@@ -133,7 +133,7 @@ class KST_EXPORT Relation : public Object {
     // render this curve
     void paint(const CurveRenderContext& context);
 
-    virtual void paintObects(const CurveRenderContext& context) = 0;
+    virtual void paintObjects(const CurveRenderContext& context) = 0;
     virtual void updatePaintObjects(const CurveRenderContext& context) = 0;
 
     // render the legend symbol for this curve

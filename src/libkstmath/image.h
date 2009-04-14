@@ -106,7 +106,7 @@ class KST_EXPORT Image : public Relation {
     virtual double distanceToPoint(double xpos, double dx, double ypos) const;
 
     // see KstRelation::paint
-    void paintObects(const CurveRenderContext& context);
+    void paintObjects(const CurveRenderContext& context);
 
     // Update the curve details.
     void updatePaintObjects(const CurveRenderContext& context);

@@ -134,7 +134,7 @@ class KST_EXPORT Curve: public Relation {
     virtual RelationPtr makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelations);
 
     // render this curve
-    virtual void paintObects(const CurveRenderContext& context);
+    virtual void paintObjects(const CurveRenderContext& context);
 
     // Update the curve details.
     void updatePaintObjects(const CurveRenderContext& context);
