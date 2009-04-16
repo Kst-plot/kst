@@ -1861,6 +1861,7 @@ void PlotItem::paintTopLabel(QPainter *painter) {
     painter->translate(QPointF(topLabel.x(), topLabel.y()));
     Label::renderLabel(rc, _topLabel.parsed->chunk);
     painter->restore();
+
   }
 
 #if DEBUG_LABEL_REGION
@@ -1936,9 +1937,6 @@ qreal PlotItem::axisMarginHeight() const {
       _calculatedAxisMarginHeight: the height of the axis numbers
 */
 void PlotItem::calculateBottomTickLabelBound(QPainter *painter) {
-  qreal inHeight = _calculatedAxisMarginHeight;
-  qreal inVLead = _calculatedAxisMarginVLead;
-  qreal inROver = _calculatedAxisMarginROverflow;
   QRectF xLabelRect;
 
   painter->save();
@@ -1993,10 +1991,6 @@ void PlotItem::calculateBottomTickLabelBound(QPainter *painter) {
       _calculatedAxisMarginWidth: the width of the widest axis number
 */
 void PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
-  qreal inWidth = _calculatedAxisMarginWidth;
-  qreal inHLead = _calculatedAxisMarginHLead;
-  qreal inTOver = _calculatedAxisMarginTOverflow;
-
   QRectF yLabelRect;
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
 
@@ -2649,6 +2643,7 @@ void PlotLabel::saveInPlot(QXmlStreamWriter &xml, QString labelId) {
 
 
 bool PlotLabel::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
+  Q_UNUSED(store);
   bool validTag = true;
 
   QString primaryTag = xml.name().toString();
