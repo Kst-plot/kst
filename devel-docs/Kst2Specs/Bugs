@@ -8,15 +8,6 @@ There needs to be an option to somehow escape these when using them in a label.
 
 Tooltips everywhere.
 
----------
-
-kst reads live dirfiles less efficiently than before. �On a shitty
-computer (devlin666), kst1.7 can display 200 frames of 24 bolometer
-channels (100Hz samples; 20 samples per frame) with a 500ms kst update
-timer, and only use about 20% of the cpu and the computer will still
-seem 'responsive enough'. �kst2 under the same conditions, except with
-2000ms kst update timer uses about 55% of the cpu and the computer (and
-kst) seem more sluggish. �
 
 ---------
 
@@ -26,24 +17,14 @@ fit on the new window size.
 The View dimensions should be saved as part of the .kst file and if the newly created
 view on a load of a .kst file doesn't match, the resize logic should be triggered.
 
------------
-
-Base / Offset / Rotation of Axis Labels based on discussion.
-
-Here's the possible changes
-
-#1.   Ability to rotate axis labels.  Axis numbers could be rotated in
-1.x but cannot in 2.0.
-
-#2.  Change Base/Offset Mode to radio box set for On (same as current)
-Auto (same as current off) Off (new mode in which it will never
-automatically switch and will truncate if settings are inappropriate.)
-
-#2b.  Update behaviour only for interpreted axis where off makes it
-possible to not use base offset mode, but that would also require #1 as
-it would never fit as is.
-
-#3.  Kst 1.x also had the ability to set the justification for the top
-label, but we currently do not that option for labels in 2.0.
-
 ----------
+
+Y Axis label placement is wrong
+Create a plot with 24 curves from the data wizard.  The Y axis label is offset vertically.
+
+------------
+
+'c' mode doesn't show difference.
+'c' mode is used to find the offset from a marker to the cursor.
+Currently, if 'c' is hit, a marker is placed, as it should.  However, the difference between the marker and the cursor is not shown anywhere.  See 1.x for the correct behavior.
+
