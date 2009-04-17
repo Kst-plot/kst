@@ -36,3 +36,27 @@ the creation of the new tab after apply, and uses a default name rather than pop
 ---------
 When a new plot is added to an tab which already has plots in it (eg, from the Placement widget), then the label font sizes should be based on the label font sizes of the plots already in the tab.  (either 'vote' or use the first one).
 
+---------
+
+Default X vector should be remembered.
+  -A default X vector, which is the last vector to have been used as an X vector, should be remembered. 
+
+---------
+
+'I' key in a plot with an image should adjust the image color scale; see 1.x for correct behavior.  Consider <shift>I as doing smaller steps.
+
+---------
+
+Easier way to specify reversed axis when loading sky images:
+  -can desire to reverse be gleaned from the fits image?
+  -command line option?
+  -new-image (sticky) option?
+
+---------
+
+Smarter ASCII reader:
+  should be able to use huristics to get information about
+  the ascii file.
+    (eg, is it a CSV?  Does it have a field name header?)
+  these should be used only for new files, and should be used to sed the defaults, which can still be changed with 'configure'.
+
