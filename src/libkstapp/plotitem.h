@@ -29,6 +29,7 @@
 #include "legenditem.h"
 #include "curveplacement.h"
 #include "sharedaxisboxitem.h"
+#include "labelrenderer.h"
 
 namespace Kst {
 
@@ -48,13 +49,14 @@ struct ZoomState {
 
 
 struct CachedLabel {
-  CachedLabel() { valid = false; dirty = true; parsed = 0; };
+  CachedLabel() { valid = false; dirty = true; parsed = 0; rc = 0; };
+  ~CachedLabel() { delete parsed; delete rc; };
 
   bool valid;
   bool dirty;
   Label::Parsed *parsed;
-  QRectF rect;
-  int location;
+  Label::RenderContext *rc;
+  QTransform transform;
 };
 
 
@@ -274,11 +276,11 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void showFilterDialog(QAction*);
     void showFitDialog(QAction*);
 
-    void setLeftLabelDirty() { _leftLabel.dirty = true; }
-    void setRightLabelDirty() { _rightLabel.dirty = true; }
-    void setTopLabelDirty() { _topLabel.dirty = true; }
-    void setBottomLabelDirty() { _bottomLabel.dirty = true; }
-    void setLabelsDirty() { _leftLabel.dirty = true; _rightLabel.dirty = true; _topLabel.dirty = true; _bottomLabel.dirty = true; }
+    void setLeftLabelDirty() { _leftLabel.dirty = true; setPlotPixmapDirty(); }
+    void setRightLabelDirty() { _rightLabel.dirty = true; setPlotPixmapDirty(); }
+    void setTopLabelDirty() { _topLabel.dirty = true; setPlotPixmapDirty(); }
+    void setBottomLabelDirty() { _bottomLabel.dirty = true; setPlotPixmapDirty(); }
+    void setLabelsDirty() { _leftLabel.dirty = true; _rightLabel.dirty = true; _topLabel.dirty = true; _bottomLabel.dirty = true; setPlotPixmapDirty(); }
 
     void setPlotPixmapDirty() { _plotPixmapDirty = true; } 
     void setAxisLabelsDirty() { _axisLabelsDirty = true; }

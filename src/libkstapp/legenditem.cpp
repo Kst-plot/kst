@@ -105,7 +105,7 @@ void LegendItem::paint(QPainter *painter) {
       Label::RenderContext rc(font, &pixmapPainter);
       QFontMetrics fm(font);
       rc.y = fm.ascent();
-      Label::renderLabel(rc, parsed->chunk);
+      Label::renderLabel(rc, parsed->chunk, false);
 
       int startPoint = qMax(0, (legendSize.width() / 2) - (rc.x / 2));
       int paddingValue = fm.height() / 4;
@@ -157,7 +157,7 @@ QSize LegendItem::paintRelation(RelationPtr relation, QPixmap *pixmap, const QFo
   rc.y = fm.ascent();
 
   if (parsed) {
-    Label::renderLabel(rc, parsed->chunk);
+    Label::renderLabel(rc, parsed->chunk, false);
     delete parsed;
     parsed = 0;
   }

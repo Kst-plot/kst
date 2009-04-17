@@ -28,7 +28,7 @@
 namespace Kst {
 
 LabelItem::LabelItem(View *parent, const QString& txt)
-  : ViewItem(parent), _parsed(0), _text(txt) {
+  : ViewItem(parent), _labelRc(0), _dirty(true), _text(txt), _height(0) {
   setTypeName("Label");
   setFixedSize(true);
   setAllowedGripModes(Move /*| Resize*/ | Rotate /*| Scale*/);
@@ -39,32 +39,54 @@ LabelItem::LabelItem(View *parent, const QString& txt)
 
 
 LabelItem::~LabelItem() {
-  delete _parsed;
-  _parsed = 0;
+  delete _labelRc;
 }
 
 
-void LabelItem::paint(QPainter *painter) {
-  if (!_parsed) {
-    _parsed = Label::parse(_text);
-    _parsed->chunk->attributes.color = _color;
+void LabelItem::generateLabel() {
+  if (_labelRc) {
+    delete _labelRc;
   }
 
-  // We can do better here. - caching
-  if (_parsed) {
-    painter->save();
+  Label::Parsed *parsed = Label::parse(_text);
+  if (parsed) {
+    parsed->chunk->attributes.color = _color;
+    _dirty = false;
     QRectF box = rect();
     QFont font(_font);
     font.setPixelSize(parentView()->defaultFont(_scale).pixelSize());
     QFontMetrics fm(font);
-    painter->translate(QPointF(box.x(), box.y() + fm.ascent()));
-    Label::RenderContext rc(font, painter);
-    Label::renderLabel(rc, _parsed->chunk);
+    _paintTransform.reset();
+    _paintTransform.translate(box.x(), box.y() + fm.ascent());
+    _labelRc = new Label::RenderContext(font, 0);
+    Label::renderLabel(*_labelRc, parsed->chunk);
+
+    _height = fm.height();
 
     // Make sure we have a rect for selection, movement, etc
-    setViewRect(QRectF(box.x(), box.y(), rc.xMax, (rc.lines+1) * fm.height()));
+    setViewRect(QRectF(rect().x(), rect().y(), _labelRc->xMax, (_labelRc->lines+1) * _height));
+
+    connect(_labelRc, SIGNAL(labelDirty()), this, SLOT(setDirty()));
+    connect(_labelRc, SIGNAL(labelDirty()), this, SLOT(triggerUpdate()));
+  }
+}
+
+
+void LabelItem::paint(QPainter *painter) {
+  if (_dirty) {
+    generateLabel();
+  }
+  if (_labelRc) {
+    painter->save();
+    painter->setTransform(_paintTransform, true);
+    Label::paintLabel(*_labelRc, painter);
     painter->restore();
   }
+}
+
+
+void LabelItem::triggerUpdate() {
+  update();
 }
 
 
@@ -88,8 +110,7 @@ QString LabelItem::labelText() {
 
 void LabelItem::setLabelText(const QString &text) {
   _text = text;
-  delete _parsed;
-  _parsed = 0;
+  setDirty();
 }
 
 
@@ -100,6 +121,7 @@ qreal LabelItem::labelScale() {
 
 void LabelItem::setLabelScale(const qreal scale) {
   _scale = scale;
+  setDirty();
 }
 
 
@@ -110,6 +132,7 @@ QColor LabelItem::labelColor() const {
 
 void LabelItem::setLabelColor(const QColor &color) {
   _color = color;
+  setDirty();
 }
 
 
@@ -126,6 +149,7 @@ QFont LabelItem::labelFont() const {
 
 void LabelItem::setLabelFont(const QFont &font) {
   _font = font;
+  setDirty();
 }
 
 
@@ -153,6 +177,7 @@ void LabelItem::creationPolygonChanged(View::CreationEvent event) {
     parentView()->setMouseMode(View::Default);
     maybeReparent();
     emit creationComplete();
+    setDirty();
     return;
   }
 }

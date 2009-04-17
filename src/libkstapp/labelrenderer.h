@@ -24,21 +24,42 @@
 #include <qstring.h>
 #include <qvariant.h>
 
-#include "dataref.h"
+#include "vector.h"
+#include "scalar.h"
+#include "string.h"
 #include "kst_export.h"
 
 namespace Label {
+
+struct RenderedText {
+  QPointF location;
+  QString text;
+  QFont font;
+  QPen pen;
+};
+
 // inline for speed.
-struct RenderContext {
+class RenderContext : public QObject {
+  Q_OBJECT
+
+  public:
   RenderContext(const QFont& font, QPainter *p)
-  : p(p), _fm(_font) {
+  : QObject(), p(p), _fm(_font) {
     x = y = xMax = xStart = 0;
     ascent = descent = 0;
     precision = 8;
-    _cache = 0L;
     substitute = true;
     setFont(font);
     lines = 0;
+  }
+
+  inline void addToCache(QPointF location, QString &text, QFont &font, QPen &pen) {
+    RenderedText cacheEntry;
+    cacheEntry.location = location;
+    cacheEntry.text = text;
+    cacheEntry.font = font;
+    cacheEntry.pen = pen;
+    cachedText.append(cacheEntry);
   }
 
   inline const QFont& font() const {
@@ -67,6 +88,21 @@ struct RenderContext {
       _descent = _fm.descent();
       _height = _fm.height();
     }
+  }
+
+  inline void addObject(Kst::VectorPtr vp) {
+    _refObjects.append(vp);
+    connect(vp, SIGNAL(updated(ObjectPtr)), this, SIGNAL(labelDirty()));
+  }
+
+  inline void addObject(Kst::ScalarPtr scalar) {
+    _refObjects.append(scalar);
+    connect(scalar, SIGNAL(updated(ObjectPtr)), this, SIGNAL(labelDirty()));
+  }
+
+  inline void addObject(Kst::StringPtr string) {
+    _refObjects.append(string);
+    connect(string, SIGNAL(updated(ObjectPtr)), this, SIGNAL(labelDirty()));
   }
 
   inline int fontSize() const {
@@ -113,9 +149,13 @@ struct RenderContext {
   QPainter *p;
   int precision;
   bool substitute;
-  QVector<DataRef> *_cache;
+  QList<Kst::Primitive*> _refObjects;
   QPen pen;
   int lines;
+  QVector<RenderedText> cachedText;
+
+  Q_SIGNALS:
+    void labelDirty();
 
   private:
     QFont _font;
@@ -125,7 +165,8 @@ struct RenderContext {
 };
 
 struct Chunk;
-KST_EXPORT void renderLabel(RenderContext& rc, Chunk *fi);
+KST_EXPORT void renderLabel(RenderContext& rc, Chunk *fi, bool cache = true);
+KST_EXPORT void paintLabel(RenderContext& rc, QPainter *p);
 }
 
 #endif

@@ -13,6 +13,7 @@
 #define LABELITEM_H
 
 #include "viewitem.h"
+#include "labelrenderer.h"
 #include "graphicsfactory.h"
 
 namespace Label {
@@ -44,16 +45,23 @@ class LabelItem : public ViewItem {
 
   public Q_SLOTS:
     virtual void edit();
+    void setDirty() { _dirty = true; };
+    void triggerUpdate();
 
   protected Q_SLOTS:
     virtual void creationPolygonChanged(View::CreationEvent event);
 
   private:
-    Label::Parsed *_parsed;
+    void generateLabel();
+
+    Label::RenderContext *_labelRc;
+    QTransform _paintTransform;
+    bool _dirty;
     QString _text;
     qreal _scale;
     QColor _color;
     QFont _font;
+    qreal _height;
 };
 
 

@@ -35,7 +35,7 @@ const double superscript_raise = 0.44;
 
 namespace Label {
 
-void renderLabel(RenderContext& rc, Label::Chunk *fi) {
+void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache) {
   // FIXME: RTL support
   int oldSize = rc.size = rc.fontSize();
   int oldY = rc.y;
@@ -69,11 +69,14 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
     f.setItalic(fi->attributes.italic);
     f.setUnderline(fi->attributes.underline);
 
-    if (rc.p && fi->attributes.color.isValid()) {
-      rc.p->setPen(fi->attributes.color);
-    } else if (rc.p) {
-      rc.p->setPen(rc.pen);
+    QPen pen = rc.pen;
+    if (fi->attributes.color.isValid()) {
+      pen.setColor(fi->attributes.color);
     }
+    if (rc.p) {
+      rc.p->setPen(pen);
+    }
+
     rc.setFont(f);
 
     if (fi->linebreak) {
@@ -89,6 +92,9 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
       if (rc.p) {
         rc.p->drawText(rc.x, rc.y, txt);
       }
+      if (cache) {
+        rc.addToCache(QPointF(rc.x, rc.y), txt, f, pen);
+      }
       rc.x += rc.fontWidth(txt);
     } else if (fi->scalar) { 
       // do scalar/string/fit substitution
@@ -99,31 +105,31 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
         const QString s = fi->text.mid(1);
         const double eqResult(Equations::interpret(store, s.toLatin1(), &ok, s.length()));
         txt = QString::number(eqResult, 'g', rc.precision);
-        if (rc._cache) {
-          rc._cache->append(DataRef(DataRef::DRExpression, fi->text, QString::null, 0.0, QVariant(eqResult)));
-        }
       } else {
         Kst::ObjectPtr op = store->retrieveObject(fi->text);
         Kst::ScalarPtr scp = Kst::kst_cast<Kst::Scalar>(op);
         if (scp) {
           KstReadLocker l(scp);
           txt = QString::number(scp->value(), 'g', rc.precision);
-          if (rc._cache) {
-            rc._cache->append(DataRef(DataRef::DRScalar, fi->text, QString::null, 0.0, QVariant(scp->value())));
+          if (cache) {
+            rc.addObject(scp);
           }
         } else {
           Kst::StringPtr stp = Kst::kst_cast<Kst::String>(op);
           if (stp) {
             KstReadLocker l(stp);
             txt = stp->value();
-            if (rc._cache) {
-              rc._cache->append(DataRef(DataRef::DRString, fi->text, QString::null, 0.0, QVariant(stp->value())));
+            if (cache) {
+              rc.addObject(stp);
             }
           }
         }
       }
       if (rc.p) {
         rc.p->drawText(rc.x, rc.y, txt);
+      }
+      if (cache) {
+        rc.addToCache(QPointF(rc.x, rc.y), txt, f, pen);
       }
       rc.x += rc.fontWidth(txt);
     } else if (fi->vector) {
@@ -139,8 +145,8 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
             KstReadLocker l(vp);
             const double vVal(vp->value()[int(idx)]);
             txt = QString::number(vVal, 'g', rc.precision);
-            if (rc._cache) {
-              rc._cache->append(DataRef(DataRef::DRVector, fi->text, fi->expression, idx, QVariant(vVal)));
+            if (cache) {
+              rc.addObject(vp);
             }
           } else {
             txt = "NAN";
@@ -150,6 +156,9 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
       if (rc.p) {
         rc.p->drawText(rc.x, rc.y, txt);
       }
+      if (cache) {
+        rc.addToCache(QPointF(rc.x, rc.y), txt, f, pen);
+      }
       rc.x += rc.fontWidth(txt);
     } else if (fi->tab) {
       const int tabWidth = rc.fontWidth("MMMM");
@@ -157,7 +166,11 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
       if (rc.p && fi->attributes.underline) {
         const int spaceWidth = rc.fontWidth(" ");
         const int spacesToSkip = tabWidth / spaceWidth + (tabWidth % spaceWidth > 0 ? 1 : 0);
-        rc.p->drawText(rc.x, rc.y, QString().fill(' ', spacesToSkip));
+        QString txt(QString().fill(' ', spacesToSkip));
+        rc.p->drawText(rc.x, rc.y, txt);
+        if (cache) {
+          rc.addToCache(QPointF(rc.x, rc.y), txt, f, pen);
+        }
       }
       rc.x += toSkip;
     } else {
@@ -167,9 +180,13 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
         t.start();
 #endif
         rc.p->drawText(rc.x, rc.y, fi->text);
+
 #ifdef BENCHMARK
         qDebug() << "Renderer did draw, time: " << t.elapsed();
 #endif
+      }
+      if (cache) {
+        rc.addToCache(QPointF(rc.x, rc.y), fi->text, f, pen);
       }
       rc.x += rc.fontWidth(fi->text);
     }
@@ -208,6 +225,18 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi) {
 
   rc.size = oldSize;
   rc.y = oldY;
+}
+
+void paintLabel(RenderContext& rc, QPainter *p) {
+  if (p) {
+    foreach (RenderedText text, rc.cachedText) {
+      p->save();
+      p->setPen(text.pen);
+      p->setFont(text.font);
+      p->drawText(text.location, text.text);
+      p->restore();
+    }
+  }
 }
 
 }
