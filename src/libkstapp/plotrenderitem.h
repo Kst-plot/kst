@@ -114,6 +114,7 @@ class PlotRenderItem : public ViewItem
     void computeNoSpike(Qt::Orientation orientation, qreal *min, qreal *max) const;
 
     void highlightNearestDataPoint(const QPointF& position);
+    void setReferencePoint(const QPointF& point);
 
   private:
     RenderType _type;

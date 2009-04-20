@@ -89,6 +89,12 @@ void PlotRenderItem::referenceModeDisabled() {
 }
 
 
+void PlotRenderItem::setReferencePoint(const QPointF& point) {
+  _referencePointMode = true;
+  _referencePoint = point;
+}
+
+
 PlotRenderItem::RenderType PlotRenderItem::type() {
   return _type;
 }
@@ -160,6 +166,12 @@ void PlotRenderItem::save(QXmlStreamWriter &xml) {
 void PlotRenderItem::saveInPlot(QXmlStreamWriter &xml) {
   xml.writeAttribute("name", typeName());
   xml.writeAttribute("type", QVariant(_type).toString());
+  if (_referencePointMode) {
+    xml.writeStartElement("referencepoint");
+  }
+  xml.writeAttribute("x", QVariant(_referencePoint.x()).toString());
+  xml.writeAttribute("y", QVariant(_referencePoint.y()).toString());
+  xml.writeEndElement();
   foreach (RelationPtr relation, relationList()) {
     xml.writeStartElement("relation");
     xml.writeAttribute("tag", relation->Name());
@@ -178,7 +190,6 @@ bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store)
   if (!av.isNull()) {
     setType((RenderType)av.toString().toInt());
   }
-
   QString expectedEnd;
   while (!(xml.isEndElement() && (xml.name().toString() == primaryTag))) {
    if (xml.isStartElement() && xml.name().toString() == "relation") {
@@ -189,6 +200,19 @@ bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store)
       if (relation) {
         addRelation(relation);
       }
+    } else if (xml.isStartElement() && xml.name().toString() == "referencepoint") {
+      expectedEnd = xml.name().toString();
+      double x = 0, y = 0;
+      attrs = xml.attributes();
+      av = attrs.value("x");
+      if (!av.isNull()) {
+        x = av.toString().toDouble();
+      }
+      av = attrs.value("y");
+      if (!av.isNull()) {
+        y = av.toString().toDouble();
+     }
+     setReferencePoint(QPointF(x, y));
     } else if (xml.isEndElement()) {
       if (xml.name().toString() != expectedEnd) {
         validTag = false;
@@ -493,6 +517,9 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   } else {
     _highlightPointActive = false;
     QString message = QString("(%1, %2)").arg(QString::number(point.x(), 'G')).arg(QString::number(point.y()));
+    if (_referencePointMode) {
+      message += QString(" [Offset: %1, %2]").arg(QString::number(point.x() - _referencePoint.x(), 'G')).arg(QString::number(point.y() - _referencePoint.y()));
+    }
     kstApp->mainWindow()->statusBar()->showMessage(message);
   }
 }
