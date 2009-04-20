@@ -20,17 +20,6 @@ fit on the new window size.
 The View dimensions should be saved as part of the .kst file and if the newly created
 view on a load of a .kst file doesn't match, the resize logic should be triggered.
 
-----------
-
-Y Axis label placement is wrong
-Create a plot with 24 curves from the data wizard.  The Y axis label is offset vertically.
-
-------------
-
-'c' mode doesn't show difference.
-'c' mode is used to find the offset from a marker to the cursor.
-Currently, if 'c' is hit, a marker is placed, as it should.  However, the difference between the marker and the cursor is not shown anywhere.  See 1.x for the correct behavior.
-
 ------------
 
 Plot update problem:
