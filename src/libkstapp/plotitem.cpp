@@ -801,6 +801,7 @@ void PlotItem::setPlotRectsDirty() {
   _plotRectsDirty = true; 
   xAxis()->setTicksUpdated(); 
   yAxis()->setTicksUpdated();
+  setPlotPixmapDirty();
 }
 
 
