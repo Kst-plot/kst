@@ -38,6 +38,16 @@
      </layout>
     </widget>
    </item>
+   <item row="2" column="0" >
+    <widget class="QDialogButtonBox" name="_buttonBox" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons" >
+      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="0" >
     <widget class="QGroupBox" name="vectorGroup" >
      <property name="title" >
@@ -50,7 +60,7 @@
       <item row="0" column="0" >
        <widget class="QRadioButton" name="_xVector" >
         <property name="text" >
-         <string>X Vector</string>
+         <string>&amp;X Vector</string>
         </property>
         <property name="checked" >
          <bool>true</bool>
@@ -60,24 +70,17 @@
       <item row="0" column="1" >
        <widget class="QRadioButton" name="_yVector" >
         <property name="text" >
-         <string>Y Vector</string>
+         <string>&amp;Y Vector</string>
         </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="2" column="0" >
-    <widget class="QDialogButtonBox" name="_buttonBox" >
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons" >
-      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-   </item>
   </layout>
+  <zorder>colorGroup</zorder>
+  <zorder>_buttonBox</zorder>
+  <zorder>vectorGroup</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>

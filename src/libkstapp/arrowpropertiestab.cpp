@@ -38,6 +38,8 @@ ArrowPropertiesTab::~ArrowPropertiesTab() {
 void ArrowPropertiesTab::update() {
   _startArrowScale->setEnabled(_startArrow->isChecked());
   _endArrowScale->setEnabled(_endArrow->isChecked());
+  _startArrowLabel->setEnabled(_startArrow->isChecked());
+  _endArrowLabel->setEnabled(_endArrow->isChecked());
 }
 
 

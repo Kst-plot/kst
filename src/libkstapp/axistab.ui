@@ -21,6 +21,9 @@
      <layout class="QGridLayout" name="gridLayout_3" >
       <item row="0" column="0" >
        <widget class="QCheckBox" name="_scaleLog" >
+        <property name="toolTip" >
+         <string/>
+        </property>
         <property name="text" >
          <string>&amp;Logarithmic</string>
         </property>
@@ -28,15 +31,11 @@
       </item>
       <item row="0" column="1" >
        <widget class="QCheckBox" name="_scaleBaseOffset" >
+        <property name="whatsThis" >
+         <string>The axis numbers are displayed relative to a reference value, which is displayed on the same line as the axis label.  This option is designed to allow small differences from large offsets to be easily seen.</string>
+        </property>
         <property name="text" >
          <string>&amp;Base and offset mode</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2" colspan="2" >
-       <widget class="QCheckBox" name="_scaleReverse" >
-        <property name="text" >
-         <string>&amp;Reverse</string>
         </property>
        </widget>
       </item>
@@ -48,6 +47,12 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="toolTip" >
+         <string>Axis is time</string>
+        </property>
+        <property name="whatsThis" >
+         <string>Interpret the axis as time.</string>
+        </property>
         <property name="text" >
          <string>&amp;Interpret as:</string>
         </property>
@@ -57,6 +62,12 @@
        <widget class="QComboBox" name="_scaleInterpretType" >
         <property name="enabled" >
          <bool>false</bool>
+        </property>
+        <property name="toolTip" >
+         <string>Time encoding type</string>
+        </property>
+        <property name="whatsThis" >
+         <string>The axis represents time, whose encoding is selected here.</string>
         </property>
        </widget>
       </item>
@@ -87,6 +98,12 @@
         <property name="enabled" >
          <bool>false</bool>
         </property>
+        <property name="toolTip" >
+         <string>Time display format</string>
+        </property>
+        <property name="whatsThis" >
+         <string>If the axis is to be intpreted as time, then display the time on the axis with this format.</string>
+        </property>
        </widget>
       </item>
       <item row="3" column="0" colspan="3" >
@@ -104,6 +121,9 @@
       </item>
       <item row="3" column="3" >
        <widget class="QSpinBox" name="_significantDigits" >
+        <property name="whatsThis" >
+         <string>If this many digits are required to display the tick numbers, then the axis will revert to Base/Offset mode.</string>
+        </property>
         <property name="minimum" >
          <number>2</number>
         </property>
@@ -115,7 +135,26 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="2" colspan="2" >
+       <widget class="QCheckBox" name="_scaleReverse" >
+        <property name="whatsThis" >
+         <string>Reverse the direction of the axis, so the numbers are decreasing, rather than increasing.f</string>
+        </property>
+        <property name="text" >
+         <string>&amp;Reverse</string>
+        </property>
+       </widget>
+      </item>
      </layout>
+     <zorder>_scaleLog</zorder>
+     <zorder>_scaleBaseOffset</zorder>
+     <zorder>_scaleInterpret</zorder>
+     <zorder>_scaleInterpretType</zorder>
+     <zorder>_Label_6</zorder>
+     <zorder>_scaleDisplayType</zorder>
+     <zorder>label_2</zorder>
+     <zorder>_significantDigits</zorder>
+     <zorder>_scaleReverse</zorder>
     </widget>
    </item>
    <item row="1" column="0" >
@@ -186,6 +225,12 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="toolTip" >
+         <string>Density of major ticks</string>
+        </property>
+        <property name="whatsThis" >
+         <string>Specify the density of major ticks.  The major tick interval will automatically be chosen as a power of 10 times 1,2, or 5.  This changes the target tick spacing within this constraint.</string>
         </property>
        </widget>
       </item>
@@ -273,38 +318,6 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="0" colspan="2" >
-       <widget class="QLabel" name="label_3" >
-        <property name="text" >
-         <string>Minor tic&amp;k count:</string>
-        </property>
-        <property name="alignment" >
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy" >
-         <cstring>_axisMinorTickCount</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2" >
-       <widget class="QSpinBox" name="_axisMinorTickCount" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimum" >
-         <number>1</number>
-        </property>
-        <property name="maximum" >
-         <number>10</number>
-        </property>
-        <property name="value" >
-         <number>4</number>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="0" >
        <widget class="QLabel" name="_axisMinorLineStyleLabel" >
         <property name="text" >
@@ -341,6 +354,38 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="0" colspan="2" >
+       <widget class="QLabel" name="label_3" >
+        <property name="text" >
+         <string>Minor tic&amp;k count:</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy" >
+         <cstring>_axisMinorTickCount</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2" >
+       <widget class="QSpinBox" name="_axisMinorTickCount" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimum" >
+         <number>1</number>
+        </property>
+        <property name="maximum" >
+         <number>10</number>
+        </property>
+        <property name="value" >
+         <number>4</number>
+        </property>
+       </widget>
+      </item>
       <item row="3" column="1" >
        <widget class="Kst::ColorButton" name="_axisMinorLineColor" />
       </item>
@@ -350,7 +395,6 @@
      <zorder>label_12</zorder>
      <zorder>label_3</zorder>
      <zorder>_axisMinorTickCount</zorder>
-     <zorder>horizontalLayoutWidget_2</zorder>
      <zorder>_axisMinorLineColor</zorder>
     </widget>
    </item>

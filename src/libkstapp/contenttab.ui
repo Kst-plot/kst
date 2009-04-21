@@ -59,10 +59,13 @@
         </sizepolicy>
        </property>
        <property name="text" >
-        <string>Available objects:</string>
+        <string>&amp;Available objects:</string>
        </property>
        <property name="wordWrap" >
         <bool>false</bool>
+       </property>
+       <property name="buddy" >
+        <cstring>_availableRelationList</cstring>
        </property>
       </widget>
      </item>
@@ -85,10 +88,13 @@
         </sizepolicy>
        </property>
        <property name="text" >
-        <string>Displayed objects:</string>
+        <string>&amp;Displayed objects:</string>
        </property>
        <property name="wordWrap" >
         <bool>false</bool>
+       </property>
+       <property name="buddy" >
+        <cstring>_displayedRelationList</cstring>
        </property>
       </widget>
      </item>
