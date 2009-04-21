@@ -60,3 +60,17 @@ Smarter ASCII reader:
     (eg, is it a CSV?  Does it have a field name header?)
   these should be used only for new files, and should be used to sed the defaults, which can still be changed with 'configure'.
 
+---------
+
+Smart selection of minor tick intervals.
+  There needs to be an option to automatically chose the number of minor tick intervals: 
+  If the major interval is 1x10^n or 5x10^n there should be 5 minor intervals.  
+  If it is 2x10^n, there should be 4.
+  This was in 1.x
+
+---------
+
+Change File Dialog is confusing.  It is not clear what the two filters at the top do, and the 
+way they do it is inconsistent: The top is applyed when you hit the all from button.  The next one
+is live, and the button clears the selection.  There is no way to combine the options.
+  Better: a file text entry and a regexp text entry, an apply filters button, and an 'and/or' radio pair.

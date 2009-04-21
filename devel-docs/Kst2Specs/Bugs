@@ -39,5 +39,28 @@ The curve updates, but the equation/equation curve does not.
 
 ------------
 
+Error in choice of offset mode.
+Create a plot with a Y range from -0.032 to 0.041.  It goes into base/offset mode and shouldn't.
+
+------------
+
+Drawing problems in resizing arrow
+draw an arrow.  In layout mode, grab one end and drag it around.  There are drawing artifacts left.
+
+------------
+
+'ok' in arrow dialog moves the arrow.
+draw an arrow. Open the edit dialog.  change something and hit apply.  The arrow moves.
+
+------------
+
+Plot is not regenerated after 'ok' in the plot dialog axis tabs makes a visual change. 
+ -create a plot.
+ -in the plot dialog axis tab change something (eg, the 'draw grid lines' option) and hit 'ok'.
+The plot is not redrawn to honor this change.  (if you do something else to force a
+redraw, the change is displayed.)
+
+-------------
+
 Image dialog 'smart' range calculations seem to be... odd.
 
