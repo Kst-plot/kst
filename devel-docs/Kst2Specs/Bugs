@@ -1,3 +1,26 @@
+---------------TO BE DONE BEFORE BETA--------------------------------
+
+Equation update problem
+  -Create a curve from a datasource.
+  -create an equation from a vector from the curve.
+  -Change the input vector (eg, with the 'back one screen' button)
+The curve updates, but the equation/equation curve does not.
+
+------------
+
+Plot is not regenerated after 'ok' in the plot dialog axis tabs makes a visual change. 
+ -create a plot.
+ -in the plot dialog axis tab change something (eg, the 'draw grid lines' option) and hit 'ok'.
+The plot is not redrawn to honor this change.  (if you do something else to force a
+redraw, the change is displayed.)
+
+-------------
+
+
+
+
+---------------TO BE DONE AFTER BETA--------------------------------
+
 
 Auto-labels, and '_' in field names:
 When plots are using name-based auto-labels, any '_' in field names gets interpreted as a subscript.
@@ -22,23 +45,6 @@ view on a load of a .kst file doesn't match, the resize logic should be triggere
 
 ------------
 
-Plot update problem:
-  -from the data wizard create several plots.
-  -Make a change to the plot that changes the size of the plot (eg, change the font size.
- The plot you changed is happy, but all of the other plots don't get automatically re-aligned.
-  -Move your mouse into one of the plots that is not properly aligned.  
-The curve is re-drawn to be aligned with the other curves, but the plot axis is not re-drawn.
-
-------------
-
-Equation update problem
-  -Create a curve from a datasource.
-  -create an equation from a vector from the curve.
-  -Change the input vector (eg, with the 'back one screen' button)
-The curve updates, but the equation/equation curve does not.
-
-------------
-
 Error in choice of offset mode.
 Create a plot with a Y range from -0.032 to 0.041.  It goes into base/offset mode and shouldn't.
 
@@ -53,14 +59,6 @@ draw an arrow.  In layout mode, grab one end and drag it around.  There are draw
 draw an arrow. Open the edit dialog.  change something and hit apply.  The arrow moves.
 
 ------------
-
-Plot is not regenerated after 'ok' in the plot dialog axis tabs makes a visual change. 
- -create a plot.
- -in the plot dialog axis tab change something (eg, the 'draw grid lines' option) and hit 'ok'.
-The plot is not redrawn to honor this change.  (if you do something else to force a
-redraw, the change is displayed.)
-
--------------
 
 Image dialog 'smart' range calculations seem to be... odd.
 

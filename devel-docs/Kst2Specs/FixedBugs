@@ -531,3 +531,13 @@ Create a plot with 24 curves from the data wizard.  The Y axis label is offset v
 'c' mode doesn't show difference.
 'c' mode is used to find the offset from a marker to the cursor.
 Currently, if 'c' is hit, a marker is placed, as it should.  However, the difference between the marker and the cursor is not shown anywhere.  See 1.x for the correct behavior.
+
+------------
+Plot update problem:
+  -from the data wizard create several plots.
+  -Make a change to the plot that changes the size of the plot (eg, change the font size.
+ The plot you changed is happy, but all of the other plots don't get automatically re-aligned.
+  -Move your mouse into one of the plots that is not properly aligned.  
+The curve is re-drawn to be aligned with the other curves, but the plot axis is not re-drawn.
+
+------------
