@@ -15,7 +15,7 @@
 
 #include <datasource.h>
 #include <dataplugin.h>
-#include <fitsio.h>
+#include <libcfitsio0/fitsio.h>
 
 class LFIIOSource : public Kst::DataSource {
   Q_OBJECT

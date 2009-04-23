@@ -31,5 +31,5 @@ then
 	echo "Using Icecream"
 	PATH=/opt/icecream/bin:$PATH make -j4
 else
-	make
+	make -j3
 fi

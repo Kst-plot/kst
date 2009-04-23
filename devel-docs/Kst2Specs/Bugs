@@ -16,8 +16,12 @@ redraw, the change is displayed.)
 
 -------------
 
-
-
+Loading a kst file does not seem to work at all:
+  -run kst
+  -with the wizard, make a plot with three curves
+  -save it.
+  -restart kst, loading the file from the command line (./run-kst tmp.kst)
+ kst gives an 'invalid Tag' error, and no plots are shown.
 
 ---------------TO BE DONE AFTER BETA--------------------------------
 
@@ -32,7 +36,7 @@ There needs to be an option to somehow escape these when using them in a label.
 
 ---------
 
-Tooltips everywhere.
+Tooltips/whats this where helpful.
 Accelerators everywhere.
 
 ---------

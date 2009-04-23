@@ -36,6 +36,9 @@ EquationTab::EquationTab(QWidget *parent)
 
   _curvePlacement->setExistingPlots(Data::self()->plotList());
 
+  _xVectorLabel->setBuddy(_xVectors->_vector);
+  _scalarsLabel->setBuddy(_scalars->_scalar);
+  _vectorsLabel->setBuddy(_vectors->_vector);
   connect(_xVectors, SIGNAL(selectionChanged(QString)), this, SLOT(selectionChanged()));
   connect(_equation, SIGNAL(textChanged(const QString &)), this, SLOT(selectionChanged()));
   connect(Operators, SIGNAL(activated(QString)), this, SLOT(equationOperatorUpdate(const QString&)));

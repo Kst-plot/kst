@@ -13,7 +13,7 @@
    <item row="1" column="0" colspan="2" >
     <widget class="QGroupBox" name="_dataStringGroup" >
      <property name="title" >
-      <string>Read from data source</string>
+      <string>Read from data &amp;source</string>
      </property>
      <property name="checkable" >
       <bool>true</bool>
@@ -44,13 +44,16 @@
       <item row="1" column="0" >
        <widget class="QLabel" name="label_5" >
         <property name="text" >
-         <string>Field:</string>
+         <string>&amp;Field:</string>
         </property>
         <property name="alignment" >
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="wordWrap" >
          <bool>false</bool>
+        </property>
+        <property name="buddy" >
+         <cstring>_field</cstring>
         </property>
        </widget>
       </item>
@@ -88,7 +91,7 @@
            <bool>false</bool>
           </property>
           <property name="text" >
-           <string>Conn&amp;ect</string>
+           <string>&amp;Connect</string>
           </property>
          </widget>
         </item>
@@ -98,7 +101,7 @@
            <bool>false</bool>
           </property>
           <property name="text" >
-           <string>Con&amp;figure...</string>
+           <string>Co&amp;nfigure...</string>
           </property>
          </widget>
         </item>
@@ -110,7 +113,7 @@
    <item row="0" column="0" colspan="2" >
     <widget class="QGroupBox" name="_generatedStringGroup" >
      <property name="title" >
-      <string>Generate</string>
+      <string>&amp;Generate</string>
      </property>
      <property name="checkable" >
       <bool>true</bool>
@@ -139,10 +142,13 @@
            </sizepolicy>
           </property>
           <property name="text" >
-           <string>Value: </string>
+           <string>V&amp;alue: </string>
           </property>
           <property name="wordWrap" >
            <bool>false</bool>
+          </property>
+          <property name="buddy" >
+           <cstring>_stringValue</cstring>
           </property>
          </widget>
         </item>
@@ -164,8 +170,8 @@
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
   <customwidget>
-    <class>Kst::DataSourceSelector</class>
-    <extends>QWidget</extends>
+   <class>Kst::DataSourceSelector</class>
+   <extends>QWidget</extends>
    <header>datasourceselector.h</header>
   </customwidget>
   <customwidget>

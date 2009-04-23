@@ -11,19 +11,30 @@ struct DFEntryType {
   int fp;
 };
 
-#define NDF 5
+#define NDF 15
 #define SCOUNT 0
 #define FCOUNT 1
 #define SINE 2
 #define SSINE 3
 #define COS 4
+#define EXTRA 5
 
 struct DFEntryType df[NDF] = {
   {"scount", 1, -1},
   {"fcount", 20, -1},
   {"sine", 20, -1},
   {"ssine", 1, -1},
-  {"cos", 20, -1}
+  {"cos", 20, -1},
+  {"E0", 20, -1},
+  {"E1", 20, -1},
+  {"E2", 20, -1},
+  {"E3", 20, -1},
+  {"E4", 20, -1},
+  {"E5", 20, -1},
+  {"E6", 20, -1},
+  {"E7", 20, -1},
+  {"E8", 20, -1},
+  {"E9", 20, -1}
 };
   
 int main() {
@@ -31,6 +42,7 @@ int main() {
   char tmpstr[150];
   FILE *fpf;
   int i, count = 0;
+  int j;
   float x;
 
   sprintf(dirfilename, "%d.dm", time(NULL));
@@ -99,6 +111,15 @@ int main() {
       x = cos(2.0*M_PI*x/100.0);
       write(df[COS].fp, &x, sizeof(float));
     }
+
+    /* write extras */
+    for (j=5; j<NDF; j++) {
+      for (i=0; i<df[j].spf; i++) {
+        x = (double)rand()/(double)RAND_MAX;
+        write(df[j].fp, &x, sizeof(float));
+      }
+    }
+
     printf("writing frame %d  \r", count);
     fflush(stdout);
     usleep(200000);

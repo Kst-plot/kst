@@ -117,7 +117,7 @@
          </sizepolicy>
         </property>
         <property name="text" >
-         <string>Type:</string>
+         <string>&amp;Type:</string>
         </property>
         <property name="wordWrap" >
          <bool>false</bool>
@@ -155,7 +155,7 @@
          </sizepolicy>
         </property>
         <property name="text" >
-         <string>Density:</string>
+         <string>&amp;Density:</string>
         </property>
         <property name="wordWrap" >
          <bool>false</bool>
@@ -232,7 +232,7 @@
          </sizepolicy>
         </property>
         <property name="text" >
-         <string>Type:</string>
+         <string>Type&amp;:</string>
         </property>
         <property name="wordWrap" >
          <bool>false</bool>
@@ -267,7 +267,7 @@
          </sizepolicy>
         </property>
         <property name="text" >
-         <string>Weight:</string>
+         <string>&amp;Weight:</string>
         </property>
         <property name="wordWrap" >
          <bool>false</bool>
@@ -324,7 +324,7 @@
          </sizepolicy>
         </property>
         <property name="text" >
-         <string>Type:</string>
+         <string>Ty&amp;pe:</string>
         </property>
         <property name="wordWrap" >
          <bool>false</bool>

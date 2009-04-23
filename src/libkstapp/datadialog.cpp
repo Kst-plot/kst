@@ -77,9 +77,10 @@ void DataDialog::createGui() {
 
   QHBoxLayout *layout = new QHBoxLayout(box);
 
-  QLabel *label = new QLabel(tr("Unique Name:"), box);
+  QLabel *label = new QLabel(tr("Uni&que name:"), box);
   _tagString = new QLineEdit(box);
   connect(_tagString, SIGNAL(textChanged(QString)), this, SLOT(modified()));
+  label->setBuddy(_tagString);
 
   QPushButton *button = new QPushButton(tr("Edit Multiple >>"));
   connect(button, SIGNAL(clicked()), this, SLOT(slotEditMultiple()));

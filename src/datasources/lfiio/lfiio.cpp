@@ -12,7 +12,7 @@
 #include "lfiio.h"
 
 #include <QXmlStreamWriter>
-#include <fitsio.h>
+//#include <fitsio.h>
 #include <math.h>
 
 #define TIME_FIELD  "TIME"

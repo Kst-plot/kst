@@ -31,10 +31,26 @@
       <property name="spacing" >
        <number>0</number>
       </property>
+      <item row="3" column="0" >
+       <spacer name="horizontalSpacer" >
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType" >
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0" >
+         <size>
+          <width>28</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
       <item row="0" column="0" colspan="3" >
        <widget class="QRadioButton" name="_noPlot" >
         <property name="text" >
-         <string>Do not place in any plot</string>
+         <string>Do not pl&amp;ace in any plot</string>
         </property>
        </widget>
       </item>
@@ -107,7 +123,7 @@
          <item>
           <widget class="QRadioButton" name="_autoLayout" >
            <property name="text" >
-            <string>Automatic Layout</string>
+            <string>Au&amp;tomatic Layout</string>
            </property>
            <property name="checked" >
             <bool>true</bool>
@@ -119,7 +135,7 @@
            <item>
             <widget class="QRadioButton" name="_customGrid" >
              <property name="text" >
-              <string>Custom Grid:</string>
+              <string>Custom &amp;Grid:</string>
              </property>
             </widget>
            </item>
@@ -139,7 +155,10 @@
            <item>
             <widget class="QLabel" name="label_2" >
              <property name="text" >
-              <string>Columns</string>
+              <string>Colu&amp;mns</string>
+             </property>
+             <property name="buddy" >
+              <cstring>_gridColumns</cstring>
              </property>
             </widget>
            </item>
@@ -148,35 +167,14 @@
          <item>
           <widget class="QRadioButton" name="_protectLayout" >
            <property name="text" >
-            <string>Protect Existing Layout</string>
+            <string>&amp;Protect Existing Layout</string>
            </property>
           </widget>
          </item>
         </layout>
        </widget>
       </item>
-      <item row="3" column="0" >
-       <spacer name="horizontalSpacer" >
-        <property name="orientation" >
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType" >
-         <enum>QSizePolicy::Fixed</enum>
-        </property>
-        <property name="sizeHint" stdset="0" >
-         <size>
-          <width>28</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
      </layout>
-     <zorder>_noPlot</zorder>
-     <zorder>_existingPlot</zorder>
-     <zorder>_plotList</zorder>
-     <zorder>_newPlot</zorder>
-     <zorder>_layoutGroup</zorder>
     </widget>
    </item>
   </layout>
@@ -184,10 +182,14 @@
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <tabstops>
-  <tabstop>_newPlot</tabstop>
-  <tabstop>_plotList</tabstop>
-  <tabstop>_existingPlot</tabstop>
   <tabstop>_noPlot</tabstop>
+  <tabstop>_existingPlot</tabstop>
+  <tabstop>_plotList</tabstop>
+  <tabstop>_newPlot</tabstop>
+  <tabstop>_autoLayout</tabstop>
+  <tabstop>_customGrid</tabstop>
+  <tabstop>_gridColumns</tabstop>
+  <tabstop>_protectLayout</tabstop>
  </tabstops>
  <resources/>
  <connections/>

@@ -12,7 +12,7 @@
 #include "fitsimage.h"
 
 #include <QXmlStreamWriter>
-#include <fitsio.h>
+//#include <fitsio.h>
 #include <math.h>
 
 #include "kst_i18n.h"

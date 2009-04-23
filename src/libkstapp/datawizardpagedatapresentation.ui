@@ -34,7 +34,7 @@
          </sizepolicy>
         </property>
         <property name="text" >
-         <string>Create from field:</string>
+         <string>Create fr&amp;om field:</string>
         </property>
         <property name="checked" >
          <bool>true</bool>
@@ -50,7 +50,7 @@
          </sizepolicy>
         </property>
         <property name="text" >
-         <string>Use existing:</string>
+         <string>Use existin&amp;g:</string>
         </property>
        </widget>
       </item>

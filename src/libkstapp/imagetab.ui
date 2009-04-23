@@ -68,7 +68,7 @@
       <item row="0" column="2" >
        <widget class="QRadioButton" name="_colorAndContour" >
         <property name="text" >
-         <string>Color Map and Contour &amp;Map</string>
+         <string>C&amp;olor Map and Contour &amp;Map</string>
         </property>
        </widget>
       </item>
@@ -112,7 +112,7 @@
          </sizepolicy>
         </property>
         <property name="text" >
-         <string>&amp;Max/Min</string>
+         <string>Max&amp;/Min</string>
         </property>
        </widget>
       </item>

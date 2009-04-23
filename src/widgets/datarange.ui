@@ -62,7 +62,7 @@
          <string>Select this to skip frames, rather than reading all of the data.  This is useful for reading very long but slowly changing data files.</string>
         </property>
         <property name="text" >
-         <string>Read 1 sample per:</string>
+         <string>Read &amp;1 sample per:</string>
         </property>
        </widget>
       </item>
@@ -78,7 +78,7 @@
          <string>Select this to read all of the data up to the end of the file.  </string>
         </property>
         <property name="text" >
-         <string>&amp;Read to end</string>
+         <string>Read to &amp;end</string>
         </property>
         <property name="checked" >
          <bool>true</bool>
@@ -155,13 +155,16 @@
          </sizepolicy>
         </property>
         <property name="text" >
-         <string>Start:</string>
+         <string>&amp;Start:</string>
         </property>
         <property name="alignment" >
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="wordWrap" >
          <bool>false</bool>
+        </property>
+        <property name="buddy" >
+         <cstring>_start</cstring>
         </property>
        </widget>
       </item>
@@ -177,13 +180,16 @@
          <string>Select this to average the skipped frames together.  Provides simple low pass filtering.</string>
         </property>
         <property name="text" >
-         <string>Range:</string>
+         <string>&amp;Range:</string>
         </property>
         <property name="alignment" >
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="wordWrap" >
          <bool>false</bool>
+        </property>
+        <property name="buddy" >
+         <cstring>_range</cstring>
         </property>
        </widget>
       </item>

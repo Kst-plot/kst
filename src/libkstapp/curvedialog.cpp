@@ -45,6 +45,13 @@ CurveTab::CurveTab(QWidget *parent)
 
   _curvePlacement->setExistingPlots(Data::self()->plotList());
 
+  _xVectorLabel->setBuddy(_xVector->_vector);
+  _yVectorLabel->setBuddy(_yVector->_vector);
+  _xErrorLabel->setBuddy(_xError->_vector);
+  _yErrorLabel->setBuddy(_yError->_vector);
+  _xMinusErrorLabel->setBuddy(_xMinusError->_vector);
+  _yMinusErrorLabel->setBuddy(_yMinusError->_vector);
+
   connect(_xVector, SIGNAL(selectionChanged(QString)), this, SIGNAL(vectorsChanged()));
   connect(_yVector, SIGNAL(selectionChanged(QString)), this, SIGNAL(vectorsChanged()));
   connect(_xMinusSameAsPlus, SIGNAL(toggled(bool)), this, SLOT(xCheckboxClicked()));

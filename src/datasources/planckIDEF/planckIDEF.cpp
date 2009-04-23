@@ -13,7 +13,6 @@
 
 #include <assert.h>
 #include <QXmlStreamWriter>
-#include <fitsio.h>
 #include <math.h>
 #include <QFileInfo>
 #include <QDir>

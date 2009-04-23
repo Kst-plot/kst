@@ -13,7 +13,7 @@
    <item row="0" column="0" >
     <widget class="QRadioButton" name="_readFromSource" >
      <property name="text" >
-      <string>Read from data source</string>
+      <string>Read from data &amp;source</string>
      </property>
      <property name="checked" >
       <bool>true</bool>
@@ -26,7 +26,7 @@
       <string>Generate a new vector with the properties given here as the independent variable.</string>
      </property>
      <property name="text" >
-      <string>Read from data vector</string>
+      <string>Read from data &amp;vector</string>
      </property>
     </widget>
    </item>
@@ -77,13 +77,16 @@
          </sizepolicy>
         </property>
         <property name="text" >
-         <string>Field:</string>
+         <string>&amp;Field:</string>
         </property>
         <property name="alignment" >
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
         <property name="wordWrap" >
          <bool>false</bool>
+        </property>
+        <property name="buddy" >
+         <cstring>_field</cstring>
         </property>
        </widget>
       </item>
@@ -103,13 +106,16 @@
          </sizepolicy>
         </property>
         <property name="text" >
-         <string>Field:</string>
+         <string>&amp;Field:</string>
         </property>
         <property name="alignment" >
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
         <property name="wordWrap" >
          <bool>false</bool>
+        </property>
+        <property name="buddy" >
+         <cstring>_fieldRV</cstring>
         </property>
        </widget>
       </item>
@@ -147,7 +153,7 @@
            <bool>false</bool>
           </property>
           <property name="text" >
-           <string>Conn&amp;ect</string>
+           <string>&amp;Connect</string>
           </property>
          </widget>
         </item>
@@ -157,7 +163,7 @@
            <bool>false</bool>
           </property>
           <property name="text" >
-           <string>Con&amp;figure...</string>
+           <string>Co&amp;nfigure...</string>
           </property>
          </widget>
         </item>
@@ -171,13 +177,16 @@
            <bool>false</bool>
           </property>
           <property name="text" >
-           <string>Frame:</string>
+           <string>F&amp;rame:</string>
           </property>
           <property name="alignment" >
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
           <property name="wordWrap" >
            <bool>false</bool>
+          </property>
+          <property name="buddy" >
+           <cstring>_start</cstring>
           </property>
          </widget>
         </item>
@@ -219,7 +228,7 @@
            <string>Select this to read data from the end of the file.  This is useful for scrolling displays when the file is being appended by another application.</string>
           </property>
           <property name="text" >
-           <string>Last Frame</string>
+           <string>&amp;Last Frame</string>
           </property>
          </widget>
         </item>
@@ -257,10 +266,13 @@
            </sizepolicy>
           </property>
           <property name="text" >
-           <string>Value: </string>
+           <string>V&amp;alue: </string>
           </property>
           <property name="wordWrap" >
            <bool>false</bool>
+          </property>
+          <property name="buddy" >
+           <cstring>_scalarValue</cstring>
           </property>
          </widget>
         </item>
@@ -285,7 +297,7 @@
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
   <customwidget>
-    <class>Kst::DataSourceSelector</class>
+   <class>Kst::DataSourceSelector</class>
    <extends>QWidget</extends>
    <header>datasourceselector.h</header>
   </customwidget>
