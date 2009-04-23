@@ -69,7 +69,7 @@
          </sizepolicy>
         </property>
         <property name="text" >
-         <string>Bins from:</string>
+         <string>Bins from&amp;:</string>
         </property>
         <property name="alignment" >
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -142,7 +142,7 @@
          </sizepolicy>
         </property>
         <property name="text" >
-         <string>Num bins:</string>
+         <string>Num bin&amp;s:</string>
         </property>
         <property name="alignment" >
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -201,7 +201,7 @@
         <item>
          <widget class="QCheckBox" name="_realTimeAutoBin" >
           <property name="text" >
-           <string>&amp;Real-time auto bin</string>
+           <string>Real&amp;-time auto bin</string>
           </property>
          </widget>
         </item>
@@ -228,7 +228,7 @@
          <string>The Y axis of the histogram reports the percent of the samples in the bin.</string>
         </property>
         <property name="text" >
-         <string>&amp;Percent in bin</string>
+         <string>Percent&amp; in bin</string>
         </property>
        </widget>
       </item>
@@ -248,7 +248,7 @@
          <string>The Y axis of the histogram reports the number of samples in the bin.</string>
         </property>
         <property name="text" >
-         <string>&amp;Number in bin</string>
+         <string>Numbe&amp;r in bin</string>
         </property>
         <property name="checked" >
          <bool>true</bool>
@@ -278,10 +278,6 @@
     <widget class="Kst::CurvePlacement" native="1" name="_curvePlacement" />
    </item>
   </layout>
-  <zorder>ButtonGroup1_3</zorder>
-  <zorder>ButtonGroup5</zorder>
-  <zorder>_curveAppearance</zorder>
-  <zorder>_curvePlacement</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>

@@ -123,7 +123,7 @@
          <item>
           <widget class="QRadioButton" name="_autoLayout" >
            <property name="text" >
-            <string>Au&amp;tomatic Layout</string>
+            <string>Automati&amp;c Layout</string>
            </property>
            <property name="checked" >
             <bool>true</bool>

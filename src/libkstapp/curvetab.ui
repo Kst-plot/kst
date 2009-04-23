@@ -186,7 +186,7 @@
        <item>
         <widget class="QCheckBox" name="_ignoreAutoScale" >
          <property name="text" >
-          <string>Ign&amp;ore in automatic axes range calculations</string>
+          <string>I&amp;gnore in automatic axes range calculations</string>
          </property>
         </widget>
        </item>

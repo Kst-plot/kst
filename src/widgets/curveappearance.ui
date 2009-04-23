@@ -232,7 +232,7 @@
          </sizepolicy>
         </property>
         <property name="text" >
-         <string>Type&amp;:</string>
+         <string>&amp;Type:</string>
         </property>
         <property name="wordWrap" >
          <bool>false</bool>
@@ -324,7 +324,7 @@
          </sizepolicy>
         </property>
         <property name="text" >
-         <string>Ty&amp;pe:</string>
+         <string>&amp;Type:</string>
         </property>
         <property name="wordWrap" >
          <bool>false</bool>

@@ -16,11 +16,11 @@ redraw, the change is displayed.)
 
 -------------
 
-Loading a kst file does not seem to work at all:
+Loading a kst files does not seem to work:
   -run kst
   -with the wizard, make a plot with three curves
   -save it.
-  -restart kst, loading the file from the command line (./run-kst tmp.kst)
+  -restart kst and load the kst file you just created.
  kst gives an 'invalid Tag' error, and no plots are shown.
 
 ---------------TO BE DONE AFTER BETA--------------------------------

@@ -91,15 +91,17 @@ void HistogramTab::generateAutoBin() {
 
   VectorPtr selectedVector = vector();
 
-  selectedVector->readLock(); // Hmm should we really lock here?  AutoBin should I think
-  int n;
-  double max, min;
-  Histogram::AutoBin(selectedVector, &n, &max, &min);
-  selectedVector->unlock();
+  if (selectedVector) {
+    selectedVector->readLock(); // Hmm should we really lock here?  AutoBin should I think
+    int n;
+    double max, min;
+    Histogram::AutoBin(selectedVector, &n, &max, &min);
+    selectedVector->unlock();
 
-  _numberOfBins->setValue(n);
-  _min->setText(QString::number(min));
-  _max->setText(QString::number(max));
+    _numberOfBins->setValue(n);
+    _min->setText(QString::number(min));
+    _max->setText(QString::number(max));
+  }
 }
 
 
