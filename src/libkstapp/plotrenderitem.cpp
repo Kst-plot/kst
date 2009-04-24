@@ -168,14 +168,22 @@ void PlotRenderItem::saveInPlot(QXmlStreamWriter &xml) {
   xml.writeAttribute("type", QVariant(_type).toString());
   if (_referencePointMode) {
     xml.writeStartElement("referencepoint");
+    xml.writeAttribute("x", QVariant(_referencePoint.x()).toString());
+    xml.writeAttribute("y", QVariant(_referencePoint.y()).toString());
+    xml.writeEndElement();
   }
-  xml.writeAttribute("x", QVariant(_referencePoint.x()).toString());
-  xml.writeAttribute("y", QVariant(_referencePoint.y()).toString());
-  xml.writeEndElement();
   foreach (RelationPtr relation, relationList()) {
     xml.writeStartElement("relation");
     xml.writeAttribute("tag", relation->Name());
     xml.writeEndElement();
+  }
+  QList<QGraphicsItem*> list = QGraphicsItem::children();
+  foreach (QGraphicsItem *item, list) {
+    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+    if (!viewItem)
+      continue;
+
+    viewItem->save(xml);
   }
 }
 
@@ -213,6 +221,10 @@ bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store)
         y = av.toString().toDouble();
      }
      setReferencePoint(QPointF(x, y));
+    } else if (xml.isStartElement()) {
+      if (!parse(xml, validTag) && validTag) {
+        ViewItem *i = GraphicsFactory::parse(xml, store, parentView(), this);
+      }
     } else if (xml.isEndElement()) {
       if (xml.name().toString() != expectedEnd) {
         validTag = false;
