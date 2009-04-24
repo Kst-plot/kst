@@ -112,7 +112,6 @@ void GeneratedMatrix::change(uint nX, uint nY, double minX, double minY,
       }
     }
   }
-  setDirty(true);
 }
 
 }

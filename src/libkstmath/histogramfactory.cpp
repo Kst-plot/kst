@@ -87,6 +87,7 @@ DataObjectPtr HistogramFactory::generateObject(ObjectStore *store, QXmlStreamRea
   histogram->setXRange(min, max);
   histogram->setNumberOfBins(numberOfBins);
   histogram->setNormalizationType((Histogram::NormalizationType)normalizationMode);
+  histogram->setRealTimeAutoBin(realTimeAutoBin);
   histogram->setDescriptiveName(descriptiveName);
 
   histogram->writeLock();

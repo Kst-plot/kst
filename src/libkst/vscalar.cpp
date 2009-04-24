@@ -37,7 +37,6 @@ VScalar::VScalar(ObjectStore *store)
   _field = QString::null;
 
   setOrphan(true);
-  setDirty();
 }
 
 
@@ -62,14 +61,6 @@ void VScalar::change(DataSourcePtr in_file, const QString &in_field, int in_f0) 
   _field = in_field;
   _file = in_file;
   _f0 = in_f0;
-
-  if (_file) {
-    _file->writeLock();
-  }
-  setDirty(true);
-  if (_file) {
-    _file->unlock();
-  }
 
   if (in_file) {
     connect(in_file, SIGNAL(sourceUpdated(ObjectPtr)), this, SLOT(sourceUpdated(ObjectPtr)));
@@ -96,14 +87,6 @@ void VScalar::changeFile(DataSourcePtr in_file) {
 
   if (!in_file) {
     Debug::self()->log(i18n("Data file for scalar %1 was not opened.", Name()), Debug::Warning);
-  }
-  _file = in_file;
-  if (_file) {
-    _file->writeLock();
-  }
-  setDirty(true);
-  if (_file) {
-    _file->unlock();
   }
 }
 
@@ -152,9 +135,7 @@ void VScalar::save(QXmlStreamWriter &s) {
 /** Update a data Scalar */
 Object::UpdateType VScalar::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
-  double old_value;
   Object::UpdateType rc = NO_CHANGE;
-  old_value = _value;
   if (_file) {
     int f0;
     if (_f0<0) { 
@@ -165,17 +146,8 @@ Object::UpdateType VScalar::update() {
     _file->writeLock();
     _file->readField(&_value, _field, f0, -1);
     _file->unlock();
-    if (dirty() || (_value != old_value)) {
-      rc = UPDATE;
-    } else {
-      rc = NO_CHANGE;
-    }
-  } else {
-    rc = NO_CHANGE;
+    rc = UPDATE;
   }
-
-
-  setDirty(false);
   return rc;
 }
 

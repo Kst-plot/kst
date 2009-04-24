@@ -63,14 +63,7 @@ void String::save(QXmlStreamWriter &s) {
 Object::UpdateType String::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  setDirty(false);
-
-  QString v = value();
-  if (_provider) {
-    _provider->update();
-  }
-
-  return (v == value() ? NO_CHANGE : UPDATE);
+  return UPDATE;
 }
 
 
@@ -87,7 +80,6 @@ String& String::operator=(const char *v) {
 
 
 void String::setValue(const QString& inV) {
-  setDirty();
   _value = inV;
   emit trigger();
 }

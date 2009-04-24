@@ -32,8 +32,6 @@ Object::Object() :
   Shared(), KstRWLock(), NamedObject(),
   _store(0L)
 {
-  _dirty = false;
-
 }
 
 
@@ -62,16 +60,6 @@ int Object::getUsage() const {
 
 
 void Object::deleteDependents() {
-}
-
-
-void Object::setDirty(bool dirty) {
-  _dirty = dirty;
-}
-
-
-bool Object::dirty() const {
-  return _dirty;
 }
 
 

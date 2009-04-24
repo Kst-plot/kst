@@ -85,8 +85,6 @@ Curve::Curve(ObjectStore *store)
   _typeString = i18n("Curve");
   _type = "Curve";
   Color = QColor();
-
-  setDirty();
 }
 
 
@@ -105,8 +103,6 @@ void Curve::vectorUpdated(ObjectPtr object) {
 Object::UpdateType Curve::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  setDirty(false);
-
   VectorPtr cxV = *_inputVectors.find(COLOR_XVECTOR);
   VectorPtr cyV = *_inputVectors.find(COLOR_YVECTOR);
   if (!cxV || !cyV) {
@@ -114,31 +110,6 @@ Object::UpdateType Curve::update() {
   }
 
   writeLockInputsAndOutputs();
-
-  bool depUpdated = true;
-
-  depUpdated = UPDATE == cxV->update() || depUpdated;
-  depUpdated = UPDATE == cyV->update() || depUpdated;
-
-  VectorPtr exV = _inputVectors.contains(EXVECTOR) ? *_inputVectors.find(EXVECTOR) : 0;
-  if (exV) {
-    depUpdated = UPDATE == exV->update() || depUpdated;
-  }
-
-  VectorPtr eyV = _inputVectors.contains(EYVECTOR) ? *_inputVectors.find(EYVECTOR) : 0;
-  if (eyV) {
-    depUpdated = UPDATE == eyV->update() || depUpdated;
-  }
-
-  VectorPtr exmV = _inputVectors.contains(EXMINUSVECTOR) ? *_inputVectors.find(EXMINUSVECTOR) : 0;
-  if (exmV) {
-    depUpdated = UPDATE == exmV->update() || depUpdated;
-  }
-
-  VectorPtr eymV = _inputVectors.contains(EYMINUSVECTOR) ? *_inputVectors.find(EYMINUSVECTOR) : 0;
-  if (eymV) {
-    depUpdated = UPDATE == eymV->update() || depUpdated;
-  }
 
   MaxX = cxV->max();
   MinX = cxV->min();
@@ -165,11 +136,9 @@ Object::UpdateType Curve::update() {
 
   unlockInputsAndOutputs();
 
-  if (depUpdated) {
-    _redrawRequired = true;
-  }
+  _redrawRequired = true;
 
-  return (depUpdated ? UPDATE : NO_CHANGE);
+  return UPDATE;
 }
 
 
@@ -353,7 +322,6 @@ void Curve::setXVector(VectorPtr new_vx) {
     disconnect(_inputVectors[COLOR_XVECTOR], SIGNAL(updated(ObjectPtr)));
     _inputVectors.remove(COLOR_XVECTOR);
   }
-  setDirty();
 }
 
 
@@ -365,7 +333,6 @@ void Curve::setYVector(VectorPtr new_vy) {
     disconnect(_inputVectors[COLOR_YVECTOR], SIGNAL(updated(ObjectPtr)));
     _inputVectors.remove(COLOR_YVECTOR);
   }
-  setDirty();
 }
 
 
@@ -379,7 +346,6 @@ void Curve::setXError(VectorPtr new_ex) {
     }
     _inputVectors.remove(EXVECTOR);
   }
-  setDirty();
 }
 
 
@@ -393,7 +359,6 @@ void Curve::setYError(VectorPtr new_ey) {
     }
     _inputVectors.remove(EYVECTOR);
   }
-  setDirty();
 }
 
 
@@ -407,7 +372,6 @@ void Curve::setXMinusError(VectorPtr new_ex) {
     }
     _inputVectors.remove(EXMINUSVECTOR);
   }
-  setDirty();
 }
 
 
@@ -421,7 +385,6 @@ void Curve::setYMinusError(VectorPtr new_ey) {
     }
     _inputVectors.remove(EYMINUSVECTOR);
   }
-  setDirty();
 }
 
 
@@ -607,54 +570,45 @@ int Curve::getIndexNearXY(double x, double dx_per_pix, double y) const {
 
 void Curve::setHasPoints(bool in_HasPoints) {
   HasPoints = in_HasPoints;
-  setDirty();
 }
 
 
 void Curve::setHasLines(bool in_HasLines) {
   HasLines = in_HasLines;
-  setDirty();
 }
 
 
 void Curve::setHasBars(bool in_HasBars) {
   HasBars = in_HasBars;
-  setDirty();
 }
 
 
 void Curve::setLineWidth(int in_LineWidth) {
   LineWidth = in_LineWidth;
-  setDirty();
 }
 
 
 void Curve::setLineStyle(int in_LineStyle) {
   LineStyle = in_LineStyle;
-  setDirty();
 }
 
 
 void Curve::setBarStyle(int in_BarStyle) {
   BarStyle = in_BarStyle;
-  setDirty();
 }
 
 
 void Curve::setPointDensity(int in_PointDensity) {
   PointDensity = in_PointDensity;
-  setDirty();
 }
 
 
 void Curve::setPointType(int in_PointType) {
   PointType = in_PointType;
-  setDirty();
 }
 
 
 void Curve::setColor(const QColor& new_c) {
-  setDirty();
   Color = new_c;
 }
 

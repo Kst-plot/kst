@@ -82,8 +82,6 @@ void DataMatrix::change(DataSourcePtr file, const QString &field,
   KstWriteLocker l(this);
 
   commonConstructor(file, field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, minX, minY, stepX, stepY);
-
-  setDirty(true);
 }
 
 
@@ -94,8 +92,6 @@ void DataMatrix::changeFrames(int xStart, int yStart,
   KstWriteLocker l(this);
 
   commonConstructor(_file, _field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, minX, minY, stepX, stepY);
-
-  setDirty(true);
 }
 
 
@@ -196,18 +192,14 @@ bool DataMatrix::isValid() const {
 Object::UpdateType DataMatrix::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  bool force = dirty();
-  setDirty(false);
-
   if (_file) {
     _file->writeLock();
   }
-  Object::UpdateType rc = doUpdate(force);
+  Object::UpdateType rc = doUpdate(true);
   if (_file) {
     _file->unlock();
   }
 
-  setDirty(false);
   return rc;
 }
 
@@ -527,7 +519,6 @@ void DataMatrix::reset() { // must be called with a lock
   _NS = 0;
   _nX = 1;
   _nY = 0;
-  setDirty();
 }
 
 

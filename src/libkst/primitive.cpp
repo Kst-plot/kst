@@ -47,24 +47,7 @@ const QString& Primitive::typeString() const {
 
 Object::UpdateType Primitive::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
-
-  bool force = dirty();
-  setDirty(false);
-
-  Object::UpdateType providerRC = NO_CHANGE;
-
-  ObjectPtr prov = ObjectPtr(_provider);  // use a ObjectPtr to prevent provider being deleted during update
-  if (prov) {
-    KstWriteLocker pl(prov);
-
-    providerRC = prov->update();
-    if (!force && providerRC == Object::NO_CHANGE) {
-      return providerRC;
-    }
-  }
-
-  Object::UpdateType rc = internalUpdate(providerRC);
-  setDirty(false);
+  Object::UpdateType rc = internalUpdate(UPDATE);
   return rc;
 }
 

@@ -90,8 +90,6 @@ void Image::matrixUpdated(ObjectPtr object) {
 Object::UpdateType Image::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  setDirty(false);
-
   writeLockInputsAndOutputs();
 
   if (_inputMatrices.contains(THEMATRIX)) {
@@ -193,13 +191,11 @@ void Image::showEditDialog() {
 
 
 void Image::setUpperThreshold(double z) {
-  setDirty();
   _zUpper = z;
 }
 
 
 void Image::setLowerThreshold(double z) {
-  setDirty();
   _zLower = z;
 }
 
@@ -236,8 +232,6 @@ void Image::changeToColorOnly(MatrixPtr in_matrix, double lowerZ,
   _hasContourMap = false;
 
   connect(in_matrix, SIGNAL(updated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
-
-  setDirty();
 }
 
 
@@ -256,8 +250,6 @@ void Image::changeToContourOnly(MatrixPtr in_matrix, int numContours,
   _hasContourMap = true;
 
   connect(in_matrix, SIGNAL(updated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
-
-  setDirty();
 }
 
 
@@ -284,8 +276,6 @@ void Image::changeToColorAndContour(MatrixPtr in_matrix,
   _hasContourMap = true;
 
   connect(in_matrix, SIGNAL(updated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
-
-  setDirty();
 }
 
 
@@ -309,19 +299,16 @@ void Image::matrixDimensions(double &x, double &y, double &width, double &height
 //this should check for duplicates
 bool Image::addContourLine(double line) {
   _contourLines.append(line);
-  setDirty();
   return true;
 }
 
 
 bool Image::removeContourLine(double line) {
-  setDirty();
   return _contourLines.removeAll(line);
 }
 
 
 void Image::clearContourLines() {
-  setDirty();
   _contourLines.clear();
 }
 
@@ -341,7 +328,6 @@ QString Image::paletteName() const {
 void Image::setColorDefaults() {
   _zLower = 0;
   _zUpper = 100;
-  setDirty();
 }
 
 
@@ -349,13 +335,11 @@ void Image::setContourDefaults() {
   _contourColor = QColor("red");
   _numContourLines = 1;
   _contourWeight = 0;
-  setDirty();
 }
 
 
 void Image::setAutoThreshold(bool yes) {
   _autoThreshold = yes;
-  setDirty();
 }
 
 

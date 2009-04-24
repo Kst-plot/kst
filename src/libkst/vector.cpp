@@ -335,7 +335,6 @@ double* Vector::realloced(double *memptr, int newSize) {
 
 
 void Vector::zero() {
-  setDirty();
   _ns_min = _ns_max = 0.0;
   memset(_v, 0, sizeof(double)*_size);
   updateScalars();
@@ -343,7 +342,6 @@ void Vector::zero() {
 
 
 void Vector::blank() {
-  setDirty();
   _ns_min = _ns_max = 0.0;
   for (int i = 0; i < _size; ++i) {
     _v[i] = NOPOINT;
@@ -367,8 +365,6 @@ bool Vector::resize(int sz, bool init) {
     _size = sz;
     updateScalars();
   }
-
-  setDirty();
   return true;
 }
 

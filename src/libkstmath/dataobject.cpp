@@ -367,8 +367,6 @@ bool DataObject::loadInputs() {
   _inputStringLoadQueue.clear();
   _inputMatrixLoadQueue.clear();
 
-  setDirty();
-
   _isInputLoaded = true;
   return rc;
 }

@@ -108,7 +108,6 @@ bool Relation::redrawRequired(const CurveRenderContext& context) {
 
 
 void Relation::setIgnoreAutoScale(bool ignoreAutoScale) {
-  setDirty();
   _ignoreAutoScale = ignoreAutoScale;
 }
 

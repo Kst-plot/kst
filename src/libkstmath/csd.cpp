@@ -91,12 +91,8 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
   _outMatrix->setYLabel(i18n("Frequency [%1]").arg(_rateUnits));
 
   updateMatrixLabels();
-  _outMatrix->setDirty();
-  setDirty();
 
   connect(_inputVectors[INVECTOR], SIGNAL(updated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
-
-  setDirty();
 }
 
 
@@ -109,17 +105,7 @@ Object::UpdateType CSD::update() {
 
   VectorPtr inVector = _inputVectors[INVECTOR];
 
-  bool force = dirty();
-  setDirty(false);
-
   writeLockInputsAndOutputs();
-
-  bool xUpdated = Object::UPDATE == inVector->update();
-  // if vector was not changed, don't update the CSD
-  if (!xUpdated && !force) {
-    unlockInputsAndOutputs();
-    return NO_CHANGE;
-  }
 
   double *tempOutput, *input;
   int tempOutputLen = PSDCalculator::calculateOutputVectorLength(_windowSize, _average, _averageLength);
@@ -198,7 +184,6 @@ void CSD::setVector(VectorPtr new_v) {
   _inputVectors.remove(INVECTOR);
   new_v->writeLock();
   _inputVectors[INVECTOR] = new_v;
-  setDirty();
 }
 
 
@@ -238,7 +223,6 @@ PSDType CSD::output() const {
 
 
 void CSD::setOutput(PSDType in_outputType)  {
-  setDirty();
   _outputType = in_outputType;
 
   updateMatrixLabels();
@@ -246,7 +230,6 @@ void CSD::setOutput(PSDType in_outputType)  {
 
 
 void CSD::setApodize(bool in_apodize)  {
-  setDirty();
   _apodize = in_apodize;
 }
 
@@ -257,7 +240,6 @@ bool CSD::removeMean() const {
 
 
 void CSD::setRemoveMean(bool in_removeMean) {
-  setDirty();
   _removeMean = in_removeMean;
 }
 
@@ -268,7 +250,6 @@ bool CSD::average() const {
 
 
 void CSD::setAverage(bool in_average) {
-  setDirty();
   _average = in_average;
 }
 
@@ -279,7 +260,6 @@ double CSD::frequency() const {
 
 
 void CSD::setFrequency(double in_frequency) {
-  setDirty();
   if (in_frequency > 0.0) {
     _frequency = in_frequency;
   } else {
@@ -292,7 +272,6 @@ ApodizeFunction CSD::apodizeFxn() const {
 }
 
 void CSD::setApodizeFxn(ApodizeFunction in_fxn) {
-  setDirty();
   _apodizeFxn = in_fxn;
 }
 
@@ -311,7 +290,6 @@ int CSD::windowSize() const {
 
 
 void CSD::setWindowSize(int in_size) {
-  setDirty();
   _windowSize = in_size;
 }
 
@@ -320,7 +298,6 @@ double CSD::gaussianSigma() const {
 }
 
 void CSD::setGaussianSigma(double in_sigma) {
-  setDirty();
   _gaussianSigma = in_sigma;
 }
 

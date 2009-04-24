@@ -61,11 +61,6 @@ class Object : public QObject, public Shared, public KstRWLock, public NamedObje
 
     virtual void deleteDependents();
 
-    // @since 1.1.0
-    virtual void setDirty(bool dirty = true);
-    // @since 1.1.0
-    bool dirty() const;
-
     virtual void beginUpdate(ObjectPtr object);
     virtual void processUpdate(ObjectPtr object);
   protected:
@@ -74,9 +69,6 @@ class Object : public QObject, public Shared, public KstRWLock, public NamedObje
 
     friend class ObjectStore;
     ObjectStore *_store;  // set by ObjectStore
-
-  private:
-    bool _dirty;
 
 } KST_EXPORT;
 

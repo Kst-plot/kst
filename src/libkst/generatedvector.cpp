@@ -73,20 +73,13 @@ void GeneratedVector::changeRange(double x0, double x1, int n) {
   _scalars["max"]->setValue(x1);
 
   internalUpdate(Object::UPDATE);
-
-  setDirty(false);
 }
 
 
 Object::UpdateType GeneratedVector::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  bool force = dirty();
   Object::UpdateType baseRC = Vector::update();
-  if (force) {
-    baseRC = UPDATE;
-  }
-
   return baseRC;
 }
 

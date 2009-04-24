@@ -145,8 +145,6 @@ void EventMonitorEntry::slotUpdate() {
 Object::UpdateType EventMonitorEntry::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  setDirty(false);
-
   writeLockInputsAndOutputs();
 
   if (!_pExpression) {
@@ -340,7 +338,6 @@ const QString& EventMonitorEntry::scriptCode() const {
 
 void EventMonitorEntry::setScriptCode(const QString& script) {
   if (_script != script) {
-    setDirty();
     _script = script;
   }
 }
@@ -348,7 +345,6 @@ void EventMonitorEntry::setScriptCode(const QString& script) {
 
 void EventMonitorEntry::setDescription(const QString& str) {
   if (_description != str) {
-    setDirty();
     _description = str;
   }
 }
@@ -356,7 +352,6 @@ void EventMonitorEntry::setDescription(const QString& str) {
 
 void EventMonitorEntry::setLevel(Debug::LogLevel level) {
   if (_level != level) {
-    setDirty();
     _level = level;
   }
 }
@@ -364,7 +359,6 @@ void EventMonitorEntry::setLevel(Debug::LogLevel level) {
 
 void EventMonitorEntry::setExpression(Equations::Node* pExpression) {
   if (_pExpression != pExpression) {
-    setDirty();
     _pExpression = pExpression;
   }
 }
@@ -372,7 +366,6 @@ void EventMonitorEntry::setExpression(Equations::Node* pExpression) {
 
 void EventMonitorEntry::setLogDebug(bool logDebug) {
   if (_logDebug != logDebug) {
-    setDirty();
     _logDebug = logDebug;
   }
 }
@@ -380,7 +373,6 @@ void EventMonitorEntry::setLogDebug(bool logDebug) {
 
 void EventMonitorEntry::setLogEMail(bool logEMail) {
   if (logEMail != _logEMail) {
-    setDirty();
     _logEMail = logEMail;
   }
 }
@@ -388,7 +380,6 @@ void EventMonitorEntry::setLogEMail(bool logEMail) {
 
 void EventMonitorEntry::setLogELOG(bool logELOG) {
   if (logELOG != _logELOG) {
-    setDirty();
     _logELOG = logELOG;
   }
 }
@@ -396,7 +387,6 @@ void EventMonitorEntry::setLogELOG(bool logELOG) {
 
 void EventMonitorEntry::setEMailRecipients(const QString& str) {
   if (str != _eMailRecipients) {
-    setDirty();
     _eMailRecipients = str;
   }
 }
@@ -466,7 +456,6 @@ void EventMonitorEntry::replaceDependency(DataObjectPtr oldObject, DataObjectPtr
   }
 
   setEvent(newExp);
-  setDirty();
 
   // events have no _inputVectors
 }
@@ -485,7 +474,6 @@ void EventMonitorEntry::replaceDependency(VectorPtr oldVector, VectorPtr newVect
   }
 
   setEvent(newExp);
-  setDirty();
 
   // events have no _inputVectors
 }
@@ -503,7 +491,6 @@ void EventMonitorEntry::replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatr
   }
 
   setEvent(newExp);
-  setDirty();
 }
 
 

@@ -68,8 +68,6 @@ DataVector::DataVector(ObjectStore *store)
   DoSkip = false;
   DoAve = false;
   _field = QString::null;
-
-  setDirty();
 }
 
 
@@ -362,18 +360,14 @@ void DataVector::checkIntegrity() {
 Object::UpdateType DataVector::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  bool force = dirty();
-  setDirty(false);
-
   if (_file) {
     _file->writeLock();
   }
-  Object::UpdateType rc = doUpdate(force);
+  Object::UpdateType rc = doUpdate(true);
   if (_file) {
     _file->unlock();
   }
 
-  setDirty(false);
   return rc;
 }
 

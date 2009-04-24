@@ -65,16 +65,7 @@ const QString& Scalar::typeString() const {
 Object::UpdateType Scalar::update() {
 //  Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  bool force = dirty();
-  setDirty(false);
-
   double v = value();
-  if (_provider) {
-    KstWriteLocker pl(_provider);
-    _provider->update();
-  } else if (force) {
-    return UPDATE;
-  }
 
   return (v == value() ? NO_CHANGE : UPDATE);
 }
@@ -105,7 +96,6 @@ Scalar& Scalar::operator=(double v) {
 
 void Scalar::setValue(double inV) {
   if (_value != inV) {
-    setDirty();
     dirtyScalars = true;
     _value = inV;
     emit trigger();

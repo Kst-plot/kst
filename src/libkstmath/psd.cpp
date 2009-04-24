@@ -105,8 +105,6 @@ void PSD::change(VectorPtr in_V,
   _sVector->resize(_PSDLength);
 
   updateVectorLabels();
-
-  setDirty();
 }
 
 
@@ -127,22 +125,11 @@ const CurveHintList *PSD::curveHints() const {
 Object::UpdateType PSD::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  bool force = dirty();
-  setDirty(false);
-
   writeLockInputsAndOutputs();
 
   VectorPtr iv = _inputVectors[INVECTOR];
 
-  bool xUpdated = Object::UPDATE == iv->update();
-
   const int v_len = iv->length();
-
-  // Don't touch _last_n_new if !xUpdated since it will certainly be wrong.
-  if (!xUpdated && !force) {
-    unlockInputsAndOutputs();
-    return NO_CHANGE;
-  }
 
   _last_n_new += iv->numNew();
   assert(_last_n_new >= 0);
@@ -150,7 +137,7 @@ Object::UpdateType PSD::update() {
   int n_subsets = v_len/_PSDLength;
 
   // determine if the PSD needs to be updated. if not using averaging, then we need at least _PSDLength/16 new data points. if averaging, then we want enough new data for a complete subset.
-  if ( ((_last_n_new < _PSDLength/16) || (_Average && (n_subsets - _last_n_subsets < 1))) &&  iv->length() != iv->numNew() && !force) {
+  if ( ((_last_n_new < _PSDLength/16) || (_Average && (n_subsets - _last_n_subsets < 1))) &&  iv->length() != iv->numNew()) {
     unlockInputsAndOutputs();
 
     return NO_CHANGE;
@@ -172,8 +159,8 @@ Object::UpdateType PSD::update() {
   _last_n_new = 0;
 
   updateVectorLabels();
-  _sVector->setDirty();
-  _fVector->setDirty();
+  _sVector->update();
+  _fVector->update();
 
   unlockInputsAndOutputs();
 
@@ -225,7 +212,6 @@ bool PSD::apodize() const {
 
 
 void PSD::setApodize(bool in_apodize)  {
-  setDirty();
   _Apodize = in_apodize;
 }
 
@@ -236,7 +222,6 @@ bool PSD::removeMean() const {
 
 
 void PSD::setRemoveMean(bool in_removeMean) {
-  setDirty();
   _RemoveMean = in_removeMean;
 }
 
@@ -247,7 +232,6 @@ bool PSD::average() const {
 
 
 void PSD::setAverage(bool in_average) {
-  setDirty();
   _Average = in_average;
 }
 
@@ -258,7 +242,6 @@ double PSD::frequency() const {
 
 
 void PSD::setFrequency(double in_frequency) {
-  setDirty();
   if (in_frequency > 0.0) {
     _Frequency = in_frequency;
   } else {
@@ -275,7 +258,6 @@ int PSD::length() const {
 void PSD::setLength(int in_length) {
   if (in_length != _averageLength) {
     _averageLength = in_length;
-    setDirty();
   }
 }
 
@@ -287,14 +269,12 @@ PSDType PSD::output() const {
 
 void PSD::setOutput(PSDType in_output)  {
   if (in_output != _Output) {
-    setDirty();
     _Output = in_output;
   }
 }
 
 
 VectorPtr PSD::vector() const {
-  
   return _inputVectors[INVECTOR];
 }
 
@@ -314,7 +294,6 @@ void PSD::setVector(VectorPtr new_v) {
   new_v->writeLock();
   _inputVectors[INVECTOR] = new_v;
   connect(new_v, SIGNAL(updated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
-  setDirty();
 }
 
 
@@ -365,7 +344,6 @@ ApodizeFunction PSD::apodizeFxn() const {
 
 void PSD::setApodizeFxn(ApodizeFunction in_apodizeFxn) {
   if (_apodizeFxn != in_apodizeFxn) {
-    setDirty();
     _apodizeFxn = in_apodizeFxn;
   }
 }
@@ -378,7 +356,6 @@ double PSD::gaussianSigma() const {
 
 void PSD::setGaussianSigma(double in_gaussianSigma) {
   if (_gaussianSigma != in_gaussianSigma) {
-    setDirty();
     _gaussianSigma = in_gaussianSigma;
   }
 }
@@ -420,7 +397,6 @@ bool PSD::interpolateHoles() const {
 void PSD::setInterpolateHoles(bool interpolate) {
   if (interpolate != _interpolateHoles) {
     _interpolateHoles = interpolate;
-    setDirty();
   }
 }
 

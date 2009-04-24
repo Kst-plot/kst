@@ -118,6 +118,7 @@ public:
     bool _realTimeAutoBin;
 
     void internalSetNumberOfBins(int in_n_bins);
+    void internalSetXRange(double xmin_in, double xmax_in);
 };
 
 typedef SharedPtr<Histogram> HistogramPtr;

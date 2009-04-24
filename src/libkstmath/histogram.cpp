@@ -102,8 +102,6 @@ void Histogram::change(VectorPtr in_V,
 
   _bVector->resize(_NumberOfBins);
   _hVector->resize(_NumberOfBins);
-
-  setDirty();
 }
 
 
@@ -119,16 +117,7 @@ Histogram::~Histogram() {
 Object::UpdateType Histogram::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  bool force = dirty();
-  setDirty(false);
-
   writeLockInputsAndOutputs();
-
-  bool xUpdated = Object::UPDATE == _inputVectors[RAWVECTOR]->update();
-  if (!xUpdated && !force) {
-    unlockInputsAndOutputs();
-    return Object::NO_CHANGE;
-  }
 
   int i_bin, i_pt, ns;
   double y = 0.0;
@@ -139,7 +128,7 @@ Object::UpdateType Histogram::update() {
     double temp_xMin, temp_xMax;
     Histogram::AutoBin(_inputVectors[RAWVECTOR], &temp_NumberOfBins, &temp_xMax, &temp_xMin);
     internalSetNumberOfBins(temp_NumberOfBins);
-    setXRange(temp_xMin, temp_xMax);
+    internalSetXRange(temp_xMin, temp_xMax);
   }
 
   _NS = 3 * _NumberOfBins + 1;
@@ -213,8 +202,8 @@ Object::UpdateType Histogram::update() {
     hist[i_bin] = _Bins[i_bin]*_Normalization;
   }
 
-  _bVector->setDirty();
-  _hVector->setDirty();
+  _bVector->update();
+  _hVector->update();
 
   unlockInputsAndOutputs();
 
@@ -228,6 +217,11 @@ int Histogram::numberOfBins() const {
 
 
 void Histogram::setXRange(double xmin_in, double xmax_in) {
+  internalSetXRange(xmin_in, xmax_in);
+}
+
+
+void Histogram::internalSetXRange(double xmin_in, double xmax_in) {
   if (xmax_in > xmin_in) {
     _MaxX = xmax_in;
     _MinX = xmin_in;
@@ -239,7 +233,6 @@ void Histogram::setXRange(double xmin_in, double xmax_in) {
     _MaxX = xmax_in + 1.0;
   }
   _W = (_MaxX - _MinX)/double(_NumberOfBins);
-  setDirty();
 }
 
 
@@ -265,14 +258,12 @@ void Histogram::internalSetNumberOfBins(int in_n_bins) {
 void Histogram::setNumberOfBins(int in_n_bins) {
   _realTimeAutoBin = false;
   internalSetNumberOfBins(in_n_bins);
-  setDirty();
 }
 
 void Histogram::setVector(VectorPtr new_v) {
   if (new_v) {
     connect(new_v, SIGNAL(updated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
     _inputVectors[RAWVECTOR] = new_v;
-    setDirty();
   }
 }
 
@@ -375,7 +366,6 @@ bool Histogram::slaveVectorsUsed() const {
 
 void Histogram::setRealTimeAutoBin(bool autoBin) {
   _realTimeAutoBin = autoBin;
-  setDirty();
 }
 
 

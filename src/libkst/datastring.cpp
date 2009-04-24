@@ -37,7 +37,6 @@ DataString::DataString(ObjectStore *store)
   _field = QString::null;
 
   setOrphan(true);
-  setDirty();
 }
 
 
@@ -61,14 +60,6 @@ void DataString::change(DataSourcePtr in_file, const QString &in_field) {
 
   _field = in_field;
   _file = in_file;
-
-  if (_file) {
-    _file->writeLock();
-  }
-  setDirty(true);
-  if (_file) {
-    _file->unlock();
-  }
 
   if (in_file) {
     connect(in_file, SIGNAL(sourceUpdated(ObjectPtr)), this, SLOT(sourceUpdated(ObjectPtr)));
@@ -100,7 +91,6 @@ void DataString::changeFile(DataSourcePtr in_file) {
   if (_file) {
     _file->writeLock();
   }
-  setDirty(true);
   if (_file) {
     _file->unlock();
   }
@@ -143,24 +133,13 @@ void DataString::save(QXmlStreamWriter &s) {
 /** Update a data String */
 Object::UpdateType DataString::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
-  QString old_value;
   Object::UpdateType rc = NO_CHANGE;
-  old_value = _value;
   if (_file) {
     _file->writeLock();
     _file->readString(_value, _field);
     _file->unlock();
-    if (dirty() || (_value != old_value)) {
-      rc = UPDATE;
-    } else {
-      rc = NO_CHANGE;
-    }
-  } else {
-    rc = NO_CHANGE;
+    rc = UPDATE;
   }
-
-
-  setDirty(false);
   return rc;
 }
 

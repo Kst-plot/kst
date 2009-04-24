@@ -104,7 +104,6 @@ class KST_EXPORT BasicPlugin : public DataObject {
 
   private:
     bool inputsExist() const;
-    bool updateInput(bool force) const;
     void updateOutput() const;
 
     QString _pluginName;

@@ -162,7 +162,6 @@ void BasicPlugin::setInputVector(const QString &type, VectorPtr ptr) {
   } else {
     _inputVectors.remove(type);
   }
-  setDirty();
 }
 
 
@@ -172,7 +171,6 @@ void BasicPlugin::setInputScalar(const QString &type, ScalarPtr ptr) {
   } else {
     _inputScalars.remove(type);
   }
-  setDirty();
 }
 
 
@@ -182,7 +180,6 @@ void BasicPlugin::setInputString(const QString &type, StringPtr ptr) {
   } else {
     _inputStrings.remove(type);
   }
-  setDirty();
 }
 
 
@@ -218,17 +215,12 @@ void BasicPlugin::setOutputString(const QString &type, const QString &name) {
 
 Object::UpdateType BasicPlugin::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
-  bool force = dirty();
-  setDirty(false);
 
   //Make sure we have all the necessary inputs
   if (!inputsExist())
     return NO_CHANGE;
 
   writeLockInputsAndOutputs();
-
-  //Update the dependent inputs
-  bool depUpdated = updateInput(force);
 
   //Call the plugins algorithm to operate on the inputs
   //and produce the outputs
@@ -245,7 +237,7 @@ Object::UpdateType BasicPlugin::update() {
 
   unlockInputsAndOutputs();
 
-  return (depUpdated ? UPDATE : NO_CHANGE);
+  return UPDATE;
 }
 
 
@@ -390,39 +382,6 @@ bool BasicPlugin::inputsExist() const {
 }
 
 
-bool BasicPlugin::updateInput(bool force) const {
-  bool depUpdated = force;
-
-  //First, update the inputVectors...
-  QStringList iv = inputVectorList();
-  QStringList::ConstIterator ivI = iv.begin();
-  for (; ivI != iv.end(); ++ivI) {
-    Q_ASSERT(inputVector(*ivI)->myLockStatus() == KstRWLock::WRITELOCKED);
-    depUpdated =
-        UPDATE == inputVector(*ivI)->update() || depUpdated;
-  }
-
-  //Now, update the inputScalars...
-  QStringList is = inputScalarList();
-  QStringList::ConstIterator isI = is.begin();
-  for (; isI != is.end(); ++isI) {
-    Q_ASSERT(inputScalar(*isI)->myLockStatus() == KstRWLock::WRITELOCKED);
-    depUpdated =
-        UPDATE == inputScalar(*isI)->update() || depUpdated;
-  }
-
-  //Finally, update the inputStrings...
-  QStringList istr = inputStringList();
-  QStringList::ConstIterator istrI = istr.begin();
-  for (; istrI != istr.end(); ++istrI) {
-    Q_ASSERT(inputString(*istrI)->myLockStatus() == KstRWLock::WRITELOCKED);
-    depUpdated =
-        UPDATE == inputString(*istrI)->update() || depUpdated;
-  }
-  return depUpdated;
-}
-
-
 void BasicPlugin::updateOutput() const {
   //output vectors...
   QStringList ov = outputVectorList();
@@ -431,9 +390,8 @@ void BasicPlugin::updateOutput() const {
     if (VectorPtr o = outputVector(*ovI)) {
       Q_ASSERT(o->myLockStatus() == KstRWLock::WRITELOCKED);
       vectorRealloced(o, o->value(), o->length());
-      o->setDirty();
       o->setNewAndShift(o->length(), o->numShift());
-//       o->update();
+      o->update();
     }
   }
 
@@ -443,7 +401,7 @@ void BasicPlugin::updateOutput() const {
   for (; osI != os.end(); ++osI) {
     if (ScalarPtr o = outputScalar(*osI)) {
       Q_ASSERT(o->myLockStatus() == KstRWLock::WRITELOCKED);
-//       o->update();
+      o->update();
     }
   }
 
@@ -453,7 +411,7 @@ void BasicPlugin::updateOutput() const {
   for (; ostrI != ostr.end(); ++ostrI) {
     if (StringPtr o = outputString(*ostrI)) {
       Q_ASSERT(o->myLockStatus() == KstRWLock::WRITELOCKED);
-//       o->update();
+      o->update();
     }
   }
 }

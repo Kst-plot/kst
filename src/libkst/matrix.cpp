@@ -46,7 +46,6 @@ Matrix::Matrix(ObjectStore *store)
       _editable(false), _saveable(false), _z(0L), _zSize(0) {
 
   createScalars(store);
-  setDirty();
 
   _shortName = "M"+QString::number(_mnum);
   if (_mnum>max_mnum) 
@@ -284,7 +283,6 @@ void Matrix::zero() {
   for (int i = 0; i < _zSize; i++) {
     _z[i] = 0.0;
   }
-  setDirty();
   updateScalars();
 }
 
@@ -293,7 +291,6 @@ void Matrix::blank() {
   for (int i = 0; i < _zSize; ++i) {
     _z[i] = NOPOINT;
   }
-  setDirty();
   updateScalars();
 }
 
@@ -481,8 +478,6 @@ bool Matrix::resizeZ(int sz, bool reinit) {
     _zSize = sz;
     updateScalars();
   }
-
-  setDirty();
   return true;
 }
 
@@ -562,7 +557,6 @@ bool Matrix::resize(int xSize, int ySize, bool reinit) {
   _zSize = sz;
 
   updateScalars();
-  setDirty(true);
 
   return true;
 }
@@ -586,8 +580,6 @@ void Matrix::change(uint nX, uint nY, double minX, double minY, double stepX, do
   _stepY = stepY;
   _minX = minX;
   _minY = minY;
-
-  setDirty();
 }
 
 
@@ -612,7 +604,6 @@ void Matrix::change(QByteArray &data, uint nX, uint nY, double minX, double minY
     Debug::self()->log(i18n("Saved matrix contains less data than it claims."), Debug::Warning);
     resizeZ(i, false);
   }
-  setDirty();
 }
 
 QString Matrix::descriptionTip() const {

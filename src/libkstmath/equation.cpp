@@ -80,8 +80,6 @@ Equation::Equation(ObjectStore *store)
   if (_enum>max_enum) 
     max_enum = _enum;
   _enum++;
-
-  setDirty();
 }
 
 
@@ -111,46 +109,23 @@ bool Equation::isValid() const {
 Object::UpdateType Equation::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  bool force = dirty();
-  setDirty(false);
-
-  bool xUpdated = false;
-  bool usedUpdated = false;
-
   if (!_pe) {
     return NO_CHANGE;
   }
 
-  // FIXME: this is broken
-#if 0
-  if (_xInVector == _inputVectors.end()) {
-    _xInVector = _inputVectors.find(XINVECTOR);
-    if (!*_xInVector) { // This is technically sort of fatal
-      return setLastUpdateResult(NO_CHANGE);
-    }
-  }
-#endif
-
   writeLockInputsAndOutputs();
 
-  VectorPtr v = _xInVector;
-
-  xUpdated = Object::UPDATE == v->update();
+  Object::UpdateType rc = UPDATE;
 
   Equations::Context ctx;
   ctx.sampleCount = _ns;
-  ctx.xVector = v;
-  usedUpdated = _pe && Object::UPDATE == _pe->update(&ctx);
+  ctx.xVector = _xInVector;
 
-  Object::UpdateType rc = NO_CHANGE; // if force, rc = UPDATE anyway.
-  if (force || xUpdated || usedUpdated) {
-    _isValid = FillY(force);
-    rc = UPDATE;
-  }
-  v = _yOutVector;
-  if (rc == UPDATE) {
-    v->setDirty();
-  }
+  _pe->update(&ctx);
+
+  _isValid = FillY(true);
+  _yOutVector->update();
+  _xOutVector->update();
 
   unlockInputsAndOutputs();
 
@@ -217,7 +192,6 @@ void Equation::save(QXmlStreamWriter &s) {
 void Equation::setEquation(const QString& in_fn) {
   // assert(*_xVector); - ugly, we have to allow this here due to
   // document loading with vector lazy-loading
-  setDirty();
   _equation = in_fn;
 
   VectorsUsed.clear();
@@ -280,8 +254,6 @@ void Equation::setExistingXVector(VectorPtr in_xv, bool do_interp) {
   if (v == in_xv) {
     return;
   }
-
-  setDirty();
 
   _inputVectors.remove(XINVECTOR);
   _xInVector = in_xv;
