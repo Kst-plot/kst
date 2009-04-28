@@ -98,7 +98,7 @@ void Scalar::setValue(double inV) {
   if (_value != inV) {
     dirtyScalars = true;
     _value = inV;
-    emit trigger();
+    emit updated(this);
   }
 }
 

@@ -81,7 +81,7 @@ String& String::operator=(const char *v) {
 
 void String::setValue(const QString& inV) {
   _value = inV;
-  emit trigger();
+  emit updated(this);
 }
 
 
