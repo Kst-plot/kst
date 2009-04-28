@@ -20,6 +20,13 @@
 
 #define MAX_UPDATES 2000
 
+#define BENCHMARK 0
+
+#if BENCHMARK
+  QTime bench_time, benchtmp;
+  int b1 = 0, b2 = 0;
+#endif
+
 namespace Kst {
 
 static UpdateManager *_self = 0;
@@ -109,6 +116,10 @@ void UpdateManager::allowUpdates() {
 #if DEBUG_UPDATE_CYCLE > 0
         qDebug() << "UM - Beginning update for" << object->Name();
 #endif
+#if BENCHMARK
+        bench_time.start();
+        benchtmp.start();
+#endif
         object->beginUpdate(object);
         _updateRequests.removeAll(object);
       }
@@ -168,6 +179,11 @@ void UpdateManager::updateFinished(ObjectPtr updateObject, ObjectPtr reportingOb
         qDebug() << "\tUM - All primitive updates complete updating relations for update of" <<  updateObject->shortName();
         qDebug() << "\t     Current dependentUpdate requests" << _dependentUpdateRequests;
 #endif
+#if BENCHMARK
+  int i = bench_time.elapsed();
+  b1 = i;
+  qDebug() << endl << "Time to update Primitives " << ": " << i << "ms";
+#endif
       _dispatchingRequests.append(updateObject);
       foreach (ObjectPtr object, _dependentUpdateRequests[updateObject]) {
         _dependentUpdateRequests[updateObject].removeAll(object);
@@ -194,6 +210,11 @@ void UpdateManager::updateFinished(ObjectPtr updateObject, ObjectPtr reportingOb
         qDebug() << "\tUM - All relation updates complete, updating plots for update of" <<  updateObject->shortName();
         qDebug() << "\t     Current display update list" <<  _displayUpdateRequests;
 #endif
+#if BENCHMARK
+  int i = bench_time.elapsed();
+  b2 = i;
+  qDebug() << endl << "Time to update Relations " << ": " << i - b1 << "ms";
+#endif
         foreach (QList<PlotItemInterface*> objectList, _displayUpdateRequests) {
           foreach (PlotItemInterface* object, objectList) {
             object->updateObject();
@@ -205,6 +226,11 @@ void UpdateManager::updateFinished(ObjectPtr updateObject, ObjectPtr reportingOb
         qDebug() << "UM - Update Complete for " << updateObject->Name();
       } else {
         qDebug() << "UM - updates not complete: not updating plots: count:" << _updateRequests.count();
+#endif
+#if BENCHMARK
+  i = bench_time.elapsed();
+  qDebug() << endl << "Time to notify Plots " << ": " << i - b2 << "ms";
+  qDebug() << endl << "Total Time to process update " << ": " << i << "ms";
 #endif
       }
     }
