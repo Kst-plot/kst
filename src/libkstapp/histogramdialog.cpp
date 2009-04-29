@@ -55,6 +55,8 @@ HistogramTab::HistogramTab(QWidget *parent)
   connect(_normalizationIsPercent, SIGNAL(clicked()), this, SLOT(normalizationChanged()));
   connect(_normalizationMaximumOne, SIGNAL(clicked()), this, SLOT(normalizationChanged()));
 
+  _vectorLabel->setBuddy(_vector->_vector);
+
   _curvePlacement->setExistingPlots(Data::self()->plotList());
   _curveAppearance->setShowLines(false);
   _curveAppearance->setShowPoints(false);

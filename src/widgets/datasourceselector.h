@@ -32,6 +32,7 @@ class KST_EXPORT DataSourceSelector : public QWidget {
     QString file() const;
     void setMode(QFileDialog::FileMode mode) { _mode = mode; }
 
+    QLineEdit *_fileEdit;
   public Q_SLOTS:
     void setFile(const QString &file);
 
@@ -44,10 +45,9 @@ class KST_EXPORT DataSourceSelector : public QWidget {
   private:
     void setup();
 
-    QLineEdit *_fileEdit;
     QToolButton *_fileButton;
-    QString _file;
     QFileDialog::FileMode _mode;
+    QString _file;
 };
 
 }

@@ -63,6 +63,8 @@ ImageTab::ImageTab(QWidget *parent)
   connect(_colorOnly, SIGNAL(clicked()), this, SLOT(modeChanged()));
   connect(_contourOnly, SIGNAL(clicked()), this, SLOT(modeChanged()));
   connect(_colorAndContour, SIGNAL(clicked()), this, SLOT(modeChanged()));
+
+  _matrixLabel->setBuddy(_matrix->_matrix);
 }
 
 
@@ -375,7 +377,8 @@ void ImageDialog::setMatrix(MatrixPtr matrix) {
 
 
 void ImageDialog::configureTab(ObjectPtr object) {
-  if (ImagePtr image = kst_cast<Image>(object)) {
+  if (!object) {
+  } else if (ImagePtr image = kst_cast<Image>(object)) {
     _imageTab->setMatrix(image->matrix());
 
     if (image->hasContourMap() && image->hasColorMap()) {

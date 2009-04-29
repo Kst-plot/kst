@@ -1,27 +1,12 @@
 ---------------TO BE DONE BEFORE BETA--------------------------------
 
-Equation update problem
-  -Create a curve from a datasource.
-  -create an equation from a vector from the curve.
-  -Change the input vector (eg, with the 'back one screen' button)
-The curve updates, but the equation/equation curve does not.
-
-------------
-
-Plot is not regenerated after 'ok' in the plot dialog axis tabs makes a visual change. 
- -create a plot.
- -in the plot dialog axis tab change something (eg, the 'draw grid lines' option) and hit 'ok'.
-The plot is not redrawn to honor this change.  (if you do something else to force a
-redraw, the change is displayed.)
-
--------------
-
-Loading a kst files does not seem to work:
-  -run kst
-  -with the wizard, make a plot with three curves
-  -save it.
-  -restart kst and load the kst file you just created.
- kst gives an 'invalid Tag' error, and no plots are shown.
+Plot sizes are not properly recovered on re-load
+Create a plot in kst.  Cleanup Layout->automatic
+ -the plot now ~fills the window.
+save it.
+load it
+  -the plot is now smaller than it was.
+It should be the same size as it started.
 
 ---------------TO BE DONE AFTER BETA--------------------------------
 
@@ -66,3 +51,23 @@ draw an arrow. Open the edit dialog.  change something and hit apply.  The arrow
 
 Image dialog 'smart' range calculations seem to be... odd.
 
+------------
+
+Layout issues in data object dialogs:
+  some dialogs, like histogram, lines up nicely, while others, like image
+  is excessivly indented.  I can't see any difference in their implementation.,
+
+------------
+
+Shared axis zoom usage problem:
+Create a shared axis zoom box with multiple plots in a column.
+  -there is no option to indicate or change whether the plots are tied.
+
+Zoom into one of them.
+  -All plots do exactly the same zoom, as if they were tied.
+
+Correct behavior:
+  -There should still be tied zoom indicators.
+  -If the tied zoom indicators are not checked, then the shared axis 
+  should behave as if it were tied, but the other should not.
+  -If the tied zoom indicators are checked, then it should tie both axis.

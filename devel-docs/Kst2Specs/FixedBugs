@@ -541,3 +541,27 @@ Plot update problem:
 The curve is re-drawn to be aligned with the other curves, but the plot axis is not re-drawn.
 
 ------------
+
+Equation update problem
+  -Create a curve from a datasource.
+  -create an equation from a vector from the curve.
+  -Change the input vector (eg, with the 'back one screen' button)
+The curve updates, but the equation/equation curve does not.
+
+------------
+
+Plot is not regenerated after 'ok' in the plot dialog axis tabs makes a visual change. 
+ -create a plot.
+ -in the plot dialog axis tab change something (eg, the 'draw grid lines' option) and hit 'ok'.
+The plot is not redrawn to honor this change.  (if you do something else to force a
+redraw, the change is displayed.)
+
+-------------
+
+Loading a kst files does not seem to work:
+  -run kst
+  -with the wizard, make a plot with three curves
+  -save it.
+  -restart kst and load the kst file you just created.
+ kst gives an 'invalid Tag' error, and no plots are shown.
+

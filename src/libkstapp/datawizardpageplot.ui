@@ -1,77 +1,75 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>DataWizardPagePlot</class>
- <widget class="QWizardPage" name="DataWizardPagePlot" >
-  <property name="geometry" >
+ <widget class="QWizardPage" name="DataWizardPagePlot">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>884</width>
-    <height>428</height>
+    <height>326</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2" >
-   <item row="0" column="0" >
-    <widget class="QGroupBox" name="buttonGroup1" >
-     <property name="title" >
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="buttonGroup1">
+     <property name="title">
       <string>Cur&amp;ve Style</string>
      </property>
-     <layout class="QVBoxLayout" >
+     <layout class="QVBoxLayout">
       <item>
-       <widget class="QRadioButton" name="_drawLines" >
-        <property name="text" >
+       <widget class="QRadioButton" name="_drawLines">
+        <property name="text">
          <string>L&amp;ines only</string>
         </property>
-        <property name="checked" >
+        <property name="checked">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="_drawPoints" >
-        <property name="text" >
+       <widget class="QRadioButton" name="_drawPoints">
+        <property name="text">
          <string>&amp;Points only</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="_drawBoth" >
-        <property name="text" >
-         <string>Lines and points</string>
-        </property>
-        <property name="shortcut" >
-         <string/>
+       <widget class="QRadioButton" name="_drawBoth">
+        <property name="text">
+         <string>Lines an&amp;d points</string>
         </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="0" column="1" >
-    <widget class="QGroupBox" name="buttonGroup7" >
-     <property name="title" >
+   <item row="0" column="1">
+    <widget class="QGroupBox" name="buttonGroup7">
+     <property name="title">
       <string>Legend</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout" >
+     <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QRadioButton" name="_legendsOn" >
-        <property name="text" >
+       <widget class="QRadioButton" name="_legendsOn">
+        <property name="text">
          <string>O&amp;n</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="_legendsOff" >
-        <property name="text" >
+       <widget class="QRadioButton" name="_legendsOff">
+        <property name="text">
          <string>&amp;Off</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="_legendsAuto" >
-        <property name="text" >
+       <widget class="QRadioButton" name="_legendsAuto">
+        <property name="text">
          <string>A&amp;uto</string>
         </property>
-        <property name="checked" >
+        <property name="checked">
          <bool>true</bool>
         </property>
        </widget>
@@ -79,93 +77,93 @@
      </layout>
     </widget>
    </item>
-   <item rowspan="2" row="0" column="2" >
-    <widget class="QGroupBox" name="_plotGroup" >
-     <property name="title" >
+   <item row="0" column="2" rowspan="2">
+    <widget class="QGroupBox" name="_plotGroup">
+     <property name="title">
       <string>Curve Placement</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout" >
-      <item row="0" column="0" >
-       <widget class="QRadioButton" name="_onePlot" >
-        <property name="text" >
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="_onePlot">
+        <property name="text">
          <string>&amp;All curves in one plot</string>
         </property>
-        <property name="checked" >
+        <property name="checked">
          <bool>false</bool>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" >
-       <widget class="QRadioButton" name="_multiplePlots" >
-        <property name="text" >
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="_multiplePlots">
+        <property name="text">
          <string>&amp;1 new plot per curve</string>
         </property>
-        <property name="shortcut" >
+        <property name="shortcut">
          <string>Alt+1</string>
         </property>
-        <property name="checked" >
+        <property name="checked">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" >
-       <layout class="QHBoxLayout" >
-        <property name="margin" >
+      <item row="2" column="0">
+       <layout class="QHBoxLayout">
+        <property name="margin">
          <number>0</number>
         </property>
         <item>
-         <widget class="QRadioButton" name="_cycleThrough" >
-          <property name="text" >
+         <widget class="QRadioButton" name="_cycleThrough">
+          <property name="text">
            <string>Cycle t&amp;hrough</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="_plotNumber" >
-          <property name="enabled" >
+         <widget class="QSpinBox" name="_plotNumber">
+          <property name="enabled">
            <bool>false</bool>
           </property>
-          <property name="buttonSymbols" >
+          <property name="buttonSymbols">
            <enum>QAbstractSpinBox::PlusMinus</enum>
           </property>
-          <property name="suffix" >
+          <property name="suffix">
            <string> plots</string>
           </property>
-          <property name="minimum" >
+          <property name="minimum">
            <number>2</number>
           </property>
-          <property name="maximum" >
+          <property name="maximum">
            <number>64</number>
           </property>
          </widget>
         </item>
        </layout>
       </item>
-      <item row="3" column="0" >
-       <widget class="QRadioButton" name="_cycleExisting" >
-        <property name="text" >
+      <item row="3" column="0">
+       <widget class="QRadioButton" name="_cycleExisting">
+        <property name="text">
          <string>Cycle through exi&amp;sting plots</string>
         </property>
-        <property name="checked" >
+        <property name="checked">
          <bool>false</bool>
         </property>
        </widget>
       </item>
-      <item row="4" column="0" >
-       <layout class="QHBoxLayout" >
-        <property name="margin" >
+      <item row="4" column="0">
+       <layout class="QHBoxLayout">
+        <property name="margin">
          <number>0</number>
         </property>
         <item>
-         <widget class="QRadioButton" name="_existingPlot" >
-          <property name="text" >
+         <widget class="QRadioButton" name="_existingPlot">
+          <property name="text">
            <string>All curv&amp;es in plot</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="Kst::ComboBox" name="_existingPlotName" >
-          <property name="enabled" >
+         <widget class="Kst::ComboBox" name="_existingPlotName">
+          <property name="enabled">
            <bool>false</bool>
           </property>
          </widget>
@@ -175,22 +173,22 @@
      </layout>
     </widget>
    </item>
-   <item rowspan="2" row="1" column="0" >
-    <widget class="QGroupBox" name="_psdAxisGroup" >
-     <property name="title" >
+   <item row="1" column="0" rowspan="2">
+    <widget class="QGroupBox" name="_psdAxisGroup">
+     <property name="title">
       <string>Spectrum Axis Mode</string>
      </property>
-     <layout class="QVBoxLayout" >
+     <layout class="QVBoxLayout">
       <item>
-       <widget class="QCheckBox" name="_psdLogX" >
-        <property name="text" >
+       <widget class="QCheckBox" name="_psdLogX">
+        <property name="text">
          <string>Lo&amp;g X axis</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="_psdLogY" >
-        <property name="text" >
+       <widget class="QCheckBox" name="_psdLogY">
+        <property name="text">
          <string>&amp;Log Y axis</string>
         </property>
        </widget>
@@ -198,28 +196,28 @@
      </layout>
     </widget>
    </item>
-   <item rowspan="2" row="1" column="1" >
-    <widget class="QGroupBox" name="buttonGroup3" >
-     <property name="title" >
+   <item row="1" column="1" rowspan="2">
+    <widget class="QGroupBox" name="buttonGroup3">
+     <property name="title">
       <string>Labels</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2" >
+     <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QCheckBox" name="_xAxisLabels" >
-        <property name="text" >
+       <widget class="QCheckBox" name="_xAxisLabels">
+        <property name="text">
          <string>&amp;X-axis labels</string>
         </property>
-        <property name="checked" >
+        <property name="checked">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="_yAxisLabels" >
-        <property name="text" >
+       <widget class="QCheckBox" name="_yAxisLabels">
+        <property name="text">
          <string>&amp;Y-axis labels</string>
         </property>
-        <property name="checked" >
+        <property name="checked">
          <bool>true</bool>
         </property>
        </widget>
@@ -227,69 +225,69 @@
      </layout>
     </widget>
    </item>
-   <item rowspan="2" row="2" column="2" >
-    <widget class="QGroupBox" name="groupBox_2" >
-     <property name="title" >
+   <item row="2" column="2" rowspan="2">
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
       <string>Plot Layout</string>
      </property>
-     <layout class="QGridLayout" >
-      <item row="0" column="0" colspan="2" >
-       <widget class="QRadioButton" name="_autoLayout" >
-        <property name="text" >
-         <string>Automatic Layout</string>
+     <layout class="QGridLayout">
+      <item row="0" column="0" colspan="2">
+       <widget class="QRadioButton" name="_autoLayout">
+        <property name="text">
+         <string>Au&amp;tomatic Layout</string>
         </property>
-        <property name="checked" >
+        <property name="checked">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" >
-       <widget class="QRadioButton" name="_customGrid" >
-        <property name="text" >
-         <string>Custom Grid</string>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="_customGrid">
+        <property name="text">
+         <string>Custo&amp;m Grid</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1" >
-       <layout class="QHBoxLayout" >
+      <item row="1" column="1">
+       <layout class="QHBoxLayout">
         <item>
-         <widget class="QLabel" name="label_3" >
-          <property name="text" >
+         <widget class="QLabel" name="label_3">
+          <property name="text">
            <string>Columns:</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="_gridColumns" >
-          <property name="enabled" >
+         <widget class="QSpinBox" name="_gridColumns">
+          <property name="enabled">
            <bool>false</bool>
           </property>
-          <property name="minimum" >
+          <property name="minimum">
            <number>1</number>
           </property>
-          <property name="maximum" >
+          <property name="maximum">
            <number>10</number>
           </property>
          </widget>
         </item>
        </layout>
       </item>
-      <item row="2" column="0" colspan="2" >
-       <widget class="QRadioButton" name="_protectLayout" >
-        <property name="text" >
-         <string>Protect Existing Layout</string>
+      <item row="2" column="0" colspan="2">
+       <widget class="QRadioButton" name="_protectLayout">
+        <property name="text">
+         <string>P&amp;rotect Existing Layout</string>
         </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item rowspan="2" row="3" column="0" >
-    <spacer name="verticalSpacer" >
-     <property name="orientation" >
+   <item row="3" column="0" rowspan="2">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeHint" stdset="0" >
+     <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
        <height>131</height>
@@ -297,12 +295,12 @@
      </property>
     </spacer>
    </item>
-   <item rowspan="2" row="3" column="1" >
-    <spacer name="verticalSpacer_2" >
-     <property name="orientation" >
+   <item row="3" column="1" rowspan="2">
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeHint" stdset="0" >
+     <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
        <height>131</height>
@@ -310,12 +308,12 @@
      </property>
     </spacer>
    </item>
-   <item row="4" column="2" >
-    <spacer name="verticalSpacer_3" >
-     <property name="orientation" >
+   <item row="4" column="2">
+    <spacer name="verticalSpacer_3">
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeHint" stdset="0" >
+     <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
        <height>58</height>
@@ -325,7 +323,7 @@
    </item>
   </layout>
  </widget>
- <layoutdefault spacing="6" margin="11" />
+ <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
    <class>Kst::ComboBox</class>
@@ -341,11 +339,11 @@
    <receiver>_plotNumber</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>650</x>
      <y>118</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>735</x>
      <y>106</y>
     </hint>
@@ -357,11 +355,11 @@
    <receiver>_gridColumns</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>630</x>
      <y>303</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>831</x>
      <y>304</y>
     </hint>
@@ -373,11 +371,11 @@
    <receiver>_existingPlotName</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>683</x>
      <y>185</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>776</x>
      <y>195</y>
     </hint>

@@ -153,7 +153,10 @@
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="label_2" >
+            <widget class="QLabel" name="_gridColumnsLabel" >
+             <property name="enabled" >
+              <bool>false</bool>
+             </property>
              <property name="text" >
               <string>Colu&amp;mns</string>
              </property>

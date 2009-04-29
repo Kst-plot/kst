@@ -91,7 +91,7 @@
          </sizepolicy>
         </property>
         <property name="text" >
-         <string>&amp;+Y error &amp;bar:</string>
+         <string>&amp;+Y error bar:</string>
         </property>
         <property name="wordWrap" >
          <bool>false</bool>

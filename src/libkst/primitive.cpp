@@ -23,8 +23,6 @@
 #include "primitive.h"
 #include "updatemanager.h"
 
-#include <assert.h>
-
 namespace Kst {
 
 const QString Primitive::staticTypeString = I18N_NOOP("Primitive");

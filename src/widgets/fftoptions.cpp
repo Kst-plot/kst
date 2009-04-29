@@ -237,6 +237,7 @@ void FFTOptions::changedApodizeFxn() {
     ++gaussianIndex;
   }
   _sigma->setEnabled(_apodizeFunction->currentIndex() == gaussianIndex && _apodize->isChecked());
+  _sigmaLabel->setEnabled(_apodizeFunction->currentIndex() == gaussianIndex && _apodize->isChecked());
 }
 
 

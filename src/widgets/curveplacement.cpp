@@ -32,6 +32,7 @@ CurvePlacement::~CurvePlacement() {
 void CurvePlacement::updateButtons() {
   _layoutGroup->setEnabled(_newPlot->isChecked());
   _gridColumns->setEnabled(_customGrid->isChecked());
+  _gridColumnsLabel->setEnabled(_customGrid->isChecked());
 }
 
 

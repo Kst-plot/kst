@@ -28,6 +28,8 @@ StringTab::StringTab(ObjectStore *store, QWidget *parent)
   setupUi(this);
   setTabTitle(tr("String"));
 
+  _fileNameLabel->setBuddy(_fileName->_fileEdit);
+
   connect(_generatedStringGroup, SIGNAL(clicked(bool)), this, SLOT(generateClicked()));
   connect(_dataStringGroup, SIGNAL(clicked(bool)), this, SLOT(readFromSourceClicked()));
   connect(_stringValue, SIGNAL(textChanged(const QString&)), this, SLOT(textChanged()));
