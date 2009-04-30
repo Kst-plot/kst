@@ -81,7 +81,7 @@ void TestScalar::testScalar() {
 
   QCOMPARE((*sp = 2.0).value(), 2.0);
   SListener *listener = new SListener;
-  sp->connect(sp, SIGNAL(trigger()), listener, SLOT(trigger()));
+  sp->connect(sp, SIGNAL(updated(ObjectPtr)), listener, SLOT(trigger()));
   *sp = 3.1415;
   QCOMPARE(listener->_trigger, 1);
   sp->setValue(3.1415);
