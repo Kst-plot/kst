@@ -136,7 +136,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QRectF plotRect();
 
     QRectF projectionRect() const;
-    void setProjectionRect(const QRectF &rect);
+    void setProjectionRect(const QRectF &rect, bool forceAxisUpdate = false);
     QRectF computedProjectionRect();
     void computedRelationalMax(qreal &minimum, qreal &maximum);
     void computeBorder(Qt::Orientation orientation, qreal &minimum, qreal &maximum) const;

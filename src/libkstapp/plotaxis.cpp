@@ -28,6 +28,7 @@ namespace Kst {
 PlotAxis::PlotAxis(PlotItem *plotItem, Qt::Orientation orientation) :
   _plotItem(plotItem),
   _orientation(orientation),
+  _dirty(true),
   _axisZoomMode(Auto),
   _isAxisVisible(true),
   _ticksUpdated(true),
@@ -350,7 +351,10 @@ PlotAxis::ZoomMode PlotAxis::axisZoomMode() const {
 
 
 void PlotAxis::setAxisZoomMode(ZoomMode mode) {
-  _axisZoomMode = mode;
+  if (_axisZoomMode != mode) {
+    _axisZoomMode = mode;
+    _dirty = true;
+  }
 }
 
 
@@ -360,7 +364,10 @@ bool PlotAxis::axisLog() const {
 
 
 void PlotAxis::setAxisLog(bool log) {
-  _axisLog = log;
+  if (_axisLog != log) {
+    _axisLog = log;
+    _dirty = true;
+  }
 }
 
 
@@ -370,7 +377,10 @@ int PlotAxis::axisSignificantDigits() const {
 
 
 void PlotAxis::setAxisSignificantDigits(const int digits) {
-  _axisSignificantDigits = digits;
+  if (_axisSignificantDigits != digits) {
+    _axisSignificantDigits = digits;
+    _dirty = true;
+  }
 }
 
 
@@ -380,7 +390,10 @@ PlotAxis::MajorTickMode PlotAxis::axisMajorTickMode() const {
 
 
 void PlotAxis::setAxisMajorTickMode(PlotAxis::MajorTickMode mode) {
-  _axisMajorTickMode = mode;
+  if (_axisMajorTickMode != mode) {
+    _axisMajorTickMode = mode;
+    _dirty = true;
+  }
 }
 
 
@@ -390,7 +403,10 @@ int PlotAxis::axisMinorTickCount() const {
 
 
 void PlotAxis::setAxisMinorTickCount(const int count) {
-  _axisMinorTickCount = count;
+  if (_axisMinorTickCount != count) {
+    _axisMinorTickCount = count;
+    _dirty = true;
+  }
 }
 
 
@@ -400,7 +416,10 @@ bool PlotAxis::drawAxisMajorTicks() const {
 
 
 void PlotAxis::setDrawAxisMajorTicks(bool draw) {
-  _drawAxisMajorTicks = draw;
+  if (_drawAxisMajorTicks != draw) {
+    _drawAxisMajorTicks = draw;
+    _dirty = true;
+  }
 }
 
 
@@ -410,7 +429,10 @@ bool PlotAxis::drawAxisMinorTicks() const {
 
 
 void PlotAxis::setDrawAxisMinorTicks(bool draw) {
-  _drawAxisMinorTicks = draw;
+  if (_drawAxisMinorTicks != draw) {
+    _drawAxisMinorTicks = draw;
+    _dirty = true;
+  }
 }
 
 
@@ -420,7 +442,10 @@ bool PlotAxis::drawAxisMajorGridLines() const {
 
 
 void PlotAxis::setDrawAxisMajorGridLines(bool draw) {
-  _drawAxisMajorGridLines = draw;
+  if (_drawAxisMajorGridLines != draw) {
+    _drawAxisMajorGridLines = draw;
+    _dirty = true;
+  }
 }
 
 
@@ -430,7 +455,10 @@ bool PlotAxis::drawAxisMinorGridLines() const {
 
 
 void PlotAxis::setDrawAxisMinorGridLines(bool draw) {
-  _drawAxisMinorGridLines = draw;
+  if (_drawAxisMinorGridLines != draw) {
+    _drawAxisMinorGridLines = draw;
+    _dirty = true;
+  }
 }
 
 
@@ -440,7 +468,10 @@ QColor PlotAxis::axisMajorGridLineColor() const {
 
 
 void PlotAxis::setAxisMajorGridLineColor(const QColor &color) {
-  _axisMajorGridLineColor = color;
+  if (_axisMajorGridLineColor != color) {
+    _axisMajorGridLineColor = color;
+    _dirty = true;
+  }
 }
 
 
@@ -450,7 +481,10 @@ QColor PlotAxis::axisMinorGridLineColor() const {
 
 
 void PlotAxis::setAxisMinorGridLineColor(const QColor &color) {
-  _axisMinorGridLineColor = color;
+  if (_axisMinorGridLineColor != color) {
+    _axisMinorGridLineColor = color;
+    _dirty = true;
+  }
 }
 
 
@@ -460,7 +494,10 @@ Qt::PenStyle PlotAxis::axisMajorGridLineStyle() const {
 
 
 void PlotAxis::setAxisMajorGridLineStyle(const Qt::PenStyle style) {
-  _axisMajorGridLineStyle = style;
+  if (_axisMajorGridLineStyle != style) {
+    _axisMajorGridLineStyle = style;
+    _dirty = true;
+  }
 }
 
 
@@ -470,7 +507,10 @@ Qt::PenStyle PlotAxis::axisMinorGridLineStyle() const {
 
 
 void PlotAxis::setAxisMinorGridLineStyle(const Qt::PenStyle style) {
-  _axisMinorGridLineStyle = style;
+  if (_axisMinorGridLineStyle != style) {
+    _axisMinorGridLineStyle = style;
+    _dirty = true;
+  }
 }
 
 
@@ -485,6 +525,7 @@ void PlotAxis::setAxisVisible(bool visible) {
   }
 
   _isAxisVisible = visible;
+  _dirty = true;
 }
 
 
@@ -494,7 +535,10 @@ bool PlotAxis::axisReversed() const {
 
 
 void PlotAxis::setAxisReversed(const bool enabled) {
-  _axisReversed = enabled;
+  if (_axisReversed != enabled) {
+    _axisReversed = enabled;
+    _dirty = true;
+  }
 }
 
 
@@ -504,7 +548,10 @@ bool PlotAxis::axisBaseOffset() const {
 
 
 void PlotAxis::setAxisBaseOffset(const bool enabled) {
-  _axisBaseOffset = enabled;
+  if (_axisBaseOffset != enabled) {
+    _axisBaseOffset = enabled;
+    _dirty = true;
+  }
 }
 
 
@@ -514,7 +561,10 @@ bool PlotAxis::axisInterpret() const {
 
 
 void PlotAxis::setAxisInterpret(const bool enabled) {
-  _axisInterpret = enabled;
+  if (_axisInterpret != enabled) {
+    _axisInterpret = enabled;
+    _dirty = true;
+  }
 }
 
 
@@ -524,7 +574,10 @@ AxisDisplayType PlotAxis::axisDisplay() const {
 
 
 void PlotAxis::setAxisDisplay(const AxisDisplayType display) {
-  _axisDisplay = display;
+  if (_axisDisplay != display) {
+    _axisDisplay = display;
+    _dirty = true;
+  }
 }
 
 
@@ -534,7 +587,10 @@ AxisInterpretationType PlotAxis::axisInterpretation() const {
 
 
 void PlotAxis::setAxisInterpretation(const AxisInterpretationType display) {
-  _axisInterpretation = display;
+  if (_axisInterpretation != display) {
+    _axisInterpretation = display;
+    _dirty = true;
+  }
 }
 
 
@@ -660,6 +716,7 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
     majorTickCount = _axisMajorTickMode;
     _axisBaseOffsetOverride = false;
   }
+  _dirty = false;
 
   QMap<qreal, QString> labels;
   QList<qreal> ticks;

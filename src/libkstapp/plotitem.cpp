@@ -2103,7 +2103,7 @@ bool PlotItem::tryShortcut(const QString &keySequence) {
 }
 
 
-void PlotItem::setProjectionRect(const QRectF &rect) {
+void PlotItem::setProjectionRect(const QRectF &rect, bool forceAxisUpdate) {
   if (!(_projectionRect == rect || rect.isEmpty() || !rect.isValid())) {
 #if DEBUG_ZOOM
     qDebug() << "=== setProjectionRect() ======================>\n"
@@ -2112,6 +2112,10 @@ void PlotItem::setProjectionRect(const QRectF &rect) {
 #endif
 
     _projectionRect = rect;
+    setPlotBordersDirty(true);
+    emit updateAxes();
+    update(); //slow, but need to update everything...
+  } else if (forceAxisUpdate) {
     setPlotBordersDirty(true);
     emit updateAxes();
     update(); //slow, but need to update everything...

@@ -111,6 +111,7 @@ class PlotAxis : public QObject
 
     // return the value and reset.
     bool ticksUpdated() { bool bReturn = _ticksUpdated; _ticksUpdated = false; return bReturn; }
+    bool isDirty() { return _dirty; }
 
   public Q_SLOTS:
     void updateTicks(bool useOverrideTicks = false);
@@ -133,6 +134,8 @@ class PlotAxis : public QObject
 
     PlotItem *_plotItem;
     Qt::Orientation _orientation;
+
+    bool _dirty;
 
     ZoomMode _axisZoomMode;
     bool _isAxisVisible;
