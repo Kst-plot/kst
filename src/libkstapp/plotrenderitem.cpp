@@ -223,7 +223,7 @@ bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store)
      setReferencePoint(QPointF(x, y));
     } else if (xml.isStartElement()) {
       if (!parse(xml, validTag) && validTag) {
-        ViewItem *i = GraphicsFactory::parse(xml, store, parentView(), this);
+        GraphicsFactory::parse(xml, store, parentView(), this);
       }
     } else if (xml.isEndElement()) {
       if (xml.name().toString() != expectedEnd) {
