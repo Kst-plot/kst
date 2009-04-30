@@ -66,9 +66,6 @@ class KST_EXPORT String : public Primitive {
     bool editable() const { return _editable; }
     void setEditable(bool editable) { _editable = editable; }
 
-  signals:
-    void trigger();
-
   protected:
     QString _value;
 

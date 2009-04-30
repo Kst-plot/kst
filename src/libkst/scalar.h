@@ -79,9 +79,6 @@ class KST_EXPORT Scalar : public Primitive {
     bool editable() const;
     void setEditable(bool editable);
 
-  signals:
-    void trigger();
-
   protected:
     double _value;
 
