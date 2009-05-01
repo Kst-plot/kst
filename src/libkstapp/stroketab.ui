@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>StrokeTab</class>
- <widget class="QWidget" name="StrokeTab" >
-  <property name="geometry" >
+ <widget class="QWidget" name="StrokeTab">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,101 +10,119 @@
     <height>218</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" >
-   <item row="0" column="0" >
-    <widget class="QLabel" name="label" >
-     <property name="text" >
-      <string>Style:</string>
+  <layout class="QGridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>&amp;Style:</string>
      </property>
-     <property name="alignment" >
+     <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>_style</cstring>
      </property>
     </widget>
    </item>
-   <item row="0" column="1" >
-    <widget class="QComboBox" name="_style" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+   <item row="0" column="1">
+    <widget class="QComboBox" name="_style">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" >
-    <widget class="QLabel" name="label_2" >
-     <property name="text" >
-      <string>Width:</string>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>&amp;Width:</string>
      </property>
-     <property name="alignment" >
+     <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>_width</cstring>
      </property>
     </widget>
    </item>
-   <item row="1" column="1" >
-    <widget class="QDoubleSpinBox" name="_width" />
+   <item row="1" column="1">
+    <widget class="QDoubleSpinBox" name="_width"/>
    </item>
-   <item row="2" column="0" >
-    <widget class="QLabel" name="label_3" >
-     <property name="text" >
-      <string>Brush Color:</string>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Brush &amp;Color:</string>
      </property>
-     <property name="alignment" >
+     <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>_brushColor</cstring>
      </property>
     </widget>
    </item>
-   <item row="2" column="1" >
-    <widget class="Kst::ColorButton" name="_brushColor" />
+   <item row="2" column="1">
+    <widget class="Kst::ColorButton" name="_brushColor"/>
    </item>
-   <item row="3" column="0" >
-    <widget class="QLabel" name="label_4" >
-     <property name="text" >
-      <string>Brush Style:</string>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>&amp;Brush Style:</string>
      </property>
-     <property name="alignment" >
+     <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>_brushStyle</cstring>
      </property>
     </widget>
    </item>
-   <item row="3" column="1" >
-    <widget class="QComboBox" name="_brushStyle" />
+   <item row="3" column="1">
+    <widget class="QComboBox" name="_brushStyle"/>
    </item>
-   <item row="4" column="0" >
-    <widget class="QLabel" name="label_5" >
-     <property name="text" >
-      <string>Join Style:</string>
+   <item row="4" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>&amp;Join Style:</string>
      </property>
-     <property name="alignment" >
+     <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>_joinStyle</cstring>
      </property>
     </widget>
    </item>
-   <item row="4" column="1" >
-    <widget class="QComboBox" name="_joinStyle" />
+   <item row="4" column="1">
+    <widget class="QComboBox" name="_joinStyle"/>
    </item>
-   <item row="5" column="0" >
-    <widget class="QLabel" name="label_6" >
-     <property name="text" >
-      <string>Cap Style:</string>
+   <item row="5" column="0">
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>Ca&amp;p Style:</string>
      </property>
-     <property name="alignment" >
+     <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>_capStyle</cstring>
      </property>
     </widget>
    </item>
-   <item row="5" column="1" >
-    <widget class="QComboBox" name="_capStyle" />
+   <item row="5" column="1">
+    <widget class="QComboBox" name="_capStyle"/>
    </item>
-   <item row="6" column="0" >
+   <item row="6" column="0">
     <spacer>
-     <property name="orientation" >
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeHint" stdset="0" >
+     <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
        <height>40</height>

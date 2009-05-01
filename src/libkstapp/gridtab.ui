@@ -1,58 +1,65 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>GridTab</class>
- <widget class="QWidget" name="GridTab" >
-  <property name="geometry" >
+ <widget class="QWidget" name="GridTab">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>212</width>
+    <width>243</width>
     <height>131</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" >
-   <item row="0" column="0" >
-    <widget class="QCheckBox" name="_showGrid" >
-     <property name="text" >
-      <string>Show Grid</string>
+  <layout class="QGridLayout">
+   <item row="0" column="0">
+    <widget class="QCheckBox" name="_showGrid">
+     <property name="text">
+      <string>Show &amp;Grid</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="1" colspan="2" >
-    <widget class="QCheckBox" name="_snapToGrid" >
-     <property name="text" >
-      <string>Snap toGrid</string>
+   <item row="0" column="1" colspan="2">
+    <widget class="QCheckBox" name="_snapToGrid">
+     <property name="text">
+      <string>&amp;Snap toGrid</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="2" >
-    <widget class="QLabel" name="label_5" >
-     <property name="text" >
-      <string>Grid Horizontal Spacing:</string>
+   <item row="1" column="0" colspan="2">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>Grid &amp;Horizontal Spacing:</string>
+     </property>
+     <property name="buddy">
+      <cstring>_gridHorSpacing</cstring>
      </property>
     </widget>
    </item>
-   <item row="1" column="2" >
-    <widget class="QDoubleSpinBox" name="_gridHorSpacing" />
+   <item row="1" column="2">
+    <widget class="QDoubleSpinBox" name="_gridHorSpacing"/>
    </item>
-   <item row="2" column="0" colspan="2" >
-    <widget class="QLabel" name="label_6" >
-     <property name="text" >
-      <string>Grid Vertical Spacing:</string>
+   <item row="2" column="0" colspan="2">
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>Grid &amp;Vertical Spacing:</string>
+     </property>
+     <property name="buddy">
+      <cstring>_gridVerSpacing</cstring>
      </property>
     </widget>
    </item>
-   <item row="2" column="2" >
-    <widget class="QDoubleSpinBox" name="_gridVerSpacing" />
+   <item row="2" column="2">
+    <widget class="QDoubleSpinBox" name="_gridVerSpacing"/>
    </item>
-   <item row="3" column="0" >
+   <item row="3" column="0">
     <spacer>
-     <property name="orientation" >
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeHint" >
+     <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
        <height>40</height>

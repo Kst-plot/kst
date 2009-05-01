@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>DefaultLabelPropertiesTab</class>
- <widget class="QWidget" name="DefaultLabelPropertiesTab" >
-  <property name="geometry" >
+ <widget class="QWidget" name="DefaultLabelPropertiesTab">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,79 +10,88 @@
     <height>161</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" >
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QGridLayout" name="gridLayout" >
-     <item row="0" column="0" >
-      <widget class="QLabel" name="_Label_11" >
-       <property name="text" >
-        <string>Font Size Offset</string>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="_Label_11">
+       <property name="text">
+        <string>Font &amp;Size Offset</string>
+       </property>
+       <property name="buddy">
+        <cstring>_labelFontScale</cstring>
        </property>
       </widget>
      </item>
-     <item row="0" column="1" colspan="2" >
-      <widget class="QDoubleSpinBox" name="_labelFontScale" >
-       <property name="decimals" >
+     <item row="0" column="1" colspan="2">
+      <widget class="QDoubleSpinBox" name="_labelFontScale">
+       <property name="decimals">
         <number>1</number>
        </property>
-       <property name="minimum" >
+       <property name="minimum">
         <double>-25.000000000000000</double>
        </property>
-       <property name="singleStep" >
+       <property name="singleStep">
         <double>1.000000000000000</double>
        </property>
       </widget>
      </item>
-     <item row="0" column="3" >
-      <widget class="QCheckBox" name="_bold" >
-       <property name="text" >
-        <string>Bold</string>
+     <item row="0" column="3">
+      <widget class="QCheckBox" name="_bold">
+       <property name="text">
+        <string>&amp;Bold</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="4" >
-      <widget class="QCheckBox" name="_underline" >
-       <property name="text" >
-        <string>Underline</string>
+     <item row="0" column="4">
+      <widget class="QCheckBox" name="_underline">
+       <property name="text">
+        <string>&amp;Underline</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="5" >
-      <widget class="QCheckBox" name="_italic" >
-       <property name="text" >
-        <string>Italics</string>
+     <item row="0" column="5">
+      <widget class="QCheckBox" name="_italic">
+       <property name="text">
+        <string>&amp;Italics</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0" >
-      <widget class="QLabel" name="_Label_12" >
-       <property name="text" >
-        <string>Font Family</string>
+     <item row="1" column="0">
+      <widget class="QLabel" name="_Label_12">
+       <property name="text">
+        <string>Font &amp;Family</string>
+       </property>
+       <property name="buddy">
+        <cstring>_family</cstring>
        </property>
       </widget>
      </item>
-     <item row="1" column="1" colspan="5" >
-      <widget class="QFontComboBox" name="_family" />
+     <item row="1" column="1" colspan="5">
+      <widget class="QFontComboBox" name="_family"/>
      </item>
-     <item rowspan="2" row="2" column="0" colspan="3" >
-      <widget class="QLabel" name="label_4" >
-       <property name="text" >
-        <string>Label Color</string>
+     <item row="2" column="0" rowspan="2" colspan="3">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Label &amp;Color</string>
+       </property>
+       <property name="buddy">
+        <cstring>_labelColor</cstring>
        </property>
       </widget>
      </item>
-     <item row="3" column="1" >
-      <widget class="Kst::ColorButton" name="_labelColor" />
+     <item row="3" column="1">
+      <widget class="Kst::ColorButton" name="_labelColor"/>
      </item>
-     <item row="3" column="2" >
-      <spacer name="horizontalSpacer" >
-       <property name="orientation" >
+     <item row="3" column="2">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="sizeHint" stdset="0" >
+       <property name="sizeHint" stdset="0">
         <size>
          <width>40</width>
          <height>20</height>
@@ -93,10 +103,10 @@
    </item>
    <item>
     <spacer>
-     <property name="orientation" >
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeHint" stdset="0" >
+     <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
        <height>40</height>

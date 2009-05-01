@@ -19,6 +19,7 @@
 #include <QTimer>
 #include <QFileInfo>
 #include <QPushButton>
+#include <QLineEdit>
 
 namespace Kst {
 
@@ -37,6 +38,8 @@ ExportGraphicsDialog::ExportGraphicsDialog(MainWindow *parent)
 
   _comboBoxFormats->addItems(formats);
   _comboBoxFormats->setCurrentIndex(0);
+
+  _saveLocationLabel->setBuddy(_saveLocation->_fileEdit);
 
   connect(_autoSaveTimer, SIGNAL(timeout()),      this, SLOT(createFile()));
   connect(_comboBoxSizeOption, SIGNAL(activated(int)), this, SLOT(enableWidthHeight()));

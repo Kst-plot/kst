@@ -1,13 +1,5 @@
 ---------------TO BE DONE BEFORE BETA--------------------------------
 
-Plot sizes are not properly recovered on re-load
-Create a plot in kst.  Cleanup Layout->automatic
- -the plot now ~fills the window.
-save it.
-load it
-  -the plot is now smaller than it was.
-It should be the same size as it started.
-
 ---------------TO BE DONE AFTER BETA--------------------------------
 
 
@@ -22,7 +14,17 @@ There needs to be an option to somehow escape these when using them in a label.
 ---------
 
 Tooltips/whats this where helpful.
-Accelerators everywhere.
+
+---------
+
+Plot sizes are not properly recovered on re-load
+Create a plot in kst.  Cleanup Layout->automatic
+ -the plot now ~fills the window.
+save it.
+load it
+  -the plot is now smaller than it was.
+It should be the same size as it started.
+** I think this is because my kst window, for some reason, is resizing.**
 
 ---------
 
@@ -40,7 +42,8 @@ Create a plot with a Y range from -0.032 to 0.041.  It goes into base/offset mod
 ------------
 
 Drawing problems in resizing arrow
-draw an arrow.  In layout mode, grab one end and drag it around.  There are drawing artifacts left.
+draw an arrow.  In layout mode, grab one end and drag it around.  The grab point
+gradually drifts away from the mouse cursor.
 
 ------------
 
