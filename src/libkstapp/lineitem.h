@@ -25,7 +25,7 @@ class LineItem : public ViewItem
     virtual ~LineItem();
 
     QLineF line() const;
-    void setLine(const QLineF &line);
+    //void setLine(const QLineF &line);
 
     virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
@@ -49,7 +49,7 @@ class LineItem : public ViewItem
 
   private:
     virtual void updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect);
-
+    bool _created;
 };
 
 class KST_EXPORT CreateLineCommand : public CreateCommand

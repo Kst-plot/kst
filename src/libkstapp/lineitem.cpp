@@ -23,6 +23,7 @@ namespace Kst {
 
 LineItem::LineItem(View *parent)
   : ViewItem(parent) {
+  _created = false;
   setTypeName("Line");
   setAllowedGrips(RightMidGrip | LeftMidGrip);
   setAllowedGripModes(Resize);
@@ -56,18 +57,18 @@ QLineF LineItem::line() const {
 }
 
 
-void LineItem::setLine(const QLineF &line_) {
-  setPos(line_.p1());
-  setViewRect(QRectF(0.0, 0.0, 0.0, sizeOfGrip().height()));
-
-  if (!rect().isEmpty()) {
-    rotateTowards(line().p2(), line_.p2());
-  }
-
-  QRectF r = rect();
-  r.setSize(QSizeF(QLineF(line().p1(), line_.p2()).length(), r.height()));
-  setViewRect(r);
-}
+//void LineItem::setLine(const QLineF &line_) {
+//  setPos(line_.p1());
+//  setViewRect(QRectF(0.0, 0.0, 0.0, sizeOfGrip().height()));
+//
+//  if (!rect().isEmpty()) {
+//    rotateTowards(line().p2(), line_.p2());
+//  }
+//
+//  QRectF r = rect();
+//  r.setSize(QSizeF(QLineF(line().p1(), line_.p2()).length(), r.height()));
+//  setViewRect(r);
+//}
 
 
 QPainterPath LineItem::leftMidGrip() const {
@@ -105,7 +106,14 @@ QPointF LineItem::centerOfRotation() const {
     return line().p1();
   else if (activeGrip() == LeftMidGrip)
     return line().p2();
-  return line().p1();
+
+  // when creating the object with the mouse, use p1 as the rotation point.
+  // otherwise, use the center
+  if (_created) {
+      return QPointF((line().x1()+line().x2())*0.5, (line().y1()+line().y2())*0.5);
+  } else {
+      return QPointF(line().p1());
+  }
 }
 
 
@@ -140,6 +148,7 @@ void LineItem::creationPolygonChanged(View::CreationEvent event) {
     parentView()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
     parentView()->setMouseMode(View::Default);
     maybeReparent();
+    _created = true;
     emit creationComplete();
     return;
   }

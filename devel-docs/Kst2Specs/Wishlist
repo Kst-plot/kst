@@ -40,6 +40,8 @@ All font properties replicated.  Use the first one.
 Default X vector should be remembered.
   -A default X vector, which is the last vector to have been used as an X vector, should be remembered. 
 
+*cbn*
+
 ---------
 
 'I' key in a plot with an image should adjust the image color scale; see 1.x for correct behavior.  Consider <shift>I as doing smaller steps.

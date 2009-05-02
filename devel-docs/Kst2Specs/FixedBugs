@@ -569,3 +569,7 @@ Loading a kst files does not seem to work:
 
 Accelerators everywhere.
 
+------------
+
+'ok' in arrow dialog moves the arrow.
+draw an arrow. Open the edit dialog.  change something and hit apply.  The arrow moves.

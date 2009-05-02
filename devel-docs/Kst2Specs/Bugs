@@ -41,14 +41,9 @@ Create a plot with a Y range from -0.032 to 0.041.  It goes into base/offset mod
 
 ------------
 
-Drawing problems in resizing arrow
-draw an arrow.  In layout mode, grab one end and drag it around.  The grab point
-gradually drifts away from the mouse cursor.
-
-------------
-
-'ok' in arrow dialog moves the arrow.
-draw an arrow. Open the edit dialog.  change something and hit apply.  The arrow moves.
+Drawing problems in resizing view items (eg, arrow)
+draw an arrow.  In layout mode, grab one end and drag it around quickly.  The grab point
+gradually drifts away from the mouse cursor.  It is much less pronounced if you move slowly.
 
 ------------
 
