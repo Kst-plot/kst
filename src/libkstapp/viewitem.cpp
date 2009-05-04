@@ -799,8 +799,8 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
 
     maybeReparent();
     _creationState = Completed;
-    emit creationComplete();
     setZValue(1);
+    emit creationComplete();
     return;
   }
 }
@@ -1774,7 +1774,7 @@ void ViewItem::updateView() {
 
 
 qreal ViewItem::rotationAngle() const {
-  return 180.0/M_PI * atan2(transform().m12(), transform().m11());
+  return 180.0/ONE_PI * atan2(transform().m12(), transform().m11());
 }
 
 
