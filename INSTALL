@@ -2,7 +2,7 @@ Installation Notes for Kst 2.0 Beta
 
 Linux
 
-1. Download or otherwise install Qt 4.3/4.4.
+1. Download or otherwise install Qt 4.4/4.5.
 2. Make sure your QTDIR is set to that Qt installation.
 3. Optionally update your ./config.pri has the appropriate settings for your machine.
 4. ./build-kst
@@ -29,7 +29,7 @@ Windows
 Note:  This has only been build using Visual Studio & Cygwin.  The following steps
 are used on the current Windows build machine used for testing, but may vary.
 
-1. Download or otherwise install Qt 4.3/4.4.
+1. Download or otherwise install Qt 4.4/4.5.
 2. Make sure your QTDIR is set to that Qt installation.
 3. Make sure your ./config.pri has the appropriate settings for you machine.
 4. Start up Cygwin's bash shell - Required due to command line length limit in cmd.exe.
@@ -50,12 +50,12 @@ rem This file is generated
 rem
 
 echo Setting up a Qt environment...
-echo -- QTDIR set to C:\Qt\4.3.4
-echo -- Added C:\Qt\4.3.4\bin to PATH
+echo -- QTDIR set to C:\Qt\4.5.0
+echo -- Added C:\Qt\4.5.0\bin to PATH
 echo -- QMAKESPEC set to win32-msvc2005
 
-set QTDIR=C:\Qt\4.3.4
-set PATH=C:\Qt\4.3.4\bin;%PATH%
+set QTDIR=C:\Qt\4.5.0
+set PATH=C:\Qt\4.5.0\bin;%PATH%
 set QMAKESPEC=win32-msvc2005
 
 if not "%1"=="vsvars" goto END
