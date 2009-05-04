@@ -903,8 +903,7 @@ void DataWizard::finished() {
 
     Q_ASSERT(plotItem);
 
-
-    double fontScale = ApplicationSettings::self()->referenceFontSize()/sqrt(plotList.count()) - ApplicationSettings::self()->referenceFontSize()+ApplicationSettings::self()->referenceFontSize()/3;
+    double fontScale = ApplicationSettings::self()->referenceFontSize()/sqrt((double) plotList.count()) - ApplicationSettings::self()->referenceFontSize()+ApplicationSettings::self()->referenceFontSize()/3;
     if (fontScale>0) fontScale = 0;
 
     plotItem->setGlobalFontScale(fontScale);
