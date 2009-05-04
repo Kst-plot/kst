@@ -1,8 +1,12 @@
+include($$PWD/../../config.pri)
 TEMPLATE = subdirs
 CONFIG += ordered
 
 SUBDIRS += \
     sampleplugin \
     filters \
-    fits \
     dataobject
+
+LibExists(gsl) {
+  SUBDIRS += fits
+}
