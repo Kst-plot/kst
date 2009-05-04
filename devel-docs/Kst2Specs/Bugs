@@ -33,7 +33,7 @@ fit on the new window size.
 
 The View dimensions should be saved as part of the .kst file and if the newly created
 view on a load of a .kst file doesn't match, the resize logic should be triggered.
-
+*Mike*
 ------------
 
 Error in choice of offset mode.
