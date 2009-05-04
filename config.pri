@@ -16,7 +16,8 @@ DISABLE_GSL = 0
 defineTest(LibExists) {
   lib = $$ARGS
 
-unix { !mac {
+unix { 
+  !mac {
   contains(lib, gsl) {
     contains(DISABLE_GSL, 1) {
       # Overridden, do not check.
@@ -42,7 +43,7 @@ unix { !mac {
   }
   message(Found $$lib at $$PKGCONFIGRESULT)
   return(true)
-}}
+} }
 
 contains(lib, gsl) {
   contains(HAVE_GSL, 1) {
