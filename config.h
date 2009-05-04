@@ -6,8 +6,5 @@
 /* Define if you have unsetenv */
 #define HAVE_UNSETENV 1
 
-/* Define if you have cfitsio */
-#define HAVE_CFITSIO 1
-
 #endif
 
