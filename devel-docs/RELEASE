@@ -10,5 +10,14 @@ How to make a Kst release:  Currently Incomplete.
   (kst/run-tests)
 
 Update Documentation. (Not yet documented)
-Package and distribute. (Not yet documented)
+Package
+ - Export the source (svn export)
+ - Remove all old_ and admin directories from the source tree.
+ - Create a tarball of the source tree (tar -cf kst-2.0.0.tar sourcetree/kst) / (gzip -9 kst-2.0.0.tar)
 Test distribution and announce (Not yet documented)
+ - Open tarball and build / test.
+ - Upload to uploads.kst.org and e-mail ftpadmin@kst.org
+ - Update kde-apps.org
+ - E-mail kstList
+ - Update Kst Website
+

@@ -1,0 +1,9 @@
+General development notes for future reference:
+
+How to update the Windows Icon
+
+If kst.png changes the windows icon should also be updated.
+
+Open kst.png in gimp and save it as kst.ico, from the dropdown for format select "32 bpp, 8-bit alpha, no palette" and ensure that compressed is not checked.
+
+Additional notes:  .ico files can contain both a 32x32 and 16x16 icon.  The current version is scaling down the 32x32 on the fly which decreases the quality of the icon.  Future icons should be created in both 16x16 and 32x32 to optimize the appearance of the icon.
