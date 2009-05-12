@@ -1,7 +1,3 @@
----------------TO BE DONE BEFORE BETA--------------------------------
-
----------------TO BE DONE AFTER BETA--------------------------------
-
 
 Auto-labels, and '_' in field names:
 When plots are using name-based auto-labels, any '_' in field names gets interpreted as a subscript.
@@ -69,3 +65,92 @@ Correct behavior:
   -If the tied zoom indicators are not checked, then the shared axis 
   should behave as if it were tied, but the other should not.
   -If the tied zoom indicators are checked, then it should tie both axis.
+
+---------------------------
+
+Bugs Reported by D.V. Wiebe
+
+I haven't tried packaging it up yet, but here's a few things I noticed
+while running it in-situ and attempting to re-create a paper plot made
+in kst 1.x.  This list ranges from bugs through wishes to just comments.
+
+1. data source text box in first panel of data wizard inevitably moves
+the text cursor to the end of the input after entering a character,
+making it difficult to edit in the middle of a path
+
+2. data source text box doesn't recognise initial ~ as a euphemism for
+the user's home directory.
+
+3. toggling log-x axis (key 'g') doesn't do anything until you poke at
+the plot. (My impression is that a re-draw is being missed.)  toggling
+log-y (key 'l') works as expected.
+
+4. toggling log-x doesn't change the x-axis tick labels/positions, even
+though the curves are drawn on a log scale.  Zooming in and pressing
+"M" fixes this.  Again, y-log works as expected.
+
+5. All the dialog boxes appear to be modal now (they block interaction
+with the main window while open).  This slows me down significanlly.
+(I find I'm constantly opening and closing dialogs)
+
+6. Unless you've explicitly given it a Unique Name, the edit curve
+dialog gives no hint as to the name of the curve you're editing.  This
+is a problem when you have, say, twelve curves called "2 vs. 1" in a
+single plot.  In 1.x I can doubleclick on the curve to bring up the edit
+dialog containing its name to figure out the name of the particular
+curve "2 vs. 1" I'm interested in.  Here, I have to go by trial and
+error.
+
+7. Adding a curve to a plot in the edit plot item dialog, and hitting
+"Apply" causes the dialog box to grow wider.  Removing a plot does the
+same thing.  The result is an ever-widening dialog box, which can't be
+re-narrowed since it believes it is as small as it can get.  (It's the
+list of tabs on the left which is doing the growing.)
+
+8. Removing a curve from an autoscaled plot and hitting "apply" removes
+the curve doesn't rescale the plot.  The plot is rescaled when "Ok" is
+hit in the edit plot item dialog.  Adding a curve to an autoscaled plot
+and hitting "apply" does rescale the plot.
+
+9. Plotting too many decades in, the x- or y-log axis results in "y-log
+base-and-offset mode", giving, say, a base of 100, and tick labels
+"-[99.9999]", "[0]", "+[9999900]", "+[1e12]", "+[1e17]" instead of
+"0.001", "100", "1000000", "1e12","1e17".  (Although I'd argue that, if
+we're going to label in 5 decade intervals, 1e-5, 1, 1e5, 1e10 is
+better, and even better than that would be 6 decade intervals: 1e-6, 1,
+1e6, 1e12)
+
+10. In the content tab, double clicking on a curve in 1.x would move
+it from the list it used to be in of the lists to the other.  This
+saved the tedious click-on-curve, click-arrow-button,
+click-on-next-curve, click-on-arrow-button, &c.
+
+11. When in log mode, the range reported in the range tab of the edit
+plot item is the logarithm of the range.  So if the y-range is 0.1 to
+100, the range will be reported as -1 to 2.  Despite this, you still
+have to enter "0.1" and "100" to get this range.
+
+12. Changing the value of the fixed range limits doesn't active the
+"Apply" button.
+
+13. Hitting shift changes into y-zoom mode forever, rather than just
+changing it while shift is depressed.  After doing this it's difficult
+to get back to xy-zoom mode.  (I have to right click twice to open and
+close the context menu.)
+
+14. The weight of a drawn curve is apparently calculated as: (my weight)
++ (sum of weights of all lower numbered curves).  Being unable to
+specify negative weights, curves just get heavier and heavier.
+
+15. The text label behaviour is un-intuitive.  The typical interface is
+to choose a position first, and then input some text.
+
+16. Text labels have to be entered in a tiny little text box, making
+decent sized labels frustrating to edit.  Furthermore lines, in a label
+are separated by "\n" now?
+
+17. There appears to be no way to change the colour of the plot border
+and tick marks from black.  I though the brush colour under "Stroke"
+might do it, but nope.
+
+---------------------
