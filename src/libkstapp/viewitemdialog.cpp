@@ -153,6 +153,11 @@ void ViewItemDialog::strokeChanged() {
   p.setJoinStyle(_strokeTab->joinStyle());
   p.setCapStyle(_strokeTab->capStyle());
   p.setBrush(b);
+#ifdef Q_WS_WIN32
+  if (p.isCosmetic()) {
+    p.setWidth(1);
+  }
+#endif
   _item->setPen(p);
 }
 

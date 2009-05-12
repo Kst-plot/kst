@@ -19,4 +19,5 @@ INCLUDEPATH += \
     $$TOPLEVELDIR/src/widgets \
     $$OUTPUT_DIR/src/widgets \
 
-LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkst -lkstmath -lkstwidgets -lkstapp
+win32:LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkstapp -lkstwidgets -lkstmath -lkst
+!win32:LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkst -lkstmath -lkstwidgets -lkstapp

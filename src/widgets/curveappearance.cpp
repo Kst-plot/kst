@@ -331,7 +331,7 @@ void CurveAppearance::populateLineStyleCombo() {
   if (lineColor == Qt::transparent) {
     lineColor = Qt::black;
   }
-  QPen pen(lineColor, 0);
+  QPen pen(lineColor, 1);
 
   int currentItem = _comboLineStyle->currentIndex();
   _comboLineStyle->clear();
@@ -372,6 +372,16 @@ void CurveAppearance::drawSampleLine() {
     p.drawRect(rectBar);
   }
 
+#ifdef Q_WS_WIN32
+  // Note:  This modification was made in response to an apparent bug in Qt 4.4.0 in which any
+  // painting done with a cosmetic pen resulted in a crash.
+
+  // When this is no longer required similar code should also be removed in ViewItemDialog.cpp and
+  // curve.cpp - setLineWidth().
+  if (pen.isCosmetic()) {
+    pen.setWidth(1);
+  }
+#endif
   p.setPen(pen);
   if (showLines()) {
     p.drawLine(1, pix.height()/2, pix.width()-1, pix.height()/2);

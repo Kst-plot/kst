@@ -12,7 +12,8 @@ INCLUDEPATH += \
     $$TOPLEVELDIR/src/libkstapp \
     $$OUTPUT_DIR/src/kst/tmp
 
-LIBS += -lkst -lkstmath -lkstwidgets -lkstapp
+win32:LIBS += -lkstapp -lkstwidgets -lkstmath -lkst
+!win32:LIBS += -lkst -lkstmath -lkstwidgets -lkstapp
 
 SOURCES += \
     d2asc.cpp

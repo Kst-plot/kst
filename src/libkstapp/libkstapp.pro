@@ -21,7 +21,8 @@ INCLUDEPATH += \
     $$OUTPUT_DIR/src/widgets \
     $$OUTPUT_DIR/src/libkstapp/tmp
 
-LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkst -lkstmath -lkstwidgets
+win32:LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkstwidgets -lkstmath -lkst
+!win32:LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkst -lkstmath -lkstwidgets
 
 SOURCES += \
     application.cpp \

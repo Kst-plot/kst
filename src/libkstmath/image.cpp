@@ -766,13 +766,13 @@ void Image::paintLegendSymbol(QPainter *p, const QRect& bound) {
     for (int i = l; i <= r; i++) {
       int index = (int)floor(static_cast<double>(((i - l) * (_pal.paletteData().count() - 1))) / (r - l));
       QColor sliceColor = _pal.paletteData().value(index).rgb();
-      p->setPen(QPen(sliceColor, 0));
+      p->setPen(QPen(sliceColor, 1));
       p->drawLine(i, t, i, b);
     }
   }
   if (hasContourMap()) {
     // draw a box with contour color
-    p->setPen(QPen(_contourColor, 0));
+    p->setPen(QPen(_contourColor, 1));
     p->drawRect(bound.left(), bound.top(), bound.width(), bound.height());
   }
 }
