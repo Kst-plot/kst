@@ -39,6 +39,8 @@ class ArrowItem : public LineItem
     qreal endArrowScale() { return _endArrowScale; }
     void setEndArrowScale(const qreal scale) { _endArrowScale = scale; }
 
+    virtual QPainterPath shape() const;
+
   public Q_SLOTS:
     virtual void edit();
 
@@ -47,6 +49,7 @@ class ArrowItem : public LineItem
     bool _endArrowHead;
     qreal _startArrowScale;
     qreal _endArrowScale;
+    QPolygonF start, end;
 };
 
 class KST_EXPORT CreateArrowCommand : public CreateCommand

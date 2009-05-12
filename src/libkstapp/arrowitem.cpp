@@ -44,6 +44,8 @@ ArrowItem::~ArrowItem() {
 void ArrowItem::paint(QPainter *painter) {
   painter->drawLine(line());
 
+  start.clear();
+  end.clear();
   if (_startArrowHead) {
     double deltax = (parentView()->defaultFont().pixelSize() / 2) * _startArrowScale;
     double theta = atan2(double(line().y2() - line().y1()), double(line().x2() - line().x1())) - M_PI / 2.0;
@@ -61,6 +63,7 @@ void ArrowItem::paint(QPainter *painter) {
     pts.append(line().p1() + QPointF(x1, y1));
     pts.append(line().p1() + QPointF(x2, y2));
     painter->drawPolygon(pts);
+    start = pts;
   }
 
   if (_endArrowHead) {
@@ -80,7 +83,22 @@ void ArrowItem::paint(QPainter *painter) {
     pts.append(line().p2() + QPointF(x1, y1));
     pts.append(line().p2() + QPointF(x2, y2));
     painter->drawPolygon(pts);
+    end = pts;
   }
+}
+
+
+QPainterPath ArrowItem::shape() const {
+  QPainterPath selectPath;
+  selectPath.setFillRule(Qt::WindingFill);
+  selectPath.addPolygon(rect());
+  selectPath.addPolygon(start);
+  selectPath.addPolygon(end);
+  if ((!isSelected() && !isHovering()) || (parentView()->mouseMode() == View::Create)) {
+  } else {
+    selectPath.addPath(grips());
+  }
+  return selectPath;
 }
 
 
