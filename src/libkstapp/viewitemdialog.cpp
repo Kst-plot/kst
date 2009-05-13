@@ -212,11 +212,14 @@ void ViewItemDialog::dimensionsChanged() {
     h = _dimensionsTab->h() * ph;
     _item->setLockAspectRatio(false);
   }
-  x = _dimensionsTab->x() * pw + ptlx - w/2.0;
-  y = _dimensionsTab->y() * ph + ptly - h/2.0;
+
+  qreal diffX = (_dimensionsTab->x() - _item->relativeCenter().x()) * pw;
+  qreal diffY = (_dimensionsTab->y() - _item->relativeCenter().y()) * ph;
+
+  QPointF newLeft(_item->pos().x() + diffX, _item->pos().y() + diffY);
+  _item->setPos(newLeft);
 
   _item->setViewRect(0,0,w,h);
-  _item->setPos(x,y);
 
   QTransform t;
   QPointF origin = _item->centerOfRotation();
