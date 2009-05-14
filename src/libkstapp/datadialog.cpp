@@ -12,6 +12,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QHBoxLayout>
+#include <QCheckBox>
 #include <QPushButton>
 #include <QDialogButtonBox>
 #include <QDebug>
@@ -31,7 +32,7 @@
 namespace Kst {
 
 DataDialog::DataDialog(Kst::ObjectPtr dataObject, QWidget *parent)
-  : Dialog(parent), _defaultTagString("<Auto Name>"), _dataObject(dataObject), _modified(false) {
+  : Dialog(parent), _dataObject(dataObject), _modified(false) {
 
   _dataObjectName = QString();
 
@@ -77,27 +78,33 @@ void DataDialog::createGui() {
 
   QHBoxLayout *layout = new QHBoxLayout(box);
 
-  QLabel *label = new QLabel(tr("Uni&que name:"), box);
+  _nameLabel = new QLabel(tr("Name:"), box);
   _tagString = new QLineEdit(box);
   connect(_tagString, SIGNAL(textChanged(QString)), this, SLOT(modified()));
-  label->setBuddy(_tagString);
+  _nameLabel->setBuddy(_tagString);
+
+  _shortName = new QLabel(QString(), box);
+
+  _tagStringAuto = new QCheckBox(tr("Auto","automatic"), box);
+  connect(_tagStringAuto, SIGNAL(toggled(bool)), _tagString, SLOT(setDisabled(bool)));
 
   QPushButton *button = new QPushButton(tr("Edit Multiple >>"));
   connect(button, SIGNAL(clicked()), this, SLOT(slotEditMultiple()));
 
   if (_dataObject) {
-    if (_dataObject->descriptiveNameIsManual()) {
-      setTagString(_dataObject->descriptiveName());
-    } else {
-      setTagString(_defaultTagString);
-    }
+    setTagString(_dataObject->descriptiveName());
+    setShortName(_dataObject->shortName());
+    _tagStringAuto->setChecked(!_dataObject->descriptiveNameIsManual());
   } else {
-    setTagString(_defaultTagString);
+    _tagStringAuto->setChecked(true);
+    setTagString(QString());
     button->setVisible(false);
   }
 
-  layout->addWidget(label);
+  layout->addWidget(_nameLabel);
   layout->addWidget(_tagString);
+  layout->addWidget(_shortName);
+  layout->addWidget(_tagStringAuto);
   layout->addWidget(button);
 
   box->setLayout(layout);
@@ -106,8 +113,6 @@ void DataDialog::createGui() {
 
 
 QString DataDialog::tagString() const {
-//  const QString tag = _tagString->text();
-//  return tag.isEmpty() ? _defaultTagString : tag;
   return _tagString->text();
 }
 
@@ -116,6 +121,13 @@ void DataDialog::setTagString(const QString &tagString) {
   _tagString->setText(tagString);
 }
 
+void DataDialog::setShortName(const QString &name) {
+  _shortName->setText("("+name+")");
+}
+
+bool DataDialog::tagStringAuto() const {
+  return _tagStringAuto->isChecked();
+}
 
 void DataDialog::addDataTab(DataTab *tab) {
   Q_ASSERT(tab);
@@ -162,13 +174,21 @@ void DataDialog::slotEditMultiple() {
   int extensionWidth = extensionWidget()->width();
   if (extensionWidth<204) extensionWidth = 204; // FIXME: magic number hack...
   extensionWidget()->setVisible(!extensionWidget()->isVisible());
- _tagString->setEnabled(!extensionWidget()->isVisible());
+  //_tagString->setEnabled(!extensionWidget()->isVisible());
   if (!extensionWidget()->isVisible()) {
+    _tagString->setVisible(true);
+    _shortName->setVisible(true);
+    _tagStringAuto->setVisible(true);
+    _nameLabel->setVisible(true);
     setMinimumWidth(currentWidth - extensionWidth);
     resize(currentWidth - extensionWidth, height());
     _mode = Edit;
     emit editSingleMode();
   } else {
+    _tagString->setVisible(false);
+    _shortName->setVisible(false);
+    _tagStringAuto->setVisible(false);
+    _nameLabel->setVisible(false);
     setMinimumWidth(currentWidth + extensionWidth);
     resize(currentWidth + extensionWidth, height());
     _mode = EditMultiple;

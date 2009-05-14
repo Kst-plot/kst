@@ -1421,8 +1421,8 @@ void PlotItem::setGlobalFontColor(const QColor &color) {
 
 
 QString PlotItem::leftLabel() const {
-  if (!leftLabelDetails()->overrideText().isEmpty()) {
-    return leftLabelDetails()->overrideText();
+  if (!leftLabelDetails()->isAuto()) {
+    return leftLabelDetails()->text();
   } else {
     return autoLeftLabel();
   }
@@ -1439,8 +1439,8 @@ QString PlotItem::autoLeftLabel() const {
 
 
 QString PlotItem::bottomLabel() const {
-  if (!bottomLabelDetails()->overrideText().isEmpty()) {
-    return bottomLabelDetails()->overrideText();
+  if (!bottomLabelDetails()->isAuto()) {
+    return bottomLabelDetails()->text();
   } else {
     return autoBottomLabel();
   }
@@ -1457,8 +1457,8 @@ QString PlotItem::autoBottomLabel() const {
 
 
 QString PlotItem::rightLabel() const {
-  if (!rightLabelDetails()->overrideText().isEmpty()) {
-    return rightLabelDetails()->overrideText();
+  if (!rightLabelDetails()->isAuto()) {
+    return rightLabelDetails()->text();
   } else {
     return autoRightLabel();
   }
@@ -1475,8 +1475,8 @@ QString PlotItem::autoRightLabel() const {
 
 
 QString PlotItem::topLabel() const {
-  if (!topLabelDetails()->overrideText().isEmpty()) {
-    return topLabelDetails()->overrideText();
+  if (!topLabelDetails()->isAuto()) {
+    return topLabelDetails()->text();
   } else {
     return autoTopLabel();
   }
@@ -2555,7 +2555,8 @@ void PlotItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &ne
 PlotLabel::PlotLabel(PlotItem *plotItem) : QObject(),
   _plotItem(plotItem),
   _visible(true),
-  _fontUseGlobal(true) {
+  _fontUseGlobal(true),
+  _isAuto(true) {
 
   _font = _plotItem->parentView()->defaultFont();
   _fontColor = ApplicationSettings::self()->defaultFontColor();
@@ -2563,15 +2564,16 @@ PlotLabel::PlotLabel(PlotItem *plotItem) : QObject(),
 }
 
 
-void PlotLabel::setDetails(const QString &label, 
+void PlotLabel::setDetails(const QString &label, bool is_auto,
                            const bool use_global, const QFont &font, 
                            const qreal scale, const QColor &color) {
-  if ((label != _overrideText) ||
+  if ((label != _text) || (_isAuto != is_auto) ||
       (use_global != _fontUseGlobal) ||
       (font != _font) ||
       (scale != _fontScale) ||
       (color != _fontColor)) {
-    _overrideText = label;
+    _text = label;
+    _isAuto = is_auto;
     _fontUseGlobal = use_global;
     _font = font;
     _fontScale = scale;
@@ -2622,19 +2624,18 @@ void PlotLabel::setFontUseGlobal(const bool use_global) {
 }
 
 
-QString PlotLabel::overrideText() const {
-  return _overrideText;
+QString PlotLabel::text() const {
+  return _text;
 }
 
 
-void PlotLabel::setOverrideText(const QString &label) {
-  if (label == _overrideText) {
+void PlotLabel::setText(const QString &label) {
+  if (label == _text) {
     return;
   }
-  _overrideText = label;
+  _text = label;
   emit labelChanged();
 }
-
 
 qreal PlotLabel::fontScale() const {
   return _fontScale;
@@ -2679,7 +2680,8 @@ void PlotLabel::saveInPlot(QXmlStreamWriter &xml, QString labelId) {
   xml.writeStartElement("plotlabel");
   xml.writeAttribute("id", labelId);
   xml.writeAttribute("visible", QVariant(_visible).toString());
-  xml.writeAttribute("overridetext", _overrideText);
+  xml.writeAttribute("overridetext", _text);
+  xml.writeAttribute("autolabel", QVariant(_isAuto).toString());
   xml.writeAttribute("font", QVariant(_font).toString());
   xml.writeAttribute("fontscale", QVariant(_fontScale).toString());
   xml.writeAttribute("fontcolor", QVariant(_fontColor).toString());
@@ -2700,7 +2702,11 @@ bool PlotLabel::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
   }
   av = attrs.value("overridetext");
   if (!av.isNull()) {
-    setOverrideText(av.toString());
+    setText(av.toString());
+  }
+  av = attrs.value("autolabel");
+  if (!av.isNull()) {
+    setIsAuto(QVariant(av.toString()).toBool());
   }
   av = attrs.value("fontuseglobal");
   if (!av.isNull()) {

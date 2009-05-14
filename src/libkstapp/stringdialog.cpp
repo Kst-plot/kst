@@ -264,7 +264,11 @@ ObjectPtr StringDialog::createNewGeneratedString(){
   string->setValue(value);
   string->setOrphan(true);
   string->setEditable(true);
-  string->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+  if (DataDialog::tagStringAuto()) {
+     string->setDescriptiveName(QString());
+  } else {
+     string->setDescriptiveName(DataDialog::tagString());
+  }
 
   string->writeLock();
   string->update();
@@ -291,7 +295,11 @@ ObjectPtr StringDialog::createNewDataString() {
   string->writeLock();
   string->change(dataSource, field);
 
-  string->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+  if (DataDialog::tagStringAuto()) {
+     string->setDescriptiveName(QString());
+  } else {
+     string->setDescriptiveName(DataDialog::tagString());
+  }
 
   string->update();
   string->unlock();
@@ -305,7 +313,11 @@ ObjectPtr StringDialog::createNewDataString() {
 ObjectPtr StringDialog::editExistingDataObject() const {
   if (StringPtr string = kst_cast<String>(dataObject())) {
     QString value = _stringTab->value();
-    string->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+    if (DataDialog::tagStringAuto()) {
+      string->setDescriptiveName(QString());
+    } else {
+      string->setDescriptiveName(DataDialog::tagString());
+    }
     string->writeLock();
     string->setValue(value);
     string->immediateUpdate();

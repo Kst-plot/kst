@@ -38,6 +38,19 @@ class KST_EXPORT LabelTab : public DialogTab, Ui::LabelTab {
     QString rightLabel() const;
     void setRightLabel(const QString &label);
 
+    bool leftLabelAuto() const;
+    void setLeftLabelAuto(bool a);
+
+    bool rightLabelAuto() const;
+    void setRightLabelAuto(bool a);
+
+    bool topLabelAuto() const;
+    void setTopLabelAuto(bool a);
+
+    bool bottomLabelAuto() const;
+    void setBottomLabelAuto(bool a);
+
+
     bool showLegend() const;
     void setShowLegend(const bool show);
 
@@ -56,7 +69,7 @@ class KST_EXPORT LabelTab : public DialogTab, Ui::LabelTab {
     void labelUpdate(const QString&);
     void labelSelected();
 
-  private:
+private:
     void setGlobalFont(const QFont &font);
 
     PlotItem *_plotItem;

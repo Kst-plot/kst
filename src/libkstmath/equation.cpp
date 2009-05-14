@@ -129,6 +129,8 @@ Object::UpdateType Equation::update() {
 
   unlockInputsAndOutputs();
 
+  updateVectorLabels();
+
   return rc;
 }
 
@@ -248,6 +250,18 @@ void Equation::setEquation(const QString& in_fn) {
   }
 }
 
+void Equation::updateVectorLabels() {
+  QString yl;
+  QString xl;
+  QRegExp sn("(\\(V(\\d{1,2})\\))|\\[|\\]"); // short name
+  yl = reparsedEquation();
+  yl.replace(sn,"");
+
+  xl = vXIn()->label();
+
+  _xOutVector->setLabel(xl);
+  _yOutVector->setLabel(yl);
+}
 
 void Equation::setExistingXVector(VectorPtr in_xv, bool do_interp) {
   VectorPtr v = _inputVectors[XINVECTOR];

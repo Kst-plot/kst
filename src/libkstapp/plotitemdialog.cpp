@@ -135,10 +135,16 @@ PlotItemDialog::~PlotItemDialog() {
 void PlotItemDialog::setupLabels() {
   Q_ASSERT(_plotItem);
 
-  _labelTab->setLeftLabel(_plotItem->leftLabelDetails()->overrideText());
-  _labelTab->setBottomLabel(_plotItem->bottomLabelDetails()->overrideText());
-  _labelTab->setTopLabel(_plotItem->topLabelDetails()->overrideText());
-  _labelTab->setRightLabel(_plotItem->rightLabelDetails()->overrideText());
+  _labelTab->setLeftLabel(_plotItem->leftLabel());
+  _labelTab->setBottomLabel(_plotItem->bottomLabel());
+  _labelTab->setTopLabel(_plotItem->topLabel());
+  _labelTab->setRightLabel(_plotItem->rightLabel());
+
+  _labelTab->setLeftLabelAuto(_plotItem->leftLabelDetails()->isAuto());
+  _labelTab->setBottomLabelAuto(_plotItem->bottomLabelDetails()->isAuto());
+  _labelTab->setTopLabelAuto(_plotItem->topLabelDetails()->isAuto());
+  _labelTab->setRightLabelAuto(_plotItem->rightLabelDetails()->isAuto());
+
   _labelTab->setShowLegend(_plotItem->showLegend());
 
   _topLabelTab->setUseDefault(_plotItem->topLabelDetails()->fontUseGlobal());
@@ -549,11 +555,11 @@ void PlotItemDialog::yAxisChanged() {
 void PlotItemDialog::labelsChanged() {
   Q_ASSERT(_plotItem);
 
-  _plotItem->leftLabelDetails()->setDetails(_labelTab->leftLabel(), _leftLabelTab->useDefault(), _leftLabelTab->labelFont(), _leftLabelTab->labelFontScale(), _leftLabelTab->labelColor());
-  _plotItem->bottomLabelDetails()->setDetails(_labelTab->bottomLabel(), _bottomLabelTab->useDefault(), _bottomLabelTab->labelFont(), _bottomLabelTab->labelFontScale(), _bottomLabelTab->labelColor());
-  _plotItem->rightLabelDetails()->setDetails(_labelTab->rightLabel(), _rightLabelTab->useDefault(), _rightLabelTab->labelFont(), _rightLabelTab->labelFontScale(), _rightLabelTab->labelColor());
-  _plotItem->topLabelDetails()->setDetails(_labelTab->topLabel(), _topLabelTab->useDefault(), _topLabelTab->labelFont(), _topLabelTab->labelFontScale(), _topLabelTab->labelColor());
-  _plotItem->numberLabelDetails()->setDetails(QString(), _axisLabelTab->useDefault(), _axisLabelTab->labelFont(), _axisLabelTab->labelFontScale(), _axisLabelTab->labelColor());
+  _plotItem->leftLabelDetails()->setDetails(_labelTab->leftLabel(), _labelTab->leftLabelAuto(), _leftLabelTab->useDefault(), _leftLabelTab->labelFont(), _leftLabelTab->labelFontScale(), _leftLabelTab->labelColor());
+  _plotItem->bottomLabelDetails()->setDetails(_labelTab->bottomLabel(), _labelTab->bottomLabelAuto(), _bottomLabelTab->useDefault(), _bottomLabelTab->labelFont(), _bottomLabelTab->labelFontScale(), _bottomLabelTab->labelColor());
+  _plotItem->rightLabelDetails()->setDetails(_labelTab->rightLabel(), _labelTab->rightLabelAuto(), _rightLabelTab->useDefault(), _rightLabelTab->labelFont(), _rightLabelTab->labelFontScale(), _rightLabelTab->labelColor());
+  _plotItem->topLabelDetails()->setDetails(_labelTab->topLabel(), _labelTab->topLabelAuto(), _topLabelTab->useDefault(), _topLabelTab->labelFont(), _topLabelTab->labelFontScale(), _topLabelTab->labelColor());
+  _plotItem->numberLabelDetails()->setDetails(QString(), false, _axisLabelTab->useDefault(), _axisLabelTab->labelFont(), _axisLabelTab->labelFontScale(), _axisLabelTab->labelColor());
 
   _plotItem->setGlobalFont(_labelTab->globalLabelFont());
   _plotItem->setGlobalFontScale(_labelTab->globalLabelFontScale());

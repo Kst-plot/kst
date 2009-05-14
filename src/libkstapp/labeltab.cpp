@@ -79,11 +79,17 @@ QString LabelTab::leftLabel() const {
   return _leftLabelText->text();
 }
 
-
 void LabelTab::setLeftLabel(const QString &label) {
   _leftLabelText->setText(label);
 }
 
+bool LabelTab::leftLabelAuto() const {
+  return _leftLabelAuto->isChecked();
+}
+
+void LabelTab::setLeftLabelAuto(bool a) {
+  _leftLabelAuto->setChecked(a);
+}
 
 QString LabelTab::bottomLabel() const {
   return _bottomLabelText->text();
@@ -92,6 +98,14 @@ QString LabelTab::bottomLabel() const {
 
 void LabelTab::setBottomLabel(const QString &label) {
   _bottomLabelText->setText(label);
+}
+
+bool LabelTab::bottomLabelAuto() const {
+  return _bottomLabelAuto->isChecked();
+}
+
+void LabelTab::setBottomLabelAuto(bool a) {
+  _bottomLabelAuto->setChecked(a);
 }
 
 
@@ -104,6 +118,14 @@ void LabelTab::setRightLabel(const QString &label) {
   _rightLabelText->setText(label);
 }
 
+bool LabelTab::rightLabelAuto() const {
+  return _rightLabelAuto->isChecked();
+}
+
+void LabelTab::setRightLabelAuto(bool a) {
+  _rightLabelAuto->setChecked(a);
+}
+
 
 QString LabelTab::topLabel() const {
   return _topLabelText->text();
@@ -112,6 +134,14 @@ QString LabelTab::topLabel() const {
 
 void LabelTab::setTopLabel(const QString &label) {
   _topLabelText->setText(label);
+}
+
+bool LabelTab::topLabelAuto() const {
+  return _topLabelAuto->isChecked();
+}
+
+void LabelTab::setTopLabelAuto(bool a) {
+  _topLabelAuto->setChecked(a);
 }
 
 
@@ -170,6 +200,7 @@ void LabelTab::labelSelected() {
     _activeLineEdit = _topLabelText;
   }
 }
+
 }
 
 // vim: ts=2 sw=2 et

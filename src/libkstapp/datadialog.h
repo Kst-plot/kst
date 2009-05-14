@@ -19,6 +19,8 @@
 #include "dataobject.h"
 
 class QLineEdit;
+class QCheckBox;
+class QLabel;
 
 namespace Kst {
 
@@ -40,7 +42,9 @@ class KST_EXPORT DataDialog : public Dialog {
   protected:
     virtual QString tagString() const;
     void setTagString(const QString &tagString);
-    QString defaultTagString() const { return _defaultTagString; }
+    void setShortName(const QString &name);
+
+    bool tagStringAuto() const;
 
     ObjectPtr dataObject() const { return _dataObject; }
     void setDataObject(ObjectPtr dataObject) { _dataObject = dataObject; }
@@ -67,8 +71,10 @@ class KST_EXPORT DataDialog : public Dialog {
     void updateApplyButton();
 
   private:
-    QString _defaultTagString;
     QLineEdit *_tagString;
+    QCheckBox *_tagStringAuto;
+    QLabel *_shortName;
+    QLabel *_nameLabel;
     ObjectPtr _dataObject;
     EditMode _mode;
     bool _modified;

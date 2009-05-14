@@ -444,7 +444,11 @@ ObjectPtr ImageDialog::createNewDataObject() {
         _imageTab->contourColor(),
         _imageTab->useVariableLineWeight() ? -1 : _imageTab->contourWeight());
   }
-  image->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+  if (DataDialog::tagStringAuto()) {
+     image->setDescriptiveName(QString());
+  } else {
+     image->setDescriptiveName(DataDialog::tagString());
+  }
 
   image->writeLock();
   image->update();
@@ -564,7 +568,11 @@ ObjectPtr ImageDialog::editExistingDataObject() const {
             _imageTab->contourColor(),
             _imageTab->useVariableLineWeight() ? -1 : _imageTab->contourWeight());
       }
-      image->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+      if (DataDialog::tagStringAuto()) {
+        image->setDescriptiveName(QString());
+      } else {
+        image->setDescriptiveName(DataDialog::tagString());
+      }
 
       image->processUpdate(image);
       image->unlock();

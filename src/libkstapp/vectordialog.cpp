@@ -374,7 +374,11 @@ ObjectPtr VectorDialog::createNewDataVector() {
       dataRange->doSkip(),
       dataRange->doFilter());
 
-  vector->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+  if (DataDialog::tagStringAuto()) {
+     vector->setDescriptiveName(QString());
+  } else {
+     vector->setDescriptiveName(DataDialog::tagString());
+  }
 
   setDataVectorDefaults(vector);
   _vectorTab->dataRange()->setWidgetDefaults();
@@ -399,7 +403,11 @@ ObjectPtr VectorDialog::createNewGeneratedVector() {
 
   setGenVectorDefaults(vector);
 
-  vector->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+  if (DataDialog::tagStringAuto()) {
+     vector->setDescriptiveName(QString());
+  } else {
+     vector->setDescriptiveName(DataDialog::tagString());
+  }
 
   _dataObjectName = vector->Name();
 
@@ -450,7 +458,11 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
         dataRange->doSkip(),
         dataRange->doFilter());
 
-      dataVector->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+      if (DataDialog::tagStringAuto()) {
+        dataVector->setDescriptiveName(QString());
+      } else {
+        dataVector->setDescriptiveName(DataDialog::tagString());
+      }
 
       dataVector->immediateUpdate();
       dataVector->unlock();
@@ -479,7 +491,11 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
       const int numberOfSamples = _vectorTab->numberOfSamples();
       generatedVector->writeLock();
       generatedVector->changeRange(from, to, numberOfSamples);
-      generatedVector->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+      if (DataDialog::tagStringAuto()) {
+        generatedVector->setDescriptiveName(QString());
+      } else {
+        generatedVector->setDescriptiveName(DataDialog::tagString());
+      }
       generatedVector->immediateUpdate();
       generatedVector->unlock();
       setGenVectorDefaults(generatedVector);

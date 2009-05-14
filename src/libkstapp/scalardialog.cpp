@@ -322,7 +322,11 @@ ObjectPtr ScalarDialog::createNewGeneratedScalar(){
   scalar->setValue(value);
   scalar->setOrphan(true);
   scalar->setEditable(true);
-  scalar->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+  if (DataDialog::tagStringAuto()) {
+     scalar->setDescriptiveName(QString());
+  } else {
+     scalar->setDescriptiveName(DataDialog::tagString());
+  }
 
   scalar->writeLock();
   scalar->update();
@@ -349,7 +353,11 @@ ObjectPtr ScalarDialog::createNewDataScalar() {
   scalar->writeLock();
   scalar->change(dataSource, field);
 
-  scalar->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+  if (DataDialog::tagStringAuto()) {
+     scalar->setDescriptiveName(QString());
+  } else {
+     scalar->setDescriptiveName(DataDialog::tagString());
+  }
 
   scalar->update();
   scalar->unlock();
@@ -376,7 +384,11 @@ ObjectPtr ScalarDialog::createNewVScalar() {
   scalar->writeLock();
   scalar->change(dataSource, field, f0);
 
-  scalar->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+  if (DataDialog::tagStringAuto()) {
+     scalar->setDescriptiveName(QString());
+  } else {
+     scalar->setDescriptiveName(DataDialog::tagString());
+  }
 
   scalar->update();
   scalar->unlock();
@@ -396,7 +408,11 @@ ObjectPtr ScalarDialog::editExistingDataObject() const {
       scalar->writeLock();
       scalar->change(dataSource, field);
 
-      scalar->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+      if (DataDialog::tagStringAuto()) {
+        scalar->setDescriptiveName(QString());
+      } else {
+        scalar->setDescriptiveName(DataDialog::tagString());
+      }
 
       scalar->immediateUpdate();
       scalar->unlock();
@@ -410,7 +426,11 @@ ObjectPtr ScalarDialog::editExistingDataObject() const {
       scalar->writeLock();
       scalar->change(dataSource, field, f0);
 
-      scalar->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+      if (DataDialog::tagStringAuto()) {
+        scalar->setDescriptiveName(QString());
+      } else {
+        scalar->setDescriptiveName(DataDialog::tagString());
+      }
 
       scalar->immediateUpdate();
       scalar->unlock();
@@ -421,7 +441,11 @@ ObjectPtr ScalarDialog::editExistingDataObject() const {
     if (!ok) {
       value = Equations::interpret(_document->objectStore(), _scalarTab->value().toLatin1(), &ok);
     }
-    scalar->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+    if (DataDialog::tagStringAuto()) {
+      scalar->setDescriptiveName(QString());
+    } else {
+      scalar->setDescriptiveName(DataDialog::tagString());
+    }
     scalar->writeLock();
     scalar->setValue(value);
     scalar->immediateUpdate();

@@ -215,7 +215,12 @@ ObjectPtr CSDDialog::createNewDataObject() {
               _CSDTab->FFTOptionsWidget()->output(), 
               _CSDTab->FFTOptionsWidget()->vectorUnits(),
               _CSDTab->FFTOptionsWidget()->rateUnits());
-  csd->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+
+  if (DataDialog::tagStringAuto()) {
+     csd->setDescriptiveName(QString());
+  } else {
+     csd->setDescriptiveName(DataDialog::tagString());
+  }
 
   csd->writeLock();
   csd->update();
@@ -314,7 +319,11 @@ ObjectPtr CSDDialog::editExistingDataObject() const {
                   _CSDTab->FFTOptionsWidget()->output(), 
                   _CSDTab->FFTOptionsWidget()->vectorUnits(),
                   _CSDTab->FFTOptionsWidget()->rateUnits());
-      csd->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+      if (DataDialog::tagStringAuto()) {
+         csd->setDescriptiveName(QString());
+      } else {
+         csd->setDescriptiveName(DataDialog::tagString());
+      }
       csd->inputObjectUpdated(csd);
       csd->unlock();
     }

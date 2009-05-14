@@ -206,7 +206,11 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
                         _powerSpectrumTab->FFTOptionsWidget()->output(),
                         _powerSpectrumTab->FFTOptionsWidget()->interpolateOverHoles());
 
-  powerspectrum->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+  if (DataDialog::tagStringAuto()) {
+     powerspectrum->setDescriptiveName(QString());
+  } else {
+     powerspectrum->setDescriptiveName(DataDialog::tagString());
+  }
 
   powerspectrum->update();
   powerspectrum->unlock();
@@ -321,7 +325,11 @@ ObjectPtr PowerSpectrumDialog::editExistingDataObject() const {
       powerspectrum->setGaussianSigma(_powerSpectrumTab->FFTOptionsWidget()->sigma());
       powerspectrum->setOutput(_powerSpectrumTab->FFTOptionsWidget()->output());
       powerspectrum->setInterpolateHoles(_powerSpectrumTab->FFTOptionsWidget()->interpolateOverHoles());
-      powerspectrum->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+      if (DataDialog::tagStringAuto()) {
+        powerspectrum->setDescriptiveName(QString());
+      } else {
+        powerspectrum->setDescriptiveName(DataDialog::tagString());
+      }
 
       powerspectrum->inputObjectUpdated(powerspectrum);
       powerspectrum->unlock();

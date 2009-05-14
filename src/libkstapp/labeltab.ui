@@ -81,19 +81,6 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="_Label_7">
-     <property name="text">
-      <string>Default font famil&amp;y:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="buddy">
-      <cstring>_globalLabelFontFamily</cstring>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="1" colspan="6">
     <widget class="QFontComboBox" name="_globalLabelFontFamily"/>
    </item>
@@ -155,8 +142,12 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="1" colspan="6">
-    <widget class="Kst::LabelLineEdit" name="_topLabelText"/>
+   <item row="5" column="1" colspan="5">
+    <widget class="Kst::LabelLineEdit" name="_topLabelText">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+    </widget>
    </item>
    <item row="6" column="0">
     <widget class="QLabel" name="_Label_14">
@@ -171,8 +162,12 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="1" colspan="6">
-    <widget class="Kst::LabelLineEdit" name="_bottomLabelText"/>
+   <item row="6" column="1" colspan="5">
+    <widget class="Kst::LabelLineEdit" name="_bottomLabelText">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+    </widget>
    </item>
    <item row="7" column="0">
     <widget class="QLabel" name="_Label_15">
@@ -187,8 +182,12 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="1" colspan="6">
-    <widget class="Kst::LabelLineEdit" name="_leftLabelText"/>
+   <item row="7" column="1" colspan="5">
+    <widget class="Kst::LabelLineEdit" name="_leftLabelText">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+    </widget>
    </item>
    <item row="8" column="0">
     <widget class="QLabel" name="_Label_16">
@@ -203,8 +202,12 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="1" colspan="6">
-    <widget class="Kst::LabelLineEdit" name="_rightLabelText"/>
+   <item row="8" column="1" colspan="5">
+    <widget class="Kst::LabelLineEdit" name="_rightLabelText">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+    </widget>
    </item>
    <item row="9" column="0" colspan="7">
     <widget class="Line" name="line">
@@ -268,6 +271,46 @@
    <item row="0" column="6">
     <widget class="Kst::ColorButton" name="_globalLabelColor"/>
    </item>
+   <item row="5" column="6">
+    <widget class="QCheckBox" name="_topLabelAuto">
+     <property name="text">
+      <string>Auto</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="6">
+    <widget class="QCheckBox" name="_bottomLabelAuto">
+     <property name="text">
+      <string>Auto</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="6">
+    <widget class="QCheckBox" name="_leftLabelAuto">
+     <property name="text">
+      <string>Auto</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="6">
+    <widget class="QCheckBox" name="_rightLabelAuto">
+     <property name="text">
+      <string>Auto</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -306,5 +349,70 @@
   <tabstop>_editLegendContents</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>_topLabelAuto</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_topLabelText</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>562</x>
+     <y>176</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>443</x>
+     <y>167</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_bottomLabelAuto</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_bottomLabelText</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>532</x>
+     <y>196</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>500</x>
+     <y>204</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_leftLabelAuto</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_leftLabelText</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>547</x>
+     <y>235</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>476</x>
+     <y>235</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_rightLabelAuto</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_rightLabelText</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>549</x>
+     <y>262</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>452</x>
+     <y>266</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

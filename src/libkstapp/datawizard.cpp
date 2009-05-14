@@ -914,12 +914,12 @@ void DataWizard::finished() {
     plotItem->numberLabelDetails()->setFontScale(fontScale);
 
     if (!xLabels) {
-      plotItem->leftLabelDetails()->setOverrideText(QString(" "));
-      plotItem->rightLabelDetails()->setOverrideText(QString(" "));
+      plotItem->leftLabelDetails()->setText(QString(" "));
+      plotItem->rightLabelDetails()->setText(QString(" "));
     }
     if (!yLabels) {
-      plotItem->topLabelDetails()->setOverrideText(QString(" "));
-      plotItem->bottomLabelDetails()->setOverrideText(QString(" "));
+      plotItem->topLabelDetails()->setText(QString(" "));
+      plotItem->bottomLabelDetails()->setText(QString(" "));
     }
 
     if (_pagePlot->legendsOn()) {

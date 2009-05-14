@@ -573,3 +573,14 @@ Accelerators everywhere.
 
 'ok' in arrow dialog moves the arrow.
 draw an arrow. Open the edit dialog.  change something and hit apply.  The arrow moves.
+
+------------
+
+6. Unless you've explicitly given it a Unique Name, the edit curve
+dialog gives no hint as to the name of the curve you're editing.  This
+is a problem when you have, say, twelve curves called "2 vs. 1" in a
+single plot.  In 1.x I can doubleclick on the curve to bring up the edit
+dialog containing its name to figure out the name of the particular
+curve "2 vs. 1" I'm interested in.  Here, I have to go by trial and
+error.
+

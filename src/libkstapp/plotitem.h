@@ -77,8 +77,11 @@ class PlotLabel : public QObject {
     bool isVisible() const;
     void setVisible(bool visible);
 
-    QString overrideText() const;
-    void setOverrideText(const QString &label);
+    bool isAuto() {return _isAuto;}
+    void setIsAuto(bool is_auto) { _isAuto = is_auto;}
+
+    QString text() const;
+    void setText(const QString &label);
 
     bool fontUseGlobal() const;
     void setFontUseGlobal(const bool use_global);
@@ -94,7 +97,7 @@ class PlotLabel : public QObject {
 
     QFont calculatedFont();
 
-    void setDetails(const QString &label, const bool use_global, const QFont &font, const qreal scale, const QColor &color);
+    void setDetails(const QString &label, bool is_auto, const bool use_global, const QFont &font, const qreal scale, const QColor &color);
     void saveInPlot(QXmlStreamWriter &xml, QString labelId);
     bool configureFromXml(QXmlStreamReader &xml, ObjectStore *store);
 
@@ -104,11 +107,12 @@ class PlotLabel : public QObject {
   public:
     PlotItem* _plotItem;
     bool _visible;
-    QString _overrideText;
+    QString _text;
     QFont _font;
     qreal _fontScale;
     QColor _fontColor;
     bool _fontUseGlobal;
+    bool _isAuto;
 };
 
 

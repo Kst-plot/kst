@@ -731,7 +731,11 @@ ObjectPtr MatrixDialog::createNewDataMatrix() {
       xNumSteps, yNumSteps, doAverage,
       doSkip, skip, minX, minY, stepX, stepY);
 
-  matrix->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+  if (DataDialog::tagStringAuto()) {
+     matrix->setDescriptiveName(QString());
+  } else {
+     matrix->setDescriptiveName(DataDialog::tagString());
+  }
 
   matrix->writeLock();
   matrix->update();
@@ -772,7 +776,11 @@ ObjectPtr MatrixDialog::createNewGeneratedMatrix() {
   Q_ASSERT(_document && _document->objectStore());
   GeneratedMatrixPtr matrix = _document->objectStore()->createObject<GeneratedMatrix>();
   matrix->change(nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
-  matrix->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+  if (DataDialog::tagStringAuto()) {
+     matrix->setDescriptiveName(QString());
+  } else {
+     matrix->setDescriptiveName(DataDialog::tagString());
+  }
 
   matrix->writeLock();
   matrix->update();

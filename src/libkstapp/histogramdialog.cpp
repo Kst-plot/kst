@@ -351,7 +351,12 @@ ObjectPtr HistogramDialog::createNewDataObject() {
   histogram->change(_histogramTab->vector(), _histogramTab->min(), _histogramTab->max(),
                   _histogramTab->bins(), _histogramTab->normalizationType(),
                   _histogramTab->realTimeAutoBin());
-  histogram->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+
+  if (DataDialog::tagStringAuto()) {
+     histogram->setDescriptiveName(QString());
+  } else {
+     histogram->setDescriptiveName(DataDialog::tagString());
+  }
 
   histogram->writeLock();
   histogram->update();
@@ -442,7 +447,11 @@ ObjectPtr HistogramDialog::editExistingDataObject() const {
       histogram->setNumberOfBins(_histogramTab->bins());
       histogram->setNormalizationType(_histogramTab->normalizationType());
       histogram->setRealTimeAutoBin(_histogramTab->realTimeAutoBin());
-      histogram->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+      if (DataDialog::tagStringAuto()) {
+        histogram->setDescriptiveName(QString());
+      } else {
+        histogram->setDescriptiveName(DataDialog::tagString());
+      }
 
       histogram->unlock();
 

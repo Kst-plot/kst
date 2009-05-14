@@ -383,7 +383,13 @@ ObjectPtr CurveDialog::createNewDataObject() {
   curve->setPointDensity(_curveTab->curveAppearance()->pointDensity());
   curve->setBarStyle(_curveTab->curveAppearance()->barStyle());
   curve->setIgnoreAutoScale(_curveTab->ignoreAutoScale());
-  curve->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+
+  if (DataDialog::tagStringAuto()) {
+     curve->setDescriptiveName(QString());
+  } else {
+     curve->setDescriptiveName(DataDialog::tagString());
+  }
+
   curve->writeLock();
   curve->update();
   curve->unlock();
@@ -488,7 +494,11 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
           curve->setPointDensity(pointDensity);
           curve->setBarStyle(barStyle);
           curve->setIgnoreAutoScale(ignoreAutoScale);
-          curve->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+          if (DataDialog::tagStringAuto()) {
+             curve->setDescriptiveName(QString());
+          } else {
+             curve->setDescriptiveName(DataDialog::tagString());
+          }
 
           curve->processUpdate(curve);
           curve->unlock();
@@ -512,7 +522,11 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
       curve->setPointDensity(_curveTab->curveAppearance()->pointDensity());
       curve->setBarStyle(_curveTab->curveAppearance()->barStyle());
       curve->setIgnoreAutoScale(_curveTab->ignoreAutoScale());
-      curve->setDescriptiveName(DataDialog::tagString().replace(defaultTagString(), QString()));
+      if (DataDialog::tagStringAuto()) {
+         curve->setDescriptiveName(QString());
+      } else {
+         curve->setDescriptiveName(DataDialog::tagString());
+      }
 
       curve->processUpdate(curve);
       curve->unlock();

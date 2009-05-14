@@ -18,6 +18,7 @@
 #define GENERATEDVECTOR_H
 
 #include "vector.h"
+//#include "kst_i18n.h"
 #include "kst_export.h"
 
 namespace Kst {
@@ -41,6 +42,8 @@ class KST_EXPORT GeneratedVector : public Vector {
 
     virtual QString descriptionTip() const;
     virtual QString propertyString() const;
+    virtual QString label() const {return QString("x");}
+
   protected:
     GeneratedVector(ObjectStore *store);
 

@@ -69,6 +69,7 @@ Correct behavior:
 ---------------------------
 
 Bugs Reported by D.V. Wiebe
+(all appear valid)
 
 I haven't tried packaging it up yet, but here's a few things I noticed
 while running it in-situ and attempting to re-create a paper plot made
@@ -92,14 +93,6 @@ though the curves are drawn on a log scale.  Zooming in and pressing
 5. All the dialog boxes appear to be modal now (they block interaction
 with the main window while open).  This slows me down significanlly.
 (I find I'm constantly opening and closing dialogs)
-
-6. Unless you've explicitly given it a Unique Name, the edit curve
-dialog gives no hint as to the name of the curve you're editing.  This
-is a problem when you have, say, twelve curves called "2 vs. 1" in a
-single plot.  In 1.x I can doubleclick on the curve to bring up the edit
-dialog containing its name to figure out the name of the particular
-curve "2 vs. 1" I'm interested in.  Here, I have to go by trial and
-error.
 
 7. Adding a curve to a plot in the edit plot item dialog, and hitting
 "Apply" causes the dialog box to grow wider.  Removing a plot does the
@@ -153,4 +146,3 @@ are separated by "\n" now?
 and tick marks from black.  I though the brush colour under "Stroke"
 might do it, but nope.
 
----------------------
