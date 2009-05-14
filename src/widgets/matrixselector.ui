@@ -1,77 +1,78 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>MatrixSelector</class>
- <widget class="QWidget" name="MatrixSelector" >
-  <property name="geometry" >
+ <widget class="QWidget" name="MatrixSelector">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
-    <height>25</height>
+    <width>277</width>
+    <height>32</height>
    </rect>
   </property>
-  <property name="maximumSize" >
-   <size>
-    <width>300</width>
-    <height>16777215</height>
-   </size>
+  <property name="whatsThis">
+   <string>Select a vector to utilize.  If you wish to create a new vector, click on the icon to the right.</string>
   </property>
-  <property name="whatsThis" >
-   <string>Select a matrix to utilize.  If you wish to create a new matrix, click on the icon to the right.</string>
-  </property>
-  <layout class="QGridLayout" >
-   <property name="leftMargin" >
+  <layout class="QHBoxLayout">
+   <property name="spacing">
     <number>0</number>
    </property>
-   <property name="topMargin" >
+   <property name="margin">
     <number>0</number>
    </property>
-   <property name="rightMargin" >
-    <number>0</number>
-   </property>
-   <property name="bottomMargin" >
-    <number>0</number>
-   </property>
-   <item row="0" column="0" >
-    <widget class="Kst::ComboBox" name="_matrix" />
+   <item>
+    <widget class="Kst::ComboBox" name="_matrix">
+     <item>
+      <property name="text">
+       <string>M</string>
+      </property>
+     </item>
+    </widget>
    </item>
-   <item row="0" column="1" >
-    <widget class="QToolButton" name="_newMatrix" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+   <item>
+    <widget class="QToolButton" name="_newMatrix">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="toolTip" >
-      <string>Create a new matrix</string>
+     <property name="toolTip">
+      <string>Create a new vector.</string>
      </property>
-     <property name="text" >
+     <property name="whatsThis">
+      <string>Opens a vector dialog to create a new vector, which will become the selected vector.</string>
+     </property>
+     <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="0" column="2" >
-    <widget class="QToolButton" name="_editMatrix" >
-     <property name="enabled" >
+   <item>
+    <widget class="QToolButton" name="_editMatrix">
+     <property name="enabled">
       <bool>false</bool>
      </property>
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="toolTip" >
-      <string>Edit selected matrix</string>
+     <property name="toolTip">
+      <string>Edit selected vector.</string>
      </property>
-     <property name="text" >
+     <property name="whatsThis">
+      <string>Opens a vector dialog to edit selected vector.</string>
+     </property>
+     <property name="text">
       <string/>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
- <layoutdefault spacing="6" margin="11" />
+ <layoutdefault spacing="6" margin="11"/>
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
   <customwidget>
