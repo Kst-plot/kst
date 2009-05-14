@@ -109,6 +109,7 @@ class KST_EXPORT View : public QGraphicsView
     void appendToLayout(CurvePlacement::Layout layout, ViewItem* item, int columns = 0);
     void createCustomLayout();
     void viewChanged();
+    void forceChildResize(QRectF oldRect, QRectF newRect);
 
   protected:
     bool event(QEvent *event);

@@ -128,7 +128,8 @@ ViewItem *View::selectedViewItem() const {
 
 void View::save(QXmlStreamWriter &xml) {
   QList<QGraphicsItem*> items = scene()->items();
-
+  xml.writeAttribute("width", QVariant(sceneRect().width()).toString());
+  xml.writeAttribute("height", QVariant(sceneRect().height()).toString());
   foreach(QGraphicsItem* viewItem, items) {
     if (!viewItem->parentItem()) {
       qgraphicsitem_cast<ViewItem*>(viewItem)->save(xml);
@@ -361,6 +362,19 @@ void View::resizeEvent(QResizeEvent *event) {
     }
   }
   updateFont();
+}
+
+
+void View::forceChildResize(QRectF oldRect, QRectF newRect) {
+  foreach (QGraphicsItem *item, items()) {
+    if (item->parentItem())
+      continue;
+
+    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+    Q_ASSERT(viewItem);
+
+    viewItem->updateChildGeometry(oldRect, newRect);
+  }
 }
 
 

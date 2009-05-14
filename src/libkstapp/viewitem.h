@@ -74,10 +74,17 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     ViewItem *parentViewItem() const;
     void setParent(ViewItem *parent);
     virtual void updateRelativeSize();
+    
     qreal relativeHeight() const { return _parentRelativeHeight; }
+    void setRelativeHeight(const qreal height) { _parentRelativeHeight = height; }
     qreal relativeWidth() const { return _parentRelativeWidth; }
-    QPointF relativeCenter() const;
-    QPointF relativePosition() const;
+    void setRelativeWidth(const qreal width) { _parentRelativeWidth = width; }
+
+    QPointF relativeCenter() const { return _parentRelativeCenter; }
+    void setRelativeCenter(const QPointF center) { _parentRelativeCenter = center; }
+    QPointF relativePosition() const { return _parentRelativePosition; }
+    void setRelativePosition(const QPointF pos) { _parentRelativePosition = pos; }
+    
     qreal rotationAngle() const;
 
     GripMode gripMode() const;

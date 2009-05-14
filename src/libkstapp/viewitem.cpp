@@ -127,6 +127,14 @@ void ViewItem::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("width", QVariant(viewRect().width()).toString());
   xml.writeAttribute("height", QVariant(viewRect().height()).toString());
   xml.writeEndElement();
+  xml.writeStartElement("relativesize");
+  xml.writeAttribute("width", QVariant(_parentRelativeWidth).toString());
+  xml.writeAttribute("height", QVariant(_parentRelativeHeight).toString());
+  xml.writeAttribute("centerx", QVariant(_parentRelativeCenter.x()).toString());
+  xml.writeAttribute("centery", QVariant(_parentRelativeCenter.y()).toString());
+  xml.writeAttribute("posx", QVariant(_parentRelativePosition.x()).toString());
+  xml.writeAttribute("posy", QVariant(_parentRelativePosition.y()).toString());
+  xml.writeEndElement();
   xml.writeStartElement("transform");
   xml.writeAttribute("m11", QVariant(transform().m11()).toString());
   xml.writeAttribute("m12", QVariant(transform().m12()).toString());
@@ -289,7 +297,38 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
       if (!av.isNull()) {
         y = av.toString().toDouble();
       }
-     setViewRect(QRectF(QPointF(x, y), QSizeF(w, h)));
+      setViewRect(QRectF(QPointF(x, y), QSizeF(w, h)));
+    } else if (xml.name().toString() == "relativesize") {
+      knownTag = true;
+      double width = 0, height = 0, centerx = 0, centery = 0, posx = 0, posy = 0;
+      av = attrs.value("width");
+      if (!av.isNull()) {
+        width = av.toString().toDouble();
+      }
+      av = attrs.value("height");
+      if (!av.isNull()) {
+        height = av.toString().toDouble();
+      }
+      av = attrs.value("centerx");
+      if (!av.isNull()) {
+        centerx = av.toString().toDouble();
+      }
+      av = attrs.value("centery");
+      if (!av.isNull()) {
+        centery = av.toString().toDouble();
+      }
+      av = attrs.value("posx");
+      if (!av.isNull()) {
+        posx = av.toString().toDouble();
+      }
+      av = attrs.value("posy");
+      if (!av.isNull()) {
+        posy = av.toString().toDouble();
+      }
+      setRelativeWidth(width);
+      setRelativeHeight(height);
+      setRelativeCenter(QPointF(centerx, centery));
+      setRelativePosition(QPointF(posx, posy));
     } else if (xml.name().toString() == "transform") {
       knownTag = true;
       double m11 = 1.0, m12 = 0, m13 = 0, m21 = 0, m22 = 1.0, m23 = 0, m31 = 0, m32= 0, m33 = 1.0;
@@ -1459,21 +1498,6 @@ void ViewItem::updateRelativeSize() {
     _parentRelativeCenter = QPointF(0, 0);
     _parentRelativePosition = QPointF(0, 0);
    }
-}
-
-
-QPointF ViewItem::relativeCenter() const {
-  QPointF c;
-  if (parentViewItem()) {
-    c =  mapToParent(rect().center()) - parentViewItem()->rect().topLeft();
-    c =  QPointF(c.x() / parentViewItem()->width(), c.y() / parentViewItem()->height());
-  } else if (parentView()) {
-    c =  mapToParent(rect().center()) - parentView()->rect().topLeft();
-    c =  QPointF(c.x() / parentView()->width(), c.y() / parentView()->height());
-  } else {
-    c = QPointF(0, 0);
-  }
-  return c;
 }
 
 

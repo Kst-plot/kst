@@ -162,6 +162,7 @@ bool Document::open(const QString& file) {
     i--;
   }
   View *currentView = 0;
+  QRectF currentSceneRect;
 
   QXmlStreamReader xml;
   xml.setDevice(&f);
@@ -222,6 +223,16 @@ bool Document::open(const QString& file) {
                   int idx = _win->tabWidget()->indexOf(currentView);
                   _win->tabWidget()->setTabText(idx, nm.toString());
                 }
+                qreal width, height;
+                QStringRef string = attrs.value("width");
+                if (!string.isNull()) {
+                   width = string.toString().toDouble();
+                }
+                string = attrs.value("height");
+                if (!string.isNull()) {
+                   height = string.toString().toDouble();
+                }
+                currentSceneRect = QRectF(QPointF(0, 0), QSizeF(width, height));
                 state = View;
               } else {
                 malformed();
@@ -258,6 +269,9 @@ bool Document::open(const QString& file) {
         }
         break;
       } else if (n == "view") {
+        if (currentView->sceneRect() != currentSceneRect) {
+          currentView->forceChildResize(currentSceneRect, currentView->sceneRect());
+        }
         state = Graphics;
       } else if (n == "data") {
         state = Unknown;
