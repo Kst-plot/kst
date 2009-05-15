@@ -173,17 +173,16 @@ void LineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     return QGraphicsRectItem::mouseMoveEvent(event);
 
   QPointF p = event->pos();
-  QPointF l = event->lastPos();
   QPointF s = event->scenePos();
 
   if (gripMode() == ViewItem::Resize) {
     switch(activeGrip()) {
     case RightMidGrip:
-      resizeRight(p.x() - l.x());
+      resizeRight(p.x() - rightMidGrip().controlPointRect().center().x());
       rotateTowards(rightMidGrip().controlPointRect().center(), p);
       break;
     case LeftMidGrip:
-      resizeLeft(p.x() - l.x());
+      resizeLeft(p.x() - leftMidGrip().controlPointRect().center().x());
       rotateTowards(leftMidGrip().controlPointRect().center(), p);
       break;
     default:

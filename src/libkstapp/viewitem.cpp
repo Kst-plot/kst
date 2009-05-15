@@ -921,7 +921,6 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     return QGraphicsRectItem::mouseMoveEvent(event);
 
   QPointF p = event->pos();
-  QPointF l = event->lastPos();
   QPointF s = event->scenePos();
 
   if (gripMode() == ViewItem::Rotate) {
@@ -949,21 +948,21 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
     switch(_activeGrip) {
     case TopLeftGrip:
-        resizeTopLeft(p - l); break;
+        resizeTopLeft(p - topLeftGrip().controlPointRect().center()); break;
     case TopRightGrip:
-        resizeTopRight(p - l); break;
+        resizeTopRight(p - topRightGrip().controlPointRect().center()); break;
     case BottomRightGrip:
-        resizeBottomRight(p - l); break;
+        resizeBottomRight(p - bottomRightGrip().controlPointRect().center()); break;
     case BottomLeftGrip:
-        resizeBottomLeft(p - l); break;
+        resizeBottomLeft(p - bottomLeftGrip().controlPointRect().center()); break;
     case TopMidGrip:
-        resizeTop(p.y() - l.y()); break;
+        resizeTop(p.y() - topMidGrip().controlPointRect().center().y()); break;
     case RightMidGrip:
-        resizeRight(p.x() - l.x()); break;
+        resizeRight(p.x() - rightMidGrip().controlPointRect().center().x()); break;
     case BottomMidGrip:
-        resizeBottom(p.y() - l.y()); break;
+        resizeBottom(p.y() - bottomMidGrip().controlPointRect().center().y()); break;
     case LeftMidGrip:
-        resizeLeft(p.x() - l.x()); break;
+        resizeLeft(p.x() - leftMidGrip().controlPointRect().center().x()); break;
     case NoGrip:
       break;
     }
