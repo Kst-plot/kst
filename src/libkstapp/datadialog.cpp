@@ -16,6 +16,7 @@
 #include <QPushButton>
 #include <QDialogButtonBox>
 #include <QDebug>
+#include <QSpacerItem>
 
 #include "datadialog.h"
 
@@ -78,18 +79,21 @@ void DataDialog::createGui() {
 
   QHBoxLayout *layout = new QHBoxLayout(box);
 
-  _nameLabel = new QLabel(tr("Name:"), box);
+  _nameLabel = new QLabel(tr("&Name:"), box);
   _tagString = new QLineEdit(box);
   connect(_tagString, SIGNAL(textChanged(QString)), this, SLOT(modified()));
   _nameLabel->setBuddy(_tagString);
 
   _shortName = new QLabel(QString(), box);
 
-  _tagStringAuto = new QCheckBox(tr("Auto","automatic"), box);
+  _tagStringAuto = new QCheckBox(tr("&Auto","automatic"), box);
   connect(_tagStringAuto, SIGNAL(toggled(bool)), _tagString, SLOT(setDisabled(bool)));
 
-  QPushButton *button = new QPushButton(tr("Edit Multiple >>"));
-  connect(button, SIGNAL(clicked()), this, SLOT(slotEditMultiple()));
+  _expand = new QPushButton(tr("Edit Multiple >>"));
+  _expand->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+  connect(_expand, SIGNAL(clicked()), this, SLOT(slotEditMultiple()));
+
+  QLabel *spacer = new QLabel();
 
   if (_dataObject) {
     setTagString(_dataObject->descriptiveName());
@@ -98,14 +102,15 @@ void DataDialog::createGui() {
   } else {
     _tagStringAuto->setChecked(true);
     setTagString(QString());
-    button->setVisible(false);
+    _expand->setVisible(false);
   }
 
   layout->addWidget(_nameLabel);
   layout->addWidget(_tagString);
   layout->addWidget(_shortName);
   layout->addWidget(_tagStringAuto);
-  layout->addWidget(button);
+  layout->addWidget(spacer);
+  layout->addWidget(_expand);
 
   box->setLayout(layout);
 
@@ -180,6 +185,7 @@ void DataDialog::slotEditMultiple() {
     _shortName->setVisible(true);
     _tagStringAuto->setVisible(true);
     _nameLabel->setVisible(true);
+    _expand->setText(tr("Edit Multiple >>"));
     setMinimumWidth(currentWidth - extensionWidth);
     resize(currentWidth - extensionWidth, height());
     _mode = Edit;
@@ -189,6 +195,7 @@ void DataDialog::slotEditMultiple() {
     _shortName->setVisible(false);
     _tagStringAuto->setVisible(false);
     _nameLabel->setVisible(false);
+    _expand->setText(tr("<< Edit one %1").arg(_shortName->text()));
     setMinimumWidth(currentWidth + extensionWidth);
     resize(currentWidth + extensionWidth, height());
     _mode = EditMultiple;

@@ -20,16 +20,8 @@ save it.
 load it
   -the plot is now smaller than it was.
 It should be the same size as it started.
-** I think this is because my kst window, for some reason, is resizing.**
+** it is now much better than it used to be.  The shift is now only a few pixels **
 
----------
-
-Loading of a Kst file into a resized window does not adjust the loaded items to
-fit on the new window size.
-
-The View dimensions should be saved as part of the .kst file and if the newly created
-view on a load of a .kst file doesn't match, the resize logic should be triggered.
-*Mike*
 ------------
 
 Error in choice of offset mode.
@@ -123,17 +115,10 @@ plot item is the logarithm of the range.  So if the y-range is 0.1 to
 100, the range will be reported as -1 to 2.  Despite this, you still
 have to enter "0.1" and "100" to get this range.
 
-12. Changing the value of the fixed range limits doesn't active the
-"Apply" button.
-
 13. Hitting shift changes into y-zoom mode forever, rather than just
 changing it while shift is depressed.  After doing this it's difficult
 to get back to xy-zoom mode.  (I have to right click twice to open and
 close the context menu.)
-
-14. The weight of a drawn curve is apparently calculated as: (my weight)
-+ (sum of weights of all lower numbered curves).  Being unable to
-specify negative weights, curves just get heavier and heavier.
 
 15. The text label behaviour is un-intuitive.  The typical interface is
 to choose a position first, and then input some text.

@@ -676,6 +676,8 @@ RelationPtr Curve::makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelat
 
 void Curve::paintObjects(const CurveRenderContext& context) {
   QPainter *p = context.painter;
+  p->save();
+
   Qt::PenStyle style = Kst::LineStyle[lineStyle()];
 
   if (hasBars()) {
@@ -689,7 +691,6 @@ void Curve::paintObjects(const CurveRenderContext& context) {
         p->fillRect(rect, color());
     }
   }
-
   p->setPen(QPen(color(), _width, style));
 
   foreach(QPolygon poly, _polygons) {
@@ -704,6 +705,7 @@ void Curve::paintObjects(const CurveRenderContext& context) {
   foreach(QPoint point, _points) {
     CurvePointSymbol::draw(PointType, p, point.x(), point.y(), _width);
   }
+  p->restore();
 }
 
 

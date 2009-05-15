@@ -584,3 +584,23 @@ dialog containing its name to figure out the name of the particular
 curve "2 vs. 1" I'm interested in.  Here, I have to go by trial and
 error.
 
+------------
+
+14. The weight of a drawn curve is apparently calculated as: (my weight)
++ (sum of weights of all lower numbered curves).  Being unable to
+specify negative weights, curves just get heavier and heavier.
+
+---------
+
+Loading of a Kst file into a resized window does not adjust the loaded items to
+fit on the new window size.
+
+The View dimensions should be saved as part of the .kst file and if the newly created
+view on a load of a .kst file doesn't match, the resize logic should be triggered.
+*Mike*
+
+---------
+
+12. Changing the value of the fixed range limits doesn't active the
+"Apply" button.
+

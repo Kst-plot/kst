@@ -34,6 +34,14 @@ RangeTab::RangeTab(PlotItem* plotItem, QWidget *parent)
   connect(_yBorder, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_ySpike, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_yFixed, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
+
+  connect(_xMin, SIGNAL(textEdited(const QString &)), this, SIGNAL(modified()));
+  connect(_xMax, SIGNAL(textEdited(const QString &)), this, SIGNAL(modified()));
+  connect(_xRange, SIGNAL(textEdited(const QString &)), this, SIGNAL(modified()));
+
+  connect(_yMin, SIGNAL(textEdited(const QString &)), this, SIGNAL(modified()));
+  connect(_yMax, SIGNAL(textEdited(const QString &)), this, SIGNAL(modified()));
+  connect(_yRange, SIGNAL(textEdited(const QString &)), this, SIGNAL(modified()));
 }
 
 RangeTab::~RangeTab() {
