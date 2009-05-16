@@ -46,7 +46,8 @@ DataString::~DataString() {
 
 
 QString DataString::_automaticDescriptiveName() const {
-  return field();
+  QString name = field();
+  return name.replace("_", "\\_");
 }
 
 

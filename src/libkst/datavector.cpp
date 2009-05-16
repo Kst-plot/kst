@@ -757,7 +757,8 @@ DataVectorPtr DataVector::makeDuplicate() const {
 }
 
 QString DataVector::_automaticDescriptiveName() const {
-  return field();
+  QString name = field();
+  return name.replace("_", "\\_");
 }
 
 QString DataVector::descriptionTip() const {

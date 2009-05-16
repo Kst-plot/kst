@@ -1,13 +1,10 @@
+Legends don't appear to work:
+  With the data wizard, create a plot, and select to create a legend.
+    No legend.
+  Edit a plot.  In the label tab, select having a legend.  Apply
+    No legend...
 
-Auto-labels, and '_' in field names:
-When plots are using name-based auto-labels, any '_' in field names gets interpreted as a subscript.
-There needs to be an option to somehow escape these when using them in a label.
-  -need escapedName() to supplement name().
-  -the name will be stored with escapes.  Name() will remove them.
-
-*cbn*
-
----------
+----------
 
 Tooltips/whats this where helpful.
 
@@ -39,12 +36,6 @@ Image dialog 'smart' range calculations seem to be... odd.
 
 ------------
 
-Layout issues in data object dialogs:
-  some dialogs, like histogram, lines up nicely, while others, like image
-  is excessivly indented.  I can't see any difference in their implementation.,
-
-------------
-
 Shared axis zoom usage problem:
 Create a shared axis zoom box with multiple plots in a column.
   -there is no option to indicate or change whether the plots are tied.
@@ -61,11 +52,6 @@ Correct behavior:
 ---------------------------
 
 Bugs Reported by D.V. Wiebe
-(all appear valid)
-
-I haven't tried packaging it up yet, but here's a few things I noticed
-while running it in-situ and attempting to re-create a paper plot made
-in kst 1.x.  This list ranges from bugs through wishes to just comments.
 
 1. data source text box in first panel of data wizard inevitably moves
 the text cursor to the end of the input after entering a character,
@@ -122,12 +108,10 @@ close the context menu.)
 
 15. The text label behaviour is un-intuitive.  The typical interface is
 to choose a position first, and then input some text.
-
-16. Text labels have to be entered in a tiny little text box, making
-decent sized labels frustrating to edit.  Furthermore lines, in a label
-are separated by "\n" now?
+   ** -a possible justification for the current order is that it could allow us to 
+      drag around the label once we have defined it, for more precision placement.
+      not sure yet if we should change anything. **
 
 17. There appears to be no way to change the colour of the plot border
 and tick marks from black.  I though the brush colour under "Stroke"
 might do it, but nope.
-

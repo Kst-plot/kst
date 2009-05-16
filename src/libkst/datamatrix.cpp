@@ -555,7 +555,8 @@ void DataMatrix::changeFile(DataSourcePtr file) {
 }
 
 QString DataMatrix::_automaticDescriptiveName() const{
-  return field();
+  QString name = field();
+  return name.replace("_", "\\_");
 }
 
 QString DataMatrix::descriptionTip() const {

@@ -38,19 +38,19 @@ void LabelBuilder::setObjectStore(ObjectStore *store) {
 
 
 QString LabelBuilder::labelText() const {
-  return _label->text();
+  return _label->toPlainText();
 }
 
 
 void LabelBuilder::setLabelText(const QString &label) {
-  _label->setText(label);
+  _label->setPlainText(label);
 }
 
 
 void LabelBuilder::labelUpdate(const QString& string) {
-  QString label = _label->text();
+  QString label = _label->toPlainText();
   label += "[" + string + "]";
-  _label->setText(label); 
+  _label->setPlainText(label);
 }
 
 }

@@ -604,3 +604,21 @@ view on a load of a .kst file doesn't match, the resize logic should be triggere
 12. Changing the value of the fixed range limits doesn't active the
 "Apply" button.
 
+------------
+
+Layout issues in data object dialogs:
+  some dialogs, like histogram, lines up nicely, while others, like image
+  is excessivly indented.  I can't see any difference in their implementation.,
+
+------------
+
+16. Text labels have to be entered in a tiny little text box, making
+decent sized labels frustrating to edit.  Furthermore lines, in a label
+are separated by "\n" now?
+
+---------
+
+Auto-labels, and '_' in field names:
+When plots are using name-based auto-labels, any '_' in field names gets interpreted as a subscript.
+  'solution'.  Append a \_ to _ in field names so the appear correctly in labels.  
+  Down side: they are less nice looking in tag names.  This is acceptable (unless we end up really board).
