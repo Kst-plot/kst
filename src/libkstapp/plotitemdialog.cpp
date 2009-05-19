@@ -193,6 +193,7 @@ void PlotItemDialog::setupAxis() {
   _xAxisTab->setAxisMinorGridLineStyle(_plotItem->xAxis()->axisMinorGridLineStyle());
   _xAxisTab->setLog(_plotItem->xAxis()->axisLog());
   _xAxisTab->setReversed(_plotItem->xAxis()->axisReversed());
+  _xAxisTab->setAutoBaseOffset(_plotItem->xAxis()->axisAutoBaseOffset());
   _xAxisTab->setBaseOffset(_plotItem->xAxis()->axisBaseOffset());
   _xAxisTab->setInterpret(_plotItem->xAxis()->axisInterpret());
   _xAxisTab->setAxisDisplay(_plotItem->xAxis()->axisDisplay());
@@ -211,6 +212,7 @@ void PlotItemDialog::setupAxis() {
   _yAxisTab->setAxisMinorGridLineStyle(_plotItem->yAxis()->axisMinorGridLineStyle());
   _yAxisTab->setLog(_plotItem->yAxis()->axisLog());
   _yAxisTab->setReversed(_plotItem->yAxis()->axisReversed());
+  _yAxisTab->setAutoBaseOffset(_plotItem->yAxis()->axisAutoBaseOffset());
   _yAxisTab->setBaseOffset(_plotItem->yAxis()->axisBaseOffset());
   _yAxisTab->setInterpret(_plotItem->yAxis()->axisInterpret());
   _yAxisTab->setAxisDisplay(_plotItem->yAxis()->axisDisplay());
@@ -522,6 +524,7 @@ void PlotItemDialog::xAxisChanged() {
   _plotItem->xAxis()->setAxisDisplay(_xAxisTab->axisDisplay());
   _plotItem->xAxis()->setAxisInterpretation(_xAxisTab->axisInterpretation());
   _plotItem->xAxis()->setAxisBaseOffset(_xAxisTab->isBaseOffset());
+  _plotItem->xAxis()->setAxisAutoBaseOffset(_xAxisTab->isAutoBaseOffset());
   _plotItem->xAxis()->setAxisMinorTickCount(_xAxisTab->axisMinorTickCount());
   _plotItem->xAxis()->setAxisSignificantDigits(_xAxisTab->significantDigits());
   _plotItem->setProjectionRect(_plotItem->projectionRect(), _plotItem->xAxis()->isDirty());
@@ -545,6 +548,7 @@ void PlotItemDialog::yAxisChanged() {
   _plotItem->yAxis()->setAxisInterpret(_yAxisTab->isInterpret());
   _plotItem->yAxis()->setAxisDisplay(_yAxisTab->axisDisplay());
   _plotItem->yAxis()->setAxisInterpretation(_yAxisTab->axisInterpretation());
+  _plotItem->yAxis()->setAxisAutoBaseOffset(_yAxisTab->isAutoBaseOffset());
   _plotItem->yAxis()->setAxisBaseOffset(_yAxisTab->isBaseOffset());
   _plotItem->yAxis()->setAxisMinorTickCount(_yAxisTab->axisMinorTickCount());
   _plotItem->yAxis()->setAxisSignificantDigits(_yAxisTab->significantDigits());

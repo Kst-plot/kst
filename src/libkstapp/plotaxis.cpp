@@ -34,6 +34,7 @@ PlotAxis::PlotAxis(PlotItem *plotItem, Qt::Orientation orientation) :
   _ticksUpdated(true),
   _axisLog(false),
   _axisReversed(false),
+  _axisAutoBaseOffset(true),
   _axisBaseOffset(false),
   _axisBaseOffsetOverride(false),
   _axisInterpret(false),
@@ -542,6 +543,19 @@ void PlotAxis::setAxisReversed(const bool enabled) {
 }
 
 
+bool PlotAxis::axisAutoBaseOffset() const {
+  return _axisAutoBaseOffset;
+}
+
+
+void PlotAxis::setAxisAutoBaseOffset(const bool enabled) {
+  if (_axisAutoBaseOffset != enabled) {
+    _axisAutoBaseOffset = enabled;
+    _dirty = true;
+  }
+}
+
+
 bool PlotAxis::axisBaseOffset() const {
   return _axisBaseOffset;
 }
@@ -656,6 +670,10 @@ void PlotAxis::validateDrawingRegion(QPainter *painter) {
     updateTicks();
   }
 
+  if (!_axisAutoBaseOffset) {
+    return;
+  }
+
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
   int longest = 0;
   QMapIterator<qreal, QString> iLongestLabelCheck(_axisLabels);
@@ -707,6 +725,7 @@ PlotAxis::MajorTickMode PlotAxis::convertToMajorTickMode(int tickCount) {
   return mode;
 }
 
+
 void PlotAxis::updateTicks(bool useOverrideTicks) {
   MajorTickMode majorTickCount;
   if (useOverrideTicks) {
@@ -716,7 +735,6 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
     majorTickCount = _axisMajorTickMode;
     _axisBaseOffsetOverride = false;
   }
-  _dirty = false;
 
   QMap<qreal, QString> labels;
   QList<qreal> ticks;
@@ -767,9 +785,12 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
     }
   }
 
-  if (_axisMajorTicks == ticks && _axisMinorTicks == minTicks) {
+  if (_axisMajorTicks == ticks && _axisMinorTicks == minTicks && !_dirty) {
     return;
   }
+
+  _dirty = false;
+
   _axisMajorTicks = ticks;
   _axisMinorTicks = minTicks;
   _ticksUpdated = true;
@@ -898,6 +919,7 @@ void PlotAxis::saveInPlot(QXmlStreamWriter &xml, QString axisId) {
   xml.writeAttribute("visible", QVariant(isAxisVisible()).toString());
   xml.writeAttribute("log", QVariant(axisLog()).toString());
   xml.writeAttribute("reversed", QVariant(axisReversed()).toString());
+  xml.writeAttribute("autobaseoffset", QVariant(axisAutoBaseOffset()).toString());
   xml.writeAttribute("baseoffset", QVariant(axisBaseOffset()).toString());
   xml.writeAttribute("interpret", QVariant(axisInterpret()).toString());
   xml.writeAttribute("interpretation", QVariant(axisInterpretation()).toString());
@@ -935,6 +957,10 @@ bool PlotAxis::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
   av = attrs.value("reversed");
   if (!av.isNull()) {
     setAxisReversed(QVariant(av.toString()).toBool());
+  }
+  av = attrs.value("autobaseoffset");
+  if (!av.isNull()) {
+    setAxisAutoBaseOffset(QVariant(av.toString()).toBool());
   }
   av = attrs.value("baseoffset");
   if (!av.isNull()) {

@@ -66,14 +66,16 @@ AxisTab::AxisTab(QWidget *parent)
   connect(_scaleInterpret, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_scaleInterpret, SIGNAL(stateChanged(int)), this, SLOT(updateButtons()));
   connect(_scaleLog, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_scaleBaseOffset, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_scaleReverse, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_scaleDisplayType, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_scaleInterpretType, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
 
   connect(_axisMinorTickCount, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
-  connect(_significantDigits, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
 
+  connect(_scaleAutoBaseOffset, SIGNAL(stateChanged(int)), this, SLOT(updateButtons()));
+  connect(_scaleAutoBaseOffset, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_scaleBaseOffset, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_significantDigits, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
 }
 
 
@@ -201,6 +203,16 @@ void AxisTab::setLog(const bool enabled) {
 }
 
 
+bool AxisTab::isAutoBaseOffset() const {
+  return _scaleAutoBaseOffset->isChecked();
+}
+
+
+void AxisTab::setAutoBaseOffset(const bool enabled) {
+  _scaleAutoBaseOffset->setChecked(enabled);
+}
+
+
 bool AxisTab::isBaseOffset() const {
   return _scaleBaseOffset->isChecked();
 }
@@ -252,7 +264,7 @@ void AxisTab::setAxisInterpretation(AxisInterpretationType interpret) {
 
 
 void AxisTab::updateButtons() {
-  _scaleBaseOffset->setEnabled(!isInterpret());
+  _scaleBaseOffset->setEnabled(!(isInterpret() || isAutoBaseOffset()));
 }
 
 }

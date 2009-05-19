@@ -84,6 +84,9 @@ class PlotAxis : public QObject
     bool axisReversed() const;
     void setAxisReversed(const bool enabled);
 
+    bool axisAutoBaseOffset() const;
+    void setAxisAutoBaseOffset(const bool enabled);
+
     bool axisBaseOffset() const;
     void setAxisBaseOffset(const bool enabled);
 
@@ -151,6 +154,7 @@ class PlotAxis : public QObject
 
     bool _axisLog;
     bool _axisReversed;
+    bool _axisAutoBaseOffset;
     bool _axisBaseOffset;
     bool _axisBaseOffsetOverride;
 

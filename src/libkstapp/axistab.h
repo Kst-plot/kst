@@ -63,6 +63,9 @@ class KST_EXPORT AxisTab : public DialogTab, Ui::AxisTab {
     bool isLog() const;
     void setLog(const bool enabled);
 
+    bool isAutoBaseOffset() const;
+    void setAutoBaseOffset(const bool enabled);
+
     bool isBaseOffset() const;
     void setBaseOffset(const bool enabled);
 
