@@ -2,13 +2,6 @@ Axis Label Rotation:
   Axis number labels should be rotateable, as in 1.x
 
 ----------
-Base / Offset mode logic change:
-  Base/offset should have three modes:
-    On: Base/offset mode is used, regardless of if it is needed (same as current 'on')
-    Auto: Base/offset mode is used if doing so makes sense (same as current 'off')
-    Off: Base/offset mode is never used.
-
-----------
 New Plot Label size mode: autoshrink.
   Add a an option to plot labels: autoshrink.  If selected, the font size used for the axis labels will reduced to the largest size (<= the current size) for which the labels don't overlap or are not truncated (only text width is considered.).  The resizing is dynamic.  If the window geometry or the label values change so that the label would fit at a larger size, the size is raised.
  - Last step after base/offset & reduced ticks.

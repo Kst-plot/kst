@@ -622,3 +622,19 @@ Auto-labels, and '_' in field names:
 When plots are using name-based auto-labels, any '_' in field names gets interpreted as a subscript.
   'solution'.  Append a \_ to _ in field names so the appear correctly in labels.  
   Down side: they are less nice looking in tag names.  This is acceptable (unless we end up really board).
+
+---------
+
+Drawing problems in resizing view items (eg, arrow)
+draw an arrow.  In layout mode, grab one end and drag it around quickly.  The grab point
+gradually drifts away from the mouse cursor.  It is much less pronounced if you move slowly.
+*Mike*
+------------
+
+Base / Offset mode logic change:
+  Base/offset should have three modes:
+    On: Base/offset mode is used, regardless of if it is needed (same as current 'on')
+    Auto: Base/offset mode is used if doing so makes sense (same as current 'off')
+    Off: Base/offset mode is never used.
+
+----------
