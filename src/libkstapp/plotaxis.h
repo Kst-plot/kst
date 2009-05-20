@@ -99,6 +99,9 @@ class PlotAxis : public QObject
     AxisInterpretationType axisInterpretation() const;
     void setAxisInterpretation(const AxisInterpretationType interpret);
 
+    int axisLabelRotation() const;
+    void setAxisLabelRotation(const int rotation);
+
     PlotMarkers axisPlotMarkers() { return _axisPlotMarkers; }
     void setAxisPlotMarkers(const PlotMarkers &plotMarkers) { _axisPlotMarkers = plotMarkers; _ticksUpdated = true; }
 
@@ -179,6 +182,8 @@ class PlotAxis : public QObject
 
     Qt::PenStyle _axisMajorGridLineStyle;
     Qt::PenStyle _axisMinorGridLineStyle;
+
+    int _labelRotation;
 
     PlotMarkers _axisPlotMarkers;
 };

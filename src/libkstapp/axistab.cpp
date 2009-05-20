@@ -76,6 +76,8 @@ AxisTab::AxisTab(QWidget *parent)
   connect(_scaleAutoBaseOffset, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_scaleBaseOffset, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_significantDigits, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+
+  connect(_rotation, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
 }
 
 
@@ -260,6 +262,16 @@ AxisInterpretationType AxisTab::axisInterpretation() const {
 
 void AxisTab::setAxisInterpretation(AxisInterpretationType interpret) {
   _scaleInterpretType->setCurrentIndex(_scaleInterpretType->findData(QVariant(interpret)));
+}
+
+
+int AxisTab::labelRotation() const {
+  return _rotation->value();
+}
+
+
+void AxisTab::setLabelRotation(const int rotation) {
+  _rotation->setValue(rotation);
 }
 
 

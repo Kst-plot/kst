@@ -200,6 +200,7 @@ void PlotItemDialog::setupAxis() {
   _xAxisTab->setAxisInterpretation(_plotItem->xAxis()->axisInterpretation());
   _xAxisTab->setAxisMinorTickCount(_plotItem->xAxis()->axisMinorTickCount());
   _xAxisTab->setSignificantDigits(_plotItem->xAxis()->axisSignificantDigits());
+  _xAxisTab->setLabelRotation(_plotItem->xAxis()->axisLabelRotation());
 
   _yAxisTab->setAxisMajorTickSpacing(_plotItem->yAxis()->axisMajorTickMode());
   _yAxisTab->setDrawAxisMajorTicks(_plotItem->yAxis()->drawAxisMajorTicks());
@@ -219,6 +220,7 @@ void PlotItemDialog::setupAxis() {
   _yAxisTab->setAxisInterpretation(_plotItem->yAxis()->axisInterpretation());
   _yAxisTab->setAxisMinorTickCount(_plotItem->yAxis()->axisMinorTickCount());
   _yAxisTab->setSignificantDigits(_plotItem->yAxis()->axisSignificantDigits());
+  _yAxisTab->setLabelRotation(_plotItem->yAxis()->axisLabelRotation());
 }
 
 
@@ -527,6 +529,7 @@ void PlotItemDialog::xAxisChanged() {
   _plotItem->xAxis()->setAxisAutoBaseOffset(_xAxisTab->isAutoBaseOffset());
   _plotItem->xAxis()->setAxisMinorTickCount(_xAxisTab->axisMinorTickCount());
   _plotItem->xAxis()->setAxisSignificantDigits(_xAxisTab->significantDigits());
+  _plotItem->xAxis()->setAxisLabelRotation(_xAxisTab->labelRotation());
   _plotItem->setProjectionRect(_plotItem->projectionRect(), _plotItem->xAxis()->isDirty());
 }
 
@@ -552,6 +555,7 @@ void PlotItemDialog::yAxisChanged() {
   _plotItem->yAxis()->setAxisBaseOffset(_yAxisTab->isBaseOffset());
   _plotItem->yAxis()->setAxisMinorTickCount(_yAxisTab->axisMinorTickCount());
   _plotItem->yAxis()->setAxisSignificantDigits(_yAxisTab->significantDigits());
+  _plotItem->yAxis()->setAxisLabelRotation(_yAxisTab->labelRotation());
   _plotItem->setProjectionRect(_plotItem->projectionRect(), _plotItem->yAxis()->isDirty());
 }
 

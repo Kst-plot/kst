@@ -52,7 +52,8 @@ PlotAxis::PlotAxis(PlotItem *plotItem, Qt::Orientation orientation) :
   _axisMinorGridLineColor(Qt::gray),
   _axisMajorGridLineStyle(Qt::DashLine),
   _axisMinorGridLineStyle(Qt::DashLine),
-  _axisPlotMarkers(orientation == Qt::Horizontal)
+  _axisPlotMarkers(orientation == Qt::Horizontal),
+  _labelRotation(0)
  {
   connect(_plotItem, SIGNAL(updateAxes()), this, SLOT(updateTicks()));
 }
@@ -608,6 +609,19 @@ void PlotAxis::setAxisInterpretation(const AxisInterpretationType display) {
 }
 
 
+int PlotAxis::axisLabelRotation() const {
+  return _labelRotation;
+}
+
+
+void PlotAxis::setAxisLabelRotation(const int rotation) {
+  if (_labelRotation != rotation) {
+    _labelRotation = rotation;
+    _dirty = true;
+  }
+}
+
+
 void PlotAxis::computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTicks, QMap<qreal, QString> *Labels, qreal min, qreal max, MajorTickMode tickMode) {
 
   qreal tick;
@@ -935,6 +949,7 @@ void PlotAxis::saveInPlot(QXmlStreamWriter &xml, QString axisId) {
   xml.writeAttribute("drawmajorgridlinestyle", QVariant(axisMajorGridLineStyle()).toString());
   xml.writeAttribute("drawminorgridlinestyle", QVariant(axisMinorGridLineStyle()).toString());
   xml.writeAttribute("significantdigits", QVariant(axisSignificantDigits()).toString());
+  xml.writeAttribute("rotation", QVariant(axisLabelRotation()).toString());
   xml.writeAttribute("zoommode", QVariant(axisZoomMode()).toString());
   _axisPlotMarkers.saveInPlot(xml);
   xml.writeEndElement();
@@ -1021,6 +1036,10 @@ bool PlotAxis::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
   av = attrs.value("significantdigits");
   if (!av.isNull()) {
     setAxisSignificantDigits(QVariant(av.toString()).toInt());
+  }
+  av = attrs.value("rotation");
+  if (!av.isNull()) {
+    setAxisLabelRotation(QVariant(av.toString()).toInt());
   }
   av = attrs.value("zoommode");
   if (!av.isNull()) {

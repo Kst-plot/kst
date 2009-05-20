@@ -81,6 +81,9 @@ class KST_EXPORT AxisTab : public DialogTab, Ui::AxisTab {
     AxisInterpretationType axisInterpretation() const;
     void setAxisInterpretation(AxisInterpretationType interpretation);
 
+    int labelRotation() const;
+    void setLabelRotation(const int rotation);
+
   public Q_SLOTS:
     void updateButtons();
 

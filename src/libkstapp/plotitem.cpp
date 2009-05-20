@@ -764,15 +764,31 @@ void PlotItem::updateXAxisLines() {
 void PlotItem::updateXAxisLabels(QPainter* painter) {
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
   _xPlotLabels.clear();
+
+  int rotation = _xAxis->axisLabelRotation();
+  painter->save();
+  QTransform t;
+  t.rotate(rotation);
+
   QMapIterator<qreal, QString> xLabelIt(_xAxis->axisLabels());
   while (xLabelIt.hasNext()) {
     xLabelIt.next();
 
     QRectF bound = painter->boundingRect(QRectF(), flags, xLabelIt.value());
-    bound.setWidth(bound.width());
-    QPointF p = QPointF(mapXToPlot(xLabelIt.key()), plotRect().bottom() + 
-        bound.height()*0.5 + _calculatedAxisMarginVLead);
-    bound.moveCenter(p);
+    QPointF p;
+    if (rotation == 0) {
+      p = QPointF(mapXToPlot(xLabelIt.key()), plotRect().bottom() + bound.height()*0.5 + _calculatedAxisMarginVLead);
+      bound.moveCenter(p);
+    } else {
+      if (rotation < 0) {
+        bound = t.mapRect(bound);
+        p = QPointF(mapXToPlot(xLabelIt.key()) - bound.width() / 2, plotRect().bottom() + _calculatedAxisMarginVLead);
+      } else {
+        p = QPointF(mapXToPlot(xLabelIt.key()) - bound.height() * 0.5, plotRect().bottom() + _calculatedAxisMarginVLead);
+        bound = t.mapRect(bound);
+      }
+      bound.moveTopLeft(p);
+    }
 
     if (rect().left() > bound.left()) bound.setLeft(rect().left());
     if (rect().right() < bound.right()) bound.setRight(rect().right());
@@ -782,6 +798,7 @@ void PlotItem::updateXAxisLabels(QPainter* painter) {
     label.value = xLabelIt.value();
     _xPlotLabels.append(label);
   }
+  painter->restore();
 
   if (!_xAxis->baseLabel().isEmpty()) {
     QRectF bound = painter->boundingRect(QRectF(), flags, _xAxis->baseLabel());
@@ -853,14 +870,31 @@ void PlotItem::updateYAxisLines() {
 void PlotItem::updateYAxisLabels(QPainter* painter) {
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
   _yPlotLabels.clear();
+
+  int rotation = _yAxis->axisLabelRotation();
+
+  QTransform t;
+  t.rotate(rotation);
+
   QMapIterator<qreal, QString> yLabelIt(_yAxis->axisLabels());
   while (yLabelIt.hasNext()) {
     yLabelIt.next();
 
     QRectF bound = painter->boundingRect(QRectF(), flags, yLabelIt.value());
-    bound.setWidth(bound.width());
-    QPointF p = QPointF(plotRect().left() - (bound.width() / 2.0) - _calculatedAxisMarginHLead, mapYToPlot(yLabelIt.key()));
-    bound.moveCenter(p);
+    QPointF p;
+    if (rotation < 0) {
+      p = QPointF(plotRect().left() - _calculatedAxisMarginHLead, mapYToPlot(yLabelIt.key()) - bound.height() * 0.5);
+      bound = t.mapRect(bound);
+      bound.moveLeft(plotRect().left() - bound.width());
+      bound.moveTop(p.y());
+    } else {
+      bound = t.mapRect(bound);
+      p = QPointF(plotRect().left() - _calculatedAxisMarginHLead, mapYToPlot(yLabelIt.key()) - bound.height() * 0.5);
+      bound.moveTopRight(p);
+      if (rotation != 0) {
+        bound.moveLeft(plotRect().left() - bound.width());
+      }
+    }
 
     if (rect().top() > bound.top()) bound.setTop(rect().top());
     if (rect().bottom() < bound.bottom()) bound.setBottom(rect().bottom());
@@ -952,8 +986,20 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
   painter->save();
   painter->setPen(_numberLabelDetails->fontColor());
 
+  int rotation = _xAxis->axisLabelRotation();
+
   foreach(CachedPlotLabel label, _xPlotLabels) {
-    painter->drawText(label.bound, flags, label.value);
+    if (rotation != 0) {
+      painter->save();
+      QTransform t;
+      t.rotate(-1*rotation);
+      painter->rotate(rotation);
+
+      painter->drawText(t.mapRect(label.bound), flags, label.value);
+      painter->restore();
+    } else {
+      painter->drawText(label.bound, flags, label.value);
+    }
   }
   painter->restore();
 
@@ -981,6 +1027,8 @@ void PlotItem::paintLeftTickLabels(QPainter *painter) {
   painter->save();
   painter->setPen(_numberLabelDetails->fontColor());
 
+  int rotation = _yAxis->axisLabelRotation();
+
   foreach(CachedPlotLabel label, _yPlotLabels) {
     if (label.baseLabel) {
       painter->save();
@@ -991,7 +1039,17 @@ void PlotItem::paintLeftTickLabels(QPainter *painter) {
       painter->drawText(t.mapRect(label.bound), flags, label.value);
       painter->restore();
     } else {
-      painter->drawText(label.bound, flags, label.value);
+      if (rotation != 0) {
+        painter->save();
+        QTransform t;
+        t.rotate(-1*rotation);
+        painter->rotate(rotation);
+
+        painter->drawText(t.mapRect(label.bound), flags, label.value);
+        painter->restore();
+      } else {
+        painter->drawText(label.bound, flags, label.value);
+      }
     }
   }
   painter->restore();
@@ -2001,6 +2059,14 @@ void PlotItem::calculateBottomTickLabelBound(QPainter *painter) {
       QPointF p(mapXToPlot(xLabelIt.key()), plotRect().bottom() + bound.height() / 2.0 + _calculatedAxisMarginVLead);
       bound.moveCenter(p);
 
+      int rotation = _xAxis->axisLabelRotation();
+      QTransform t;
+      t.rotate(rotation);
+
+      if (rotation != 0) {
+        bound.setHeight(t.mapRect(bound).height());
+      }
+
       if (xLabelRect.isValid()) {
         xLabelRect = xLabelRect.united(bound);
       } else {
@@ -2051,6 +2117,15 @@ void PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
       QRectF bound = painter->boundingRect(QRectF(), flags, yLabelIt.value());
       QPointF p(plotRect().left() - bound.width() / 2.0 - _calculatedAxisMarginHLead, mapYToPlot(yLabelIt.key()));
       bound.moveCenter(p);
+
+      int rotation = _yAxis->axisLabelRotation();
+      QTransform t;
+      t.rotate(rotation);
+
+      if (rotation != 0) {
+        bound.setWidth(t.mapRect(bound).width());
+        bound.setHeight(t.mapRect(bound).height());
+      }
 
       if (yLabelRect.isValid()) {
         yLabelRect = yLabelRect.united(bound);
