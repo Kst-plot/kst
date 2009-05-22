@@ -771,7 +771,12 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
     int i = 0;
     qreal nextTick = firstTick;
     while (1) {
-      nextTick = firstTick + (i++ * majorTickSpacing);
+      // Note:  This was divided into two lines to avoid a close to zero error with double 
+      // values.  firstTick + (i++ * majorTickSpacing) where values where (-0.03 + 3 + 0.01)
+      // consistently provided a value of 1.73472e-18 resulting in base offset mode being
+      // triggered.
+      qreal space = i++ * majorTickSpacing;
+      nextTick = firstTick + space;
       if (nextTick > max)
         break;
       ticks << nextTick;
