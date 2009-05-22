@@ -183,9 +183,9 @@ class PlotAxis : public QObject
     Qt::PenStyle _axisMajorGridLineStyle;
     Qt::PenStyle _axisMinorGridLineStyle;
 
-    int _labelRotation;
-
     PlotMarkers _axisPlotMarkers;
+
+    int _labelRotation;
 };
 
 
