@@ -638,3 +638,10 @@ Base / Offset mode logic change:
     Off: Base/offset mode is never used.
 
 ----------
+
+
+Error in choice of offset mode.
+Create a plot with a Y range from -0.032 to 0.041.  It goes into base/offset mode and shouldn't.
+
+
+------------

@@ -21,11 +21,6 @@ It should be the same size as it started.
 
 ------------
 
-Error in choice of offset mode.
-Create a plot with a Y range from -0.032 to 0.041.  It goes into base/offset mode and shouldn't.
-
-------------
-
 Image dialog 'smart' range calculations seem to be... odd.
 
 ------------
