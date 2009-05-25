@@ -14,11 +14,12 @@
 #include "dialoglauncher.h"
 #include "datacollection.h"
 #include "objectstore.h"
+#include "dialogdefaults.h"
 
 namespace Kst {
 
 VectorSelector::VectorSelector(QWidget *parent, ObjectStore *store)
-  : QWidget(parent), _allowEmptySelection(false), _store(store) {
+  : QWidget(parent), _allowEmptySelection(false), _isX(false), _store(store)  {
 
   setupUi(this);
 
@@ -113,6 +114,9 @@ void VectorSelector::setAllowEmptySelection(bool allowEmptySelection) {
 
 void VectorSelector::newVector() {
   QString newName;
+  if (_isX) {
+    newName = _dialogDefaults->value("curve/xvectorfield","INDEX").toString();
+  }
   DialogLauncher::self()->showVectorDialog(newName);
   fillVectors();
   VectorPtr vector = kst_cast<Vector>(_store->retrieveObject(newName));

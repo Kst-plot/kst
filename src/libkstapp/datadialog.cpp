@@ -171,6 +171,7 @@ void DataDialog::clearModified() {
 
 void DataDialog::updateApplyButton() {
   _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(_modified);
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_modified);
 }
 
 

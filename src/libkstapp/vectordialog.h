@@ -73,6 +73,7 @@ class KST_EXPORT VectorTab : public DataTab, Ui::VectorTab {
 
   Q_SIGNALS:
     void sourceChanged();
+    void fieldChanged();
 
   private Q_SLOTS:
     void readFromSourceClicked();
@@ -85,6 +86,7 @@ class KST_EXPORT VectorTab : public DataTab, Ui::VectorTab {
     VectorMode _mode;
     ObjectStore *_store;
     DataSourcePtr _dataSource;
+    QString _initField;
     int _requestID;
 };
 
@@ -93,6 +95,8 @@ class KST_EXPORT VectorDialog : public DataDialog {
   public:
     VectorDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~VectorDialog();
+
+    void setField(QString field) {_vectorTab->setField(field);}
 
   protected:
 //     virtual QString tagString() const;

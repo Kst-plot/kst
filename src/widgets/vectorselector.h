@@ -41,6 +41,7 @@ class KST_EXPORT VectorSelector : public QWidget, public Ui::VectorSelector {
     void clearSelection();
 
     void fillVectors();
+    void setIsX(bool is_x) {_isX = is_x;}
 
   Q_SIGNALS:
     void selectionChanged(const QString&);
@@ -54,6 +55,7 @@ class KST_EXPORT VectorSelector : public QWidget, public Ui::VectorSelector {
 
   private:
     bool _allowEmptySelection;
+    bool _isX;
 
     ObjectStore *_store;
 };

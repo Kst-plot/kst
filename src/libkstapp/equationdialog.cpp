@@ -36,6 +36,8 @@ EquationTab::EquationTab(QWidget *parent)
 
   _curvePlacement->setExistingPlots(Data::self()->plotList());
 
+  _xVectors->setIsX(true);
+
   _xVectorLabel->setBuddy(_xVectors->_vector);
   _scalarsLabel->setBuddy(_scalars->_scalar);
   _vectorsLabel->setBuddy(_vectors->_vector);

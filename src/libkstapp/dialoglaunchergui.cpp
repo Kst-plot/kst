@@ -49,6 +49,9 @@ DialogLauncherGui::~DialogLauncherGui() {
 
 void DialogLauncherGui::showVectorDialog(QString &vectorname, ObjectPtr objectPtr) {
   VectorDialog dialog(objectPtr, kstApp->mainWindow());
+  if (!vectorname.isEmpty()) {
+    dialog.setField(vectorname);
+  }
   dialog.exec();
   vectorname = dialog.dataObjectName();
 }

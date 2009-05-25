@@ -104,3 +104,8 @@ to choose a position first, and then input some text.
 17. There appears to be no way to change the colour of the plot border
 and tick marks from black.  I though the brush colour under "Stroke"
 might do it, but nope.
+
+----------
+
+Crash case: edit vector button is active in vector selectors
+for error bar vectors which aren't yet set.  Clicking crashes.

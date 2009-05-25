@@ -30,7 +30,7 @@
 namespace Kst {
 
 VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
-  : DataTab(parent), _mode(DataVector), _store(store), _requestID(0) {
+  : DataTab(parent), _mode(DataVector), _store(store), _initField(QString()), _requestID(0) {
 
   setupUi(this);
   setTabTitle(tr("Vector"));
@@ -39,6 +39,7 @@ VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
   connect(_dataVectorGroup, SIGNAL(clicked(bool)), this, SLOT(readFromSourceClicked()));
   connect(_fileName, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
   connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
+  connect(_field, SIGNAL(editTextChanged(const QString &)), this, SIGNAL(fieldChanged()));
 
   connect(_dataRange, SIGNAL(modified()), this, SIGNAL(modified()));
   connect(_numberOfSamples, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
@@ -95,6 +96,7 @@ QString VectorTab::field() const {
 
 
 void VectorTab::setField(const QString &field) {
+  _initField = field; // for delayed index setting
   _field->setCurrentIndex(_field->findText(field));
 }
 
@@ -218,6 +220,9 @@ void VectorTab::sourceValid(QString filename, int requestID) {
   _dataSource->readLock();
 
   _field->addItems(_dataSource->fieldList());
+  if (!_initField.isEmpty()) {
+    setField(_initField);
+  }
   _field->setEditable(!_dataSource->fieldListIsComplete());
   _configure->setEnabled(_dataSource->hasConfigWidget());
 
@@ -265,6 +270,8 @@ VectorDialog::VectorDialog(ObjectPtr dataObject, QWidget *parent)
   }
 
   connect(_vectorTab, SIGNAL(sourceChanged()), this, SLOT(updateButtons()));
+  connect(_vectorTab, SIGNAL(fieldChanged()), this, SLOT(updateButtons()));
+
   connect(this, SIGNAL(editMultipleMode()), this, SLOT(editMultipleMode()));
   connect(this, SIGNAL(editSingleMode()), this, SLOT(editSingleMode()));
 
@@ -290,7 +297,9 @@ void VectorDialog::editSingleMode() {
 
 
 void VectorDialog::updateButtons() {
+
   bool valid = _vectorTab->vectorMode() == VectorTab::GeneratedVector || !_vectorTab->field().isEmpty();
+  // FIXME: add stricter validity testing.
   _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(valid);
   _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(valid);
 }

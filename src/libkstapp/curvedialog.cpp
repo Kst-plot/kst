@@ -52,6 +52,8 @@ CurveTab::CurveTab(QWidget *parent)
   _xMinusErrorLabel->setBuddy(_xMinusError->_vector);
   _yMinusErrorLabel->setBuddy(_yMinusError->_vector);
 
+  _xVector->setIsX(true);
+
   connect(_xVector, SIGNAL(selectionChanged(QString)), this, SIGNAL(vectorsChanged()));
   connect(_yVector, SIGNAL(selectionChanged(QString)), this, SIGNAL(vectorsChanged()));
   connect(_xMinusSameAsPlus, SIGNAL(toggled(bool)), this, SLOT(xCheckboxClicked()));
