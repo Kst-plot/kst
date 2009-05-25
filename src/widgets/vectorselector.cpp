@@ -59,6 +59,9 @@ void VectorSelector::updateDescriptionTip() {
 
 
 void VectorSelector::emitSelectionChanged() {
+  if (_allowEmptySelection && (_vector->count()>0)) {
+      _editVector->setDisabled(_vector->currentIndex()==0);
+  }
   emit selectionChanged(_vector->currentText());
 }
 
@@ -108,6 +111,7 @@ void VectorSelector::setAllowEmptySelection(bool allowEmptySelection) {
   if (_allowEmptySelection) {
     _vector->insertItem(0, tr("<None>"), qVariantFromValue(0));
     _vector->setCurrentIndex(0);
+    _editVector->setEnabled(false);
   }
 }
 
@@ -173,6 +177,7 @@ void VectorSelector::fillVectors() {
     VectorPtr v = vectors.value(string);
     _vector->addItem(string, qVariantFromValue(v.data()));
   }
+  _editVector->setEnabled(_vector->count() > 0);
 
   if (_allowEmptySelection) //reset the <None>
     setAllowEmptySelection(true);
@@ -180,7 +185,6 @@ void VectorSelector::fillVectors() {
   if (current)
     setSelectedVector(current);
 
-  _editVector->setEnabled(_vector->count() > 0);
 }
 
 }

@@ -639,9 +639,10 @@ Base / Offset mode logic change:
 
 ----------
 
-
 Error in choice of offset mode.
 Create a plot with a Y range from -0.032 to 0.041.  It goes into base/offset mode and shouldn't.
 
-
 ------------
+
+Crash case: edit vector button is active in vector selectors
+for error bar vectors which aren't yet set.  Clicking crashes.
