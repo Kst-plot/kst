@@ -40,6 +40,9 @@ ContentTab::ContentTab(QWidget *parent)
   connect(_up, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_down, SIGNAL(clicked()), this, SIGNAL(modified()));
 
+  connect(_availableRelationList, SIGNAL(itemDoubleClicked ( QListWidgetItem * )), this, SLOT(availableDoubleClicked(QListWidgetItem *)));
+  connect(_displayedRelationList, SIGNAL(itemDoubleClicked ( QListWidgetItem * )), this, SLOT(displayedDoubleClicked(QListWidgetItem *)));
+
   connect(_availableRelationList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
   connect(_displayedRelationList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
 }
@@ -67,26 +70,39 @@ void ContentTab::updateButtons() {
 
 
 void ContentTab::removeButtonClicked() {
-  for (int i = 0; i < _displayedRelationList->count(); i++) {
-    if (_displayedRelationList->item(i) && _displayedRelationList->item(i)->isSelected()) {
-      _availableRelationList->addItem(_displayedRelationList->takeItem(i));
-      _availableRelationList->clearSelection();
-      _availableRelationList->item(_availableRelationList->count() - 1)->setSelected(true);
-    }
+  foreach (QListWidgetItem* item, _displayedRelationList->selectedItems()) {
+    _availableRelationList->addItem(_displayedRelationList->takeItem(_displayedRelationList->row(item)));
   }
+
+  _availableRelationList->clearSelection();
   updateButtons();
 }
 
 
-void ContentTab::addButtonClicked() {
-  for (int i = 0; i < _availableRelationList->count(); i++) {
-    if (_availableRelationList->item(i) && _availableRelationList->item(i)->isSelected()) {
-      _displayedRelationList->addItem(_availableRelationList->takeItem(i));
-      _displayedRelationList->clearSelection();
-    }
+void ContentTab::displayedDoubleClicked(QListWidgetItem * item) {
+  if (item) {
+    _availableRelationList->addItem(_displayedRelationList->takeItem(_displayedRelationList->row(item)));
+    _availableRelationList->clearSelection();
+    updateButtons();
   }
-  _displayedRelationList->setCurrentRow(_displayedRelationList->count() - 1);;
+}
+
+
+void ContentTab::addButtonClicked() {
+  foreach (QListWidgetItem* item, _availableRelationList->selectedItems()) {
+    _displayedRelationList->addItem(_availableRelationList->takeItem(_availableRelationList->row(item)));
+  }
+  _displayedRelationList->clearSelection();
   updateButtons();
+}
+
+
+void ContentTab::availableDoubleClicked(QListWidgetItem * item) {
+  if (item) {
+    _displayedRelationList->addItem(_availableRelationList->takeItem(_availableRelationList->row(item)));
+    _displayedRelationList->clearSelection();
+    updateButtons();
+  }
 }
 
 

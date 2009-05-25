@@ -41,6 +41,8 @@ class KST_EXPORT ContentTab : public DialogTab, Ui::ContentTab {
     void removeButtonClicked();
     void upButtonClicked();
     void downButtonClicked();
+    void availableDoubleClicked(QListWidgetItem * item);
+    void displayedDoubleClicked(QListWidgetItem * item);
 };
 
 }
