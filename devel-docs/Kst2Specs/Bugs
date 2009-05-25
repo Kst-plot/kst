@@ -80,11 +80,6 @@ we're going to label in 5 decade intervals, 1e-5, 1, 1e5, 1e10 is
 better, and even better than that would be 6 decade intervals: 1e-6, 1,
 1e6, 1e12)
 
-10. In the content tab, double clicking on a curve in 1.x would move
-it from the list it used to be in of the lists to the other.  This
-saved the tedious click-on-curve, click-arrow-button,
-click-on-next-curve, click-on-arrow-button, &c.
-
 11. When in log mode, the range reported in the range tab of the edit
 plot item is the logarithm of the range.  So if the y-range is 0.1 to
 100, the range will be reported as -1 to 2.  Despite this, you still

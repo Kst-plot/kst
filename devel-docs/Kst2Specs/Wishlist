@@ -9,7 +9,7 @@ New Plot Label size mode: autoshrink.
 
 Edit Multiple for Plots
   It should be possible to edit the properties of multiple plots at once.  The UI used in data objects and in 1.x works well and should be used here.
-
+*Mike*
 ----------
 
 New tab in Data Wizard:

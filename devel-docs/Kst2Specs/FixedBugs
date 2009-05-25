@@ -646,3 +646,10 @@ Create a plot with a Y range from -0.032 to 0.041.  It goes into base/offset mod
 
 Crash case: edit vector button is active in vector selectors
 for error bar vectors which aren't yet set.  Clicking crashes.
+
+------------
+
+10. In the content tab, double clicking on a curve in 1.x would move
+it from the list it used to be in of the lists to the other.  This
+saved the tedious click-on-curve, click-arrow-button,
+click-on-next-curve, click-on-arrow-button, &c.
