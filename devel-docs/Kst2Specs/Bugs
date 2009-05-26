@@ -38,9 +38,6 @@ Correct behavior:
 
 Bugs Reported by D.V. Wiebe
 
-1. data source text box in first panel of data wizard inevitably moves
-the text cursor to the end of the input after entering a character,
-making it difficult to edit in the middle of a path
 
 2. data source text box doesn't recognise initial ~ as a euphemism for
 the user's home directory.

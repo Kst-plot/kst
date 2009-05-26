@@ -658,6 +658,9 @@ it from the list it used to be in of the lists to the other.  This
 saved the tedious click-on-curve, click-arrow-button,
 click-on-next-curve, click-on-arrow-button 
 
+1. data source text box in first panel of data wizard inevitably moves
+the text cursor to the end of the input after entering a character,
+making it difficult to edit in the middle of a path=======
 ---------
 
 A spectrum curve created with the data wizard should have
@@ -665,3 +668,7 @@ the same color as a XY curve simultaneously created from the
 same data field.  ie, if the XY curve of [sine] is red, the spectrum
 curve of [sine] should also be red.
 
+
+17. There appears to be no way to change the colour of the plot border
+and tick marks from black.  I though the brush colour under "Stroke"
+might do it, but nope.
