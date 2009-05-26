@@ -658,3 +658,10 @@ it from the list it used to be in of the lists to the other.  This
 saved the tedious click-on-curve, click-arrow-button,
 click-on-next-curve, click-on-arrow-button 
 
+---------
+
+A spectrum curve created with the data wizard should have
+the same color as a XY curve simultaneously created from the
+same data field.  ie, if the XY curve of [sine] is red, the spectrum
+curve of [sine] should also be red.
+

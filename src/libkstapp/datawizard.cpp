@@ -858,7 +858,7 @@ void DataWizard::finished() {
         curve->setLineWidth(Settings::globalSettings()->defaultLineWeight);
         curve->setPointType(ptype++ % KSTPOINT_MAXTYPE);
 
-        if (_pageDataPresentation->plotPSD() || colors.count() <= indexColor) {
+        if (!_pageDataPresentation->plotDataPSD() || colors.count() <= indexColor) {
           color = ColorSequence::next();
         } else {
           color = colors[indexColor];

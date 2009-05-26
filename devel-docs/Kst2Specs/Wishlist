@@ -63,10 +63,3 @@ way they do it is inconsistent: The top is applyed when you hit the all from but
 is live, and the button clears the selection.  There is no way to combine the options.
   Better: a file text entry and a regexp text entry, an apply filters button, and an 'and/or' radio pair.
 
----------
-
-A spectrum curve created with the data wizard should have
-the same color as a XY curve simultaneously created from the
-same data field.  ie, if the XY curve of [sine] is red, the spectrum
-curve of [sine] should also be red.
-
