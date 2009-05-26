@@ -4,10 +4,6 @@ Legends don't appear to work:
   Edit a plot.  In the label tab, select having a legend.  Apply
     No legend...
 
-----------
-
-Tooltips/whats this where helpful.
-
 ---------
 
 Plot sizes are not properly recovered on re-load
@@ -48,6 +44,10 @@ making it difficult to edit in the middle of a path
 
 2. data source text box doesn't recognise initial ~ as a euphemism for
 the user's home directory.
+
+[ Related bug from Nicholas:]
+In the data wizard or in the data manager, select the data from a file by giving the path relative to the folder where kst was started. The plot appears without problem. Save the kst file in the same folder where kst was started. Close Kst from the same place and reopen the kst file. It cannot plot the data. But if you go in the data manager and edit a specific vector from the file, it will be plotted.
+[cbn: under linux, relative file names don't seem to work at all.]
 
 3. toggling log-x axis (key 'g') doesn't do anything until you poke at
 the plot. (My impression is that a re-draw is being missed.)  toggling
@@ -93,13 +93,15 @@ to get back to xy-zoom mode.  (I have to right click twice to open and
 close the context menu.)
 (cbn says 'not confirmed - more info needed)
 
-15. The text label behaviour is un-intuitive.  The typical interface is
-to choose a position first, and then input some text.
-   ** -a possible justification for the current order is that it could allow us to 
-      drag around the label once we have defined it, for more precision placement.
-      not sure yet if we should change anything. **
+----------------
 
-17. There appears to be no way to change the colour of the plot border
-and tick marks from black.  I though the brush colour under "Stroke"
-might do it, but nope.
+1) Open the „about“ dialog box and click on a link. Nothing happens, everything disappears in the box. If kst was started from the command line, you get:
+QFSFileEngine::open: No file name specified
+QTextBrowser: No document for http://kst.kde.org/
+(NB/windows.  Confirmed by CBN/linux)
 
+4) When configuring Kst: “Settings>Configure kst” many settings are not taken into account, such as the grid settings, and disappear by the next start of kst.
+ (NB/windows.  Under linux, the configuration options are remembered, but not honored until kst is restarted).
+
+5) When starting Kst from a different folder, it creates another kstdatarc in the current folder instead of having one fixed rc file stored somewhere
+(cbn note: this appears to be masked using the run-kst script - which won't work if installed)
