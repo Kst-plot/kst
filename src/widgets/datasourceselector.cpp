@@ -51,7 +51,7 @@ void DataSourceSelector::setup() {
   _fileButton->setFixedSize(size + 8, size + 8);
 
   setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-  connect (_fileEdit, SIGNAL(textChanged(const QString &)), this, SLOT(setFile(const QString &)));
+  connect (_fileEdit, SIGNAL(textChanged(const QString &)), this, SIGNAL(changed(const QString &)));
   connect (_fileButton, SIGNAL(clicked()), this, SLOT(chooseFile()));
 
   QDirModel *dirModel = new QDirModel(this);
