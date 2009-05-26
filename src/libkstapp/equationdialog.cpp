@@ -260,6 +260,7 @@ void EquationDialog::updateButtons() {
 void EquationDialog::configureTab(ObjectPtr object) {
   if (!object) {
     _equationTab->curveAppearance()->loadWidgetDefaults();
+    _equationTab->setToLastX();
   } else if (EquationPtr equation = kst_cast<Equation>(object)) {
     _equationTab->setXVector(equation->vXIn());
     _equationTab->setEquation(equation->equation());

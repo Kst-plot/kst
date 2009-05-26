@@ -15,6 +15,7 @@
 #include "datacollection.h"
 #include "objectstore.h"
 #include "dialogdefaults.h"
+#include "curve.h"
 
 namespace Kst {
 
@@ -145,6 +146,15 @@ void VectorSelector::editVector() {
   emit contentChanged();
 }
 
+void VectorSelector::setToLastX() {
+  if (!_store) {
+    return;
+  }
+  CurveList objects = _store->getObjects<Curve>();
+  if (objects.count()>0) {
+    setSelectedVector(objects.at(objects.count()-1)->xVector());
+  }
+}
 
 void VectorSelector::fillVectors() {
   if (!_store) {

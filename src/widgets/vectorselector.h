@@ -41,7 +41,10 @@ class KST_EXPORT VectorSelector : public QWidget, public Ui::VectorSelector {
     void clearSelection();
 
     void fillVectors();
+    void setToLastX();
+
     void setIsX(bool is_x) {_isX = is_x;}
+    int count() {return _vector->count();}
 
   Q_SIGNALS:
     void selectionChanged(const QString&);

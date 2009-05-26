@@ -383,7 +383,8 @@ DataWizardPageDataPresentation::DataWizardPageDataPresentation(ObjectStore *stor
    setupUi(this);
 
   _xVectorExisting->setObjectStore(store);
-
+  _xVectorExisting->setToLastX();
+  _xAxisUseExisting->setChecked(_xVectorExisting->count()>0);
   dataRange()->loadWidgetDefaults();
   getFFTOptions()->loadWidgetDefaults();
 

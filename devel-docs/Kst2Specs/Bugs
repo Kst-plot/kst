@@ -52,10 +52,12 @@ the user's home directory.
 3. toggling log-x axis (key 'g') doesn't do anything until you poke at
 the plot. (My impression is that a re-draw is being missed.)  toggling
 log-y (key 'l') works as expected.
+(cbn sees: the mouse needs to leave the plot for the plot to be redrawn)
 
 4. toggling log-x doesn't change the x-axis tick labels/positions, even
 though the curves are drawn on a log scale.  Zooming in and pressing
 "M" fixes this.  Again, y-log works as expected.
+(cbn says 'confirmed')
 
 5. All the dialog boxes appear to be modal now (they block interaction
 with the main window while open).  This slows me down significanlly.
@@ -89,6 +91,7 @@ have to enter "0.1" and "100" to get this range.
 changing it while shift is depressed.  After doing this it's difficult
 to get back to xy-zoom mode.  (I have to right click twice to open and
 close the context menu.)
+(cbn says 'not confirmed - more info needed)
 
 15. The text label behaviour is un-intuitive.  The typical interface is
 to choose a position first, and then input some text.

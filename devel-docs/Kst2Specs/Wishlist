@@ -70,15 +70,3 @@ the same color as a XY curve simultaneously created from the
 same data field.  ie, if the XY curve of [sine] is red, the spectrum
 curve of [sine] should also be red.
 
----------
-
-Default X vector field:
-  We need to guess that is wanted for an X vector in dialogs which take an X vector	:
-    -wizard, or a create curve dialog called from a vector selector for an X vector: 
-	remember last X vector field name, or INDEX if last field name doesn't exist.
-    -Equations and Curves: Try in order
-	1) remember last vector used on X axis and use it again.
-	2) remember descriptive name last used on X axis and use any vector with this name.
-	3) Use a vector named INDEX
-	4) Use a generated vector
-   

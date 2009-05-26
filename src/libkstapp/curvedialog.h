@@ -65,6 +65,8 @@ class KST_EXPORT CurveTab : public DataTab, Ui::CurveTab {
     void hidePlacementOptions();
     void clearTabValues();
 
+    void setToLastX() {_xVector->setToLastX();}
+
   Q_SIGNALS:
     void vectorsChanged();
 

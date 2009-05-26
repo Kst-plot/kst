@@ -47,6 +47,8 @@ class KST_EXPORT EquationTab : public DataTab, Ui::EquationTab {
     void hideCurveOptions();
     void clearTabValues();
 
+    void setToLastX() {_xVectors->setToLastX();}
+
   public Q_SLOTS:
     void updateVectorCombos();
 

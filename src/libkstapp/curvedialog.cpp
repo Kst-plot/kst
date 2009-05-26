@@ -315,6 +315,7 @@ void CurveDialog::editSingleMode() {
 void CurveDialog::configureTab(ObjectPtr object) {
   if (!object) {
     _curveTab->curveAppearance()->loadWidgetDefaults();
+    _curveTab->setToLastX();
   } else if (CurvePtr curve = kst_cast<Curve>(object)) {
     _curveTab->curveAppearance()->loadWidgetDefaults();
     _curveTab->setXVector(curve->xVector());
