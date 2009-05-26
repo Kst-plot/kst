@@ -177,6 +177,8 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
 
     CreationState creationState() const { return _creationState; }
 
+    virtual void setItemPen(const QPen & pen) { setPen(pen); };
+
   Q_SIGNALS:
     void geometryChanged();
     void creationComplete();

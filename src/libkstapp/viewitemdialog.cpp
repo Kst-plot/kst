@@ -158,7 +158,7 @@ void ViewItemDialog::strokeChanged() {
     p.setWidth(1);
   }
 #endif
-  _item->setPen(p);
+  _item->setItemPen(p);
 }
 
 

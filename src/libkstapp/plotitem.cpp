@@ -691,8 +691,8 @@ void PlotItem::paintPlot(QPainter *painter) {
 #endif
   painter->save();
   painter->setBrush(Qt::NoBrush);
+  painter->setPen(pen());
   painter->drawRect(plotRect());
-  painter->restore();
 #if BENCHMARK > 1
     b_3 = benchtmp.elapsed();
 #endif
@@ -704,6 +704,7 @@ void PlotItem::paintPlot(QPainter *painter) {
 #if BENCHMARK > 1
     b_5 = benchtmp.elapsed();
 #endif
+  painter->restore();
 
 #if BENCHMARK > 1
   int i = bench_time.elapsed();

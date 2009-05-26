@@ -235,6 +235,8 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 
     void setAllowUpdates(bool allowed);
 
+    virtual void setItemPen(const QPen & pen) { ViewItem::setPen(pen); setPlotPixmapDirty();}
+
   protected:
     virtual QString _automaticDescriptiveName() const;
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
