@@ -223,7 +223,7 @@ bool Document::open(const QString& file) {
                   int idx = _win->tabWidget()->indexOf(currentView);
                   _win->tabWidget()->setTabText(idx, nm.toString());
                 }
-                qreal width, height;
+                qreal width = 1.0, height = 1.0;
                 QStringRef string = attrs.value("width");
                 if (!string.isNull()) {
                    width = string.toString().toDouble();

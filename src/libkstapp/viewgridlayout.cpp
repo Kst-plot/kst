@@ -692,7 +692,7 @@ void ViewGridLayout::updateProjections(ViewItem *item) {
 
   qreal xStart = 0.0, xStop = 0.0;
   qreal yStart = 0.0, yStop = 0.0;
-  qreal xMin, xMax, yMin, yMax;
+  qreal xMin = 0.0, xMax = 0.0, yMin = 0.0, yMax = 0.0;
 
   QList<ViewItem*> viewItems;
   QList<QGraphicsItem*> list = item->QGraphicsItem::children();

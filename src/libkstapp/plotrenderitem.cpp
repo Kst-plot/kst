@@ -427,7 +427,7 @@ void PlotRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 void PlotRenderItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
   const QPointF point = plotItem()->mapToProjection(event->pos());
   qreal range = qMax(plotItem()->xMax() - plotItem()->xMin(), plotItem()->yMax() - plotItem()->yMin());
-  double distance;
+  double distance = 1000;
   bool first = true;
   RelationPtr closestRelation = 0;
   foreach (RelationPtr relation, _relationList) {
@@ -875,11 +875,11 @@ void PlotRenderItem::computeMeanCentered(Qt::Orientation orientation, qreal *min
 void PlotRenderItem::computeNoSpike(Qt::Orientation orientation, qreal *min, qreal *max) const {
   //The previous values are of no consequence as this algorithm does not depend
   //on the previous values.  So start over so that first active relation initializes.
-  qreal minimum;
-  qreal maximum;
   bool unInitialized = true;
 
   bool axisLog = orientation == Qt::Horizontal ? plotItem()->xAxis()->axisLog() : plotItem()->yAxis()->axisLog();
+  qreal minimum = axisLog ? 0.0 : -0.1;
+  qreal maximum = 0.2;
 
   foreach (RelationPtr relation, relationList()) {
       if (relation->ignoreAutoScale())
@@ -901,9 +901,9 @@ void PlotRenderItem::computeNoSpike(Qt::Orientation orientation, qreal *min, qre
       unInitialized = false;
   }
 
-  if (unInitialized || maximum <= minimum) {
+  if (maximum <= minimum) {
     minimum = axisLog ? 0.0 : -0.1;
-    minimum = 0.2;
+    maximum = 0.2;
   }
 
   if (axisLog && minimum < 0.0) {
