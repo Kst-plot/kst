@@ -34,7 +34,7 @@ DataObjectPtr HistogramFactory::generateObject(ObjectStore *store, QXmlStreamRea
   double min=-1, max=1;
   int numberOfBins=16, normalizationMode=0;
   QString VectorName, descriptiveName;
-  bool realTimeAutoBin;
+  bool realTimeAutoBin = true;
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();
