@@ -144,7 +144,7 @@ void PlotRenderItem::removeRelation(RelationPtr relation) {
   if (relation) {
     disconnect(relation, SIGNAL(relationUpdated(ObjectPtr)));
     _relationList.removeAll(relation);
-//    plotItem()->zoomMaximum();
+    plotItem()->updateObject();
   }
 }
 
