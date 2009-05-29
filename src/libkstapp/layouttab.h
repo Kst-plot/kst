@@ -26,16 +26,22 @@ class KST_EXPORT LayoutTab : public DialogTab, Ui::LayoutTab {
     virtual ~LayoutTab();
 
     double horizontalMargin() const;
+    bool horizontalMarginDirty() const;
     void setHorizontalMargin(double horizontalMargin);
 
     double verticalMargin() const;
+    bool verticalMarginDirty() const;
     void setVerticalMargin(double verticalMargin);
 
     double horizontalSpacing() const;
+    bool horizontalSpacingDirty() const;
     void setHorizontalSpacing(double horizontalSpacing);
 
     double verticalSpacing() const;
+    bool verticalSpacingDirty() const;
     void setVerticalSpacing(double verticalSpacing);
+
+    void clearTabValues();
 };
 
 }

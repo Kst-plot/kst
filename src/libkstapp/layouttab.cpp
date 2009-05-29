@@ -35,6 +35,11 @@ double LayoutTab::horizontalMargin() const {
 }
 
 
+bool LayoutTab::horizontalMarginDirty() const {
+  return (!_horMargin->text().isEmpty());
+}
+
+
 void LayoutTab::setHorizontalMargin(double horizontalMargin) {
   _horMargin->setValue(horizontalMargin);
 }
@@ -42,6 +47,11 @@ void LayoutTab::setHorizontalMargin(double horizontalMargin) {
 
 double LayoutTab::verticalMargin() const {
   return _verMargin->value();
+}
+
+
+bool LayoutTab::verticalMarginDirty() const {
+  return (!_verMargin->text().isEmpty());
 }
 
 
@@ -55,6 +65,11 @@ double LayoutTab::horizontalSpacing() const {
 }
 
 
+bool LayoutTab::horizontalSpacingDirty() const {
+  return (!_horSpacing->text().isEmpty());
+}
+
+
 void LayoutTab::setHorizontalSpacing(double horizontalSpacing) {
   _horSpacing->setValue(horizontalSpacing);
 }
@@ -65,10 +80,22 @@ double LayoutTab::verticalSpacing() const {
 }
 
 
+bool LayoutTab::verticalSpacingDirty() const {
+  return (!_verSpacing->text().isEmpty());
+}
+
+
 void LayoutTab::setVerticalSpacing(double verticalSpacing) {
   _verSpacing->setValue(verticalSpacing);
 }
 
+
+void LayoutTab::clearTabValues() {
+  _horMargin->clear();
+  _verMargin->clear();
+  _horSpacing->clear();
+  _verSpacing->clear();
+}
 
 }
 

@@ -27,36 +27,52 @@ class KST_EXPORT LabelTab : public DialogTab, Ui::LabelTab {
     virtual ~LabelTab();
 
     QString leftLabel() const;
+    bool leftLabelDirty() const;
     void setLeftLabel(const QString &label);
 
     QString bottomLabel() const;
+    bool bottomLabelDirty() const;
     void setBottomLabel(const QString &label);
 
     QString topLabel() const;
+    bool topLabelDirty() const;
     void setTopLabel(const QString &label);
 
     QString rightLabel() const;
+    bool rightLabelDirty() const;
     void setRightLabel(const QString &label);
 
     bool leftLabelAuto() const;
+    bool leftLabelAutoDirty() const;
     void setLeftLabelAuto(bool a);
 
     bool rightLabelAuto() const;
+    bool rightLabelAutoDirty() const;
     void setRightLabelAuto(bool a);
 
     bool topLabelAuto() const;
+    bool topLabelAutoDirty() const;
     void setTopLabelAuto(bool a);
 
     bool bottomLabelAuto() const;
+    bool bottomLabelAutoDirty() const;
     void setBottomLabelAuto(bool a);
 
-
     bool showLegend() const;
+    bool showLegendDirty() const;
     void setShowLegend(const bool show);
 
     QFont globalLabelFont() const;
+    bool globalLabelFontDirty() const;
+
     qreal globalLabelFontScale() const;
+    bool globalLabelFontScaleDirty() const;
+
     QColor globalLabelColor() const;
+    bool globalLabelColorDirty() const;
+
+    void enableSingleEditOptions(bool enabled);
+    void clearTabValues();
 
   Q_SIGNALS:
     void test();
@@ -68,12 +84,17 @@ class KST_EXPORT LabelTab : public DialogTab, Ui::LabelTab {
   private Q_SLOTS:
     void labelUpdate(const QString&);
     void labelSelected();
+    void activateFields();
+    void buttonUpdate();
+
 
 private:
     void setGlobalFont(const QFont &font);
 
     PlotItem *_plotItem;
     QLineEdit* _activeLineEdit;
+    bool _fontDirty;
+
 
 };
 

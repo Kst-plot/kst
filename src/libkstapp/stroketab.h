@@ -26,22 +26,30 @@ class KST_EXPORT StrokeTab : public DialogTab, Ui::StrokeTab {
     virtual ~StrokeTab();
 
     Qt::PenStyle style() const;
+    bool styleDirty() const;
     void setStyle(Qt::PenStyle style);
 
     qreal width() const;
+    bool widthDirty() const;
     void setWidth(qreal width);
 
     QColor brushColor() const;
+    bool brushColorDirty() const;
     void setBrushColor(const QColor &color);
 
     Qt::BrushStyle brushStyle() const;
+    bool brushStyleDirty() const;
     void setBrushStyle(Qt::BrushStyle style);
 
     Qt::PenJoinStyle joinStyle() const;
+    bool joinStyleDirty() const;
     void setJoinStyle(Qt::PenJoinStyle style);
 
     Qt::PenCapStyle capStyle() const;
+    bool capStyleDirty() const;
     void setCapStyle(Qt::PenCapStyle style);
+
+    void clearTabValues();
 };
 
 }

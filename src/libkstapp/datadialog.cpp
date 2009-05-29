@@ -16,7 +16,6 @@
 #include <QPushButton>
 #include <QDialogButtonBox>
 #include <QDebug>
-#include <QSpacerItem>
 
 #include "datadialog.h"
 
@@ -89,9 +88,9 @@ void DataDialog::createGui() {
   _tagStringAuto = new QCheckBox(tr("&Auto","automatic"), box);
   connect(_tagStringAuto, SIGNAL(toggled(bool)), _tagString, SLOT(setDisabled(bool)));
 
-  _expand = new QPushButton(tr("Edit Multiple >>"));
-  _expand->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-  connect(_expand, SIGNAL(clicked()), this, SLOT(slotEditMultiple()));
+  _editMultipleButton = new QPushButton(tr("Edit Multiple >>"));
+  _editMultipleButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+  connect(_editMultipleButton, SIGNAL(clicked()), this, SLOT(slotEditMultiple()));
 
   QLabel *spacer = new QLabel();
 
@@ -102,7 +101,7 @@ void DataDialog::createGui() {
   } else {
     _tagStringAuto->setChecked(true);
     setTagString(QString());
-    _expand->setVisible(false);
+    _editMultipleButton->setVisible(false);
   }
 
   layout->addWidget(_nameLabel);
@@ -110,7 +109,7 @@ void DataDialog::createGui() {
   layout->addWidget(_shortName);
   layout->addWidget(_tagStringAuto);
   layout->addWidget(spacer);
-  layout->addWidget(_expand);
+  layout->addWidget(_editMultipleButton);
 
   box->setLayout(layout);
 
@@ -180,26 +179,25 @@ void DataDialog::slotEditMultiple() {
   int extensionWidth = extensionWidget()->width();
   if (extensionWidth<204) extensionWidth = 204; // FIXME: magic number hack...
   extensionWidget()->setVisible(!extensionWidget()->isVisible());
-  //_tagString->setEnabled(!extensionWidget()->isVisible());
   if (!extensionWidget()->isVisible()) {
     _tagString->setVisible(true);
     _shortName->setVisible(true);
     _tagStringAuto->setVisible(true);
     _nameLabel->setVisible(true);
-    _expand->setText(tr("Edit Multiple >>"));
     setMinimumWidth(currentWidth - extensionWidth);
     resize(currentWidth - extensionWidth, height());
     _mode = Edit;
+    _editMultipleButton->setText(tr("Edit Multiple >>"));
     emit editSingleMode();
   } else {
     _tagString->setVisible(false);
     _shortName->setVisible(false);
     _tagStringAuto->setVisible(false);
     _nameLabel->setVisible(false);
-    _expand->setText(tr("<< Edit one %1").arg(_shortName->text()));
     setMinimumWidth(currentWidth + extensionWidth);
     resize(currentWidth + extensionWidth, height());
     _mode = EditMultiple;
+    _editMultipleButton->setText(tr("<< Edit one %1").arg(_shortName->text()));
     emit editMultipleMode();
   }
   clearModified();

@@ -16,7 +16,8 @@
 namespace Kst {
 
 FillTab::FillTab(QWidget *parent)
-  : DialogTab(parent) {
+  : DialogTab(parent), _multiEdit(false)
+ {
 
   setupUi(this);
   setTabTitle(tr("Fill"));
@@ -53,11 +54,13 @@ FillTab::~FillTab() {
 }
 
 
-void FillTab::updateButtons() {
-  _color->setEnabled(!_useGradient->isChecked());
-  _style->setEnabled(!_useGradient->isChecked());
-  _gradientReset->setEnabled(_useGradient->isChecked());
-  _gradientEditor->setEnabled(_useGradient->isChecked());
+void FillTab::updateButtons() { 
+  if (!_multiEdit) {
+    _color->setEnabled(!_useGradient->isChecked());
+    _style->setEnabled(!_useGradient->isChecked());
+    _gradientReset->setEnabled(_useGradient->isChecked());
+    _gradientEditor->setEnabled(_useGradient->isChecked());
+  }
 }
 
 
@@ -75,8 +78,18 @@ void FillTab::setColor(const QColor &color) {
 }
 
 
+bool FillTab::colorDirty() const {
+  return _color->colorDirty();
+}
+
+
 Qt::BrushStyle FillTab::style() const {
   return Qt::BrushStyle(_style->itemData(_style->currentIndex()).toInt());
+}
+
+
+bool FillTab::styleDirty() const {
+  return _style->currentIndex() != -1;
 }
 
 
@@ -98,12 +111,53 @@ QGradient FillTab::gradient() const {
 }
 
 
+bool FillTab::gradientDirty() const {
+  return _gradientEditor->dirty();
+}
+
+
 void FillTab::setGradient(const QGradient &gradient) {
   _useGradient->setChecked(!gradient.stops().empty());
   _gradientEditor->setGradient(gradient);
   updateButtons();
 }
 
+
+bool FillTab::useGradient() const {
+  return _useGradient->isChecked();
+}
+
+
+bool FillTab::useGradientDirty() const {
+  return _useGradient->checkState() != Qt::PartiallyChecked;
+}
+
+
+void FillTab::setUseGradient(const bool useGradient) {
+  _useGradient->setChecked(useGradient);
+  updateButtons();
+}
+
+
+void FillTab::clearTabValues() {
+  _useGradient->setCheckState(Qt::PartiallyChecked);
+  _style->setCurrentIndex(-1);
+
+  _color->clearSelection();
+
+  _color->setEnabled(true);
+  _style->setEnabled(true);
+  _gradientReset->setEnabled(true);
+  _gradientEditor->setEnabled(true);
+}
+
+
+void FillTab::enableSingleEditOptions(bool enabled) {
+  _multiEdit = !enabled;
+  if (enabled) {
+    _useGradient->setTristate(false);
+  }
+}
 }
 
 // vim: ts=2 sw=2 et

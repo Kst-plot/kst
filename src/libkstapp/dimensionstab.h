@@ -34,18 +34,30 @@ class KST_EXPORT DimensionsTab : public DialogTab, Ui::DimensionsTab {
 
     void setupDimensions();
 
-    double x() {return _x->value();}
+    double x() {return _x->value();}  
     double y() {return _y->value();}
-    double w() {return _width->value();}
-    double h() {return _height->value();}
-    double r() {return _rotation->value();}
+
+    double width() {return _width->value();}
+    bool widthDirty() const;
+
+    double height() {return _height->value();}
+    bool heightDirty() const;
+
+    double rotation() {return _rotation->value();}
+    bool rotationDirty() const;
+
     bool fixedAspect() {return _fixAspectRatio->isChecked();}
+    bool fixedAspectDirty() const;
+
+    void enableSingleEditOptions(bool enabled);
+    void clearTabValues();
 
   private:
     ViewItem *_viewItem;
 
   private Q_SLOTS:
     void modified();
+    void updateButtons();
 
   Q_SIGNALS:
     void tabModified();

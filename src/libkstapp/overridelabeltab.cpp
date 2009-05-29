@@ -19,7 +19,7 @@
 namespace Kst {
 
 OverrideLabelTab::OverrideLabelTab(QString title, QWidget *parent)
-  : DialogTab(parent) {
+  : DialogTab(parent), _fontDirty(false) {
 
   setupUi(this);
   _bold->setIcon(QPixmap(":kst_bold.png"));
@@ -37,11 +37,20 @@ OverrideLabelTab::OverrideLabelTab(QString title, QWidget *parent)
   connect(_family, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_labelColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
   connect(_useDefault, SIGNAL(toggled(bool)), this, SIGNAL(useDefaultChanged(bool)));
+
+  connect(_bold, SIGNAL(toggled(bool)), this, SLOT(buttonUpdate()));
+  connect(_italic, SIGNAL(toggled(bool)), this, SLOT(buttonUpdate()));
 }
 
 
 OverrideLabelTab::~OverrideLabelTab() {
 }
+
+
+void OverrideLabelTab::buttonUpdate() {
+  _fontDirty = true;
+}
+
 
 QFont OverrideLabelTab::labelFont() const {
   QFont font(_family->currentFont());
@@ -51,7 +60,13 @@ QFont OverrideLabelTab::labelFont() const {
 }
 
 
+bool OverrideLabelTab::labelFontDirty() const {
+  return (_family->currentIndex() != -1 || _fontDirty);
+}
+
+
 void OverrideLabelTab::setLabelFont(const QFont &font) {
+  _fontDirty = false;
   _family->setCurrentFont(font);
   _bold->setChecked(font.bold());
   _italic->setChecked(font.italic());
@@ -60,6 +75,11 @@ void OverrideLabelTab::setLabelFont(const QFont &font) {
 
 qreal OverrideLabelTab::labelFontScale() const {
   return _fontSize->value();
+}
+
+
+bool OverrideLabelTab::labelFontScaleDirty() const {
+  return (!_fontSize->text().isEmpty());
 }
 
 
@@ -73,25 +93,60 @@ QColor OverrideLabelTab::labelColor() const {
 }
 
 
+bool OverrideLabelTab::labelColorDirty() const {
+  return _labelColor->colorDirty();
+}
+
+
 void OverrideLabelTab::setLabelColor(const QColor &color) {
   _labelColor->setColor(color);
 }
 
+
 void OverrideLabelTab::setFontSpecsIfDefault(const QFont &font, const qreal scale, const QColor &color) {
   if (_useDefault->isChecked()) {
+    _fontDirty = false;
     setLabelFontScale(scale);
     setLabelFont(font);
     setLabelColor(color);
   }
 }
 
+
 void OverrideLabelTab::setUseDefault(bool use_default) {
   _useDefault->setChecked(use_default);
 }
 
+
 bool OverrideLabelTab::useDefault() const {
   return (_useDefault->isChecked());
 }
+
+
+bool OverrideLabelTab::useDefaultDirty() const {
+  return _useDefault->checkState() != Qt::PartiallyChecked;
+}
+
+
+void OverrideLabelTab::clearTabValues() {
+  _fontDirty = false;
+  _useDefault->setCheckState(Qt::PartiallyChecked);
+  _fontSize->clear();
+  _family->setCurrentIndex(-1);
+
+  _bold->setChecked(false);
+  _italic->setChecked(false);
+
+  _labelColor->clearSelection();
+}
+
+
+void OverrideLabelTab::enableSingleEditOptions(bool enabled) {
+  if (enabled) {
+    _useDefault->setTristate(false);
+  }
+}
+
 
 }
 

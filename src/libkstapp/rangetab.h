@@ -38,25 +38,42 @@ class KST_EXPORT RangeTab : public DialogTab, Ui::RangeTab {
     bool xSpike() {return _xSpike->isChecked();}
     bool xBorder() {return _xBorder->isChecked();}
     bool xMean() {return _xMean->isChecked();}
-    double xRange() {return _xRange->text().toDouble();}
     bool xFixed() { return _xFixed->isChecked();}
+    bool xModeDirty() const;
+
+    double xRange() {return _xRange->text().toDouble();}
+    bool xRangeDirty() const;
+
     double xMin() {return _xMin->text().toDouble();}
+    bool xMinDirty() const;
+
     double xMax() {return _xMax->text().toDouble();}
+    bool xMaxDirty() const;
 
     bool yAuto() {return _yAuto->isChecked();}
     bool ySpike() {return _ySpike->isChecked();}
-    bool yBorder() {return _yBorder->isChecked();}
+    bool yBorder() {return _yBorder->isChecked();}   
     bool yMean() {return _yMean->isChecked();}
-    double yRange() {return _yRange->text().toDouble();}
     bool yFixed() { return _yFixed->isChecked();}
+    bool yModeDirty() const;
+
+    double yRange() {return _yRange->text().toDouble();}
+    bool yRangeDirty() const;
+
     double yMin() {return _yMin->text().toDouble();}
+    bool yMinDirty() const;
+
     double yMax() {return _yMax->text().toDouble();}
+    bool yMaxDirty() const;
+
+    void clearTabValues();
 
   private:
     PlotItem *_plotItem;
 
   private Q_SLOTS:
     void modified();
+    void updateButtons();
 
   Q_SIGNALS:
     void tabModified();

@@ -28,61 +28,83 @@ class KST_EXPORT AxisTab : public DialogTab, Ui::AxisTab {
     virtual ~AxisTab();
 
     bool drawAxisMajorTicks() const;
+    bool drawAxisMajorTicksDirty() const;
     void setDrawAxisMajorTicks(const bool enabled);
 
     bool drawAxisMajorGridLines() const;
+    bool drawAxisMajorGridLinesDirty() const;
     void setDrawAxisMajorGridLines(const bool enabled);
 
     bool drawAxisMinorTicks() const;
+    bool drawAxisMinorTicksDirty() const;
     void setDrawAxisMinorTicks(const bool enabled);
 
     bool drawAxisMinorGridLines() const;
+    bool drawAxisMinorGridLinesDirty() const;
     void setDrawAxisMinorGridLines(const bool enabled);
 
     PlotAxis::MajorTickMode axisMajorTickSpacing() const;
+    bool axisMajorTickSpacingDirty() const;
     void setAxisMajorTickSpacing(PlotAxis::MajorTickMode spacing);
 
     Qt::PenStyle axisMajorGridLineStyle() const;
+    bool axisMajorGridLineStyleDirty() const;
     void setAxisMajorGridLineStyle(Qt::PenStyle style);
 
     QColor axisMajorGridLineColor() const;
+    bool axisMajorGridLineColorDirty() const;
     void setAxisMajorGridLineColor(const QColor &color);
 
     Qt::PenStyle axisMinorGridLineStyle() const;
+    bool axisMinorGridLineStyleDirty() const;
     void setAxisMinorGridLineStyle(Qt::PenStyle style);
 
     QColor axisMinorGridLineColor() const;
+    bool axisMinorGridLineColorDirty() const;
     void setAxisMinorGridLineColor(const QColor &color);
 
     int axisMinorTickCount() const;
+    bool axisMinorTickCountDirty() const;
     void setAxisMinorTickCount(const int count);
 
     int significantDigits() const;
+    bool significantDigitsDirty() const;
     void setSignificantDigits(const int digits);
 
     bool isLog() const;
+    bool isLogDirty() const;
     void setLog(const bool enabled);
 
     bool isAutoBaseOffset() const;
+    bool isAutoBaseOffsetDirty() const;
     void setAutoBaseOffset(const bool enabled);
 
     bool isBaseOffset() const;
+    bool isBaseOffsetDirty() const;
     void setBaseOffset(const bool enabled);
 
     bool isReversed() const;
+    bool isReversedDirty() const;
     void setReversed(const bool enabled);
 
     bool isInterpret() const;
+    bool isInterpretDirty() const;
     void setInterpret(const bool enabled);
 
     AxisDisplayType axisDisplay() const;
+    bool axisDisplayDirty() const;
     void setAxisDisplay(AxisDisplayType display);
 
     AxisInterpretationType axisInterpretation() const;
+    bool axisInterpretationDirty() const;
     void setAxisInterpretation(AxisInterpretationType interpretation);
 
     int labelRotation() const;
+    bool labelRotationDirty() const;
     void setLabelRotation(const int rotation);
+
+    void enableSingleEditOptions(bool enabled);
+    void clearTabValues();
 
   public Q_SLOTS:
     void updateButtons();

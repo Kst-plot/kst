@@ -28,6 +28,8 @@ class ObjectStore;
 class PlotItem;
 class OverrideLabelTab;
 class DialogPageTab;
+class PlotAxis;
+class PlotMarkers;
 
 class KST_EXPORT PlotItemDialog : public ViewItemDialog
 {
@@ -51,6 +53,10 @@ class KST_EXPORT PlotItemDialog : public ViewItemDialog
     void useRightDefaultChanged(bool);
     void useAxisDefaultChanged(bool);
     void rangeChanged();
+    void editMultiple();
+    void editSingle();
+    void slotApply();
+
   private:
     void setupContent();
     void setupAxis();
@@ -60,8 +66,14 @@ class KST_EXPORT PlotItemDialog : public ViewItemDialog
     void addRelations();
     void updateRelations();
 
+    void saveAxis(PlotAxis *item, AxisTab *axisTab);
+    void saveRange(PlotItem *item);
+    void saveLabels(PlotItem *item);
+    void saveMarkers(PlotAxis *item, PlotMarkers& markers);
+
   private:
     PlotItem* _plotItem;
+    QString _defaultTagString;
 
     ContentTab *_contentTab;
     AxisTab *_xAxisTab;

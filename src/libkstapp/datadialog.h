@@ -75,7 +75,7 @@ class KST_EXPORT DataDialog : public Dialog {
     QCheckBox *_tagStringAuto;
     QLabel *_shortName;
     QLabel *_nameLabel;
-    QPushButton *_expand;
+    QPushButton *_editMultipleButton;
     ObjectPtr _dataObject;
     EditMode _mode;
     bool _modified;

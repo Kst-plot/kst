@@ -26,18 +26,31 @@ class KST_EXPORT FillTab : public DialogTab, Ui::FillTab {
     virtual ~FillTab();
 
     QColor color() const;
+    bool colorDirty() const;
     void setColor(const QColor &color);
 
     Qt::BrushStyle style() const;
+    bool styleDirty() const;
     void setStyle(Qt::BrushStyle style);
 
     QGradient gradient() const;
+    bool gradientDirty() const;
     void setGradient(const QGradient &gradient);
+
+    bool useGradient() const;
+    bool useGradientDirty() const;
+    void setUseGradient(const bool useGradient);
 
     GradientEditor *gradientEditor() { return _gradientEditor; }
 
+    void enableSingleEditOptions(bool enabled);
+    void clearTabValues();
+
   public Q_SLOTS:
     void updateButtons();
+
+  private:
+    bool _multiEdit;
 };
 
 }

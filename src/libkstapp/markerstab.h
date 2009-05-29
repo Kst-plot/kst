@@ -59,14 +59,20 @@ class KST_EXPORT MarkersTab : public DialogTab, Ui::MarkersTab {
     PlotMarkers plotMarkers() const;
     void setPlotMarkers(const PlotMarkers &plotMarkers);
 
+    bool markersDirty() const { return _dirty; }
+    void enableSingleEditOptions(bool enabled);
+    void clearTabValues();
+
   public Q_SLOTS:
     void add();
     void remove();
     void clear();
     void update();
+    void setDirty() { _dirty = true; }
 
   private:
     PlotMarkers _plotMarkers;
+    bool _dirty;
 };
 
 }

@@ -19,7 +19,7 @@
 namespace Kst {
 
 Dialog::Dialog(QWidget *parent)
-  : QDialog(parent) {
+  : QDialog(parent), _allowApply(false) {
 
   setupUi(this);
 
@@ -136,7 +136,9 @@ void Dialog::buttonClicked(QAbstractButton *button) {
     emit ok();
     break;
   case QDialogButtonBox::Apply:
-    _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
+    if (!_allowApply) {
+      _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
+    }
     emit apply();
     break;
   case QDialogButtonBox::Cancel:
@@ -144,6 +146,14 @@ void Dialog::buttonClicked(QAbstractButton *button) {
     break;
   default:
     break;
+  }
+}
+
+
+void Dialog::setAlwaysAllowApply(const bool allow) {
+  _allowApply = allow;
+  if (!allow) {
+    _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
   }
 }
 

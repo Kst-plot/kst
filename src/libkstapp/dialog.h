@@ -37,6 +37,8 @@ class KST_EXPORT Dialog : public QDialog, public Ui::Dialog
     DialogPage* getDialogPage(const QString &pageName);
     void selectDialogPage(DialogPage *page);
 
+    void setAlwaysAllowApply(const bool allow);
+
   Q_SIGNALS:
     void ok();
     void apply();
@@ -59,6 +61,7 @@ class KST_EXPORT Dialog : public QDialog, public Ui::Dialog
 
   private:
     QHash<QListWidgetItem*, DialogPage*> _itemHash;
+    bool _allowApply;
 };
 
 }

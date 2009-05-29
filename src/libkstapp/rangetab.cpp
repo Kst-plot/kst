@@ -42,10 +42,14 @@ RangeTab::RangeTab(PlotItem* plotItem, QWidget *parent)
   connect(_yMin, SIGNAL(textEdited(const QString &)), this, SIGNAL(modified()));
   connect(_yMax, SIGNAL(textEdited(const QString &)), this, SIGNAL(modified()));
   connect(_yRange, SIGNAL(textEdited(const QString &)), this, SIGNAL(modified()));
+
+  connect(this, SIGNAL(modified()), this, SLOT(updateButtons()));
 }
+
 
 RangeTab::~RangeTab() {
 }
+
 
 void RangeTab::setupRange() {
   Q_ASSERT(_plotItem);
@@ -98,8 +102,104 @@ void RangeTab::setupRange() {
   }
 }
 
+
 void RangeTab::modified() {
   emit tabModified();
 }
 
+
+void RangeTab::clearTabValues() {
+
+  _xHidden->setChecked(true);
+  _yHidden->setChecked(true);
+  _xRange->clear();
+  _xMin->clear();
+  _xMax->clear();
+
+  _yRange->clear();
+  _yMin->clear();
+  _yMax->clear();
 }
+
+
+void RangeTab::updateButtons() {
+  if (!_xHidden->isChecked()) {
+    label->setEnabled(_xMean->isChecked());
+    _xRange->setEnabled(_xMean->isChecked());
+
+    label_2->setEnabled(_xFixed->isChecked());
+    _xMin->setEnabled(_xFixed->isChecked());
+    label_3->setEnabled(_xFixed->isChecked());
+    _xMax->setEnabled(_xFixed->isChecked());
+  } else {
+    label->setEnabled(true);
+    _xRange->setEnabled(true);
+
+    label_2->setEnabled(true);
+    _xMin->setEnabled(true);
+    label_3->setEnabled(true);
+    _xMax->setEnabled(true);
+  }
+
+  if (!_yHidden->isChecked()) {
+    label_4->setEnabled(_yMean->isChecked());
+    _yRange->setEnabled(_yMean->isChecked());
+
+    label_5->setEnabled(_yFixed->isChecked());
+    _yMin->setEnabled(_yFixed->isChecked());
+    label_6->setEnabled(_yFixed->isChecked());
+    _yMax->setEnabled(_yFixed->isChecked());
+  } else {
+    label_4->setEnabled(true);
+    _yRange->setEnabled(true);
+
+    label_5->setEnabled(true);
+    _yMin->setEnabled(true);
+    label_6->setEnabled(true);
+    _yMax->setEnabled(true);
+  }
+
+}
+
+
+bool RangeTab::xModeDirty() const {
+  return (!_xHidden->isChecked());
+}
+
+
+bool RangeTab::xRangeDirty() const {
+  return (!_xRange->text().isEmpty());
+}
+
+
+bool RangeTab::xMinDirty() const {
+  return (!_xMin->text().isEmpty());
+}
+
+
+bool RangeTab::xMaxDirty() const {
+  return (!_xMax->text().isEmpty());
+}
+
+
+bool RangeTab::yModeDirty() const {
+  return (!_yHidden->isChecked());
+}
+
+
+bool RangeTab::yRangeDirty() const {
+  return (!_yRange->text().isEmpty());
+}
+
+
+bool RangeTab::yMinDirty() const {
+  return (!_yMin->text().isEmpty());
+}
+
+
+bool RangeTab::yMaxDirty() const {
+  return (!_yMax->text().isEmpty());
+}
+
+}
+

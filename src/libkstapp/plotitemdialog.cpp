@@ -22,6 +22,7 @@
 #include "objectstore.h"
 #include "mainwindow.h"
 #include "document.h"
+#include "plotitemmanager.h"
 
 #include "curve.h"
 #include "curvedialog.h"
@@ -33,10 +34,13 @@
 #include "filltab.h"
 #include "stroketab.h"
 
+
 namespace Kst {
 
 PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
-    : ViewItemDialog(item, parent), _plotItem(item) {
+    : ViewItemDialog(item, parent), _plotItem(item), _defaultTagString("<Auto Name>") {
+
+  Q_ASSERT(_plotItem);
 
   _store = kstApp->mainWindow()->document()->objectStore();
 
@@ -60,11 +64,6 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
   addDialogPage(_labelPage);
 
   connect(_labelTab, SIGNAL(apply()), this, SLOT(labelsChanged()));
-  connect(_topLabelTab, SIGNAL(apply()), this, SLOT(labelsChanged()));
-  connect(_bottomLabelTab, SIGNAL(apply()), this, SLOT(labelsChanged()));
-  connect(_leftLabelTab, SIGNAL(apply()), this, SLOT(labelsChanged()));
-  connect(_rightLabelTab, SIGNAL(apply()), this, SLOT(labelsChanged()));
-  connect(_axisLabelTab, SIGNAL(apply()), this, SLOT(labelsChanged()));
   connect(_labelTab, SIGNAL(globalFontUpdate()), this, SLOT(globalFontUpdate()));
 
   connect(_topLabelTab, SIGNAL(useDefaultChanged(bool)), this, SLOT(useTopDefaultChanged(bool)));
@@ -125,6 +124,24 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
   setupRange();
   setupLabels();
   setupMarkers();
+
+  setSupportsMultipleEdit(true);
+
+  if (_plotItem->descriptiveNameIsManual()) {
+    setTagString(_plotItem->descriptiveName());
+  } else {
+    setTagString(_defaultTagString);
+  }
+
+  QList<PlotItem*> list = PlotItemManager::plotsForView(_plotItem->parentView());
+  clearMultipleEditOptions();
+  foreach(PlotItem* plot, list) {
+    addMultipleEditOption(plot->plotName(), plot->descriptionTip(), plot);
+  }
+
+  connect(this, SIGNAL(editMultipleMode()), this, SLOT(editMultiple()));
+  connect(this, SIGNAL(editSingleMode()), this, SLOT(editSingle()));
+  connect(this, SIGNAL(apply()), this, SLOT(slotApply()));
 }
 
 
@@ -132,8 +149,50 @@ PlotItemDialog::~PlotItemDialog() {
 }
 
 
+void PlotItemDialog::editMultiple() {
+  _xAxisTab->clearTabValues();
+  _yAxisTab->clearTabValues();
+  _rangeTab->clearTabValues();
+  _labelTab->clearTabValues();
+  _labelTab->enableSingleEditOptions(false);
+  _topLabelTab->clearTabValues();
+  _bottomLabelTab->clearTabValues();
+  _leftLabelTab->clearTabValues();
+  _rightLabelTab->clearTabValues();
+  _axisLabelTab->clearTabValues();
+  _xMarkersTab->clearTabValues();
+  _yMarkersTab->clearTabValues();
+  _contentTab->setEnabled(false);
+  foreach(DialogPage* page, _relationPages) {
+    removeDialogPage(page);
+  }
+  _relationPages.clear();
+}
+
+
+void PlotItemDialog::editSingle() {
+  _contentTab->setEnabled(true);
+  updateRelations();
+  setupContent();
+  setupAxis();
+  setupRange();
+  setupLabels();
+  setupMarkers();
+  setAlwaysAllowApply(false);
+}
+
+
+void PlotItemDialog::slotApply() {
+  if (editMode() == Single) {
+    _plotItem->setDescriptiveName(tagString().replace(_defaultTagString, QString()));
+  }
+}
+
+
 void PlotItemDialog::setupLabels() {
   Q_ASSERT(_plotItem);
+
+  _labelTab->enableSingleEditOptions(true);
 
   _labelTab->setLeftLabel(_plotItem->leftLabel());
   _labelTab->setBottomLabel(_plotItem->bottomLabel());
@@ -147,26 +206,31 @@ void PlotItemDialog::setupLabels() {
 
   _labelTab->setShowLegend(_plotItem->showLegend());
 
+  _topLabelTab->enableSingleEditOptions(true);
   _topLabelTab->setUseDefault(_plotItem->topLabelDetails()->fontUseGlobal());
   _topLabelTab->setLabelFont(_plotItem->topLabelDetails()->font());
   _topLabelTab->setLabelFontScale(_plotItem->topLabelDetails()->fontScale());
   _topLabelTab->setLabelColor(_plotItem->topLabelDetails()->fontColor());
 
+  _bottomLabelTab->enableSingleEditOptions(true);
   _bottomLabelTab->setUseDefault(_plotItem->bottomLabelDetails()->fontUseGlobal());
   _bottomLabelTab->setLabelFont(_plotItem->bottomLabelDetails()->font());
   _bottomLabelTab->setLabelFontScale(_plotItem->bottomLabelDetails()->fontScale());
   _bottomLabelTab->setLabelColor(_plotItem->bottomLabelDetails()->fontColor());
 
+  _leftLabelTab->enableSingleEditOptions(true);
   _leftLabelTab->setUseDefault(_plotItem->leftLabelDetails()->fontUseGlobal());
   _leftLabelTab->setLabelFont(_plotItem->leftLabelDetails()->font());
   _leftLabelTab->setLabelFontScale(_plotItem->leftLabelDetails()->fontScale());
   _leftLabelTab->setLabelColor(_plotItem->leftLabelDetails()->fontColor());
 
+  _rightLabelTab->enableSingleEditOptions(true);
   _rightLabelTab->setUseDefault(_plotItem->rightLabelDetails()->fontUseGlobal());
   _rightLabelTab->setLabelFont(_plotItem->rightLabelDetails()->font());
   _rightLabelTab->setLabelFontScale(_plotItem->rightLabelDetails()->fontScale());
   _rightLabelTab->setLabelColor(_plotItem->rightLabelDetails()->fontColor());
 
+  _axisLabelTab->enableSingleEditOptions(true);
   _axisLabelTab->setUseDefault(_plotItem->numberLabelDetails()->fontUseGlobal());
   _axisLabelTab->setLabelFont(_plotItem->numberLabelDetails()->font());
   _axisLabelTab->setLabelFontScale(_plotItem->numberLabelDetails()->fontScale());
@@ -182,6 +246,7 @@ void PlotItemDialog::setupRange() {
 void PlotItemDialog::setupAxis() {
   Q_ASSERT(_plotItem);
 
+  _xAxisTab->enableSingleEditOptions(true);
   _xAxisTab->setAxisMajorTickSpacing(_plotItem->xAxis()->axisMajorTickMode());
   _xAxisTab->setDrawAxisMajorTicks(_plotItem->xAxis()->drawAxisMajorTicks());
   _xAxisTab->setDrawAxisMajorGridLines(_plotItem->xAxis()->drawAxisMajorGridLines());
@@ -202,6 +267,7 @@ void PlotItemDialog::setupAxis() {
   _xAxisTab->setSignificantDigits(_plotItem->xAxis()->axisSignificantDigits());
   _xAxisTab->setLabelRotation(_plotItem->xAxis()->axisLabelRotation());
 
+  _yAxisTab->enableSingleEditOptions(true);
   _yAxisTab->setAxisMajorTickSpacing(_plotItem->yAxis()->axisMajorTickMode());
   _yAxisTab->setDrawAxisMajorTicks(_plotItem->yAxis()->drawAxisMajorTicks());
   _yAxisTab->setDrawAxisMajorGridLines(_plotItem->yAxis()->drawAxisMajorGridLines());
@@ -227,7 +293,9 @@ void PlotItemDialog::setupAxis() {
 void PlotItemDialog::setupMarkers() {
   Q_ASSERT(_plotItem);
 
+  _xMarkersTab->enableSingleEditOptions(true);
   _xMarkersTab->setPlotMarkers(_plotItem->xAxis()->axisPlotMarkers());
+  _yMarkersTab->enableSingleEditOptions(true);
   _yMarkersTab->setPlotMarkers(_plotItem->yAxis()->axisPlotMarkers());
 }
 
@@ -443,150 +511,298 @@ void PlotItemDialog::relationChanged() {
     }
   }
 }
-  QPointer<PlotItem> item;
-  QRectF projectionRect;
-  int xAxisZoomMode;
-  int yAxisZoomMode;
-  bool isXAxisLog;
-  bool isYAxisLog;
-  qreal xLogBase;
-  qreal yLogBase;
+
 
 void PlotItemDialog::rangeChanged() {
   Q_ASSERT(_plotItem);
+  if (editMode() == Multiple) {
+    foreach(ViewItem* item, selectedMultipleEditObjects()) {
+      PlotItem* plotItem = (PlotItem*)item;
+      saveRange(plotItem);
+    }
+  } else {
+    saveRange(_plotItem);
+  }
+  kstApp->mainWindow()->document()->setChanged(true);
+}
+
+
+void PlotItemDialog::saveRange(PlotItem *item) {
   ZoomState zoomstate;
   double x;
   double y;
   double w;
   double h;
 
-  zoomstate = _plotItem->currentZoomState();
+  zoomstate = item->currentZoomState();
 
-  zoomstate.item = _plotItem;
-  if (_rangeTab->xMean()) {
-    w = (_rangeTab->xRange());
-    x = (_plotItem->xMin() + _plotItem->xMax()-w)/2.0;
-  } else {
-    x = qMin(_rangeTab->xMax(), _rangeTab->xMin());
-    w = fabs(_rangeTab->xMax() - _rangeTab->xMin());
-  }
-  if (_rangeTab->yMean()) {
-    h = (_rangeTab->yRange());
-    y = (_plotItem->yMax() + _plotItem->yMin()-h)/2;
-  } else {
-    y = qMin(_rangeTab->yMax(), _rangeTab->yMin());
-    h = fabs(_rangeTab->yMax() - _rangeTab->yMin());
-  }
+  qreal xRange = _rangeTab->xRangeDirty() ? _rangeTab->xRange() :fabs(item->xMax() - item->xMin());
+  qreal xMax = _rangeTab->xMaxDirty() ? _rangeTab->xMax() :item->xMax();
+  qreal xMin = _rangeTab->xMinDirty() ? _rangeTab->xMin() :item->xMin();
 
+  qreal yRange = _rangeTab->yRangeDirty() ? _rangeTab->yRange() :fabs(item->yMax() - item->yMin());
+  qreal yMax = _rangeTab->yMaxDirty() ? _rangeTab->yMax() :item->yMax();
+  qreal yMin = _rangeTab->yMinDirty() ? _rangeTab->yMin() :item->yMin();
+
+  zoomstate.item = item;
+
+  if ((_rangeTab->xModeDirty() && _rangeTab->xMean()) || (!_rangeTab->xModeDirty() && zoomstate.xAxisZoomMode == PlotAxis::MeanCentered)) {
+    w = xRange;
+    x = (item->xMin() + item->xMax()-w)/2.0;
+  } else {
+    x = qMin(xMax, xMin);
+    w = fabs(xMax - xMin);
+  }
   if (w == 0.0) w = 0.2;
+
+  if ((_rangeTab->yModeDirty() && _rangeTab->yMean()) || (!_rangeTab->yModeDirty() && zoomstate.yAxisZoomMode == PlotAxis::MeanCentered)) {
+    h = yRange;
+    y = (item->yMin() + item->yMax()-h)/2.0;
+  } else {
+    y = qMin(yMax, yMin);
+    h = fabs(yMax - yMin);
+  }
   if (h == 0.0) h = 0.2;
 
-  if (_rangeTab->xAuto()) {
-  } else if (_rangeTab->xSpike()) {
-    zoomstate.xAxisZoomMode = PlotAxis::SpikeInsensitive;
-  } else if (_rangeTab->xBorder()) {
-    zoomstate.xAxisZoomMode = PlotAxis::AutoBorder;
-  } else if (_rangeTab->xMean()) {
-    zoomstate.xAxisZoomMode = PlotAxis::MeanCentered;
-  } else if (_rangeTab->xFixed()) {
-    zoomstate.xAxisZoomMode = PlotAxis::FixedExpression;
+  if (_rangeTab->xModeDirty()) {
+    if (_rangeTab->xAuto()) {
+    } else if (_rangeTab->xSpike()) {
+      zoomstate.xAxisZoomMode = PlotAxis::SpikeInsensitive;
+    } else if (_rangeTab->xBorder()) {
+      zoomstate.xAxisZoomMode = PlotAxis::AutoBorder;
+    } else if (_rangeTab->xMean()) {
+      zoomstate.xAxisZoomMode = PlotAxis::MeanCentered;
+    } else if (_rangeTab->xFixed()) {
+      zoomstate.xAxisZoomMode = PlotAxis::FixedExpression;
+    }
   }
 
-  if (_rangeTab->yAuto()) {
-    zoomstate.yAxisZoomMode = PlotAxis::Auto;
-  } else if (_rangeTab->ySpike()) {
-    zoomstate.yAxisZoomMode = PlotAxis::SpikeInsensitive;
-  } else if (_rangeTab->yBorder()) {
-    zoomstate.yAxisZoomMode = PlotAxis::AutoBorder;
-  } else if (_rangeTab->yMean()) {
-    zoomstate.yAxisZoomMode = PlotAxis::MeanCentered;
-  } else if (_rangeTab->yFixed()) {
-    zoomstate.yAxisZoomMode = PlotAxis::FixedExpression;
+  if (_rangeTab->yModeDirty()) {
+    if (_rangeTab->yAuto()) {
+      zoomstate.yAxisZoomMode = PlotAxis::Auto;
+    } else if (_rangeTab->ySpike()) {
+      zoomstate.yAxisZoomMode = PlotAxis::SpikeInsensitive;
+    } else if (_rangeTab->yBorder()) {
+      zoomstate.yAxisZoomMode = PlotAxis::AutoBorder;
+    } else if (_rangeTab->yMean()) {
+      zoomstate.yAxisZoomMode = PlotAxis::MeanCentered;
+    } else if (_rangeTab->yFixed()) {
+      zoomstate.yAxisZoomMode = PlotAxis::FixedExpression;
+    }
   }
   zoomstate.projectionRect = QRectF(x,y,w,h);
 
-  _plotItem->zoomGeneral(zoomstate);
+  item->zoomGeneral(zoomstate);
 }
+
 
 void PlotItemDialog::xAxisChanged() {
   Q_ASSERT(_plotItem);
-
-  _plotItem->xAxis()->setAxisMajorTickMode(_xAxisTab->axisMajorTickSpacing());
-  _plotItem->xAxis()->setDrawAxisMajorTicks(_xAxisTab->drawAxisMajorTicks());
-  _plotItem->xAxis()->setDrawAxisMajorGridLines(_xAxisTab->drawAxisMajorGridLines());
-  _plotItem->xAxis()->setDrawAxisMinorTicks(_xAxisTab->drawAxisMinorTicks());
-  _plotItem->xAxis()->setDrawAxisMinorGridLines(_xAxisTab->drawAxisMinorGridLines());
-  _plotItem->xAxis()->setAxisMajorGridLineColor(_xAxisTab->axisMajorGridLineColor());
-  _plotItem->xAxis()->setAxisMinorGridLineColor(_xAxisTab->axisMinorGridLineColor());
-  _plotItem->xAxis()->setAxisMajorGridLineStyle(_xAxisTab->axisMajorGridLineStyle());
-  _plotItem->xAxis()->setAxisMinorGridLineStyle(_xAxisTab->axisMinorGridLineStyle());
-  _plotItem->xAxis()->setAxisLog(_xAxisTab->isLog());
-  _plotItem->xAxis()->setAxisReversed(_xAxisTab->isReversed());
-  _plotItem->xAxis()->setAxisInterpret(_xAxisTab->isInterpret());
-  _plotItem->xAxis()->setAxisDisplay(_xAxisTab->axisDisplay());
-  _plotItem->xAxis()->setAxisInterpretation(_xAxisTab->axisInterpretation());
-  _plotItem->xAxis()->setAxisBaseOffset(_xAxisTab->isBaseOffset());
-  _plotItem->xAxis()->setAxisAutoBaseOffset(_xAxisTab->isAutoBaseOffset());
-  _plotItem->xAxis()->setAxisMinorTickCount(_xAxisTab->axisMinorTickCount());
-  _plotItem->xAxis()->setAxisSignificantDigits(_xAxisTab->significantDigits());
-  _plotItem->xAxis()->setAxisLabelRotation(_xAxisTab->labelRotation());
-  _plotItem->setProjectionRect(_plotItem->projectionRect(), _plotItem->xAxis()->isDirty());
+  if (editMode() == Multiple) {
+    foreach(ViewItem* item, selectedMultipleEditObjects()) {
+      PlotItem* plotItem = (PlotItem*)item;
+      saveAxis(plotItem->xAxis(), _xAxisTab);
+      plotItem->setProjectionRect(plotItem->projectionRect(), plotItem->xAxis()->isDirty());
+    }
+  } else {
+    saveAxis(_plotItem->xAxis(), _xAxisTab);
+    _plotItem->setProjectionRect(_plotItem->projectionRect(), _plotItem->xAxis()->isDirty());
+  }
+  kstApp->mainWindow()->document()->setChanged(true);
 }
 
 
 void PlotItemDialog::yAxisChanged() {
   Q_ASSERT(_plotItem);
+  if (editMode() == Multiple) {
+    foreach(ViewItem* item, selectedMultipleEditObjects()) {
+      PlotItem* plotItem = (PlotItem*)item;
+      saveAxis(plotItem->yAxis(), _yAxisTab);
+      plotItem->setProjectionRect(plotItem->projectionRect(), plotItem->yAxis()->isDirty());
+    }
+  } else {
+    saveAxis(_plotItem->yAxis(), _yAxisTab);
+    _plotItem->setProjectionRect(_plotItem->projectionRect(), _plotItem->yAxis()->isDirty());
+  }
+  kstApp->mainWindow()->document()->setChanged(true);
+}
 
-  _plotItem->yAxis()->setAxisMajorTickMode(_yAxisTab->axisMajorTickSpacing());
-  _plotItem->yAxis()->setDrawAxisMajorTicks(_yAxisTab->drawAxisMajorTicks());
-  _plotItem->yAxis()->setDrawAxisMajorGridLines(_yAxisTab->drawAxisMajorGridLines());
-  _plotItem->yAxis()->setDrawAxisMinorTicks(_yAxisTab->drawAxisMinorTicks());
-  _plotItem->yAxis()->setDrawAxisMinorGridLines(_yAxisTab->drawAxisMinorGridLines());
-  _plotItem->yAxis()->setAxisMajorGridLineColor(_yAxisTab->axisMajorGridLineColor());
-  _plotItem->yAxis()->setAxisMinorGridLineColor(_yAxisTab->axisMinorGridLineColor());
-  _plotItem->yAxis()->setAxisMajorGridLineStyle(_yAxisTab->axisMajorGridLineStyle());
-  _plotItem->yAxis()->setAxisMinorGridLineStyle(_yAxisTab->axisMinorGridLineStyle());
-  _plotItem->yAxis()->setAxisLog(_yAxisTab->isLog());
-  _plotItem->yAxis()->setAxisReversed(_yAxisTab->isReversed());
-  _plotItem->yAxis()->setAxisInterpret(_yAxisTab->isInterpret());
-  _plotItem->yAxis()->setAxisDisplay(_yAxisTab->axisDisplay());
-  _plotItem->yAxis()->setAxisInterpretation(_yAxisTab->axisInterpretation());
-  _plotItem->yAxis()->setAxisAutoBaseOffset(_yAxisTab->isAutoBaseOffset());
-  _plotItem->yAxis()->setAxisBaseOffset(_yAxisTab->isBaseOffset());
-  _plotItem->yAxis()->setAxisMinorTickCount(_yAxisTab->axisMinorTickCount());
-  _plotItem->yAxis()->setAxisSignificantDigits(_yAxisTab->significantDigits());
-  _plotItem->yAxis()->setAxisLabelRotation(_yAxisTab->labelRotation());
-  _plotItem->setProjectionRect(_plotItem->projectionRect(), _plotItem->yAxis()->isDirty());
+
+void PlotItemDialog::saveAxis(PlotAxis *axis, AxisTab *axisTab) {
+  Q_ASSERT(axis);
+  if (axisTab->axisMajorTickSpacingDirty()) {
+    axis->setAxisMajorTickMode(axisTab->axisMajorTickSpacing());
+  }
+  if (axisTab->drawAxisMajorTicksDirty()) {
+    axis->setDrawAxisMajorTicks(axisTab->drawAxisMajorTicks());
+  }
+  if (axisTab->drawAxisMajorGridLinesDirty()) {
+    axis->setDrawAxisMajorGridLines(axisTab->drawAxisMajorGridLines());
+  }
+  if (axisTab->drawAxisMinorTicksDirty()) {
+    axis->setDrawAxisMinorTicks(axisTab->drawAxisMinorTicks());
+  }
+  if (axisTab->drawAxisMinorGridLinesDirty()) {
+    axis->setDrawAxisMinorGridLines(axisTab->drawAxisMinorGridLines());
+  }
+  if (axisTab->axisMajorGridLineColorDirty()) {
+    axis->setAxisMajorGridLineColor(axisTab->axisMajorGridLineColor());
+  }
+  if (axisTab->axisMinorGridLineColorDirty()) {
+    axis->setAxisMinorGridLineColor(axisTab->axisMinorGridLineColor());
+  }
+  if (axisTab->axisMajorGridLineStyleDirty()) {
+    axis->setAxisMajorGridLineStyle(axisTab->axisMajorGridLineStyle());
+  }
+  if (axisTab->axisMinorGridLineStyleDirty()) {
+    axis->setAxisMinorGridLineStyle(axisTab->axisMinorGridLineStyle());
+  }
+  if (axisTab->isLogDirty()) {
+    axis->setAxisLog(axisTab->isLog());
+  }
+  if (axisTab->isReversedDirty()) {
+    axis->setAxisReversed(axisTab->isReversed());
+  }
+  if (axisTab->isInterpretDirty()) {
+    axis->setAxisInterpret(axisTab->isInterpret());
+  }
+  if (axisTab->axisDisplayDirty()) {
+    axis->setAxisDisplay(axisTab->axisDisplay());
+  }
+  if (axisTab->axisInterpretationDirty()) {
+    axis->setAxisInterpretation(axisTab->axisInterpretation());
+  }
+  if (axisTab->isBaseOffsetDirty()) {
+    axis->setAxisBaseOffset(axisTab->isBaseOffset());
+  }
+  if (axisTab->axisMinorTickCountDirty()) {
+    axis->setAxisMinorTickCount(axisTab->axisMinorTickCount());
+  }
+  if (axisTab->significantDigitsDirty()) {
+    axis->setAxisSignificantDigits(axisTab->significantDigits());
+  }
+  if (axisTab->isBaseOffsetDirty()) {
+    axis->setAxisBaseOffset(axisTab->isBaseOffset());
+  }
+  if (axisTab->isAutoBaseOffsetDirty()) {
+    axis->setAxisAutoBaseOffset(axisTab->isAutoBaseOffset());
+  }
+  if (axisTab->labelRotationDirty()) {
+    axis->setAxisLabelRotation(axisTab->labelRotation());
+  }
 }
 
 
 void PlotItemDialog::labelsChanged() {
   Q_ASSERT(_plotItem);
+  if (editMode() == Multiple) {
+    foreach(ViewItem* item, selectedMultipleEditObjects()) {
+      PlotItem* plotItem = (PlotItem*)item;
+      saveLabels(plotItem);
+    }
+  } else {
+    saveLabels(_plotItem);
+  }
+  kstApp->mainWindow()->document()->setChanged(true);
+}
 
-  _plotItem->leftLabelDetails()->setDetails(_labelTab->leftLabel(), _labelTab->leftLabelAuto(), _leftLabelTab->useDefault(), _leftLabelTab->labelFont(), _leftLabelTab->labelFontScale(), _leftLabelTab->labelColor());
-  _plotItem->bottomLabelDetails()->setDetails(_labelTab->bottomLabel(), _labelTab->bottomLabelAuto(), _bottomLabelTab->useDefault(), _bottomLabelTab->labelFont(), _bottomLabelTab->labelFontScale(), _bottomLabelTab->labelColor());
-  _plotItem->rightLabelDetails()->setDetails(_labelTab->rightLabel(), _labelTab->rightLabelAuto(), _rightLabelTab->useDefault(), _rightLabelTab->labelFont(), _rightLabelTab->labelFontScale(), _rightLabelTab->labelColor());
-  _plotItem->topLabelDetails()->setDetails(_labelTab->topLabel(), _labelTab->topLabelAuto(), _topLabelTab->useDefault(), _topLabelTab->labelFont(), _topLabelTab->labelFontScale(), _topLabelTab->labelColor());
-  _plotItem->numberLabelDetails()->setDetails(QString(), false, _axisLabelTab->useDefault(), _axisLabelTab->labelFont(), _axisLabelTab->labelFontScale(), _axisLabelTab->labelColor());
 
-  _plotItem->setGlobalFont(_labelTab->globalLabelFont());
-  _plotItem->setGlobalFontScale(_labelTab->globalLabelFontScale());
-  _plotItem->setGlobalFontColor(_labelTab->globalLabelColor());
+void PlotItemDialog::saveLabels(PlotItem *item) {
+  QString leftLabel = _labelTab->leftLabelDirty() ? _labelTab->leftLabel() :item->leftLabel();
+  bool leftLabelAuto = _labelTab->leftLabelAutoDirty() ? _labelTab->leftLabelAuto() :item->leftLabelDetails()->isAuto();
+  bool leftUseDefault = _leftLabelTab->useDefaultDirty() ? _leftLabelTab->useDefault() :item->leftLabelDetails()->fontUseGlobal();
+  QFont leftFont = _leftLabelTab->labelFontDirty() ? _leftLabelTab->labelFont() :item->leftLabelDetails()->font();
+  qreal leftFontScale = _leftLabelTab->labelFontScaleDirty() ? _leftLabelTab->labelFontScale() :item->leftLabelDetails()->fontScale();
+  QColor leftFontColor = _leftLabelTab->labelColorDirty() ? _leftLabelTab->labelColor() :item->leftLabelDetails()->fontColor();
 
-  _plotItem->setShowLegend(_labelTab->showLegend());
+  QString bottomLabel = _labelTab->bottomLabelDirty() ? _labelTab->bottomLabel() :item->bottomLabel();
+  bool bottomLabelAuto = _labelTab->bottomLabelAutoDirty() ? _labelTab->bottomLabelAuto() :item->bottomLabelDetails()->isAuto();
+  bool bottomUseDefault = _bottomLabelTab->useDefaultDirty() ? _bottomLabelTab->useDefault() :item->bottomLabelDetails()->fontUseGlobal();
+  QFont bottomFont = _bottomLabelTab->labelFontDirty() ? _bottomLabelTab->labelFont() :item->bottomLabelDetails()->font();
+  qreal bottomFontScale = _bottomLabelTab->labelFontScaleDirty() ? _bottomLabelTab->labelFontScale() :item->bottomLabelDetails()->fontScale();
+  QColor bottomFontColor = _bottomLabelTab->labelColorDirty() ? _bottomLabelTab->labelColor() :item->bottomLabelDetails()->fontColor();
+
+  QString rightLabel = _labelTab->rightLabelDirty() ? _labelTab->rightLabel() :item->rightLabel();
+  bool rightLabelAuto = _labelTab->rightLabelAutoDirty() ? _labelTab->rightLabelAuto() :item->rightLabelDetails()->isAuto();
+  bool rightUseDefault = _rightLabelTab->useDefaultDirty() ? _rightLabelTab->useDefault() :item->rightLabelDetails()->fontUseGlobal();
+  QFont rightFont = _rightLabelTab->labelFontDirty() ? _rightLabelTab->labelFont() :item->rightLabelDetails()->font();
+  qreal rightFontScale = _rightLabelTab->labelFontScaleDirty() ? _rightLabelTab->labelFontScale() :item->rightLabelDetails()->fontScale();
+  QColor rightFontColor = _rightLabelTab->labelColorDirty() ? _rightLabelTab->labelColor() :item->rightLabelDetails()->fontColor();
+
+  QString topLabel = _labelTab->topLabelDirty() ? _labelTab->topLabel() :item->topLabel();
+  bool topLabelAuto = _labelTab->topLabelAutoDirty() ? _labelTab->topLabelAuto() :item->topLabelDetails()->isAuto();
+  bool topUseDefault = _topLabelTab->useDefaultDirty() ? _topLabelTab->useDefault() :item->topLabelDetails()->fontUseGlobal();
+  QFont topFont = _topLabelTab->labelFontDirty() ? _topLabelTab->labelFont() :item->topLabelDetails()->font();
+  qreal topFontScale = _topLabelTab->labelFontScaleDirty() ? _topLabelTab->labelFontScale() :item->topLabelDetails()->fontScale();
+  QColor topFontColor = _topLabelTab->labelColorDirty() ? _topLabelTab->labelColor() :item->topLabelDetails()->fontColor();
+
+  bool axisUseDefault = _axisLabelTab->useDefaultDirty() ? _axisLabelTab->useDefault() :item->numberLabelDetails()->fontUseGlobal();
+  QFont axisFont = _axisLabelTab->labelFontDirty() ? _axisLabelTab->labelFont() :item->numberLabelDetails()->font();
+  qreal axisFontScale = _axisLabelTab->labelFontScaleDirty() ? _axisLabelTab->labelFontScale() :item->numberLabelDetails()->fontScale();
+  QColor axisFontColor = _axisLabelTab->labelColorDirty() ? _axisLabelTab->labelColor() :item->numberLabelDetails()->fontColor();
+
+  QFont globalFont = _labelTab->globalLabelFontDirty() ? _labelTab->globalLabelFont() :item->globalFont();
+  qreal globalFontScale = _labelTab->globalLabelFontScaleDirty() ? _labelTab->globalLabelFontScale() :item->globalFontScale();
+  QColor globalFontColor = _labelTab->globalLabelColorDirty() ? _labelTab->globalLabelColor() :item->globalFontColor();
+  bool showLegend = _labelTab->showLegendDirty() ? _labelTab->showLegend() :item->showLegend();
+
+  item->leftLabelDetails()->setDetails(leftLabel, leftLabelAuto, leftUseDefault, leftFont, leftFontScale, leftFontColor);
+  item->bottomLabelDetails()->setDetails(bottomLabel, bottomLabelAuto, bottomUseDefault, bottomFont, bottomFontScale, bottomFontColor);
+  item->rightLabelDetails()->setDetails(rightLabel, rightLabelAuto, rightUseDefault, rightFont, rightFontScale, rightFontColor);
+  item->topLabelDetails()->setDetails(topLabel, topLabelAuto, topUseDefault, topFont, topFontScale, topFontColor);
+  item->numberLabelDetails()->setDetails(QString(), false, axisUseDefault, axisFont, axisFontScale, axisFontColor);
+
+  item->setGlobalFont(globalFont);
+  item->setGlobalFontScale(globalFontScale);
+  item->setGlobalFontColor(globalFontColor);
+
+  item->setShowLegend(showLegend);
 }
 
 
 void PlotItemDialog::xAxisPlotMarkersChanged() {
   Q_ASSERT(_plotItem);
-  _plotItem->xAxis()->setAxisPlotMarkers(_xMarkersTab->plotMarkers());
+  if (!_xMarkersTab->markersDirty()) {
+    return;
+  }
+
+  PlotMarkers markers = _xMarkersTab->plotMarkers();
+  if (editMode() == Multiple) {
+    foreach(ViewItem* item, selectedMultipleEditObjects()) {
+      PlotItem* plotItem = (PlotItem*)item;
+      saveMarkers(plotItem->xAxis(), markers);
+    }
+  } else {
+    saveMarkers(_plotItem->xAxis(), markers);
+  }
+  kstApp->mainWindow()->document()->setChanged(true);
 }
 
 
 void PlotItemDialog::yAxisPlotMarkersChanged() {
   Q_ASSERT(_plotItem);
-  _plotItem->yAxis()->setAxisPlotMarkers(_yMarkersTab->plotMarkers());
+  if (!_yMarkersTab->markersDirty()) {
+    return;
+  }
+
+  PlotMarkers markers = _yMarkersTab->plotMarkers();
+  if (editMode() == Multiple) {
+    foreach(ViewItem* item, selectedMultipleEditObjects()) {
+      PlotItem* plotItem = (PlotItem*)item;
+      saveMarkers(plotItem->yAxis(), markers);
+    }
+  } else {
+    saveMarkers(_plotItem->yAxis(), markers);
+  }
+  kstApp->mainWindow()->document()->setChanged(true);
+
 }
+
+
+void PlotItemDialog::saveMarkers(PlotAxis *axis, PlotMarkers &markers) {
+  axis->setAxisPlotMarkers(markers);
+}
+
 
 void PlotItemDialog::useTopDefaultChanged(bool use) {
   if (use) {

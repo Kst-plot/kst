@@ -69,6 +69,11 @@ Qt::PenStyle StrokeTab::style() const {
 }
 
 
+bool StrokeTab::styleDirty() const {
+  return _style->currentIndex() != -1;
+}
+
+
 void StrokeTab::setStyle(Qt::PenStyle style) {
   _style->setCurrentIndex(_style->findData(QVariant(style)));
 }
@@ -76,6 +81,11 @@ void StrokeTab::setStyle(Qt::PenStyle style) {
 
 qreal StrokeTab::width() const {
   return _width->value();
+}
+
+
+bool StrokeTab::widthDirty() const {
+  return (!_width->text().isEmpty());
 }
 
 
@@ -89,6 +99,11 @@ QColor StrokeTab::brushColor() const {
 }
 
 
+bool StrokeTab::brushColorDirty() const {
+  return _brushColor->colorDirty();
+}
+
+
 void StrokeTab::setBrushColor(const QColor &color) {
   _brushColor->setColor(color);
 }
@@ -96,6 +111,11 @@ void StrokeTab::setBrushColor(const QColor &color) {
 
 Qt::BrushStyle StrokeTab::brushStyle() const {
   return Qt::BrushStyle(_brushStyle->itemData(_brushStyle->currentIndex()).toInt());
+}
+
+
+bool StrokeTab::brushStyleDirty() const {
+  return _brushStyle->currentIndex() != -1;
 }
 
 
@@ -109,6 +129,11 @@ Qt::PenJoinStyle StrokeTab::joinStyle() const {
 }
 
 
+bool StrokeTab::joinStyleDirty() const {
+  return _joinStyle->currentIndex() != -1;
+}
+
+
 void StrokeTab::setJoinStyle(Qt::PenJoinStyle style) {
   _joinStyle->setCurrentIndex(_joinStyle->findData(QVariant(style)));
 }
@@ -119,9 +144,27 @@ Qt::PenCapStyle StrokeTab::capStyle() const {
 }
 
 
+bool StrokeTab::capStyleDirty() const {
+  return _capStyle->currentIndex() != -1;
+}
+
+
 void StrokeTab::setCapStyle(Qt::PenCapStyle style) {
   _capStyle->setCurrentIndex(_capStyle->findData(QVariant(style)));
 }
+
+
+void StrokeTab::clearTabValues() {
+  _width->clear();
+
+  _style->setCurrentIndex(-1);
+  _brushStyle->setCurrentIndex(-1);
+  _joinStyle->setCurrentIndex(-1);
+  _capStyle->setCurrentIndex(-1);
+
+  _brushColor->clearSelection();
+}
+
 
 }
 

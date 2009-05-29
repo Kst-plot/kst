@@ -21,7 +21,7 @@
 namespace Kst {
 
 GradientEditor::GradientEditor(QWidget *parent)
-  : QWidget(parent), _gradient(0), _movingStop(-1) {
+  : QWidget(parent), _gradient(0), _movingStop(-1), _dirty(false) {
   setMouseTracking(true);
   setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
@@ -47,6 +47,7 @@ QGradient GradientEditor::gradient() const {
 
 
 void GradientEditor::setGradient(const QGradient &gradient) {
+  _dirty = false;
   setGradientStops(gradient.stops());
   update();
 }
@@ -58,9 +59,11 @@ void GradientEditor::setDefaultGradientStops(QGradientStops stops) {
 
 
 void GradientEditor::resetGradient() {
+  _dirty = true;
   QLinearGradient defaultGradient(1,0,0,0);
   clearGradientStops();
   setGradientStops(_defaultGradientStops);
+  emit changed(gradient());
   update();
 }
 
@@ -95,6 +98,7 @@ void GradientEditor::mouseReleaseEvent(QMouseEvent *event) {
     stop.color = color;
     stop.path = marker(position);
     _stopHash.insert(position, stop);
+    _dirty = true;
     emit changed(gradient());
     update();
   }
@@ -111,6 +115,7 @@ void GradientEditor::mouseMoveEvent(QMouseEvent *event) {
     stop.path = marker(position);
     _stopHash.insert(position, stop);
     _movingStop = position;
+    _dirty = true;
     emit changed(gradient());
   }
 

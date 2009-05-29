@@ -50,6 +50,7 @@ MarkersTab::MarkersTab(QWidget *parent)
   connect(_removeMarker, SIGNAL(clicked()), this, SLOT(remove()));
   connect(_clearMarkers, SIGNAL(clicked()), this, SLOT(clear()));
 
+  connect(this, SIGNAL(modified()), this, SLOT(setDirty()));
 
   update();
 }
@@ -275,6 +276,30 @@ void MarkersTab::setPlotMarkers(const PlotMarkers &plotMarkers) {
     setCurveSource(true);
   } else {
     setCurveSource(false);
+  }
+  _dirty = false;
+}
+
+
+void MarkersTab::clearTabValues() {
+  _currentMarkersList->clear();
+  _hidden->setChecked(true);
+  _markerLineStyle->setCurrentIndex(-1);
+  _markerLineColor->clearSelection();
+  _markerLineWidth->clear();
+
+  _curve->clearSelection();
+  _vector->clearSelection();
+
+  _curveMarkers->setCheckState(Qt::PartiallyChecked);
+  _vectorMarkers->setCheckState(Qt::PartiallyChecked);
+}
+
+
+void MarkersTab::enableSingleEditOptions(bool enabled) {
+  if (enabled) {
+    _curveMarkers->setTristate(false);
+    _vectorMarkers->setTristate(false);
   }
 }
 
