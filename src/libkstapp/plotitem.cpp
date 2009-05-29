@@ -3370,7 +3370,7 @@ void ZoomNormalizeYToXCommand::applyZoomTo(PlotItem *item) {
  */
 void ZoomXLogCommand::applyZoomTo(PlotItem *item) {
   item->xAxis()->setAxisLog(_enableLog);
-  item->setProjectionRect(item->computedProjectionRect()); //need to recompute
+  item->setProjectionRect(item->computedProjectionRect(), true); //need to recompute
 }
 
 
@@ -3379,7 +3379,7 @@ void ZoomXLogCommand::applyZoomTo(PlotItem *item) {
  */
 void ZoomYLogCommand::applyZoomTo(PlotItem *item) {
   item->yAxis()->setAxisLog(_enableLog);
-  item->setProjectionRect(item->computedProjectionRect()); //need to recompute
+  item->setProjectionRect(item->computedProjectionRect(), true); //need to recompute
 }
 
 
