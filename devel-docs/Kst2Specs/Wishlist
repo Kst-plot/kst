@@ -7,21 +7,21 @@ New Plot Label size mode: autoshrink.
 
 New tab in Data Wizard:
   There should be an option in the data wizard to create all of the new plots in a new tab.  1.x has this.
-*Mike*
+
 ----------
 
 XY Plots and Spectra in separate new tabs in data wizard.
   If XY plots and Spectra are both being created, there should be an option to create the Specta in a separate new tab.  1.x has this.
-*Mike*
+
 ----------
 Placement widget (eg, in the curve dialog)  needs a create in new tab option.
   1.x had a 'create new tab' button.  This is similar, but does
 the creation of the new tab after apply, and uses a default name rather than popping up a new dialog.
-*Mike*
+
 ---------
 When a new plot is added to an tab which already has plots in it (eg, from the Placement widget), then the label font sizes should be based on the label font sizes of the plots already in the tab.  (either 'vote' or use the first one).
 All font properties replicated.  Use the first one.
-*Mike*
+
 ---------
 
 'I' key in a plot with an image should adjust the image color scale; see 1.x for correct behavior.  Consider <shift>I as doing smaller steps.

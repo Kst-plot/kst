@@ -695,3 +695,9 @@ log-y (key 'l') works as expected.
 though the curves are drawn on a log scale.  Zooming in and pressing
 "M" fixes this.  Again, y-log works as expected.
 (cbn says 'confirmed')
+
+Legends don't appear to work:
+  With the data wizard, create a plot, and select to create a legend.
+    No legend.
+  Edit a plot.  In the label tab, select having a legend.  Apply
+    No legend...
