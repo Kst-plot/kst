@@ -34,6 +34,26 @@ Correct behavior:
   should behave as if it were tied, but the other should not.
   -If the tied zoom indicators are checked, then it should tie both axis.
 
+(ie, if only the x axis is shared, then only the x axis is tied; if only 
+ the y axis is shared, only the y axis is tied.)
+
+If axis are shared, then they must always have exactly the same
+range.  So 'M' (autoscale) must be set to the Max/Min over all of the 
+plots with the shared axis, not each inividually.
+
+---------------------------
+
+Shared axis not shared until a redraw.
+create plots with more than 1 column (eg, 6 plots in two columns).
+With a shared axis box, select two plots on the same row, so you
+would expect them to share a Y axis.  
+  -the bottom axis is suppresed on both.
+    (they should not be)
+  -The left axis on the right plot is not suppresed.
+    (it should be)
+until something is done to trigger a redraw (eg, a rescale) at which 
+time the plots are drawn correctly.
+
 ---------------------------
 
 Bugs Reported by D.V. Wiebe
@@ -87,4 +107,5 @@ QTextBrowser: No document for http://kst.kde.org/
 not change created objects.  Ie.  Grid setting will apply to all newly created Tabs, but not existing tabs currently.
 
 5) When starting Kst from a different folder, it creates another kstdatarc in the current folder instead of having one fixed rc file stored somewhere
-(cbn note: this appears to be masked using the run-kst script - which won't work if installed)
+cbn note: this appears to be masked using the run-kst script - which which sets the cwd to the directory where the script is located (I think).  The kstdatarc file should live in the standard kde config directory (on my machine, this is ~/.kde/share/config, but we need to verify where it is on Windows and Mac.
+
