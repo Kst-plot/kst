@@ -34,6 +34,7 @@
 #include "filltab.h"
 #include "stroketab.h"
 
+#include "math_kst.h"
 
 namespace Kst {
 
@@ -529,40 +530,75 @@ void PlotItemDialog::rangeChanged() {
 
 void PlotItemDialog::saveRange(PlotItem *item) {
   ZoomState zoomstate;
-  double x;
-  double y;
-  double w;
-  double h;
+  double newXMin, newXMax;
+  double newYMin, newYMax;
 
   zoomstate = item->currentZoomState();
 
   qreal xRange = _rangeTab->xRangeDirty() ? _rangeTab->xRange() :fabs(item->xMax() - item->xMin());
   qreal xMax = _rangeTab->xMaxDirty() ? _rangeTab->xMax() :item->xMax();
   qreal xMin = _rangeTab->xMinDirty() ? _rangeTab->xMin() :item->xMin();
+  if (item->xAxis()->axisLog()) {
+    if (xMax != item->xMax()) {
+      xMax = pow(10, xMax);
+    } else {
+      xMax = item->projectionRect().right();
+    }
+    if (xMin != item->xMin()) {
+      xMin = pow(10, xMin);
+    } else {
+      xMin = item->projectionRect().left();
+    }
+  }
 
   qreal yRange = _rangeTab->yRangeDirty() ? _rangeTab->yRange() :fabs(item->yMax() - item->yMin());
   qreal yMax = _rangeTab->yMaxDirty() ? _rangeTab->yMax() :item->yMax();
   qreal yMin = _rangeTab->yMinDirty() ? _rangeTab->yMin() :item->yMin();
 
+  if (item->yAxis()->axisLog()) {
+    if (yMax != item->yMax()) {
+      yMax = pow(10, yMax);
+    } else {
+      yMax = item->projectionRect().bottom();
+    }
+    if (yMin != item->yMin()) {
+      yMin = pow(10, yMin);
+    } else {
+      yMin = item->projectionRect().top();
+    }
+  }
+
   zoomstate.item = item;
 
   if ((_rangeTab->xModeDirty() && _rangeTab->xMean()) || (!_rangeTab->xModeDirty() && zoomstate.xAxisZoomMode == PlotAxis::MeanCentered)) {
-    w = xRange;
-    x = (item->xMin() + item->xMax()-w)/2.0;
+    if (item->xAxis()->axisLog()) {
+      qreal min = (item->xMin() + item->xMax() - xRange) / 2.0;
+      newXMin = pow(10, min);
+      newXMax = pow(10, min+xRange);
+    } else {
+      newXMax = xRange;
+      newXMin = (item->xMin() + item->xMax() - newXMax)/2.0;
+    }
   } else {
-    x = qMin(xMax, xMin);
-    w = fabs(xMax - xMin);
+    newXMin = qMin(xMax, xMin);
+    newXMax = fabs(xMax - xMin);
   }
-  if (w == 0.0) w = 0.2;
+  if (newXMax == 0.0) newXMax = 0.2;
 
   if ((_rangeTab->yModeDirty() && _rangeTab->yMean()) || (!_rangeTab->yModeDirty() && zoomstate.yAxisZoomMode == PlotAxis::MeanCentered)) {
-    h = yRange;
-    y = (item->yMin() + item->yMax()-h)/2.0;
+    if (item->yAxis()->axisLog()) {
+      qreal min = (item->yMin() + item->yMax() - yRange) / 2.0;
+      newYMin = pow(10, min);
+      newYMax = pow(10, min+yRange);
+    } else {
+      newYMax = yRange;
+      newYMin = (item->yMin() + item->yMax() - newYMax)/2.0;
+    }
   } else {
-    y = qMin(yMax, yMin);
-    h = fabs(yMax - yMin);
+    newYMin = qMin(yMax, yMin);
+    newYMax = fabs(yMax - yMin);
   }
-  if (h == 0.0) h = 0.2;
+  if (newYMax == 0.0) newYMax = 0.2;
 
   if (_rangeTab->xModeDirty()) {
     if (_rangeTab->xAuto()) {
@@ -590,7 +626,7 @@ void PlotItemDialog::saveRange(PlotItem *item) {
       zoomstate.yAxisZoomMode = PlotAxis::FixedExpression;
     }
   }
-  zoomstate.projectionRect = QRectF(x,y,w,h);
+  zoomstate.projectionRect = QRectF(newXMin, newYMin, newXMax, newYMax);
 
   item->zoomGeneral(zoomstate);
 }
