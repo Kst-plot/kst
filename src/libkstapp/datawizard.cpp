@@ -899,44 +899,40 @@ void DataWizard::finished() {
   bool xLabels = _pagePlot->xAxisLabels();
   bool yLabels = _pagePlot->yAxisLabels();
 
-  for (i_plot = 0; i_plot < plotList.count(); i_plot ++) { 
-    PlotItem *plotItem = plotList[i_plot];
-
-    Q_ASSERT(plotItem);
-
-    double fontScale = ApplicationSettings::self()->referenceFontSize()/sqrt((double) plotList.count()) - ApplicationSettings::self()->referenceFontSize()+ApplicationSettings::self()->referenceFontSize()/3;
-    if (fontScale>0) fontScale = 0;
-
-    plotItem->setGlobalFontScale(fontScale);
-    plotItem->leftLabelDetails()->setFontScale(fontScale);
-    plotItem->rightLabelDetails()->setFontScale(fontScale);
-    plotItem->topLabelDetails()->setFontScale(fontScale);
-    plotItem->bottomLabelDetails()->setFontScale(fontScale);
-    plotItem->numberLabelDetails()->setFontScale(fontScale);
-
-    if (!xLabels) {
-      plotItem->leftLabelDetails()->setText(QString(" "));
-      plotItem->rightLabelDetails()->setText(QString(" "));
-    }
-    if (!yLabels) {
-      plotItem->topLabelDetails()->setText(QString(" "));
-      plotItem->bottomLabelDetails()->setText(QString(" "));
-    }
-
-    if (_pagePlot->legendsOn()) {
-      plotItem->setShowLegend(true);
-      plotItem->legend()->setFontScale(fontScale);
-    } else if (_pagePlot->legendsAuto()) {
-      if (plotItem->renderItem(PlotRenderItem::Cartesian)->relationList().count() > 1) {
-        plotItem->setShowLegend(true);
-        plotItem->legend()->setFontScale(fontScale);
-      }
-    }
+  double fontScale = ApplicationSettings::self()->referenceFontSize()/sqrt((double) plotList.count()) - ApplicationSettings::self()->referenceFontSize()+ApplicationSettings::self()->referenceFontSize()/3;
+  if (fontScale > 0)  {
+    fontScale = 0;
   }
 
   foreach (PlotItem* plot, plotList) {
+    plot->setGlobalFontScale(fontScale);
+    plot->leftLabelDetails()->setFontScale(fontScale);
+    plot->rightLabelDetails()->setFontScale(fontScale);
+    plot->topLabelDetails()->setFontScale(fontScale);
+    plot->bottomLabelDetails()->setFontScale(fontScale);
+    plot->numberLabelDetails()->setFontScale(fontScale);
+
+    if (!xLabels) {
+      plot->leftLabelDetails()->setText(QString(" "));
+      plot->rightLabelDetails()->setText(QString(" "));
+    }
+    if (!yLabels) {
+      plot->topLabelDetails()->setText(QString(" "));
+      plot->bottomLabelDetails()->setText(QString(" "));
+    }
+
     plot->update();
     plot->parentView()->appendToLayout(_pagePlot->layout(), plot, _pagePlot->gridColumns());
+
+    if (_pagePlot->legendsOn()) {
+      plot->setShowLegend(true);
+      plot->legend()->setFontScale(fontScale);
+    } else if (_pagePlot->legendsAuto()) {
+      if (plot->renderItem(PlotRenderItem::Cartesian)->relationList().count() > 1) {
+        plot->setShowLegend(true);
+        plot->legend()->setFontScale(fontScale);
+      }
+    }
   }
 
   QApplication::restoreOverrideCursor();
