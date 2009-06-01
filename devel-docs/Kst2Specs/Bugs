@@ -46,16 +46,6 @@ the user's home directory.
 In the data wizard or in the data manager, select the data from a file by giving the path relative to the folder where kst was started. The plot appears without problem. Save the kst file in the same folder where kst was started. Close Kst from the same place and reopen the kst file. It cannot plot the data. But if you go in the data manager and edit a specific vector from the file, it will be plotted.
 [cbn: under linux, relative file names don't seem to work at all.]
 
-3. toggling log-x axis (key 'g') doesn't do anything until you poke at
-the plot. (My impression is that a re-draw is being missed.)  toggling
-log-y (key 'l') works as expected.
-(cbn sees: the mouse needs to leave the plot for the plot to be redrawn)
-
-4. toggling log-x doesn't change the x-axis tick labels/positions, even
-though the curves are drawn on a log scale.  Zooming in and pressing
-"M" fixes this.  Again, y-log works as expected.
-(cbn says 'confirmed')
-
 5. All the dialog boxes appear to be modal now (they block interaction
 with the main window while open).  This slows me down significanlly.
 (I find I'm constantly opening and closing dialogs)
@@ -73,6 +63,11 @@ base-and-offset mode", giving, say, a base of 100, and tick labels
 we're going to label in 5 decade intervals, 1e-5, 1, 1e5, 1e10 is
 better, and even better than that would be 6 decade intervals: 1e-6, 1,
 1e6, 1e12)
+
+11. When in log mode, the range reported in the range tab of the edit
+plot item is the logarithm of the range.  So if the y-range is 0.1 to
+100, the range will be reported as -1 to 2.  Despite this, you still
+have to enter "0.1" and "100" to get this range.
 
 13. Hitting shift changes into y-zoom mode forever, rather than just
 changing it while shift is depressed.  After doing this it's difficult

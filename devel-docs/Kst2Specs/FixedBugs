@@ -686,7 +686,12 @@ the curve doesn't rescale the plot.  The plot is rescaled when "Ok" is
 hit in the edit plot item dialog.  Adding a curve to an autoscaled plot
 and hitting "apply" does rescale the plot.
 
-11. When in log mode, the range reported in the range tab of the edit
-plot item is the logarithm of the range.  So if the y-range is 0.1 to
-100, the range will be reported as -1 to 2.  Despite this, you still
-have to enter "0.1" and "100" to get this range.
+3. toggling log-x axis (key 'g') doesn't do anything until you poke at
+the plot. (My impression is that a re-draw is being missed.)  toggling
+log-y (key 'l') works as expected.
+(cbn sees: the mouse needs to leave the plot for the plot to be redrawn)
+
+4. toggling log-x doesn't change the x-axis tick labels/positions, even
+though the curves are drawn on a log scale.  Zooming in and pressing
+"M" fixes this.  Again, y-log works as expected.
+(cbn says 'confirmed')
