@@ -66,11 +66,6 @@ same thing.  The result is an ever-widening dialog box, which can't be
 re-narrowed since it believes it is as small as it can get.  (It's the
 list of tabs on the left which is doing the growing.)
 
-8. Removing a curve from an autoscaled plot and hitting "apply" removes
-the curve doesn't rescale the plot.  The plot is rescaled when "Ok" is
-hit in the edit plot item dialog.  Adding a curve to an autoscaled plot
-and hitting "apply" does rescale the plot.
-
 9. Plotting too many decades in, the x- or y-log axis results in "y-log
 base-and-offset mode", giving, say, a base of 100, and tick labels
 "-[99.9999]", "[0]", "+[9999900]", "+[1e12]", "+[1e17]" instead of
@@ -78,11 +73,6 @@ base-and-offset mode", giving, say, a base of 100, and tick labels
 we're going to label in 5 decade intervals, 1e-5, 1, 1e5, 1e10 is
 better, and even better than that would be 6 decade intervals: 1e-6, 1,
 1e6, 1e12)
-
-11. When in log mode, the range reported in the range tab of the edit
-plot item is the logarithm of the range.  So if the y-range is 0.1 to
-100, the range will be reported as -1 to 2.  Despite this, you still
-have to enter "0.1" and "100" to get this range.
 
 13. Hitting shift changes into y-zoom mode forever, rather than just
 changing it while shift is depressed.  After doing this it's difficult
@@ -98,7 +88,8 @@ QTextBrowser: No document for http://kst.kde.org/
 (NB/windows.  Confirmed by CBN/linux)
 
 4) When configuring Kst: “Settings>Configure kst” many settings are not taken into account, such as the grid settings, and disappear by the next start of kst.
- (NB/windows.  Under linux, the configuration options are remembered, but not honored until kst is restarted).
+ (NB/windows.  Under linux, the configuration options are remembered, but not honored until kst is restarted).  Note - Settings are treated as defaults and do
+not change created objects.  Ie.  Grid setting will apply to all newly created Tabs, but not existing tabs currently.
 
 5) When starting Kst from a different folder, it creates another kstdatarc in the current folder instead of having one fixed rc file stored somewhere
 (cbn note: this appears to be masked using the run-kst script - which won't work if installed)

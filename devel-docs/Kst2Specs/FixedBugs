@@ -672,3 +672,21 @@ curve of [sine] should also be red.
 17. There appears to be no way to change the colour of the plot border
 and tick marks from black.  I though the brush colour under "Stroke"
 might do it, but nope.
+
+Axis Label Rotation:
+  Axis number labels should be rotateable, as in 1.x
+
+
+Edit Multiple for Plots
+  It should be possible to edit the properties of multiple plots at once.  The UI used in data objects and in 1.x works well and should be used here.
+*Mike*
+
+8. Removing a curve from an autoscaled plot and hitting "apply" removes
+the curve doesn't rescale the plot.  The plot is rescaled when "Ok" is
+hit in the edit plot item dialog.  Adding a curve to an autoscaled plot
+and hitting "apply" does rescale the plot.
+
+11. When in log mode, the range reported in the range tab of the edit
+plot item is the logarithm of the range.  So if the y-range is 0.1 to
+100, the range will be reported as -1 to 2.  Despite this, you still
+have to enter "0.1" and "100" to get this range.
