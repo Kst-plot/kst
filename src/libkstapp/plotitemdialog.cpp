@@ -253,6 +253,7 @@ void PlotItemDialog::setupAxis() {
   _xAxisTab->setDrawAxisMajorGridLines(_plotItem->xAxis()->drawAxisMajorGridLines());
   _xAxisTab->setDrawAxisMinorTicks(_plotItem->xAxis()->drawAxisMinorTicks());
   _xAxisTab->setDrawAxisMinorGridLines(_plotItem->xAxis()->drawAxisMinorGridLines());
+  _xAxisTab->setAutoMinorTickCount(_plotItem->xAxis()->axisAutoMinorTicks());
   _xAxisTab->setAxisMajorGridLineColor(_plotItem->xAxis()->axisMajorGridLineColor());
   _xAxisTab->setAxisMinorGridLineColor(_plotItem->xAxis()->axisMinorGridLineColor());
   _xAxisTab->setAxisMajorGridLineStyle(_plotItem->xAxis()->axisMajorGridLineStyle());
@@ -273,6 +274,7 @@ void PlotItemDialog::setupAxis() {
   _yAxisTab->setDrawAxisMajorTicks(_plotItem->yAxis()->drawAxisMajorTicks());
   _yAxisTab->setDrawAxisMajorGridLines(_plotItem->yAxis()->drawAxisMajorGridLines());
   _yAxisTab->setDrawAxisMinorTicks(_plotItem->yAxis()->drawAxisMinorTicks());
+  _yAxisTab->setAutoMinorTickCount(_plotItem->yAxis()->axisAutoMinorTicks());
   _yAxisTab->setDrawAxisMinorGridLines(_plotItem->yAxis()->drawAxisMinorGridLines());
   _yAxisTab->setAxisMajorGridLineColor(_plotItem->yAxis()->axisMajorGridLineColor());
   _yAxisTab->setAxisMinorGridLineColor(_plotItem->yAxis()->axisMinorGridLineColor());
@@ -713,6 +715,9 @@ void PlotItemDialog::saveAxis(PlotAxis *axis, AxisTab *axisTab) {
   }
   if (axisTab->axisMinorTickCountDirty()) {
     axis->setAxisMinorTickCount(axisTab->axisMinorTickCount());
+  }
+  if (axisTab->isAutoMinorTickCountDirty()) {
+    axis->setAxisAutoMinorTicks(axisTab->isAutoMinorTickCount());
   }
   if (axisTab->significantDigitsDirty()) {
     axis->setAxisSignificantDigits(axisTab->significantDigits());

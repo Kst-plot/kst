@@ -48,6 +48,9 @@ class PlotAxis : public QObject
     int axisMinorTickCount() const;
     void setAxisMinorTickCount(const int count);
 
+    bool axisAutoMinorTicks() const;
+    void setAxisAutoMinorTicks(const bool enabled);
+
     bool drawAxisMajorTicks() const;
     void setDrawAxisMajorTicks(const bool draw);
 
@@ -169,6 +172,8 @@ class PlotAxis : public QObject
     MajorTickMode _axisOverrideMajorTicks;
 
     int _axisMinorTickCount;
+    bool _automaticMinorTicks;
+    int _automaticMinorTickCount;
 
     int _axisSignificantDigits;
 

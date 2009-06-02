@@ -62,6 +62,8 @@ AxisTab::AxisTab(QWidget *parent)
   connect(_axisMinorLineStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_axisMajorLineColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
   connect(_axisMinorLineColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
+  connect(_autoMinorTicks, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_autoMinorTicks, SIGNAL(stateChanged(int)), this, SLOT(updateButtons()));
 
   connect(_scaleInterpret, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_scaleInterpret, SIGNAL(stateChanged(int)), this, SLOT(updateButtons()));
@@ -235,6 +237,21 @@ void AxisTab::setAxisMinorTickCount(const int count) {
 }
 
 
+bool AxisTab::isAutoMinorTickCount() const {
+  return _autoMinorTicks->isChecked();
+}
+
+
+bool AxisTab::isAutoMinorTickCountDirty() const {
+  return _autoMinorTicks->checkState() != Qt::PartiallyChecked;
+}
+
+
+void AxisTab::setAutoMinorTickCount(const bool enabled) {
+  _autoMinorTicks->setChecked(enabled);
+}
+
+
 int AxisTab::significantDigits() const {
   return _significantDigits->value();
 }
@@ -372,7 +389,7 @@ void AxisTab::setLabelRotation(const int rotation) {
 
 void AxisTab::updateButtons() {
   _scaleBaseOffset->setEnabled(!(_scaleInterpret->checkState() == Qt::PartiallyChecked || _scaleAutoBaseOffset->checkState() == Qt::PartiallyChecked));
-
+  _axisMinorTickCount->setEnabled(_autoMinorTicks->checkState() != Qt::Checked);
 }
 
 
@@ -386,6 +403,7 @@ void AxisTab::enableSingleEditOptions(bool enabled) {
     _drawAxisMajorGridLines->setTristate(false);
     _drawAxisMinorTicks->setTristate(false);
     _drawAxisMinorGridLines->setTristate(false);
+    _autoMinorTicks->setTristate(false);
   }
 }
 
@@ -396,6 +414,7 @@ void AxisTab::clearTabValues() {
   _scaleBaseOffset->setCheckState(Qt::PartiallyChecked);
   _scaleReverse->setCheckState(Qt::PartiallyChecked);
   _scaleInterpret->setCheckState(Qt::PartiallyChecked);
+  _autoMinorTicks->setCheckState(Qt::PartiallyChecked);
   _significantDigits->clear();
   _rotation->clear();
   _scaleInterpretType->setCurrentIndex(-1);

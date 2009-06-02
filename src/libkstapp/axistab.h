@@ -63,6 +63,10 @@ class KST_EXPORT AxisTab : public DialogTab, Ui::AxisTab {
     bool axisMinorGridLineColorDirty() const;
     void setAxisMinorGridLineColor(const QColor &color);
 
+    bool isAutoMinorTickCount() const;
+    bool isAutoMinorTickCountDirty() const;
+    void setAutoMinorTickCount(const bool enabled);
+
     int axisMinorTickCount() const;
     bool axisMinorTickCountDirty() const;
     void setAxisMinorTickCount(const int count);

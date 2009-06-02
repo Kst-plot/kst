@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>537</width>
+    <width>551</width>
     <height>451</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_5">
+  <layout class="QGridLayout" name="gridLayout_4">
    <item row="0" column="0" colspan="2">
     <widget class="QGroupBox" name="_scaleGroup">
      <property name="title">
       <string>Scale</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_4">
+     <layout class="QGridLayout" name="gridLayout_5">
       <item row="0" column="0">
        <widget class="QCheckBox" name="_scaleLog">
         <property name="toolTip">
@@ -350,7 +350,7 @@
       <string>Minor Ticks and Lines</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0" colspan="3">
+      <item row="0" column="0" colspan="4">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
          <widget class="QCheckBox" name="_drawAxisMinorTicks">
@@ -373,42 +373,6 @@
          </widget>
         </item>
        </layout>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="_axisMinorLineStyleLabel">
-        <property name="text">
-         <string>Line st&amp;yle:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>_axisMinorLineStyle</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1" colspan="2">
-       <widget class="QComboBox" name="_axisMinorLineStyle">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_12">
-        <property name="text">
-         <string>Lin&amp;e color:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>_axisMinorLineColor</cstring>
-        </property>
-       </widget>
       </item>
       <item row="1" column="0" colspan="2">
        <widget class="QLabel" name="label_3">
@@ -442,6 +406,49 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="3">
+       <widget class="QCheckBox" name="_autoMinorTicks">
+        <property name="text">
+         <string>Auto</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="_axisMinorLineStyleLabel">
+        <property name="text">
+         <string>Line st&amp;yle:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>_axisMinorLineStyle</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="3">
+       <widget class="QComboBox" name="_axisMinorLineStyle">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_12">
+        <property name="text">
+         <string>Lin&amp;e color:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>_axisMinorLineColor</cstring>
+        </property>
+       </widget>
+      </item>
       <item row="3" column="1">
        <widget class="Kst::ColorButton" name="_axisMinorLineColor"/>
       </item>
@@ -449,6 +456,12 @@
     </widget>
    </item>
   </layout>
+  <zorder>_scaleGroup</zorder>
+  <zorder>groupBox</zorder>
+  <zorder>groupBox_2</zorder>
+  <zorder>_axisMajorGridGroup</zorder>
+  <zorder>_axisMinorGridGroup</zorder>
+  <zorder>label_3</zorder>
  </widget>
  <customwidgets>
   <customwidget>

@@ -43,6 +43,8 @@ PlotAxis::PlotAxis(PlotItem *plotItem, Qt::Orientation orientation) :
   _axisMajorTickMode(Normal),
   _axisOverrideMajorTicks(Normal),
   _axisMinorTickCount(4),
+  _automaticMinorTicks(true),
+  _automaticMinorTickCount(5),
   _axisSignificantDigits(9),
   _drawAxisMajorTicks(true),
   _drawAxisMinorTicks(true),
@@ -407,6 +409,20 @@ int PlotAxis::axisMinorTickCount() const {
 void PlotAxis::setAxisMinorTickCount(const int count) {
   if (_axisMinorTickCount != count) {
     _axisMinorTickCount = count;
+    _dirty = true;
+  }
+}
+
+
+
+bool PlotAxis::axisAutoMinorTicks() const {
+  return _automaticMinorTicks;
+}
+
+
+void PlotAxis::setAxisAutoMinorTicks(const bool enabled) {
+  if (_automaticMinorTicks != enabled) {
+    _automaticMinorTicks = enabled;
     _dirty = true;
   }
 }
@@ -784,8 +800,14 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
     }
 
     qreal minorTickSpacing = 0;
-    if (_axisMinorTickCount > 0) {
-      minorTickSpacing = majorTickSpacing / _axisMinorTickCount;
+    int desiredTicks;
+    if (_automaticMinorTicks) {
+      desiredTicks = _automaticMinorTickCount;
+    } else {
+      desiredTicks = _axisMinorTickCount;
+    }
+    if (desiredTicks > 0) {
+      minorTickSpacing = majorTickSpacing / desiredTicks;
     }
 
     if (minorTickSpacing != 0) {
@@ -908,6 +930,7 @@ qreal PlotAxis::computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orien
   qreal s2 = qAbs(r2 - R);
   qreal s5 = qAbs(r5 - R);
 
+  _automaticMinorTickCount = 5;
   if (s1 <= s2 && s1 <= s5) {
     return d1;
   } else if (s2 <= s5) {
@@ -917,6 +940,7 @@ qreal PlotAxis::computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orien
 #endif
       return d1;
     } else {
+      _automaticMinorTickCount = 4;
       return d2;
     }
   } else {
@@ -924,6 +948,7 @@ qreal PlotAxis::computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orien
 #if MAJOR_TICK_DEBUG 
       qDebug() << "Minimum ticks not met using d5 using d2 instead";
 #endif
+      _automaticMinorTickCount = 4;
       return d2;
     } else {
       return d5;
@@ -945,6 +970,7 @@ void PlotAxis::saveInPlot(QXmlStreamWriter &xml, QString axisId) {
   xml.writeAttribute("display", QVariant(axisDisplay()).toString());
   xml.writeAttribute("majortickmode", QVariant(axisMajorTickMode()).toString());
   xml.writeAttribute("minortickcount", QVariant(axisMinorTickCount()).toString());
+  xml.writeAttribute("autominortickcount", QVariant(axisAutoMinorTicks()).toString());
   xml.writeAttribute("drawmajorticks", QVariant(drawAxisMajorTicks()).toString());
   xml.writeAttribute("drawminorticks", QVariant(drawAxisMinorTicks()).toString());
   xml.writeAttribute("drawmajorgridlines", QVariant(drawAxisMajorGridLines()).toString());
@@ -1005,6 +1031,10 @@ bool PlotAxis::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
   av = attrs.value("minortickcount");
   if (!av.isNull()) {
     setAxisMinorTickCount(QVariant(av.toString()).toInt());
+  }
+  av = attrs.value("autominortickcount");
+  if (!av.isNull()) {
+    setAxisAutoMinorTicks(QVariant(av.toString()).toBool());
   }
   av = attrs.value("drawmajorticks");
   if (!av.isNull()) {
