@@ -31,6 +31,8 @@ Dialog::Dialog(QWidget *parent)
   connect(_buttonBox, SIGNAL(clicked(QAbstractButton *)),
           this, SLOT(buttonClicked(QAbstractButton *)));
 
+  setAttribute(Qt::WA_DeleteOnClose);
+
   resize(minimumSizeHint());
 }
 
@@ -46,7 +48,7 @@ void Dialog::addDialogPage(DialogPage *page) {
   _listWidget->addItem(item);
   _stackedWidget->addWidget(page);
   _itemHash.insert(item, page);
-  int itemWidth = _listWidget->visualItemRect(item).width() + 5;
+  int itemWidth = _listWidget->visualItemRect(item).width() + 4;
   if (_listWidget->width() < itemWidth) {
     _listWidget->setMinimumSize(itemWidth, _listWidget->size().height());
   }
@@ -61,6 +63,20 @@ void Dialog::removeDialogPage(DialogPage *page) {
     _itemHash.remove(item);
     _listWidget->takeItem(_listWidget->row(item));
     _stackedWidget->removeWidget(page);
+  }
+  resetListWidget();
+}
+
+
+void Dialog::resetListWidget() {
+  int extraSize = _listWidget->width() - 100;
+  _listWidget->setMaximumWidth(100);
+  _listWidget->setMinimumWidth(100);
+  if (extraSize > 0 ) {
+     QList <int> splitterSize;
+     splitterSize << 100;
+     splitterSize << _splitter->sizes()[1] + extraSize;
+     _splitter->setSizes(splitterSize);
   }
 }
 

@@ -60,6 +60,8 @@ class KST_EXPORT Dialog : public QDialog, public Ui::Dialog
     void modified();
 
   private:
+    void resetListWidget();
+
     QHash<QListWidgetItem*, DialogPage*> _itemHash;
     bool _allowApply;
 };
