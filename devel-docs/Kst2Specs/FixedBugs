@@ -701,7 +701,17 @@ Legends don't appear to work:
     No legend.
   Edit a plot.  In the label tab, select having a legend.  Apply
     No legend...
+----------
 
+New tab in Data Wizard:
+  There should be an option in the data wizard to create all of the new plots in a new tab.  1.x has this.
+
+----------
+
+XY Plots and Spectra in separate new tabs in data wizard.
+  If XY plots and Spectra are both being created, there should be an option to create the Specta in a separate new tab.  1.x has this.
+
+----------
 
 11. When in log mode, the range reported in the range tab of the edit
 plot item is the logarithm of the range.  So if the y-range is 0.1 to
@@ -720,3 +730,4 @@ Smart selection of minor tick intervals.
 same thing.  The result is an ever-widening dialog box, which can't be
 re-narrowed since it believes it is as small as it can get.  (It's the
 list of tabs on the left which is doing the growing.)
+

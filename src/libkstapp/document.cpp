@@ -313,6 +313,10 @@ bool Document::open(const QString& file) {
   return _isOpen = true;
 }
 
+void Document::createView() {
+  _win->tabWidget()->createView();
+}
+
 
 QString Document::lastError() const {
   return _lastError;
@@ -333,10 +337,10 @@ void Document::setChanged(bool dirty) {
   _dirty = dirty;
 }
 
-/*View* Document::currentView() const {
+View* Document::currentView() const {
   return _win->tabWidget()->currentView();
 }
-*/
+
 }
 
 // vim: ts=2 sw=2 et

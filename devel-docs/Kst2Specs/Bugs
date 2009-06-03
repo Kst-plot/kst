@@ -1,3 +1,6 @@
+Problem with plot range and offsets:
+Make a plot with the Y range from -0.75 to 0.4.  It goes into base/offset mode 
+and it shouldn't.
 
 ---------
 

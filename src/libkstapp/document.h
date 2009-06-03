@@ -42,7 +42,10 @@ class Document : public CoreDocument {
     bool isOpen() const;
 
     QString lastError() const;
-    //View *currentView() const;
+
+    void createView();
+
+    View *currentView() const;
   private:
     QPointer<MainWindow> _win;
     SessionModel *_session;

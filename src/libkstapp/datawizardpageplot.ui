@@ -207,7 +207,7 @@
       <item row="3" column="0">
        <widget class="QRadioButton" name="_cycleExisting">
         <property name="text">
-         <string>Cycle through exi&amp;sting plots</string>
+         <string>Cycle through exis&amp;ting plots</string>
         </property>
         <property name="checked">
          <bool>false</bool>
@@ -247,21 +247,24 @@
       <item>
        <widget class="QRadioButton" name="_currentTab">
         <property name="text">
-         <string>Current Tab</string>
+         <string>All in &amp;current tab</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QRadioButton" name="_newTab">
         <property name="text">
-         <string>New Tab</string>
+         <string>All in ne&amp;w tab</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QRadioButton" name="_separateTabs">
         <property name="text">
-         <string>XY and spectra in separate new tabs</string>
+         <string>XY and spectra in &amp;separate new tabs</string>
         </property>
        </widget>
       </item>
@@ -277,7 +280,7 @@
       <item row="0" column="0" colspan="2">
        <widget class="QRadioButton" name="_autoLayout">
         <property name="text">
-         <string>Au&amp;tomatic Layout</string>
+         <string>Automatic &amp;Layout</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -344,12 +347,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>650</x>
-     <y>118</y>
+     <x>128</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>735</x>
-     <y>106</y>
+     <x>225</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -360,12 +363,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>630</x>
-     <y>303</y>
+     <x>632</x>
+     <y>112</y>
     </hint>
     <hint type="destinationlabel">
-     <x>831</x>
-     <y>304</y>
+     <x>760</x>
+     <y>114</y>
     </hint>
    </hints>
   </connection>
@@ -376,12 +379,60 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>683</x>
-     <y>185</y>
+     <x>143</x>
+     <y>172</y>
     </hint>
     <hint type="destinationlabel">
-     <x>776</x>
-     <y>195</y>
+     <x>225</x>
+     <y>174</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_currentTab</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_cycleExisting</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>251</x>
+     <y>54</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>101</x>
+     <y>133</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_currentTab</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_existingPlotName</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>357</x>
+     <y>62</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>189</x>
+     <y>152</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_currentTab</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_existingPlot</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>389</x>
+     <y>62</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>55</x>
+     <y>166</y>
     </hint>
    </hints>
   </connection>

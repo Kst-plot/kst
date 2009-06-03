@@ -99,6 +99,8 @@ class KST_EXPORT DataWizardPagePlot : public QWizardPage, Ui::DataWizardPagePlot
   public:
     enum CurvePlotPlacement { OnePlot, MultiplePlots, CyclePlotCount, CycleExisting, ExistingPlot };
 
+    enum PlotTabPlacement { CurrentTab, NewTab, SeparateTabs };
+
     DataWizardPagePlot(QWidget *parent);
     virtual ~DataWizardPagePlot();
 
@@ -120,6 +122,8 @@ class KST_EXPORT DataWizardPagePlot : public QWizardPage, Ui::DataWizardPagePlot
 
     CurvePlotPlacement curvePlacement() const;
     PlotItemInterface *existingPlot() const;
+
+    PlotTabPlacement plotTabPlacement() const;
 
     int plotCount() const;
 

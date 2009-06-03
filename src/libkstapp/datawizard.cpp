@@ -296,6 +296,17 @@ DataWizardPagePlot::CurvePlotPlacement DataWizardPagePlot::curvePlacement() cons
   return placement;
 }
 
+DataWizardPagePlot::PlotTabPlacement DataWizardPagePlot::plotTabPlacement() const {
+  PlotTabPlacement placement = CurrentTab;
+  if (_newTab->isChecked()) {
+    placement = NewTab;
+  } else if (_separateTabs->isChecked()) {
+    placement = SeparateTabs;
+  }
+
+  return placement;
+}
+
 
 CurvePlacement::Layout DataWizardPagePlot::layout() const {
   if (_autoLayout->isChecked())
@@ -688,6 +699,13 @@ void DataWizard::finished() {
     }
   }
 
+  // Create a new tab, if we asked for it and the current tab isn't empty.
+  if ((_pagePlot->plotTabPlacement() == DataWizardPagePlot::NewTab) ||
+      (_pagePlot->plotTabPlacement() == DataWizardPagePlot::SeparateTabs)) {
+    if (_document->currentView()->scene()->items().count()>0) {
+     _document->createView();
+   }
+  }
 
   // create the necessary plots
   QList<PlotItem*> plotList;
@@ -719,7 +737,14 @@ void DataWizard::finished() {
     }
     case DataWizardPagePlot::MultiplePlots:
     {
+      bool separate_plots =
+          ((_pagePlot->plotTabPlacement() == DataWizardPagePlot::SeparateTabs) && _pageDataPresentation->plotPSD()
+           && _pageDataPresentation->plotData());
+
       int nplots = vectors.count() * (_pageDataPresentation->plotPSD() + _pageDataPresentation->plotData());
+
+      if (separate_plots)
+        nplots/=2;
 
       for (int i = 0; i < nplots; ++i) {
         CreatePlotForCurve *cmd = new CreatePlotForCurve();
@@ -728,6 +753,17 @@ void DataWizard::finished() {
         plotItem = static_cast<PlotItem*>(cmd->item());
         plotList.append(plotItem);
       }
+      if (separate_plots) {
+        _document->createView();
+        for (int i = 0; i < nplots; ++i) {
+          CreatePlotForCurve *cmd = new CreatePlotForCurve();
+          cmd->createItem();
+
+          plotItem = static_cast<PlotItem*>(cmd->item());
+          plotList.append(plotItem);
+        }
+      }
+
       break;
     }
     case DataWizardPagePlot::CycleExisting:

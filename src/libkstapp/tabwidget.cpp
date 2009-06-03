@@ -43,7 +43,7 @@ View *TabWidget::createView() {
   }
 
   QString label = view->objectName().isEmpty() ?
-                  tr("View %1").arg(++_cnt) :
+                  tr("View &%1").arg(++_cnt) :
                   view->objectName();
 
   addTab(view, label);

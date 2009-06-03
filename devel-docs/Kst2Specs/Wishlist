@@ -5,15 +5,6 @@ New Plot Label size mode: autoshrink.
  - Last step after base/offset & reduced ticks.
 ----------
 
-New tab in Data Wizard:
-  There should be an option in the data wizard to create all of the new plots in a new tab.  1.x has this.
-
-----------
-
-XY Plots and Spectra in separate new tabs in data wizard.
-  If XY plots and Spectra are both being created, there should be an option to create the Specta in a separate new tab.  1.x has this.
-
-----------
 Placement widget (eg, in the curve dialog)  needs a create in new tab option.
   1.x had a 'create new tab' button.  This is similar, but does
 the creation of the new tab after apply, and uses a default name rather than popping up a new dialog.
