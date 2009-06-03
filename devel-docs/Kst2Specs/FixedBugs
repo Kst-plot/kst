@@ -701,3 +701,22 @@ Legends don't appear to work:
     No legend.
   Edit a plot.  In the label tab, select having a legend.  Apply
     No legend...
+
+
+11. When in log mode, the range reported in the range tab of the edit
+plot item is the logarithm of the range.  So if the y-range is 0.1 to
+100, the range will be reported as -1 to 2.  Despite this, you still
+have to enter "0.1" and "100" to get this range.
+
+
+Smart selection of minor tick intervals.
+  There needs to be an option to automatically chose the number of minor tick intervals: 
+  If the major interval is 1x10^n or 5x10^n there should be 5 minor intervals.  
+  If it is 2x10^n, there should be 4.
+  This was in 1.x
+
+7. Adding a curve to a plot in the edit plot item dialog, and hitting
+"Apply" causes the dialog box to grow wider.  Removing a plot does the
+same thing.  The result is an ever-widening dialog box, which can't be
+re-narrowed since it believes it is as small as it can get.  (It's the
+list of tabs on the left which is doing the growing.)

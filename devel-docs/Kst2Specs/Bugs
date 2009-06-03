@@ -49,6 +49,14 @@ would expect them to share a Y axis.
 until something is done to trigger a redraw (eg, a rescale) at which 
 time the plots are drawn correctly.
 
+Sharing is happening however, sharing is based upon plot projectionRect, not on
+physical location.
+Ie.  in scenario described the Y axis of the two plots do not match but it seems likely that the x axis range 
+does match.  This results in an inappropriate sharing of the x axis when the physical location of the plots 
+lends to a natural y axis sharing.  The zoom update will trigger the tied zoom code which standardizes all the 
+plots.  
+This proper fix for this will be part of the logic rework for shared axis as it is related directly to the above 
+bug.
 ---------------------------
 
 Bugs Reported by D.V. Wiebe
@@ -65,12 +73,6 @@ In the data wizard or in the data manager, select the data from a file by giving
 with the main window while open).  This slows me down significanlly.
 (I find I'm constantly opening and closing dialogs)
 
-7. Adding a curve to a plot in the edit plot item dialog, and hitting
-"Apply" causes the dialog box to grow wider.  Removing a plot does the
-same thing.  The result is an ever-widening dialog box, which can't be
-re-narrowed since it believes it is as small as it can get.  (It's the
-list of tabs on the left which is doing the growing.)
-
 9. Plotting too many decades in, the x- or y-log axis results in "y-log
 base-and-offset mode", giving, say, a base of 100, and tick labels
 "-[99.9999]", "[0]", "+[9999900]", "+[1e12]", "+[1e17]" instead of
@@ -78,11 +80,6 @@ base-and-offset mode", giving, say, a base of 100, and tick labels
 we're going to label in 5 decade intervals, 1e-5, 1, 1e5, 1e10 is
 better, and even better than that would be 6 decade intervals: 1e-6, 1,
 1e6, 1e12)
-
-11. When in log mode, the range reported in the range tab of the edit
-plot item is the logarithm of the range.  So if the y-range is 0.1 to
-100, the range will be reported as -1 to 2.  Despite this, you still
-have to enter "0.1" and "100" to get this range.
 
 13. Hitting shift changes into y-zoom mode forever, rather than just
 changing it while shift is depressed.  After doing this it's difficult
