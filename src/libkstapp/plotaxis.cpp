@@ -690,52 +690,75 @@ void PlotAxis::computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTick
 
 // Function validates that the labels will not overlap.  Only functions for x Axis.
 void PlotAxis::validateDrawingRegion(QPainter *painter) {
-  if (_orientation != Qt::Horizontal) {
-    return;
-  }
-
   // Always try to use the settings requested.
   if (_axisOverrideMajorTicks != _axisMajorTickMode) {
     _axisBaseOffsetOverride = false;
     updateTicks();
   }
 
-  if (!_axisAutoBaseOffset) {
-    return;
-  }
-
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
-  int longest = 0;
-  QMapIterator<qreal, QString> iLongestLabelCheck(_axisLabels);
-  while (iLongestLabelCheck.hasNext()) {
-    iLongestLabelCheck.next();
-    QRectF bound = painter->boundingRect(QRectF(), flags, iLongestLabelCheck.value());
-    if (bound.width() > longest) {
-      longest = bound.width();
-    }
-  }
+  int rotation = axisLabelRotation();
+  QTransform t;
+  t.rotate(rotation);
 
-// Make local... Use begin.
-  qreal firstTick = 0, secondTick = 0;
+  QVector<QPolygonF> labels;
   QMapIterator<qreal, QString> iLabelCheck(_axisLabels);
-  if (iLabelCheck.hasNext()) {
+  while (iLabelCheck.hasNext()) {
     iLabelCheck.next();
-    firstTick = iLabelCheck.key();
-    if (iLabelCheck.hasNext()) {
-      iLabelCheck.next();
-      secondTick = iLabelCheck.key();
+    QRectF bound = painter->boundingRect(QRectF(), flags, iLabelCheck.value());
+    QPointF p;
+    QPolygonF mappedPoly;
+
+    if (rotation == 0) {
+      if (_orientation == Qt::Horizontal) {
+        p = QPointF(plotItem()->mapXToPlot(iLabelCheck.key()), 0);
+      } else {
+        p = QPointF(0, plotItem()->mapYToPlot(iLabelCheck.key()));
+      }
+
+      bound.moveCenter(p);
+      mappedPoly = QPolygonF(bound);
+    } else {
+      if (_orientation == Qt::Horizontal) {
+        p = QPointF(plotItem()->mapXToPlot(iLabelCheck.key()) - bound.height() * 0.5, 0);
+      } else {
+        p = QPointF(0, plotItem()->mapYToPlot(iLabelCheck.key()) - bound.height() * 0.5);
+      }
+
+      mappedPoly = t.map(QPolygonF(bound));
+      mappedPoly.translate(p - bound.topLeft());
     }
+
+    labels << mappedPoly;
   }
 
-  qreal labelSpace = plotItem()->mapXToPlot(secondTick) - plotItem()->mapXToPlot(firstTick);
-  if (labelSpace < (longest + 2)) {
-    _axisOverrideMajorTicks = convertToMajorTickMode((plotItem()->plotRect().width() / (longest + 2)) - 1);
-    if (_axisOverrideMajorTicks == None) {
-      _axisBaseOffsetOverride = true;
-      _axisOverrideMajorTicks = Coarse;
-    }
+  for (int i = 0; i < (labels.count() - 1); i++) {
+    if (!labels[i].intersected(labels[i+1]).isEmpty()) {
 
-    updateTicks(true);
+      qreal labelSize;
+      qreal plotSize;
+
+      if (_orientation == Qt::Horizontal) {
+        labelSize = qMax(labels[i].boundingRect().width(), labels[i+1].boundingRect().width());
+        plotSize = plotItem()->plotRect().width();
+      } else {
+        labelSize = qMax(labels[i].boundingRect().height(), labels[i+1].boundingRect().height());
+        plotSize = plotItem()->plotRect().height();
+      }
+
+      _axisOverrideMajorTicks = convertToMajorTickMode((plotSize / labelSize) - 1);
+
+      if (_axisOverrideMajorTicks == None) {
+        qreal scale = plotSize / (labelSize * (Coarse + 1));
+        if (scale < 1) {
+          plotItem()->scaleAxisLabels(scale);
+        }
+        _axisOverrideMajorTicks = Coarse;
+      }
+
+      updateTicks(true);
+      break;
+    }
   }
   setTicksUpdated();
 }

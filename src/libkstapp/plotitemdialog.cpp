@@ -200,6 +200,8 @@ void PlotItemDialog::setupLabels() {
   _labelTab->setTopLabel(_plotItem->topLabel());
   _labelTab->setRightLabel(_plotItem->rightLabel());
 
+  _labelTab->setAutoScaleNumbers(_plotItem->isUseAxisScale());
+
   _labelTab->setLeftLabelAuto(_plotItem->leftLabelDetails()->isAuto());
   _labelTab->setBottomLabelAuto(_plotItem->bottomLabelDetails()->isAuto());
   _labelTab->setTopLabelAuto(_plotItem->topLabelDetails()->isAuto());
@@ -786,6 +788,7 @@ void PlotItemDialog::saveLabels(PlotItem *item) {
   qreal globalFontScale = _labelTab->globalLabelFontScaleDirty() ? _labelTab->globalLabelFontScale() :item->globalFontScale();
   QColor globalFontColor = _labelTab->globalLabelColorDirty() ? _labelTab->globalLabelColor() :item->globalFontColor();
   bool showLegend = _labelTab->showLegendDirty() ? _labelTab->showLegend() :item->showLegend();
+  bool axisLabelScale = _labelTab->autoScaleNumbersDirty() ? _labelTab->autoScaleNumbers() :item->isUseAxisScale();
 
   item->leftLabelDetails()->setDetails(leftLabel, leftLabelAuto, leftUseDefault, leftFont, leftFontScale, leftFontColor);
   item->bottomLabelDetails()->setDetails(bottomLabel, bottomLabelAuto, bottomUseDefault, bottomFont, bottomFontScale, bottomFontColor);
@@ -796,6 +799,7 @@ void PlotItemDialog::saveLabels(PlotItem *item) {
   item->setGlobalFont(globalFont);
   item->setGlobalFontScale(globalFontScale);
   item->setGlobalFontColor(globalFontColor);
+  item->setUseAxisScale(axisLabelScale);
 
   item->setShowLegend(showLegend);
 }

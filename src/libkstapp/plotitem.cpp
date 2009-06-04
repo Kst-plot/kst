@@ -76,6 +76,8 @@ PlotItem::PlotItem(View *parent)
   _bottomPadding(0.0),
   _rightPadding(0.0),
   _topPadding(0.0),
+  _numberAxisLabelScaleFactor(1.0),
+  _useNumberAxisLabelScale(true),
   _showLegend(false),
   _plotMaximized(false),
   _allowUpdates(true),
@@ -598,6 +600,12 @@ void PlotItem::paintPixmap(QPainter *painter) {
   painter->restore();
 
   painter->save();
+  bool xTicksUpdated = xAxis()->ticksUpdated();
+  bool yTicksUpdated = yAxis()->ticksUpdated();
+  if (xTicksUpdated ||yTicksUpdated) {
+    resetScaleAxisLabels();
+  }
+
   painter->setFont(numberLabelDetails()->calculatedFont());
 
 #if BENCHMARK
@@ -623,7 +631,7 @@ void PlotItem::paintPixmap(QPainter *painter) {
     b_2 = benchtmp.elapsed();
 #endif
 
-  paintPlot(painter);
+  paintPlot(painter, xTicksUpdated, yTicksUpdated);
 #if BENCHMARK
     b_3 = benchtmp.elapsed();
 #endif
@@ -651,27 +659,30 @@ void PlotItem::paintPixmap(QPainter *painter) {
 }
 
 
-void PlotItem::paintPlot(QPainter *painter) {
-  bool xLabelsUpdated = false;
-  bool yLabelsUpdated = false;
-  if (xAxis()->ticksUpdated()) {
+void PlotItem::paintPlot(QPainter *painter, bool xUpdated, bool yUpdated) {
+  if (xUpdated) {
     xAxis()->validateDrawingRegion(painter);
     updateXAxisLines();
     updateXAxisLabels(painter);
-    xLabelsUpdated = true;
   }
-  if (yAxis()->ticksUpdated()) {
+  if (yUpdated) {
     yAxis()->validateDrawingRegion(painter);
     updateYAxisLines();
     updateYAxisLabels(painter);
-    yLabelsUpdated = true;
+  }
+  if (isUseAxisScale()) {
+    QFont font(painter->font());
+    int pixelSize = qMax((int)(font.pixelSize() * _numberAxisLabelScaleFactor), ApplicationSettings::self()->minimumFontSize());
+    
+    font.setPixelSize(pixelSize);
+    painter->setFont(font);
   }
 
   if (_axisLabelsDirty) {
-    if (!xLabelsUpdated) {
+    if (!xUpdated) {
       updateXAxisLabels(painter);
     }
-    if (!yLabelsUpdated) {
+    if (!yUpdated) {
       updateYAxisLabels(painter);
     }
   }
@@ -981,8 +992,31 @@ void PlotItem::paintMinorTicks(QPainter *painter) {
 }
 
 
+void PlotItem::scaleAxisLabels(qreal scaleFactor) {
+  _numberAxisLabelScaleFactor = qMin(_numberAxisLabelScaleFactor, scaleFactor);
+}
+
+
+void PlotItem::resetScaleAxisLabels() {
+  _numberAxisLabelScaleFactor = 1.0;
+}
+
+
+bool PlotItem::isUseAxisScale() const {
+  return _useNumberAxisLabelScale;
+}
+
+
+void PlotItem::setUseAxisScale(bool useScale) {
+  if (_useNumberAxisLabelScale != useScale) {
+    _useNumberAxisLabelScale = useScale;
+    setPlotPixmapDirty();
+  }
+}
+
+
 void PlotItem::paintBottomTickLabels(QPainter *painter) {
-  int flags = Qt::TextSingleLine | Qt::AlignCenter;
+  int flags = Qt::TextSingleLine/* | Qt::AlignCenter*/;
 
   painter->save();
   painter->setPen(_numberLabelDetails->fontColor());
@@ -1023,7 +1057,7 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
 
 
 void PlotItem::paintLeftTickLabels(QPainter *painter) {
-  int flags = Qt::TextSingleLine | Qt::AlignVCenter;
+  int flags = Qt::TextSingleLine | Qt::AlignVCenter | Qt::AlignRight;
 
   painter->save();
   painter->setPen(_numberLabelDetails->fontColor());

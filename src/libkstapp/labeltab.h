@@ -71,6 +71,10 @@ class KST_EXPORT LabelTab : public DialogTab, Ui::LabelTab {
     QColor globalLabelColor() const;
     bool globalLabelColorDirty() const;
 
+    bool autoScaleNumbers() const;
+    bool autoScaleNumbersDirty() const;
+    void setAutoScaleNumbers(const bool scale);
+
     void enableSingleEditOptions(bool enabled);
     void clearTabValues();
 

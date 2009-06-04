@@ -54,6 +54,7 @@ LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
   connect(_strings, SIGNAL(selectionChanged(QString)), this, SLOT(labelUpdate(const QString&)));
   connect(_scalars, SIGNAL(selectionChanged(QString)), this, SLOT(labelUpdate(const QString&)));
 
+  connect(_autoScaleNumberAxis, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_showLegend, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
 
   connect(_editLegendContents, SIGNAL(pressed()), _plotItem->legend(), SLOT(edit()));
@@ -276,6 +277,21 @@ void LabelTab::setShowLegend(const bool show) {
 }
 
 
+bool LabelTab::autoScaleNumbers() const {
+  return _autoScaleNumberAxis->isChecked();
+}
+
+
+bool LabelTab::autoScaleNumbersDirty() const {
+  return _autoScaleNumberAxis->checkState() != Qt::PartiallyChecked;
+}
+
+
+void LabelTab::setAutoScaleNumbers(const bool scale) {
+  _autoScaleNumberAxis->setChecked(scale);
+}
+
+
 void LabelTab::labelUpdate(const QString& string) {
   if (_activeLineEdit) {
     QString label = _activeLineEdit->text();
@@ -305,6 +321,7 @@ void LabelTab::clearTabValues() {
 
   _globalLabelBold->setChecked(false);
   _globalLabelItalic->setChecked(false);
+  _autoScaleNumberAxis->setCheckState(Qt::PartiallyChecked);
 
   _topLabelText->clear();
   _bottomLabelText->clear();
@@ -330,6 +347,7 @@ void LabelTab::enableSingleEditOptions(bool enabled) {
     _bottomLabelAuto->setTristate(false);
     _leftLabelAuto->setTristate(false);
     _rightLabelAuto->setTristate(false);
+    _autoScaleNumberAxis->setTristate(false);
     activateFields();
   }
 }

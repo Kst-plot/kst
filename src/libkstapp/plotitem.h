@@ -237,6 +237,12 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 
     virtual void setItemPen(const QPen & pen) { ViewItem::setPen(pen); setPlotPixmapDirty();}
 
+    void scaleAxisLabels(qreal scaleFactor);
+    void resetScaleAxisLabels();
+
+    bool isUseAxisScale() const;
+    void setUseAxisScale(bool useScale);
+
   protected:
     virtual QString _automaticDescriptiveName() const;
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -308,7 +314,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void updateXAxisLabels(QPainter* painter);
     void updateYAxisLabels(QPainter* painter);
 
-    virtual void paintPlot(QPainter *painter);
+    virtual void paintPlot(QPainter *painter, bool xUpdated, bool yUpdated);
 
     virtual void paintMajorGridLines(QPainter *painter);
     virtual void paintMinorGridLines(QPainter *painter);
@@ -405,6 +411,9 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QFont _globalFont;
     qreal _globalFontScale;
     QColor _globalFontColor;
+
+    qreal _numberAxisLabelScaleFactor;
+    bool _useNumberAxisLabelScale;
 
     bool _showLegend;
 
