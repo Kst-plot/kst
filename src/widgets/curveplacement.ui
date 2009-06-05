@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>CurvePlacement</class>
- <widget class="QWidget" name="CurvePlacement" >
-  <property name="geometry" >
+ <widget class="QWidget" name="CurvePlacement">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,37 +10,37 @@
     <height>218</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2" >
-   <property name="margin" >
+  <layout class="QGridLayout" name="gridLayout_2">
+   <property name="margin">
     <number>0</number>
    </property>
-   <property name="spacing" >
+   <property name="spacing">
     <number>0</number>
    </property>
-   <item row="0" column="0" >
-    <widget class="QGroupBox" name="_curvePlacementGroup" >
-     <property name="title" >
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="_curvePlacementGroup">
+     <property name="title">
       <string>Placement</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout" >
-      <property name="topMargin" >
+     <layout class="QGridLayout" name="gridLayout">
+      <property name="topMargin">
        <number>0</number>
       </property>
-      <property name="bottomMargin" >
+      <property name="bottomMargin">
        <number>0</number>
       </property>
-      <property name="spacing" >
+      <property name="spacing">
        <number>0</number>
       </property>
-      <item row="3" column="0" >
-       <spacer name="horizontalSpacer" >
-        <property name="orientation" >
+      <item row="3" column="0">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
-        <property name="sizeType" >
+        <property name="sizeType">
          <enum>QSizePolicy::Fixed</enum>
         </property>
-        <property name="sizeHint" stdset="0" >
+        <property name="sizeHint" stdset="0">
          <size>
           <width>28</width>
           <height>20</height>
@@ -47,120 +48,120 @@
         </property>
        </spacer>
       </item>
-      <item row="0" column="0" colspan="3" >
-       <widget class="QRadioButton" name="_noPlot" >
-        <property name="text" >
+      <item row="0" column="0" colspan="4">
+       <widget class="QRadioButton" name="_noPlot">
+        <property name="text">
          <string>Do not pl&amp;ace in any plot</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="2" >
-       <widget class="QRadioButton" name="_existingPlot" >
-        <property name="text" >
+      <item row="1" column="0" colspan="2">
+       <widget class="QRadioButton" name="_existingPlot">
+        <property name="text">
          <string>Place in &amp;existing plot:</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="2" >
-       <widget class="QComboBox" name="_plotList" >
-        <property name="enabled" >
+      <item row="1" column="2">
+       <widget class="QComboBox" name="_plotList">
+        <property name="enabled">
          <bool>false</bool>
         </property>
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>1</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="whatsThis" >
+        <property name="whatsThis">
          <string>The name of the data file which will be read for this vector.</string>
         </property>
-        <property name="editable" >
+        <property name="editable">
          <bool>false</bool>
         </property>
-        <property name="insertPolicy" >
+        <property name="insertPolicy">
          <enum>QComboBox::InsertAtTop</enum>
         </property>
-        <property name="autoCompletion" >
+        <property name="autoCompletion">
          <bool>true</bool>
         </property>
-        <property name="duplicatesEnabled" >
+        <property name="duplicatesEnabled">
          <bool>false</bool>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" colspan="2" >
-       <widget class="QRadioButton" name="_newPlot" >
-        <property name="text" >
+      <item row="2" column="0" colspan="2">
+       <widget class="QRadioButton" name="_newPlot">
+        <property name="text">
          <string>Place in &amp;new plot</string>
         </property>
-        <property name="checked" >
+        <property name="checked">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="3" column="1" colspan="2" >
-       <widget class="QGroupBox" name="_layoutGroup" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+      <item row="3" column="1" colspan="3">
+       <widget class="QGroupBox" name="_layoutGroup">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="title" >
+        <property name="title">
          <string/>
         </property>
-        <property name="flat" >
+        <property name="flat">
          <bool>true</bool>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout" >
-         <property name="spacing" >
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="spacing">
           <number>0</number>
          </property>
-         <property name="margin" >
+         <property name="margin">
           <number>0</number>
          </property>
          <item>
-          <widget class="QRadioButton" name="_autoLayout" >
-           <property name="text" >
+          <widget class="QRadioButton" name="_autoLayout">
+           <property name="text">
             <string>Automati&amp;c Layout</string>
            </property>
-           <property name="checked" >
+           <property name="checked">
             <bool>true</bool>
            </property>
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" >
+          <layout class="QHBoxLayout">
            <item>
-            <widget class="QRadioButton" name="_customGrid" >
-             <property name="text" >
+            <widget class="QRadioButton" name="_customGrid">
+             <property name="text">
               <string>Custom &amp;Grid:</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="_gridColumns" >
-             <property name="enabled" >
+            <widget class="QSpinBox" name="_gridColumns">
+             <property name="enabled">
               <bool>false</bool>
              </property>
-             <property name="minimum" >
+             <property name="minimum">
               <number>1</number>
              </property>
-             <property name="maximum" >
+             <property name="maximum">
               <number>10</number>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="_gridColumnsLabel" >
-             <property name="enabled" >
+            <widget class="QLabel" name="_gridColumnsLabel">
+             <property name="enabled">
               <bool>false</bool>
              </property>
-             <property name="text" >
+             <property name="text">
               <string>Colu&amp;mns</string>
              </property>
-             <property name="buddy" >
+             <property name="buddy">
               <cstring>_gridColumns</cstring>
              </property>
             </widget>
@@ -168,8 +169,8 @@
           </layout>
          </item>
          <item>
-          <widget class="QRadioButton" name="_protectLayout" >
-           <property name="text" >
+          <widget class="QRadioButton" name="_protectLayout">
+           <property name="text">
             <string>&amp;Protect Existing Layout</string>
            </property>
           </widget>
@@ -177,12 +178,19 @@
         </layout>
        </widget>
       </item>
+      <item row="2" column="2">
+       <widget class="QCheckBox" name="newTab">
+        <property name="text">
+         <string>In new tab</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
   </layout>
  </widget>
- <layoutdefault spacing="6" margin="11" />
+ <layoutdefault spacing="6" margin="11"/>
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <tabstops>
   <tabstop>_noPlot</tabstop>
