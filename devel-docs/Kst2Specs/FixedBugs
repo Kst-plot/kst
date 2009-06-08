@@ -731,3 +731,8 @@ same thing.  The result is an ever-widening dialog box, which can't be
 re-narrowed since it believes it is as small as it can get.  (It's the
 list of tabs on the left which is doing the growing.)
 
+----------
+
+Placement widget (eg, in the curve dialog)  needs a create in new tab option.
+  1.x had a 'create new tab' button.  This is similar, but does
+the creation of the new tab after apply, and uses a default name rather than popping up a new dialog.

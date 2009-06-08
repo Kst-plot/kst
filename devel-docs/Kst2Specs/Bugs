@@ -15,10 +15,6 @@ It should be the same size as it started.
 
 ------------
 
-Image dialog 'smart' range calculations seem to be... odd.
-
-------------
-
 Shared axis zoom usage problem:
 Create a shared axis zoom box with multiple plots in a column.
   -there is no option to indicate or change whether the plots are tied.

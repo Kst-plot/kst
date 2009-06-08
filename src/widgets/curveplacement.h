@@ -24,7 +24,7 @@ class PlotItemInterface;
 class KST_EXPORT CurvePlacement : public QWidget, public Ui::CurvePlacement {
   Q_OBJECT
   public:
-    enum Place { NewPlot, ExistingPlot, NoPlot };
+    enum Place { NewPlot, ExistingPlot, NoPlot, NewPlotNewTab };
     enum Layout { Auto, Custom, Protect };
     CurvePlacement(QWidget *parent = 0);
     virtual ~CurvePlacement();

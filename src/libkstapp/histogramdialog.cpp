@@ -391,6 +391,9 @@ ObjectPtr HistogramDialog::createNewDataObject() {
       plotItem = static_cast<PlotItem*>(_histogramTab->curvePlacement()->existingPlot());
       break;
     }
+  case CurvePlacement::NewPlotNewTab:
+    _document->createView();
+    // fall through to case NewPlot.
   case CurvePlacement::NewPlot:
     {
       CreatePlotForCurve *cmd = new CreatePlotForCurve();

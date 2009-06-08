@@ -179,9 +179,9 @@
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="QCheckBox" name="newTab">
+       <widget class="QCheckBox" name="_newTab">
         <property name="text">
-         <string>In new tab</string>
+         <string>In ne&amp;w tab</string>
         </property>
        </widget>
       </item>

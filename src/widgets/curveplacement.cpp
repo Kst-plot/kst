@@ -33,6 +33,10 @@ void CurvePlacement::updateButtons() {
   _layoutGroup->setEnabled(_newPlot->isChecked());
   _gridColumns->setEnabled(_customGrid->isChecked());
   _gridColumnsLabel->setEnabled(_customGrid->isChecked());
+  _newTab->setEnabled(_newPlot->isChecked());
+  if (!_newPlot->isChecked()) {
+    _newTab->setChecked(false);
+  }
 }
 
 
@@ -41,6 +45,8 @@ CurvePlacement::Place CurvePlacement::place() const {
     return NoPlot;
   else if (_existingPlot->isChecked())
     return ExistingPlot;
+  else if (_newTab->isChecked())
+    return NewPlotNewTab;
   else
     return NewPlot;
 }
@@ -57,6 +63,9 @@ void CurvePlacement::setPlace(CurvePlacement::Place place) {
   case NewPlot:
     _newPlot->setChecked(true);
     break;
+  case NewPlotNewTab:
+    _newPlot->setChecked(true);
+    _newTab->setChecked(true);
   default:
     break;
   }
