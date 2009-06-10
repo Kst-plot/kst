@@ -23,17 +23,29 @@ Zoom into one of them.
   -All plots do exactly the same zoom, as if they were tied.
 
 Correct behavior:
+  -The shared axis box should have 'share X axis' and 'share Y axis' options
+   which are settable from the object dialog.
+  -If only the x axis is shared, then only the x axis is tied; if only 
+   the y axis is shared, only the y axis is tied.
+  -If axis are shared, and the plots are aligned to within 1% of the 
+   size of the top level view, then intermediate axis/labels
+   will be surpressed.
+  -If axis are shared, then they must always have exactly the same
+   range and mode.  So 'M' (autoscale) must be set to the Max/Min 
+   over all of the plots in the shared box, not each inividually.
+  -sharing one axis does not effect the behavior of the other; so:
   -There should still be tied zoom indicators.
-  -If the tied zoom indicators are not checked, then the shared axis 
-  should behave as if it were tied, but the other should not.
-  -If the tied zoom indicators are checked, then it should tie both axis.
+  -If the tied zoom indicators are not checked, then the unshared axis
+   should behave as if they were not shared or tied.
 
-(ie, if only the x axis is shared, then only the x axis is tied; if only 
- the y axis is shared, only the y axis is tied.)
-
-If axis are shared, then they must always have exactly the same
-range.  So 'M' (autoscale) must be set to the Max/Min over all of the 
-plots with the shared axis, not each inividually.
+Creation Heuristics:
+  -If all of the plots in the creation box have the same X range, then
+   'share X axis' should be set; analogously for the Y axis.
+  -If, by the above rules, neither 'share X axis' nor 'share Y axis'
+   would be set, then 'share X axis' will be set.
+  -Upon being shared, all plots in the shared box must have the same
+   range and mode; set the range and mode to that of an arbitrary plot
+   in the shared box (eg, the first in the list).
 
 ---------------------------
 
@@ -93,9 +105,12 @@ QFSFileEngine::open: No file name specified
 QTextBrowser: No document for http://kst.kde.org/
 (NB/windows.  Confirmed by CBN/linux)
 
-4) When configuring Kst: “Settings>Configure kst” many settings are not taken into account, such as the grid settings, and disappear by the next start of kst.
- (NB/windows.  Under linux, the configuration options are remembered, but not honored until kst is restarted).  Note - Settings are treated as defaults and do
-not change created objects.  Ie.  Grid setting will apply to all newly created Tabs, but not existing tabs currently.
+4) When configuring Kst: “Settings>Configure kst” many settings are not taken into account, such as the grid settings, and disappear by the next start of kst. (NB/windows. )
+Under linux, the font configuration options behave properly, except that a re-draw needs to be triggered - eg, window resize.
+
+Related bug:
+  It is not clear from the dialog that grid and color options are defaults for new plots.  The text should be modified
+  to make this clear.
 
 5) When starting Kst from a different folder, it creates another kstdatarc in the current folder instead of having one fixed rc file stored somewhere
 cbn note: this appears to be masked using the run-kst script - which which sets the cwd to the directory where the script is located (I think).  The kstdatarc file should live in the standard kde config directory (on my machine, this is ~/.kde/share/config, but we need to verify where it is on Windows and Mac.
