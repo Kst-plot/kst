@@ -740,3 +740,32 @@ New Plot Label size mode: autoshrink.
 Placement widget (eg, in the curve dialog)  needs a create in new tab option.
   1.x had a 'create new tab' button.  This is similar, but does
 the creation of the new tab after apply, and uses a default name rather than popping up a new dialog.
+
+---
+
+
+   3. Very often, changing the range settings of a plot does not change anything (I did not find out why it worked sometimes)
+
+
+---------------------------
+
+Shared axis not shared until a redraw.
+create plots with more than 1 column (eg, 6 plots in two columns).
+With a shared axis box, select two plots on the same row, so you
+would expect them to share a Y axis.  
+  -the bottom axis is suppresed on both.
+    (they should not be)
+  -The left axis on the right plot is not suppresed.
+    (it should be)
+until something is done to trigger a redraw (eg, a rescale) at which 
+time the plots are drawn correctly.
+
+Sharing is happening however, sharing is based upon plot projectionRect, not on
+physical location.
+Ie.  in scenario described the Y axis of the two plots do not match but it seems likely that the x axis range 
+does match.  This results in an inappropriate sharing of the x axis when the physical location of the plots 
+lends to a natural y axis sharing.  The zoom update will trigger the tied zoom code which standardizes all the 
+plots.  
+This proper fix for this will be part of the logic rework for shared axis as it is related directly to the above 
+bug.
+---------------------------

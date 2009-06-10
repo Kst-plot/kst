@@ -47,28 +47,9 @@ Creation Heuristics:
    range and mode; set the range and mode to that of an arbitrary plot
    in the shared box (eg, the first in the list).
 
----------------------------
 
-Shared axis not shared until a redraw.
-create plots with more than 1 column (eg, 6 plots in two columns).
-With a shared axis box, select two plots on the same row, so you
-would expect them to share a Y axis.  
-  -the bottom axis is suppresed on both.
-    (they should not be)
-  -The left axis on the right plot is not suppresed.
-    (it should be)
-until something is done to trigger a redraw (eg, a rescale) at which 
-time the plots are drawn correctly.
-
-Sharing is happening however, sharing is based upon plot projectionRect, not on
-physical location.
-Ie.  in scenario described the Y axis of the two plots do not match but it seems likely that the x axis range 
-does match.  This results in an inappropriate sharing of the x axis when the physical location of the plots 
-lends to a natural y axis sharing.  The zoom update will trigger the tied zoom code which standardizes all the 
-plots.  
-This proper fix for this will be part of the logic rework for shared axis as it is related directly to the above 
-bug.
----------------------------
+Note:  Many changes have already been made.  Awaiting review.
+------------------------------
 
 Bugs Reported by D.V. Wiebe
 
@@ -118,7 +99,7 @@ cbn note: this appears to be masked using the run-kst script - which which sets 
 ---------------------
    1. In the « edit plot item » dialog: the size of this dialog box is not scalable. Problem is that the size is computed with the longest name of all the curves in the plot. And these names can be very long if automatically generated… Maybe I should order a 3rd screen ;)
    2. “Configure ASCII file” : -it seems that these settings are not saved as global settings, but for each file ! Such that for my 10^5 files having the same format, I have to define 10^5 the same ascii format. It may be useful to have global settings and to overwrite them with settings stored in the .kst files. Note: I informed him that it was possible to edit manually the kstdatarc file to get the desired result, but a global setting UI has to be provided at some point.
-   3. Very often, changing the range settings of a plot does not change anything (I did not find out why it worked sometimes)
+
    4. Reloading a previously saved kst files seems to forget all the “configure ascii file” settings (in particularly “read fields names from”) so that no vector can be generated because kst tries to read an unknown field! This may explain why the relative path names did not work (see bug reported earlier). In the meantime, it has been confirmed that reloading works with the appropriate kstdatarc file in the right place.
    5. For the « kst --help » I first get the message
 
