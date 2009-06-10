@@ -46,7 +46,8 @@ namespace Kst {
 
 ViewItem::ViewItem(View *parent)
   : QObject(parent),
-    _isTiedZoom(false),
+    _isXTiedZoom(false),
+    _isYTiedZoom(false),
     _gripMode(Move),
     _allowedGripModes(Move | Resize | Rotate /*| Scale*/),
     _creationState(None),
@@ -705,7 +706,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         painter->save();
         QColor c = Qt::black;
         c.setAlphaF(c.alphaF() * 0.5);
-        painter->fillPath(checkBox(), c);
+        painter->fillPath(tiedZoomCheck(), c);
         painter->restore();
       }
       painter->setBrush(Qt::transparent);
@@ -747,10 +748,10 @@ void ViewItem::edit() {
 }
 
 
-void ViewItem::sharePlots(QPainter *painter) {
+void ViewItem::sharePlots(QPainter *painter, bool creation) {
   if (!_updatingLayout) {
     _updatingLayout = true;
-    ViewGridLayout::sharePlots(this, painter);
+    ViewGridLayout::sharePlots(this, painter, creation);
     _updatingLayout = false;
   }
 }
@@ -1791,6 +1792,23 @@ QPainterPath ViewItem::checkBox() const {
 }
 
 
+QPainterPath ViewItem::tiedZoomCheck() const {
+  QRectF bound = selectBoundingRect();
+  QRectF grip = QRectF(bound.topRight() - QPointF(sizeOfGrip().width() * 1.25, sizeOfGrip().height() * -.25), sizeOfGrip());
+  QPainterPath path;
+  if (isXTiedZoom() && isYTiedZoom()) {
+    path.addEllipse(grip);
+  } else if (isXTiedZoom()) {
+    path.moveTo(grip.center());
+    path.arcTo(grip, 225, 180);
+  } else if (isYTiedZoom()) {
+    path.moveTo(grip.center());
+    path.arcTo(grip, 45, 180);
+  }
+  return path;
+}
+
+
 void ViewItem::updateView() {
   update();
 }
@@ -1819,20 +1837,24 @@ void ViewItem::setSupportsTiedZoom(const bool supports) {
 }
 
 
-void ViewItem::setTiedZoom(bool tiedZoom, bool checkAllTied) {
+void ViewItem::setTiedZoom(bool tiedXZoom, bool tiedYZoom, bool checkAllTied) {
   Q_UNUSED(checkAllTied)
 
-  if (_isTiedZoom == tiedZoom)
+  if ((_isXTiedZoom == tiedXZoom) && (_isYTiedZoom == tiedYZoom))
     return;
 
-  _isTiedZoom = tiedZoom;
+  bool wasTiedZoom = isTiedZoom();
 
-  if (_isTiedZoom)
+  _isXTiedZoom = tiedXZoom;
+  _isYTiedZoom = tiedYZoom;
+
+  if (isTiedZoom() && !wasTiedZoom) {
     PlotItemManager::self()->addTiedZoomViewItem(this);
-  else
+  } else if (!isTiedZoom() && wasTiedZoom) {
     PlotItemManager::self()->removeTiedZoomViewItem(this);
+  }
 
-  //FIXME ugh, this is expensive, but need to redraw the renderitems checkboxes...
+  //FIXME ugh, this is expensive, but need to redraw the checkboxes...
   update();
 }
 

@@ -168,12 +168,16 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
 
     virtual bool tryShortcut(const QString &keySequence);
     QPainterPath checkBox() const;
-
-    virtual bool isTiedZoom() const { return _isTiedZoom; }
-    virtual bool supportsTiedZoom() const { return _supportsTiedZoom; }
-    virtual void setSupportsTiedZoom(const bool supports);
-    virtual void setTiedZoom(bool tiedZoom, bool checkAllTied = true);
+    QPainterPath tiedZoomCheck() const;
     virtual QSizeF tiedZoomSize() const { return QSizeF(checkBox().controlPointRect().size() * 1.5); }
+
+    virtual bool isTiedZoom() const { return (_isXTiedZoom || _isYTiedZoom); }
+    virtual bool isXTiedZoom() const { return _isXTiedZoom; }
+    virtual bool isYTiedZoom() const { return _isYTiedZoom; }
+    virtual void setTiedZoom(bool tiedXZoom, bool tiedYZoom, bool checkAllTied = true);
+
+    virtual bool supportsTiedZoom() const { return _supportsTiedZoom; }
+    virtual void setSupportsTiedZoom(const bool supports);    
 
     CreationState creationState() const { return _creationState; }
 
@@ -190,7 +194,7 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     virtual void lower();
     virtual void createAutoLayout();
     virtual void createCustomLayout();
-    virtual void sharePlots(QPainter *painter);
+    virtual void sharePlots(QPainter *painter, bool creation);
     virtual void remove();
     void resizeTopLeft(const QPointF &offset);
     void resizeTopRight(const QPointF &offset);
@@ -250,7 +254,8 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     QAction *_autoLayoutAction;
     QAction *_customLayoutAction;
 
-    bool _isTiedZoom;
+    bool _isXTiedZoom;
+    bool _isYTiedZoom;
 
   private Q_SLOTS:
     void viewMouseModeChanged(View::MouseMode oldMode);

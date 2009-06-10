@@ -135,14 +135,14 @@ void PlotItemManager::setAllTiedZoom(View *view, bool tiedZoom) {
   if (_plotLists.contains(view)) {
     foreach(PlotItem* plot, _plotLists[view]) {
       if (plot->supportsTiedZoom()) {
-        plot->setTiedZoom(tiedZoom, false);
+        plot->setTiedZoom(tiedZoom, tiedZoom, false);
       }
     }
   }
   if (_viewItemLists.contains(view)) {
     foreach(ViewItem* viewItem, _viewItemLists[view]) {
       if (viewItem->supportsTiedZoom()) {
-        viewItem->setTiedZoom(tiedZoom, false);
+        viewItem->setTiedZoom(tiedZoom, tiedZoom, false);
       }
     }
   }
@@ -198,11 +198,6 @@ QList<PlotItem*> PlotItemManager::plotsForView(View *view) {
 QList<PlotItem*> PlotItemManager::tiedZoomPlotsForView(View *view) {
   if (PlotItemManager::self()->_tiedZoomViewPlotLists.contains(view)) {
     QList<PlotItem*> plots = PlotItemManager::self()->_tiedZoomViewPlotLists.value(view);
-    if (PlotItemManager::self()->_tiedZoomViewItemLists.contains(view)) {
-      foreach (ViewItem *viewItem, PlotItemManager::self()->_tiedZoomViewItemLists.value(view)) {
-        plots << tiedZoomPlotsForViewItem(viewItem);
-      }
-    }
     return plots;
   }
   return QList<PlotItem*>();
@@ -235,6 +230,11 @@ QList<PlotItem*> PlotItemManager::tiedZoomPlots(PlotItem* plotItem) {
   } else {
     return tiedZoomPlotsForView(plotItem->parentView());
   }
+}
+
+
+QList<ViewItem*> PlotItemManager::tiedZoomViewItems(PlotItem* plotItem) {
+  return PlotItemManager::self()->_tiedZoomViewItemLists.value(plotItem->parentView());
 }
 
 

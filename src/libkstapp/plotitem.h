@@ -28,13 +28,13 @@
 #include "plotaxis.h"
 #include "legenditem.h"
 #include "curveplacement.h"
-#include "sharedaxisboxitem.h"
 #include "labelrenderer.h"
 
 namespace Kst {
 
 class PlotItem;
 class PlotAxis;
+class SharedAxisBoxItem;
 
 struct ZoomState {
   QPointer<PlotItem> item;
@@ -43,8 +43,6 @@ struct ZoomState {
   int yAxisZoomMode;
   bool isXAxisLog;
   bool isYAxisLog;
-  qreal xLogBase;
-  qreal yLogBase;
 };
 
 
@@ -148,7 +146,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     PlotAxis* xAxis() { return _xAxis; }
     PlotAxis* yAxis() { return _yAxis; }
 
-    virtual void setTiedZoom(bool tiedZoom, bool checkAllTied = true);
+    virtual void setTiedZoom(bool tiedXZoom, bool tiedYZoom, bool checkAllTied = true);
 
     bool isInSharedAxisBox() const;
     void setInSharedAxisBox(bool inSharedBox);
@@ -254,29 +252,38 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void triggerRedraw();
 
   public Q_SLOTS:
-    void zoomFixedExpression(const QRectF &projection);
-    void zoomXRange(const QRectF &projection);
-    void zoomYRange(const QRectF &projection);
-    void zoomMaximum();
-    void zoomGeneral(ZoomState &zoomstate);
-    void zoomMaxSpikeInsensitive();
+    void zoomFixedExpression(const QRectF &projection, bool force = false);
+    void zoomXRange(const QRectF &projection, bool force = false);
+    void zoomYRange(const QRectF &projection, bool force = false);
+    void zoomMaximum(bool force = false);
+    void zoomMaxSpikeInsensitive(bool force = false);
     void zoomPrevious();
-    void zoomYMeanCentered();
-    void zoomXMaximum();
-    void zoomXRight();
-    void zoomXLeft();
-    void zoomXOut();
-    void zoomXIn();
-    void zoomNormalizeXtoY();
-    void zoomLogX();
-    void zoomYLocalMaximum();
-    void zoomYMaximum();
-    void zoomYUp();
-    void zoomYDown();
-    void zoomYOut();
-    void zoomYIn();
-    void zoomNormalizeYtoX();
-    void zoomLogY();
+
+    void zoomTied();
+    void zoomXTied();
+    void zoomYTied();
+
+    void zoomYMeanCentered(bool force = false);
+    void zoomXMaximum(bool force = false);
+    void zoomXNoSpike(bool force = false);
+    void zoomXAutoBorder(bool force = false);
+    void zoomXRight(bool force = false);
+    void zoomXLeft(bool force = false);
+    void zoomXOut(bool force = false);
+    void zoomXIn(bool force = false);
+    void zoomNormalizeXtoY(bool force = false);
+    void zoomLogX(bool force = false, bool autoLog = true, bool enableLog = false);
+
+    void zoomYLocalMaximum(bool force = false);
+    void zoomYMaximum(bool force = false);
+    void zoomYNoSpike(bool force = false);
+    void zoomYAutoBorder(bool force = false);
+    void zoomYUp(bool force = false);
+    void zoomYDown(bool force = false);
+    void zoomYOut(bool force = false);
+    void zoomYIn(bool force = false);
+    void zoomNormalizeYtoX(bool force = false);
+    void zoomLogY(bool force = false, bool autoLog = true, bool enableLog = false);
 
     void setPlotBordersDirty(bool dirty = true);
 
@@ -432,8 +439,13 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QAction *_zoomMaximum;
     QAction *_zoomMaxSpikeInsensitive;
     QAction *_zoomPrevious;
+    QAction *_zoomTied;
+    QAction *_zoomXTied;
+    QAction *_zoomYTied;
     QAction *_zoomYMeanCentered;
     QAction *_zoomXMaximum;
+    QAction *_zoomXAutoBorder;
+    QAction *_zoomXNoSpike;
     QAction *_zoomXRight;
     QAction *_zoomXLeft;
     QAction *_zoomXOut;
@@ -442,6 +454,8 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QAction *_zoomLogX;
     QAction *_zoomYLocalMaximum;
     QAction *_zoomYMaximum;
+    QAction *_zoomYAutoBorder;
+    QAction *_zoomYNoSpike;
     QAction *_zoomYUp;
     QAction *_zoomYDown;
     QAction *_zoomYOut;
@@ -525,56 +539,47 @@ class PlotItemFactory : public GraphicsFactory {
 class KST_EXPORT ZoomCommand : public ViewItemCommand
 {
   public:
-    ZoomCommand(PlotItem *item, const QString &text);
+    ZoomCommand(PlotItem *item, const QString &text, bool forced = false);
     virtual ~ZoomCommand();
 
     virtual void undo();
     virtual void redo();
 
-    virtual void applyZoomTo(PlotItem *item) = 0;
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true) = 0;
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true) = 0;
 
   private:
     QList<ZoomState> _originalStates;
+    QList<ViewItem*> _viewItems;
+    PlotItem* _plotItem;
 };
 
 
 class KST_EXPORT ZoomFixedExpressionCommand : public ZoomCommand
 {
   public:
-    ZoomFixedExpressionCommand(PlotItem *item, const QRectF &fixed)
-        : ZoomCommand(item, QObject::tr("Zoom Fixed Expression")), _fixed(fixed) {}
+    ZoomFixedExpressionCommand(PlotItem *item, const QRectF &fixed, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom Fixed Expression"), forced), _fixed(fixed) {}
     virtual ~ZoomFixedExpressionCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 
   private:
     QRectF _fixed;
 };
 
 
-class KST_EXPORT ZoomGeneralCommand : public ZoomCommand
-{
-  public:
-    ZoomGeneralCommand(PlotItem *item, const ZoomState &zoomstate)
-        : ZoomCommand(item, QObject::tr("Zoom Fixed Expression")), _zoomstate(zoomstate) {}
-    virtual ~ZoomGeneralCommand() {}
-
-    virtual void applyZoomTo(PlotItem *item);
-
-  private:
-    ZoomState _zoomstate;
-};
-
-
 class KST_EXPORT ZoomXRangeCommand : public ZoomCommand
 {
   public:
-    ZoomXRangeCommand(PlotItem *item, const QRectF &fixed)
-        : ZoomCommand(item, QObject::tr("Zoom X Range Expression")), _fixed(fixed) {}
+    ZoomXRangeCommand(PlotItem *item, const QRectF &fixed, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom X Range Expression"), forced), _fixed(fixed) {}
     virtual ~ZoomXRangeCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
-
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
+    
   private:
     QRectF _fixed;
 };
@@ -583,12 +588,13 @@ class KST_EXPORT ZoomXRangeCommand : public ZoomCommand
 class KST_EXPORT ZoomYRangeCommand : public ZoomCommand
 {
   public:
-    ZoomYRangeCommand(PlotItem *item, const QRectF &fixed)
-        : ZoomCommand(item, QObject::tr("Zoom X Range Expression")), _fixed(fixed) {}
+    ZoomYRangeCommand(PlotItem *item, const QRectF &fixed, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom X Range Expression"), forced), _fixed(fixed) {}
     virtual ~ZoomYRangeCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
-
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
+    
   private:
     QRectF _fixed;
 };
@@ -597,171 +603,232 @@ class KST_EXPORT ZoomYRangeCommand : public ZoomCommand
 class KST_EXPORT ZoomMaximumCommand : public ZoomCommand
 {
   public:
-    ZoomMaximumCommand(PlotItem *item)
-        : ZoomCommand(item, QObject::tr("Zoom Maximum")) {}
+    ZoomMaximumCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom Maximum"), forced) {}
     virtual ~ZoomMaximumCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
 class KST_EXPORT ZoomMaxSpikeInsensitiveCommand : public ZoomCommand
 {
   public:
-    ZoomMaxSpikeInsensitiveCommand(PlotItem *item)
-        : ZoomCommand(item, QObject::tr("Zoom Max Spike Insensitive")) {}
+    ZoomMaxSpikeInsensitiveCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom Max Spike Insensitive"), forced) {}
     virtual ~ZoomMaxSpikeInsensitiveCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
 class KST_EXPORT ZoomYMeanCenteredCommand : public ZoomCommand
 {
   public:
-    ZoomYMeanCenteredCommand(PlotItem *item)
-        : ZoomCommand(item, QObject::tr("Zoom Y Mean Centered")) {}
+    ZoomYMeanCenteredCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom Y Mean Centered"), forced) {}
     virtual ~ZoomYMeanCenteredCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
 class KST_EXPORT ZoomXMaximumCommand : public ZoomCommand
 {
   public:
-    ZoomXMaximumCommand(PlotItem *item)
-        : ZoomCommand(item, QObject::tr("Zoom X Maximum")) {}
+    ZoomXMaximumCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom X Maximum"), forced) {}
     virtual ~ZoomXMaximumCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
+};
+
+class KST_EXPORT ZoomXAutoBorderCommand : public ZoomCommand
+{
+  public:
+    ZoomXAutoBorderCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom X Auto Border"), forced) {}
+    virtual ~ZoomXAutoBorderCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
+};
+
+class KST_EXPORT ZoomXNoSpikeCommand : public ZoomCommand
+{
+  public:
+    ZoomXNoSpikeCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom X No Spike"), forced) {}
+    virtual ~ZoomXNoSpikeCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
 class KST_EXPORT ZoomXRightCommand : public ZoomCommand
 {
   public:
-    ZoomXRightCommand(PlotItem *item)
-        : ZoomCommand(item, QObject::tr("Scroll X Right")) {}
+    ZoomXRightCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Scroll X Right"), forced) {}
     virtual ~ZoomXRightCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
 class KST_EXPORT ZoomXLeftCommand : public ZoomCommand
 {
   public:
-    ZoomXLeftCommand(PlotItem *item)
-        : ZoomCommand(item, QObject::tr("Scroll X Left")) {}
+    ZoomXLeftCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Scroll X Left"), forced) {}
     virtual ~ZoomXLeftCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
 class KST_EXPORT ZoomXOutCommand : public ZoomCommand
 {
   public:
-    ZoomXOutCommand(PlotItem *item)
-        : ZoomCommand(item, QObject::tr("Zoom X Out")) {}
+    ZoomXOutCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom X Out"), forced) {}
     virtual ~ZoomXOutCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
 class KST_EXPORT ZoomXInCommand : public ZoomCommand
 {
   public:
-    ZoomXInCommand(PlotItem *item)
-        : ZoomCommand(item, QObject::tr("Zoom X In")) {}
+    ZoomXInCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom X In"), forced) {}
     virtual ~ZoomXInCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
 class KST_EXPORT ZoomNormalizeXToYCommand : public ZoomCommand
 {
   public:
-    ZoomNormalizeXToYCommand(PlotItem *item)
-        : ZoomCommand(item, QObject::tr("Zoom Normalize X to Y")) {}
+    ZoomNormalizeXToYCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom Normalize X to Y"), forced) {}
     virtual ~ZoomNormalizeXToYCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
 class KST_EXPORT ZoomYLocalMaximumCommand : public ZoomCommand
 {
   public:
-    ZoomYLocalMaximumCommand(PlotItem *item)
-        : ZoomCommand(item, QObject::tr("Zoom Y Local Maximum")) {}
+    ZoomYLocalMaximumCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom Y Local Maximum"), forced) {}
     virtual ~ZoomYLocalMaximumCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
 class KST_EXPORT ZoomYMaximumCommand : public ZoomCommand
 {
   public:
-    ZoomYMaximumCommand(PlotItem *item)
-        : ZoomCommand(item, QObject::tr("Zoom Y Maximum")) {}
+    ZoomYMaximumCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom Y Maximum"), forced) {}
     virtual ~ZoomYMaximumCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
+};
+
+class KST_EXPORT ZoomYAutoBorderCommand : public ZoomCommand
+{
+  public:
+    ZoomYAutoBorderCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom Y Auto Border"), forced) {}
+    virtual ~ZoomYAutoBorderCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
+};
+
+class KST_EXPORT ZoomYNoSpikeCommand : public ZoomCommand
+{
+  public:
+    ZoomYNoSpikeCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom Y No Spike"), forced) {}
+    virtual ~ZoomYNoSpikeCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
 class KST_EXPORT ZoomYUpCommand : public ZoomCommand
 {
   public:
-    ZoomYUpCommand(PlotItem *item)
-        : ZoomCommand(item, QObject::tr("Zoom Y Up")) {}
+    ZoomYUpCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom Y Up"), forced) {}
     virtual ~ZoomYUpCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
 class KST_EXPORT ZoomYDownCommand : public ZoomCommand
 {
   public:
-    ZoomYDownCommand(PlotItem *item)
-        : ZoomCommand(item, QObject::tr("Zoom Y Down")) {}
+    ZoomYDownCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom Y Down"), forced) {}
     virtual ~ZoomYDownCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
 class KST_EXPORT ZoomYOutCommand : public ZoomCommand
 {
   public:
-    ZoomYOutCommand(PlotItem *item)
-        : ZoomCommand(item, QObject::tr("Zoom Y Out")) {}
+    ZoomYOutCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom Y Out"), forced) {}
     virtual ~ZoomYOutCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
 class KST_EXPORT ZoomYInCommand : public ZoomCommand
 {
   public:
-    ZoomYInCommand(PlotItem *item)
-        : ZoomCommand(item, QObject::tr("Zoom Y In")) {}
+    ZoomYInCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom Y In"), forced) {}
     virtual ~ZoomYInCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
 class KST_EXPORT ZoomNormalizeYToXCommand : public ZoomCommand
 {
   public:
-    ZoomNormalizeYToXCommand(PlotItem *item)
-        : ZoomCommand(item, QObject::tr("Zoom Normalize Y to X")) {}
+    ZoomNormalizeYToXCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom Normalize Y to X"), forced) {}
     virtual ~ZoomNormalizeYToXCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
 class KST_EXPORT ZoomXLogCommand : public ZoomCommand
 {
   public:
-    ZoomXLogCommand(PlotItem *item, bool enableLog)
-        : ZoomCommand(item, QObject::tr("Zoom X Log")), _enableLog(enableLog) {}
+    ZoomXLogCommand(PlotItem *item, bool enableLog, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom X Log"), forced), _enableLog(enableLog) {}
     virtual ~ZoomXLogCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 
   private:
     bool _enableLog;
@@ -770,11 +837,12 @@ class KST_EXPORT ZoomXLogCommand : public ZoomCommand
 class KST_EXPORT ZoomYLogCommand : public ZoomCommand
 {
   public:
-    ZoomYLogCommand(PlotItem *item, bool enableLog)
-        : ZoomCommand(item, QObject::tr("Zoom Y Log")), _enableLog(enableLog) {}
+    ZoomYLogCommand(PlotItem *item, bool enableLog, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom Y Log"), forced), _enableLog(enableLog) {}
     virtual ~ZoomYLogCommand() {}
 
-    virtual void applyZoomTo(PlotItem *item);
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 
   private:
     bool _enableLog;

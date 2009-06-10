@@ -13,11 +13,10 @@
 #define SHAREDAXISBOXITEM_H
 
 #include "viewitem.h"
+#include "plotitem.h"
 #include "graphicsfactory.h"
 
 namespace Kst {
-
-class PlotItem;
 
 class SharedAxisBoxItem : public ViewItem
 {
@@ -35,13 +34,58 @@ class SharedAxisBoxItem : public ViewItem
     bool tryMousePressEvent(ViewItem* viewItem, QGraphicsSceneMouseEvent *event);
     void setDirty() { _dirty = true; }
 
+    bool isXAxisShared() const { return _shareX; }
+    void setXAxisShared(const bool shared);
+
+    bool isYAxisShared() const { return _shareY; }
+    void setYAxisShared(const bool shared);
+
+    PlotAxis::ZoomMode xAxisZoomMode() const { return _xAxisZoomMode; }
+    void setXAxisZoomMode(PlotAxis::ZoomMode mode);
+
+    PlotAxis::ZoomMode yAxisZoomMode() const { return _yAxisZoomMode; }
+    void setYAxisZoomMode(PlotAxis::ZoomMode mode);
+
+    void updateZoomForDataUpdate();
+
   Q_SIGNALS:
     void breakShareSignal();
 
-  public slots:
+  public Q_SLOTS:
     void breakShare();
     bool acceptItems();
     void lockItems();
+
+    void shareXAxis();
+    void shareYAxis();
+
+    void zoomFixedExpression(const QRectF &projection, PlotItem* originPlotItem);
+    void zoomXRange(const QRectF &projection, PlotItem* originPlotItem);
+    void zoomYRange(const QRectF &projection, PlotItem* originPlotItem);
+    void zoomMaximum(PlotItem* originPlotItem);
+    void zoomMaxSpikeInsensitive(PlotItem* originPlotItem);
+
+    void zoomXMaximum(PlotItem* originPlotItem);
+    void zoomXNoSpike(PlotItem* originPlotItem);
+    void zoomXAutoBorder(PlotItem* originPlotItem);
+    void zoomXRight(PlotItem* originPlotItem);
+    void zoomXLeft(PlotItem* originPlotItem);
+    void zoomXOut(PlotItem* originPlotItem);
+    void zoomXIn(PlotItem* originPlotItem);
+    void zoomNormalizeXtoY(PlotItem* originPlotItem);
+    void zoomLogX(PlotItem* originPlotItem, bool autoEnable = true, bool enable = true);
+
+    void zoomYMeanCentered(PlotItem* originPlotItem);
+    void zoomYLocalMaximum(PlotItem* originPlotItem);
+    void zoomYMaximum(PlotItem* originPlotItem);
+    void zoomYNoSpike(PlotItem* originPlotItem);
+    void zoomYAutoBorder(PlotItem* originPlotItem);
+    void zoomYUp(PlotItem* originPlotItem);
+    void zoomYDown(PlotItem* originPlotItem);
+    void zoomYOut(PlotItem* originPlotItem);
+    void zoomYIn(PlotItem* originPlotItem);
+    void zoomNormalizeYtoX(PlotItem* originPlotItem);
+    void zoomLogY(PlotItem* originPlotItem, bool autoEnable = true, bool enable = true);
 
   protected Q_SLOTS:
     virtual void creationPolygonChanged(View::CreationEvent event);
@@ -49,11 +93,24 @@ class SharedAxisBoxItem : public ViewItem
   private:
     void highlightPlots(QList<PlotItem*> plots);
 
+    QRectF computeRect(PlotAxis::ZoomMode xMode, PlotAxis::ZoomMode yMode);
+    void applyZoom(const QRectF &projection, PlotItem* originPlotItem, bool applyX = true, bool applyY = true);
+
+    QList<PlotItem*> getSharedPlots();
+    QList<PlotItem*> getTiedPlots();
+
     QAction *_breakAction;
+
     QPointer<ViewGridLayout> _layout;
     QList<PlotItem*> _highlightedPlots;
+    QList<PlotItem*> _sharedPlots;
+
     bool _loaded;
+    bool _firstPaint;
     bool _dirty;
+    bool _shareX, _shareY;
+
+    PlotAxis::ZoomMode _xAxisZoomMode, _yAxisZoomMode;
 };
 
 class KST_EXPORT CreateSharedAxisBoxCommand : public CreateCommand

@@ -16,6 +16,7 @@
 #include "plotitem.h"
 #include "layoutboxitem.h"
 #include "gridlayouthelper.h"
+#include "sharedaxisboxitem.h"
 
 #include <QDebug>
 
@@ -154,7 +155,7 @@ void ViewGridLayout::reset() {
 }
 
 
-void ViewGridLayout::sharePlots(ViewItem *item, QPainter *painter) {
+void ViewGridLayout::sharePlots(ViewItem *item, QPainter *painter, bool creation) {
   Q_ASSERT(item);
   Q_ASSERT(item->parentView());
 
@@ -220,7 +221,7 @@ void ViewGridLayout::sharePlots(ViewItem *item, QPainter *painter) {
     }
   }
 
-  layout->shareAxis(painter);
+  layout->shareAxis(painter, creation);
 }
 
 
@@ -375,9 +376,22 @@ void ViewGridLayout::apply() {
 }
 
 
-void ViewGridLayout::shareAxis(QPainter *painter) {
-  calculateSharing();
-  updateSharedAxis();
+void ViewGridLayout::shareAxis(QPainter *painter, bool creation) {
+
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(parentItem());
+  if (!shareBox) {
+    return;
+  }
+
+  if (creation) {
+    calculateSharing();
+    updateSharedAxis();
+    shareBox->setXAxisShared(_shareX);
+    shareBox->setYAxisShared(_shareY);
+  } else {
+    _shareX = shareBox->isXAxisShared();
+    _shareY = shareBox->isYAxisShared();
+  }
 
   // Determine area of layout.  Minimal spacing on SharedAxisBoxItems.
   QSizeF layoutSize(parentItem()->width() - 1, parentItem()->height() - 1);
@@ -564,8 +578,9 @@ void ViewGridLayout::shareAxis(QPainter *painter) {
     item.viewItem->setPos(itemRect.topLeft());
     item.viewItem->setViewRect(QRectF(QPoint(0,0), itemRect.size()));
 
-    if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem))
+    if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem)) {
       emit plotItem->updatePlotRect();
+    }
 
 #if DEBUG_SHAREDAXIS
     qDebug() << "Shared Axis Plot item details:"

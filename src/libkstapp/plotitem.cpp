@@ -170,7 +170,8 @@ QString PlotItem::plotName() const {
 void PlotItem::save(QXmlStreamWriter &xml) {
   if (isVisible()) {
     xml.writeStartElement("plot");
-    xml.writeAttribute("tiedzoom", QVariant(isTiedZoom()).toString());
+    xml.writeAttribute("tiedxzoom", QVariant(isXTiedZoom()).toString());
+    xml.writeAttribute("tiedyzoom", QVariant(isYTiedZoom()).toString());
     xml.writeAttribute("leftlabelvisible", QVariant(_leftLabelDetails->isVisible()).toString());
     xml.writeAttribute("bottomlabelvisible", QVariant(_bottomLabelDetails->isVisible()).toString());
     xml.writeAttribute("rightlabelvisible", QVariant(_rightLabelDetails->isVisible()).toString());
@@ -227,6 +228,24 @@ void PlotItem::createActions() {
   _zoomPrevious->setShortcut(Qt::Key_R);
   registerShortcut(_zoomPrevious);
 
+  _zoomTied = new QAction(tr("Zoom Tied"), this);
+  _zoomTied->setShortcut(Qt::Key_T);
+  _zoomTied->setCheckable(true);
+  registerShortcut(_zoomTied);
+  connect(_zoomTied, SIGNAL(triggered()), this, SLOT(zoomTied()));
+
+  _zoomXTied = new QAction(tr("Zoom X Tied"), this);
+  _zoomXTied->setShortcut(Qt::CTRL+Qt::Key_T);
+  _zoomXTied->setCheckable(true);
+  registerShortcut(_zoomXTied);
+  connect(_zoomXTied, SIGNAL(triggered()), this, SLOT(zoomXTied()));
+
+  _zoomYTied = new QAction(tr("Zoom Y Tied"), this);
+  _zoomYTied->setShortcut(Qt::SHIFT+Qt::Key_T);
+  _zoomYTied->setCheckable(true);
+  registerShortcut(_zoomYTied);
+  connect(_zoomYTied, SIGNAL(triggered()), this, SLOT(zoomYTied()));
+
   _zoomYMeanCentered = new QAction(tr("Y-Zoom Mean-centered"), this);
   _zoomYMeanCentered->setShortcut(Qt::Key_A);
   registerShortcut(_zoomYMeanCentered);
@@ -236,6 +255,16 @@ void PlotItem::createActions() {
   _zoomXMaximum->setShortcut(Qt::CTRL+Qt::Key_M);
   registerShortcut(_zoomXMaximum);
   connect(_zoomXMaximum, SIGNAL(triggered()), this, SLOT(zoomXMaximum()));
+
+  _zoomXAutoBorder = new QAction(tr("X-Zoom Auto Border"), this);
+  _zoomXAutoBorder->setShortcut(Qt::CTRL+Qt::Key_B);
+  registerShortcut(_zoomXAutoBorder);
+  connect(_zoomXAutoBorder, SIGNAL(triggered()), this, SLOT(zoomXAutoBorder()));
+
+  _zoomXNoSpike = new QAction(tr("X-Zoom Spike Insensitive"), this);
+  _zoomXNoSpike->setShortcut(Qt::CTRL+Qt::Key_S);
+  registerShortcut(_zoomXNoSpike);
+  connect(_zoomXNoSpike, SIGNAL(triggered()), this, SLOT(zoomXNoSpike()));
 
   _zoomXRight = new QAction(tr("X-Zoom Right"), this);
   _zoomXRight->setShortcut(Qt::Key_Right);
@@ -277,6 +306,16 @@ void PlotItem::createActions() {
   _zoomYMaximum->setShortcut(Qt::SHIFT+Qt::Key_M);
   registerShortcut(_zoomYMaximum);
   connect(_zoomYMaximum, SIGNAL(triggered()), this, SLOT(zoomYMaximum()));
+
+  _zoomYAutoBorder = new QAction(tr("Y-Zoom Auto Border"), this);
+  _zoomYAutoBorder->setShortcut(Qt::SHIFT+Qt::Key_B);
+  registerShortcut(_zoomYAutoBorder);
+  connect(_zoomYAutoBorder, SIGNAL(triggered()), this, SLOT(zoomYAutoBorder()));
+
+  _zoomYNoSpike = new QAction(tr("Y-Zoom Spike Insensitive"), this);
+  _zoomYNoSpike->setShortcut(Qt::SHIFT+Qt::Key_S);
+  registerShortcut(_zoomYNoSpike);
+  connect(_zoomYNoSpike, SIGNAL(triggered()), this, SLOT(zoomYNoSpike()));
 
   _zoomYUp= new QAction(tr("Y-Zoom Up"), this);
   _zoomYUp->setShortcut(Qt::Key_Up);
@@ -331,10 +370,14 @@ void PlotItem::createZoomMenu() {
   _zoomMenu->addAction(_zoomMaxSpikeInsensitive);
   _zoomMenu->addAction(_zoomPrevious);
   _zoomMenu->addAction(_zoomYMeanCentered);
+  _zoomMenu->addAction(_zoomTied);
 
   _zoomMenu->addSeparator();
 
+  _zoomMenu->addAction(_zoomXTied);
   _zoomMenu->addAction(_zoomXMaximum);
+  _zoomMenu->addAction(_zoomXAutoBorder);
+  _zoomMenu->addAction(_zoomXNoSpike);
   _zoomMenu->addAction(_zoomXRight);
   _zoomMenu->addAction(_zoomXLeft);
   _zoomMenu->addAction(_zoomXOut);
@@ -344,8 +387,11 @@ void PlotItem::createZoomMenu() {
 
   _zoomMenu->addSeparator();
 
+  _zoomMenu->addAction(_zoomYTied);
   _zoomMenu->addAction(_zoomYLocalMaximum);
   _zoomMenu->addAction(_zoomYMaximum);
+  _zoomMenu->addAction(_zoomYAutoBorder);
+  _zoomMenu->addAction(_zoomYNoSpike);
   _zoomMenu->addAction(_zoomYUp);
   _zoomMenu->addAction(_zoomYDown);
   _zoomMenu->addAction(_zoomYOut);
@@ -400,6 +446,20 @@ void PlotItem::createFitMenu() {
 void PlotItem::addToMenuForContextEvent(QMenu &menu) {
   if (parentItem() && isInSharedAxisBox() && _sharedBox) {
     if (parentView()->viewMode() == View::Data) {
+      QAction *xAxisSharedBox = new QAction(tr("Share Plots on X-Axis"), this);
+      xAxisSharedBox->setShortcut(Qt::Key_X);
+      connect(xAxisSharedBox, SIGNAL(triggered()), _sharedBox, SLOT(shareXAxis()));
+      xAxisSharedBox->setCheckable(true);
+      xAxisSharedBox->setChecked(_sharedBox->isXAxisShared());
+      menu.addAction(xAxisSharedBox);
+
+      QAction *yAxisSharedBox = new QAction(tr("Share Plots on Y-Axis"), this);
+      yAxisSharedBox->setShortcut(Qt::Key_Y);
+      connect(yAxisSharedBox, SIGNAL(triggered()), _sharedBox, SLOT(shareYAxis()));
+      yAxisSharedBox->setCheckable(true);
+      yAxisSharedBox->setChecked(_sharedBox->isYAxisShared());
+      menu.addAction(yAxisSharedBox);
+
       QAction *breakSharedBox = new QAction(tr("Break Shared Axis Box"), this);
       breakSharedBox->setShortcut(Qt::Key_B);
       connect(breakSharedBox, SIGNAL(triggered()), _sharedBox, SLOT(breakShare()));
@@ -414,6 +474,16 @@ void PlotItem::addToMenuForContextEvent(QMenu &menu) {
 
   _zoomLogX->setChecked(xAxis()->axisLog());
   _zoomLogY->setChecked(yAxis()->axisLog());
+  if (isInSharedAxisBox()) {
+    _zoomTied->setChecked(sharedAxisBox()->isTiedZoom());
+    _zoomXTied->setChecked(sharedAxisBox()->isXTiedZoom());
+    _zoomYTied->setChecked(sharedAxisBox()->isYTiedZoom());
+  } else {
+    _zoomTied->setChecked(isTiedZoom());
+    _zoomXTied->setChecked(isXTiedZoom());
+    _zoomYTied->setChecked(isYTiedZoom());
+  }
+  _zoomPrevious->setVisible(!isInSharedAxisBox());
   menu.addMenu(_zoomMenu);
   if (!DataObject::filterPluginList().empty()) {
     createFilterMenu();
@@ -466,32 +536,40 @@ void PlotItem::updateObject() {
 #if DEBUG_UPDATE_CYCLE > 1
   qDebug() << "\t\tUP - Updating Plot";
 #endif
-  if (xAxis()->axisZoomMode() == PlotAxis::Auto) {
-    if (yAxis()->axisZoomMode() == PlotAxis::AutoBorder || yAxis()->axisZoomMode() == PlotAxis::Auto
-        || yAxis()->axisZoomMode() == PlotAxis::SpikeInsensitive || yAxis()->axisZoomMode() == PlotAxis::MeanCentered) {
-#if DEBUG_UPDATE_CYCLE > 1
-      qDebug() << "\t\t\tUP - Updating Plot Projection Rect - X and Y Maximum";
-#endif
-      setProjectionRect(computedProjectionRect());
-    } else {
-#if DEBUG_UPDATE_CYCLE > 1
-      qDebug() << "\t\t\tUP - Updating Plot Projection Rect - X Maximum";
-#endif
+  if (isInSharedAxisBox()) {
+    // Need to update the box's projectionRect.
+    #if DEBUG_UPDATE_CYCLE > 1
+        qDebug() << "\t\t\tUP - Updating Shared Axis Box Projection Rect";
+    #endif
+    sharedAxisBox()->updateZoomForDataUpdate();
+  } else {
+    if (xAxis()->axisZoomMode() == PlotAxis::Auto) {
+      if (yAxis()->axisZoomMode() == PlotAxis::AutoBorder || yAxis()->axisZoomMode() == PlotAxis::Auto
+          || yAxis()->axisZoomMode() == PlotAxis::SpikeInsensitive || yAxis()->axisZoomMode() == PlotAxis::MeanCentered) {
+  #if DEBUG_UPDATE_CYCLE > 1
+        qDebug() << "\t\t\tUP - Updating Plot Projection Rect - X and Y Maximum";
+  #endif
+        setProjectionRect(computedProjectionRect());
+      } else {
+  #if DEBUG_UPDATE_CYCLE > 1
+        qDebug() << "\t\t\tUP - Updating Plot Projection Rect - X Maximum";
+  #endif
+        QRectF compute = computedProjectionRect();
+        setProjectionRect(QRectF(compute.x(),
+              projectionRect().y(),
+              compute.width(),
+              projectionRect().height()));
+      }
+    } else if (yAxis()->axisZoomMode() == PlotAxis::Auto) {
+  #if DEBUG_UPDATE_CYCLE > 1
+      qDebug() << "\t\t\tUP - Updating Plot Projection Rect - Y Maximum";
+  #endif
       QRectF compute = computedProjectionRect();
-      setProjectionRect(QRectF(compute.x(),
-            projectionRect().y(),
-            compute.width(),
-            projectionRect().height()));
+      setProjectionRect(QRectF(projectionRect().x(),
+            compute.y(),
+            projectionRect().width(),
+            compute.height()));
     }
-  } else if (yAxis()->axisZoomMode() == PlotAxis::Auto) {
-#if DEBUG_UPDATE_CYCLE > 1
-    qDebug() << "\t\t\tUP - Updating Plot Projection Rect - Y Maximum";
-#endif
-    QRectF compute = computedProjectionRect();
-    setProjectionRect(QRectF(projectionRect().x(),
-          compute.y(),
-          projectionRect().width(),
-          compute.height()));
   }
   setLabelsDirty();
   update();
@@ -1269,18 +1347,22 @@ QRectF PlotItem::projectionRect() const {
 }
 
 
-void PlotItem::setTiedZoom(bool tiedZoom, bool checkAllTied) {
-  if ((_isInSharedAxisBox && !tiedZoom) || (_isTiedZoom == tiedZoom))
+void PlotItem::setTiedZoom(bool tiedXZoom, bool tiedYZoom, bool checkAllTied) {
+  if ((_isXTiedZoom == tiedXZoom) && (_isYTiedZoom == tiedYZoom))
     return;
 
-  _isTiedZoom = tiedZoom;
+  bool wasTiedZoom = isTiedZoom();
 
-  if (_isTiedZoom)
+  _isXTiedZoom = tiedXZoom;
+  _isYTiedZoom = tiedYZoom;
+
+  if (isTiedZoom() && !wasTiedZoom) {
     PlotItemManager::self()->addTiedZoomPlot(this, checkAllTied);
-  else
+  } else if (!isTiedZoom() && wasTiedZoom) {
     PlotItemManager::self()->removeTiedZoomPlot(this);
+  }
 
-  //FIXME ugh, this is expensive, but need to redraw the renderitems checkboxes...
+  //FIXME ugh, this is expensive, but need to redraw the checkboxes...
   update();
 }
 
@@ -1304,18 +1386,16 @@ SharedAxisBoxItem* PlotItem::sharedAxisBox() {
 
 void PlotItem::setSharedAxisBox(SharedAxisBoxItem* parent) {
   if (parent) {
-    if (_isTiedZoom) {
-      setTiedZoom(false);
+    if (isTiedZoom()) {
+      setTiedZoom(false, false);
     }
     setInSharedAxisBox(true);
     setAllowedGripModes(0);
     setFlags(0);
     setParent(parent);
-    setTiedZoom(true);
     setBrush(Qt::transparent);
   } else {
     setInSharedAxisBox(false);
-    setTiedZoom(false);
     setAllowedGripModes(Move | Resize | Rotate);
     setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
     setParent(0);
@@ -2303,7 +2383,7 @@ void PlotItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   }
   if (event->button() == Qt::LeftButton) {
     if (checkBox().contains(event->pos())) {
-      setTiedZoom(!isTiedZoom());
+      setTiedZoom(!isTiedZoom(), !isTiedZoom());
     } else if (parentView()->viewMode() == View::Data) {
       edit();
     } else {
@@ -2355,66 +2435,79 @@ void PlotItem::plotMaximize() {
 }
 
 
-void PlotItem::zoomFixedExpression(const QRectF &projection) {
+void PlotItem::zoomFixedExpression(const QRectF &projection, bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomFixedExpression" << projection << "current" << projectionRect();
 #endif
   if (projection.isValid()) {
-    ZoomCommand *cmd = new ZoomFixedExpressionCommand(this, projection);
-    _undoStack->push(cmd);
-    cmd->redo();
+    if (isInSharedAxisBox() && !force) {
+      sharedAxisBox()->zoomFixedExpression(projection, this);
+    } else {
+      ZoomCommand *cmd = new ZoomFixedExpressionCommand(this, projection, force);
+      _undoStack->push(cmd);
+      cmd->redo();
+    }
   }
 }
 
 
-void PlotItem::zoomXRange(const QRectF &projection) {
+void PlotItem::zoomXRange(const QRectF &projection, bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomXRange" << projection << endl;
 #endif
   if (projection.isValid()) {
-    ZoomCommand *cmd = new ZoomXRangeCommand(this, projection);
-    _undoStack->push(cmd);
-    cmd->redo();
+    if (isInSharedAxisBox() && !force) {
+      sharedAxisBox()->zoomXRange(projection, this);
+    } else {
+      ZoomCommand *cmd = new ZoomXRangeCommand(this, projection, force);
+      _undoStack->push(cmd);
+      cmd->redo();
+    }
   }
 }
 
 
-void PlotItem::zoomYRange(const QRectF &projection) {
+void PlotItem::zoomYRange(const QRectF &projection, bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomYRange" << projection << endl;
 #endif
   if (projection.isValid()) {
-    ZoomCommand *cmd = new ZoomYRangeCommand(this, projection);
+    if (isInSharedAxisBox() && !force) {
+      sharedAxisBox()->zoomYRange(projection, this);
+    } else {
+      ZoomCommand *cmd = new ZoomYRangeCommand(this, projection, force);
+      _undoStack->push(cmd);
+      cmd->redo();
+    }
+  }
+}
+
+
+void PlotItem::zoomMaximum(bool force) {
+#if DEBUG_ZOOM
+  qDebug() << "zoomMaximum" << endl;
+#endif
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomMaximum(this);
+  } else {
+    ZoomCommand *cmd = new ZoomMaximumCommand(this, force);
     _undoStack->push(cmd);
     cmd->redo();
   }
 }
 
 
-void PlotItem::zoomGeneral(ZoomState &zoomstate) {
-  ZoomCommand *cmd = new ZoomGeneralCommand(this, zoomstate);
-  _undoStack->push(cmd);
-  cmd->redo();
-}
-
-
-void PlotItem::zoomMaximum() {
-#if DEBUG_ZOOM
-  qDebug() << "zoomMaximum" << endl;
-#endif
-  ZoomCommand *cmd = new ZoomMaximumCommand(this);
-  _undoStack->push(cmd);
-  cmd->redo();
-}
-
-
-void PlotItem::zoomMaxSpikeInsensitive() {
+void PlotItem::zoomMaxSpikeInsensitive(bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomMaxSpikeInsensitive" << endl;
 #endif
-  ZoomCommand *cmd = new ZoomMaxSpikeInsensitiveCommand(this);
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomMaxSpikeInsensitive(this);
+  } else {
+    ZoomCommand *cmd = new ZoomMaxSpikeInsensitiveCommand(this, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
@@ -2422,78 +2515,168 @@ void PlotItem::zoomPrevious() {
 #if DEBUG_ZOOM
   qDebug() << "zoomPrevious" << endl;
 #endif
-  if (_undoStack->canUndo()) {
-    QAction *undoAction = _undoStack->createUndoAction(this);
-    if (undoAction) {
-      undoAction->activate(QAction::Trigger);
+  if (!isInSharedAxisBox()) {
+    if (_undoStack->canUndo()) {
+      QAction *undoAction = _undoStack->createUndoAction(this);
+      if (undoAction) {
+        undoAction->activate(QAction::Trigger);
+      }
     }
   }
 }
 
 
-void PlotItem::zoomYMeanCentered() {
+void PlotItem::zoomTied() {
+#if DEBUG_ZOOM
+  qDebug() << "zoomTied" << endl;
+#endif
+  if (isInSharedAxisBox()) {
+    sharedAxisBox()->setTiedZoom(!sharedAxisBox()->isTiedZoom(), !sharedAxisBox()->isTiedZoom());
+  } else {
+    setTiedZoom(!isTiedZoom(), !isTiedZoom());
+  }
+}
+
+
+void PlotItem::zoomXTied() {
+#if DEBUG_ZOOM
+  qDebug() << "zoomXTied" << endl;
+#endif
+  if (isInSharedAxisBox()) {
+    sharedAxisBox()->setTiedZoom(!sharedAxisBox()->isXTiedZoom(), sharedAxisBox()->isYTiedZoom());
+  } else {
+    setTiedZoom(!isXTiedZoom(), isYTiedZoom());
+  }
+}
+
+
+void PlotItem::zoomYTied() {
+#if DEBUG_ZOOM
+  qDebug() << "zoomYTied" << endl;
+#endif
+  if (isInSharedAxisBox()) {
+    sharedAxisBox()->setTiedZoom(sharedAxisBox()->isXTiedZoom(), !sharedAxisBox()->isYTiedZoom());
+  } else {
+    setTiedZoom(isXTiedZoom(), !isYTiedZoom());
+  }
+}
+
+
+void PlotItem::zoomYMeanCentered(bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomYMeanCentered" << endl;
 #endif
-  ZoomCommand *cmd = new ZoomYMeanCenteredCommand(this);
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomYMeanCentered(this);
+  } else {
+    ZoomCommand *cmd = new ZoomYMeanCenteredCommand(this, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
-void PlotItem::zoomXMaximum() {
+void PlotItem::zoomXMaximum(bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomXMaximum" << endl;
 #endif
-  ZoomCommand *cmd = new ZoomXMaximumCommand(this);
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomXMaximum(this);
+  } else {
+    ZoomCommand *cmd = new ZoomXMaximumCommand(this, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
-void PlotItem::zoomXRight() {
+void PlotItem::zoomXNoSpike(bool force) {
+#if DEBUG_ZOOM
+  qDebug() << "zoomXNoSpike" << endl;
+#endif
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomXNoSpike(this);
+  } else {
+    ZoomCommand *cmd = new ZoomXNoSpikeCommand(this, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
+}
+
+
+void PlotItem::zoomXAutoBorder(bool force) {
+#if DEBUG_ZOOM
+  qDebug() << "zoomXAutoBorder" << endl;
+#endif
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomXAutoBorder(this);
+  } else {
+    ZoomCommand *cmd = new ZoomXAutoBorderCommand(this, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
+}
+
+
+void PlotItem::zoomXRight(bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomXRight" << endl;
 #endif
-  ZoomCommand *cmd = new ZoomXRightCommand(this);
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomXRight(this);
+  } else {
+    ZoomCommand *cmd = new ZoomXRightCommand(this, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
-void PlotItem::zoomXLeft() {
+void PlotItem::zoomXLeft(bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomXLeft" << endl;
 #endif
-  ZoomCommand *cmd = new ZoomXLeftCommand(this);
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomXLeft(this);
+  } else {
+    ZoomCommand *cmd = new ZoomXLeftCommand(this, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
-void PlotItem::zoomXOut() {
+void PlotItem::zoomXOut(bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomXOut" << endl;
 #endif
   resetSelectionRect();
-  ZoomCommand *cmd = new ZoomXOutCommand(this);
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomXOut(this);
+  } else {
+    ZoomCommand *cmd = new ZoomXOutCommand(this, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
-void PlotItem::zoomXIn() {
+void PlotItem::zoomXIn(bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomXIn" << endl;
 #endif
   resetSelectionRect();
-  ZoomCommand *cmd = new ZoomXInCommand(this);
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomXIn(this);
+  } else {
+    ZoomCommand *cmd = new ZoomXInCommand(this, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
-void PlotItem::zoomNormalizeXtoY() {
+void PlotItem::zoomNormalizeXtoY(bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomNormalizeXtoY" << endl;
 #endif
@@ -2501,85 +2684,149 @@ void PlotItem::zoomNormalizeXtoY() {
   if (xAxis()->axisLog() || yAxis()->axisLog())
     return; //apparently we don't want to do anything here according to kst2dplot...
 
-  ZoomCommand *cmd = new ZoomNormalizeXToYCommand(this);
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomNormalizeXtoY(this);
+  } else {
+    ZoomCommand *cmd = new ZoomNormalizeXToYCommand(this, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
-void PlotItem::zoomLogX() {
+void PlotItem::zoomLogX(bool force, bool autoLog, bool enableLog) {
 #if DEBUG_ZOOM
   qDebug() << "zoomLogX" << endl;
 #endif
-  ZoomCommand *cmd = new ZoomXLogCommand(this, !xAxis()->axisLog());
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomLogX(this);
+  } else {
+    bool log = enableLog;
+    if (autoLog) {
+      log = !xAxis()->axisLog();
+    }
+    ZoomCommand *cmd = new ZoomXLogCommand(this, log, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
-void PlotItem::zoomYLocalMaximum() {
+void PlotItem::zoomYLocalMaximum(bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomYLocalMaximum" << endl;
 #endif
-  ZoomCommand *cmd = new ZoomYLocalMaximumCommand(this);
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomYLocalMaximum(this);
+  } else {
+    ZoomCommand *cmd = new ZoomYLocalMaximumCommand(this, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
-void PlotItem::zoomYMaximum() {
+void PlotItem::zoomYMaximum(bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomYMaximum" << endl;
 #endif
-  ZoomCommand *cmd = new ZoomYMaximumCommand(this);
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomYMaximum(this);
+  } else {
+    ZoomCommand *cmd = new ZoomYMaximumCommand(this, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
-void PlotItem::zoomYUp() {
+void PlotItem::zoomYNoSpike(bool force) {
+#if DEBUG_ZOOM
+  qDebug() << "zoomYNoSpike" << endl;
+#endif
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomYNoSpike(this);
+  } else {
+    ZoomCommand *cmd = new ZoomYNoSpikeCommand(this, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
+}
+
+
+void PlotItem::zoomYAutoBorder(bool force) {
+#if DEBUG_ZOOM
+  qDebug() << "zoomYAutoBorder" << endl;
+#endif
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomYAutoBorder(this);
+  } else {
+    ZoomCommand *cmd = new ZoomYAutoBorderCommand(this, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
+}
+
+
+void PlotItem::zoomYUp(bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomYUp" << endl;
 #endif
-  ZoomCommand *cmd = new ZoomYUpCommand(this);
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomYUp(this);
+  } else {
+    ZoomCommand *cmd = new ZoomYUpCommand(this, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
-void PlotItem::zoomYDown() {
+void PlotItem::zoomYDown(bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomYDown" << endl;
 #endif
-  ZoomCommand *cmd = new ZoomYDownCommand(this);
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomYDown(this);
+  } else {
+    ZoomCommand *cmd = new ZoomYDownCommand(this, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
-void PlotItem::zoomYOut() {
+void PlotItem::zoomYOut(bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomYOut" << endl;
 #endif
   resetSelectionRect();
-  ZoomCommand *cmd = new ZoomYOutCommand(this);
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomYOut(this);
+  } else {
+    ZoomCommand *cmd = new ZoomYOutCommand(this, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
-void PlotItem::zoomYIn() {
+void PlotItem::zoomYIn(bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomYIn" << endl;
 #endif
   resetSelectionRect();
-  ZoomCommand *cmd = new ZoomYInCommand(this);
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomYIn(this);
+  } else {
+    ZoomCommand *cmd = new ZoomYInCommand(this, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
-void PlotItem::zoomNormalizeYtoX() {
+void PlotItem::zoomNormalizeYtoX(bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomNormalizeYtoX" << endl;
 #endif
@@ -2587,19 +2834,31 @@ void PlotItem::zoomNormalizeYtoX() {
   if (xAxis()->axisLog() || yAxis()->axisLog())
     return; //apparently we don't want to do anything here according to kst2dplot...
 
-  ZoomCommand *cmd = new ZoomNormalizeYToXCommand(this);
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomNormalizeYtoX(this);
+  } else {
+    ZoomCommand *cmd = new ZoomNormalizeYToXCommand(this, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
-void PlotItem::zoomLogY() {
+void PlotItem::zoomLogY(bool force, bool autoLog, bool enableLog) {
 #if DEBUG_ZOOM
   qDebug() << "zoomLogY" << endl;
 #endif
-  ZoomCommand *cmd = new ZoomYLogCommand(this, !yAxis()->axisLog());
-  _undoStack->push(cmd);
-  cmd->redo();
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomLogY(this);
+  } else {
+    bool log = enableLog;
+    if (autoLog) {
+      log = !yAxis()->axisLog();
+    }
+    ZoomCommand *cmd = new ZoomYLogCommand(this, log, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
 }
 
 
@@ -2641,8 +2900,6 @@ ZoomState PlotItem::currentZoomState() {
   zoomState.yAxisZoomMode = yAxis()->axisZoomMode();
   zoomState.isXAxisLog = xAxis()->axisLog();
   zoomState.isYAxisLog = yAxis()->axisLog();
-  zoomState.xLogBase = 10.0;
-  zoomState.yLogBase = 10.0;
   return zoomState;
 }
 
@@ -2891,10 +3148,16 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         }
         QXmlStreamAttributes attrs = xml.attributes();
         QStringRef av;
-        av = attrs.value("tiedzoom");
+        bool xTiedZoom = false, yTiedZoom = false;
+        av = attrs.value("tiedxzoom");
         if (!av.isNull()) {
-          rc->setTiedZoom(QVariant(av.toString()).toBool());
+          xTiedZoom = QVariant(av.toString()).toBool();
         }
+        av = attrs.value("tiedyzoom");
+        if (!av.isNull()) {
+          yTiedZoom = QVariant(av.toString()).toBool();
+        }
+        rc->setTiedZoom(xTiedZoom, yTiedZoom);
         av = attrs.value("leftlabelvisible");
         if (!av.isNull()) {
           rc->leftLabelDetails()->setVisible(QVariant(av.toString()).toBool());
@@ -3021,16 +3284,17 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
 }
 
 
-ZoomCommand::ZoomCommand(PlotItem *item, const QString &text)
-    : ViewItemCommand(item, text, false) {
+ZoomCommand::ZoomCommand(PlotItem *item, const QString &text, bool forced)
+    : ViewItemCommand(item, text, false), _plotItem(item) {
 
-  if (!item->isTiedZoom()) {
+  if (!item->isTiedZoom() || forced) {
     _originalStates << item->currentZoomState();
   } else {
     QList<PlotItem*> plots = PlotItemManager::tiedZoomPlots(item);
     foreach (PlotItem *plotItem, plots) {
       _originalStates << plotItem->currentZoomState();
     }
+    _viewItems = PlotItemManager::tiedZoomViewItems(item);
   }
 }
 
@@ -3048,112 +3312,319 @@ void ZoomCommand::undo() {
 
 
 void ZoomCommand::redo() {
+  bool tiedX = _plotItem->isXTiedZoom();
+  bool tiedY = _plotItem->isYTiedZoom();
   foreach (ZoomState state, _originalStates) {
-    applyZoomTo(state.item);
+    if (state.item == _plotItem) {
+      applyZoomTo(state.item, true, true);
+    } else {
+      applyZoomTo(state.item, state.item->isXTiedZoom() && tiedX, state.item->isYTiedZoom() && tiedY);
+    }
+  }
+  foreach (ViewItem* item, _viewItems) {
+    applyZoomTo(item, tiedX, tiedY);
   }
 
   kstApp->mainWindow()->document()->setChanged(true);
 }
 
-/* 
- * Set zoom to arbitrary state: used by the dialog
- */
-void ZoomGeneralCommand::applyZoomTo(PlotItem *item) {
-  item->xAxis()->setAxisZoomMode((PlotAxis::ZoomMode)_zoomstate.xAxisZoomMode);
-  item->yAxis()->setAxisZoomMode((PlotAxis::ZoomMode)_zoomstate.yAxisZoomMode);
-  item->setProjectionRect(_zoomstate.projectionRect);
-}
 
 /*
  * X axis zoom to FixedExpression, Y axis zoom to FixedExpression.
  */
-void ZoomFixedExpressionCommand::applyZoomTo(PlotItem *item) {
-  item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
-  item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
-  item->setProjectionRect(_fixed);
+void ZoomFixedExpressionCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  if (applyX && applyY) {
+    item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+    item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+    item->setProjectionRect(_fixed);
+  } else if (applyX) {
+    item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+    item->setProjectionRect(QRectF(_fixed.x(), item->projectionRect().y(), _fixed.width(), item->projectionRect().height()));
+  } else if (applyY) {
+    item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+    item->setProjectionRect(QRectF(item->projectionRect().x(), _fixed.y(), item->projectionRect().width(), _fixed.height()));
+  }
+}
+
+
+void ZoomFixedExpressionCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyX && applyY) {
+      shareBox->zoomFixedExpression(_fixed, 0);
+    } else if (applyX) {
+      shareBox->zoomXRange(_fixed, 0);
+    } else if (applyY) {
+      shareBox->zoomYRange(_fixed, 0);
+    }
+  }
 }
 
 
 /*
  * X axis zoom to Range.
  */
-void ZoomXRangeCommand::applyZoomTo(PlotItem *item) {
-  item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
-  item->setProjectionRect(QRectF(_fixed.x(), item->projectionRect().y(), _fixed.width(), item->projectionRect().height()));
+void ZoomXRangeCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  if (applyX) {
+    item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+    item->setProjectionRect(QRectF(_fixed.x(), item->projectionRect().y(), _fixed.width(), item->projectionRect().height()));
+  }
+}
+
+
+void ZoomXRangeCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyX) {
+      shareBox->zoomXRange(_fixed, 0);
+    }
+  }
 }
 
 
 /*
  * Y axis zoom to Range.
  */
-void ZoomYRangeCommand::applyZoomTo(PlotItem *item) {
-  item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
-  item->setProjectionRect(QRectF(item->projectionRect().x(), _fixed.y(), item->projectionRect().width(), _fixed.height()));
+void ZoomYRangeCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  if (applyY) {
+    item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+    item->setProjectionRect(QRectF(item->projectionRect().x(), _fixed.y(), item->projectionRect().width(), _fixed.height()));
+  }
+}
+
+
+void ZoomYRangeCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyY) {
+      shareBox->zoomYRange(_fixed, 0);
+    }
+  }
 }
 
 
 /*
  * X axis zoom to Auto, Y axis zoom to AutoBorder.
  */
-void ZoomMaximumCommand::applyZoomTo(PlotItem *item) {
-  item->xAxis()->setAxisZoomMode(PlotAxis::Auto);
-  item->yAxis()->setAxisZoomMode(PlotAxis::AutoBorder);
-  item->setProjectionRect(item->computedProjectionRect());
+void ZoomMaximumCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  if (applyX && applyY) {
+    item->xAxis()->setAxisZoomMode(PlotAxis::Auto);
+    item->yAxis()->setAxisZoomMode(PlotAxis::AutoBorder);
+    QRectF compute = item->computedProjectionRect();
+    item->setProjectionRect(compute);
+  } else if (applyX) {
+    item->xAxis()->setAxisZoomMode(PlotAxis::Auto);
+    QRectF compute = item->computedProjectionRect();
+    item->setProjectionRect(QRectF(compute.x(), item->projectionRect().y(), compute.width(), item->projectionRect().height()));
+  } else if (applyY) {
+    item->yAxis()->setAxisZoomMode(PlotAxis::AutoBorder);
+    QRectF compute = item->computedProjectionRect();
+    item->setProjectionRect(QRectF(item->projectionRect().x(), compute.y(), item->projectionRect().width(), compute.height()));
+  }
 }
 
+
+void ZoomMaximumCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyX && applyY) {
+      shareBox->zoomMaximum(0);
+    } else if (applyX) {
+      shareBox->zoomXMaximum(0);
+    } else if (applyY) {
+      shareBox->zoomYMaximum(0);
+    }
+  }
+}
 
 /*
  * X axis zoom to Auto, Y axis zoom to SpikeInsensitive.
  */
-void ZoomMaxSpikeInsensitiveCommand::applyZoomTo(PlotItem *item) {
-  item->xAxis()->setAxisZoomMode(PlotAxis::Auto);
-  item->yAxis()->setAxisZoomMode(PlotAxis::SpikeInsensitive);
-  item->setProjectionRect(item->computedProjectionRect());
+void ZoomMaxSpikeInsensitiveCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  if (applyX && applyY) {
+    item->xAxis()->setAxisZoomMode(PlotAxis::Auto);
+    item->yAxis()->setAxisZoomMode(PlotAxis::SpikeInsensitive);
+    QRectF compute = item->computedProjectionRect();
+    item->setProjectionRect(compute);
+  } else if (applyX) {
+    item->xAxis()->setAxisZoomMode(PlotAxis::Auto);
+    QRectF compute = item->computedProjectionRect();
+    item->setProjectionRect(QRectF(compute.x(), item->projectionRect().y(), compute.width(), item->projectionRect().height()));
+  } else if (applyY) {
+    item->yAxis()->setAxisZoomMode(PlotAxis::SpikeInsensitive);
+    QRectF compute = item->computedProjectionRect();
+    item->setProjectionRect(QRectF(item->projectionRect().x(), compute.y(), item->projectionRect().width(), compute.height()));
+  }
+}
+
+
+void ZoomMaxSpikeInsensitiveCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyX && applyY) {
+      shareBox->zoomMaxSpikeInsensitive(0);
+    } else if (applyX) {
+      shareBox->zoomXMaximum(0);
+    } else if (applyY) {
+      shareBox->zoomYNoSpike(0);
+    }
+  }
 }
 
 
 /*
  * X axis zoom to Auto, Y axis zoom to Mean Centered.
  */
-void ZoomYMeanCenteredCommand::applyZoomTo(PlotItem *item) {
-  item->xAxis()->setAxisZoomMode(PlotAxis::Auto);
-  item->yAxis()->setAxisZoomMode(PlotAxis::MeanCentered);
-  item->setProjectionRect(item->computedProjectionRect());
+void ZoomYMeanCenteredCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  if (applyX && applyY) {
+    item->xAxis()->setAxisZoomMode(PlotAxis::Auto);
+    item->yAxis()->setAxisZoomMode(PlotAxis::MeanCentered);
+    QRectF compute = item->computedProjectionRect();
+    item->setProjectionRect(compute);
+  } else if (applyX) {
+    item->xAxis()->setAxisZoomMode(PlotAxis::Auto);
+    QRectF compute = item->computedProjectionRect();
+    item->setProjectionRect(QRectF(compute.x(), item->projectionRect().y(), compute.width(), item->projectionRect().height()));
+  } else if (applyY) {
+    item->yAxis()->setAxisZoomMode(PlotAxis::MeanCentered);
+    QRectF compute = item->computedProjectionRect();
+    item->setProjectionRect(QRectF(item->projectionRect().x(), compute.y(), item->projectionRect().width(), compute.height()));
+  }
 }
 
+
+void ZoomYMeanCenteredCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyX && applyY) {
+      shareBox->zoomYMeanCentered(0);
+    } else if (applyX) {
+      shareBox->zoomXMaximum(0);
+    } else if (applyY) {
+      shareBox->zoomYMeanCentered(0);
+    }
+  }
+}
 
 /*
  * X axis zoom to auto, Y zoom not changed.
  */
-void ZoomXMaximumCommand::applyZoomTo(PlotItem *item) {
-  item->xAxis()->setAxisZoomMode(PlotAxis::Auto);
-  QRectF compute = item->computedProjectionRect();
-  item->setProjectionRect(QRectF(compute.x(),
-        item->projectionRect().y(),
-        compute.width(),
-        item->projectionRect().height()));
+void ZoomXMaximumCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  if (applyX) {
+    item->xAxis()->setAxisZoomMode(PlotAxis::Auto);
+    QRectF compute = item->computedProjectionRect();
+    item->setProjectionRect(QRectF(compute.x(),
+          item->projectionRect().y(),
+          compute.width(),
+          item->projectionRect().height()));
+  }
 }
+
+
+void ZoomXMaximumCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyX) {
+      shareBox->zoomXMaximum(0);
+    }
+  }
+}
+
+
+/*
+ * X axis zoom to auto border, Y zoom not changed.
+ */
+void ZoomXAutoBorderCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  if (applyX) {
+    item->xAxis()->setAxisZoomMode(PlotAxis::AutoBorder);
+    QRectF compute = item->computedProjectionRect();
+    item->setProjectionRect(QRectF(compute.x(),
+          item->projectionRect().y(),
+          compute.width(),
+          item->projectionRect().height()));
+  }
+}
+
+
+void ZoomXAutoBorderCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyX) {
+      shareBox->zoomXAutoBorder(0);
+    }
+  }
+}
+
+
+/*
+ * X axis zoom to no spike, Y zoom not changed.
+ */
+void ZoomXNoSpikeCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  if (applyX) {
+    item->xAxis()->setAxisZoomMode(PlotAxis::SpikeInsensitive);
+    QRectF compute = item->computedProjectionRect();
+    item->setProjectionRect(QRectF(compute.x(),
+          item->projectionRect().y(),
+          compute.width(),
+          item->projectionRect().height()));
+  }
+}
+
+
+void ZoomXNoSpikeCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyX) {
+      shareBox->zoomXNoSpike(0);
+    }
+  }
+}
+
 
 /*
  * X axis zoom changed to fixed and shifted to right:
  *       new_xmin = xmin + (xmax - xmin)*0.10;
  *       new_xmax = xmax + (xmax – xmin)*0.10;
  */
-void ZoomXRightCommand::applyZoomTo(PlotItem *item) {
-  item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+void ZoomXRightCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  if (applyX) {
+    item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
 
-  QRectF compute = item->projectionRect();
+    QRectF compute = item->projectionRect();
 
-  qreal dx = (item->xMax() - item->xMin())*0.10;
-  if (item->xAxis()->axisLog()) {
-    compute.setLeft(pow(10, item->xMin() + dx));
-    compute.setRight(pow(10, item->xMax() + dx));
-  } else {
-    compute.setLeft(compute.left() + dx);
-    compute.setRight(compute.right() + dx);
+    qreal dx = (item->xMax() - item->xMin())*0.10;
+    if (item->xAxis()->axisLog()) {
+      compute.setLeft(pow(10, item->xMin() + dx));
+      compute.setRight(pow(10, item->xMax() + dx));
+    } else {
+      compute.setLeft(compute.left() + dx);
+      compute.setRight(compute.right() + dx);
+    }
+
+    item->setProjectionRect(compute);
   }
+}
 
-  item->setProjectionRect(compute);
+
+void ZoomXRightCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyX) {
+      shareBox->zoomXRight(0);
+    }
+  }
 }
 
 /*
@@ -3161,44 +3632,73 @@ void ZoomXRightCommand::applyZoomTo(PlotItem *item) {
  *       new_xmin = xmin - (xmax - xmin)*0.10;
  *       new_xmax = xmax - (xmax – xmin)*0.10;
  */
-void ZoomXLeftCommand::applyZoomTo(PlotItem *item) {
-  item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+void ZoomXLeftCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  if (applyX) {
+    item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
 
-  QRectF compute = item->projectionRect();
+    QRectF compute = item->projectionRect();
 
-  qreal dx = (item->xMax() - item->xMin())*0.10;
-  if (item->xAxis()->axisLog()) {
-    compute.setLeft(pow(10, item->xMin() - dx));
-    compute.setRight(pow(10, item->xMax() - dx));
-  } else {
-    compute.setLeft(compute.left() - dx);
-    compute.setRight(compute.right() - dx);
+    qreal dx = (item->xMax() - item->xMin())*0.10;
+    if (item->xAxis()->axisLog()) {
+      compute.setLeft(pow(10, item->xMin() - dx));
+      compute.setRight(pow(10, item->xMax() - dx));
+    } else {
+      compute.setLeft(compute.left() - dx);
+      compute.setRight(compute.right() - dx);
+    }
+
+    item->setProjectionRect(compute);
   }
-
-  item->setProjectionRect(compute);
 }
+
+
+void ZoomXLeftCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyX) {
+      shareBox->zoomXLeft(0);
+    }
+  }
+}
+
 
 /*
  * X axis zoom changed to fixed and increased:
  *       new_xmin = xmin - (xmax - xmin)*0.25;
  *       new_xmax = xmax + (xmax – xmin)*0.25;
  */
-void ZoomXOutCommand::applyZoomTo(PlotItem *item) {
-  item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+void ZoomXOutCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  if (applyX) {
+    item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
 
-  QRectF compute = item->projectionRect();
+    QRectF compute = item->projectionRect();
 
-  qreal dx = (item->xMax() - item->xMin())*0.25;
-  if (item->xAxis()->axisLog()) {
-    compute.setLeft(pow(10, item->xMin() - dx));
-    compute.setRight(pow(10, item->xMax() + dx));
-  } else {
-    compute.setLeft(compute.left() - dx);
-    compute.setRight(compute.right() + dx);
+    qreal dx = (item->xMax() - item->xMin())*0.25;
+    if (item->xAxis()->axisLog()) {
+      compute.setLeft(pow(10, item->xMin() - dx));
+      compute.setRight(pow(10, item->xMax() + dx));
+    } else {
+      compute.setLeft(compute.left() - dx);
+      compute.setRight(compute.right() + dx);
+    }
+
+    item->setProjectionRect(compute);
+    //   item->update();
   }
+}
 
-  item->setProjectionRect(compute);
-  //   item->update();
+
+void ZoomXOutCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyX) {
+      shareBox->zoomXOut(0);
+    }
+  }
 }
 
 
@@ -3207,21 +3707,35 @@ void ZoomXOutCommand::applyZoomTo(PlotItem *item) {
  *       new_xmin = xmin + (xmax - xmin)*0.1666666;
  *       new_xmax = xmax - (xmax – xmin)*0.1666666;
  */
-void ZoomXInCommand::applyZoomTo(PlotItem *item) {
-  item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+void ZoomXInCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  if (applyX) {
+    item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
 
-  QRectF compute = item->projectionRect();
+    QRectF compute = item->projectionRect();
 
-  qreal dx = (item->xMax() - item->xMin())*0.1666666;
-  if (item->xAxis()->axisLog()) {
-    compute.setLeft(pow(10, item->xMin() + dx));
-    compute.setRight(pow(10, item->xMax() - dx));
-  } else {
-    compute.setLeft(compute.left() + dx);
-    compute.setRight(compute.right() - dx);
+    qreal dx = (item->xMax() - item->xMin())*0.1666666;
+    if (item->xAxis()->axisLog()) {
+      compute.setLeft(pow(10, item->xMin() + dx));
+      compute.setRight(pow(10, item->xMax() - dx));
+    } else {
+      compute.setLeft(compute.left() + dx);
+      compute.setRight(compute.right() - dx);
+    }
+
+    item->setProjectionRect(compute);
   }
+}
 
-  item->setProjectionRect(compute);
+
+void ZoomXInCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyX) {
+      shareBox->zoomXIn(0);
+    }
+  }
 }
 
 
@@ -3230,16 +3744,30 @@ void ZoomXInCommand::applyZoomTo(PlotItem *item) {
  * the X axis range to have the same units per mm as the Y axis range. Particularly
  * useful for images.
  */
-void ZoomNormalizeXToYCommand::applyZoomTo(PlotItem *item) {
-  QRectF compute = item->projectionRect();
-  qreal mean = compute.center().x();
-  qreal range = item->plotRect().width() * compute.height() / item->plotRect().height();
+void ZoomNormalizeXToYCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  if (applyX) {
+    QRectF compute = item->projectionRect();
+    qreal mean = compute.center().x();
+    qreal range = item->plotRect().width() * compute.height() / item->plotRect().height();
 
-  compute.setLeft(mean - (range / 2.0));
-  compute.setRight(mean + (range / 2.0));
+    compute.setLeft(mean - (range / 2.0));
+    compute.setRight(mean + (range / 2.0));
 
-  item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
-  item->setProjectionRect(compute);
+    item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+    item->setProjectionRect(compute);
+  }
+}
+
+
+void ZoomNormalizeXToYCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyX) {
+      shareBox->zoomNormalizeXtoY(0);
+    }
+  }
 }
 
 
@@ -3249,33 +3777,115 @@ void ZoomNormalizeXToYCommand::applyZoomTo(PlotItem *item) {
  * we are zoomed in to x = 30 to 40. Adjust Y zoom to include all points with x
  * values between 30 and 40.
  */
-void ZoomYLocalMaximumCommand::applyZoomTo(PlotItem *item) {
-  qreal minimum = item->yAxis()->axisLog() ? 0.0 : -0.1;
-  qreal maximum = 0.1;
-  item->computedRelationalMax(minimum, maximum);
+void ZoomYLocalMaximumCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  if (applyY) {
+    qreal minimum = item->yAxis()->axisLog() ? 0.0 : -0.1;
+    qreal maximum = 0.1;
+    item->computedRelationalMax(minimum, maximum);
 
-  item->computeBorder(Qt::Vertical, minimum, maximum);
+    item->computeBorder(Qt::Vertical, minimum, maximum);
 
-  item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+    item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
 
-  QRectF compute = item->projectionRect();
-  compute.setTop(minimum);
-  compute.setBottom(maximum);
+    QRectF compute = item->projectionRect();
+    compute.setTop(minimum);
+    compute.setBottom(maximum);
 
-  item->setProjectionRect(compute);
+    item->setProjectionRect(compute);
+  }
+}
+
+
+void ZoomYLocalMaximumCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyY) {
+      shareBox->zoomYLocalMaximum(0);
+    }
+  }
 }
 
 
 /*
  * Y axis zoom to auto, X zoom not changed.
  */
-void ZoomYMaximumCommand::applyZoomTo(PlotItem *item) {
-  item->yAxis()->setAxisZoomMode(PlotAxis::Auto);
-  QRectF compute = item->computedProjectionRect();
-  item->setProjectionRect(QRectF(item->projectionRect().x(),
-        compute.y(),
-        item->projectionRect().width(),
-        compute.height()));
+void ZoomYMaximumCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  if (applyY) {
+    item->yAxis()->setAxisZoomMode(PlotAxis::Auto);
+    QRectF compute = item->computedProjectionRect();
+    item->setProjectionRect(QRectF(item->projectionRect().x(),
+          compute.y(),
+          item->projectionRect().width(),
+          compute.height()));
+  }
+}
+
+
+void ZoomYMaximumCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyY) {
+      shareBox->zoomYMaximum(0);
+    }
+  }
+}
+
+
+/*
+ * Y axis zoom to auto border, X zoom not changed.
+ */
+void ZoomYAutoBorderCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  if (applyY) {
+    item->yAxis()->setAxisZoomMode(PlotAxis::AutoBorder);
+    QRectF compute = item->computedProjectionRect();
+    item->setProjectionRect(QRectF(item->projectionRect().x(),
+          compute.y(),
+          item->projectionRect().width(),
+          compute.height()));
+  }
+}
+
+
+void ZoomYAutoBorderCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyY) {
+      shareBox->zoomYAutoBorder(0);
+    }
+  }
+}
+
+
+/*
+ * Y axis zoom to no spike, X zoom not changed.
+ */
+void ZoomYNoSpikeCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  if (applyY) {
+    item->yAxis()->setAxisZoomMode(PlotAxis::SpikeInsensitive);
+    QRectF compute = item->computedProjectionRect();
+    item->setProjectionRect(QRectF(item->projectionRect().x(),
+          compute.y(),
+          item->projectionRect().width(),
+          compute.height()));
+  }
+}
+
+
+void ZoomYNoSpikeCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyY) {
+      shareBox->zoomYNoSpike(0);
+    }
+  }
 }
 
 
@@ -3285,22 +3895,36 @@ void ZoomYMaximumCommand::applyZoomTo(PlotItem *item) {
  *             new_ymin = ymin + (ymax - ymin)*0.1;
  *             new_ymax = ymax + (ymax - ymin)*0.1;
  */
-void ZoomYUpCommand::applyZoomTo(PlotItem *item) {
-  if (item->yAxis()->axisZoomMode() != PlotAxis::MeanCentered)
-    item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+void ZoomYUpCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  if (applyY) {
+    if (item->yAxis()->axisZoomMode() != PlotAxis::MeanCentered)
+      item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
 
-  QRectF compute = item->projectionRect();
+    QRectF compute = item->projectionRect();
 
-  qreal dy = (item->yMax() - item->yMin())*0.1;
-  if (item->yAxis()->axisLog()) {
-    compute.setTop(pow(10, item->yMin() + dy));
-    compute.setBottom(pow(10, item->yMax() + dy));
-  } else {
-    compute.setTop(compute.top() + dy);
-    compute.setBottom(compute.bottom() + dy);
+    qreal dy = (item->yMax() - item->yMin())*0.1;
+    if (item->yAxis()->axisLog()) {
+      compute.setTop(pow(10, item->yMin() + dy));
+      compute.setBottom(pow(10, item->yMax() + dy));
+    } else {
+      compute.setTop(compute.top() + dy);
+      compute.setBottom(compute.bottom() + dy);
+    }
+
+    item->setProjectionRect(compute);
   }
+}
 
-  item->setProjectionRect(compute);
+
+void ZoomYUpCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyY) {
+      shareBox->zoomYUp(0);
+    }
+  }
 }
 
 
@@ -3310,22 +3934,36 @@ void ZoomYUpCommand::applyZoomTo(PlotItem *item) {
  *             new_ymin = ymin - (ymax - ymin)*0.10;
  *             new_ymax = ymax - (ymax - ymin)*0.10;
  */
-void ZoomYDownCommand::applyZoomTo(PlotItem *item) {
-  if (item->yAxis()->axisZoomMode() != PlotAxis::MeanCentered)
-    item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+void ZoomYDownCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  if (applyY) {
+    if (item->yAxis()->axisZoomMode() != PlotAxis::MeanCentered)
+      item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
 
-  QRectF compute = item->projectionRect();
+    QRectF compute = item->projectionRect();
 
-  qreal dy = (item->yMax() - item->yMin())*0.1;
-  if (item->yAxis()->axisLog()) {
-    compute.setTop(pow(10, item->yMin() - dy));
-    compute.setBottom(pow(10, item->yMax() - dy));
-  } else {
-    compute.setTop(compute.top() - dy);
-    compute.setBottom(compute.bottom() - dy);
+    qreal dy = (item->yMax() - item->yMin())*0.1;
+    if (item->yAxis()->axisLog()) {
+      compute.setTop(pow(10, item->yMin() - dy));
+      compute.setBottom(pow(10, item->yMax() - dy));
+    } else {
+      compute.setTop(compute.top() - dy);
+      compute.setBottom(compute.bottom() - dy);
+    }
+
+    item->setProjectionRect(compute);
   }
+}
 
-  item->setProjectionRect(compute);
+
+void ZoomYDownCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyY) {
+      shareBox->zoomYDown(0);
+    }
+  }
 }
 
 
@@ -3335,23 +3973,37 @@ void ZoomYDownCommand::applyZoomTo(PlotItem *item) {
  *             new_ymin = ymin - (ymax - ymin)*0.25;
  *             new_ymax = ymax + (ymax - ymin)*0.25;
  */
-void ZoomYOutCommand::applyZoomTo(PlotItem *item) {
-  if (item->yAxis()->axisZoomMode() != PlotAxis::MeanCentered)
-    item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+void ZoomYOutCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  if (applyY) {
+    if (item->yAxis()->axisZoomMode() != PlotAxis::MeanCentered)
+      item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
 
-  QRectF compute = item->projectionRect();
+    QRectF compute = item->projectionRect();
 
-  qreal dy = (item->yMax() - item->yMin())*0.25;
-  if (item->yAxis()->axisLog()) {
-    compute.setTop(pow(10, item->yMin() - dy));
-    compute.setBottom(pow(10, item->yMax() + dy));
-  } else {
-    compute.setTop(compute.top() - dy);
-    compute.setBottom(compute.bottom() + dy);
+    qreal dy = (item->yMax() - item->yMin())*0.25;
+    if (item->yAxis()->axisLog()) {
+      compute.setTop(pow(10, item->yMin() - dy));
+      compute.setBottom(pow(10, item->yMax() + dy));
+    } else {
+      compute.setTop(compute.top() - dy);
+      compute.setBottom(compute.bottom() + dy);
+    }
+
+    item->setProjectionRect(compute);
+    //   item->update();
   }
+}
 
-  item->setProjectionRect(compute);
-  //   item->update();
+
+void ZoomYOutCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyY) {
+      shareBox->zoomYOut(0);
+    }
+  }
 }
 
 
@@ -3361,23 +4013,37 @@ void ZoomYOutCommand::applyZoomTo(PlotItem *item) {
  *             new_ymin = ymin + (ymax - ymin)*0.1666666;
  *             new_ymax = ymax - (ymax – ymin)*0.1666666;
  */
-void ZoomYInCommand::applyZoomTo(PlotItem *item) {
-  if (item->yAxis()->axisZoomMode() != PlotAxis::MeanCentered)
-    item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+void ZoomYInCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  if (applyY) {
+    if (item->yAxis()->axisZoomMode() != PlotAxis::MeanCentered)
+      item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
 
-  QRectF compute = item->projectionRect();
+    QRectF compute = item->projectionRect();
 
-  qreal dy = (item->yMax() - item->yMin())*0.1666666;
-  if (item->yAxis()->axisLog()) {
-    compute.setTop(pow(10, item->yMin() + dy));
-    compute.setBottom(pow(10, item->yMax() - dy));
-  } else {
-    compute.setTop(compute.top() + dy);
-    compute.setBottom(compute.bottom() - dy);
+    qreal dy = (item->yMax() - item->yMin())*0.1666666;
+    if (item->yAxis()->axisLog()) {
+      compute.setTop(pow(10, item->yMin() + dy));
+      compute.setBottom(pow(10, item->yMax() - dy));
+    } else {
+      compute.setTop(compute.top() + dy);
+      compute.setBottom(compute.bottom() - dy);
+    }
+
+    item->setProjectionRect(compute);
+    //   item->update();
   }
+}
 
-  item->setProjectionRect(compute);
-  //   item->update();
+
+void ZoomYInCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyY) {
+      shareBox->zoomYIn(0);
+    }
+  }
 }
 
 
@@ -3386,36 +4052,77 @@ void ZoomYInCommand::applyZoomTo(PlotItem *item) {
  * change the Y axis range to have the same units per mm as the X axis range.
  * Particularly useful for images.
  */
-void ZoomNormalizeYToXCommand::applyZoomTo(PlotItem *item) {
-  QRectF compute = item->projectionRect();
-  qreal mean = compute.center().y();
-  qreal range = item->plotRect().height() * compute.width() / item->plotRect().width();
+void ZoomNormalizeYToXCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  if (applyY) {
+    QRectF compute = item->projectionRect();
+    qreal mean = compute.center().y();
+    qreal range = item->plotRect().height() * compute.width() / item->plotRect().width();
 
-  compute.setTop(mean - (range / 2.0));
-  compute.setBottom(mean + (range / 2.0));
+    compute.setTop(mean - (range / 2.0));
+    compute.setBottom(mean + (range / 2.0));
 
-  item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
-  item->setProjectionRect(compute);
+    item->yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+    item->setProjectionRect(compute);
+  }
+}
+
+
+void ZoomNormalizeYToXCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyY) {
+      shareBox->zoomNormalizeYtoX(0);
+    }
+  }
 }
 
 
 /*
  * Switch the X Axis to a Log Scale.
  */
-void ZoomXLogCommand::applyZoomTo(PlotItem *item) {
-  item->xAxis()->setAxisLog(_enableLog);
-  item->setProjectionRect(item->computedProjectionRect(), true); //need to recompute
+void ZoomXLogCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  if (applyX) {
+    item->xAxis()->setAxisLog(_enableLog);
+    item->setProjectionRect(item->computedProjectionRect(), true); //need to recompute
+  }
+}
+
+
+void ZoomXLogCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyX) {
+      shareBox->zoomLogX(0, false, _enableLog);
+    }
+  }
 }
 
 
 /*
  * Switch the Y Axis to a Log Scale.
  */
-void ZoomYLogCommand::applyZoomTo(PlotItem *item) {
-  item->yAxis()->setAxisLog(_enableLog);
-  item->setProjectionRect(item->computedProjectionRect(), true); //need to recompute
+void ZoomYLogCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  if (applyY) {
+    item->yAxis()->setAxisLog(_enableLog);
+    item->setProjectionRect(item->computedProjectionRect(), true); //need to recompute
+  }
 }
 
+
+void ZoomYLogCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyX);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyY) {
+      shareBox->zoomLogY(0, false, _enableLog);
+    }
+  }
+}
 
 }
 

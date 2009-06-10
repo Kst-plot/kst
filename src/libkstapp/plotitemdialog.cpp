@@ -604,35 +604,61 @@ void PlotItemDialog::saveRange(PlotItem *item) {
   }
   if (newYMax == 0.0) newYMax = 0.2;
 
+   PlotAxis::ZoomMode xZoomMode = item->yAxis()->axisZoomMode();
+   PlotAxis::ZoomMode yZoomMode = item->yAxis()->axisZoomMode();
   if (_rangeTab->xModeDirty()) {
     if (_rangeTab->xAuto()) {
+      xZoomMode = PlotAxis::Auto;
     } else if (_rangeTab->xSpike()) {
-      zoomstate.xAxisZoomMode = PlotAxis::SpikeInsensitive;
+      xZoomMode = PlotAxis::SpikeInsensitive;
     } else if (_rangeTab->xBorder()) {
-      zoomstate.xAxisZoomMode = PlotAxis::AutoBorder;
+      xZoomMode = PlotAxis::AutoBorder;
     } else if (_rangeTab->xMean()) {
-      zoomstate.xAxisZoomMode = PlotAxis::MeanCentered;
+      xZoomMode = PlotAxis::MeanCentered;
     } else if (_rangeTab->xFixed()) {
-      zoomstate.xAxisZoomMode = PlotAxis::FixedExpression;
+      xZoomMode = PlotAxis::FixedExpression;
     }
   }
 
   if (_rangeTab->yModeDirty()) {
     if (_rangeTab->yAuto()) {
-      zoomstate.yAxisZoomMode = PlotAxis::Auto;
+      yZoomMode = PlotAxis::Auto;
     } else if (_rangeTab->ySpike()) {
-      zoomstate.yAxisZoomMode = PlotAxis::SpikeInsensitive;
+      yZoomMode = PlotAxis::SpikeInsensitive;
     } else if (_rangeTab->yBorder()) {
-      zoomstate.yAxisZoomMode = PlotAxis::AutoBorder;
+      yZoomMode = PlotAxis::AutoBorder;
     } else if (_rangeTab->yMean()) {
-      zoomstate.yAxisZoomMode = PlotAxis::MeanCentered;
+      yZoomMode = PlotAxis::MeanCentered;
     } else if (_rangeTab->yFixed()) {
-      zoomstate.yAxisZoomMode = PlotAxis::FixedExpression;
+      yZoomMode = PlotAxis::FixedExpression;
     }
   }
-  zoomstate.projectionRect = QRectF(newXMin, newYMin, newXMax, newYMax);
 
-  item->zoomGeneral(zoomstate);
+  QRectF newProjectionRect(newXMin, newYMin, newXMax, newYMax);
+  if (_rangeTab->xModeDirty()) {
+    if (xZoomMode == PlotAxis::Auto) {
+      item->zoomXMaximum();
+    } else if (xZoomMode == PlotAxis::AutoBorder) {
+      item->zoomXAutoBorder();
+    } else if (xZoomMode == PlotAxis::SpikeInsensitive) {
+      item->zoomXNoSpike();
+    }
+  }
+  if (xZoomMode == PlotAxis::MeanCentered || xZoomMode == PlotAxis::FixedExpression) {
+    item->zoomXRange(newProjectionRect);
+  }
+  if (_rangeTab->yModeDirty()) {
+    if (yZoomMode == PlotAxis::Auto) {
+      item->zoomYMaximum();
+    } else if (yZoomMode == PlotAxis::AutoBorder) {
+      item->zoomYAutoBorder();
+    } else if (yZoomMode == PlotAxis::SpikeInsensitive) {
+      item->zoomYNoSpike();
+    }
+  }
+  if (yZoomMode == PlotAxis::MeanCentered || yZoomMode == PlotAxis::FixedExpression) {
+    item->zoomYRange(newProjectionRect);
+  }
 }
 
 
