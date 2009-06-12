@@ -378,6 +378,8 @@ void MainWindow::createBox() {
     _createBoxAct->setChecked(true);
     CreateBoxCommand *cmd = new CreateBoxCommand;
     cmd->createItem();
+  } else {
+    _tabWidget->currentView()->setMouseMode(View::Default);
   }
 }
 
@@ -389,6 +391,8 @@ void MainWindow::createSharedAxisBox() {
     _createSharedAxisBoxAct->setChecked(true);
     CreateSharedAxisBoxCommand *cmd = new CreateSharedAxisBoxCommand;
     cmd->createItem();
+  } else {
+    _tabWidget->currentView()->setMouseMode(View::Default);
   }
 }
 
@@ -399,6 +403,8 @@ void MainWindow::createCircle() {
     _createCircleAct->setChecked(true);
     CreateCircleCommand *cmd = new CreateCircleCommand;
     cmd->createItem();
+  } else {
+    _tabWidget->currentView()->setMouseMode(View::Default);
   }
 }
 
@@ -409,6 +415,8 @@ void MainWindow::createEllipse() {
     _createEllipseAct->setChecked(true);
     CreateEllipseCommand *cmd = new CreateEllipseCommand;
     cmd->createItem();
+  } else {
+    _tabWidget->currentView()->setMouseMode(View::Default);
   }
 }
 
@@ -419,6 +427,8 @@ void MainWindow::createLabel() {
     _createLabelAct->setChecked(true);
     CreateLabelCommand *cmd = new CreateLabelCommand;
     cmd->createItem();
+  } else {
+    _tabWidget->currentView()->setMouseMode(View::Default);
   }
 }
 
@@ -429,6 +439,8 @@ void MainWindow::createLine() {
     _createLineAct->setChecked(true);
     CreateLineCommand *cmd = new CreateLineCommand;
     cmd->createItem();
+  } else {
+    _tabWidget->currentView()->setMouseMode(View::Default);
   }
 }
 
@@ -439,6 +451,8 @@ void MainWindow::createArrow() {
     _createArrowAct->setChecked(true);
     CreateArrowCommand *cmd = new CreateArrowCommand;
     cmd->createItem();
+  } else {
+    _tabWidget->currentView()->setMouseMode(View::Default);
   }
 }
 
@@ -449,6 +463,8 @@ void MainWindow::createPicture() {
     _createPictureAct->setChecked(true);
     CreatePictureCommand *cmd = new CreatePictureCommand;
     cmd->createItem();
+  } else {
+    _tabWidget->currentView()->setMouseMode(View::Default);
   }
 }
 
@@ -459,6 +475,8 @@ void MainWindow::createPlot() {
     _createPlotAct->setChecked(true);
     CreatePlotCommand *cmd = new CreatePlotCommand;
     cmd->createItem();
+  } else {
+    _tabWidget->currentView()->setMouseMode(View::Default);
   }
 }
 
@@ -469,6 +487,8 @@ void MainWindow::createSvg() {
     _createSvgAct->setChecked(true);
     CreateSvgCommand *cmd = new CreateSvgCommand;
     cmd->createItem();
+  } else {
+    _tabWidget->currentView()->setMouseMode(View::Default);
   }
 }
 
