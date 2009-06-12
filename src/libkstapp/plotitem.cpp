@@ -351,7 +351,7 @@ void PlotItem::createActions() {
   registerShortcut(_zoomLogY);
   connect(_zoomLogY, SIGNAL(triggered()), this, SLOT(zoomLogY()));
 
-  _adjustImageColorscale = new QAction(tr("Ajust Image Color Scale"), this);
+  _adjustImageColorscale = new QAction(tr("Adjust Image Color Scale"), this);
   _adjustImageColorscale->setShortcut(Qt::Key_I);
   registerShortcut(_adjustImageColorscale);
   connect(_adjustImageColorscale, SIGNAL(triggered()), this, SLOT(adjustImageColorScale()));
