@@ -769,3 +769,5 @@ plots.
 This proper fix for this will be part of the logic rework for shared axis as it is related directly to the above 
 bug.
 ---------------------------
+
+'I' key in a plot with an image should adjust the image color scale; see 1.x for correct behavior.

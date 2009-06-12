@@ -258,6 +258,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void zoomMaximum(bool force = false);
     void zoomMaxSpikeInsensitive(bool force = false);
     void zoomPrevious();
+    void adjustImageColorScale();
 
     void zoomTied();
     void zoomXTied();
@@ -463,6 +464,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QAction *_zoomNormalizeYtoX;
     QAction *_zoomLogY;
     QAction *_plotMaximize;
+    QAction *_adjustImageColorscale;
 
     QMenu *_filterMenu;
     QAction *_filterAction;
@@ -496,6 +498,8 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QPixmap _plotPixmap;
 
     QUndoStack *_undoStack;
+
+    int _i_per; // index for image smart ranges
 
     friend class ZoomCommand;
     friend class ZoomMaximumCommand;

@@ -4,10 +4,6 @@ All font properties replicated.  Use the first one.
 
 ---------
 
-'I' key in a plot with an image should adjust the image color scale; see 1.x for correct behavior.  Consider <shift>I as doing smaller steps.
-
----------
-
 Easier way to specify reversed axis when loading sky images:
   -can desire to reverse be gleaned from the fits image?
   -command line option?

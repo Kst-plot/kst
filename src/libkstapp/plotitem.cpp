@@ -14,6 +14,8 @@
 #include "plotitemmanager.h"
 #include "plotrenderitem.h"
 
+#include "image.h"
+
 #include "layoutboxitem.h"
 #include "viewgridlayout.h"
 #include "debug.h"
@@ -88,7 +90,8 @@ PlotItem::PlotItem(View *parent)
   _fitMenu(0),
   _sharedBox(0),
   _axisLabelsDirty(true),
-  _plotPixmapDirty(true)
+  _plotPixmapDirty(true),
+  _i_per(0)
 {
 
   setTypeName("Plot");
@@ -348,6 +351,11 @@ void PlotItem::createActions() {
   registerShortcut(_zoomLogY);
   connect(_zoomLogY, SIGNAL(triggered()), this, SLOT(zoomLogY()));
 
+  _adjustImageColorscale = new QAction(tr("Ajust Image Color Scale"), this);
+  _adjustImageColorscale->setShortcut(Qt::Key_I);
+  registerShortcut(_adjustImageColorscale);
+  connect(_adjustImageColorscale, SIGNAL(triggered()), this, SLOT(adjustImageColorScale()));
+
   createZoomMenu();
 
   _plotMaximize = new QAction(tr("Maximize Plot"), this);
@@ -355,6 +363,7 @@ void PlotItem::createActions() {
   _plotMaximize->setCheckable(true);
   registerShortcut(_plotMaximize);
   connect(_plotMaximize, SIGNAL(triggered()), this, SLOT(plotMaximize()));
+
 }
 
 
@@ -371,6 +380,7 @@ void PlotItem::createZoomMenu() {
   _zoomMenu->addAction(_zoomPrevious);
   _zoomMenu->addAction(_zoomYMeanCentered);
   _zoomMenu->addAction(_zoomTied);
+  _zoomMenu->addAction(_adjustImageColorscale);
 
   _zoomMenu->addSeparator();
 
@@ -2496,6 +2506,24 @@ void PlotItem::zoomMaximum(bool force) {
   }
 }
 
+void PlotItem::adjustImageColorScale() {
+  const double per[] = {0.0, 0.0001, 0.001, 0.005, 0.02};
+  const int length = sizeof(per) / sizeof(double);
+
+  if (++_i_per >= length) {
+    _i_per = 0;
+  }
+  foreach (PlotRenderItem *renderer, renderItems()) {
+    foreach (RelationPtr relation, renderer->relationList()) {
+      if (ImagePtr image = kst_cast<Image>(relation)) {
+        image->writeLock();
+        image->setThresholdToSpikeInsensitive(per[_i_per]);
+        image->processUpdate(image);
+        image->unlock();
+      }
+    }
+  }
+}
 
 void PlotItem::zoomMaxSpikeInsensitive(bool force) {
 #if DEBUG_ZOOM
