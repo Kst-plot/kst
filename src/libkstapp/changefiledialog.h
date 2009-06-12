@@ -36,14 +36,21 @@ class KST_EXPORT ChangeFileDialog : public QDialog, Ui::ChangeFileDialog
     void exec();
 
   private Q_SLOTS:
-    void selectAll();
-    void updateSelection(const QString&);
-    void selectAllFromFile();
-    void OKClicked();
-    void apply();
-    void updateButtons();
     void fileNameChanged(const QString &file);
     void sourceValid(QString filename, int requestID);
+
+    void addButtonClicked();
+    void removeButtonClicked();
+    void addAll();
+    void removeAll();
+    void selectAllFromFile();
+
+    void availableDoubleClicked(QListWidgetItem * item);
+    void selectedDoubleClicked(QListWidgetItem * item);
+
+    void updateButtons();
+    void OKClicked();
+    void apply();
 
   private:
     void updatePrimitiveList();

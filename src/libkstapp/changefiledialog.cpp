@@ -39,29 +39,25 @@ ChangeFileDialog::ChangeFileDialog(QWidget *parent)
     qFatal("ERROR: can't construct a ChangeDataSampleDialog without the object store");
   }
 
-  // TODO Need Icon.
-  _clearFilter->setText("Clear Filter");
+  connect(_add, SIGNAL(clicked()), this, SLOT(addButtonClicked()));
+  connect(_remove, SIGNAL(clicked()), this, SLOT(removeButtonClicked()));
+  connect(_removeAll, SIGNAL(clicked()), this, SLOT(removeAll()));
+  connect(_addAll, SIGNAL(clicked()), this, SLOT(addAll()));
+
+  connect(_changeFilePrimitiveList, SIGNAL(itemDoubleClicked ( QListWidgetItem * )), this, SLOT(availableDoubleClicked(QListWidgetItem *)));
+  connect(_selectedFilePrimitiveList, SIGNAL(itemDoubleClicked ( QListWidgetItem * )), this, SLOT(selectedDoubleClicked(QListWidgetItem *)));
+
+  connect(_allFromFile, SIGNAL(clicked()), this, SLOT(selectAllFromFile()));
+
+  connect(_changeFilePrimitiveList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
+  connect(_selectedFilePrimitiveList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
+
+  connect(_duplicateSelected, SIGNAL(toggled(bool)), _duplicateDependents, SLOT(setEnabled(bool)));
+  connect(_dataFile, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
 
   connect(_buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
   connect(_buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(OKClicked()));
   connect(_buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(apply()));
-
-  connect(_changeFileClear, SIGNAL(clicked()), _filter, SLOT(clear()));
-  connect(_changeFileClear, SIGNAL(clicked()), _changeFilePrimitiveList, SLOT(clearSelection()));
-  connect(_changeFileSelectAll, SIGNAL(clicked()), _filter, SLOT(clear()));
-  connect(_changeFileSelectAll, SIGNAL(clicked()), this, SLOT(selectAll()));
-  connect(_clearFilter, SIGNAL(clicked()), _filter, SLOT(clear()));
-  connect(_clearFilter, SIGNAL(clicked()), _changeFilePrimitiveList, SLOT(clearSelection()));
-
-  connect(_allFromFile, SIGNAL(clicked()), _filter, SLOT(clear()));
-  connect(_allFromFile, SIGNAL(clicked()), this, SLOT(selectAllFromFile()));
-
-  connect(_duplicateSelected, SIGNAL(toggled(bool)), _duplicateDependents, SLOT(setEnabled(bool)));
-
-  connect(_filter, SIGNAL(textChanged(const QString&)), this, SLOT(updateSelection(const QString&)));
-  connect(_changeFilePrimitiveList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
-
-  connect(_dataFile, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
 
   _dataFile->setFile(QDir::currentPath());
   updateButtons();
@@ -78,6 +74,41 @@ void ChangeFileDialog::exec() {
 }
 
 
+void ChangeFileDialog::removeButtonClicked() {
+  foreach (QListWidgetItem* item, _selectedFilePrimitiveList->selectedItems()) {
+    _changeFilePrimitiveList->addItem(_selectedFilePrimitiveList->takeItem(_selectedFilePrimitiveList->row(item)));
+  }
+
+  _changeFilePrimitiveList->clearSelection();
+  updateButtons();
+}
+
+
+void ChangeFileDialog::selectedDoubleClicked(QListWidgetItem * item) {
+  if (item) {
+    _changeFilePrimitiveList->addItem(_selectedFilePrimitiveList->takeItem(_selectedFilePrimitiveList->row(item)));
+    _changeFilePrimitiveList->clearSelection();
+    updateButtons();
+  }
+}
+
+
+void ChangeFileDialog::addButtonClicked() {
+  foreach (QListWidgetItem* item, _changeFilePrimitiveList->selectedItems()) {
+    _selectedFilePrimitiveList->addItem(_changeFilePrimitiveList->takeItem(_changeFilePrimitiveList->row(item)));
+  }
+  _selectedFilePrimitiveList->clearSelection();
+  updateButtons();
+}
+
+
+void ChangeFileDialog::availableDoubleClicked(QListWidgetItem * item) {
+  if (item) {
+    _selectedFilePrimitiveList->addItem(_changeFilePrimitiveList->takeItem(_changeFilePrimitiveList->row(item)));
+    _selectedFilePrimitiveList->clearSelection();
+    updateButtons();
+  }
+}
 
 
 void ChangeFileDialog::sourceValid(QString filename, int requestID) {
@@ -107,6 +138,7 @@ void ChangeFileDialog::updatePrimitiveList() {
   int i;
 
   _changeFilePrimitiveList->clear();
+  _selectedFilePrimitiveList->clear();
 
   for (i = 0; i < (int)dataVectorList.count(); i++) {
     dataVectorList[i]->readLock();
@@ -126,32 +158,37 @@ void ChangeFileDialog::updatePrimitiveList() {
   _files->clear();
 
   for (QStringList::Iterator it = fileNameList.begin(); it != fileNameList.end(); ++it) {
-    _files->addItem(*it);
+    if (_files->findText(*it) == -1) {
+      _files->addItem(*it);
+    }
   }
 
   _allFromFile->setEnabled(_files->count() > 0);
   _files->setEnabled(_files->count() > 0);
+  updateButtons();
 }
 
 
 void ChangeFileDialog::updateButtons() {
-  bool valid = _changeFilePrimitiveList->selectedItems().count() > 0 && _dataSource;
+  bool valid = _selectedFilePrimitiveList->count() > 0 && _dataSource;
   _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(valid);
   _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(valid);
+  _add->setEnabled(_changeFilePrimitiveList->selectedItems().count() > 0);
+  _addAll->setEnabled(_changeFilePrimitiveList->count() > 0);
+  _remove->setEnabled(_selectedFilePrimitiveList->selectedItems().count() > 0);
+  _removeAll->setEnabled(_selectedFilePrimitiveList->count() > 0);
 }
 
 
-void ChangeFileDialog::selectAll() {
+void ChangeFileDialog::addAll() {
   _changeFilePrimitiveList->selectAll();
+  addButtonClicked();
 }
 
 
-void ChangeFileDialog::updateSelection(const QString& txt) {
-  _changeFilePrimitiveList->clearSelection();
-  QRegExp re(txt, Qt::CaseSensitive, QRegExp::Wildcard);
-  for (int i = 0; i < _changeFilePrimitiveList->count(); ++i) {
-    _changeFilePrimitiveList->item(i)->setSelected(re.exactMatch(_changeFilePrimitiveList->item(i)->text()));
-  }
+void ChangeFileDialog::removeAll() {
+  _selectedFilePrimitiveList->selectAll();
+  removeButtonClicked();
 }
 
 
@@ -169,6 +206,7 @@ void ChangeFileDialog::selectAllFromFile() {
       _changeFilePrimitiveList->item(i)->setSelected(matrix->filename() == _files->currentText());
     }
   }
+  addButtonClicked();
 }
 
 
@@ -193,7 +231,8 @@ void ChangeFileDialog::apply() {
   QMap<DataVectorPtr, DataVectorPtr> duplicatedVectors;
   QMap<DataMatrixPtr, DataMatrixPtr> duplicatedMatrices;
 
-  QList<QListWidgetItem*> selectedItems = _changeFilePrimitiveList->selectedItems();
+  _selectedFilePrimitiveList->selectAll();
+  QList<QListWidgetItem*> selectedItems = _selectedFilePrimitiveList->selectedItems();
   for (int i = 0; i < selectedItems.size(); ++i) {
     if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(selectedItems[i]->text()))) {
       vector->writeLock();
@@ -291,8 +330,9 @@ void ChangeFileDialog::apply() {
     } else {
       QMessageBox::warning(this, tr("Kst"), tr("The following fields are not defined for the requested file:\n%1").arg(invalidSources), QMessageBox::Ok);
     }
+  } else {
+    updatePrimitiveList();
   }
-  updatePrimitiveList();
   kstApp->mainWindow()->document()->setChanged(true);
 }
 
