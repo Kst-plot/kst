@@ -93,7 +93,7 @@ QString PlotAxis::interpretLabel(AxisInterpretationType axisInterpretation, Axis
       value /= 365.25;
       value += 1900.0;
       label = i18n("J");
-      label += QString::number(value, 'g', FULL_PRECISION);
+      label += QString::number(value, 'g', FULL_PRECISION-2);
       label += " [years]";
       break;
     case AXIS_DISPLAY_YYMMDDHHMMSS_SS:
@@ -113,19 +113,19 @@ QString PlotAxis::interpretLabel(AxisInterpretationType axisInterpretation, Axis
       break;
     case AXIS_DISPLAY_JD:
       label = i18n("JD");
-      label += QString::number(value, 'g', FULL_PRECISION);
+      label += QString::number(value, 'g', FULL_PRECISION-2);
       label += " [days]";
       break;
     case AXIS_DISPLAY_MJD:
       value -= JD_MJD;
       label = i18n("MJD");
-      label += QString::number(value, 'g', FULL_PRECISION);
+      label += QString::number(value, 'g', FULL_PRECISION-2);
       label += " [days]";
       break;
     case AXIS_DISPLAY_RJD:
       value -= JD_RJD;
       label = i18n("RJD");
-      label += QString::number(value, 'g', FULL_PRECISION);
+      label += QString::number(value, 'g', FULL_PRECISION-2);
       label += " [days]";
       break;
   }
@@ -658,7 +658,7 @@ void PlotAxis::computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTick
     if (majorPoint == 0) majorPoint = -350;
     if (i >= min && i <= max) {
       *MajorTicks << majorPoint;
-      *Labels->insert(majorPoint, QString::number(majorPoint, 'g', FULL_PRECISION));
+      *Labels->insert(majorPoint, QString::number(majorPoint, 'g', FULL_PRECISION-2));
     }
 
     if (tick == 1.0) {
@@ -670,7 +670,7 @@ void PlotAxis::computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTick
         if (minorPoint >= powMin && minorPoint <= powMax) {
           *MinorTicks << minorPoint;
           if (minorLabels && first) {
-            *Labels->insert(minorPoint, QString::number(minorPoint, 'g', FULL_PRECISION));
+            *Labels->insert(minorPoint, QString::number(minorPoint, 'g', FULL_PRECISION-2));
             first = false;
           }
         }
@@ -681,7 +681,7 @@ void PlotAxis::computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTick
     qreal lastMinorTick = MinorTicks->last();
     if (MajorTicks->isEmpty() || MajorTicks->last() < lastMinorTick) {
       if (!Labels->contains(lastMinorTick)) {
-        *Labels->insert(lastMinorTick, QString::number(lastMinorTick, 'g', FULL_PRECISION));
+        *Labels->insert(lastMinorTick, QString::number(lastMinorTick, 'g', FULL_PRECISION-2));
       }
     }
   }
@@ -819,7 +819,9 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
       if (nextTick > max)
         break;
       ticks << nextTick;
-      labels.insert(nextTick, QString::number(nextTick, 'g', FULL_PRECISION));
+      // FILL_PRECISION - 2 because round off errors mean you never actually quite get
+      // full precision...
+      labels.insert(nextTick, QString::number(nextTick, 'g', FULL_PRECISION-2));
     }
 
     qreal minorTickSpacing = 0;
@@ -876,7 +878,9 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
     }
   }
 
-  if (_axisBaseOffset || _axisInterpret || (longest > _axisSignificantDigits) || _axisBaseOffsetOverride ) {
+  // (shortest > 3) so that you don't use automatic base/offset mode when
+  // it wouldn't actually take up less space.
+  if (_axisBaseOffset || _axisInterpret || ((longest > _axisSignificantDigits)&&(shortest>3)) || _axisBaseOffsetOverride ) {
     if (_axisInterpret) {
       _baseLabel = interpretLabel(_axisInterpretation, _axisDisplay, base, (_axisMajorTicks).last());
     } else {
@@ -889,7 +893,7 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
       if (_axisInterpret) {
         offset = interpretOffset(_axisInterpretation, _axisDisplay, base, i.key());
       } else {
-        offset = i.key() - base;
+        offset = i.key() - base; // FIX round off error for base/offet mode here
       }
       QString label;
       if (offset < 0) {
