@@ -1,6 +1,7 @@
-Problem with plot range and offsets:
-Make a plot with the Y range from -0.75 to 0.4.  It goes into base/offset mode 
-and it shouldn't.
+Rounding problems in base/offset mode:
+  For extreme cases of base/offset mode there are 
+  rounding errors related to the subtraction of the base.
+  They show up in the axis labels.
 
 ---------
 
@@ -15,41 +16,83 @@ It should be the same size as it started.
 
 ------------
 
-Shared axis zoom usage problem:
-Create a shared axis zoom box with multiple plots in a column.
-  -there is no option to indicate or change whether the plots are tied.
+Missing X axis and cut off right edge in tied zoom box:
+  create a tab with 6 plots in two columns
+  make all 6 X axis the same, but with 6 different Y axis
+  Create a shared axis box that encloses all 6.
 
-Zoom into one of them.
-  -All plots do exactly the same zoom, as if they were tied.
+There is no X axis visible.  There should be.
+The right edge of the right collumn is cut off.  It shouldn't be.
 
-Correct behavior:
-  -The shared axis box should have 'share X axis' and 'share Y axis' options
-   which are settable from the object dialog.
-  -If only the x axis is shared, then only the x axis is tied; if only 
-   the y axis is shared, only the y axis is tied.
-  -If axis are shared, and the plots are aligned to within 1% of the 
-   size of the top level view, then intermediate axis/labels
-   will be surpressed.
-  -If axis are shared, then they must always have exactly the same
-   range and mode.  So 'M' (autoscale) must be set to the Max/Min 
-   over all of the plots in the shared box, not each inividually.
-  -sharing one axis does not effect the behavior of the other; so:
-  -There should still be tied zoom indicators.
-  -If the tied zoom indicators are not checked, then the unshared axis
-   should behave as if they were not shared or tied.
-
-Creation Heuristics:
-  -If all of the plots in the creation box have the same X range, then
-   'share X axis' should be set; analogously for the Y axis.
-  -If, by the above rules, neither 'share X axis' nor 'share Y axis'
-   would be set, then 'share X axis' will be set.
-  -Upon being shared, all plots in the shared box must have the same
-   range and mode; set the range and mode to that of an arbitrary plot
-   in the shared box (eg, the first in the list).
-
-
-Note:  Many changes have already been made.  Awaiting review.
 ------------------------------
+------------------------------
+
+Shared Axis behavioral principles:
+
+"shared axis" means that only the bottom most (for shared X) or the
+left most (for shared Y) numbers and labels are shown.
+
+  -If 'share [X|Y] axis' is selected, then the axis should always be shared,
+   if aligned properly
+  -If 'share [X|Y] axis' is selected, then the shared axis for all shared plots should 
+   always have the same range, regardless of alignment (unshared axis don't
+   necessairly have to be the same).
+  -All plots have a tied zoom indicator.  All plots indicated as tied will have
+   both of their axis tied, regardless if they are shared.  All plots not indicated
+   as tied will only have their axis tied if they are shared.
+
+------------------------------
+------------ Bugs based on the above principles: --------------
+
+Selecting 'share Y axis' in shared axis box context menu does not share Y axis.
+  create a tab with 6 plots in two columns
+  make all 6 X axis ranges the same, but with different Y axis ranges.
+  Create a shared axis box that encloses all 6 plots.
+  Notice that X axis is shared and Y isn't.  This is the correct default as the Y axis were different.
+  Now, select 'share Y axis' in the context menu.
+The check box is now marked, but the Y axis aren't shared.  
+
+What should happen if the Y axis shared box is changed to checked:
+  -The Y axis ranges should be changed to go from the minimum Y min
+  shown to the maximum Y max shown of all of the plots in the box, and 
+  the Y axis should be shared if properly aligned.
+  -If all of the plots were in 'm' auto zoom mode, then the shared axis box will
+   be in 'm' auto zoom mode, with all plots going from the minimum Y min to
+   the maximum Y max.  Otherwise, the the shared box will be in fixed mode, 
+   again going from the current displayed minumum Y min to the current 
+   displayed maximum Y max.
+  -hitting 'm' anywhere in the shared axis box will place the shared axis box 
+   and all of its plots into 'm' maximum zoom mode.
+  -Doing a mouse zoom in any of the shared plots will do the zoom of any shared
+   axis in all of the plots, and place them all in fixed mode.
+
+------------
+
+unselecting 'share Y axis' in shared axis box context menu does not restore the separate Y axis.
+  create a tab with 6 plots in two columns
+  make all 6 X axis be the same and all 6 y axis be the same.
+  Create a shared axis box that encloses all 6.
+  Notice that both the X axis and Y axis are shared.  This is correct.
+  Now, un-select 'share Y axis' in the context menu.
+
+The share Y axis is no longer selected, but Y separeate Y axis are not
+restored.  They should be.  Note: the Y ranges are no longer tied, even
+though the axis are still shared.
+
+------------
+
+There is no tied zoom indicator for plots in a shared axis box.
+There should be.  Its behavior is as follows:
+  For axis that are selected to be shared:
+    -If any of the plots inside the shared axis box are tied to any plots outside the 
+     shared axis box, then the shared axis for all plots in the shared axis box will
+     be tied to the tied plots outside.
+  For axis that are *not* selected to be shared:
+    -The tied zoom for the *unshared* axis behaves exactly as it would if the plot 
+     were not in a shared axis box.
+
+------------------------------
+------------
 
 Bugs Reported by D.V. Wiebe
 

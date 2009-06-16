@@ -1,4 +1,3 @@
----------
 When a new plot is added to an tab which already has plots in it (eg, from the Placement widget), then the label font sizes should be based on the label font sizes of the plots already in the tab.  (either 'vote' or use the first one).
 All font properties replicated.  Use the first one.
 
@@ -33,3 +32,11 @@ Tooltips/whats this where helpful.
 ----------
 
 Printing from the command line.  This existed in 1.x
+
+--------
+
+Scientific notation for extreme axis numbers
+
+--------
+
+Edit multiple for all view objects.  The highest priority is legends.

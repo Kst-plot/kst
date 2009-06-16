@@ -779,3 +779,10 @@ way they do it is inconsistent: The top is applyed when you hit the all from but
 is live, and the button clears the selection.  There is no way to combine the options.
   Better: a file text entry and a regexp text entry, an apply filters button, and an 'and/or' radio pair.
 
+---------------------------
+
+Problem with plot range and offsets:
+Make a plot with the Y range from -0.75 to 0.4.  It goes into base/offset mode 
+and it shouldn't.
+
+---------

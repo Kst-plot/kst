@@ -819,7 +819,7 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
       if (nextTick > max)
         break;
       ticks << nextTick;
-      // FILL_PRECISION - 2 because round off errors mean you never actually quite get
+      // FULL_PRECISION - 2 because round off errors mean you never actually quite get
       // full precision...
       labels.insert(nextTick, QString::number(nextTick, 'g', FULL_PRECISION-2));
     }
@@ -893,7 +893,7 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
       if (_axisInterpret) {
         offset = interpretOffset(_axisInterpretation, _axisDisplay, base, i.key());
       } else {
-        offset = i.key() - base; // FIX round off error for base/offet mode here
+        offset = i.key() - base; // FIXME FIX round off error for base/offet mode here
       }
       QString label;
       if (offset < 0) {
