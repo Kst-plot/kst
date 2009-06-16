@@ -32,13 +32,23 @@ class KST_EXPORT ChangeDataSampleDialog : public QDialog, Ui::ChangeDataSampleDi
     void exec();
 
   private slots:
+    void addButtonClicked();
+    void removeButtonClicked();
+    void addAll();
+    void removeAll();
+
+    void availableDoubleClicked(QListWidgetItem * item);
+    void selectedDoubleClicked(QListWidgetItem * item);
+
+    void modified();
+    void updateButtons();
+
+    void initializeEntries();
     void updateDefaults(QListWidgetItem* item);
-    void selectAll();
+
     void OKClicked();
     void apply();
-    void updateButtons();
-    void modified();
-    void initialzeEntries();
+
 
   private:
     void updateCurveListDialog();

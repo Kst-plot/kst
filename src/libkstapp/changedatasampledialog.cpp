@@ -32,10 +32,16 @@ ChangeDataSampleDialog::ChangeDataSampleDialog(QWidget *parent)
     qFatal("ERROR: can't construct a ChangeDataSampleDialog without the object store");
   }
 
-  connect(_clear, SIGNAL(clicked()), _curveList, SLOT(clearSelection()));
-  connect(_selectAll, SIGNAL(clicked()), this, SLOT(selectAll()));
-  //connect(_curveList, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(updateDefaults(QListWidgetItem*)));
-  connect(_curveList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
+  connect(_add, SIGNAL(clicked()), this, SLOT(addButtonClicked()));
+  connect(_remove, SIGNAL(clicked()), this, SLOT(removeButtonClicked()));
+  connect(_removeAll, SIGNAL(clicked()), this, SLOT(removeAll()));
+  connect(_addAll, SIGNAL(clicked()), this, SLOT(addAll()));
+
+  connect(_vectorList, SIGNAL(itemDoubleClicked ( QListWidgetItem * )), this, SLOT(availableDoubleClicked(QListWidgetItem *)));
+  connect(_selectedVectorList, SIGNAL(itemDoubleClicked ( QListWidgetItem * )), this, SLOT(selectedDoubleClicked(QListWidgetItem *)));
+
+  connect(_vectorList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
+  connect(_selectedVectorList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
 
   connect(_dataRange, SIGNAL(modified()), this, SLOT(modified()));
 
@@ -43,7 +49,7 @@ ChangeDataSampleDialog::ChangeDataSampleDialog(QWidget *parent)
   connect(_buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(OKClicked()));
   connect(_buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
 
-  initialzeEntries();
+  initializeEntries();
   updateButtons();
 }
 
@@ -58,9 +64,51 @@ void ChangeDataSampleDialog::exec() {
 }
 
 
+void ChangeDataSampleDialog::removeButtonClicked() {
+  foreach (QListWidgetItem* item, _selectedVectorList->selectedItems()) {
+    _vectorList->addItem(_selectedVectorList->takeItem(_selectedVectorList->row(item)));
+  }
+
+  _vectorList->clearSelection();
+  updateButtons();
+}
+
+
+void ChangeDataSampleDialog::selectedDoubleClicked(QListWidgetItem * item) {
+  if (item) {
+    _vectorList->addItem(_selectedVectorList->takeItem(_selectedVectorList->row(item)));
+    _vectorList->clearSelection();
+    updateButtons();
+  }
+}
+
+
+void ChangeDataSampleDialog::addButtonClicked() {
+  foreach (QListWidgetItem* item, _vectorList->selectedItems()) {
+    _selectedVectorList->addItem(_vectorList->takeItem(_vectorList->row(item)));
+  }
+  _selectedVectorList->clearSelection();
+  updateButtons();
+}
+
+
+void ChangeDataSampleDialog::availableDoubleClicked(QListWidgetItem * item) {
+  if (item) {
+    _selectedVectorList->addItem(_vectorList->takeItem(_vectorList->row(item)));
+    _selectedVectorList->clearSelection();
+    updateButtons();
+  }
+}
+
+
 void ChangeDataSampleDialog::updateButtons() {
-  bool ok = (_curveList->selectedItems().count() > 0);
-  _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(ok);
+  bool valid = _selectedVectorList->count() > 0;
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(valid);
+  _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(valid);
+  _add->setEnabled(_vectorList->selectedItems().count() > 0);
+  _addAll->setEnabled(_vectorList->count() > 0);
+  _remove->setEnabled(_selectedVectorList->selectedItems().count() > 0);
+  _removeAll->setEnabled(_selectedVectorList->count() > 0);
 }
 
 
@@ -70,38 +118,46 @@ void ChangeDataSampleDialog::modified() {
 
 
 void ChangeDataSampleDialog::updateCurveListDialog() {
-  _curveList->clear();
+  _vectorList->clear();
+  _selectedVectorList->clear();
   DataVectorList dataVectors = _store->getObjects<DataVector>();
 
-  _curveList->blockSignals(true);
+  _vectorList->blockSignals(true);
   for (DataVectorList::ConstIterator i = dataVectors.begin(); i != dataVectors.end(); ++i) {
     DataVectorPtr vector = *i;
     vector->readLock();
     QListWidgetItem *wi = new QListWidgetItem(vector->Name());
     wi->setToolTip(vector->descriptionTip());
     vector->unlock();
-    _curveList->addItem(wi);
+    _vectorList->addItem(wi);
   }
 
-  _curveList->blockSignals(false);
-  _curveList->selectAll();
+  _vectorList->blockSignals(false);
 }
 
 
-void ChangeDataSampleDialog::selectAll() {
-  _curveList->selectAll();
+void ChangeDataSampleDialog::addAll() {
+  _vectorList->selectAll();
+  addButtonClicked();
 }
 
 
-void ChangeDataSampleDialog::initialzeEntries() {
-    _dataRange->setCountFromEnd(_dialogDefaults->value("vector/countFromEnd",false).toBool());
-    _dataRange->setStart(_dialogDefaults->value("vector/start", 0).toInt());
-    _dataRange->setReadToEnd(_dialogDefaults->value("vector/readToEnd",true).toBool());
-    _dataRange->setRange(_dialogDefaults->value("vector/range", 1).toInt());
-    _dataRange->setSkip(_dialogDefaults->value("vector/skip", 0).toInt());
-    _dataRange->setDoSkip(_dialogDefaults->value("vector/doSkip", false).toBool());
-    _dataRange->setDoFilter(_dialogDefaults->value("vector/doAve",false).toBool());
+void ChangeDataSampleDialog::removeAll() {
+  _selectedVectorList->selectAll();
+  removeButtonClicked();
 }
+
+
+void ChangeDataSampleDialog::initializeEntries() {
+  _dataRange->setCountFromEnd(_dialogDefaults->value("vector/countFromEnd",false).toBool());
+  _dataRange->setStart(_dialogDefaults->value("vector/start", 0).toInt());
+  _dataRange->setReadToEnd(_dialogDefaults->value("vector/readToEnd",true).toBool());
+  _dataRange->setRange(_dialogDefaults->value("vector/range", 1).toInt());
+  _dataRange->setSkip(_dialogDefaults->value("vector/skip", 0).toInt());
+  _dataRange->setDoSkip(_dialogDefaults->value("vector/doSkip", false).toBool());
+  _dataRange->setDoFilter(_dialogDefaults->value("vector/doAve",false).toBool());
+}
+
 
 void ChangeDataSampleDialog::updateDefaults(QListWidgetItem* item) {
   if (!item) {
@@ -131,7 +187,8 @@ void ChangeDataSampleDialog::OKClicked() {
 
 
 void ChangeDataSampleDialog::apply() {
-  QList<QListWidgetItem*> selectedItems = _curveList->selectedItems();
+  _selectedVectorList->selectAll();
+  QList<QListWidgetItem*> selectedItems = _selectedVectorList->selectedItems();
   for (int i = 0; i < selectedItems.size(); ++i) {
     if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(selectedItems.at(i)->text()))) {
       vector->writeLock();
