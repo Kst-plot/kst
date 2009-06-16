@@ -286,7 +286,7 @@ void ViewGridLayout::standardizePlotMargins(ViewItem *item, QPainter *painter) {
     qreal rightPadding = rightMarginWidths[floor(plotItem->width()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->rightMarginSize();
     qreal topPadding = topMarginWidths[floor(plotItem->height()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->topMarginSize();
     qreal bottomPadding = bottomMarginHeights[floor(plotItem->height()*PLOT_STANDARDIZATION_FACTOR)] - plotItem->bottomMarginSize();
-
+  
     plotItem->setPadding(leftPadding, rightPadding, topPadding, bottomPadding);
   }
 }
@@ -391,6 +391,8 @@ void ViewGridLayout::shareAxis(QPainter *painter, bool creation) {
   } else {
     _shareX = shareBox->isXAxisShared();
     _shareY = shareBox->isYAxisShared();
+    unshareAxis();
+    updateSharedAxis();
   }
 
   // Determine area of layout.  Minimal spacing on SharedAxisBoxItems.
@@ -492,7 +494,7 @@ void ViewGridLayout::shareAxis(QPainter *painter, bool creation) {
   } else if (rowMode) {
     int totalHeight = 0;
     for (int i = 0; i < rowCount(); i++) {
-      totalHeight = topLabelBounds[i] + bottomLabelBounds[i];
+      totalHeight += topLabelBounds[i] + bottomLabelBounds[i];
     }
     totalProjWidth = layoutRect.width() - leftLabelBounds[0] - rightLabelBounds[columnCount() - 1];
     totalProjHeight = layoutRect.height() - totalHeight;
@@ -500,10 +502,10 @@ void ViewGridLayout::shareAxis(QPainter *painter, bool creation) {
   } else if (colMode) {
     int totalWidth = 0;
     for (int i = 0; i < columnCount(); i++) {
-      totalWidth = leftLabelBounds[i] + rightLabelBounds[i];
+      totalWidth += leftLabelBounds[i] + rightLabelBounds[i];
     }
     totalProjWidth = layoutRect.width() - totalWidth;
-    totalProjHeight = layoutRect.height() - topLabelBounds[0] - bottomLabelBounds[columnCount() - 1];
+    totalProjHeight = layoutRect.height() - topLabelBounds[0] - bottomLabelBounds[rowCount() - 1];
   } else {
     return;
   }
@@ -635,6 +637,19 @@ void ViewGridLayout::updatePlotMargins() {
 }
 
 
+void ViewGridLayout::unshareAxis() {
+  foreach (LayoutItem item, _items) {
+    PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
+
+    if (!plotItem)
+      continue;
+
+    plotItem->setLabelsVisible(true);
+    plotItem->update();
+  }
+}
+
+
 void ViewGridLayout::updateSharedAxis() {
   if (!_shareX && !_shareY) {
     return;
@@ -699,7 +714,7 @@ void ViewGridLayout::calculateSharing() {
 }
 
 
-void ViewGridLayout::updateProjections(ViewItem *item) {
+void ViewGridLayout::updateProjections(ViewItem *item, bool forceXShare, bool forceYShare) {
   bool xMatch = true;
   bool yMatch = true;
 
@@ -756,6 +771,9 @@ void ViewGridLayout::updateProjections(ViewItem *item) {
     }
   }
 
+  xMatch = xMatch || forceXShare;
+  yMatch = yMatch || forceYShare;
+
   if (!xMatch && !yMatch) {
     xMatch = true;
     yMatch = true;
@@ -770,11 +788,11 @@ void ViewGridLayout::updateProjections(ViewItem *item) {
 
     if (PlotItem *plotItem = qobject_cast<PlotItem*>(viewItem)) {
       if (xMatch && yMatch) {
-        plotItem->zoomFixedExpression(projectionRect);
+        plotItem->zoomFixedExpression(projectionRect, true);
       } else if (xMatch) {
-        plotItem->zoomXRange(projectionRect);
+        plotItem->zoomXRange(projectionRect, true);
       } else if (yMatch) {
-        plotItem->zoomYRange(projectionRect);
+        plotItem->zoomYRange(projectionRect, true);
       }
     }
   }

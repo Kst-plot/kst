@@ -56,7 +56,7 @@ class ViewGridLayout : public QObject
     void setEnabled(bool enabled);
 
     void calculateSharing();
-    static void updateProjections(ViewItem *item);
+    static void updateProjections(ViewItem *item, bool forceXShare = false, bool forceYShare = false);
 
     static void standardizePlotMargins(ViewItem *item, QPainter *painter);
     static void sharePlots(ViewItem *item, QPainter *painter, bool creation);
@@ -92,6 +92,7 @@ class ViewGridLayout : public QObject
 
   private:
     void updateSharedAxis();
+    void unshareAxis();
     void shareAxisWithPlotToLeft(LayoutItem item);
     void shareAxisWithPlotToRight(LayoutItem item);
     void shareAxisWithPlotAbove(LayoutItem item);

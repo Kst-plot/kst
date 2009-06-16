@@ -91,6 +91,7 @@ class SharedAxisBoxItem : public ViewItem
     virtual void creationPolygonChanged(View::CreationEvent event);
 
   private:
+    void updateShare();
     void highlightPlots(QList<PlotItem*> plots);
 
     QRectF computeRect(PlotAxis::ZoomMode xMode, PlotAxis::ZoomMode yMode);

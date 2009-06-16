@@ -223,11 +223,24 @@ void SharedAxisBoxItem::lockItems() {
 
 void SharedAxisBoxItem::shareXAxis() {
   _shareX = !_shareX;
+  updateShare();
 }
 
 
 void SharedAxisBoxItem::shareYAxis() {
   _shareY = !_shareY;
+  updateShare();
+}
+
+
+void SharedAxisBoxItem::updateShare() {
+  if (!_shareX && !_shareY) {
+    breakShare();
+  } else {
+    ViewGridLayout::updateProjections(this, _shareX, _shareY);
+    setDirty();
+    update();
+  }
 }
 
 
@@ -362,7 +375,7 @@ void SharedAxisBoxItem::applyZoom(const QRectF &projection, PlotItem* originPlot
 
 void SharedAxisBoxItem::zoomFixedExpression(const QRectF &projection, PlotItem* originPlotItem) {
 #if DEBUG_ZOOM
-  qDebug() << "zoomFixedExpression" << projection << "current" << projectionRect();
+  qDebug() << "zoomFixedExpression" << projection;
 #endif
   _xAxisZoomMode = PlotAxis::FixedExpression;
   _yAxisZoomMode = PlotAxis::FixedExpression;
