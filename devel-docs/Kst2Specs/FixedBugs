@@ -834,3 +834,5 @@ restored.  They should be.  Note: the Y ranges are no longer tied, even
 though the axis are still shared.
 
 ------------
+
+   7. Even if I don’t modify anything on a kst file (no click at all) kst always ask for saving the changes on closing.

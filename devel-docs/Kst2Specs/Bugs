@@ -104,6 +104,26 @@ It needs a maximum width
 
 ---------------------
 
+LabelCreator Dialog cleanup required.
+
+Missing Signal - 
+  Object::connect: No such signal QPlainTextEdit::textChanged(const QString &) in ../../../src/widgets/labelbuilder.cpp:23
+  Object::connect:  (sender name:   '_label')
+  Object::connect:  (receiver name: 'LabelBuilder')
+
+Title missing (reads Dialog)
+
+---------------------
+
+Drawing / Standardization Errors with inverted drawing of Plots
+
+Draw a plot using the drawing tool in any direction other than down and to the right.
+ - The PlotRenderItem is provided a negative size and not drawn
+ - Plot standardization is triggered and all labels / axis are drawn incorrectly
+
+---------------------
+
+
    2. “Configure ASCII file” : -it seems that these settings are not saved as global settings, but for each file ! Such that for my 10^5 files having the same format, I have to define 10^5 the same ascii format. It may be useful to have global settings and to overwrite them with settings stored in the .kst files. Note: I informed him that it was possible to edit manually the kstdatarc file to get the desired result, but a global setting UI has to be provided at some point.
 
    4. Reloading a previously saved kst files seems to forget all the “configure ascii file” settings (in particularly “read fields names from”) so that no vector can be generated because kst tries to read an unknown field! This may explain why the relative path names did not work (see bug reported earlier). In the meantime, it has been confirmed that reloading works with the appropriate kstdatarc file in the right place.
@@ -114,8 +134,6 @@ It needs a maximum width
 Then kst closes and and I get the help in the console (cygwin) in the windows cmd.exe I don’t get any help…
 
    6. I did not found an option for forcing the use of a specific kstdatarc file. Meaning that now I’m having a kstdatarc in each folder where I want to start kst.
-
-   7. Even if I don’t modify anything on a kst file (no click at all) kst always ask for saving the changes on closing.
 
    9. the font resizing does not work so well as in the 1.7. If you resize the windows, the fonts are not resized so well. It may come from the windows fonts. I tried several different fonts but did not succeed to get a clear one. Note: it seems to be somewhat better with the latest changes.
   
