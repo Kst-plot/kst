@@ -836,3 +836,14 @@ though the axis are still shared.
 ------------
 
    7. Even if I don’t modify anything on a kst file (no click at all) kst always ask for saving the changes on closing.
+
+
+----------------
+
+Font settings in Settings->General do not appear until, eg, the window is resized.
+Plots should be updated upon 'apply'.
+
+----------------
+
+It is not clear from the dialog that grid and color options are defaults for new plots and don't apply to existing
+plots.  The text should be modified to make this clear.

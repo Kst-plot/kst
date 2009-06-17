@@ -81,16 +81,6 @@ Confirmed by CBN/linux
 
 ----------------
 
-Font settings in Settings->General do not appear until, eg, the window is resized.
-Plots should be updated upon 'apply'.
-
-----------------
-
-It is not clear from the dialog that grid and color options are defaults for new plots and don't apply to existing
-plots.  The text should be modified to make this clear.
-
-----------------
-
 kstdatarc is located relative to the directory from which kst is run.  It should be located in
 the standard config directory.  
   For linux under KDE4, this is `kde4-config --localprefix`/share/config/
