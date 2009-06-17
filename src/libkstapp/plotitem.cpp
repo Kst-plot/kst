@@ -1421,7 +1421,9 @@ void PlotItem::setPlotBordersDirty(bool dirty) {
   } else {
     parentView()->setPlotBordersDirty(dirty);
   }
-  setPlotRectsDirty();
+  if (dirty) {
+    setPlotRectsDirty();
+  }
 }
 
 
