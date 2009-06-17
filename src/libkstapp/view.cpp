@@ -442,6 +442,18 @@ void View::drawBackground(QPainter *painter, const QRectF &rect) {
 
 void View::updateSettings() {
   setUseOpenGL(ApplicationSettings::self()->useOpenGL());
+  setShowGrid(ApplicationSettings::self()->showGrid());
+
+  setSnapToGrid(ApplicationSettings::self()->snapToGrid());
+
+  setGridSpacing(QSizeF(ApplicationSettings::self()->gridHorizontalSpacing(),
+                        ApplicationSettings::self()->gridVerticalSpacing()));
+
+  QFont oldFont = _defaultFont;
+  updateFont();
+  if (oldFont != _defaultFont) {
+    forceChildResize(sceneRect(), sceneRect());
+  }
 }
 
 

@@ -2946,6 +2946,9 @@ void PlotItem::setCurrentZoomState(ZoomState zoomState) {
 void PlotItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect) {
   ViewItem::updateChildGeometry(oldParentRect, newParentRect);
   setPlotBordersDirty(true);
+  setLabelsDirty();
+  setAxisLabelsDirty();
+  setPlotPixmapDirty();
 }
 
 

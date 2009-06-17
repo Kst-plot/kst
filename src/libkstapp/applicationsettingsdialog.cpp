@@ -54,7 +54,7 @@ ApplicationSettingsDialog::ApplicationSettingsDialog(QWidget *parent)
   addDialogPage(grid);
 
   DialogPage *fill = new DialogPage(this);
-  fill->setPageTitle(tr("Fill"));
+  fill->setPageTitle(tr("Default Fill Properties"));
   fill->addDialogTab(_fillTab);
   addDialogPage(fill);
 
