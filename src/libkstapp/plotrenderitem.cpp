@@ -61,6 +61,8 @@ PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
   _referenceModeDisabled->setShortcut(Qt::SHIFT + Qt::Key_C);
   registerShortcut(_referenceModeDisabled);
   connect(_referenceModeDisabled, SIGNAL(triggered()), this, SLOT(referenceModeDisabled()));
+
+  disconnect(this, SIGNAL(geometryChanged()), parentView(), SLOT(viewChanged()));
 }
 
 

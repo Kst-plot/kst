@@ -229,6 +229,8 @@ void MainWindow::openFile(const QString &file) {
     QMessageBox::critical(this, tr("Kst"), tr("Error opening document '%1':\n%2").arg(file, _doc->lastError()));
     delete _doc;
     _doc = new Document(this);
+  } else {
+    _doc->setChanged(false);
   }
 }
 
