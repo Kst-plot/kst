@@ -40,3 +40,7 @@ Scientific notation for extreme axis numbers
 --------
 
 Edit multiple for all view objects.  The highest priority is legends.
+
+--------
+
+Make dialogs modeless.

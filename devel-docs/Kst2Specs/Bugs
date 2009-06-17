@@ -1,8 +1,8 @@
 Rounding problems in base/offset mode:
-  For extreme cases of base/offset mode there are 
-  rounding errors related to the subtraction of the base.
-  They show up in the axis labels.
+  For extreme cases of base/offset mode there are  rounding errors related to the subtraction of the base.
+  Log axis should never go to base offset mode - instead they should use scientific; powers should be relative to 1.
 
+*cbn*
 ---------
 
 Plot sizes are not properly recovered on re-load
@@ -13,18 +13,7 @@ load it
   -the plot is now smaller than it was.
 It should be the same size as it started.
 ** it is now much better than it used to be.  The shift is now only a few pixels **
-
-------------
-
-Missing X axis and cut off right edge in tied zoom box:
-  create a tab with 6 plots in two columns
-  make all 6 X axis the same, but with 6 different Y axis
-  Create a shared axis box that encloses all 6.
-
-There is no X axis visible.  There should be.
-The right edge of the right collumn is cut off.  It shouldn't be.
-
-------------------------------
+** low priority **
 ------------------------------
 
 Shared Axis behavioral principles:
@@ -32,54 +21,12 @@ Shared Axis behavioral principles:
 "shared axis" means that only the bottom most (for shared X) or the
 left most (for shared Y) numbers and labels are shown.
 
-  -If 'share [X|Y] axis' is selected, then the axis should always be shared,
-   if aligned properly
-  -If 'share [X|Y] axis' is selected, then the shared axis for all shared plots should 
-   always have the same range, regardless of alignment (unshared axis don't
-   necessairly have to be the same).
   -All plots have a tied zoom indicator.  All plots indicated as tied will have
    both of their axis tied, regardless if they are shared.  All plots not indicated
    as tied will only have their axis tied if they are shared.
 
 ------------------------------
 ------------ Bugs based on the above principles: --------------
-
-Selecting 'share Y axis' in shared axis box context menu does not share Y axis.
-  create a tab with 6 plots in two columns
-  make all 6 X axis ranges the same, but with different Y axis ranges.
-  Create a shared axis box that encloses all 6 plots.
-  Notice that X axis is shared and Y isn't.  This is the correct default as the Y axis were different.
-  Now, select 'share Y axis' in the context menu.
-The check box is now marked, but the Y axis aren't shared.  
-
-What should happen if the Y axis shared box is changed to checked:
-  -The Y axis ranges should be changed to go from the minimum Y min
-  shown to the maximum Y max shown of all of the plots in the box, and 
-  the Y axis should be shared if properly aligned.
-  -If all of the plots were in 'm' auto zoom mode, then the shared axis box will
-   be in 'm' auto zoom mode, with all plots going from the minimum Y min to
-   the maximum Y max.  Otherwise, the the shared box will be in fixed mode, 
-   again going from the current displayed minumum Y min to the current 
-   displayed maximum Y max.
-  -hitting 'm' anywhere in the shared axis box will place the shared axis box 
-   and all of its plots into 'm' maximum zoom mode.
-  -Doing a mouse zoom in any of the shared plots will do the zoom of any shared
-   axis in all of the plots, and place them all in fixed mode.
-
-------------
-
-unselecting 'share Y axis' in shared axis box context menu does not restore the separate Y axis.
-  create a tab with 6 plots in two columns
-  make all 6 X axis be the same and all 6 y axis be the same.
-  Create a shared axis box that encloses all 6.
-  Notice that both the X axis and Y axis are shared.  This is correct.
-  Now, un-select 'share Y axis' in the context menu.
-
-The share Y axis is no longer selected, but Y separeate Y axis are not
-restored.  They should be.  Note: the Y ranges are no longer tied, even
-though the axis are still shared.
-
-------------
 
 There is no tied zoom indicator for plots in a shared axis box.
 There should be.  Its behavior is as follows:
@@ -90,33 +37,36 @@ There should be.  Its behavior is as follows:
   For axis that are *not* selected to be shared:
     -The tied zoom for the *unshared* axis behaves exactly as it would if the plot 
      were not in a shared axis box.
+ Shared axis boxes do not have tied zoom indicators - only the plots do.
+
+Tied zoom indicator location:
+  - If a plot shares *only* an X axis with a plot directly above it:
+     The indicator will be to the right of the plot, with its top even with
+     the top of the plot.
+  - If a plot shares *only* a Y axis with the plot directly to its right:
+      The indicator will be above the plot, with its top even with the right 
+      of the plot.
+  - If a plot shares *both* axis with a plot above and a plot to its right:
+      The indicator is not shown - its behavior would be redundant with the
+      indicator on the top right corner.
+  - If a plot is in a shared axis box which shares both X and Y axis:
+      only the plot in the top right corner  (alternativly, only plots which don't 
+      share an axis with a plot above or to its right) will show its indicator.  
+      The indicator would be redundant, anyway, with the indicator in the top right.
 
 ------------------------------
 ------------
 
-Bugs Reported by D.V. Wiebe
+Only absolute file names seem to work. 
+  -data source text box doesn't recognise initial ~ as a euphemism for
+   the user's home directory.
 
+  -In the data wizard or in the data manager, select the data from a file by giving the path relative to the folder where kst was started. The plot appears without problem. Save the kst file in the same folder where kst was started. Close Kst from the same place and reopen the kst file. It cannot plot the data. But if you go in the data manager and edit a specific vector from the file, it will be plotted.
+ -[cbn: under linux, relative file names don't seem to work at all.]
 
-2. data source text box doesn't recognise initial ~ as a euphemism for
-the user's home directory.
+------------------------------
 
-[ Related bug from Nicholas:]
-In the data wizard or in the data manager, select the data from a file by giving the path relative to the folder where kst was started. The plot appears without problem. Save the kst file in the same folder where kst was started. Close Kst from the same place and reopen the kst file. It cannot plot the data. But if you go in the data manager and edit a specific vector from the file, it will be plotted.
-[cbn: under linux, relative file names don't seem to work at all.]
-
-5. All the dialog boxes appear to be modal now (they block interaction
-with the main window while open).  This slows me down significanlly.
-(I find I'm constantly opening and closing dialogs)
-
-9. Plotting too many decades in, the x- or y-log axis results in "y-log
-base-and-offset mode", giving, say, a base of 100, and tick labels
-"-[99.9999]", "[0]", "+[9999900]", "+[1e12]", "+[1e17]" instead of
-"0.001", "100", "1000000", "1e12","1e17".  (Although I'd argue that, if
-we're going to label in 5 decade intervals, 1e-5, 1, 1e5, 1e10 is
-better, and even better than that would be 6 decade intervals: 1e-6, 1,
-1e6, 1e12)
-
-13. Hitting shift changes into y-zoom mode forever, rather than just
+Hitting shift changes into y-zoom mode forever, rather than just
 changing it while shift is depressed.  After doing this it's difficult
 to get back to xy-zoom mode.  (I have to right click twice to open and
 close the context menu.)
@@ -124,23 +74,35 @@ close the context menu.)
 
 ----------------
 
-1) Open the „about“ dialog box and click on a link. Nothing happens, everything disappears in the box. If kst was started from the command line, you get:
+Open the „about“ dialog box and click on a link. Nothing happens, everything disappears in the box. If kst was started from the command line, you get:
 QFSFileEngine::open: No file name specified
 QTextBrowser: No document for http://kst.kde.org/
-(NB/windows.  Confirmed by CBN/linux)
+Confirmed by CBN/linux
 
-4) When configuring Kst: “Settings>Configure kst” many settings are not taken into account, such as the grid settings, and disappear by the next start of kst. (NB/windows. )
-Under linux, the font configuration options behave properly, except that a re-draw needs to be triggered - eg, window resize.
+----------------
 
-Related bug:
-  It is not clear from the dialog that grid and color options are defaults for new plots.  The text should be modified
-  to make this clear.
+Font settings in Settings->General do not appear until, eg, the window is resized.
+Plots should be updated upon 'apply'.
 
-5) When starting Kst from a different folder, it creates another kstdatarc in the current folder instead of having one fixed rc file stored somewhere
-cbn note: this appears to be masked using the run-kst script - which which sets the cwd to the directory where the script is located (I think).  The kstdatarc file should live in the standard kde config directory (on my machine, this is ~/.kde/share/config, but we need to verify where it is on Windows and Mac.
+----------------
+
+It is not clear from the dialog that grid and color options are defaults for new plots and don't apply to existing
+plots.  The text should be modified to make this clear.
+
+----------------
+
+kstdatarc is located relative to the directory from which kst is run.  It should be located in
+the standard config directory.  
+  For linux under KDE4, this is `kde4-config --localprefix`/share/config/
+  For linux, not kde4, consider ~/.kst/
+  No idea what it should be for windows or mac.  
 
 ---------------------
-   1. In the « edit plot item » dialog: the size of this dialog box is not scalable. Problem is that the size is computed with the longest name of all the curves in the plot. And these names can be very long if automatically generated… Maybe I should order a 3rd screen ;)
+
+In the « edit plot item » dialog: the size of this dialog box is not scalable. Problem is that the size is computed with the longest name of all the curves in the plot. And these names can be very long if automatically generated… 
+It needs a maximum width
+
+---------------------
 
    2. “Configure ASCII file” : -it seems that these settings are not saved as global settings, but for each file ! Such that for my 10^5 files having the same format, I have to define 10^5 the same ascii format. It may be useful to have global settings and to overwrite them with settings stored in the .kst files. Note: I informed him that it was possible to edit manually the kstdatarc file to get the desired result, but a global setting UI has to be provided at some point.
 

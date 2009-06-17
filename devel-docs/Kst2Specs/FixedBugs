@@ -786,3 +786,51 @@ Make a plot with the Y range from -0.75 to 0.4.  It goes into base/offset mode
 and it shouldn't.
 
 ---------
+
+Missing X axis and cut off right edge in tied zoom box:
+  create a tab with 6 plots in two columns
+  make all 6 X axis the same, but with 6 different Y axis
+  Create a shared axis box that encloses all 6.
+
+There is no X axis visible.  There should be.
+The right edge of the right collumn is cut off.  It shouldn't be.
+
+------------------------------
+
+
+Selecting 'share Y axis' in shared axis box context menu does not share Y axis.
+  create a tab with 6 plots in two columns
+  make all 6 X axis ranges the same, but with different Y axis ranges.
+  Create a shared axis box that encloses all 6 plots.
+  Notice that X axis is shared and Y isn't.  This is the correct default as the Y axis were different.
+  Now, select 'share Y axis' in the context menu.
+The check box is now marked, but the Y axis aren't shared.  
+
+What should happen if the Y axis shared box is changed to checked:
+  -The Y axis ranges should be changed to go from the minimum Y min
+  shown to the maximum Y max shown of all of the plots in the box, and 
+  the Y axis should be shared if properly aligned.
+  -If all of the plots were in 'm' auto zoom mode, then the shared axis box will
+   be in 'm' auto zoom mode, with all plots going from the minimum Y min to
+   the maximum Y max.  Otherwise, the the shared box will be in fixed mode, 
+   again going from the current displayed minumum Y min to the current 
+   displayed maximum Y max.
+  -hitting 'm' anywhere in the shared axis box will place the shared axis box 
+   and all of its plots into 'm' maximum zoom mode.
+  -Doing a mouse zoom in any of the shared plots will do the zoom of any shared
+   axis in all of the plots, and place them all in fixed mode.
+
+------------
+
+unselecting 'share Y axis' in shared axis box context menu does not restore the separate Y axis.
+  create a tab with 6 plots in two columns
+  make all 6 X axis be the same and all 6 y axis be the same.
+  Create a shared axis box that encloses all 6.
+  Notice that both the X axis and Y axis are shared.  This is correct.
+  Now, un-select 'share Y axis' in the context menu.
+
+The share Y axis is no longer selected, but Y separeate Y axis are not
+restored.  They should be.  Note: the Y ranges are no longer tied, even
+though the axis are still shared.
+
+------------
