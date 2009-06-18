@@ -832,7 +832,7 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
                    poly.last().x() - rect().x(),
                    poly.last().y() - rect().y());
 
-    if (!newRect.isValid())
+    if (!newRect.isValid()) {
       newRect = newRect.normalized();
       setPos(pos() + newRect.topLeft());
 
