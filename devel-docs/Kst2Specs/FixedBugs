@@ -847,3 +847,13 @@ Plots should be updated upon 'apply'.
 
 It is not clear from the dialog that grid and color options are defaults for new plots and don't apply to existing
 plots.  The text should be modified to make this clear.
+
+---------------------
+
+Drawing / Standardization Errors with inverted drawing of Plots
+
+Draw a plot using the drawing tool in any direction other than down and to the right.
+ - The PlotRenderItem is provided a negative size and not drawn
+ - Plot standardization is triggered and all labels / axis are drawn incorrectly
+
+---------------------

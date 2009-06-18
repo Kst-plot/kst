@@ -1,6 +1,7 @@
 Rounding problems in base/offset mode:
   For extreme cases of base/offset mode there are  rounding errors related to the subtraction of the base.
   Log axis should never go to base offset mode - instead they should use scientific; powers should be relative to 1.
+   - LogAxis are now using only two significant digits so that scientific notation is used by default.
 
 *cbn*
 ---------
@@ -102,14 +103,6 @@ Missing Signal -
   Object::connect:  (receiver name: 'LabelBuilder')
 
 Title missing (reads Dialog)
-
----------------------
-
-Drawing / Standardization Errors with inverted drawing of Plots
-
-Draw a plot using the drawing tool in any direction other than down and to the right.
- - The PlotRenderItem is provided a negative size and not drawn
- - Plot standardization is triggered and all labels / axis are drawn incorrectly
 
 ---------------------
 
