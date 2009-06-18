@@ -658,7 +658,7 @@ void PlotAxis::computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTick
     if (majorPoint == 0) majorPoint = -350;
     if (i >= min && i <= max) {
       *MajorTicks << majorPoint;
-      *Labels->insert(majorPoint, QString::number(majorPoint, 'g', FULL_PRECISION-2));
+      *Labels->insert(majorPoint, QString::number(majorPoint, 'g', 2));
     }
 
     if (tick == 1.0) {
@@ -670,7 +670,7 @@ void PlotAxis::computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTick
         if (minorPoint >= powMin && minorPoint <= powMax) {
           *MinorTicks << minorPoint;
           if (minorLabels && first) {
-            *Labels->insert(minorPoint, QString::number(minorPoint, 'g', FULL_PRECISION-2));
+            *Labels->insert(minorPoint, QString::number(minorPoint, 'g', 2));
             first = false;
           }
         }
@@ -681,7 +681,7 @@ void PlotAxis::computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTick
     qreal lastMinorTick = MinorTicks->last();
     if (MajorTicks->isEmpty() || MajorTicks->last() < lastMinorTick) {
       if (!Labels->contains(lastMinorTick)) {
-        *Labels->insert(lastMinorTick, QString::number(lastMinorTick, 'g', FULL_PRECISION-2));
+        *Labels->insert(lastMinorTick, QString::number(lastMinorTick, 'g', 2));
       }
     }
   }
