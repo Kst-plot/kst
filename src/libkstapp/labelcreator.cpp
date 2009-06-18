@@ -24,6 +24,7 @@ LabelCreator::LabelCreator(QWidget *parent)
   : QDialog(parent) {
 
   setupUi(this);
+  setWindowTitle(tr("Create Label Dialog"));
   _bold->setFixedWidth(32);
   _bold->setFixedHeight(32);
   _bold->setIcon(QPixmap(":kst_bold.png"));

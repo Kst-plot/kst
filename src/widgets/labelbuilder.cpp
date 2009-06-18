@@ -20,7 +20,7 @@ LabelBuilder::LabelBuilder(QWidget *parent, ObjectStore *store)
 
   setupUi(this);
 
-  connect(_label, SIGNAL(textChanged(const QString &)), this, SIGNAL(labelChanged(const QString &)));
+  connect(_label, SIGNAL(textChanged()), this, SIGNAL(labelChanged()));
   connect(_strings, SIGNAL(selectionChanged(QString)), this, SLOT(labelUpdate(const QString&)));
   connect(_scalars, SIGNAL(selectionChanged(QString)), this, SLOT(labelUpdate(const QString&)));
 }

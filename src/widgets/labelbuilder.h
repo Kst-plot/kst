@@ -35,7 +35,7 @@ class KST_EXPORT LabelBuilder : public QWidget, public Ui::LabelBuilder {
     void setLabelText(const QString &label);
 
   Q_SIGNALS:
-    void labelChanged(const QString &);
+    void labelChanged();
 
   private Q_SLOTS:
     void labelUpdate(const QString&);
