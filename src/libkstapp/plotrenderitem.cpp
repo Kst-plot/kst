@@ -246,6 +246,9 @@ void PlotRenderItem::addToMenuForContextEvent(QMenu &menu) {
 
 
 void PlotRenderItem::paint(QPainter *painter) {
+  if (!rect().isValid()) {
+    return;
+  }
   painter->setRenderHint(QPainter::Antialiasing, false);
 
 #ifdef CURVE_DRAWING_TIME

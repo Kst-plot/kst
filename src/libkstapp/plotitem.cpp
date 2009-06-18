@@ -670,7 +670,7 @@ void PlotItem::paint(QPainter *painter) {
 
 
 void PlotItem::paintPixmap(QPainter *painter) {
-  if (parentView()->plotBordersDirty() || (creationState() == ViewItem::InProgress)) {
+  if ((parentView()->plotBordersDirty() || (creationState() == ViewItem::InProgress)) && rect().isValid()) {
     ViewGridLayout::standardizePlotMargins(this, painter);
     setPlotBordersDirty(false);
   }

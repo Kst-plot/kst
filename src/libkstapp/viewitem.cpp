@@ -831,7 +831,18 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
     QRectF newRect(rect().x(), rect().y(),
                    poly.last().x() - rect().x(),
                    poly.last().y() - rect().y());
-    setViewRect(newRect.normalized());
+
+    if (!newRect.isValid())
+      newRect = newRect.normalized();
+      setPos(pos() + newRect.topLeft());
+
+      newRect.moveTopLeft(QPointF(0, 0));
+      setViewRect(newRect);
+
+      parentView()->setPlotBordersDirty(true);
+    } else {
+      setViewRect(newRect.normalized());
+    }
 
     parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
     parentView()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
