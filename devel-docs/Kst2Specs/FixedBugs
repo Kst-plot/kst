@@ -857,3 +857,14 @@ Draw a plot using the drawing tool in any direction other than down and to the r
  - Plot standardization is triggered and all labels / axis are drawn incorrectly
 
 ---------------------
+
+LabelCreator Dialog cleanup required.
+
+Missing Signal - 
+  Object::connect: No such signal QPlainTextEdit::textChanged(const QString &) in ../../../src/widgets/labelbuilder.cpp:23
+  Object::connect:  (sender name:   '_label')
+  Object::connect:  (receiver name: 'LabelBuilder')
+
+Title missing (reads Dialog)
+
+---------------------

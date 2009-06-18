@@ -95,18 +95,6 @@ It needs a maximum width
 
 ---------------------
 
-LabelCreator Dialog cleanup required.
-
-Missing Signal - 
-  Object::connect: No such signal QPlainTextEdit::textChanged(const QString &) in ../../../src/widgets/labelbuilder.cpp:23
-  Object::connect:  (sender name:   '_label')
-  Object::connect:  (receiver name: 'LabelBuilder')
-
-Title missing (reads Dialog)
-
----------------------
-
-
    2. “Configure ASCII file” : -it seems that these settings are not saved as global settings, but for each file ! Such that for my 10^5 files having the same format, I have to define 10^5 the same ascii format. It may be useful to have global settings and to overwrite them with settings stored in the .kst files. Note: I informed him that it was possible to edit manually the kstdatarc file to get the desired result, but a global setting UI has to be provided at some point.
 
    4. Reloading a previously saved kst files seems to forget all the “configure ascii file” settings (in particularly “read fields names from”) so that no vector can be generated because kst tries to read an unknown field! This may explain why the relative path names did not work (see bug reported earlier). In the meantime, it has been confirmed that reloading works with the appropriate kstdatarc file in the right place.
