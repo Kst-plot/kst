@@ -868,3 +868,41 @@ Missing Signal -
 Title missing (reads Dialog)
 
 ---------------------
+
+Shared Axis behavioral principles:
+
+"shared axis" means that only the bottom most (for shared X) or the
+left most (for shared Y) numbers and labels are shown.
+
+  -All plots have a tied zoom indicator.  All plots indicated as tied will have
+   both of their axis tied, regardless if they are shared.  All plots not indicated
+   as tied will only have their axis tied if they are shared.
+
+------------------------------
+------------ Bugs based on the above principles: --------------
+
+There is no tied zoom indicator for plots in a shared axis box.
+There should be.  Its behavior is as follows:
+  For axis that are selected to be shared:
+    -If any of the plots inside the shared axis box are tied to any plots outside the 
+     shared axis box, then the shared axis for all plots in the shared axis box will
+     be tied to the tied plots outside.
+  For axis that are *not* selected to be shared:
+    -The tied zoom for the *unshared* axis behaves exactly as it would if the plot 
+     were not in a shared axis box.
+ Shared axis boxes do not have tied zoom indicators - only the plots do.
+
+Tied zoom indicator location:
+  - If a plot shares *only* an X axis with a plot directly above it:
+     The indicator will be to the right of the plot, with its top even with
+     the top of the plot.
+  - If a plot shares *only* a Y axis with the plot directly to its right:
+      The indicator will be above the plot, with its top even with the right 
+      of the plot.
+  - If a plot shares *both* axis with a plot above and a plot to its right:
+      The indicator is not shown - its behavior would be redundant with the
+      indicator on the top right corner.
+  - If a plot is in a shared axis box which shares both X and Y axis:
+      only the plot in the top right corner  (alternativly, only plots which don't 
+      share an axis with a plot above or to its right) will show its indicator.  
+      The indicator would be redundant, anyway, with the indicator in the top right.
