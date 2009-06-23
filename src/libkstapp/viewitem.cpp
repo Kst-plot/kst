@@ -1842,6 +1842,7 @@ void ViewItem::setSupportsTiedZoom(const bool supports) {
     if (_supportsTiedZoom) {
       PlotItemManager::self()->addViewItem(this);
     } else {
+      setTiedZoom(false, false, false);
       PlotItemManager::self()->removeViewItem(this);
     }
   }

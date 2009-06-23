@@ -151,7 +151,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     bool isInSharedAxisBox() const;
     void setInSharedAxisBox(bool inSharedBox);
 
-    SharedAxisBoxItem* sharedAxisBox();
+    SharedAxisBoxItem* sharedAxisBox() const;
     void setSharedAxisBox(SharedAxisBoxItem* parent);
 
     void setPadding(const qreal, const qreal, const qreal, const qreal);
@@ -241,6 +241,9 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     bool isUseAxisScale() const;
     void setUseAxisScale(bool useScale);
 
+    virtual QPainterPath checkBox() const;
+    virtual QPainterPath tiedZoomCheck() const;
+
   protected:
     virtual QString _automaticDescriptiveName() const;
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -310,6 +313,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void createZoomMenu();
     void createFilterMenu();
     void createFitMenu();
+    void createSharedAxisBoxMenu();
 
     void resetSelectionRect();
 
@@ -470,6 +474,12 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QAction *_filterAction;
     QMenu *_fitMenu;
     QAction *_fitAction;
+    QMenu *_sharedAxisBoxMenu;
+    QAction *_shareBoxShareX;
+    QAction *_shareBoxShareY;
+    QAction *_shareBoxTieZoom;
+    QAction *_shareBoxTieXZoom;
+    QAction *_shareBoxTieYZoom;
 
     SharedAxisBoxItem * _sharedBox;
 
@@ -555,6 +565,7 @@ class KST_EXPORT ZoomCommand : public ViewItemCommand
   private:
     QList<ZoomState> _originalStates;
     QList<ViewItem*> _viewItems;
+    QList<PlotItem*> _sharedPlotItems;
     PlotItem* _plotItem;
 };
 

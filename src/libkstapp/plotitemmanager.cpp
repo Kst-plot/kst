@@ -86,25 +86,15 @@ void PlotItemManager::removeViewItem(ViewItem *viewItem) {
 
 
 void PlotItemManager::addTiedZoomPlot(PlotItem *plotItem, bool checkAll) {
-  if (plotItem->isInSharedAxisBox()) {
-    if (!_tiedZoomViewItemPlotLists.contains(plotItem->parentViewItem())) {
-      _tiedZoomViewItemPlotLists.insert(plotItem->parentViewItem(), QList<PlotItem*>() << plotItem);
-    } else {
-      QList<PlotItem*> list = _tiedZoomViewItemPlotLists.value(plotItem->parentViewItem());
-      list << plotItem;
-      _tiedZoomViewItemPlotLists.insert(plotItem->parentViewItem(), list);
-    }
+  if (!_tiedZoomViewPlotLists.contains(plotItem->parentView())) {
+    _tiedZoomViewPlotLists.insert(plotItem->parentView(), QList<PlotItem*>() << plotItem);
   } else {
-    if (!_tiedZoomViewPlotLists.contains(plotItem->parentView())) {
-      _tiedZoomViewPlotLists.insert(plotItem->parentView(), QList<PlotItem*>() << plotItem);
-    } else {
-      QList<PlotItem*> list = _tiedZoomViewPlotLists.value(plotItem->parentView());
-      list << plotItem;
-      _tiedZoomViewPlotLists.insert(plotItem->parentView(), list);
-    }
-    if (checkAll) {
-      checkAllTied(plotItem->parentView());
-    }
+    QList<PlotItem*> list = _tiedZoomViewPlotLists.value(plotItem->parentView());
+    list << plotItem;
+    _tiedZoomViewPlotLists.insert(plotItem->parentView(), list);
+  }
+  if (checkAll) {
+    checkAllTied(plotItem->parentView());
   }
 }
 
@@ -198,6 +188,11 @@ QList<PlotItem*> PlotItemManager::plotsForView(View *view) {
 QList<PlotItem*> PlotItemManager::tiedZoomPlotsForView(View *view) {
   if (PlotItemManager::self()->_tiedZoomViewPlotLists.contains(view)) {
     QList<PlotItem*> plots = PlotItemManager::self()->_tiedZoomViewPlotLists.value(view);
+    if (PlotItemManager::self()->_tiedZoomViewItemLists.contains(view)) {
+      foreach (ViewItem *viewItem, PlotItemManager::self()->_tiedZoomViewItemLists.value(view)) {
+        plots << tiedZoomPlotsForViewItem(viewItem);
+      }
+    }
     return plots;
   }
   return QList<PlotItem*>();

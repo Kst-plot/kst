@@ -167,8 +167,8 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     { _acceptsContextMenuEvents = acceptsContextMenuEvents; }
 
     virtual bool tryShortcut(const QString &keySequence);
-    QPainterPath checkBox() const;
-    QPainterPath tiedZoomCheck() const;
+    virtual QPainterPath checkBox() const;
+    virtual QPainterPath tiedZoomCheck() const;
     virtual QSizeF tiedZoomSize() const { return QSizeF(checkBox().controlPointRect().size() * 1.5); }
 
     virtual bool isTiedZoom() const { return (_isXTiedZoom || _isYTiedZoom); }

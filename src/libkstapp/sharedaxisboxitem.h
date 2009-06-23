@@ -59,6 +59,10 @@ class SharedAxisBoxItem : public ViewItem
     void shareXAxis();
     void shareYAxis();
 
+    void zoomTied();
+    void zoomXTied();
+    void zoomYTied();
+
     void zoomFixedExpression(const QRectF &projection, PlotItem* originPlotItem);
     void zoomXRange(const QRectF &projection, PlotItem* originPlotItem);
     void zoomYRange(const QRectF &projection, PlotItem* originPlotItem);
@@ -92,6 +96,7 @@ class SharedAxisBoxItem : public ViewItem
 
   private:
     void updateShare();
+    void updatePlotTiedZoomSupport();
     void highlightPlots(QList<PlotItem*> plots);
 
     QRectF computeRect(PlotAxis::ZoomMode xMode, PlotAxis::ZoomMode yMode);

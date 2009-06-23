@@ -88,6 +88,7 @@ PlotItem::PlotItem(View *parent)
   _zoomMenu(0),
   _filterMenu(0),
   _fitMenu(0),
+  _sharedAxisBoxMenu(0),
   _sharedBox(0),
   _axisLabelsDirty(true),
   _plotPixmapDirty(true),
@@ -364,6 +365,11 @@ void PlotItem::createActions() {
   registerShortcut(_plotMaximize);
   connect(_plotMaximize, SIGNAL(triggered()), this, SLOT(plotMaximize()));
 
+  _shareBoxShareX = 0;
+  _shareBoxShareY = 0;
+  _shareBoxTieZoom = 0;
+  _shareBoxTieXZoom = 0;
+  _shareBoxTieYZoom = 0;
 }
 
 
@@ -453,22 +459,71 @@ void PlotItem::createFitMenu() {
 }
 
 
+void PlotItem::createSharedAxisBoxMenu() {
+  if (_sharedAxisBoxMenu) {
+    delete _shareBoxShareX;
+    delete _shareBoxShareY;
+    delete _shareBoxTieZoom;
+    delete _shareBoxTieXZoom;
+    delete _shareBoxTieYZoom;
+
+    delete _sharedAxisBoxMenu;
+  }
+
+  _sharedAxisBoxMenu = new QMenu;
+  _sharedAxisBoxMenu->setTitle(tr("Shared Axis Box Settings"));
+
+  _shareBoxShareX = new QAction(tr("Share Plots on X-Axis"), this);
+  _shareBoxShareX->setShortcut(Qt::Key_X);
+  connect(_shareBoxShareX, SIGNAL(triggered()), _sharedBox, SLOT(shareXAxis()));
+  _shareBoxShareX->setCheckable(true);
+  _shareBoxShareX->setChecked(_sharedBox->isXAxisShared());
+  registerShortcut(_shareBoxShareX);
+  _sharedAxisBoxMenu->addAction(_shareBoxShareX);
+
+  _shareBoxShareY = new QAction(tr("Share Plots on Y-Axis"), this);
+  _shareBoxShareY->setShortcut(Qt::Key_Y);
+  connect(_shareBoxShareY, SIGNAL(triggered()), _sharedBox, SLOT(shareYAxis()));
+  _shareBoxShareY->setCheckable(true);
+  _shareBoxShareY->setChecked(_sharedBox->isYAxisShared());
+  registerShortcut(_shareBoxShareY);
+  _sharedAxisBoxMenu->addAction(_shareBoxShareY);
+
+  _sharedAxisBoxMenu->addSeparator();
+
+  _shareBoxTieZoom = new QAction(tr("Tie Zoom of Shared Axis Box"), this);
+  _shareBoxTieZoom->setShortcut(Qt::Key_O);
+  connect(_shareBoxTieZoom, SIGNAL(triggered()), _sharedBox, SLOT(zoomTied()));
+  _shareBoxTieZoom->setCheckable(true);
+  _shareBoxTieZoom->setChecked(_sharedBox->isTiedZoom());
+  registerShortcut(_shareBoxTieZoom);
+  _sharedAxisBoxMenu->addAction(_shareBoxTieZoom);
+
+  _shareBoxTieXZoom = new QAction(tr("Tie X Zoom of Shared Axis Box"), this);
+  _shareBoxTieXZoom->setShortcut(Qt::SHIFT+Qt::Key_O);
+  connect(_shareBoxTieXZoom, SIGNAL(triggered()), _sharedBox, SLOT(zoomXTied()));
+  _shareBoxTieXZoom->setCheckable(true);
+  _shareBoxTieXZoom->setChecked(_sharedBox->isXTiedZoom());
+  registerShortcut(_shareBoxTieXZoom);
+  _sharedAxisBoxMenu->addAction(_shareBoxTieXZoom);
+
+  _shareBoxTieYZoom = new QAction(tr("Tie Y Zoom of Shared Axis Box"), this);
+  _shareBoxTieYZoom->setShortcut(Qt::CTRL+Qt::Key_O);
+  connect(_shareBoxTieYZoom, SIGNAL(triggered()), _sharedBox, SLOT(zoomYTied()));
+  _shareBoxTieYZoom->setCheckable(true);
+  _shareBoxTieYZoom->setChecked(_sharedBox->isYTiedZoom());
+  registerShortcut(_shareBoxTieYZoom);
+  _sharedAxisBoxMenu->addAction(_shareBoxTieYZoom);
+}
+
+
+
+
 void PlotItem::addToMenuForContextEvent(QMenu &menu) {
   if (parentItem() && isInSharedAxisBox() && _sharedBox) {
     if (parentView()->viewMode() == View::Data) {
-      QAction *xAxisSharedBox = new QAction(tr("Share Plots on X-Axis"), this);
-      xAxisSharedBox->setShortcut(Qt::Key_X);
-      connect(xAxisSharedBox, SIGNAL(triggered()), _sharedBox, SLOT(shareXAxis()));
-      xAxisSharedBox->setCheckable(true);
-      xAxisSharedBox->setChecked(_sharedBox->isXAxisShared());
-      menu.addAction(xAxisSharedBox);
 
-      QAction *yAxisSharedBox = new QAction(tr("Share Plots on Y-Axis"), this);
-      yAxisSharedBox->setShortcut(Qt::Key_Y);
-      connect(yAxisSharedBox, SIGNAL(triggered()), _sharedBox, SLOT(shareYAxis()));
-      yAxisSharedBox->setCheckable(true);
-      yAxisSharedBox->setChecked(_sharedBox->isYAxisShared());
-      menu.addAction(yAxisSharedBox);
+      menu.addMenu(_sharedAxisBoxMenu);
 
       QAction *breakSharedBox = new QAction(tr("Break Shared Axis Box"), this);
       breakSharedBox->setShortcut(Qt::Key_B);
@@ -484,11 +539,15 @@ void PlotItem::addToMenuForContextEvent(QMenu &menu) {
 
   _zoomLogX->setChecked(xAxis()->axisLog());
   _zoomLogY->setChecked(yAxis()->axisLog());
-  if (isInSharedAxisBox()) {
-    _zoomTied->setChecked(sharedAxisBox()->isTiedZoom());
-    _zoomXTied->setChecked(sharedAxisBox()->isXTiedZoom());
-    _zoomYTied->setChecked(sharedAxisBox()->isYTiedZoom());
+  if (isInSharedAxisBox() && sharedAxisBox()->isXAxisShared() && sharedAxisBox()->isYAxisShared()) {
+    _zoomTied->setVisible(false);
+    _zoomXTied->setVisible(false);
+    _zoomYTied->setVisible(false);
   } else {
+    _zoomTied->setVisible(true);
+    _zoomXTied->setVisible(true);
+    _zoomYTied->setVisible(true);
+
     _zoomTied->setChecked(isTiedZoom());
     _zoomXTied->setChecked(isXTiedZoom());
     _zoomYTied->setChecked(isYTiedZoom());
@@ -651,7 +710,7 @@ void PlotItem::paint(QPainter *painter) {
   QTime bench_time;
   bench_time.start();
 #endif
-  if (_plotPixmapDirty) {
+  if (_plotPixmapDirty && rect().isValid()) {
     updatePlotPixmap();
   }
 
@@ -665,7 +724,6 @@ void PlotItem::paint(QPainter *painter) {
   int i = bench_time.elapsed();
   qDebug() << "Total Time to paint " << (void *)this << ": " << i << "ms" << endl;
 #endif
-
 }
 
 
@@ -1384,12 +1442,11 @@ bool PlotItem::isInSharedAxisBox() const {
 
 void PlotItem::setInSharedAxisBox(bool inSharedBox) {
   _isInSharedAxisBox = inSharedBox;
-  setSupportsTiedZoom(!_isInSharedAxisBox);
   setLockParent(inSharedBox);
 }
 
 
-SharedAxisBoxItem* PlotItem::sharedAxisBox() {
+SharedAxisBoxItem* PlotItem::sharedAxisBox() const {
   return _sharedBox;
 }
 
@@ -1404,14 +1461,19 @@ void PlotItem::setSharedAxisBox(SharedAxisBoxItem* parent) {
     setFlags(0);
     setParent(parent);
     setBrush(Qt::transparent);
+
+    _sharedBox = parent;
+    createSharedAxisBoxMenu();
   } else {
+    setSupportsTiedZoom(true);
     setInSharedAxisBox(false);
     setAllowedGripModes(Move | Resize | Rotate);
     setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
     setParent(0);
     setBrush(Qt::white);
+
+    _sharedBox = 0;
   }
-  _sharedBox = parent;
 }
 
 
@@ -2405,6 +2467,51 @@ void PlotItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 
+
+QPainterPath PlotItem::checkBox() const {
+  if (!isInSharedAxisBox()) {
+    return ViewItem::checkBox();
+  } else {
+    QRectF bound = selectBoundingRect();
+    QRectF grip;
+    if (sharedAxisBox()->isXAxisShared()) {
+      grip = QRectF(QPointF(_calculatedPlotRect.topRight().x() + sizeOfGrip().width() * .25, _calculatedPlotRect.topRight().y() - sizeOfGrip().height() * -.25), sizeOfGrip());
+    } else if (sharedAxisBox()->isYAxisShared()) {
+      grip = QRectF(QPointF(_calculatedPlotRect.topRight().x() - sizeOfGrip().width() * 1.25, _calculatedPlotRect.topRight().y() - sizeOfGrip().height() * 1.25), sizeOfGrip());
+    }
+    QPainterPath path;
+    path.addEllipse(grip);
+    return path;
+  }
+}
+
+
+QPainterPath PlotItem::tiedZoomCheck() const {
+  if (!isInSharedAxisBox()) {
+    return ViewItem::tiedZoomCheck();
+  } else {
+    QRectF bound = selectBoundingRect();
+    QRectF grip;
+    if (sharedAxisBox()->isXAxisShared()) {
+      grip = QRectF(QPointF(_calculatedPlotRect.topRight().x() + sizeOfGrip().width() * .25, _calculatedPlotRect.topRight().y() - sizeOfGrip().height() * -.25), sizeOfGrip());
+    } else if (sharedAxisBox()->isYAxisShared()) {
+      grip = QRectF(QPointF(_calculatedPlotRect.topRight().x() - sizeOfGrip().width() * 1.25, _calculatedPlotRect.topRight().y() - sizeOfGrip().height() * 1.25), sizeOfGrip());
+    }
+    QPainterPath path;
+    if (isXTiedZoom() && isYTiedZoom()) {
+      path.addEllipse(grip);
+    } else if (isXTiedZoom()) {
+      path.moveTo(grip.center());
+      path.arcTo(grip, 225, 180);
+    } else if (isYTiedZoom()) {
+      path.moveTo(grip.center());
+      path.arcTo(grip, 45, 180);
+    }
+    return path;
+  }
+}
+
+
 void PlotItem::setAllowUpdates(bool allowed) {
   if (allowed == _allowUpdates)
     return;
@@ -2560,11 +2667,7 @@ void PlotItem::zoomTied() {
 #if DEBUG_ZOOM
   qDebug() << "zoomTied" << endl;
 #endif
-  if (isInSharedAxisBox()) {
-    sharedAxisBox()->setTiedZoom(!sharedAxisBox()->isTiedZoom(), !sharedAxisBox()->isTiedZoom());
-  } else {
-    setTiedZoom(!isTiedZoom(), !isTiedZoom());
-  }
+  setTiedZoom(!isTiedZoom(), !isTiedZoom());
 }
 
 
@@ -2572,11 +2675,7 @@ void PlotItem::zoomXTied() {
 #if DEBUG_ZOOM
   qDebug() << "zoomXTied" << endl;
 #endif
-  if (isInSharedAxisBox()) {
-    sharedAxisBox()->setTiedZoom(!sharedAxisBox()->isXTiedZoom(), sharedAxisBox()->isYTiedZoom());
-  } else {
-    setTiedZoom(!isXTiedZoom(), isYTiedZoom());
-  }
+  setTiedZoom(!isXTiedZoom(), isYTiedZoom());
 }
 
 
@@ -2584,11 +2683,7 @@ void PlotItem::zoomYTied() {
 #if DEBUG_ZOOM
   qDebug() << "zoomYTied" << endl;
 #endif
-  if (isInSharedAxisBox()) {
-    sharedAxisBox()->setTiedZoom(sharedAxisBox()->isXTiedZoom(), !sharedAxisBox()->isYTiedZoom());
-  } else {
-    setTiedZoom(isXTiedZoom(), !isYTiedZoom());
-  }
+  setTiedZoom(isXTiedZoom(), !isYTiedZoom());
 }
 
 
@@ -3323,11 +3418,17 @@ ZoomCommand::ZoomCommand(PlotItem *item, const QString &text, bool forced)
   if (!item->isTiedZoom() || forced) {
     _originalStates << item->currentZoomState();
   } else {
+    _viewItems = PlotItemManager::tiedZoomViewItems(item);
+
     QList<PlotItem*> plots = PlotItemManager::tiedZoomPlots(item);
     foreach (PlotItem *plotItem, plots) {
+      if (plotItem->isInSharedAxisBox()) {
+        if (!_viewItems.contains(plotItem->sharedAxisBox())) {
+          _viewItems << plotItem->sharedAxisBox();
+        }
+      }
       _originalStates << plotItem->currentZoomState();
     }
-    _viewItems = PlotItemManager::tiedZoomViewItems(item);
   }
 }
 
