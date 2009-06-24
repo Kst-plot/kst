@@ -134,7 +134,7 @@ class PlotAxis : public QObject
     double convertTimeDiffValueToDays(AxisInterpretationType axisInterpretation, double offsetIn);
     double interpretOffset(AxisInterpretationType axisInterpretation, AxisDisplayType axisDisplay, double base, double value);
 
-    qreal computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orientation orientation);
+    qreal computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orientation orientation, bool maxTicks);
     void computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTicks, QMap<qreal, QString> *Labels, qreal min, qreal max, MajorTickMode tickMode);
 
     MajorTickMode convertToMajorTickMode(int tickCount);
