@@ -34,8 +34,8 @@ ScalarTab::ScalarTab(ObjectStore *store, QWidget *parent)
 
   connect(_scalarValue, SIGNAL(textChanged(const QString&)), this, SLOT(entryChanged()));
   connect(_start, SIGNAL(textChanged(const QString&)), this, SLOT(entryChanged()));
-  connect(_field, SIGNAL(textChanged(const QString&)), this, SLOT(entryChanged()));
-  connect(_fieldRV, SIGNAL(textChanged(const QString&)), this, SLOT(entryChanged()));
+  connect(_field, SIGNAL(editTextChanged(const QString&)), this, SLOT(entryChanged()));
+  connect(_fieldRV, SIGNAL(editTextChanged(const QString&)), this, SLOT(entryChanged()));
   connect(_readFromSource, SIGNAL(toggled(bool)), this, SLOT(readFromSourceChanged()));
   connect(_readFromRVector, SIGNAL(toggled(bool)), this, SLOT(readFromSourceChanged()));
   connect(_fileName, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
