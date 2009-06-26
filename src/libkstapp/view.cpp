@@ -552,8 +552,8 @@ void View::addTitle(QMenu *menu) const {
 
 
 void View::edit() {
-  ViewDialog editDialog(this);
-  editDialog.exec();
+  ViewDialog *editDialog = new ViewDialog(this, kstApp->mainWindow());
+  editDialog->show();
 }
 
 

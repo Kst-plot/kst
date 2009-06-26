@@ -541,6 +541,8 @@ DataWizard::DataWizard(QWidget *parent)
   setPage(PagePlot, _pagePlot);
 
   setWindowTitle("Data Wizard");
+  setAttribute(Qt::WA_DeleteOnClose);
+
   show();
 
   connect(_pageDataSource, SIGNAL(dataSourceChanged()), _pageVectors, SLOT(updateVectors()));
@@ -555,11 +557,6 @@ DataWizard::DataWizard(QWidget *parent)
 
 
 DataWizard::~DataWizard() {
-}
-
-
-void DataWizard::exec() {
-  QWizard::exec();
 }
 
 

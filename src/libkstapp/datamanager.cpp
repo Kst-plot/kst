@@ -308,53 +308,48 @@ void DataManager::showEditDialog(QModelIndex qml) {
 
 void DataManager::showEditDialog() {
   DialogLauncher::self()->showObjectDialog(_currentObject);
-  _doc->session()->triggerReset();
 }
 
 
-void DataManager::show() {
-  _doc->session()->triggerReset();
-  QDialog::show();
+bool DataManager::event(QEvent * event) {
+  if (event->type() == QEvent::QEvent::WindowActivate) {
+    _doc->session()->triggerReset();
+  }
+  return QDialog::event(event);
 }
 
 
 void DataManager::showVectorDialog() {
   QString tmp;
   DialogLauncher::self()->showVectorDialog(tmp);
-  _doc->session()->triggerReset();
 }
 
 
 void DataManager::showMatrixDialog() {
   QString tmp;
   DialogLauncher::self()->showMatrixDialog(tmp);
-  _doc->session()->triggerReset();
 }
 
 
 void DataManager::showScalarDialog() {
   QString scalarName;
   DialogLauncher::self()->showScalarDialog(scalarName);
-  _doc->session()->triggerReset();
 }
 
 
 void DataManager::showStringDialog() {
   QString stringName;
   DialogLauncher::self()->showStringDialog(stringName);
-  _doc->session()->triggerReset();
 }
 
 
 void DataManager::showEventMonitorDialog() {
   DialogLauncher::self()->showEventMonitorDialog();
-  _doc->session()->triggerReset();
 }
 
 
 void DataManager::showEquationDialog() {
   DialogLauncher::self()->showEquationDialog();
-  _doc->session()->triggerReset();
 }
 
 
@@ -364,7 +359,6 @@ void DataManager::showCurveDialog() {
   } else {
     DialogLauncher::self()->showCurveDialog();
   }
-  _doc->session()->triggerReset();
 }
 
 
@@ -374,7 +368,6 @@ void DataManager::showCSDDialog() {
   } else {
     DialogLauncher::self()->showCSDDialog();
   }
-  _doc->session()->triggerReset();
 }
 
 
@@ -384,7 +377,6 @@ void DataManager::showPowerSpectrumDialog() {
   } else {
     DialogLauncher::self()->showPowerSpectrumDialog();
   }
-  _doc->session()->triggerReset();
 }
 
 
@@ -394,7 +386,6 @@ void DataManager::showHistogramDialog() {
   } else {
     DialogLauncher::self()->showHistogramDialog();
   }
-  _doc->session()->triggerReset();
 }
 
 
@@ -404,7 +395,6 @@ void DataManager::showImageDialog() {
   } else {
     DialogLauncher::self()->showImageDialog();
   }
-  _doc->session()->triggerReset();
 }
 
 
@@ -415,9 +405,7 @@ void DataManager::showPluginDialog(QString &pluginName) {
     DialogLauncher::self()->showBasicPluginDialog(pluginName, 0, curve->xVector(), curve->yVector());
   } else {
     DialogLauncher::self()->showBasicPluginDialog(pluginName);
-}
-
-  _doc->session()->triggerReset();
+  }
 }
 
 

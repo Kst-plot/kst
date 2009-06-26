@@ -47,6 +47,7 @@
 #include "changefiledialog.h"
 #include "bugreportwizard.h"
 #include "datawizard.h"
+#include "aboutdialog.h"
 #include "datavector.h"
 
 #include <QtGui>
@@ -62,15 +63,22 @@
 
 namespace Kst {
 
-MainWindow::MainWindow() {
-  _dataManager = 0;
-  _exportGraphics = 0;
+MainWindow::MainWindow() :
+  _dataManager(0),
+  _exportGraphics(0),
+  _differentiateCurvesDialog(0),
+  _chooseColorDialog(0),
+  _changeDataSampleDialog(0),
+  _changeFileDialog(0),
+  _bugReportWizard(0),
+  _applicationSettingsDialog(0),
+  _aboutDialog(0),
+  _dataMode(false) {
   _doc = new Document(this);
   _tabWidget = new TabWidget(this);
   _undoGroup = new QUndoGroup(this);
   _debugDialog = new DebugDialog(this);
   Debug::self()->setHandler(_debugDialog);
-  _dataMode = false;
 
   createActions();
   createMenus();
@@ -333,30 +341,14 @@ void MainWindow::aboutToQuit() {
 
 
 void MainWindow::about() {
-  QDialog dlg;
-  Ui::AboutDialog ui;
-  ui.setupUi(&dlg);
-  // Sorted alphabetically, first group is 2.0 contributors
-  const QString msg = tr(
-  "<qt><h2>Kst 2.0 - A data viewing program.</h2>\n<hr>\n"
-  "Copyright &copy; 2000-2008 Barth Netterfield<br>"
-  "<a href=\"http://kst.kde.org/\">http://kst.kde.org/</a><br>"
-  "Please report bugs to: <a href=\"http://bugs.kde.org/\">http://bugs.kde.org/</a><br>"
-  "Authors:<ul>"
-  "<li>Barth Netterfield</li>"
-  "<li><a href=\"http://www.staikos.net/\">Staikos Computing Services Inc.</a></li>"
-  "<li>Ted Kisner</li>"
-  "<li>The University of Toronto</li>"
-  "</ul><ul>"
-  "<li>Matthew Truch</li>"
-  "<li>Nicolas Brisset</li>"
-  "<li>Rick Chern</li>"
-  "<li>Sumus Technology Limited</li>"
-  "<li>The University of British Columbia</li>"
-  "</ul>"
-  );
-  ui.text->setText(msg);
-  dlg.exec();
+  if (!_aboutDialog) {
+    _aboutDialog = new AboutDialog(this);
+  }
+  if (_aboutDialog->isVisible()) {
+    _aboutDialog->raise();
+    _aboutDialog->activateWindow();
+  }
+  _aboutDialog->show();
 }
 
 
@@ -1015,30 +1007,34 @@ void MainWindow::showDataManager() {
   if (!_dataManager) {
     _dataManager = new DataManager(this, _doc);
   }
+  if (_dataManager->isVisible()) {
+    _dataManager->raise();
+    _dataManager->activateWindow();
+  }
   _dataManager->show();
 }
 
 
 void MainWindow::showVectorEditor() {
-  ViewVectorDialog vectorDialog(this, _doc);
-  vectorDialog.exec();
+  ViewVectorDialog *viewVectorDialog = new ViewVectorDialog(this, _doc);
+  viewVectorDialog->show();
 }
 
 
 void MainWindow::showScalarEditor() {
-  ViewPrimitiveDialog scalarDialog(this, _doc, ViewPrimitiveDialog::Scalar);
-  scalarDialog.exec();
+  ViewPrimitiveDialog *viewScalarDialog = new ViewPrimitiveDialog(this, _doc, ViewPrimitiveDialog::Scalar);
+  viewScalarDialog->show();
 }
 
 
 void MainWindow::showStringEditor() {
-  ViewPrimitiveDialog stringDialog(this, _doc, ViewPrimitiveDialog::String);
-  stringDialog.exec();
+  ViewPrimitiveDialog *viewStringDialog = new ViewPrimitiveDialog(this, _doc, ViewPrimitiveDialog::String);
+  viewStringDialog->show();
 }
 
 void MainWindow::showMatrixEditor() {
-  ViewMatrixDialog matrixDialog(this, _doc);
-  matrixDialog.exec();
+  ViewMatrixDialog *viewMatrixDialog = new ViewMatrixDialog(this, _doc);
+  viewMatrixDialog->show();
 }
 
 
@@ -1047,6 +1043,10 @@ void MainWindow::showDebugDialog() {
     _debugDialog = new DebugDialog(this);
   }
   _debugDialog->setObjectStore(document()->objectStore());
+  if (_debugDialog->isVisible()) {
+    _debugDialog->raise();
+    _debugDialog->activateWindow();
+  }
   _debugDialog->show();
 }
 
@@ -1056,49 +1056,89 @@ void MainWindow::showExportGraphicsDialog() {
     _exportGraphics = new ExportGraphicsDialog(this);
     connect(_exportGraphics, SIGNAL(exportGraphics(const QString &, const QString &, int, int, int)), this, SLOT(exportGraphicsFile(const QString &, const QString &, int, int, int)));
   }
+  if (_exportGraphics->isVisible()) {
+    _exportGraphics->raise();
+    _exportGraphics->activateWindow();
+  }
   _exportGraphics->show();
 }
 
 
 void MainWindow::showSettingsDialog() {
-  ApplicationSettingsDialog settingsDialog(this);
-  settingsDialog.exec();
+  if (!_applicationSettingsDialog) {
+    _applicationSettingsDialog = new ApplicationSettingsDialog(this);
+  }
+  if (_applicationSettingsDialog->isVisible()) {
+    _applicationSettingsDialog->raise();
+    _applicationSettingsDialog->activateWindow();
+  }
+  _applicationSettingsDialog->show();
 }
 
 
 void MainWindow::showDifferentiateCurvesDialog() {
-  DifferentiateCurvesDialog differentiateCurvesDialog(this);
-  differentiateCurvesDialog.exec();
+  if (!_differentiateCurvesDialog) {
+    _differentiateCurvesDialog = new DifferentiateCurvesDialog(this);
+  }
+  if (_differentiateCurvesDialog->isVisible()) {
+    _differentiateCurvesDialog->raise();
+    _differentiateCurvesDialog->activateWindow();
+  }
+  _differentiateCurvesDialog->show();
 }
 
 
 void MainWindow::showChooseColorDialog() {
-  ChooseColorDialog chooseColorDialog(this);
-  chooseColorDialog.exec();
+  if (!_chooseColorDialog) {
+    _chooseColorDialog = new ChooseColorDialog(this);
+  }
+  if (_chooseColorDialog->isVisible()) {
+    _chooseColorDialog->raise();
+    _chooseColorDialog->activateWindow();
+  }
+  _chooseColorDialog->show();
 }
 
 
 void MainWindow::showChangeDataSampleDialog() {
-  ChangeDataSampleDialog changeDataSampleDialog(this);
-  changeDataSampleDialog.exec();
+  if (!_changeDataSampleDialog) {
+    _changeDataSampleDialog = new ChangeDataSampleDialog(this);
+  }
+  if (_changeDataSampleDialog->isVisible()) {
+    _changeDataSampleDialog->raise();
+    _changeDataSampleDialog->activateWindow();
+  }
+  _changeDataSampleDialog->show();
 }
 
 
 void MainWindow::showDataWizard() {
-  DataWizard dataWizard(this);
-  dataWizard.exec();
+  DataWizard *dataWizard = new DataWizard(this);
+  dataWizard->show();
 }
 
 
 void MainWindow::showBugReportWizard() {
-  BugReportWizard bugReportWizard(this);
-  bugReportWizard.exec();
+  if (!_bugReportWizard) {
+    _bugReportWizard = new BugReportWizard(this);
+  }
+  if (_bugReportWizard->isVisible()) {
+    _bugReportWizard->raise();
+    _bugReportWizard->activateWindow();
+  }
+  _bugReportWizard->show();
 }
 
 
 void MainWindow::showChangeFileDialog() {
-  ChangeFileDialog changeFileDialog(this);
-  changeFileDialog.exec();
+  if (!_changeFileDialog) {
+    _changeFileDialog = new ChangeFileDialog(this);
+  }
+  if (_changeFileDialog->isVisible()) {
+    _changeFileDialog->raise();
+    _changeFileDialog->activateWindow();
+  }
+  _changeFileDialog->show();
 }
 
 

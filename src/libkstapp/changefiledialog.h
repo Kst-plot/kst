@@ -33,7 +33,7 @@ class KST_EXPORT ChangeFileDialog : public QDialog, Ui::ChangeFileDialog
     ChangeFileDialog(QWidget *parent);
     virtual ~ChangeFileDialog();
 
-    void exec();
+    void show();
 
   private Q_SLOTS:
     void fileNameChanged(const QString &file);

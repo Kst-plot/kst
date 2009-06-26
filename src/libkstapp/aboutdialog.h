@@ -1,6 +1,6 @@
 /***************************************************************************
  *                                                                         *
- *   copyright : (C) 2007 The University of Toronto                        *
+ *   copyright : (C) 2009 The University of Toronto                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -9,37 +9,27 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef VIEWVECTORDIALOG_H
-#define VIEWVECTORDIALOG_H
+#ifndef ABOUTDIALOG_H
+#define ABOUTDIALOG_H
 
 #include <QDialog>
 
-#include "ui_viewvectordialog.h"
+#include "ui_aboutdialog.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class Document;
-class VectorModel;
-
-class KST_EXPORT ViewVectorDialog : public QDialog, Ui::ViewVectorDialog
+class KST_EXPORT AboutDialog : public QDialog, Ui::AboutDialog
 {
   Q_OBJECT
   public:
-    ViewVectorDialog(QWidget *parent, Document *doc);
-    virtual ~ViewVectorDialog();
+    AboutDialog(QWidget *parent);
+    virtual ~AboutDialog();
 
-    virtual void show();
-
-private Q_SLOTS:
-    void vectorSelected();
-
-  private:
-    Document *_doc;
-    VectorModel *_model;
+  private Q_SLOTS:
+   void launchURL(const QUrl &link);
 };
-
 }
 
 #endif

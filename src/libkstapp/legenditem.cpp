@@ -244,8 +244,8 @@ bool LegendItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
 
 
 void LegendItem::edit() {
-  LegendItemDialog editDialog(this);
-  editDialog.exec();
+  LegendItemDialog *editDialog = new LegendItemDialog(this);
+  editDialog->show();
 }
 
 

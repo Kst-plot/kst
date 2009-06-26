@@ -25,6 +25,8 @@ ViewMatrixDialog::ViewMatrixDialog(QWidget *parent, Document *doc)
 
   connect(matrixSelector, SIGNAL(selectionChanged()), this, SLOT(matrixSelected()));
   matrixSelector->setObjectStore(doc->objectStore());
+
+  setAttribute(Qt::WA_DeleteOnClose);
 }
 
 

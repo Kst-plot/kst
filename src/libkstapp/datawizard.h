@@ -176,8 +176,6 @@ class KST_EXPORT DataWizard : public QWizard
     DataWizard(QWidget *parent);
     virtual ~DataWizard();
 
-    void exec();
-
     QStringList dataSourceFieldList() const;
 
   private:

@@ -1,7 +1,11 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>BasicPluginTab</class>
- <widget class="QWidget" name="BasicPluginTab" >
-  <property name="geometry" >
+ <widget class="QWidget" name="BasicPluginTab">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,38 +13,23 @@
     <height>52</height>
    </rect>
   </property>
-  <layout class="QGridLayout" >
-   <property name="leftMargin" >
+  <layout class="QGridLayout">
+   <property name="margin">
     <number>9</number>
    </property>
-   <property name="topMargin" >
-    <number>9</number>
-   </property>
-   <property name="rightMargin" >
-    <number>9</number>
-   </property>
-   <property name="bottomMargin" >
-    <number>9</number>
-   </property>
-   <property name="horizontalSpacing" >
+   <property name="spacing">
     <number>-1</number>
    </property>
-   <property name="verticalSpacing" >
-    <number>-1</number>
-   </property>
-   <item row="1" column="0" >
-    <widget class="QGroupBox" name="_inputOutputBox" >
-     <property name="windowModality" >
-      <enum>Qt::WindowModal</enum>
-     </property>
-     <property name="title" >
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="_inputOutputBox">
+     <property name="title">
       <string>Inputs and Outputs</string>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
- <layoutdefault spacing="6" margin="11" />
+ <layoutdefault spacing="6" margin="11"/>
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <resources/>
  <connections/>

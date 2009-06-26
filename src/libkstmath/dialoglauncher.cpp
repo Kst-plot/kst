@@ -52,27 +52,31 @@ DialogLauncher::~DialogLauncher() {
 }
 
 
-void DialogLauncher::showVectorDialog(QString &vectorname, ObjectPtr objectPtr) {
+void DialogLauncher::showVectorDialog(QString &vectorname, ObjectPtr objectPtr, bool modal) {
   Q_UNUSED(objectPtr);
   Q_UNUSED(vectorname);
+  Q_UNUSED(modal);
 }
 
 
-void DialogLauncher::showMatrixDialog(QString &matrixName, ObjectPtr objectPtr) {
+void DialogLauncher::showMatrixDialog(QString &matrixName, ObjectPtr objectPtr, bool modal) {
   Q_UNUSED(objectPtr);
   Q_UNUSED(matrixName);
+  Q_UNUSED(modal);
 }
 
 
-void DialogLauncher::showScalarDialog(QString &scalarname, ObjectPtr objectPtr) {
+void DialogLauncher::showScalarDialog(QString &scalarname, ObjectPtr objectPtr, bool modal) {
   Q_UNUSED(objectPtr);
   Q_UNUSED(scalarname);
+  Q_UNUSED(modal);
 }
 
 
-void DialogLauncher::showStringDialog(QString &scalarname, ObjectPtr objectPtr) {
+void DialogLauncher::showStringDialog(QString &scalarname, ObjectPtr objectPtr, bool modal) {
   Q_UNUSED(objectPtr);
   Q_UNUSED(scalarname);
+  Q_UNUSED(modal);
 }
 
 

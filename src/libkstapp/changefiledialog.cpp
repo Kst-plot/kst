@@ -36,7 +36,7 @@ ChangeFileDialog::ChangeFileDialog(QWidget *parent)
     _store = mw->document()->objectStore();
   } else {
      // FIXME: we need the object store
-    qFatal("ERROR: can't construct a ChangeDataSampleDialog without the object store");
+    qFatal("ERROR: can't construct a ChangeFileDialog without the object store");
   }
 
   connect(_add, SIGNAL(clicked()), this, SLOT(addButtonClicked()));
@@ -68,9 +68,9 @@ ChangeFileDialog::~ChangeFileDialog() {
 }
 
 
-void ChangeFileDialog::exec() {
+void ChangeFileDialog::show() {
   updatePrimitiveList();
-  QDialog::exec();
+  QDialog::show();
 }
 
 

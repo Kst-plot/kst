@@ -32,7 +32,7 @@ class KST_EXPORT ChooseColorDialog : public QDialog, Ui::ChooseColorDialog
     ChooseColorDialog(QWidget *parent);
     virtual ~ChooseColorDialog();
 
-    void exec();
+    void show();
 
   private slots:
     void OKClicked();

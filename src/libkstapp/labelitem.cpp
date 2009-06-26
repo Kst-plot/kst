@@ -137,8 +137,8 @@ void LabelItem::setLabelColor(const QColor &color) {
 
 
 void LabelItem::edit() {
-  LabelItemDialog editDialog(this);
-  editDialog.exec();
+  LabelItemDialog *editDialog = new LabelItemDialog(this);
+  editDialog->show();
 }
 
 

@@ -26,10 +26,16 @@ class DataManager;
 class DebugDialog;
 class Document;
 class ExportGraphicsDialog;
+class DifferentiateCurvesDialog;
+class ChooseColorDialog;
+class ChangeDataSampleDialog;
+class ChangeFileDialog;
+class BugReportWizard;
+class ApplicationSettingsDialog;
+class AboutDialog;
 class TabWidget;
 class View;
-class ViewMatrixDialog;
-class ViewVectorDialog;
+
 
 class MainWindow : public QMainWindow
 {
@@ -125,6 +131,13 @@ class MainWindow : public QMainWindow
     DataManager *_dataManager;
     DebugDialog *_debugDialog;
     ExportGraphicsDialog *_exportGraphics;
+    DifferentiateCurvesDialog *_differentiateCurvesDialog;
+    ChooseColorDialog *_chooseColorDialog;
+    ChangeDataSampleDialog *_changeDataSampleDialog;
+    ChangeFileDialog *_changeFileDialog;
+    BugReportWizard *_bugReportWizard;
+    ApplicationSettingsDialog *_applicationSettingsDialog;
+    AboutDialog* _aboutDialog;
 
     QPointer<QProgressBar> _progressBar;
 

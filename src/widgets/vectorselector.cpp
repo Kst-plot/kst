@@ -122,7 +122,7 @@ void VectorSelector::newVector() {
   if (_isX) {
     newName = _dialogDefaults->value("curve/xvectorfield","INDEX").toString();
   }
-  DialogLauncher::self()->showVectorDialog(newName);
+  DialogLauncher::self()->showVectorDialog(newName, 0, true);
   fillVectors();
   VectorPtr vector = kst_cast<Vector>(_store->retrieveObject(newName));
 
@@ -139,7 +139,7 @@ void VectorSelector::editVector() {
     DialogLauncher::self()->showObjectDialog(selectedVector()->provider());
   } else {
     QString vectorname;
-    DialogLauncher::self()->showVectorDialog(vectorname, ObjectPtr(selectedVector()));
+    DialogLauncher::self()->showVectorDialog(vectorname, ObjectPtr(selectedVector()), true);
   }
   fillVectors(); // we might have just changed the name, so refill the combo.
 

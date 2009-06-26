@@ -25,6 +25,7 @@ win32:LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkstwidgets -lkstmath -l
 !win32:LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkst -lkstmath -lkstwidgets
 
 SOURCES += \
+    aboutdialog.cpp \
     application.cpp \
     applicationsettings.cpp \
     applicationsettingsdialog.cpp \
@@ -131,6 +132,7 @@ SOURCES += \
     viewvectordialog.cpp
 
 HEADERS += \
+    aboutdialog.h \
     application.h \
     applicationsettings.h \
     applicationsettingsdialog.h \

@@ -33,7 +33,7 @@ ChooseColorDialog::ChooseColorDialog(QWidget *parent)
     _store = mw->document()->objectStore();
   } else {
     // FIXME: we need the object store
-    qFatal("ERROR: can't construct a ChangeDataSampleDialog without the object store");
+    qFatal("ERROR: can't construct a ChooseColorDialog without the object store");
   }
 
   connect(_buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
@@ -47,9 +47,9 @@ ChooseColorDialog::~ChooseColorDialog() {
 }
 
 
-void ChooseColorDialog::exec() {
+void ChooseColorDialog::show() {
   updateColorGroup();
-  QDialog::exec();
+  QDialog::show();
 }
 
 

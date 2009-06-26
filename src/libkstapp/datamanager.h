@@ -57,7 +57,7 @@ class KST_EXPORT DataManager : public QDialog, Ui::DataManager
     void addToPlot(QAction* action);
     void removeFromPlot(QAction* action);
 
-    virtual void show();
+    virtual bool event(QEvent * event);
 
   private:
     Document *_doc;

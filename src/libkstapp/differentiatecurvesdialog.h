@@ -29,7 +29,7 @@ class KST_EXPORT DifferentiateCurvesDialog : public QDialog, Ui::DifferentiateCu
     DifferentiateCurvesDialog(QWidget *parent);
     virtual ~DifferentiateCurvesDialog();
 
-    void exec();
+    void show();
 
   private slots:
     void updateButtons();

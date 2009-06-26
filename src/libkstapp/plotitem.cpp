@@ -212,8 +212,8 @@ void PlotItem::save(QXmlStreamWriter &xml) {
 
 
 void PlotItem::edit() {
-  PlotItemDialog editDialog(this);
-  editDialog.exec();
+  PlotItemDialog *editDialog = new PlotItemDialog(this, kstApp->mainWindow());
+  editDialog->show();
 }
 
 

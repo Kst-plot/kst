@@ -29,7 +29,7 @@ DifferentiateCurvesDialog::DifferentiateCurvesDialog(QWidget *parent)
     _store = mw->document()->objectStore();
   } else {
     // FIXME: we need the object store
-    qFatal("ERROR: can't construct a ChangeDataSampleDialog without the object store");
+    qFatal("ERROR: can't construct a DifferentiateCurvesDialog without the object store");
   }
 
   resetLists();
@@ -63,9 +63,9 @@ DifferentiateCurvesDialog::~DifferentiateCurvesDialog() {
 }
 
 
-void DifferentiateCurvesDialog::exec() {
+void DifferentiateCurvesDialog::show() {
   updateButtons();
-  QDialog::exec();
+  QDialog::show();
 }
 
 

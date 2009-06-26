@@ -29,7 +29,7 @@ class KST_EXPORT ChangeDataSampleDialog : public QDialog, Ui::ChangeDataSampleDi
     ChangeDataSampleDialog(QWidget *parent);
     virtual ~ChangeDataSampleDialog();
 
-    void exec();
+    void show();
 
   private slots:
     void addButtonClicked();

@@ -84,7 +84,7 @@ void StringSelector::setSelectedString(StringPtr selectedString) {
 
 void StringSelector::newString() {
   QString stringName;
-  DialogLauncher::self()->showStringDialog(stringName);
+  DialogLauncher::self()->showStringDialog(stringName, 0, true);
   fillStrings();
   StringPtr string = kst_cast<String>(_store->retrieveObject(stringName));
 
@@ -97,7 +97,7 @@ void StringSelector::newString() {
 
 void StringSelector::editString() {
   QString stringName;
-  DialogLauncher::self()->showStringDialog(stringName, ObjectPtr(selectedString()));
+  DialogLauncher::self()->showStringDialog(stringName, ObjectPtr(selectedString()), true);
   fillStrings();
 }
 

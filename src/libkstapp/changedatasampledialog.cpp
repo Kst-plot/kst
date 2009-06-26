@@ -58,9 +58,9 @@ ChangeDataSampleDialog::~ChangeDataSampleDialog() {
 }
 
 
-void ChangeDataSampleDialog::exec() {
+void ChangeDataSampleDialog::show() {
   updateCurveListDialog();
-  QDialog::exec();
+  QDialog::show();
 }
 
 

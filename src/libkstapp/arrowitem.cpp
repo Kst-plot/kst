@@ -116,8 +116,8 @@ void ArrowItem::save(QXmlStreamWriter &xml) {
 
 
 void ArrowItem::edit() {
-  ArrowItemDialog editDialog(this);
-  editDialog.exec();
+  ArrowItemDialog *editDialog = new ArrowItemDialog(this);
+  editDialog->show();
 }
 
 

@@ -30,6 +30,8 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
 
   connect(_vectorSelector, SIGNAL(selectionChanged(const QString&)), this, SLOT(vectorSelected()));
   _vectorSelector->setObjectStore(doc->objectStore());
+
+  setAttribute(Qt::WA_DeleteOnClose);
 }
 
 
@@ -39,9 +41,9 @@ ViewVectorDialog::~ViewVectorDialog() {
 }
 
 
-void ViewVectorDialog::exec() {
+void ViewVectorDialog::show() {
   vectorSelected();
-  QDialog::exec();
+  QDialog::show();
 }
 
 

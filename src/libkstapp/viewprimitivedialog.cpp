@@ -26,6 +26,8 @@ ViewPrimitiveDialog::ViewPrimitiveDialog(QWidget *parent, Document *doc, Primiti
   _model = 0;
   setupUi(this);
   refresh();
+
+  setAttribute(Qt::WA_DeleteOnClose);
 }
 
 

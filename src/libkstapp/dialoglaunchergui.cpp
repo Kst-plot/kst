@@ -47,111 +47,136 @@ DialogLauncherGui::~DialogLauncherGui() {
 }
 
 
-void DialogLauncherGui::showVectorDialog(QString &vectorname, ObjectPtr objectPtr) {
-  VectorDialog dialog(objectPtr, kstApp->mainWindow());
+void DialogLauncherGui::showVectorDialog(QString &vectorname, ObjectPtr objectPtr, bool modal) {
+  VectorDialog *dialog = new VectorDialog(objectPtr, kstApp->mainWindow());
   if (!vectorname.isEmpty()) {
-    dialog.setField(vectorname);
+    dialog->setField(vectorname);
   }
-  dialog.exec();
-  vectorname = dialog.dataObjectName();
+  if (modal) {
+    dialog->setAttribute(Qt::WA_DeleteOnClose, false);
+    dialog->exec();
+    vectorname = dialog->dataObjectName();
+    delete dialog;
+  } else {
+    dialog->show();
+  }
 }
 
 
-void DialogLauncherGui::showMatrixDialog(QString &matrixName, ObjectPtr objectPtr) {
-  MatrixDialog dialog(objectPtr, kstApp->mainWindow());
-  dialog.exec();
-  matrixName = dialog.dataObjectName();
+void DialogLauncherGui::showMatrixDialog(QString &matrixName, ObjectPtr objectPtr, bool modal) {
+  MatrixDialog *dialog = new MatrixDialog(objectPtr, kstApp->mainWindow());
+  if (modal) {
+    dialog->setAttribute(Qt::WA_DeleteOnClose, false);
+    dialog->exec();
+    matrixName = dialog->dataObjectName();
+    delete dialog;
+  } else {
+    dialog->show();
+  }
 }
 
 
-void DialogLauncherGui::showScalarDialog(QString &scalarname, ObjectPtr objectPtr) {
-  ScalarDialog dialog(objectPtr, kstApp->mainWindow());
-  dialog.exec();
-  scalarname = dialog.dataObjectName();
+void DialogLauncherGui::showScalarDialog(QString &scalarname, ObjectPtr objectPtr, bool modal) {
+  ScalarDialog *dialog = new ScalarDialog(objectPtr, kstApp->mainWindow());
+  if (modal) {
+    dialog->setAttribute(Qt::WA_DeleteOnClose, false);
+    dialog->exec();
+    scalarname = dialog->dataObjectName();
+    delete dialog;
+  } else {
+    dialog->show();
+  }
 }
 
 
-void DialogLauncherGui::showStringDialog(QString &stringname, ObjectPtr objectPtr) {
-  StringDialog dialog(objectPtr, kstApp->mainWindow());
-  dialog.exec();
-  stringname = dialog.dataObjectName();
+void DialogLauncherGui::showStringDialog(QString &stringname, ObjectPtr objectPtr, bool modal) {
+  StringDialog *dialog = new StringDialog(objectPtr, kstApp->mainWindow());
+  if (modal) {
+    dialog->setAttribute(Qt::WA_DeleteOnClose, false);
+    dialog->exec();
+    stringname = dialog->dataObjectName();
+    delete dialog;
+  } else {
+    dialog->show();
+  }
 }
 
 
 void DialogLauncherGui::showCurveDialog(ObjectPtr objectPtr, VectorPtr vector) {
-  CurveDialog dialog(objectPtr, kstApp->mainWindow());
+  CurveDialog *dialog = new CurveDialog(objectPtr, kstApp->mainWindow());
   if (vector) {
-    dialog.setVector(vector);
+    dialog->setVector(vector);
   }
-  dialog.exec();
+  dialog->show();
 }
 
 
 void DialogLauncherGui::showImageDialog(ObjectPtr objectPtr, MatrixPtr matrix) {
-  ImageDialog dialog(objectPtr, kstApp->mainWindow());
+  ImageDialog *dialog = new ImageDialog(objectPtr, kstApp->mainWindow());
   if (matrix) {
-    dialog.setMatrix(matrix);
+    dialog->setMatrix(matrix);
   }
-  dialog.exec();
+  dialog->show();
 }
 
 
 void DialogLauncherGui::showEquationDialog(ObjectPtr objectPtr) {
-  EquationDialog(objectPtr, kstApp->mainWindow()).exec();
+  EquationDialog *dialog = new EquationDialog(objectPtr, kstApp->mainWindow());
+  dialog->show();
 }
 
 
 void DialogLauncherGui::showHistogramDialog(ObjectPtr objectPtr, VectorPtr vector) {
-  HistogramDialog dialog(objectPtr, kstApp->mainWindow());
+  HistogramDialog *dialog = new HistogramDialog(objectPtr, kstApp->mainWindow());
   if (vector) {
-    dialog.setVector(vector);
+    dialog->setVector(vector);
   }
-  dialog.exec();
+  dialog->show();
 }
 
 
 void DialogLauncherGui::showPowerSpectrumDialog(ObjectPtr objectPtr, VectorPtr vector) {
-  PowerSpectrumDialog dialog(objectPtr, kstApp->mainWindow());
+  PowerSpectrumDialog *dialog = new PowerSpectrumDialog(objectPtr, kstApp->mainWindow());
   if (vector) {
-    dialog.setVector(vector);
+    dialog->setVector(vector);
   }
-  dialog.exec();
+  dialog->show();
 }
 
 
 void DialogLauncherGui::showCSDDialog(ObjectPtr objectPtr, VectorPtr vector) {
-  CSDDialog dialog(objectPtr, kstApp->mainWindow());
+  CSDDialog *dialog = new CSDDialog(objectPtr, kstApp->mainWindow());
   if (vector) {
-    dialog.setVector(vector);
+    dialog->setVector(vector);
   }
-  dialog.exec();
+  dialog->show();
 }
 
 
 void DialogLauncherGui::showEventMonitorDialog(ObjectPtr objectPtr) {
-  EventMonitorDialog dialog(objectPtr, kstApp->mainWindow());
-  dialog.exec();
+  EventMonitorDialog *dialog = new EventMonitorDialog(objectPtr, kstApp->mainWindow());
+  dialog->show();
 }
 
 
 void DialogLauncherGui::showBasicPluginDialog(QString pluginName, ObjectPtr objectPtr, VectorPtr vectorX, VectorPtr vectorY, PlotItemInterface *plotItem) {
   if (DataObject::pluginType(pluginName) == DataObjectPluginInterface::Generic) {
-    BasicPluginDialog dialog(pluginName, objectPtr, kstApp->mainWindow());
-    dialog.exec();
+    BasicPluginDialog *dialog = new BasicPluginDialog(pluginName, objectPtr, kstApp->mainWindow());
+    dialog->show();
   } else {
-    FilterFitDialog dialog(pluginName, objectPtr, kstApp->mainWindow());
+    FilterFitDialog *dialog = new FilterFitDialog(pluginName, objectPtr, kstApp->mainWindow());
     if (!objectPtr) {
       if (vectorX) {
-        dialog.setVectorX(vectorX);
+        dialog->setVectorX(vectorX);
       }
       if (vectorY) {
-        dialog.setVectorY(vectorY);
+        dialog->setVectorY(vectorY);
       }
       if (plotItem) {
-        dialog.setPlotMode((PlotItem*)plotItem);
+        dialog->setPlotMode((PlotItem*)plotItem);
       }
     }
-    dialog.exec();
+    dialog->show();
   }
 }
 

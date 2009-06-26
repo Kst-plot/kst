@@ -154,7 +154,7 @@ void ScalarSelector::setSelectedScalar(ScalarPtr selectedScalar) {
 
 void ScalarSelector::newScalar() {
   QString scalarName;
-  DialogLauncher::self()->showScalarDialog(scalarName);
+  DialogLauncher::self()->showScalarDialog(scalarName, 0, true);
   fillScalars();
   ScalarPtr scalar = kst_cast<Scalar>(_store->retrieveObject(scalarName));
 
@@ -170,7 +170,7 @@ void ScalarSelector::editScalar() {
     DialogLauncher::self()->showObjectDialog(selectedScalar()->provider());
   } else {
     QString scalarName;
-    DialogLauncher::self()->showScalarDialog(scalarName, ObjectPtr(selectedScalar()));
+    DialogLauncher::self()->showScalarDialog(scalarName, ObjectPtr(selectedScalar()), true);
   }
   fillScalars();
 }

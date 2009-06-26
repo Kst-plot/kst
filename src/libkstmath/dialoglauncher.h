@@ -43,13 +43,13 @@ class KST_EXPORT DialogLauncher : public QObject {
 
   public Q_SLOTS:
     //primitives
-    virtual void showVectorDialog(QString &vectorname, ObjectPtr objectPtr = 0);
+    virtual void showVectorDialog(QString &vectorname, ObjectPtr objectPtr = 0, bool modal = false);
 
-    virtual void showMatrixDialog(QString &matrixName, ObjectPtr objectPtr = 0);
+    virtual void showMatrixDialog(QString &matrixName, ObjectPtr objectPtr = 0, bool modal = false);
 
-    virtual void showScalarDialog(QString &scalarname, ObjectPtr objectPtr = 0);
+    virtual void showScalarDialog(QString &scalarname, ObjectPtr objectPtr = 0, bool modal = false);
 
-    virtual void showStringDialog(QString &scalarname, ObjectPtr objectPtr = 0);
+    virtual void showStringDialog(QString &scalarname, ObjectPtr objectPtr = 0, bool modal = false);
 
     //standard objects
     virtual void showCurveDialog(ObjectPtr objectPtr = 0, VectorPtr vector = 0);

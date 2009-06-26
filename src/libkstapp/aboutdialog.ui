@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>AboutDialog</class>
- <widget class="QDialog" name="AboutDialog" >
-  <property name="geometry" >
+ <widget class="QDialog" name="AboutDialog">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,42 +10,42 @@
     <height>278</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>About Kst</string>
   </property>
-  <layout class="QGridLayout" >
-   <item row="0" column="0" >
-    <layout class="QHBoxLayout" >
+  <layout class="QGridLayout">
+   <item row="0" column="0">
+    <layout class="QHBoxLayout">
      <item>
-      <widget class="QLabel" name="label" >
-       <property name="text" >
+      <widget class="QLabel" name="label">
+       <property name="text">
         <string/>
        </property>
-       <property name="pixmap" >
-        <pixmap resource="../images/images.qrc" >:/kst.png</pixmap>
+       <property name="pixmap">
+        <pixmap resource="../images/images.qrc">:/kst.png</pixmap>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_2" >
-       <property name="font" >
+      <widget class="QLabel" name="label_2">
+       <property name="font">
         <font>
          <pointsize>26</pointsize>
         </font>
        </property>
-       <property name="text" >
+       <property name="text">
         <string>Kst</string>
        </property>
       </widget>
      </item>
     </layout>
    </item>
-   <item row="0" column="1" >
+   <item row="0" column="1">
     <spacer>
-     <property name="orientation" >
+     <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="sizeHint" >
+     <property name="sizeHint" stdset="0">
       <size>
        <width>40</width>
        <height>20</height>
@@ -52,15 +53,22 @@
      </property>
     </spacer>
    </item>
-   <item row="1" column="0" colspan="2" >
-    <widget class="QTextBrowser" name="text" />
+   <item row="1" column="0" colspan="2">
+    <widget class="QTextBrowser" name="text">
+     <property name="openExternalLinks">
+      <bool>true</bool>
+     </property>
+     <property name="openLinks">
+      <bool>false</bool>
+     </property>
+    </widget>
    </item>
-   <item row="2" column="0" colspan="2" >
-    <widget class="QDialogButtonBox" name="buttonBox" >
-     <property name="orientation" >
+   <item row="2" column="0" colspan="2">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="standardButtons" >
+     <property name="standardButtons">
       <set>QDialogButtonBox::Close</set>
      </property>
     </widget>
@@ -68,7 +76,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../images/images.qrc" />
+  <include location="../images/images.qrc"/>
  </resources>
  <connections>
   <connection>
@@ -77,11 +85,11 @@
    <receiver>AboutDialog</receiver>
    <slot>accept()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>191</x>
      <y>257</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>191</x>
      <y>138</y>
     </hint>

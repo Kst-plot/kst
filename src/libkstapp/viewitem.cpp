@@ -743,8 +743,8 @@ void ViewItem::paint(QPainter *painter) {
 
 
 void ViewItem::edit() {
-  ViewItemDialog editDialog(this);
-  editDialog.exec();
+  ViewItemDialog *editDialog = new ViewItemDialog(this, kstApp->mainWindow());
+  editDialog->show();
 }
 
 
