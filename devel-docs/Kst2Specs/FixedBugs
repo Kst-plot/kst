@@ -868,3 +868,5 @@ Missing Signal -
 Title missing (reads Dialog)
 
 ---------------------
+
+Make dialogs modeless.

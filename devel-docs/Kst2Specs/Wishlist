@@ -1,8 +1,14 @@
+
 When a new plot is added to an tab which already has plots in it (eg, from the Placement widget), then the label font sizes should be based on the label font sizes of the plots already in the tab.  (either 'vote' or use the first one).
 All font properties replicated.  Use the first one.
 
 ---------
 
+"kst setting dialog" interface to global ASCII options.
+kst can currently read default ascii settings from the kstrc file.
+These settings need to be settable from the kstsettingsdialog.  
+
+--------
 Easier way to specify reversed axis when loading sky images:
   -can desire to reverse be gleaned from the fits image?
   -command line option?
@@ -35,7 +41,7 @@ Printing from the command line.  This existed in 1.x
 
 --------
 
-Scientific notation for extreme axis numbers
+Scientific notation (instead of C's %e notation) for extreme axis numbers
 
 --------
 
@@ -43,4 +49,5 @@ Edit multiple for all view objects.  The highest priority is legends.
 
 --------
 
-Make dialogs modeless.
+Intelligent and useful window title:
+  If a kst file has been opened, the window title should be kst <kstfile>
