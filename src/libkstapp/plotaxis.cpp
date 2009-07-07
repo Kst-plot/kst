@@ -800,10 +800,10 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
   } else {
     qreal min = _orientation == Qt::Horizontal ? plotItem()->projectionRect().left() : plotItem()->projectionRect().top();
     qreal max = _orientation == Qt::Horizontal ? plotItem()->projectionRect().right() : plotItem()->projectionRect().bottom();
-    qreal majorTickSpacing = computedMajorTickSpacing(majorTickCount, _orientation, false);
+    qreal majorTickSpacing = computedMajorTickSpacing(majorTickCount, _orientation);
 
     if (useOverrideTicks && (((max - min) / majorTickSpacing) > majorTickCount)) {
-      majorTickSpacing = computedMajorTickSpacing(majorTickCount, _orientation, true);
+      majorTickSpacing = computedMajorTickSpacing(majorTickCount, _orientation, false);
     }
 
     qreal firstTick = ceil(min / majorTickSpacing) * majorTickSpacing;
@@ -938,15 +938,10 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
  * on the axis (but at least 2). The value of M is set by the requested
  * MajorTickMode.
  */
-qreal PlotAxis::computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orientation orientation, bool maxTicks) {
+qreal PlotAxis::computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orientation orientation, bool enforceMin) {
   qreal R = orientation == Qt::Horizontal ? plotItem()->projectionRect().width() : plotItem()->projectionRect().height();
   qreal M = majorTickCount;
-  qreal B;
-  if (maxTicks) {
-    B = ceil(log10(R/M));
-  } else {
-    B = floor(log10(R/M));
-  }
+  qreal B = floor(log10(R/M));
 
   qreal d1 = 1 * pow(10, B);
   qreal d2 = 2 * pow(10, B);
@@ -960,7 +955,7 @@ qreal PlotAxis::computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orien
   qDebug() << "MajorTickMode:" << M << "Range:" << R
            << "\n\tranges:" << r1 << r2 << r5
            << "\n\tspaces:" << d1 << d2 << d5
-           << "\n\tmax tick mode:" << maxTicks
+           << "\n\tenforce min tick mode:" << enforceMin
            << endl;
 #endif
 
@@ -972,7 +967,7 @@ qreal PlotAxis::computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orien
   if (s1 <= s2 && s1 <= s5) {
     return d1;
   } else if (s2 <= s5) {
-    if ((M == 2) && (r2 > R)) {
+    if (enforceMin && (M == 2) && (r2 > R)) {
 #if MAJOR_TICK_DEBUG 
       qDebug() << "Minimum ticks not met using d2 using d1 instead";
 #endif
@@ -982,7 +977,7 @@ qreal PlotAxis::computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orien
       return d2;
     }
   } else {
-    if ((M == 2) && (r5 > R)) {
+    if (enforceMin && (M == 2) && (r5 > R)) {
 #if MAJOR_TICK_DEBUG 
       qDebug() << "Minimum ticks not met using d5 using d2 instead";
 #endif
