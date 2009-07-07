@@ -17,67 +17,6 @@ It should be the same size as it started.
 ** low priority **
 
 ------------
-
-Problems with shared axis boxes: 
-
-Incorrect feedback in rmb menu.
-Create a window with 6 plots in 2 columns.  The X axis are the same.  The Y axis are different.
-Make a shared axis box with includes all 6.  As expected, the X axis are shared, and the Y aren't.
-"rmb->Shared Axis Box Settings -> Share Plots on Y axis " is checked, even though the Y axis aren't shared.
-Un check it.  The Y axis are now shared, even though the check box says they aren't.
-
-Tied Zoom behavior in shared axis boxes:
-Create a window with 6 plots in 2 columns.  
-Create a shared axis box which shares in X but not in Y.
-Select the tied zoom box in any two of the plots.  
-Make a Y zoom in one of the tied plots.  The plot it is tied to does not re-zoom.  It should.
-
-Related to above:
-Create a share X axis box, which contains some, but not all of the plots.
-Tie a plot inside the share axis box with a plot outside the share axis box.
-Do a Y zoom on the tied plot inside the share axis box.  The one outside does not
-change its zoom.  It should.
-
-Extra tied zoom button:
-There is a tied zoom box associated with shared axis boxes.  There shouldn't be.
-Tied zoom boxes are only associated with plots.
-
-I have moved the description of correct behavior which is broken by the above back to here from 'fixed bugs' :
-------------------------------
-Shared Axis behavioral principles:
-
-  -All plots have a tied zoom indicator (which may not always be shown).  
-  -All plots indicated as tied will have both of their axis tied, regardless if they are shared.  
-  -All plots not indicated as tied will only have their axis tied if they are shared.
-
------------- Bugs based on the above principles: --------------
-
-The tied zoom indicator behavior is as follows:
-  For axis that are selected to be shared:
-    -If any of the plots inside the shared axis box are tied to any plots outside the 
-     shared axis box, then the shared axis for all plots in the shared axis box will
-     be tied to the tied plots outside.
-  For axis that are *not* selected to be shared:
-    -The tied zoom for the *unshared* axis behaves exactly as it would if the plot 
-     were not in a shared axis box.
- **Shared axis boxes do not have tied zoom indicators - only the plots do.**
-
-Tied zoom indicator location:
-  - If a plot shares *only* an X axis with a plot directly above it:
-     The indicator will be to the right of the plot, with its top even with
-     the top of the plot.
-  - If a plot shares *only* a Y axis with the plot directly to its right:
-      The indicator will be above the plot, with its top even with the right 
-      of the plot.
-  - If a plot shares *both* axis with a plot above and a plot to its right:
-      The indicator is not shown - its behavior would be redundant with the
-      indicator on the top right corner.
-  - If a plot is in a shared axis box which shares both X and Y axis:
-      only the plot in the top right corner  (alternativly, only plots which don't 
-      share an axis with a plot above or to its right) will show its indicator.  
-      The indicator would be redundant, anyway, with the indicator in the top right.
-------------
-
 Only absolute file names seem to work. 
   -data source text box doesn't recognise initial ~ as a euphemism for
    the user's home directory.
@@ -93,13 +32,6 @@ to get back to xy-zoom mode.  (I have to right click twice to open and
 close the context menu.)
 (cbn says 'not confirmed - more info needed)
 
-----------------
-
-Open the „about“ dialog box and click on a link. Nothing happens, everything disappears in the box. If kst was started from the command line, you get:
-QFSFileEngine::open: No file name specified
-QTextBrowser: No document for http://kst.kde.org/
-Confirmed by CBN/linux
-*Mike*
 ----------------
 
 kstdatarc is located relative to the directory from which kst is run.  It should be located in
