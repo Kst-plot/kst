@@ -66,7 +66,18 @@ void SharedAxisBoxItem::paint(QPainter *painter) {
       sharePlots(painter, false);
     }
     updatePlotTiedZoomSupport();
+    _keyPlot = 0;
+    foreach (PlotItem* plotItem, _sharedPlots) {
+      if (!_keyPlot) {
+        _keyPlot = plotItem;
+      } else {
+        if ((plotItem->pos().x() > _keyPlot->pos().x()) || ((plotItem->pos().y() < _keyPlot->pos().y()))) {
+          _keyPlot = plotItem;
+        }
+      }
+    }
     _dirty = false;
+
   }
   painter->drawRect(rect());
 }
@@ -79,35 +90,9 @@ void SharedAxisBoxItem::updatePlotTiedZoomSupport() {
 }
 
 
-void SharedAxisBoxItem::zoomTied() {
-#if DEBUG_ZOOM
-  qDebug() << "zoomTied" << endl;
-#endif
-  setTiedZoom(!isTiedZoom(), !isTiedZoom());
-}
-
-
-void SharedAxisBoxItem::zoomXTied() {
-#if DEBUG_ZOOM
-  qDebug() << "zoomXTied" << endl;
-#endif
-  setTiedZoom(!isXTiedZoom(), isYTiedZoom());
-}
-
-
-void SharedAxisBoxItem::zoomYTied() {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYTied" << endl;
-#endif
-  setTiedZoom(isXTiedZoom(), !isYTiedZoom());
-}
-
-
 void SharedAxisBoxItem::save(QXmlStreamWriter &xml) {
   if (isVisible()) {
     xml.writeStartElement("sharedaxisbox");
-    xml.writeAttribute("tiedxzoom", QVariant(isXTiedZoom()).toString());
-    xml.writeAttribute("tiedyzoom", QVariant(isYTiedZoom()).toString());
     xml.writeAttribute("sharex", QVariant(isXAxisShared()).toString());
     xml.writeAttribute("sharey", QVariant(isYAxisShared()).toString());
     xml.writeAttribute("xzoommode", QVariant(xAxisZoomMode()).toString());
@@ -181,6 +166,7 @@ bool SharedAxisBoxItem::acceptItems() {
           continue;
         }
         plotItem->setSharedAxisBox(this);
+
         _sharedPlots << plotItem;
         child = plotItem;
         if (!maxSize.contains(plotItem->mapToParent(plotItem->viewRect().topLeft()))) {
@@ -196,7 +182,6 @@ bool SharedAxisBoxItem::acceptItems() {
     if (child) {
       setPen(QPen(Qt::white));
       setBrush(Qt::white);
-      setSupportsTiedZoom(true);
       ViewGridLayout::updateProjections(this);
       _dirty = true;
       bReturn =  true;
@@ -243,6 +228,7 @@ void SharedAxisBoxItem::lockItems() {
     if (PlotItem *plotItem = qobject_cast<PlotItem*>(viewItem)) {
       plotItem->setAllowedGripModes(0);
       plotItem->setFlags(0);
+
       _sharedPlots << plotItem;
     }
   }
@@ -397,6 +383,16 @@ void SharedAxisBoxItem::applyZoom(const QRectF &projection, PlotItem* originPlot
   QList<PlotItem*> plotTied;
   if (originPlotItem && originPlotItem->isTiedZoom() && originPlotItem->isInSharedAxisBox() && (originPlotItem->sharedAxisBox() == this)) {
     plotTied = PlotItemManager::tiedZoomPlotsForView(parentView());
+
+    foreach (PlotItem* plotItem, plotTied) {
+      if ((originPlotItem->isXTiedZoom() && plotItem->isXTiedZoom()) && (originPlotItem->isYTiedZoom() && plotItem->isYTiedZoom())) {
+        plotItem->zoomFixedExpression(projection, true);
+      } else if (originPlotItem->isXTiedZoom() && plotItem->isXTiedZoom()) {
+        plotItem->zoomFixedExpression(QRectF(projection.x(), plotItem->projectionRect().y(), projection.width(), plotItem->projectionRect().height()), true);
+      } else if (originPlotItem->isYTiedZoom() && plotItem->isYTiedZoom()) {
+        plotItem->zoomFixedExpression(QRectF(plotItem->projectionRect().x(), projection.y(), plotItem->projectionRect().width(), projection.height()), true);
+      }
+    }
   }
   foreach (PlotItem* plotItem, allPlots) {
     if ((applyX && applyY) && ((_shareX && _shareY) || (isXTiedZoom() && isYTiedZoom()) || (plotItem == originPlotItem))) {
@@ -405,17 +401,6 @@ void SharedAxisBoxItem::applyZoom(const QRectF &projection, PlotItem* originPlot
       plotItem->zoomFixedExpression(QRectF(projection.x(), plotItem->projectionRect().y(), projection.width(), plotItem->projectionRect().height()), true);
     } else if (applyY && (_shareY || isYTiedZoom() || (plotItem == originPlotItem))) {
       plotItem->zoomFixedExpression(QRectF(plotItem->projectionRect().x(), projection.y(), plotItem->projectionRect().width(), projection.height()), true);
-    }
-  }
-  foreach (PlotItem* plotItem, plotTied) {
-    if (!allPlots.contains(plotItem)) {
-      if ((originPlotItem->isXTiedZoom() && plotItem->isXTiedZoom()) && (originPlotItem->isYTiedZoom() && plotItem->isYTiedZoom())) {
-        plotItem->zoomFixedExpression(projection, true);
-      } else if (originPlotItem->isXTiedZoom() && plotItem->isXTiedZoom()) {
-        plotItem->zoomFixedExpression(QRectF(projection.x(), plotItem->projectionRect().y(), projection.width(), plotItem->projectionRect().height()), true);
-      } else if (originPlotItem->isYTiedZoom() && plotItem->isYTiedZoom()) {
-        plotItem->zoomFixedExpression(QRectF(plotItem->projectionRect().x(), projection.y(), plotItem->projectionRect().width(), projection.height()), true);
-      }
     }
   }
 }
@@ -438,6 +423,14 @@ void SharedAxisBoxItem::zoomXRange(const QRectF &projection, PlotItem* originPlo
   if (!_shareX) {
     if (originPlotItem) {
       originPlotItem->zoomXRange(projection, true);
+
+      if (originPlotItem->isTiedZoom() && originPlotItem->isInSharedAxisBox() && (originPlotItem->sharedAxisBox() == this)) {
+        QList<PlotItem*> plotTied = PlotItemManager::tiedZoomPlotsForView(parentView());
+
+        foreach(PlotItem* plotItem, plotTied) {
+          plotItem->zoomXRange(projection, true);
+        }
+      }
     }
   } else {
     _xAxisZoomMode = PlotAxis::FixedExpression;
@@ -453,6 +446,14 @@ void SharedAxisBoxItem::zoomYRange(const QRectF &projection, PlotItem* originPlo
   if (!_shareY) {
     if (originPlotItem) {
       originPlotItem->zoomYRange(projection, true);
+
+      if (originPlotItem->isTiedZoom() && originPlotItem->isInSharedAxisBox() && (originPlotItem->sharedAxisBox() == this)) {
+        QList<PlotItem*> plotTied = PlotItemManager::tiedZoomPlotsForView(parentView());
+
+        foreach(PlotItem* plotItem, plotTied) {
+          plotItem->zoomYRange(projection, true);
+        }
+      }
     }
   } else {
     _yAxisZoomMode = PlotAxis::FixedExpression;
@@ -1027,18 +1028,7 @@ ViewItem* SharedAxisBoxItemFactory::generateGraphics(QXmlStreamReader& xml, Obje
           rc->setParent(parent);
         }
         QXmlStreamAttributes attrs = xml.attributes();
-        QStringRef av;
-        bool xTiedZoom = false, yTiedZoom = false;
-        av = attrs.value("tiedxzoom");
-        if (!av.isNull()) {
-          xTiedZoom = QVariant(av.toString()).toBool();
-        }
-        av = attrs.value("tiedyzoom");
-        if (!av.isNull()) {
-          yTiedZoom = QVariant(av.toString()).toBool();
-        }
-        rc->setTiedZoom(xTiedZoom, yTiedZoom);
-        av = attrs.value("sharex");
+        QStringRef av = attrs.value("sharex");
         if (!av.isNull()) {
           rc->setXAxisShared(QVariant(av.toString()).toBool());
         }

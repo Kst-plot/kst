@@ -689,7 +689,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
       QColor highlightColor(QColor(255, 255, 0, 120));
       painter->fillPath(shape(), highlightColor);
     }
-    if (_supportsTiedZoom) {
+    if (supportsTiedZoom()) {
       painter->save();
       painter->setPen(Qt::black);
       painter->setRenderHint(QPainter::Antialiasing, true);

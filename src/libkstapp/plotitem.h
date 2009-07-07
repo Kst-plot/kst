@@ -243,6 +243,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
 
     virtual QPainterPath checkBox() const;
     virtual QPainterPath tiedZoomCheck() const;
+    virtual bool supportsTiedZoom() const;
 
   protected:
     virtual QString _automaticDescriptiveName() const;
@@ -477,9 +478,6 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QMenu *_sharedAxisBoxMenu;
     QAction *_shareBoxShareX;
     QAction *_shareBoxShareY;
-    QAction *_shareBoxTieZoom;
-    QAction *_shareBoxTieXZoom;
-    QAction *_shareBoxTieYZoom;
 
     SharedAxisBoxItem * _sharedBox;
 

@@ -48,6 +48,8 @@ class SharedAxisBoxItem : public ViewItem
 
     void updateZoomForDataUpdate();
 
+    PlotItem* keyPlot() { return _keyPlot; };
+
   Q_SIGNALS:
     void breakShareSignal();
 
@@ -58,10 +60,6 @@ class SharedAxisBoxItem : public ViewItem
 
     void shareXAxis();
     void shareYAxis();
-
-    void zoomTied();
-    void zoomXTied();
-    void zoomYTied();
 
     void zoomFixedExpression(const QRectF &projection, PlotItem* originPlotItem);
     void zoomXRange(const QRectF &projection, PlotItem* originPlotItem);
@@ -110,6 +108,7 @@ class SharedAxisBoxItem : public ViewItem
     QPointer<ViewGridLayout> _layout;
     QList<PlotItem*> _highlightedPlots;
     QList<PlotItem*> _sharedPlots;
+    PlotItem* _keyPlot;
 
     bool _loaded;
     bool _firstPaint;
