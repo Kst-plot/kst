@@ -40,6 +40,8 @@ class KST_EXPORT CurveSelector : public QWidget, public Ui::CurveSelector {
 
     void clearSelection();
 
+    virtual bool event(QEvent * event);
+
   Q_SIGNALS:
     void selectionChanged(const QString&);
 

@@ -140,6 +140,13 @@ void MatrixSelector::fillMatrices() {
 }
 
 
+bool MatrixSelector::event(QEvent * event) {
+  if (event->type() == QEvent::QEvent::WindowActivate) {
+    fillMatrices();
+  }
+  return QWidget::event(event);
+}
+
 }
 
 // vim: ts=2 sw=2 et

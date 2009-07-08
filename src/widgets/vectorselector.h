@@ -46,6 +46,8 @@ class KST_EXPORT VectorSelector : public QWidget, public Ui::VectorSelector {
     void setIsX(bool is_x) {_isX = is_x;}
     int count() {return _vector->count();}
 
+    virtual bool event(QEvent * event);
+
   Q_SIGNALS:
     void selectionChanged(const QString&);
     void contentChanged(); // something in the combo changed (new or edit)

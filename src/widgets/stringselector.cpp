@@ -159,6 +159,15 @@ void StringSelector::setAllowEmptySelection(bool allowEmptySelection) {
     _string->setCurrentIndex(0);
   }
 }
+
+
+bool StringSelector::event(QEvent * event) {
+  if (event->type() == QEvent::QEvent::WindowActivate) {
+    fillStrings();
+  }
+  return QWidget::event(event);
+}
+
 }
 
 // vim: ts=2 sw=2 et

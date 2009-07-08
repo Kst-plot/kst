@@ -50,6 +50,7 @@ void VectorSelector::setObjectStore(ObjectStore *store) {
   fillVectors();
 }
 
+
 void VectorSelector::updateDescriptionTip() {
   if (selectedVector()) {
     setToolTip(selectedVector()->descriptionTip());
@@ -146,6 +147,7 @@ void VectorSelector::editVector() {
   emit contentChanged();
 }
 
+
 void VectorSelector::setToLastX() {
   if (!_store) {
     return;
@@ -155,6 +157,7 @@ void VectorSelector::setToLastX() {
     setSelectedVector(objects.at(objects.count()-1)->xVector());
   }
 }
+
 
 void VectorSelector::fillVectors() {
   if (!_store) {
@@ -195,6 +198,14 @@ void VectorSelector::fillVectors() {
   if (current)
     setSelectedVector(current);
 
+}
+
+
+bool VectorSelector::event(QEvent * event) {
+  if (event->type() == QEvent::QEvent::WindowActivate) {
+    fillVectors();
+  }
+  return QWidget::event(event);
 }
 
 }

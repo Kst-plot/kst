@@ -52,6 +52,7 @@ void ScalarSelector::setObjectStore(ObjectStore *store) {
   fillScalars();
 }
 
+
 void ScalarSelector::updateDescriptionTip() {
   setToolTip(selectedScalarString());
 }
@@ -223,6 +224,13 @@ void ScalarSelector::fillScalars() {
   _selectScalar->setEnabled(_scalar->count() > 0);
 }
 
+
+bool ScalarSelector::event(QEvent * event) {
+  if (event->type() == QEvent::QEvent::WindowActivate) {
+    fillScalars();
+  }
+  return QWidget::event(event);
+}
 }
 
 // vim: ts=2 sw=2 et

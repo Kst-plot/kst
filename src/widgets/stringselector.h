@@ -39,6 +39,7 @@ class KST_EXPORT StringSelector : public QWidget, public Ui::StringSelector {
 
     void fillStrings();
 
+    virtual bool event(QEvent * event);
 
   Q_SIGNALS:
     void selectionChanged(const QString&);

@@ -130,6 +130,14 @@ void CurveSelector::fillCurves() {
     setSelectedCurve(current);
 }
 
+
+bool CurveSelector::event(QEvent * event) {
+  if (event->type() == QEvent::QEvent::WindowActivate) {
+    fillCurves();
+  }
+  return QWidget::event(event);
+}
+
 }
 
 // vim: ts=2 sw=2 et

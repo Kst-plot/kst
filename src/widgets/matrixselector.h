@@ -37,6 +37,8 @@ class KST_EXPORT MatrixSelector : public QWidget, public Ui::MatrixSelector {
 
     void clearSelection();
 
+    virtual bool event(QEvent * event);
+
   Q_SIGNALS:
     void selectionChanged();
 
