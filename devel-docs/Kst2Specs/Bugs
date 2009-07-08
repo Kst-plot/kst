@@ -57,11 +57,4 @@ USAGE() does not exit cleanly, so there are issues under windows:
 
 Then kst closes and and I get the help in the console (cygwin) in the windows cmd.exe I don’t get any help…
 
-----------------
 
-Vector selectors in opened dialogs not updated when new vectirs are created.
-Start kst
-From the data manager open a curve dialog and a vector dialog.
-Create a vector in the vector dialog.
-It does not appear in any of the vector selectors in the curve dialog.
-It should.

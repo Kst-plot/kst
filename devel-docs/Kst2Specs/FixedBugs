@@ -938,3 +938,10 @@ Tied zoom indicator location:
       share an axis with a plot above or to its right) will show its indicator.  
       The indicator would be redundant, anyway, with the indicator in the top right.
 ------------
+
+Vector selectors in opened dialogs not updated when new vectirs are created.
+Start kst
+From the data manager open a curve dialog and a vector dialog.
+Create a vector in the vector dialog.
+It does not appear in any of the vector selectors in the curve dialog.
+It should.
