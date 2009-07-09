@@ -80,6 +80,8 @@ MainWindow::MainWindow() :
   _debugDialog = new DebugDialog(this);
   Debug::self()->setHandler(_debugDialog);
 
+  setWindowTitle("Kst");
+
   createActions();
   createMenus();
   createToolBars();
@@ -204,6 +206,7 @@ void MainWindow::saveAs() {
     return;
   }
   _doc->save(fn);
+  setWindowTitle("Kst - " + fn);
 }
 
 
@@ -217,6 +220,7 @@ void MainWindow::open() {
   }
 
   openFile(fn);
+  setWindowTitle("Kst - " + fn);
 }
 
 void MainWindow::initFromCommandLine() {
