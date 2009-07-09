@@ -21,7 +21,11 @@ Only absolute file names seem to work.
   -data source text box doesn't recognise initial ~ as a euphemism for
    the user's home directory.
 
-  -In the data wizard or in the data manager, select the data from a file by giving the path relative to the folder where kst was started. The plot appears without problem. Save the kst file in the same folder where kst was started. Close Kst from the same place and reopen the kst file. It cannot plot the data. But if you go in the data manager and edit a specific vector from the file, it will be plotted.
+ -In the data wizard or in the data manager, select the data from a file by giving the path 
+  relative to the folder where kst was started. The plot appears without problem. Save the 
+  kst file in the same folder where kst was started. Close Kst from the same place and reopen 
+  the kst file. It cannot plot the data. But if you go in the data manager and edit a specific 
+  vector from the file, it will be plotted.
  -[cbn: under linux, relative file names don't seem to work at all.]
 
 ------------------------------
@@ -42,12 +46,28 @@ the standard config directory.
 
 ---------------------
 
-In the « edit plot item » dialog: the size of this dialog box is not scalable. Problem is that the size is computed with the longest name of all the curves in the plot. And these names can be very long if automatically generated… 
+In the « edit plot item » dialog: the size of this dialog box is not scalable. Problem is that the 
+size is computed with the longest name of all the curves in the plot. And these names can be very 
+long if automatically generated… 
 It needs a maximum width
 
 ---------------------
 
-4. Reloading a previously saved kst files seems to forget all the “configure ascii file” settings (in particularly “read fields names from”) so that no vector can be generated because kst tries to read an unknown field! This may explain why the relative path names did not work (see bug reported earlier). In the meantime, it has been confirmed that reloading works with the appropriate kstdatarc file in the right place.
+Maximum zoom problem after breaking shared axis boxes
+Create a window with several plots in 2 columns.  Each plot should have the same X range, but different Y ranges.
+Create a shared axis box which includes all the plots.  Only X axis are shared, as expected.
+Now, hit 'm' in one of the plots.  It's zoom is what it would be if both X and Y axis were shared
+(ie, it includes all points in all plots).  But, since only the X axis are shared and the Y axis are 
+not shared, the Y zoom should be such that it includes all the points in only the current plot, and not
+all the plots in the shared box.  ie, the Y axis should not be effected by being in a shared box, if Y axis are
+not shared.
+
+-------------------
+4. Reloading a previously saved kst files seems to forget all the “configure ascii file” settings 
+(in particularly “read fields names from”) so that no vector can be generated because kst tries to 
+read an unknown field! This may explain why the relative path names did not work (see bug reported 
+earlier). In the meantime, it has been confirmed that reloading works with the appropriate 
+kstdatarc file in the right place.
 
 --------------------
 
