@@ -15,7 +15,7 @@
 #include "settings.h"
 #include <QDate>
 
-#define MAJOR_TICK_DEBUG 0
+#define MAJOR_TICK_DEBUG 1
 
 static int FULL_PRECISION = 15;
 static qreal JD1900 = 2415020.5;
@@ -802,9 +802,9 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
     qreal max = _orientation == Qt::Horizontal ? plotItem()->projectionRect().right() : plotItem()->projectionRect().bottom();
     qreal majorTickSpacing = computedMajorTickSpacing(majorTickCount, _orientation);
 
-    if (useOverrideTicks && (((max - min) / majorTickSpacing) > majorTickCount)) {
-      majorTickSpacing = computedMajorTickSpacing(majorTickCount, _orientation, false);
-    }
+    //if (useOverrideTicks && (((max - min) / majorTickSpacing) > majorTickCount)) {
+      //majorTickSpacing = computedMajorTickSpacing(majorTickCount, _orientation, false);
+    //}
 
     qreal firstTick = ceil(min / majorTickSpacing) * majorTickSpacing;
 
@@ -815,12 +815,10 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
     int i = 0;
     qreal nextTick = firstTick;
     while (1) {
-      // Note:  This was divided into two lines to avoid a close to zero error with double 
-      // values.  firstTick + (i++ * majorTickSpacing) where values where (-0.03 + 3 + 0.01)
-      // consistently provided a value of 1.73472e-18 resulting in base offset mode being
-      // triggered.
-      qreal space = i++ * majorTickSpacing;
-      nextTick = firstTick + space;
+      nextTick = firstTick + i++ * majorTickSpacing;
+      if (fabs(nextTick)<majorTickSpacing*0.5) {
+        nextTick = 0.0;
+      }
       if (nextTick > max)
         break;
       ticks << nextTick;
@@ -930,7 +928,7 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
 
 
 /*
- * Major ticks are always spaced by D = A*10B where B is an integer,
+ * Major ticks are always spaced by D = A*10^B where B is an integer,
  * and A is 1, 2 or 5. So: 1, 0.02, 50, 2000 are all possible major tick
  * spacings, but 30 is not.
  *
@@ -952,7 +950,7 @@ qreal PlotAxis::computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orien
   qreal r5 = d5 * M;
 
 #if MAJOR_TICK_DEBUG 
-  qDebug() << "MajorTickMode:" << M << "Range:" << R
+  qDebug() << "MajorTickCount:" << M << "Range:" << R
            << "\n\tranges:" << r1 << r2 << r5
            << "\n\tspaces:" << d1 << d2 << d5
            << "\n\tenforce min tick mode:" << enforceMin
