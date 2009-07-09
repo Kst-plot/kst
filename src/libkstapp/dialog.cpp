@@ -41,7 +41,7 @@ Dialog::~Dialog() {
 }
 
 
-void Dialog::addDialogPage(DialogPage *page) {
+void Dialog::addDialogPage(DialogPage *page, bool addMinSize) {
   connect(page, SIGNAL(modified()), this, SLOT(modified()));
   connect(this, SIGNAL(apply()), page, SIGNAL(apply()));
   QListWidgetItem *item = new QListWidgetItem(page->pageIcon(), page->pageTitle(), _listWidget);
@@ -49,7 +49,7 @@ void Dialog::addDialogPage(DialogPage *page) {
   _stackedWidget->addWidget(page);
   _itemHash.insert(item, page);
   int itemWidth = _listWidget->visualItemRect(item).width() + 4;
-  if (_listWidget->width() < itemWidth) {
+  if (addMinSize && _listWidget->width() < itemWidth) {
     _listWidget->setMinimumSize(itemWidth, _listWidget->size().height());
   }
 }

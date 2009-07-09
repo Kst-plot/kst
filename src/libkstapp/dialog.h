@@ -32,7 +32,7 @@ class KST_EXPORT Dialog : public QDialog, public Ui::Dialog
     Dialog(QWidget *parent = 0);
     virtual ~Dialog();
 
-    void addDialogPage(DialogPage *page);
+    void addDialogPage(DialogPage *page, bool addMinSize = true);
     void removeDialogPage(DialogPage *page);
     DialogPage* getDialogPage(const QString &pageName);
     void selectDialogPage(DialogPage *page);

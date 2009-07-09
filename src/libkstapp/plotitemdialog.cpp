@@ -378,7 +378,7 @@ void PlotItemDialog::addRelations() {
       DialogPage *curvePage = new DialogPage(this);
       curvePage->setPageTitle(curve->Name());
       curvePage->addDialogTab(curveTab);
-      addDialogPage(curvePage);
+      addDialogPage(curvePage, false);
       _relationPages.append(curvePage);
     } else if (ImagePtr image = kst_cast<Image>(relation)) {
       ImageTab* imageTab = new ImageTab(this);
@@ -415,7 +415,7 @@ void PlotItemDialog::addRelations() {
       DialogPage *imagePage = new DialogPage(this);
       imagePage->setPageTitle(image->Name());
       imagePage->addDialogTab(imageTab);
-      addDialogPage(imagePage);
+      addDialogPage(imagePage, false);
       _relationPages.append(imagePage);
     }
   }
