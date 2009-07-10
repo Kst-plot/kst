@@ -66,6 +66,7 @@ class SharedAxisBoxItem : public ViewItem
     void zoomYRange(const QRectF &projection, PlotItem* originPlotItem);
     void zoomMaximum(PlotItem* originPlotItem);
     void zoomMaxSpikeInsensitive(PlotItem* originPlotItem);
+    void zoomMeanCentered(PlotItem* originPlotItem);
 
     void zoomXMaximum(PlotItem* originPlotItem);
     void zoomXNoSpike(PlotItem* originPlotItem);

@@ -485,6 +485,14 @@ void SharedAxisBoxItem::zoomMaxSpikeInsensitive(PlotItem* originPlotItem) {
 }
 
 
+void SharedAxisBoxItem::zoomMeanCentered(PlotItem* originPlotItem) {
+#if DEBUG_ZOOM
+  qDebug() << "zoomMeanCentered" << endl;
+#endif
+  _yAxisZoomMode = PlotAxis::MeanCentered;
+  applyZoom(computeRect(PlotAxis::Auto, PlotAxis::MeanCentered), originPlotItem, false, true);
+}
+
 void SharedAxisBoxItem::zoomYMeanCentered(PlotItem* originPlotItem) {
 #if DEBUG_ZOOM
   qDebug() << "zoomYMeanCentered" << endl;
@@ -493,7 +501,6 @@ void SharedAxisBoxItem::zoomYMeanCentered(PlotItem* originPlotItem) {
   originPlotItem->zoomYMeanCentered(true);
   applyZoom(computeRect(PlotAxis::Auto, PlotAxis::MeanCentered), originPlotItem, false, true);
 }
-
 
 void SharedAxisBoxItem::zoomXMaximum(PlotItem* originPlotItem) {
 #if DEBUG_ZOOM
@@ -965,7 +972,7 @@ void SharedAxisBoxItem::updateZoomForDataUpdate() {
         zoomYNoSpike(0);
         break;
       case PlotAxis::MeanCentered:
-        zoomYMeanCentered(0);
+        zoomMeanCentered(0);
         break;
       default:
         break;

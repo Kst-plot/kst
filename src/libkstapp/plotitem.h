@@ -268,7 +268,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void zoomXTied();
     void zoomYTied();
 
-    void zoomYMeanCentered(bool force = false);
+    //void zoomXMeanCentered(bool force = false);
     void zoomXMaximum(bool force = false);
     void zoomXNoSpike(bool force = false);
     void zoomXAutoBorder(bool force = false);
@@ -279,6 +279,8 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void zoomNormalizeXtoY(bool force = false);
     void zoomLogX(bool force = false, bool autoLog = true, bool enableLog = false);
 
+    void zoomMeanCentered(bool force = false);
+    void zoomYMeanCentered(bool force = false);
     void zoomYLocalMaximum(bool force = false);
     void zoomYMaximum(bool force = false);
     void zoomYNoSpike(bool force = false);
@@ -448,7 +450,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     QAction *_zoomTied;
     QAction *_zoomXTied;
     QAction *_zoomYTied;
-    QAction *_zoomYMeanCentered;
+    QAction *_zoomMeanCentered;
     QAction *_zoomXMaximum;
     QAction *_zoomXAutoBorder;
     QAction *_zoomXNoSpike;
@@ -513,6 +515,8 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     friend class ZoomMaximumCommand;
     friend class ZoomGeneralCommand;
     friend class ZoomMaxSpikeInsensitiveCommand;
+    friend class ZoomMeanCenteredCommand;
+    //friend class ZoomXMeanCenteredCommand;
     friend class ZoomYMeanCenteredCommand;
     friend class ZoomXMaximumCommand;
     friend class ZoomYLocalMaximumCommand;
@@ -635,16 +639,42 @@ class KST_EXPORT ZoomMaxSpikeInsensitiveCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
+class KST_EXPORT ZoomMeanCenteredCommand : public ZoomCommand
+{
+  public:
+    ZoomMeanCenteredCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom Mean Centered"), forced) {}
+    virtual ~ZoomMeanCenteredCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
+};
+
+/*
+class KST_EXPORT ZoomXMeanCenteredCommand : public ZoomCommand
+{
+  public:
+    ZoomXMeanCenteredCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom Mean Centered"), forced) {}
+    virtual ~ZoomXMeanCenteredCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
+};
+
+*/
+
 class KST_EXPORT ZoomYMeanCenteredCommand : public ZoomCommand
 {
   public:
     ZoomYMeanCenteredCommand(PlotItem *item, bool forced = false)
-        : ZoomCommand(item, QObject::tr("Zoom Y Mean Centered"), forced) {}
+        : ZoomCommand(item, QObject::tr("Zoom Mean Centered"), forced) {}
     virtual ~ZoomYMeanCenteredCommand() {}
 
     virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
+
 
 class KST_EXPORT ZoomXMaximumCommand : public ZoomCommand
 {

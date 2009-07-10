@@ -949,7 +949,6 @@ qreal PlotAxis::computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orien
   qDebug() << "MajorTickCount:" << M << "Range:" << R
            << "\n\tranges:" << r1 << r2 << r5
            << "\n\tspaces:" << d1 << d2 << d5
-           << "\n\tenforce min tick mode:" << enforceMin
            << endl;
 #endif
 
