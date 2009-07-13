@@ -15,7 +15,7 @@
 #include "settings.h"
 #include <QDate>
 
-#define MAJOR_TICK_DEBUG 1
+#define MAJOR_TICK_DEBUG 0
 
 static int FULL_PRECISION = 15;
 static qreal JD1900 = 2415020.5;
