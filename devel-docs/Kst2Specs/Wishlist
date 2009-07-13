@@ -49,5 +49,3 @@ Edit multiple for all view objects.  The highest priority is legends.
 
 --------
 
-Intelligent and useful window title:
-  If a kst file has been opened, the window title should be kst <kstfile>
