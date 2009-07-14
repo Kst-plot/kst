@@ -43,7 +43,7 @@ ApplicationSettings *ApplicationSettings::self() {
 
 ApplicationSettings::ApplicationSettings() {
 
-  _settings = new QSettings("kstapplicationrc", QSettings::NativeFormat);
+  _settings = new QSettings("kst", "application");
 
   //FIXME Not sure if this is the best test for hardware acceleration
   // but right now opening with QGV with QGLWidget as viewport takes

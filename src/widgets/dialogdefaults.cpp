@@ -11,7 +11,7 @@
 
 #include "dialogdefaults.h"
 namespace Kst {
-  QSettings *_dialogDefaults = new QSettings("kstdialogrc", QSettings::NativeFormat);
+  QSettings *_dialogDefaults = new QSettings("kst", "dialog");
 
 void setDataVectorDefaults(DataVectorPtr V) {
   //FIXME Do we need a V->readLock() here?

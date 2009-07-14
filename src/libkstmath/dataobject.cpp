@@ -45,7 +45,7 @@ static QSettings *settingsObject = 0L;
 static QMap<QString,QString> urlMap;
 void DataObject::init() {
   if (!settingsObject) {
-    QSettings *settingsObj = new QSettings("kstdatarc", QSettings::IniFormat);
+    QSettings *settingsObj = new QSettings("kst", "data");
     settingsObject = settingsObj;
   }
 
