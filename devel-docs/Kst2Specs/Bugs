@@ -59,9 +59,3 @@ USAGE() does not exit cleanly, so there are issues under windows:
 
 Then kst closes and and I get the help in the console (cygwin) in the windows cmd.exe I don’t get any help…
 
---------------------
-
-plot dialog bugs:
-  -doesn't properly fill zoom mode with 'mean centered'.
-  -doesn't fill range with enough significant figures
-*cbn*

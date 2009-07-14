@@ -642,13 +642,15 @@ void PlotItemDialog::saveRange(PlotItem *item) {
       item->zoomXAutoBorder();
     } else if (xZoomMode == PlotAxis::SpikeInsensitive) {
       item->zoomXNoSpike();
-    } else if (xZoomMode == PlotAxis::MeanCentered) {
-
     }
   }
-  if (xZoomMode == PlotAxis::MeanCentered || xZoomMode == PlotAxis::FixedExpression) {
+  if (xZoomMode == PlotAxis::FixedExpression) {
     item->zoomXRange(newProjectionRect);
   }
+  if (xZoomMode == PlotAxis::MeanCentered) {
+      item->zoomXMeanCentered(_rangeTab->xRange());
+  }
+
   if (_rangeTab->yModeDirty()) {
     if (yZoomMode == PlotAxis::Auto) {
       item->zoomYMaximum();
@@ -658,11 +660,11 @@ void PlotItemDialog::saveRange(PlotItem *item) {
       item->zoomYNoSpike();
     }
   }
-  if (/*yZoomMode == PlotAxis::MeanCentered || */ yZoomMode == PlotAxis::FixedExpression) {
+  if (yZoomMode == PlotAxis::FixedExpression) {
     item->zoomYRange(newProjectionRect);
   }
   if (yZoomMode == PlotAxis::MeanCentered) {
-      item->zoomYMeanCentered();
+      item->zoomYMeanCentered(_rangeTab->yRange());
   }
 }
 

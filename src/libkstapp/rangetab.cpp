@@ -54,13 +54,13 @@ RangeTab::~RangeTab() {
 void RangeTab::setupRange() {
   Q_ASSERT(_plotItem);
 
-  _xRange->setText(QString::number(fabs(_plotItem->xMax() - _plotItem->xMin())));
-  _xMin->setText(QString::number(_plotItem->xMin()));
-  _xMax->setText(QString::number(_plotItem->xMax()));
+  _xRange->setText(QString::number(fabs(_plotItem->xMax() - _plotItem->xMin()),'g', 13));
+  _xMin->setText(QString::number(_plotItem->xMin(),'g', 13));
+  _xMax->setText(QString::number(_plotItem->xMax(),'g', 13));
 
-  _yRange->setText(QString::number(fabs(_plotItem->yMax() - _plotItem->yMin())));
-  _yMin->setText(QString::number(_plotItem->yMin()));
-  _yMax->setText(QString::number(_plotItem->yMax()));
+  _yRange->setText(QString::number(fabs(_plotItem->yMax() - _plotItem->yMin()),'g', 13));
+  _yMin->setText(QString::number(_plotItem->yMin(),'g', 13));
+  _yMax->setText(QString::number(_plotItem->yMax(),'g', 13));
 
   switch (_plotItem->xAxis()->axisZoomMode()) {
     case PlotAxis::Auto:

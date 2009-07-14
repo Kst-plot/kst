@@ -68,6 +68,7 @@ class SharedAxisBoxItem : public ViewItem
     void zoomMaxSpikeInsensitive(PlotItem* originPlotItem);
     void zoomMeanCentered(PlotItem* originPlotItem);
 
+    void zoomXMeanCentered(PlotItem* originPlotItem);
     void zoomXMaximum(PlotItem* originPlotItem);
     void zoomXNoSpike(PlotItem* originPlotItem);
     void zoomXAutoBorder(PlotItem* originPlotItem);

@@ -965,3 +965,20 @@ It needs a maximum width
 
 Intelligent and useful window title:
   If a kst file has been opened, the window title should be kst <kstfile>
+
+plot dialog bug:  -doesn't properly fill zoom mode with 'mean centered'.
+
+--------------------
+
+Plot Bug:
+  Mean Centered X range doesn't seem to work:
+  create a plot with a curve
+  Mean centered X range -> apply.  Does the right thing.
+  Now advance one screen.  Plot does not advance.
+
+--------------------
+
+plot dialog bugs:
+  -doesn't fill range with enough significant figures
+*cbn*
+

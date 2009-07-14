@@ -280,7 +280,8 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void zoomLogX(bool force = false, bool autoLog = true, bool enableLog = false);
 
     void zoomMeanCentered(bool force = false);
-    void zoomYMeanCentered(bool force = false);
+    void zoomYMeanCentered(qreal dY, bool force = false);
+    void zoomXMeanCentered(qreal dX, bool force = false);
     void zoomYLocalMaximum(bool force = false);
     void zoomYMaximum(bool force = false);
     void zoomYNoSpike(bool force = false);
@@ -516,7 +517,7 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     friend class ZoomGeneralCommand;
     friend class ZoomMaxSpikeInsensitiveCommand;
     friend class ZoomMeanCenteredCommand;
-    //friend class ZoomXMeanCenteredCommand;
+    friend class ZoomXMeanCenteredCommand;
     friend class ZoomYMeanCenteredCommand;
     friend class ZoomXMaximumCommand;
     friend class ZoomYLocalMaximumCommand;
@@ -650,29 +651,32 @@ class KST_EXPORT ZoomMeanCenteredCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-/*
+
 class KST_EXPORT ZoomXMeanCenteredCommand : public ZoomCommand
 {
   public:
-    ZoomXMeanCenteredCommand(PlotItem *item, bool forced = false)
-        : ZoomCommand(item, QObject::tr("Zoom Mean Centered"), forced) {}
+    ZoomXMeanCenteredCommand(PlotItem *item, qreal dX, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom X Mean Centered"), forced), _dX(dX)  {}
     virtual ~ZoomXMeanCenteredCommand() {}
 
     virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
+  private:
+    qreal _dX;
 };
 
-*/
 
 class KST_EXPORT ZoomYMeanCenteredCommand : public ZoomCommand
 {
   public:
-    ZoomYMeanCenteredCommand(PlotItem *item, bool forced = false)
-        : ZoomCommand(item, QObject::tr("Zoom Mean Centered"), forced) {}
+    ZoomYMeanCenteredCommand(PlotItem *item, qreal dY, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Zoom Y Mean Centered"), forced), _dY(dY) {}
     virtual ~ZoomYMeanCenteredCommand() {}
 
     virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
+  private:
+    qreal _dY;
 };
 
 

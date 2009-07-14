@@ -571,9 +571,14 @@ void PlotItem::updateObject() {
     #endif
     sharedAxisBox()->updateZoomForDataUpdate();
   } else {
-    if (xAxis()->axisZoomMode() == PlotAxis::Auto) {
-      if (yAxis()->axisZoomMode() == PlotAxis::AutoBorder || yAxis()->axisZoomMode() == PlotAxis::Auto
-          || yAxis()->axisZoomMode() == PlotAxis::SpikeInsensitive || yAxis()->axisZoomMode() == PlotAxis::MeanCentered) {
+    if ((xAxis()->axisZoomMode() == PlotAxis::Auto) ||
+        (xAxis()->axisZoomMode() == PlotAxis::MeanCentered) ||
+        (xAxis()->axisZoomMode() == PlotAxis::AutoBorder) ||
+        (xAxis()->axisZoomMode() == PlotAxis::SpikeInsensitive)) {
+      if ((yAxis()->axisZoomMode() == PlotAxis::AutoBorder) ||
+          (yAxis()->axisZoomMode() == PlotAxis::Auto) ||
+          (yAxis()->axisZoomMode() == PlotAxis::SpikeInsensitive) ||
+          (yAxis()->axisZoomMode() == PlotAxis::MeanCentered)) {
   #if DEBUG_UPDATE_CYCLE > 1
         qDebug() << "\t\t\tUP - Updating Plot Projection Rect - X and Y Maximum";
   #endif
@@ -2665,14 +2670,28 @@ void PlotItem::zoomMeanCentered(bool force) {
 }
 
 
-void PlotItem::zoomYMeanCentered(bool force) {
+void PlotItem::zoomYMeanCentered(qreal dY, bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomYMeanCentered" << endl;
 #endif
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomYMeanCentered(this);
   } else {
-    ZoomCommand *cmd = new ZoomYMeanCenteredCommand(this, force);
+    ZoomCommand *cmd = new ZoomYMeanCenteredCommand(this, dY, force);
+    _undoStack->push(cmd);
+    cmd->redo();
+  }
+}
+
+
+void PlotItem::zoomXMeanCentered(qreal dX, bool force) {
+#if DEBUG_ZOOM
+  qDebug() << "zoomXMeanCentered" << endl;
+#endif
+  if (isInSharedAxisBox() && !force) {
+    sharedAxisBox()->zoomXMeanCentered(this);
+  } else {
+    ZoomCommand *cmd = new ZoomXMeanCenteredCommand(this, dX, force);
     _undoStack->push(cmd);
     cmd->redo();
   }
@@ -3631,7 +3650,7 @@ void ZoomYMeanCenteredCommand::applyZoomTo(PlotItem *item, bool applyX, bool app
   if (applyY) {
     item->yAxis()->setAxisZoomMode(PlotAxis::MeanCentered);
     QRectF compute = item->computedProjectionRect();
-    item->setProjectionRect(QRectF(item->projectionRect().x(), compute.y(), item->projectionRect().width(), compute.height()));
+    item->setProjectionRect(QRectF(item->projectionRect().x(), compute.y(), item->projectionRect().width(), _dY));
   }
 }
 
@@ -3642,6 +3661,30 @@ void ZoomYMeanCenteredCommand::applyZoomTo(ViewItem *item, bool applyX, bool app
   if (shareBox) {
     if (applyY) {
       shareBox->zoomYMeanCentered(0);
+    }
+  }
+}
+
+/*
+ * X axis zoom to Mean Centered, Y axis unchanged.
+ */
+void ZoomXMeanCenteredCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+
+  if (applyX) {
+    item->xAxis()->setAxisZoomMode(PlotAxis::MeanCentered);
+    QRectF compute = item->computedProjectionRect();
+    item->setProjectionRect(QRectF(compute.x(), item->projectionRect().y(), _dX, item->projectionRect().height()));
+  }
+}
+
+
+void ZoomXMeanCenteredCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyX) {
+      shareBox->zoomXMeanCentered(0);
     }
   }
 }
