@@ -982,3 +982,23 @@ plot dialog bugs:
   -doesn't fill range with enough significant figures
 *cbn*
 
+----------------
+
+kstdatarc is located relative to the directory from which kst is run.  It should be located in
+the standard config directory.  
+  For linux under KDE4, this is `kde4-config --localprefix`/share/config/
+  For linux, not kde4, consider ~/.kst/
+  No idea what it should be for windows or mac.  
+
+---------------------
+4. Reloading a previously saved kst files seems to forget all the “configure ascii file” settings 
+(in particularly “read fields names from”) so that no vector can be generated because kst tries to 
+read an unknown field! This may explain why the relative path names did not work (see bug reported 
+earlier). In the meantime, it has been confirmed that reloading works with the appropriate 
+kstdatarc file in the right place.
+
+---------
+
+"kst setting dialog" interface to global ASCII options.
+kst can currently read default ascii settings from the kstrc file.
+These settings need to be settable from the kstsettingsdialog.  

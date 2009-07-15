@@ -4,12 +4,6 @@ then the label font sizes should be based on the label font sizes of the plots a
 (either 'vote' or use the first one).
 All font properties replicated.  Use the first one.
 
----------
-
-"kst setting dialog" interface to global ASCII options.
-kst can currently read default ascii settings from the kstrc file.
-These settings need to be settable from the kstsettingsdialog.  
-
 --------
 Easier way to specify reversed axis when loading sky images:
   -can desire to reverse be gleaned from the fits image?
