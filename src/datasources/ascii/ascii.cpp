@@ -703,6 +703,7 @@ void AsciiSource::save(QXmlStreamWriter &s) {
 
 void AsciiSource::parseProperties(QXmlStreamAttributes &properties) {
   _config->parseProperties(properties);
+  reset();
 }
 
 
@@ -805,8 +806,8 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
           _ac->_indexVector->setEditText(src->_config->_indexVector);
         }
 
-        _cfg->endGroup();
         _cfg->beginGroup(src->fileName());
+
         _ac->_delimiters->setText(_cfg->value("Comment Delimiters", _ac->_delimiters->text()).toString());
         _ac->_columnDelimiter->setText(_cfg->value("Column Delimiter", _ac->_columnDelimiter->text()).toString());
         _ac->_columnWidth->setValue(_cfg->value("Column Width", _ac->_columnWidth->value()).toInt());
@@ -821,6 +822,7 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
         } else {
           _ac->_whitespace->setChecked(true);
         }
+        _cfg->endGroup();
       } else {
         _ac->_indexVector->addItem("INDEX");
         int x = _cfg->value("Default INDEX Interpretation", (int)AsciiSource::Config::INDEX).toInt();
@@ -837,27 +839,41 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
     void save() {
       assert(_cfg);
       _cfg->beginGroup(asciiTypeString);
-      _cfg->setValue("Filename Pattern", _ac->_fileNamePattern->text());
-      // If we have an instance, save settings for that instance only
+      if (_ac->_applyDefault->isChecked()) {
+        _cfg->setValue("Filename Pattern", _ac->_fileNamePattern->text());
+
+        _cfg->setValue("Default INDEX Interpretation", 1 + _ac->_indexType->currentIndex());
+        _cfg->setValue("Comment Delimiters", _ac->_delimiters->text());
+        AsciiSource::Config::ColumnType ct = AsciiSource::Config::Whitespace;
+        if (_ac->_fixed->isChecked()) {
+          ct = AsciiSource::Config::Fixed;
+        } else if (_ac->_custom->isChecked()) {
+          ct = AsciiSource::Config::Custom;
+        }
+        _cfg->setValue("Column Type", (int)ct);
+        _cfg->setValue("Column Delimiter", _ac->_columnDelimiter->text());
+        _cfg->setValue("Column Width", _ac->_columnWidth->value());
+        _cfg->setValue("Data Start", _ac->_startLine->value());
+        _cfg->setValue("Read Fields", _ac->_readFields->isChecked());
+        _cfg->setValue("Fields Line", _ac->_fieldsLine->value());
+      }
+
+      // If we have an instance, save settings for that instance as well
       Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(_instance);
       if (src) {
-        _cfg->endGroup();
         _cfg->beginGroup(src->fileName());
+
+        _cfg->setValue("Default INDEX Interpretation", 1 + _ac->_indexType->currentIndex());
+        _cfg->setValue("Comment Delimiters", _ac->_delimiters->text());
+        AsciiSource::Config::ColumnType ct = AsciiSource::Config::Whitespace;
+        _cfg->setValue("Column Type", (int)ct);
+        _cfg->setValue("Column Delimiter", _ac->_columnDelimiter->text());
+        _cfg->setValue("Column Width", _ac->_columnWidth->value());
+        _cfg->setValue("Data Start", _ac->_startLine->value());
+        _cfg->setValue("Read Fields", _ac->_readFields->isChecked());
+        _cfg->setValue("Fields Line", _ac->_fieldsLine->value());
+        _cfg->endGroup();
       }
-      _cfg->setValue("Default INDEX Interpretation", 1 + _ac->_indexType->currentIndex());
-      _cfg->setValue("Comment Delimiters", _ac->_delimiters->text());
-      AsciiSource::Config::ColumnType ct = AsciiSource::Config::Whitespace;
-      if (_ac->_fixed->isChecked()) {
-        ct = AsciiSource::Config::Fixed;
-      } else if (_ac->_custom->isChecked()) {
-        ct = AsciiSource::Config::Custom;
-      }
-      _cfg->setValue("Column Type", (int)ct);
-      _cfg->setValue("Column Delimiter", _ac->_columnDelimiter->text());
-      _cfg->setValue("Column Width", _ac->_columnWidth->value());
-      _cfg->setValue("Data Start", _ac->_startLine->value());
-      _cfg->setValue("Read Fields", _ac->_readFields->isChecked());
-      _cfg->setValue("Fields Line", _ac->_fieldsLine->value());
       _cfg->endGroup();
 
       // Update the instance from our new settings
