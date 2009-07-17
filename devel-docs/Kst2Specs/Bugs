@@ -1,5 +1,11 @@
+Crash Case: crash second time opening config dialog.
+Start kst.
+Open the configuration dialog (settings->configure kst), close it, then open it again.
+Crash!
+
+---------
+
 Rounding problems in base/offset mode:
-  For extreme cases of base/offset mode there are  rounding errors related to the subtraction of the base.
   Log axis should never go to base offset mode - instead they should use scientific; powers should be relative to 1.
    - LogAxis are now using only two significant digits so that scientific notation is used by default.
 

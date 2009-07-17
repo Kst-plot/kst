@@ -734,9 +734,9 @@ void PlotAxis::validateDrawingRegion(QPainter *painter) {
 
   for (int i = 0; i < (labels.count() - 1); i++) {
     if (!labels[i].intersected(labels[i+1]).isEmpty()) {
-
       qreal labelSize;
       qreal plotSize;
+      PlotAxis::MajorTickMode old_override_major_ticks = _axisOverrideMajorTicks;
 
       if (_orientation == Qt::Horizontal) {
         labelSize = qMax(labels[i].boundingRect().width(), labels[i+1].boundingRect().width());
@@ -746,10 +746,10 @@ void PlotAxis::validateDrawingRegion(QPainter *painter) {
         plotSize = plotItem()->plotRect().height();
       }
 
-      _axisOverrideMajorTicks = convertToMajorTickMode((plotSize / labelSize) - 1);
+      _axisOverrideMajorTicks = convertToMajorTickMode((plotSize / labelSize) - 1, old_override_major_ticks);
 
       if (_axisOverrideMajorTicks == None) {
-        qreal scale = plotSize / (labelSize * (Coarse + 1));
+        qreal scale = plotSize / (labelSize * (Normal - 1));
         if (scale < 1) {
           plotItem()->scaleAxisLabels(scale);
         }
@@ -761,18 +761,19 @@ void PlotAxis::validateDrawingRegion(QPainter *painter) {
     }
   }
   setTicksUpdated();
+
 }
 
 
-PlotAxis::MajorTickMode PlotAxis::convertToMajorTickMode(int tickCount) {
+PlotAxis::MajorTickMode PlotAxis::convertToMajorTickMode(int tickCount, PlotAxis::MajorTickMode old_mode) {
   MajorTickMode mode = None;
-  if (tickCount >= VeryFine) {
+  if ((tickCount >= VeryFine) && (old_mode > VeryFine)) {
     mode = VeryFine;
-  } else if (tickCount >= Fine) {
+  } else if ((tickCount >= Fine) && (old_mode > Fine)) {
     mode = Fine;
-  } else if (tickCount >= Normal) {
+  } else if ((tickCount >= Normal) && (old_mode > Normal)) {
     mode = Normal;
-  } else if (tickCount >= Coarse) {
+  } else if ((tickCount >= Coarse) && (old_mode > Coarse)) {
     mode = Coarse;
   }
   return mode;
@@ -877,6 +878,7 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
     }
   }
 
+
   // (shortest > 3) so that you don't use automatic base/offset mode when
   // it wouldn't actually take up less space.
   if (_axisBaseOffset || _axisInterpret || ((longest > _axisSignificantDigits)&&(shortest>3)) || _axisBaseOffsetOverride ) {
@@ -892,18 +894,27 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
       if (_axisInterpret) {
         offset = interpretOffset(_axisInterpretation, _axisDisplay, base, i.key());
       } else {
-        offset = i.key() - base; // FIXME FIX round off error for base/offet mode here
+        offset = i.key() - base;
       }
-      QString label;
+      QString label, num;
       if (offset < 0) {
-        label += "-";
+        label += "-[";
         offset = offset * -1;
       } else if (offset > 0) {
-        label += "+";
+        label += "+[";
       }
-      label += "[";
-      label += QString::number(offset, 'g', _axisSignificantDigits);
-      label += "]";
+
+      if (offset==0.0) {
+        num = "[0";
+      } else if ((fabs(offset)>9.9E3)||(fabs(offset)<0.99E-3)) {
+        num = QString::number(offset, 'e', 1);
+      } else {
+        num = QString::number(offset, 'g', 5);
+      }
+
+      ConvertScientificNotation(num);
+
+      label = label + num + "]";
       _axisLabels.insert(i.key(), label);
     }
   } else {
@@ -1122,6 +1133,12 @@ bool PlotAxis::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
 
   return validTag;
 }
+
+void ConvertScientificNotation(QString &num) {
+  //num.replace(QRegExp(".0?[eE][+]0?([1-9]?\\d?)$"), "x10^{\\1}");
+  //num.replace(QRegExp(".0?[eE][-]0?([1-9]?\\d?)$"), "x10^{-\\1}");
+}
+
 
 }
 

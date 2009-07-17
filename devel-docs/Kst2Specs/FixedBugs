@@ -1002,3 +1002,7 @@ kstdatarc file in the right place.
 "kst setting dialog" interface to global ASCII options.
 kst can currently read default ascii settings from the kstrc file.
 These settings need to be settable from the kstsettingsdialog.  
+
+---------
+
+For extreme cases of base/offset mode there are  rounding errors related to the subtraction of the base.

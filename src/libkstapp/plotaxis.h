@@ -19,6 +19,9 @@
 
 namespace Kst {
 
+
+void ConvertScientificNotation(QString &num); // FIXME: should be somewhere else (?)
+
 class PlotAxis : public QObject
 {
   Q_OBJECT
@@ -137,7 +140,7 @@ class PlotAxis : public QObject
     qreal computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orientation orientation);
     void computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTicks, QMap<qreal, QString> *Labels, qreal min, qreal max, MajorTickMode tickMode);
 
-    MajorTickMode convertToMajorTickMode(int tickCount);
+    MajorTickMode convertToMajorTickMode(int tickCount, PlotAxis::MajorTickMode old_mode = VeryFine);
 
   private:
 

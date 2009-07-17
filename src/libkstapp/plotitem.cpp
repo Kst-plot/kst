@@ -1132,18 +1132,21 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
   painter->setPen(_numberLabelDetails->fontColor());
 
   int rotation = _xAxis->axisLabelRotation();
-
   foreach(CachedPlotLabel label, _xPlotLabels) {
+    QRectF bound = label.bound;
+    if (_numberAxisLabelScaleFactor<0.9999) {
+      bound.translate( bound.width() *(1.0-_numberAxisLabelScaleFactor)*0.5, 0.0);
+    }
     if (rotation != 0) {
       painter->save();
       QTransform t;
       t.rotate(-1*rotation);
       painter->rotate(rotation);
 
-      painter->drawText(t.mapRect(label.bound), flags, label.value);
+      painter->drawText(t.mapRect(bound), flags, label.value);
       painter->restore();
     } else {
-      painter->drawText(label.bound, flags, label.value);
+      painter->drawText(bound, flags, label.value);
     }
   }
   painter->restore();
