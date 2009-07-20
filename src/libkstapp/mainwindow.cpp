@@ -293,7 +293,7 @@ void MainWindow::exportGraphicsFile(const QString &filename, const QString &form
 
 
 void MainWindow::print() {
-  QPrinter printer(QPrinter::HighResolution);
+  QPrinter printer(QPrinter::ScreenResolution);
 
   QPrintDialog pd(&printer, this);
   pd.addEnabledOption(QPrintDialog::PrintToFile);
