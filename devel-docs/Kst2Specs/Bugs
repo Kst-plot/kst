@@ -1,3 +1,4 @@
+------------
 Plot sizes are not properly recovered on re-load
 Create a plot in kst.  Cleanup Layout->automatic
  -the plot now ~fills the window.
@@ -31,3 +32,12 @@ Print to pdf is not vector quality... it should be.
 
 Print to ps is not vector quality... it should be.
 It is also huge!
+
+--------------------
+
+Offset mode doesn't work in data mode.
+In a plot in kst, go into data mode.  Then use 'c' to leave a marker.
+It is left in the correct place.  Now move the mouse.  The offset to the marker
+is not shown, but it should be.  If you leave data mode, then it is.
+(behavior should be the same as 1.x).
+

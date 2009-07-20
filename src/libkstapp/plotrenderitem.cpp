@@ -582,7 +582,14 @@ void PlotRenderItem::highlightNearestDataPoint(const QPointF& position) {
       }
     }
     if (!curveName.isEmpty()) {
-      QString message = curveName + QString(" (%1, %2)").arg(QString::number(matchedPoint.x(), 'G')).arg(QString::number(matchedPoint.y()));
+      QString message = curveName + QString(" (%1, %2)").
+                        arg(QString::number(matchedPoint.x(), 'G')).
+                        arg(QString::number(matchedPoint.y()));
+      if (_referencePointMode) {
+        message += QString(" [Offset: %1, %2]").
+                   arg(QString::number(matchedPoint.x() - _referencePoint.x(), 'G')).
+                   arg(QString::number(matchedPoint.y() - _referencePoint.y()));
+      }
       kstApp->mainWindow()->statusBar()->showMessage(message);
       _highlightPointActive = true;
       _highlightPoint = QPointF(matchedPoint.x(), matchedPoint.y());
