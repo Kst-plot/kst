@@ -1033,3 +1033,12 @@ close the context menu.)
   kst file in the same folder where kst was started. Close Kst from the same place and reopen 
   the kst file. It cannot plot the data. But if you go in the data manager and edit a specific 
   vector from the file, it will be plotted.
+
+--------------------
+
+Offset mode doesn't work in data mode.
+In a plot in kst, go into data mode.  Then use 'c' to leave a marker.
+It is left in the correct place.  Now move the mouse.  The offset to the marker
+is not shown, but it should be.  If you leave data mode, then it is.
+(behavior should be the same as 1.x).
+
