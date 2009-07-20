@@ -28,6 +28,7 @@ ApplicationSettingsDialog::ApplicationSettingsDialog(QWidget *parent)
     : Dialog(parent) {
 
   setWindowTitle(tr("Kst Settings"));
+  setAttribute(Qt::WA_DeleteOnClose, false);
 
   _generalTab = new GeneralTab(this);
   _gridTab = new GridTab(this);
