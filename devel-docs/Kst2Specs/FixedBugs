@@ -1006,3 +1006,30 @@ These settings need to be settable from the kstsettingsdialog.
 ---------
 
 For extreme cases of base/offset mode there are  rounding errors related to the subtraction of the base.
+Rounding problems in base/offset mode:
+  Log axis should never go to base offset mode - instead they should use scientific; powers should be relative to 1.
+   - LogAxis are now using only two significant digits so that scientific notation is used by default.
+
+*cbn*
+---------
+
+Crash Case: crash second time opening config dialog.
+Start kst.
+Open the configuration dialog (settings->configure kst), close it, then open it again.
+Crash!
+
+---------
+
+Hitting shift changes into y-zoom mode forever, rather than just
+changing it while shift is depressed.  After doing this it's difficult
+to get back to xy-zoom mode.  (I have to right click twice to open and
+close the context menu.)
+(cbn says 'not confirmed - more info needed)
+ - Tested on Windows / Linux and cannot reproduce.
+--------------------
+
+ -In the data wizard or in the data manager, select the data from a file by giving the path 
+  relative to the folder where kst was started. The plot appears without problem. Save the 
+  kst file in the same folder where kst was started. Close Kst from the same place and reopen 
+  the kst file. It cannot plot the data. But if you go in the data manager and edit a specific 
+  vector from the file, it will be plotted.

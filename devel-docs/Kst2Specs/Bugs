@@ -1,17 +1,3 @@
-Crash Case: crash second time opening config dialog.
-Start kst.
-Open the configuration dialog (settings->configure kst), close it, then open it again.
-Crash!
-
----------
-
-Rounding problems in base/offset mode:
-  Log axis should never go to base offset mode - instead they should use scientific; powers should be relative to 1.
-   - LogAxis are now using only two significant digits so that scientific notation is used by default.
-
-*cbn*
----------
-
 Plot sizes are not properly recovered on re-load
 Create a plot in kst.  Cleanup Layout->automatic
  -the plot now ~fills the window.
@@ -26,23 +12,10 @@ It should be the same size as it started.
 Only absolute file names seem to work. 
   -data source text box doesn't recognise initial ~ as a euphemism for
    the user's home directory.
-
- -In the data wizard or in the data manager, select the data from a file by giving the path 
-  relative to the folder where kst was started. The plot appears without problem. Save the 
-  kst file in the same folder where kst was started. Close Kst from the same place and reopen 
-  the kst file. It cannot plot the data. But if you go in the data manager and edit a specific 
-  vector from the file, it will be plotted.
+Note:  Resolve symlinks is turned on, but ~ is not processed by QDirModel completer.
  -[cbn: under linux, relative file names don't seem to work at all.]
 
 ------------------------------
-
-Hitting shift changes into y-zoom mode forever, rather than just
-changing it while shift is depressed.  After doing this it's difficult
-to get back to xy-zoom mode.  (I have to right click twice to open and
-close the context menu.)
-(cbn says 'not confirmed - more info needed)
-
---------------------
 
 USAGE() does not exit cleanly, so there are issues under windows:
  For the « kst --help » I first get the message
