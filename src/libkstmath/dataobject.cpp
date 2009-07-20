@@ -96,6 +96,15 @@ void DataObject::scanPlugins() {
   pluginPaths << QLibraryInfo::location(QLibraryInfo::PluginsPath);
   pluginPaths << QString(qApp->applicationDirPath()).replace("bin", "plugin");
 
+  QDir rootDir = QApplication::applicationDirPath();
+  rootDir.cdUp();
+  QString pluginPath = rootDir.canonicalPath();
+  pluginPath += QDir::separator();
+  pluginPath += QLatin1String(INSTALL_LIBDIR);
+  pluginPath += QDir::separator();
+  pluginPath += QLatin1String("kst");
+  pluginPaths << pluginPath;
+
   foreach (QString pluginPath, pluginPaths) {
     QDir d(pluginPath);
     foreach (QString fileName, d.entryList(QDir::Files)) {

@@ -7,11 +7,11 @@ CONFIG += designer plugin
 TARGET = kstwidgets
 win32:CONFIG += staticlib
 
-INSTALL_DIR = $$(INSTDIR)
-! isEmpty(INSTALL_DIR) {
-  target.path = $$INSTALL_DIR/plugin
+! isEmpty(INSTALL_PREFIX) {
+  target.path = $$INSTALL_PREFIX/$$INSTALL_LIBDIR/kst
   INSTALLS += target
 }
+
 
 DESTDIR = $$OUTPUT_DIR/plugin
 

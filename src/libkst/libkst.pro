@@ -5,9 +5,8 @@ TARGET = kst
 DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
 
-INSTALL_DIR = $$(INSTDIR)
-! isEmpty(INSTALL_DIR) {
-  target.path = $$INSTALL_DIR/lib
+! isEmpty(INSTALL_PREFIX) {
+  target.path = $$INSTALL_PREFIX/$$INSTALL_LIBDIR
   INSTALLS += target
 }
 

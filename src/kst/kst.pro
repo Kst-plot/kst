@@ -4,9 +4,8 @@ TEMPLATE = app
 TARGET = kst
 DESTDIR = $$OUTPUT_DIR/bin
 
-INSTALL_DIR = $$(INSTDIR)
-! isEmpty(INSTALL_DIR) {
-  target.path = $$INSTALL_DIR/bin
+! isEmpty(INSTALL_PREFIX) {
+  target.path = $$INSTALL_PREFIX/bin
   INSTALLS += target
 }
 

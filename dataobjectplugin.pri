@@ -6,9 +6,8 @@ OBJECTS_DIR = tmp
 MOC_DIR = tmp
 DESTDIR = $$OUTPUT_DIR/plugin
 
-INSTALL_DIR = $$(INSTDIR)
-! isEmpty(INSTALL_DIR) {
-  target.path = $$INSTALL_DIR/plugin
+! isEmpty(INSTALL_PREFIX) {
+  target.path = $$INSTALL_PREFIX/$$INSTALL_LIBDIR/kst
   INSTALLS += target
 }
 
