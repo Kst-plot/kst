@@ -25,7 +25,9 @@ How To Build and Install:
 
 Note:  It is recommended that all installable builds be release as release mode does not set the RPATH directories which
 in a distribution system could result in a security hole.
-Note: install-kst supports the same command line parameters as build-kst.
+Note: install-kst can also automatically configure INSTALL_PREFIX and INSTALL_LIBDIR from the command line
+ie. install-kst (debug/release) INSTALL_PREFIX INSTALL_LIBDIR OUTPUT_DIR
+Any or all of the values can be provided, defaults will be provided for the omitted values.
 
 Mac OS
 
