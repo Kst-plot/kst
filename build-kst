@@ -12,7 +12,7 @@ then
   echo "Building in Debug mode"
   export KST_DEBUG_MODE=1
 else
-  echo "Build in Release mode"
+  echo "Building in Release mode"
   export KST_DEBUG_MODE=0
 fi
 

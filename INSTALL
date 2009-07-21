@@ -13,9 +13,19 @@ To build in debug mode debug can be added as a parameter to build-kst
 ie.  ./build-kst debug
 To configure the output directory, set OUTPUT_DIR or include it after the command line argument for debug.
 ie.  ./build-kst release /home/kst
+Default Build mode is release
 
-To enable make install support, set INSTALL_PREFIX and INSTALL_LIBDIR to control the location.  Defaults to /usr and lib.
+How To Build and Install:
 
+1. Follow Steps 1 - 3 for building.
+2. Setup install locations by exporting
+    INSTALL_PREFIX - Installation location - Defaults to '/usr'
+    INSTALL_LIBDIR - Library Installation Directory name - Defaults to 'lib'
+3. ./install-kst
+
+Note:  It is recommended that all installable builds be release as release mode does not set the RPATH directories which
+in a distribution system could result in a security hole.
+Note: install-kst supports the same command line parameters as build-kst.
 
 Mac OS
 
