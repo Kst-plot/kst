@@ -20,6 +20,7 @@
 #include "viewgridlayout.h"
 #include "document.h"
 #include "plotitemmanager.h"
+#include "plotitem.h"
 
 #include <math.h>
 
@@ -136,7 +137,6 @@ void View::save(QXmlStreamWriter &xml) {
     }
   }
 }
-
 
 
 View::ViewMode View::viewMode() const {
@@ -515,6 +515,52 @@ QFont View::defaultFont(double scale) const {
   }
 
   return font;
+}
+
+
+void View::configurePlotFontDefaults(PlotItem *plot) {
+  if (plot) {
+    bool configured = false;
+    foreach(PlotItem* plotItem, PlotItemManager::self()->plotsForView(this)) {
+      if (plot != plotItem) {
+        configured = true;
+        plot->setGlobalFont(plotItem->globalFont());
+        plot->setGlobalFontScale(plotItem->globalFontScale());
+        plot->setGlobalFontColor(plotItem->globalFontColor());
+
+        plot->leftLabelDetails()->setFontUseGlobal(plotItem->leftLabelDetails()->fontUseGlobal());
+        plot->leftLabelDetails()->setFont(plotItem->leftLabelDetails()->font());
+        plot->leftLabelDetails()->setFontScale(plotItem->leftLabelDetails()->fontScale());
+        plot->leftLabelDetails()->setFontColor(plotItem->leftLabelDetails()->fontColor());
+
+        plot->rightLabelDetails()->setFontUseGlobal(plotItem->rightLabelDetails()->fontUseGlobal());
+        plot->rightLabelDetails()->setFont(plotItem->rightLabelDetails()->font());
+        plot->rightLabelDetails()->setFontScale(plotItem->rightLabelDetails()->fontScale());
+        plot->rightLabelDetails()->setFontColor(plotItem->rightLabelDetails()->fontColor());
+
+        plot->topLabelDetails()->setFontUseGlobal(plotItem->topLabelDetails()->fontUseGlobal());
+        plot->topLabelDetails()->setFont(plotItem->topLabelDetails()->font());
+        plot->topLabelDetails()->setFontScale(plotItem->topLabelDetails()->fontScale());
+        plot->topLabelDetails()->setFontColor(plotItem->topLabelDetails()->fontColor());
+
+        plot->bottomLabelDetails()->setFontUseGlobal(plotItem->bottomLabelDetails()->fontUseGlobal());
+        plot->bottomLabelDetails()->setFont(plotItem->bottomLabelDetails()->font());
+        plot->bottomLabelDetails()->setFontScale(plotItem->bottomLabelDetails()->fontScale());
+        plot->bottomLabelDetails()->setFontColor(plotItem->bottomLabelDetails()->fontColor());
+
+        plot->numberLabelDetails()->setFontUseGlobal(plotItem->numberLabelDetails()->fontUseGlobal());
+        plot->numberLabelDetails()->setFont(plotItem->numberLabelDetails()->font());
+        plot->numberLabelDetails()->setFontScale(plotItem->numberLabelDetails()->fontScale());
+        plot->numberLabelDetails()->setFontColor(plotItem->numberLabelDetails()->fontColor());
+        break;
+      }
+    }
+    if (!configured) {
+      plot->setGlobalFont(defaultFont());
+      plot->setGlobalFontScale(ApplicationSettings::self()->defaultFontScale());
+      plot->setGlobalFontColor(ApplicationSettings::self()->defaultFontColor());
+    }
+  }
 }
 
 

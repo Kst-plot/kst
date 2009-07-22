@@ -25,6 +25,7 @@ namespace Kst {
 
 class ViewItem;
 class LayoutBoxItem;
+class PlotItem;
 
 class KST_EXPORT View : public QGraphicsView
 {
@@ -98,6 +99,8 @@ class KST_EXPORT View : public QGraphicsView
 
     bool plotBordersDirty() const {return _plotBordersDirty;}
     void setPlotBordersDirty(bool dirty) {_plotBordersDirty = dirty;}
+
+    void configurePlotFontDefaults(PlotItem *plot);
 
   Q_SIGNALS:
     void viewModeChanged(View::ViewMode oldMode);

@@ -94,7 +94,6 @@ PlotItem::PlotItem(View *parent)
   _plotPixmapDirty(true),
   _i_per(0)
 {
-
   setTypeName("Plot");
   setBrush(Qt::white);
 
@@ -107,13 +106,13 @@ PlotItem::PlotItem(View *parent)
   connect(this, SIGNAL(geometryChanged()), _yAxis, SLOT(setTicksUpdated()));
   connect(this, SIGNAL(geometryChanged()), this, SLOT(setPlotRectsDirty()));
 
-  _globalFont = parentView()->defaultFont();
-
   _leftLabelDetails = new PlotLabel(this);
   _rightLabelDetails = new PlotLabel(this);
   _topLabelDetails = new PlotLabel(this);
   _bottomLabelDetails = new PlotLabel(this);
   _numberLabelDetails = new PlotLabel(this);
+
+  parentView()->configurePlotFontDefaults(this);
 
   connect(_leftLabelDetails, SIGNAL(labelChanged()), this, SLOT(setPlotBordersDirty()));
   connect(_leftLabelDetails, SIGNAL(labelChanged()), this, SLOT(setLeftLabelDirty()));
@@ -125,10 +124,6 @@ PlotItem::PlotItem(View *parent)
   connect(_bottomLabelDetails, SIGNAL(labelChanged()), this, SLOT(setBottomLabelDirty()));
   connect(_numberLabelDetails, SIGNAL(labelChanged()), this, SLOT(setPlotBordersDirty()));
   connect(_numberLabelDetails, SIGNAL(labelChanged()), this, SLOT(setAxisLabelsDirty()));
-
-  _globalFont = parentView()->defaultFont();
-  _globalFontColor = ApplicationSettings::self()->defaultFontColor();
-  _globalFontScale = ApplicationSettings::self()->defaultFontScale();
 
   _undoStack = new QUndoStack(this);
 
