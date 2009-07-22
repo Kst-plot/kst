@@ -1,9 +1,32 @@
 General development notes for future reference:
 
+For Additional notes regarding the BuildSystem see Kst2Specs/BuildSystemOverview
+For Additional notes regarding the update system see Kst2Specs/updatecycleexplanation
+
 How to update the Windows Icon
 
-If kst.png changes the windows icon should also be updated.
+  If kst.png changes the windows icon should also be updated.
 
-Open kst.png in gimp and save it as kst.ico, from the dropdown for format select "32 bpp, 8-bit alpha, no palette" and ensure that compressed is not checked.
+  Open kst.png in gimp and save it as kst.ico, from the dropdown for format select "32 bpp, 8-bit alpha, no palette" and ensure that compressed is not checked.
 
-Additional notes:  .ico files can contain both a 32x32 and 16x16 icon.  The current version is scaling down the 32x32 on the fly which decreases the quality of the icon.  Future icons should be created in both 16x16 and 32x32 to optimize the appearance of the icon.
+  Additional notes:  .ico files can contain both a 32x32 and 16x16 icon.  The current version is scaling down the 32x32 on the fly which decreases the quality of the icon.  Future icons should be created in both 16x16 and 32x32 to optimize the appearance of the icon.
+
+
+Locks
+
+  All Objects in Kst support writeLock and unlock commands to prevent access when updates are occuring.  No
+  lock is required during read.
+
+  DataSources
+
+    DataSources (specifically the files) must be locked and unlocked when the primitive (Vector, Matrix, Scalar or String) is being 
+    updated.
+
+  DataObjects, Primitives and Relations
+
+    All DataObjects, Primitives and Relations require locks for the following actions, updating the data either from creation of the object, or 
+    from an update cycle.  Editing of the object making a change.
+
+    In DataObject there are helper functions writeLockInputsAndOutputs() and unlockInputsAndOutputs() which server the purpose of locking dependent 
+    objects within the DataObject's update cycle.
+
