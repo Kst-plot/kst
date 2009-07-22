@@ -31,10 +31,17 @@ Showstopper printing problems:  - 2.0 needs these fixed.  otherwise, another bet
 Labels in Print to file are not vector quality... they should be.
 This appears to be related to caching of labels...
 
-Point density in printing seems to be limited (much less than the printer resolution).
+Increasing the printer resolution to "high resolution" solves this, at the expense of huge pdf files, and very
+slow print rendering.  Printed files should be all vector, not cached pixmaps.
 
-(Circles seem to print in full resolution.)
+--------------------
+
+Line widths on the screen don't mean the same thing (visually) as they do on the printer.  We need to come
+up with a reasonable definition.  (currently, we mean 'pixels').
+
+Line widths need a reasonable (sticky?) default.
 
 --------------------
 
 Drawing a circle places it behind plots.  It should be in front!
+
