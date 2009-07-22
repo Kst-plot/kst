@@ -48,7 +48,7 @@ class MainWindow : public QMainWindow
     TabWidget *tabWidget() const;
     Document *document() const;
     QProgressBar *progressBar() const;
-    void initFromCommandLine();
+    bool initFromCommandLine();
     bool isDataMode() { return _dataMode; }
 
   public Q_SLOTS:

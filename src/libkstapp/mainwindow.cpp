@@ -223,14 +223,10 @@ void MainWindow::open() {
   setWindowTitle("Kst - " + fn);
 }
 
-void MainWindow::initFromCommandLine() {
+bool MainWindow::initFromCommandLine() {
   delete _doc;
   _doc = new Document(this);
-  bool ok = _doc->initFromCommandLine();
-  if (!ok) {
-    //FIXME: should now exit cleanly
-    exit(0);
-  }
+  return _doc->initFromCommandLine();
 }
 
 void MainWindow::openFile(const QString &file) {

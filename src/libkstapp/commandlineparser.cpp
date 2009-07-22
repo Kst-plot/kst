@@ -17,6 +17,7 @@
 #include <iostream>
 #include <QCoreApplication>
 #include <QFileInfo>
+#include <QMessageBox>
 #include "curve.h"
 #include "psd.h"
 #include "histogram.h"
@@ -27,31 +28,8 @@
 
 namespace Kst {
 
-CommandLineParser::CommandLineParser(Document *doc):
-      _doAve(false), _doSkip(false), _doConsecutivePlots(true), _useBargraph(false), 
-      _useLines(true), _usePoints(false), _overrideStyle(false), _sampleRate(1.0), 
-      _numFrames(-1), _startFrame(-1),
-      _skip(0), _plotName(), _errorField(), _fileName(), _xField(QString("INDEX")) {
-
-  Q_ASSERT(QCoreApplication::instance());
-  _arguments = QCoreApplication::instance()->arguments();
-  _arguments.takeFirst(); //appname
-
-  _document = doc;
-
-  _fileNames.clear();
-  _vectors.clear();
-  _plotItems.clear();
-}
-
-
-CommandLineParser::~CommandLineParser() {
-}
-
-void CommandLineParser::usage(QString Message) {
-  //FIXME: proper printing and exiting!
-  std::cerr <<
-  i18n("KST Command Line Usage\n"
+  static const char *usageMessage =
+"KST Command Line Usage\n"
 "************************\n"
 "*** Load a kst file: ***\n"
 "kst [OPTIONS] kstfile\n"
@@ -62,7 +40,9 @@ void CommandLineParser::usage(QString Message) {
 "      -n  <numframes>\n"
 "      -s  <frames per sample>\n"
 "      -a                     (apply averaging filter: requires -s)\n\n"
-"************************\n"
+"************************\n";
+
+  static const char *usageDetailsMessage =
 "*** Read a data file ***\n"
 "kst datasource OPTIONS [datasource OPTIONS []]\n"
 "\n"
@@ -118,15 +98,55 @@ void CommandLineParser::usage(QString Message) {
 "\n"
 "Placement:\n"
 "Plot column 2 and column 3 in plot P1 and column 4 in plot P2\n"
-"       kst data.dat -P P1 -y 2 -y 3 -P P2 -y 4\n"
-      ).toLatin1().constData();
+"       kst data.dat -P P1 -y 2 -y 3 -P P2 -y 4\n";
 
-  std::cerr << Message.toLatin1().constData();
+#ifdef Q_OS_WIN
+static void printUsage(QString t) { // No console on Windows.
+    QString displayText(usageMessage);
+    if (!t.isEmpty()) {
+      displayText += "\n";
+      displayText += t;
+    }
+    QMessageBox box(QMessageBox::Information, "Kst", displayText);
+    QString detailText(usageDetailsMessage);
+    box.setDetailedText(detailText);
+    box.exec();
+}
+#else
+static void printUsage(const QString &t) {
+  QString displayText = QString(usageMessage) + QString(usageDetailsMessage);
+  if (!t.isEmpty()) {
+    displayText += "\n\n";
+    displayText += t;
+  }
+  qWarning("%s", qPrintable(displayText));
+}
+#endif
 
-  exit(0);
+
+CommandLineParser::CommandLineParser(Document *doc):
+      _doAve(false), _doSkip(false), _doConsecutivePlots(true), _useBargraph(false), 
+      _useLines(true), _usePoints(false), _overrideStyle(false), _sampleRate(1.0), 
+      _numFrames(-1), _startFrame(-1),
+      _skip(0), _plotName(), _errorField(), _fileName(), _xField(QString("INDEX")) {
+
+  Q_ASSERT(QCoreApplication::instance());
+  _arguments = QCoreApplication::instance()->arguments();
+  _arguments.takeFirst(); //appname
+
+  _document = doc;
+
+  _fileNames.clear();
+  _vectors.clear();
+  _plotItems.clear();
 }
 
-void CommandLineParser::_setIntArg(int *arg, QString Message, bool accept_end) {
+
+CommandLineParser::~CommandLineParser() {
+}
+
+
+bool CommandLineParser::_setIntArg(int *arg, QString Message, bool accept_end) {
   QString param;
   bool ok = true;
 
@@ -140,11 +160,12 @@ void CommandLineParser::_setIntArg(int *arg, QString Message, bool accept_end) {
   } else {
     ok=false;
   }
-  if (!ok) usage(Message);
-
+  if (!ok) printUsage(Message);
+  return ok;
 }
 
-void CommandLineParser::_setDoubleArg(double *arg, QString Message) {
+
+bool CommandLineParser::_setDoubleArg(double *arg, QString Message) {
   QString param;
   bool ok = true;
   
@@ -154,10 +175,12 @@ void CommandLineParser::_setDoubleArg(double *arg, QString Message) {
   } else {
     ok=false;
   }
-  if (!ok) usage(Message);
+  if (!ok) printUsage(Message);
+  return ok;
 }
 
-void CommandLineParser::_setStringArg(QString &arg, QString Message) {
+
+bool CommandLineParser::_setStringArg(QString &arg, QString Message) {
   bool ok = true;
 
   if (_arguments.count()> 0) {
@@ -165,9 +188,10 @@ void CommandLineParser::_setStringArg(QString &arg, QString Message) {
   } else {
     ok=false;
   }
-  if (!ok) usage(Message);
-
+  if (!ok) printUsage(Message);
+  return ok;
 }
+
 
 DataVectorPtr CommandLineParser::createOrFindDataVector(QString field, DataSourcePtr ds) {
     DataVectorPtr xv;
@@ -302,30 +326,30 @@ QString CommandLineParser::kstFileName() {
   }
 }
 
-bool CommandLineParser::processCommandLine() {
+bool CommandLineParser::processCommandLine(bool *ok) {
   QString arg, param;
-  bool ok=true;
+  *ok=true;
   bool new_fileList=true;
   bool dataPlotted = false;
 
-  while (1) {
+  while (*ok) {
     if (_arguments.count()<1) break;
 
     arg = _arguments.takeFirst();
-    ok = true;
     if ((arg == "--help")||(arg == "-help")) {
-      usage();
+      printUsage(QString());
+      *ok = false;
     } else if (arg == "-f") {
-      _setIntArg(&_startFrame, i18n("Usage: -f <startframe>\n"), true);
+      *ok = _setIntArg(&_startFrame, i18n("Usage: -f <startframe>\n"), true);
     } else if (arg == "-n") {
-      _setIntArg(&_numFrames, i18n("Usage: -f <numframes>\n"), true);
+      *ok = _setIntArg(&_numFrames, i18n("Usage: -f <numframes>\n"), true);
     } else if (arg == "-s") {
-      _setIntArg(&_skip, i18n("Usage: -s <frames per sample>\n"));
+      *ok = _setIntArg(&_skip, i18n("Usage: -s <frames per sample>\n"));
     } else if (arg == "-a") {
       _doAve = true;
     } else if (arg == "-P") {
       QString plot_name;
-      _setStringArg(plot_name,i18n("Usage: -P <plotname>\n"));
+      *ok = _setStringArg(plot_name,i18n("Usage: -P <plotname>\n"));
       _doConsecutivePlots=false;
 
       createOrFindPlot(plot_name);
@@ -347,23 +371,28 @@ bool CommandLineParser::processCommandLine() {
       _usePoints = false;
       _overrideStyle = true;
     } else if (arg == "-x") {
-      _setStringArg(_xField,i18n("Usage: -x <xfieldname>\n"));
+      *ok = _setStringArg(_xField,i18n("Usage: -x <xfieldname>\n"));
     } else if (arg == "-e") {
-      _setStringArg(_errorField,i18n("Usage: -e <errorfieldname>\n"));
+      *ok = _setStringArg(_errorField,i18n("Usage: -e <errorfieldname>\n"));
     } else if (arg == "-r") {
-      _setDoubleArg(&_sampleRate,i18n("Usage: -r <samplerate>\n"));
+      *ok = _setDoubleArg(&_sampleRate,i18n("Usage: -r <samplerate>\n"));
     } else if (arg == "-y") {
       QString field;
-      _setStringArg(field,i18n("Usage: -y <fieldname>\n"));
+      *ok = _setStringArg(field,i18n("Usage: -y <fieldname>\n"));
 
       if (_fileNames.size()<1) {
-        usage(i18n("No data files specified\n"));
+        printUsage(i18n("No data files specified\n"));
+        *ok = false;
+        break;
       }
       for (int i_file=0; i_file<_fileNames.size(); i_file++) { 
         QString file = _fileNames.at(i_file);
         QFileInfo info(file);
-        if (!info.exists())
-          usage(i18n("file %1 does not exist\n").arg(file));
+        if (!info.exists()) {
+          printUsage(i18n("file %1 does not exist\n").arg(file));
+          *ok = false;
+          break;
+        }
 
         DataSourcePtr ds = DataSource::findOrLoadSource(_document->objectStore(), file);
         DataVectorPtr xv = createOrFindDataVector(_xField, ds);
@@ -396,100 +425,114 @@ bool CommandLineParser::processCommandLine() {
       _overrideStyle = false;
     } else if (arg == "-p") {
       QString field;
-      _setStringArg(field,i18n("Usage: -p <fieldname>\n"));
+      *ok = _setStringArg(field,i18n("Usage: -p <fieldname>\n"));
 
-      for (int i_file=0; i_file<_fileNames.size(); i_file++) { 
-        QString file = _fileNames.at(i_file);
-        QFileInfo info(file);
-        if (!info.exists() || !info.isFile())
-          usage(i18n("file %1 does not exist\n").arg(file));
+      if (*ok) {
+        for (int i_file=0; i_file<_fileNames.size(); i_file++) {
+          QString file = _fileNames.at(i_file);
+          QFileInfo info(file);
+          if (!info.exists() || !info.isFile()) {
+            printUsage(i18n("file %1 does not exist\n").arg(file));
+            *ok = false;
+            break;
+          }
 
-        DataSourcePtr ds = DataSource::findOrLoadSource(_document->objectStore(), file);
+          DataSourcePtr ds = DataSource::findOrLoadSource(_document->objectStore(), file);
 
-        DataVectorPtr pv = createOrFindDataVector(field, ds);
+          DataVectorPtr pv = createOrFindDataVector(field, ds);
 
-        Q_ASSERT(_document && _document->objectStore());
-        PSDPtr powerspectrum = _document->objectStore()->createObject<PSD>();
-        Q_ASSERT(powerspectrum);
+          Q_ASSERT(_document && _document->objectStore());
+          PSDPtr powerspectrum = _document->objectStore()->createObject<PSD>();
+          Q_ASSERT(powerspectrum);
 
-        powerspectrum->writeLock();
-        powerspectrum->change(pv, _sampleRate, true, 14, true, true, QString(), QString());
-        powerspectrum->update();
-        powerspectrum->unlock();
+          powerspectrum->writeLock();
+          powerspectrum->change(pv, _sampleRate, true, 14, true, true, QString(), QString());
+          powerspectrum->update();
+          powerspectrum->unlock();
 
-        VectorPtr ev=0;
+          VectorPtr ev=0;
 
-        if ( !_overrideStyle ) {
-            _useBargraph=false;
-            _useLines = true;
-            _usePoints = false;
+          if ( !_overrideStyle ) {
+              _useBargraph=false;
+              _useLines = true;
+              _usePoints = false;
+          }
+
+          createCurveInPlot(powerspectrum->vX(), powerspectrum->vY(), ev);
+          dataPlotted = true;
         }
-
-        createCurveInPlot(powerspectrum->vX(), powerspectrum->vY(), ev);
-        dataPlotted = true;
+        new_fileList = true;
+        _overrideStyle = false;
       }
-      new_fileList = true;
-      _overrideStyle = false;
-
     } else if (arg == "-h") {
       QString field;
-      _setStringArg(field,i18n("Usage: -h <fieldname>\n"));
+      *ok = _setStringArg(field,i18n("Usage: -h <fieldname>\n"));
 
-      for ( int i_file=0; i_file<_fileNames.size(); i_file++ ) {
-        QString file = _fileNames.at ( i_file );
-        QFileInfo info ( file );
-        if ( !info.exists() || !info.isFile() )
-            usage ( i18n ( "file %1 does not exist\n" ).arg ( file ) );
+      if (!*ok) {
+        for ( int i_file=0; i_file<_fileNames.size(); i_file++ ) {
+          QString file = _fileNames.at ( i_file );
+          QFileInfo info ( file );
+          if ( !info.exists() || !info.isFile() ) {
+            printUsage ( i18n ( "file %1 does not exist\n" ).arg ( file ) );
+            *ok = false;
+            break;
+          }
 
-        DataSourcePtr ds = DataSource::findOrLoadSource ( _document->objectStore(), file );
+          DataSourcePtr ds = DataSource::findOrLoadSource ( _document->objectStore(), file );
 
-        DataVectorPtr hv = createOrFindDataVector ( field, ds );
-        Q_ASSERT ( _document && _document->objectStore() );
-        HistogramPtr histogram = _document->objectStore()->createObject<Histogram> ();
+          DataVectorPtr hv = createOrFindDataVector ( field, ds );
+          Q_ASSERT ( _document && _document->objectStore() );
+          HistogramPtr histogram = _document->objectStore()->createObject<Histogram> ();
 
-        histogram->change(hv, -1, 1, 60, Histogram::Number, true);
+          histogram->change(hv, -1, 1, 60, Histogram::Number, true);
 
-        histogram->writeLock();
-        histogram->update ();
-        histogram->unlock();
+          histogram->writeLock();
+          histogram->update ();
+          histogram->unlock();
 
-        VectorPtr ev=0;
+          VectorPtr ev=0;
 
-        if ( !_overrideStyle ) {
-            _useBargraph=true;
-            _useLines = false;
-            _usePoints = false;
+          if ( !_overrideStyle ) {
+              _useBargraph=true;
+              _useLines = false;
+              _usePoints = false;
+          }
+
+          createCurveInPlot(histogram->vX(), histogram->vY(), ev);
+          dataPlotted = true;
         }
 
-        createCurveInPlot(histogram->vX(), histogram->vY(), ev);
-        dataPlotted = true;
+        new_fileList = true;
+        _overrideStyle = false;
       }
-
-      new_fileList = true;
-      _overrideStyle = false;
     } else if (arg == "-z") {
       QString field;
-      _setStringArg(field,i18n("Usage: -z <fieldname>\n"));
-      for (int i_file=0; i_file<_fileNames.size(); i_file++) { 
-        QString file = _fileNames.at(i_file);
-        QFileInfo info(file);
-        if (!info.exists() || !info.isFile())
-          usage(i18n("file %1 does not exist\n").arg(file));
+      *ok = _setStringArg(field,i18n("Usage: -z <fieldname>\n"));
+      if (*ok) {
+        for (int i_file=0; i_file<_fileNames.size(); i_file++) {
+          QString file = _fileNames.at(i_file);
+          QFileInfo info(file);
+          if (!info.exists() || !info.isFile()) {
+            printUsage(i18n("file %1 does not exist\n").arg(file));
+            *ok = false;
+            break;
+          }
 
-        DataSourcePtr ds = DataSource::findOrLoadSource(_document->objectStore(), file);
+          DataSourcePtr ds = DataSource::findOrLoadSource(_document->objectStore(), file);
 
-        DataMatrixPtr dm = _document->objectStore()->createObject<DataMatrix>();
+          DataMatrixPtr dm = _document->objectStore()->createObject<DataMatrix>();
 
-        dm->writeLock();
-        dm->change(ds, field, 0, 0, -1, -1, _doAve, _skip>0, _skip, 0.0, 0.0, 1.0, 1.0);
+          dm->writeLock();
+          dm->change(ds, field, 0, 0, -1, -1, _doAve, _skip>0, _skip, 0.0, 0.0, 1.0, 1.0);
 
-        dm->update();
-        dm->unlock();
+          dm->update();
+          dm->unlock();
 
-        createImageInPlot(dm);
+          createImageInPlot(dm);
+        }
+        new_fileList = true;
+        dataPlotted = true;
       }
-      new_fileList = true;
-      dataPlotted = true;
     } else { // arg is not an option... must be a file
       if (new_fileList) { // if the file list has been used, clear it.
         _fileNames.clear();

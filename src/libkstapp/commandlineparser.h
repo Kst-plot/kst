@@ -26,7 +26,7 @@ public:
   CommandLineParser(Document *doc);
   ~CommandLineParser();
 
-  bool processCommandLine();
+  bool processCommandLine(bool *ok);
   QString kstFileName();
 private:
   bool _doAve;
@@ -55,10 +55,9 @@ private:
 
   Document *_document;
 
-  void _setIntArg(int *arg, QString Message, bool accept_end=false);
-  void _setDoubleArg(double *arg, QString Message);
-  void _setStringArg(QString &arg, QString Message);
-  void usage(QString Message = "");
+  bool _setIntArg(int *arg, QString Message, bool accept_end=false);
+  bool _setDoubleArg(double *arg, QString Message);
+  bool _setStringArg(QString &arg, QString Message);
   DataVectorPtr createOrFindDataVector(QString field, DataSourcePtr ds);
   void createOrFindPlot(const QString name);
   void createCurveInPlot(VectorPtr xv, VectorPtr yv, VectorPtr ev=0);

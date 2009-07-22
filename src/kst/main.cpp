@@ -11,8 +11,10 @@
 
 #include <application.h>
 
-int main(int argc, char *argv[])
-{
-    Kst::Application app(argc, argv);
+int main(int argc, char *argv[]) {
+  Kst::Application app(argc, argv);
+  if (app.mainWindow()->initFromCommandLine()) {
     return app.exec();
+  }
+  return 0;
 }
