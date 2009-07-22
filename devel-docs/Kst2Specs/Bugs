@@ -26,10 +26,15 @@ Then kst closes and and I get the help in the console (cygwin) in the windows cm
 
 --------------------
 
-Print to pdf is not vector quality... it should be.
+Showstopper printing problems:  - 2.0 needs these fixed.  otherwise, another beta :-(
+
+Labels in Print to file are not vector quality... they should be.
+This appears to be related to caching of labels...
+
+Point density in printing seems to be limited (much less than the printer resolution).
+
+(Circles seem to print in full resolution.)
 
 --------------------
 
-Print to ps is not vector quality... it should be.
-It is also huge!
-
+Drawing a circle places it behind plots.  It should be in front!

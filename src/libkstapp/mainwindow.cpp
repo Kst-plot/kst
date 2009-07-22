@@ -318,20 +318,23 @@ void MainWindow::print() {
         pages.append(_tabWidget->currentView());
         break;
     }
-
     for (int i = 0; i < printer.numCopies(); ++i) {
-      foreach (View *view, pages) {
+      for (int i_page = 0; i_page<pages.count(); i_page++) {
+        View *view = pages.at(i_page);
+        QSize currentSize(view->size());
+        view->resize(printer.pageRect().size());
         view->setPrinting(true);
         view->render(&painter);
         view->setPrinting(false);
-        printer.newPage();
+        view->resize(currentSize);
+        if (i_page<pages.count()-1) printer.newPage();
+
       }
     }
 
     QApplication::restoreOverrideCursor();
   }
 }
-
 
 void MainWindow::currentViewChanged() {
   _undoGroup->setActiveStack(_tabWidget->currentView()->undoStack());
