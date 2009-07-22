@@ -1,3 +1,4 @@
+
 Installation Notes for Kst 2.0.0
 
 Linux
@@ -29,6 +30,26 @@ Note: install-kst can also automatically configure INSTALL_PREFIX and INSTALL_LI
 ie. install-kst (debug/release) INSTALL_PREFIX INSTALL_LIBDIR OUTPUT_DIR
 Any or all of the values can be provided, defaults will be provided for the omitted values.
 
+
+Examples:
+
+Build and run debug version.
+
+1. Follow Linux build steps 1 - 3.
+2. ./build-kst debug
+3. ./run-kst
+
+Build and install to /usr/bin /usr/lib
+
+1. Follow Linux build steps 1 - 3.
+2. ./install-kst
+
+Build and install to specific location (/usr/local/bin /usr/local/libXX)
+
+1. Follow Linux build steps 1 - 3.
+2. ./install-kst release /usr/local libXX
+
+
 Mac OS
 
 Notes:
@@ -37,6 +58,16 @@ Notes:
 #2.  The qmake command line needs to be updated to include -spec macx-g++.
 #3.  An error has been observed compiling view.cpp, view.h may need to be updated to change QXmlStreamWriter to QCoreXmlStreamWriter on line 45.
 
+
+
+Windows using Qt Creator Bundle (Preferred Options)
+
+1. Download or otherwise install the Qt Creator bundle including mingw
+2. Open Kst.pro
+3. Verify build settings
+4. Click Build
+
+-------------------------------------------------------------
 
 Windows using mingw
 
@@ -79,16 +110,6 @@ set QMAKESPEC=win32-g++
 
 
 -------------------------------------------------------------
-
-Windows using Qt Creator Bundle
-
-1. Download or otherwise install the Qt Creator bundle including mingw
-2. Open Kst.pro
-3. Verify build settings
-4. Click Build
-
--------------------------------------------------------------
-
 
 Windows using Visual Studio
 
@@ -146,3 +167,12 @@ call "C:\cygwin\Cygwin.bat" -i
 :ENDBASH
 
 -------------------------------------------------------------
+
+Windows Installation
+
+No installer exists for windows currently.  To distribute / move locations.
+
+1. Create kst/bin and kst/plugin directories
+2. Copy kst.exe mingwm10.dll QtCore4.dll QtGui4.dll QtOpenGL4.dll QtSvg4.dll QtXml4.dll into kst/bin
+3. Copy DataSource and DataObject Plugins to kst/plugin
+4. Package kst directory or use from this location.
