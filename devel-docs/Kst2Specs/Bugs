@@ -10,16 +10,6 @@ It should be the same size as it started.
 
 --------------------
 
-Drawing a circle places it behind plots.  It should be in front!
-
---------------------
-
-Problem resizing plots:
-resizing a plot from the top or left grip points blanks out part of the plot.
-Using the bottom right grip does not.
-
---------------------
-
 Update ineffciency:
 One plot gets re-drawn twice in an update in PlotItem::updatePlotPixmap. (?)
 
@@ -27,3 +17,18 @@ One plot gets re-drawn twice in an update in PlotItem::updatePlotPixmap. (?)
 
 Save as default should not default to checked in ascii configure dialog.
 
+--------------------
+
+The Y axis label  drifts when you resize the height of a plot with the top grip.  
+Then, pull up the Plot Edit dialog, dimensions tab.  Enable 'apply' by 
+selecting, then unselecting 'fix aspect ratio'.  Apply.  The plot moves, 
+but the Y label is back where it should be.  Enable apply again, and hit 
+apply.  The plot is back where it should be, with no problems.
+
+--------------------
+
+Draw a line in a plot.  Resize the plot.  The line drifts away.
+
+--------------------
+
+Draw an ellipse that spans many plots.  It ends up in the back, and can't be brought to the front.

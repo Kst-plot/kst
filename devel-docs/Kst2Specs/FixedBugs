@@ -1068,4 +1068,8 @@ then the label font sizes should be based on the label font sizes of the plots a
 (either 'vote' or use the first one).
 All font properties replicated.  Use the first one.
 
---------
+--------------------
+
+Problem resizing plots:
+resizing a plot from the top or left grip points blanks out part of the plot.
+Using the bottom right grip does not.
