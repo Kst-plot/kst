@@ -653,9 +653,14 @@ void PlotItem::updatePlotPixmap() {
   QPixmap pixmap(rect().width()+1, rect().height()+1);
   pixmap.fill(Qt::transparent);
   QPainter pixmapPainter(&pixmap);
-
+  
+  pixmapPainter.save();
+  if (rect().topLeft() != QPointF(0, 0)) {
+    pixmapPainter.translate(-rect().topLeft());  
+  }
   paintPixmap(&pixmapPainter);
-
+  pixmapPainter.restore();
+  
   _plotPixmap = pixmap;
 #if BENCHMARK
   int i = bench_time.elapsed();
@@ -681,7 +686,7 @@ void PlotItem::paint(QPainter *painter) {
     painter->drawRect(rect());
     painter->restore();
 
-    painter->drawPixmap(QPointF(0, 0), _plotPixmap);
+    painter->drawPixmap(rect().topLeft(), _plotPixmap);
   }
 #if BENCHMARK
   int i = bench_time.elapsed();
