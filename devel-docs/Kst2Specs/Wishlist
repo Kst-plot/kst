@@ -1,10 +1,3 @@
-
-When a new plot is added to an tab which already has plots in it (eg, from the Placement widget), 
-then the label font sizes should be based on the label font sizes of the plots already in the tab.  
-(either 'vote' or use the first one).
-All font properties replicated.  Use the first one.
-
---------
 Easier way to specify reversed axis when loading sky images:
   -can desire to reverse be gleaned from the fits image?
   -command line option?
@@ -44,4 +37,30 @@ Scientific notation (instead of C's %e notation) for extreme axis numbers
 Edit multiple for all view objects.  The highest priority is legends.
 
 --------
+
+Multi-page printing:
+The code is in place and commented out, because it gets the size wrong for pages other than the current tab.
+This bug is also hit in the export widget.
+
+--------
+
+Export eps to vector format.
+
+--------
+
+Reasonable/sticky defaults for the export dialog.
+
+--------
+
+Reasonable/sticky defaults for line widths, and the ability to set grid line linewidths.
+
+------------
+
+  -data source text box doesn't recognise initial ~ as a euphemism for
+   the user's home directory (QDirModel doesn't handle this...)
+
+------------
+
+1.x kst file read compatibility...
+
 

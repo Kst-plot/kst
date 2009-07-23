@@ -309,8 +309,8 @@ class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
     void setBottomLabelDirty() { _bottomLabel.dirty = true; setPlotPixmapDirty(); }
     void setLabelsDirty() { _leftLabel.dirty = true; _rightLabel.dirty = true; _topLabel.dirty = true; _bottomLabel.dirty = true; setPlotPixmapDirty(); }
 
-    void setPlotPixmapDirty() { _plotPixmapDirty = true; } 
-    void setAxisLabelsDirty() { _axisLabelsDirty = true; }
+    void setPlotPixmapDirty(bool dirty = true) { _plotPixmapDirty = dirty; }
+    void setAxisLabelsDirty(bool dirty = true) { _axisLabelsDirty = dirty; }
 
   private:
     void createActions();

@@ -1042,3 +1042,30 @@ It is left in the correct place.  Now move the mouse.  The offset to the marker
 is not shown, but it should be.  If you leave data mode, then it is.
 (behavior should be the same as 1.x).
 
+--------------------
+
+Showstopper printing problems:  - 2.0 needs these fixed.  otherwise, another beta :-(
+
+Labels in Print to file are not vector quality... they should be.
+This appears to be related to caching of labels...
+
+Increasing the printer resolution to "high resolution" solves this, at the expense of huge pdf files, and very
+slow print rendering.  Printed files should be all vector, not cached pixmaps.
+
+------------------------------
+
+USAGE() does not exit cleanly, so there are issues under windows:
+ For the « kst --help » I first get the message
+“Runtime Error! Program: c:\Program\klst\bin\kst.exe This application has requested the runtim to terminate it in an unusual way. Please contact the application’s support team for more information.”
+
+Then kst closes and and I get the help in the console (cygwin) in the windows cmd.exe I don’t get any help…
+
+---------------------
+
+
+When a new plot is added to an tab which already has plots in it (eg, from the Placement widget), 
+then the label font sizes should be based on the label font sizes of the plots already in the tab.  
+(either 'vote' or use the first one).
+All font properties replicated.  Use the first one.
+
+--------

@@ -669,16 +669,20 @@ void PlotItem::paint(QPainter *painter) {
   QTime bench_time;
   bench_time.start();
 #endif
-  if (_plotPixmapDirty && rect().isValid()) {
-    updatePlotPixmap();
+  if (parentView()->isPrinting()) {
+    paintPixmap(painter);
+  } else {
+    if (_plotPixmapDirty && rect().isValid()) {
+      updatePlotPixmap();
+    }
+
+    painter->save();
+    painter->setPen(Qt::NoPen);
+    painter->drawRect(rect());
+    painter->restore();
+
+    painter->drawPixmap(QPointF(0, 0), _plotPixmap);
   }
-
-  painter->save();
-  painter->setPen(Qt::NoPen);
-  painter->drawRect(rect());
-  painter->restore();
-
-  painter->drawPixmap(QPointF(0, 0), _plotPixmap);
 #if BENCHMARK
   int i = bench_time.elapsed();
   qDebug() << "Total Time to paint " << (void *)this << ": " << i << "ms" << endl;

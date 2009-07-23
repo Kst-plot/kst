@@ -912,8 +912,6 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
         num = QString::number(offset, 'g', 5);
       }
 
-      ConvertScientificNotation(num);
-
       label = label + num + "]";
       _axisLabels.insert(i.key(), label);
     }
@@ -1133,12 +1131,6 @@ bool PlotAxis::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
 
   return validTag;
 }
-
-void ConvertScientificNotation(QString &num) {
-  //num.replace(QRegExp(".0?[eE][+]0?([1-9]?\\d?)$"), "x10^{\\1}");
-  //num.replace(QRegExp(".0?[eE][-]0?([1-9]?\\d?)$"), "x10^{-\\1}");
-}
-
 
 }
 

@@ -19,9 +19,6 @@
 
 namespace Kst {
 
-
-void ConvertScientificNotation(QString &num); // FIXME: should be somewhere else (?)
-
 class PlotAxis : public QObject
 {
   Q_OBJECT

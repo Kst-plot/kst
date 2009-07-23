@@ -450,7 +450,6 @@ void ViewItem::setViewRect(const QRectF &viewRect, bool automaticChange) {
     if (viewItem->hasStaticGeometry())
       continue;
 
-
     viewItem->setSkipNextParentCheck(true);
     viewItem->updateChildGeometry(oldViewRect, viewRect);
   }
@@ -1098,7 +1097,6 @@ void ViewItem::resizeRight(qreal offset) {
 
 
 void ViewItem::setTopLeft(const QPointF &point) {
-//   qDebug() << "setTopLeft" << point << endl;
   QPointF p = point;
 
   QPointF anchor = selectTransform().map(rect().bottomRight());
@@ -1114,7 +1112,6 @@ void ViewItem::setTopLeft(const QPointF &point) {
 
 
 void ViewItem::setTopRight(const QPointF &point) {
-//   qDebug() << "setTopRight" << point << endl;
   QPointF p = point;
 
   QPointF anchor = selectTransform().map(rect().bottomLeft());
@@ -1130,7 +1127,6 @@ void ViewItem::setTopRight(const QPointF &point) {
 
 
 void ViewItem::setBottomLeft(const QPointF &point) {
-//   qDebug() << "setBottomLeft" << point << endl;
   QPointF p = point;
 
   QPointF anchor = selectTransform().map(rect().topRight());
@@ -1146,7 +1142,6 @@ void ViewItem::setBottomLeft(const QPointF &point) {
 
 
 void ViewItem::setBottomRight(const QPointF &point) {
-//   qDebug() << "setBottomRight" << point << endl;
   QPointF p = point;
 
   QPointF anchor = selectTransform().map(rect().topLeft());
@@ -1177,7 +1172,6 @@ void ViewItem::setTop(qreal y) {
 
 
 void ViewItem::setBottom(qreal y) {
-//   qDebug() << "setBottom" << x << endl;
 
   QPointF anchor = selectTransform().map(rect().topLeft());
 
@@ -1192,7 +1186,6 @@ void ViewItem::setBottom(qreal y) {
 
 
 void ViewItem::setLeft(qreal x) {
-//   qDebug() << "setLeft" << x << endl;
 
   QPointF anchor = selectTransform().map(rect().topRight());
 
@@ -1207,7 +1200,6 @@ void ViewItem::setLeft(qreal x) {
 
 
 void ViewItem::setRight(qreal x) {
-//   qDebug() << "setRight" << x << endl;
 
   QPointF anchor = selectTransform().map(rect().topLeft());
 
@@ -1249,8 +1241,6 @@ bool ViewItem::transformToRect(const QRectF &from, const QRectF &to) {
   if (!to.isValid()) {
     return false;
   }
-
-//   qDebug() << "Mapping from " << from << "to" << to << endl;
 
   QPolygonF from_(from);
   from_.pop_back(); //get rid of last closed point
@@ -1508,7 +1498,7 @@ void ViewItem::updateRelativeSize() {
     _parentRelativeWidth = 0;
     _parentRelativeCenter = QPointF(0, 0);
     _parentRelativePosition = QPointF(0, 0);
-   }
+  }
 }
 
 

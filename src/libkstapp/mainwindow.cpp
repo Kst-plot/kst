@@ -289,11 +289,14 @@ void MainWindow::exportGraphicsFile(const QString &filename, const QString &form
 
 
 void MainWindow::print() {
+  // line widths in pixels make sense when using ScreenResolution
+  // FIXME: come up with a better definition of line width!
   QPrinter printer(QPrinter::ScreenResolution);
+  //QPrinter printer(QPrinter::HighResolution);
 
   QPrintDialog pd(&printer, this);
-  pd.addEnabledOption(QPrintDialog::PrintToFile);
-  pd.addEnabledOption(QPrintDialog::PrintPageRange);
+  pd.setOption(QPrintDialog::PrintToFile);
+  pd.setOption(QPrintDialog::PrintPageRange, false);
 
   if (pd.exec() == QDialog::Accepted) {
 
@@ -301,29 +304,39 @@ void MainWindow::print() {
 
     QPainter painter(&printer);
     QList<View*> pages;
-    switch (printer.printRange()) {
-      case QPrinter::PageRange:
-        break;
-      case QPrinter::AllPages:
-        foreach (View *view, _tabWidget->views()) {
-          pages.append(view);
-        }
-        break;
-      case QPrinter::Selection:
-      default:
-        pages.append(_tabWidget->currentView());
-        break;
-    }
+    // FIXME: multi-page printing doesn't work.  Fix it, then re-enable...
+//    switch (printer.printRange()) {
+//      case QPrinter::PageRange:
+//        if (printer.fromPage()>0) {
+//          for (int i_page = printer.fromPage(); i_page<=printer.toPage(); i_page++) {
+//            pages.append(_tabWidget->views().at(i_page-1));
+//          }
+//        }
+//        break;
+//      case QPrinter::AllPages:
+//        foreach (View *view, _tabWidget->views()) {
+//          pages.append(view);
+//        }
+//        break;
+//      case QPrinter::Selection:
+//      default:
+//        pages.append(_tabWidget->currentView());
+//        break;
+//    }
+    pages.append(_tabWidget->currentView()); // FIXME: remove once above is fixed.
+
+    QSize printerPageSize = printer.pageRect().size();
     for (int i = 0; i < printer.numCopies(); ++i) {
       for (int i_page = 0; i_page<pages.count(); i_page++) {
         View *view = pages.at(i_page);
         QSize currentSize(view->size());
-        view->resize(printer.pageRect().size());
+        view->resize(printerPageSize);
         view->setPrinting(true);
         view->render(&painter);
         view->setPrinting(false);
         view->resize(currentSize);
-        if (i_page<pages.count()-1) printer.newPage();
+        if (i_page<pages.count()-1) 
+          printer.newPage();
 
       }
     }

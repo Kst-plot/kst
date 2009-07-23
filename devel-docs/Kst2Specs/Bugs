@@ -1,4 +1,3 @@
-------------
 Plot sizes are not properly recovered on re-load
 Create a plot in kst.  Cleanup Layout->automatic
  -the plot now ~fills the window.
@@ -9,39 +8,22 @@ It should be the same size as it started.
 ** it is now much better than it used to be.  The shift is now only a few pixels **
 ** low priority **
 
-------------
-Only absolute file names seem to work. 
-  -data source text box doesn't recognise initial ~ as a euphemism for
-   the user's home directory.
-Note:  Resolve symlinks is turned on, but ~ is not processed by QDirModel completer.
- -[cbn: under linux, relative file names don't seem to work at all.]
-
-------------------------------
-
-USAGE() does not exit cleanly, so there are issues under windows:
- For the « kst --help » I first get the message
-“Runtime Error! Program: c:\Program\klst\bin\kst.exe This application has requested the runtim to terminate it in an unusual way. Please contact the application’s support team for more information.”
-
-Then kst closes and and I get the help in the console (cygwin) in the windows cmd.exe I don’t get any help…
-
---------------------
-
-Showstopper printing problems:  - 2.0 needs these fixed.  otherwise, another beta :-(
-
-Labels in Print to file are not vector quality... they should be.
-This appears to be related to caching of labels...
-
-Increasing the printer resolution to "high resolution" solves this, at the expense of huge pdf files, and very
-slow print rendering.  Printed files should be all vector, not cached pixmaps.
-
---------------------
-
-Line widths on the screen don't mean the same thing (visually) as they do on the printer.  We need to come
-up with a reasonable definition.  (currently, we mean 'pixels').
-
-Line widths need a reasonable (sticky?) default.
-
 --------------------
 
 Drawing a circle places it behind plots.  It should be in front!
+
+--------------------
+
+Problem resizing plots:
+resizing a plot from the top or left grip points blanks out part of the plot.
+Using the bottom right grip does not.
+
+--------------------
+
+Update ineffciency:
+One plot gets re-drawn twice in an update in PlotItem::updatePlotPixmap. (?)
+
+--------------------
+
+Save as default should not default to checked in ascii configure dialog.
 
