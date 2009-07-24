@@ -1,0 +1,95 @@
+Kst Build System Overview
+
+The Kst build system is built using qmake.
+
+The build starts in /kst/kst.pro which triggers processing of each subdirectory triggering the named .pro that matches the subdirectory name.
+
+
+Building the Main Libraries (libkst, libkstmath, libkstapp, libwidgets)
+
+  These libs are all built as lib, in windows as static libs, and have fairly straight forward .pro files.  All include /kst/kst.pri and pull many of their settings from it.
+
+  Kst.pri
+
+    Kst.pri configures the following details and is used by all libs and plugins.
+
+    INSTALL_PREFIX - The installation location, also sets the default to /usr if not provided.
+    INSTALL_LIBDIR - The installation lib location, also sets the default to lib if not provided.
+    QMAKE_RPATH - The rpath is set if in debug mode to the lib/plugin locations.
+    CONFIG - Debug mode is set if appropriate.
+    VERSION - The version used by the build.
+    DEFINES - The INSTALL_LIBDIR is exported as a define to be used at the code level.
+
+
+Building of the Executable
+
+  The executable is built using the same Kst.pri settings as the libs and is very similar to the libs except that the base template used is app rather than lib.
+
+  NOTE:  In /kst/kst/kst.pro the LIBS are set separately for windows compared to linux.  This is required due to linking errors on windows when in the standard order due to interdependencies between the libs.
+
+
+Building of DataSources
+
+  DataSources are built starting in datasources.pro, This includes logic to determine which plugins will be built dependent on the system libraries that is determined by including config.pri
+
+  config.pri
+
+    config.pri provides the function libExists that is used to test whether required libraries are installed that allow the building of the libraries.
+
+    Supports the testing for cfitsio, dirfile (getdata), and gsl but could easily be extended for more.
+    Each library can be enabled for Windows or Disabled for linux.  If it is not disabled for Linux, pkgconfig is called to test if the library exists.  Only 
+    if it can be found are the dependent plugins built.
+
+  Building a DataSource
+
+    Each datasource has it's own .pro file which includes kst.pri as well as datasourceplugin.pri which contains settings for all datasourceplugins.  The .pro file itself is very straightforward.
+
+    datasourceplugin.pri
+
+      datasourceplugin.pri is a straightforward grouping of settings used by datasources and serves to put them in a common location making updates easier.  It sets the template to lib and includes the plugin config.  It also includes the install settings and lib paths.
+
+
+Building of DataObject Plugins
+
+  DataObject Plugins are built from plugins.pro, dataobject.pro, filters.pro and fits.pro.  Each make use of config.pri to determine which of the plugins can be built on the system.
+
+  Building a DataObject Plugin
+
+    Just like the DataSources each Dataobject Plugin has it's own .pro file which includes kst.pri as well as dataobjectplugin.pri which has settings specific to DataObject Plugins.
+
+    dataobjectplugin.pri
+
+      dataobjectplugin.pri is very straightforward and very similar to datasourceplugin.pri with the main difference being additional include paths as DataObject Plugins are permitted to make use of libkstmath, libkstapp and libwidgets which DataSource plugins do not have access to.
+
+      It also includes the separate lib defines for windows / linux as references above under Building of the Executable. 
+
+
+Build of Tests
+
+  The tests are built using a similiar configuration to the executable.  The config is qtestlib with the template being app to create the test application.  See NOTE from executable regarding lib order.
+
+
+
+Build System Scripts
+
+  build-kst
+
+    build-kst is the main build script for the system.  It is a basic script that does the following:
+
+      1.  Parse parameter 1 for debug/release setting.  Default is release.
+      2.  Parse parameter 2 for build output directory.
+      3.  Create the build directory (PWD/build)
+      4.  Enter the directory and run qmake on kst.pro
+      5.  Run make (either using Icecream or directly).
+
+  install-kst is a build and install script for the system.  It is very similiar to build-kst with a few added parameters to parse and a call to make install after build is complete.
+
+      1.  Parse parameter 1 for debug/release setting.  Default is release.
+      2.  Parse parameter 2 for INSTALL_PREFIX.  Default is /usr
+      3.  Parse parameter 3 for INSTALL_LIBDIR.  Default is lib
+      4.  Parse parameter 4 for build output directory.
+      5.  Create the build directory (PWD/build)
+      6.  Enter the directory and run qmake on kst.pro
+      7.  Run make (either using Icecream or directly).
+      8.  Run make install (either using Icecream or directly).
+
