@@ -5,7 +5,6 @@ CONFIG += plugin
 OBJECTS_DIR = tmp
 MOC_DIR = tmp
 DESTDIR = $$OUTPUT_DIR/plugin
-CONFIG += debug
 
 ! isEmpty(INSTALL_PREFIX) {
   target.path = $$INSTALL_PREFIX/$$INSTALL_LIBDIR/kst
