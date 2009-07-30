@@ -656,7 +656,7 @@ void PlotItem::updatePlotPixmap() {
   
   pixmapPainter.save();
   if (rect().topLeft() != QPointF(0, 0)) {
-    pixmapPainter.translate(-rect().topLeft());  
+    pixmapPainter.translate(-rect().topLeft());
   }
   paintPixmap(&pixmapPainter);
   pixmapPainter.restore();
@@ -686,7 +686,8 @@ void PlotItem::paint(QPainter *painter) {
     painter->drawRect(rect());
     painter->restore();
 
-    painter->drawPixmap(rect().topLeft(), _plotPixmap);
+  //painter->drawPixmap(QPointF(0, 0), _plotPixmap);
+  painter->drawPixmap(rect().topLeft(), _plotPixmap);
   }
 #if BENCHMARK
   int i = bench_time.elapsed();
@@ -1009,13 +1010,15 @@ void PlotItem::updateYAxisLabels(QPainter* painter) {
     QRectF bound = painter->boundingRect(QRectF(), flags, yLabelIt.value());
     QPointF p;
     if (rotation < 0) {
-      p = QPointF(plotRect().left() - _calculatedAxisMarginHLead, mapYToPlot(yLabelIt.key()) - bound.height() * 0.5);
+      p = QPointF(plotRect().left() - _calculatedAxisMarginHLead,
+                  mapYToPlot(yLabelIt.key()) - bound.height() * 0.5);
       bound = t.mapRect(bound);
       bound.moveLeft(plotRect().left() - bound.width());
       bound.moveTop(p.y());
     } else {
       bound = t.mapRect(bound);
-      p = QPointF(plotRect().left() - _calculatedAxisMarginHLead, mapYToPlot(yLabelIt.key()) - bound.height() * 0.5);
+      p = QPointF(plotRect().left() - _calculatedAxisMarginHLead,
+                  mapYToPlot(yLabelIt.key()) - bound.height() * 0.5);
       bound.moveTopRight(p);
       if (rotation != 0) {
         bound.moveLeft(plotRect().left() - bound.width());
@@ -1053,14 +1056,14 @@ void PlotItem::updateYAxisLabels(QPainter* painter) {
 void PlotItem::paintMajorGridLines(QPainter *painter) {
   if (xAxis()->drawAxisMajorGridLines()) {
     painter->save();
-    painter->setPen(QPen(QBrush(_xAxis->axisMajorGridLineColor()), 1.0, _xAxis->axisMajorGridLineStyle()));
+    painter->setPen(QPen(QBrush(_xAxis->axisMajorGridLineColor()), _xAxis->axisMajorGridLineWidth(), _xAxis->axisMajorGridLineStyle()));
     painter->drawLines(_xMajorGridLines);
     painter->restore();
   }
 
   if (yAxis()->drawAxisMajorGridLines()) {
     painter->save();
-    painter->setPen(QPen(QBrush(_yAxis->axisMajorGridLineColor()), 1.0, _yAxis->axisMajorGridLineStyle()));
+    painter->setPen(QPen(QBrush(_yAxis->axisMajorGridLineColor()), _yAxis->axisMajorGridLineWidth(), _yAxis->axisMajorGridLineStyle()));
     painter->drawLines(_yMajorGridLines);
     painter->restore();
   }
@@ -1070,14 +1073,14 @@ void PlotItem::paintMajorGridLines(QPainter *painter) {
 void PlotItem::paintMinorGridLines(QPainter *painter) {
   if (xAxis()->drawAxisMinorGridLines()) {
     painter->save();
-    painter->setPen(QPen(QBrush(_xAxis->axisMinorGridLineColor()), 1.0, _xAxis->axisMinorGridLineStyle()));
+    painter->setPen(QPen(QBrush(_xAxis->axisMinorGridLineColor()), _xAxis->axisMinorGridLineWidth(), _xAxis->axisMinorGridLineStyle()));
     painter->drawLines(_xMinorGridLines);
     painter->restore();
   }
 
   if (yAxis()->drawAxisMinorGridLines()) {
     painter->save();
-    painter->setPen(QPen(QBrush(_yAxis->axisMinorGridLineColor()), 1.0, _yAxis->axisMinorGridLineStyle()));
+    painter->setPen(QPen(QBrush(_yAxis->axisMinorGridLineColor()), _yAxis->axisMinorGridLineWidth(), _yAxis->axisMinorGridLineStyle()));
     painter->drawLines(_yMinorGridLines);
     painter->restore();
   }
@@ -1808,18 +1811,13 @@ void PlotItem::generateLeftLabel() {
       delete _leftLabel.rc;
     }
 
-    QRectF leftLabel = leftLabelRect();
-
     Label::RenderContext *rc = new Label::RenderContext(leftLabelDetails()->calculatedFont(), 0);
     QFontMetrics fm(leftLabelDetails()->calculatedFont());
     rc->y = fm.ascent();
     Label::renderLabel(*rc, parsed->chunk);
 
-    leftLabel.moveTopRight(plotAxisRect().topLeft());
-    leftLabel.moveBottomLeft(QPointF(leftLabel.bottomLeft().x(), plotRect().center().y() - rc->x / 2));
-
     QTransform t;
-    t.translate(leftLabel.x(), -leftLabel.y());
+    t.translate(rect().left(),plotRect().center().y() + rc->x/2);
     t.rotate(-90.0);
 
     connect(rc, SIGNAL(labelDirty()), this, SLOT(setLeftLabelDirty()));
@@ -1904,17 +1902,13 @@ void PlotItem::generateBottomLabel() {
       delete _bottomLabel.rc;
     }
 
-    QRectF bottomLabel = bottomLabelRect();
-
     Label::RenderContext *rc = new Label::RenderContext(bottomLabelDetails()->calculatedFont(), 0);
     QFontMetrics fm(bottomLabelDetails()->calculatedFont());
     rc->y = fm.ascent();
     Label::renderLabel(*rc, parsed->chunk);
 
-    bottomLabel.moveTopLeft(QPointF(plotRect().center().x() - rc->x / 2, plotAxisRect().bottomLeft().y()));
-
     QTransform t;
-    t.translate(bottomLabel.x(), bottomLabel.y());
+    t.translate(plotRect().center().x() - rc->x / 2, plotAxisRect().bottom());
 
     connect(rc, SIGNAL(labelDirty()), this, SLOT(setBottomLabelDirty()));
     connect(rc, SIGNAL(labelDirty()), this, SLOT(redrawPlot()));
@@ -1986,8 +1980,7 @@ void PlotItem::generateRightLabel() {
   _rightLabel.valid = false;
   _rightLabel.dirty = false;
   Label::Parsed *parsed = Label::parse(rightLabel());
-  QRectF rightLabel = rightLabelRect();
-  if (parsed && rightLabel.isValid()) {
+  if (parsed && rightLabelRect().isValid()) {
     parsed->chunk->attributes.color = _rightLabelDetails->fontColor();
 
     if (_rightLabel.parsed) {
@@ -1999,11 +1992,9 @@ void PlotItem::generateRightLabel() {
     rc->y = fm.ascent();
     Label::renderLabel(*rc, parsed->chunk);
 
-    rightLabel.moveTopLeft(plotAxisRect().topRight());
-    rightLabel.moveBottomRight(QPointF(rightLabel.bottomRight().x(), plotRect().center().y() + rc->x / 2));
-
     QTransform t;
-    t.translate(rightLabel.x() + rightLabel.width(), -rightLabel.y());
+    t.translate(rect().right(), plotRect().center().y() - rc->x/2);
+
     t.rotate(90.0);
 
     connect(rc, SIGNAL(labelDirty()), this, SLOT(setRightLabelDirty()));
@@ -2082,8 +2073,7 @@ void PlotItem::generateTopLabel() {
   _topLabel.valid = false;
   _topLabel.dirty = false;
   Label::Parsed *parsed = Label::parse(topLabel());
-  QRectF topLabel = topLabelRect();
-  if (parsed && topLabel.isValid()) {
+  if (parsed && topLabelRect().isValid()) {
     parsed->chunk->attributes.color = _topLabelDetails->fontColor();
 
     if (_topLabel.rc) {
@@ -2095,11 +2085,8 @@ void PlotItem::generateTopLabel() {
     rc->y = fm.ascent();
     Label::renderLabel(*rc, parsed->chunk);
 
-    topLabel.moveBottomLeft(QPointF(plotRect().center().x() - rc->x / 2, plotAxisRect().topLeft().y()));
-
     QTransform t;
-    t.translate(topLabel.x(), topLabel.y());
-
+    t.translate(plotRect().center().x() - rc->x / 2, rect().top());
     connect(rc, SIGNAL(labelDirty()), this, SLOT(setTopLabelDirty()));
     connect(rc, SIGNAL(labelDirty()), this, SLOT(redrawPlot()));
 

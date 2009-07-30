@@ -54,6 +54,8 @@ PlotAxis::PlotAxis(PlotItem *plotItem, Qt::Orientation orientation) :
   _axisMinorGridLineColor(Qt::gray),
   _axisMajorGridLineStyle(Qt::DashLine),
   _axisMinorGridLineStyle(Qt::DashLine),
+  _axisMajorGridLineWidth(1.0),
+  _axisMinorGridLineWidth(1.0),
   _axisPlotMarkers(orientation == Qt::Horizontal),
   _labelRotation(0)
  {
@@ -531,6 +533,27 @@ void PlotAxis::setAxisMinorGridLineStyle(const Qt::PenStyle style) {
   }
 }
 
+qreal PlotAxis::axisMajorGridLineWidth() const {
+  return _axisMajorGridLineWidth;
+}
+
+void PlotAxis::setAxisMajorGridLineWidth(qreal width) {
+  if (_axisMajorGridLineWidth != width) {
+    _axisMajorGridLineWidth = width;
+    _dirty = true;
+  }
+}
+
+qreal PlotAxis::axisMinorGridLineWidth() const {
+  return _axisMinorGridLineWidth;
+}
+
+void PlotAxis::setAxisMinorGridLineWidth(qreal width) {
+  if (_axisMinorGridLineWidth != width) {
+    _axisMinorGridLineWidth = width;
+    _dirty = true;
+  }
+}
 
 bool PlotAxis::isAxisVisible() const {
   return _isAxisVisible;
@@ -991,6 +1014,33 @@ qreal PlotAxis::computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orien
   }
 }
 
+void PlotAxis::copyProperties(PlotAxis *source) {
+  if (source) {
+    setAxisVisible(source->isAxisVisible());
+    setAxisLog(source->axisLog());
+    setAxisReversed(source->axisReversed());
+    setAxisBaseOffset(source->axisBaseOffset());
+    setAxisInterpret(source->axisInterpret());
+    setAxisInterpretation(source->axisInterpretation());
+    setAxisDisplay(source->axisDisplay());
+    setAxisMajorTickMode(source->axisMajorTickMode());
+    setAxisMinorTickCount(source->axisMinorTickCount());
+    setAxisAutoMinorTicks(source->axisAutoMinorTicks());
+    setDrawAxisMajorTicks(source->drawAxisMajorTicks());
+    setDrawAxisMinorTicks(source->drawAxisMinorTicks());
+    setDrawAxisMajorGridLines(source->drawAxisMajorGridLines());
+    setDrawAxisMinorGridLines(source->drawAxisMinorGridLines());
+    setAxisMajorGridLineColor(source->axisMajorGridLineColor());
+    setAxisMinorGridLineColor(source->axisMinorGridLineColor());
+    setAxisMajorGridLineStyle(source->axisMajorGridLineStyle());
+    setAxisMinorGridLineStyle(source->axisMinorGridLineStyle());
+    setAxisMajorGridLineWidth(source->axisMinorGridLineWidth());
+    setAxisMinorGridLineWidth(source->axisMinorGridLineWidth());
+    setAxisSignificantDigits(source->axisSignificantDigits());
+    setAxisLabelRotation(source->axisLabelRotation());
+    setAxisZoomMode(source->axisZoomMode());
+  }
+}
 
 void PlotAxis::saveInPlot(QXmlStreamWriter &xml, QString axisId) {
   xml.writeStartElement("plotaxis");
@@ -1014,6 +1064,8 @@ void PlotAxis::saveInPlot(QXmlStreamWriter &xml, QString axisId) {
   xml.writeAttribute("drawminorgridlinecolor", QVariant(axisMinorGridLineColor()).toString());
   xml.writeAttribute("drawmajorgridlinestyle", QVariant(axisMajorGridLineStyle()).toString());
   xml.writeAttribute("drawminorgridlinestyle", QVariant(axisMinorGridLineStyle()).toString());
+  xml.writeAttribute("drawmajorgridlinewidth", QVariant(axisMajorGridLineWidth()).toString());
+  xml.writeAttribute("drawminorgridlinewidth", QVariant(axisMinorGridLineWidth()).toString());
   xml.writeAttribute("significantdigits", QVariant(axisSignificantDigits()).toString());
   xml.writeAttribute("rotation", QVariant(axisLabelRotation()).toString());
   xml.writeAttribute("zoommode", QVariant(axisZoomMode()).toString());
@@ -1103,6 +1155,14 @@ bool PlotAxis::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
   if (!av.isNull()) {
     setAxisMinorGridLineStyle((Qt::PenStyle)QVariant(av.toString()).toInt());
   }
+  av = attrs.value("drawmajorgridlinewidth");
+  if (!av.isNull()) {
+    setAxisMajorGridLineWidth((qreal)QVariant(av.toString()).toDouble());
+  }
+  av = attrs.value("drawminorgridlinewidth");
+  if (!av.isNull()) {
+    setAxisMinorGridLineWidth((qreal)QVariant(av.toString()).toDouble());
+  }
   av = attrs.value("significantdigits");
   if (!av.isNull()) {
     setAxisSignificantDigits(QVariant(av.toString()).toInt());
@@ -1131,6 +1191,7 @@ bool PlotAxis::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
 
   return validTag;
 }
+
 
 }
 

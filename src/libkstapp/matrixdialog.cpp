@@ -526,6 +526,7 @@ void MatrixTab::fileNameChanged(const QString &file) {
 void MatrixTab::showConfigWidget() {
   DataSourceDialog dialog(dataDialog()->editMode(), _dataSource, this);
   dialog.exec();
+  fileNameChanged(_dataSource->fileName());
 }
 
 

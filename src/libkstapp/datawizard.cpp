@@ -68,7 +68,7 @@ QStringList DataWizardPageDataSource::dataSourceFieldList() const {
 void DataWizardPageDataSource::configureSource() {
   DataSourceDialog dialog(DataDialog::New, _dataSource, this);
   dialog.exec();
-  sourceChanged(_url->file());
+  sourceChanged(_dataSource->fileName());
 }
 
 

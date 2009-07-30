@@ -55,6 +55,10 @@ class KST_EXPORT AxisTab : public DialogTab, Ui::AxisTab {
     bool axisMajorGridLineColorDirty() const;
     void setAxisMajorGridLineColor(const QColor &color);
 
+    qreal axisMajorGridLineWidth() const;
+    bool axisMajorGridLineWidthDirty() const;
+    void setAxisMajorGridLineWidth(qreal width);
+
     Qt::PenStyle axisMinorGridLineStyle() const;
     bool axisMinorGridLineStyleDirty() const;
     void setAxisMinorGridLineStyle(Qt::PenStyle style);
@@ -62,6 +66,10 @@ class KST_EXPORT AxisTab : public DialogTab, Ui::AxisTab {
     QColor axisMinorGridLineColor() const;
     bool axisMinorGridLineColorDirty() const;
     void setAxisMinorGridLineColor(const QColor &color);
+
+    qreal axisMinorGridLineWidth() const;
+    bool axisMinorGridLineWidthDirty() const;
+    void setAxisMinorGridLineWidth(qreal width);
 
     bool isAutoMinorTickCount() const;
     bool isAutoMinorTickCountDirty() const;

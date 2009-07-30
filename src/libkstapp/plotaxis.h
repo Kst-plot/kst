@@ -75,6 +75,12 @@ class PlotAxis : public QObject
     Qt::PenStyle axisMinorGridLineStyle() const;
     void setAxisMinorGridLineStyle(const Qt::PenStyle style);
 
+    qreal axisMajorGridLineWidth() const;
+    void setAxisMajorGridLineWidth(qreal width);
+
+    qreal axisMinorGridLineWidth() const;
+    void setAxisMinorGridLineWidth(qreal width);
+
     int axisSignificantDigits() const;
     void setAxisSignificantDigits(const int digits);
 
@@ -121,6 +127,8 @@ class PlotAxis : public QObject
     // return the value and reset.
     bool ticksUpdated() { bool bReturn = _ticksUpdated; _ticksUpdated = false; return bReturn; }
     bool isDirty() { return _dirty; }
+
+    void copyProperties(PlotAxis *source);
 
   public Q_SLOTS:
     void updateTicks(bool useOverrideTicks = false);
@@ -187,6 +195,9 @@ class PlotAxis : public QObject
 
     Qt::PenStyle _axisMajorGridLineStyle;
     Qt::PenStyle _axisMinorGridLineStyle;
+
+    qreal _axisMajorGridLineWidth;
+    qreal _axisMinorGridLineWidth;
 
     PlotMarkers _axisPlotMarkers;
 

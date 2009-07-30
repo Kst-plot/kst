@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>356</width>
-    <height>352</height>
+    <height>359</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -267,9 +267,6 @@
     <widget class="QCheckBox" name="_applyDefault">
      <property name="text">
       <string>Apply these settings as default</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
      </property>
     </widget>
    </item>

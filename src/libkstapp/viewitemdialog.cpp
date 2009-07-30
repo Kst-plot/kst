@@ -335,7 +335,6 @@ void ViewItemDialog::dimensionsChanged() {
 
 void ViewItemDialog::saveDimensions(ViewItem *item) {
   Q_ASSERT(item);
-
   qreal parentWidth;
   qreal parentHeight;
 
@@ -374,8 +373,8 @@ void ViewItemDialog::saveDimensions(ViewItem *item) {
   if (_mode != Multiple) {
     qreal diffX = (_dimensionsTab->x() - item->relativeCenter().x()) * parentWidth;
     qreal diffY = (_dimensionsTab->y() - item->relativeCenter().y()) * parentHeight;
-
-    QPointF newLeft(item->pos().x() + diffX, item->pos().y() + diffY);
+    QPointF newLeft(item->pos().x() + diffX - item->rect().x(), item->pos().y() + diffY + item->rect().y());
+    //QPointF newLeft(item->relativePosition().x()*parentWidth + diffX, item->relativePosition().y()*parentHeight + diffY);
     item->setPos(newLeft);
   }
   item->setViewRect(0, 0, width, height);

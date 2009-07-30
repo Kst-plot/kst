@@ -218,6 +218,7 @@ void ScalarTab::fileNameChanged(const QString &file) {
 void ScalarTab::showConfigWidget() {
   DataSourceDialog dialog(dataDialog()->editMode(), _dataSource, this);
   dialog.exec();
+  fileNameChanged(_dataSource->fileName());
 }
 
 

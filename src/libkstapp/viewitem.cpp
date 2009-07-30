@@ -432,6 +432,7 @@ void ViewItem::setViewRect(const QRectF &viewRect, bool automaticChange) {
     return;
 
   setRect(viewRect);
+
   emit geometryChanged();
 
   if (!automaticChange) {

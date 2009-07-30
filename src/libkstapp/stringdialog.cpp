@@ -183,6 +183,7 @@ void StringTab::fileNameChanged(const QString &file) {
 void StringTab::showConfigWidget() {
   DataSourceDialog dialog(dataDialog()->editMode(), _dataSource, this);
   dialog.exec();
+  fileNameChanged(_dataSource->fileName());
 }
 
 

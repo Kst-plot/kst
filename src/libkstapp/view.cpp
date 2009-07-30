@@ -552,6 +552,12 @@ void View::configurePlotFontDefaults(PlotItem *plot) {
         plot->numberLabelDetails()->setFont(plotItem->numberLabelDetails()->font());
         plot->numberLabelDetails()->setFontScale(plotItem->numberLabelDetails()->fontScale());
         plot->numberLabelDetails()->setFontColor(plotItem->numberLabelDetails()->fontColor());
+
+        plot->setItemPen(plotItem->pen());
+        plot->setItemBrush(plotItem->brush());
+        plot->xAxis()->copyProperties(plotItem->xAxis());
+        plot->yAxis()->copyProperties(plotItem->yAxis());
+
         break;
       }
     }

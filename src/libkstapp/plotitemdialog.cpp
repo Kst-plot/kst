@@ -258,6 +258,8 @@ void PlotItemDialog::setupAxis() {
   _xAxisTab->setAutoMinorTickCount(_plotItem->xAxis()->axisAutoMinorTicks());
   _xAxisTab->setAxisMajorGridLineColor(_plotItem->xAxis()->axisMajorGridLineColor());
   _xAxisTab->setAxisMinorGridLineColor(_plotItem->xAxis()->axisMinorGridLineColor());
+  _xAxisTab->setAxisMajorGridLineWidth(_plotItem->xAxis()->axisMajorGridLineWidth());
+  _xAxisTab->setAxisMinorGridLineWidth(_plotItem->xAxis()->axisMinorGridLineWidth());
   _xAxisTab->setAxisMajorGridLineStyle(_plotItem->xAxis()->axisMajorGridLineStyle());
   _xAxisTab->setAxisMinorGridLineStyle(_plotItem->xAxis()->axisMinorGridLineStyle());
   _xAxisTab->setLog(_plotItem->xAxis()->axisLog());
@@ -280,6 +282,8 @@ void PlotItemDialog::setupAxis() {
   _yAxisTab->setDrawAxisMinorGridLines(_plotItem->yAxis()->drawAxisMinorGridLines());
   _yAxisTab->setAxisMajorGridLineColor(_plotItem->yAxis()->axisMajorGridLineColor());
   _yAxisTab->setAxisMinorGridLineColor(_plotItem->yAxis()->axisMinorGridLineColor());
+  _yAxisTab->setAxisMajorGridLineWidth(_plotItem->yAxis()->axisMajorGridLineWidth());
+  _yAxisTab->setAxisMinorGridLineWidth(_plotItem->yAxis()->axisMinorGridLineWidth());
   _yAxisTab->setAxisMajorGridLineStyle(_plotItem->yAxis()->axisMajorGridLineStyle());
   _yAxisTab->setAxisMinorGridLineStyle(_plotItem->yAxis()->axisMinorGridLineStyle());
   _yAxisTab->setLog(_plotItem->yAxis()->axisLog());
@@ -723,6 +727,12 @@ void PlotItemDialog::saveAxis(PlotAxis *axis, AxisTab *axisTab) {
   }
   if (axisTab->axisMinorGridLineColorDirty()) {
     axis->setAxisMinorGridLineColor(axisTab->axisMinorGridLineColor());
+  }
+  if (axisTab->axisMajorGridLineWidthDirty()) {
+    axis->setAxisMajorGridLineWidth(axisTab->axisMajorGridLineWidth());
+  }
+  if (axisTab->axisMinorGridLineWidthDirty()) {
+    axis->setAxisMinorGridLineWidth(axisTab->axisMinorGridLineWidth());
   }
   if (axisTab->axisMajorGridLineStyleDirty()) {
     axis->setAxisMajorGridLineStyle(axisTab->axisMajorGridLineStyle());

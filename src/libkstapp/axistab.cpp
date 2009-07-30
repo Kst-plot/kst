@@ -62,6 +62,8 @@ AxisTab::AxisTab(QWidget *parent)
   connect(_axisMinorLineStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_axisMajorLineColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
   connect(_axisMinorLineColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
+  connect(_axisMajorLineWidth, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
+  connect(_axisMinorLineWidth, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_autoMinorTicks, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_autoMinorTicks, SIGNAL(stateChanged(int)), this, SLOT(updateButtons()));
 
@@ -192,6 +194,21 @@ void AxisTab::setAxisMajorGridLineColor(const QColor &color) {
 }
 
 
+qreal AxisTab::axisMajorGridLineWidth() const {
+  return _axisMajorLineWidth->value();
+}
+
+
+bool AxisTab::axisMajorGridLineWidthDirty() const {
+  return (!_axisMajorLineWidth->text().isEmpty());
+}
+
+
+void AxisTab::setAxisMajorGridLineWidth(qreal width) {
+  _axisMajorLineWidth->setValue(width);
+}
+
+
 Qt::PenStyle AxisTab::axisMinorGridLineStyle() const {
   return Qt::PenStyle(_axisMinorLineStyle->itemData(_axisMinorLineStyle->currentIndex()).toInt());
 }
@@ -219,6 +236,20 @@ bool AxisTab::axisMinorGridLineColorDirty() const {
 
 void AxisTab::setAxisMinorGridLineColor(const QColor &color) {
   _axisMinorLineColor->setColor(color);
+}
+
+
+qreal AxisTab::axisMinorGridLineWidth() const {
+  return _axisMinorLineWidth->value();
+}
+
+
+bool AxisTab::axisMinorGridLineWidthDirty() const {
+return (!_axisMinorLineWidth->text().isEmpty());}
+
+
+void AxisTab::setAxisMinorGridLineWidth(qreal width) {
+  _axisMinorLineWidth->setValue(width);
 }
 
 

@@ -13,7 +13,6 @@ Smarter ASCII reader:
 
 ---------
 
-
 15. The text label behaviour is un-intuitive.  The typical interface is
 to choose a position first, and then input some text.
    ** -a possible justification for the current order is that it could allow us to 
@@ -52,15 +51,21 @@ Reasonable/sticky defaults for the export dialog.
 
 --------
 
-Reasonable/sticky defaults for line widths, and the ability to set grid line linewidths.
+Reasonable/sticky defaults for line widths
+See View::configurePlotFontDefaults for a place to do this...
+Currently, new plots follow any existing plots, but there is no
+sensibly set 1st plot default.
 
 ------------
 
-  -data source text box doesn't recognise initial ~ as a euphemism for
+data source text box doesn't recognise initial ~ as a euphemism for
    the user's home directory (QDirModel doesn't handle this...)
 
 ------------
 
 1.x kst file read compatibility...
 
+------------
+
+DECIDE: absolute or relative file names in kst files?
 
