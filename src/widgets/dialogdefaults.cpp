@@ -14,19 +14,16 @@ namespace Kst {
   QSettings *_dialogDefaults = new QSettings("kst", "dialog");
 
 void setDataVectorDefaults(DataVectorPtr V) {
-  //FIXME Do we need a V->readLock() here?
   _dialogDefaults->setValue("vector/datasource", V->filename());
 }
 
 void setGenVectorDefaults(GeneratedVectorPtr V) {
-  //FIXME Do we need a V->readLock() here? 
   _dialogDefaults->setValue("genVector/min", V->min());
   _dialogDefaults->setValue("genVector/max", V->max()); 
   _dialogDefaults->setValue("genVector/length", V->length());
 }
 
 void setDataMatrixDefaults(DataMatrixPtr M) {
-  //FIXME Do we need a M->readLock() here?
   _dialogDefaults->setValue("matrix/datasource",M->dataSource()->fileName());
 
   _dialogDefaults->setValue("matrix/xCountFromEnd",M->xCountFromEnd());

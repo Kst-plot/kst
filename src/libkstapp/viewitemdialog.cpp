@@ -337,13 +337,19 @@ void ViewItemDialog::saveDimensions(ViewItem *item) {
   Q_ASSERT(item);
   qreal parentWidth;
   qreal parentHeight;
+  qreal parentX;
+  qreal parentY;
 
   if (item->parentViewItem()) {
     parentWidth = item->parentViewItem()->width();
     parentHeight = item->parentViewItem()->height();
+    parentX = item->parentViewItem()->rect().x();
+    parentY = item->parentViewItem()->rect().y();
   } else if (item->parentView()) {
     parentWidth = item->parentView()->width();
     parentHeight = item->parentView()->height();
+    parentX = item->parentView()->rect().x();
+    parentY = item->parentView()->rect().y();
   } else {
     Q_ASSERT_X(false,"parent test", "item has no parentview item");
     parentWidth = parentHeight = 1.0;
@@ -371,13 +377,9 @@ void ViewItemDialog::saveDimensions(ViewItem *item) {
   }
 
   if (_mode != Multiple) {
-    qreal diffX = (_dimensionsTab->x() - item->relativeCenter().x()) * parentWidth;
-    qreal diffY = (_dimensionsTab->y() - item->relativeCenter().y()) * parentHeight;
-    QPointF newLeft(item->pos().x() + diffX - item->rect().x(), item->pos().y() + diffY + item->rect().y());
-    //QPointF newLeft(item->relativePosition().x()*parentWidth + diffX, item->relativePosition().y()*parentHeight + diffY);
-    item->setPos(newLeft);
+    item->setPos(parentX + _dimensionsTab->x()*parentWidth, parentY + _dimensionsTab->y()*parentHeight);
   }
-  item->setViewRect(0, 0, width, height);
+  item->setViewRect(-width/2, -height/2, width, height);
 
   qreal rotation = _dimensionsTab->rotationDirty() ? _dimensionsTab->rotation() :item->rotationAngle();
 

@@ -1550,7 +1550,9 @@ void ViewItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &ne
     qDebug() << "ViewItem::updateChildGeometry non-Fixed Ratio" << "relativeHeight = " << relativeHeight() << "relative Width" << relativeWidth();
 #endif
 
-    QPointF newTopLeft = newParentRect.topLeft() + QPointF(newParentRect.width() * _parentRelativePosition.x(), newParentRect.height() * _parentRelativePosition.y());
+    QPointF newTopLeft = newParentRect.topLeft() - itemRect.topLeft() +
+                         QPointF(newParentRect.width() * _parentRelativePosition.x(),
+                                 newParentRect.height() * _parentRelativePosition.y());
 
     itemRect.setWidth(newWidth);
     itemRect.setHeight(newHeight);

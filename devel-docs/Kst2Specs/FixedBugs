@@ -1085,3 +1085,7 @@ Then, pull up the Plot Edit dialog, dimensions tab.  Enable 'apply' by
 selecting, then unselecting 'fix aspect ratio'.  Apply.  The plot moves, 
 but the Y label is back where it should be.  Enable apply again, and hit 
 apply.  The plot is back where it should be, with no problems.
+
+--------
+
+Reasonable/sticky defaults for the export dialog.

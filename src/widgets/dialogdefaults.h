@@ -65,3 +65,5 @@ namespace Kst {
 // spectrum/interpolateHoles bool FFToptions 
 
 // curve/xvectorfield    QString  datawizard, curvedialog
+
+// export/filename       QString  exportgraphicsdialog

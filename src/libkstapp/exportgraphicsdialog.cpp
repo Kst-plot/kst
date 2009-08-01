@@ -10,6 +10,7 @@
  ***************************************************************************/
 
 #include "exportgraphicsdialog.h"
+#include "dialogdefaults.h"
 
 #include "mainwindow.h"
 #include <QDir>
@@ -27,7 +28,7 @@ ExportGraphicsDialog::ExportGraphicsDialog(MainWindow *parent)
   : QDialog(parent) {
   setupUi(this);
 
-  _saveLocation->setFile(QDir::currentPath());
+  _saveLocation->setFile(_dialogDefaults->value("export/filename",QDir::currentPath()).toString());
 
   _autoSaveTimer = new QTimer(this);
 
@@ -37,7 +38,14 @@ ExportGraphicsDialog::ExportGraphicsDialog(MainWindow *parent)
   }
 
   _comboBoxFormats->addItems(formats);
-  _comboBoxFormats->setCurrentIndex(0);
+  _comboBoxFormats->setCurrentIndex(
+        _comboBoxFormats->findText(_dialogDefaults->value("export/format","png").toString()));
+
+  _xSize->setValue(_dialogDefaults->value("export/xsize","1024").toInt());
+  _ySize->setValue(_dialogDefaults->value("export/ysize","768").toInt());
+
+  _comboBoxSizeOption->setCurrentIndex(_dialogDefaults->value("export/sizeOption","0").toInt());
+  enableWidthHeight();
 
   _saveLocationLabel->setBuddy(_saveLocation->_fileEdit);
 
@@ -61,18 +69,26 @@ void ExportGraphicsDialog::enableWidthHeight() {
     case 0:
       _xSize->setEnabled(true);
       _ySize->setEnabled(true);
+      _widthLabel->setEnabled(true);
+      _heightLabel->setEnabled(true);
       break;
     case 1:
       _xSize->setEnabled(true);
       _ySize->setEnabled(false);
+      _widthLabel->setEnabled(true);
+      _heightLabel->setEnabled(false);
       break;
     case 2:
       _xSize->setEnabled(true);
       _ySize->setEnabled(false);
+      _widthLabel->setEnabled(true);
+      _heightLabel->setEnabled(false);
       break;
     case 3:
       _xSize->setEnabled(false);
       _ySize->setEnabled(true);
+      _widthLabel->setEnabled(false);
+      _heightLabel->setEnabled(true);
       break;
   }
 }
@@ -97,6 +113,11 @@ void ExportGraphicsDialog::apply() {
 
 
 void ExportGraphicsDialog::createFile() {
+  _dialogDefaults->setValue("export/filename", _saveLocation->file());
+  _dialogDefaults->setValue("export/format", _comboBoxFormats->currentText());
+  _dialogDefaults->setValue("export/xsize", _xSize->value());
+  _dialogDefaults->setValue("export/ysize", _ySize->value());
+  _dialogDefaults->setValue("export/sizeOption", _comboBoxSizeOption->currentIndex());
   emit exportGraphics(_saveLocation->file(), _comboBoxFormats->currentText(), _xSize->value(), _ySize->value(), _comboBoxSizeOption->currentIndex());
 }
 
