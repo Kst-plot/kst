@@ -15,10 +15,6 @@ One plot gets re-drawn twice in an update in PlotItem::updatePlotPixmap. (?)
 
 --------------------
 
-Draw a line in a plot.  Resize the plot.  The line drifts away.
-
---------------------
-
 Draw an ellipse that spans many plots.  It ends up in the back, and can't be brought to the front.
 
 --------------------

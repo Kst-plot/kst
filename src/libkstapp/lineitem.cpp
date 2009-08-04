@@ -223,32 +223,34 @@ void LineItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 
 
 void LineItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect) {
-   qDebug() << "LineItem::updateChildGeometry" << oldParentRect << newParentRect << endl;
+  // parent has been resized: update the line's dimensions:
+
+  // we would like to have lines in terms of relative endpoint locations,
+  // but instead they are in terms of length (relative to parent width)
+  // and angle, relative to the parent.
+  qreal theta = rotationAngle()*M_PI/180.0;
+  qreal oldL = relativeWidth()*oldParentRect.width();
+
+  // we want to keep the endpoints fixed relative to the parent, so
+  // we need to calculate new lengths and angles.
+  qreal newDx = cos(theta)*oldL*newParentRect.width()/oldParentRect.width();
+  qreal newDy = sin(theta)*oldL*newParentRect.height()/oldParentRect.height();
+  qreal newWidth = sqrt(newDx*newDx + newDy*newDy);
+  QTransform transform;
+  transform.rotate(atan2(newDy, newDx)*180.0/M_PI);
 
   QRectF itemRect = rect();
+  itemRect.setWidth(newWidth); // new length...
+  // my brain hurts less for rotations when we center the object at 0,0
+  itemRect.setTopLeft(QPointF(-itemRect.width()*0.5, -itemRect.height()*0.5));
 
-   qDebug() << "Relative Top Left x" << QPointF(mapToParent(leftMidGrip().controlPointRect().center()) - oldParentRect.topLeft()).x() / oldParentRect.width();
-   qDebug() << "Relative Top Left y" << QPointF(mapToParent(leftMidGrip().controlPointRect().center()) - oldParentRect.topLeft()).y() / oldParentRect.height();
-   qDebug() << "Relative Bottom Right x" << QPointF(mapToParent(rightMidGrip().controlPointRect().center()) - oldParentRect.topLeft()).x() / oldParentRect.width();
-   qDebug() << "Relative Bottom Right y" << QPointF(mapToParent(rightMidGrip().controlPointRect().center()) - oldParentRect.topLeft()).y() / oldParentRect.height();
-
-  qreal relLeftX = QPointF(mapToParent(leftMidGrip().controlPointRect().center()) - oldParentRect.topLeft()).x() / oldParentRect.width();
-  qreal relLeftY = QPointF(mapToParent(leftMidGrip().controlPointRect().center()) - oldParentRect.topLeft()).y() / oldParentRect.height();
-  qreal relRightX = QPointF(mapToParent(rightMidGrip().controlPointRect().center()) - oldParentRect.topLeft()).x() / oldParentRect.width();
-  qreal relRightY = QPointF(mapToParent(rightMidGrip().controlPointRect().center()) - oldParentRect.topLeft()).y() / oldParentRect.height();
-
-  QPointF newLeft = QPointF((relLeftX * newParentRect.width()) + newParentRect.topLeft().x(), (relLeftY * newParentRect.height()) + newParentRect.topLeft().y());
-  QPointF newRight = QPointF((relRightX * newParentRect.width()) + newParentRect.topLeft().x(), (relRightY * newParentRect.height()) + newParentRect.topLeft().y());
-
-  newLeft -= leftMidGrip().controlPointRect().center();
-  newRight -= leftMidGrip().controlPointRect().center();
-
-  setPos(newLeft);
-
-  itemRect.setRight(itemRect.left() + QLineF(pos(), newRight).length());
-  rotateTowards(rightMidGrip().controlPointRect().center(), mapFromParent(QPointF(newRight.x(), newRight.y() + (itemRect.height() / 2))));
-
+  // we don't now what the parents's origin is, so, add .x() and .y()
+  setPos(relativeCenter().x() * newParentRect.width() + newParentRect.x(),
+         relativeCenter().y() * newParentRect.height()+ newParentRect.y());
   setViewRect(itemRect, true);
+
+  setTransform(transform);
+  setRelativeWidth(newWidth / newParentRect.width());
 }
 
 
