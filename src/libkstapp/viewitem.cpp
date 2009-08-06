@@ -1217,7 +1217,7 @@ void ViewItem::setRight(qreal x) {
 QTransform ViewItem::selectTransform() const {
 
   /* Converts a point on the rect() to a point on the selectBoundingRect()
-     or the inverse by using selectTransform().inverted()...
+     or the inverse by using selectTransform().inverted().
   */
 
   QRectF from = rect();

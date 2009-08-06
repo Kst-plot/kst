@@ -163,7 +163,10 @@ void LineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   }
 
   if (parentView()->mouseMode() == View::Default) {
-    if (gripMode() == ViewItem::Resize) {
+    if (gripMode() == ViewItem::Move || activeGrip() == NoGrip) {
+      parentView()->setMouseMode(View::Move);
+      parentView()->undoStack()->beginMacro(tr("Move"));
+    } else if (gripMode() == ViewItem::Resize) {
       parentView()->setMouseMode(View::Resize);
       parentView()->undoStack()->beginMacro(tr("Resize"));
     }
@@ -239,10 +242,9 @@ void LineItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &ne
   QTransform transform;
   transform.rotate(atan2(newDy, newDx)*180.0/M_PI);
 
-  QRectF itemRect = rect();
-  itemRect.setWidth(newWidth); // new length...
   // my brain hurts less for rotations when we center the object at 0,0
-  itemRect.setTopLeft(QPointF(-itemRect.width()*0.5, -itemRect.height()*0.5));
+  QRectF itemRect(-newWidth*0.5, -rect().height()*0.5,
+                  newWidth, rect().height());
 
   // we don't now what the parents's origin is, so, add .x() and .y()
   setPos(relativeCenter().x() * newParentRect.width() + newParentRect.x(),

@@ -1,15 +1,3 @@
-Plot sizes are not properly recovered on re-load
-Create a plot in kst.  Cleanup Layout->automatic
- -the plot now ~fills the window.
-save it.
-load it
-  -the plot is now smaller than it was.
-It should be the same size as it started.
-** it is now much better than it used to be.  The shift is now only a few pixels **
-** low priority **
-
---------------------
-
 Update ineffciency:
 One plot gets re-drawn twice in an update in PlotItem::updatePlotPixmap. (?)
 
@@ -20,3 +8,8 @@ Draw an ellipse that spans many plots.  It ends up in the back, and can't be bro
 --------------------
 
 Rotated axis number label spacing is wrong
+
+--------------------
+
+Artifacts when resizing large arrowheads.
+

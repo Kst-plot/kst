@@ -384,10 +384,7 @@ void ViewItemDialog::saveDimensions(ViewItem *item) {
   qreal rotation = _dimensionsTab->rotationDirty() ? _dimensionsTab->rotation() :item->rotationAngle();
 
   QTransform transform;
-  QPointF origin = item->centerOfRotation();
-  transform.translate(origin.x(), origin.y());
   transform.rotate(rotation);
-  transform.translate(-origin.x(), -origin.y());
 
   item->setTransform(transform);
   item->updateRelativeSize();

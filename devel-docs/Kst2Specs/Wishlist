@@ -66,3 +66,11 @@ data source text box doesn't recognise initial ~ as a euphemism for
 
 DECIDE: absolute or relative file names in kst files?
 
+------------
+
+Sensible filter in image dialog
+
+------------
+
+Fixup line/arrow dimensions tab:
+  x,y instead of length/angle

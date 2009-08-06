@@ -686,8 +686,7 @@ void PlotItem::paint(QPainter *painter) {
     painter->drawRect(rect());
     painter->restore();
 
-  //painter->drawPixmap(QPointF(0, 0), _plotPixmap);
-  painter->drawPixmap(rect().topLeft(), _plotPixmap);
+    painter->drawPixmap(rect().topLeft(), _plotPixmap);
   }
 #if BENCHMARK
   int i = bench_time.elapsed();
