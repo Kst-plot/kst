@@ -48,6 +48,8 @@ class KST_EXPORT ViewItemDialog : public Dialog
 
     EditMode editMode() const { return _mode; }
 
+    DialogPage *dimensionsPage;
+    DimensionsTab *_dimensionsTab;
   public Q_SLOTS:
     void setSingleEdit();
     void setMultipleEdit();
@@ -89,7 +91,6 @@ class KST_EXPORT ViewItemDialog : public Dialog
     FillTab *_fillTab;
     StrokeTab *_strokeTab;
     LayoutTab *_layoutTab;
-    DimensionsTab *_dimensionsTab;
 };
 
 }

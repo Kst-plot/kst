@@ -68,9 +68,5 @@ DECIDE: absolute or relative file names in kst files?
 
 ------------
 
-Sensible filter in image dialog
-
-------------
-
 Fixup line/arrow dimensions tab:
   x,y instead of length/angle

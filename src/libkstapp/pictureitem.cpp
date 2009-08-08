@@ -12,12 +12,14 @@
 #include "pictureitem.h"
 
 #include "debug.h"
+#include "dialogdefaults.h"
 
 #include <QDebug>
 #include <QFileDialog>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QBuffer>
+#include <QImageReader>
 
 namespace Kst {
 
@@ -68,10 +70,17 @@ void PictureItem::paint(QPainter *painter) {
 
 
 void CreatePictureCommand::createItem() {
-  QString file = QFileDialog::getOpenFileName(_view, tr("Kst: Open Image"));
+  QString start_dir = _dialogDefaults->value("picture/startdir", ".").toString();
+  QString filter = "Images (";
+  QList<QByteArray> formats = QImageReader::supportedImageFormats ();
+  for (int i=0; i<formats.size(); i++) {
+    filter += " *."+QString(formats.at(i)).toUpper() + " *." + QString(formats.at(i)).toLower();
+  }
+  filter += ")";
+  QString file = QFileDialog::getOpenFileName(_view, tr("Kst: Open Image"), start_dir, filter);
   if (file.isEmpty())
     return;
-
+  _dialogDefaults->setValue("picture/startdir", QFileInfo(file).path());
   _item = new PictureItem(_view, QImage(file));
   _view->setCursor(Qt::CrossCursor);
 

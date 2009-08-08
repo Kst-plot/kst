@@ -113,12 +113,19 @@ void ExportGraphicsDialog::apply() {
 
 
 void ExportGraphicsDialog::createFile() {
-  _dialogDefaults->setValue("export/filename", _saveLocation->file());
-  _dialogDefaults->setValue("export/format", _comboBoxFormats->currentText());
+  QString filename = _saveLocation->file();
+  QString format = _comboBoxFormats->currentText();
+  if (_autoExtension->isChecked()) {
+    if (QFileInfo(filename).suffix().toLower() != format.toLower()) {
+      filename += "." + format;
+    }
+  }
+  _dialogDefaults->setValue("export/filename", filename);
+  _dialogDefaults->setValue("export/format", format);
   _dialogDefaults->setValue("export/xsize", _xSize->value());
   _dialogDefaults->setValue("export/ysize", _ySize->value());
   _dialogDefaults->setValue("export/sizeOption", _comboBoxSizeOption->currentIndex());
-  emit exportGraphics(_saveLocation->file(), _comboBoxFormats->currentText(), _xSize->value(), _ySize->value(), _comboBoxSizeOption->currentIndex());
+  emit exportGraphics(filename, format, _xSize->value(), _ySize->value(), _comboBoxSizeOption->currentIndex());
 }
 
 
