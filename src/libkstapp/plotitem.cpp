@@ -907,13 +907,18 @@ void PlotItem::updateXAxisLabels(QPainter* painter) {
       bound.moveCenter(p);
     } else {
       if (rotation < 0) {
+        qreal theta = (rotation >-30 ? rotation : -30);
+        qreal right = mapXToPlot(xLabelIt.key()) - bound.height() * (sin(theta*M_PI/180.0));
         bound = t.mapRect(bound);
-        p = QPointF(mapXToPlot(xLabelIt.key()) - bound.width() / 2, plotRect().bottom() + _calculatedAxisMarginVLead);
+        p = QPointF(right, plotRect().bottom() + _calculatedAxisMarginVLead);
+        bound.moveTopRight(p);
       } else {
-        p = QPointF(mapXToPlot(xLabelIt.key()) - bound.height() * 0.5, plotRect().bottom() + _calculatedAxisMarginVLead);
+        qreal theta = (rotation <30 ? rotation : 30);
+        qreal left = mapXToPlot(xLabelIt.key()) - bound.height() * (sin(theta*M_PI/180.0));
         bound = t.mapRect(bound);
+        p = QPointF(left, plotRect().bottom() + _calculatedAxisMarginVLead);
+        bound.moveTopLeft(p);
       }
-      bound.moveTopLeft(p);
     }
 
     if (rect().left() > bound.left()) bound.setLeft(rect().left());
@@ -1009,19 +1014,31 @@ void PlotItem::updateYAxisLabels(QPainter* painter) {
     QRectF bound = painter->boundingRect(QRectF(), flags, yLabelIt.value());
     QPointF p;
     if (rotation < 0) {
-      p = QPointF(plotRect().left() - _calculatedAxisMarginHLead,
-                  mapYToPlot(yLabelIt.key()) - bound.height() * 0.5);
+      qreal theta = (rotation >-45.0) ? rotation : -45.0;
+      qreal top;
+      if (rotation >-89) {
+        top = mapYToPlot(yLabelIt.key()) - bound.height()*0.5*cos(theta*2.0*M_PI/180.0);
+      } else {
+        top = mapYToPlot(yLabelIt.key()) - bound.width()*0.5;
+      }
       bound = t.mapRect(bound);
-      bound.moveLeft(plotRect().left() - bound.width());
-      bound.moveTop(p.y());
-    } else {
+      bound.moveRight(plotRect().left() - _calculatedAxisMarginHLead);
+      bound.moveTop(top);
+    } else if (rotation > 0) {
+      qreal theta = (rotation <45.0) ? rotation : 45.0;
+      qreal bottom;
+      if (rotation < 89) {
+        bottom = mapYToPlot(yLabelIt.key()) + bound.height()*0.5*cos(theta*2.0*M_PI/180.0);
+      } else {
+        bottom = mapYToPlot(yLabelIt.key()) + bound.width()*0.5;
+      }
       bound = t.mapRect(bound);
+      bound.moveRight(plotRect().left() - _calculatedAxisMarginHLead);
+      bound.moveBottom(bottom);
+    } else { // no rotation.
       p = QPointF(plotRect().left() - _calculatedAxisMarginHLead,
                   mapYToPlot(yLabelIt.key()) - bound.height() * 0.5);
       bound.moveTopRight(p);
-      if (rotation != 0) {
-        bound.moveLeft(plotRect().left() - bound.width());
-      }
     }
 
     if (rect().top() > bound.top()) bound.setTop(rect().top());
@@ -1149,7 +1166,7 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
       t.rotate(-1*rotation);
       painter->rotate(rotation);
 
-      painter->drawText(t.mapRect(bound), flags, label.value);
+      painter->drawText(t.mapRect(bound), Qt::TextSingleLine | Qt::AlignCenter, label.value);
       painter->restore();
     } else {
       painter->drawText(bound, flags, label.value);

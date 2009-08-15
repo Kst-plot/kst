@@ -67,3 +67,21 @@ namespace Kst {
 // curve/xvectorfield    QString  datawizard, curvedialog
 
 // export/filename       QString  exportgraphicsdialog
+// export/format         QString  exportgraphicsdialog
+// export/xsize                   exportgraphicsdialog
+// export/ysize                   exportgraphicsdialog
+// export/sizeOption              exportgraphicsdialog
+
+// picture/startdir               pictureitem.cpp
+
+//  histogram/realTimeAutoBin    histogramdialog.cpp
+
+//  matrix/datasource            matrixdialog.cpp
+//  matrix/reqXStart             matrixdialog.cpp
+//  matrix/reqYStart             matrixdialog.cpp
+//  matrix/xCountFromEnd         matrixdialog.cpp
+//  matrix/xNumSteps             matrixdialog.cpp
+//  matrix/xReadToEnd            matrixdialog.cpp
+//  matrix/yCountFromEnd         matrixdialog.cpp
+//  matrix/yNumSteps             matrixdialog.cpp
+//  matrix/yReadToEnd            matrixdialog.cpp
