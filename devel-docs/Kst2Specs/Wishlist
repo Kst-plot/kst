@@ -36,6 +36,7 @@ Scientific notation (instead of C's %e notation) for extreme axis numbers
 --------
 
 Edit multiple for all view objects.  The highest priority is legends.
+  -make an doc->item store which holds all items, like objects have.
 
 --------
 

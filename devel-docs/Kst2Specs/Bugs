@@ -9,7 +9,4 @@ Draw an ellipse that spans many plots.  It ends up in the back, and can't be bro
 
 Artifacts when resizing large arrowheads.
 
---------------------
-
-ASCII settings are ignored unless they are the global defaults.
 

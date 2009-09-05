@@ -1,30 +1,33 @@
 include($$PWD/../../kst.pri)
-
-QT += gui network svg opengl
-
+QT += gui \
+    network \
+    svg \
+    opengl
 TEMPLATE = lib
 TARGET = kstapp
 DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
-
-! isEmpty(INSTALL_PREFIX) {
-  target.path = $$INSTALL_PREFIX/$$INSTALL_LIBDIR
-  INSTALLS += target
+!isEmpty(INSTALL_PREFIX) { 
+    target.path = $$INSTALL_PREFIX/$$INSTALL_LIBDIR
+    INSTALLS += target
 }
-
-INCLUDEPATH += \
-    tmp \
+INCLUDEPATH += tmp \
     $$TOPLEVELDIR/src/libkst \
     $$TOPLEVELDIR/src/libkstmath \
     $$TOPLEVELDIR/src/widgets \
     $$OUTPUT_DIR/src/widgets \
     $$OUTPUT_DIR/src/libkstapp/tmp
-
-win32:LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkstwidgets -lkstmath -lkst
-!win32:LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkst -lkstmath -lkstwidgets
-
-SOURCES += \
-    aboutdialog.cpp \
+win32:LIBS += -L$$OUTPUT_DIR/lib \
+    -L$$OUTPUT_DIR/plugin \
+    -lkstwidgets \
+    -lkstmath \
+    -lkst
+!win32:LIBS += -L$$OUTPUT_DIR/lib \
+    -L$$OUTPUT_DIR/plugin \
+    -lkst \
+    -lkstmath \
+    -lkstwidgets
+SOURCES += aboutdialog.cpp \
     application.cpp \
     applicationsettings.cpp \
     applicationsettingsdialog.cpp \
@@ -129,7 +132,6 @@ SOURCES += \
     viewmatrixdialog.cpp \
     viewprimitivedialog.cpp \
     viewvectordialog.cpp
-
 HEADERS += \
     aboutdialog.h \
     application.h \
@@ -150,7 +152,7 @@ HEADERS += \
     childviewoptionstab.h \
     choosecolordialog.h \
     circleitem.h \
-    commandlineparser.h\
+    commandlineparser.h \
     contenttab.h \
     csddialog.h \
     curvedialog.h \
@@ -237,9 +239,7 @@ HEADERS += \
     viewmatrixdialog.h \
     viewprimitivedialog.h \
     viewvectordialog.h
-
-FORMS += \
-    aboutdialog.ui \
+FORMS += aboutdialog.ui \
     arrowpropertiestab.ui \
     axistab.ui \
     basicplugintab.ui \
@@ -289,7 +289,5 @@ FORMS += \
     viewmanager.ui \
     viewmatrixdialog.ui \
     viewprimitivedialog.ui \
-    viewvectordialog.ui
-
-RESOURCES += \
-    $$TOPLEVELDIR/src/images/images.qrc
+    viewvectordialog.ui 
+RESOURCES += $$TOPLEVELDIR/src/images/images.qrc

@@ -72,7 +72,6 @@ class AsciiSource::Config {
       _readFields = cfg->value("Read Fields", false).toBool();
       _fieldsLine = cfg->value("Fields Line", 0).toInt();
       if (!fileName.isEmpty()) {
-        cfg->endGroup();
         cfg->beginGroup(fileName);
         _delimiters = cfg->value("Comment Delimiters", _delimiters).toString().toLatin1();
         _indexInterpretation = (Interpretation)cfg->value("Default INDEX Interpretation", (int)_indexInterpretation).toInt();
@@ -82,6 +81,7 @@ class AsciiSource::Config {
         _dataLine = cfg->value("Data Start", _dataLine).toInt();
         _readFields = cfg->value("Read Fields", _readFields).toBool();
         _fieldsLine = cfg->value("Fields Line", _fieldsLine).toInt();
+        cfg->endGroup();
       }
       _delimiters = QRegExp::escape(_delimiters).toLatin1();
       cfg->endGroup();
@@ -862,7 +862,6 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
       Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(_instance);
       if (src) {
         _cfg->beginGroup(src->fileName());
-
         _cfg->setValue("Default INDEX Interpretation", 1 + _ac->_indexType->currentIndex());
         _cfg->setValue("Comment Delimiters", _ac->_delimiters->text());
         AsciiSource::Config::ColumnType ct = AsciiSource::Config::Whitespace;

@@ -41,6 +41,7 @@ LegendItemDialog::LegendItemDialog(LegendItem *item, QWidget *parent)
   addDialogPage(page);
 
   setupLegend();
+
 }
 
 

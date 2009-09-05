@@ -172,5 +172,16 @@ private:
   T* ptr;
 };
 
+
+template <typename T, typename U>
+inline SharedPtr<T> kst_cast(SharedPtr<U> object) {
+  return qobject_cast<T*>(object.data());
+}
+// FIXME: make this safe
+template <typename T>
+inline SharedPtr<T> kst_cast(QObject *object) {
+  return qobject_cast<T*>(object);
+}
+
 }
 #endif

@@ -44,12 +44,6 @@ class Data {
 
     virtual void removeCurveFromPlots(Relation *c); // no sharedptr here
 
-#if 0
-    /** Save a vector to a file */
-    virtual int vectorToFile(VectorPtr v, QFile *f);
-    virtual int vectorsToFile(const VectorList& l, QFile *f, bool interpolate);
-#endif
-
     /** The list of plots for the current view. */
     virtual QList<PlotItemInterface*> plotList() const;
 

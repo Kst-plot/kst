@@ -29,13 +29,6 @@
 
 namespace Kst {
 
-// Forward Declarations
-//class Matrix;
-//class Scalar;
-//class KstString;
-//class Vector;
-//class DataSource;
-
 class ObjectNameIndex;
 
 

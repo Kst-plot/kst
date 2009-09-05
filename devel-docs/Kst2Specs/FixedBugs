@@ -1102,3 +1102,6 @@ Sensible filter in image dialog
 
 Rotated axis number label spacing is wrong
 
+--------------------
+
+ASCII settings are ignored unless they are the global defaults.

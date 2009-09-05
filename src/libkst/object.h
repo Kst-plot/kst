@@ -73,17 +73,6 @@ class Object : public QObject, public Shared, public KstRWLock, public NamedObje
 } KST_EXPORT;
 
 
-
-template <typename T, typename U>
-inline SharedPtr<T> kst_cast(SharedPtr<U> object) {
-  return qobject_cast<T*>(object.data());
-}
-// FIXME: make this safe
-template <typename T>
-inline SharedPtr<T> kst_cast(QObject *object) {
-  return qobject_cast<T*>(object);
-}
-
 }
 
 Q_DECLARE_METATYPE(Kst::Object*)

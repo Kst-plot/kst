@@ -94,26 +94,6 @@ void Data::removeCurveFromPlots(Relation *c) {
   // meaningless in no GUI: no plots!
 }
 
-
-#if 0
-int Data::vectorToFile(VectorPtr v, QFile *f) {
-  Q_UNUSED(v)
-  Q_UNUSED(f)
-  // FIXME: implement me (non-gui)
-  return 0;
-}
-
-
-int Data::vectorsToFile(const VectorList& l, QFile *f, bool interpolate) {
-  Q_UNUSED(l)
-  Q_UNUSED(f)
-  Q_UNUSED(interpolate)
-  // FIXME: implement me (non-gui)
-  return 0;
-}
-#endif
-
-
 QList<PlotItemInterface*> Data::plotList() const {
   return QList<PlotItemInterface*>();
 }

@@ -20,7 +20,7 @@
 
 #include "kst_export.h"
 #include "viewcommand.h"
-#include "view.h" //forward declare, but enums??
+#include "view.h"
 #include "curveplacement.h"
 
 namespace Kst {
