@@ -44,6 +44,7 @@ class KST_EXPORT Matrix : public Primitive {
     virtual ~Matrix();
 
     friend class ObjectStore;
+    virtual void _initializeShortName();
 
   public:
     void change(uint nX, uint nY, double minX=0, double minY=0,

@@ -134,17 +134,21 @@ void ViewItemDialog::slotEditMultiple() {
 }
 
 
-void ViewItemDialog::addMultipleEditOption(QString name, QString descriptionTip, ViewItem* item) {
+void ViewItemDialog::addMultipleEditOption(QString name, QString descriptionTip, QString shortName) {
   _editMultipleWidget->addObject(name, descriptionTip);
-  multiItems.insert(name, item);
+  _multiNameShortName.insert(name, shortName);
 }
 
 
 QList<ViewItem*> ViewItemDialog::selectedMultipleEditObjects() {
   QList<ViewItem*> selectedItems;
+  QList<ViewItem*> allItiems = ViewItem::getItems<ViewItem>();
   foreach(QString name, _editMultipleWidget->selectedObjects()) {
-    if (multiItems.contains(name)) {
-      selectedItems.append(multiItems[name]);
+    if (_multiNameShortName.contains(name)) {
+      QString shortName = _multiNameShortName[name];
+      foreach (ViewItem *item, allItiems) {
+      }
+    //  selectedItems.append(multiItems[name]);
     }
   }
   return selectedItems;
@@ -153,7 +157,7 @@ QList<ViewItem*> ViewItemDialog::selectedMultipleEditObjects() {
 
 void ViewItemDialog::clearMultipleEditOptions() {
   _editMultipleWidget->clearObjects();
-  multiItems.clear();
+  _multiNameShortName.clear();
 }
 
 

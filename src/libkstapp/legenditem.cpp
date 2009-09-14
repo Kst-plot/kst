@@ -46,6 +46,12 @@ LegendItem::LegendItem(PlotItem *parent)
 
   QPointF origin = QPointF(parent->width() / 10, parent->height() / 5);
   setPos(origin);
+
+  _shortName = "L"+QString::number(_lnum);
+  if (_lnum>max_lnum)
+    max_lnum = _lnum;
+  _lnum++;
+
 }
 
 
@@ -296,6 +302,30 @@ qreal LegendItem::fontScale() const {
 
 void LegendItem::setFontScale(const qreal scale) {
   _fontScale = scale;
+}
+
+QString LegendItem::_automaticDescriptiveName() const {
+
+  QString name = i18n("Empty Legend");
+  if (_auto) {
+    name = _plotItem->descriptiveName();
+  } else if (_relations.length()>0) {
+    name = _relations.at(0)->descriptiveName();
+    if (_relations.length()>1) {
+      name += ", ...";
+    }
+  }
+  //qDebug() << "a desc name called: " << name << " relation.length: " << _relations.length();
+  return name;
+}
+
+QString LegendItem::descriptionTip() const {
+  QString contents;
+  foreach (Relation *relation, _relations) {
+    contents += QString("  %1\n").arg(relation->Name());
+  }
+
+  return i18n("Plot: %1 \nContents:\n %2").arg(Name()).arg(contents);
 }
 
 }

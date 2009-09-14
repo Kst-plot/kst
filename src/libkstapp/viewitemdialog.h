@@ -42,7 +42,7 @@ class KST_EXPORT ViewItemDialog : public Dialog
     void setTagString(const QString& tagString) { _tagString->setText(tagString); }
     QString tagString() const { return _tagString->text(); }
 
-    void addMultipleEditOption(QString name, QString descriptionTip, ViewItem* item);
+    void addMultipleEditOption(QString name, QString descriptionTip, QString shortName);
     QList<ViewItem*> selectedMultipleEditObjects();
     void clearMultipleEditOptions();
 
@@ -80,7 +80,7 @@ class KST_EXPORT ViewItemDialog : public Dialog
   private:
     QPointer<ViewItem> _item;
 
-    QMap <QString, ViewItem*> multiItems;
+    QMap <QString, QString> _multiNameShortName;
     QLabel *_tagStringLabel;
     QLineEdit *_tagString;
     EditMultipleWidget *_editMultipleWidget;

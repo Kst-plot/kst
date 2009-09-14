@@ -64,15 +64,14 @@ PSD::PSD(ObjectStore *store)
   ov->setSlaveName("psd");
   ov->resize(2);
   _sVector = _outputVectors.insert(SVECTOR, ov).value();
-
-  _shortName = "S"+QString::number(_psdnum);
-  if (_psdnum>max_psdnum) 
-    max_psdnum = _psdnum;
-  _psdnum++;
-
-
 }
 
+void PSD::_initializeShortName() {
+  _shortName = "S"+QString::number(_psdnum);
+  if (_psdnum>max_psdnum)
+    max_psdnum = _psdnum;
+  _psdnum++;
+}
 
 void PSD::change(VectorPtr in_V,
                                double in_freq, bool in_average, int in_averageLen, bool in_apodize,

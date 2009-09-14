@@ -56,8 +56,12 @@ class LegendItem : public ViewItem {
     virtual void saveInPlot(QXmlStreamWriter &xml);
     virtual bool configureFromXml(QXmlStreamReader &xml, ObjectStore *store);
 
+    QString descriptionTip() const;
   public Q_SLOTS:
     virtual void edit();
+
+  protected:
+    virtual QString _automaticDescriptiveName() const;
 
   private:
     QSize paintRelation(RelationPtr relation, QPixmap *pixmap, const QFont &font);

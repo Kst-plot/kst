@@ -75,16 +75,18 @@ Curve::Curve(ObjectStore *store)
   setBarStyle(0);
   setPointDensity(0);
 
-  _shortName = "C"+QString::number(_cnum);
-  if (_cnum>max_cnum) 
-    max_cnum = _cnum;
-  _cnum++;
-
   MaxX = MinX = MeanX = MaxY = MinY = MeanY = MinPosX = MinPosY = 0;
   NS = 0;
   _typeString = i18n("Curve");
   _type = "Curve";
   Color = QColor();
+}
+
+void Curve::_initializeShortName() {
+  _shortName = "C"+QString::number(_cnum);
+  if (_cnum>max_cnum)
+    max_cnum = _cnum;
+  _cnum++;
 }
 
 

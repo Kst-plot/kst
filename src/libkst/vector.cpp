@@ -43,7 +43,6 @@ const QString Vector::staticTypeTag = I18N_NOOP("vector");
 /** Create a vector */
 Vector::Vector(ObjectStore *store)
     : Primitive(store, 0L), _nsum(0) {
-  //qDebug() << "+++ CREATING VECTOR: " << (void*) this;
 
   _editable = false;
   NumShifted = 0;
@@ -67,12 +66,14 @@ Vector::Vector(ObjectStore *store)
   CreateScalars(store);
   blank();
 
+}
+
+void Vector::_initializeShortName() {
   _shortName = "V"+QString::number(_vnum);
-  if (_vnum>max_vnum) 
+  if (_vnum>max_vnum)
     max_vnum = _vnum;
   _vnum++;
 }
-
 
 Vector::~Vector() {
   // qDebug() << "+++ DELETING VECTOR: " << (void*) this;

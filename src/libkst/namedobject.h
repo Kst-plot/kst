@@ -37,7 +37,9 @@ extern int _psdnum; // psd
 extern int _xnum; // scalars
 extern int _tnum; // text string
 extern int _mnum; // matrix
-extern int _gnum; // plot item
+extern int _plotnum; // plot item
+extern int _lnum; // legend
+extern int _dnum; // view item (drawable)
 
 extern int max_vnum; // vectors
 extern int max_pnum; // plugins
@@ -50,7 +52,9 @@ extern int max_psdnum; // psd
 extern int max_xnum; // scalars
 extern int max_tnum; // string
 extern int max_mnum; // matrix
-extern int max_gnum; // plot item
+extern int max_plotnum; // plot item
+extern int max_lnum; // legend
+extern int max_dnum; // view item
 
 class NamedObject {
 public: 
@@ -69,7 +73,9 @@ public:
       XNUM   = 0x0100,
       TNUM   = 0x0200,
       MNUM   = 0x0400,
-      GNUM   = 0x0800
+      PLOTNUM= 0x0800,
+      LNUM   = 0x1000,
+      DNUM   = 0x2000
     };
 
     // name system: see object names devel doc
@@ -86,6 +92,7 @@ public:
 
   protected:
     virtual QString _automaticDescriptiveName() const= 0;
+    virtual void _initializeShortName() = 0;
     QString _manualDescriptiveName;
     QString _shortName;
     virtual void saveNameInfo(QXmlStreamWriter &s, unsigned I = 0xffff);
@@ -103,8 +110,9 @@ public:
     int _initial_tnum; // text string
     int _initial_mnum; // matrix
 
-    int _initial_gnum; // plot item
-
+    int _initial_plotnum; // plot item
+    int _initial_lnum; // legend
+    int _initial_dnum; // view item
 };
 
 }

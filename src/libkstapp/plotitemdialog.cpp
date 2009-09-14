@@ -137,7 +137,7 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
   QList<PlotItem*> list = PlotItemManager::plotsForView(_plotItem->parentView());
   clearMultipleEditOptions();
   foreach(PlotItem* plot, list) {
-    addMultipleEditOption(plot->plotName(), plot->descriptionTip(), plot);
+    addMultipleEditOption(plot->plotName(), plot->descriptionTip(), plot->shortName());
   }
 
   connect(this, SIGNAL(editMultipleMode()), this, SLOT(editMultiple()));

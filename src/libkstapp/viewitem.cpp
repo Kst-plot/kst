@@ -10,13 +10,12 @@
  ***************************************************************************/
 
 #include "viewitem.h"
-#include "application.h"
 #include "applicationsettings.h"
-#include "tabwidget.h"
 #include "viewitemdialog.h"
 #include "viewgridlayout.h"
 #include "plotitem.h"
 #include "plotitemmanager.h"
+#include "document.h"
 
 #include "layoutboxitem.h"
 
@@ -113,6 +112,14 @@ ViewItem::ViewItem(View *parent)
 
 
 ViewItem::~ViewItem() {
+}
+
+void ViewItem::_initializeShortName() {
+  _shortName = "D"+QString::number(_dnum);
+  if (_dnum>max_dnum)
+    max_dnum = _dnum;
+  _dnum++;
+
 }
 
 
@@ -1863,6 +1870,13 @@ void ViewItem::setTiedZoom(bool tiedXZoom, bool tiedYZoom, bool checkAllTied) {
   update();
 }
 
+QString ViewItem::_automaticDescriptiveName() const {
+  return typeName();
+}
+
+QString ViewItem::descriptionTip() const {
+  return typeName();
+}
 
 #ifndef QT_NO_DEBUG_STREAM
 QDebug operator<<(QDebug dbg, ViewItem *viewItem) {
@@ -2075,7 +2089,6 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
   }
   _item->parentView()->undoStack()->push(this);
 }
-
 
 void MoveCommand::undo() {
   Q_ASSERT(_item);

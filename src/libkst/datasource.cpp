@@ -60,6 +60,8 @@ void DataSource::init() {
   initPlugins();
 }
 
+void DataSource::_initializeShortName() {
+}
 
 static PluginList _pluginList;
 void DataSource::cleanupForExit() {

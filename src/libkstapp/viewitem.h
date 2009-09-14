@@ -18,17 +18,24 @@
 #include <QHash>
 #include <QAction>
 
+#include "namedobject.h"
 #include "kst_export.h"
 #include "viewcommand.h"
 #include "view.h"
 #include "curveplacement.h"
+//#include "sharedptr.h"
+#include "application.h"
+#include "tabwidget.h"
 
 namespace Kst {
 
 class DialogPage;
 class ViewGridLayout;
+class ViewItem;
 
-class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
+typedef QList<ViewItem *> ViewItemList;
+
+class KST_EXPORT ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 {
   Q_OBJECT
   public:
@@ -184,6 +191,8 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     virtual void setItemPen(const QPen & pen) { setPen(pen); };
     virtual void setItemBrush(const QBrush & brush) { setBrush(brush); };
 
+    template<class T> static QList<T *> getItems();
+
   Q_SIGNALS:
     void geometryChanged();
     void creationComplete();
@@ -233,6 +242,8 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
     void addTitle(QMenu *menu) const;
     void registerShortcut(QAction *action);
 
+    QString descriptionTip() const;
+
   protected Q_SLOTS:
     virtual void creationPolygonChanged(View::CreationEvent event);
 
@@ -264,7 +275,8 @@ class KST_EXPORT ViewItem : public QObject, public QGraphicsRectItem
 
   protected:
     virtual void updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect);
-
+    virtual QString _automaticDescriptiveName() const;
+    virtual void _initializeShortName();
   private:
     GripMode _gripMode;
     GripModes _allowedGripModes;
@@ -479,6 +491,36 @@ class KST_EXPORT RotateCommand : public TransformCommand
 
     virtual ~RotateCommand() {}
 };
+
+// FIXME: This returns a list of ungaurded pointers; if the object is deleted
+// between when the list is aquired and when one of the pointers is de-referenced,
+// there will be a crash.  They are unguarded, because they are normally held by the
+// scene as unguarded pointers, so it is too late to add a guard.
+// I can't see a way of fixing it easily.  The best option
+// for now is to minimize the cross section of this: use the pointers
+// immediately after getting them, and don't hold them waiting for the
+// user to delete the object they refer to...  The user might still be able to arrange
+// a crash, however.
+template<class T>
+QList<T *> ViewItem::getItems() {
+  QList<T *> tItems;
+  ViewItem *viewItem;
+  T* tItem;
+
+  QList<View*> views = kstApp->mainWindow()->tabWidget()->views();
+
+  for (int i_view = 0; i_view<views.count(); i_view++) {
+    QList<QGraphicsItem*> items = views.at(i_view)->scene()->items();
+    for (int i_item = 0; i_item<items.count(); i_item++) {
+      viewItem = qgraphicsitem_cast<ViewItem *>(items[i_item]);
+      tItem = dynamic_cast<T*>(viewItem);
+      if (tItem) {
+        tItems.append(tItem);
+      }
+    }
+  }
+  return tItems;
+}
 
 }
 

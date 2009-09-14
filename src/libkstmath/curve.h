@@ -160,6 +160,7 @@ class KST_EXPORT Curve: public Relation {
     friend class ObjectStore;
 
     virtual QString _automaticDescriptiveName() const;
+    virtual void _initializeShortName();
 
   private:
     double MeanY;

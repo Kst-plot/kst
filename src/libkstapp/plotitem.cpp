@@ -135,10 +135,10 @@ PlotItem::PlotItem(View *parent)
   setProjectionRect(QRectF(QPointF(-0.1, -0.1), QPointF(0.1, 0.1)));
   renderItem(PlotRenderItem::Cartesian);
 
-  _shortName = "G"+QString::number(_gnum);
-  if (_gnum>max_gnum)
-    max_gnum = _gnum;
-  _gnum++;
+  _shortName = "P"+QString::number(_plotnum);
+  if (_plotnum>max_plotnum)
+    max_plotnum = _plotnum;
+  _plotnum++;
 
   setPlotBordersDirty(true);
   connect(this, SIGNAL(triggerRedraw()), this, SLOT(redrawPlot()));
@@ -179,7 +179,7 @@ void PlotItem::save(QXmlStreamWriter &xml) {
     xml.writeAttribute("globalfontscale", QVariant(_globalFontScale).toString());
     xml.writeAttribute("globalfontcolor", QVariant(_globalFontColor).toString());
     xml.writeAttribute("showlegend", QVariant(_showLegend).toString());
-    saveNameInfo(xml, GNUM);
+    saveNameInfo(xml, PLOTNUM);
 
     ViewItem::save(xml);
     legend()->saveInPlot(xml);

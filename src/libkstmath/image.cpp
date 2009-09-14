@@ -42,10 +42,6 @@ Image::Image(ObjectStore *store) : Relation(store) {
   _hasColorMap = false;
   setColorDefaults();
   setContourDefaults();
-  _shortName = "I"+QString::number(_inum);
-  if (_inum>max_inum) 
-    max_inum = _inum;
-  _inum++;
 
 }
 
@@ -53,6 +49,12 @@ Image::Image(ObjectStore *store) : Relation(store) {
 Image::~Image() {
 }
 
+void Image::_initializeShortName() {
+  _shortName = "I"+QString::number(_inum);
+  if (_inum>max_inum)
+    max_inum = _inum;
+  _inum++;
+}
 
 void Image::save(QXmlStreamWriter &s) {
   s.writeStartElement(staticTypeTag);

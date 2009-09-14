@@ -58,9 +58,11 @@ Histogram::Histogram(ObjectStore *store)
   v->setSlaveName("num");
   v->resize(2);
   _hVector = _outputVectors.insert(HIST, v).value();
+}
 
+void Histogram::_initializeShortName() {
   _shortName = "H"+QString::number(_hnum);
-  if (_hnum>max_hnum) 
+  if (_hnum>max_hnum)
     max_hnum = _hnum;
   _hnum++;
 }

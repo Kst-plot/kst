@@ -105,6 +105,7 @@ class KST_EXPORT PSD : public DataObject {
     friend class ObjectStore;
 
     virtual QString _automaticDescriptiveName() const;
+    virtual void _initializeShortName();
 
   private:
     void updateVectorLabels();

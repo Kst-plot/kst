@@ -31,7 +31,11 @@ NamedObject::NamedObject() : _manualDescriptiveName(QString()), _shortName(QStri
   _initial_xnum = _xnum; // scalars
   _initial_tnum = _tnum; // text string
   _initial_mnum = _mnum; // text string
+  _initial_plotnum = _plotnum; // plots
+  _initial_lnum = _lnum; // legend
+  _initial_dnum = _dnum; // view image
 
+  _initializeShortName();
 }
 
 NamedObject::~NamedObject() {
@@ -101,7 +105,12 @@ void NamedObject::saveNameInfo(QXmlStreamWriter &s, unsigned I) {
     s.writeAttribute("initialTNum", QString::number(_initial_tnum));
   if (I & MNUM)
     s.writeAttribute("initialMNum", QString::number(_initial_mnum));
-
+  if (I & PLOTNUM)
+    s.writeAttribute("initialPlotNum", QString::number(_initial_plotnum));
+  if (I & LNUM)
+    s.writeAttribute("initialLNum", QString::number(_initial_lnum));
+  if (I & DNUM)
+    s.writeAttribute("initialDNum", QString::number(_initial_dnum));
 }
 
 void NamedObject::processShortNameIndexAttributes(QXmlStreamAttributes &attrs) {
@@ -150,6 +159,18 @@ void NamedObject::processShortNameIndexAttributes(QXmlStreamAttributes &attrs) {
   R = attrs.value("initialMNum");
   if (!R.isEmpty()) 
     _mnum = R.toString().toInt();
+
+  R = attrs.value("initialPlotNum");
+  if (!R.isEmpty())
+    _plotnum = R.toString().toInt();
+
+  R = attrs.value("initialLNum");
+  if (!R.isEmpty())
+    _lnum = R.toString().toInt();
+
+  R = attrs.value("initialDNum");
+  if (!R.isEmpty())
+    _dnum = R.toString().toInt();
 }
 
 
@@ -166,6 +187,9 @@ void NamedObject::resetNameIndex() {
   _xnum = 1; // scalars
   _tnum = 1; // text string
   _mnum = 1; // matrix
+  _plotnum = 1; // plots
+  _lnum = 1; // legends
+  _dnum = 1; // other view objects
 
   max_vnum = 0; // vectors
   max_pnum = 0; // plugins
@@ -178,6 +202,9 @@ void NamedObject::resetNameIndex() {
   max_xnum = 0; // scalars
   max_tnum = 0; // text string
   max_mnum = 0; // matrix
+  max_plotnum = 0;
+  max_lnum = 0;
+  max_dnum = 0;
 }
 
 // QString NamedObject::descriptionTip() const {

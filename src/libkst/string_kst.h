@@ -42,6 +42,7 @@ class KST_EXPORT String : public Primitive {
 
     friend class ObjectStore;
     virtual QString _automaticDescriptiveName() const;
+    virtual void _initializeShortName();
 
   public:
     /** Save information */

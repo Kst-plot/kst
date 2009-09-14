@@ -93,6 +93,7 @@ class KST_EXPORT CSD : public DataObject {
     friend class ObjectStore;
 
     virtual QString _automaticDescriptiveName() const;
+    virtual void _initializeShortName();
 
   private:
     void updateMatrixLabels();

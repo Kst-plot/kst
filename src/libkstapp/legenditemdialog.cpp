@@ -42,6 +42,9 @@ LegendItemDialog::LegendItemDialog(LegendItem *item, QWidget *parent)
 
   setupLegend();
 
+  setSupportsMultipleEdit(true);
+
+  QList<LegendItem *> legends = ViewItem::getItems<LegendItem>();
 }
 
 

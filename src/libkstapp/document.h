@@ -22,6 +22,7 @@ namespace Kst {
 class MainWindow;
 class SessionModel;
 class View;
+class ViewItem;
 
 class Document : public CoreDocument {
   public:
@@ -46,6 +47,7 @@ class Document : public CoreDocument {
     void createView();
 
     View *currentView() const;
+
   private:
     QPointer<MainWindow> _win;
     SessionModel *_session;

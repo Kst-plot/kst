@@ -50,13 +50,14 @@ CSD::CSD(ObjectStore *store)
   outMatrix->setSlaveName("SG");
   outMatrix->change(1, 1);
   _outMatrix = _outputMatrices.insert(OUTMATRIX, outMatrix).value();
+}
 
+void CSD::_initializeShortName() {
   _shortName = "G"+QString::number(_csdnum);
-  if (_csdnum>max_csdnum) 
+  if (_csdnum>max_csdnum)
     max_csdnum = _csdnum;
   _csdnum++;
 }
-
 
 void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
     bool in_removeMean, bool in_apodize, ApodizeFunction in_apodizeFxn,

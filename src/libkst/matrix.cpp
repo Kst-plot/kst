@@ -47,11 +47,6 @@ Matrix::Matrix(ObjectStore *store)
 
   createScalars(store);
 
-  _shortName = "M"+QString::number(_mnum);
-  if (_mnum>max_mnum) 
-    max_mnum = _mnum;
-  _mnum++;
-
 }
 
 
@@ -60,6 +55,13 @@ Matrix::~Matrix() {
     free(_z);
     _z = 0L;
   }
+}
+
+void Matrix::_initializeShortName() {
+  _shortName = "M"+QString::number(_mnum);
+  if (_mnum>max_mnum)
+    max_mnum = _mnum;
+  _mnum++;
 }
 
 

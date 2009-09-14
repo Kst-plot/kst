@@ -46,12 +46,14 @@ void Scalar::clearScalarsDirty() {
 Scalar::Scalar(ObjectStore *store)
     : Primitive(store, 0L), _value(0.0), _orphan(false), _displayable(true), _editable(false) {
 
+}
+
+void Scalar::_initializeShortName() {
   _shortName = "X"+QString::number(_xnum);
-  if (_xnum>max_xnum) 
+  if (_xnum>max_xnum)
     max_xnum = _xnum;
   _xnum++;
 }
-
 
 Scalar::~Scalar() {
 }

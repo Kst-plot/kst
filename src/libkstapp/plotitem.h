@@ -24,6 +24,7 @@
 #include "plotiteminterface.h"
 #include "plotdefines.h"
 #include "plotmarkers.h"
+#include "namedobject.h"
 
 #include "plotaxis.h"
 #include "legenditem.h"
@@ -114,7 +115,7 @@ class PlotLabel : public QObject {
 };
 
 
-class PlotItem : public ViewItem, public PlotItemInterface, public NamedObject
+class PlotItem : public ViewItem, public PlotItemInterface
 {
   Q_OBJECT
   public:

@@ -62,6 +62,7 @@ class Vector : public Primitive {
 
     friend class ObjectStore; 
 
+    virtual void _initializeShortName();
   public:
     void change(QByteArray& data);
 

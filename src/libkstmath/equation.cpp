@@ -75,17 +75,19 @@ Equation::Equation(ObjectStore *store)
 
   _isValid = false;
   _numNew = _numShifted = 0;
-
-  _shortName = "E"+QString::number(_enum);
-  if (_enum>max_enum) 
-    max_enum = _enum;
-  _enum++;
 }
 
 
 Equation::~Equation() {
   delete _pe;
   _pe = 0L;
+}
+
+void Equation::_initializeShortName() {
+  _shortName = "E"+QString::number(_enum);
+  if (_enum>max_enum)
+    max_enum = _enum;
+  _enum++;
 }
 
 
