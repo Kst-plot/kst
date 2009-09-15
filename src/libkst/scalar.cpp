@@ -46,6 +46,8 @@ void Scalar::clearScalarsDirty() {
 Scalar::Scalar(ObjectStore *store)
     : Primitive(store, 0L), _value(0.0), _orphan(false), _displayable(true), _editable(false) {
 
+  _initializeShortName();
+
 }
 
 void Scalar::_initializeShortName() {

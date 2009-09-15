@@ -35,7 +35,6 @@ NamedObject::NamedObject() : _manualDescriptiveName(QString()), _shortName(QStri
   _initial_lnum = _lnum; // legend
   _initial_dnum = _dnum; // view image
 
-  _initializeShortName();
 }
 
 NamedObject::~NamedObject() {
@@ -206,6 +205,9 @@ void NamedObject::resetNameIndex() {
   max_lnum = 0;
   max_dnum = 0;
 }
+
+//void NamedObject::_initializeShortName() {
+//}
 
 // QString NamedObject::descriptionTip() const {
 //   return Name();

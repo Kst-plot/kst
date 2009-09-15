@@ -72,6 +72,7 @@ EventMonitorEntry::EventMonitorEntry(ObjectStore *store) : DataObject(store) {
 
   _typeString = staticTypeString;
   _type = "Event";
+  _initializeShortName();
 
   VectorPtr xv = store->createObject<Vector>();
   xv->resize(NS);
@@ -84,6 +85,8 @@ EventMonitorEntry::EventMonitorEntry(ObjectStore *store) : DataObject(store) {
   _yVector = _outputVectors.insert(OUTYVECTOR, yv);
 }
 
+void EventMonitorEntry::_initializeShortName() {
+}
 
 bool EventMonitorEntry::reparse() {
   _isValid = false;

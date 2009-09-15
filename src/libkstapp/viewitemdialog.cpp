@@ -147,6 +147,9 @@ QList<ViewItem*> ViewItemDialog::selectedMultipleEditObjects() {
     if (_multiNameShortName.contains(name)) {
       QString shortName = _multiNameShortName[name];
       foreach (ViewItem *item, allItiems) {
+        if (item->shortName() == shortName) {
+          selectedItems.append(item);
+        }
       }
     //  selectedItems.append(multiItems[name]);
     }
@@ -327,9 +330,11 @@ void ViewItemDialog::saveLayout(ViewItem *item) {
 void ViewItemDialog::dimensionsChanged() {
   Q_ASSERT(_item);
   if (_mode == Multiple) {
-    foreach(ViewItem* item, selectedMultipleEditObjects()) {
-      saveDimensions(item);
-    }
+    // FIXME: what makes sense for edit multiple in here?
+    // decide, then make it work.  Probably rotation.  Maybe size.
+    //foreach(ViewItem* item, selectedMultipleEditObjects()) {
+    //  saveDimensions(item);
+    //}
   } else {
     saveDimensions(_item);
   }
@@ -380,9 +385,7 @@ void ViewItemDialog::saveDimensions(ViewItem *item) {
     item->setLockAspectRatio(false);
   }
 
-  if (_mode != Multiple) {
-    item->setPos(parentX + _dimensionsTab->x()*parentWidth, parentY + _dimensionsTab->y()*parentHeight);
-  }
+  item->setPos(parentX + _dimensionsTab->x()*parentWidth, parentY + _dimensionsTab->y()*parentHeight);
   item->setViewRect(-width/2, -height/2, width, height);
 
   qreal rotation = _dimensionsTab->rotationDirty() ? _dimensionsTab->rotation() :item->rotationAngle();

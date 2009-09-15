@@ -95,6 +95,8 @@ PlotItem::PlotItem(View *parent)
   _i_per(0)
 {
   setTypeName("Plot");
+  _initializeShortName();
+
   setBrush(Qt::white);
 
   setSupportsTiedZoom(true);
@@ -135,11 +137,6 @@ PlotItem::PlotItem(View *parent)
   setProjectionRect(QRectF(QPointF(-0.1, -0.1), QPointF(0.1, 0.1)));
   renderItem(PlotRenderItem::Cartesian);
 
-  _shortName = "P"+QString::number(_plotnum);
-  if (_plotnum>max_plotnum)
-    max_plotnum = _plotnum;
-  _plotnum++;
-
   setPlotBordersDirty(true);
   connect(this, SIGNAL(triggerRedraw()), this, SLOT(redrawPlot()));
   connect(this, SIGNAL(geometryChanged()), this, SLOT(setLabelsDirty()));
@@ -160,6 +157,13 @@ PlotItem::~PlotItem() {
   PlotItemManager::self()->removePlot(this);
 }
 
+void PlotItem::_initializeShortName() {
+  _shortName = "P"+QString::number(_plotnum);
+  if (_plotnum>max_plotnum)
+    max_plotnum = _plotnum;
+  _plotnum++;
+
+}
 
 QString PlotItem::plotName() const {
   return Name();

@@ -51,6 +51,7 @@ PSD::PSD(ObjectStore *store)
 : DataObject(store) {
   _typeString = staticTypeString;
   _type = "PowerSpectrum";
+  _initializeShortName();
 
   Q_ASSERT(store);
   VectorPtr ov = store->createObject<Vector>();

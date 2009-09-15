@@ -79,6 +79,7 @@ Curve::Curve(ObjectStore *store)
   NS = 0;
   _typeString = i18n("Curve");
   _type = "Curve";
+  _initializeShortName();
   Color = QColor();
 }
 

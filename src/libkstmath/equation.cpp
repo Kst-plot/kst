@@ -57,6 +57,7 @@ Equation::Equation(ObjectStore *store)
   _pe = 0L;
   _typeString = i18n("Equation");
   _type = "Equation";
+  _initializeShortName();
 
   Q_ASSERT(store);
   _xOutVector = store->createObject<Vector>();

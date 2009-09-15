@@ -44,6 +44,8 @@ CSD::CSD(ObjectStore *store)
   _typeString = staticTypeString;
   _type = "Cumulative Spectral Decay";
 
+  _initializeShortName();
+
   Q_ASSERT(store);
   MatrixPtr outMatrix = store->createObject<Matrix>();
   outMatrix->setProvider(this);

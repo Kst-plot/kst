@@ -38,6 +38,8 @@ LegendItem::LegendItem(PlotItem *parent)
   : ViewItem(parent->parentView()), _plotItem(parent), _auto(true), _fontScale(0.0), _verticalDisplay(true) {
   setTypeName("Legend");
 
+  _initializeShortName();
+
   setAllowedGripModes(Move /*| Resize*/ /*| Rotate*/ /*| Scale*/);
 
   setViewRect(0.0, 0.0, 0.0, 0.0);
@@ -46,12 +48,13 @@ LegendItem::LegendItem(PlotItem *parent)
 
   QPointF origin = QPointF(parent->width() / 10, parent->height() / 5);
   setPos(origin);
+}
 
+void LegendItem::_initializeShortName() {
   _shortName = "L"+QString::number(_lnum);
   if (_lnum>max_lnum)
     max_lnum = _lnum;
   _lnum++;
-
 }
 
 

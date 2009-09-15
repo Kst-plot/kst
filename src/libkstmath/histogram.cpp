@@ -42,6 +42,7 @@ Histogram::Histogram(ObjectStore *store)
   setRealTimeAutoBin(false);
   _typeString = staticTypeString;
   _type = "Histogram";
+  _initializeShortName();
 
   // _Bins, _bVector and _hVector need to be valid, 
   // so initialize them as size 2 (where 2 is a small valid number)

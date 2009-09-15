@@ -30,6 +30,8 @@ const QString String::staticTypeTag = I18N_NOOP("string");
 String::String(ObjectStore *store)
     : Primitive(store, 0L), _value(QString::null), _orphan(false), _editable(false) {
 
+  _initializeShortName();
+
 }
 
 void String::_initializeShortName() {

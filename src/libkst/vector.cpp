@@ -44,6 +44,8 @@ const QString Vector::staticTypeTag = I18N_NOOP("vector");
 Vector::Vector(ObjectStore *store)
     : Primitive(store, 0L), _nsum(0) {
 
+  _initializeShortName();
+
   _editable = false;
   NumShifted = 0;
   NumNew = 0;

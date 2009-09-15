@@ -22,7 +22,6 @@
 #include "objectstore.h"
 #include "mainwindow.h"
 #include "document.h"
-#include "plotitemmanager.h"
 
 #include "curve.h"
 #include "curvedialog.h"
@@ -134,7 +133,7 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
     setTagString(_defaultTagString);
   }
 
-  QList<PlotItem*> list = PlotItemManager::plotsForView(_plotItem->parentView());
+  QList<PlotItem*> list = ViewItem::getItems<PlotItem>();
   clearMultipleEditOptions();
   foreach(PlotItem* plot, list) {
     addMultipleEditOption(plot->plotName(), plot->descriptionTip(), plot->shortName());

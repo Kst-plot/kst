@@ -62,7 +62,7 @@ class LegendItem : public ViewItem {
 
   protected:
     virtual QString _automaticDescriptiveName() const;
-
+    virtual void _initializeShortName();
   private:
     QSize paintRelation(RelationPtr relation, QPixmap *pixmap, const QFont &font);
 

@@ -38,6 +38,8 @@ static const QLatin1String& THEMATRIX = QLatin1String("THEMATRIX");
 Image::Image(ObjectStore *store) : Relation(store) {
   _typeString = staticTypeString;
   _type = "Image";
+  _initializeShortName();
+
   _hasContourMap = false;
   _hasColorMap = false;
   setColorDefaults();

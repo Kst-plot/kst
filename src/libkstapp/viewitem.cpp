@@ -44,7 +44,7 @@ static const int DRAWING_ZORDER = 500;
 namespace Kst {
 
 ViewItem::ViewItem(View *parent)
-  : QObject(parent),
+  : QObject(parent), NamedObject(),
     _isXTiedZoom(false),
     _isYTiedZoom(false),
     _gripMode(Move),
@@ -70,7 +70,7 @@ ViewItem::ViewItem(View *parent)
     _parentRelativeHeight(0),
     _parentRelativeWidth(0)
  {
-
+  _initializeShortName();
   setZValue(DRAWING_ZORDER);
   setAcceptsHoverEvents(true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);

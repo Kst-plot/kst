@@ -248,6 +248,8 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
   protected:
     virtual QString _automaticDescriptiveName() const;
+    virtual void _initializeShortName();
+
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect);
 
