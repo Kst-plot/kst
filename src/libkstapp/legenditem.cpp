@@ -46,8 +46,9 @@ LegendItem::LegendItem(PlotItem *parent)
   parentView()->scene()->addItem(this);
   setParent(_plotItem);
 
-  QPointF origin = QPointF(parent->width() / 10, parent->height() / 5);
+  QPointF origin = QPointF(parent->width() * 0.15, parent->height() * 0.15);
   setPos(origin);
+
 }
 
 void LegendItem::_initializeShortName() {
@@ -96,7 +97,8 @@ void LegendItem::paint(QPainter *painter) {
     legendPixmaps.append(item);
   }
 
-  int x = 0, y = 0;
+  int x = rect().left();
+  int y = rect().top();
 
   painter->save();
 

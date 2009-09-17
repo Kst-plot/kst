@@ -957,6 +957,9 @@ void DataWizard::finished() {
     plot->update();
     plot->parentView()->appendToLayout(_pagePlot->layout(), plot, _pagePlot->gridColumns());
 
+  }
+
+  foreach (PlotItem* plot, plotList) {
     if (_pagePlot->legendsOn()) {
       plot->setShowLegend(true);
       plot->legend()->setFontScale(fontScale);

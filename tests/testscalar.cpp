@@ -20,6 +20,8 @@
 #undef protected
 
 #include <math_kst.h>
+#include <kst_inf.h>
+
 #include <datacollection.h>
 #include <objectstore.h>
 

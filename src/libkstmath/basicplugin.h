@@ -101,7 +101,7 @@ class KST_EXPORT BasicPlugin : public DataObject {
 
     virtual QString parameterName(int index) const;
     QString _errorString;
-
+    virtual void _initializeShortName();
   private:
     bool inputsExist() const;
     void updateOutput() const;

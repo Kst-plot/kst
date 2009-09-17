@@ -14,6 +14,7 @@
 #include <QtTest>
 
 #include <math_kst.h>
+#include <kst_inf.h>
 #include <enodes.h>
 #include <eparse-eh.h>
 #include <objectstore.h>

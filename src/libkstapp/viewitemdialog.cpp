@@ -330,11 +330,9 @@ void ViewItemDialog::saveLayout(ViewItem *item) {
 void ViewItemDialog::dimensionsChanged() {
   Q_ASSERT(_item);
   if (_mode == Multiple) {
-    // FIXME: what makes sense for edit multiple in here?
-    // decide, then make it work.  Probably rotation.  Maybe size.
-    //foreach(ViewItem* item, selectedMultipleEditObjects()) {
-    //  saveDimensions(item);
-    //}
+    foreach(ViewItem* item, selectedMultipleEditObjects()) {
+      saveDimensions(item);
+    }
   } else {
     saveDimensions(_item);
   }
@@ -385,7 +383,13 @@ void ViewItemDialog::saveDimensions(ViewItem *item) {
     item->setLockAspectRatio(false);
   }
 
-  item->setPos(parentX + _dimensionsTab->x()*parentWidth, parentY + _dimensionsTab->y()*parentHeight);
+
+  if (_mode == Multiple) {
+    item->setPos(parentX + item->relativeCenter().x()*parentWidth,
+                 parentY + item->relativeCenter().y()*parentHeight);
+  } else {
+    item->setPos(parentX + _dimensionsTab->x()*parentWidth, parentY + _dimensionsTab->y()*parentHeight);
+  }
   item->setViewRect(-width/2, -height/2, width, height);
 
   qreal rotation = _dimensionsTab->rotationDirty() ? _dimensionsTab->rotation() :item->rotationAngle();

@@ -36,15 +36,19 @@ BasicPlugin::BasicPlugin(ObjectStore *store)
   _typeString = i18n("Plugin");
   _type = "Plugin";
 
-  _shortName = "P"+QString::number(_pnum);
-  if (_pnum>max_pnum) 
-    max_pnum = _pnum;
-  _pnum++;
-
+  _initializeShortName();
 }
 
 
 BasicPlugin::~BasicPlugin() {
+}
+
+void BasicPlugin::_initializeShortName() {
+  _shortName = "P"+QString::number(_pnum);
+  if (_pnum>max_pnum)
+    max_pnum = _pnum;
+  _pnum++;
+
 }
 
 

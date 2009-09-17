@@ -2328,6 +2328,8 @@ LegendItem* PlotItem::legend() {
   if (!_legend) {
     _legend = new LegendItem(this);
     _legend->setVisible(false);
+    _legend->setPos(rect().x() + width()*0.15, rect().y() + height()*0.15);
+    _legend->updateRelativeSize();
   }
   return _legend;
 }
