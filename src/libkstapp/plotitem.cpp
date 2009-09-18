@@ -2338,6 +2338,7 @@ LegendItem* PlotItem::legend() {
 void PlotItem::setShowLegend(const bool show) {
   if (show != _showLegend) {
     legend()->setVisible(show);
+    _showLegend = show;
   }
 }
 
