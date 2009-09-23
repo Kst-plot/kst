@@ -62,7 +62,7 @@ class KST_EXPORT LabelTab : public DialogTab, Ui::LabelTab {
     bool showLegendDirty() const;
     void setShowLegend(const bool show);
 
-    QFont globalLabelFont() const;
+    QFont globalLabelFont(const QFont ref_font) const;
     bool globalLabelFontDirty() const;
 
     qreal globalLabelFontScale() const;

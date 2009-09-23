@@ -21,11 +21,16 @@ LegendTab::LegendTab(QWidget *parent)
 
   setupUi(this);
 
-  //TODO Need icons.
-  _add->setText("Add");
-  _remove->setText("Remove");
-  _up->setText("Up");
-  _down->setText("Down");
+  _single = true;
+
+  _up->setIcon(QPixmap(":kst_uparrow.png"));
+  _down->setIcon(QPixmap(":kst_downarrow.png"));
+  _add->setIcon(QPixmap(":kst_rightarrow.png"));
+  _remove->setIcon(QPixmap(":kst_leftarrow.png"));
+  _up->setToolTip(i18n("Raise in list order: Alt+Up"));
+  _down->setToolTip(i18n("Lower in list order: Alt+Down"));
+  _add->setToolTip(i18n("Select: Alt+s"));
+  _remove->setToolTip(i18n("Remove: Alt+r"));
 
   connect(_add, SIGNAL(clicked()), this, SLOT(addButtonClicked()));
   connect(_remove, SIGNAL(clicked()), this, SLOT(removeButtonClicked()));
@@ -39,6 +44,8 @@ LegendTab::LegendTab(QWidget *parent)
 
   connect(_availableRelationList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
   connect(_displayedRelationList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
+  connect(_availableRelationList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(addButtonClicked()));
+  connect(_displayedRelationList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(removeButtonClicked()));
 
   connect(_autoContents, SIGNAL(stateChanged(int)), this, SLOT(updateActive()));
   connect(_autoContents, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
@@ -50,6 +57,9 @@ LegendTab::LegendTab(QWidget *parent)
   connect(_underline, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_italic, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_family, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
+
+  _displayedRelationList->setSortingEnabled(false);
+  _availableRelationList->setSortingEnabled(false);
 }
 
 
@@ -58,7 +68,7 @@ LegendTab::~LegendTab() {
 
 
 void LegendTab::updateActive() {
-  _contentGroupBox->setEnabled(!_autoContents->isChecked());
+  _contentGroupBox->setEnabled((!_autoContents->isChecked()) && _single);
 }
 
 
@@ -104,27 +114,30 @@ void LegendTab::addButtonClicked() {
 
 
 void LegendTab::upButtonClicked() {
-  int i = _displayedRelationList->currentRow();
-  if (i != -1) {
-    QListWidgetItem *item = _displayedRelationList->takeItem(i);
-    _displayedRelationList->insertItem(i-1, item);
-    _displayedRelationList->clearSelection();
-    item->setSelected(true);
-    updateButtons();
+  //_displayedRelationList->setFocus();
+
+  for (int i=1; i<_displayedRelationList->count(); i++) {
+    if (_displayedRelationList->item(i) && _displayedRelationList->item(i)->isSelected()) {
+      QListWidgetItem *item = _displayedRelationList->takeItem(i);
+      _displayedRelationList->insertItem(i-1, item);
+      item->setSelected(true);
+    }
   }
+  updateButtons();
 }
 
 
 void LegendTab::downButtonClicked() {
-  // move item down
-  int i = _displayedRelationList->currentRow();
-  if (i != -1) {
-    QListWidgetItem *item = _displayedRelationList->takeItem(i);
-    _displayedRelationList->insertItem(i+1, item);
-    _displayedRelationList->clearSelection();
-    item->setSelected(true);
-    updateButtons();
+
+  for (int i=_displayedRelationList->count()-2; i>=0; --i) {
+    if (_displayedRelationList->item(i) && _displayedRelationList->item(i)->isSelected()) {
+      QListWidgetItem *item = _displayedRelationList->takeItem(i);
+      _displayedRelationList->insertItem(i+1, item);
+      item->setSelected(true);
+    }
   }
+  updateButtons();
+
 }
 
 
@@ -154,14 +167,20 @@ QStringList LegendTab::displayedRelations() {
   return relations;
 }
 
-QFont LegendTab::font() const {
-  QFont font(_family->currentFont());
+QFont LegendTab::font(QFont ref_font) const {
+  QString family = (_family->currentIndex() == -1) ?
+                   ref_font.family() : _family->currentFont().family();
+  QFont font(family);
   font.setItalic(_italic->isChecked());
   font.setBold(_bold->isChecked());
   font.setUnderline(_underline->isChecked());
   return font;
 }
 
+//FIXME: handle tristate bool/italics, etc.
+bool LegendTab::fontDirty() const {
+  return true;
+}
 
 void LegendTab::setFont(const QFont &font) {
   _family->setCurrentFont(font);
@@ -180,6 +199,9 @@ void LegendTab::setFontScale(const qreal scale) {
   _fontSize->setValue(scale);
 }
 
+bool LegendTab::fontScaleDirty() const {
+  return _fontSize->text().isEmpty();
+}
 
 bool LegendTab::autoContents() const {
   return _autoContents->isChecked();
@@ -190,6 +212,9 @@ void LegendTab::setAutoContents(const bool autoContents) {
   _autoContents->setChecked(autoContents);
 }
 
+bool LegendTab::autoContentsDirty() const {
+  return _autoContents->checkState() != Qt::PartiallyChecked;
+}
 
 bool LegendTab::verticalDisplay() const {
   return _displayVertically->isChecked();
@@ -200,6 +225,10 @@ void LegendTab::setVerticalDisplay(const bool vertical) {
   _displayVertically->setChecked(vertical);
 }
 
+bool LegendTab::verticalDisplayDirty() const {
+  return _displayVertically->checkState() != Qt::PartiallyChecked;
+}
+
 
 QString LegendTab::title() const {
   return _title->text();
@@ -208,6 +237,26 @@ QString LegendTab::title() const {
 
 void LegendTab::setTitle(const QString& title) {
   _title->setText(title);
+}
+
+bool LegendTab::titleDirty() const {
+  return _title->text().isEmpty();
+}
+
+void LegendTab::clearTabValues() {
+  _autoContents->setCheckState(Qt::PartiallyChecked);
+  _fontSize->clear();
+  _family->setCurrentIndex(-1);
+  _displayVertically->setCheckState(Qt::PartiallyChecked);
+}
+
+void LegendTab::setSingle(bool single) {
+  _single = single;
+  updateActive();
+  if (single) {
+    _autoContents->setTristate(false);
+    _displayVertically->setTristate(false);
+  }
 }
 
 }

@@ -25,7 +25,7 @@ class KST_EXPORT OverrideLabelTab : public DialogTab, Ui::OverrideLabelTab {
     OverrideLabelTab(QString title, QWidget *parent = 0);
     virtual ~OverrideLabelTab();
 
-    QFont labelFont() const;
+    QFont labelFont(QFont ref_font) const;
     bool labelFontDirty() const;
     void setLabelFont(const QFont &font);
 

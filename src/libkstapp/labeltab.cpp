@@ -229,8 +229,10 @@ void LabelTab::setGlobalFont(const QFont &font) {
 }
 
 
-QFont LabelTab::globalLabelFont() const {
-  QFont font(_globalLabelFontFamily->currentFont());
+QFont LabelTab::globalLabelFont(const QFont ref_font) const {
+  QString family = (_globalLabelFontFamily->currentIndex() == -1) ?
+                   ref_font.family() : _globalLabelFontFamily->currentFont().family();
+  QFont font(family);
   font.setItalic(_globalLabelItalic->isChecked());
   font.setBold(_globalLabelBold->isChecked());
   return font;

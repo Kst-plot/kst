@@ -796,37 +796,42 @@ void PlotItemDialog::saveLabels(PlotItem *item) {
   QString leftLabel = _labelTab->leftLabelDirty() ? _labelTab->leftLabel() :item->leftLabel();
   bool leftLabelAuto = _labelTab->leftLabelAutoDirty() ? _labelTab->leftLabelAuto() :item->leftLabelDetails()->isAuto();
   bool leftUseDefault = _leftLabelTab->useDefaultDirty() ? _leftLabelTab->useDefault() :item->leftLabelDetails()->fontUseGlobal();
-  QFont leftFont = _leftLabelTab->labelFontDirty() ? _leftLabelTab->labelFont() :item->leftLabelDetails()->font();
+  QFont leftFont = _leftLabelTab->labelFontDirty() ?
+                   _leftLabelTab->labelFont(item->leftLabelDetails()->font()) :item->leftLabelDetails()->font();
   qreal leftFontScale = _leftLabelTab->labelFontScaleDirty() ? _leftLabelTab->labelFontScale() :item->leftLabelDetails()->fontScale();
   QColor leftFontColor = _leftLabelTab->labelColorDirty() ? _leftLabelTab->labelColor() :item->leftLabelDetails()->fontColor();
 
   QString bottomLabel = _labelTab->bottomLabelDirty() ? _labelTab->bottomLabel() :item->bottomLabel();
   bool bottomLabelAuto = _labelTab->bottomLabelAutoDirty() ? _labelTab->bottomLabelAuto() :item->bottomLabelDetails()->isAuto();
   bool bottomUseDefault = _bottomLabelTab->useDefaultDirty() ? _bottomLabelTab->useDefault() :item->bottomLabelDetails()->fontUseGlobal();
-  QFont bottomFont = _bottomLabelTab->labelFontDirty() ? _bottomLabelTab->labelFont() :item->bottomLabelDetails()->font();
+  QFont bottomFont = _bottomLabelTab->labelFontDirty() ?
+                     _bottomLabelTab->labelFont(item->bottomLabelDetails()->font()) :item->bottomLabelDetails()->font();
   qreal bottomFontScale = _bottomLabelTab->labelFontScaleDirty() ? _bottomLabelTab->labelFontScale() :item->bottomLabelDetails()->fontScale();
   QColor bottomFontColor = _bottomLabelTab->labelColorDirty() ? _bottomLabelTab->labelColor() :item->bottomLabelDetails()->fontColor();
 
   QString rightLabel = _labelTab->rightLabelDirty() ? _labelTab->rightLabel() :item->rightLabel();
   bool rightLabelAuto = _labelTab->rightLabelAutoDirty() ? _labelTab->rightLabelAuto() :item->rightLabelDetails()->isAuto();
   bool rightUseDefault = _rightLabelTab->useDefaultDirty() ? _rightLabelTab->useDefault() :item->rightLabelDetails()->fontUseGlobal();
-  QFont rightFont = _rightLabelTab->labelFontDirty() ? _rightLabelTab->labelFont() :item->rightLabelDetails()->font();
+  QFont rightFont = _rightLabelTab->labelFontDirty() ?
+                    _rightLabelTab->labelFont(item->rightLabelDetails()->font()) :item->rightLabelDetails()->font();
   qreal rightFontScale = _rightLabelTab->labelFontScaleDirty() ? _rightLabelTab->labelFontScale() :item->rightLabelDetails()->fontScale();
   QColor rightFontColor = _rightLabelTab->labelColorDirty() ? _rightLabelTab->labelColor() :item->rightLabelDetails()->fontColor();
 
   QString topLabel = _labelTab->topLabelDirty() ? _labelTab->topLabel() :item->topLabel();
   bool topLabelAuto = _labelTab->topLabelAutoDirty() ? _labelTab->topLabelAuto() :item->topLabelDetails()->isAuto();
   bool topUseDefault = _topLabelTab->useDefaultDirty() ? _topLabelTab->useDefault() :item->topLabelDetails()->fontUseGlobal();
-  QFont topFont = _topLabelTab->labelFontDirty() ? _topLabelTab->labelFont() :item->topLabelDetails()->font();
+  QFont topFont = _topLabelTab->labelFontDirty() ?
+                  _topLabelTab->labelFont(item->topLabelDetails()->font()) :item->topLabelDetails()->font();
   qreal topFontScale = _topLabelTab->labelFontScaleDirty() ? _topLabelTab->labelFontScale() :item->topLabelDetails()->fontScale();
   QColor topFontColor = _topLabelTab->labelColorDirty() ? _topLabelTab->labelColor() :item->topLabelDetails()->fontColor();
 
   bool axisUseDefault = _axisLabelTab->useDefaultDirty() ? _axisLabelTab->useDefault() :item->numberLabelDetails()->fontUseGlobal();
-  QFont axisFont = _axisLabelTab->labelFontDirty() ? _axisLabelTab->labelFont() :item->numberLabelDetails()->font();
+  QFont axisFont = _axisLabelTab->labelFontDirty() ?
+                   _axisLabelTab->labelFont(item->numberLabelDetails()->font()) :item->numberLabelDetails()->font();
   qreal axisFontScale = _axisLabelTab->labelFontScaleDirty() ? _axisLabelTab->labelFontScale() :item->numberLabelDetails()->fontScale();
   QColor axisFontColor = _axisLabelTab->labelColorDirty() ? _axisLabelTab->labelColor() :item->numberLabelDetails()->fontColor();
 
-  QFont globalFont = _labelTab->globalLabelFontDirty() ? _labelTab->globalLabelFont() :item->globalFont();
+  QFont globalFont = _labelTab->globalLabelFontDirty() ? _labelTab->globalLabelFont(item->globalFont()) :item->globalFont();
   qreal globalFontScale = _labelTab->globalLabelFontScaleDirty() ? _labelTab->globalLabelFontScale() :item->globalFontScale();
   QColor globalFontColor = _labelTab->globalLabelColorDirty() ? _labelTab->globalLabelColor() :item->globalFontColor();
   bool showLegend = _labelTab->showLegendDirty() ? _labelTab->showLegend() :item->showLegend();
@@ -943,7 +948,7 @@ void PlotItemDialog::useAxisDefaultChanged(bool use) {
 
 void PlotItemDialog::globalFontUpdate() {
   qreal fontScale = _labelTab->globalLabelFontScale();
-  QFont font = _labelTab->globalLabelFont();
+  QFont font = _labelTab->globalLabelFont(QFont());
   QColor color = _labelTab->globalLabelColor();
 
 

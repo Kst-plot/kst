@@ -34,21 +34,29 @@ class KST_EXPORT LegendTab : public DialogTab, Ui::LegendTab {
 
     QString title() const;
     void setTitle(const QString& title);
+    bool titleDirty() const;
 
     bool autoContents() const;
     void setAutoContents(const bool auto);
+    bool autoContentsDirty() const;
 
-    QFont font() const;
+    QFont font(const QFont font) const;
     void setFont(const QFont &font);
+    bool fontDirty() const;
 
     qreal fontScale() const;
     void setFontScale(const qreal scale);
+    bool fontScaleDirty() const;
 
     bool verticalDisplay() const;
     void setVerticalDisplay(const bool vertical);
+    bool verticalDisplayDirty() const;
 
+    void clearTabValues();
+    void setSingle(bool single);
   private:
     ObjectStore* _store;
+    bool _single;
 
   private Q_SLOTS:
     void updateActive();

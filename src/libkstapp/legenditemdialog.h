@@ -31,9 +31,12 @@ class KST_EXPORT LegendItemDialog : public ViewItemDialog
 
   private Q_SLOTS:
     void legendChanged();
+    void editMultiple();
+    void editSingle();
 
   private:
     void setupLegend();
+    void saveLegend(LegendItem *item, bool save_relations);
 
   private:
     LegendItem* _legendItem;

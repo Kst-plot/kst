@@ -51,6 +51,9 @@ LegendItemDialog::LegendItemDialog(LegendItem *item, QWidget *parent)
     addMultipleEditOption(legend->Name(), legend->descriptionTip(), legend->shortName());
   }
 
+  connect(this, SIGNAL(editMultipleMode()), this, SLOT(editMultiple()));
+  connect(this, SIGNAL(editSingleMode()), this, SLOT(editSingle()));
+
 }
 
 
@@ -110,23 +113,45 @@ void LegendItemDialog::setupLegend() {
 
 }
 
+void LegendItemDialog::editMultiple() {
+  _legendTab->clearTabValues();
+  _legendTab->setSingle(false);
+}
+
+void LegendItemDialog::editSingle() {
+  _legendTab->setSingle(true);
+  setupLegend();
+}
 
 void LegendItemDialog::legendChanged() {
-  _legendItem->setFont(_legendTab->font());
-  _legendItem->setFontScale(_legendTab->fontScale());
-  _legendItem->setTitle(_legendTab->title());
-  _legendItem->setAutoContents(_legendTab->autoContents());
-  _legendItem->setVerticalDisplay(_legendTab->verticalDisplay());
+  if (editMode() == Multiple) {
+    foreach(ViewItem* item, selectedMultipleEditObjects()) {
+      LegendItem* legendItem = (LegendItem*)item;
+      saveLegend(legendItem, false);
+    }
+  } else {
+    saveLegend(_legendItem, true);
+  }
+}
+
+void LegendItemDialog::saveLegend(LegendItem *legendItem, bool save_relations) {
+  legendItem->setFont(_legendTab->font(legendItem->font()));
+  legendItem->setFontScale(_legendTab->fontScale());
+  legendItem->setTitle(_legendTab->title());
+  legendItem->setAutoContents(_legendTab->autoContents());
+  legendItem->setVerticalDisplay(_legendTab->verticalDisplay());
 
   QStringList displayedRelations = _legendTab->displayedRelations();
 
-  RelationList newRelations;
-  foreach (QString relationName, displayedRelations) {
-    if (RelationPtr relation = kst_cast<Relation>(_store->retrieveObject(relationName))) {
-      newRelations.append(relation);
+  if (save_relations) {
+    RelationList newRelations;
+    foreach (QString relationName, displayedRelations) {
+      if (RelationPtr relation = kst_cast<Relation>(_store->retrieveObject(relationName))) {
+        newRelations.append(relation);
+      }
     }
+    legendItem->setRelations(newRelations);
   }
-  _legendItem->setRelations(newRelations);
 }
 
 }

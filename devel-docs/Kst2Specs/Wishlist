@@ -35,8 +35,7 @@ Scientific notation (instead of C's %e notation) for extreme axis numbers
 
 --------
 
-Edit multiple for all view objects.  The highest priority is legends.
-  -make a function which returns a list of all view objects.
+Edit multiple for other view objects (arrow, line, label...)
 
 --------
 

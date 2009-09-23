@@ -52,8 +52,10 @@ void OverrideLabelTab::buttonUpdate() {
 }
 
 
-QFont OverrideLabelTab::labelFont() const {
-  QFont font(_family->currentFont());
+QFont OverrideLabelTab::labelFont(QFont ref_font) const {
+  QString family = (_family->currentIndex() == -1) ?
+                   ref_font.family() : _family->currentFont().family();
+  QFont font(family);
   font.setItalic(_italic->isChecked());
   font.setBold(_bold->isChecked());
   return font;
