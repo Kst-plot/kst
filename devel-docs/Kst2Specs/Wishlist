@@ -48,16 +48,6 @@ This bug is also hit in the export widget.
 Export eps to vector format.
   kst 1.x did this by printing to file a .ps file, and then modifying it by adding the bounding box.
 
---------
-
-Reasonable/sticky defaults for plotDefaults
-See View::configurePlotFontDefaults for a place to do this...
-Currently, new plots follow any existing plots, but there is no
-sensibly set 1st plot default.
-Probably need to set defaults in the plot dialog *Changed fields (?).
-But need to figure out order - we want to also save the viewItemDialog
-set fields.
-
 ------------
 
 data source text box doesn't recognise initial ~ as a euphemism for

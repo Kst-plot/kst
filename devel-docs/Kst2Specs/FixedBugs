@@ -1105,3 +1105,13 @@ Rotated axis number label spacing is wrong
 --------------------
 
 ASCII settings are ignored unless they are the global defaults.
+
+--------
+
+Reasonable/sticky defaults for plotDefaults
+See View::configurePlotFontDefaults for a place to do this...
+Currently, new plots follow any existing plots, but there is no
+sensibly set 1st plot default.
+Probably need to set defaults in the plot dialog *Changed fields (?).
+But need to figure out order - we want to also save the viewItemDialog
+set fields.

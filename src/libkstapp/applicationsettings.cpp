@@ -52,11 +52,11 @@ ApplicationSettings::ApplicationSettings() {
 
   _refViewWidth = _settings->value("general/referenceviewwidth", QVariant(16)).toDouble();
   _refViewHeight = _settings->value("general/referenceviewheight", QVariant(12)).toDouble();
-  _refFontSize = _settings->value("general/referencefontsize", QVariant(12)).toInt();
+  _refFontSize = _settings->value("general/referencefontsize", QVariant(16)).toInt();
   _minFontSize = _settings->value("general/minimumfontsize", QVariant(5)).toInt();
-  _maxUpdate = _settings->value("general/minimumupdateperiod", QVariant(2000)).toInt();
+  _maxUpdate = _settings->value("general/minimumupdateperiod", QVariant(200)).toInt();
 
-  _showGrid = _settings->value("grid/showgrid", QVariant(true)).toBool();
+  _showGrid = _settings->value("grid/showgrid", QVariant(false)).toBool();
   _snapToGrid = _settings->value("grid/snaptogrid", QVariant(false)).toBool();
   _gridHorSpacing = _settings->value("grid/horizontalspacing", 20.0).toDouble();
   _gridVerSpacing = _settings->value("grid/verticalspacing", 20.0).toDouble();
@@ -67,7 +67,7 @@ ApplicationSettings::ApplicationSettings() {
     _backgroundBrush.setStyle(style);
   }
 
-  QString stopList = _settings->value("fill/gradient", "0,#cccccc,1,#ffffff").toString();
+  QString stopList = _settings->value("fill/gradient", QString()).toString();
   if (!stopList.isEmpty()) {
     QStringList stopInfo = stopList.split(',', QString::SkipEmptyParts);
     QLinearGradient gradient(0.0, 0.0, 0.0, 1.0);
@@ -78,15 +78,15 @@ ApplicationSettings::ApplicationSettings() {
     _backgroundBrush = QBrush(gradient);
   }
 
-  QString fontString = _settings->value("defaultlabelproperties/defaultfont", QFont("Albany AMT")).toString();
+  QString fontString = _settings->value("defaultlabelproperties/defaultfont", QFont()).toString();
   _defaultFont.fromString(fontString);
   _defaultFontScale = _settings->value("defaultlabelproperties/defaultfontscale", QVariant(0)).toDouble();
   _defaultFontColor = QColor(_settings->value("defaultlabelproperties/defaultfontcolor", "black").toString());
 
   _shareAxis = _settings->value("childviewoptions/shareaxis", QVariant(true)).toBool();
 
-  _layoutMargins.setHeight(_settings->value("layout/marginheight", QVariant(5.0)).toDouble());
-  _layoutMargins.setWidth(_settings->value("layout/marginwidth", QVariant(5.0)).toDouble());
+  _layoutMargins.setHeight(_settings->value("layout/marginheight", QVariant(3.0)).toDouble());
+  _layoutMargins.setWidth(_settings->value("layout/marginwidth", QVariant(3.0)).toDouble());
   _layoutSpacing.setHeight(_settings->value("layout/spacingheight", QVariant(0.0)).toDouble());
   _layoutSpacing.setWidth(_settings->value("layout/spacingwidth", QVariant(0.0)).toDouble());
 }
