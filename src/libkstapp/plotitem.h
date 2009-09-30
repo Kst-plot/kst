@@ -100,6 +100,8 @@ class PlotLabel : public QObject {
     void saveInPlot(QXmlStreamWriter &xml, QString labelId);
     bool configureFromXml(QXmlStreamReader &xml, ObjectStore *store);
 
+    void saveAsDialogDefaults(const QString &group) const;
+
   Q_SIGNALS:
     void labelChanged();
 
@@ -176,11 +178,11 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QString autoRightLabel() const;
     QString autoTopLabel() const;
 
-    PlotLabel* leftLabelDetails() const { return _leftLabelDetails; };
-    PlotLabel* rightLabelDetails() const { return _rightLabelDetails; };
-    PlotLabel* topLabelDetails() const { return _topLabelDetails; };
-    PlotLabel* bottomLabelDetails() const { return _bottomLabelDetails; };
-    PlotLabel* numberLabelDetails() const { return _numberLabelDetails; };
+    PlotLabel* leftLabelDetails() const { return _leftLabelDetails; }
+    PlotLabel* rightLabelDetails() const { return _rightLabelDetails; }
+    PlotLabel* topLabelDetails() const { return _topLabelDetails; }
+    PlotLabel* bottomLabelDetails() const { return _bottomLabelDetails; }
+    PlotLabel* numberLabelDetails() const { return _numberLabelDetails; }
 
     void setTopSuppressed(bool suppressed);
     void setBottomSuppressed(bool suppressed);
@@ -245,6 +247,9 @@ class PlotItem : public ViewItem, public PlotItemInterface
     virtual QPainterPath checkBox() const;
     virtual QPainterPath tiedZoomCheck() const;
     virtual bool supportsTiedZoom() const;
+
+    void saveAsDialogDefaults() const;
+    void applyDefaults();
 
   protected:
     virtual QString _automaticDescriptiveName() const;

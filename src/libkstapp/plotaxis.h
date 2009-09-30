@@ -130,6 +130,8 @@ class PlotAxis : public QObject
 
     void copyProperties(PlotAxis *source);
 
+    void saveAsDialogDefaults(const QString &group) const;
+
   public Q_SLOTS:
     void updateTicks(bool useOverrideTicks = false);
     void setTicksUpdated() { _ticksUpdated = true; }

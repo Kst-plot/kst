@@ -51,13 +51,22 @@ LegendItemDialog::LegendItemDialog(LegendItem *item, QWidget *parent)
     addMultipleEditOption(legend->Name(), legend->descriptionTip(), legend->shortName());
   }
 
+  _saveAsDefault->show();
   connect(this, SIGNAL(editMultipleMode()), this, SLOT(editMultiple()));
   connect(this, SIGNAL(editSingleMode()), this, SLOT(editSingle()));
-
+  connect(this, SIGNAL(apply()), this, SLOT(slotApply()));
 }
 
 
 LegendItemDialog::~LegendItemDialog() {
+}
+
+void LegendItemDialog::slotApply() {
+  //FIXME: it is not clear that slotApply must be executed last.
+  // experimentally, it seems to be...
+  if (_saveAsDefault->isChecked()) {
+    _legendItem->saveAsDialogDefaults();
+  }
 }
 
 

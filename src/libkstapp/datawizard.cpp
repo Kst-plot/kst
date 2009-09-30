@@ -932,10 +932,16 @@ void DataWizard::finished() {
   bool xLabels = _pagePlot->xAxisLabels();
   bool yLabels = _pagePlot->yAxisLabels();
 
-  double fontScale = ApplicationSettings::self()->referenceFontSize()/sqrt((double) plotList.count()) - ApplicationSettings::self()->referenceFontSize()+ApplicationSettings::self()->referenceFontSize()/3;
-  if (fontScale > 0)  {
-    fontScale = 0;
-  }
+  //double fontScale = ApplicationSettings::self()->referenceFontSize()/sqrt((double) plotList.count()) -
+  //                   ApplicationSettings::self()->referenceFontSize()+
+  //                   ApplicationSettings::self()->referenceFontSize()/3;
+  double fontScale = ApplicationSettings::self()->referenceFontSize()/sqrt((double) plotList.count())-
+                     ApplicationSettings::self()->referenceFontSize() +
+                     _dialogDefaults->value("plot/globalFontScale",0.0).toDouble();
+
+  //if (fontScale > 0)  {
+  //  fontScale = 0;
+  //}
 
   foreach (PlotItem* plot, plotList) {
     plot->setGlobalFontScale(fontScale);
@@ -958,6 +964,10 @@ void DataWizard::finished() {
     plot->parentView()->appendToLayout(_pagePlot->layout(), plot, _pagePlot->gridColumns());
 
   }
+
+  fontScale = ApplicationSettings::self()->referenceFontSize()/sqrt((double) plotList.count())-
+                     ApplicationSettings::self()->referenceFontSize() +
+                     _dialogDefaults->value("legend/fontScale",0.0).toDouble();
 
   foreach (PlotItem* plot, plotList) {
     if (_pagePlot->legendsOn()) {

@@ -33,6 +33,7 @@ class KST_EXPORT LegendItemDialog : public ViewItemDialog
     void legendChanged();
     void editMultiple();
     void editSingle();
+    void slotApply();
 
   private:
     void setupLegend();

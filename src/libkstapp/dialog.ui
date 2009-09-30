@@ -25,8 +25,8 @@
   <property name="modal">
    <bool>false</bool>
   </property>
-  <layout class="QGridLayout">
-   <item row="0" column="0">
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" colspan="2">
     <layout class="QGridLayout">
      <property name="spacing">
       <number>0</number>
@@ -131,6 +131,13 @@
     </layout>
    </item>
    <item row="1" column="0">
+    <widget class="QCheckBox" name="_saveAsDefault">
+     <property name="text">
+      <string>Save As Default</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
     <widget class="QDialogButtonBox" name="_buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

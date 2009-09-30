@@ -57,6 +57,10 @@ class LegendItem : public ViewItem {
     virtual bool configureFromXml(QXmlStreamReader &xml, ObjectStore *store);
 
     QString descriptionTip() const;
+
+    void saveAsDialogDefaults() const;
+
+    void applyDefaults();
   public Q_SLOTS:
     virtual void edit();
 

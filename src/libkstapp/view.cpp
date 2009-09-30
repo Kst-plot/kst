@@ -21,6 +21,7 @@
 #include "document.h"
 #include "plotitemmanager.h"
 #include "plotitem.h"
+#include "dialogdefaults.h"
 
 #include <math.h>
 
@@ -560,11 +561,6 @@ void View::configurePlotFontDefaults(PlotItem *plot) {
 
         break;
       }
-    }
-    if (!configured) {
-      plot->setGlobalFont(defaultFont());
-      plot->setGlobalFontScale(ApplicationSettings::self()->defaultFontScale());
-      plot->setGlobalFontColor(ApplicationSettings::self()->defaultFontColor());
     }
   }
 }

@@ -10,6 +10,7 @@
  ***************************************************************************/
 
 #include "dialogdefaults.h"
+
 namespace Kst {
   QSettings *_dialogDefaults = new QSettings("kst", "dialog");
 
@@ -35,15 +36,11 @@ void setDataMatrixDefaults(DataMatrixPtr M) {
   _dialogDefaults->setValue("matrix/yNumSteps",M->yNumSteps());
   _dialogDefaults->setValue("matrix/reqXStart",M->reqXStart());
   _dialogDefaults->setValue("matrix/reqYStart",M->reqYStart());
-
 }
 
-void setHistogramDefaults(HistogramPtr H) {
-  //FIXME Do we need a H->readLock() here?
-  
+void setHistogramDefaults(HistogramPtr H) {  
   _dialogDefaults->setValue("histogram/realTimeAutoBin", H->realTimeAutoBin());
   _dialogDefaults->setValue("histogram/normalizationType",H->normalizationType());
-
 }
 
 }

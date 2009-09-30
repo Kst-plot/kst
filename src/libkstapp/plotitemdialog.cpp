@@ -8,7 +8,6 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
 #include "plotitemdialog.h"
 
 #include "contenttab.h"
@@ -139,6 +138,8 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
     addMultipleEditOption(plot->plotName(), plot->descriptionTip(), plot->shortName());
   }
 
+  _saveAsDefault->show();
+
   connect(this, SIGNAL(editMultipleMode()), this, SLOT(editMultiple()));
   connect(this, SIGNAL(editSingleMode()), this, SLOT(editSingle()));
   connect(this, SIGNAL(apply()), this, SLOT(slotApply()));
@@ -185,6 +186,12 @@ void PlotItemDialog::editSingle() {
 void PlotItemDialog::slotApply() {
   if (editMode() == Single) {
     _plotItem->setDescriptiveName(tagString().replace(_defaultTagString, QString()));
+  }
+
+  //FIXME: it is not clear that slotApply must be executed last.
+  // experimentally, it seems to be...
+  if (_saveAsDefault->isChecked()) {
+    _plotItem->saveAsDialogDefaults();
   }
 }
 

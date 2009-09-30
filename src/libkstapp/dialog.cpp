@@ -23,6 +23,8 @@ Dialog::Dialog(QWidget *parent)
 
   setupUi(this);
 
+  _saveAsDefault->hide();
+
   extensionWidget()->hide();
 
   connect(_listWidget, SIGNAL(itemClicked(QListWidgetItem *)),

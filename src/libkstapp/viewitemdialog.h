@@ -88,6 +88,7 @@ class KST_EXPORT ViewItemDialog : public Dialog
     EditMode _mode;
     QWidget *_editMultipleBox;
     
+  protected:
     FillTab *_fillTab;
     StrokeTab *_strokeTab;
     LayoutTab *_layoutTab;
