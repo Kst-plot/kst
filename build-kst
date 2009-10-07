@@ -7,13 +7,13 @@ export BUILDDIR=$PWD/build
 
 echo "Building Kst from $SCRIPTDIR into $BUILDDIR"
 
-if [ "$1" = "debug" ]
+if [ "$1" = "release" ]
 then
-  echo "Building in Debug mode"
-  export KST_DEBUG_MODE=1
-else
   echo "Building in Release mode"
   export KST_DEBUG_MODE=0
+else
+  echo "Building in Debug mode"
+  export KST_DEBUG_MODE=1
 fi
 
 if [ "$2" ]

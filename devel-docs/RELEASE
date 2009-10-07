@@ -4,6 +4,7 @@ Create and Update Branch
 
 1.  Update code from SVN (svn update)
 2.  Create branch for release (svn cp)
+    eg, svn cp https://svn.kde.org/home/kde/branches/work/kst/portto4 https://svn.kde.org/home/kde/branches/work/kst/2.0.0-beta3
 3.  In the branch, update the RELEASE.NOTES (kst/RELEASE.NOTES)
 4.  Update the version number in config.h and kst.pri 
     [NOTE:  This step should be moved to immediately after the release and be done in the working directory, not the branch]
@@ -39,3 +40,4 @@ Test, Distribute and Announce the Release
 4.  Update the windows binary zip file available on the website with the build package.
 5.  Login to kde-apps.org and update the version and upload the file.
 6.  E-mail the kst List notifying everyone of the release.
+

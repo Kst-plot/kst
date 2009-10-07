@@ -1115,3 +1115,10 @@ sensibly set 1st plot default.
 Probably need to set defaults in the plot dialog *Changed fields (?).
 But need to figure out order - we want to also save the viewItemDialog
 set fields.
+-------------------------------------------------------------------------------------
+Fixed after beta 3
+-------------------------------------------------------------------------------------
+
+Multi-page printing:
+The code is in place and commented out, because it gets the size wrong for pages other than the current tab.
+This bug is also hit in the export widget.

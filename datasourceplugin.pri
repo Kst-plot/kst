@@ -13,6 +13,6 @@ DESTDIR = $$OUTPUT_DIR/plugin
 
 INCLUDEPATH += \
     tmp \
-    $$TOPLEVELDIR/src/libkst \
+    $$TOPLEVELDIR/src/libkst 
 
 LIBS += -L$$OUTPUT_DIR/lib -lkst

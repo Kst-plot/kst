@@ -1,7 +1,7 @@
 include($$PWD/../../kst.pri)
 
 TEMPLATE = app
-TARGET = kst
+TARGET = kst2
 DESTDIR = $$OUTPUT_DIR/bin
 
 ! isEmpty(INSTALL_PREFIX) {

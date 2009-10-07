@@ -340,8 +340,37 @@ void View::appendToLayout(CurvePlacement::Layout layout, ViewItem* item, int col
 }
 
 
+void View::processResize(QSize size) {
+
+  setPlotBordersDirty(true);
+  if (size != sceneRect().size()) {
+    QRectF oldSceneRect = sceneRect();
+
+    viewport()->resize(size);
+
+    setSceneRect(QRectF(0.0, 0.0, size.width() - 4.0, size.height() - 4.0));
+
+    updateBrush();
+
+    setCacheMode(QGraphicsView::CacheBackground);
+
+    foreach (QGraphicsItem *item, items()) {
+      if (item->parentItem())
+        continue;
+
+      ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+      Q_ASSERT(viewItem);
+
+      viewItem->updateChildGeometry(oldSceneRect, sceneRect());
+    }
+  }
+  updateFont();
+}
+
 void View::resizeEvent(QResizeEvent *event) {
-  QGraphicsView::resizeEvent(event);
+  if (event) {
+    QGraphicsView::resizeEvent(event);
+  }
   setPlotBordersDirty(true);
   if (size() != sceneRect().size()) {
     QRectF oldSceneRect = sceneRect();

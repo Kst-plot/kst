@@ -113,11 +113,11 @@ class KST_EXPORT View : public QGraphicsView
     void createCustomLayout();
     void viewChanged();
     void forceChildResize(QRectF oldRect, QRectF newRect);
-
+    void processResize(QSize size);
   protected:
     bool event(QEvent *event);
     bool eventFilter(QObject *obj, QEvent *event);
-    void resizeEvent(QResizeEvent *event);
+    void resizeEvent(QResizeEvent *event=NULL);
     void drawBackground(QPainter *painter, const QRectF &rect);
     void addTitle(QMenu *menu) const;
 

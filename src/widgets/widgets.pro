@@ -3,26 +3,26 @@ include($$PWD/../../kst.pri)
 QT += gui
 
 TEMPLATE = lib
-CONFIG += designer plugin
+CONFIG += designer
 TARGET = kstwidgets
+DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
-
-! isEmpty(INSTALL_PREFIX) {
-  target.path = $$INSTALL_PREFIX/$$INSTALL_LIBDIR/kst
-  INSTALLS += target
+!isEmpty(INSTALL_PREFIX) {
+    target.path = $$INSTALL_PREFIX/$$INSTALL_LIBDIR
+    INSTALLS += target
 }
-
-
-DESTDIR = $$OUTPUT_DIR/plugin
-
-INCLUDEPATH += \
-    tmp \
+INCLUDEPATH += tmp \
     $$TOPLEVELDIR/src/libkst \
     $$TOPLEVELDIR/src/libkstmath \
     $$OUTPUT_DIR/src/widgets/tmp
-
-win32:LIBS += -L$$OUTPUT_DIR/lib -lkstmath -lkst
-!win32:LIBS += -L$$OUTPUT_DIR/lib -lkst -lkstmath
+win32:LIBS += -L$$OUTPUT_DIR/lib \
+    -L$$OUTPUT_DIR/plugin \
+    -lkstmath \
+    -lkst
+!win32:LIBS += -L$$OUTPUT_DIR/lib \
+    -L$$OUTPUT_DIR/plugin \
+    -lkst \
+    -lkstmath
 
 SOURCES += \
     colorbutton.cpp \

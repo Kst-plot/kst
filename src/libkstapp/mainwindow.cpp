@@ -243,7 +243,8 @@ void MainWindow::openFile(const QString &file) {
 }
 
 
-void MainWindow::exportGraphicsFile(const QString &filename, const QString &format, int width, int height, int display) {
+void MainWindow::exportGraphicsFile(
+    const QString &filename, const QString &format, int width, int height, int display) {
   int viewCount = 0;
   foreach (View *view, _tabWidget->views()) {
     QSize size;
@@ -270,10 +271,12 @@ void MainWindow::exportGraphicsFile(const QString &filename, const QString &form
     QPainter painter(&image);
     QSize currentSize(view->size());
     view->resize(size);
+    view->processResize(size);
     view->setPrinting(true);
     view->render(&painter);
     view->setPrinting(false);
     view->resize(currentSize);
+    view->processResize(currentSize);
 
     QString file = filename;
     if (viewCount != 0) {
@@ -304,26 +307,25 @@ void MainWindow::print() {
 
     QPainter painter(&printer);
     QList<View*> pages;
-    // FIXME: multi-page printing doesn't work.  Fix it, then re-enable...
-//    switch (printer.printRange()) {
-//      case QPrinter::PageRange:
-//        if (printer.fromPage()>0) {
-//          for (int i_page = printer.fromPage(); i_page<=printer.toPage(); i_page++) {
-//            pages.append(_tabWidget->views().at(i_page-1));
-//          }
-//        }
-//        break;
-//      case QPrinter::AllPages:
-//        foreach (View *view, _tabWidget->views()) {
-//          pages.append(view);
-//        }
-//        break;
-//      case QPrinter::Selection:
-//      default:
-//        pages.append(_tabWidget->currentView());
-//        break;
-//    }
-    pages.append(_tabWidget->currentView()); // FIXME: remove once above is fixed.
+
+    switch (printer.printRange()) {
+      case QPrinter::PageRange:
+        if (printer.fromPage()>0) {
+          for (int i_page = printer.fromPage(); i_page<=printer.toPage(); i_page++) {
+            pages.append(_tabWidget->views().at(i_page-1));
+          }
+        }
+        break;
+      case QPrinter::AllPages:
+        foreach (View *view, _tabWidget->views()) {
+          pages.append(view);
+        }
+        break;
+      case QPrinter::Selection:
+      default:
+        pages.append(_tabWidget->currentView());
+        break;
+    }
 
     QSize printerPageSize = printer.pageRect().size();
     for (int i = 0; i < printer.numCopies(); ++i) {
@@ -331,11 +333,13 @@ void MainWindow::print() {
         View *view = pages.at(i_page);
         QSize currentSize(view->size());
         view->resize(printerPageSize);
+        view->processResize(printerPageSize);
         view->setPrinting(true);
         view->render(&painter);
         view->setPrinting(false);
         view->resize(currentSize);
-        if (i_page<pages.count()-1) 
+        view->processResize(currentSize);
+        if (i_page<pages.count()-1)
           printer.newPage();
 
       }
@@ -1070,7 +1074,8 @@ void MainWindow::showDebugDialog() {
 void MainWindow::showExportGraphicsDialog() {
   if (!_exportGraphics) {
     _exportGraphics = new ExportGraphicsDialog(this);
-    connect(_exportGraphics, SIGNAL(exportGraphics(const QString &, const QString &, int, int, int)), this, SLOT(exportGraphicsFile(const QString &, const QString &, int, int, int)));
+    connect(_exportGraphics, SIGNAL(exportGraphics(const QString &, const QString &, int, int, int)),
+            this, SLOT(exportGraphicsFile(const QString &, const QString &, int, int, int)));
   }
   if (_exportGraphics->isVisible()) {
     _exportGraphics->raise();

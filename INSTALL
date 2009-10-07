@@ -1,46 +1,50 @@
 
-Installation Notes for Kst 2.0.0
+Installation Notes for Kst 2.0.0 beta 3
 
+*********************************************
 Linux
-
+*********************************************
+Preliminaries:
 1. Download or otherwise install Qt 4.5 or greater.
 2. Make sure your QTDIR is set to that Qt installation.
-3. Optionally update your ./config.pri has the appropriate settings for your machine.
-4. ./build-kst
+3. Optionally update your ./config.pri (you probably don't need to do this).
+
+Globally installed build/install:
+1-3 above
+4. ./install-kst [release|debug [INSTALL_PREFIX [INSTALL_LIBDIR [OUTPUT_DIR]]]]
+5. kst2
+
+Locally installed debug build:
+1-3 above
+4. ./build-kst 
 5. ./run-kst
+kst2 will be installed into ./build
 
-Notes:
-To build in debug mode debug can be added as a parameter to build-kst
-ie.  ./build-kst debug
-To configure the output directory, set OUTPUT_DIR or include it after the command line argument for debug.
-ie.  ./build-kst release /home/kst
-Default Build mode is release
 
-How To Build and Install:
-
-1. Follow Steps 1 - 3 for building.
-2. Setup install locations by exporting
+Command line options for install-kst (all optional)
     INSTALL_PREFIX - Installation location - Defaults to '/usr'
     INSTALL_LIBDIR - Library Installation Directory name - Defaults to 'lib'
-3. ./install-kst
+    release        - optimized build (eg, -O2) for release: this is the default
+    debug          - debug mode rather than release mode (eg, -g, no optimizations)
 
-Note:  It is recommended that all installable builds be release as release mode does not set the RPATH directories which
-in a distribution system could result in a security hole.
-Note: install-kst can also automatically configure INSTALL_PREFIX and INSTALL_LIBDIR from the command line
-ie. install-kst (debug/release) INSTALL_PREFIX INSTALL_LIBDIR OUTPUT_DIR
-Any or all of the values can be provided, defaults will be provided for the omitted values.
-
+Note:  It is recommended that all installable builds be "release", since
+  release mode does not set the RPATH directories.  Setting RPATH can
+  result in a security hole.  The default for ./install-kst is release
+Note: build-kst and install-kst both build in ./build, so ./build should be [re-]moved 
+  before running ./install-kst if a debug build from ./build-kst already exists.
+Note: installation likely requires root privilidges.  You can separate the build and install
+  steps (only if you really want to) by, eg:
+    ./build-kst release
+    sudo ./install-kst release
 
 Examples:
-
 Build and run debug version.
 
 1. Follow Linux build steps 1 - 3.
-2. ./build-kst debug
+2. ./build-kst 
 3. ./run-kst
 
 Build and install to /usr/bin /usr/lib
-
 1. Follow Linux build steps 1 - 3.
 2. ./install-kst
 
@@ -50,18 +54,19 @@ Build and install to specific location (/usr/local/bin /usr/local/libXX)
 2. ./install-kst release /usr/local libXX
 
 
+*********************************************
 Mac OS
-
-Notes:
-
+*********************************************
+#0.  Not currently supported due to lack of a mac.  We'd love some help here!
 #1.  Same as the steps for Linux with some modifications required.
 #2.  The qmake command line needs to be updated to include -spec macx-g++.
 #3.  An error has been observed compiling view.cpp, view.h may need to be updated to change QXmlStreamWriter to QCoreXmlStreamWriter on line 45.
 
 
-
-Windows using Qt Creator Bundle (Preferred Options)
-
+*********************************************
+Windows
+*********************************************
+Using Qt Creator Bundle (Prefered method)
 1. Download or otherwise install the Qt Creator bundle including mingw
 2. Open Kst.pro
 3. Verify build settings
@@ -69,6 +74,7 @@ Windows using Qt Creator Bundle (Preferred Options)
 
 -------------------------------------------------------------
 
+The following methods are not being activly tested, but might work.
 Windows using mingw
 
 Note:  This process must be done using the windows shell directly.  It cannot be done within cygwin or msys and neither can be included in the path.
@@ -88,7 +94,6 @@ Note:  This process must be done using the windows shell directly.  It cannot be
 Notes:  Be careful to ensure there's nothing else in path that might interfere.  Cygwin, msys and various other things all have individual make and sh executables that are slightly incompatible.
 
 qtvars.bat - mingw - Update directories to match machine configuration.
--------------------------------------------------------------
 
 @echo off
 rem
@@ -110,7 +115,6 @@ set QMAKESPEC=win32-g++
 
 
 -------------------------------------------------------------
-
 Windows using Visual Studio
 
 Note:  This has only been build using Visual Studio & Cygwin.  The following steps
@@ -135,7 +139,6 @@ are used on the current Windows build machine used for testing, but may vary.
 
 
 qtvars.bat - Visual Studio - Update directories to match machine configuration.
--------------------------------------------------------------
 
 @echo off
 rem
@@ -166,8 +169,8 @@ rem Don't launch batch with --login so it doesn't prepend /usr/bin to the path; 
 call "C:\cygwin\Cygwin.bat" -i
 :ENDBASH
 
--------------------------------------------------------------
 
+-------------------------------------------------------------
 Windows Installation
 
 No installer exists for windows currently.  To distribute / move locations.
