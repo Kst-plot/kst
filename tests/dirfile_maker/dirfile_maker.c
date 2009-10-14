@@ -73,6 +73,7 @@ int main() {
   fprintf(fpf,"META cos metaC CONST FLOAT64 3.291882\n"
   "META cos metaS STRING Test_String\n");
 
+  fprintf(fpf, "cos/units STRING ^o\ncos/quantity STRING Angle\n");
   fclose(fpf);
 
   /* make curfile */

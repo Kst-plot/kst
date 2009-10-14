@@ -317,10 +317,11 @@ void PlotRenderItem::paintHighlightPoint(QPainter *painter) {
 
 
 QString PlotRenderItem::leftLabel() const {
-  // This will make sense once curves learn
-  // to return <Quantity> [<Units>]
   QStringList labels;
 
+  // chose the first vector with a label.
+  // for best results here, vectors should define
+  // fieldScalars "quantity" and "units".
   foreach (RelationPtr relation, relationList()) {
     if (!relation->yLabel().isEmpty()) {
       return relation->yLabel();
@@ -340,16 +341,28 @@ QString PlotRenderItem::bottomLabel() const {
 
 
 QString PlotRenderItem::rightLabel() const {
-  // right labels should only be used where there is more htan one 
+  // right labels should only be used where there is more than one
   // projection in the plot...
   return QString();
 }
 
 
 QString PlotRenderItem::topLabel() const {
-  // right labels should only be used where there is more htan one 
-  // projection in the plot...
-  return QString();
+  QString label;
+  int count;
+  for (int i = 0, count = relationList().count(); i<count; i++) {
+    if (i>0) {
+      if (i==count-1) {
+        //label += i18n(" and ", "last separater in a list");
+        label += i18n(" and ");
+      } else {
+        //label += i18n(", ", "separater in a list");
+        label += i18n(", ");
+      }
+    }
+    label += relationList().at(i)->topLabel();
+  }
+  return label;
 }
 
 

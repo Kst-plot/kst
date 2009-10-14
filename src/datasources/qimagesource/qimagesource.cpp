@@ -411,7 +411,14 @@ int QImageSourcePlugin::understands(QSettings *cfg, const QString& filename) con
     return 0;
 
   if ( ftype == "TIFF" ) {
-    if ( !filename.endsWith(".tif") ) return 0;
+    if ( !filename.toLower().endsWith(".tif") ) return 0;
+  }
+
+
+  //QImageReader is incorrectly identifying a single column ascii file with
+  // the first row blank as a pcx file... so... enforce filename...
+  if ( ftype == "pcx" ) {
+    if ( !filename.toLower().endsWith(".pcx") ) return 0;
   }
 
   return 90;

@@ -1821,8 +1821,9 @@ QString PlotItem::leftLabel() const {
 
 QString PlotItem::autoLeftLabel() const {
   foreach (PlotRenderItem *renderer, renderItems()) {
-    if (!renderer->leftLabel().isEmpty())
-      return renderer->leftLabel();
+    QString label = renderer->leftLabel();
+    if (!label.isEmpty())
+      return label;
   }
   return QString();
 }
@@ -1839,8 +1840,9 @@ QString PlotItem::bottomLabel() const {
 
 QString PlotItem::autoBottomLabel() const {
   foreach (PlotRenderItem *renderer, renderItems()) {
-    if (!renderer->bottomLabel().isEmpty())
-      return renderer->bottomLabel();
+    QString label = renderer->bottomLabel();
+    if (!label.isEmpty())
+      return label;
   }
   return QString();
 }
@@ -1857,8 +1859,9 @@ QString PlotItem::rightLabel() const {
 
 QString PlotItem::autoRightLabel() const {
   foreach (PlotRenderItem *renderer, renderItems()) {
-    if (!renderer->rightLabel().isEmpty())
-      return renderer->rightLabel();
+    QString label = renderer->rightLabel();
+    if (!label.isEmpty())
+      return label;
   }
   return QString();
 }
@@ -1874,11 +1877,15 @@ QString PlotItem::topLabel() const {
 
 
 QString PlotItem::autoTopLabel() const {
-  foreach (PlotRenderItem *renderer, renderItems()) {
-    if (!renderer->topLabel().isEmpty())
-      return renderer->topLabel();
+  if (showLegend()) {
+    return QString();
+  } else {
+    QString label;
+    foreach (PlotRenderItem *renderer, renderItems()) {
+      label += renderer->topLabel() + " ";
+    }
+    return label;
   }
-  return QString();
 }
 
 

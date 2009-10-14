@@ -61,3 +61,7 @@ DECIDE: absolute or relative file names in kst files?
 
 Fixup line/arrow dimensions tab:
   x,y instead of length/angle
+
+------------
+
+Names in multipage graphics file export.  name_2.png, not name.png_2, etc

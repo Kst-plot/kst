@@ -299,20 +299,33 @@ QString DataVector::label() const {
   bool ok;
   QString label;
 
-  _field.toInt(&ok);
-  if (ok && _file) {
-    _file->readLock();
-    if (_file->fileType() == "ASCII") {
-      label = i18n("Column %1", _field);
+  if (_fieldStrings.contains("quantity")) {
+    label = _fieldStrings.value("quantity")->value();
+  }
+
+  if (!label.isEmpty()) {
+    if (_fieldStrings.contains("units")) {
+      QString units = _fieldStrings.value("units")->value();
+      if (!units.isEmpty()) {
+        label += "\\[" + units + "\\]";
+      }
+    }
+  } else {
+    _field.toInt(&ok);
+    if (ok && _file) {
+      _file->readLock();
+      if (_file->fileType() == "ASCII file") {
+        label = i18n("Column %1", _field);
+      } else {
+        label = _field;
+      }
+      _file->unlock();
     } else {
       label = _field;
     }
-    _file->unlock();
-  } else {
-    label = _field;
+    label.replace('_', "\\_");
   }
 
-  label.replace('_', "\\_");
   return label;
 }
 
@@ -757,7 +770,12 @@ DataVectorPtr DataVector::makeDuplicate() const {
 }
 
 QString DataVector::_automaticDescriptiveName() const {
-  QString name = field();
+  QString name;
+  if (_file->fileType() == "ASCII file") {
+    name = i18n("Column %1", _field);
+  } else {
+    name = _field;
+  }
   return name.replace("_", "\\_");
 }
 

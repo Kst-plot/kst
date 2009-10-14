@@ -58,8 +58,8 @@ namespace Kst {
 const QString Curve::staticTypeString = I18N_NOOP("Curve");
 const QString Curve::staticTypeTag = I18N_NOOP("curve");
 
-static const QLatin1String& COLOR_XVECTOR = QLatin1String("X");
-static const QLatin1String& COLOR_YVECTOR = QLatin1String("Y");
+static const QLatin1String& XVECTOR = QLatin1String("X");
+static const QLatin1String& YVECTOR = QLatin1String("Y");
 static const QLatin1String& EXVECTOR = QLatin1String("EX");
 static const QLatin1String& EYVECTOR = QLatin1String("EY");
 static const QLatin1String& EXMINUSVECTOR = QLatin1String("EXMinus");
@@ -106,8 +106,8 @@ void Curve::vectorUpdated(ObjectPtr object) {
 Object::UpdateType Curve::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  VectorPtr cxV = *_inputVectors.find(COLOR_XVECTOR);
-  VectorPtr cyV = *_inputVectors.find(COLOR_YVECTOR);
+  VectorPtr cxV = *_inputVectors.find(XVECTOR);
+  VectorPtr cyV = *_inputVectors.find(YVECTOR);
   if (!cxV || !cyV) {
     return NO_CHANGE;
   }
@@ -283,8 +283,8 @@ bool Curve::hasYMinusError() const {
 
 void Curve::save(QXmlStreamWriter &s) {
   s.writeStartElement(staticTypeTag);
-  s.writeAttribute("xvector", _inputVectors[COLOR_XVECTOR]->Name());
-  s.writeAttribute("yvector", _inputVectors[COLOR_YVECTOR]->Name());
+  s.writeAttribute("xvector", _inputVectors[XVECTOR]->Name());
+  s.writeAttribute("yvector", _inputVectors[YVECTOR]->Name());
   if (_inputVectors.contains(EXVECTOR)) {
     s.writeAttribute("errorxvector", _inputVectors[EXVECTOR]->Name());
   }
@@ -319,22 +319,22 @@ void Curve::save(QXmlStreamWriter &s) {
 
 void Curve::setXVector(VectorPtr new_vx) {
   if (new_vx) {
-    _inputVectors[COLOR_XVECTOR] = new_vx;
+    _inputVectors[XVECTOR] = new_vx;
     connect(new_vx, SIGNAL(updated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
-    disconnect(_inputVectors[COLOR_XVECTOR], SIGNAL(updated(ObjectPtr)));
-    _inputVectors.remove(COLOR_XVECTOR);
+    disconnect(_inputVectors[XVECTOR], SIGNAL(updated(ObjectPtr)));
+    _inputVectors.remove(XVECTOR);
   }
 }
 
 
 void Curve::setYVector(VectorPtr new_vy) {
   if (new_vy) {
-    _inputVectors[COLOR_YVECTOR] = new_vy;
+    _inputVectors[YVECTOR] = new_vy;
     connect(new_vy, SIGNAL(updated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
-    disconnect(_inputVectors[COLOR_YVECTOR], SIGNAL(updated(ObjectPtr)));
-    _inputVectors.remove(COLOR_YVECTOR);
+    disconnect(_inputVectors[YVECTOR], SIGNAL(updated(ObjectPtr)));
+    _inputVectors.remove(YVECTOR);
   }
 }
 
@@ -392,18 +392,17 @@ void Curve::setYMinusError(VectorPtr new_ey) {
 
 
 QString Curve::xLabel() const {
-  return _inputVectors[COLOR_XVECTOR]->label();
+  return _inputVectors[XVECTOR]->label();
 }
 
 
 QString Curve::yLabel() const {
-  return _inputVectors[COLOR_YVECTOR]->label();
+  return _inputVectors[YVECTOR]->label();
 }
 
 
 QString Curve::topLabel() const {
-  return QString::null;
-  //return VY->fileLabel();
+  return _inputVectors[YVECTOR]->descriptiveName();
 }
 
 
@@ -428,18 +427,18 @@ void Curve::showEditDialog() {
 
 
 int Curve::samplesPerFrame() const {
-  const DataVector *rvp = dynamic_cast<const DataVector*>(_inputVectors[COLOR_YVECTOR].data());
+  const DataVector *rvp = dynamic_cast<const DataVector*>(_inputVectors[YVECTOR].data());
   return rvp ? rvp->samplesPerFrame() : 1;
 }
 
 
 VectorPtr Curve::xVector() const {
-  return *_inputVectors.find(COLOR_XVECTOR);
+  return *_inputVectors.find(XVECTOR);
 }
 
 
 VectorPtr Curve::yVector() const {
-  return *_inputVectors.find(COLOR_YVECTOR);
+  return *_inputVectors.find(YVECTOR);
 }
 
 
@@ -464,7 +463,7 @@ VectorPtr Curve::yMinusErrorVector() const {
 
 
 bool Curve::xIsRising() const {
-  return _inputVectors[COLOR_XVECTOR]->isRising();
+  return _inputVectors[XVECTOR]->isRising();
 }
 
 
@@ -516,8 +515,8 @@ inline int indexNearX(double x, VectorPtr& xv, int NS) {
 /** getIndexNearXY: return index of point within (or closest too)
     x +- dx which is closest to y **/
 int Curve::getIndexNearXY(double x, double dx_per_pix, double y) const {
-  VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
-  VectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
+  VectorPtr xv = *_inputVectors.find(XVECTOR);
+  VectorPtr yv = *_inputVectors.find(YVECTOR);
   if (!xv || !yv) {
     return 0; // anything better we can do?
   }
@@ -719,8 +718,8 @@ void Curve::updatePaintObjects(const CurveRenderContext& context) {
   _filledRects.clear();
   _rects.clear();
 
-  VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
-  VectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
+  VectorPtr xv = *_inputVectors.find(XVECTOR);
+  VectorPtr yv = *_inputVectors.find(YVECTOR);
   if (!xv || !yv) {
     return;
   }
@@ -1503,8 +1502,8 @@ void Curve::yRange(double xFrom, double xTo, double* yMin, double* yMax) {
     return;
   }
 
-  VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
-  VectorPtr yv = *_inputVectors.find(COLOR_YVECTOR);
+  VectorPtr xv = *_inputVectors.find(XVECTOR);
+  VectorPtr yv = *_inputVectors.find(YVECTOR);
   if (!xv || !yv) {
     *yMin = *yMax = 0;
     return;
@@ -1561,7 +1560,7 @@ DataObjectPtr Curve::providerDataObject() const {
 
 double Curve::distanceToPoint(double xpos, double dx, double ypos) const {
 // find the y distance between the curve and a point. return 1.0E300 if this distance is undefined. i don't want to use -1 because it will make the code which uses this function messy.
-  VectorPtr xv = *_inputVectors.find(COLOR_XVECTOR);
+  VectorPtr xv = *_inputVectors.find(XVECTOR);
   if (!xv) {
     return 1.0E300; // anything better we can do?
   }

@@ -1012,16 +1012,16 @@ int AsciiPlugin::understands(QSettings *cfg, const QString& filename) const {
   AsciiSource::Config config;
   config.read(cfg, filename);
 
+  if (!QFile::exists(filename) || QFileInfo(filename).isDir()) {
+    return 0;
+  }
+
   if (!config._fileNamePattern.isEmpty()) {
     QRegExp filenamePattern(config._fileNamePattern);
     filenamePattern.setPatternSyntax(QRegExp::Wildcard);
     if (filenamePattern.exactMatch(filename)) {
       return 100;
     }
-  }
-
-  if (!QFile::exists(filename) || QFileInfo(filename).isDir()) {
-    return 0;
   }
 
   QFile f(filename);
@@ -1060,7 +1060,8 @@ int AsciiPlugin::understands(QSettings *cfg, const QString& filename) const {
         // a number - this may be an ascii file - assume that it is
         // This line checks for an indirect file and gives that a chance too.
         // Indirect files look like ascii files.
-        return QFile::exists(s.trimmed()) ? 49 : 75;
+        return 75;
+        //return QFile::exists(s.trimmed()) ? 49 : 75;
       } else {
         return 20;
       }
