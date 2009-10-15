@@ -1,7 +1,7 @@
 include($$PWD/../../../kst.pri)
 include($$PWD/../../../datasourceplugin.pri)
 
-TARGET = kstdata_planckIDEF
+TARGET = kst2data_planckIDEF
 
 INCLUDEPATH += $$OUTPUT_DIR/src/datasources/fitsimage/tmp
 

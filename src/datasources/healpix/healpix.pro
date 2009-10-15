@@ -1,7 +1,7 @@
 include($$PWD/../../../kst.pri)
 include($$PWD/../../../datasourceplugin.pri)
 
-TARGET = kstdata_healpix
+TARGET = kst2data_healpix
 
 INCLUDEPATH += $$OUTPUT_DIR/src/datasources/fitsimage/tmp
 

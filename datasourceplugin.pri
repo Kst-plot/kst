@@ -15,4 +15,4 @@ INCLUDEPATH += \
     tmp \
     $$TOPLEVELDIR/src/libkst 
 
-LIBS += -L$$OUTPUT_DIR/lib -lkst
+LIBS += -L$$OUTPUT_DIR/lib -lkst2

@@ -1,7 +1,7 @@
 include($$PWD/../../kst.pri)
 
 TEMPLATE = lib
-TARGET = kst
+TARGET = kst2
 DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
 

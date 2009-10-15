@@ -4,7 +4,7 @@ QT += gui
 
 TEMPLATE = lib
 CONFIG += designer
-TARGET = kstwidgets
+TARGET = kst2widgets
 DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
 !isEmpty(INSTALL_PREFIX) {
@@ -17,12 +17,12 @@ INCLUDEPATH += tmp \
     $$OUTPUT_DIR/src/widgets/tmp
 win32:LIBS += -L$$OUTPUT_DIR/lib \
     -L$$OUTPUT_DIR/plugin \
-    -lkstmath \
-    -lkst
+    -lkst2math \
+    -lkst2
 !win32:LIBS += -L$$OUTPUT_DIR/lib \
     -L$$OUTPUT_DIR/plugin \
-    -lkst \
-    -lkstmath
+    -lkst2 \
+    -lkst2math
 
 SOURCES += \
     colorbutton.cpp \
