@@ -12,7 +12,7 @@
 #include "dialogdefaults.h"
 
 namespace Kst {
-  QSettings *_dialogDefaults = new QSettings("kst", "dialog");
+  QSettings *_dialogDefaults;
 
 void setDataVectorDefaults(DataVectorPtr V) {
   _dialogDefaults->setValue("vector/datasource", V->filename());

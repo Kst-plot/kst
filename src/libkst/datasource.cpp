@@ -66,6 +66,7 @@ void DataSource::_initializeShortName() {
 static PluginList _pluginList;
 void DataSource::cleanupForExit() {
   _pluginList.clear();
+  delete settingsObject;
   settingsObject = 0L;
 //   for (QMap<QString,QString>::Iterator i = urlMap.begin(); i != urlMap.end(); ++i) {
 //     KIO::NetAccess::removeTempFile(i.value());

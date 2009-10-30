@@ -78,11 +78,11 @@ void Vector::_initializeShortName() {
 }
 
 Vector::~Vector() {
-  // qDebug() << "+++ DELETING VECTOR: " << (void*) this;
   if (_v) {
     free(_v);
     _v = 0;
   }
+  qDebug() << "destroying vector: rms scalar usage: " << _scalars["rms"]->getUsage();
 }
 
 

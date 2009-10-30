@@ -30,6 +30,8 @@ Application::Application(int &argc, char **argv)
 
   QCoreApplication::setApplicationName("Kst");
 
+  _dialogDefaults = new QSettings("kst", "dialog");
+
   Builtins::initPrimitives(); //libkst
   Builtins::initDataSources(); //libkst
   Builtins::initObjects();    //libkstmath
@@ -52,6 +54,7 @@ Application::Application(int &argc, char **argv)
 
 Application::~Application() {
   delete _mainWindow;
+  delete _dialogDefaults;
 }
 
 

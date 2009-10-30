@@ -146,7 +146,6 @@ void ObjectStore::rebuildDataSourceList() {
       P->changeFile(new_data_source);
       of.object->unlock();
     }
-    qDebug() << of.object->Name() << " " << of.filename;
   }
 
   newDataSourceList.clear();

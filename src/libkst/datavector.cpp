@@ -368,7 +368,6 @@ void DataVector::checkIntegrity() {
 Object::UpdateType DataVector::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  qDebug() << " data vector update: " << Name();
   if (_file) {
     _file->writeLock();
   }
@@ -477,7 +476,6 @@ Object::UpdateType DataVector::doUpdate(bool force) {
 
   if (DoSkip) {
     // reallocate V if necessary
-    //qDebug() << "new_nf = " << new_nf << " and skip = " << Skip << " so new_nf/Skip+1 = " << (new_nf / Skip + 1) << endl;
     if (new_nf / Skip != _size) {
       bool rc = resize(new_nf/Skip);
       if (!rc) {
@@ -494,7 +492,6 @@ Object::UpdateType DataVector::doUpdate(bool force) {
       } else {
         rc = _file->readField(_v + _numSamples, _field, new_f0, (new_nf - NF)/Skip, Skip, &lastRead);
         if (rc != -9999) {
-          //qDebug() << "USED SKIP FOR READ - " << _field << " - rc=" << rc << " for Skip=" << Skip << " s=" << new_f0 << " n=" << (new_nf - NF)/Skip << endl;
           if (rc >= 0) {
             n_read = rc;
           } else {
@@ -508,7 +505,6 @@ Object::UpdateType DataVector::doUpdate(bool force) {
     if (_dontUseSkipAccel) {
       n_read = 0;
       /** read each sample from the File */
-      //qDebug() << "NF = " << NF << " numsamples = " << _numSamples << " new_f0 = " << new_f0 << endl;
       double *t = _v + _numSamples;
       int new_nf_Skip = new_nf - Skip;
       if (DoAve) {
@@ -533,7 +529,6 @@ Object::UpdateType DataVector::doUpdate(bool force) {
         }
       } else {
         for (i = NF; new_nf_Skip >= i; i += Skip) {
-          //qDebug() << "readField " << _field << " start=" << new_f0 + i << " n=-1" << endl;
           n_read += _file->readField(t++, _field, new_f0 + i, -1);
         }
       }
@@ -563,7 +558,6 @@ Object::UpdateType DataVector::doUpdate(bool force) {
       n_read = _file->readField(_v+NF*SPF, _field, new_f0 + NF, new_nf - NF - 1);
       n_read += _file->readField(_v+(new_nf-1)*SPF, _field, new_f0 + new_nf - 1, -1);
     } else {
-      //qDebug() << "Reading into _v=" << (void*)_v << " which has size " << _size << " and starting at offset " << NF*SPF << " for s=" << new_f0 + NF << " and n=" << new_nf - NF << endl;
       assert(new_f0 + NF >= 0);
       if (new_nf - NF > 0 || new_nf - NF == -1) {
         n_read = _file->readField(_v+NF*SPF, _field, new_f0 + NF, new_nf - NF);
@@ -585,7 +579,6 @@ Object::UpdateType DataVector::doUpdate(bool force) {
   // As a first fix, mount all nsf mounted dirfiles with "-o noac"
   _dirty = false;
   if (_numSamples != _size && !(_numSamples == 0 && _size == 1)) {
-    //qDebug() << "SET DIRTY since _numSamples = " << _numSamples << " but _size = " << _size << endl;
     _dirty = true;
     for (i = _numSamples; i < _size; i++) {
       _v[i] = _v[0];

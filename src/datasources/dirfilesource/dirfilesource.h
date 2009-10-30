@@ -24,6 +24,8 @@
 
 using namespace GetData;
 
+class QFileSystemWatcher;
+
 class DirFileSource : public Kst::DataSource {
   Q_OBJECT
 
@@ -75,6 +77,7 @@ class DirFileSource : public Kst::DataSource {
   private:
     QString _directoryName;
     Dirfile *_dirfile;
+    QFileSystemWatcher *_watcher;
 
     int _frameCount;
     mutable Config *_config;

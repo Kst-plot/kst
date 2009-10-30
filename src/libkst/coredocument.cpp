@@ -33,6 +33,8 @@ CoreDocument::CoreDocument()
 
 
 CoreDocument::~CoreDocument() {
+  delete _objectStore;
+  _objectStore = 0;
 }
 
 
