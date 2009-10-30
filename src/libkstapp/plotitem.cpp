@@ -79,6 +79,7 @@ PlotItem::PlotItem(View *parent)
   _bottomPadding(0.0),
   _rightPadding(0.0),
   _topPadding(0.0),
+  _globalFontScale(0.0),
   _numberAxisLabelScaleFactor(1.0),
   _useNumberAxisLabelScale(true),
   _showLegend(false),
@@ -1881,10 +1882,18 @@ QString PlotItem::autoTopLabel() const {
     return QString();
   } else {
     QString label;
-    foreach (PlotRenderItem *renderer, renderItems()) {
-      label += renderer->topLabel() + " ";
+    int count = renderItems().count();
+    for (int i=0; i<count; i++) {
+      label += renderItems().at(i)->topLabel();
+      if (i<count - 1) {
+        label += " ";
+      }
     }
-    return label;
+    if (label == leftLabel()) {
+      return QString();
+    } else {
+      return label;
+    }
   }
 }
 

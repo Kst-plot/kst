@@ -31,9 +31,8 @@ const QString DataScalar::staticTypeTag = I18N_NOOP("datascalar");
 
 /** Create a DataVector: raw data from a file */
 DataScalar::DataScalar(ObjectStore *store)
-: Scalar(store) {
+: Scalar(store), DataPrimitive() {
 
-  _file = 0L;
   _field = QString::null;
 
   setOrphan(true);
@@ -55,6 +54,17 @@ const QString& DataScalar::typeString() const {
   return staticTypeString;
 }
 
+
+/** return true if it has a valid file and field, or false otherwise */
+bool DataScalar::isValid() const {
+  if (_file) {
+    _file->readLock();
+    bool rc = _file->isValidScalar(_field);
+    _file->unlock();
+    return rc;
+  }
+  return false;
+}
 
 void DataScalar::change(DataSourcePtr in_file, const QString &in_field) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
@@ -89,24 +99,6 @@ void DataScalar::changeFile(DataSourcePtr in_file) {
     Debug::self()->log(i18n("Data file for scalar %1 was not opened.", Name()), Debug::Warning);
   }
   _file = in_file;
-}
-
-
-/** return the name of the file */
-QString DataScalar::filename() const {
-  QString rc;
-  if (_file) {
-    _file->readLock();
-    rc = _file->fileName();
-    _file->unlock();
-  }
-  return rc;
-}
-
-
-/** return the field */
-const QString& DataScalar::field() const {
-  return _field;
 }
 
 
@@ -157,11 +149,6 @@ DataScalarPtr DataScalar::makeDuplicate() const {
 }
 
 
-DataSourcePtr DataScalar::dataSource() const {
-  return _file;
-}
-
-
 QString DataScalar::descriptionTip() const {
   QString IDstring;
 
@@ -173,17 +160,6 @@ QString DataScalar::descriptionTip() const {
   return IDstring;
 }
 
-
-/** return true if it has a valid file and field, or false otherwise */
-bool DataScalar::isValid() const {
-  if (_file) {
-    _file->readLock();
-    bool rc = _file->isValidField(_field);
-    _file->unlock();
-    return rc;
-  }
-  return false;
-}
 
 QString DataScalar::propertyString() const {
   return i18n("%2 of %1 = %3").arg(dataSource()->fileName()).arg(field()).arg(value());

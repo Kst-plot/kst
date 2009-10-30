@@ -78,6 +78,11 @@ DirFileSource::DirFileSource(Kst::ObjectStore *store, QSettings *cfg, const QStr
 
 
 DirFileSource::~DirFileSource() {
+  delete _config;
+  _config = 0L;
+  if (_dirfile) {
+    delete _dirfile;
+  }
 }
 
 

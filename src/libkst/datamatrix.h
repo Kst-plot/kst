@@ -17,10 +17,11 @@
 #include "sharedptr.h"
 #include "datasource.h"
 #include "kst_export.h"
+#include "dataprimitive.h"
 
 namespace Kst {
 
-class KST_EXPORT DataMatrix : public Matrix {
+class KST_EXPORT DataMatrix : public Matrix, public DataPrimitive {
   Q_OBJECT
 
   public:
@@ -60,9 +61,6 @@ class KST_EXPORT DataMatrix : public Matrix {
     // labels for this matrix
     virtual QString label() const;
     virtual QString fileLabel() const;
-
-    // the data source this DataMatrix is using
-    DataSourcePtr dataSource() const;
 
     // returns true if the file and field is valid; false otherwise
     bool isValid() const;

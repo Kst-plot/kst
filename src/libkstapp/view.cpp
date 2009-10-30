@@ -46,6 +46,7 @@ View::View()
     _mouseMode(Default),
     _layoutBoxItem(0),
     _gridSpacing(QSizeF(20,20)),
+    _showGrid(false),
     _snapToGridHorizontal(false),
     _snapToGridVertical(false),
     _plotBordersDirty(false),

@@ -31,7 +31,7 @@ const QString DataString::staticTypeTag = I18N_NOOP("datastring");
 
 /** Create a DataVector: raw data from a file */
 DataString::DataString(ObjectStore *store)
-: String(store) {
+: String(store), DataPrimitive() {
 
   _file = 0L;
   _field = QString::null;
@@ -55,6 +55,17 @@ const QString& DataString::typeString() const {
   return staticTypeString;
 }
 
+
+/** return true if it has a valid file and field, or false otherwise */
+bool DataString::isValid() const {
+  if (_file) {
+    _file->readLock();
+    bool rc = _file->isValidString(_field);
+    _file->unlock();
+    return rc;
+  }
+  return false;
+}
 
 void DataString::change(DataSourcePtr in_file, const QString &in_field) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
@@ -89,30 +100,6 @@ void DataString::changeFile(DataSourcePtr in_file) {
     Debug::self()->log(i18n("Data file for string %1 was not opened.", Name()), Debug::Warning);
   }
   _file = in_file;
-  if (_file) {
-    _file->writeLock();
-  }
-  if (_file) {
-    _file->unlock();
-  }
-}
-
-
-/** return the name of the file */
-QString DataString::filename() const {
-  QString rc;
-  if (_file) {
-    _file->readLock();
-    rc = _file->fileName();
-    _file->unlock();
-  }
-  return rc;
-}
-
-
-/** return the field */
-const QString& DataString::field() const {
-  return _field;
 }
 
 
@@ -162,11 +149,6 @@ DataStringPtr DataString::makeDuplicate() const {
 }
 
 
-DataSourcePtr DataString::dataSource() const {
-  return _file;
-}
-
-
 QString DataString::descriptionTip() const {
   QString IDstring;
 
@@ -178,17 +160,6 @@ QString DataString::descriptionTip() const {
   return IDstring;
 }
 
-
-/** return true if it has a valid file and field, or false otherwise */
-bool DataString::isValid() const {
-  if (_file) {
-    _file->readLock();
-    bool rc = _file->isValidField(_field);
-    _file->unlock();
-    return rc;
-  }
-  return false;
-}
 
 QString DataString::propertyString() const {
   return i18n("%1 of %2").arg(_field).arg(dataSource()->fileName());

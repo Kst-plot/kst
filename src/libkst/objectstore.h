@@ -49,14 +49,17 @@ class KST_EXPORT ObjectStore {
     bool isEmpty() const;
     void clear();
 
-    // get a list containing only objects of type T in the object store
-    // T must inherit from Kst::Object
+    /** get a list containing only objects of type T in the object store
+     ** T must inherit from Kst::Object */
     template<class T> const ObjectList<T> getObjects() const;
 
-    // get just the data sources
+    /**  get just the data sources */
     DataSourceList dataSourceList() const;
 
-    // locking
+    /** Close all data sources, and reopen ones that are needed */
+    void rebuildDataSourceList();
+
+    /** locking */
     KstRWLock& lock() const { return _lock; }
 
   private:

@@ -49,7 +49,7 @@ const QString DataVector::staticTypeTag = I18N_NOOP("datavector");
 
 /** Create a DataVector: raw data from a file */
 DataVector::DataVector(ObjectStore *store)
-: Vector(store) {
+: Vector(store), DataPrimitive() {
 
   _saveable = true;
   _dontUseSkipAccel = false;
@@ -75,6 +75,17 @@ const QString& DataVector::typeString() const {
   return staticTypeString;
 }
 
+
+/** return true if it has a valid file and field, or false otherwise */
+bool DataVector::isValid() const {
+  if (_file) {
+    _file->readLock();
+    bool rc = _file->isValidField(_field);
+    _file->unlock();
+    return rc;
+  }
+  return false;
+}
 
 void DataVector::sourceUpdated(ObjectPtr object) {
 #if DEBUG_UPDATE_CYCLE > 1
@@ -143,10 +154,10 @@ void DataVector::changeFile(DataSourcePtr in_file) {
     _file->writeLock();
   }
   reset();
-  _resetFieldMetadata();
   if (_file) {
     _file->unlock();
   }
+  immediateUpdate();
 }
 
 
@@ -277,24 +288,6 @@ void DataVector::save(QXmlStreamWriter &s) {
 }
 
 
-/** return the name of the file */
-QString DataVector::filename() const {
-  QString rc;
-  if (_file) {
-    _file->readLock();
-    rc = _file->fileName();
-    _file->unlock();
-  }
-  return rc;
-}
-
-
-/** return the field */
-const QString& DataVector::field() const {
-  return _field;
-}
-
-
 QString DataVector::label() const {
   bool ok;
   QString label;
@@ -341,6 +334,8 @@ void DataVector::reset() { // must be called with a lock
   resize(0);
   _numSamples = 0;
   _dirty = true;
+  _resetFieldMetadata();
+
 }
 
 
@@ -373,6 +368,7 @@ void DataVector::checkIntegrity() {
 Object::UpdateType DataVector::update() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
+  qDebug() << " data vector update: " << Name();
   if (_file) {
     _file->writeLock();
   }
@@ -612,18 +608,6 @@ int DataVector::samplesPerFrame() const {
 }
 
 
-/** return true if it has a valid file and field, or false otherwise */
-bool DataVector::isValid() const {
-  if (_file) {
-    _file->readLock();
-    bool rc = _file->isValidField(_field);
-    _file->unlock();
-    return rc;
-  }
-  return false;
-}
-
-
 int DataVector::fileLength() const {
   if (_file) {
     _file->readLock();
@@ -670,7 +654,7 @@ void DataVector::_resetFieldMetadata() {
 }
 
 void DataVector::_resetFieldStrings() {
-  // Note: this does not necessarily preseve order if the 
+  // Note: this does not necessarily preserve order if the
   // datasource or field have been changed.  If dynamic
   // fieldScalars are ever wanted, this should be fixed.
   QStringList string_names = dataSource()->fieldStrings(field());
@@ -749,9 +733,6 @@ void DataVector::_resetFieldScalars() {
   unlock();
 }
 
-DataSourcePtr DataVector::dataSource() const {
-  return _file;
-}
 
 DataVectorPtr DataVector::makeDuplicate() const {
   Q_ASSERT(store());

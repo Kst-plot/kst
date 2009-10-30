@@ -21,6 +21,7 @@
 #include "vector.h"
 
 #include "datasource.h"
+#include "dataprimitive.h"
 #include "kst_export.h"
 
 namespace Kst {
@@ -29,7 +30,7 @@ namespace Kst {
  *@author cbn
  */
 
-class KST_EXPORT DataVector : public Vector {
+class KST_EXPORT DataVector : public Vector, public DataPrimitive {
   Q_OBJECT
 
   public:
@@ -76,12 +77,6 @@ class KST_EXPORT DataVector : public Vector {
     /** Save vector information */
     virtual void save(QXmlStreamWriter &s);
 
-    /** return the name of the file */
-    QString filename() const;
-
-    /** return the field name */
-    const QString& field() const;
-
     /** return a sensible label for this vector */
     virtual QString label() const;
     virtual QString fileLabel() const { return filename(); }
@@ -95,21 +90,17 @@ class KST_EXPORT DataVector : public Vector {
     /** read whether the vector is suppose to count back from end of file */
     bool countFromEOF() const;
 
-    /** return true if it has a valid file and field, or false otherwise */
-    bool isValid() const;
-
     /** Read from end */
     void setFromEnd();
 
     /** make a copy of the DataVector */
     SharedPtr<DataVector> makeDuplicate() const;
 
-    /** the data source */
-    DataSourcePtr dataSource() const;
-
     virtual QString descriptionTip() const;
 
     virtual QString propertyString() const;
+
+    bool isValid() const;
   public Q_SLOTS:
     void sourceUpdated(ObjectPtr object);
 
@@ -149,12 +140,6 @@ class KST_EXPORT DataVector : public Vector {
 
     /** Requested Starting Frame */
     int ReqF0;
-
-    /** file to read for rvectors */
-    DataSourcePtr _file;
-
-    /** The vector field in the data source */
-    QString _field;
 
     /** Number of Samples allocated to the vector */
     int _numSamples;

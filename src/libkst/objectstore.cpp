@@ -21,6 +21,7 @@
 
 #include "object.h"
 #include "objectstore.h"
+#include "dataprimitive.h"
 
 // NAMEDEBUG: 0 for no debug, 1 for some debug, 2 for more debug, 3 for all debug
 #define NAMEDEBUG 0
@@ -110,6 +111,55 @@ ObjectPtr ObjectStore::retrieveObject(const QString name) const {
   return NULL;
 }
 
+typedef struct {
+    ObjectPtr object;
+    QString filename;
+} ObjectFile;
+
+void ObjectStore::rebuildDataSourceList() {
+
+  QList<ObjectFile> dataPrimitives;
+  ObjectFile objectFile;
+  DataSourceList newDataSourceList;
+  DataSourcePtr new_data_source;
+
+  DataPrimitive* P;
+
+  foreach(ObjectPtr object, _list) {
+    P = dynamic_cast<DataPrimitive *>(object.data());
+    if (P) {
+      objectFile.object = object;
+      objectFile.filename = P->filename();
+      dataPrimitives.append(objectFile);
+    }
+  }
+
+  foreach(ObjectFile of, dataPrimitives) {
+    P = dynamic_cast<DataPrimitive *>(of.object.data());
+    if (P) {
+      new_data_source = newDataSourceList.findReusableFileName(of.filename);
+      if (new_data_source == 0) {
+        new_data_source = DataSource::loadSource(this, of.filename);
+        newDataSourceList.append(new_data_source);
+      }
+      of.object->writeLock();
+      P->changeFile(new_data_source);
+      of.object->unlock();
+    }
+    qDebug() << of.object->Name() << " " << of.filename;
+  }
+
+  newDataSourceList.clear();
+  dataPrimitives.clear();
+
+  // clean up unused data sources
+  for (DataSourceList::Iterator it = _dataSourceList.begin(); it != _dataSourceList.end(); ++it) {
+    qDebug() << "Usage: " << (*it)->getUsage();
+    if ((*it)->getUsage() == 0) {
+      removeObject(*it);
+    }
+  }
+}
 
 bool ObjectStore::isEmpty() const {
   KstReadLocker l(&_lock);

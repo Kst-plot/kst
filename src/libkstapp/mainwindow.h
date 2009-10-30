@@ -71,6 +71,7 @@ class MainWindow : public QMainWindow
     void pause(bool pause);
     void back();
     void forward();
+    void reload();
 
     void save();
     void saveAs();
@@ -204,6 +205,7 @@ class MainWindow : public QMainWindow
     QAction *_pauseAct;
     QAction *_backAct;
     QAction *_forwardAct;
+    QAction *_reloadAct;
 };
 
 }

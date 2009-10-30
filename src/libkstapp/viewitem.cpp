@@ -2079,6 +2079,7 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
         qDebug() << "ooops, viewItem does not fit in layout" << endl;
       }
     }
+    delete grid;
 
     if (qobject_cast<LayoutBoxItem*>(_item)) {
       QObject::connect(_layout, SIGNAL(enabledChanged(bool)),

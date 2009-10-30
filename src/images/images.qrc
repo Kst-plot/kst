@@ -74,5 +74,6 @@
         <file>kst_downarrow.png</file>
         <file>kst_bold.png</file>
         <file>kst_italic.png</file>
+        <file>kst_reload.png</file>
     </qresource>
 </RCC>

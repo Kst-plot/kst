@@ -739,6 +739,11 @@ void MainWindow::createActions() {
   _forwardAct->setStatusTip(tr("Forward one screen"));
   _forwardAct->setIcon(QPixmap(":kst_forward.png"));
   connect(_forwardAct, SIGNAL(triggered()), this, SLOT(forward()));
+
+  _reloadAct = new QAction(tr("Reload all data sources..."), this);
+  _reloadAct->setStatusTip(tr("Reload all data sources"));
+  _reloadAct->setIcon(QPixmap(":kst_reload.png"));
+  connect(_reloadAct, SIGNAL(triggered()), this, SLOT(reload()));
   // ****************************************************************************** //
 
   _layoutModeAct = new QAction(tr("&Layout Mode"), this);
@@ -854,6 +859,7 @@ void MainWindow::createToolBars() {
   _dataToolBar->addAction(_forwardAct);
   _dataToolBar->addAction(_pauseAct);
   _dataToolBar->addAction(_readFromEndAct);
+  _dataToolBar->addAction(_reloadAct);
 
 //   _layoutToggleToolBar = addToolBar(tr("Mode"));
 
@@ -1021,6 +1027,10 @@ void MainWindow::back() {
       v->unlock();
     }
   }
+}
+
+void MainWindow::reload() {
+  document()->objectStore()->rebuildDataSourceList();
 }
 
 void MainWindow::showDataManager() {

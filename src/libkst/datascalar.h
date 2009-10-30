@@ -21,6 +21,7 @@
 #include "scalar.h"
 #include "datasource.h"
 #include "kst_export.h"
+#include "dataprimitive.h"
 
 class QXmlStreamWriter;
 
@@ -31,7 +32,7 @@ namespace Kst {
  */
 
 /** A scalar which gets its value from a data file. */
-class KST_EXPORT DataScalar : public Scalar {
+class KST_EXPORT DataScalar : public Scalar, public DataPrimitive {
   Q_OBJECT
 
   protected:
@@ -51,12 +52,6 @@ class KST_EXPORT DataScalar : public Scalar {
     void change(DataSourcePtr file, const QString &field);
     void changeFile(DataSourcePtr file);
 
-    /** return the name of the file */
-    QString filename() const;
-
-    /** return the field name */
-    const QString& field() const;
-
     /** Save scalar information */
     virtual void save(QXmlStreamWriter &s);
 
@@ -66,24 +61,12 @@ class KST_EXPORT DataScalar : public Scalar {
     /** make a copy of the DataScalar */
     SharedPtr<DataScalar> makeDuplicate() const;
 
-    /** the data source */
-    DataSourcePtr dataSource() const;
-
     virtual QString descriptionTip() const;
 
-    /** return true if it has a valid file and field, or false otherwise */
-    bool isValid() const;
-
     virtual QString propertyString() const;
+    bool isValid() const;
   public Q_SLOTS:
     void sourceUpdated(ObjectPtr object);
-
-  private:
-    /** file to read for rvectors */
-    DataSourcePtr _file;
-
-    /** For the scalar field in the data source */
-    QString _field;
 
 };
 

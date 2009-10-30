@@ -26,10 +26,4 @@ mkdir -p $BUILDDIR
 cd $BUILDDIR
 qmake -r $SCRIPTDIR/kst.pro
 
-if [ -d /opt/icecream/bin ]
-then
-	echo "Using Icecream"
-	PATH=/opt/icecream/bin:$PATH make -j4
-else
-	make -j3
-fi
+make -j3

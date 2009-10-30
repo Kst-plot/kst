@@ -42,6 +42,22 @@ void Relation::commonConstructor() {
 
   _redrawRequired = true;
   _ignoreAutoScale = false;
+
+  _contextDetails.Lx = 0.0;
+  _contextDetails.Hx = 0.0;
+  _contextDetails.Ly = 0.0;
+  _contextDetails.Hy = 0.0;
+  _contextDetails.m_X = 0.0;
+  _contextDetails.m_Y = 0.0;
+  _contextDetails.b_X = 0.0;
+  _contextDetails.b_Y = 0.0;
+  _contextDetails.XMin = 0.0;
+  _contextDetails.XMax = 0.0;
+  _contextDetails.xLog = false;
+  _contextDetails.yLog = false;
+  _contextDetails.xLogBase = 0.0;
+  _contextDetails.yLogBase = 0.0;
+  _contextDetails.penWidth = 0;
 }
 
 

@@ -173,11 +173,6 @@ QString DataMatrix::fileLabel() const {
 }
 
 
-DataSourcePtr DataMatrix::dataSource() const {
-  return _file;
-}
-
-
 bool DataMatrix::isValid() const {
   if (_file) {
     _file->readLock();
@@ -547,7 +542,6 @@ void DataMatrix::changeFile(DataSourcePtr file) {
   if (_file) {
     _file->writeLock();
   }
-//   setTagName(ObjectTag(tag().name(), _file->tag(), false));
   reset();
   if (_file) {
     _file->unlock();

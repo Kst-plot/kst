@@ -1,25 +1,20 @@
 include($$PWD/../../kst.pri)
-
 TEMPLATE = lib
 TARGET = kst2
 DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
-
-! isEmpty(INSTALL_PREFIX) {
-  target.path = $$INSTALL_PREFIX/$$INSTALL_LIBDIR
-  INSTALLS += target
+!isEmpty(INSTALL_PREFIX) { 
+    target.path = $$INSTALL_PREFIX/$$INSTALL_LIBDIR
+    INSTALLS += target
 }
-
-INCLUDEPATH += \
-    tmp \
+INCLUDEPATH += tmp \
     $$OUTPUT_DIR/src/libkst/tmp
-
-SOURCES += \
-    builtindatasources.cpp \
+SOURCES += builtindatasources.cpp \
     builtinprimitives.cpp \
     coredocument.cpp \
     datacollection.cpp \
     datamatrix.cpp \
+    dataprimitive.cpp \
     datasource.cpp \
     datasourcefactory.cpp \
     datasourcepluginfactory.cpp \
@@ -47,24 +42,23 @@ SOURCES += \
     rwlock.cpp \
     scalar.cpp \
     scalarfactory.cpp \
-    shortnameindex.cpp\
+    shortnameindex.cpp \
     string_kst.cpp \
     stringfactory.cpp \
     updatemanager.cpp \
     vector.cpp \
     vectorfactory.cpp \
-    vscalar.cpp
-
+    vscalar.cpp 
 !win32:SOURCES += stdinsource.cpp
-!macx:!win32:SOURCES += sysinfo.c psversion.c
-
-HEADERS += \
-    builtindatasources.h \
+!macx:!win32:SOURCES += sysinfo.c \
+    psversion.c
+HEADERS += builtindatasources.h \
     builtinprimitives.h \
     coredocument.h \
     datacollection.h \
     datamatrix.h \
     dataplugin.h \
+    dataprimitive.h \
     datasource.h \
     datasourcefactory.h \
     datasourcepluginfactory.h \
@@ -110,4 +104,4 @@ HEADERS += \
     updatemanager.h \
     vector.h \
     vectorfactory.h \
-    vscalar.h
+    vscalar.h 
