@@ -1031,6 +1031,7 @@ void MainWindow::back() {
 
 void MainWindow::reload() {
   document()->objectStore()->rebuildDataSourceList();
+  document()->setChanged(true);
 }
 
 void MainWindow::showDataManager() {

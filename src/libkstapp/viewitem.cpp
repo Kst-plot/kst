@@ -1659,7 +1659,6 @@ ViewItem::GripMode ViewItem::nextGripMode(GripMode currentMode) const {
 
 
 void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-
   if (parentView()->viewMode() == View::Data) {
     event->ignore();
     return;

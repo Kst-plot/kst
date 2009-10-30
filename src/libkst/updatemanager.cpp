@@ -58,6 +58,7 @@ UpdateManager::~UpdateManager() {
 
 void UpdateManager::requestUpdate(ObjectPtr object) {
   if (!_updateRequests.contains(object)) {
+//    qDebug() << "xxx    appending object to update requests";
     _updateRequests.append(object);
   }
 #if DEBUG_UPDATE_CYCLE > 1

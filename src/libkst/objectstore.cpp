@@ -21,7 +21,7 @@
 
 #include "object.h"
 #include "objectstore.h"
-#include "dataprimitive.h"
+#include "datavector.h"
 
 // NAMEDEBUG: 0 for no debug, 1 for some debug, 2 for more debug, 3 for all debug
 #define NAMEDEBUG 0
@@ -111,45 +111,30 @@ ObjectPtr ObjectStore::retrieveObject(const QString name) const {
   return NULL;
 }
 
-typedef struct {
-    ObjectPtr object;
-    QString filename;
-} ObjectFile;
-
+#if 0
 void ObjectStore::rebuildDataSourceList() {
 
-  QList<ObjectFile> dataPrimitives;
-  ObjectFile objectFile;
   DataSourceList newDataSourceList;
   DataSourcePtr new_data_source;
-
-  DataPrimitive* P;
+  DataPrimitive* object_P;
 
   foreach(ObjectPtr object, _list) {
-    P = dynamic_cast<DataPrimitive *>(object.data());
-    if (P) {
-      objectFile.object = object;
-      objectFile.filename = P->filename();
-      dataPrimitives.append(objectFile);
-    }
-  }
-
-  foreach(ObjectFile of, dataPrimitives) {
-    P = dynamic_cast<DataPrimitive *>(of.object.data());
-    if (P) {
-      new_data_source = newDataSourceList.findReusableFileName(of.filename);
+    object_P = dynamic_cast<DataPrimitive *>(object.data());
+    if (object_P) {
+      QString filename = object_P->filename();
+      new_data_source = newDataSourceList.findReusableFileName(filename);
       if (new_data_source == 0) {
-        new_data_source = DataSource::loadSource(this, of.filename);
+        new_data_source = DataSource::loadSource(this, filename);
         newDataSourceList.append(new_data_source);
       }
-      of.object->writeLock();
-      P->changeFile(new_data_source);
-      of.object->unlock();
+      //object->writeLock();
+      object_P->changeFile(new_data_source);
+      object->update();
+      //object->unlock();
     }
   }
 
   newDataSourceList.clear();
-  dataPrimitives.clear();
 
   // clean up unused data sources
   for (DataSourceList::Iterator it = _dataSourceList.begin(); it != _dataSourceList.end(); ++it) {
@@ -158,6 +143,44 @@ void ObjectStore::rebuildDataSourceList() {
       removeObject(*it);
     }
   }
+}
+#endif
+
+void ObjectStore::rebuildDataSourceList() {
+
+  DataSourceList newDataSourceList;
+
+  foreach(ObjectPtr object, _list) {
+  DataSourcePtr new_data_source;
+    DataVectorPtr object_P = kst_cast<DataVector>(object);
+    if (object_P) {
+      object_P->readLock();
+      QString filename = object_P->filename();
+      object_P->unlock();
+      new_data_source = newDataSourceList.findReusableFileName(filename);
+      if (new_data_source == 0) {
+        new_data_source = DataSource::loadSource(this, filename);
+        new_data_source->readLock();
+        newDataSourceList.append(new_data_source);
+        new_data_source->unlock();
+      }
+      object_P->writeLock();
+      //object_P->changeFile(new_data_source);
+      object_P->update();
+      object_P->unlock();
+    }
+  }
+
+
+  // clean up unused data sources
+  for (DataSourceList::Iterator it = _dataSourceList.begin(); it != _dataSourceList.end(); ++it) {
+    qDebug() << "Usage: " << (*it)->getUsage() << " fileName: " << (*it)->fileName();
+    if ((*it)->getUsage() == 1) {
+      removeObject(*it);
+    }
+  }
+  qDebug() << "removed";
+  newDataSourceList.clear();
 }
 
 bool ObjectStore::isEmpty() const {

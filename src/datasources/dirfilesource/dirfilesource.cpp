@@ -78,12 +78,15 @@ DirFileSource::DirFileSource(Kst::ObjectStore *store, QSettings *cfg, const QStr
 
 
 DirFileSource::~DirFileSource() {
+  disconnect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
+  disconnect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
   delete _config;
   _config = 0L;
   delete _dirfile;
   _dirfile = 0L;
   delete _watcher;
   _watcher = 0L;
+  qDebug() << " xxx deleting a dirfilesource";
 }
 
 
@@ -136,6 +139,8 @@ Kst::Object::UpdateType DirFileSource::update() {
   int newNF = _dirfile->NFrames();
   bool isnew = newNF != _frameCount;
   _frameCount = newNF;
+
+  //qDebug() << "xxx   frameCount: " << _frameCount << " is New: " << isnew;
 
   return (isnew ? Kst::Object::UPDATE : Kst::Object::NO_CHANGE);
 }
