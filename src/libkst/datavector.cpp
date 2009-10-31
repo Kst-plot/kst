@@ -626,7 +626,6 @@ void DataVector::reload() {
       assert(newsrc != _file);
       if (newsrc) {
         _file->unlock();
-        // FIXME: need to writelock store?
         if (store()) {
           store()->removeObject(_file);
         }
@@ -638,6 +637,7 @@ void DataVector::reload() {
     }
     _resetFieldMetadata();
     _file->unlock();
+    update();
   }
 }
 

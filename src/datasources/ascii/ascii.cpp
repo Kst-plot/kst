@@ -226,7 +226,7 @@ bool AsciiSource::reset() {
     _rowIndex = 0L;
     _numLinesAlloc = 0;
   }
-
+  _numFrames = 0;
   _haveHeader = false;
   _fieldListComplete = false;
   _fieldList.clear();
@@ -234,7 +234,7 @@ bool AsciiSource::reset() {
   _matrixList.clear();
   _stringList.clear();
 
-  update(); // Yuck - same problem as in the constructor presently.
+  checkUpdate();
 
   return true;
 }

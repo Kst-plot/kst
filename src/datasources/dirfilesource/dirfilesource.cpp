@@ -64,15 +64,6 @@ DirFileSource::DirFileSource(Kst::ObjectStore *store, QSettings *cfg, const QStr
   init();
   update();
 
-  _watcher = new QFileSystemWatcher();
-  if (_fieldList.count() > 1) {
-    QString filePath = _dirfile->ReferenceFilename();
-    _watcher->addPath(filePath);
-  }
-
-  connect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
-  connect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
-
 }
 
 
@@ -91,9 +82,15 @@ DirFileSource::~DirFileSource() {
 
 
 bool DirFileSource::reset() {
+  disconnect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
+  disconnect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
   if (_dirfile) {
     delete _dirfile;
   }
+
+  delete _watcher;
+  _watcher = 0L;
+
   init();
   return true;
 }
@@ -130,6 +127,15 @@ bool DirFileSource::init() {
 
     _writable = true;
   }
+
+  _watcher = new QFileSystemWatcher();
+  if (_fieldList.count() > 1) {
+    QString filePath = _dirfile->ReferenceFilename();
+    _watcher->addPath(filePath);
+  }
+
+  connect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
+  connect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
 
   return update() == Kst::Object::UPDATE;
 }

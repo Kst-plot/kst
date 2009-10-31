@@ -148,39 +148,34 @@ void ObjectStore::rebuildDataSourceList() {
 
 void ObjectStore::rebuildDataSourceList() {
 
-  DataSourceList newDataSourceList;
+  DataSourceList dataSourceList;
 
-  foreach(ObjectPtr object, _list) {
-  DataSourcePtr new_data_source;
-    DataVectorPtr object_P = kst_cast<DataVector>(object);
+  for (int i=0; i<_list.count(); i++) {
+    DataVectorPtr object_P = kst_cast<DataVector>(_list.at(i));
     if (object_P) {
+      DataSourcePtr dataSource;
       object_P->readLock();
-      QString filename = object_P->filename();
+      dataSource = object_P->dataSource();
       object_P->unlock();
-      new_data_source = newDataSourceList.findReusableFileName(filename);
-      if (new_data_source == 0) {
-        new_data_source = DataSource::loadSource(this, filename);
-        new_data_source->readLock();
-        newDataSourceList.append(new_data_source);
-        new_data_source->unlock();
+
+      if (!dataSourceList.contains(dataSource)) {
+        object_P->writeLock();
+        object_P->reload();
+        object_P->unlock();
+        dataSourceList.append(dataSource);
       }
-      object_P->writeLock();
-      //object_P->changeFile(new_data_source);
-      object_P->update();
-      object_P->unlock();
     }
   }
 
+  dataSourceList.clear();
+  dataSourceList.append(_dataSourceList);
 
   // clean up unused data sources
-  for (DataSourceList::Iterator it = _dataSourceList.begin(); it != _dataSourceList.end(); ++it) {
-    qDebug() << "Usage: " << (*it)->getUsage() << " fileName: " << (*it)->fileName();
+  for (DataSourceList::Iterator it = dataSourceList.begin(); it != dataSourceList.end(); ++it) {
     if ((*it)->getUsage() == 1) {
       removeObject(*it);
     }
   }
-  qDebug() << "removed";
-  newDataSourceList.clear();
 }
 
 bool ObjectStore::isEmpty() const {
