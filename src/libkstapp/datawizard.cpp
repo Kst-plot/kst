@@ -710,10 +710,12 @@ void DataWizard::finished() {
    }
   }
 
+
   // create the necessary plots
   QList<PlotItem*> plotList;
   PlotItem *plotItem = 0;
   bool relayout = true;
+  int plotsInPage = _document->currentView()->scene()->items().count();
   switch (_pagePlot->curvePlacement()) {
     case DataWizardPagePlot::ExistingPlot:
     {
@@ -941,22 +943,29 @@ void DataWizard::finished() {
   //double fontScale = ApplicationSettings::self()->referenceFontSize()/sqrt((double) plotList.count()) -
   //                   ApplicationSettings::self()->referenceFontSize()+
   //                   ApplicationSettings::self()->referenceFontSize()/3;
-  double fontScale = ApplicationSettings::self()->referenceFontSize()/sqrt((double) plotList.count())-
-                     ApplicationSettings::self()->referenceFontSize() +
-                     _dialogDefaults->value("plot/globalFontScale",0.0).toDouble();
 
-  //if (fontScale > 0)  {
-  //  fontScale = 0;
-  //}
+  double fontScale;
+  if (plotsInPage==0) {
+    plotsInPage = plotList.count();
+    if (plotsInPage==0) plotsInPage = 1;
+    fontScale = ApplicationSettings::self()->referenceFontSize()/sqrt((double)plotsInPage)-
+                       ApplicationSettings::self()->referenceFontSize() +
+                       _dialogDefaults->value("plot/globalFontScale",0.0).toDouble();
+    foreach (PlotItem* plot, plotList) {
+      plot->setGlobalFontScale(fontScale);
+      plot->leftLabelDetails()->setFontScale(fontScale);
+      plot->rightLabelDetails()->setFontScale(fontScale);
+      plot->topLabelDetails()->setFontScale(fontScale);
+      plot->bottomLabelDetails()->setFontScale(fontScale);
+      plot->numberLabelDetails()->setFontScale(fontScale);
+    }
+  } else {
+    foreach (PlotItem* plot, plotList) {
+      _document->currentView()->configurePlotFontDefaults(plot); // copy plots already in window
+    }
+  }
 
   foreach (PlotItem* plot, plotList) {
-    plot->setGlobalFontScale(fontScale);
-    plot->leftLabelDetails()->setFontScale(fontScale);
-    plot->rightLabelDetails()->setFontScale(fontScale);
-    plot->topLabelDetails()->setFontScale(fontScale);
-    plot->bottomLabelDetails()->setFontScale(fontScale);
-    plot->numberLabelDetails()->setFontScale(fontScale);
-
     if (!xLabels) {
       plot->leftLabelDetails()->setText(QString(" "));
       plot->rightLabelDetails()->setText(QString(" "));
@@ -971,7 +980,7 @@ void DataWizard::finished() {
 
   }
 
-  fontScale = ApplicationSettings::self()->referenceFontSize()/sqrt((double) plotList.count())-
+  fontScale = ApplicationSettings::self()->referenceFontSize()/sqrt((double) plotsInPage)-
                      ApplicationSettings::self()->referenceFontSize() +
                      _dialogDefaults->value("legend/fontScale",0.0).toDouble();
 

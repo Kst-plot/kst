@@ -116,7 +116,7 @@ PlotItem::PlotItem(View *parent)
   _bottomLabelDetails = new PlotLabel(this);
   _numberLabelDetails = new PlotLabel(this);
 
-  parentView()->configurePlotFontDefaults(this);
+  //parentView()->configurePlotFontDefaults(this);
 
   connect(_leftLabelDetails, SIGNAL(labelChanged()), this, SLOT(setPlotBordersDirty()));
   connect(_leftLabelDetails, SIGNAL(labelChanged()), this, SLOT(setLeftLabelDirty()));
