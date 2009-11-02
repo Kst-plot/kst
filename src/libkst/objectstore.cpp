@@ -111,41 +111,6 @@ ObjectPtr ObjectStore::retrieveObject(const QString name) const {
   return NULL;
 }
 
-#if 0
-void ObjectStore::rebuildDataSourceList() {
-
-  DataSourceList newDataSourceList;
-  DataSourcePtr new_data_source;
-  DataPrimitive* object_P;
-
-  foreach(ObjectPtr object, _list) {
-    object_P = dynamic_cast<DataPrimitive *>(object.data());
-    if (object_P) {
-      QString filename = object_P->filename();
-      new_data_source = newDataSourceList.findReusableFileName(filename);
-      if (new_data_source == 0) {
-        new_data_source = DataSource::loadSource(this, filename);
-        newDataSourceList.append(new_data_source);
-      }
-      //object->writeLock();
-      object_P->changeFile(new_data_source);
-      object->update();
-      //object->unlock();
-    }
-  }
-
-  newDataSourceList.clear();
-
-  // clean up unused data sources
-  for (DataSourceList::Iterator it = _dataSourceList.begin(); it != _dataSourceList.end(); ++it) {
-    qDebug() << "Usage: " << (*it)->getUsage();
-    if ((*it)->getUsage() == 0) {
-      removeObject(*it);
-    }
-  }
-}
-#endif
-
 void ObjectStore::rebuildDataSourceList() {
 
   DataSourceList dataSourceList;
@@ -170,9 +135,13 @@ void ObjectStore::rebuildDataSourceList() {
   dataSourceList.clear();
   dataSourceList.append(_dataSourceList);
 
+  cleanUpDataSourceList();
+}
+
+void ObjectStore::cleanUpDataSourceList() {
   // clean up unused data sources
-  for (DataSourceList::Iterator it = dataSourceList.begin(); it != dataSourceList.end(); ++it) {
-    if ((*it)->getUsage() == 1) {
+  for (DataSourceList::Iterator it = _dataSourceList.begin(); it != _dataSourceList.end(); ++it) {
+    if ((*it)->getUsage() <= 1) {
       removeObject(*it);
     }
   }
@@ -200,17 +169,6 @@ void ObjectStore::clear() {
   NamedObject::resetNameIndex();
 }
 
-
-#if 0
-void ObjectStore::setUpdateDisplayTags(bool u) {
-  if (u && !_updateDisplayTags) {
-    // turning on _updateDisplayTags, so do an update
-    updateAllDisplayTags();
-  }
-
-  _updateDisplayTags = u;
-}
-#endif
 
 DataSourceList ObjectStore::dataSourceList() const {
   KstReadLocker l(&_lock);

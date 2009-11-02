@@ -82,7 +82,6 @@ Vector::~Vector() {
     free(_v);
     _v = 0;
   }
-  qDebug() << "destroying vector: rms scalar usage: " << _scalars["rms"]->getUsage();
 }
 
 

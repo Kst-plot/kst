@@ -66,12 +66,3 @@ Fixup line/arrow dimensions tab:
 
 Names in multipage graphics file export.  name_2.png, not name.png_2, etc
 
---------------------
-
-Need to be able to rebuild the datasource list:
-  Make a list of all dataprimitives and their file names
-  Erase all data sources from the object store.
-  for each dataprimitive {
-    find or create (filename)
-    changeFile(newDatasource) (adds to the store?)
-  }

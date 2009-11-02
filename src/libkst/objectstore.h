@@ -59,6 +59,9 @@ class KST_EXPORT ObjectStore {
     /** Close all data sources, and reopen ones that are needed */
     void rebuildDataSourceList();
 
+    /** remove unused data sources from the list */
+    void cleanUpDataSourceList();
+
     /** locking */
     KstRWLock& lock() const { return _lock; }
 

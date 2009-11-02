@@ -197,6 +197,7 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
 
 
 AsciiSource::~AsciiSource() {
+  qDebug() << "xxx deleting an ascii source";
   if (_tmpBuf) {
     free(_tmpBuf);
     _tmpBuf = 0L;

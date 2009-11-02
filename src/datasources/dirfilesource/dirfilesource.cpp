@@ -77,7 +77,6 @@ DirFileSource::~DirFileSource() {
   _dirfile = 0L;
   delete _watcher;
   _watcher = 0L;
-  qDebug() << " xxx deleting a dirfilesource";
 }
 
 

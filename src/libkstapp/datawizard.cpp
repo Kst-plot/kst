@@ -56,6 +56,7 @@ bool DataWizardPageDataSource::isComplete() const {
 
 
 DataSourcePtr DataWizardPageDataSource::dataSource() const {
+
   return _dataSource;
 }
 
@@ -83,6 +84,11 @@ void DataWizardPageDataSource::sourceValid(QString filename, int requestID) {
   _dataSource->readLock();
   _configureSource->setEnabled(_dataSource->hasConfigWidget());
   _dataSource->unlock();
+
+  {
+    DataSourcePtr tmpds = _dataSource; // increase usage count
+    _store->cleanUpDataSourceList();
+  }
 
   emit completeChanged();
   emit dataSourceChanged();

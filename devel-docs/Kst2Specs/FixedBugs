@@ -1122,3 +1122,17 @@ Fixed after beta 3
 Multi-page printing:
 The code is in place and commented out, because it gets the size wrong for pages other than the current tab.
 This bug is also hit in the export widget.
+
+--------------------
+
+Need to be able to rebuild the datasource list:
+  Make a list of all dataprimitives and their file names
+  Erase all data sources from the object store.
+  for each dataprimitive {
+    find or create (filename)
+    changeFile(newDatasource) (adds to the store?)
+  }
+
+--------------------
+
+Datasources that are browsed are created, remembered, and saved/loaded.

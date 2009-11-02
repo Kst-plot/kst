@@ -9,7 +9,4 @@ Draw an ellipse that spans many plots.  It ends up in the back, and can't be bro
 
 Artifacts when resizing large arrowheads.
 
---------------------
-
-Datasources that are browsed are created, remembered, and saved/loaded.
 
