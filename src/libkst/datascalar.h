@@ -37,13 +37,13 @@ class KST_EXPORT DataScalar : public Scalar, public DataPrimitive {
 
   protected:
     DataScalar(ObjectStore *store);
-    virtual ~DataScalar();
-
     friend class ObjectStore;
 
     virtual QString _automaticDescriptiveName() const;
 
   public:
+    virtual ~DataScalar();
+
     virtual const QString& typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
@@ -65,6 +65,10 @@ class KST_EXPORT DataScalar : public Scalar, public DataPrimitive {
 
     virtual QString propertyString() const;
     bool isValid() const;
+
+    void reset();
+    void reload();
+
   public Q_SLOTS:
     void sourceUpdated(ObjectPtr object);
 

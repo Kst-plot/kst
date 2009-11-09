@@ -47,6 +47,7 @@ class DirFileSource::Config {
 
 DirFileSource::DirFileSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
 : Kst::DataSource(store, cfg, filename, type, None), _config(0L) {
+
   _valid = false;
   if (!type.isEmpty() && type != dirfileTypeString) {
     return;
@@ -69,14 +70,16 @@ DirFileSource::DirFileSource(Kst::ObjectStore *store, QSettings *cfg, const QStr
 
 
 DirFileSource::~DirFileSource() {
-  disconnect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
-  disconnect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
+  if (_watcher) {
+    disconnect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
+    disconnect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
+    delete _watcher;
+    _watcher = 0L;
+  }
   delete _config;
   _config = 0L;
   delete _dirfile;
   _dirfile = 0L;
-  delete _watcher;
-  _watcher = 0L;
 }
 
 
@@ -132,7 +135,6 @@ bool DirFileSource::init() {
     QString filePath = _dirfile->ReferenceFilename();
     _watcher->addPath(filePath);
   }
-
   connect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
   connect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
 

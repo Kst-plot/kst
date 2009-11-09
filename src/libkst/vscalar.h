@@ -36,13 +36,13 @@ class KST_EXPORT VScalar : public Scalar {
 
   protected:
     VScalar(ObjectStore *store);
-    virtual ~VScalar();
-
     friend class ObjectStore;
 
     virtual QString _automaticDescriptiveName() const;
 
   public:
+    virtual ~VScalar();
+
     virtual const QString& typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;

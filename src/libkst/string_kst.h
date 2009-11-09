@@ -38,13 +38,13 @@ class KST_EXPORT String : public Primitive {
     virtual QString propertyString() const;
   protected:
     String(ObjectStore *store);
-    virtual ~String();
 
     friend class ObjectStore;
     virtual QString _automaticDescriptiveName() const;
     virtual void _initializeShortName();
 
   public:
+    virtual ~String();
     /** Save information */
     void save(QXmlStreamWriter &s);
 

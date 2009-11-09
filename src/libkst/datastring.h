@@ -37,13 +37,17 @@ class KST_EXPORT DataString : public String, public DataPrimitive {
 
   protected:
     DataString(ObjectStore *store);
-    virtual ~DataString();
-
     friend class ObjectStore;
 
     virtual QString _automaticDescriptiveName() const;
 
   public:
+    virtual ~DataString();
+
+    void reload();
+
+    void reset();
+
     virtual const QString& typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;

@@ -171,7 +171,7 @@ void MainWindow::closeEvent(QCloseEvent *e) {
     e->ignore();
     return;
   }
-  cleanup();
+  //cleanup();
   QMainWindow::closeEvent(e);
 }
 

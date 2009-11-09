@@ -66,6 +66,7 @@ void DataSource::_initializeShortName() {
 static PluginList _pluginList;
 void DataSource::cleanupForExit() {
   _pluginList.clear();
+  qDebug() << "cleaning up for exit in datasource";
   delete settingsObject;
   settingsObject = 0L;
 //   for (QMap<QString,QString>::Iterator i = urlMap.begin(); i != urlMap.end(); ++i) {
@@ -568,6 +569,7 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
   _valid = false;
   _reusable = true;
   _writable = false;
+  _watcher = 0L;
 
   QString shortFilename = filename;
   while (shortFilename.at(shortFilename.length() - 1) == '/') {
@@ -580,16 +582,22 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
   if (_updateCheckType == Timer) {
     QTimer::singleShot(UpdateManager::self()->minimumUpdatePeriod()-1, this, SLOT(checkUpdate()));
   } else if (_updateCheckType == File) {
-    QFileSystemWatcher *watcher = new QFileSystemWatcher();
-    watcher->addPath(_filename);
-    connect(watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
-    connect(watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
+    _watcher = new QFileSystemWatcher();
+    _watcher->addPath(_filename);
+    connect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
+    connect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
   }
 }
 
 
 DataSource::~DataSource() {
-//    qDebug() << "DataSource destructor: " << Name() << endl;
+  if (_watcher) {
+    disconnect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
+    disconnect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
+    delete _watcher;
+    _watcher = 0L;
+  }
+
 }
 
 

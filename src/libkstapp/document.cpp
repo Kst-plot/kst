@@ -65,6 +65,8 @@ bool Document::save(const QString& to) {
 
   Q_ASSERT(objectStore());
 
+  objectStore()->cleanUpDataSourceList();
+
   _fileName = file;
 
   QXmlStreamWriter xml;

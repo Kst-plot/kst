@@ -31,16 +31,17 @@ class KST_EXPORT Scalar : public Primitive {
   Q_PROPERTY(double value READ value WRITE setValue)
   Q_PROPERTY(bool displayable READ displayable WRITE setDisplayable)
 
-  protected:
+    protected:
     Scalar(ObjectStore *store);
-    virtual ~Scalar();
 
     friend class ObjectStore;
 
     virtual QString _automaticDescriptiveName() const;
     virtual void _initializeShortName();
   public:
-    virtual const QString& typeString() const;
+    virtual ~Scalar();
+
+  virtual const QString& typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
 

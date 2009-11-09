@@ -88,6 +88,15 @@ Vector::~Vector() {
 void Vector::deleteDependents() {
   for (QHash<QString, Scalar*>::Iterator it = _scalars.begin(); it != _scalars.end(); ++it) {
     _store->removeObject(it.value());
+    if (it.value()->getUsage() == 0) {
+      delete it.value();
+    }
+  }
+  for (QHash<QString, String*>::Iterator it = _strings.begin(); it != _strings.end(); ++it) {
+    _store->removeObject(it.value());
+    if (it.value()->getUsage() == 0) {
+      delete it.value();
+    }
   }
 }
 

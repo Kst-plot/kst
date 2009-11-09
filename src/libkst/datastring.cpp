@@ -164,5 +164,34 @@ QString DataString::descriptionTip() const {
 QString DataString::propertyString() const {
   return i18n("%1 of %2").arg(_field).arg(dataSource()->fileName());
 }
+
+void DataString::reload() {
+  Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
+
+  if (_file) {
+    _file->writeLock();
+    if (_file->reset()) { // try the efficient way first
+      reset();
+    } else { // the inefficient way
+      DataSourcePtr newsrc = DataSource::loadSource(store(), _file->fileName(), _file->fileType());
+      if (newsrc) {
+        _file->unlock();
+        if (store()) {
+          store()->removeObject(_file);
+        }
+        _file = newsrc;
+        _file->writeLock();
+        reset();
+      }
+    }
+    _file->unlock();
+    update();
+  }
+}
+
+void DataString::reset() {
+  _file->readString(_value, _field);
+}
+
 }
 // vim: ts=2 sw=2 et

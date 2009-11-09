@@ -64,6 +64,8 @@ QImageSource::QImageSource(Kst::ObjectStore *store, QSettings *cfg, const QStrin
 
 
 QImageSource::~QImageSource() {
+  delete _config;
+  _config = 0L;
 }
 
 

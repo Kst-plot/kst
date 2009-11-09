@@ -165,5 +165,33 @@ QString DataScalar::propertyString() const {
   return i18n("%2 of %1 = %3").arg(dataSource()->fileName()).arg(field()).arg(value());
 }
 
+void DataScalar::reload() {
+  Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
+
+  if (_file) {
+    _file->writeLock();
+    if (_file->reset()) { // try the efficient way first
+      reset();
+    } else { // the inefficient way
+      DataSourcePtr newsrc = DataSource::loadSource(store(), _file->fileName(), _file->fileType());
+      if (newsrc) {
+        _file->unlock();
+        if (store()) {
+          store()->removeObject(_file);
+        }
+        _file = newsrc;
+        _file->writeLock();
+        reset();
+      }
+    }
+    _file->unlock();
+    update();
+  }
+}
+
+void DataScalar::reset() {
+  _file->readScalar(_value, _field);
+}
+
 }
 // vim: ts=2 sw=2 et

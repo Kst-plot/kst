@@ -66,3 +66,10 @@ Fixup line/arrow dimensions tab:
 
 Names in multipage graphics file export.  name_2.png, not name.png_2, etc
 
+-----------
+
+Improve behavior of data wizard selector
+
+----------
+
+Shared axis from the command line

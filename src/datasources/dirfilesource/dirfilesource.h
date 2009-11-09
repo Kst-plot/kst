@@ -77,7 +77,6 @@ class DirFileSource : public Kst::DataSource {
   private:
     QString _directoryName;
     Dirfile *_dirfile;
-    QFileSystemWatcher *_watcher;
 
     int _frameCount;
     mutable Config *_config;

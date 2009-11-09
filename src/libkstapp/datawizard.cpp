@@ -191,8 +191,6 @@ void DataWizardPageVectors::add() {
 
   _vectorsToPlot->setCurrentRow(_vectorsToPlot->count() - 1);
 
-  _vectors->setFocus();
-
   emit completeChanged();
 }
 

@@ -22,6 +22,9 @@
 #include "object.h"
 #include "objectstore.h"
 #include "datavector.h"
+#include "datastring.h"
+#include "datascalar.h"
+#include "datamatrix.h"
 
 // NAMEDEBUG: 0 for no debug, 1 for some debug, 2 for more debug, 3 for all debug
 #define NAMEDEBUG 0
@@ -116,35 +119,74 @@ void ObjectStore::rebuildDataSourceList() {
   DataSourceList dataSourceList;
 
   for (int i=0; i<_list.count(); i++) {
-    DataVectorPtr object_P = kst_cast<DataVector>(_list.at(i));
-    if (object_P) {
+    if (DataVectorPtr object_V = kst_cast<DataVector>(_list.at(i))) {
       DataSourcePtr dataSource;
-      object_P->readLock();
-      dataSource = object_P->dataSource();
-      object_P->unlock();
+      object_V->readLock();
+      dataSource = object_V->dataSource();
+      object_V->unlock();
 
       if (!dataSourceList.contains(dataSource)) {
-        object_P->writeLock();
-        object_P->reload();
-        object_P->unlock();
+        object_V->writeLock();
+        object_V->reload();
+        object_V->unlock();
+        dataSourceList.append(dataSource);
+      }
+    } else if (DataStringPtr object_T = kst_cast<DataString>(_list.at(i))) {
+      DataSourcePtr dataSource;
+      object_T->readLock();
+      dataSource = object_T->dataSource();
+      object_T->unlock();
+
+      if (!dataSourceList.contains(dataSource)) {
+        object_T->writeLock();
+        object_T->reload();
+        object_T->unlock();
+        dataSourceList.append(dataSource);
+      }
+    } else if (DataScalarPtr object_X = kst_cast<DataScalar>(_list.at(i))) {
+      DataSourcePtr dataSource;
+      object_X->readLock();
+      dataSource = object_X->dataSource();
+      object_X->unlock();
+
+      if (!dataSourceList.contains(dataSource)) {
+        object_X->writeLock();
+        object_X->reload();
+        object_X->unlock();
+        dataSourceList.append(dataSource);
+      }
+    } else if (DataMatrixPtr object_M = kst_cast<DataMatrix>(_list.at(i))) {
+      DataSourcePtr dataSource;
+      object_M->readLock();
+      dataSource = object_M->dataSource();
+      object_M->unlock();
+
+      if (!dataSourceList.contains(dataSource)) {
+        object_M->writeLock();
+        object_M->reload();
+        object_M->unlock();
         dataSourceList.append(dataSource);
       }
     }
   }
 
   dataSourceList.clear();
-  dataSourceList.append(_dataSourceList);
 
   cleanUpDataSourceList();
 }
 
 void ObjectStore::cleanUpDataSourceList() {
+  DataSourceList currentSourceList;
+
+  currentSourceList.clear();
+  currentSourceList.append(_dataSourceList);
   // clean up unused data sources
-  for (DataSourceList::Iterator it = _dataSourceList.begin(); it != _dataSourceList.end(); ++it) {
+  for (DataSourceList::Iterator it = currentSourceList.begin(); it != currentSourceList.end(); ++it) {
     if ((*it)->getUsage() <= 1) {
       removeObject(*it);
     }
   }
+  currentSourceList.clear();
 }
 
 bool ObjectStore::isEmpty() const {

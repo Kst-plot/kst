@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>DataWizardPageVectors</class>
- <widget class="QWizardPage" name="DataWizardPageVectors" >
-  <property name="geometry" >
+ <widget class="QWizardPage" name="DataWizardPageVectors">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,19 +10,19 @@
     <height>313</height>
    </rect>
   </property>
-  <layout class="QGridLayout" >
-   <property name="margin" >
+  <layout class="QGridLayout">
+   <property name="margin">
     <number>0</number>
    </property>
-   <item row="0" column="1" >
-    <spacer name="spacer117" >
-     <property name="orientation" >
+   <item row="0" column="1">
+    <spacer name="spacer117">
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeType" >
+     <property name="sizeType">
       <enum>QSizePolicy::Expanding</enum>
      </property>
-     <property name="sizeHint" stdset="0" >
+     <property name="sizeHint" stdset="0">
       <size>
        <width>121</width>
        <height>102</height>
@@ -29,95 +30,95 @@
      </property>
     </spacer>
    </item>
-   <item row="1" column="1" >
-    <layout class="QGridLayout" >
-     <property name="margin" >
+   <item row="1" column="1">
+    <layout class="QGridLayout">
+     <property name="margin">
       <number>0</number>
      </property>
-     <item row="1" column="1" >
-      <widget class="QPushButton" name="_up" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+     <item row="1" column="1">
+      <widget class="QPushButton" name="_up">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="whatsThis" >
+       <property name="whatsThis">
         <string>Raise in plot order (Alt-up)</string>
        </property>
-       <property name="text" >
+       <property name="text">
         <string/>
        </property>
-       <property name="shortcut" >
+       <property name="shortcut">
         <string>Alt+Up</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="1" >
-      <widget class="QPushButton" name="_down" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+     <item row="3" column="1">
+      <widget class="QPushButton" name="_down">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="text" >
+       <property name="text">
         <string/>
        </property>
-       <property name="shortcut" >
+       <property name="shortcut">
         <string>Alt+Down</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="2" >
-      <widget class="QPushButton" name="_add" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+     <item row="2" column="2">
+      <widget class="QPushButton" name="_add">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="whatsThis" >
+       <property name="whatsThis">
         <string>Select (Alt-s): Move highlighted fields from the Available data list to the Selected data list for plotting.</string>
        </property>
-       <property name="text" >
+       <property name="text">
         <string/>
        </property>
-       <property name="shortcut" >
+       <property name="shortcut">
         <string>Alt+S</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="0" >
-      <widget class="QPushButton" name="_remove" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+     <item row="2" column="0">
+      <widget class="QPushButton" name="_remove">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="whatsThis" >
+       <property name="whatsThis">
         <string>Remove (Alt-s): Move highlighted fields from the Selected data list to the Available data list so that they will not be plotted.</string>
        </property>
-       <property name="text" >
+       <property name="text">
         <string/>
        </property>
-       <property name="shortcut" >
+       <property name="shortcut">
         <string>Alt+R</string>
        </property>
       </widget>
      </item>
     </layout>
    </item>
-   <item row="2" column="1" >
-    <spacer name="spacer118" >
-     <property name="orientation" >
+   <item row="2" column="1">
+    <spacer name="spacer118">
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeType" >
+     <property name="sizeType">
       <enum>QSizePolicy::Expanding</enum>
      </property>
-     <property name="sizeHint" stdset="0" >
+     <property name="sizeHint" stdset="0">
       <size>
        <width>138</width>
        <height>97</height>
@@ -125,83 +126,83 @@
      </property>
     </spacer>
    </item>
-   <item rowspan="3" row="0" column="2" >
-    <layout class="QGridLayout" >
-     <property name="margin" >
+   <item row="0" column="2" rowspan="3">
+    <layout class="QGridLayout">
+     <property name="margin">
       <number>0</number>
      </property>
-     <item row="1" column="0" colspan="2" >
-      <widget class="QListWidget" name="_vectorsToPlot" >
-       <property name="toolTip" >
+     <item row="1" column="0" colspan="2">
+      <widget class="QListWidget" name="_vectorsToPlot">
+       <property name="toolTip">
         <string>Selected data: All fields in this list are plotted.</string>
        </property>
-       <property name="whatsThis" >
+       <property name="whatsThis">
         <string>Selected data: All fields in this list are plotted.  To remove fields from this list, drag them to the Available data list, double click on them, or select them and use the Remove button (right arrow icon or Alt-r).  The order in which fields appear in this list is the order in which they will be plotted.</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="0" colspan="2" >
-      <widget class="QLabel" name="textLabel1" >
-       <property name="text" >
+     <item row="0" column="0" colspan="2">
+      <widget class="QLabel" name="textLabel1">
+       <property name="text">
         <string>Selected data:</string>
        </property>
-       <property name="wordWrap" >
+       <property name="wordWrap">
         <bool>false</bool>
        </property>
       </widget>
      </item>
     </layout>
    </item>
-   <item rowspan="3" row="0" column="0" >
-    <layout class="QGridLayout" >
-     <property name="margin" >
+   <item row="0" column="0" rowspan="3">
+    <layout class="QGridLayout">
+     <property name="margin">
       <number>0</number>
      </property>
-     <item row="1" column="1" >
-      <widget class="QPushButton" name="_vectorSearch" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+     <item row="1" column="1">
+      <widget class="QPushButton" name="_vectorSearch">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="whatsThis" >
+       <property name="whatsThis">
         <string>Appends the '*' wild card to the beginning and end of the search filter to match everything containing the search filter text.</string>
        </property>
-       <property name="text" >
+       <property name="text">
         <string>S&amp;earch</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0" >
-      <widget class="QLineEdit" name="_vectorReduction" >
-       <property name="toolTip" >
+     <item row="1" column="0">
+      <widget class="QLineEdit" name="_vectorReduction">
+       <property name="toolTip">
         <string>Search Filter</string>
        </property>
-       <property name="whatsThis" >
+       <property name="whatsThis">
         <string>Search Filter: Fields matching this filter will be highlighted and moved to the top of the Available data list.  '*' and '?' wild cards are supported.</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="0" colspan="2" >
-      <widget class="QListWidget" name="_vectors" >
-       <property name="toolTip" >
+     <item row="2" column="0" colspan="2">
+      <widget class="QListWidget" name="_vectors">
+       <property name="toolTip">
         <string>Field selection: Checked fields are plotted.</string>
        </property>
-       <property name="whatsThis" >
+       <property name="whatsThis">
         <string>Available data: This box lists all fields which have not been selected for plotting.  To select a field for plotting, move it to the Selected data list, by dragging it with the mouse, by double clicking, or by highlighting it, and clicking on the select button (Right Arrow - accelerator is Alt-s).</string>
        </property>
-       <property name="selectionMode" >
-        <enum>QAbstractItemView::MultiSelection</enum>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::ExtendedSelection</enum>
        </property>
       </widget>
      </item>
-     <item row="0" column="0" colspan="2" >
-      <widget class="QLabel" name="textLabel1_2" >
-       <property name="text" >
+     <item row="0" column="0" colspan="2">
+      <widget class="QLabel" name="textLabel1_2">
+       <property name="text">
         <string>Available data:</string>
        </property>
-       <property name="wordWrap" >
+       <property name="wordWrap">
         <bool>false</bool>
        </property>
       </widget>
@@ -210,7 +211,7 @@
    </item>
   </layout>
  </widget>
- <layoutdefault spacing="6" margin="11" />
+ <layoutdefault spacing="6" margin="11"/>
  <tabstops>
   <tabstop>_vectorReduction</tabstop>
   <tabstop>_vectors</tabstop>
@@ -222,5 +223,54 @@
   <tabstop>_vectorSearch</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>_add</sender>
+   <signal>clicked()</signal>
+   <receiver>_vectorReduction</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>480</x>
+     <y>154</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>237</x>
+     <y>31</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_add</sender>
+   <signal>clicked()</signal>
+   <receiver>_vectorReduction</receiver>
+   <slot>selectAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>500</x>
+     <y>152</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>256</x>
+     <y>43</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_vectors</sender>
+   <signal>clicked(QModelIndex)</signal>
+   <receiver>_vectorReduction</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>94</x>
+     <y>95</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>104</x>
+     <y>30</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

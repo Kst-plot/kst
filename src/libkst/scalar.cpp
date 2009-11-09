@@ -58,7 +58,7 @@ void Scalar::_initializeShortName() {
 }
 
 Scalar::~Scalar() {
-  qDebug() << "scalar destructor for: " << Name();
+  //qDebug() << "scalar destructor for: " << Name();
 }
 
 

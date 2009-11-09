@@ -1995,6 +1995,7 @@ void LayoutCommand::createLayout(int columns) {
       }
     }
   }
+  delete grid;
 
   if (qobject_cast<LayoutBoxItem*>(_item)) {
     QObject::connect(_layout, SIGNAL(enabledChanged(bool)),

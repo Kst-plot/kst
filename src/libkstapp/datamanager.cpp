@@ -149,6 +149,9 @@ DataManager::DataManager(QWidget *parent, Document *doc)
 
 
 DataManager::~DataManager() {
+  // the data manager is only destroyed at exit, so there is no real
+  // need to clean up anything...  (though valgrind thinks we really
+  // ought to delete all of our actions before we exit)
 }
 
 
@@ -430,6 +433,7 @@ void DataManager::deleteObject() {
   }
   _currentObject = 0;
   _doc->session()->triggerReset();
+  _doc->objectStore()->cleanUpDataSourceList();
 }
 
 

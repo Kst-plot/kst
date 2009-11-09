@@ -42,6 +42,7 @@ namespace KST {
   class DataSourcePlugin;
 }
 
+class QFileSystemWatcher;
 
 namespace Kst {
 
@@ -360,6 +361,8 @@ class KST_EXPORT DataSource : public Object {
 
     virtual QString _automaticDescriptiveName() const;
     void _initializeShortName();
+
+    QFileSystemWatcher *_watcher;
 
     // NOTE: You must bump the version key if you add new member variables
     //       or change or add virtual functions.

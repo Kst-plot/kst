@@ -303,6 +303,8 @@ PlotItem::~PlotItem() {
   delete _topLabelDetails;
   delete _bottomLabelDetails;
   delete _numberLabelDetails;
+  delete _zoomMenu;
+  delete _filterMenu;
 
   PlotItemManager::self()->removePlot(this);
 }
@@ -2278,7 +2280,9 @@ void PlotItem::generateTopLabel() {
     _topLabel.rc = rc;
     _topLabel.transform = t;
     _topLabel.valid = true;
-  }
+
+    delete parsed;
+    }
 }
 
 
