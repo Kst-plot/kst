@@ -128,7 +128,7 @@ CommandLineParser::CommandLineParser(Document *doc):
       _doAve(false), _doSkip(false), _doConsecutivePlots(true), _useBargraph(false), 
       _useLines(true), _usePoints(false), _overrideStyle(false), _sampleRate(1.0), 
       _numFrames(-1), _startFrame(-1),
-      _skip(0), _plotName(), _errorField(), _fileName(), _xField(QString("INDEX")) {
+      _skip(0), _plotName(), _errorField(), _fileName(), _xField(QString("INDEX")), _pngFile(QString()){
 
   Q_ASSERT(QCoreApplication::instance());
   _arguments = QCoreApplication::instance()->arguments();
@@ -533,6 +533,10 @@ bool CommandLineParser::processCommandLine(bool *ok) {
         new_fileList = true;
         dataPlotted = true;
       }
+    } else if (arg == "--png") {
+      *ok = _setStringArg(_pngFile, i18n("Usage: --png <filename>\n"));
+    } else if (arg == "--print") {
+      *ok = _setStringArg(_printFile, i18n("Usage: --print <filename>\n"));
     } else { // arg is not an option... must be a file
       if (new_fileList) { // if the file list has been used, clear it.
         _fileNames.clear();

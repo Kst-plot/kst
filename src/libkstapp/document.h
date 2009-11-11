@@ -23,6 +23,7 @@ class MainWindow;
 class SessionModel;
 class View;
 class ViewItem;
+class CommandLineParser;
 
 class Document : public CoreDocument {
   public:
@@ -33,7 +34,7 @@ class Document : public CoreDocument {
 
     QString fileName() const;
 
-    bool initFromCommandLine();
+    bool initFromCommandLine(CommandLineParser *P);
 
     bool open(const QString& file);
     bool save(const QString& to = QString::null);

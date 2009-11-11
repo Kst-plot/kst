@@ -28,6 +28,8 @@ public:
 
   bool processCommandLine(bool *ok);
   QString kstFileName();
+  QString pngFile() {return _pngFile;}
+  QString printFile() {return _printFile;}
 private:
   bool _doAve;
   bool _doSkip;
@@ -44,6 +46,9 @@ private:
   QString _errorField;
   QString _fileName;
   QString _xField;
+  QString _pngFile;
+  QString _printFile;
+
   QStringList _fileNames;
   QStringList _arguments;
   PlotItem *_plotItem;

@@ -19,6 +19,7 @@ class QMenu;
 class QAction;
 class QProgressBar;
 class QUndoGroup;
+class QPrinter;
 
 namespace Kst {
 
@@ -78,6 +79,8 @@ class MainWindow : public QMainWindow
     void open();
     void openFile(const QString &file);
     void print();
+    void printToPrinter(QPrinter *printer);
+    void printFromCommandLine(const QString &printFileName);
     void exportGraphicsFile(const QString &filename, const QString &format, int w, int h, int display);
 
     void clearDrawingMarker();

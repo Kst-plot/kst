@@ -129,14 +129,13 @@ bool Document::save(const QString& to) {
   return true;
 }
 
-bool Document::initFromCommandLine() {
-  CommandLineParser P(this);
+bool Document::initFromCommandLine(CommandLineParser *P) {
 
   bool ok;
-  bool dataPlotted = P.processCommandLine(&ok);
+  bool dataPlotted = P->processCommandLine(&ok);
 
   if (!dataPlotted && ok) {
-    QString kstfile = P.kstFileName();
+    QString kstfile = P->kstFileName();
     if (!kstfile.isEmpty()) {
       dataPlotted = open(kstfile);
     }

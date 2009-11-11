@@ -9,6 +9,3 @@ Draw an ellipse that spans many plots.  It ends up in the back, and can't be bro
 
 Artifacts when resizing large arrowheads.
 
---------------------
-
-Segfault on exit if there is a shared axis box.

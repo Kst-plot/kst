@@ -49,6 +49,7 @@
 #include "datawizard.h"
 #include "aboutdialog.h"
 #include "datavector.h"
+#include "commandlineparser.h"
 
 #include <QtGui>
 
@@ -64,16 +65,16 @@
 namespace Kst {
 
 MainWindow::MainWindow() :
-  _dataManager(0),
-  _exportGraphics(0),
-  _differentiateCurvesDialog(0),
-  _chooseColorDialog(0),
-  _changeDataSampleDialog(0),
-  _changeFileDialog(0),
-  _bugReportWizard(0),
-  _applicationSettingsDialog(0),
-  _aboutDialog(0),
-  _dataMode(false) {
+    _dataManager(0),
+    _exportGraphics(0),
+    _differentiateCurvesDialog(0),
+    _chooseColorDialog(0),
+    _changeDataSampleDialog(0),
+    _changeFileDialog(0),
+    _bugReportWizard(0),
+    _applicationSettingsDialog(0),
+    _aboutDialog(0),
+    _dataMode(false) {
   _doc = new Document(this);
   _tabWidget = new TabWidget(this);
   _undoGroup = new QUndoGroup(this);
@@ -226,7 +227,17 @@ void MainWindow::open() {
 bool MainWindow::initFromCommandLine() {
   delete _doc;
   _doc = new Document(this);
-  return _doc->initFromCommandLine();
+  CommandLineParser P(_doc);
+  bool ok = _doc->initFromCommandLine(&P);
+  if (!P.pngFile().isEmpty()) {
+    exportGraphicsFile(P.pngFile(), "png", 1280, 1024,0);
+    ok = false;
+  }
+  if (!P.printFile().isEmpty()) {
+    printFromCommandLine(P.printFile());
+    ok = false;
+  }
+  return ok;
 }
 
 void MainWindow::openFile(const QString &file) {
@@ -246,6 +257,7 @@ void MainWindow::openFile(const QString &file) {
 void MainWindow::exportGraphicsFile(
     const QString &filename, const QString &format, int width, int height, int display) {
   int viewCount = 0;
+  int n_views = _tabWidget->views().length();
   foreach (View *view, _tabWidget->views()) {
     QSize size;
     if (display == 0) {
@@ -279,9 +291,12 @@ void MainWindow::exportGraphicsFile(
     view->processResize(currentSize);
 
     QString file = filename;
-    if (viewCount != 0) {
-      file += "_";
-      file += QString::number(viewCount);
+    if (n_views != 1) {
+      QFileInfo QFI(filename);
+      file = QFI.completeBaseName() +
+             "_" +
+             QString::number(viewCount+1) + "." +
+             QFI.suffix();
     }
 
     QImageWriter imageWriter(file, format.toLatin1());
@@ -290,6 +305,55 @@ void MainWindow::exportGraphicsFile(
   }
 }
 
+void MainWindow::printToPrinter(QPrinter *printer) {
+
+  QPainter painter(printer);
+  QList<View*> pages;
+
+  switch (printer->printRange()) {
+   case QPrinter::PageRange:
+    if (printer->fromPage()>0) {
+      for (int i_page = printer->fromPage(); i_page<=printer->toPage(); i_page++) {
+        pages.append(_tabWidget->views().at(i_page-1));
+      }
+    }
+    break;
+   case QPrinter::AllPages:
+    foreach (View *view, _tabWidget->views()) {
+      pages.append(view);
+    }
+    break;
+   case QPrinter::Selection:
+   default:
+    pages.append(_tabWidget->currentView());
+    break;
+  }
+
+  QSize printerPageSize = printer->pageRect().size();
+  for (int i = 0; i < printer->numCopies(); ++i) {
+    for (int i_page = 0; i_page<pages.count(); i_page++) {
+      View *view = pages.at(i_page);
+      QSize currentSize(view->size());
+      view->resize(printerPageSize);
+      view->processResize(printerPageSize);
+      view->setPrinting(true);
+      view->render(&painter);
+      view->setPrinting(false);
+      view->resize(currentSize);
+      view->processResize(currentSize);
+      if (i_page<pages.count()-1)
+        printer->newPage();
+
+    }
+  }
+}
+
+void MainWindow::printFromCommandLine(const QString &printFileName) {
+  QPrinter printer(QPrinter::ScreenResolution);
+  printer.setOutputFileName(printFileName);
+  printer.setPrintRange(QPrinter::AllPages);
+  printToPrinter(&printer);
+}
 
 void MainWindow::print() {
   // line widths in pixels make sense when using ScreenResolution
@@ -304,47 +368,7 @@ void MainWindow::print() {
   if (pd.exec() == QDialog::Accepted) {
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-
-    QPainter painter(&printer);
-    QList<View*> pages;
-
-    switch (printer.printRange()) {
-      case QPrinter::PageRange:
-        if (printer.fromPage()>0) {
-          for (int i_page = printer.fromPage(); i_page<=printer.toPage(); i_page++) {
-            pages.append(_tabWidget->views().at(i_page-1));
-          }
-        }
-        break;
-      case QPrinter::AllPages:
-        foreach (View *view, _tabWidget->views()) {
-          pages.append(view);
-        }
-        break;
-      case QPrinter::Selection:
-      default:
-        pages.append(_tabWidget->currentView());
-        break;
-    }
-
-    QSize printerPageSize = printer.pageRect().size();
-    for (int i = 0; i < printer.numCopies(); ++i) {
-      for (int i_page = 0; i_page<pages.count(); i_page++) {
-        View *view = pages.at(i_page);
-        QSize currentSize(view->size());
-        view->resize(printerPageSize);
-        view->processResize(printerPageSize);
-        view->setPrinting(true);
-        view->render(&painter);
-        view->setPrinting(false);
-        view->resize(currentSize);
-        view->processResize(currentSize);
-        if (i_page<pages.count()-1)
-          printer.newPage();
-
-      }
-    }
-
+    printToPrinter(&printer);
     QApplication::restoreOverrideCursor();
   }
 }

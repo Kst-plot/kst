@@ -1136,3 +1136,19 @@ Need to be able to rebuild the datasource list:
 --------------------
 
 Datasources that are browsed are created, remembered, and saved/loaded.
+
+----------
+
+Improve behavior of data wizard selector
+
+
+------------
+
+Names in multipage graphics file export.  name_2.png, not name.png_2, etc
+
+--------
+
+Printing from the command line.  This existed in 1.x
+  Note: printing still requires parts of Qt which require a window session, so pure scripted 
+  headless prints are not possible :-(
+

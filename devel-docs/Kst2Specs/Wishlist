@@ -1,7 +1,9 @@
-Easier way to specify reversed axis when loading sky images:
-  -can desire to reverse be gleaned from the fits image?
-  -command line option?
-  -new-image (sticky) option?
+Export eps to vector format.
+  kst 1.x did this by printing to file a .ps file, and then modifying it by adding the bounding box.
+
+------------
+
+Shared axis from the command line
 
 ---------
 
@@ -11,25 +13,17 @@ Smarter ASCII reader:
     (eg, is it a CSV?  Does it have a field name header?)
   these should be used only for new files, and should be used to sed the defaults, which can still be changed with 'configure'.
 
----------
+------------
 
-15. The text label behaviour is un-intuitive.  The typical interface is
-to choose a position first, and then input some text.
-   ** -a possible justification for the current order is that it could allow us to 
-      drag around the label once we have defined it, for more precision placement.
-      not sure yet if we should change anything. **
+Fixup line/arrow dimensions tab:
+  x,y instead of length/angle
+
 
 ----------
 
 Tooltips/whats this where helpful.
 
 ----------
-
-Printing from the command line.  This existed in 1.x
-  Note: printing still requires parts of Qt which require a window session, so pure scripted 
-  headless prints are not possible :-(
-
---------
 
 Scientific notation (instead of C's %e notation) for extreme axis numbers
 
@@ -38,11 +32,6 @@ Scientific notation (instead of C's %e notation) for extreme axis numbers
 Edit multiple for other view objects (arrow, line, label...)
 
 --------
-
-Export eps to vector format.
-  kst 1.x did this by printing to file a .ps file, and then modifying it by adding the bounding box.
-
-------------
 
 data source text box doesn't recognise initial ~ as a euphemism for
    the user's home directory (QDirModel doesn't handle this...)
@@ -57,19 +46,14 @@ data source text box doesn't recognise initial ~ as a euphemism for
 DECIDE: absolute or relative file names in kst files?
   kst1.x uses absolute.  This becomes a problem when the directory changes.
 
-------------
-
-Fixup line/arrow dimensions tab:
-  x,y instead of length/angle
-
-------------
-
-Names in multipage graphics file export.  name_2.png, not name.png_2, etc
-
 -----------
 
-Improve behavior of data wizard selector
+Easier way to specify reversed axis when loading sky images:
+  -can desire to reverse be gleaned from the fits image?
+  -command line option?
+  -new-image (sticky) option?
 
-----------
+---------
 
-Shared axis from the command line
+After the label creation dialog has been applied, attach the label to
+the mouse, to allow it to be dragged around until placed by a click.

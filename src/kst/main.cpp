@@ -14,6 +14,7 @@
 int main(int argc, char *argv[]) {
   Kst::Application app(argc, argv);
   if (app.mainWindow()->initFromCommandLine()) {
+    app.mainWindow()->show();
     return app.exec();
   }
   return 0;

@@ -349,7 +349,6 @@ QString PlotRenderItem::rightLabel() const {
 
 QString PlotRenderItem::topLabel() const {
   QString label;
-  int count;
   for (int i = 0, count = relationList().count(); i<count; i++) {
     if (i>0) {
       if (i==count-1) {
