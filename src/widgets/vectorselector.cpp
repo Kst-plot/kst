@@ -202,7 +202,7 @@ void VectorSelector::fillVectors() {
 
 
 bool VectorSelector::event(QEvent * event) {
-  if (event->type() == QEvent::QEvent::WindowActivate) {
+  if (event->type() == QEvent::WindowActivate) {
     fillVectors();
   }
   return QWidget::event(event);

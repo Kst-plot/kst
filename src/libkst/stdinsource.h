@@ -18,7 +18,7 @@
 #ifndef STDINSRC_H
 #define STDINSRC_H
 
-#include <datasource.h>
+#include "datasource.h"
 
 #include "kst_export.h"
 

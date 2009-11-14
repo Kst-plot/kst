@@ -19,7 +19,7 @@
 #include <qdebug.h>
 #include "kst_i18n.h"
 
-#include <ksttimers.h>
+#include "ksttimers.h"
 
 namespace Kst {
 

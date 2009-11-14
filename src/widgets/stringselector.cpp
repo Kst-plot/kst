@@ -162,7 +162,7 @@ void StringSelector::setAllowEmptySelection(bool allowEmptySelection) {
 
 
 bool StringSelector::event(QEvent * event) {
-  if (event->type() == QEvent::QEvent::WindowActivate) {
+  if (event->type() == QEvent::WindowActivate) {
     fillStrings();
   }
   return QWidget::event(event);

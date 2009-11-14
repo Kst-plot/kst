@@ -318,7 +318,7 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(ViewItem::GripModes)
 Q_DECLARE_OPERATORS_FOR_FLAGS(ViewItem::ActiveGrips)
 
 #ifndef QT_NO_DEBUG_STREAM
-Q_CORE_EXPORT QDebug operator<<(QDebug, ViewItem*);
+KST_EXPORT QDebug operator<<(QDebug, ViewItem*);
 #endif
 
 class KST_EXPORT ViewItemCommand : public QUndoCommand

@@ -226,7 +226,7 @@ void ScalarSelector::fillScalars() {
 
 
 bool ScalarSelector::event(QEvent * event) {
-  if (event->type() == QEvent::QEvent::WindowActivate) {
+  if (event->type() == QEvent::WindowActivate) {
     fillScalars();
   }
   return QWidget::event(event);

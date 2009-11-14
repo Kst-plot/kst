@@ -141,7 +141,7 @@ void MatrixSelector::fillMatrices() {
 
 
 bool MatrixSelector::event(QEvent * event) {
-  if (event->type() == QEvent::QEvent::WindowActivate) {
+  if (event->type() == QEvent::WindowActivate) {
     fillMatrices();
   }
   return QWidget::event(event);

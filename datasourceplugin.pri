@@ -1,4 +1,4 @@
-QT += xml qt3support
+QT += xml 
 
 TEMPLATE = lib
 CONFIG += plugin
