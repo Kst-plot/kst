@@ -330,7 +330,8 @@ Kst::Object::UpdateType AsciiSource::update() {
   int bufstart, bufread;
   bool new_data = false;
   char tmpbuf[MAXBUFREADLEN+1];
-  char *del = strdup(_config->_delimiters.toLatin1());
+  QByteArray delbytes = _config->_delimiters.toLatin1();
+  const char *del = delbytes.constData();
   
   do {
     /* Read the tmpbuffer, starting at row_index[_numFrames] */
@@ -370,8 +371,6 @@ Kst::Object::UpdateType AsciiSource::update() {
       }
     }
   } while (bufread == MAXBUFREADLEN);
-  
-  free(del);
 
   file.close();
 
