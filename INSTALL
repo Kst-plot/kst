@@ -123,9 +123,23 @@ set PATH=%PATH%;C:\Qt\MinGW\bin
 set PATH=%PATH%;%SystemRoot%\System32
 set QMAKESPEC=win32-g++
 
-
 -------------------------------------------------------------
 Windows using Visual Studio
+
+Use a Qt build with Visual Studio.
+
+- open a Visual Studio console command promt
+- add path to qmake.exe to the PATH environment variable:
+    set PATH=<path to qmake>;%PATH% 
+- to build Visual Studio project files call in kst:
+    qmake -tp vc -recursive
+- open kst.sln from this console (e.g. vcexpress kst.sln)
+- build, run, and debug kst in Visual Studio
+
+
+
+-------------------------------------------------------------
+Windows using Visual Studio & Cygwin
 
 Note:  This has only been build using Visual Studio & Cygwin.  The following
        steps are used on the current Windows build machine used for testing,
