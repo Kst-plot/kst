@@ -412,17 +412,15 @@ int AsciiSource::readString(QString &S, const QString& string) {
 
 struct SetScopedDot
 {
-  SetScopedDot() : orig((const char*) setlocale(LC_NUMERIC, 0))
-  {
+  SetScopedDot() : orig((const char*) setlocale(LC_NUMERIC, 0)) {
     setlocale(LC_NUMERIC, "C");
   }
 
-  ~SetScopedDot()
-  {
-     //printf("original LC_NUMERIC: %s\n", orig.constData());
-      setlocale(LC_NUMERIC, orig.constData());
+  ~SetScopedDot() {
+    //printf("original LC_NUMERIC: %s\n", orig.constData());
+    setlocale(LC_NUMERIC, orig.constData());
   }
-
+  
   QByteArray orig;
 };
 
