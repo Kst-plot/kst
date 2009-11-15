@@ -25,12 +25,13 @@ CONFIG += silent
 
 DEBUG_MODE = $$(KST_DEBUG_MODE)
 contains(DEBUG_MODE, 1) {
-  CONFIG += debug
+  !win32:CONFIG += debug
   QMAKE_RPATHDIR += $$OUTPUT_DIR/lib $$OUTPUT_DIR/plugin
 }
 
-OBJECTS_DIR = tmp
-MOC_DIR = tmp
+
+!win32:OBJECTS_DIR = tmp
+!win32:MOC_DIR = tmp
 
 TOPLEVELDIR = $$PWD
 

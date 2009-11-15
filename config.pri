@@ -13,7 +13,6 @@ HAVE_GSL = 0
 # Set to 1 to disable usage of gsl - only for unix
 DISABLE_GSL = 0
 
-win32:CONFIG += debug_and_release
 
 defineTest(LibExists) {
   lib = $$ARGS

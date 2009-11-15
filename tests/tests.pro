@@ -5,8 +5,8 @@ QT += gui network svg xml opengl qt3support
 macx:CONFIG -= app_bundle
 CONFIG += qtestlib
 TEMPLATE = app
-OBJECTS_DIR = tmp
-MOC_DIR = tmp
+!win32:OBJECTS_DIR = tmp
+!win32:MOC_DIR = tmp
 TARGET = runtests
 DESTDIR = $$OUTPUT_DIR/bin
 

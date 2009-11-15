@@ -2,8 +2,8 @@ QT += xml
 
 TEMPLATE = lib
 CONFIG += plugin
-OBJECTS_DIR = tmp
-MOC_DIR = tmp
+!win32:OBJECTS_DIR = tmp
+!win32:MOC_DIR = tmp
 DESTDIR = $$OUTPUT_DIR/plugin
 
 ! isEmpty(INSTALL_PREFIX) {
