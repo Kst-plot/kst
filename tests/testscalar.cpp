@@ -15,9 +15,7 @@
 
 #include <QDomDocument>
 
-#define protected public
 #include <scalar.h>
-#undef protected
 
 #include <math_kst.h>
 #include <kst_inf.h>

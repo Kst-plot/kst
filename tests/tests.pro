@@ -1,6 +1,6 @@
 include($$PWD/../kst.pri)
 
-QT += gui network svg xml opengl qt3support
+QT += gui network svg xml opengl
 
 macx:CONFIG -= app_bundle
 CONFIG += qtestlib

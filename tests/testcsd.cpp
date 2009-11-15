@@ -20,9 +20,9 @@
 #include <datacollection.h>
 #include <objectstore.h>
 
-#define protected public
+
 #include <csd.h>
-#undef protected
+
 
 static Kst::ObjectStore _store;
 

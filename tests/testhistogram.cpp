@@ -17,9 +17,9 @@
 #include <datacollection.h>
 #include <objectstore.h>
 
-#define protected public
+
 #include <histogram.h>
-#undef protected
+
 
 static Kst::ObjectStore _store;
 

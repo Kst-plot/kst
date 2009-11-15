@@ -24,10 +24,9 @@
 #include <datacollection.h>
 #include <objectstore.h>
 
-#define protected public
 #include <datavector.h>
 #include <datamatrix.h>
-#undef protected
+
 
 static Kst::ObjectStore _store;
 

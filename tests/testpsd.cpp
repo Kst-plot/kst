@@ -18,9 +18,9 @@
 #include <QTemporaryFile>
 #include <QXmlStreamWriter>
 
-#define protected public
+
 #include <psd.h>
-#undef protected
+
 
 #include <datacollection.h>
 #include <objectstore.h>

@@ -9,6 +9,5 @@ SUBDIRS += \
     src/libkstapp \
     src/kst \
     src/d2asc \
-    src/plugins
-
-!win32:SUBDIRS += tests
+    src/plugins \
+    tests

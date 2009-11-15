@@ -156,6 +156,11 @@ class KST_EXPORT DataVector : public Vector, public DataPrimitive {
     QHash<QString, Scalar*> _fieldScalars;
     QHash<QString, String*> _fieldStrings;
 
+    friend class TestDataSource;
+    friend class TestHistogram;
+    friend class TestCSD;
+    friend class TestPSD;
+    friend class TestScalar;
 };
 
 typedef SharedPtr<DataVector> DataVectorPtr;
