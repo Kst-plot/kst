@@ -40,6 +40,11 @@
 #include "ui_asciiconfig.h"
 #include "kst_i18n.h"
 
+#ifdef Q_OS_WIN
+#include "kst_atof.h"
+#define atof kst_atof
+#endif
+
 #define DEFAULT_DELIMITERS "#/c!;"
 #define DEFAULT_COLUMN_WIDTH 16
 
