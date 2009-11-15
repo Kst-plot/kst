@@ -141,14 +141,19 @@ static void scanPlugins() {
   foreach (QString pluginPath, pluginPaths) {
     QDir d(pluginPath);
     foreach (QString fileName, d.entryList(QDir::Files)) {
+#ifdef Q_OS_WIN
+        if (!fileName.endsWith(".dll"))
+            continue;
+#endif
         QPluginLoader loader(d.absoluteFilePath(fileName));
         QObject *plugin = loader.instance();
         if (plugin) {
           if (DataSourcePluginInterface *ds = dynamic_cast<DataSourcePluginInterface*>(plugin)) {
             tmpList.append(ds);
+            Debug::self()->log(QString("Plugin loaded: %1").arg(fileName));
           }
         } else {
-              Debug::self()->log(QString("instance failed for %1 (%2)").arg(fileName).arg(loader.errorString()));
+            Debug::self()->log(QString("instance failed for %1 (%2)").arg(fileName).arg(loader.errorString()));
         }
     }
   }
