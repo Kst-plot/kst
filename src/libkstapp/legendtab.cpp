@@ -141,7 +141,7 @@ void LegendTab::downButtonClicked() {
 }
 
 
-void LegendTab::setDisplayedRelations(QStringList displayedRelations, QStringList displayedRelationTips) {
+void LegendTab::setDisplayedRelations(const QStringList& displayedRelations, const QStringList& displayedRelationTips) {
   _displayedRelationList->clear();
   _displayedRelationList->addItems(displayedRelations);
   for (int i=0; i<_displayedRelationList->count(); i++) {
@@ -150,7 +150,7 @@ void LegendTab::setDisplayedRelations(QStringList displayedRelations, QStringLis
 }
 
 
-void LegendTab::setAvailableRelations(QStringList availableRelations, QStringList availableRelationTips) {
+void LegendTab::setAvailableRelations(const QStringList& availableRelations, const QStringList& availableRelationTips) {
   _availableRelationList->clear();
   _availableRelationList->addItems(availableRelations);
   for (int i=0; i<_availableRelationList->count(); i++) {

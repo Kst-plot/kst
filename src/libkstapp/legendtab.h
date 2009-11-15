@@ -27,8 +27,8 @@ class KST_EXPORT LegendTab : public DialogTab, Ui::LegendTab {
     LegendTab(QWidget *parent = 0);
     virtual ~LegendTab();
 
-    void setDisplayedRelations(QStringList displayedRelations, QStringList displayedRelationTips);
-    void setAvailableRelations(QStringList availableRelations, QStringList availableRelationTips);
+    void setDisplayedRelations(const QStringList& displayedRelations, const QStringList& displayedRelationTips);
+    void setAvailableRelations(const QStringList& availableRelations, const QStringList& availableRelationTips);
 
     QStringList displayedRelations();
 
