@@ -4,7 +4,7 @@ QT += gui
 
 TEMPLATE = lib
 CONFIG += designer
-TARGET = kst2widgets
+TARGET = $$qtLibraryTarget(kst2widgets)
 DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
 !isEmpty(INSTALL_PREFIX) {
@@ -17,11 +17,11 @@ INCLUDEPATH += tmp \
     $$OUTPUT_DIR/src/widgets/tmp
 win32:LIBS += -L$$OUTPUT_DIR/lib \
     -L$$OUTPUT_DIR/plugin \
-    -lkst2math \
-    -lkst2
+    -lqtLibraryTarget(kst2math) \
+    -lqtLibraryTargetkst2)
 !win32:LIBS += -L$$OUTPUT_DIR/lib \
     -L$$OUTPUT_DIR/plugin \
-    -lkst2 \
+    -lkst2lib \
     -lkst2math
 
 SOURCES += \

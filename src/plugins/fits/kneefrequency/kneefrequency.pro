@@ -1,7 +1,7 @@
 include($$PWD/../../../../kst.pri)
 include($$PWD/../../../../dataobjectplugin.pri)
 
-TARGET = kstplugin_fitkneefrequency
+TARGET = $$qtLibraryTarget(kstplugin_fitkneefrequency)
 LIBS += -lgsl
 
 SOURCES += \

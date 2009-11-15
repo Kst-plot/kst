@@ -4,7 +4,7 @@ QT += gui \
     svg \
     opengl
 TEMPLATE = lib
-TARGET = kst2app
+TARGET = $$qtLibraryTarget(kst2app)
 DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
 !isEmpty(INSTALL_PREFIX) { 
@@ -19,12 +19,12 @@ INCLUDEPATH += tmp \
     $$OUTPUT_DIR/src/libkstapp/tmp
 win32:LIBS += -L$$OUTPUT_DIR/lib \
     -L$$OUTPUT_DIR/plugin \
-    -lkst2widgets \
-    -lkst2math \
-    -lkst2
+    -l$$qtLibraryTarget(kst2widgets) \
+    -l$$qtLibraryTarget(kst2math) \
+    -l$$qtLibraryTarget(kst2lib)
 !win32:LIBS += -L$$OUTPUT_DIR/lib \
     -L$$OUTPUT_DIR/plugin \
-    -lkst2 \
+    -lkst2lib \
     -lkst2math \
     -lkst2widgets
 SOURCES += aboutdialog.cpp \

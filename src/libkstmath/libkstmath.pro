@@ -1,7 +1,7 @@
 include($$PWD/../../kst.pri)
 
 TEMPLATE = lib
-TARGET = kst2math
+TARGET = $$qtLibraryTarget(kst2math)
 DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
 
@@ -15,7 +15,7 @@ INCLUDEPATH += \
     $$TOPLEVELDIR/src/libkst \
     $$OUTPUT_DIR/src/libkstmath/tmp
 
-LIBS += -L$$OUTPUT_DIR/lib -lkst2
+LIBS += -L$$OUTPUT_DIR/lib -l$$qtLibraryTarget(kst2lib)
 
 #Don't trigger qmake's lex/yacc handling by default.
 #Rather we want to use the files that are pre-generated and checked in.

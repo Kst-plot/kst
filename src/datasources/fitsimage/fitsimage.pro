@@ -1,7 +1,7 @@
 include($$PWD/../../../kst.pri)
 include($$PWD/../../../datasourceplugin.pri)
 
-TARGET = kst2data_fitsimage
+TARGET = $$qtLibraryTarget(kst2data_fitsimage)
 
 INCLUDEPATH += $$OUTPUT_DIR/src/datasources/fitsimage/tmp
 

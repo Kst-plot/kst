@@ -1,7 +1,7 @@
 include($$PWD/../../../../../kst.pri)
 include($$PWD/../../../../../dataobjectplugin.pri)
 
-TARGET = kstplugin_autocorrelation
+TARGET = $$qtLibraryTarget(kstplugin_autocorrelation)
 LIBS += -lgsl
 
 SOURCES += \

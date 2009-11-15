@@ -1,7 +1,7 @@
 include($$PWD/../../../../kst.pri)
 include($$PWD/../../../../dataobjectplugin.pri)
 
-TARGET = kstplugin_genericfilter
+TARGET = $$qtLibraryTarget(kstplugin_genericfilter)
 
 SOURCES += \
     genericfilter.cpp

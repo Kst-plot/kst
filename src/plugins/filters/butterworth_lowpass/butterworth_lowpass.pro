@@ -1,7 +1,7 @@
 include($$PWD/../../../../kst.pri)
 include($$PWD/../../../../dataobjectplugin.pri)
 
-TARGET = kstplugin_filterbutterworthlowpass
+TARGET = $$qtLibraryTarget(kstplugin_filterbutterworthlowpass)
 LIBS += -lgsl -lgslcblas
 
 SOURCES += \

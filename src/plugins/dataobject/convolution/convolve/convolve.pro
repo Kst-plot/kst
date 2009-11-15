@@ -1,7 +1,7 @@
 include($$PWD/../../../../../kst.pri)
 include($$PWD/../../../../../dataobjectplugin.pri)
 
-TARGET = kstplugin_convolve
+TARGET = $$qtLibraryTarget(kstplugin_convolve)
 LIBS += -lgsl
 
 SOURCES += \

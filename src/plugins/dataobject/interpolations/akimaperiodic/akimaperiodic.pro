@@ -1,7 +1,7 @@
 include($$PWD/../../../../../kst.pri)
 include($$PWD/../../../../../dataobjectplugin.pri)
 
-TARGET = kstplugin_akimaperiodic
+TARGET = $$qtLibraryTarget(kstplugin_akimaperiodic)
 
 LIBS += -lgsl
 

@@ -1,7 +1,7 @@
 include($$PWD/../../../kst.pri)
 include($$PWD/../../../datasourceplugin.pri)
 
-TARGET = kst2data_lfiio
+TARGET = $$qtLibraryTarget(kst2data_lfiio)
 
 INCLUDEPATH += $$OUTPUT_DIR/src/datasources/lfiio/tmp
 

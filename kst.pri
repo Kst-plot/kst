@@ -1,6 +1,8 @@
 OUTPUT_DIR = $$(OUTPUT_DIR)
 isEmpty(OUTPUT_DIR):OUTPUT_DIR=$$PWD/build
 
+
+
 INSTALL_PREFIX = $$(INSTALL_PREFIX)
 unix {
   !mac {
@@ -37,4 +39,20 @@ INCLUDEPATH += $$TOPLEVELDIR
 LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin
 VERSION = 2.0.0
 
-
+# similar to qtLibraryTarget from mkspecs\features\qt_functions.p
+defineReplace(kstlib) {
+   unset(LIBRARY_NAME)
+   LIBRARY_NAME = $$1
+   mac:!static:contains(QT_CONFIG, qt_framework) {
+      QMAKE_FRAMEWORK_BUNDLE_NAME = $$LIBRARY_NAME
+      export(QMAKE_FRAMEWORK_BUNDLE_NAME)
+   }
+   CONFIG(debug, debug|release) {
+      !debug_and_release|build_pass {
+          mac:RET = $$member(LIBRARY_NAME, 0)_debug
+   	      else:win32:RET = $$member(LIBRARY_NAME, 0)d
+      }
+   }
+   isEmpty(RET):RET = $$LIBRARY_NAME
+   return($$RET)
+}

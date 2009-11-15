@@ -1,7 +1,7 @@
 include($$PWD/../../../../kst.pri)
 include($$PWD/../../../../dataobjectplugin.pri)
 
-TARGET = kstplugin_fitsinusoid_unweighted
+TARGET = $$qtLibraryTarget(kstplugin_fitsinusoid_unweighted)
 LIBS += -lgsl
 
 SOURCES += \

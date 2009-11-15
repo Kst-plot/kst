@@ -1,7 +1,7 @@
 include($$PWD/../../../../kst.pri)
 include($$PWD/../../../../dataobjectplugin.pri)
 
-TARGET = kstplugin_shift
+TARGET = $$qtLibraryTarget(kstplugin_shift)
 
 SOURCES += \
     shift.cpp

@@ -1,7 +1,7 @@
 include($$PWD/../../kst.pri)
 
 TEMPLATE = app
-TARGET = kst2
+TARGET = $$kstlib(kst2)
 DESTDIR = $$OUTPUT_DIR/bin
 
 ! isEmpty(INSTALL_PREFIX) {
@@ -17,8 +17,8 @@ INCLUDEPATH += \
     $$TOPLEVELDIR/src/libkstapp \
     $$OUTPUT_DIR/src/kst/tmp
 
-win32:LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkst2app -lkst2widgets -lkst2math -lkst2
-!win32:LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkst2 -lkst2math -lkst2widgets -lkst2app
+win32:LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -l$$kstlib(kst2app) -l$$kstlib(kst2widgets) -l$$kstlib(kst2math) -l$$kstlib(kst2lib)
+!win32:LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkst2lib -lkst2math -lkst2widgets -lkst2app
 
 SOURCES += \
     main.cpp

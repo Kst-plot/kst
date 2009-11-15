@@ -1,7 +1,7 @@
 include($$PWD/../../../../kst.pri)
 include($$PWD/../../../../dataobjectplugin.pri)
 
-TARGET = kstplugin_effectivebandwidth
+TARGET = $$qtLibraryTarget(kstplugin_effectivebandwidth)
 
 SOURCES += \
     effectivebandwidth.cpp

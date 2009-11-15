@@ -1,6 +1,6 @@
 include($$PWD/../../kst.pri)
 TEMPLATE = lib
-TARGET = kst2
+TARGET = $$qtLibraryTarget(kst2lib)
 DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
 !isEmpty(INSTALL_PREFIX) { 

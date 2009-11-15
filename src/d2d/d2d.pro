@@ -1,7 +1,7 @@
 include($$PWD/../../kst.pri)
 
 TEMPLATE = app
-TARGET = d2d
+TARGET = $$kstlib(d2d)
 DESTDIR = $$OUTPUT_DIR/bin
 
 INCLUDEPATH += \
@@ -12,8 +12,8 @@ INCLUDEPATH += \
     $$TOPLEVELDIR/src/libkstapp \
     $$OUTPUT_DIR/src/kst/tmp
 
-win32:LIBS += -lkst2app -lkst2widgets -lkst2math -lkst2
-!win32:LIBS += -lkst2 -lkst2math -lkst2widgets -lkst2app
+win32:LIBS += -l$$kstlib(kst2app) -l$$kstlib(kst2widgets) -l$$kstlib(kst2math) -l$$kstlib(kst2lib)
+!win32:LIBS += -lkst2lib -lkst2math -lkst2widgets -lkst2app
 
 SOURCES += \
     d2d.cpp

@@ -15,4 +15,5 @@ INCLUDEPATH += \
     tmp \
     $$TOPLEVELDIR/src/libkst 
 
-LIBS += -L$$OUTPUT_DIR/lib -lkst2
+!win32:LIBS += -L$$OUTPUT_DIR/lib -lkst2lib
+win32:LIBS += -L$$OUTPUT_DIR/lib -l$$qtLibraryTarget(kst2lib)

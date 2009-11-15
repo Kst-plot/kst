@@ -1,7 +1,7 @@
 include($$PWD/../../../kst.pri)
 include($$PWD/../../../dataobjectplugin.pri)
 
-TARGET = kstplugin_sampleplugin
+TARGET = $$qtLibraryTarget(kstplugin_sampleplugin)
 
 SOURCES += \
     sampleplugin.cpp

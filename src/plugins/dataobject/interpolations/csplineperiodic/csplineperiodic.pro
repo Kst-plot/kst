@@ -1,7 +1,7 @@
 include($$PWD/../../../../../kst.pri)
 include($$PWD/../../../../../dataobjectplugin.pri)
 
-TARGET = kstplugin_csplineperiodic
+TARGET = $$qtLibraryTarget(kstplugin_csplineperiodic)
 LIBS += -lgsl
 
 SOURCES += \

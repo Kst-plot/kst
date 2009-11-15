@@ -1,7 +1,7 @@
 include($$PWD/../../../../kst.pri)
 include($$PWD/../../../../dataobjectplugin.pri)
 
-TARGET = kstplugin_fitlorentzian_weighted
+TARGET = $$qtLibraryTarget(kstplugin_fitlorentzian_weighted)
 LIBS += -lgsl
 
 SOURCES += \

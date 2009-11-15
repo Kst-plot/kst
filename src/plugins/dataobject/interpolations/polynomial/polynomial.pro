@@ -1,7 +1,7 @@
 include($$PWD/../../../../../kst.pri)
 include($$PWD/../../../../../dataobjectplugin.pri)
 
-TARGET = kstplugin_polynomialinterpolation
+TARGET = $$qtLibraryTarget(kstplugin_polynomialinterpolation)
 LIBS += -lgsl
 
 SOURCES += \

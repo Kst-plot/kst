@@ -1,7 +1,7 @@
 include($$PWD/../../../../kst.pri)
 include($$PWD/../../../../dataobjectplugin.pri)
 
-TARGET = kstplugin_crossspectrum
+TARGET = $$qtLibraryTarget(kstplugin_crossspectrum)
 
 SOURCES += \
     fftsg_h.c \

@@ -1,7 +1,7 @@
 include($$PWD/../../../../kst.pri)
 include($$PWD/../../../../dataobjectplugin.pri)
 
-TARGET = kstplugin_noiseaddition
+TARGET = $$qtLibraryTarget(kstplugin_noiseaddition)
 LIBS += -lgsl
 
 SOURCES += \
