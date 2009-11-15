@@ -37,7 +37,7 @@ class KST_EXPORT LegendTab : public DialogTab, Ui::LegendTab {
     bool titleDirty() const;
 
     bool autoContents() const;
-    void setAutoContents(const bool auto);
+    void setAutoContents(const bool value);
     bool autoContentsDirty() const;
 
     QFont font(const QFont font) const;
