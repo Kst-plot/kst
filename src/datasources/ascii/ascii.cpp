@@ -41,6 +41,10 @@
 #include "kst_i18n.h"
 
 #ifdef Q_OS_WIN
+#define USE_KST_ATOF
+#endif
+
+#ifdef USE_KST_ATOF
 #include "kst_atof.h"
 #define atof kst_atof
 #endif
@@ -406,8 +410,30 @@ int AsciiSource::readString(QString &S, const QString& string) {
 }
 
 
+struct SetScopedDot
+{
+  SetScopedDot() : orig((const char*) setlocale(LC_NUMERIC, 0))
+  {
+    setlocale(LC_NUMERIC, "C");
+  }
+
+  ~SetScopedDot()
+  {
+     //printf("original LC_NUMERIC: %s\n", orig.constData());
+      setlocale(LC_NUMERIC, orig.constData());
+  }
+
+  QByteArray orig;
+};
+
 
 int AsciiSource::readField(double *v, const QString& field, int s, int n) {
+
+#ifndef USE_KST_ATOF
+  // assume numbers with points; also on systems with other locales (e.g. German with ',')
+  SetScopedDot dot;
+#endif
+
   if (n < 0) {
     n = 1; /* n < 0 means read one sample, not frame - irrelevent here */
   }
