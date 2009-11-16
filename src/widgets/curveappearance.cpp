@@ -21,10 +21,11 @@ namespace Kst {
 
 CurveAppearance::CurveAppearance(QWidget *parent)
   : QWidget(parent) {
-  setupUi(this);
-  drawSampleLine();
+  setupUi(this);  
   populatePointSymbolCombo();
   populateLineStyleCombo();
+
+  drawSampleLine();
 
   connect(_showPoints, SIGNAL(stateChanged(int)), this, SLOT(enableSettings()));
   connect(_showLines, SIGNAL(stateChanged(int)), this, SLOT(enableSettings()));
