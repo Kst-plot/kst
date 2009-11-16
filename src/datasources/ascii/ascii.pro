@@ -6,4 +6,5 @@ SOURCES += ascii.cpp
 win32:SOURCES += kst_atof.cpp
 HEADERS += ascii.h \
     ../../libkst/kst_inf.h
+win32:HEADERS += kst_atof.h
 FORMS += asciiconfig.ui
