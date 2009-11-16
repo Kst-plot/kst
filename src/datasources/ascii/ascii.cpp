@@ -33,6 +33,7 @@
 #include <qtextdocument.h>
 #include <QXmlStreamWriter>
 #include <QXmlStreamAttributes>
+#include <QLocale>
 
 #include <math_kst.h>
 #include <kst_inf.h>
@@ -46,7 +47,9 @@
 
 #ifdef USE_KST_ATOF
 #include "kst_atof.h"
-#define atof kst_atof
+#define atof(X, Y) kst_atof(X, Y)
+#else
+#define atof(X, Y) atof(X)
 #endif
 
 #define DEFAULT_DELIMITERS "#/c!;"
@@ -68,6 +71,8 @@ class AsciiSource::Config {
       _dataLine = 0;
       _readFields = false;
       _fieldsLine = 0;
+      _useDot = true;
+      _localSeparator = QLocale().decimalPoint().toAscii();
     }
 
     void read(QSettings *cfg, const QString& fileName = QString::null) {
@@ -80,6 +85,7 @@ class AsciiSource::Config {
       _columnWidth = cfg->value("Column Width", DEFAULT_COLUMN_WIDTH).toInt();
       _dataLine = cfg->value("Data Start", 0).toInt();
       _readFields = cfg->value("Read Fields", false).toBool();
+      _useDot = cfg->value("Use Dot", true).toBool();
       _fieldsLine = cfg->value("Fields Line", 0).toInt();
       if (!fileName.isEmpty()) {
         cfg->beginGroup(fileName);
@@ -90,6 +96,7 @@ class AsciiSource::Config {
         _columnWidth = cfg->value("Column Width", _columnWidth).toInt();
         _dataLine = cfg->value("Data Start", _dataLine).toInt();
         _readFields = cfg->value("Read Fields", _readFields).toBool();
+        _useDot = cfg->value("Use Dot", _useDot).toBool();
         _fieldsLine = cfg->value("Fields Line", _fieldsLine).toInt();
         cfg->endGroup();
       }
@@ -109,6 +116,8 @@ class AsciiSource::Config {
     int _dataLine;
     bool _readFields;
     int _fieldsLine;
+    bool _useDot;
+    char _localSeparator;
 
     void save(QXmlStreamWriter& s) {
       s.writeStartElement("properties");
@@ -128,6 +137,7 @@ class AsciiSource::Config {
       s.writeAttribute("headerstart", QString::number(_dataLine));
       s.writeAttribute("fields", QString::number(_fieldsLine));
       s.writeAttribute("readfields", QVariant(_readFields).toString());
+      s.writeAttribute("usedot", QVariant(_useDot).toString());
       s.writeEndElement();
     }
 
@@ -142,6 +152,7 @@ class AsciiSource::Config {
       _dataLine = properties.value("headerstart").toString().toInt();
       _fieldsLine = properties.value("fields").toString().toInt();
       _readFields = QVariant(properties.value("readfields").toString()).toBool();
+      _useDot = QVariant(properties.value("usedot").toString()).toBool();
     }
 
     void load(const QDomElement& e) {
@@ -410,27 +421,42 @@ int AsciiSource::readString(QString &S, const QString& string) {
 }
 
 
-struct SetScopedDot
+struct NumberLocale
 {
-  SetScopedDot() : orig((const char*) setlocale(LC_NUMERIC, 0)) {
+  NumberLocale() : use_dot(false) {
+  }
+
+  ~NumberLocale() {
+    if (use_dot) {
+      //printf("original LC_NUMERIC: %s\n", orig.constData());
+      setlocale(LC_NUMERIC, orig.constData());
+    }
+  }
+  
+  void useDot() {
+    use_dot = true;
+    orig = QByteArray((const char*) setlocale(LC_NUMERIC, 0));
     setlocale(LC_NUMERIC, "C");
   }
 
-  ~SetScopedDot() {
-    //printf("original LC_NUMERIC: %s\n", orig.constData());
-    setlocale(LC_NUMERIC, orig.constData());
-  }
-  
+private:
+  bool use_dot;
   QByteArray orig;
 };
 
 
 int AsciiSource::readField(double *v, const QString& field, int s, int n) {
 
-#ifndef USE_KST_ATOF
-  // assume numbers with points; also on systems with other locales (e.g. German with ',')
-  SetScopedDot dot;
+  NumberLocale dot;
+  char sep = _config->_localSeparator;
+
+  if (_config->_useDot) {
+#ifdef USE_KST_ATOF
+    sep = '.';
+#else
+    dot.useDot();
 #endif
+  }
 
   if (n < 0) {
     n = 1; /* n < 0 means read one sample, not frame - irrelevent here */
@@ -489,7 +515,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
   if (_config->_columnType == AsciiSource::Config::Fixed) {
     for (int i = 0; i < n; ++i, ++s) {
       // Read appropriate column and convert to double
-      v[i] = atof(_tmpBuf + _rowIndex[i] - _rowIndex[0] + _config->_columnWidth * (col - 1));
+      v[i] = atof(_tmpBuf + _rowIndex[i] - _rowIndex[0] + _config->_columnWidth * (col - 1), sep);
     }
   } else if (_config->_columnType == AsciiSource::Config::Custom) {
     for (int i = 0; i < n; ++i, ++s) {
@@ -509,7 +535,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
             ++i_col;
             if (i_col == col) {
               if (isdigit(_tmpBuf[ch]) || _tmpBuf[ch] == '-' || _tmpBuf[ch] == '.' || _tmpBuf[ch] == '+') {
-                v[i] = atof(_tmpBuf + ch);
+                v[i] = atof(_tmpBuf + ch, sep);
               } else if (ch + 2 < bufread && tolower(_tmpBuf[ch]) == 'i' &&
                   tolower(_tmpBuf[ch + 1]) == 'n' && tolower(_tmpBuf[ch + 2]) == 'f') {
                 v[i] = INF;
@@ -541,7 +567,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
             ++i_col;
             if (i_col == col) {
               if (isdigit(_tmpBuf[ch]) || _tmpBuf[ch] == '-' || _tmpBuf[ch] == '.' || _tmpBuf[ch] == '+') {
-                v[i] = atof(_tmpBuf + ch);
+                v[i] = atof(_tmpBuf + ch, sep);
               } else if (ch + 2 < bufread && tolower(_tmpBuf[ch]) == 'i' &&
                   tolower(_tmpBuf[ch + 1]) == 'n' && tolower(_tmpBuf[ch + 2]) == 'f') {
                 v[i] = INF;
@@ -815,6 +841,7 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
       _ac->_columnWidth->setValue(_cfg->value("Column Width", DEFAULT_COLUMN_WIDTH).toInt());
       _ac->_startLine->setValue(_cfg->value("Data Start", 0).toInt());
       _ac->_readFields->setChecked(_cfg->value("Read Fields", false).toBool());
+      _ac->_useDot->setChecked(_cfg->value("Use Dot", true).toBool());
       _ac->_fieldsLine->setValue(_cfg->value("Fields Line", 0).toInt());
       AsciiSource::Config::ColumnType ct = (AsciiSource::Config::ColumnType)_cfg->value("Column Type", 0).toInt();
       if (ct == AsciiSource::Config::Fixed) {
@@ -842,6 +869,7 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
         _ac->_columnWidth->setValue(_cfg->value("Column Width", _ac->_columnWidth->value()).toInt());
         _ac->_startLine->setValue(_cfg->value("Data Start", _ac->_startLine->value()).toInt());
         _ac->_readFields->setChecked(_cfg->value("Read Fields", _ac->_readFields->isChecked()).toBool());
+        _ac->_useDot->setChecked(_cfg->value("Use Dot", _ac->_useDot->isChecked()).toBool());
         _ac->_fieldsLine->setValue(_cfg->value("Fields Line", _ac->_fieldsLine->value()).toInt());
         ct = (AsciiSource::Config::ColumnType)_cfg->value("Column Type", (int)ct).toInt();
         if (ct == AsciiSource::Config::Fixed) {
@@ -884,6 +912,7 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
         _cfg->setValue("Column Width", _ac->_columnWidth->value());
         _cfg->setValue("Data Start", _ac->_startLine->value());
         _cfg->setValue("Read Fields", _ac->_readFields->isChecked());
+        _cfg->setValue("Use Dot", _ac->_useDot->isChecked());
         _cfg->setValue("Fields Line", _ac->_fieldsLine->value());
       }
 
@@ -899,6 +928,7 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
         _cfg->setValue("Column Width", _ac->_columnWidth->value());
         _cfg->setValue("Data Start", _ac->_startLine->value());
         _cfg->setValue("Read Fields", _ac->_readFields->isChecked());
+        _cfg->setValue("Use Dot", _ac->_useDot->isChecked());
         _cfg->setValue("Fields Line", _ac->_fieldsLine->value());
         _cfg->endGroup();
       }

@@ -7,7 +7,7 @@
 #define LOGHUGE 39
 
 
-double kst_atof(const char* p)
+double kst_atof(const char* p, const char sep)
 {
 	int c;
 	double fl, flexp, exp5;
@@ -36,7 +36,7 @@ double kst_atof(const char* p)
 		nd++;
 	}
 
-	if (c == '.') {
+	if (c == sep) {
 		while ((c = *p++), isdigit(c)) {
 			if (fl<big) {
 				fl = 10*fl + (c-'0');
