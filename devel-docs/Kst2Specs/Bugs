@@ -9,3 +9,63 @@ Draw an ellipse that spans many plots.  It ends up in the back, and can't be bro
 
 Artifacts when resizing large arrowheads.
 
+--------------------
+
+PSDs are not updated.  The whole update system might be due for a complete re-write (?)
+
+--------------------
+
+Curves are rendered slightly above where they should be.  Take a plot
+that it is of very boring data (like always exactly zero) and it'll be
+drawn one pixel above the axis tick mark for zero.  
+
+--------------------
+
+Text for labels and axes is rendered (anti-aliased) non-uniformly.  One
+plot may look sharp whereas the plot immediately below it will have text
+that looks blurry (even out of focus).  
+
+--------------------
+
+If you turn on data mode, the data mode indicator on the plot (grey
+filled circle) remains, even after you scroll your mouse to a new plot.
+If in "live" mode, the indicator will scroll with the plot until it
+disappears off the edge.  If you turn off datamode all shown indicators
+disappear, but if you turn it on, those ones reappear.  
+
+--------------------
+
+When in data mode, the position of the data mode indicator and the
+values in the bottom status bar only update if you move the mouse.  When
+live data is scrolling by and the mouse is still, the data mode
+indicator scrolls off the plot with the data (until you jiggle the
+mouse).
+
+--------------------
+
+When you plot 48 plots on one screen, the default text size for the
+plots is way too small to be readable.  
+
+--------------------
+
+In this case (48 plots, live data at 100Hz) kst2 is now usable (last
+time I tested it it was too bogged down to use).  However, it is still
+more sluggish than kst1 would feel with the same data on the same
+machine.  There are probably still some multiple draws or something.  
+
+--------------------
+
+With the live data, the UI is sluggish.  I have the plot update timer
+set to 200ms, but clearly the data only updates at about 2Hz (and it's
+kinda random), and between updates drawing things on the plots (like
+zoom rectangles) is choppy (updating when the data does).  The dialog
+boxes are also sluggish.  kst2 must not be multi-threaded.
+
+--------------------
+
+Windows MEMleak
+
+--------------------
+
+Windows ascii performance
+
