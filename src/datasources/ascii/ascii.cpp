@@ -922,7 +922,13 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
         _cfg->beginGroup(src->fileName());
         _cfg->setValue("Default INDEX Interpretation", 1 + _ac->_indexType->currentIndex());
         _cfg->setValue("Comment Delimiters", _ac->_delimiters->text());
-        AsciiSource::Config::ColumnType ct = AsciiSource::Config::Whitespace;
+        AsciiSource::Config::ColumnType ct;
+        if (_ac->_fixed->isChecked())
+          ct = AsciiSource::Config::Fixed;
+        else if (_ac->_custom->isChecked())
+          ct = AsciiSource::Config::Custom;
+        else 
+          ct = AsciiSource::Config::Whitespace;
         _cfg->setValue("Column Type", (int)ct);
         _cfg->setValue("Column Delimiter", _ac->_columnDelimiter->text());
         _cfg->setValue("Column Width", _ac->_columnWidth->value());
