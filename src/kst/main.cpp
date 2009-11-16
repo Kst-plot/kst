@@ -11,6 +11,9 @@
 
 #include <application.h>
 
+#ifdef Q_CC_MSVC
+__declspec(dllexport)
+#endif
 int main(int argc, char *argv[]) {
   Kst::Application app(argc, argv);
   if (app.mainWindow()->initFromCommandLine()) {
