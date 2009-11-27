@@ -1,0 +1,90 @@
+Updates are done by explicitly looping through lists of objects and items.
+
+Kst::Objects keep track of and/or provide
+
+  serial: the serial number (from doUpdates()) of the last time it was updated.
+
+  serialOfLastChange: the serial number of the last time an update actually led to a change.
+
+  minInputSerial(): the min serial of any input primitives to the object
+    This method querries the inputs. 
+
+  maxInputSerialOfLastChange(): the max serial where on of the input primitives was actually changed.
+    This method also querries the inputs     
+
+  objectUpdate(new_serial): 
+    return NoChange if serial == new_serial
+    return Deferred if minInputSerial < new_serial  (an input hasn't be updated yet)
+    return Changed after calling internalUpdate() if maxInputSerialOfLastChange > serialOfLastChange
+    return NoChange otherwise
+
+  internalUpdate(): actually perform an update.  ** should only be called by objectUpdate **
+
+ObjectManager::doUpdates(): The loop for updating Kst::Objects.  Calls objectUpdate().
+  doUpdates() is called by:
+    -datasources, by their timer or watcher
+    -dialogs, at the end of apply() or equivalent
+  
+  Algorithm:
+  loop over all datasources
+    set serialOfLastChange if there was new data
+    
+  do 
+    loop over all Objects (except data sources)
+      retval = objectUpdate()
+  until no retval's == Deferred
+
+
+MainWindow::updateViewItems(serial): update plotitems and then views
+  called by a signal emitted at the end of doUpdates()
+
+  loop over all plot items:
+    plotItem::handleChangedInputs()
+
+  if any plotItems changed
+    _tabwidget->currentView()->update()
+
+--------------
+ToDo/shortcomings
+-The system does not currently honor the update rate system settings.  This needs to go into
+ doUpdates(). 
+
+-The object loop in doUpdates is inefficient, in that it may have to go through the loop
+ up to D times, where D is the heirarchy depth.  The loop could instead re-sort the objects as it
+ goes, so that for future visits, nothing would be deferred.  In practive, objectUpdate(new_serial)
+ where new_serial == _serial is pretty cheap, and probably doesn't produce a noticible slowdown.
+ In practice the heirarchy depth is 2 (curves of dataVectors) or three 
+ (curves of PSD's of dataVectors)
+
+-The updateViewItems loop only considers plot items to trigger a view update.  It does not check
+ if labels have changed.  In practice, it is rare to have only labels from a data source, and no
+ plots, but if one were to do this, it would not get real time redrawn.  The solution is to add
+ labels to the list it checks.
+
+-The updateViewItems loop will update the current view if any plots have changed: if only plots on
+ other tabs had been changed, it would be better to not update the current view.  Not common, and
+ the update is pretty fast if the plot didn't change.
+
+-doUpdates() could be threaded
+  the data source loop should not be threaded.  It's to cheap to be worth the threading overhead.
+  data primitives should be looped over before all other objects
+    whether data primitives updates should be threaded depends on the nature of the datasource and
+    on the media it is being read from to avoid disk thrashing - dirfiles will suffer from threading
+    data primitive reads, but data sources that store their data contiguously will benefit (eg, ascii).
+    Using flash drives should mean all data primitives would benefit from threading.
+
+  other data object updates can be threaded.
+
+  suggested algorithm
+    make a pool of threads
+    parcel out the data objects to the threads
+  
+-updateViewItems() is probably the slowest operation, and could benefit from threading.
+  the loop over plotItems can easily be threaded as with Objects.
+
+  There is no way to thread the view update call with the current architecture.  It is possible
+  that the refresh pixmaps stuff could be threaded, but I don't know how yet.
+
+
+version: cbn Nov 26'09
+
