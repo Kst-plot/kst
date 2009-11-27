@@ -2,6 +2,7 @@ QT += xml
 
 TEMPLATE = lib
 CONFIG += plugin
+CONFIG -= precompile_header
 !win32:OBJECTS_DIR = tmp
 !win32:MOC_DIR = tmp
 DESTDIR = $$OUTPUT_DIR/plugin
