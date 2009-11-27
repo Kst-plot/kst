@@ -30,6 +30,7 @@ contains(DEBUG_MODE, 1) {
 }
 
 
+
 !win32:OBJECTS_DIR = tmp
 !win32:MOC_DIR = tmp
 
@@ -39,6 +40,9 @@ INCLUDEPATH += $$TOPLEVELDIR
 
 LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin
 VERSION = 2.0.0
+
+PRECOMPILED_HEADER = $$TOPLEVELDIR/pch.h
+CONFIG += precompile_header
 
 # similar to qtLibraryTarget from mkspecs\features\qt_functions.p
 defineReplace(kstlib) {
