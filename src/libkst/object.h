@@ -45,10 +45,15 @@ class Object : public QObject, public Shared, public KstRWLock, public NamedObje
 
   public:
     static QString type();
+    static const qint64 Forced = -1;
 
-    enum UpdateType { NO_CHANGE = 0, UPDATE };
+    enum UpdateType { NoChange = 0, Updated, Deferred };
 
-    virtual UpdateType update() = 0;
+    virtual UpdateType objectUpdate(qint64 newSerial);
+    virtual void registerChange() {_serial = Forced;}
+
+    qint64 serial() const {return _serial;}
+    qint64 serialOfLastChange() const {return _serialOfLastChange;}
 
     virtual const QString& typeString() const;
     static const QString staticTypeString;
@@ -61,14 +66,19 @@ class Object : public QObject, public Shared, public KstRWLock, public NamedObje
 
     virtual void deleteDependents();
 
-    virtual void beginUpdate(ObjectPtr object);
-    virtual void processUpdate(ObjectPtr object);
+    virtual void internalUpdate() = 0;
   protected:
     Object();
     virtual ~Object();
 
     friend class ObjectStore;
     ObjectStore *_store;  // set by ObjectStore
+
+    virtual qint64 minInputSerial() const = 0;
+    virtual qint64 minInputSerialOfLastChange() const = 0;
+
+    qint64 _serial;
+    qint64 _serialOfLastChange;
 
 } KST_EXPORT;
 

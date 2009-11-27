@@ -125,17 +125,8 @@ RelationList PlotRenderItem::relationList() const {
 }
 
 
-void PlotRenderItem::relationUpdated(ObjectPtr object) {
-#if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "\t\t\tUP - Curve update required by Plot for update of" << object->shortName();
-#endif
-  UpdateManager::self()->requestUpdate(object, plotItem());
-}
-
-
 void PlotRenderItem::addRelation(RelationPtr relation) {
   if (relation) {
-    connect(relation, SIGNAL(relationUpdated(ObjectPtr)), this, SLOT(relationUpdated(ObjectPtr)));
     _relationList.append(relation);
     plotItem()->zoomMaximum();
   }
@@ -144,17 +135,14 @@ void PlotRenderItem::addRelation(RelationPtr relation) {
 
 void PlotRenderItem::removeRelation(RelationPtr relation) {
   if (relation) {
-    disconnect(relation, SIGNAL(relationUpdated(ObjectPtr)));
     _relationList.removeAll(relation);
-    plotItem()->updateObject();
+    plotItem()->registerChange();
+    UpdateManager::self()->doUpdates(true);
   }
 }
 
 
 void PlotRenderItem::clearRelations() {
-  foreach (RelationPtr relation, _relationList) {
-    disconnect(relation, SIGNAL(relationUpdated(ObjectPtr)));
-  }
   _relationList.clear();
   plotItem()->zoomMaximum();
 }

@@ -104,7 +104,7 @@ DataObjectPtr CSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
 
   csd->setDescriptiveName(descriptiveName);
   csd->writeLock();
-  csd->update();
+  csd->registerChange();
   csd->unlock();
 
   return csd;

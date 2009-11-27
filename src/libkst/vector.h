@@ -152,6 +152,8 @@ class Vector : public Primitive {
     virtual QString descriptionTip() const;
 
     virtual QString sizeString() const;
+
+    virtual void internalUpdate();
   protected:
     /** current number of samples */
     int _size;
@@ -206,8 +208,6 @@ class Vector : public Primitive {
 
     friend class DataObject;
     virtual double* realloced(double *memptr, int newSize);
-    Object::UpdateType internalUpdate(Object::UpdateType providerRC);
-
 } KST_EXPORT;
 
 

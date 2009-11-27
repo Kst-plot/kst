@@ -25,6 +25,7 @@
 #include "image.h"
 #include "palette.h"
 #include "kst_i18n.h"
+#include "updatemanager.h"
 
 namespace Kst {
 
@@ -226,7 +227,7 @@ DataVectorPtr CommandLineParser::createOrFindDataVector(QString field, DataSourc
       xv->writeLock();
       xv->change(ds, field, _startFrame, _numFrames, _skip, _skip>0, _doAve);
 
-      xv->update();
+      xv->registerChange();
       xv->unlock();
 
       _vectors.append(xv);
@@ -258,7 +259,7 @@ void CommandLineParser::createCurveInPlot(VectorPtr xv, VectorPtr yv, VectorPtr 
     }
 
     curve->writeLock();
-    curve->update();
+    curve->registerChange();
     curve->unlock();
 
     if (_doConsecutivePlots) {
@@ -278,7 +279,7 @@ void CommandLineParser::createImageInPlot(MatrixPtr m) {
     image->changeToColorOnly(m, 0.0, 1.0, true, Palette::getPaletteList().at(0));
 
     image->writeLock();
-    image->update();
+    image->registerChange();
     image->unlock();
 
     if (_doConsecutivePlots) {
@@ -447,7 +448,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
 
           powerspectrum->writeLock();
           powerspectrum->change(pv, _sampleRate, true, 14, true, true, QString(), QString());
-          powerspectrum->update();
+          powerspectrum->registerChange();
           powerspectrum->unlock();
 
           VectorPtr ev=0;
@@ -487,7 +488,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
           histogram->change(hv, -1, 1, 60, Histogram::Number, true);
 
           histogram->writeLock();
-          histogram->update ();
+          histogram->registerChange();
           histogram->unlock();
 
           VectorPtr ev=0;
@@ -525,7 +526,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
           dm->writeLock();
           dm->change(ds, field, 0, 0, -1, -1, _doAve, _skip>0, _skip, 0.0, 0.0, 1.0, 1.0);
 
-          dm->update();
+          dm->registerChange();
           dm->unlock();
 
           createImageInPlot(dm);
@@ -545,6 +546,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       _fileNames.append(arg);
     }
   }
+  UpdateManager::self()->doUpdates(true);
   return (dataPlotted);
 }
 

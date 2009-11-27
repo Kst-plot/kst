@@ -75,7 +75,6 @@ class PlotRenderItem : public ViewItem
     virtual void createAutoLayout();
     virtual void createCustomLayout();
     virtual void remove();
-    virtual void relationUpdated(ObjectPtr object);
     virtual void referenceMode();
     virtual void referenceModeDisabled();
 

@@ -41,8 +41,13 @@ class KST_EXPORT DataString : public String, public DataPrimitive {
 
     virtual QString _automaticDescriptiveName() const;
 
+    /** Update the string */
+    virtual qint64 minInputSerial() const;
+    virtual qint64 minInputSerialOfLastChange() const;
+
   public:
     virtual ~DataString();
+    virtual void internalUpdate();
 
     void reload();
 
@@ -59,9 +64,6 @@ class KST_EXPORT DataString : public String, public DataPrimitive {
     /** Save scalar information */
     virtual void save(QXmlStreamWriter &s);
 
-    /** Update the scalar.  Return true if there was new data. */
-    virtual UpdateType update();
-
     /** make a copy of the DataString */
     SharedPtr<DataString> makeDuplicate() const;
 
@@ -70,9 +72,6 @@ class KST_EXPORT DataString : public String, public DataPrimitive {
     virtual QString propertyString() const;
 
     bool isValid() const;
-
-  public Q_SLOTS:
-    void sourceUpdated(ObjectPtr object);
 };
 
 typedef SharedPtr<DataString> DataStringPtr;

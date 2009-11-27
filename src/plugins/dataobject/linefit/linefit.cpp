@@ -305,7 +305,7 @@ Kst::DataObject *LineFitPlugin::create(Kst::ObjectStore *store, Kst::DataObjectC
     object->setPluginName(pluginName());
 
     object->writeLock();
-    object->update();
+    object->registerChange();
     object->unlock();
 
     return object;

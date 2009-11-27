@@ -37,7 +37,6 @@ class KST_EXPORT GeneratedVector : public Vector {
     void save(QXmlStreamWriter &s);
 
     void changeRange(double x0, double x1, int n);
-    Object::UpdateType update();
     void setSaveData(bool save);
 
     virtual QString descriptionTip() const;

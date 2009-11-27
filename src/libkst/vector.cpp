@@ -380,7 +380,7 @@ bool Vector::resize(int sz, bool init) {
 }
 
 
-Object::UpdateType Vector::internalUpdate(Object::UpdateType providerRC) {
+void Vector::internalUpdate() {
   int i, i0;
   double sum, sum2, last, first, v;
   double last_v;
@@ -411,7 +411,7 @@ Object::UpdateType Vector::internalUpdate(Object::UpdateType providerRC) {
 
       updateScalars();
 
-      return providerRC;
+      return;
     }
 
     i0 = i;
@@ -504,10 +504,7 @@ Object::UpdateType Vector::internalUpdate(Object::UpdateType providerRC) {
 
     updateScalars();
 
-    return providerRC;
   }
-
-  return NO_CHANGE;
 }
 
 void Vector::save(QXmlStreamWriter &s) {

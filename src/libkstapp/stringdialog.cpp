@@ -272,7 +272,7 @@ ObjectPtr StringDialog::createNewGeneratedString(){
   }
 
   string->writeLock();
-  string->update();
+  string->registerChange();
   string->unlock();
 
   _dataObjectName = string->Name();
@@ -302,7 +302,7 @@ ObjectPtr StringDialog::createNewDataString() {
      string->setDescriptiveName(DataDialog::tagString());
   }
 
-  string->update();
+  string->registerChange();
   string->unlock();
 
   _dataObjectName = string->Name();
@@ -321,7 +321,7 @@ ObjectPtr StringDialog::editExistingDataObject() const {
     }
     string->writeLock();
     string->setValue(value);
-    string->immediateUpdate();
+    string->registerChange();
     string->unlock();
   }
   return dataObject();

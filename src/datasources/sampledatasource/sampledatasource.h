@@ -27,7 +27,7 @@ class SampleDatasourceSource : public Kst::DataSource {
     bool init();
     bool reset();
 
-    Kst::Object::UpdateType update();
+    Kst::Object::UpdateType internalDataSourceUpdate();
 
     // Optional function that must be implemented if this datasource supports matricies.
     bool matrixDimensions( const QString& matrix, int* xDim, int* yDim);

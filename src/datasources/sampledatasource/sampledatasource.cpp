@@ -66,7 +66,7 @@ SampleDatasourceSource::SampleDatasourceSource(Kst::ObjectStore *store, QSetting
     _valid = true;
   }
 
-  update();
+  registerChange();
 }
 
 
@@ -87,14 +87,15 @@ bool SampleDatasourceSource::init() {
   _fieldList.clear();
   _frameCount = 0;
 
-   return update() == Kst::Object::UPDATE;
+  registerChange();
+  return true; // false if something went wrong
 }
 
 
 // Check if the data in the from the source has updated.  Typically done by checking the frame count of the datasource for 
 // changes.
-Kst::Object::UpdateType SampleDatasourceSource::update() {
-  return Kst::Object::NO_CHANGE;
+Kst::Object::UpdateType SampleDatasourceSource::internalDataSourceUpdate() {
+  return Kst::Object::NoChange;
 }
 
 

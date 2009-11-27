@@ -258,7 +258,7 @@ Kst::DataObject *SamplePlugin::create(Kst::ObjectStore *store, Kst::DataObjectCo
     // If inputs/outputs was not triggered, this will also be run a second time after all inputs/outputs have been 
     // configured.
     object->writeLock();
-    object->update();
+    object->registerChange();
     object->unlock();
 
     return object;

@@ -19,6 +19,8 @@
 //#define UPDATEDEBUG
 #include <QDebug>
 
+#include <limits.h>
+
 #include "kst_i18n.h"
 #include "primitive.h"
 #include "updatemanager.h"
@@ -42,19 +44,6 @@ const QString& Primitive::typeString() const {
   return staticTypeString;
 }
 
-
-Object::UpdateType Primitive::update() {
-  Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
-  Object::UpdateType rc = internalUpdate(UPDATE);
-  return rc;
-}
-
-
-Object::UpdateType Primitive::internalUpdate(Object::UpdateType providerRC) {
-  Q_UNUSED(providerRC)
-  return NO_CHANGE;
-}
-
 void Primitive::setProvider(Object* obj) {
   _provider = obj;
 }
@@ -73,20 +62,20 @@ QString Primitive::_automaticDescriptiveName() const {
   return name;
 }
 
-void Primitive::triggerUpdateSignal(ObjectPtr object) {
-#if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "UP - Primitive" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
-#endif
-  emit updated(object);
+qint64 Primitive::minInputSerial() const {
+  if (_provider) {
+    return (_provider->serial());
+  }
+  return LLONG_MAX;
 }
 
-
-void Primitive::immediateUpdate() {
-  UpdateManager::self()->updateStarted(this,this);
-  update();
-  triggerUpdateSignal(this);
-  UpdateManager::self()->updateFinished(this,this);
+qint64 Primitive::minInputSerialOfLastChange() const {
+  if (_provider) {
+    return (_provider->serialOfLastChange());
+  }
+  return LLONG_MAX;
 }
+
 
 QString Primitive::propertyString() const {
   return QString("Base Class Property String");

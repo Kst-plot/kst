@@ -31,8 +31,6 @@ class EditableVector : public Vector {
 
     void save(QXmlStreamWriter &s);
 
-    Object::UpdateType update();
-
     void setSaveData(bool save);
 
     virtual QString descriptionTip() const;

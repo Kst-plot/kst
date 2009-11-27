@@ -391,7 +391,7 @@ ObjectPtr VectorDialog::createNewDataVector() {
   setDataVectorDefaults(vector);
   _vectorTab->dataRange()->setWidgetDefaults();
 
-  vector->update();
+  vector->registerChange();
   vector->unlock();
 
   _dataObjectName = vector->Name();
@@ -444,7 +444,7 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
           bool doAve = dataRange->doFilterDirty() ?  dataRange->doFilter() : vector->doAve();
           vector->writeLock();
           vector->changeFrames(start, range, skip, doSkip, doAve);
-          vector->immediateUpdate();
+          vector->registerChange();
           vector->unlock();
         }
       }
@@ -472,7 +472,7 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
         dataVector->setDescriptiveName(DataDialog::tagString());
       }
 
-      dataVector->immediateUpdate();
+      dataVector->registerChange();
       dataVector->unlock();
 
       setDataVectorDefaults(dataVector);
@@ -489,7 +489,7 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
           double length = _vectorTab->numberOfSamplesDirty() ?  _vectorTab->numberOfSamples() : vector->length();
           vector->writeLock();
           vector->changeRange(min, max, length);
-          vector->immediateUpdate();
+          vector->registerChange();
           vector->unlock();
         }
       }
@@ -504,7 +504,7 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
       } else {
         generatedVector->setDescriptiveName(DataDialog::tagString());
       }
-      generatedVector->immediateUpdate();
+      generatedVector->registerChange();
       generatedVector->unlock();
       setGenVectorDefaults(generatedVector);
     }

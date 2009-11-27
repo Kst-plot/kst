@@ -67,10 +67,6 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
     PSDType in_outputType, const QString& in_vectorUnits,
     const QString& in_rateUnits) {
 
-  if (_inputVectors[INVECTOR]) {
-    disconnect(_inputVectors[INVECTOR], SIGNAL(updated(ObjectPtr)));
-  }
-
   _inputVectors[INVECTOR] = in_V;
   QString vecName = in_V ? in_V->Name() : QString::null;
   _frequency = in_freq;
@@ -94,8 +90,6 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
   _outMatrix->setYLabel(i18n("Frequency [%1]").arg(_rateUnits));
 
   updateMatrixLabels();
-
-  connect(_inputVectors[INVECTOR], SIGNAL(updated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
 }
 
 
@@ -103,8 +97,7 @@ CSD::~CSD() {
   _outMatrix = 0L;
 }
 
-Object::UpdateType CSD::update() {
-  Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
+void CSD::internalUpdate() {
 
   VectorPtr inVector = _inputVectors[INVECTOR];
 
@@ -147,11 +140,10 @@ Object::UpdateType CSD::update() {
   double frequencyStep = .5*_frequency/(double)(tempOutputLen-1);
 
   _outMatrix->change(xSize, tempOutputLen, 0, 0, _windowSize, frequencyStep);
-  _outMatrix->update();
 
   unlockInputsAndOutputs();
 
-  return UPDATE;
+  return;
 }
 
 
@@ -349,7 +341,7 @@ DataObjectPtr CSD::makeDuplicate() {
     csd->setDescriptiveName(descriptiveName());
   }
   csd->writeLock();
-  csd->update();
+  csd->registerChange();
   csd->unlock();
 
   return DataObjectPtr(csd);

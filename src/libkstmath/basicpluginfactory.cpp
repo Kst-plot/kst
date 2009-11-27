@@ -136,7 +136,7 @@ DataObjectPtr BasicPluginFactory::generateObject(ObjectStore *store, QXmlStreamR
   }
 
   dataObject->writeLock();
-  dataObject->update();
+  dataObject->registerChange();
   dataObject->unlock();
 
   return dataObject;

@@ -138,6 +138,9 @@ class KST_EXPORT Matrix : public Primitive {
     virtual void deleteDependents();
 
     virtual QString sizeString() const;
+
+    virtual void internalUpdate();
+
   protected:
     int _NS;
     int _NRealS; // number of samples with real values
@@ -174,7 +177,6 @@ class KST_EXPORT Matrix : public Primitive {
     // returns -1 if (x,y) is out of bounds
     int zIndex(int x, int y) const;
 
-    Object::UpdateType internalUpdate(Object::UpdateType providerUpdateType);
 };
 
 typedef SharedPtr<Matrix> MatrixPtr;

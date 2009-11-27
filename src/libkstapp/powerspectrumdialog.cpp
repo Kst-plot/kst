@@ -212,7 +212,7 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
      powerspectrum->setDescriptiveName(DataDialog::tagString());
   }
 
-  powerspectrum->update();
+  powerspectrum->registerChange();
   powerspectrum->unlock();
 
   _powerSpectrumTab->FFTOptionsWidget()->setWidgetDefaults();
@@ -233,7 +233,7 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
   curve->setBarStyle(_powerSpectrumTab->curveAppearance()->barStyle());
 
   curve->writeLock();
-  curve->update();
+  curve->registerChange();
   curve->unlock();
 
   _powerSpectrumTab->curveAppearance()->setWidgetDefaults();
@@ -310,7 +310,7 @@ ObjectPtr PowerSpectrumDialog::editExistingDataObject() const {
           powerspectrum->setOutput(output);
           powerspectrum->setInterpolateHoles(interpolateOverHoles);
 
-          powerspectrum->inputObjectUpdated(powerspectrum);
+          powerspectrum->registerChange();
           powerspectrum->unlock();
         }
       }
@@ -334,7 +334,7 @@ ObjectPtr PowerSpectrumDialog::editExistingDataObject() const {
         powerspectrum->setDescriptiveName(DataDialog::tagString());
       }
 
-      powerspectrum->inputObjectUpdated(powerspectrum);
+      powerspectrum->registerChange();
       powerspectrum->unlock();
 
       _powerSpectrumTab->FFTOptionsWidget()->setWidgetDefaults();

@@ -330,7 +330,7 @@ ObjectPtr ScalarDialog::createNewGeneratedScalar(){
   }
 
   scalar->writeLock();
-  scalar->update();
+  scalar->registerChange();
   scalar->unlock();
 
   _dataObjectName = scalar->Name();
@@ -360,7 +360,7 @@ ObjectPtr ScalarDialog::createNewDataScalar() {
      scalar->setDescriptiveName(DataDialog::tagString());
   }
 
-  scalar->update();
+  scalar->registerChange();
   scalar->unlock();
 
   _dataObjectName = scalar->Name();
@@ -391,7 +391,7 @@ ObjectPtr ScalarDialog::createNewVScalar() {
      scalar->setDescriptiveName(DataDialog::tagString());
   }
 
-  scalar->update();
+  scalar->registerChange();
   scalar->unlock();
 
   _dataObjectName = scalar->Name();
@@ -415,7 +415,7 @@ ObjectPtr ScalarDialog::editExistingDataObject() const {
         scalar->setDescriptiveName(DataDialog::tagString());
       }
 
-      scalar->immediateUpdate();
+      scalar->registerChange();
       scalar->unlock();
     }
   } else if (VScalarPtr scalar = kst_cast<VScalar>(dataObject())) {
@@ -433,7 +433,7 @@ ObjectPtr ScalarDialog::editExistingDataObject() const {
         scalar->setDescriptiveName(DataDialog::tagString());
       }
 
-      scalar->immediateUpdate();
+      scalar->registerChange();
       scalar->unlock();
     }
   } else   if (ScalarPtr scalar = kst_cast<Scalar>(dataObject())) {
@@ -449,7 +449,7 @@ ObjectPtr ScalarDialog::editExistingDataObject() const {
     }
     scalar->writeLock();
     scalar->setValue(value);
-    scalar->immediateUpdate();
+    scalar->registerChange();
     scalar->unlock();
   }
 

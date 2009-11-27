@@ -231,7 +231,7 @@ Kst::DataObject *CubicSplinePlugin::create(Kst::ObjectStore *store, Kst::DataObj
     object->setPluginName(pluginName());
 
     object->writeLock();
-    object->update();
+    object->registerChange();
     object->unlock();
 
     return object;

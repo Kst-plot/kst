@@ -33,7 +33,6 @@
 #include "ksttimers.h"
 
 #include "objectstore.h"
-#include "updatemanager.h"
 
 #include <time.h>
 
@@ -95,21 +94,13 @@ Curve::~Curve() {
 }
 
 
-void Curve::vectorUpdated(ObjectPtr object) {
-#if DEBUG_UPDATE_CYCLE > 1
-    qDebug() << "\t\t\tUP - Curve update ready for" << object->shortName();
-#endif
-    UpdateManager::self()->requestUpdate(object, this);
-}
-
-
-Object::UpdateType Curve::update() {
+void Curve::internalUpdate() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   VectorPtr cxV = *_inputVectors.find(XVECTOR);
   VectorPtr cyV = *_inputVectors.find(YVECTOR);
   if (!cxV || !cyV) {
-    return NO_CHANGE;
+    return;
   }
 
   writeLockInputsAndOutputs();
@@ -141,7 +132,7 @@ Object::UpdateType Curve::update() {
 
   _redrawRequired = true;
 
-  return UPDATE;
+  return;
 }
 
 
@@ -320,9 +311,7 @@ void Curve::save(QXmlStreamWriter &s) {
 void Curve::setXVector(VectorPtr new_vx) {
   if (new_vx) {
     _inputVectors[XVECTOR] = new_vx;
-    connect(new_vx, SIGNAL(updated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
-    disconnect(_inputVectors[XVECTOR], SIGNAL(updated(ObjectPtr)));
     _inputVectors.remove(XVECTOR);
   }
 }
@@ -331,9 +320,7 @@ void Curve::setXVector(VectorPtr new_vx) {
 void Curve::setYVector(VectorPtr new_vy) {
   if (new_vy) {
     _inputVectors[YVECTOR] = new_vy;
-    connect(new_vy, SIGNAL(updated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
-    disconnect(_inputVectors[YVECTOR], SIGNAL(updated(ObjectPtr)));
     _inputVectors.remove(YVECTOR);
   }
 }
@@ -342,11 +329,7 @@ void Curve::setYVector(VectorPtr new_vy) {
 void Curve::setXError(VectorPtr new_ex) {
   if (new_ex) {
     _inputVectors[EXVECTOR] = new_ex;
-    connect(new_ex, SIGNAL(updated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
-    if (_inputVectors[EXVECTOR]) {
-      disconnect(_inputVectors[EXVECTOR], SIGNAL(updated(ObjectPtr)));
-    }
     _inputVectors.remove(EXVECTOR);
   }
 }
@@ -355,11 +338,7 @@ void Curve::setXError(VectorPtr new_ex) {
 void Curve::setYError(VectorPtr new_ey) {
   if (new_ey) {
     _inputVectors[EYVECTOR] = new_ey;
-    connect(new_ey, SIGNAL(updated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
-    if (_inputVectors[EYVECTOR]) {
-      disconnect(_inputVectors[EYVECTOR], SIGNAL(updated(ObjectPtr)));
-    }
     _inputVectors.remove(EYVECTOR);
   }
 }
@@ -368,11 +347,7 @@ void Curve::setYError(VectorPtr new_ey) {
 void Curve::setXMinusError(VectorPtr new_ex) {
   if (new_ex) {
     _inputVectors[EXMINUSVECTOR] = new_ex;
-    connect(new_ex, SIGNAL(updated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
-    if (_inputVectors[EXMINUSVECTOR]) {
-      disconnect(_inputVectors[EXMINUSVECTOR], SIGNAL(updated(ObjectPtr)));
-    }
     _inputVectors.remove(EXMINUSVECTOR);
   }
 }
@@ -381,11 +356,7 @@ void Curve::setXMinusError(VectorPtr new_ex) {
 void Curve::setYMinusError(VectorPtr new_ey) {
   if (new_ey) {
     _inputVectors[EYMINUSVECTOR] = new_ey;
-    connect(new_ey, SIGNAL(updated(ObjectPtr)), this, SLOT(vectorUpdated(ObjectPtr)));
   } else {
-    if (_inputVectors[EYMINUSVECTOR]) {
-      disconnect(_inputVectors[EYMINUSVECTOR], SIGNAL(updated(ObjectPtr)));
-    }
     _inputVectors.remove(EYMINUSVECTOR);
   }
 }
@@ -403,11 +374,6 @@ QString Curve::yLabel() const {
 
 QString Curve::topLabel() const {
   return _inputVectors[YVECTOR]->descriptiveName();
-}
-
-
-CurveType Curve::curveType() const {
-  return VCURVE;
 }
 
 
@@ -668,7 +634,7 @@ RelationPtr Curve::makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelat
   curve->setBarStyle(BarStyle);
 
   curve->writeLock();
-  curve->update();
+  curve->registerChange();
   curve->unlock();
 
   duplicatedRelations.insert(this, RelationPtr(curve));

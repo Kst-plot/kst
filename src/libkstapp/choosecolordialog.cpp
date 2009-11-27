@@ -17,6 +17,7 @@
 #include "mainwindow.h"
 #include "document.h"
 #include "application.h"
+#include "updatemanager.h"
 
 #include "colorsequence.h"
 #include <QPushButton>
@@ -141,11 +142,13 @@ void ChooseColorDialog::apply() {
     {
       curve->writeLock();
       curve->setColor(getColorForFile(dataVector->filename()));
-      curve->processUpdate(curve);
+      curve->registerChange();
       curve->unlock();
     }
   }
   updateColorGroup();
+
+  UpdateManager::self()->doUpdates(true);
   kstApp->mainWindow()->document()->setChanged(true);
 }
 

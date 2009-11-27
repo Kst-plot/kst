@@ -217,12 +217,10 @@ void BasicPlugin::setOutputString(const QString &type, const QString &name) {
 }
 
 
-Object::UpdateType BasicPlugin::update() {
-  Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
-
+void BasicPlugin::internalUpdate() {
   //Make sure we have all the necessary inputs
   if (!inputsExist())
-    return NO_CHANGE;
+    return;
 
   writeLockInputsAndOutputs();
 
@@ -231,7 +229,7 @@ Object::UpdateType BasicPlugin::update() {
   if ( !algorithm() ) {
     Debug::self()->log(i18n("There is an error in the %1 algorithm.").arg(propertyString()), Debug::Error);
     unlockInputsAndOutputs();
-    return NO_CHANGE;
+    return;
   }
 
   //Perform update on the outputs
@@ -241,7 +239,7 @@ Object::UpdateType BasicPlugin::update() {
 
   unlockInputsAndOutputs();
 
-  return UPDATE;
+  return;
 }
 
 
@@ -388,36 +386,42 @@ bool BasicPlugin::inputsExist() const {
 
 void BasicPlugin::updateOutput() const {
   //output vectors...
+  //FIXME: _outputVectors should be used, not this string list!
   QStringList ov = outputVectorList();
   QStringList::ConstIterator ovI = ov.begin();
   for (; ovI != ov.end(); ++ovI) {
     if (VectorPtr o = outputVector(*ovI)) {
       Q_ASSERT(o->myLockStatus() == KstRWLock::WRITELOCKED);
-      vectorRealloced(o, o->value(), o->length());
-      o->setNewAndShift(o->length(), o->numShift());
-      o->update();
+      vectorRealloced(o, o->value(), o->length()); // why here?
+      o->setNewAndShift(o->length(), o->numShift()); // why here?
+      // outputs should get updated by the update manager.
+      //o->update();
     }
   }
 
-  //output scalars...
-  QStringList os = outputScalarList();
-  QStringList::ConstIterator osI = os.begin();
-  for (; osI != os.end(); ++osI) {
-    if (ScalarPtr o = outputScalar(*osI)) {
-      Q_ASSERT(o->myLockStatus() == KstRWLock::WRITELOCKED);
-      o->update();
-    }
-  }
+  //output scalars... Nothing to do...
+  // this can be deleted if plugins are working.
+  //QStringList os = outputScalarList();
+  //QStringList::ConstIterator osI = os.begin();
+  //for (; osI != os.end(); ++osI) {
+    //if (ScalarPtr o = outputScalar(*osI)) {
+      //Q_ASSERT(o->myLockStatus() == KstRWLock::WRITELOCKED);
+      //outputs should get updated by the update manager.
+      //o->update();
+    //}
+  //}
 
-  //ouput strings...
-  QStringList ostr = outputStringList();
-  QStringList::ConstIterator ostrI = ostr.begin();
-  for (; ostrI != ostr.end(); ++ostrI) {
-    if (StringPtr o = outputString(*ostrI)) {
-      Q_ASSERT(o->myLockStatus() == KstRWLock::WRITELOCKED);
-      o->update();
-    }
-  }
+  //output strings...
+  // this can be deleted if plugins are working.
+  //QStringList ostr = outputStringList();
+  //QStringList::ConstIterator ostrI = ostr.begin();
+  //for (; ostrI != ostr.end(); ++ostrI) {
+    //if (StringPtr o = outputString(*ostrI)) {
+      //Q_ASSERT(o->myLockStatus() == KstRWLock::WRITELOCKED);
+      //outputs should get updated by the update manager.
+      //o->update();
+    //}
+  //}
 }
 
 QString BasicPlugin::descriptionTip() const {

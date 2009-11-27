@@ -18,6 +18,7 @@
 #include "mainwindow.h"
 #include "document.h"
 #include "application.h"
+#include "updatemanager.h"
 
 namespace Kst {
 
@@ -188,11 +189,13 @@ void DifferentiateCurvesDialog::apply() {
       curve->setLineWidth((sequenceNum + 1) % maxLineWidth);
     }
 
-    curve->processUpdate(curve);
+    curve->registerChange();
     curve->unlock();
     ++sequenceNum;
   }
   resetLists();
+
+  UpdateManager::self()->doUpdates(true);
   kstApp->mainWindow()->document()->setChanged(true);
 }
 

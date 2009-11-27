@@ -227,7 +227,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     virtual void addToMenuForContextEvent(QMenu &menu);
     virtual bool tryShortcut(const QString &keySequence);
 
-    virtual void updateObject();
+    virtual bool handleChangedInputs(qint64 serial);
 
     LegendItem* legend();
 
@@ -448,7 +448,6 @@ class PlotItem : public ViewItem, public PlotItemInterface
     ViewItem* _plotMaximizedSourceParent;
 
     bool _allowUpdates;
-    bool _updateDelayed;
 
     LegendItem* _legend;
 

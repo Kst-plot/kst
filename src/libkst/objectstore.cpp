@@ -217,6 +217,10 @@ DataSourceList ObjectStore::dataSourceList() const {
   return _dataSourceList;
 }
 
+QList<ObjectPtr> ObjectStore::objectList() {
+  KstReadLocker l(&_lock);
+  return _list;
 }
 
+}
 // vim: ts=2 sw=2 et

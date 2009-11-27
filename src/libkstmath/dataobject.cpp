@@ -24,7 +24,6 @@
 #include "kst_i18n.h"
 #include "objectstore.h"
 #include "relation.h"
-#include "updatemanager.h"
 
 #include <QApplication>
 #include <QDir>
@@ -34,7 +33,7 @@
 #include <QLibraryInfo>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
-
+#include <limits.h>
 #include <assert.h>
 
 //#define LOCKTRACE
@@ -56,7 +55,6 @@ void DataObject::init() {
 DataObject::DataObject(ObjectStore *store) : Object() {
   Q_UNUSED(store);
   _curveHints = new CurveHintList;
-  _isInputLoaded = false;
 }
 
 
@@ -277,32 +275,6 @@ double *DataObject::vectorRealloced(VectorPtr v, double *memptr, int newSize) co
   return v->realloced(memptr, newSize);
 }
 
-
-void DataObject::inputObjectUpdated(ObjectPtr object) {
-#if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "UP - Vector update required by DataObject " << shortName() << "for update of" << object->shortName();
-#endif
-  writeLock();
-  UpdateManager::self()->updateStarted(object, this);
-  if (update()) {
-#if DEBUG_UPDATE_CYCLE > 1
-    qDebug() << "UP - DataObject" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
-#endif
-    foreach (VectorPtr vector, _outputVectors) {
-      vector->triggerUpdateSignal(object);
-    }
-    foreach (MatrixPtr matrix, _outputMatrices) {
-      matrix->triggerUpdateSignal(object);
-    }
-    foreach (ScalarPtr scalar, _outputScalars) {
-      scalar->triggerUpdateSignal(object);
-    }
-  }
-  UpdateManager::self()->updateFinished(object, this);
-  unlock();
-}
-
-
 void DataObject::load(const QXmlStreamReader &e) {
   qDebug() << QString("FIXME! Loading of %1 is not implemented yet.").arg(typeString()) << endl;
   Q_UNUSED(e)
@@ -313,73 +285,6 @@ void DataObject::save(QXmlStreamWriter& ts) {
   qDebug() << QString("FIXME! Saving of %1 is not implemented yet.").arg(typeString()) << endl;
   Q_UNUSED(ts)
 }
-
-
-bool DataObject::loadInputs() {
-  bool rc = true;
-  QList<QPair<QString,QString> >::Iterator i;
-
-  // FIXME:
-#if 0
-  vectorList.lock().readLock();
-  for (i = _inputVectorLoadQueue.begin(); i != _inputVectorLoadQueue.end(); ++i) {
-    VectorList::Iterator it = vectorList.findTag((*i).second);
-    if (it != vectorList.end()) {
-      assert(*it);
-      _inputVectors.insert((*i).first, *it);
-    } else {
-      Debug::self()->log(i18n("Unable to find required vector [%1] for data object %2.").arg((*i).second).arg(tagName()), Debug::Error);
-      rc = false;
-    }
-  }
-  vectorList.lock().unlock();
-
-  scalarList.lock().readLock();
-  for (i = _inputScalarLoadQueue.begin(); i != _inputScalarLoadQueue.end(); ++i) {
-    ScalarList::Iterator it = scalarList.findTag((*i).second);
-    if (it != scalarList.end()) {
-      _inputScalars.insert((*i).first, *it);
-    } else {
-      Debug::self()->log(i18n("Unable to find required scalar [%1] for data object %2.").arg((*i).second).arg(tagName()), Debug::Error);
-      rc = false;
-    }
-  }
-  scalarList.lock().unlock();
-
-  stringList.lock().readLock();
-  for (i = _inputStringLoadQueue.begin(); i != _inputStringLoadQueue.end(); ++i) {
-    StringList::Iterator it = stringList.findTag((*i).second);
-    if (it != stringList.end()) {
-      _inputStrings.insert((*i).first, *it);
-    } else {
-      Debug::self()->log(i18n("Unable to find required string [%1] for data object %2.").arg((*i).second).arg(tagName()), Debug::Error);
-      rc = false;
-    }
-  }
-  stringList.lock().unlock();
-
-  matrixList.lock().readLock();
-  for (i = _inputMatrixLoadQueue.begin(); i != _inputMatrixLoadQueue.end(); ++i) {
-    MatrixList::Iterator it = matrixList.findTag((*i).second);
-    if (it != matrixList.end()) {
-      _inputMatrices.insert((*i).first, *it);
-    } else {
-      Debug::self()->log(i18n("Unable to find required matrix [%1] for data object %2.").arg((*i).second).arg(tagName()), Debug::Error);
-      rc = false;
-    }
-  }
-  matrixList.lock().unlock();
-#endif
-
-  _inputVectorLoadQueue.clear();
-  _inputScalarLoadQueue.clear();
-  _inputStringLoadQueue.clear();
-  _inputMatrixLoadQueue.clear();
-
-  _isInputLoaded = true;
-  return rc;
-}
-
 
 int DataObject::getUsage() const {
   int rc = 0;
@@ -941,6 +846,42 @@ bool DataObject::uses(ObjectPtr p) const {
     }
   }
   return false;
+}
+
+qint64 DataObject::minInputSerial() const{
+  qint64 minSerial = LLONG_MAX;
+
+  foreach (VectorPtr P, _inputVectors) {
+    minSerial = qMin(minSerial, P->serial());
+  }
+  foreach (ScalarPtr P, _inputScalars) {
+    minSerial = qMin(minSerial, P->serial());
+  }
+  foreach (MatrixPtr P, _inputMatrices) {
+    minSerial = qMin(minSerial, P->serial());
+  }
+  foreach (StringPtr P, _inputStrings) {
+    minSerial = qMin(minSerial, P->serial());
+  }
+  return minSerial;
+}
+
+qint64 DataObject::minInputSerialOfLastChange() const {
+  qint64 minSerial = LLONG_MAX;
+
+  foreach (VectorPtr P, _inputVectors) {
+    minSerial = qMin(minSerial, P->serialOfLastChange());
+  }
+  foreach (ScalarPtr P, _inputScalars) {
+    minSerial = qMin(minSerial, P->serialOfLastChange());
+  }
+  foreach (MatrixPtr P, _inputMatrices) {
+    minSerial = qMin(minSerial, P->serialOfLastChange());
+  }
+  foreach (StringPtr P, _inputStrings) {
+    minSerial = qMin(minSerial, P->serialOfLastChange());
+  }
+  return minSerial;
 }
 
 

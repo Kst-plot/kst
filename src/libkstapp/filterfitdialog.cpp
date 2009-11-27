@@ -220,7 +220,7 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
     curve->setBarStyle(_filterFitTab->curveAppearance()->barStyle());
 
     curve->writeLock();
-    curve->update();
+    curve->registerChange();
     curve->unlock();
 
     _filterFitTab->curveAppearance()->setWidgetDefaults();
@@ -240,7 +240,7 @@ ObjectPtr FilterFitDialog::editExistingDataObject() const {
   if (BasicPlugin* plugin = kst_cast<BasicPlugin>(dataObject())) {
     plugin->writeLock();
     plugin->change(_filterFitTab->configWidget());
-    plugin->inputObjectUpdated(plugin);
+    plugin->registerChange();
     plugin->unlock();
   }
   return dataObject();

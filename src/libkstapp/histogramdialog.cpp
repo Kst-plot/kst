@@ -359,7 +359,7 @@ ObjectPtr HistogramDialog::createNewDataObject() {
   }
 
   histogram->writeLock();
-  histogram->update();
+  histogram->registerChange();
   histogram->unlock();
 
   setHistogramDefaults(histogram);
@@ -379,7 +379,7 @@ ObjectPtr HistogramDialog::createNewDataObject() {
   curve->setBarStyle(_histogramTab->curveAppearance()->barStyle());
 
   curve->writeLock();
-  curve->update();
+  curve->registerChange();
   curve->unlock();
 
   PlotItem *plotItem = 0;
@@ -440,7 +440,7 @@ ObjectPtr HistogramDialog::editExistingDataObject() const {
 
           histogram->unlock();
 
-          histogram->inputObjectUpdated(histogram);
+          histogram->registerChange();
         }
       }
     } else {
@@ -458,7 +458,7 @@ ObjectPtr HistogramDialog::editExistingDataObject() const {
 
       histogram->unlock();
 
-      histogram->inputObjectUpdated(histogram);
+      histogram->registerChange();
       setHistogramDefaults(histogram);
     }
   }

@@ -231,7 +231,7 @@ Kst::DataObject *AkimaPeriodicPlugin::create(Kst::ObjectStore *store, Kst::DataO
     object->setPluginName(pluginName());
 
     object->writeLock();
-    object->update();
+    object->registerChange();
     object->unlock();
 
     return object;

@@ -149,7 +149,7 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
   curve->setDescriptiveName(descriptiveName);
 
   curve->writeLock();
-  curve->update();
+  curve->registerChange();
   curve->unlock();
 
   return curve;

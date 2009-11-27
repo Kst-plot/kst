@@ -262,7 +262,7 @@ Kst::DataObject *ButterworthHighPassPlugin::create(Kst::ObjectStore *store, Kst:
     object->setPluginName(pluginName());
 
     object->writeLock();
-    object->update();
+    object->registerChange();
     object->unlock();
 
     return object;

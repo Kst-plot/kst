@@ -84,7 +84,7 @@ void TestDataSource::testAscii() {
 
     rvp->writeLock();
     rvp->change(dsp, "1", 0, -1, 0, false, false);
-    rvp->update();
+    rvp->internalUpdate();
     rvp->unlock();
     QVERIFY(rvp->isValid());
     QCOMPARE(rvp->length(), 3);
@@ -96,7 +96,7 @@ void TestDataSource::testAscii() {
 
     rvp->writeLock();
     rvp->change(dsp, "INDEX", 0, -1, 0, false, false);
-    rvp->update();
+    rvp->internalUpdate();
     rvp->unlock();
 
     QVERIFY(rvp->isValid());
@@ -143,7 +143,7 @@ void TestDataSource::testAscii() {
 
     rvp->writeLock();
     rvp->change(dsp, "1", 0, -1, 0, false, false);
-    rvp->update();
+    rvp->internalUpdate();
     rvp->unlock();
 
     QVERIFY(rvp->isValid());
@@ -160,7 +160,7 @@ void TestDataSource::testAscii() {
     rvp->writeLock();
     rvp->change(dsp, "2", 0, -1, 0, false, false);
     rvp->writeLock();
-    rvp->update();
+    rvp->internalUpdate();
     rvp->unlock();
 
     QVERIFY(rvp->isValid());
@@ -206,7 +206,7 @@ void TestDataSource::testAscii() {
 
     rvp->writeLock();
     rvp->change(dsp, "1", 0, -1, 0, false, false);
-    rvp->update();
+    rvp->internalUpdate();
     rvp->unlock();
 
     QVERIFY(rvp->isValid());
@@ -217,7 +217,7 @@ void TestDataSource::testAscii() {
 
     rvp->writeLock();
     rvp->change(dsp, "2", 0, -1, 0, false, false);
-    rvp->update();
+    rvp->internalUpdate();
     rvp->unlock();
 
     QVERIFY(rvp->isValid());
@@ -250,7 +250,7 @@ void TestDataSource::testAscii() {
     }
 
     Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(&_store, tf.fileName());
-    dsp->update();
+    dsp->internalUpdate();
 
     QVERIFY(dsp);
     QVERIFY(dsp->isValid());
@@ -268,7 +268,7 @@ void TestDataSource::testAscii() {
 
     rvp->writeLock();
     rvp->change(dsp, "1", 0, -1, 0, false, false);
-    rvp->update();
+    rvp->internalUpdate();
     rvp->unlock();
     QVERIFY(rvp->isValid());
     QCOMPARE(rvp->length(), 39000);
@@ -277,7 +277,7 @@ void TestDataSource::testAscii() {
 
     rvp->writeLock();
     rvp->change(dsp, "2", 0, -1, 10, true, false);
-    rvp->update();
+    rvp->internalUpdate();
     rvp->unlock();
 
     QVERIFY(rvp->isValid());
@@ -291,7 +291,7 @@ void TestDataSource::testAscii() {
 
     rvp->writeLock();
     rvp->change(dsp, "3", 0, -1, 10, true, true);
-    rvp->update();
+    rvp->internalUpdate();
     rvp->unlock();
 
     QVERIFY(rvp->isValid());
@@ -331,7 +331,7 @@ void TestDataSource::testDirfile() {
     printf("Opening dirfile = %s for test.\n", fifteen.toLatin1().data());
 
     Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(&_store, fifteen);
-    dsp->update();
+    dsp->internalUpdate();
 
     QVERIFY(dsp);
     QVERIFY(dsp->isValid());
@@ -361,7 +361,7 @@ void TestDataSource::testDirfile() {
 
     rvp->writeLock();
     rvp->change(dsp, "INDEX", 0, -1, 5, true, false);
-    rvp->update();
+    rvp->internalUpdate();
     rvp->unlock();
 
     //We should have length equal to three...  items {0, 5, 10}
@@ -389,7 +389,7 @@ void TestDataSource::testDirfile() {
 
     rvp->writeLock();
     rvp->change(dsp, "INDEX", 3, -1, 5, true, false);
-    rvp->update();
+    rvp->internalUpdate();
     rvp->unlock();
 
     //We should have length equal to two...  items {5, 10}
@@ -415,7 +415,7 @@ void TestDataSource::testDirfile() {
 
     rvp->writeLock();
     rvp->change(dsp, "INDEX", 0, 11, 5, true, false);
-    rvp->update();
+    rvp->internalUpdate();
     rvp->unlock();
 
     //We should have length equal to two...  items {0, 5}
@@ -441,7 +441,7 @@ void TestDataSource::testDirfile() {
 
     rvp->writeLock();
     rvp->change(dsp, "INDEX", -1, 10, 5, true, false);
-    rvp->update();
+    rvp->internalUpdate();
     rvp->unlock();
 
     //We should have length equal to two...  items {5, 10}
@@ -525,7 +525,7 @@ void TestDataSource::testQImageSource() {
   printf("Opening image = %s for test.\n", imageFile.toLatin1().data());
 
   Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(&_store, imageFile);
-  dsp->update();
+  dsp->internalUpdate();
 
   QVERIFY(dsp);
   QVERIFY(dsp->isValid());
@@ -560,7 +560,7 @@ void TestDataSource::testQImageSource() {
         false, 0, 0, 0, 1, 1);
 
     matrix->writeLock();
-    matrix->update();
+    matrix->internalUpdate();
     matrix->unlock();
 
 
@@ -588,7 +588,7 @@ void TestDataSource::testQImageSource() {
 
     rvp->writeLock();
     rvp->change(dsp, "INDEX", 0, -1, 1, false, false);
-    rvp->update();
+    rvp->internalUpdate();
     rvp->unlock();
 
     QCOMPARE(1024, rvp->length());
@@ -629,7 +629,7 @@ void TestDataSource::testFITSImage() {
   printf("Opening image = %s for test.\n", imageFile.toLatin1().data());
 
   Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(&_store, imageFile);
-  dsp->update();
+  dsp->internalUpdate();
 
   QVERIFY(dsp);
   QVERIFY(dsp->isValid());
@@ -657,7 +657,7 @@ void TestDataSource::testFITSImage() {
         -1, -1, false, false, 0, 0, 0, 1, 1);
 
     matrix->writeLock();
-    matrix->update();
+    matrix->internalUpdate();
     matrix->unlock();
 
     QCOMPARE(matrix->xNumSteps(), 280);
@@ -686,7 +686,7 @@ void TestDataSource::testFITSImage() {
 
     rvp->writeLock();
     rvp->change(dsp, "INDEX", 0, -1, 1, false, false);
-    rvp->update();
+    rvp->internalUpdate();
     rvp->unlock();
 
     QCOMPARE(58800, rvp->length());

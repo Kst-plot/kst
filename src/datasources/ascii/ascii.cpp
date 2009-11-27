@@ -212,7 +212,7 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   }
 
   _valid = true;
-  update();
+  registerChange();
 }
 
 
@@ -254,7 +254,8 @@ bool AsciiSource::reset() {
   _matrixList.clear();
   _stringList.clear();
 
-  checkUpdate();
+  registerChange();
+
 
   return true;
 }
@@ -312,11 +313,11 @@ bool AsciiSource::initRowIndex() {
 
 
 #define MAXBUFREADLEN 32768
-Kst::Object::UpdateType AsciiSource::update() {
+Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() {
   if (!_haveHeader) {
     _haveHeader = initRowIndex();
     if (!_haveHeader) {
-      return Kst::Object::NO_CHANGE;
+      return NoChange;
     }
     // Re-update the field list since we have one now
     _fieldList = fieldListFor(_filename, _config);
@@ -336,13 +337,13 @@ Kst::Object::UpdateType AsciiSource::update() {
     _byteLength = file.size();
   } else {
     _valid = false;
-    return Kst::Object::NO_CHANGE;
+    return NoChange;
   }
 
   if (!file.open(QIODevice::ReadOnly)) {
     // quietly fail - no data to be had here
     _valid = false;
-    return Kst::Object::NO_CHANGE;
+    return NoChange;
   }
 
   _valid = true;
@@ -394,7 +395,7 @@ Kst::Object::UpdateType AsciiSource::update() {
 
   file.close();
 
-  return (forceUpdate ? Kst::Object::UPDATE : (new_data ? Kst::Object::UPDATE : Kst::Object::NO_CHANGE));
+  return (forceUpdate ? Updated : (new_data ? Updated : NoChange));
 }
 
 

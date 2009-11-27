@@ -60,7 +60,7 @@ static const int PLOT_MAXIMIZED_ZORDER = 1000;
 namespace Kst {
 
 PlotItem::PlotItem(View *parent)
-  : ViewItem(parent),
+  : ViewItem(parent), PlotItemInterface(),
   _isInSharedAxisBox(false),
   _plotRectsDirty(true),
   _calculatedLeftLabelMargin(0.0),
@@ -85,7 +85,6 @@ PlotItem::PlotItem(View *parent)
   _showLegend(false),
   _plotMaximized(false),
   _allowUpdates(true),
-  _updateDelayed(false),
   _legend(0),
   _zoomMenu(0),
   _filterMenu(0),
@@ -707,19 +706,34 @@ void PlotItem::redrawPlot() {
 }
 
 
-void PlotItem::updateObject() {
+bool PlotItem::handleChangedInputs(qint64 serial) {
   if (!_allowUpdates) {
-    _updateDelayed = true;
-    return;
+    return false;
   }
-#if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "\t\tUP - Updating Plot";
-#endif
+
+  // decide if the inputs have changed
+  bool no_change = true;
+
+  if (_serialOfLastChange==Forced) {
+    no_change = false;
+  } else {
+    foreach (PlotRenderItem *renderer, renderItems()) {
+      foreach (RelationPtr relation, renderer->relationList()) {
+        if (relation->serialOfLastChange() > _serialOfLastChange) {
+          no_change = false;
+        }
+      }
+    }
+  }
+
+  if (no_change) {
+    return false;
+  }
+
+  _serialOfLastChange = serial;
+
   if (isInSharedAxisBox()) {
     // Need to update the box's projectionRect.
-    #if DEBUG_UPDATE_CYCLE > 1
-        qDebug() << "\t\t\tUP - Updating Shared Axis Box Projection Rect";
-    #endif
     sharedAxisBox()->updateZoomForDataUpdate();
   } else {
     if ((xAxis()->axisZoomMode() == PlotAxis::Auto) ||
@@ -730,14 +744,8 @@ void PlotItem::updateObject() {
           (yAxis()->axisZoomMode() == PlotAxis::Auto) ||
           (yAxis()->axisZoomMode() == PlotAxis::SpikeInsensitive) ||
           (yAxis()->axisZoomMode() == PlotAxis::MeanCentered)) {
-  #if DEBUG_UPDATE_CYCLE > 1
-        qDebug() << "\t\t\tUP - Updating Plot Projection Rect - X and Y Maximum";
-  #endif
         setProjectionRect(computedProjectionRect());
       } else {
-  #if DEBUG_UPDATE_CYCLE > 1
-        qDebug() << "\t\t\tUP - Updating Plot Projection Rect - X Maximum";
-  #endif
         QRectF compute = computedProjectionRect();
         setProjectionRect(QRectF(compute.x(),
               projectionRect().y(),
@@ -745,9 +753,6 @@ void PlotItem::updateObject() {
               projectionRect().height()));
       }
     } else if (yAxis()->axisZoomMode() == PlotAxis::Auto) {
-  #if DEBUG_UPDATE_CYCLE > 1
-      qDebug() << "\t\t\tUP - Updating Plot Projection Rect - Y Maximum";
-  #endif
       QRectF compute = computedProjectionRect();
       setProjectionRect(QRectF(projectionRect().x(),
             compute.y(),
@@ -756,7 +761,9 @@ void PlotItem::updateObject() {
     }
   }
   setLabelsDirty();
-  update();
+  //update();
+
+  return true;
 }
 
 
@@ -2668,16 +2675,8 @@ bool PlotItem::supportsTiedZoom() const {
 
 
 void PlotItem::setAllowUpdates(bool allowed) {
-  if (allowed == _allowUpdates)
-    return;
-
   _allowUpdates = allowed;
-  if (_allowUpdates) {
-    if (_updateDelayed) {
-      _updateDelayed = false;
-      updateObject();
-    }
-  }
+  UpdateManager::self()->doUpdates(true);
 }
 
 
@@ -2782,11 +2781,12 @@ void PlotItem::adjustImageColorScale() {
       if (ImagePtr image = kst_cast<Image>(relation)) {
         image->writeLock();
         image->setThresholdToSpikeInsensitive(per[_i_per]);
-        image->processUpdate(image);
+        image->registerChange();
         image->unlock();
       }
     }
   }
+  UpdateManager::self()->doUpdates(true);
 }
 
 void PlotItem::zoomMaxSpikeInsensitive(bool force) {

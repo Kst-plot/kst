@@ -34,7 +34,7 @@ class AsciiSource : public Kst::DataSource {
     static int readFullLine(QFile &file, QByteArray &str);
     bool initRowIndex();
 
-    Kst::Object::UpdateType update();
+    virtual UpdateType internalDataSourceUpdate();
 
     int readField(double *v, const QString &field, int s, int n);
 

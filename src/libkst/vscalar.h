@@ -40,8 +40,14 @@ class KST_EXPORT VScalar : public Scalar {
 
     virtual QString _automaticDescriptiveName() const;
 
+    virtual qint64 minInputSerial() const;
+    virtual qint64 minInputSerialOfLastChange() const;
+
   public:
     virtual ~VScalar();
+
+    /** Update the scalar. */
+    virtual void internalUpdate();
 
     virtual const QString& typeString() const;
     static const QString staticTypeString;
@@ -63,9 +69,6 @@ class KST_EXPORT VScalar : public Scalar {
     /** Save scalar information */
     virtual void save(QXmlStreamWriter &s);
 
-    /** Update the scalar.  Return true if there was new data. */
-    virtual UpdateType update();
-
     /** make a copy of the VScalar */
     SharedPtr<VScalar> makeDuplicate() const;
 
@@ -78,8 +81,6 @@ class KST_EXPORT VScalar : public Scalar {
     bool isValid() const;
 
     virtual QString propertyString() const;
-  public Q_SLOTS:
-    void sourceUpdated(ObjectPtr object);
 
   private:
     /** file to read for rvectors */

@@ -231,7 +231,7 @@ Kst::DataObject *LinearPlugin::create(Kst::ObjectStore *store, Kst::DataObjectCo
     object->setPluginName(pluginName());
 
     object->writeLock();
-    object->update();
+    object->registerChange();
     object->unlock();
 
     return object;

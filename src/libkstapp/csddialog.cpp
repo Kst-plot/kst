@@ -223,14 +223,14 @@ ObjectPtr CSDDialog::createNewDataObject() {
   }
 
   csd->writeLock();
-  csd->update();
+  csd->registerChange();
   csd->unlock();
 
   ImagePtr image = _document->objectStore()->createObject<Image>();
   image->changeToColorOnly(csd->outputMatrix(), 0, 1, true, _CSDTab->colorPalette()->selectedPalette());
 
   image->writeLock();
-  image->update();
+  image->registerChange();
   image->unlock();
 
   PlotItem *plotItem = 0;
@@ -301,7 +301,7 @@ ObjectPtr CSDDialog::editExistingDataObject() const {
                       vectorUnits,
                       rateUnits);
 
-          csd->inputObjectUpdated(csd);
+          csd->registerChange();
           csd->unlock();
         }
       }
@@ -324,7 +324,7 @@ ObjectPtr CSDDialog::editExistingDataObject() const {
       } else {
          csd->setDescriptiveName(DataDialog::tagString());
       }
-      csd->inputObjectUpdated(csd);
+      csd->registerChange();
       csd->unlock();
     }
   }

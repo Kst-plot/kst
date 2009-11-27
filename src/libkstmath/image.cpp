@@ -16,7 +16,6 @@
 #include "image.h"
 #include "math_kst.h"
 #include "objectstore.h"
-#include "updatemanager.h"
 
 #include "kst_i18n.h"
 
@@ -83,15 +82,7 @@ void Image::save(QXmlStreamWriter &s) {
 }
 
 
-void Image::matrixUpdated(ObjectPtr object) {
-#if DEBUG_UPDATE_CYCLE > 1
-    qDebug() << "UP - Image update ready for" << object->shortName();
-#endif
-    UpdateManager::self()->requestUpdate(object, this);
-}
-
-
-Object::UpdateType Image::update() {
+void Image::internalUpdate() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   writeLockInputsAndOutputs();
@@ -136,14 +127,11 @@ Object::UpdateType Image::update() {
       }
     }
 
-    unlockInputsAndOutputs();
-
     _redrawRequired = true;
-    return UPDATE;
   }
 
   unlockInputsAndOutputs();
-  return NO_CHANGE;
+  return;
 }
 
 
@@ -220,10 +208,6 @@ void Image::setThresholdToSpikeInsensitive(double per) {
 void Image::changeToColorOnly(MatrixPtr in_matrix, double lowerZ,
     double upperZ, bool autoThreshold, const QString &paletteName) {
 
-  if (_inputMatrices[THEMATRIX]) {
-    disconnect(_inputMatrices[THEMATRIX], SIGNAL(updated(ObjectPtr)));
-  }
-
   _inputMatrices[THEMATRIX] = in_matrix;
 
   _zLower = lowerZ;
@@ -234,17 +218,11 @@ void Image::changeToColorOnly(MatrixPtr in_matrix, double lowerZ,
   }
   _hasColorMap = true;
   _hasContourMap = false;
-
-  connect(in_matrix, SIGNAL(updated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
 }
 
 
 void Image::changeToContourOnly(MatrixPtr in_matrix, int numContours,
     const QColor& contourColor, int contourWeight) {
-
-  if (_inputMatrices[THEMATRIX]) {
-    disconnect(_inputMatrices[THEMATRIX], SIGNAL(updated(ObjectPtr)));
-  }
 
   _inputMatrices[THEMATRIX] = in_matrix;
   _numContourLines = numContours;
@@ -253,17 +231,12 @@ void Image::changeToContourOnly(MatrixPtr in_matrix, int numContours,
   _hasColorMap = false;
   _hasContourMap = true;
 
-  connect(in_matrix, SIGNAL(updated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
 }
 
 
 void Image::changeToColorAndContour(MatrixPtr in_matrix,
     double lowerZ, double upperZ, bool autoThreshold, const QString &paletteName,
     int numContours, const QColor& contourColor, int contourWeight) {
-
-  if (_inputMatrices[THEMATRIX]) {
-    disconnect(_inputMatrices[THEMATRIX], SIGNAL(updated(ObjectPtr)));
-  }
 
   _inputMatrices[THEMATRIX] = in_matrix;
 
@@ -279,7 +252,6 @@ void Image::changeToColorAndContour(MatrixPtr in_matrix,
   _hasColorMap = true;
   _hasContourMap = true;
 
-  connect(in_matrix, SIGNAL(updated(ObjectPtr)), this, SLOT(matrixUpdated(ObjectPtr)));
 }
 
 
@@ -376,7 +348,7 @@ RelationPtr Image::makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelat
     image->setDescriptiveName(descriptiveName());
   }
   image->writeLock();
-  image->update();
+  image->registerChange();
   image->unlock();
 
   duplicatedRelations.insert(this, RelationPtr(image));
@@ -417,11 +389,6 @@ QString Image::topLabel() const {
   } else {
     return QString();
   }
-}
-
-
-CurveType Image::curveType() const {
-  return IMAGE;
 }
 
 

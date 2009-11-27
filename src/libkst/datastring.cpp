@@ -22,7 +22,6 @@
 #include "datastring.h"
 #include "debug.h"
 #include "objectstore.h"
-#include "updatemanager.h"
 
 namespace Kst {
 
@@ -72,26 +71,7 @@ void DataString::change(DataSourcePtr in_file, const QString &in_field) {
 
   _field = in_field;
   _file = in_file;
-
-  if (in_file) {
-    connect(in_file, SIGNAL(sourceUpdated(ObjectPtr)), this, SLOT(sourceUpdated(ObjectPtr)));
-  }
-
 }
-
-
-void DataString::sourceUpdated(ObjectPtr object) {
-  //qDebug() << "UP - Data Source update required by Vector" << shortName() << "for update of" << object->shortName();
-  writeLock();
-  UpdateManager::self()->updateStarted(object, this);
-  if (update()) {
-  //qDebug() << "UP - Vector" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
-    emit updated(object);
-  }
-  UpdateManager::self()->updateFinished(object, this);
-  unlock();
-}
-
 
 void DataString::changeFile(DataSourcePtr in_file) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
@@ -119,17 +99,28 @@ void DataString::save(QXmlStreamWriter &s) {
 
 
 /** Update a data String */
-Object::UpdateType DataString::update() {
-  Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
-  Object::UpdateType rc = NO_CHANGE;
+void DataString::internalUpdate() {
   if (_file) {
     _file->writeLock();
     _file->readString(_value, _field);
     _file->unlock();
-    rc = UPDATE;
   }
-  return rc;
 }
+
+qint64 DataString::minInputSerial() const {
+  if (_file) {
+    return (_file->serial());
+  }
+  return LLONG_MAX;
+}
+
+qint64 DataString::minInputSerialOfLastChange() const {
+  if (_file) {
+    return (_file->serialOfLastChange());
+  }
+  return LLONG_MAX;
+}
+
 
 
 DataStringPtr DataString::makeDuplicate() const {
@@ -142,7 +133,7 @@ DataStringPtr DataString::makeDuplicate() const {
     string->setDescriptiveName(descriptiveName());
   }
 
-  string->update();
+  string->registerChange();
   string->unlock();
 
   return string;
@@ -185,7 +176,7 @@ void DataString::reload() {
       }
     }
     _file->unlock();
-    update();
+    registerChange();
   }
 }
 

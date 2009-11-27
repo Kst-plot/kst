@@ -20,11 +20,18 @@ namespace Kst {
 class PlotItemInterface
 {
   public:
+    static const qint64 Forced = -1;
+
     PlotItemInterface();
     virtual ~PlotItemInterface();
 
     virtual QString plotName() const = 0;
-    virtual void updateObject() = 0;
+
+    virtual bool handleChangedInputs(qint64 serial) = 0;
+
+    void registerChange() {_serialOfLastChange = Forced;}
+  protected:
+    qint64 _serialOfLastChange;
 };
 
 }

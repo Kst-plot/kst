@@ -87,22 +87,6 @@ bool DataVector::isValid() const {
   return false;
 }
 
-void DataVector::sourceUpdated(ObjectPtr object) {
-#if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "\t\tUP - Data Source update required by Vector" << shortName() << "for update of" << object->shortName();
-#endif
-  writeLock();
-  UpdateManager::self()->updateStarted(object, this);
-  if (update()) {
-#if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "\t\t\tUP - Vector" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
-#endif
-    emit updated(object);
-  }
-  UpdateManager::self()->updateFinished(object, this);
-  unlock();
-}
-
 
 void DataVector::change(DataSourcePtr in_file, const QString &in_field,
                         int in_f0, int in_n,
@@ -135,11 +119,20 @@ void DataVector::change(DataSourcePtr in_file, const QString &in_field,
   if (ReqNF <= 0 && ReqF0 < 0) {
     ReqF0 = 0;
   }
+}
 
-  if (in_file) {
-    connect(in_file, SIGNAL(sourceUpdated(ObjectPtr)), this, SLOT(sourceUpdated(ObjectPtr)));
+qint64 DataVector::minInputSerial() const {
+  if (_file) {
+    return (_file->serial());
   }
+  return LLONG_MAX;
+}
 
+qint64 DataVector::minInputSerialOfLastChange() const {
+  if (_file) {
+    return (_file->serialOfLastChange());
+  }
+  return LLONG_MAX;
 }
 
 
@@ -157,7 +150,7 @@ void DataVector::changeFile(DataSourcePtr in_file) {
   if (_file) {
     _file->unlock();
   }
-  immediateUpdate();
+  registerChange();
 }
 
 
@@ -363,22 +356,6 @@ void DataVector::checkIntegrity() {
   }
 }
 
-
-/** Update an RVECTOR */
-Object::UpdateType DataVector::update() {
-  Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
-
-  if (_file) {
-    _file->writeLock();
-  }
-  Object::UpdateType rc = doUpdate(true);
-  if (_file) {
-    _file->unlock();
-  }
-
-  return rc;
-}
-
 // Some things to consider about the following routine...
 // Frames:
 //    Some data sources have data devided into frames.  Each field
@@ -401,21 +378,24 @@ Object::UpdateType DataVector::update() {
 //     read with skip enabled are read on 'skip boundries'... ie, the first samples of
 //     frame 0, Skip, 2*Skip... N*skip, and never M*Skip+1.
 
-Object::UpdateType DataVector::doUpdate(bool force) {
+void DataVector::internalUpdate() {
   int i, k, shift, n_read=0;
   int ave_nread;
   int new_f0, new_nf;
   bool start_past_eof = false;
-  
+
+  if (_file) {
+    _file->writeLock();
+  } else {
+    return;
+  }
+
   checkIntegrity();
 
   if (DoSkip && Skip < 2 && SPF == 1) {
     DoSkip = false;
   }
 
-  if (!_file) {
-    return NO_CHANGE;
-  }
 
   // set new_nf and new_f0
   int fc = _file->frameCount(_field);
@@ -448,10 +428,6 @@ Object::UpdateType DataVector::doUpdate(bool force) {
       new_f0 = ((new_f0-1)/Skip+1)*Skip;
     }
     new_nf = (new_nf/Skip)*Skip;
-  }
-
-  if (NF == new_nf && F0 == new_f0 && !force) {
-    return NO_CHANGE;
   }
 
   // shift vector if necessary
@@ -552,7 +528,6 @@ Object::UpdateType DataVector::doUpdate(bool force) {
       _v[0] = NOPOINT;
       n_read = 1;
     } else if (_file->samplesPerFrame(_field) > 1) {
-      assert(new_nf - NF - 1 > 0 || new_nf - NF - 1 == -1 || force);
       assert(new_f0 + NF >= 0);
       assert(new_f0 + new_nf - 1 >= 0);
       n_read = _file->readField(_v+NF*SPF, _field, new_f0 + NF, new_nf - NF - 1);
@@ -591,7 +566,12 @@ Object::UpdateType DataVector::doUpdate(bool force) {
   if (NumShifted > _size) {
     NumShifted = _size;
   }
-  return Vector::internalUpdate(UPDATE);
+
+  if (_file) {
+    _file->unlock();
+  }
+
+  Vector::internalUpdate();
 }
 
 
@@ -637,7 +617,7 @@ void DataVector::reload() {
     }
     _resetFieldMetadata();
     _file->unlock();
-    update();
+    registerChange();
   }
 }
 
@@ -737,7 +717,7 @@ DataVectorPtr DataVector::makeDuplicate() const {
     vector->setDescriptiveName(descriptiveName());
   }
 
-  vector->update();
+  vector->registerChange();
   vector->unlock();
 
   return vector;

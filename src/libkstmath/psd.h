@@ -38,8 +38,6 @@ class KST_EXPORT PSD : public DataObject {
     static const QString staticTypeTag;
     const QString& typeString() const { return staticTypeString; }
 
-    virtual UpdateType update();
-
     virtual void save(QXmlStreamWriter &s);
     virtual QString propertyString() const;
 
@@ -97,8 +95,10 @@ class KST_EXPORT PSD : public DataObject {
         double freq, bool average, int average_len, bool apodize, bool removeMean,
         const QString& VUnits, const QString& RUnits, ApodizeFunction in_apodizeFxn = WindowOriginal, 
         double in_gaussianSigma = 3.0, PSDType in_output = PSDAmplitudeSpectralDensity, bool interpolateHoles = false);
+    virtual void internalUpdate();
 
   protected:
+
     PSD(ObjectStore *store);
     virtual ~PSD();
 

@@ -30,8 +30,6 @@ class KST_EXPORT CSD : public DataObject {
     const QString& typeString() const { return staticTypeString; }
     static const QString staticTypeTag;
 
-    virtual UpdateType update();
-
     virtual void save(QXmlStreamWriter &s);
     virtual QString propertyString() const;
 
@@ -86,6 +84,8 @@ class KST_EXPORT CSD : public DataObject {
         PSDType in_outputType, const QString& in_vectorUnits,
         const QString& in_rateUnits);
     virtual QString descriptionTip() const;
+
+    virtual void internalUpdate();
   protected:
     CSD(ObjectStore *store);
     virtual ~CSD();

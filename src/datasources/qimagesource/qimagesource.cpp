@@ -58,7 +58,7 @@ QImageSource::QImageSource(Kst::ObjectStore *store, QSettings *cfg, const QStrin
     _valid = true;
   }
 
-  update();
+  registerChange();
 }
 
 
@@ -95,7 +95,8 @@ bool QImageSource::init() {
     _matrixList.append( "RED" );
     _matrixList.append( "GREEN" );
     _matrixList.append( "BLUE" );
-    return update() == Kst::Object::UPDATE;
+    registerChange();
+    return true;
   } else {
     _image = QImage();
     return false;
@@ -103,13 +104,13 @@ bool QImageSource::init() {
 }
 
 
-Kst::Object::UpdateType QImageSource::update() {
+Kst::Object::UpdateType QImageSource::internalDataSourceUpdate() {
   int newNF = _image.width()*_image.height();
   bool isnew = newNF != _frameCount;
 
   _frameCount = newNF;
 
-  return (isnew ? Kst::Object::UPDATE : Kst::Object::NO_CHANGE);
+  return (isnew ? Kst::Object::Updated : Kst::Object::NoChange);
 }
 
 

@@ -58,7 +58,7 @@ void TestDataMatrix::testDataMatrix() {
   printf("Opening image = %s for test.\n", imageFile.toLatin1().data());
 
   Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(&_store, imageFile);
-  dsp->update();
+  dsp->internalUpdate();
 
   QVERIFY(dsp);
   QVERIFY(dsp->isValid());
@@ -66,7 +66,7 @@ void TestDataMatrix::testDataMatrix() {
   m1->change(dsp, "GRAY", 0, 0, -1, -1, false, false, 1, 0, 0, 1, 1);
 
   m1->writeLock();
-  m1->update();
+  m1->internalUpdate();
   m1->unlock();
 
   QCOMPARE(m1->xNumSteps(), 32);

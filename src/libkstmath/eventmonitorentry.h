@@ -33,7 +33,6 @@ class EventMonitorEntry : public DataObject {
     const QString& typeString() const { return staticTypeString; }
     static const QString staticTypeTag;
 
-    UpdateType update();
     void save(QXmlStreamWriter &s);
     QString propertyString() const;
     void showNewDialog();
@@ -75,6 +74,8 @@ class EventMonitorEntry : public DataObject {
     bool uses(ObjectPtr p) const;
 
     virtual QString descriptionTip() const;
+
+    virtual void internalUpdate();
   protected:
     EventMonitorEntry(ObjectStore *store);
     ~EventMonitorEntry();
@@ -87,7 +88,6 @@ class EventMonitorEntry : public DataObject {
     bool event(QEvent *e);
 
   private slots:
-    void slotUpdate();
     void doLog(const QString& logMessage) const;
 
   private:

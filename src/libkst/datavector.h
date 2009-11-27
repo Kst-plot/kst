@@ -65,9 +65,6 @@ class KST_EXPORT DataVector : public Vector, public DataPrimitive {
     bool doAve() const;
     int skip() const;
 
-    /** Update the vector.  Return true if there was new data. */
-    virtual UpdateType update();
-
     /** Reload the contents of the vector */
     void reload();
 
@@ -101,8 +98,7 @@ class KST_EXPORT DataVector : public Vector, public DataPrimitive {
     virtual QString propertyString() const;
 
     bool isValid() const;
-  public Q_SLOTS:
-    void sourceUpdated(ObjectPtr object);
+    virtual void internalUpdate();
 
   protected:
     DataVector(ObjectStore *store);
@@ -113,11 +109,13 @@ class KST_EXPORT DataVector : public Vector, public DataPrimitive {
     virtual QString _automaticDescriptiveName() const;
 
     virtual void _resetFieldMetadata();
+
+    virtual qint64 minInputSerial() const;
+    virtual qint64 minInputSerialOfLastChange() const;
+
   private:
     virtual void _resetFieldScalars();
     virtual void _resetFieldStrings();
-
-    Object::UpdateType doUpdate(bool force = false);
 
     bool _dirty; // different from the Object dirty flag
 

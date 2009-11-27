@@ -31,33 +31,29 @@ class KST_EXPORT Scalar : public Primitive {
   Q_PROPERTY(double value READ value WRITE setValue)
   Q_PROPERTY(bool displayable READ displayable WRITE setDisplayable)
 
-    protected:
+  protected:
     Scalar(ObjectStore *store);
 
     friend class ObjectStore;
 
     virtual QString _automaticDescriptiveName() const;
+
     virtual void _initializeShortName();
   public:
     virtual ~Scalar();
 
-  virtual const QString& typeString() const;
+    /** Update the scalar.*/
+    virtual void internalUpdate();
+
+    virtual const QString& typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
-
-    /* return true if any scalars are dirty at the moment */
-    static bool scalarsDirty();
-    /* For use by the update thread */
-    static void clearScalarsDirty();
 
     /* return a string representation of the scalar */
     QString label() const;
 
     /** Save scalar information */
     virtual void save(QXmlStreamWriter &s);
-
-    /** Update the scalar.  Return true if there was new data. */
-    virtual UpdateType update();
 
     Scalar& operator=(double v);
 

@@ -138,7 +138,7 @@ PrimitivePtr DataScalarFactory::generatePrimitive(ObjectStore *store, QXmlStream
   scalar->change(dataSource, field);
 
   scalar->setDescriptiveName(descriptiveName);
-  scalar->update();
+  scalar->registerChange();
   scalar->unlock();
 
   return scalar;
@@ -207,7 +207,7 @@ PrimitivePtr VScalarFactory::generatePrimitive(ObjectStore *store, QXmlStreamRea
   scalar->change(dataSource, field, f0);
 
   scalar->setDescriptiveName(descriptiveName);
-  scalar->update();
+  scalar->registerChange();
   scalar->unlock();
 
   return scalar;

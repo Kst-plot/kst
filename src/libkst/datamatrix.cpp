@@ -1,7 +1,7 @@
 /***************************************************************************
  *                                                                         *
  *   copyright : (C) 2007 The University of Toronto                        *
- *   copyright : (C) 2005  University of British Columbia                        *
+ *   copyright : (C) 2005  University of British Columbia                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -183,34 +183,12 @@ bool DataMatrix::isValid() const {
   return false;
 }
 
-
-Object::UpdateType DataMatrix::update() {
-  Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
-
-  if (_file) {
-    _file->writeLock();
-  }
-  Object::UpdateType rc = doUpdate(true);
-  if (_file) {
-    _file->unlock();
-  }
-
-  return rc;
-}
-
-
-bool DataMatrix::doUpdateSkip(int realXStart, int realYStart, bool force) {
+void DataMatrix::doUpdateSkip(int realXStart, int realYStart) {
 
   // since we are skipping, we don't need all the pixels
   // also, samples per frame is always 1 with skipping
   _nX = _nX / _skip;
   _nY = _nY / _skip;
-
-  // unless we are forced to, don't update if the range is the same
-  if (realXStart == _lastXStart && realYStart == _lastYStart && _nX == _lastNX && _nY == _lastNY &&
-      _doAve == _lastDoAve && _doSkip == _lastDoSkip && _skip == _lastSkip && !force) {
-    return false;
-  }
 
   // resize the array if necessary
   int requiredSize = _nX * _nY;
@@ -237,7 +215,6 @@ bool DataMatrix::doUpdateSkip(int realXStart, int realYStart, bool force) {
       _minY = matData.yMin;
       _stepX = matData.xStepSize;
       _stepY = matData.yStepSize;
-      return true;
     }
   }
 
@@ -295,18 +272,10 @@ bool DataMatrix::doUpdateSkip(int realXStart, int realYStart, bool force) {
       }
     }
   }
-
-  return true;
 }
 
 
-bool DataMatrix::doUpdateNoSkip(int realXStart, int realYStart, bool force) {
-
-  // unless we are forced to, don't update if the range is the same
-  if (realXStart == _lastXStart && realYStart == _lastYStart && _nX == _lastNX && _nY == _lastNY &&
-      _doAve == _lastDoAve && _doSkip == _lastDoSkip && _skip == _lastSkip && !force) {
-    return false;
-  }
+void DataMatrix::doUpdateNoSkip(int realXStart, int realYStart) {
 
   // resize _z if necessary
   int requiredSize = _nX*_nY*_samplesPerFrameCache*_samplesPerFrameCache;
@@ -327,15 +296,27 @@ bool DataMatrix::doUpdateNoSkip(int realXStart, int realYStart, bool force) {
   _minY = matData.yMin;
   _stepX = matData.xStepSize;
   _stepY = matData.yStepSize;
-
-  return true;
 }
 
+qint64 DataMatrix::minInputSerial() const {
+  if (_file) {
+    return (_file->serial());
+  }
+  return LLONG_MAX;
+}
 
-Object::UpdateType DataMatrix::doUpdate(bool force) {
+qint64 DataMatrix::minInputSerialOfLastChange() const {
+  if (_file) {
+    return (_file->serialOfLastChange());
+  }
+  return LLONG_MAX;
+}
 
-  if (!_file) {
-    return NO_CHANGE;
+void DataMatrix::internalUpdate() {
+  if (_file) {
+    _file->writeLock();
+  } else {
+    return;
   }
 
   // see if we can turn off skipping (only check if skipping enabled)
@@ -401,13 +382,9 @@ Object::UpdateType DataMatrix::doUpdate(bool force) {
 
   // do the reading; skip or non-skip version
   if (_doSkip) {
-    if (!doUpdateSkip(realXStart, realYStart, force)) {
-      return NO_CHANGE;
-    }
+    doUpdateSkip(realXStart, realYStart);
   } else {
-    if (!doUpdateNoSkip(realXStart, realYStart, force)) {
-      return NO_CHANGE;
-    }
+    doUpdateNoSkip(realXStart, realYStart);
   }
 
   // remember these as the last updated range
@@ -419,7 +396,9 @@ Object::UpdateType DataMatrix::doUpdate(bool force) {
   _lastDoSkip = _doSkip;
   _lastSkip = _skip;
 
-  return Matrix::internalUpdate(UPDATE);
+  _file->unlock();
+
+  Matrix::internalUpdate();
 }
 
 
@@ -458,7 +437,7 @@ DataMatrixPtr DataMatrix::makeDuplicate() const {
   if (descriptiveNameIsManual()) {
     matrix->setDescriptiveName(descriptiveName());
   }
-  matrix->update();
+  matrix->registerChange();
   matrix->unlock();
 
   return matrix;

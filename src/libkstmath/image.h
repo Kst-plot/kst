@@ -47,10 +47,8 @@ class KST_EXPORT Image : public Relation {
     virtual void showNewDialog();
     virtual void showEditDialog();
     virtual void save(QXmlStreamWriter &s);
-    virtual UpdateType update();
+    virtual void internalUpdate();
     virtual QString propertyString() const;
-
-    virtual CurveType curveType() const;
 
     virtual bool getNearestZ(double x, double y, double& z);
     virtual QColor getMappedColor(double x, double y);
@@ -118,8 +116,6 @@ class KST_EXPORT Image : public Relation {
     virtual void paintLegendSymbol(QPainter *p, const QRect& bound);
 
     virtual QString descriptionTip() const;
-  public Q_SLOTS:
-    void matrixUpdated(ObjectPtr object);
 
   protected:
     Image(ObjectStore *store);

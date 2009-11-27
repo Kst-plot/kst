@@ -321,7 +321,7 @@ Kst::DataObject *CrossCorrelationPlugin::create(Kst::ObjectStore *store, Kst::Da
     object->setPluginName(pluginName());
 
     object->writeLock();
-    object->update();
+    object->registerChange();
     object->unlock();
 
     return object;

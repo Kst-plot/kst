@@ -74,6 +74,8 @@ class MainWindow : public QMainWindow
     void forward();
     void reload();
 
+    void updateViewItems(qint64 serial);
+
     void save();
     void saveAs();
     void open();

@@ -22,7 +22,6 @@
 #include "kst_i18n.h"
 
 #include "objectstore.h"
-#include "updatemanager.h"
 
 #include <QXmlStreamWriter>
 
@@ -127,21 +126,40 @@ void Relation::setIgnoreAutoScale(bool ignoreAutoScale) {
   _ignoreAutoScale = ignoreAutoScale;
 }
 
+qint64 Relation::minInputSerial() const{
+  qint64 minSerial = LLONG_MAX;
 
-void Relation::processUpdate(ObjectPtr object) {
-#if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "\t\tUP - Relation" << shortName() << "is processing update of" << object->shortName();
-#endif
-  UpdateManager::self()->updateStarted(object, this);
-  writeLock();
-  if (update()) {
-#if DEBUG_UPDATE_CYCLE > 1
-    qDebug() << "\t\tUP - Relation" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
-#endif
-    emit relationUpdated(object);
+  foreach (VectorPtr P, _inputVectors) {
+    minSerial = qMin(minSerial, P->serial());
   }
-  unlock();
-  UpdateManager::self()->updateFinished(object, this);
+  foreach (ScalarPtr P, _inputScalars) {
+    minSerial = qMin(minSerial, P->serial());
+  }
+  foreach (MatrixPtr P, _inputMatrices) {
+    minSerial = qMin(minSerial, P->serial());
+  }
+  foreach (StringPtr P, _inputStrings) {
+    minSerial = qMin(minSerial, P->serial());
+  }
+  return minSerial;
+}
+
+qint64 Relation::minInputSerialOfLastChange() const {
+  qint64 minSerial = LLONG_MAX;
+
+  foreach (VectorPtr P, _inputVectors) {
+    minSerial = qMin(minSerial, P->serialOfLastChange());
+  }
+  foreach (ScalarPtr P, _inputScalars) {
+    minSerial = qMin(minSerial, P->serialOfLastChange());
+  }
+  foreach (MatrixPtr P, _inputMatrices) {
+    minSerial = qMin(minSerial, P->serialOfLastChange());
+  }
+  foreach (StringPtr P, _inputStrings) {
+    minSerial = qMin(minSerial, P->serialOfLastChange());
+  }
+  return minSerial;
 }
 
 

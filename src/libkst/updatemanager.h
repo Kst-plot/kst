@@ -13,17 +13,12 @@
 #define UPDATEMANAGER_H
 
 #include "object.h"
-#include "plotiteminterface.h"
 
 #include <QGraphicsRectItem>
 
-// Provides additional output during update cycle.
-// Level 0 No Debug
-// Level 1 Simple Debugging - UpdateManager Only
-// Level 2 Full Debugging
-#define DEBUG_UPDATE_CYCLE 0
-
 namespace Kst {
+class ObjectStore;
+class TabWidget;
 
 class UpdateManager : public QObject
 {
@@ -31,21 +26,20 @@ class UpdateManager : public QObject
   public:
     static UpdateManager *self();
 
-    void requestUpdate(ObjectPtr object);
-    void requestUpdate(ObjectPtr updateObject, ObjectPtr object);
-    void requestUpdate(ObjectPtr updateObject, PlotItemInterface* displayObject);
-    void objectDeleted(ObjectPtr object);
-
-    void updateStarted(ObjectPtr updateObject, ObjectPtr reportingObject);
-    void updateFinished(ObjectPtr updateObject, ObjectPtr reportingObject);
-
     void setMinimumUpdatePeriod(const int period) { _maxUpdate = period; }
     int minimumUpdatePeriod() { return _maxUpdate; }
 
     void setPaused(bool paused) { _paused = paused;}
     bool paused() { return _paused; }
-  private Q_SLOTS:
-    void allowUpdates();
+
+    void setStore(ObjectStore *store) {_store = store;}
+    void setTabWidget(TabWidget *tabWidget) {_tabWidget = tabWidget;}
+
+  public Q_SLOTS:
+    void doUpdates(bool forceImmediate = false);
+
+  Q_SIGNALS:
+    void objectsUpdated(qint64 serial);
 
   private:
     UpdateManager();
@@ -53,15 +47,12 @@ class UpdateManager : public QObject
     static void cleanup();
 
   private:
-    QList<ObjectPtr> _updateRequests;
-    QMap<ObjectPtr, int> _activeUpdates;
-    QMap<ObjectPtr, QList<ObjectPtr> > _dependentUpdateRequests;
-    QMap<ObjectPtr, QList<PlotItemInterface*> > _displayUpdateRequests;
-    QList<ObjectPtr> _dispatchingRequests;
-
     bool _delayedUpdate;
     int _maxUpdate;
     bool _paused;
+    qint64 _serial;
+    ObjectStore *_store;
+    TabWidget *_tabWidget;
 };
 
 }

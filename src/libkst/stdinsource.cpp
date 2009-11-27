@@ -65,13 +65,13 @@ const QString& StdinSource::typeString() const {
 }
 
 
-Object::UpdateType StdinSource::update() {
+Object::UpdateType StdinSource::internalDataSourceUpdate() {
   if (!_valid) {
     _src = DataSource::loadSource(store(), _filename, "ASCII");
     if (_src && _src->isValid()) {
       _valid = true;
     } else {
-      return Object::NO_CHANGE;
+      return NoChange;
     }
   }
 
@@ -116,7 +116,7 @@ Object::UpdateType StdinSource::update() {
   if (got_some && _src) {
     return _src->update();
   }
-  return Object::NO_CHANGE;
+  return NoChange;
 }
 
 

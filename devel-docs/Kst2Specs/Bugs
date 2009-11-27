@@ -1,17 +1,9 @@
-Update ineffciency:
-One plot gets re-drawn twice in an update in PlotItem::updatePlotPixmap. (?)
-
---------------------
 
 Draw an ellipse that spans many plots.  It ends up in the back, and can't be brought to the front.
 
 --------------------
 
 Artifacts when resizing large arrowheads.
-
---------------------
-
-PSDs are not updated.  The whole update system might be due for a complete re-write (?)
 
 --------------------
 
@@ -45,13 +37,6 @@ mouse).
 
 When you plot 48 plots on one screen, the default text size for the
 plots is way too small to be readable.  
-
---------------------
-
-In this case (48 plots, live data at 100Hz) kst2 is now usable (last
-time I tested it it was too bogged down to use).  However, it is still
-more sluggish than kst1 would feel with the same data on the same
-machine.  There are probably still some multiple draws or something.  
 
 --------------------
 

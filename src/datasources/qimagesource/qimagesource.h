@@ -27,7 +27,7 @@ class QImageSource : public Kst::DataSource {
     bool init();
     bool reset();
 
-    Kst::Object::UpdateType update();
+    Kst::Object::UpdateType internalDataSourceUpdate();
 
     bool matrixDimensions( const QString& matrix, int* xDim, int* yDim);
     int readMatrix(Kst::MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps);

@@ -9,10 +9,14 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "../libkstapp/tabwidget.h"
 #include "updatemanager.h"
 
 #include "primitive.h"
 #include "datasource.h"
+#include "objectstore.h"
+//#include "application.h"
+//#include "document.h"
 
 #include <QCoreApplication>
 #include <QTimer>
@@ -46,198 +50,62 @@ UpdateManager *UpdateManager::self() {
 
 
 UpdateManager::UpdateManager() {
+  _serial = 0;
   _maxUpdate = MAX_UPDATES;
   _paused = false;
-  QTimer::singleShot(_maxUpdate, this, SLOT(allowUpdates()));
+  _store = 0;
 }
 
 
 UpdateManager::~UpdateManager() {
 }
 
+void UpdateManager::doUpdates(bool forceImmediate) {
+  Q_UNUSED(forceImmediate)
 
-void UpdateManager::requestUpdate(ObjectPtr object) {
-  if (!_updateRequests.contains(object)) {
-    _updateRequests.append(object);
+  if (!_store) {
+    return;
   }
-#if DEBUG_UPDATE_CYCLE > 1
-  qDebug() << "UM - Update requested for" << object->Name() << "Update Count" << _updateRequests;
-#endif
-}
 
+  _serial++;
 
-void UpdateManager::requestUpdate(ObjectPtr updateObject, ObjectPtr object) {
-  if (!_dependentUpdateRequests.contains(updateObject)) {
-    QList<ObjectPtr> newList;
-    newList.append(object);
-    _dependentUpdateRequests.insert(updateObject, newList);
-  } else {
-    if (!_dependentUpdateRequests[updateObject].contains(object)) {
-      _dependentUpdateRequests[updateObject].append(object);
-    }
+  int n_updated=0, n_deferred=0, n_unchanged = 0;
+  qint64 retval;
+
+  // update the datasources
+  foreach (DataSourcePtr ds, _store->dataSourceList()) {
+    ds->writeLock();
+    retval = ds->objectUpdate(_serial);
+    ds->unlock();
+    if (retval == Object::Updated) n_updated++;
+    else if (retval == Object::Deferred) n_deferred++;
+    else if (retval == Object::NoChange) n_unchanged++;
   }
-#if DEBUG_UPDATE_CYCLE > 0
-  qDebug() << "\t\t\tUM - Curve" << object->shortName() << "requested update requested for" << updateObject->Name();
-  qDebug() << "\t\t\t     Current dependent update list" <<  _dependentUpdateRequests;
-#endif
-}
 
+  //qDebug() << "ds up: " << n_updated << "  ds def: " << n_deferred << " n_no: " << n_unchanged;
 
-void UpdateManager::requestUpdate(ObjectPtr updateObject, PlotItemInterface* displayObject) {
-  if (!_displayUpdateRequests.contains(updateObject)) {
-    QList<PlotItemInterface*> newList;
-    newList.append(displayObject);
-    _displayUpdateRequests.insert(updateObject, newList);
-  } else {
-    if (!_displayUpdateRequests[updateObject].contains(displayObject)) {
-      _displayUpdateRequests[updateObject].append(displayObject);
+  int i_loop = retval = 0;
+  int maxloop = _store->objectList().size();
+  //qDebug() << "starting update loop.  Maxloop: " << maxloop;
+  do {
+    n_updated = n_unchanged = n_deferred = 0;
+    // update data objects
+    foreach (ObjectPtr p, _store->objectList()) {
+      p->writeLock();
+      retval = p->objectUpdate(_serial);
+      p->unlock();
+
+      if (retval == Object::Updated) n_updated++;
+      else if (retval == Object::Deferred) n_deferred++;
+      else if (retval == Object::NoChange) n_unchanged++;
+      maxloop = qMin(maxloop,n_deferred);
     }
-  }
-#if DEBUG_UPDATE_CYCLE > 0
-  qDebug() << "\t\t\tUM - Plot update requested for" << updateObject->Name();
-  qDebug() << "\t\t\t     Current display update list" <<  _displayUpdateRequests;
-#endif
+    //qDebug() << "loop: " << i_loop << " obj up: " << n_updated << "  obj def: " << n_deferred << " obj_no: " << n_unchanged;
+    i_loop++;
+  } while ((retval>0) && (i_loop<=maxloop));
+
+  emit objectsUpdated(_serial);
 }
-
-
-void UpdateManager::allowUpdates() {
-#if DEBUG_UPDATE_CYCLE > 0
-  qDebug() << "UM - Allow updates triggered";
-#endif
-  if (!_updateRequests.empty()) {
-    if (!_activeUpdates.empty()) {
-#if DEBUG_UPDATE_CYCLE > 0
-      qDebug() << "UM - Update in progress, delaying start of update";
-#endif
-      _delayedUpdate = true;
-    } else {
-      _delayedUpdate = false;
-      foreach(ObjectPtr object, _updateRequests) {
-#if DEBUG_UPDATE_CYCLE > 0
-        qDebug() << "UM - Beginning update for" << object->Name();
-#endif
-#if BENCHMARK
-        bench_time.start();
-        benchtmp.start();
-#endif
-        object->beginUpdate(object);
-        _updateRequests.removeAll(object);
-      }
-    }
-  }
-#if DEBUG_UPDATE_CYCLE > 0
-  qDebug() << "UM - Delaying for " << _maxUpdate << "ms before allowing next update";
-#endif
-  QTimer::singleShot(_maxUpdate, this, SLOT(allowUpdates()));
 }
-
-
-void UpdateManager::objectDeleted(ObjectPtr object) {
-  _updateRequests.removeAll(object);
-  _activeUpdates.remove(object);
-}
-
-
-void UpdateManager::updateStarted(ObjectPtr updateObject, ObjectPtr reportingObject) {
-  _activeUpdates[updateObject]++;
-#if DEBUG_UPDATE_CYCLE > 0
-    if (PrimitivePtr primitive = kst_cast<Primitive>(reportingObject)) {
-      qDebug() << "\t\tUM - Update beginning for" << reportingObject->shortName() << "for update" << updateObject->shortName() << "update count" << _activeUpdates[updateObject];
-    } else if (DataSourcePtr ds = kst_cast<DataSource>(reportingObject)) {
-      qDebug() << "\tUM - Update beginning for" << reportingObject->shortName() << "for update" << updateObject->shortName() << "update count" << _activeUpdates[updateObject];
-    } else {
-      qDebug() << "\t\tUM - Update beginning for" << reportingObject->shortName() << "for update" << updateObject->shortName() << "update count" << _activeUpdates[updateObject];
-    }
-#else
-  Q_UNUSED(reportingObject)
-#endif
-}
-
-
-void UpdateManager::updateFinished(ObjectPtr updateObject, ObjectPtr reportingObject) {
-  _activeUpdates[updateObject]--;
-#if DEBUG_UPDATE_CYCLE > 0
-    if (PrimitivePtr primitive = kst_cast<Primitive>(reportingObject)) {
-      qDebug() << "\t\tUM - Update finish notification from" << reportingObject->shortName() << "for update" << updateObject->shortName() << "update count" << _activeUpdates[updateObject];
-    } else if (DataSourcePtr ds = kst_cast<DataSource>(reportingObject)) {
-      qDebug() << "\tUM - Update finish notification from" << reportingObject->shortName() << "for update" << updateObject->shortName() << "update count" << _activeUpdates[updateObject];
-    } else {
-      qDebug() << "\t\t\tUM - Update finish notification from" << reportingObject->shortName() << "for update" << updateObject->shortName() << "update count" << _activeUpdates[updateObject];
-    }
-#else
-  Q_UNUSED(reportingObject)
-#endif
-  if (_activeUpdates[updateObject] == 0) {
-    _activeUpdates.remove(updateObject);
-
-  // Add Logic for no curves to update plots.
-    if (!_dependentUpdateRequests[updateObject].empty()) {
-      if (_dispatchingRequests.contains(updateObject)) {
-        return;
-      }
-#if DEBUG_UPDATE_CYCLE > 0
-        qDebug() << "\tUM - All primitive updates complete updating relations for update of" <<  updateObject->shortName();
-        qDebug() << "\t     Current dependentUpdate requests" << _dependentUpdateRequests;
-#endif
-#if BENCHMARK
-  int i = bench_time.elapsed();
-  b1 = i;
-  qDebug() << endl << "Time to update Primitives " << ": " << i << "ms";
-#endif
-      _dispatchingRequests.append(updateObject);
-      foreach (ObjectPtr object, _dependentUpdateRequests[updateObject]) {
-        _dependentUpdateRequests[updateObject].removeAll(object);
-        bool continueWaiting = false;
-        foreach (QList<ObjectPtr> list, _dependentUpdateRequests) {
-          if (list.contains(object)) {
-            continueWaiting = true;
-#if DEBUG_UPDATE_CYCLE > 0
-            qDebug() << "\t\tUM - Delaying relation update for" << object->shortName() << "object is part of another update.";
-#endif
-            break;
-          }
-        }
-        if (!continueWaiting) {
-          object->beginUpdate(updateObject); 
-        }
-      }
-      _dependentUpdateRequests.remove(updateObject);
-      _dispatchingRequests.removeAll(updateObject);
-    } else {
-      // Display level update required.
-      if (_activeUpdates.empty()) {
-#if DEBUG_UPDATE_CYCLE > 0
-        qDebug() << "\tUM - All relation updates complete, updating plots for update of" <<  updateObject->shortName();
-        qDebug() << "\t     Current display update list" <<  _displayUpdateRequests;
-#endif
-#if BENCHMARK
-  int i = bench_time.elapsed();
-  b2 = i;
-  qDebug() << endl << "Time to update Relations " << ": " << i - b1 << "ms";
-#endif
-        foreach (QList<PlotItemInterface*> objectList, _displayUpdateRequests) {
-          foreach (PlotItemInterface* object, objectList) {
-            object->updateObject();
-          }
-        }
-        _displayUpdateRequests.clear();
-#if DEBUG_UPDATE_CYCLE > 0
-        qDebug() << "\tUM - All Plot updates completed for update of " << updateObject->Name();
-        qDebug() << "UM - Update Complete for " << updateObject->Name();
-      } else {
-        qDebug() << "UM - updates not complete: not updating plots: count:" << _updateRequests.count();
-#endif
-#if BENCHMARK
-  i = bench_time.elapsed();
-  qDebug() << endl << "Time to notify Plots " << ": " << i - b2 << "ms";
-  qDebug() << endl << "Total Time to process update " << ": " << i << "ms";
-#endif
-      }
-    }
-  }
-}
-
-}
-
 
 // vim: ts=2 sw=2 et

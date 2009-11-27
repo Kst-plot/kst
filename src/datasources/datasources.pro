@@ -9,9 +9,9 @@ SUBDIRS += \
 
 LibExists(cfitsio) {
     message(CFITSIO configured.  Plugins will be built.)
-    SUBDIRS += fitsimage lfiio healpix planckIDEF
-    CONFIG += link_pkgconfig
-    PKGCONFIG += cfitsio
+#    SUBDIRS += fitsimage lfiio healpix planckIDEF
+#    CONFIG += link_pkgconfig
+#    PKGCONFIG += cfitsio
 }
 
 LibExists(getdata) {

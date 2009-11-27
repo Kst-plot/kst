@@ -292,7 +292,7 @@ ObjectPtr EquationDialog::createNewDataObject() {
   }
 
   equation->writeLock();
-  equation->update();
+  equation->registerChange();
   equation->unlock();
 
   CurvePtr curve = _document->objectStore()->createObject<Curve>();
@@ -311,7 +311,7 @@ ObjectPtr EquationDialog::createNewDataObject() {
   curve->setBarStyle(_equationTab->curveAppearance()->barStyle());
 
   curve->writeLock();
-  curve->update();
+  curve->registerChange();
   curve->unlock();
 
   _equationTab->curveAppearance()->setWidgetDefaults();
@@ -367,7 +367,7 @@ ObjectPtr EquationDialog::editExistingDataObject() const {
           equation->setEquation(equationString);
           equation->setExistingXVector(xVector, doInterpolation);
 
-          equation->inputObjectUpdated(equation);
+          equation->registerChange();
           equation->unlock();
         }
       }
@@ -380,7 +380,7 @@ ObjectPtr EquationDialog::editExistingDataObject() const {
       } else {
          equation->setDescriptiveName(DataDialog::tagString());
       }
-      equation->inputObjectUpdated(equation);
+      equation->registerChange();
       equation->unlock();
     }
   }

@@ -313,7 +313,7 @@ Kst::DataObject *FitGaussianUnweightedPlugin::create(Kst::ObjectStore *store, Ks
     object->setPluginName(pluginName());
 
     object->writeLock();
-    object->update();
+    object->registerChange();
     object->unlock();
 
     return object;

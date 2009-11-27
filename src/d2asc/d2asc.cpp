@@ -113,8 +113,9 @@ int main(int argc, char *argv[]) {
 
   /* find NS */
   for (i = 0; i < n_field; i++) {
-    while (vlist.at(i)->update() != Kst::Object::NO_CHANGE)
-      ; // read vector
+    // FIXME: need to learn to wait...
+    //while (vlist.at(i)->update() != Kst::Object::NO_CHANGE)
+    //  ; // read vector
 
     if (vlist.at(i)->length() > NS)
       NS = vlist.at(i)->length();

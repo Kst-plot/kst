@@ -111,7 +111,7 @@ ScalarPtr ScalarSelector::selectedScalar() {
     scalar->setEditable(true);
 
     scalar->writeLock();
-    scalar->update();
+    scalar->registerChange();
     scalar->unlock();
 
     _scalar->clearEditText();

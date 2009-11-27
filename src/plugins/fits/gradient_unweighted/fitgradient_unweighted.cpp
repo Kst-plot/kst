@@ -293,7 +293,7 @@ Kst::DataObject *FitGradientUnweightedPlugin::create(Kst::ObjectStore *store, Ks
     object->setPluginName(pluginName());
 
     object->writeLock();
-    object->update();
+    object->registerChange();
     object->unlock();
 
     return object;

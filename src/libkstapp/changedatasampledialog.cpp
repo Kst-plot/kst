@@ -18,6 +18,7 @@
 #include "mainwindow.h"
 #include "application.h"
 #include "dialogdefaults.h"
+#include "updatemanager.h"
 
 namespace Kst {
 
@@ -197,10 +198,13 @@ void ChangeDataSampleDialog::apply() {
                             _dataRange->skip(),
                             _dataRange->doSkip(),
                             _dataRange->doFilter());
-      vector->immediateUpdate(); // FIXME: cache all dependent updates until all vectors have been updated
+      vector->registerChange();
       vector->unlock();
     }
   }
+
+  UpdateManager::self()->doUpdates(true);
+
   _dialogDefaults->setValue("vector/range", _dataRange->range());
   _dialogDefaults->setValue("vector/start", _dataRange->start());
   _dialogDefaults->setValue("vector/countFromEnd", _dataRange->countFromEnd());

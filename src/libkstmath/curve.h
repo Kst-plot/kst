@@ -39,7 +39,7 @@ class KST_EXPORT Curve: public Relation {
     const QString& typeString() const { return staticTypeString; }
     static const QString staticTypeTag;
 
-    virtual UpdateType update();
+    virtual void internalUpdate();
     virtual QString propertyString() const;
 
     virtual int getIndexNearXY(double x, double dx, double y) const;
@@ -71,8 +71,6 @@ class KST_EXPORT Curve: public Relation {
     QString xLabel() const;
     QString yLabel() const;
     QString topLabel() const;
-
-    virtual CurveType curveType() const;
 
     virtual bool xIsRising() const;
 
@@ -149,8 +147,6 @@ class KST_EXPORT Curve: public Relation {
     virtual DataObjectPtr providerDataObject() const;
 
     virtual QString descriptionTip() const;
-  public Q_SLOTS:
-    void vectorUpdated(ObjectPtr object);
 
   protected:
     Curve(ObjectStore *store);

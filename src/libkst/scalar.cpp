@@ -25,21 +25,9 @@
 
 namespace Kst {
 
-static bool dirtyScalars = false;
 
 const QString Scalar::staticTypeString = I18N_NOOP("Scalar");
 const QString Scalar::staticTypeTag = I18N_NOOP("scalar");
-
-bool Scalar::scalarsDirty() {
-  // Should use a mutex, but let's play with fire to be fast
-  return dirtyScalars;
-}
-
-
-void Scalar::clearScalarsDirty() {
-  // Should use a mutex, but let's play with fire to be fast
-  dirtyScalars = false;
-}
 
 
 /** Create the base scalar */
@@ -67,12 +55,8 @@ const QString& Scalar::typeString() const {
 }
 
 
-Object::UpdateType Scalar::update() {
-//  Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
-
-  double v = value();
-
-  return (v == value() ? NO_CHANGE : UPDATE);
+void Scalar::internalUpdate() {
+  // do nothing
 }
 
 
@@ -100,11 +84,12 @@ Scalar& Scalar::operator=(double v) {
 
 
 void Scalar::setValue(double inV) {
+  writeLock();
   if (_value != inV) {
-    dirtyScalars = true;
     _value = inV;
-    emit updated(this);
+    registerChange();
   }
+  unlock();
 }
 
 

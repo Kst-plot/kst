@@ -28,6 +28,7 @@
 #include "document.h"
 #include "mainwindow.h"
 #include "application.h"
+#include "updatemanager.h"
 
 namespace Kst {
 
@@ -151,6 +152,7 @@ void DataDialog::slotApply() {
   else
     ptr = editExistingDataObject();
   setDataObject(ptr);
+  UpdateManager::self()->doUpdates();
   kstApp->mainWindow()->document()->setChanged(true);
   clearModified();
 }

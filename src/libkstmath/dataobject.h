@@ -68,8 +68,6 @@ class KST_EXPORT DataObject : public Object {
     static QString pluginDescription(const QString &name);
     static int pluginType(const QString &name);
 
-    virtual UpdateType update() = 0;
-
     virtual const QString& typeString() const { return _typeString; }
     virtual QString propertyString() const = 0;
     virtual const QString& type() const { return _type; }
@@ -102,8 +100,6 @@ class KST_EXPORT DataObject : public Object {
     virtual void load(const QXmlStreamReader& s);
     virtual void save(QXmlStreamWriter& s);
 
-    virtual bool loadInputs();
-
     virtual int getUsage() const;
 
     virtual void readLock() const;
@@ -134,9 +130,6 @@ class KST_EXPORT DataObject : public Object {
     const QString& library() const { return _library; }
 
     void showDialog(bool isNew = true);
-
-  public Q_SLOTS:
-    void inputObjectUpdated(ObjectPtr object);
 
   protected slots:
     virtual void showNewDialog() = 0;
@@ -170,12 +163,10 @@ class KST_EXPORT DataObject : public Object {
 
     QString _typeString, _type;
 
-    bool _isInputLoaded;
-    QList<QPair<QString,QString> > _inputVectorLoadQueue;
-    QList<QPair<QString,QString> > _inputScalarLoadQueue;
-    QList<QPair<QString,QString> > _inputStringLoadQueue;
-    QList<QPair<QString,QString> > _inputMatrixLoadQueue;
     CurveHintList *_curveHints;
+
+    virtual qint64 minInputSerial() const;
+    virtual qint64 minInputSerialOfLastChange() const;
 
   private:
     QString _name;

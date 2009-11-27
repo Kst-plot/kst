@@ -46,8 +46,6 @@ class KST_EXPORT Equation : public DataObject {
     static const QString staticTypeTag;
 
     void attach();
-    UpdateType update();
-
     void save(QXmlStreamWriter &s);
     QString propertyString() const;
 
@@ -82,15 +80,19 @@ class KST_EXPORT Equation : public DataObject {
     bool uses(ObjectPtr p) const;
 
     virtual QString descriptionTip() const;
+    virtual void internalUpdate();
 
   protected:
     Equation(ObjectStore *store);
     ~Equation();
 
-    friend class ObjectStore; 
+    friend class ObjectStore;
 
     virtual QString _automaticDescriptiveName() const;
     virtual void _initializeShortName();
+
+    virtual qint64 minInputSerial() const;
+    virtual qint64 minInputSerialOfLastChange() const;
 
   private:
     QString _equation;

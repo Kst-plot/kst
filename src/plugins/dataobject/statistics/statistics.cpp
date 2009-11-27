@@ -328,7 +328,7 @@ Kst::DataObject *StatisticsPlugin::create(Kst::ObjectStore *store, Kst::DataObje
     object->setPluginName(pluginName());
 
     object->writeLock();
-    object->update();
+    object->registerChange();
     object->unlock();
 
     return object;

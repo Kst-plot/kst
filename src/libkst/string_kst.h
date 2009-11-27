@@ -44,12 +44,12 @@ class KST_EXPORT String : public Primitive {
     virtual void _initializeShortName();
 
   public:
+    /** Update the string. */
+    virtual void internalUpdate();
+
     virtual ~String();
     /** Save information */
     void save(QXmlStreamWriter &s);
-
-    /** Update the vector.  Return true if there was new data. */
-    UpdateType update();
 
     String& operator=(const QString& v);
     String& operator=(const char *v);

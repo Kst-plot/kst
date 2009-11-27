@@ -331,7 +331,7 @@ Kst::DataObject *FitExponentialWeightedPlugin::create(Kst::ObjectStore *store, K
     object->setPluginName(pluginName());
 
     object->writeLock();
-    object->update();
+    object->registerChange();
     object->unlock();
 
     return object;

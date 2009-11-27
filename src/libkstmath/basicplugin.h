@@ -84,10 +84,6 @@ class KST_EXPORT BasicPlugin : public DataObject {
     void setPluginName(const QString &pluginName);
     QString pluginName() { return _pluginName; }
 
-    //Pure virtual methods inherited from DataObject
-    //We do this one ourselves for benefit of all plugins...
-    Object::UpdateType update();
-
     //Regular virtual methods from DataObject
     virtual void save(QXmlStreamWriter &s);
     virtual void saveProperties(QXmlStreamWriter &s);
@@ -95,9 +91,13 @@ class KST_EXPORT BasicPlugin : public DataObject {
     void createScalars();
     QString label(int precision) const;
 
+    virtual void internalUpdate();
   protected:
     BasicPlugin(ObjectStore *store);
     virtual ~BasicPlugin();
+
+    //Pure virtual methods inherited from DataObject
+    //We do this one ourselves for benefit of all plugins...
 
     virtual QString parameterName(int index) const;
     QString _errorString;

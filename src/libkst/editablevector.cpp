@@ -36,14 +36,6 @@ const QString& EditableVector::typeString() const {
 }
 
 
-Object::UpdateType EditableVector::update() {
-  Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
-
-  Object::UpdateType baseRC = Vector::update();
-  return baseRC;
-}
-
-
 void EditableVector::setSaveData(bool save) {
   Q_UNUSED(save)
 }

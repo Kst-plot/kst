@@ -128,7 +128,6 @@ SOURCES += aboutdialog.cpp \
     viewgridlayout.cpp \
     viewitem.cpp \
     viewitemdialog.cpp \
-    viewmanager.cpp \
     viewmatrixdialog.cpp \
     viewprimitivedialog.cpp \
     viewvectordialog.cpp
@@ -235,7 +234,6 @@ HEADERS += \
     viewgridlayout.h \
     viewitemdialog.h \
     viewitem.h \
-    viewmanager.h \
     viewmatrixdialog.h \
     viewprimitivedialog.h \
     viewvectordialog.h
@@ -286,7 +284,6 @@ FORMS += aboutdialog.ui \
     stringtab.ui \
     stroketab.ui \
     vectortab.ui \
-    viewmanager.ui \
     viewmatrixdialog.ui \
     viewprimitivedialog.ui \
     viewvectordialog.ui 

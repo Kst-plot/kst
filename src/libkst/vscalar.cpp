@@ -61,26 +61,7 @@ void VScalar::change(DataSourcePtr in_file, const QString &in_field, int in_f0) 
   _field = in_field;
   _file = in_file;
   _f0 = in_f0;
-
-  if (in_file) {
-    connect(in_file, SIGNAL(sourceUpdated(ObjectPtr)), this, SLOT(sourceUpdated(ObjectPtr)));
-  }
-
 }
-
-
-void VScalar::sourceUpdated(ObjectPtr object) {
-  //qDebug() << "UP - Data Source update required by Vector" << shortName() << "for update of" << object->shortName();
-  writeLock();
-  UpdateManager::self()->updateStarted(object, this);
-  if (update()) {
-  //qDebug() << "UP - Vector" << shortName() << "has been updated as part of update of" << object->shortName() << "informing dependents";
-    emit updated(object);
-  }
-  UpdateManager::self()->updateFinished(object, this);
-  unlock();
-}
-
 
 void VScalar::changeFile(DataSourcePtr in_file) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
@@ -133,9 +114,7 @@ void VScalar::save(QXmlStreamWriter &s) {
 
 
 /** Update a data Scalar */
-Object::UpdateType VScalar::update() {
-  Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
-  Object::UpdateType rc = NO_CHANGE;
+void VScalar::internalUpdate() {
   if (_file) {
     int f0;
     if (_f0<0) { 
@@ -146,11 +125,22 @@ Object::UpdateType VScalar::update() {
     _file->writeLock();
     _file->readField(&_value, _field, f0, -1);
     _file->unlock();
-    rc = UPDATE;
   }
-  return rc;
 }
 
+qint64 VScalar::minInputSerial() const {
+  if (_file) {
+    return (_file->serial());
+  }
+  return LLONG_MAX;
+}
+
+qint64 VScalar::minInputSerialOfLastChange() const {
+  if (_file) {
+    return (_file->serialOfLastChange());
+  }
+  return LLONG_MAX;
+}
 
 VScalarPtr VScalar::makeDuplicate() const {
   Q_ASSERT(store());
@@ -162,7 +152,7 @@ VScalarPtr VScalar::makeDuplicate() const {
     scalar->setDescriptiveName(descriptiveName());
   }
 
-  scalar->update();
+  scalar->registerChange();
   scalar->unlock();
 
   return scalar;

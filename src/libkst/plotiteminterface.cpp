@@ -13,7 +13,7 @@
 
 namespace Kst {
 
-PlotItemInterface::PlotItemInterface() {
+PlotItemInterface::PlotItemInterface(): _serialOfLastChange(0) {
 }
 
 

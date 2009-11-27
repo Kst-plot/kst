@@ -49,7 +49,7 @@ SOURCES += builtindatasources.cpp \
     vector.cpp \
     vectorfactory.cpp \
     vscalar.cpp 
-!win32:SOURCES += stdinsource.cpp
+# !win32:SOURCES += stdinsource.cpp
 !macx:!win32:SOURCES += sysinfo.c \
     psversion.c
 HEADERS += builtindatasources.h \
@@ -96,7 +96,7 @@ HEADERS += builtindatasources.h \
     scalar.h \
     scalarfactory.h \
     sharedptr.h \
-    stdinsource.h \
+#    stdinsource.h \
     string_kst.h \
     stringfactory.h \
     sysinfo.h \

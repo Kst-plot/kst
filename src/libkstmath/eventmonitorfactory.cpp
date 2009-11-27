@@ -82,7 +82,7 @@ DataObjectPtr EventMonitorFactory::generateObject(ObjectStore *store, QXmlStream
   eventMonitor->reparse();
 
   eventMonitor->writeLock();
-  eventMonitor->update();
+  eventMonitor->registerChange();
   eventMonitor->unlock();
 
   return eventMonitor;

@@ -36,7 +36,7 @@
 #include "viewmatrixdialog.h"
 #include "viewprimitivedialog.h"
 #include "view.h"
-#include "viewmanager.h"
+//#include "viewmanager.h"
 #include "updatemanager.h"
 #include "applicationsettings.h"
 
@@ -95,6 +95,10 @@ MainWindow::MainWindow() :
   connect(PlotItemManager::self(), SIGNAL(allPlotsTiedZoom()), this, SLOT(allPlotsTiedZoom()));
 
   readSettings();
+
+  UpdateManager::self()->setStore(_doc->objectStore());
+  connect(UpdateManager::self(), SIGNAL(objectsUpdated(qint64)), this, SLOT(updateViewItems(qint64)));
+
   QTimer::singleShot(0, this, SLOT(performHeavyStartupActions()));
 }
 
@@ -953,9 +957,10 @@ void MainWindow::readFromEnd() {
 
     v->writeLock();
     v->changeFrames(-1, nf, skip, do_skip, do_filter);
-    v->immediateUpdate();
+    v->registerChange();
     v->unlock();
   }
+  UpdateManager::self()->doUpdates(true);
 } 
 
 void MainWindow::pause(bool pause) {
@@ -1001,10 +1006,11 @@ void MainWindow::forward() {
 
       v->writeLock(); 
       v->changeFrames(f0, nf, skip, do_skip, do_filter);
-      v->immediateUpdate();
+      v->registerChange();
       v->unlock();
     }
   }
+  UpdateManager::self()->doUpdates(true);
 }
 
 void MainWindow::back() {
@@ -1047,10 +1053,11 @@ void MainWindow::back() {
 
       v->writeLock(); 
       v->changeFrames(f0, nf, skip, do_skip, do_filter);
-      v->immediateUpdate();
+      v->registerChange();
       v->unlock();
     }
   }
+  UpdateManager::self()->doUpdates(true);
 }
 
 void MainWindow::reload() {
@@ -1069,6 +1076,21 @@ void MainWindow::showDataManager() {
   _dataManager->show();
 }
 
+
+void MainWindow::updateViewItems(qint64 serial) {
+
+  QList<PlotItem *> plots = ViewItem::getItems<PlotItem>();
+
+  bool changed = false;
+  foreach (PlotItem *plot, plots) {
+    changed |= plot->handleChangedInputs(serial);
+  }
+
+  if (changed) {
+    _tabWidget->currentView()->update();
+  }
+
+}
 
 void MainWindow::showVectorEditor() {
   ViewVectorDialog *viewVectorDialog = new ViewVectorDialog(this, _doc);

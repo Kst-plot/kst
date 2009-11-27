@@ -40,7 +40,7 @@ public:
     const QString& typeString() const { return staticTypeString; }
     static const QString staticTypeTag;
 
-    virtual UpdateType update();
+    virtual void internalUpdate();
     virtual void save(QXmlStreamWriter &xml);
     virtual QString propertyString() const;
 

@@ -394,7 +394,7 @@ ObjectPtr CurveDialog::createNewDataObject() {
   }
 
   curve->writeLock();
-  curve->update();
+  curve->registerChange();
   curve->unlock();
 
   _curveTab->curveAppearance()->setWidgetDefaults();
@@ -506,7 +506,7 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
              curve->setDescriptiveName(DataDialog::tagString());
           }
 
-          curve->processUpdate(curve);
+          curve->registerChange();
           curve->unlock();
         }
       }
@@ -534,7 +534,7 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
          curve->setDescriptiveName(DataDialog::tagString());
       }
 
-      curve->processUpdate(curve);
+      curve->registerChange();
       curve->unlock();
 
       _curveTab->curveAppearance()->setWidgetDefaults(false);

@@ -100,7 +100,7 @@ DataObjectPtr PSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
 
   powerspectrum->setDescriptiveName(descriptiveName);
 
-  powerspectrum->update();
+  powerspectrum->registerChange();
   powerspectrum->unlock();
 
   return powerspectrum;

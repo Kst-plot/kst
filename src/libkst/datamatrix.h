@@ -65,9 +65,6 @@ class KST_EXPORT DataMatrix : public Matrix, public DataPrimitive {
     // returns true if the file and field is valid; false otherwise
     bool isValid() const;
 
-    // update DataMatrix
-    virtual UpdateType update();
-
     // reload contents of DataMatrix from file
     void reload();
 
@@ -80,9 +77,14 @@ class KST_EXPORT DataMatrix : public Matrix, public DataPrimitive {
     virtual QString descriptionTip() const;
 
     virtual QString propertyString() const;
+    virtual void internalUpdate();
   protected:
     DataMatrix(ObjectStore *store);
     virtual ~DataMatrix();
+
+    // update DataMatrix
+    virtual qint64 minInputSerial() const;
+    virtual qint64 minInputSerialOfLastChange() const;
 
     friend class ObjectStore;
 
@@ -94,11 +96,8 @@ class KST_EXPORT DataMatrix : public Matrix, public DataPrimitive {
                            bool doAve, bool doSkip, int skip,
                            double minX, double minY, double stepX, double stepY);
 
-    // internal update function, called by update()
-    Object::UpdateType doUpdate(bool force = false);
-
-    bool doUpdateSkip(int realXStart, int realYStart, bool force);
-    bool doUpdateNoSkip(int realXStart, int realYStart, bool force);
+    void doUpdateSkip(int realXStart, int realYStart);
+    void doUpdateNoSkip(int realXStart, int realYStart);
 
     void reset();
 

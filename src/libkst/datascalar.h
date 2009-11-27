@@ -41,9 +41,15 @@ class KST_EXPORT DataScalar : public Scalar, public DataPrimitive {
 
     virtual QString _automaticDescriptiveName() const;
 
+    /** Update the scalar.*/
+    virtual qint64 minInputSerial() const;
+    virtual qint64 minInputSerialOfLastChange() const;
+
+
   public:
     virtual ~DataScalar();
 
+    virtual void internalUpdate();
     virtual const QString& typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
@@ -55,9 +61,6 @@ class KST_EXPORT DataScalar : public Scalar, public DataPrimitive {
     /** Save scalar information */
     virtual void save(QXmlStreamWriter &s);
 
-    /** Update the scalar.  Return true if there was new data. */
-    virtual UpdateType update();
-
     /** make a copy of the DataScalar */
     SharedPtr<DataScalar> makeDuplicate() const;
 
@@ -68,10 +71,6 @@ class KST_EXPORT DataScalar : public Scalar, public DataPrimitive {
 
     void reset();
     void reload();
-
-  public Q_SLOTS:
-    void sourceUpdated(ObjectPtr object);
-
 };
 
 typedef SharedPtr<DataScalar> DataScalarPtr;

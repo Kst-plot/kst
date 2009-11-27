@@ -117,8 +117,7 @@ Histogram::~Histogram() {
 }
 
 
-Object::UpdateType Histogram::update() {
-  Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
+void Histogram::internalUpdate() {
 
   writeLockInputsAndOutputs();
 
@@ -205,12 +204,13 @@ Object::UpdateType Histogram::update() {
     hist[i_bin] = _Bins[i_bin]*_Normalization;
   }
 
-  _bVector->update();
-  _hVector->update();
+  // these will get updated by the update manager now
+  // that their provider been changed.
+  //_bVector->update();
+  //_hVector->update();
 
   unlockInputsAndOutputs();
 
-  return UPDATE;
 }
 
 
@@ -265,7 +265,6 @@ void Histogram::setNumberOfBins(int in_n_bins) {
 
 void Histogram::setVector(VectorPtr new_v) {
   if (new_v) {
-    connect(new_v, SIGNAL(updated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
     _inputVectors[RAWVECTOR] = new_v;
   }
 }
@@ -407,7 +406,7 @@ DataObjectPtr Histogram::makeDuplicate() {
   }
 
   histogram->writeLock();
-  histogram->update();
+  histogram->registerChange();
   histogram->unlock();
 
   return DataObjectPtr(histogram);

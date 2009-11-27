@@ -36,7 +36,7 @@ class DirFileSource : public Kst::DataSource {
 
     bool init();
 
-    Kst::Object::UpdateType update();
+    virtual UpdateType internalDataSourceUpdate();
 
     int readField(double *v, const QString &field, int s, int n);
 

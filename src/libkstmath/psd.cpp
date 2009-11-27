@@ -122,8 +122,7 @@ const CurveHintList *PSD::curveHints() const {
 }
 
 
-Object::UpdateType PSD::update() {
-  Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
+void PSD::internalUpdate() {
 
   writeLockInputsAndOutputs();
 
@@ -136,11 +135,14 @@ Object::UpdateType PSD::update() {
 
   int n_subsets = v_len/_PSDLength;
 
-  // determine if the PSD needs to be updated. if not using averaging, then we need at least _PSDLength/16 new data points. if averaging, then we want enough new data for a complete subset.
-  if ( ((_last_n_new < _PSDLength/16) || (_Average && (n_subsets - _last_n_subsets < 1))) &&  iv->length() != iv->numNew()) {
+  // determine if the PSD needs to be updated.
+  // if not using averaging, then we need at least _PSDLength/16 new data points.
+  // if averaging, then we want enough new data for a complete subset.
+  if ( ((_last_n_new < _PSDLength/16) || (_Average && (n_subsets - _last_n_subsets < 1))) &&
+       iv->length() != iv->numNew()) {
     unlockInputsAndOutputs();
 
-    return NO_CHANGE;
+    return;
   }
 
   _adjustLengths();
@@ -159,12 +161,14 @@ Object::UpdateType PSD::update() {
   _last_n_new = 0;
 
   updateVectorLabels();
-  _sVector->update();
-  _fVector->update();
+
+  // should be updated by the update manager
+  //_sVector->update();
+  //_fVector->update();
 
   unlockInputsAndOutputs();
 
-  return UPDATE;
+  return;
 }
 
 
@@ -293,7 +297,6 @@ void PSD::setVector(VectorPtr new_v) {
   _inputVectors.remove(INVECTOR);
   new_v->writeLock();
   _inputVectors[INVECTOR] = new_v;
-  connect(new_v, SIGNAL(updated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
 }
 
 
@@ -382,7 +385,7 @@ DataObjectPtr PSD::makeDuplicate() {
   if (descriptiveNameIsManual()) {
     powerspectrum->setDescriptiveName(descriptiveName());
   }
-  powerspectrum->update();
+  powerspectrum->registerChange();
   powerspectrum->unlock();
 
   return DataObjectPtr(powerspectrum);

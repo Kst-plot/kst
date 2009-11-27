@@ -109,16 +109,14 @@ bool Equation::isValid() const {
 }
 
 
-Object::UpdateType Equation::update() {
+void Equation::internalUpdate() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (!_pe) {
-    return NO_CHANGE;
+    return;
   }
 
   writeLockInputsAndOutputs();
-
-  Object::UpdateType rc = UPDATE;
 
   Equations::Context ctx;
   ctx.sampleCount = _ns;
@@ -127,14 +125,16 @@ Object::UpdateType Equation::update() {
   _pe->update(&ctx);
 
   _isValid = FillY(true);
-  _yOutVector->update();
-  _xOutVector->update();
+
+  // these should be updated by the update manager
+  //_yOutVector->update();
+  //_xOutVector->update();
 
   unlockInputsAndOutputs();
 
   updateVectorLabels();
 
-  return rc;
+  return;
 }
 
 const QString Equation::reparsedEquation() const {
@@ -244,12 +244,6 @@ void Equation::setEquation(const QString& in_fn) {
 
   if (_isValid) {
     _equation = reparsedEquation(); // update the string
-    foreach (VectorPtr vector, VectorsUsed) {
-      connect(vector, SIGNAL(updated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
-    }
-    foreach (ScalarPtr scalar, ScalarsUsed) {
-      connect(scalar, SIGNAL(updated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
-    }
   }
 }
 
@@ -276,12 +270,36 @@ void Equation::setExistingXVector(VectorPtr in_xv, bool do_interp) {
   _xInVector = in_xv;
   _inputVectors.insert(XINVECTOR, in_xv);
 
-  connect(in_xv, SIGNAL(updated(ObjectPtr)), this, SLOT(inputObjectUpdated(ObjectPtr)));
-
   _ns = 2; // reset the updating
   _doInterp = do_interp;
 }
 
+//FIXME: equations should not use ScalarsUsed and VectorsUsed:
+//instead, they should use _inputScalars and _inputVectors only.
+//This code, and used() is only here because they don't.
+qint64 Equation::minInputSerial() const {
+  qint64 minSerial = DataObject::minInputSerial();
+
+  foreach (VectorPtr P, VectorsUsed) {
+    minSerial = qMin(minSerial, P->serial());
+  }
+  foreach (ScalarPtr P, ScalarsUsed) {
+    minSerial = qMin(minSerial, P->serial());
+  }
+  return minSerial;
+}
+
+qint64 Equation::minInputSerialOfLastChange() const {
+  qint64 minSerial = DataObject::minInputSerialOfLastChange();
+
+  foreach (VectorPtr P, VectorsUsed) {
+    minSerial = qMin(minSerial, P->serialOfLastChange());
+  }
+  foreach (ScalarPtr P, ScalarsUsed) {
+    minSerial = qMin(minSerial, P->serialOfLastChange());
+  }
+  return minSerial;
+}
 
 /************************************************************************/
 /*                                                                      */
@@ -447,7 +465,7 @@ DataObjectPtr Equation::makeDuplicate() {
     equation->setDescriptiveName(descriptiveName());
   }
   equation->writeLock();
-  equation->update();
+  equation->registerChange();
   equation->unlock();
 
   return DataObjectPtr(equation);

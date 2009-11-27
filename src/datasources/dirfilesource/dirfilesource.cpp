@@ -63,7 +63,7 @@ DirFileSource::DirFileSource(Kst::ObjectStore *store, QSettings *cfg, const QStr
   _directoryName = DirFilePlugin::getDirectory(_filename);
 
   init();
-  update();
+  registerChange();
 
 }
 
@@ -128,6 +128,7 @@ bool DirFileSource::init() {
     }
 
     _writable = true;
+    _frameCount = _dirfile->NFrames();
   }
 
   _watcher = new QFileSystemWatcher();
@@ -138,18 +139,17 @@ bool DirFileSource::init() {
   connect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
   connect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
 
-  return update() == Kst::Object::UPDATE;
+  registerChange();
+  return true;
 }
 
 
-Kst::Object::UpdateType DirFileSource::update() {
+Kst::Object::UpdateType DirFileSource::internalDataSourceUpdate() {
   int newNF = _dirfile->NFrames();
   bool isnew = newNF != _frameCount;
   _frameCount = newNF;
 
-  //qDebug() << "xxx   frameCount: " << _frameCount << " is New: " << isnew;
-
-  return (isnew ? Kst::Object::UPDATE : Kst::Object::NO_CHANGE);
+  return (isnew ? Updated : NoChange);
 }
 
 int DirFileSource::readField(double *v, const QString& field, int s, int n) {
@@ -239,7 +239,7 @@ int DirFileSource::readString(QString &S, const QString& string) {
 //QStringList fieldScalars(const QString& field);
 
 QStringList DirFileSource::fieldScalars(const QString& field) {
-  const char **mflist = _dirfile->MFieldListByType(field, ConstEntryType);
+  const char **mflist = _dirfile->MFieldListByType(field.toAscii(), ConstEntryType);
   if (!mflist) {
     return QStringList();
   }
@@ -254,8 +254,8 @@ int DirFileSource::readFieldScalars(QList<double> &v, const QString& field, bool
   int nc=0;
   if (init) { // only update if we need to initialize.  Otherwise preserve old values.
     v.clear();
-    nc = _dirfile->NMFieldsByType(field,ConstEntryType);
-    double *vin = (double *)_dirfile->MConstants(field, Float64);
+    nc = _dirfile->NMFieldsByType(field.toAscii(),ConstEntryType);
+    double *vin = (double *)_dirfile->MConstants(field.toAscii(), Float64);
     for (int i=0; i<nc; i++) {
       v.append(vin[i]);
     }
@@ -265,7 +265,7 @@ int DirFileSource::readFieldScalars(QList<double> &v, const QString& field, bool
 
 
 QStringList DirFileSource::fieldStrings(const QString& field) {
-  const char **mflist = _dirfile->MFieldListByType(field, StringEntryType);
+  const char **mflist = _dirfile->MFieldListByType(field.toAscii(), StringEntryType);
   if (!mflist) {
     return QStringList();
   }
@@ -280,8 +280,8 @@ int DirFileSource::readFieldStrings(QStringList &v, const QString& field, bool i
   int nc=0;
   if (init) { // only update if we need to initialize.  Otherwise preserve old values.
     v.clear();
-    nc = _dirfile->NMFieldsByType(field,StringEntryType);
-    char **str_in = (char **)_dirfile->MStrings(field);
+    nc = _dirfile->NMFieldsByType(field.toAscii(),StringEntryType);
+    char **str_in = (char **)_dirfile->MStrings(field.toAscii());
     for (int i=0; i<nc; i++) {
       v.append(str_in[i]);
     }

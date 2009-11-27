@@ -85,6 +85,8 @@ class KST_EXPORT DataSource : public Object {
     DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const UpdateCheckType updateType = File);
     virtual ~DataSource();
 
+    virtual UpdateType objectUpdate(qint64 newSerial);
+
     virtual const QString& typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
@@ -99,10 +101,16 @@ class KST_EXPORT DataSource : public Object {
     virtual bool isValid() const; // generally you don't need to change this
     // returns _valid;
 
-    /** Updates number of samples.
+    // these are not used by datasources
+    void internalUpdate() {return;}
+    qint64 minInputSerial() const {return 0;}
+    qint64 minInputSerialOfLastChange() const {return 0;}
+
+   /** Updates number of samples.
       For ascii files, it also reads and writes to a temporary binary file.
-      It returns 1 if there was new data. */
-    virtual Object::UpdateType update();
+      It must be implemented by the datasource. */
+
+    virtual UpdateType internalDataSourceUpdate() = 0;
 
     virtual QString fileName() const;
 
@@ -132,8 +140,6 @@ class KST_EXPORT DataSource : public Object {
     virtual bool reset();
 
     virtual void deleteDependents();
-
-    virtual void processUpdate(ObjectPtr object);
 
     virtual QString descriptionTip() const;
 

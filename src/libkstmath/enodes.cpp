@@ -125,7 +125,7 @@ void Node::visit(NodeVisitor* v) {
 
 Kst::Object::UpdateType Node::update(Context *ctx) {
   Q_UNUSED(ctx)
-  return Kst::Object::NO_CHANGE;
+  return Kst::Object::NoChange;
 }
 
 
@@ -177,7 +177,7 @@ Kst::Object::UpdateType BinaryNode::update(Context *ctx) {
   Kst::Object::UpdateType l = _left->update(ctx);
   Kst::Object::UpdateType r = _right->update(ctx);
 
-  return (l == Kst::Object::UPDATE || r == Kst::Object::UPDATE) ? Kst::Object::UPDATE : Kst::Object::NO_CHANGE;
+  return (l == Kst::Object::Updated || r == Kst::Object::Updated) ? Kst::Object::Updated : Kst::Object::NoChange;
 }
 
 
@@ -450,7 +450,7 @@ Function::~Function() {
 
 Kst::Object::UpdateType Function::update(Context *ctx) {
   _args->update(ctx);
-  return Kst::Object::NO_CHANGE;
+  return Kst::Object::NoChange;
 }
 
 
@@ -557,9 +557,9 @@ Node *ArgumentList::node(int idx) {
 Kst::Object::UpdateType ArgumentList::update(Context *ctx) {
   bool updated = false;
   foreach (Node *i, _args) {
-    updated = updated || Kst::Object::UPDATE == i->update(ctx);
+    updated = updated || Kst::Object::Updated == i->update(ctx);
   }
-  return updated ? Kst::Object::UPDATE : Kst::Object::NO_CHANGE;
+  return updated ? Kst::Object::Updated : Kst::Object::NoChange;
 }
 
 
@@ -778,16 +778,17 @@ Kst::Object::UpdateType DataNode::update(Context *ctx) {
   Q_UNUSED(ctx)
   if (_isEquation) {
     if (_equation) {
-      return _equation->update(ctx);
+      //return _equation->update(ctx);
     }
   } else if (_vector) {
     KstWriteLocker l(_vector);
-    return _vector->update();
+    //return _vector->update();
   } else if (_scalar) {
     KstWriteLocker l(_scalar);
-    return _scalar->update();
+    //return _scalar->registerChange();
   }
-  return Kst::Object::NO_CHANGE;
+  //return Kst::Object::NoChange;
+  return Kst::Object::Updated;
 }
 
 

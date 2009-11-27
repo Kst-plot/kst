@@ -58,8 +58,6 @@ class CurveRenderContext {
     int penWidth;
 };
 
-enum CurveType { VCURVE, HISTOGRAM, IMAGE };
-
   struct CurveContextDetails {
     double Lx, Hx, Ly, Hy;
     double m_X, m_Y;
@@ -88,8 +86,6 @@ class KST_EXPORT Relation : public Object {
     virtual void save(QXmlStreamWriter &s);
 
     virtual QString propertyString() const = 0;
-
-    virtual CurveType curveType() const = 0;
 
     virtual int sampleCount() const { return NS; }
 
@@ -145,23 +141,16 @@ class KST_EXPORT Relation : public Object {
     virtual void replaceDependency(VectorPtr oldVector, VectorPtr newVector);
     virtual void replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix);
 
-    virtual void processUpdate(ObjectPtr object);
-
     // Compare the cached the context to the provided one.
     bool redrawRequired(const CurveRenderContext& context); 
-
-  Q_SIGNALS:
-    void relationUpdated(ObjectPtr object);
 
   protected:
     virtual void writeLockInputsAndOutputs() const;
     virtual void unlockInputsAndOutputs() const;
 
-    bool _isInputLoaded;
-    QList<QPair<QString,QString> > _inputVectorLoadQueue;
-    QList<QPair<QString,QString> > _inputScalarLoadQueue;
-    QList<QPair<QString,QString> > _inputStringLoadQueue;
-    QList<QPair<QString,QString> > _inputMatrixLoadQueue;
+    virtual qint64 minInputSerial() const;
+    virtual qint64 minInputSerialOfLastChange() const;
+
     CurveHintList *_curveHints;
     QString _typeString, _type;
     VectorMap _inputVectors;

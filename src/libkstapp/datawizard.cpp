@@ -30,6 +30,7 @@
 #include "plotiteminterface.h"
 #include "settings.h"
 #include "applicationsettings.h"
+#include "updatemanager.h"
 
 namespace Kst {
 
@@ -595,7 +596,7 @@ void DataWizard::finished() {
     if (_pageDataPresentation->dataRange()->readToEnd()) {
       frames = ds->frameCount(_pageDataPresentation->vectorField()) - startOffset;
     } else {
-      frames = ds->frameCount(_pageDataPresentation->vectorField()) - rangeCount;
+      frames = qMin(rangeCount,double(ds->frameCount(_pageDataPresentation->vectorField())));
     }
 
     if (_pageDataPresentation->dataRange()->doSkip() && _pageDataPresentation->dataRange()->skip() > 0) {
@@ -604,6 +605,10 @@ void DataWizard::finished() {
       memoryRequested += frames * ds->samplesPerFrame(_pageDataPresentation->vectorField())*sizeof(double);
     }
   }
+      qDebug() <<
+          "memReq: " << memoryRequested <<
+          " spf: " << ds->samplesPerFrame(_pageDataPresentation->vectorField()) <<
+          " frames: " << frames;
 
   // memory estimate for the y vectors
   {
@@ -630,9 +635,14 @@ void DataWizard::finished() {
       }
     }
   }
+      qDebug() <<
+          "memReq: " << memoryRequested <<
+          " spf: " << ds->samplesPerFrame(_pageDataPresentation->vectorField()) <<
+          " frames: " << frames;
 
   ds->unlock();
   if (memoryRequested > memoryAvailable) {
+    QApplication::restoreOverrideCursor();
     QMessageBox::warning(this, i18n("Insufficient Memory"), i18n("You requested to read in %1 MB of data but it seems that you only have approximately %2 MB of usable memory available.  You cannot load this much data.").arg(memoryRequested/(1024*1024)).arg(memoryAvailable/(1024*1024)));
     return;
   }
@@ -662,7 +672,7 @@ void DataWizard::finished() {
         _pageDataPresentation->dataRange()->doSkip(),
         _pageDataPresentation->dataRange()->doFilter());
 
-    dxv->update();
+    dxv->registerChange();
     dxv->unlock();
     xv = dxv;
 
@@ -688,7 +698,7 @@ void DataWizard::finished() {
           _pageDataPresentation->dataRange()->doSkip(),
           _pageDataPresentation->dataRange()->doFilter());
 
-      vector->update();
+      vector->registerChange();
       vector->unlock();
 
       vectors.append(vector);
@@ -822,7 +832,7 @@ void DataWizard::finished() {
       curve->setPointType(ptype++ % KSTPOINT_MAXTYPE);
 
       curve->writeLock();
-      curve->update();
+      curve->registerChange();
       curve->unlock();
 
       Q_ASSERT(plotList[i_plot]);
@@ -884,7 +894,7 @@ void DataWizard::finished() {
                               _pageDataPresentation->getFFTOptions()->output(),
                               _pageDataPresentation->getFFTOptions()->interpolateOverHoles());
 
-        powerspectrum->update();
+        powerspectrum->registerChange();
         powerspectrum->unlock();
 
         CurvePtr curve = _document->objectStore()->createObject<Curve>();
@@ -906,7 +916,7 @@ void DataWizard::finished() {
         curve->setColor(color);
 
         curve->writeLock();
-        curve->update();
+        curve->registerChange();
         curve->unlock();
 
         Q_ASSERT(plotList[i_plot]);
@@ -995,7 +1005,8 @@ void DataWizard::finished() {
   }
 
   QApplication::restoreOverrideCursor();
-
+  UpdateManager::self()->doUpdates(true);
+  kstApp->mainWindow()->document()->setChanged(true);
   accept();
 
 }

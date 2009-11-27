@@ -31,7 +31,6 @@
 #include "math_kst.h"
 #include "datacollection.h"
 #include "objectstore.h"
-#include "updatemanager.h"
 
 
 // used for resizing; set to 1 for loop zeroing, 2 to use memset
@@ -248,10 +247,6 @@ void Matrix::calcNoSpikeRange(double per) {
   }
 
   // FIXME: this needs a z spike insensitive algorithm...
-  // it should use the update counter to see if it needs
-  // to calculate it.  A call to either this or to
-  // minValueNoSpike should trigger the calculation
-  // which will be slow.
   _minNoSpike = max_of_min;
   _maxNoSpike = min_of_max;
 
@@ -307,7 +302,7 @@ int Matrix::getUsage() const {
 }
 
 
-Object::UpdateType Matrix::internalUpdate(Object::UpdateType providerUpdateType) {
+void Matrix::internalUpdate() {
   // calculate stats
   _NS = _nX * _nY;
 
@@ -352,10 +347,7 @@ Object::UpdateType Matrix::internalUpdate(Object::UpdateType providerUpdateType)
     _statScalars["minpos"]->setValue(minpos);
 
     updateScalars();
-
-    return providerUpdateType;
   }
-  return NO_CHANGE;
 }
 
 

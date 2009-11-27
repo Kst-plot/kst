@@ -231,7 +231,7 @@ Kst::DataObject *AkimaPlugin::create(Kst::ObjectStore *store, Kst::DataObjectCon
     object->setPluginName(pluginName());
 
     object->writeLock();
-    object->update();
+    object->registerChange();
     object->unlock();
 
     return object;

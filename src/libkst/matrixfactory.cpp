@@ -81,7 +81,7 @@ PrimitivePtr GeneratedMatrixFactory::generatePrimitive(ObjectStore *store, QXmlS
   matrix->setDescriptiveName(descriptiveName);
 
   matrix->writeLock();
-  matrix->update();
+  matrix->registerChange();
   matrix->unlock();
 
   return matrix;
@@ -150,7 +150,7 @@ PrimitivePtr EditableMatrixFactory::generatePrimitive(ObjectStore *store, QXmlSt
   matrix->setDescriptiveName(descriptiveName);
 
   matrix->writeLock();
-  matrix->update();
+  matrix->registerChange();
   matrix->unlock();
 
   return matrix;
@@ -232,7 +232,7 @@ PrimitivePtr DataMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStream
   matrix->setDescriptiveName(descriptiveName);
 
   matrix->writeLock();
-  matrix->update();
+  matrix->registerChange();
   matrix->unlock();
 
   return matrix;

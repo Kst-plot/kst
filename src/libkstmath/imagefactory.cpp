@@ -117,7 +117,7 @@ RelationPtr ImageFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
   image->setDescriptiveName(descriptiveName);
 
   image->writeLock();
-  image->update();
+  image->registerChange();
   image->unlock();
 
   return image;

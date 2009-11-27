@@ -40,18 +40,10 @@ class KST_EXPORT Primitive : public Object {
 
     inline ObjectPtr provider() const { return ObjectPtr(_provider); }
 
-    /** Update the primitive via the provider and/or internalUpdate().
-        Return true if there was new data. */
-    UpdateType update();
-    void immediateUpdate();
-
     void setSlaveName(QString slaveName);
     QString slaveName() { return _slaveName; }
-    void triggerUpdateSignal(ObjectPtr object);
     virtual QString propertyString() const;
     virtual QString  sizeString() const;
-  Q_SIGNALS:
-    void updated(ObjectPtr object);
 
   protected:
     Primitive(ObjectStore *store, Object* provider = 0L);
@@ -64,12 +56,13 @@ class KST_EXPORT Primitive : public Object {
 
     QString _slaveName;
 
-  protected:
-    virtual Object::UpdateType internalUpdate(Object::UpdateType providerRC);
+    virtual qint64 minInputSerial() const;
+    virtual qint64 minInputSerialOfLastChange() const;
 
+  protected:
     /** Possibly null.  Be careful, this is non-standard usage of a KstShared.
-     * The purpose of this is to trigger hierarchical updates properly.
-     */
+     * FIXME: pretty sure this is wrong: it shouldn't be a qpointer... not sure
+     * what should be going on here! */
     QPointer<Object> _provider;
 };
 

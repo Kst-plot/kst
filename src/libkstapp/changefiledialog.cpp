@@ -21,6 +21,7 @@
 #include "document.h"
 #include "mainwindow.h"
 #include "application.h"
+#include "updatemanager.h"
 
 #include <QDir>
 #include <QMessageBox>
@@ -251,7 +252,7 @@ void ChangeFileDialog::apply() {
 
           newVector->writeLock();
           newVector->changeFile(_dataSource);
-          newVector->update();
+          newVector->registerChange();
           newVector->unlock();
 
           if (_duplicateDependents->isChecked()) {
@@ -263,7 +264,7 @@ void ChangeFileDialog::apply() {
           }
           vector->writeLock();
           vector->changeFile(_dataSource);
-          vector->update();
+          vector->registerChange();
           vector->unlock();
         }
       }
@@ -285,7 +286,7 @@ void ChangeFileDialog::apply() {
 
           newMatrix->writeLock();
           newMatrix->changeFile(_dataSource);
-          newMatrix->update();
+          newMatrix->registerChange();
           newMatrix->unlock();
 
           if (_duplicateDependents->isChecked()) {
@@ -297,7 +298,7 @@ void ChangeFileDialog::apply() {
           }
           matrix->writeLock();
           matrix->changeFile(_dataSource);
-          matrix->update();
+          matrix->registerChange();
           matrix->unlock();
         }
       }
@@ -305,7 +306,7 @@ void ChangeFileDialog::apply() {
     }
   }
 
-  // Plot the items.
+  // Plot the items. (Do we need to doUpdates before this?)
   foreach (PlotItemInterface *plot, Data::self()->plotList()) {
     PlotItem* plotItem = static_cast<PlotItem*>(plot);
     foreach (PlotRenderItem* renderItem, plotItem->renderItems()) {
@@ -333,6 +334,8 @@ void ChangeFileDialog::apply() {
   } else {
     updatePrimitiveList();
   }
+
+  UpdateManager::self()->doUpdates(true);
   kstApp->mainWindow()->document()->setChanged(true);
 }
 

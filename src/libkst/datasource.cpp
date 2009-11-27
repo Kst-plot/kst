@@ -38,7 +38,7 @@
 #include "objectstore.h"
 #include "scalar.h"
 #include "string.h"
-#include "stdinsource.h"
+//#include "stdinsource.h"
 #include "updatemanager.h"
 
 #include "dataplugin.h"
@@ -251,10 +251,10 @@ static DataSourcePtr findPluginFor(ObjectStore *store, const QString& filename, 
 
 DataSourcePtr DataSource::loadSource(ObjectStore *store, const QString& filename, const QString& type) {
 #ifndef Q_WS_WIN32
-  if (filename == "stdin" || filename == "-") {
+  //if (filename == "stdin" || filename == "-") {
     // FIXME: what store do we put this in?
-    return new StdinSource(0, settingsObject);
-  }
+  //  return new StdinSource(0, settingsObject);
+  //}
 #endif
   QString fn = obtainFile(filename);
   if (fn.isEmpty()) {
@@ -283,11 +283,29 @@ DataSourcePtr DataSource::findOrLoadSource(ObjectStore *store, const QString& fi
 }
 
 
+Kst::Object::UpdateType DataSource::objectUpdate(qint64 newSerial) {
+  if (_serial==newSerial) {
+    return NoChange;
+  }
+
+  // update the datasource
+  UpdateType updated = internalDataSourceUpdate();
+
+  if (updated == Updated) {
+    _serialOfLastChange = newSerial; // tell data objects it is new
+  }
+
+  _serial = newSerial;
+
+  return updated;
+}
+
+
 bool DataSource::validSource(const QString& filename) {
 #ifndef Q_WS_WIN32
-  if (filename == "stdin" || filename == "-") {
-    return true;
-  }
+//  if (filename == "stdin" || filename == "-") {
+//    return true;
+//  }
 #endif
   QString fn = obtainFile(filename);
   if (fn.isEmpty()) {
@@ -558,10 +576,10 @@ DataSourcePtr DataSource::loadSource(ObjectStore *store, QDomElement& e) {
   }
 
 #ifndef Q_WS_WIN32
-  if (filename == "stdin" || filename == "-") {
+  //if (filename == "stdin" || filename == "-") {
     // FIXME: what store do we put this in?
-    return new StdinSource(0, settingsObject);
-  }
+  //  return new StdinSource(0, settingsObject);
+  //}
 #endif
 
   return findPluginFor(store, filename, type, e);
@@ -606,27 +624,15 @@ DataSource::~DataSource() {
 }
 
 
+
 void DataSource::checkUpdate() {
   if (!UpdateManager::self()->paused()) {
-    if (update()) {
-#if DEBUG_UPDATE_CYCLE > 1
-      qDebug() << "UP - DataSource update ready for" << shortName();
-#endif
-      UpdateManager::self()->requestUpdate(this);
-    }
-
-    if (_updateCheckType == Timer) {
-      QTimer::singleShot(UpdateManager::self()->minimumUpdatePeriod()-1, this, SLOT(checkUpdate()));
-    }
+    UpdateManager::self()->doUpdates(false);
   }
-}
 
-
-void DataSource::processUpdate(ObjectPtr object) {
-  Q_UNUSED(object);
-  UpdateManager::self()->updateStarted(this, this);
-  emit sourceUpdated(this);
-  UpdateManager::self()->updateFinished(this, this);
+  if (_updateCheckType == Timer) {
+    QTimer::singleShot(UpdateManager::self()->minimumUpdatePeriod()-1, this, SLOT(checkUpdate()));
+  }
 }
 
 
@@ -637,14 +643,6 @@ void DataSource::deleteDependents() {
 const QString& DataSource::typeString() const {
   return staticTypeString;
 }
-
-
-Object::UpdateType DataSource::update() {
-  Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
-
-  return Object::NO_CHANGE;
-}
-
 
 int DataSource::readField(double *v, const QString& field, int s, int n, int skip, int *lastFrameRead) {
   Q_UNUSED(v)

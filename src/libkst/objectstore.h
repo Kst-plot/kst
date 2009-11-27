@@ -62,6 +62,9 @@ class KST_EXPORT ObjectStore {
     /** remove unused data sources from the list */
     void cleanUpDataSourceList();
 
+    /** get everything but the data sources */
+    QList<ObjectPtr> objectList();
+
     /** locking */
     KstRWLock& lock() const { return _lock; }
 

@@ -324,7 +324,7 @@ Kst::DataObject *ConvolvePlugin::create(Kst::ObjectStore *store, Kst::DataObject
     object->setPluginName(pluginName());
 
     object->writeLock();
-    object->update();
+    object->registerChange();
     object->unlock();
 
     return object;
