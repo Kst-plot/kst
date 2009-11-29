@@ -93,7 +93,7 @@ void MeasureTime::measure()
 void MeasureTime::print()
 {
   measure();
-  printf("%s: %f sec \n", qPrintable(name), interval);
+  qDebug("%s: %f sec", qPrintable(name), interval);
 }
 
 
