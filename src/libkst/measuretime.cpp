@@ -50,11 +50,12 @@ MeasureTime::MeasureTime(MeasureTime& rhs) :
 
 MeasureTime::~MeasureTime()
 {
-  measure();
-  if (other_interval)
-      *other_interval += interval;
-  else
-     print();
+  if (other_interval) {
+    measure();
+    *other_interval += interval;
+  } else {
+    print();
+  }
 }
 
 
@@ -91,6 +92,7 @@ void MeasureTime::measure()
 
 void MeasureTime::print()
 {
+  measure();
   printf("%s: %f sec \n", qPrintable(name), interval);
 }
 
