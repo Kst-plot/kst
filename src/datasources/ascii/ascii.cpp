@@ -460,6 +460,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
 #ifdef USE_KST_ATOF
     sep = '.';
 #else
+    (void) sep;
     dot.useDot();
 #endif
   }
