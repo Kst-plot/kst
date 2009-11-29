@@ -31,6 +31,7 @@ SOURCES += builtindatasources.cpp \
     math_kst.cpp \
     matrix.cpp \
     matrixfactory.cpp \
+    measuretime.cpp \
     namedobject.cpp \
     object.cpp \
     objectlist.cpp \
@@ -82,6 +83,7 @@ HEADERS += builtindatasources.h \
     math_kst.h \
     matrix.h \
     matrixfactory.h \
+    measuretime.h \
     namedobject.h \
     object.h \
     objectlist.h \

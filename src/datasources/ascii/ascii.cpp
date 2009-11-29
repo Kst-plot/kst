@@ -40,6 +40,7 @@
 #include "ascii.h"
 #include "ui_asciiconfig.h"
 #include "kst_i18n.h"
+#include "measuretime.h"
 
 #ifdef Q_OS_WIN
 #define USE_KST_ATOF
@@ -198,6 +199,9 @@ class AsciiSource::Config {
 
 AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
 : Kst::DataSource(store, cfg, filename, type, File), _rowIndex(0L), _config(0L), _tmpBuf(0L), _tmpBufSize(0) {
+
+  TIME_IN_SCOPE(Ctor_AsciiSource);
+
   _valid = false;
   _haveHeader = false;
   _fieldListComplete = false;
