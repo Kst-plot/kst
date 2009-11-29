@@ -3,6 +3,7 @@ include($$PWD/../../kst.pri)
 TEMPLATE = app
 TARGET = $$kstlib(d2d)
 DESTDIR = $$OUTPUT_DIR/bin
+CONFIG -= precompile_header
 
 INCLUDEPATH += \
     tmp \
