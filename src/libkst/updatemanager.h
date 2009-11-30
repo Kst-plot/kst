@@ -15,6 +15,7 @@
 #include "object.h"
 
 #include <QGraphicsRectItem>
+#include <QTime>
 
 namespace Kst {
 class ObjectStore;
@@ -37,6 +38,7 @@ class UpdateManager : public QObject
 
   public Q_SLOTS:
     void doUpdates(bool forceImmediate = false);
+    void delayedUpdates();
 
   Q_SIGNALS:
     void objectsUpdated(qint64 serial);
@@ -45,11 +47,13 @@ class UpdateManager : public QObject
     UpdateManager();
     ~UpdateManager();
     static void cleanup();
+    QTime _time;
 
   private:
     bool _delayedUpdate;
     int _maxUpdate;
     bool _paused;
+    bool _delayedUpdateScheduled;
     qint64 _serial;
     ObjectStore *_store;
     TabWidget *_tabWidget;

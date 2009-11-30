@@ -54,10 +54,17 @@ UpdateManager::UpdateManager() {
   _maxUpdate = MAX_UPDATES;
   _paused = false;
   _store = 0;
+  _delayedUpdateScheduled = false;
+  _time.start();
 }
 
 
 UpdateManager::~UpdateManager() {
+}
+
+void UpdateManager::delayedUpdates() {
+  _delayedUpdateScheduled = false;
+  doUpdates();
 }
 
 void UpdateManager::doUpdates(bool forceImmediate) {
@@ -66,6 +73,20 @@ void UpdateManager::doUpdates(bool forceImmediate) {
   if (!_store) {
     return;
   }
+
+  if (_paused && !forceImmediate) {
+    return;
+  }
+
+  int dT = _time.elapsed();
+  if ((dT<_maxUpdate) && (!forceImmediate)) {
+    if (!_delayedUpdateScheduled) {
+      _delayedUpdateScheduled = true;
+      QTimer::singleShot(_maxUpdate-dT, this, SLOT(delayedUpdates()));
+    }
+    return;
+  }
+  _time.restart();
 
   _serial++;
 

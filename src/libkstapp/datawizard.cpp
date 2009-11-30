@@ -605,10 +605,6 @@ void DataWizard::finished() {
       memoryRequested += frames * ds->samplesPerFrame(_pageDataPresentation->vectorField())*sizeof(double);
     }
   }
-      qDebug() <<
-          "memReq: " << memoryRequested <<
-          " spf: " << ds->samplesPerFrame(_pageDataPresentation->vectorField()) <<
-          " frames: " << frames;
 
   // memory estimate for the y vectors
   {
@@ -635,10 +631,6 @@ void DataWizard::finished() {
       }
     }
   }
-      qDebug() <<
-          "memReq: " << memoryRequested <<
-          " spf: " << ds->samplesPerFrame(_pageDataPresentation->vectorField()) <<
-          " frames: " << frames;
 
   ds->unlock();
   if (memoryRequested > memoryAvailable) {
