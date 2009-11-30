@@ -13,7 +13,7 @@
 #ifdef Q_OS_WIN
 #include <windows.h>
 #else
-#include <ctime>
+#include <time.h>
 #endif
 
  
