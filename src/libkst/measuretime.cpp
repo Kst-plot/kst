@@ -30,7 +30,7 @@ MeasureTime::MeasureTime(const QString& n) :
 
 void MeasureTime::setFrequency()
 {
-#ifdef Q_CC_MSVC
+#ifdef Q_OS_WIN
   LARGE_INTEGER proc_freq;
   QueryPerformanceFrequency(&proc_freq);
   frequency =  1.0 / proc_freq.QuadPart;
@@ -61,7 +61,7 @@ MeasureTime::~MeasureTime()
 
 void MeasureTime::restart()
 {
-#ifdef Q_CC_MSVC
+#ifdef Q_OS_WIN
   LARGE_INTEGER st;
   QueryPerformanceCounter(&st);
   started = st.QuadPart * frequency;
@@ -76,7 +76,7 @@ void MeasureTime::restart()
 
 void MeasureTime::measure()
 {
-#ifdef Q_CC_MSVC
+#ifdef Q_OS_WIN
   LARGE_INTEGER st;
   QueryPerformanceCounter(&st);
   double now = st.QuadPart * frequency;
