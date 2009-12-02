@@ -360,6 +360,7 @@ void ViewItemDialog::saveDimensions(ViewItem *item) {
   } else {
     Q_ASSERT_X(false,"parent test", "item has no parentview item");
     parentWidth = parentHeight = 1.0;
+    parentX = parentY = 0.0;
   }
 
   qreal aspectRatio;

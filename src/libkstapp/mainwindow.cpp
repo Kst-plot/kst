@@ -231,6 +231,8 @@ void MainWindow::open() {
 bool MainWindow::initFromCommandLine() {
   delete _doc;
   _doc = new Document(this);
+  UpdateManager::self()->setStore(_doc->objectStore());
+
   CommandLineParser P(_doc);
   bool ok = _doc->initFromCommandLine(&P);
   if (!P.pngFile().isEmpty()) {
@@ -247,12 +249,16 @@ bool MainWindow::initFromCommandLine() {
 void MainWindow::openFile(const QString &file) {
   delete _doc;
   _doc = new Document(this);
+  UpdateManager::self()->setStore(_doc->objectStore());
+
   bool ok = _doc->open(file);
   if (!ok) {
     QMessageBox::critical(this, tr("Kst"), tr("Error opening document '%1':\n%2").arg(file, _doc->lastError()));
     delete _doc;
     _doc = new Document(this);
+    UpdateManager::self()->setStore(_doc->objectStore());
   } else {
+    UpdateManager::self()->doUpdates(true);
     _doc->setChanged(false);
   }
 }
