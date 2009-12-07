@@ -86,17 +86,11 @@ Vector::~Vector() {
 
 
 void Vector::deleteDependents() {
-  for (QHash<QString, Scalar*>::Iterator it = _scalars.begin(); it != _scalars.end(); ++it) {
+  for (QHash<QString, ScalarPtr>::Iterator it = _scalars.begin(); it != _scalars.end(); ++it) {
     _store->removeObject(it.value());
-    if (it.value()->getUsage() == 0) {
-      delete it.value();
-    }
   }
-  for (QHash<QString, String*>::Iterator it = _strings.begin(); it != _strings.end(); ++it) {
+  for (QHash<QString, StringPtr>::Iterator it = _strings.begin(); it != _strings.end(); ++it) {
     _store->removeObject(it.value());
-    if (it.value()->getUsage() == 0) {
-      delete it.value();
-    }
   }
 }
 
@@ -257,47 +251,47 @@ void Vector::CreateScalars(ObjectStore *store) {
     _scalars.insert("max", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("Max");
-    sp->_KShared_ref();
+
     _scalars.insert("min", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("Min");
-    sp->_KShared_ref();
+
     _scalars.insert("last", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("Last");
-    sp->_KShared_ref();
+
     _scalars.insert("first", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("First");
-    sp->_KShared_ref();
+
     _scalars.insert("mean", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("Mean");
-    sp->_KShared_ref();
+
     _scalars.insert("sigma", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("Sigma");
-    sp->_KShared_ref();
+
     _scalars.insert("rms", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("Rms");
-    sp->_KShared_ref();
+
     _scalars.insert("ns", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("NS");
-    sp->_KShared_ref();
+
     _scalars.insert("sum", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("Sum");
-    sp->_KShared_ref();
+
     _scalars.insert("sumsquared", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("SumSquared");
-    sp->_KShared_ref();
+
     _scalars.insert("minpos", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("MinPos");
-    sp->_KShared_ref();
+
   }
 }
 
@@ -321,12 +315,12 @@ void Vector::updateScalars() {
 }
 
 
-const QHash<QString, Scalar*>& Vector::scalars() const {
+const QHash<QString, ScalarPtr>& Vector::scalars() const {
   return _scalars;
 }
 
 
-const QHash<QString, String*>& Vector::strings() const {
+const QHash<QString, StringPtr>& Vector::strings() const {
   return _strings;
 }
 
@@ -558,7 +552,7 @@ void Vector::setLabel(const QString& label_in) {
 
 int Vector::getUsage() const {
   int adj = 0;
-  for (QHash<QString, Scalar*>::ConstIterator it = _scalars.begin(); it != _scalars.end(); ++it) {
+  for (QHash<QString, ScalarPtr>::ConstIterator it = _scalars.begin(); it != _scalars.end(); ++it) {
     adj += it.value()->getUsage() - 1;
   }
   return Object::getUsage() + adj;

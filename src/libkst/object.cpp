@@ -32,9 +32,6 @@ Object::Object() :
 
 
 Object::~Object() {
-  if (_store) {
-    _store->removeObject(this);
-  }
 }
 
 

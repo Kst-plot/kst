@@ -151,8 +151,8 @@ class KST_EXPORT DataVector : public Vector, public DataPrimitive {
 
     bool _dontUseSkipAccel;
 
-    QHash<QString, Scalar*> _fieldScalars;
-    QHash<QString, String*> _fieldStrings;
+    QHash<QString, ScalarPtr> _fieldScalars;
+    QHash<QString, StringPtr> _fieldStrings;
 
     friend class TestDataSource;
     friend class TestHistogram;

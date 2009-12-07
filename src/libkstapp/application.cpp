@@ -57,9 +57,8 @@ Application::~Application() {
   // lets not clean up before we leave....
   // if we do, we'll end up crashing on exit
   // unless we fix some stuff related to destruction
-  // in a multi-threaded situation.
-  //delete _mainWindow;
-  //delete _dialogDefaults;
+  delete _mainWindow;
+  delete _dialogDefaults;
 }
 
 

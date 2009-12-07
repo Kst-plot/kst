@@ -136,8 +136,8 @@ class Vector : public Primitive {
     /** access functions for _isScalarList */
     bool isScalarList() const { return _isScalarList; }
 
-    const QHash<QString, Scalar*>& scalars() const;
-    const QHash<QString, String*>& strings() const; // used by datavector
+    const QHash<QString, ScalarPtr>& scalars() const;
+    const QHash<QString, StringPtr>& strings() const; // used by datavector
 
     void setLabel(const QString& label_in);
 
@@ -175,10 +175,10 @@ class Vector : public Primitive {
     int NumNew;
 
     /** Statistics Scalars */
-    QHash<QString, Scalar*> _scalars;
+    QHash<QString, ScalarPtr> _scalars;
 
     /** Dependent Strings: used by datavector */
-    QHash<QString, String*> _strings;
+    QHash<QString, StringPtr> _strings;
 
     /** is the vector monotonically rising */
     bool _is_rising : 1;

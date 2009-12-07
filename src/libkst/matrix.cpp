@@ -66,7 +66,7 @@ void Matrix::_initializeShortName() {
 
 
 void Matrix::deleteDependents() {
-  for (QHash<QString, Scalar*>::Iterator it = _statScalars.begin(); it != _statScalars.end(); ++it) {
+  for (QHash<QString, ScalarPtr>::Iterator it = _statScalars.begin(); it != _statScalars.end(); ++it) {
     _store->removeObject(it.value());
   }
 }
@@ -295,7 +295,7 @@ void Matrix::blank() {
 
 int Matrix::getUsage() const {
   int scalarUsage = 0;
-  for (QHash<QString, Scalar*>::ConstIterator it = _statScalars.begin(); it != _statScalars.end(); ++it) {
+  for (QHash<QString, ScalarPtr>::ConstIterator it = _statScalars.begin(); it != _statScalars.end(); ++it) {
     scalarUsage += it.value()->getUsage() - 1;
   }
   return Object::getUsage() + scalarUsage;
@@ -351,7 +351,7 @@ void Matrix::internalUpdate() {
 }
 
 
-const QHash<QString, Scalar*>& Matrix::scalars() const {
+const QHash<QString, ScalarPtr>& Matrix::scalars() const {
   return _statScalars;
 }
 

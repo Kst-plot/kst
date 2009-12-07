@@ -110,7 +110,7 @@ class KST_EXPORT Matrix : public Primitive {
     virtual void save(QXmlStreamWriter &s);
 
     // the statistics scalars for this matrix
-    const QHash<QString, Scalar*>& scalars() const;
+    const QHash<QString, ScalarPtr>& scalars() const;
 
     // set the labels for this matrix
     void setLabel(const QString& newLabel);
@@ -151,7 +151,7 @@ class KST_EXPORT Matrix : public Primitive {
     double _stepX;
     double _stepY;
     int _numNew; // number of new samples
-    QHash<QString, Scalar*> _statScalars; // statistics scalars
+    QHash<QString, ScalarPtr> _statScalars; // statistics scalars
     bool _editable : 1;
     bool _saveable : 1;
 
