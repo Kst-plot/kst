@@ -626,7 +626,7 @@ void DataObject::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObj
       }
     }
     // also replace dependencies on vector stats
-    QHashIterator<QString, Scalar*> scalarDictIter(j.value()->scalars());
+    QHashIterator<QString, ScalarPtr> scalarDictIter(j.value()->scalars());
     for (ScalarMap::Iterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
       while (scalarDictIter.hasNext()) {
         scalarDictIter.next();
@@ -636,7 +636,7 @@ void DataObject::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObj
       }
     }
     // also replace dependencies on vector strings
-    QHashIterator<QString, String*> stringDictIter(j.value()->strings());
+    QHashIterator<QString, StringPtr> stringDictIter(j.value()->strings());
     for (StringMap::Iterator k = _inputStrings.begin(); k != _inputStrings.end(); ++k) {
       while (stringDictIter.hasNext()) {
         stringDictIter.next();
@@ -656,7 +656,7 @@ void DataObject::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObj
       }
     }
     // also replace dependencies on matrix stats
-    QHashIterator<QString, Scalar*> scalarDictIter(j.value()->scalars());
+    QHashIterator<QString, ScalarPtr> scalarDictIter(j.value()->scalars());
     for (ScalarMap::Iterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
       while (scalarDictIter.hasNext()) {
         scalarDictIter.next();
@@ -697,7 +697,7 @@ void DataObject::replaceDependency(VectorPtr oldVector, VectorPtr newVector) {
   }
 
   // slave scalars
-  QHashIterator<QString, Scalar*> scalarDictIter(oldVector->scalars());
+  QHashIterator<QString, ScalarPtr> scalarDictIter(oldVector->scalars());
   for (ScalarMap::Iterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
     while (scalarDictIter.hasNext()) {
       scalarDictIter.next();
@@ -708,7 +708,7 @@ void DataObject::replaceDependency(VectorPtr oldVector, VectorPtr newVector) {
   }
 
   // slave strings
-  QHashIterator<QString, String*> stringDictIter(oldVector->strings());
+  QHashIterator<QString, StringPtr> stringDictIter(oldVector->strings());
   for (StringMap::Iterator j = _inputStrings.begin(); j != _inputStrings.end(); ++j) {
     while (stringDictIter.hasNext()) {
       stringDictIter.next();
@@ -727,7 +727,7 @@ void DataObject::replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix) {
     }
   }
 
-  QHashIterator<QString, Scalar*> scalarDictIter(oldMatrix->scalars());
+  QHashIterator<QString, ScalarPtr> scalarDictIter(oldMatrix->scalars());
   for (ScalarMap::Iterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
     while (scalarDictIter.hasNext()) {
       scalarDictIter.next();
@@ -747,7 +747,7 @@ bool DataObject::uses(ObjectPtr p) const {
         return true;
       }
     }
-    QHashIterator<QString, Scalar*> scalarDictIter(v->scalars());
+    QHashIterator<QString, ScalarPtr> scalarDictIter(v->scalars());
     for (ScalarMap::ConstIterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
       while (scalarDictIter.hasNext()) {
         scalarDictIter.next();
@@ -756,7 +756,7 @@ bool DataObject::uses(ObjectPtr p) const {
         }
       }
     }
-    QHashIterator<QString, String*> stringDictIter(v->strings());
+    QHashIterator<QString, StringPtr> stringDictIter(v->strings());
     for (StringMap::ConstIterator j = _inputStrings.begin(); j != _inputStrings.end(); ++j) {
       while (stringDictIter.hasNext()) {
         stringDictIter.next();
@@ -771,7 +771,7 @@ bool DataObject::uses(ObjectPtr p) const {
         return true;
       }
     }
-    QHashIterator<QString, Scalar*> scalarDictIter(matrix->scalars());
+    QHashIterator<QString, ScalarPtr> scalarDictIter(matrix->scalars());
     for (ScalarMap::ConstIterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
       while (scalarDictIter.hasNext()) {
         scalarDictIter.next();
@@ -789,7 +789,7 @@ bool DataObject::uses(ObjectPtr p) const {
         }
       }
       // also check dependencies on vector stats
-      QHashIterator<QString, Scalar*> scalarDictIter(j.value()->scalars());
+      QHashIterator<QString, ScalarPtr> scalarDictIter(j.value()->scalars());
       for (ScalarMap::ConstIterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
         while (scalarDictIter.hasNext()) {
           scalarDictIter.next();
@@ -799,7 +799,7 @@ bool DataObject::uses(ObjectPtr p) const {
         }
       }
       // also check dependencies on vector strings
-      QHashIterator<QString, String*> stringDictIter(j.value()->strings());
+      QHashIterator<QString, StringPtr> stringDictIter(j.value()->strings());
       for (StringMap::ConstIterator k = _inputStrings.begin(); k != _inputStrings.end(); ++k) {
         while (stringDictIter.hasNext()) {
           stringDictIter.next();
@@ -818,7 +818,7 @@ bool DataObject::uses(ObjectPtr p) const {
         }
       }
       // also check dependencies on matrix stats
-      QHashIterator<QString, Scalar*> scalarDictIter(j.value()->scalars());
+      QHashIterator<QString, ScalarPtr> scalarDictIter(j.value()->scalars());
       for (ScalarMap::ConstIterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
         while (scalarDictIter.hasNext()) {
           scalarDictIter.next();

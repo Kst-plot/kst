@@ -545,6 +545,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       }
       _fileNames.append(arg);
     }
+    UpdateManager::self()->doUpdates(true);
   }
   UpdateManager::self()->doUpdates(true);
   return (dataPlotted);

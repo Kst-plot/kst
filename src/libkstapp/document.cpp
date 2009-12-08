@@ -22,6 +22,7 @@
 #include <viewitem.h>
 #include <commandlineparser.h>
 #include "objectstore.h"
+#include "updatemanager.h"
 
 #include <QDebug>
 #include <QFile>
@@ -32,6 +33,8 @@ namespace Kst {
 Document::Document(MainWindow *window)
 : CoreDocument(), _win(window), _dirty(false), _isOpen(false), _fileName(QString::null) {
   _session = new SessionModel(objectStore());
+
+  UpdateManager::self()->setStore(objectStore());
 }
 
 

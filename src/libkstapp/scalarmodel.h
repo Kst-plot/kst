@@ -63,7 +63,7 @@ public:
   void addMatrix(MatrixPtr matrix, ScalarTreeItem* parent = 0);
   void addDataObject(DataObjectPtr dataObject, ScalarTreeItem* parent = 0);
   void addDataSource(DataSourcePtr dataSource, ScalarTreeItem* parent = 0);
-  void addScalars(const QHash<QString, Kst::Scalar*> scalarMap, ScalarTreeItem* parent = 0);
+  void addScalars(const QHash<QString, Kst::ScalarPtr> scalarMap, ScalarTreeItem* parent = 0);
 
 private:
   ObjectStore *_store;

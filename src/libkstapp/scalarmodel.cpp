@@ -104,9 +104,9 @@ void ScalarModel::addScalar(ScalarPtr scalar, ScalarTreeItem* parent) {
 }
 
 
-void ScalarModel::addScalars(const QHash<QString, Kst::Scalar*> scalarMap, ScalarTreeItem* parent) {
+void ScalarModel::addScalars(const QHash<QString, Kst::ScalarPtr> scalarMap, ScalarTreeItem* parent) {
   QMap<QString, ScalarPtr> map;
-  foreach(Scalar* scalar, scalarMap) {
+  foreach(ScalarPtr scalar, scalarMap) {
     map.insert(scalar->Name(), scalar);
   }
   QMapIterator<QString, ScalarPtr> iObject(map);

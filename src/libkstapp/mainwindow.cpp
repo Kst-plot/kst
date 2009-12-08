@@ -36,9 +36,8 @@
 #include "viewmatrixdialog.h"
 #include "viewprimitivedialog.h"
 #include "view.h"
-//#include "viewmanager.h"
-#include "updatemanager.h"
 #include "applicationsettings.h"
+#include "updatemanager.h"
 
 #include "applicationsettingsdialog.h"
 #include "differentiatecurvesdialog.h"
@@ -96,7 +95,6 @@ MainWindow::MainWindow() :
 
   readSettings();
 
-  UpdateManager::self()->setStore(_doc->objectStore());
   connect(UpdateManager::self(), SIGNAL(objectsUpdated(qint64)), this, SLOT(updateViewItems(qint64)));
 
   QTimer::singleShot(0, this, SLOT(performHeavyStartupActions()));
@@ -231,9 +229,9 @@ void MainWindow::open() {
 bool MainWindow::initFromCommandLine() {
   delete _doc;
   _doc = new Document(this);
-  UpdateManager::self()->setStore(_doc->objectStore());
 
   CommandLineParser P(_doc);
+
   bool ok = _doc->initFromCommandLine(&P);
   if (!P.pngFile().isEmpty()) {
     exportGraphicsFile(P.pngFile(), "png", 1280, 1024,0);
@@ -249,14 +247,12 @@ bool MainWindow::initFromCommandLine() {
 void MainWindow::openFile(const QString &file) {
   delete _doc;
   _doc = new Document(this);
-  UpdateManager::self()->setStore(_doc->objectStore());
 
   bool ok = _doc->open(file);
   if (!ok) {
     QMessageBox::critical(this, tr("Kst"), tr("Error opening document '%1':\n%2").arg(file, _doc->lastError()));
     delete _doc;
     _doc = new Document(this);
-    UpdateManager::self()->setStore(_doc->objectStore());
   } else {
     UpdateManager::self()->doUpdates(true);
     _doc->setChanged(false);

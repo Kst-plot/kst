@@ -431,8 +431,8 @@ void EventMonitorEntry::replaceDependency(DataObjectPtr oldObject, DataObjectPtr
 
   // and dependencies on vector stats
   for (VectorMap::ConstIterator j = oldObject->outputVectors().begin(); j != oldObject->outputVectors().end(); ++j) {
-    const QHash<QString, Scalar*>& scalarMap(newObject->outputVectors()[j.key()]->scalars());
-    QHashIterator<QString, Scalar*> scalarDictIter(j.value()->scalars());
+    const QHash<QString, ScalarPtr>& scalarMap(newObject->outputVectors()[j.key()]->scalars());
+    QHashIterator<QString, ScalarPtr> scalarDictIter(j.value()->scalars());
     while (scalarDictIter.hasNext()) {
       const QString oldName = scalarDictIter.next().value()->Name();
       const QString newName = scalarMap[scalarDictIter.key()]->Name();
@@ -442,8 +442,8 @@ void EventMonitorEntry::replaceDependency(DataObjectPtr oldObject, DataObjectPtr
 
   // and dependencies on matrix stats
   for (MatrixMap::ConstIterator j = oldObject->outputMatrices().begin(); j != oldObject->outputMatrices().end(); ++j) {
-    const QHash<QString, Scalar*>& scalarMap(newObject->outputMatrices()[j.key()]->scalars());
-    QHashIterator<QString, Scalar*> scalarDictIter(j.value()->scalars());
+    const QHash<QString, ScalarPtr>& scalarMap(newObject->outputMatrices()[j.key()]->scalars());
+    QHashIterator<QString, ScalarPtr> scalarDictIter(j.value()->scalars());
     while (scalarDictIter.hasNext()) {
       const QString oldName = scalarDictIter.next().value()->Name();
       const QString newName = scalarMap[scalarDictIter.key()]->Name();
@@ -462,7 +462,7 @@ void EventMonitorEntry::replaceDependency(VectorPtr oldVector, VectorPtr newVect
   QString newExp = _event.replace("[" + oldVector->Name() + "]", "[" + newVector->Name() + "]");
 
   // also replace all occurences of vector stats for the oldVector
-  QHashIterator<QString, Scalar*> scalarDictIter(oldVector->scalars());
+  QHashIterator<QString, ScalarPtr> scalarDictIter(oldVector->scalars());
   while (scalarDictIter.hasNext()) {
     const QString oldName = scalarDictIter.next().value()->Name();
     const QString newName = newVector->scalars()[scalarDictIter.key()]->Name();
@@ -479,7 +479,7 @@ void EventMonitorEntry::replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatr
   QString newExp = _event;
 
   // also replace all occurences of scalar stats for the oldMatrix
-  QHashIterator<QString, Scalar*> scalarDictIter(oldMatrix->scalars());
+  QHashIterator<QString, ScalarPtr> scalarDictIter(oldMatrix->scalars());
   while (scalarDictIter.hasNext()) {
     const QString oldName = scalarDictIter.next().value()->Name();
     const QString newName = newMatrix->scalars()[scalarDictIter.key()]->Name();

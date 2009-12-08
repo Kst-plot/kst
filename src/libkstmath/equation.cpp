@@ -491,7 +491,7 @@ void Equation::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObjec
 
   // and dependencies on matrix stats (there won't be matrices themselves in the expression)
   for (MatrixMap::Iterator j = oldObject->outputMatrices().begin(); j != oldObject->outputMatrices().end(); ++j) {
-    QHashIterator<QString, Scalar*> scalarDictIter(j.value()->scalars());
+    QHashIterator<QString, ScalarPtr> scalarDictIter(j.value()->scalars());
     while (scalarDictIter.hasNext()) {
       scalarDictIter.next();
       QString oldName = scalarDictIter.value()->Name();
@@ -509,7 +509,7 @@ void Equation::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObjec
       }
     }
     // and dependencies on vector stats
-    QHashIterator<QString, Scalar*> scalarDictIter(j.value()->scalars());
+    QHashIterator<QString, ScalarPtr> scalarDictIter(j.value()->scalars());
     while (scalarDictIter.hasNext()) {
       scalarDictIter.next();
       QString oldName = scalarDictIter.value()->Name();
@@ -530,7 +530,7 @@ void Equation::replaceDependency(VectorPtr oldVector, VectorPtr newVector) {
   QString newExp = _equation.replace("["+oldName+"]", "["+newName+"]");
 
   // also replace all occurences of scalar stats for the oldVector
-  QHashIterator<QString, Scalar*> scalarDictIter(oldVector->scalars());
+  QHashIterator<QString, ScalarPtr> scalarDictIter(oldVector->scalars());
   while (scalarDictIter.hasNext()) {
     scalarDictIter.next();
     QString oldName = scalarDictIter.value()->Name();
@@ -555,7 +555,7 @@ void Equation::replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix) {
   QString newExp = _equation;
 
   // also replace all occurences of scalar stats for the oldMatrix
-  QHashIterator<QString, Scalar*> scalarDictIter(oldMatrix->scalars());
+  QHashIterator<QString, ScalarPtr> scalarDictIter(oldMatrix->scalars());
   while (scalarDictIter.hasNext()) {
     scalarDictIter.next();
     QString oldName = scalarDictIter.value()->Name();
