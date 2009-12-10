@@ -315,6 +315,7 @@ bool Document::open(const QString& file) {
   _win->tabWidget()->setCurrentIndex(0);
   _win->tabWidget()->closeCurrentView();
 
+  UpdateManager::self()->doUpdates(true);
   return _isOpen = true;
 }
 

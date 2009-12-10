@@ -88,13 +88,13 @@ MainWindow::MainWindow() :
   createStatusBar();
 
   _tabWidget->createView();
+
   setCentralWidget(_tabWidget);
   connect(_tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentViewChanged()));
   connect(PlotItemManager::self(), SIGNAL(tiedZoomRemoved()), this, SLOT(tiedZoomRemoved()));
   connect(PlotItemManager::self(), SIGNAL(allPlotsTiedZoom()), this, SLOT(allPlotsTiedZoom()));
 
   readSettings();
-
   connect(UpdateManager::self(), SIGNAL(objectsUpdated(qint64)), this, SLOT(updateViewItems(qint64)));
 
   QTimer::singleShot(0, this, SLOT(performHeavyStartupActions()));

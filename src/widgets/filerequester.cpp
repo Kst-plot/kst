@@ -48,7 +48,7 @@ void FileRequester::setup() {
   _fileButton->setFixedSize(size + 8, size + 8);
 
   setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-  connect (_fileEdit, SIGNAL(textChanged(const QString &)), this, SLOT(setFile(const QString &)));
+  connect (_fileEdit, SIGNAL(textChanged(const QString &)), this, SLOT(updateFile(const QString &)));
   connect (_fileButton, SIGNAL(clicked()), this, SLOT(chooseFile()));
 
   QDirModel *dirModel = new QDirModel(this);
@@ -72,6 +72,11 @@ void FileRequester::setFile(const QString &file) {
   _fileEdit->blockSignals(true);
   _fileEdit->setText(_file);
   _fileEdit->blockSignals(false);
+  emit changed(file);
+}
+
+void FileRequester::updateFile(const QString &file) {
+  _file = file;
   emit changed(file);
 }
 

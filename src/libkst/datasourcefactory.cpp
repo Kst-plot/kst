@@ -55,7 +55,6 @@ DataSourcePtr DataSourceFactory::parse(ObjectStore *store, QXmlStreamReader& str
   if (!factories) {
     return 0;
   }
-
   DataSourceFactory *f = factories->value(stream.name().toString());
   if (!f) {
     return 0;

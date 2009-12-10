@@ -68,7 +68,6 @@ void UpdateManager::delayedUpdates() {
 }
 
 void UpdateManager::doUpdates(bool forceImmediate) {
-
   if (!_store) {
     return;
   }

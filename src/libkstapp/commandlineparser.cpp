@@ -432,7 +432,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
         for (int i_file=0; i_file<_fileNames.size(); i_file++) {
           QString file = _fileNames.at(i_file);
           QFileInfo info(file);
-          if (!info.exists() || !info.isFile()) {
+          if (!info.exists()) {
             printUsage(i18n("file %1 does not exist\n").arg(file));
             *ok = false;
             break;
@@ -545,7 +545,6 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       }
       _fileNames.append(arg);
     }
-    UpdateManager::self()->doUpdates(true);
   }
   UpdateManager::self()->doUpdates(true);
   return (dataPlotted);

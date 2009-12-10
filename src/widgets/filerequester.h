@@ -35,6 +35,7 @@ class KST_EXPORT FileRequester : public QWidget {
 
   public Q_SLOTS:
     void setFile(const QString &file);
+    void updateFile(const QString &file);
 
   Q_SIGNALS:
     void changed(const QString &file);
