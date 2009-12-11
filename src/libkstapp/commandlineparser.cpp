@@ -201,7 +201,15 @@ DataVectorPtr CommandLineParser::createOrFindDataVector(QString field, DataSourc
     if ((_startFrame==-1) && (_numFrames==-1)) { // count from end and read to end
       _startFrame = 0;
     }
-
+    // Flaky magic: if ds is an ascii file, change fields named 0 to 99 to
+    // Column xx.  This allows "-y 2" but prevents ascii files with fields
+    // actually named "0 to 99" from being read from the command line.
+    if (ds->fileType() == "ASCII file") {
+      QRegExp num("^[0-9]{1,2}$");
+      if (num.exactMatch(field)) {
+        field = i18n("Column %1", field);
+      }
+    }
     // check to see if an identical vector already exists.  If so, use it.
     for (int i=0; i<_vectors.count(); i++) {
       xv = _vectors.at(i);

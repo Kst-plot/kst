@@ -282,7 +282,6 @@ void DataVector::save(QXmlStreamWriter &s) {
 
 
 QString DataVector::label() const {
-  bool ok;
   QString label;
 
   if (_fieldStrings.contains("quantity")) {
@@ -297,18 +296,7 @@ QString DataVector::label() const {
       }
     }
   } else {
-    _field.toInt(&ok);
-    if (ok && _file) {
-      _file->readLock();
-      if (_file->fileType() == "ASCII file") {
-        label = i18n("Column %1", _field);
-      } else {
-        label = _field;
-      }
-      _file->unlock();
-    } else {
-      label = _field;
-    }
+    label = _field;
     label.replace('_', "\\_");
   }
 
@@ -725,11 +713,7 @@ DataVectorPtr DataVector::makeDuplicate() const {
 
 QString DataVector::_automaticDescriptiveName() const {
   QString name;
-  if (_file->fileType() == "ASCII file") {
-    name = i18n("Column %1", _field);
-  } else {
-    name = _field;
-  }
+  name = _field;
   return name.replace("_", "\\_");
 }
 

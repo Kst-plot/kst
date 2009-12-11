@@ -183,6 +183,7 @@ void VectorSelector::fillVectors() {
 
   qSort(list);
 
+  int current_index = _vector->currentIndex();
   VectorPtr current = selectedVector();
 
   _vector->clear();
@@ -195,9 +196,11 @@ void VectorSelector::fillVectors() {
   if (_allowEmptySelection) //reset the <None>
     setAllowEmptySelection(true);
 
-  if (current)
+  if (current_index==-1) {
+    _vector->setCurrentIndex(current_index);
+  } else if (current) {
     setSelectedVector(current);
-
+  }
 }
 
 

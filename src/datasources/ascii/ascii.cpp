@@ -751,7 +751,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSource::Conf
 
   file.close();
   for (int i = 1; i <= maxcnt; ++i) {
-    rc += QString::number(i);
+    rc += i18n("Column %1").arg(i);
   }
 
   return rc;

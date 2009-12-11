@@ -306,7 +306,6 @@ void CurveDialog::editMultipleMode() {
   _curveTab->clearTabValues();
 }
 
-
 void CurveDialog::editSingleMode() {
    configureTab(dataObject());
 }
