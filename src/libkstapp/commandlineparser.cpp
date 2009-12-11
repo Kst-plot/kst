@@ -206,7 +206,7 @@ DataVectorPtr CommandLineParser::createOrFindDataVector(QString field, DataSourc
     for (int i=0; i<_vectors.count(); i++) {
       xv = _vectors.at(i);
       if (field == xv->field()) {
-        if ((xv->startFrame() == _startFrame) &&
+        if ((xv->reqStartFrame() == _startFrame) &&
             (xv->reqNumFrames() == _numFrames) &&
             (xv->skip() == _skip) &&
             (xv->doSkip() == (_skip>0)) &&

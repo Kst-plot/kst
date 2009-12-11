@@ -238,7 +238,7 @@ bool CurveTab::ignoreAutoScale() const {
 
 
 bool CurveTab::ignoreAutoScaleDirty() const {
-  return _ignoreAutoScale->checkState() == Qt::PartiallyChecked;
+  return _ignoreAutoScale->checkState() != Qt::PartiallyChecked;
 }
 
 
