@@ -79,6 +79,21 @@ inline int isinf(double x) { return x == x && !finite(x); }
 #endif
 
 #ifdef Q_WS_WIN32
+#ifndef isnan
+#define isnan _isnan
+#endif
+#ifndef finite
+#define finite _finite
+#endif
+#ifndef M_PI
+#define M_PI 3.14159265358979323
+#endif
+#ifndef isinf
+#define isinf !_finite
+#endif
+#endif
+
+#if 0
 #define isnan _isnan
 #define finite _finite
 #ifndef M_PI
