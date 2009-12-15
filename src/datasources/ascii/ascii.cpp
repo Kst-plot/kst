@@ -260,7 +260,7 @@ bool AsciiSource::reset() {
   _stringList.clear();
 
   registerChange();
-
+  internalDataSourceUpdate();
 
   return true;
 }
